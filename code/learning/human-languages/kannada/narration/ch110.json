@@ -3,8 +3,8 @@
   "language": "kannada",
   "chapter": 110,
   "title": "Market, Beach, Garden, Corner, Turn",
-  "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a6acd8aee4210ce5",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:e4b415100fbf3621",
   "lessons": [
     {
       "id": "KA-C110-sante",
@@ -680,6 +680,330 @@
             {
               "kind": "speech",
               "text": "What does ತಿರುವು (tiruvu) mean? (\"A turn, a bend\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C110-tree-on-under",
+      "sequence": 4492,
+      "title": "ಮರದ ಮೇಲೆ / ಮರದ ಕೆಳಗೆ — on or under the tree",
+      "headword": "ಮರದ ಮೇಲೆ ಹಕ್ಕಿ ಇದೆ.",
+      "romanization": "marada mēle hakki ide",
+      "gloss": "The bird is on the tree — a named reference place",
+      "script": "kannada",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:52b3b651ed0a5907",
+      "notice": {
+        "modality": "pen",
+        "needs": [],
+        "waitUntilStopped": [
+          "Writing: the place phrases"
+        ],
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing: the place phrases."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall ಮರ (mara, tree) and ಹಕ್ಕಿ (hakki, bird). Say ಮೇಲೆ (mēle, on top), then ಕೆಳಗೆ (keḷage, under). You know all four words already."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: on the tree",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Listen once, then say the line after the pause:"
+            },
+            {
+              "kind": "speech",
+              "text": "ಮರದ ಮೇಲೆ ಹಕ್ಕಿ ಇದೆ. marada mēle hakki ide. — The bird is on the tree."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮರದ (marada) means “of the tree” here. It names what ಮೇಲೆ is relative to. Keep ಮರದ ಮೇಲೆ together as “on the tree”; ಹಕ್ಕಿ ಇದೆ says that the bird is there. This one frame does not teach every Kannada noun ending."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar lens: under the tree",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮರದ ಕೆಳಗೆ ಹಕ್ಕಿ ಇದೆ. marada keḷage hakki ide. — The bird is under the tree."
+            },
+            {
+              "kind": "speech",
+              "text": "The tree and bird stay the same. Only ಮೇಲೆ changes to ಕೆಳಗೆ. Say both lines aloud, slowly. Listen for the word that tells you where."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice: on or under",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "The bird is on the tree.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: The bird is **on** the tree.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "The bird is under the tree.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: The bird is **under** the tree.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ANSWER",
+              "instruction": "which word puts the bird below? Say it aloud.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ANSWER: which word puts the bird below? Say it aloud.]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "writing",
+          "title": "Writing: the place phrases",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ಮರದ ಮೇಲೆ and ಮರದ ಕೆಳಗೆ from memory. Check the two final words against the lines above.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ಮರದ ಮೇಲೆ** and **ಮರದ ಕೆಳಗೆ** from memory. Check the two final words against the lines above.]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say “on the tree” and “under the tree” once more. You have located one named thing relative to another. Direction words alone do not give that reference."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C110-house-near-far-inside",
+      "sequence": 4494,
+      "title": "ಮನೆಯ ಹತ್ತಿರ / ಮನೆಯಿಂದ ದೂರ / ಮನೆಯೊಳಗೆ",
+      "headword": "ಶಾಲೆ ಮನೆಯ ಹತ್ತಿರ ಇದೆ.",
+      "romanization": "śāle maneya hattira ide",
+      "gloss": "The school is near the house — compare near, far and inside",
+      "script": "kannada",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:13b6e9b43bfb9734",
+      "notice": {
+        "modality": "pen",
+        "needs": [],
+        "waitUntilStopped": [
+          "Writing: three house phrases"
+        ],
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing: three house phrases."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the chapter's five place words: market, beach, garden, corner, turn. Say them before checking: ಸಂತೆ (sante), ಕಡಲತೀರ (kaḍalatīra), ತೋಟ (tōṭa), ಮೂಲೆ (mūle), ತಿರುವು (tiruvu). Now say “on the tree” and “under the tree”. Recall ಮನೆ (mane, house), ಹತ್ತಿರ (hattira, near), and ದೂರ (dūra, far). We will keep one house as the reference and change its relation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: near the house",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Listen, then say the line after the pause:"
+            },
+            {
+              "kind": "speech",
+              "text": "ಶಾಲೆ ಮನೆಯ ಹತ್ತಿರ ಇದೆ. śāle maneya hattira ide. — The school is near the house."
+            },
+            {
+              "kind": "speech",
+              "text": "You know ಶಾಲೆ (śāle, school). ಮನೆಯ (maneya) links the house to ಹತ್ತಿರ. Say ಮನೆಯ ಹತ್ತಿರ as one place phrase."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar lens: far from the house",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಶಾಲೆ ಮನೆಯಿಂದ ದೂರ ಇದೆ. śāle maneyinda dūra ide. — The school is far from the house."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮನೆಯಿಂದ (maneyinda) means “from the house”; its -ಇಂದ is the same source marker you met in ಬೆಂಗಳೂರಿನಿಂದ. Do not put ಮನೆಯ in this far-from line. Listen to near and far once more; answer aloud which one means “far from the house”."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "input",
+          "title": "You'll want to know: inside the house",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹಕ್ಕಿ ಮನೆಯೊಳಗೆ ಇದೆ. hakki maneyoḷage ide. — The bird is inside the house."
+            },
+            {
+              "kind": "speech",
+              "text": "Here ಒಳಗೆ (oḷage) means “inside”. In this fixed place phrase it joins ಮನೆಯ as ಮನೆಯೊಳಗೆ. Answer aloud: is the bird on the tree, under the tree, or inside the house?"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You heard ಒಳಗೆ earlier in ಒಳಗೆ ಬನ್ನಿ (“please come in”). It is native Dravidian for “inside”; DEDR 698 also lists Tamil uḷ."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice: three house relations",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "The school is near the house; now far from the house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: The school is near the house; now far from the house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "The bird is inside the house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: The bird is inside the house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the line that puts the bird under the tree.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the line that puts the bird **under** the tree.]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "writing",
+          "title": "Writing: three house phrases",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ಮನೆಯ ಹತ್ತಿರ, ಮನೆಯಿಂದ ದೂರ, and ಮನೆಯೊಳಗೆ from memory; check each against the printed examples.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ಮನೆಯ ಹತ್ತಿರ**, **ಮನೆಯಿಂದ ದೂರ**, and **ಮನೆಯೊಳಗೆ** from memory; check each against the printed examples.]"
+            }
+          ]
+        },
+        {
+          "index": 7,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name the five places: near, far, on, under, inside. For each, say the complete phrase with its tree or house reference. That is what you will retrieve later; isolated words are not enough."
             }
           ]
         }

@@ -103,9 +103,10 @@ Sources checked 2026-11-04:
 
 ### A1 location-and-movement bridge source plan (#19319)
 
-The A1 inventory still marks `KA-A1-POST-02` and `KA-A1-POST-03` uncovered,
-but its claim that no spatial relator occurs in the corpus is stale. The
-curriculum extension files declare **pre-A1** for chapter 100's **ಹತ್ತಿರ**
+The #19319 A1 inventory mapped `KA-A1-POST-03` to its taught to/from
+contrast but left `KA-A1-POST-02` uncovered. The earlier claim that no spatial relator
+occurs in the corpus was stale. The curriculum extension files declare
+**pre-A1** for chapter 100's **ಹತ್ತಿರ**
 (*hattira*, near), chapter 107's **ಮೇಲೆ** (*mēle*, above/on top), and chapter
 108's **ಕೆಳಗೆ** (*keḷage*, below). That declaration is not the book filter:
 `lessonsUpToLevel` derives the effective level from the owning spine node.
@@ -134,19 +135,39 @@ inventory point covered only after an assessed composition path genuinely
 supports the whole point; the wider near/far/on/under/inside and
 towards/away demands must remain explicit if a bounded tranche teaches less.
 
-The first bounded delivery within this issue will close **movement
+The first bounded delivery, merged in #19325, closed **movement
 towards/away** (`KA-A1-POST-03`) only. After the existing chapter 108 road and
-location words, an A1 lesson can introduce the destination form **ಶಾಲೆಗೆ**
+location words, an A1 lesson introduced the destination form **ಶಾಲೆಗೆ**
 (*śālege*, to school) in **ನಾನು ಶಾಲೆಗೆ ಹೋಗುತ್ತೇನೆ** (*nānu śālege
 hōguttēne*, I go to school), a deliberately shortened teaching frame from
-the NITI Aayog sentence above. A later retrieval can contrast that destination
+the NITI Aayog sentence above. Later retrieval contrasts that destination
 with chapter 103's already-taught **ಬೆಂಗಳೂರಿನಿಂದ** (*Beṅgaḷūrininda*, from
 Bengaluru) and **ನಾನು ಬೆಂಗಳೂರಿನಿಂದ ಬಂದಿದ್ದೇನೆ** (*nānu
 Beṅgaḷūrininda bandiddēne*, I am from Bengaluru). This makes the two
 directions visible without claiming that every use of the dative or ablative
-has been taught. The relative-position point (`KA-A1-POST-02`) stays uncovered
-until separate assessed noun-plus-relator compositions genuinely cover its
-range; a near-word drill alone cannot close it.
+has been taught. The relative-position point (`KA-A1-POST-02`) stayed
+uncovered in that delivery: a near-word drill alone could not close it.
+
+For that remaining point, [Zydenbos, *A Manual of Modern Kannada*, lesson
+8](https://hasp.ub.uni-heidelberg.de/catalog/view/736/1242/90904) explains
+the genitive-plus-postposition frame for precise location and attests a bird
+on and under a tree and a person inside and outside a house. The previously
+cited UIDAI phrase independently anchors a named-place **ಹತ್ತಿರ**. A
+[Press Information Bureau Kannada transcript](https://www.pib.gov.in/PressReleasePage.aspx?PRID=1510958&lang=2&reg=48)
+describes a school as **ಮನೆಯಿಂದ** (*maneyinda*, from the house) five kilometres
+**ದೂರ** (*dūra*, far), supporting a distinct source-plus-distance construction.
+These are form evidence, not permission to jump straight to a five-way exam probe:
+**ಮರ** (tree), **ಹಕ್ಕಿ** (bird), and **ಮನೆ** (house) are already introduced,
+but **ಒಳಗೆ** (inside) had no A1 lesson, and **ದೂರ** (far) uses a different
+**-ಇಂದ** source form in the attested sentence. The #19321 extension introduces
+inside in a short place lesson after a separate on/under step; both lessons
+assess complete tree- or house-referenced phrases within 240 seconds each.
+Its three-atom probe covers the bounded five-relation task, not productive
+spatial grammar for arbitrary nouns or external exam readiness. The
+school-near-house and bird-inside-house teaching sentences are editorial
+minimal substitutions across the attested forms, not quotations from those
+sources or qualified Kannada review; that separate review is tracked in
+[#19335](https://github.com/adhithyan15/coding-adventures/issues/19335).
 
 ### B2 content-inventory source plan
 

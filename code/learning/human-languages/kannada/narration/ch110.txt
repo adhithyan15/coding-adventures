@@ -1,8 +1,8 @@
 Kannada, chapter 110: Market, Beach, Garden, Corner, Turn.
-5 lessons. All 5 can be done entirely by ear.
+7 lessons. All 7 can be done by ear. Of those 7, 2 have a part that needs your eyes or your hands; those parts wait until you have stopped.
 
 
-Lesson 1 of 5.
+Lesson 1 of 7.
 ಸಂತೆ (sante) — a market.
 
 Warm-up.
@@ -36,7 +36,7 @@ Wrap-up Recall.
 What does ಸಂತೆ (sante) mean? ("A market".) Say it once more.
 
 
-Lesson 2 of 5.
+Lesson 2 of 7.
 ಕಡಲತೀರ (kaḍalatīra) — a beach.
 
 Warm-up.
@@ -68,7 +68,7 @@ Wrap-up Recall.
 What does ಕಡಲತೀರ (kaḍalatīra) mean? ("A beach".) Say it once more.
 
 
-Lesson 3 of 5.
+Lesson 3 of 7.
 ತೋಟ (tōṭa) — a garden.
 
 Warm-up.
@@ -100,7 +100,7 @@ Wrap-up Recall.
 What does ತೋಟ (tōṭa) mean? ("A garden".) Say it once more.
 
 
-Lesson 4 of 5.
+Lesson 4 of 7.
 ಮೂಲೆ (mūle) — a corner.
 
 Warm-up.
@@ -132,7 +132,7 @@ Wrap-up Recall.
 What does ಮೂಲೆ (mūle) mean? ("A corner".) Say it once more.
 
 
-Lesson 5 of 5.
+Lesson 5 of 7.
 ತಿರುವು (tiruvu) — a turn, a bend.
 
 Warm-up.
@@ -162,3 +162,82 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 What does ತಿರುವು (tiruvu) mean? ("A turn, a bend".) Say it once more.
+
+
+Lesson 6 of 7.
+ಮರದ ಮೇಲೆ / ಮರದ ಕೆಳಗೆ — on or under the tree.
+
+Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing: the place phrases.
+
+Warm-up.
+[pause 2 seconds]
+Recall ಮರ (mara, tree) and ಹಕ್ಕಿ (hakki, bird). Say ಮೇಲೆ (mēle, on top), then ಕೆಳಗೆ (keḷage, under). You know all four words already.
+
+You'll want to know: on the tree.
+Listen once, then say the line after the pause:
+ಮರದ ಮೇಲೆ ಹಕ್ಕಿ ಇದೆ. marada mēle hakki ide. — The bird is on the tree.
+ಮರದ (marada) means “of the tree” here. It names what ಮೇಲೆ is relative to. Keep ಮರದ ಮೇಲೆ together as “on the tree”; ಹಕ್ಕಿ ಇದೆ says that the bird is there. This one frame does not teach every Kannada noun ending.
+
+Grammar lens: under the tree.
+ಮರದ ಕೆಳಗೆ ಹಕ್ಕಿ ಇದೆ. marada keḷage hakki ide. — The bird is under the tree.
+The tree and bird stay the same. Only ಮೇಲೆ changes to ಕೆಳಗೆ. Say both lines aloud, slowly. Listen for the word that tells you where.
+
+Guided Practice: on or under.
+[pause 3 seconds]
+[your turn — say: The bird is on the tree.]
+[pause 8 seconds for the answer]
+[your turn — say: The bird is under the tree.]
+[pause 8 seconds for the answer]
+[your turn — answer: which word puts the bird below? Say it aloud.]
+[pause 8 seconds for the answer]
+
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Writing: the place phrases.
+[once you have stopped driving — write: ಮರದ ಮೇಲೆ and ಮರದ ಕೆಳಗೆ from memory. Check the two final words against the lines above.]
+
+Wrap-up recall.
+[pause 3 seconds]
+Say “on the tree” and “under the tree” once more. You have located one named thing relative to another. Direction words alone do not give that reference.
+
+
+Lesson 7 of 7.
+ಮನೆಯ ಹತ್ತಿರ / ಮನೆಯಿಂದ ದೂರ / ಮನೆಯೊಳಗೆ — The school is near the house — compare near, far and inside.
+
+Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing: three house phrases.
+
+Warm-up.
+[pause 2 seconds]
+Recall the chapter's five place words: market, beach, garden, corner, turn. Say them before checking: ಸಂತೆ (sante), ಕಡಲತೀರ (kaḍalatīra), ತೋಟ (tōṭa), ಮೂಲೆ (mūle), ತಿರುವು (tiruvu). Now say “on the tree” and “under the tree”. Recall ಮನೆ (mane, house), ಹತ್ತಿರ (hattira, near), and ದೂರ (dūra, far). We will keep one house as the reference and change its relation.
+
+You'll want to know: near the house.
+Listen, then say the line after the pause:
+ಶಾಲೆ ಮನೆಯ ಹತ್ತಿರ ಇದೆ. śāle maneya hattira ide. — The school is near the house.
+You know ಶಾಲೆ (śāle, school). ಮನೆಯ (maneya) links the house to ಹತ್ತಿರ. Say ಮನೆಯ ಹತ್ತಿರ as one place phrase.
+
+Grammar lens: far from the house.
+ಶಾಲೆ ಮನೆಯಿಂದ ದೂರ ಇದೆ. śāle maneyinda dūra ide. — The school is far from the house.
+ಮನೆಯಿಂದ (maneyinda) means “from the house”; its -ಇಂದ is the same source marker you met in ಬೆಂಗಳೂರಿನಿಂದ. Do not put ಮನೆಯ in this far-from line. Listen to near and far once more; answer aloud which one means “far from the house”.
+
+You'll want to know: inside the house.
+ಹಕ್ಕಿ ಮನೆಯೊಳಗೆ ಇದೆ. hakki maneyoḷage ide. — The bird is inside the house.
+Here ಒಳಗೆ (oḷage) means “inside”. In this fixed place phrase it joins ಮನೆಯ as ಮನೆಯೊಳಗೆ. Answer aloud: is the bird on the tree, under the tree, or inside the house?
+
+The word, taken apart.
+You heard ಒಳಗೆ earlier in ಒಳಗೆ ಬನ್ನಿ (“please come in”). It is native Dravidian for “inside”; DEDR 698 also lists Tamil uḷ.
+
+Guided Practice: three house relations.
+[pause 3 seconds]
+[your turn — say: The school is near the house; now far from the house.]
+[pause 8 seconds for the answer]
+[your turn — say: The bird is inside the house.]
+[pause 8 seconds for the answer]
+[your turn — recall: say the line that puts the bird under the tree.]
+[pause 8 seconds for the answer]
+
+[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
+Writing: three house phrases.
+[once you have stopped driving — write: ಮನೆಯ ಹತ್ತಿರ, ಮನೆಯಿಂದ ದೂರ, and ಮನೆಯೊಳಗೆ from memory; check each against the printed examples.]
+
+Wrap-up recall.
+[pause 3 seconds]
+Name the five places: near, far, on, under, inside. For each, say the complete phrase with its tree or house reference. That is what you will retrieve later; isolated words are not enough.
