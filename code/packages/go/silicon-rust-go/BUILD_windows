@@ -1,1 +1,5 @@
-cargo build --manifest-path ../../rust/Cargo.toml -p silicon-rust-cgo --release && go test ./...
+# Windows: cgo needs MinGW-w64 gcc, so tools\run-tests.ps1 builds the Rust
+# silicon-rust-cgo staticlib for x86_64-pc-windows-gnu, puts MinGW gcc on PATH and
+# runs `go test ./... -v -cover` (see code\scripts\build-conduit-capi-windows-gnu.ps1).
+# build-tool: deps=rust/silicon-rust-cgo
+powershell -NoProfile -ExecutionPolicy Bypass -File tools\run-tests.ps1

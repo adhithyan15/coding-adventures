@@ -1475,6 +1475,7 @@ type RunningService struct {
 	Address string
 	Port    int
 	cmd     *exec.Cmd
+	tree    *processTree
 	done    chan error
 	log     *os.File
 }
@@ -1512,6 +1513,7 @@ func startServiceSubject(subject PreparedSubject, subjectDir string) (*RunningSe
 	cmd.Dir = workingDir
 	cmd.Stdout = logFile
 	cmd.Stderr = logFile
+	configureProcessTree(cmd)
 	if err := cmd.Start(); err != nil {
 		_ = logFile.Close()
 		return nil, err
@@ -1521,6 +1523,7 @@ func startServiceSubject(subject PreparedSubject, subjectDir string) (*RunningSe
 		Address: address,
 		Port:    port,
 		cmd:     cmd,
+		tree:    attachProcessTree(cmd),
 		done:    make(chan error, 1),
 		log:     logFile,
 	}
@@ -1538,18 +1541,25 @@ func (s *RunningService) Stop() error {
 	if s == nil || s.cmd == nil {
 		return nil
 	}
+	// The service runs through a shell, so it is stopped together with everything it
+	// started: killing only the shell leaves the real server running as an orphan that
+	// holds the service log open (on Windows that also blocks deleting the directory).
 	var waitErr error
 	select {
 	case waitErr = <-s.done:
 	default:
 		if s.cmd.Process != nil {
-			if err := s.cmd.Process.Kill(); err != nil && !errors.Is(err, os.ErrProcessDone) {
+			if err := s.tree.Kill(); err != nil && !errors.Is(err, os.ErrProcessDone) {
+				s.tree.Close()
 				_ = s.log.Close()
 				return err
 			}
 		}
 		waitErr = <-s.done
 	}
+	// The shell may have exited while its child kept running; clean up any survivor.
+	_ = s.tree.Kill()
+	s.tree.Close()
 	if s.log != nil {
 		_, _ = fmt.Fprintf(s.log, "\nservice_exit: %v\n", waitErr)
 		if err := s.log.Close(); err != nil {
