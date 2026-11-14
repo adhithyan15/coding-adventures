@@ -1728,6 +1728,17 @@ vacuous or ambiguous, the note says which reading is implemented.
     `inout` parameter names and the `post_slot`), tested here, for the v1 corpus profile to
     emit under `ops.<op>`. VER04i is not edited: no value encoding changes, because a result
     is encoded as its declared type.
+11. **An `ensures` block must be able to discriminate (W0601).** The post-state of an
+    `inout` parameter is reachable only through `result`, so a block in which no row mentions
+    `result` (`ensures noop: len(buf) == len(buf)`) is a function of the pre-state alone: it
+    cannot fail for any subject, yet it would count as `postcondition_rows`. The checker
+    refuses it with W0601 ("vacuous contract", as for a `vectors` table that calls no
+    operation). The rule is syntactic: a row such as `result == result` still passes it.
+12. **A host return is never discarded.** Where a slot has no host-returned component (S1,
+    S2, and S3/S4 with `h = 0`) the adapter binds the host's return to `()`: `let () = call`
+    for a plain slot, `Ok(())` / `Some(())` for a `Result` slot, so a host that returns a
+    value (a count) or whose `Ok` carries data fails to compile instead of being ignored. A
+    host `Result` that returns `Err` is mapped to its Warrant case, never read as success.
 
 ## 5. Cross-cutting evidence and portability rules
 
@@ -2079,6 +2090,9 @@ coordinator decision above is listed in the S0 pull request for owner override.
   generator does not yet emit WX-D1 forms; the corpus requirement of 4.9 provided as a
   descriptor function because the corpus compiler has no v1 profile; the rule-order sentence of
   4.2 recorded as vacuous. No rule of 4.2 to 4.9 changes.
+- Review fixes (2026-11-14), section 4.13 items 11 and 12: an `ensures` block with no row that
+  mentions `result` is W0601; the host return of a slot with no returned component is typed
+  `()` and never discarded.
 
 - Amendment with VER04m (2026-11-14): section 4.3 admits `inout List<R>` for an admissible
   record `R` (tuples stay inadmissible); section 4.6 adds the host forms `slice-of:struct:`,
