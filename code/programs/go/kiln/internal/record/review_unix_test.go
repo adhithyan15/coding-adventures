@@ -56,8 +56,9 @@ func TestPathHelpers(t *testing.T) {
 	if pathOf([]string{"A=1"}) != "" {
 		t.Fatal("found a PATH that is not there")
 	}
-	got := withPathEnv([]string{"A=1", "PATH=/a", "PATHEXT=x", "PATH=/b"}, "/safe")
-	if strings.Join(got, ",") != "A=1,PATHEXT=x,PATH=/safe" {
+	got := childEnv([]string{"A=1", "PATH=/a", "PATHEXT=x", "PATH=/b", "LD_PRELOAD=/x", "LD_DEBUG=all", "GCONV_PATH=/g", "LOCPATH=/l", "LD_LIBRARY_PATH=/z"},
+		"/safe", []string{"LD_LIBRARY_PATH=/ok"})
+	if strings.Join(got, ",") != "A=1,PATHEXT=x,PATH=/safe,LD_LIBRARY_PATH=/ok" {
 		t.Fatal(got)
 	}
 }

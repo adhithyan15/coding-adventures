@@ -49,6 +49,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -85,6 +86,9 @@ type ToolsFile struct {
 	Git    string `json:"git"`
 	Strace string `json:"strace"`
 	Path   string `json:"path"`
+	// LoaderEnv are the validated dynamic-loader entries ("NAME=value") the
+	// build tool was started with; usually empty.
+	LoaderEnv []string `json:"loader_env"`
 }
 
 // ToolRun is one start of the build tool.
@@ -212,8 +216,25 @@ func Prepare(o Options) (*PrepareResult, error) {
 	if err != nil {
 		return nil, err
 	}
-	// Every host-side Git call runs the one git resolved above, by path.
-	src := source.NewGitAt(o.Root, git.Path, safe.String())
+	// The dynamic loader and C library variables (M3): a library planted in the
+	// checkout must not be loaded by anything the recorder starts.
+	loader, loaderDirs, err := LoaderEnv(o.Environ, append(append([]Region{}, early...), Region{"the record directory", o.Dir}))
+	if err != nil {
+		return nil, err
+	}
+	xdg := getenv("XDG_CONFIG_HOME")
+	if xdg != "" && !filepath.IsAbs(xdg) {
+		return nil, fmt.Errorf("XDG_CONFIG_HOME %q is not an absolute path", printable(xdg))
+	}
+	// Every host-side Git call runs the one git resolved above, by path, with an
+	// ALLOWLIST environment: HOME, the validated PATH and XDG_CONFIG_HOME, and
+	// the fixed hardening source.NewGitAt adds. Nothing else of the process
+	// environment reaches git.
+	gitEnv := []string{"HOME=" + home, "PATH=" + safe.String()}
+	if xdg != "" {
+		gitEnv = append(gitEnv, "XDG_CONFIG_HOME="+xdg)
+	}
+	src := source.NewGitAt(o.Root, git.Path, gitEnv)
 
 	// 2. The disk is the commit, and HEAD is the commit GitHub is running.
 	vt, err := VerifyTreeWith(src, o.Root, "")
@@ -251,7 +272,7 @@ func Prepare(o Options) (*PrepareResult, error) {
 	w := &sealWriter{pre: pre, sums: map[string]string{}}
 
 	// 5. Graph, steps and plan, by the out-of-tree build tool.
-	toolEnv := withPathEnv(envscrub.Scrub(o.Environ), safe.String())
+	toolEnv := childEnv(envscrub.Scrub(o.Environ), safe.String(), loader)
 	graphPath, stepsPath, planPath := filepath.Join(pre, "graph.json"), filepath.Join(pre, "steps.json"), filepath.Join(pre, "build-plan.json")
 	if err := o.RunTool(ToolRun{Path: bt.Path, Dir: o.Dir, Env: toolEnv, Timeout: ToolTimeout, Args: GraphArgs(o.Root, graphPath, stepsPath)}); err != nil {
 		return nil, fmt.Errorf("build tool (graph and steps export): %w", err)
@@ -358,9 +379,9 @@ func Prepare(o Options) (*PrepareResult, error) {
 	}
 	cfg, err := BuildSandboxConfig(ConfigInput{
 		Root: o.Root, Home: home, Tmpdir: o.Tmpdir, KilnExe: kiln.Path,
-		XDGConfigHome: getenv("XDG_CONFIG_HOME"), Roots: traced.HostRoots(), EnvByAction: envByAction,
+		XDGConfigHome: xdg, Roots: traced.HostRoots(), EnvByAction: envByAction,
 		Private: privateRegions(o, kiln.Path, bt.Path), PrivateState: append(
-			[]Region{{"the strace binary", strace.Path}, {"the git binary", git.Path}}, safe.Regions()...),
+			[]Region{{"the strace binary", strace.Path}, {"the git binary", git.Path}}, append(safe.Regions(), loaderDirs...)...),
 	})
 	if err != nil {
 		return nil, err
@@ -413,7 +434,7 @@ func Prepare(o Options) (*PrepareResult, error) {
 	// The programs the recorder runs, by absolute path, and the PATH it passes:
 	// `kiln record step` and `collect` use exactly these and never look
 	// anything up (decision P11).
-	toolsBytes, err := marshalJSON(ToolsFile{Schema: ToolsSchema, Git: git.Path, Strace: strace.Path, Path: safe.String()})
+	toolsBytes, err := marshalJSON(ToolsFile{Schema: ToolsSchema, Git: git.Path, Strace: strace.Path, Path: safe.String(), LoaderEnv: nonNil(loader)})
 	if err != nil {
 		return nil, err
 	}
@@ -654,8 +675,12 @@ func (w *sealWriter) seal() error {
 		return err
 	}
 	if err := w.readOnly(); err != nil {
-		// A directory that is not sealed must not look sealed.
-		os.Remove(filepath.Join(w.pre, "SEALED"))
+		// A directory that is not sealed must not look sealed. Directories that
+		// were already made 0555 must be writable again for the remove to work.
+		w.writable()
+		if rerr := os.Remove(filepath.Join(w.pre, "SEALED")); rerr != nil {
+			return errors.Join(err, fmt.Errorf("and SEALED could not be removed: %w", rerr))
+		}
 		return err
 	}
 	return nil
@@ -683,6 +708,17 @@ func (w *sealWriter) checkContents() error {
 			if _, ok := w.sums[rel]; !ok {
 				return fmt.Errorf("pre/%s is not one of the files this run wrote", rel)
 			}
+		}
+		return nil
+	})
+}
+
+// writable undoes readOnly's directory modes (best effort, deepest last is not
+// needed: parents first so children can be reached).
+func (w *sealWriter) writable() {
+	filepath.WalkDir(w.pre, func(p string, d os.DirEntry, err error) error {
+		if err == nil && d.IsDir() {
+			os.Chmod(p, 0o700)
 		}
 		return nil
 	})
@@ -765,6 +801,7 @@ func straceVersion(p string) (string, error) {
 	defer cancel()
 	cmd := exec.CommandContext(ctx, p, "--version")
 	cmd.Env = []string{"LANG=C", "PATH=/usr/bin:/bin"}
+	cmd.Dir = string(os.PathSeparator) // never the checkout
 	cmd.WaitDelay = 10 * time.Second
 	var out capBuffer
 	cmd.Stdout = &out

@@ -971,7 +971,9 @@ different `st_dev` is skipped only when `/proc/self/mountinfo` lists it as a
 mount point (the bind is non-recursive); if mountinfo cannot be read, or does not
 list it, it is scanned like any other, so the scan fails closed. A directory the
 scan cannot list is skipped only when this process also lacks search permission
-on it (a step is the same user and cannot reach anything in it); a directory with
+on it, judged by the effective uid, gid and supplementary groups against the
+mode bits and confirmed by `access(2)`, unknown meaning searchable (a step is the
+same user and cannot reach anything in it); a directory with
 `--x` and no `r` hides its names but not a socket at a known name, so it fails the
 scan, as does any other error. The scan of the sandbox's own view (the in-sandbox
 probe, design step 8) needs the supervisor and `strace`, so it is **2b-2**; it is
@@ -1056,10 +1058,36 @@ would be run by `prepare` itself. So:
   `tmpdir` or the record directory; it also stays out of the state roots (P9).
   The build tool is started with a scrubbed environment whose `PATH` is exactly
   that validated value. The build tool's own code is not changed.
-- `pre/tools.json` (`kiln-record-tools/1`) records the absolute `git`, `strace`
-  and the `PATH` string.
+- **The dynamic loader (M3).** The process environment can steer the loader into
+  a library planted in the checkout (`LD_PRELOAD`, `LD_AUDIT`, an `LD_LIBRARY_PATH`
+  with an empty entry, which means the working directory, `GCONV_PATH`,
+  `LOCPATH`, `TZDIR`...). So: the pinned git gets an **allowlist** environment
+  and nothing else of the process's (`HOME`, the validated `PATH`, the validated
+  `XDG_CONFIG_HOME`, and fixed `GIT_CONFIG_NOSYSTEM`, `GIT_CONFIG_SYSTEM` and
+  `GIT_CONFIG_GLOBAL` all `/dev/null`, `GIT_OPTIONAL_LOCKS`,
+  `GIT_TERMINAL_PROMPT`, `GIT_NO_REPLACE_OBJECTS`, `GIT_NO_LAZY_FETCH`,
+  `LC_ALL=C`); no global configuration is read because nothing Kiln asks git needs
+  one, and a git too old for `GIT_CONFIG_GLOBAL` still reads files the recorder
+  keeps unwritable (P9). The build tool's environment is the scrubbed process
+  environment without `PATH`, without every `LD_*`, `GCONV_PATH` and `LOCPATH`,
+  then the validated `PATH` and the validated loader entries: `LD_PRELOAD` and
+  `LD_AUDIT` set and non-empty refuse `prepare`; `LD_LIBRARY_PATH` is validated
+  like `PATH` (no empty or relative entry, none overlapping the checkout, `tmpdir`
+  or record directory, symlinks resolved through the deepest existing ancestor);
+  `GCONV_PATH` and `LOCPATH` are kept only if absolute and clear of those places,
+  else dropped; any other `LD_*` is dropped. The kept entries are also kept out of
+  the state roots. Every host-side subprocess starts in a directory a step cannot
+  write (the build tool in the record directory, `git` and `strace` in `/`), with
+  absolute paths throughout; the build tool takes `-root` and does not depend on
+  its working directory.
+- `pre/tools.json` (`kiln-record-tools/1`) records the absolute `git`, `strace`,
+  the `PATH` string and the validated loader entries (`loader_env`).
 - **2b-2.** `kiln record step` and `collect` use only the recorded git path and
   the recorded `PATH`, and never look a program up on `PATH`.
+- **2b-2.** `record step` refuses to run unless its inherited `PATH` and loader
+  variables equal `pre/tools.json`'s (`path`, `loader_env`; the build tool's
+  wrapper is started by the build tool, which got exactly those). The workflow
+  does not launch the build tool through anything that changes them.
 - **2b-2.** `step` and `collect` re-verify `pre/` against `SEALED` and the binding
   id before using any file in it. The `0444`/`0555` modes are cosmetic; integrity
   comes only from the files being unreachable from the sandbox.

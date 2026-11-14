@@ -24,20 +24,45 @@ import (
 // contents, never from Revision, so this only affects explanations.
 type Git struct {
 	dir string
-	// bin and path pin the program and the PATH it runs with. Empty means the
-	// default: look "git" up on the process PATH.
-	bin, path string
-	tm        treeModes // lazily loaded index modes, see Describe
+	// bin and env pin the program and its WHOLE environment (before the fixed
+	// hardening entries). Empty bin means the default: look "git" up on the
+	// process PATH and run it with the process environment, minus credentials
+	// and GIT_*.
+	bin string
+	env []string
+	tm  treeModes // lazily loaded index modes, see Describe
 }
 
 // NewGit returns a Source for the work tree at dir.
 func NewGit(dir string) *Git { return &Git{dir: dir} }
 
 // NewGitAt is NewGit with the git program fixed to bin (an absolute path) and
-// git's PATH fixed to path. The recorder uses it: a lookup on the process PATH
-// can find a `git` a BUILD planted in a directory the checkout is bound into,
-// and run it, unsandboxed, with the recorder's privileges (KILN04 4.8, H1).
-func NewGitAt(dir, bin, path string) *Git { return &Git{dir: dir, bin: bin, path: path} }
+// its environment fixed to exactly env plus the entries of pinnedEnv. The
+// recorder uses it (KILN04 4.8, H1 and M3): a lookup on the process PATH can find
+// a `git` a BUILD planted in a directory the checkout is bound into, and the
+// process environment can steer the dynamic loader (LD_PRELOAD, LD_LIBRARY_PATH
+// with an empty entry, GCONV_PATH, LOCPATH...) into a library planted there; git
+// would then run it, unsandboxed, with the recorder's privileges. An ALLOWLIST
+// closes every such variable at once, including ones nobody has thought of. The
+// child also starts in "/", not in the checkout (dir is passed with -C).
+func NewGitAt(dir, bin string, env []string) *Git {
+	return &Git{dir: dir, bin: bin, env: append([]string(nil), env...)}
+}
+
+// pinnedEnv are the fixed entries every pinned git gets, after the caller's.
+//
+//   - GIT_CONFIG_NOSYSTEM and GIT_CONFIG_SYSTEM: no system configuration (two
+//     spellings, for old and new git);
+//   - GIT_CONFIG_GLOBAL=/dev/null: no global configuration either. Nothing Kiln
+//     asks git needs one, and a user-level file is exactly the kind of input that
+//     can change what a command means; a git too old to know the variable still
+//     reads $HOME and $XDG_CONFIG_HOME, which the recorder keeps unwritable from
+//     the sandbox (sandboxcfg.go, checkGitConfigUnwritable);
+//   - the rest are the fixed hardening of gitEnv.
+func pinnedEnv() []string {
+	return []string{"GIT_CONFIG_NOSYSTEM=1", "GIT_CONFIG_SYSTEM=" + os.DevNull, "GIT_CONFIG_GLOBAL=" + os.DevNull,
+		"GIT_OPTIONAL_LOCKS=0", "GIT_TERMINAL_PROMPT=0", "LC_ALL=C", "GIT_NO_REPLACE_OBJECTS=1", "GIT_NO_LAZY_FETCH=1"}
+}
 
 // run executes git in the work tree and returns stdout.
 func (g *Git) run(args ...string) ([]byte, error) {
@@ -45,12 +70,14 @@ func (g *Git) run(args ...string) ([]byte, error) {
 	full = append(full, args...)
 	prog := "git"
 	env := gitEnv(os.Environ())
+	dir := ""
 	if g.bin != "" {
 		prog = g.bin
-		env = withPath(env, g.path)
+		env = append(append([]string(nil), g.env...), pinnedEnv()...)
+		dir = string(os.PathSeparator) // never the checkout: see NewGitAt
 	}
 	cmd := exec.Command(prog, full...)
-	cmd.Env = env
+	cmd.Env, cmd.Dir = env, dir
 	var out, errb bytes.Buffer
 	cmd.Stdout, cmd.Stderr = &out, &errb
 	if err := cmd.Run(); err != nil {
@@ -66,17 +93,6 @@ func (g *Git) run(args ...string) ([]byte, error) {
 // each element of args is one argv element. A non-zero exit is an error that
 // wraps the *exec.ExitError.
 func (g *Git) Output(args ...string) ([]byte, error) { return g.run(args...) }
-
-// withPath replaces PATH in env (or adds it).
-func withPath(env []string, path string) []string {
-	out := make([]string, 0, len(env)+1)
-	for _, e := range env {
-		if envscrub.EntryName(e) != "PATH" {
-			out = append(out, e)
-		}
-	}
-	return append(out, "PATH="+path)
-}
 
 // gitHardening are options placed before every subcommand.  None is needed
 // for correctness; each closes a way a repository's own configuration could
