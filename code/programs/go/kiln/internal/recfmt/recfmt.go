@@ -357,6 +357,10 @@ func checkPath(p string) error {
 	return key.ValidatePath(p)
 }
 
+// CheckPath is the path rule of every record list, for callers that must hold a
+// path from another source (the build plan's rel_paths) to the same rule.
+func CheckPath(p string) error { return checkPath(p) }
+
 func textList(what string, l []string, max, maxLen int) error {
 	if len(l) > max {
 		return fmt.Errorf("%s has %d entries, limit %d", what, len(l), max)
