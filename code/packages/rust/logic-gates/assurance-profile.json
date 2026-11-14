@@ -1,0 +1,19 @@
+{
+  "schema": "warrant-assurance-profile-v1",
+  "name": "boolean-logic",
+  "kind": "transform",
+  "rows": {
+    "326": {
+      "applicability": "excluded",
+      "reason": "no keys: the package takes and generates no key material; operands are single bits and short bit vectors, not key bytes of a fixed strength"
+    },
+    "327": {
+      "applicability": "excluded",
+      "reason": "boolean logic: package implements logic gates and combinational blocks over single-bit values only, no cipher, hash or MAC"
+    },
+    "407": {
+      "applicability": "excluded",
+      "reason": "bounded work per call: a gate is a fixed number of CMOS evaluations, an n-input gate or multiplexer is linear in its inputs, and a decoder or demultiplexer produces 2^n lines for at most 16 inputs (a width cap enforced by a panic); no other input-dependent iteration"
+    }
+  }
+}

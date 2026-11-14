@@ -421,6 +421,7 @@
   ],
   "package": "rust/wasm-leb128",
   "profile": "varint-codec",
+  "profile_sha256": "dd06097e1ba879ef8797587ecbe37192be7391eadc8a3b84202c58e1eefc01ef",
   "public_symbols_without_claims": [],
   "rungs": {
     "E0": "pass",

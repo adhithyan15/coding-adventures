@@ -1,7 +1,7 @@
 {
   "schema_version": "ver24-effect-cert-v1",
   "package": "rust/ca-assurance-report",
-  "source_digest": "2bd7bfb5d562f2ca5df9c487d4f1494e887f5e948cdb32a918e152bdb4762815",
+  "source_digest": "d0648b1842f4846ff65dbe239016f62b7670211152cf7436798175eb7417a580",
   "manifest_digest": "76b295ae5d9c1a4663b58384c8a19d9d1080c7d11a87a709f6bd152a89ad20ca",
   "declared_effects": [
     "fs:read:*",
@@ -26,7 +26,19 @@
     },
     {
       "name": "generate_package_report",
-      "signature": "pub fn generate_package_report( package: &str, version: &str, commit_sha: &str, registry: &WeaknessRegistry, evidence: &Evidence, profile: AuditProfile, ) -> Result<AssuranceReport, MatrixError>",
+      "signature": "pub fn generate_package_report( package: &str, version: &str, commit_sha: &str, registry: &WeaknessRegistry, evidence: &Evidence, ) -> Result<AssuranceReport, MatrixError>",
+      "effects": [
+        "fs:read:*",
+        "fs:list:*",
+        "fs:write:*",
+        "stdout:write:*",
+        "env:read:*",
+        "proc:signal:*"
+      ]
+    },
+    {
+      "name": "verify_rederivation",
+      "signature": "pub fn verify_rederivation( report: &AssuranceReport, evidence: &Evidence, registry: &WeaknessRegistry, ) -> Result<(), EvidenceCheckError>",
       "effects": [
         "fs:read:*",
         "fs:list:*",

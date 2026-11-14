@@ -211,6 +211,7 @@
   ],
   "package": "rust/lzw",
   "profile": "lossless-compression",
+  "profile_sha256": "bbf338224f61bd634921f33ad2a993e024eea85d4e018abea38128789b6aa92e",
   "public_symbols_without_claims": [],
   "rungs": {
     "E0": "pass",

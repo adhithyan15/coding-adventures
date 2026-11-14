@@ -450,6 +450,7 @@
   ],
   "package": "rust/arithmetic",
   "profile": "bit-arithmetic",
+  "profile_sha256": "2a313a37cc6a8f236f32fe0ea55a2a1fa9db016352b0c449ebeb8bce5cd939f3",
   "public_symbols_without_claims": [],
   "rungs": {
     "E0": "pass",

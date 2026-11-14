@@ -1,0 +1,19 @@
+{
+  "schema": "warrant-assurance-profile-v1",
+  "name": "bit-arithmetic",
+  "kind": "transform",
+  "rows": {
+    "326": {
+      "applicability": "excluded",
+      "reason": "no keys: the package takes and generates no key material; operands are bits and bit vectors of the caller's width, not key bytes of a fixed strength"
+    },
+    "327": {
+      "applicability": "excluded",
+      "reason": "bit arithmetic: package implements adders and an arithmetic logic unit over bit vectors only, no cipher, hash or MAC"
+    },
+    "407": {
+      "applicability": "excluded",
+      "reason": "bounded work per call: a half or full adder is a fixed number of gate evaluations, a ripple-carry adder and every ALU operation make a constant number of passes over their operands, linear in the operand length, and the result is exactly as long as the operands (no width-driven allocation); no other input-dependent iteration"
+    }
+  }
+}

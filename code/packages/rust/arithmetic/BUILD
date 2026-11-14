@@ -49,4 +49,4 @@ WARRANT_PROOF_OUT=$PWD/evidence cargo test -q -p coding_adventures_warrant_ir --
 # --allow-unverified: the report still cites `unverified::` static attestations
 # (AST audits no tool re-runs, same rows as gf256, ct-compare, wasm-leb128 and logic-gates).
 # --profile pins the audit profile the report records (see BUILD).
-cargo run -p coding_adventures_ca_assurance_report -- --check assurance_report.json --allow-unverified --profile bit-arithmetic
+cargo run -p coding_adventures_ca_assurance_report -- --check assurance_report.json --allow-unverified --profile bit-arithmetic --profile-kind transform

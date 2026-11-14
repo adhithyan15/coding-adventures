@@ -1,0 +1,19 @@
+{
+  "schema": "warrant-assurance-profile-v1",
+  "name": "varint-codec",
+  "kind": "transform",
+  "rows": {
+    "326": {
+      "applicability": "excluded",
+      "reason": "no keys: the package takes and generates no key material; operands are integers and LEB128 byte strings, not key bytes of a fixed strength"
+    },
+    "327": {
+      "applicability": "excluded",
+      "reason": "integer encoding: package implements LEB128 variable-length integer encoding only, no cipher, hash or MAC"
+    },
+    "407": {
+      "applicability": "excluded",
+      "reason": "bounded work per call: a LEB128 encoder emits at most ceil(64/7) = 10 bytes and a decoder reads at most ceil(max_bits/7) bytes from its offset (10 for the documented widths, max_bits <= 64), one constant-time step per byte; no other input-dependent iteration"
+    }
+  }
+}

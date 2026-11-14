@@ -9,6 +9,7 @@ use std::fmt;
 
 use crate::evidence::DecompressionBounds;
 use crate::json::JsonValue;
+use crate::profile::AuditProfile;
 use crate::registry::{WeaknessClass, WeaknessRegistry};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -164,90 +165,21 @@ pub struct AuditEvidence {
     /// default -- means "not attested", never "no secrets": with no
     /// constant-time evidence either, the CWE-208 row stays open.
     pub no_secret_operand_ids: Vec<String>,
-    /// What kind of package the three attestation rows (CWE-326/327/407)
-    /// describe; see [`AuditProfile`].
+    /// The package's audit profile (`assurance-profile.json`): the wording of
+    /// the three attestation rows (CWE-326/327/407) and what kind of package it
+    /// is; see [`AuditProfile`].  Data supplies sentences; the checks below
+    /// decide whether a declared exclusion may stand.
     pub profile: AuditProfile,
+    /// The Warrant document has at least one operation and every operation
+    /// declares a `steps` bound row.  A declared CWE-407 exclusion ("bounded
+    /// work per call") needs it: a profile cannot call work bounded that the
+    /// document does not bound.
+    pub all_ops_step_bounded: bool,
     /// The CWE-409 (decompression bomb) facts: the operations with an `output`
     /// bound row and the generated evidence that supports or fails to support
     /// them.  Empty -- the default -- means "the document bounds no output",
     /// which excludes CWE-409 only for a profile that does not decompress.
     pub decompression: DecompressionBounds,
-}
-
-/// What the package does, for the rows whose rationale is a static statement
-/// about the package rather than a derived fact.  Those rows already carry the
-/// `unverified::` evidence prefix; this only selects which true sentence they
-/// carry.
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
-pub enum AuditProfile {
-    /// Constant-time comparison / selection primitives (rust/ct-compare).
-    #[default]
-    Comparison,
-    /// Table-driven finite-field arithmetic (rust/gf256).
-    FieldArithmetic,
-    /// A variable-length integer codec (rust/wasm-leb128): bytes in, integers
-    /// out and back, no key material, no cryptography.
-    VarintCodec,
-    /// Pure Boolean logic (rust/logic-gates): logic gates and combinational
-    /// blocks over single-bit values.  No bytes-as-keys, no cryptography.
-    BooleanLogic,
-    /// Adders and an arithmetic logic unit over bit vectors (rust/arithmetic):
-    /// a bit vector of the caller's width in, a bit vector of the same width out.
-    /// No bytes-as-keys, no cryptography.  Distinct from `BooleanLogic`, whose
-    /// sentences say "single-bit values only" and name a 2^n decoder bound, both
-    /// false for an adder over a 16-bit operand.
-    BitArithmetic,
-    /// A lossless compressor and decompressor (rust/lzw): bytes in, bytes out
-    /// and back, an output that can be far larger than the input, no key
-    /// material, no cryptography.  Unlike every other profile this one
-    /// *decompresses hostile input*, so CWE-409 is never excluded for it: the
-    /// row is evidenced by the document's `output`/`heap` bound rows or the
-    /// report cannot be generated (see [`DecompressionBounds`]).
-    LosslessCompression,
-}
-
-impl AuditProfile {
-    /// Does a package with this profile expand attacker-controlled input?
-    /// CWE-409 is then applicable by definition, whatever the document says.
-    pub fn decompresses(self) -> bool {
-        matches!(self, AuditProfile::LosslessCompression)
-    }
-
-    /// The name `--profile` accepts and a report records (`FromStr`'s inverse).
-    /// It is the on-disk spelling, so it must never change for an existing variant.
-    pub fn as_str(self) -> &'static str {
-        match self {
-            AuditProfile::Comparison => "comparison",
-            AuditProfile::FieldArithmetic => "field-arithmetic",
-            AuditProfile::VarintCodec => "varint-codec",
-            AuditProfile::BooleanLogic => "boolean-logic",
-            AuditProfile::BitArithmetic => "bit-arithmetic",
-            AuditProfile::LosslessCompression => "lossless-compression",
-        }
-    }
-}
-
-impl std::fmt::Display for AuditProfile {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.write_str(self.as_str())
-    }
-}
-
-impl std::str::FromStr for AuditProfile {
-    type Err = String;
-    fn from_str(s: &str) -> Result<Self, String> {
-        match s {
-            "comparison" => Ok(AuditProfile::Comparison),
-            "field-arithmetic" => Ok(AuditProfile::FieldArithmetic),
-            "varint-codec" => Ok(AuditProfile::VarintCodec),
-            "boolean-logic" => Ok(AuditProfile::BooleanLogic),
-            "bit-arithmetic" => Ok(AuditProfile::BitArithmetic),
-            "lossless-compression" => Ok(AuditProfile::LosslessCompression),
-            other => Err(format!(
-                "unknown profile `{other}` (comparison | field-arithmetic | varint-codec | boolean-logic | bit-arithmetic | lossless-compression)"
-            )),
-        }
-    }
 }
 
 #[derive(Clone, Debug)]
@@ -328,13 +260,32 @@ pub fn build_weakness_matrix(
 fn cwe_409(class: &WeaknessClass, ctx: &PackageAuditContext) -> Result<WeaknessRow, MatrixError> {
     let d = &ctx.evidence.decompression;
     let applies = ctx.evidence.profile.decompresses() || !d.ops.is_empty();
+    // A profile that declares CWE-409 excluded is claiming the class does not
+    // apply; an `output` row (or, defensively, a decompressor kind) contradicts
+    // the claim, and no wording can outvote the document.
+    if applies && ctx.evidence.profile.row_reason(409).is_some() {
+        return Err(MatrixError::InvalidExclusion(format!(
+            "CWE-409: profile `{}` declares the class excluded, but it applies ({}): the declaration is refused",
+            ctx.evidence.profile.name,
+            if ctx.evidence.profile.decompresses() {
+                "the profile is a decompressor".to_string()
+            } else {
+                format!("the document declares an `output` row for {}", d.ops.join(", "))
+            }
+        )));
+    }
     if !applies {
         return Ok(WeaknessRow {
             cwe: 409,
             name: class.name.clone(),
             status: WeaknessStatus::Excluded,
             approved: None,
-            reason: "pure computation: package implements no decompression or archive decoding routines".into(),
+            reason: ctx
+                .evidence
+                .profile
+                .row_reason(409)
+                .unwrap_or("pure computation: package implements no decompression or archive decoding routines")
+                .into(),
             evidence: vec!["unverified::ast-audit::no-compression-routines".into()],
         });
     }
@@ -363,6 +314,42 @@ fn cwe_409(class: &WeaknessClass, ctx: &PackageAuditContext) -> Result<WeaknessR
         ),
         evidence: d.ids.clone(),
     })
+}
+
+/// The reason sentence of a static attestation row, taken from the profile, but
+/// only when the evidence does not contradict the declaration.
+///
+/// The profile supplies *words*; this function is where the words are held to
+/// the facts, so a data file can never claim more than the evidence allows:
+///
+/// ```text
+///  CWE-326, CWE-327  excluded  <-  no `rand:` capability (key material needs entropy)
+///  CWE-407           excluded  <-  the document has operations, and every one has a `steps` bound row
+/// ```
+fn declared_exclusion(ctx: &PackageAuditContext, cwe: u32) -> Result<String, MatrixError> {
+    let profile = &ctx.evidence.profile;
+    let reason = profile.row_reason(cwe).ok_or_else(|| {
+        MatrixError::MissingEvidence(format!(
+            "profile `{}` declares no CWE-{cwe} row (an audit profile must declare 326, 327 and 407)",
+            profile.name
+        ))
+    })?;
+    let contradiction = match cwe {
+        326 | 327 if ctx.declared_capabilities.iter().any(|c| c.starts_with("rand:")) => {
+            Some("the package declares a `rand:` capability, so it can generate key material")
+        }
+        407 if !ctx.evidence.all_ops_step_bounded => {
+            Some("the Warrant document has an operation with no `steps` bound row, so its work is not declared bounded")
+        }
+        _ => None,
+    };
+    match contradiction {
+        Some(why) => Err(MatrixError::InvalidExclusion(format!(
+            "CWE-{cwe}: profile `{}` declares the class excluded, but {why}",
+            profile.name
+        ))),
+        None => Ok(reason.to_string()),
+    }
 }
 
 fn evaluate_row(
@@ -571,15 +558,7 @@ fn evaluate_row(
                 name: class.name.clone(),
                 status: WeaknessStatus::Excluded,
                 approved: None,
-                reason: match ctx.evidence.profile {
-                    AuditProfile::Comparison => "linear complexity: algorithms operate in strict linear time O(n) independent of input values",
-                    AuditProfile::FieldArithmetic => "constant work per call: every operation is a bounded number of table lookups and arithmetic steps after a one-time 255-iteration table build; no input-dependent iteration",
-                    AuditProfile::VarintCodec => "bounded work per call: a LEB128 encoder emits at most ceil(64/7) = 10 bytes and a decoder reads at most ceil(max_bits/7) bytes from its offset (10 for the documented widths, max_bits <= 64), one constant-time step per byte; no other input-dependent iteration",
-                    AuditProfile::LosslessCompression => "bounded work per call: the encoder performs one dictionary lookup per input byte and the decoder writes each delivered byte once, through a dictionary of at most 65,536 fixed-size entries, delivering at most the documented output cap; no other input-dependent iteration",
-                    AuditProfile::BooleanLogic => "bounded work per call: a gate is a fixed number of CMOS evaluations, an n-input gate or multiplexer is linear in its inputs, and a decoder or demultiplexer produces 2^n lines for at most 16 inputs (a width cap enforced by a panic); no other input-dependent iteration",
-                    AuditProfile::BitArithmetic => "bounded work per call: a half or full adder is a fixed number of gate evaluations, a ripple-carry adder and every ALU operation make a constant number of passes over their operands, linear in the operand length, and the result is exactly as long as the operands (no width-driven allocation); no other input-dependent iteration",
-                }
-                .into(),
+                reason: declared_exclusion(ctx, 407)?,
                 evidence: vec!["unverified::warrant-ir::cost-semantics-linear".into()],
             })
         }
@@ -667,15 +646,7 @@ fn evaluate_row(
                 name: class.name.clone(),
                 status: WeaknessStatus::Excluded,
                 approved: None,
-                reason: match ctx.evidence.profile {
-                    AuditProfile::Comparison => "primitive comparison: package implements constant-time comparison primitives rather than legacy ciphers",
-                    AuditProfile::FieldArithmetic => "field arithmetic: package implements GF(2^8) arithmetic only, no cipher, hash or MAC",
-                    AuditProfile::VarintCodec => "integer encoding: package implements LEB128 variable-length integer encoding only, no cipher, hash or MAC",
-                    AuditProfile::BooleanLogic => "boolean logic: package implements logic gates and combinational blocks over single-bit values only, no cipher, hash or MAC",
-                    AuditProfile::BitArithmetic => "bit arithmetic: package implements adders and an arithmetic logic unit over bit vectors only, no cipher, hash or MAC",
-                    AuditProfile::LosslessCompression => "lossless compression: package implements LZW compression and decompression only, no cipher, hash or MAC",
-                }
-                .into(),
+                reason: declared_exclusion(ctx, 327)?,
                 evidence: vec!["unverified::ast-audit::no-legacy-ciphers".into()],
             })
         }
@@ -685,15 +656,7 @@ fn evaluate_row(
                 name: class.name.clone(),
                 status: WeaknessStatus::Excluded,
                 approved: None,
-                reason: match ctx.evidence.profile {
-                    AuditProfile::Comparison => "arbitrary buffer lengths: comparison functions accept arbitrary slice lengths without fixed sub-strength keys",
-                    AuditProfile::FieldArithmetic => "no keys: the package takes and generates no key material; operands are field elements, not key bytes of a fixed strength",
-                    AuditProfile::VarintCodec => "no keys: the package takes and generates no key material; operands are integers and LEB128 byte strings, not key bytes of a fixed strength",
-                    AuditProfile::BooleanLogic => "no keys: the package takes and generates no key material; operands are single bits and short bit vectors, not key bytes of a fixed strength",
-                    AuditProfile::BitArithmetic => "no keys: the package takes and generates no key material; operands are bits and bit vectors of the caller's width, not key bytes of a fixed strength",
-                    AuditProfile::LosslessCompression => "no keys: the package takes and generates no key material; operands are byte strings to compress and compressed streams, not key bytes of a fixed strength",
-                }
-                .into(),
+                reason: declared_exclusion(ctx, 326)?,
                 evidence: vec!["unverified::type-signatures::unconstrained-slices".into()],
             })
         }

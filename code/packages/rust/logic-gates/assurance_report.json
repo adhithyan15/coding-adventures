@@ -1047,6 +1047,7 @@
   ],
   "package": "rust/logic-gates",
   "profile": "boolean-logic",
+  "profile_sha256": "e6dcd154fb4801acbdfe317068f46d8b0fe15a1b83e71b018d13bfe9490707f9",
   "public_symbols_without_claims": [],
   "rungs": {
     "E0": "pass",
