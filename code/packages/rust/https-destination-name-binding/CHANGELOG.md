@@ -24,3 +24,13 @@
 - Reject every additional case-insensitive Content-Length spelling and every
   Transfer-Encoding field while retaining both complete proofs with
   payload-free failures and redacted Debug output.
+- Bind one exact provider-policy-classified public request line to the complete
+  fixed-body destination proof under a hard-capped complete-head byte ceiling.
+- Encode the exact public request line, Host, Content-Length, and terminating
+  CRLF into caller-owned storage without allocation or partial output on
+  capacity failure; retain but do not write the body.
+- Require a non-copyable exact request-line proof classified by data-driven
+  provider policy as public and query-free; reject every additional field until
+  a later provider/trace-audited credential-release composition exists.
+- Delegate request-line and field serialization to their repository-owned
+  encoders so the composition cannot drift from the owning wire primitives.

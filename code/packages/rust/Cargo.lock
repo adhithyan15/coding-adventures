@@ -7380,6 +7380,7 @@ dependencies = [
  "http1-fixed-request-body",
  "http1-request-header-field",
  "http1-request-host-authority",
+ "http1-request-line",
  "tls-server-identity",
  "tls13-server-name",
  "x509-certificate",
