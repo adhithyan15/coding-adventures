@@ -7397,6 +7397,7 @@ dependencies = [
  "x509-certificate-policy",
  "x509-intermediate-certificate-policy",
  "x509-name-value-policy",
+ "x509-ocsp-reviewed-server-revocation-binding",
  "x509-rsa-algorithm-policy",
  "x509-rsa-constructed-path-signature-routing",
  "x509-rsa-public-key",

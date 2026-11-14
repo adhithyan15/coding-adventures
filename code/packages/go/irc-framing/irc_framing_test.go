@@ -138,3 +138,84 @@ func TestBufferSize(t *testing.T) {
 	f.Feed(data)
 	if f.BufferSize() != len(data) { t.Errorf("expected %d, got %d", len(data), f.BufferSize()) }
 }
+
+// ---------------------------------------------------------------------------
+// SEC-011: a peer that never sends LF must not grow the buffer.
+//
+// The cap is 511 bytes for an unterminated line: 510 content bytes plus a CR
+// whose LF has not arrived yet (RFC 1459 / RFC 2812 section 2.3: 512 bytes
+// including CRLF).  The tests mirror the Rust crate's SEC-011 tests.
+// ---------------------------------------------------------------------------
+
+const sixteenMiB = 16 * 1024 * 1024
+
+func TestSEC011_NoLFInChunksIsBounded(t *testing.T) {
+	f := NewFramer()
+	chunk := bytes.Repeat([]byte("A"), 4096)
+	worst := 0
+	for i := 0; i < sixteenMiB/len(chunk); i++ {
+		f.Feed(chunk)
+		if f.BufferSize() > worst { worst = f.BufferSize() }
+	}
+	if worst > 512 { t.Errorf("buffer grew to %d bytes with no LF", worst) }
+	if len(f.Frames()) != 0 { t.Error("expected no frames") }
+}
+
+func TestSEC011_NoLFInOneFeedIsBounded(t *testing.T) {
+	f := NewFramer()
+	f.Feed(bytes.Repeat([]byte("A"), sixteenMiB))
+	if f.BufferSize() > 512 { t.Errorf("buffer grew to %d", f.BufferSize()) }
+	if len(f.Frames()) != 0 { t.Error("expected no frames") }
+}
+
+func TestSEC011_RecoversAfterFlood(t *testing.T) {
+	// The flooded line is dropped whole, including bytes that arrive after
+	// the cap, up to its LF; the next line frames normally.
+	f := NewFramer()
+	f.Feed(bytes.Repeat([]byte("A"), 4096))
+	f.Feed(bytes.Repeat([]byte("B"), 4096))
+	f.Feed([]byte("tail\r\nNICK alice\r\n"))
+	frames := f.Frames()
+	if len(frames) != 1 || string(frames[0]) != "NICK alice" {
+		t.Fatalf("got %q", frames)
+	}
+	if f.BufferSize() != 0 { t.Errorf("buffer size %d", f.BufferSize()) }
+}
+
+func TestSEC011_PendingLineAtLimitIsKept(t *testing.T) {
+	// 510 content bytes plus a CR is a legal line still waiting for its LF.
+	f := NewFramer()
+	f.Feed(append(bytes.Repeat([]byte("A"), 510), '\r'))
+	if f.BufferSize() != 511 { t.Fatalf("buffer size %d, want 511", f.BufferSize()) }
+	f.Feed([]byte("\n"))
+	frames := f.Frames()
+	if len(frames) != 1 || len(frames[0]) != 510 { t.Fatalf("got %d frames", len(frames)) }
+}
+
+func TestSEC011_PendingLineOverLimitIsDropped(t *testing.T) {
+	f := NewFramer()
+	f.Feed(bytes.Repeat([]byte("A"), 512))
+	if f.BufferSize() != 0 { t.Fatalf("buffer size %d, want 0", f.BufferSize()) }
+	f.Feed([]byte("\r\nPING x\r\n"))
+	frames := f.Frames()
+	if len(frames) != 1 || string(frames[0]) != "PING x" { t.Fatalf("got %q", frames) }
+}
+
+func TestSEC011_CompleteLinesBeforeFloodSurvive(t *testing.T) {
+	f := NewFramer()
+	f.Feed(append([]byte("NICK a\r\n"), bytes.Repeat([]byte("A"), 2000)...))
+	frames := f.Frames()
+	if len(frames) != 1 || string(frames[0]) != "NICK a" { t.Fatalf("got %q", frames) }
+	if f.BufferSize() != 0 { t.Errorf("buffer size %d", f.BufferSize()) }
+}
+
+func TestSEC011_ResetClearsDiscardState(t *testing.T) {
+	// After a flood the framer is skipping to the next LF.  Reset must end
+	// that, or the first line of the next connection would be swallowed.
+	f := NewFramer()
+	f.Feed(bytes.Repeat([]byte("A"), 600))
+	f.Reset()
+	f.Feed([]byte("NICK a\r\n"))
+	frames := f.Frames()
+	if len(frames) != 1 || string(frames[0]) != "NICK a" { t.Fatalf("got %q", frames) }
+}

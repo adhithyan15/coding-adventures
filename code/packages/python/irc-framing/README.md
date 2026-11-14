@@ -43,6 +43,12 @@ Lines exceeding 510 bytes of content (RFC 1459 maximum of 512 including CRLF)
 are silently discarded.  Bare `\n` (LF-only) terminators are also accepted for
 compatibility with simple bots and clients.
 
+The pending (not yet LF-terminated) line is capped at 511 bytes: 510 content
+bytes plus a CR (RFC 1459 and RFC 2812 section 2.3, 512 bytes including CRLF).
+A peer that sends more without an LF has the partial line dropped, and input is
+skipped up to the next LF, so memory stays constant however much is fed
+(SEC-011).  No API change.
+
 ## Specification
 
 See [`../../../specs/irc-framing.md`](../../../specs/irc-framing.md) for the
