@@ -370,15 +370,22 @@ Two consequences:
   is not proven to be outside the init child's tree (an exit is excluded only
   when its parent chain provably ends at a parentless process without passing
   the init child; a missing entry, a cycle or any depth is undecidable and
-  counts), is not provably in the init child's thread group, and has an exit line `killed by SIGKILL` **after the init child's
-  `exit_group` call line** gives `daemon-left` (D19). The boundary is the
+  counts), is not provably in the init child's thread group, and has ANY
+  exit line (killed by any signal, or exited: a daemon may quit on EOF
+  before the namespace's SIGKILL arrives) **after the init child's
+  `exit_group` call line** gives `daemon-left` (D19). A child the step
+  waited for has its exit line printed when strace reaps it, before the
+  parent's `wait4` returns, so it precedes the marker. The boundary is the
   call line, not the init child's `+++ exited +++` line: strace prints
   `exit_group` when the group starts to die, and whether a survivor's line
   falls before or after the init child's own exit line is **left open**
   until a real-strace run settles it (the `daemon-left` subtest of
   `TestSandboxStraceSignals` logs it). With no `exit_group` seen
   (`InitExitLine == 0`: the init child was killed from outside) every such
-  SIGKILL death counts, which fails closed. A child the step SIGKILLed and
+  `SIGKILL` death counts, which fails closed (other exits cannot be placed
+  relative to a marker that is not there). A failed `exit_group` (a result
+  other than `?`, for instance EPERM from a seccomp filter the step installed)
+  does not set the marker. A child the step SIGKILLed and
   did not wait for just before exiting may be flagged too; that race is
   accepted. No timer is needed.
 
@@ -604,7 +611,14 @@ first successful exec of a non-Kiln path is the step.**
   first `exit_group` made after the step's exec by the init child or one of
   its `CLONE_THREAD` threads, 0 if none); `traced.DaemonLeft` applies the
   rule (D19). `--- SIG ---` signal lines are skipped; `+++ killed by SIG
-  +++` is an exit.
+  +++` is an exit. A `--- SIG ---` line on a thread with a `???(` entry
+  pending is still `interleaved` (a SIGKILL has no delivery stop, so a real
+  trace should not show one); a test pins it so a relaxation is deliberate.
+  **Known precision limit.** A harness that SIGKILLs a busy child (a test
+  timeout, say) can leave a handled call unresumed, which is an unknown write
+  set and a void run (`unresumed`). It cannot be relaxed safely: a call killed
+  at entry and a call killed while blocked print identically. It is strictly
+  better than before D19, when every kill was `missing-exit`.
 
 **Addresses.** `socket` needs a symbolic `AF_*` domain, and `connect` and
 `bind` need a `sockaddr`; otherwise `sockaddr`. Only `sendto` may have a
@@ -2486,7 +2500,7 @@ other than `ECONNREFUSED` or `ENOENT` is judged like a success. The program in
 
 **Reasons from the step itself.** A step whose init child (or root) did not
 exit with 0 gives `failed`. A descendant outside the init child's thread
-group killed by `SIGKILL` after the init child's `exit_group` line gives
+group with an exit line after the init child's `exit_group` line gives
 `daemon-left` (§4.3, D19). `CheckRecipe` accepts an argv of
 exactly `[<shell>, "-c", <line>]`; `argv[0]` is not compared.
 

@@ -388,11 +388,15 @@ func (c *classifier) stepStatus(t *trace.Trace) {
 //
 // The init child is PID 1 of the sandbox's PID namespace, so when its thread
 // group exits the kernel SIGKILLs every other process in the namespace.  Such
-// a survivor's exit line says "+++ killed by SIGKILL +++".  A process the step
-// itself killed and reaped ("kill -KILL $p; wait $p") has the same line, but
-// it comes BEFORE the init's exit_group.  So a survivor is an exit that
+// a survivor's exit line says "+++ killed by SIGKILL +++" (or, if it saw EOF
+// on a descriptor init's death closed and quit first, "+++ exited with 0 +++":
+// any exit counts).  A process the step itself killed and reaped ("kill -KILL
+// $p; wait $p") has the same line, but strace prints a reaped child's exit line
+// when it reaps it, before the parent's wait4 returns, so it comes BEFORE the
+// init's exit_group.  So a survivor is an exit that
 //
-//   - is killed by SIGKILL,
+//   - when the marker is known: is ANY exit (killed by any signal, or exited);
+//     when it is not (InitExitLine == 0): is killed by SIGKILL,
 //   - belongs to a process NOT PROVEN to be outside the init child's tree (see
 //     below),
 //   - is NOT in the init's own thread group (its sibling threads are killed by
@@ -405,7 +409,8 @@ func (c *classifier) stepStatus(t *trace.Trace) {
 // something the design relies on (KILN04 D19, open question F2).
 //
 // FAIL CLOSED: InitExitLine == 0 (the init was killed from outside, or the
-// last thread called exit(2)) makes every SIGKILL death of a descendant count.
+// last thread called exit(2)) makes every SIGKILL death of a descendant count
+// (other exits cannot be placed relative to a marker that is not there).
 // So does an ExitLines slice that does not line up with Exits.  A child
 // SIGKILLed and not waited for just before the step exits may also be flagged;
 // that race is accepted.
@@ -426,13 +431,14 @@ func DaemonLeft(t *trace.Trace) bool {
 	aligned := len(t.ExitLines) == len(t.Exits)
 	w := &ancestry{t: t, under: map[int]bool{}, group: map[int]bool{}}
 	for i, ex := range t.Exits {
-		if !ex.Killed || ex.Signal != "SIGKILL" {
+		known := aligned && t.InitExitLine > 0
+		if !known && !(ex.Killed && ex.Signal == "SIGKILL") {
 			continue
 		}
 		if !w.underInit(ex.Pid) || w.inInitGroup(ex.Pid) {
 			continue
 		}
-		if !aligned || t.InitExitLine == 0 || t.ExitLines[i] > t.InitExitLine {
+		if !known || t.ExitLines[i] > t.InitExitLine {
 			return true
 		}
 	}

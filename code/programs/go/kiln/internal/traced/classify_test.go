@@ -290,8 +290,25 @@ func TestStepStatus(t *testing.T) {
 			build(10, []trace.Exit{{Pid: 1}, sigkill(7)}, []int{12, 13}, child), true},
 		{"killed before init's exit_group (reaped by the step)",
 			build(10, []trace.Exit{sigkill(7), {Pid: 1}}, []int{9, 12}, child), false},
-		{"SIGTERM is not a survivor",
-			build(10, []trace.Exit{{Pid: 7, Killed: true, Signal: "SIGTERM"}, {Pid: 1}}, []int{11, 12}, child), false},
+		// With the marker known ANY exit after it is a survivor's (a daemon
+		// may quit on EOF, or on a signal, before the namespace SIGKILL
+		// arrives); a waited child's line is printed at the reap, before
+		// the marker.
+		{"a SIGTERM survivor after the marker",
+			build(10, []trace.Exit{{Pid: 7, Killed: true, Signal: "SIGTERM"}, {Pid: 1}}, []int{11, 12}, child), true},
+		{"an exited-with-0 survivor after the marker",
+			build(10, []trace.Exit{{Pid: 7}, {Pid: 1}}, []int{11, 12}, child), true},
+		{"a waited child that exited with 0 (line before the marker)",
+			build(10, []trace.Exit{{Pid: 7}, {Pid: 1}}, []int{9, 12}, child), false},
+		{"a waited SIGTERM child (line before the marker)",
+			build(10, []trace.Exit{{Pid: 7, Killed: true, Signal: "SIGTERM"}, {Pid: 1}}, []int{9, 12}, child), false},
+		{"marker 0: only SIGKILL deaths count (a SIGTERM exit is not placed)",
+			build(0, []trace.Exit{{Pid: 7, Killed: true, Signal: "SIGTERM"}, {Pid: 1}}, []int{11, 12}, child), false},
+		{"marker 0: an ordinary exit is not placed either",
+			build(0, []trace.Exit{{Pid: 7}, {Pid: 1}}, []int{11, 12}, child), false},
+		{"an init-group thread's ordinary exit after the marker is not a daemon",
+			build(10, []trace.Exit{{Pid: 8}, {Pid: 1}}, []int{11, 12},
+				&trace.Process{Pid: 8, Parent: 1, CloneFlags: "CLONE_THREAD"}), false},
 		{"marker 0 (init killed from outside): fail closed",
 			build(0, []trace.Exit{sigkill(7), {Pid: 1}}, []int{3, 12}, child), true},
 		{"a SIGKILLed thread of the init group is not a daemon",
