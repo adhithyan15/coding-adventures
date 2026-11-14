@@ -255,4 +255,83 @@ mod tests {
         assert_eq!(f2[0], b"JOIN #two");
         assert_eq!(f2[1], b"JOIN #three");
     }
+
+    // -----------------------------------------------------------------
+    // SEC-011: a peer that never sends LF must not grow the buffer.
+    // -----------------------------------------------------------------
+
+    const SIXTEEN_MIB: usize = 16 * 1024 * 1024;
+
+    #[test]
+    fn test_no_lf_in_chunks_is_bounded() {
+        let mut f = Framer::new();
+        let chunk = [b'A'; 4096];
+        let mut worst = 0;
+        for _ in 0..(SIXTEEN_MIB / chunk.len()) {
+            f.feed(&chunk);
+            worst = worst.max(f.buffer_size());
+        }
+        assert!(worst <= 512, "buffer grew to {worst} bytes with no LF");
+        assert!(f.frames().is_empty());
+    }
+
+    #[test]
+    fn test_no_lf_in_one_feed_is_bounded() {
+        let mut f = Framer::new();
+        f.feed(&vec![b'A'; SIXTEEN_MIB]);
+        assert!(f.buffer_size() <= 512, "buffer grew to {}", f.buffer_size());
+        assert!(f.frames().is_empty());
+    }
+
+    #[test]
+    fn test_framer_recovers_after_flood() {
+        // The flooded line is dropped whole, including bytes that arrive
+        // after the cap, up to its LF; the next line frames normally.
+        let mut f = Framer::new();
+        f.feed(&vec![b'A'; 4096]);
+        f.feed(&vec![b'B'; 4096]);
+        f.feed(b"tail\r\nNICK alice\r\n");
+        assert_eq!(f.frames(), vec![b"NICK alice".to_vec()]);
+        assert_eq!(f.buffer_size(), 0);
+    }
+
+    #[test]
+    fn test_pending_line_at_limit_is_kept() {
+        // 510 content bytes plus a CR is a legal line still waiting for its LF.
+        let mut f = Framer::new();
+        let mut data = vec![b'A'; 510];
+        data.push(b'\r');
+        f.feed(&data);
+        assert_eq!(f.buffer_size(), 511);
+        f.feed(b"\n");
+        assert_eq!(f.frames(), vec![vec![b'A'; 510]]);
+    }
+
+    #[test]
+    fn test_pending_line_over_limit_is_dropped() {
+        let mut f = Framer::new();
+        f.feed(&vec![b'A'; 512]);
+        assert_eq!(f.buffer_size(), 0);
+        f.feed(b"\r\nPING x\r\n");
+        assert_eq!(f.frames(), vec![b"PING x".to_vec()]);
+    }
+
+    #[test]
+    fn test_complete_lines_before_flood_survive() {
+        let mut f = Framer::new();
+        let mut data = b"NICK a\r\n".to_vec();
+        data.extend(vec![b'A'; 2000]);
+        f.feed(&data);
+        assert_eq!(f.frames(), vec![b"NICK a".to_vec()]);
+        assert_eq!(f.buffer_size(), 0);
+    }
+
+    #[test]
+    fn test_reset_clears_discard_mode() {
+        let mut f = Framer::new();
+        f.feed(&vec![b'A'; 2000]);
+        f.reset();
+        f.feed(b"PING y\r\n");
+        assert_eq!(f.frames(), vec![b"PING y".to_vec()]);
+    }
 }
