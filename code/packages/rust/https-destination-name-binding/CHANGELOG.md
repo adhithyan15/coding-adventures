@@ -34,3 +34,10 @@
   a later provider/trace-audited credential-release composition exists.
 - Delegate request-line and field serialization to their repository-owned
   encoders so the composition cannot drift from the owning wire primitives.
+- Add a provider/trace-audited request-head release for a non-empty ordered
+  public additional-field slice under exact data-driven method, path,
+  destination, and field name/value policy; admit only `Accept` and `Content-
+  Type` while credential-bearing and custom fields remain blocked.
+- Preflight every policy, length, and output condition before durable audit and
+  every output mutation; return one redacted non-copyable encoded wrapper that
+  retains the exact audited provider and trace only after the gate succeeds.
