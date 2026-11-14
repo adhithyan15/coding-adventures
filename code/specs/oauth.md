@@ -5017,19 +5017,20 @@ without substituting any input, and must apply its own audit gates before every
 credential access and external effect. Concrete HTTPS remains unavailable.
 
 An allocation-free `oauth-client-secret-http1-binding` prerequisite now binds
-one custody-built `ClientSecretAuthenticatedRequest` to its exact validated
-HTTP/1 fixed-body and canonical Content-Length proof plus the optional exact
-Authorization field selected by the custody request. Before inspecting either
+one custody-built `ClientSecretAuthenticatedRequest` to strict HTTP/1 evidence
+constructed only inside the audited boundary. Before inspecting either
 credential-bearing body or Authorization bytes, the binder durably publishes
 an attempted event containing only the request's validated provider, trace,
-stable action, and closed outcome. It then requires the fixed-body proof to
-retain the request's original form-body allocation, not merely byte-equal
-contents. When custody produced Basic authentication, the binder requires one
-case-insensitive `Authorization` field name whose value retains the original
-Authorization allocation; when custody produced body authentication, any
-Authorization field fails closed. A closed rejected or succeeded event must be
-durable before the call returns an error or releases the non-copyable proof.
-Audit failure releases no proof. Success retains the exact request reference,
+stable action, and closed outcome. It then uses the repository-owned fixed-body
+and field primitives to retain the request's original form-body allocation,
+encode and bind its canonical Content-Length in bounded caller storage, and,
+when custody produced Basic authentication, validate an `Authorization` field
+that retains the original Authorization allocation. Body authentication
+produces no Authorization field. Callers cannot supply alternate credential
+bytes or prebuild evidence by reading them before this audit. A closed rejected
+or succeeded event must be durable before the call returns an error or releases
+the non-copyable proof. Validation or audit failure restores the bounded caller
+storage and releases no proof. Success retains the exact request reference,
 fixed-body/Content-Length proof, Authorization-field presence, provider, and
 trace so a later composition cannot substitute credential material or relabel
 the release.
