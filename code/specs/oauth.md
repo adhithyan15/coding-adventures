@@ -5000,6 +5000,28 @@ revocation policy, repository-owned TLS/HTTP, and audited transport remain
 separate blockers. Concrete HTTPS and live-provider readiness remain
 unavailable.
 
+The existing bounded `https-reviewed-server-path-binding` prerequisite now
+also joins the complete HTTPS destination-name proof directly to that complete
+reviewed server-path-and-anchor-self-signature evidence. It derives the path
+target only through the retained accumulated path, requires the destination
+certificate and path target to be the same exact decoded certificate object,
+and retains both complete non-copyable inputs after success. A byte-equal
+independently decoded leaf fails closed. The original path-only binder remains
+available as the deliberately weaker evidence boundary; this stronger entry
+point cannot be constructed from a detached leaf, path, anchor selection, or
+self-signature claim. Stable failures and Debug output retain no certificate,
+hostname, authority, path, key, signature, algorithm, constraint, or root
+payloads.
+
+This stronger composition performs no parsing, signature verification,
+credential access or editing, signing, storage, clock acquisition, provider
+action, audit event, trace emission, I/O, network access, or other external
+effect. It does not add trust-anchor semantics, complete RFC 5280 Name or path
+validation, revocation, TLS, HTTP, OAuth transport, or network authority.
+Complete revocation policy, repository-owned TLS/HTTP, and audited transport
+remain separate blockers. Concrete HTTPS and live-provider readiness remain
+unavailable.
+
 An allocation-free `form-urlencoded` prerequisite now validates an ordered,
 caller-borrowed sequence of UTF-8 name/value pairs under explicit field,
 component, and encoded-output ceilings. It serializes the exact
