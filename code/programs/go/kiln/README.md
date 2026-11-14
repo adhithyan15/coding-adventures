@@ -543,8 +543,8 @@ GitHub run with an image id; every other failure is exit 1. In order, it:
    records their digests and the partition digest;
 4. writes `host-facts.json` and computes the weak key of every package the
    shard runs from them (the merge recomputes the same keys), one
-   `kiln-record-action/2` file per package (it also lists the tool names the
-   key pins, `tools`);
+   `kiln-record-action/3` file per package (it also lists the tool names the
+   key pins, `tools`, and the package's `gate`, see below);
 5. generates `sandbox.json` (state roots for `~/.cargo`, a closed anchor table,
    `.git` masked, no root overlapping the record directory or `RUNNER_TEMP`),
    scans every `ro_roots` entry for sockets and FIFOs, and runs the sandbox's
@@ -575,8 +575,18 @@ result is the sealed `pre/probes.json` (digest of every trace) and the traces
 themselves in `<dir>/probe/` (never sealed, never read by `collect`). Unit tests
 inject `Options.Structure`; the real run is the Linux test `TestSandboxRecordProbe`.
 
-`kiln record step` and `kiln record collect` are the next sections. Not done by
-`prepare`, by design: gates and toolchain probes (2b-2c).
+**Gates and the toolchain probes (stage 4 PR 2b-2c-3, decision P7).** Each action
+file carries a `gate`: the reason the package must not be recorded as a
+measurement (the never list, a KILN03 hard reason, a toolchain probe that
+disagreed). It is computed by `Traced.Gate`, which shares `gateFacts`/`gateFrom`
+with `kiln legacy-plan`, so the two cannot drift. A gated package still runs; its
+record carries the gate and the merge never emits it. The toolchain probes run
+INSIDE a sandbox (`internal/record/probe_toolchain.go`: plain `kiln sandbox-exec`,
+no strace, an empty checkout, no state roots, 60 s each and 10 minutes in all),
+never on the host, and their results are sealed in `pre/probes.json`. Unit tests
+inject `Options.ProbeRun`; the real run is the Linux test `TestSandboxRecordGates`.
+
+`kiln record step` and `kiln record collect` are the next sections.
 
 **The recorder's PATH and its git.** `git` is resolved once from `--git` (default
 `/usr/bin/git`) and every host-side Git call runs that file by absolute path;
