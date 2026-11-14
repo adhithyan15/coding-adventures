@@ -24,18 +24,33 @@ import (
 // contents, never from Revision, so this only affects explanations.
 type Git struct {
 	dir string
-	tm  treeModes // lazily loaded index modes, see Describe
+	// bin and path pin the program and the PATH it runs with. Empty means the
+	// default: look "git" up on the process PATH.
+	bin, path string
+	tm        treeModes // lazily loaded index modes, see Describe
 }
 
 // NewGit returns a Source for the work tree at dir.
 func NewGit(dir string) *Git { return &Git{dir: dir} }
 
+// NewGitAt is NewGit with the git program fixed to bin (an absolute path) and
+// git's PATH fixed to path. The recorder uses it: a lookup on the process PATH
+// can find a `git` a BUILD planted in a directory the checkout is bound into,
+// and run it, unsandboxed, with the recorder's privileges (KILN04 4.8, H1).
+func NewGitAt(dir, bin, path string) *Git { return &Git{dir: dir, bin: bin, path: path} }
+
 // run executes git in the work tree and returns stdout.
 func (g *Git) run(args ...string) ([]byte, error) {
 	full := append(gitHardening(), "-C", g.dir)
 	full = append(full, args...)
-	cmd := exec.Command("git", full...)
-	cmd.Env = gitEnv(os.Environ())
+	prog := "git"
+	env := gitEnv(os.Environ())
+	if g.bin != "" {
+		prog = g.bin
+		env = withPath(env, g.path)
+	}
+	cmd := exec.Command(prog, full...)
+	cmd.Env = env
 	var out, errb bytes.Buffer
 	cmd.Stdout, cmd.Stderr = &out, &errb
 	if err := cmd.Run(); err != nil {
@@ -51,6 +66,17 @@ func (g *Git) run(args ...string) ([]byte, error) {
 // each element of args is one argv element. A non-zero exit is an error that
 // wraps the *exec.ExitError.
 func (g *Git) Output(args ...string) ([]byte, error) { return g.run(args...) }
+
+// withPath replaces PATH in env (or adds it).
+func withPath(env []string, path string) []string {
+	out := make([]string, 0, len(env)+1)
+	for _, e := range env {
+		if envscrub.EntryName(e) != "PATH" {
+			out = append(out, e)
+		}
+	}
+	return append(out, "PATH="+path)
+}
 
 // gitHardening are options placed before every subcommand.  None is needed
 // for correctness; each closes a way a repository's own configuration could

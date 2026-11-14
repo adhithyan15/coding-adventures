@@ -27,3 +27,17 @@ func deviceOf(fi os.FileInfo) (uint64, bool) {
 	}
 	return uint64(st.Dev), true
 }
+
+// searchable reports whether this process may traverse (search) dir. A
+// directory with --x and no r cannot be listed but its entries can be reached by
+// name, so "cannot list it" does not mean "a step cannot reach what is in it".
+func searchable(dir string) bool { return syscall.Access(dir, 1) == nil } // X_OK
+
+// ownerOf is st_uid of a file.
+func ownerOf(fi os.FileInfo) (uint32, bool) {
+	st, ok := fi.Sys().(*syscall.Stat_t)
+	if !ok {
+		return 0, false
+	}
+	return st.Uid, true
+}

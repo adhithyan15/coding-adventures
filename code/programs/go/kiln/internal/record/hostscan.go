@@ -23,15 +23,22 @@ package record
 //     in the sandbox, and following one would walk the host outside the root.
 //   - A root that is itself a symlink (`/bin` on most images) is not entered.
 //     Its target is another root or is absent from the sandbox.
-//   - No mount boundary is crossed. A subdirectory whose st_dev differs from
-//     the root's is another file system; the sandbox binds a root
+//   - A real mount point is not crossed. The sandbox binds a root
 //     NON-recursively, so nothing mounted beneath it comes along, and walking
-//     it would only report things the step cannot reach.
+//     it would only report things the step cannot reach. A different st_dev is
+//     only a hint: it is believed when /proc/self/mountinfo lists the
+//     directory as a mount point. If mountinfo cannot be read (or does not list
+//     it), the directory is scanned like any other, which can only add
+//     findings: the scan fails closed. (What a host mount shadows beneath it is
+//     covered by the in-sandbox probe of PR 2b-2.)
 //   - One goroutine per root, because /usr is large and the roots are few.
-//   - An entry we are not allowed to read is skipped, not an error: a step runs
-//     as the same user and cannot read it either (the sandbox has no more
-//     privilege than the recorder). Any other error fails the scan, because a
-//     scan that quietly stopped is a pass nobody earned.
+//   - A directory we cannot list is skipped ONLY when we cannot traverse it
+//     either (no search permission): then a step, which runs as the same user,
+//     cannot reach anything in it. A directory with search permission but no
+//     read permission (`--x`) hides its names from a listing but not from a
+//     `connect` to a known name, so that fails the scan. Any other error fails
+//     it too, because a scan that quietly stopped is a pass nobody earned.
+//   - The walk of a root stops after MaxReported findings.
 
 import (
 	"errors"
@@ -39,15 +46,62 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+	"strconv"
+	"strings"
 	"sync"
 )
 
 // devOf reads st_dev; a variable so a test can pretend a directory is a mount.
 var devOf = deviceOf
 
+// mountPoints returns the mount points of this mount namespace, or nil when
+// they cannot be known. A variable so a test can supply them.
+var mountPoints = readMountPoints
+
+// readMountPoints parses the kernel's mountinfo for this process (field 5 of
+// each line is the mount point, with space, tab, newline and backslash written
+// as octal escapes).
+func readMountPoints() map[string]bool {
+	data, err := os.ReadFile("/proc/self/mountinfo")
+	if err != nil {
+		return nil
+	}
+	out := map[string]bool{}
+	for _, line := range strings.Split(string(data), "\n") {
+		f := strings.Fields(line)
+		if len(f) >= 5 {
+			out[unescapeMount(f[4])] = true
+		}
+	}
+	return out
+}
+
+// unescapeMount decodes the kernel's \040-style escapes.
+func unescapeMount(s string) string {
+	if !strings.Contains(s, "\\") {
+		return s
+	}
+	var b strings.Builder
+	for i := 0; i < len(s); i++ {
+		if s[i] == '\\' && i+3 < len(s) {
+			if n, err := strconv.ParseUint(s[i+1:i+4], 8, 8); err == nil {
+				b.WriteByte(byte(n))
+				i += 3
+				continue
+			}
+		}
+		b.WriteByte(s[i])
+	}
+	return b.String()
+}
+
+// errEnough stops a walk that has found MaxReported hazards.
+var errEnough = errors.New("enough findings")
+
 // HostScan walks every root and returns an error naming at most MaxReported
 // sockets or FIFOs.
 func HostScan(roots []string) error {
+	mounts := mountPoints()
 	var (
 		mu  sync.Mutex
 		bad problems
@@ -58,7 +112,7 @@ func HostScan(roots []string) error {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
-			found, e := scanRoot(r)
+			found, e := scanRoot(r, mounts)
 			mu.Lock()
 			defer mu.Unlock()
 			for _, p := range found {
@@ -76,8 +130,9 @@ func HostScan(roots []string) error {
 	return bad.err("host scan")
 }
 
-// scanRoot returns the sockets and FIFOs under one root, sorted.
-func scanRoot(root string) ([]string, error) {
+// scanRoot returns the sockets and FIFOs under one root, sorted (at most
+// MaxReported of them).
+func scanRoot(root string, mounts map[string]bool) ([]string, error) {
 	st, err := os.Lstat(root)
 	if err != nil {
 		return nil, err
@@ -97,8 +152,11 @@ func scanRoot(root string) ([]string, error) {
 	walk = func(dir string) error {
 		entries, err := os.ReadDir(dir)
 		if err != nil {
-			if errors.Is(err, os.ErrPermission) || errors.Is(err, os.ErrNotExist) {
+			if errors.Is(err, os.ErrNotExist) {
 				return nil
+			}
+			if errors.Is(err, os.ErrPermission) && !searchable(dir) {
+				return nil // unreachable by this user, so by a step
 			}
 			return err
 		}
@@ -114,9 +172,12 @@ func scanRoot(root string) ([]string, error) {
 			switch mode := info.Mode(); {
 			case hazard(mode):
 				found = append(found, p)
+				if len(found) >= MaxReported {
+					return errEnough
+				}
 			case mode.IsDir():
-				if dev, ok := devOf(info); haveDev && ok && dev != rootDev {
-					continue // another file system: not part of a non-recursive bind
+				if dev, ok := devOf(info); haveDev && ok && dev != rootDev && mounts[p] {
+					continue // a real mount point: not part of a non-recursive bind
 				}
 				if err := walk(p); err != nil {
 					return err
@@ -125,7 +186,7 @@ func scanRoot(root string) ([]string, error) {
 		}
 		return nil
 	}
-	if err := walk(root); err != nil {
+	if err := walk(root); err != nil && !errors.Is(err, errEnough) {
 		return nil, fmt.Errorf("scan of %q: %w", printable(root), err)
 	}
 	sort.Strings(found)

@@ -104,8 +104,17 @@ type ConfigInput struct {
 	Roots *legacy.HostRoots
 	// EnvByAction is every action the shard runs and its scrubbed environment.
 	EnvByAction map[string][]string
-	// Private are the places no ro root may overlap (decision 7).
+	// Private are the places neither an ro root nor a state root may overlap, in
+	// either direction (decision 7): the record directory, RUNNER_TEMP, the
+	// binaries Kiln runs from the sandbox's side, the directories of the GitHub
+	// command files.
 	Private []Region
+	// PrivateState are places a STATE root (writable) may not overlap but an ro
+	// root may: the image's own strace and git live under /usr, which is a
+	// read-only root, and so do the directories of the recorder's PATH. A
+	// writable root over any of them would let a step plant a program the
+	// recorder runs.
+	PrivateState []Region
 
 	// Lstat and ReadDir default to os.Lstat and os.ReadDir; tests inject fakes.
 	Lstat   func(string) (os.FileInfo, error)
@@ -123,6 +132,9 @@ func BuildSandboxConfig(in ConfigInput) (*sandbox.Config, error) {
 	}
 	if in.Roots == nil {
 		return nil, fmt.Errorf("sandbox config: host-roots.json is required")
+	}
+	if in.XDGConfigHome != "" && !path.IsAbs(in.XDGConfigHome) {
+		return nil, fmt.Errorf("sandbox config: XDG_CONFIG_HOME %q is not an absolute path, so the version-control tool would read a configuration relative to its working directory", printable(in.XDGConfigHome))
 	}
 	if in.Home == "" || !path.IsAbs(in.Home) {
 		return nil, fmt.Errorf("sandbox config: HOME %q is not an absolute path", printable(in.Home))
@@ -212,6 +224,13 @@ func BuildSandboxConfig(in ConfigInput) (*sandbox.Config, error) {
 	if err := CheckRoRoots(cfg.RoRoots, in.Private); err != nil {
 		return nil, err
 	}
+	for _, st := range cfg.StateRoots {
+		for _, p := range append(append([]Region{}, in.Private...), in.PrivateState...) {
+			if p.Path != "" && overlap(st, p.Path) {
+				return nil, fmt.Errorf("sandbox config: state root %q overlaps %s %q, which a step must not be able to write", printable(st), p.Name, printable(p.Path))
+			}
+		}
+	}
 	if err := checkGitConfigUnwritable(cfg, in.XDGConfigHome); err != nil {
 		return nil, err
 	}
@@ -275,7 +294,7 @@ func stateRootEmpty(p string, lstat func(string) (os.FileInfo, error), readDir f
 // the PATHs the actions run with.
 func checkGitConfigUnwritable(c *sandbox.Config, xdg string) error {
 	reads := []string{path.Join(c.Home, ".gitconfig"), path.Join(c.Home, ".config", "git")}
-	if xdg != "" && path.IsAbs(xdg) {
+	if xdg != "" {
 		reads = append(reads, path.Clean(xdg))
 	}
 	seen := map[string]bool{}

@@ -144,8 +144,11 @@ func TestSealWriterWritesOnceAndAdoptsOnlyRegularFiles(t *testing.T) {
 	}
 	// adopt: a regular file, never a symlink, a FIFO or a missing file.
 	write(t, filepath.Join(d, "tool-wrote"), "data", 0o644)
-	if err := w.adopt("tool-wrote"); err != nil || w.sums["tool-wrote"] != sumOf([]byte("data")) {
-		t.Fatalf("%v %v", err, w.sums)
+	if data, err := w.adopt("tool-wrote", 100); err != nil || string(data) != "data" || w.sums["tool-wrote"] != sumOf([]byte("data")) {
+		t.Fatalf("%q %v %v", data, err, w.sums)
+	}
+	if _, err := w.adopt("tool-wrote", 3); err == nil || !strings.Contains(err.Error(), "exceeds") {
+		t.Fatalf("an oversized export was adopted: %v", err)
 	}
 	if err := os.Symlink(filepath.Join(d, "tool-wrote"), filepath.Join(d, "link")); err != nil {
 		t.Fatal(err)
@@ -154,7 +157,7 @@ func TestSealWriterWritesOnceAndAdoptsOnlyRegularFiles(t *testing.T) {
 		t.Fatal(err)
 	}
 	for _, name := range []string{"link", "fifo", "missing"} {
-		if err := w.adopt(name); err == nil {
+		if _, err := w.adopt(name, 100); err == nil {
 			t.Errorf("adopted %s", name)
 		}
 	}
@@ -273,5 +276,47 @@ func TestBindingFromPrepareIsValid(t *testing.T) {
 	}
 	if res.Binding.ShardIndex != 0 || res.Binding.Recorder != legacy.RecorderVersion {
 		t.Fatalf("%+v", res.Binding)
+	}
+}
+
+// SEALED lists every file, so nothing may be in pre/ that it does not: a stray
+// file, a symlink (which chmod would follow), or a directory of another name.
+func TestSealRefusesWhatIsNotOurs(t *testing.T) {
+	for name, mk := range map[string]func(d string){
+		"a stray file":             func(d string) { write(t, filepath.Join(d, "stray"), "x", 0o644) },
+		"a stray in actions":       func(d string) { write(t, filepath.Join(d, "actions", "stray"), "x", 0o644) },
+		"a symlink":                func(d string) { os.Symlink("/etc/passwd", filepath.Join(d, "link")) },
+		"a symlink to a directory": func(d string) { os.Symlink(d, filepath.Join(d, "actions", "dirlink")) },
+		"another directory":        func(d string) { os.MkdirAll(filepath.Join(d, "traces"), 0o755) },
+		"a FIFO":                   func(d string) { syscall.Mkfifo(filepath.Join(d, "fifo"), 0o600) },
+	} {
+		d := canonTemp(t)
+		os.Mkdir(filepath.Join(d, "actions"), 0o755)
+		w := &sealWriter{pre: d, sums: map[string]string{}}
+		if err := w.write("a.json", []byte("x")); err != nil {
+			t.Fatal(err)
+		}
+		mk(d)
+		if err := w.seal(); err == nil {
+			t.Errorf("%s: sealed", name)
+		}
+		if _, err := os.Lstat(filepath.Join(d, "SEALED")); err == nil {
+			t.Errorf("%s: SEALED was written", name)
+		}
+	}
+}
+
+func TestSealRemovesSealedWhenTheChmodPassFails(t *testing.T) {
+	d := canonTemp(t)
+	os.Mkdir(filepath.Join(d, "actions"), 0o755)
+	w := &sealWriter{pre: d, sums: map[string]string{}}
+	if err := w.write("a.json", []byte("x")); err != nil {
+		t.Fatal(err)
+	}
+	// A file removed between the content check and the chmod pass cannot be
+	// arranged portably, so drive readOnly directly on a tree with a symlink.
+	os.Symlink(d, filepath.Join(d, "sneaky"))
+	if err := w.readOnly(); err == nil || !strings.Contains(err.Error(), "symlink") {
+		t.Fatalf("%v", err)
 	}
 }

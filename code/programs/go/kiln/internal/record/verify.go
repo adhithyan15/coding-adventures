@@ -131,7 +131,13 @@ type Result struct {
 // bytes and mode. Any other outcome is an error: a *TreeError for a tree that
 // differs, or a plain error when git itself could not be run.
 func VerifyTree(root, expectedCommit string) (Result, error) {
-	g := source.NewGit(root)
+	return VerifyTreeWith(source.NewGit(root), root, expectedCommit)
+}
+
+// VerifyTreeWith is VerifyTree with the Git runner chosen by the caller. The
+// recorder passes one pinned to an absolute git path (source.NewGitAt), so no
+// lookup on the process PATH can run a git a BUILD planted.
+func VerifyTreeWith(g *source.Git, root, expectedCommit string) (Result, error) {
 	if err := requireTopLevel(g); err != nil {
 		return Result{}, err
 	}

@@ -29,7 +29,8 @@ package record
 //	    a name starting with BUILD that the index does not list   -> problem
 //	    a regular file whose link count is above one              -> problem
 //	    a directory                                               -> descend
-//	    anything else (symlink, FIFO, socket)                     -> nothing
+//	    a socket or a FIFO                                        -> problem
+//	    anything else (a symlink)                                 -> nothing
 //
 // A symlink is not descended into and its link count is not asked: a symlink's
 // own count says nothing about its target. A tracked file that is a hard link
@@ -69,8 +70,11 @@ func CheckInventory(inv recfmt.Inventory) error {
 
 // ScanTree walks root as described above and returns a *TreeError naming at
 // most MaxReported problems. root must be the top level of its repository.
-func ScanTree(root string) error {
-	g := source.NewGit(root)
+func ScanTree(root string) error { return ScanTreeWith(source.NewGit(root), root) }
+
+// ScanTreeWith is ScanTree with the Git runner chosen by the caller (see
+// VerifyTreeWith).
+func ScanTreeWith(g *source.Git, root string) error {
 	if err := requireTopLevel(g); err != nil {
 		return err
 	}
@@ -107,6 +111,12 @@ func ScanTree(root string) error {
 				return err
 			}
 			switch mode := info.Mode(); {
+			case hazard(mode):
+				// The checkout is bound writable into the sandbox, so a socket
+				// or FIFO left in it is reachable by every step and leads to
+				// whatever process is on the other end (it is the same hazard
+				// the host scan looks for in the read-only roots).
+				bad.add(rel, "a socket or FIFO in the checkout: a step could reach a process outside the sandbox through it")
 			case mode.IsDir():
 				if err := walk(rel); err != nil {
 					return err

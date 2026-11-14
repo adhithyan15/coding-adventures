@@ -523,7 +523,7 @@ Everything a recording shard does before any BUILD, in `internal/record`
 ```
 kiln record prepare --root <abs> --dir <abs> --build-tool <abs>
                     --shard-index I --shard-count N --job-start <unix seconds>
-                    [--strace <abs>]
+                    [--strace <abs>] [--git <abs>]
 ```
 
 It refuses (exit 3, nothing written) unless this is linux/amd64 and a trusted
@@ -553,10 +553,13 @@ GitHub run with an image id; every other failure is exit 1. In order, it:
 2b-2). Not done here, by design: gates and toolchain probes, the in-sandbox
 socket probe, the supervisor, and `collect`.
 
-**The record directory must lie outside `home`.** `sandbox.CheckHost` refuses a
-configuration file inside `home`, so `$RUNNER_TEMP` (which is under `/home/runner`
-on a hosted runner) cannot hold it until that rule is relaxed or the workflow
-uses another directory; see the report of this change.
+**The recorder's PATH and its git.** `git` is resolved once from `--git` (default
+`/usr/bin/git`) and every host-side Git call runs that file by absolute path;
+the process `PATH` must hold no empty, relative or checkout/tmpdir/record-dir
+entry, and is what the build tool gets. `pre/tools.json` records the paths for
+`step` and `collect`. The record directory may be `$RUNNER_TEMP/kiln-record`
+(beneath `home`): `CheckHost` now refuses a configuration only where a step could
+reach it.
 
 One test (`TestRealBuildToolExportsAreWhatPrepareReads`, about a minute) builds
 the real build tool and runs it over this repository with the arguments

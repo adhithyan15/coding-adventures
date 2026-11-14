@@ -107,6 +107,7 @@ func TestRecordPrepareUsageErrors(t *testing.T) {
 		"a relative dir":     replace(goodArgs, "/d", "rec"),
 		"a relative tool":    replace(goodArgs, "/b", "bt"),
 		"a relative strace":  append(append([]string{}, goodArgs...), "--strace", "strace"),
+		"a relative git":     append(append([]string{}, goodArgs...), "--git", "git"),
 		"a negative index":   replace(goodArgs, "3", "-3"),
 		"a zero shard count": replace(goodArgs, "12", "0"),
 	} {
@@ -195,8 +196,12 @@ func TestRecordPrepareRunsPrepareOnATrustedRun(t *testing.T) {
 	}
 	// The default strace.
 	runRec(goodArgs...)
-	if got.Strace != "/usr/bin/strace" {
-		t.Fatalf("%q", got.Strace)
+	if got.Strace != "/usr/bin/strace" || got.Git != "/usr/bin/git" {
+		t.Fatalf("%q %q", got.Strace, got.Git)
+	}
+	runRec(append(append([]string{}, goodArgs...), "--git", "/opt/git")...)
+	if got.Git != "/opt/git" {
+		t.Fatalf("%q", got.Git)
 	}
 }
 

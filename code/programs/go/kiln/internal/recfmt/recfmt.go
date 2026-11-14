@@ -115,6 +115,8 @@ type Binding struct {
 	SandboxConfigSHA256 string `json:"sandbox_config_sha256"`
 	KilnSHA256          string `json:"kiln_sha256"`
 	BuildToolSHA256     string `json:"build_tool_sha256"`
+	StraceSHA256        string `json:"strace_sha256"`
+	GitSHA256           string `json:"git_sha256"`
 	Recorder            int    `json:"recorder"`
 	StraceVersion       string `json:"strace_version"`
 	Kernel              string `json:"kernel"`
@@ -405,7 +407,7 @@ func (b *Binding) Validate() error {
 		{"graph_sha256", b.GraphSHA256}, {"steps_sha256", b.StepsSHA256}, {"partition_sha256", b.PartitionSHA256},
 		{"host_facts_sha256", b.HostFactsSHA256}, {"inventory_sha256", b.InventorySHA256},
 		{"sandbox_config_sha256", b.SandboxConfigSHA256}, {"kiln_sha256", b.KilnSHA256},
-		{"build_tool_sha256", b.BuildToolSHA256},
+		{"build_tool_sha256", b.BuildToolSHA256}, {"strace_sha256", b.StraceSHA256}, {"git_sha256", b.GitSHA256},
 	} {
 		if !isDigest(f.v) {
 			return fmt.Errorf("binding: %s is not a SHA-256 in lowercase hex", f.name)

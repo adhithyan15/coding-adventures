@@ -244,8 +244,9 @@ func TestHostScanDoesNotCrossAMount(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-	old := devOf
-	defer func() { devOf = old }()
+	old, oldMounts := devOf, mountPoints
+	defer func() { devOf, mountPoints = old, oldMounts }()
+	mountPoints = func() map[string]bool { return map[string]bool{mount: true} }
 	devOf = func(fi os.FileInfo) (uint64, bool) {
 		if fi.Name() == "mnt" {
 			return 99, true // pretend a different file system is mounted here
@@ -258,6 +259,7 @@ func TestHostScanDoesNotCrossAMount(t *testing.T) {
 	}
 	// Without the pretence the mounted directory is part of the root.
 	devOf = old
+	mountPoints = oldMounts
 	if err := HostScan([]string{root}); err == nil || !strings.Contains(err.Error(), "2 problems") {
 		t.Fatalf("%v", err)
 	}

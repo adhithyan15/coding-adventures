@@ -11,3 +11,9 @@ func linkCount(os.FileInfo) (uint64, bool) { return 0, false }
 
 // deviceOf: no st_dev here either (see linkCount).
 func deviceOf(os.FileInfo) (uint64, bool) { return 0, false }
+
+// searchable: unknown here, so assume it is (the caller then fails closed).
+func searchable(string) bool { return true }
+
+// ownerOf: no uid here.
+func ownerOf(os.FileInfo) (uint32, bool) { return 0, false }

@@ -10,6 +10,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -39,6 +40,8 @@ type prep struct {
 	tmpdir    string
 	kiln, bt  string
 	strace    string
+	gitBin    string // the real git, resolved
+	gitSum    string
 	sha       string // HEAD
 	env       []string
 	getenv    map[string]string
@@ -47,6 +50,7 @@ type prep struct {
 	graph     string   // the graph export (default: the three fixture packages)
 	toolErr   map[string]error
 	toolCalls [][]string
+	toolEnvs  [][]string
 	files     map[string]string
 }
 
@@ -67,6 +71,25 @@ func writeBytes(t *testing.T, p string, data []byte, mode os.FileMode) {
 	}
 }
 
+// realGit finds the real git, resolved through symlinks, and hashes it: the
+// recorder runs exactly that file.
+func realGit(t *testing.T) (string, string) {
+	t.Helper()
+	g, err := exec.LookPath("git")
+	if err != nil {
+		t.Skip("git is not installed")
+	}
+	g, err = filepath.EvalSymlinks(g)
+	if err != nil {
+		t.Fatal(err)
+	}
+	b, err := ResolveBinary("git", g)
+	if err != nil {
+		t.Fatal(err)
+	}
+	return b.Path, b.SHA256
+}
+
 func newPrep(t *testing.T) *prep {
 	t.Helper()
 	p := &prep{t: t, base: canonTemp(t), toolErr: map[string]error{}}
@@ -83,6 +106,7 @@ func newPrep(t *testing.T) *prep {
 	writeBytes(t, p.kiln, []byte("kiln binary"), 0o755)
 	writeBytes(t, p.bt, []byte("build tool binary"), 0o755)
 	writeBytes(t, p.strace, []byte("strace"), 0o755)
+	p.gitBin, p.gitSum = realGit(t)
 	p.files = map[string]string{
 		"code/kiln/legacy/pinned.json":        `{"languages": []}`,
 		"code/kiln/legacy/never.json":         `{"packages": []}`,
@@ -95,7 +119,7 @@ func newPrep(t *testing.T) *prep {
 		"code/packages/x/b/BUILD":             "echo b1\necho b2\n",
 		"code/packages/x/z/BUILD":             "echo z\n",
 	}
-	p.env = []string{"HOME=" + p.home, "FIXTURE_A=1", "OTHER=2", "PATH=/evil/bin", "GITHUB_TOKEN=not-a-real-token", "LANG=C.UTF-8"}
+	p.env = []string{"HOME=" + p.home, "FIXTURE_A=1", "OTHER=2", "PATH=/usr/bin:/bin", "GITHUB_TOKEN=not-a-real-token", "LANG=C.UTF-8"}
 	return p
 }
 
@@ -181,6 +205,7 @@ var plan = fixturePlan
 // say, as the real one does.
 func (p *prep) run(r ToolRun) error {
 	p.toolCalls = append(p.toolCalls, append([]string{r.Path}, r.Args...))
+	p.toolEnvs = append(p.toolEnvs, r.Env)
 	arg := func(flag string) string {
 		for i, a := range r.Args {
 			if a == flag && i+1 < len(r.Args) {
@@ -208,7 +233,7 @@ var fixedNow = time.Date(2026, 11, 13, 2, 3, 4, 0, time.UTC)
 
 func (p *prep) options() Options {
 	return Options{
-		Root: p.root, Dir: p.dir, BuildTool: p.bt, KilnExe: p.kiln, Strace: p.strace,
+		Root: p.root, Dir: p.dir, BuildTool: p.bt, KilnExe: p.kiln, Strace: p.strace, Git: p.gitBin,
 		ShardIndex: 0, ShardCount: 2, JobStart: 1794000000,
 		Image:   "github/linux/amd64/ubuntu24/20260101.1",
 		Getenv:  func(k string) string { return p.getenv[k] },
@@ -314,6 +339,7 @@ func TestPrepareWritesTheSealedRecord(t *testing.T) {
 		HostFactsSHA256: sumOf(factsBytes), InventorySHA256: sumOf(invBytes),
 		SandboxConfigSHA256: sumOf(readPre(t, res, "sandbox.json")),
 		KilnSHA256:          sumOf([]byte("kiln binary")), BuildToolSHA256: sumOf([]byte("build tool binary")),
+		StraceSHA256: sumOf([]byte("strace")), GitSHA256: p.gitSum,
 		Recorder: legacy.RecorderVersion, StraceVersion: "strace -- version 6.8", Kernel: "6.8.0-test",
 		JobStart: 1794000000, PreparedAt: "2026-11-13T02:03:04Z",
 	}
@@ -669,9 +695,6 @@ func TestPrepareRefusals(t *testing.T) {
 		"a read-only root that holds GITHUB_ENV": {before: func(p *prep) {
 			p.getenv["GITHUB_ENV"] = "/sbin/envfile"
 		}, want: "GITHUB_ENV"},
-		"the record directory beneath home (the sandbox's own host check)": {before: func(p *prep) {
-			p.env = []string{"HOME=" + p.base, "FIXTURE_A=1"}
-		}, want: "rewrite"},
 		"a symlink read-only root beneath home": {setup: func(p *prep) {
 			p.roots = []string{`{"path": "$HOME/.xtool", "kind": "tool", "tool": "xtool"}`}
 			p.files["code/kiln/legacy/toolchains.json"] = strings.Replace(fixtureToolchains, `"roots": {"xtool": ["/opt/x/bin"]}`, `"roots": {"xtool": ["/opt/x/bin"]}`, 1)
@@ -810,7 +833,7 @@ func TestPrepareARoRootContainingTheRecordDirectoryIsRefused(t *testing.T) {
 func TestPrepareWorksWithTheDefaultTmpdirOption(t *testing.T) {
 	// Options.Tmpdir defaults to legacy.RecordTmpdir, which a test must not
 	// create in the real /tmp: assert the default and stop before any write.
-	o := Options{Root: "/r", Dir: "/d", BuildTool: "/b", KilnExe: "/k", Strace: "/s", ShardCount: 1}
+	o := Options{Root: "/r", Dir: "/d", BuildTool: "/b", KilnExe: "/k", Strace: "/s", Git: "/g", ShardCount: 1}
 	if err := o.normalize(); err != nil || o.Tmpdir != legacy.RecordTmpdir || o.RunTool == nil || o.StraceVersion == nil || o.Kernel == nil || o.Now == nil || o.Getenv == nil {
 		t.Fatalf("%+v %v", o, err)
 	}
@@ -826,4 +849,13 @@ func equalStrings(a, b []string) bool {
 		}
 	}
 	return true
+}
+
+// P3 (decided): the configuration may lie beneath home, which is a fresh tmpfs
+// in the sandbox; on a hosted runner RUNNER_TEMP is beneath home.
+func TestPrepareAcceptsARecordDirectoryBeneathHome(t *testing.T) {
+	p := newPrep(t)
+	p.commit()
+	p.env = []string{"HOME=" + p.base, "FIXTURE_A=1", "PATH=/usr/bin:/bin"}
+	p.mustPrepare()
 }

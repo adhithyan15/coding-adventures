@@ -74,6 +74,19 @@ const ShardWeightsPath = "code/specs/data/ci-package-durations.json"
 // ToolTimeout bounds one run of the build tool during prepare.
 const ToolTimeout = 15 * time.Minute
 
+// ToolsSchema is the schema of pre/tools.json.
+const ToolsSchema = "kiln-record-tools/1"
+
+// ToolsFile is pre/tools.json: the programs the recorder runs from the host
+// side, by absolute path, and the PATH it passes them. `kiln record step` and
+// `collect` (PR 2b-2) use exactly these and never look a program up on PATH.
+type ToolsFile struct {
+	Schema string `json:"schema"`
+	Git    string `json:"git"`
+	Strace string `json:"strace"`
+	Path   string `json:"path"`
+}
+
 // ToolRun is one start of the build tool.
 type ToolRun struct {
 	Path    string
@@ -103,9 +116,10 @@ type Runner func(ToolRun) error
 // Options are the inputs of Prepare. Paths must be absolute and clean.
 type Options struct {
 	// Root is the checkout, Dir the record directory (made if absent),
-	// BuildTool the build-tool binary, KilnExe this binary and Strace the
-	// strace binary (run once, as `strace --version`).
-	Root, Dir, BuildTool, KilnExe, Strace string
+	// BuildTool the build-tool binary, KilnExe this binary, Strace the
+	// strace binary (run once, as `strace --version`) and Git the git binary
+	// every host-side Git call uses. None is ever looked up on PATH.
+	Root, Dir, BuildTool, KilnExe, Strace, Git string
 
 	ShardIndex, ShardCount int
 	// JobStart is the Unix time the job's first step stamped (§5.3, setup
@@ -173,21 +187,36 @@ func Prepare(o Options) (*PrepareResult, error) {
 	if err != nil {
 		return nil, err
 	}
-	if _, err := Canonical("--strace", o.Strace); err != nil {
+	strace, err := ResolveBinary("--strace", o.Strace)
+	if err != nil {
+		return nil, err
+	}
+	git, err := ResolveBinary("--git", o.Git)
+	if err != nil {
 		return nil, err
 	}
 	if _, err := Canonical("--root", o.Root); err != nil {
 		return nil, err
 	}
 	early := []Region{{"the checkout", o.Root}, {"tmpdir", o.Tmpdir}}
-	for _, b := range []struct{ what, p string }{{"the kiln binary", kiln.Path}, {"--build-tool", bt.Path}, {"--strace", o.Strace}, {"--dir", o.Dir}} {
+	for _, b := range []struct{ what, p string }{
+		{"the kiln binary", kiln.Path}, {"--build-tool", bt.Path}, {"--strace", strace.Path}, {"--git", git.Path}, {"--dir", o.Dir},
+	} {
 		if err := CheckOutside(b.what, b.p, early); err != nil {
 			return nil, err
 		}
 	}
+	// The recorder's own PATH (decision P11): the build tool starts programs
+	// through it, so it must hold nothing a step could have written.
+	safe, err := SafePath(pathOf(o.Environ), append(append([]Region{}, early...), Region{"the record directory", o.Dir}))
+	if err != nil {
+		return nil, err
+	}
+	// Every host-side Git call runs the one git resolved above, by path.
+	src := source.NewGitAt(o.Root, git.Path, safe.String())
 
 	// 2. The disk is the commit, and HEAD is the commit GitHub is running.
-	vt, err := VerifyTree(o.Root, "")
+	vt, err := VerifyTreeWith(src, o.Root, "")
 	if err != nil {
 		return nil, fmt.Errorf("verify tree: %w", err)
 	}
@@ -196,14 +225,14 @@ func Prepare(o Options) (*PrepareResult, error) {
 	}
 
 	// 3. Nothing untracked may change what runs, and no file has a second name.
-	inv, err := Inventory(o.Root)
+	inv, err := InventoryWith(src, o.Root)
 	if err != nil {
 		return nil, fmt.Errorf("inventory: %w", err)
 	}
 	if err := CheckInventory(inv); err != nil {
 		return nil, err
 	}
-	if err := ScanTree(o.Root); err != nil {
+	if err := ScanTreeWith(src, o.Root); err != nil {
 		return nil, err
 	}
 
@@ -222,7 +251,7 @@ func Prepare(o Options) (*PrepareResult, error) {
 	w := &sealWriter{pre: pre, sums: map[string]string{}}
 
 	// 5. Graph, steps and plan, by the out-of-tree build tool.
-	toolEnv := envscrub.Scrub(o.Environ)
+	toolEnv := withPathEnv(envscrub.Scrub(o.Environ), safe.String())
 	graphPath, stepsPath, planPath := filepath.Join(pre, "graph.json"), filepath.Join(pre, "steps.json"), filepath.Join(pre, "build-plan.json")
 	if err := o.RunTool(ToolRun{Path: bt.Path, Dir: o.Dir, Env: toolEnv, Timeout: ToolTimeout, Args: GraphArgs(o.Root, graphPath, stepsPath)}); err != nil {
 		return nil, fmt.Errorf("build tool (graph and steps export): %w", err)
@@ -230,23 +259,32 @@ func Prepare(o Options) (*PrepareResult, error) {
 	if err := o.RunTool(ToolRun{Path: bt.Path, Dir: o.Dir, Env: toolEnv, Timeout: ToolTimeout, Args: PlanArgs(o.Root, o.ShardCount, planPath)}); err != nil {
 		return nil, fmt.Errorf("build tool (plan export): %w", err)
 	}
-	for _, f := range []string{"graph.json", "steps.json", "build-plan.json"} {
-		if err := w.adopt(f); err != nil {
-			return nil, err
-		}
-	}
-	graph, err := legacy.ReadGraphFile(graphPath)
+	// Each export is read ONCE: the bytes that are hashed for the binding are
+	// the bytes that are parsed.
+	graphData, err := w.adopt("graph.json", legacy.MaxGraphBytes)
 	if err != nil {
 		return nil, err
 	}
-	steps, err := legacy.ReadStepsFile(stepsPath)
+	stepsData, err := w.adopt("steps.json", legacy.MaxStepsBytes)
+	if err != nil {
+		return nil, err
+	}
+	planData, err := w.adopt("build-plan.json", planLimit)
+	if err != nil {
+		return nil, err
+	}
+	graph, err := legacy.ParseGraph(graphData)
+	if err != nil {
+		return nil, err
+	}
+	steps, err := legacy.DecodeSteps(stepsData)
 	if err != nil {
 		return nil, err
 	}
 	if steps.OS != "linux" {
 		return nil, fmt.Errorf("steps export is for %q, not linux", printable(steps.OS))
 	}
-	part, err := ReadPartition(planPath, o.ShardCount)
+	part, err := parsePartition(planData, o.ShardCount)
 	if err != nil {
 		return nil, err
 	}
@@ -260,7 +298,6 @@ func Prepare(o Options) (*PrepareResult, error) {
 	}
 
 	// 6. Host facts, then the weak key of every package the shard runs.
-	src := source.NewGit(o.Root)
 	envEntries, err := legacy.RecordEnviron(src, o.Environ, o.Tmpdir)
 	if err != nil {
 		return nil, err
@@ -322,7 +359,8 @@ func Prepare(o Options) (*PrepareResult, error) {
 	cfg, err := BuildSandboxConfig(ConfigInput{
 		Root: o.Root, Home: home, Tmpdir: o.Tmpdir, KilnExe: kiln.Path,
 		XDGConfigHome: getenv("XDG_CONFIG_HOME"), Roots: traced.HostRoots(), EnvByAction: envByAction,
-		Private: privateRegions(o, kiln.Path, bt.Path),
+		Private: privateRegions(o, kiln.Path, bt.Path), PrivateState: append(
+			[]Region{{"the strace binary", strace.Path}, {"the git binary", git.Path}}, safe.Regions()...),
 	})
 	if err != nil {
 		return nil, err
@@ -336,6 +374,18 @@ func Prepare(o Options) (*PrepareResult, error) {
 	}
 	for _, b := range []struct{ what, p string }{{"the kiln binary", kiln.Path}, {"--build-tool", bt.Path}} {
 		if err := CheckOutside(b.what, b.p, inner); err != nil {
+			return nil, err
+		}
+	}
+	// strace and git are the image's own programs and normally live in a
+	// read-only root (/usr/bin), which a step can read but not write; they must
+	// only stay out of what a step can WRITE.
+	writable := []Region{{"the checkout", o.Root}, {"tmpdir", o.Tmpdir}}
+	for _, r := range cfg.StateRoots {
+		writable = append(writable, Region{"a state root", r})
+	}
+	for _, b := range []struct{ what, p string }{{"--strace", strace.Path}, {"--git", git.Path}, {"--dir", o.Dir}} {
+		if err := CheckOutside(b.what, b.p, writable); err != nil {
 			return nil, err
 		}
 	}
@@ -360,7 +410,14 @@ func Prepare(o Options) (*PrepareResult, error) {
 	if err != nil {
 		return nil, err
 	}
-	strace, err := o.StraceVersion(o.Strace)
+	// The programs the recorder runs, by absolute path, and the PATH it passes:
+	// `kiln record step` and `collect` use exactly these and never look
+	// anything up (decision P11).
+	toolsBytes, err := marshalJSON(ToolsFile{Schema: ToolsSchema, Git: git.Path, Strace: strace.Path, Path: safe.String()})
+	if err != nil {
+		return nil, err
+	}
+	straceVer, err := o.StraceVersion(strace.Path)
 	if err != nil {
 		return nil, err
 	}
@@ -371,7 +428,7 @@ func Prepare(o Options) (*PrepareResult, error) {
 	for _, f := range []struct {
 		rel  string
 		data []byte
-	}{{"host-facts.json", factsBytes}, {"inventory.json", invBytes}, {"sandbox.json", cfgBytes}, {"exec-wrapper.json", wrapperBytes}} {
+	}{{"host-facts.json", factsBytes}, {"inventory.json", invBytes}, {"sandbox.json", cfgBytes}, {"exec-wrapper.json", wrapperBytes}, {"tools.json", toolsBytes}} {
 		if err := w.write(f.rel, f.data); err != nil {
 			return nil, err
 		}
@@ -401,8 +458,8 @@ func Prepare(o Options) (*PrepareResult, error) {
 		ShardIndex: o.ShardIndex, ShardCount: o.ShardCount,
 		GraphSHA256: w.sums["graph.json"], StepsSHA256: w.sums["steps.json"], PartitionSHA256: partDigest,
 		HostFactsSHA256: w.sums["host-facts.json"], InventorySHA256: w.sums["inventory.json"],
-		SandboxConfigSHA256: w.sums["sandbox.json"], KilnSHA256: kiln.SHA256, BuildToolSHA256: bt.SHA256,
-		Recorder: legacy.RecorderVersion, StraceVersion: strace, Kernel: kernel, JobStart: o.JobStart,
+		SandboxConfigSHA256: w.sums["sandbox.json"], KilnSHA256: kiln.SHA256, BuildToolSHA256: bt.SHA256, StraceSHA256: strace.SHA256, GitSHA256: git.SHA256,
+		Recorder: legacy.RecorderVersion, StraceVersion: straceVer, Kernel: kernel, JobStart: o.JobStart,
 		PreparedAt: o.Now().UTC().Format(time.RFC3339),
 	}
 	bindBytes, err := recfmt.EncodeBinding(binding)
@@ -423,7 +480,7 @@ func Prepare(o Options) (*PrepareResult, error) {
 // normalize fills defaults and checks the options that need no file system.
 func (o *Options) normalize() error {
 	for _, p := range []struct{ name, v string }{
-		{"--root", o.Root}, {"--dir", o.Dir}, {"--build-tool", o.BuildTool}, {"the kiln binary", o.KilnExe}, {"--strace", o.Strace},
+		{"--root", o.Root}, {"--dir", o.Dir}, {"--build-tool", o.BuildTool}, {"the kiln binary", o.KilnExe}, {"--strace", o.Strace}, {"--git", o.Git},
 	} {
 		if !filepath.IsAbs(p.v) || filepath.Clean(p.v) != p.v {
 			return fmt.Errorf("%s %q must be an absolute, clean path", p.name, printable(p.v))
@@ -487,7 +544,7 @@ func privateRegions(o Options, kiln, bt string) []Region {
 	if t := o.Getenv("RUNNER_TEMP"); t != "" {
 		rs = append(rs, Region{"RUNNER_TEMP", path.Clean(t)})
 	}
-	for _, name := range []string{"GITHUB_ENV", "GITHUB_PATH", "GITHUB_OUTPUT"} {
+	for _, name := range []string{"GITHUB_ENV", "GITHUB_PATH", "GITHUB_OUTPUT", "GITHUB_STEP_SUMMARY", "GITHUB_EVENT_PATH"} {
 		if f := o.Getenv(name); f != "" {
 			rs = append(rs, Region{"the directory of " + name, path.Dir(path.Clean(f))})
 		}
@@ -517,7 +574,7 @@ func ensureTmpdir(p string) error {
 	if len(entries) != 0 {
 		return fmt.Errorf("tmpdir %q is not empty: the step's TMPDIR must start fresh", printable(p))
 	}
-	return nil
+	return claimDir("tmpdir", p, st)
 }
 
 // sealWriter writes the files of `pre/` exactly once each and remembers their
@@ -546,28 +603,34 @@ func (w *sealWriter) write(rel string, data []byte) error {
 	return nil
 }
 
-// adopt records the digest of a file another program wrote into pre/. It must
-// be a regular file (not a symlink, not a FIFO).
-func (w *sealWriter) adopt(rel string) error {
+// adopt reads a file another program wrote into pre/ ONCE, records the digest
+// of exactly the bytes it returns, and returns them (so what is hashed is what
+// is parsed). It must be a regular file (not a symlink, not a FIFO) of at most
+// limit bytes.
+func (w *sealWriter) adopt(rel string, limit int64) ([]byte, error) {
 	full := filepath.Join(w.pre, filepath.FromSlash(rel))
 	f, err := openNoFollow(full)
 	if err != nil {
-		return fmt.Errorf("%s: %w", rel, err)
+		return nil, fmt.Errorf("%s: %w", rel, err)
 	}
 	defer f.Close()
 	st, err := f.Stat()
 	if err != nil {
-		return err
+		return nil, err
 	}
 	if !st.Mode().IsRegular() {
-		return fmt.Errorf("%s is not a regular file", rel)
+		return nil, fmt.Errorf("%s is not a regular file", rel)
 	}
-	h := sha256.New()
-	if _, err := io.Copy(h, f); err != nil {
-		return err
+	data, err := io.ReadAll(io.LimitReader(f, limit+1))
+	if err != nil {
+		return nil, err
 	}
-	w.sums[rel] = hex.EncodeToString(h.Sum(nil))
-	return nil
+	if int64(len(data)) > limit {
+		return nil, fmt.Errorf("%s exceeds %d bytes", rel, limit)
+	}
+	sum := sha256.Sum256(data)
+	w.sums[rel] = hex.EncodeToString(sum[:])
+	return data, nil
 }
 
 // seal writes SEALED, the digest of every other file of pre/ in path order, and
@@ -582,13 +645,61 @@ func (w *sealWriter) seal() error {
 	for _, n := range names {
 		fmt.Fprintf(&b, "%s  %s\n", w.sums[n], n)
 	}
+	// Nothing may be in pre/ that SEALED does not list: a stray file (or a
+	// symlink, which chmod would follow) would be sealed as if it were ours.
+	if err := w.checkContents(); err != nil {
+		return err
+	}
 	if err := w.write("SEALED", []byte(b.String())); err != nil {
 		return err
 	}
+	if err := w.readOnly(); err != nil {
+		// A directory that is not sealed must not look sealed.
+		os.Remove(filepath.Join(w.pre, "SEALED"))
+		return err
+	}
+	return nil
+}
+
+// checkContents requires every entry of pre/ to be the root, the actions
+// directory, or a regular file whose digest is known.
+func (w *sealWriter) checkContents() error {
+	return filepath.WalkDir(w.pre, func(p string, d os.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+		rel, _ := filepath.Rel(w.pre, p)
+		rel = filepath.ToSlash(rel)
+		switch {
+		case d.Type()&os.ModeSymlink != 0:
+			return fmt.Errorf("pre/%s is a symlink", rel)
+		case d.IsDir():
+			if rel != "." && rel != "actions" {
+				return fmt.Errorf("pre/%s is an unexpected directory", rel)
+			}
+		case !d.Type().IsRegular():
+			return fmt.Errorf("pre/%s is not a regular file", rel)
+		default:
+			if _, ok := w.sums[rel]; !ok {
+				return fmt.Errorf("pre/%s is not one of the files this run wrote", rel)
+			}
+		}
+		return nil
+	})
+}
+
+// readOnly makes the tree read-only: files 0444, directories 0555, deepest
+// first. The modes are a convenience: integrity comes from the files being
+// unreachable from the sandbox, and from `step` and `collect` re-verifying
+// pre/ against SEALED (KILN04 4.8, 2b-2).
+func (w *sealWriter) readOnly() error {
 	var dirs []string
 	err := filepath.WalkDir(w.pre, func(p string, d os.DirEntry, err error) error {
 		if err != nil {
 			return err
+		}
+		if d.Type()&os.ModeSymlink != 0 {
+			return fmt.Errorf("%s is a symlink", p)
 		}
 		if d.IsDir() {
 			dirs = append(dirs, p)
@@ -599,7 +710,7 @@ func (w *sealWriter) seal() error {
 	if err != nil {
 		return err
 	}
-	for i := len(dirs) - 1; i >= 0; i-- { // deepest first, pre itself last
+	for i := len(dirs) - 1; i >= 0; i-- {
 		if err := os.Chmod(dirs[i], 0o555); err != nil {
 			return err
 		}
@@ -625,6 +736,9 @@ func execTool(r ToolRun) error {
 	defer cancel()
 	cmd := exec.CommandContext(ctx, r.Path, r.Args...)
 	cmd.Dir, cmd.Env = r.Dir, r.Env
+	// A tool that was killed at the deadline may have left a child holding its
+	// output pipes; do not wait for them forever.
+	cmd.WaitDelay = 10 * time.Second
 	var out capBuffer
 	cmd.Stdout, cmd.Stderr = &out, &out
 	if err := cmd.Run(); err != nil {
@@ -651,6 +765,7 @@ func straceVersion(p string) (string, error) {
 	defer cancel()
 	cmd := exec.CommandContext(ctx, p, "--version")
 	cmd.Env = []string{"LANG=C", "PATH=/usr/bin:/bin"}
+	cmd.WaitDelay = 10 * time.Second
 	var out capBuffer
 	cmd.Stdout = &out
 	if err := cmd.Run(); err != nil {

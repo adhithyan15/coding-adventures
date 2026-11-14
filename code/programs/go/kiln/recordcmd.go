@@ -88,18 +88,19 @@ func runRecordPrepare(args []string, stdout, stderr io.Writer) int {
 	dir := fs.String("dir", "", "the record directory, absent or empty (absolute)")
 	buildTool := fs.String("build-tool", "", "the build-tool binary, outside the checkout (absolute)")
 	strace := fs.String("strace", "/usr/bin/strace", "the strace binary (absolute)")
+	gitBin := fs.String("git", "/usr/bin/git", "the git binary every host-side Git call uses (absolute; never looked up on PATH)")
 	index := fs.Int("shard-index", -1, "this shard's index")
 	count := fs.Int("shard-count", 0, "the number of shards")
 	jobStart := fs.Int64("job-start", -1, "Unix time the job's first step stamped")
 	if err := fs.Parse(args); err != nil {
 		return 2
 	}
-	usage := "usage: kiln record prepare --root <abs> --dir <abs> --build-tool <abs> --shard-index I --shard-count N --job-start <unix seconds> [--strace <abs>]"
+	usage := "usage: kiln record prepare --root <abs> --dir <abs> --build-tool <abs> --shard-index I --shard-count N --job-start <unix seconds> [--strace <abs>] [--git <abs>]"
 	if fs.NArg() != 0 || *root == "" || *dir == "" || *buildTool == "" || *index < 0 || *count < 1 || *jobStart < 0 {
 		fmt.Fprintln(stderr, usage)
 		return 2
 	}
-	for _, p := range []struct{ name, v string }{{"--root", *root}, {"--dir", *dir}, {"--build-tool", *buildTool}, {"--strace", *strace}} {
+	for _, p := range []struct{ name, v string }{{"--root", *root}, {"--dir", *dir}, {"--build-tool", *buildTool}, {"--strace", *strace}, {"--git", *gitBin}} {
 		if !filepath.IsAbs(p.v) {
 			fmt.Fprintf(stderr, "kiln: %s %q is not an absolute path\n", p.name, p.v)
 			return 2
@@ -126,7 +127,7 @@ func runRecordPrepare(args []string, stdout, stderr io.Writer) int {
 		return 1
 	}
 	res, err := recordPrepare(record.Options{
-		Root: *root, Dir: *dir, BuildTool: *buildTool, KilnExe: self, Strace: *strace,
+		Root: *root, Dir: *dir, BuildTool: *buildTool, KilnExe: self, Strace: *strace, Git: *gitBin,
 		ShardIndex: *index, ShardCount: *count, JobStart: *jobStart,
 		Image: h.ImageID(), Getenv: os.Getenv, Environ: os.Environ(),
 	})

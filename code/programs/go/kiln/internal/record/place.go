@@ -166,5 +166,26 @@ func checkDirArg(dir string) (create bool, err error) {
 	if len(entries) != 0 {
 		return false, fmt.Errorf("--dir %q is not empty: a record directory must be fresh", printable(dir))
 	}
+	if err := claimDir("--dir", dir, st); err != nil {
+		return false, err
+	}
 	return false, nil
+}
+
+// claimDir takes over an EXISTING directory the recorder is about to keep
+// private: it must belong to this user and must not be writable by group or
+// others (anyone who can write it can swap what is in it between our checks and
+// our use), and then its mode is forced to 0700. A directory we create ourselves
+// is made 0700 at birth and needs no claim.
+func claimDir(what, p string, st os.FileInfo) error {
+	if uid, ok := ownerOf(st); ok && uid != uint32(os.Geteuid()) {
+		return fmt.Errorf("%s %q is owned by uid %d, not by this user", what, printable(p), uid)
+	}
+	if st.Mode().Perm()&0o022 != 0 {
+		return fmt.Errorf("%s %q is writable by group or others (mode %v)", what, printable(p), st.Mode().Perm())
+	}
+	if err := os.Chmod(p, 0o700); err != nil {
+		return fmt.Errorf("%s %q: %v", what, printable(p), err)
+	}
+	return nil
 }
