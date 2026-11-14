@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "One to Five — Where the Character Is the Count",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:eca847ce3b81dcf6",
+  "sourceHash": "fnv1a64:b3256505119992df",
   "lessons": [
     {
       "id": "ZH-W03-yi",
@@ -1053,7 +1053,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c5a5763b89a23cc1",
+      "sourceHash": "fnv1a64:b592f56d771c7f87",
       "notice": null,
       "blocks": [
         {
@@ -1125,7 +1125,7 @@
             },
             {
               "kind": "speech",
-              "text": "Not just a sound exercise: some buildings omit the floor label 4. One photographed Shanghai apartment lift panel shows 1, 2, 3, then 5. That is a documented example, not a rule for every building. The near-match between sì and sǐ helps explain why the number may be avoided."
+              "text": "This is more than a sound exercise: some buildings omit the floor label 4. One photographed Shanghai apartment lift panel shows 1, 2, 3, then 5. That is a documented example, not a rule for every building. The near-match between sì and sǐ helps explain why the number may be avoided."
             }
           ]
         },

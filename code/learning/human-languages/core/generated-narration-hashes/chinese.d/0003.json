@@ -1,7 +1,7 @@
 {
   "language": "chinese",
   "chapter": 3,
-  "sourceHash": "fnv1a64:eca847ce3b81dcf6",
+  "sourceHash": "fnv1a64:b3256505119992df",
   "lessonIds": [
     "ZH-W03-yi",
     "ZH-C03-yi",
@@ -19,7 +19,7 @@
   "drivablePrefix": 0,
   "text": "chinese/narration/ch03.txt",
   "json": "chinese/narration/ch03.json",
-  "textHash": "fnv1a64:ea87373335884a4b",
-  "jsonHash": "fnv1a64:a3be58790370ec1c",
+  "textHash": "fnv1a64:ff89ce957908c900",
+  "jsonHash": "fnv1a64:a3045b84869d98da",
   "findings": []
 }

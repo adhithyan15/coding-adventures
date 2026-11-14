@@ -67,7 +67,7 @@ A reason to get that tone right, and it is a real one:
 Separated **by pitch alone** — the third time this chapter has shown you that
 tone is part of a Mandarin word's identity, not an accent on it.
 
-Not just a sound exercise: some buildings omit the floor label **4**. One
+This is more than a sound exercise: some buildings omit the floor label **4**. One
 photographed Shanghai apartment lift panel shows 1, 2, 3, then 5. That is a
 documented example, not a rule for every building. The near-match between
 *sì* and *sǐ* helps explain why the number may be avoided.
