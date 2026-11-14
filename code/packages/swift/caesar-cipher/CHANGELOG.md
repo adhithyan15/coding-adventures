@@ -4,6 +4,12 @@ All notable changes to this package will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Fixed
+
+- SEC-010: `decrypt` negated the raw shift; `-Int.min` is an arithmetic overflow, which traps (crashes the process) in Swift. `encrypt` had the sibling flaw: `offset + shift` overflows (traps) for shifts near `Int.max`. Both now reduce the shift to 0..25 before adding or negating. Tests: `testDecryptIntMinIsCorrect`, `testEncryptIntMaxIsCorrect`, `testDecryptInvertsEncryptAtIntExtremes`.
+
 ## [0.1.0] - 2026-03-29
 
 ### Added

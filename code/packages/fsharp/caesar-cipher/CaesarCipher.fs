@@ -44,7 +44,11 @@ module CaesarCipher =
         if isNull text then
             nullArg (nameof text)
 
-        encrypt text (-shift)
+        // SEC-010: never negate the raw shift. -Int32.MinValue overflows and
+        // (F# arithmetic is unchecked by default) wraps back to Int32.MinValue,
+        // so the "undo" would shift the wrong way. Reduce to 0..25 first; the
+        // residue is small, so negating it cannot overflow.
+        encrypt text (-(normalizeShift shift))
 
     let rot13 (text: string) =
         if isNull text then
