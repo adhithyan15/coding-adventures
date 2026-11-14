@@ -1,0 +1,38 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "python/warrant-corpus",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "*",
+      "justification": "Reads the corpus directory, the package's evidence.bindings, the Warrant spec and the production source tree it digests; paths are supplied on the command line."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "evidence/test-manifest.json",
+      "justification": "Writes the lane manifest, and only for an unfaulted, unfiltered, fully passing run."
+    },
+    {
+      "category": "env",
+      "action": "read",
+      "target": "WARRANT_EVIDENCE_*",
+      "justification": "WARRANT_EVIDENCE_FAULT, WARRANT_EVIDENCE_FILTER and WARRANT_EVIDENCE_OUT select the sabotage and output behaviour of a run (VER04i 4.3)."
+    },
+    {
+      "category": "proc",
+      "action": "exec",
+      "target": "sys.executable",
+      "justification": "The sabotage command re-executes the same interpreter on the same runner to prove that a faulted run exits non-zero and prints `not ok`."
+    },
+    {
+      "category": "stdout",
+      "action": "write",
+      "target": "*",
+      "justification": "Prints TAP-style `ok` and `not ok` lines."
+    }
+  ],
+  "justification": "Test-time evidence runner: it reads the corpus and binding, imports the one library under test, writes its manifest and runs one child process for sabotage. It opens no network connection."
+}
