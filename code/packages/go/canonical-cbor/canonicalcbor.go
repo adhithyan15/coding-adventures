@@ -74,6 +74,7 @@ package canonicalcbor
 import (
 	"bytes"
 	"encoding/binary"
+	"fmt"
 	"math"
 	"sort"
 	"unicode/utf8"
@@ -84,6 +85,9 @@ import (
 // ============================================================================
 
 const (
+	// RootDepth defines the initial recursion depth of the root CBOR item.
+	RootDepth = 0
+
 	// MaxNestingDepth defines the maximum recursion depth allowed during encoding
 	// and decoding. The root item is at depth 0. Items requiring depth 129 are
 	// rejected with ErrEncodeTooDeep or ErrTooDeep.
@@ -93,6 +97,11 @@ const (
 	// in bytes (1 MiB). Attempting to encode an item exceeding this size fails
 	// with ErrEncodeTooLarge.
 	MaxEncodedBytes = 1048576
+
+	// Argument byte widths for multi-byte CBOR header arguments:
+	ArgWidth2Bytes = 2
+	ArgWidth4Bytes = 4
+	ArgWidth8Bytes = 8
 
 	// MajorTypeShift is the bit shift applied to place the 3-bit major type into the high bits of a header byte.
 	MajorTypeShift = 5
@@ -220,7 +229,7 @@ func (e *Error) Error() string {
 	case ErrTooDeep:
 		return "canonical-cbor: nesting depth exceeded the configured maximum"
 	case ErrLengthTooLarge:
-		return "canonical-cbor: length / count exceeds the remaining bytes or platform usize"
+		return "canonical-cbor: length / count exceeds the remaining bytes or platform int"
 	case ErrDuplicateMapKey:
 		return "canonical-cbor: duplicate canonical map key"
 	case ErrEncodeTooDeep:
@@ -531,7 +540,7 @@ func (v Value) Equal(other Value) bool {
 // If validation fails at any point, no bytes are returned.
 func EncodeChecked(v Value) ([]byte, error) {
 	out := make([]byte, 0, InitialOutputCapacity)
-	if err := encodeIntoBuffer(v, &out, 0); err != nil {
+	if err := encodeIntoBuffer(v, &out, RootDepth); err != nil {
 		return nil, err
 	}
 	return out, nil
@@ -571,6 +580,49 @@ func EncodeInto(v Value, dst *[]byte) {
 	}
 }
 
+type encodedMapEntry struct {
+	encodedKey []byte
+	value      Value
+}
+
+func encodeMap(entries []MapEntry, out *[]byte, depth int) error {
+	encodedEntries := make([]encodedMapEntry, len(entries))
+	for i, entry := range entries {
+		keyBuf := make([]byte, 0, InitialKeyCapacity)
+		if err := encodeIntoBuffer(entry.Key, &keyBuf, depth+1); err != nil {
+			return err
+		}
+		encodedEntries[i] = encodedMapEntry{encodedKey: keyBuf, value: entry.Value}
+	}
+
+	sort.Slice(encodedEntries, func(i, j int) bool {
+		leftKeyLen, rightKeyLen := len(encodedEntries[i].encodedKey), len(encodedEntries[j].encodedKey)
+		if leftKeyLen != rightKeyLen {
+			return leftKeyLen < rightKeyLen
+		}
+		return bytes.Compare(encodedEntries[i].encodedKey, encodedEntries[j].encodedKey) < 0
+	})
+
+	for i := 1; i < len(encodedEntries); i++ {
+		if bytes.Equal(encodedEntries[i-1].encodedKey, encodedEntries[i].encodedKey) {
+			return &Error{Code: ErrDuplicateMapKey}
+		}
+	}
+
+	if err := writeTypeAndArgument(out, MajorMap, uint64(len(encodedEntries))); err != nil {
+		return err
+	}
+	for _, entry := range encodedEntries {
+		if err := appendChecked(out, entry.encodedKey); err != nil {
+			return err
+		}
+		if err := encodeIntoBuffer(entry.value, out, depth+1); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 func encodeIntoBuffer(v Value, out *[]byte, depth int) error {
 	if depth > MaxNestingDepth {
 		return &Error{Code: ErrEncodeTooDeep}
@@ -587,6 +639,9 @@ func encodeIntoBuffer(v Value, out *[]byte, depth int) error {
 		}
 		return appendChecked(out, v.bytes)
 	case KindText:
+		if !utf8.ValidString(v.text) {
+			return &Error{Code: ErrInvalidUtf8}
+		}
 		textBytes := []byte(v.text)
 		if err := writeTypeAndArgument(out, MajorText, uint64(len(textBytes))); err != nil {
 			return err
@@ -603,50 +658,7 @@ func encodeIntoBuffer(v Value, out *[]byte, depth int) error {
 		}
 		return nil
 	case KindMap:
-		// Map canonicalization (RFC 8949 §4.2.3):
-		// 1. Encode every key independently at depth + 1.
-		// 2. Sort key-value pairs by key encoding: length ascending, then bytewise lex.
-		// 3. Verify no adjacent keys have identical encodings (reject duplicate keys).
-		// 4. Emit map header, followed by key bytes and encoded values.
-		type encodedEntry struct {
-			encodedKey []byte
-			val        Value
-		}
-		entries := make([]encodedEntry, len(v.entries))
-		for i, entry := range v.entries {
-			keyBuf := make([]byte, 0, InitialKeyCapacity)
-			if err := encodeIntoBuffer(entry.Key, &keyBuf, depth+1); err != nil {
-				return err
-			}
-			entries[i] = encodedEntry{encodedKey: keyBuf, val: entry.Value}
-		}
-
-		sort.Slice(entries, func(i, j int) bool {
-			li, lj := len(entries[i].encodedKey), len(entries[j].encodedKey)
-			if li != lj {
-				return li < lj
-			}
-			return bytes.Compare(entries[i].encodedKey, entries[j].encodedKey) < 0
-		})
-
-		for i := 1; i < len(entries); i++ {
-			if bytes.Equal(entries[i-1].encodedKey, entries[i].encodedKey) {
-				return &Error{Code: ErrDuplicateMapKey}
-			}
-		}
-
-		if err := writeTypeAndArgument(out, MajorMap, uint64(len(entries))); err != nil {
-			return err
-		}
-		for _, e := range entries {
-			if err := appendChecked(out, e.encodedKey); err != nil {
-				return err
-			}
-			if err := encodeIntoBuffer(e.val, out, depth+1); err != nil {
-				return err
-			}
-		}
-		return nil
+		return encodeMap(v.entries, out, depth)
 	case KindTag:
 		if err := writeTypeAndArgument(out, MajorTag, v.tag); err != nil {
 			return err
@@ -671,33 +683,33 @@ func encodeIntoBuffer(v Value, out *[]byte, depth int) error {
 // writeTypeAndArgument emits a CBOR header byte and argument using the minimal-width
 // representation required by canonical CBOR.
 func writeTypeAndArgument(out *[]byte, major byte, arg uint64) error {
-	mt := major << MajorTypeShift
+	majorBits := major << MajorTypeShift
 	if arg <= MaxInlineInteger {
-		return pushByteChecked(out, mt|byte(arg))
+		return pushByteChecked(out, majorBits|byte(arg))
 	} else if arg <= Max1ByteInteger {
-		if err := pushByteChecked(out, mt|Info1ByteArg); err != nil {
+		if err := pushByteChecked(out, majorBits|Info1ByteArg); err != nil {
 			return err
 		}
 		return pushByteChecked(out, byte(arg))
 	} else if arg <= Max2ByteInteger {
-		if err := pushByteChecked(out, mt|Info2ByteArg); err != nil {
+		if err := pushByteChecked(out, majorBits|Info2ByteArg); err != nil {
 			return err
 		}
-		var b [2]byte
+		var b [ArgWidth2Bytes]byte
 		binary.BigEndian.PutUint16(b[:], uint16(arg))
 		return appendChecked(out, b[:])
 	} else if arg <= Max4ByteInteger {
-		if err := pushByteChecked(out, mt|Info4ByteArg); err != nil {
+		if err := pushByteChecked(out, majorBits|Info4ByteArg); err != nil {
 			return err
 		}
-		var b [4]byte
+		var b [ArgWidth4Bytes]byte
 		binary.BigEndian.PutUint32(b[:], uint32(arg))
 		return appendChecked(out, b[:])
 	} else {
-		if err := pushByteChecked(out, mt|Info8ByteArg); err != nil {
+		if err := pushByteChecked(out, majorBits|Info8ByteArg); err != nil {
 			return err
 		}
-		var b [8]byte
+		var b [ArgWidth8Bytes]byte
 		binary.BigEndian.PutUint64(b[:], arg)
 		return appendChecked(out, b[:])
 	}
@@ -712,7 +724,7 @@ func pushByteChecked(out *[]byte, b byte) error {
 }
 
 func appendChecked(out *[]byte, data []byte) error {
-	if len(*out)+len(data) > MaxEncodedBytes {
+	if len(data) > MaxEncodedBytes-len(*out) {
 		return &Error{Code: ErrEncodeTooLarge}
 	}
 	*out = append(*out, data...)
@@ -723,16 +735,16 @@ func appendChecked(out *[]byte, data []byte) error {
 // 5. Strict Decoder
 // ============================================================================
 
-type cursor struct {
+type byteCursor struct {
 	data []byte
 	pos  int
 }
 
-func (c *cursor) remaining() int {
+func (c *byteCursor) remaining() int {
 	return len(c.data) - c.pos
 }
 
-func (c *cursor) readU8() (byte, error) {
+func (c *byteCursor) readU8() (byte, error) {
 	if c.pos >= len(c.data) {
 		return 0, &Error{Code: ErrUnexpectedEof}
 	}
@@ -741,7 +753,7 @@ func (c *cursor) readU8() (byte, error) {
 	return b, nil
 }
 
-func (c *cursor) readN(n int) ([]byte, error) {
+func (c *byteCursor) readN(n int) ([]byte, error) {
 	if n < 0 {
 		return nil, &Error{Code: ErrLengthTooLarge}
 	}
@@ -757,72 +769,89 @@ func (c *cursor) readN(n int) ([]byte, error) {
 	return s, nil
 }
 
-func checkLength(declared uint64, rem int, minPerUnit int) (int, error) {
+func checkLength(declared uint64, remainingBytes int, minBytesPerUnit int) (int, error) {
 	if declared > uint64(math.MaxInt) {
 		return 0, &Error{Code: ErrLengthTooLarge}
 	}
 	count := int(declared)
-	if minPerUnit > 0 {
-		if count > rem/minPerUnit {
+	if minBytesPerUnit > 0 {
+		if count > remainingBytes/minBytesPerUnit {
 			return 0, &Error{Code: ErrLengthTooLarge}
 		}
 	}
 	return count, nil
 }
 
-func readHeader(c *cursor) (major byte, info byte, arg uint64, err error) {
-	b, err := c.readU8()
+func validateMinimalArgument(major byte, info byte, arg uint64) error {
+	if major == MajorSimpleOrFloat {
+		return nil
+	}
+	switch info {
+	case Info1ByteArg:
+		if arg <= MaxInlineInteger {
+			return &Error{Code: ErrNonMinimalInteger}
+		}
+	case Info2ByteArg:
+		if arg <= Max1ByteInteger {
+			return &Error{Code: ErrNonMinimalInteger}
+		}
+	case Info4ByteArg:
+		if arg <= Max2ByteInteger {
+			return &Error{Code: ErrNonMinimalInteger}
+		}
+	case Info8ByteArg:
+		if arg <= Max4ByteInteger {
+			return &Error{Code: ErrNonMinimalInteger}
+		}
+	}
+	return nil
+}
+
+func readHeader(reader *byteCursor) (major byte, info byte, arg uint64, err error) {
+	headerByte, err := reader.readU8()
 	if err != nil {
 		return 0, 0, 0, err
 	}
-	major = b >> MajorTypeShift
-	info = b & AdditionalInfoMask
-	enforceMinimal := (major != MajorSimpleOrFloat)
+	major = headerByte >> MajorTypeShift
+	info = headerByte & AdditionalInfoMask
 
 	switch {
 	case info <= InfoInlineMax:
 		arg = uint64(info)
 	case info == Info1ByteArg:
-		v, err := c.readU8()
+		b, err := reader.readU8()
 		if err != nil {
 			return 0, 0, 0, err
 		}
-		arg = uint64(v)
-		if enforceMinimal && arg <= MaxInlineInteger {
-			return 0, 0, 0, &Error{Code: ErrNonMinimalInteger}
-		}
+		arg = uint64(b)
 	case info == Info2ByteArg:
-		bs, err := c.readN(2)
+		argBytes, err := reader.readN(ArgWidth2Bytes)
 		if err != nil {
 			return 0, 0, 0, err
 		}
-		arg = uint64(binary.BigEndian.Uint16(bs))
-		if enforceMinimal && arg <= Max1ByteInteger {
-			return 0, 0, 0, &Error{Code: ErrNonMinimalInteger}
-		}
+		arg = uint64(binary.BigEndian.Uint16(argBytes))
 	case info == Info4ByteArg:
-		bs, err := c.readN(4)
+		argBytes, err := reader.readN(ArgWidth4Bytes)
 		if err != nil {
 			return 0, 0, 0, err
 		}
-		arg = uint64(binary.BigEndian.Uint32(bs))
-		if enforceMinimal && arg <= Max2ByteInteger {
-			return 0, 0, 0, &Error{Code: ErrNonMinimalInteger}
-		}
+		arg = uint64(binary.BigEndian.Uint32(argBytes))
 	case info == Info8ByteArg:
-		bs, err := c.readN(8)
+		argBytes, err := reader.readN(ArgWidth8Bytes)
 		if err != nil {
 			return 0, 0, 0, err
 		}
-		arg = binary.BigEndian.Uint64(bs)
-		if enforceMinimal && arg <= Max4ByteInteger {
-			return 0, 0, 0, &Error{Code: ErrNonMinimalInteger}
-		}
+		arg = binary.BigEndian.Uint64(argBytes)
 	case info >= InfoReserved28 && info <= InfoReserved30:
 		return 0, 0, 0, &Error{Code: ErrReserved}
 	case info == InfoIndefinite:
 		return 0, 0, 0, &Error{Code: ErrIndefinite}
 	}
+
+	if err := validateMinimalArgument(major, info, arg); err != nil {
+		return 0, 0, 0, err
+	}
+
 	return major, info, arg, nil
 }
 
@@ -839,23 +868,86 @@ func readHeader(c *cursor) (major byte, info byte, arg uint64, err error) {
 //   - Floating-point encodings return ErrFloatNotSupported.
 //   - Unassigned simple values return ErrUnsupportedSimple.
 func Decode(data []byte) (Value, error) {
-	c := &cursor{data: data, pos: 0}
-	v, err := readValue(c, 0)
+	reader := &byteCursor{data: data, pos: 0}
+	v, err := readValue(reader, RootDepth)
 	if err != nil {
 		return Value{}, err
 	}
-	if c.pos != len(data) {
+	if reader.pos != len(data) {
 		return Value{}, &Error{Code: ErrTrailingBytes}
 	}
 	return v, nil
 }
 
-func readValue(c *cursor, depth int) (Value, error) {
+func readArray(reader *byteCursor, depth int, arg uint64) (Value, error) {
+	count, err := checkLength(arg, reader.remaining(), MinBytesPerElement)
+	if err != nil {
+		return Value{}, err
+	}
+	items := make([]Value, count)
+	for i := 0; i < count; i++ {
+		item, err := readValue(reader, depth+1)
+		if err != nil {
+			return Value{}, err
+		}
+		items[i] = item
+	}
+	return Value{kind: KindArray, array: items}, nil
+}
+
+func readMap(reader *byteCursor, depth int, arg uint64) (Value, error) {
+	count, err := checkLength(arg, reader.remaining(), MinBytesPerMapEntry)
+	if err != nil {
+		return Value{}, err
+	}
+	spannedEntries, err := readSpannedMapEntries(reader, depth, count)
+	if err != nil {
+		return Value{}, err
+	}
+	entries := make([]MapEntry, len(spannedEntries))
+	for i, entry := range spannedEntries {
+		entries[i] = MapEntry{Key: entry.Key, Value: entry.Value}
+	}
+	return Value{kind: KindMap, entries: entries}, nil
+}
+
+func readSpannedMapEntries(reader *byteCursor, parentDepth int, entryCount int) ([]SpannedMapEntry, error) {
+	entries := make([]SpannedMapEntry, entryCount)
+	var prevKeyBytes []byte
+	for i := 0; i < entryCount; i++ {
+		keyStart := reader.pos
+		key, err := readValue(reader, parentDepth+1)
+		if err != nil {
+			return nil, err
+		}
+		curKeyBytes := reader.data[keyStart:reader.pos]
+		if prevKeyBytes != nil && !keyStrictlyLess(prevKeyBytes, curKeyBytes) {
+			return nil, &Error{Code: ErrNonCanonicalMapOrder}
+		}
+		prevKeyBytes = curKeyBytes
+
+		valStart := reader.pos
+		val, err := readValue(reader, parentDepth+1)
+		if err != nil {
+			return nil, err
+		}
+		valEnd := reader.pos
+
+		entries[i] = SpannedMapEntry{
+			Key:       key,
+			Value:     val,
+			ValueSpan: Span{Start: valStart, End: valEnd},
+		}
+	}
+	return entries, nil
+}
+
+func readValue(reader *byteCursor, depth int) (Value, error) {
 	if depth > MaxNestingDepth {
 		return Value{}, &Error{Code: ErrTooDeep}
 	}
 
-	major, info, arg, err := readHeader(c)
+	major, info, arg, err := readHeader(reader)
 	if err != nil {
 		return Value{}, err
 	}
@@ -866,21 +958,21 @@ func readValue(c *cursor, depth int) (Value, error) {
 	case MajorNegative:
 		return NewNegative(arg), nil
 	case MajorBytes:
-		length, err := checkLength(arg, c.remaining(), MinBytesPerElement)
+		length, err := checkLength(arg, reader.remaining(), MinBytesPerElement)
 		if err != nil {
 			return Value{}, err
 		}
-		bs, err := c.readN(length)
+		bs, err := reader.readN(length)
 		if err != nil {
 			return Value{}, err
 		}
 		return NewBytes(bs), nil
 	case MajorText:
-		length, err := checkLength(arg, c.remaining(), MinBytesPerElement)
+		length, err := checkLength(arg, reader.remaining(), MinBytesPerElement)
 		if err != nil {
 			return Value{}, err
 		}
-		bs, err := c.readN(length)
+		bs, err := reader.readN(length)
 		if err != nil {
 			return Value{}, err
 		}
@@ -889,49 +981,11 @@ func readValue(c *cursor, depth int) (Value, error) {
 		}
 		return NewText(string(bs)), nil
 	case MajorArray:
-		count, err := checkLength(arg, c.remaining(), MinBytesPerElement)
-		if err != nil {
-			return Value{}, err
-		}
-		items := make([]Value, count)
-		for i := 0; i < count; i++ {
-			item, err := readValue(c, depth+1)
-			if err != nil {
-				return Value{}, err
-			}
-			items[i] = item
-		}
-		return Value{kind: KindArray, array: items}, nil
+		return readArray(reader, depth, arg)
 	case MajorMap:
-		count, err := checkLength(arg, c.remaining(), MinBytesPerMapEntry)
-		if err != nil {
-			return Value{}, err
-		}
-		entries := make([]MapEntry, count)
-		var prevKeyBytes []byte
-		for i := 0; i < count; i++ {
-			keyStart := c.pos
-			key, err := readValue(c, depth+1)
-			if err != nil {
-				return Value{}, err
-			}
-			curKeyBytes := c.data[keyStart:c.pos]
-			if prevKeyBytes != nil {
-				if !keyStrictlyLess(prevKeyBytes, curKeyBytes) {
-					return Value{}, &Error{Code: ErrNonCanonicalMapOrder}
-				}
-			}
-			prevKeyBytes = curKeyBytes
-
-			val, err := readValue(c, depth+1)
-			if err != nil {
-				return Value{}, err
-			}
-			entries[i] = MapEntry{Key: key, Value: val}
-		}
-		return Value{kind: KindMap, entries: entries}, nil
+		return readMap(reader, depth, arg)
 	case MajorTag:
-		inner, err := readValue(c, depth+1)
+		inner, err := readValue(reader, depth+1)
 		if err != nil {
 			return Value{}, err
 		}
@@ -973,12 +1027,28 @@ type Span struct {
 	End   int
 }
 
+// String returns the bracketed representation [Start, End) of the span.
+func (s Span) String() string {
+	return fmt.Sprintf("[%d, %d)", s.Start, s.End)
+}
+
 // SpannedMapEntry represents one key-value pair of a decoded map alongside the
 // byte range occupied by its value in the input slice.
 type SpannedMapEntry struct {
 	Key       Value
 	Value     Value
 	ValueSpan Span
+}
+
+// String returns a redacted string representation of SpannedMapEntry to prevent sensitive
+// key or value material from being leaked into logs or diagnostics.
+func (e SpannedMapEntry) String() string {
+	return fmt.Sprintf("SpannedMapEntry{Key: <redacted>, Value: <redacted>, ValueSpan: %s}", e.ValueSpan)
+}
+
+// GoString returns a redacted Go-syntax representation of SpannedMapEntry.
+func (e SpannedMapEntry) GoString() string {
+	return fmt.Sprintf("canonicalcbor.SpannedMapEntry{Key: <redacted>, Value: <redacted>, ValueSpan: canonicalcbor.Span{Start: %d, End: %d}}", e.ValueSpan.Start, e.ValueSpan.End)
 }
 
 // DecodeMapSpans decodes a single canonical CBOR map from data and reports the
@@ -1009,47 +1079,22 @@ func DecodeMapSpans(data []byte) ([]SpannedMapEntry, bool, error) {
 		return nil, false, nil
 	}
 
-	c := &cursor{data: data, pos: 0}
-	_, _, arg, err := readHeader(c)
+	reader := &byteCursor{data: data, pos: 0}
+	_, _, arg, err := readHeader(reader)
 	if err != nil {
 		return nil, false, err
 	}
-	count, err := checkLength(arg, c.remaining(), MinBytesPerMapEntry)
+	count, err := checkLength(arg, reader.remaining(), MinBytesPerMapEntry)
 	if err != nil {
 		return nil, false, err
 	}
 
-	entries := make([]SpannedMapEntry, count)
-	var prevKeyBytes []byte
-	for i := 0; i < count; i++ {
-		keyStart := c.pos
-		key, err := readValue(c, 1)
-		if err != nil {
-			return nil, false, err
-		}
-		curKeyBytes := c.data[keyStart:c.pos]
-		if prevKeyBytes != nil {
-			if !keyStrictlyLess(prevKeyBytes, curKeyBytes) {
-				return nil, false, &Error{Code: ErrNonCanonicalMapOrder}
-			}
-		}
-		prevKeyBytes = curKeyBytes
-
-		valStart := c.pos
-		val, err := readValue(c, 1)
-		if err != nil {
-			return nil, false, err
-		}
-		valEnd := c.pos
-
-		entries[i] = SpannedMapEntry{
-			Key:       key,
-			Value:     val,
-			ValueSpan: Span{Start: valStart, End: valEnd},
-		}
+	entries, err := readSpannedMapEntries(reader, RootDepth, count)
+	if err != nil {
+		return nil, false, err
 	}
 
-	if c.pos != len(data) {
+	if reader.pos != len(data) {
 		return nil, false, &Error{Code: ErrTrailingBytes}
 	}
 

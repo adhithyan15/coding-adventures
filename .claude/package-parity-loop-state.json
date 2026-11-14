@@ -10049,7 +10049,7 @@
     {
       "id": "canonical-cbor-go-lane-parity",
       "title": "Port canonical CBOR to Go",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": [
         "canonical-cbor-language-neutral-conformance"
       ],

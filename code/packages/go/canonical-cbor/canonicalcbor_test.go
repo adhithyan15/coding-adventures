@@ -3,6 +3,7 @@ package canonicalcbor
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"math"
 	"strings"
 	"testing"
@@ -545,6 +546,19 @@ func TestSecretSentinelLeakage(t *testing.T) {
 	if strings.Contains(msg, string(secretBytes)) {
 		t.Fatalf("error message leaked raw secret bytes: %q", msg)
 	}
+
+	// 3. SpannedMapEntry formatting redacts secret key and value payloads
+	spanned := SpannedMapEntry{
+		Key:       NewText(secretStr),
+		Value:     NewBytes(secretBytes),
+		ValueSpan: Span{Start: 5, End: 20},
+	}
+	if strings.Contains(spanned.String(), secretStr) {
+		t.Fatalf("SpannedMapEntry.String() leaked secret text: %s", spanned.String())
+	}
+	if strings.Contains(fmt.Sprintf("%#v", spanned), secretStr) {
+		t.Fatalf("SpannedMapEntry.GoString() leaked secret text: %#v", spanned)
+	}
 }
 
 func TestAtomicEncodeIntoCheckedRollback(t *testing.T) {
@@ -623,6 +637,70 @@ func TestDecodeMapSpansValid(t *testing.T) {
 		if !bytes.Equal(spanBytes, expectedValBytes) {
 			t.Errorf("entry %d span mismatch: got %x, want %x", i, spanBytes, expectedValBytes)
 		}
+	}
+}
+
+func TestDecodeMapSpansPassThroughExceedingEncoderLimit(t *testing.T) {
+	// CBR01 invariant: MaxEncodedBytes bounds the encoder only. The decoder has
+	// no input-length limit. Inputs exist that decode and will not re-encode.
+	// For those, b[s] is the value's canonical bytes even though EncodeChecked
+	// on the outer map reports encode-too-large.
+	//
+	// Construct outer map wire bytes exceeding MaxEncodedBytes (1,048,576):
+	// Map of 1 entry:
+	// - Header: 0xA1 (major 5, length 1)
+	// - Key: 0x00 (unsigned 0)
+	// - Value: byte string of length 1,048,570 bytes (header 5 bytes + 1,048,570 payload = 1,048,575 bytes <= MaxEncodedBytes)
+	// Outer map total wire bytes: 1 + 1 + 1,048,575 = 1,048,577 bytes (> 1,048,576).
+	childPayloadLen := 1048570
+	childValue := NewBytes(make([]byte, childPayloadLen))
+	childEncoded, err := EncodeChecked(childValue)
+	if err != nil {
+		t.Fatalf("child EncodeChecked failed: %v", err)
+	}
+	if len(childEncoded) != 1048575 {
+		t.Fatalf("unexpected child encoded len: %d", len(childEncoded))
+	}
+
+	var outerWire []byte
+	outerWire = append(outerWire, 0xA1) // map of 1
+	outerWire = append(outerWire, 0x00) // key: 0
+	outerWire = append(outerWire, childEncoded...)
+
+	if len(outerWire) != 1048577 {
+		t.Fatalf("expected outer wire 1048577 bytes, got %d", len(outerWire))
+	}
+
+	// 1. DecodeMapSpans must succeed
+	spans, ok, err := DecodeMapSpans(outerWire)
+	if err != nil {
+		t.Fatalf("DecodeMapSpans failed on >1MiB wire: %v", err)
+	}
+	if !ok || len(spans) != 1 {
+		t.Fatalf("expected ok=true and 1 span, got ok=%v, count=%d", ok, len(spans))
+	}
+
+	// 2. EncodeChecked on outer map must fail with ErrEncodeTooLarge
+	outerMap := NewMap([]MapEntry{
+		{Key: spans[0].Key, Value: spans[0].Value},
+	})
+	_, err = EncodeChecked(outerMap)
+	if err == nil {
+		t.Fatal("expected EncodeChecked to fail with ErrEncodeTooLarge for outer map")
+	}
+	var cborErr *Error
+	if !errors.As(err, &cborErr) || cborErr.Code != ErrEncodeTooLarge {
+		t.Fatalf("expected ErrEncodeTooLarge, got %v", err)
+	}
+
+	// 3. But EncodeChecked on the child value succeeds, and b[s] == EncodeChecked(v)!
+	childReEncoded, err := EncodeChecked(spans[0].Value)
+	if err != nil {
+		t.Fatalf("EncodeChecked on child failed: %v", err)
+	}
+	spanBytes := outerWire[spans[0].ValueSpan.Start:spans[0].ValueSpan.End]
+	if !bytes.Equal(spanBytes, childReEncoded) {
+		t.Fatalf("span bytes do not match EncodeChecked(child)")
 	}
 }
 
@@ -917,10 +995,25 @@ func FuzzDecode(f *testing.F) {
 			return
 		}
 
-		// If data successfully decoded, EncodeChecked must succeed and round-trip
+		// If data successfully decoded:
+		if len(data) > MaxEncodedBytes {
+			_, err := EncodeChecked(val)
+			if err == nil {
+				t.Fatalf("expected ErrEncodeTooLarge for input > MaxEncodedBytes")
+			}
+			var cborErr *Error
+			if !errors.As(err, &cborErr) || cborErr.Code != ErrEncodeTooLarge {
+				t.Fatalf("expected ErrEncodeTooLarge, got %v", err)
+			}
+			return
+		}
+
 		enc, err := EncodeChecked(val)
 		if err != nil {
 			t.Fatalf("Decode succeeded but EncodeChecked failed: %v", err)
+		}
+		if !bytes.Equal(enc, data) {
+			t.Fatalf("canonical encoding drift: got %x, expected %x", enc, data)
 		}
 		val2, err := Decode(enc)
 		if err != nil {
@@ -939,6 +1032,17 @@ func FuzzEncodeDecodeBijection(f *testing.F) {
 
 	f.Fuzz(func(t *testing.T, num uint64, txt string, raw []byte) {
 		if !utf8.ValidString(txt) {
+			_, err := EncodeChecked(NewText(txt))
+			if err == nil {
+				t.Fatalf("expected ErrInvalidUtf8 for invalid string: %q", txt)
+			}
+			var cborErr *Error
+			if !errors.As(err, &cborErr) || cborErr.Code != ErrInvalidUtf8 {
+				t.Fatalf("expected ErrInvalidUtf8, got %v", err)
+			}
+			if !strings.HasPrefix(err.Error(), "canonical-cbor: ") {
+				t.Fatalf("expected canonical-cbor: prefix, got %v", err.Error())
+			}
 			return
 		}
 		m := NewMap([]MapEntry{
@@ -1229,9 +1333,14 @@ func TestCVEResilienceShowcase(t *testing.T) {
 
 		for _, tc := range oomVectors {
 			t.Run(tc.name, func(t *testing.T) {
-				_, err := Decode(tc.wire)
-				if err == nil || err.(*Error).ID() != "length-too-large" {
-					t.Fatalf("expected length-too-large, got %v", err)
+				allocs := testing.AllocsPerRun(10, func() {
+					_, err := Decode(tc.wire)
+					if err == nil || err.(*Error).ID() != "length-too-large" {
+						t.Fatalf("expected length-too-large, got %v", err)
+					}
+				})
+				if allocs > 4 {
+					t.Fatalf("heap allocation detected during OOM rejection: got %.1f allocs/run, want <= 4", allocs)
 				}
 			})
 		}
@@ -1308,6 +1417,34 @@ func TestCVEResilienceShowcase(t *testing.T) {
 				}
 			})
 		}
+
+		// Ensure encoder strictly rejects invalid UTF-8 strings with atomic rollback:
+		invalidStrings := []struct {
+			name string
+			str  string
+		}{
+			{"Overlong 2-byte NUL", "\xC0\x80"},
+			{"Overlong 3-byte slash", "\xE0\x80\xAF"},
+			{"Surrogate U+D800", "\xED\xA0\x80"},
+			{"Surrogate U+DFFF", "\xED\xBF\xBF"},
+			{"Raw 0xFF byte", "\xFF"},
+		}
+		for _, tc := range invalidStrings {
+			t.Run("Encode-"+tc.name, func(t *testing.T) {
+				_, err := EncodeChecked(NewText(tc.str))
+				if err == nil || err.(*Error).ID() != "invalid-utf8" {
+					t.Fatalf("expected invalid-utf8 on EncodeChecked for %s, got %v", tc.name, err)
+				}
+				dst := []byte{0xDE, 0xAD}
+				err = EncodeIntoChecked(NewText(tc.str), &dst)
+				if err == nil || err.(*Error).ID() != "invalid-utf8" {
+					t.Fatalf("expected invalid-utf8 on EncodeIntoChecked for %s, got %v", tc.name, err)
+				}
+				if !bytes.Equal(dst, []byte{0xDE, 0xAD}) {
+					t.Fatalf("atomic rollback violated on invalid UTF-8: dst was modified to %x", dst)
+				}
+			})
+		}
 	})
 
 	t.Run("CVE-6: Trailing-byte smuggling and stream confusion", func(t *testing.T) {
@@ -1344,6 +1481,21 @@ func TestCVEResilienceShowcase(t *testing.T) {
 		}
 		if !strings.HasPrefix(errMsg, "canonical-cbor: ") {
 			t.Fatalf("error message missing standard prefix: %q", errMsg)
+		}
+
+		// Also verify SpannedMapEntry formatting redacts secret key and value payloads:
+		spanned := SpannedMapEntry{
+			Key:       NewText(confidentialToken),
+			Value:     NewText("SECRET_VALUE_99999"),
+			ValueSpan: Span{Start: 2, End: 10},
+		}
+		strRep := fmt.Sprintf("%v", spanned)
+		goStrRep := fmt.Sprintf("%#v", spanned)
+		if strings.Contains(strRep, confidentialToken) || strings.Contains(strRep, "SECRET_VALUE_99999") {
+			t.Fatalf("SpannedMapEntry.String() leaked secret material: %s", strRep)
+		}
+		if strings.Contains(goStrRep, confidentialToken) || strings.Contains(goStrRep, "SECRET_VALUE_99999") {
+			t.Fatalf("SpannedMapEntry.GoString() leaked secret material: %s", goStrRep)
 		}
 	})
 }
