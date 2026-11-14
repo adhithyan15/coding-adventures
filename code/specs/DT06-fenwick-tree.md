@@ -735,3 +735,13 @@ for _ in range(10_000):
   indices first. The Fenwick tree operates on the compressed indices, giving
   O(n log n) algorithms for problems like "number of elements smaller than x
   seen so far."
+
+## Cross-language conformance
+
+The language-neutral observable contract and deterministic fixtures live in
+[`fixtures/fenwick-tree-v1/`](fixtures/fenwick-tree-v1/). Implementations must
+preserve exact signed integer results over the portable 2^53-1 absolute-sum
+bound, reject out-of-domain operations atomically, and agree on validation
+precedence. The fixture documentation includes a bounded exhaustive array-oracle
+domain and the distinction between signed sums and nonnegative `find_kth`
+frequencies. The fixture is a conformance oracle, not a runtime dependency.
