@@ -70,13 +70,20 @@ const int wireByteTrue =
 const int wireByteNull =
     (majorSimpleOrFloat << majorTypeShift) | simpleNull; // 0xF6
 
+/// Bit widths and byte masks for big-endian integer serialization:
+const int uint64BitWidth = 64;
+const int bitsPerByte = 8;
+const int byteMask = 0xFF;
+
+/// Maximum unsigned integer boundaries for CBOR argument width selection:
+final BigInt maxUint8 = BigInt.from(0xFF);
+final BigInt maxUint16 = BigInt.from(0xFFFF);
+final BigInt maxUint32 = BigInt.from(0xFFFFFFFF);
+final BigInt maxUint64 = (BigInt.one << uint64BitWidth) - BigInt.one;
+
 /// Minimum wire bytes required per element to prevent hostile pre-allocation DoS:
 const int minBytesPerElement = 1;
 const int minBytesPerMapEntry = 2;
-
-/// Initial allocation capacities for buffers:
-const int initialOutputCapacity = 64;
-const int initialKeyCapacity = 32;
 
 /// UTF-16 surrogate code point boundaries:
 const int surrogateHighStart = 0xD800;

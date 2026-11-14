@@ -7,8 +7,42 @@ import 'dart:typed_data';
 import 'constants.dart';
 import 'messages.dart';
 
-/// Maximum 64-bit unsigned integer value (2^64 - 1).
-final BigInt maxUint64 = (BigInt.one << 64) - BigInt.one;
+/// Validates that a 64-bit integer is within unsigned range [0, 2^64 - 1].
+BigInt validateU64(BigInt v) {
+  if (v < BigInt.zero || v > maxUint64) {
+    throw const CborError(CborErrorId.lengthTooLarge);
+  }
+  return v;
+}
+
+/// Converts a non-negative Dart int to BigInt, rejecting negative values.
+BigInt u64FromInt(int value) {
+  if (value < 0) {
+    throw const CborError(CborErrorId.lengthTooLarge);
+  }
+  return BigInt.from(value);
+}
+
+/// Generic structural equality comparison for nullable lists.
+bool listEquals<T>(List<T>? a, List<T>? b) {
+  if (identical(a, b)) return true;
+  if (a == null || b == null) return false;
+  if (a.length != b.length) return false;
+  for (var i = 0; i < a.length; i++) {
+    if (a[i] != b[i]) return false;
+  }
+  return true;
+}
+
+/// Bytewise equality comparison for byte slices.
+bool bytesEqual(Uint8List a, Uint8List b) {
+  if (identical(a, b)) return true;
+  if (a.length != b.length) return false;
+  for (var i = 0; i < a.length; i++) {
+    if (a[i] != b[i]) return false;
+  }
+  return true;
+}
 
 /// Validates that a Dart string consists strictly of valid Unicode scalar values.
 ///
@@ -137,8 +171,9 @@ final class DecodeMapSpansResult {
   final List<SpannedMapEntry>? entries;
   final bool isMap;
 
-  const DecodeMapSpansResult.map(List<SpannedMapEntry> this.entries)
-      : isMap = true;
+  DecodeMapSpansResult.map(List<SpannedMapEntry> entries)
+      : entries = List<SpannedMapEntry>.unmodifiable(entries),
+        isMap = true;
 
   const DecodeMapSpansResult.nonMap()
       : entries = null,
@@ -149,20 +184,11 @@ final class DecodeMapSpansResult {
       identical(this, other) ||
       (other is DecodeMapSpansResult &&
           other.isMap == isMap &&
-          _spannedEntriesEqual(entries, other.entries));
+          listEquals(entries, other.entries));
 
   @override
-  int get hashCode => Object.hash(isMap, entries?.length);
-}
-
-bool _spannedEntriesEqual(List<SpannedMapEntry>? a, List<SpannedMapEntry>? b) {
-  if (identical(a, b)) return true;
-  if (a == null || b == null) return false;
-  if (a.length != b.length) return false;
-  for (var i = 0; i < a.length; i++) {
-    if (a[i] != b[i]) return false;
-  }
-  return true;
+  int get hashCode =>
+      Object.hash(isMap, entries == null ? null : Object.hashAll(entries!));
 }
 
 /// The high-level data types defined by the CBOR data model.
@@ -192,22 +218,10 @@ final class CborUnsigned extends CborValue {
   final BigInt value;
 
   CborUnsigned(BigInt value)
-      : value = _validateU64(value),
+      : value = validateU64(value),
         super();
 
-  factory CborUnsigned.fromInt(int value) {
-    if (value < 0) {
-      throw const CborError(CborErrorId.lengthTooLarge);
-    }
-    return CborUnsigned(BigInt.from(value));
-  }
-
-  static BigInt _validateU64(BigInt v) {
-    if (v < BigInt.zero || v > maxUint64) {
-      throw const CborError(CborErrorId.lengthTooLarge);
-    }
-    return v;
-  }
+  factory CborUnsigned.fromInt(int value) => CborUnsigned(u64FromInt(value));
 
   @override
   CborKind get kind => CborKind.unsigned;
@@ -228,22 +242,10 @@ final class CborNegative extends CborValue {
   final BigInt value;
 
   CborNegative(BigInt value)
-      : value = _validateU64(value),
+      : value = validateU64(value),
         super();
 
-  factory CborNegative.fromInt(int value) {
-    if (value < 0) {
-      throw const CborError(CborErrorId.lengthTooLarge);
-    }
-    return CborNegative(BigInt.from(value));
-  }
-
-  static BigInt _validateU64(BigInt v) {
-    if (v < BigInt.zero || v > maxUint64) {
-      throw const CborError(CborErrorId.lengthTooLarge);
-    }
-    return v;
-  }
+  factory CborNegative.fromInt(int value) => CborNegative(u64FromInt(value));
 
   @override
   CborKind get kind => CborKind.negative;
@@ -277,10 +279,10 @@ final class CborBytes extends CborValue {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is CborBytes && _bytesEqual(_bytes, other._bytes));
+      (other is CborBytes && bytesEqual(_bytes, other._bytes));
 
   @override
-  int get hashCode => _bytesHashCode(_bytes);
+  int get hashCode => Object.hashAll(_bytes);
 
   @override
   String toString() => 'CborBytes($_bytes)';
@@ -328,7 +330,7 @@ final class CborArray extends CborValue {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is CborArray && _listEquals(_items, other._items));
+      (other is CborArray && listEquals(_items, other._items));
 
   @override
   int get hashCode => Object.hashAll(_items);
@@ -374,7 +376,7 @@ final class CborMap extends CborValue {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is CborMap && _mapEntriesEqual(_entries, other._entries));
+      (other is CborMap && listEquals(_entries, other._entries));
 
   @override
   int get hashCode => Object.hashAll(_entries);
@@ -389,22 +391,11 @@ final class CborTag extends CborValue {
   final CborValue value;
 
   CborTag(BigInt tag, this.value)
-      : tag = _validateU64(tag),
+      : tag = validateU64(tag),
         super();
 
-  factory CborTag.fromInt(int tag, CborValue value) {
-    if (tag < 0) {
-      throw const CborError(CborErrorId.lengthTooLarge);
-    }
-    return CborTag(BigInt.from(tag), value);
-  }
-
-  static BigInt _validateU64(BigInt v) {
-    if (v < BigInt.zero || v > maxUint64) {
-      throw const CborError(CborErrorId.lengthTooLarge);
-    }
-    return v;
-  }
+  factory CborTag.fromInt(int tag, CborValue value) =>
+      CborTag(u64FromInt(tag), value);
 
   @override
   CborKind get kind => CborKind.tag;
@@ -456,41 +447,4 @@ final class CborNull extends CborValue {
 
   @override
   String toString() => 'CborNull()';
-}
-
-// Byte-slice comparison helpers:
-
-bool _bytesEqual(Uint8List a, Uint8List b) {
-  if (identical(a, b)) return true;
-  if (a.length != b.length) return false;
-  for (var i = 0; i < a.length; i++) {
-    if (a[i] != b[i]) return false;
-  }
-  return true;
-}
-
-int _bytesHashCode(Uint8List bytes) {
-  var hash = 0;
-  for (var i = 0; i < bytes.length; i++) {
-    hash = (hash * 31 + bytes[i]) & 0x3FFFFFFF;
-  }
-  return hash;
-}
-
-bool _listEquals(List<CborValue> a, List<CborValue> b) {
-  if (identical(a, b)) return true;
-  if (a.length != b.length) return false;
-  for (var i = 0; i < a.length; i++) {
-    if (a[i] != b[i]) return false;
-  }
-  return true;
-}
-
-bool _mapEntriesEqual(List<CborMapEntry> a, List<CborMapEntry> b) {
-  if (identical(a, b)) return true;
-  if (a.length != b.length) return false;
-  for (var i = 0; i < a.length; i++) {
-    if (a[i] != b[i]) return false;
-  }
-  return true;
 }

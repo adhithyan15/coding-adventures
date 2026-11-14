@@ -36,6 +36,13 @@
 library canonical_cbor;
 
 export 'src/cbor_types.dart';
-export 'src/codec.dart';
+export 'src/codec.dart'
+    show
+        decode,
+        decodeMapSpans,
+        encode,
+        encodeChecked,
+        encodeInto,
+        encodeIntoChecked;
 export 'src/constants.dart';
 export 'src/messages.dart';

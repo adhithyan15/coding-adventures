@@ -256,6 +256,7 @@ void main() {
         )
       ]);
       expect(resMap == resMapDiff, isFalse);
+      expect(resMap.hashCode != resMapDiff.hashCode, isTrue);
     });
 
     test('Structural equality and hash codes across types', () {
@@ -369,6 +370,37 @@ void main() {
 
       expect(() => encodeIntoChecked(badVal, dst), throwsA(isA<CborError>()));
       // Destination buffer must remain 100% untouched:
+      expect(dst, equals([0x01, 0x02, 0x03]));
+    });
+
+    test('encodeIntoChecked atomic rollback on mid-map duplicate keys', () {
+      final dst = <int>[0x01, 0x02, 0x03];
+      final dupMap = CborMap([
+        CborMapEntry(CborText('alpha'), CborUnsigned.fromInt(1)),
+        CborMapEntry(CborText('beta'), CborUnsigned.fromInt(2)),
+        CborMapEntry(CborText('alpha'), CborUnsigned.fromInt(3)),
+      ]);
+
+      expect(
+          () => encodeIntoChecked(dupMap, dst),
+          throwsA(predicate(
+              (e) => e is CborError && e.id == CborErrorId.duplicateMapKey)));
+      expect(dst, equals([0x01, 0x02, 0x03]));
+    });
+
+    test('encodeIntoChecked atomic rollback on mid-map size limit overflow',
+        () {
+      final dst = <int>[0x01, 0x02, 0x03];
+      final bigChild = CborBytes(Uint8List(maxEncodedBytes - 10));
+      final overflowMap = CborMap([
+        CborMapEntry(CborUnsigned.fromInt(1), bigChild),
+        CborMapEntry(CborUnsigned.fromInt(2), CborBytes(Uint8List(20))),
+      ]);
+
+      expect(
+          () => encodeIntoChecked(overflowMap, dst),
+          throwsA(predicate(
+              (e) => e is CborError && e.id == CborErrorId.encodeTooLarge)));
       expect(dst, equals([0x01, 0x02, 0x03]));
     });
   });
@@ -525,6 +557,49 @@ void main() {
           () => decodeMapSpans(outOfOrder),
           throwsA(predicate((e) =>
               e is CborError && e.id == CborErrorId.nonCanonicalMapOrder)));
+
+      // Indefinite map header: 0xBF
+      expect(
+          () => decodeMapSpans(Uint8List.fromList([0xBF, 0xFF])),
+          throwsA(predicate(
+              (e) => e is CborError && e.id == CborErrorId.indefinite)));
+
+      // Non-minimal map count: 0xB800
+      expect(
+          () => decodeMapSpans(Uint8List.fromList([0xB8, 0x00])),
+          throwsA(predicate(
+              (e) => e is CborError && e.id == CborErrorId.nonMinimalInteger)));
+
+      // Reserved additional-info code on map header: 0xBC (info 28)
+      expect(
+          () => decodeMapSpans(Uint8List.fromList([0xBC])),
+          throwsA(predicate(
+              (e) => e is CborError && e.id == CborErrorId.reserved)));
+    });
+
+    test(
+        'Defensive immutability: DecodeMapSpansResult, CborMap, and CborArray expose unmodifiable lists',
+        () {
+      final map = CborMap([
+        CborMapEntry(CborText('key'), CborUnsigned.fromInt(42)),
+      ]);
+      expect(
+          () => map.entries
+              .add(CborMapEntry(CborText('k2'), CborUnsigned.fromInt(1))),
+          throwsUnsupportedError);
+      expect(() => map.entries.clear(), throwsUnsupportedError);
+
+      final arr = CborArray([CborUnsigned.fromInt(1)]);
+      expect(
+          () => arr.items.add(CborUnsigned.fromInt(2)), throwsUnsupportedError);
+      expect(() => arr.items.clear(), throwsUnsupportedError);
+
+      final encoded = encodeChecked(map);
+      final spans = decodeMapSpans(encoded);
+      expect(spans.isMap, isTrue);
+      expect(() => spans.entries!.add(spans.entries!.first),
+          throwsUnsupportedError);
+      expect(() => spans.entries!.clear(), throwsUnsupportedError);
     });
 
     test('CBR01 pass-through rationale: map > 1 MiB decodes spans', () {
@@ -727,20 +802,6 @@ void main() {
             () => CborText(str),
             throwsA(predicate(
                 (e) => e is CborError && e.id == CborErrorId.invalidUtf8)));
-
-        final dst = <int>[0xDE, 0xAD];
-        // Test that encodeIntoChecked on any invalid text rolls back:
-        expect(() {
-          try {
-            final t = CborText(str);
-            encodeIntoChecked(t, dst);
-          } catch (_) {
-            rethrow;
-          }
-        },
-            throwsA(predicate(
-                (e) => e is CborError && e.id == CborErrorId.invalidUtf8)));
-        expect(dst, equals([0xDE, 0xAD]));
       }
     });
 

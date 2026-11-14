@@ -55,8 +55,7 @@ The encoder produces, and the decoder strictly enforces, the following rules:
   and signature-bypass attacks.
 - **Pure Computation**: Zero dependencies (`required_capabilities.json: []`). Uses only `dart:typed_data`
   and `dart:convert`. `dart:io`, `dart:mirrors`, and `dart:ffi` are completely absent from `lib/`.
-- **Atomic Rollback**: `encodeIntoChecked` records the initial buffer length and truncates it back
-  to original length if any serialization or limit error occurs.
+- **Atomic Rollback**: `encodeIntoChecked` stages serialization through `encodeChecked` before appending to destination, guaranteeing the destination buffer remains completely untouched if encoding fails at any stage.
 
 ## Resource Bounds & Threat Model
 
@@ -106,9 +105,9 @@ if (!result.isMap) {
   return;
 }
 
-for (final entry in result.entries) {
+for (final entry in result.entries!) {
   // byte span matches exact re-encoding of entry.value
-  final subBytes = data.sublist(entry.span.start, entry.span.end);
-  assert(identical(subBytes, encodeChecked(entry.value)));
+  final subBytes = data.sublist(entry.valueSpan.start, entry.valueSpan.end);
+  assert(bytesEqual(subBytes, encodeChecked(entry.value)));
 }
 ```

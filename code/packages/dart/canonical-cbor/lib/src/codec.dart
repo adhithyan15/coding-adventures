@@ -8,11 +8,6 @@ import 'dart:typed_data';
 import 'cbor_types.dart';
 import 'constants.dart';
 
-final BigInt _maxInline = BigInt.from(infoInlineMax);
-final BigInt _maxUint8 = BigInt.from(0xFF);
-final BigInt _maxUint16 = BigInt.from(0xFFFF);
-final BigInt _maxUint32 = BigInt.from(0xFFFFFFFF);
-
 /// Encodes a [CborValue] into canonical CBOR bytes adhering to RFC 8949 §4.2.3.
 ///
 /// Invariants enforced:
@@ -118,7 +113,7 @@ void _encodeMap(List<CborMapEntry> entries, List<int> out, int depth) {
   });
 
   for (var i = 1; i < encodedEntries.length; i++) {
-    if (_bytesEqual(
+    if (bytesEqual(
         encodedEntries[i - 1].encodedKey, encodedEntries[i].encodedKey)) {
       throw const CborError(CborErrorId.duplicateMapKey);
     }
@@ -140,15 +135,6 @@ int _compareBytes(Uint8List a, Uint8List b) {
   return a.length.compareTo(b.length);
 }
 
-bool _bytesEqual(Uint8List a, Uint8List b) {
-  if (identical(a, b)) return true;
-  if (a.length != b.length) return false;
-  for (var i = 0; i < a.length; i++) {
-    if (a[i] != b[i]) return false;
-  }
-  return true;
-}
-
 bool _keyStrictlyLess(Uint8List a, Uint8List b) {
   if (a.length != b.length) {
     return a.length < b.length;
@@ -161,36 +147,41 @@ bool _keyStrictlyLess(Uint8List a, Uint8List b) {
   return false;
 }
 
+void _writeBigEndianUint(List<int> out, BigInt value, int byteCount) {
+  for (var i = byteCount - 1; i >= 0; i--) {
+    final shift = i * bitsPerByte;
+    _pushByteChecked(out, ((value >> shift) & BigInt.from(byteMask)).toInt());
+  }
+}
+
+BigInt _readBigEndianUint(Uint8List bytes, int byteCount) {
+  var val = BigInt.zero;
+  for (var i = 0; i < byteCount; i++) {
+    val = (val << bitsPerByte) | BigInt.from(bytes[i]);
+  }
+  return val;
+}
+
 void _writeTypeAndArgument(List<int> out, int major, BigInt arg) {
   if (arg < BigInt.zero || arg > maxUint64) {
     throw const CborError(CborErrorId.lengthTooLarge);
   }
   final majorBits = major << majorTypeShift;
 
-  if (arg <= _maxInline) {
+  if (arg <= BigInt.from(infoInlineMax)) {
     _pushByteChecked(out, majorBits | arg.toInt());
-  } else if (arg <= _maxUint8) {
+  } else if (arg <= maxUint8) {
     _pushByteChecked(out, majorBits | info1ByteArg);
     _pushByteChecked(out, arg.toInt());
-  } else if (arg <= _maxUint16) {
+  } else if (arg <= maxUint16) {
     _pushByteChecked(out, majorBits | info2ByteArg);
-    final val = arg.toInt();
-    _pushByteChecked(out, (val >> 8) & 0xFF);
-    _pushByteChecked(out, val & 0xFF);
-  } else if (arg <= _maxUint32) {
+    _writeBigEndianUint(out, arg, argWidth2Bytes);
+  } else if (arg <= maxUint32) {
     _pushByteChecked(out, majorBits | info4ByteArg);
-    final val = arg.toInt();
-    _pushByteChecked(out, (val >> 24) & 0xFF);
-    _pushByteChecked(out, (val >> 16) & 0xFF);
-    _pushByteChecked(out, (val >> 8) & 0xFF);
-    _pushByteChecked(out, val & 0xFF);
+    _writeBigEndianUint(out, arg, argWidth4Bytes);
   } else {
     _pushByteChecked(out, majorBits | info8ByteArg);
-    for (var i = 7; i >= 0; i--) {
-      final shift = i * 8;
-      final byteVal = ((arg >> shift) & BigInt.from(0xFF)).toInt();
-      _pushByteChecked(out, byteVal);
-    }
+    _writeBigEndianUint(out, arg, argWidth8Bytes);
   }
 }
 
@@ -248,10 +239,8 @@ int _checkLength(BigInt declared, int remainingBytes, int minBytesPerUnit) {
     throw const CborError(CborErrorId.lengthTooLarge);
   }
   final count = declared.toInt();
-  if (minBytesPerUnit > 0) {
-    if (count > remainingBytes ~/ minBytesPerUnit) {
-      throw const CborError(CborErrorId.lengthTooLarge);
-    }
+  if (count > remainingBytes ~/ minBytesPerUnit) {
+    throw const CborError(CborErrorId.lengthTooLarge);
   }
   return count;
 }
@@ -261,22 +250,22 @@ void _validateMinimalArgument(int major, int info, BigInt arg) {
 
   switch (info) {
     case info1ByteArg:
-      if (arg <= _maxInline) {
+      if (arg <= BigInt.from(infoInlineMax)) {
         throw const CborError(CborErrorId.nonMinimalInteger);
       }
       break;
     case info2ByteArg:
-      if (arg <= _maxUint8) {
+      if (arg <= maxUint8) {
         throw const CborError(CborErrorId.nonMinimalInteger);
       }
       break;
     case info4ByteArg:
-      if (arg <= _maxUint16) {
+      if (arg <= maxUint16) {
         throw const CborError(CborErrorId.nonMinimalInteger);
       }
       break;
     case info8ByteArg:
-      if (arg <= _maxUint32) {
+      if (arg <= maxUint32) {
         throw const CborError(CborErrorId.nonMinimalInteger);
       }
       break;
@@ -295,25 +284,18 @@ void _validateMinimalArgument(int major, int info, BigInt arg) {
     arg = BigInt.from(reader.readU8());
   } else if (info == info2ByteArg) {
     final bytes = reader.readN(argWidth2Bytes);
-    arg = BigInt.from((bytes[0] << 8) | bytes[1]);
+    arg = _readBigEndianUint(bytes, argWidth2Bytes);
   } else if (info == info4ByteArg) {
     final bytes = reader.readN(argWidth4Bytes);
-    final val =
-        (bytes[0] << 24) | (bytes[1] << 16) | (bytes[2] << 8) | bytes[3];
-    arg = BigInt.from(val & 0xFFFFFFFF);
+    arg = _readBigEndianUint(bytes, argWidth4Bytes);
   } else if (info == info8ByteArg) {
     final bytes = reader.readN(argWidth8Bytes);
-    var val = BigInt.zero;
-    for (var i = 0; i < 8; i++) {
-      val = (val << 8) | BigInt.from(bytes[i]);
-    }
-    arg = val;
+    arg = _readBigEndianUint(bytes, argWidth8Bytes);
   } else if (info >= infoReserved28 && info <= infoReserved30) {
     throw const CborError(CborErrorId.reserved);
-  } else if (info == infoIndefinite) {
-    throw const CborError(CborErrorId.indefinite);
   } else {
-    throw const CborError(CborErrorId.reserved);
+    // info == infoIndefinite (since additionalInfoMask is 0x1F, values 0..31 are exhausted)
+    throw const CborError(CborErrorId.indefinite);
   }
 
   _validateMinimalArgument(major, info, arg);
@@ -352,7 +334,7 @@ CborValue _readArray(_ByteCursor reader, int depth, BigInt arg) {
 
 CborValue _readMap(_ByteCursor reader, int depth, BigInt arg) {
   final count = _checkLength(arg, reader.remaining, minBytesPerMapEntry);
-  final spanned = readSpannedMapEntries(reader, depth, count);
+  final spanned = _readSpannedMapEntries(reader, depth, count);
   final entries = spanned.map((s) => CborMapEntry(s.key, s.value)).toList();
   return CborMap(entries);
 }
@@ -361,7 +343,7 @@ CborValue _readMap(_ByteCursor reader, int depth, BigInt arg) {
 ///
 /// Shared between [_readMap] and [decodeMapSpans] to ensure DRY single-source
 /// validation of length-first map key ordering and duplicate rejection.
-List<SpannedMapEntry> readSpannedMapEntries(
+List<SpannedMapEntry> _readSpannedMapEntries(
     _ByteCursor reader, int parentDepth, int entryCount) {
   final entries = <SpannedMapEntry>[];
   Uint8List? prevKeyBytes;
@@ -464,7 +446,7 @@ DecodeMapSpansResult decodeMapSpans(Uint8List data) {
   final reader = _ByteCursor(data);
   final (_, _, arg) = _readHeader(reader);
   final count = _checkLength(arg, reader.remaining, minBytesPerMapEntry);
-  final entries = readSpannedMapEntries(reader, rootDepth, count);
+  final entries = _readSpannedMapEntries(reader, rootDepth, count);
 
   if (reader.pos != data.length) {
     throw const CborError(CborErrorId.trailingBytes);
