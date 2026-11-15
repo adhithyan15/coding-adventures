@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased - source-input boundary sync (python dsp packages)
+
+- `code/packages/python/dsp-complex`, `code/packages/python/dsp-dct`, `code/packages/python/dsp-fft`, and `code/packages/python/dsp-filters` added to `python-uv-workspace-manifest`: #19437 added these packages to `code/packages/python/pyproject.toml`. The checked repository source-input boundary added all four roots, the projection was regenerated with the repository's generator, and the pinned boundary digest moved from `3f8aff75...` to `43a5ed7f...`. The boundary has 497 scopes and 511 authorizations (were 493 and 507). No behaviour change in the tool.
+
 ## Unreleased - source-input boundary sync (python packages)
 
 - `code/packages/python/ca-capability-analyzer` and `code/packages/python/test-bootstrap` added to `python-uv-workspace-manifest`: #19424 added both packages to `code/packages/python/pyproject.toml`. The checked repository source-input boundary added both roots, the projection was regenerated with the repository's generator, and the pinned boundary digest moved from `f338935e...` to `3f8aff75...`. The boundary has 493 scopes and 507 authorizations (were 491 and 505). No behaviour change in the tool.
