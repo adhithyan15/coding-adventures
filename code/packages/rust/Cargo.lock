@@ -12214,6 +12214,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "sim-teletype-asr33"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "logic-gates",
+ "paint-instructions",
+ "paint-vm-ascii",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "simd-adler32"
 version = "0.3.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
