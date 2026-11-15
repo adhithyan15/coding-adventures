@@ -779,6 +779,7 @@ members = [
     "sim-pdp8-ge225-io-bridge",
     "game-clock",
     "game-pong",
+    "game-breakout",
     "perl-bridge",
     "polynomial-c",
     "wasm-execution",
