@@ -35,7 +35,6 @@ defmodule CodingAdventures.Hamurabi do
   # ── Protocol Constants ──────────────────────────────────────────────────────
 
   @pcg_multiplier 6_364_136_223_846_793_005
-  @hamurabi_stream_id 54
   @pcg_inc 109
   @mask64 0xFFFF_FFFF_FFFF_FFFF
   @mask32 0xFFFF_FFFF
