@@ -1,0 +1,7 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/sim-discrete-arcade-logic",
+  "capabilities": [],
+  "justification": "Gate-level netlist simulator for 7400-series TTL ICs, raster sync generator, and paddle ADC deterministic simulation. Zero dynamic memory allocation and no ambient capabilities."
+}

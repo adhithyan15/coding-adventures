@@ -1,0 +1,28 @@
+[package]
+name = "sim-discrete-arcade-logic"
+version = "0.1.0"
+edition = "2021"
+description = "Gate-level netlist simulator for 7400-series TTL ICs, raster sync generator, and paddle ADC (GAME15a)"
+license = "MIT"
+
+[dependencies]
+logic-gates = { path = "../logic-gates" }
+
+[dev-dependencies]
+coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
+coding_adventures_sha256 = { path = "../sha256" }
+capability-runtime-conformance = { path = "../capability-runtime-conformance" }
+
+[[test]]
+name = "conformance"
+path = "tests/conformance.rs"
+
+[[test]]
+name = "microbenchmarks"
+path = "tests/microbenchmarks.rs"
+harness = false
+
+[[test]]
+name = "runtime_capability"
+path = "tests/runtime_capability.rs"
+harness = false
