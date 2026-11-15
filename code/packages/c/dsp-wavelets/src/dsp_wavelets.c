@@ -15,7 +15,6 @@
  */
 #include "dsp_wavelets.h"
 
-#include <math.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -46,6 +45,78 @@ static inline int checked_mul_size(size_t a, size_t b, size_t *out) {
 static inline int wv_isfinite(float x) {
     /* Pure IEEE-754: x == x fails for NaN; (x - x == 0.0f) fails for ±Inf */
     return (x == x) && ((x - x) == 0.0f);
+}
+
+/* Pure ISO C math helpers (zero libm/-lm dependency for iso-harness). */
+static float wv_sqrtf(float x) {
+    double m;
+    double scale = 1.0;
+    double g;
+    int iter;
+    if (x <= 0.0f || !wv_isfinite(x)) {
+        return 0.0f;
+    }
+    m = (double)x;
+    while (m < 0.25) { m *= 4.0; scale *= 0.5; }
+    while (m >= 1.0) { m *= 0.25; scale *= 2.0; }
+    g = 0.5 * (1.0 + m);
+    for (iter = 0; iter < 8; ++iter) {
+        g = 0.5 * (g + m / g);
+    }
+    return (float)(g * scale);
+}
+
+static float wv_expf(float x) {
+    const double LN2 = 0.693147180559945309417;
+    double d;
+    int k;
+    double r;
+    double term = 1.0;
+    double sum = 1.0;
+    int i;
+    if (x <= -88.0f) { return 0.0f; }
+    if (x >= 88.0f) { return 3.402823466e+38f; }
+    d = (double)x;
+    k = (int)(d / LN2 + (d >= 0.0 ? 0.5 : -0.5));
+    r = d - (double)k * LN2;
+    for (i = 1; i <= 12; ++i) {
+        term *= r / (double)i;
+        sum += term;
+    }
+    while (k > 0) { sum *= 2.0; --k; }
+    while (k < 0) { sum *= 0.5; ++k; }
+    return (float)sum;
+}
+
+static void wv_sincosf(float x, float *sin_out, float *cos_out) {
+    const double PI = 3.14159265358979323846;
+    const double TWO_PI = 6.28318530717958647692;
+    double d = (double)x;
+    double r;
+    double r2;
+    double s_term;
+    double c_term;
+    double s_sum;
+    double c_sum;
+    int k;
+    int n;
+    k = (int)(d / TWO_PI + (d >= 0.0 ? 0.5 : -0.5));
+    r = d - (double)k * TWO_PI;
+    if (r > PI) { r -= TWO_PI; }
+    if (r < -PI) { r += TWO_PI; }
+    r2 = r * r;
+    s_term = r;
+    s_sum = r;
+    c_term = 1.0;
+    c_sum = 1.0;
+    for (n = 1; n <= 9; ++n) {
+        s_term *= -r2 / (double)((2 * n) * (2 * n + 1));
+        s_sum += s_term;
+        c_term *= -r2 / (double)((2 * n - 1) * (2 * n));
+        c_sum += c_term;
+    }
+    *sin_out = (float)s_sum;
+    *cos_out = (float)c_sum;
 }
 
 /* ================================================================== */
@@ -1416,7 +1487,7 @@ wv_error_t wv_cwt(const float *signal, size_t signal_len,
         const float OMEGA_0 = 6.0f;
         for (s_idx = 0; s_idx < scales_len; ++s_idx) {
             float s = scales[s_idx];
-            float inv_sqrt_s = 1.0f / sqrtf(s);
+            float inv_sqrt_s = 1.0f / wv_sqrtf(s);
             float inv_s = 1.0f / s;
             int64_t half_support = (int64_t)(8.0f * s + 0.999f);
             if (half_support > (int64_t)signal_len) {
@@ -1438,15 +1509,21 @@ wv_error_t wv_cwt(const float *signal, size_t signal_len,
 
                 for (k = start_k; k <= end_k; ++k) {
                     float t = ((float)k - (float)i) * inv_s;
-                    float envelope = PI_POW_NEG_QUARTER * expf(-0.5f * t * t);
+                    float envelope = PI_POW_NEG_QUARTER * wv_expf(-0.5f * t * t);
                     float phase = OMEGA_0 * t;
-                    float re_psi = envelope * cosf(phase);
-                    float im_psi = -envelope * sinf(phase);
-                    float x = signal[(size_t)k];
+                    float s_val;
+                    float c_val;
+                    float re_psi;
+                    float im_psi;
+                    float x;
+                    wv_sincosf(phase, &s_val, &c_val);
+                    re_psi = envelope * c_val;
+                    im_psi = -envelope * s_val;
+                    x = signal[(size_t)k];
                     re_acc += x * re_psi;
                     im_acc += x * im_psi;
                 }
-                result[s_idx * signal_len + i] = inv_sqrt_s * sqrtf(re_acc * re_acc + im_acc * im_acc);
+                result[s_idx * signal_len + i] = inv_sqrt_s * wv_sqrtf(re_acc * re_acc + im_acc * im_acc);
             }
         }
     } else {
@@ -1454,7 +1531,7 @@ wv_error_t wv_cwt(const float *signal, size_t signal_len,
         const float c = 0.86732507f; /* (2.0 / sqrt(3.0)) * pi^(-1/4) */
         for (s_idx = 0; s_idx < scales_len; ++s_idx) {
             float s = scales[s_idx];
-            float inv_sqrt_s = 1.0f / sqrtf(s);
+            float inv_sqrt_s = 1.0f / wv_sqrtf(s);
             float inv_s = 1.0f / s;
             int64_t half_support = (int64_t)(8.0f * s + 0.999f);
             if (half_support > (int64_t)signal_len) {
@@ -1475,7 +1552,7 @@ wv_error_t wv_cwt(const float *signal, size_t signal_len,
 
                 for (k = start_k; k <= end_k; ++k) {
                     float t = ((float)k - (float)i) * inv_s;
-                    float psi = c * (1.0f - t * t) * expf(-0.5f * t * t);
+                    float psi = c * (1.0f - t * t) * wv_expf(-0.5f * t * t);
                     acc += signal[(size_t)k] * psi;
                 }
                 result[s_idx * signal_len + i] = inv_sqrt_s * acc;
