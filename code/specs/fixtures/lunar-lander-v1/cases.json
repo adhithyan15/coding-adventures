@@ -1,0 +1,1072 @@
+{
+  "version": 1,
+  "suite": "lunar_lander_deterministic_flight",
+  "cases": [
+    {
+      "id": "freefall_crater_impact",
+      "description": "Freefall descent with zero thrust from 120,000 ft until surface impact resulting in Crater",
+      "initial_state": {
+        "time_seconds": 0,
+        "altitude_mft": 120000000,
+        "velocity_mft_s": -3000000,
+        "fuel_lbs": 16500,
+        "dry_mass_lbs": 16500,
+        "status": "InFlight",
+        "impact_velocity_mft_s": null
+      },
+      "turns": [
+        {
+          "turn": 1,
+          "command": {
+            "burn_rate_lbs_s": 0,
+            "duration_seconds": 10
+          },
+          "expected_state": {
+            "time_seconds": 10,
+            "altitude_mft": 89734500,
+            "velocity_mft_s": -3053100,
+            "fuel_lbs": 16500,
+            "dry_mass_lbs": 16500,
+            "status": "InFlight",
+            "impact_velocity_mft_s": null
+          }
+        },
+        {
+          "turn": 2,
+          "command": {
+            "burn_rate_lbs_s": 0,
+            "duration_seconds": 10
+          },
+          "expected_state": {
+            "time_seconds": 20,
+            "altitude_mft": 58938000,
+            "velocity_mft_s": -3106200,
+            "fuel_lbs": 16500,
+            "dry_mass_lbs": 16500,
+            "status": "InFlight",
+            "impact_velocity_mft_s": null
+          }
+        },
+        {
+          "turn": 3,
+          "command": {
+            "burn_rate_lbs_s": 0,
+            "duration_seconds": 10
+          },
+          "expected_state": {
+            "time_seconds": 30,
+            "altitude_mft": 27610500,
+            "velocity_mft_s": -3159300,
+            "fuel_lbs": 16500,
+            "dry_mass_lbs": 16500,
+            "status": "InFlight",
+            "impact_velocity_mft_s": null
+          }
+        },
+        {
+          "turn": 4,
+          "command": {
+            "burn_rate_lbs_s": 0,
+            "duration_seconds": 10
+          },
+          "expected_state": {
+            "time_seconds": 39,
+            "altitude_mft": 0,
+            "velocity_mft_s": -3207090,
+            "fuel_lbs": 16500,
+            "dry_mass_lbs": 16500,
+            "status": "Landed(Crater)",
+            "impact_velocity_mft_s": -3207090
+          }
+        }
+      ]
+    },
+    {
+      "id": "controlled_perfect_landing",
+      "description": "Controlled two-stage terminal descent achieving Perfect landing (|V| <= 5 ft/s) with mid-step fuel refund",
+      "initial_state": {
+        "time_seconds": 50,
+        "altitude_mft": 200000,
+        "velocity_mft_s": -80000,
+        "fuel_lbs": 2000,
+        "dry_mass_lbs": 16500,
+        "status": "InFlight",
+        "impact_velocity_mft_s": null
+      },
+      "turns": [
+        {
+          "turn": 1,
+          "command": {
+            "burn_rate_lbs_s": 50,
+            "duration_seconds": 5
+          },
+          "expected_state": {
+            "time_seconds": 55,
+            "altitude_mft": 5725,
+            "velocity_mft_s": 2290,
+            "fuel_lbs": 1750,
+            "dry_mass_lbs": 16500,
+            "status": "InFlight",
+            "impact_velocity_mft_s": null
+          }
+        },
+        {
+          "turn": 2,
+          "command": {
+            "burn_rate_lbs_s": 10,
+            "duration_seconds": 10
+          },
+          "expected_state": {
+            "time_seconds": 62,
+            "altitude_mft": 0,
+            "velocity_mft_s": -4115,
+            "fuel_lbs": 1680,
+            "dry_mass_lbs": 16500,
+            "status": "Landed(Perfect)",
+            "impact_velocity_mft_s": -4115
+          }
+        }
+      ]
+    },
+    {
+      "id": "hard_landing_trajectory",
+      "description": "Terminal descent resulting in Hard landing (5 ft/s < |V| <= 15 ft/s) with landing gear damage",
+      "initial_state": {
+        "time_seconds": 50,
+        "altitude_mft": 100000,
+        "velocity_mft_s": -35000,
+        "fuel_lbs": 2000,
+        "dry_mass_lbs": 16500,
+        "status": "InFlight",
+        "impact_velocity_mft_s": null
+      },
+      "turns": [
+        {
+          "turn": 1,
+          "command": {
+            "burn_rate_lbs_s": 30,
+            "duration_seconds": 5
+          },
+          "expected_state": {
+            "time_seconds": 55,
+            "altitude_mft": 21437,
+            "velocity_mft_s": 3575,
+            "fuel_lbs": 1850,
+            "dry_mass_lbs": 16500,
+            "status": "InFlight",
+            "impact_velocity_mft_s": null
+          }
+        },
+        {
+          "turn": 2,
+          "command": {
+            "burn_rate_lbs_s": 6,
+            "duration_seconds": 10
+          },
+          "expected_state": {
+            "time_seconds": 61,
+            "altitude_mft": 0,
+            "velocity_mft_s": -12565,
+            "fuel_lbs": 1814,
+            "dry_mass_lbs": 16500,
+            "status": "Landed(Hard)",
+            "impact_velocity_mft_s": -12565
+          }
+        }
+      ]
+    },
+    {
+      "id": "crash_landing_trajectory",
+      "description": "Terminal descent resulting in Crash landing (15 ft/s < |V| <= 30 ft/s) with craft wrecked but crew surviving",
+      "initial_state": {
+        "time_seconds": 50,
+        "altitude_mft": 100000,
+        "velocity_mft_s": -35000,
+        "fuel_lbs": 2000,
+        "dry_mass_lbs": 16500,
+        "status": "InFlight",
+        "impact_velocity_mft_s": null
+      },
+      "turns": [
+        {
+          "turn": 1,
+          "command": {
+            "burn_rate_lbs_s": 30,
+            "duration_seconds": 5
+          },
+          "expected_state": {
+            "time_seconds": 55,
+            "altitude_mft": 21437,
+            "velocity_mft_s": 3575,
+            "fuel_lbs": 1850,
+            "dry_mass_lbs": 16500,
+            "status": "InFlight",
+            "impact_velocity_mft_s": null
+          }
+        },
+        {
+          "turn": 2,
+          "command": {
+            "burn_rate_lbs_s": 5,
+            "duration_seconds": 10
+          },
+          "expected_state": {
+            "time_seconds": 61,
+            "altitude_mft": 0,
+            "velocity_mft_s": -15193,
+            "fuel_lbs": 1820,
+            "dry_mass_lbs": 16500,
+            "status": "Landed(Crash)",
+            "impact_velocity_mft_s": -15193
+          }
+        }
+      ]
+    },
+    {
+      "id": "fatal_landing_trajectory",
+      "description": "High-speed descent resulting in Fatal impact (30 ft/s < |V| <= 60 ft/s) destroying lunar module",
+      "initial_state": {
+        "time_seconds": 50,
+        "altitude_mft": 250000,
+        "velocity_mft_s": -50000,
+        "fuel_lbs": 2000,
+        "dry_mass_lbs": 16500,
+        "status": "InFlight",
+        "impact_velocity_mft_s": null
+      },
+      "turns": [
+        {
+          "turn": 1,
+          "command": {
+            "burn_rate_lbs_s": 30,
+            "duration_seconds": 5
+          },
+          "expected_state": {
+            "time_seconds": 55,
+            "altitude_mft": 96437,
+            "velocity_mft_s": -11425,
+            "fuel_lbs": 1850,
+            "dry_mass_lbs": 16500,
+            "status": "InFlight",
+            "impact_velocity_mft_s": null
+          }
+        },
+        {
+          "turn": 2,
+          "command": {
+            "burn_rate_lbs_s": 5,
+            "duration_seconds": 10
+          },
+          "expected_state": {
+            "time_seconds": 61,
+            "altitude_mft": 0,
+            "velocity_mft_s": -30193,
+            "fuel_lbs": 1820,
+            "dry_mass_lbs": 16500,
+            "status": "Landed(Fatal)",
+            "impact_velocity_mft_s": -30193
+          }
+        }
+      ]
+    },
+    {
+      "id": "mid_flight_fuel_exhaustion",
+      "description": "Propellant exhaustion mid-burn at altitude followed by zero-thrust ballistic fall and touchdown without phantom fuel refund",
+      "initial_state": {
+        "time_seconds": 100,
+        "altitude_mft": 10000000,
+        "velocity_mft_s": -500000,
+        "fuel_lbs": 100,
+        "dry_mass_lbs": 16500,
+        "status": "InFlight",
+        "impact_velocity_mft_s": null
+      },
+      "turns": [
+        {
+          "turn": 1,
+          "command": {
+            "burn_rate_lbs_s": 50,
+            "duration_seconds": 10
+          },
+          "expected_state": {
+            "time_seconds": 110,
+            "altitude_mft": 4976150,
+            "velocity_mft_s": -504770,
+            "fuel_lbs": 0,
+            "dry_mass_lbs": 16500,
+            "status": "InFlight",
+            "impact_velocity_mft_s": null
+          }
+        },
+        {
+          "turn": 2,
+          "command": {
+            "burn_rate_lbs_s": 50,
+            "duration_seconds": 10
+          },
+          "expected_state": {
+            "time_seconds": 120,
+            "altitude_mft": 0,
+            "velocity_mft_s": -557870,
+            "fuel_lbs": 0,
+            "dry_mass_lbs": 16500,
+            "status": "Landed(Crater)",
+            "impact_velocity_mft_s": -557870
+          }
+        }
+      ]
+    },
+    {
+      "id": "hover_near_equilibrium",
+      "description": "Equilibrium hover step where thrust acceleration exactly balances lunar gravity (a_thrust == 5310 mft/s^2, a_net == 0)",
+      "initial_state": {
+        "time_seconds": 50,
+        "altitude_mft": 50000000,
+        "velocity_mft_s": 0,
+        "fuel_lbs": 125,
+        "dry_mass_lbs": 16500,
+        "status": "InFlight",
+        "impact_velocity_mft_s": null
+      },
+      "turns": [
+        {
+          "turn": 1,
+          "command": {
+            "burn_rate_lbs_s": 11,
+            "duration_seconds": 10
+          },
+          "expected_state": {
+            "time_seconds": 60,
+            "altitude_mft": 50000000,
+            "velocity_mft_s": 0,
+            "fuel_lbs": 15,
+            "dry_mass_lbs": 16500,
+            "status": "InFlight",
+            "impact_velocity_mft_s": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "constant_velocity_touchdown_a_half_zero",
+      "description": "Touchdown under exact net zero acceleration exercising the linear delta_t = floor(-Y/V) contact time branch",
+      "initial_state": {
+        "time_seconds": 100,
+        "altitude_mft": 15000,
+        "velocity_mft_s": -3000,
+        "fuel_lbs": 125,
+        "dry_mass_lbs": 16500,
+        "status": "InFlight",
+        "impact_velocity_mft_s": null
+      },
+      "turns": [
+        {
+          "turn": 1,
+          "command": {
+            "burn_rate_lbs_s": 11,
+            "duration_seconds": 10
+          },
+          "expected_state": {
+            "time_seconds": 105,
+            "altitude_mft": 0,
+            "velocity_mft_s": -3000,
+            "fuel_lbs": 70,
+            "dry_mass_lbs": 16500,
+            "status": "Landed(Perfect)",
+            "impact_velocity_mft_s": -3000
+          }
+        }
+      ]
+    },
+    {
+      "id": "high_altitude_full_power_braking",
+      "description": "Multi-turn maximum thrust burn (200 lbs/s) from initial flight condition reversing vertical velocity",
+      "initial_state": {
+        "time_seconds": 0,
+        "altitude_mft": 120000000,
+        "velocity_mft_s": -3000000,
+        "fuel_lbs": 16500,
+        "dry_mass_lbs": 16500,
+        "status": "InFlight",
+        "impact_velocity_mft_s": null
+      },
+      "turns": [
+        {
+          "turn": 1,
+          "command": {
+            "burn_rate_lbs_s": 200,
+            "duration_seconds": 10
+          },
+          "expected_state": {
+            "time_seconds": 10,
+            "altitude_mft": 92234500,
+            "velocity_mft_s": -2553100,
+            "fuel_lbs": 14500,
+            "dry_mass_lbs": 16500,
+            "status": "InFlight",
+            "impact_velocity_mft_s": null
+          }
+        },
+        {
+          "turn": 2,
+          "command": {
+            "burn_rate_lbs_s": 200,
+            "duration_seconds": 10
+          },
+          "expected_state": {
+            "time_seconds": 20,
+            "altitude_mft": 69104650,
+            "velocity_mft_s": -2072870,
+            "fuel_lbs": 12500,
+            "dry_mass_lbs": 16500,
+            "status": "InFlight",
+            "impact_velocity_mft_s": null
+          }
+        },
+        {
+          "turn": 3,
+          "command": {
+            "burn_rate_lbs_s": 200,
+            "duration_seconds": 10
+          },
+          "expected_state": {
+            "time_seconds": 30,
+            "altitude_mft": 50967550,
+            "velocity_mft_s": -1554550,
+            "fuel_lbs": 10500,
+            "dry_mass_lbs": 16500,
+            "status": "InFlight",
+            "impact_velocity_mft_s": null
+          }
+        },
+        {
+          "turn": 4,
+          "command": {
+            "burn_rate_lbs_s": 200,
+            "duration_seconds": 10
+          },
+          "expected_state": {
+            "time_seconds": 40,
+            "altitude_mft": 38233450,
+            "velocity_mft_s": -992270,
+            "fuel_lbs": 8500,
+            "dry_mass_lbs": 16500,
+            "status": "InFlight",
+            "impact_velocity_mft_s": null
+          }
+        },
+        {
+          "turn": 5,
+          "command": {
+            "burn_rate_lbs_s": 200,
+            "duration_seconds": 10
+          },
+          "expected_state": {
+            "time_seconds": 50,
+            "altitude_mft": 31378550,
+            "velocity_mft_s": -378710,
+            "fuel_lbs": 6500,
+            "dry_mass_lbs": 16500,
+            "status": "InFlight",
+            "impact_velocity_mft_s": null
+          }
+        },
+        {
+          "turn": 6,
+          "command": {
+            "burn_rate_lbs_s": 200,
+            "duration_seconds": 10
+          },
+          "expected_state": {
+            "time_seconds": 60,
+            "altitude_mft": 30962300,
+            "velocity_mft_s": 295460,
+            "fuel_lbs": 4500,
+            "dry_mass_lbs": 16500,
+            "status": "InFlight",
+            "impact_velocity_mft_s": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "single_step_sub_second_interval",
+      "description": "Single 1-second burn interval at standard flight condition",
+      "initial_state": {
+        "time_seconds": 20,
+        "altitude_mft": 100000000,
+        "velocity_mft_s": -2000000,
+        "fuel_lbs": 10000,
+        "dry_mass_lbs": 16500,
+        "status": "InFlight",
+        "impact_velocity_mft_s": null
+      },
+      "turns": [
+        {
+          "turn": 1,
+          "command": {
+            "burn_rate_lbs_s": 100,
+            "duration_seconds": 1
+          },
+          "expected_state": {
+            "time_seconds": 21,
+            "altitude_mft": 98012467,
+            "velocity_mft_s": -1975065,
+            "fuel_lbs": 9900,
+            "dry_mass_lbs": 16500,
+            "status": "InFlight",
+            "impact_velocity_mft_s": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "single_step_zero_burn_rate",
+      "description": "Single 5-second zero burn ballistic step in lunar gravity",
+      "initial_state": {
+        "time_seconds": 20,
+        "altitude_mft": 100000000,
+        "velocity_mft_s": -2000000,
+        "fuel_lbs": 10000,
+        "dry_mass_lbs": 16500,
+        "status": "InFlight",
+        "impact_velocity_mft_s": null
+      },
+      "turns": [
+        {
+          "turn": 1,
+          "command": {
+            "burn_rate_lbs_s": 0,
+            "duration_seconds": 5
+          },
+          "expected_state": {
+            "time_seconds": 25,
+            "altitude_mft": 89933625,
+            "velocity_mft_s": -2026550,
+            "fuel_lbs": 10000,
+            "dry_mass_lbs": 16500,
+            "status": "InFlight",
+            "impact_velocity_mft_s": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "single_step_max_burn_rate",
+      "description": "Single 10-second maximum burn rate step (200 lbs/s)",
+      "initial_state": {
+        "time_seconds": 20,
+        "altitude_mft": 100000000,
+        "velocity_mft_s": -2000000,
+        "fuel_lbs": 10000,
+        "dry_mass_lbs": 16500,
+        "status": "InFlight",
+        "impact_velocity_mft_s": null
+      },
+      "turns": [
+        {
+          "turn": 1,
+          "command": {
+            "burn_rate_lbs_s": 200,
+            "duration_seconds": 10
+          },
+          "expected_state": {
+            "time_seconds": 30,
+            "altitude_mft": 82871750,
+            "velocity_mft_s": -1425650,
+            "fuel_lbs": 8000,
+            "dry_mass_lbs": 16500,
+            "status": "InFlight",
+            "impact_velocity_mft_s": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "refusal_lifecycle_already_landed_perfect",
+      "description": "Burning after touching down with Perfect outcome fails FlightAlreadyEnded",
+      "initial_state": {
+        "time_seconds": 62,
+        "altitude_mft": 0,
+        "velocity_mft_s": -4115,
+        "fuel_lbs": 1680,
+        "dry_mass_lbs": 16500,
+        "status": "Landed(Perfect)",
+        "impact_velocity_mft_s": -4115
+      },
+      "command": {
+        "burn_rate_lbs_s": 100,
+        "duration_seconds": 5
+      },
+      "expected_error": "FlightAlreadyEnded"
+    },
+    {
+      "id": "refusal_lifecycle_already_landed_crater",
+      "description": "Burning after cratering on surface fails FlightAlreadyEnded",
+      "initial_state": {
+        "time_seconds": 39,
+        "altitude_mft": 0,
+        "velocity_mft_s": -3207090,
+        "fuel_lbs": 16500,
+        "dry_mass_lbs": 16500,
+        "status": "Landed(Crater)",
+        "impact_velocity_mft_s": -3207090
+      },
+      "command": {
+        "burn_rate_lbs_s": 0,
+        "duration_seconds": 10
+      },
+      "expected_error": "FlightAlreadyEnded"
+    },
+    {
+      "id": "refusal_lifecycle_already_landed_hard",
+      "description": "Burning after Hard landing outcome fails FlightAlreadyEnded",
+      "initial_state": {
+        "time_seconds": 61,
+        "altitude_mft": 0,
+        "velocity_mft_s": -12565,
+        "fuel_lbs": 1814,
+        "dry_mass_lbs": 16500,
+        "status": "Landed(Hard)",
+        "impact_velocity_mft_s": -12565
+      },
+      "command": {
+        "burn_rate_lbs_s": 50,
+        "duration_seconds": 5
+      },
+      "expected_error": "FlightAlreadyEnded"
+    },
+    {
+      "id": "refusal_lifecycle_already_landed_crash",
+      "description": "Burning after Crash landing outcome fails FlightAlreadyEnded",
+      "initial_state": {
+        "time_seconds": 61,
+        "altitude_mft": 0,
+        "velocity_mft_s": -15193,
+        "fuel_lbs": 1820,
+        "dry_mass_lbs": 16500,
+        "status": "Landed(Crash)",
+        "impact_velocity_mft_s": -15193
+      },
+      "command": {
+        "burn_rate_lbs_s": 50,
+        "duration_seconds": 5
+      },
+      "expected_error": "FlightAlreadyEnded"
+    },
+    {
+      "id": "refusal_lifecycle_already_landed_fatal",
+      "description": "Burning after Fatal landing outcome fails FlightAlreadyEnded",
+      "initial_state": {
+        "time_seconds": 61,
+        "altitude_mft": 0,
+        "velocity_mft_s": -30193,
+        "fuel_lbs": 1820,
+        "dry_mass_lbs": 16500,
+        "status": "Landed(Fatal)",
+        "impact_velocity_mft_s": -30193
+      },
+      "command": {
+        "burn_rate_lbs_s": 50,
+        "duration_seconds": 5
+      },
+      "expected_error": "FlightAlreadyEnded"
+    },
+    {
+      "id": "refusal_command_burn_rate_exceeds_max_201",
+      "description": "Burn rate of 201 lbs/s exceeds maximum engine capability (200 lbs/s)",
+      "initial_state": {
+        "time_seconds": 0,
+        "altitude_mft": 120000000,
+        "velocity_mft_s": -3000000,
+        "fuel_lbs": 16500,
+        "dry_mass_lbs": 16500,
+        "status": "InFlight",
+        "impact_velocity_mft_s": null
+      },
+      "command": {
+        "burn_rate_lbs_s": 201,
+        "duration_seconds": 10
+      },
+      "expected_error": "ExcessiveBurnRate"
+    },
+    {
+      "id": "refusal_command_burn_rate_u32_max",
+      "description": "Hostile burn rate of u32::MAX fails ExcessiveBurnRate",
+      "initial_state": {
+        "time_seconds": 0,
+        "altitude_mft": 120000000,
+        "velocity_mft_s": -3000000,
+        "fuel_lbs": 16500,
+        "dry_mass_lbs": 16500,
+        "status": "InFlight",
+        "impact_velocity_mft_s": null
+      },
+      "command": {
+        "burn_rate_lbs_s": 4294967295,
+        "duration_seconds": 10
+      },
+      "expected_error": "ExcessiveBurnRate"
+    },
+    {
+      "id": "refusal_command_duration_zero",
+      "description": "Burn duration of 0 seconds fails InvalidDuration",
+      "initial_state": {
+        "time_seconds": 0,
+        "altitude_mft": 120000000,
+        "velocity_mft_s": -3000000,
+        "fuel_lbs": 16500,
+        "dry_mass_lbs": 16500,
+        "status": "InFlight",
+        "impact_velocity_mft_s": null
+      },
+      "command": {
+        "burn_rate_lbs_s": 100,
+        "duration_seconds": 0
+      },
+      "expected_error": "InvalidDuration"
+    },
+    {
+      "id": "refusal_command_duration_eleven",
+      "description": "Burn duration of 11 seconds exceeds maximum turn interval (10 seconds)",
+      "initial_state": {
+        "time_seconds": 0,
+        "altitude_mft": 120000000,
+        "velocity_mft_s": -3000000,
+        "fuel_lbs": 16500,
+        "dry_mass_lbs": 16500,
+        "status": "InFlight",
+        "impact_velocity_mft_s": null
+      },
+      "command": {
+        "burn_rate_lbs_s": 100,
+        "duration_seconds": 11
+      },
+      "expected_error": "InvalidDuration"
+    },
+    {
+      "id": "refusal_command_duration_u32_max",
+      "description": "Hostile duration of u32::MAX fails InvalidDuration",
+      "initial_state": {
+        "time_seconds": 0,
+        "altitude_mft": 120000000,
+        "velocity_mft_s": -3000000,
+        "fuel_lbs": 16500,
+        "dry_mass_lbs": 16500,
+        "status": "InFlight",
+        "impact_velocity_mft_s": null
+      },
+      "command": {
+        "burn_rate_lbs_s": 100,
+        "duration_seconds": 4294967295
+      },
+      "expected_error": "InvalidDuration"
+    },
+    {
+      "id": "refusal_mission_time_overflow",
+      "description": "Command that would cause mission time to exceed 86,400s fails ArithmeticOverflow",
+      "initial_state": {
+        "time_seconds": 86400,
+        "altitude_mft": 100000000,
+        "velocity_mft_s": -2000000,
+        "fuel_lbs": 10000,
+        "dry_mass_lbs": 16500,
+        "status": "InFlight",
+        "impact_velocity_mft_s": null
+      },
+      "command": {
+        "burn_rate_lbs_s": 0,
+        "duration_seconds": 1
+      },
+      "expected_error": "ArithmeticOverflow"
+    },
+    {
+      "id": "refusal_mission_time_u32_overflow",
+      "description": "Mission time addition resulting in overflow beyond 86,400s boundary fails ArithmeticOverflow",
+      "initial_state": {
+        "time_seconds": 86395,
+        "altitude_mft": 100000000,
+        "velocity_mft_s": -2000000,
+        "fuel_lbs": 10000,
+        "dry_mass_lbs": 16500,
+        "status": "InFlight",
+        "impact_velocity_mft_s": null
+      },
+      "command": {
+        "burn_rate_lbs_s": 0,
+        "duration_seconds": 10
+      },
+      "expected_error": "ArithmeticOverflow"
+    },
+    {
+      "id": "refusal_cwe369_zero_dry_mass_zero_fuel",
+      "description": "CWE-369: Hostile state with dry_mass_lbs = 0 and fuel_lbs = 0 fails ArithmeticOverflow to prevent divide-by-zero",
+      "initial_state": {
+        "time_seconds": 0,
+        "altitude_mft": 120000000,
+        "velocity_mft_s": -3000000,
+        "fuel_lbs": 0,
+        "dry_mass_lbs": 0,
+        "status": "InFlight",
+        "impact_velocity_mft_s": null
+      },
+      "command": {
+        "burn_rate_lbs_s": 100,
+        "duration_seconds": 5
+      },
+      "expected_error": "ArithmeticOverflow"
+    },
+    {
+      "id": "refusal_cwe369_corrupted_dry_mass",
+      "description": "Hostile state with dry_mass_lbs != 16500 (10000) fails ArithmeticOverflow state invariant",
+      "initial_state": {
+        "time_seconds": 0,
+        "altitude_mft": 120000000,
+        "velocity_mft_s": -3000000,
+        "fuel_lbs": 10000,
+        "dry_mass_lbs": 10000,
+        "status": "InFlight",
+        "impact_velocity_mft_s": null
+      },
+      "command": {
+        "burn_rate_lbs_s": 100,
+        "duration_seconds": 5
+      },
+      "expected_error": "ArithmeticOverflow"
+    },
+    {
+      "id": "refusal_cwe190_fuel_exceeds_tank_capacity",
+      "description": "CWE-190: Hostile state with fuel_lbs > 16500 (16501) fails ArithmeticOverflow",
+      "initial_state": {
+        "time_seconds": 0,
+        "altitude_mft": 120000000,
+        "velocity_mft_s": -3000000,
+        "fuel_lbs": 16501,
+        "dry_mass_lbs": 16500,
+        "status": "InFlight",
+        "impact_velocity_mft_s": null
+      },
+      "command": {
+        "burn_rate_lbs_s": 50,
+        "duration_seconds": 5
+      },
+      "expected_error": "ArithmeticOverflow"
+    },
+    {
+      "id": "refusal_cwe190_fuel_u32_max",
+      "description": "CWE-190: Hostile state with fuel_lbs = u32::MAX fails ArithmeticOverflow",
+      "initial_state": {
+        "time_seconds": 0,
+        "altitude_mft": 120000000,
+        "velocity_mft_s": -3000000,
+        "fuel_lbs": 4294967295,
+        "dry_mass_lbs": 16500,
+        "status": "InFlight",
+        "impact_velocity_mft_s": null
+      },
+      "command": {
+        "burn_rate_lbs_s": 50,
+        "duration_seconds": 5
+      },
+      "expected_error": "ArithmeticOverflow"
+    },
+    {
+      "id": "refusal_cwe190_altitude_zero_in_flight",
+      "description": "Hostile state with altitude_mft == 0 while status is InFlight fails ArithmeticOverflow",
+      "initial_state": {
+        "time_seconds": 0,
+        "altitude_mft": 0,
+        "velocity_mft_s": -3000000,
+        "fuel_lbs": 16500,
+        "dry_mass_lbs": 16500,
+        "status": "InFlight",
+        "impact_velocity_mft_s": null
+      },
+      "command": {
+        "burn_rate_lbs_s": 50,
+        "duration_seconds": 5
+      },
+      "expected_error": "ArithmeticOverflow"
+    },
+    {
+      "id": "refusal_cwe190_negative_altitude_in_flight",
+      "description": "Hostile state with altitude_mft < 0 (-1000) while status is InFlight fails ArithmeticOverflow",
+      "initial_state": {
+        "time_seconds": 0,
+        "altitude_mft": -1000,
+        "velocity_mft_s": -3000000,
+        "fuel_lbs": 16500,
+        "dry_mass_lbs": 16500,
+        "status": "InFlight",
+        "impact_velocity_mft_s": null
+      },
+      "command": {
+        "burn_rate_lbs_s": 50,
+        "duration_seconds": 5
+      },
+      "expected_error": "ArithmeticOverflow"
+    },
+    {
+      "id": "refusal_cwe190_altitude_exceeds_max_boundary",
+      "description": "Hostile state with altitude_mft > 200,000,000 (200,000,001) fails ArithmeticOverflow",
+      "initial_state": {
+        "time_seconds": 0,
+        "altitude_mft": 200000001,
+        "velocity_mft_s": 0,
+        "fuel_lbs": 16500,
+        "dry_mass_lbs": 16500,
+        "status": "InFlight",
+        "impact_velocity_mft_s": null
+      },
+      "command": {
+        "burn_rate_lbs_s": 50,
+        "duration_seconds": 5
+      },
+      "expected_error": "ArithmeticOverflow"
+    },
+    {
+      "id": "refusal_cwe190_altitude_i64_max",
+      "description": "CWE-190: Hostile state with altitude_mft = i64::MAX fails ArithmeticOverflow",
+      "initial_state": {
+        "time_seconds": 0,
+        "altitude_mft": 9223372036854775807,
+        "velocity_mft_s": 0,
+        "fuel_lbs": 16500,
+        "dry_mass_lbs": 16500,
+        "status": "InFlight",
+        "impact_velocity_mft_s": null
+      },
+      "command": {
+        "burn_rate_lbs_s": 0,
+        "duration_seconds": 10
+      },
+      "expected_error": "ArithmeticOverflow"
+    },
+    {
+      "id": "refusal_cwe190_altitude_i64_min",
+      "description": "CWE-190: Hostile state with altitude_mft = i64::MIN fails ArithmeticOverflow",
+      "initial_state": {
+        "time_seconds": 0,
+        "altitude_mft": -9223372036854775808,
+        "velocity_mft_s": 0,
+        "fuel_lbs": 16500,
+        "dry_mass_lbs": 16500,
+        "status": "InFlight",
+        "impact_velocity_mft_s": null
+      },
+      "command": {
+        "burn_rate_lbs_s": 0,
+        "duration_seconds": 10
+      },
+      "expected_error": "ArithmeticOverflow"
+    },
+    {
+      "id": "refusal_cwe190_velocity_below_minimum",
+      "description": "Hostile state with velocity_mft_s < -10,000,000 (-10,000,001) fails ArithmeticOverflow",
+      "initial_state": {
+        "time_seconds": 0,
+        "altitude_mft": 120000000,
+        "velocity_mft_s": -10000001,
+        "fuel_lbs": 16500,
+        "dry_mass_lbs": 16500,
+        "status": "InFlight",
+        "impact_velocity_mft_s": null
+      },
+      "command": {
+        "burn_rate_lbs_s": 0,
+        "duration_seconds": 10
+      },
+      "expected_error": "ArithmeticOverflow"
+    },
+    {
+      "id": "refusal_cwe190_velocity_above_maximum",
+      "description": "Hostile state with velocity_mft_s > 10,000,000 (10,000,001) fails ArithmeticOverflow",
+      "initial_state": {
+        "time_seconds": 0,
+        "altitude_mft": 120000000,
+        "velocity_mft_s": 10000001,
+        "fuel_lbs": 16500,
+        "dry_mass_lbs": 16500,
+        "status": "InFlight",
+        "impact_velocity_mft_s": null
+      },
+      "command": {
+        "burn_rate_lbs_s": 0,
+        "duration_seconds": 10
+      },
+      "expected_error": "ArithmeticOverflow"
+    },
+    {
+      "id": "refusal_cwe190_velocity_i64_max",
+      "description": "CWE-190: Hostile state with velocity_mft_s = i64::MAX fails ArithmeticOverflow",
+      "initial_state": {
+        "time_seconds": 0,
+        "altitude_mft": 120000000,
+        "velocity_mft_s": 9223372036854775807,
+        "fuel_lbs": 16500,
+        "dry_mass_lbs": 16500,
+        "status": "InFlight",
+        "impact_velocity_mft_s": null
+      },
+      "command": {
+        "burn_rate_lbs_s": 0,
+        "duration_seconds": 10
+      },
+      "expected_error": "ArithmeticOverflow"
+    },
+    {
+      "id": "refusal_cwe190_velocity_i64_min",
+      "description": "CWE-190: Hostile state with velocity_mft_s = i64::MIN fails ArithmeticOverflow",
+      "initial_state": {
+        "time_seconds": 0,
+        "altitude_mft": 120000000,
+        "velocity_mft_s": -9223372036854775808,
+        "fuel_lbs": 16500,
+        "dry_mass_lbs": 16500,
+        "status": "InFlight",
+        "impact_velocity_mft_s": null
+      },
+      "command": {
+        "burn_rate_lbs_s": 0,
+        "duration_seconds": 10
+      },
+      "expected_error": "ArithmeticOverflow"
+    },
+    {
+      "id": "refusal_cwe190_time_seconds_exceeds_max",
+      "description": "Hostile state with time_seconds > 86,400 (86,401) fails ArithmeticOverflow",
+      "initial_state": {
+        "time_seconds": 86401,
+        "altitude_mft": 120000000,
+        "velocity_mft_s": -3000000,
+        "fuel_lbs": 16500,
+        "dry_mass_lbs": 16500,
+        "status": "InFlight",
+        "impact_velocity_mft_s": null
+      },
+      "command": {
+        "burn_rate_lbs_s": 0,
+        "duration_seconds": 5
+      },
+      "expected_error": "ArithmeticOverflow"
+    },
+    {
+      "id": "refusal_cwe190_impact_velocity_set_while_in_flight",
+      "description": "Hostile state with impact_velocity_mft_s populated while status is InFlight fails ArithmeticOverflow",
+      "initial_state": {
+        "time_seconds": 0,
+        "altitude_mft": 120000000,
+        "velocity_mft_s": -3000000,
+        "fuel_lbs": 16500,
+        "dry_mass_lbs": 16500,
+        "status": "InFlight",
+        "impact_velocity_mft_s": -3000
+      },
+      "command": {
+        "burn_rate_lbs_s": 0,
+        "duration_seconds": 5
+      },
+      "expected_error": "ArithmeticOverflow"
+    }
+  ]
+}

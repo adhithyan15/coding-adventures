@@ -134,9 +134,10 @@ var (
 		"code/scripts/tfv.py",
 		"code/scripts/bootstrap_harness_conformance.py",
 	}
-	rngCorpusPaths      = []string{"code/specs/fixtures/rng-v1"}
-	hamurabiCorpusPaths = []string{"code/specs/fixtures/hamurabi-v1"}
-	warrantGrammarPaths = []string{
+	rngCorpusPaths         = []string{"code/specs/fixtures/rng-v1"}
+	hamurabiCorpusPaths    = []string{"code/specs/fixtures/hamurabi-v1"}
+	lunarLanderCorpusPaths = []string{"code/specs/fixtures/lunar-lander-v1"}
+	warrantGrammarPaths    = []string{
 		"code/grammars/warrant",
 		"code/specs/fixtures/warrant-syntax-v1",
 		"code/specs/fixtures/warrant-vectors-synthetic-v1",
@@ -330,6 +331,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "the shared hamurabi conformance corpus",
 		matches:  isHamurabiCorpus,
 		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "rust/lunar-lander",
+		language: "rust",
+		inputs:   "the shared lunar lander conformance corpus",
+		matches:  isLunarLanderCorpus,
+		paths:    lunarLanderCorpusPaths,
 	},
 	{
 		name:     "go/rng",
@@ -646,6 +654,11 @@ func isRngCorpus(changed string) bool {
 //	code/specs/fixtures/hamurabi-v10/cases.json → false
 func isHamurabiCorpus(changed string) bool {
 	return strings.HasPrefix(changed, "code/specs/fixtures/hamurabi-v1/")
+}
+
+// isLunarLanderCorpus reports whether a changed path is in the shared lunar lander corpus.
+func isLunarLanderCorpus(changed string) bool {
+	return strings.HasPrefix(changed, "code/specs/fixtures/lunar-lander-v1/")
 }
 
 // isMosaicRepositorySource reports whether a changed path is one the Mosaic
