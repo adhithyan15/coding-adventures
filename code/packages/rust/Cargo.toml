@@ -439,6 +439,7 @@ members = [
     "percussion-kit",
     "music-machine-core",
     "music-machine-ffi",
+    "music-analysis",
     "numeric-tower",
     "math-core",
     "matrix",

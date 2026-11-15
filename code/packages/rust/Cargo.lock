@@ -4734,6 +4734,20 @@ name = "coding_adventures_md5"
 version = "0.1.0"
 
 [[package]]
+name = "coding_adventures_music_analysis"
+version = "0.1.0"
+dependencies = [
+ "coding-adventures-note-frequency",
+ "coding_adventures_test_bootstrap",
+ "dsp-fft",
+ "dsp-stft",
+ "dsp-wavelets",
+ "music-machine-core",
+ "musical-instruments",
+ "pcm-audio",
+]
+
+[[package]]
 name = "coding_adventures_oauth"
 version = "0.1.0"
 dependencies = [
