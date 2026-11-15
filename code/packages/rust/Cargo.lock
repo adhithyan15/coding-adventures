@@ -6802,6 +6802,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "game-clock"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+]
+
+[[package]]
 name = "garbage-collector"
 version = "0.1.0"
 
