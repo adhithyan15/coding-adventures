@@ -11633,7 +11633,8 @@
         "elixir-zip-png-scale-raw-codec-hardening"
       ],
       "branch": "feat/image-codec-png-elixir-lane-parity",
-      "pr_number": null,
+      "pr_number": 19423,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19423",
       "notes": "Standalone Elixir child consuming the neutral PNG corpus and established ZIP raw/CRC surface with empty production capabilities, after bounded PNG-scale Elixir ZIP raw-codec hardening."
     },
     {
