@@ -55,6 +55,7 @@
 //! tolerance for `N ≤ 65536`, f32 dtype.  Snapshot vectors (impulse,
 //! DC, single-bin sinusoid) hit closed-form known values.
 
+#![forbid(unsafe_code)]
 #![warn(rust_2018_idioms)]
 
 pub mod bluestein;
@@ -72,6 +73,20 @@ pub use rfft::{irfft, irfft_scalar, rfft, rfft_scalar};
 use dsp_complex::ComplexTensor;
 use std::fmt;
 
+// ═══════════════════════════════════════════════════════════════════════
+// § 1. Defensive Boundaries and Constants (CWE-400 / CWE-190)
+// ═══════════════════════════════════════════════════════════════════════
+
+/// Maximum transform length for 1-D FFT operations (CWE-400 bound: 1,048,576).
+pub const MAX_FFT_LEN: usize = 1 << 20;
+
+/// Maximum number of samples allowed across any buffer (CWE-400 bound: 16,777,216).
+pub const MAX_SAMPLES: usize = 1 << 24;
+
+// ═══════════════════════════════════════════════════════════════════════
+// § 2. Scalar Decimation-in-Time Radix-2 FFT / IFFT
+// ═══════════════════════════════════════════════════════════════════════
+
 /// Forward FFT on interleaved `[re, im]` data.  Length of `signal`
 /// must be `2 * N` where `N` is a power of two; returns a buffer of
 /// the same length holding the natural-order spectrum.
@@ -85,8 +100,27 @@ pub fn fft_scalar(signal: &[f32]) -> Result<Vec<f32>, FftError> {
             signal.len()
         )));
     }
+    if signal.len() > MAX_SAMPLES {
+        return Err(FftError::InvalidInput(format!(
+            "signal length {} exceeds MAX_SAMPLES ({})",
+            signal.len(),
+            MAX_SAMPLES
+        )));
+    }
     let n = signal.len() / 2;
+    if n > MAX_FFT_LEN {
+        return Err(FftError::InvalidInput(format!(
+            "FFT length {} exceeds MAX_FFT_LEN ({})",
+            n,
+            MAX_FFT_LEN
+        )));
+    }
     require_pow2_length(n)?;
+    if signal.iter().any(|&x| !x.is_finite()) {
+        return Err(FftError::InvalidInput(
+            "input contains non-finite float (NaN or Inf)".into(),
+        ));
+    }
     let mut buf = signal.to_vec();
     bit_reversal_permute(&mut buf, n);
     butterflies(&mut buf, n, Direction::Forward);
@@ -104,8 +138,27 @@ pub fn ifft_scalar(spectrum: &[f32]) -> Result<Vec<f32>, FftError> {
             spectrum.len()
         )));
     }
+    if spectrum.len() > MAX_SAMPLES {
+        return Err(FftError::InvalidInput(format!(
+            "spectrum length {} exceeds MAX_SAMPLES ({})",
+            spectrum.len(),
+            MAX_SAMPLES
+        )));
+    }
     let n = spectrum.len() / 2;
+    if n > MAX_FFT_LEN {
+        return Err(FftError::InvalidInput(format!(
+            "FFT length {} exceeds MAX_FFT_LEN ({})",
+            n,
+            MAX_FFT_LEN
+        )));
+    }
     require_pow2_length(n)?;
+    if spectrum.iter().any(|&x| !x.is_finite()) {
+        return Err(FftError::InvalidInput(
+            "input contains non-finite float (NaN or Inf)".into(),
+        ));
+    }
     let mut buf = spectrum.to_vec();
     bit_reversal_permute(&mut buf, n);
     butterflies(&mut buf, n, Direction::Inverse);
@@ -116,6 +169,10 @@ pub fn ifft_scalar(spectrum: &[f32]) -> Result<Vec<f32>, FftError> {
     }
     Ok(buf)
 }
+
+// ═══════════════════════════════════════════════════════════════════════
+// § 3. High-Level Public Dispatch (Radix-2, Bluestein, Runtime Lowering)
+// ═══════════════════════════════════════════════════════════════════════
 
 /// Compute the forward 1-D FFT of a real-valued or already-complex
 /// `signal`.
@@ -154,37 +211,68 @@ pub fn fft(signal: &[f32], complex: bool) -> Result<ComplexTensor, FftError> {
                 signal.len()
             )));
         }
+        if signal.len() > MAX_SAMPLES {
+            return Err(FftError::InvalidInput(format!(
+                "signal length {} exceeds MAX_SAMPLES ({})",
+                signal.len(),
+                MAX_SAMPLES
+            )));
+        }
         let n = signal.len() / 2;
+        if n > MAX_FFT_LEN {
+            return Err(FftError::InvalidInput(format!(
+                "FFT length {} exceeds MAX_FFT_LEN ({})",
+                n,
+                MAX_FFT_LEN
+            )));
+        }
+        if signal.iter().any(|&x| !x.is_finite()) {
+            return Err(FftError::InvalidInput(
+                "input contains non-finite float (NaN or Inf)".into(),
+            ));
+        }
         if n.is_power_of_two() && n >= 1 {
             fft_scalar(signal)?
         } else {
             bluestein_scalar(signal, Direction::Forward)?
         }
-    } else if signal.len() < 2 {
-        // Degenerate N < 2 case (empty or single real sample).
-        // The matrix-ir graph builder requires N ≥ 2; fall back to
-        // the scalar oracle so the public API behavior is unchanged
-        // for these edge cases — empty still returns `InvalidInput`,
-        // single-element passes through as the identity.
-        let mut interleaved_real = Vec::with_capacity(signal.len() * 2);
-        for &x in signal {
-            interleaved_real.push(x);
-            interleaved_real.push(0.0);
-        }
-        fft_scalar(&interleaved_real)?
-    } else if signal.len().is_power_of_two() {
-        // Real input, N ≥ 2 power-of-two: matrix-ir-lowered path.
-        fft_via_runtime(signal, Direction::Forward)?
     } else {
-        // Real input, non-power-of-two N: wrap as interleaved
-        // complex with im = 0 then call Bluestein.  No matrix-ir
-        // path yet (Phase 4c).
-        let mut interleaved_real = Vec::with_capacity(signal.len() * 2);
-        for &x in signal {
-            interleaved_real.push(x);
-            interleaved_real.push(0.0);
+        if signal.is_empty() {
+            return Err(FftError::InvalidInput("FFT length must be at least 1".into()));
         }
-        bluestein_scalar(&interleaved_real, Direction::Forward)?
+        if signal.len() > MAX_FFT_LEN || signal.len() > MAX_SAMPLES {
+            return Err(FftError::InvalidInput(format!(
+                "signal length {} exceeds maximum allowed ({})",
+                signal.len(),
+                MAX_FFT_LEN
+            )));
+        }
+        if signal.iter().any(|&x| !x.is_finite()) {
+            return Err(FftError::InvalidInput(
+                "input contains non-finite float (NaN or Inf)".into(),
+            ));
+        }
+        if signal.len() < 2 {
+            // Degenerate N < 2 case (single real sample).
+            let mut interleaved_real = Vec::with_capacity(signal.len() * 2);
+            for &x in signal {
+                interleaved_real.push(x);
+                interleaved_real.push(0.0);
+            }
+            fft_scalar(&interleaved_real)?
+        } else if signal.len().is_power_of_two() {
+            // Real input, N ≥ 2 power-of-two: matrix-ir-lowered path.
+            fft_via_runtime(signal, Direction::Forward)?
+        } else {
+            // Real input, non-power-of-two N: wrap as interleaved
+            // complex with im = 0 then call Bluestein.
+            let mut interleaved_real = Vec::with_capacity(signal.len() * 2);
+            for &x in signal {
+                interleaved_real.push(x);
+                interleaved_real.push(0.0);
+            }
+            bluestein_scalar(&interleaved_real, Direction::Forward)?
+        }
     };
     Ok(ComplexTensor::from_interleaved(interleaved).expect("fft output has even length"))
 }
@@ -203,6 +291,20 @@ pub fn fft(signal: &[f32], complex: bool) -> Result<ComplexTensor, FftError> {
 pub fn ifft(spectrum: &ComplexTensor) -> Result<ComplexTensor, FftError> {
     let interleaved = spectrum.as_interleaved();
     let n = spectrum.len();
+    if n == 0 {
+        return Err(FftError::InvalidInput("FFT length must be at least 1".into()));
+    }
+    if n > MAX_FFT_LEN || interleaved.len() > MAX_SAMPLES {
+        return Err(FftError::InvalidInput(format!(
+            "spectrum length {} exceeds maximum bounds",
+            n
+        )));
+    }
+    if interleaved.iter().any(|&x| !x.is_finite()) {
+        return Err(FftError::InvalidInput(
+            "input contains non-finite float (NaN or Inf)".into(),
+        ));
+    }
     let result = if n.is_power_of_two() && n >= 1 {
         ifft_scalar(interleaved)?
     } else {
@@ -688,5 +790,107 @@ mod tests {
         assert_eq!(spectrum.len(), 3);
         let recovered = ifft(&spectrum).unwrap();
         assert_close(recovered.as_interleaved(), &interleaved, 1e-4);
+    }
+
+    // ═══════════════════════════════════════════════════════════════════
+    // § 6. SplitMix64 Property-Based Tests and Hostile Suites
+    // ═══════════════════════════════════════════════════════════════════
+
+    use coding_adventures_test_bootstrap::prng::SplitMix64;
+
+    fn sample_f32(rng: &mut SplitMix64) -> f32 {
+        let u = rng.next_u64();
+        let mantissa = (u & 0x00ff_ffff) as f32 / (0x0100_0000 as f32);
+        (mantissa * 2.0) - 1.0
+    }
+
+    #[test]
+    fn pbt_splitmix64_fft_ifft_round_trip() {
+        let mut rng = SplitMix64::new(0x1234_5678_9abc_def0);
+        let sizes = [1usize, 2, 3, 4, 5, 7, 8, 11, 16, 23, 32, 64, 100, 128];
+        for &n in &sizes {
+            let mut complex_sig = Vec::with_capacity(2 * n);
+            for _ in 0..(2 * n) {
+                complex_sig.push(sample_f32(&mut rng));
+            }
+            let spec = fft(&complex_sig, true).unwrap();
+            assert_eq!(spec.len(), n);
+            let back = ifft(&spec).unwrap();
+            assert_close(back.as_interleaved(), &complex_sig, 1e-4);
+
+            let mut real_sig = Vec::with_capacity(n);
+            for _ in 0..n {
+                real_sig.push(sample_f32(&mut rng));
+            }
+            let spec_r = fft(&real_sig, false).unwrap();
+            let back_r = ifft(&spec_r).unwrap();
+            assert_close(&back_r.real(), &real_sig, 1e-4);
+        }
+    }
+
+    #[test]
+    fn pbt_splitmix64_rfft_irfft_round_trip() {
+        let mut rng = SplitMix64::new(0xfeed_face_cafe_beef);
+        let sizes = [1usize, 2, 3, 4, 5, 7, 8, 13, 16, 29, 32, 64, 99, 128];
+        for &n in &sizes {
+            let mut real_sig = Vec::with_capacity(n);
+            for _ in 0..n {
+                real_sig.push(sample_f32(&mut rng));
+            }
+            let half = rfft(&real_sig).unwrap();
+            assert_eq!(half.len(), n / 2 + 1);
+            let recovered = irfft(&half, n as u32).unwrap();
+            assert_close(&recovered, &real_sig, 1e-4);
+        }
+    }
+
+    #[test]
+    fn hostile_non_finite_inputs_rejected() {
+        // NaN in real fft
+        assert!(matches!(
+            fft(&[1.0, f32::NAN, 3.0, 4.0], false),
+            Err(FftError::InvalidInput(_))
+        ));
+        // Inf in real fft
+        assert!(matches!(
+            fft(&[1.0, f32::INFINITY, 3.0, 4.0], false),
+            Err(FftError::InvalidInput(_))
+        ));
+        assert!(matches!(
+            fft(&[1.0, f32::NEG_INFINITY, 3.0, 4.0], false),
+            Err(FftError::InvalidInput(_))
+        ));
+        // NaN in complex fft
+        assert!(matches!(
+            fft(&[1.0, 0.0, f32::NAN, 0.0], true),
+            Err(FftError::InvalidInput(_))
+        ));
+        // NaN in rfft
+        assert!(matches!(
+            rfft(&[1.0, f32::NAN, 3.0]),
+            Err(FftError::InvalidInput(_))
+        ));
+        // Inf in rfft
+        assert!(matches!(
+            rfft(&[1.0, f32::INFINITY, 3.0]),
+            Err(FftError::InvalidInput(_))
+        ));
+        // NaN in irfft
+        assert!(matches!(
+            irfft_scalar(&[1.0, f32::NAN, 2.0, 0.0], 2),
+            Err(FftError::InvalidInput(_))
+        ));
+    }
+
+    #[test]
+    fn hostile_oversized_bounds_rejected() {
+        assert!(matches!(
+            irfft_scalar(&[1.0, 0.0], (MAX_FFT_LEN + 1) as u32),
+            Err(FftError::InvalidInput(_))
+        ));
+        assert!(matches!(
+            build_fft_graph((MAX_FFT_LEN * 2) as u32, Direction::Forward),
+            Err(FftError::InvalidInput(_))
+        ));
     }
 }
