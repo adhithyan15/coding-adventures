@@ -3,7 +3,14 @@
   "version": "0.1.0",
   "description": "Backend-neutral audio device sink contract, PCM validation, and noop playback reporting",
   "type": "module",
-  "main": "src/index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
   "scripts": {
     "build": "tsc",
     "test": "node --experimental-strip-types --test tests/index.test.ts"

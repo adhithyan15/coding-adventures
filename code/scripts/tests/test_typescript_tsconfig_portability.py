@@ -458,7 +458,8 @@ console.log(prose, nested);
         # +3: dsp-conv, dsp-stft, dsp-wavelets (DSP-W4-D2 standalone packages).
         # +2: musical-instruments and percussion-kit (MUS-W3-B standalone packages).
         # +1: lunar-lander, the GAME02 isolated standalone simulation package.
-        self.assertEqual(summary.total_projects, 512)
+        # +2: music-machine-web and music-machine-node (MUS-W3-C standalone packages).
+        self.assertEqual(summary.total_projects, 514)
         self.assertEqual(summary.shared_projects, 308)
         self.assertEqual(summary.inherited_root_dir, 135)
         self.assertEqual(summary.inherited_out_dir, 138)
@@ -472,8 +473,9 @@ console.log(prose, nested);
         # +3: dsp-conv, dsp-stft, dsp-wavelets are isolated standalone emitters.
         # +2: musical-instruments and percussion-kit are isolated standalone emitters.
         # +1: lunar-lander is an isolated standalone emitter.
-        self.assertEqual(summary.standalone_emit_projects, 173)
-        self.assertEqual(summary.isolated_standalone_projects, 173)
+        # +2: music-machine-web and music-machine-node are isolated standalone emitters.
+        self.assertEqual(summary.standalone_emit_projects, 175)
+        self.assertEqual(summary.isolated_standalone_projects, 175)
         self.assertEqual(summary.unbounded_root_projects, 0)
         self.assertEqual(summary.outside_root_inputs, 0)
         # 94: +1 for script-ductus. Nothing the package SHIPS touches a Node
@@ -629,7 +631,8 @@ console.log(prose, nested);
         # +3: dsp-conv, dsp-stft, dsp-wavelets lock their standalone compiler.
         # +2: musical-instruments and percussion-kit lock their standalone compiler.
         # +1: lunar-lander locks its standalone compiler and test toolchain.
-        self.assertEqual(summary.locked_compilers, 525)
+        # +2: music-machine-web and music-machine-node lock their standalone compiler.
+        self.assertEqual(summary.locked_compilers, 527)
 
 
 if __name__ == "__main__":
