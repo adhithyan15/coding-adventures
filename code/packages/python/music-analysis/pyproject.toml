@@ -55,8 +55,3 @@ coding-adventures-note-frequency = { path = "../note-frequency", editable = true
 coding-adventures-pcm-audio = { path = "../pcm-audio", editable = true }
 coding-adventures-musical-instruments = { path = "../musical-instruments", editable = true }
 coding-adventures-music-machine = { path = "../music-machine", editable = true }
-coding-adventures-dsp-fft = { workspace = true }
-coding-adventures-dsp-stft = { workspace = true }
-coding-adventures-dsp-wavelets = { workspace = true }
-coding-adventures-dsp-filters = { workspace = true }
-coding-adventures-test-bootstrap = { workspace = true }
