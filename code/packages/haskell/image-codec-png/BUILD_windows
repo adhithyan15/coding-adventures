@@ -1,0 +1,1 @@
+cabal test && cabal build image-codec-png:lib:image-codec-png image-codec-png:test:spec --ghc-options=-Wall --ghc-options=-Werror
