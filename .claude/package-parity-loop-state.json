@@ -11657,12 +11657,12 @@
     {
       "id": "image-codec-png-haskell-lane-parity",
       "title": "Port IC18 image-codec-png to Haskell",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": [
         "image-codec-png-language-neutral-conformance",
         "image-codec-png-apng-neutral-rejection-conformance"
       ],
-      "branch": null,
+      "branch": "feat/image-codec-png-haskell-lane-parity",
       "pr_number": null,
       "notes": "Standalone Haskell child consuming the neutral PNG corpus and established ZIP raw/CRC surface with empty production capabilities."
     },
@@ -11711,13 +11711,16 @@
     {
       "id": "image-codec-png-perl-lane-parity",
       "title": "Port IC18 image-codec-png to Perl",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "image-codec-png-language-neutral-conformance",
         "image-codec-png-apng-neutral-rejection-conformance"
       ],
       "branch": "feat/image-codec-png-perl-lane-parity",
-      "pr_number": null,
+      "pr_number": 19411,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19411",
+      "merged_at": "2026-11-15T02:49:34Z",
+      "merge_commit": "8f7e7793634a579f310381ad59f3f8e2918c492a",
       "notes": "Standalone Perl child consuming the neutral PNG corpus and established ZIP raw/CRC surface with empty production capabilities."
     },
     {
