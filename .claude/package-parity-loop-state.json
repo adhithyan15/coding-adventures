@@ -16041,7 +16041,7 @@
     {
       "id": "itf-java-kotlin-dart-lane-parity",
       "title": "Complete ITF parity in Java, Kotlin, and Dart",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "barcode-symbologies-language-neutral-conformance",
         "itf-existing-lanes-v1-conformance",
@@ -16050,6 +16050,8 @@
       "branch": "feat/itf-java-kotlin-dart-lane-parity",
       "pr_number": 19426,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19426",
+      "merged_at": "2026-11-15T08:26:17Z",
+      "merge_commit": "518331a7e8edb037be14cb172a188e0c046e8fa4",
       "notes": "Implement the neutral ITF encoder in all three missing lanes with strict nonempty even-length ASCII digits, exact patterns, checked bounds, stable payload-blind errors, and shared layout output."
     },
     {
@@ -18603,9 +18605,9 @@
     {
       "id": "ml02-gradient-descent-dart-java-kotlin-swift-parity",
       "title": "Port ML02 gradient descent across four missing lanes",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": [],
-      "branch": null,
+      "branch": "feat/ml02-gradient-descent-dart-java-kotlin-swift-parity",
       "pr_number": null,
       "notes": "Ten of fifteen lanes present; Dart, Java, Kotlin, Swift missing. Existing matrix, activation, and loss foundations permit independent lane-sized SGD ports with deterministic neutral cases.",
       "postmerge_preparation_evidence": [
