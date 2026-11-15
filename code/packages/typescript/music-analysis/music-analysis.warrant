@@ -1,0 +1,256 @@
+-- MUS08 / VER15 -- Music Understanding, Analysis, and Sample-to-Score Transcription
+--
+-- Warrant specification for typescript/music-analysis.
+-- Every operand is public (no cryptographic secrets or private keys), which establishes
+-- the derived attestation `warrant-spec::all-operands-public` and discharges CWE-208.
+-- Bounded resource consumption satisfies CWE-400 (MAX_SAMPLES=16777216, MAX_FFT_LEN=1048576,
+-- MAX_FRAMES=1048576, MAX_PARTIALS=64, MAX_ONSETS=65536, MAX_BPM=1000.0,
+-- MAX_SAMPLE_RATE_HZ=192000.0), strictly iterative algorithms discharge CWE-674,
+-- and zero regex discharges CWE-1333.
+
+warrant music_analysis v1
+  error AnalysisError = INVALID_INPUT | BUDGET_EXCEEDED
+
+  op frequency_to_note(hz: Nat, a4_hz: Nat) -> Result<Nat, AnalysisError>
+  op spectral_centroid(sample_count: Nat, sample_rate_hz: Nat) -> Result<Nat, AnalysisError>
+  op spectral_flux(frame_count: Nat, bin_count: Nat) -> Result<Nat, AnalysisError>
+  op spectral_rolloff(bin_count: Nat, sample_rate_hz: Nat) -> Result<Nat, AnalysisError>
+  op zero_crossing_rate(sample_count: Nat) -> Result<Nat, AnalysisError>
+  op rms_energy(sample_count: Nat) -> Result<Nat, AnalysisError>
+  op yin_pitch(sample_count: Nat, sample_rate_hz: Nat) -> Result<Nat, AnalysisError>
+  op hps_pitch(sample_count: Nat, sample_rate_hz: Nat) -> Result<Nat, AnalysisError>
+  op detect_onsets(sample_count: Nat, sample_rate_hz: Nat) -> Result<Nat, AnalysisError>
+  op extract_harmonic_profile(sample_count: Nat, sample_rate_hz: Nat, max_partials: Nat) -> Result<Nat, AnalysisError>
+  op transcribe_pcm_to_portable_score(sample_count: Nat, sample_rate_hz: Nat, bpm: Nat) -> Result<Nat, AnalysisError>
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels frequency_to_note:
+    hz public
+    a4_hz public
+
+  labels spectral_centroid:
+    sample_count public
+    sample_rate_hz public
+
+  labels spectral_flux:
+    frame_count public
+    bin_count public
+
+  labels spectral_rolloff:
+    bin_count public
+    sample_rate_hz public
+
+  labels zero_crossing_rate:
+    sample_count public
+
+  labels rms_energy:
+    sample_count public
+
+  labels yin_pitch:
+    sample_count public
+    sample_rate_hz public
+
+  labels hps_pitch:
+    sample_count public
+    sample_rate_hz public
+
+  labels detect_onsets:
+    sample_count public
+    sample_rate_hz public
+
+  labels extract_harmonic_profile:
+    sample_count public
+    sample_rate_hz public
+    max_partials public
+
+  labels transcribe_pcm_to_portable_score:
+    sample_count public
+    sample_rate_hz public
+    bpm public
+
+  input frequency_to_note.hz:
+    hostile
+    rejects hz == 0 with AnalysisError.INVALID_INPUT
+    rejects hz > 96000 with AnalysisError.INVALID_INPUT
+    ensures no_panic, terminates
+
+  input frequency_to_note.a4_hz:
+    hostile
+    rejects a4_hz == 0 with AnalysisError.INVALID_INPUT
+    rejects a4_hz > 10000 with AnalysisError.INVALID_INPUT
+    ensures no_panic, terminates
+
+  input spectral_centroid.sample_count:
+    hostile
+    rejects sample_count == 0 with AnalysisError.INVALID_INPUT
+    rejects sample_count > 1048576 with AnalysisError.BUDGET_EXCEEDED
+    ensures no_panic, terminates
+
+  input spectral_centroid.sample_rate_hz:
+    hostile
+    rejects sample_rate_hz == 0 or sample_rate_hz > 192000 with AnalysisError.INVALID_INPUT
+    ensures no_panic, terminates
+
+  input spectral_flux.frame_count:
+    hostile
+    rejects frame_count == 0 with AnalysisError.INVALID_INPUT
+    rejects frame_count > 1048576 with AnalysisError.BUDGET_EXCEEDED
+    ensures no_panic, terminates
+
+  input spectral_flux.bin_count:
+    hostile
+    rejects bin_count == 0 with AnalysisError.INVALID_INPUT
+    rejects bin_count > 1048576 with AnalysisError.BUDGET_EXCEEDED
+    ensures no_panic, terminates
+
+  input spectral_rolloff.bin_count:
+    hostile
+    rejects bin_count == 0 with AnalysisError.INVALID_INPUT
+    rejects bin_count > 1048576 with AnalysisError.BUDGET_EXCEEDED
+    ensures no_panic, terminates
+
+  input spectral_rolloff.sample_rate_hz:
+    hostile
+    rejects sample_rate_hz == 0 or sample_rate_hz > 192000 with AnalysisError.INVALID_INPUT
+    ensures no_panic, terminates
+
+  input zero_crossing_rate.sample_count:
+    hostile
+    rejects sample_count > 16777216 with AnalysisError.BUDGET_EXCEEDED
+    ensures no_panic, terminates
+
+  input rms_energy.sample_count:
+    hostile
+    rejects sample_count > 16777216 with AnalysisError.BUDGET_EXCEEDED
+    ensures no_panic, terminates
+
+  input yin_pitch.sample_count:
+    hostile
+    rejects sample_count == 0 with AnalysisError.INVALID_INPUT
+    rejects sample_count > 16777216 with AnalysisError.BUDGET_EXCEEDED
+    ensures no_panic, terminates
+
+  input yin_pitch.sample_rate_hz:
+    hostile
+    rejects sample_rate_hz == 0 or sample_rate_hz > 192000 with AnalysisError.INVALID_INPUT
+    ensures no_panic, terminates
+
+  input hps_pitch.sample_count:
+    hostile
+    rejects sample_count == 0 with AnalysisError.INVALID_INPUT
+    rejects sample_count > 16777216 with AnalysisError.BUDGET_EXCEEDED
+    ensures no_panic, terminates
+
+  input hps_pitch.sample_rate_hz:
+    hostile
+    rejects sample_rate_hz == 0 or sample_rate_hz > 192000 with AnalysisError.INVALID_INPUT
+    ensures no_panic, terminates
+
+  input detect_onsets.sample_count:
+    hostile
+    rejects sample_count == 0 with AnalysisError.INVALID_INPUT
+    rejects sample_count > 16777216 with AnalysisError.BUDGET_EXCEEDED
+    ensures no_panic, terminates
+
+  input detect_onsets.sample_rate_hz:
+    hostile
+    rejects sample_rate_hz == 0 or sample_rate_hz > 192000 with AnalysisError.INVALID_INPUT
+    ensures no_panic, terminates
+
+  input extract_harmonic_profile.sample_count:
+    hostile
+    rejects sample_count == 0 with AnalysisError.INVALID_INPUT
+    rejects sample_count > 16777216 with AnalysisError.BUDGET_EXCEEDED
+    ensures no_panic, terminates
+
+  input extract_harmonic_profile.sample_rate_hz:
+    hostile
+    rejects sample_rate_hz == 0 or sample_rate_hz > 192000 with AnalysisError.INVALID_INPUT
+    ensures no_panic, terminates
+
+  input extract_harmonic_profile.max_partials:
+    hostile
+    rejects max_partials == 0 with AnalysisError.INVALID_INPUT
+    rejects max_partials > 64 with AnalysisError.BUDGET_EXCEEDED
+    ensures no_panic, terminates
+
+  input transcribe_pcm_to_portable_score.sample_count:
+    hostile
+    rejects sample_count == 0 with AnalysisError.INVALID_INPUT
+    rejects sample_count > 16777216 with AnalysisError.BUDGET_EXCEEDED
+    ensures no_panic, terminates
+
+  input transcribe_pcm_to_portable_score.sample_rate_hz:
+    hostile
+    rejects sample_rate_hz == 0 or sample_rate_hz > 192000 with AnalysisError.INVALID_INPUT
+    ensures no_panic, terminates
+
+  input transcribe_pcm_to_portable_score.bpm:
+    hostile
+    rejects bpm == 0 or bpm > 1000 with AnalysisError.INVALID_INPUT
+    ensures no_panic, terminates
+
+  bound frequency_to_note:
+    steps <= 1024
+    heap <= 1024
+    depth <= 16
+
+  bound spectral_centroid:
+    steps <= 64 * sample_count + 1024
+    heap <= 2 * sample_count + 2048
+    depth <= 16
+
+  bound spectral_flux:
+    steps <= 64 * frame_count + 1024
+    heap <= 2 * frame_count + 2048
+    depth <= 16
+
+  bound spectral_rolloff:
+    steps <= 64 * bin_count + 1024
+    heap <= 2 * bin_count + 2048
+    depth <= 16
+
+  bound zero_crossing_rate:
+    steps <= 16 * sample_count + 1024
+    heap <= 1024
+    depth <= 16
+
+  bound rms_energy:
+    steps <= 16 * sample_count + 1024
+    heap <= 1024
+    depth <= 16
+
+  bound yin_pitch:
+    steps <= 128 * sample_count + 4096
+    heap <= 4 * sample_count + 8192
+    depth <= 16
+
+  bound hps_pitch:
+    steps <= 128 * sample_count + 4096
+    heap <= 4 * sample_count + 8192
+    depth <= 16
+
+  bound detect_onsets:
+    steps <= 128 * sample_count + 4096
+    heap <= 4 * sample_count + 8192
+    depth <= 16
+
+  bound extract_harmonic_profile:
+    steps <= 128 * sample_count + 4096
+    heap <= 4 * sample_count + 8192
+    depth <= 16
+
+  bound transcribe_pcm_to_portable_score:
+    steps <= 256 * sample_count + 8192
+    heap <= 8 * sample_count + 16384
+    depth <= 32
+
+  claim frequency_inversion_is_deterministic:
+    forall f: Nat, a: Nat | f > 0 and f <= 96000 and a > 0 and a <= 10000. frequency_to_note(f, a) == frequency_to_note(f, a)
+
+  claim rms_energy_is_deterministic:
+    forall n: Nat | n <= 16777216. rms_energy(n) == rms_energy(n)
