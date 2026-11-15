@@ -1,0 +1,87 @@
+-- MUS08 -- Real-time Audio Mixer and Voice Allocator
+--
+-- Warrant document for audio-mixer-realtime (VER04j and VER04m: state=explicit).
+-- Formal verification contract for fixed-point real-time audio mixing and PCM ring buffers.
+
+warrant audio_mixer_realtime v1
+  error MixerError = InvalidSampleRate | InvalidParameter | ChannelLimitExceeded | ChannelIndexOutOfBounds | RingBufferOverrun | RingBufferUnderrun | EmptyBuffer | BufferTooSmall | SinkBufferError
+
+  model clamp_pcm16_model(v: Int) -> Int = if v > 32767 then 32767 else (if v < 0 - 32768 then 0 - 32768 else v)
+  model scale_voice_model(sample: Int, gain_q16: Nat, master_gain_q16: Nat) -> Int = (((sample * gain_q16) / 65536) * master_gain_q16) / 65536
+  model valid_sample_rate(rate: Nat) -> Bool = rate >= 1 and rate <= 192000
+
+  record VoiceSlot(active: Bool, voice_id: U32, priority: U8, cursor: Nat, gain_q16: U32, pan_q16: I32, pitch_step_q16: U32, phase_q16: U64, looping: Bool)
+  record RealtimeMixerState(master_gain_q16: U32, sample_rate_hz: U32, clipped_samples: U64, mixed_frames: U64)
+
+  op clamp_sample(v: Int) -> Int
+  op scale_voice_sample(sample: Int, gain_q16: Nat, master_gain_q16: Nat) -> Int
+  op validate_sample_rate(sample_rate_hz: Nat) -> Result<Bool, MixerError>
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels clamp_sample:
+    v public
+  labels scale_voice_sample:
+    sample public
+    gain_q16 public
+    master_gain_q16 public
+  labels validate_sample_rate:
+    sample_rate_hz public
+
+  input clamp_sample.v:
+    hostile
+    ensures no_panic, terminates
+
+  input scale_voice_sample.sample:
+    hostile
+    ensures no_panic, terminates
+  input scale_voice_sample.gain_q16:
+    hostile
+    ensures no_panic, terminates
+  input scale_voice_sample.master_gain_q16:
+    hostile
+    ensures no_panic, terminates
+
+  input validate_sample_rate.sample_rate_hz:
+    hostile
+    ensures no_panic, terminates
+
+  bound clamp_sample:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound scale_voice_sample:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_sample_rate:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+
+  example clamp_zero:
+    clamp_sample(0) == 0
+  example clamp_max:
+    clamp_sample(32767) == 32767
+  example clamp_overflow:
+    clamp_sample(70000) == 32767
+  example clamp_min:
+    clamp_sample(0 - 32768) == 0 - 32768
+  example clamp_underflow:
+    clamp_sample(0 - 80000) == 0 - 32768
+
+  example scale_unity:
+    scale_voice_sample(1000, 65536, 65536) == 1000
+
+  example rate_44100:
+    validate_sample_rate(44100) == Ok(true)
+
+  claim clamp_sample_agrees:
+    forall v: Int. clamp_sample(v) == clamp_pcm16_model(v)
+  claim scale_voice_agrees:
+    forall s: Int, g: Nat, mg: Nat. scale_voice_sample(s, g, mg) == scale_voice_model(s, g, mg)
+  claim validate_rate_agrees:
+    forall r: Nat. validate_sample_rate(r) == (if valid_sample_rate(r) then Ok(true) else Err(MixerError.InvalidSampleRate))

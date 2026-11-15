@@ -648,6 +648,17 @@ name = "audio-device-sink"
 version = "0.1.0"
 
 [[package]]
+name = "audio-mixer-realtime"
+version = "0.1.0"
+dependencies = [
+ "audio-device-sink",
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "pcm-audio",
+]
+
+[[package]]
 name = "autocfg"
 version = "1.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
