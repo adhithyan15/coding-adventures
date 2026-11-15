@@ -459,7 +459,8 @@ console.log(prose, nested);
         # +2: musical-instruments and percussion-kit (MUS-W3-B standalone packages).
         # +1: lunar-lander, the GAME02 isolated standalone simulation package.
         # +2: music-machine-web and music-machine-node (MUS-W3-C standalone packages).
-        self.assertEqual(summary.total_projects, 514)
+        # +1: music-analysis (MUS-W5-B2 isolated standalone package).
+        self.assertEqual(summary.total_projects, 515)
         self.assertEqual(summary.shared_projects, 308)
         self.assertEqual(summary.inherited_root_dir, 135)
         self.assertEqual(summary.inherited_out_dir, 138)
@@ -474,8 +475,9 @@ console.log(prose, nested);
         # +2: musical-instruments and percussion-kit are isolated standalone emitters.
         # +1: lunar-lander is an isolated standalone emitter.
         # +2: music-machine-web and music-machine-node are isolated standalone emitters.
-        self.assertEqual(summary.standalone_emit_projects, 175)
-        self.assertEqual(summary.isolated_standalone_projects, 175)
+        # +1: music-analysis is an isolated standalone emitter.
+        self.assertEqual(summary.standalone_emit_projects, 176)
+        self.assertEqual(summary.isolated_standalone_projects, 176)
         self.assertEqual(summary.unbounded_root_projects, 0)
         self.assertEqual(summary.outside_root_inputs, 0)
         # 94: +1 for script-ductus. Nothing the package SHIPS touches a Node
@@ -632,7 +634,8 @@ console.log(prose, nested);
         # +2: musical-instruments and percussion-kit lock their standalone compiler.
         # +1: lunar-lander locks its standalone compiler and test toolchain.
         # +2: music-machine-web and music-machine-node lock their standalone compiler.
-        self.assertEqual(summary.locked_compilers, 527)
+        # +1: music-analysis locks its standalone compiler.
+        self.assertEqual(summary.locked_compilers, 528)
 
 
 if __name__ == "__main__":
