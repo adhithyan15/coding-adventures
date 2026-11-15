@@ -44,6 +44,7 @@ members = [
     "audio-device-coreaudio",
     "audio-device-sink",
     "audio-mixer-realtime",
+    "arcade-sfx",
     "actor",
     "arithmetic",
     "array-runtime",

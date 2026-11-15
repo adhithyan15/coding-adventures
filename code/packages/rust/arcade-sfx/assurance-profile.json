@@ -1,0 +1,19 @@
+{
+  "schema": "warrant-assurance-profile-v1",
+  "name": "arcade-sfx",
+  "kind": "transform",
+  "rows": {
+    "326": {
+      "applicability": "excluded",
+      "reason": "no keys: the package takes and generates no key material; operands are audio sample arrays and synthesizer parameters"
+    },
+    "327": {
+      "applicability": "excluded",
+      "reason": "pure signal processing: package implements deterministic sound effect synthesis only, no cipher, hash or MAC"
+    },
+    "407": {
+      "applicability": "excluded",
+      "reason": "bounded work per call: sound rendering operates in linear time proportional to output buffer size and voice count; no unbounded iteration"
+    }
+  }
+}
