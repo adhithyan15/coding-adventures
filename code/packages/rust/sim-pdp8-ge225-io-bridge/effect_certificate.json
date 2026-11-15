@@ -1,0 +1,217 @@
+{
+  "schema_version": "ver24-effect-cert-v1",
+  "package": "rust/sim-pdp8-ge225-io-bridge",
+  "source_digest": "60d8191375977d08a04d73188cc7ac79d5a812a4803141deb34355693abd1915",
+  "manifest_digest": "2406a6a2aa62dba4950d597f4c7f65ffc062f7da38c0755f29b838d13905e72d",
+  "declared_effects": [],
+  "entry_points": [
+    {
+      "name": "pdp8_dispatch_iot_functional",
+      "signature": "pub fn pdp8_dispatch_iot_functional( device: u8, pulses: u8, ac: u16, kb_flag: bool, tp_flag: bool, kb_buffer: u8, ) -> Pdp8IotDispatchResult",
+      "effects": []
+    },
+    {
+      "name": "decode",
+      "signature": "pub fn decode( device: u8, pulses: u8, ac: u16, kb_flag: bool, tp_flag: bool, kb_buffer: u8, ) -> GateLevelIotOutput",
+      "effects": []
+    },
+    {
+      "name": "new",
+      "signature": "pub fn new() -> Self",
+      "effects": []
+    },
+    {
+      "name": "with_asr33",
+      "signature": "pub fn with_asr33(asr33: Asr33Functional) -> Self",
+      "effects": []
+    },
+    {
+      "name": "asr33",
+      "signature": "pub fn asr33(&self) -> &Asr33Functional",
+      "effects": []
+    },
+    {
+      "name": "asr33_mut",
+      "signature": "pub fn asr33_mut(&mut self) -> &mut Asr33Functional",
+      "effects": []
+    },
+    {
+      "name": "kbd_push_byte",
+      "signature": "pub fn kbd_push_byte(&mut self, byte: u8)",
+      "effects": []
+    },
+    {
+      "name": "tp_flag",
+      "signature": "pub fn tp_flag(&self) -> bool",
+      "effects": []
+    },
+    {
+      "name": "kb_flag",
+      "signature": "pub fn kb_flag(&self) -> bool",
+      "effects": []
+    },
+    {
+      "name": "handle_iot",
+      "signature": "pub fn handle_iot(&mut self, iot: IotEvent, ac: u16) -> Pdp8IotDispatchResult",
+      "effects": []
+    },
+    {
+      "name": "step_sim",
+      "signature": "pub fn step_sim(&mut self, sim: &mut Pdp8Simulator) -> Result<StepTrace, Pdp8Error>",
+      "effects": []
+    },
+    {
+      "name": "step_gate",
+      "signature": "pub fn step_gate(&mut self, cpu: &mut pdp8_gatelevel::Pdp8GateLevel) -> Result<StepTrace, Pdp8Error>",
+      "effects": []
+    },
+    {
+      "name": "run_sim_until_halt",
+      "signature": "pub fn run_sim_until_halt(&mut self, sim: &mut Pdp8Simulator, max_steps: usize) -> Result<usize, Pdp8Error>",
+      "effects": []
+    },
+    {
+      "name": "run_gate_until_halt",
+      "signature": "pub fn run_gate_until_halt( &mut self, cpu: &mut pdp8_gatelevel::Pdp8GateLevel, max_steps: usize, ) -> Result<usize, Pdp8Error>",
+      "effects": []
+    },
+    {
+      "name": "paper_roll_text",
+      "signature": "pub fn paper_roll_text(&self) -> String",
+      "effects": []
+    },
+    {
+      "name": "render_paper_roll_ascii",
+      "signature": "pub fn render_paper_roll_ascii(&self) -> String",
+      "effects": []
+    },
+    {
+      "name": "new",
+      "signature": "pub fn new() -> Self",
+      "effects": []
+    },
+    {
+      "name": "with_asr33",
+      "signature": "pub fn with_asr33(asr33: Asr33GateLevel) -> Self",
+      "effects": []
+    },
+    {
+      "name": "asr33",
+      "signature": "pub fn asr33(&self) -> &Asr33GateLevel",
+      "effects": []
+    },
+    {
+      "name": "asr33_mut",
+      "signature": "pub fn asr33_mut(&mut self) -> &mut Asr33GateLevel",
+      "effects": []
+    },
+    {
+      "name": "kbd_push_byte",
+      "signature": "pub fn kbd_push_byte(&mut self, byte: u8)",
+      "effects": []
+    },
+    {
+      "name": "tp_flag",
+      "signature": "pub fn tp_flag(&self) -> bool",
+      "effects": []
+    },
+    {
+      "name": "kb_flag",
+      "signature": "pub fn kb_flag(&self) -> bool",
+      "effects": []
+    },
+    {
+      "name": "handle_iot",
+      "signature": "pub fn handle_iot(&mut self, iot: IotEvent, ac: u16) -> GateLevelIotOutput",
+      "effects": []
+    },
+    {
+      "name": "step_sim",
+      "signature": "pub fn step_sim(&mut self, sim: &mut Pdp8Simulator) -> Result<StepTrace, Pdp8Error>",
+      "effects": []
+    },
+    {
+      "name": "step_gate",
+      "signature": "pub fn step_gate(&mut self, cpu: &mut pdp8_gatelevel::Pdp8GateLevel) -> Result<StepTrace, Pdp8Error>",
+      "effects": []
+    },
+    {
+      "name": "run_sim_until_halt",
+      "signature": "pub fn run_sim_until_halt(&mut self, sim: &mut Pdp8Simulator, max_steps: usize) -> Result<usize, Pdp8Error>",
+      "effects": []
+    },
+    {
+      "name": "run_gate_until_halt",
+      "signature": "pub fn run_gate_until_halt( &mut self, cpu: &mut pdp8_gatelevel::Pdp8GateLevel, max_steps: usize, ) -> Result<usize, Pdp8Error>",
+      "effects": []
+    },
+    {
+      "name": "ge225_bcd_to_ascii",
+      "signature": "pub const fn ge225_bcd_to_ascii(code: u8) -> Option<u8>",
+      "effects": []
+    },
+    {
+      "name": "ascii_to_ge225_bcd",
+      "signature": "pub const fn ascii_to_ge225_bcd(ascii: u8) -> Option<u8>",
+      "effects": []
+    },
+    {
+      "name": "ge225_bcd_to_str",
+      "signature": "pub fn ge225_bcd_to_str(codes: &[u8]) -> String",
+      "effects": []
+    },
+    {
+      "name": "str_to_ge225_bcd",
+      "signature": "pub fn str_to_ge225_bcd(text: &str) -> Vec<u8>",
+      "effects": []
+    },
+    {
+      "name": "sync_sim_typewriter",
+      "signature": "pub fn sync_sim_typewriter(sim: &ge225_simulator::Simulator, asr: &mut Asr33Functional)",
+      "effects": []
+    },
+    {
+      "name": "sync_gate_typewriter",
+      "signature": "pub fn sync_gate_typewriter(gate: &ge225_gatelevel::Ge225GateLevel, asr: &mut Asr33Functional)",
+      "effects": []
+    },
+    {
+      "name": "feed_sim_typewriter",
+      "signature": "pub fn feed_sim_typewriter(sim: &mut ge225_simulator::Simulator, text: &str) -> Result<(), String>",
+      "effects": []
+    },
+    {
+      "name": "feed_gate_typewriter",
+      "signature": "pub fn feed_gate_typewriter( gate: &mut ge225_gatelevel::Ge225GateLevel, text: &str, ) -> Result<(), ge225_gatelevel::Ge225GateError>",
+      "effects": []
+    },
+    {
+      "name": "assemble_pdp8_teletype_printer_program",
+      "signature": "pub fn assemble_pdp8_teletype_printer_program(input_char_dest: u16) -> Vec<u16>",
+      "effects": []
+    },
+    {
+      "name": "encode_ascii_for_pdp8",
+      "signature": "pub fn encode_ascii_for_pdp8(text: &str) -> Vec<u16>",
+      "effects": []
+    },
+    {
+      "name": "assemble_ge225_typewriter_program",
+      "signature": "pub fn assemble_ge225_typewriter_program(bcd_data_addr: i32, bcd_len: usize) -> Option<Vec<i32>>",
+      "effects": []
+    },
+    {
+      "name": "new_pdp8_teletype_bridge",
+      "signature": "pub fn new_pdp8_teletype_bridge() -> Pdp8TeletypeBridge",
+      "effects": []
+    },
+    {
+      "name": "new_pdp8_teletype_gate_bridge",
+      "signature": "pub fn new_pdp8_teletype_gate_bridge() -> Pdp8TeletypeGateLevelBridge",
+      "effects": []
+    }
+  ],
+  "unconditional_roots": [],
+  "banned_construct_exceptions": [],
+  "label": "proved"
+}

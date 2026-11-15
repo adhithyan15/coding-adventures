@@ -12214,6 +12214,27 @@ dependencies = [
 ]
 
 [[package]]
+name = "sim-pdp8-ge225-io-bridge"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding-adventures-ge225-simulator",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "ge225-gatelevel",
+ "hamurabi",
+ "logic-gates",
+ "lunar-lander",
+ "paint-instructions",
+ "paint-vm-ascii",
+ "pdp8-gatelevel",
+ "pdp8-simulator",
+ "serde",
+ "serde_json",
+ "sim-teletype-asr33",
+]
+
+[[package]]
 name = "sim-teletype-asr33"
 version = "0.1.0"
 dependencies = [

@@ -1,0 +1,39 @@
+[package]
+name = "sim-pdp8-ge225-io-bridge"
+version = "0.1.0"
+edition = "2021"
+description = "Era 0 peripheral I/O bridge connecting PDP-8 and GE-225 simulators/gate-level models to ASR-33 Teletype (GAME03b)"
+license = "MIT"
+
+[dependencies]
+logic-gates = { path = "../logic-gates" }
+pdp8-simulator = { path = "../pdp8-simulator" }
+pdp8-gatelevel = { path = "../pdp8-gatelevel" }
+ge225-simulator = { package = "coding-adventures-ge225-simulator", path = "../ge225-simulator" }
+ge225-gatelevel = { path = "../ge225-gatelevel" }
+sim-teletype-asr33 = { path = "../sim-teletype-asr33" }
+hamurabi = { path = "../hamurabi" }
+lunar-lander = { path = "../lunar-lander" }
+paint-instructions = { path = "../paint-instructions" }
+paint-vm-ascii = { path = "../paint-vm-ascii" }
+
+[dev-dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
+coding_adventures_sha256 = { path = "../sha256" }
+capability-runtime-conformance = { path = "../capability-runtime-conformance" }
+
+[[test]]
+name = "conformance"
+path = "tests/conformance.rs"
+
+[[test]]
+name = "microbenchmarks"
+path = "tests/microbenchmarks.rs"
+harness = false
+
+[[test]]
+name = "runtime_capability"
+path = "tests/runtime_capability.rs"
+harness = false

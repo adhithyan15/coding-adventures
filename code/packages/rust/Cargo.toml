@@ -772,6 +772,7 @@ members = [
     "lua-bridge",
     "lunar-lander",
     "sim-teletype-asr33",
+    "sim-pdp8-ge225-io-bridge",
     "perl-bridge",
     "polynomial-c",
     "wasm-execution",
