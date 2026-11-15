@@ -70,6 +70,7 @@ members = [
     "dsp-conv",
     "dsp-stft",
     "dsp-wavelets",
+    "music-analysis",
 ]
 
 [tool.uv.sources]
@@ -138,6 +139,7 @@ coding-adventures-dsp-filters = { workspace = true }
 coding-adventures-dsp-conv = { workspace = true }
 coding-adventures-dsp-stft = { workspace = true }
 coding-adventures-dsp-wavelets = { workspace = true }
+coding-adventures-music-analysis = { workspace = true }
 
 [dependency-groups]
 dev = [
