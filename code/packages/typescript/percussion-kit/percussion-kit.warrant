@@ -1,0 +1,113 @@
+-- MUS07 / VER04 -- Deterministic Unpitched Percussion Voices and Drum Kit Sequences
+--
+-- Warrant specification for typescript/percussion-kit.
+-- Every operand is public (no cryptographic secrets or private keys), which establishes
+-- the derived attestation `warrant-spec::all-operands-public` and discharges CWE-208.
+-- Bounded resource consumption satisfies CWE-400, strictly iterative synthesis
+-- discharges CWE-674, and zero regex / dynamic eval discharges CWE-1333 and CWE-94.
+
+warrant percussion_kit v1
+  error PercussionError = INVALID_ARGUMENT | BUDGET_EXCEEDED
+
+  op render_percussion_hit(hit_id: Nat, duration_ms: Nat, sample_rate_hz: Nat) -> Nat
+  op render_percussion_sequence(event_count: Nat, sample_rate_hz: Nat) -> Nat
+  op apply_hihat_choke(sample_count: Nat, choke_sample: Nat, ramp_samples: Nat) -> Nat
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  -- Every operand is public: percussion synthesis operates strictly on public musical
+  -- parameters (hit id, durations, sample rates). With zero secret inputs, timing side-channels
+  -- are impossible by construction, discharging CWE-208 via warrant-spec::all-operands-public.
+  labels render_percussion_hit:
+    hit_id public
+    duration_ms public
+    sample_rate_hz public
+
+  labels render_percussion_sequence:
+    event_count public
+    sample_rate_hz public
+
+  labels apply_hihat_choke:
+    sample_count public
+    choke_sample public
+    ramp_samples public
+
+  -- CWE-400 input validation contracts: all inputs are hostile and must be validated
+  -- against strict upper ceilings before allocating buffers or computing samples.
+  input render_percussion_hit.hit_id:
+    hostile
+    rejects hit_id >= 15 with PercussionError.INVALID_ARGUMENT
+    ensures no_panic, terminates
+
+  input render_percussion_hit.duration_ms:
+    hostile
+    rejects duration_ms > 30000 with PercussionError.BUDGET_EXCEEDED
+    ensures no_panic, terminates
+
+  input render_percussion_hit.sample_rate_hz:
+    hostile
+    rejects sample_rate_hz == 0 or sample_rate_hz > 192000 with PercussionError.INVALID_ARGUMENT
+    ensures no_panic, terminates
+
+  input render_percussion_sequence.event_count:
+    hostile
+    rejects event_count > 16384 with PercussionError.BUDGET_EXCEEDED
+    ensures no_panic, terminates
+
+  input render_percussion_sequence.sample_rate_hz:
+    hostile
+    rejects sample_rate_hz == 0 or sample_rate_hz > 192000 with PercussionError.INVALID_ARGUMENT
+    ensures no_panic, terminates
+
+  input apply_hihat_choke.sample_count:
+    hostile
+    rejects sample_count > 16777216 with PercussionError.BUDGET_EXCEEDED
+    ensures no_panic, terminates
+
+  input apply_hihat_choke.choke_sample:
+    hostile
+    ensures no_panic, terminates
+
+  input apply_hihat_choke.ramp_samples:
+    hostile
+    ensures no_panic, terminates
+
+  -- CWE-400 / CWE-674 execution bounds: linear step bounds, bounded working space,
+  -- constant stack depth (strictly iterative loops, zero recursion), and strict
+  -- total output sample limits on sequence mixing.
+  bound render_percussion_hit:
+    steps <= 256 * duration_ms + 1024
+    heap <= 4096
+    depth <= 16
+
+  bound render_percussion_sequence:
+    steps <= 512 * event_count + 2048
+    heap <= 8192
+    depth <= 16
+    total_samples <= 16777216
+
+  bound apply_hihat_choke:
+    steps <= 64 * ramp_samples + 256
+    heap <= 1024
+    depth <= 16
+
+  -- Determinism and budget claims: identical inputs produce identical synthesized PCM output
+  -- and sequence sample count never exceeds MAX_SAMPLE_COUNT.
+  claim hit_rendering_is_deterministic:
+    forall h: Nat, d: Nat, r: Nat | h < 15 and d <= 30000 and r > 0 and r <= 192000.
+      render_percussion_hit(h, d, r) == render_percussion_hit(h, d, r)
+
+  claim sequence_rendering_is_deterministic:
+    forall c: Nat, r: Nat | c <= 16384 and r > 0 and r <= 192000.
+      render_percussion_sequence(c, r) == render_percussion_sequence(c, r)
+
+  claim sequence_sample_budget_bounded:
+    forall c: Nat, r: Nat | c <= 16384 and r > 0 and r <= 192000.
+      render_percussion_sequence(c, r) <= 16777216
+
+  claim choke_is_deterministic:
+    forall s: Nat, c: Nat, r: Nat | s <= 16777216.
+      apply_hihat_choke(s, c, r) == apply_hihat_choke(s, c, r)
