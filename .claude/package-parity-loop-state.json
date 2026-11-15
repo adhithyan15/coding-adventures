@@ -18608,7 +18608,8 @@
       "status": "pr-open",
       "depends_on": [],
       "branch": "feat/ml02-gradient-descent-dart-java-kotlin-swift-parity",
-      "pr_number": null,
+      "pr_number": 19430,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19430",
       "notes": "Eleven of fifteen lanes present; Dart, Java, Kotlin, Swift missing. Existing matrix, activation, and loss foundations permit independent lane-sized SGD ports with deterministic neutral cases.",
       "postmerge_preparation_evidence": [
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/ml02-gradient-descent-dart-java-kotlin-swift-parity"
