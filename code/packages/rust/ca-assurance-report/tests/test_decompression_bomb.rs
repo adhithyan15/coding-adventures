@@ -33,7 +33,8 @@ use std::path::{Path, PathBuf};
 use coding_adventures_ca_assurance_report::evidence::DecompressionBounds;
 use coding_adventures_ca_assurance_report::{
     build_weakness_matrix, generate_package_report, verify_evidence, AuditEvidence, AuditProfile,
-    Evidence, PackageAuditContext, WeaknessRegistry, WeaknessRow, WeaknessStatus,
+    Evidence, LanguageSafetyProfile, PackageAuditContext, WeaknessRegistry, WeaknessRow,
+    WeaknessStatus,
 };
 
 fn pkg_dir(name: &str) -> PathBuf {
@@ -67,7 +68,12 @@ fn clean_bounds() -> DecompressionBounds {
 fn row409(profile: AuditProfile, d: DecompressionBounds) -> Result<WeaknessRow, String> {
     let ctx = PackageAuditContext {
         package_id: "rust/example".into(),
+        language_safety: LanguageSafetyProfile::SafeRust,
         is_safe_rust: true,
+        has_secret_ops: false,
+        has_eval_analyzer_evidence: false,
+        has_prototype_analyzer_evidence: false,
+        constant_time_claims: vec![],
         declared_capabilities: vec![],
         has_wir_timing_proof: false,
         has_instruction_benchmarks: false,

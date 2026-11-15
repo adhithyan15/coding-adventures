@@ -27,7 +27,8 @@ pub use evidence::{
     derive_claims, verify_evidence, verify_profile, Evidence, EvidenceCheckError, EvidenceError,
 };
 pub use matrix::{
-    build_weakness_matrix, AuditEvidence, MatrixError, PackageAuditContext, WeaknessRow, WeaknessStatus,
+    build_weakness_matrix, AuditEvidence, LanguageSafetyProfile, MatrixError, PackageAuditContext,
+    WeaknessRow, WeaknessStatus,
 };
 pub use profile::{AuditProfile, ProfileError, ProfileKind, PROFILE_FILE};
 pub use registry::{RegistryError, WeaknessClass, WeaknessRegistry};

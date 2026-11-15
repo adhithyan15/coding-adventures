@@ -196,17 +196,6 @@
       "id": "EXEMPT-CWE-400-NO-STEP-PROOF",
       "kind": "no-live-proof",
       "rationale": "computed exemption (unapproved): no step-bound proof is live, so the Warrant steps bounds are declarations that no tool checks (parse refused at src/lib.rs:166:18: Unexpected byte: ''' (line: `struct BitReader<'a> {`); per export, compress: alone: parse refused (Expected Semi, found Lt); decompress: alone: parse refused (Unexpected byte: '?'))"
-    },
-    {
-      "approved": false,
-      "assumptions": [],
-      "cwe": 208,
-      "evidence": [
-        "warrant-spec::all-operands-public"
-      ],
-      "id": "EXEMPT-CWE-208-NO-SECRET-OPERANDS",
-      "kind": "not-applicable",
-      "rationale": "not applicable: no secret operands; the Warrant document labels every operand of every operation public, so it states no constant-time obligation and none was run. Recorded as an unapproved exemption rather than an exclusion because the registry defines no safe subset for CWE-208, and because the labels are the specification's own classification, which no analyzer here confirms"
     }
   ],
   "package": "rust/lzw",
@@ -396,14 +385,14 @@
       "status": "excluded"
     },
     {
-      "approved": false,
       "cwe": 208,
       "evidence": [
+        "capability-audit::no-secret-inputs",
         "warrant-spec::all-operands-public"
       ],
       "name": "Observable Timing Discrepancy",
-      "reason": "not applicable: no secret operands; the Warrant document labels every operand of every operation public, so it states no constant-time obligation and none was run. Recorded as an unapproved exemption rather than an exclusion because the registry defines no safe subset for CWE-208, and because the labels are the specification's own classification, which no analyzer here confirms",
-      "status": "exemption"
+      "reason": "no secret inputs: package contains no secret operands or cryptographic comparison operations; timing variation reveals no sensitive data",
+      "status": "excluded"
     },
     {
       "cwe": 330,
