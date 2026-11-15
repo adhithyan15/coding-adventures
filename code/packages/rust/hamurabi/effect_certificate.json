@@ -1,7 +1,7 @@
 {
   "schema_version": "ver24-effect-cert-v1",
   "package": "rust/hamurabi",
-  "source_digest": "2bffa9254ec95c1aabfb8bb6e34a429c81b98e1f8e08067dc038b382bcd7010d",
+  "source_digest": "c2f4d6ebf3c71b7c23bad8acfabb98cd3daa57cd7afb5e96464658cc5ca35168",
   "manifest_digest": "509321ac4d53c49e52d85d178eef6faef619bb4ad3345b942cd00f5e20129c86",
   "declared_effects": [],
   "entry_points": [
