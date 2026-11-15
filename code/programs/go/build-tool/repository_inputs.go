@@ -311,6 +311,27 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		paths:    hamurabiCorpusPaths,
 	},
 	{
+		name:     "go/hamurabi",
+		language: "go",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "python/hamurabi",
+		language: "python",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "typescript/hamurabi",
+		language: "typescript",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
 		name:     "go/rng",
 		language: "go",
 		inputs:   "the shared rng conformance corpus",
