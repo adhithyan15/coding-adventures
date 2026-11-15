@@ -10071,7 +10071,7 @@
         "canonical-cbor-language-neutral-conformance"
       ],
       "branch": "feat/canonical-cbor-haskell-lane-parity",
-      "pr_number": null,
+      "pr_number": 19408,
       "notes": "Implement the closed canonical-CBOR contract in Haskell and consume every language-neutral case."
     },
     {
