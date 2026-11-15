@@ -135,6 +135,7 @@ var (
 		"code/scripts/bootstrap_harness_conformance.py",
 	}
 	rngCorpusPaths      = []string{"code/specs/fixtures/rng-v1"}
+	hamurabiCorpusPaths = []string{"code/specs/fixtures/hamurabi-v1"}
 	warrantGrammarPaths = []string{
 		"code/grammars/warrant",
 		"code/specs/fixtures/warrant-syntax-v1",
@@ -301,6 +302,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "the shared rng conformance corpus",
 		matches:  isRngCorpus,
 		paths:    rngCorpusPaths,
+	},
+	{
+		name:     "rust/hamurabi",
+		language: "rust",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
 	},
 	{
 		name:     "go/rng",
@@ -608,6 +616,15 @@ func isKilnToolchainPinInput(changed string) bool {
 //	code/specs/rng.md                         → false (prose; the corpus pins behaviour)
 func isRngCorpus(changed string) bool {
 	return strings.HasPrefix(changed, "code/specs/fixtures/rng-v1/")
+}
+
+// isHamurabiCorpus reports whether a changed path is in the shared hamurabi corpus,
+// which the hamurabi package tests read.
+//
+//	code/specs/fixtures/hamurabi-v1/cases.json  → true
+//	code/specs/fixtures/hamurabi-v10/cases.json → false
+func isHamurabiCorpus(changed string) bool {
+	return strings.HasPrefix(changed, "code/specs/fixtures/hamurabi-v1/")
 }
 
 // isMosaicRepositorySource reports whether a changed path is one the Mosaic

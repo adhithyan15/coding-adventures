@@ -216,6 +216,7 @@ members = [
     "grammar-tools",
     "grammar-lsp-bridge",
     "grammar-wasm-support",
+    "hamurabi",
     "haskell-lexer",
     "haskell-parser",
     "heap",

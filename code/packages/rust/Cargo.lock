@@ -7109,6 +7109,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "hamurabi"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "rng",
+]
+
+[[package]]
 name = "hardware-vm"
 version = "0.1.0"
 dependencies = [
