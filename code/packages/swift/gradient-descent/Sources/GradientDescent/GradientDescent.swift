@@ -72,7 +72,8 @@ public enum GradientDescent {
       let next = weight - step
       // Overflow refusal: finite inputs can still overflow (for example
       // 1e308 - (-1e308) = +Inf). Fail closed rather than return +-Inf/NaN.
-      guard step.isFinite, next.isFinite else {
+      // If step overflows, next = weight - step is already non-finite.
+      guard next.isFinite else {
         throw GradientDescentError(.numericOverflow)
       }
       updated.append(next)
