@@ -706,6 +706,7 @@ members = [
     "paint-codec-png",
     "paint-codec-png-c",
     "paint-instructions",
+    "paint-batch-tiles",
     "paint-vm-ascii",
     "paint-vm-cairo",
     "cuda-compute",
