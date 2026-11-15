@@ -11751,7 +11751,7 @@
         "image-codec-png-apng-neutral-rejection-conformance"
       ],
       "branch": "feat/image-codec-png-ruby-lane-parity",
-      "pr_number": null,
+      "pr_number": 19410,
       "notes": "Standalone Ruby child consuming the neutral PNG corpus and established ZIP raw/CRC surface with empty production capabilities."
     },
     {
