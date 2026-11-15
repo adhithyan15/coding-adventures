@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.3.0] - 2026-11-15
+
+### Added
+
+- Hardened raw RFC 1951 DEFLATE encoder and bounded streaming decoder to handle IC18 PNG ceiling of 134,234,112 bytes ($33,554,432 \times 4 + 16,384$) in bounded time and RAM.
+- 4 KiB paged sliding-window output buffer with fast `:binary.copy/2` pattern replication for run-length decoding and zero-allocation cross-page lookups.
+- Centralized protocol constants and bitwise parameters in `CodingAdventures.Zip.Constants` with zero inline magic literals or masks.
+- Consolidated closed 14-code RFC 1951 taxonomy and payload-blind diagnostic strings in `CodingAdventures.Zip.Messages` adhering to Standing Rule #20 (no payload or untrusted input reflection in error strings).
+- 7-class ZIP and RFC 1951 CVE resilience showcase covering zip bombs, Huffman tree oversubscription, window underflow, stored-block NLEN tampering, trailing payload cavities, Zip-Slip traversal, and payload data leakage.
+- Exhaustive test suite in `test/png_scale_hardening_test.exs` including 134 MB roundtrip, 10,000-iteration deterministic PRNG mutation fuzz loop, and bidirectional property tests against Erlang `:zlib`.
+- Raised test coverage threshold to >=95% across all `CodingAdventures.Zip*` modules.
+
 ## [0.2.0] - 2026-08-13
 
 ### Added

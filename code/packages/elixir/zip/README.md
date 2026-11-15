@@ -77,6 +77,45 @@ and dynamic Huffman blocks, rejects trailing compressed-payload cavities at
 the ZIP boundary, returns no partial output, and exposes one of 14 stable,
 payload-blind errors through `CodingAdventures.Zip.RawInflateError`.
 
+### PNG-Scale Hardening (IC18)
+
+The raw codec is engineered to handle the maximum IC18 PNG decompressed scanline ceiling of **134,234,112 bytes** (33,554,432 pixels × 4 bytes/pixel + 16,384 filter bytes) in bounded time and RAM:
+- **Chunked Bit Accumulation**: `BitWriter` accumulates bits in 64-bit machine words using binary patterns (`<<word::64-little>>`) and flushes 64 KiB chunks, avoiding linked-list heap expansion.
+- **Fast Pattern Matcher**: The DEFLATE encoder utilizes a byte-backed 3-byte hash table paired with Erlang's C-BIF `:binary.longest_common_prefix/1` for ultra-fast LZ77 tokenization.
+- **Paged Output Buffer**: `raw_inflate` operates with a 4 KiB paged buffer map and slice-based zero-copy lookups (`:binary.copy/2` for RLE sequences and zero-copy stored block ingestion).
+- **Compile-Time Lookup Tables**: Fixed Huffman literal/length, distance, and CRC-32 tables are precomputed at compile time into module constants.
+
+## CVE Resilience Showcase
+
+| Vulnerability Class | Relevant CVE | Mitigation in `CodingAdventures.Zip` |
+|:---|:---|:---|
+| **Zip-Bomb Amplification & Allocation Limits** | CVE-2002-1363, CVE-2023-4863 | Output limit is enforced eagerly before every stored block, literal, and back-reference copy. Exceeding limit raises `RawInflateError` with `output-limit-exceeded` in bounded memory with zero partial output leakage. |
+| **Huffman Oversubscription & Incomplete Trees** | CVE-2016-9840, CVE-2008-1372 | Rejects oversubscribed or incomplete code length tables and dynamic Huffman trees (`huffman-oversubscribed`, `incomplete-code-length-tree`, `incomplete-literal-length-tree`, `incomplete-distance-tree`, `invalid-literal-length-symbol`). |
+| **Sliding-Window Underflow & Wrap-Around Overflow** | Historical zlib/Info-ZIP issues | Full 32 KiB history window boundary enforcement: distance exceeding current buffer offset or 32,768 raises `invalid-back-reference`. Overlapping RLE pattern replication is handled safely via `:binary.copy/2`. |
+| **Stored-Block NLEN Complement Tampering** | CVE-2005-1849 | RFC 1951 stored block `LEN ^ 0xFFFF == NLEN` strictly verified (`stored-length-mismatch`). Zero-copy payload ingestion bounded by remaining input. |
+| **Trailing Payload Cavities & Premature BFINAL** | CVE-2010-1205 | `raw_inflate_counted` returns exact `bytes_consumed` through the BFINAL end-of-block marker. Archive extraction rejects compressed payloads with unconsumed trailing bytes (`zip: compressed payload contains trailing bytes`). |
+| **Zip-Slip Directory Traversal & Absolute Paths** | CVE-2018-1002200 | Central directory and local file entry names validated on both write and read: paths cannot contain `..`, leading `/` or `\`, or Windows drive letters (`C:`), raising dedicated payload-blind exceptions. |
+| **Payload Data Leakage in Exceptions** | Standing Rule #20 | 100% of error messages and diagnostic strings are isolated in `Messages.ex`. Zero untrusted file names, offsets, or byte snippets are interpolated into error strings. |
+
+## Error Taxonomy
+
+The package defines a closed taxonomy of 14 RFC 1951 error identifiers isolated in `Messages.ex`:
+
+- `invalid-output-limit`
+- `unexpected-eof`
+- `reserved-block-type`
+- `stored-length-mismatch`
+- `huffman-oversubscribed`
+- `incomplete-code-length-tree`
+- `incomplete-literal-length-tree`
+- `incomplete-distance-tree`
+- `repeat-without-previous`
+- `repeat-overrun`
+- `invalid-literal-length-symbol`
+- `reserved-distance-symbol`
+- `invalid-back-reference`
+- `output-limit-exceeded`
+
 ## API
 
 | Function | Description |
