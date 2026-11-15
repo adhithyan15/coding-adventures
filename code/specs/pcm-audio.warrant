@@ -1,0 +1,78 @@
+warrant pcm_audio
+  error PcmError = INVALID_PARAMETER | MALFORMED_WAV | OVERSIZED_CHUNK
+
+  model clamp_pcm16_model(v: Int) -> Int = if v > 32767 then 32767 else (if v < 0 - 32768 then 0 - 32768 else v)
+  model wav_payload_size(sample_count: Int, channels: Int, bytes_per_sample: Int) -> Int = sample_count * channels * bytes_per_sample
+  model wav_total_file_size(data_size: Int) -> Int = 44 + data_size
+
+  op clamp_to_pcm16(v: Int) -> Int
+  op compute_data_size(sample_count: Int, channels: Int, bytes_per_sample: Int) -> Int
+  op compute_wav_file_size(data_size: Int) -> Int
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels clamp_to_pcm16:
+    v public
+  labels compute_data_size:
+    sample_count public
+    channels public
+    bytes_per_sample public
+  labels compute_wav_file_size:
+    data_size public
+
+  input clamp_to_pcm16.v:
+    hostile
+    ensures no_panic, terminates
+
+  input compute_data_size.sample_count:
+    hostile
+    ensures no_panic, terminates
+  input compute_data_size.channels:
+    hostile
+    ensures no_panic, terminates
+  input compute_data_size.bytes_per_sample:
+    hostile
+    ensures no_panic, terminates
+
+  input compute_wav_file_size.data_size:
+    hostile
+    ensures no_panic, terminates
+
+  bound clamp_to_pcm16:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound compute_data_size:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound compute_wav_file_size:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+
+  example clamp_zero:
+    clamp_to_pcm16(0) == 0
+  example clamp_max:
+    clamp_to_pcm16(32767) == 32767
+  example clamp_overflow:
+    clamp_to_pcm16(50000) == 32767
+  example clamp_min:
+    clamp_to_pcm16(0 - 32768) == 0 - 32768
+  example clamp_underflow:
+    clamp_to_pcm16(0 - 60000) == 0 - 32768
+
+  example data_size_mono_16:
+    compute_data_size(44100, 1, 2) == 88200
+  example wav_file_size_sample:
+    compute_wav_file_size(88200) == 88244
+
+  claim clamp_pcm16_agrees:
+    forall v: Int. clamp_to_pcm16(v) == clamp_pcm16_model(v)
+  claim data_size_agrees:
+    forall samples: Int, channels: Int, bps: Int. compute_data_size(samples, channels, bps) == wav_payload_size(samples, channels, bps)
+  claim wav_file_size_agrees:
+    forall d: Int. compute_wav_file_size(d) == wav_total_file_size(d)

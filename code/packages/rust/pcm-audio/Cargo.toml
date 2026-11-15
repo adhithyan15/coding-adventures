@@ -1,0 +1,13 @@
+[package]
+name = "pcm-audio"
+version = "0.1.0"
+edition = "2021"
+description = "MUS01 Stage 5: PCM Audio container, quantization, and secure WAV serialization/parsing"
+license = "MIT"
+readme = "README.md"
+
+[dependencies]
+oscillator = { path = "../oscillator" }
+
+[dev-dependencies]
+coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
