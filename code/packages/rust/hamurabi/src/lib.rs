@@ -67,7 +67,10 @@ pub enum GameStatus {
     /// Completed 10-year term successfully (transitioned to terminal year 11).
     Won { rating: Rating },
     /// Impeached and expelled from office due to extreme starvation (> 45%).
-    Impeached { starved_this_turn: u32, percent: u32 },
+    Impeached {
+        starved_this_turn: u32,
+        percent: u32,
+    },
     /// Entire population died of starvation or disaster.
     GameOverExtinction,
 }
@@ -97,13 +100,26 @@ impl std::fmt::Display for HamurabiError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             Self::GameAlreadyEnded => write!(f, "Game has already ended"),
-            Self::InvalidOrderBounds => write!(f, "Order parameters exceed valid numerical bounds or overflow"),
-            Self::InsufficientBushelsForLand => write!(f, "Insufficient bushels to buy specified acreage"),
+            Self::InvalidOrderBounds => write!(
+                f,
+                "Order parameters exceed valid numerical bounds or overflow"
+            ),
+            Self::InsufficientBushelsForLand => {
+                write!(f, "Insufficient bushels to buy specified acreage")
+            }
             Self::InsufficientAcresToSell => write!(f, "Cannot sell more acres than the city owns"),
-            Self::InsufficientBushelsToFeed => write!(f, "Insufficient bushels in store to feed population"),
-            Self::InsufficientAcresToPlant => write!(f, "Cannot plant more acres than owned after land trade"),
-            Self::InsufficientPopulationToPlant => write!(f, "Insufficient population to tend planted acreage"),
-            Self::InsufficientGrainForSeed => write!(f, "Insufficient grain to seed planted acreage"),
+            Self::InsufficientBushelsToFeed => {
+                write!(f, "Insufficient bushels in store to feed population")
+            }
+            Self::InsufficientAcresToPlant => {
+                write!(f, "Cannot plant more acres than owned after land trade")
+            }
+            Self::InsufficientPopulationToPlant => {
+                write!(f, "Insufficient population to tend planted acreage")
+            }
+            Self::InsufficientGrainForSeed => {
+                write!(f, "Insufficient grain to seed planted acreage")
+            }
         }
     }
 }
@@ -276,7 +292,7 @@ pub fn validate_order(state: &HamurabiState, order: &TurnOrder) -> Result<(), Ha
             _ => return Err(HamurabiError::InvalidOrderBounds),
         }
     } else {
-        let sell_count = (- (order.acres_delta as i64)) as u64;
+        let sell_count = (-(order.acres_delta as i64)) as u64;
         (state.acres as u64 - sell_count) as u32
     };
 
@@ -284,7 +300,7 @@ pub fn validate_order(state: &HamurabiState, order: &TurnOrder) -> Result<(), Ha
         let cost = (order.acres_delta as u64) * (state.land_price as u64);
         (state.bushels as u64 - cost) as u32
     } else if order.acres_delta < 0 {
-        let sell_count = (- (order.acres_delta as i64)) as u64;
+        let sell_count = (-(order.acres_delta as i64)) as u64;
         let revenue = match sell_count.checked_mul(state.land_price as u64) {
             Some(r) => r,
             None => return Err(HamurabiError::InvalidOrderBounds),
@@ -316,7 +332,7 @@ pub fn validate_order(state: &HamurabiState, order: &TurnOrder) -> Result<(), Ha
     }
 
     // 6. Planting Seed Check: each bushel seeds 2 acres (ceil(acres / 2))
-    let seed_needed = ((order.acres_to_plant as u64) + 1) / 2;
+    let seed_needed = (order.acres_to_plant as u64).div_ceil(2);
     if seed_needed > bushels_after_feed as u64 {
         return Err(HamurabiError::InsufficientGrainForSeed);
     }
@@ -357,7 +373,7 @@ pub fn step_year(state: &HamurabiState, order: &TurnOrder) -> Result<HamurabiSta
     let acres_after_trade = if order.acres_delta >= 0 {
         state.acres + (order.acres_delta as u32)
     } else {
-        let sell_count = (- (order.acres_delta as i64)) as u32;
+        let sell_count = (-(order.acres_delta as i64)) as u32;
         state.acres - sell_count
     };
 
@@ -365,7 +381,7 @@ pub fn step_year(state: &HamurabiState, order: &TurnOrder) -> Result<HamurabiSta
         let cost = (order.acres_delta as u64) * (state.land_price as u64);
         (state.bushels as u64 - cost) as u32
     } else if order.acres_delta < 0 {
-        let sell_count = (- (order.acres_delta as i64)) as u64;
+        let sell_count = (-(order.acres_delta as i64)) as u64;
         let revenue = sell_count * (state.land_price as u64);
         (state.bushels as u64 + revenue) as u32
     } else {
@@ -373,7 +389,7 @@ pub fn step_year(state: &HamurabiState, order: &TurnOrder) -> Result<HamurabiSta
     };
 
     let bushels_after_feed = bushels_after_trade - order.bushels_to_feed;
-    let seed_needed = ((order.acres_to_plant as u64) + 1) / 2;
+    let seed_needed = (order.acres_to_plant as u64).div_ceil(2);
     let bushels_after_seed = bushels_after_feed - (seed_needed as u32);
 
     // Step 1: Harvest Yield Draw
@@ -393,7 +409,8 @@ pub fn step_year(state: &HamurabiState, order: &TurnOrder) -> Result<HamurabiSta
     } else {
         0
     };
-    let bushels_final = (bushels_stored.saturating_sub(rats_eaten as u64)).min(u32::MAX as u64) as u32;
+    let bushels_final =
+        (bushels_stored.saturating_sub(rats_eaten as u64)).min(u32::MAX as u64) as u32;
 
     // Step 3: Plague Draw
     // Draw 4: pcg.next_int_in_range(1, 100) -> plague_roll (u32)
@@ -429,7 +446,7 @@ pub fn step_year(state: &HamurabiState, order: &TurnOrder) -> Result<HamurabiSta
 
     // Step 5: Plague Resolution
     if plague_struck && new_status == GameStatus::Playing {
-        survivors = survivors / 2;
+        survivors /= 2;
     }
 
     // Step 6: Immigration Draw
@@ -440,11 +457,9 @@ pub fn step_year(state: &HamurabiState, order: &TurnOrder) -> Result<HamurabiSta
         let inner = acres_term.saturating_add(bushels_final as u64);
         let numerator = (imm_factor as u64).saturating_mul(inner);
         let denominator = 100 * (state.population as u64);
-        if denominator > 0 {
-            ((numerator / denominator).saturating_add(1)).min(u32::MAX as u64) as u32
-        } else {
-            0
-        }
+        numerator
+            .checked_div(denominator)
+            .map_or(0, |q| q.saturating_add(1).min(u32::MAX as u64) as u32)
     } else {
         0
     };
@@ -459,11 +474,7 @@ pub fn step_year(state: &HamurabiState, order: &TurnOrder) -> Result<HamurabiSta
     let next_year = state.year.saturating_add(1);
     if next_year == 11 && new_status == GameStatus::Playing {
         let avg_starved = new_percent_sum / 10;
-        let acres_per_person = if final_population > 0 {
-            acres_after_trade / final_population
-        } else {
-            0
-        };
+        let acres_per_person = acres_after_trade.checked_div(final_population).unwrap_or(0);
         let rating = if avg_starved <= 3 && acres_per_person >= 10 {
             Rating::Charlemagne
         } else if avg_starved <= 10 && acres_per_person >= 9 {
@@ -499,7 +510,9 @@ pub fn step_year(state: &HamurabiState, order: &TurnOrder) -> Result<HamurabiSta
 #[must_use]
 pub fn format_report(state: &HamurabiState) -> String {
     match state.status {
-        GameStatus::Impeached { starved_this_turn, .. } => {
+        GameStatus::Impeached {
+            starved_this_turn, ..
+        } => {
             format!(
                 "YOU STARVED {} PEOPLE IN ONE YEAR!!!\n\
                  DUE TO THIS EXTREME MISMANAGEMENT YOU HAVE BEEN IMPEACHED AND THROWN OUT OF OFFICE!\n",
@@ -511,11 +524,7 @@ pub fn format_report(state: &HamurabiState) -> String {
         }
         GameStatus::Won { rating } => {
             let avg_starved = state.percent_starved_sum / 10;
-            let acres_per_person = if state.population > 0 {
-                state.acres / state.population
-            } else {
-                0
-            };
+            let acres_per_person = state.acres.checked_div(state.population).unwrap_or(0);
             let rating_msg = match rating {
                 Rating::Charlemagne => {
                     "A FANTASTIC PERFORMANCE! CHARLEMAGNE, DISRAELI, AND JEFFERSON COMBINED COULD NOT HAVE DONE BETTER!"

@@ -102,7 +102,10 @@ fn check_validate_order_zero_alloc(_ctx: &Ctx) -> Verdict {
     });
 
     if !zero_alloc_ok(&res) {
-        return Verdict::fail(FID_BENCH_FAIL, "validate_order exceeded zero allocation budget");
+        return Verdict::fail(
+            FID_BENCH_FAIL,
+            "validate_order exceeded zero allocation budget",
+        );
     }
 
     Verdict::Pass
@@ -174,7 +177,10 @@ fn write_bench_manifest(outcomes: &[Outcome]) {
             Json::obj([
                 ("id", Json::str(o.id.clone())),
                 ("kind", Json::str("bench")),
-                ("verdict", Json::str(if o.passed() { "pass" } else { "fail" })),
+                (
+                    "verdict",
+                    Json::str(if o.passed() { "pass" } else { "fail" }),
+                ),
             ])
         })
         .collect();
@@ -186,8 +192,10 @@ fn write_bench_manifest(outcomes: &[Outcome]) {
         (
             "source_sha256",
             Json::str(coding_adventures_sha256::sha256_hex(
-                &manifest::source_tree_framing(&std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("src"))
-                    .expect("bind bench manifest to src"),
+                &manifest::source_tree_framing(
+                    &std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("src"),
+                )
+                .expect("bind bench manifest to src"),
             )),
         ),
         ("tests", Json::Arr(tests)),
@@ -203,7 +211,10 @@ fn main() {
         check_counting_allocator_is_live,
     );
     suite.add("bench/step_year/zero_alloc", check_step_year_zero_alloc);
-    suite.add("bench/validate_order/zero_alloc", check_validate_order_zero_alloc);
+    suite.add(
+        "bench/validate_order/zero_alloc",
+        check_validate_order_zero_alloc,
+    );
     suite.add("bench/new_game/zero_alloc", check_new_game_zero_alloc);
     suite.add(
         "bench/sabotage/allocation_detected",

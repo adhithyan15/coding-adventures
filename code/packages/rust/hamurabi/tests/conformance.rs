@@ -11,8 +11,8 @@
 //! - Teletype report formatting (`format_report`)
 
 use hamurabi::{
-    format_report, new_game, step_year, validate_order, GameStatus, HamurabiError,
-    Rating, TurnOrder,
+    format_report, new_game, step_year, validate_order, GameStatus, HamurabiError, Rating,
+    TurnOrder,
 };
 
 #[test]
@@ -232,7 +232,7 @@ fn test_full_10_year_deterministic_game() {
         // If bushels are running low, sell land to ensure food supply
         let acres_delta = if state.bushels < feed_needed + 500 {
             let deficit = (feed_needed + 500) - state.bushels;
-            let acres_to_sell = ((deficit + state.land_price - 1) / state.land_price).min(state.acres / 3);
+            let acres_to_sell = deficit.div_ceil(state.land_price).min(state.acres / 3);
             -(acres_to_sell as i32)
         } else if state.bushels > feed_needed + 2000 {
             // Surplus grain: buy land
@@ -348,7 +348,10 @@ fn test_plague_population_reduction() {
             }
         }
     }
-    assert!(found_plague, "should find a plague occurrence in 1000 seeds");
+    assert!(
+        found_plague,
+        "should find a plague occurrence in 1000 seeds"
+    );
 }
 
 #[test]
@@ -361,7 +364,15 @@ fn test_canonical_10_year_charlemagne_fixture() {
     assert_eq!(state.land_price, 21);
 
     // Turn 1
-    let next = step_year(&state, &TurnOrder { acres_delta: 0, bushels_to_feed: 2000, acres_to_plant: 1000 }).unwrap();
+    let next = step_year(
+        &state,
+        &TurnOrder {
+            acres_delta: 0,
+            bushels_to_feed: 2000,
+            acres_to_plant: 1000,
+        },
+    )
+    .unwrap();
     assert_eq!(next.year, 2);
     assert_eq!(next.population, 103);
     assert_eq!(next.bushels, 4300);
@@ -378,21 +389,45 @@ fn test_canonical_10_year_charlemagne_fixture() {
     state = next;
 
     // Turn 2
-    let next = step_year(&state, &TurnOrder { acres_delta: 0, bushels_to_feed: 2060, acres_to_plant: 1000 }).unwrap();
+    let next = step_year(
+        &state,
+        &TurnOrder {
+            acres_delta: 0,
+            bushels_to_feed: 2060,
+            acres_to_plant: 1000,
+        },
+    )
+    .unwrap();
     assert_eq!(next.year, 3);
     assert_eq!(next.population, 108);
     assert_eq!(next.bushels, 3740);
     state = next;
 
     // Turn 3
-    let next = step_year(&state, &TurnOrder { acres_delta: 0, bushels_to_feed: 2160, acres_to_plant: 1000 }).unwrap();
+    let next = step_year(
+        &state,
+        &TurnOrder {
+            acres_delta: 0,
+            bushels_to_feed: 2160,
+            acres_to_plant: 1000,
+        },
+    )
+    .unwrap();
     assert_eq!(next.year, 4);
     assert_eq!(next.population, 115);
     assert_eq!(next.bushels, 2080);
     state = next;
 
     // Turn 4
-    let next = step_year(&state, &TurnOrder { acres_delta: -38, bushels_to_feed: 2300, acres_to_plant: 962 }).unwrap();
+    let next = step_year(
+        &state,
+        &TurnOrder {
+            acres_delta: -38,
+            bushels_to_feed: 2300,
+            acres_to_plant: 962,
+        },
+    )
+    .unwrap();
     assert_eq!(next.year, 5);
     assert_eq!(next.population, 124);
     assert_eq!(next.bushels, 3983);
@@ -400,14 +435,30 @@ fn test_canonical_10_year_charlemagne_fixture() {
     state = next;
 
     // Turn 5
-    let next = step_year(&state, &TurnOrder { acres_delta: 0, bushels_to_feed: 2480, acres_to_plant: 962 }).unwrap();
+    let next = step_year(
+        &state,
+        &TurnOrder {
+            acres_delta: 0,
+            bushels_to_feed: 2480,
+            acres_to_plant: 962,
+        },
+    )
+    .unwrap();
     assert_eq!(next.year, 6);
     assert_eq!(next.population, 133);
     assert_eq!(next.bushels, 1984);
     state = next;
 
     // Turn 6
-    let next = step_year(&state, &TurnOrder { acres_delta: -71, bushels_to_feed: 2660, acres_to_plant: 891 }).unwrap();
+    let next = step_year(
+        &state,
+        &TurnOrder {
+            acres_delta: -71,
+            bushels_to_feed: 2660,
+            acres_to_plant: 891,
+        },
+    )
+    .unwrap();
     assert_eq!(next.year, 7);
     assert_eq!(next.population, 138);
     assert_eq!(next.bushels, 2829);
@@ -415,7 +466,15 @@ fn test_canonical_10_year_charlemagne_fixture() {
     state = next;
 
     // Turn 7
-    let next = step_year(&state, &TurnOrder { acres_delta: -26, bushels_to_feed: 2760, acres_to_plant: 865 }).unwrap();
+    let next = step_year(
+        &state,
+        &TurnOrder {
+            acres_delta: -26,
+            bushels_to_feed: 2760,
+            acres_to_plant: 865,
+        },
+    )
+    .unwrap();
     assert_eq!(next.year, 8);
     assert_eq!(next.population, 76);
     assert_eq!(next.bushels, 1047);
@@ -424,7 +483,15 @@ fn test_canonical_10_year_charlemagne_fixture() {
     state = next;
 
     // Turn 8
-    let next = step_year(&state, &TurnOrder { acres_delta: -43, bushels_to_feed: 1520, acres_to_plant: 760 }).unwrap();
+    let next = step_year(
+        &state,
+        &TurnOrder {
+            acres_delta: -43,
+            bushels_to_feed: 1520,
+            acres_to_plant: 760,
+        },
+    )
+    .unwrap();
     assert_eq!(next.year, 9);
     assert_eq!(next.population, 81);
     assert_eq!(next.bushels, 871);
@@ -432,20 +499,42 @@ fn test_canonical_10_year_charlemagne_fixture() {
     state = next;
 
     // Turn 9
-    let next = step_year(&state, &TurnOrder { acres_delta: -71, bushels_to_feed: 1620, acres_to_plant: 751 }).unwrap();
+    let next = step_year(
+        &state,
+        &TurnOrder {
+            acres_delta: -71,
+            bushels_to_feed: 1620,
+            acres_to_plant: 751,
+        },
+    )
+    .unwrap();
     assert_eq!(next.year, 10);
     assert_eq!(next.population, 93);
     assert_eq!(next.bushels, 3979);
     state = next;
 
     // Turn 10
-    let next = step_year(&state, &TurnOrder { acres_delta: 0, bushels_to_feed: 1860, acres_to_plant: 751 }).unwrap();
+    let next = step_year(
+        &state,
+        &TurnOrder {
+            acres_delta: 0,
+            bushels_to_feed: 1860,
+            acres_to_plant: 751,
+        },
+    )
+    .unwrap();
     assert_eq!(next.year, 11);
     assert_eq!(next.population, 55);
     assert_eq!(next.bushels, 4747);
-    assert_eq!(next.status, GameStatus::Won { rating: Rating::Charlemagne });
+    assert_eq!(
+        next.status,
+        GameStatus::Won {
+            rating: Rating::Charlemagne
+        }
+    );
     let final_report = format_report(&next);
-    assert!(final_report.contains("CHARLEMAGNE, DISRAELI, AND JEFFERSON COMBINED COULD NOT HAVE DONE BETTER!"));
+    assert!(final_report
+        .contains("CHARLEMAGNE, DISRAELI, AND JEFFERSON COMBINED COULD NOT HAVE DONE BETTER!"));
 }
 
 #[test]
