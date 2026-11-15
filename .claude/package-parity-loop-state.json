@@ -19198,11 +19198,11 @@
     {
       "id": "dart-swift-java-lexer-lane-parity",
       "title": "Port the Java lexer to Dart and Swift",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": [
         "dart-swift-language-frontends-neutral-fixtures"
       ],
-      "branch": null,
+      "branch": "feat/dart-swift-java-lexer-lane-parity",
       "pr_number": null,
       "notes": "Java lexer is 13/15 and missing only Dart and Swift. Split by lane and preserve ten Java grammar versions. Java parser is already owned by parser-contextual-generic-closer-established-lane-parity; do not duplicate it.",
       "postmerge_preparation_evidence": [
