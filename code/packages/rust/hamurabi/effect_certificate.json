@@ -1,0 +1,32 @@
+{
+  "schema_version": "ver24-effect-cert-v1",
+  "package": "rust/hamurabi",
+  "source_digest": "2bffa9254ec95c1aabfb8bb6e34a429c81b98e1f8e08067dc038b382bcd7010d",
+  "manifest_digest": "509321ac4d53c49e52d85d178eef6faef619bb4ad3345b942cd00f5e20129c86",
+  "declared_effects": [],
+  "entry_points": [
+    {
+      "name": "new_game",
+      "signature": "pub fn new_game(seed: u64) -> HamurabiState",
+      "effects": []
+    },
+    {
+      "name": "validate_order",
+      "signature": "pub fn validate_order(state: &HamurabiState, order: &TurnOrder) -> Result<(), HamurabiError>",
+      "effects": []
+    },
+    {
+      "name": "step_year",
+      "signature": "pub fn step_year(state: &HamurabiState, order: &TurnOrder) -> Result<HamurabiState, HamurabiError>",
+      "effects": []
+    },
+    {
+      "name": "format_report",
+      "signature": "pub fn format_report(state: &HamurabiState) -> String",
+      "effects": []
+    }
+  ],
+  "unconditional_roots": [],
+  "banned_construct_exceptions": [],
+  "label": "proved"
+}
