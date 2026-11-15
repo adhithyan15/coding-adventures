@@ -10067,6 +10067,33 @@ name = "multi-directed-graph"
 version = "0.1.0"
 
 [[package]]
+name = "music-machine-core"
+version = "0.1.0"
+dependencies = [
+ "coding-adventures-note-frequency",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "musical-instruments",
+ "note-audio",
+ "oscillator",
+ "pcm-audio",
+ "percussion-kit",
+ "virtual-dac",
+ "virtual-speaker",
+ "wav-sink",
+]
+
+[[package]]
+name = "music-machine-ffi"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "music-machine-core",
+ "pcm-audio",
+]
+
+[[package]]
 name = "musical-instruments"
 version = "0.1.0"
 dependencies = [
@@ -10979,6 +11006,7 @@ dependencies = [
  "coding_adventures_test_bootstrap",
  "oscillator",
  "pcm-audio",
+ "trig",
 ]
 
 [[package]]

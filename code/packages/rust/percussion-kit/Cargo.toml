@@ -9,6 +9,7 @@ readme = "README.md"
 [dependencies]
 oscillator = { path = "../oscillator" }
 pcm-audio = { path = "../pcm-audio" }
+trig = { path = "../trig" }
 
 [dev-dependencies]
 coding_adventures_test_bootstrap = { path = "../test-bootstrap" }

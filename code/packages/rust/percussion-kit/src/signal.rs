@@ -129,8 +129,7 @@ impl ContinuousSignal for PercussionSignal {
         for mode in &self.voice.modes {
             raw += mode.amplitude
                 * (-time_seconds / mode.decay_seconds).exp()
-                * (std::f64::consts::TAU * (mode.frequency_hz * time_seconds + mode.phase_cycles))
-                    .sin();
+                * trig::sin(2.0 * trig::PI * (mode.frequency_hz * time_seconds + mode.phase_cycles));
         }
 
         if let Some(ref noise) = self.voice.noise_profile {

@@ -437,6 +437,8 @@ members = [
     "wav-sink",
     "musical-instruments",
     "percussion-kit",
+    "music-machine-core",
+    "music-machine-ffi",
     "numeric-tower",
     "math-core",
     "matrix",
