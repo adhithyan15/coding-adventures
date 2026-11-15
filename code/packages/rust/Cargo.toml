@@ -435,6 +435,7 @@ members = [
     "virtual-dac",
     "virtual-speaker",
     "wav-sink",
+    "musical-instruments",
     "numeric-tower",
     "math-core",
     "matrix",
