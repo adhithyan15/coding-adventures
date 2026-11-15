@@ -36,7 +36,17 @@
 //! mode (matching librosa / scipy defaults) is a Phase 4+
 //! follow-up.
 
+#![forbid(unsafe_code)]
 #![warn(rust_2018_idioms)]
+
+/// Maximum supported FFT length (2^20 = 1,048,576).
+pub const MAX_FFT_LEN: usize = 1 << 20;
+
+/// Maximum supported signal/output length in samples (2^24 = 16,777,216).
+pub const MAX_SAMPLES: usize = 1 << 24;
+
+/// Maximum supported frames in spectrogram (2^20 = 1,048,576).
+pub const MAX_FRAMES: usize = 1 << 20;
 
 pub mod inverse;
 pub mod matrix;
@@ -89,6 +99,18 @@ pub fn stft(
     let nf = n_fft as usize;
     let hop = hop_length as usize;
 
+    if nf > MAX_FFT_LEN {
+        return Err(StftError::InvalidParam(format!(
+            "n_fft {} exceeds MAX_FFT_LEN {}",
+            nf, MAX_FFT_LEN
+        )));
+    }
+    if n > MAX_SAMPLES {
+        return Err(StftError::InvalidParam(format!(
+            "signal length {} exceeds MAX_SAMPLES {}",
+            n, MAX_SAMPLES
+        )));
+    }
     if n < nf {
         return Err(StftError::SignalTooShort(format!(
             "signal length {} < n_fft {} (strict-mode framing)",
@@ -101,8 +123,29 @@ pub fn stft(
     // n - nf >= 0 (checked above), so integer division gives the
     // floor we want.
     let num_frames = 1 + (n - nf) / hop;
+    if num_frames > MAX_FRAMES {
+        return Err(StftError::InvalidParam(format!(
+            "num_frames {} exceeds MAX_FRAMES {}",
+            num_frames, MAX_FRAMES
+        )));
+    }
     let bins = nf / 2 + 1;
-    let out_len = num_frames * bins * 2;
+    let out_len = num_frames
+        .checked_mul(bins)
+        .and_then(|v| v.checked_mul(2))
+        .ok_or_else(|| StftError::InvalidParam("output length overflow".into()))?;
+    if out_len > MAX_SAMPLES {
+        return Err(StftError::InvalidParam(format!(
+            "output length {} exceeds MAX_SAMPLES {}",
+            out_len, MAX_SAMPLES
+        )));
+    }
+
+    if !signal.iter().all(|x| x.is_finite()) {
+        return Err(StftError::InvalidParam(
+            "signal contains non-finite floats (NaN or Inf)".into(),
+        ));
+    }
 
     // ── Pre-compute the analysis window once.
     //
@@ -153,6 +196,9 @@ pub(crate) fn build_window_bytes(
 /// Blackman.  All windows are normalised to peak ≤ 1 and
 /// span the closed interval `[0, n_fft - 1]`.
 fn build_window(window: WindowType, n_fft: usize) -> Vec<f32> {
+    if n_fft == 1 {
+        return vec![1.0];
+    }
     let m = (n_fft - 1) as f32;
     (0..n_fft)
         .map(|n| {
@@ -442,5 +488,68 @@ mod tests {
             hann_mag,
             rect_mag
         );
+    }
+
+    #[test]
+    fn hostile_inputs_rejected() {
+        use crate::mel::{mel_filterbank, mel_spectrogram, mfcc};
+        use crate::spectrogram::{log_spectrogram, spectrogram};
+
+        // NaN / Inf in signal
+        assert!(stft(&[1.0, f32::NAN], 64, 32, WindowType::Hann).is_err());
+        assert!(stft(&[1.0, f32::INFINITY], 64, 32, WindowType::Hann).is_err());
+        assert!(stft(&[f32::NEG_INFINITY; 64], 64, 32, WindowType::Hann).is_err());
+
+        // Oversized n_fft
+        assert!(stft(&[1.0; 64], (MAX_FFT_LEN + 1) as u32, 32, WindowType::Hann).is_err());
+
+        // Hostile istft inputs
+        assert!(crate::istft(&[1.0, f32::NAN], 64, 32, WindowType::Hann, 64).is_err());
+        assert!(crate::istft(&[1.0; 66], (MAX_FFT_LEN + 1) as u32, 32, WindowType::Hann, 64).is_err());
+
+        // Hostile mel / mfcc / spectrogram
+        assert!(mel_filterbank((MAX_SAMPLES + 1) as u32, 64, 16000.0).is_empty());
+        assert!(mel_spectrogram(&[1.0, f32::NAN], 64, 32, 20, 16000.0, WindowType::Hann).is_err());
+        assert!(mfcc(&[1.0, f32::INFINITY], 64, 32, 20, 13, 16000.0, WindowType::Hann).is_err());
+        assert!(spectrogram(&[1.0, f32::NAN], 64, 32, WindowType::Hann).is_err());
+        assert!(log_spectrogram(&[f32::NAN; 64], 64, 32, WindowType::Hann).is_err());
+    }
+
+    #[test]
+    fn pbt_splitmix64_stft_istft_reconstruction() {
+        use coding_adventures_test_bootstrap::prng::SplitMix64;
+
+        let mut rng = SplitMix64::new(0x1234_5678_9abc_def0);
+        let n_fft = 64u32;
+        let hop = 32u32; // 50% overlap, Hann COLA compliant
+
+        for &n in &[128usize, 256, 384] {
+            let mut sig = Vec::with_capacity(n);
+            for _ in 0..n {
+                let u = rng.next_u64();
+                let mantissa = (u & 0x00ff_ffff) as f32 / (0x0100_0000 as f32);
+                sig.push((mantissa * 2.0) - 1.0);
+            }
+
+            let spec = stft(&sig, n_fft, hop, WindowType::Hann).unwrap();
+            let rec = crate::istft(&spec, n_fft, hop, WindowType::Hann, n as u32).unwrap();
+            assert_eq!(rec.len(), n);
+
+            // In strict mode framing without edge padding, the interior samples
+            // satisfy COLA and reconstruct accurately.
+            let interior_start = n_fft as usize;
+            let interior_end = n - (n_fft as usize);
+            if interior_end > interior_start {
+                for i in interior_start..interior_end {
+                    assert!(
+                        (rec[i] - sig[i]).abs() < 1e-3,
+                        "reconstruction mismatch at sample {}: rec={}, sig={}",
+                        i,
+                        rec[i],
+                        sig[i]
+                    );
+                }
+            }
+        }
     }
 }

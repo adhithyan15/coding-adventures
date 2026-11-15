@@ -138,13 +138,27 @@ pub fn idwt_2d(
             "n_rows and n_cols must be > 0".into(),
         ));
     }
-    if (n_rows as usize) > MAX_SAMPLES as usize
-        || (n_cols as usize) > MAX_SAMPLES as usize
+    if (n_rows as usize) > MAX_SAMPLES
+        || (n_cols as usize) > MAX_SAMPLES
     {
         return Err(WaveletError::InvalidParam(format!(
             "image dimension {}×{} exceeds MAX_SAMPLES {}",
             n_rows, n_cols, MAX_SAMPLES
         )));
+    }
+    let total_pixels = (n_rows as usize)
+        .checked_mul(n_cols as usize)
+        .ok_or_else(|| WaveletError::InvalidParam("image dimensions overflow usize".into()))?;
+    if total_pixels > MAX_SAMPLES {
+        return Err(WaveletError::InvalidParam(format!(
+            "total image pixels {} exceeds MAX_SAMPLES {}",
+            total_pixels, MAX_SAMPLES
+        )));
+    }
+    if !coeffs.iter().all(|x| x.is_finite()) {
+        return Err(WaveletError::InvalidCoefficients(
+            "coeffs contains non-finite floats (NaN or Inf)".into(),
+        ));
     }
     if levels == 0 {
         return Err(WaveletError::InvalidParam("levels must be > 0".into()));
@@ -229,21 +243,35 @@ fn validate_2d_inputs(
             "n_rows and n_cols must be > 0".into(),
         ));
     }
-    if (n_rows as usize) > MAX_SAMPLES as usize
-        || (n_cols as usize) > MAX_SAMPLES as usize
+    if (n_rows as usize) > MAX_SAMPLES
+        || (n_cols as usize) > MAX_SAMPLES
     {
         return Err(WaveletError::InvalidParam(format!(
             "image dimension {}×{} exceeds MAX_SAMPLES {}",
             n_rows, n_cols, MAX_SAMPLES
         )));
     }
-    if image.len() != (n_rows as usize) * (n_cols as usize) {
+    let total_pixels = (n_rows as usize)
+        .checked_mul(n_cols as usize)
+        .ok_or_else(|| WaveletError::InvalidParam("image dimensions overflow usize".into()))?;
+    if total_pixels > MAX_SAMPLES {
+        return Err(WaveletError::InvalidParam(format!(
+            "total image pixels {} exceeds MAX_SAMPLES {}",
+            total_pixels, MAX_SAMPLES
+        )));
+    }
+    if !image.iter().all(|x| x.is_finite()) {
+        return Err(WaveletError::InvalidParam(
+            "image contains non-finite floats (NaN or Inf)".into(),
+        ));
+    }
+    if image.len() != total_pixels {
         return Err(WaveletError::InvalidParam(format!(
             "image length {} does not match n_rows × n_cols = {} × {} = {}",
             image.len(),
             n_rows,
             n_cols,
-            (n_rows as usize) * (n_cols as usize)
+            total_pixels
         )));
     }
     if levels == 0 {

@@ -27,7 +27,7 @@
 //! The boundary mode is applied along the corresponding axis
 //! in each pass.
 
-use crate::{conv1d, BoundaryMode, ConvError};
+use crate::{conv1d, BoundaryMode, ConvError, MAX_KERNEL_LEN, MAX_SAMPLES};
 
 /// Same-size separable 2-D convolution.  Applies
 /// `horizontal_kernel` along each row of `image`, then
@@ -75,6 +75,33 @@ pub fn sep_conv2d(
             h, w
         ))
     })?;
+    if expected_image_len > MAX_SAMPLES {
+        return Err(ConvError::InvalidInput(format!(
+            "image size {} exceeds MAX_SAMPLES {}",
+            expected_image_len, MAX_SAMPLES
+        )));
+    }
+    if horizontal_kernel.len() > MAX_KERNEL_LEN || vertical_kernel.len() > MAX_KERNEL_LEN {
+        return Err(ConvError::InvalidInput(format!(
+            "separable kernel length exceeds MAX_KERNEL_LEN {}",
+            MAX_KERNEL_LEN
+        )));
+    }
+    for &px in image {
+        if !px.is_finite() {
+            return Err(ConvError::InvalidInput("non-finite float in image".into()));
+        }
+    }
+    for &k in horizontal_kernel {
+        if !k.is_finite() {
+            return Err(ConvError::InvalidInput("non-finite float in horizontal_kernel".into()));
+        }
+    }
+    for &k in vertical_kernel {
+        if !k.is_finite() {
+            return Err(ConvError::InvalidInput("non-finite float in vertical_kernel".into()));
+        }
+    }
     if image.len() != expected_image_len {
         return Err(ConvError::ImageSizeMismatch(format!(
             "image length {} does not match {}×{} = {}",

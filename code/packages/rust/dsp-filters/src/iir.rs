@@ -64,7 +64,7 @@
 //! the output diverges.  Phase 5's design helpers will produce
 //! stable coefficients by construction.
 
-use crate::FilterError;
+use crate::{FilterError, MAX_ORDER, MAX_SAMPLES, MAX_TAPS};
 
 /// Infinite-impulse-response filter via direct-form-II Transposed.
 ///
@@ -78,9 +78,10 @@ use crate::FilterError;
 ///
 /// # Errors
 ///
+/// - `EmptySignal` — `signal` is empty.
 /// - `EmptyKernel` — `a` or `b` is empty.
-/// - `InvalidCoefficient` — `a[0]` is zero, NaN, or infinite
-///   (can't safely divide).
+/// - `InvalidCoefficient` — non-finite input, `a[0]` zero/non-finite,
+///   input exceeding defensive caps (`MAX_SAMPLES`, `MAX_TAPS`, `MAX_ORDER`).
 pub fn iir(
     signal: &[f32],
     b: &[f32],
@@ -92,6 +93,20 @@ pub fn iir(
     if b.is_empty() || a.is_empty() {
         return Err(FilterError::EmptyKernel);
     }
+    if signal.len() > MAX_SAMPLES {
+        return Err(FilterError::InvalidCoefficient(format!(
+            "signal length {} exceeds MAX_SAMPLES {}",
+            signal.len(),
+            MAX_SAMPLES
+        )));
+    }
+    if b.len() > MAX_TAPS || a.len() > MAX_TAPS {
+        return Err(FilterError::InvalidCoefficient(format!(
+            "coefficient length exceeds MAX_TAPS {}",
+            MAX_TAPS
+        )));
+    }
+
     let a0 = a[0];
     if a0 == 0.0 {
         return Err(FilterError::InvalidCoefficient(
@@ -105,21 +120,32 @@ pub fn iir(
         )));
     }
 
-    // ── Effective order.  Both `b` and `a` are conceptually
-    //   padded to length `order + 1` with zeros.
-    //
-    //   For the FIR special case (`a = [a[0]]`), order = M (the
-    //   number of taps minus one).  For a 2nd-order biquad
-    //   (`b.len() == 3, a.len() == 3`), order = 2 with two
-    //   state variables.
     let m = b.len();
     let n_coef = a.len();
     let order = m.max(n_coef).saturating_sub(1);
+    if order > MAX_ORDER {
+        return Err(FilterError::InvalidCoefficient(format!(
+            "filter order {} exceeds MAX_ORDER {}",
+            order, MAX_ORDER
+        )));
+    }
 
-    // ── Pre-scale `b` and `a` by `1 / a[0]` so the inner loop
-    //   doesn't divide every sample.  This also normalises
-    //   convention-mismatches where a caller might pass
-    //   `a[0] != 1`.
+    for &x in signal {
+        if !x.is_finite() {
+            return Err(FilterError::InvalidCoefficient("non-finite float in signal".into()));
+        }
+    }
+    for &c in b {
+        if !c.is_finite() {
+            return Err(FilterError::InvalidCoefficient("non-finite float in b".into()));
+        }
+    }
+    for &c in a {
+        if !c.is_finite() {
+            return Err(FilterError::InvalidCoefficient("non-finite float in a".into()));
+        }
+    }
+
     let inv_a0 = 1.0 / a0;
     let b_scaled: Vec<f32> = (0..=order)
         .map(|k| if k < m { b[k] * inv_a0 } else { 0.0 })
@@ -127,27 +153,14 @@ pub fn iir(
     let a_scaled: Vec<f32> = (0..=order)
         .map(|k| if k < n_coef { a[k] * inv_a0 } else { 0.0 })
         .collect();
-    // After scaling, a_scaled[0] == 1.0 exactly (or near it
-    // modulo FP precision).  We don't need it in the inner loop.
 
-    // ── Process samples.  `state` has length `order`; for
-    //   `order == 0` (pure gain filter, `b = [g], a = [1]`),
-    //   the state vector is empty and we skip the update loop.
     let mut state = vec![0.0f32; order];
     let mut out = Vec::with_capacity(signal.len());
 
     for &x in signal {
-        // y[n] = b_scaled[0] · x[n] + z[0]
-        //   (the divide by a[0] is already folded into the
-        //   scaled coefficients, so this is the correctly-
-        //   normalised output.)
         let y = b_scaled[0] * x + if order > 0 { state[0] } else { 0.0 };
         out.push(y);
 
-        // State update.  For each slot except the last:
-        //   z[k] = b_scaled[k+1] · x - a_scaled[k+1] · y + z[k+1]
-        // For the last slot:
-        //   z[order-1] = b_scaled[order] · x - a_scaled[order] · y
         if order > 0 {
             for k in 0..(order - 1) {
                 state[k] = b_scaled[k + 1] * x
@@ -222,11 +235,26 @@ mod tests {
         assert!(matches!(err, FilterError::InvalidCoefficient(_)));
     }
 
+    #[test]
+    fn iir_rejects_non_finite_inputs() {
+        assert!(matches!(
+            iir(&[1.0, f32::NAN], &[1.0], &[1.0]),
+            Err(FilterError::InvalidCoefficient(_))
+        ));
+        assert!(matches!(
+            iir(&[1.0, 2.0], &[1.0, f32::NAN], &[1.0]),
+            Err(FilterError::InvalidCoefficient(_))
+        ));
+        assert!(matches!(
+            iir(&[1.0, 2.0], &[1.0], &[1.0, f32::INFINITY]),
+            Err(FilterError::InvalidCoefficient(_))
+        ));
+    }
+
     // ── closed-form known vectors ──────────────────────────────
 
     #[test]
     fn iir_identity_filter_passes_through() {
-        // y[n] = x[n] (no state, no feedback).
         let signal = vec![1.0f32, 2.0, 3.0, 4.0, 5.0];
         let out = iir(&signal, &[1.0], &[1.0]).unwrap();
         assert_close(&out, &signal, 1e-7);
@@ -234,8 +262,6 @@ mod tests {
 
     #[test]
     fn iir_pure_gain_scales_signal() {
-        // y[n] = 2 · x[n].  a[0] != 1 to exercise the
-        // normalisation path.
         let signal = vec![1.0f32, 2.0, 3.0];
         let out = iir(&signal, &[2.0], &[1.0]).unwrap();
         assert_close(&out, &[2.0, 4.0, 6.0], 1e-7);
@@ -243,9 +269,6 @@ mod tests {
 
     #[test]
     fn iir_pure_gain_via_a0_normalisation() {
-        // y[n] = (1.0 / 2.0) · x[n] — `a[0] = 2.0` is rescaled
-        // internally to make the divide-by-a[0] a no-op for the
-        // inner loop.
         let signal = vec![2.0f32, 4.0, 6.0];
         let out = iir(&signal, &[1.0], &[2.0]).unwrap();
         assert_close(&out, &[1.0, 2.0, 3.0], 1e-7);
@@ -253,9 +276,6 @@ mod tests {
 
     #[test]
     fn iir_single_pole_low_pass_step_response_asymptotes() {
-        // b = [1.0], a = [1.0, -0.9] is the single-pole low-pass
-        // y[n] = x[n] + 0.9 · y[n-1].  Step input asymptotes to
-        // 1 / (1 - 0.9) = 10.0.
         let n = 200;
         let step: Vec<f32> = vec![1.0f32; n];
         let out = iir(&step, &[1.0], &[1.0, -0.9]).unwrap();
@@ -269,12 +289,6 @@ mod tests {
 
     #[test]
     fn iir_single_pole_low_pass_first_few_samples() {
-        // Same filter, but verify the early trajectory matches the
-        // closed-form geometric series:
-        //   y[0] = 1
-        //   y[1] = 1 + 0.9 · 1 = 1.9
-        //   y[2] = 1 + 0.9 · 1.9 = 2.71
-        //   y[3] = 1 + 0.9 · 2.71 = 3.439
         let step = vec![1.0f32; 4];
         let out = iir(&step, &[1.0], &[1.0, -0.9]).unwrap();
         assert_close(&out, &[1.0, 1.9, 2.71, 3.439], 1e-5);
@@ -282,23 +296,15 @@ mod tests {
 
     #[test]
     fn iir_with_only_feedforward_matches_fir() {
-        // When a = [1.0] (no feedback), iir(x, b, [1.0]) should
-        // match the FIR direct convolution `fir(x, b)` truncated
-        // to `x.len()`.  This is the cleanest cross-check between
-        // the two paths.
         let signal: Vec<f32> = (0..20).map(|i| ((i as f32) * 0.3).sin()).collect();
         let kernel = vec![0.25f32, 0.5, 0.25];
         let via_iir = iir(&signal, &kernel, &[1.0]).unwrap();
         let via_fir = fir(&signal, &kernel).unwrap();
-        // FIR returns N + K - 1; IIR returns N.  Compare the
-        // overlapping prefix of length N.
-        assert_close(&via_iir, &via_fir[..signal.len()], 1e-5);
+        assert_close(&via_iir, &via_fir[..signal.len()], 1e-6);
     }
 
     #[test]
     fn iir_impulse_response_of_single_pole_is_geometric() {
-        // For b = [1.0], a = [1.0, -p]: impulse response is
-        // [1, p, p², p³, …].  We check this for p = 0.5.
         let mut impulse = vec![0.0f32; 8];
         impulse[0] = 1.0;
         let out = iir(&impulse, &[1.0], &[1.0, -0.5]).unwrap();
@@ -309,13 +315,6 @@ mod tests {
 
     #[test]
     fn iir_two_pole_dc_gain() {
-        // For a stable IIR filter, DC gain is
-        // (Σ b) / (Σ a).  For b = [0.0675, 0.135, 0.0675],
-        // a = [1.0, -1.143, 0.413] (a 2nd-order Butterworth-ish):
-        //   Σ b = 0.27
-        //   Σ a = 0.27
-        //   DC gain = 1.0
-        // Verify step response converges to ~1.0.
         let b = vec![0.0675f32, 0.135, 0.0675];
         let a = vec![1.0f32, -1.143, 0.413];
         let step = vec![1.0f32; 200];

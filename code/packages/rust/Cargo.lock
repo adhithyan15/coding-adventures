@@ -6266,8 +6266,9 @@ dependencies = [
 
 [[package]]
 name = "dsp-conv"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
+ "coding_adventures_test_bootstrap",
  "dsp-fft",
  "dsp-filters",
 ]
@@ -6294,15 +6295,17 @@ dependencies = [
 
 [[package]]
 name = "dsp-filters"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
+ "coding_adventures_test_bootstrap",
  "dsp-fft",
 ]
 
 [[package]]
 name = "dsp-stft"
-version = "0.4.0"
+version = "0.5.0"
 dependencies = [
+ "coding_adventures_test_bootstrap",
  "compute-ir",
  "dsp-complex",
  "dsp-dct",
@@ -6316,7 +6319,10 @@ dependencies = [
 
 [[package]]
 name = "dsp-wavelets"
-version = "0.4.0"
+version = "0.5.0"
+dependencies = [
+ "coding_adventures_test_bootstrap",
+]
 
 [[package]]
 name = "dunce"
