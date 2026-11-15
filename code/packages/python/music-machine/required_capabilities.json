@@ -4,11 +4,11 @@
   "package": "python/music-machine",
   "capabilities": [
     {
-      "category": "audio",
-      "action": "play",
-      "target": "default audio output device",
-      "justification": "The optional play_score_text and play_score helpers lazily delegate rendered PCM buffers to audio-device-sink when callers explicitly request playback."
+      "category": "fs",
+      "action": "read",
+      "target": "*",
+      "justification": "Reads score files from the filesystem via parse_score_file and parse_portable_score_file."
     }
   ],
-  "justification": "Parsing and rendering are pure computation. Real audio output is optional and only happens through explicit playback helpers."
+  "justification": "Provides text score and portable multi-track score parsing, deterministic JSON interchange, additive instrument modeling, percussion kit rendering, and PCM buffer generation. Requires filesystem read access solely for the parse_score_file and parse_portable_score_file loader functions."
 }

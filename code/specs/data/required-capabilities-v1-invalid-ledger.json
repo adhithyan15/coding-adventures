@@ -303,7 +303,6 @@
     "code/packages/python/intel8008-gatelevel/required_capabilities.json": "9606e26564d1933379664b00384c13a1017f887870267c625e9fd2e62aa71eff",
     "code/packages/python/intel8008-simulator/required_capabilities.json": "9606e26564d1933379664b00384c13a1017f887870267c625e9fd2e62aa71eff",
     "code/packages/python/mini-sqlite/required_capabilities.json": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
-    "code/packages/python/music-machine/required_capabilities.json": "11a6c7ca6097cecd5ca1c487a833345fa6e028e2150b70dfd8f05ebbb36a5357",
     "code/packages/python/pbkdf2/required_capabilities.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
     "code/packages/python/point2d/required_capabilities.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
     "code/packages/python/polynomial-native/required_capabilities.json": "9606e26564d1933379664b00384c13a1017f887870267c625e9fd2e62aa71eff",
