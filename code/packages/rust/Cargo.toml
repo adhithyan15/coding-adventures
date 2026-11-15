@@ -428,6 +428,8 @@ members = [
     "loss-functions",
     "markov-chain",
     "note-frequency",
+    "oscillator",
+    "pcm-audio",
     "numeric-tower",
     "math-core",
     "matrix",
