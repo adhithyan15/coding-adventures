@@ -438,6 +438,27 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		paths:    hamurabiCorpusPaths,
 	},
 	{
+		name:     "go/lunar-lander",
+		language: "go",
+		inputs:   "the shared lunar lander conformance corpus",
+		matches:  isLunarLanderCorpus,
+		paths:    lunarLanderCorpusPaths,
+	},
+	{
+		name:     "python/lunar-lander",
+		language: "python",
+		inputs:   "the shared lunar lander conformance corpus",
+		matches:  isLunarLanderCorpus,
+		paths:    lunarLanderCorpusPaths,
+	},
+	{
+		name:     "typescript/lunar-lander",
+		language: "typescript",
+		inputs:   "the shared lunar lander conformance corpus",
+		matches:  isLunarLanderCorpus,
+		paths:    lunarLanderCorpusPaths,
+	},
+	{
 		name:     "go/rng",
 		language: "go",
 		inputs:   "the shared rng conformance corpus",
