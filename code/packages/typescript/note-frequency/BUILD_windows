@@ -1,2 +1,5 @@
-npm ci --silent
-npx vitest run
+# build-tool: deps=typescript/test-bootstrap
+call npm ci --quiet
+if not exist ..\test-bootstrap\dist\index.js (cd ..\test-bootstrap && call npx tsc)
+call npx tsc
+node --experimental-strip-types --test tests/note_frequency.test.ts

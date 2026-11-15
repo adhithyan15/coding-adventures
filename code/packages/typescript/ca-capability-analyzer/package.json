@@ -1,0 +1,30 @@
+{
+  "name": "@coding-adventures/ca-capability-analyzer",
+  "version": "0.1.0",
+  "description": "Static capability analyzer and VER15 CWE detector for TypeScript and JavaScript packages",
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "ca-capability-analyzer": "./bin/cli.mjs"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./*": {
+      "types": "./dist/*.d.ts",
+      "import": "./dist/*.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "node --experimental-strip-types --test tests/analyzer.test.ts tests/pbt.test.ts tests/hostile.test.ts tests/cli.test.ts"
+  },
+  "dependencies": {
+    "typescript": "^5.4.0"
+  },
+  "devDependencies": {}
+}
