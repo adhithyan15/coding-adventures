@@ -1,0 +1,19 @@
+{
+  "schema": "warrant-assurance-profile-v1",
+  "name": "simulation",
+  "kind": "transform",
+  "rows": {
+    "326": {
+      "applicability": "excluded",
+      "reason": "no keys: the package takes and generates no key material; operands are bounded batch coordinates and indices [attestation not machine-checked by any tool]"
+    },
+    "327": {
+      "applicability": "excluded",
+      "reason": "pure graphics transform: package implements sprite/tile batch lowering and diffing only, no cipher, hash or MAC [attestation not machine-checked by any tool]"
+    },
+    "407": {
+      "applicability": "excluded",
+      "reason": "bounded work per call: sprite diff and lowering operations run within bounded iteration counts capped by MAX_BATCH_SPRITES = 4096 [attestation not machine-checked by any tool]"
+    }
+  }
+}

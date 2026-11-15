@@ -10765,6 +10765,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "paint-batch-tiles"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "paint-instructions",
+ "pixel-container",
+]
+
+[[package]]
 name = "paint-codec-png"
 version = "0.2.0"
 dependencies = [
