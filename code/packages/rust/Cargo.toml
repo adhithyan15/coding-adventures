@@ -773,6 +773,7 @@ members = [
     "lunar-lander",
     "sim-teletype-asr33",
     "sim-pdp8-ge225-io-bridge",
+    "game-clock",
     "perl-bridge",
     "polynomial-c",
     "wasm-execution",
