@@ -186,9 +186,7 @@ defmodule CodingAdventures.Hamurabi.ConformanceTest do
           assert init_from_game.rng_inc == expected_init["rng_inc"], "#{id}: init rng_inc"
 
           # Play through each turn
-          cur_state = json_to_state(expected_init)
-
-          for t <- tc["turns"] do
+          Enum.reduce(tc["turns"], json_to_state(expected_init), fn t, cur_state ->
             turn_num = t["turn"]
             order = json_to_order(t["order"])
             expected_next = t["expected_state"]
@@ -249,8 +247,8 @@ defmodule CodingAdventures.Hamurabi.ConformanceTest do
                    "#{id} turn #{turn_num}: report mismatch\nGot:\n#{report}\nExpected:\n#{expected_report}"
 
             # Continue to next turn
-            cur_state = next_state
-          end
+            next_state
+          end)
 
         true ->
           flunk("#{id}: unknown case shape")

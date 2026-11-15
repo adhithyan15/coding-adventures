@@ -403,7 +403,7 @@ defmodule CodingAdventures.Hamurabi do
       if order.acres_delta >= 0 do
         state.acres + order.acres_delta
       else
-        state.acres - (-order.acres_delta)
+        state.acres - -order.acres_delta
       end
 
     if acres_after_trade > @u32_max do
@@ -504,7 +504,7 @@ defmodule CodingAdventures.Hamurabi do
       if order.acres_delta >= 0 do
         state.acres + order.acres_delta
       else
-        state.acres - (-order.acres_delta)
+        state.acres - -order.acres_delta
       end
 
     bushels_after_trade =
@@ -513,7 +513,7 @@ defmodule CodingAdventures.Hamurabi do
           state.bushels - order.acres_delta * state.land_price
 
         order.acres_delta < 0 ->
-          state.bushels + (-order.acres_delta) * state.land_price
+          state.bushels + -order.acres_delta * state.land_price
 
         true ->
           state.bushels

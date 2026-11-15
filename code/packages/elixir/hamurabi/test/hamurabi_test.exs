@@ -4,7 +4,7 @@ defmodule CodingAdventures.HamurabiTest do
   import Bitwise
 
   alias CodingAdventures.Hamurabi
-  alias CodingAdventures.Hamurabi.{Error, State, TurnOrder}
+  alias CodingAdventures.Hamurabi.{Error, TurnOrder}
 
   @u32_max 0xFFFF_FFFF
 
@@ -37,7 +37,9 @@ defmodule CodingAdventures.HamurabiTest do
 
     # Arm 2: InvalidOrderBounds (corrupted land price)
     bad_price_state = %{state | land_price: 10}
-    assert {:error, :invalid_order_bounds} == Hamurabi.validate_order(bad_price_state, normal_order)
+
+    assert {:error, :invalid_order_bounds} ==
+             Hamurabi.validate_order(bad_price_state, normal_order)
 
     # Arm 2: InvalidOrderBounds (negative trade revenue exceeds u32)
     rich_state = %{state | acres: 2_000_000_000, bushels: 4_000_000_000}
@@ -52,7 +54,9 @@ defmodule CodingAdventures.HamurabiTest do
 
     # Arm 3: InsufficientBushelsForLand
     buy_too_much = %TurnOrder{acres_delta: 200, bushels_to_feed: 0, acres_to_plant: 0}
-    assert {:error, :insufficient_bushels_for_land} == Hamurabi.validate_order(state, buy_too_much)
+
+    assert {:error, :insufficient_bushels_for_land} ==
+             Hamurabi.validate_order(state, buy_too_much)
 
     # Arm 4: InsufficientAcresToSell
     sell_too_much = %TurnOrder{acres_delta: -1001, bushels_to_feed: 0, acres_to_plant: 0}
@@ -60,7 +64,9 @@ defmodule CodingAdventures.HamurabiTest do
 
     # Arm 5: InsufficientBushelsToFeed
     feed_too_much = %TurnOrder{acres_delta: 0, bushels_to_feed: 2801, acres_to_plant: 0}
-    assert {:error, :insufficient_bushels_to_feed} == Hamurabi.validate_order(state, feed_too_much)
+
+    assert {:error, :insufficient_bushels_to_feed} ==
+             Hamurabi.validate_order(state, feed_too_much)
 
     # Arm 6: InsufficientAcresToPlant
     plant_too_much_acres = %TurnOrder{acres_delta: 0, bushels_to_feed: 1000, acres_to_plant: 1001}
@@ -292,7 +298,10 @@ defmodule CodingAdventures.HamurabiTest do
           cond do
             cur.bushels < feed_needed + 500 ->
               deficit = feed_needed + 500 - cur.bushels
-              acres_to_sell = min(div(deficit + cur.land_price - 1, cur.land_price), div(cur.acres, 3))
+
+              acres_to_sell =
+                min(div(deficit + cur.land_price - 1, cur.land_price), div(cur.acres, 3))
+
               -acres_to_sell
 
             cur.bushels > feed_needed + 2000 ->
@@ -307,13 +316,13 @@ defmodule CodingAdventures.HamurabiTest do
           if acres_delta >= 0 do
             cur.acres + acres_delta
           else
-            cur.acres - (-acres_delta)
+            cur.acres - -acres_delta
           end
 
         bushels_after_trade =
           cond do
             acres_delta > 0 -> cur.bushels - acres_delta * cur.land_price
-            acres_delta < 0 -> cur.bushels + (-acres_delta) * cur.land_price
+            acres_delta < 0 -> cur.bushels + -acres_delta * cur.land_price
             true -> cur.bushels
           end
 
