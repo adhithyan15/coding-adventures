@@ -16048,7 +16048,8 @@
         "barcode-layout-1d-java-kotlin-dart-lane-parity"
       ],
       "branch": "feat/itf-java-kotlin-dart-lane-parity",
-      "pr_number": null,
+      "pr_number": 19426,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19426",
       "notes": "Implement the neutral ITF encoder in all three missing lanes with strict nonempty even-length ASCII digits, exact patterns, checked bounds, stable payload-blind errors, and shared layout output."
     },
     {
