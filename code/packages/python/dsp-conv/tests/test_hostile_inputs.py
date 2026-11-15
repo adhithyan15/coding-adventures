@@ -81,17 +81,29 @@ def test_empty_inputs_rejected() -> None:
     with pytest.raises(ImageSizeMismatchError):
         convolve2d([[1.0]], [[1.0, 2.0], [3.0]])  # Jagged kernel
     with pytest.raises(ImageSizeMismatchError):
-        convolve2d([1.0], [1.0], image_height=0, image_width=1, kernel_height=1, kernel_width=1)
+        convolve2d(
+            [1.0], [1.0], image_height=0, image_width=1, kernel_height=1, kernel_width=1
+        )
     with pytest.raises(ImageSizeMismatchError):
-        convolve2d([1.0], [1.0], image_height=1, image_width=0, kernel_height=1, kernel_width=1)
+        convolve2d(
+            [1.0], [1.0], image_height=1, image_width=0, kernel_height=1, kernel_width=1
+        )
     with pytest.raises(EmptyKernelError):
-        convolve2d([1.0], [1.0], image_height=1, image_width=1, kernel_height=0, kernel_width=1)
+        convolve2d(
+            [1.0], [1.0], image_height=1, image_width=1, kernel_height=0, kernel_width=1
+        )
     with pytest.raises(EmptyKernelError):
-        convolve2d([1.0], [1.0], image_height=1, image_width=1, kernel_height=1, kernel_width=0)
+        convolve2d(
+            [1.0], [1.0], image_height=1, image_width=1, kernel_height=1, kernel_width=0
+        )
     with pytest.raises(ImageSizeMismatchError):
-        convolve2d([1.0], [1.0], image_height=1, image_width=2, kernel_height=1, kernel_width=1)  # Length mismatch
+        convolve2d(
+            [1.0], [1.0], image_height=1, image_width=2, kernel_height=1, kernel_width=1
+        )
     with pytest.raises(ImageSizeMismatchError):
-        convolve2d([1.0], [1.0], image_height=1, image_width=1, kernel_height=1, kernel_width=2)  # Kernel length mismatch
+        convolve2d(
+            [1.0], [1.0], image_height=1, image_width=1, kernel_height=1, kernel_width=2
+        )
     with pytest.raises(ImageSizeMismatchError):
         convolve2d([1.0], [1.0])  # Missing image dimensions for 1D
     with pytest.raises(ImageSizeMismatchError):
