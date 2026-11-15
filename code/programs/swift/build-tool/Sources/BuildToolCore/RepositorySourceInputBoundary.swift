@@ -203,6 +203,7 @@ enum RepositorySourceInputBoundaryProjection {
                   "code/packages/python/ml-framework-keras",
                   "code/packages/python/ml-framework-tf",
                   "code/packages/python/ml-framework-torch",
+                  "code/packages/python/music-analysis",
                   "code/packages/python/parallel-execution-engine",
                   "code/packages/python/parser",
                   "code/packages/python/riscv-simulator",
