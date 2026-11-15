@@ -43,6 +43,7 @@ members = [
     "activation-functions",
     "audio-device-coreaudio",
     "audio-device-sink",
+    "audio-mixer-realtime",
     "actor",
     "arithmetic",
     "array-runtime",

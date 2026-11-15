@@ -1,0 +1,152 @@
+{
+  "schema_version": "ver24-effect-cert-v1",
+  "package": "rust/audio-mixer-realtime",
+  "source_digest": "1ccf889424de3906cd5e704a84474565ea6390e0408f506913eba6aa0dbb5edb",
+  "manifest_digest": "5f56209f880820b0ca200863a56e461066768fe82d4f5d2319a4e1c96999c9e0",
+  "declared_effects": [],
+  "entry_points": [
+    {
+      "name": "empty",
+      "signature": "pub const fn empty() -> Self",
+      "effects": []
+    },
+    {
+      "name": "reset",
+      "signature": "pub fn reset(&mut self)",
+      "effects": []
+    },
+    {
+      "name": "new",
+      "signature": "pub fn new(sample_rate_hz: u32) -> Result<Self, MixerError>",
+      "effects": []
+    },
+    {
+      "name": "default_at_sample_rate",
+      "signature": "pub fn default_at_sample_rate(sample_rate_hz: u32) -> Result<Self, MixerError>",
+      "effects": []
+    },
+    {
+      "name": "allocate_voice",
+      "signature": "pub fn allocate_voice( &mut self, voice_id: u32, priority: u8, gain_q16: u32, looping: bool, ) -> Result<usize, MixerError>",
+      "effects": []
+    },
+    {
+      "name": "set_voice_pitch",
+      "signature": "pub fn set_voice_pitch( &mut self, slot_idx: usize, pitch_step_q16: u32, ) -> Result<(), MixerError>",
+      "effects": []
+    },
+    {
+      "name": "set_voice_gain",
+      "signature": "pub fn set_voice_gain(&mut self, slot_idx: usize, gain_q16: u32) -> Result<(), MixerError>",
+      "effects": []
+    },
+    {
+      "name": "set_voice_pan",
+      "signature": "pub fn set_voice_pan(&mut self, slot_idx: usize, pan_q16: i32) -> Result<(), MixerError>",
+      "effects": []
+    },
+    {
+      "name": "stop_voice",
+      "signature": "pub fn stop_voice(&mut self, voice_id: u32)",
+      "effects": []
+    },
+    {
+      "name": "stop_slot",
+      "signature": "pub fn stop_slot(&mut self, slot_idx: usize) -> Result<(), MixerError>",
+      "effects": []
+    },
+    {
+      "name": "active_slots",
+      "signature": "pub fn active_slots(&self) -> usize",
+      "effects": []
+    },
+    {
+      "name": "reset",
+      "signature": "pub fn reset(&mut self)",
+      "effects": []
+    },
+    {
+      "name": "empty",
+      "signature": "pub const fn empty() -> Self",
+      "effects": []
+    },
+    {
+      "name": "push",
+      "signature": "pub fn push(&mut self, sample: i16) -> Result<(), MixerError>",
+      "effects": []
+    },
+    {
+      "name": "pop",
+      "signature": "pub fn pop(&mut self) -> Option<i16>",
+      "effects": []
+    },
+    {
+      "name": "push_slice",
+      "signature": "pub fn push_slice(&mut self, slice: &[i16]) -> Result<usize, MixerError>",
+      "effects": []
+    },
+    {
+      "name": "pop_slice",
+      "signature": "pub fn pop_slice(&mut self, out: &mut [i16]) -> usize",
+      "effects": []
+    },
+    {
+      "name": "capacity",
+      "signature": "pub const fn capacity(&self) -> usize",
+      "effects": []
+    },
+    {
+      "name": "len",
+      "signature": "pub const fn len(&self) -> usize",
+      "effects": []
+    },
+    {
+      "name": "is_empty",
+      "signature": "pub const fn is_empty(&self) -> bool",
+      "effects": []
+    },
+    {
+      "name": "is_full",
+      "signature": "pub const fn is_full(&self) -> bool",
+      "effects": []
+    },
+    {
+      "name": "clear",
+      "signature": "pub fn clear(&mut self)",
+      "effects": []
+    },
+    {
+      "name": "clamp_sample",
+      "signature": "pub const fn clamp_sample(v: i64) -> i16",
+      "effects": []
+    },
+    {
+      "name": "scale_voice_sample",
+      "signature": "pub const fn scale_voice_sample(sample: i16, gain_q16: u32, master_gain_q16: u32) -> i64",
+      "effects": []
+    },
+    {
+      "name": "validate_sample_rate",
+      "signature": "pub const fn validate_sample_rate(sample_rate_hz: u32) -> Result<bool, MixerError>",
+      "effects": []
+    },
+    {
+      "name": "mix_channels_into",
+      "signature": "pub fn mix_channels_into( state: &mut RealtimeMixerState, sources: &[&[i16]], out_mono: &mut [i16], ) -> Result<usize, MixerError>",
+      "effects": []
+    },
+    {
+      "name": "export_to_sink_buffer",
+      "signature": "pub fn export_to_sink_buffer( samples: &[i16], sample_rate_hz: u32, ) -> Result<audio_device_sink::PcmPlaybackBuffer, MixerError>",
+      "effects": []
+    },
+    {
+      "name": "export_to_pcm_audio",
+      "signature": "pub fn export_to_pcm_audio( samples: &[i16], sample_rate_hz: u32, ) -> Result<pcm_audio::PcmAudio, MixerError>",
+      "effects": []
+    }
+  ],
+  "unconditional_roots": [],
+  "banned_construct_exceptions": [],
+  "label": "proved"
+}
