@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased - source-input boundary sync (python packages)
+
+- `code/packages/python/ca-capability-analyzer` and `code/packages/python/test-bootstrap` added to `python-uv-workspace-manifest`: #19424 added both packages to `code/packages/python/pyproject.toml`. The checked repository source-input boundary added both roots, the projection was regenerated with the repository's generator, and the pinned boundary digest moved from `f338935e...` to `3f8aff75...`. The boundary has 493 scopes and 507 authorizations (were 491 and 505). No behaviour change in the tool.
+
 ## Unreleased - source-input boundary sync (rust/arithmetic)
 
 - `code/packages/rust/arithmetic` is no longer a consumer of `starlark-rust-library-rule-consumers`: #19311 (Warrant adoption) rewrote its BUILD from a Starlark `rust_library` target into plain shell commands, so nothing loads `rust_library.star` there any more. The checked repository source-input boundary dropped that root, the projection was regenerated with the repository's generator, and the pinned boundary digest moved from `4569b531...` to `f338935e...`. The boundary has 491 scopes and 505 authorizations (were 492 and 506). No behaviour change in the tool.
