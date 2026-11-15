@@ -1,0 +1,27 @@
+cabal-version: 3.0
+name:          coding-adventures-hamurabi
+version:       0.1.0
+synopsis:      Pure deterministic simulation core for the seminal 1968 Hamurabi game
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+
+library
+    exposed-modules:  Hamurabi
+    build-depends:    base >=4.14
+    hs-source-dirs:   src
+    default-language: Haskell2010
+    ghc-options:      -Wall
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    other-modules:    HamurabiSpec
+                    , ConformanceSpec
+    build-depends:    base >=4.14
+                    , coding-adventures-hamurabi
+                    , hspec == 2.*
+    hs-source-dirs:   test
+    default-language: Haskell2010
+    ghc-options:      -Wall
