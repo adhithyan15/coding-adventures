@@ -31,7 +31,7 @@ fn test_constructor_helpers() {
 #[test]
 fn test_7xor_parity_tree_exhaustion() {
     for b in 0u8..=127u8 {
-        let b0 = (b >> 0) & 1;
+        let b0 = b & 1;
         let b1 = (b >> 1) & 1;
         let b2 = (b >> 2) & 1;
         let b3 = (b >> 3) & 1;
@@ -216,7 +216,7 @@ fn test_serial_rx_stream_reconstruction() {
         let p = compute_even_parity(byte);
         let frame_bits = [
             SERIAL_SPACE,
-            (ascii >> 0) & 1,
+            ascii & 1,
             (ascii >> 1) & 1,
             (ascii >> 2) & 1,
             (ascii >> 3) & 1,
