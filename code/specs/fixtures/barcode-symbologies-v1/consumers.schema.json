@@ -9,7 +9,7 @@
     "profile": { "const": "barcode-symbologies-v1-consumers" },
     "consumers": {
       "type": "array",
-      "maxItems": 72,
+      "maxItems": 90,
       "items": { "$ref": "#/$defs/consumer" }
     }
   },
@@ -34,10 +34,13 @@
         "language": {
           "enum": [
             "csharp",
+            "dart",
             "elixir",
             "fsharp",
             "go",
             "haskell",
+            "java",
+            "kotlin",
             "lua",
             "perl",
             "python",
