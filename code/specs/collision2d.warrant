@@ -1,0 +1,81 @@
+-- GA11 -- Collision2D: Deterministic 2D Arcade Collision and Swept Primitives (GAME11).
+--
+-- Warrant document for collision2d (VER04j and VER04m: state=explicit).
+-- Formal verification contract for 2D collision detection and continuous sweep.
+
+warrant collision2d v1
+  error CollisionError = NonFiniteInput | CoordinateOutOfBounds | NegativeDimension | DegenerateDirection | InvalidRestitution | FixedCoordinateOutOfBounds
+
+  model Unit = Bool
+
+  record Point(x: F64, y: F64)
+  record Rect(x: F64, y: F64, width: F64, height: F64)
+  record Circle(center: Point, radius: F64)
+  record Obb2D(center: Point, half_extents: Point, rotation_rad: F64)
+  record Ray2D(origin: Point, dir: Point, max_toi: F64)
+  record ContactManifold(normal: Point, penetration: F64, contact_point: Point)
+  record SweepHit(toi: F64, normal: Point, contact_point: Point)
+  record FixedRectI64(x: I64, y: I64, width: I64, height: I64)
+  record FixedCircleI64(cx: I64, cy: I64, radius: I64)
+  record FixedOverlapI64(normal_x: I64, normal_y: I64, penetration: I64)
+
+  op aabb_vs_aabb(a: Rect, b: Rect) -> Result<Option<ContactManifold>, CollisionError>
+  op circle_vs_circle(a: Circle, b: Circle) -> Result<Option<ContactManifold>, CollisionError>
+  op circle_vs_aabb(circle: Circle, rect: Rect) -> Result<Option<ContactManifold>, CollisionError>
+  op obb_vs_obb_sat(a: Obb2D, b: Obb2D) -> Result<Option<ContactManifold>, CollisionError>
+  op raycast_aabb(ray: Ray2D, rect: Rect) -> Result<Option<SweepHit>, CollisionError>
+  op raycast_circle(ray: Ray2D, circle: Circle) -> Result<Option<SweepHit>, CollisionError>
+  op sweep_aabb_aabb(moving: Rect, velocity: Point, target: Rect) -> Result<Option<SweepHit>, CollisionError>
+  op sweep_circle_aabb(circle: Circle, velocity: Point, target: Rect) -> Result<Option<SweepHit>, CollisionError>
+  op reflect_velocity(velocity: Point, normal: Point, restitution: F64) -> Result<Point, CollisionError>
+  op fixed_aabb_vs_aabb(a: FixedRectI64, b: FixedRectI64) -> Result<Option<FixedOverlapI64>, CollisionError>
+  op fixed_circle_vs_aabb(c: FixedCircleI64, r: FixedRectI64) -> Result<Option<FixedOverlapI64>, CollisionError>
+
+  assume platform:
+    contract.trig.pure_software
+  assume environment:
+    none
+
+  bound aabb_vs_aabb:
+    steps <= 64
+    heap <= 0
+
+  bound circle_vs_circle:
+    steps <= 64
+    heap <= 0
+
+  bound circle_vs_aabb:
+    steps <= 64
+    heap <= 0
+
+  bound obb_vs_obb_sat:
+    steps <= 256
+    heap <= 0
+
+  bound raycast_aabb:
+    steps <= 64
+    heap <= 0
+
+  bound raycast_circle:
+    steps <= 64
+    heap <= 0
+
+  bound sweep_aabb_aabb:
+    steps <= 128
+    heap <= 0
+
+  bound sweep_circle_aabb:
+    steps <= 256
+    heap <= 0
+
+  bound reflect_velocity:
+    steps <= 64
+    heap <= 0
+
+  bound fixed_aabb_vs_aabb:
+    steps <= 64
+    heap <= 0
+
+  bound fixed_circle_vs_aabb:
+    steps <= 64
+    heap <= 0
