@@ -456,7 +456,8 @@ console.log(prose, nested);
         # +4: dsp-complex, dsp-fft, dsp-dct, dsp-filters (DSP-W4-D1 standalone packages).
         # +1: oscillator, the OSC00 isolated standalone waveform & sampler package.
         # +3: dsp-conv, dsp-stft, dsp-wavelets (DSP-W4-D2 standalone packages).
-        self.assertEqual(summary.total_projects, 509)
+        # +2: musical-instruments and percussion-kit (MUS-W3-B standalone packages).
+        self.assertEqual(summary.total_projects, 511)
         self.assertEqual(summary.shared_projects, 308)
         self.assertEqual(summary.inherited_root_dir, 135)
         self.assertEqual(summary.inherited_out_dir, 138)
@@ -468,8 +469,9 @@ console.log(prose, nested);
         # +4: dsp-complex, dsp-fft, dsp-dct, dsp-filters are isolated standalone emitters.
         # +1: oscillator is an isolated standalone emitter.
         # +3: dsp-conv, dsp-stft, dsp-wavelets are isolated standalone emitters.
-        self.assertEqual(summary.standalone_emit_projects, 170)
-        self.assertEqual(summary.isolated_standalone_projects, 170)
+        # +2: musical-instruments and percussion-kit are isolated standalone emitters.
+        self.assertEqual(summary.standalone_emit_projects, 172)
+        self.assertEqual(summary.isolated_standalone_projects, 172)
         self.assertEqual(summary.unbounded_root_projects, 0)
         self.assertEqual(summary.outside_root_inputs, 0)
         # 94: +1 for script-ductus. Nothing the package SHIPS touches a Node
@@ -623,7 +625,8 @@ console.log(prose, nested);
         # +4: dsp-complex, dsp-fft, dsp-dct, dsp-filters lock their standalone compiler.
         # +1: oscillator locks its standalone compiler.
         # +3: dsp-conv, dsp-stft, dsp-wavelets lock their standalone compiler.
-        self.assertEqual(summary.locked_compilers, 522)
+        # +2: musical-instruments and percussion-kit lock their standalone compiler.
+        self.assertEqual(summary.locked_compilers, 524)
 
 
 if __name__ == "__main__":
