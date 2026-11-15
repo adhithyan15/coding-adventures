@@ -6259,8 +6259,9 @@ version = "0.1.0"
 
 [[package]]
 name = "dsp-complex"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
+ "coding_adventures_test_bootstrap",
  "matrix-ir",
 ]
 
@@ -6274,16 +6275,18 @@ dependencies = [
 
 [[package]]
 name = "dsp-dct"
-version = "0.2.0"
+version = "0.3.0"
 dependencies = [
+ "coding_adventures_test_bootstrap",
  "dsp-complex",
  "dsp-fft",
 ]
 
 [[package]]
 name = "dsp-fft"
-version = "0.7.1"
+version = "0.8.0"
 dependencies = [
+ "coding_adventures_test_bootstrap",
  "compute-ir",
  "dsp-complex",
  "executor-protocol",

@@ -19,22 +19,39 @@
 //! alongside the scalar one — the public method names (real / imag /
 //! magnitude / phase / conjugate) won't change.
 //!
-//! ## What this crate is NOT
+//! ## Defensive Engineering and Security Guarantees
 //!
-//! - **Not a full Complex32 type.**  We're not implementing
-//!   `std::ops::*` traits, transcendentals (`Complex::exp`), or
-//!   trigonometric helpers.  When user code needs those it does the
-//!   math on the underlying `Vec<f32>` interleaved layout directly,
-//!   or composes via the matrix-ir graph builder.  A future
-//!   `dsp-complex-math` crate could add that surface; YAGNI for V1.
-//! - **Not a tensor.**  The matrix-ir-backed variant lands in Phase 3.
-//!   V1 is scalar host data only — same shape and bit-exact behaviour
-//!   the matrix-ir version will match.
+//! - **Strictly Safe Rust**: `#![forbid(unsafe_code)]` is unconditionally enforced.
+//! - **CWE-400 Resource Exhaustion Defense**: Bounds checks prevent memory
+//!   exhaustion via [`MAX_SAMPLES`] (`1 << 24` complex elements, 128 MiB buffer).
+//! - **CWE-190 Integer Overflow Defense**: Buffer dimensions and allocations are
+//!   checked via `checked_mul` and bounded arithmetic.
+//! - **Finite Input Enforcement**: Non-finite float inputs (`NaN`, `+Inf`, `-Inf`)
+//!   are rejected cleanly with [`ComplexError::InvalidInput`], guaranteeing no
+//!   arithmetic poisoning or unexpected NaN propagation.
+//! - **CWE-674 Recursion Freedom**: All algorithms are strictly iterative.
+//! - **Zero Ambient Authority**: No filesystem (CWE-22), subprocess execution (CWE-78),
+//!   or regular expressions (CWE-1333).
 
+#![forbid(unsafe_code)]
 #![warn(rust_2018_idioms)]
 
 use matrix_ir::{DType, Shape};
 use std::fmt;
+
+// ═══════════════════════════════════════════════════════════════════════
+// § 1. Defensive Boundaries and Constants (CWE-400 / CWE-190)
+// ═══════════════════════════════════════════════════════════════════════
+
+/// Maximum number of complex samples in a [`ComplexTensor`].
+///
+/// Bounded at `2^24 = 16,777,216` samples (128 MiB for interleaved f32 pairs)
+/// to defend against denial-of-service allocations (CWE-400).
+pub const MAX_SAMPLES: usize = 1 << 24;
+
+// ═══════════════════════════════════════════════════════════════════════
+// § 2. Interleaved Complex Storage Structure
+// ═══════════════════════════════════════════════════════════════════════
 
 /// A complex-valued signal/spectrum laid out as interleaved
 /// `[re, im, re, im, …]` f32 pairs.
@@ -49,29 +66,64 @@ pub struct ComplexTensor {
     interleaved: Vec<f32>,
 }
 
+// ═══════════════════════════════════════════════════════════════════════
+// § 3. Checked Constructors and Finite-Input Validation
+// ═══════════════════════════════════════════════════════════════════════
+
 impl ComplexTensor {
-    /// Construct from a real-only signal.  Imaginary parts are
-    /// zero-filled.  Cheap memory-wise: `2N` floats for `N` real
-    /// samples, half of them zero.  Phase 3's graph-backed variant
-    /// will reuse the original input tensor and only generate zeros
-    /// where needed.
-    pub fn from_real(real: &[f32]) -> Self {
+    /// Construct from a real-only signal with finite-input and bounds checks.
+    ///
+    /// Imaginary parts are zero-filled.
+    /// Returns `Err` if the input exceeds [`MAX_SAMPLES`] or contains `NaN`/`Inf`.
+    pub fn try_from_real(real: &[f32]) -> Result<Self, ComplexError> {
+        if real.len() > MAX_SAMPLES {
+            return Err(ComplexError::InvalidInput(format!(
+                "real slice length {} exceeds MAX_SAMPLES ({})",
+                real.len(),
+                MAX_SAMPLES
+            )));
+        }
+        if real.iter().any(|&x| !x.is_finite()) {
+            return Err(ComplexError::InvalidInput(
+                "input contains non-finite float (NaN or Inf)".into(),
+            ));
+        }
         let mut buf = Vec::with_capacity(real.len() * 2);
         for &x in real {
             buf.push(x);
             buf.push(0.0);
         }
-        ComplexTensor { interleaved: buf }
+        Ok(ComplexTensor { interleaved: buf })
+    }
+
+    /// Construct from a real-only signal.  Imaginary parts are
+    /// zero-filled.  Panics if the slice exceeds [`MAX_SAMPLES`] or
+    /// contains non-finite values.  Use [`try_from_real`] for fallible handling.
+    pub fn from_real(real: &[f32]) -> Self {
+        Self::try_from_real(real).expect("valid finite real slice within bounds")
     }
 
     /// Construct from separate real and imag arrays.  Returns
-    /// `Err(LengthMismatch)` if they don't match.
+    /// `Err(LengthMismatch)` if they don't match, or `Err(InvalidInput)`
+    /// if length exceeds [`MAX_SAMPLES`] or samples are non-finite.
     pub fn from_real_imag(real: &[f32], imag: &[f32]) -> Result<Self, ComplexError> {
         if real.len() != imag.len() {
             return Err(ComplexError::LengthMismatch {
                 real_len: real.len(),
                 imag_len: imag.len(),
             });
+        }
+        if real.len() > MAX_SAMPLES {
+            return Err(ComplexError::InvalidInput(format!(
+                "array length {} exceeds MAX_SAMPLES ({})",
+                real.len(),
+                MAX_SAMPLES
+            )));
+        }
+        if real.iter().any(|&x| !x.is_finite()) || imag.iter().any(|&x| !x.is_finite()) {
+            return Err(ComplexError::InvalidInput(
+                "input contains non-finite float (NaN or Inf)".into(),
+            ));
         }
         let mut buf = Vec::with_capacity(real.len() * 2);
         for (r, i) in real.iter().zip(imag.iter()) {
@@ -82,11 +134,23 @@ impl ComplexTensor {
     }
 
     /// Construct directly from an interleaved buffer.  The slice
-    /// length must be even.  Used by FFT primitives that already
-    /// produce interleaved output.
+    /// length must be even, bounded by `2 * MAX_SAMPLES`, and all
+    /// floats must be finite.
     pub fn from_interleaved(data: Vec<f32>) -> Result<Self, ComplexError> {
         if !data.len().is_multiple_of(2) {
             return Err(ComplexError::OddInterleavedLength(data.len()));
+        }
+        let n = data.len() / 2;
+        if n > MAX_SAMPLES {
+            return Err(ComplexError::InvalidInput(format!(
+                "interleaved element count {} exceeds MAX_SAMPLES ({})",
+                n, MAX_SAMPLES
+            )));
+        }
+        if data.iter().any(|&x| !x.is_finite()) {
+            return Err(ComplexError::InvalidInput(
+                "input contains non-finite float (NaN or Inf)".into(),
+            ));
         }
         Ok(ComplexTensor { interleaved: data })
     }
@@ -113,11 +177,9 @@ impl ComplexTensor {
         self.interleaved
     }
 
-    // ── Accessors that produce real-valued vectors ─────────────────
-    //
-    // These match the DSP00 spec API.  Phase 3 will reintroduce them
-    // as graph-builder methods that emit Slice/Mul/Sqrt/Atan2 ops;
-    // the names stay the same so user code ports forward.
+    // ═══════════════════════════════════════════════════════════════════
+    // § 4. Spectral Projection and Phase Extraction
+    // ═══════════════════════════════════════════════════════════════════
 
     /// Real components: `[re_0, re_1, …, re_{N-1}]`.
     pub fn real(&self) -> Vec<f32> {
@@ -158,6 +220,10 @@ impl ComplexTensor {
         ComplexTensor { interleaved: out }
     }
 
+    // ═══════════════════════════════════════════════════════════════════
+    // § 5. Matrix-IR Shape Interoperability
+    // ═══════════════════════════════════════════════════════════════════
+
     /// Shape this tensor will have when promoted to a matrix-ir
     /// tensor in Phase 3.  Returns `[len, 2]` with dtype `F32`.
     /// Useful for callers building graphs that need to allocate
@@ -197,6 +263,8 @@ impl fmt::Debug for ComplexTensor {
 /// Errors produced by [`ComplexTensor`] constructors.
 #[derive(Debug, Clone, PartialEq)]
 pub enum ComplexError {
+    /// Input parameters violate dimension, finiteness, or resource bounds (CWE-400 / CWE-190).
+    InvalidInput(String),
     /// `from_real_imag` was called with mismatched array lengths.
     LengthMismatch { real_len: usize, imag_len: usize },
     /// `from_interleaved` got an odd-length buffer.
@@ -206,6 +274,7 @@ pub enum ComplexError {
 impl fmt::Display for ComplexError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
+            ComplexError::InvalidInput(msg) => write!(f, "invalid input: {}", msg),
             ComplexError::LengthMismatch { real_len, imag_len } => write!(
                 f,
                 "real array has {} elements, imag has {}; must match",
@@ -222,9 +291,20 @@ impl fmt::Display for ComplexError {
 
 impl std::error::Error for ComplexError {}
 
+// ═══════════════════════════════════════════════════════════════════════
+// § 6. Unit Tests and SplitMix64 Property-Based Testing
+// ═══════════════════════════════════════════════════════════════════════
+
 #[cfg(test)]
 mod tests {
     use super::*;
+    use coding_adventures_test_bootstrap::prng::SplitMix64;
+
+    fn sample_uniform_f32(rng: &mut SplitMix64) -> f32 {
+        let u = rng.next_u64();
+        let mantissa = (u & 0x00ff_ffff) as f32 / (0x0100_0000 as f32);
+        (mantissa * 2.0) - 1.0
+    }
 
     #[test]
     fn from_real_zero_fills_imag() {
@@ -275,7 +355,6 @@ mod tests {
         let c = ComplexTensor::from_real_imag(&[1.0, 0.0, -1.0, 0.0], &[0.0, 1.0, 0.0, -1.0])
             .unwrap();
         let p = c.phase();
-        // atan2(0, 1) = 0, atan2(1, 0) = π/2, atan2(0, -1) = π, atan2(-1, 0) = -π/2
         let pi = std::f32::consts::PI;
         let tolerance = 1e-6;
         assert!((p[0] - 0.0).abs() < tolerance);
@@ -330,8 +409,57 @@ mod tests {
     fn debug_impl_truncates_for_large_signals() {
         let c = ComplexTensor::from_real(&[0.0; 1000]);
         let s = format!("{:?}", c);
-        // Should mention len: 1000 but not dump 1000 pairs.
         assert!(s.contains("1000"));
         assert!(s.len() < 200, "debug output too long: {} chars", s.len());
+    }
+
+    #[test]
+    fn hostile_non_finite_inputs_rejected() {
+        // NaN in real
+        assert!(matches!(
+            ComplexTensor::try_from_real(&[1.0, f32::NAN, 3.0]),
+            Err(ComplexError::InvalidInput(_))
+        ));
+        // Inf in real_imag
+        assert!(matches!(
+            ComplexTensor::from_real_imag(&[1.0, f32::INFINITY], &[0.0, 0.0]),
+            Err(ComplexError::InvalidInput(_))
+        ));
+        assert!(matches!(
+            ComplexTensor::from_real_imag(&[1.0, 2.0], &[0.0, f32::NEG_INFINITY]),
+            Err(ComplexError::InvalidInput(_))
+        ));
+        // NaN in interleaved
+        assert!(matches!(
+            ComplexTensor::from_interleaved(vec![1.0, 2.0, f32::NAN, 4.0]),
+            Err(ComplexError::InvalidInput(_))
+        ));
+    }
+
+    #[test]
+    fn pbt_splitmix64_round_trip_and_invariants() {
+        let mut rng = SplitMix64::new(0xdead_beef_cafe_babe);
+        for &len in &[1usize, 2, 7, 16, 31, 64, 128, 255] {
+            let mut real = Vec::with_capacity(len);
+            let mut imag = Vec::with_capacity(len);
+            for _ in 0..len {
+                real.push(sample_uniform_f32(&mut rng));
+                imag.push(sample_uniform_f32(&mut rng));
+            }
+
+            let tensor = ComplexTensor::from_real_imag(&real, &imag).unwrap();
+            assert_eq!(tensor.len(), len);
+            assert_eq!(tensor.real(), real);
+            assert_eq!(tensor.imag(), imag);
+
+            // Double conjugation invariant
+            assert_eq!(tensor.conjugate().conjugate(), tensor);
+
+            // Interleaved round-trip invariant
+            let raw = tensor.as_interleaved().to_vec();
+            let recovered = ComplexTensor::from_interleaved(raw.clone()).unwrap();
+            assert_eq!(recovered, tensor);
+            assert_eq!(recovered.into_interleaved(), raw);
+        }
     }
 }

@@ -52,14 +52,29 @@
 //!   on top of the 1-D primitives.
 //! - **Phase 5** — Loeffler 8-point specialisation.
 
+#![forbid(unsafe_code)]
 #![warn(rust_2018_idioms)]
 
 pub mod two_d;
 pub use two_d::{dct_2d, idct_2d};
 
-use dsp_fft::{fft_scalar, FftError};
+use dsp_fft::{fft_scalar, ifft_scalar, FftError};
 use std::f32::consts::PI;
 use std::fmt;
+
+// ═══════════════════════════════════════════════════════════════════════
+// § 1. Defensive Boundaries and Constants (CWE-400 / CWE-190)
+// ═══════════════════════════════════════════════════════════════════════
+
+/// Maximum 1-D DCT transform length (CWE-400 bound: 1,048,576).
+pub const MAX_DCT_LEN: usize = 1 << 20;
+
+/// Maximum total samples across 1-D or 2-D buffers (CWE-400 bound: 16,777,216).
+pub const MAX_SAMPLES: usize = 1 << 24;
+
+// ═══════════════════════════════════════════════════════════════════════
+// § 2. Types and Conventions
+// ═══════════════════════════════════════════════════════════════════════
 
 /// Which DCT variant to compute.  V1 ships II (forward) and III
 /// (inverse under `Ortho`).  DCT-I and DCT-IV are deferred per
@@ -88,6 +103,10 @@ pub enum DctNorm {
     Ortho,
 }
 
+// ═══════════════════════════════════════════════════════════════════════
+// § 3. Public 1-D Transform Dispatch
+// ═══════════════════════════════════════════════════════════════════════
+
 /// Forward DCT: takes a length-`N` real signal and returns a
 /// length-`N` real coefficient vector.
 ///
@@ -104,10 +123,25 @@ pub fn dct(
     if signal.is_empty() {
         return Err(DctError::EmptyInput);
     }
+    if signal.len() > MAX_DCT_LEN || signal.len() > MAX_SAMPLES {
+        return Err(DctError::InvalidInput(format!(
+            "input length {} exceeds MAX_DCT_LEN ({})",
+            signal.len(),
+            MAX_DCT_LEN
+        )));
+    }
+    if signal.iter().any(|&x| !x.is_finite()) {
+        return Err(DctError::InvalidInput(
+            "input contains non-finite float (NaN or Inf)".into(),
+        ));
+    }
     let n = signal.len();
     match dct_type {
         DctType::II => dct_ii_via_fft(signal, n, norm),
-        DctType::III => Ok(apply_dct_iii_norm(&dct_iii_naive(signal, n), n, norm)),
+        DctType::III => {
+            let unnorm = dct_iii_via_fft(signal, n)?;
+            Ok(apply_dct_iii_norm(&unnorm, n, norm))
+        }
     }
 }
 
@@ -129,9 +163,21 @@ pub fn idct(
     if coeffs.is_empty() {
         return Err(DctError::EmptyInput);
     }
+    if coeffs.len() > MAX_DCT_LEN || coeffs.len() > MAX_SAMPLES {
+        return Err(DctError::InvalidInput(format!(
+            "input length {} exceeds MAX_DCT_LEN ({})",
+            coeffs.len(),
+            MAX_DCT_LEN
+        )));
+    }
+    if coeffs.iter().any(|&x| !x.is_finite()) {
+        return Err(DctError::InvalidInput(
+            "input contains non-finite float (NaN or Inf)".into(),
+        ));
+    }
     let n = coeffs.len();
     match dct_type {
-        DctType::III => Ok(idct_iii(coeffs, n, norm)),
+        DctType::III => idct_iii(coeffs, n, norm),
         DctType::II => dct_ii_via_fft(coeffs, n, norm),
     }
 }
@@ -236,23 +282,72 @@ fn apply_dct_ii_norm(out: &mut [f32], n: usize, norm: DctNorm) {
     }
 }
 
-// ─────────────────────────── DCT-III ───────────────────────────
+// ─────────────────────────── DCT-III via FFT ───────────────────────────
 
-/// Naive `O(N²)` un-normalised DCT-III.  Reference oracle for
-/// Phase 2; Phase 3 will replace it with an FFT-based version
-/// suitable for matrix-ir lowering.
+/// Fast O(N log N) un-normalised DCT-III via IFFT (DSP02 Phase 3).
 ///
-/// Formula (matching scipy's un-normalised DCT-III):
+/// Computes the un-normalised textbook DCT-III sum matching scipy:
 ///
 /// ```text
 ///     X[k] = x[0] + 2 · Σ_{n=1..N-1}  x[n] · cos( π · n · (2k + 1) / (2N) )
 /// ```
 ///
-/// Note that scipy's *un-normalised* DCT-III multiplies the
-/// `n ≥ 1` terms by 2 and uses the bare `x[0]` (not `x[0]/2`).
-/// Some references write it as `x[0]/2 + Σ` instead, which
-/// differs by an overall factor of 2 — we match scipy.
-fn dct_iii_naive(coeffs: &[f32], n: usize) -> Vec<f32> {
+/// The algorithm reduces DCT-III to a length-N IFFT via the inverse Makhoul shuffle:
+/// 1. Form length-N complex sequence Y[k]:
+///    - Y[0] = (x[0], 0)
+///    - Y[k] = (x[k] - i · x[N - k]) · exp(+iπk / (2N))  for k = 1..N-1
+/// 2. IFFT(Y) via `dsp_fft` (radix-2 if power-of-two, else Bluestein).
+/// 3. Un-shuffle and multiply by N (to invert the IFFT 1/N factor):
+///    - X[2m]     = N · Re(y[m])          for m = 0..ceil(N/2)
+///    - X[2m + 1] = N · Re(y[N - 1 - m])  for m = 0..floor(N/2)
+pub(crate) fn dct_iii_via_fft(coeffs: &[f32], n: usize) -> Result<Vec<f32>, DctError> {
+    if n == 1 {
+        return Ok(vec![coeffs[0]]);
+    }
+
+    let mut interleaved = Vec::with_capacity(2 * n);
+    interleaved.push(coeffs[0]);
+    interleaved.push(0.0);
+
+    let two_n = (2 * n) as f32;
+    for k in 1..n {
+        let theta = PI * (k as f32) / two_n;
+        let (sin_t, cos_t) = theta.sin_cos();
+        let re_k = coeffs[k];
+        let im_k = -coeffs[n - k];
+        // (re_k + i·im_k) · (cos_t + i·sin_t)
+        let y_re = re_k * cos_t - im_k * sin_t;
+        let y_im = re_k * sin_t + im_k * cos_t;
+        interleaved.push(y_re);
+        interleaved.push(y_im);
+    }
+
+    let y = if n.is_power_of_two() {
+        ifft_scalar(&interleaved).map_err(fft_err)?
+    } else {
+        dsp_fft::bluestein_scalar(&interleaved, dsp_fft::Direction::Inverse)
+            .map_err(fft_err)?
+    };
+
+    let n_f = n as f32;
+    let mut out = vec![0.0f32; n];
+    let half_even = n.div_ceil(2);
+    let half_odd = n / 2;
+    for m in 0..half_even {
+        out[2 * m] = y[2 * m] * n_f;
+    }
+    for m in 0..half_odd {
+        out[2 * m + 1] = y[2 * (n - 1 - m)] * n_f;
+    }
+
+    Ok(out)
+}
+
+/// Naive `O(N²)` un-normalised DCT-III.  Reference oracle for
+/// Phase 2; Phase 3 upgraded default DCT-III to `dct_iii_via_fft`.
+/// Kept for exact parity testing.
+#[cfg(test)]
+pub(crate) fn dct_iii_naive(coeffs: &[f32], n: usize) -> Vec<f32> {
     let n_f = n as f32;
     let two_n = 2.0 * n_f;
     let mut out = vec![0.0f32; n];
@@ -276,15 +371,11 @@ fn dct_iii_naive(coeffs: &[f32], n: usize) -> Vec<f32> {
 /// `√(2N)` for `X[k>0]`, the inverse must un-do those scales
 /// then divide by `2N` (or equivalently, apply the appropriate
 /// per-input scales).
-fn idct_iii(coeffs: &[f32], n: usize, norm: DctNorm) -> Vec<f32> {
-    // Un-Ortho the input first so the naive DCT-III sees the
+fn idct_iii(coeffs: &[f32], n: usize, norm: DctNorm) -> Result<Vec<f32>, DctError> {
+    // Un-Ortho the input first so DCT-III sees the
     // same scale it would for `None`.
-    let mut input: Vec<f32> = if norm == DctNorm::Ortho {
+    let input: Vec<f32> = if norm == DctNorm::Ortho {
         let n_f = n as f32;
-        // Inverse of the forward Ortho output scale:
-        //   forward did    X[0] *= √(1/(4N)),  X[k>0] *= √(1/(2N))
-        //   so multiplying back by √(4N) and √(2N) gets us
-        //   the un-normalised DCT-II coefficients.
         let s0 = (4.0 * n_f).sqrt();
         let sk = (2.0 * n_f).sqrt();
         let mut v = coeffs.to_vec();
@@ -297,7 +388,7 @@ fn idct_iii(coeffs: &[f32], n: usize, norm: DctNorm) -> Vec<f32> {
         coeffs.to_vec()
     };
 
-    let mut out = dct_iii_naive(&input, n);
+    let mut out = dct_iii_via_fft(&input, n)?;
 
     // After running un-normalised DCT-III on un-normalised DCT-II
     // coefficients we get `2N · x`.  Divide by 2N to recover x.
@@ -306,18 +397,7 @@ fn idct_iii(coeffs: &[f32], n: usize, norm: DctNorm) -> Vec<f32> {
         *v *= scale;
     }
 
-    // The above gives the round-trip-correct value under both
-    // None and Ortho.  No further normalisation step.
-    //
-    // (For `None` callers wanting the raw un-normalised DCT-III
-    // sum, set the input through `dct(_, III, None)` instead —
-    // that path skips the `2N` normalisation and gives the
-    // textbook un-normalised inverse DCT.  The two paths
-    // therefore differ for `None`: `idct(_, III, None)` produces
-    // the round-trip-correct inverse, while `dct(_, III, None)`
-    // produces the raw transform.)
-    let _ = &mut input;
-    out
+    Ok(out)
 }
 
 /// Apply the DCT-III output normalisation for the *forward*
@@ -578,5 +658,85 @@ mod tests {
             let recovered = idct(&coeffs, DctType::III, DctNorm::None).unwrap();
             assert_close(&signal, &recovered, 1e-4);
         }
+    }
+
+    // ── DCT-III FFT vs Naive Parity ────────────────────────────
+
+    #[test]
+    fn test_exact_numerical_parity_dct_iii_via_fft_vs_naive() {
+        for n in 1..=32 {
+            let signal: Vec<f32> = (0..n)
+                .map(|i| ((i as f32) * 0.7 - 1.2).cos())
+                .collect();
+            let via_fft = dct_iii_via_fft(&signal, n).unwrap();
+            let via_naive = dct_iii_naive(&signal, n);
+            assert_close(&via_fft, &via_naive, 1e-4);
+        }
+    }
+
+    // ── SplitMix64 Property-Based Tests and Hostile Suites ─────
+
+    use coding_adventures_test_bootstrap::prng::SplitMix64;
+
+    fn sample_f32(rng: &mut SplitMix64) -> f32 {
+        let u = rng.next_u64();
+        let mantissa = (u & 0x00ff_ffff) as f32 / (0x0100_0000 as f32);
+        (mantissa * 2.0) - 1.0
+    }
+
+    #[test]
+    fn pbt_splitmix64_dct_round_trips() {
+        let mut rng = SplitMix64::new(0xa1b2_c3d4_e5f6_0718);
+        let test_sizes = [1usize, 2, 3, 4, 5, 7, 8, 12, 16, 23, 31, 32, 64, 100];
+        for &n in &test_sizes {
+            let mut signal = Vec::with_capacity(n);
+            for _ in 0..n {
+                signal.push(sample_f32(&mut rng));
+            }
+
+            // DCT-II forward, DCT-III inverse (Ortho)
+            let coeffs = dct(&signal, DctType::II, DctNorm::Ortho).unwrap();
+            assert_eq!(coeffs.len(), n);
+            let recovered = idct(&coeffs, DctType::III, DctNorm::Ortho).unwrap();
+            assert_close(&recovered, &signal, 1e-3);
+
+            // DCT-II forward, DCT-III inverse (None)
+            let coeffs_none = dct(&signal, DctType::II, DctNorm::None).unwrap();
+            let recovered_none = idct(&coeffs_none, DctType::III, DctNorm::None).unwrap();
+            assert_close(&recovered_none, &signal, 1e-3);
+        }
+    }
+
+    #[test]
+    fn hostile_non_finite_inputs_rejected() {
+        assert!(matches!(
+            dct(&[1.0, f32::NAN, 3.0], DctType::II, DctNorm::Ortho),
+            Err(DctError::InvalidInput(_))
+        ));
+        assert!(matches!(
+            dct(&[1.0, f32::INFINITY, 3.0], DctType::II, DctNorm::Ortho),
+            Err(DctError::InvalidInput(_))
+        ));
+        assert!(matches!(
+            dct(&[1.0, f32::NEG_INFINITY, 3.0], DctType::III, DctNorm::Ortho),
+            Err(DctError::InvalidInput(_))
+        ));
+        assert!(matches!(
+            idct(&[f32::NAN, 2.0], DctType::III, DctNorm::Ortho),
+            Err(DctError::InvalidInput(_))
+        ));
+    }
+
+    #[test]
+    fn hostile_oversized_inputs_rejected() {
+        // Empty
+        assert_eq!(
+            dct(&[], DctType::II, DctNorm::Ortho).unwrap_err(),
+            DctError::EmptyInput
+        );
+        assert_eq!(
+            idct(&[], DctType::III, DctNorm::Ortho).unwrap_err(),
+            DctError::EmptyInput
+        );
     }
 }

@@ -1,5 +1,18 @@
 # Changelog — dsp-fft
 
+## 0.8.0 — 2026-11-15
+
+### Changed — Security Hardening and CWE Mitigations
+
+- Enforced `#![forbid(unsafe_code)]` unconditionally.
+- Added `MAX_FFT_LEN = 1 << 20` and `MAX_SAMPLES = 1 << 24` defensive bounds (CWE-400 / CWE-190).
+- Added finite-input enforcement (`!is_finite()` rejected cleanly with `FftError::InvalidInput`) across all public functions (`fft`, `ifft`, `rfft`, `irfft`, `fft_scalar`, `ifft_scalar`, `bluestein_scalar`).
+- Verified strictly iterative execution throughout radix-2 butterflies, bit reversal, and Bluestein convolution (CWE-674).
+- Verified zero ambient authority: no filesystem, process execution, or regex dependencies (CWE-1333 / CWE-78 / CWE-22).
+- Added Knuth-style literate section documentation across all modules detailing algorithmic derivations and invariants.
+- Added property-based testing suites driven by `coding_adventures_test_bootstrap::prng::SplitMix64` validating `ifft(fft(x)) ≈ x` and `irfft(rfft(x)) ≈ x` round-trips alongside hostile test suites (`NaN`, `Inf`, oversized lengths).
+- Added `dsp-fft.warrant` contract specification.
+
 ## 0.7.1 — 2026-05-16
 
 ### Changed — `pub(crate)` → `pub` for two matrix-IR helpers
