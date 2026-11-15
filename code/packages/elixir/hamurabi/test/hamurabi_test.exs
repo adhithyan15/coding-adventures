@@ -349,4 +349,74 @@ defmodule CodingAdventures.HamurabiTest do
     report = Hamurabi.format_report(final_state)
     assert String.contains?(report, "IN YOUR 10-YEAR TERM OF OFFICE")
   end
+
+  test "TurnOrder.new, HamurabiState, status and error conversions" do
+    order = %TurnOrder{acres_delta: 5, bushels_to_feed: 100, acres_to_plant: 20}
+    assert {:ok, ^order} = TurnOrder.new(order)
+
+    assert {:ok, ^order} =
+             TurnOrder.new(%{
+               "acres_delta" => 5,
+               "bushels_to_feed" => 100,
+               "acres_to_plant" => 20
+             })
+
+    assert {:error, :invalid_order_bounds} == TurnOrder.new(:invalid)
+
+    assert {:error, :invalid_order_bounds} ==
+             TurnOrder.new(%{acres_delta: "5", bushels_to_feed: 100, acres_to_plant: 20})
+
+    alias CodingAdventures.Hamurabi.HamurabiState
+    base_map = Map.from_struct(Hamurabi.new_game(1))
+    assert %CodingAdventures.Hamurabi.State{year: 1} = HamurabiState.__struct__(base_map)
+
+    statuses = [
+      {"Playing", :playing},
+      {"Won(Charlemagne)", {:won, :charlemagne}},
+      {"Won(Acre)", {:won, :acre}},
+      {"Won(Nero)", {:won, :nero}},
+      {"Won(Disaster)", {:won, :disaster}},
+      {"GameOverExtinction", :game_over_extinction},
+      {"Impeached(starved=10, percent=50)", {:impeached, 10, 50}}
+    ]
+
+    for {str, val} <- statuses do
+      assert Hamurabi.status_to_string(val) == str
+      assert Hamurabi.status_from_string(str) == {:ok, val}
+    end
+
+    assert Hamurabi.status_to_string({:impeached, %{starved_this_turn: 4, percent: 45}}) ==
+             "Impeached(starved=4, percent=45)"
+
+    assert Hamurabi.status_to_string("CustomStatus") == "CustomStatus"
+    assert Hamurabi.status_from_string("Impeached(bad)") == {:error, :invalid_status}
+
+    assert Hamurabi.status_from_string("Impeached(starved=abc, percent=1)") ==
+             {:error, :invalid_status}
+
+    assert Hamurabi.status_from_string("Unknown") == {:error, :invalid_status}
+
+    errors = [
+      {"GameAlreadyEnded", :game_already_ended},
+      {"InvalidOrderBounds", :invalid_order_bounds},
+      {"InsufficientBushelsForLand", :insufficient_bushels_for_land},
+      {"InsufficientAcresToSell", :insufficient_acres_to_sell},
+      {"InsufficientBushelsToFeed", :insufficient_bushels_to_feed},
+      {"InsufficientAcresToPlant", :insufficient_acres_to_plant},
+      {"InsufficientPopulationToPlant", :insufficient_population_to_plant},
+      {"InsufficientGrainForSeed", :insufficient_grain_for_seed}
+    ]
+
+    for {str, reason} <- errors do
+      assert Hamurabi.error_to_string(reason) == str
+      assert Hamurabi.error_from_string(str) == {:ok, reason}
+      err = Error.exception(reason)
+      assert err.reason == reason
+      assert is_binary(err.message)
+    end
+
+    assert Hamurabi.error_to_string("CustomErr") == "CustomErr"
+    assert Hamurabi.error_from_string("UnknownErr") == {:error, :unknown_error}
+    assert String.contains?(Hamurabi.error_message(:custom_reason), "custom_reason")
+  end
 end
