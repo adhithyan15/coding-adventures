@@ -769,6 +769,7 @@ members = [
     "sha256-c",
     "md5-c",
     "lua-bridge",
+    "lunar-lander",
     "perl-bridge",
     "polynomial-c",
     "wasm-execution",

@@ -9116,6 +9116,19 @@ name = "lua-bridge"
 version = "0.1.0"
 
 [[package]]
+name = "lunar-lander"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "paint-instructions",
+ "paint-vm-ascii",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "lz77"
 version = "0.1.0"
 
