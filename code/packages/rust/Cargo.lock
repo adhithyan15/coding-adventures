@@ -6836,6 +6836,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "game-breakout"
+version = "0.1.0"
+dependencies = [
+ "arcade-sfx",
+ "audio-mixer-realtime",
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "collision2d",
+ "game-clock",
+ "paint-batch-tiles",
+ "pcm-audio",
+]
+
+[[package]]
 name = "game-clock"
 version = "0.1.0"
 dependencies = [

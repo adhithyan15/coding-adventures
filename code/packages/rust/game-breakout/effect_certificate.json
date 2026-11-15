@@ -1,0 +1,172 @@
+{
+  "schema_version": "ver24-effect-cert-v1",
+  "package": "rust/game-breakout",
+  "source_digest": "e80930750906dd3c321c4fe772b293171657deb62773fc1532b5fe24605deb7f",
+  "manifest_digest": "0c06b32103a037a51ee8cbcccf63918b36396b2ef3353317f32602979486db13",
+  "declared_effects": [],
+  "entry_points": [
+    {
+      "name": "standard_breakout",
+      "signature": "pub const fn standard_breakout() -> Self",
+      "effects": []
+    },
+    {
+      "name": "check_config_validity",
+      "signature": "pub fn check_config_validity(&self) -> Result<(), BreakoutError>",
+      "effects": []
+    },
+    {
+      "name": "default_config",
+      "signature": "pub fn default_config() -> BreakoutConfig",
+      "effects": []
+    },
+    {
+      "name": "validate_config",
+      "signature": "pub fn validate_config(config: &BreakoutConfig) -> Result<(), BreakoutError>",
+      "effects": []
+    },
+    {
+      "name": "move_paddle_left",
+      "signature": "pub const fn move_paddle_left(launch: bool) -> Self",
+      "effects": []
+    },
+    {
+      "name": "move_paddle_right",
+      "signature": "pub const fn move_paddle_right(launch: bool) -> Self",
+      "effects": []
+    },
+    {
+      "name": "hold_paddle",
+      "signature": "pub const fn hold_paddle(launch: bool) -> Self",
+      "effects": []
+    },
+    {
+      "name": "idle_breakout_input",
+      "signature": "pub const fn idle_breakout_input() -> Self",
+      "effects": []
+    },
+    {
+      "name": "launch_only",
+      "signature": "pub const fn launch_only() -> Self",
+      "effects": []
+    },
+    {
+      "name": "new_brick",
+      "signature": "pub const fn new_brick( row: u8, col: u8, max_hits: u8, points: u32, color_rgb: RgbColor, ) -> Self",
+      "effects": []
+    },
+    {
+      "name": "is_brick_active",
+      "signature": "pub const fn is_brick_active(&self) -> bool",
+      "effects": []
+    },
+    {
+      "name": "empty_breakout_events",
+      "signature": "pub const fn empty_breakout_events() -> Self",
+      "effects": []
+    },
+    {
+      "name": "init_breakout_state",
+      "signature": "pub fn init_breakout_state( config: BreakoutConfig, initial_prng_seed: u64, ) -> Result<Self, BreakoutError>",
+      "effects": []
+    },
+    {
+      "name": "check_breakout_state_validity",
+      "signature": "pub fn check_breakout_state_validity(&self) -> Result<(), BreakoutError>",
+      "effects": []
+    },
+    {
+      "name": "paddle_bounding_rect",
+      "signature": "pub fn paddle_bounding_rect(&self) -> Rect",
+      "effects": []
+    },
+    {
+      "name": "ball_bounding_circle",
+      "signature": "pub fn ball_bounding_circle(&self) -> Circle",
+      "effects": []
+    },
+    {
+      "name": "reset_ball_on_paddle",
+      "signature": "pub fn reset_ball_on_paddle(&mut self)",
+      "effects": []
+    },
+    {
+      "name": "populate_level_bricks",
+      "signature": "pub fn populate_level_bricks(&mut self, level: u32)",
+      "effects": []
+    },
+    {
+      "name": "is_breakout_game_over",
+      "signature": "pub fn is_breakout_game_over(&self) -> bool",
+      "effects": []
+    },
+    {
+      "name": "remaining_lives",
+      "signature": "pub fn remaining_lives(&self) -> u32",
+      "effects": []
+    },
+    {
+      "name": "active_brick_count",
+      "signature": "pub fn active_brick_count(&self) -> usize",
+      "effects": []
+    },
+    {
+      "name": "current_score",
+      "signature": "pub fn current_score(&self) -> u32",
+      "effects": []
+    },
+    {
+      "name": "new_game",
+      "signature": "pub fn new_game( config: BreakoutConfig, initial_prng_seed: u64, ) -> Result<BreakoutState, BreakoutError>",
+      "effects": []
+    },
+    {
+      "name": "validate_state",
+      "signature": "pub fn validate_state(state: &BreakoutState) -> Result<(), BreakoutError>",
+      "effects": []
+    },
+    {
+      "name": "brick_bounding_rect",
+      "signature": "pub fn brick_bounding_rect(config: &BreakoutConfig, row: u8, col: u8) -> Rect",
+      "effects": []
+    },
+    {
+      "name": "deterministic_prng_next",
+      "signature": "pub fn deterministic_prng_next(state: &mut u64) -> u64",
+      "effects": []
+    },
+    {
+      "name": "deterministic_launch_angle",
+      "signature": "pub fn deterministic_launch_angle(prng: &mut u64, max_angle_rad: f64) -> f64",
+      "effects": []
+    },
+    {
+      "name": "step_breakout",
+      "signature": "pub fn step_breakout( state: &mut BreakoutState, input: &BreakoutInput, sfx: &mut SfxBank<4>, ) -> Result<BreakoutFrameEvents, BreakoutError>",
+      "effects": []
+    },
+    {
+      "name": "step_breakout_with_clock",
+      "signature": "pub fn step_breakout_with_clock( clock: &mut GameClockState, raw_delta_ns: u64, state: &mut BreakoutState, input: &BreakoutInput, sfx: &mut SfxBank<4>, ) -> Result<ClockBreakoutResult, BreakoutError>",
+      "effects": []
+    },
+    {
+      "name": "build_breakout_sprites",
+      "signature": "pub fn build_breakout_sprites(state: &BreakoutState, out: &mut [SpriteItem]) -> usize",
+      "effects": []
+    },
+    {
+      "name": "lower_breakout_to_paint_scene",
+      "signature": "pub fn lower_breakout_to_paint_scene(state: &BreakoutState) -> Result<PaintScene, BreakoutError>",
+      "effects": []
+    },
+    {
+      "name": "render_breakout_audio_into",
+      "signature": "pub fn render_breakout_audio_into<const N: usize>( bank: &mut SfxBank<4>, ring: &mut PcmRingBuffer<N>, scratch: &mut [i16], ) -> Result<usize, BreakoutError>",
+      "effects": []
+    }
+  ],
+  "unconditional_roots": [],
+  "banned_construct_exceptions": [],
+  "label": "proved"
+}
