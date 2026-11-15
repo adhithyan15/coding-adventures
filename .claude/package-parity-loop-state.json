@@ -11663,7 +11663,8 @@
         "image-codec-png-apng-neutral-rejection-conformance"
       ],
       "branch": "feat/image-codec-png-haskell-lane-parity",
-      "pr_number": null,
+      "pr_number": 19412,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19412",
       "notes": "Standalone Haskell child consuming the neutral PNG corpus and established ZIP raw/CRC surface with empty production capabilities."
     },
     {
