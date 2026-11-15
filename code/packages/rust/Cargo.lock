@@ -10067,6 +10067,15 @@ name = "multi-directed-graph"
 version = "0.1.0"
 
 [[package]]
+name = "musical-instruments"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_test_bootstrap",
+ "oscillator",
+ "pcm-audio",
+]
+
+[[package]]
 name = "naga"
 version = "0.19.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
