@@ -410,6 +410,10 @@ new contracts must never name missing evidence. See
 [`HL15`](../../../specs/HL15-the-completion-plan.md).
 The separate `mock-assessment` item is blocked on an absent task-shape
 inventory; it cannot infer a complete timed paper from `timed: true` alone.
+Marwadi and Punjabi now have project-defined B1 four-skill shape inventories
+grounded in their own assessment specifications. These describe intended form
+envelopes, not assembled recordings, native-speaker review, or book-only B1
+attainment; the mock and human-validation gates remain independent.
 
 For a human review of Spanish mock question vocabulary, run
 `npm run report:mock-stem-coverage -- --level A2` (or `pre-A1`/`A1`). The
