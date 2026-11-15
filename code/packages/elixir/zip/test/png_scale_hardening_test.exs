@@ -230,16 +230,18 @@ defmodule CodingAdventures.Zip.PngScaleHardeningTest do
       craft_zip = fn entry_name ->
         name_len = byte_size(entry_name)
 
-        local =
+        local_hdr =
           <<0x50, 0x4B, 0x03, 0x04, 20::little-16, 0::little-16, 0::little-16, 0::little-32,
-            0::little-32, 0::little-32, 0::little-32, name_len::little-16, 0::little-16>> <>
-            entry_name
+            0::little-32, 0::little-32, 0::little-32, name_len::little-16, 0::little-16>>
 
-        cd =
+        local = local_hdr <> entry_name
+
+        cd_hdr =
           <<0x50, 0x4B, 0x01, 0x02, 0x031E::little-16, 20::little-16, 0::little-16, 0::little-16,
             0::little-32, 0::little-32, 0::little-32, 0::little-32, name_len::little-16,
-            0::little-16, 0::little-16, 0::little-16, 0::little-16, 0::little-32, 0::little-32>> <>
-            entry_name
+            0::little-16, 0::little-16, 0::little-16, 0::little-16, 0::little-32, 0::little-32>>
+
+        cd = cd_hdr <> entry_name
 
         cd_size = byte_size(cd)
         cd_offset = byte_size(local)
