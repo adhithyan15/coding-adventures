@@ -13,8 +13,6 @@ coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
 coding_adventures_sha256 = { path = "../sha256" }
 capability-runtime-conformance = { path = "../capability-runtime-conformance" }
 
-[workspace]
-
 [[test]]
 name = "conformance"
 path = "tests/conformance.rs"
