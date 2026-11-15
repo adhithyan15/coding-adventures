@@ -20,7 +20,7 @@ use game_breakout::{
     build_breakout_sprites, default_config, deterministic_launch_angle, deterministic_prng_next,
     lower_breakout_to_paint_scene, new_game, render_breakout_audio_into, step_breakout,
     step_breakout_with_clock, validate_config, validate_state, BreakoutError, BreakoutInput, Point,
-    SpriteItem, DEFAULT_ARENA_HEIGHT, DEFAULT_ARENA_WIDTH, MAX_BRICK_COLS, MAX_BRICKS, MAX_COORD,
+    SpriteItem, DEFAULT_ARENA_HEIGHT, DEFAULT_ARENA_WIDTH, MAX_BRICK_COLS, MAX_COORD,
 };
 use game_clock::{new_clock, GameClockConfig, DEFAULT_60HZ_DT_NS};
 
@@ -337,9 +337,9 @@ fn test_level_clear_progression() {
 
     // Deactivate all bricks except 1 in row 7 col 0
     let last_brick_idx = 7 * MAX_BRICK_COLS;
-    for idx in 0..MAX_BRICKS {
+    for (idx, brick) in state.bricks.iter_mut().enumerate() {
         if idx != last_brick_idx {
-            state.bricks[idx].hits_remaining = 0;
+            brick.hits_remaining = 0;
         }
     }
     state.active_bricks = 1;
