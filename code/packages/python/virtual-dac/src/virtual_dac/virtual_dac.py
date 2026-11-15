@@ -8,14 +8,29 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from math import floor, isfinite
-from numbers import Real
+from numbers import Integral, Real
 
-from pcm_audio import PCM16_MAX, PCM16_MIN, PCMBuffer, PCMFormat
+from pcm_audio import (
+    MAX_DURATION_SECONDS,
+    MAX_SAMPLE_RATE_HZ,
+    MAX_SAMPLES,
+    PCM16_MAX,
+    PCM16_MIN,
+    PCMBuffer,
+    PCMFormat,
+)
+
+__all__ = [
+    "MAX_DURATION_SECONDS",
+    "MAX_SAMPLES",
+    "MAX_SAMPLE_RATE_HZ",
+    "ZeroOrderHoldDACSignal",
+    "pcm16_to_voltage",
+]
 
 
 def _finite_float(name: str, value: Real) -> float:
     """Convert a finite real value to ``float`` and reject slippery inputs."""
-
     if isinstance(value, bool) or not isinstance(value, Real):
         raise ValueError(f"{name} must be a finite real number, got {value!r}")
 
@@ -28,12 +43,22 @@ def _finite_float(name: str, value: Real) -> float:
 
 def pcm16_to_voltage(sample: int, pcm_format: PCMFormat | None = None) -> float:
     """Map a signed 16-bit PCM integer to virtual DAC voltage."""
+    if isinstance(sample, bool) or not isinstance(sample, Integral):
+        raise ValueError(f"sample must be a PCM integer, got {sample!r}")
+
+    s = int(sample)
+    if s < PCM16_MIN or s > PCM16_MAX:
+        raise ValueError(
+            f"sample {s} must fit signed 16-bit PCM [{PCM16_MIN}, {PCM16_MAX}]"
+        )
 
     active_format = pcm_format if pcm_format is not None else PCMFormat()
-    checked = PCMBuffer((sample,), active_format).samples[0]
-    if checked >= 0:
-        return checked / PCM16_MAX * active_format.full_scale_voltage
-    return checked / abs(PCM16_MIN) * active_format.full_scale_voltage
+    if not isinstance(active_format, PCMFormat):
+        raise ValueError("pcm_format must be a PCMFormat")
+
+    if s >= 0:
+        return s / PCM16_MAX * active_format.full_scale_voltage
+    return s / abs(PCM16_MIN) * active_format.full_scale_voltage
 
 
 @dataclass(frozen=True)
@@ -45,19 +70,28 @@ class ZeroOrderHoldDACSignal:
     def __post_init__(self) -> None:
         if not isinstance(self.pcm_buffer, PCMBuffer):
             raise ValueError("pcm_buffer must be a PCMBuffer")
+        if self.pcm_buffer.sample_count() > MAX_SAMPLES:
+            raise ValueError(
+                f"pcm_buffer sample count {self.pcm_buffer.sample_count()} "
+                f"exceeds MAX_SAMPLES={MAX_SAMPLES}"
+            )
+        if self.pcm_buffer.pcm_format.sample_rate_hz > MAX_SAMPLE_RATE_HZ:
+            raise ValueError(
+                f"pcm_buffer sample rate {self.pcm_buffer.pcm_format.sample_rate_hz} "
+                f"exceeds MAX_SAMPLE_RATE_HZ={MAX_SAMPLE_RATE_HZ}"
+            )
 
     def value_at(self, time_seconds: Real) -> float:
         """Return the held DAC voltage at ``time_seconds``."""
-
         time = _finite_float("time_seconds", time_seconds)
         start = self.pcm_buffer.start_time_seconds
         end = start + self.pcm_buffer.duration_seconds()
-        if time < start or time >= end or self.pcm_buffer.sample_count() == 0:
+        count = self.pcm_buffer.sample_count()
+        if time < start or time >= end or count == 0:
             return 0.0
 
         index = int(floor((time - start) * self.pcm_buffer.pcm_format.sample_rate_hz))
-        if index < 0 or index >= self.pcm_buffer.sample_count():
-            return 0.0
+        index = min(max(index, 0), count - 1)
         return pcm16_to_voltage(
             self.pcm_buffer.samples[index],
             self.pcm_buffer.pcm_format,
