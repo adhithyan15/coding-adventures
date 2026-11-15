@@ -61,6 +61,8 @@ members = [
     "tcp-server",
     "radix-tree",
     "simulator-protocol",
+    "test-bootstrap",
+    "ca-capability-analyzer",
 ]
 
 [tool.uv.sources]
@@ -120,6 +122,8 @@ coding-adventures-tree-set-native = { workspace = true }
 coding-adventures-tcp-server = { workspace = true }
 coding-adventures-radix-tree = { workspace = true }
 coding-adventures-simulator-protocol = { workspace = true }
+coding-adventures-test-bootstrap = { workspace = true }
+coding-adventures-ca-capability-analyzer = { workspace = true }
 
 [dependency-groups]
 dev = [

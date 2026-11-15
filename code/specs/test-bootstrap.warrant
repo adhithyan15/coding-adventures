@@ -1,0 +1,31 @@
+-- VER00 / VER05 -- Test Bootstrap Foundation
+warrant test_bootstrap v1
+  error TestError = INVALID_ARGUMENT | BUDGET_EXCEEDED
+
+  op splitmix64_next(seed: U64) -> U64
+  op fnv1a64(data: Bytes) -> U64
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels splitmix64_next:
+    seed public
+  labels fnv1a64:
+    data public
+
+  example seed_zero_first_output:
+    splitmix64_next(0u64) == 16294208416658607535u64
+
+  example fnv1a64_empty:
+    fnv1a64(b"") == 14695981039346656037u64
+
+  example fnv1a64_letter_a:
+    fnv1a64(b"61") == 12638253115895997580u64
+
+  claim splitmix64_is_deterministic:
+    forall s: U64. splitmix64_next(s) == splitmix64_next(s)
+
+  claim fnv1a64_is_deterministic:
+    forall d: Bytes. fnv1a64(d) == fnv1a64(d)
