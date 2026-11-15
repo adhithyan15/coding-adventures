@@ -9,7 +9,7 @@
       "description": "Memory is accessed through a pointer or reference after the allocated memory has been deallocated.",
       "applies_to": ["c", "cpp", "rust_unsafe", "ffi"],
       "safe_subsets": ["safe_rust", "go_race_free", "gc_runtimes"],
-      "exclusion_rationale": "The language enforces strict compile-time ownership, lifetimes, and borrow semantics with no manual deallocation. The static analyzer verifies zero unsafe blocks and zero FFI reachability.",
+      "exclusion_rationale": "The language enforces strict compile-time ownership, lifetimes, and borrow semantics with no manual deallocation in safe Rust, race-free Go, or garbage-collected runtimes strictly free of FFI and unsafe operations. The static analyzer verifies zero unsafe blocks and zero FFI reachability.",
       "attack_patterns": [
         "Free followed by read access",
         "Free followed by write access",
@@ -26,7 +26,7 @@
       "description": "The software writes data past the end, or before the beginning, of the intended buffer.",
       "applies_to": ["c", "cpp", "rust_unsafe", "ffi"],
       "safe_subsets": ["safe_rust", "go_race_free", "gc_runtimes"],
-      "exclusion_rationale": "The compiler instruments all slice and index writes with bounds checks, or proves bounds preservation via type invariants. The static analyzer verifies zero unsafe blocks.",
+      "exclusion_rationale": "The compiler instruments all slice and index writes with bounds checks, or managed runtime enforces automatic bounds checks without FFI or unsafe operations. The static analyzer verifies zero unsafe blocks.",
       "attack_patterns": [
         "Off-by-one buffer index write",
         "Negative buffer index indexing",
@@ -42,7 +42,7 @@
       "description": "The software reads data past the end, or before the beginning, of the intended buffer.",
       "applies_to": ["c", "cpp", "rust_unsafe", "ffi"],
       "safe_subsets": ["safe_rust", "go_race_free", "gc_runtimes"],
-      "exclusion_rationale": "The compiler instruments all slice and index reads with bounds checks or panics on divergence. The static analyzer verifies zero unsafe blocks.",
+      "exclusion_rationale": "The compiler instruments all slice and index reads with bounds checks or panics on divergence, or managed runtime enforces automatic bounds checks without FFI or unsafe operations. The static analyzer verifies zero unsafe blocks.",
       "attack_patterns": [
         "Over-read of trailing buffer bytes",
         "Negative indexing into array or slice",
@@ -58,7 +58,7 @@
       "description": "The software calls free() on a resource that has already been deallocated.",
       "applies_to": ["c", "cpp", "rust_unsafe", "ffi"],
       "safe_subsets": ["safe_rust", "go_race_free", "gc_runtimes"],
-      "exclusion_rationale": "Single ownership semantics guarantees exactly one drop execution per heap resource. The static analyzer verifies zero unsafe blocks.",
+      "exclusion_rationale": "Single ownership semantics guarantees exactly one drop execution per heap resource, or automatic garbage collection prevents manual memory deallocation in FFI-free and unsafe-free managed code. The static analyzer verifies zero unsafe blocks.",
       "attack_patterns": [
         "Duplicate free in error handling recovery branch",
         "Aliased pointer double release"
@@ -72,8 +72,8 @@
       "family": "memory_safety",
       "description": "A NULL pointer is dereferenced, leading to segmentation fault or abnormal process termination.",
       "applies_to": ["c", "cpp", "rust_unsafe", "ffi"],
-      "safe_subsets": ["safe_rust"],
-      "exclusion_rationale": "The type system enforces non-nullable references (&T, &mut T) and mandates explicit handling of Option<T>. The static analyzer verifies zero unsafe pointer dereferences.",
+      "safe_subsets": ["safe_rust", "go_race_free", "gc_runtimes"],
+      "exclusion_rationale": "The type system enforces non-nullable references (&T, &mut T) and mandates explicit handling of Option<T>, or managed runtime memory safety prevents raw pointer dereference in FFI-free code. The static analyzer verifies zero unsafe pointer dereferences.",
       "attack_patterns": [
         "Unchecked dereference of lookup or allocation return",
         "Missing sentinel node check in linked structures"
@@ -88,7 +88,7 @@
       "description": "Integer arithmetic calculation of buffer size or offset wraps around, producing an undersized allocation or out-of-bounds pointer calculation.",
       "applies_to": ["c", "cpp", "rust_unsafe", "ffi"],
       "safe_subsets": ["safe_rust", "go_race_free", "gc_runtimes"],
-      "exclusion_rationale": "Language checks arithmetic overflow in debug mode and slices panic on out-of-range indexing. The static analyzer verifies all length calculations are checked or saturated.",
+      "exclusion_rationale": "Language checks arithmetic overflow in debug mode and slices panic on out-of-range indexing, or managed runtime enforces checked/bounded arithmetic and buffer bounds checking without FFI or unsafe operations. The static analyzer verifies all length calculations are checked or saturated.",
       "attack_patterns": [
         "Multiplication overflow in element count times size",
         "Addition overflow in offset plus length calculation"
@@ -284,8 +284,8 @@
       "family": "cryptography",
       "description": "Differences in execution time, memory access patterns, or microarchitectural state vary with secret data, allowing secret extraction via timing side channels.",
       "applies_to": ["cryptography", "constant_time_comparison", "secret_handling"],
-      "safe_subsets": [],
-      "exclusion_rationale": null,
+      "safe_subsets": ["no_secret_inputs"],
+      "exclusion_rationale": "Package performs no cryptographic operations or secret comparisons; all operands and execution paths process public, non-sensitive data.",
       "attack_patterns": [
         "Early return on byte mismatch in secret comparison",
         "Secret-dependent memory indexing causing cache line hits/misses",

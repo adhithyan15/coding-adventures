@@ -113,6 +113,31 @@ pub fn verify_assurance_report(
                     row.cwe
                 )));
             }
+            // For CWE-208, exclusion under `no_secret_inputs` is only valid for packages
+            // with no constant-time obligations or claims.
+            if row.cwe == 208 {
+                let has_ct_claims = report.claims.iter().any(|c| {
+                    c.id.starts_with("claim/ct_")
+                        || c.id.contains("constant-time")
+                        || c.id.contains("constant_time")
+                        || c.id.contains("secret")
+                        || c.evidence.iter().any(|e| {
+                            e.contains("constant-time") || e.contains("constant_time") || e.contains("secret")
+                        })
+                });
+                if has_ct_claims {
+                    return Err(CheckError::InvalidExclusion(
+                        "CWE-208 cannot be excluded for a package with constant-time claims; secret inputs exist".into(),
+                    ));
+                }
+                let has_audit = row.evidence.iter().any(|e| e == "capability-audit::no-secret-inputs");
+                let has_public = row.evidence.iter().any(|e| e == "warrant-spec::all-operands-public");
+                if !has_audit || !has_public {
+                    return Err(CheckError::InvalidExclusion(
+                        "CWE-208 cannot be excluded: exclusion requires both 'capability-audit::no-secret-inputs' and 'warrant-spec::all-operands-public' in evidence".into(),
+                    ));
+                }
+            }
         }
 
         // 4. Discharged rows validity
