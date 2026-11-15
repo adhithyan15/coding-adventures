@@ -453,7 +453,8 @@ console.log(prose, nested);
         # +1: test-matchers, the VER01 zero-dependency Level 1 matchers and assertions package.
         # +1: hamurabi, the GAME01 isolated standalone simulation package.
         # +1: ca-capability-analyzer, the TS static capability & VER15 CWE analyzer package.
-        self.assertEqual(summary.total_projects, 501)
+        # +4: dsp-complex, dsp-fft, dsp-dct, dsp-filters (DSP-W4-D1 standalone packages).
+        self.assertEqual(summary.total_projects, 505)
         self.assertEqual(summary.shared_projects, 308)
         self.assertEqual(summary.inherited_root_dir, 135)
         self.assertEqual(summary.inherited_out_dir, 138)
@@ -462,8 +463,9 @@ console.log(prose, nested);
         # forme-authoring-shell are isolated standalone emitters, adding five
         # to both standalone inventories; hamurabi adds one more.
         # +1: ca-capability-analyzer is an isolated standalone emitter.
-        self.assertEqual(summary.standalone_emit_projects, 162)
-        self.assertEqual(summary.isolated_standalone_projects, 162)
+        # +4: dsp-complex, dsp-fft, dsp-dct, dsp-filters are isolated standalone emitters.
+        self.assertEqual(summary.standalone_emit_projects, 166)
+        self.assertEqual(summary.isolated_standalone_projects, 166)
         self.assertEqual(summary.unbounded_root_projects, 0)
         self.assertEqual(summary.outside_root_inputs, 0)
         # 94: +1 for script-ductus. Nothing the package SHIPS touches a Node
@@ -614,7 +616,8 @@ console.log(prose, nested);
         # rpc, starlark-vm, tree-set, twig-vscode, hash-breaker and parrot.
         # +1: hamurabi locks its standalone compiler and test toolchain.
         # +1: ca-capability-analyzer locks its standalone compiler.
-        self.assertEqual(summary.locked_compilers, 514)
+        # +4: dsp-complex, dsp-fft, dsp-dct, dsp-filters lock their standalone compiler.
+        self.assertEqual(summary.locked_compilers, 518)
 
 
 if __name__ == "__main__":
