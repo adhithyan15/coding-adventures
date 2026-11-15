@@ -179,7 +179,9 @@ defmodule CodingAdventures.LunarLander do
     defp parse_status_value(:in_flight), do: {:ok, :in_flight}
 
     defp parse_status_value({:landed, outcome})
-         when outcome in [:perfect, :hard, :crash, :fatal, :crater], do: {:ok, {:landed, outcome}}
+         when outcome in [:perfect, :hard, :crash, :fatal, :crater] do
+      {:ok, {:landed, outcome}}
+    end
 
     defp parse_status_value(str) when is_binary(str) do
       case CodingAdventures.LunarLander.status_from_string(str) do
