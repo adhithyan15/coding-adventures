@@ -262,8 +262,8 @@ pub fn from_wav_bytes(bytes: &[u8]) -> Result<PcmAudio, PcmError> {
             if audio_format == FORMAT_PCM {
                 // 16-bit signed PCM
                 let mut samples = Vec::with_capacity(sample_count);
-                for chunk in data_bytes.chunks_exact(2) {
-                    let s = i16::from_le_bytes([chunk[0], chunk[1]]);
+                for chunk in data_bytes.as_chunks::<2>().0 {
+                    let s = i16::from_le_bytes(*chunk);
                     samples.push(s);
                 }
                 return PcmAudio::from_i16(samples, format, 0.0);
@@ -271,8 +271,8 @@ pub fn from_wav_bytes(bytes: &[u8]) -> Result<PcmAudio, PcmError> {
                 // 32-bit IEEE float PCM -> quantize to 16-bit PCM
                 let mut samples = Vec::with_capacity(sample_count);
                 let mut clipped_count = 0;
-                for chunk in data_bytes.chunks_exact(4) {
-                    let float_val = f32::from_le_bytes([chunk[0], chunk[1], chunk[2], chunk[3]]);
+                for chunk in data_bytes.as_chunks::<4>().0 {
+                    let float_val = f32::from_le_bytes(*chunk);
                     let (pcm, clipped) = safe_round_sample_f32(float_val)?;
                     samples.push(pcm);
                     if clipped {
