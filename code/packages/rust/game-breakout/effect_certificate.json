@@ -1,7 +1,7 @@
 {
   "schema_version": "ver24-effect-cert-v1",
   "package": "rust/game-breakout",
-  "source_digest": "e80930750906dd3c321c4fe772b293171657deb62773fc1532b5fe24605deb7f",
+  "source_digest": "306d896dc6214b2b11e97ee60e66c41087474df8807aebc67e28f0f273dfa114",
   "manifest_digest": "0c06b32103a037a51ee8cbcccf63918b36396b2ef3353317f32602979486db13",
   "declared_effects": [],
   "entry_points": [

@@ -639,9 +639,7 @@ impl BreakoutState {
         }
 
         // Fill remaining unused slots with inactive bricks
-        for idx in count..MAX_BRICKS {
-            self.bricks[idx] = BrickSlot::new_brick(0, 0, 0, 0, [0, 0, 0]);
-        }
+        self.bricks[count..].fill(BrickSlot::new_brick(0, 0, 0, 0, [0, 0, 0]));
 
         self.active_bricks = count;
     }
