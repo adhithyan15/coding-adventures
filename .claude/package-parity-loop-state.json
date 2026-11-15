@@ -10164,12 +10164,14 @@
     {
       "id": "canonical-cbor-swift-lane-parity",
       "title": "Port canonical CBOR to Swift",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "canonical-cbor-language-neutral-conformance"
       ],
       "branch": "feat/canonical-cbor-swift-lane-parity",
       "pr_number": 19409,
+      "merged_at": "2026-11-15T01:32:28Z",
+      "merge_commit": "30058d4cbeb",
       "notes": "Implement the closed canonical-CBOR contract in Swift and consume every language-neutral case."
     },
     {
@@ -11743,13 +11745,13 @@
     {
       "id": "image-codec-png-ruby-lane-parity",
       "title": "Port IC18 image-codec-png to Ruby",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": [
         "image-codec-png-language-neutral-conformance",
         "image-codec-png-apng-neutral-rejection-conformance"
       ],
-      "branch": null,
-      "pr_number": null,
+      "branch": "feat/image-codec-png-ruby-lane-parity",
+      "pr_number": 19410,
       "notes": "Standalone Ruby child consuming the neutral PNG corpus and established ZIP raw/CRC surface with empty production capabilities."
     },
     {
