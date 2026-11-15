@@ -1,0 +1,2 @@
+REM prereqs: ../pixel-container ../zip ../lzss
+powershell -NoProfile -ExecutionPolicy Bypass -File ..\..\..\scripts\run-perl-tests-windows.ps1 -Deps pixel-container,zip,lzss

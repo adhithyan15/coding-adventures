@@ -11711,12 +11711,12 @@
     {
       "id": "image-codec-png-perl-lane-parity",
       "title": "Port IC18 image-codec-png to Perl",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": [
         "image-codec-png-language-neutral-conformance",
         "image-codec-png-apng-neutral-rejection-conformance"
       ],
-      "branch": null,
+      "branch": "feat/image-codec-png-perl-lane-parity",
       "pr_number": null,
       "notes": "Standalone Perl child consuming the neutral PNG corpus and established ZIP raw/CRC surface with empty production capabilities."
     },
@@ -11745,13 +11745,16 @@
     {
       "id": "image-codec-png-ruby-lane-parity",
       "title": "Port IC18 image-codec-png to Ruby",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "image-codec-png-language-neutral-conformance",
         "image-codec-png-apng-neutral-rejection-conformance"
       ],
       "branch": "feat/image-codec-png-ruby-lane-parity",
       "pr_number": 19410,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19410",
+      "merged_at": "2026-11-15T02:12:22Z",
+      "merge_commit": "922613efa9fce5dac671e68763aecb15952e0559",
       "notes": "Standalone Ruby child consuming the neutral PNG corpus and established ZIP raw/CRC surface with empty production capabilities."
     },
     {

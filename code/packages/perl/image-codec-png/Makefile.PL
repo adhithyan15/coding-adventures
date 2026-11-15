@@ -1,0 +1,31 @@
+use strict;
+use warnings;
+use ExtUtils::MakeMaker;
+
+WriteMakefile(
+    NAME             => 'CodingAdventures::ImageCodecPNG',
+    VERSION_FROM     => 'lib/CodingAdventures/ImageCodecPNG.pm',
+    ABSTRACT         => 'Bounded IC18 PNG codec reusing repository ZIP DEFLATE/CRC-32 and pixel container',
+    AUTHOR           => 'coding-adventures',
+    LICENSE          => 'mit',
+    MIN_PERL_VERSION => '5.026000',
+    PREREQ_PM        => {
+        'CodingAdventures::PixelContainer' => 0,
+        'CodingAdventures::Zip'            => 0,
+    },
+    TEST_REQUIRES    => {
+        'Test2::V0'           => 0,
+        'JSON::PP'            => 0,
+        'Compress::Raw::Zlib' => 0,
+    },
+    META_MERGE       => {
+        'meta-spec' => { version => 2 },
+        resources   => {
+            repository => {
+                type => 'git',
+                url  => 'https://github.com/adhithyan15/coding-adventures.git',
+                web  => 'https://github.com/adhithyan15/coding-adventures',
+            },
+        },
+    },
+);
