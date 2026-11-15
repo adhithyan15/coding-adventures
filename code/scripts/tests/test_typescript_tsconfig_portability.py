@@ -608,7 +608,8 @@ console.log(prose, nested);
         # +13: the dependency-pinning work committed locks for affine2d,
         # arc2d, bezier2d, deflate, matrix-rust-napi, point2d, progress-bar,
         # rpc, starlark-vm, tree-set, twig-vscode, hash-breaker and parrot.
-        self.assertEqual(summary.locked_compilers, 512)
+        # +1: hamurabi locks its standalone compiler and test toolchain.
+        self.assertEqual(summary.locked_compilers, 513)
 
 
 if __name__ == "__main__":
