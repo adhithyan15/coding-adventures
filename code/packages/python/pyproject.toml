@@ -67,6 +67,9 @@ members = [
     "dsp-fft",
     "dsp-dct",
     "dsp-filters",
+    "dsp-conv",
+    "dsp-stft",
+    "dsp-wavelets",
 ]
 
 [tool.uv.sources]
@@ -132,6 +135,9 @@ coding-adventures-dsp-complex = { workspace = true }
 coding-adventures-dsp-fft = { workspace = true }
 coding-adventures-dsp-dct = { workspace = true }
 coding-adventures-dsp-filters = { workspace = true }
+coding-adventures-dsp-conv = { workspace = true }
+coding-adventures-dsp-stft = { workspace = true }
+coding-adventures-dsp-wavelets = { workspace = true }
 
 [dependency-groups]
 dev = [
