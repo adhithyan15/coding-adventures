@@ -15225,12 +15225,12 @@
     {
       "id": "sha512-java-kotlin-dart-lane-parity",
       "title": "Complete SHA-512 parity in Java, Kotlin, and Dart",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": [
         "sha512-existing-lane-hf04-conformance-audit"
       ],
-      "branch": null,
-      "pr_number": null,
+      "branch": "feat/sha512-java-kotlin-dart-lane-parity",
+      "pr_number": 19420,
       "notes": "Port the reviewed HF04 SHA-512 core into the three missing established lanes. Use unsigned-safe word operations, Dart BigInt only where needed to preserve exact length arithmetic across VM and web targets, deterministic vectors, empty capability manifests, and no host-crypto substitution.",
       "postmerge_preparation_evidence": [
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/sha512-java-kotlin-dart-lane-parity"
