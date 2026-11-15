@@ -11612,26 +11612,29 @@
     {
       "id": "elixir-zip-png-scale-raw-codec-hardening",
       "title": "Bound Elixir ZIP raw-codec memory and work before PNG-scale use",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "zip-raw-rfc1951-elixir-lane-parity"
       ],
       "branch": "feat/elixir-zip-png-scale-raw-codec-hardening",
       "pr_number": 19414,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19414",
+      "merged_at": "2026-11-15T06:51:49Z",
+      "merge_commit": "1a462b8bfc79c501dd1d748f19f595027108946e",
       "notes": "The post-#16909 read-only audit found raw deflate boxing the full input and rebuilding an array at each cursor, while counted inflate retains every output byte in an array. Before IC18 PNG's 134 MiB maximum RGBA surface, establish byte-backed bounded encode/decode behavior, stable counted/error semantics, foreign round trips, and measured ceiling tests while preserving all 34 RFC1951 fixtures. Exact and punctuation-insensitive owner-ID and live PR path checks found no collision."
     },
     {
       "id": "image-codec-png-elixir-lane-parity",
       "title": "Port IC18 image-codec-png to Elixir",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": [
         "image-codec-png-language-neutral-conformance",
         "image-codec-png-apng-neutral-rejection-conformance",
         "elixir-zip-png-scale-raw-codec-hardening"
       ],
-      "branch": null,
-      "pr_number": null,
+      "branch": "feat/image-codec-png-elixir-lane-parity",
+      "pr_number": 19423,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19423",
       "notes": "Standalone Elixir child consuming the neutral PNG corpus and established ZIP raw/CRC surface with empty production capabilities, after bounded PNG-scale Elixir ZIP raw-codec hardening."
     },
     {
