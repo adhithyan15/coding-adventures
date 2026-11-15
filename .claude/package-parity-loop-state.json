@@ -11626,7 +11626,7 @@
     {
       "id": "image-codec-png-elixir-lane-parity",
       "title": "Port IC18 image-codec-png to Elixir",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "image-codec-png-language-neutral-conformance",
         "image-codec-png-apng-neutral-rejection-conformance",
@@ -11635,6 +11635,8 @@
       "branch": "feat/image-codec-png-elixir-lane-parity",
       "pr_number": 19423,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19423",
+      "merged_at": "2026-11-15T07:40:30Z",
+      "merge_commit": "2b900ff281ade8f83e4fd81257fc6ad02d3b2029",
       "notes": "Standalone Elixir child consuming the neutral PNG corpus and established ZIP raw/CRC surface with empty production capabilities, after bounded PNG-scale Elixir ZIP raw-codec hardening."
     },
     {
@@ -15228,12 +15230,15 @@
     {
       "id": "sha512-java-kotlin-dart-lane-parity",
       "title": "Complete SHA-512 parity in Java, Kotlin, and Dart",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "sha512-existing-lane-hf04-conformance-audit"
       ],
       "branch": "feat/sha512-java-kotlin-dart-lane-parity",
       "pr_number": 19420,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19420",
+      "merged_at": "2026-11-15T07:33:43Z",
+      "merge_commit": "45c331ff862dbff63543e0e34bceff4e2be94e0e",
       "notes": "Port the reviewed HF04 SHA-512 core into the three missing established lanes. Use unsigned-safe word operations, Dart BigInt only where needed to preserve exact length arithmetic across VM and web targets, deterministic vectors, empty capability manifests, and no host-crypto substitution.",
       "postmerge_preparation_evidence": [
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/sha512-java-kotlin-dart-lane-parity"
@@ -16036,14 +16041,15 @@
     {
       "id": "itf-java-kotlin-dart-lane-parity",
       "title": "Complete ITF parity in Java, Kotlin, and Dart",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": [
         "barcode-symbologies-language-neutral-conformance",
         "itf-existing-lanes-v1-conformance",
         "barcode-layout-1d-java-kotlin-dart-lane-parity"
       ],
-      "branch": null,
-      "pr_number": null,
+      "branch": "feat/itf-java-kotlin-dart-lane-parity",
+      "pr_number": 19426,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19426",
       "notes": "Implement the neutral ITF encoder in all three missing lanes with strict nonempty even-length ASCII digits, exact patterns, checked bounds, stable payload-blind errors, and shared layout output."
     },
     {
