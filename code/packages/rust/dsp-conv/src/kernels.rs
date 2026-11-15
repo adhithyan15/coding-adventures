@@ -42,7 +42,8 @@ use std::f32::consts::PI;
 /// Panics if `size == 0`, `size` is even, or `sigma <= 0.0`.
 pub fn gaussian_blur_kernel(sigma: f32, size: u32) -> Vec<f32> {
     assert!(size > 0 && size % 2 == 1, "size must be odd and > 0; got {}", size);
-    assert!(sigma > 0.0, "sigma must be > 0; got {}", sigma);
+    assert!((size as usize) <= crate::MAX_KERNEL_LEN, "size {} exceeds MAX_KERNEL_LEN {}", size, crate::MAX_KERNEL_LEN);
+    assert!(sigma > 0.0 && sigma.is_finite(), "sigma must be positive and finite; got {}", sigma);
 
     let n = size as usize;
     let centre = (n - 1) as f32 / 2.0;
@@ -78,6 +79,7 @@ pub fn gaussian_blur_kernel(sigma: f32, size: u32) -> Vec<f32> {
 /// Panics if `size == 0`.
 pub fn box_blur_kernel(size: u32) -> Vec<f32> {
     assert!(size > 0, "size must be > 0");
+    assert!((size as usize) <= crate::MAX_KERNEL_LEN, "size {} exceeds MAX_KERNEL_LEN {}", size, crate::MAX_KERNEL_LEN);
     let n = size as usize;
     let v = 1.0 / (n as f32);
     vec![v; n]
@@ -149,6 +151,7 @@ pub fn laplacian_kernel() -> Vec<f32> {
 /// brightness of the image is preserved.  Common values are
 /// `amount ∈ [0.5, 2.0]`.
 pub fn sharpen_kernel(amount: f32) -> Vec<f32> {
+    assert!(amount.is_finite(), "amount must be finite; got {}", amount);
     let c = 1.0 + 4.0 * amount;
     vec![
         0.0, -amount, 0.0,

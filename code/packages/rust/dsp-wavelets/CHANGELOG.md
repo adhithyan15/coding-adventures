@@ -1,10 +1,18 @@
 # Changelog — dsp-wavelets
 
-## [Unreleased]
+## 0.5.0 — 2026-11-15
 
-### Added
-
-- Add required_capabilities.json (pure computation).
+### Security & Feature Hardening (DSP-W4-A2)
+- Added `#![forbid(unsafe_code)]` in `src/lib.rs`.
+- Enforced public constants: `MAX_SAMPLES = 1 << 24` (16,777,216 samples = 64 MB of f32), `MAX_WAVELET_LEVELS = 31`, `MAX_SCALES = 1024`.
+- Implemented `WaveletBoundary::Zero`, `WaveletBoundary::Replicate`, and `WaveletBoundary::Reflect` boundary modes for 1-D DWT.
+- Implemented Phase 5 Continuous Wavelet Transform `cwt(signal, scales, wavelet)` for `WaveletType::Morlet` and `WaveletType::MexicanHat` with strictly iterative execution (no recursion, CWE-674).
+- Hardened `dwt_1d`, `idwt_1d`, `dwt_2d`, `idwt_2d`, and `cwt` against CWE-400 (uncontrolled resource consumption / unbounded memory allocations), CWE-190 (integer overflow / wraparound), and CWE-20 (NaN/Inf float inputs):
+  - Validated all input slices are non-empty and bounded before allocating output buffers.
+  - Enforced finite floats (`x.is_finite()`) before any allocation.
+  - Added overflow-checked multiplications (`checked_mul`) for image dimension and scaleogram buffer sizing calculations.
+- Added comprehensive hostile-input rejection tests and SplitMix64 property-based testing.
+- Created formal warrant contract (`dsp-wavelets.warrant`).
 
 ## 0.4.0 — 2026-05-17
 

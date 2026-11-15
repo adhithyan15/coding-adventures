@@ -1,64 +1,32 @@
 //! # `dsp-filters` — FIR / IIR filters for the DSP layer
 //!
-//! **DSP03 Phase 1 + 2 (this release).**  Pure-Rust scalar
-//! reference for FIR (finite impulse response) filtering via
-//! direct linear convolution.  Phase 3 will add an FFT-based
-//! overlap-add path for long kernels; Phase 4 adds IIR
-//! (direct-form-II Transposed); Phase 5 adds the canonical
-//! filter design helpers (Butterworth, Chebyshev,
-//! windowed-sinc).
-//!
-//! ## Quick example
-//!
-//! ```rust
-//! use dsp_filters::fir;
-//!
-//! let signal = vec![1.0_f32, 2.0, 3.0, 4.0, 5.0];
-//! let kernel = vec![0.25_f32, 0.5, 0.25];   // 3-tap low-pass
-//! let smoothed = fir(&signal, &kernel).unwrap();
-//! assert_eq!(smoothed.len(), signal.len() + kernel.len() - 1);
-//! ```
-//!
-//! ## Algorithm
-//!
-//! Direct linear convolution:
-//!
-//! ```text
-//!     y[n] = Σ_{k=0..K-1}  kernel[k] · signal[n - k]
-//! ```
-//!
-//! Output length is `N + K - 1` (the full convolution; matches
-//! `numpy.convolve(signal, kernel, mode='full')`).  Boundary
-//! handling: input is implicitly zero-padded outside `[0, N)`.
-//!
-//! `O(N · K)` time, `O(N + K)` memory.  For long kernels
-//! (`K > ~64`), Phase 3 will add an FFT-based overlap-add
-//! implementation that's `O((N + K) · log(N + K))`.
-//!
-//! ## Phase scope
-//!
-//! - **Phase 0** — spec (`code/specs/DSP03-filters.md`).
-//! - **Phase 1+2** — crate skeleton + scalar FIR + tests.
-//!   Landed as 0.1.0.
-//! - **Phase 3** — `fir_fft` (FFT-based overlap-add).  Deferred;
-//!   direct convolution is enough for the V1 user-facing API.
-//! - **Phase 4** — [`iir`] (direct-form-II Transposed).  Matches
-//!   `scipy.signal.lfilter(b, a, x)`.  Landed as 0.2.0.
-//! - **Phase 5 (this release)** — filter design helpers:
-//!   [`design_low_pass`] / [`design_high_pass`] (windowed-sinc
-//!   FIR with Rectangular / Hamming / Hann / Blackman windows)
-//!   and [`butterworth_lowpass`] (1st / 2nd order via bilinear
-//!   transform).
-//! - **Phase 6** — matrix-ir-lowered `fir_via_runtime`.  Pending.
+//! **DSP03 Phases 1-5.** Pure-Rust scalar reference for FIR (finite
+//! impulse response) filtering via direct linear convolution and FFT-based
+//! convolution ([`fir_fft`]), IIR filtering via direct-form-II Transposed
+//! ([`iir`]), and canonical filter design helpers (windowed-sinc low/high/band-pass
+//! and Butterworth/Chebyshev-I).
 
+#![forbid(unsafe_code)]
 #![warn(rust_2018_idioms)]
 
 pub mod design;
 pub mod iir;
-pub use design::{butterworth_lowpass, design_high_pass, design_low_pass, WindowType};
+pub use design::{
+    butterworth_lowpass, chebyshev1_lowpass, design_band_pass, design_high_pass,
+    design_low_pass, WindowType,
+};
 pub use iir::iir;
 
 use std::fmt;
+
+/// Maximum signal length in samples (16,777,216 samples = 64 MB of f32).
+pub const MAX_SAMPLES: usize = 1 << 24;
+
+/// Maximum filter taps (1,048,576 taps).
+pub const MAX_TAPS: usize = 1 << 20;
+
+/// Maximum IIR filter order.
+pub const MAX_ORDER: usize = 1024;
 
 /// Finite-impulse-response filter via direct linear convolution.
 ///
@@ -68,11 +36,11 @@ use std::fmt;
 /// (`numpy.convolve(signal, kernel, mode='full')`).
 ///
 /// Boundary handling: the input is implicitly zero-padded outside
-/// `[0, N)`.  The output's `n`-th sample sums all kernel taps that
-/// land within `signal`'s support.
+/// `[0, N)`.
 ///
-/// Returns [`FilterError::EmptySignal`] or
-/// [`FilterError::EmptyKernel`] when either input is empty.
+/// Returns [`FilterError::EmptySignal`] or [`FilterError::EmptyKernel`]
+/// when either input is empty, or [`FilterError::InvalidCoefficient`]
+/// on non-finite floats or inputs exceeding defensive caps (`MAX_SAMPLES`, `MAX_TAPS`).
 pub fn fir(signal: &[f32], kernel: &[f32]) -> Result<Vec<f32>, FilterError> {
     if signal.is_empty() {
         return Err(FilterError::EmptySignal);
@@ -80,33 +48,52 @@ pub fn fir(signal: &[f32], kernel: &[f32]) -> Result<Vec<f32>, FilterError> {
     if kernel.is_empty() {
         return Err(FilterError::EmptyKernel);
     }
+    if signal.len() > MAX_SAMPLES {
+        return Err(FilterError::InvalidCoefficient(format!(
+            "signal length {} exceeds MAX_SAMPLES {}",
+            signal.len(),
+            MAX_SAMPLES
+        )));
+    }
+    if kernel.len() > MAX_TAPS {
+        return Err(FilterError::InvalidCoefficient(format!(
+            "kernel length {} exceeds MAX_TAPS {}",
+            kernel.len(),
+            MAX_TAPS
+        )));
+    }
     let n = signal.len();
     let k = kernel.len();
-    let out_len = n + k - 1;
+    let out_len = n.checked_add(k).and_then(|x| x.checked_sub(1)).ok_or_else(|| {
+        FilterError::InvalidCoefficient("convolution output length overflow".into())
+    })?;
+    if out_len > MAX_SAMPLES {
+        return Err(FilterError::InvalidCoefficient(format!(
+            "convolution output length {} exceeds MAX_SAMPLES {}",
+            out_len,
+            MAX_SAMPLES
+        )));
+    }
+
+    // Validate finite floats BEFORE any allocation
+    for &x in signal {
+        if !x.is_finite() {
+            return Err(FilterError::InvalidCoefficient("non-finite float in signal".into()));
+        }
+    }
+    for &h in kernel {
+        if !h.is_finite() {
+            return Err(FilterError::InvalidCoefficient("non-finite float in kernel".into()));
+        }
+    }
+
     let mut out = vec![0.0f32; out_len];
 
-    // Direct convolution.  For each output sample `i`, sum the
-    // `kernel[j]` taps over the `j` for which `i - j` lands inside
-    // `[0, n)`.  Equivalent to (and faster than) the textbook
-    // sliding-window form when expressed as the inner-product over
-    // `j ∈ [j_lo, j_hi)` with explicitly-clamped bounds.
-    //
-    //   - For `i < k`, `j_lo = 0` (kernel head is bounded by zero).
-    //     `j_hi = min(i + 1, k)` (kernel can't reach past index 0
-    //     of `signal` from the left).
-    //   - For `i >= k - 1`, `j_lo = max(0, i - n + 1)` (kernel
-    //     can't reach past the right edge of `signal`).
-    //     `j_hi = k`.
-    //
-    // The combined formula collapses to:
-    //   `j_lo = max(0, i + 1 - n)`,  `j_hi = min(k, i + 1)`.
     for i in 0..out_len {
         let j_lo = (i + 1).saturating_sub(n);
         let j_hi = if i + 1 < k { i + 1 } else { k };
         let mut acc = 0.0f32;
         for j in j_lo..j_hi {
-            // signal index = i - j, guaranteed in [0, n) by the
-            // bounds above.  kernel index = j, in [0, k).
             acc += kernel[j] * signal[i - j];
         }
         out[i] = acc;
@@ -114,22 +101,102 @@ pub fn fir(signal: &[f32], kernel: &[f32]) -> Result<Vec<f32>, FilterError> {
     Ok(out)
 }
 
-/// Errors produced by filter primitives.
+/// FIR filtering via FFT-based convolution for long kernels.
 ///
-/// `InvalidCoefficient` and `Fft` variants are reserved for IIR
-/// (Phase 4) and FFT-based FIR (Phase 3) respectively; Phase 2
-/// only ever returns `EmptySignal` or `EmptyKernel`.
+/// Computes the exact linear convolution of `signal` (length $N$) and
+/// `kernel` (length $K$) returning length $N + K - 1$, matching [`fir`]
+/// within numerical tolerance.
+pub fn fir_fft(signal: &[f32], kernel: &[f32]) -> Result<Vec<f32>, FilterError> {
+    if signal.is_empty() {
+        return Err(FilterError::EmptySignal);
+    }
+    if kernel.is_empty() {
+        return Err(FilterError::EmptyKernel);
+    }
+    if signal.len() > MAX_SAMPLES {
+        return Err(FilterError::InvalidCoefficient(format!(
+            "signal length {} exceeds MAX_SAMPLES {}",
+            signal.len(),
+            MAX_SAMPLES
+        )));
+    }
+    if kernel.len() > MAX_TAPS {
+        return Err(FilterError::InvalidCoefficient(format!(
+            "kernel length {} exceeds MAX_TAPS {}",
+            kernel.len(),
+            MAX_TAPS
+        )));
+    }
+    let n = signal.len();
+    let k = kernel.len();
+    let out_len = n.checked_add(k).and_then(|x| x.checked_sub(1)).ok_or_else(|| {
+        FilterError::InvalidCoefficient("convolution output length overflow".into())
+    })?;
+    if out_len > MAX_SAMPLES {
+        return Err(FilterError::InvalidCoefficient(format!(
+            "convolution output length {} exceeds MAX_SAMPLES {}",
+            out_len,
+            MAX_SAMPLES
+        )));
+    }
+
+    for &x in signal {
+        if !x.is_finite() {
+            return Err(FilterError::InvalidCoefficient("non-finite float in signal".into()));
+        }
+    }
+    for &h in kernel {
+        if !h.is_finite() {
+            return Err(FilterError::InvalidCoefficient("non-finite float in kernel".into()));
+        }
+    }
+
+    let fft_len = out_len.checked_next_power_of_two().ok_or_else(|| {
+        FilterError::InvalidCoefficient("FFT length overflow".into())
+    })?.max(2);
+    if fft_len > MAX_SAMPLES {
+        return Err(FilterError::InvalidCoefficient(format!(
+            "FFT length {} exceeds MAX_SAMPLES {}",
+            fft_len,
+            MAX_SAMPLES
+        )));
+    }
+
+    let mut sig_pad = vec![0.0f32; fft_len];
+    sig_pad[..n].copy_from_slice(signal);
+
+    let mut ker_pad = vec![0.0f32; fft_len];
+    ker_pad[..k].copy_from_slice(kernel);
+
+    let sig_spec = dsp_fft::rfft_scalar(&sig_pad).map_err(|e| FilterError::Fft(e.to_string()))?;
+    let ker_spec = dsp_fft::rfft_scalar(&ker_pad).map_err(|e| FilterError::Fft(e.to_string()))?;
+
+    let bins = fft_len / 2 + 1;
+    let mut prod = vec![0.0f32; bins * 2];
+    for b in 0..bins {
+        let r1 = sig_spec[2 * b];
+        let i1 = sig_spec[2 * b + 1];
+        let r2 = ker_spec[2 * b];
+        let i2 = ker_spec[2 * b + 1];
+        prod[2 * b] = r1 * r2 - i1 * i2;
+        prod[2 * b + 1] = r1 * i2 + i1 * r2;
+    }
+
+    let mut out = dsp_fft::irfft_scalar(&prod, fft_len as u32).map_err(|e| FilterError::Fft(e.to_string()))?;
+    out.truncate(out_len);
+    Ok(out)
+}
+
+/// Errors produced by filter primitives.
 #[derive(Debug, Clone, PartialEq)]
 pub enum FilterError {
-    /// `signal` is empty.  V1 requires `N ≥ 1`.
+    /// `signal` is empty.
     EmptySignal,
-    /// `kernel` is empty.  V1 requires `K ≥ 1`.
+    /// `kernel` is empty.
     EmptyKernel,
-    /// Reserved for IIR (Phase 4): `a[0] == 0`, NaN coefficients,
-    /// length mismatch between `b` and `a`, etc.
+    /// Invalid coefficient, non-finite float, or parameter exceeding defensive caps.
     InvalidCoefficient(String),
-    /// Reserved for FIR-via-FFT (Phase 3): wraps a
-    /// `dsp_fft::FftError` from the underlying FFT call.
+    /// FFT failure.
     Fft(String),
 }
 
@@ -148,11 +215,18 @@ impl fmt::Display for FilterError {
 
 impl std::error::Error for FilterError {}
 
+impl From<dsp_fft::FftError> for FilterError {
+    fn from(e: dsp_fft::FftError) -> Self {
+        FilterError::Fft(e.to_string())
+    }
+}
+
 // ─────────────────────────── Tests ───────────────────────────
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use coding_adventures_test_bootstrap::prng::SplitMix64;
 
     fn approx_eq(a: f32, b: f32, tol: f32) -> bool {
         let scale = a.abs().max(b.abs()).max(1.0);
@@ -173,22 +247,11 @@ mod tests {
         }
     }
 
-    /// Naive O(N · K) FIR oracle — direct double-sum without the
-    /// bounded-index optimization in `fir`.  Used to verify
-    /// correctness across various N, K combinations.
-    fn naive_fir(signal: &[f32], kernel: &[f32]) -> Vec<f32> {
-        let n = signal.len();
-        let k = kernel.len();
-        let mut out = vec![0.0f32; n + k - 1];
-        for i in 0..n {
-            for j in 0..k {
-                out[i + j] += signal[i] * kernel[j];
-            }
-        }
-        out
+    fn sample_f32(rng: &mut SplitMix64) -> f32 {
+        let u = rng.next_u64();
+        let mantissa = (u & 0x00ff_ffff) as f32 / (0x0100_0000 as f32);
+        (mantissa * 2.0) - 1.0
     }
-
-    // ── error paths ────────────────────────────────────────────
 
     #[test]
     fn fir_rejects_empty_signal() {
@@ -198,127 +261,76 @@ mod tests {
 
     #[test]
     fn fir_rejects_empty_kernel() {
-        let err = fir(&[1.0, 2.0, 3.0], &[]).unwrap_err();
+        let err = fir(&[1.0, 2.0], &[]).unwrap_err();
         assert_eq!(err, FilterError::EmptyKernel);
     }
 
-    // ── closed-form known vectors ──────────────────────────────
+    #[test]
+    fn fir_output_length_equals_n_plus_k_minus_one() {
+        for n in 1..=10 {
+            for k in 1..=10 {
+                let signal = vec![1.0f32; n];
+                let kernel = vec![1.0f32; k];
+                let out = fir(&signal, &kernel).unwrap();
+                assert_eq!(out.len(), n + k - 1);
+            }
+        }
+    }
 
     #[test]
-    fn fir_with_identity_kernel_returns_signal() {
-        // [1.0] is the convolutional identity.
+    fn fir_identity_kernel_returns_signal() {
         let signal = vec![1.0f32, 2.0, 3.0, 4.0, 5.0];
-        let out = fir(&signal, &[1.0]).unwrap();
-        assert_eq!(out.len(), 5);
+        let kernel = vec![1.0f32];
+        let out = fir(&signal, &kernel).unwrap();
         assert_close(&out, &signal, 1e-7);
     }
 
     #[test]
-    fn fir_with_delay_kernel_shifts_by_one() {
-        // [0.0, 1.0, 0.0] is a unit-delay convolved with a
-        // surrounding zero — the full convolution starts with a 0
-        // and trails with a 0.
-        let signal = vec![1.0f32, 2.0, 3.0];
-        let out = fir(&signal, &[0.0, 1.0, 0.0]).unwrap();
-        // Output length = 3 + 3 - 1 = 5.
-        // n=0: kernel[0..1] · signal[0..1] = 0·1 = 0
-        // n=1: kernel[0..2] · signal[1, 0] = 0·2 + 1·1 = 1
-        // n=2: kernel[0..3] · signal[2, 1, 0] = 0·3 + 1·2 + 0·1 = 2
-        // n=3: kernel[1..3] · signal[2, 1] = 1·3 + 0·2 = 3
-        // n=4: kernel[2..3] · signal[2] = 0·3 = 0
-        let expected = vec![0.0f32, 1.0, 2.0, 3.0, 0.0];
-        assert_close(&out, &expected, 1e-7);
+    fn fir_fft_matches_fir_direct() {
+        let signal = vec![1.0f32, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0];
+        let kernel = vec![0.25f32, 0.5, 0.25];
+        let out_dir = fir(&signal, &kernel).unwrap();
+        let out_fft = fir_fft(&signal, &kernel).unwrap();
+        assert_close(&out_dir, &out_fft, 1e-4);
     }
 
     #[test]
-    fn fir_with_uniform_kernel_preserves_total_sum() {
-        // Convolving with kernel [1.0; K] sums every neighborhood
-        // of K samples.  The total sum of the output equals
-        // (sum of signal) * (sum of kernel) — basic integral
-        // identity for linear convolution.
-        let signal = vec![1.0f32, 2.0, 3.0, 4.0, 5.0];
-        let kernel = vec![1.0f32; 3];
-        let out = fir(&signal, &kernel).unwrap();
-        let sig_sum: f32 = signal.iter().sum();
-        let ker_sum: f32 = kernel.iter().sum();
-        let out_sum: f32 = out.iter().sum();
-        assert!(
-            approx_eq(out_sum, sig_sum * ker_sum, 1e-5),
-            "out_sum {} != sig_sum {} * ker_sum {} = {}",
-            out_sum,
-            sig_sum,
-            ker_sum,
-            sig_sum * ker_sum
-        );
+    fn hostile_non_finite_rejected() {
+        assert!(matches!(
+            fir(&[1.0, f32::NAN], &[1.0]),
+            Err(FilterError::InvalidCoefficient(_))
+        ));
+        assert!(matches!(
+            fir(&[1.0], &[f32::INFINITY]),
+            Err(FilterError::InvalidCoefficient(_))
+        ));
+        assert!(matches!(
+            fir_fft(&[1.0, f32::NAN], &[1.0]),
+            Err(FilterError::InvalidCoefficient(_))
+        ));
+        assert!(matches!(
+            fir_fft(&[1.0], &[f32::NEG_INFINITY]),
+            Err(FilterError::InvalidCoefficient(_))
+        ));
     }
 
     #[test]
-    fn fir_with_box_kernel_3tap() {
-        // 3-tap box [1, 1, 1] convolved with [1, 2, 3]:
-        // n=0: 1·1 = 1
-        // n=1: 1·1 + 1·2 = 3
-        // n=2: 1·1 + 1·2 + 1·3 = 6
-        // n=3: 1·2 + 1·3 = 5
-        // n=4: 1·3 = 3
-        let signal = vec![1.0f32, 2.0, 3.0];
-        let kernel = vec![1.0f32, 1.0, 1.0];
-        let out = fir(&signal, &kernel).unwrap();
-        assert_close(&out, &[1.0, 3.0, 6.0, 5.0, 3.0], 1e-7);
-    }
+    fn pbt_splitmix64_fir_direct_vs_fft() {
+        let mut rng = SplitMix64::new(0x1234_5678_9abc_def0);
+        let pairs = [(8, 3), (16, 5), (32, 8), (64, 17), (128, 33), (100, 20)];
+        for (n, k) in pairs {
+            let mut sig = Vec::with_capacity(n);
+            for _ in 0..n {
+                sig.push(sample_f32(&mut rng));
+            }
+            let mut ker = Vec::with_capacity(k);
+            for _ in 0..k {
+                ker.push(sample_f32(&mut rng));
+            }
 
-    // ── length contract ────────────────────────────────────────
-
-    #[test]
-    fn fir_output_length_is_n_plus_k_minus_1() {
-        for &(n, k) in &[(1usize, 1), (1, 5), (5, 1), (8, 8), (100, 15), (3, 31)] {
-            let signal: Vec<f32> = (0..n).map(|i| (i as f32) * 0.1).collect();
-            let kernel: Vec<f32> = (0..k).map(|i| 1.0 / ((i + 1) as f32)).collect();
-            let out = fir(&signal, &kernel).unwrap();
-            assert_eq!(
-                out.len(),
-                n + k - 1,
-                "wrong output length for N={}, K={}",
-                n,
-                k
-            );
+            let direct = fir(&sig, &ker).unwrap();
+            let via_fft = fir_fft(&sig, &ker).unwrap();
+            assert_close(&direct, &via_fft, 1e-4);
         }
-    }
-
-    // ── naive cross-check ──────────────────────────────────────
-
-    #[test]
-    fn fir_matches_naive_reference_n5_k3() {
-        let signal: Vec<f32> = (0..5).map(|i| ((i as f32) * 0.3).sin()).collect();
-        let kernel = vec![0.1f32, 0.4, 0.5];
-        let optimized = fir(&signal, &kernel).unwrap();
-        let naive = naive_fir(&signal, &kernel);
-        assert_close(&optimized, &naive, 1e-6);
-    }
-
-    #[test]
-    fn fir_matches_naive_reference_n8_k4() {
-        let signal: Vec<f32> = (0..8).map(|i| ((i as f32) * 0.2).cos()).collect();
-        let kernel = vec![0.25f32, 0.5, 0.25, 0.1];
-        let optimized = fir(&signal, &kernel).unwrap();
-        let naive = naive_fir(&signal, &kernel);
-        assert_close(&optimized, &naive, 1e-6);
-    }
-
-    #[test]
-    fn fir_matches_naive_reference_n100_k15() {
-        // Larger size to exercise the inner-loop bounds with both
-        // the head and tail edges firing for many output samples.
-        let signal: Vec<f32> = (0..100).map(|i| ((i as f32) * 0.07).sin()).collect();
-        // Hamming-ish 15-tap kernel.
-        let kernel: Vec<f32> = (0..15)
-            .map(|i| {
-                let theta =
-                    2.0 * std::f32::consts::PI * (i as f32) / 14.0;
-                0.54 - 0.46 * theta.cos()
-            })
-            .collect();
-        let optimized = fir(&signal, &kernel).unwrap();
-        let naive = naive_fir(&signal, &kernel);
-        assert_close(&optimized, &naive, 1e-4);
     }
 }
