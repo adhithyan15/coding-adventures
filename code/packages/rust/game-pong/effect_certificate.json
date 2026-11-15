@@ -1,0 +1,142 @@
+{
+  "schema_version": "ver24-effect-cert-v1",
+  "package": "rust/game-pong",
+  "source_digest": "6c280fa064525e6f3a54b2199ea258c9cba3fa3098520686a4c482ef6cc82112",
+  "manifest_digest": "787ef0b21899d12074a7079bd774c3ef9f09e41162f6d6e2839c72c8dc72bad4",
+  "declared_effects": [],
+  "entry_points": [
+    {
+      "name": "standard",
+      "signature": "pub const fn standard() -> Self",
+      "effects": []
+    },
+    {
+      "name": "check_validity",
+      "signature": "pub fn check_validity(&self) -> Result<(), PongError>",
+      "effects": []
+    },
+    {
+      "name": "default_config",
+      "signature": "pub fn default_config() -> PongConfig",
+      "effects": []
+    },
+    {
+      "name": "validate_config",
+      "signature": "pub fn validate_config(config: &PongConfig) -> Result<(), PongError>",
+      "effects": []
+    },
+    {
+      "name": "player_vs_player",
+      "signature": "pub const fn player_vs_player(left: PaddleAction, right: PaddleAction) -> Self",
+      "effects": []
+    },
+    {
+      "name": "player_vs_ai",
+      "signature": "pub const fn player_vs_ai(left: PaddleAction) -> Self",
+      "effects": []
+    },
+    {
+      "name": "ai_vs_ai",
+      "signature": "pub const fn ai_vs_ai() -> Self",
+      "effects": []
+    },
+    {
+      "name": "idle_input",
+      "signature": "pub const fn idle_input() -> Self",
+      "effects": []
+    },
+    {
+      "name": "empty_events",
+      "signature": "pub const fn empty_events() -> Self",
+      "effects": []
+    },
+    {
+      "name": "init_match",
+      "signature": "pub fn init_match(config: PongConfig, initial_prng_seed: u64) -> Result<Self, PongError>",
+      "effects": []
+    },
+    {
+      "name": "check_state_validity",
+      "signature": "pub fn check_state_validity(&self) -> Result<(), PongError>",
+      "effects": []
+    },
+    {
+      "name": "reset_ball_serve",
+      "signature": "pub fn reset_ball_serve(&mut self, towards_right: bool)",
+      "effects": []
+    },
+    {
+      "name": "is_game_finished",
+      "signature": "pub fn is_game_finished(&self) -> bool",
+      "effects": []
+    },
+    {
+      "name": "winning_player",
+      "signature": "pub fn winning_player(&self) -> Option<PaddleSide>",
+      "effects": []
+    },
+    {
+      "name": "left_paddle_rect",
+      "signature": "pub fn left_paddle_rect(&self) -> Rect",
+      "effects": []
+    },
+    {
+      "name": "right_paddle_rect",
+      "signature": "pub fn right_paddle_rect(&self) -> Rect",
+      "effects": []
+    },
+    {
+      "name": "ball_circle",
+      "signature": "pub fn ball_circle(&self) -> Circle",
+      "effects": []
+    },
+    {
+      "name": "new_game",
+      "signature": "pub fn new_game(config: PongConfig, initial_prng_seed: u64) -> Result<PongState, PongError>",
+      "effects": []
+    },
+    {
+      "name": "validate_state",
+      "signature": "pub fn validate_state(state: &PongState) -> Result<(), PongError>",
+      "effects": []
+    },
+    {
+      "name": "deterministic_prng_next",
+      "signature": "pub fn deterministic_prng_next(state: &mut u64) -> u64",
+      "effects": []
+    },
+    {
+      "name": "deterministic_serve_angle",
+      "signature": "pub fn deterministic_serve_angle(prng: &mut u64, max_angle_rad: f64) -> f64",
+      "effects": []
+    },
+    {
+      "name": "step_pong",
+      "signature": "pub fn step_pong( state: &mut PongState, input: &PongInput, sfx: &mut SfxBank<4>, ) -> Result<PongFrameEvents, PongError>",
+      "effects": []
+    },
+    {
+      "name": "step_pong_with_clock",
+      "signature": "pub fn step_pong_with_clock( clock: &mut GameClockState, raw_delta_ns: u64, state: &mut PongState, input: &PongInput, sfx: &mut SfxBank<4>, ) -> Result<ClockPongResult, PongError>",
+      "effects": []
+    },
+    {
+      "name": "build_pong_sprites",
+      "signature": "pub fn build_pong_sprites(state: &PongState, out: &mut [SpriteItem]) -> usize",
+      "effects": []
+    },
+    {
+      "name": "lower_pong_to_paint_scene",
+      "signature": "pub fn lower_pong_to_paint_scene(state: &PongState) -> Result<PaintScene, PongError>",
+      "effects": []
+    },
+    {
+      "name": "render_pong_audio_into",
+      "signature": "pub fn render_pong_audio_into<const N: usize>( bank: &mut SfxBank<4>, ring: &mut PcmRingBuffer<N>, scratch: &mut [i16], ) -> Result<usize, PongError>",
+      "effects": []
+    }
+  ],
+  "unconditional_roots": [],
+  "banned_construct_exceptions": [],
+  "label": "proved"
+}
