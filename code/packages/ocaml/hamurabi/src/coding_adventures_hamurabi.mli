@@ -1,11 +1,7 @@
-(** Pure, deterministic simulation core for the seminal 1968 mainframe
-    resource allocation game (GAME01). *)
+(** Pure, deterministic simulation core for the seminal 1968 mainframe resource
+    allocation game (GAME01). *)
 
-type rating =
-  | Charlemagne
-  | Acre
-  | Nero
-  | Disaster
+type rating = Charlemagne | Acre | Nero | Disaster
 
 type game_status =
   | Playing
@@ -48,6 +44,11 @@ type turn_order = {
 }
 
 val new_game : int64 -> hamurabi_state
-val validate_order : hamurabi_state -> turn_order -> (unit, hamurabi_error) result
-val step_year : hamurabi_state -> turn_order -> (hamurabi_state, hamurabi_error) result
+
+val validate_order :
+  hamurabi_state -> turn_order -> (unit, hamurabi_error) result
+
+val step_year :
+  hamurabi_state -> turn_order -> (hamurabi_state, hamurabi_error) result
+
 val format_report : hamurabi_state -> string

@@ -71,55 +71,48 @@ let test_validate_order () =
     { acres_delta = 200; bushels_to_feed = 0; acres_to_plant = 0 }
   in
   Alcotest.(check (result unit hamurabi_error_testable))
-    "insufficient bushels for land"
-    (Error InsufficientBushelsForLand)
+    "insufficient bushels for land" (Error InsufficientBushelsForLand)
     (validate_order s buy_too_much);
 
   let sell_too_much =
     { acres_delta = -1001; bushels_to_feed = 0; acres_to_plant = 0 }
   in
   Alcotest.(check (result unit hamurabi_error_testable))
-    "insufficient acres to sell"
-    (Error InsufficientAcresToSell)
+    "insufficient acres to sell" (Error InsufficientAcresToSell)
     (validate_order s sell_too_much);
 
   let feed_too_much =
     { acres_delta = 0; bushels_to_feed = 2801; acres_to_plant = 0 }
   in
   Alcotest.(check (result unit hamurabi_error_testable))
-    "insufficient bushels to feed"
-    (Error InsufficientBushelsToFeed)
+    "insufficient bushels to feed" (Error InsufficientBushelsToFeed)
     (validate_order s feed_too_much);
 
   let plant_too_much_acres =
     { acres_delta = 0; bushels_to_feed = 0; acres_to_plant = 1001 }
   in
   Alcotest.(check (result unit hamurabi_error_testable))
-    "insufficient acres to plant"
-    (Error InsufficientAcresToPlant)
+    "insufficient acres to plant" (Error InsufficientAcresToPlant)
     (validate_order s plant_too_much_acres);
 
   let plant_too_much_pop =
     { acres_delta = 0; bushels_to_feed = 0; acres_to_plant = 200 }
   in
   Alcotest.(check (result unit hamurabi_error_testable))
-    "insufficient population to plant"
-    (Error InsufficientPopulationToPlant)
+    "insufficient population to plant" (Error InsufficientPopulationToPlant)
     (validate_order { s with population = 10 } plant_too_much_pop);
 
   let plant_no_grain =
     { acres_delta = 0; bushels_to_feed = 2800; acres_to_plant = 100 }
   in
   Alcotest.(check (result unit hamurabi_error_testable))
-    "insufficient grain for seed"
-    (Error InsufficientGrainForSeed)
+    "insufficient grain for seed" (Error InsufficientGrainForSeed)
     (validate_order s plant_no_grain)
 
 let test_format_report () =
   let s = { (new_game 42L) with status = GameOverExtinction } in
   Alcotest.(check string)
-    "extinction teletype"
-    "EVERYONE HAS DIED. THE CITY OF LAGASH IS EXTINCT!\n"
+    "extinction teletype" "EVERYONE HAS DIED. THE CITY OF LAGASH IS EXTINCT!\n"
     (format_report s)
 
 (* ── Conformance Corpus Parser & Test ────────────────────────────────────── *)
@@ -485,7 +478,7 @@ let parse_corpus raw =
       (fun l ->
         let trimmed = String.trim l in
         String.length trimmed > 0
-        && not (String.starts_with ~prefix:"#" trimmed)
+        && (not (String.starts_with ~prefix:"#" trimmed))
         && not (String.starts_with ~prefix:"COUNT " trimmed))
       all_lines
   in
@@ -503,7 +496,8 @@ let parse_corpus raw =
           | next_line :: next_rest
             when String.starts_with ~prefix:"CASE " next_line ->
               (List.rev case_acc, next_line :: next_rest)
-          | other :: next_rest -> collect_case_lines (other :: case_acc) next_rest
+          | other :: next_rest ->
+              collect_case_lines (other :: case_acc) next_rest
         in
         let case_lines, remaining = collect_case_lines [] rest in
         let tc = build_case c_id mb_seed case_lines in
@@ -544,7 +538,8 @@ let parse_corpus raw =
           in
           let rep_line, after_rep =
             match rest with
-            | r_line :: after when String.starts_with ~prefix:"REPORT " r_line ->
+            | r_line :: after when String.starts_with ~prefix:"REPORT " r_line
+              ->
                 (r_line, after)
             | _ -> failwith ("Expected REPORT after STATE in " ^ c_id)
           in

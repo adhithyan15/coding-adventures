@@ -1,8 +1,4 @@
-type rating =
-  | Charlemagne
-  | Acre
-  | Nero
-  | Disaster
+type rating = Charlemagne | Acre | Nero | Disaster
 
 type game_status =
   | Playing
@@ -51,7 +47,9 @@ let mask32 = 0xFFFFFFFFL
 let pcg32_step state inc =
   let old_state = !state in
   state := Int64.add (Int64.mul old_state pcg_multiplier) inc;
-  let xor_val = Int64.logxor (Int64.shift_right_logical old_state 18) old_state in
+  let xor_val =
+    Int64.logxor (Int64.shift_right_logical old_state 18) old_state
+  in
   let shifted = Int64.shift_right_logical xor_val 27 in
   let xsh = Int64.logand shifted mask32 in
   let rot = Int64.to_int (Int64.shift_right_logical old_state 59) land 31 in
@@ -105,17 +103,25 @@ let new_game seed =
 let validate_order state order =
   (* 1. Status Check *)
   if state.status <> Playing then Error GameAlreadyEnded
-  (* State invariant checks (VER04m state_inv & CWE-400 / CWE-835) *)
+    (* State invariant checks (VER04m state_inv & CWE-400 / CWE-835) *)
   else if Int64.logand state.rng_inc 1L <> 1L then Error InvalidOrderBounds
   else if state.year < 1 || state.year > 10 then Error InvalidOrderBounds
-  else if state.land_price < 17 || state.land_price > 26 then Error InvalidOrderBounds
-  else if state.harvest_per_acre < 1 || state.harvest_per_acre > 5 then Error InvalidOrderBounds
-  else if state.population < 0 || state.population > 0xFFFFFFFF then Error InvalidOrderBounds
-  else if state.bushels < 0 || state.bushels > 0xFFFFFFFF then Error InvalidOrderBounds
-  else if state.acres < 0 || state.acres > 0xFFFFFFFF then Error InvalidOrderBounds
-  else if order.acres_delta < -2147483648 || order.acres_delta > 2147483647 then Error InvalidOrderBounds
-  else if order.bushels_to_feed < 0 || order.bushels_to_feed > 0xFFFFFFFF then Error InvalidOrderBounds
-  else if order.acres_to_plant < 0 || order.acres_to_plant > 0xFFFFFFFF then Error InvalidOrderBounds
+  else if state.land_price < 17 || state.land_price > 26 then
+    Error InvalidOrderBounds
+  else if state.harvest_per_acre < 1 || state.harvest_per_acre > 5 then
+    Error InvalidOrderBounds
+  else if state.population < 0 || state.population > 0xFFFFFFFF then
+    Error InvalidOrderBounds
+  else if state.bushels < 0 || state.bushels > 0xFFFFFFFF then
+    Error InvalidOrderBounds
+  else if state.acres < 0 || state.acres > 0xFFFFFFFF then
+    Error InvalidOrderBounds
+  else if order.acres_delta < -2147483648 || order.acres_delta > 2147483647 then
+    Error InvalidOrderBounds
+  else if order.bushels_to_feed < 0 || order.bushels_to_feed > 0xFFFFFFFF then
+    Error InvalidOrderBounds
+  else if order.acres_to_plant < 0 || order.acres_to_plant > 0xFFFFFFFF then
+    Error InvalidOrderBounds
   else
     let max_u32 = 0xFFFFFFFF in
     (* 2. Bounds & Overflow Guard on Land Trade *)
@@ -123,7 +129,8 @@ let validate_order state order =
       if order.acres_delta > 0 then
         let cost = order.acres_delta * state.land_price in
         if cost > state.bushels then Some InsufficientBushelsForLand
-        else if state.acres + order.acres_delta > max_u32 then Some InvalidOrderBounds
+        else if state.acres + order.acres_delta > max_u32 then
+          Some InvalidOrderBounds
         else None
       else if order.acres_delta < 0 then
         let sell_count = -order.acres_delta in
@@ -139,26 +146,36 @@ let validate_order state order =
     | None ->
         let acres_after_trade =
           if order.acres_delta >= 0 then state.acres + order.acres_delta
-          else state.acres - (-order.acres_delta)
+          else state.acres - -order.acres_delta
         in
-        if acres_after_trade < 0 || acres_after_trade > max_u32 then Error InvalidOrderBounds
+        if acres_after_trade < 0 || acres_after_trade > max_u32 then
+          Error InvalidOrderBounds
         else
           let bushels_after_trade =
-            if order.acres_delta > 0 then state.bushels - (order.acres_delta * state.land_price)
-            else if order.acres_delta < 0 then state.bushels + ((-order.acres_delta) * state.land_price)
+            if order.acres_delta > 0 then
+              state.bushels - (order.acres_delta * state.land_price)
+            else if order.acres_delta < 0 then
+              state.bushels + (-order.acres_delta * state.land_price)
             else state.bushels
           in
-          if bushels_after_trade < 0 || bushels_after_trade > max_u32 then Error InvalidOrderBounds
-          else if order.bushels_to_feed > bushels_after_trade then Error InsufficientBushelsToFeed
+          if bushels_after_trade < 0 || bushels_after_trade > max_u32 then
+            Error InvalidOrderBounds
+          else if order.bushels_to_feed > bushels_after_trade then
+            Error InsufficientBushelsToFeed
           else
-            let bushels_after_feed = bushels_after_trade - order.bushels_to_feed in
-            if order.acres_to_plant > acres_after_trade then Error InsufficientAcresToPlant
+            let bushels_after_feed =
+              bushels_after_trade - order.bushels_to_feed
+            in
+            if order.acres_to_plant > acres_after_trade then
+              Error InsufficientAcresToPlant
             else
               let max_labor = state.population * 10 in
-              if order.acres_to_plant > max_labor then Error InsufficientPopulationToPlant
+              if order.acres_to_plant > max_labor then
+                Error InsufficientPopulationToPlant
               else
                 let seed_needed = (order.acres_to_plant + 1) / 2 in
-                if seed_needed > bushels_after_feed then Error InsufficientGrainForSeed
+                if seed_needed > bushels_after_feed then
+                  Error InsufficientGrainForSeed
                 else
                   let bushels_after_seed = bushels_after_feed - seed_needed in
                   let max_harvest = order.acres_to_plant * 5 in
@@ -172,11 +189,13 @@ let step_year state order =
   | Ok () ->
       let acres_after_trade =
         if order.acres_delta >= 0 then state.acres + order.acres_delta
-        else state.acres - (-order.acres_delta)
+        else state.acres - -order.acres_delta
       in
       let bushels_after_trade =
-        if order.acres_delta > 0 then state.bushels - (order.acres_delta * state.land_price)
-        else if order.acres_delta < 0 then state.bushels + ((-order.acres_delta) * state.land_price)
+        if order.acres_delta > 0 then
+          state.bushels - (order.acres_delta * state.land_price)
+        else if order.acres_delta < 0 then
+          state.bushels + (-order.acres_delta * state.land_price)
         else state.bushels
       in
       let bushels_after_feed = bushels_after_trade - order.bushels_to_feed in
@@ -200,7 +219,9 @@ let step_year state order =
           min 0xFFFFFFFF eaten
         else 0
       in
-      let bushels_final = min 0xFFFFFFFF (max 0 (bushels_stored - rats_eaten)) in
+      let bushels_final =
+        min 0xFFFFFFFF (max 0 (bushels_stored - rats_eaten))
+      in
 
       (* Step 3: Plague Draw [1, 100] *)
       let plague_roll = pcg32_next_int_in_range rng_state inc 1 100 in
@@ -213,11 +234,13 @@ let step_year state order =
         else (state.population - people_fed, people_fed)
       in
       let percent_starved =
-        if state.population > 0 then min 100 ((starved * 100) / state.population)
+        if state.population > 0 then min 100 (starved * 100 / state.population)
         else 0
       in
       let new_starved_total = min 0xFFFFFFFF (state.starved_total + starved) in
-      let new_percent_sum = min 0xFFFFFFFF (state.percent_starved_sum + percent_starved) in
+      let new_percent_sum =
+        min 0xFFFFFFFF (state.percent_starved_sum + percent_starved)
+      in
 
       let status0 =
         if starved * 100 > state.population * 45 then
@@ -255,7 +278,8 @@ let step_year state order =
         if next_year = 11 && status0 = Playing then
           let avg_starved = new_percent_sum / 10 in
           let acres_per_person =
-            if final_population > 0 then acres_after_trade / final_population else 0
+            if final_population > 0 then acres_after_trade / final_population
+            else 0
           in
           let rating =
             if avg_starved <= 3 && acres_per_person >= 10 then Charlemagne
@@ -267,33 +291,34 @@ let step_year state order =
         else status0
       in
 
-      Ok {
-        year = next_year;
-        population = final_population;
-        bushels = bushels_final;
-        acres = acres_after_trade;
-        land_price = next_land_price;
-        harvest_per_acre;
-        rats_eaten;
-        starved_last_year = starved;
-        starved_total = new_starved_total;
-        percent_starved_sum = new_percent_sum;
-        immigrants_last_year = immigrants;
-        plague_struck;
-        status = final_status;
-        rng_state = !rng_state;
-        rng_inc = inc;
-      }
+      Ok
+        {
+          year = next_year;
+          population = final_population;
+          bushels = bushels_final;
+          acres = acres_after_trade;
+          land_price = next_land_price;
+          harvest_per_acre;
+          rats_eaten;
+          starved_last_year = starved;
+          starved_total = new_starved_total;
+          percent_starved_sum = new_percent_sum;
+          immigrants_last_year = immigrants;
+          plague_struck;
+          status = final_status;
+          rng_state = !rng_state;
+          rng_inc = inc;
+        }
 
 let format_report state =
   match state.status with
   | Impeached { starved_this_turn; _ } ->
       Printf.sprintf
         "YOU STARVED %d PEOPLE IN ONE YEAR!!!\n\
-         DUE TO THIS EXTREME MISMANAGEMENT YOU HAVE BEEN IMPEACHED AND THROWN OUT OF OFFICE!\n"
+         DUE TO THIS EXTREME MISMANAGEMENT YOU HAVE BEEN IMPEACHED AND THROWN \
+         OUT OF OFFICE!\n"
         starved_this_turn
-  | GameOverExtinction ->
-      "EVERYONE HAS DIED. THE CITY OF LAGASH IS EXTINCT!\n"
+  | GameOverExtinction -> "EVERYONE HAS DIED. THE CITY OF LAGASH IS EXTINCT!\n"
   | Won rating ->
       let avg_starved = state.percent_starved_sum / 10 in
       let acres_per_person =
@@ -302,13 +327,17 @@ let format_report state =
       let rating_msg =
         match rating with
         | Charlemagne ->
-            "A FANTASTIC PERFORMANCE! CHARLEMAGNE, DISRAELI, AND JEFFERSON COMBINED COULD NOT HAVE DONE BETTER!"
+            "A FANTASTIC PERFORMANCE! CHARLEMAGNE, DISRAELI, AND JEFFERSON \
+             COMBINED COULD NOT HAVE DONE BETTER!"
         | Acre ->
-            "YOUR PERFORMANCE COULD HAVE BEEN WORSE, BUT YOU LEFT THEM REASONABLE ACREAGE."
+            "YOUR PERFORMANCE COULD HAVE BEEN WORSE, BUT YOU LEFT THEM \
+             REASONABLE ACREAGE."
         | Nero ->
-            "YOUR PERFORMANCE LEAVES MUCH TO BE DESIRED. NERO WOULD HAVE BEEN PROUD OF YOU."
+            "YOUR PERFORMANCE LEAVES MUCH TO BE DESIRED. NERO WOULD HAVE BEEN \
+             PROUD OF YOU."
         | Disaster ->
-            "YOU DID SO POORLY YOU HAVE BEEN DECLARED AN OFFICIAL NATIONAL DISASTER!"
+            "YOU DID SO POORLY YOU HAVE BEEN DECLARED AN OFFICIAL NATIONAL \
+             DISASTER!"
       in
       Printf.sprintf
         "IN YOUR 10-YEAR TERM OF OFFICE, %d PERCENT OF THE\n\
