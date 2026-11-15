@@ -10040,12 +10040,14 @@
     {
       "id": "canonical-cbor-elixir-lane-parity",
       "title": "Port canonical CBOR to Elixir",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "canonical-cbor-language-neutral-conformance"
       ],
       "branch": "feat/canonical-cbor-elixir-lane-parity",
       "pr_number": 19407,
+      "merged_at": "2026-11-15T00:17:44Z",
+      "merge_commit": "bc705baf6a6",
       "notes": "Implement the closed canonical-CBOR contract in Elixir and consume every language-neutral case."
     },
     {
@@ -10064,11 +10066,11 @@
     {
       "id": "canonical-cbor-haskell-lane-parity",
       "title": "Port canonical CBOR to Haskell",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": [
         "canonical-cbor-language-neutral-conformance"
       ],
-      "branch": null,
+      "branch": "feat/canonical-cbor-haskell-lane-parity",
       "pr_number": null,
       "notes": "Implement the closed canonical-CBOR contract in Haskell and consume every language-neutral case."
     },
