@@ -10297,6 +10297,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "note-audio"
+version = "0.1.0"
+dependencies = [
+ "coding-adventures-note-frequency",
+ "coding_adventures_test_bootstrap",
+ "oscillator",
+ "pcm-audio",
+]
+
+[[package]]
 name = "num"
 version = "0.4.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -15012,12 +15022,29 @@ name = "vigenere-cipher"
 version = "0.1.0"
 
 [[package]]
+name = "virtual-dac"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_test_bootstrap",
+ "oscillator",
+ "pcm-audio",
+]
+
+[[package]]
 name = "virtual-machine"
 version = "0.1.0"
 
 [[package]]
 name = "virtual-memory"
 version = "0.1.0"
+
+[[package]]
+name = "virtual-speaker"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_test_bootstrap",
+ "oscillator",
+]
 
 [[package]]
 name = "vis-connected-components"
@@ -15282,6 +15309,15 @@ dependencies = [
  "wasm-module-parser",
  "wasm-opcodes",
  "wasm-types",
+]
+
+[[package]]
+name = "wav-sink"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_test_bootstrap",
+ "oscillator",
+ "pcm-audio",
 ]
 
 [[package]]
