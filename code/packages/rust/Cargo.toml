@@ -45,6 +45,7 @@ members = [
     "audio-device-sink",
     "audio-mixer-realtime",
     "arcade-sfx",
+    "sim-discrete-audio-timer",
     "actor",
     "arithmetic",
     "array-runtime",
