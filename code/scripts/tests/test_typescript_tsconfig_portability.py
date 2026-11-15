@@ -452,7 +452,8 @@ console.log(prose, nested);
         # +1: fuzz, the VER06 zero-dependency Level 2 coverage-guided fuzz engine package.
         # +1: test-matchers, the VER01 zero-dependency Level 1 matchers and assertions package.
         # +1: hamurabi, the GAME01 isolated standalone simulation package.
-        self.assertEqual(summary.total_projects, 500)
+        # +1: ca-capability-analyzer, the TS static capability & VER15 CWE analyzer package.
+        self.assertEqual(summary.total_projects, 501)
         self.assertEqual(summary.shared_projects, 308)
         self.assertEqual(summary.inherited_root_dir, 135)
         self.assertEqual(summary.inherited_out_dir, 138)
@@ -460,8 +461,9 @@ console.log(prose, nested);
         # forme-authoring-preview, forme-authoring-publish, and
         # forme-authoring-shell are isolated standalone emitters, adding five
         # to both standalone inventories; hamurabi adds one more.
-        self.assertEqual(summary.standalone_emit_projects, 161)
-        self.assertEqual(summary.isolated_standalone_projects, 161)
+        # +1: ca-capability-analyzer is an isolated standalone emitter.
+        self.assertEqual(summary.standalone_emit_projects, 162)
+        self.assertEqual(summary.isolated_standalone_projects, 162)
         self.assertEqual(summary.unbounded_root_projects, 0)
         self.assertEqual(summary.outside_root_inputs, 0)
         # 94: +1 for script-ductus. Nothing the package SHIPS touches a Node
@@ -515,7 +517,8 @@ console.log(prose, nested);
         # +1: forme-shell-desktop uses Node APIs in its build and test inputs.
         # -1: the retired checklist-app (its Electron shell used Node APIs).
         # +1: neural-framework reads fixtures and checkpoint stdin in tests/CLI.
-        self.assertEqual(summary.node_api_projects, 88)
+        # +1: ca-capability-analyzer reads TypeScript packages off disk via Node APIs.
+        self.assertEqual(summary.node_api_projects, 89)
         # +1: script-ductus owns `@types/node` directly, because its tests
         # read the shipped fonts off disk to verify the pen paths.
         # +1: chief-of-staff-channel-store owns the test-only Node provider.
@@ -548,7 +551,8 @@ console.log(prose, nested);
         # +1: forme-shell-desktop directly owns its Node test/build provider.
         # -1: the retired checklist-app (its Electron shell used Node APIs).
         # +1: neural-framework directly owns its test/CLI Node type provider.
-        self.assertEqual(summary.node_provider_projects, 88)
+        # +1: ca-capability-analyzer owns `@types/node` directly.
+        self.assertEqual(summary.node_provider_projects, 89)
         self.assertEqual(summary.missing_node_provider_projects, 0)
         self.assertEqual(summary.stale_node_provider_locks, 0)
         # 0: matrix-rust-napi's lock exemption is retired; it commits a lock.
@@ -609,7 +613,8 @@ console.log(prose, nested);
         # arc2d, bezier2d, deflate, matrix-rust-napi, point2d, progress-bar,
         # rpc, starlark-vm, tree-set, twig-vscode, hash-breaker and parrot.
         # +1: hamurabi locks its standalone compiler and test toolchain.
-        self.assertEqual(summary.locked_compilers, 513)
+        # +1: ca-capability-analyzer locks its standalone compiler.
+        self.assertEqual(summary.locked_compilers, 514)
 
 
 if __name__ == "__main__":
