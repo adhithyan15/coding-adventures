@@ -266,12 +266,7 @@ pub fn safe_round_sample(time_seconds: f64, sample_rate_hz: f64) -> Result<usize
             max: MAX_SAMPLE_COUNT,
         });
     }
-    let nearest = prod.round();
-    let count_f64 = if (prod - nearest).abs() <= INTEGER_TOLERANCE {
-        nearest
-    } else {
-        prod.floor()
-    };
+    let count_f64 = prod.round();
     if count_f64 < 0.0 {
         return Err(PercussionError::NegativeNumber {
             name: "sample index",

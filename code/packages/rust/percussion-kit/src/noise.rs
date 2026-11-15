@@ -74,7 +74,7 @@ impl PercussionNoiseProfile {
 #[inline]
 pub fn pseudo_noise(sample_index: usize, seed: u64) -> f64 {
     let phase = (sample_index as f64 + 1.0) * (seed as f64 * 0.161_803_398_874_989_5 + 0.618_033_988_75);
-    let val = (std::f64::consts::TAU * phase).sin() * 43_758.545_312_3;
+    let val = trig::sin(2.0 * trig::PI * phase) * 43_758.545_312_3;
     let frac = val - val.floor();
     2.0 * frac - 1.0
 }
