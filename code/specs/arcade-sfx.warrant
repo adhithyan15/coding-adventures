@@ -1,0 +1,110 @@
+-- GAME12 -- Arcade SFX: Deterministic Fixed-Point Waveform Synthesis & Preset Engine
+--
+-- Warrant document for arcade-sfx (VER04j and VER04m: state=explicit).
+-- Formal verification contract for zero-drift fixed-point arcade sound generator.
+
+warrant arcade_sfx v1
+  error SfxError = InvalidSampleRate | InvalidFrequency | InvalidDutyCycle | InvalidParameter | VoiceLimitExceeded | BufferTooSmall | MixerIntegrationError
+
+  model clamp_pcm16_model(v: Int) -> Int = if v > 32767 then 32767 else (if v < 0 - 32768 then 0 - 32768 else v)
+  model scale_gain_model(sample: Int, gain_q16: Nat) -> Int = (sample * gain_q16) / 65536
+  model valid_sample_rate(rate: Nat) -> Bool = rate >= 1 and rate <= 192000
+  model valid_frequency(freq_hz: Nat, sample_rate_hz: Nat) -> Bool = freq_hz <= sample_rate_hz / 2
+
+  record AdsrEnvelope(attack_samples: U32, decay_samples: U32, sustain_level_q16: U32, release_samples: U32)
+  record SfxVoiceState(active: Bool, sample_rate_hz: U32, current_sample: U32, total_samples: U32, phase_acc: U32, lfsr_state: U16, voice_id: U32, priority: U8)
+
+  op clamp_sample(v: Int) -> Int
+  op scale_gain(sample: Int, gain_q16: Nat) -> Int
+  op validate_sample_rate(sample_rate_hz: Nat) -> Result<Bool, SfxError>
+  op validate_frequency(freq_hz: Nat, sample_rate_hz: Nat) -> Result<Bool, SfxError>
+  op lfsr_step_15(state: Nat) -> Nat
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels clamp_sample:
+    v public
+  labels scale_gain:
+    sample public
+    gain_q16 public
+  labels validate_sample_rate:
+    sample_rate_hz public
+  labels validate_frequency:
+    freq_hz public
+    sample_rate_hz public
+  labels lfsr_step_15:
+    state public
+
+  input clamp_sample.v:
+    hostile
+    ensures no_panic, terminates
+
+  input scale_gain.sample:
+    hostile
+    ensures no_panic, terminates
+  input scale_gain.gain_q16:
+    hostile
+    ensures no_panic, terminates
+
+  input validate_sample_rate.sample_rate_hz:
+    hostile
+    ensures no_panic, terminates
+
+  input validate_frequency.freq_hz:
+    hostile
+    ensures no_panic, terminates
+  input validate_frequency.sample_rate_hz:
+    hostile
+    ensures no_panic, terminates
+
+  input lfsr_step_15.state:
+    hostile
+    ensures no_panic, terminates
+
+  bound clamp_sample:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound scale_gain:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_sample_rate:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_frequency:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound lfsr_step_15:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+
+  example clamp_zero:
+    clamp_sample(0) == 0
+  example clamp_max:
+    clamp_sample(32767) == 32767
+  example clamp_overflow:
+    clamp_sample(70000) == 32767
+  example clamp_min:
+    clamp_sample(0 - 32768) == 0 - 32768
+  example clamp_underflow:
+    clamp_sample(0 - 80000) == 0 - 32768
+
+  example scale_unity:
+    scale_gain(1000, 65536) == 1000
+
+  example rate_44100:
+    validate_sample_rate(44100) == Ok(true)
+
+  claim clamp_sample_agrees:
+    forall v: Int. clamp_sample(v) == clamp_pcm16_model(v)
+  claim scale_gain_agrees:
+    forall s: Int, g: Nat. scale_gain(s, g) == scale_gain_model(s, g)
+  claim validate_rate_agrees:
+    forall r: Nat. validate_sample_rate(r) == (if valid_sample_rate(r) then Ok(true) else Err(SfxError.InvalidSampleRate))

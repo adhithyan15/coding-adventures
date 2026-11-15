@@ -389,6 +389,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "arcade-sfx"
+version = "0.1.0"
+dependencies = [
+ "audio-mixer-realtime",
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "pcm-audio",
+]
+
+[[package]]
 name = "arduino-uno-r4-hal"
 version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
