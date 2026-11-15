@@ -10973,6 +10973,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "percussion-kit"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_test_bootstrap",
+ "oscillator",
+ "pcm-audio",
+]
+
+[[package]]
 name = "perl-bridge"
 version = "0.1.0"
 

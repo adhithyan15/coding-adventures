@@ -436,6 +436,7 @@ members = [
     "virtual-speaker",
     "wav-sink",
     "musical-instruments",
+    "percussion-kit",
     "numeric-tower",
     "math-core",
     "matrix",
