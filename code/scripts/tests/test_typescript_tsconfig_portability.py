@@ -451,16 +451,17 @@ console.log(prose, nested);
         # +1: pbt, the VER05 zero-dependency Level 2 property-based testing package.
         # +1: fuzz, the VER06 zero-dependency Level 2 coverage-guided fuzz engine package.
         # +1: test-matchers, the VER01 zero-dependency Level 1 matchers and assertions package.
-        self.assertEqual(summary.total_projects, 499)
+        # +1: hamurabi, the GAME01 isolated standalone simulation package.
+        self.assertEqual(summary.total_projects, 500)
         self.assertEqual(summary.shared_projects, 308)
         self.assertEqual(summary.inherited_root_dir, 135)
         self.assertEqual(summary.inherited_out_dir, 138)
         # forme-authoring-core, forme-authoring-editor,
         # forme-authoring-preview, forme-authoring-publish, and
         # forme-authoring-shell are isolated standalone emitters, adding five
-        # to both standalone inventories.
-        self.assertEqual(summary.standalone_emit_projects, 160)
-        self.assertEqual(summary.isolated_standalone_projects, 160)
+        # to both standalone inventories; hamurabi adds one more.
+        self.assertEqual(summary.standalone_emit_projects, 161)
+        self.assertEqual(summary.isolated_standalone_projects, 161)
         self.assertEqual(summary.unbounded_root_projects, 0)
         self.assertEqual(summary.outside_root_inputs, 0)
         # 94: +1 for script-ductus. Nothing the package SHIPS touches a Node
