@@ -2,6 +2,6 @@
   "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
   "version": 1,
   "package": "ocaml/hamurabi",
-  "capabilities": ["fs:list:*", "fs:read:*"],
-  "justification": "Pure computation in src/. Read-only filesystem list/read access is used solely by test/test_hamurabi.ml to locate and read code/specs/fixtures/hamurabi-v1/cases.txt."
+  "capabilities": [],
+  "justification": "Pure computation. No filesystem, network, process, or environment access needed."
 }
