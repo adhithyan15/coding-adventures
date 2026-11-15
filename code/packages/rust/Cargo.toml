@@ -778,6 +778,7 @@ members = [
     "sim-teletype-asr33",
     "sim-pdp8-ge225-io-bridge",
     "game-clock",
+    "game-pong",
     "perl-bridge",
     "polynomial-c",
     "wasm-execution",
