@@ -11617,7 +11617,8 @@
         "zip-raw-rfc1951-elixir-lane-parity"
       ],
       "branch": "feat/elixir-zip-png-scale-raw-codec-hardening",
-      "pr_number": null,
+      "pr_number": 19414,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19414",
       "notes": "The post-#16909 read-only audit found raw deflate boxing the full input and rebuilding an array at each cursor, while counted inflate retains every output byte in an array. Before IC18 PNG's 134 MiB maximum RGBA surface, establish byte-backed bounded encode/decode behavior, stable counted/error semantics, foreign round trips, and measured ceiling tests while preserving all 34 RFC1951 fixtures. Exact and punctuation-insensitive owner-ID and live PR path checks found no collision."
     },
     {
