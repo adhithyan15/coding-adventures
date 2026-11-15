@@ -2,6 +2,17 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.1.1] - 2026-11-15
+
+### Added
+
+- Security & CWE hardening (MUS-W1-D):
+  - CWE-400 (Resource Exhaustion Defense): enforced `MAX_SAMPLE_RATE_HZ = 192_000.0`, `MAX_DURATION_SECONDS = 60.0`, and `MAX_SAMPLES = 16_777_216` (`MAX_SAMPLE_COUNT`) prior to note synthesis and buffer allocation.
+  - CWE-190 / CWE-20 (Strict Input Validation): reject `bool` for numeric arguments, reject `NaN`/`±Inf` and out-of-range duration, sample rate, or sample counts.
+  - Pure capability declaration: updated `required_capabilities.json` to declare `capabilities: []` matching AST scanner purity.
+- Added VER specification `note_audio.warrant` and `code/specs/note-audio.warrant` matching grammar v0 specification.
+- Added SplitMix64 deterministic PRNG property-based testing (PBT) and fuzzing suite achieving 100% test coverage.
+
 ## [0.1.0] - 2026-04-20
 
 ### Added

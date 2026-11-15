@@ -5,10 +5,16 @@
   "capabilities": [
     {
       "category": "fs",
+      "action": "read",
+      "target": "caller-provided WAV input path",
+      "justification": "The read_wav helper reads WAV bytes from a caller-selected file path."
+    },
+    {
+      "category": "fs",
       "action": "write",
       "target": "caller-provided WAV output path",
-      "justification": "The optional write_wav helper writes deterministic WAV bytes to a caller-selected file path."
+      "justification": "The write_wav helper writes deterministic WAV bytes to a caller-selected file path."
     }
   ],
-  "justification": "Pure WAV byte serialization except for the explicit optional file sink."
+  "justification": "WAV file sink and source operations with strict path validation."
 }
