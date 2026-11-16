@@ -1172,9 +1172,10 @@ repeats it.
 | Slice | Content | Hazard it settles | Gate |
 |---|---|---|---|
 | **TC-0** | this specification (merged) and the backlog row | none | review |
-| **TC-1** | the fixture of section 6 (generator, validator, `edge.tsv`, sweeps, manifest, README, generated Dart source), **and** the Python port (3.3 to 3.9), whose tests become the vectors, **and** the Part II table of 3.9 (every port's current `sqrt`, `atan`, `atan2` and `tan` run against the vectors, differences listed) | the oracle is also a lane; the generator's cross-check against C and Rust must be green; Part II's "unchanged" becomes a measurement | validator and the Python tests pass; `TC-0` accepted |
-| TC-2 | **rust** | compiled, strict; the model lane for VER04p's softfloat self-check | TC-1 |
-| TC-3 | **typescript** | f64-only, JS `%` and `0.0 + x` quirks go away; the web side of Dart shares its semantics | TC-1 |
+| **TC-1** | the fixture of section 6 (generator, validator, `edge.tsv`, sweeps, manifest, README), the build-tool registration, and the spec amendments. **No port changes** | the oracle and its cross-checks (C, Rust, `bc`) must be green | validator passes; `TC-0` accepted |
+| **TC-2** | the **music trio**: `python`, `rust` and `typescript` `trig`, `oscillator` wherever 7 requires it, and the shared `music-machine` golden regenerated once | the three lanes share `fixtures/music-machine`, so they converge together (a golden changes once, when all three produce the new bits) | TC-1 |
+| (TC-2) | **rust** | compiled, strict; the model lane for VER04p's softfloat self-check | TC-1 |
+| (TC-2) | **typescript** | f64-only, JS `%` and `0.0 + x` quirks go away; the web side of Dart shares its semantics | TC-1 |
 | TC-4 | **c** | flag hazards (`-ffp-contract=off`, `FLT_EVAL_METHOD`); the build file gains the flag and a second `-mfma` build that must **fail** the vectors (the fusion canary) | TC-1 |
 | TC-5 | **cpp** | same hazards as C, header-only | TC-4 |
 | TC-6 | **go** | FMA on arm64; the `float64()` rule; the arm64 assembly check as a CI step | TC-1 |
@@ -1193,20 +1194,22 @@ repeats it.
 
 **TC-1 status (2026-11-16).** Landed in the TC-1 pull request: the fixture
 (`fixtures/trig-reference-v1`, 61,854 vectors; generator, validator, both host
-cross-checks and the `bc` check of `cr` green); the build-tool registration of the fixture
-for `python/trig`; and the **Python port** (`trig` 0.3.0), bit-exact on every vector,
-together with `oscillator` 0.1.2 (the phase reduction 7 requires in the same PR as the
-lane's port). Measured worst case: **2.3829 ulp** (`sin`, `0x41BB531AD2E28013`), 2.3738
-(`cos`, `0x41B08A633012E355`), 0.6486 (`radians`), 0.8042 (`degrees`), exactly the
-review's targeted-search figures, now reproduced by independent code; no row of the
-fixture exceeds the 3-ulp gate. **Deferred, not dropped:** (a) the generated Dart
-source (the base64 mirror of `phy00-phy01-v1/dart`) moves to TC-16, because it has no
-consumer until Dart adopts the vectors and would add 4.7 MB of source with none;
-(b) the Part II **survey table** (every other port's *current* `sqrt`, `atan`, `atan2`
-and `tan` run against the vectors) needs the sixteen other toolchains and is the
-follow-up slice TC-1b; what TC-1 did measure is that the reference's Part II (3.9) as
-specified is reproduced bit for bit by two independent transcriptions (C and Rust)
-and by the Python port.
+cross-checks and the `bc` check of `cr` green) and the build-tool registration of
+the fixture for `python/trig`. **No port changed**, deliberately: converging
+`python/trig` alone changed 33 of 96,138 samples of the shared `music-machine`
+golden (Rust and TypeScript share it), and a shared golden must change once, when
+every lane that consumes it produces the new bits, so Python, Rust and TypeScript
+converge together in TC-2. Measured worst case: **2.3829 ulp** (`sin`,
+`0x41BB531AD2E28013`), 2.3738 (`cos`, `0x41B08A633012E355`), 0.6486 (`radians`),
+0.8042 (`degrees`), exactly the review's targeted-search figures, now reproduced
+by independent code; no row of the fixture exceeds the 3-ulp gate. **Deferred, not
+dropped:** (a) the generated Dart source (the base64 mirror of
+`phy00-phy01-v1/dart`) moves to TC-16, because it has no consumer until Dart adopts
+the vectors and would add 4.7 MB of source with none; (b) the Part II **survey
+table** (every port's *current* `sqrt`, `atan`, `atan2` and `tan` run against the
+vectors) needs the other toolchains and is the follow-up slice TC-1b; what TC-1 did
+measure is that the reference's Part II (3.9) as specified is reproduced bit for bit
+by two independent transcriptions (C and Rust).
 
 Each port PR has the same shape (`feat(trig-<lang>): converge on TRIG-REF-1`):
 
@@ -1277,7 +1280,7 @@ changes the sections named.
 |---|---|
 | 2026-11-16 | First draft. Survey of seventeen ports at `origin/main` 046c2d8b84b (nine run, eight read). Reference algorithm TRIG-REF-1 (nearest-integer Cody-Waite with five 24-bit chunks to 2^29, folded beyond, ten-term Horner kernels on stored coefficients, quadrant selection, pre-divided degree constants, early returns for `\|x\| < 2^-27` and NaN and infinity). Prototyped in Python and nine other languages; bit-identical on 30,025 inputs. Accuracy measured at 2.21 ulp (`sin`), 2.16 (`cos`), 0.81 (`degrees`). Conformance corpus format and generator; migration plan TC-0 to TC-18; open questions OQ-1 to OQ-14 |
 | 2026-11-16 | Adversarial review 1. **Domain:** the fold beyond 2^29 is removed; `sin`, `cos`, `tan` return NaN there (BEAM: raise), by one negated comparison that also covers NaN and infinity (3.3, 3.4.1, 3.6, Appendix A); the stated reason for the fold was checked against all fifteen `wave` ports and is false; `oscillator` is named as the dependent that must reduce its phase (7). **Arithmetic:** the claim that the Cody-Waite subtraction "loses nothing until the last term" is false (subtractions 3 to 5 round; measured) and is corrected, with the error budget rebuilt on it (3.4, 4.2); chunks have at most 24 bits, not 24 each; all constants re-derived and confirmed. **Accuracy:** "2.21 ulp worst case" was the peak of a random sample; a targeted search found 2.38 (`sin`) and 2.37 (`cos`); the statement is split into gated (3 ulp), argued (about 2.7) and observed, and the worst inputs and their class enter the vectors (4, 6.3). **Lanes:** Haskell, Swift, Dart (VM) and C# prototyped and bit-identical; Perl's integer path corrected (it applies to integer-valued operands however written, measured); GCC ignores `#pragma STDC FP_CONTRACT` and clang's `-ffp-contract=fast` overrides it (measured), so header-only C++ gets in-source guards and two canaries; `GOAMD64=v3` added to the Go assembly check; bit comparison never through printed floats (Perl, Lua, BEAM); non-float arguments scoped (5). **Part II:** "unchanged" was a reading, now a TC-1 measurement; `atan2` of a NaN returned `0.0` and now returns NaN; the non-IEEE conventions and the `tan` sentinel are listed and labelled (3.8, 3.9). **Vectors:** flags `out-of-domain`, `pole-sentinel`, `beam-raises`; guard-sensitivity gates; `same` named as the comparison (6). **Open questions:** ten resolved, four left for the owner (9) |
-| 2026-11-16 | TC-1 implementation. 3.2: the hex float of `PIO2_3` read `0x1.84698p-48` and is `0x1.846988p-48` (the bit pattern was right; found by the C cross-check). 6.2: flag semantics pinned (`nonfinite=unrepresentable` and `=rejects` never together; `signed-zero` and `nan-class` describe the result). 6.3: counts as generated; halfway cases are stood in for by ulp neighbours (a midpoint is not a double); 128 reduction tie cases added. 6.4: gates (b) and (c) amended with the measured masked list (16 constants and 20 sites that no sampled vector can see; 5 sites provably inert), generator file names. 8: TC-1 status, Dart source deferred to TC-16, the Part II survey of other ports deferred to TC-1b |
+| 2026-11-16 | TC-1 implementation. 3.2: the hex float of `PIO2_3` read `0x1.84698p-48` and is `0x1.846988p-48` (the bit pattern was right; found by the C cross-check). 6.2: flag semantics pinned (`nonfinite=unrepresentable` and `=rejects` never together; `signed-zero` and `nan-class` describe the result). 6.3: counts as generated; halfway cases are stood in for by ulp neighbours (a midpoint is not a double); 128 reduction tie cases added. 6.4: gates (b) and (c) amended with the measured masked list (16 constants and 20 sites that no sampled vector can see; 5 sites provably inert), generator file names. 8: TC-1 is fixture-only, the music trio converges together in TC-2 (shared golden), Dart source deferred to TC-16, the Part II survey of other ports deferred to TC-1b |
 
 ## Appendix A. Reference implementation (Python, normative as a transcription)
 

@@ -1,7 +1,7 @@
 ## Unreleased — TRIG-REF-1 conformance corpus inputs (PHY00a 6, TC-1)
 
 - `python/trig` is now also selected by any file beneath
-  `code/specs/fixtures/trig-reference-v1/`, because its tests decode every row of
+  `code/specs/fixtures/trig-reference-v1/`, because its tests will decode every row of (from TC-2; registered now so the corpus never lands unwatched)
   that bit-exact corpus. The match is a slash-delimited prefix, so a lookalike
   directory such as `trig-reference-v10` selects nothing, and a selected
   consumer missing from discovery is a hard error.
