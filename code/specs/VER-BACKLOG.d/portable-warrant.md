@@ -24,7 +24,11 @@ remain historical and must not be read as the current queue.
 | WD-HARN1 | Harness supervisor hardening: wait timeout, never block exit, poison recovery | From the 2026-11-14 Windows `rust/lzw` hang. After WX-G (PR #19369), before CV2-S2 in the `warrant-grammar` queue. Companion: BT-TIMEOUT, PR #19483 (build-tool per-command timeout). |
 | Lane order after Go | ruby, java, csharp, kotlin, fsharp, c, cpp, elixir, lua, perl, haskell, swift, dart, ocaml, two at a time | Each on corpus v2 once CV2-S6 and CV2-S7 land, each passing WD-100. |
 | WX-O0 / WX-FL0 / WX-M0 | Specs VER04n (opaque, with VER29 and VER04m amendments), VER04p (floats), VER04o (collections plus first generics) | Written on other branches; VER04n and VER04p in parallel, VER04o after VER04n. Implementation WX-O1, WX-M1, WX-P1, WX-FL1 follows WX-G, WX-D2, WX-F, LP-012, WX-S1, WX-T1. |
-| VER30-INV2 | Re-run the inventory with a `recursive-types` tag | Before the four features' order is final; 654 is an upper bound. |
+| VER30-INV2 | Re-run the inventory with a `recursive-types` tag | **Done 2026-11-16** (data in `data/warrant-inventory/*-2026-11-16.*`; four features alone +432 crates over a baseline of 492, with recursive types +775 crates / 2,028 ports, recursive types alone +74). Recursive types are lifted (VER04s, WX-R0 after VER04o; WX-R1 after the four). |
+| WX-R0 / WX-R1 | Spec VER04s (recursive algebraic types), written after VER04o; implementation after the four features | Owner decision 15 (2026-11-16). Stream tags, if any, from `66` (VER04i 2.6.1). |
+| TRIG-CONV | One reference algorithm for the sixteen `trig` ports: spec first, then one PR per port | Owner decision 16. The VER04p floats pilot (WX-FL1) waits for it. |
+| WX-O4a / WX-O4b | Verify `x509-subject-public-key-info` and `der-asn1` (own Warrant evidence each) before the RSA pilot stage P-b | Owner decision 17, reversing the VER04n OWN-4 recommendation. Then adopt `x509-rsa-public-key`, then P-b. |
+| WD-100b | `warrant-corpus-conformance-v1` follow-up: Windows reserved device names refused; `win32` case folding is ASCII-only with non-ASCII compared exactly | Spec text is in VER04i 9.1, marked pending implementation. Applies to Python, TypeScript, Go and the Rust loader (PR #19492). Owner decision 20. |
 
 WX implementation continues under the existing WX-001 owner and IDs; this
 shard does not create a duplicate feature owner. WX-H/E prerequisites merged
