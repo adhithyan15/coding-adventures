@@ -1,329 +1,261 @@
 """
-Trigonometric Functions from First Principles (TRIG-REF-1)
-==========================================================
+Trigonometric Functions from First Principles
+==============================================
 
-This module implements sine, cosine and their friends from **addition,
-subtraction, multiplication and comparison alone**.  It never calls the host
-``sin`` or ``cos``, and ``sin``/``cos``/``radians``/``degrees`` do not even
-divide.  Every number is a binary64 ``float`` and every operation rounds once,
-so the answer is *bit for bit* the same in all seventeen language ports of this
-package.  The algorithm is specified in ``code/specs/PHY00a-trig-convergence.md``
-and checked against the shared vectors in
-``code/specs/fixtures/trig-reference-v1``.
+This module implements sine and cosine using **Taylor series** (specifically,
+Maclaurin series — Taylor series centered at zero). No math library is used;
+everything is built from addition, multiplication, and division alone.
 
-The big idea
-------------
-
-A sine wave repeats, so knowing ``sin`` on the small interval [-pi/4, pi/4] and
-*which quarter-turn* an angle sits in is enough to know it everywhere:
-
-    x = k * (pi/2) + r        with  |r| <= pi/4   and   k a whole number
-
-* ``sin`` of ``x`` is one of ``sin r``, ``cos r``, ``-sin r``, ``-cos r``,
-  chosen by ``k mod 4``.
-* ``cos`` of ``x`` is one of ``cos r``, ``-sin r``, ``-cos r``, ``sin r``.
-
-So the work is (1) finding ``k`` and ``r`` accurately, and (2) evaluating
-``sin r`` and ``cos r`` for a small ``r`` by their Maclaurin series.
-
-Step 1: range reduction (Cody-Waite)
-------------------------------------
-
-``k`` is the whole number nearest to ``x / (pi/2)``.  We find it with an
-add-and-subtract trick: ``MAGIC = 1.5 * 2**52`` has its units digit in the last
-place of the significand, so ``(t + MAGIC) - MAGIC`` is ``t`` rounded to the
-nearest integer, using only ``+`` and ``-`` (no ``floor``, no ``round``, no
-float-to-int cast, so nothing special happens at NaN or infinity).
-
-Then ``r = x - k*(pi/2)``.  The catch: ``pi/2`` is irrational, so a 53-bit
-``pi/2`` times a big ``k`` loses the very digits we need.  The fix is to store
-``pi/2`` as a *sum of five short pieces*, each at most 24 bits, so that
-``k * piece`` is **exact** (24 bits + 29 bits of ``k`` = 53 bits)::
-
-    x --------------------------------------------------------- the angle
-    |-- k*PIO2_1 --|                                             24 bits of k*pi/2
-                   |-- k*PIO2_2 --|                              next 24
-                                  |-- k*PIO2_3 --|               next 24
-                                                 |- k*PIO2_4 -|  next 24
-                                                              |k*PIO2_5| last, rounds
-
-Each subtraction strips one more slice of ``k*pi/2`` off ``x``.  The pieces add
-up to ``pi/2`` with a residual of ``2**-150``.
-
-Step 2: the series
+Why Taylor series?
 ------------------
 
-On |r| <= pi/4 both functions are short polynomials in ``z = r*r``::
+Any "smooth" function can be approximated near a point by a polynomial. The
+idea, due to Brook Taylor (1715), is:
 
-    sin r = r + r*z*(S1 + S2*z + ... + S9*z**8)      S[n] = (-1)**n / (2n+1)!
-    cos r = 1 - z/2 + z*z*(C2 + C3*z + ... + C9*z**7)  C[n] = (-1)**n / (2n)!
+    f(x) = f(0) + f'(0)*x + f''(0)*x^2/2! + f'''(0)*x^3/3! + ...
 
-The coefficients are the factorial table of the Maclaurin series, each rounded
-*once* to a double and stored as a bit pattern, so no port ever divides.  They
-are summed by **Horner's rule**, innermost first: the smallest terms are added
-first, which is the accurate order, and each step is one multiply and one add.
+When centered at zero this is called a **Maclaurin series**. For sine and
+cosine the derivatives cycle through a simple pattern, giving us concrete
+formulas we can compute with just arithmetic.
 
-How accurate is it?
--------------------
+How accurate is this?
+---------------------
 
-Within 3 ulp of the exact sine/cosine on the whole domain |x| <= 2**29 (the
-vectors gate this; the worst case found is 2.38 ulp), and **not** a libm: a
-correctly rounded sine is a project of its own.
-
-The domain
-----------
-
-``sin``, ``cos`` and ``tan`` are defined for ``|x| <= 2**29`` (about 5.4e8
-radians).  Beyond that, and for NaN and the infinities, they return **NaN**: the
-quotient ``k`` would no longer fit the exact products above, and returning a
-finite number would be a wrong answer that looks like a right one.
+With 20 terms and range reduction to [-pi, pi], we achieve accuracy matching
+IEEE 754 double-precision (~15 decimal digits) for all inputs, including very
+large ones like sin(1000*pi).
 """
 
-from __future__ import annotations
-
-import struct
-
 # ---------------------------------------------------------------------------
-# Constants, specified by bit pattern (PHY00a 3.2).
-#
-# A constant is a *bit pattern*; the decimal is only a convenience.  Building
-# each one from its bits means no parser, on any platform, can round it wrongly.
+# Constants
 # ---------------------------------------------------------------------------
 
+# Pi to full double-precision accuracy.  This is the ratio of a circle's
+# circumference to its diameter — the most important constant in
+# trigonometry.  We hard-code it here rather than computing it so that every
+# other function in the module can use it without circular imports.
 
-def _f(bits: int) -> float:
-    """The double whose IEEE 754 bit pattern is *bits*."""
-    return struct.unpack("<d", struct.pack("<Q", bits))[0]
+PI: float = 3.141592653589793
 
+# Two-pi comes up constantly in range reduction (see below).  A full
+# rotation around the unit circle is 2*pi radians, so adding or subtracting
+# 2*pi from an angle doesn't change its sine or cosine.
 
-# Pi, and the multiples the rest of the package leans on.
-PI: float = _f(0x400921FB54442D18)  # 3.141592653589793
-TWO_PI: float = _f(0x401921FB54442D18)
-HALF_PI: float = _f(0x3FF921FB54442D18)
-
-# 2/pi, the double nearest to it: x * INV_PIO2 is x measured in quarter-turns.
-_INV_PIO2: float = _f(0x3FE45F306DC9C883)
-
-# pi/2 as five pieces.  The first four have at most 24 significant bits (so
-# k * piece is exact for |k| < 2**29); the fifth is the remainder, rounded.
-_PIO2 = (
-    _f(0x3FF921FB40000000),  # 1.570796251296997
-    _f(0x3E74442D00000000),  # 7.549789415861596e-08
-    _f(0x3CF8469880000000),  # 5.390302529957765e-15
-    _f(0x3B78CC5160000000),  # 3.282003415807913e-22
-    _f(0x39F01B839A25204A),  # 1.2706558760139879e-29
-)
-
-# 1.5 * 2**52: adding then subtracting it rounds a number to the nearest integer.
-_MAGIC: float = _f(0x4338000000000000)
-
-# The edge of the domain, 2**29, and the threshold 2**-27 below which
-# sin(x) == x exactly (the next term, x**3/6, is under half an ulp of x).
-_LIMIT: float = _f(0x41C0000000000000)
-_TINY: float = _f(0x3E40000000000000)
-
-# Sine coefficients S[n] = (-1)**n / (2n+1)!   (index 0 is unused)
-#   S1 = -1/3!   S2 = +1/5!   S3 = -1/7!   S4 = +1/9!   S5 = -1/11!
-#   S6 = +1/13!  S7 = -1/15!  S8 = +1/17!  S9 = -1/19!
-_S = (
-    0.0,
-    _f(0xBFC5555555555555),
-    _f(0x3F81111111111111),
-    _f(0xBF2A01A01A01A01A),
-    _f(0x3EC71DE3A556C734),
-    _f(0xBE5AE64567F544E4),
-    _f(0x3DE6124613A86D09),
-    _f(0xBD6AE7F3E733B81F),
-    _f(0x3CE952C77030AD4A),
-    _f(0xBC62F49B46814157),
-)
-
-# Cosine coefficients C[n] = (-1)**n / (2n)!   (indices 0 and 1 are unused:
-# the n = 1 term, -1/2, is applied as the exact product 0.5 * z)
-#   C2 = +1/4!   C3 = -1/6!   C4 = +1/8!   C5 = -1/10!
-#   C6 = +1/12!  C7 = -1/14!  C8 = +1/16!  C9 = -1/18!
-_C = (
-    0.0,
-    0.0,
-    _f(0x3FA5555555555555),
-    _f(0xBF56C16C16C16C17),
-    _f(0x3EFA01A01A01A01A),
-    _f(0xBE927E4FB7789F5C),
-    _f(0x3E21EED8EFF8D898),
-    _f(0xBDA93974A8C07C9D),
-    _f(0x3D2AE7F3E733B81F),
-    _f(0xBCA6827863B97D97),
-)
-
-# pi/180 and 180/pi, pre-divided so a conversion is ONE multiply (one rounding).
-_RAD_PER_DEG: float = _f(0x3F91DF46A2529D39)  # 0.017453292519943295
-_DEG_PER_RAD: float = _f(0x404CA5DC1A63C1F8)  # 57.29577951308232
-
-_NAN: float = _f(0x7FF8000000000000)
-
-
-def _to_float(x: float) -> float:
-    """Convert an int argument to binary64 once (``float`` keeps -0.0)."""
-    return x if type(x) is float else float(x)
+TWO_PI: float = 2 * PI
 
 
 # ---------------------------------------------------------------------------
-# Range reduction
+# Range Reduction
 # ---------------------------------------------------------------------------
 
-
-def _reduce(x: float) -> tuple[float, float]:
-    """Return ``(k, r)`` with ``x = k*(pi/2) + r`` and ``|r| <= pi/4`` (about).
-
-    Precondition: ``|x| <= 2**29`` (the callers' domain guard has run), so ``k``
-    is a finite whole number below 2**29 in magnitude.
-
-    Every product and the subtraction that uses it are written as two
-    statements.  They must stay two operations: a compiler that fused
-    ``r - k*p`` into one fused multiply-add would round once instead of twice
-    and change the last bit.  (CPython never fuses; the habit is the contract.)
+def _range_reduce(x: float) -> float:
     """
-    t = x * _INV_PIO2  # x measured in quarter-turns, one rounding
-    k = (t + _MAGIC) - _MAGIC  # nearest whole number, ties to even
-    r = x
-    for piece in _PIO2:
-        m = k * piece  # exact for the first four pieces
-        r = r - m
-    return k, r
+    Normalize an angle *x* (in radians) into the interval [-pi, pi].
+
+    Why do we need this?
+    ~~~~~~~~~~~~~~~~~~~~
+
+    The Taylor series for sin and cos converge for *any* real number, but
+    they converge **faster** when x is small.  If someone passes in
+    x = 1000*pi, the raw series would need hundreds of terms to cancel out
+    the enormous intermediate values.  By first reducing x into [-pi, pi],
+    20 terms are more than enough.
+
+    How it works
+    ~~~~~~~~~~~~
+
+    Since sin and cos are **periodic** with period 2*pi:
+
+        sin(x) = sin(x - 2*pi*k)   for any integer k
+
+    we subtract (or add) multiples of 2*pi until the result lands in
+    [-pi, pi].  Python's modulo operator handles this neatly:
+
+        x mod 2*pi   lands in [0, 2*pi)
+
+    then shifting by -pi lands in [-pi, pi).
+    """
+    # Step 1: bring x into [0, 2*pi) using modulo.
+    # Python's % operator always returns a non-negative result when the
+    # divisor is positive, which is exactly what we want.
+    x = x % TWO_PI
+
+    # Step 2: shift from [0, 2*pi) to [-pi, pi).
+    # Values greater than pi get wrapped to the negative side.
+    if x > PI:
+        x -= TWO_PI
+
+    return x
 
 
 # ---------------------------------------------------------------------------
-# The series kernels, Horner's rule on stored coefficients
+# Sine — The Maclaurin Series
 # ---------------------------------------------------------------------------
-
-
-def _sin_k(r: float) -> float:
-    """sin(r) for |r| <= pi/4:  r + r*z*(S1 + S2*z + ... + S9*z**8)."""
-    z = r * r
-    p = _S[9]
-    for n in range(8, 0, -1):
-        p = p * z
-        p = p + _S[n]
-    w = r * z
-    w = w * p
-    return r + w
-
-
-def _cos_k(r: float) -> float:
-    """cos(r) for |r| <= pi/4:  (1 - z/2) + z*z*(C2 + C3*z + ... + C9*z**7)."""
-    z = r * r
-    q = _C[9]
-    for n in range(8, 1, -1):
-        q = q * z
-        q = q + _C[n]
-    u = 0.5 * z  # exact
-    u = 1.0 - u
-    v = z * z
-    v = v * q
-    return u + v
-
-
-# ---------------------------------------------------------------------------
-# Sine and cosine
-# ---------------------------------------------------------------------------
-
 
 def sin(x: float) -> float:
     """
-    Sine of *x* (radians), for ``|x| <= 2**29``; NaN outside that domain.
+    Compute the sine of *x* (in radians) using the Maclaurin series.
 
-    The result table (PHY00a 3.3):
+    The Maclaurin series for sine
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    ===================== ==============================
-    input                 result
-    ===================== ==============================
-    NaN, +-inf            NaN
-    ``|x| > 2**29``       NaN (outside the domain)
-    +0 / -0               +0 / **-0** (``sin(-0) = -0``)
-    ``0 < |x| < 2**-27``  ``x`` itself (correctly rounded)
-    otherwise             reduce, then pick a kernel
-    ===================== ==============================
+    Starting from the general Taylor formula and plugging in the derivatives
+    of sin (which cycle: cos, -sin, -cos, sin, ...):
 
-    The domain guard is a *negated* ``<=``.  A NaN fails every comparison, so
-    ``not (abs(x) <= LIMIT)`` is true for NaN, both infinities and every large
-    finite value, in one test.  The tempting ``abs(x) > LIMIT`` lets a NaN
-    through to ``int(k)``, which raises.
+        sin(x) = x - x^3/3! + x^5/5! - x^7/7! + ...
+
+    Written with sigma notation:
+
+                 inf
+        sin(x) = SUM  (-1)^n * x^(2n+1) / (2n+1)!
+                 n=0
+
+    Computing iteratively (the key trick)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    Rather than computing each term from scratch (which would require
+    computing large factorials and large powers), we compute each term
+    **from the previous one**.  Look at the ratio of consecutive terms:
+
+        term_{n+1}     (-1)^(n+1) * x^(2(n+1)+1) / (2(n+1)+1)!
+        ----------  =  ----------------------------------------
+         term_n            (-1)^n * x^(2n+1) / (2n+1)!
+
+    Simplifying:
+
+        term_{n+1} = term_n * (-x^2) / ((2n+2) * (2n+3))
+
+    This is beautiful: each new term is just the old term multiplied by
+    a small fraction.  No factorials, no large powers — just one multiply
+    and one divide per iteration.
     """
-    x = _to_float(x)
-    if not (abs(x) <= _LIMIT):
-        return _NAN
-    if abs(x) < _TINY:
-        return x  # also keeps -0.0 and subnormals exact
-    k, r = _reduce(x)
-    # k is a whole number below 2**29, so int(k) is exact; "& 3" is k mod 4
-    # (floor-modulus for negatives: -1 & 3 == 3).
-    q = int(k) & 3
-    if q == 0:
-        return _sin_k(r)
-    if q == 1:
-        return _cos_k(r)
-    if q == 2:
-        return -_sin_k(r)
-    return -_cos_k(r)
+    # --- Range reduction first ---
+    # Bring x into [-pi, pi] so the series converges rapidly.
+    x = _range_reduce(x)
 
+    # --- Series computation ---
+    # The first term (n=0) of the Maclaurin series for sin is simply x.
+    term: float = x          # current term: (-1)^n * x^(2n+1) / (2n+1)!
+    total: float = x         # running sum of all terms so far
+
+    # We'll compute 20 terms total (n=0 through n=19).  In practice the
+    # series converges well before 20 terms for inputs in [-pi, pi], but
+    # extra terms cost almost nothing and guarantee full precision.
+    for n in range(1, 20):
+        # Compute the multiplier to go from term_n to term_{n+1}:
+        #
+        #   multiplier = -x^2 / ((2n+2) * (2n+3))
+        #
+        # But since we're using the *previous* n (which is n-1 in our loop
+        # variable), the denominator uses (2*(n-1)+2) * (2*(n-1)+3) = 2n * (2n+1).
+        # Wait — let's be precise.  In the loop, `n` is the 1-based index of
+        # the term we're about to compute.  The previous term had index n-1.
+        # So:
+        #
+        #   term_n = term_{n-1} * (-x^2) / ((2(n-1)+2) * (2(n-1)+3))
+        #          = term_{n-1} * (-x^2) / ((2n) * (2n+1))
+
+        denominator = (2 * n) * (2 * n + 1)
+        term = term * (-x * x) / denominator
+        total += term
+
+    return total
+
+
+# ---------------------------------------------------------------------------
+# Cosine — The Maclaurin Series
+# ---------------------------------------------------------------------------
 
 def cos(x: float) -> float:
     """
-    Cosine of *x* (radians), for ``|x| <= 2**29``; NaN outside that domain.
+    Compute the cosine of *x* (in radians) using the Maclaurin series.
 
-    ``cos(+-0) = 1``, and ``cos(x) = 1`` for ``|x| < 2**-27`` (the first
-    correction, ``x**2/2``, is below half an ulp of the double just under 1).
-    The quarter-turn table is ``cos r, -sin r, -cos r, sin r`` for
-    ``k mod 4 = 0, 1, 2, 3``.
+    The Maclaurin series for cosine
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    Cosine's derivatives also cycle, but shifted by one position compared
+    to sine:
+
+        cos(x) = 1 - x^2/2! + x^4/4! - x^6/6! + ...
+
+    In sigma notation:
+
+                 inf
+        cos(x) = SUM  (-1)^n * x^(2n) / (2n)!
+                 n=0
+
+    The iterative trick (same idea as sine)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    The ratio of consecutive terms:
+
+        term_{n+1} = term_n * (-x^2) / ((2n+1) * (2n+2))
+
+    Notice it's almost identical to the sine recurrence — only the
+    denominator indices differ by one.  This makes sense: cosine uses
+    even powers (0, 2, 4, ...) while sine uses odd powers (1, 3, 5, ...),
+    so the factorial denominators shift accordingly.
     """
-    x = _to_float(x)
-    if not (abs(x) <= _LIMIT):
-        return _NAN
-    if abs(x) < _TINY:
-        return 1.0
-    k, r = _reduce(x)
-    q = int(k) & 3
-    if q == 0:
-        return _cos_k(r)
-    if q == 1:
-        return -_sin_k(r)
-    if q == 2:
-        return -_cos_k(r)
-    return _sin_k(r)
+    # --- Range reduction first ---
+    x = _range_reduce(x)
+
+    # --- Series computation ---
+    # The first term (n=0) of the Maclaurin series for cos is 1.
+    term: float = 1.0        # current term: (-1)^n * x^(2n) / (2n)!
+    total: float = 1.0       # running sum
+
+    for n in range(1, 20):
+        # Going from term at index (n-1) to term at index n:
+        #
+        #   term_n = term_{n-1} * (-x^2) / ((2(n-1)+1) * (2(n-1)+2))
+        #          = term_{n-1} * (-x^2) / ((2n-1) * (2n))
+
+        denominator = (2 * n - 1) * (2 * n)
+        term = term * (-x * x) / denominator
+        total += term
+
+    return total
 
 
 # ---------------------------------------------------------------------------
 # Degree / Radian Conversion
 # ---------------------------------------------------------------------------
 
-
 def radians(deg: float) -> float:
     """
-    Convert an angle from degrees to radians: ONE multiply by ``pi/180``.
+    Convert an angle from degrees to radians.
 
-    180 degrees is pi radians, so ``radians = degrees * (pi / 180)``.  The
-    constant is pre-divided and stored as a bit pattern, so the conversion
-    rounds once (``deg * PI / 180`` rounds twice and can overflow its
-    intermediate).  NaN propagates, infinities map to infinities and signed
-    zero keeps its sign.
+    Why radians?
+    ~~~~~~~~~~~~
+
+    Degrees are a human convenience (360 per full turn, inherited from
+    Babylonian base-60 arithmetic).  Radians are the *natural* unit for
+    angles in mathematics: one radian is the angle subtended by an arc
+    whose length equals the radius.  A full circle is 2*pi radians.
+
+    The conversion is straightforward:
+
+        radians = degrees * (pi / 180)
+
+    since 180 degrees = pi radians.
     """
-    return _to_float(deg) * _RAD_PER_DEG
+    return deg * PI / 180
 
 
 def degrees(rad: float) -> float:
     """
-    Convert an angle from radians to degrees: ONE multiply by ``180/pi``.
+    Convert an angle from radians to degrees.
 
-    The inverse of :func:`radians`.  A result above the largest double is
-    ``inf``.
+    This is simply the inverse of the radians() function:
+
+        degrees = radians * (180 / pi)
     """
-    return _to_float(rad) * _DEG_PER_RAD
+    return rad * 180 / PI
 
 
 # ---------------------------------------------------------------------------
 # Square Root — Newton's (Babylonian) Method
 # ---------------------------------------------------------------------------
-
 
 def sqrt(x: float) -> float:
     """
@@ -351,11 +283,10 @@ def sqrt(x: float) -> float:
 
     Typically converges in 10–15 iterations for any normal double-precision input.
     """
-    x = _to_float(x)
     if x < 0:
         raise ValueError(f"sqrt: domain error — input {x} is negative")
 
-    # sqrt(0) is exactly 0 (and keeps the sign of -0).
+    # sqrt(0) is exactly 0.
     if x == 0.0:
         return x
     if x == float("inf"):
@@ -392,7 +323,6 @@ def sqrt(x: float) -> float:
 # Tangent — Sine over Cosine
 # ---------------------------------------------------------------------------
 
-
 def tan(x: float) -> float:
     """
     Compute the tangent of *x* (in radians).
@@ -408,26 +338,23 @@ def tan(x: float) -> float:
     (1, 0), then tan(x) is where the ray at angle x meets that line. This is
     the literal origin of the name "tangent."
 
-    The pole sentinel (a pinned legacy contract)
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    Undefined Points (Poles)
+    ~~~~~~~~~~~~~~~~~~~~~~~~
 
-    Wherever cos(x) = 0 — at x = pi/2 + k*pi — tan(x) is undefined. When
-    ``|cos(x)| < 1e-15`` we return +-1e308 (signed like ``sin``) instead of an
-    infinity.  That is **a convention, not an approximation**: the true tangent
-    of the double nearest pi/2 is about 1.6e16.  PHY00 documents it and the
-    shared corpus requires it, so it is pinned.  No accuracy claim is made for
-    ``tan``.
+    Wherever cos(x) = 0 — at x = π/2 + k·π for any integer k — tan(x) is
+    undefined (division by zero). The function "blows up" to ±∞. We detect
+    when |cos(x)| < 1e-15 and return a very large finite number instead, to
+    signal the near-singularity without raising an error.
 
-    ``tan(+-0) = +-0``; NaN, infinities and ``|x| > 2**29`` give NaN (both
-    ``sin`` and ``cos`` are NaN, the sentinel test is false for NaN, and
-    ``NaN / NaN`` is NaN).  ``cos`` is never zero here, so the division cannot
-    raise.
+    We call our own sin() and cos() here — no math.tan used.
     """
     s = sin(x)  # our own sin — no math.sin
     c = cos(x)  # our own cos — no math.cos
 
-    # False when c is NaN, so a NaN falls through to NaN / NaN = NaN.
+    # Guard against poles: |cos(x)| < 1e-15 means we're within
+    # about 1e-15 radians of a discontinuity.
     if abs(c) < 1e-15:
+        # Return the largest float, signed to match the direction of divergence.
         return 1.0e308 if s > 0 else -1.0e308
 
     return s / c
@@ -436,6 +363,10 @@ def tan(x: float) -> float:
 # ---------------------------------------------------------------------------
 # Arctangent — Inverse of Tangent
 # ---------------------------------------------------------------------------
+
+# HALF_PI is π/2. It appears in both atan's range reduction and atan2's
+# quadrant handling. We compute it once here for reuse.
+HALF_PI: float = PI / 2.0
 
 
 def _atan_core(x: float) -> float:
@@ -469,9 +400,7 @@ def _atan_core(x: float) -> float:
 
         term_n = term_{n-1} * (-t^2) * (2n-1) / (2n+1)
 
-    The operations run strictly left to right, ``((term * -t^2) * (2n-1)) /
-    (2n+1)``, one rounding each (PHY00a 3.9).  We multiply the final result by
-    2 to undo the half-angle halving.
+    We multiply the final result by 2 to undo the half-angle halving.
     """
     # Half-angle reduction: shrink |x| to |y| <= tan(pi/8) ~= 0.414.
     # We use our own sqrt here — no math.sqrt.
@@ -484,9 +413,8 @@ def _atan_core(x: float) -> float:
     result: float = t
 
     for n in range(1, 31):
-        term = term * (-t_sq)
-        term = term * (2 * n - 1)
-        term = term / (2 * n + 1)
+        # Each term: term_n = term_{n-1} * (-t^2) * (2n-1) / (2n+1)
+        term = term * (-t_sq) * (2 * n - 1) / (2 * n + 1)
         result += term
 
         # Early exit when terms are negligibly small.
@@ -516,7 +444,7 @@ def atan(x: float) -> float:
     then tan(pi/2 - theta) = cot(theta) = 1/x, so atan(1/x) = pi/2 - theta.
     """
     # The public contract is binary64 even when a Python caller supplies an int.
-    x = _to_float(x)
+    x = float(x)
 
     # atan(x) rounds exactly to x here; avoid halving subnormals and retain -0.
     if abs(x) <= 7.450580596923828e-9:
@@ -563,17 +491,7 @@ def atan2(y: float, x: float) -> float:
       (y=0, x<0)   → pi      (negative x-axis, by atan(0/x<0) + pi = pi)
       (y<0, x=0)   → -pi/2   (negative y-axis)
       (y=0, x=0)   → 0       (undefined by convention)
-      (NaN, any) or (any, NaN) → NaN   (added by PHY00a: a finite answer to an
-                                        undefined question is a wrong answer)
-
-    These are *pinned conventions*, not IEEE 754's: ``atan2(-0, x < 0)`` is
-    ``+pi`` and ``atan2(+-inf, +-inf)`` is NaN (because ``y/x`` is NaN).
     """
-    y = _to_float(y)
-    x = _to_float(x)
-    # A NaN fails every comparison below and would fall through to 0.0.
-    if x != x or y != y:  # noqa: PLR0124
-        return _NAN
     if x > 0.0:
         return atan(y / x)
     if x < 0.0 and y >= 0.0:

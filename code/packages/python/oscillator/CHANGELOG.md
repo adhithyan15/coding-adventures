@@ -1,15 +1,5 @@
 # Changelog
 
-## 0.1.2 - 2026-11-16
-
-- `SineOscillator.value_at` reduces its phase to [0, 1) cycles
-  (`phase - floor(phase)`, exact in binary64) before multiplying by `2*pi`.
-  `trig.sin` now returns NaN beyond 2**29 radians (PHY00a 3.4.1, TRIG-CONV), and a
-  440 Hz tone would have crossed that after about 54 hours; the reduction keeps
-  every time finite and is also more accurate at large times.
-- Test: a sine oscillator at 440 Hz stays finite and periodic far beyond 2**29
-  radians.
-
 ## 0.1.1 - 2026-11-15
 
 - Security & CWE hardening (MUS-W1-D):
