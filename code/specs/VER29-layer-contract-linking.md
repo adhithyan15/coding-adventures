@@ -22,8 +22,9 @@ reach classes, obligations, labels) is VER04m.
 **Amendment (2026-11-16), owner decision, with [VER04n](VER04n-warrant-opaque-types.md):**
 foreign opaque handles are cited through a new contract id shape,
 `contract.<package>.opaque.<Type>` (section 3.1), recognised also after `from` in an
-`opaque` declaration (section 3.3), pinned by an interface digest (section 5.3) and
-discharged from the maker grounding evidence (section 5.1); `ContractInterfaceMismatch`
+`opaque` declaration (section 3.3), pinned by an interface digest and a binding digest
+(section 5.3) and discharged from the maker grounding evidence, the lower controls and
+the lower sealing status (sections 5.1, 5.5); `ContractInterfaceMismatch`
 is a new error (section 5.2) and a binder of opaque type is never a complete domain
 (section 6.2). The normative text of each edit is VER04n section 17.1 and is applied by
 the implementation slice that makes it true (slice 6 below); no existing id, rung or
