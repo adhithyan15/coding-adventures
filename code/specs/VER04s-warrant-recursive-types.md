@@ -10,8 +10,9 @@ until the R1-S0 errata pass fixes them, and every count in the text was computed
 by hand from the stated domains so a reviewer can redo it. Claims about what a
 package does are "from reading": the public signatures and the code named in the
 text were read, not run. The freeze is lifted **spec first, with adversarial
-review**; that review has **not** happened for this document, and backlog row
-WX-R-REVIEW (19.2) is owed before R1-S0 starts. Section 20.1 lists the two
+review**; one adversarial review ran on 2026-11-16 and its findings and fixes
+are recorded in section 21. The lane-specialist read of the per-lane table of
+8.3 (WX-R-REVIEW, 19.2) is still owed before the lane rollout R2. Section 20.1 lists the two
 questions that are the owner's to answer; every other open question carries a
 recommended default that the text already applies.
 
@@ -36,7 +37,7 @@ full depth, `MAX_IR_VALUE`, fuel, total-work bounds, the independent oracle),
 [VER29](VER29-layer-contract-linking.md) (strength rungs),
 [VER30](VER30-warrant-expansion-roadmap.md) (decisions log, decision 15),
 [VER-BACKLOG](VER-BACKLOG.md) LP-012 (the honest kinds), and the 2026-11-16
-inventory (`data/warrant-inventory/summary-2026-11-16.md`,
+inventory (`code/specs/data/warrant-inventory/summary-2026-11-16.md`,
 `method-delta-2026-11-16.md`).
 
 **Section references.** As in VER04n, VER04o and VER04p, where this document needs
@@ -117,7 +118,7 @@ What is added:
 | the corpus encoding (no new stream tag, one value one encoding), type-table cycles, descriptors `rec_depth` and `rec_nodes`, the IR level `ir.rec` | 7 |
 | the lane binding contract: iterative adapter, per-lane table for eighteen lanes, C structs and ownership, lazy and cyclic hosts | 8 |
 | parser-style claims: round trip, malformed input, canonical form, depth bombs | 9 |
-| three obligations and their controls, fourteen sabotage controls | 10, 11 |
+| three obligations and their controls, fifteen sabotage controls | 10, 11 |
 | honest labels and vacuity guards | 12 |
 | security considerations | 13 |
 | the pilot `canonical-cbor`, chosen over `bounded-json`, `json-value`, `wasm-types` | 14 |
@@ -167,7 +168,7 @@ presented as already decided.
 | i | **The runtime capability jail stays mandatory**, and a recursive claim is never published through VER29 above its layer as an unbounded fact | 13, 12 |
 | j | **Pilot: `canonical-cbor`** (14) | 14 |
 
-### 1.2 Where this document departs from VER04o section 19, and from the task text
+### 1.2 Where this document departs from VER04o section 19
 
 VER04o section 19 listed nine things VER04s would need and said the design was
 already shaped for them. Four of its sentences are changed here, each for a stated
@@ -176,10 +177,10 @@ reason.
 | # | VER04o 19 said | Here | Why |
 |---|---|---|---|
 | D1 | row 5: "a `fold_rec` over a value is bounded by its leaf count" (a built-in fold) | a user-written **`rec model`** with a `decreasing` parameter and the subterm, rank and linear-use rules (4) | a catamorphism hands the step only the *results* for the children, not the children; `subst`, `simplify` and every function that matches on a child's shape need the children themselves. A fold-only language cannot state them |
-| D2 | row 9: "VER04s is expected to need none (a recursive value is a variant, tag `65`); if it does, the lowest free value is `68`" | **no tag is taken**; `68` to `79` stay free (7.1) | one value, one encoding: a second tag for the same variant would make two byte strings for one value, which the injective stream of VER04i 2.6 forbids |
+| D2 | row 9: "VER04s is expected to need none (a recursive value is a variant, tag `65`); if it does, the lowest free value is `68`" | **no tag is taken**; `68` to `79` stay free (7.1). This confirms what VER04o expected and is listed for the record, not as a change | one value, one encoding: a second tag for the same variant would make two byte strings for one value, which the injective stream of VER04i 2.6 forbids |
 | D3 | row 2: "decide whether a recursive type may be a key" | a recursive type **may** be a key type when every non-recursive component is (3.6); `List`, `Set`, `Map` stay non-key | `Expr` with `And(Expr, Expr)` is the common case and needs no host story beyond the one `Bytes` already has; a `List` key needs one (open question RQ-1) |
 | D4 | row 4: "only a depth cap is new" | two caps: **nesting depth** and **cells** (6.1) | a tree of 65,536 empty arrays has no leaf and so no weight under the leaf cap of VER04o CT2; cells count every node |
-| D5 | the task text writes `Num(Int)` | `Num(I64)` | `Int` exists inside the model IR only and MUST NOT appear in an op signature, binder or value (VER04r 2.1) |
+| D5 | a first sketch of the JSON example wrote `Num(Int)` | `Num(I64)` | `Int` exists inside the model IR only and MUST NOT appear in an op signature, binder or value (VER04r 2.1) |
 
 Alternatives considered and rejected: **a built-in `fold_rec` only** (D1);
 **general recursion with a fuel limit as the only guard** (rejected: a document
@@ -335,7 +336,7 @@ the **type expression**: the recursion edge is a name, not a nested level, so
 
 ### 3.4 Measures
 
-**RM4.** Three measures, each defined by structural induction, each computed in
+**RM4.** Four measures, each defined by structural induction, each computed in
 checked arithmetic, none by host recursion. In each, a **cell** is every scalar,
 every nullary constructor, and every aggregate (constructor application, tuple,
 record, `List`, `Option` `Some`, `Set`, `Map`); a map entry is not a cell of its
@@ -394,7 +395,7 @@ VER04s adds exactly two rows:
 
 | Type | `ord` | Note |
 |---|---|---|
-| a **recursive** `variant` or `record` | constructor **declaration index** first, then the fields lexicographically in declaration order, depth first, as VER04o already says for a variant | a key type **only if** every non-recursive component of every constructor is a key type, where a mention of a type of the same group counts as a key type (a greatest-fixed-point assumption, discharged by the table's other rows) |
+| a **recursive** `variant` or `record` | constructor **declaration index** first, then the fields lexicographically in declaration order, depth first, as VER04o already says for a variant | a key type **only if the whole group is**: start with every type of the group assumed a key type, remove any member one of whose fields is then not a key type, and repeat until nothing changes (at most `MAX_SCC_TYPES` rounds). What is left are the key types. So `A = X(B)`, `B = Y(A) \| Z(List<U8>)` has **no** key type: `B` fails on the `List`, and then `A` fails on `B` |
 | `Option<K>` of a recursive key type | unchanged | |
 
 `List`, `Set`, `Map` and opaque types stay **non-key**, so `Json` and `Node` are
@@ -422,6 +423,11 @@ somewhere, and a proper "prefix" case cannot arise because the walk compares
 constructors, whose field counts are fixed by the constructor. `ord` is consistent
 with `==`: `cmp(a, b) = 0` iff `a == b`, so VER04o's strict-order decoder rule CC2
 applies to a `Set` of trees unchanged. The comparison is **iterative** (RM5a).
+`ord` is **not** the bytewise order of the stream encoding (the stream carries
+constructor *names*, and `ord` uses declaration *indices*), and nothing needs it to
+be: what the encoding needs is that `cmp(a, b) = 0` exactly when the two encodings
+are the same byte string, which is the injectivity of 7.1. A consumer MUST compare
+decoded values with `ord`, never encoded bytes.
 
 **RM6b.** (The constraints of VER04o 6.2.) A recursive type is `Eq` iff it has `==`;
 it is `Ord` iff it is a key type; it is **never `Finite`**: every type of a
@@ -434,7 +440,8 @@ It is never `Bits`.
 value built from the first member of each field's list (at most 8)". For a
 recursive type a recursive field has no "first member" yet. The built-in
 **`least<T>()`** is the first value of `shape(v, nodes <= n)` for the least `n` at
-which the domain is non-empty, taken in the enumeration order of 5.3: the smallest
+which the domain is non-empty, with `width <= 2` and the default alphabets of 5.5,
+taken in the enumeration order of 5.3: the smallest
 tree, ties broken by constructor index. `witness<T>()` of a recursive type uses
 `least<T>()` for every recursive field. For `Expr`: `witness = [Lit(false),
 Not(Lit(false)), And(Lit(false), Lit(false))]`. (`least<T>()` is also what the
@@ -446,7 +453,8 @@ is not a key type, `least<T>()` still exists; `witness<T>()` is only for key typ
 * **Not a graph.** A host structure with sharing (`let a = Arr([n, n])` where both
   elements are one object) is, as a model value, the tree with the subtree
   **twice**. Its `cells_of` counts it twice. A host structure with a cycle is not
-  a value at all and is the failure `value-depth` (8.2). Hash-consing, DAG
+  a value at all and is the failure `value-depth` or `value-cells`, whichever cap
+  the walk reaches first (8.2). Hash-consing, DAG
   equality and cyclic data are out of scope (18).
 * **Not lazy.** A value is fully constructed. A host value that is a thunk, a
   generator or an infinite stream is forced by the adapter under the caps of 6.1
@@ -526,10 +534,12 @@ another call, on a value derived from a different parameter, or a call with the
 decreasing position unfilled, is **W0771**.
 
 **RR3.** (Why this terminates.) The measure of a call is the pair `(cells_of(arg),
-rank(callee))` under the lexicographic order. A strict call lowers the first
-component (a derived term is a proper subtree, so it has fewer cells). A level call
-keeps the first and raises the second. Ranks are bounded by the group size. There
-is no infinite descending chain in `(N, {0..15})` ordered lexicographically, so
+MAX_REC_MODELS - 1 - rank(callee))` under the lexicographic order. A strict call
+lowers the first component (a derived term is a proper subtree, so it has fewer
+cells). A level call keeps the first and lowers the second, because it goes to a
+member of higher rank and ranks are below `MAX_REC_MODELS = 16`. Both components
+are natural numbers, the pair strictly decreases at every call, and there is no
+infinite descending chain in `(N, {0..15})` ordered lexicographically, so
 every chain of calls is finite, and therefore every evaluation terminates, **and
 the number of nested calls on one path is at most `cells_of(p) * MAX_REC_MODELS`**.
 This is the "size-change" argument of the structural-recursion checkers of Coq,
@@ -540,14 +550,29 @@ cost: `f(Node(l, r)) = add(f(l), f(l))` calls `f` on `l` twice at every level, s
 the work is `2^depth`. The checker therefore also requires that along every
 **evaluation path** (the arms of `if` and `match` are different paths; the two
 operands of `and`, `or`, `implies` and a `fold` over one sequence are one path) the
-**arguments passed to group members are pairwise disjoint derived terms**: no two
-calls receive the same term, or a term and one of its derived terms. A `fold` over a
+**decreasing arguments passed to group members are pairwise disjoint**: no two
+calls receive the same term, or a term and one of its derived terms. The argument
+of a **level call** (the decreasing parameter itself) counts, and it overlaps every
+derived term, so a path with a level call has no other call to a group member.
+Two terms `at(t, i)` and `at(t, j)` are disjoint only when `i` and `j` are
+different literals; `at(t, i)` overlaps a WX-D form over `t`. A `fold` over a
 derived sequence `xs` with a group member counts as **one** use of `xs`. A
 violation is **W0771** with the text "term used by two recursive calls". Under this
 rule each cell of the decreasing value is the decreasing argument of at most one
 invocation per member of the group, so the invocation count is at most
-`MAX_REC_MODELS * cells_of(p)`; the work is linear in the size of the data, not
-exponential in its depth.
+`MAX_REC_MODELS * cells_of(p)`; the number of invocations **within one group** is
+linear in the size of the data, not exponential in its depth.
+
+**RR4a.** (Calls between groups: what the bound is not.) Groups form an acyclic
+order (a `rec model` of one group that calls a `rec model` of another cannot be
+called back by it, or the two would be one group). A call from a member of group
+`G` to a model of another group `H` is **not** restricted by RR4, and `H` may walk
+the whole argument again. So a chain of `s` groups, each calling the next at
+every node (a `depth_like(l)` called beside `f(l)`), costs up to `cells^s`
+invocations: **polynomial of degree `s`, not linear**. Termination (RR3) is not
+affected. The static bound of 4.5 is computed with this in it, and the fuel of
+RR7 is the limit that actually stops a costly model; a document is not refused
+for it.
 
 What RR4 refuses, and the remedy, stated so authors are not surprised: a model
 that visits the elements of one list **twice** by two recursive folds on the path
@@ -639,8 +664,7 @@ generated model code and each lane's IR evaluator). Every node evaluation and ev
 frame push charges as VER04k 2.7 and VER04j 4.5 say (one unit, plus one per field
 touched). Exhaustion is `ir-fuel`: a **corpus error** if the evaluation is
 subject-independent, a **case failure** if a `subject_op` sits beneath it, exactly
-the split of VER04r 3.2 for `ir-overflow`. This is the "fuel" of the task text: the
-run-time step meter that VER04r 4.2 rule 6 said was unnecessary *because the IR
+the split of VER04r 3.2 for `ir-overflow`. This is the run-time step meter that VER04r 4.2 rule 6 said was unnecessary *because the IR
 had no recursion*, now necessary and added.
 
 **RR8.** (Two layers.) Structural recursion (RR1 to RR4) is the first layer: it
@@ -656,16 +680,28 @@ from the source (10.2 of VER04r).
 ### 4.5 Termination, restated for a reviewer
 
 * every `rec model` call chain is finite (RR3);
-* its length is at most `cells_of(p) * 16` and the number of invocations at most the
-  same (RR4);
-* each invocation does a bounded amount of **non-recursive** work: the static cost
-  of its body is at most `MAX_IR_COST = 2,000` (VER04r 4.2 rule 6), with a call to
-  a group member counted as one node;
-* so the whole evaluation is at most `16 * cells_of(p) * 2,000` units, which for
-  `cells_of(p) = 65,536` is `2.1e9`, **above** `MAX_IR_FUEL`. Hence the fuel is a
-  real limit and the report prints, per suite, whether fuel was **proven
-  sufficient** (the static bound of the largest value in the domain is under the
-  cap) or **dynamic** (6.5).
+* its length is at most `cells_of(p) * 16`, and the number of invocations of the
+  members of one group on one argument is at most the same (RR4);
+* the **static bound** `fuel_bound(G, c)` of a group `G` on an argument of at most
+  `c` cells is `c * (sum over the members of G of the static cost of the body)`,
+  where a body's static cost is the node count of VER04r 4.2 rule 6 (at most
+  `MAX_IR_COST = 2,000`) with a call to a member of `G` counted as one node, a call
+  to an ordinary model at its full cost, and a call to a `rec model` of another
+  group `H` at `fuel_bound(H, c)` (RR4a);
+* the bound **exists only** for a group none of whose bodies, and none of whose
+  callees, uses a form whose charge depends on the size of a value: a WX-D form
+  over a sequence (charged per element, VER04k 2.7), a collection built-in
+  (charged per leaf, VER04o 3.6) or a constructor of a recursive value (charged
+  per cell copied, RB6). A group that uses one has **no static bound** and is
+  `dynamic`;
+* the worst case is far above the fuel: 16 members of cost 2,000 on
+  `cells_of(p) = 65,536` is `2.1e9`, **above** `MAX_IR_FUEL = 1,000,000`. Hence the
+  fuel is a real limit and the report prints, per suite, whether fuel was **proven
+  sufficient** (a static bound exists and, for the largest value in the domain,
+  is under the cap), **measured** (the evaluation is subject-independent, so the
+  generator ran every case and none exhausted, RB7) or **dynamic** (6.5). The
+  pilot's writer `enc` folds over lists and concatenates, so it has no static
+  bound; it is subject-independent, so it is `measured` (14.5).
 
 ## 5. Domains for evidence
 
@@ -684,16 +720,26 @@ shape(v, depth <= d, width <= w, T1 in L1, T2 in L2, ...) : Bool
 shape(v, nodes <= n, width <= w, T1 in L1, ...)           : Bool
 ```
 
-* `v` is a value of a recursive type (the group `G` of that type);
+* `v` is a value of a recursive type (the group `G` of that type). **Only one
+  recursive group may be reachable from the type of `v`**: a type of a second
+  group reachable through a field (`Stmt` holding a `Json`) is **W0772** in R1,
+  because a bound on the nodes of `G` does not bound the other group and the
+  domain would be infinite. The remedy is a `rec model` that builds the inner
+  value, or one group;
 * exactly one of `depth <= d` or `nodes <= n`, with `d` a literal `1..=16` or `n` a
   literal `1..=64`: `depth_of(v) <= d` or `nodes_of(v) <= n` (3.4);
 * `width <= w`, a literal `0..=4`, default `2`: every `List`, `Set` and `Map`
   field of every node of `v` has at most `w` entries;
 * `T in L` for each **atomic leaf type** `T` reachable in `G` (a scalar, `Bool`,
-  `Bytes`, `Bytes<N>`, `Text` or `Char`): `L` is a **ground** list
+  `Bytes`, `Bytes<N>`, `Text`, `Char`, `F32` or `F64`): `L` is a **ground** list
   (a literal or a model call with no free binder) of **at most 16 distinct values**
-  of type `T`, and every leaf of type `T` in `v` is a member of `L`, in order of
-  position in `L`. A leaf type with no clause has the default alphabet of 5.5.
+  of type `T`, and every leaf of type `T` anywhere in `v` is a member of `L`. The
+  position of a member in `L` is its index in the enumeration (5.3). A leaf type
+  with no clause has the default alphabet of 5.5; a float leaf has no default and
+  needs its clause (members distinct under `same`, VER04p). A leaf of an `error`
+  type takes no clause: its alphabet is every case, in declaration order.
+  One alphabet serves every leaf of the type, wherever it sits: a tag number and a
+  length that are both `U64` share it.
 
 As a predicate it is total and has its ordinary meaning anywhere an expression is
 allowed. When a binder's refinement has a **top-level conjunct** `shape(binder,
@@ -703,7 +749,10 @@ set the predicate describes, and the exhaustive domain of the binder is that set
 **W0772**: a binder that is not of a recursive type; both or neither of `depth` and
 `nodes`; a bound outside its range; a leaf type that does not occur in the group; a
 duplicate clause; a duplicate or ill-typed member in `L`; an `L` with more than 16
-members or not ground; a `T in L` for a non-atomic `T`; a shape whose domain is
+members or not ground; a `T in L` for a non-atomic `T`; a second recursive group reachable from the
+binder's type; an opaque type reachable from it; a float leaf with no clause; a
+`nodes` shape over a type with a `Set` of group values or a `Map` keyed by them
+(RD2); a shape whose domain is
 empty (no value of the group satisfies it, which RM2 prevents for `nodes <= n` once
 `n` reaches `least`, but a small `depth` or an `L = []` for the only base leaf can
 reach it); a `shape` conjunct under `or`, `not` or `implies` (it must be a
@@ -726,7 +775,8 @@ field type `F` at bound `k`:
 |---|---|
 | an atomic leaf type `X` | `A(X)` |
 | a type of the group | `V_{k-1}(F)` |
-| a type outside the group | its ordinary size under VER04h 3 and VER04l/VER04o domains (finite, not depth-bounded) |
+| a non-recursive `variant` outside the group | the sum over its constructors of the product of `c_k` of their fields (the same rule, so the leaf alphabets apply inside it; a declared type is expanded structurally, never given its "ordinary" domain, which for a record of two `U64` would be `2^128`) |
+| `Result<F', E>` | `c_k(F')` plus the number of cases of `E` |
 | `Option<F'>` | `1 + c_k(F')` |
 | a tuple or record | the product of its components |
 | `List<F'>` | `sum for i = 0..w of c_k(F')^i` |
@@ -740,19 +790,38 @@ whose recursive field sits under a `List`, `Set` or `Map` still has `P_1 >= 1` (
 empty collection), which is why `Arr([])` is a depth-1 value.
 
 For `nodes <= n`: let `N_k(U)` be the number of values of `U` with **exactly** `k`
-nodes of the group. A constructor contributes the sum, over every way of writing
-`k - 1` as an ordered sum of node counts for its **group-typed value slots** (a
-group-typed field is one slot; a `List`, `Option`, `Set` or `Map` field of group
-values with `j` entries contributes `j` slots; a tuple or record is flattened),
-of the product of the `N` of those slots times the finite factor of the non-group
-leaves and of the collection shape. The domain is `S = union of N_k for k <= n`.
+nodes of the group, and for a field type `F` let `c(F, m)` be the number of values
+of `F` that hold exactly `m` nodes of the group:
+
+| `F` | `c(F, m)` |
+|---|---|
+| an atomic leaf type `X` | `A(X)` if `m = 0`, else 0 |
+| a type `U` of the group | `N_m(U)` (0 for `m = 0`) |
+| `Option<F'>` | `[m = 0] + c(F', m)` |
+| a tuple or record `(F1, ..., Fj)` | `T_1(m)`, where `T_i` counts the fields `Fi .. Fj`: `T_{j+1}(m) = [m = 0]` and `T_i(m) = sum for a = 0..m of c(Fi, a) * T_{i+1}(m - a)` (the first of them takes `a` nodes) |
+| `List<F'>` | `sum for i = 0..w of L_i(m)`, where `L_0(m) = [m = 0]` and `L_i(m) = sum for a = 0..m of c(F', a) * L_{i-1}(m - a)` (the first element takes `a` nodes) |
+| `Set<X>` of an atomic leaf type with alphabet size `s` | `sum for i = 0..min(w, s) of C(s, i)` if `m = 0`, else 0 |
+| `Map<X, F'>` keyed by an atomic leaf type with alphabet size `s` | `sum for i = 0..min(w, s) of C(s, i) * L_i(m)` with `L` taken over `F'` |
+| a non-recursive variant, `Result` | the sum over the alternatives, as for depth |
+
+`[m = 0]` is 1 when `m` is 0 and 0 otherwise. A constructor `C(F1, ..., Fj)` of `U`
+contributes to `N_k(U)` the tuple count `T_1(k - 1)` of its fields, and `N_k(U)` is
+the sum over the constructors. `N_k` depends only on `N_1 .. N_{k-1}`, so the table
+is filled by ascending `k`. A `Set` of group values, and a `Map` whose **key** is a
+group type, have no such recurrence (the count of sets of distinct trees with a
+given total size is not a convolution) and are **W0772** in a `nodes` shape; the
+`depth` form covers them. The domain is `S = union of N_k for k <= n`.
 
 **RD3.** (Checked before any enumeration.) A consumer computes `|S|` from RD2 before
 it generates anything, and refuses a domain with `|S| > MAX_SUITE_PRODUCT = 2^28`
 or a product over the budget `B` (VER04r 5.3): **W0706** at generation. A domain that
 the author did not size (the default `rec_d1`, 5.5) is **demoted** to the largest
-`d` or `n` that fits, recorded in the manifest as VER04r 5.3 requires, so the label
-stays honest.
+`d` or `n` that fits, recorded in the manifest as VER04r 5.3 requires. A demoted
+binder is labelled **`sample`**, exactly as VER04r 9.3 labels every demoted binder,
+and its scope line says `demoted from` (RV3): the smaller domain was chosen by the
+budget, not by the author, so it is not presented as the author's bounded set. An
+author who wants `bounded-set` writes the `shape`. If not even `nodes <= n` at the
+least non-empty `n` fits, there is nothing to demote to and it is W0706.
 
 ### 5.3 Enumeration order
 
@@ -772,17 +841,29 @@ every lane and the oracle implement identically**, never the host's:
   members, then the values lexicographic, last fastest. An `Option` field is
   `None` first.
 * **`nodes <= n`.** By **node count `k` ascending**, and within one `k`, the
-  constructors in declaration order, and within one constructor the **compositions
-  of `k - 1` into its slots with the first slot's count ascending**, and within one
-  composition the product of the slot domains with the last slot fastest. (The
-  worked example of 5.6 lists it.)
+  constructors in declaration order, and within one constructor the values of its
+  field tuple holding `k - 1` nodes, ordered as the recurrences of RD2 are
+  written, outermost choice slowest: a **tuple** `(F1, ..., Fj)` holding `m` nodes
+  by the node count `a` of `F1` ascending, then the values of `F1` with `a` nodes
+  in their own order, then the tuple `(F2, ..., Fj)` holding `m - a` nodes in the
+  same way (so the last component varies fastest); a **`List`** by length
+  ascending, then as a tuple of that many elements; an **`Option`** `None`
+  first; a **`Map`** by size ascending, then the ascending indices of the chosen
+  keys, then its values as a tuple. Unranking divides by the count of the
+  remainder at each step, so it never lists compositions. For two group-typed fields this is "the compositions of `k - 1` with
+  the first slot's count ascending", which the worked example of 5.6 lists. The
+  conformance case `rec/nth-nodes-list` (16) pins the order for a type with a
+  `List` field, where a reader is most likely to choose differently.
 
 **RD5.** (`nth`, `size`.) A descriptor of this kind has the two total functions of
 VER04r 5.1, `size()` and `nth(i)`, so chunk jumping works. `nth(i)` is an
 **unranking** over the counting tables of RD2: find the node count (or constructor)
 by comparing `i` with the cumulative sizes, subtract, and recurse **iteratively**
-into the field domains by mixed-radix division. The tables have at most
-`MAX_SCC_TYPES * 65` entries (types times `max(d, n) + 1`) and are built once per
+into the field domains by mixed-radix division. The tables hold one row per type of
+the group and per field type or tuple prefix or list length that the recurrences of
+RD2 name, each of `max(d, n) + 1` entries; a descriptor whose tables would exceed
+`MAX_SHAPE_TABLE = 65,536` entries is W0706 (a corpus error `shape-size` in a
+consumer). They are built once per
 descriptor at load, in checked arithmetic; a table entry that saturates, or a
 declared `size` that differs from the recomputed one, is a corpus error
 (`shape-size`). `nth` is `O(cells of the result * constructors)` and never
@@ -830,7 +911,10 @@ domain contains the interesting boundary values and stays small:
 
 A document that needs the boundary values of a format (the CBOR argument
 boundaries `23 24 255 256 65535 65536 2^32-1 2^32 2^64-1`) states them in a
-`T in L` clause (14.3). `rec_d1` is **`bounded-set`**, always (5.8).
+`T in L` clause (14.3). `rec_d1` is **`bounded-set`** when it stands as defined
+here (the choice of `d` by the size of the domain alone is its definition, and the
+scope line prints the `d` chosen), and **`sample`** when the product with the
+suite's other binders forced a further demotion (RD3). It is never `full` (5.8).
 
 ### 5.6 Worked examples
 
@@ -919,6 +1003,7 @@ that builds it (`fold` over `range(n)`), 9.5.
 | Claim form | Kind | VER29 rung |
 |---|---|---|
 | `shape` or `rec_d1` over a recursive binder, any alphabets | **`bounded-set`** | `exhaustive-sampled` at most |
+| a recursive binder **demoted** by the budget (RD3) | **`sample`** (VER04r 9.3: every demoted binder) | `randomized` at most |
 | the same, all other binders also exhaustive | `bounded-set` (the weakest binder; **never** `full`, because the type is infinite) | `exhaustive-sampled` |
 | `property` or `fuzz` over a recursive binder | `sample` | `randomized` |
 | a `reference` claim, a `predicate` claim | independent expected values versus `relational` (VER04r 4.3) | a `relational` suite never counts as an independent reference |
@@ -934,16 +1019,39 @@ it). The leaf alphabets can be `full` for their own types; the **tree** is not.
 a recursive `shape` contributes `size(shape)` ordinals, and `nth(i)` is the
 unranking of RD5, so a lane unranks the first ordinal of a chunk and enumerates
 forward. The `slim` selection of VER04r 5.6 is unchanged (the base set from the
-suite id, the witness chunks, the added chunks). Two properties of a recursive
-domain to keep in view: the **first chunk holds the smallest trees** and the last
-the largest and deepest (order is by constructor, then by field, so the tail of
-the enumeration is the all-last-constructor trees), so the always-included first
-and last chunks cover both extremes; and a `slim` run **never** claims `full`. For
-a domain of at most 16 chunks (the 812,160-case `canonical-cbor` domain of 14.4 has
-13) `slim` is every chunk. The witness chunk of a tree fault (11.1) is the lowest
-admitted case at which the faulted value differs; for most of the faults of RS1 to
-RS6 that case needs a node with two children, which the order reaches early (index
-6 in the `Expr` example).
+suite id, the witness chunks, the added chunks), and a `slim` run **never** claims
+`full`. Three things are particular to trees.
+
+**RD12a.** (What a chunk of trees is.) A chunk is a contiguous range of ranks. In
+the `nodes` order the first chunk holds the smallest trees and the last the
+largest. In the `depth` order the ranks go **by root constructor in declaration
+order**, so the first chunk holds values of the first constructor, whatever their
+size (for `variant T = Node(T, T) | Leaf` they are the largest trees, not the
+smallest), and within one constructor the leading fields are fixed while the last
+field's subtree varies. So what `slim` thins in a large tree domain is the **root
+constructor and the leading children**: a constructor whose values all fall
+between two selected chunks is not run at `slim` at all. This is the tree form of
+the statement VER04r 5.6 makes about leading binders, and it is a coverage
+reduction that the label `slim(n of m chunks)` already declares.
+
+**RD12b.** (Constructor chunks.) So that a `slim` run cannot silently miss a whole
+constructor, the generator adds to `slim_chunks`, for every binder with a `rec_*`
+descriptor and every constructor of the binder's type that has a value in the
+domain, the chunk that holds the **lowest admitted case** whose value for that
+binder has that root constructor. The oracle recomputes them, as it does witness
+chunks. They count against `MAX_SLIM_CHUNKS = 32`; a suite that would exceed it is
+a generation error, never a shorter list (the remedy is a smaller shape or fewer
+claims per suite). A constructor with no admitted case is printed in the report
+(`ctors_admitted 8 of 9`), because a claim that never sees one constructor is
+weaker than its scope line suggests.
+
+**RD12c.** (Small domains.) For a domain of at most 16 chunks (the 812,160-ordinal
+`canonical-cbor` domain of 14.4 has 13) `slim` is every chunk and the two rules
+above add nothing. The witness chunk of a tree fault (11.1) is the lowest
+admitted case at which the faulted value differs; a claim whose subject call does
+not take the binder directly (`decode(enc(v))`) has no stand-in and its witness is
+`unproven` (VER04r 5.6), so its controls must fail inside the slim set or the
+lane fails.
 
 ## 6. Resource bounds and the cost model
 
@@ -966,8 +1074,8 @@ are the reference profile; `corpus.profile` may **lower** any of them, never rai
 | `MAX_SHAPE_DEPTH`, `MAX_SHAPE_NODES`, `MAX_SHAPE_WIDTH` | 16, 64, 4 | the literals of a `shape` | W0772 |
 | `MAX_SHAPE_ALPHABET` | 16 | members of one leaf alphabet | W0772 |
 | `MAX_SUITE_PRODUCT` | `2^28` | product ordinals of one suite (VER04r 14, unchanged) | W0706 |
-| `MAX_TOTAL_FUEL_SLIM`, `MAX_TOTAL_FUEL_FULL` | `2^30`, `2^34` | fuel summed over a run (6.5) | W0706 |
-| counting tables | `MAX_SCC_TYPES * 65` entries | the unranker (RD5) | `shape-size` |
+| `MAX_TOTAL_FUEL_SLIM`, `MAX_TOTAL_FUEL_FULL` | `2^30`, `2^34` (provisional, RB8) | fuel summed over a run (6.5) | W0706 |
+| `MAX_SHAPE_TABLE` | 65,536 entries | the counting tables of one descriptor (RD5) | W0706, `shape-size` |
 
 The existing bounds apply unchanged to what a recursive value *contains*: 4,096
 bytes in a `Bytes` leaf, 4,096 entries in one `List`, `Set` or `Map`
@@ -1037,7 +1145,7 @@ budget `B` of VER04r 5.3. The checker reports the product with the factor that
 broke it.
 
 **RB4.** The **table** of counts is itself a resource: it is computed once per
-descriptor, has at most `MAX_SCC_TYPES * 65` entries, and every entry is
+descriptor, has at most `MAX_SHAPE_TABLE` entries (RD5), and every entry is
 saturating; a consumer builds it **before** accepting the descriptor's `size`.
 
 ### 6.5 The cost model under VER04r's IR-cost rules
@@ -1065,23 +1173,46 @@ structure and one that copies reach exhaustion at the same instruction). Sharing
 inside an evaluator is an optimisation that MUST NOT change a charge or a cap, and
 `cells` counts a shared subtree once per path (3.7).
 
-**RB7.** (The prediction.) For a **subject-independent** evaluation the generator
-measures the fuel, records it per suite (`fuel`), and every lane and the oracle
-reproduce it exactly, as `wraps` and `expected_calls` are reproduced today. For a
-subject-dependent one (a `rec model` applied to a subject's result) the bound is
-per case `MAX_IR_FUEL`, and the suite's worst case `cases * min(MAX_IR_FUEL,
-fuel_bound)` must not exceed `MAX_TOTAL_FUEL_SLIM`, where `fuel_bound` is the static
-bound of 4.5 for the largest value the call can see (**W0706** otherwise). The
-report prints `fuel: proven sufficient` when `fuel_bound` of every call in the suite
-is below `MAX_IR_FUEL`, else `fuel: dynamic` (exhaustion is then a possible failure
-and is counted).
+**RB7.** (The prediction, and the three modes.) For a **subject-independent**
+evaluation (a `rec model` applied to binders and models only: the writer `enc(v)`,
+the admission `canonical(v)`) the generator runs every case, **refuses to emit a
+corpus in which any case exhausts** (W0703 at generation, as VER04k 2.13 does
+today), records the fuel per suite (`fuel`), and every lane and the oracle
+reproduce the number exactly, as `wraps` and `expected_calls` are reproduced
+today. The mode is **`measured`**: exhaustion cannot happen in a lane that
+evaluates correctly, and a lane whose total differs fails. For a
+**subject-dependent** evaluation (a `rec model` applied to a subject's result) no
+measurement is possible before the run. If `fuel_bound` of 4.5 exists for the
+largest value the call can see (`MAX_VALUE_CELLS` unless the op's result type
+bounds it lower) and is at most `MAX_IR_FUEL`, the mode is **`proven`**. Otherwise
+it is **`dynamic`**: exhaustion is a possible case failure (`ir-fuel`) and is
+counted.
+
+**RB7a.** (The run total.) The total fuel of a run is the sum, over the suites it
+executes and their control re-runs, of the measured fuel of subject-independent
+evaluations plus, for each subject-dependent one, `cases * min(MAX_IR_FUEL,
+fuel_bound)` (`MAX_IR_FUEL` where no bound exists). It must not exceed
+`MAX_TOTAL_FUEL_SLIM` for the slim set and `MAX_TOTAL_FUEL_FULL` for every chunk
+(**W0706** otherwise, with the suite that contributes most named). The case
+bounds `MAX_TOTAL_WORK_SLIM` and `MAX_TOTAL_WORK_FULL` of VER04r 14 apply as well;
+neither replaces the other. The report prints the mode per suite as `fuel:
+measured`, `fuel: proven sufficient` or `fuel: dynamic`.
 
 **RB8.** (Slim and full totals.) The run totals are in **fuel**, because the case
 counts of VER04r 14 (`MAX_TOTAL_WORK_SLIM = 32,000,000` cases) no longer bound work
 when one case can cost a million units: `MAX_TOTAL_FUEL_SLIM = 2^30` (about 10^9
 node evaluations; at the speed of an interpreted lane, minutes) and
-`MAX_TOTAL_FUEL_FULL = 2^34`. The two constants are **provisional**: R1-S0 measures
-the Python and Lua evaluators and may lower them, never raise.
+`MAX_TOTAL_FUEL_FULL = 2^34`. The two constants are **provisional** and so is
+`MAX_IR_FUEL`'s adequacy for the pilot: by hand, the pilot's three claims over
+812,160 ordinals at a few hundred units each (the admission on every ordinal, the
+writer on every admitted case) come to the order of `10^9`, which is **at** the
+slim total, not comfortably under it. R1-S0 measures the Python and Lua
+evaluators and the pilot's models and **fixes** the two totals, in either
+direction, before any corpus that uses `ir.rec` is committed; after that a
+`corpus.profile` may only lower them. If the measured pilot does not fit a total
+that the interpreted lanes can run in PR CI, the pilot's alphabet is narrowed
+(fewer `U64` boundaries per suite, the boundaries split across suites); the
+constants are not raised to fit a document.
 
 ## 7. Corpus encoding (`warrant-corpus-v2`)
 
@@ -1142,8 +1273,9 @@ most `MAX_SCC_TYPES` types, and the depth of a type *expression* is still at mos
 (a recursion edge is a name, not a nested expression). The reader computes groups
 and inhabitation **iteratively** and, before using a type, checks that it
 terminates in at most `MAX_SCC_TYPES * (types + 1)` rounds (a hostile table cannot
-make it loop). A type row in a recursive group gains one optional field, `"rec":
-"<group>"`, where `<group>` is the least member name of the group; the reader
+make it loop). A type row in a recursive group carries the field `"rec":
+"<group>"` (**required** for a member of a group and **forbidden** for any other
+type, so the canonical JSON of a table has one form), where `<group>` is the least member name of the group; the reader
 **recomputes** it and a different value is the corpus error `type-cycle`, so a
 corpus cannot assert a group it does not have. A cycle in a v1 profile, or one with
 an uninhabited member, is `type-cycle` too.
@@ -1177,7 +1309,7 @@ does not declare the level records the suite `not-live`, never skipped.
 | `depth_of nodes_of cells_of` | the built-ins of 3.4 |
 | `least` with a type | the built-in of RM6c |
 | `eq` and `same` extended | structural equality through recursion (RM5) |
-| **fault-only:** `rec_drop_child rec_dup_child rec_swap_children rec_truncate rec_ctor_next rec_wrap` | the rewrites of 11.1, refused in a claim, a model, an `admit` and an `ensures` (as `recipe_is` is in VER04n OC5 and `coll_drop_first` in VER04o CC6) |
+| **fault-only:** `rec_drop_child rec_dup_child rec_swap_children rec_truncate rec_ctor_next rec_wrap rec_limit_low rec_accept` | the rewrites of 11.1, refused in a claim, a model, an `admit` and an `ensures` (as `recipe_is` is in VER04n OC5 and `coll_drop_first` in VER04o CC6) |
 
 Lowering stays **syntax-directed and unoptimised** (VER04r 10.3): one IR node per
 source construct, no inlining of a `rec model`, no unrolling, no sharing. A `rec`
@@ -1196,10 +1328,11 @@ models over sequences are `not-live` (RM0c).
 
 **RC7.** The lane manifest (`warrant-lane-evidence-v2`, VER04r 9.1) gains, per suite
 row that uses a recursive type: `fuel` (the generator-predicted fuel of the
-subject-independent evaluation, reproduced), `fuel_mode` (`proven` or `dynamic`,
-RB7), `max_nest_seen` and `max_cells_seen` (the largest values the adapter built or
-read, so a report can show the deepest value actually tried), `deep_cases` and
-`branchy_cases` (counts, 12.3), and per binder of a `shape` domain the **scope**
+subject-independent evaluation, reproduced), `fuel_mode` (`measured`, `proven` or
+`dynamic`, RB7), `max_nest_seen` and `max_cells_seen` (the largest values the adapter built or
+read, so a report can show the deepest value actually tried), `deep_cases`,
+`branchy_cases`, `ctors_admitted` and, for a claim with a `match` on a subject
+result, `ok_arm_cases` and `err_arm_cases` (counts, 12.3), and per binder of a `shape` domain the **scope**
 (`depth<=3`, `width<=2`, the alphabet sizes) so the report can print the
 quantifier. Per lane: `lane_max_nest` (the deepest value the lane's host form can
 carry, default `MAX_NEST`, never above it); cases that need more are recorded
@@ -1253,8 +1386,13 @@ holding (host node, expected type, state)**, and never by host recursion:
 3. read host nodes **without running host code**: no `__getattr__`, no `__index`
    metamethod, no tied or overloaded value, no getter, no proxy trap (the adapter
    uses the raw access of the lane: `rawget` in Lua, `reftype` and no overload in
-   Perl, own-property reads of a plain object in TypeScript). A host value whose
-   read would run code is `type-mismatch`;
+   Perl, own-property reads of a plain object in TypeScript), and it requires the
+   host node to be **exactly** the bound class or shape, never a subclass (a
+   Python subclass with a property, a Ruby subclass with an overridden reader).
+   A host value whose read would run code is `type-mismatch`. Where a host cannot
+   tell (plain JavaScript cannot detect a `Proxy`; the TypeScript lane uses the
+   runtime's `util.types.isProxy` and says so), the lane table names the gap and
+   the jail remains the defence (RT7);
 4. never use the host's `==`, `equals`, `hashCode`, `toString`, `repr`, `deepcopy`,
    serialiser, `compare` or sort on a tree (they recurse on the host stack, loop on a
    cycle, or compare identity), only the work stack above and the `warrant-corpus`
@@ -1263,10 +1401,31 @@ holding (host node, expected type, state)**, and never by host recursion:
    it (VER04o CL2 step 0);
 6. encode the canonical value.
 
-The cycle rule needs no cycle detector: a cyclic host value has no finite `nest`, so
-the `nest` counter reaches the cap and the failure is `value-depth`. (A detector
-would be a hash set keyed by host identity, which is exactly the kind of structure
-13 forbids on attacker-chosen data.)
+The cycle rule needs no cycle detector: a cyclic host value has no finite `nest`
+and no finite `cells`, so one of the two counters reaches its cap and the failure
+is `value-depth` or `value-cells` (which one depends on the shape of the cycle and
+on the walk order, so a control accepts either). The walk visits at most
+`MAX_VALUE_CELLS + 1` host nodes and holds at most `min(MAX_NEST,
+host_depth_limit) + 1` frames **whatever the host value is**: that is the step
+bound RO2 checks. (A detector would be a hash set keyed by host identity, which
+is exactly the kind of structure 13 forbids on attacker-chosen data.) Sharing
+that fits the caps is **not** detected and not a failure: a small DAG is read as
+the tree it unfolds to (3.7, RQ-7).
+
+**RL1a.** (Letting go of a value the adapter refused.) A subject can hand back a
+tree 100,000 levels deep. The adapter refuses it at the cap without a crash, and
+then the **host** destroys it: a derived `Drop` in Rust, a `deinit` in Swift, a
+destructor in C++, the reference-count cascade in Perl, each recursing once per
+level on the host stack. The refusal would then end as a crash after all. So for
+a host value that RL1 refused with `value-depth` or `value-cells`, or whose walk
+it did not finish, the adapter MUST NOT let the host free it recursively: it
+**dismantles** the value with a worklist where the host lets it move children
+out (Rust `mem::take` on the child vector, C++ releasing each `unique_ptr`, C by
+the rule of RL5), and otherwise **keeps it alive until the process ends** and
+ends the run without running destructors. The case failure is recorded first in
+either case. A lane that can do neither for a bound form cannot evidence a
+depth-bomb claim for it and records the claim `not-live` (8.6). The kit's deep
+fixture (RO2) is 10,000 levels of the **subject's** host type for exactly this.
 
 **RL2.** (Canonical to host.) To build a host recursive argument the adapter
 decodes the canonical value **iteratively, building bottom-up**: a stack of partially
@@ -1298,7 +1457,7 @@ that is what a lane must not trigger.
 |---|---|---|
 | rust | `enum` with `Vec`, `Box` (`tagged-enum`) | a recursive `Drop` overflows the stack on a deep tree (the adapter builds at most `MAX_NEST`, and drops through a worklist for anything deeper); a stack overflow **aborts** the process and cannot be caught; `derive(PartialEq, Debug, Clone)` recurse, never used by the adapter |
 | python | `dataclass`, tagged `tuple` (`tagged-class`) | `RecursionError` at about 1,000 frames for `==`, `repr`, `deepcopy`, `json`, `pickle`; `sys.setrecursionlimit` is **forbidden** as a workaround (it turns a catchable error into a C-stack crash); a list can contain itself; `True == 1`, so a leaf is checked `type(x) is bool` |
-| typescript | discriminated union objects (`tagged-object`) | a plain object keyed from data (`__proto__`, `constructor`) mis-parses: use a `Map` or a null-prototype object for any keyed collection; `RangeError` at roughly 10,000 frames; getters and `Proxy` run code on read; a cycle makes `JSON.stringify` throw, never used |
+| typescript | discriminated union objects (`tagged-object`) | a plain object keyed from data (`__proto__`, `constructor`) mis-parses: use a `Map` or a null-prototype object for any keyed collection; `RangeError` at roughly 10,000 frames; getters and `Proxy` run code on read, and a `Proxy` cannot be detected from plain JavaScript (RL1 step 3); a cycle makes `JSON.stringify` throw, never used |
 | go | interface with a sealed method, struct pointers (`sealed-iface`) | a **goroutine stack overflow is fatal** and not recoverable by `recover`; a nil pointer is absent, not `Nil`; slices share backing arrays (`append` aliasing between two nodes); pointer cycles are expressible |
 | java | `sealed interface` + `record` (`sealed-hierarchy`) | `StackOverflowError` leaves state unreliable; a record's `equals`, `hashCode`, `toString` recurse; `byte[]` in a record is compared by identity |
 | kotlin | `sealed class` + `data class` (`sealed-hierarchy`) | as Java; `data class` `copy` shares children |
@@ -1334,15 +1493,20 @@ containment rule of VER04i 5.1), and the adapter does not free it afterwards; a
 `take` without a `free` is **W0773**, because the lane could neither free nor
 leak-check it. For a **result** the subject's tree is `owned` (the adapter calls
 `free=<export>` once, after RL1 has converted it) or `borrowed` (the adapter never
-frees). A double free, a free of a borrowed result and a leak of an owned result are
+frees). The adapter calls the subject's `free` **only on a result whose walk
+finished**: a result refused as `value-depth` or `value-cells` may be cyclic or
+deep, the subject's own recursive `free` would loop, double free or overflow on
+it, and so it is left allocated and counted (`refused_unfreed`), never freed and
+never reported as a `leak` of the subject's. A double free, a free of a borrowed result and a leak of an owned result are
 distinct failures (`bad-free`, `leak`); `leak` is checked once per recursive result
 the way VER04n OL7 checks it.
 
 **RL6.** (Pointer discipline.) The adapter treats every pointer of a result as
 hostile: it checks `kind` against the closed constructor list, a `NULL` child
 against the field's optionality, `n` against `MAX_COLLECTION` **before** reading
-`v[0..n]`, and counts `cells` and `nest` per path (RL1) so a pointer cycle or a
-shared child is a named failure, not a hang. The worklist and the arena are
+`v[0..n]`, and counts `cells` and `nest` per path (RL1) so a pointer cycle, or sharing that
+unfolds past the caps, is a named failure, not a hang (a small shared child is
+read as two equal subtrees, RL1). The worklist and the arena are
 allocated by the adapter with checked arithmetic (`n * sizeof` cannot wrap). In C++
 a `unique_ptr` tree is built bottom-up (RL2) and destroyed by a **worklist**, not
 by the implicit recursive destructor, for anything above 64 levels.
@@ -1354,6 +1518,9 @@ is **forced node by node** by the adapter under the caps of RL1; `deepseq` and
 `force` on the whole value are forbidden, because they do not terminate on an
 infinite or cyclic one. A thunk that raises is `unexpected-error`; an infinite value
 is `value-depth` (nesting) or `value-cells` (width), as a cyclic one is anywhere.
+Forcing one node **runs the subject's code** (the thunk), which the caps do not
+bound: a thunk that never returns is stopped only by the suite's wall-clock
+limit under the supervisor (8.6), and is then `subject-crash`, never a pass.
 A lane with *strict* host forms is unaffected. This is the lane-specific shape of
 the rule "values are finite trees" (3.1): the harness defends the model from a host
 that can build what the model cannot contain.
@@ -1417,14 +1584,14 @@ Byte domains are **bounded**, so rejection claims are `bounded-set` and say so:
 `sum of |A|^i` members (VER04l 4.3). Two ways to build a malformed family, both
 language neutral:
 
-* **mutation of a canonical encoding**, by models: `concat(enc(v), t"\x00")`
+* **mutation of a canonical encoding**, by models: `concat(enc(v), b"00")`
   (trailing byte: `TRAILING_BYTES`), `take(enc(v), k)` for every `k < len(enc(v))`
   (every proper prefix is rejected: the format is **prefix-free**, a property
   worth a claim by itself), `non_minimal(v)` (the head of a number rewritten in a
   longer form: `NON_MINIMAL_INTEGER`), `swap_entries(v)` (a map's two entries
   exchanged: `NON_CANONICAL_MAP_ORDER`);
 * **a token alphabet**: `within(b, [00, 17, 18, 19, 1a, 1b, 1f, 40, 60, 80, a0, c0,
-  f4, f5, f6, f7, fb, ff], 5)`: the bytes that start every CBOR item kind, reserved
+  f4, f5, f6, f7, fb, ff], 4)`: the bytes that start every CBOR item kind, reserved
   value or boundary, all strings of length at most 4 over them.
 
 A claim over a mutation family names the **expected error** (a `reference` claim
@@ -1445,7 +1612,7 @@ and for hashing, and it is the reason the pilot is a canonical codec.
 ### 9.5 Depth bombs
 
 P4 builds the structure **by a model**, never by a literal: `nest_tag(n: Nat) -> Bytes
-= fold(range(n), b"\x00", prepend_c0)` makes `n` tags in front of `00`;
+= fold(range(n), b"00", prepend_c0)` makes `n` tags in front of the byte `00`;
 `nest_array(n)` makes `n` arrays. The claim quantifies `n` over a `nat_count`
 domain around the limit:
 
@@ -1455,10 +1622,18 @@ claim decode_depth_limit:
     decode(nest_tag(n)) == (if n <= 128 then Ok(tag_chain(n)) else Err(CborError.TOO_DEEP))
 ```
 
-with `tag_chain(n)` built by `fold(range(n), Nil, wrap_tag)`. The `nat_count`
+with `tag_chain(n)` built by `fold(range(n), Uint(0u64), wrap_tag)` (the byte `00`
+is `Uint(0)`, so the two sides describe the same item). The subject counts
+**wrappers** (CBR01: the root is depth zero, 128 nested tags are accepted), while
+`depth_of` counts nodes, so `depth_of(tag_chain(n)) = n + 1`: a claim about a
+subject's limit is written over the wrapper count `n`, as here, never by comparing
+`depth_of` with the subject's number. The encoder side is the same claim on
+`try_encode(tag_chain(n))`, with `Ok(nest_tag(n))` up to 128 and
+`Err(CborError.ENCODE_TOO_DEEP)` past it; there the lane builds a host value of
+`nest` up to 142, far inside `MAX_NEST`. The `nat_count`
 descriptor (VER04r 5.1) has 141 values; the boundary `n = 127, 128, 129` is in every
-slim run (it is one chunk). Because the bytes are 130 in length and the expected
-value has `nest` 129, **neither side needs a materialised deep value**, which is the
+slim run (it is one chunk). Because the bytes are at most 141 in length and the
+expected value has `nest` at most 142, **neither side needs a materialised deep value**, which is the
 rule of 6.2.
 
 ## 10. Evidence obligations
@@ -1482,8 +1657,10 @@ object by data breaks. Failure id `adapter-roundtrip`. Control `lossy-host` (11.
 **RO2.** (`bounded-walk`.) The adapter is run on the **fixture hosts** of the
 conformance kit (16): a deep host value (`nest` 10,000), a wide one (a million
 empty children), a **shared** one (forty diamonds, `2^40` paths) and a **cyclic**
-one. The adapter MUST finish each within a fixed number of steps and report
-`value-depth` or `value-cells`, never crash and never hang. Control: the four broken
+one. The adapter MUST finish each within the step bound of RL1 (at most
+`MAX_VALUE_CELLS + 1` host nodes visited, counted by the fixture) and report
+`value-depth` or `value-cells`, never crash and never hang, and MUST then release
+the refused value without a crash (RL1a). Control: the four broken
 adapters of 11.2 (`recursive-adapter`, `no-depth-cap`, `path-blind`, `cycle-blind`).
 
 **RO3.** (`fresh-tree`.) For every recursive argument and every obligation build
@@ -1527,7 +1704,8 @@ value of that node.
 | RS3 | `swap-children` | `post`: `rec_swap_children(r)`, the first two **different** children of one node exchanged | a reference claim over a case with two different siblings | `swappable_cases = 0` |
 | RS4 | `truncate` | `post`: `rec_truncate(r, k)`, every node at `depth_of > k` replaced by `least<T>()` (a **silent depth truncation**: a parser that stops at its limit and returns what it has) | a claim whose domain has trees deeper than `k`, and **P4**: the boundary cases | no case has depth `> k` |
 | RS5 | `ctor-confusion` | `post`: `rec_ctor_next(r)`, the first node's constructor replaced by the **next** constructor with the same field types, else the first node's first leaf by the next leaf value | a reference claim | no constructor has a same-typed neighbour |
-| RS6 | `off-by-one-limit` | the generic `off-by-one` (VER04r 8.2) on the `Nat` or the depth predicate of a P4 claim, or a fault that replaces `<=` by `<` in the subject's limit | **P4** at `n = limit` and `n = limit + 1` | the op has no depth-limit claim |
+| RS6 | `limit-low` | `post`: `rec_limit_low(r, L, E)`: a result `Ok(x)` with `depth_of(x) > L` becomes `Err(E)`, where `L` is the subject's limit counted in wrappers and `E` its error (a subject whose limit is one too low: the value **at** the limit, which has `depth_of = L + 1`, is refused) | **P4** at `n = limit` | the op has no depth-limit claim |
+| RS15 | `accept-malformed` | `replace`: `rec_accept(r)`: a result `Err(_)` becomes `Ok(least<T>())` (the recursive form of the generic `missing-error` of VER04r 8.2, whose `Ok(first Bytes arg)` is not a tree). It is a decoder that accepts what it must reject, and with RS6 it is the other half of an off-by-one limit (one too high) | **P2** (every case expects an `Err`), **P3** (the accepted `least<T>()` does not re-encode to the input), **P4** at `n = limit + 1` | the op's result is not a `Result` with a recursive `Ok` |
 
 A control is **observable** only if some case differs; the generator counts them
 (`branchy_cases`, `swappable_cases`) and the witness-chunk rule of VER04r 5.6 puts
@@ -1558,9 +1736,9 @@ outcome is that it is **caught**, never that it survives.
 |---|---|
 | P1 round trip (reference) | RS1, RS2, RS3, RS5 on the encoder; RS11 on the adapter |
 | P1 `enc(v) == try_encode(v)` | RS1 to RS5 |
-| P2 rejection by mutation | a fixture subject that accepts one malformed form: the generic `missing-error` of VER04r 8.2 |
-| P3 canonical form | a fixture decoder that accepts a non-minimal head, or an encoder that does not sort |
-| P4 limit boundary | RS4, RS6 |
+| P2 rejection by mutation, and by `is_err` | RS15 `accept-malformed` |
+| P3 canonical form | RS15 on the decoder (an input it must reject comes back as `Ok(least<T>())`, whose encoding is not that input; the case exists whenever `err_arm_cases > 0`, RV11); RS1, RS2 or RS5 on the encoder (an accepted input no longer re-encodes to itself; needs `ok_arm_cases > 0`) |
+| P4 limit boundary | RS6 at `n = limit`, RS15 at `n = limit + 1`, RS4 for a silent truncation |
 | a `rec model` fold claim (R3) | RS1 to RS5 on the claim's subject; a model fault `rec_wrap` (the root wrapped in a constructor) on the expected side, refused outside a fault |
 | the depth and size measures (`depth_of`, `nodes_of`) | `off-by-one` on the `Nat` result |
 
@@ -1580,7 +1758,7 @@ file a human or the report reads. The VER29 rung is at most `exhaustive-sampled`
 (RD9, RD11).
 
 **RV3.** A **demoted** default domain (RD3) prints `demoted from depth<=3 to
-depth<=2` and keeps the weaker label.
+depth<=2` and is labelled `sample` (RD3, VER04r 9.3), never `bounded-set`.
 
 ### 12.2 The report block (sketch)
 
@@ -1588,8 +1766,8 @@ depth<=2` and keeps the weaker label.
 claim decode_round_trip      reference  bounded-set  exhaustive-sampled
    trees(depth<=2, width<=2; U64 10, Bytes 2, Text 3, Bool 2)  812,160 ordinals  admitted 393,660  discarded 418,500
    deep_cases (depth>=2) 393,630   branchy_cases 393,300   max_nest_seen 5   max_cells_seen 12
-   fuel: proven sufficient   obligations: adapter-roundtrip pass  bounded-walk pass  fresh-tree pass
-   lanes ran 2 of 17 (rust, python); absent 15
+   ctors_admitted 9 of 9   fuel: measured   obligations: adapter-roundtrip pass  bounded-walk pass  fresh-tree pass
+   lanes ran 2 of 17 (rust, python); absent 15   ops adopted 3 of 8 public entries
    flood-resistance: not evidenced
 ```
 
@@ -1611,6 +1789,9 @@ and two two-cell nodes: `2 + 2 * 5 = 12`. All by hand.)
 | RV8 | **a lane that cannot carry the depth, counted as covered** | `lane_max_nest` and the `not-live` count (8.6, VER04o CB6) |
 | RV9 | **a relational claim presented as independent** | the `relational` tag (VER04r 4.3, 9.3) and the advisory of 9.1 |
 | RV10 | **a bounded domain read as the type** | the scope line (RV1) and the absence of `full` (RV2) |
+| RV11 | **a canonical-form claim that accepts nothing** (P3 is `Err(_) -> true`, so a domain of rejected inputs only passes for any decoder), or one that rejects nothing | `ok_arm_cases` and `err_arm_cases` are counted by the generator from the model where one exists, and otherwise by the lane, and printed; `ok_arm_cases = 0` is **W0601** when predicted and a lane failure `vacuous-arm` when observed. A P3 claim SHOULD have both above zero, and a zero `err_arm_cases` makes RS15 `n/a` for it |
+| RV12 | **a constructor never admitted** | `ctors_admitted n of m` per recursive binder (RD12b); below `m` is printed, and zero admitted cases for the whole suite is already a corpus error (VER04r 14) |
+| RV13 | **a partial adoption read as the package** | the report prints `ops adopted n of m public entries` for the adopter (14.1), and the package is not counted as covered while `n < m` |
 
 ## 13. Security considerations
 
@@ -1685,7 +1866,7 @@ jail property: reading a subject's value must not run the subject's code.
 **RT8.** **No reproducing material in public output.** A failure prints the suite id,
 the case address and the failure id (`value-depth`, `value-cells`, `rec-frames`,
 `ir-fuel`, `adapter-roundtrip`, `arg-aliased`, `shape-size`, `type-cycle`,
-`subject-crash`), never a key, a text or a byte of the value (VER00 7.3, VER04i
+`vacuous-arm`, `subject-crash`), never a key, a text or a byte of the value (VER00 7.3, VER04i
 6.1): the tree may be a hostile document.
 
 **RT9.** **Layered verification.** A lower layer's recursive-typed claim is a
@@ -1704,7 +1885,7 @@ about a recursive type resolves above the layer **with its scope** (`bounded-set
 ### 14.1 Why this crate
 
 The owner prefers pilots whose dependencies are already verified or verifiable
-first, and the task is to choose one crate from the inventory list by security
+first, and the pilot is one crate from the inventory list, chosen by security
 weight and dependency depth. The candidates, from the inventory CSV (2026-11-16) and
 from reading the sources:
 
@@ -1748,15 +1929,33 @@ Reasons for `canonical-cbor`, in order of weight:
    and `max_encoded_bytes = 1,048,576` (CBR01) are exactly the depth bomb and the
    size bomb of section 6.
 
-Honest caveats: the inventory tags the crate `WX-G|generics|recursive-types|text`
-because **tags are computed over every public entry**; the pilot narrows the
-adopted surface to three operations, and the rest (`encode_into`, `try_encode_into`,
-`CborValue::text`, `CborValue::bytes`, `decode_map_spanned`) are listed as **not
-adopted**, not hidden. `max_encoded_bytes` (1 MiB) is above the harness's 4,096-byte
-value cap, so the `encode-too-large` boundary is reached only by an **encode-only
-builder** whose result the lane does not return as a value (the CBR01 fixture's
-shape); until that has a Warrant form it is `not-live` and printed so.
-`bounded-json` follows as the second adopter (the first with a float).
+**What is adopted, and what is not (partial adoption, stated).** The inventory tags
+the crate `WX-G|generics|recursive-types|text` because tags are computed over
+**every** public entry, and it counts 8 public entries. The pilot adopts **3 of
+the 8**. The report says `ops adopted 3 of 8 public entries` (RV13), the package
+is **not** counted as covered, and nothing below is evidenced for the other five:
+
+| Public entry (Rust) | Status | Why |
+|---|---|---|
+| `decode(&[u8]) -> Result<CborValue, CborError>` | **adopted** | P1, P2, P3, P4 |
+| `try_encode(&CborValue) -> Result<Vec<u8>, CborError>` | **adopted** | P1 on the encoder, P3, P4 |
+| `encode(&CborValue) -> Vec<u8>` | **adopted, on its precondition only** | it is `try_encode` that **panics** on a duplicate key, on depth 129 and on an oversized result; the claim is over values that are encodable, and the panic outside them is **not evidenced** |
+| `encode_into`, `try_encode_into` (`&mut Vec<u8>`) | not adopted | an `inout` buffer: WX-G, which 3.7 keeps out of the first slice for a recursive value. The "destination unchanged on failure" property is unevidenced |
+| `CborValue::text`, `CborValue::bytes` (`impl Into<...>`) | not adopted | generics (VER04o G1). Constructors only; the adapter builds values without them |
+| `decode_map_spanned` | not adopted | returns byte spans into the input, a different result type; its agreement with `decode` on key order and depth is unevidenced |
+
+Two further limits, both printed. **The ports do not share one surface** (from a
+grep of the sources, not from running them): Go exports `Encode`, `EncodeChecked`
+and `Decode`; Python exports `encode_checked` and `decode` and has **no**
+panicking `encode`. An op is bound per lane by its Warrant name; an op with no
+counterpart in a port is `not-live` in that lane and counted so, and R1-S5
+produces the lane-by-op matrix before stage B (so `encode` is expected to be
+`not-live` in the Python lane of stage A). **`max_encoded_bytes`** (1 MiB) is
+above the harness's 4,096-byte value cap, so the `encode-too-large` boundary is
+reached only by an **encode-only builder** whose result the lane does not return
+as a value (the CBR01 fixture's shape); until that has a Warrant form it is
+`not-live` and printed so. `bounded-json` follows as the second adopter (the
+first with a float).
 
 ### 14.2 The document (sketch)
 
@@ -1778,6 +1977,7 @@ variant Cbor = Uint(U64) | Nint(U64) | Blob(Bytes) | Str(Text)
 
 op decode(b: Bytes)     -> Result<Cbor, CborError>
 op try_encode(v: Cbor)  -> Result<Bytes, CborError>
+op encode(v: Cbor)      -> Bytes                      -- partial: defined where try_encode is Ok (a precondition, sketch)
 ```
 
 ### 14.3 Models and claims (sketch)
@@ -1813,6 +2013,10 @@ claim decode_round_trip:                                        -- P1, a referen
 claim encode_is_model:                                          -- P1 on the encoder
   forall v: Cbor | shape(v, depth <= 2, ...) and canonical(v).
     try_encode(v) == Ok(enc(v))
+
+claim encode_total_form:                                        -- the panicking wrapper, on its precondition
+  forall v: Cbor | shape(v, depth <= 2, ...) and canonical(v).
+    encode(v) == enc(v)
 
 claim canonical_only:                                           -- P3, a predicate claim, relational
   forall b: Bytes | within(b, b"00171819 1a1b1f40 6080a0c0 f4f5f6f7 fbff", 4).   -- 18 bytes; spaces for reading
@@ -1856,8 +2060,9 @@ pairs: **391,500** admitted two-entry dicts; the discarded are the `30 * 900 =
 27,000` with `k1 = k2` and the `391,500` with `k1 > k2`, 418,500 in all (`27,000 +
 391,500 + 391,500 = 810,000`). So the admitted `Dict` count is `1 + 900 + 391,500 =
 392,401`, the **admitted total is `28 + 931 + 392,401 + 300 = 393,660`**, and the
-discarded total is `812,160 - 393,660 = 418,500`. The two claims `decode_round_trip`
-and `encode_is_model` make 393,660 subject calls each, one call per admitted case.
+discarded total is `812,160 - 393,660 = 418,500`. The three claims
+`decode_round_trip`, `encode_is_model` and `encode_total_form` make 393,660 subject
+calls each, one call per admitted case.
 `canonical_only` has, for an alphabet of 18 bytes and `k = 4`, `1 + 18 + 324 +
 5,832 + 104,976 = 111,151` cases, a predicate claim with two subject calls on the
 accepted ones. `every_prefix_rejected` has `30 * 65 = 1,950` product ordinals (30
@@ -1865,23 +2070,27 @@ values of depth at most 1, `k` over 0 to 64) and **94** admitted cases, because 
 admitted `(v, k)` pairs are the proper prefixes and the encodings of the 30 values
 have lengths `1 1 2 2 3 3 5 5 9 9` (`Uint`, 40 in all), the same for `Nint` (40),
 `1 2` for `Blob` and `1 2 3` for `Str` (3 and 6), `1 1` for `Flag`, and 1 each for
-`Nil`, `Arr([])` and `Dict([])`: `40 + 40 + 3 + 6 + 2 + 3 = 94`.
+`Nil`, `Arr([])` and `Dict([])`: `40 + 40 + 3 + 6 + 2 + 3 = 94`. In `canonical_only`
+both arms are taken (RV11): the single bytes `00 17 40 60 80 a0 f4 f5 f6` are
+accepted, and `18 00`, `1f`, `f7`, `fb` and `ff` are among the rejected; the exact
+`ok_arm_cases` is the generator's to count, not this text's.
 
 The **discarded** 418,500 are not wasted: a second pair of claims uses
 `not canonical(v)` as its admission and says `decode(swap_or_dup_enc(v)) ==
 Err(NON_CANONICAL_MAP_ORDER)`, so the rejection of out-of-order and duplicate keys
 has the same domain. `try_encode` on those is `Err(DUPLICATE_MAP_KEY)` for the
-27,000 with equal keys and, for the 391,500 out of order, `Ok(enc(sorted(v)))`
-(CBR01: the encoder sorts), which is a **relational** claim of input-order
-independence by `swap_entries` (9.3).
+27,000 with equal keys and, for the 391,500 out of order, `Ok(enc(swap_entries(v)))`
+(CBR01: the encoder sorts; with two entries out of order, sorting is the swap),
+which is a **reference** claim, since `swap_entries` is an ordinary model and the
+expected bytes owe nothing to the subject.
 
 ### 14.5 Staging and acceptance
 
 Stage A (Rust and Python, both exist as packages): P1 round trip and encoder
 model, the prefix-free claim, the trailing byte and non-minimal mutations, the depth
-claim P4 on both chains (`Tagged` and `Arr`) for `n` in 0 to 140, the CBR01
-`cases.json` rows as WX-E tables, the controls RS1 to RS6 and the adapter
-controls RS7 to RS14. Stage B (TypeScript, Go, then the rest of R2a): the same,
+claim P4 on both chains (`Tagged` and `Arr`) for `n` in 0 to 140, on the decoder
+and on `try_encode` (9.5), the CBR01 `cases.json` rows as WX-E tables, the corpus
+controls RS1 to RS6 and RS15 and the adapter controls RS7 to RS14. Stage B (TypeScript, Go, then the rest of R2a): the same,
 with the adapter hazard rows (`__proto__`, a nil pointer, a shared slice). Stage C:
 the remaining lanes of R2b and R2c, with the lanes that cannot carry the depth
 recorded `not-live` (8.6).
@@ -1890,7 +2099,8 @@ recorded `not-live` (8.6).
 `full`; (2) every control that applies is **caught** in both, and every one that does
 not prints its condition; (3) the counts of 14.4 are reproduced by the oracle and by
 both lanes; (4) the adapter obligations RO1 to RO3 pass in both; (5) the report
-prints the scope, the label `bounded-set`, `fuel: proven sufficient` and
+prints the scope, the label `bounded-set`, `fuel: measured`, `ops adopted 3 of 8
+public entries`, the lane-by-op matrix with every `not-live` cell, and
 `flood-resistance: not evidenced`; (6) the three crate-level findings, if any,
 are filed under VER15 with their weakness id, never fixed inside this PR; (7) the
 capability jail run (VER08b) gives identical digests. The pilot is **not** complete
@@ -1905,7 +2115,7 @@ already name. Four codes are new.
 |---|---|---|---|
 | **W0770** | R1 | checking | recursive type declarations (RM2, RM3): a type with no finite value (no base case); a group of more than `MAX_SCC_TYPES` types; an opaque type inside a recursive type; a recursive value as an `inout` parameter or in stateful state; (R3) polymorphic recursion, a mention of a generic type at arguments other than its own parameters |
 | **W0771** | R1 | checking | structural recursion (RR1 to RR5): a recursive call on a constructed or non-derived term; a level call to an earlier or the same member; a term used by two recursive calls; a `rec model` with no `decreasing` parameter or with one that does not exist; more than `MAX_REC_MODELS` members; a `rec model` that calls a later ordinary model or an operation; a `rec` call through a function reference whose element is not a derived term |
-| **W0772** | R1 | checking, generation | recursive domains (RD1, RD11): a `shape` on a non-recursive binder; both or neither of `depth` and `nodes`; a bound over its maximum; a leaf alphabet over 16, not ground, with a duplicate or ill-typed member; an unknown leaf type; an empty domain; a `shape` that is not a top-level conjunct; a `label full` asserted for a recursive binder |
+| **W0772** | R1 | checking, generation | recursive domains (RD1, RD11): a `shape` on a non-recursive binder; both or neither of `depth` and `nodes`; a bound over its maximum; a leaf alphabet over 16, not ground, with a duplicate or ill-typed member; an unknown leaf type; a float leaf with no alphabet; a second recursive group or an opaque type reachable from the binder's type; a `nodes` shape over a `Set` of group values or a `Map` keyed by them; an empty domain; a `shape` that is not a top-level conjunct; a `label full` asserted for a recursive binder |
 | **W0773** | R1 | generation | recursive binding (RL5, 8.1): a `rec` form outside the lane's closed list; `own` missing where the lane table requires it; `take` without a `free`; a `host_depth_limit` above `MAX_NEST` |
 
 Reused: **W0101** (a v2 construct in a v0 or v1 document, RM0), **W0201/W0203** (a
@@ -1914,7 +2124,8 @@ reserved name; a cycle through ordinary models, a cycle in a v0 or v1 document),
 `secret` label on a recursive value, RT6), **W0501** (a malformed `rec`, `own` or
 `host_depth_limit` entry), **W0502** (a `faults=` list that omits an applicable
 control of section 11), **W0601** (a claim with no deep or branchy case, no nodes
-visited, a depth claim that never reaches its limit, an empty domain), **W0602**
+visited, a depth claim that never reaches its limit, a canonical-form claim whose
+`Ok` arm is never taken, an empty domain), **W0602**
 (function-reference nesting over 4), **W0701** (a control that does not apply, a
 lane without the level `ir.rec`), **W0703** (frame or fuel exhaustion at checking
 and ground evaluation), **W0706** (a `shape` size, a product, or a total fuel over
@@ -1957,11 +2168,17 @@ document creates none.
 | `rec/frames-1000` | a 1,000-deep value through the evaluator: no host recursion (a recursive evaluator fails) |
 | `rec/fuel` | exhaustion at the same instruction in every implementation; `ir-fuel` split by subject dependence |
 | `rec/nth-expr`, `rec/nth-json` | the unranker reproduces the ten values and `nth(7)` of 5.6, the sizes 9, 198, 79,011 and the refusal of 12,485,713,284 |
+| `rec/nth-nodes-list` | the `nodes` order for a type with a `List` field and a three-field constructor (RD4): every value of `nodes <= 4`, listed, and `nth` at each boundary between lengths and between node counts |
+| `rec/shape-refused` | W0772 for a second recursive group, a `nodes` shape over a `Set` of group values, a float leaf with no alphabet; W0706 for tables over `MAX_SHAPE_TABLE` |
+| `rec/slim-ctors` | the constructor chunks of RD12b are in `slim_chunks`; a list without one is rejected by the oracle |
+| `rec/key-group` | `A = X(B)`, `B = Y(A) \| Z(List<U8>)` has no key type (RM6); `Set<A>` is W0760 |
+| `rec/refused-release` | a 10,000-deep value of the subject's host type is refused and then released without a crash (RL1a) |
 | `rec/order` | `ord` on `Expr`: constructor index first, so `Lit(true) < Not(Lit(false))`; `Set<Expr>` canonical encoding; the strict-order decoder rejects a repeat |
 | `rec/stream-roundtrip` | `Tagged(24, Nil)` and `Not(Lit(true))` encode as in RC1; the decoder re-encodes equal |
 | `rec/decoder-nest`, `rec/decoder-cells`, `rec/decoder-count` | `value-depth` at `MAX_NEST + 1`, `value-cells`, a count bomb with nested counts |
 | `rec/type-cycle` | a hostile table (uninhabited, over `MAX_SCC_TYPES`, a lying `rec` field) is `type-cycle` |
-| `rec/adapter-fixtures` | the deep, wide, shared and cyclic host fixtures of RO2; the controls RS7 to RS14 are each caught |
+| `rec/adapter-fixtures` | the deep, wide, shared and cyclic host fixtures of RO2, each within the step bound of RL1 (`MAX_VALUE_CELLS + 1` nodes visited); the controls RS7 to RS14 are each caught |
+| `rec/faults` | RS1 to RS6 and RS15 each change the value at the stated witness; `rec_accept` and `rec_limit_low` are refused outside a fault |
 | `rec/hostile-keys` | the keys of RO1 survive the host form |
 | `rec/same` | `same` lifted through a recursive type with an `F64` field |
 
@@ -1985,8 +2202,8 @@ Each requirement below is a follow-up to be filed.
 
 ### 17.2 VER04r
 
-* **2.2 rule 1** (types structural, no recursion): the cycle rule of RC3, the optional
-  `rec` field, the error `type-cycle`.
+* **2.2 rule 1** (types structural, no recursion): the cycle rule of RC3, the
+  `rec` field (required exactly for group members), the error `type-cycle`.
 * **4.1** (levels): the level `ir.rec` and its tags (RC5, RC6).
 * **4.2 rule 6** (static cost): the dynamic fuel and frame meter for `rec` groups
   (RR6, RR7, RB5 to RB8); the values bound of RB6.
@@ -2047,7 +2264,7 @@ Each requirement below is a follow-up to be filed.
 | Slice | Scope | Prerequisites |
 |---|---|---|
 | **R0** | this specification; the adversarial review recorded in section 21 | none |
-| **R1-S0** | errata pass against the then-current VER04j, k, l, o, p, r; reconcile sections 6 and 7 with VER04r and file the requests of 17; re-confirm no tag and the block `W0770` to `W0779`; reserved names; accept the recursion constructs in the `v2` header parser; measure the evaluators and fix `MAX_TOTAL_FUEL_*` | R0 reviewed; T1-S0 (`v2` accepted) |
+| **R1-S0** | errata pass against the then-current VER04j, k, l, o, p, r; reconcile sections 6 and 7 with VER04r and file the requests of 17; re-confirm no tag and the block `W0770` to `W0779`; reserved names; accept the recursion constructs in the `v2` header parser; measure the evaluators and the pilot's models and fix `MAX_TOTAL_FUEL_*` (RB8); draw up the pilot's lane-by-op matrix (14.1) | R0 reviewed; T1-S0 (`v2` accepted) |
 | **R1-S1** | checker and ground evaluator: groups, inhabitation, `rec model`, RR1 to RR5, `depth_of nodes_of cells_of least`, iterative equality and `ord`, `shape`, the frame and fuel meter, the labels | R1-S0; VER04o C1-S1 (the `witness<T>` call form; `Map` and `Set` for `Json`) |
 | **R1-S2** | generator at `ir.rec`: the type-table cycles, the descriptors and the counting tables, `nth`, the stream (no tag), the fuel prediction, the faults RS1 to RS6, the independent oracle (an independent unranker), the kit category `v2-recursive` | R1-S1; VER04r slices S3 to S5 |
 | **R1-S3** | Rust lane: binding reader (`rec`, `own`, `host_depth_limit`), RL1 and RL2, RO1 to RO3, the adapter controls RS7 to RS14, the shared fixture in Rust | R1-S2; the shared-crate queue of VER30 5.3 |
@@ -2070,10 +2287,11 @@ to keep the VER30 order or let the spec and checker slices start earlier.
 * **WX-R0**: spec recursive types (this document); status: written; **adversarial
   review required before R1-S0**. (The row exists as P3 / WX-R1's predecessor in
   the backlog; this updates its status.)
-* **WX-R-REVIEW**: the adversarial review of this document: three reviewers (the
-  type system, structural recursion and domains; polyglot adapters and per-lane
-  hazards; security, resource bounds and the meter). The per-lane table of 8.3 has
-  had no lane specialist.
+* **WX-R-REVIEW**: the adversarial review of this document. One review ran on
+  2026-11-16 (the type system, structural recursion, domains, the encoding,
+  security and the pilot; section 21). **Still owed before R2:** a lane-specialist
+  read of the per-lane table of 8.3 and of RL1a, which no reviewer has checked
+  against a running host.
 * **WX-R1** (R1-S0 to R1-S5): implementation, pilot `canonical-cbor`; depends on
   T1, WX-D2, the `ir.seq` amendment, VER04o C1-S1, and (VER30 order) WX-O1, WX-M1,
   WX-P1, WX-FL1.
@@ -2102,8 +2320,8 @@ to keep the VER30 order or let the spec and checker slices start earlier.
 
 | # | Question | Recommended default (encoded above) |
 |---|---|---|
-| OWN-R1 | Keep the VER30 order (WX-R1 after floats, opaque types, collections and generics), or let R1-S0 to R1-S4 start after VER04o C1-S1 alone? | **Keep the VER30 order for implementation**, because the lane rollout of the four features is the shared critical path; **do the adversarial review (WX-R-REVIEW) now**, which costs no implementation. R1-S0 to R1-S2 could start earlier at the owner's word |
-| OWN-R2 | Confirm the pilot: `canonical-cbor` (17 lanes, no dependencies, canonical form is the property), `bounded-json` second | **Confirmed in the text (14)**; the alternative `bounded-json` has three lanes and needs FL2 |
+| OWN-R1 | Keep the VER30 order (WX-R1 after floats, opaque types, collections and generics), or let R1-S0 to R1-S4 start after VER04o C1-S1 alone? | **Open; the owner's.** Recommended: **keep the VER30 order.** Three reasons found in review. The `warrant-grammar` queue is serial (VER30 5.3), so starting R1-S1 early delays the four features rather than running beside them. R1 changes rules that the four are still landing on (VER04k's depth and work meter, VER04r 4.2 rule 6, VER04o CM5 and its key table), so an early start means amending moving text. And the pilot cannot finish early in any case: it needs T1, WX-D2 and the `ir.seq` meter. The one thing worth doing now is **R1-S0** (the errata pass and the measurement of the fuel totals, RB8), which writes no checker code and tells the owner whether the pilot fits PR CI |
+| OWN-R2 | Confirm the pilot: `canonical-cbor` (17 lanes, no dependencies, canonical form is the property), `bounded-json` second; and accept that it is a **partial** adoption (3 of 8 public entries, 14.1) | **Open; the owner's.** Recommended: **confirm `canonical-cbor`, labelled partial.** Review re-checked the facts against the tree: zero dependencies in Rust and Python, 16 ports, depth 128 accepted and 129 refused, the encoder sorts and rejects duplicates, the decoder demands strict order. The alternative `bounded-json` has three lanes and needs FL2. What the owner is asked to accept is that the pilot's report says `3 of 8`, that `encode` is `not-live` in ports without it, and that the pilot is not called done on Rust alone |
 
 ### 20.2 Engineering questions
 
@@ -2118,11 +2336,16 @@ to keep the VER30 order or let the spec and checker slices start earlier.
 | RQ-7 | Shared subtrees in host values: reject, or accept and count per path? | Accept and count per path (RL1): rejecting sharing would reject legitimate hosts (interned strings, shared constants) and needs a visited set |
 | RQ-8 | Is `least<T>()` needed as a language built-in, or only inside `witness`? | A built-in: faults (RS4) and a model that needs a default tree use it |
 | RQ-9 | A `shape` over `Set<Self>`? | Yes (RD2 table), but a recursive `Set` needs a key type (RM3a) |
-| RQ-10 | The fuel and totals (`MAX_IR_FUEL`, `MAX_TOTAL_FUEL_*`)? | Provisional (RB8); R1-S0 measures the interpreted lanes and may lower them |
+| RQ-10 | The fuel and totals (`MAX_IR_FUEL`, `MAX_TOTAL_FUEL_*`)? | Provisional (RB8): the pilot is, by hand, at the slim total. R1-S0 measures and fixes them in either direction before any `ir.rec` corpus is committed; afterwards they only go down |
 | RQ-11 | How is a cross-package recursive type kept identical (RT9)? | A canonical type digest compared by the generator; a mismatch is a corpus error. The VER29 field is requested (17.3) |
 | RQ-12 | Does the encoder-side size cap (`max_encoded_bytes` 1 MiB) of the pilot have a Warrant form, given values are at most 4,096 bytes? | Not in the first slice: `not-live`, printed (14.1); an encode-only builder is a follow-up |
 | RQ-13 | May `admit` call a `rec model`? | Yes (`canonical(v)` in 14.3): `admit` is a pure Bool IR and a `rec model` is pure; it is charged to the same fuel |
 | RQ-14 | A `fuzz` engine that draws trees by a size-biased grammar instead of uniform `nth(i)`? | Not specified (RD10, 18); uniform by rank is the only distribution the oracle can reproduce |
+| RQ-15 | A `shape` over a type that reaches a second recursive group? | Refused in R1 (RD1, W0772): one bound cannot bound two groups. A per-group bound is a later extension |
+| RQ-16 | What label does a budget-demoted recursive binder carry? | `sample`, as VER04r 9.3 says for every demoted binder (RD3). The undemoted default `rec_d1` is `bounded-set` |
+| RQ-17 | How does `slim` treat a tree domain of more than 16 chunks? | The VER04r selection plus one chunk per root constructor (RD12b), fail closed at `MAX_SLIM_CHUNKS` |
+| RQ-18 | Is the work of a `rec model` linear? | Per group, in invocations (RR4). Across `s` groups it is degree `s` (RR4a), and a body with a size-charged form has no static bound; fuel is the limit and the report says `measured`, `proven` or `dynamic` (RB7) |
+| RQ-19 | What happens to a subject's value that the adapter refused? | It is dismantled by a worklist or kept until exit, never handed to a recursive host destructor, and in C never passed to the subject's `free` (RL1a, RL5) |
 
 ## 21. Specification change record
 
@@ -2145,8 +2368,43 @@ to keep the VER30 order or let the spec and checker slices start earlier.
   `W0779`; **no stream tag**. Edits no other specification but the VER04i 2.6.1
   registry rows; requirements on VER04j, VER04k, VER04o, VER04r, VER04i, VER29 are
   section 17.
-* **Not yet reviewed.** No adversarial review has run (WX-R-REVIEW is owed), and
-  the per-lane hazards of 8.3 have had no lane specialist. **Checks the author
+* **Adversarial review, 2026-11-16** (one reviewer; the per-lane hazards of 8.3 and
+  RL1a have still had no lane specialist). Defects found and fixed in the text:
+  (1) the termination measure of RR3 was stated as rising, and is now the
+  decreasing pair; RR4 did not say that a level call's argument counts, nor when
+  two `at` terms are disjoint. (2) "Work is linear" was false across groups and
+  for bodies with size-charged forms: RR4a, 4.5 and RB7 now say what is bounded,
+  and the fuel mode gains `measured`. (3) RB7's total, taken with the old static
+  bound, refused the pilot itself; RB7a restates it, and RB8 records that the
+  pilot is at the slim total by hand and that R1-S0 fixes the constants. (4) A
+  `shape` over a type that reaches a second recursive group was an infinite
+  domain counted as finite (now W0772), and a non-recursive record inside a group
+  was given its unbounded "ordinary" domain (now expanded structurally). (5) The
+  `nodes` count and order were under-specified for `List`, `Option` and `Map`
+  fields, so two implementations could disagree; RD2 and RD4 now give the
+  recurrences and the order, `Set` of trees is refused there, and a conformance
+  case pins it. (6) 5.9 claimed the first chunk holds the smallest trees, which is
+  false in the `depth` order; RD12a to RD12c define what `slim` thins and add
+  constructor chunks. (7) A demoted default was called `bounded-set` against
+  VER04r 9.3; it is `sample`. (8) The key-type rule let one member of a mutual
+  group be a key type while another was not; it is now a fixed point over the
+  group. (9) The type-table `rec` field was optional, giving one table two JSON
+  forms; it is required exactly for group members. (10) P3 could pass with no
+  accepted input and had no control that could fail; RV11 and RS15
+  (`accept-malformed`) are added, and RS6 is redefined as an IR rewrite
+  (`limit-low`) because a corpus fault cannot edit the subject's comparison.
+  (11) The depth-bomb sketch compared the bytes `c0..00` with a chain ending in
+  `Nil` (`f6`); it is `Uint(0)`, and the off-by-one between the subject's wrapper
+  count and `depth_of` is stated. (12) A subject's refused deep value was left to
+  the host's recursive destructor, and in C to the subject's `free`; RL1a and
+  RL5 forbid both. (13) The pilot said it adopted `encode` but declared no such
+  op; it is declared on its precondition, the five entries not adopted are
+  tabled, the ports' differing surfaces are recorded, and the report prints `3
+  of 8`. (14) Smaller: four measures, not three; `within(..., 4)` in 9.3; the
+  cyclic failure may be `value-cells`; the inventory path. **Confirmed, not
+  changed:** no stream tag (the existing tags are self-delimiting and decoding is
+  type-directed, so nesting is injective; VER04o expected the same); every value
+  is finite and inductive; the counts of 5.6 and 14.4. **Checks the author
   made:** the stream tags and diagnostic codes of 15.1 against every specification
   on the base as it stood; the section references against the texts as read on
   2026-11-16; the counts of 5.6 (`N_1` to `N_5`, `V_1` to `V_4`) and 14.4 (`V_2`
