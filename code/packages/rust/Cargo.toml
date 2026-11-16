@@ -1060,6 +1060,7 @@ members = [
     "generic-job-protocol",
     "generic-job-runtime",
     "rng",
+    "rpg-battle-engine",
     "feature-normalization",
     "single-layer-network",
     "two-layer-network",

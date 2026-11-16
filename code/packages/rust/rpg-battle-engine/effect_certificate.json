@@ -1,0 +1,277 @@
+{
+  "schema_version": "ver24-effect-cert-v1",
+  "package": "rust/rpg-battle-engine",
+  "source_digest": "32cf0031a4023445b42f622051601844817394c51e985c757a12239a2061bf96",
+  "manifest_digest": "2ba65293f4485295b551ff5a4ff88cfcd5484a27ecf5c41c5005cd6f067eef83",
+  "declared_effects": [],
+  "entry_points": [
+    {
+      "name": "slot",
+      "signature": "pub const fn slot(self) -> usize",
+      "effects": []
+    },
+    {
+      "name": "foe",
+      "signature": "pub const fn foe(self) -> Side",
+      "effects": []
+    },
+    {
+      "name": "check_move",
+      "signature": "pub fn check_move(&self) -> Result<(), BattleError>",
+      "effects": []
+    },
+    {
+      "name": "type_effectiveness",
+      "signature": "pub fn type_effectiveness(attack: u8, defend: u8) -> Result<u8, BattleError>",
+      "effects": []
+    },
+    {
+      "name": "dual_multiplier",
+      "signature": "pub fn dual_multiplier(attack: u8, t1: u8, t2: u8) -> Result<u16, BattleError>",
+      "effects": []
+    },
+    {
+      "name": "clamp_stage",
+      "signature": "pub const fn clamp_stage(stage: i32) -> i8",
+      "effects": []
+    },
+    {
+      "name": "stage_ratio",
+      "signature": "pub const fn stage_ratio(stage: i32) -> (u32, u32)",
+      "effects": []
+    },
+    {
+      "name": "accuracy_ratio",
+      "signature": "pub const fn accuracy_ratio(stage: i32) -> (u32, u32)",
+      "effects": []
+    },
+    {
+      "name": "derive_hp",
+      "signature": "pub const fn derive_hp(base: u8, level: u8) -> u16",
+      "effects": []
+    },
+    {
+      "name": "derive_stat",
+      "signature": "pub const fn derive_stat(base: u8, level: u8) -> u16",
+      "effects": []
+    },
+    {
+      "name": "effective_stat",
+      "signature": "pub const fn effective_stat(raw: u16, stage: i32) -> u32",
+      "effects": []
+    },
+    {
+      "name": "xp_for_level",
+      "signature": "pub const fn xp_for_level(level: u8) -> u32",
+      "effects": []
+    },
+    {
+      "name": "xp_yield",
+      "signature": "pub const fn xp_yield(exp_yield: u16, enemy_level: u8, is_wild: bool) -> u32",
+      "effects": []
+    },
+    {
+      "name": "isqrt_u32",
+      "signature": "pub const fn isqrt_u32(n: u32) -> u32",
+      "effects": []
+    },
+    {
+      "name": "seeded",
+      "signature": "pub fn seeded(seed: u64) -> BattleRng",
+      "effects": []
+    },
+    {
+      "name": "next_word",
+      "signature": "pub fn next_word(&mut self) -> u32",
+      "effects": []
+    },
+    {
+      "name": "below",
+      "signature": "pub fn below(&mut self, n: u32) -> u32",
+      "effects": []
+    },
+    {
+      "name": "from_spec",
+      "signature": "pub fn from_spec(spec: &CreatureSpec<'_>) -> Result<Creature, BattleError>",
+      "effects": []
+    },
+    {
+      "name": "check_integrity",
+      "signature": "pub fn check_integrity(&self) -> Result<(), BattleError>",
+      "effects": []
+    },
+    {
+      "name": "is_fainted",
+      "signature": "pub const fn is_fainted(&self) -> bool",
+      "effects": []
+    },
+    {
+      "name": "all_pp_spent",
+      "signature": "pub fn all_pp_spent(&self) -> bool",
+      "effects": []
+    },
+    {
+      "name": "stage_of",
+      "signature": "pub fn stage_of(&self, stat: StatIndex) -> i8",
+      "effects": []
+    },
+    {
+      "name": "grant_xp",
+      "signature": "pub fn grant_xp(&mut self, amount: u32) -> u8",
+      "effects": []
+    },
+    {
+      "name": "calc_damage",
+      "signature": "pub fn calc_damage( attacker: &Creature, defender: &Creature, mv: &Move, roll: u32, crit: bool, ) -> DamageResult",
+      "effects": []
+    },
+    {
+      "name": "catch_value",
+      "signature": "pub fn catch_value(max_hp: u16, hp: u16, catch_rate: u8, ball_x10: u16, status: Status) -> u32",
+      "effects": []
+    },
+    {
+      "name": "shake_threshold",
+      "signature": "pub fn shake_threshold(a: u32) -> u32",
+      "effects": []
+    },
+    {
+      "name": "attempt_capture",
+      "signature": "pub fn attempt_capture(rng: &mut BattleRng, a: u32) -> u8",
+      "effects": []
+    },
+    {
+      "name": "flee_succeeds",
+      "signature": "pub fn flee_succeeds(player_spe: u32, enemy_spe: u32, attempts: u8, random_byte: u32) -> bool",
+      "effects": []
+    },
+    {
+      "name": "is_terminal",
+      "signature": "pub const fn is_terminal(self) -> bool",
+      "effects": []
+    },
+    {
+      "name": "start",
+      "signature": "pub fn start( player: &[Creature], enemy: &[Creature], wild: bool, seed: u64, ) -> Result<Battle, BattleError>",
+      "effects": []
+    },
+    {
+      "name": "phase",
+      "signature": "pub const fn phase(&self) -> Phase",
+      "effects": []
+    },
+    {
+      "name": "turn_number",
+      "signature": "pub const fn turn_number(&self) -> u16",
+      "effects": []
+    },
+    {
+      "name": "is_wild_battle",
+      "signature": "pub const fn is_wild_battle(&self) -> bool",
+      "effects": []
+    },
+    {
+      "name": "was_captured",
+      "signature": "pub const fn was_captured(&self) -> bool",
+      "effects": []
+    },
+    {
+      "name": "event_log",
+      "signature": "pub fn event_log(&self) -> &[Event]",
+      "effects": []
+    },
+    {
+      "name": "dropped_events",
+      "signature": "pub const fn dropped_events(&self) -> u16",
+      "effects": []
+    },
+    {
+      "name": "party_size",
+      "signature": "pub const fn party_size(&self, side: Side) -> u8",
+      "effects": []
+    },
+    {
+      "name": "active_index",
+      "signature": "pub const fn active_index(&self, side: Side) -> u8",
+      "effects": []
+    },
+    {
+      "name": "active_creature",
+      "signature": "pub fn active_creature(&self, side: Side) -> &Creature",
+      "effects": []
+    },
+    {
+      "name": "party_member",
+      "signature": "pub fn party_member(&self, side: Side, index: u8) -> Option<&Creature>",
+      "effects": []
+    },
+    {
+      "name": "has_usable_creature",
+      "signature": "pub fn has_usable_creature(&self, side: Side) -> bool",
+      "effects": []
+    },
+    {
+      "name": "begin",
+      "signature": "pub fn begin(&mut self) -> Result<(), BattleError>",
+      "effects": []
+    },
+    {
+      "name": "submit_turn",
+      "signature": "pub fn submit_turn(&mut self, player: Command, enemy: Command) -> Result<(), BattleError>",
+      "effects": []
+    },
+    {
+      "name": "switch_in",
+      "signature": "pub fn switch_in(&mut self, index: u8) -> Result<(), BattleError>",
+      "effects": []
+    },
+    {
+      "name": "ai_choose",
+      "signature": "pub fn ai_choose(&mut self) -> Command",
+      "effects": []
+    },
+    {
+      "name": "resolve_turn",
+      "signature": "pub fn resolve_turn(&mut self) -> Result<(), BattleError>",
+      "effects": []
+    },
+    {
+      "name": "hp_bar_state",
+      "signature": "pub fn hp_bar_state(hp: u16, max_hp: u16) -> HpBarState",
+      "effects": []
+    },
+    {
+      "name": "hp_bar_pixels",
+      "signature": "pub fn hp_bar_pixels(hp: u16, max_hp: u16, width: u16) -> u16",
+      "effects": []
+    },
+    {
+      "name": "hp_bar_color",
+      "signature": "pub const fn hp_bar_color(state: HpBarState) -> Rgba8",
+      "effects": []
+    },
+    {
+      "name": "hp_bar_palette_index",
+      "signature": "pub const fn hp_bar_palette_index(state: HpBarState) -> u8",
+      "effects": []
+    },
+    {
+      "name": "hp_bar_blend_color",
+      "signature": "pub fn hp_bar_blend_color(hp: u16, max_hp: u16) -> Rgba8",
+      "effects": []
+    },
+    {
+      "name": "fade_trigger_for_phase",
+      "signature": "pub const fn fade_trigger_for_phase(phase: Phase) -> FadeTrigger",
+      "effects": []
+    },
+    {
+      "name": "fade_params",
+      "signature": "pub const fn fade_params(trigger: FadeTrigger) -> (Rgba8, u16)",
+      "effects": []
+    }
+  ],
+  "unconditional_roots": [],
+  "banned_construct_exceptions": [],
+  "label": "proved"
+}

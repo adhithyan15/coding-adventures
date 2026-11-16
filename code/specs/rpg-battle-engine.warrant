@@ -1,0 +1,81 @@
+-- GAME24 -- RPG Battle Engine: deterministic zero-allocation turn-based creature battle state machine.
+--
+-- Warrant document for rpg-battle-engine (VER04j and VER04m: state=explicit).
+-- Formal verification contract for the bounds guards of the battle engine.
+
+warrant rpg_battle_engine v1
+  -- Contract mapping: validate_type_id models the guard in type_effectiveness / dual_multiplier
+  -- (and Creature::from_spec / Move::check_move type checks); validate_level models the level guard in
+  -- Creature::from_spec; validate_stage models clamp_stage (stages are clamped to -6..=6, shifted by +6 here).
+  error BattleError = InvalidType | InvalidLevel | InvalidStat | InvalidMove | InvalidCreature | PartyEmpty | PartyTooLarge | InvalidParty | AllFainted | InvalidPhase | InvalidMoveSlot | InvalidPartyIndex | NoPp | CannotCatch | CannotFlee | InvalidCommand
+
+  model Unit = Bool
+  variant Phase = Intro | CommandSelect | TurnResolution | SwitchPrompt | Victory | Defeat | Fled
+  variant Status = None | Burn | Paralysis | Poison | Sleep | Freeze
+
+  record Command(slot: Nat, index: Nat)
+
+  model valid_type_id(n: Nat) -> Bool = n < 15
+  model valid_level(n: Nat) -> Bool = n >= 1 and n <= 100
+  model valid_party_len(n: Nat) -> Bool = n >= 1 and n <= 6
+
+  op validate_type_id(n: Nat) -> Result<Bool, BattleError>
+  op validate_level(n: Nat) -> Result<Bool, BattleError>
+  op validate_party_len(n: Nat) -> Result<Bool, BattleError>
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels validate_type_id:
+    n public
+  labels validate_level:
+    n public
+  labels validate_party_len:
+    n public
+
+  input validate_type_id.n:
+    hostile
+    ensures no_panic, terminates
+  input validate_level.n:
+    hostile
+    ensures no_panic, terminates
+  input validate_party_len.n:
+    hostile
+    ensures no_panic, terminates
+
+  bound validate_type_id:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_level:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_party_len:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+
+  example type_first:
+    validate_type_id(0) == Ok(true)
+  example type_last:
+    validate_type_id(14) == Ok(true)
+  example type_out_of_range:
+    validate_type_id(15) == Err(BattleError.InvalidType)
+  example level_min:
+    validate_level(1) == Ok(true)
+  example level_max:
+    validate_level(100) == Ok(true)
+  example level_zero:
+    validate_level(0) == Err(BattleError.InvalidLevel)
+  example party_len_max:
+    validate_party_len(6) == Ok(true)
+  example party_len_zero:
+    validate_party_len(0) == Err(BattleError.PartyEmpty)
+
+  claim validate_type_id_agrees:
+    forall n: Nat. validate_type_id(n) == (if valid_type_id(n) then Ok(true) else Err(BattleError.InvalidType))
+  claim validate_level_agrees:
+    forall n: Nat. validate_level(n) == (if valid_level(n) then Ok(true) else Err(BattleError.InvalidLevel))
