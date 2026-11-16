@@ -709,6 +709,7 @@ members = [
     "paint-codec-png-c",
     "paint-instructions",
     "paint-batch-tiles",
+    "paint-palette-blend",
     "paint-vm-ascii",
     "paint-vm-cairo",
     "cuda-compute",

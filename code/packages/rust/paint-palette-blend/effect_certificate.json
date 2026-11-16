@@ -1,0 +1,67 @@
+{
+  "schema_version": "ver24-effect-cert-v1",
+  "package": "rust/paint-palette-blend",
+  "source_digest": "949ce40e41aab15e36515fbc50964fb5a1842bcc865944210ef5ec41ba8b3c2d",
+  "manifest_digest": "5fcbad759a2b06814f1f5bbd0726095c16554c4d6931e3ee5e6506072bf7f31c",
+  "declared_effects": [],
+  "entry_points": [
+    {
+      "name": "blend_mode_from_code",
+      "signature": "pub fn blend_mode_from_code(code: u8) -> Result<BlendMode, PaletteBlendError>",
+      "effects": []
+    },
+    {
+      "name": "blend_mode_from_paint",
+      "signature": "pub fn blend_mode_from_paint(mode: &paint_instructions::BlendMode) -> Option<BlendMode>",
+      "effects": []
+    },
+    {
+      "name": "alpha_from_unit_f32",
+      "signature": "pub fn alpha_from_unit_f32(alpha: f32) -> Result<u8, PaletteBlendError>",
+      "effects": []
+    },
+    {
+      "name": "blend_pixel",
+      "signature": "pub fn blend_pixel(mode: BlendMode, src: Rgba8, dst: Rgba8, alpha: u8) -> Rgba8",
+      "effects": []
+    },
+    {
+      "name": "blit_indexed_scanline",
+      "signature": "pub fn blit_indexed_scanline( dst: &mut [u8], indices: &[u8], palette: &[Rgba8], params: &BlitParams, ) -> Result<usize, PaletteBlendError>",
+      "effects": []
+    },
+    {
+      "name": "blend_solid_span",
+      "signature": "pub fn blend_solid_span( dst: &mut [u8], color: Rgba8, mode: BlendMode, alpha: u8, ) -> Result<usize, PaletteBlendError>",
+      "effects": []
+    },
+    {
+      "name": "blend_rgba_scanline",
+      "signature": "pub fn blend_rgba_scanline( dst: &mut [u8], src: &[u8], mode: BlendMode, alpha: u8, ) -> Result<usize, PaletteBlendError>",
+      "effects": []
+    },
+    {
+      "name": "blit_indexed_image",
+      "signature": "pub fn blit_indexed_image( target: &mut RgbaTarget<'_>, x: i32, y: i32, src: &IndexedImage<'_>, palette: &[Rgba8], params: &BlitParams, ) -> Result<usize, PaletteBlendError>",
+      "effects": []
+    },
+    {
+      "name": "blit_indexed_to_pixel_container",
+      "signature": "pub fn blit_indexed_to_pixel_container( container: &mut PixelContainer, x: i32, y: i32, src: &IndexedImage<'_>, palette: &[Rgba8], params: &BlitParams, ) -> Result<usize, PaletteBlendError>",
+      "effects": []
+    },
+    {
+      "name": "instruction_id",
+      "signature": "pub fn instruction_id(instr: &PaintInstruction) -> Option<&str>",
+      "effects": []
+    },
+    {
+      "name": "diff_paint_scene_into",
+      "signature": "pub fn diff_paint_scene_into( prev: &PaintScene, next: &PaintScene, out_ops: &mut [PatchOp], ) -> Result<PatchSummary, PaletteBlendError>",
+      "effects": []
+    }
+  ],
+  "unconditional_roots": [],
+  "banned_construct_exceptions": [],
+  "label": "proved"
+}
