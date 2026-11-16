@@ -14076,6 +14076,16 @@ name = "superh2-simulator"
 version = "0.1.0"
 
 [[package]]
+name = "swf-container"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "deflate",
+]
+
+[[package]]
 name = "symbolic-ir"
 version = "0.2.0"
 
