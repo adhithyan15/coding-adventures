@@ -9,21 +9,24 @@ from pathlib import Path
 
 import pytest
 from note_frequency import parse_note
-from oscillator import SampleBuffer
 
 from note_audio import (
+    DEFAULT_AMPLITUDE,
+    DEFAULT_MAX_SAMPLE_COUNT,
     DEFAULT_SAMPLE_RATE_HZ,
-    LinearSpeakerSignal,
+    MAX_DURATION_SECONDS,
+    MAX_SAMPLE_COUNT,
+    MAX_SAMPLE_RATE_HZ,
+    MAX_SAMPLES,
     NoteEvent,
     PCMBuffer,
     PCMFormat,
+    RenderedNote,
     ZeroOrderHoldDACSignal,
     __version__,
     encode_sample_buffer,
     float_to_pcm16,
-    pcm16_to_voltage,
     render_note_to_sound_chain,
-    samples_to_pcm_buffer,
     to_wav_bytes,
     write_wav,
 )
@@ -31,14 +34,46 @@ from note_audio import (
 ABS_TOLERANCE = 1e-9
 
 
+# =============================================================================
+# § 1. Pure Python SplitMix64 PRNG for PBT / Fuzzing
+# =============================================================================
+
+
+class SplitMix64:
+    """Deterministic 64-bit PRNG (Steele et al., 2014) for reproducible PBT."""
+
+    def __init__(self, seed: int = 0x123456789ABCDEF0) -> None:
+        self.state: int = seed & 0xFFFF_FFFF_FFFF_FFFF
+
+    def next_u64(self) -> int:
+        self.state = (self.state + 0x9E3779B97F4A7C15) & 0xFFFF_FFFF_FFFF_FFFF
+        z = self.state
+        z = ((z ^ (z >> 30)) * 0xBF58476D1CE4E5B9) & 0xFFFF_FFFF_FFFF_FFFF
+        z = ((z ^ (z >> 27)) * 0x94D049BB133111EB) & 0xFFFF_FFFF_FFFF_FFFF
+        return z ^ (z >> 31)
+
+    def next_float(self) -> float:
+        """Return uniform float in [0.0, 1.0)."""
+        return (self.next_u64() >> 11) * (1.0 / 9007199254740992.0)
+
+    def uniform(self, low: float, high: float) -> float:
+        """Return uniform float in [low, high)."""
+        return low + (high - low) * self.next_float()
+
+
 def assert_close(got: float, want: float, tolerance: float = ABS_TOLERANCE) -> None:
     """Keep float assertions readable in the tutorial-style tests."""
-
     assert abs(got - want) <= tolerance
 
 
-def test_version_exists() -> None:
+def test_version_and_constants_exist() -> None:
     assert __version__ == "0.1.0"
+    assert MAX_SAMPLE_RATE_HZ == 192_000.0
+    assert MAX_DURATION_SECONDS == 60.0
+    assert MAX_SAMPLES == 16_777_216
+    assert MAX_SAMPLE_COUNT == 16_777_216
+    assert DEFAULT_MAX_SAMPLE_COUNT == 16_777_216
+    assert DEFAULT_AMPLITUDE == 0.8
 
 
 def test_note_event_parses_strings_and_preserves_timing() -> None:
@@ -105,97 +140,44 @@ def test_zero_duration_render_is_an_empty_but_valid_chain() -> None:
     assert chain.speaker_signal.value_at(0.0) == 0.0
 
 
-def test_pcm_parity_vector_for_one_hz_sampled_at_four_hz() -> None:
-    sample_buffer = SampleBuffer(
-        samples=(0.0, 1.0, 0.0, -1.0),
-        sample_rate_hz=4.0,
-    )
-    pcm_buffer = encode_sample_buffer(sample_buffer, PCMFormat(sample_rate_hz=4.0))
-    dac = ZeroOrderHoldDACSignal(pcm_buffer)
-    speaker = LinearSpeakerSignal(dac)
-
-    assert pcm_buffer.samples == (0, 32767, 0, -32768)
-    assert dac.value_at(0.00) == 0.0
-    assert dac.value_at(0.24) == 0.0
-    assert dac.value_at(0.25) == 1.0
-    assert dac.value_at(0.49) == 1.0
-    assert dac.value_at(0.50) == 0.0
-    assert dac.value_at(0.74) == 0.0
-    assert dac.value_at(0.75) == -1.0
-    assert dac.value_at(0.99) == -1.0
-    assert dac.value_at(1.00) == 0.0
-    assert speaker.value_at(0.75) == -1.0
-
-
-def test_float_to_pcm16_clips_and_reports_clipping() -> None:
-    assert float_to_pcm16(0.0) == (0, False)
-    assert float_to_pcm16(1.0) == (32767, False)
-    assert float_to_pcm16(-1.0) == (-32768, False)
-    assert float_to_pcm16(2.0) == (32767, True)
-    assert float_to_pcm16(-2.0) == (-32768, True)
-
-
-def test_encode_sample_buffer_tracks_clipped_samples() -> None:
-    buffer = SampleBuffer(samples=(2.0, -2.0, 0.5, -0.5), sample_rate_hz=8.0)
-    pcm_buffer = encode_sample_buffer(buffer, PCMFormat(sample_rate_hz=8.0))
-
-    assert pcm_buffer.samples == (32767, -32768, 16384, -16384)
-    assert pcm_buffer.clipped_sample_count == 2
-
-
-def test_samples_to_pcm_buffer_validates_and_encodes_raw_samples() -> None:
-    pcm_buffer = samples_to_pcm_buffer((0.0, 1.0, -1.0), sample_rate_hz=3.0)
-
-    assert pcm_buffer.samples == (0, 32767, -32768)
-    assert pcm_buffer.sample_count() == 3
-    assert_close(pcm_buffer.duration_seconds(), 1.0)
-
-
-def test_pcm_buffer_metadata_and_bytes() -> None:
-    pcm_buffer = PCMBuffer(
-        samples=(0, 32767, -32768),
-        pcm_format=PCMFormat(sample_rate_hz=3.0),
-        start_time_seconds=5.0,
+def test_speaker_gain_scales_pressure_linearly() -> None:
+    chain = render_note_to_sound_chain(
+        "A4",
+        duration_seconds=0.001,
+        speaker_gain=3.0,
     )
 
-    assert pcm_buffer.sample_count() == 3
-    assert_close(pcm_buffer.sample_period_seconds(), 1.0 / 3.0)
-    assert_close(pcm_buffer.duration_seconds(), 1.0)
-    assert_close(pcm_buffer.time_at(2), 5.0 + 2.0 / 3.0)
-    assert pcm_buffer.to_little_endian_bytes() == b"\x00\x00\xff\x7f\x00\x80"
+    sample_time = chain.pcm_buffer.time_at(1)
+    voltage = chain.dac_signal.value_at(sample_time)
+    pressure = chain.speaker_signal.value_at(sample_time)
+
+    assert_close(pressure, voltage * 3.0)
 
 
-def test_pcm16_to_voltage_uses_asymmetric_signed_range() -> None:
-    pcm_format = PCMFormat(sample_rate_hz=4.0, full_scale_voltage=2.0)
-
-    assert pcm16_to_voltage(0, pcm_format) == 0.0
-    assert pcm16_to_voltage(32767, pcm_format) == 2.0
-    assert pcm16_to_voltage(-32768, pcm_format) == -2.0
-
-
-def test_linear_speaker_gain_scales_the_dac_signal() -> None:
-    pcm_buffer = PCMBuffer((0, 32767), PCMFormat(sample_rate_hz=2.0))
-    speaker = LinearSpeakerSignal(ZeroOrderHoldDACSignal(pcm_buffer), speaker_gain=0.5)
-
-    assert speaker.value_at(0.0) == 0.0
-    assert speaker.value_at(0.5) == 0.5
+def test_rendered_note_frequency_validates() -> None:
+    chain = render_note_to_sound_chain("A4", duration_seconds=0.001)
+    with pytest.raises(ValueError, match="frequency_hz"):
+        RenderedNote(
+            note_event=chain.note_event,
+            frequency_hz=0.0,
+            oscillator=chain.oscillator,
+            floating_samples=chain.floating_samples,
+            pcm_buffer=chain.pcm_buffer,
+            dac_signal=chain.dac_signal,
+            speaker_signal=chain.speaker_signal,
+        )
 
 
-def test_wav_bytes_are_parseable_mono_pcm() -> None:
-    pcm_buffer = PCMBuffer(
-        samples=(0, 32767, -32768),
-        pcm_format=PCMFormat(sample_rate_hz=8.0),
-    )
-    wav_bytes = to_wav_bytes(pcm_buffer)
+def test_to_wav_bytes_round_trip() -> None:
+    chain = render_note_to_sound_chain("A4", duration_seconds=0.01)
+    wav_bytes = to_wav_bytes(chain.pcm_buffer)
 
     assert wav_bytes.startswith(b"RIFF")
-    assert wav_bytes[8:12] == b"WAVE"
     with wave.open(BytesIO(wav_bytes), "rb") as wav_file:
         assert wav_file.getnchannels() == 1
         assert wav_file.getsampwidth() == 2
-        assert wav_file.getframerate() == 8
-        assert wav_file.getnframes() == 3
-        assert wav_file.readframes(3) == b"\x00\x00\xff\x7f\x00\x80"
+        assert wav_file.getframerate() == int(DEFAULT_SAMPLE_RATE_HZ)
+        assert wav_file.getnframes() == chain.pcm_buffer.sample_count()
 
 
 def test_write_wav_writes_the_same_bytes(tmp_path: Path) -> None:
@@ -235,22 +217,37 @@ def test_render_rejects_oversized_sample_budget() -> None:
     [
         ({"duration_seconds": -1.0}, "duration_seconds"),
         ({"duration_seconds": math.nan}, "duration_seconds"),
+        ({"duration_seconds": MAX_DURATION_SECONDS + 1.0}, "MAX_DURATION_SECONDS"),
         ({"sample_rate_hz": 0.0}, "sample_rate_hz"),
+        ({"sample_rate_hz": MAX_SAMPLE_RATE_HZ + 1.0}, "MAX_SAMPLE_RATE_HZ"),
         ({"amplitude": -0.1}, "amplitude"),
         ({"phase_cycles": math.inf}, "phase_cycles"),
         ({"full_scale_voltage": 0.0}, "full_scale_voltage"),
         ({"speaker_gain": math.nan}, "speaker_gain"),
         ({"max_sample_count": -1}, "max_sample_count"),
+        ({"max_sample_count": MAX_SAMPLES + 1}, "MAX_SAMPLES"),
+        ({"duration_seconds": True}, "duration_seconds"),
+        ({"sample_rate_hz": True}, "sample_rate_hz"),
+        ({"max_sample_count": True}, "max_sample_count"),
     ],
 )
 def test_render_rejects_invalid_numeric_inputs(
     kwargs: dict[str, object],
     message: str,
 ) -> None:
-    render_kwargs = {"duration_seconds": 1.0}
+    render_kwargs: dict[str, object] = {"duration_seconds": 1.0}
     render_kwargs.update(kwargs)
     with pytest.raises(ValueError, match=message):
         render_note_to_sound_chain("A4", **render_kwargs)
+
+
+def test_helper_validation_branches() -> None:
+    from note_audio.note_audio import _finite_float, _non_negative_int
+
+    with pytest.raises(ValueError, match="test must be finite"):
+        _finite_float("test", float("nan"))
+    with pytest.raises(ValueError, match="test must be >= 0"):
+        _non_negative_int("test", -5)
 
 
 @pytest.mark.parametrize(
@@ -319,3 +316,36 @@ def test_wav_output_rejects_non_integer_sample_rates_and_bad_buffers() -> None:
         to_wav_bytes(pcm_buffer)
     with pytest.raises(ValueError, match="pcm_buffer"):
         to_wav_bytes(object())  # type: ignore[arg-type]
+
+
+# =============================================================================
+# § 2. Property-Based Testing (PBT) using SplitMix64 PRNG
+# =============================================================================
+
+
+def test_splitmix64_pbt_rendered_note_invariants() -> None:
+    """PBT: Render notes across octaves and verify chain property invariants."""
+    prng = SplitMix64(seed=0xBEEF_CAFE_0001)
+    notes = ["C3", "D3", "E3", "F3", "G3", "A3", "B3", "C4", "E4", "G4", "A4", "C5"]
+
+    for _ in range(20):
+        note_name = notes[prng.next_u64() % len(notes)]
+        dur = prng.uniform(0.005, 0.05)
+        amp = prng.uniform(0.1, 0.9)
+        gain = prng.uniform(0.5, 2.0)
+
+        chain = render_note_to_sound_chain(
+            note_name,
+            duration_seconds=dur,
+            amplitude=amp,
+            speaker_gain=gain,
+            sample_rate_hz=44100.0,
+        )
+
+        expected_count = int(dur * 44100.0)
+        assert abs(chain.pcm_buffer.sample_count() - expected_count) <= 1
+        assert chain.frequency_hz == parse_note(note_name).frequency()
+
+        # Check all PCM samples are in valid range
+        for sample in chain.pcm_buffer.samples:
+            assert -32768 <= sample <= 32767

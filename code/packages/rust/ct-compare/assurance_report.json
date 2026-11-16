@@ -616,6 +616,7 @@
   ],
   "package": "rust/ct-compare",
   "profile": "comparison",
+  "profile_sha256": "5530f1ea98fc785ce89646b3672221b8e56db6c04b259cf4236a8a3c0fbbd5f1",
   "public_symbols_without_claims": [],
   "rungs": {
     "E0": "pass",

@@ -20,12 +20,18 @@
  *
  * A Framer is NOT thread-safe; each connection should own one.
  *
- * SECURITY / UNBOUNDED BUFFER. Like the Rust original, `feed` buffers whatever
- * it is given: the 510-byte cap only applies to a line once its terminator is
- * seen, so a peer that streams bytes with no LF grows the buffer without limit.
- * This is by design — the read layer above (which owns the socket) is
- * responsible for bounding how much it reads before a terminator, exactly as in
- * the Rust stack. Do not feed unbounded untrusted input without such a cap.
+ * MEMORY BOUND (SEC-011, CWE-400/770). The 510-byte cap alone is applied only
+ * once a line's terminator is seen, so on its own it would let a peer that
+ * streams bytes with no LF grow the buffer without limit. `feed` therefore also
+ * caps the *unterminated tail* (the bytes after the last LF) at
+ * IRC_MAX_PENDING_BYTES = 511: 510 content bytes plus a CR whose LF has not
+ * arrived yet (RFC 1459 and RFC 2812 §2.3: 512 bytes including CRLF). One more
+ * byte with no LF and the line cannot be legal, so the partial line is dropped
+ * and the framer discards input up to and including the next LF, keeping no
+ * data. Memory for the pending line stays constant however much is fed. This
+ * is a silent, fail-closed discard like the one for complete overlong lines, so
+ * the API is unchanged. Complete lines that are already buffered are kept; the
+ * caller bounds those by calling `irc_framer_frames` after each read.
  *
  * OWNERSHIP. Create with `irc_framer_new`, release with `irc_framer_free`.
  * `irc_framer_frames` returns an `IrcFrames` batch the caller releases with
@@ -46,6 +52,10 @@ extern "C" {
 
 /* RFC 1459 §2.3: maximum line content is 510 bytes (512 − CRLF). */
 #define IRC_MAX_CONTENT_BYTES 510
+
+/* The most bytes held for one line that has not yet seen its LF: 510 content
+ * bytes plus a CR (SEC-011). */
+#define IRC_MAX_PENDING_BYTES (IRC_MAX_CONTENT_BYTES + 1)
 
 /* Opaque stateful framer, holding an internal byte buffer. */
 typedef struct IrcFramer IrcFramer;
@@ -71,7 +81,10 @@ IrcFramer *irc_framer_new(void);
 void irc_framer_free(IrcFramer *f);
 
 /* Append `len` bytes of `data` to the internal buffer. A zero length is a safe
- * no-op. Returns 0 on success, -1 on allocation failure (buffer unchanged). */
+ * no-op. The unterminated tail never exceeds IRC_MAX_PENDING_BYTES; past that
+ * the partial line is dropped and input is skipped up to the next LF (see
+ * MEMORY BOUND above). Returns 0 on success, -1 on allocation failure (state
+ * unchanged). */
 int irc_framer_feed(IrcFramer *f, const unsigned char *data, size_t len);
 
 /* Drain all complete frames (CRLF stripped) into *out; overlong lines (content
@@ -83,7 +96,7 @@ int irc_framer_frames(IrcFramer *f, IrcFrames *out);
 /* Release a frame batch returned by `irc_framer_frames`. */
 void irc_frames_free(IrcFrames *frames);
 
-/* Discard all buffered data. */
+/* Discard all buffered data, including the skip-to-LF discard state. */
 void irc_framer_reset(IrcFramer *f);
 
 /* Number of bytes currently held in the internal buffer. */

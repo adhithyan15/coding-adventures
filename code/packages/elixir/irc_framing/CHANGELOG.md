@@ -1,5 +1,12 @@
 # Changelog — irc_framing (Elixir)
 
+## [Unreleased]
+
+### Fixed
+
+- SEC-011 (CWE-400/770): `Framer.feed/2` buffered input without limit when no LF arrived, and the moduledoc wrongly claimed the 510-byte rule prevented memory exhaustion (it only applies to lines that already ended in LF). The unterminated tail is now capped at 511 bytes (510 content plus a CR; RFC 1459 and RFC 2812 section 2.3: 512 including CRLF). Past the cap the partial line is dropped and input is skipped up to the next LF (fail closed, same silent discard as a complete overlong line; no function signature changes, so no version bump). The struct gains `:tail_len` and `:discarding` fields (defaults `0` / `false`; `:buf` is still the only enforced key). `reset/1` also clears the discard state. Ported from the Rust fix (PR #19359).
+- Moduledoc corrected to state the real memory bound.
+
 ## [0.1.0] — 2026-04-12
 
 ### Added

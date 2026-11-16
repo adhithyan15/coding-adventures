@@ -1,0 +1,116 @@
+-- GAME23 -- RpgGridWorld: deterministic zero-allocation overworld RPG grid-movement engine.
+--
+-- Warrant document for rpg-grid-world (VER04j and VER04m: state=explicit).
+-- Formal verification contract for the resource guards of the grid-world engine.
+
+warrant rpg-grid-world v1
+  -- Contract mapping: validate_speed models GridActor::set_speed; validate_reach models the
+  -- guard of interact_target; validate_page_count models the guard of DialogueBox::open;
+  -- validate_text_speed models DialogueBox::set_text_speed; validate_rate models the
+  -- encounter-rate guard of validate_encounter_table. Every divisor and bound used by the
+  -- movement, encounter and dialogue paths is a validated, capped value (CWE-369, CWE-400).
+  error GridError = InvalidSpeed | InvalidReach | InvalidPageCount | InvalidTextSpeed | InvalidRate
+
+  model Unit = Bool
+  variant Facing = Up | Down | Left | Right
+
+  record Tile(x: Nat, y: Nat)
+
+  model valid_speed(n: Nat) -> Bool = n >= 1 and n <= 256
+  model valid_reach(n: Nat) -> Bool = n >= 1 and n <= 4
+  model valid_page_count(n: Nat) -> Bool = n >= 1 and n <= 64
+  model valid_text_speed(n: Nat) -> Bool = n >= 1 and n <= 32768
+  model valid_rate(n: Nat) -> Bool = n <= 256
+
+  op validate_speed(n: Nat) -> Result<Bool, GridError>
+  op validate_reach(n: Nat) -> Result<Bool, GridError>
+  op validate_page_count(n: Nat) -> Result<Bool, GridError>
+  op validate_text_speed(n: Nat) -> Result<Bool, GridError>
+  op validate_rate(n: Nat) -> Result<Bool, GridError>
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels validate_speed:
+    n public
+  labels validate_reach:
+    n public
+  labels validate_page_count:
+    n public
+  labels validate_text_speed:
+    n public
+  labels validate_rate:
+    n public
+
+  input validate_speed.n:
+    hostile
+    ensures no_panic, terminates
+  input validate_reach.n:
+    hostile
+    ensures no_panic, terminates
+  input validate_page_count.n:
+    hostile
+    ensures no_panic, terminates
+  input validate_text_speed.n:
+    hostile
+    ensures no_panic, terminates
+  input validate_rate.n:
+    hostile
+    ensures no_panic, terminates
+
+  bound validate_speed:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_reach:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_page_count:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_text_speed:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_rate:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+
+  example speed_min:
+    validate_speed(1) == Ok(true)
+  example speed_max:
+    validate_speed(256) == Ok(true)
+  example speed_zero:
+    validate_speed(0) == Err(GridError.InvalidSpeed)
+  example reach_max:
+    validate_reach(4) == Ok(true)
+  example reach_zero:
+    validate_reach(0) == Err(GridError.InvalidReach)
+  example pages_max:
+    validate_page_count(64) == Ok(true)
+  example pages_zero:
+    validate_page_count(0) == Err(GridError.InvalidPageCount)
+  example text_speed_max:
+    validate_text_speed(32768) == Ok(true)
+  example text_speed_zero:
+    validate_text_speed(0) == Err(GridError.InvalidTextSpeed)
+  example rate_max:
+    validate_rate(256) == Ok(true)
+  example rate_over:
+    validate_rate(257) == Err(GridError.InvalidRate)
+
+  claim validate_speed_agrees:
+    forall n: Nat. validate_speed(n) == (if valid_speed(n) then Ok(true) else Err(GridError.InvalidSpeed))
+  claim validate_reach_agrees:
+    forall n: Nat. validate_reach(n) == (if valid_reach(n) then Ok(true) else Err(GridError.InvalidReach))
+  claim validate_page_count_agrees:
+    forall n: Nat. validate_page_count(n) == (if valid_page_count(n) then Ok(true) else Err(GridError.InvalidPageCount))
+  claim validate_text_speed_agrees:
+    forall n: Nat. validate_text_speed(n) == (if valid_text_speed(n) then Ok(true) else Err(GridError.InvalidTextSpeed))
+  claim validate_rate_agrees:
+    forall n: Nat. validate_rate(n) == (if valid_rate(n) then Ok(true) else Err(GridError.InvalidRate))

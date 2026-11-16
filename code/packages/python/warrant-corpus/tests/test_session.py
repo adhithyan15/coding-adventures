@@ -204,3 +204,28 @@ def test_a_tampered_digest_is_reported_as_a_suite_level_failure(
     tampered = document["suites"][0]["id"]
     assert not outcome.passed and outcome.manifest is None
     assert f"not ok {tampered} stream-mismatch" in lines
+
+
+def test_a_corpus_outside_the_repository_is_refused_not_a_crash(
+    tmp_path, monkeypatch
+) -> None:
+    """``relative_to`` raises ``ValueError`` for a path that is not beneath the
+    root (and across Windows drives); the runner must turn that into a refusal
+    (exit 2), never a traceback."""
+    _root, corpus_dir = mini_corpus(tmp_path)
+    _name, package_dir, binding_path = new_library(tmp_path, monkeypatch)
+    with pytest.raises(BindingError, match="inside the repository root"):
+        prepare(RunConfig(REPO_ROOT, corpus_dir, binding_path, package_dir))
+
+
+def test_validate_manifest_refuses_a_corpus_outside_the_repository(
+    tmp_path,
+) -> None:
+    from coding_adventures_warrant_corpus.cli import main
+
+    root, corpus_dir = mini_corpus(tmp_path)
+    manifest = tmp_path / "m.json"
+    manifest.write_bytes(b"{}")
+    argv = ["validate-manifest", "--repo-root", str(REPO_ROOT)]
+    argv += ["--corpus", str(corpus_dir), str(manifest)]
+    assert main(argv) == 2

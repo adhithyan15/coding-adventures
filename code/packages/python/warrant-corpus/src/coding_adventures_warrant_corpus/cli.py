@@ -40,6 +40,7 @@ from .session import (
     ENV_OUT,
     RunConfig,
     check_filter_rules,
+    corpus_relative,
     environment,
     execute,
     parse_fault_spec,
@@ -120,7 +121,11 @@ def _labels_for(corpus, manifest: dict[str, object]) -> dict:  # noqa: ANN001
     ``check`` does, so a different CPython patch release is not label drift.
     """
     stable = dict(manifest)
-    stable["toolchain"] = {"name": "python", "version": ""}
+    # The toolchain *name* stays in the digest (a lane that swapped runtimes is
+    # drift); only its version is diagnostic.  Reading the name from the
+    # manifest, not hard-coding "python", lets this validator accept the labels
+    # of another lane's manifest (the TypeScript lane's toolchain is "node").
+    stable["toolchain"] = {"name": manifest["toolchain"]["name"], "version": ""}  # type: ignore[index]
     return derive_labels(
         corpus,
         str(manifest["package"]),
@@ -155,7 +160,7 @@ def _compare(
         old = json.loads(text)
         old_version = old["toolchain"]["version"]
         new = dict(fresh)
-        new["toolchain"] = {"name": "python", "version": old_version}
+        new["toolchain"] = {"name": fresh["toolchain"]["name"], "version": old_version}  # type: ignore[index]
     except (ValueError, KeyError, TypeError):
         print("not ok manifest: the committed manifest is not a lane manifest")
         return 1
@@ -239,7 +244,7 @@ def _common_flags(args: argparse.Namespace) -> list[str]:
 
 def _validate(args: argparse.Namespace) -> int:
     corpus = load_corpus(args.repo_root, args.corpus)
-    relative = args.corpus.resolve().relative_to(args.repo_root.resolve()).as_posix()
+    relative = corpus_relative(args.repo_root, args.corpus)
     registry = read_bytes(args.registry, MAX_TEXT_BYTES) if args.registry else None
     validate_manifest(
         read_bytes(args.manifest, MAX_TEXT_BYTES),

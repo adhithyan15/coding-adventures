@@ -1,0 +1,4 @@
+cargo test -p sim-discrete-arcade-logic -- --nocapture
+cargo test -p sim-discrete-arcade-logic --release -- --nocapture
+cargo run --manifest-path ../ca-capability-analyzer/Cargo.toml -- --dir . --check-module
+cargo run --manifest-path ../ca-capability-analyzer/Cargo.toml -- --dir . --verify-cert effect_certificate.json

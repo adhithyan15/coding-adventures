@@ -1,0 +1,19 @@
+{
+  "schema": "warrant-assurance-profile-v1",
+  "name": "simulation",
+  "kind": "transform",
+  "rows": {
+    "326": {
+      "applicability": "excluded",
+      "reason": "no keys: the package takes and generates no key material; operands are bounded pixel coordinates, palette indices and alpha values [attestation not machine-checked by any tool]"
+    },
+    "327": {
+      "applicability": "excluded",
+      "reason": "pure graphics transform: package implements indexed-color blitting, blending and scene diffing only, no cipher, hash or MAC [attestation not machine-checked by any tool]"
+    },
+    "407": {
+      "applicability": "excluded",
+      "reason": "bounded work per call: blits are bounded by MAX_DIMENSION = 8192 per axis and scene diffs by MAX_SCENE_INSTRUCTIONS = 4096 [attestation not machine-checked by any tool]"
+    }
+  }
+}

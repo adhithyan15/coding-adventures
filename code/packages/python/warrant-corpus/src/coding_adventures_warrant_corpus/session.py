@@ -113,6 +113,24 @@ def check_filter_rules(fault_text: str | None, filter_text: str | None) -> None:
         )
 
 
+def corpus_relative(repo_root: Path, corpus_dir: Path) -> str:
+    """The corpus directory as a repository-relative POSIX path, or a refusal.
+
+    ``Path.relative_to`` is the safe containment test here: unlike
+    ``os.path.relpath`` (which raises across Windows drives) or the JavaScript
+    ``path.relative`` (which returns an *absolute* path across drives), it
+    raises ``ValueError`` for anything not beneath the root -- a parent, a
+    sibling, or another drive. That error must become a clean refusal (exit 2),
+    not an uncaught traceback.
+    """
+    try:
+        return corpus_dir.resolve().relative_to(repo_root.resolve()).as_posix()
+    except ValueError:
+        raise BindingError(
+            "corpus-path", "the corpus must lie inside the repository root"
+        ) from None
+
+
 def prepare(config: RunConfig) -> Prepared:
     """Load, cross-check and import; raise a :class:`LaneError` to refuse."""
     corpus = load_corpus(config.repo_root, config.corpus_dir)
@@ -139,9 +157,7 @@ def prepare(config: RunConfig) -> Prepared:
                 "totality", f"op `{name}`: error rows differ from the spec"
             )
     exports = resolve_exports(binding, config.package_dir)
-    relative = (
-        config.corpus_dir.resolve().relative_to(config.repo_root.resolve()).as_posix()
-    )
+    relative = corpus_relative(config.repo_root, config.corpus_dir)
     return Prepared(config, corpus, binding, exports, relative)
 
 

@@ -3,5 +3,5 @@
   "version": 1,
   "package": "python/percussion-kit",
   "capabilities": [],
-  "justification": "Pure computation. The package deterministically synthesizes percussion hits, samples them, and encodes PCM without filesystem, network, process, environment, or audio-device access."
+  "justification": "Pure computation. The package deterministically synthesizes percussion hits and sequences, samples them, and encodes PCM without filesystem, network, process, environment, or audio-device access."
 }

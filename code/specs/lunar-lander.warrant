@@ -1,0 +1,141 @@
+-- LL01 -- Lunar Lander: Discrete Fixed-Point Flight Simulation (GAME02).
+--
+-- Warrant document for lunar-lander (VER04j and VER04m: state=explicit).
+-- Formal verification contract for the pure deterministic lunar module descent simulation.
+
+warrant lunar_lander v1
+  error LanderError = FlightAlreadyEnded | ExcessiveBurnRate | InvalidDuration | ArithmeticOverflow
+
+  model Unit = Bool
+  variant LandingOutcome = Perfect | Hard | Crash | Fatal | Crater
+  variant FlightStatus = InFlight | Landed(outcome: LandingOutcome)
+
+  record LanderState(time_seconds: U32, altitude_mft: I64, velocity_mft_s: I64, fuel_lbs: U32, dry_mass_lbs: U32, status: FlightStatus, impact_velocity_mft_s: Option<I64>)
+
+  record BurnCommand(burn_rate_lbs_s: U32, duration_seconds: U32)
+
+  op new_flight() -> LanderState
+  op validate_burn(state: LanderState, cmd: BurnCommand) -> Result<Unit, LanderError>
+  op step_burn(state: LanderState, cmd: BurnCommand) -> Result<LanderState, LanderError>
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels validate_burn:
+    state public
+    cmd public
+  labels step_burn:
+    state public
+    cmd public
+
+  input validate_burn.state:
+    hostile
+    ensures no_panic, terminates
+  input validate_burn.cmd:
+    hostile
+    ensures no_panic, terminates
+
+  input step_burn.state:
+    hostile
+    ensures no_panic, terminates
+  input step_burn.cmd:
+    hostile
+    ensures no_panic, terminates
+
+  bound new_flight:
+    steps <= 32
+    heap <= 0
+
+  bound validate_burn:
+    steps <= 64
+    heap <= 0
+
+  bound step_burn:
+    steps <= 128
+    heap <= 0
+
+  -- State Invariant (VER04m)
+  model state_inv(s: LanderState) -> Bool = s.dry_mass_lbs == 16500u32 and s.fuel_lbs <= 16500u32 and s.altitude_mft >= 0 and s.altitude_mft <= 200000000 and s.velocity_mft_s >= -10000000 and s.velocity_mft_s <= 10000000 and s.time_seconds <= 86400u32
+
+  -- Initial state model
+  model initial_state() -> LanderState = LanderState(0u32, 120000000, -3000000, 16500u32, 16500u32, InFlight, None)
+
+  claim initial_flight_has_zero_time:
+    new_flight().time_seconds == 0u32
+
+  claim initial_flight_has_initial_altitude:
+    new_flight().altitude_mft == 120000000
+
+  claim initial_flight_has_initial_velocity:
+    new_flight().velocity_mft_s == -3000000
+
+  claim initial_flight_has_initial_fuel:
+    new_flight().fuel_lbs == 16500u32
+
+  claim initial_flight_has_dry_mass:
+    new_flight().dry_mass_lbs == 16500u32
+
+  claim initial_flight_has_inflight_status:
+    match new_flight().status with InFlight -> true | _ -> false
+
+  claim initial_flight_has_no_impact_velocity:
+    match new_flight().impact_velocity_mft_s with None -> true | _ -> false
+
+  claim initial_flight_satisfies_invariant:
+    state_inv(new_flight())
+
+  claim validate_refuses_when_landed_perfect:
+    forall s: LanderState, c: BurnCommand. (match s.status with Landed(Perfect) -> validate_burn(s, c) == Err(LanderError.FlightAlreadyEnded) | _ -> true)
+
+  claim validate_refuses_when_landed_hard:
+    forall s: LanderState, c: BurnCommand. (match s.status with Landed(Hard) -> validate_burn(s, c) == Err(LanderError.FlightAlreadyEnded) | _ -> true)
+
+  claim validate_refuses_when_landed_crash:
+    forall s: LanderState, c: BurnCommand. (match s.status with Landed(Crash) -> validate_burn(s, c) == Err(LanderError.FlightAlreadyEnded) | _ -> true)
+
+  claim validate_refuses_when_landed_fatal:
+    forall s: LanderState, c: BurnCommand. (match s.status with Landed(Fatal) -> validate_burn(s, c) == Err(LanderError.FlightAlreadyEnded) | _ -> true)
+
+  claim validate_refuses_when_landed_crater:
+    forall s: LanderState, c: BurnCommand. (match s.status with Landed(Crater) -> validate_burn(s, c) == Err(LanderError.FlightAlreadyEnded) | _ -> true)
+
+  claim step_refuses_when_landed_perfect:
+    forall s: LanderState, c: BurnCommand. (match s.status with Landed(Perfect) -> step_burn(s, c) == Err(LanderError.FlightAlreadyEnded) | _ -> true)
+
+  claim step_refuses_when_landed_hard:
+    forall s: LanderState, c: BurnCommand. (match s.status with Landed(Hard) -> step_burn(s, c) == Err(LanderError.FlightAlreadyEnded) | _ -> true)
+
+  claim step_refuses_when_landed_crash:
+    forall s: LanderState, c: BurnCommand. (match s.status with Landed(Crash) -> step_burn(s, c) == Err(LanderError.FlightAlreadyEnded) | _ -> true)
+
+  claim step_refuses_when_landed_fatal:
+    forall s: LanderState, c: BurnCommand. (match s.status with Landed(Fatal) -> step_burn(s, c) == Err(LanderError.FlightAlreadyEnded) | _ -> true)
+
+  claim step_refuses_when_landed_crater:
+    forall s: LanderState, c: BurnCommand. (match s.status with Landed(Crater) -> step_burn(s, c) == Err(LanderError.FlightAlreadyEnded) | _ -> true)
+
+  claim validate_refuses_excessive_burn_rate:
+    forall s: LanderState, c: BurnCommand. (s.status == FlightStatus.InFlight && state_inv(s) && c.burn_rate_lbs_s > 200u32) => validate_burn(s, c) == Err(LanderError.ExcessiveBurnRate)
+
+  claim step_refuses_excessive_burn_rate:
+    forall s: LanderState, c: BurnCommand. (s.status == FlightStatus.InFlight && state_inv(s) && c.burn_rate_lbs_s > 200u32) => step_burn(s, c) == Err(LanderError.ExcessiveBurnRate)
+
+  claim validate_refuses_zero_duration:
+    forall s: LanderState, c: BurnCommand. (s.status == FlightStatus.InFlight && state_inv(s) && c.burn_rate_lbs_s <= 200u32 && c.duration_seconds == 0u32) => validate_burn(s, c) == Err(LanderError.InvalidDuration)
+
+  claim validate_refuses_excessive_duration:
+    forall s: LanderState, c: BurnCommand. (s.status == FlightStatus.InFlight && state_inv(s) && c.burn_rate_lbs_s <= 200u32 && c.duration_seconds > 10u32) => validate_burn(s, c) == Err(LanderError.InvalidDuration)
+
+  claim step_refuses_zero_duration:
+    forall s: LanderState, c: BurnCommand. (s.status == FlightStatus.InFlight && state_inv(s) && c.burn_rate_lbs_s <= 200u32 && c.duration_seconds == 0u32) => step_burn(s, c) == Err(LanderError.InvalidDuration)
+
+  claim step_refuses_excessive_duration:
+    forall s: LanderState, c: BurnCommand. (s.status == FlightStatus.InFlight && state_inv(s) && c.burn_rate_lbs_s <= 200u32 && c.duration_seconds > 10u32) => step_burn(s, c) == Err(LanderError.InvalidDuration)
+
+  claim step_burn_fuel_monotonicity:
+    forall s: LanderState, c: BurnCommand. match step_burn(s, c) with Ok(s_next) -> s_next.fuel_lbs <= s.fuel_lbs | Err(_) -> true
+
+  claim step_burn_time_monotonicity:
+    forall s: LanderState, c: BurnCommand. match step_burn(s, c) with Ok(s_next) -> s_next.time_seconds > s.time_seconds | Err(_) -> true

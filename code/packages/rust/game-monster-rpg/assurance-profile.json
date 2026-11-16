@@ -1,0 +1,19 @@
+{
+  "schema": "warrant-assurance-profile-v1",
+  "name": "game-monster-rpg",
+  "kind": "transform",
+  "rows": {
+    "326": {
+      "applicability": "excluded",
+      "reason": "no keys: the package takes and generates no key material; operands are bounded map coords, party indices, battle stats, and audio buffers [attestation not machine-checked by any tool]"
+    },
+    "327": {
+      "applicability": "excluded",
+      "reason": "pure simulation: package implements monster RPG game simulation only, no cipher, hash or MAC [attestation not machine-checked by any tool]"
+    },
+    "407": {
+      "applicability": "excluded",
+      "reason": "bounded work per call: frame steps, overworld movement, battle resolution, sprite lowering, and audio mixing run in bounded O(1) or bounded linear time [attestation not machine-checked by any tool]"
+    }
+  }
+}

@@ -1,0 +1,29 @@
+[package]
+name = "audio-mixer-realtime"
+version = "0.1.0"
+edition = "2021"
+description = "Deterministic fixed-point real-time audio mixer and voice allocator"
+license = "MIT"
+
+[dependencies]
+pcm-audio = { path = "../pcm-audio" }
+audio-device-sink = { path = "../audio-device-sink" }
+
+[dev-dependencies]
+coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
+coding_adventures_sha256 = { path = "../sha256" }
+capability-runtime-conformance = { path = "../capability-runtime-conformance" }
+
+[[test]]
+name = "conformance"
+path = "tests/conformance.rs"
+
+[[test]]
+name = "microbenchmarks"
+path = "tests/microbenchmarks.rs"
+harness = false
+
+[[test]]
+name = "runtime_capability"
+path = "tests/runtime_capability.rs"
+harness = false

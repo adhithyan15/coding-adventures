@@ -1,0 +1,215 @@
+{
+  "events": [
+    {
+      "duration_tick": 120,
+      "kind": "note",
+      "notes": [
+        "C5"
+      ],
+      "source_order": 0,
+      "start_tick": 0,
+      "track_id": "melody",
+      "velocity": 0.8
+    },
+    {
+      "duration_tick": 240,
+      "kind": "note",
+      "notes": [
+        "C4",
+        "E4",
+        "G4"
+      ],
+      "source_order": 4,
+      "start_tick": 0,
+      "track_id": "chords",
+      "velocity": 0.6
+    },
+    {
+      "duration_tick": 240,
+      "kind": "note",
+      "notes": [
+        "C3"
+      ],
+      "source_order": 6,
+      "start_tick": 0,
+      "track_id": "bass",
+      "velocity": 0.7
+    },
+    {
+      "duration_tick": 120,
+      "hit_id": "kick",
+      "kind": "hit",
+      "notes": [],
+      "source_order": 8,
+      "start_tick": 0,
+      "track_id": "rhythm",
+      "velocity": 0.9
+    },
+    {
+      "duration_tick": 120,
+      "kind": "note",
+      "notes": [
+        "D5"
+      ],
+      "source_order": 1,
+      "start_tick": 120,
+      "track_id": "melody",
+      "velocity": 0.8
+    },
+    {
+      "duration_tick": 120,
+      "hit_id": "snare",
+      "kind": "hit",
+      "notes": [],
+      "source_order": 9,
+      "start_tick": 120,
+      "track_id": "rhythm",
+      "velocity": 0.85
+    },
+    {
+      "duration_tick": 120,
+      "kind": "note",
+      "notes": [
+        "E5"
+      ],
+      "source_order": 2,
+      "start_tick": 240,
+      "track_id": "melody",
+      "velocity": 0.8
+    },
+    {
+      "duration_tick": 240,
+      "kind": "note",
+      "notes": [
+        "C4",
+        "F4",
+        "A4"
+      ],
+      "source_order": 5,
+      "start_tick": 240,
+      "track_id": "chords",
+      "velocity": 0.6
+    },
+    {
+      "duration_tick": 240,
+      "kind": "note",
+      "notes": [
+        "F2"
+      ],
+      "source_order": 7,
+      "start_tick": 240,
+      "track_id": "bass",
+      "velocity": 0.7
+    },
+    {
+      "duration_tick": 60,
+      "hit_id": "open_hihat",
+      "kind": "hit",
+      "notes": [],
+      "source_order": 10,
+      "start_tick": 240,
+      "track_id": "rhythm",
+      "velocity": 0.7
+    },
+    {
+      "duration_tick": 60,
+      "hit_id": "closed_hihat",
+      "kind": "hit",
+      "notes": [],
+      "source_order": 11,
+      "start_tick": 300,
+      "track_id": "rhythm",
+      "velocity": 0.8
+    },
+    {
+      "duration_tick": 120,
+      "kind": "note",
+      "notes": [
+        "G5"
+      ],
+      "source_order": 3,
+      "start_tick": 360,
+      "track_id": "melody",
+      "velocity": 0.8
+    }
+  ],
+  "format_version": "music-machine-score/v2",
+  "instruments": [
+    {
+      "gain": 0.6,
+      "id": "lead",
+      "kind": "preset",
+      "profile_id": "flute_naive"
+    },
+    {
+      "gain": 0.5,
+      "id": "comp",
+      "kind": "preset",
+      "profile_id": "piano_naive"
+    },
+    {
+      "envelope": [
+        0.01,
+        0.05,
+        0.7,
+        0.1
+      ],
+      "gain": 0.5,
+      "harmonics": [
+        [
+          1.0,
+          1.0,
+          0.0
+        ],
+        [
+          2.0,
+          0.5,
+          0.0
+        ]
+      ],
+      "id": "synth",
+      "kind": "additive",
+      "profile_id": "synth"
+    },
+    {
+      "gain": 0.8,
+      "id": "drums",
+      "kind": "drumkit",
+      "kit": "standard_kit",
+      "profile_id": "drumkit"
+    }
+  ],
+  "meter_events": [
+    {
+      "meter": "4/4",
+      "start_tick": 0
+    }
+  ],
+  "ppq": 120,
+  "sample_rate_hz": 44100,
+  "tempo_events": [
+    {
+      "bpm": 120.0,
+      "start_tick": 0
+    }
+  ],
+  "title": "Tier 0 Canonical Score",
+  "tracks": [
+    {
+      "id": "melody",
+      "instrument_id": "lead"
+    },
+    {
+      "id": "chords",
+      "instrument_id": "comp"
+    },
+    {
+      "id": "bass",
+      "instrument_id": "synth"
+    },
+    {
+      "id": "rhythm",
+      "instrument_id": "drums"
+    }
+  ]
+}

@@ -68,7 +68,9 @@
 //! "imag must be near-zero" check is conceivable but matches
 //! `numpy.fft.irfft` semantics by not bothering.
 
-use crate::{bluestein_scalar, fft_scalar, ifft_scalar, Direction, FftError};
+use crate::{
+    bluestein_scalar, fft_scalar, ifft_scalar, Direction, FftError, MAX_FFT_LEN, MAX_SAMPLES,
+};
 use dsp_complex::ComplexTensor;
 
 /// Scalar real-input FFT.  Takes a real signal `[x[0], …, x[N-1]]`
@@ -84,6 +86,18 @@ pub fn rfft_scalar(signal: &[f32]) -> Result<Vec<f32>, FftError> {
     if n == 0 {
         return Err(FftError::InvalidInput(
             "rfft input must be at least 1 sample".into(),
+        ));
+    }
+    if n > MAX_FFT_LEN || n > MAX_SAMPLES {
+        return Err(FftError::InvalidInput(format!(
+            "rfft input length {} exceeds MAX_FFT_LEN ({})",
+            n,
+            MAX_FFT_LEN
+        )));
+    }
+    if signal.iter().any(|&x| !x.is_finite()) {
+        return Err(FftError::InvalidInput(
+            "input contains non-finite float (NaN or Inf)".into(),
         ));
     }
     // ── Wrap as interleaved complex with im = 0.
@@ -125,11 +139,23 @@ pub fn irfft_scalar(
             "irfft output length must be at least 1".into(),
         ));
     }
+    if n > MAX_FFT_LEN || half_spectrum.len() > MAX_SAMPLES {
+        return Err(FftError::InvalidInput(format!(
+            "output length {} exceeds MAX_FFT_LEN ({})",
+            n,
+            MAX_FFT_LEN
+        )));
+    }
     if !half_spectrum.len().is_multiple_of(2) {
         return Err(FftError::InvalidInput(format!(
             "irfft half-spectrum must have even length; got {}",
             half_spectrum.len()
         )));
+    }
+    if half_spectrum.iter().any(|&x| !x.is_finite()) {
+        return Err(FftError::InvalidInput(
+            "input contains non-finite float (NaN or Inf)".into(),
+        ));
     }
     let half_bins = half_spectrum.len() / 2;
     let expected_half_bins = n / 2 + 1;

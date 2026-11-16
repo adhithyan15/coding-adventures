@@ -1,0 +1,37 @@
+[package]
+name = "game-breakout"
+version = "0.1.0"
+edition = "2021"
+description = "Deterministic Breakout arcade simulation, swept collision physics, PaintScene rendering, and sound effects"
+license = "MIT"
+
+[lib]
+name = "game_breakout"
+path = "src/lib.rs"
+
+[dependencies]
+game-clock = { path = "../game-clock" }
+collision2d = { path = "../collision2d" }
+paint-batch-tiles = { path = "../paint-batch-tiles" }
+arcade-sfx = { path = "../arcade-sfx" }
+audio-mixer-realtime = { path = "../audio-mixer-realtime" }
+pcm-audio = { path = "../pcm-audio" }
+
+[dev-dependencies]
+coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
+coding_adventures_sha256 = { path = "../sha256" }
+capability-runtime-conformance = { path = "../capability-runtime-conformance" }
+
+[[test]]
+name = "conformance"
+path = "tests/conformance.rs"
+
+[[test]]
+name = "microbenchmarks"
+path = "tests/microbenchmarks.rs"
+harness = false
+
+[[test]]
+name = "runtime_capability"
+path = "tests/runtime_capability.rs"
+harness = false

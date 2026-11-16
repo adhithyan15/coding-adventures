@@ -1,0 +1,79 @@
+-- SWF02 -- SWF Shape to Paint: Dual-fill Bezier shape converter -> P2D00 PaintInstructions.
+--
+-- Formal verification contract for bounded SWF shape conversion.
+
+warrant swf_shape_to_paint v1
+  error ShapeError = InvalidTag | BufferTooSmall | UnexpectedEof | InvalidBitField | ExcessiveStyles | ExcessiveEdges | InvalidStyleIndex | WindingError | CorruptedRecord | ArithmeticOverflow
+
+  model Unit = Bool
+
+  model valid_shape_tag(c: Nat) -> Bool = c == 2 or c == 22 or c == 32 or c == 83
+  model valid_twips(t: Int) -> Bool = t >= -1073741824 and t <= 1073741823
+  model valid_style_count(c: Nat) -> Bool = c <= 65535
+
+  op validate_shape_tag(c: Nat) -> Result<Bool, ShapeError>
+  op validate_twips(t: Int) -> Result<Bool, ShapeError>
+  op validate_style_count(c: Nat) -> Result<Bool, ShapeError>
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels validate_shape_tag:
+    c public
+  labels validate_twips:
+    t public
+  labels validate_style_count:
+    c public
+
+  input validate_shape_tag.c:
+    hostile
+    ensures no_panic, terminates
+
+  input validate_twips.t:
+    hostile
+    ensures no_panic, terminates
+
+  input validate_style_count.c:
+    hostile
+    ensures no_panic, terminates
+
+  bound validate_shape_tag:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_twips:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_style_count:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+
+  example shape_tag_define_shape:
+    validate_shape_tag(2) == Ok(true)
+  example shape_tag_define_shape2:
+    validate_shape_tag(22) == Ok(true)
+  example shape_tag_define_shape3:
+    validate_shape_tag(32) == Ok(true)
+  example shape_tag_define_shape4:
+    validate_shape_tag(83) == Ok(true)
+  example shape_tag_invalid:
+    validate_shape_tag(0) == Err(ShapeError.InvalidTag)
+  example twips_zero:
+    validate_twips(0) == Ok(true)
+  example twips_large:
+    validate_twips(100000) == Ok(true)
+  example style_count_safe:
+    validate_style_count(255) == Ok(true)
+  example style_count_too_large:
+    validate_style_count(70000) == Err(ShapeError.ExcessiveStyles)
+
+  claim validate_shape_tag_agrees:
+    forall c: Nat. validate_shape_tag(c) == (if valid_shape_tag(c) then Ok(true) else Err(ShapeError.InvalidTag))
+  claim validate_twips_agrees:
+    forall t: Int. validate_twips(t) == (if valid_twips(t) then Ok(true) else Err(ShapeError.ArithmeticOverflow))
+  claim validate_style_count_agrees:
+    forall c: Nat. validate_style_count(c) == (if valid_style_count(c) then Ok(true) else Err(ShapeError.ExcessiveStyles))

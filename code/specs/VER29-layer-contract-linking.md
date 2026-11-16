@@ -414,7 +414,7 @@ the rest go in `also`:
 | Reason code | Meaning |
 |---|---|
 | `lane-not-supported` | The lane's build-manifest reader or evidence reader is not implemented. Only the Rust lane is, at first. |
-| `lower-evidence-absent` | No evidence manifest at the lane's path (`evidence/test-manifest.json` for Rust; `evidence/<lane>/test-manifest.json` for the other lanes, VER04i section 8). |
+| `lower-evidence-absent` | No evidence manifest at the lane's path (`evidence/test-manifest.json` inside the package directory in every lane, that is `code/packages/<lane>/<pkg>/evidence/test-manifest.json`; VER04i section 8 and VER04r section 1.3. An earlier draft of this row named `evidence/<lane>/test-manifest.json`, a path no lane ever used). |
 | `lower-report-absent` | No `assurance_report.json` in the lower package. |
 | `lower-report-fails-check` | Condition (c): the lower report does not pass its own `--check`. The lower failure is quoted in `detail`. |
 | `claim-not-in-manifest` | The lower document declares the claim; the manifest has no entry for it (stale manifest, or this lane does not bind the claim's operation). |

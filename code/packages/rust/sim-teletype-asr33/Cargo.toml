@@ -1,0 +1,32 @@
+[package]
+name = "sim-teletype-asr33"
+version = "0.1.0"
+edition = "2021"
+description = "Cycle-accurate ASR-33 Teletype functional and gate-level simulator with ASCII paper-roll rendering (GAME03a)"
+license = "MIT"
+
+[dependencies]
+logic-gates = { path = "../logic-gates" }
+paint-instructions = { path = "../paint-instructions" }
+paint-vm-ascii = { path = "../paint-vm-ascii" }
+
+[dev-dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
+coding_adventures_sha256 = { path = "../sha256" }
+capability-runtime-conformance = { path = "../capability-runtime-conformance" }
+
+[[test]]
+name = "conformance"
+path = "tests/conformance.rs"
+
+[[test]]
+name = "microbenchmarks"
+path = "tests/microbenchmarks.rs"
+harness = false
+
+[[test]]
+name = "runtime_capability"
+path = "tests/runtime_capability.rs"
+harness = false

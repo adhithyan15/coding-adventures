@@ -1,0 +1,51 @@
+cabal-version: 3.0
+name:          image-codec-png
+version:       0.1.0
+synopsis:      IC18: RFC 2083 Portable Network Graphics (PNG) codec
+description:   Bounded, deterministic PNG codec for 8-bit non-interlaced RGBA8
+               images with 7-class CVE resilience, payload-blind error taxonomy,
+               and native ZIP/PixelContainer reuse.
+category:      Codec, Graphics
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+extra-doc-files:
+    README.md
+    CHANGELOG.md
+
+library
+    exposed-modules:  CodingAdventures.ImageCodecPng
+                    , CodingAdventures.ImageCodecPng.Adler32
+                    , CodingAdventures.ImageCodecPng.Chunk
+                    , CodingAdventures.ImageCodecPng.Constants
+                    , CodingAdventures.ImageCodecPng.Decoder
+                    , CodingAdventures.ImageCodecPng.Encoder
+                    , CodingAdventures.ImageCodecPng.Filter
+                    , CodingAdventures.ImageCodecPng.Messages
+                    , CodingAdventures.ImageCodecPng.Types
+    build-depends:    base >=4.14 && <5
+                    , array >=0.5 && <0.6
+                    , bytestring >=0.11 && <0.13
+                    , pixel-container >=0.1 && <0.2
+                    , zip >=0.1 && <0.2
+    hs-source-dirs:   src
+    ghc-options:      -Wall -Werror
+    default-language: Haskell2010
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    other-modules:    SimpleJson
+    hs-source-dirs:   test
+    build-depends:    base >=4.14 && <5
+                    , array >=0.5 && <0.6
+                    , bytestring >=0.11 && <0.13
+                    , directory >=1.3 && <1.4
+                    , filepath >=1.4 && <1.6
+                    , image-codec-png
+                    , pixel-container >=0.1 && <0.2
+                    , process >=1.6 && <1.7
+                    , zip >=0.1 && <0.2
+    ghc-options:      -Wall -Werror
+    default-language: Haskell2010

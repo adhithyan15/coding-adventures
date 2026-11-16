@@ -32,8 +32,15 @@
  *
  * RFC 1459 §2.3 states that a single IRC message MUST NOT exceed 512 bytes
  * **including** the trailing `\r\n`.  That leaves at most 510 bytes of
- * content.  Lines that exceed this limit are silently discarded to prevent
- * memory exhaustion from malformed or malicious clients.
+ * content.  RFC 2812 §2.3 keeps the same 512-byte limit.  Lines that exceed
+ * this limit are silently discarded to prevent memory exhaustion from
+ * malformed or malicious clients.
+ *
+ * That limit alone is not enough: it is only applied to lines that already
+ * ended in LF.  A peer that never sends LF would grow the buffer without bound
+ * (SEC-011, CWE-400/770).  So a line still lacking its LF after 511 bytes
+ * (510 plus a CR) is dropped early and the framer skips input up to the next
+ * LF.
  *
  * ## Usage
  *
@@ -53,6 +60,13 @@
 // RFC 1459 §2.3: maximum line length is 512 bytes including CRLF.
 // Content beyond 510 bytes must be discarded.
 const MAX_CONTENT_BYTES = 510;
+
+// The most bytes we will hold for one line that has not yet seen its LF.
+//
+// A legal line can be 510 content bytes plus a CR whose LF has not arrived
+// yet, i.e. 511 bytes.  One more byte with no LF and the line can no longer be
+// legal (SEC-011), so we stop remembering it.
+const MAX_PENDING_BYTES = MAX_CONTENT_BYTES + 1;
 
 /**
  * Stateful byte-stream-to-line-frame converter.
@@ -81,6 +95,14 @@ export class Framer {
   // handles the memory allocation for us.
   private buf: Buffer = Buffer.alloc(0);
 
+  // Length of the unterminated tail of `buf` (bytes after the last LF).
+  // Invariant: tailLen <= MAX_PENDING_BYTES after every feed().
+  private tailLen = 0;
+
+  // True while we are skipping the rest of an overlong line: everything up to
+  // and including the next LF is thrown away, unread.
+  private discarding = false;
+
   // ------------------------------------------------------------------
   // Public API
   // ------------------------------------------------------------------
@@ -93,13 +115,50 @@ export class Framer {
    *
    * @param data Raw bytes received from the network.  May be any length,
    *             including zero.
+   *
+   * ## Memory bound (SEC-011)
+   *
+   * The unterminated tail (bytes after the last LF) never exceeds 511 bytes.
+   * When it would, the partial line is dropped and the framer *discards input
+   * up to the next LF* -- fail closed, the same silent discard that already
+   * applies to a complete overlong line, so the API is unchanged.  Complete
+   * lines already buffered are kept; the caller bounds those by calling
+   * {@link frames} after each read.
+   *
+   * ```
+   * data = [ ...complete lines... LF ][ unterminated tail ]
+   *                                   ^ only this part can be flooded
+   * ```
    */
   feed(data: Buffer): void {
-    if (data.length === 0) return;
-    // Buffer.concat allocates a new Buffer containing both halves.
-    // For IRC traffic (≤512 bytes per message at human typing speed)
-    // this is fast enough.
-    this.buf = Buffer.concat([this.buf, data]);
+    // Step 1: while discarding an overlong line, skip to just past its LF.
+    if (this.discarding) {
+      const pos = data.indexOf(0x0a);
+      if (pos === -1) return; // still inside the overlong line
+      this.discarding = false;
+      data = data.subarray(pos + 1);
+    }
+
+    // Step 2: split data at its last LF.  The head (through that LF)
+    // completes lines and is stored; only the tail can be flooded.
+    const lastLf = data.lastIndexOf(0x0a);
+    const head = data.subarray(0, lastLf + 1);
+    const tail = data.subarray(lastLf + 1);
+    if (head.length > 0) {
+      this.buf = Buffer.concat([this.buf, head]);
+      this.tailLen = 0;
+    }
+
+    // Step 3: store the tail only if the pending line still fits.  We check
+    // *before* concatenating so a huge single feed is never copied.
+    if (this.tailLen + tail.length > MAX_PENDING_BYTES) {
+      this.buf = this.buf.subarray(0, this.buf.length - this.tailLen); // drop partial line
+      this.tailLen = 0;
+      this.discarding = true;
+    } else if (tail.length > 0) {
+      this.buf = Buffer.concat([this.buf, tail]);
+      this.tailLen += tail.length;
+    }
   }
 
   /**
@@ -170,6 +229,8 @@ export class Framer {
       result.push(line);
     }
 
+    // Only the unterminated tail remains in the buffer.
+    this.tailLen = this.buf.length;
     return result;
   }
 
@@ -183,6 +244,8 @@ export class Framer {
     // Replacing buf with a fresh empty Buffer is the clearest way to
     // express "all data is gone".
     this.buf = Buffer.alloc(0);
+    this.tailLen = 0;
+    this.discarding = false;
   }
 
   /**

@@ -1,0 +1,287 @@
+{
+  "schema_version": "ver24-effect-cert-v1",
+  "package": "rust/sim-discrete-audio-timer",
+  "source_digest": "06b68efc72c9a4c3bdf00360e4a4aa25c4b2fa6d77ee02c132e9361bfac7d89a",
+  "manifest_digest": "8772b8eaf54ccacc8cbb396e844c1b3dcc59d325f6b83ff1a52cd0f86cba4f85",
+  "declared_effects": [],
+  "entry_points": [
+    {
+      "name": "clamp_sample",
+      "signature": "pub const fn clamp_sample(v: i64) -> i16",
+      "effects": []
+    },
+    {
+      "name": "scale_gain",
+      "signature": "pub const fn scale_gain(sample: i32, gain_q16: u32) -> i32",
+      "effects": []
+    },
+    {
+      "name": "validate_sample_rate",
+      "signature": "pub const fn validate_sample_rate(sample_rate_hz: u32) -> Result<bool, TimerAudioError>",
+      "effects": []
+    },
+    {
+      "name": "calculate_555_frequency",
+      "signature": "pub const fn calculate_555_frequency( r1_ohms: u32, r2_ohms: u32, c_picofarads: u64, ) -> Result<u32, TimerAudioError>",
+      "effects": []
+    },
+    {
+      "name": "calculate_555_duty_q16",
+      "signature": "pub const fn calculate_555_duty_q16( r1_ohms: u32, r2_ohms: u32, ) -> Result<u16, TimerAudioError>",
+      "effects": []
+    },
+    {
+      "name": "lfsr17_step",
+      "signature": "pub const fn lfsr17_step(state: u32) -> u32",
+      "effects": []
+    },
+    {
+      "name": "lfsr15_step",
+      "signature": "pub const fn lfsr15_step(state: u16) -> u16",
+      "effects": []
+    },
+    {
+      "name": "rc_filter_alpha_q16",
+      "signature": "pub const fn rc_filter_alpha_q16(cutoff_hz: u32, sample_rate_hz: u32) -> u32",
+      "effects": []
+    },
+    {
+      "name": "diode_clip_sample",
+      "signature": "pub const fn diode_clip_sample(sample: i32, threshold: i16) -> i16",
+      "effects": []
+    },
+    {
+      "name": "diode_shape_sample",
+      "signature": "pub fn diode_shape_sample(sample: i32, threshold: i16, mode: DiodeMode) -> i16",
+      "effects": []
+    },
+    {
+      "name": "new_astable",
+      "signature": "pub fn new_astable( r1_ohms: u32, r2_ohms: u32, c_picofarads: u64, sample_rate_hz: u32, ) -> Result<Self, TimerAudioError>",
+      "effects": []
+    },
+    {
+      "name": "paddle_hit_timer",
+      "signature": "pub fn paddle_hit_timer(sample_rate_hz: u32) -> Result<Self, TimerAudioError>",
+      "effects": []
+    },
+    {
+      "name": "wall_bounce_timer",
+      "signature": "pub fn wall_bounce_timer(sample_rate_hz: u32) -> Result<Self, TimerAudioError>",
+      "effects": []
+    },
+    {
+      "name": "score_timer",
+      "signature": "pub fn score_timer(sample_rate_hz: u32) -> Result<Self, TimerAudioError>",
+      "effects": []
+    },
+    {
+      "name": "high_score_timer",
+      "signature": "pub fn high_score_timer(sample_rate_hz: u32) -> Result<Self, TimerAudioError>",
+      "effects": []
+    },
+    {
+      "name": "step_timer",
+      "signature": "pub fn step_timer(&mut self) -> i16",
+      "effects": []
+    },
+    {
+      "name": "timer_frequency_hz",
+      "signature": "pub fn timer_frequency_hz(&self) -> u32",
+      "effects": []
+    },
+    {
+      "name": "timer_duty_q16",
+      "signature": "pub fn timer_duty_q16(&self) -> u16",
+      "effects": []
+    },
+    {
+      "name": "timer_output_high",
+      "signature": "pub fn timer_output_high(&self) -> bool",
+      "effects": []
+    },
+    {
+      "name": "capacitor_voltage_q16",
+      "signature": "pub fn capacitor_voltage_q16(&self) -> u32",
+      "effects": []
+    },
+    {
+      "name": "reset_timer",
+      "signature": "pub fn reset_timer(&mut self)",
+      "effects": []
+    },
+    {
+      "name": "set_timer_components",
+      "signature": "pub fn set_timer_components( &mut self, r1_ohms: u32, r2_ohms: u32, c_picofarads: u64, ) -> Result<(), TimerAudioError>",
+      "effects": []
+    },
+    {
+      "name": "new_noise_filter",
+      "signature": "pub fn new_noise_filter( use_17bit: bool, cutoff_hz: u32, sample_rate_hz: u32, diode_threshold: i16, diode_mode: DiodeMode, ) -> Result<Self, TimerAudioError>",
+      "effects": []
+    },
+    {
+      "name": "explosion_filter",
+      "signature": "pub fn explosion_filter(sample_rate_hz: u32) -> Result<Self, TimerAudioError>",
+      "effects": []
+    },
+    {
+      "name": "thud_filter",
+      "signature": "pub fn thud_filter(sample_rate_hz: u32) -> Result<Self, TimerAudioError>",
+      "effects": []
+    },
+    {
+      "name": "step_filter",
+      "signature": "pub fn step_filter(&mut self) -> i16",
+      "effects": []
+    },
+    {
+      "name": "reset_filter",
+      "signature": "pub fn reset_filter(&mut self)",
+      "effects": []
+    },
+    {
+      "name": "set_cutoff_hz",
+      "signature": "pub fn set_cutoff_hz(&mut self, cutoff_hz: u32)",
+      "effects": []
+    },
+    {
+      "name": "filter_alpha_q16",
+      "signature": "pub fn filter_alpha_q16(&self) -> u32",
+      "effects": []
+    },
+    {
+      "name": "filter_output_sample",
+      "signature": "pub fn filter_output_sample(&self) -> i16",
+      "effects": []
+    },
+    {
+      "name": "new_debouncer",
+      "signature": "pub fn new_debouncer(threshold_cycles: u16, max_credits: u16) -> Self",
+      "effects": []
+    },
+    {
+      "name": "step_debounce",
+      "signature": "pub fn step_debounce(&mut self, raw_input: bool) -> bool",
+      "effects": []
+    },
+    {
+      "name": "step_debounce_sr",
+      "signature": "pub fn step_debounce_sr(&mut self, no_val: u8, nc_val: u8) -> bool",
+      "effects": []
+    },
+    {
+      "name": "current_credits",
+      "signature": "pub fn current_credits(&self) -> u16",
+      "effects": []
+    },
+    {
+      "name": "insert_test_credit",
+      "signature": "pub fn insert_test_credit(&mut self)",
+      "effects": []
+    },
+    {
+      "name": "consume_credit",
+      "signature": "pub fn consume_credit(&mut self) -> bool",
+      "effects": []
+    },
+    {
+      "name": "reset_debounce",
+      "signature": "pub fn reset_debounce(&mut self)",
+      "effects": []
+    },
+    {
+      "name": "is_coin_latched",
+      "signature": "pub fn is_coin_latched(&self) -> bool",
+      "effects": []
+    },
+    {
+      "name": "clear_coin_latch",
+      "signature": "pub fn clear_coin_latch(&mut self)",
+      "effects": []
+    },
+    {
+      "name": "new_arcade_audio",
+      "signature": "pub fn new_arcade_audio(sample_rate_hz: u32) -> Result<Self, TimerAudioError>",
+      "effects": []
+    },
+    {
+      "name": "trigger_paddle_tone",
+      "signature": "pub fn trigger_paddle_tone(&mut self, duration_samples: u32)",
+      "effects": []
+    },
+    {
+      "name": "trigger_wall_tone",
+      "signature": "pub fn trigger_wall_tone(&mut self, duration_samples: u32)",
+      "effects": []
+    },
+    {
+      "name": "trigger_score_tone",
+      "signature": "pub fn trigger_score_tone(&mut self, duration_samples: u32)",
+      "effects": []
+    },
+    {
+      "name": "trigger_explosion",
+      "signature": "pub fn trigger_explosion(&mut self, duration_samples: u32)",
+      "effects": []
+    },
+    {
+      "name": "step_arcade_audio",
+      "signature": "pub fn step_arcade_audio(&mut self) -> i16",
+      "effects": []
+    },
+    {
+      "name": "render_audio_frames",
+      "signature": "pub fn render_audio_frames(&mut self, out: &mut [i16]) -> usize",
+      "effects": []
+    },
+    {
+      "name": "reset_arcade_audio",
+      "signature": "pub fn reset_arcade_audio(&mut self)",
+      "effects": []
+    },
+    {
+      "name": "render_timer_audio_into",
+      "signature": "pub fn render_timer_audio_into( timer: &mut Timer555Astable, out: &mut [i16], ) -> Result<usize, TimerAudioError>",
+      "effects": []
+    },
+    {
+      "name": "render_noise_audio_into",
+      "signature": "pub fn render_noise_audio_into( filter: &mut DiscreteNoiseFilter, out: &mut [i16], ) -> Result<usize, TimerAudioError>",
+      "effects": []
+    },
+    {
+      "name": "render_system_audio_into",
+      "signature": "pub fn render_system_audio_into( system: &mut DiscreteArcadeAudio, out: &mut [i16], ) -> Result<usize, TimerAudioError>",
+      "effects": []
+    },
+    {
+      "name": "render_timer_to_ring_buffer",
+      "signature": "pub fn render_timer_to_ring_buffer<const N: usize>( timer: &mut Timer555Astable, ring: &mut audio_mixer_realtime::PcmRingBuffer<N>, frames: usize, ) -> Result<usize, TimerAudioError>",
+      "effects": []
+    },
+    {
+      "name": "render_noise_to_ring_buffer",
+      "signature": "pub fn render_noise_to_ring_buffer<const N: usize>( filter: &mut DiscreteNoiseFilter, ring: &mut audio_mixer_realtime::PcmRingBuffer<N>, frames: usize, ) -> Result<usize, TimerAudioError>",
+      "effects": []
+    },
+    {
+      "name": "export_timer_to_pcm_audio",
+      "signature": "pub fn export_timer_to_pcm_audio( timer: &mut Timer555Astable, sample_count: usize, ) -> Result<pcm_audio::PcmAudio, TimerAudioError>",
+      "effects": []
+    },
+    {
+      "name": "export_noise_to_pcm_audio",
+      "signature": "pub fn export_noise_to_pcm_audio( filter: &mut DiscreteNoiseFilter, sample_count: usize, ) -> Result<pcm_audio::PcmAudio, TimerAudioError>",
+      "effects": []
+    },
+    {
+      "name": "export_system_to_pcm_audio",
+      "signature": "pub fn export_system_to_pcm_audio( system: &mut DiscreteArcadeAudio, sample_count: usize, ) -> Result<pcm_audio::PcmAudio, TimerAudioError>",
+      "effects": []
+    }
+  ],
+  "unconditional_roots": [],
+  "banned_construct_exceptions": [],
+  "label": "proved"
+}

@@ -1,5 +1,18 @@
 # Changelog — dsp-stft
 
+## 0.5.0 — 2026-11-15
+
+### Security & Hardening (DSP-W4-A2)
+- Added `#![forbid(unsafe_code)]` in `src/lib.rs`.
+- Enforced public constants: `MAX_FFT_LEN = 1 << 20` (1,048,576), `MAX_SAMPLES = 1 << 24` (16,777,216), `MAX_FRAMES = 1 << 20` (1,048,576).
+- Guarded `stft`, `istft`, `spectrogram`, `log_spectrogram`, `mel_spectrogram`, `mfcc`, and `stft_via_runtime` against CWE-400 (uncontrolled resource consumption / unbounded memory allocations), CWE-190 (integer overflow / wraparound), and CWE-20 (NaN/Inf float inputs):
+  - Validated all input slices are non-empty and within bounded lengths before any buffer allocations.
+  - Enforced finite floats (`x.is_finite()`) before any allocation.
+  - Added overflow-checked multiplications (`checked_mul`) for all frame and buffer sizing calculations.
+- Added comprehensive hostile-input rejection tests and SplitMix64 property-based testing.
+- Created `required_capabilities.json` with empty capabilities (`[]`).
+- Created formal warrant contract (`dsp-stft.warrant`).
+
 ## 0.4.0 — 2026-05-16
 
 ### Added — DSP05 Phase 6 (matrix-IR-lowered STFT)

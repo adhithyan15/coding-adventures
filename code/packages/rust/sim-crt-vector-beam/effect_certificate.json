@@ -1,0 +1,177 @@
+{
+  "schema_version": "ver24-effect-cert-v1",
+  "package": "rust/sim-crt-vector-beam",
+  "source_digest": "ad0e788a935d5fd6a11130a1eedf0c06e0794bcf5876259a0b85100685582430",
+  "manifest_digest": "32e6a2c944c593c64b78ee9e03eebcdd6944bcb516cea1c5de0706e7c73668d0",
+  "declared_effects": [],
+  "entry_points": [
+    {
+      "name": "phosphor_decay_factor_q16",
+      "signature": "pub const fn phosphor_decay_factor_q16(&self) -> u32",
+      "effects": []
+    },
+    {
+      "name": "phosphor_rgb_tint",
+      "signature": "pub const fn phosphor_rgb_tint(&self) -> RgbColor",
+      "effects": []
+    },
+    {
+      "name": "validate_phosphor",
+      "signature": "pub fn validate_phosphor(&self) -> Result<(), CrtError>",
+      "effects": []
+    },
+    {
+      "name": "standard_ntsc",
+      "signature": "pub const fn standard_ntsc() -> Self",
+      "effects": []
+    },
+    {
+      "name": "standard_arcade",
+      "signature": "pub const fn standard_arcade() -> Self",
+      "effects": []
+    },
+    {
+      "name": "total_raster_width",
+      "signature": "pub const fn total_raster_width(&self) -> u32",
+      "effects": []
+    },
+    {
+      "name": "total_raster_height",
+      "signature": "pub const fn total_raster_height(&self) -> u32",
+      "effects": []
+    },
+    {
+      "name": "total_raster_pixels",
+      "signature": "pub const fn total_raster_pixels(&self) -> usize",
+      "effects": []
+    },
+    {
+      "name": "validate_timing",
+      "signature": "pub fn validate_timing(&self) -> Result<(), CrtError>",
+      "effects": []
+    },
+    {
+      "name": "validate_raster_timing",
+      "signature": "pub fn validate_raster_timing(timing: RasterTiming) -> Result<(), CrtError>",
+      "effects": []
+    },
+    {
+      "name": "new_raster_beam",
+      "signature": "pub fn new_raster_beam( timing: RasterTiming, phosphor_type: PhosphorType, ) -> Result<Self, CrtError>",
+      "effects": []
+    },
+    {
+      "name": "raster_beam_x",
+      "signature": "pub fn raster_beam_x(&self) -> u32",
+      "effects": []
+    },
+    {
+      "name": "raster_beam_y",
+      "signature": "pub fn raster_beam_y(&self) -> u32",
+      "effects": []
+    },
+    {
+      "name": "raster_frame_count",
+      "signature": "pub fn raster_frame_count(&self) -> u64",
+      "effects": []
+    },
+    {
+      "name": "reset_raster_beam",
+      "signature": "pub fn reset_raster_beam(&mut self)",
+      "effects": []
+    },
+    {
+      "name": "step_raster_beam",
+      "signature": "pub fn step_raster_beam( &mut self, video_luma: u8, phosphor: &mut [u16], ) -> Result<BeamFlags, CrtError>",
+      "effects": []
+    },
+    {
+      "name": "lower_raster_to_pixel_buffer",
+      "signature": "pub fn lower_raster_to_pixel_buffer( &self, phosphor: &[u16], out_pixels: &mut PixelContainer, ) -> Result<(), CrtError>",
+      "effects": []
+    },
+    {
+      "name": "lower_raster_to_paint_scene",
+      "signature": "pub fn lower_raster_to_paint_scene( &self, phosphor: &[u16], min_intensity_threshold: u16, ) -> Result<PaintScene, CrtError>",
+      "effects": []
+    },
+    {
+      "name": "decay_phosphor_buffer",
+      "signature": "pub fn decay_phosphor_buffer( phosphor: &mut [u16], decay_factor_q16: u32, ) -> Result<(), CrtError>",
+      "effects": []
+    },
+    {
+      "name": "clear_phosphor_buffer",
+      "signature": "pub fn clear_phosphor_buffer(phosphor: &mut [u16])",
+      "effects": []
+    },
+    {
+      "name": "decay_phosphor_sample",
+      "signature": "pub fn decay_phosphor_sample(sample: u16, decay_factor_q16: u32) -> u16",
+      "effects": []
+    },
+    {
+      "name": "accumulate_intensity",
+      "signature": "pub fn accumulate_intensity(current: u16, add_intensity: u16) -> u16",
+      "effects": []
+    },
+    {
+      "name": "new_vector_stroke",
+      "signature": "pub const fn new_vector_stroke(x0: f64, y0: f64, x1: f64, y1: f64, intensity: u8) -> Self",
+      "effects": []
+    },
+    {
+      "name": "new_dwell_spot",
+      "signature": "pub const fn new_dwell_spot(x: f64, y: f64, intensity: u8, dwell_ticks: u32) -> Self",
+      "effects": []
+    },
+    {
+      "name": "stroke_length",
+      "signature": "pub fn stroke_length(&self) -> f64",
+      "effects": []
+    },
+    {
+      "name": "validate_slew_rate",
+      "signature": "pub fn validate_slew_rate(slew_rate: f64) -> Result<(), CrtError>",
+      "effects": []
+    },
+    {
+      "name": "new_vector_display",
+      "signature": "pub fn new_vector_display( display_width: f64, display_height: f64, max_slew_rate: f64, phosphor_type: PhosphorType, ) -> Result<Self, CrtError>",
+      "effects": []
+    },
+    {
+      "name": "vector_beam_x",
+      "signature": "pub fn vector_beam_x(&self) -> f64",
+      "effects": []
+    },
+    {
+      "name": "vector_beam_y",
+      "signature": "pub fn vector_beam_y(&self) -> f64",
+      "effects": []
+    },
+    {
+      "name": "reset_vector_beam",
+      "signature": "pub fn reset_vector_beam(&mut self)",
+      "effects": []
+    },
+    {
+      "name": "step_vector_beam",
+      "signature": "pub fn step_vector_beam( &mut self, target_x: f64, target_y: f64, blanked: bool, intensity: u8, ) -> Result<VectorBeamPoint, CrtError>",
+      "effects": []
+    },
+    {
+      "name": "rasterize_vector_stroke_into",
+      "signature": "pub fn rasterize_vector_stroke_into( &mut self, stroke: &VectorStroke, phosphor: &mut [u16], buf_width: u32, buf_height: u32, ) -> Result<usize, CrtError>",
+      "effects": []
+    },
+    {
+      "name": "lower_vector_strokes_to_paint_scene",
+      "signature": "pub fn lower_vector_strokes_to_paint_scene( strokes: &[VectorStroke], scene_width: f64, scene_height: f64, phosphor_type: PhosphorType, ) -> Result<PaintScene, CrtError>",
+      "effects": []
+    }
+  ],
+  "unconditional_roots": [],
+  "banned_construct_exceptions": [],
+  "label": "proved"
+}

@@ -3,5 +3,5 @@
   "version": 1,
   "package": "rust/http1-fixed-request-body",
   "capabilities": [],
-  "justification": "Pure bounded length binding and decimal encoding over caller-owned memory. No filesystem, network, process, environment, clock, FFI, credential interpretation or release, audit, trace, or external effect is required."
+  "justification": "Pure bounded length binding, validated Content-Length field comparison, and decimal encoding over caller-owned memory. No filesystem, network, process, environment, clock, FFI, credential interpretation or release, audit, trace, or external effect is required."
 }

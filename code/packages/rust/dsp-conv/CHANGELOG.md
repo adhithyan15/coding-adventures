@@ -1,5 +1,17 @@
 # Changelog — dsp-conv
 
+## 0.4.0 — 2026-11-15
+
+### Changed — Security Hardening and CWE Mitigations
+
+- Enforced `#![forbid(unsafe_code)]` unconditionally.
+- Added defensive bounds: `MAX_SAMPLES = 1 << 24` and `MAX_KERNEL_LEN = 1 << 20` across 1-D, 2-D, and separable convolution and filter kernels (CWE-400 / CWE-190).
+- Enforced `checked_mul` bounds checks and finite-float validation before any buffer allocation across `conv1d`, `conv2d`, `sep_conv2d`, and design helpers (CWE-20).
+- Verified strictly iterative execution throughout 1-D and 2-D convolution passes (CWE-674).
+- Added `ConvError::InvalidInput` for clean reporting of parameter / input violations.
+- Added `dsp-conv.warrant` contract specification and `required_capabilities.json` (`[]`).
+- Added SplitMix64 property-based testing and hostile input test suites.
+
 ## 0.3.0 — 2026-05-16
 
 ### Added — DSP04 Phase 4 + 5 (separable conv + image filter design helpers)

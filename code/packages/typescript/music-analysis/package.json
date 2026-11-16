@@ -1,0 +1,35 @@
+{
+  "name": "@coding-adventures/music-analysis",
+  "version": "0.1.0",
+  "description": "Music Understanding, Audio Feature Extraction, Pitch Detection, and Sample-to-Score Transcription in pure safe TypeScript (MUS08)",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "node node_modules/typescript/bin/tsc",
+    "test": "node node_modules/typescript/bin/tsc -p tsconfig.test.json && node --experimental-test-coverage --test-coverage-exclude=../** --test-coverage-exclude=dist-test/tests/** --test-coverage-lines=95 --test dist-test/tests/*.test.js"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/dsp-complex": "file:../dsp-complex",
+    "@coding-adventures/dsp-fft": "file:../dsp-fft",
+    "@coding-adventures/dsp-stft": "file:../dsp-stft",
+    "@coding-adventures/dsp-wavelets": "file:../dsp-wavelets",
+    "@coding-adventures/musical-instruments": "file:../musical-instruments",
+    "@coding-adventures/music-machine-web": "file:../music-machine-web",
+    "@coding-adventures/note-frequency": "file:../note-frequency",
+    "@coding-adventures/pcm-audio": "file:../pcm-audio"
+  },
+  "devDependencies": {
+    "@coding-adventures/test-bootstrap": "file:../test-bootstrap",
+    "@types/node": "^24.0.0",
+    "typescript": "^5.0.0"
+  }
+}

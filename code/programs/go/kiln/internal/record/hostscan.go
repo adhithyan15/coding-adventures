@@ -30,7 +30,7 @@ package record
 //     directory as a mount point. If mountinfo cannot be read (or does not list
 //     it), the directory is scanned like any other, which can only add
 //     findings: the scan fails closed. (What a host mount shadows beneath it is
-//     covered by the in-sandbox probe of PR 2b-2.)
+//     covered by the in-sandbox `shadow` probe: probe.go and ShadowedMounts.)
 //   - One goroutine per root, because /usr is large and the roots are few.
 //   - A directory we cannot list is skipped ONLY when we cannot traverse it
 //     either (no search permission): then a step, which runs as the same user,
@@ -49,6 +49,8 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+
+	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/sandbox"
 )
 
 // devOf reads st_dev; a variable so a test can pretend a directory is a mount.
@@ -195,3 +197,64 @@ func scanRoot(root string, mounts map[string]bool) ([]string, error) {
 
 // hazard: a pathname socket or a FIFO.
 func hazard(m os.FileMode) bool { return m&(os.ModeSocket|os.ModeNamedPipe) != 0 }
+
+// ShadowedMounts are the host mount points that lie strictly inside a place the
+// sandbox binds NON-recursively: a read-only root (that is not a symlink), the
+// checkout, or a state root. The sandbox shows, at such a path, the directory
+// UNDER the mount, which the host scan (it does not cross mount points) never
+// looked at. The in-sandbox probe `shadow` (probe.go) does, once for all of them.
+//
+// The result is sorted, has no duplicate, and holds no entry inside another. A mountinfo that cannot be read is
+// an error (the answer would be "none", which a failed read must never give), and
+// so is a list longer than MaxShadowed.
+func ShadowedMounts(cfg *sandbox.Config) ([]string, error) {
+	mounts := mountPoints()
+	if mounts == nil {
+		return nil, fmt.Errorf("the mount points of this host cannot be read (/proc/self/mountinfo): the shadowed directories cannot be listed")
+	}
+	var roots []string
+	for _, r := range cfg.RoRoots {
+		st, err := os.Lstat(r)
+		if errors.Is(err, os.ErrNotExist) {
+			continue
+		}
+		if err != nil {
+			return nil, fmt.Errorf("shadowed mounts: ro root %q: %v", printable(r), err)
+		}
+		if st.Mode()&os.ModeSymlink != 0 {
+			continue // recreated, not bound: nothing under it is the host's
+		}
+		roots = append(roots, r)
+	}
+	roots = append(roots, cfg.RepoRoot)
+	roots = append(roots, cfg.StateRoots...)
+	seen := map[string]bool{}
+	out := []string{}
+	for m := range mounts {
+		for _, r := range roots {
+			if strings.HasPrefix(m, strings.TrimSuffix(r, "/")+"/") && !seen[m] {
+				seen[m] = true
+				out = append(out, m)
+			}
+		}
+	}
+	sort.Strings(out)
+	// Only the outermost mount point is visible in the sandbox: beneath a
+	// shadowed directory the nested mount point may not exist at all (find would
+	// fail on it), and everything under it is covered by walking the outer one.
+	kept := out[:0]
+	for _, m := range out {
+		inside := false
+		for _, k := range kept { // every kept entry: "/a", "/a-b", "/a/b" sorts in that order
+			inside = inside || strings.HasPrefix(m, k+"/")
+		}
+		if !inside {
+			kept = append(kept, m)
+		}
+	}
+	out = kept
+	if len(out) > MaxShadowed {
+		return nil, fmt.Errorf("%d host mount points lie inside the read-only roots, the checkout or the state roots (at most %d are probed)", len(out), MaxShadowed)
+	}
+	return out, nil
+}

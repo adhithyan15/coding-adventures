@@ -1,0 +1,35 @@
+[package]
+name = "sim-discrete-audio-timer"
+version = "0.1.0"
+edition = "2021"
+description = "Deterministic 555-timer, LFSR noise, and analog filter simulation for coin-op arcade audio"
+license = "MIT"
+
+[lib]
+name = "sim_discrete_audio_timer"
+path = "src/lib.rs"
+
+[dependencies]
+oscillator = { path = "../oscillator" }
+pcm-audio = { path = "../pcm-audio" }
+audio-mixer-realtime = { path = "../audio-mixer-realtime" }
+logic-gates = { path = "../logic-gates" }
+
+[dev-dependencies]
+coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
+coding_adventures_sha256 = { path = "../sha256" }
+capability-runtime-conformance = { path = "../capability-runtime-conformance" }
+
+[[test]]
+name = "conformance"
+path = "tests/conformance.rs"
+
+[[test]]
+name = "microbenchmarks"
+path = "tests/microbenchmarks.rs"
+harness = false
+
+[[test]]
+name = "runtime_capability"
+path = "tests/runtime_capability.rs"
+harness = false

@@ -1,0 +1,13 @@
+[package]
+name = "virtual-speaker"
+version = "0.1.0"
+edition = "2021"
+description = "MUS01 Stage 7: Virtual speaker models turning analog voltage signals into a pressure proxy"
+license = "MIT"
+readme = "README.md"
+
+[dependencies]
+oscillator = { path = "../oscillator" }
+
+[dev-dependencies]
+coding_adventures_test_bootstrap = { path = "../test-bootstrap" }

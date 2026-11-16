@@ -1,0 +1,12 @@
+name: coding_adventures_canonical_cbor
+version: 0.1.0
+description: Canonical CBOR codec (RFC 8949 §4.2.3 length-first map key ordering / CTAP2 / COSE profile).
+repository: https://github.com/adhithyan15/coding-adventures
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dev_dependencies:
+  coverage: ^1.15.0
+  test: ^1.25.0

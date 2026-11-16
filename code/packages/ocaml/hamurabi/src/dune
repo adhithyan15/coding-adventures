@@ -1,0 +1,6 @@
+(library
+ (name coding_adventures_hamurabi)
+ (public_name coding-adventures-hamurabi)
+ (wrapped false)
+ (instrumentation
+  (backend bisect_ppx)))

@@ -1,0 +1,19 @@
+{
+  "schema": "warrant-assurance-profile-v1",
+  "name": "avm-bytecode-lifter",
+  "kind": "transform",
+  "rows": {
+    "326": {
+      "applicability": "excluded",
+      "reason": "no keys: the package takes and generates no key material; operands are bounded Flash AVM1/AVM2 bytecode streams, constant pools, and InterpreterIR modules"
+    },
+    "327": {
+      "applicability": "excluded",
+      "reason": "pure bytecode lifter transform: package implements binary AVM1 and AVM2 bytecode parsing, CFG/stack validation, and InterpreterIR lowering only, no cipher, hash or MAC"
+    },
+    "407": {
+      "applicability": "excluded",
+      "reason": "bounded work per call: lifting and execution simulation are bounded by MAX_BYTECODE_SIZE, MAX_CONSTANTS, MAX_OPERAND_STACK, and MAX_INSTRUCTIONS"
+    }
+  }
+}

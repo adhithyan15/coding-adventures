@@ -11,6 +11,12 @@ call may return half a message, one full message, or several messages concatenat
 complete, CRLF-stripped lines whenever a `\n` terminator appears. Overlong lines
 (> 510 bytes of content, per RFC 1459) are silently discarded.
 
+The pending (not yet LF-terminated) line is capped at 511 bytes: 510 content
+bytes plus a CR (RFC 1459 and RFC 2812 section 2.3, 512 bytes including CRLF).
+A peer that sends more without an LF has the partial line dropped, and input is
+skipped up to the next LF, so memory stays constant however much is fed
+(SEC-011). No API change.
+
 ## API
 
 ```go

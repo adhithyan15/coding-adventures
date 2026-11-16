@@ -366,3 +366,72 @@ class TestVersion:
     def test_version_exists(self) -> None:
         """__version__ must be present and match pyproject.toml."""
         assert __version__ == "0.1.0"
+
+
+# ---------------------------------------------------------------------------
+# 8. SEC-011: a peer that never sends LF must not grow the buffer
+# ---------------------------------------------------------------------------
+#
+# The cap on an unterminated line is 511 bytes: 510 content bytes plus a CR
+# whose LF has not arrived yet (RFC 1459 / RFC 2812 section 2.3: 512 bytes
+# including CRLF).  These tests mirror the Rust crate's SEC-011 tests.
+
+SIXTEEN_MIB = 16 * 1024 * 1024
+
+
+class TestPendingLineBound:
+    """An unterminated line is held in bounded memory."""
+
+    def test_no_lf_in_chunks_is_bounded(self) -> None:
+        f = Framer()
+        chunk = b"A" * 4096
+        worst = 0
+        for _ in range(SIXTEEN_MIB // len(chunk)):
+            f.feed(chunk)
+            worst = max(worst, f.buffer_size)
+        assert worst <= 512, f"buffer grew to {worst} bytes with no LF"
+        assert drain(f) == []
+
+    def test_no_lf_in_one_feed_is_bounded(self) -> None:
+        f = Framer()
+        f.feed(b"A" * SIXTEEN_MIB)
+        assert f.buffer_size <= 512
+        assert drain(f) == []
+
+    def test_framer_recovers_after_flood(self) -> None:
+        """The flooded line is dropped whole, up to its LF; the next frames."""
+        f = Framer()
+        f.feed(b"A" * 4096)
+        f.feed(b"B" * 4096)
+        f.feed(b"tail\r\nNICK alice\r\n")
+        assert drain(f) == [b"NICK alice"]
+        assert f.buffer_size == 0
+
+    def test_pending_line_at_limit_is_kept(self) -> None:
+        """510 content bytes plus a CR is a legal line awaiting its LF."""
+        f = Framer()
+        f.feed(b"A" * 510 + b"\r")
+        assert f.buffer_size == 511
+        f.feed(b"\n")
+        assert drain(f) == [b"A" * 510]
+
+    def test_pending_line_over_limit_is_dropped(self) -> None:
+        f = Framer()
+        f.feed(b"A" * 512)
+        assert f.buffer_size == 0
+        f.feed(b"\r\nPING x\r\n")
+        assert drain(f) == [b"PING x"]
+
+    def test_complete_lines_before_flood_survive(self) -> None:
+        f = Framer()
+        f.feed(b"NICK a\r\n" + b"A" * 2000)
+        assert drain(f) == [b"NICK a"]
+        assert f.buffer_size == 0
+
+    def test_reset_clears_discard_state(self) -> None:
+        """Reset must end the skip-to-LF state, or the next line is lost."""
+        f = Framer()
+        f.feed(b"A" * 600)
+        f.reset()
+        f.feed(b"NICK a\r\n")
+        assert drain(f) == [b"NICK a"]

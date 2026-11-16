@@ -1,0 +1,14 @@
+[package]
+name = "virtual-dac"
+version = "0.1.0"
+edition = "2021"
+description = "MUS01 Stage 6: Virtual DAC models (zero-order hold and linear interpolation) turning PCM into continuous voltage"
+license = "MIT"
+readme = "README.md"
+
+[dependencies]
+oscillator = { path = "../oscillator" }
+pcm-audio = { path = "../pcm-audio" }
+
+[dev-dependencies]
+coding_adventures_test_bootstrap = { path = "../test-bootstrap" }

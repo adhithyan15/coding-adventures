@@ -1,0 +1,91 @@
+-- DSP-FFT -- Fast Fourier Transform for the DSP layer
+--
+-- Warrant specification for typescript/dsp-fft (VER04h / DSP01).
+-- Covers memory safety, resource bounding (CWE-400), integer overflow prevention (CWE-190),
+-- strictly iterative execution (CWE-674), and all-operands-public guarantees.
+
+warrant dsp_fft v1
+  error FftError = INVALID_INPUT | NOT_POWER_OF_TWO
+
+  op fft(signal: Bytes, complex: Bool) -> Result<Bytes, FftError>
+  op ifft(spectrum: Bytes) -> Result<Bytes, FftError>
+  op rfft(signal: Bytes) -> Result<Bytes, FftError>
+  op irfft(half_spectrum: Bytes, output_length: Nat) -> Result<Bytes, FftError>
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  -- All operands are public spectral/signal data.
+  labels fft:
+    signal public
+    complex public
+  labels ifft:
+    spectrum public
+  labels rfft:
+    signal public
+  labels irfft:
+    half_spectrum public
+    output_length public
+
+  -- Bounded inputs: MAX_FFT_LEN = 1 << 20, MAX_SAMPLES = 1 << 24.
+  input fft.signal:
+    hostile
+    rejects len(signal) == 0 with FftError.INVALID_INPUT
+    rejects len(signal) > 67108864 with FftError.INVALID_INPUT
+    ensures no_panic, terminates
+  input fft.complex:
+    hostile
+    ensures no_panic, terminates
+
+  input ifft.spectrum:
+    hostile
+    rejects len(spectrum) == 0 with FftError.INVALID_INPUT
+    rejects len(spectrum) > 134217728 with FftError.INVALID_INPUT
+    ensures no_panic, terminates
+
+  input rfft.signal:
+    hostile
+    rejects len(signal) == 0 with FftError.INVALID_INPUT
+    rejects len(signal) > 67108864 with FftError.INVALID_INPUT
+    ensures no_panic, terminates
+
+  input irfft.half_spectrum:
+    hostile
+    rejects len(half_spectrum) == 0 with FftError.INVALID_INPUT
+    rejects len(half_spectrum) > 134217728 with FftError.INVALID_INPUT
+    ensures no_panic, terminates
+  input irfft.output_length:
+    hostile
+    rejects output_length == 0 with FftError.INVALID_INPUT
+    rejects output_length > 1048576 with FftError.INVALID_INPUT
+    ensures no_panic, terminates
+
+  -- Declared bounds (WX-H): O(N log N) time, bounded heap, and shallow stack depth (CWE-674).
+  bound fft:
+    output <= 2 * len(signal)
+    steps <= 64 * len(signal) + 4096
+    heap <= 4 * len(signal) + 8192
+    depth <= 32
+
+  bound ifft:
+    output <= len(spectrum)
+    steps <= 64 * len(spectrum) + 4096
+    heap <= 4 * len(spectrum) + 8192
+    depth <= 32
+
+  bound rfft:
+    output <= len(signal) + 8
+    steps <= 64 * len(signal) + 4096
+    heap <= 4 * len(signal) + 8192
+    depth <= 32
+
+  bound irfft:
+    output <= 4 * output_length
+    steps <= 64 * len(half_spectrum) + 4096
+    heap <= 4 * len(half_spectrum) + 8192
+    depth <= 32
+
+  claim fft_round_trip:
+    forall s: Bytes. ifft(s) == Ok(s)

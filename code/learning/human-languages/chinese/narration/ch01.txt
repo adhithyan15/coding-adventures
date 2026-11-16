@@ -142,7 +142,7 @@ A character writes one syllable and usually one meaningful piece. A word is one 
 Nobody hearing 你好 (nǐ hǎo) parses it as "you good", any more than an English speaker hears "good" and "bye" inside goodbye. The pieces are visible, which makes the word easy to remember; the whole is what it means.
 
 Why it's said this way.
-你好 (nǐ hǎo) is safe, neutral, and understood everywhere — which is exactly why a course teaches it first. But it is worth knowing that it is used less freely than English "hello". Between people who already know each other, a Mandarin speaker is more likely to open with a small situational remark than with 你好 (nǐ hǎo) at all. Reserve it for meeting someone, and you will sound right.
+你好 (nǐ hǎo) is a greeting you can use in a first exchange. Say it, then hear the other person answer with the same word. This lesson gives you one greeting; later lessons add other ways to open a conversation.
 
 The word, taken apart.
 你好 (nǐ hǎo) is a Chinese compound of two inherited words: hǎo, "good", from Middle Chinese xawX, and nǐ, "you", usually traced to the older second-person word nyeX (Guangyun, in Baxter's transcription).
@@ -157,7 +157,7 @@ Guided Practice.
 
 Wrap-up Recall.
 Which character comes first, and what does it mean on its own? (你, "you".) Is 你好 (nǐ hǎo) one word or two? (One.)
-Source: Unicode Han database, characters 你 (nǐ) and 好 (hào).
+Sources: Unicode Han database, characters 你 (nǐ) and 好 (hào) and YCT Level 1 language functions: greetings.
 [once you have stopped driving — question: You have just been introduced to someone. Type the Mandarin greeting in characters.]
 
 

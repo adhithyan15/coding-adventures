@@ -828,6 +828,9 @@ const PLAIN_WORD = /^[a-z]+:?$/;
  *   " the a b c d e **X**"              no   five plain words: past the bound
  */
 function readsTheObjectOnThePage(ahead: string): boolean {
+  // Two lines are a printed pair, not the heard "line" of a dialogue. Keep
+  // the bound narrow: "read the whole line" remains an audio-capable control.
+  if (/^ both lines\b/i.test(ahead)) return true;
   const start = ahead.startsWith(":") ? 1 : 0;
   if (ahead[start] !== " ") return false;
   const words = ahead.slice(start + 1).split(" ");
@@ -856,6 +859,7 @@ function readsTheObjectOnThePage(ahead: string): boolean {
 /** Does the content of a spoken cue ask the learner to read script on the page? */
 export function spokenCueAsksToReadScript(content: string): boolean {
   const text = withoutQuotations(content.replace(/\s+/g, " ").trim());
+  if (asksToFollowAPrintedLine(text) || BARE_LISTEN_THEN_READ.test(text)) return true;
   for (const step of text.matchAll(READING_STEP)) {
     const from = (step.index ?? 0) + step[0].length;
     if (readsTheObjectOnThePage(text.slice(from, from + READ_OBJECT_WINDOW))) return true;
@@ -1069,7 +1073,7 @@ export function gestureSpokenCues(markdown: string): string[] {
 // What fires
 // ----------
 //
-// Four shapes, each a closed vocabulary, judged on the narrated prose spans the
+// Four original shapes, each a closed vocabulary, judged on the narrated prose spans the
 // writing check reads (`narratedProseSpans`, so a cue is never prose):
 //
 //   shape                                          example from the corpus
@@ -1086,6 +1090,9 @@ export function gestureSpokenCues(markdown: string): string[] {
 //     unpointed card(s)
 //   cover, uncover or hide where a step starts,    Look, cover, and wait five seconds.
 //     with an object or a following link          Hide the pinyin. Read 书 …
+//   page-following or bare paired reading         Follow the printed line with your finger.
+//     where a step starts                          Listen, then read.
+//   "read both lines" where a step starts          Read both lines.
 //
 // The step links are the reading cue check's, minus the em dash and the colon
 // (in prose an em dash opens a gloss — "*Cubre la olla* — cover the pot" — and
@@ -1158,6 +1165,34 @@ export function gestureSpokenCues(markdown: string): string[] {
  * only at `^`, so the link stays linear.
  */
 const PROSE_LINK = String.raw`(?:^(?:(?:[-*+]|\d+[.)]) )?|[.!?;:]["”’)*]{0,3} |, (?:and |or )?|; | and | or | then )(?:\*{1,2}|_{1,2})?(?:then |now |and |also |first )?`;
+
+/**
+ * A sight/hand step can say "follow" rather than "read". Its explicit printed
+ * object or finger manner must appear inside one bounded clause, so "follow
+ * the sound with your ear" remains a voice instruction. The same step links
+ * apply to prose and the spoken content of a cue.
+ */
+const PAGE_FOLLOW_STEP = new RegExp(`${PROSE_LINK}follow(?= )`, "gi");
+const PRINTED_LINE_OBJECT = /^ (?:the|this|a) (?:printed|written|visible) (?:line|text)\b/i;
+const FINGER_LINE_OBJECT = /^ (?:the|this|a) (?:line|text)\b[^.!?;]{0,40}\bwith (?:your|a|one) finger\b/i;
+
+function asksToFollowAPrintedLine(text: string): boolean {
+  for (const step of text.matchAll(PAGE_FOLLOW_STEP)) {
+    const ahead = text.slice((step.index ?? 0) + step[0].length, (step.index ?? 0) + step[0].length + READ_OBJECT_WINDOW);
+    if (PRINTED_LINE_OBJECT.test(ahead) || FINGER_LINE_OBJECT.test(ahead)) return true;
+  }
+  return false;
+}
+
+/**
+ * A bare "listen, then read" requires a page even without a stated object.
+ * The following sentence or a closed set of linked response steps may share
+ * the same prose span; "read it as a sum" is not a bare reading step.
+ */
+const BARE_LISTEN_THEN_READ = new RegExp(
+  `${PROSE_LINK}listen(?:,| and)? then read(?=$|[.!?;](?: |$)|(?:,)? (?:and|then) (?:say|answer|tell|name|choose|point|write)\\b)`,
+  "i",
+);
 
 /**
  * "read" where a step starts. A closing emphasis marker after it is consumed
@@ -1306,6 +1341,7 @@ const FROM_THE_PAGE = /^[^.;!?]{0,60}? (?:from|off) (?:the|your(?: own)?) (?:pag
  * the step on the page anyway. See the second table on {@link proseReadsThePage}.
  */
 function readsAPageThingWithoutScript(ahead: string): boolean {
+  if (/^ both lines\b/i.test(ahead)) return true;
   if (READ_OBJECT_THEN_MANNER.test(ahead)) return true;
   if (WHAT_YOU_WROTE.test(ahead) || FROM_THE_PAGE.test(ahead)) return true;
   const words = ahead.trim().split(" ");
@@ -1417,7 +1453,7 @@ function handlesACard(ahead: string): boolean {
 /** Does one narrated prose span ask the listener to read printed script, handle cards, or cover the page? */
 export function proseAsksToReadOrHandleCards(span: string): boolean {
   const text = withoutQuotations(span.replace(/\s+/g, " ").trim());
-  if (PRINTED_CARD.test(text)) return true;
+  if (PRINTED_CARD.test(text) || asksToFollowAPrintedLine(text) || BARE_LISTEN_THEN_READ.test(text)) return true;
   for (const step of text.matchAll(COVER_STEP)) {
     const from = (step.index ?? 0) + step[0].length;
     if (coversThePage(text.slice(from, from + READ_OBJECT_WINDOW))) return true;
@@ -1623,7 +1659,7 @@ function partAsksForEyesOrHands(part: ReturnType<typeof splitNarrationCues>[numb
  * unfiltered walks agree.
  */
 const STEP_VOCABULARY =
-  /\b(?:(?:re)?write|draw|copy|circle|underline|sketch|jot|read|card|(?:un)?cover|hid|point|clap|tap|touch|rais|hold|show|gestur|wav|nod|shak|bow|palm|hand)/i;
+  /\b(?:(?:re)?write|draw|copy|circle|underline|sketch|jot|read|follow|card|(?:un)?cover|hid|point|clap|tap|touch|rais|hold|show|gestur|wav|nod|shak|bow|palm|hand)/i;
 const NESTED_CUE_START = /YOU [A-Z]/;
 
 /** Could any check in this file fire on `markdown`? False means certainly not. */

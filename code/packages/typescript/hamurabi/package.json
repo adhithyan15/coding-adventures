@@ -1,0 +1,19 @@
+{
+  "name": "@coding-adventures/hamurabi",
+  "version": "0.1.0",
+  "description": "Pure, deterministic simulation core for the seminal 1968 Hamurabi mainframe game",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "node node_modules/typescript/bin/tsc",
+    "test": "node node_modules/typescript/bin/tsc -p tsconfig.test.json && node --test dist-test/tests/*.test.js",
+    "test:coverage": "node node_modules/typescript/bin/tsc -p tsconfig.test.json && node --experimental-test-coverage --test-coverage-exclude=dist-test/tests/** --test-coverage-lines=80 --test dist-test/tests/*.test.js"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^5.0.0"
+  }
+}

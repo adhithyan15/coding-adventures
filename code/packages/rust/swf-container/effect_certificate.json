@@ -1,0 +1,27 @@
+{
+  "schema_version": "ver24-effect-cert-v1",
+  "package": "rust/swf-container",
+  "source_digest": "920a886ef2050b699afaa86bbef8d74989dcbda3c0b7120c27f2f2302a6e722e",
+  "manifest_digest": "26782272247f11f1985869578021522686372be39fc0aa2eed8cbea9c0b107ee",
+  "declared_effects": [],
+  "entry_points": [
+    {
+      "name": "validate_version",
+      "signature": "pub fn validate_version(v: usize) -> Result<bool, SwfError>",
+      "effects": []
+    },
+    {
+      "name": "validate_tag_code",
+      "signature": "pub fn validate_tag_code(c: usize) -> Result<bool, SwfError>",
+      "effects": []
+    },
+    {
+      "name": "validate_ratio",
+      "signature": "pub fn validate_ratio(bytes_out: usize, bytes_in: usize) -> Result<bool, SwfError>",
+      "effects": []
+    }
+  ],
+  "unconditional_roots": [],
+  "banned_construct_exceptions": [],
+  "label": "proved"
+}

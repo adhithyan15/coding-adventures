@@ -33,5 +33,9 @@ socket.on('close', () => framer.reset());
 ## RFC 1459 Compliance
 
 - Lines longer than 510 bytes (512 including CRLF) are silently discarded
+- A pending (not yet LF-terminated) line is capped at 511 bytes: 510 content
+  bytes plus a CR (RFC 1459 / RFC 2812 section 2.3).  Past that the partial
+  line is dropped and input is skipped up to the next LF, so memory stays
+  constant however much a peer sends without an LF (SEC-011).  No API change.
 - Both `\r\n` (CRLF) and bare `\n` (LF) are accepted as line terminators
 - The terminator is stripped from each returned `Buffer`

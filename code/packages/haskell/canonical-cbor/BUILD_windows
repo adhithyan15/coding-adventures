@@ -1,0 +1,1 @@
+cabal test && cabal build canonical-cbor:lib:canonical-cbor canonical-cbor:test:spec --ghc-options=-Wall --ghc-options=-Werror

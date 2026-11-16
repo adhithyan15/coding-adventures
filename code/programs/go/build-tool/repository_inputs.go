@@ -134,8 +134,10 @@ var (
 		"code/scripts/tfv.py",
 		"code/scripts/bootstrap_harness_conformance.py",
 	}
-	rngCorpusPaths      = []string{"code/specs/fixtures/rng-v1"}
-	warrantGrammarPaths = []string{
+	rngCorpusPaths         = []string{"code/specs/fixtures/rng-v1"}
+	hamurabiCorpusPaths    = []string{"code/specs/fixtures/hamurabi-v1"}
+	lunarLanderCorpusPaths = []string{"code/specs/fixtures/lunar-lander-v1"}
+	warrantGrammarPaths    = []string{
 		"code/grammars/warrant",
 		"code/specs/fixtures/warrant-syntax-v1",
 		"code/specs/fixtures/warrant-vectors-synthetic-v1",
@@ -167,6 +169,31 @@ var (
 	warrantPythonRunnerPackage   = "code/packages/python/warrant-corpus"
 	warrantPythonLaneCorpusPaths = warrantPythonLaneInputs
 	warrantPythonLanePilotPaths  = append(append([]string{}, warrantPythonLaneInputs...), warrantPythonRunnerPackage)
+	// The TypeScript Warrant lane (WD-102) reads the same spec, corpus and
+	// registry. Its ct-compare BUILD re-runs the corpus, fails when the
+	// committed manifest drifted and validates it; the runner package's own
+	// tests run the real corpus once.
+	warrantTypeScriptLaneInputs = warrantPythonLaneInputs
+	// warrantTypeScriptRunnerPackage is the shared runner. ct-compare names it
+	// as a file: devDependency, which is a graph edge, but the committed
+	// manifest embeds the runner's source digest, so the pilot is selected by
+	// an explicit prefix too: the selection must not depend on the dependency
+	// resolver noticing a dev-only edge.
+	warrantTypeScriptRunnerPackage   = "code/packages/typescript/warrant-corpus"
+	warrantTypeScriptLaneCorpusPaths = warrantTypeScriptLaneInputs
+	warrantTypeScriptLanePilotPaths  = append(append([]string{}, warrantTypeScriptLaneInputs...), warrantTypeScriptRunnerPackage)
+	// The Go Warrant lane (WD-103) reads the same spec, corpus and registry. Its
+	// ct-compare BUILD re-runs the corpus, fails when the committed manifest
+	// drifted, proves every negative control and validates the manifest; the
+	// runner package's own tests run the real corpus once.
+	warrantGoLaneInputs = warrantPythonLaneInputs
+	// warrantGoRunnerPackage is the shared runner. ct-compare's go.mod requires
+	// it (a graph edge), but the committed manifest embeds the runner's source
+	// digest, so the pilot is selected by an explicit prefix too: the selection
+	// must not depend on the dependency resolver noticing the edge.
+	warrantGoRunnerPackage   = "code/packages/go/warrant-corpus"
+	warrantGoLaneCorpusPaths = warrantGoLaneInputs
+	warrantGoLanePilotPaths  = append(append([]string{}, warrantGoLaneInputs...), warrantGoRunnerPackage)
 	// warrantAssurancePaths are the shared Warrant lane artifacts the
 	// assurance report validates directly (see isWarrantAssuranceInput).
 	// The Kiln graph export reads them, so they must list every path the
@@ -288,6 +315,188 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "the shared rng conformance corpus",
 		matches:  isRngCorpus,
 		paths:    rngCorpusPaths,
+	},
+	{
+		name:     "rust/hamurabi",
+		language: "rust",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "go/hamurabi",
+		language: "go",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "python/hamurabi",
+		language: "python",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "typescript/hamurabi",
+		language: "typescript",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "rust/lunar-lander",
+		language: "rust",
+		inputs:   "the shared lunar lander conformance corpus",
+		matches:  isLunarLanderCorpus,
+		paths:    lunarLanderCorpusPaths,
+	},
+	{
+		name:     "csharp/hamurabi",
+		language: "csharp",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "fsharp/hamurabi",
+		language: "fsharp",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "java/hamurabi",
+		language: "java",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "kotlin/hamurabi",
+		language: "kotlin",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "dart/hamurabi",
+		language: "dart",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "swift/hamurabi",
+		language: "swift",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "haskell/hamurabi",
+		language: "haskell",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "c/hamurabi",
+		language: "c",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "cpp/hamurabi",
+		language: "cpp",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "ocaml/hamurabi",
+		language: "ocaml",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "ruby/hamurabi",
+		language: "ruby",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "elixir/hamurabi",
+		language: "elixir",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "lua/hamurabi",
+		language: "lua",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "perl/hamurabi",
+		language: "perl",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "go/lunar-lander",
+		language: "go",
+		inputs:   "the shared lunar lander conformance corpus",
+		matches:  isLunarLanderCorpus,
+		paths:    lunarLanderCorpusPaths,
+	},
+	{
+		name:     "python/lunar-lander",
+		language: "python",
+		inputs:   "the shared lunar lander conformance corpus",
+		matches:  isLunarLanderCorpus,
+		paths:    lunarLanderCorpusPaths,
+	},
+	{
+		name:     "typescript/lunar-lander",
+		language: "typescript",
+		inputs:   "the shared lunar lander conformance corpus",
+		matches:  isLunarLanderCorpus,
+		paths:    lunarLanderCorpusPaths,
+	},
+	{
+		name:     "ruby/lunar-lander",
+		language: "ruby",
+		inputs:   "the shared lunar lander conformance corpus",
+		matches:  isLunarLanderCorpus,
+		paths:    lunarLanderCorpusPaths,
+	},
+	{
+		name:     "elixir/lunar_lander",
+		language: "elixir",
+		inputs:   "the shared lunar lander conformance corpus",
+		matches:  isLunarLanderCorpus,
+		paths:    lunarLanderCorpusPaths,
+	},
+	{
+		name:     "lua/lunar-lander",
+		language: "lua",
+		inputs:   "the shared lunar lander conformance corpus",
+		matches:  isLunarLanderCorpus,
+		paths:    lunarLanderCorpusPaths,
+	},
+	{
+		name:     "perl/lunar-lander",
+		language: "perl",
+		inputs:   "the shared lunar lander conformance corpus",
+		matches:  isLunarLanderCorpus,
+		paths:    lunarLanderCorpusPaths,
 	},
 	{
 		name:     "go/rng",
@@ -436,6 +645,34 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		matches:  isWarrantPythonLanePilotInput,
 		paths:    warrantPythonLanePilotPaths,
 	},
+	{
+		name:     "typescript/warrant-corpus",
+		language: "typescript",
+		inputs:   "the Warrant spec, corpus and consumer registry its tests run",
+		matches:  isWarrantTypeScriptLaneCorpusInput,
+		paths:    warrantTypeScriptLaneCorpusPaths,
+	},
+	{
+		name:     "typescript/ct-compare",
+		language: "typescript",
+		inputs:   "the Warrant spec, corpus, consumer registry and the shared TypeScript runner",
+		matches:  isWarrantTypeScriptLanePilotInput,
+		paths:    warrantTypeScriptLanePilotPaths,
+	},
+	{
+		name:     "go/warrant-corpus",
+		language: "go",
+		inputs:   "the Warrant spec, corpus and consumer registry its tests run",
+		matches:  isWarrantGoLaneCorpusInput,
+		paths:    warrantGoLaneCorpusPaths,
+	},
+	{
+		name:     "go/ct-compare",
+		language: "go",
+		inputs:   "the Warrant spec, corpus, consumer registry and the shared Go runner",
+		matches:  isWarrantGoLanePilotInput,
+		paths:    warrantGoLanePilotPaths,
+	},
 }
 
 // The assurance report validates the shared Warrant lane artifacts directly.
@@ -472,6 +709,34 @@ func isWarrantPythonLaneCorpusInput(changed string) bool {
 func isWarrantPythonLanePilotInput(changed string) bool {
 	return isWarrantPythonLaneCorpusInput(changed) ||
 		strings.HasPrefix(changed, "code/packages/python/warrant-corpus/")
+}
+
+// isWarrantTypeScriptLaneCorpusInput selects the TypeScript runner package
+// when the spec, corpus or registry its tests run changes. Exact paths only: a
+// lookalike version of the fixture directory must not select it.
+func isWarrantTypeScriptLaneCorpusInput(changed string) bool {
+	return isWarrantPythonLaneCorpusInput(changed)
+}
+
+// isWarrantTypeScriptLanePilotInput selects typescript/ct-compare for the same
+// files plus anything beneath the shared runner package.
+func isWarrantTypeScriptLanePilotInput(changed string) bool {
+	return isWarrantTypeScriptLaneCorpusInput(changed) ||
+		strings.HasPrefix(changed, "code/packages/typescript/warrant-corpus/")
+}
+
+// isWarrantGoLaneCorpusInput selects the Go runner package when the spec, corpus
+// or registry its tests run changes. Exact paths only: a lookalike version of the
+// fixture directory must not select it.
+func isWarrantGoLaneCorpusInput(changed string) bool {
+	return isWarrantPythonLaneCorpusInput(changed)
+}
+
+// isWarrantGoLanePilotInput selects go/ct-compare for the same files plus
+// anything beneath the shared runner package.
+func isWarrantGoLanePilotInput(changed string) bool {
+	return isWarrantGoLaneCorpusInput(changed) ||
+		strings.HasPrefix(changed, "code/packages/go/warrant-corpus/")
 }
 
 // Canonical inputs live outside the Rust artifact package. Exact file paths
@@ -567,6 +832,20 @@ func isKilnToolchainPinInput(changed string) bool {
 //	code/specs/rng.md                         → false (prose; the corpus pins behaviour)
 func isRngCorpus(changed string) bool {
 	return strings.HasPrefix(changed, "code/specs/fixtures/rng-v1/")
+}
+
+// isHamurabiCorpus reports whether a changed path is in the shared hamurabi corpus,
+// which the hamurabi package tests read.
+//
+//	code/specs/fixtures/hamurabi-v1/cases.json  → true
+//	code/specs/fixtures/hamurabi-v10/cases.json → false
+func isHamurabiCorpus(changed string) bool {
+	return strings.HasPrefix(changed, "code/specs/fixtures/hamurabi-v1/")
+}
+
+// isLunarLanderCorpus reports whether a changed path is in the shared lunar lander corpus.
+func isLunarLanderCorpus(changed string) bool {
+	return strings.HasPrefix(changed, "code/specs/fixtures/lunar-lander-v1/")
 }
 
 // isMosaicRepositorySource reports whether a changed path is one the Mosaic

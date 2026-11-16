@@ -1,0 +1,31 @@
+[package]
+name = "swf-shape-to-paint"
+version = "0.1.0"
+edition = "2021"
+description = "Dual-fill Bezier shape converter lowering SWF DefineShape records to P2D00 PaintInstructions (SWF02)"
+license = "MIT"
+
+[dependencies]
+swf-container = { path = "../swf-container" }
+paint-instructions = { path = "../paint-instructions" }
+bezier2d = { path = "../bezier2d" }
+point2d = { path = "../point2d" }
+
+[dev-dependencies]
+coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
+coding_adventures_sha256 = { path = "../sha256" }
+capability-runtime-conformance = { path = "../capability-runtime-conformance" }
+
+[[test]]
+name = "conformance"
+path = "tests/conformance.rs"
+
+[[test]]
+name = "microbenchmarks"
+path = "tests/microbenchmarks.rs"
+harness = false
+
+[[test]]
+name = "runtime_capability"
+path = "tests/runtime_capability.rs"
+harness = false

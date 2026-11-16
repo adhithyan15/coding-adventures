@@ -21,7 +21,7 @@ use coding_adventures_ca_assurance_report::catalogue::{
 use coding_adventures_ca_assurance_report::evidence::ProofEntry;
 use coding_adventures_ca_assurance_report::{
     check_assumptions, generate_ct_compare_report, generate_package_report, verify_evidence,
-    AssumptionCheckError, AssumptionSummary, AssuranceReport, AuditProfile, DischargedAssumption, Evidence,
+    AssumptionCheckError, AssumptionSummary, AssuranceReport, DischargedAssumption, Evidence,
     EvidenceCheckError, WeaknessRegistry, WeaknessStatus,
 };
 
@@ -49,7 +49,6 @@ fn gf() -> (AssuranceReport, Evidence) {
         "c0ffee",
         &WeaknessRegistry::embedded(),
         &ev,
-        AuditProfile::FieldArithmetic,
     )
     .expect("derives");
     (r, ev)

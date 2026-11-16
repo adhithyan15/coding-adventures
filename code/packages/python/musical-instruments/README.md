@@ -1,6 +1,6 @@
 # musical-instruments
 
-`musical-instruments` is the first implementation of `MUS05: Naive Instrument
+`musical-instruments` is the deterministic implementation of `MUS05: Naive Instrument
 Models and Timbre`.
 
 It adds the missing box between a note's frequency and the sampled audio:
@@ -9,12 +9,15 @@ It adds the missing box between a note's frequency and the sampled audio:
 note frequency + instrument profile -> shaped waveform -> sampler -> PCM
 ```
 
-V1 is deliberately naive. A flute, violin, piano, and plucked string are not
-physical simulations yet. They are small additive-synthesis recipes:
+This package models instruments as inspectable additive synthesis recipes with
+deterministic humanization:
 
-- a harmonic profile says which sine waves are mixed together
-- an ADSR envelope says how the loudness changes over the note's lifetime
-- a gain keeps the result safe for PCM output
+- a harmonic profile specifies which sine waves are mixed together
+- an ADSR envelope shapes loudness over the note's lifetime and release tail
+- a deterministic seeded `VariationProfile` introduces micro-variations (pitch, amplitude, attack timing, overtones)
+- a pure-Python SplitMix64 PRNG drives variations with zero ambient entropy
+- strict CWE-400 / CWE-674 / CWE-1333 resource and recursion bounds are enforced
+- formal VER verification artifacts (`musical_instruments.warrant`, `required_capabilities.json`)
 
 ## Keyboard-Style Catalog
 
@@ -22,14 +25,11 @@ The package exposes a full 128-entry General-MIDI-style melodic program catalog.
 That gives us the same kind of "program number selects a voice" idea found on
 many keyboards.
 
-The first catalog is wide, not perfect: all 128 programs are selectable, but
-many programs intentionally share a smaller set of naive archetypes until we
-teach each family better behavior.
-
 Examples:
 
 ```python
 from musical_instruments import (
+    VariationProfile,
     get_gm_program,
     instrument_for_gm_program,
     render_instrument_note,
@@ -38,11 +38,20 @@ from musical_instruments import (
 program = get_gm_program(74)              # Flute
 instrument = instrument_for_gm_program(74)
 
+# Render with deterministic seeded micro-variation
+variation = VariationProfile(
+    pitch_cents_jitter=5.0,
+    amplitude_jitter=0.08,
+    attack_jitter_ms=2.0,
+    seed=42,
+)
+
 rendered = render_instrument_note(
     "A4",
     duration_seconds=0.5,
     instrument=instrument,
     amplitude=0.2,
+    variation_profile=variation,
 )
 
 print(program.name)                       # Flute
@@ -52,7 +61,7 @@ print(rendered.pcm_buffer.samples[:5])
 
 ## Built-In Naive Presets
 
-The first named presets are:
+The built-in naive presets cover common instrument archetypes:
 
 | Id | Meaning |
 |----|---------|
@@ -76,31 +85,25 @@ The first named presets are:
 | `synth_lead_naive` | bright synth lead archetype |
 | `synth_pad_naive` | slow-attack pad archetype |
 | `effect_naive` | inharmonic placeholder for effects |
+| `silence` | zero-amplitude silence utility |
 
-These are still rendered through the same note-based path as melodic
-instruments:
+## Security & Verification Invariants (VER15)
 
-```text
-note -> frequency -> instrument signal -> sampled PCM
-```
+In accordance with the Verified Shipping Program:
 
-That is the key distinction for this phase: pitched percussion still has a
-stable note/frequency center, even though its overtone mix and envelope feel
-more like a struck bar, bell, tine, or drum shell than a flute or violin.
-
-## What This Is Not Yet
-
-This is not a Yamaha, Casio, Roland, or Korg voice clone. Real keyboard patches
-often combine sampled attacks, looping sustain regions, filters, effects,
-velocity layers, and proprietary tuning choices.
-
-This package gives us a teachable foundation that can later grow into:
-
-- better per-instrument harmonic profiles
-- velocity-sensitive envelopes
-- sampled attacks
-- filters and vibrato
-- physical models for strings, reeds, pipes, and resonating bodies
+- **CWE-400 (Uncontrolled Resource Consumption):** Strictly bounded by
+  `MAX_PARTIALS = 64`, `MAX_NOTE_DURATION_SECONDS = 60.0`,
+  `MAX_SAMPLE_RATE_HZ = 192_000.0`, and `MAX_SAMPLE_COUNT = 16_777_216`.
+- **CWE-190 (Integer Overflow):** Bounded envelope calculations and protected
+  sample rounding (`_safe_round_sample`) eliminate float-to-int overflow.
+- **CWE-674 (Uncontrolled Recursion):** Synthesis and envelope evaluation are
+  strictly iterative with constant call stack depth.
+- **CWE-1333 (ReDoS) / CWE-94 (Code Injection):** Zero regular expressions
+  (`re`) and zero dynamic code execution (`eval`/`exec`).
+- **CWE-208 (Timing Side-Channels):** All operands are public (`musical_instruments.warrant`),
+  establishing the `warrant-spec::all-operands-public` derived attestation.
+- **Required Capabilities:** `capabilities: []` declared in `required_capabilities.json`
+  (pure computation).
 
 ## Development
 

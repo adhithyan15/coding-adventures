@@ -117,11 +117,17 @@ pub fn stft_via_runtime(
     // shape dims are u32, so silently truncating
     // `signal.len() as u32` would produce a bogus graph against a
     // much-longer signal — caught by security review.
-    if signal.len() > u32::MAX as usize {
+    if signal.len() > crate::MAX_SAMPLES {
         return Err(StftError::InvalidParam(format!(
-            "signal length {} exceeds u32::MAX",
-            signal.len()
+            "signal length {} exceeds MAX_SAMPLES {}",
+            signal.len(),
+            crate::MAX_SAMPLES
         )));
+    }
+    if !signal.iter().all(|x| x.is_finite()) {
+        return Err(StftError::InvalidParam(
+            "signal contains non-finite floats (NaN or Inf)".into(),
+        ));
     }
     let signal_length = signal.len() as u32;
     let (mut b, _signal_tensor, frame_tensors) = build_stft_graph_internal(
@@ -264,8 +270,22 @@ fn build_stft_graph_internal<'a>(
     if signal_length == 0 {
         return Err(StftError::EmptySignal);
     }
+    if (signal_length as usize) > crate::MAX_SAMPLES {
+        return Err(StftError::InvalidParam(format!(
+            "signal_length {} exceeds MAX_SAMPLES {}",
+            signal_length,
+            crate::MAX_SAMPLES
+        )));
+    }
     if n_fft == 0 {
         return Err(StftError::InvalidParam("n_fft must be > 0".into()));
+    }
+    if (n_fft as usize) > crate::MAX_FFT_LEN {
+        return Err(StftError::InvalidParam(format!(
+            "n_fft {} exceeds MAX_FFT_LEN {}",
+            n_fft,
+            crate::MAX_FFT_LEN
+        )));
     }
     if hop_length == 0 {
         return Err(StftError::InvalidParam(

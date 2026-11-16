@@ -152,6 +152,11 @@ type Options struct {
 	RunTool       Runner
 	StraceVersion func(path string) (string, error)
 	Kernel        func() (string, error)
+	// Structure runs the in-sandbox structure probes (probe.go, decision P14);
+	// the default is RunStructureProbes, which starts the real sandbox under
+	// the real strace. The report it returns is checked (CheckProbeReport)
+	// before it is sealed, whoever produced it.
+	Structure func(ProbeInput) (ProbeReport, error)
 }
 
 // PrepareResult is what a successful Prepare reports.
@@ -501,6 +506,39 @@ func Prepare(o Options) (*PrepareResult, error) {
 			return nil, fmt.Errorf("%w (the record directory must lie outside home, tmpdir, the checkout and every state root)", err)
 		}
 	}
+	// The in-sandbox structure probe (P14): the real sandbox, under the real
+	// strace, on the configuration as sealed. It runs here, after the host
+	// checks and before anything of the plan is written, so a sandbox that is
+	// not what the scan believed fails the job with nothing sealed.
+	probeIn := ProbeInput{
+		Dir: o.Dir, Cfg: cfg, ConfigPath: filepath.Join(pre, "sandbox.json"), ConfigSHA256: w.sums["sandbox.json"],
+		KilnExe: kiln.Path, Strace: strace.Path,
+	}
+	actionNames := make([]string, 0, len(actions))
+	for _, a := range actions {
+		actionNames = append(actionNames, a.Action)
+	}
+	if len(actions) > 0 {
+		probeIn.Action = actions[0].Action
+		probeIn.Env = stepProcessEnv(probeIn.Action, 0, 1, safe.String(), toolEnv)
+	}
+	probes, err := o.Structure(probeIn)
+	if err != nil {
+		return nil, fmt.Errorf("structure probe: %w", err)
+	}
+	if err := CheckProbeReport(cfg, probes, actionNames); err != nil {
+		return nil, fmt.Errorf("structure probe: %w", err)
+	}
+	if probes.Action != probeIn.Action {
+		return nil, fmt.Errorf("structure probe: it ran for %q, not for the first action %q", printable(probes.Action), printable(probeIn.Action))
+	}
+	probesBytes, err := EncodeProbes(probes)
+	if err != nil {
+		return nil, err
+	}
+	if err := w.write(ProbesFile, probesBytes); err != nil {
+		return nil, err
+	}
 	for _, a := range actions {
 		data, err := EncodeAction(a)
 		if err != nil {
@@ -590,6 +628,9 @@ func (o *Options) normalize() error {
 	}
 	if o.Kernel == nil {
 		o.Kernel = kernelRelease
+	}
+	if o.Structure == nil {
+		o.Structure = RunStructureProbes
 	}
 	return nil
 }

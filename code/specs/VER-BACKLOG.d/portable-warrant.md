@@ -15,7 +15,9 @@ remain historical and must not be read as the current queue.
 | WX-RD1 | Bound the ground evaluator's deep read-copy amplification while preserving public `EvalValue` and error shapes | Existing P1 under WX-001, selected as the next bounded item after PR #19236. Spec-first guard contract; the 32-byte portable slot-charge under-accounting and total-memory/RSS claims remain open after the first guard slice. |
 | WD-004b1 | Add the safe lane artifact loader, registry join, raw digest checks, and static readiness checks | After WD-004a; preserve the legacy Rust loader and make no source/build/toolchain authenticity claim beyond the named checks. |
 | WD-004b2 | Integrate lane-aware package reports, CLI/check behavior, and honest absent rungs | After WD-004b1; keep Rust-only proof/effect attestations isolated from non-Rust lanes. |
-| WD-101 (Python L0 runner) | First non-Rust lane: `python/warrant-corpus` runner, `python/ct-compare` binding and committed lane manifest, BUILD drift/sabotage/validate lines, repository-input registration | Delivered on branch `claude/warrant-python-lane` (not yet merged). 12 examples; 9 exhaustive suites, 572,109 cases enumerated in Python over finite domains (`Bytes[347]` x `Bytes[347]`, `Bytes<0/1/2/4/16>`, `U64[377]` x `U64[377]`), every `inputs_sha256`/`expected_sha256`/call count equal to the Rust-emitted corpus; 8 negative controls, each caught by a required claim; each `sabotage` child exits 1 with `not ok`. The consumer row stays `planned`: `ca-assurance-report`'s own test pins the checked-in registry to `planned`, and flipping it belongs with WD-004b1. Not delivered: report integration, sandbox arming (CAP-RT-1xx Python), native (layer B) suites, the shared `warrant-corpus-conformance-v1` fixture of VER04i section 9. |
+| WD-101 (Python L0 runner) | First non-Rust lane: `python/warrant-corpus` runner, `python/ct-compare` binding and committed lane manifest, BUILD drift/sabotage/validate lines, repository-input registration | Delivered and merged (PR #19354). 12 examples; 9 exhaustive suites, 572,109 cases enumerated in Python over finite domains (`Bytes[347]` x `Bytes[347]`, `Bytes<0/1/2/4/16>`, `U64[377]` x `U64[377]`), every `inputs_sha256`/`expected_sha256`/call count equal to the Rust-emitted corpus; 8 negative controls, each caught by a required claim; each `sabotage` child exits 1 with `not ok`. The consumer row stays `planned`: `ca-assurance-report`'s own test pins the checked-in registry to `planned`, and flipping it belongs with WD-004b1. Not delivered: report integration, sandbox arming (CAP-RT-1xx Python), native (layer B) suites, the shared `warrant-corpus-conformance-v1` fixture of VER04i section 9. |
+| WD-102 (TypeScript L0 runner) | Second non-Rust lane: `typescript/warrant-corpus` runner (`@coding-adventures/warrant-corpus`, zero runtime dependencies, runs as TypeScript by Node type stripping), `typescript/ct-compare` binding and committed lane manifest and label sidecar, BUILD and BUILD_windows `check`/`sabotage`/`validate-manifest` lines, repository-input registration | Delivered and merged (PR #19368). Same corpus as WD-101: 12 examples; 9 exhaustive suites, 572,109 cases enumerated in TypeScript (65,537 `full`, 506,572 `bounded-set`), every `inputs_sha256`/`expected_sha256`/call count equal to the Rust-emitted corpus and every manifest row equal to the Python lane's; 8 negative controls, each caught by a required claim; each `sabotage` child exits 1 with `not ok`. `U64`/`Nat` are `bigint`, `Bytes` results must be an exact `Uint8Array` and a `fresh` result may not alias an argument (VER04i 5.2); the corpus is read by a strict JSON reader. 183 tests, line coverage 99.7%. Same open items as WD-101: the consumer registry has no `typescript/ct-compare` row (the checked-in registry lists only `python/ct-compare` and `ca-assurance-report` pins it), so BUILD validates the manifest without `--registry`; no sandbox arming (CAP-RT-1xx TypeScript/Node); no layer B (native) suites; no `warrant-corpus-conformance-v1` fixture. |
+| WD-103 (Go L0 runner) | Third non-Rust lane: `go/warrant-corpus` runner (standard library only; a Go library plus the leaf package's `cmd/warrant-evidence` entry), `go/ct-compare` binding, adapters and committed lane manifest and label sidecar, BUILD and BUILD_windows `check`/`sabotage`/`validate-manifest` lines plus one explicit `not ok` line per fault, repository-input registration | Delivered on branch `claude/warrant-go-lane` (not yet merged). Same corpus as WD-101 and WD-102: 12 examples; 9 exhaustive suites, 572,109 cases enumerated in Go (65,537 `full`, 506,572 `bounded-set`), every `inputs_sha256`/`expected_sha256`/call count equal to the Rust-emitted corpus and every manifest row equal to the Python and TypeScript lanes'; 8 negative controls, each caught by a required claim; each `sabotage` child exits 1 with `not ok`. Go cannot import by name, so a compiled adapter registry is verified by runtime symbol name and source file (`source-mismatch`); errors map by sentinel identity; `U64` is a native `uint64`; a `fresh` result is checked by mutation; the corpus is read by a strict JSON reader (duplicate keys, invalid UTF-8, lone surrogates, integers above 2^53) and its paths are contained with a cross-drive-safe check (VER04i 5.3). Statement coverage 99%. Same open items as WD-101 and WD-102: the consumer registry has no `go/ct-compare` row, so BUILD validates the manifest without `--registry`; no sandbox arming (CAP-RT-1xx Go); no layer B (native) suites; no `warrant-corpus-conformance-v1` fixture; report integration. |
 
 WX implementation continues under the existing WX-001 owner and IDs; this
 shard does not create a duplicate feature owner. WX-H/E prerequisites merged
@@ -125,3 +127,34 @@ and before a separate GF256 portable-corpus rollout. This is package-parity
 work, not a Warrant syntax, compiler, or report port. The missing Warrant
 language features remain WX-D, WX-F, and WX-G under their existing WX owner and
 IDs.
+
+## Follow-ups from WD-102
+
+- **Registry row for the TypeScript lane.** Add `typescript/ct-compare` (`planned`) to
+  `code/specs/fixtures/ct-compare-warrant-v1/consumers.json` and its count, with the Rust tests that pin the checked-in
+  registry (`test_lane_evidence.rs`), then add `--registry` to the TypeScript `validate-manifest` BUILD line. It was left
+  out because the registry belongs to WD-004a's Rust validator and this branch does not run Rust.
+- **Shared runner fixes found by the second lane.** The Python runner hard-coded `toolchain.name == "python"` in the label
+  digest; fixed in WD-102 (see `lessons.d`). Any further lane should validate its manifest with *both* existing runners
+  before it is called shared.
+- **Dedicated error class per declared error.** `ctSelectBytes` throws a plain `RangeError` for the length mismatch and
+  for an out-of-range byte, so the exact-prototype binding cannot tell them apart; the corpus passes only `Uint8Array`s.
+  Same recommendation as the Python lane: one named error class per declared error.
+- **LP-012.** The TypeScript lane writes the same `domain-labels.json` sidecar (65,537 `full`, 506,572 `bounded-set`).
+- **Layer B.** TypeScript is the lane with property and fuzz engines (VER05a, VER06b); native suites remain WD-2xx.
+
+## Follow-ups from WD-103
+
+- **Registry row for the Go lane.** Same as WD-102: add `go/ct-compare` (`planned`) to
+  `code/specs/fixtures/ct-compare-warrant-v1/consumers.json` and its count, with the Rust tests that pin it, then add
+  `--registry` to the Go `validate-manifest` BUILD line. The registry belongs to WD-004a's Rust validator.
+- **The adapters are code, not data.** `go/ct-compare/cmd/warrant-evidence` translates the Warrant `Bool` choice into the
+  `int` bit `CTSelectBytes` takes and the library's length-mismatch panic into the `ErrLengthMismatch` sentinel. They are
+  digested with the source and are what a reviewer reads (VER04i 11, item 3). A dedicated error return from
+  `CTSelectBytes` (a library change) would remove the panic translation.
+- **No `-trimpath`.** The provenance check needs the real source path of each export and fails closed otherwise; a lane
+  BUILD must not pass `-trimpath`.
+- **Sandbox (CAP-RT-1xx, Go).** Not armed: the expected strategy is an OS sandbox around the test binary.
+- **Layer B.** Go has no property or fuzz engine corpus in the Warrant sense yet; native suites remain WD-2xx.
+- **Sibling-lane note.** The older lanes' build-tool language-filter probes used `"go"` as a language with no consumers;
+  that stopped being true here and they now probe `"ruby"`.

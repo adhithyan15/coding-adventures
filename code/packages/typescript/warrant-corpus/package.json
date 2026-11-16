@@ -1,0 +1,24 @@
+{
+  "name": "@coding-adventures/warrant-corpus",
+  "version": "0.1.0",
+  "description": "TypeScript lane runner for the language-neutral Warrant evidence corpus (warrant-corpus-v1)",
+  "type": "module",
+  "main": "src/index.ts",
+  "bin": {
+    "warrant-corpus": "src/bin.ts"
+  },
+  "scripts": {
+    "lint": "tsc --noEmit",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^22.20.1",
+    "@vitest/coverage-v8": "^4.1.11",
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.11"
+  }
+}

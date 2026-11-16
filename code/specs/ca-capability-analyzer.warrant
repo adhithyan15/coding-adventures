@@ -1,0 +1,21 @@
+-- VER08 / VER15 -- Static Capability Analyzer Foundation
+warrant ca_capability_analyzer v1
+  error AnalyzerError = INVALID_ARGUMENT | SCAN_FAILED
+
+  op classify_capability(source_len: Nat) -> Result<Nat, AnalyzerError>
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels classify_capability:
+    source_len public
+
+  input classify_capability.source_len:
+    hostile
+    rejects source_len > 10485760 with AnalyzerError.INVALID_ARGUMENT
+    ensures no_panic, terminates
+
+  claim analysis_is_deterministic:
+    forall n: Nat | n <= 10485760. classify_capability(n) == classify_capability(n)

@@ -4,11 +4,11 @@ defmodule CodingAdventures.Zip.MixProject do
   def project do
     [
       app: :coding_adventures_zip,
-      version: "0.2.0",
+      version: "0.3.0",
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      test_coverage: [summary: [threshold: 80]]
+      test_coverage: [summary: [threshold: 95]]
     ]
   end
 

@@ -1,0 +1,19 @@
+{
+  "schema": "warrant-assurance-profile-v1",
+  "name": "simulation",
+  "kind": "transform",
+  "rows": {
+    "326": {
+      "applicability": "excluded",
+      "reason": "no keys: the package takes and generates no key material; operands are bounded coordinates, scores, and simulation state [attestation not machine-checked by any tool]"
+    },
+    "327": {
+      "applicability": "excluded",
+      "reason": "pure simulation: package implements arcade pong simulation only, no cipher, hash or MAC [attestation not machine-checked by any tool]"
+    },
+    "407": {
+      "applicability": "excluded",
+      "reason": "bounded work per call: simulation steps, collision checks, sprite generation, and audio mixing run in bounded O(1) or bounded linear time [attestation not machine-checked by any tool]"
+    }
+  }
+}

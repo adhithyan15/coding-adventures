@@ -141,7 +141,7 @@ Exemptions are **never declared by package authors**:
 ### 3.4 Verdict Determination
 The final `verdict` is computed as follows:
 - **`pass` (Publishable):**
-  All rungs E0–E5 are `"pass"`, all weakness rows are `"excluded"` or `"discharged"`, all exemptions are `approved: true`, and `public_symbols_without_claims` is empty.
+  All rungs E0–E5 are `"pass"`, all weakness rows are `"excluded"` or `"discharged"` (including CWE-208 excluded under `no_secret_inputs` for non-crypto packages), all exemptions are `approved: true`, and `public_symbols_without_claims` is empty.
 - **`report-only`:**
   The package is valid, honest, and completely audited for testing/research, but cannot be published to a distribution registry because:
   - At least one rung is `"not-live"` (e.g. E2 simulated host); OR

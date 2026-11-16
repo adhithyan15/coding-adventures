@@ -1,0 +1,357 @@
+{
+  "schema_version": "ver24-effect-cert-v1",
+  "package": "rust/sim-discrete-arcade-logic",
+  "source_digest": "efc9ff2dc41bc4f0f6766de67a01d47caa313bc497e980ba318f94cc4f610e78",
+  "manifest_digest": "36274d6a28f303164848b507497fa557528eeef4ae722cda0d4da712152fec8a",
+  "declared_effects": [],
+  "entry_points": [
+    {
+      "name": "bcd_value",
+      "signature": "pub const fn bcd_value(&self) -> u8",
+      "effects": []
+    },
+    {
+      "name": "binary_value",
+      "signature": "pub const fn binary_value(&self) -> u8",
+      "effects": []
+    },
+    {
+      "name": "new_7400",
+      "signature": "pub const fn new_7400() -> Self",
+      "effects": []
+    },
+    {
+      "name": "nand_eval_gate",
+      "signature": "pub fn nand_eval_gate(&self, channel: usize, a: u8, b: u8) -> Result<u8, LogicError>",
+      "effects": []
+    },
+    {
+      "name": "nand_eval_gate_level",
+      "signature": "pub fn nand_eval_gate_level(&self, channel: usize, a: u8, b: u8) -> Result<u8, LogicError>",
+      "effects": []
+    },
+    {
+      "name": "nand_eval_quad",
+      "signature": "pub fn nand_eval_quad( &self, a0: u8, b0: u8, a1: u8, b1: u8, a2: u8, b2: u8, a3: u8, b3: u8, ) -> Result<QuadLogicLevels, LogicError>",
+      "effects": []
+    },
+    {
+      "name": "nand_eval_quad_gate_level",
+      "signature": "pub fn nand_eval_quad_gate_level( &self, a0: u8, b0: u8, a1: u8, b1: u8, a2: u8, b2: u8, a3: u8, b3: u8, ) -> Result<QuadLogicLevels, LogicError>",
+      "effects": []
+    },
+    {
+      "name": "new_7402",
+      "signature": "pub const fn new_7402() -> Self",
+      "effects": []
+    },
+    {
+      "name": "nor_eval_gate",
+      "signature": "pub fn nor_eval_gate(&self, channel: usize, a: u8, b: u8) -> Result<u8, LogicError>",
+      "effects": []
+    },
+    {
+      "name": "nor_eval_gate_level",
+      "signature": "pub fn nor_eval_gate_level(&self, channel: usize, a: u8, b: u8) -> Result<u8, LogicError>",
+      "effects": []
+    },
+    {
+      "name": "nor_eval_quad",
+      "signature": "pub fn nor_eval_quad( &self, a0: u8, b0: u8, a1: u8, b1: u8, a2: u8, b2: u8, a3: u8, b3: u8, ) -> Result<QuadLogicLevels, LogicError>",
+      "effects": []
+    },
+    {
+      "name": "nor_eval_quad_gate_level",
+      "signature": "pub fn nor_eval_quad_gate_level( &self, a0: u8, b0: u8, a1: u8, b1: u8, a2: u8, b2: u8, a3: u8, b3: u8, ) -> Result<QuadLogicLevels, LogicError>",
+      "effects": []
+    },
+    {
+      "name": "new_7474",
+      "signature": "pub const fn new_7474() -> Self",
+      "effects": []
+    },
+    {
+      "name": "dff_step_channel",
+      "signature": "pub fn dff_step_channel( &mut self, channel: usize, clk: u8, d: u8, pre_b: u8, clr_b: u8, ) -> Result<FlipFlopOutput, LogicError>",
+      "effects": []
+    },
+    {
+      "name": "dff_step_channel_gate_level",
+      "signature": "pub fn dff_step_channel_gate_level( &mut self, channel: usize, clk: u8, d: u8, pre_b: u8, clr_b: u8, ) -> Result<FlipFlopOutput, LogicError>",
+      "effects": []
+    },
+    {
+      "name": "dff_q_channel",
+      "signature": "pub fn dff_q_channel(&self, channel: usize) -> Result<u8, LogicError>",
+      "effects": []
+    },
+    {
+      "name": "dff_q_bar_channel",
+      "signature": "pub fn dff_q_bar_channel(&self, channel: usize) -> Result<u8, LogicError>",
+      "effects": []
+    },
+    {
+      "name": "dff_reset_channel",
+      "signature": "pub fn dff_reset_channel(&mut self, channel: usize) -> Result<(), LogicError>",
+      "effects": []
+    },
+    {
+      "name": "new_7490",
+      "signature": "pub const fn new_7490() -> Self",
+      "effects": []
+    },
+    {
+      "name": "decade_clock_a",
+      "signature": "pub fn decade_clock_a(&mut self, clk_a: u8) -> Result<u8, LogicError>",
+      "effects": []
+    },
+    {
+      "name": "decade_clock_b",
+      "signature": "pub fn decade_clock_b(&mut self, clk_b: u8) -> Result<DecadeOutputs, LogicError>",
+      "effects": []
+    },
+    {
+      "name": "decade_clock_a_gate_level",
+      "signature": "pub fn decade_clock_a_gate_level(&mut self, clk_a: u8) -> Result<u8, LogicError>",
+      "effects": []
+    },
+    {
+      "name": "decade_clock_b_gate_level",
+      "signature": "pub fn decade_clock_b_gate_level(&mut self, clk_b: u8) -> Result<DecadeOutputs, LogicError>",
+      "effects": []
+    },
+    {
+      "name": "decade_reset",
+      "signature": "pub fn decade_reset( &mut self, r0_1: u8, r0_2: u8, r9_1: u8, r9_2: u8, ) -> Result<(), LogicError>",
+      "effects": []
+    },
+    {
+      "name": "decade_step_bcd",
+      "signature": "pub fn decade_step_bcd(&mut self, clk: u8) -> Result<DecadeOutputs, LogicError>",
+      "effects": []
+    },
+    {
+      "name": "decade_step_bcd_gate_level",
+      "signature": "pub fn decade_step_bcd_gate_level(&mut self, clk: u8) -> Result<DecadeOutputs, LogicError>",
+      "effects": []
+    },
+    {
+      "name": "decade_read_bcd",
+      "signature": "pub const fn decade_read_bcd(&self) -> u8",
+      "effects": []
+    },
+    {
+      "name": "decade_outputs",
+      "signature": "pub const fn decade_outputs(&self) -> DecadeOutputs",
+      "effects": []
+    },
+    {
+      "name": "new_7493",
+      "signature": "pub const fn new_7493() -> Self",
+      "effects": []
+    },
+    {
+      "name": "binary_clock_a",
+      "signature": "pub fn binary_clock_a(&mut self, clk_a: u8) -> Result<u8, LogicError>",
+      "effects": []
+    },
+    {
+      "name": "binary_clock_b",
+      "signature": "pub fn binary_clock_b(&mut self, clk_b: u8) -> Result<BinaryOutputs, LogicError>",
+      "effects": []
+    },
+    {
+      "name": "binary_clock_a_gate_level",
+      "signature": "pub fn binary_clock_a_gate_level(&mut self, clk_a: u8) -> Result<u8, LogicError>",
+      "effects": []
+    },
+    {
+      "name": "binary_clock_b_gate_level",
+      "signature": "pub fn binary_clock_b_gate_level(&mut self, clk_b: u8) -> Result<BinaryOutputs, LogicError>",
+      "effects": []
+    },
+    {
+      "name": "binary_reset",
+      "signature": "pub fn binary_reset(&mut self, r0_1: u8, r0_2: u8) -> Result<(), LogicError>",
+      "effects": []
+    },
+    {
+      "name": "binary_step_4bit",
+      "signature": "pub fn binary_step_4bit(&mut self, clk: u8) -> Result<BinaryOutputs, LogicError>",
+      "effects": []
+    },
+    {
+      "name": "binary_step_4bit_gate_level",
+      "signature": "pub fn binary_step_4bit_gate_level(&mut self, clk: u8) -> Result<BinaryOutputs, LogicError>",
+      "effects": []
+    },
+    {
+      "name": "binary_read_u8",
+      "signature": "pub const fn binary_read_u8(&self) -> u8",
+      "effects": []
+    },
+    {
+      "name": "binary_outputs",
+      "signature": "pub const fn binary_outputs(&self) -> BinaryOutputs",
+      "effects": []
+    },
+    {
+      "name": "new_74153",
+      "signature": "pub const fn new_74153() -> Self",
+      "effects": []
+    },
+    {
+      "name": "mux_eval_section",
+      "signature": "pub fn mux_eval_section( &self, section: usize, s0: u8, s1: u8, strobe_b: u8, c0: u8, c1: u8, c2: u8, c3: u8, ) -> Result<u8, LogicError>",
+      "effects": []
+    },
+    {
+      "name": "mux_eval_section_gate_level",
+      "signature": "pub fn mux_eval_section_gate_level( &self, section: usize, s0: u8, s1: u8, strobe_b: u8, c0: u8, c1: u8, c2: u8, c3: u8, ) -> Result<u8, LogicError>",
+      "effects": []
+    },
+    {
+      "name": "mux_eval_dual",
+      "signature": "pub fn mux_eval_dual( &self, s0: u8, s1: u8, str1: u8, in1: QuadLogicLevels, str2: u8, in2: QuadLogicLevels, ) -> Result<DualLogicLevels, LogicError>",
+      "effects": []
+    },
+    {
+      "name": "mux_eval_dual_gate_level",
+      "signature": "pub fn mux_eval_dual_gate_level( &self, s0: u8, s1: u8, str1: u8, in1: QuadLogicLevels, str2: u8, in2: QuadLogicLevels, ) -> Result<DualLogicLevels, LogicError>",
+      "effects": []
+    },
+    {
+      "name": "new_arcade_sync",
+      "signature": "pub fn new_arcade_sync(master_clock_hz: u64) -> Result<Self, LogicError>",
+      "effects": []
+    },
+    {
+      "name": "sync_step_master_clock",
+      "signature": "pub fn sync_step_master_clock(&mut self) -> RasterBeamPosition",
+      "effects": []
+    },
+    {
+      "name": "sync_step_master_clock_gate_level",
+      "signature": "pub fn sync_step_master_clock_gate_level(&mut self) -> RasterBeamPosition",
+      "effects": []
+    },
+    {
+      "name": "sync_step_pixel_clocks",
+      "signature": "pub fn sync_step_pixel_clocks(&mut self, count: u32) -> RasterBeamPosition",
+      "effects": []
+    },
+    {
+      "name": "sync_raster_state",
+      "signature": "pub const fn sync_raster_state(&self) -> RasterBeamPosition",
+      "effects": []
+    },
+    {
+      "name": "sync_hsync",
+      "signature": "pub const fn sync_hsync(&self) -> bool",
+      "effects": []
+    },
+    {
+      "name": "sync_vsync",
+      "signature": "pub const fn sync_vsync(&self) -> bool",
+      "effects": []
+    },
+    {
+      "name": "sync_hblank",
+      "signature": "pub const fn sync_hblank(&self) -> bool",
+      "effects": []
+    },
+    {
+      "name": "sync_vblank",
+      "signature": "pub const fn sync_vblank(&self) -> bool",
+      "effects": []
+    },
+    {
+      "name": "sync_is_active_video",
+      "signature": "pub const fn sync_is_active_video(&self) -> bool",
+      "effects": []
+    },
+    {
+      "name": "sync_reset",
+      "signature": "pub fn sync_reset(&mut self)",
+      "effects": []
+    },
+    {
+      "name": "new_paddle_pot_adc",
+      "signature": "pub fn new_paddle_pot_adc( clock_hz: u64, capacitance_pf: u64, max_pot_resistance_ohms: u64, ) -> Result<Self, LogicError>",
+      "effects": []
+    },
+    {
+      "name": "paddle_trigger_discharge",
+      "signature": "pub fn paddle_trigger_discharge(&mut self)",
+      "effects": []
+    },
+    {
+      "name": "paddle_charge_duration_clocks",
+      "signature": "pub fn paddle_charge_duration_clocks( &self, pot_normalized_u16: u16, ) -> Result<u64, LogicError>",
+      "effects": []
+    },
+    {
+      "name": "paddle_step_clock",
+      "signature": "pub fn paddle_step_clock( &mut self, pot_normalized_u16: u16, ) -> Result<PaddleAdcState, LogicError>",
+      "effects": []
+    },
+    {
+      "name": "paddle_is_triggered",
+      "signature": "pub const fn paddle_is_triggered(&self) -> bool",
+      "effects": []
+    },
+    {
+      "name": "paddle_capacitor_voltage_q16",
+      "signature": "pub fn paddle_capacitor_voltage_q16(&self) -> u32",
+      "effects": []
+    },
+    {
+      "name": "paddle_reset",
+      "signature": "pub fn paddle_reset(&mut self)",
+      "effects": []
+    },
+    {
+      "name": "nand_eval_op",
+      "signature": "pub fn nand_eval_op(channel: usize, a: u8, b: u8) -> Result<u8, LogicError>",
+      "effects": []
+    },
+    {
+      "name": "nor_eval_op",
+      "signature": "pub fn nor_eval_op(channel: usize, a: u8, b: u8) -> Result<u8, LogicError>",
+      "effects": []
+    },
+    {
+      "name": "mux_eval_op",
+      "signature": "pub fn mux_eval_op( section: usize, s0: u8, s1: u8, str_b: u8, c0: u8, c1: u8, c2: u8, c3: u8, ) -> Result<u8, LogicError>",
+      "effects": []
+    },
+    {
+      "name": "dff_step_op",
+      "signature": "pub fn dff_step_op( pre_b: u8, clr_b: u8, clk_edge: bool, d: u8, prev_q: u8, ) -> Result<u8, LogicError>",
+      "effects": []
+    },
+    {
+      "name": "bcd_step_op",
+      "signature": "pub fn bcd_step_op(current_bcd: u8) -> Result<u8, LogicError>",
+      "effects": []
+    },
+    {
+      "name": "binary_step_op",
+      "signature": "pub fn binary_step_op(current_val: u8) -> Result<u8, LogicError>",
+      "effects": []
+    },
+    {
+      "name": "sync_next_dot",
+      "signature": "pub const fn sync_next_dot(current_dot: u16) -> u16",
+      "effects": []
+    },
+    {
+      "name": "paddle_calc_clocks",
+      "signature": "pub fn paddle_calc_clocks( pot_norm: u16, clk_hz: u64, cap_pf: u64, max_r: u64, ) -> Result<u64, LogicError>",
+      "effects": []
+    }
+  ],
+  "unconditional_roots": [],
+  "banned_construct_exceptions": [],
+  "label": "proved"
+}

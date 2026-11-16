@@ -1,0 +1,19 @@
+{
+  "schema": "warrant-assurance-profile-v1",
+  "name": "comparison",
+  "kind": "transform",
+  "rows": {
+    "326": {
+      "applicability": "excluded",
+      "reason": "arbitrary buffer lengths: comparison functions accept arbitrary slice lengths without fixed sub-strength keys"
+    },
+    "327": {
+      "applicability": "excluded",
+      "reason": "primitive comparison: package implements constant-time comparison primitives rather than legacy ciphers"
+    },
+    "407": {
+      "applicability": "excluded",
+      "reason": "linear complexity: algorithms operate in strict linear time O(n) independent of input values"
+    }
+  }
+}

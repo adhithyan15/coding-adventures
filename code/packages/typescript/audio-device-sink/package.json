@@ -1,27 +1,23 @@
 {
   "name": "@coding-adventures/audio-device-sink",
   "version": "0.1.0",
-  "description": "Backend-neutral PCM playback primitives",
+  "description": "Backend-neutral audio device sink contract, PCM validation, and noop playback reporting",
   "type": "module",
-  "main": "src/index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
   "scripts": {
     "build": "tsc",
-    "test": "vitest run",
-    "test:coverage": "vitest run --coverage"
+    "test": "node --experimental-strip-types --test tests/index.test.ts"
   },
-  "keywords": [
-    "audio",
-    "pcm",
-    "sink",
-    "computer-science",
-    "education"
-  ],
-  "author": "Adhithya Rajasekaran",
   "license": "MIT",
-  "dependencies": {},
+  "author": "Adhithya Rajasekaran",
   "devDependencies": {
-    "@vitest/coverage-v8": "^4.1.11",
-    "typescript": "^5.0.0",
-    "vitest": "^4.1.11"
+    "typescript": "^5.4.0"
   }
 }
