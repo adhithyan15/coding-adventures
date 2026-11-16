@@ -12319,6 +12319,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "sim-discrete-audio-timer"
+version = "0.1.0"
+dependencies = [
+ "audio-mixer-realtime",
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "logic-gates",
+ "oscillator",
+ "pcm-audio",
+]
+
+[[package]]
 name = "sim-pdp8-ge225-io-bridge"
 version = "0.1.0"
 dependencies = [
