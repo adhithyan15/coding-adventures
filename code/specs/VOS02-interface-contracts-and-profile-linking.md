@@ -172,9 +172,11 @@ author who may restate it may weaken it (section 1.3, option (b)).
 
 **R2. The implementation document is generated.** `code/specs/<impl>.warrant` is
 assembled as the contract block, then the hand-written **implementation block**,
-then the obligations blocks the implementation carries. Blocks 1 and 3 of R1 are
+then the obligations blocks the implementation carries. Blocks 1 and 2 of R1 are
 copied verbatim between marker comments (section 2.3) with their SHA-256
-recorded. A regeneration check (`vos-link check-doc`, section 10) fails on drift,
+recorded. Block 3 (`contract.vos`) is **not** copied: it is not Warrant, it has no place
+in a `.warrant` document, and its digest is pinned by the lock (`ceilings-sha256`,
+section 6.3), so a change to a ceiling regenerates no document (section 10.1, D-GD1). A regeneration check (`vos-link check-doc`, section 10) fails on drift,
 in the style of `--check-module` (VER23a section 2.1) and `gen_evidence --check`
 (VER04h section 1).
 
@@ -536,6 +538,8 @@ A crate declares its kind in its `Cargo.toml`:
 # vos.toml in the crate directory (Cargo.toml carries no VOS keys)
 kind = "production"             # or "reference", "any"
 evidence-features = ["ghost"]   # features that exist for evidence only; must be in the central list of section 7.3
+contract = "vos-ready-contract" # the contract package this implementation realises (an implementation only)
+obligations = ["canonical", "policy", "safety"]   # the tiers gen-doc embeds; sorted, unique, each a `tier` of contract.vos
 ```
 
 The kind is **checked by `vos-link`**, not merely trusted, with the rules listed under
@@ -1307,6 +1311,112 @@ vos-link check-owners                                                # CODEOWNER
 `vos-link` spawns any subprocess from an **argv array, never a shell**. The image build
 command (`vos-link build`, the recorder, the hermetic tree) and `sh16`'s build-time
 checks are specified by VOS22. Every path it touches is contained as in section 6.8.
+
+### 10.1 `gen-doc` and `check-doc`, as built (VOS-033)
+
+Section 2 left these points open; the decisions, with their reasons, are below. They are
+the contract of `vos-manifest` (the pure part) and `vos-link` (the file part), and every
+one has a test.
+
+**D-GD1. What is copied, and what is not.** The document holds blocks 1 and 2 of R1 and
+the implementation block, nothing else (R2 as amended). `contract.vos` is parsed (it names
+the tiers and the instance) and pinned by digest in the lock, never copied.
+
+**D-GD2. Which crate names which contract, and which tiers are embedded.** The crate's
+`vos.toml` has two more keys, both required for kind `production`, `reference` and `any`:
+`contract = "<package>"` (an `IDENT` naming `code/packages/rust/<package>`, whose own
+`vos.toml` must say `kind = "contract"`) and `obligations = [..]` (the tiers `gen-doc`
+embeds, in sorted order, each one a `tier` row of the contract's `contract.vos`). The
+authority over what a document *carries* stays R6 and section 2.3: `carries` is parsed
+from the claims, so a wrong `obligations` list produces a finding, never a silent pass.
+`vos-shape-check` accepts both keys (its closed list grows by two).
+
+**D-GD3. Where files live.** The implementation directory must be exactly
+`<root>/code/packages/rust/<impl>` and the contract directory exactly
+`<root>/code/packages/rust/<contract>`; the document is exactly
+`<root>/code/specs/<impl>.warrant`. `<root>` is derived from the implementation directory
+(four levels up) or given with `--root`, which must then agree. `<impl>` and `<contract>`
+are `IDENT`s; in the document they appear with `-` replaced by `_` (the header
+`warrant vos_ready_bitmap v1`, the marker `contract-package=vos_ready_contract`), as the
+listing of section 2.4 shows. Reads are bounded and never follow a symlink; the write goes
+through a fresh file (`create_new`) in `code/specs` and a rename, and a symlink or a
+non-regular file already at the target fails.
+
+**D-GD4. The document trailer.** After the last obligations block `gen-doc` writes the
+two rows `assume platform:` / `none` and `assume environment:` / `none` (R7: an
+implementation assumes nothing). An implementation block may declare no `assume` row;
+`check-doc` requires exactly one row of each, after the last marker, both `none`.
+
+**D-GD5. The markers are a grammar, not a scanner.** The marker skeleton of section 2.3 is
+`code/grammars/vos-document/` (a token grammar whose line tokens are the seven exact
+markers, a catch-all token for any other line containing `-- vos02:`, newline and plain
+line, and a parser grammar that fixes the order, so each marker appears once and in its
+place). The tier order and uniqueness, which a grammar cannot express, are a post-parse
+check. A part is lexed with the same token grammar and admitted only if it lexes to plain
+lines: so a forged marker, an exact one or a near miss, **anywhere in a line**, including
+inside a string or a trailing comment, is refused in a part and, in a document, fails
+`check-doc`. `contract.vos` is `code/grammars/vos-contract/`, read the same way (D-GD6).
+
+**D-GD6. `contract.vos`.** Tokens are `NAME` (`[A-Za-z][A-Za-z0-9_-]*`), `DEC`
+(`0` or a digit run with no leading zero, at most 20 digits; the value must also fit
+`u64`, which a grammar cannot count and a post-token check does) and `NEWLINE`; a space is
+skipped by the lexer, a tab, a CR or any other byte is a lexical error. The word classes
+(`PKG`/`IDENT` hyphen-only, `OPNAME` underscore-only, `KEY` letters, digits and underscore,
+each at most 32 bytes) are a post-token check on the value, because one lexical pattern
+cannot know which row it is in. Canonical form is the section 6.1 discipline: the
+grammar accepts some non-canonical spellings (a doubled space, a blank line), so the **re-emitted** text must equal the input
+byte for byte, which rejects them all, and sorted order and duplicates are explicit
+errors first, so the message names the row. The digest of a contract is the SHA-256 of
+those canonical bytes.
+
+**D-GD7. `claim_sha256`.** VER29 section 5.3 defines it, and VER29 slice 2 is not
+implemented, so `vos-manifest` computes it with the same definition until the VER29
+function exists (VOS-D056): the real (non-layout) tokens of the claim declaration, from the
+Warrant lexer and layout pass of `warrant-grammar`, with comments already absent, joined
+by single spaces, hashed with SHA-256. The tokens inside the claim's source span are used;
+`Indent`, `Dedent` and `Newline` are layout, not text, so re-wrapping a claim changes
+no digest, and renaming a token or changing a literal changes it.
+
+**D-GD8. What `check-doc` checks, in order, and what each finding is.** All run on the
+document on disk; every finding is reported, none stops the others except where a later
+check needs an earlier result.
+
+| Code | Check |
+|---|---|
+| CD01 | the document file exists and is a regular file; its marker skeleton parses (order, once each, no forged marker, tiers sorted and unique) |
+| CD02 | each marker digest equals the SHA-256 of the lines between its markers |
+| CD03 | the contract block and each obligations block equal the contract package's `.part` file for that tier, byte for byte |
+| CD04 | the document parses and type-checks with `warrant-grammar`; its trailer is D-GD4's |
+| CD05 | no claim in the document carries the name of a contract obligation with a different `claim_sha256` (NC2) |
+| CD06 | `carries` is computed from the parsed claims; a tier is carried when every obligation of the tier appears with the contract's `claim_sha256`, and a **partly** carried tier is a finding |
+| CD07 | the R6 rules that the document alone decides (below) |
+| CD08 | regeneration: the document equals, byte for byte, what `gen-doc` would write now |
+
+R6, as far as the document goes. `kind = production`: the document carries every
+`canonical` obligation and no `any` obligation, the crate name does not end in `-any`, and
+**every field of `Impl` is in the cone of `build`**: the `build` model must be an `Impl(..)`
+constructor application, and every argument must mention the model's parameter (a field set
+from a constant is an oracle or a register, not a function of M). `kind = any`: the document
+carries every `any` obligation, **no** `canonical` claim (by `claim_sha256`), the crate name
+ends in `-any`, and **at least one** `Impl` field is outside the cone of `build` (the oracle
+the `any` block names). `kind = reference`: the document has no `bound` row. A `build` that is
+not an `Impl(..)` application cannot be decided structurally and fails closed for
+`production` and `any`. Not decided here, and so not claimed: that `alpha` reads every field
+(the ghost wrapper, SH17), that `evidence.bindings` binds no oracle write, the registry
+cross-check of kind and class (VOS-D030), the manifest row and the `image` rule (VOS-034).
+
+**D-GD9. Exit codes** are `vos-shape-check`'s: 0 no findings, 1 findings, 2 no verdict.
+No verdict means a rule could not even be applied: an unreadable path, a path outside the
+repository or through a symlink, a file over its cap, a usage error. A rule that fails on
+bytes that were admitted (a forged marker, a malformed contract, a drifted document) is a
+finding. `gen-doc` runs every check but CD08 on the document it would write, and writes
+nothing if any finding exists.
+
+**D-GD10. What `vos-sched-contract-check` keeps.** Its string-joining assembler is replaced
+by the tool's (`vos_manifest::document::assemble`), and its marker-discipline stand-in by
+the tool's part admission. The crate stays: the ground evaluation of the lemmas and
+obligations over Warrant models (about a minute) is a semantic suite, not a document check,
+and the tool's own tests should stay fast.
 
 ---
 
