@@ -193,10 +193,10 @@ fn every_checked_in_lane_loads_with_its_named_checks_and_no_release_claim() {
         );
         assert_eq!(lane.readiness.passed, READINESS_CHECKS.to_vec());
         assert!(!lane.readiness.release_ready);
-        assert_eq!(lane.readiness.sandbox, "not-armed");
+        assert_eq!(lane.readiness.sandbox, "absent");
         let text = lane.render_readiness();
         assert!(text.contains("release_ready: false"), "{text}");
-        assert!(text.contains("sandbox: not-armed"), "{text}");
+        assert!(text.contains("sandbox: absent"), "{text}");
         assert!(text.contains("makes no claim"), "{text}");
         for unclaimed in UNCLAIMED {
             assert!(text.contains(unclaimed), "{text} lacks {unclaimed}");

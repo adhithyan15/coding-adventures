@@ -1287,7 +1287,7 @@ result.
 
 `build-routing` is a text search. It shows the routing was written; it does not
 show the BUILD ran or passed. Readiness output always ends with the unclaimed
-list: toolchain authenticity, build execution and the sandbox. The sandbox is `not-armed` (section 12) in every lane
+list: toolchain authenticity, build execution and the sandbox. The sandbox is `absent` (not armed, section 12) in every lane
 today, so `release_ready` is `false` and no readiness result can be read as
 release-ready. The loader makes no authenticity claim about the source, the
 build or the toolchain beyond the named checks above.
@@ -1334,8 +1334,7 @@ that exists but is unreadable, a link or malformed is an error.
 The sandbox rung is `absent` in every entry, live or not, and `release_ready`
 is `false`: no lane arms a runtime jail yet (section 12, CAP-RT-1xx), and
 no readiness result is release-ready without it. It is never reported as passing.
-The loader's own `sandbox: not-armed` (section 8.2) and the report's `absent` say
-the same thing.
+The loader's own `sandbox` field (section 8.2) uses the same word.
 
 **Checking.** Two layers, both in `--check`. The offline shape check
 (`verify_assurance_report`) requires a sorted, unique lane list; `package` equal
@@ -1703,8 +1702,8 @@ this is the expectation each lane's rollout row must meet):
 | haskell, ocaml, swift, dart | OS sandbox around the toolchain-produced binary / VM |
 
 Because VER08b is not on `main`, a lane's `release-ready` status in §13 is
-conditioned on it: before VER08b lands, `sandbox` is `not-armed` and the
-report says so; no lane can be `release-ready` with `sandbox: not-armed`.
+conditioned on it: before VER08b lands, `sandbox` is `absent` (not armed) and the
+report says so; no lane can be `release-ready` with `sandbox: absent`.
 
 ## 13. Rollout order and acceptance per lane
 

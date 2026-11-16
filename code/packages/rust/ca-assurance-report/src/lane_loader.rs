@@ -1067,7 +1067,7 @@ pub struct LaneReadiness {
     /// Always `false` today: the sandbox rung (VER04i 12) is not armed in any
     /// lane, and no lane is release-ready without it.
     pub release_ready: bool,
-    /// Always `"not-armed"` until VER08b lands.
+    /// Always `"absent"` (no sandbox is armed) until VER08b lands.
     pub sandbox: &'static str,
 }
 
@@ -1095,7 +1095,7 @@ impl LoadedLane {
              static checks passed: {checks}\n\
              cases_by_label: {labels}\n\
              release_ready: {ready}\n\
-             sandbox: {sandbox}\n\
+             sandbox: {sandbox} (not armed: no lane runs under a runtime jail yet)\n\
              This loader makes no claim about the authenticity of the source, the build or the \
              toolchain beyond the checks named above.\n\
              not checked: {unclaimed}\n",
@@ -1129,6 +1129,22 @@ fn read_registry(
     let bytes = read_repo_file(repo_root, &path, MAX_MANIFEST_BYTES)?;
     let registry = lift("registry", parse_consumer_registry(&bytes))?;
     Ok((bytes, registry))
+}
+
+/// The consumer registry, or `None` when the registry file does not exist at
+/// all (an unknown lane universe, not an empty one).  A registry that exists
+/// but is a link, too large or malformed is an error, never `None`: a hostile
+/// checkout must not be able to hide its lanes by breaking the file.
+pub fn load_registry(
+    repo_root: &Path,
+) -> Result<Option<crate::lane_evidence::LaneConsumerRegistry>, LaneLoadError> {
+    let path = sibling(CORPUS_FILE, "consumers.json");
+    match fs::symlink_metadata(repo_root.join(&path)) {
+        Err(e) if e.kind() == std::io::ErrorKind::NotFound => Ok(None),
+        // Any other answer, including an error, goes through the safe reader,
+        // which names the problem.
+        _ => read_registry(repo_root).map(|(_, registry)| Some(registry)),
+    }
 }
 
 /// Load one registered lane: open its artifacts safely, run the raw digest
@@ -1259,7 +1275,7 @@ pub fn load_lane(repo_root: &Path, package: &str) -> Result<LoadedLane, LaneLoad
         readiness: LaneReadiness {
             passed: READINESS_CHECKS.to_vec(),
             release_ready: false,
-            sandbox: "not-armed",
+            sandbox: "absent",
         },
     })
 }

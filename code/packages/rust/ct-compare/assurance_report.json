@@ -614,6 +614,92 @@
       "rationale": "computed exemption (unapproved): floor requires proof to gate-level CPU netlist; backed by WIR-level 2-safety proofs at label bounded(128) and microbenchmark runs (no retired-instruction evidence is claimed: hardware counters are host-dependent and recorded in evidence/bench-manifest.json)"
     }
   ],
+  "lanes": [
+    {
+      "cases_by_label": {
+        "bounded-set": 506572,
+        "full": 65537
+      },
+      "checks": [
+        "paths-contained",
+        "registry-active",
+        "corpus-digests",
+        "corpus-join",
+        "binding-digest",
+        "runner-identity",
+        "labels-bound",
+        "build-routing",
+        "source-fresh",
+        "runner-source-fresh"
+      ],
+      "lane": "go",
+      "package": "go/ct-compare",
+      "release_ready": false,
+      "rung": "live",
+      "sandbox": "absent",
+      "unclaimed": [
+        "toolchain authenticity",
+        "build execution",
+        "sandbox"
+      ]
+    },
+    {
+      "cases_by_label": {
+        "bounded-set": 506572,
+        "full": 65537
+      },
+      "checks": [
+        "paths-contained",
+        "registry-active",
+        "corpus-digests",
+        "corpus-join",
+        "binding-digest",
+        "runner-identity",
+        "labels-bound",
+        "build-routing",
+        "source-fresh",
+        "runner-source-fresh"
+      ],
+      "lane": "python",
+      "package": "python/ct-compare",
+      "release_ready": false,
+      "rung": "live",
+      "sandbox": "absent",
+      "unclaimed": [
+        "toolchain authenticity",
+        "build execution",
+        "sandbox"
+      ]
+    },
+    {
+      "cases_by_label": {
+        "bounded-set": 506572,
+        "full": 65537
+      },
+      "checks": [
+        "paths-contained",
+        "registry-active",
+        "corpus-digests",
+        "corpus-join",
+        "binding-digest",
+        "runner-identity",
+        "labels-bound",
+        "build-routing",
+        "source-fresh",
+        "runner-source-fresh"
+      ],
+      "lane": "typescript",
+      "package": "typescript/ct-compare",
+      "release_ready": false,
+      "rung": "live",
+      "sandbox": "absent",
+      "unclaimed": [
+        "toolchain authenticity",
+        "build execution",
+        "sandbox"
+      ]
+    }
+  ],
   "package": "rust/ct-compare",
   "profile": "comparison",
   "profile_sha256": "5530f1ea98fc785ce89646b3672221b8e56db6c04b259cf4236a8a3c0fbbd5f1",

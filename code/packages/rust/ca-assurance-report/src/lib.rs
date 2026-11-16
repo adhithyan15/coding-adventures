@@ -16,6 +16,7 @@ pub mod evidence;
 pub mod json;
 pub mod lane_evidence;
 pub mod lane_loader;
+pub mod lane_report;
 pub mod matrix;
 pub mod profile;
 pub mod registry;
@@ -150,6 +151,9 @@ pub fn generate_package_report(
         weaknesses,
         claims,
         rungs,
+        // Derived from the consumer registry and the lane loader only (VER04i
+        // 8.3): never from the Rust proof, effect or weakness evidence above.
+        lanes: evidence.lanes.clone(),
         public_symbols_without_claims: vec![],
         exemptions,
         verdict: "report-only".into(),
