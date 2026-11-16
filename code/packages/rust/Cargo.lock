@@ -14341,6 +14341,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "tilemap2d"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "paint-batch-tiles",
+ "paint-palette-blend",
+ "palette-indexed",
+ "pixel-container",
+]
+
+[[package]]
 name = "time"
 version = "0.3.55"
 source = "registry+https://github.com/rust-lang/crates.io-index"
