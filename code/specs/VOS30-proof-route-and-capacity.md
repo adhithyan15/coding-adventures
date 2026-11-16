@@ -635,7 +635,8 @@ witness is run on the concrete machine:
    `riscv-simulator` (the real simulator runs the image from the witness state and
    takes the path). A path with no replayed witness is not feasible. (VOS-029 may
    justify one witness per entry instead, in its own spec, if path counts make
-   per-path replay impractical; the default is per path.) An entry with no
+   per-path replay impractical, **never for a path whose PC is claimed
+   infeasible**; the default is per path.) An entry with no
    feasible path proves nothing. **An infeasibility claim is accepted only if the
    checker's regenerated path condition is UNSAT** (with a certificate); the
    manifest's "infeasible" flag is never enough.
@@ -788,12 +789,18 @@ only data; nothing is accepted because a field says so. The checker:
    (both tables wrong the same way) passes. That is why the `riscv-simulator`
    differential and the gate-level twin (`riscv-gatelevel`, VER13 section 4.3)
    exist; independent code is not claimed to rule it out.
+   **Binding of the refuted CNF.** The CNF that `drat-check` refutes is the
+   checker's own Tseitin encoding of its regenerated AIG (canonical variable
+   numbering derived from the canonical AIG order), or is verified clause-for-clause
+   equal to it up to a stated renaming. An AIG hash alone, without this binding, is
+   not accepted: it would show the AIG is right and say nothing about the formula
+   the certificate is about.
    **Structural parsing instead of regeneration** is allowed for exactly these
    kinds and no others: `witness` (the model is evaluated against the regenerated
-   formula), `coverage` (against the regenerated path list), `step-bound`, and the
-   image checks of section 3.7. Every machine-segment, `base`, `final`,
-   `model-decomposition` and `access` kind **must be regenerated**; a kind not
-   listed is rejected.
+   formula), `step-bound` and the image checks of section 3.7. Every
+   machine-segment, `base`, `final`, `model-decomposition`, `access` and
+   **`coverage`** kind **must be regenerated** (coverage from the regenerated path
+   conditions and `pre`, with the binding above); a kind not listed is rejected.
 2. **Verifies the hypothesis pairing** as instances of one relation under the
    version-indexed mapping (section 4.2 condition 1): it re-derives `R_j` once and
    checks that the predecessor's negated conclusion and the successor's hypothesis
@@ -1160,9 +1167,10 @@ the miter output, not taken from the generator, and a `collapsed` flag: the CNF
 has at most two clauses, or the solver used zero conflicts. A collapsed row is
 reported with `result = "collapsed"` and excluded from every threshold and table
 statistic. Experiment B1 (a sequence against itself, divergence 0%) *must* report
-collapsed; it measures build time and memory only. `collapsed_reason` is a closed
-enum (`identical-structure`, `frame-untouched`, `constant-fold`) and `check`
-verifies it by re-deriving it from the instance.
+collapsed; it measures build time and memory only. `collapsed_reason` is the
+four-value closed enum of the section 4.5 table (`identical-structure`,
+`constant-fold`, `frame-untouched`, `propagation-only`) and `check` verifies it
+structurally, by the allowed-when rules of that table, from the instance.
 
 **G2. Liveness of generated programs, measured semantically.** Generators keep
 programs live: inject a fresh symbolic load every `6` instructions, and cap the
@@ -1172,8 +1180,10 @@ cone can mention an input bit and still ignore it):
 
 * **Declared bits** come from the generator's *input list* (the symbolic registers
   and loads it created), enumerated by the tool, never a self-reported count.
-* **Sensitivity** is measured by **random simulation of the output cone with
-  per-input-bit flips**: for each declared bit, over `256` random assignments flip
+* **Sensitivity** is defined on **each side's own output cone** (the code side
+  and the reference side separately), **not on the miter output**: an UNSAT miter
+  is constant 0 and would wrongly mark every row collapsed. It is measured by
+  **random simulation of the cone with per-input-bit flips**: for each declared bit, over `256` random assignments flip
   that bit and see whether any output bit changes; a bit is *sensitive* if it ever
   does. (Where an instance is small, a SAT query "two inputs differing only in
   this bit give different outputs" replaces the sampling.) `entropy_bits` is the
