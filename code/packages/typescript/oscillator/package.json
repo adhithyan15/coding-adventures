@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/oscillator",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Continuous waveforms, phase accumulator state, deterministic PRNG noise, and uniform samplers",
   "type": "module",
   "main": "dist/index.js",
@@ -11,7 +11,9 @@
   },
   "author": "Adhithya Rajasekaran",
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "trig": "file:../trig"
+  },
   "devDependencies": {
     "@types/node": "^24.0.0",
     "typescript": "^5.0.0"

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.0 - 2026-11-16
+
+### Changed
+- Mode and noise sines come from the bit-exact `trig` package (TRIG-REF-1, PHY00a) instead of `Math.sin`: byte-identical to the Python and Rust lanes. New dependency `trig` (`file:../trig`).
+
 ## Unreleased
 
 ### Fixed

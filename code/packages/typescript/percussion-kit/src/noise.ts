@@ -2,6 +2,7 @@
  * Deterministic pseudo-random noise burst models (MUS07 §4.1).
  */
 
+import { sin } from "trig/dist/trig.js";
 import { splitmix64Noise } from "./splitmix64.js";
 import type { NoiseAlgorithm } from "./types.js";
 import { validateDuration, validateNonNegative } from "./validation.js";
@@ -14,7 +15,7 @@ export function pseudoNoise(sampleIndex: number, seed: number | bigint): number 
   const seedNum = typeof seed === "bigint" ? Number(seed & 0xffff_ffffn) : Number(seed);
   const phase =
     (sampleIndex + 1.0) * (seedNum * 0.1618033988749895 + 0.61803398875);
-  const val = Math.sin(2.0 * Math.PI * phase) * 43758.5453123;
+  const val = sin(2.0 * Math.PI * phase) * 43758.5453123;
   const frac = val - Math.floor(val);
   return 2.0 * frac - 1.0;
 }

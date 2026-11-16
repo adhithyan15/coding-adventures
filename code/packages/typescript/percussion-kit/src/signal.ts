@@ -3,6 +3,7 @@
  * Zero allocations in valueAt().
  */
 
+import { sin } from "trig/dist/trig.js";
 import {
   type ContinuousSignal,
   SampleBuffer,
@@ -73,7 +74,7 @@ export class PercussionSignal implements ContinuousSignal {
       raw +=
         mode.amplitude *
         Math.exp(-time / mode.decaySeconds) *
-        Math.sin(TWO_PI * (mode.frequencyHz * time + mode.phaseCycles));
+        sin(TWO_PI * (mode.frequencyHz * time + mode.phaseCycles));
     }
 
     if (this.voice.noiseProfile !== null) {
