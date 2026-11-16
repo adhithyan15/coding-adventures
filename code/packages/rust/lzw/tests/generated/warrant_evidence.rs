@@ -42,7 +42,20 @@ use coding_adventures_test_bootstrap::Verdict;
 use std::cell::Cell;
 use std::collections::BTreeMap;
 use std::panic::{catch_unwind, AssertUnwindSafe};
-use std::sync::Mutex;
+use std::sync::{Mutex, MutexGuard};
+
+/// Lock `m`, recovering the data if a panicking thread poisoned it (WD-HARN1).
+///
+/// Every lock in this harness guards plain bookkeeping (registered tests,
+/// per-test statistics, a reply slot) that is consistent after any single
+/// operation, and a panic is an expected event here: the subject under test is
+/// not trusted to be total, and a panicking instance is reported as a failed
+/// verdict.  `lock().unwrap()` would turn one such panic into a cascade of
+/// panics (or, in the observer's reply slot, a supervisor that never wakes), so
+/// the harness never unwraps a lock: it takes the guard out of the poison error.
+fn lock_or_recover<T>(m: &Mutex<T>) -> MutexGuard<'_, T> {
+    m.lock().unwrap_or_else(|e| e.into_inner())
+}
 
 /// Dynamic value of the Warrant pure profile (VER04e section 2.1 subset).
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -755,6 +768,27 @@ fn attacking<T>(op: &'static str, body: impl FnOnce() -> T) -> T {
 // instances without running them (so a shrinker cannot abandon a worker per
 // candidate), and at most `OBS_MAX_ABANDONED` workers, holding at most
 // `OBS_MAX_HELD` bytes between them, are ever abandoned in one process.
+//
+// WD-HARN1 (the 2026-11-14 Windows `rust/lzw` hang): the supervisor never waits
+// without a bound, and nothing it does can wait on an abandoned worker.
+//
+//   * Every wait is a `Condvar::wait_timeout` against one deadline of
+//     `OBS_CALL_TIMEOUT_MS`.  A call that has not answered by then (a worker that
+//     spins without allocating, one that deadlocks inside the subject, one that
+//     died) is a failed instance (`observer-timeout`), and its worker is
+//     abandoned exactly like a tripped one.  `OBS_MAX_TIMEOUTS` such calls
+//     refuse every later observed call, so a subject that never answers costs
+//     at most that many timeouts, not one per instance.
+//   * An abandoned worker is never joined: its `JoinHandle` is dropped at spawn
+//     (the thread is detached), its job channel is dropped when it is
+//     abandoned, and the process leaves through `process::exit`, which does not
+//     wait for threads (the generated `main` and libtest alike).
+//   * A worker only ever takes its own reply slot, and only for a few
+//     instructions.  No lock the supervisor, the TAP printer or the manifest
+//     writer needs (META, STATS, OBS_STATS, TABLE_STATS, SOURCE_SHA256) is ever
+//     taken on a worker thread, so an abandoned worker cannot hold one.
+//   * Every lock is taken through `lock_or_recover`, so a panic never poisons
+//     the harness into a hang or a second panic.
 // ---------------------------------------------------------------------------
 
 use std::alloc::{GlobalAlloc, Layout, System};
@@ -763,6 +797,15 @@ use std::alloc::{GlobalAlloc, Layout, System};
 const OBS_MAX_ABANDONED: usize = 64;
 /// Bytes the abandoned workers may hold between them (they are never freed).
 const OBS_MAX_HELD: u64 = 1 << 30;
+/// How long the supervisor waits for one observed call before it fails the
+/// instance (WD-HARN1).  Far above the slowest honest call (a 16 MiB
+/// decompression bomb under a debug build takes seconds) and far below any CI
+/// job limit: a hung call costs minutes, not hours.
+const OBS_CALL_TIMEOUT_MS: u64 = 120_000;
+/// The wait bound in force (a static so the supervisor's own tests can shorten it).
+static OBS_TIMEOUT_MS: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(OBS_CALL_TIMEOUT_MS);
+/// Calls that may time out in one process before observed calls are refused.
+const OBS_MAX_TIMEOUTS: usize = 3;
 
 /// The panic payload an observed instance raises when the observer fails it
 /// (`bound-heap-exceeded`, `bound-negative`, `output-bound-exceeded`).
@@ -831,9 +874,9 @@ fn obs_release(n: u64) {
 /// Report the attempted peak to the supervisor and park this thread forever.
 fn obs_trip(w: &Window, attempted: u64, held: u64) -> ! {
     if let Some(slot) = w.slot.get() {
-        if let Ok(mut g) = slot.state.lock() {
-            *g = Some(ObsReply::Tripped(attempted, held));
-        }
+        // Poison-proof: a skipped write here would leave the supervisor waiting.
+        // `lock_or_recover` neither allocates nor unwinds, as the allocator needs.
+        *lock_or_recover(&slot.state) = Some(ObsReply::Tripped(attempted, held));
         slot.ready.notify_one();
     }
     loop {
@@ -898,6 +941,7 @@ fn obs_spawn() -> Worker {
 
 static OBS_ABANDONED: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
 static OBS_HELD: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
+static OBS_TIMEOUTS: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
 
 thread_local! {
     static OBS_WORKER: std::cell::RefCell<Option<Worker>> = const { std::cell::RefCell::new(None) };
@@ -911,10 +955,19 @@ enum Exec {
     Tripped(u64),
     /// Too many workers (or bytes) are already abandoned: the call was not started.
     Refused,
+    /// The call did not answer within the wait timeout; its worker is abandoned.
+    TimedOut(std::time::Duration),
+    /// Earlier calls of this process already timed out: the call was not started.
+    RefusedStalled,
 }
 
-/// Run `job` on the observer worker inside an allocation window.
+/// Run `job` on the observer worker inside an allocation window, waiting at most
+/// `OBS_CALL_TIMEOUT_MS` for the answer.
 fn obs_exec(job: impl FnOnce() -> V + Send + 'static) -> Exec {
+    let timeout = std::time::Duration::from_millis(OBS_TIMEOUT_MS.load(std::sync::atomic::Ordering::SeqCst));
+    if OBS_TIMEOUTS.load(std::sync::atomic::Ordering::SeqCst) >= OBS_MAX_TIMEOUTS {
+        return Exec::RefusedStalled;
+    }
     if OBS_ABANDONED.load(std::sync::atomic::Ordering::SeqCst) >= OBS_MAX_ABANDONED
         || OBS_HELD.load(std::sync::atomic::Ordering::SeqCst) >= OBS_MAX_HELD
     {
@@ -924,7 +977,7 @@ fn obs_exec(job: impl FnOnce() -> V + Send + 'static) -> Exec {
         let mut held = cell.borrow_mut();
         let worker = held.get_or_insert_with(obs_spawn);
         let slot = worker.slot;
-        *slot.state.lock().unwrap() = None;
+        *lock_or_recover(&slot.state) = None;
         let wrapped: ObsJob = Box::new(move || {
             WIN.with(|w| {
                 w.cur.set(0);
@@ -936,13 +989,35 @@ fn obs_exec(job: impl FnOnce() -> V + Send + 'static) -> Exec {
                 w.active.set(false);
                 w.peak.get()
             });
-            *slot.state.lock().unwrap() = Some(ObsReply::Done(r, peak));
+            *lock_or_recover(&slot.state) = Some(ObsReply::Done(r, peak));
             slot.ready.notify_one();
         });
-        worker.jobs.send(wrapped).expect("the observer worker is alive");
-        let mut g = slot.state.lock().unwrap();
+        if worker.jobs.send(wrapped).is_err() {
+            // The worker is gone (its thread ended): drop it, so the next call
+            // starts a fresh one, and refuse this call instead of crashing.
+            *held = None;
+            return Exec::Refused;
+        }
+        // One deadline for the whole wait: a spurious wakeup does not extend it.
+        let deadline = std::time::Instant::now() + timeout;
+        let mut g = lock_or_recover(&slot.state);
         while g.is_none() {
-            g = slot.ready.wait(g).unwrap();
+            let left = deadline.saturating_duration_since(std::time::Instant::now());
+            if left.is_zero() {
+                drop(g);
+                // Abandon the worker without joining it: dropping the worker drops
+                // its job channel, so it exits if it ever finishes, and nothing
+                // here waits for it.
+                *held = None;
+                OBS_ABANDONED.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+                OBS_TIMEOUTS.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+                return Exec::TimedOut(timeout);
+            }
+            g = slot
+                .ready
+                .wait_timeout(g, left)
+                .unwrap_or_else(|e| e.into_inner())
+                .0;
         }
         let reply = g.take().expect("reply present");
         drop(g);
@@ -1067,6 +1142,17 @@ fn obs_observe(op: &str, heap: Option<i128>, job: impl FnOnce() -> V + Send + 's
             OBS_AGG.with(|a| a.borrow_mut().latched = true);
             obs_fail(format!(
                 "bound-heap-exceeded: `{op}` not run, earlier calls in this process already exceeded the allocation cap"
+            ))
+        }
+        Exec::TimedOut(limit) => {
+            obs_fail(format!(
+                "observer-timeout: `{op}` did not return within {} seconds; the call was abandoned",
+                limit.as_secs_f64()
+            ))
+        }
+        Exec::RefusedStalled => {
+            obs_fail(format!(
+                "observer-timeout: `{op}` not run, earlier calls in this process already timed out"
             ))
         }
     }
@@ -2184,14 +2270,14 @@ fn reg(
     }
     let id = meta.id.clone();
     let observed = meta.kind != "negctl";
-    META.lock().unwrap().push(meta);
+    lock_or_recover(&META).push(meta);
     suite.add(id.clone(), move |_ctx| {
         obs_begin_test();
         let (verdict, stats, note) = body();
         let agg = obs_end_test();
         let verdict = if observed { obs_annotate(verdict, &agg.note) } else { verdict };
-        OBS_STATS.lock().unwrap().insert(id.clone(), agg);
-        STATS.lock().unwrap().insert(id.clone(), (stats, note));
+        lock_or_recover(&OBS_STATS).insert(id.clone(), agg);
+        lock_or_recover(&STATS).insert(id.clone(), (stats, note));
         verdict
     });
 }
@@ -2219,9 +2305,9 @@ fn write_manifest(outcomes: &[Outcome]) {
         eprintln!("refusing to write an evidence manifest from a sabotaged or filtered run");
         return;
     }
-    let metas = META.lock().unwrap().clone();
-    let stats = STATS.lock().unwrap().clone();
-    let obs_stats = OBS_STATS.lock().unwrap().clone();
+    let metas = lock_or_recover(&META).clone();
+    let stats = lock_or_recover(&STATS).clone();
+    let obs_stats = lock_or_recover(&OBS_STATS).clone();
     let mut tests: Vec<Json> = Vec::new();
     for m in metas {
         let verdict = outcomes
@@ -2287,7 +2373,7 @@ fn write_manifest(outcomes: &[Outcome]) {
         ("module", Json::str(MODULE)),
         ("spec", Json::str(SPEC_PATH)),
         ("spec_sha256", Json::str(SPEC_SHA256)),
-        ("source_sha256", Json::Str(SOURCE_SHA256.lock().unwrap().clone())),
+        ("source_sha256", Json::Str(lock_or_recover(&SOURCE_SHA256).clone())),
         ("evidence_seed", Json::Str(EVIDENCE_SEED.to_string())),
         ("tests", Json::Arr(tests)),
     ]);
@@ -2341,7 +2427,7 @@ pub fn require_tests(count: usize, filter: Option<&str>) -> Result<(), String> {
 /// same definition the proof and bench manifests and the checker use.
 pub fn run_main(src_dir: &std::path::Path) -> i32 {
     match manifest::source_tree_framing(src_dir) {
-        Ok(framed) => *SOURCE_SHA256.lock().unwrap() = sha256_hex(&framed),
+        Ok(framed) => *lock_or_recover(&SOURCE_SHA256) = sha256_hex(&framed),
         Err(e) => {
             eprintln!("cannot bind evidence to {}: {e}", src_dir.display());
             return 2;
@@ -2358,7 +2444,7 @@ pub fn run_main(src_dir: &std::path::Path) -> i32 {
         }
     };
     let suite = build_suite(fault);
-    let registered = META.lock().unwrap().len();
+    let registered = lock_or_recover(&META).len();
     if let Err(msg) = require_tests(registered, filter_var.as_deref()) {
         eprintln!("{msg}");
         return 2;
