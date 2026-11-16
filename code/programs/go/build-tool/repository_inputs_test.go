@@ -127,6 +127,32 @@ func TestTrigReferenceCorpusSelectsConvertedPorts(t *testing.T) {
 			t.Errorf("isTrigReferenceCorpus(%q) != %v", path, want)
 		}
 	}
+	// The generator, its oracle, the cross-checks and the validator select python/trig
+	// too, because its BUILD runs the generator's --check; lookalikes select nothing.
+	for path, want := range map[string]bool{
+		"code/scripts/generate_trig_reference_fixture.py":     true,
+		"code/scripts/trig_ref_exact.py":                      true,
+		"code/scripts/trig_ref_softfloat.py":                  true,
+		"code/scripts/tests/test_trig_reference_fixture.py":   true,
+		"code/scripts/trig_reference_xcheck/xcheck.c":         true,
+		"code/scripts/trig_reference_xcheck/search.c":         true,
+		"code/specs/fixtures/trig-reference-v1/manifest.json": true,
+		"code/scripts/generate_trig_reference_fixture.py.bak": false,
+		"code/scripts/trig_ref_exact.pyc":                     false,
+		"code/scripts/trig_reference_xcheck2/x.c":             false,
+		"code/scripts/generate_other_fixture.py":              false,
+	} {
+		if isTrigReferenceInput(path) != want {
+			t.Errorf("isTrigReferenceInput(%q) != %v", path, want)
+		}
+		got, err := repositoryInputConsumersForChange([]string{path}, packages, "all")
+		if err != nil {
+			t.Fatal(err)
+		}
+		if (len(got) == 1) != want {
+			t.Errorf("%s selected %v, want selection=%v", path, got, want)
+		}
+	}
 	// A converted port whose package is missing from discovery is a hard error,
 	// never a silent skip.
 	if _, err := repositoryInputConsumersForChange([]string{"code/specs/fixtures/trig-reference-v1/edge.tsv"}, nil, "all"); err == nil {
