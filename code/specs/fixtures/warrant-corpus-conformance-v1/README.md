@@ -25,5 +25,5 @@ python3 code/scripts/warrant_corpus_conformance.py --write  # regenerate
 ```
 
 Cases are only ever added within `-v1`; changing an expectation means `-v2`.
-Lanes: Python and TypeScript run all four categories. The Go lane (WD-103) must
-adopt the fixture before its runner is accepted.
+Lanes: Python and TypeScript run all four categories. The Go lane (WD-103) merged before
+the fixture existed and adopts it in a follow-up.

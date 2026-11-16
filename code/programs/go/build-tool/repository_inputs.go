@@ -188,6 +188,18 @@ var (
 	warrantTypeScriptRunnerPackage   = "code/packages/typescript/warrant-corpus"
 	warrantTypeScriptLaneCorpusPaths = append(append([]string{}, warrantTypeScriptLaneInputs...), warrantConformanceFixture)
 	warrantTypeScriptLanePilotPaths  = append(append([]string{}, warrantTypeScriptLaneInputs...), warrantTypeScriptRunnerPackage)
+	// The Go Warrant lane (WD-103) reads the same spec, corpus and registry. Its
+	// ct-compare BUILD re-runs the corpus, fails when the committed manifest
+	// drifted, proves every negative control and validates the manifest; the
+	// runner package's own tests run the real corpus once.
+	warrantGoLaneInputs = warrantPythonLaneInputs
+	// warrantGoRunnerPackage is the shared runner. ct-compare's go.mod requires
+	// it (a graph edge), but the committed manifest embeds the runner's source
+	// digest, so the pilot is selected by an explicit prefix too: the selection
+	// must not depend on the dependency resolver noticing the edge.
+	warrantGoRunnerPackage   = "code/packages/go/warrant-corpus"
+	warrantGoLaneCorpusPaths = warrantGoLaneInputs
+	warrantGoLanePilotPaths  = append(append([]string{}, warrantGoLaneInputs...), warrantGoRunnerPackage)
 	// warrantAssurancePaths are the shared Warrant lane artifacts the
 	// assurance report validates directly (see isWarrantAssuranceInput).
 	// The Kiln graph export reads them, so they must list every path the
@@ -653,6 +665,20 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		matches:  isWarrantTypeScriptLanePilotInput,
 		paths:    warrantTypeScriptLanePilotPaths,
 	},
+	{
+		name:     "go/warrant-corpus",
+		language: "go",
+		inputs:   "the Warrant spec, corpus and consumer registry its tests run",
+		matches:  isWarrantGoLaneCorpusInput,
+		paths:    warrantGoLaneCorpusPaths,
+	},
+	{
+		name:     "go/ct-compare",
+		language: "go",
+		inputs:   "the Warrant spec, corpus, consumer registry and the shared Go runner",
+		matches:  isWarrantGoLanePilotInput,
+		paths:    warrantGoLanePilotPaths,
+	},
 }
 
 // The assurance report validates the shared Warrant lane artifacts directly.
@@ -721,6 +747,20 @@ func isWarrantTypeScriptLaneCorpusInput(changed string) bool {
 func isWarrantTypeScriptLanePilotInput(changed string) bool {
 	return isWarrantTypeScriptLaneCorpusInput(changed) ||
 		strings.HasPrefix(changed, "code/packages/typescript/warrant-corpus/")
+}
+
+// isWarrantGoLaneCorpusInput selects the Go runner package when the spec, corpus
+// or registry its tests run changes. Exact paths only: a lookalike version of the
+// fixture directory must not select it.
+func isWarrantGoLaneCorpusInput(changed string) bool {
+	return isWarrantPythonLaneCorpusInput(changed)
+}
+
+// isWarrantGoLanePilotInput selects go/ct-compare for the same files plus
+// anything beneath the shared runner package.
+func isWarrantGoLanePilotInput(changed string) bool {
+	return isWarrantGoLaneCorpusInput(changed) ||
+		strings.HasPrefix(changed, "code/packages/go/warrant-corpus/")
 }
 
 // Canonical inputs live outside the Rust artifact package. Exact file paths

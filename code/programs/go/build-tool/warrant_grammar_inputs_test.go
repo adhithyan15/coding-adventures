@@ -70,6 +70,8 @@ func TestWarrantLaneArtifactsSelectGrammarAndAssuranceConsumers(t *testing.T) {
 		{Name: "python/ct-compare", Language: "python"},
 		{Name: "typescript/warrant-corpus", Language: "typescript"},
 		{Name: "typescript/ct-compare", Language: "typescript"},
+		{Name: "go/warrant-corpus", Language: "go"},
+		{Name: "go/ct-compare", Language: "go"},
 	}
 	for _, input := range []string{
 		"code/specs/ct-compare.warrant",
@@ -91,6 +93,12 @@ func TestWarrantLaneArtifactsSelectGrammarAndAssuranceConsumers(t *testing.T) {
 			// read the same spec, corpus and registry.
 			want["typescript/warrant-corpus"] = true
 			want["typescript/ct-compare"] = true
+		}
+		if isWarrantGoLaneCorpusInput(input) {
+			// WD-103: the Go lane runner and its ct-compare pilot read the same
+			// spec, corpus and registry.
+			want["go/warrant-corpus"] = true
+			want["go/ct-compare"] = true
 		}
 		if err != nil || !reflect.DeepEqual(got, want) {
 			t.Fatalf("%s: got %v, err %v", input, got, err)
@@ -138,7 +146,7 @@ func TestPythonWarrantLaneInputsSelectTheirConsumers(t *testing.T) {
 		if _, err := repositoryInputConsumersForChange([]string{input}, packages[:1], "python"); err == nil {
 			t.Fatalf("%s: a missing Python lane consumer must fail closed", input)
 		}
-		if got, err := repositoryInputConsumersForChange([]string{input}, packages, "go"); err != nil || len(got) != 0 {
+		if got, err := repositoryInputConsumersForChange([]string{input}, packages, "ruby"); err != nil || len(got) != 0 {
 			t.Fatalf("%s: language filtering: %v, %v", input, got, err)
 		}
 	}
@@ -191,7 +199,7 @@ func TestTypeScriptWarrantLaneInputsSelectTheirConsumers(t *testing.T) {
 		if _, err := repositoryInputConsumersForChange([]string{input}, packages[:1], "typescript"); err == nil {
 			t.Fatalf("%s: a missing TypeScript lane consumer must fail closed", input)
 		}
-		if got, err := repositoryInputConsumersForChange([]string{input}, packages, "go"); err != nil || len(got) != 0 {
+		if got, err := repositoryInputConsumersForChange([]string{input}, packages, "ruby"); err != nil || len(got) != 0 {
 			t.Fatalf("%s: language filtering: %v, %v", input, got, err)
 		}
 	}
@@ -215,6 +223,60 @@ func TestTypeScriptWarrantLaneInputsSelectTheirConsumers(t *testing.T) {
 		`code\packages\typescript\warrant-corpus\src\x.ts`,
 	} {
 		if isWarrantTypeScriptLanePilotInput(input) {
+			t.Errorf("lookalike selected the pilot: %s", input)
+		}
+	}
+}
+
+// WD-103: the Go Warrant lane. The pilot's go.mod requires the runner (a graph
+// edge), but its committed manifest embeds the runner's source digest, so a
+// runner edit selects the pilot by an explicit registered prefix too.
+func TestGoWarrantLaneInputsSelectTheirConsumers(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "go/warrant-corpus", Language: "go"},
+		{Name: "go/ct-compare", Language: "go"},
+	}
+	corpusFiles := []string{
+		"code/specs/ct-compare.warrant",
+		"code/specs/fixtures/ct-compare-warrant-v1/cases.tfv",
+		"code/specs/fixtures/ct-compare-warrant-v1/corpus.json",
+		"code/specs/fixtures/ct-compare-warrant-v1/consumers.json",
+	}
+	for _, input := range corpusFiles {
+		// The language filter isolates the Go consumers from the Rust, Python
+		// and TypeScript ones that read the same spec and corpus.
+		got, err := repositoryInputConsumersForChange([]string{input}, packages, "go")
+		want := map[string]bool{"go/warrant-corpus": true, "go/ct-compare": true}
+		if err != nil || !reflect.DeepEqual(got, want) {
+			t.Fatalf("%s: got %v, err %v", input, got, err)
+		}
+		if _, err := repositoryInputConsumersForChange([]string{input}, packages[:1], "go"); err == nil {
+			t.Fatalf("%s: a missing Go lane consumer must fail closed", input)
+		}
+		if got, err := repositoryInputConsumersForChange([]string{input}, packages, "ruby"); err != nil || len(got) != 0 {
+			t.Fatalf("%s: language filtering: %v, %v", input, got, err)
+		}
+	}
+
+	// An edit to the runner selects the pilot (the runner selects itself through
+	// the normal package mapping, not through this table).
+	got, err := repositoryInputConsumersForChange([]string{"code/packages/go/warrant-corpus/runner.go"}, packages, "go")
+	want := map[string]bool{"go/ct-compare": true}
+	if err != nil || !reflect.DeepEqual(got, want) {
+		t.Fatalf("runner edit: got %v, err %v", got, err)
+	}
+
+	for _, input := range []string{
+		"code/specs/fixtures/ct-compare-warrant-v10/corpus.json",
+		"code/specs/fixtures/ct-compare-warrant-v1/consumers.schema.json",
+		"code/specs/fixtures/ct-compare-warrant-v1/consumers.backup.json",
+		"code/packages/go/warrant-corpus-extra/x.go",
+		"code/packages/go/warrant-corpus",
+		"code/packages/typescript/warrant-corpus/src/runner.ts",
+		"docs/code/specs/ct-compare.warrant",
+		`code\packages\go\warrant-corpus\x.go`,
+	} {
+		if isWarrantGoLanePilotInput(input) {
 			t.Errorf("lookalike selected the pilot: %s", input)
 		}
 	}
