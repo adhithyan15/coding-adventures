@@ -1202,24 +1202,32 @@ fn forged_markers_in_the_canonical_and_policy_parts_are_refused() {
 #[test]
 fn untrusted_strings_are_escaped_in_findings() {
     // S-L1: a value with ESC or a newline must not reach the report raw.
-    let r = Repo::with("esc1", SCAN);
-    let w = "code/packages/rust/vos-sched-contract/warrant";
-    r.write(
-        &format!("{w}/obligations-x\u{1b}[31m\nFAKE.part"),
-        "  claim x:\n    true\n",
-    );
-    let g = r.gen(SCAN);
-    let text = show(&g);
-    assert!(has(&g, "GD03", "obligations-x"), "{text}");
-    assert!(
-        !text.contains('\u{1b}'),
-        "raw ESC reached the report: {text:?}"
-    );
-    assert!(
-        !text.contains("\nFAKE"),
-        "a file name forged a report line: {text:?}"
-    );
-    assert!(text.contains("\\u{1b}") && text.contains("\\n"), "{text}");
+    // A file NAME with ESC or a newline can only be created on Unix: Windows
+    // forbids control characters in file names, so there the sub-case cannot
+    // arise and is skipped visibly. The value and header cases below run on
+    // every platform.
+    if cfg!(unix) {
+        let r = Repo::with("esc1", SCAN);
+        let w = "code/packages/rust/vos-sched-contract/warrant";
+        r.write(
+            &format!("{w}/obligations-x\u{1b}[31m\nFAKE.part"),
+            "  claim x:\n    true\n",
+        );
+        let g = r.gen(SCAN);
+        let text = show(&g);
+        assert!(has(&g, "GD03", "obligations-x"), "{text}");
+        assert!(
+            !text.contains('\u{1b}'),
+            "raw ESC reached the report: {text:?}"
+        );
+        assert!(
+            !text.contains("\nFAKE"),
+            "a file name forged a report line: {text:?}"
+        );
+        assert!(text.contains("\\u{1b}") && text.contains("\\n"), "{text}");
+    } else {
+        eprintln!("SKIPPED: control characters in file names are not creatable on this platform");
+    }
     // A contract value that is legal TOML but not a package name.
     let r = Repo::with("esc2", SCAN);
     r.write(
