@@ -17,6 +17,7 @@ from coding_adventures_warrant_corpus import main
 from coding_adventures_warrant_corpus.errors import LaneError
 from coding_adventures_warrant_corpus.isolation import (
     ENV_PRIVATE,
+    _is_under,
     verify_isolated_cache,
 )
 from coding_adventures_warrant_corpus.jsonio import render_json
@@ -55,6 +56,35 @@ def test_a_prefix_that_is_not_a_private_directory_under_temp_is_refused(
         with pytest.raises(LaneError) as error:
             verify_isolated_cache()
         assert error.value.code == "pycache-isolation"
+
+
+def test_a_prefix_on_another_drive_is_refused_not_a_crash(monkeypatch, tmp_path):
+    # On Windows, commonpath raises ValueError ("Paths don't have the same
+    # drive") for a prefix on a different drive from %TEMP%.  Reproduce that
+    # on any platform, and check the refusal is the module's own.
+    private = Path(tempfile.mkdtemp(prefix="warrant-pycache-"))
+    monkeypatch.setattr(sys, "pycache_prefix", str(private))
+    monkeypatch.setenv(ENV_PRIVATE, str(private))
+
+    def other_drive(paths):
+        raise ValueError("Paths don't have the same drive")
+
+    monkeypatch.setattr(os.path, "commonpath", other_drive)
+    with pytest.raises(LaneError) as error:
+        verify_isolated_cache()
+    assert error.value.code == "pycache-isolation"
+    assert "not inside the private temporary directory" in str(error.value)
+
+
+def test_ntpath_commonpath_across_drives_is_handled(monkeypatch):
+    import ntpath
+
+    with pytest.raises(ValueError, match="same drive"):
+        ntpath.commonpath(["C:\\Temp", "D:\\x"])
+    monkeypatch.setattr(os.path, "commonpath", ntpath.commonpath)
+    assert _is_under("C:\\Temp", "D:\\x") is False
+    assert _is_under("C:\\Temp", "C:\\Temp\\x") is True
+    assert _is_under("C:\\Temp", "relative") is False
 
 
 @pytest.mark.skipif(os.name == "nt", reason="POSIX permission bits")

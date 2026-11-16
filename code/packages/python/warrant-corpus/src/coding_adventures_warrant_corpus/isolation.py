@@ -40,6 +40,20 @@ def _refuse(message: str) -> CorpusError:
     return CorpusError(CODE, f"the bytecode cache is not isolated: {message}")
 
 
+def _is_under(base: str, path: str) -> bool:
+    """Is ``path`` inside ``base``?  A path with no common root is simply not.
+
+    On Windows ``os.path.commonpath`` raises ``ValueError`` ("Paths don't have
+    the same drive") when the two paths sit on different drives, or when one is
+    absolute and the other is not.  That is an answer, not a crash: a prefix on
+    another drive is not under the temporary directory.
+    """
+    try:
+        return os.path.commonpath([base, path]) == base
+    except ValueError:
+        return False
+
+
 def verify_isolated_cache() -> None:
     """Raise a named :class:`CorpusError` unless the run uses a private cache."""
     prefix = sys.pycache_prefix
@@ -58,7 +72,7 @@ def verify_isolated_cache() -> None:
         raise _refuse("it is not a plain directory")
     temp = os.path.realpath(tempfile.gettempdir())
     real = os.path.realpath(prefix)
-    if os.path.commonpath([temp, real]) != temp or real == temp:
+    if real == temp or not _is_under(temp, real):
         raise _refuse("it is not inside the private temporary directory")
     if os.name != "nt":
         if info.st_uid != os.geteuid():
