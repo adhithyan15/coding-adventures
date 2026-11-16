@@ -100,6 +100,7 @@ func TestTrigReferenceCorpusSelectsConvertedPorts(t *testing.T) {
 		{Name: "python/trig", Language: "python"},
 		{Name: "rust/trig", Language: "rust"},
 		{Name: "typescript/trig", Language: "typescript"},
+		{Name: "c/trig", Language: "c"},
 		{Name: "cpp/trig", Language: "cpp"},
 		{Name: "go/trig", Language: "go"},
 		{Name: "python/rng", Language: "python"},
@@ -113,11 +114,11 @@ func TestTrigReferenceCorpusSelectsConvertedPorts(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		if want := map[string]bool{"python/trig": true, "rust/trig": true, "typescript/trig": true, "cpp/trig": true}; !reflect.DeepEqual(got, want) {
+		if want := map[string]bool{"python/trig": true, "rust/trig": true, "typescript/trig": true, "c/trig": true, "cpp/trig": true}; !reflect.DeepEqual(got, want) {
 			t.Fatalf("%s selected %v, want %v", changed, got, want)
 		}
 	}
-	for lang, want := range map[string]string{"rust": "rust/trig", "typescript": "typescript/trig", "python": "python/trig", "cpp": "cpp/trig"} {
+	for lang, want := range map[string]string{"rust": "rust/trig", "typescript": "typescript/trig", "python": "python/trig", "c": "c/trig", "cpp": "cpp/trig"} {
 		got, _ := repositoryInputConsumersForChange([]string{"code/specs/fixtures/trig-reference-v1/edge.tsv"}, packages, lang)
 		if !reflect.DeepEqual(got, map[string]bool{want: true}) {
 			t.Fatalf("%s-only run selected %v, want only %s", lang, got, want)
@@ -160,13 +161,13 @@ func TestTrigReferenceCorpusSelectsConvertedPorts(t *testing.T) {
 			t.Fatal(err)
 		}
 		// The generator, oracle and cross-check select only python/trig, whose
-		// BUILD runs --check; a corpus file also selects the converged Rust,
-		// TypeScript and C++ ports.
+		// BUILD runs --check; a corpus file also selects the converged Rust, C,
+		// C++ and TypeScript ports.
 		wantCount := 0
 		if want {
 			wantCount = 1
 			if isTrigReferenceCorpus(path) {
-				wantCount = 4
+				wantCount = 5
 			}
 		}
 		if len(got) != wantCount || (want && !got["python/trig"]) {
