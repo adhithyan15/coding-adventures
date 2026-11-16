@@ -1,0 +1,12 @@
+go test ./... -v -cover
+go run ./cmd/warrant-evidence check evidence/test-manifest.json
+go run ./cmd/warrant-evidence sabotage
+go run ./cmd/warrant-evidence validate-manifest evidence/test-manifest.json
+set WARRANT_EVIDENCE_FAULT=ignore-last-byte:eq&& set WARRANT_EVIDENCE_FILTER=/exhaustive/&& go run ./cmd/warrant-evidence run 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=invert:eq&& set WARRANT_EVIDENCE_FILTER=/exhaustive/&& go run ./cmd/warrant-evidence run 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=ignore-last-byte:eq_fixed&& set WARRANT_EVIDENCE_FILTER=/exhaustive/&& go run ./cmd/warrant-evidence run 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=invert:eq_fixed&& set WARRANT_EVIDENCE_FILTER=/exhaustive/&& go run ./cmd/warrant-evidence run 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=ignore-high-bit:eq_u64&& set WARRANT_EVIDENCE_FILTER=/exhaustive/&& go run ./cmd/warrant-evidence run 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=invert:eq_u64&& set WARRANT_EVIDENCE_FILTER=/exhaustive/&& go run ./cmd/warrant-evidence run 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=missing-error:select_bytes&& set WARRANT_EVIDENCE_FILTER=/exhaustive/&& go run ./cmd/warrant-evidence run 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=swap-choice:select_bytes&& set WARRANT_EVIDENCE_FILTER=/exhaustive/&& go run ./cmd/warrant-evidence run 2>NUL | findstr /B /C:"not ok "

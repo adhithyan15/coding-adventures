@@ -1,0 +1,33 @@
+# Warrant binding table (VER04i section 5.3) for code/specs/ct-compare.warrant.
+#
+# One line per Warrant operation: which public export implements it and how a
+# returned error becomes a declared `Err` variant.  This file is data, not code
+# -- it cannot compute an answer, retry or fall back; the runner
+# (`go/warrant-corpus`) reads nothing else about this package, and the adapters
+# that translate values and errors live in cmd/warrant-evidence/main.go, inside
+# `source`, so they are digested with the library.
+#
+# Go cannot import a package by name at run time, so `import` is the Go import
+# path the runner checks each export's compiled symbol against, and `source` is
+# the directory whose `*.go` files the manifest digests.  The runner also
+# requires each export's source file to lie under `source`.
+#
+# `width=implicit`: `CTEqFixed` infers the width N from its slices; the runner
+# asserts every Bytes<N> argument really has length N and does not pass N.
+#
+# `U64` is a native `uint64`, parsed unsigned.  The `errors=` row maps by
+# sentinel IDENTITY (`err == ErrLengthMismatch`), not by message or type, and the
+# adapter returns it only for the library's exact length-mismatch panic; any
+# other panic reaches the runner as `unexpected-error`.  `CTSelectBytes` takes its
+# selection bit as an `int`; the adapter turns the Warrant Bool into 1 or 0.
+lane go
+package go/ct-compare
+module ct_compare
+import github.com/adhithyan15/coding-adventures/code/packages/go/ct-compare
+source .
+seed 0x5741_5252_414e_5421
+values Bool=bool Bytes=[]byte Nat=uint64 U64=uint64
+op eq export=CTEq
+op eq_fixed export=CTEqFixed width=implicit
+op select_bytes export=CTSelectBytes errors=CT_SELECT_LENGTH_MISMATCH:ErrLengthMismatch
+op eq_u64 export=CTEqU64
