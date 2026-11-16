@@ -62,7 +62,7 @@ fn prepare() -> Exercise {
         checks.push(check("bit_reader read_ub", bit_read_ok));
 
         // 3. Tag streaming
-        let tag_data = [(9u8 << 6) | 3, 0x00, 0xFF, 0x00, 0x00, 0x00, 0x00];
+        let tag_data = [0x43, 0x02, 0xFF, 0x00, 0x00, 0x00, 0x00];
         let mut iter = SwfTagIter::from_payload(&tag_data);
         let first_tag = iter.next();
         checks.push(check(
