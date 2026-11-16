@@ -38,9 +38,9 @@ this table. They differ on purpose (VOS00 section 6.2).
 
 | ID | Track | Title | Deliverable | Depends on | State |
 |---|---|---|---|---|---|
-| VOS-001 CP | all | Umbrella | VOS00 and this backlog | - | in review (this PR) |
-| VOS-002 CP | all | Component contract model | VOS01: anatomy, the eight rules, by-value steps, tiers, X1-X3 | 001 | queued |
-| VOS-003 CP | E | Emulator framework spec | EMU00: contracts, machine loop, board format, determinism, relation to SIM00, VER13 entries | 002 | queued |
+| VOS-001 CP | all | Umbrella | VOS00 and this backlog | - | done (#19485) |
+| VOS-002 CP | all | Component contract model | VOS01: anatomy, the eight rules, by-value steps, tiers, X1-X3 | 001 | done (#19491) |
+| VOS-003 CP | E | Emulator framework spec | EMU00: contracts, machine loop, board format, determinism, relation to SIM00, VER13 entries | 002 | in review (this PR) |
 | VOS-004 CP | all | Interface contracts and profile/board linking | VOS02: contract packages, manifests, UFCS rule, `-any` discipline, VER29 amendment text | 002 | queued |
 | VOS-005 CP | E | Emulator core crate | `emu-core`: bus map and validator, machine loop, device traits, recording bus | 003 | queued |
 | VOS-006 CP | E | First devices | Console/teleprinter and paper tape, with Warrant claims | 005 | queued |
@@ -48,7 +48,7 @@ this table. They differ on purpose (VOS00 section 6.2).
 | VOS-008 | E | Tape and card devices; IBM 704 I/O orders | Devices and a simulator extension (spec first) | 006 | queued |
 | VOS-009 | L1 | Batch monitor rung | 704 resident monitor; job-control and I/O-supervisor contracts | 008 | queued |
 | VOS-010 CP | M | Scheduler contract | VOS10 and `vos-sched.warrant` (safety and fixed-priority tiers) | 002, 004 | queued |
-| VOS-011 CP | M | Bitmap fixed-priority scheduler | `vos-sched-fp-bitmap`, exhaustive at N=8 unique priorities | 010 | queued |
+| VOS-011 CP | M | Bitmap fixed-priority scheduler | `vos-sched-fp-bitmap`, exhaustive at N=8 unique priorities | 010, D002 | queued |
 | VOS-012 CP | M | Most-general scheduler and a second implementation | `vos-sched-any` and a round-robin scheduler (safety tier); record that nothing else regenerates | 010 | queued |
 | VOS-013 | E | Interrupt controller and timer devices | Generic contracts and two devices | 005 | queued |
 | VOS-014 | E | Disk device; 8080 board | Block device, port console and disk, 8080 adapter | 006 | queued |
@@ -80,7 +80,26 @@ review, a CI failure, a measurement, a PR) and the item it came from.
 
 | ID | Found by | Description | Priority | State |
 |---|---|---|---|---|
-| VOS-D001 | VOS-001 security review | Tape, paper-tape, card and disk images and board definitions are untrusted input to the emulator. EMU00 must bound them: maximum image and record sizes, maximum board-definition size and range count, fail-closed parsing with no panics, and a fuzz target per parser (VER06). | P1: fold into VOS-003 (EMU00); implement in VOS-005/006/008/014 | queued |
+| VOS-D001 | VOS-001 security review | Tape, paper-tape, card and disk images and board definitions are untrusted input to the emulator. EMU00 must bound them: maximum image and record sizes, maximum board-definition size and range count, fail-closed parsing with no panics, and a fuzz target per parser (VER06). | P1: fold into VOS-003 (EMU00); implement in VOS-005/006/008/014 | resolved in EMU00 spec; implementation in VOS-005/006/008/014 |
+| VOS-D002 | VOS-002 (VOS01 drafting) | No analyzer checks most of the component restrictions that VOS00 rules 2 and 7 and the footprint of section 4.4 rely on: VER08a does not require `no_std`, classes `alloc` as pure, and knows nothing of statics, interior mutability, `dyn` or function pointers, recursion, loop bounds, division, panic paths, macros or fixed-width types. VOS01 section 1.4 defines the rules SH1-SH15 (SH3 bans statics outright; SH9 covers variable shift amounts; SH15 bans `include*!`, `#[path]`, `#[link_section]`, `#[no_mangle]`, `#[export_name]`, `build.rs` and the `links` key); build the lexical shape check (reusing the VER08a lexer) and the two image-level companions (no path to the panic handler, static stack bound). | P1: before VOS-011; VOS02 names the tool | queued |
+| VOS-D003 | VOS-002 (VOS01 drafting) | VOS00 sections 4.5 and 4.7 call an implementation a "binding of" the contract's `.warrant`, but a `.warrant` stem is the package directory (VER29 section 3.1) and a document has no imports (VER29 section 15). Needs a generated, digest-checked per-implementation document (contract block copied verbatim plus an implementation block) and a drift check, and the interface-id decision must cover all four id kinds (functional, timing, resource, capability), three of which VER29 does not publish yet (slice 2). | P1: fold into VOS-004 (VOS02) and the VER29 amendment (LV-005) | queued (folded into VOS-004) |
+| VOS-D004 | VOS-002 (VOS01 drafting) | VER29 section 7.1 classes a bench observation as `example`, so a complete emulator sweep of instruction counts (for example all 256 masks of the toy) cannot earn more than `example`. Need a bench-kind manifest entry that declares its domain complete, and a bound observer named in RV32 instructions. | P2: VOS-027 and VOS-028 | queued |
+| VOS-D005 | VOS-002 (VOS01 drafting) | Claims over models alone (contract-level closure, tier ordering, spine invariants) are rejected by the current generator (`extract_claim_cases` answers W0702); VER04m V9 specifies a lemma kind with no published strength. Also VER04m E8 prints `closure:` and `init:` lines for `state=explicit` operations only, but by-value operations are `state=none`, so VOS00's X1 ("closure and init evidenced") has no report line. Needs the lemma kind and a by-value closure and init convention (small extension of VER04m E8). | P1: sequence with WX-S1; VOS-004 for the convention | queued |
+| VOS-D006 | VOS-002 (VOS01 drafting) | The by-value binding cannot build a record with private fields (it needs public fields, VER04j struct line), which conflicts with VOS00 rule 2; VER04m E11's `fn:` builder exists for `inout` codecs only. Also missing: generator faults for tuple and variant results (`drop-state-update`, `const-variant:<Ctor>`) that the refinement and `-any` coverage claims need as negative controls, and a manifest and report field that prints configuration constants. | P1: fold into VOS-004 (VOS02), request via the VER backlog | queued (folded into VOS-004) |
+| VOS-D007 | VOS-002 (VOS01 drafting) | VOS00 rule 4 and section 8 say `-any` covers every implementation for system theorems. True only for single-trace properties: refinement can remove nondeterminism in a way that breaks noninterference (a hyperproperty), and over `-any` no liveness or progress theorem holds. The partitioned-profile spec must evidence noninterference over deterministic policy-tier components or state how the safety tier's choice may depend on secrets. | P1: fold into VOS-031 | queued |
+| VOS-D008 | VOS-002 (VOS01 drafting) | VOS00 section 8 lists three items re-proved on a swap (refinement, bounds, footprint). It omits the per-image artifacts that regenerate (monitor run, instruction counts, X3 image proofs), the profile manifest row and tier-eligibility check, and the role of contract ceilings in keeping the entry-level timing bound valid; section 4.5 also says a call site "names its implementation" where VOS01 section 1.2 has it name the interface through the profile. Amend VOS00 sections 4.5 and 8 after VOS01 lands. | P2: doc follow-up PR | done (this PR) |
+| VOS-D009 | VOS01 security review | Profile gate SH16: no `vos-*-any` crate and no `ghost` feature in the resolved dependency and feature graph of an `image`-class profile, checked on the resolved features (`cargo metadata` or `cargo tree -e features`), because feature unification can enable `ghost` through another crate. The oracle-write path lives in the ghost module only. VOS02 must key the check on the implementation kind recorded in the profile manifest (`-any` vs. production), not only on the crate-name pattern. | P1: fold into VOS-004 (profile manifests and validator); the image-side check also feeds VOS-028 | queued |
+| VOS-D010 | VOS-003 (EMU00 drafting) | VOS00 section 5.2 and VOS01 section 1.4 apply SH1-SH16 to the emulator, but the simulators it wraps use heap, `String` and `std::error`, and the emulator is not an image. EMU00 section 3.3 scopes the rules by crate class (C, S, M, P, H). VOS01 section 1.4 and the conformance checklist need an amendment saying which class each SH rule binds, and the shape check (VOS-D002) must read the class tag. | P2: doc follow-up with VOS-005 | done (this PR) |
+| VOS-D011 | VOS-003 (EMU00 drafting) | Audited simulators lack accessors the adapters and snapshots need: `restore` for `ibm704-simulator`, `intel8080-simulator`, `ge225-simulator` and `pdp11-simulator`; incremental `feed_input` and `take_output` for `edsac-simulator` (its `output` Vec is unbounded and `set_input` rewinds); typed errors in place of `String` in `ge225-simulator`. Add each as an additive PR with a test that the existing API is unchanged. | P1: before VOS-007 (EDSAC) and VOS-008, VOS-014, VOS-016 for their ISAs | queued |
+| VOS-D012 | VOS-003 (EMU00 drafting) | Every simulator step clones O(memory) state (8080 and Z80: twice per step for the trace; RV32I checked: three times; PDP-11: the whole simulator). Throughput of a long boot is bounded by it. Measure at VOS-007 before deciding on a non-cloning fast path. | P3: measure at VOS-007 | queued |
+| VOS-D013 | VOS-003 (EMU00 drafting) | No row builds the PDP-11 machine work (traps and vectors, interrupts, I/O page, bus-generic `emu-cpu-pdp11`) that VOS-023 (L6) needs; VOS-030 is only the later MMU and devices. `pdp11-simulator` has no traps, interrupts or devices. Add a row before VOS-023 and make 023 depend on it. | P1: before VOS-023 is scheduled | queued |
+| VOS-D014 | VOS-003 (EMU00 drafting) | VER13 section 5.2 `family` list lacks `emu`, and `mc.isa.model-faithful` already exists for RISC-V, so the new `mc.<isa>.model-faithful` ids must refine it and `emu.board.<name>.faithful` needs the family added. One-word schema amendment through the catalogue's own process (AS-001a rules AC-14). | P2: with VOS-005 | queued |
+| VOS-D015 | VOS-003 (EMU00 drafting) | The 704 FP path (`powi`, `round_ties_even` on host `f64`) and `RiscVSimulator` host ecalls (`f64` services) make deterministic replay host-dependent. Audit and make them integer, or keep the per-host caveat in every report that replays those models. | P2: before VOS-027 claims cross-host replay | queued |
+| VOS-D016 | VOS-003 (EMU00 drafting) | VOS00 sections 2.3 and 5.4 disagree with the code: EDSAC and GE-225 hold their peripherals inside the simulator (not hook-only); 8080 and Z80 expose latches (adapter must peek); `riscv-simulator` has `mscratch`, fetches only inside the loaded program, reports faults as errors not traps, and `mret` sets only `MIE`; Z80 has `interrupt` and `nmi`, the 8080 no delivery. Amend VOS00 after EMU00 lands. | P2: doc follow-up PR | done (this PR) |
+| VOS-D017 | VOS-003 (EMU00 drafting) | Model-fidelity gaps to list in the `mc.<isa>.model-faithful` entries and to fix in the adapters: Z80 has no EI one-instruction delay; 8080 has no interrupt delivery (so VOS-014/015 can have no timer interrupt); the Z80 adapter (`emu-cpu-z80`, the L7 "then z80" step) has no backlog row. | P3: schedule with VOS-015 | queued |
+| VOS-D018 | VOS-003 (EMU00 drafting) | VER06 has no coverage instrumentation (its audit item 10), so fuzzing the `emu-image` parsers is black-box. `emu-image` should expose an edge counter behind a `cov` feature, or the VER06 backlog should supply a source. | P2: VOS-005 | queued |
+| VOS-D019 | VOS-003 (EMU00 drafting) | VOS-016 (L3) needs several teletypes on the GE-225; the simulator has eight controller plugs but no row builds a multi-terminal device behind them. Add it to VOS-016's scope or to VOS-013. | P2: before VOS-016 | queued |
+| VOS-D020 | EMU00 security review | Known guest-reachable panic paths in class M models: `IBM704Simulator::reset` calls `expect`; `Rv32ISimulator`'s CSR arm contains `unreachable!()`. Remove or guard them in the adapters (or additively upstream), and audit every wrapped simulator for `unwrap`, `expect`, indexing and `unreachable!` reachable from guest bytes. `emu-host` contains the rest with `catch_unwind` (EMU00 section 7.5). | P2: with each adapter (VOS-007, 008, 014, 016, 017, 020) | queued |
 
 ## Decision log
 
@@ -126,3 +145,26 @@ places. Each change is recorded here with the fact that forced it.
    because cost differs. Rungs that need a missing simulator (Atlas, AGC) are
    late, stand-in machines are labelled, and every historical fact carries a
    source or an `[unverified]` mark.
+
+### 2026-11-16: VOS00 reconciled with the VOS01 contract model
+
+Findings F1-F9 of VOS01 section 9 were applied to VOS00 in the same PR rather
+than left as a follow-up: section 8 gets the full re-prove list, sections 4.5 and
+4.7 the interface-through-profile call sites, generated per-implementation
+documents and four id kinds, rule 4 and section 8 the single-trace limit, section
+9 the by-value X1 wording, the `example` cap on emulator measurements and the
+configuration-field gap, and rules 2 and 7 and the footprint are marked reviewed,
+not checked, until the shape check exists. Backlog consequences: VOS-D008 done;
+D002 gates VOS-011 because the analyzer must exist before the first component
+code; D003 and D006 are folded into VOS-004; D002, D004, D005 and D007 stay
+queued.
+
+### 2026-11-16: VOS00 and VOS01 reconciled with the simulator ground truth
+
+EMU00 section 2 was read from the simulator sources and disagreed with VOS00 in
+places. VOS00 sections 2.3, 5.2 and 5.4 now state the real I/O and interrupt
+shapes (EDSAC and GE-225 peripherals inside the simulator, 8080 and Z80 latches
+with a peek, no 704 or PDP-11 I/O, the RISC-V simulator's five CSRs, errors
+instead of traps, code-only fetch, no M, `mret` setting `MIE` only) (D016). VOS01
+gets a new section 1.6 scoping SH1-SH16 by crate class K, C, S, M, P and H, with
+class K the default and SH16 unchanged (D010).
