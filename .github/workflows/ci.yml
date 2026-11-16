@@ -730,7 +730,7 @@ jobs:
 
       - name: Set up Dart for native build-tool contract consumers
         if: needs.detect.outputs.run_contracts_build_tool_conformance == 'true'
-        uses: dart-lang/setup-dart@6afc89df92d6eb3834022f73cd65adc8cdfcb92d # v1.8.1
+        uses: dart-lang/setup-dart@2286a0c042b44434fe26d292bbce8d34f7ec662b # v1.8.2
         with:
           sdk: '3.12.2'
 
@@ -1185,7 +1185,7 @@ jobs:
           filter: blob:none
 
       - name: Set up Dart
-        uses: dart-lang/setup-dart@6afc89df92d6eb3834022f73cd65adc8cdfcb92d # v1.8.1
+        uses: dart-lang/setup-dart@2286a0c042b44434fe26d292bbce8d34f7ec662b # v1.8.2
 
       - name: Verify generated fixtures and Dart consumers
         shell: bash
@@ -1938,7 +1938,7 @@ jobs:
           filter: blob:none
 
       - name: Set up pinned Dart toolchain
-        uses: dart-lang/setup-dart@6afc89df92d6eb3834022f73cd65adc8cdfcb92d # v1.8.1
+        uses: dart-lang/setup-dart@2286a0c042b44434fe26d292bbce8d34f7ec662b # v1.8.2
         with:
           sdk: '3.12.2'
 
@@ -1985,7 +1985,7 @@ jobs:
           filter: blob:none
 
       - name: Set up pinned Dart toolchain
-        uses: dart-lang/setup-dart@6afc89df92d6eb3834022f73cd65adc8cdfcb92d # v1.8.1
+        uses: dart-lang/setup-dart@2286a0c042b44434fe26d292bbce8d34f7ec662b # v1.8.2
         with:
           sdk: '3.12.2'
 
@@ -2516,7 +2516,7 @@ jobs:
 
       - name: Set up Dart
         if: needs.detect.outputs.needs_mosaic_flutter_runtime == 'true'
-        uses: dart-lang/setup-dart@6afc89df92d6eb3834022f73cd65adc8cdfcb92d # v1.8.1
+        uses: dart-lang/setup-dart@2286a0c042b44434fe26d292bbce8d34f7ec662b # v1.8.2
         with:
           sdk: '3.12.2'
 
@@ -4626,7 +4626,7 @@ jobs:
 
       - name: Set up Dart
         if: needs.detect.outputs.needs_dart == 'true' || needs.detect.outputs.needs_mosaic_flutter_runtime == 'true'
-        uses: dart-lang/setup-dart@6afc89df92d6eb3834022f73cd65adc8cdfcb92d # v1.8.1
+        uses: dart-lang/setup-dart@2286a0c042b44434fe26d292bbce8d34f7ec662b # v1.8.2
         with:
           sdk: '3.12.2'
 
