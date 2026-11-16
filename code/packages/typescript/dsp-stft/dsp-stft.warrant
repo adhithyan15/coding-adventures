@@ -119,9 +119,9 @@ warrant dsp_stft v1
 
   -- Declared bounds: linear in signal length and number of frames.
   bound stft:
-    output <= (1 + len(signal) / hop_length) * (n_fft + 2)
-    steps <= 64 * (1 + len(signal) / hop_length) * n_fft + 4096
-    heap <= 4 * (1 + len(signal) / hop_length) * (n_fft + 2) + 8192
+    output <= (1 + unwrap_or(div(len(signal), hop_length), 0)) * (n_fft + 2)
+    steps <= 64 * (1 + unwrap_or(div(len(signal), hop_length), 0)) * n_fft + 4096
+    heap <= 4 * (1 + unwrap_or(div(len(signal), hop_length), 0)) * (n_fft + 2) + 8192
     depth <= 32
 
   bound istft:
@@ -131,13 +131,13 @@ warrant dsp_stft v1
     depth <= 32
 
   bound spectrogram:
-    output <= (1 + len(signal) / hop_length) * (n_fft / 2 + 1)
-    steps <= 64 * (1 + len(signal) / hop_length) * n_fft + 4096
-    heap <= 4 * (1 + len(signal) / hop_length) * (n_fft / 2 + 1) + 8192
+    output <= (1 + unwrap_or(div(len(signal), hop_length), 0)) * (unwrap_or(div(n_fft, 2), 0) + 1)
+    steps <= 64 * (1 + unwrap_or(div(len(signal), hop_length), 0)) * n_fft + 4096
+    heap <= 4 * (1 + unwrap_or(div(len(signal), hop_length), 0)) * (unwrap_or(div(n_fft, 2), 0) + 1) + 8192
     depth <= 32
 
   bound log_spectrogram:
-    output <= (1 + len(signal) / hop_length) * (n_fft / 2 + 1)
-    steps <= 64 * (1 + len(signal) / hop_length) * n_fft + 4096
-    heap <= 4 * (1 + len(signal) / hop_length) * (n_fft / 2 + 1) + 8192
+    output <= (1 + unwrap_or(div(len(signal), hop_length), 0)) * (unwrap_or(div(n_fft, 2), 0) + 1)
+    steps <= 64 * (1 + unwrap_or(div(len(signal), hop_length), 0)) * n_fft + 4096
+    heap <= 4 * (1 + unwrap_or(div(len(signal), hop_length), 0)) * (unwrap_or(div(n_fft, 2), 0) + 1) + 8192
     depth <= 32
