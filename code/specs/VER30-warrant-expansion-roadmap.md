@@ -867,4 +867,13 @@ Owner decisions, 2026-11-16, on VER04o's open questions.
     `flood-resistance: not evidenced`.
 24. **VER04o OWN-5: generic claims across VER29 layers fail closed**
     (`generic-not-published`, VER04o CT10).
+25. **VER04s owner questions OWN-R1 and OWN-R2 (2026-11-16).** OWN-R1: keep the
+    VER30 order; recursive types are implemented after the four features
+    (opaque types, collections, generics, floats), and only the groundwork slice
+    R1-S0 may start early. OWN-R2: `canonical-cbor` is confirmed as the
+    recursive-types pilot, as a partial adoption of 3 of 8 entries (`encode`,
+    `try_encode`, `decode`), with the other five tabled as not covered;
+    `bounded-json` is the second adopter (WX-R-PILOT2). Backlog rows WX-R0 to
+    WX-R-PILOT2 and the VER04s amendment rows are in `VER-BACKLOG.md` and the
+    portable Warrant queue.
 26. PHY00a (trig convergence) owner answers: NaN beyond 2^29, 3-ulp gate, pinned tan/atan2 conventions, minor version bump per port (2026-11-16).

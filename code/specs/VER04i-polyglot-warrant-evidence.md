@@ -342,15 +342,15 @@ reject a tag it does not know).
 | `65` | variant | VER04r 2.4 | renumbered 2026-11-16 (was `62`) |
 | `66` | `Set` | VER04o 8.2 | spec only (2026-11-16) |
 | `67` | `Map` | VER04o 8.2 | spec only (2026-11-16) |
-| `68` to `79` | free; the next specification (VER04s recursive types, if it needs one) takes from `68` | none | free |
+| `68` to `79` | free; VER04s (recursive types) took none, so the next specification takes from `68` | none | free |
 | `80` | opaque recipe | VER04n 9.1 | merged 2026-11-16 |
 | `81` | opaque observation tuple | VER04n 9.1 | merged 2026-11-16 |
 | `82` to `8f` | reserved for VER04n | VER04n 9.1 | reserved |
 | `90` to `ff` | free | none | free |
 
-VER04s (recursive types) is expected to need no tag of its own: a value of a
-recursive type is a variant (`65`) whose fields nest. If its design needs one, it
-takes `68` (VER04o took `66` and `67`).
+VER04s (recursive types) took **no** tag: a value of a recursive type is a variant
+(`65`) whose fields nest, and a second tag would give one value two encodings
+(VER04s 7.1). `68` is still the lowest free value (VER04o took `66` and `67`).
 
 **Diagnostic codes** (`W` codes of the Warrant checker and generator).
 
@@ -366,7 +366,8 @@ takes `68` (VER04o took `66` and `67`).
 | `W0734` to `W0749` | free | none | free |
 | `W0750` to `W0759` | opaque types (`W0750` to `W0753` assigned) | VER04n | merged; the block is reserved |
 | `W0760` to `W0769` | collections and generics (`W0760` to `W0765` assigned) | VER04o | spec only (2026-11-16); the block is reserved |
-| `W0770` and up | free | none | free |
+| `W0770` to `W0779` | recursive types (`W0770` to `W0773` assigned) | VER04s | spec only (2026-11-16); the block is reserved |
+| `W0780` and up | free | none | free |
 
 On 2026-11-16 the registry was built by reading every specification under
 `code/specs` that allocates either kind. **Stream tags had three collisions**
@@ -1356,7 +1357,7 @@ is the same digest.
 subject result of §2.5 are not in this fixture; each lane covers them with its
 falsification tests until a later category lands (case files are only *added* to
 `-v1`; changing an expectation means `-v2`). The Go lane (WD-103) merged before the
-fixture existed and adopts it in a follow-up.
+fixture existed and now passes it.
 
 ## 10. Layer C: proofs per lane (not-live)
 

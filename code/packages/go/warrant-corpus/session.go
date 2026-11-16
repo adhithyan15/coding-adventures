@@ -81,6 +81,12 @@ func outcomePassed(outcome *Outcome) bool {
 
 func noFault(text string) bool { return text == "" || text == "none" }
 
+// An unknown FAULT NAME is a usage error (exit 2). An unknown or inapplicable OP
+// after the colon is not checked here, and the Python and TypeScript lanes do
+// not check it either: such a run simply faults nothing and exits as a clean
+// filtered run would. The three lanes agree on this, so it is left as is rather
+// than made a Go-only refusal (reported in WD-100's follow-up note).
+//
 // parseFaultSpec splits WARRANT_EVIDENCE_FAULT (`<fault>` or `<fault>:<op>`).
 // `none` and the empty string mean "no fault" -- a CLEAN run.
 func parseFaultSpec(text string) (fault, op string) {
