@@ -48,9 +48,39 @@ MAX_INT_DIGITS = 4096
 
 #: Reserved words (VER04 section 2).  They can never be identifiers.
 RESERVED = frozenset(
-    "warrant model error op example claim assume platform environment none "
-    "labels public secret input hostile rejects with ensures bound fresh if "
-    "then else match forall exists not and or true false".split()
+    [
+        "warrant",
+        "model",
+        "error",
+        "op",
+        "example",
+        "claim",
+        "assume",
+        "platform",
+        "environment",
+        "none",
+        "labels",
+        "public",
+        "secret",
+        "input",
+        "hostile",
+        "rejects",
+        "with",
+        "ensures",
+        "bound",
+        "fresh",
+        "if",
+        "then",
+        "else",
+        "match",
+        "forall",
+        "exists",
+        "not",
+        "and",
+        "or",
+        "true",
+        "false",
+    ]
 )
 
 INT_SUFFIXES = ("u8", "u16", "u32", "u64", "i8", "i16", "i32", "i64")

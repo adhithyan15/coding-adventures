@@ -14,18 +14,130 @@ from coding_adventures_warrant_oracle.parser import MAX_NESTING, parse_source
 # (module, document version, declarations, declaration census).  Written down from
 # a first reading and then cross-checked against a line scan of each file below.
 GOLDEN = {
-    "ct-compare": ("ct_compare", "v0", 47, {"AssumeDecl": 2, "BoundDecl": 4, "ClaimDecl": 9, "ErrorDecl": 1, "ExampleDecl": 12, "InputDecl": 9, "LabelsDecl": 4, "ModelDecl": 2, "OpDecl": 4}),
-    "gf256": ("gf256", "v0", 128, {"AssumeDecl": 2, "BoundDecl": 6, "ClaimDecl": 38, "ErrorDecl": 1, "ExampleDecl": 35, "InputDecl": 11, "LabelsDecl": 6, "ModelDecl": 23, "OpDecl": 6}),
-    "wasm-leb128": ("wasm_leb128", "v1", 163, {"AssumeDecl": 2, "BoundDecl": 6, "ClaimDecl": 42, "ErrorDecl": 1, "ExampleDecl": 39, "InputDecl": 12, "LabelsDecl": 6, "ModelDecl": 49, "OpDecl": 6}),
-    "logic-gates": ("logic_gates", "v1", 340, {"AssumeDecl": 2, "BoundDecl": 22, "ClaimDecl": 88, "ErrorDecl": 1, "ExampleDecl": 83, "InputDecl": 41, "LabelsDecl": 22, "ModelDecl": 59, "OpDecl": 22}),
-    "lzw": ("lzw", "v1", 89, {"AssumeDecl": 2, "BoundDecl": 2, "ClaimDecl": 21, "ErrorDecl": 1, "ExampleDecl": 27, "InputDecl": 2, "LabelsDecl": 2, "ModelDecl": 30, "OpDecl": 2}),
-    "arithmetic": ("arithmetic", "v1", 218, {"AssumeDecl": 2, "BoundDecl": 5, "ClaimDecl": 63, "ErrorDecl": 1, "ExampleDecl": 53, "InputDecl": 12, "LabelsDecl": 5, "ModelDecl": 69, "OpDecl": 5, "RecordDecl": 2, "VariantDecl": 1}),
-    "x25519": ("x25519", "v1", 26, {"ClaimDecl": 8, "ErrorDecl": 1, "ExampleDecl": 9, "LabelsDecl": 3, "ModelDecl": 2, "OpDecl": 3}),
+    "ct-compare": (
+        "ct_compare",
+        "v0",
+        47,
+        {
+            "AssumeDecl": 2,
+            "BoundDecl": 4,
+            "ClaimDecl": 9,
+            "ErrorDecl": 1,
+            "ExampleDecl": 12,
+            "InputDecl": 9,
+            "LabelsDecl": 4,
+            "ModelDecl": 2,
+            "OpDecl": 4,
+        },
+    ),
+    "gf256": (
+        "gf256",
+        "v0",
+        128,
+        {
+            "AssumeDecl": 2,
+            "BoundDecl": 6,
+            "ClaimDecl": 38,
+            "ErrorDecl": 1,
+            "ExampleDecl": 35,
+            "InputDecl": 11,
+            "LabelsDecl": 6,
+            "ModelDecl": 23,
+            "OpDecl": 6,
+        },
+    ),
+    "wasm-leb128": (
+        "wasm_leb128",
+        "v1",
+        163,
+        {
+            "AssumeDecl": 2,
+            "BoundDecl": 6,
+            "ClaimDecl": 42,
+            "ErrorDecl": 1,
+            "ExampleDecl": 39,
+            "InputDecl": 12,
+            "LabelsDecl": 6,
+            "ModelDecl": 49,
+            "OpDecl": 6,
+        },
+    ),
+    "logic-gates": (
+        "logic_gates",
+        "v1",
+        340,
+        {
+            "AssumeDecl": 2,
+            "BoundDecl": 22,
+            "ClaimDecl": 88,
+            "ErrorDecl": 1,
+            "ExampleDecl": 83,
+            "InputDecl": 41,
+            "LabelsDecl": 22,
+            "ModelDecl": 59,
+            "OpDecl": 22,
+        },
+    ),
+    "lzw": (
+        "lzw",
+        "v1",
+        89,
+        {
+            "AssumeDecl": 2,
+            "BoundDecl": 2,
+            "ClaimDecl": 21,
+            "ErrorDecl": 1,
+            "ExampleDecl": 27,
+            "InputDecl": 2,
+            "LabelsDecl": 2,
+            "ModelDecl": 30,
+            "OpDecl": 2,
+        },
+    ),
+    "arithmetic": (
+        "arithmetic",
+        "v1",
+        218,
+        {
+            "AssumeDecl": 2,
+            "BoundDecl": 5,
+            "ClaimDecl": 63,
+            "ErrorDecl": 1,
+            "ExampleDecl": 53,
+            "InputDecl": 12,
+            "LabelsDecl": 5,
+            "ModelDecl": 69,
+            "OpDecl": 5,
+            "RecordDecl": 2,
+            "VariantDecl": 1,
+        },
+    ),
+    "x25519": (
+        "x25519",
+        "v1",
+        26,
+        {
+            "ClaimDecl": 8,
+            "ErrorDecl": 1,
+            "ExampleDecl": 9,
+            "LabelsDecl": 3,
+            "ModelDecl": 2,
+            "OpDecl": 3,
+        },
+    ),
 }
 KEYWORD = {
-    "claim": "ClaimDecl", "example": "ExampleDecl", "model": "ModelDecl", "op": "OpDecl",
-    "error": "ErrorDecl", "labels": "LabelsDecl", "input": "InputDecl", "bound": "BoundDecl",
-    "assume": "AssumeDecl", "record": "RecordDecl", "variant": "VariantDecl",
+    "claim": "ClaimDecl",
+    "example": "ExampleDecl",
+    "model": "ModelDecl",
+    "op": "OpDecl",
+    "error": "ErrorDecl",
+    "labels": "LabelsDecl",
+    "input": "InputDecl",
+    "bound": "BoundDecl",
+    "assume": "AssumeDecl",
+    "record": "RecordDecl",
+    "variant": "VariantDecl",
 }
 
 
@@ -94,7 +206,9 @@ def test_v1_constructs_in_arithmetic():
 def test_tuples_projection_and_static_builtins_in_wasm():
     doc = parse_source(adopter_bytes("wasm-leb128"))
     models = {d.name: d for d in doc.decls if isinstance(d, A.ModelDecl)}
-    assert str(models["du1"].ret) == "Result<((U64,Nat)),Leb128Error>".replace("((", "(").replace("))", ")")
+    assert str(models["du1"].ret) == "Result<((U64,Nat)),Leb128Error>".replace("((", "(").replace(
+        "))", ")"
+    )
     low7 = models["low7"].body
     assert isinstance(low7, A.Call) and low7.name == ("widen",) and low7.statics == ("U64",)
     mv = models["sx"].body
@@ -140,7 +254,7 @@ def test_static_application_versus_comparison():
     )
     assert isinstance(doc.decls[1].body, A.Binary)
     doc = parse_source(
-        b"warrant p\n  op f<N: Nat>(a: Bytes<N>) -> Bool\n  example e:\n    f<2>(b\"0000\") == true\n"
+        b'warrant p\n  op f<N: Nat>(a: Bytes<N>) -> Bool\n  example e:\n    f<2>(b"0000") == true\n'
     )
     call = doc.decls[1].body.left
     assert isinstance(call, A.Call) and call.statics == (2,)
@@ -167,7 +281,9 @@ def test_tuple_type_and_literal():
 
 
 def test_postfix_projection_forms():
-    doc = parse_source(b"warrant p v1\n  model m(t: (Nat, Bool)) -> Nat = t.0\n  model n(a: Nat) -> Nat = f(a).1\n")
+    doc = parse_source(
+        b"warrant p v1\n  model m(t: (Nat, Bool)) -> Nat = t.0\n  model n(a: Nat) -> Nat = f(a).1\n"
+    )
     assert doc.decls[0].body == A.Name(("t", "0"))
     assert doc.decls[1].body == A.Proj(A.Call(("f",), (), (A.Name(("a",)),)), "1")
 

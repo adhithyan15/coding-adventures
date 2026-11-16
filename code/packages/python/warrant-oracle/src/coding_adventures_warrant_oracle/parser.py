@@ -37,7 +37,7 @@ MAX_TUPLE_ARITY = 8
 
 #: Built-ins that take ``<...>`` static arguments (VER04j section 2.3 and 3.3).
 STATIC_BUILTINS = frozenset(
-    "widen wrap try max_value min_value from_be from_le fixed".split()
+    ["widen", "wrap", "try", "max_value", "min_value", "from_be", "from_le", "fixed"]
 )
 #: Words that can never be a name in expression position.  VER04 section 2
 #: lists the declaration keywords (``op``, ``claim`` ...) as reserved too, but the
@@ -45,7 +45,7 @@ STATIC_BUILTINS = frozenset(
 #: evidently treats them as contextual; the oracle follows the behaviour the
 #: adopters need and rejects only the words that *start or join expressions*.
 RESERVED = frozenset(
-    "if then else match with forall exists not and or true false".split()
+    ["if", "then", "else", "match", "with", "forall", "exists", "not", "and", "or", "true", "false"]
 )
 _COMPARE = ("==", "!=", "<", "<=", ">", ">=")
 _V1_ONLY = frozenset({"record", "variant", "ensures"})
@@ -262,9 +262,7 @@ class _Parser:
         name = self.ident()
         self.eat_op(":")
         inout = False
-        if self.is_word("inout") and (
-            self.peek(1).kind == "NAME" or self.is_op("(", 1)
-        ):
+        if self.is_word("inout") and (self.peek(1).kind == "NAME" or self.is_op("(", 1)):
             self.next()
             inout = True
         ty = self.type_()

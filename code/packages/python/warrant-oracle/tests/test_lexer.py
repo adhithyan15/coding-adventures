@@ -23,8 +23,20 @@ def texts(text: str) -> list[str]:
 
 def test_layout_tokens_for_a_nested_block():
     assert kinds("warrant m\n  a\n    b\n  c\n") == [
-        "NAME", "NAME", "NEWLINE", "INDENT", "NAME", "NEWLINE", "INDENT", "NAME", "NEWLINE",
-        "DEDENT", "NAME", "NEWLINE", "DEDENT", "EOF",
+        "NAME",
+        "NAME",
+        "NEWLINE",
+        "INDENT",
+        "NAME",
+        "NEWLINE",
+        "INDENT",
+        "NAME",
+        "NEWLINE",
+        "DEDENT",
+        "NAME",
+        "NEWLINE",
+        "DEDENT",
+        "EOF",
     ]
 
 
