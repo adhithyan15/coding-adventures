@@ -144,3 +144,31 @@ def test_containment_helper_relative_text() -> None:
     assert relative_inside("/r", "/rr", "posix") is None
     assert relative_inside("D:/r", "d:/R/x/y", "win32") == "x/y"
     assert relative_inside("D:/r", "C:/r/x", "win32") is None
+
+
+def test_reserved_names_and_trailing_dots_are_refused_components() -> None:
+    from coding_adventures_warrant_corpus.containment import refused_component
+
+    for name in ("CON", "con", "CON.txt", "NUL.", "nul ", "COM1", "com9.log", "LPT1", "com1.tar.gz", "x."):
+        assert refused_component(name), name
+    for name in ("console.txt", "COM10", "LPT0", "COM0", "CONx", "xCON", ".hidden", "a.CON.b", "\u017fon"):
+        assert not refused_component(name), name
+
+
+def test_ascii_fold_maps_only_a_to_z() -> None:
+    from coding_adventures_warrant_corpus.containment import ascii_fold
+
+    assert ascii_fold("Repo-\u00c9") == "repo-\u00c9"
+    for text in ("\u017f", "\u212a", "\u0130", "\u03a3", "\u03c2"):
+        assert ascii_fold(text) == text
+
+
+def test_production_win32_helper_refuses_reserved_names_and_folds_ascii_only(monkeypatch) -> None:
+    from coding_adventures_warrant_corpus import containment
+
+    monkeypatch.setattr(containment, "HOST_FLAVOR", "win32")
+    assert relative_inside("D:\\repo", "d:\\REPO\\x") == "x"
+    assert relative_inside("D:\\repo", "D:\\repo\\console.txt") == "console.txt"
+    for child in ("D:\\repo\\NUL", "D:\\repo\\con.txt", "D:\\repo\\AUX\\x", "D:\\repo\\a."):
+        assert relative_inside("D:\\repo", child) is None
+    assert relative_inside("D:\\\u212a", "D:\\k\\x") is None
