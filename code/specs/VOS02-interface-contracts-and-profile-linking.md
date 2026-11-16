@@ -237,7 +237,7 @@ state.
 | `reference` | a deterministic executable model with no `bound` rows | an `image` profile |
 
 This makes VOS-D009 independent of crate names: the name pattern `vos-*-any` is a
-two-way lint (section 7), never the authority.
+two-way lint (section 7.2), never the authority.
 
 **R7. The spine's document assumes no implementation ids.** The **profile
 package** is the package with the direct dependency edges (VER29 section 5.1(a)),
@@ -489,7 +489,7 @@ A crate declares its kind in its `Cargo.toml`:
 ```toml
 # vos.toml in the crate directory (Cargo.toml carries no VOS keys)
 kind = "production"             # or "reference", "any"
-evidence-features = ["ghost"]   # features that exist for evidence only; must be in the central list of section 7.8
+evidence-features = ["ghost"]   # features that exist for evidence only; must be in the central list of section 7.3
 ```
 
 The kind is **checked against the evidence**, not merely trusted: a crate that
@@ -564,8 +564,8 @@ section resolves it with the generator that exists.
 ### 4.2 The shape
 
 ```rust
-// vos-ready-bitmap/src/lib.rs  (the spike's source, shown in its natural form;
-// what ran is the interim form of section 4.4)
+// vos-ready-bitmap/src/lib.rs  (natural form, with the SH17 prefix; the spike ran the
+// interim form of section 4.4 with unprefixed export names)
 #![no_std]
 #![forbid(unsafe_code)]
 use vos_ready_contract::{Pick, ReadySet, Upd};
@@ -578,14 +578,14 @@ impl ReadySet for BitmapReady { type State = Bitmap; const N: u8 = 8; /* init, i
 pub mod ghost {
     use super::*;
     pub struct Image { pub mask: u8 }            // public fields, equal to State's (SH17)
-    pub fn insert(s: Image, p: u8) -> (Upd, Image) {
+    pub fn vos_ghost_insert(s: Image, p: u8) -> (Upd, Image) {
         let (o, Bitmap { mask }) = <BitmapReady as ReadySet>::insert(Bitmap { mask: s.mask }, p);
         (o, Image { mask })                      // exhaustive destructure, one UFCS call, restructure
     }
-    /* init, remove, pick, alpha, cfg_n: the same four-line shape */
+    /* vos_ghost_init, _remove, _pick, _alpha, _cfg_n: the same four-line shape */
 }
 #[cfg(feature = "ghost")]
-pub use ghost::{alpha, cfg_n, init, insert, pick, remove};   // see section 4.3
+pub use ghost::{vos_ghost_alpha, vos_ghost_cfg_n, vos_ghost_insert /* ... */};   // sections 4.3, 4.6
 ```
 
 The wrappers forward to the production code through the same UFCS call the spine
@@ -638,7 +638,7 @@ carries these (`canon_insert_img`, `canon_remove_img`, `canon_pick_img`).
 ### 4.5 The bindings file
 
 The generated harness needs bindings (VER04 section 6, VER04j section 14.1). The
-spike's, for the bitmap, abridged:
+spike's, for the bitmap, abridged (the spike ran with unprefixed `export=` names; SH17 now requires the `vos_ghost_` prefix, which changes only the `export=` and the wrappers' names):
 
 ```text
 package vos_ready_bitmap
@@ -648,9 +648,9 @@ struct Impl path=vos_ready_bitmap::ghost::Image fields=mask:u8
 struct AbsW path=vos_ready_bitmap::ghost::AbsW fields=w:u8
 enum Upd path=vos_ready_contract::Upd ctors=Changed,Unchanged,OutOfRange
 enum Pick path=vos_ready_contract::Pick ctors=NoneReady,Member(0:u8)
-op insert_out export=insert_out args=Impl,u8 ret=Upd faults=wrong-ctor
-op insert_img export=insert_img args=Impl,u8 ret=Impl faults=field-zero
-op alpha_w export=alpha_w args=Impl ret=AbsW faults=field-zero
+op insert_out export=vos_ghost_insert_out args=Impl,u8 ret=Upd faults=wrong-ctor
+op insert_img export=vos_ghost_insert_img args=Impl,u8 ret=Impl faults=field-zero
+op alpha_w export=vos_ghost_alpha_w args=Impl ret=AbsW faults=field-zero
 ```
 
 The package declares the test target with `required-features = ["ghost"]` and
@@ -664,8 +664,8 @@ These extend VOS01 section 1.4's table (the shape check, VOS-D002).
 
 | Id | Rule | Why | Checked by |
 |---|---|---|---|
-| SH17 | In the `ghost` module: every `Image` struct has exactly the fields of the `State` struct it mirrors, same names, types and order; every wrapper body is an **exhaustive destructure** of the production `State` (a struct pattern with no `..`), one UFCS call into the production trait, and a restructure into the image; no other statement | a field added to `State` and forgotten in the image breaks the build (the spike confirmed E0027 and E0063), so the image cannot silently describe a different state than the one that ships | NEW(VOS-D002): lexical, VER08a lexer |
-| SH18 | No path containing `ghost::`, no `use` of a ghost item and no `cfg(feature = "ghost")` item appears in **non-ghost class K source**, except the `mod ghost` item itself and `pub use ghost::...` items that are themselves gated by the same feature. **Extension:** no `cfg(feature = "<f>")` or `cfg_attr` mentioning an **evidence feature** `<f>` (`ghost`, `cov`, or any name in `evidence-features`) appears anywhere in the crate except on that one `mod` and its gated `pub use` items; and every `cfg(feature = ...)` in the crate names a feature declared in `Cargo.toml` (section 7.8) | the ghost face must not become reachable from the shipped build; a gated re-export (section 4.3) is the one exception, and it is gated | NEW(VOS-D002): lexical |
+| SH17 | In the `ghost` module: **every item, and every crate-root re-export of one, is named with the prefix `vos_ghost_`** (the Warrant operation name is free; the binding's `export=` carries the prefixed name); every `Image` struct has exactly the fields of the `State` struct it mirrors, same names, types and order; every wrapper body is an **exhaustive destructure** of the production `State` (a struct pattern with no `..`), one UFCS call into the production trait, and a restructure into the image; no other statement | a field added to `State` and forgotten in the image breaks the build (the spike confirmed E0027 and E0063), so the image cannot silently describe a different state than the one that ships | NEW(VOS-D002): lexical, VER08a lexer |
+| SH18 | No path containing `ghost::`, no `use` of a ghost item and no `cfg(feature = "ghost")` item appears in **non-ghost class K source**, except the `mod ghost` item itself and `pub use ghost::...` items that are themselves gated by the same feature. **Extension:** no `cfg(feature = "<f>")` or `cfg_attr` mentioning an **evidence feature** `<f>` (`ghost`, `cov`, or any name in `evidence-features`) appears anywhere in the crate except on that one `mod` and its gated `pub use` items; and every `cfg(feature = ...)` in the crate names a feature declared in `Cargo.toml` (section 7.3) | the ghost face must not become reachable from the shipped build; a gated re-export (section 4.3) is the one exception, and it is gated | NEW(VOS-D002): lexical |
 
 SH17 is the structural half of "the ghost face is faithful": the wrapper cannot
 compute anything, so what it forwards is what the production code returns. It
@@ -716,7 +716,7 @@ The audit target of a profile is that block plus the profile manifest
 1. Exactly one `impl <Profile trait> for <T>` item per profile type `T`
    (AM5, negative control NC12).
 2. Each `type A = <path>;` names a type of a crate that is a manifest row (the
-   closed world of SH16 step 2).
+   static closed-world rule of section 7.2).
 3. The spine and the leaf crates contain no path into an implementation crate.
 4. Every interface use in the spine is UFCS through `P::<Assoc>` (VOS00 rule 5); a
    method-call form is a finding.
@@ -819,14 +819,14 @@ lock = "vos-lock 1" LF
                                                                      ; certificate_sha256 toolchain features
          { "obl " IDENT "." TIER "." CLAIM SP "claim_sha256=" HEX SP "claim_entries_sha256=" HEX LF }
          { "cfg " IDENT SP KEY "=" DEC SP "example=" IDENT LF } }
-       { "build image record-sha256=" HEX SP "image-sha256=" HEX SP "toolchain-sha256=" HEX LF }   ; section 7.5
+       [ "build image " ...  LF ]   ; record, image and toolchain digests: defined by VOS22
        { "theorem " IDENT SP "profile-sha256=" HEX SP "transfer=" ( "none" | "single-trace" ) LF }
        "end" LF
 ```
 
 `features=` on an `impl` pin is the resolved feature set of that crate in **each
-named build** (`evidence` and `image`, section 7); for an image it is a record of what
-was found, checked against the policy of section 7.2 step 5, never an expectation.
+named build** (`evidence` and `image`); for an image it is a record of what
+was found, checked against the policy of section 7.2 rule 4, never an expectation.
 Every comparison that decides a gate uses the **full 64-hex SHA-256**; the 16-hex
 `stack=` token is display only and is never compared (EMU00 Q14 states that the
 full digest is what AC-7 compares). `cfg` rows record that the
@@ -891,7 +891,7 @@ and transfers nothing.
 The board is EMU00 section 5.2's `rv32-virt-lite` (`isa rv32i`, a UART, a timer,
 RAM with a `kernel` slot and a ROM with a `bootrom` slot). The profile references
 it by name; the lock pins its SHA-256 and the `stack` token EMU00 Q14 defines.
-The image has **two named builds** (section 7): the `evidence` build on the host with
+The image has **two named builds** (the mechanism of the image build is VOS22, section 7.1): the `evidence` build on the host with
 `ghost` on, and the `image` build for the target with no features.
 
 ```text
@@ -987,184 +987,97 @@ elsewhere, and a pre-existing symlink at that path fails.
 
 ---
 
-## 7. SH16 and the hermetic image build
+## 7. SH16: the requirement, and the static rules VOS02 owns
 
-### 7.1 The gate, and why resolved features are not enough
+### 7.1 The requirement
 
-SH16 (VOS01 section 1.4, VOS-D009) says no `-any` crate and no `ghost` feature may be
-in an `image` profile's build. It binds the **image build**, not the evidence build,
-which has `ghost` on by design. A gate that reads Cargo's resolution is bypassable, and
-the spike measured two routes (section 13.4): under resolver 1 `cargo tree` showed no
-`ghost` while the build compiled it, and `RUSTFLAGS='--cfg feature="ghost"'` is
-invisible to `cargo tree` but present in `cargo build -v`. Others (`build.rs`
-printing `cargo:rustc-cfg`, proc macros, `RUSTC_WRAPPER`, `.cargo/config.toml`
-`rustflags`, `[source]`/`[patch]`, `--unit-graph` being nightly-only) are closed by
-construction. Rather than deny each route, the design removes the ambient inputs:
-**the image is built in a pristine, generated tree that the repository cannot
-influence, and what the compiler was actually asked is recorded, not parsed from
-logs.** One design, in six parts.
+**SH16 (normative).** An `image`-class build contains no `-any` crate, no `ghost` or
+other evidence feature, and no ghost code. This document states the requirement and the
+checks that are cheap and sound **now**, on source and manifests: kind keyed on
+evidence (R6), the lexical rules, the file bans of section 7.2, the central
+evidence-feature list and the lock authority. **How an image is built so that the
+requirement can be checked on what was actually compiled** (a hermetic, recorded
+build) is **not** specified here: it is VOS22 (`VOS22-hermetic-image-build.md`, not yet written), which
+**must exist before any image is built** (backlog VOS-036). Until it does, no VOS
+profile may be `class image`, and `check-profile` rejects the class. The appendix
+records every build-gate finding of the security review as the input to VOS22; none is
+dropped by the split.
 
-### 7.2 Phase 1: static checks, no code executed
+### 7.2 Static rules (no code executed)
 
-Run first and alone; nothing is built unless all pass. `cargo metadata` and
-`cargo tree` run no build scripts or proc macros.
+1. **Closed world, by manifests.** Every dependency of an image profile's package is a
+   manifest row, `core` or `compiler_builtins`; every source is an in-tree path (no
+   registry, git, `[patch]`, `[replace]`, `package =`; VER29 section 5.1.1).
+2. **No build scripts, no proc macros, by file as well as key.** In every closed-world
+   crate: no `build =` key of **any** value (`false` included), no `build.rs` file at
+   the package root (Cargo auto-detects it), no custom-build target, and no
+   `proc-macro = true`; unless the crate is a manifest row of a declared kind that pins
+   the script by SHA-256 (none today).
+3. **Kinds.** Each node's kind is `contract`, `production`, `spine`, `hal` or `profile`;
+   its `vos.toml` kind equals the manifest's and agrees with the evidence (a `production`
+   crate's **parsed** claims match the `canonical` obligations by `claim_sha256`; no node
+   carries an `any` block). The `*-any` name is a lint only (R6).
+4. **Features, as resolved by the manifests.** Every non-default feature of every node is
+   off, and no node enables an evidence feature (section 7.3). This is a static reading of
+   `Cargo.toml`; it is **not** proof of what was compiled (VOS22 closes that).
+5. **Lexical.** SH17, SH18 and its `cfg` containment (section 4.6) over every class K
+   crate, and the cross-check of section 7.3.
 
-1. Parse `profile.vos` and `profile.lock` with `vos-manifest`; require `class image`.
-2. **Environment policy** (section 7.3, part c) holds for the gate's own process.
-3. **Closed world.** Every node of the image target's normal and build dependency
-   graph is a manifest row, `core` or `compiler_builtins`; every source is an in-tree
-   path (no registry, git, `[patch]`, `[replace]`, `package =`; VER29 section 5.1.1).
-   Manifest-level bans: **no `build =` key and no `proc-macro = true`** in any node,
-   unless the node is a manifest row of a declared kind that pins the script by
-   SHA-256 (none today).
-4. **Kinds.** Each node's kind is `contract`, `production`, `spine`, `hal` or
-   `profile`; its `vos.toml` kind equals the manifest's and agrees with the evidence
-   (a `production` crate's **parsed** claims match the `canonical` obligations by
-   `claim_sha256`; no node carries an `any` block). The `*-any` name is a lint only.
-5. **Features, per `(package, host|target)` unit.** The resolved set must be a subset
-   of the **policy** compiled into `vos-link` (the empty set plus an initially empty
-   allowlist); the policy is never read from the lock. Every non-default feature is off,
-   and the set never intersects the evidence-only set (section 7.8).
-6. **Lexical.** SH18 with its `cfg` containment (section 4.6) and the section 7.8
-   cross-check, over every class K crate in the closed world.
-
-### 7.3 Phase 2: the hermetic build
-
-`vos-link build --build image <profile.vos>` is the **only sanctioned way to build an
-image**, and the gate is that build, so gate and shipped invocation cannot differ.
-If release CI must build otherwise, it passes its argv to the same validator
-(`--argv-file`), which applies the same allowlist; nothing else ships.
-
-**(a) Pristine tree.** `vos-link` copies exactly the closed-world crates plus
-`Cargo.lock` into a freshly created private directory with **no `.cargo` and no
-`rust-toolchain*` anywhere above it**, and writes a **generated root `Cargo.toml`**:
-`[workspace]`, `resolver = "2"`, `[profile.*]` (`strip = false`, panic and lto policy)
-and no `[patch]`/`[replace]` all come from the tool's hard-coded policy, never from the
-repository. The repository's own `.cargo/config*`, root manifest and profiles are
-therefore **irrelevant to the image**, so nothing config-related is pinned in the lock
-(no lock-authority regression, no machine paths). A repo `.cargo/config` that sets
-rustflags changes nothing, and that is a control (S7).
-`CARGO_HOME` and the target directory are fresh and empty, so no unit can be `Fresh`.
-
-**(b) Toolchain.** `cargo` and `rustc` are invoked by **absolute path**, each digest-
-checked against a pinned toolchain record (`toolchain-sha256` in the lock, set by
-review). The target must appear in `rustc --print target-list`; `.json` target specs
-are rejected.
-
-**(c) Environment: an allowlist, no denylist.** The child's environment is exactly
-`PATH` (fixed), `CARGO_HOME`, `CARGO_TARGET_DIR`, `TMPDIR` (all private),
-`RUSTC_WRAPPER` (the recorder, below), `VOS_RECORD_FILE` and `LANG=C`. The gate also
-**refuses to run** if its own environment has any `CARGO_*`, `RUST*` or `CC*` variable
-outside that list (this covers `CARGO_BUILD_RUSTC*`, `CARGO_TARGET_<T>_LINKER` and
-`_RUNNER`, `CARGO_PROFILE_*`, `CARGO_UNSTABLE_*`, `RUSTC_BOOTSTRAP`, `RUSTUP_TOOLCHAIN`,
-`RUST_TARGET_PATH`, rustflags variables) without naming them.
-
-**(d) Flag allowlist.** argv is an array, never a shell, and may contain only
-`build`, `--locked`, `--offline`, `--release`, `--package=<p>`, `--target=<t>` and
-`--message-format=json`. Everything else (`--config`, `-Z`, `--manifest-path`,
-`--features`, `--workspace`, a second `--package`) is rejected. `TRIPLE` matches
-`[a-z0-9][a-z0-9_.-]*` and is in the target list.
-
-**(e) Sandbox.** The build needs no network and no secrets. Requirement on the CI
-runner: no network namespace access and no credentials in the job. What `vos-link`
-enforces itself: `--offline`, an environment without secrets, a read-only copy of the
-sources (build output goes only to the fresh target directory), and a private
-`TMPDIR`. It cannot enforce kernel-level isolation, and says so in the report.
-
-### 7.4 The recorder and the unit check
-
-`RUSTC_WRAPPER` is `vos-link`'s own tiny recorder binary, the one exempted wrapper. For
-each `rustc` call it appends a **structured record** to `VOS_RECORD_FILE`: the argv as
-an array, `CARGO_MANIFEST_DIR` (relative to the pristine root), `CARGO_PKG_NAME`,
-`CARGO_CRATE_NAME`, and host or target. It then execs the real `rustc`. A record is
-written by length-prefixed fields, so metadata containing newlines cannot spoof a
-neighbour (nothing is parsed from a text log). A unit is keyed by
-`(manifest dir, crate name, -C metadata, host|target)`.
-
-The gate **fails unless there is exactly one unit per closed-world node per kind** and
-no other unit; it fails on any `Fresh` marker or `fresh:true` message (a cached unit
-would skip the recorder). On the records: every `--cfg` is in the allowlist
-(`feature="<f>"` only for features the section 7.2 policy permits on that crate); `-C`,
-`--extern`, `-L` and `--target` are exactly Cargo's defaults for the sanctioned argv;
-nothing mentions `ghost`, `cov` or an `-any` crate. The **record digest** is over the
-records after normalisation (paths relative, sorted by unit key), not the raw output.
-
-### 7.5 Scan, snapshot and the image digest
-
-After the build, `vos-link` scans the image with its own ELF reader (no subprocess):
-symbol table and printable strings must not contain the crate name of an `-any` crate,
-the ghost prefix, or any item name in the ghost modules. This scan is **heuristic and
-name-based**: it matches only names unique to ghost code (every ghost item carries the
-forced prefix `vos_ghost_`, a rule SH17 checks), a pass is **never evidence of
-absence**, and a stripped or symbol-less image fails. The ELF reader has a fuzz target
-(VER06). The strong check is the link-map origin test of VOS-026.
-
-Phase 1, the build and the scan run on **one checkout snapshot** (a commit id recorded
-in the report). The report binds `image-sha256` to the record digest, the scan result
-and the snapshot id; the lock stores `record-sha256` and `image-sha256` for the image
-build and `toolchain-sha256`.
-
-### 7.6 Authority: lock, owners, review
-
-A lock that the tool regenerates and CI then trusts blesses tampering, so:
-
-1. CI runs `check-profile` and `sh16` read-only and fails on any diff from the
-   recomputed lock. For an image profile the feature and cfg policy is hard-coded in
-   `vos-link`; the lock records findings, never expectations.
-2. **CODEOWNERS** guards the authority paths: `profile.vos`, `profile.lock`,
-   `contract.vos`, `**/*.part`, each crate's `vos.toml`, every `evidence.bindings`,
-   `.cargo/**`, `rust-toolchain*`, root `Cargo.toml` and `Cargo.lock`,
-   `.github/workflows/**`, `CODEOWNERS` itself, and the sources of `vos-link`,
-   `vos-manifest` and `vos-shape-check`. A commit trailer was rejected: it is written
-   by the change's author and authorises nothing (VER29 section 5.3.1 is a visibility
-   device).
-3. `vos-link check-owners` evaluates, per path, the **effective owner by last-match-wins**
-   (GitHub's rule) and fails if any authority path has none. It prints
-   `git diff base...HEAD --name-only` filtered to those paths.
-4. **External prerequisite, recorded here:** branch protection with "Require review from
-   Code Owners" on the default branch. `check-owners` verifies it with
-   `gh api repos/{owner}/{repo}/branches/{branch}/protection` where the token allows,
-   and otherwise prints `unverified`. **Limit, stated:** with a single maintainer, or
-   with admin bypass enabled, the review gate protects nothing the maintainer does not
-   choose to be protected from; the report prints that.
-5. The report prints the lock digest and the base-branch lock digest.
-
-### 7.7 Negative controls (the marked ones must pass)
-
-| # | Setup | Expected |
-|---|---|---|
-| S1 | `ghost` enabled through a third crate | phase 1 step 5 fails |
-| S2 | an `-any` crate renamed, declares `kind = "any"` | step 4 fails by kind |
-| S3 | an `-any` relabelled `production` in `profile.vos` | step 4 fails (parsed claims) |
-| S4 | `ghost` in a crate's `default` features | step 5 fails |
-| S5 | `[patch]` or `package =` in the graph | step 3 fails |
-| S6 | `ghost` only through a dev-dependency, resolver 2 | **passes** |
-| S7 | `RUSTFLAGS`, `.cargo/config.toml` `rustflags`, or any repo `.cargo/config` | env var: gate refuses (c); repo config: **passes**, irrelevant to the pristine tree |
-| S8 | `build.rs` printing `cargo:rustc-cfg=feature="ghost"` | step 3 fails before any build |
-| S9 | a proc-macro crate | step 3 fails before any build |
-| S10 | workspace `resolver = "1"` with ghost via a dev-dependency | **passes**: the generated root uses resolver 2 and the repo's setting is ignored |
-| S11 | `RUSTC_WRAPPER` set; argv with `--workspace`, `--config`, `-Z`, `--features` or a second `--package` | (c) or (d) fails |
-| S12 | `-any` or `vos_ghost_` names in the image, or a stripped image | scan fails |
-| S13 | lock regenerated by the author to allow ghost | policy fails it; `check-owners` flags the paths |
-| S14 | a unit that is `Fresh` (reused target dir) | record check fails |
-| S15 | a `CARGO_PKG_*` value containing newlines that imitates a record | no effect: records are length-prefixed |
-| S16 | `CARGO_BUILD_RUSTFLAGS`, `CARGO_TARGET_<T>_RUNNER` or `RUSTUP_TOOLCHAIN` set | gate refuses (c) |
-| S17 | a `.json` target spec, or a triple not in `--print target-list` | (b) fails |
-| S18 | a missing unit, or an extra unit, for a closed-world node | record check fails |
-| S19 | `cargo` or `rustc` whose digest differs from the pinned record | (b) fails |
-
-### 7.8 Evidence features are policy, not self-declaration
+### 7.3 Evidence features are policy, not self-declaration
 
 `vos.toml` (a dedicated file in each crate directory, 4 KiB cap, parsed by
 `vos-manifest`; `Cargo.toml` carries no VOS keys) declares `kind` and
 `evidence-features`, but the authority is a **central list in `vos-link`** (initially
-`ghost`, `cov`). A declared name outside the list is an error. For an image every
-non-default feature of every node is off, and any feature on a class K crate outside
-the central image allowlist (initially empty) fails. Cross-check, lexical: every
-`cfg(feature = ...)` or `cfg_attr` in a crate names a feature in its `[features]`, and
-a feature that gates code is either in `evidence-features` (SH18's gating shape applies)
-or absent from the class K crate; a feature that gates code and is declared nowhere is
-a finding.
+`ghost`, `cov`). A declared name outside the list is an error. Any feature on a class K
+crate outside the central image allowlist (initially empty) fails for an image. Lexical
+cross-check: every `cfg(feature = ...)` or `cfg_attr` in a crate names a feature in its
+`[features]`, and a feature that gates code is either in `evidence-features` (SH18's
+gating shape applies) or absent from the class K crate; a feature that gates code and is
+declared nowhere is a finding.
+
+### 7.4 Lock authority
+
+A lock the tool regenerates and CI then trusts blesses tampering, so:
+
+1. CI runs `check-profile` **read-only** and fails on any diff from the recomputed lock.
+   The image feature policy is hard-coded in `vos-link`; the lock records findings,
+   never expectations.
+2. **CODEOWNERS** guards the authority paths: `profile.vos`, `profile.lock`,
+   `contract.vos`, `**/*.part`, each crate's `vos.toml`, every `evidence.bindings`,
+   `.cargo/**`, `rust-toolchain*`, root `Cargo.toml` and `Cargo.lock`,
+   `.github/workflows/**`, `CODEOWNERS` itself, and the sources of `vos-link`,
+   `vos-manifest` and `vos-shape-check`. A commit trailer was rejected: it is written by
+   the change's author and authorises nothing (VER29 section 5.3.1 is a visibility
+   device).
+3. `vos-link check-owners` evaluates, per path, the **effective owner by last-match-wins**
+   and fails if any authority path has none; it prints `git diff base...HEAD --name-only`
+   filtered to those paths.
+4. **External prerequisite, recorded here:** branch protection with "Require review from
+   Code Owners" on the default branch. `check-owners` verifies it through
+   `gh api repos/{owner}/{repo}/branches/{branch}/protection` where the token scope
+   allows; an `unverified` result **fails closed for a release** and is only a warning
+   elsewhere. Limit, stated: with a single maintainer or admin bypass the gate protects
+   nothing the maintainer does not choose to be protected from, and the report says so.
+5. The report prints the lock digest and the base-branch lock digest.
+
+### 7.5 Controls VOS02 owns, and the pointer
+
+The lock rows VOS02 itself needs are in section 6.3. Rows for the image build (record,
+image and toolchain digests) are **defined by VOS22**. The negative controls of the
+build mechanism (environment, argv, caching, record spoofing, toolchain and target
+checks, the image scan, repo `.cargo`, resolver 1) are listed in the appendix for VOS22.
+
+| # | Setup | Expected |
+|---|---|---|
+| S1 | `ghost` enabled through a third crate | rule 4 fails |
+| S2 | an `-any` crate renamed, declares `kind = "any"` | rule 3 fails by kind |
+| S3 | an `-any` relabelled `production` in `profile.vos` | rule 3 fails (parsed claims) |
+| S4 | `ghost` in a crate's `default` features | rule 4 fails |
+| S5 | `[patch]` or `package =` in the graph | rule 1 fails |
+| S6 | `ghost` only through a dev-dependency | **passes** (not in the normal or build graph) |
+| S7 | a `build.rs` file with no `build =` key; `build = false` beside a `build.rs`; a proc-macro crate | rule 2 fails |
+| S8 | `profile.lock` regenerated by the author to allow ghost | the hard-coded policy fails it; `check-owners` flags the paths |
+| S9 | `class image` in `profile.vos` before VOS22 exists | `check-profile` rejects the class |
 
 ---
 ## 8. The four id kinds: what works now, what waits
@@ -1241,11 +1154,11 @@ and `cfg` list** of the evidence build (today the manifest has neither; the spik
 checked). A feature is **evidence-only** only if it is in the **central
 list** kept by the VOS validator (`ghost`, `cov`) **and** the lower package declares
 it in `vos.toml` `evidence-features`; a self-declared name outside the
-central list earns no exemption (VOS02 section 7.8). An
+central list earns no exemption (VOS02 section 7.3). An
 evidence-only feature that gates exactly one `mod` item, plus `pub use` items that
 re-export from that module and are gated by the same feature, is **not**
 `build-config-unpinned`: the link reads the profile lock's resolved features for the
-**image** build instead (section 7), which must not contain it. Any other feature
+**image** build instead (VOS22), which must not contain it. Any other feature
 difference is `build-config-unpinned` as today. Without this clause every
 ghost-built implementation's link would be open. (The "plus `pub use`" is a spike
 correction: the bindings reader needs the wrappers at the crate root, section 4.3.)
@@ -1260,7 +1173,7 @@ correction: the bindings reader needs the wrappers at the crate root, section 4.
    pass must read the `realises=` key from the binding and the shape check must
    fail the wrapper; neither alone is enough (the pair of controls is the test);
 4. a `type A = <path>` into a crate that is not a manifest row: not a VER29 result;
-   `check-profile` and SH16 step 2 reject it (the closed world);
+   `check-profile` and the closed-world rule of section 7.2 reject it;
 5. a use `<P::A as T>::f` where `T` resolves to a trait of a crate that is **not** a
    direct dependency (AM1's condition): `opaque`, as before.
 
@@ -1308,7 +1221,7 @@ and capability strengths are not withheld for class K (VER29 section 7.2.1).
 | Tool | Class | Home | What it does |
 |---|---|---|---|
 | `vos-manifest` | P (parser) | `code/packages/rust/vos-manifest` | parsers and canonical emitters for `contract.vos`, `profile.vos`, `profile.lock`; total, bounded, fail closed, a fuzz target per parser (VER06, as VOS-D001 requires of EMU00); `alloc` allowed (VOS01 section 1.6) |
-| `vos-link` | H (host) | `code/programs/rust/vos-link` | `gen-doc`, `check-doc`, `check-profile` (`--write-lock`), `sh16`; may run `cargo tree` and read files; owns no capability but the filesystem and a subprocess |
+| `vos-link` | H (host) | `code/programs/rust/vos-link` | `gen-doc`, `check-doc`, `check-profile` (`--write-lock`), `check-owners`; reads files; the image build command and its gate are VOS22 |
 | `vos-shape-check` | tool (class H) | `code/packages/rust/vos-shape-check` | SH1-SH15, SH17, SH18, class tags; uses the VER08a lexer as a **library**; reads each crate's class from its README (VOS01 section 1.6) |
 
 **Do not add modes to `ca-capability-analyzer`.** A change to that crate selects
@@ -1318,9 +1231,8 @@ library, so VOS changes select only VOS crates.
 
 `gen-doc` and `check-doc` are backlog row **VOS-033**, ahead of VOS-011: they are
 small, they have a prototype (section 13.1), and they make R2 true. `check-profile`
-and `sh16` (phase 1 static checks, the hermetic build with its recorder, the unit and
-scan checks) and `check-owners` are **VOS-034**, with VOS-012 (the
-first interface with two implementations); the link-map part of SH16 (section 7.5) arrives
+(static part: sections 7.2 and 7.4) and `check-owners` are **VOS-034**, with VOS-012 (the
+first interface with two implementations); the image part of SH16 (VOS22) arrives
 with VOS-026. The shape
 rules SH17 and SH18 and the audits of section 5 are VOS-D002 and VOS-D024. The trusted-base cost is that
 the conformance authority is `vos-link`: its negative controls (section 12) are
@@ -1332,14 +1244,12 @@ Commands, as the CI invocation will read them:
 vos-link gen-doc     code/packages/rust/vos-ready-bitmap            # writes code/specs/vos-ready-bitmap.warrant
 vos-link check-doc   code/packages/rust/vos-ready-bitmap            # exit 1 on any drift
 vos-link check-profile profiles/rtos-min/profile.vos [--write-lock]
-vos-link build       profiles/rtos-min/profile.vos --build image     # the only sanctioned image build (section 7.3)
-vos-link sh16        profiles/rtos-min/profile.vos --build image [--argv-file <f>]
-vos-link check-owners                                                # CODEOWNERS covers the authority files (section 7.6)
+vos-link check-owners                                                # CODEOWNERS covers the authority files (section 7.4)
 ```
 
-`vos-link` spawns Cargo and any other subprocess from an **argv array, never a shell**,
-under the flag and environment allowlists of section 7.3; the `TRIPLE` is checked
-against `rustc --print target-list`. Every path it touches is contained as in section 6.8.
+`vos-link` spawns any subprocess from an **argv array, never a shell**. The image build
+command (`vos-link build`, the recorder, the hermetic tree) and `sh16`'s build-time
+checks are specified by VOS22. Every path it touches is contained as in section 6.8.
 
 ---
 
@@ -1388,7 +1298,7 @@ timing      none claimed
 the bytes between `impl-begin` and `impl-end`) beside the contract digest: the
 contract block is shared and copied, but the implementation block is the one part a
 swap authors, and it is where `build` and `alpha` live (section 12.3). It also prints
-the lock digest and the base-branch lock digest (section 7.6). Every digest is the
+the lock digest and the base-branch lock digest (section 7.4). Every digest is the
 full 64-hex value; shortened forms in this document are for reading only.
 
 ---
@@ -1416,9 +1326,8 @@ marked `n/a` with a reason.
    `evidence-features`, and the test target has `required-features`.
 7. The profile is canonical text (parse then re-emit is byte-equal), the lock is
    current, and `check-profile` passes its six checks (section 6.6).
-8. An `image` profile passes SH16 (phase 1, the hermetic recorded build, the unit and
-   scan checks) on the build `vos-link build` ran (sections 7.2-7.5);
-   authority files changed only with CODEOWNERS review (section 7.6).
+8. No profile is `class image` until VOS22 exists; the static rules of section 7.2
+   pass; authority files changed only with CODEOWNERS review (section 7.4).
 9. The report prints the instance constants, `rests on -any` and the transfer row
    (section 11). Any resource figure printed is marked `example`.
 10. A contract change (any `.part` file) lists every implementation and profile it
@@ -1437,11 +1346,11 @@ the gate (VER04h section 6).
 | NC4 | a `-any` crate declared `production` | R6: no `canonical` evidence |
 | NC5 | a `production` crate carrying an `any` block | R6 |
 | NC6 | a stale lock after a contract change | `check-profile` (digest mismatch) |
-| NC7 | an `any` implementation in an `image` profile | eligibility, SH16 step 3 |
+| NC7 | an `any` implementation in an `image` profile | eligibility, section 7.2 rule 3 |
 | NC8 | a `hyper` theorem over an `any` or non-policy interface | `check-profile` (VOS-D007) |
 | NC9 | an implementation whose `bound` row exceeds the ceiling | `check-profile` (resource) |
 | NC10 | a board whose `isa` differs from the target | `check-profile` |
-| NC11 | every control S1-S19 of section 7.7 (unification, renamed or relabelled `-any`, `build.rs` and proc macros, environment and argv, `Fresh` units, spoofed records, bad targets and toolchains, ghost symbols, a regenerated lock; repo `.cargo` and resolver 1 must pass) | SH16 |
+| NC11 | every control S1-S9 of section 7.5 (unification, renamed or relabelled `-any`, `ghost` in `default`, `build.rs` file and proc macros, a regenerated lock, `class image` before VOS22; a dev-dependency-only ghost must pass) | SH16 static rules |
 | NC12 | two `impl Profile` blocks; a missing `realises=`; a wrapper that does not forward | AM5 controls 1-3 |
 | NC13 | an `Image` that lacks a field of `State`; a wrapper with `..` or extra statements | SH17 |
 | NC14 | a `ghost::` path in non-ghost class K source | SH18 |
@@ -1449,8 +1358,8 @@ the gate (VER04h section 6).
 | NC16 | a `config` value that differs from the implementation's `cfg_<name>` example | `check-profile` |
 | NC17 | a `.part` or `impl.part` containing a `-- vos02:` line or any control character other than LF; a duplicated, missing or reordered marker; a claim moved between blocks | `gen-doc` / `check-doc` (section 2.3); `carries` is parsed, not read from markers |
 | NC18 | an oversized file, a duplicate key or row, a `DEC` over 20 digits or above `u64::MAX`, a `..` or symlink in a bindings path | `vos-manifest` and `vos-link` (section 6.8) |
-| NC19 | an authority file (the list of section 7.6, including `vos.toml`, `.cargo/**`, workflows and the VOS tool sources) without an effective CODEOWNERS owner | `check-owners` (section 7.6) |
-| NC20 | a self-declared `evidence-features` name outside the central list; a feature that gates code but is declared nowhere | section 7.8 |
+| NC19 | an authority file (the list of section 7.4, including `vos.toml`, `.cargo/**`, workflows and the VOS tool sources) without an effective CODEOWNERS owner | `check-owners` (section 7.6) |
+| NC20 | a self-declared `evidence-features` name outside the central list; a feature that gates code but is declared nowhere | section 7.3 |
 
 ### 12.3 What equal tokens do not establish (the residue of R3)
 
@@ -1466,7 +1375,7 @@ at.
 **The trusted base, stated.** R4 and SH16 are only as good as the tools and the review
 that guard them. The authority is `vos-link` (digest comparison, the sanctioned build,
 the gate) together with `vos-manifest`, `vos-shape-check` and the **review gate on the
-authority files** (CODEOWNERS, section 7.6, whose branch-protection prerequisite a sole maintainer or an admin can bypass): a contributor who can edit a `.part`, the
+authority files** (CODEOWNERS, section 7.4, whose branch-protection prerequisite a sole maintainer or an admin can bypass): a contributor who can edit a `.part`, the
 lock, `contract.vos` or `profile.vos` and merge without that review can move the
 meaning of every obligation or the policy of the gate. Digest equality proves the
 text is the contract's; it does not prove the contract is right, and it does not prove
@@ -1583,7 +1492,7 @@ cargo tree -p img3 -e normal,build --prefix none --format '{p} [{f}]'    prints 
 ```
 
 The `--format '{p} [{f}]'` form lists each node's resolved features per package and
-works for any `--target`; it is a cross-check (phase 1, step 5), while the authority is the recorder of section 7.4.
+works for any `--target`; it is only a cross-check, while what was compiled is VOS22's question.
 
 ### 13.4 Findings that changed the brief
 
@@ -1594,9 +1503,9 @@ works for any `--target`; it is a cross-check (phase 1, step 5), while the autho
 | F3 | A negative control attaches to a claim by its **subject operation**: the first operation found by shallow search. In `dec(alpha_w(insert_img(...))) == ...` the subject is `alpha_w`, so `insert_img` had no control that could pass (3 negctls `not ok` until the commuting claims were added) | R5's canonical block uses the commuting form (section 4.4) |
 | F4 | `field-zero` on `init` is **inert** when the initial state's field is already 0: no claim can distinguish the faulted from the real value, so the `init` control fails (an example over the zero state had the same defect for `alpha_w` until it used a non-zero state) | WX-SV item 2 asks for a fault that changes a zero field; until then the `init` control is a known failure, recorded in the lock as `controls: init field-zero inert` |
 | F5 | The evidence manifest has no `features`, `cfg` or `config` field | AM4 (features and `cfg`) and WX-SV item 4 (`config`) |
-| F6 | The generated harness needs `coding_adventures_sha256` and `coding_adventures_test_bootstrap` as dev-dependencies | VOS-D002 must state that SH12 reads normal dependencies only (VOS01 section 1.4 does not say); the closed-world check of section 7.2 excludes dev-dependencies (S6) |
+| F6 | The generated harness needs `coding_adventures_sha256` and `coding_adventures_test_bootstrap` as dev-dependencies | VOS-D002 must state that SH12 reads normal dependencies only (VOS01 section 1.4 does not say); the static closed-world rule of section 7.2 reads normal and build dependencies only (S6) |
 | F7 | AM4 as briefed said "a feature that gates exactly one module item"; the root re-export is a second gated item | AM4 allows `pub use` items from that module (section 9.1) |
-| F8 | Resolver 1 makes `cargo tree -e normal,build` report no `ghost` while the build compiles it (dev-dependency unification); `RUSTFLAGS` cfgs are invisible to `cargo tree`; `--unit-graph` is nightly-only | SH16 builds in a pristine generated tree with an environment allowlist and a recorder (section 7.3-7.4), so resolver, rustflags and config no longer matter |
+| F8 | Resolver 1 makes `cargo tree -e normal,build` report no `ghost` while the build compiles it (dev-dependency unification); `RUSTFLAGS` cfgs are invisible to `cargo tree`; `--unit-graph` is nightly-only | VOS22 (hermetic, recorded build); see the appendix |
 
 Findings F1, F2 and F7 contradict the instructions this PR was written from (a
 path-valued `export=`, a `wrong-ctor` that reaches tuple components, an AM4 that
@@ -1631,3 +1540,96 @@ OK3, OB1, OF1, OR5 and section 18; and, in `code/packages/rust/warrant-grammar`,
 `src/binding.rs` (`is_rust_identifier` on `export=`), `src/evidence.rs`
 (`composite_adapter`, negative-control attachment) and `src/codegen.rs`
 (`find_operation_in_expr`).
+
+---
+
+## Appendix A. Image-build findings carried forward to VOS22
+
+The owner split the image-build mechanism out of this document after three rounds of
+security review. This list is the durable brief for VOS22 (`VOS22-hermetic-image-build.md`, not yet written),
+which must exist before any image is built (backlog VOS-036). Every build-gate finding is
+here, with its essence and the proposed fix; the non-build findings were fixed in this
+document.
+
+**Spike facts** (scratchpad, Cargo 1.94 stable; section 13.3):
+(a) under resolver 1, `cargo tree -e normal,build` shows no `ghost` while `cargo build -v`
+compiles it (dev-dependency unification), so the tree can lie;
+(b) a `RUSTFLAGS='--cfg feature="ghost"'` cfg is invisible to `cargo tree` and visible in
+`cargo build -v`;
+(c) `--unit-graph` is nightly-only on stable, so it cannot be the source of truth;
+(d) `cargo build -p a -p b` unifies features across the selected packages.
+
+**Round 1**
+1. **Bypass routes** (HIGH): `RUSTFLAGS`, `CARGO_*RUSTFLAGS`, `.cargo/config` rustflags,
+   `build.rs` `cargo:rustc-cfg`, proc macros, `RUSTC_WRAPPER`, config `[source]`/`[patch]`
+   never appear in resolved features. Fix: do not deny routes one by one; remove ambient
+   inputs (hermetic tree, env allowlist) and check what the compiler was asked.
+2. **Gate versus shipped invocation** (confused deputy): the gate checked one build and
+   release shipped another. Fix: one sanctioned build command; a CI argv goes through the
+   same validator; bind argv, record and image digests.
+3. **Resolver version**: resolver 1 hides dev-dependency unification. Fix: the generated
+   build root fixes `resolver = "2"`; compare features per (package, host|target) unit.
+7. **argv hygiene**: `TRIPLE` and package names reach a command line. Fix: argv array,
+   never a shell; `--target=`/`--package=` forms; triple checked against the target list.
+8. **`cargo tree` parsing**: dedupe markers and loose formats hide nodes. Fix: do not
+   parse text; use a recorder, or at least `--no-dedupe` with a delimiter-safe format.
+
+**Round 2**
+- **R2-1** The verbose log is spoofable through newlines in `CARGO_PKG_*`, and crate-name
+  matching is ambiguous. Fix: structured, length-prefixed records keyed by (manifest dir,
+  crate name, `-C metadata`, host|target).
+- **R2-2** A cached build prints `Fresh` and skips the log, so the check fails open. Fix:
+  a fresh target directory; fail on any `Fresh` unit.
+- **R2-3** The gate ran `build.rs` and proc macros before rejecting them. Fix: static phase
+  first (manifest and file bans), build only if it passes.
+- **R2-4** Cargo discovers `.cargo/config` from the cwd, not the package directory; config
+  and argv pins were read back from the lock; the CI argv had no flag allowlist; machine
+  paths ended up in the lock. Fix: build in a private tree with no `.cargo` above it, no
+  config pins at all, a strict flag allowlist, relative paths in records.
+- **R2-5** The env denylist was incomplete (`CARGO_BUILD_RUSTC*`, `CARGO_TARGET_<T>_LINKER`
+  and `_RUNNER`, `CARGO_PROFILE_*`, `CARGO_UNSTABLE_*`, `RUSTC_BOOTSTRAP`, `RUSTUP_TOOLCHAIN`,
+  `RUST_TARGET_PATH`); `.json` target specs; toolchain not pinned by binary; root
+  `Cargo.toml`, `Cargo.lock` and `[profile]` not pinned. Fix: an env **allowlist**, refuse
+  to run with stray `CARGO_*`/`RUST*`/`CC*`; reject `.json` targets; absolute toolchain
+  paths with a pinned digest; generate the root manifest and profiles from tool policy.
+
+**Round 3**
+- **M1** Phase-1 `cargo metadata`/`tree` on the repo tree makes Cargo probe `rustc` through
+  the repo's `.cargo/config` (`rustc`, `rustc-wrapper`) and `rust-toolchain.toml`. Fix: run
+  even the static graph queries in a pristine copy, or read the manifests with the tool's
+  own parser.
+- **M2** The pinned `rustc` may not be the one Cargo runs (`RUSTC` unset, `PATH` undefined);
+  the sysroot and `rust-lld` are unpinned; the recorder's handling of probe invocations
+  (`-vV`, `--print`) is undefined. Fix: set `RUSTC` to the pinned absolute path, pin the
+  whole sysroot by digest, and define recorder behaviour for probes (pass through, do not
+  count as units).
+- **M3** `build.rs` is auto-detected without a `build =` key. Fix (already a static rule,
+  section 7.2): ban the file, the custom-build target and `build = false`; VOS22 repeats the
+  check on the pristine copy.
+- **M4** The copy step is unspecified (symlinks, special files, `git archive` versus the
+  working tree, excluded directories), as are dev-dependencies, `workspace = true`
+  inheritance and offline `Cargo.lock` resolution. Fix: copy from `git archive` of the
+  snapshot commit, reject symlinks and special files, resolve `workspace = true` when
+  generating the root, vendor or pre-fetch nothing and require `Cargo.lock` to be complete.
+- **L1** The sandbox is stated, not enforced. Fix: name the runner mechanism (network
+  namespace, read-only mounts) and have the gate probe it, or fail closed for release.
+- **L2** The image scan relied on a `vos_ghost_` prefix that SH17 lacked. Fixed in this
+  document (SH17 now requires the prefix); VOS22 keeps the scan heuristic and never treats a
+  pass as evidence of absence.
+- **L3** A bare-metal image needs a policy linker script and linker flags. Fix: the generated
+  build root supplies them from tool policy; the recorder checks `-C link-arg`.
+- **L4** An `unverified` branch-protection check must fail closed for release, and the
+  `gh api` token scope must be stated. Fixed in section 7.4.
+- **L5** `image-sha256` must be reproducible (fixed timestamps, `SOURCE_DATE_EPOCH`, path
+  remapping); the recorder must be built from the base branch or digest-pinned; read JSON
+  with a real parser; stale `[package.metadata.vos]` and old section references (VOS-D022,
+  F6) were fixed in this document.
+
+**Controls VOS22 must carry** (moved out of section 7.5): `RUSTFLAGS` or
+`CARGO_BUILD_RUSTFLAGS`/`CARGO_TARGET_<T>_RUNNER`/`RUSTUP_TOOLCHAIN` set (gate refuses); a
+repo `.cargo/config` (must **pass**, irrelevant to the pristine tree); resolver 1 with a
+dev-dependency ghost (must pass: generated root is resolver 2); `RUSTC_WRAPPER` set; argv with
+`--workspace`, `--config`, `-Z`, `--features`, a second `--package`; a `Fresh` unit; a
+newline-in-metadata record spoof; a `.json` target or a triple not in the target list; a
+toolchain digest mismatch; a missing or extra unit; ghost or `-any` names in the image, or a
+stripped image; a probe invocation counted as a unit; a symlink or special file in the copy.
