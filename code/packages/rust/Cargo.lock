@@ -11769,6 +11769,17 @@ name = "rope"
 version = "0.1.0"
 
 [[package]]
+name = "rpg-grid-world"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "paint-batch-tiles",
+ "tilemap2d",
+]
+
+[[package]]
 name = "rsa-pkcs1-v1-5-sha256"
 version = "0.1.0"
 
