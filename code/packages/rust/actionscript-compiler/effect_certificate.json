@@ -1,0 +1,37 @@
+{
+  "schema_version": "ver24-effect-cert-v1",
+  "package": "rust/actionscript-compiler",
+  "source_digest": "db42072635e68f7bc75dfcbff512b82325b8b1242a2c8c88bf5849c5430d7e83",
+  "manifest_digest": "18226bf103e906b4e693bd045df1883067847ca0eb4b88adc1bc1958ec35a4c9",
+  "declared_effects": [],
+  "entry_points": [
+    {
+      "name": "compile_actionscript",
+      "signature": "pub fn compile_actionscript( source: &str, dialect: AsDialect, module_name: &str, ) -> Result<interpreter_ir::module::IIRModule, AsCompilerError>",
+      "effects": []
+    },
+    {
+      "name": "run_actionscript",
+      "signature": "pub fn run_actionscript(source: &str, dialect: AsDialect) -> Result<String, AsCompilerError>",
+      "effects": []
+    },
+    {
+      "name": "validate_dialect",
+      "signature": "pub fn validate_dialect(d: usize) -> Result<bool, AsCompilerError>",
+      "effects": []
+    },
+    {
+      "name": "validate_token_count",
+      "signature": "pub fn validate_token_count(n: usize) -> Result<bool, AsCompilerError>",
+      "effects": []
+    },
+    {
+      "name": "validate_instruction_count",
+      "signature": "pub fn validate_instruction_count(n: usize) -> Result<bool, AsCompilerError>",
+      "effects": []
+    }
+  ],
+  "unconditional_roots": [],
+  "banned_construct_exceptions": [],
+  "label": "proved"
+}

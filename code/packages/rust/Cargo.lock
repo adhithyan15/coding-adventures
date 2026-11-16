@@ -32,6 +32,17 @@ name = "aarch64-simulator"
 version = "0.1.0"
 
 [[package]]
+name = "actionscript-compiler"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "interpreter-ir",
+ "vm-core",
+]
+
+[[package]]
 name = "activation-functions"
 version = "0.1.0"
 

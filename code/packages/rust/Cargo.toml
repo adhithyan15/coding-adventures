@@ -36,6 +36,7 @@ members = [
     "twig-aot",
     "lang-aot",
     "nib-iir-compiler",
+    "actionscript-compiler",
     "javascript-iir-compiler",
     "python-iir-compiler",
     "ruby-iir-compiler",
