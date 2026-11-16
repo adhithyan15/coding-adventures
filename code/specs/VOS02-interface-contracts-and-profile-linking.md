@@ -218,8 +218,12 @@ Condition (a), the dependency edge, is carried by the profile package (R7).
 obligations state each step claim for every concrete state `build(m)`, `m` ranging
 over M (section 2.6), so the binder is a complete domain of the abstract state
 and the claim is `exhaustive` where the instance fits the budget (VOS01 section
-5.6). The `canonical` block adds, for every step, `build(alpha(post)) == post` and
-`alpha(build(m)) == m`: the reachable states are exactly the image of `build`.
+5.6). The `canonical` block adds, for every step, `build(alpha(post)) == post`: the
+reachable states are exactly the image of `build`. `alpha(build(m)) == m` is a
+**safety-tier** obligation (VOS10 names it `safety_alpha_build`), not a canonical one:
+it is field-agnostic and every implementation needs `build`, `alpha` and `dec` pinned,
+including the representation-mode and `any` implementations that do not carry
+`canonical`.
 *Why:* without the canonical block, "every state `build(m)` behaves" says nothing
 about a state the step reaches that is not in the image. An implementation whose
 representation has history (a ring buffer's head position) is not canonical; it
@@ -237,7 +241,10 @@ state.
 | `reference` | a deterministic executable model with no `bound` rows | an `image` profile |
 
 **What `vos-link` enforces (the authority).** The kind is declared in the crate's
-`vos.toml` and in the profile manifest row, and the two must be equal. For each crate
+`vos.toml` and in the profile manifest row. Two author-written values that agree prove
+nothing, so `vos-link` compares **both against a central crate-to-class-and-kind
+registry** that it owns (backlog VOS-D030, the authority list of section 7.4); a crate
+absent from the registry has no kind and cannot be a manifest row. For each crate
 `vos-link` then checks, from the generated document and the crate's files (never from
 evidence alone):
 
@@ -247,10 +254,22 @@ evidence alone):
    check made by the Warrant type checker on the generated document; the crate name ends
    in `-any`; the kind never appears in an `image` profile (SH16).
 2. `kind = production`: the document carries `canonical` (or the representation-mode
-   determinism claim) **and no `any` block**, and the crate's `evidence.bindings` binds
-   no oracle-write export (the ghost `set_oracle` path) and its `Impl` has no field
-   the `any` block names; the crate name does not end in `-any`.
+   determinism claim) **and no `any` block**, and a **structural** state check holds:
+   every field of `Impl` is in the cone of `alpha` and `build` (the Warrant `build` model
+   sets it from M, and the ghost `alpha` wrapper reads it, SH17), so no field is an oracle
+   or history register outside that cone; the crate's `evidence.bindings` binds no
+   oracle-write export (the ghost `set_oracle` path). For `kind = any` the converse holds:
+   at least one `Impl` field is outside the cone (the oracle the `any` block names). This
+   is a check on the state's structure, not on any name; the crate name is only the lint
+   below.
 3. `kind = reference`: no `bound` rows, never in an `image` profile.
+
+**What this rule is not.** It separates `any` from `production` in the *documents*; it is
+not the barrier that keeps `-any` out of a shipped image. That barrier is SH13 (the
+oracle-write path and `alpha` live behind the `ghost` feature), SH16 (no `-any` crate and
+no evidence feature in the **resolved** graph of an `image` profile), the closed-world
+manifest rows of section 7.2 and the hermetic build of VOS22. A mislabelled kind could
+fool rule 2; it could not get past those.
 
 **What canonical evidence does and does not exclude.** The canonical block (R5) starts
 from `build(M)` and says every step lands back in the image of `build`. It excludes an
@@ -414,6 +433,9 @@ warrant vos_ready_bitmap v1
   assume environment:
     none
 ```
+
+(The `canon_alpha_build` of this listing is, in VOS10's real contract package, the
+**safety** claim `safety_alpha_build`: R5 above.)
 
 What the author wrote: `impl.part` (lines from `impl-begin` to `impl-end`) and,
 in the contract package, the `.part` files. Everything else is assembled. Two

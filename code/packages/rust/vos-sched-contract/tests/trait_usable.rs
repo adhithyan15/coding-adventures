@@ -7,7 +7,7 @@
 //! bound, an enum whose derives are missing. This file implements the trait with
 //! a three-line bitmap and a deliberately different one-cell-per-thread scan, and
 //! checks, over **every** state and thread id at `N = 8`, the same safety and
-//! policy statements that `tests/warrant_contract.rs` evaluates in Warrant. It is
+//! policy statements that `vos-sched-contract-check/tests/warrant_contract.rs` evaluates in Warrant. It is
 //! a Rust-level cross-check of the claim text's meaning, not evidence about any
 //! shipped scheduler (that is VOS-011).
 

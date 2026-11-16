@@ -57,6 +57,8 @@
   model policy_dispatch(m: Ready, o: Pick, m2: Ready) -> Bool = o == top(m) and m2 == after(m, o)
 
   -- Lemmas (VER04m V9): no bound operation is called, so no subject evidence and no strength.
+  -- closure_at_m is a TRIVIAL lemma (inv is `true`): it documents the shape, and is not counted as
+  -- evidence of anything (VOS10 section 4).
   claim closure_at_m:
     forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool, t: U8. (
       inv(init_m()) and
@@ -96,7 +98,7 @@
       (subset(after(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), pick_of(k)), ready_of(b0, b1, b2, b3, b4, b5, b6, b7)) and
        (match pick_of(k) with
           Idle -> after(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), pick_of(k)) == ready_of(b0, b1, b2, b3, b4, b5, b6, b7)
-        | Run(h) -> not mem(after(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), pick_of(k)), h))))
+        | Run(h) -> after(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), pick_of(k)) == put(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), h, false) and not mem(after(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), pick_of(k)), h))))
   claim policy_implies_safety:
     forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool. (
       policy_dispatch(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), top(ready_of(b0, b1, b2, b3, b4, b5, b6, b7)), after(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), top(ready_of(b0, b1, b2, b3, b4, b5, b6, b7)))) =>

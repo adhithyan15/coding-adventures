@@ -1,9 +1,8 @@
-  -- The reachable states are exactly the image of build (VOS02 R5). The commuting claims have
+  -- The reachable states are exactly the image of build (VOS02 R5). alpha(build(m)) == m is not
+  -- here: it is field-agnostic and every tier needs it, so it is safety_alpha_build. The commuting claims have
   -- the image operation as their subject, so a fault in it has a negative control (VOS02 4.4).
   claim canon_init:
     forall b: Bool. init() == build(empty())
-  claim canon_alpha_build:
-    forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool. dec(alpha_w(build(ready_of(b0, b1, b2, b3, b4, b5, b6, b7)))) == ready_of(b0, b1, b2, b3, b4, b5, b6, b7)
   claim canon_insert_post:
     forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool, t: U8. build(dec(alpha_w(insert_img(build(ready_of(b0, b1, b2, b3, b4, b5, b6, b7)), t)))) == insert_img(build(ready_of(b0, b1, b2, b3, b4, b5, b6, b7)), t)
   claim canon_insert_img:

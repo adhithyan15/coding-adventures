@@ -178,7 +178,7 @@ function of the *choice*: `after(m, o)` is `m` for `Idle` and `m` without `t` fo
 ill-formed state to exclude (a Boolean per thread cannot be corrupted). `init`
 returns the empty set. **Closure** says every operation maps an `inv` state to an
 `inv` state; it is trivial for a total `inv`, but it is still stated, as the
-lemma `closure_at_m`, so that a later M with structure cannot change `inv`
+lemma `closure_at_m` (a **trivial** lemma, evaluated but not counted as evidence), so that a later M with structure cannot change `inv`
 without restating it (VOS01 section 2.2).
 
 The implementation-level pair is the one VOS01 describes: `inv_impl(S)` is the
@@ -241,7 +241,7 @@ a function, so a policy implementation is a *deterministic* function of M
   forgets, so it is **not canonical**: it declares `mode=representation`
   (VOS02 section 2.7), writes its own `dispatch_rep` claims over `inv_impl`
   states and a determinism claim, and does not carry the `canonical` block. The
-  negative control `control_a_scheduler_with_history_is_not_canonical` (section 12)
+  negative control the "history register" mutants (section 12)
   shows the canonical block catching exactly this.
 * **Earliest-deadline-first** satisfies the safety tier only. Under this contract it
   can implement `Sched` only if its deadline arrives some other way than through
@@ -436,6 +436,8 @@ The document header and the implementation block are not part of it. This is
   model policy_dispatch(m: Ready, o: Pick, m2: Ready) -> Bool = o == top(m) and m2 == after(m, o)
 
   -- Lemmas (VER04m V9): no bound operation is called, so no subject evidence and no strength.
+  -- closure_at_m is a TRIVIAL lemma (inv is `true`): it documents the shape, and is not counted as
+  -- evidence of anything (VOS10 section 4).
   claim closure_at_m:
     forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool, t: U8. (
       inv(init_m()) and
@@ -475,7 +477,7 @@ The document header and the implementation block are not part of it. This is
       (subset(after(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), pick_of(k)), ready_of(b0, b1, b2, b3, b4, b5, b6, b7)) and
        (match pick_of(k) with
           Idle -> after(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), pick_of(k)) == ready_of(b0, b1, b2, b3, b4, b5, b6, b7)
-        | Run(h) -> not mem(after(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), pick_of(k)), h))))
+        | Run(h) -> after(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), pick_of(k)) == put(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), h, false) and not mem(after(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), pick_of(k)), h))))
   claim policy_implies_safety:
     forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool. (
       policy_dispatch(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), top(ready_of(b0, b1, b2, b3, b4, b5, b6, b7)), after(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), top(ready_of(b0, b1, b2, b3, b4, b5, b6, b7)))) =>
@@ -494,9 +496,9 @@ only, and every claim is *exhaustive* where the instance fits.
 
 | Block | Claims | Shape | Carried by |
 |---|---|---|---|
-| `safety` | `insert_safe`, `remove_safe`, `dispatch_safe` | A for `insert`/`remove`, B for `dispatch` | every implementation |
+| `safety` | `insert_safe`, `remove_safe`, `dispatch_safe`, `safety_alpha_build` | A for `insert`/`remove`, B for `dispatch`, C for `alpha` | every implementation |
 | `policy` | `dispatch_policy` | A (deterministic) | fixed-priority implementations |
-| `canonical` | `canon_init`, `canon_alpha_build`, `canon_insert_post`, `canon_insert_img`, `canon_remove_post`, `canon_remove_img`, `canon_dispatch_post`, `canon_dispatch_img` | shape C and closure | every `production` implementation with `mode=canonical` |
+| `canonical` | `canon_init`, `canon_insert_post`, `canon_insert_img`, `canon_remove_post`, `canon_remove_img`, `canon_dispatch_post`, `canon_dispatch_img` | shape C and closure | every `production` implementation with `mode=canonical` |
 | `any` | `dispatch_sound`, `dispatch_covers_run`, `dispatch_covers_idle` | soundness and coverage | `kind = any` only |
 
 **Safety** (`warrant/obligations-safety.part`):
@@ -515,6 +517,11 @@ only, and every claim is *exhaustive* where the instance fits.
   claim dispatch_safe:
     forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool. (
       safe_dispatch(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), dispatch_out(build(ready_of(b0, b1, b2, b3, b4, b5, b6, b7))), dec(alpha_w(dispatch_img(build(ready_of(b0, b1, b2, b3, b4, b5, b6, b7)))))))
+  -- alpha is onto M (shape C of VOS01 section 2.3): build and alpha agree on every abstract state.
+  -- It pins build, alpha and dec for EVERY implementation: a representation-mode scheduler and -any
+  -- carry the safety tier but not canonical, and would otherwise have an alpha nothing constrains.
+  claim safety_alpha_build:
+    forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool. dec(alpha_w(build(ready_of(b0, b1, b2, b3, b4, b5, b6, b7)))) == ready_of(b0, b1, b2, b3, b4, b5, b6, b7)
 ```
 
 **Policy** (`warrant/obligations-policy.part`):
@@ -526,6 +533,10 @@ only, and every claim is *exhaustive* where the instance fits.
       policy_dispatch(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), dispatch_out(build(ready_of(b0, b1, b2, b3, b4, b5, b6, b7))), dec(alpha_w(dispatch_img(build(ready_of(b0, b1, b2, b3, b4, b5, b6, b7)))))))
 ```
 
+**Safety also holds `safety_alpha_build`** (`alpha(build(m)) == m`, shape C): it is
+field-agnostic, and every implementation needs `build`, `alpha` and `dec` pinned,
+including a representation-mode scheduler and `-any`, which do not carry `canonical`.
+
 **Canonical** (`warrant/obligations-canonical.part`). `canon_init` states that
 `init()` is `build(empty())` (an `example` would do, but an obligation cannot be
 left out of an implementation block unnoticed); the `_post` claims state that the
@@ -536,12 +547,11 @@ abstract successor from the implementation's own choice, because the successor
 depends on it:
 
 ```text
-  -- The reachable states are exactly the image of build (VOS02 R5). The commuting claims have
+  -- The reachable states are exactly the image of build (VOS02 R5). alpha(build(m)) == m is not
+  -- here: it is field-agnostic and every tier needs it, so it is safety_alpha_build. The commuting claims have
   -- the image operation as their subject, so a fault in it has a negative control (VOS02 4.4).
   claim canon_init:
     forall b: Bool. init() == build(empty())
-  claim canon_alpha_build:
-    forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool. dec(alpha_w(build(ready_of(b0, b1, b2, b3, b4, b5, b6, b7)))) == ready_of(b0, b1, b2, b3, b4, b5, b6, b7)
   claim canon_insert_post:
     forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool, t: U8. build(dec(alpha_w(insert_img(build(ready_of(b0, b1, b2, b3, b4, b5, b6, b7)), t)))) == insert_img(build(ready_of(b0, b1, b2, b3, b4, b5, b6, b7)), t)
   claim canon_insert_img:
@@ -615,11 +625,11 @@ counts the evaluation of section 12 measured, not typed by hand.
 | **Safety** | | | | |
 | `insert_safe`, `remove_safe` (each) | 8 Bool, `t: U8` | 65,536 | 65,536 | 16.38 |
 | `dispatch_safe` | 8 Bool | 256 | 256 | 0.06 |
+| `safety_alpha_build` | 8 Bool | 256 | 256 | 0.06 |
 | **Policy** | | | | |
 | `dispatch_policy` | 8 Bool | 256 | 256 | 0.06 |
 | **Canonical** | | | | |
 | `canon_init` | `b: Bool` | 2 | 2 | 0.00 |
-| `canon_alpha_build` | 8 Bool | 256 | 256 | 0.06 |
 | `canon_insert_post`, `canon_insert_img`, `canon_remove_post`, `canon_remove_img` (each) | 8 Bool, `t: U8` | 65,536 | 65,536 | 16.38 |
 | `canon_dispatch_post`, `canon_dispatch_img` (each) | 8 Bool | 256 | 256 | 0.06 |
 | **Any** | | | | |
@@ -633,9 +643,9 @@ as in the toy. The obligation totals per implementation (enumerated cases):
 | Implementation | Carries | Enumerated cases |
 |---|---|---|
 | fixed-priority bitmap (`production`) | safety, policy, canonical | **394,498** |
-| lowest-first scan (safety, canonical) | safety, canonical | 131,328 + 262,914 = 394,242 |
-| round-robin (safety only, `representation`) | safety, plus its own `_rep` claims | 131,328 + its own |
-| `-any` | safety, any | **199,168** admitted (262,656 binder cases) |
+| lowest-first scan (safety, canonical) | safety, canonical | 131,584 + 262,658 = 394,242 |
+| round-robin (safety only, `representation`) | safety, plus its own `_rep` claims | 131,584 + its own |
+| `-any` | safety, any | **199,424** admitted (262,912 binder cases) |
 
 Where the budget ends for this contract:
 
@@ -702,7 +712,7 @@ is out of this contract's reach: plan on `T <= 8..16` per obligation there.
 No scheduler exists, so no evidence about Rust is claimed. What was checked, with
 the repository's Warrant tooling (`coding_adventures_warrant_grammar`: parser,
 `check_warrant`, and the ground `Evaluator`), in
-`code/packages/rust/vos-sched-contract/tests/warrant_contract.rs`:
+`code/packages/rust/vos-sched-contract-check/tests/warrant_contract.rs`:
 
 0. **Where the checks live.** The shape check (VOS03 SH12) allows a class K crate no
    Warrant-tooling dependency, so the Warrant checks are in the sibling crate
@@ -719,28 +729,62 @@ the repository's Warrant tooling (`coding_adventures_warrant_grammar`: parser,
 3. **Three implementations written as Warrant models**, independently of the
    abstract record (bit operations, a one-cell-per-thread scan, a bitmap with an
    oracle), are run against the obligations over every binder value: the
-   fixed-priority bitmap passes all twelve; the lowest-first scan passes safety and
-   canonical and fails `dispatch_policy` on exactly **247** of 256 states; the
-   oracle model passes safety and `any`.
-4. **Negative controls**, mutants of those models, each break the claims they should
-   and no others: a `dispatch` that always answers `Idle` fails only the policy
-   claim; one that returns a non-member fails `dispatch_safe`; one that does not
-   remove fails `dispatch_safe` and `canon_dispatch_img`; an `insert` that ignores the
-   range check fails `insert_safe`; an `alpha` that forgets the state fails
-   `canon_alpha_build`; a wrong `init` fails `canon_init`; a scheduler with history
-   fails `canon_dispatch_post` and passes safety; an `-any` that never proposes
-   thread 3 fails `dispatch_covers_run` on exactly 128 cases; one that skips the
-   validation step fails `dispatch_sound`.
-5. **The lemmas can fail** (their own mutants), and the `.part` files obey the marker
-   discipline of VOS02 section 2.3 (ASCII, no control characters, no `-- vos02:`).
+   fixed-priority bitmap passes all twelve; the lowest-first scan passes every claim
+   but `dispatch_policy`, which it fails on exactly **247** of 256 states; the oracle
+   model passes safety and `any`.
+4. **Negative controls: a table of 19 mutants plus 9 lemma mutants**
+   (`every_mutant_breaks_exactly_the_claims_it_should`,
+   `every_lemma_has_a_mutant_that_breaks_it`, `every_obligation_has_a_control`). Each
+   mutant is a textual change to one model, asserted to have changed it. A claim is
+   evaluated for a mutant iff its own text names a mutated operation (a claim that does
+   not name it cannot fail), and the set of evaluated claims that fail must equal the
+   expected set **exactly**. What each control is for:
+
+   | Claim (conjunct) | Control: a wrong implementation that breaks it | Exact set that fails |
+   |---|---|---|
+   | `insert_safe`, `_out` | `insert_out` without the range check | `insert_safe` |
+   | `insert_safe`, `_img` | `insert_img` returns the state unchanged for `t < 8`; or sets bit 0 whatever `t` is | `insert_safe`, `canon_insert_img` |
+   | `remove_safe`, `_out` | `remove_out` always `Unchanged` | `remove_safe` |
+   | `remove_safe`, `_img` | `remove_img` returns the state unchanged; or clears every bit | `remove_safe`, `canon_remove_img` |
+   | `dispatch_safe`, `_out` | `dispatch` answers `Run(0)` for the empty set (a thread that is not ready) | `dispatch_safe`, `dispatch_policy` |
+   | `dispatch_safe`, `_img` | `dispatch_img` forgets to remove the chosen thread | `dispatch_safe`, `dispatch_policy`, `canon_dispatch_img` |
+   | `safety_alpha_build` | `alpha` forgets the state; `build` ignores thread 7 | `alpha`: the four safety claims, `dispatch_policy` and the three `_post` claims; `build`: the four safety claims, `dispatch_policy` and `canon_insert_post`, `canon_insert_img` |
+   | `dispatch_policy` | `dispatch` always `Idle`, state kept | `dispatch_policy` only |
+   | `canon_init` | `init()` is not `build(empty())` | `canon_init` only |
+   | `canon_insert_post`, `canon_remove_post`, `canon_dispatch_post` | a history register that `alpha` drops, moved by `insert_img`, `remove_img`, `dispatch_img` respectively (the oracle model) | the `_post` claim and its `_img` twin, never safety |
+   | `canon_insert_img`, `canon_remove_img`, `canon_dispatch_img` | see the `_img` rows above | |
+   | `dispatch_sound`, safe part | `any` skips the validation step | `dispatch_safe`, `dispatch_sound` |
+   | `dispatch_sound`, `.choice == c` | `any`'s `dispatch_img` moves the oracle | `dispatch_sound` only |
+   | `dispatch_covers_run` | `any` never proposes thread 3 | `dispatch_covers_run` only |
+   | `dispatch_covers_idle` | `any` answers `Run(7)` for oracle 255 on a non-empty set | `dispatch_sound`, `dispatch_covers_idle` |
+   | each of the nine lemmas | one mutation of the contract block per lemma | that lemma |
+
+   Three honest limits. (a) The `_post` claims are *implied* by their `_img` twins plus
+   `safety_alpha_build`: no mutant can break a `_post` claim alone (an `img` equal to a
+   `build` value is in the image), so the controls assert the pair, and the `_post`
+   claims earn their place only where `alpha` itself is wrong (the `alpha` mutant breaks
+   the three `_post` claims and not the `_img` ones). (b) A `build` that ignores thread 7 is caught
+   by the safety claims and, for `insert` only (it sets thread 7), by the canonical
+   `insert` pair; the canonical `remove` and `dispatch` claims are blind to it, because
+   they compare `build` with `build`. Only `safety_alpha_build` states what `build` and
+   `alpha` mean, which is why it is a safety obligation. (c) `closure_at_m` is a *trivial* lemma
+   (`inv` is `true`): its mutant makes `inv` non-trivial and breaks it, but the lemma
+   is not evidence of anything and is not counted as such.
+5. **The `.part` files obey the marker discipline** of VOS02 section 2.3 (ASCII, no
+   control characters, no `-- vos02:`), and an obligations part contains claim
+   declarations only. This is a stand-in for `vos-link gen-doc` (VOS-033), not the
+   authority.
 6. **The Rust trait crate and the Warrant text agree**: the enum constructors of `Upd`
-   and `Pick` equal the Warrant variants (names, order, payload arity). Two plain Rust
+   and `Pick` equal the Warrant variants (names, order, payload arity), through
+   exhaustive `match`es without a wildcard, so a new Rust variant is a compile error.
+   That the literal `8` of the text, `Sched::N` and `config N 8` in `contract.vos` agree
+   is **not** checked: it needs `vos-manifest` (VOS-033, VOS-D049). Two plain Rust
    schedulers (a bitmap and a lowest-first scan) implement `Sched` and are checked over
    every state and id at `N = 8` against the same safety and policy statements; the scan
    fails the policy on exactly 247 states (`tests/trait_usable.rs`).
 
-**Results.** 24 Warrant-level tests and 4 Rust-level tests pass; the Warrant suite runs
-about 2 million claim evaluations in about a minute in a debug build.
+**Results.** See the report of the commit; the Warrant suite runs several million claim
+evaluations in a few minutes of CPU, about a minute or two of wall time in a debug build.
 
 **What this does not establish.** The evaluator runs Warrant models, not compiled
 Rust: the claim that *Rust* refines the contract is VOS-011's evidence. The
@@ -831,7 +875,7 @@ code/packages/rust/vos-sched-contract/
     BUILD  BUILD_windows  README.md  CHANGELOG.md
 
 code/packages/rust/vos-sched-contract-check/                   class H, test-only
-    tests/warrant_contract.rs         section 12 (items 0 to 5)
+    tests/warrant_contract.rs         section 12 (items 0 to 5), and the control table
     tests/fixtures/impl-*.part        three implementations as Warrant models, and the bound-operation block
 ```
 

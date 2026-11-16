@@ -113,6 +113,11 @@ pub enum Pick {
 pub trait Sched {
     /// The scheduler's whole mutable state, owned by one field of the kernel
     /// record. Implementations keep its fields private (VOS00 rule 2).
+    ///
+    /// The trait puts **no bound** on `State` (no `Copy`, `Clone` or `Default`):
+    /// what a state may contain is a lexical matter for the shape check, not a
+    /// trait bound. SH3 (no `static`, no interior mutability) and the privacy rule
+    /// SH14 cover it; a by-value step needs nothing more.
     type State;
 
     /// The number of thread ids, `0..N`. A claim made at `N = 8` says nothing
