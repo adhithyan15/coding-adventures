@@ -11,10 +11,11 @@ illustrative until the C1-S0 errata pass fixes them, and every case count in the
 text was computed by hand from the stated domains, so a reviewer can redo it.
 Claims about what a package does are "from reading": the public signatures and
 the code named in the text were read, not run. The freeze on collections and
-generics is lifted **spec first, with adversarial review**. That review has **not
-been done yet**: section 23 records only the author's own checks (tags, codes,
-section references, counts). C1-S0 and G1-S0 do not start until the review has run
-and the owner has answered section 22.1.
+generics is lifted **spec first, with adversarial review**. One adversarial review
+ran on 2026-11-16 and its findings R1 to R16 are applied in the text and listed in
+section 23; it was a single reviewer, so the three-reviewer pass of backlog row
+WX-MP-REVIEW (21.2) is still owed. C1-S0 and G1-S0 do not start until the owner has
+answered section 22.1.
 
 **Parent:** [VER04 §2–§8](VER04-warrant-language.md) (§3: values and equality;
 §5: static parameters, `op name<N: Nat>`), [VER04d](VER04d-warrant-type-system.md),
@@ -29,15 +30,17 @@ built-ins and the meter, on which every element quantification here is built),
 boundary rows, style), [VER04n](VER04n-warrant-opaque-types.md) (opaque types:
 generic opaque types are stated on top of it, section 6.9),
 [VER04p](VER04p-warrant-floats.md) (style; the float relations that lift through
-map values), [VER29](VER29-layer-contract-linking.md) (strength rungs), the draft
-**VER04r** (`warrant-corpus-v2`, branch `claude/warrant-corpus-v2-spec`: the
-encoding of section 9), [VER30](VER30-warrant-expansion-roadmap.md) (the frozen
+map values), [VER29](VER29-layer-contract-linking.md) (strength rungs),
+[VER04r](VER04r-warrant-corpus-v2.md) (`warrant-corpus-v2`: the encoding of
+section 8; merged, as amended on 2026-11-16), [VER30](VER30-warrant-expansion-roadmap.md) (the frozen
 features), [VER-BACKLOG](VER-BACKLOG.md) LP-012 (the honest kinds).
 
 **Section references.** As in VER04n and VER04p, where this document needs a
 corpus, binding or language rule from another specification it states a
 **requirement** on that specification (section 18); it does not edit VER04, VER04d,
-VER04i to VER04n, VER04p, VER04r, VER29, VER30 or `VER-BACKLOG.md`. The backlog rows
+VER04j to VER04n, VER04p, VER04r, VER29, VER30 or `VER-BACKLOG.md`. The one
+exception is the allocation registry of VER04i section 2.6.1, whose own rule is that
+a specification adds its row in the same PR (16.1). The backlog rows
 it needs are listed in section 21.2. Every reference to VER04n, VER04p and VER04r is
 to the text as read on 2026-11-16; C1-S0 re-reads them.
 
@@ -85,7 +88,7 @@ What is added:
 | the order-witness alphabet `witness<T>()`, the domains `set_d1`, `subset_of`, `maps_over`, `map_d1`, labelled by LP-012 kind | 5 |
 | rank-1 type parameters, four built-in constraints (`Eq Ord Finite Bits`), the `instantiate` declaration, monomorphisation, instance coverage, `all-instances`, generic opaque types | 6 |
 | surface syntax, typing rules and diagnostics `W0760` to `W0765` | 7, 16 |
-| the corpus encoding: stream tags `70`, `71`, descriptors, the IR level `ir.coll`, instance suites | 8 |
+| the corpus encoding: stream tags `66`, `67`, descriptors, the IR level `ir.coll`, instance suites | 8 |
 | the lane binding contract: order classes, a per-lane table for eighteen lanes, four generic modes, the lane-by-instance matrix | 9 |
 | four obligations and their controls | 10 |
 | sabotage controls: corpus faults, adapter controls, generic faults | 11 |
@@ -128,7 +131,7 @@ opaque types). Section 21 lists the slices and their prerequisites.
 | a | The freeze on collections and generics is lifted: specification first, with adversarial review before any implementation | the status paragraph, 21, 23 |
 | b | **One canonical map order.** A host with unspecified iteration order cannot bind to a `List` result | 3.3, 9.2 |
 | c | **Generic claims are never `exhaustive`.** Evidence covers the listed instances, except `all-instances(n/n)` over a closed universe. Coverage is counted per lane **and** per instance | 6.5, 6.6, 9.6, 12 |
-| d | **Honest labels** (`full`, `bounded-set`, `sampled`, the LP-012 names), fail closed, layered verification (a lower contract is assumed above, never re-proved), and the runtime capability jail stays mandatory | 12, 13 |
+| d | **Honest labels** (`full`, `bounded-set`, `sample`: the LP-012 kinds, spelled as in 12.1), fail closed, layered verification (a lower contract is assumed above, never re-proved), and the runtime capability jail stays mandatory | 12, 13 |
 | e | Pilots: `csv-parser` for collections, `hash-set` for generics | 14, 15 |
 | f | **Recursive types are lifted too**, but get their own later specification, **VER04s**, written after this one. Collections and generics are designed so recursive algebraic types can be added cleanly; this document says what VER04s will need and specifies no recursion | 3.8, 19 |
 | g | **Map iteration order is deterministic in the corpus**: every collection in a stream, a descriptor or a result is in canonical order | 3.3, 8 |
@@ -160,7 +163,7 @@ eight fixed-width integers, where "all eight, each run" is a complete statement.
 | D5 | `Finite`: "a complete domain within `B`" | `Finite` means at most **16** values (3.2) | the only use of `Finite` is `all_values<T>()` feeding `subset_of`, whose cap is 16 (5.3). A larger bound would promise `full` for a domain the generator refuses |
 | D6 | the sketch `op add<T>(s: HashSet<T>, x: T) -> HashSet<T>` | an operation that returns a handle is refused by VER04n OK3; `add`, `union` and the other transformers are **makers whose plan applies them** (15.2) | VER04n section 18 defers transformers and answers builder-style construction with a plan (OR5, OL1) |
 | D7 | `insertion` order may bind a `List<(K, V)>`; "the model must compute that order" | kept, but only with a document model that computes it from the construction list (3.3, 9.2); there is no ordered-map type | a type whose value includes an order would put a second meaning of equality in the language |
-| D8 | stream tags `70` Set and `71` Map; `W07xx` for generic diagnostics | tags `70`, `71`, and the code block `W0760` to `W0769`, rechecked on 2026-11-16 against the tree and both draft branches (16.1) | VER04n holds `80`, `81`, `W0750` to `W0759` |
+| D8 | stream tags `70` Set and `71` Map; `W07xx` for generic diagnostics | tags **`66`** (`Set`) and **`67`** (`Map`), and the code block `W0760` to `W0769`, taken from the VER04i section 2.6.1 registry (16.1) | the registry (2026-11-16) says the next specification "takes from `66`"; `60` to `65` and `80`, `81` are held; `W0750` to `W0759` are VER04n's |
 | D9 | the generic claim minimum is "two instances, one scalar and one of `Bytes` or `Text`" | per type parameter, one scalar and one **by-reference-hazard** type (`Bytes`, `Bytes<N>`, `Text` or a tuple, record, variant, `Option`, `Set` or `Map` over one) (6.5) | the hazard is reference equality and identity hashing, which composites of bytes and text share |
 | D10 | `corpus.json.widths` becomes sugar for `instantiate` rows | sugar in the **checker and report** only. A document whose only static parameters are `Nat` keeps the `widths` encoding and ids byte for byte (8.5) | the acceptance gate of VER04r 1.2: `ct-compare` under v2 reproduces nine v1 digests |
 | D11 | the `Ord` constraint on a generic container "needs `Ord`" | `Ord` is a constraint on the **model's** key, not on the subject: `hash-set` needs only `Eq` and a hash (6.2) | the document needs a canonical order to state `elements(s)` as a `Set`; the subject never sorts |
@@ -199,8 +202,8 @@ prelude part (the canonical order, the collection built-ins, the instance
 dispatch) is emitted only for a document that uses it, so the output of every
 existing document stays byte-identical.
 
-**CM0c.** (Dependencies on other drafts.) The element quantification of section 4
-uses the WX-D built-ins (`all`, `any`, `count`, `fold`), which the draft VER04r
+**CM0c.** (Dependencies on other specifications.) The element quantification of section 4
+uses the WX-D built-ins (`all`, `any`, `count`, `fold`), which VER04r
 keeps in a **reserved** level `ir.seq` ("not-live until an amendment defines the
 v2 meter", VER04r 4.1). So a claim that quantifies over elements is `not-live`
 in every lane until that amendment lands; a claim that uses only the built-ins of
@@ -240,11 +243,16 @@ are the element type of a `Set` and the first argument of a `Map`. The order is:
 | `Char` | scalar value | |
 | `Text` | scalar order, which equals the order of the UTF-8 bytes | **not** UTF-16 code-unit order: `U+FFFF < U+10000`, while as UTF-16 `D800 DC00 < FFFF` |
 | `Option<K>` | `None < Some(x)`; `Some` by `ord` of the payload | |
-| tuple, record | lexicographic over components or fields in declaration order | |
-| variant | constructor **declaration index** first, then the fields lexicographically | reordering constructor declarations changes the canonical order, and so the corpus digests |
+| tuple, record | lexicographic over components or fields in declaration order | a key type **only if every component is** |
+| variant | constructor **declaration index** first, then the fields lexicographically | a key type only if every field of every constructor is; reordering constructor declarations changes the canonical order, and so the corpus digests |
 
-Not key types: `F32 F64` (VER04p: no equality), opaque types, `Result` (its error
-cases are compared by name), `List<T>`, `Set<K>`, `Map<K, V>`. `List` and nested
+The table is closed and `ord` is total on it by induction: every row is a total
+order on its own values given total orders on its components, and a composite with
+one non-key component (`(U8, F64)`, a record holding a `List`) is **not** a key type
+(W0760), so no comparison ever reaches a type without a row. `Option<K>` needs `K` a
+key type. Not key types: `F32 F64` (VER04p: no equality), opaque types, `Result`
+and an `error` type (error cases are compared by name, and no order is given to
+names), `List<T>`, `Set<K>`, `Map<K, V>`. `List` and nested
 collections as keys are deferred (section 20): they need the recursive machinery
 of VER04s or a host story the first slice does not have. The `Text` order is the one VER04l 3.4 records so that a later slice cannot choose
 differently. `ord` is consistent with
@@ -285,6 +293,23 @@ So `to_list` of a hash set binds as `Set<T>` (the adapter sorts the host `Vec` a
 rejects a repeated element), and a function that really returns keys in
 insertion order (Python `list(d)`) binds as `List<K>` with a model that says what
 insertion order means. A claim over a host list never depends on a hash seed.
+
+**CM3b.** (What a declared order is worth.) For a `Set` or `Map` result the order
+class changes nothing: the adapter sorts. For a `List` result, `sorted` or
+`insertion` is a **declared assumption about the subject** that nothing in the
+binding can check: a host list built by iterating a hash table looks like any other
+list, and CPython iterates a small set of small integers in the same order on every
+run, so such a claim can pass by accident. Three rules keep the label honest:
+
+1. the report prints `order: declared <class>` for every `List` result that
+   carries one, and counts it in the trust base, never as evidence;
+2. `insertion` is accepted only when **no parameter of the operation is a `Set` or
+   `Map`**: a Warrant collection has no insertion order for a model to compute, and
+   CL3 builds it in two orders, so the claim would fail or be meaningless (W0762);
+3. in a lane whose host hashing is randomised or seedable, a suite with such a
+   result is run **twice in separate processes**, with randomisation left on or
+   with two distinct seeds, at `full`; a difference is `order-dependent`. A lane
+   that cannot vary it prints `order: declared, one seed`.
 
 ### 3.4 Built-ins
 
@@ -351,11 +376,15 @@ identity or a host representation (VER04r 4.2 rule 5).
 | leaves of any one value (keys, values and every nested component) | `MAX_VALUE_LEAVES = 65,536` | the meter of VER04k 2.7 |
 | nesting of `Set`/`Map` in one type (`Map<K, Set<V>>` is 2) | 3 (W0760 above) | CT2 |
 | entries in a value generated by a domain | 16 (the `subset_of` universe) | 5 |
-| work for one built-in | `1 + (sizes of the collection operands) + (size of the result)` units, charged as if every result were copied | VER04k 2.7 ("charges as if it copied") |
+| work for one built-in | `1 + (leaves of the collection operands) + (leaves of the result)` units, charged as if every result were copied. A leaf is a scalar; a `Bytes` or `Text` leaf counts `1 +` its length in bytes | VER04k 2.7 ("charges as if it copied") |
 
 The work rule is deliberately simple and implementation independent: a model that
 uses a balanced tree and one that uses a sorted array reach exhaustion at the
-same instruction. C1-S0 checks the constants against the meter text of VER04k 2.7.
+same instruction. It counts **leaves, not entries**, because an entry of a nested
+collection can itself hold thousands of leaves: charged by entries, `map_put` on a
+one-entry `Map<K, Set<V>>` would cost 3 units and copy up to 65,536 leaves. Sorting
+adds at most `log2(4,096) = 12` comparisons per entry to what the unit counts, a
+constant factor the limit of CC7 absorbs. C1-S0 checks the constants against the meter text of VER04k 2.7.
 
 ### 3.7 What a collection is not
 
@@ -423,8 +452,9 @@ claim insert_exact:
 second claim is a **reference** claim in the sense of VER04r 4.3 (one subject
 call compared with a pure expected value), so the oracle supplies independent
 expected values; the first is a **predicate** claim (`relational`) and the report
-says so. Both exercise the order-witness pair `127, 128`, so a host that sorts
-bytes as signed values fails the canonicalisation of `insert_into`'s result.
+says so. Both exercise the order-witness pair `127, 128`, so an adapter
+that sorted bytes as signed values would produce a stream the strict-order decoder
+rejects (control `host-ord`, 11.2); the subject's own order is never read.
 
 ### 4.3 The element vacuity guard
 
@@ -438,6 +468,32 @@ on average is printed, and the number is committed in the corpus and reproduced
 by every lane (it does not depend on the subject). The report also prints, per
 collection binder, `nonempty` and `size>=2` case counts, so "the sets were all
 empty" cannot hide behind a large case count.
+
+**CQ3a.** (Elements of a subject result.) CQ3 covers a collection the **model**
+computes. When the expression under `all`, `any`, `count` or `fold` contains a
+subject call (`all(set_elems(dedupe(xs)), p)`), the element count depends on the
+subject, the corpus cannot predict it, and **a subject that returns the empty
+collection satisfies the claim**. So:
+
+1. the lane counts `subject_elements_visited` per suite; a suite total of zero is
+   the failure `vacuous-elements` in that lane, never a pass, and the number is
+   printed per lane (it is not a corpus prediction and is not compared across
+   lanes);
+2. the suite is `relational` (VER04r 4.3) and the report prints
+   `one-directional: only what the subject returned is examined`, unless the
+   document also has a whole-value claim (Q3) or a `set_size`/`map_size` claim on
+   the same operation;
+3. `drop-element` (CS1) applies to that operation and is never `n/a` for want of a
+   reference claim: if no claim catches it, the control is reported **not caught**,
+   which fails the document (VER04r 8.3). An author who writes only the `all` form
+   is thereby told to add the claim that pins the size or the value.
+
+**CQ3b.** (Sizes behind a handle.) A collection reached only through an observer of
+an opaque type (`elements(h)`, section 15) has no collection binder, so CQ3's
+`size>=2` count does not see it. For every observer whose result is a `Set` or
+`Map` the report prints, from the recipes, `observed sizes: max m, size>=2 in c of
+r recipes`. A hash container whose every recipe holds two elements has never
+resized or chained a bucket, and the line is what says so.
 
 ## 5. Domains and labels
 
@@ -494,8 +550,8 @@ without the author having to know it.
 
 **CD3.** The label is `full` exactly when `n' <= 4` **and** `D` is the whole type
 (so `Bool`, `Option<Bool>`, a variant with at most four values); otherwise
-`bounded-set`. It is never `sampled` for a generated domain; a property or fuzz
-suite draws sets of 0 to 16 members from `U` and is `sampled`, as VER04h says of
+`bounded-set`. It is never `sample` for a generated domain; a property or fuzz
+suite draws sets of 0 to 16 members from `U` and is `sample`, as VER04h says of
 every random suite.
 
 ### 5.3 `subset_of` and `maps_over`
@@ -554,7 +610,8 @@ admitted case with a repeated key and different values; the generator counts the
 
 ### 5.6 `one_of`: one element from a list
 
-**CD7.** A scalar or composite binder `x: T` (or a maker parameter, 18.1) whose
+**CD7.** A binder `x: T` of any type with `==`, a list included (or a maker
+parameter, 18.1), whose
 refinement has a top-level conjunct `one_of(x, A)`, with `A` a ground list of
 distinct members of `T` and `|A| <= 16`, has the domain `A` in its **positional
 order**; a duplicate, a member of the wrong type or a longer list is W0761. The label
@@ -630,6 +687,18 @@ instantiate add_inserts:
   T = (I8, Bool)
 ```
 
+**GM3a.** (No schema is silently unevidenced.) A generic `claim` with no
+`instantiate` declaration is **W0764**: a schema with no instance has no suite, and
+a report that listed it without a failure would read as a claim that holds. Only
+claims are instantiated by rows. A generic `op`, `model`, `record`, `variant` or
+`opaque` type has exactly the instances **reached from the claim rows** (the type
+arguments written at each use, after substitution); the generator lists them in the
+`reached` section of the corpus (8.5). A generic opaque type's obligations (6.9)
+and derived grounding suites run **once for each reached instance**, carry the same
+`schema` and `instance` fields and appear in the matrix (9.6). A generic `op` that
+no instantiated claim reaches is reported as an operation without a claim, as any
+other is.
+
 ### 6.4 Monomorphisation
 
 **GM4.** The compiler **monomorphises before it emits any IR**. For each instance
@@ -662,7 +731,12 @@ only at `U8` and `Bool` would never see the identity bug the generic container
 exists to have.
 
 A parameter constrained by `Bits` alone is exempt from item 2 (its universe has
-no heap-represented member) and needs at least two rows or `T = *`.
+no heap-represented member) and needs at least two rows or `T = *`. A parameter
+constrained by `Finite` cannot satisfy item 2 as written (no type with at most 16
+values contains `Bytes<N>` with `N >= 1` or `Text`), so for it item 2 reads: at
+least one scalar and at least one **composite** (`Option`, a tuple, a record or a
+variant with a field), which is the heap-represented form available in that
+universe.
 
 **GM5a.** (Rows are explicit.) A row binds every parameter of the schema. There
 is no implicit product of columns: two parameters with three candidate types each
@@ -682,8 +756,8 @@ add_inserts<T: Ord>   instances(3): U8, Bytes, (I8,Bool)
 Its **kind** is the weakest kind among its instances' suites **capped at
 `bounded-set`**: a schema is never `full` through `instances(...)`, even when
 every listed instance is `full`. Its **VER29 rung** is at most
-`exhaustive-sampled`, never `exhaustive`. A suite with kind `sampled` stays
-`sampled`.
+`exhaustive-sampled`, never `exhaustive`. A suite with kind `sample` stays
+`sample`.
 
 **GM6a.** (The one exception.) A schema is **`all-instances(n/n)`** when every
 type parameter is constrained to a **closed universe** and the `instantiate` block
@@ -702,6 +776,17 @@ kind uncapped**, so a claim whose every instance is `full` is `full`, and its
 rung may be `exhaustive`. The shorthand `T = *` (7.1) writes every member, so none can
 be forgotten; a block that lists fewer is `instances(k)`, and a block that claims
 `all-instances` with a member missing is W0764.
+
+**GM6b.** (The label is per lane.) `instances(n)` and `all-instances(n/n)` describe
+the **document**. Each lane's row carries its own label, computed from the cells
+that lane ran (9.6): a lane that ran `k` of the `n` cells prints `instances(k/n)`
+and takes the cap of GM6. It prints `all-instances(n/n)`, and may reach `full` or
+the rung `exhaustive`, **only when it ran every one of the `n` cells**. A lane
+whose `ran` cells for some parameter hold no by-reference-hazard instance (GM5
+item 2) prints the open exemption `no-hazard-instance` on that schema: the
+identity bug GM5 exists for was not looked for there. It blocks `--require-closed`
+and the schema is not `lane-complete` in that lane. Nothing is inherited across
+lanes, so a document-level `all-instances(8/8)` never lifts a lane that ran five.
 
 ### 6.7 Why parametricity is not evidence
 
@@ -745,9 +830,9 @@ Bytes<N>, b: Bytes<N>)` (VER04 §5), bound in a lane by `width_params` and a
    a key of the wrong length from a host result is the existing
    `type-mismatch` (VER04r 7.3: a wrong-length result is a failure, never padded).
 3. **Labels follow the width.** The domain of a `Bytes<N>` binder is `full` for
-   `N <= 1` and `sampled` for `N >= 2` (VER04r 9.3, following VER04j 14.4); an
-   instance `T = Bytes<4>` is therefore a `sampled` suite and the schema's kind is
-   at most `sampled`. Nothing here raises it.
+   `N <= 1` and `sample` for `N >= 2` (VER04r 9.3, following VER04j 14.4); an
+   instance `T = Bytes<4>` is therefore a `sample` suite and the schema's kind is
+   at most `sample`. Nothing here raises it.
 4. **`Finite` and `Bits` interplay.** `Bytes<0>` (1 value) and `Bytes<1>` (256 values)
    are key types; only `Bytes<0>` is `Finite` (at most 16 values). `Bytes<N>` is
    never in `Bits`.
@@ -813,7 +898,11 @@ call              += NAME "<" type_arg { "," type_arg } ">" [ "(" args ")" ]   -
 of CM0a. A type argument list uses the same `<` `>` of `Bytes<N>` and `Result<T,
 E>`. The call form extends the v0 `reference = qualified_name [ "<" widths ">" ] [
 "(" args ")" ]` of VER04 §5: the angle part now takes types as well as widths, and
-a call of a generic operation MUST write all of them. An `instantiate` declaration
+a call of a generic operation MUST write all of them. The `<` after a name is
+read as the start of an argument list exactly when the name resolves to a
+declaration with static parameters or to `witness` or `all_values`, as the v0
+width form already is; after any other name it is the comparison operator, so no
+expression changes meaning. An `instantiate` declaration
 follows the schema it names (a forward reference is a name-resolution error) and
 there is at most one per schema (a second is W0764).
 
@@ -826,9 +915,9 @@ record Pair<A: Eq, B: Eq>(first: A, second: B)
 
 model swap<A: Eq, B: Eq>(p: Pair<A, B>) -> Pair<B, A> = Pair<B, A>(p.second, p.first)
 
-op put_all<K: Ord, V: Eq>(m: Map<K, V>, es: List<(K, V)>) -> Map<K, V>
+op put_all<K: Ord, V: Ord>(m: Map<K, V>, es: List<(K, V)>) -> Map<K, V>
 
-claim put_all_is_last_wins<K: Ord, V: Eq>:
+claim put_all_is_last_wins<K: Ord, V: Ord>:
   forall m: Map<K, V>, es: List<(K, V)> | within(es, pairs<K, V>(), 2).
     put_all<K, V>(m, es) == map_of(concat(map_entries(m), es))
 
@@ -838,8 +927,10 @@ instantiate put_all_is_last_wins:
   K = Text, V = Bool
 ```
 
-(`pairs<K, V>()` stands for a ground model that builds the tuples of two
-witnesses; a real document writes it as a `model`. `concat` of two `List<(K, V)>`
+(`pairs<K, V>()` stands for a ground model that builds tuples from
+`witness<K>()` and `witness<V>()`; a real document writes it as a `model`. `V`
+carries `Ord` here, although a map value needs only `Eq`, because a generic body
+has no literal of type `V` (CK5) and `witness` is the one source of values. `concat` of two `List<(K, V)>`
 is the existing sequence built-in.) Three suites exist, one per row. Reading the
 claim: applying the entries of `es` in order to `m` is the same as building a map
 from `m`'s entries followed by `es`, because `map_of` lets a later entry win. That
@@ -913,11 +1004,11 @@ finite.
 
 ## 8. Corpus and encoding (`warrant-corpus-v2`)
 
-Collections and generics are encoded in the `warrant-corpus-v2` profile of the
-draft VER04r, never in the v1 corpus: a v1 reader rejects the profile (VER04r
+Collections and generics are encoded in the `warrant-corpus-v2` profile of
+VER04r, never in the v1 corpus: a v1 reader rejects the profile (VER04r
 1.1), a suite with a `Set` or `Map` binder is outside the v1 type set and so uses
-the `warrant-stream-v2` header (VER04r 1.2). Because VER04r is itself a draft,
-section 18 lists what it must gain; C1-S0 reconciles the two.
+the `warrant-stream-v2` header (VER04r 1.2). VER04r is merged, so
+section 18.2 lists the amendment it needs; C1-S0 files it.
 
 ### 8.1 Canonical type names
 
@@ -930,9 +1021,9 @@ arguments in the corpus: each instance is a declared type with a mangled name
 
 ### 8.2 Streams
 
-**CC1.** (Tags.) A `Set<K>` is tag `70`, a u32 little-endian **count**, then the
+**CC1.** (Tags.) A `Set<K>` is tag `66`, a u32 little-endian **count**, then the
 elements in ascending `ord`, each in the ordinary encoding of `K`. A `Map<K, V>` is
-tag `71`, a u32 little-endian count, then for each entry **in ascending key order**
+tag `67`, a u32 little-endian count, then for each entry **in ascending key order**
 the key and then the value. The count makes each value self-delimiting
 (VER04r 2.4). The type name in the context prefix is the canonical name of 8.1.
 **No host representation ever enters a stream**: the corpus is language independent
@@ -941,13 +1032,13 @@ and a host's iteration order is irrelevant to every digest.
 Worked example, `Set<U8>` holding `{5, 128}`:
 
 ```text
-70 02000000 10 0500000000000000 10 8000000000000000
+66 02000000 10 0500000000000000 10 8000000000000000
 ```
 
 and `Map<Bool, U8>` holding `{false: 7, true: 0}`:
 
 ```text
-71 02000000 00 10 0700000000000000 01 10 0000000000000000
+67 02000000 00 10 0700000000000000 01 10 0000000000000000
 ```
 
 **CC2.** (Decoder rules; corpus error `collection-order`.) A decoder MUST reject,
@@ -958,10 +1049,11 @@ elements cannot fit in the bytes that remain (**check before allocating**; a dec
 MUST NOT size a buffer from the count beyond `min(count, 4,096)`, CT3). The
 decoder re-encodes what it decoded and compares the bytes, as VER04l 7.2 does.
 
-**CC3.** (Tags, checked.) `70` and `71` are free. Checked on 2026-11-16 against
-every specification that allocates stream tags, merged or draft (16.1). `72` to
-`79` are reserved for follow-ups of this document (an unreserved use by another
-specification is a conflict to settle at that merge).
+**CC3.** (Tags, from the registry.) `66` and `67` are the two lowest free values of
+the VER04i section 2.6.1 registry, which is the one place allocations are listed;
+the PR that carries this document adds their rows there (16.1). Nothing is
+reserved beyond them: `68` to `79` stay free, and a follow-up takes the lowest
+free value like any other specification.
 
 ### 8.3 JSON, TFV and descriptors
 
@@ -1019,7 +1111,10 @@ unifies this meter with the `ir.seq` meter that VER04r reserves; until then
 claim field is `<claim>__i<8 hex>`, where the hex is the first 8 digits of the
 SHA-256 of the **canonical instance text** (parameters in declaration order,
 `T=Bytes<4>,N=4`, canonical type names, no spaces). The generator fails if two
-instances of one document collide in those 8 digits. The suite row gains
+claim fields of one document are equal, whether two instances collide in those 8
+digits or a non-generic claim happens to be named like a mangled one; a
+declaration name that matches `__i` followed by 8 hex digits at its end is refused
+in a v2 document (W0763), so the suffix always means an instance. The suite row gains
 `"schema": "<claim>"` and `"instance": {"T": "Bytes<4>", "N": "4"}`, and the file
 `chunks/<claim>__i<8 hex>.txt` follows VER04r 5.5 unchanged. The display form in
 reports is `claim[T=Bytes<4>,N=4]`; the `@` of VER04r 5.2 keeps meaning "case
@@ -1032,6 +1127,11 @@ document order, and its label (`instances(k)` or `all-instances(n/n)`):
    "rows": [{"T":"U8"},{"T":"Bytes"},{"T":"(I8,Bool)"}],
    "label": "instances(3)", "universe": null } }
 ```
+
+A second top-level section, `reached`, lists every instance of a generic `op`,
+`model`, `record`, `variant` and `opaque` type that the claim rows reach (GM3a),
+with the claim instances that reach it; the oracle recomputes it, and a lane's
+manifest must account for every reached opaque instance.
 
 **CC9.** (Nat-only generics keep `widths`.) A document whose static parameters are
 all `Nat` keeps `width_params` and `corpus.json.widths` exactly as VER04i 2.5
@@ -1047,10 +1147,14 @@ The lane manifest (`warrant-lane-evidence-v2`, VER04r 9.1) gains, per suite row:
 for a suite with a collection input, `m1_cases` and `m1_calls` (10.1) and
 `entries_built` (13, the number of collection entries the adapter built, which the
 corpus predicts without the subject); for a suite that uses `all`, `any`, `count`
-or `fold` over a collection, `elements_visited` (CQ3); for a `Map` or `Set`
+or `fold` over a collection, `elements_visited` (CQ3) or, where the collection
+comes from the subject, `subject_elements_visited` (CQ3a, measured, not
+predicted); for a `Map` or `Set`
 result with an `unspecified` host, `order_class`. Per generic schema: the
 **lane-by-instance matrix** of 9.6, each cell `ran`, `absent` or `not-live` with
-a reason. Per lane: `host_hash` (`randomised`, `fixed:<seed>` or `n/a`, 13).
+a reason. Per lane and schema: the lane's mode and its own label (GM6b). Per `List` result
+with a declared order: `order_declared` and the number of processes it was run in
+(CM3b). Per lane: `host_hash` (`randomised`, `fixed:<seed>` or `n/a`, 13).
 
 ## 9. Lane binding contract
 
@@ -1085,8 +1189,11 @@ instance HashSet T=Text    absent=no-value-equal-host-form
 
 **CL1.** The `order=` of a host collection is one of three facts. The binding
 MUST state it for every collection type in a **result** position, and for every
-`List` result of an operation whose package declares collection types (a missing
-one is W0762: fail closed).
+`List` result of an operation or observer in a document that uses a collection
+type **or declares an opaque type** (a missing one is W0762: fail closed). The
+second half is for the container whose document never says `Set`: `observe
+to_list(s: HashSet<T>) -> List<T>` is exactly the result a hash iteration fills.
+What a declared class on a `List` result is worth is CM3b.
 
 | Class | Meaning | The lane table (9.4) lets it claim it for |
 |---|---|---|
@@ -1104,7 +1211,11 @@ nothing: the adapter sorts anyway.
 ### 9.3 The adapter, normative
 
 **CL2.** (Host to canonical.) For every collection value that crosses from the
-subject to the runner, the adapter MUST: (1) convert each key and value by the
+subject to the runner, the adapter MUST: (0) read the host collection's size and
+refuse above `MAX_COLLECTION` (`collection-size`) **before** it converts, copies
+or sorts anything (where the host has no constant-time size, iterate with a
+counter and stop at 4,097), and count leaves cumulatively across nesting while
+converting (`value-leaves`, CT2); (1) convert each key and value by the
 exact-type rules of VER04r 7.2 (a value of the wrong host type is
 `type-mismatch`); (2) **sort with the `warrant-corpus` comparator for the key
 type**, never the host's sort with a host comparator, never `sorted()` on mixed
@@ -1136,6 +1247,13 @@ fail a wrong comparator), not assumed. The closed lists name host forms; `canoni
 marks a form whose natural order the lane can certify equals `ord` for the key
 forms listed.
 
+A host **key form** is a fact the binding names from the lane's closed list
+(`key=`, 9.1), and it must be the form the package's own API takes. The serialised
+composite key of the lua and perl rows is such a form, usable only for a package
+that itself keys by that string. The adapter never invents a value-equal wrapper
+for a package that keys another way (9.5): that operation or instance is
+`not-live` or `absent`, with the reason printed.
+
 | Lane | Host set and map forms | Order | Key and order hazards |
 |---|---|---|---|
 | rust | `HashSet HashMap` (SipHash, random per map); `BTreeSet BTreeMap` (**canonical** for integers, `String`, `Vec<u8>`, tuples, derived-`Ord` enums in declaration order) | `unspecified`; `sorted` | `HashMap` iteration differs between two maps in one process; `f64` has no `Ord` (never a key); `String` keys need valid UTF-8 (the `Text` policy of VER04l) |
@@ -1152,7 +1270,7 @@ forms listed.
 | elixir | maps (`%{}`), `MapSet` | `unspecified` (a map with at most 32 keys iterates in key order; **above 32 it does not**) | `1` and `1.0` are distinct keys (`===`), equal under `==`; binaries compare bytewise; atoms are not `Text` |
 | lua | tables | `unspecified` (`pairs`) | keys cannot be `nil` or NaN; `t[1.0]` and `t[1]` are one key; a table key is by **identity** (a composite key is serialised to its canonical stream bytes by the adapter, which owns that); `#t` has no value with holes |
 | perl | hashes | `unspecified` (random per process, `PERL_HASH_SEED`) | keys stringify (`1`, `1.0`, `"1"` agree); a `utf8`-flagged `"\xe9"` and a byte string `"\xe9"` are **one** key; a NUL in a key is legal; composites are serialised by the adapter |
-| haskell | `Data.Map Data.Set` (balanced tree, by `Ord`), `Data.HashMap` | `sorted` (when `Ord` matches); `unspecified` | `Ord` on `ByteString` is lexicographic unsigned (canonical); `Data.Text` `Ord` is by UTF-16 unit in `text-1.x` and by UTF-8 bytes in `text-2.0`; derived `Ord` for sums is by constructor order; laziness (forced before compare) |
+| haskell | `Data.Map Data.Set` (balanced tree, by `Ord`), `Data.HashMap` | `sorted` (when `Ord` matches); `unspecified` | `Ord` on `ByteString` is lexicographic unsigned (canonical); `Data.Text` changed its internal encoding from UTF-16 (`text-1.x`) to UTF-8 (`text-2.0`), so its `Ord` is **not assumed** canonical in either: the `U+FFFF`/`U+10000` witness row decides per pinned version; derived `Ord` for sums is by constructor order; laziness (forced before compare) |
 | swift | `Set`, `Dictionary` (seeded per process) | `unspecified` | `String ==` is **canonical equivalence**: `"\u{E9}"` and `"e\u{301}"` are one key (the adapter keys by `Array(s.unicodeScalars)` or `utf8`); `Character`; `[UInt8]` is hashable |
 | dart | `LinkedHashSet/Map` (default), `HashMap`, `SplayTreeMap` | `insertion`; `unspecified`; `sorted` only with the corpus comparator | `String.compareTo` is by UTF-16 unit; `Uint8List` keys are by identity; on the web ints are doubles (VER04r 7.2) |
 | ocaml | `Hashtbl`, `Map.Make`, `Set.Make` | `unspecified`; `sorted` with a corpus-supplied `compare` | `Hashtbl.hash` inspects a bounded number of nodes of a structured key (collisions for long keys); `Int64.compare` is **signed** (use `Int64.unsigned_compare`); polymorphic `compare` raises on functions |
@@ -1207,8 +1325,12 @@ instance X" means in each:
   function. The adapter supplies the instance's comparator from `warrant-corpus`
   (an implementation of `ord` for that key form). Then the claim tests the
   *container* with our comparator; the package's own notion of element equality is
-  **not exercised**, and the cell prints `eq: supplied by adapter`. A claim about
-  the element equality of the subject is not made in this mode.
+  **not exercised**, and the cell prints `eq: supplied by adapter`. A hash container
+  of this shape also takes a hash function pointer; the adapter supplies one from
+  `warrant-corpus` (a fixed function over the canonical stream bytes of the
+  element) and the cell prints `eq+hash: supplied by adapter`. A claim about the
+  element equality or the hashing of the subject is not made in this mode, and its
+  flooding exposure (CT4) is that of our function, not the package's.
 * **Lua and Perl**: one function; the instance is a *conversion*. `U8` is a Lua
   integer (a float result is `type-mismatch`, VER04r 7.2) or a Perl `IV` that is not
   an `NV`; `Bytes` a byte string; `Text` a character string (Perl: `utf8::decode`d).
@@ -1222,7 +1344,11 @@ instance X" means in each:
 
 **CL7.** (Coverage is per lane and per instance.) A schema is reported as a matrix,
 one row per lane, one column per instance, each cell `ran`, `absent=<reason>` or
-`not-live=<reason>`; the count printed is **cells run of cells listed**, never a
+`not-live=<reason>`, and each row headed by the lane's **mode** (`static`,
+`erased`, `dynamic`, `c-per-type`, `c-void-ptr`) and its own label (GM6b), because
+a `ran` cell does not mean the same in each: in an erased or dynamic lane the
+instances `U8` and `I8` are one export fed two conversions, and two `ran` cells
+there are not two independent implementations; the count printed is **cells run of cells listed**, never a
 total of cases across instances and never a lane count. A lane covers a schema
 **only for the instances it ran**: an absent cell is printed and is not inherited
 from a neighbouring lane or instance, and a schema is `lane-complete` only when
@@ -1275,7 +1401,12 @@ MUST equal the model's. This is the round-trip obligation of VER04l 7.3, for key
 a host collection that merges `"\u{E9}"` with `"e\u{301}"` (Swift), `True` with `1`
 (Python), `-0` with `0`, or a `utf8`-flagged byte string with a byte string
 (Perl) fails here, before any operation is blamed. Failure id `key-collapsed`.
-Control: `lossy-key`.
+The opposite defect is tested too: each witness is inserted **twice, as two
+separately built equal host values**, and the size MUST NOT grow. A host form
+keyed by identity (`byte[]`, `Uint8Array`, a Lua table, a C pointer) keeps both
+and fails with `key-split`; without this half an identity-keyed form would pass
+key fidelity, since it never merges anything. Control: `lossy-key`, in both
+directions (CS9).
 
 **CO4.** (`instance-isolation`.) Each instance suite runs with that instance's
 conversion and its own fresh container, and the lane's manifest binds each suite
@@ -1289,7 +1420,7 @@ that survives into the next instance is the failure `instance-mixed`. Controls:
 | Establishes | Does not establish |
 |---|---|
 | the host's result, after canonicalisation by our comparator, equals the model, for every case of the stated domains | the host's own iteration order, sort or hash (they are never used) |
-| the subject's results do not depend on the order in which a container was filled, for the cases where the order can differ | that the subject is correct for a key the domain does not enumerate (it is `bounded-set`) |
+| the subject's results are the same for the **two** fill orders tried (ascending and descending `ord`), for the cases where the order can differ; other permutations of three or more entries are not tried | that the subject is correct for a key the domain does not enumerate (it is `bounded-set`) |
 | the adapter's host collections do not merge keys the model keeps apart, for the witness sets of the key types used | that every host key form is faithful (only the witnesses are tried) |
 | the instances listed ran, in the lanes marked `ran` | the schema at an unlisted type, or the same lane at another instance (parametricity, 6.7) |
 | nothing about resource use or flooding resistance of the subject | CWE-407 (section 13, CT4) |
@@ -1314,7 +1445,7 @@ the control is `n/a (no collection in the result)`.
 | # | Fault | Kind and rewrite | Must be caught by | `n/a` when |
 |---|---|---|---|---|
 | CS1 | `drop-element` | `post`: `coll_drop_first(r)`, the least element or entry removed | a claim whose expected value holds it (any reference claim) | every expected collection is empty |
-| CS2 | `extra-element` | `post`: `coll_add_least(r)`, the least key of the key type added (for a map, mapped to the value of the first entry) | a reference claim | the map result is always empty (no value to borrow) |
+| CS2 | `extra-element` | `post`: `coll_add_least(r)`, the least value of the key type **that is not already in `r`** added (for a map, mapped to the value of the first entry) | a reference claim | in every case the result already holds every value of the key type, or the map result is empty (no value to borrow) |
 | CS3 | `first-wins` | `replace`: `map_of_first(es)`, the result built from the op's first `List<(K, V)>` parameter with the **first** entry per key winning | a claim over a case with a repeated key and different values | the op has no such parameter, or `dup_key_cases = 0` |
 | CS4 | `swap-values` | `post`: `coll_swap_values(r)`, the values of the two least entries exchanged | a reference claim over a map with two entries of different values | `swappable_cases = 0` |
 | CS5 | `stale-key` | `post`: the result is the first parameter of the result's type (an `insert` or `remove` that did nothing) | a reference claim over a case where the operation changes the collection | the op has no parameter of the result type |
@@ -1334,7 +1465,7 @@ a manifest (VER04r D7), so each control runs in **every** lane.
 |---|---|---|---|
 | CS7 | `leak-host-order` | the adapter skips the sort of CL2 for an `unspecified` or `insertion` host | the strict-order decoder (CC2), and a digest mismatch on any case with two or more elements |
 | CS8 | `host-ord` | the adapter sorts with the host comparator (signed bytes, UTF-16 order, length-first arrays, culture compare) | the witness rows of 5.1: `127` against `128`, `U+FFFF` against `U+10000`, `00` against `0000`. It MUST fail in every lane whose table row (9.4) names a divergent host order, and may pass only where the host order is `canonical`, which the lane prints |
-| CS9 | `lossy-key` | the adapter builds the host collection through a key function that merges two distinct keys | `key-fidelity` (CO3), on the witness sets |
+| CS9 | `lossy-key` | two broken adapters: (a) the host collection is built through a key function that merges two distinct keys; (b) it is keyed by identity, so two equal keys stay apart | `key-fidelity` (CO3): (a) with `key-collapsed`, (b) with `key-split`; each alone must fail |
 | CS10 | `insertion-bias` | a fixture subject whose result depends on the order in which it was filled | `order-independence` (CO1) |
 
 ### 11.3 Generic controls
@@ -1353,12 +1484,15 @@ a manifest (VER04r D7), so each control runs in **every** lane.
 
 **CB1.** The kinds are the three of LP-012: **`full`** (every binder enumerates its
 whole type), **`bounded-set`** (a fixed strict subset the generator chose or the
-author listed) and **`sampled`** (a draw from a space too large). Owner decision d
-uses LP-012's spelling `sampled`; the v1 manifest and the drafts VER04n and VER04r
-print `sample` for the same kind. The spelling is settled by LP-012's count split,
-and this document changes nothing about it (owner question OWN-1). A claim's kind
-is the weakest among its binders; a refinement never improves it; "exhaustive" is
-never a total.
+author listed) and **`sample`** (a draw from a space too large). The third kind is
+spelled **`sample`**, the owner's original wording and the value that is already
+machine-read: the VER04i section 8 sidecar, the `domain_label` field of VER04r 9.1
+and 9.3, and VER04n OB1 all print `sample`. VER04l, VER04m, VER04p, VER30 and the
+LP-012 backlog row write `sampled` in prose for the same kind; this document does
+not edit them (owner question OWN-1 lists them). The VER29 rung
+`exhaustive-sampled` is a different word and is unchanged. A claim's kind is the
+weakest among its binders; a refinement never improves it; "exhaustive" is never a
+total.
 
 | Claim form | Example | Kind | VER29 rung |
 |---|---|---|---|
@@ -1366,10 +1500,10 @@ never a total.
 | `subset_of` over 4 of the 256 `U8` | `insert_exact` | `bounded-set` (16 x 256 = 4,096) | `exhaustive-sampled` |
 | `maps_over` listing all of `K` and all of `V` | a `Map<Bool, Bool>` claim (9 maps) | `full` | `exhaustive` |
 | `set_d1` or `map_d1` for a large `K` | `Map<U8, U8>`: 81 maps | `bounded-set` | `exhaustive-sampled` |
-| `property` or `fuzz` over collections | sets of 0 to 16 members | `sampled` | `randomized` |
+| `property` or `fuzz` over collections | sets of 0 to 16 members | `sample` | `randomized` |
 | a schema, `instances(k)` | `add_inserts` over three types | the weakest instance kind **capped at `bounded-set`** | at most `exhaustive-sampled` |
 | a schema, `all-instances(8/8)` over `Bits` | a bit operation over the eight integers | the weakest instance kind, uncapped | up to `exhaustive` |
-| an instance with a `Bytes<N>`, `N >= 2` binder | `T = Bytes<4>` | `sampled` (VER04r 9.3) | `exhaustive-sampled` |
+| an instance with a `Bytes<N>`, `N >= 2` binder | `T = Bytes<4>` | `sample` (VER04r 9.3) | `exhaustive-sampled` |
 | a `reference` claim, a `predicate` claim | | independent expected values versus `relational` | a `relational` suite never counts as an independent reference |
 | a generic opaque instance | `HashSet[T=U8]` | handle binder `bounded-set` (VER04n OB1) | at most `exhaustive-sampled` |
 
@@ -1404,6 +1538,10 @@ toy.)
 | CB9 | **a per-key sweep standing in for equality** | the advisory of CQ2 |
 | CB10 | **the adapter's build counts hidden** | `entries_built` is predicted by the corpus and reproduced; a lane that builds less skipped a build (13) |
 | CB11 | **a relational claim presented as independent** | the `relational` tag of VER04r 4.3 and 9.3 |
+| CB12 | **`all` over an empty subject result** | `subject_elements_visited`, zero is `vacuous-elements`; `drop-element` must be caught (CQ3a) |
+| CB13 | **a schema with no instance, or a lane that ran too few** | W0764 without `instantiate` (GM3a); the per-lane label and `no-hazard-instance` (GM6b) |
+| CB14 | **a container tested only when nearly empty** | `observed sizes` per collection-typed observer (CQ3b) |
+| CB15 | **a host list order taken on trust** | `order: declared` in the trust base, two processes (CM3b) |
 
 ## 13. Security considerations
 
@@ -1434,7 +1572,7 @@ allocates, across all nesting levels:
 | instances per schema, per document | 64, 256 | checker (W0764) |
 | total cases | the run totals of VER04r 14, **summed over instances** | generator (W0706) |
 
-**CT3.** **Count bombs.** A stream `71 ffffffff ...` is an allocation attack
+**CT3.** **Count bombs.** A stream `67 ffffffff ...` is an allocation attack
 (the shape of the CWE-789 findings in VER04j 6.1: a capacity taken from a
 header). A decoder checks the count against `MAX_COLLECTION` and against the bytes
 that remain **before** it allocates, never pre-sizes from the count beyond
@@ -1469,9 +1607,13 @@ caps the file sizes already fixed by VER04r 14 before parsing.
   VER04j 6.3 which a document MAY state for an operation, and **document-supplied**
   hostile keys as `example` or WX-E rows (the generator cannot invent keys that
   collide in a subject's hash; VER04j 6.3 says the same of format bombs). When an
-  operation has a `bound steps` row and a hostile-key table of at least one row,
-  the report prints `flood-resistance: bounded-steps(<op>, <k> keys)` for it, still
-  per lane (a lane without an observer prints `not-live`). The `hash-set` pilot is
+  operation has a `bound steps` row and a hostile-key table, the report adds a
+  **second** line, `hostile-key bound: <op> steps <= N held for <k> document-supplied
+  keys (collisions not verified)`, per lane (a lane without an observer prints
+  `not-live`). The first line does not change: it still reads `flood-resistance:
+  not evidenced`, because nothing checks that the supplied keys collide in this
+  subject, in this lane, with this hash function, and a table of keys that do not
+  collide would otherwise buy a label that sounds like resistance. The `hash-set` pilot is
   exactly this case: from reading, `hash-map` offers unkeyed FNV-1a, djb2 and
   Murmur3 as hash functions, and a SipHash used with a **constant** key, so
   colliding keys can be computed offline (15.5, stage C). Whether a
@@ -1503,7 +1645,8 @@ jail with identical digests, and no manifest is written otherwise.
 
 **CT9.** **No reproducing material in public output.** A failure prints the suite
 id, the case address and the failure id (`duplicate-element`, `order-dependent`,
-`key-collapsed`, `instance-mixed`, `collection-order`), never a key or a value
+`key-collapsed`, `key-split`, `vacuous-elements`, `instance-mixed`,
+`collection-order`, `collection-size`, `value-leaves`), never a key or a value
 (VER00 7.3, VER04i 6.1): keys may be attacker-chosen text.
 
 **CT10.** **Layered verification.** Collections are values, not contracts, so a
@@ -1517,8 +1660,9 @@ for a generic claim resolves as open with the reason `generic-not-published`
 
 ### 14.1 Why this crate
 
-`csv-parser` parses untrusted files, has 14 ports among the eighteen lanes (c cpp
-csharp dart fsharp go haskell java kotlin perl python rust swift typescript), and
+`csv-parser` parses untrusted files, has 17 ports among the eighteen lanes (every
+lane but ocaml; counted from `code/packages/*/csv-parser` and `csv_parser` on
+2026-11-16), and
 its result is `List<Map<Text, Text>>`: the Rust port returns
 `Vec<HashMap<String, String>>`, whose iteration order is **unspecified**, which is
 exactly the owner's rule (decision b). It also has a built-in oracle for last-wins
@@ -1533,9 +1677,16 @@ security weight; the pilot is chosen for its shape, not for a count.
 
 | Stage | Content | Prerequisites |
 |---|---|---|
-| **P-a** | `parse_csv` claim A (below) in the Rust and Python lanes, with the adapter obligations and controls of sections 10 and 11 | C1-S0 to C1-S4, T1 (`Text`, `within` over `Text`) |
-| **P-b** | the relational claim C, which needs `ir.seq` for the `map` in `rows_to_maps`; then typescript and go | C1-S5, `ir.seq` meter |
-| **P-c** | the remaining ten ports as C2 waves; the hostile-header table and `bound steps` row (CT4), where a lane has the observer | C2a to C2c |
+| **P-a** | `parse_csv` claim A (below) in the Rust and Python lanes, with the adapter obligations and controls of sections 10 and 11 | C1-S5, so C1-S0 to C1-S4 **and the `ir.seq` amendment**; T1 (`Text`, `within` over `Text`) |
+| **P-b** | the relational claim C; then typescript and go | P-a; C2a |
+| **P-c** | the remaining thirteen ports as C2 waves; the hostile-header table and `bound steps` row (CT4), where a lane has the observer | C2a to C2c |
+
+**No stage of this pilot runs before `ir.seq`.** Claim A's writer model `render` is
+a fold and `row_map` uses `map` and `range`, and in `warrant-corpus-v2` a lane
+evaluates the model IR itself (VER04r D1: expected values are not materialised), so
+claim A is `not-live` in every lane until the amendment lands. What runs at
+`ir.coll` alone (C1-S2 to C1-S4) is the `collections-fixture` and the worked claims
+of 4.2, not the pilot.
 
 ### 14.3 The document (sketch)
 
@@ -1581,7 +1732,7 @@ sources, a `predicate` claim, label `relational`.
 The Rust adapter binds `Map=hashmap`, `coll Map<Text,Text> order=unspecified`,
 and the result is canonicalised by CL2 before it is compared; the Python adapter
 binds `Map=dict`, `order=insertion`. A row with all-empty fields, a blank line, and
-`\r\n` are **not** claimed here: they are pinned in P-a by reading the 14 ports
+`\r\n` are **not** claimed here: they are pinned in P-a by reading the 17 ports
 (the S0 task), and claims about them are added only for behaviour that all ports
 share or whose difference the owner accepts.
 
@@ -1601,7 +1752,10 @@ share or whose difference the owner accepts.
    pairs parameter)`.
 4. The adapter controls (CS7 to CS9) fail the lane's fixture, and `host-ord` fails
    in the lane tables that name a divergent order (`typescript` and the JVM lanes
-   when they arrive).
+   when they arrive). The result is a `List` of maps: the outer list is record
+   order, which the subject computes from the input and not from a hash, so its
+   binding carries `order=insertion` as a declared assumption (CM3b) and the report
+   prints it.
 5. `key-fidelity` passes on the witness sets of `Text` in the lanes that ran, or the
    lane's port **fails honestly**: a Swift port whose `Dictionary<String, String>`
    merges two headers that differ only by canonical equivalence is a finding about
@@ -1613,11 +1767,13 @@ share or whose difference the owner accepts.
 
 ### 15.1 Why this crate
 
-`hash-set` (DT19) is security-flagged in the memo, has ports in 14 of the eighteen
-lanes (c cpp csharp fsharp go haskell java kotlin lua perl python rust swift
-typescript; a `wasm` port is outside the lanes), is blocked by collections and
-generics only, and lands in every lane class of 9.5: static (rust cpp csharp fsharp
-go haskell swift), erased (java kotlin typescript), dynamic (python lua perl) and c.
+`hash-set` (DT19) is security-flagged in the memo, has ports in 16 of the eighteen
+lanes (every lane but dart and ocaml; counted from `code/packages/*/hash-set` and
+`hash_set` on 2026-11-16; a `wasm` port is outside the lanes), is blocked by
+collections and generics only, and lands in every lane class of 9.5: static (rust
+cpp csharp fsharp go haskell swift), erased (java kotlin typescript), dynamic
+(python ruby elixir lua perl) and c. Its Rust crate depends on `hash-map`, which
+depends on `hash-functions`; neither has Warrant evidence (OWN-6).
 From reading `hash-set` and `hash-map`: the Rust `HashSet<T: Eq + Debug>` is a
 wrapper of `HashMap<T, ()>` whose hash is computed over the **`Debug` text** of the
 key (`format!("{:?}", key)`), with a chosen function (SipHash 2-4 with a constant
@@ -1630,8 +1786,10 @@ needs `Eq` and a hash.
 
 An operation that returns a handle is refused by VER04n OK3, and `add`, `remove`,
 `discard`, `union`, `intersection`, `difference` and `symmetric_difference` all do.
-VER04n's answer is the **maker plan** (OL1, OR5): the transformer becomes a maker
-whose plan applies it, and the derived grounding claim (OV6) is the claim the memo
+VER04n's answer is the **maker plan** (OL1; the OR5 row "a builder whose methods
+return a new value: one maker per reachable shape, as a plan" is this case, since
+the Rust methods take `self` and return a new set): the transformer becomes a maker
+whose plan, in the binding, applies it, and the derived grounding claim (OV6) is the claim the memo
 wrote by hand. Two-handle operations become makers of two lists, because a maker
 parameter cannot be a handle (OM3). Operations that return a value stay
 operations. For example:
@@ -1639,16 +1797,23 @@ operations. For example:
 | Library operation | In the document |
 |---|---|
 | `from_list(xs)` | maker `from_list(xs)` |
-| `from_list(xs).add(x)` | maker `from_list_add(xs, x)`, plan `[from_list(xs), step.0.add(x)]` |
-| `from_list(xs).union(from_list(ys))` | maker `from_lists_union(xs, ys)`, plan `[from_list(xs), from_list(ys), step.0.union(step.1)]` |
+| `from_list(xs).add(x)` | maker `from_list_add(xs, x)`; binding plan `HashSet::from_list(param.xs)`, then `HashSet::add(step.0, param.x)` (the step vocabulary of VER04n OL1: a function path with `param.` and `step.` arguments, never a method chain) |
+| `from_list(xs).union(from_list(ys))` | maker `from_lists_union(xs, ys)`; plan `HashSet::from_list(param.xs)`, `HashSet::from_list(param.ys)`, `HashSet::union(step.0, step.1)` |
 | `contains(&s, x)`, `size(&s)` | operation `contains`, observer `size` |
 | `to_list(&s)` | observer `elements` with result `Set<T>` (the host `Vec` is canonicalised, CL2) |
 | `is_subset(&a, &b)` | operation over two handles returning `Bool` |
 | `with_options(capacity, strategy, hash_fn)` | **not modelled** in G1: the `impl AsRef<str>` parameters are erased by the binding to fixed defaults (memo P-3); strategies and hash functions are the callbacks slice (section 20) |
 
 The plan of a maker is checked by the grounding claim over the **whole** plan
-(VER04n OL1), so `add` and `union` are evidenced exactly as well as a handle
-operation is.
+(VER04n OL1), so `add` and `union` are evidenced on the recipes listed and no
+further. Three limits follow from the restatement and are printed, not hidden:
+a transformer is exercised only on handles its own maker built (`add` on sets of
+at most one element here), never on an arbitrary handle; a failure names the plan,
+not the step's operation; and each further transformer costs a maker (at most
+eight per type, VER04n OM3), so `remove`, `intersection`, `difference` and
+`symmetric_difference` need a second document or the transformer slice VER04n
+section 18 defers. The review confirmed the restatement is the only form VER04n
+accepts today (R5).
 
 ### 15.3 The document (sketch)
 
@@ -1668,6 +1833,10 @@ opaque HashSet<T: Ord>
     admits true
     means elements = set_union(set_of(xs), set_of(ys))
     means size     = set_size(set_union(set_of(xs), set_of(ys)))
+  make from_all(xs: List<T> | one_of(xs, [witness<T>()])) -> HashSet<T>
+    admits true
+    means elements = set_of(xs)
+    means size     = set_size(set_of(xs))
   observe elements(s: HashSet<T>) -> Set<T>
   observe size(s: HashSet<T>) -> Nat
 
@@ -1696,8 +1865,12 @@ instantiate is_subset_agrees:
 ```
 
 The six instances satisfy GM5: scalars `Bool`, `U8`, `I8` and by-reference-hazard
-types `Bytes` and `Text`; the tuple `(I8, Bool)` is neither (it holds no heap
-representation) but exercises the lexicographic order of 3.2. `U8` and `I8` put
+types `Bytes` and `Text`. The tuple `(I8, Bool)` counts as neither under GM5, but
+it exercises the lexicographic order of 3.2, and in typescript, lua and java a
+tuple is itself a heap object keyed by identity, so it is the cell most likely to
+be `absent` or to fail there. `from_all` builds one set of the whole witness list
+(a `one_of` domain of one member, CD7), which is the only recipe above two
+elements. `U8` and `I8` put
 `127`/`128` and `-1`/`1` in every set (`host-ord`); `Text` carries the NFC/NFD pair
 (`key-fidelity`). The makers use `within` (VER04l 4.3) over the ground alphabet
 `witness<T>()` (CD1) and `one_of(x, A)` (CD7). Both need VER04n's maker rule to
@@ -1708,30 +1881,30 @@ read a parameter refinement as the domain, which section 18.1 requests.
 Hand-computed. For each instance, `w = |witness<T>()|` (4, 2, 4, 7, 10, 4 for `U8`,
 `Bool`, `I8`, `Bytes`, `Text`, `(I8, Bool)`; the tuple's witness is the grid of the
 first two members of each component, 2 x 2 = 4). The recipes per maker are
-`sum_{i<=2} w^i`, `(1 + w) * w` and `(1 + w)^2`:
+`sum_{i<=2} w^i`, `(1 + w) * w`, `(1 + w)^2` and 1:
 
-| `T` | `from_list` | `from_list_add` | `from_lists_union` | handles | `D(T)` | `contains_agrees` | `is_subset_agrees` |
-|---|---|---|---|---|---|---|---|
-| `Bool` | 7 | 6 | 9 | 22 | 2 | 44 | 484 |
-| `U8` | 21 | 20 | 25 | 66 | 256 | 16,896 | 4,356 |
-| `I8` | 21 | 20 | 25 | 66 | 256 | 16,896 | 4,356 |
-| `Bytes` | 57 | 56 | 64 | 177 | 347 | 61,419 | 31,329 |
-| `Text` | 111 | 110 | 121 | 342 | 418 | 142,956 | 116,964 |
-| `(I8, Bool)` | 21 | 20 | 25 | 66 | 512 | 33,792 | 4,356 |
-| **total** | | | | 739 | | **272,003** | **161,845** |
+| `T` | `from_list` | `from_list_add` | `from_lists_union` | `from_all` | handles | `D(T)` | `contains_agrees` | `is_subset_agrees` |
+|---|---|---|---|---|---|---|---|---|
+| `Bool` | 7 | 6 | 9 | 1 | 23 | 2 | 46 | 529 |
+| `U8` | 21 | 20 | 25 | 1 | 67 | 256 | 17,152 | 4,489 |
+| `I8` | 21 | 20 | 25 | 1 | 67 | 256 | 17,152 | 4,489 |
+| `Bytes` | 57 | 56 | 64 | 1 | 178 | 347 | 61,766 | 31,684 |
+| `Text` | 111 | 110 | 121 | 1 | 343 | 418 | 143,374 | 117,649 |
+| `(I8, Bool)` | 21 | 20 | 25 | 1 | 67 | 512 | 34,304 | 4,489 |
+| **total** | | | | | 745 | | **273,794** | **163,329** |
 
 Every maker list is at most 256 and every handle domain at most 2,048 recipes
 (VER04n OV1), so each handle binder is `bounded-set` and none is cut.
-`contains_agrees` over `Text` is `342 x 418 = 142,956`, within `B = 400,000`. The
-derived grounding suites add the 739 recipes. A schema line reads
+`contains_agrees` over `Text` is `343 x 418 = 143,374`, within `B = 400,000`. The
+derived grounding suites add the 745 recipes. A schema line reads
 `contains_agrees<T: Ord> instances(6)`, kind `bounded-set` (the weakest instance
 kind is `bounded-set`, which is also the cap), rung at most
 `exhaustive-sampled`. The cases of one lane over all six instances are
-`272,003 + 161,845 + 739 = 434,587`, far under the slim total of 32,000,000
+`273,794 + 163,329 + 745 = 437,868`, far under the slim total of 32,000,000
 (VER04r 14).
 
-The matrix has `18 x 6 = 108` cells. Four lanes (ruby, elixir, dart, ocaml) ship no
-`hash-set` port: `4 x 6 = 24` cells are `absent=no-port`. The other 14 lanes have 84
+The matrix has `18 x 6 = 108` cells. Two lanes (dart, ocaml) ship no `hash-set`
+port: `2 x 6 = 12` cells are `absent=no-port`. The other 16 lanes have 96
 cells, of which the lane PRs decide how many are `ran`; the expected `absent`
 ones are `T = Bytes` in the erased lanes and in C where the natural host form is
 identity-compared (9.5).
@@ -1740,9 +1913,9 @@ identity-compared (9.5).
 
 | Stage | Content | Prerequisites |
 |---|---|---|
-| **P-a** | Rust (static) and Python (dynamic), instances `Bool` and `U8` only; the grounding claims, `contains_agrees` | G1-S0 to G1-S3, VER04n O1-S3 |
-| **P-b** | all six instances; Rust, Python, TypeScript (erased) and Go (static); the controls `host-ord`, `identity-eq`, `specialise` in their fixtures | G1-S4 |
-| **P-c** | the remaining lanes (G2 waves); the **flood bound**: for the stage's hash functions, a hostile-key table of keys that collide under FNV-1a and under djb2 (computed offline by the document author) and a `bound steps` row on `contains`, in the lanes that have the observer; the report then prints `flood-resistance: bounded-steps(contains, k keys)` | G2a to G2c; OWN-2 decides whether it is required |
+| **P-a** | Rust (static) and Python (dynamic), instances `Bool`, `U8` and `Bytes` (the smallest block GM5 accepts: two scalars and one by-reference-hazard type that needs no `Text`); the grounding claims, `contains_agrees` | G1-S0 to G1-S3, VER04n O1-S3; T1-S1 and T1-S2 for `within` (VER04l 4), which the maker domains use even at scalar instances |
+| **P-b** | all six instances; Rust, Python, TypeScript (erased) and Go (static); the controls `host-ord`, `identity-eq`, `specialise` in their fixtures | G1-S4; T1 complete (the `Text` instance) |
+| **P-c** | the remaining lanes (G2 waves); the **flood bound**: for the stage's hash functions, a hostile-key table of keys that collide under FNV-1a and under djb2 (computed offline by the document author) and a `bound steps` row on `contains`, in the lanes that have the observer; the report then adds the `hostile-key bound` line of CT4 and still prints `flood-resistance: not evidenced` | G2a to G2c; OWN-2 decides whether it is required |
 
 Acceptance for P-b:
 
@@ -1760,8 +1933,13 @@ Acceptance for P-b:
    CS7 to CS10 are caught.
 6. VER04n's five obligations hold per instance (the sealing probe once per host
    type, 6.9), and the printed trust base lists the crates of each maker plan.
-7. `flood-resistance: not evidenced` is printed (stage P-c changes it per lane
-   and per operation only where the bound exists).
+7. `flood-resistance: not evidenced` is printed, at every stage (stage P-c adds
+   the `hostile-key bound` line per lane and per operation; it never replaces this
+   one).
+8. The report prints `observed sizes` for `elements` (CQ3b): at most `w` elements
+   through `from_all`, at most 2 through the other makers. No resize and no long
+   bucket chain is exercised at these sizes, and the report says so; a larger
+   ground set per instance waits for a customer (CQ-17).
 
 ## 16. Diagnostics
 
@@ -1772,9 +1950,9 @@ already name. Six codes are new.
 |---|---|---|---|
 | **W0760** | C1 | checking | collection typing (CK1 to CK3, CK10): a type without `ord` in key position, a type parameter in key position without `Ord`, more than three `Set`/`Map` levels, a literal collection, `len`, `<` or any ordering on a `Set` or `Map`, a built-in applied to the wrong arity, a collection as an `inout` parameter |
 | **W0761** | C1 | checking, generation | collection domains (CD1 to CD7): a `subset_of`, `maps_over` or `one_of` universe that is not ground, has a duplicate, has a member of the wrong type, or exceeds 16 members; a key type with no `witness` row; a collection binder whose universe makes the product over `B` is W0706 instead |
-| **W0762** | C1 | generation | collection binding (CL1, 3.3): `order=` missing where required; `unspecified` bound to a `List` result; `order=` stronger than the lane table allows for the host form; a host form outside the lane's closed list |
-| **W0763** | G1 | checking | generics (CK4, CK5, CK8, CK12): a missing, surplus or ill-kinded type argument; an operation used on a type parameter that its constraints do not license; an expression in a width position; recursion through instantiation; a generic claim name over 52 characters |
-| **W0764** | G1 | checking, generation | `instantiate` (CK7, GM5, GM6a): an unknown schema or parameter; a missing parameter in a row; an instance that violates its constraint; a duplicate row; fewer than two instances or no by-reference-hazard instance for a parameter; over 64 rows or 256 per document; `*` for a parameter that is not `Bits`; `all-instances` with a member missing; a second `instantiate` for one schema |
+| **W0762** | C1 | generation | collection binding (CL1, 3.3): `order=` missing where required; `unspecified` bound to a `List` result; `insertion` on a `List` result of an operation with a `Set` or `Map` parameter (CM3b); `order=` stronger than the lane table allows for the host form; a host form outside the lane's closed list |
+| **W0763** | G1 | checking | generics (CK4, CK5, CK8, CK12): a missing, surplus or ill-kinded type argument; an operation used on a type parameter that its constraints do not license; an expression in a width position; recursion through instantiation; a generic claim name over 52 characters; a declaration name ending in `__i` and 8 hex digits (CC8) |
+| **W0764** | G1 | checking, generation | `instantiate` (CK7, GM5, GM6a): a generic claim with no `instantiate` (GM3a); an unknown schema or parameter; a missing parameter in a row; an instance that violates its constraint; a duplicate row; fewer than two instances or no by-reference-hazard instance for a parameter; over 64 rows or 256 per document; `*` for a parameter that is not `Bits`; `all-instances` with a member missing; a second `instantiate` for one schema |
 | **W0765** | G1 | generation | generic binding (CL6, 9.1): a `generic` mode missing or not allowed for the lane class; an `instance` row with no `absent=` and no host mapping; a free-text host type in an `instance` row; an adapter-supplied wrapper where `absent` is required |
 
 Reused: **W0101** (a v2 construct in a v0 or v1 document, CM0), **W0201/W0203**
@@ -1787,25 +1965,29 @@ claim with no collection element visited, a domain with zero admitted cases),
 **W0706** (a product, a schema's summed work, the entries-built bound over budget),
 **W0707** (a `Bytes<N>` width above 4,096).
 
-### 16.1 Tags and codes, checked
+### 16.1 Tags and codes, from the registry
 
-Checked on 2026-11-16 against the tree at the base of this branch and the two draft
-branches it is merged with (VER04n, VER04r).
+The allocation registry is **VER04i section 2.6.1** (added 2026-11-16, VER30 decision
+19). Its rule: a specification checks the registry, takes the lowest free value and
+adds its row **in the same PR**; a later collision is resolved in favour of the
+earliest-merged allocation. That registry row is the one edit this document's PR
+makes to another specification (18.3).
 
-* **Stream tags in use:** `00 01 10 20 30 40 41 50 51` (VER04i 2.6); `11 60 62`
-  (draft VER04r 2.4: signed integers, tuple and record, variant); `60 61` (VER04l
-  7.2: `Text`, `Char`); `62 63` (draft VER04p, floats); `80 81` (draft VER04n 9.1).
-  **`60` is claimed by VER04l and VER04r, and `62` by VER04r and VER04p**; that is
-  theirs to settle and does not touch this document. **Chosen: `70` (`Set`) and
-  `71` (`Map`); `72` to `79` reserved here.** No other document uses a tag in `70`
-  to `79` or `90` and above.
-* **Diagnostic codes in use:** `W0001`; `W0101 W0102`; `W0201 W0202 W0203`; `W0301`;
-  `W0401 W0402`; `W0501 W0502`; `W0601 W0602`; `W0701` to `W0713`; `W0730` to `W0733`
-  (VER04m); `W0750` to `W0753`, block `W0750` to `W0759` reserved (draft VER04n).
-  **Chosen: `W0760` to `W0765`; the block `W0760` to `W0769` is reserved here, the
-  last four unassigned.** VER04p and VER04r allocate none. If another document merges
-  the same numbers first, the later one renumbers at merge; C1-S0 and G1-S0 repeat
-  the check.
+* **Stream tags.** Held: `00 01 10 11 20 30 40 41 50 51` (VER04i 2.6, VER04r 2.4),
+  `60 61` (VER04l), `62 63` (VER04p), `64 65` (VER04r, renumbered 2026-11-16), `80 81`
+  with `82` to `8f` reserved (VER04n). Free: `66` to `79`, `90` to `ff`. **Taken here:
+  `66` (`Set`) and `67` (`Map`)**, the two lowest free values, as the registry's own
+  row says ("the next specification takes from `66`"). The first draft of this
+  document chose `70`, `71` and reserved `72` to `79`; the review moved them (R1).
+* **Diagnostic codes.** Held: the v0 set `W0001` to `W0602`; `W0701` to `W0713`;
+  `W0730` to `W0733` (VER04m); `W0750` to `W0759` (VER04n, `W0750` to `W0753`
+  assigned). **Taken here: the block `W0760` to `W0769`, with `W0760` to `W0765`
+  assigned and the last four unassigned.** The registry lists `W0760` and up as
+  free; codes are allocated in blocks of ten per feature (VER04m `W0730`, VER04n
+  `W0750`), so the next block after VER04n's is the lowest free block of that
+  shape, and the gaps `W0714` to `W0729` and `W0734` to `W0749` are left as the
+  registry shows them.
+* C1-S0 and G1-S0 re-read the registry before any code is written.
 
 ## 17. Conformance
 
@@ -1848,7 +2030,13 @@ implemented.
     controls (`insertion-bias`, `leak-host-order`, `lossy-key`); `m1_cases`,
     `m1_calls` and `entries_built` equal the corpus's predictions.
 14. The sealed values of 9.2: an `order=sorted` declaration for a form the table
-    does not certify is W0762.
+    does not certify is W0762; so is `insertion` on a `List` result of an operation
+    with a collection parameter. A declared order prints as an assumption and the
+    suite runs in two processes (CM3b).
+14a. A fixture subject that returns an empty set under an `all`-only claim fails
+    `vacuous-elements`, and its `drop-element` control is reported not caught
+    (CQ3a). Key fidelity fails an identity-keyed form with `key-split` (CO3). A
+    host result of 4,097 entries is refused before any conversion (CL2 step 0).
 
 **G1-S1, G1-S2 (checker, generator).**
 15. A generic body is checked under its constraints only (CK5); a call without type
@@ -1863,11 +2051,16 @@ implemented.
     `widths` encoding and reproduces its nine v1 digests (CC9, VER04r 1.2).
 19. The label rules of 12.1: `instances(k)` is never `full` and at most
     `exhaustive-sampled`; `all-instances(8/8)` takes the weakest kind uncapped.
+    A generic claim with no `instantiate` is W0764; the `reached` section lists
+    every instance of a generic op and opaque type, and the oracle recomputes it.
 
 **G1-S3, G1-S4 (lanes, pilot).**
 20. The four modes of 9.5 are implemented; a lane without a mode for the package
     records `not-live` (W0701).
-21. The matrix is printed with `ran`, `absent=` and `not-live=` cells; counts are
+21. The matrix is printed with `ran`, `absent=` and `not-live=` cells, the mode and
+    the per-lane label; a lane with seven of eight `Bits` cells prints
+    `instances(7/8)` and cannot reach `exhaustive`; a lane with no `ran` hazard
+    instance prints `no-hazard-instance` (GM6b); counts are
     cells, per lane and per instance; a missing `instance` row without `absent=` is
     W0765.
 22. Controls CS11 to CS15 are caught; `identity-eq` fails `Bytes`/`Text` and passes
@@ -1896,7 +2089,7 @@ slices that make them true apply them (as VER04n section 17 does for VER29).
 * **OQ-12** (nested handles, a handle in a `List`, `Set` or `Map`) is **not** reopened:
   CK11 refuses it, and the reasons of VER04n OQ-12 (recursive recipe descriptors,
   aliasing) stand.
-* **OWN-1** (`eq=observational`): still not added. Handles are not key types, so
+* **VER04n's OWN-1** (`eq=observational`, decided 2026-11-16: not added) stands. Handles are not key types, so
   the trigger VER04n names ("two adopters need handles as map keys") has not
   occurred.
 
@@ -1905,7 +2098,7 @@ slices that make them true apply them (as VER04n section 17 does for VER29).
 1. 2.1 type grammar: `Set<T>`, `Map<K,V>`; 2.2: the optional `instance_of` and `args`
    fields of a `types` row, and a restatement that rule 1 (no recursion) traverses
    `Set` and `Map` (CM5).
-2. 2.4: stream rows `70` and `71`, the decoder rules CC2, the leaf cap, the JSON and
+2. 2.4: stream rows `66` and `67`, the decoder rules CC2, the leaf cap, the JSON and
    TFV forms of CC4.
 3. 4.1: the level `ir.coll`, its tags, the five fault-only tags, and the run-time
    data meter of CC7, to be unified with the `ir.seq` meter when that is defined.
@@ -1920,6 +2113,9 @@ slices that make them true apply them (as VER04n section 17 does for VER29).
    generalised, so there is one run-time meter in the profile.
 
 ### 18.3 VER04i (lanes and bindings)
+
+**Done in this PR** (the registry's rule, 16.1): the rows `66` (`Set`), `67` (`Map`)
+and `W0760` to `W0769` in VER04i section 2.6.1. **Requested:**
 
 The binding directives `coll`, `generic`, `instance` and the `values Set=`/`Map=`
 entries with each lane's closed list (9.1, 9.4); the four modes of 9.5; the
@@ -1940,12 +2136,14 @@ with the generic `witness<T>()` as its alphabet.
 VER29: a contract id naming a generic claim resolves as open with the reason
 `generic-not-published` until a later slice gives the id an instance segment
 (CT10, OWN-5). VER30: a change record (the freeze on collections and generics is
-lifted; the order sentence of the memo's section 5). Backlog: section 21.2.
+lifted; the order sentence of the memo's section 5). Backlog: section 21.2; the
+WX-R0 row says VER04s "takes stream tags from `66`", which after this document is
+`68` (the row cites the registry, so the registry is what binds).
 
 ## 19. What VER04s (recursive types) will need
 
 The owner decided that recursive algebraic types get **their own specification,
-VER04s, written after this one** (backlog name WX-I, recursive sums). It is not
+VER04s, written after this one** (backlog row WX-R0, VER30 track C14). It is not
 specified here. This section is a list of the places where this design is already
 shaped so recursion can be added, and what VER04s must supply. The point is that
 nothing in the encoding or the model of this document has to change.
@@ -1960,7 +2158,7 @@ nothing in the encoding or the model of this document has to change.
 | 6 | define the host form of a recursive value per lane (boxed trees, C structs and ownership) and **sharing and cycles** in host results | CL2 is driven by the declared type and a leaf counter, so a cyclic host value cannot loop the adapter; sharing and ownership rules (VER04r 7.4) need extending |
 | 7 | state `Eq`, `Ord` and `Finite` for recursive types | the constraints are closed (GM2); VER04s extends the table of 3.2 |
 | 8 | forbid **polymorphic recursion** (`Nested<T>` mentioning `Nested<List<T>>`), which would make the instance set infinite | CK12 already refuses recursion through instantiation, so monomorphisation terminates |
-| 9 | take a fresh diagnostic block and check tags again | this block ends at `W0765` and reserves `W0760` to `W0769`; tags `72` to `79` stay reserved here but VER04s needs none (the existing tags suffice) |
+| 9 | take a fresh diagnostic block and read the registry again | this block ends at `W0765` and reserves `W0760` to `W0769`; tags `68` to `79` stay free in the VER04i 2.6.1 registry. VER04s is expected to need none (a recursive value is a variant, tag `65`, whose fields nest); if it does, the lowest free value is now `68` |
 
 VER04s's pilots (`json-value` with 38 dependents, `cbor`, the tree crates,
 `wasm-module-parser`) are not chosen here. A `Map<Text, JsonValue>` is exactly the
@@ -1984,8 +2182,9 @@ statement that the two documents fit.
 * **Collections as `inout` or as stateful objects** (CK10); **heaps and priority
   queues** (VER04m).
 * **Iterator invalidation, concurrent collections, capacity and load factor** as
-  properties of a value; **hash-flooding resistance** as a claim (CT4: bounded where
-  the document supplies a bound and a hostile table, otherwise not evidenced).
+  properties of a value; **hash-flooding resistance** as a claim (CT4: always
+  printed `not evidenced`; a document-supplied bound over document-supplied keys is
+  a separate line).
 * **Publication of generic claims through VER29** (CT10, OWN-5); **foreign generic
   handles** (6.9).
 * **Proofs**: all collection and generic rows are `not-live` for the proof rung at
@@ -1999,9 +2198,9 @@ statement that the two documents fit.
 | Slice | Scope | Prerequisites |
 |---|---|---|
 | **C0, G0** | this specification; adversarial review recorded in section 23 | none |
-| **C1-S0** | errata pass against the then-current VER04j, k, l, n, p, r; reconcile section 8 with VER04r and file the requests of 18; re-confirm tags `70`, `71` and the block `W0760` to `W0769`; reserved names; accept the collection constructs in the `v2` header parser; the data meter against VER04k 2.7 | C0 reviewed; T1-S0 (`v2` accepted) |
+| **C1-S0** | errata pass against the then-current VER04j, k, l, n, p, r; reconcile section 8 with VER04r and file the requests of 18; re-confirm tags `66`, `67` and the block `W0760` to `W0769`; reserved names; accept the collection constructs in the `v2` header parser; the data meter against VER04k 2.7 | C0 reviewed; T1-S0 (`v2` accepted) |
 | **C1-S1** | checker and ground evaluator: `Set`/`Map`, `ord`, the 20 built-ins, CK1 to CK3, CK9 to CK11, CM5, `witness`, `subset_of`, `maps_over`, `one_of`, `set_d1`, `map_d1`, the labels | C1-S0; T1 for `Text` keys |
-| **C1-S2** | generator at `ir.coll` (no `ir.seq`): tags `70`/`71`, descriptors, the data meter, reference and predicate claims, faults CS1 to CS6, `m1_cases`/`entries_built` predictions, the independent oracle at the level, the `v2-collections` kit | C1-S1; VER04r slices S3 to S5 |
+| **C1-S2** | generator at `ir.coll` (no `ir.seq`): tags `66`/`67`, descriptors, the data meter, reference and predicate claims, faults CS1 to CS6, `m1_cases`/`entries_built` predictions, the independent oracle at the level, the `v2-collections` kit | C1-S1; VER04r slices S3 to S5 |
 | **C1-S3** | Rust lane: binding reader (`coll`, closed list), CL2, CL3, CO1 to CO3, the adapter controls CS7 to CS10, the shared fixture `collections-fixture` in Rust | C1-S2; the shared-crate queue of VER30 5.3 |
 | **C1-S4** | Python lane, with the oracle cross-check | C1-S3 |
 | **C1-S5** | element quantification (`all`, `any`, `count`, `fold` over collections), `elements_visited`; pilot `csv-parser` stages P-a and P-b in Rust and Python | C1-S4; the `ir.seq` amendment (VER04r 4.1); WX-D2 |
@@ -2012,14 +2211,17 @@ statement that the two documents fit.
 | **G1-S1** | checker: parameters, constraints, explicit arguments, `instantiate`, the minimum set, `witness<T>`, `all_values<T>`, generic opaque declarations | C1-S1; VER04n O1-S1 |
 | **G1-S2** | generator: monomorphisation, the `schemas` section, instance ids, the `widths` compatibility gate (item 18), the matrix, faults CS11 to CS15, the oracle's independent monomorphiser | G1-S1; C1-S2; VER04n O1-S2 |
 | **G1-S3** | Rust (static) and Python (dynamic) lanes: modes, the instance bindings, CO4, the fixture with `specialise` and `identity-eq` | G1-S2; C1-S4; VER04n O1-S3 |
-| **G1-S4** | pilot `hash-set`, stages P-a and P-b (Rust, Python, TypeScript, Go) | G1-S3 |
-| **G2a** | lanes typescript (erased), go (static), then ruby, java, kotlin (erased), c (`c-per-type`, `c-void-ptr`) | G1-S4; C2a |
+| **G1-S4** | pilot `hash-set`, stages P-a and P-b (Rust, Python, TypeScript, Go) | G1-S3; T1 (`within` for the maker domains at P-a, `Text` at P-b) |
+| **G2a** | lanes typescript (erased), go (static), then ruby (dynamic), java, kotlin (erased), c (`c-per-type`, `c-void-ptr`) | G1-S4; C2a |
 | **G2b, G2c** | the remaining lanes; P-c of the pilot | G2a |
 | **later** | VER04s, callbacks (memo P3), interfaces (P2), `eq=observational` | demand |
 
 Implementation order (memo section 5): after WX-G, WX-D2, WX-F, LP-012, S1 and T1:
 VER04n O1, then **C1**, then **G1**, then FL1. C1-S0 to C1-S4 need neither `ir.seq`
-nor generics, so collection work can begin while the `ir.seq` amendment is written.
+nor generics, so collection work can begin while the `ir.seq` amendment is written;
+but **both stages of the `csv-parser` pilot wait for that amendment** (14.2), so it
+is on the critical path of the collections pilot and should be written alongside
+C1-S0, not after C1-S4. The `hash-set` pilot needs no `ir.seq`.
 
 ### 21.2 Backlog rows needed (this document does not edit `VER-BACKLOG.md` or VER30)
 
@@ -2036,13 +2238,15 @@ nor generics, so collection work can begin while the `ir.seq` amendment is writt
 * **WX-P2a, WX-P2b, WX-P2c**: the generics lane rollout, per lane class.
 * **WX-MP-REVIEW**: the adversarial review of owner decision (a): three reviewers
   (polyglot lane and host hazards; type system and generics; security, resource
-  bounds and hash flooding).
-* **WX-I** (recursive sums) re-scoped to VER04s: spec after this one (decision f).
+  bounds and hash flooding). One combined review ran on 2026-11-16 (section 23);
+  the per-lane hazard table of 9.4 in particular has had no lane specialist.
+* **WX-R0** (VER04s, recursive types; already a backlog row): spec after this one
+  (decision f); section 19 is its input.
 * **LP-012 amendment**: the kinds of the new domains (`set_d1`, `subset_of`,
-  `maps_over`, `map_d1`, `one_of`, instance suites), and the settlement of the spelling
-  `sample`/`sampled` (OWN-1).
-* **VER04n amendment** (18.1) and **VER04r amendment** (18.2), as the owners of those
-  drafts see fit; **VER04i amendment** request (18.3).
+  `maps_over`, `map_d1`, `one_of`, instance suites), and the one spelling `sample`
+  across the specifications that write `sampled` (OWN-1).
+* **VER04n amendment** (18.1) and **VER04r amendment** (18.2), both now merged
+  specifications, so each is an amendment PR of its own; **VER04i amendment** request (18.3).
 * **VER29**: the open state `generic-not-published` (CT10).
 * **VER13**: an assumption `A-COLLECTION-HOST`, "the lane's canonicalisation and key
   conversion are faithful for the key forms the lane binds", discharged per lane
@@ -2055,16 +2259,17 @@ nor generics, so collection work can begin while the `ir.seq` amendment is writt
 
 ### 22.1 For the owner
 
-Five questions are choices of policy or scope. Each has a recommendation, and the
-text above already encodes it, so a "yes" needs no edit.
+Four questions are choices of policy or scope. Each has a recommendation, and the
+text above already encodes it, so a "yes" needs no edit here. (The earlier OWN-3
+and OWN-4 were engineering and are resolved as CQ-18 and CQ-19; the numbers are
+not reused.)
 
 | # | Question | Recommendation |
 |---|---|---|
-| OWN-1 | **Spelling of the third kind.** Your decision d says `sampled` (LP-012). The v1 manifest, VER04n and VER04r print `sample`. Confirm `sampled`, and settle it once at LP-012's count split? | **`sampled`, settled at the count split.** This document uses LP-012's word; the three specifications that print `sample` change together, not one by one |
-| OWN-2 | **Flooding evidence for security-flagged hash containers.** Must `hash-set` carry a `bound steps` row and a hostile-key table before it ships (CT4)? | **No in C1 and G1, printed as `not evidenced`.** The harness can bound its own work, and a document can supply a bound, but a collision table is per hash function and per subject; make it a **shipping-gate** decision per crate (VER00), not a language rule |
-| OWN-3 | **More closed universes.** Only `Bits` is closed (GM6a). Allow a `Finite` type list, or `Nat` ranges, to be declared closed by the document? | **No.** A document that declares its own universe closed asserts the thing the label exists to check |
-| OWN-4 | **The dependency chain.** `csv-parser` needs T1, C1 and the `ir.seq` amendment; `hash-set` needs C1, VER04n O1 and G1. Accept this order (21.1), with collection claims that use no WX-D form first? | **Yes.** The chain is real; C1-S0 to C1-S4 need no `ir.seq` |
-| OWN-5 | **Generic claims across layers.** Fail closed: a contract id naming a generic claim is `generic-not-published` (CT10). Accept until a package needs to cite one? | **Yes.** An id with an instance segment is a VER29 design question with no adopter yet |
+| OWN-1 | **Spelling of the third kind: `sample` or `sampled`.** Your original wording was `full` / `bounded-set` / `sample`, and that is what every machine-read field prints (the VER04i section 8 sidecar, VER04r `domain_label`, VER04n OB1, the v1 manifests). VER04l, VER04m, VER04p, VER30 (A2 and the count tables), and the LP-012 backlog row write `sampled` in prose (VER04n's own review, its R20, already ruled that `sampled` is not an LP-012 kind). | **`sample`, everywhere.** It is the emitted value, so choosing `sampled` would change a manifest field and the lanes that already write it; choosing `sample` changes only prose. This document now uses `sample` (12.1). The other specifications are not edited here; fix them in one small PR with the LP-012 count split. `exhaustive-sampled` (a VER29 rung) and `*_16_bit_sampled` (claim names) are different words and stay |
+| OWN-2 | **Flooding evidence as a shipping gate for `hash-set`.** Must a security-flagged hash container carry a `bound steps` row and a hostile-key table before it ships (CT4)? | **No, as a language rule; printed `flood-resistance: not evidenced`, always.** No harness can show resistance: the collision set is per hash function, per lane and per subject, and nothing here verifies that supplied keys collide. Decide it per crate at the VER00 shipping gate. For this crate the honest finding is already known from reading: unkeyed FNV-1a, djb2, Murmur3 and a constant-key SipHash are floodable by construction, so the gate question is whether `hash-set` may ship with that printed, not whether a table exists |
+| OWN-5 | **Generic claims across VER29 layers.** Fail closed: a contract id naming a generic claim resolves open with `generic-not-published` (CT10), so no upper layer can lean on one. Accept until a package needs to cite one? | **Yes.** An id with an instance segment is a VER29 design question with no adopter yet, and the cost of waiting is only that a user of `hash-set` re-tests what it uses. The alternative, publishing the schema, would let one instance stand for another across a layer, which decision c forbids |
+| OWN-6 | **`hash-set`'s unverified lower crates.** Its Rust crate is a thin wrapper of `hash-map` (which holds the table, the strategies and the hashing) over `hash-functions`; neither has Warrant evidence. No foreign handle is cited, so VER04n OWN-4 does not bind in its letter, but its reason (no unverified crate under a pilot) does in spirit. Pilot `hash-set` as planned, or verify `hash-map` first? | **Pilot `hash-set` as planned, with both lower crates named as unverified in the report's `tcb` line.** Every claim is end to end through the wrapper, so the lower code is exercised, not assumed, and `hash-map` itself needs two type parameters, `Map` values and its mutable API (VER04m), a larger first step. If you want OWN-4 applied uniformly, the order becomes `hash-functions`, `hash-map`, `hash-set`, and the generics pilot starts two adoptions later |
 
 ### 22.2 Engineering questions
 
@@ -2078,14 +2283,18 @@ text above already encodes it, so a "yes" needs no edit.
 | CQ-6 | One data meter or two? | One: CC7 generalised into the `ir.seq` meter at C1-S0 |
 | CQ-7 | Does `witness<T>()` for `Text` hold ten members, and are those the right ones? | Yes, from VER04l 7.3 rows 3, 6, 14, 16 and the prefix/NUL rows; C1-S0 re-derives it against `text_d1` |
 | CQ-8 | Should `order-independence` (CO1) run every case or a sample at `full`? | Every qualifying case at `slim`; at `full` too, because `m1_cases` is predicted exactly; revisit if interpreted lanes cannot afford the doubling |
-| CQ-9 | A lane whose `unspecified` host is seeded: run each case under two seeds? | A SHOULD at nightly `full` in the lanes that can set a seed (`host_hash`, CT4); not a gate |
+| CQ-9 | A lane whose `unspecified` host is seeded: run each case under two seeds? | For a `Set` or `Map` result, a SHOULD at nightly `full` (the adapter sorts, so the seed cannot reach a digest). For a `List` result with a declared order it is a MUST (CM3b), because there the seed can decide the outcome |
 | CQ-10 | Is `all-instances` worth keeping for one constraint? | Yes: it is the only way a generic claim reaches `exhaustive`, and the eight-integer family is the common case (bit operations) |
 | CQ-11 | Dart classification (D4)? | `static` (reified); revisit if a Dart package takes `dynamic` |
 | CQ-12 | Suite id mangling: 8 hex digits, collision checked? | Yes; the generator fails on a collision (CC8) |
 | CQ-13 | Do instance suites each get their own slim set? | Yes (VER04r 5.6 per suite); the report prints it per instance |
 | CQ-14 | `T = *` for a `Finite` parameter? | No (GM6a); only `Bits` |
 | CQ-15 | More built-ins (`set_min`, `set_max`, `map_merge`, `map_fold`, `map_filter`)? | Not until an adopter needs one; each is another IR tag in eighteen evaluators |
-| CQ-16 | The unkeyed hash functions of `hash-map`: report them? | The report prints, per hash container, `flood-resistance: not evidenced` and nothing else; whether to name the unkeyed functions is the owner's (OWN-2) |
+| CQ-16 | The unkeyed hash functions of `hash-map`: report them? | The report prints, per hash container, `flood-resistance: not evidenced`; whether to name the unkeyed functions is the owner's (OWN-2) |
+| CQ-17 | A recipe large enough to force a resize or a long bucket chain in a generic container? | Not in G1: a generic body has no literal of `T`, so the largest ground set is `witness<T>()` (`from_all`, at most 10). The sizes are printed (CQ3b). Reopen with a ground `range`-like generator per constraint if an adopter's defect class needs it |
+| CQ-18 | More closed universes (a `Finite` type list or a `Nat` range declared closed by the document)? Was OWN-3 | **No, resolved in review.** A document that declares its own universe closed asserts the thing the label exists to check; only the language closes a universe (GM6a) |
+| CQ-19 | The dependency chain. Was OWN-4 | **Resolved in review; it is a fact, not a choice.** `csv-parser` needs T1, C1-S5 and the `ir.seq` amendment at every stage (14.2); `hash-set` needs T1 (`within`), C1, VER04n O1 and G1 (15.5), and no `ir.seq` |
+| CQ-20 | Is the maker restatement of `add`, `union` (D6) right? | Yes (R5): VER04n OK3 refuses a handle result and OR5 names the plan as the form for a value-returning builder. Its limits are printed (15.2) |
 
 ## 23. Specification change record
 
@@ -2097,23 +2306,81 @@ text above already encodes it, so a "yes" needs no edit.
   `instantiate`, monomorphisation before IR, the minimum instance set, honest
   labels (`instances(n)`, `all-instances(n/n)` over `Bits` only); generic opaque
   types as an amendment to VER04n; the interaction with `Bytes<N>` parameters;
-  the corpus encoding (tags `70`, `71`, descriptors, `ir.coll`, instance suites,
+  the corpus encoding (tags `66`, `67`, descriptors, `ir.coll`, instance suites,
   `widths` compatibility); the lane binding contract with four generic modes and a
-  per-lane table for eighteen lanes; four obligations; fifteen sabotage controls;
+  per-lane table for eighteen lanes; four obligations; fifteen sabotage controls
+  (CS1 to CS15);
   security (leaf bounds, count bombs, hash flooding on three surfaces); pilots
   `csv-parser` and `hash-set`; what VER04s will need. Departures from the memo
   are D1 to D11 of section 1.2. New diagnostics `W0760` to `W0765`. Edits no other
-  specification; requirements on VER04n, VER04r, VER04i, VER29 are section 18.
-* **Adversarial review: not yet done.** The freeze is lifted spec first, with
-  adversarial review (decision a); the review has not run. Findings will be recorded
-  here as R1, R2, ... each with the place it is closed. Checks the author did make:
+  specification but the VER04i 2.6.1 registry rows; requirements on VER04n, VER04r,
+  VER04i, VER29 are section 18. (The tags in this entry are the reviewed ones.)
+* **Adversarial review, 2026-11-16 (one reviewer; the three-reviewer pass of
+  WX-MP-REVIEW is still owed).** Findings, each with the place it is closed:
+  * **R1** tags `70`, `71` and a reserved `72` to `79` ignored the registry's
+    "takes from `66`": now `66`, `67`, nothing reserved, rows added to VER04i 2.6.1
+    (CC1, CC3, 16.1). The codes `W0760` to `W0769` fit and stay.
+  * **R2** the kind was spelled `sampled` against the emitted `sample`: now `sample`
+    (12.1, OWN-1).
+  * **R3** vacuity: `all` over the elements of a **subject** result passed for an
+    empty result, and `elements_visited` was wrongly said not to depend on the
+    subject (CQ3a); a collection behind an observer had no size count (CQ3b); a
+    generic claim with no `instantiate` had no suite and no diagnostic (GM3a,
+    W0764); the instances of generic ops and opaque types were never defined
+    (GM3a, `reached`, 8.5).
+  * **R4** `all-instances(8/8)` and the GM5 hazard instance were properties of the
+    document, so a lane with absent cells inherited `exhaustive` or never ran a
+    by-reference instance: both are now per lane (GM6b, 9.6). A `Finite` parameter
+    could not satisfy GM5 at all (6.5).
+  * **R5** the maker restatement of `add` and `union` (D6) is right, and is the form
+    VER04n OR5 names; the plan syntax was not VER04n's and its limits were unstated
+    (15.2). The pilot's sets held at most two elements: `from_all` added, counts
+    redone (15.3, 15.4).
+  * **R6** `ord` was not total as written: a composite with a non-key component had
+    no rule (3.2).
+  * **R7** a declared `sorted` or `insertion` on a `List` result was unverifiable
+    and could pass by accident; `insertion` with a collection parameter was
+    contradictory with CL3; a container document that never says `Set` escaped the
+    `order=` rule (CM3b, CL1).
+  * **R8** the work rule counted entries, so nested collections were undercharged
+    by up to the leaf cap (3.6); the adapter sorted a host result before checking
+    its size (CL2 step 0).
+  * **R9** `flood-resistance: bounded-steps` was printed for keys nobody showed to
+    collide: the line stays `not evidenced` and the bound is a separate line (CT4).
+  * **R10** key fidelity tested merging only; an identity-keyed host form never
+    merges and passed (`key-split`, CO3, CS9). `extra-element` was unobservable
+    when the least key was already present (CS2).
+  * **R11** `csv-parser` stage P-a was said to need no `ir.seq`; its writer model
+    is a fold and lanes evaluate the IR, so the whole pilot waits for the amendment
+    (14.2, 21.1). `hash-set` needs T1 for `within` (15.5).
+  * **R12** port counts were wrong: `csv-parser` has 17 lanes, not 14; `hash-set`
+    16, not 14 (ruby and elixir have ports), so 12 absent cells, not 24 (14.1,
+    15.1, 15.4).
+  * **R13** lane feasibility: the lua and perl "serialised composite key"
+    contradicted "the adapter never wraps" (9.4); `c-void-ptr` did not say who
+    supplies the hash (9.5); the matrix did not show that a `ran` cell in an erased
+    or dynamic lane is one export under two conversions (9.6); the Haskell `Text`
+    order was asserted, not tested (9.4).
+  * **R14** a non-generic claim could be named like a mangled instance (CC8); the
+    7.2 example needed a literal of an `Eq`-only type; the `<` of a type argument
+    list was not disambiguated (7.1).
+  * **R15** order independence was described as covering "the order" when two
+    orders are tried (10.2).
+  * **R16** stale references: VER04n, VER04p and VER04r are merged and amended, the
+    recursive-types row is WX-R0, the tag overlap among VER04l, VER04p and VER04r is
+    settled by the registry.
+
+  Not reviewed by a lane specialist: the per-lane hazards of 9.4. Checks the author
+  made before the review:
   the stream tags and diagnostic codes of 16.1 against every specification on the
-  base and both draft branches; the section references against the texts as read on
+  base and the VER04n and VER04r branches as they then stood; the section references against the texts as read on
   2026-11-16; the counts of 4.2, 5.2, 5.3, 14.3 and 15.4 by hand. Not checked: no
   fragment has been run through any checker; the per-lane hazards of 9.4 are "from
   reading" and are confirmed only by each lane's hazard-row test; the behaviour of
   the `csv-parser` and `hash-set` ports beyond their public signatures, the code
   named in sections 14 and 15 and the Rust packages was not run.
-* Known cross-document conflicts reported, not fixed here: VER04l, the draft VER04r
-  and the draft VER04p allocate overlapping stream tags `60` to `62`; VER04n holds
-  `80`, `81`, `W0750` to `W0759`.
+* Cross-document state: the overlap of VER04l, VER04p and VER04r on tags `60` to
+  `62` was settled on 2026-11-16 by the VER04i 2.6.1 registry (VER04r moved to `64`,
+  `65`); VER04n holds `80`, `81` and `W0750` to `W0759`. Other specifications that
+  write `sampled` for the kind `sample`, listed for OWN-1 and not edited here:
+  VER04l, VER04m, VER04p, VER30 and the LP-012 row of `VER-BACKLOG.md`.
