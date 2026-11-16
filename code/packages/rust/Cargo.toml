@@ -1514,4 +1514,5 @@ members = [
   "vos-manifest",
   "vos-sched-contract",
   "vos-sched-contract-check",
+  "vos-sched-fp-bitmap",
 ]
