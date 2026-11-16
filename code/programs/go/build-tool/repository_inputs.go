@@ -134,6 +134,12 @@ var (
 		"code/scripts/tfv.py",
 		"code/scripts/bootstrap_harness_conformance.py",
 	}
+	// trigReferenceCorpusPaths is the bit-exact TRIG-REF-1 conformance corpus
+	// (PHY00a section 6). Every converged trig port's tests decode it, so an
+	// edit to any of its files selects each converted port. Slices TC-1..TC-17
+	// add one consumer row per port as the port adopts the corpus.
+	trigReferenceCorpusPaths = []string{"code/specs/fixtures/trig-reference-v1"}
+
 	rngCorpusPaths         = []string{"code/specs/fixtures/rng-v1"}
 	hamurabiCorpusPaths    = []string{"code/specs/fixtures/hamurabi-v1"}
 	lunarLanderCorpusPaths = []string{"code/specs/fixtures/lunar-lander-v1"}
@@ -329,6 +335,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "the shared rng conformance corpus",
 		matches:  isRngCorpus,
 		paths:    rngCorpusPaths,
+	},
+	{
+		name:     "python/trig",
+		language: "python",
+		inputs:   "the shared TRIG-REF-1 bit-exact conformance corpus",
+		matches:  isTrigReferenceCorpus,
+		paths:    trigReferenceCorpusPaths,
 	},
 	{
 		name:     "rust/rng",
@@ -914,6 +927,13 @@ func isKilnToolchainPinInput(changed string) bool {
 //	code/specs/rng.md                         → false (prose; the corpus pins behaviour)
 func isRngCorpus(changed string) bool {
 	return strings.HasPrefix(changed, "code/specs/fixtures/rng-v1/")
+}
+
+// isTrigReferenceCorpus reports whether a changed path is a file of the shared
+// TRIG-REF-1 conformance corpus. A slash-delimited prefix, so a lookalike
+// directory such as trig-reference-v10 is not selected.
+func isTrigReferenceCorpus(changed string) bool {
+	return strings.HasPrefix(changed, "code/specs/fixtures/trig-reference-v1/")
 }
 
 // isHamurabiCorpus reports whether a changed path is in the shared hamurabi corpus,

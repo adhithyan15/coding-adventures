@@ -95,6 +95,45 @@ func TestRngCorpusSelectsEveryFixedLane(t *testing.T) {
 	}
 }
 
+func TestTrigReferenceCorpusSelectsConvertedPorts(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "python/trig", Language: "python"},
+		{Name: "rust/trig", Language: "rust"},
+		{Name: "python/rng", Language: "python"},
+	}
+	for _, changed := range []string{
+		"code/specs/fixtures/trig-reference-v1/edge.tsv",
+		"code/specs/fixtures/trig-reference-v1/manifest.json",
+		"code/specs/fixtures/trig-reference-v1/sweep-cw.tsv",
+	} {
+		got, err := repositoryInputConsumersForChange([]string{changed}, packages, "all")
+		if err != nil {
+			t.Fatal(err)
+		}
+		if want := map[string]bool{"python/trig": true}; !reflect.DeepEqual(got, want) {
+			t.Fatalf("%s selected %v, want %v", changed, got, want)
+		}
+	}
+	if got, _ := repositoryInputConsumersForChange([]string{"code/specs/fixtures/trig-reference-v1/edge.tsv"}, packages, "rust"); len(got) != 0 {
+		t.Fatalf("rust-only run selected %v", got)
+	}
+	for path, want := range map[string]bool{
+		"code/specs/fixtures/trig-reference-v1/edge.tsv":  true,
+		"code/specs/fixtures/trig-reference-v10/edge.tsv": false,
+		"code/specs/fixtures/trig-reference-v1":           false,
+		"code/specs/fixtures/phy00-phy01-v1/cases/x.json": false,
+	} {
+		if isTrigReferenceCorpus(path) != want {
+			t.Errorf("isTrigReferenceCorpus(%q) != %v", path, want)
+		}
+	}
+	// A converted port whose package is missing from discovery is a hard error,
+	// never a silent skip.
+	if _, err := repositoryInputConsumersForChange([]string{"code/specs/fixtures/trig-reference-v1/edge.tsv"}, nil, "all"); err == nil {
+		t.Fatal("missing consumer must be an error")
+	}
+}
+
 func TestCtCompareInputsSelectTheirConsumers(t *testing.T) {
 	corpusLanes := []string{"dart", "haskell", "lua", "ocaml", "perl", "swift"}
 	packages := []discovery.Package{
