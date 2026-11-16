@@ -537,21 +537,31 @@ RESERVED_NAMES = frozenset(
     {"CON", "PRN", "AUX", "NUL"}
     | {f"COM{n}" for n in range(1, 10)}
     | {f"LPT{n}" for n in range(1, 10)}
+    | {"CONIN$", "CONOUT$"}
+    | {f"{d}{sup}" for d in ("COM", "LPT") for sup in ("\u00b9", "\u00b2", "\u00b3")}
 )
 
 
 def refused_component(name: str) -> bool:
-    """Is this win32 path component refused (reserved name or trailing dot/space)?
+    """Is this win32 path component refused? (VER04i 9.1, WD-100b)
 
-    A name ending in a dot or a space is refused outright (Windows strips them,
-    so two spellings would name one file).  Otherwise the part before the
-    first dot is compared, ASCII case-insensitively, with the device names:
-    ``CON.txt`` and ``com1.tar.gz`` are devices, ``console.txt`` and ``COM10``
-    are not.
+    Three independent reasons, any one is enough:
+
+    * it contains ``:`` (an alternate data stream or device suffix:
+      ``CON:``, ``nul::$DATA``, ``file.txt:NUL``);
+    * it ends in a dot or a space (Windows strips them, so two spellings would
+      name one file);
+    * its *stem* is a device name.  The stem is the part before the FIRST dot
+      with trailing spaces removed, so ``CON.txt``, ``com1.tar.gz`` and
+      ``CON .txt`` are devices while ``console.txt``, ``COM10`` and ``LPT0``
+      are not.  The set includes ``CONIN$``, ``CONOUT$`` and the superscript
+      digits ``COM\u00b9``..``LPT\u00b3``.  Only ``a``..``z`` fold, so the
+      superscripts match exactly, and fullwidth ``\uff23\uff2f\uff2e`` and
+      ``CLOCK$`` stay ordinary.
     """
-    if name.endswith((".", " ")):
+    if ":" in name or name.endswith((".", " ")):
         return True
-    stem = name.split(".", 1)[0]
+    stem = name.split(".", 1)[0].rstrip(" ")
     return "".join(chr(ord(c) - 32) if "a" <= c <= "z" else c for c in stem) in RESERVED_NAMES
 
 
@@ -1084,6 +1094,28 @@ CONTAINMENT_CASES: list[ContainmentCase] = [
     ("win32-trailing-space-name", "a name ending in a space", W, "D:\\repo", "D:\\repo\\name ", False, False),
     ("win32-trailing-dot-directory", "a directory ending in a dot", W, "D:\\repo", "D:\\repo\\a.\\b", False, False),
     ("win32-three-dots-name", "... ends in a dot", W, "D:\\repo", "D:\\repo\\...", False, False),
+    # Review follow-up: real device paths the first draft let through.
+    ("win32-reserved-space-before-extension", "a space before the extension: CON .txt is CON", W, "D:\\repo", "D:\\repo\\CON .txt", False, False),
+    ("win32-reserved-double-space-extension", "NUL  .tar is NUL", W, "D:\\repo", "D:\\repo\\NUL  .tar", False, False),
+    ("win32-colon-device-stream", "CON:stream is the CON device", W, "D:\\repo", "D:\\repo\\CON:stream", False, False),
+    ("win32-colon-device-bare", "CON: is the CON device", W, "D:\\repo", "D:\\repo\\CON:", False, False),
+    ("win32-colon-data-stream", "nul::$DATA is NUL", W, "D:\\repo", "D:\\repo\\nul::$DATA", False, False),
+    ("win32-colon-stream-suffix", "file.txt:NUL is an alternate data stream", W, "D:\\repo", "D:\\repo\\file.txt:NUL", False, False),
+    ("win32-colon-ordinary-stream", "any colon is refused, not only device names", W, "D:\\repo", "D:\\repo\\a.b:c", False, False),
+    ("win32-reserved-superscript-com", "COM\u00b9 is COM1 to Windows", W, "D:\\repo", "D:\\repo\\COM\u00b9", False, False),
+    ("win32-reserved-superscript-lpt-extension", "LPT\u00b2.txt is LPT2", W, "D:\\repo", "D:\\repo\\LPT\u00b2.txt", False, False),
+    ("win32-reserved-superscript-com3", "COM\u00b3 is COM3", W, "D:\\repo", "D:\\repo\\com\u00b3", False, False),
+    ("win32-reserved-conin", "CONIN$ is the console input device", W, "D:\\repo", "D:\\repo\\CONIN$", False, False),
+    ("win32-reserved-conout-lower", "conout$ is the console output device", W, "D:\\repo", "D:\\repo\\conout$", False, False),
+    ("win32-reserved-conout-extension", "CONOUT$.log is CONOUT$", W, "D:\\repo", "D:\\repo\\CONOUT$.log", False, False),
+    ("win32-lookalike-consoles", "CONsole is an ordinary name", W, "D:\\repo", "D:\\repo\\CONsole", True, False),
+    ("win32-lookalike-clock", "CLOCK$ is not a device on current Windows", W, "D:\\repo", "D:\\repo\\CLOCK$", True, False),
+    ("win32-lookalike-fullwidth-con", "fullwidth CON (U+FF23 U+FF2F U+FF2E) is not folded by Windows", W, "D:\\repo", "D:\\repo\\\uff23\uff2f\uff2e", True, False),
+    ("win32-lookalike-conin-extra", "CONIN$x is an ordinary name", W, "D:\\repo", "D:\\repo\\CONIN$x", True, False),
+    ("win32-lookalike-superscript-4", "COM with U+2074 (superscript four) is not a device", W, "D:\\repo", "D:\\repo\\COM\u2074", True, False),
+    ("win32-lookalike-dollar", "a dollar sign alone is ordinary", W, "D:\\repo", "D:\\repo\\a$b", True, False),
+    ("posix-colon-is-ordinary", "a colon is an ordinary character on posix", P, "/repo", "/repo/a.b:c", True, False),
+    ("posix-device-stream-is-ordinary", "CON:stream is an ordinary name on posix", P, "/repo", "/repo/CON:stream", True, False),
     # Look-alikes that are NOT reserved stay inside.
     ("win32-lookalike-console", "console.txt only begins with CON", W, "D:\\repo", "D:\\repo\\console.txt", True, False),
     ("win32-lookalike-com10", "COM10 is not COM1..COM9", W, "D:\\repo", "D:\\repo\\COM10", True, False),
@@ -1303,7 +1335,10 @@ def _pathlib_applicable(flavor: str, root: str, child: str) -> bool:
 
 #: ``str.translate`` table that lower-cases ``A``..``Z`` and nothing else.
 _ASCII_FOLD = {code: code + 32 for code in range(ord("A"), ord("Z") + 1)}
-_RESERVED_RE = re.compile(r"(?:con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\..*)?", re.IGNORECASE | re.ASCII)
+_RESERVED_RE = re.compile(
+    r"(?:con|prn|aux|nul|com[1-9\u00b9\u00b2\u00b3]|lpt[1-9\u00b9\u00b2\u00b3]|conin\$|conout\$) *(?:\..*)?",
+    re.IGNORECASE | re.ASCII,
+)
 
 
 def _alt_refused(name: str) -> bool:
@@ -1312,7 +1347,7 @@ def _alt_refused(name: str) -> bool:
     ``re.ASCII`` matters: without it ``IGNORECASE`` would let U+212A (Kelvin)
     match ``k`` and U+017F match ``s``, the very folding the rule forbids.
     """
-    return bool(re.search(r"[. ]$", name)) or _RESERVED_RE.fullmatch(name) is not None
+    return bool(re.search(r"[:]|[. ]$", name)) or _RESERVED_RE.fullmatch(name) is not None
 
 
 def alt_contains(flavor: str, root: str, child: str) -> dict[str, bool]:

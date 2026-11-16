@@ -1046,6 +1046,237 @@
       "summary": "... ends in a dot"
     },
     {
+      "child": "D:\\repo\\CON .txt",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-reserved-space-before-extension",
+      "root": "D:\\repo",
+      "summary": "a space before the extension: CON .txt is CON"
+    },
+    {
+      "child": "D:\\repo\\NUL  .tar",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-reserved-double-space-extension",
+      "root": "D:\\repo",
+      "summary": "NUL  .tar is NUL"
+    },
+    {
+      "child": "D:\\repo\\CON:stream",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-colon-device-stream",
+      "root": "D:\\repo",
+      "summary": "CON:stream is the CON device"
+    },
+    {
+      "child": "D:\\repo\\CON:",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-colon-device-bare",
+      "root": "D:\\repo",
+      "summary": "CON: is the CON device"
+    },
+    {
+      "child": "D:\\repo\\nul::$DATA",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-colon-data-stream",
+      "root": "D:\\repo",
+      "summary": "nul::$DATA is NUL"
+    },
+    {
+      "child": "D:\\repo\\file.txt:NUL",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-colon-stream-suffix",
+      "root": "D:\\repo",
+      "summary": "file.txt:NUL is an alternate data stream"
+    },
+    {
+      "child": "D:\\repo\\a.b:c",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-colon-ordinary-stream",
+      "root": "D:\\repo",
+      "summary": "any colon is refused, not only device names"
+    },
+    {
+      "child": "D:\\repo\\COM\u00b9",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-reserved-superscript-com",
+      "root": "D:\\repo",
+      "summary": "COM\u00b9 is COM1 to Windows"
+    },
+    {
+      "child": "D:\\repo\\LPT\u00b2.txt",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-reserved-superscript-lpt-extension",
+      "root": "D:\\repo",
+      "summary": "LPT\u00b2.txt is LPT2"
+    },
+    {
+      "child": "D:\\repo\\com\u00b3",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-reserved-superscript-com3",
+      "root": "D:\\repo",
+      "summary": "COM\u00b3 is COM3"
+    },
+    {
+      "child": "D:\\repo\\CONIN$",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-reserved-conin",
+      "root": "D:\\repo",
+      "summary": "CONIN$ is the console input device"
+    },
+    {
+      "child": "D:\\repo\\conout$",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-reserved-conout-lower",
+      "root": "D:\\repo",
+      "summary": "conout$ is the console output device"
+    },
+    {
+      "child": "D:\\repo\\CONOUT$.log",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-reserved-conout-extension",
+      "root": "D:\\repo",
+      "summary": "CONOUT$.log is CONOUT$"
+    },
+    {
+      "child": "D:\\repo\\CONsole",
+      "expect": {
+        "inside": true,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-lookalike-consoles",
+      "root": "D:\\repo",
+      "summary": "CONsole is an ordinary name"
+    },
+    {
+      "child": "D:\\repo\\CLOCK$",
+      "expect": {
+        "inside": true,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-lookalike-clock",
+      "root": "D:\\repo",
+      "summary": "CLOCK$ is not a device on current Windows"
+    },
+    {
+      "child": "D:\\repo\\\uff23\uff2f\uff2e",
+      "expect": {
+        "inside": true,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-lookalike-fullwidth-con",
+      "root": "D:\\repo",
+      "summary": "fullwidth CON (U+FF23 U+FF2F U+FF2E) is not folded by Windows"
+    },
+    {
+      "child": "D:\\repo\\CONIN$x",
+      "expect": {
+        "inside": true,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-lookalike-conin-extra",
+      "root": "D:\\repo",
+      "summary": "CONIN$x is an ordinary name"
+    },
+    {
+      "child": "D:\\repo\\COM\u2074",
+      "expect": {
+        "inside": true,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-lookalike-superscript-4",
+      "root": "D:\\repo",
+      "summary": "COM with U+2074 (superscript four) is not a device"
+    },
+    {
+      "child": "D:\\repo\\a$b",
+      "expect": {
+        "inside": true,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-lookalike-dollar",
+      "root": "D:\\repo",
+      "summary": "a dollar sign alone is ordinary"
+    },
+    {
+      "child": "/repo/a.b:c",
+      "expect": {
+        "inside": true,
+        "same": false
+      },
+      "flavor": "posix",
+      "id": "containment/posix-colon-is-ordinary",
+      "root": "/repo",
+      "summary": "a colon is an ordinary character on posix"
+    },
+    {
+      "child": "/repo/CON:stream",
+      "expect": {
+        "inside": true,
+        "same": false
+      },
+      "flavor": "posix",
+      "id": "containment/posix-device-stream-is-ordinary",
+      "root": "/repo",
+      "summary": "CON:stream is an ordinary name on posix"
+    },
+    {
       "child": "D:\\repo\\console.txt",
       "expect": {
         "inside": true,
