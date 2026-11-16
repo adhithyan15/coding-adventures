@@ -240,3 +240,36 @@ fn an_oversized_binder_domain_of_the_output_bound_claim_is_w0706() {
 fn the_cap_constant_is_the_documented_64_mib() {
     assert_eq!(OBSERVER_CAP_BYTES, 64 * 1024 * 1024);
 }
+
+// ---------------------------------------------------------------------------
+// WD-HARN1: the supervisor is bounded, never joins, and no lock can poison it
+// ---------------------------------------------------------------------------
+
+#[test]
+fn the_observer_supervisor_waits_with_a_timeout_and_never_joins_a_worker() {
+    let text = generate(&doc(ROWS, CLAIM), &[&format!("{DECOMPRESS}missing-error")]).unwrap();
+    // Every wait is bounded: a deadline, `wait_timeout`, and a distinct verdict.
+    assert!(text.contains("const OBS_CALL_TIMEOUT_MS: u64 = 120_000;"));
+    assert!(text.contains(".wait_timeout(g, left)"));
+    assert!(text.contains("observer-timeout:"));
+    // No unbounded condvar wait and no join of a worker anywhere in the observer.
+    assert!(!text.contains("slot.ready.wait("), "an unbounded condvar wait");
+    assert!(!text.contains(".join()"), "a thread join");
+    // A timed-out worker is abandoned (not joined) and counted.
+    assert!(text.contains("OBS_TIMEOUTS.fetch_add"));
+}
+
+#[test]
+fn every_lock_of_the_harness_recovers_from_poisoning() {
+    // The prelude is shared by every adopter, observer or not.
+    let plain = "warrant t v1\n  error Err = LIMIT | BAD\n  op decompress(d: Bytes, m: U32) -> Result<Bytes, Err>\n  labels decompress:\n    d public\n    m public\n  claim c:\n    forall m: U32. decompress(b\"\", m) == Err(Err.BAD)\n";
+    for text in [
+        generate(plain, &[&format!("{DECOMPRESS}missing-error")]).unwrap(),
+        generate(&doc(ROWS, CLAIM), &[&format!("{DECOMPRESS}missing-error")]).unwrap(),
+    ] {
+        assert!(text.contains("fn lock_or_recover<T>("));
+        assert!(text.contains("unwrap_or_else(|e| e.into_inner())"));
+        assert!(!text.contains(".lock().unwrap()"), "a lock that a poisoning can cascade through");
+        assert!(!text.contains(".lock().expect("));
+    }
+}

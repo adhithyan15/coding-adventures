@@ -1,5 +1,31 @@
 # Changelog
 
+## Unreleased — WD-HARN1 harness supervisor hardening (from the 2026-11-14 Windows `rust/lzw` hang)
+
+- Prelude, observer supervisor: every wait on the worker is a `Condvar::wait_timeout`
+  against one deadline of `OBS_CALL_TIMEOUT_MS` (120 s); an overrun fails the instance
+  with the new note `observer-timeout: ... did not return within N seconds; the call was
+  abandoned`, abandons the worker, and after `OBS_MAX_TIMEOUTS` (3) timeouts later
+  observed calls fail at once (`observer-timeout: ... not run`). A job that cannot be
+  sent (worker gone) is refused instead of panicking.
+- Prelude, exit: abandoned workers (tripped or timed out) are never joined; the
+  invariant (a worker takes only its own reply slot, no lock the supervisor, TAP printer
+  or manifest writer needs) is written into the prelude comment and tested.
+- Prelude, poison: new `lock_or_recover`; no `lock().unwrap()` remains (META, STATS,
+  OBS_STATS, TABLE_STATS, SOURCE_SHA256, the reply slot). The allocator-side trip no
+  longer skips its write on a poisoned slot (which would have left the supervisor
+  waiting).
+- Regenerated: every adopter's `tests/generated/warrant_evidence.rs` (arithmetic,
+  ct-compare, gf256, hash-functions, logic-gates, lzw, wasm-leb128, x25519, zeroize) and
+  the six `warrant-grammar` fixtures. Only lzw, wasm-leb128 and the `wxh` fixture carry
+  the observer; the rest change only by `lock_or_recover`.
+- Tests: `tests/wxh_supervisor.rs` (new; runs the generated WX-H harness against a
+  subject that stalls and panics, with a 300 ms bound, and checks the call times out,
+  the shared locks stay usable, a poisoned lock recovers and the whole suite finishes
+  in bounded time), two generator tests in `wxh_generator`, hook updates in `wxh_evidence`
+  and `wxh_caps`. New support subject `tests/support/wxh_subject_stalling.rs`.
+- Specification: VER04j 14.2 item 53 (and a pointer from item 33), VER-BACKLOG row.
+
 ## Unreleased — WX-FAULT1 `flip-result-bit` for a fixed-width integer result
 
 - Generator: the composite adapter accepts `flip-result-bit` for a `Bytes -> U32/U64`
