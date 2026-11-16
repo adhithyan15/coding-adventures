@@ -226,13 +226,17 @@ fn main() {
             exit(2);
         }
         let root = repo_root.unwrap_or_else(|| PathBuf::from("."));
+        // Say which tree was checked: a wrong --repo-root must be visible.
+        let shown_root = std::path::absolute(&root).unwrap_or_else(|_| root.clone()).display().to_string();
         match lane_status(&root, &package) {
             Ok(LaneStatus::Live(loaded)) => {
+                println!("repo root: {shown_root}");
                 println!("rung: LIVE");
                 print!("{}", loaded.render_readiness());
                 exit(0);
             }
             Ok(status) => {
+                println!("repo root: {shown_root}");
                 print!("{}", render_not_live(&package, &status));
                 if require_active {
                     eprintln!("LANE CHECK FAILED: {package} is not an active lane (--require-active)");

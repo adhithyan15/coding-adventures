@@ -1109,33 +1109,36 @@ fn a_changed_byte_of_an_existing_production_file_is_stale_source() {
 }
 
 #[test]
-fn files_outside_each_lanes_rule_do_not_change_the_digest() {
+fn files_the_rule_skips_by_directory_or_name_do_not_change_the_digest() {
     let python = lane_source_rel("python/ct-compare");
     let ts = lane_source_rel("typescript/ct-compare");
     let go = lane_source_rel("go/ct-compare");
     let repo = Repo::new();
     let ignored = [
-        // Python: derived output and non-source files.
-        format!("{python}/__pycache__/x.py"),
-        format!("{python}/notes.txt"),
-        format!("{python}/data.json"),
-        // TypeScript: tests, build output, vendored modules, other extensions.
-        format!("{ts}/index.test.ts"),
+        // Directories the rules skip (not descended).
         format!("{ts}/dist/a.ts"),
         format!("{ts}/node_modules/a.ts"),
-        format!("{ts}/readme.md"),
-        // Go: tests, vendored and underscored or dotted directories.
-        format!("{go}/zz_test.go"),
         format!("{go}/vendor/a.go"),
         format!("{go}/testdata/a.go"),
         format!("{go}/_scratch/a.go"),
         format!("{go}/.hidden/a.go"),
+        // The spec-listed ignore set: tests and documentation.
+        format!("{ts}/index.test.ts"),
+        format!("{go}/zz_test.go"),
+        format!("{python}/README.md"),
+        format!("{python}/changelog.md"),
+        format!("{ts}/LICENSE"),
+        format!("{python}/.DS_Store"),
     ];
     for rel in &ignored {
         let path = repo.root.join(rel);
         fs::create_dir_all(path.parent().unwrap()).unwrap();
         fs::write(path, b"not production source\n").unwrap();
     }
+    // A cached bytecode file beside its source is derived output.
+    let cache = repo.root.join(&python).join("__pycache__");
+    fs::create_dir_all(&cache).unwrap();
+    fs::write(cache.join("__init__.cpython-312.pyc"), b"derived").unwrap();
     for package in PACKAGES {
         repo.load(package)
             .unwrap_or_else(|e| panic!("{package}: {e}"));
@@ -1161,6 +1164,70 @@ fn files_outside_each_lanes_rule_do_not_change_the_digest() {
         };
         expect_code(repo.load(package), "stale-source", "source_sha256");
     }
+}
+
+#[test]
+fn a_file_in_the_source_root_that_no_rule_digests_fails_source_fresh() {
+    let python = lane_source_rel("python/ct-compare");
+    let ts = lane_source_rel("typescript/ct-compare");
+    let go = lane_source_rel("go/ct-compare");
+    let runner_py = runner_root("python").unwrap();
+    let probes: Vec<(&str, String, &str)> = vec![
+        (
+            "python/ct-compare",
+            format!("{python}/native.so"),
+            "native.so",
+        ),
+        ("python/ct-compare", format!("{python}/EVIL.PY"), "EVIL.PY"),
+        (
+            "python/ct-compare",
+            format!("{python}/data.json"),
+            "data.json",
+        ),
+        (
+            "python/ct-compare",
+            format!("{python}/sub/notes.txt"),
+            "notes.txt",
+        ),
+        // An orphan bytecode file: no source beside it, so it is not derived output.
+        (
+            "python/ct-compare",
+            format!("{python}/__pycache__/evil.cpython-312.pyc"),
+            "evil.cpython-312.pyc",
+        ),
+        (
+            "python/ct-compare",
+            format!("{python}/__pycache__/notes.txt"),
+            "notes.txt",
+        ),
+        (
+            "python/ct-compare",
+            format!("{runner_py}/blob.so"),
+            "blob.so",
+        ),
+        (
+            "typescript/ct-compare",
+            format!("{ts}/addon.node"),
+            "addon.node",
+        ),
+        ("typescript/ct-compare", format!("{ts}/lib.JS"), "lib.JS"),
+        ("go/ct-compare", format!("{go}/asm_amd64.s"), "asm_amd64.s"),
+        ("go/ct-compare", format!("{go}/blob.syso"), "blob.syso"),
+        ("go/ct-compare", format!("{go}/shim.c"), "shim.c"),
+        // go.mod at the root is the listed residual; a nested one is a new module.
+        ("go/ct-compare", format!("{go}/cmd/go.mod"), "go.mod"),
+        ("go/ct-compare", format!("{go}/Evil.GO"), "Evil.GO"),
+    ];
+    for (package, rel, name) in probes {
+        let repo = Repo::new();
+        let path = repo.root.join(&rel);
+        fs::create_dir_all(path.parent().unwrap()).unwrap();
+        fs::write(&path, b"x").unwrap();
+        expect_code(repo.load(package), "uncovered-source", name);
+    }
+    // The checked-in root go.mod is the one listed exception and still loads.
+    assert!(real_root().join(format!("{go}/go.mod")).is_file());
+    load_lane(&real_root(), "go/ct-compare").unwrap();
 }
 
 #[test]

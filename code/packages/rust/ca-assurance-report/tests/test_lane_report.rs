@@ -604,6 +604,15 @@ fn check_lane_prints_the_readiness_of_a_live_lane_and_exits_zero() {
         let (code, stdout, stderr) = cli(&args);
         assert_eq!(code, 0, "{stderr}");
         assert!(stdout.contains("rung: LIVE"), "{stdout}");
+        // The root that was checked is printed, absolute, so a wrong --repo-root shows.
+        let line = stdout
+            .lines()
+            .find(|l| l.starts_with("repo root: "))
+            .expect(&stdout);
+        assert!(
+            Path::new(&line["repo root: ".len()..]).is_absolute(),
+            "{line}"
+        );
         assert!(
             stdout.contains("source-fresh, runner-source-fresh"),
             "{stdout}"
@@ -624,6 +633,7 @@ fn check_lane_reports_absent_honestly_and_require_active_turns_it_into_a_failure
     let (code, stdout, _) = cli(&["--check-lane", "python/gf256", "--repo-root", root]);
     assert_eq!(code, 0);
     assert!(stdout.contains("rung: ABSENT"), "{stdout}");
+    assert!(stdout.contains("repo root: "), "{stdout}");
     assert!(
         stdout.contains("release_ready: false") && stdout.contains("sandbox: absent"),
         "{stdout}"

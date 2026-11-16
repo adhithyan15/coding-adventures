@@ -113,7 +113,7 @@ pub const UNCLAIMED: [&str; 3] = ["toolchain authenticity", "build execution", "
 /// Codes: `path`, `symlink`, `not-regular`, `too-large`, `io`, `registry`,
 /// `not-registered`, `not-active`, `manifest`, `digest`, `join`,
 /// `runner-identity`, `labels`, `build-routing`, `source-tree`,
-/// `stale-source`, `stale-runner`.
+/// `uncovered-source`, `stale-source`, `stale-runner`.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct LaneLoadError {
     pub code: &'static str,
@@ -534,6 +534,30 @@ struct SourceRule {
     skip_dir: fn(&str) -> bool,
     /// `false` for the Go runner, which embeds only its own directory's `*.go`.
     recursive: bool,
+    /// The lane's own part of the ignore set: a file that is not selected but is
+    /// known not to change behaviour (tests).  Arguments: lower-cased name, and
+    /// whether the file is directly in the root.
+    ignore_file: fn(&str, bool) -> bool,
+    /// Directories at the root that are listed as not source (Go package data).
+    ignore_root_dir: fn(&str) -> bool,
+    /// Python: `__pycache__` holds derived bytecode, accepted only beside its source.
+    pycache: bool,
+}
+
+/// The ignore set every lane shares (VER04i 8.1): documentation and editor
+/// litter, compared case-insensitively.  Anything else a rule does not select
+/// is an `uncovered-source` failure.
+fn common_ignore(lower: &str) -> bool {
+    matches!(
+        lower,
+        "readme"
+            | "readme.md"
+            | "changelog.md"
+            | "license"
+            | "license.md"
+            | ".ds_store"
+            | ".gitkeep"
+    )
 }
 
 fn source_rule(lane: &str, kind: SourceKind) -> Option<SourceRule> {
@@ -542,11 +566,17 @@ fn source_rule(lane: &str, kind: SourceKind) -> Option<SourceRule> {
             select: |name| name.ends_with(".py") || name.ends_with(".pyi") || name == "py.typed",
             skip_dir: |name| name == "__pycache__",
             recursive: true,
+            ignore_file: |_, _| false,
+            ignore_root_dir: |_| false,
+            pycache: true,
         }),
         "typescript" => Some(SourceRule {
             select: |name| name.ends_with(".ts") && !name.ends_with(".test.ts"),
             skip_dir: |name| name == "dist" || name == "node_modules",
             recursive: true,
+            ignore_file: |lower, _| lower.ends_with(".test.ts"),
+            ignore_root_dir: |_| false,
+            pycache: false,
         }),
         "go" => Some(SourceRule {
             select: |name| name.ends_with(".go") && !name.ends_with("_test.go"),
@@ -557,6 +587,24 @@ fn source_rule(lane: &str, kind: SourceKind) -> Option<SourceRule> {
                     || name.starts_with('_')
             },
             recursive: kind == SourceKind::Production,
+            // Tests, and the two dependency files at the root: `go.mod` and `go.sum`
+            // pin dependencies and are NOT digested (a listed residual, VER04i 8.1);
+            // a go.mod anywhere else starts a new module and is refused.
+            ignore_file: |lower, at_root| {
+                lower.ends_with("_test.go")
+                    || (at_root
+                        && matches!(
+                            lower,
+                            "go.mod"
+                                | "go.sum"
+                                | "build"
+                                | "build_windows"
+                                | "required_capabilities.json"
+                                | "evidence.bindings"
+                        ))
+            },
+            ignore_root_dir: |name| name == "evidence" || name == "CHANGELOG.d",
+            pycache: false,
         }),
         _ => None,
     }
@@ -655,14 +703,78 @@ impl Walk {
                     format!("{shown} is a symbolic link; links are refused"),
                 );
             }
+            let at_root = rel.is_empty();
             if meta.is_dir() {
-                if self.rule.recursive && !(self.rule.skip_dir)(&name) {
+                if self.rule.pycache && name == "__pycache__" {
+                    self.pycache(&path, dir, &shown)?;
+                } else if at_root && (self.rule.ignore_root_dir)(&name) {
+                    // listed as not source
+                } else if self.rule.recursive && !(self.rule.skip_dir)(&name) {
                     self.directory(&path, &shown, depth + 1)?;
                 }
-            } else if meta.is_file() && (self.rule.select)(&name) {
-                self.file(&path, &shown, meta.len())?;
+            } else if meta.is_file() {
+                if (self.rule.select)(&name) {
+                    self.file(&path, &shown, meta.len())?;
+                } else {
+                    let lower = name.to_ascii_lowercase();
+                    if !common_ignore(&lower) && !(self.rule.ignore_file)(&lower, at_root) {
+                        return err(
+                            "uncovered-source",
+                            format!(
+                                "{shown} is in the source root but no digest rule covers it and it is not in the ignore set (VER04i 8.1)"
+                            ),
+                        );
+                    }
+                }
             }
             // A FIFO, socket or device is neither: stepped over, never opened.
+        }
+        Ok(())
+    }
+
+    /// `__pycache__` is derived output, but a `.pyc` the interpreter would load
+    /// must have its source beside it: every entry must be a regular file named
+    /// `<module>.<tag>.pyc` whose `<module>.py` exists in the parent directory.
+    fn pycache(&self, cache: &Path, parent: &Path, shown: &str) -> Result<(), LaneLoadError> {
+        let listing = fs::read_dir(cache).map_err(|e| LaneLoadError {
+            code: "io",
+            message: format!("cannot list {shown}: {e}"),
+        })?;
+        for entry in listing {
+            let entry = entry.map_err(|e| LaneLoadError {
+                code: "io",
+                message: format!("cannot list {shown}: {e}"),
+            })?;
+            let Ok(name) = entry.file_name().into_string() else {
+                return source_fail("non-UTF-8 file name in the source tree");
+            };
+            let meta = fs::symlink_metadata(entry.path()).map_err(|e| LaneLoadError {
+                code: "io",
+                message: format!("{shown}/{name}: {e}"),
+            })?;
+            if is_link(&meta) {
+                return err(
+                    "symlink",
+                    format!("{shown}/{name} is a symbolic link; links are refused"),
+                );
+            }
+            let module = name
+                .strip_suffix(".pyc")
+                .and_then(|stem| stem.split('.').next());
+            let source_beside = module.is_some_and(|m| {
+                !m.is_empty()
+                    && fs::symlink_metadata(parent.join(format!("{m}.py")))
+                        .map(|m| m.is_file())
+                        .unwrap_or(false)
+            });
+            if !meta.is_file() || !source_beside {
+                return err(
+                    "uncovered-source",
+                    format!(
+                        "{shown}/{name} is not bytecode for a source file beside it (VER04i 8.1)"
+                    ),
+                );
+            }
         }
         Ok(())
     }

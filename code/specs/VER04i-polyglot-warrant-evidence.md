@@ -1115,7 +1115,8 @@ The digest is the same `warrant-src-v1` framing as Rust (VER04h §8):
 length-prefixed, sorted by path bytes, paths relative to the *source root*,
 symlink / non-UTF-8 / oversized / too-deep entries are errors. Only the
 *definition of which files* is lane-specific. It must cover every file that can
-change what the implementation does and nothing that changes only tests, so it
+change what the implementation does and nothing that changes only tests (the
+loader enforces this by refusing an uncovered file, section 8.2), so it
 is a **production-source** subset of the existing
 `build-tool-v1/language-source-input-registry.json` (which is a build-input
 registry that includes tests and build scripts; reuse its component
@@ -1253,6 +1254,27 @@ selected files and 64 MiB in total. Files are read with the same bounded
 a digest that differs from the manifest is `stale-source` (`source_sha256`) or
 `stale-runner` (`runner.src_sha256`).
 
+*Nothing in the root may escape the rule (fail closed).* The digest covers only
+the files the rule selects, so the walk also refuses a root that holds a file the
+rule does not cover: any regular file that is neither selected nor in the ignore
+set is `uncovered-source`, naming the file. Extensions are matched exactly, so
+`EVIL.PY`, `lib.JS` and `Evil.GO` are uncovered, not digested (the runners would
+not digest them either); a `.so`, `.node`, `.s`, `.syso`, `.c` or `.json` file is
+uncovered. The ignore set is exactly this, names compared case-insensitively:
+`README`, `README.md`, `CHANGELOG.md`, `LICENSE`, `LICENSE.md`, `.DS_Store`,
+`.gitkeep`; TypeScript `*.test.ts`; Go `*_test.go` and, directly in the root only,
+`go.mod`, `go.sum`, `BUILD`, `BUILD_windows`, `required_capabilities.json`,
+`evidence.bindings`, plus the root directories `evidence` and `CHANGELOG.d`. A
+`go.mod` anywhere but the root starts a new module and is uncovered. The Go
+dependency files `go.mod` and `go.sum` are therefore a **listed residual**: they
+change what the build links but the Go runner does not digest them (closing this
+needs a runner change and a regenerated manifest, not a loader change). `__pycache__`
+is derived output and is not descended into for the digest, but each entry must
+be a regular `<module>.<tag>.pyc` with `<module>.py` beside it; an orphan
+bytecode file is `uncovered-source`. (A forged `.pyc` beside real source is the
+residual of that rule.) Directories the lane rule skips (`dist`, `node_modules`,
+`vendor`, `testdata`, names starting `.` or `_`) are not examined.
+
 What this establishes: the manifest's two digests describe the trees as they are
 now, so editing a production source file or the runner without regenerating the
 manifest fails the load. What it does not: that the manifest was *produced* by
@@ -1357,7 +1379,7 @@ ca-assurance-report-rs --check-lane <lane>/<name> [--repo-root <DIR>] [--require
 ```
 
 `--repo-root` defaults to `.`. The command loads the lane with `load_lane` and
-prints `render_readiness`. Exit 0 when the lane loaded. When the registry has no
+prints `render_readiness`, preceded by the absolute `repo root:` it checked. Exit 0 when the lane loaded. When the registry has no
 row, or a `planned` row, for the package: without `--require-active` it prints
 `ABSENT` or `PLANNED` and the reason and exits 0 (an honest report, not a gate);
 with `--require-active` it exits 1. An `active` row that fails to load exits 1
@@ -1919,7 +1941,7 @@ dependency graph.
   link-refusing walk with the loader's own file and byte bounds), so the readiness
   list is ten checks (`source-fresh`, `runner-source-fresh` added) and the
   unclaimed list is three (source freshness and the runner source digest are
-  removed). New load codes `source-tree`, `stale-source`, `stale-runner`.
+  removed). New load codes `source-tree`, `uncovered-source`, `stale-source`, `stale-runner`.
   (2) Section 8.3 is new: the report's required `lanes` array (a rung per
   registry lane: `live`, `planned`, `absent`; `release_ready` false and `sandbox`
   `absent` always), `LaneMismatch` and `LabelOverclaim` report checks, isolation
