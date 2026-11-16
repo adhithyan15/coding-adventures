@@ -172,23 +172,40 @@ func asciiLower(text string) string {
 	return text
 }
 
-// refusedComponent reports a win32 path component that is a reserved device
-// name (CON, PRN, AUX, NUL, COM1-COM9, LPT1-LPT9, with or without an extension,
-// ASCII case-insensitively) or that ends in a dot or a space (Windows strips
-// them, so two spellings would name one file). console.txt, COM10, LPT0 and
-// CONx are ordinary names.
+// refusedComponent reports a win32 path component that must be refused
+// (VER04i 9.1): one containing a colon (an alternate data stream or device
+// suffix: `CON:`, `nul::$DATA`, `file.txt:NUL`), one ending in a dot or a space
+// (Windows strips them, so two spellings would name one file), or one whose
+// stem is a device name. The stem is the part before the FIRST dot with
+// trailing spaces removed, so CON.txt, com1.tar.gz and "CON .txt" are devices;
+// console.txt, COM10, LPT0 and CONx are ordinary. The set is CON, PRN, AUX,
+// NUL, COM1-COM9, LPT1-LPT9, CONIN$, CONOUT$ and COM/LPT followed by a
+// superscript 1, 2 or 3, ASCII case-insensitively (superscripts exactly).
+// Fullwidth CON and CLOCK$ stay ordinary.
 func refusedComponent(name string) bool {
-	if strings.HasSuffix(name, ".") || strings.HasSuffix(name, " ") {
+	if strings.Contains(name, ":") || strings.HasSuffix(name, ".") || strings.HasSuffix(name, " ") {
 		return true
 	}
 	stem, _, _ := strings.Cut(name, ".")
-	stem = asciiLower(stem)
+	stem = asciiLower(strings.TrimRight(stem, " "))
 	switch stem {
-	case "con", "prn", "aux", "nul":
+	case "con", "prn", "aux", "nul", "conin$", "conout$":
 		return true
 	}
-	if len(stem) == 4 && (stem[:3] == "com" || stem[:3] == "lpt") {
-		return '1' <= stem[3] && stem[3] <= '9'
+	if rest, ok := strings.CutPrefix(stem, "com"); ok {
+		return isDeviceDigit(rest)
+	}
+	if rest, ok := strings.CutPrefix(stem, "lpt"); ok {
+		return isDeviceDigit(rest)
+	}
+	return false
+}
+
+// isDeviceDigit: one of 1-9, or the superscripts U+00B9, U+00B2, U+00B3.
+func isDeviceDigit(rest string) bool {
+	switch rest {
+	case "1", "2", "3", "4", "5", "6", "7", "8", "9", "\u00b9", "\u00b2", "\u00b3":
+		return true
 	}
 	return false
 }

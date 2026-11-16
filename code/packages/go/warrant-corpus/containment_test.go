@@ -111,12 +111,12 @@ func TestStatIsRegular(t *testing.T) {
 // WD-100b: reserved device names and ASCII-only win32 folding.
 
 func TestRefusedComponent(t *testing.T) {
-	for _, name := range []string{"CON", "con", "CON.txt", "NUL.", "nul ", "COM1", "com9.log", "LPT1", "com1.tar.gz", "x."} {
+	for _, name := range []string{"CON", "con", "CON.txt", "NUL.", "nul ", "COM1", "com9.log", "LPT1", "com1.tar.gz", "x.", "CON .txt", "NUL  .tar", "CON:stream", "CON:", "nul::$DATA", "file.txt:NUL", "COM\u00b9", "LPT\u00b2.txt", "CONIN$", "conout$"} {
 		if !refusedComponent(name) {
 			t.Errorf("%q must be refused", name)
 		}
 	}
-	for _, name := range []string{"console.txt", "COM10", "LPT0", "COM0", "CONx", "xCON", ".hidden", "a.CON.b", "\u017fon", "com\u0661"} {
+	for _, name := range []string{"console.txt", "COM10", "LPT0", "COM0", "CONx", "xCON", ".hidden", "a.CON.b", "\u017fon", "com\u0661", "CONsole", "CLOCK$", "\uff23\uff2f\uff2e", "CONIN$x", "COM\u2074"} {
 		if refusedComponent(name) {
 			t.Errorf("%q is an ordinary name", name)
 		}
