@@ -157,26 +157,35 @@ item can name them. VOS02 names the tool.
 |---|---|---|---|
 | SH1 | `#![no_std]`; no `extern crate`, `alloc` or `std` | zero heap, zero OS authority; VER08a would pass `alloc::vec::Vec` | NEW(VOS-owned) |
 | SH2 | No `unsafe`, inline asm or foreign linkage, **and no waiver** (only the HAL may hold VER08a exceptions) | memory safety is a type fact; a waiver lets the footprint read "proved" while `unsafe` exists (VER23a section 3.3) | **today** (VER08a `CAP002`) plus a no-exception rule |
-| SH3 | No `static mut`, no `static` naming `Cell`, `RefCell`, `UnsafeCell`, `OnceCell`, `Atomic*`, `Mutex`, `RwLock` or `Once*`, no `thread_local!`; `const` and immutable tables are fine | rule 2: no global, no interior mutability | NEW(VOS-owned) |
+| SH3 | **No `static` items at all** in a component crate, and no `thread_local!`. `const` items are allowed if they are plain data with no interior mutability, including through wrapper types (a `const` of a `Cell`-bearing type is refused) | rule 2: no global, no interior mutability | NEW(VOS-owned) |
 | SH4 | No `dyn`, function-pointer types, closures or `Fn*` bounds | an indirect call is a transfer the image proof cannot follow; VER08a G-7 | NEW(VOS-owned) |
 | SH5 | No recursion: the name-resolved call graph, UFCS included, is acyclic | bounded stack and step bound; rustc's lint catches only direct recursion | NEW(VOS-owned) |
 | SH6 | The only loop is `for i in 0..K`, `K` a literal or a `const` path; no `while`, `loop` or iterator adaptors | the bound must be a configuration constant (rule 7); the one loop form of the VER25a subset | NEW(VOS-owned) |
 | SH7 | No `/`, `%`, `/=`, `%=`, `div_*`, `rem_*`, `checked_div`, `checked_rem` | RV32I has no divide, so it is a library routine of data-dependent length, and divide-by-zero is a trap path (VER13 section 4.3 picks the base ISA for this reason); use shifts and masks | NEW(VOS-owned); `clippy::integer_division` as a second line |
 | SH8 | No path to a panic: no `unwrap`, `expect`, `panic!`, `unreachable!`, `assert!`, `debug_assert!` (a `const _: () = assert!(..)` item is compile time and allowed); indexing only by a `for` variable over `0..K` where `K` is the array's own length, else `get` | a panic is the uncontracted exit of law 2; `debug_assert!` differs between the debug host build and the release image | NEW(VOS-owned); `clippy::unwrap_used`, `expect_used`, `panic`, `indexing_slicing` |
-| SH9 | Overflowing arithmetic uses `wrapping_*`, `checked_*` or `saturating_*`, never bare `+ - *` | debug overflow panics and release wraps: two builds, two functions | `clippy::arithmetic_side_effects` denied (**today** as a lint; the CI wiring is NEW(VOS-owned)) |
+| SH9 | Overflowing arithmetic uses `wrapping_*`, `checked_*` or `saturating_*`, never bare `+ - *`. Every non-literal shift amount of `<<` or `>>` uses `wrapping_shl/shr` or `checked_shl/shr`, or is provably below the bit width (a literal, or guarded as in the `-any` listing's `c < N` plus a `const` assert that `N` fits the type) | debug overflow panics and release wraps: two builds, two functions | `clippy::arithmetic_side_effects` denied (**today** as a lint; the CI wiring is NEW(VOS-owned)) |
 | SH10 | Fixed-width types only (section 1.3) | host and image compute one function | NEW(VOS-owned) |
 | SH11 | No `f32`, `f64` | no float unit on RV32I; rounding and formatting differ by host | NEW(VOS-owned) |
 | SH12 | Dependencies are `core` and the interface's own contract crate; a third-party dependency is an error, not the `WARN` of VER08a section 3.6 | VER08a does not analyse dependencies, so the footprint would not cover them (VER23a section 3.2) | NEW(VOS-owned) policy over **today's** report |
 | SH13 | `alpha` and the state builder live in a `ghost` module behind a cargo feature the image build must not enable | they exist for evidence, not the kernel; features are pinned only at manifest level (VER29 section 15, limit 10) | NEW(VOS-owned) |
 | SH14 | A `State` field is touched only by its owning component; the spine passes `k.field` only to operations of that field's interface | rule 2; privacy gives it inside a crate, the spine needs the UFCS reach pass | privacy **today**; spine check NEW(VER29 slice 4) |
-| SH15 | No `macro_rules!` in a component; only pure `core` macros | a macro expands out of a lexical analyzer's sight (VER08a gap G-6) | NEW(VOS-owned) |
+| SH15 | No `macro_rules!` in a component; only pure `core` macros. Also banned: `include!`, `include_str!`, `include_bytes!`, `#[path]`, `#[link_section]`, `#[no_mangle]`, `#[export_name]`, a `build.rs`, and the `links` key in `Cargo.toml` | a macro, an included file, a relocated module or a build script puts code or symbols out of a lexical analyzer's sight (VER08a gap G-6 and `CAP003`) | NEW(VOS-owned) |
 
 Two image-level companions close the same rows at the other end, both
 NEW(VOS-owned) and both inputs to `RV32SYM`: no path from any kernel entry to the
 panic handler in the compiled image, and a static stack bound (no recursion, so
 the maximum stack is the sum of frames along the deepest chain). The checks are
 lexical, so they inherit VER08a section 8: a pass means "no occurrence the lexer
-can see". SH12 and SH15 close the two ways a lexical check is bypassed.
+can see". SH12 and SH15 close the ways a lexical check is bypassed.
+
+**SH16, a profile-gate rule (NEW(VOS-owned), backlog VOS-D009).** No `vos-*-any`
+crate and no `ghost` feature may appear in the **resolved** dependency and
+feature graph of any profile whose ship class is `image`. The gate checks the
+resolution Cargo actually computes (`cargo metadata` or `cargo tree -e
+features` for the image target), not the manifests, because feature unification
+can enable `ghost` in a crate through an unrelated dependent. `-any` is
+evidence-only (section 3.1), as are `alpha`, the builders and the oracle-write
+path.
 
 ### 1.5 `alpha` is ghost code
 
@@ -521,14 +530,19 @@ ones, provided `-any` exhibits *every* permitted behaviour and *nothing else*.
 **Test the contract:** a theorem false over `-any` has a counterexample that is a
 *permitted* behaviour, the sharpest signal that the contract is too weak
 (section 3.5). **Cheap first swap:** `-any` is the first alternative
-implementation of every interface (VOS-012).
+implementation of every interface (VOS-012). `-any` is **evidence-only**, not a
+shippable swap: it is allowed in model and evidence profiles and never in an
+`image` profile (SH16, section 1.4).
 
 ### 3.2 Construction: propose, validate, default
 
 One recipe for every interface. `-any` carries an **oracle register** in its
 state, sized to the output set (nine outputs need 4 bits, not 64). An operation
 whose safety tier fixes the output (`insert`, `remove`) behaves exactly as the
-model and **never reads the oracle** (a lexical rule of the shape check). A
+model and **never reads the oracle** (a lexical rule of the shape check). The
+oracle-write path (the harness setting `choice` before an entry) lives in the
+crate's `ghost` module, never in the production API; `choice` itself is a private
+field. A
 nondeterministic operation **proposes** the output the oracle encodes,
 **validates** it against the safety relation and **defaults** to a canonical safe
 output otherwise:
@@ -536,9 +550,11 @@ output otherwise:
 ```rust
 // vos-ready-any/src/lib.rs  (illustrative; inside `impl ReadySet for ReadyAny`)
 pub struct AnyReady { mask: u8, choice: u8 }          // choice: the oracle register
+const _: () = assert!(<ReadyAny as ReadySet>::N <= 8);  // N fits the u8 mask
+// ghost::set_oracle(s, c) is the only writer of `choice` (SH13, SH16)
 fn pick(s: AnyReady) -> (Pick, AnyReady) {
     let c = s.choice;
-    let ok = c < Self::N && (s.mask >> c) & 1 != 0;    // propose Member(c); validate; the && guards the shift
+    let ok = c < Self::N && s.mask.wrapping_shr(c as u32) & 1 != 0;  // propose Member(c); validate
     (if ok { Pick::Member(c) } else { Pick::NoneReady }, s)   // default NoneReady; oracle returned unchanged
 }
 ```
@@ -1231,6 +1247,9 @@ passed).
 19. Every NEW row the PR leans on is named with the row that would close it; no
     label is printed that a missing row would be needed to earn.
 20. Any defect found along the way is fixed or logged under "Discovered work".
+21. No `vos-*-any` crate and no `ghost` feature is in the resolved graph of an
+    `image` profile (SH16), checked on the resolved features, not the manifests;
+    the oracle-write path is in `ghost` only.
 
 ---
 
