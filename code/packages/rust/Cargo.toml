@@ -633,7 +633,7 @@ members = [
     "oct-parser",
     "oct-type-checker",
     "oct-iir-compiler",
-    # MacroOct (PREP01 slice 1) — Oct plus a preprocessor. Deliberately no
+    # MacroOct (PREP01 slice 1) â€” Oct plus a preprocessor. Deliberately no
     # `macrooct-parser` or `macrooct-type-checker`: after preprocessing the
     # stream is pure Oct, so both are Oct's, unchanged.
     "macrooct-lexer",
@@ -1060,6 +1060,7 @@ members = [
     "generic-job-protocol",
     "generic-job-runtime",
     "rng",
+    "rpg-battle-engine",
     "feature-normalization",
     "single-layer-network",
     "two-layer-network",
