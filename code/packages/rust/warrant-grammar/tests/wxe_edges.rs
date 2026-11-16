@@ -449,3 +449,56 @@ fn generate_evidence_harness_refuses_a_document_with_tables_and_none_loaded() {
         assert_eq!(e.code, GenCode::W0708);
     });
 }
+
+// ---------------------------------------------------------------------------
+// WX-FAULT1: `flip-result-bit` on a fixed-width integer result
+// ---------------------------------------------------------------------------
+
+fn checksum_doc(ret: &str) -> String {
+    format!(
+        "warrant t v1\n  op sum(m: Bytes) -> {ret}\n  labels sum:\n    m public\n  claim c:\n    forall m: Bytes. sum(m) == sum(m)\n"
+    )
+}
+
+#[test]
+fn a_bytes_to_fixed_operation_gets_the_flip_result_bit_control() {
+    for ret in ["U32", "U64"] {
+        let out = generate(
+            &checksum_doc(ret),
+            &[],
+            &["op sum export=sum faults=flip-result-bit"],
+        )
+        .unwrap_or_else(|e| panic!("{ret}: {e}"));
+        assert!(out.contains("Fault::FlipResultBit => fault_flip_result_bit(v),"), "{ret}: {out}");
+        assert!(out.contains("V::Fixed(f, x) => V::Fixed(f, x ^ 1),"), "{ret}: {out}");
+        assert!(out.contains("negctl/"), "{ret}: {out}");
+    }
+}
+
+#[test]
+fn the_fixed_arm_is_emitted_only_for_a_fixed_width_result() {
+    // A byte-string result keeps the harness byte-identical to before.
+    let bytes = "warrant t v1\n  op f(m: Bytes) -> Bytes\n  labels f:\n    m public\n  claim c:\n    forall m: Bytes. f(m) == f(m)\n";
+    let out = generate(bytes, &[], &["op f export=f faults=flip-result-bit"]).unwrap();
+    assert!(out.contains("fn fault_flip_result_bit"), "{out}");
+    assert!(!out.contains("V::Fixed(f, x) => V::Fixed(f, x ^ 1)"), "{out}");
+}
+
+#[test]
+fn flip_result_bit_still_refuses_a_result_that_is_neither_bytes_nor_fixed() {
+    // `drop-last-result-byte` has no meaning for an integer.
+    let e = generate(
+        &checksum_doc("U32"),
+        &[],
+        &["op sum export=sum faults=drop-last-result-byte"],
+    )
+    .unwrap_err();
+    assert!(e.contains("does not apply"), "{e}");
+    let e = generate(
+        &checksum_doc("Bool"),
+        &[],
+        &["op sum export=sum faults=flip-result-bit"],
+    )
+    .unwrap_err();
+    assert!(e.contains("does not apply"), "{e}");
+}
