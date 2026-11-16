@@ -1,7 +1,7 @@
 {
   "schema_version": "ver24-effect-cert-v1",
   "package": "rust/tilemap2d",
-  "source_digest": "7bf5abfb54b7b963fc48ee97c2ca1ba8886a6ba99b920737171993f83b308d53",
+  "source_digest": "9a7b9f00881789a8ae76e73da632dfca859d5861b0fc91d2e8b880bf437c90c5",
   "manifest_digest": "0cd7d21a82bca3acf930c1014ac5a685d175d412412b10c8e25c21448c869f89",
   "declared_effects": [],
   "entry_points": [

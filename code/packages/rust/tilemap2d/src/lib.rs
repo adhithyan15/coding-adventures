@@ -963,6 +963,21 @@ fn bank_tint(bank_colors: &[Rgb8], bank: u8) -> Result<Rgb8, TilemapError> {
         })
 }
 
+/// Rejects hand-built rectangles larger than any real viewport could cull
+/// (a culled rectangle has at most `MAX_VIEWPORT + 1` tiles per axis), so a
+/// hostile `VisibleRect` cannot force an unbounded loop (CWE-400).
+fn check_rect_extent(rect: &VisibleRect) -> Result<(), TilemapError> {
+    let limit = MAX_VIEWPORT + 1;
+    if rect.cols > limit || rect.rows > limit {
+        Err(TilemapError::InvalidViewport {
+            width: rect.cols,
+            height: rect.rows,
+        })
+    } else {
+        Ok(())
+    }
+}
+
 /// Visits every non-blank visible cell of `rect` with its rect-relative
 /// `(i, j)` position.
 fn for_each_visible<F: FnMut(u32, u32, TileCell) -> Result<(), TilemapError>>(
@@ -970,6 +985,7 @@ fn for_each_visible<F: FnMut(u32, u32, TileCell) -> Result<(), TilemapError>>(
     rect: &VisibleRect,
     mut visit: F,
 ) -> Result<(), TilemapError> {
+    check_rect_extent(rect)?;
     for j in 0..rect.rows {
         let row = rect
             .first_row
@@ -1306,6 +1322,7 @@ fn for_each_row_cell<F: FnMut(TileCell, i64) -> Result<(), TilemapError>>(
     tile_row: i64,
     mut visit: F,
 ) -> Result<(), TilemapError> {
+    check_rect_extent(rect)?;
     let tw = i64::from(layer.tile_w);
     for i in 0..rect.cols {
         let col = rect

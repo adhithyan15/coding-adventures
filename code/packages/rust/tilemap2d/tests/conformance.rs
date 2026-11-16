@@ -794,6 +794,42 @@ fn lower_cells_skip_blank_and_carry_attributes() {
 }
 
 #[test]
+fn cwe_400_hostile_visible_rect_is_rejected() {
+    let cells = grid(2, 2, |_, _| TileCell::tile(1));
+    let l = plain_layer(&cells, 2, 2);
+    let hostile = tilemap2d::VisibleRect {
+        first_col: 0,
+        first_row: 0,
+        cols: u32::MAX,
+        rows: u32::MAX,
+        offset_x: 0,
+        offset_y: 0,
+    };
+    assert!(matches!(
+        count_visible_cells(&l, &hostile),
+        Err(TilemapError::InvalidViewport { .. })
+    ));
+    let mut out = [TileBatchCell::new(0, 0, 0); 4];
+    assert!(matches!(
+        lower_layer_cells_into(&l, &hostile, &tints(), &mut out),
+        Err(TilemapError::InvalidViewport { .. })
+    ));
+    // The largest real rectangle (1px tiles across an 8192px viewport) is accepted.
+    let cells1 = vec![TileCell::tile(1); 4];
+    let l1 = TileLayer::attach(&cells1, 2, 2, 1, 1).unwrap();
+    let r = cull_layer(
+        &l1,
+        Viewport {
+            width: MAX_VIEWPORT,
+            height: 1,
+        },
+        Camera { x: 1, y: 0 },
+    )
+    .unwrap();
+    assert!(r.cols <= MAX_VIEWPORT + 1);
+}
+
+#[test]
 fn lower_cells_error_paths() {
     let cells = grid(2, 2, |_, _| TileCell::tile(1).with_bank(1));
     let l = plain_layer(&cells, 2, 2);
