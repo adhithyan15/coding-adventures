@@ -2,3 +2,11 @@ uv venv .venv --quiet --no-project --clear
 uv pip install --python .venv -e .[dev] --quiet
 .venv\Scripts\python -m ruff check src tests
 .venv\Scripts\python -m pytest tests/ -v --tb=short
+.venv\Scripts\python -m coding_adventures_warrant_oracle verify-v1 --spec ..\..\..\specs\ct-compare.warrant --corpus ..\..\..\specs\fixtures\ct-compare-warrant-v1\corpus.json
+.venv\Scripts\python -m coding_adventures_warrant_oracle check --spec ..\..\..\specs\ct-compare.warrant
+.venv\Scripts\python -m coding_adventures_warrant_oracle check --spec ..\..\..\specs\gf256.warrant
+.venv\Scripts\python -m coding_adventures_warrant_oracle check --spec ..\..\..\specs\wasm-leb128.warrant
+.venv\Scripts\python -m coding_adventures_warrant_oracle check --spec ..\..\..\specs\logic-gates.warrant
+.venv\Scripts\python -m coding_adventures_warrant_oracle check --spec ..\..\..\specs\lzw.warrant
+.venv\Scripts\python -m coding_adventures_warrant_oracle check --spec ..\..\..\specs\arithmetic.warrant
+.venv\Scripts\python -m coding_adventures_warrant_oracle check --spec ..\..\..\specs\x25519.warrant
