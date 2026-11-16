@@ -364,7 +364,7 @@ func resolveExports(binding *Binding, registry *Registry, packageDir string) (ma
 		if err != nil || !filepath.IsAbs(filepath.FromSlash(file)) {
 			bindingFail("source-mismatch", "the source file of `%s` cannot be found (a build with -trimpath cannot run this lane)", op.ExportName)
 		}
-		if _, inside := relativeInside(root, resolved, osPath); !inside {
+		if _, inside := relativeInside(root, resolved, hostFlavor); !inside {
 			bindingFail("source-mismatch", "`%s` is not inside the declared source root", op.ExportName)
 		}
 		exports[name] = export.Call
