@@ -1,60 +1,133 @@
 defmodule Trig do
   @moduledoc """
-  # Trig — Trigonometric Functions from First Principles
+  # Trig: trigonometric functions from first principles (TRIG-REF-1)
 
-  This module implements sine, cosine, and angle conversion functions
-  using nothing but basic arithmetic. No `:math` module, no external
-  dependencies — just the Maclaurin series (Taylor series centered at 0).
+  This module computes `sin`, `cos`, `tan`, the degree/radian conversions and
+  (Part II) `sqrt`, `atan` and `atan2` using nothing but `+ - * /` on IEEE 754
+  doubles.  No `:math` call is made anywhere.  It is the Elixir lane of the
+  reference algorithm TRIG-REF-1 specified in `code/specs/PHY00a-trig-convergence.md`;
+  every result is **bit for bit** the one the other sixteen lanes return, and
+  the shared vectors in `code/specs/fixtures/trig-reference-v1` prove it.
 
-  ## Why from scratch?
+  ## The idea in one picture
 
-  Building trig functions from first principles teaches you:
-  1. How Taylor/Maclaurin series approximate transcendental functions
-  2. Why range reduction matters for numerical stability
-  3. How computers actually compute sin/cos under the hood (CORDIC aside)
+  A sine is a repeating wave.  Knowing `sin` on [-pi/4, pi/4] and which
+  quarter-turn you are in is enough to know it everywhere.  So each call does
+  three things:
 
-  ## The Maclaurin Series
+      x ──► how many quarter-turns fit?  k = nearest integer to x / (pi/2)
+        └─► what is left over?           r = x - k * pi/2,   |r| <= ~pi/4
+        └─► a short polynomial in r, picked by q = k mod 4
 
-  The Maclaurin series is a Taylor series expanded around x = 0.
-  For sine and cosine:
+  The polynomial is the Maclaurin series (Taylor series at 0):
 
-      sin(x) = x - x^3/3! + x^5/5! - x^7/7! + ...
-             = sum_{n=0}^{inf} (-1)^n * x^(2n+1) / (2n+1)!
+      sin(r) = r - r^3/3! + r^5/5! - r^7/7! + ...
+      cos(r) = 1 - r^2/2! + r^4/4! - r^6/6! + ...
 
-      cos(x) = 1 - x^2/2! + x^4/4! - x^6/6! + ...
-             = sum_{n=0}^{inf} (-1)^n * x^(2n) / (2n)!
+  but with the factorials baked into a table of coefficients, evaluated by
+  Horner's rule.  That needs no division, adds the smallest terms first (the
+  accurate order) and cannot be regrouped by anybody.
 
-  Each successive term gets smaller (for |x| < pi), so after enough
-  terms, the partial sum converges to the true value.
+  ## Arithmetic model (why the code is written one operation per line)
 
-  ## Range Reduction
+  Erlang floats are IEEE binary64 and the BEAM does not fuse a multiply and an
+  add into one rounding (no FMA) nor keep extended-precision intermediates.
+  So `a * b + c` rounds twice, exactly like the reference.  Each statement
+  below is one IEEE operation, in the order the specification writes it.
 
-  The Maclaurin series converges fastest when x is near 0. For large
-  inputs (like sin(1000)), the terms start huge before cancelling out,
-  causing floating-point errors. Range reduction maps any input into
-  [-pi, pi] using the periodicity of sin and cos (period = 2*pi).
+  ## The domain, and what the BEAM does about NaN
+
+  `sin`, `cos` and `tan` are defined for `|x| <= 2^29` (about 5.4e8).  Beyond
+  that the reduction would need pi to over a thousand bits.  The reference
+  returns NaN there (and for NaN and infinity inputs).  **A BEAM float cannot
+  be NaN or infinite**: arithmetic that would produce one raises
+  `ArithmeticError`.  So here "returns NaN" means *raises `ArithmeticError`*
+  (PHY00a 3.3, 5, OQ-10), by the same single comparison the reference uses.
+  The same convention covers every other non-finite result, for example
+  `degrees(1.7e308)`, and `atan2` when `y / x` overflows although the true
+  result is finite (the division raises).
 
   ## Layer
 
-  This is a PHY00 (physics layer 0) leaf package with no dependencies.
+  PHY00 (physics layer 0), a leaf package with no dependencies.
   """
 
+  import Bitwise
+
   # ---------------------------------------------------------------------------
-  # Constants
+  # Constants, written by BIT PATTERN (PHY00a 3.2)
   # ---------------------------------------------------------------------------
+  #
+  # A decimal literal is only as exact as the parser that reads it.  The spec
+  # pins each constant by its 64 bits, and Erlang binaries can state those bits
+  # directly: `<<f::float-64>> = <<bits::64>>` reinterprets eight bytes as a
+  # double with no rounding.  `bits` below is that cast as a throwaway function
+  # used at compile time, so every attribute is the exact double.
 
-  # Pi to double-precision accuracy (IEEE 754 float64).
-  # This is the ratio of a circle's circumference to its diameter,
-  # the most fundamental constant in trigonometry.
-  @pi 3.141592653589793
+  bits = fn b ->
+    <<f::float-64>> = <<b::64>>
+    f
+  end
 
-  # Two pi — one full revolution in radians. Used for range reduction.
-  @two_pi 2.0 * @pi
+  # pi, 2*pi, pi/2: the values the package has always exposed.
+  @pi bits.(0x400921FB54442D18)
+  @two_pi bits.(0x401921FB54442D18)
+  @half_pi bits.(0x3FF921FB54442D18)
 
-  # Number of terms in the Maclaurin series. 20 terms gives us
-  # roughly 15-16 digits of precision for inputs in [-pi, pi],
-  # which matches IEEE 754 double precision.
-  @terms 20
+  # Reduction constants.  INV_PIO2 is the double nearest 2/pi.  PIO2_1..4 are
+  # the first 96 bits of pi/2 in four chunks of at most 24 significant bits, so
+  # the product k * PIO2_i is EXACT whenever |k| < 2^29 (24 + 29 = 53 bits).
+  # PIO2_5 is the remainder rounded to 53 bits.  (Cody and Waite, 1980.)
+  @inv_pio2 bits.(0x3FE45F306DC9C883)
+  @pio2_1 bits.(0x3FF921FB40000000)
+  @pio2_2 bits.(0x3E74442D00000000)
+  @pio2_3 bits.(0x3CF8469880000000)
+  @pio2_4 bits.(0x3B78CC5160000000)
+  @pio2_5 bits.(0x39F01B839A25204A)
+
+  # MAGIC = 1.5 * 2^52: adding it pushes the fraction bits of t off the end of
+  # the significand, so (t + MAGIC) - MAGIC is t rounded to the nearest whole
+  # number (ties to even) using only an add and a subtract.
+  @magic bits.(0x4338000000000000)
+  # LIMIT = 2^29 and TINY = 2^-27.
+  @limit bits.(0x41C0000000000000)
+  @tiny bits.(0x3E40000000000000)
+
+  # Sine coefficients S[n] = (-1)^n / (2n+1)!, rounded once from the exact
+  # rational.  Read the table as the Maclaurin series: -1/3!, +1/5!, ...
+  @s1 bits.(0xBFC5555555555555)
+  @s2 bits.(0x3F81111111111111)
+  @s3 bits.(0xBF2A01A01A01A01A)
+  @s4 bits.(0x3EC71DE3A556C734)
+  @s5 bits.(0xBE5AE64567F544E4)
+  @s6 bits.(0x3DE6124613A86D09)
+  @s7 bits.(0xBD6AE7F3E733B81F)
+  @s8 bits.(0x3CE952C77030AD4A)
+  @s9 bits.(0xBC62F49B46814157)
+
+  # Cosine coefficients C[n] = (-1)^n / (2n)!  (n = 1 is -1/2, applied as
+  # 0.5 * z, which is exact).  Note C4 = 1/8! and S3 = 1/7! share a significand
+  # (their ratio is 8), as do C8 and S7.
+  @c2 bits.(0x3FA5555555555555)
+  @c3 bits.(0xBF56C16C16C16C17)
+  @c4 bits.(0x3EFA01A01A01A01A)
+  @c5 bits.(0xBE927E4FB7789F5C)
+  @c6 bits.(0x3E21EED8EFF8D898)
+  @c7 bits.(0xBDA93974A8C07C9D)
+  @c8 bits.(0x3D2AE7F3E733B81F)
+  @c9 bits.(0xBCA6827863B97D97)
+
+  # Degree conversion: one multiply by a stored constant (the doubles nearest
+  # pi/180 and 180/pi).
+  @rad_per_deg bits.(0x3F91DF46A2529D39)
+  @deg_per_rad bits.(0x404CA5DC1A63C1F8)
+
+  # tan and Part II thresholds: 1e-15, 1e308, 1e-17, 1e-300.
+  @pole_eps bits.(0x3CD203AF9EE75616)
+  @pole_big bits.(0x7FE1CCF385EBC8A0)
+  @atan_term bits.(0x3C670EF54646D497)
+  @sqrt_rel bits.(0x3CD203AF9EE75616)
+  @sqrt_tiny bits.(0x01A56E1FC2F8F359)
 
   @doc """
   Returns pi to double-precision accuracy.
@@ -66,214 +139,304 @@ defmodule Trig do
   """
   def pi, do: @pi
 
-  # ---------------------------------------------------------------------------
-  # Range Reduction (private)
-  # ---------------------------------------------------------------------------
-
-  # Range reduction normalizes an angle to the interval [-pi, pi].
-  #
-  # Why [-pi, pi] and not [0, 2*pi]? Because the Maclaurin series
-  # converges fastest near 0. By centering our interval on 0, we
-  # minimize the magnitude of x, which means:
-  #   - Fewer terms needed for convergence
-  #   - Less floating-point cancellation error
-  #
-  # The algorithm:
-  #   1. Compute how many full rotations (2*pi) fit in x
-  #   2. Subtract those full rotations
-  #   3. If the result is still outside [-pi, pi], adjust by one more 2*pi
-  #
-  # Example: sin(7.0)
-  #   7.0 / (2*pi) = 1.114... so subtract 1 full rotation
-  #   7.0 - 2*pi = 0.717... which is in [-pi, pi]. Done!
-
-  defp range_reduce(x) when is_number(x) do
-    # Subtract multiples of 2*pi to get into roughly [-2*pi, 2*pi]
-    reduced = x - Float.round(x / @two_pi, 0) * @two_pi
-
-    # Clamp to [-pi, pi] if we overshot
-    cond do
-      reduced > @pi  -> reduced - @two_pi
-      reduced < -@pi -> reduced + @two_pi
-      true           -> reduced
-    end
+  @doc """
+  Returns every constant of PHY00a 3.2 as a map from its specification name
+  (`"PI"`, `"S1"`, `"PIO2_3"`, ...) to its float.  The conformance test
+  compares the bits of each against the shared manifest (PHY00a 6.5 (e)).
+  """
+  def constants do
+    %{
+      "PI" => @pi,
+      "TWO_PI" => @two_pi,
+      "HALF_PI" => @half_pi,
+      "INV_PIO2" => @inv_pio2,
+      "PIO2_1" => @pio2_1,
+      "PIO2_2" => @pio2_2,
+      "PIO2_3" => @pio2_3,
+      "PIO2_4" => @pio2_4,
+      "PIO2_5" => @pio2_5,
+      "MAGIC" => @magic,
+      "LIMIT" => @limit,
+      "TINY" => @tiny,
+      "S1" => @s1,
+      "S2" => @s2,
+      "S3" => @s3,
+      "S4" => @s4,
+      "S5" => @s5,
+      "S6" => @s6,
+      "S7" => @s7,
+      "S8" => @s8,
+      "S9" => @s9,
+      "C2" => @c2,
+      "C3" => @c3,
+      "C4" => @c4,
+      "C5" => @c5,
+      "C6" => @c6,
+      "C7" => @c7,
+      "C8" => @c8,
+      "C9" => @c9,
+      "RAD_PER_DEG" => @rad_per_deg,
+      "DEG_PER_RAD" => @deg_per_rad,
+      "TAN_POLE" => @pole_eps,
+      "TAN_BIG" => @pole_big,
+      "ATAN_TERM" => @atan_term,
+      "SQRT_REL" => @sqrt_rel,
+      "SQRT_TINY" => @sqrt_tiny
+    }
   end
 
   # ---------------------------------------------------------------------------
-  # sin(x) — Maclaurin Series
+  # Range reduction (private): x = k * (pi/2) + r
+  # ---------------------------------------------------------------------------
+  #
+  # Step 1, the quotient.  t = x * (2/pi) is roughly "how many quarter-turns".
+  # (t + MAGIC) - MAGIC rounds t to the nearest integer k, as a float, with no
+  # floor/round/trunc call.  It is valid for |t| < 2^51; the domain guard has
+  # already ensured |t| < 3.5e8.
+  #
+  # Step 2, the remainder, by Cody-Waite subtraction.  pi/2 is irrational, so
+  # k * (pi/2) cannot be formed exactly.  Instead pi/2 is stored as a SUM of
+  # five pieces; the first four are so short (24 bits) that k * piece is exact:
+  #
+  #    x ------------------------------------------------------- the angle
+  #    |-- k*PIO2_1 --|                                           24 bits of k*pi/2
+  #                   |-- k*PIO2_2 --|                            next 24
+  #                                  |-- k*PIO2_3 --|             next 24
+  #                                                 |- k*PIO2_4 -|  next 24
+  #                                                              |k*PIO2_5| rounds
+  #    r = what is left, |r| <= pi/4 (plus a few ulps)
+  #
+  # The first two subtractions are exact (Sterbenz); the last three round, each
+  # by at most half an ulp of the current r.  Every line below is ONE IEEE
+  # operation: the product and the difference are separate statements, because
+  # a fused multiply-subtract would round differently.
+  defp reduce(x) do
+    t = x * @inv_pio2
+    k = t + @magic
+    k = k - @magic
+
+    r = x - k * @pio2_1
+    r = r - k * @pio2_2
+    r = r - k * @pio2_3
+    r = r - k * @pio2_4
+    r = r - k * @pio2_5
+
+    {k, r}
+  end
+
+  # Step 3, the quadrant.  k is an integer-valued float with |k| < 2^29, so
+  # trunc(k) is exact, and `&&& 3` on a two's-complement integer is the floor
+  # modulus 4 (k = -1 gives 3, k = -5 gives 3).  The only integer operation.
+  defp quadrant(k), do: trunc(k) &&& 3
+
+  # ---------------------------------------------------------------------------
+  # The series kernels, by Horner's rule (PHY00a 3.5)
+  # ---------------------------------------------------------------------------
+  #
+  #   sin(r) = r + r*z*(S1 + S2 z + S3 z^2 + ... + S9 z^8),        z = r*r
+  #   cos(r) = (1 - z/2) + z^2*(C2 + C3 z + ... + C9 z^7)
+  #
+  # The leading term is added LAST and unrounded inside the polynomial, so the
+  # dominant part of the answer carries one rounding.  Ten terms: the first
+  # omitted one (r^21/21!) is far below half an ulp.
+  #
+  #   n   | sin coefficient | cos coefficient
+  #   ----|-----------------|----------------
+  #   1   | -1/3!           | -1/2!  (the 0.5 * z)
+  #   2   | +1/5!           | +1/4!
+  #   3   | -1/7!           | -1/6!
+  #   ...
+  #   9   | -1/19!          | -1/18!
+  defp sin_kernel(r) do
+    z = r * r
+    p = @s9
+    p = p * z
+    p = p + @s8
+    p = p * z
+    p = p + @s7
+    p = p * z
+    p = p + @s6
+    p = p * z
+    p = p + @s5
+    p = p * z
+    p = p + @s4
+    p = p * z
+    p = p + @s3
+    p = p * z
+    p = p + @s2
+    p = p * z
+    p = p + @s1
+    w = r * z
+    w = w * p
+    r + w
+  end
+
+  defp cos_kernel(r) do
+    z = r * r
+    q = @c9
+    q = q * z
+    q = q + @c8
+    q = q * z
+    q = q + @c7
+    q = q * z
+    q = q + @c6
+    q = q * z
+    q = q + @c5
+    q = q * z
+    q = q + @c4
+    q = q * z
+    q = q + @c3
+    q = q * z
+    q = q + @c2
+    u = 0.5 * z
+    u = 1.0 - u
+    v = z * z
+    v = v * q
+    u + v
+  end
+
+  # ---------------------------------------------------------------------------
+  # sin(x) and cos(x)  (PHY00a 3.6)
   # ---------------------------------------------------------------------------
 
   @doc """
-  Computes the sine of `x` (in radians) using the Maclaurin series.
+  Computes the sine of `x` (radians).
+
+  Integers are accepted and converted once with `x * 1.0` (never `x + 0.0`,
+  which would turn `-0.0` into `+0.0`).
+
+  ## Domain
+
+  Defined for `|x| <= 2^29`.  Outside it the reference result is NaN, which a
+  BEAM float cannot hold, so this raises `ArithmeticError`.
 
   ## How it works
 
-  The Maclaurin series for sine is:
+      quadrant q = k mod 4      sin(x)
+      0                          sinK(r)
+      1                          cosK(r)
+      2                         -sinK(r)
+      3                         -cosK(r)
 
-      sin(x) = x - x^3/3! + x^5/5! - x^7/7! + ...
-
-  Rather than computing each term from scratch (which would involve
-  recomputing large powers and factorials), we use an iterative trick:
-
-      term_n+1 = term_n * (-x^2) / ((2n+2) * (2n+3))
-
-  This works because:
-  - Each new term introduces two more factors of x (hence x^2)
-  - The sign alternates (hence the negative)
-  - The factorial grows by two new factors: (2n+2) and (2n+3)
-
-  Starting from term_0 = x, we multiply by this ratio to get each
-  successive term. This avoids overflow from large intermediate values.
+  and `sin(x) = x` exactly for `|x| < 2^-27` (including `-0.0` and every
+  subnormal), because the next term `x^3/6` is under half an ulp of `x`.
 
   ## Examples
 
       iex> Trig.sin(0)
       0.0
 
-      iex> Trig.sin(Trig.pi() / 2)  # approximately 1.0
-      1.0
-
+      iex> Trig.sin(1.0)
+      0.8414709848078965
   """
   def sin(x) when is_number(x) do
-    # Step 1: Range reduce to [-pi, pi] for best convergence
-    reduced = range_reduce(x)
+    x = x * 1.0
+    check_domain(x)
 
-    # Step 2: The first term of the sin series is just x itself
-    first_term = reduced / 1.0
+    if abs(x) < @tiny do
+      x
+    else
+      {k, r} = reduce(x)
 
-    # Step 3: Accumulate @terms terms using Enum.reduce
-    #
-    # We track {current_term, running_sum} through each iteration.
-    # At each step n (1-based), we compute the ratio to get the next term:
-    #
-    #   ratio = -x^2 / (2n * (2n + 1))
-    #
-    # This ratio comes from:
-    #   term_{n} / term_{n-1} = (-1) * x^2 / ((2n) * (2n+1))
-    #
-    # where 2n and 2n+1 are the next two factorial denominators.
-
-    {_final_term, sum} =
-      Enum.reduce(1..(@terms - 1), {first_term, first_term}, fn n, {term, acc} ->
-        denominator = 2 * n * (2 * n + 1)
-        next_term = term * (-reduced * reduced) / denominator
-        {next_term, acc + next_term}
-      end)
-
-    sum
+      case quadrant(k) do
+        0 -> sin_kernel(r)
+        1 -> cos_kernel(r)
+        2 -> -sin_kernel(r)
+        3 -> -cos_kernel(r)
+      end
+    end
   end
 
-  # ---------------------------------------------------------------------------
-  # cos(x) — Maclaurin Series
-  # ---------------------------------------------------------------------------
-
   @doc """
-  Computes the cosine of `x` (in radians) using the Maclaurin series.
+  Computes the cosine of `x` (radians).  Same domain and conversion rules as
+  `sin/1`.
 
-  ## How it works
+      quadrant q = k mod 4      cos(x)
+      0                          cosK(r)
+      1                         -sinK(r)
+      2                         -cosK(r)
+      3                          sinK(r)
 
-  The Maclaurin series for cosine is:
-
-      cos(x) = 1 - x^2/2! + x^4/4! - x^6/6! + ...
-
-  Similar to sin, we use the iterative term trick:
-
-      term_n+1 = term_n * (-x^2) / ((2n) * (2n+1))
-
-  But the indexing is slightly different because cosine starts with
-  even powers (0, 2, 4, ...) while sine starts with odd powers (1, 3, 5, ...).
-
-  Starting from term_0 = 1, each successive term multiplies by:
-
-      ratio = -x^2 / ((2n-1) * (2n))
-
-  where n goes from 1 to @terms-1.
+  `cos(x) = 1.0` exactly for `|x| < 2^-27`.
 
   ## Examples
 
       iex> Trig.cos(0)
       1.0
 
-      iex> Trig.cos(Trig.pi())  # approximately -1.0
+      iex> Trig.cos(Trig.pi())
       -1.0
-
   """
   def cos(x) when is_number(x) do
-    # Step 1: Range reduce to [-pi, pi]
-    reduced = range_reduce(x)
+    x = x * 1.0
+    check_domain(x)
 
-    # Step 2: The first term of the cos series is 1.0
-    first_term = 1.0
+    if abs(x) < @tiny do
+      1.0
+    else
+      {k, r} = reduce(x)
 
-    # Step 3: Accumulate terms.
-    #
-    # For cosine, the ratio between successive terms is:
-    #
-    #   term_{n} / term_{n-1} = -x^2 / ((2n-1) * 2n)
-    #
-    # where n starts at 1. The denominators are:
-    #   n=1: 1*2 = 2   (giving -x^2/2! )
-    #   n=2: 3*4 = 12  (giving +x^4/4! )
-    #   n=3: 5*6 = 30  (giving -x^6/6! )
-    #   ...and so on.
+      case quadrant(k) do
+        0 -> cos_kernel(r)
+        1 -> -sin_kernel(r)
+        2 -> -cos_kernel(r)
+        3 -> sin_kernel(r)
+      end
+    end
+  end
 
-    {_final_term, sum} =
-      Enum.reduce(1..(@terms - 1), {first_term, first_term}, fn n, {term, acc} ->
-        denominator = (2 * n - 1) * (2 * n)
-        next_term = term * (-reduced * reduced) / denominator
-        {next_term, acc + next_term}
-      end)
-
-    sum
+  # The domain guard.  The reference writes it as `not (|x| <= LIMIT)`: one
+  # comparison that also catches NaN and the infinities.  A BEAM float is never
+  # NaN or infinite, so the negated form is not needed here to catch them, but
+  # the comparison is kept in the reference's shape.  "Returns NaN" becomes
+  # "raises ArithmeticError" (PHY00a 3.3, 5).
+  defp check_domain(x) do
+    if abs(x) <= @limit do
+      :ok
+    else
+      raise ArithmeticError,
+            "Trig: |x| > 2^29 is outside the domain of sin/cos/tan (TRIG-REF-1 returns NaN here)"
+    end
   end
 
   # ---------------------------------------------------------------------------
-  # Angle Conversion
+  # Angle conversion (PHY00a 3.7): one multiply by a stored constant
   # ---------------------------------------------------------------------------
 
   @doc """
-  Converts degrees to radians.
-
-  The conversion factor is pi/180, since a full circle is 360 degrees
-  or 2*pi radians:
-
-      radians = degrees * pi / 180
+  Converts degrees to radians with a single multiply by the double nearest
+  pi/180: one rounding, no overflowing `d * pi` intermediate, `-0.0` keeps its
+  sign.  A product above the largest finite float would be `+-inf`, which a
+  BEAM float cannot hold, so the multiply raises `ArithmeticError`.
 
   ## Examples
 
       iex> Trig.radians(180)
       3.141592653589793
 
-      iex> Trig.radians(90)
-      1.5707963267948966
-
       iex> Trig.radians(0)
       0.0
   """
   def radians(deg) when is_number(deg) do
-    deg * @pi / 180.0
+    deg = deg * 1.0
+    deg * @rad_per_deg
   end
 
   @doc """
-  Converts radians to degrees.
-
-  The conversion factor is 180/pi, the inverse of `radians/1`:
-
-      degrees = radians * 180 / pi
+  Converts radians to degrees with a single multiply by the double nearest
+  180/pi.  `degrees(1.7e308)` would be `+inf`, so it raises `ArithmeticError`.
 
   ## Examples
 
       iex> Trig.degrees(3.141592653589793)
       180.0
 
-      iex> Trig.degrees(1.5707963267948966)
-      90.0
-
       iex> Trig.degrees(0)
       0.0
   """
   def degrees(rad) when is_number(rad) do
-    rad * 180.0 / @pi
+    rad = rad * 1.0
+    rad * @deg_per_rad
   end
 
   # ---------------------------------------------------------------------------
@@ -355,7 +518,7 @@ defmodule Trig do
 
     # Stop when improvement is below the precision floor.
     # 1.0e-15 * guess gives relative precision; 1.0e-300 handles subnormals.
-    if improvement < 1.0e-15 * guess + 1.0e-300 do
+    if improvement < @sqrt_rel * guess + @sqrt_tiny do
       next_guess
     else
       sqrt_iterate(x, next_guess, iteration + 1)
@@ -381,7 +544,7 @@ defmodule Trig do
   ## Undefined Points (Poles)
 
   tan is undefined at x = π/2 + k·π for any integer k, where cos(x) = 0.
-  When |cos(x)| < 1.0e-15 we return ±1.0e308 (the largest finite float)
+  When |cos(x)| < 1.0e-15 we return the sentinel ±1.0e308 (not ±inf, which a BEAM float cannot be)
   to signal near-singularity without crashing.
 
   We call our own `sin/1` and `cos/1` — no `:math.tan` used.
@@ -396,12 +559,16 @@ defmodule Trig do
 
   """
   def tan(x) when is_number(x) do
-    s = sin(x)  # our own sin
-    c = cos(x)  # our own cos
+    # sin/1 and cos/1 raise beyond 2^29, so the domain is tested first, as the
+    # specification requires of a language that raises on NaN.
+    s = sin(x)
+    c = cos(x)
 
     # Guard against poles: |cos| < 1e-15 means we're near a discontinuity.
-    if abs(c) < 1.0e-15 do
-      if s > 0, do: 1.0e308, else: -1.0e308
+    # This pinned legacy sentinel is not an approximation (PHY00a 3.8).  The
+    # guard makes c = 0 unreachable in the division.
+    if abs(c) < @pole_eps do
+      if s > 0, do: @pole_big, else: -@pole_big
     else
       s / c
     end
@@ -410,9 +577,6 @@ defmodule Trig do
   # ---------------------------------------------------------------------------
   # Constants for atan
   # ---------------------------------------------------------------------------
-
-  # HALF_PI is π/2. Used in atan's range reduction and atan2's quadrant cases.
-  @half_pi @pi / 2.0
 
   # ---------------------------------------------------------------------------
   # atan/1 — Arctangent via Taylor Series with Half-Angle Reduction
@@ -451,7 +615,7 @@ defmodule Trig do
 
     cond do
       # atan(x) rounds exactly to x here; avoid halving subnormals and retain -0.
-      abs(x) <= 7.450580596923828e-9 -> x
+      abs(x) <= @tiny -> x
       x >  1.0  -> @half_pi - atan_core(1.0 / x)
       x < -1.0  -> -@half_pi - atan_core(1.0 / x)
       true      -> atan_core(x)
@@ -480,7 +644,7 @@ defmodule Trig do
         next_acc = acc + next_term
 
         # Early exit when term is negligibly small.
-        if abs(next_term) < 1.0e-17 do
+        if abs(next_term) < @atan_term do
           {:halt, {next_term, next_acc}}
         else
           {:cont, {next_term, next_acc}}
