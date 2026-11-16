@@ -467,3 +467,77 @@ func TestSamplerPropagatesSignalErrors(t *testing.T) {
 		t.Fatal("expected signal error to propagate")
 	}
 }
+
+// ---------------------------------------------------------------------------
+// Large times: phase in cycles (PHY00a 3.4.1, TC-6)
+// ---------------------------------------------------------------------------
+//
+// trig.Sin is NaN beyond 2^29 radians. A sine oscillator must therefore reduce
+// its phase to a fractional cycle before converting to radians. The expected bits
+// below were produced by the Python oscillator (itself on the TRIG-REF-1 trig),
+// which the Rust and TypeScript oscillators match, so a sine oscillator returns
+// the same 64 bits in every language.
+
+func TestSineOscillatorSurvivesPhasesBeyondTwoToThe29Radians(t *testing.T) {
+	signal, err := NewSineOscillator(440.0)
+	requireNoError(t, err)
+	week := 7.0 * 24.0 * 3600.0
+	if 2.0*math.Pi*440.0*week <= math.Exp2(29) {
+		t.Fatal("test premise: the unreduced phase must exceed 2^29 radians")
+	}
+
+	got, err := signal.ValueAt(week + 0.25/440.0)
+	requireNoError(t, err)
+	if math.IsNaN(got) || math.IsInf(got, 0) {
+		t.Fatalf("a week-old 440 Hz sine is %v, want a finite value", got)
+	}
+	requireApprox(t, got, 1.0)
+}
+
+func TestSineOscillatorIsExactlyPeriodicInCycles(t *testing.T) {
+	signal, err := NewSineOscillatorWithOptions(1.0, 1.0, 0.125, 0.0)
+	requireNoError(t, err)
+	far, err := signal.ValueAt(1.0e9)
+	requireNoError(t, err)
+	origin, err := signal.ValueAt(0.0)
+	requireNoError(t, err)
+	if math.Float64bits(far) != math.Float64bits(origin) {
+		t.Fatalf("ValueAt(1e9) = %v, want exactly ValueAt(0) = %v", far, origin)
+	}
+}
+
+func TestSineOscillatorMatchesThePythonRustTypeScriptBits(t *testing.T) {
+	cases := []struct {
+		freq, amp, phase, offset, time float64
+		bits                           uint64
+	}{
+		{440.0, 1.0, 0.0, 0.0, 7.0*24.0*3600.0 + 0.25/440.0, 0x3fefffffffffff62},
+		{1.0, 1.0, 0.125, 0.0, 1.0e9, 0x3fe6a09e667f3bcc},
+		{1.0, 1.0, 0.125, 0.0, 0.0, 0x3fe6a09e667f3bcc},
+		{440.0, 0.5, 0.1, 0.25, 123456.789, 0x3fe7f7eadf60b1fc},
+		{48000.0, 1.0, 0.3, 0.0, 86400.0*3 + 0.1234567, 0x3fef7deb0f9b4dc5},
+		{3.5, 2.0, -0.7, -1.0, -9.87654321e5, 0x3fe94bb4678a1e12},
+		{1e-3, 1.0, 0.0, 0.0, 3.0e9 + 0.1, 0x3f4496b563ba995f},
+	}
+	for _, c := range cases {
+		signal, err := NewSineOscillatorWithOptions(c.freq, c.amp, c.phase, c.offset)
+		requireNoError(t, err)
+		got, err := signal.ValueAt(c.time)
+		requireNoError(t, err)
+		if math.Float64bits(got) != c.bits {
+			t.Errorf("%+v: got %016x, want %016x", c, math.Float64bits(got), c.bits)
+		}
+	}
+}
+
+// A phase that overflows to infinity gives NaN, not an error and not a panic,
+// like the Python, Rust and TypeScript oscillators.
+func TestSineOscillatorNonFinitePhaseIsNaN(t *testing.T) {
+	signal, err := NewSineOscillator(440.0)
+	requireNoError(t, err)
+	got, err := signal.ValueAt(1e308)
+	requireNoError(t, err)
+	if !math.IsNaN(got) {
+		t.Fatalf("got %v, want NaN", got)
+	}
+}
