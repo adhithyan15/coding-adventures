@@ -1328,3 +1328,15 @@ fn a_fanout_chain_in_an_implementation_is_checked_quickly() {
         t.elapsed()
     );
 }
+
+#[test]
+fn a_model_with_more_than_63_parameters_fails_closed_end_to_end() {
+    let params: Vec<String> = (0..70).map(|i| format!("p{i}: Bool")).collect();
+    let args = vec!["b2m(m.p0, 0) == 0u8"; 70].join(", ");
+    let extra = format!(
+        "  model w({}) -> U8 = if p63 then 1u8 else 0u8\n",
+        params.join(", ")
+    );
+    let (_r, g) = pretender("wide", &format!("w({args})"), &extra);
+    assert!(has(&g, "CD07", "more than 63 parameters"), "{}", show(&g));
+}

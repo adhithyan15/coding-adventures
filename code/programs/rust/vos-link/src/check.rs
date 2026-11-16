@@ -311,6 +311,9 @@ fn r6(
                 BuildShape::BudgetExhausted => cd07(cone_failure(
                     "exhausted the taint-walk step budget, so the cone cannot be decided (fails closed)",
                 )),
+                BuildShape::WideModel => cd07(cone_failure(
+                    "calls a model with more than 63 parameters, which the cone walk cannot tell apart, so the cone cannot be decided (fails closed)",
+                )),
                 BuildShape::Constructor { in_cone } => {
                     let outside: Vec<String> = in_cone
                         .iter()
@@ -346,6 +349,9 @@ fn r6(
                 )),
                 BuildShape::BudgetExhausted => cd07(cone_failure(
                     "exhausted the taint-walk step budget, so the oracle field cannot be found (fails closed)",
+                )),
+                BuildShape::WideModel => cd07(cone_failure(
+                    "calls a model with more than 63 parameters, so the oracle field cannot be found (fails closed)",
                 )),
                 BuildShape::Constructor { in_cone } => {
                     if !in_cone.iter().any(|c| !*c) {

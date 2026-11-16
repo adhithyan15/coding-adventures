@@ -89,6 +89,9 @@ pub enum BuildShape {
     /// The taint walk ran out of its step budget (`TAINT_BUDGET`): no answer, which
     /// `vos-link` treats as a failure for production and `any` (fail closed).
     BudgetExhausted,
+    /// A model the walk had to summarise has more than 63 parameters, more than a
+    /// 64-bit mask can tell apart: no answer, so a failure for production and `any`.
+    WideModel,
     /// `Impl(e0, ..., en)`: for each field argument, whether it mentions the model's
     /// parameter (the abstract state), i.e. whether the field is in the cone of `build`.
     Constructor {
@@ -374,7 +377,14 @@ struct Taint<'a, 'b> {
     /// failure for production and `any` crates (fail closed).
     budget: Cell<u64>,
     exhausted: Cell<bool>,
+    /// Set when a model with more than [`MAX_MODEL_PARAMS`] parameters is met.
+    too_wide: Cell<bool>,
 }
+
+/// The most parameters of one model the walk can tell apart (one bit each, bit 63 spare).
+/// A model with more is refused, not approximated: sharing a bit would let a dependence
+/// on a later parameter hide behind an earlier one, the permissive direction.
+pub const MAX_MODEL_PARAMS: usize = 63;
 
 /// The default step budget of the taint walk.  With per-model summaries the work is
 /// linear in the document, so a real document is far below it (the Warrant token budget
@@ -424,6 +434,7 @@ impl<'a, 'b> Taint<'a, 'b> {
             summaries: RefCell::new(HashMap::new()),
             budget: Cell::new(budget),
             exhausted: Cell::new(false),
+            too_wide: Cell::new(false),
         }
     }
 
@@ -443,10 +454,14 @@ impl<'a, 'b> Taint<'a, 'b> {
         !t.is_empty() && t == self.text(b)
     }
 
-    /// The bit of parameter `j` in a mask (a model with more than 64 parameters shares
-    /// the last bit, which only makes the answer more conservative).
+    /// The bit of parameter `j`.  Callers have refused every model with more than
+    /// [`MAX_MODEL_PARAMS`] parameters, so `j` is below 63 in every walk whose answer is used.
     fn bit(j: usize) -> u64 {
-        1u64 << j.min(63)
+        // Past 63 only after `too_wide` is set, whose answer replaces this one.
+        u32::try_from(j)
+            .ok()
+            .and_then(|j| 1u64.checked_shl(j))
+            .unwrap_or(0)
     }
 
     /// Which parameters (a bit per index of `params`) does the VALUE of `e` depend on?
@@ -542,6 +557,10 @@ impl<'a, 'b> Taint<'a, 'b> {
         let Some(model) = self.models.get(name).copied() else {
             return u64::MAX;
         };
+        if model.params.len() > MAX_MODEL_PARAMS {
+            self.too_wide.set(true);
+            return u64::MAX;
+        }
         self.summaries.borrow_mut().insert(name.to_string(), None);
         let params: Vec<&str> = model.params.iter().map(|p| p.name).collect();
         let m = model.body.as_ref().map_or(0, |b| self.deps(b, &params));
@@ -577,6 +596,9 @@ fn build_shape(
         return BuildShape::NotConstructor;
     }
     let in_cone: Vec<bool> = args.iter().map(|arg| t.deps(arg, &[param]) != 0).collect();
+    if t.too_wide.get() {
+        return BuildShape::WideModel;
+    }
     if t.exhausted.get() {
         return BuildShape::BudgetExhausted;
     }

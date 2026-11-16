@@ -576,3 +576,31 @@ fn a_recursive_model_summary_is_conservative() {
     let e = analyze_document(doc).unwrap_err();
     assert_eq!(e.stage, WarrantStage::Check, "{e}");
 }
+
+#[test]
+fn a_model_with_more_than_63_parameters_is_refused_not_approximated() {
+    // The reviewer's input: w(p0..p69) depends only on p63, called with m.b at index 69.
+    // With shared high bits that read as "p63 is the argument that matters" and hid the
+    // dependence the other way round; the walk now gives up (fail closed).
+    let wide = |n: usize| {
+        let params: Vec<String> = (0..n).map(|i| format!("p{i}: Bool")).collect();
+        let mut args = vec!["m.a".to_string(); n];
+        args[n - 1] = "m.a".to_string();
+        format!(
+            "warrant t v1\n  record M(a: Bool, b: U8)\n  record Impl(f0: U8)\n  model w({}) -> U8 = if p63 then 1u8 else 0u8\n  model build(m: M) -> Impl = (Impl(w({})))\n",
+            params.join(", "),
+            args.join(", ")
+        )
+    };
+    let a = analyze_document(&wide(70));
+    match a {
+        Ok(a) => assert_eq!(a.build, BuildShape::WideModel),
+        Err(e) => panic!("{e}"),
+    }
+    // 63 parameters are still told apart (indices 0..=62): p62 is the one used here.
+    let ok = wide(63).replace("if p63 then", "if p62 then");
+    assert!(matches!(
+        analyze_document(&ok).unwrap().build,
+        BuildShape::Constructor { .. }
+    ));
+}
