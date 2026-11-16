@@ -711,6 +711,7 @@ members = [
     "paint-batch-tiles",
     "paint-palette-blend",
     "palette-indexed",
+    "swf-container",
     "sprite-oam",
     "tilemap2d",
     "rpg-grid-world",
