@@ -10,6 +10,13 @@ CI receipts, and subsequent discoveries are maintained in the
 shard is authoritative for current implementation status; the design and
 historical rollout snapshots below remain part of this specification.
 
+**Corpus v2.** The closed profile `warrant-corpus-v2` (structural types, chunked
+digests with `slim`/`full` depth, predicate claims, data faults, `inout`/`ensures`,
+the independent oracle and the one wrapping arithmetic rule) is specified in
+[VER04r](VER04r-warrant-corpus-v2.md). It is a new profile beside this one: every
+section of this document describes `warrant-corpus-v1` and stays authoritative for it
+until VER04r slice S13 deletes v1.
+
 ## 0. Why this exists
 
 VER04h made one lane honest. For `rust/ct-compare`, every number in the
@@ -342,6 +349,15 @@ of a spec-declared width is a corpus error at *generation time*, so a lane never
 sees one). The corpus includes the 377-value `u64_edge` domain precisely so a
 lane that silently holds `U64` in a 63-bit or double type fails an exhaustive
 case, not a code review.
+
+**Erratum (VER04r section 3, 2026-11-16).** The wrapping rule above is stated for
+`U64` only, and three evaluators disagreed with it: the shipped runners refuse an
+overflow, the Python oracle used unbounded integers, and the Rust v0 harness
+evaluates `U8` as `Nat` (WD-013). The rule is: `+ - *` and unary `-` on **every**
+fixed-width type wrap modulo `2^w`; `Nat` and `Int` are exact and bounded by `2^127`
+at generation time. A v1 corpus never produces an overflow, so the v1 runners are
+unchanged; the rule binds the v2 profile, where VER04r section 3.3 also refuses a v0
+document whose `U8` arithmetic would wrap.
 
 ### 2.8 Regeneration and drift checks
 
