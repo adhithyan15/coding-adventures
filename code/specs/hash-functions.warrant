@@ -1,10 +1,10 @@
 -- DT17 -- Hash functions: FNV-1a, DJB2, polynomial rolling, MurmurHash3, SipHash.
 --
--- DRAFT, NOT WIRED (DT17a section 5).  This document parses and type-checks, and
--- its 67 examples were cross-checked against the real crate, but no
--- evidence.bindings file refers to it: gen_evidence requires a negative control
--- for every bound operation and none exists for a `Bytes -> U32/U64` operation,
--- so no harness has been generated and none of the claims has been executed.
+-- Wired (WX-P1a, DT17a): evidence.bindings binds all eight operations and the
+-- generated harness runs every claim below against the real crate.  The
+-- analyzer and the ca-assurance-report package report are NOT wired (DT17a
+-- section 7).  Negative controls: `flip-result-bit` on each U32/U64 result
+-- (WX-FAULT1) and `missing-error` on the zero-modulus rejection.
 --
 -- Warrant document for rust/hash-functions (VER04h, VER04j section 14.4, WX-P1a).
 -- Every example and claim below is compiled into tests/generated/warrant_evidence.rs

@@ -1,0 +1,42 @@
+# VER04h: the one per-package input of the evidence generator (`gen_evidence`).
+# It says which public export implements which operation of
+# code/specs/hash-functions.warrant, which deliberate faults the generated
+# negative controls attack it with (VER04h section 6), and the generation
+# parameters.  DT17a is the contract for what is and is not covered.
+#
+# Every covered operation takes a `Bytes` (and, for `siphash_2_4`, a `Bytes<16>`
+# key) and returns a fixed-width integer, so the composite adapter is used and its
+# only applicable control for a `U32`/`U64` result is `flip-result-bit` (WX-FAULT1,
+# VER04j 14.1 item 46): it XORs the least significant bit of the result.  The one
+# operation with a `Result` result, `polynomial_rolling_with_params`, gets
+# `missing-error` (`ok-as-err` is refused for it: its Ok value is a scalar).
+#
+# Defaults: `&[u8]` is `bytes`, `u32` and `u64` are the host types of `U32` and
+# `U64`, so only the key and the bounded parameters name their types.  The crate
+# function `polynomial_rolling_with_params` panics on a zero modulus; the
+# generated adapter reports the panic as the single Warrant case MODULUS_ZERO
+# (the way gf256 reports its divide-by-zero panic).
+#
+# proofs_not_live=<reason> declares that the operation's proof obligations cannot
+# be run: the Rust-subset front end refuses src/algorithms.rs (it stops at the first
+# `pub const` item, and `for &byte in data` and `as_chunks` also fail), and the
+# proof manifest records the siphash_2_4 constant-time obligation `not-live` with
+# the front end's own message.
+package coding_adventures_hash_functions
+revision 0.1.0
+spec code/specs/hash-functions.warrant
+output code/packages/rust/hash-functions/tests/generated/warrant_evidence.rs
+seed 0x4841_5348_5f46_4e53
+property_cases 4096
+fuzz_iterations 5000
+negctl_fuzz_iterations 1000
+exhaustive_budget 16777216
+
+op fnv1a_32 export=fnv1a_32 faults=flip-result-bit proofs_not_live=frontend-refuses-lib
+op fnv1a_64 export=fnv1a_64 faults=flip-result-bit proofs_not_live=frontend-refuses-lib
+op djb2 export=djb2 faults=flip-result-bit proofs_not_live=frontend-refuses-lib
+op polynomial_rolling export=polynomial_rolling faults=flip-result-bit proofs_not_live=frontend-refuses-lib
+op polynomial_rolling_with_params export=polynomial_rolling_with_params args=bytes,u64,u64 error=MODULUS_ZERO faults=missing-error proofs_not_live=frontend-refuses-lib
+op murmur3_32 export=murmur3_32 faults=flip-result-bit proofs_not_live=frontend-refuses-lib
+op murmur3_32_with_seed export=murmur3_32_with_seed args=bytes,u32 faults=flip-result-bit proofs_not_live=frontend-refuses-lib
+op siphash_2_4 export=siphash_2_4 args=bytes,bytes<16> faults=flip-result-bit proofs_not_live=frontend-refuses-lib
