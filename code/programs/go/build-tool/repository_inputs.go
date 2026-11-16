@@ -147,10 +147,12 @@ var (
 	trigReferenceInputPaths = []string{
 		"code/specs/fixtures/trig-reference-v1",
 		"code/scripts/generate_trig_reference_fixture.py",
+		"code/scripts/generate_trig_reference_dart_fixtures.py",
 		"code/scripts/trig_ref_exact.py",
 		"code/scripts/trig_ref_softfloat.py",
 		"code/scripts/trig_reference_xcheck",
 		"code/scripts/tests/test_trig_reference_fixture.py",
+		"code/scripts/tests/test_trig_reference_dart_fixtures.py",
 	}
 
 	rngCorpusPaths         = []string{"code/specs/fixtures/rng-v1"}
@@ -381,6 +383,93 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		name:     "cpp/trig",
 		language: "cpp",
 		inputs:   "the shared TRIG-REF-1 bit-exact conformance corpus",
+		matches:  isTrigReferenceCorpus,
+		paths:    trigReferenceCorpusPaths,
+	},
+	{
+		name:     "ruby/trig",
+		language: "ruby",
+		inputs:   "the shared TRIG-REF-1 bit-exact conformance corpus",
+		matches:  isTrigReferenceCorpus,
+		paths:    trigReferenceCorpusPaths,
+	},
+	{
+		name:     "haskell/trig",
+		language: "haskell",
+		inputs:   "the shared TRIG-REF-1 bit-exact conformance corpus",
+		matches:  isTrigReferenceCorpus,
+		paths:    trigReferenceCorpusPaths,
+	},
+	{
+		name:     "java/trig",
+		language: "java",
+		inputs:   "the shared TRIG-REF-1 bit-exact conformance corpus",
+		matches:  isTrigReferenceCorpus,
+		paths:    trigReferenceCorpusPaths,
+	},
+	{
+		name:     "kotlin/trig",
+		language: "kotlin",
+		inputs:   "the shared TRIG-REF-1 bit-exact conformance corpus",
+		matches:  isTrigReferenceCorpus,
+		paths:    trigReferenceCorpusPaths,
+	},
+	{
+		name:     "swift/trig",
+		language: "swift",
+		inputs:   "the shared TRIG-REF-1 bit-exact conformance corpus",
+		matches:  isTrigReferenceCorpus,
+		paths:    trigReferenceCorpusPaths,
+	},
+	{
+		name:     "csharp/trig",
+		language: "csharp",
+		inputs:   "the shared TRIG-REF-1 bit-exact conformance corpus",
+		matches:  isTrigReferenceCorpus,
+		paths:    trigReferenceCorpusPaths,
+	},
+	{
+		name:     "fsharp/trig",
+		language: "fsharp",
+		inputs:   "the shared TRIG-REF-1 bit-exact conformance corpus",
+		matches:  isTrigReferenceCorpus,
+		paths:    trigReferenceCorpusPaths,
+	},
+	{
+		name:     "lua/trig",
+		language: "lua",
+		inputs:   "the shared TRIG-REF-1 bit-exact conformance corpus",
+		matches:  isTrigReferenceCorpus,
+		paths:    trigReferenceCorpusPaths,
+	},
+	{
+		name:     "perl/trig",
+		language: "perl",
+		inputs:   "the shared TRIG-REF-1 bit-exact conformance corpus",
+		matches:  isTrigReferenceCorpus,
+		paths:    trigReferenceCorpusPaths,
+	},
+	{
+		name:     "elixir/trig",
+		language: "elixir",
+		inputs:   "the shared TRIG-REF-1 bit-exact conformance corpus",
+		matches:  isTrigReferenceCorpus,
+		paths:    trigReferenceCorpusPaths,
+	},
+	{
+		name:     "go/trig",
+		language: "go",
+		inputs:   "the shared TRIG-REF-1 bit-exact conformance corpus",
+		matches:  isTrigReferenceCorpus,
+		paths:    trigReferenceCorpusPaths,
+	},
+	{
+		// Dart's test reads the generated trig_reference_vectors.dart, not the TSVs;
+		// python/trig's BUILD --check keeps that file in step with the corpus, and a
+		// corpus change re-runs these tests against it.
+		name:     "dart/trig",
+		language: "dart",
+		inputs:   "the shared TRIG-REF-1 corpus, via the generated Dart vector source",
 		matches:  isTrigReferenceCorpus,
 		paths:    trigReferenceCorpusPaths,
 	},
@@ -992,9 +1081,11 @@ func isTrigReferenceInput(changed string) bool {
 	}
 	switch changed {
 	case "code/scripts/generate_trig_reference_fixture.py",
+		"code/scripts/generate_trig_reference_dart_fixtures.py",
 		"code/scripts/trig_ref_exact.py",
 		"code/scripts/trig_ref_softfloat.py",
-		"code/scripts/tests/test_trig_reference_fixture.py":
+		"code/scripts/tests/test_trig_reference_fixture.py",
+		"code/scripts/tests/test_trig_reference_dart_fixtures.py":
 		return true
 	}
 	return strings.HasPrefix(changed, "code/scripts/trig_reference_xcheck/")
