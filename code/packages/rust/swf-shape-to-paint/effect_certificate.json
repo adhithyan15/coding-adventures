@@ -1,0 +1,27 @@
+{
+  "schema_version": "ver24-effect-cert-v1",
+  "package": "rust/swf-shape-to-paint",
+  "source_digest": "d08e2b25824aaae4efe3c2f03d3280a3e71ce7ae3d6402dd8a10681f78bab4fa",
+  "manifest_digest": "1f45445c9f0d401cdad9ad39810e5a29506e956626c9971934f45384f09fde90",
+  "declared_effects": [],
+  "entry_points": [
+    {
+      "name": "validate_shape_tag",
+      "signature": "pub fn validate_shape_tag(tag_code: usize) -> Result<bool, ShapeError>",
+      "effects": []
+    },
+    {
+      "name": "validate_twips",
+      "signature": "pub fn validate_twips(t: i32) -> Result<bool, ShapeError>",
+      "effects": []
+    },
+    {
+      "name": "validate_style_count",
+      "signature": "pub fn validate_style_count(count: usize) -> Result<bool, ShapeError>",
+      "effects": []
+    }
+  ],
+  "unconditional_roots": [],
+  "banned_construct_exceptions": [],
+  "label": "proved"
+}
