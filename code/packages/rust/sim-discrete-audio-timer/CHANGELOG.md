@@ -2,6 +2,11 @@
 
 All notable changes to `sim-discrete-audio-timer` will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+- `code/specs/sim-discrete-audio-timer.warrant` was invalid Warrant (`/`); rewritten with `div`. Document only.
+
 ## [0.1.0] - 2026-11-15
 
 ### Added
