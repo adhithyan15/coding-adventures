@@ -401,12 +401,13 @@ once per profile.
   cannot resolve method calls or trait paths (limit 4), so the UFCS form is a
   stopgap that keeps a grep-level audit possible until the reach pass learns
   trait paths (VER29 slice 4, section 12). Detail: VOS01 section 1.2.
-* The contract package owns the contract document. Each implementation package
+* The contract package owns the contract text. Each implementation package
   carries a *generated, digest-checked* document: the contract block copied
-  verbatim plus its own implementation block (a `.warrant` stem is a package
-  directory and a document has no imports, VER29 sections 3.1 and 15). A profile
-  manifest records which implementation realises which interface, with digests
-  of the contract and implementation. Detail: VOS01 section 2.10, VOS-D003.
+  verbatim, its own implementation block, and the obligations blocks it carries
+  (a `.warrant` stem is a package directory and a document has no imports, VER29
+  sections 3.1 and 15). A profile manifest (authored `profile.vos`, generated
+  `profile.lock`) records which implementation realises which interface, with
+  digests of the contract and implementation. Detail: VOS02 sections 2 and 6.
 
 ### 4.6 The HAL
 
@@ -422,26 +423,44 @@ ladder.
 ### 4.7 What this needs from VER29
 
 VER29's ids are `contract.<package>.<claim>` and are tied to the implementing
-package. VOS wants the opposite: the contract is owned by a contract package
-and *several* implementation packages realise it. Two options exist and the
-choice is the open decision in section 14.3:
+package (section 3.1 there), while VOS wants a contract owned by one package and
+realised by *several* implementations. This section first said the program's
+direction was for the contract package to own the ids and for implementations to
+discharge them. **That direction is reversed by [VOS02](VOS02-interface-contracts-and-profile-linking.md)**
+(backlog VOS-004, decision D1), for the reasons in its section 1.3: an interface
+document has only lemmas and a lemma earns no strength; the realiser is chosen by
+the profile, which is a sibling of the spine and not a dependency of it, so VER29's
+direct-edge rule cannot reach it; refinement claims mention the implementation's
+own state, so "one id, one text" cannot hold; and slice 2 of VER29 is frozen for
+LV-006.
 
-1. **Contract package owns the ids.** `contract.vos-sched-contract.pick_ready`
-   is published by the contract package, and implementations prove refinement
-   against it. This needs an amendment to VER29 so that an implementation
-   package can *discharge* an id owned by another package.
-2. **Each implementation re-publishes under its own id,** with an
-   equivalence claim linking the two. This needs no VER29 change but
-   duplicates the contract text and invites drift.
+The decision, in four lines:
 
-The program's direction is option 1, amended through the existing backlog row
-LV-005 rather than forking VER29 (risk 4). VOS02 (backlog VOS-004) carries the
-exact amendment text. The decision must cover all four id kinds, functional,
-resource, timing and capability (VER29 section 3.1), not only the functional one
-used above: a VOS contract has bounds, a footprint and, for partitioned
-profiles, timing, and VER29 does not publish the last three until its slice 2
-(section 13 there). Until then bounds and footprint are checked at the profile
-gate, not linked by id.
+1. **Ids stay stock VER29**: `contract.<impl-package>.<claim>`, published by the
+   implementation. No new id shape and no change to VER29 sections 3, 5.1(a)-(e),
+   6 or 9.
+2. **The contract package owns the text.** It owns the contract block, one
+   obligations block per tier and the ceilings. Each implementation's document is
+   *generated*: the contract block, then its own implementation block, then the
+   obligations blocks it carries, copied verbatim between marker comments with
+   digests, checked by regeneration.
+3. **Conformance is digest equality**: the implementation's `claim_sha256` for each
+   obligation equals the contract's, and VER29 sections 5.1(b)-(e) hold. The
+   implementation block uses one fixed vocabulary (`Impl`, `build`, `alpha`, ...),
+   which is what makes the equality possible.
+4. **VER29 is amended only in its reach rules and its feature rule** (new slice 7,
+   backlog LV-008): `<P::A as T>::f` is an interface use composed through the
+   profile's `impl` block, and an evidence-only feature that gates one module is
+   not `build-config-unpinned`.
+
+The decision covers all four id kinds, functional, resource, timing and capability
+(VER29 section 3.1): VOS02 section 8 states what each checks today and what the
+`contract.<impl>.resource...` ids would add later. Until VER29 publishes the last
+three (its slice 2) bounds and footprint are checked at the profile gate by a VOS
+validator, not linked by id. A new finding there: VER29 section 7.2.1 withholds
+resource, timing and capability strengths for any contract-less dependency, and
+class K crates depend on `core`, so a VER13 catalogue entry for `core` is needed
+(backlog AS-008).
 
 ### 4.8 A kernel entry, step by step
 
@@ -814,7 +833,8 @@ printing rules follow:
    evidenced at (N, P, priority levels). Today a pinned example checks the
    value; a manifest and report field to print it, and the binding support the
    refinement claims need (private-field state, variant-result faults), are
-   VOS-D006, folded into VOS-004 (VOS01 sections 1.5, 2.3 and 2.9).
+   VOS-D006, resolved in VOS02 section 4 (a ghost face now) and VER backlog row
+   WX-SV (the generator support later).
 2. Counts per kind are manifest-derived. The VER-P030 audit found hard-coded
    counts; this program never has one.
 3. A claim that rests on `-any` says so, because that is the evidence that it
@@ -929,7 +949,7 @@ row from 4 on.
 |---|---|---|---|
 | 0 | None: by-value claims, property tests, fuzz and sabotage work now | n/a | First components and the monitor |
 | 1 | Per-kind case counts (full, sampled, bounded-set) | LP-012 | Honest X1 and X2 labels (section 9) |
-| 2 | Contract linking, slices 1 and 2, and the interface-id decision | VER29 via LV-005 (section 4.7) | Contract package plus several implementations |
+| 2 | Contract linking, slices 1 and 2, and interface reach (slice 7, the VOS02 amendment) | VER29 via LV-005 and LV-008 (section 4.7, VOS02 section 9) | Contract package plus several implementations |
 | 3 | `inout` and explicit-state steps | WX-G, WX-S1 (VER04m) | An `inout` wrapper at the HAL edge only |
 | 4 | Functional equivalence and bounded unrolling | WX-SP1, WX-D3 | Any `proved` label. Without WX-SP1 no `proved` is possible for a stateful step |
 | 5 | Symbolic RV32 executor | VER13 section 4.3 item 2 | X3 on the image |
@@ -1003,7 +1023,7 @@ never folded into a single row (risk 12).
 
 | # | Decision | Where it lands |
 |---|---|---|
-| D1 | Contract-package-owned ids versus implementation-owned ids (section 4.7) | VOS-004 (VOS02) with VER29 amendment text |
+| D1 | Contract-package-owned ids versus implementation-owned ids (section 4.7) | Decided in VOS02 (VOS-004, 2026-11-16): implementation-owned ids with contract-owned verbatim obligations, conformance by digest; the VER29 amendment is LV-008 |
 | D2 | When to adopt `inout` at the HAL edge | After WX-G and WX-S1; not before |
 | D3 | Whether the ladder's early rungs get a numbered Warrant reference model per rung or one shared model per machine | Decided in the first rung spec (VOS-007) |
 | D4 | The exact reduced configuration for X1 per component | Decided with the measurement in VOS-028 |
