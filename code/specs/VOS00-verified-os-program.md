@@ -857,9 +857,17 @@ shipping, because without them an R3 family would count as exhaustive
               at every trap, abstract K via alpha and check the transition
               against the kernel model.                 label: randomized
    LATER      symbolic RV32 execution of each compiled kernel entry, trap
-              vector to mret, mitered against the bit-blasted model and
+              vector to mret, cut into small obligations (per path, per
+              cut point), each mitered against the bit-blasted model and
               DRAT-checked, per instance.                 label: proved (X3)
 ```
+
+**X3 is compositional, never one monolithic miter.** A single miter over a
+whole entry is past the solver's cliff (a dependent chain of 25 ALU steps
+already needs about 240,000 conflicts; section 10.2), so the proof is a set
+of obligations tied together by cut points, a composition argument and a
+manifest. The route, the obligation kinds and the capacity probe are specified
+in [VOS30](VOS30-proof-route-and-capacity.md) (backlog VOS-028a and VOS-028b).
 
 **Why not lower the Rust to WIR.** VER25a's subset has no struct, enum, match,
 while, trait or impl, so the kernel cannot be lowered, and a kernel written to
@@ -880,11 +888,14 @@ The symbolic executor in `code/packages/rust/warrant-ir/src/sym.rs` refuses
 `CallFunction` (an inliner exists, capped at 64), refuses `CallCapability`
 and refuses a symbolic allocation size. It has no array theory, and the
 EUF/LIA/arrays work (VER10 remainder) is not done. A kernel entry with
-bounded, loop-free or constant-bounded code and fixed-size arrays is within
-reach of inlining plus bit-blasting; a general page-table walk is not until
-arrays land. That is why the GPOS profile starts at X1 and X2 (section 11).
-Solver capacity at kernel-entry size is unmeasured; backlog VOS-028 measures
-it early, and the answer may change phasing.
+bounded, loop-free or constant-bounded code is within reach of inlining plus
+bit-blasting, and fixed-size arrays are within reach **only for concrete or
+case-split indices**: with symbolic indices the calibrated limit is about two
+chained accesses into an eight-word table (VOS30 section 8.2). A general
+page-table walk is not within reach until arrays land. That is why the GPOS profile starts at X1 and X2 (section 11).
+Solver capacity at kernel-entry size is unmeasured: an advisor calibration
+exists (VOS30 section 8.2, not reproducible from the repository) and backlog
+VOS-028b measures it with a committed probe; the answer may change phasing.
 
 ### 10.3 The trusted base
 
@@ -1026,7 +1037,7 @@ never folded into a single row (risk 12).
 | D1 | Contract-package-owned ids versus implementation-owned ids (section 4.7) | Decided in VOS02 (VOS-004, 2026-11-16): implementation-owned ids with contract-owned verbatim obligations, conformance by digest; the VER29 amendment is LV-008 |
 | D2 | When to adopt `inout` at the HAL edge | After WX-G and WX-S1; not before |
 | D3 | Whether the ladder's early rungs get a numbered Warrant reference model per rung or one shared model per machine | Decided in the first rung spec (VOS-007) |
-| D4 | The exact reduced configuration for X1 per component | Decided with the measurement in VOS-028 |
+| D4 | The exact reduced configuration for X1 per component | Decided with the measurement in VOS-028b (provisional guidance in [VOS30](VOS30-proof-route-and-capacity.md) section 8.5) |
 | D5 | Whether the AGC simulator and the Atlas simulator are built in this program or contributed through the CPU simulator backlog | Decided when VOS-018 is scheduled |
 
 ### 14.4 What this program does not buy
@@ -1099,3 +1110,20 @@ secondary summary, the table in section 6.5 says what could not be confirmed.
   2009, https://trustworthy.systems/publications/papers/Klein_EHACDEEKNSTW_09.abstract
 * Multics: Multicians, "Multics history", https://multicians.org/history.html
   and https://multicians.org/chrono.html
+
+### 2026-11-16: the X3 route is compositional (VOS30)
+
+The advisor's capacity calibration for the machine-proof stage (VOS30 section 8.2,
+scratch numbers) found that instruction count is not what makes a miter hard;
+structural divergence between compiled code and model is, in arithmetic and in
+symbolic-offset memory. A monolithic miter over a realistic entry already sits in
+the "re-plan" row (a dependent ALU chain is not green from 25 steps; a mux over an
+eight-word table is not green at two chained accesses), while per-instruction cut
+points took the 25-step case from 6.5 s to 31 ms. VOS00 section 10.1 is corrected
+accordingly: **X3 is compositional, never one monolithic miter**, and VOS-029 is
+designed with cut points, per-path splitting and concrete addresses from the start.
+Section 10.2's sentence that fixed-size arrays are within reach of inlining plus
+bit-blasting is corrected to "only for concrete or case-split indices". The route is
+specified in [VOS30](VOS30-proof-route-and-capacity.md) (VOS-028a); the probe that
+decides whether the compositional route is funded is VOS-028b; VOS-029 is not funded
+until that decision.
