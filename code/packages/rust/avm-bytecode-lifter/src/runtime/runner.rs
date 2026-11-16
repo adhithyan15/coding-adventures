@@ -280,6 +280,108 @@ impl AvmRunner {
             Ok(Value::str(mname))
         });
 
+        // 9. Extended AVM2 arithmetic, logical, and property built-ins
+        builtins.register("flash_modulo", |args| {
+            if args.len() < 2 {
+                return Ok(Value::Int(0));
+            }
+            match (&args[0], &args[1]) {
+                (Value::Int(a), Value::Int(b)) => {
+                    if *b == 0 {
+                        Ok(Value::Float(f64::NAN))
+                    } else {
+                        Ok(Value::Int(a.wrapping_rem(*b)))
+                    }
+                }
+                (Value::Float(a), Value::Float(b)) => Ok(Value::Float(a % b)),
+                (Value::Int(a), Value::Float(b)) => Ok(Value::Float((*a as f64) % b)),
+                (Value::Float(a), Value::Int(b)) => Ok(Value::Float(a % (*b as f64))),
+                _ => Ok(Value::Int(0)),
+            }
+        });
+
+        builtins.register("flash_negate", |args| match args.first() {
+            Some(Value::Int(n)) => Ok(Value::Int(-*n)),
+            Some(Value::Float(f)) => Ok(Value::Float(-*f)),
+            _ => Ok(Value::Int(0)),
+        });
+
+        builtins.register("flash_increment", |args| match args.first() {
+            Some(Value::Int(n)) => Ok(Value::Int(n.wrapping_add(1))),
+            Some(Value::Float(f)) => Ok(Value::Float(f + 1.0)),
+            _ => Ok(Value::Int(1)),
+        });
+
+        builtins.register("flash_decrement", |args| match args.first() {
+            Some(Value::Int(n)) => Ok(Value::Int(n.wrapping_sub(1))),
+            Some(Value::Float(f)) => Ok(Value::Float(f - 1.0)),
+            _ => Ok(Value::Int(-1)),
+        });
+
+        builtins.register("flash_not", |args| {
+            let is_truthy = match args.first() {
+                Some(Value::Bool(b)) => *b,
+                Some(Value::Int(n)) => *n != 0,
+                Some(Value::Float(f)) => *f != 0.0 && !f.is_nan(),
+                Some(Value::Str(s)) => !s.is_empty(),
+                Some(Value::Null) | None => false,
+                _ => true,
+            };
+            Ok(Value::Bool(!is_truthy))
+        });
+
+        builtins.register("flash_le2", |args| {
+            if args.len() < 2 {
+                return Ok(Value::Bool(false));
+            }
+            let le = match (&args[0], &args[1]) {
+                (Value::Int(a), Value::Int(b)) => a <= b,
+                (Value::Float(a), Value::Float(b)) => a <= b,
+                (Value::Int(a), Value::Float(b)) => (*a as f64) <= *b,
+                (Value::Float(a), Value::Int(b)) => *a <= (*b as f64),
+                (Value::Str(a), Value::Str(b)) => a <= b,
+                _ => false,
+            };
+            Ok(Value::Bool(le))
+        });
+
+        builtins.register("flash_gt2", |args| {
+            if args.len() < 2 {
+                return Ok(Value::Bool(false));
+            }
+            let gt = match (&args[0], &args[1]) {
+                (Value::Int(a), Value::Int(b)) => a > b,
+                (Value::Float(a), Value::Float(b)) => a > b,
+                (Value::Int(a), Value::Float(b)) => (*a as f64) > *b,
+                (Value::Float(a), Value::Int(b)) => *a > (*b as f64),
+                (Value::Str(a), Value::Str(b)) => a > b,
+                _ => false,
+            };
+            Ok(Value::Bool(gt))
+        });
+
+        builtins.register("flash_ge2", |args| {
+            if args.len() < 2 {
+                return Ok(Value::Bool(false));
+            }
+            let ge = match (&args[0], &args[1]) {
+                (Value::Int(a), Value::Int(b)) => a >= b,
+                (Value::Float(a), Value::Float(b)) => a >= b,
+                (Value::Int(a), Value::Float(b)) => (*a as f64) >= *b,
+                (Value::Float(a), Value::Int(b)) => *a >= (*b as f64),
+                (Value::Str(a), Value::Str(b)) => a >= b,
+                _ => false,
+            };
+            Ok(Value::Bool(ge))
+        });
+
+        let env_cprop_ctor = env.clone();
+        builtins.register("flash_construct_property", move |args| {
+            let class_name = args.first().map_or("Object".to_string(), format_avm_value);
+            let id = env_cprop_ctor.env_new_object(&class_name);
+            Ok(Value::Int(id as i64))
+        });
+
         Ok(())
     }
 }

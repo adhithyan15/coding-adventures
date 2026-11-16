@@ -11,7 +11,7 @@ use interpreter_ir::module::IIRModule;
 use super::action::{Avm1Action, Avm1ActionKind};
 use super::value::Avm1Value;
 use super::verifier::Avm1Verifier;
-use crate::error::{LifterError, MAX_INSTRUCTIONS};
+use crate::error::{LifterError, MAX_FUNCTION_DEPTH, MAX_INSTRUCTIONS};
 
 /// AVM1 bytecode lifter targeting InterpreterIR.
 pub struct Avm1Lifter {
@@ -55,7 +55,7 @@ impl Avm1Lifter {
         }
 
         // Lift main body
-        let main_instrs = self.a1l_lift_actions(actions, total_len, "main")?;
+        let main_instrs = self.a1l_lift_actions(actions, total_len, "main", 0)?;
         let main_fn = IIRFunction::new("main", vec![], "void", main_instrs);
         module.add_or_replace(main_fn);
 
@@ -96,7 +96,12 @@ impl Avm1Lifter {
         actions: &[Avm1Action],
         total_len: usize,
         fn_name: &str,
+        depth: usize,
     ) -> Result<Vec<IIRInstr>, LifterError> {
+        if depth > MAX_FUNCTION_DEPTH {
+            return Err(LifterError::FunctionLimitExceeded);
+        }
+
         let mut instrs = Vec::new();
 
         // Identify which offsets are jump targets
@@ -105,9 +110,13 @@ impl Avm1Lifter {
             if let Avm1ActionKind::BranchAlways(off) | Avm1ActionKind::BranchIfTrue(off) =
                 &action.kind
             {
-                let next_off = action.offset + action.length;
-                let tgt = ((next_off as isize) + (*off as isize)) as usize;
-                jump_targets.insert(tgt);
+                if let Some(next_off) = action.offset.checked_add(action.length) {
+                    if let Some(tgt_i64) = (next_off as i64).checked_add(*off as i64) {
+                        if let Ok(tgt) = usize::try_from(tgt_i64) {
+                            jump_targets.insert(tgt);
+                        }
+                    }
+                }
             }
         }
 
@@ -630,8 +639,15 @@ impl Avm1Lifter {
                     )?;
                 }
                 Avm1ActionKind::BranchAlways(off) => {
-                    let next_off = action.offset + action.length;
-                    let tgt = ((next_off as isize) + (*off as isize)) as usize;
+                    let next_off = action
+                        .offset
+                        .checked_add(action.length)
+                        .ok_or(LifterError::InvalidBranchTarget)?;
+                    let tgt_i64 = (next_off as i64)
+                        .checked_add(*off as i64)
+                        .ok_or(LifterError::InvalidBranchTarget)?;
+                    let tgt =
+                        usize::try_from(tgt_i64).map_err(|_| LifterError::InvalidBranchTarget)?;
                     let target_lbl = format!("{}_off_{}", fn_name, tgt);
                     self.a1l_emit(
                         &mut instrs,
@@ -642,8 +658,15 @@ impl Avm1Lifter {
                     if stack_depth >= 1 {
                         let cond = format!("%s{}", stack_depth - 1);
                         stack_depth -= 1;
-                        let next_off = action.offset + action.length;
-                        let tgt = ((next_off as isize) + (*off as isize)) as usize;
+                        let next_off = action
+                            .offset
+                            .checked_add(action.length)
+                            .ok_or(LifterError::InvalidBranchTarget)?;
+                        let tgt_i64 = (next_off as i64)
+                            .checked_add(*off as i64)
+                            .ok_or(LifterError::InvalidBranchTarget)?;
+                        let tgt = usize::try_from(tgt_i64)
+                            .map_err(|_| LifterError::InvalidBranchTarget)?;
                         let target_lbl = format!("{}_off_{}", fn_name, tgt);
                         self.a1l_emit(
                             &mut instrs,
@@ -681,7 +704,8 @@ impl Avm1Lifter {
                     } else {
                         name.clone()
                     };
-                    let nested_instrs = self.a1l_lift_actions(body, *body_len, &func_sym)?;
+                    let nested_instrs =
+                        self.a1l_lift_actions(body, *body_len, &func_sym, depth + 1)?;
                     let param_entries: Vec<(String, String)> = params
                         .iter()
                         .map(|p| (p.clone(), "any".to_string()))
@@ -724,7 +748,8 @@ impl Avm1Lifter {
                     } else {
                         name.clone()
                     };
-                    let nested_instrs = self.a1l_lift_actions(body, *body_len, &func_sym)?;
+                    let nested_instrs =
+                        self.a1l_lift_actions(body, *body_len, &func_sym, depth + 1)?;
                     let param_entries: Vec<(String, String)> = params
                         .iter()
                         .map(|(_, pname)| (pname.clone(), "any".to_string()))

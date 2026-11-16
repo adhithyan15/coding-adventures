@@ -1,7 +1,7 @@
 {
   "schema_version": "ver24-effect-cert-v1",
   "package": "rust/avm-bytecode-lifter",
-  "source_digest": "34af2fb803d523b0d0e7e31bce2352353f82a21fd14da3f604c2bffedb8472d1",
+  "source_digest": "7712cb8d20faf284b443fe76872aa14c7b371eff4149ca788590d429e80310e9",
   "manifest_digest": "863f4dc0b01536893052345d2a002a2f9c1766e63d40b5e5233bd51c004e6e4f",
   "declared_effects": [],
   "entry_points": [

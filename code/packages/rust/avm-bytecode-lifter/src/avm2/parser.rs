@@ -4,7 +4,10 @@
 
 use super::abc_file::{AbcFile, AbcMethod, AbcMethodBody, AbcScript};
 use super::cpool::{AbcConstantPool, AbcMultiname, AbcNamespace};
-use crate::error::{LifterError, MAX_BYTECODE_SIZE, MAX_CONSTANTS};
+use crate::error::{
+    LifterError, MAX_BYTECODE_SIZE, MAX_CODE_BYTES, MAX_CONSTANTS, MAX_FUNCTIONS, MAX_METHODS,
+    MAX_SCRIPTS,
+};
 
 /// Bounded parser for ABC binary bytecode files.
 pub struct AbcParser<'a> {
@@ -32,18 +35,29 @@ impl<'a> AbcParser<'a> {
             return Err(LifterError::UnexpectedEof);
         }
         let b = self.data[self.pos];
-        self.pos += 1;
+        self.pos = self
+            .pos
+            .checked_add(1)
+            .ok_or_else(|| LifterError::InvalidBytecode("offset overflow".to_string()))?;
         Ok(b)
     }
 
+    fn a2p_read_slice(&mut self, len: usize) -> Result<&'a [u8], LifterError> {
+        let slice = self
+            .data
+            .get(self.pos..)
+            .and_then(|tail| tail.get(..len))
+            .ok_or(LifterError::UnexpectedEof)?;
+        self.pos = self
+            .pos
+            .checked_add(len)
+            .ok_or_else(|| LifterError::InvalidBytecode("offset overflow".to_string()))?;
+        Ok(slice)
+    }
+
     fn a2p_read_u16_le(&mut self) -> Result<u16, LifterError> {
-        if self.a2p_remaining() < 2 {
-            return Err(LifterError::UnexpectedEof);
-        }
-        let b0 = self.data[self.pos] as u16;
-        let b1 = self.data[self.pos + 1] as u16;
-        self.pos += 2;
-        Ok(b0 | (b1 << 8))
+        let slice = self.a2p_read_slice(2)?;
+        Ok((slice[0] as u16) | ((slice[1] as u16) << 8))
     }
 
     /// Read an unsigned variable-length 30-bit integer (u30 / LEB128).
@@ -54,6 +68,11 @@ impl<'a> AbcParser<'a> {
             let b = self.a2p_read_u8()?;
             result |= ((b & 0x7F) as u32) << shift;
             if (b & 0x80) == 0 {
+                if result > 0x3FFF_FFFF {
+                    return Err(LifterError::InvalidBytecode(
+                        "u30 value exceeds 30 bits (0x3FFF_FFFF)".to_string(),
+                    ));
+                }
                 return Ok(result);
             }
             shift += 7;
@@ -87,13 +106,8 @@ impl<'a> AbcParser<'a> {
     }
 
     fn a2p_read_f64_le(&mut self) -> Result<f64, LifterError> {
-        if self.a2p_remaining() < 8 {
-            return Err(LifterError::UnexpectedEof);
-        }
-        let bytes: [u8; 8] = self.data[self.pos..self.pos + 8]
-            .try_into()
-            .map_err(|_| LifterError::UnexpectedEof)?;
-        self.pos += 8;
+        let slice = self.a2p_read_slice(8)?;
+        let bytes: [u8; 8] = slice.try_into().map_err(|_| LifterError::UnexpectedEof)?;
         Ok(f64::from_le_bytes(bytes))
     }
 
@@ -106,11 +120,18 @@ impl<'a> AbcParser<'a> {
 
         // Methods
         let method_count = self.a2p_read_u30()? as usize;
-        let mut methods = Vec::with_capacity(method_count.min(1024));
+        if method_count > MAX_FUNCTIONS {
+            return Err(LifterError::FunctionLimitExceeded);
+        }
+        let cap = method_count.min(self.a2p_remaining());
+        let mut methods = Vec::with_capacity(cap);
         for _ in 0..method_count {
             let param_count = self.a2p_read_u30()? as usize;
+            if param_count > 256 {
+                return Err(LifterError::MethodBodyLimitExceeded);
+            }
             let return_type = self.a2p_read_u30()?;
-            let mut param_types = Vec::with_capacity(param_count.min(64));
+            let mut param_types = Vec::with_capacity(param_count.min(self.a2p_remaining()));
             for _ in 0..param_count {
                 param_types.push(self.a2p_read_u30()?);
             }
@@ -140,6 +161,9 @@ impl<'a> AbcParser<'a> {
 
         // Metadata
         let metadata_count = self.a2p_read_u30()? as usize;
+        if metadata_count > MAX_METHODS {
+            return Err(LifterError::MethodBodyLimitExceeded);
+        }
         for _ in 0..metadata_count {
             let _name = self.a2p_read_u30()?;
             let item_count = self.a2p_read_u30()? as usize;
@@ -151,6 +175,9 @@ impl<'a> AbcParser<'a> {
 
         // Instances & Classes
         let class_count = self.a2p_read_u30()? as usize;
+        if class_count > MAX_METHODS {
+            return Err(LifterError::MethodBodyLimitExceeded);
+        }
         for _ in 0..class_count {
             let _name = self.a2p_read_u30()?;
             let _super_name = self.a2p_read_u30()?;
@@ -172,7 +199,10 @@ impl<'a> AbcParser<'a> {
 
         // Scripts
         let script_count = self.a2p_read_u30()? as usize;
-        let mut scripts = Vec::with_capacity(script_count.min(16));
+        if script_count > MAX_SCRIPTS {
+            return Err(LifterError::MethodBodyLimitExceeded);
+        }
+        let mut scripts = Vec::with_capacity(script_count.min(self.a2p_remaining()));
         for _ in 0..script_count {
             let init_method = self.a2p_read_u30()?;
             self.a2p_skip_traits()?;
@@ -181,7 +211,10 @@ impl<'a> AbcParser<'a> {
 
         // Method bodies
         let body_count = self.a2p_read_u30()? as usize;
-        let mut method_bodies = Vec::with_capacity(body_count.min(1024));
+        if body_count > MAX_FUNCTIONS {
+            return Err(LifterError::FunctionLimitExceeded);
+        }
+        let mut method_bodies = Vec::with_capacity(body_count.min(self.a2p_remaining()));
         for _ in 0..body_count {
             let method_index = self.a2p_read_u30()?;
             let max_stack = self.a2p_read_u30()?;
@@ -190,11 +223,11 @@ impl<'a> AbcParser<'a> {
             let max_scope_depth = self.a2p_read_u30()?;
             let code_length = self.a2p_read_u30()? as usize;
 
-            if self.a2p_remaining() < code_length {
-                return Err(LifterError::UnexpectedEof);
+            if code_length > MAX_CODE_BYTES {
+                return Err(LifterError::MethodBodyLimitExceeded);
             }
-            let code = self.data[self.pos..self.pos + code_length].to_vec();
-            self.pos += code_length;
+            let code_slice = self.a2p_read_slice(code_length)?;
+            let code = code_slice.to_vec();
 
             let exception_count = self.a2p_read_u30()? as usize;
             for _ in 0..exception_count {
@@ -228,6 +261,9 @@ impl<'a> AbcParser<'a> {
 
     fn a2p_skip_traits(&mut self) -> Result<(), LifterError> {
         let trait_count = self.a2p_read_u30()? as usize;
+        if trait_count > 1024 {
+            return Err(LifterError::MethodBodyLimitExceeded);
+        }
         for _ in 0..trait_count {
             let _name = self.a2p_read_u30()?;
             let kind_byte = self.a2p_read_u8()?;
@@ -275,7 +311,11 @@ impl<'a> AbcParser<'a> {
 
         // Integers
         let int_count = self.a2p_read_u30()? as usize;
+        if int_count > MAX_CONSTANTS {
+            return Err(LifterError::ConstantPoolLimitExceeded);
+        }
         if int_count > 0 {
+            cpool.integers = Vec::with_capacity(int_count.min(self.a2p_remaining() + 1));
             cpool.integers.push(0); // index 0 dummy
             for _ in 1..int_count {
                 cpool.integers.push(self.a2p_read_s32()?);
@@ -284,7 +324,11 @@ impl<'a> AbcParser<'a> {
 
         // Uintegers
         let uint_count = self.a2p_read_u30()? as usize;
+        if uint_count > MAX_CONSTANTS {
+            return Err(LifterError::ConstantPoolLimitExceeded);
+        }
         if uint_count > 0 {
+            cpool.uintegers = Vec::with_capacity(uint_count.min(self.a2p_remaining() + 1));
             cpool.uintegers.push(0);
             for _ in 1..uint_count {
                 cpool.uintegers.push(self.a2p_read_u30()?);
@@ -293,7 +337,11 @@ impl<'a> AbcParser<'a> {
 
         // Doubles
         let double_count = self.a2p_read_u30()? as usize;
+        if double_count > MAX_CONSTANTS {
+            return Err(LifterError::ConstantPoolLimitExceeded);
+        }
         if double_count > 0 {
+            cpool.doubles = Vec::with_capacity(double_count.min(self.a2p_remaining() / 8 + 1));
             cpool.doubles.push(0.0);
             for _ in 1..double_count {
                 cpool.doubles.push(self.a2p_read_f64_le()?);
@@ -306,14 +354,11 @@ impl<'a> AbcParser<'a> {
             return Err(LifterError::ConstantPoolLimitExceeded);
         }
         if string_count > 0 {
+            cpool.strings = Vec::with_capacity(string_count.min(self.a2p_remaining() + 1));
             cpool.strings.push(String::new());
             for _ in 1..string_count {
                 let len = self.a2p_read_u30()? as usize;
-                if self.a2p_remaining() < len {
-                    return Err(LifterError::UnexpectedEof);
-                }
-                let s_bytes = &self.data[self.pos..self.pos + len];
-                self.pos += len;
+                let s_bytes = self.a2p_read_slice(len)?;
                 cpool
                     .strings
                     .push(String::from_utf8_lossy(s_bytes).to_string());
@@ -322,7 +367,11 @@ impl<'a> AbcParser<'a> {
 
         // Namespaces
         let ns_count = self.a2p_read_u30()? as usize;
+        if ns_count > MAX_CONSTANTS {
+            return Err(LifterError::ConstantPoolLimitExceeded);
+        }
         if ns_count > 0 {
+            cpool.namespaces = Vec::with_capacity(ns_count.min(self.a2p_remaining() + 1));
             cpool.namespaces.push(AbcNamespace {
                 kind: 0,
                 name_index: 0,
@@ -336,11 +385,18 @@ impl<'a> AbcParser<'a> {
 
         // NsSets
         let ns_set_count = self.a2p_read_u30()? as usize;
+        if ns_set_count > MAX_CONSTANTS {
+            return Err(LifterError::ConstantPoolLimitExceeded);
+        }
         if ns_set_count > 0 {
+            cpool.ns_sets = Vec::with_capacity(ns_set_count.min(self.a2p_remaining() + 1));
             cpool.ns_sets.push(Vec::new());
             for _ in 1..ns_set_count {
                 let count = self.a2p_read_u30()? as usize;
-                let mut set = Vec::with_capacity(count.min(64));
+                if count > 256 {
+                    return Err(LifterError::ConstantPoolLimitExceeded);
+                }
+                let mut set = Vec::with_capacity(count.min(self.a2p_remaining()));
                 for _ in 0..count {
                     set.push(self.a2p_read_u30()?);
                 }
@@ -350,7 +406,11 @@ impl<'a> AbcParser<'a> {
 
         // Multinames
         let mn_count = self.a2p_read_u30()? as usize;
+        if mn_count > MAX_CONSTANTS {
+            return Err(LifterError::ConstantPoolLimitExceeded);
+        }
         if mn_count > 0 {
+            cpool.multinames = Vec::with_capacity(mn_count.min(self.a2p_remaining() + 1));
             cpool.multinames.push(AbcMultiname::Other(0));
             for _ in 1..mn_count {
                 let kind = self.a2p_read_u8()?;

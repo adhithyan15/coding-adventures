@@ -40,7 +40,9 @@ impl Avm2Verifier {
             let start = pos;
             valid_offsets.insert(start);
             let op = code[pos];
-            pos += 1;
+            pos = pos
+                .checked_add(1)
+                .ok_or_else(|| LifterError::InvalidBytecode("offset overflow".to_string()))?;
 
             let mut branch_offset = None;
             let mut arg_count = 0;
@@ -50,7 +52,9 @@ impl Avm2Verifier {
                     if pos >= code.len() {
                         return Err(LifterError::UnexpectedEof);
                     }
-                    pos += 1; // 1 byte imm
+                    pos = pos.checked_add(1).ok_or_else(|| {
+                        LifterError::InvalidBytecode("offset overflow".to_string())
+                    })?;
                 }
                 OP_PUSHSHORT => {
                     let _ = Self::a2v_read_u30(code, &mut pos)?;
@@ -71,13 +75,16 @@ impl Avm2Verifier {
                 | OP_GREATEREQUALS => {}
                 OP_JUMP | OP_IFTRUE | OP_IFFALSE | OP_IFEQ | OP_IFNE | OP_IFLT | OP_IFLE
                 | OP_IFGT | OP_IFGE => {
-                    if pos + 3 > code.len() {
-                        return Err(LifterError::UnexpectedEof);
-                    }
-                    let b0 = code[pos] as i32;
-                    let b1 = code[pos + 1] as i32;
-                    let b2 = code[pos + 2] as i32;
-                    pos += 3;
+                    let slice = code
+                        .get(pos..)
+                        .and_then(|s| s.get(..3))
+                        .ok_or(LifterError::UnexpectedEof)?;
+                    pos = pos.checked_add(3).ok_or_else(|| {
+                        LifterError::InvalidBytecode("offset overflow".to_string())
+                    })?;
+                    let b0 = slice[0] as i32;
+                    let b1 = slice[1] as i32;
+                    let b2 = slice[2] as i32;
                     let u = b0 | (b1 << 8) | (b2 << 16);
                     let s = if (u & 0x800000) != 0 {
                         u | !0xFFFFFF
@@ -92,6 +99,9 @@ impl Avm2Verifier {
                 OP_CALLPROPERTY | OP_CALLPROPVOID | OP_CONSTRUCTPROP => {
                     let _ = Self::a2v_read_u30(code, &mut pos)?;
                     arg_count = Self::a2v_read_u30(code, &mut pos)? as usize;
+                    if arg_count > 256 {
+                        return Err(LifterError::MethodBodyLimitExceeded);
+                    }
                 }
                 OP_RETURNVALUE | OP_RETURNVOID => {}
                 _ => {
@@ -120,8 +130,16 @@ impl Avm2Verifier {
 
         for instr in &instrs {
             if let Some(boff) = instr.branch_offset {
-                let target = (instr.offset + instr.length) as isize + boff as isize;
-                if target < 0 || !valid_offsets.contains(&(target as usize)) {
+                let next_pc = instr
+                    .offset
+                    .checked_add(instr.length)
+                    .ok_or(LifterError::InvalidBranchTarget)?;
+                let target_i64 = (next_pc as i64)
+                    .checked_add(boff as i64)
+                    .ok_or(LifterError::InvalidBranchTarget)?;
+                let target_usize =
+                    usize::try_from(target_i64).map_err(|_| LifterError::InvalidBranchTarget)?;
+                if !valid_offsets.contains(&target_usize) {
                     return Err(LifterError::InvalidBranchTarget);
                 }
             }
@@ -158,9 +176,17 @@ impl Avm2Verifier {
             let mut successors = Vec::new();
             if instr.op == OP_JUMP {
                 let boff = instr.branch_offset.unwrap_or(0);
-                let tgt = ((instr.offset + instr.length) as isize + boff as isize) as usize;
-                if let Some(&tgt_idx) = offset_to_idx.get(&tgt) {
-                    successors.push(tgt_idx);
+                let next_pc = instr
+                    .offset
+                    .checked_add(instr.length)
+                    .ok_or(LifterError::InvalidBranchTarget)?;
+                let target_i64 = (next_pc as i64)
+                    .checked_add(boff as i64)
+                    .ok_or(LifterError::InvalidBranchTarget)?;
+                if let Ok(tgt) = usize::try_from(target_i64) {
+                    if let Some(&tgt_idx) = offset_to_idx.get(&tgt) {
+                        successors.push(tgt_idx);
+                    }
                 }
             } else if instr.branch_offset.is_some() {
                 // Conditional jump: fallthrough + target
@@ -168,9 +194,17 @@ impl Avm2Verifier {
                     successors.push(idx + 1);
                 }
                 let boff = instr.branch_offset.unwrap_or(0);
-                let tgt = ((instr.offset + instr.length) as isize + boff as isize) as usize;
-                if let Some(&tgt_idx) = offset_to_idx.get(&tgt) {
-                    successors.push(tgt_idx);
+                let next_pc = instr
+                    .offset
+                    .checked_add(instr.length)
+                    .ok_or(LifterError::InvalidBranchTarget)?;
+                let target_i64 = (next_pc as i64)
+                    .checked_add(boff as i64)
+                    .ok_or(LifterError::InvalidBranchTarget)?;
+                if let Ok(tgt) = usize::try_from(target_i64) {
+                    if let Some(&tgt_idx) = offset_to_idx.get(&tgt) {
+                        successors.push(tgt_idx);
+                    }
                 }
             } else if instr.op == OP_RETURNVALUE || instr.op == OP_RETURNVOID {
                 // Terminators don't fall through
@@ -182,8 +216,11 @@ impl Avm2Verifier {
 
             for succ_idx in successors {
                 if let Some(&existing_depth) = entry_depths.get(&succ_idx) {
-                    if existing_depth != new_depth && new_depth > max_stack {
-                        return Err(LifterError::StackOverflow);
+                    if existing_depth != new_depth {
+                        return Err(LifterError::InvalidBytecode(format!(
+                            "stack depth mismatch at merge point instruction {}: expected {}, found {}",
+                            succ_idx, existing_depth, new_depth
+                        )));
                     }
                 } else {
                     entry_depths.insert(succ_idx, new_depth);
@@ -203,9 +240,16 @@ impl Avm2Verifier {
                 return Err(LifterError::UnexpectedEof);
             }
             let b = code[*pos];
-            *pos += 1;
+            *pos = pos
+                .checked_add(1)
+                .ok_or_else(|| LifterError::InvalidBytecode("offset overflow".to_string()))?;
             result |= ((b & 0x7F) as u32) << shift;
             if (b & 0x80) == 0 {
+                if result > 0x3FFF_FFFF {
+                    return Err(LifterError::InvalidBytecode(
+                        "u30 value exceeds 30 bits (0x3FFF_FFFF)".to_string(),
+                    ));
+                }
                 return Ok(result);
             }
             shift += 7;
@@ -232,9 +276,9 @@ impl Avm2Verifier {
             OP_FINDPROPSTRICT => (0, 1),
             OP_GETPROPERTY => (1, 1),
             OP_SETPROPERTY | OP_INITPROPERTY => (2, 0),
-            OP_CALLPROPERTY => (1 + instr.arg_count, 1),
-            OP_CALLPROPVOID => (1 + instr.arg_count, 0),
-            OP_CONSTRUCTPROP => (1 + instr.arg_count, 1),
+            OP_CALLPROPERTY => (1usize.saturating_add(instr.arg_count), 1),
+            OP_CALLPROPVOID => (1usize.saturating_add(instr.arg_count), 0),
+            OP_CONSTRUCTPROP => (1usize.saturating_add(instr.arg_count), 1),
             OP_JUMP => (0, 0),
             OP_IFTRUE | OP_IFFALSE => (1, 0),
             OP_IFEQ | OP_IFNE | OP_IFLT | OP_IFLE | OP_IFGT | OP_IFGE => (2, 0),

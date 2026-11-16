@@ -79,7 +79,8 @@ impl AvmEnvironment {
 
     /// Guard property assignment against CWE-1321.
     pub fn env_set_member(&self, obj_id: usize, prop: &str, val: Value) -> Result<(), LifterError> {
-        if prop == "__proto__" || prop == "constructor" {
+        let prop_lower = prop.to_ascii_lowercase();
+        if prop_lower == "__proto__" || prop_lower == "constructor" || prop_lower == "prototype" {
             return Err(LifterError::PrototypePollutionBlocked(format!(
                 "attempted modification of forbidden prototype property: {}",
                 prop
@@ -125,9 +126,14 @@ impl AvmEnvironment {
                 name
             )));
         }
-        if name.starts_with("_global.Object.prototype")
-            || name.starts_with("_global.Function.prototype")
-            || name.contains("__proto__")
+        let lower = name.to_ascii_lowercase();
+        if lower.contains("__proto__")
+            || lower.contains(".prototype")
+            || lower.ends_with(".prototype")
+            || lower == "prototype"
+            || lower.contains(".constructor")
+            || lower.ends_with(".constructor")
+            || lower == "constructor"
         {
             return Err(LifterError::PrototypePollutionBlocked(format!(
                 "attempted prototype pollution via variable path: {}",

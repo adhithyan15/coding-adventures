@@ -5,18 +5,115 @@
 use super::action::{Avm1Action, Avm1ActionKind};
 use super::opcode::*;
 use super::value::Avm1Value;
-use crate::error::{LifterError, MAX_BYTECODE_SIZE, MAX_CONSTANTS, MAX_INSTRUCTIONS};
+use crate::error::{
+    LifterError, MAX_ACTIONS, MAX_BYTECODE_SIZE, MAX_CONSTANTS, MAX_FUNCTION_DEPTH,
+};
+
+/// Bounded reader for reading within a single action's payload sub-slice.
+struct Avm1PayloadReader<'p> {
+    slice: &'p [u8],
+    pos: usize,
+}
+
+impl<'p> Avm1PayloadReader<'p> {
+    fn a1pr_new(slice: &'p [u8]) -> Self {
+        Self { slice, pos: 0 }
+    }
+
+    fn a1pr_remaining(&self) -> usize {
+        self.slice.len().saturating_sub(self.pos)
+    }
+
+    fn a1pr_read_u8(&mut self) -> Result<u8, LifterError> {
+        let b = *self.slice.get(self.pos).ok_or(LifterError::UnexpectedEof)?;
+        self.pos = self
+            .pos
+            .checked_add(1)
+            .ok_or_else(|| LifterError::InvalidBytecode("offset overflow".to_string()))?;
+        Ok(b)
+    }
+
+    fn a1pr_read_slice(&mut self, len: usize) -> Result<&'p [u8], LifterError> {
+        let s = self
+            .slice
+            .get(self.pos..)
+            .and_then(|tail| tail.get(..len))
+            .ok_or(LifterError::UnexpectedEof)?;
+        self.pos = self
+            .pos
+            .checked_add(len)
+            .ok_or_else(|| LifterError::InvalidBytecode("offset overflow".to_string()))?;
+        Ok(s)
+    }
+
+    fn a1pr_read_u16_le(&mut self) -> Result<u16, LifterError> {
+        let s = self.a1pr_read_slice(2)?;
+        Ok((s[0] as u16) | ((s[1] as u16) << 8))
+    }
+
+    fn a1pr_read_i16_le(&mut self) -> Result<i16, LifterError> {
+        self.a1pr_read_u16_le().map(|u| u as i16)
+    }
+
+    fn a1pr_read_u32_le(&mut self) -> Result<u32, LifterError> {
+        let s = self.a1pr_read_slice(4)?;
+        Ok((s[0] as u32) | ((s[1] as u32) << 8) | ((s[2] as u32) << 16) | ((s[3] as u32) << 24))
+    }
+
+    fn a1pr_read_f32_le(&mut self) -> Result<f32, LifterError> {
+        self.a1pr_read_u32_le().map(f32::from_bits)
+    }
+
+    fn a1pr_read_f64_le(&mut self) -> Result<f64, LifterError> {
+        let s = self.a1pr_read_slice(8)?;
+        let bytes: [u8; 8] = s.try_into().map_err(|_| LifterError::UnexpectedEof)?;
+        let w0 = u32::from_le_bytes([bytes[0], bytes[1], bytes[2], bytes[3]]);
+        let w1 = u32::from_le_bytes([bytes[4], bytes[5], bytes[6], bytes[7]]);
+        let u = (w0 as u64) | ((w1 as u64) << 32);
+        Ok(f64::from_bits(u))
+    }
+
+    fn a1pr_read_string_null_terminated(&mut self, max_len: usize) -> Result<String, LifterError> {
+        let mut bytes = Vec::new();
+        while self.pos < self.slice.len() {
+            let b = self.a1pr_read_u8()?;
+            if b == 0 {
+                return Ok(String::from_utf8_lossy(&bytes).to_string());
+            }
+            bytes.push(b);
+            if bytes.len() > max_len {
+                return Err(LifterError::InvalidBytecode(
+                    "null-terminated string exceeded maximum length".to_string(),
+                ));
+            }
+        }
+        Ok(String::from_utf8_lossy(&bytes).to_string())
+    }
+}
 
 /// Bounded parser for AVM1 byte streams.
 pub struct Avm1Parser<'a> {
     data: &'a [u8],
     pos: usize,
     instruction_count: usize,
+    depth: usize,
 }
 
 impl<'a> Avm1Parser<'a> {
     /// Create a new AVM1 parser for the given bytecode slice.
     pub fn a1p_new(data: &'a [u8]) -> Result<Self, LifterError> {
+        Self::a1p_new_with_depth(data, 0, 0)
+    }
+
+    /// Create a new AVM1 parser with specified function nesting depth and instruction budget.
+    pub fn a1p_new_with_depth(
+        data: &'a [u8],
+        depth: usize,
+        instruction_count: usize,
+    ) -> Result<Self, LifterError> {
+        if depth > MAX_FUNCTION_DEPTH {
+            return Err(LifterError::FunctionLimitExceeded);
+        }
         if data.len() > MAX_BYTECODE_SIZE {
             return Err(LifterError::InvalidBytecode(
                 "bytecode stream exceeds maximum allowed size".to_string(),
@@ -25,7 +122,8 @@ impl<'a> Avm1Parser<'a> {
         Ok(Self {
             data,
             pos: 0,
-            instruction_count: 0,
+            instruction_count,
+            depth,
         })
     }
 
@@ -46,87 +144,34 @@ impl<'a> Avm1Parser<'a> {
         Ok(actions)
     }
 
-    fn a1p_remaining(&self) -> usize {
-        self.data.len().saturating_sub(self.pos)
-    }
-
     fn a1p_read_u8(&mut self) -> Result<u8, LifterError> {
-        if self.pos >= self.data.len() {
-            return Err(LifterError::UnexpectedEof);
-        }
-        let b = self.data[self.pos];
-        self.pos += 1;
+        let b = *self.data.get(self.pos).ok_or(LifterError::UnexpectedEof)?;
+        self.pos = self
+            .pos
+            .checked_add(1)
+            .ok_or_else(|| LifterError::InvalidBytecode("offset overflow".to_string()))?;
         Ok(b)
     }
 
     fn a1p_read_u16_le(&mut self) -> Result<u16, LifterError> {
-        if self.a1p_remaining() < 2 {
-            return Err(LifterError::UnexpectedEof);
-        }
-        let b0 = self.data[self.pos] as u16;
-        let b1 = self.data[self.pos + 1] as u16;
-        self.pos += 2;
-        Ok(b0 | (b1 << 8))
-    }
-
-    fn a1p_read_i16_le(&mut self) -> Result<i16, LifterError> {
-        self.a1p_read_u16_le().map(|u| u as i16)
-    }
-
-    fn a1p_read_u32_le(&mut self) -> Result<u32, LifterError> {
-        if self.a1p_remaining() < 4 {
-            return Err(LifterError::UnexpectedEof);
-        }
-        let b0 = self.data[self.pos] as u32;
-        let b1 = self.data[self.pos + 1] as u32;
-        let b2 = self.data[self.pos + 2] as u32;
-        let b3 = self.data[self.pos + 3] as u32;
-        self.pos += 4;
-        Ok(b0 | (b1 << 8) | (b2 << 16) | (b3 << 24))
-    }
-
-    fn a1p_read_f32_le(&mut self) -> Result<f32, LifterError> {
-        self.a1p_read_u32_le().map(f32::from_bits)
-    }
-
-    fn a1p_read_f64_le(&mut self) -> Result<f64, LifterError> {
-        if self.a1p_remaining() < 8 {
-            return Err(LifterError::UnexpectedEof);
-        }
-        // In Flash AVM1 ActionPush, double floats are swapped 32-bit words in Flash 5/6!
-        // Read 8 bytes
-        let bytes: [u8; 8] = self.data[self.pos..self.pos + 8]
-            .try_into()
-            .map_err(|_| LifterError::UnexpectedEof)?;
-        self.pos += 8;
-        // Check SWF double format: lower and upper 32-bit words are swapped
-        let w0 = u32::from_le_bytes([bytes[0], bytes[1], bytes[2], bytes[3]]);
-        let w1 = u32::from_le_bytes([bytes[4], bytes[5], bytes[6], bytes[7]]);
-        let u = (w0 as u64) | ((w1 as u64) << 32);
-        Ok(f64::from_bits(u))
-    }
-
-    fn a1p_read_string_null_terminated(&mut self, max_len: usize) -> Result<String, LifterError> {
-        let mut bytes = Vec::new();
-        while self.pos < self.data.len() {
-            let b = self.a1p_read_u8()?;
-            if b == 0 {
-                return Ok(String::from_utf8_lossy(&bytes).to_string());
-            }
-            bytes.push(b);
-            if bytes.len() > max_len {
-                return Err(LifterError::InvalidBytecode(
-                    "null-terminated string exceeded maximum length".to_string(),
-                ));
-            }
-        }
-        // If EOF before null byte
-        Ok(String::from_utf8_lossy(&bytes).to_string())
+        let slice = self
+            .data
+            .get(self.pos..)
+            .and_then(|tail| tail.get(..2))
+            .ok_or(LifterError::UnexpectedEof)?;
+        self.pos = self
+            .pos
+            .checked_add(2)
+            .ok_or_else(|| LifterError::InvalidBytecode("offset overflow".to_string()))?;
+        Ok((slice[0] as u16) | ((slice[1] as u16) << 8))
     }
 
     fn a1p_parse_action(&mut self) -> Result<Avm1Action, LifterError> {
-        self.instruction_count += 1;
-        if self.instruction_count > MAX_INSTRUCTIONS {
+        self.instruction_count = self
+            .instruction_count
+            .checked_add(1)
+            .ok_or(LifterError::InstructionLimitExceeded)?;
+        if self.instruction_count > MAX_ACTIONS {
             return Err(LifterError::InstructionLimitExceeded);
         }
 
@@ -192,69 +237,86 @@ impl<'a> Avm1Parser<'a> {
 
         // Action has payload: op >= 0x80
         let payload_len = self.a1p_read_u16_le()? as usize;
-        if self.a1p_remaining() < payload_len {
+        let payload_start = self.pos;
+        let payload_end = payload_start
+            .checked_add(payload_len)
+            .ok_or_else(|| LifterError::InvalidBytecode("offset overflow".to_string()))?;
+        if payload_end > self.data.len() {
             return Err(LifterError::UnexpectedEof);
         }
-        let payload_end = self.pos + payload_len;
+        let payload_slice = &self.data[payload_start..payload_end];
+        let mut reader = Avm1PayloadReader::a1pr_new(payload_slice);
 
         let (kind, total_length) = match op {
             ACTION_GOTO_FRAME => {
-                let frame = self.a1p_read_u16_le()?;
-                (Avm1ActionKind::GotoFrame(frame), 3 + payload_len)
+                let frame = reader.a1pr_read_u16_le()?;
+                self.pos = payload_end;
+                let span = 3usize
+                    .checked_add(payload_len)
+                    .ok_or_else(|| LifterError::InvalidBytecode("overflow".to_string()))?;
+                (Avm1ActionKind::GotoFrame(frame), span)
             }
             ACTION_STORE_REGISTER => {
-                let reg = self.a1p_read_u8()?;
-                (Avm1ActionKind::StoreRegister(reg), 3 + payload_len)
+                let reg = reader.a1pr_read_u8()?;
+                self.pos = payload_end;
+                let span = 3usize
+                    .checked_add(payload_len)
+                    .ok_or_else(|| LifterError::InvalidBytecode("overflow".to_string()))?;
+                (Avm1ActionKind::StoreRegister(reg), span)
             }
             ACTION_CONSTANT_POOL => {
-                let count = self.a1p_read_u16_le()? as usize;
+                let count = reader.a1pr_read_u16_le()? as usize;
                 if count > MAX_CONSTANTS {
                     return Err(LifterError::ConstantPoolLimitExceeded);
                 }
-                let mut constants = Vec::with_capacity(count.min(1024));
+                let mut constants = Vec::with_capacity(count.min(reader.a1pr_remaining() + 1));
                 for _ in 0..count {
-                    let s = self.a1p_read_string_null_terminated(65536)?;
+                    let s = reader.a1pr_read_string_null_terminated(65536)?;
                     constants.push(s);
                 }
-                (Avm1ActionKind::ConstantPool(constants), 3 + payload_len)
+                self.pos = payload_end;
+                let span = 3usize
+                    .checked_add(payload_len)
+                    .ok_or_else(|| LifterError::InvalidBytecode("overflow".to_string()))?;
+                (Avm1ActionKind::ConstantPool(constants), span)
             }
             ACTION_PUSH => {
                 let mut values = Vec::new();
-                while self.pos < payload_end {
-                    let ptype = self.a1p_read_u8()?;
+                while reader.pos < reader.slice.len() {
+                    let ptype = reader.a1pr_read_u8()?;
                     let val = match ptype {
                         PUSH_TYPE_STRING => {
-                            let s = self.a1p_read_string_null_terminated(65536)?;
+                            let s = reader.a1pr_read_string_null_terminated(65536)?;
                             Avm1Value::String(s)
                         }
                         PUSH_TYPE_FLOAT => {
-                            let f = self.a1p_read_f32_le()?;
+                            let f = reader.a1pr_read_f32_le()?;
                             Avm1Value::Float(f)
                         }
                         PUSH_TYPE_NULL => Avm1Value::Null,
                         PUSH_TYPE_UNDEFINED => Avm1Value::Undefined,
                         PUSH_TYPE_REGISTER => {
-                            let r = self.a1p_read_u8()?;
+                            let r = reader.a1pr_read_u8()?;
                             Avm1Value::Register(r)
                         }
                         PUSH_TYPE_BOOLEAN => {
-                            let b = self.a1p_read_u8()? != 0;
+                            let b = reader.a1pr_read_u8()? != 0;
                             Avm1Value::Boolean(b)
                         }
                         PUSH_TYPE_DOUBLE => {
-                            let d = self.a1p_read_f64_le()?;
+                            let d = reader.a1pr_read_f64_le()?;
                             Avm1Value::Double(d)
                         }
                         PUSH_TYPE_INTEGER => {
-                            let i = self.a1p_read_u32_le()? as i32;
+                            let i = reader.a1pr_read_u32_le()? as i32;
                             Avm1Value::Integer(i)
                         }
                         PUSH_TYPE_CONSTANT8 => {
-                            let idx = self.a1p_read_u8()?;
+                            let idx = reader.a1pr_read_u8()?;
                             Avm1Value::Constant8(idx)
                         }
                         PUSH_TYPE_CONSTANT16 => {
-                            let idx = self.a1p_read_u16_le()?;
+                            let idx = reader.a1pr_read_u16_le()?;
                             Avm1Value::Constant16(idx)
                         }
                         other => {
@@ -266,37 +328,64 @@ impl<'a> Avm1Parser<'a> {
                     };
                     values.push(val);
                 }
-                (Avm1ActionKind::Push(values), 3 + payload_len)
+                self.pos = payload_end;
+                let span = 3usize
+                    .checked_add(payload_len)
+                    .ok_or_else(|| LifterError::InvalidBytecode("overflow".to_string()))?;
+                (Avm1ActionKind::Push(values), span)
             }
             ACTION_BRANCH_ALWAYS => {
-                let offset = self.a1p_read_i16_le()?;
-                (Avm1ActionKind::BranchAlways(offset), 3 + payload_len)
+                let offset = reader.a1pr_read_i16_le()?;
+                self.pos = payload_end;
+                let span = 3usize
+                    .checked_add(payload_len)
+                    .ok_or_else(|| LifterError::InvalidBytecode("overflow".to_string()))?;
+                (Avm1ActionKind::BranchAlways(offset), span)
             }
             ACTION_BRANCH_IF_TRUE => {
-                let offset = self.a1p_read_i16_le()?;
-                (Avm1ActionKind::BranchIfTrue(offset), 3 + payload_len)
+                let offset = reader.a1pr_read_i16_le()?;
+                self.pos = payload_end;
+                let span = 3usize
+                    .checked_add(payload_len)
+                    .ok_or_else(|| LifterError::InvalidBytecode("overflow".to_string()))?;
+                (Avm1ActionKind::BranchIfTrue(offset), span)
             }
             ACTION_DEFINE_FUNCTION => {
-                let name = self.a1p_read_string_null_terminated(256)?;
-                let num_params = self.a1p_read_u16_le()? as usize;
+                let name = reader.a1pr_read_string_null_terminated(256)?;
+                let num_params = reader.a1pr_read_u16_le()? as usize;
                 let mut params = Vec::with_capacity(num_params.min(256));
                 for _ in 0..num_params {
-                    params.push(self.a1p_read_string_null_terminated(256)?);
+                    params.push(reader.a1pr_read_string_null_terminated(256)?);
                 }
-                let body_len = self.a1p_read_u16_le()? as usize;
-                // Move position to end of header payload
+                let body_len = reader.a1pr_read_u16_le()? as usize;
                 self.pos = payload_end;
 
-                // Read function body
-                if self.a1p_remaining() < body_len {
+                let body_end = payload_end
+                    .checked_add(body_len)
+                    .ok_or_else(|| LifterError::InvalidBytecode("offset overflow".to_string()))?;
+                if body_end > self.data.len() {
                     return Err(LifterError::UnexpectedEof);
                 }
-                let body_slice = &self.data[self.pos..self.pos + body_len];
-                let mut body_parser = Avm1Parser::a1p_new(body_slice)?;
-                let body = body_parser.a1p_parse_all()?;
-                self.pos += body_len;
+                let body_slice = &self.data[payload_end..body_end];
 
-                let total_span = 3 + payload_len + body_len;
+                if self.depth >= MAX_FUNCTION_DEPTH {
+                    return Err(LifterError::FunctionLimitExceeded);
+                }
+                let mut body_parser = Avm1Parser::a1p_new_with_depth(
+                    body_slice,
+                    self.depth + 1,
+                    self.instruction_count,
+                )?;
+                let body = body_parser.a1p_parse_all()?;
+                self.instruction_count = body_parser.instruction_count;
+                self.pos = body_end;
+
+                let total_span = 3usize
+                    .checked_add(payload_len)
+                    .and_then(|t| t.checked_add(body_len))
+                    .ok_or_else(|| {
+                        LifterError::InvalidBytecode("action length overflow".to_string())
+                    })?;
                 (
                     Avm1ActionKind::DefineFunction {
                         name,
@@ -308,28 +397,45 @@ impl<'a> Avm1Parser<'a> {
                 )
             }
             ACTION_DEFINE_FUNCTION2 => {
-                let name = self.a1p_read_string_null_terminated(256)?;
-                let num_params = self.a1p_read_u16_le()? as usize;
-                let register_count = self.a1p_read_u8()?;
-                let flags = self.a1p_read_u16_le()?;
+                let name = reader.a1pr_read_string_null_terminated(256)?;
+                let num_params = reader.a1pr_read_u16_le()? as usize;
+                let register_count = reader.a1pr_read_u8()?;
+                let flags = reader.a1pr_read_u16_le()?;
                 let mut params = Vec::with_capacity(num_params.min(256));
                 for _ in 0..num_params {
-                    let reg = self.a1p_read_u8()?;
-                    let pname = self.a1p_read_string_null_terminated(256)?;
+                    let reg = reader.a1pr_read_u8()?;
+                    let pname = reader.a1pr_read_string_null_terminated(256)?;
                     params.push((reg, pname));
                 }
-                let body_len = self.a1p_read_u16_le()? as usize;
+                let body_len = reader.a1pr_read_u16_le()? as usize;
                 self.pos = payload_end;
 
-                if self.a1p_remaining() < body_len {
+                let body_end = payload_end
+                    .checked_add(body_len)
+                    .ok_or_else(|| LifterError::InvalidBytecode("offset overflow".to_string()))?;
+                if body_end > self.data.len() {
                     return Err(LifterError::UnexpectedEof);
                 }
-                let body_slice = &self.data[self.pos..self.pos + body_len];
-                let mut body_parser = Avm1Parser::a1p_new(body_slice)?;
-                let body = body_parser.a1p_parse_all()?;
-                self.pos += body_len;
+                let body_slice = &self.data[payload_end..body_end];
 
-                let total_span = 3 + payload_len + body_len;
+                if self.depth >= MAX_FUNCTION_DEPTH {
+                    return Err(LifterError::FunctionLimitExceeded);
+                }
+                let mut body_parser = Avm1Parser::a1p_new_with_depth(
+                    body_slice,
+                    self.depth + 1,
+                    self.instruction_count,
+                )?;
+                let body = body_parser.a1p_parse_all()?;
+                self.instruction_count = body_parser.instruction_count;
+                self.pos = body_end;
+
+                let total_span = 3usize
+                    .checked_add(payload_len)
+                    .and_then(|t| t.checked_add(body_len))
+                    .ok_or_else(|| {
+                        LifterError::InvalidBytecode("action length overflow".to_string())
+                    })?;
                 (
                     Avm1ActionKind::DefineFunction2 {
                         name,
@@ -343,13 +449,11 @@ impl<'a> Avm1Parser<'a> {
                 )
             }
             _ => {
-                // Unsupported action with payload, skip over it safely
                 self.pos = payload_end;
                 return Err(LifterError::UnsupportedOpcode(op));
             }
         };
 
-        // Ensure parser position is at the end of this action
         if self.pos < payload_end {
             self.pos = payload_end;
         }

@@ -26,8 +26,8 @@ pub use avm2::{
 };
 pub use capabilities::PureCapabilities;
 pub use error::{
-    LifterError, MAX_BYTECODE_SIZE, MAX_CONSTANTS, MAX_FUNCTIONS, MAX_INSTRUCTIONS,
-    MAX_OPERAND_STACK, MAX_VM_STEPS,
+    LifterError, MAX_ACTIONS, MAX_BYTECODE_SIZE, MAX_CONSTANTS, MAX_FUNCTIONS, MAX_FUNCTION_DEPTH,
+    MAX_INSTRUCTIONS, MAX_OPERAND_STACK, MAX_VM_STEPS,
 };
 pub use runtime::{AvmEnvironment, AvmRunner};
 

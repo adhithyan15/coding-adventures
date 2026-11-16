@@ -13,11 +13,29 @@ pub const MAX_OPERAND_STACK: usize = 1024;
 /// Maximum number of constants in a constant pool (CWE-400 defense).
 pub const MAX_CONSTANTS: usize = 65_536;
 
+/// Alias for maximum constant pool entries.
+pub const MAX_CONST_POOL_ENTRIES: usize = MAX_CONSTANTS;
+
 /// Maximum number of instructions lifted in a single module (CWE-400 defense).
 pub const MAX_INSTRUCTIONS: usize = 100_000;
 
+/// Alias for maximum action count in AVM1 (CWE-400 defense).
+pub const MAX_ACTIONS: usize = MAX_INSTRUCTIONS;
+
 /// Maximum function count per bytecode payload.
 pub const MAX_FUNCTIONS: usize = 8_192;
+
+/// Maximum nested function definition depth in AVM1/AVM2 (CWE-674 defense).
+pub const MAX_FUNCTION_DEPTH: usize = 32;
+
+/// Maximum method count per ABC file (CWE-400 defense).
+pub const MAX_METHODS: usize = 8_192;
+
+/// Maximum script count per ABC file (CWE-400 defense).
+pub const MAX_SCRIPTS: usize = 1_024;
+
+/// Maximum code bytes per ABC method body (CWE-400 defense).
+pub const MAX_CODE_BYTES: usize = 4 * 1024 * 1024;
 
 /// Maximum VM step execution budget per frame/script (SWF00 §7.2 / CWE-400 defense).
 pub const MAX_VM_STEPS: u64 = 2_000_000;
