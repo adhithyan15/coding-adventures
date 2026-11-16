@@ -710,6 +710,7 @@ members = [
     "paint-instructions",
     "paint-batch-tiles",
     "paint-palette-blend",
+    "palette-indexed",
     "paint-vm-ascii",
     "paint-vm-cairo",
     "cuda-compute",

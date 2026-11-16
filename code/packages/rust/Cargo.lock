@@ -10997,6 +10997,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "palette-indexed"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "pixel-container",
+]
+
+[[package]]
 name = "panic-halt"
 version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
