@@ -196,6 +196,16 @@ fn test_unsupported_version_zero() {
 }
 
 #[test]
+fn test_unsupported_version_exceeding_50() {
+    let swf = build_synthetic_swf(b"FWS", 51, (0, 100, 0, 100), 0x0C00, 1, &[]);
+    let config = SwfDecompressorConfig::default_decompressor_config();
+    assert_eq!(
+        SwfMovie::from_swf_bytes(&swf, &config),
+        Err(SwfError::UnsupportedVersion)
+    );
+}
+
+#[test]
 fn test_frame_rate_fractional() {
     // 23.976 fps: 23 integer (0x17), 0.976 * 256 ≈ 250 (0xFA) -> 0x17FA
     let raw: u16 = 0x17FA;
@@ -586,6 +596,63 @@ fn test_cws_decompression_bomb_detected() {
     );
 }
 
+#[test]
+fn test_cws_odd_aligned_decompression_bomb() {
+    // 3 literal bytes (odd length 3), followed by 258-byte repeats (always odd length: 3, 261, 519, ...)
+    let mut writer = LsbBitWriter::new();
+    writer.write_bit(1);
+    writer.write_bit(1);
+    writer.write_bit(0);
+
+    // 3 literals: 'A', 'B', 'C'
+    // Sym 65 ('A') -> 0b01110001
+    // Sym 66 ('B') -> 0b01110010
+    // Sym 67 ('C') -> 0b01110011
+    writer.write_code(0b01110001, 8);
+    writer.write_code(0b01110010, 8);
+    writer.write_code(0b01110011, 8);
+
+    // 5000 repetitions of (Length 258, Dist 3)
+    // Sym 285 -> code 0b11000101 (8 bits)
+    // Dist 2 (code 2 for distance 3, 5 bits) -> 0b00010
+    for _ in 0..5000 {
+        writer.write_code(0b11000101, 8);
+        writer.write_code(0b00010, 5);
+    }
+    writer.write_code(0b0000000, 7); // end of block
+
+    let raw_deflate = writer.finish();
+    let uncompressed_len = 3 + 5000 * 258;
+
+    let mut uncompressed_data = Vec::with_capacity(uncompressed_len);
+    uncompressed_data.extend_from_slice(b"ABC");
+    while uncompressed_data.len() < uncompressed_len {
+        let remaining = uncompressed_len - uncompressed_data.len();
+        let chunk = remaining.min(3);
+        uncompressed_data.extend_from_slice(&b"ABC"[..chunk]);
+    }
+    let adler = compute_adler32(&uncompressed_data);
+
+    let mut zlib = Vec::with_capacity(2 + raw_deflate.len() + 4);
+    zlib.push(0x78);
+    zlib.push(0x9C);
+    zlib.extend_from_slice(&raw_deflate);
+    zlib.extend_from_slice(&adler.to_be_bytes());
+
+    let mut cws = Vec::new();
+    cws.extend_from_slice(b"CWS");
+    cws.push(10);
+    let total_uncompressed = (8 + uncompressed_len) as u32;
+    cws.extend_from_slice(&total_uncompressed.to_le_bytes());
+    cws.extend_from_slice(&zlib);
+
+    let config = SwfDecompressorConfig::default_decompressor_config();
+    assert_eq!(
+        SwfMovie::from_swf_bytes(&cws, &config),
+        Err(SwfError::DecompressionBombDetected)
+    );
+}
+
 // --- ZWS (LZMA) Tests ---
 
 #[test]
@@ -620,6 +687,258 @@ fn test_zws_version_must_be_at_least_13() {
         ZwsConfig::parse_zws_header(&zws_bytes),
         Err(SwfError::UnsupportedVersion)
     );
+}
+
+struct LzmaTestEncoder {
+    low: u64,
+    range: u32,
+    bytes: Vec<u8>,
+}
+
+impl LzmaTestEncoder {
+    fn new() -> Self {
+        Self {
+            low: 0,
+            range: 0xFFFF_FFFF,
+            bytes: vec![0], // First byte of LZMA stream is ignored
+        }
+    }
+
+    fn encode_bit(&mut self, prob: &mut u16, bit: u32) {
+        let bound = (self.range >> 11) * (*prob as u32);
+        if bit == 0 {
+            self.range = bound;
+            *prob += (2048 - *prob) >> 5;
+        } else {
+            self.low += bound as u64;
+            self.range -= bound;
+            *prob -= *prob >> 5;
+        }
+        self.shift_low();
+    }
+
+    fn encode_direct_bits(&mut self, val: u32, count: usize) {
+        for i in (0..count).rev() {
+            self.range >>= 1;
+            let bit = (val >> i) & 1;
+            if bit == 1 {
+                self.low += self.range as u64;
+            }
+            self.shift_low();
+        }
+    }
+
+    fn encode_bit_tree(&mut self, probs: &mut [u16], val: usize) {
+        let num_bits = probs.len().ilog2() as usize;
+        let mut model_index = 1;
+        for i in (0..num_bits).rev() {
+            let bit = ((val >> i) & 1) as u32;
+            self.encode_bit(&mut probs[model_index], bit);
+            model_index = (model_index << 1) | (bit as usize);
+        }
+    }
+
+    fn encode_reverse_bit_tree(&mut self, probs: &mut [u16], val: usize) {
+        let num_bits = probs.len().ilog2() as usize;
+        let mut model_index = 1;
+        for i in 0..num_bits {
+            let bit = ((val >> i) & 1) as u32;
+            self.encode_bit(&mut probs[model_index], bit);
+            model_index = (model_index << 1) | (bit as usize);
+        }
+    }
+
+    fn shift_low(&mut self) {
+        if self.range < 0x0100_0000 {
+            self.bytes.push((self.low >> 24) as u8);
+            self.low = (self.low << 8) & 0xFFFF_FFFF;
+            self.range <<= 8;
+        }
+    }
+
+    fn finish(mut self) -> Vec<u8> {
+        for _ in 0..5 {
+            self.bytes.push((self.low >> 24) as u8);
+            self.low = (self.low << 8) & 0xFFFF_FFFF;
+        }
+        // Extra padding bytes so RangeDecoder doesn't EOF on trailing normalizations
+        self.bytes.extend_from_slice(&[0u8; 32]);
+        self.bytes
+    }
+}
+
+#[test]
+fn test_lzma_slot_13_and_state7_literal_match() {
+    let mut enc = LzmaTestEncoder::new();
+
+    let mut is_match = [1024u16; 12 * 16];
+    let mut is_rep = [1024u16; 12];
+    let mut pos_slot = [[1024u16; 64]; 4];
+    let mut spec_pos = [1024u16; 115];
+    let mut choice = 1024u16;
+    let mut low = [1024u16; 16 * 8];
+    let mut lit_probs = vec![1024u16; 0x300];
+
+    let mut output: Vec<u8> = Vec::new();
+    let mut state = 0usize;
+
+    // Step 1: 130 literal 0 bytes
+    for _ in 0..130 {
+        let match_idx = state << 4;
+        enc.encode_bit(&mut is_match[match_idx], 0); // literal
+        let mut sym = 1;
+        for _ in 0..8 {
+            enc.encode_bit(&mut lit_probs[sym], 0);
+            sym <<= 1;
+        }
+        output.push(0);
+        state = 0;
+    }
+    assert_eq!(output.len(), 130);
+
+    // Step 2: Normal match with slot == 13 (exercises spec_pos[83..115])
+    let match_idx = state << 4;
+    enc.encode_bit(&mut is_match[match_idx], 1); // match
+    enc.encode_bit(&mut is_rep[state], 0); // normal match
+    state = 7;
+    enc.encode_bit(&mut choice, 0); // low len
+    enc.encode_bit_tree(&mut low[0..8], 0); // len_raw = 0 -> len = 2
+    let slot = 13usize;
+    enc.encode_bit_tree(&mut pos_slot[0], slot); // slot = 13
+    let num_direct_bits = (slot >> 1) - 1; // 5
+    let dist_base = (2 | (slot & 1)) << num_direct_bits; // 96
+    let offset = dist_base - slot; // 83
+    assert_eq!(offset, 83);
+    assert_eq!(offset + (1 << num_direct_bits), 115);
+    let extra = 0usize;
+    enc.encode_reverse_bit_tree(&mut spec_pos[offset..offset + 32], extra);
+    let rep0 = dist_base + extra; // 96
+    assert_eq!(rep0, 96);
+    for _ in 0..2 {
+        let idx = output.len() - 1 - rep0;
+        let b = output[idx];
+        output.push(b);
+    }
+    assert_eq!(output.len(), 132);
+
+    // Step 3: Literal decoding in state >= 7 (exercises match_byte <<= 1)
+    assert!(state >= 7);
+    let match_idx = state << 4;
+    enc.encode_bit(&mut is_match[match_idx], 0); // literal
+    let mut match_byte = output[output.len() - 1 - rep0] as usize; // 0
+    assert_eq!(match_byte, 0);
+    let target_lit = 0usize;
+    let mut sym = 1;
+    let mut match_bit_enabled = true;
+    while sym < 0x100 {
+        let match_bit = if match_bit_enabled {
+            (match_byte >> 7) & 1
+        } else {
+            0
+        };
+        match_byte <<= 1;
+        let prob_idx = 0x100 + (match_bit << 8) + sym;
+        let bit = 0u32;
+        enc.encode_bit(&mut lit_probs[prob_idx], bit);
+        sym = (sym << 1) | (bit as usize);
+        if match_bit_enabled && bit as usize != match_bit {
+            match_bit_enabled = false;
+        }
+    }
+    output.push(target_lit as u8);
+    state -= 3; // 4
+    assert_eq!(state, 4);
+    assert_eq!(output.len(), 133);
+
+    let lzma_stream = enc.finish();
+
+    // Now decompress with swf_container::lzma_decompress_bounded
+    let config = ZwsConfig {
+        version: 13,
+        uncompressed_file_length: 133 + 8,
+        compressed_length: lzma_stream.len() as u32,
+        lc: 0,
+        lp: 0,
+        pb: 0,
+        dict_size: 1 << 20,
+    };
+
+    let decompressed =
+        swf_container::lzma_decompress_bounded(&lzma_stream, 133, &config, 100_000, 100.0)
+            .expect("decompress synthesized LZMA stream exercising slot 13 and state 7 match");
+
+    assert_eq!(decompressed.len(), 133);
+    assert_eq!(decompressed, output);
+}
+
+#[test]
+fn test_lzma_decode_direct_bits_slot_14() {
+    let mut enc = LzmaTestEncoder::new();
+
+    let mut is_match = [1024u16; 12 * 16];
+    let mut is_rep = [1024u16; 12];
+    let mut pos_slot = [[1024u16; 64]; 4];
+    let mut align_probs = [1024u16; 16];
+    let mut choice = 1024u16;
+    let mut low = [1024u16; 16 * 8];
+    let mut lit_probs = vec![1024u16; 0x300];
+
+    let mut output: Vec<u8> = Vec::new();
+    let mut state = 0usize;
+
+    // Step 1: 130 literal 0 bytes
+    for _ in 0..130 {
+        let match_idx = state << 4;
+        enc.encode_bit(&mut is_match[match_idx], 0); // literal
+        let mut sym = 1;
+        for _ in 0..8 {
+            enc.encode_bit(&mut lit_probs[sym], 0);
+            sym <<= 1;
+        }
+        output.push(0);
+        state = 0;
+    }
+    assert_eq!(output.len(), 130);
+
+    // Step 2: Normal match with slot == 14 (exercises decode_direct_bits and wrapping arithmetic)
+    let match_idx = state << 4;
+    enc.encode_bit(&mut is_match[match_idx], 1); // match
+    enc.encode_bit(&mut is_rep[state], 0); // normal match
+    enc.encode_bit(&mut choice, 0); // low len
+    enc.encode_bit_tree(&mut low[0..8], 0); // len = 2
+    let slot = 14usize;
+    enc.encode_bit_tree(&mut pos_slot[0], slot); // slot = 14
+    let num_direct_bits = (slot >> 1) - 1; // 6
+    let dist_base = (2 | (slot & 1)) << num_direct_bits; // 128
+    enc.encode_direct_bits(0, num_direct_bits - 4); // direct bits (2 bits: 0)
+    enc.encode_reverse_bit_tree(&mut align_probs, 0); // align bits (4 bits: 0)
+    let rep0 = dist_base; // 128
+    assert_eq!(rep0, 128);
+    for _ in 0..2 {
+        let idx = output.len() - 1 - rep0;
+        let b = output[idx];
+        output.push(b);
+    }
+    assert_eq!(output.len(), 132);
+
+    let lzma_stream = enc.finish();
+
+    let config = ZwsConfig {
+        version: 13,
+        uncompressed_file_length: 132 + 8,
+        compressed_length: lzma_stream.len() as u32,
+        lc: 0,
+        lp: 0,
+        pb: 0,
+        dict_size: 1 << 20,
+    };
+
+    let decompressed =
+        swf_container::lzma_decompress_bounded(&lzma_stream, 132, &config, 100_000, 100.0)
+            .expect("decompress synthesized LZMA stream exercising slot 14 and direct bits");
+
+    assert_eq!(decompressed.len(), 132);
+    assert_eq!(decompressed, output);
 }
 
 // --- Validation Functions (Warrant Contract) Tests ---

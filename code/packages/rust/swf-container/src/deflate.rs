@@ -200,17 +200,22 @@ fn decode_huffman_block(
     max_uncompressed_bytes: usize,
     max_ratio: f64,
 ) -> Result<(), SwfError> {
+    let mut last_checked_len = output.len();
     loop {
         let sym = ll_table.decode_symbol(reader)?;
         if sym < 256 {
+            if output.len() >= max_uncompressed_bytes {
+                return Err(SwfError::OutputLimitExceeded);
+            }
             output.push(sym as u8);
-            if output.len().is_multiple_of(8192) {
+            if output.len().saturating_sub(last_checked_len) >= 8192 {
                 check_output_bounds(
                     output.len(),
                     reader.bytes_consumed(),
                     max_uncompressed_bytes,
                     max_ratio,
                 )?;
+                last_checked_len = output.len();
             }
         } else if sym == 256 {
             // End of block
@@ -231,19 +236,24 @@ fn decode_huffman_block(
                 return Err(SwfError::CorruptedData);
             }
 
+            if output.len().saturating_add(length) > max_uncompressed_bytes {
+                return Err(SwfError::OutputLimitExceeded);
+            }
+
             for _ in 0..length {
                 let idx = output.len() - distance;
                 let b = output[idx];
                 output.push(b);
             }
 
-            if output.len().is_multiple_of(8192) {
+            if output.len().saturating_sub(last_checked_len) >= 8192 {
                 check_output_bounds(
                     output.len(),
                     reader.bytes_consumed(),
                     max_uncompressed_bytes,
                     max_ratio,
                 )?;
+                last_checked_len = output.len();
             }
         } else {
             return Err(SwfError::CorruptedData);
@@ -311,6 +321,9 @@ pub fn zlib_decompress_bounded(
                 let nlen = reader.read_u16_le()? as usize;
                 if (len ^ 0xFFFF) != nlen {
                     return Err(SwfError::CorruptedData);
+                }
+                if output.len().saturating_add(len) > max_uncompressed_bytes {
+                    return Err(SwfError::OutputLimitExceeded);
                 }
                 for _ in 0..len {
                     let b = reader.read_byte()?;

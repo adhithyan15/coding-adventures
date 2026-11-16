@@ -135,9 +135,9 @@ impl<'a> RangeDecoder<'a> {
         let mut val: u32 = 0;
         for _ in 0..count {
             self.range >>= 1;
-            self.code -= self.range;
+            self.code = self.code.wrapping_sub(self.range);
             let bit = if (self.code as i32) < 0 {
-                self.code += self.range;
+                self.code = self.code.wrapping_add(self.range);
                 0
             } else {
                 1
@@ -235,7 +235,7 @@ pub fn lzma_decompress_bounded(
     let mut is_rep_g2 = [1024u16; 12];
     let mut is_rep0_long = [1024u16; 12 * 16];
     let mut pos_slot = [[1024u16; 64]; 4];
-    let mut spec_pos = [1024u16; 114];
+    let mut spec_pos = [1024u16; 115];
     let mut align_probs = [1024u16; 16];
 
     let mut len_coder = LenCoder::new_len_coder();
@@ -272,7 +272,7 @@ pub fn lzma_decompress_bounded(
                 }
                 (sym - 0x100) as u8
             } else {
-                let match_byte = if rep0 < output.len() {
+                let mut match_byte = if rep0 < output.len() {
                     output[output.len() - 1 - rep0] as usize
                 } else {
                     0
@@ -285,6 +285,7 @@ pub fn lzma_decompress_bounded(
                     } else {
                         0
                     };
+                    match_byte <<= 1;
                     let prob_idx = 0x100 + (match_bit << 8) + sym;
                     let bit = range.decode_bit(&mut sub_probs[prob_idx])?;
                     sym = (sym << 1) | (bit as usize);
@@ -360,9 +361,10 @@ pub fn lzma_decompress_bounded(
 
                     if slot < 14 {
                         let offset = dist - slot;
-                        let extra = range.decode_reverse_bit_tree(
-                            &mut spec_pos[offset..offset + (1 << num_direct_bits)],
-                        )?;
+                        let slice = spec_pos
+                            .get_mut(offset..offset + (1 << num_direct_bits))
+                            .ok_or(SwfError::CorruptedData)?;
+                        let extra = range.decode_reverse_bit_tree(slice)?;
                         dist += extra;
                     } else {
                         let direct = range.decode_direct_bits(num_direct_bits - 4)? as usize;
@@ -405,4 +407,34 @@ pub fn lzma_decompress_bounded(
     }
 
     Ok(output)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_lzma_decode_direct_bits_wrapping() {
+        let raw = [0u8, 0x20, 0x00, 0x00, 0x00, 0x00];
+        let mut rd = RangeDecoder::new_range_decoder(&raw).unwrap();
+        // Force range > code to exercise wrapping_sub and wrapping_add
+        rd.range = 0x8000_0000;
+        rd.code = 0x2000_0000;
+        let bit = rd.decode_direct_bits(1).unwrap();
+        assert_eq!(bit, 0);
+    }
+
+    #[test]
+    fn test_lzma_spec_pos_slot_13_slice_bounds() {
+        let mut spec_pos = [1024u16; 115];
+        let slot = 13usize;
+        let num_direct_bits = (slot >> 1) - 1; // 5
+        let dist = (2 | (slot & 1)) << num_direct_bits; // 96
+        let offset = dist - slot; // 83
+        let slice = spec_pos
+            .get_mut(offset..offset + (1 << num_direct_bits))
+            .expect("slot 13 slice within 115 elements");
+        assert_eq!(slice.len(), 32);
+        assert_eq!(offset + (1 << num_direct_bits), 115);
+    }
 }

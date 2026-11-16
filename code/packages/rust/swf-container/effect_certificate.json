@@ -1,7 +1,7 @@
 {
   "schema_version": "ver24-effect-cert-v1",
   "package": "rust/swf-container",
-  "source_digest": "e989ce62855ccfe97251abacd732247e7fed37178188ba97a234ad6a8722a492",
+  "source_digest": "920a886ef2050b699afaa86bbef8d74989dcbda3c0b7120c27f2f2302a6e722e",
   "manifest_digest": "26782272247f11f1985869578021522686372be39fc0aa2eed8cbea9c0b107ee",
   "declared_effects": [],
   "entry_points": [

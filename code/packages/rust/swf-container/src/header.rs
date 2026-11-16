@@ -66,7 +66,7 @@ impl SwfHeader {
         let sig_bytes: SignatureBytes = [bytes[0], bytes[1], bytes[2]];
         let signature = SwfSignature::from_signature_bytes(sig_bytes)?;
         let version = bytes[3];
-        if version == 0 {
+        if version == 0 || version > 50 {
             return Err(SwfError::UnsupportedVersion);
         }
 
