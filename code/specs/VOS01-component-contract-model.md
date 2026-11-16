@@ -1257,10 +1257,11 @@ Each has a recommended answer, which this document assumes until decided.
 
 ## 9. Findings against VOS00 and the toolchain
 
-Found while making VOS00's anatomy precise. VOS00 is **not** edited here; each
-finding is logged in [the backlog](VOS-BACKLOG.md) under "Discovered work" and the
-umbrella is amended in a follow-up. Until then this document governs the detail
-and VOS00 governs the program.
+Found while making VOS00's anatomy precise. Each finding is logged in
+[the backlog](VOS-BACKLOG.md) under "Discovered work". **F1-F9 were applied to
+VOS00 in the same PR** (second commit): VOS00 now states each resolution
+concisely and cites this document for the detail, so the two agree. The backlog
+rows stay open where the fix is tooling, not text.
 
 | # | Finding | Where | Backlog |
 |---|---|---|---|

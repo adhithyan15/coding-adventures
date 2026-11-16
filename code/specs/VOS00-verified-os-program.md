@@ -294,7 +294,9 @@ place that has to be proved about all of them together (rule 3).
 
 **Rule 2. Single ownership of each field of K.** The kernel state K is a
 record; every field is owned by exactly one component. No `static mut`, no
-interior mutability, no globals.
+interior mutability, no globals. (Checked by the shape check of VOS01 section
+1.4, rules SH3 and SH14, which does not exist yet: backlog VOS-D002. Until it
+does, this rule is reviewed, not checked.)
 *Why:* frame conditions ("this operation changed nothing else") are the most
 expensive thing to prove about stateful code. If each field has one owner and
 the type system enforces it, the frame condition is true by construction and
@@ -314,8 +316,10 @@ preserves it.
 
 **Rule 4. Every interface ships a most-general implementation
 `vos-<iface>-any`.** It takes one extra oracle input and can return any
-output the *safety* contract permits. System theorems (isolation, integrity,
-confinement) are evidenced over the `-any` components.
+output the *safety* contract permits. System theorems that are single-trace
+safety properties (isolation, integrity, confinement) are evidenced over the
+`-any` components. Noninterference (a hyperproperty) and liveness do not follow
+from refinement and need more: VOS01 section 3.4, backlog VOS-D007 and VOS-031.
 *Why, three reasons.* First, a theorem proved over `-any` holds for every
 implementation of the safety tier, including implementations nobody has
 written yet, which is exactly the replaceability promise. Second, building
@@ -337,7 +341,8 @@ no tool will ask for it.
 
 **Rule 7. Bounded by construction.** Kernel paths use loop-free code or loops
 whose bound is a configuration constant; no recursion; no division; no
-allocation. Prefer bitmaps to queues.
+allocation. Prefer bitmaps to queues. (Checked by shape rules SH1 and SH5 to
+SH8 of VOS01 section 1.4; until that analyzer exists, VOS-D002, reviewed only.)
 *Why:* bounded code is what the enumeration budget and the future symbolic
 executor can reach at all (the budget is 400,000 cases and 64 MiB per claim,
 VER04m section 4.2 E7 and E10), and what lets timing compose as an
@@ -369,7 +374,7 @@ such as `vos-sched-contract`. A contract contains, in this order:
 | Policy tier | What a profile needs beyond safety | Fixed-priority order, round-robin fairness, EDF |
 | Resource bounds | Maximum instructions and bytes per op | Rule 8 |
 | Timing and flow labels | Which inputs may influence which outputs and durations | Noninterference (section 11) |
-| Effect footprint | An empty capability set, `no_std`, no `unsafe` | The D21 capability cage |
+| Effect footprint | An empty capability set, `no_std`, no `unsafe` | The D21 capability cage. VER08a checks only part of this; the rest needs the new shape check (VOS-D002, VOS01 section 1.4) and is reviewed until it exists |
 | Caller preconditions | What the spine must establish before each call | Rule 6 |
 | Configuration constants | The sizes (thread count N, priority levels P) and the values the claim was evidenced at | Section 9.3: a proof at N=8 says nothing about N=64 unless it says so |
 
@@ -388,14 +393,19 @@ once per profile.
 * No `dyn` and no function pointers. A trait object would hide which
   implementation runs, and an indirect call is something the image-level proof
   cannot follow.
-* Spine call sites use UFCS (`<Impl as Sched>::pick(...)`), so a call site
-  names its implementation. VER29's lexical reach pass cannot resolve method
-  calls or trait paths (limit 4), so the UFCS form is a stopgap that keeps a
-  grep-level audit possible until the reach pass learns trait paths (VER29
-  slice 4, section 12).
-* The contract package owns the `.warrant`. An implementation is a *binding*
-  of it. A profile manifest records which implementation realises which
-  interface, with digests of the contract and implementation.
+* Spine call sites use UFCS through the profile's associated type
+  (`<P::Sched as Sched>::pick(...)`), so a call site names the *interface* and
+  one `impl Profile` block names the implementation. The spine source is then
+  identical for every profile, which rule 5 needs. VER29's lexical reach pass
+  cannot resolve method calls or trait paths (limit 4), so the UFCS form is a
+  stopgap that keeps a grep-level audit possible until the reach pass learns
+  trait paths (VER29 slice 4, section 12). Detail: VOS01 section 1.2.
+* The contract package owns the contract document. Each implementation package
+  carries a *generated, digest-checked* document: the contract block copied
+  verbatim plus its own implementation block (a `.warrant` stem is a package
+  directory and a document has no imports, VER29 sections 3.1 and 15). A profile
+  manifest records which implementation realises which interface, with digests
+  of the contract and implementation. Detail: VOS01 section 2.10, VOS-D003.
 
 ### 4.6 The HAL
 
@@ -425,7 +435,12 @@ choice is the open decision in section 14.3:
 
 The program's direction is option 1, amended through the existing backlog row
 LV-005 rather than forking VER29 (risk 4). VOS02 (backlog VOS-004) carries the
-exact amendment text.
+exact amendment text. The decision must cover all four id kinds, functional,
+resource, timing and capability (VER29 section 3.1), not only the functional one
+used above: a VOS contract has bounds, a footprint and, for partitioned
+profiles, timing, and VER29 does not publish the last three until its slice 2
+(section 13 there). Until then bounds and footprint are checked at the profile
+gate, not linked by id.
 
 ### 4.8 A kernel entry, step by step
 
@@ -701,6 +716,20 @@ This is the promise in the owner direction, stated so it can be checked.
 > They do **not** re-prove: any other component, the spine invariant, or any
 > system theorem.
 
+The list is complete only with three further items, which VOS01 section 5.8
+works through:
+
+* **Per-image artifacts are regenerated.** The image changes whenever any
+  component does, so CI redoes the monitor run, the emulator instruction counts
+  and any X3 image proof. They are regenerated mechanically, not re-authored.
+* **Manifest and tier eligibility.** The profile manifest row changes (the swap
+  is a manifest edit), and a validator checks that the new implementation
+  discharges every tier its interface needs in that profile.
+* **Contract ceilings.** The contract states a ceiling per operation; the new
+  implementation declares a bound at or under it. The entry-level timing bound
+  (rule 8) is built from ceilings, so it stays valid across a swap inside the
+  ceilings and only measured numbers move.
+
 Why this follows from the rules:
 
 * Rule 1 (no calls) means no other component's proof mentions the scheduler's
@@ -710,8 +739,10 @@ Why this follows from the rules:
 * Rule 3 (spine invariant over abstract states) means the cross-component
   invariant mentions only the contract's state, which the new implementation
   refines.
-* Rule 4 (`-any`) means system theorems were evidenced (at the bar printed for each, section 9) over every possible safety
-  behaviour, so a refining implementation is already covered.
+* Rule 4 (`-any`) means system theorems that are single-trace safety
+  properties were evidenced (at the bar printed for each, section 9) over every
+  possible safety behaviour, so a refining implementation is already covered.
+  This does not extend to noninterference or liveness (VOS-D007, VOS-031).
 
 A concrete first exercise (backlog VOS-011 and VOS-012): the fixed-priority
 bitmap scheduler `vos-sched-fp-bitmap` is evidenced exhaustively at eight
@@ -750,9 +781,14 @@ manifest, never typed by hand.
 
 | Bar | Name | Means | Reachable when |
 |---|---|---|---|
-| X1 | Exhaustive, reduced | `exhaustive` on a *reduced configuration*, with closure and init evidenced | Now, for small N |
+| X1 | Exhaustive, reduced | `exhaustive` on a *reduced configuration*, with closure and init evidenced | Now, for small N. For by-value operations closure and init are a model lemma plus subject claims (a closure conjunct, an init `example`) until WX-S1 and VER04m S3; see VOS01 section 2.2 and VOS-D005 |
 | X2 | Exhaustive plus shipped-size evidence | X1, plus property, fuzz and monitor evidence at the shipped configuration | Now, for the RTOS profiles |
 | X3 | Proved on the image | `proved` on the compiled image, per instance, with a certificate | After the symbolic RV32 executor (section 10) |
+
+Resource and timing evidence measured on the emulator is labelled as VER29
+section 7.1 labels it, `example`, even for a complete sweep, until a bench entry
+can declare its domain complete (VOS01 section 2.5, VOS-D004). X2 therefore
+claims no better than `example` for it.
 
 X1 exists because the enumeration budget is 400,000 cases and 64 MiB per claim
 (VER04m section 4.2, E7 and E10). A scheduler over 8 unique priorities can be
@@ -769,7 +805,10 @@ The program does not invent labels. It reuses VER29 section 6.1 (`proved`,
 printing rules follow:
 
 1. Every label prints the configuration constants of the instance it was
-   evidenced at (N, P, priority levels).
+   evidenced at (N, P, priority levels). Today a pinned example checks the
+   value; a manifest and report field to print it, and the binding support the
+   refinement claims need (private-field state, variant-result faults), are
+   VOS-D006, folded into VOS-004 (VOS01 sections 1.5, 2.3 and 2.9).
 2. Counts per kind are manifest-derived. The VER-P030 audit found hard-coded
    counts; this program never has one.
 3. A claim that rests on `-any` says so, because that is the evidence that it
