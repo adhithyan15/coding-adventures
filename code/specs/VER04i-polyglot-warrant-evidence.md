@@ -342,15 +342,15 @@ reject a tag it does not know).
 | `65` | variant | VER04r 2.4 | renumbered 2026-11-16 (was `62`) |
 | `66` | `Set` | VER04o 8.2 | spec only (2026-11-16) |
 | `67` | `Map` | VER04o 8.2 | spec only (2026-11-16) |
-| `68` to `79` | free; the next specification (VER04s recursive types, if it needs one) takes from `68` | none | free |
+| `68` to `79` | free; VER04s (recursive types) took none, so the next specification takes from `68` | none | free |
 | `80` | opaque recipe | VER04n 9.1 | merged 2026-11-16 |
 | `81` | opaque observation tuple | VER04n 9.1 | merged 2026-11-16 |
 | `82` to `8f` | reserved for VER04n | VER04n 9.1 | reserved |
 | `90` to `ff` | free | none | free |
 
-VER04s (recursive types) is expected to need no tag of its own: a value of a
-recursive type is a variant (`65`) whose fields nest. If its design needs one, it
-takes `68` (VER04o took `66` and `67`).
+VER04s (recursive types) took **no** tag: a value of a recursive type is a variant
+(`65`) whose fields nest, and a second tag would give one value two encodings
+(VER04s 7.1). `68` is still the lowest free value (VER04o took `66` and `67`).
 
 **Diagnostic codes** (`W` codes of the Warrant checker and generator).
 
@@ -366,7 +366,8 @@ takes `68` (VER04o took `66` and `67`).
 | `W0734` to `W0749` | free | none | free |
 | `W0750` to `W0759` | opaque types (`W0750` to `W0753` assigned) | VER04n | merged; the block is reserved |
 | `W0760` to `W0769` | collections and generics (`W0760` to `W0765` assigned) | VER04o | spec only (2026-11-16); the block is reserved |
-| `W0770` and up | free | none | free |
+| `W0770` to `W0779` | recursive types (`W0770` to `W0773` assigned) | VER04s | spec only (2026-11-16); the block is reserved |
+| `W0780` and up | free | none | free |
 
 On 2026-11-16 the registry was built by reading every specification under
 `code/specs` that allocates either kind. **Stream tags had three collisions**
@@ -1055,9 +1056,10 @@ exact keys are `lane`, `package`, `module`, `package_root`, `binding`,
 path, runner entry, evidence-manifest path, build files, and
 `status: "planned"|"active"`. In this first profile, each `build_files` array
 contains one or two unique paths. Planned entries reserve identity and paths
-only; they cannot authorize a passing lane result. WD-004a registers
+only; they cannot authorize a passing lane result. WD-004a registered
 `python/ct-compare` as `planned`; no entry becomes active until its binding,
-runner, evidence manifest, and build routing exist.
+runner, evidence manifest, and build routing exist. WD-004b1 (section 8.2)
+flips the Python row and adds the TypeScript and Go rows, all `active`.
 
 Registry path values are lexically normalized, slash-separated,
 repository-relative paths with no empty, `.` or `..` component and no
@@ -1148,6 +1150,115 @@ roots; a package with a native tree and no declared native root fails
 and the `warrant-corpus` runner for each lane to call (`source-digest
 --lane python --root …`), so producers cannot drift from the checker.
 Lanes never re-implement the framing.
+
+### 8.2 The lane artifact loader and static readiness (WD-004b1)
+
+WD-004a parses bytes. WD-004b1 adds the first code that *opens* the lane
+artifacts: `ca-assurance-report`'s `lane_loader` module (library only; no CLI
+and no report output, which are WD-004b2). The legacy Rust loader
+(`warrant-test-evidence-v1`, `evidence.rs`) is untouched, a Rust package's
+`assurance_report.json` does not change, and a legacy manifest is still never
+read as a lane manifest: the loader only reads packages that the consumer
+registry lists, and `rust/*` is not in the registry.
+
+**Artifact set.** For one registered package the loader reads, in this order:
+the registry (`<corpus>/consumers.json`), the spec, `corpus.json`, `cases.tfv`,
+the registry's `evidence_manifest`, the labels sidecar
+`<package_root>/evidence/domain-labels.json`, the registry's `binding` file and
+each `build_files` entry. Every read is bounded before it happens: registry,
+manifest and sidecar 16 MiB (`MAX_MANIFEST_BYTES`), spec 4 MiB, corpus and TFV
+32 MiB (the WD-004a caps), binding 1 MiB, a BUILD file 256 KiB. A file that
+grows between the size check and the read is still cut at the cap and refused.
+
+**Path safety.** The registry's paths are already lexically normalised
+(section 8). Opening adds three rules. (1) The path is joined to the supplied
+repository root and checked by the lexical containment rule of the lane runners
+(both paths absolute, `.`/`..` normalised, every component of the root a leading
+component of the child, whole components never string prefixes; the `win32`
+flavour is case-insensitive, accepts `/` and `\`, never calls two drives or UNC
+shares contained, and treats a device path `\\?\` or `\\.\` as never inside;
+a POSIX path that starts with exactly two slashes is never inside; the host's
+flavour is used in production, both are tested). (2) Every component beneath
+the root is examined with `symlink_metadata` and a symbolic link (or a Windows
+reparse point std reports as one) is refused: symlink safety is by refusal, not
+by resolving with `canonicalize`, which on Windows returns a `\\?\` device path
+that rule (1) would, correctly, never call inside. (3) The target must be a
+regular file. The repository root itself is trusted and may be reached through a
+symlink. A local attacker who can rewrite the worktree concurrently can still
+race the check; the loader defends against a hostile checkout, not a hostile
+co-tenant process.
+
+**Strict JSON.** The manifest, registry and sidecar are parsed by the WD-004a
+parser (UTF-8, canonical integers only, duplicate keys and excess depth
+rejected, closed key sets). The sidecar adds its own closed schema
+(`warrant-lane-domain-labels-v1`).
+
+**Raw digest checks (the whole list).** Each is a SHA-256 of the exact bytes
+read, compared with a recorded value:
+
+| Check | Compared |
+|---|---|
+| `spec_sha256` | spec file, and the corpus's recorded spec digest |
+| `corpus_sha256`, `cases_sha256` | `corpus.json`, `cases.tfv` |
+| `binding_sha256` | the registry's `binding` file, raw bytes |
+| labels binding | the sidecar's `manifest_sha256` against the digest below |
+
+*Labels digest.* The digest is the SHA-256 of the canonical rendering
+(object keys by code point, two-space indent, `: ` after a key, LF line
+endings with one final LF, every character outside U+0020..U+007E escaped as
+lowercase `\uXXXX`, integers in plain decimal) of the manifest with
+`toolchain.version` replaced by the empty string. `toolchain.name` is read from
+the manifest, never a literal, so a different name is a different digest and a
+different version is the same digest. The loader also re-derives every suite's
+label from its binder domain descriptors (`bool`, `u8_all`, `Bytes<0>`,
+`Bytes<1>` are `full`; `u64_edge`, `bytes_d1`, `nat_0_64` and `bytes_n(N>=2)`
+are `bounded-set`; a suite is as weak as its weakest binder) and requires the
+sidecar's suite ids, domains and case counts to equal the manifest's
+exhaustive rows and `cases_by_label` to be their sum. The report quotes
+`cases_by_label`, never the manifest's "exhaustive" total (LP-012).
+
+**What is not digest-checked.** `runner.src_sha256` and `source_sha256` are
+format-checked (64 lowercase hex) and recorded, **not recomputed**. Recomputing
+them needs a per-lane production-source rule (section 8.1) and a runner package
+root, neither of which the registry carries; the freshness check (section 9,
+check 23) belongs to WD-004b2. `toolchain.version` is never evidence.
+
+**Registry join.** A package is loadable only if the registry has exactly one
+row for it and that row is `active`. `status: "active"` now means exactly
+this: the binding, runner entry, evidence manifest and build files named by
+the row exist, open safely, and pass the checks of this section. It does not
+say the runner ran, the sources are fresh or the toolchain is genuine.
+`planned` rows (none today) still cannot authorize a lane result. The
+checked-in registry lists `go/ct-compare`, `python/ct-compare` and
+`typescript/ct-compare`, all `active`, `active_consumer_count` 3.
+
+**Static readiness checks (the whole list).** A successful load carries the
+names of the checks that passed; any failure is an error, never a partial
+result.
+
+| Name | Check |
+|---|---|
+| `paths-contained` | every registered path opened under the rules above |
+| `registry-active` | exactly one `active` row for the package, manifest identity equal to it |
+| `corpus-digests` | spec, corpus and TFV raw digests |
+| `corpus-join` | the WD-004a join: ids, counts, stream digests, controls |
+| `binding-digest` | `binding_sha256` against the binding file |
+| `runner-identity` | `runner.name` is `warrant-corpus` and `runner.lane` is the lane |
+| `labels-bound` | sidecar identity, labels digest, descriptor labels, join |
+| `build-routing` | each build file is text that names `evidence/test-manifest.json` and `sabotage` |
+
+`build-routing` is a text search. It shows the routing was written; it does not
+show the BUILD ran or passed. Readiness output always ends with the unclaimed
+list: source freshness, runner source digest, toolchain authenticity, build
+execution and the sandbox. The sandbox is `not-armed` (section 12) in every lane
+today, so `release_ready` is `false` and no readiness result can be read as
+release-ready. The loader makes no authenticity claim about the source, the
+build or the toolchain beyond the named checks above.
+
+**Hooks left for WD-004b2.** `load_lane` and `load_active_lanes` return typed
+values (manifest, labels, readiness) for report integration; they do not
+generate a report, change `--check`, render absent rungs or touch the Rust
+proof and effect attestations.
 
 ## 9. Report generation and fail-closed checking per lane
 
@@ -1314,28 +1425,44 @@ whose default skips the device rule tests something production never calls. Syml
 scope for the cases: resolving them (`realpath`) is the caller's job and must happen
 *before* this check; a lane that skips it must say so.
 
-**Pending implementation: two cross-lane path rules (2026-11-16, backlog
-`WD-100b`).** A review of the conformance kit found two places where the lanes
-disagree with the Rust loader (PR #19492) or with each other. Both rules below are
-**normative now** and **not yet implemented**: they are pinned in
-`warrant-corpus-conformance-v1` as new cases (added only, never changing an
-existing expectation; if one existing case turns out to say otherwise, that
-expectation moves to `-v2`) and applied to the Python, TypeScript and Go lanes and
-to the Rust loader. Until a lane passes them it must say so in its manifest, and it
-does not count as passing the kit.
+**Two cross-lane path rules (implemented 2026-11-16, backlog `WD-100b`).** A review
+of the conformance kit found two places where the lanes disagreed with the Rust
+loader (PR #19492) or with each other. Both rules below are pinned in
+`warrant-corpus-conformance-v1` as 64 added containment cases (77 to 141; the
+fixture is 461 cases; no existing expectation changed) and are applied by the Python,
+TypeScript and Go lanes and by the Rust loader's `lexical_containment`; the checker's
+reference and its string-level second opinion derive them independently.
 
-1. **Windows reserved device names are refused.** A path component is *reserved*
-   if, after removing any trailing dots and spaces, and then removing everything
-   from the first `.` onward (the extension, so `CON.txt` and `nul.tar.gz` are
-   reserved), the remainder equals `CON`, `PRN`, `AUX`, `NUL`, `COM1` to `COM9` or
-   `LPT1` to `LPT9`, compared ASCII case-insensitively. A component that merely
-   ends in a dot or a space (`name.`, `name `) is also refused, because Windows
-   silently strips them and two spellings would name one file. A path containing a
-   reserved or trailing-dot-or-space component is **refused** by the lane's
+1. **Windows reserved device names are refused.** A path component is *refused*
+   if any of these holds (security review of WD-100b widened the first draft, which
+   missed real device paths):
+   (a) it contains a colon (`CON:`, `CON:stream`, `nul::$DATA`, `file.txt:NUL`:
+   an alternate data stream or device suffix);
+   (b) it ends in a dot or a space (`name.`, `name `), because Windows silently
+   strips them and two spellings would name one file;
+   (c) its *stem* is reserved. The stem is the part before the **first** `.`, with
+   trailing spaces then removed (so `CON.txt`, `nul.tar.gz` and `CON .txt` are
+   reserved). The reserved set is `CON`, `PRN`, `AUX`, `NUL`, `COM1` to `COM9`,
+   `LPT1` to `LPT9`, `CONIN$`, `CONOUT$`, and the superscript forms `COM` or `LPT`
+   followed by U+00B9, U+00B2 or U+00B3 (Windows treats them as devices), compared
+   with ASCII case-insensitivity: only `A` to `Z` fold, so the superscripts match
+   exactly. `CLOCK$` (removed from current Windows) and fullwidth `ＣＯＮ` (not a
+   device: Windows does not fold it) stay ordinary names, as do `CONsole`, `COM10`
+   and `LPT0`.
+   A path containing a
+   refused component is **refused** by the lane's
    artifact-path acceptance on **every host flavour** (an artifact written on Linux
    must load on Windows) and, under `win32`, a containment query with such a
-   component in `child` answers `inside: false`. The Rust loader already refuses
-   these; the lanes do not.
+   component in `child` answers `inside: false`. As implemented: the check
+   (win32 children only; a colon is ordinary in `posix`: `a.b:c` is inside)
+   runs on the **child's** components after `.` and `..` are normalised (so
+   `D:\repo\CON\..\x` is `D:\repo\x`), never on the anchor (drive or share)
+   and never on `root`; `posix` containment has no such rule (`/repo/NUL` is
+   inside `/repo`), because the refusal for a path that will be *written* is the
+   artifact-path acceptance's job. The three lanes expose the containment helper
+   only, so the every-host artifact-path acceptance is applied today by the Rust
+   registry-path validator (`validate_repo_path`); a lane that adds an artifact
+   loader must refuse the same names on every host.
 2. **`win32` case-insensitive comparison folds ASCII only.** Under `win32` two
    components are equal if they are equal after mapping `A` to `Z` onto `a` to `z`
    and **nothing else**: every non-ASCII code point is compared exactly, so
@@ -1344,7 +1471,10 @@ does not count as passing the kit.
    root only by a non-ASCII case variant is **not inside** it. Go (`strings.EqualFold`
    with its Unicode simple folding) and Python (`casefold`/`lower`) differ today
    on exactly those characters, so the rule is a defined behaviour in place of two
-   different accidents.
+   different accidents. The comparison also covers the drive letter and the UNC
+   server and share. Node's `path.win32.relative` and the Rust `to_lowercase`
+   fold Unicode too, so all four implementations replaced their library
+   comparison with an explicit ASCII fold.
 
 **Label digest.** The `domain-labels.json` digest is the SHA-256 of the canonical
 rendering of the manifest with `toolchain.version` replaced by the empty string.
@@ -1356,7 +1486,7 @@ is the same digest.
 subject result of §2.5 are not in this fixture; each lane covers them with its
 falsification tests until a later category lands (case files are only *added* to
 `-v1`; changing an expectation means `-v2`). The Go lane (WD-103) merged before the
-fixture existed and adopts it in a follow-up.
+fixture existed and now passes it.
 
 ## 10. Layer C: proofs per lane (not-live)
 
@@ -1609,11 +1739,9 @@ dependency graph.
   corpus is read by a strict JSON parser that rejects duplicate keys and any
   non-safe-integer number. (4) The failure-id set, work bounds, CLI and
   manifest of §6.2 and §8 are unchanged. (5) Still open: the
-  `warrant-corpus-conformance-v1` fixture; the registry row for
-  `typescript/ct-compare` (the checked-in registry lists only
-  `python/ct-compare`, and the TypeScript BUILD therefore validates the
-  manifest without `--registry`); the VER08b sandbox run (CAP-RT-1xx,
-  TypeScript/Node).
+  `warrant-corpus-conformance-v1` fixture; the VER08b sandbox run
+  (CAP-RT-1xx, TypeScript/Node). The registry row for `typescript/ct-compare`
+  and the BUILD `--registry` flag were open here and are done in WD-004b1.
 * **WD-100 (shared runner conformance fixture).** §9.1 pins the reader profile,
   the canonical writer, the containment profile and the label digest, and the
   fixture `warrant-corpus-conformance-v1` (with its independent checker) now
@@ -1640,7 +1768,27 @@ dependency graph.
   contained with a cross-drive-safe check whose `Rel` error is a refusal. (6) The
   failure-id set, work bounds, CLI and manifest of §6.2 and §8 are unchanged; the
   Go lane's case count equals the other lanes' (572,109). (7) Still open: the
-  `warrant-corpus-conformance-v1` fixture; the registry row for `go/ct-compare`
-  (the checked-in registry lists only `python/ct-compare`, so the Go BUILD
-  validates the manifest without `--registry`); the VER08b sandbox run
-  (CAP-RT-1xx, Go: OS sandbox around the test binary).
+  `warrant-corpus-conformance-v1` fixture; the VER08b sandbox run
+  (CAP-RT-1xx, Go: OS sandbox around the test binary). The registry row for
+  `go/ct-compare` and the BUILD `--registry` flag were open here and are done
+  in WD-004b1.
+* **WD-004b1 (lane loader) amendments.** (1) Section 8.2 is new: bounded,
+  contained, symlink-refusing reads of the registry, spec, corpus, TFV,
+  manifest, labels sidecar, binding file and build files; the raw digest list;
+  the labels digest (canonical rendering with `toolchain.version` blanked);
+  the named static readiness checks; the unclaimed list. (2) The registry
+  rows for `go/ct-compare`, `python/ct-compare` and `typescript/ct-compare` are
+  `active`, which means only what section 8.2 says. (3) `runner.src_sha256`
+  and `source_sha256` are format-checked and recorded but not recomputed:
+  the registry has no runner root and the per-lane source rules are
+  section 8.1's, so the freshness check (section 9, check 23) stays with
+  WD-004b2. (4) The Python, TypeScript and Go runners' own tests no longer
+  pin the checked-in registry to `planned` or to a single Python row; they
+  build the planned and unregistered cases from synthetic registries; the
+  TypeScript and Go BUILD lines now pass `--registry`. (5) Security-review
+  hardening: the sidecar is read with the manifest's strict integer-token
+  rules, its case sums are overflow-checked, and registry paths refuse Windows
+  reserved device names and trailing dots. (6) Still open: report and CLI
+  integration, absent rungs, the sandbox, the check-to-open race (documented in
+  section 8.2), BUILD lines passing `--require-active`, and junction or
+  reparse-point tests on a Windows runner (all WD-004b2).

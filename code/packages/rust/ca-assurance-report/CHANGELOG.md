@@ -2,6 +2,36 @@
 
 ## Unreleased
 
+- **WD-100b security-review follow-up.**  `refused_component` also refuses any win32 child component with a `:`
+  (alternate data streams and device suffixes), takes the reserved stem before the first `.` with trailing spaces
+  trimmed (`CON .txt`), and adds `CONIN$`, `CONOUT$` and `COM`/`LPT` with a superscript 1, 2 or 3.  `CLOCK$` and
+  fullwidth `CON` stay ordinary.  Fixture test now 141 cases.  `effect_certificate.json` regenerated again (only
+  `source_digest`; capabilities unchanged).
+- **WD-100b: ASCII-only win32 folding and reserved names in `lexical_containment`.**  The win32 flavour folded
+  names (and the UNC server and share) with `str::to_lowercase`, which is full Unicode (the Kelvin sign equalled
+  `k`); it now uses `to_ascii_lowercase`, so every non-ASCII code point is compared exactly and a non-ASCII case
+  variant is "not inside" (fails closed).  A win32 child with a reserved device name (`CON`, `PRN`, `AUX`, `NUL`,
+  `COM1`..`COM9`, `LPT1`..`LPT9`, with or without an extension) or a component ending in a dot or space is never
+  inside (`refused_component`).  The shared-fixture test now runs 120 cases (43 new) and a new test pins the names,
+  look-alikes and the non-ASCII pairs.  `effect_certificate.json` regenerated (only `source_digest` moved; declared
+  effects and capabilities unchanged).  `validate_repo_path` (registry paths) already refused these names and is
+  unchanged.
+
+- **Safe lane artifact loader** (WD-004b1, VER04i 8.2).  New `lane_loader` module (library only; no CLI or
+  report change, those are WD-004b2): `read_repo_file` (bounded, lexically contained in the host path flavour,
+  every symbolic link refused, regular files only), `lexical_containment` (the lane runners' shared rule, both
+  flavours), `canonical_json` and `labels_manifest_digest` (`toolchain.version` blanked, name kept; reproduces the
+  Python, TypeScript and Go runners' `manifest_sha256`), `parse_domain_labels` (closed schema, labels re-derived from
+  domain descriptors), `load_lane` and `load_active_lanes` (registry join, raw digests of spec, corpus, TFV and binding,
+  the WD-004a join, eight named static readiness checks).  `LoadedLane::render_readiness` ends with the unclaimed list
+  (source freshness, runner source digest, toolchain authenticity, build execution, sandbox) and `release_ready: false`.
+  `runner.src_sha256` and `source_sha256` are format-checked only.  `lane_evidence` only widened `CORPUS_DIR`,
+  `CORPUS_FILE`, `SPEC_FILE` to `pub` and `validate_repo_path` to `pub(crate)`.  The legacy Rust loader and every Rust
+  adopter's `assurance_report.json` are unchanged.
+- **Registry flip.**  `consumers.json` lists `go/ct-compare`, `python/ct-compare` and `typescript/ct-compare`, all
+  `active`; `test_lane_evidence.rs` no longer pins the Python row to `planned` and builds its planned case from the
+  checked-in registry.
+
 - **Multi-language `LanguageSafetyProfile` and fail-closed non-crypto CWE-208 exclusion** (VER-W0-A; closes blockers for Music and DSP packages):
   - **CWE-208 (`Observable Timing Discrepancy`)**: When `ctx.constant_time_claims.is_empty()`, `ctx.evidence.ct_proof_ids.is_empty()`, `!ctx.has_secret_ops`, and `!ctx.evidence.no_secret_operand_ids.is_empty()`, mark CWE-208 as `Excluded` under the `no_secret_inputs` safe subset citing both `"capability-audit::no-secret-inputs"` and `"warrant-spec::all-operands-public"`. Any missing attestation, unproven constant-time obligation, or secret operation strictly fails closed (`MatrixError::OpenRow`). `verify_evidence` and `checker.rs` cross-check both attestations and verify zero secret ops or constant-time claims/proofs exist.
   - **Multi-language `LanguageSafetyProfile`**: Introduced `LanguageSafetyProfile` enum (`SafeRust`, `GcManaged { language: String }`, `ManualMemoryChecked { language: String }`) to model language memory safety invariants for Family 1 (CWE-416, 787, 125, 415, 476, 190).

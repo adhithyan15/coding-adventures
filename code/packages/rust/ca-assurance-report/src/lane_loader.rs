@@ -1,0 +1,1016 @@
+//! # The safe lane artifact loader (WD-004b1, VER04i section 8.2)
+//!
+//! [`crate::lane_evidence`] (WD-004a) parses *bytes*.  This module is the first
+//! code that *opens files*, so it is where the hostile-checkout questions get
+//! answered:
+//!
+//! 1. **Can a registry path make us read something outside the repository?**
+//!    No: [`read_repo_file`] joins a lexically-validated relative path to the
+//!    repository root, re-checks containment with the lane runners' shared
+//!    rule ([`lexical_containment`]), refuses every symbolic link beneath the
+//!    root, and insists on a regular file.
+//! 2. **Can a file be so large that reading it is itself the attack?**  No:
+//!    every read has a cap that is checked against the file's size *and* again
+//!    against the bytes actually read.
+//! 3. **Do the recorded digests describe the bytes on disk?**  Each raw digest
+//!    is a SHA-256 of exactly the bytes this loader read (VER04i 8.2).
+//! 4. **Is the evidence honest about what it does not know?**  A successful
+//!    load carries the *names* of the static checks that passed and a list of
+//!    what is **not** claimed.  Nothing here says the sources are fresh, the
+//!    build ran, or the toolchain is genuine.
+//!
+//! ## What this module is not
+//!
+//! * It is not a report generator and has no CLI (WD-004b2).
+//! * It never touches the legacy Rust loader in [`crate::evidence`]: a Rust
+//!   package is not in the consumer registry, so [`load_lane`] refuses it with
+//!   `not-registered`, and a Rust `warrant-test-evidence-v1` manifest is never
+//!   read as a lane manifest.
+//! * It does not recompute `source_sha256` or `runner.src_sha256` (they need a
+//!   per-lane source rule and a runner root the registry does not carry).
+//!
+//! ## Reading order of one [`load_lane`]
+//!
+//! ```text
+//!   registry ──► row for <package> ──► status must be "active"
+//!      │
+//!      ├─ spec, corpus.json, cases.tfv   (bounded, contained, raw bytes)
+//!      ├─ manifest ──► strict parse ──► identity equals the registry row
+//!      ├─ raw digests: spec / corpus / cases against the manifest
+//!      ├─ WD-004a join: ids, counts, stream digests, controls
+//!      ├─ binding file ──► sha256 equals manifest.binding_sha256
+//!      ├─ runner identity (name + lane)
+//!      ├─ labels sidecar ──► closed schema, labels re-derived, digest bound
+//!      └─ runner entry + build files ──► exist, contained, build routing text
+//! ```
+//!
+//! Any failure is an `Err`; there is no partial result.
+
+#![deny(unsafe_code)]
+
+use std::collections::{BTreeMap, BTreeSet};
+use std::fmt;
+use std::fs;
+use std::io::Read;
+use std::path::Path;
+
+use coding_adventures_sha256::sha256_hex;
+
+use crate::evidence::MAX_MANIFEST_BYTES;
+use crate::json::JsonValue;
+use crate::lane_evidence::{
+    parse_consumer_registry, parse_lane_manifest, validate_integer_tokens, validate_lane_evidence,
+    validate_repo_path, ExhaustiveEntry, LaneConsumer, LaneEvidenceError, LaneEvidenceManifest,
+    LaneTestEntry, CORPUS_FILE, SPEC_FILE,
+};
+
+// ---------------------------------------------------------------------------
+// Caps.  Registry, manifest and sidecar share the WD-004a manifest cap; the
+// spec, corpus and TFV caps are the WD-004a lane-profile caps.
+// ---------------------------------------------------------------------------
+
+const MAX_SPEC_BYTES: u64 = 4 * 1024 * 1024;
+const MAX_CORPUS_BYTES: u64 = 32 * 1024 * 1024;
+const MAX_BINDING_BYTES: u64 = 1024 * 1024;
+const MAX_RUNNER_ENTRY_BYTES: u64 = 4 * 1024 * 1024;
+const MAX_BUILD_FILE_BYTES: u64 = 256 * 1024;
+
+/// The runner every lane manifest must name (VER04i 8: `runner.name`).
+pub const RUNNER_NAME: &str = "warrant-corpus";
+
+/// The static readiness checks, in the order a successful load reports them.
+/// The names are the ones VER04i 8.2 lists; a test pins the two together.
+pub const READINESS_CHECKS: [&str; 8] = [
+    "paths-contained",
+    "registry-active",
+    "corpus-digests",
+    "corpus-join",
+    "binding-digest",
+    "runner-identity",
+    "labels-bound",
+    "build-routing",
+];
+
+/// What a successful load deliberately does **not** establish.  The output of
+/// [`LoadedLane::render_readiness`] always prints this list.
+pub const UNCLAIMED: [&str; 5] = [
+    "source freshness",
+    "runner source digest",
+    "toolchain authenticity",
+    "build execution",
+    "sandbox",
+];
+
+// ---------------------------------------------------------------------------
+// Errors
+// ---------------------------------------------------------------------------
+
+/// A failed load.  `code` is a stable machine-readable id (tests and WD-004b2
+/// match on it); `message` is for humans and never echoes whole untrusted
+/// files.
+///
+/// Codes: `path`, `symlink`, `not-regular`, `too-large`, `io`, `registry`,
+/// `not-registered`, `not-active`, `manifest`, `digest`, `join`,
+/// `runner-identity`, `labels`, `build-routing`.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct LaneLoadError {
+    pub code: &'static str,
+    pub message: String,
+}
+
+impl fmt::Display for LaneLoadError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "lane load error [{}]: {}", self.code, self.message)
+    }
+}
+
+impl std::error::Error for LaneLoadError {}
+
+fn err<T>(code: &'static str, message: impl Into<String>) -> Result<T, LaneLoadError> {
+    Err(LaneLoadError {
+        code,
+        message: message.into(),
+    })
+}
+
+fn lift<T>(code: &'static str, result: Result<T, LaneEvidenceError>) -> Result<T, LaneLoadError> {
+    result.map_err(|LaneEvidenceError(message)| LaneLoadError { code, message })
+}
+
+// ---------------------------------------------------------------------------
+// Lexical containment (the rule every lane runner shares)
+// ---------------------------------------------------------------------------
+
+/// Which path grammar a containment question is asked in.  Production code
+/// always uses [`PathFlavor::host`]; both flavours exist so the rules for the
+/// *other* platform stay testable on this one.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum PathFlavor {
+    Posix,
+    Win32,
+}
+
+impl PathFlavor {
+    /// The flavour of the platform this binary runs on.
+    pub fn host() -> PathFlavor {
+        if cfg!(target_os = "windows") {
+            PathFlavor::Win32
+        } else {
+            PathFlavor::Posix
+        }
+    }
+}
+
+/// The answer to "is `child` inside `root`?".  `same` means the child *is* the
+/// root, in which case `inside` is also true.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct Containment {
+    pub inside: bool,
+    pub same: bool,
+}
+
+const NEVER: Containment = Containment {
+    inside: false,
+    same: false,
+};
+
+/// A path reduced to `(prefix, components)`: two paths can only be related if
+/// their prefixes (root, drive or UNC share) are identical.
+struct Normal {
+    prefix: String,
+    parts: Vec<String>,
+}
+
+/// Split `rest` on `/`, dropping empty and `.` components and letting `..`
+/// pop (a `..` at the root stays at the root).  `fold` lower-cases **ASCII
+/// only** for the case-insensitive Windows flavour (VER04i 9.1, WD-100b):
+/// `str::to_lowercase` is full Unicode and would equate the Kelvin sign with
+/// `k`, so a non-ASCII case variant must stay a different name (fail closed).
+fn components(rest: &str, fold: bool) -> Vec<String> {
+    let mut parts: Vec<String> = Vec::new();
+    for part in rest.split('/') {
+        match part {
+            "" | "." => {}
+            ".." => {
+                parts.pop();
+            }
+            other => parts.push(if fold {
+                other.to_ascii_lowercase()
+            } else {
+                other.to_owned()
+            }),
+        }
+    }
+    parts
+}
+
+/// `None` means "unusable as either side of a containment question": relative,
+/// drive-relative, a device path, or a POSIX `//x` path, all of which the
+/// conservative rule says are never inside anything.
+fn normalize(flavor: PathFlavor, path: &str) -> Option<Normal> {
+    match flavor {
+        PathFlavor::Posix => {
+            if !path.starts_with('/') {
+                return None;
+            }
+            // Exactly two leading slashes is implementation-defined by POSIX;
+            // three or more collapse to one.
+            let leading = path.bytes().take_while(|b| *b == b'/').count();
+            if leading == 2 {
+                return None;
+            }
+            Some(Normal {
+                prefix: "/".into(),
+                parts: components(path, false),
+            })
+        }
+        PathFlavor::Win32 => {
+            // Separators are normalised *before* any prefix rule, so
+            // `\/?\D:\r`, `/\?/D:/r` and `\\?/D:\r` are all device paths.
+            let p = path.replace('\\', "/");
+            if let Some(rest) = p.strip_prefix("//") {
+                let head = rest.split('/').next().unwrap_or("");
+                if head == "?" || head == "." {
+                    return None; // device namespace, including `\\?\UNC\...`
+                }
+                // UNC: `//server/share/...`.  The server and share are the
+                // prefix; fewer than two names is not a path we can reason about.
+                if rest.starts_with('/') {
+                    return None;
+                }
+                let mut names = rest.split('/').filter(|s| !s.is_empty());
+                let server = names.next()?;
+                let share = names.next()?;
+                let tail: Vec<&str> = names.collect();
+                return Some(Normal {
+                    prefix: format!(
+                        "//{}/{}",
+                        server.to_ascii_lowercase(),
+                        share.to_ascii_lowercase()
+                    ),
+                    parts: components(&tail.join("/"), true),
+                });
+            }
+            let bytes = p.as_bytes();
+            if bytes.len() >= 2 && bytes[0].is_ascii_alphabetic() && bytes[1] == b':' {
+                // `C:foo` is drive-relative, not absolute.
+                if bytes.len() < 3 || bytes[2] != b'/' {
+                    return None;
+                }
+                return Some(Normal {
+                    prefix: format!("{}:", (bytes[0] as char).to_ascii_lowercase()),
+                    parts: components(&p[2..], true),
+                });
+            }
+            if p.starts_with('/') {
+                return Some(Normal {
+                    prefix: "/".into(),
+                    parts: components(&p, true),
+                });
+            }
+            None
+        }
+    }
+}
+
+/// Is this a Windows path component that must be refused (VER04i 9.1)?  Any
+/// of: a colon (an alternate data stream or device suffix: `CON:`,
+/// `nul::$DATA`, `file.txt:NUL`); a trailing dot or space (Windows strips
+/// them, so two spellings would name one file); or a *stem* that is a device
+/// name.  The stem is the part before the first `.` with trailing spaces
+/// removed (`CON.txt`, `com1.tar.gz` and `CON .txt` are devices).  The set is
+/// `CON`, `PRN`, `AUX`, `NUL`, `COM1`-`COM9`, `LPT1`-`LPT9`, `CONIN$`,
+/// `CONOUT$` and `COM`/`LPT` plus a superscript 1, 2 or 3; only ASCII folds,
+/// so fullwidth `CON` and `CLOCK$` stay ordinary, as do `console.txt`,
+/// `COM10`, `LPT0` and `CONx`.
+fn refused_component(name: &str) -> bool {
+    if name.contains(':') || name.ends_with('.') || name.ends_with(' ') {
+        return true;
+    }
+    let stem = name.split('.').next().unwrap_or("").trim_end_matches(' ');
+    let stem = stem.to_ascii_uppercase();
+    match stem.as_str() {
+        "CON" | "PRN" | "AUX" | "NUL" | "CONIN$" | "CONOUT$" => true,
+        _ => {
+            let digit = |rest: &str| {
+                matches!(
+                    rest,
+                    "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "\u{b9}" | "\u{b2}" | "\u{b3}"
+                )
+            };
+            stem.strip_prefix("COM").is_some_and(digit) || stem.strip_prefix("LPT").is_some_and(digit)
+        }
+    }
+}
+
+/// Is `child` inside `root`?  Purely lexical: both inputs must be absolute and
+/// nothing is looked up on disk, so symbolic links are the caller's concern
+/// ([`read_repo_file`] refuses them).  Whole components are compared, never
+/// string prefixes (`/rr` is not inside `/r`), and paths on different drives or
+/// shares have no common root, whatever a runtime's `relative()` would say.
+pub fn lexical_containment(flavor: PathFlavor, root: &str, child: &str) -> Containment {
+    let (Some(root), Some(child)) = (normalize(flavor, root), normalize(flavor, child)) else {
+        return NEVER;
+    };
+    if root.prefix != child.prefix || child.parts.len() < root.parts.len() {
+        return NEVER;
+    }
+    if child.parts[..root.parts.len()] != root.parts[..] {
+        return NEVER;
+    }
+    // Under win32 a child with a reserved device name or a trailing dot/space
+    // component is never inside anything (WD-100b).  The parts are already
+    // ASCII-lowercased, which the case-insensitive check does not mind.
+    if flavor == PathFlavor::Win32 && child.parts.iter().any(|part| refused_component(part)) {
+        return NEVER;
+    }
+    Containment {
+        inside: true,
+        same: child.parts.len() == root.parts.len(),
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Bounded, contained, symlink-refusing reads
+// ---------------------------------------------------------------------------
+
+/// Is this metadata a symbolic link or, on Windows, any reparse point (which
+/// covers junctions and mount points as well as symlinks)?
+fn is_link(meta: &fs::Metadata) -> bool {
+    #[cfg(target_os = "windows")]
+    {
+        use std::os::windows::fs::MetadataExt;
+        const FILE_ATTRIBUTE_REPARSE_POINT: u32 = 0x400;
+        if meta.file_attributes() & FILE_ATTRIBUTE_REPARSE_POINT != 0 {
+            return true;
+        }
+    }
+    meta.file_type().is_symlink()
+}
+
+/// Read the repository-relative file `rel` under `repo_root`, refusing anything
+/// but a bounded regular file reached without a symbolic link.
+///
+/// The repository root itself is trusted (it may be a symlink); every
+/// component *beneath* it is inspected with `symlink_metadata`.  This is a
+/// defence against a hostile checkout, not against a process that can rewrite
+/// the tree while the load runs.
+pub fn read_repo_file(repo_root: &Path, rel: &str, cap: u64) -> Result<Vec<u8>, LaneLoadError> {
+    // Step 1: the registry's lexical rules (ASCII, slash-separated, no empty,
+    // `.` or `..` component, portable characters).  Cheap, and it runs before
+    // any filesystem call.
+    if let Err(LaneEvidenceError(message)) = validate_repo_path(rel) {
+        return err("path", format!("{rel:?}: {message}"));
+    }
+    // Step 2: the shared containment rule, in the host's path flavour.  With a
+    // validated `rel` it cannot fail, but a production path must go through
+    // the same helper the fixture drives, so it is asserted, not assumed.
+    let root_abs = std::path::absolute(repo_root).map_err(|e| LaneLoadError {
+        code: "io",
+        message: format!("repository root: {e}"),
+    })?;
+    let root_text = root_abs.to_str().ok_or_else(|| LaneLoadError {
+        code: "path",
+        message: "repository root is not UTF-8".into(),
+    })?;
+    let joined = format!("{}/{rel}", root_text.trim_end_matches(['/', '\\']));
+    let verdict = lexical_containment(PathFlavor::host(), root_text, &joined);
+    if !verdict.inside || verdict.same {
+        return err(
+            "path",
+            format!("{rel}: resolves outside the repository root"),
+        );
+    }
+    // Step 3: walk the components, refusing links and non-regular targets.
+    let parts: Vec<&str> = rel.split('/').collect();
+    let mut current = repo_root.to_path_buf();
+    let mut shown = String::new();
+    for (index, part) in parts.iter().enumerate() {
+        current.push(part);
+        if !shown.is_empty() {
+            shown.push('/');
+        }
+        shown.push_str(part);
+        let meta = fs::symlink_metadata(&current).map_err(|e| LaneLoadError {
+            code: "io",
+            message: format!("{rel}: {e}"),
+        })?;
+        if is_link(&meta) {
+            return err(
+                "symlink",
+                format!("{shown} is a symbolic link; links are refused"),
+            );
+        }
+        let last = index + 1 == parts.len();
+        if last && !meta.is_file() {
+            return err("not-regular", format!("{rel} is not a regular file"));
+        }
+        if !last && !meta.is_dir() {
+            return err("not-regular", format!("{shown} is not a directory"));
+        }
+    }
+    // Step 4: bounded read.  The size check rejects the common case without
+    // reading; `take` makes the cap hold even if the file grows meanwhile.
+    let file = fs::File::open(&current).map_err(|e| LaneLoadError {
+        code: "io",
+        message: format!("{rel}: {e}"),
+    })?;
+    let size = file
+        .metadata()
+        .map_err(|e| LaneLoadError {
+            code: "io",
+            message: format!("{rel}: {e}"),
+        })?
+        .len();
+    if size > cap {
+        return err(
+            "too-large",
+            format!("{rel} is {size} bytes, over the {cap}-byte limit"),
+        );
+    }
+    let mut bytes = Vec::with_capacity(size as usize);
+    file.take(cap + 1)
+        .read_to_end(&mut bytes)
+        .map_err(|e| LaneLoadError {
+            code: "io",
+            message: format!("{rel}: {e}"),
+        })?;
+    if bytes.len() as u64 > cap {
+        return err(
+            "too-large",
+            format!("{rel} grew past the {cap}-byte limit while reading"),
+        );
+    }
+    Ok(bytes)
+}
+
+// ---------------------------------------------------------------------------
+// Canonical JSON and the labels digest
+// ---------------------------------------------------------------------------
+
+/// Escape one JSON string per the canonical writer profile: every character
+/// outside U+0020..U+007E becomes lowercase `\uXXXX` (an astral character is a
+/// surrogate pair), `"` and `\` are backslash-escaped, `\b \f \n \r \t` use
+/// their short forms, and `/` is never escaped.
+fn escape_canonical(text: &str, out: &mut String) {
+    out.push('"');
+    for c in text.chars() {
+        match c {
+            '"' => out.push_str("\\\""),
+            '\\' => out.push_str("\\\\"),
+            '\u{8}' => out.push_str("\\b"),
+            '\u{c}' => out.push_str("\\f"),
+            '\n' => out.push_str("\\n"),
+            '\r' => out.push_str("\\r"),
+            '\t' => out.push_str("\\t"),
+            ' '..='~' => out.push(c),
+            other => {
+                let mut units = [0_u16; 2];
+                for unit in other.encode_utf16(&mut units) {
+                    out.push_str(&format!("\\u{unit:04x}"));
+                }
+            }
+        }
+    }
+    out.push('"');
+}
+
+fn render_canonical(value: &JsonValue, depth: usize, out: &mut String) {
+    let pad = |level: usize| "  ".repeat(level);
+    match value {
+        JsonValue::Null => out.push_str("null"),
+        JsonValue::Bool(b) => out.push_str(if *b { "true" } else { "false" }),
+        JsonValue::Number(n) => {
+            if n.fract() == 0.0 {
+                out.push_str(&format!("{n:.0}"));
+            } else {
+                out.push_str(&format!("{n}"));
+            }
+        }
+        JsonValue::String(s) => escape_canonical(s, out),
+        JsonValue::Array(items) if items.is_empty() => out.push_str("[]"),
+        JsonValue::Array(items) => {
+            out.push_str("[\n");
+            for (i, item) in items.iter().enumerate() {
+                out.push_str(&pad(depth + 1));
+                render_canonical(item, depth + 1, out);
+                out.push_str(if i + 1 < items.len() { ",\n" } else { "\n" });
+            }
+            out.push_str(&pad(depth));
+            out.push(']');
+        }
+        JsonValue::Object(map) if map.is_empty() => out.push_str("{}"),
+        JsonValue::Object(map) => {
+            // A BTreeMap<String, _> iterates in UTF-8 byte order, which is
+            // Unicode code point order: exactly the profile's key order.
+            out.push_str("{\n");
+            for (i, (key, item)) in map.iter().enumerate() {
+                out.push_str(&pad(depth + 1));
+                escape_canonical(key, out);
+                out.push_str(": ");
+                render_canonical(item, depth + 1, out);
+                out.push_str(if i + 1 < map.len() { ",\n" } else { "\n" });
+            }
+            out.push_str(&pad(depth));
+            out.push('}');
+        }
+    }
+}
+
+/// The canonical rendering of `value`: two-space indent, LF endings, one final
+/// LF.  Identical across the Python, TypeScript and Go runners.
+pub fn canonical_json(value: &JsonValue) -> String {
+    let mut out = String::new();
+    render_canonical(value, 0, &mut out);
+    out.push('\n');
+    out
+}
+
+/// The `manifest_sha256` a labels sidecar must carry: the SHA-256 of the
+/// canonical rendering of the manifest with `toolchain.version` replaced by the
+/// empty string.  `toolchain.name` stays, read from the manifest and never a
+/// literal: a different name is a different digest, a different version is the
+/// same digest (the version is diagnostic, not evidence).
+pub fn labels_manifest_digest(manifest_bytes: &[u8]) -> Result<String, LaneLoadError> {
+    let text = std::str::from_utf8(manifest_bytes).map_err(|_| LaneLoadError {
+        code: "manifest",
+        message: "manifest must be UTF-8".into(),
+    })?;
+    let mut value = JsonValue::parse(text).map_err(|e| LaneLoadError {
+        code: "manifest",
+        message: format!("invalid manifest JSON: {e}"),
+    })?;
+    let toolchain = match &mut value {
+        JsonValue::Object(map) => match map.get_mut("toolchain") {
+            Some(JsonValue::Object(toolchain)) => toolchain,
+            _ => return err("manifest", "manifest has no toolchain object"),
+        },
+        _ => return err("manifest", "manifest must be an object"),
+    };
+    toolchain.insert("version".into(), JsonValue::String(String::new()));
+    Ok(sha256_hex(canonical_json(&value).as_bytes()))
+}
+
+// ---------------------------------------------------------------------------
+// The coverage-labels sidecar (`domain-labels.json`)
+// ---------------------------------------------------------------------------
+
+const LABELS_SCHEMA: &str = "warrant-lane-domain-labels-v1";
+
+/// Coverage labels, weakest last: a suite is as weak as its weakest binder.
+const LABEL_RANK: [&str; 3] = ["full", "bounded-set", "sample"];
+
+/// One suite's coverage label, joined to the manifest's exhaustive row.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct SuiteLabel {
+    pub id: String,
+    pub label: String,
+    pub domain: String,
+    pub cases: u64,
+}
+
+/// The parsed sidecar.  `cases_by_label` is the honest headline: the manifest's
+/// own `exhaustive` total conflates `full`, `bounded-set` and `sample` domains
+/// (backlog LP-012).
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct DomainLabels {
+    pub package: String,
+    pub module: String,
+    pub manifest_sha256: String,
+    pub cases_by_label: BTreeMap<String, u64>,
+    pub suites: Vec<SuiteLabel>,
+}
+
+/// The label of one domain descriptor, as the runners derive it.  `Bytes<0>`
+/// has one value and `Bytes<1>` has 256, so both enumerate their whole type;
+/// every other descriptor is a fixed, strict subset.  `None` for a descriptor
+/// this profile does not know: the loader cannot vouch for a label it cannot
+/// re-derive.
+fn descriptor_label(descriptor: &str) -> Option<&'static str> {
+    match descriptor {
+        "bool" | "u8_all" => Some("full"),
+        "u64_edge" | "bytes_d1" | "nat_0_64" => Some("bounded-set"),
+        other => {
+            let digits = other.strip_prefix("bytes_n(")?.strip_suffix(')')?;
+            if digits.is_empty() || !digits.bytes().all(|b| b.is_ascii_digit()) {
+                return None;
+            }
+            Some(if digits.parse::<u64>().ok()? <= 1 {
+                "full"
+            } else {
+                "bounded-set"
+            })
+        }
+    }
+}
+
+fn labels_fail<T>(message: impl Into<String>) -> Result<T, LaneLoadError> {
+    err("labels", message)
+}
+
+type Obj = BTreeMap<String, JsonValue>;
+
+fn closed<'a>(value: &'a JsonValue, keys: &[&str], what: &str) -> Result<&'a Obj, LaneLoadError> {
+    let Some(map) = value.as_object() else {
+        return labels_fail(format!("{what} must be an object"));
+    };
+    if map.len() != keys.len() || keys.iter().any(|k| !map.contains_key(*k)) {
+        return labels_fail(format!("{what} fields do not match the closed schema"));
+    }
+    Ok(map)
+}
+
+fn text<'a>(map: &'a Obj, key: &str, what: &str) -> Result<&'a str, LaneLoadError> {
+    match map.get(key).and_then(JsonValue::as_str) {
+        Some(s) if !s.is_empty() => Ok(s),
+        _ => labels_fail(format!("{what}.{key} must be a non-empty string")),
+    }
+}
+
+fn count(map: &Obj, key: &str, what: &str) -> Result<u64, LaneLoadError> {
+    match map.get(key).and_then(JsonValue::as_i64) {
+        Some(n) if n >= 0 && (n as u64) <= (1 << 53) => Ok(n as u64),
+        _ => labels_fail(format!(
+            "{what}.{key} must be a bounded non-negative integer"
+        )),
+    }
+}
+
+fn known_label(label: &str, what: &str) -> Result<usize, LaneLoadError> {
+    match LABEL_RANK.iter().position(|known| *known == label) {
+        Some(rank) => Ok(rank),
+        None => labels_fail(format!("{what} label is not full, bounded-set or sample")),
+    }
+}
+
+/// Parse and self-check a sidecar: the closed schema, every binder label
+/// re-derived from its descriptor, every suite label equal to its weakest
+/// binder, and `cases_by_label` equal to the per-label sum of the suites.
+/// Binding to a manifest is [`load_lane`]'s job.
+pub fn parse_domain_labels(bytes: &[u8]) -> Result<DomainLabels, LaneLoadError> {
+    let source = std::str::from_utf8(bytes).map_err(|_| LaneLoadError {
+        code: "labels",
+        message: "sidecar must be UTF-8".into(),
+    })?;
+    // The same strict number rules as the manifest (VER04i 8.2): canonical
+    // non-negative integers within 2^53 only, so `65537.0`, `6.5537e4` and
+    // `065537` are refused before the f64-based parser can round them.
+    lift(
+        "labels",
+        validate_integer_tokens(bytes, "domain-labels sidecar"),
+    )?;
+    let root = JsonValue::parse(source).map_err(|e| LaneLoadError {
+        code: "labels",
+        message: format!("invalid sidecar JSON: {e}"),
+    })?;
+    let top = closed(
+        &root,
+        &[
+            "schema",
+            "package",
+            "module",
+            "manifest_sha256",
+            "note",
+            "cases_by_label",
+            "suites",
+        ],
+        "sidecar",
+    )?;
+    if text(top, "schema", "sidecar")? != LABELS_SCHEMA {
+        return labels_fail("unsupported sidecar schema");
+    }
+    let manifest_sha256 = text(top, "manifest_sha256", "sidecar")?;
+    if manifest_sha256.len() != 64
+        || !manifest_sha256
+            .bytes()
+            .all(|b| b.is_ascii_digit() || (b'a'..=b'f').contains(&b))
+    {
+        return labels_fail("sidecar.manifest_sha256 must be lowercase SHA-256 hex");
+    }
+    text(top, "note", "sidecar")?;
+
+    let Some(by_label) = top.get("cases_by_label").and_then(JsonValue::as_object) else {
+        return labels_fail("sidecar.cases_by_label must be an object");
+    };
+    let mut declared = BTreeMap::new();
+    for key in by_label.keys() {
+        known_label(key, "cases_by_label")?;
+        declared.insert(key.clone(), count(by_label, key, "cases_by_label")?);
+    }
+
+    let Some(rows) = top.get("suites").and_then(JsonValue::as_array) else {
+        return labels_fail("sidecar.suites must be an array");
+    };
+    let mut suites: Vec<SuiteLabel> = Vec::with_capacity(rows.len());
+    let mut summed: BTreeMap<String, u64> = BTreeMap::new();
+    for row in rows {
+        let suite = closed(row, &["id", "label", "domain", "cases", "binders"], "suite")?;
+        let id = text(suite, "id", "suite")?;
+        let label = text(suite, "label", "suite")?;
+        let cases = count(suite, "cases", "suite")?;
+        let mut weakest = 0;
+        let Some(binders) = suite.get("binders").and_then(JsonValue::as_array) else {
+            return labels_fail("suite.binders must be an array");
+        };
+        if binders.is_empty() {
+            return labels_fail("suite.binders must not be empty");
+        }
+        for binder in binders {
+            let binder = closed(binder, &["name", "domain", "label"], "binder")?;
+            text(binder, "name", "binder")?;
+            let descriptor = text(binder, "domain", "binder")?;
+            let derived = descriptor_label(descriptor).ok_or_else(|| LaneLoadError {
+                code: "labels",
+                message: format!(
+                    "unknown domain descriptor {descriptor:?}: no label can be derived"
+                ),
+            })?;
+            if text(binder, "label", "binder")? != derived {
+                return labels_fail(format!(
+                    "binder label for descriptor {descriptor:?} is not the derived label {derived}"
+                ));
+            }
+            weakest = weakest.max(known_label(derived, "binder")?);
+        }
+        if known_label(label, "suite")? != weakest {
+            return labels_fail(format!(
+                "suite {id} label is not its weakest binder's label"
+            ));
+        }
+        let total = summed.entry(label.to_owned()).or_insert(0_u64);
+        *total = total.checked_add(cases).ok_or_else(|| LaneLoadError {
+            code: "labels",
+            message: "cases_by_label sum overflows u64".into(),
+        })?;
+        suites.push(SuiteLabel {
+            id: id.to_owned(),
+            label: label.to_owned(),
+            domain: text(suite, "domain", "suite")?.to_owned(),
+            cases,
+        });
+    }
+    if !suites.windows(2).all(|pair| pair[0].id < pair[1].id) {
+        return labels_fail("sidecar suites must be unique and sorted by id");
+    }
+    if summed != declared {
+        return labels_fail("cases_by_label is not the per-label sum of the suites");
+    }
+    Ok(DomainLabels {
+        package: text(top, "package", "sidecar")?.to_owned(),
+        module: text(top, "module", "sidecar")?.to_owned(),
+        manifest_sha256: manifest_sha256.to_owned(),
+        cases_by_label: declared,
+        suites,
+    })
+}
+
+// ---------------------------------------------------------------------------
+// The loaded lane
+// ---------------------------------------------------------------------------
+
+/// The outcome of the static checks of one lane.  It exists only inside a
+/// successful [`LoadedLane`]: a failed check is an `Err`, never a `false`.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct LaneReadiness {
+    /// Names of the checks that passed, in [`READINESS_CHECKS`] order.
+    pub passed: Vec<&'static str>,
+    /// Always `false` today: the sandbox rung (VER04i 12) is not armed in any
+    /// lane, and no lane is release-ready without it.
+    pub release_ready: bool,
+    /// Always `"not-armed"` until VER08b lands.
+    pub sandbox: &'static str,
+}
+
+/// A lane whose artifacts opened safely and passed the named checks.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct LoadedLane {
+    pub consumer: LaneConsumer,
+    pub manifest: LaneEvidenceManifest,
+    pub labels: DomainLabels,
+    pub readiness: LaneReadiness,
+}
+
+impl LoadedLane {
+    /// Human-readable readiness, ending with the honest limits.  WD-004b2 will
+    /// put the same facts in a report; this text is the loader's own output.
+    pub fn render_readiness(&self) -> String {
+        let by_label: Vec<String> = self
+            .labels
+            .cases_by_label
+            .iter()
+            .map(|(label, cases)| format!("{label}={cases}"))
+            .collect();
+        format!(
+            "lane: {package} (lane {lane}, toolchain {tool})\n\
+             static checks passed: {checks}\n\
+             cases_by_label: {labels}\n\
+             release_ready: {ready}\n\
+             sandbox: {sandbox}\n\
+             This loader makes no claim about the authenticity of the source, the build or the \
+             toolchain beyond the checks named above.\n\
+             not checked: {unclaimed}\n",
+            package = self.consumer.package,
+            lane = self.manifest.lane,
+            tool = self.manifest.toolchain_name,
+            checks = self.readiness.passed.join(", "),
+            labels = by_label.join(", "),
+            ready = self.readiness.release_ready,
+            sandbox = self.readiness.sandbox,
+            unclaimed = UNCLAIMED.join(", "),
+        )
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Loading
+// ---------------------------------------------------------------------------
+
+fn sibling(path: &str, name: &str) -> String {
+    match path.rsplit_once('/') {
+        Some((dir, _)) => format!("{dir}/{name}"),
+        None => name.to_owned(),
+    }
+}
+
+fn read_registry(
+    repo_root: &Path,
+) -> Result<(Vec<u8>, crate::lane_evidence::LaneConsumerRegistry), LaneLoadError> {
+    let path = sibling(CORPUS_FILE, "consumers.json");
+    let bytes = read_repo_file(repo_root, &path, MAX_MANIFEST_BYTES)?;
+    let registry = lift("registry", parse_consumer_registry(&bytes))?;
+    Ok((bytes, registry))
+}
+
+/// Load one registered lane: open its artifacts safely, run the raw digest
+/// checks, join the registry and corpus, and run the static readiness checks.
+/// See the module documentation for the order.  `package` is `<lane>/<name>`
+/// (for example `python/ct-compare`); a package the registry does not list,
+/// including every Rust package, is `not-registered`.
+pub fn load_lane(repo_root: &Path, package: &str) -> Result<LoadedLane, LaneLoadError> {
+    // --- registry join -----------------------------------------------------
+    let (registry_bytes, registry) = read_registry(repo_root)?;
+    let consumer = registry
+        .consumers
+        .iter()
+        .find(|row| row.package == package)
+        .ok_or_else(|| LaneLoadError {
+            code: "not-registered",
+            message: format!("{package} is not in the consumer registry"),
+        })?
+        .clone();
+    if consumer.status != "active" {
+        return err(
+            "not-active",
+            format!(
+                "{package} is {} in the registry; planned rows cannot authorize lane evidence",
+                consumer.status
+            ),
+        );
+    }
+
+    // --- the artifacts, each bounded and contained --------------------------
+    let spec = read_repo_file(repo_root, SPEC_FILE, MAX_SPEC_BYTES)?;
+    let corpus = read_repo_file(repo_root, CORPUS_FILE, MAX_CORPUS_BYTES)?;
+    let cases = read_repo_file(
+        repo_root,
+        &sibling(CORPUS_FILE, "cases.tfv"),
+        MAX_CORPUS_BYTES,
+    )?;
+    let manifest_bytes =
+        read_repo_file(repo_root, &consumer.evidence_manifest, MAX_MANIFEST_BYTES)?;
+    let labels_path = sibling(&consumer.evidence_manifest, "domain-labels.json");
+    let labels_bytes = read_repo_file(repo_root, &labels_path, MAX_MANIFEST_BYTES)?;
+    let binding = read_repo_file(repo_root, &consumer.binding, MAX_BINDING_BYTES)?;
+
+    // --- strict parse and identity -----------------------------------------
+    let manifest = lift("manifest", parse_lane_manifest(&manifest_bytes))?;
+    if manifest.package != consumer.package || manifest.lane != consumer.lane {
+        return err(
+            "manifest",
+            format!(
+                "manifest is for package {} but the registry row is {}",
+                manifest.package, consumer.package
+            ),
+        );
+    }
+
+    // --- raw digest checks on exactly the bytes read ------------------------
+    for (name, recorded, bytes) in [
+        ("spec_sha256", &manifest.spec_sha256, &spec),
+        ("corpus_sha256", &manifest.corpus_sha256, &corpus),
+        ("cases_sha256", &manifest.cases_sha256, &cases),
+    ] {
+        if *recorded != sha256_hex(bytes) {
+            return err("digest", format!("{name} does not match the file on disk"));
+        }
+    }
+    // The WD-004a join: ids, counts, domains, stream digests, controls.
+    lift(
+        "join",
+        validate_lane_evidence(&manifest_bytes, &registry_bytes, &spec, &corpus, &cases),
+    )?;
+    if manifest.binding_sha256 != sha256_hex(&binding) {
+        return err(
+            "digest",
+            format!("binding_sha256 does not match {}", consumer.binding),
+        );
+    }
+
+    // --- static readiness ----------------------------------------------------
+    if manifest.runner_name != RUNNER_NAME || manifest.runner_lane != consumer.lane {
+        return err(
+            "runner-identity",
+            format!("runner must be {RUNNER_NAME} for lane {}", consumer.lane),
+        );
+    }
+    let labels = parse_domain_labels(&labels_bytes)?;
+    bind_labels(&labels, &manifest, &manifest_bytes)?;
+    // The runner entry must exist and open safely; its bytes are not judged.
+    read_repo_file(repo_root, &consumer.runner_entry, MAX_RUNNER_ENTRY_BYTES)?;
+    for build_file in &consumer.build_files {
+        let bytes = read_repo_file(repo_root, build_file, MAX_BUILD_FILE_BYTES)?;
+        check_build_routing(build_file, &bytes)?;
+    }
+
+    Ok(LoadedLane {
+        consumer,
+        manifest,
+        labels,
+        readiness: LaneReadiness {
+            passed: READINESS_CHECKS.to_vec(),
+            release_ready: false,
+            sandbox: "not-armed",
+        },
+    })
+}
+
+/// Load every `active` lane of the registry, in registry order.  Fail-closed:
+/// the first lane that does not load is the error.  This is the hook WD-004b2
+/// uses; it generates nothing.
+pub fn load_active_lanes(repo_root: &Path) -> Result<Vec<LoadedLane>, LaneLoadError> {
+    let (_, registry) = read_registry(repo_root)?;
+    registry
+        .consumers
+        .iter()
+        .filter(|row| row.status == "active")
+        .map(|row| load_lane(repo_root, &row.package))
+        .collect()
+}
+
+/// The sidecar describes *this* manifest: same identity, same digest (with the
+/// toolchain version blanked), and the same exhaustive suites with the same
+/// domains and case counts.
+fn bind_labels(
+    labels: &DomainLabels,
+    manifest: &LaneEvidenceManifest,
+    manifest_bytes: &[u8],
+) -> Result<(), LaneLoadError> {
+    if labels.package != manifest.package || labels.module != manifest.module {
+        return labels_fail("sidecar package or module differs from the manifest");
+    }
+    if labels.manifest_sha256 != labels_manifest_digest(manifest_bytes)? {
+        return labels_fail(
+            "sidecar manifest_sha256 does not bind this manifest (toolchain.version excluded)",
+        );
+    }
+    let rows: Vec<&ExhaustiveEntry> = manifest
+        .tests
+        .iter()
+        .filter_map(|t| match t {
+            LaneTestEntry::Exhaustive(row) => Some(row),
+            _ => None,
+        })
+        .collect();
+    let ids: BTreeSet<&str> = rows.iter().map(|r| r.id.as_str()).collect();
+    let label_ids: BTreeSet<&str> = labels.suites.iter().map(|s| s.id.as_str()).collect();
+    if ids != label_ids || rows.len() != labels.suites.len() {
+        return labels_fail("sidecar suites differ from the manifest's exhaustive rows");
+    }
+    for suite in &labels.suites {
+        let row = rows
+            .iter()
+            .find(|r| r.id == suite.id)
+            .expect("ids were just compared");
+        if row.cases != suite.cases || row.domain != suite.domain {
+            return labels_fail(format!(
+                "suite {} cases or domain differ from the manifest",
+                suite.id
+            ));
+        }
+    }
+    Ok(())
+}
+
+/// A static *text* check: the build file names the manifest it validates and
+/// the sabotage step.  It shows the routing was written, not that it ran.
+fn check_build_routing(path: &str, bytes: &[u8]) -> Result<(), LaneLoadError> {
+    let Ok(text) = std::str::from_utf8(bytes) else {
+        return err("build-routing", format!("{path} is not UTF-8 text"));
+    };
+    for needle in ["evidence/test-manifest.json", "sabotage"] {
+        if !text.contains(needle) {
+            return err("build-routing", format!("{path} does not mention {needle}"));
+        }
+    }
+    Ok(())
+}

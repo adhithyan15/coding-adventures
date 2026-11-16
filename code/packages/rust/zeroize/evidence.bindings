@@ -1,0 +1,21 @@
+# Warrant binding manifest (VER04 section 6, VER04k sections 4.6 and 4.13) for
+# code/specs/zeroize.warrant.  A PILOT of WX-G `inout` parameters: `inout=` names the
+# host form that carries each mutable parameter (`slice` is `&mut [u8]`, `array` is
+# `&mut [u8; N]`, `int:u64` is `&mut u64`, `vec` is `&mut Vec<u8>`), and `export=` is
+# a Rust path for the trait methods.  The stale-post fault models zeroizing a COPY of
+# a key; skip-last-write the off-by-one loop bound (CWE-193); cursor-off-by-one a
+# store of the wrong value.
+package coding_adventures_zeroize
+revision 0.1.1
+spec code/specs/zeroize.warrant
+output code/packages/rust/zeroize/tests/generated/warrant_evidence.rs
+seed 0x5a45_524f_495a_4557
+property_cases 2048
+fuzz_iterations 1200
+negctl_fuzz_iterations 600
+exhaustive_budget 400000
+
+op zeroize_bytes export=zeroize_bytes inout=buf:slice faults=stale-post,skip-last-write
+op zeroize_array32 export=Zeroize::zeroize inout=buf:array faults=stale-post,skip-last-write
+op zeroize_u64 export=Zeroize::zeroize inout=x:int:u64 faults=stale-post,cursor-off-by-one
+op zeroize_vec export=Zeroize::zeroize inout=buf:vec faults=stale-post

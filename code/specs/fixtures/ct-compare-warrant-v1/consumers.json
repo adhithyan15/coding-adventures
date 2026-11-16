@@ -2,9 +2,23 @@
   "schema_version": 1,
   "profile": "warrant-lane-consumers-v1",
   "corpus": "code/specs/fixtures/ct-compare-warrant-v1/corpus.json",
-  "consumer_count": 1,
-  "active_consumer_count": 0,
+  "consumer_count": 3,
+  "active_consumer_count": 3,
   "consumers": [
+    {
+      "lane": "go",
+      "package": "go/ct-compare",
+      "module": "ct_compare",
+      "package_root": "code/packages/go/ct-compare",
+      "binding": "code/packages/go/ct-compare/evidence.bindings",
+      "runner_entry": "code/packages/go/ct-compare/cmd/warrant-evidence/main.go",
+      "evidence_manifest": "code/packages/go/ct-compare/evidence/test-manifest.json",
+      "build_files": [
+        "code/packages/go/ct-compare/BUILD",
+        "code/packages/go/ct-compare/BUILD_windows"
+      ],
+      "status": "active"
+    },
     {
       "lane": "python",
       "package": "python/ct-compare",
@@ -17,7 +31,21 @@
         "code/packages/python/ct-compare/BUILD",
         "code/packages/python/ct-compare/BUILD_windows"
       ],
-      "status": "planned"
+      "status": "active"
+    },
+    {
+      "lane": "typescript",
+      "package": "typescript/ct-compare",
+      "module": "ct_compare",
+      "package_root": "code/packages/typescript/ct-compare",
+      "binding": "code/packages/typescript/ct-compare/evidence.bindings",
+      "runner_entry": "code/packages/typescript/ct-compare/tests/warrant-evidence.ts",
+      "evidence_manifest": "code/packages/typescript/ct-compare/evidence/test-manifest.json",
+      "build_files": [
+        "code/packages/typescript/ct-compare/BUILD",
+        "code/packages/typescript/ct-compare/BUILD_windows"
+      ],
+      "status": "active"
     }
   ]
 }

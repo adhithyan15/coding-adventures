@@ -843,6 +843,7 @@ fn test_codegen_and_evaluator_deep_coverage() {
                             span: (0, 0),
                         },
                         refinement: None,
+                        inout: false,
                         span: (0, 0),
                     }],
                     target_type: coding_adventures_warrant_grammar::parser::TypeExpr::Named {

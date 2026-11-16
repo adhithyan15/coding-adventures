@@ -15,6 +15,7 @@ pub mod checker;
 pub mod evidence;
 pub mod json;
 pub mod lane_evidence;
+pub mod lane_loader;
 pub mod matrix;
 pub mod profile;
 pub mod registry;

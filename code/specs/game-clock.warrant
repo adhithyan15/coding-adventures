@@ -68,4 +68,4 @@ warrant game_clock v1
     forall s: GameClockState, dt: U64. match advance_frame(s, dt) with Ok(r) -> r.steps_to_run <= s.max_frame_steps and state_inv(r.state) and r.alpha_milli < 1000u32 | Err(_) -> true
 
   claim advance_frame_preserves_invariant:
-    forall s: GameClockState, dt: U64. (state_inv(s) -> match advance_frame(s, dt) with Ok(r) -> state_inv(r.state) | Err(_) -> true)
+    forall s: GameClockState, dt: U64. if state_inv(s) then (match advance_frame(s, dt) with Ok(r) -> state_inv(r.state) | Err(_) -> true) else true

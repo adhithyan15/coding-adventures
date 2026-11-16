@@ -25,5 +25,7 @@ python3 code/scripts/warrant_corpus_conformance.py --write  # regenerate
 ```
 
 Cases are only ever added within `-v1`; changing an expectation means `-v2`.
-Lanes: Python and TypeScript run all four categories. The Go lane (WD-103) merged before
-the fixture existed and adopts it in a follow-up.
+Containment includes the WD-100b cases (Windows reserved device names refused,
+win32 case folding ASCII-only; 141 cases, 461 in the fixture).
+Lanes: Python, TypeScript and Go run all four categories (Go: `conformance_test.go` in
+`code/packages/go/warrant-corpus`).

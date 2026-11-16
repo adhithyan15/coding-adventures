@@ -6,64 +6,208 @@ import (
 	"strings"
 )
 
-// # Is this path inside that directory?
+// # Is this path inside that directory?  (VER04i 9.1, containment profile)
 //
 // A containment check is a security boundary: the corpus, the binding file and
 // the library under test must live inside the repository, or a crafted
 // `--corpus` could point the runner at files it was never meant to read.
 //
-// # The trap: Rel does not always give you a relative path
+// # The trap: a relative-path string is the wrong thing to inspect
 //
 // The usual idiom is "compute filepath.Rel(root, child) and see whether it
-// climbs out with `..`". That is not enough, in three separate ways.
+// climbs out with `..`". That is not enough: across Windows drives Rel errors
+// (Node's path.relative returns an absolute target instead), a UNC share has no
+// drive, and a directory NAMED `..foo` begins with `..` and is inside. So this
+// check never builds a relative string to judge. It is LEXICAL: each path is
+// normalised into an anchor (drive, UNC share, or root) plus whole components,
+// and the verdict is "same anchor, and every component of root is a leading
+// component of child". Whole components also mean `/rr` is not inside `/r`.
 //
-//  1. Across Windows drives there is no way to climb from D:\repo to C:\tmp\x.
-//     Go's filepath.Rel returns an *error* there (Node's path.relative returns
-//     the absolute target instead). A caller that ignores the error and looks at
-//     the empty string it got back would accept it.
-//  2. A path module that does return an absolute target (the Node behaviour, or
-//     a UNC share) slips past a `..` prefix test, so an absolute result is also
-//     "outside".
-//  3. The result `..` and the results `..\x` and `../x` are outside, but a
-//     directory legitimately named `..foo` is inside and Rel reports it as
-//     `..foo`. So the prefix test must be "`..`, or `..` followed by a
-//     separator", never a bare strings.HasPrefix(rel, "..").
+// The helper takes the path flavour as a parameter so the shared fixture can
+// drive the win32 rules from a Linux host. Production passes hostFlavor, the
+// same helper with the same rules: there is no variant that skips the device
+// rule.
 //
-// pathOps carries the five primitives the check needs, so tests can drive a
-// Windows-shaped implementation from any host.
-type pathOps struct {
-	rel   func(base, target string) (string, error)
-	isAbs func(path string) bool
-	sep   byte
+//   - win32 compares case-insensitively **for ASCII only** (A-Z fold to a-z,
+//     every other code point is compared exactly: strings.EqualFold's Unicode
+//     simple folding would equate U+017F with s and U+212A with k, which a
+//     fail-closed boundary must not), refuses a child with a Windows reserved
+//     device name or a component ending in a dot or space (WD-100b), accepts `/` and `\` as separators
+//     (normalised BEFORE any prefix rule, so `\/?\D:\r` is a device path too),
+//     and refuses a device path (`\\?\`, `\\.\`, including `\\?\UNC\...`).
+//   - posix is case-sensitive and `\` is an ordinary character; a path with
+//     EXACTLY two leading slashes is implementation-defined by POSIX, so like a
+//     device path it is never inside anything; three or more collapse to one.
+//
+// Symlinks are not resolved here; resolveInside does that first.
+const (
+	flavorPosix = "posix"
+	flavorWin32 = "win32"
+)
+
+// hostFlavor is the path rules production uses. It is a variable so a test can
+// prove the production call path applies the same rules the fixture drives.
+var hostFlavor = func() string {
+	if filepath.Separator == '\\' {
+		return flavorWin32
+	}
+	return flavorPosix
+}()
+
+// lexicalPath normalises text under flavor into an anchor and its components.
+// ok == false means a path that is never inside anything (a device path or a
+// POSIX `//x` path). The returned comparison key folds case on win32 only.
+func lexicalPath(text, flavor string) (anchor string, parts []string, ok bool) {
+	var rest string
+	switch flavor {
+	case flavorPosix:
+		if strings.HasPrefix(text, "//") && !strings.HasPrefix(text, "///") {
+			return "", nil, false
+		}
+		if strings.HasPrefix(text, "/") {
+			anchor = "/"
+		}
+		rest = text
+	case flavorWin32:
+		text = strings.ReplaceAll(text, "/", `\`)
+		if strings.HasPrefix(text, `\\?\`) || strings.HasPrefix(text, `\\.\`) {
+			return "", nil, false
+		}
+		anchor, rest = splitWindowsAnchor(text)
+	default:
+		panic("lexicalPath: unknown flavor " + flavor)
+	}
+	separator := "/"
+	if flavor == flavorWin32 {
+		separator = `\`
+	}
+	for _, part := range strings.Split(rest, separator) {
+		switch part {
+		case "", ".":
+		case "..":
+			if len(parts) > 0 {
+				parts = parts[:len(parts)-1]
+			} else if anchor == "" {
+				parts = append(parts, part) // a relative path keeps its leading ".."
+			} // else: a `..` at the root stays at the root
+		default:
+			parts = append(parts, part)
+		}
+	}
+	return anchor, parts, true
 }
 
-// osPath is the host's own path rules.
-var osPath = pathOps{
-	rel:   filepath.Rel,
-	isAbs: filepath.IsAbs,
-	sep:   filepath.Separator,
+// splitWindowsAnchor splits a separator-normalised win32 path into its anchor
+// (`d:\`, `\\server\share\`, `\` or "") and the remaining components text.
+// The anchor is lowercased: win32 comparison is case-insensitive.
+func splitWindowsAnchor(text string) (string, string) {
+	if len(text) >= 2 && text[1] == ':' && (text[0]|0x20) >= 'a' && (text[0]|0x20) <= 'z' {
+		drive := asciiLower(text[:2])
+		if strings.HasPrefix(text[2:], `\`) {
+			return drive + `\`, text[2:]
+		}
+		return drive, text[2:]
+	}
+	if strings.HasPrefix(text, `\\`) && !strings.HasPrefix(text, `\\\`) {
+		fields := strings.SplitN(text[2:], `\`, 3)
+		if len(fields) >= 2 && fields[0] != "" && fields[1] != "" {
+			anchor := asciiLower(`\\` + fields[0] + `\` + fields[1] + `\`)
+			rest := ""
+			if len(fields) == 3 {
+				rest = fields[2]
+			}
+			return anchor, rest
+		}
+	}
+	if strings.HasPrefix(text, `\`) {
+		return `\`, text
+	}
+	return "", text
 }
 
-// relativeInside returns child relative to root when child lies at or beneath
-// root, and ok == false otherwise. The root itself yields "" with ok == true;
-// callers that need a strict descendant reject "" as well.
-//
-// Both arguments should already be absolute and cleaned; resolveInside does that.
-func relativeInside(root, child string, ops pathOps) (string, bool) {
-	rel, err := ops.rel(root, child)
-	if err != nil {
-		return "", false // different volume, or no relative form exists
-	}
-	if ops.isAbs(rel) {
+// relativeInside returns child relative to root (slash-separated, original
+// case) when child lies at or beneath root under flavor's rules, and ok == false
+// otherwise. The root itself yields "" with ok == true; callers that need a
+// strict descendant reject "" as well.
+func relativeInside(root, child, flavor string) (string, bool) {
+	rootAnchor, rootParts, rootOK := lexicalPath(root, flavor)
+	childAnchor, childParts, childOK := lexicalPath(child, flavor)
+	if !rootOK || !childOK || rootAnchor != childAnchor || len(childParts) < len(rootParts) {
 		return "", false
 	}
-	if rel == ".." || strings.HasPrefix(rel, ".."+string(ops.sep)) {
-		return "", false
+	for i, part := range rootParts {
+		if flavor == flavorWin32 {
+			if asciiLower(part) != asciiLower(childParts[i]) {
+				return "", false
+			}
+		} else if part != childParts[i] {
+			return "", false
+		}
 	}
-	if rel == "." {
-		rel = "" // the root itself
+	if flavor == flavorWin32 {
+		for _, part := range childParts {
+			if refusedComponent(part) {
+				return "", false
+			}
+		}
 	}
-	return rel, true
+	return strings.Join(childParts[len(rootParts):], "/"), true
+}
+
+// asciiLower maps A-Z to a-z and nothing else. strings.ToLower and
+// strings.EqualFold apply Unicode case rules (U+212A lower-cases to k), which
+// is the accident VER04i 9.1 replaces with a defined behaviour.
+func asciiLower(text string) string {
+	for i := 0; i < len(text); i++ {
+		if c := text[i]; 'A' <= c && c <= 'Z' {
+			b := []byte(text)
+			for j := i; j < len(b); j++ {
+				if 'A' <= b[j] && b[j] <= 'Z' {
+					b[j] += 'a' - 'A'
+				}
+			}
+			return string(b)
+		}
+	}
+	return text
+}
+
+// refusedComponent reports a win32 path component that must be refused
+// (VER04i 9.1): one containing a colon (an alternate data stream or device
+// suffix: `CON:`, `nul::$DATA`, `file.txt:NUL`), one ending in a dot or a space
+// (Windows strips them, so two spellings would name one file), or one whose
+// stem is a device name. The stem is the part before the FIRST dot with
+// trailing spaces removed, so CON.txt, com1.tar.gz and "CON .txt" are devices;
+// console.txt, COM10, LPT0 and CONx are ordinary. The set is CON, PRN, AUX,
+// NUL, COM1-COM9, LPT1-LPT9, CONIN$, CONOUT$ and COM/LPT followed by a
+// superscript 1, 2 or 3, ASCII case-insensitively (superscripts exactly).
+// Fullwidth CON and CLOCK$ stay ordinary.
+func refusedComponent(name string) bool {
+	if strings.Contains(name, ":") || strings.HasSuffix(name, ".") || strings.HasSuffix(name, " ") {
+		return true
+	}
+	stem, _, _ := strings.Cut(name, ".")
+	stem = asciiLower(strings.TrimRight(stem, " "))
+	switch stem {
+	case "con", "prn", "aux", "nul", "conin$", "conout$":
+		return true
+	}
+	if rest, ok := strings.CutPrefix(stem, "com"); ok {
+		return isDeviceDigit(rest)
+	}
+	if rest, ok := strings.CutPrefix(stem, "lpt"); ok {
+		return isDeviceDigit(rest)
+	}
+	return false
+}
+
+// isDeviceDigit: one of 1-9, or the superscripts U+00B9, U+00B2, U+00B3.
+func isDeviceDigit(rest string) bool {
+	switch rest {
+	case "1", "2", "3", "4", "5", "6", "7", "8", "9", "\u00b9", "\u00b2", "\u00b3":
+		return true
+	}
+	return false
 }
 
 // realPath makes path absolute and resolves symlinks, so a link inside the
@@ -89,7 +233,7 @@ func resolveInside(root, path string, strict bool) (string, bool) {
 	if err != nil {
 		return "", false
 	}
-	rel, ok := relativeInside(realRoot, realChild, osPath)
+	rel, ok := relativeInside(realRoot, realChild, hostFlavor)
 	if !ok || (strict && rel == "") {
 		return "", false
 	}

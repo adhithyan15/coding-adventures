@@ -32,19 +32,22 @@ use std::fmt::Write as _;
 use std::path::Path;
 
 use crate::binding::{
-    is_rust_identifier, validate_bindings, BindingManifest, HostShape, HostSpec, HostTy,
+    is_rust_identifier, is_rust_path, validate_bindings, BindingManifest, HostShape, HostSpec, HostTy,
+    InoutForm, MAX_EXPORT_SEGMENTS,
 };
-use crate::checker::CheckedWarrantModule;
+use crate::checker::{resolve_post_slot, CheckedWarrantModule, PostSlot, SlotShape};
 use crate::codegen::{
     find_operation_in_expr, hex_decode, CodegenError, CodegenErrorKind, DiagnosticCode,
 };
 use crate::fixed::{self, FixedTy};
 use crate::vectors::{self, LoadedTable, Shape as ColShape};
 use crate::parser::{
-    valid_table_path, BinaryOp, ClaimDecl, Declaration, Expression, Literal, OpDecl, Parameter, Pattern, ProjKey,
+    valid_table_path, BinaryOp, ClaimDecl, Declaration, EnsuresDecl, Expression, Literal, OpDecl, Parameter, Pattern, ProjKey,
     TypeExpr,
     UnaryOp, Version, WarrantFile, Width,
 };
+
+mod inout;
 
 /// The runtime prelude embedded verbatim in every generated harness.
 const PRELUDE: &str = include_str!("evidence_prelude.rs.txt");
@@ -1080,6 +1083,16 @@ const WXH_FAULTS: &[(&str, &str)] = &[
     ("truncate-silently", "TruncateSilently"),
 ];
 
+/// The faults of VER04k section 4.8 (WX-G): rewrites of an `inout` adapter's
+/// read-back of the post-state.  They apply to the operation they are bound to only.
+const WXG_FAULTS: &[(&str, &str)] = &[
+    ("stale-post", "StalePost"),
+    ("skip-last-write", "SkipLastWrite"),
+    ("drop-last-push", "DropLastPush"),
+    ("clobber-prefix", "ClobberPrefix"),
+    ("cursor-off-by-one", "CursorOffByOne"),
+];
+
 fn fault_variant(name: &str) -> Option<&'static str> {
     FAULTS
         .iter()
@@ -1105,6 +1118,12 @@ fn fault_variant(name: &str) -> Option<&'static str> {
         })
         .or_else(|| {
             WXE_FAULTS
+                .iter()
+                .find(|(n, _)| *n == name)
+                .map(|(_, v)| *v)
+        })
+        .or_else(|| {
+            WXG_FAULTS
                 .iter()
                 .find(|(n, _)| *n == name)
                 .map(|(_, v)| *v)
@@ -1166,6 +1185,7 @@ fn fault_block(used: &BTreeSet<String>) -> String {
         .chain(WXA_FAULTS.iter().copied())
         .chain(WXH_FAULTS.iter().copied())
         .chain(WXE_FAULTS.iter().copied())
+        .chain(WXG_FAULTS.iter().copied())
         .filter(|(n, _)| used.contains(*n))
         .collect();
     let mut s = String::new();
@@ -1242,6 +1262,9 @@ enum Shape {
     /// WX-A: a signature that mentions a tuple, record or variant, converted to
     /// and from the host through the bindings' `struct`/`enum`/`ret=` data.
     Composite,
+    /// WX-G: an operation with an `inout` parameter, called with a host `&mut`
+    /// and read back (VER04k section 4.6).
+    Inout,
 }
 
 impl Shape {
@@ -1250,7 +1273,7 @@ impl Shape {
     fn scoped(self) -> bool {
         matches!(
             self,
-            Shape::Scalar { .. } | Shape::ScalarV1(_) | Shape::Composite
+            Shape::Scalar { .. } | Shape::ScalarV1(_) | Shape::Composite | Shape::Inout
         )
     }
 }
@@ -1260,7 +1283,7 @@ impl Shape {
     /// the ones the operation's binding names (`negative_controls`).
     fn faults(self) -> &'static [(&'static str, &'static str)] {
         match self {
-            Shape::Scalar { .. } | Shape::ScalarV1(_) | Shape::Composite => &[],
+            Shape::Scalar { .. } | Shape::ScalarV1(_) | Shape::Composite | Shape::Inout => &[],
             Shape::BytesEq | Shape::FixedEq => {
                 &[("invert", "Fault::Invert"), ("ignore-last-byte", "Fault::IgnoreLastByte")]
             }
@@ -1274,6 +1297,9 @@ impl Shape {
 }
 
 fn shape_of<'a>(op: &OpDecl<'a>, v1: bool, env: &TyEnv<'a>) -> Result<Shape, CodegenError> {
+    if v1 && op.params.iter().any(|p| p.inout) {
+        return Ok(Shape::Inout);
+    }
     if v1
         && (op.params.iter().any(|p| env.has_composite(&p.param_type, 0))
             || env.has_composite(&op.return_type, 0))
@@ -1356,7 +1382,7 @@ fn adapter(
     let mut s = String::new();
     match shape {
         // Scalar operations are emitted by `scalar_adapter`/`scalar_adapter_v1`.
-        Shape::Scalar { .. } | Shape::ScalarV1(_) | Shape::Composite => {}
+        Shape::Scalar { .. } | Shape::ScalarV1(_) | Shape::Composite | Shape::Inout => {}
         Shape::BytesEq => {
             let _ = write!(
                 s,
@@ -2751,7 +2777,16 @@ pub fn generate_evidence_harness_with_tables(
         return Err(unsupported(format!("spec path {:?} cannot be embedded", options.spec_path), (0, 0)));
     }
     for (op, b) in &manifest.bindings {
-        if !is_rust_identifier(&b.export) {
+        // VER04k section 4.6: an operation with `inout=` may name a method or a
+        // function by a Rust path (at most 8 segments); every other export is an
+        // identifier, as it always was.
+        let has_inout = options.hosts.ops.get(op).is_some_and(|h| !h.inout.is_empty());
+        let export_ok = if has_inout {
+            is_rust_path(&b.export) && b.export.split("::").count() <= MAX_EXPORT_SEGMENTS
+        } else {
+            is_rust_identifier(&b.export)
+        };
+        if !export_ok {
             return Err(unsupported(
                 format!("export `{}` of operation `{op}` is not a Rust identifier", b.export),
                 (0, 0),
@@ -2853,11 +2888,15 @@ pub fn generate_evidence_harness_with_tables(
     let tables_need_comp = table_decls
         .iter()
         .any(|(_, _, tys)| tys.iter().any(|t| !plain_column(t)));
+    // WX-G: a document with an `ensures` block monitors its calls, and the panic
+    // containment that reports a violation is the composite machinery's.
+    let has_post = v1 && file.declarations.iter().any(|d| matches!(d, Declaration::Ensures(_)));
     let comp = v1
         && (tables_need_comp
+            || has_post
             || uses_composites(file, &env)
             || file.declarations.iter().any(|d| {
-                matches!(d, Declaration::Op(o) if matches!(shape_of(o, v1, &env), Ok(Shape::Composite)))
+                matches!(d, Declaration::Op(o) if matches!(shape_of(o, v1, &env), Ok(Shape::Composite | Shape::Inout)))
             }));
 
     // WX-H: the `heap` and `output` rows of each operation's `bound` (v1 only).
@@ -2917,6 +2956,9 @@ pub fn generate_evidence_harness_with_tables(
     if obs {
         features.insert("obs");
     }
+    if has_post {
+        features.insert("post");
+    }
     if !table_decls.is_empty() {
         features.insert("vec");
     }
@@ -2953,6 +2995,33 @@ pub fn generate_evidence_harness_with_tables(
         }
     }
 
+    // WX-G: one monitor per `ensures` block (VER04k section 4.7).
+    let mut ensures_of: BTreeMap<&str, &EnsuresDecl<'_>> = BTreeMap::new();
+    for d in &file.declarations {
+        if let Declaration::Ensures(e) = d {
+            let Some(o) = op_decls.iter().find(|o| o.name == e.op) else {
+                return Err(unsupported(format!("ensures of unknown operation `{}`", e.op), e.span));
+            };
+            if obs_ops.contains_key(e.op) {
+                return Err(unsupported(
+                    format!("operation `{}` has both an `ensures` block and an observed `bound`", e.op),
+                    o.span,
+                ));
+            }
+            body.push_str(&inout::post_monitor(
+                o, e, &models, &ops, &errors, &env.ctors, &mut widths,
+            )?);
+            ensures_of.insert(e.op, e);
+        }
+    }
+    // W0601: an example may not contradict the postcondition of its operation.
+    inout::check_examples_against_ensures(file, &ensures_of)?;
+    let mut post_rows: Vec<(String, usize)> = ensures_of
+        .iter()
+        .map(|(op, e)| (op.to_string(), e.rows.len()))
+        .collect();
+    post_rows.sort();
+
     // Examples.
     struct Ex {
         name: String,
@@ -2980,6 +3049,14 @@ pub fn generate_evidence_harness_with_tables(
                 let _ = write!(
                     body,
                     "#[allow(unused_variables)]\npub fn example_{}(fault: Fault) -> bool {{\n    match catch_unwind(AssertUnwindSafe(|| {}.truthy())) {{\n        Ok(v) => v,\n        Err(p) => obs_failed(p),\n    }}\n}}\n\n",
+                    ex.name,
+                    emit(&ex.body, &mut cx)?
+                );
+            } else if has_post {
+                // A call the monitor fails is a failed example, not a panic.
+                let _ = write!(
+                    body,
+                    "#[allow(unused_variables)]\npub fn example_{}(fault: Fault) -> bool {{\n    match catch_unwind(AssertUnwindSafe(|| {}.truthy())) {{\n        Ok(v) => v,\n        Err(p) if p.is::<PostViolation>() => post_failed(p),\n        Err(p) => std::panic::resume_unwind(p),\n    }}\n}}\n\n",
                     ex.name,
                     emit(&ex.body, &mut cx)?
                 );
@@ -3011,6 +3088,9 @@ pub fn generate_evidence_harness_with_tables(
     enum Job<'f, 'a> {
         Real(&'f ClaimDecl<'a>),
         OutputBound(&'f OpDecl<'a>),
+        /// WX-G: the synthesized `<op>/post` suites of an operation with an
+        /// `ensures` block (VER04k section 4.7).
+        Post(&'f OpDecl<'a>),
     }
     /// One claim to generate: a written one, or a synthesized `output-bound`.
     struct Work<'f, 'a> {
@@ -3030,6 +3110,11 @@ pub fn generate_evidence_harness_with_tables(
     for o in &op_decls {
         if obs_ops.get(o.name).is_some_and(|b| b.output.is_some()) {
             jobs.push(Job::OutputBound(o));
+        }
+    }
+    for o in &op_decls {
+        if ensures_of.contains_key(o.name) {
+            jobs.push(Job::Post(o));
         }
     }
     let mut claims: Vec<Cl> = Vec::new();
@@ -3067,6 +3152,14 @@ pub fn generate_evidence_harness_with_tables(
                     op: op.to_string(),
                 }
             }
+            Job::Post(o) => Work {
+                label: format!("{}/post", o.name),
+                ident: format!("{}_post", o.name),
+                binders: o.params.as_slice(),
+                cbody: None,
+                span: o.span,
+                op: o.name.to_string(),
+            },
             Job::OutputBound(o) => {
                 if !o.static_params.is_empty() {
                     return Err(unsupported(
@@ -3176,6 +3269,11 @@ pub fn generate_evidence_harness_with_tables(
             // bound is evaluated first, for every instance, so a bound that is
             // negative on the admitted domain fails even where the operation
             // answers `Err`.
+            None if matches!(job, Job::Post(_)) => {
+                // WX-G: the monitor inside `op_<op>` is the whole property.
+                let args: Vec<String> = binders.iter().map(|p| format!("b_{}.clone()", p.name)).collect();
+                format!("V::Bool({{ op_{op}(&[], &[{}], fault); true }})", args.join(", "))
+            }
             None => {
                 let args: Vec<String> = binders.iter().map(|p| format!("b_{}.clone()", p.name)).collect();
                 format!(
@@ -3205,9 +3303,13 @@ pub fn generate_evidence_harness_with_tables(
         // WX-H: an instance the observer fails is a false claim, not a panic.
         let obs_arm = if obs {
             "        Err(p) if p.is::<ObsFailure>() => obs_failed(p),\n"
+        } else if has_post {
+            "        Err(p) if p.is::<PostViolation>() => post_failed(p),\n"
         } else {
             ""
         };
+        let monitored = if has_post { "    s.monitored = take_post_calls();\n" } else { "" };
+        let reset_monitored = if has_post { "    take_post_calls();\n" } else { "" };
         if comp {
             // A value a host integer cannot hold raises `Unreachable`: the case
             // is skipped and counted, never narrowed (VER04j section 4.6).
@@ -3217,9 +3319,9 @@ pub fn generate_evidence_harness_with_tables(
             );
             let _ = write!(
                 body,
-                "pub fn exh_{n}(fault: Fault) -> (Verdict, Stats) {{\n    take_unreach();\n    let (v, mut s) = exhaustive(CLAIM_{up}_TYS, claim_{n}_admit, claim_{n}_holds, fault);\n    s.unreachable = take_unreach();\n    (v, s)\n}}\n\n\
-                 pub fn prop_{n}(fault: Fault) -> (Verdict, Stats) {{\n    take_unreach();\n    let (v, mut s) = property(\"claim/{module}/{label}\", CLAIM_{up}_TYS, claim_{n}_admit, claim_{n}_holds, fault);\n    s.unreachable = take_unreach();\n    (v, s)\n}}\n\n\
-                 pub fn fuz_{n}(fault: Fault, iterations: u64) -> (Verdict, Stats) {{\n    take_unreach();\n    let (v, mut s) = fuzz_claim(\"fuzz/{module}/{label}\", CLAIM_{up}_TYS, claim_{n}_admit, claim_{n}_holds, fault, iterations);\n    s.unreachable = take_unreach();\n    (v, s)\n}}\n\n"
+                "pub fn exh_{n}(fault: Fault) -> (Verdict, Stats) {{\n    take_unreach();\n{reset_monitored}    let (v, mut s) = exhaustive(CLAIM_{up}_TYS, claim_{n}_admit, claim_{n}_holds, fault);\n    s.unreachable = take_unreach();\n{monitored}    (v, s)\n}}\n\n\
+                 pub fn prop_{n}(fault: Fault) -> (Verdict, Stats) {{\n    take_unreach();\n{reset_monitored}    let (v, mut s) = property(\"claim/{module}/{label}\", CLAIM_{up}_TYS, claim_{n}_admit, claim_{n}_holds, fault);\n    s.unreachable = take_unreach();\n{monitored}    (v, s)\n}}\n\n\
+                 pub fn fuz_{n}(fault: Fault, iterations: u64) -> (Verdict, Stats) {{\n    take_unreach();\n{reset_monitored}    let (v, mut s) = fuzz_claim(\"fuzz/{module}/{label}\", CLAIM_{up}_TYS, claim_{n}_admit, claim_{n}_holds, fault, iterations);\n    s.unreachable = take_unreach();\n{monitored}    (v, s)\n}}\n\n"
             );
         } else {
             let holds_fn = if obs {
@@ -3375,7 +3477,38 @@ pub fn generate_evidence_harness_with_tables(
         }
         let empty = BTreeSet::new();
         let err_case = binding.error_normalization.as_ref().map(|n| n.error_case.as_str());
-        if shape == Shape::Composite {
+        // WX-G: the post-state faults need an `inout` parameter to rewrite.
+        if shape != Shape::Inout {
+            if let Some(f) = binding
+                .negative_controls
+                .iter()
+                .find(|f| WXG_FAULTS.iter().any(|(k, _)| k == f))
+            {
+                return Err(unsupported(
+                    format!("fault `{f}` of operation `{}` needs an operation with an inout parameter", op.name),
+                    op.span,
+                ));
+            }
+        }
+        if shape == Shape::Inout {
+            features.insert("scoped");
+            adapters.push_str(&inout::inout_adapter(
+                op,
+                &env,
+                &binding.export,
+                err_case,
+                &binding.negative_controls,
+                options,
+            )?);
+            let mut list = Vec::new();
+            for f in &binding.negative_controls {
+                let variant = fault_variant(f).ok_or_else(|| {
+                    unsupported(format!("unknown fault `{f}` for `{}`", op.name), op.span)
+                })?;
+                list.push((f.clone(), format!("Fault::{variant}")));
+            }
+            op_faults.insert(op.name.to_string(), list);
+        } else if shape == Shape::Composite {
             features.insert("scoped");
             adapters.push_str(&composite_adapter(
                 op,
@@ -3477,10 +3610,37 @@ pub fn generate_evidence_harness_with_tables(
                 "#[allow(unused_variables)]\nfn op_{n}(w: &[u64], args: &[V], fault: Fault) -> V {{\n{resolve}{heap}    let (w, a) = (w.to_vec(), args.to_vec());\n    obs_observe(\"{n}\", heap, move || op_{n}_raw(&w, &a, fault))\n}}\n\n"
             );
         }
+        if ensures_of.contains_key(op.name) {
+            // WX-G: every call of a monitored operation goes through the wrapper.
+            let emitted = adapters.split_off(adapters_before);
+            let from = format!("fn op_{}(", op.name);
+            let to = format!("fn op_{}_core(", op.name);
+            if !emitted.contains(&from) {
+                return Err(unsupported(
+                    format!("operation `{}` has no adapter to monitor", op.name),
+                    op.span,
+                ));
+            }
+            adapters.push_str(&emitted.replacen(&from, &to, 1));
+            adapters.push_str(&inout::post_wrapper(op.name));
+        }
         for (n, _) in &op_faults[op.name] {
             used_faults.insert(n.clone());
         }
         shapes.insert(op.name.to_string(), shape);
+    }
+
+    adapters.push_str(&inout::fault_helpers(&used_faults));
+    if has_post {
+        let rows: Vec<String> = post_rows
+            .iter()
+            .map(|(op, n)| format!("(\"{op}\", {n})"))
+            .collect();
+        let _ = write!(
+            adapters,
+            "/// The number of `ensures` rows of each monitored operation (VER04k section 4.7).\nconst POST_ROWS: &[(&str, u64)] = &[{}];\n\n",
+            rows.join(", ")
+        );
     }
 
     // Suite registration.
@@ -3650,7 +3810,7 @@ pub fn generate_evidence_harness_with_tables(
          // Source-SHA256: {sha}\n\
          // Target: Rust evidence harness (examples, bounded-exhaustive, property, fuzz, negative controls)\n\
          // Regenerate: cargo run -p coding_adventures_warrant_grammar --example gen_evidence\n\n\
-         use {krate}::*;\n\n\
+         {allow_glob}use {krate}::*;\n\n\
          pub const MODULE: &str = \"{module}\";\n\
          pub const SPEC_PATH: &str = \"{spec}\";\n\
          pub const SPEC_SHA256: &str = \"{sha}\";\n\
@@ -3665,6 +3825,13 @@ pub fn generate_evidence_harness_with_tables(
         spec = options.spec_path,
         sha = options.spec_sha256,
         krate = options.package_crate,
+        // An inout adapter calls its export by the fully qualified path (VER04k
+        // section 4.6), so the glob import may be unused.
+        allow_glob = if shapes.values().any(|s| *s == Shape::Inout) {
+            "#[allow(unused_imports)]\n"
+        } else {
+            ""
+        },
         seed = options.seed,
         pc = options.property_cases,
         fi = options.fuzz_iterations,

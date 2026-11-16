@@ -134,6 +134,25 @@ var (
 		"code/scripts/tfv.py",
 		"code/scripts/bootstrap_harness_conformance.py",
 	}
+	// trigReferenceCorpusPaths is the bit-exact TRIG-REF-1 conformance corpus
+	// (PHY00a section 6). Every converged trig port's tests decode it, so an
+	// edit to any of its files selects each converted port. Slices TC-1..TC-17
+	// add one consumer row per port as the port adopts the corpus.
+	trigReferenceCorpusPaths = []string{"code/specs/fixtures/trig-reference-v1"}
+	// trigReferenceInputPaths adds what regenerates and validates the corpus. The
+	// python/trig BUILD runs the generator's --check (byte-for-byte regeneration, the
+	// sensitivity gates and the C/Rust/bc cross-checks) and the validator tests, so
+	// an edit to any of these files must select it, or the generator could change
+	// without anything running it.
+	trigReferenceInputPaths = []string{
+		"code/specs/fixtures/trig-reference-v1",
+		"code/scripts/generate_trig_reference_fixture.py",
+		"code/scripts/trig_ref_exact.py",
+		"code/scripts/trig_ref_softfloat.py",
+		"code/scripts/trig_reference_xcheck",
+		"code/scripts/tests/test_trig_reference_fixture.py",
+	}
+
 	rngCorpusPaths         = []string{"code/specs/fixtures/rng-v1"}
 	hamurabiCorpusPaths    = []string{"code/specs/fixtures/hamurabi-v1"}
 	lunarLanderCorpusPaths = []string{"code/specs/fixtures/lunar-lander-v1"}
@@ -200,6 +219,21 @@ var (
 	warrantGoRunnerPackage   = "code/packages/go/warrant-corpus"
 	warrantGoLaneCorpusPaths = warrantGoLaneInputs
 	warrantGoLanePilotPaths  = append(append([]string{}, warrantGoLaneInputs...), warrantGoRunnerPackage)
+	// warrantOraclePaths are the files the independent Warrant oracle
+	// (python/warrant-oracle, VER04r section 10) reads: every adopter
+	// specification it parses and the one v1 corpus it gates against. The
+	// oracle re-derives everything from the source, so a change to any of
+	// these files must re-run it (that is the gate of VER04r 10.4).
+	warrantOraclePaths = []string{
+		"code/specs/ct-compare.warrant",
+		"code/specs/gf256.warrant",
+		"code/specs/wasm-leb128.warrant",
+		"code/specs/logic-gates.warrant",
+		"code/specs/lzw.warrant",
+		"code/specs/arithmetic.warrant",
+		"code/specs/x25519.warrant",
+		"code/specs/fixtures/ct-compare-warrant-v1/corpus.json",
+	}
 	// warrantAssurancePaths are the shared Warrant lane artifacts the
 	// assurance report validates directly (see isWarrantAssuranceInput).
 	// The Kiln graph export reads them, so they must list every path the
@@ -314,6 +348,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "the shared rng conformance corpus",
 		matches:  isRngCorpus,
 		paths:    rngCorpusPaths,
+	},
+	{
+		name:     "python/trig",
+		language: "python",
+		inputs:   "the TRIG-REF-1 bit-exact corpus and the generator, oracle and validator its BUILD runs (--check)",
+		matches:  isTrigReferenceInput,
+		paths:    trigReferenceInputPaths,
 	},
 	{
 		name:     "rust/rng",
@@ -646,6 +687,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		paths:    warrantPythonLaneCorpusPaths,
 	},
 	{
+		name:     "python/warrant-oracle",
+		language: "python",
+		inputs:   "the adopter Warrant specs and the v1 ct-compare corpus the oracle gates",
+		matches:  isWarrantOracleInput,
+		paths:    warrantOraclePaths,
+	},
+	{
 		name:     "python/ct-compare",
 		language: "python",
 		inputs:   "the Warrant spec, corpus, consumer registry and the shared Python runner",
@@ -692,6 +740,17 @@ func isWarrantAssuranceInput(changed string) bool {
 		"code/specs/fixtures/ct-compare-warrant-v1/consumers.schema.json",
 		"code/scripts/tfv.py":
 		return true
+	}
+	return false
+}
+
+// isWarrantOracleInput selects python/warrant-oracle when an adopter spec it
+// parses, or the v1 corpus it gates, changes. Exact paths only.
+func isWarrantOracleInput(changed string) bool {
+	for _, path := range warrantOraclePaths {
+		if changed == path {
+			return true
+		}
 	}
 	return false
 }
@@ -881,6 +940,36 @@ func isKilnToolchainPinInput(changed string) bool {
 //	code/specs/rng.md                         → false (prose; the corpus pins behaviour)
 func isRngCorpus(changed string) bool {
 	return strings.HasPrefix(changed, "code/specs/fixtures/rng-v1/")
+}
+
+// isTrigReferenceCorpus reports whether a changed path is a file of the shared
+// TRIG-REF-1 conformance corpus. A slash-delimited prefix, so a lookalike
+// directory such as trig-reference-v10 is not selected.
+func isTrigReferenceCorpus(changed string) bool {
+	return strings.HasPrefix(changed, "code/specs/fixtures/trig-reference-v1/")
+}
+
+// isTrigReferenceInput reports whether a changed path is the TRIG-REF-1 corpus or
+// one of the files that generates and validates it. The python/trig BUILD runs the
+// generator's --check, so each of these must select that package:
+//
+//	code/specs/fixtures/trig-reference-v1/edge.tsv            → true
+//	code/scripts/generate_trig_reference_fixture.py           → true
+//	code/scripts/trig_reference_xcheck/xcheck.c               → true
+//	code/scripts/trig_ref_exact.py                            → true
+//	code/scripts/generate_trig_reference_fixture.py.bak       → false (exact filenames)
+func isTrigReferenceInput(changed string) bool {
+	if isTrigReferenceCorpus(changed) {
+		return true
+	}
+	switch changed {
+	case "code/scripts/generate_trig_reference_fixture.py",
+		"code/scripts/trig_ref_exact.py",
+		"code/scripts/trig_ref_softfloat.py",
+		"code/scripts/tests/test_trig_reference_fixture.py":
+		return true
+	}
+	return strings.HasPrefix(changed, "code/scripts/trig_reference_xcheck/")
 }
 
 // isHamurabiCorpus reports whether a changed path is in the shared hamurabi corpus,

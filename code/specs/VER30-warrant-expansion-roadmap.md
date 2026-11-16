@@ -501,7 +501,7 @@ parallel with Rust adoption, because it does not depend on the T0 list.
 
 | Order | Item | Backlog id | Notes |
 |---:|---|---|---|
-| D1 | Lane artifact loader, registry join, digest checks | WD-004b1 | WD-004a is merged (PR #19236) |
+| D1 | Lane artifact loader, registry join, digest checks | WD-004b1 | WD-004a is merged (PR #19236); loader delivered on `claude/wd-004b1-lane-loader` (VER04i 8.2) |
 | D2 | Lane-aware reports, CLI and `--check`, honest absent rungs | WD-004b2 | the cross-language report; keep Rust-only proof and effect attestations isolated from the other lanes |
 | D3 | Per-language runners: Python, TypeScript, Go first | WD-1xx | one PR per lane: corpus runner, sabotage, manifest, report, for ct-compare first; then the other lanes (ruby, c, cpp, java, kotlin, csharp, fsharp, elixir) |
 | D4 | Per-language runtime jails | CAP-RT-1xx | arm the filter after interpreter or VM startup (Python, Node, Go, JVM, .NET and so on) |
@@ -839,7 +839,7 @@ Owner decisions, later on 2026-11-16.
     `80`/`81`. Diagnostic codes had no collision (VER04n's `W0750` to `W0759` is
     disjoint from every other block). Future specifications check the registry
     and add their row in the same PR.
-20. **Conformance-kit follow-up** (backlog WD-100b, no code in this change). Two
+20. **Conformance-kit follow-up** (backlog WD-100b, implemented on branch `claude/warrant-conformance-reserved-names`). Two
     cross-lane gaps found in review are pinned in
     `warrant-corpus-conformance-v1` and applied to Python, TypeScript, Go and the
     Rust loader: Windows reserved device names (`CON`, `NUL`, `COM1` to `COM9`,
@@ -847,8 +847,8 @@ Owner decisions, later on 2026-11-16.
     and spaces) are refused, as the Rust loader in PR #19492 already does and the
     lanes do not; and `win32` case-insensitive comparison folds ASCII only, with
     non-ASCII compared exactly (fail closed), where Go and Python currently differ
-    on `ſ`, `Σ` and `İ`. The rules are written into VER04i section 9.1 now, marked
-    pending implementation.
+    on `ſ`, `Σ` and `İ`. The rules are written into VER04i section 9.1 and are implemented in
+    all four places.
 
 Owner decisions, 2026-11-16, on VER04o's open questions.
 
@@ -867,3 +867,13 @@ Owner decisions, 2026-11-16, on VER04o's open questions.
     `flood-resistance: not evidenced`.
 24. **VER04o OWN-5: generic claims across VER29 layers fail closed**
     (`generic-not-published`, VER04o CT10).
+25. **VER04s owner questions OWN-R1 and OWN-R2 (2026-11-16).** OWN-R1: keep the
+    VER30 order; recursive types are implemented after the four features
+    (opaque types, collections, generics, floats), and only the groundwork slice
+    R1-S0 may start early. OWN-R2: `canonical-cbor` is confirmed as the
+    recursive-types pilot, as a partial adoption of 3 of 8 entries (`encode`,
+    `try_encode`, `decode`), with the other five tabled as not covered;
+    `bounded-json` is the second adopter (WX-R-PILOT2). Backlog rows WX-R0 to
+    WX-R-PILOT2 and the VER04s amendment rows are in `VER-BACKLOG.md` and the
+    portable Warrant queue.
+26. PHY00a (trig convergence) owner answers: NaN beyond 2^29, 3-ulp gate, pinned tan/atan2 conventions, minor version bump per port (2026-11-16).
