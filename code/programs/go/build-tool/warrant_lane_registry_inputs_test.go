@@ -1,6 +1,8 @@
 package main
 
 import (
+	"os"
+	"path/filepath"
 	"reflect"
 	"testing"
 
@@ -60,4 +62,31 @@ func indexByte(s string, c byte) int {
 		}
 	}
 	return len(s)
+}
+
+// WD-004b2: the three lanes' ct-compare BUILD files run the Rust loader through
+// cargo, so a change scoped to one lane must still ask CI for Rust.
+func TestWarrantLanePilotsRequestRustWhenOnlyTheLaneChanges(t *testing.T) {
+	root := findRepoRoot("")
+	for _, lane := range []string{"python", "typescript", "go"} {
+		pkgPath := "code/packages/" + lane + "/ct-compare"
+		for _, platform := range []string{"linux", "darwin", "windows"} {
+			fronts := make(map[string]string)
+			for _, front := range []string{"BUILD", "BUILD_windows"} {
+				raw, err := os.ReadFile(filepath.Join(root, filepath.FromSlash(pkgPath), front))
+				if err != nil {
+					t.Fatal(err)
+				}
+				fronts[front] = string(raw)
+			}
+			pkg := discovery.Package{
+				Name: lane + "/ct-compare", Language: lane,
+				ExtraToolchains: discovery.ExtraToolchainsForSnapshot(fronts, platform),
+			}
+			needed := computeLanguagesNeeded([]discovery.Package{pkg}, map[string]bool{pkg.Name: true}, false, nil)
+			if !needed[lane] || !needed["rust"] {
+				t.Errorf("%s/%s: a lane-only change needs its own toolchain and Rust: %v", lane, platform, needed)
+			}
+		}
+	}
 }
