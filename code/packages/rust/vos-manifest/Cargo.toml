@@ -19,6 +19,12 @@ parser = { path = "../parser" }
 coding_adventures_warrant_grammar = { path = "../warrant-grammar" }
 coding_adventures_sha256 = { path = "../sha256" }
 
+# A test-only edge (VOS-D058): the tests read the real contract package's files
+# (`include_bytes!` / copies), and the build tool selects a package's tests by its Cargo
+# dependency edges, so an edit to a `.part` or `contract.vos` must select them.
+[dev-dependencies]
+vos-sched-contract = { path = "../vos-sched-contract" }
+
 [[test]]
 name = "grammars"
 path = "tests/grammars.rs"

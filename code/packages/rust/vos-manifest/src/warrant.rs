@@ -35,14 +35,15 @@
 //! rule needs to know which fields of `Impl` the `build` model sets from the abstract
 //! state `m` (its cone).
 
-use std::collections::HashSet;
+use std::collections::HashMap;
 
 use coding_adventures_warrant_grammar::checker::check_warrant;
 use coding_adventures_warrant_grammar::layout::{
     capture_layout, LayoutLimits, LayoutToken, LayoutTokenKind, TokenSpan,
 };
 use coding_adventures_warrant_grammar::parser::{
-    parse_document, AssumptionsDecl, Declaration, Expression, ParserLimits,
+    parse_document, AssumptionsDecl, BinaryOp, Declaration, Expression, Literal, ModelDecl,
+    ParserLimits,
 };
 use coding_adventures_warrant_grammar::source::{SourceDocument, SourceLimits};
 
@@ -151,7 +152,7 @@ fn line_at(text: &str, offset: usize) -> u32 {
 }
 
 /// `claim_sha256` of the declaration whose source span is `span`.
-fn claim_digest(tokens: &[LayoutToken<'_>], span: (usize, usize)) -> String {
+fn claim_digest(tokens: &[LayoutToken<'_>], norm: &str, span: (usize, usize)) -> String {
     // Tokens are in source order, so a binary search finds the first one in the span
     // and the walk stops at the first one past it: linear in the claim, not in the
     // document.
@@ -172,15 +173,22 @@ fn claim_digest(tokens: &[LayoutToken<'_>], span: (usize, usize)) -> String {
         if end > span.1 {
             continue;
         }
-        let text = match t.kind {
-            LayoutTokenKind::Word(s)
-            | LayoutTokenKind::Symbol(s)
-            | LayoutTokenKind::Number(s)
-            | LayoutTokenKind::Bytes(s)
-            | LayoutTokenKind::Text(s) => s,
+        // The raw source slice of the token, not the lexer's `text`: the lexer drops the
+        // quotes of a string literal, so `"x"` and `x` would otherwise hash alike.  For a
+        // word, symbol or number the slice IS the token text, so VER29 5.3's definition
+        // ("tokens joined by single spaces") is unchanged for them.
+        match t.kind {
+            LayoutTokenKind::Word(_)
+            | LayoutTokenKind::Symbol(_)
+            | LayoutTokenKind::Number(_)
+            | LayoutTokenKind::Bytes(_)
+            | LayoutTokenKind::Text(_) => {}
             LayoutTokenKind::Indent | LayoutTokenKind::Dedent | LayoutTokenKind::Newline => {
                 continue
             }
+        }
+        let Some(text) = norm.get(start..end) else {
+            continue;
         };
         if !joined.is_empty() {
             joined.push(' ');
@@ -209,6 +217,7 @@ fn with_parsed<R>(
     f: impl FnOnce(
         &coding_adventures_warrant_grammar::parser::WarrantFile<'_>,
         &[LayoutToken<'_>],
+        &str,
     ) -> Result<R, WarrantFailure>,
 ) -> Result<R, WarrantFailure> {
     let doc = SourceDocument::admit(text.as_bytes(), SourceLimits::default())
@@ -223,7 +232,7 @@ fn with_parsed<R>(
     })?;
     let file = parse_document(&tokens, &doc, ParserLimits::default())
         .map_err(|e| refuse(WarrantStage::Parse, text, format!("{e}"), e.span()))?;
-    f(&file, &tokens)
+    f(&file, &tokens, doc.normalized())
 }
 
 /// The claims of an obligations (or any claim-only) block, with their digests.
@@ -233,13 +242,13 @@ fn with_parsed<R>(
 /// it cannot type-check alone.  Every declaration must be a `claim`.
 pub fn claims_of_block(block: &str) -> Result<Vec<ClaimFact>, WarrantFailure> {
     let text = format!("warrant vos_block v1\n{block}");
-    with_parsed(&text, |file, tokens| {
+    with_parsed(&text, |file, tokens, norm| {
         let mut out = Vec::new();
         for d in &file.declarations {
             match d {
                 Declaration::Claim(c) => out.push(ClaimFact {
                     name: c.name.to_string(),
-                    sha256: claim_digest(tokens, c.span),
+                    sha256: claim_digest(tokens, norm, c.span),
                 }),
                 other => {
                     let span = declaration_span(other);
@@ -278,9 +287,18 @@ fn declaration_span(d: &Declaration<'_>) -> (usize, usize) {
 /// Parse and type-check a whole document with `warrant-grammar` and report what the
 /// R6 checks need.
 pub fn analyze_document(text: &str) -> Result<Analysis, WarrantFailure> {
-    with_parsed(text, |file, tokens| {
+    with_parsed(text, |file, tokens, norm| {
         check_warrant(file)
             .map_err(|e| refuse(WarrantStage::Check, text, format!("{e:?}"), None))?;
+        let models: HashMap<&str, &ModelDecl<'_>> = file
+            .declarations
+            .iter()
+            .filter_map(|d| match d {
+                Declaration::Model(m) => Some((m.name, m)),
+                _ => None,
+            })
+            .collect();
+        let taint = Taint { models, src: norm };
         let mut a = Analysis {
             claims: Vec::new(),
             assumptions: Vec::new(),
@@ -292,7 +310,7 @@ pub fn analyze_document(text: &str) -> Result<Analysis, WarrantFailure> {
             match d {
                 Declaration::Claim(c) => a.claims.push(ClaimFact {
                     name: c.name.to_string(),
-                    sha256: claim_digest(tokens, c.span),
+                    sha256: claim_digest(tokens, norm, c.span),
                 }),
                 Declaration::Assumptions(AssumptionsDecl::Platform { rows, span }) => {
                     a.assumptions.push(AssumeFact {
@@ -311,7 +329,8 @@ pub fn analyze_document(text: &str) -> Result<Analysis, WarrantFailure> {
                 Declaration::Bound(_) => a.bound_declarations += 1,
                 Declaration::Record(r) if r.name == "Impl" => a.impl_fields = Some(r.fields.len()),
                 Declaration::Model(m) if m.name == "build" => {
-                    a.build = build_shape(m.params.first().map(|p| p.name), m.body.as_ref());
+                    a.build =
+                        build_shape(&taint, m.params.first().map(|p| p.name), m.body.as_ref());
                 }
                 _ => {}
             }
@@ -320,8 +339,151 @@ pub fn analyze_document(text: &str) -> Result<Analysis, WarrantFailure> {
     })
 }
 
-/// The cone of `build`: which constructor arguments mention the abstract state.
-fn build_shape(param: Option<&str>, body: Option<&Expression<'_>>) -> BuildShape {
+/// The facts the taint walk needs: the document's `model` declarations (to see through a
+/// call) and its source (to compare two sub-expressions by text).
+struct Taint<'a, 'b> {
+    models: HashMap<&'b str, &'b ModelDecl<'a>>,
+    src: &'b str,
+}
+
+/// How deep a chain of model calls the walk follows before it gives up.  Giving up means
+/// "not tainted", which is the failing direction for a production crate.
+const TAINT_DEPTH: u32 = 16;
+
+fn span_of(e: &Expression<'_>) -> (usize, usize) {
+    match e {
+        Expression::Quantified { span, .. }
+        | Expression::Conditional { span, .. }
+        | Expression::Match { span, .. }
+        | Expression::Binary { span, .. }
+        | Expression::Unary { span, .. }
+        | Expression::Literal { span, .. }
+        | Expression::List { span, .. }
+        | Expression::Reference { span, .. }
+        | Expression::Grouped { span, .. }
+        | Expression::Tuple { span, .. }
+        | Expression::Project { span, .. } => *span,
+    }
+}
+
+fn is_zero(e: &Expression<'_>) -> bool {
+    match e {
+        Expression::Grouped { inner, .. } => is_zero(inner),
+        Expression::Literal { lit, .. } => matches!(
+            lit,
+            Literal::U8(0) | Literal::U64(0) | Literal::Int(0) | Literal::Fixed(_, 0)
+        ),
+        _ => false,
+    }
+}
+
+fn is_false(e: &Expression<'_>) -> bool {
+    match e {
+        Expression::Grouped { inner, .. } => is_false(inner),
+        Expression::Literal { lit, .. } => matches!(lit, Literal::Bool(false)),
+        _ => false,
+    }
+}
+
+impl Taint<'_, '_> {
+    /// The source text of an expression with its whitespace removed.
+    fn text(&self, e: &Expression<'_>) -> String {
+        let (a, b) = span_of(e);
+        self.src
+            .get(a..b)
+            .unwrap_or("")
+            .chars()
+            .filter(|c| !c.is_whitespace())
+            .collect()
+    }
+
+    fn same(&self, a: &Expression<'_>, b: &Expression<'_>) -> bool {
+        let t = self.text(a);
+        !t.is_empty() && t == self.text(b)
+    }
+
+    /// Does the VALUE of `e` depend on the parameter `param`?  A mention is not enough
+    /// (VOS02 10.1, D-GD8): a mention does not count when it is
+    ///
+    /// * an operand of `and`, `bit_and` or `*` whose other operand is a literal zero or
+    ///   `false` (the result is constant),
+    /// * the two operands of `x - x` or `bit_xor(x, x)` (the text is identical),
+    /// * an argument to a `model` whose body does not depend on that parameter.
+    ///
+    /// Still evaded, by design of a syntactic walk: a constant produced by arithmetic on
+    /// a literal (`shl(1u8, 8)`), a constant condition (`if true then 0u8 else m.p0`),
+    /// a dependence hidden by a bound operation, and `x - x` written two ways.
+    fn depends(&self, e: &Expression<'_>, param: &str, depth: u32) -> bool {
+        match e {
+            Expression::Literal { .. } => false,
+            Expression::Grouped { inner, .. } => self.depends(inner, param, depth),
+            Expression::Unary { operand, .. } => self.depends(operand, param, depth),
+            Expression::Project { base, .. } => self.depends(base, param, depth),
+            Expression::Binary {
+                op, left, right, ..
+            } => {
+                match op {
+                    BinaryOp::And if is_false(left) || is_false(right) => return false,
+                    BinaryOp::Mul if is_zero(left) || is_zero(right) => return false,
+                    BinaryOp::Sub if self.same(left, right) => return false,
+                    _ => {}
+                }
+                self.depends(left, param, depth) || self.depends(right, param, depth)
+            }
+            Expression::Conditional {
+                condition,
+                then_branch,
+                else_branch,
+                ..
+            } => {
+                self.depends(condition, param, depth)
+                    || self.depends(then_branch, param, depth)
+                    || self.depends(else_branch, param, depth)
+            }
+            Expression::Match { target, arms, .. } => {
+                self.depends(target, param, depth)
+                    || arms.iter().any(|a| self.depends(&a.body, param, depth))
+            }
+            Expression::Tuple { elements, .. } | Expression::List { elements, .. } => {
+                elements.iter().any(|x| self.depends(x, param, depth))
+            }
+            Expression::Quantified { body, .. } => self.depends(body, param, depth),
+            Expression::Reference { name, args, .. } => {
+                if name.segments.first() == Some(&param) {
+                    return true;
+                }
+                let Some(args) = args else { return false };
+                let [fname] = name.segments.as_slice() else {
+                    return args.iter().any(|a| self.depends(a, param, depth));
+                };
+                match *fname {
+                    "bit_and" if args.iter().any(is_zero) => return false,
+                    "bit_xor" if args.len() == 2 && self.same(&args[0], &args[1]) => return false,
+                    _ => {}
+                }
+                if let Some(m) = self.models.get(fname) {
+                    if depth >= TAINT_DEPTH {
+                        return false;
+                    }
+                    return args.iter().zip(&m.params).any(|(a, p)| {
+                        self.depends(a, param, depth)
+                            && m.body
+                                .as_ref()
+                                .is_some_and(|b| self.depends(b, p.name, depth + 1))
+                    });
+                }
+                args.iter().any(|a| self.depends(a, param, depth))
+            }
+        }
+    }
+}
+
+/// The cone of `build`: which constructor arguments depend on the abstract state.
+fn build_shape(
+    t: &Taint<'_, '_>,
+    param: Option<&str>,
+    body: Option<&Expression<'_>>,
+) -> BuildShape {
     let (Some(param), Some(mut body)) = (param, body) else {
         return BuildShape::Missing;
     };
@@ -340,14 +502,6 @@ fn build_shape(param: Option<&str>, body: Option<&Expression<'_>>) -> BuildShape
     if name.segments.as_slice() != ["Impl"] {
         return BuildShape::NotConstructor;
     }
-    let names: HashSet<&str> = [param].into_iter().collect();
-    let in_cone = args
-        .iter()
-        .map(|arg| {
-            let mut found = std::collections::BTreeSet::new();
-            arg.mentioned_names(&names, &mut found);
-            !found.is_empty()
-        })
-        .collect();
+    let in_cone = args.iter().map(|arg| t.depends(arg, param, 0)).collect();
     BuildShape::Constructor { in_cone }
 }

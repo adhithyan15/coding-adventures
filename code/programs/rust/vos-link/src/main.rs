@@ -25,7 +25,8 @@ fn parse_args(args: &[String]) -> Result<Args, NoVerdict> {
     let command = it.next().ok_or_else(|| NoVerdict::new(USAGE))?.to_string();
     if command != "gen-doc" && command != "check-doc" {
         return Err(NoVerdict::new(format!(
-            "unknown command `{command}`\n{USAGE}"
+            "unknown command {}\n{USAGE}",
+            vos_link::fsio::esc(&command)
         )));
     }
     let mut crate_dir = None;
@@ -39,7 +40,10 @@ fn parse_args(args: &[String]) -> Result<Args, NoVerdict> {
                 return Err(NoVerdict::new(format!("--root given twice\n{USAGE}")));
             }
         } else if a.starts_with("--") {
-            return Err(NoVerdict::new(format!("unknown option `{a}`\n{USAGE}")));
+            return Err(NoVerdict::new(format!(
+                "unknown option {}\n{USAGE}",
+                vos_link::fsio::esc(a)
+            )));
         } else if crate_dir.replace(PathBuf::from(a)).is_some() {
             return Err(NoVerdict::new(format!(
                 "more than one crate directory\n{USAGE}"
@@ -76,6 +80,9 @@ fn print(command: &str, o: &Outcome) {
         );
     }
     if o.findings.is_empty() {
+        for n in &o.notes {
+            println!("note: {n}");
+        }
         println!("result: PASS, 0 findings");
     } else {
         println!("result: FAIL, {} findings", o.findings.len());

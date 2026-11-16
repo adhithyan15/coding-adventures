@@ -34,6 +34,20 @@ pub struct Outcome {
     pub header: String,
     /// What `gen-doc` did: `Some("wrote ...")`, `Some("unchanged ...")`.
     pub action: Option<String>,
+    /// Statements about what a pass does NOT establish, printed with the result.
+    pub notes: Vec<String>,
+}
+
+/// What a PASS of the document-level R6 rules does and does not mean (VOS02 10.1).
+pub const R6_LINT_NOTE: &str = "R6 cone rule: a STRUCTURAL LINT at document level (no Impl field of `build` is a constant or an ignored argument); not proof that the state has no oracle. Not checked here: that `alpha` reads every field, that evidence.bindings binds no oracle write (VOS-D060, a prerequisite of any image profile), the central kind registry (VOS-D030) and the profile manifest (VOS-034). kind, contract and obligations are author-declared until then.";
+
+fn notes_for(l: &Loaded) -> Vec<String> {
+    match l.kind {
+        crate::inputs::ImplKind::Production | crate::inputs::ImplKind::Any => {
+            vec![R6_LINT_NOTE.to_string()]
+        }
+        crate::inputs::ImplKind::Reference => Vec::new(),
+    }
 }
 
 fn header(l: &Loaded) -> String {
@@ -85,6 +99,7 @@ pub fn gen_doc(crate_arg: &Path, root_arg: Option<&Path>) -> Result<Outcome, NoV
     };
     let mut out = Outcome {
         header: header(&loaded),
+        notes: notes_for(&loaded),
         ..Outcome::default()
     };
     let doc = expected(&loaded)?;
@@ -127,6 +142,7 @@ pub fn check_doc(crate_arg: &Path, root_arg: Option<&Path>) -> Result<Outcome, N
     };
     let mut out = Outcome {
         header: header(&loaded),
+        notes: notes_for(&loaded),
         ..Outcome::default()
     };
     let fresh = expected(&loaded)?;

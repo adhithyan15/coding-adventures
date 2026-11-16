@@ -84,8 +84,44 @@ const OPEN_FLAGS: Option<i32> = None;
 /// Most entries read from one directory listing.
 pub const MAX_DIR_ENTRIES: usize = 64;
 
+/// Quote an untrusted string for a report: escapes ESC, newlines and every other
+/// non-printable (Rust `Debug` form), so a hostile file name or `vos.toml` value cannot
+/// inject terminal control sequences or forge a report line (backlog S-L1).
+pub fn esc(s: &str) -> String {
+    format!("{s:?}")
+}
+
+/// A path, quoted and escaped for a report.
+pub fn q(p: impl AsRef<Path>) -> String {
+    format!("{:?}", p.as_ref())
+}
+
 fn io_err(what: &str, path: &Path, e: &std::io::Error) -> NoVerdict {
-    NoVerdict::new(format!("{what} {}: {e}", path.display()))
+    NoVerdict::new(format!("{what} {}: {e}", q(path)))
+}
+
+/// Drop the Windows verbatim prefix that `canonicalize` adds (`\\?\C:\x` is `C:\x`,
+/// `\\?\UNC\h\s` is `\\h\s`), so a canonical path can be compared with the path the user
+/// typed.  Pure string work, so it is tested on every platform.
+pub fn strip_verbatim(s: &str) -> String {
+    if let Some(rest) = s.strip_prefix(r"\\?\UNC\") {
+        format!(r"\\{rest}")
+    } else if let Some(rest) = s.strip_prefix(r"\\?\") {
+        rest.to_string()
+    } else {
+        s.to_string()
+    }
+}
+
+/// Are two paths the same, as written?  Windows is case-insensitive about the drive
+/// letter and everything after it, and separators may differ; Unix is exact.
+pub fn same_path_text(a: &str, b: &str, windows: bool) -> bool {
+    if windows {
+        let norm = |x: &str| strip_verbatim(x).replace('/', "\\").to_lowercase();
+        norm(a) == norm(b)
+    } else {
+        a == b
+    }
 }
 
 #[cfg(unix)]
@@ -124,7 +160,7 @@ pub fn absolute_plain(arg: &Path) -> Result<PathBuf, NoVerdict> {
     if arg.components().any(|c| matches!(c, Component::ParentDir)) {
         return Err(NoVerdict::new(format!(
             "{}: `..` is not allowed in a path",
-            arg.display()
+            q(arg)
         )));
     }
     let abs = if arg.is_absolute() {
@@ -146,11 +182,15 @@ pub fn absolute_plain(arg: &Path) -> Result<PathBuf, NoVerdict> {
     let canon = clean
         .canonicalize()
         .map_err(|e| io_err("cannot resolve", &clean, &e))?;
-    if canon != clean {
+    if !same_path_text(
+        &canon.to_string_lossy(),
+        &clean.to_string_lossy(),
+        cfg!(windows),
+    ) {
         return Err(NoVerdict::new(format!(
             "{}: a component is a symlink (it resolves to {})",
-            clean.display(),
-            canon.display()
+            q(&clean),
+            q(&canon)
         )));
     }
     Ok(clean)
@@ -164,13 +204,10 @@ pub fn ensure_plain_dirs(root: &Path, rel: &[&str]) -> Result<PathBuf, NoVerdict
         p.push(part);
         let md = fs::symlink_metadata(&p).map_err(|e| io_err("cannot stat", &p, &e))?;
         if md.file_type().is_symlink() {
-            return Err(NoVerdict::new(format!("{}: is a symlink", p.display())));
+            return Err(NoVerdict::new(format!("{}: is a symlink", q(p))));
         }
         if !md.is_dir() {
-            return Err(NoVerdict::new(format!(
-                "{}: is not a directory",
-                p.display()
-            )));
+            return Err(NoVerdict::new(format!("{}: is not a directory", q(p))));
         }
     }
     Ok(p)
@@ -184,18 +221,18 @@ pub fn read_regular_opt(path: &Path, cap: usize) -> Result<Option<Vec<u8>>, NoVe
         Err(e) => return Err(io_err("cannot stat", path, &e)),
     };
     if before.file_type().is_symlink() {
-        return Err(NoVerdict::new(format!("{}: is a symlink", path.display())));
+        return Err(NoVerdict::new(format!("{}: is a symlink", q(path))));
     }
     if !before.is_file() {
         return Err(NoVerdict::new(format!(
             "{}: is not a regular file",
-            path.display()
+            q(path)
         )));
     }
     if before.len() > cap as u64 {
         return Err(NoVerdict::new(format!(
             "{}: {} bytes is over the {cap}-byte cap",
-            path.display(),
+            q(path),
             before.len()
         )));
     }
@@ -206,7 +243,7 @@ pub fn read_regular_opt(path: &Path, cap: usize) -> Result<Option<Vec<u8>>, NoVe
     if !after.is_file() || !same_file(&before, &after) {
         return Err(NoVerdict::new(format!(
             "{}: changed while it was being opened",
-            path.display()
+            q(path)
         )));
     }
     let mut bytes = Vec::new();
@@ -216,7 +253,7 @@ pub fn read_regular_opt(path: &Path, cap: usize) -> Result<Option<Vec<u8>>, NoVe
     if bytes.len() > cap {
         return Err(NoVerdict::new(format!(
             "{}: grew past the {cap}-byte cap while it was read",
-            path.display()
+            q(path)
         )));
     }
     Ok(Some(bytes))
@@ -224,8 +261,7 @@ pub fn read_regular_opt(path: &Path, cap: usize) -> Result<Option<Vec<u8>>, NoVe
 
 /// Read a regular file that must exist.
 pub fn read_regular(path: &Path, cap: usize) -> Result<Vec<u8>, NoVerdict> {
-    read_regular_opt(path, cap)?
-        .ok_or_else(|| NoVerdict::new(format!("{}: not found", path.display())))
+    read_regular_opt(path, cap)?.ok_or_else(|| NoVerdict::new(format!("{}: not found", q(path))))
 }
 
 /// The entry names of a directory (UTF-8, at most [`MAX_DIR_ENTRIES`]).  A directory
@@ -235,13 +271,10 @@ pub fn list_names(dir: &Path) -> Result<Vec<String>, NoVerdict> {
     match fs::symlink_metadata(dir) {
         Ok(m) => {
             if m.file_type().is_symlink() {
-                return Err(NoVerdict::new(format!("{}: is a symlink", dir.display())));
+                return Err(NoVerdict::new(format!("{}: is a symlink", q(dir))));
             }
             if !m.is_dir() {
-                return Err(NoVerdict::new(format!(
-                    "{}: is not a directory",
-                    dir.display()
-                )));
+                return Err(NoVerdict::new(format!("{}: is not a directory", q(dir))));
             }
         }
         Err(e) if e.kind() == std::io::ErrorKind::NotFound => return Ok(Vec::new()),
@@ -253,13 +286,13 @@ pub fn list_names(dir: &Path) -> Result<Vec<String>, NoVerdict> {
         if names.len() >= MAX_DIR_ENTRIES {
             return Err(NoVerdict::new(format!(
                 "{}: more than {MAX_DIR_ENTRIES} entries",
-                dir.display()
+                q(dir)
             )));
         }
         let Ok(name) = entry.file_name().into_string() else {
             return Err(NoVerdict::new(format!(
                 "{}: a file name is not UTF-8",
-                dir.display()
+                q(dir)
             )));
         };
         names.push(name);
@@ -277,20 +310,25 @@ pub fn write_replacing(dir: &Path, name: &str, bytes: &[u8]) -> Result<(), NoVer
             if m.file_type().is_symlink() {
                 return Err(NoVerdict::new(format!(
                     "{}: the output path is a symlink",
-                    target.display()
+                    q(target)
                 )));
             }
             if !m.is_file() {
                 return Err(NoVerdict::new(format!(
                     "{}: the output path is not a regular file",
-                    target.display()
+                    q(target)
                 )));
             }
         }
         Err(e) if e.kind() == std::io::ErrorKind::NotFound => {}
         Err(e) => return Err(io_err("cannot stat", &target, &e)),
     }
-    let tmp = dir.join(format!(".{name}.vos-link.tmp"));
+    // A unique name (process id plus a counter), still created with `create_new`, so a
+    // stale file left by a crashed run never blocks the next one and a planted file or
+    // symlink at the chosen name fails the create rather than being written through.
+    static COUNTER: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
+    let n = COUNTER.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+    let tmp = dir.join(format!(".{name}.{}.{n}.vos-link.tmp", std::process::id()));
     let mut f = OpenOptions::new()
         .write(true)
         .create_new(true)

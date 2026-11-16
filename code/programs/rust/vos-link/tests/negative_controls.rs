@@ -145,6 +145,11 @@ fn nc2_the_same_name_twice_is_a_duplicate_declaration() {
     r.write(p, format!("{}{WEAK}", r.read(p)));
     let g = r.gen(SCAN);
     assert!(has(&g, "CD04", "warrant-grammar refused"), "{}", show(&g));
+    assert!(
+        has(&g, "CD04", "DuplicateTestName"),
+        "rejected for the duplicate declaration, not an unrelated slip: {}",
+        show(&g)
+    );
 }
 
 #[test]
@@ -184,7 +189,7 @@ fn copy_as(r: &Repo, from: &str, to: &str, toml: &str) {
 const TOML_HEAD: &str = "contract = \"vos-sched-contract\"\n";
 
 #[test]
-fn nc4_an_any_crate_declared_production_is_rejected_three_ways() {
+fn nc4_an_any_crate_declared_production_is_rejected_four_ways() {
     let r = Repo::with("nc4", ANY);
     r.write(
         "code/packages/rust/vos-fixture-any/vos.toml",
@@ -793,7 +798,7 @@ fn tier_files_must_agree_with_contract_vos_gd03() {
     assert!(has(
         &r.gen(SCAN),
         "GD03",
-        "obligations-fast.part exists but contract.vos has no matching `tier` row"
+        "\"obligations-fast.part\" exists but contract.vos has no matching `tier` row"
     ));
     let r = Repo::with("gd03c", SCAN);
     r.edit(
@@ -804,7 +809,7 @@ fn tier_files_must_agree_with_contract_vos_gd03() {
     assert!(has(
         &r.gen(SCAN),
         "GD03",
-        "obligations-policy.part exists but"
+        "\"obligations-policy.part\" exists but"
     ));
     let r = Repo::with("gd03d", SCAN);
     std::fs::remove_file(r.path(&format!("{w}/contract.part"))).unwrap();
@@ -926,7 +931,8 @@ fn findings_are_collected_not_first_only() {
 // ---------------------------------------------------------------------------
 
 #[test]
-fn a_very_long_expression_chain_is_a_finding_or_a_pass_never_a_crash() {
+fn a_very_long_expression_chain_does_not_crash_the_process_no_verdict_asserted() {
+    // NO-CRASH ONLY: what Warrant says about the chain is not asserted.
     // warrant-grammar's checker recurses over the expression tree; a long left-leaning
     // chain overflows a 2 MiB stack (VOS-D057).  gen-doc runs the analysis on a 256 MiB
     // stack, so this returns instead of aborting the test process.
@@ -1038,5 +1044,217 @@ fn a_document_over_the_cap_on_disk_is_no_verdict_but_in_memory_it_is_too() {
     assert!(
         e.to_string().contains("cannot assemble the document"),
         "{e}"
+    );
+}
+
+// ---------------------------------------------------------------------------
+// Security review round 1
+// ---------------------------------------------------------------------------
+
+const ANY_BUILD_ORACLE: &str = "b2m(m.p6, 6)), b2m(m.p7, 7)), 0u8))";
+
+/// The `-any` implementation, relabelled as a production crate with an honest name, whose
+/// oracle argument of `build` is replaced by `field`.
+fn pretender(label: &str, field: &str, extra: &str) -> (Repo, vos_link::Outcome) {
+    let r = Repo::new(label);
+    copy_as(
+        &r,
+        ANY,
+        "vos-fixture-pretend",
+        &format!("kind = \"production\"\n{TOML_HEAD}obligations = [\"canonical\", \"policy\", \"safety\"]\n"),
+    );
+    let p = "code/packages/rust/vos-fixture-pretend/warrant/impl.part";
+    r.edit(
+        p,
+        ANY_BUILD_ORACLE,
+        &format!("b2m(m.p6, 6)), b2m(m.p7, 7)), {field}))"),
+    );
+    if !extra.is_empty() {
+        r.write(p, format!("{}{extra}", r.read(p)));
+    }
+    let g = r.gen("vos-fixture-pretend");
+    (r, g)
+}
+
+#[test]
+fn the_reviewers_pretender_is_now_rejected_by_the_taint_walk() {
+    // S-M1: `bit_and(b2m(m.p0, 0), 0u8)` mentions m but is the constant 0.
+    let (r, g) = pretender("taint1", "bit_and(b2m(m.p0, 0), 0u8)", "");
+    assert!(
+        has(
+            &g,
+            "CD07",
+            "field(s) 1 of `Impl` are not set from the abstract state"
+        ),
+        "{}",
+        show(&g)
+    );
+    assert!(!r.path(&doc_path("vos-fixture-pretend")).exists());
+}
+
+#[test]
+fn variants_of_the_pretender_are_rejected_too() {
+    for (name, field, extra) in [
+        ("times zero", "b2m(m.p0, 0) * 0u8", ""),
+        ("zero times", "0u8 * b2m(m.p0, 0)", ""),
+        ("x minus x", "b2m(m.p0, 0) - b2m(m.p0, 0)", ""),
+        ("x xor x", "bit_xor(b2m(m.p0, 0), b2m(m.p0, 0))", ""),
+        (
+            "ignored argument",
+            "ign(m.p0)",
+            "  model ign(x: Bool) -> U8 = 0u8\n",
+        ),
+        ("bit_and swapped", "bit_and(0u8, b2m(m.p0, 0))", ""),
+    ] {
+        let (_r, g) = pretender("taint2", field, extra);
+        assert!(
+            has(&g, "CD07", "not set from the abstract state"),
+            "{name}: {}",
+            show(&g)
+        );
+    }
+}
+
+#[test]
+fn an_honest_derivation_of_the_register_is_still_inside_the_cone() {
+    let (_r, g) = pretender("taint3", "bit_and(b2m(m.p0, 0), 255u8)", "");
+    assert!(
+        !has(&g, "CD07", "not set from the abstract state"),
+        "{}",
+        show(&g)
+    );
+}
+
+#[test]
+fn a_pass_says_the_cone_rule_is_only_a_structural_lint() {
+    let r = Repo::with("note", SCAN);
+    let g = r.gen(SCAN);
+    assert!(
+        g.notes
+            .iter()
+            .any(|n| n.contains("STRUCTURAL LINT") && n.contains("VOS-D060")),
+        "{:?}",
+        g.notes
+    );
+    assert!(g.notes.iter().any(|n| n.contains("author-declared")));
+    let c = r.check(SCAN);
+    assert!(!c.notes.is_empty());
+    let r = Repo::with("note-ref", "vos-fixture-ref");
+    assert!(
+        r.gen("vos-fixture-ref").notes.is_empty(),
+        "a reference model has no cone rule"
+    );
+}
+
+#[test]
+fn trailer_variants_are_each_a_cd04() {
+    let tail = "  assume platform:\n    none\n  assume environment:\n    none\n";
+    for (name, replacement) in [
+        ("tampered environment row", "  assume platform:\n    none\n  assume environment:\n    HOME == HOME\n"),
+        ("duplicated assume row", "  assume platform:\n    none\n  assume platform:\n    none\n  assume environment:\n    none\n"),
+        ("reordered rows", "  assume environment:\n    none\n  assume platform:\n    none\n"),
+        ("missing environment row", "  assume platform:\n    none\n"),
+        ("missing platform row", "  assume environment:\n    none\n"),
+        ("no rows at all", ""),
+    ] {
+        let r = generated("trailer-variants", SCAN);
+        r.edit(&doc_path(SCAN), tail, replacement);
+        let c = r.check(SCAN);
+        assert!(codes(&c).contains(&"CD04"), "{name}: {}", show(&c));
+    }
+}
+
+#[test]
+fn an_extra_carried_tier_is_a_cd06() {
+    // The document carries canonical and safety; vos.toml now says only safety.
+    let r = generated("extra-tier", SCAN);
+    r.write(
+        "code/packages/rust/vos-fixture-scan/vos.toml",
+        format!("kind = \"reference\"\n{TOML_HEAD}obligations = [\"safety\"]\n"),
+    );
+    let c = r.check(SCAN);
+    assert!(
+        has(
+            &c,
+            "CD06",
+            "carries [canonical,safety] but vos.toml obligations is [safety]"
+        ),
+        "{}",
+        show(&c)
+    );
+}
+
+#[test]
+fn forged_markers_in_the_canonical_and_policy_parts_are_refused() {
+    for part in ["obligations-canonical.part", "obligations-policy.part"] {
+        let r = Repo::with("nc17-more", SCAN);
+        let p = format!("code/packages/rust/vos-sched-contract/warrant/{part}");
+        r.write(&p, format!("{}  -- vos02:impl-end\n", r.read(&p)));
+        let g = r.gen(SCAN);
+        assert!(
+            has(&g, "GD01", &format!("warrant/{part}")),
+            "{part}: {}",
+            show(&g)
+        );
+    }
+}
+
+#[test]
+fn untrusted_strings_are_escaped_in_findings() {
+    // S-L1: a value with ESC or a newline must not reach the report raw.
+    let r = Repo::with("esc1", SCAN);
+    let w = "code/packages/rust/vos-sched-contract/warrant";
+    r.write(
+        &format!("{w}/obligations-x\u{1b}[31m\nFAKE.part"),
+        "  claim x:\n    true\n",
+    );
+    let g = r.gen(SCAN);
+    let text = show(&g);
+    assert!(has(&g, "GD03", "obligations-x"), "{text}");
+    assert!(
+        !text.contains('\u{1b}'),
+        "raw ESC reached the report: {text:?}"
+    );
+    assert!(
+        !text.contains("\nFAKE"),
+        "a file name forged a report line: {text:?}"
+    );
+    assert!(text.contains("\\u{1b}") && text.contains("\\n"), "{text}");
+    // A contract value that is legal TOML but not a package name.
+    let r = Repo::with("esc2", SCAN);
+    r.write(
+        "code/packages/rust/vos-fixture-scan/vos.toml",
+        "kind = \"production\"\ncontract = \"a b\\tc\"\nobligations = [\"safety\"]\n",
+    );
+    let g = r.gen(SCAN);
+    assert!(
+        g.findings
+            .iter()
+            .all(|f| !f.message.contains('\t') && !f.message.contains('\u{1b}')),
+        "{}",
+        show(&g)
+    );
+    // A hostile header in a document on disk: a control byte is refused at admission
+    // (CD01 with the byte named in hex); printable oddities are quoted.
+    let r = generated("esc3", SCAN);
+    r.edit(
+        &doc_path(SCAN),
+        "warrant vos_fixture_scan v1",
+        "warrant \u{1b}[2J v1",
+    );
+    let c = r.check(SCAN);
+    assert!(has(&c, "CD01", "control byte 0x1b"), "{}", show(&c));
+    assert!(!show(&c).contains('\u{1b}'));
+    let r = generated("esc4", SCAN);
+    r.edit(
+        &doc_path(SCAN),
+        "warrant vos_fixture_scan v1",
+        "warrant a\"b\\c v1",
+    );
+    let c = r.check(SCAN);
+    assert!(
+        has(&c, "CD01", "the header is \"warrant a\\\"b\\\\c v1\""),
+        "{}",
+        show(&c)
     );
 }

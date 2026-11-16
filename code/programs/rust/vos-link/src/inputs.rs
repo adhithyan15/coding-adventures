@@ -33,7 +33,7 @@ use vos_manifest::{Contract, Part, Tier};
 use vos_shape_check::manifest::{parse_vos_toml, Kind, VosToml, VOS_TOML_MAX_BYTES};
 
 use crate::error::{Finding, NoVerdict};
-use crate::fsio::{absolute_plain, ensure_plain_dirs, list_names, read_regular_opt};
+use crate::fsio::{absolute_plain, ensure_plain_dirs, esc, list_names, q, read_regular_opt};
 
 /// The three kinds of implementation (VOS02 R6); the other `vos.toml` kinds name crates
 /// that are not implementations and are refused before this type is built.
@@ -101,12 +101,12 @@ pub fn resolve_layout(crate_arg: &Path, root_arg: Option<&Path>) -> Result<Layou
     let name = impl_dir
         .file_name()
         .and_then(|n| n.to_str())
-        .ok_or_else(|| NoVerdict::new(format!("{}: not a package directory", impl_dir.display())))?
+        .ok_or_else(|| NoVerdict::new(format!("{}: not a package directory", q(&impl_dir))))?
         .to_string();
     if !is_ident(&name) {
         return Err(NoVerdict::new(format!(
             "{}: `{name}` is not a package name ([a-z][a-z0-9-]{{0,31}})",
-            impl_dir.display()
+            q(&impl_dir)
         )));
     }
     // .../code/packages/rust/<name>: the four ancestors.
@@ -126,7 +126,7 @@ pub fn resolve_layout(crate_arg: &Path, root_arg: Option<&Path>) -> Result<Layou
     if !ok {
         return Err(NoVerdict::new(format!(
             "{}: an implementation lives at <root>/code/packages/rust/<package>",
-            impl_dir.display()
+            q(&impl_dir)
         )));
     }
     let derived = root.map(Path::to_path_buf).unwrap_or_default();
@@ -135,9 +135,9 @@ pub fn resolve_layout(crate_arg: &Path, root_arg: Option<&Path>) -> Result<Layou
         if given != derived {
             return Err(NoVerdict::new(format!(
                 "--root {} is not the repository root of {} ({})",
-                given.display(),
-                impl_dir.display(),
-                derived.display()
+                q(&given),
+                q(&impl_dir),
+                q(&derived)
             )));
         }
     }
@@ -188,15 +188,12 @@ pub fn obligations_file(tier: Tier) -> String {
 fn exists_plain_dir(path: &Path) -> Result<bool, NoVerdict> {
     match std::fs::symlink_metadata(path) {
         Ok(m) if m.file_type().is_symlink() => {
-            Err(NoVerdict::new(format!("{}: is a symlink", path.display())))
+            Err(NoVerdict::new(format!("{}: is a symlink", q(path))))
         }
         Ok(m) if m.is_dir() => Ok(true),
-        Ok(_) => Err(NoVerdict::new(format!(
-            "{}: is not a directory",
-            path.display()
-        ))),
+        Ok(_) => Err(NoVerdict::new(format!("{}: is not a directory", q(path)))),
         Err(e) if e.kind() == std::io::ErrorKind::NotFound => Ok(false),
-        Err(e) => Err(NoVerdict::new(format!("{}: {e}", path.display()))),
+        Err(e) => Err(NoVerdict::new(format!("{}: {e}", q(path)))),
     }
 }
 
@@ -220,7 +217,7 @@ fn read_vos_toml(
         Err((line, why)) => {
             f.push(Finding::new(
                 "GD05",
-                format!("{label}vos.toml:{line}: {why}"),
+                format!("{label}vos.toml:{line}: {}", esc(&why)),
             ));
             Ok(None)
         }
@@ -273,7 +270,10 @@ pub fn load(crate_arg: &Path, root_arg: Option<&Path>) -> Result<Load, NoVerdict
         Some(c) => {
             f.push(Finding::new(
                 "GD05",
-                format!("vos.toml: contract `{c}` is not a package name ([a-z][a-z0-9-]{{0,31}})"),
+                format!(
+                    "vos.toml: contract {} is not a package name ([a-z][a-z0-9-]{{0,31}})",
+                    esc(c)
+                ),
             ));
             None
         }
@@ -348,7 +348,10 @@ pub fn load(crate_arg: &Path, root_arg: Option<&Path>) -> Result<Load, NoVerdict
         if is_obligation && !declared {
             f.push(Finding::new(
                 "GD03",
-                format!("{name} exists but contract.vos has no matching `tier` row"),
+                format!(
+                    "{} exists but contract.vos has no matching `tier` row",
+                    esc(name)
+                ),
             ));
         }
     }
@@ -407,12 +410,16 @@ pub fn load(crate_arg: &Path, root_arg: Option<&Path>) -> Result<Load, NoVerdict
             None => f.push(Finding::new(
                 "GD05",
                 format!(
-                    "vos.toml: obligations `{name}` is not a tier (any, canonical, policy, safety)"
+                    "vos.toml: obligations {} is not a tier (any, canonical, policy, safety)",
+                    esc(name)
                 ),
             )),
             Some(t) if !contract.has_tier(t) => f.push(Finding::new(
                 "GD05",
-                format!("vos.toml: obligations `{name}` is not a tier of `{contract_pkg}`"),
+                format!(
+                    "vos.toml: obligations {} is not a tier of `{contract_pkg}`",
+                    esc(name)
+                ),
             )),
             Some(t) => {
                 if let Some(&last) = obligations.last() {

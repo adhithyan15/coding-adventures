@@ -15539,6 +15539,7 @@ dependencies = [
  "grammar-tools",
  "lexer",
  "parser",
+ "vos-sched-contract",
 ]
 
 [[package]]

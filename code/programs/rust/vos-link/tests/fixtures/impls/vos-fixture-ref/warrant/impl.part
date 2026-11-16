@@ -1,3 +1,8 @@
+  -- vos-fixture-ref: a REFERENCE model of the scheduler contract.  Its models are the same
+  -- linear-scan models as vos-fixture-scan on purpose: a reference implementation is the
+  -- executable oracle other implementations are compared with, so it is the simplest correct
+  -- one.  What makes it a reference is the kind in vos.toml (no `bound` rows, no -any name,
+  -- safety tier only), which tests/gen_and_check.rs checks, not different text.
   -- A different representation of the same contract: one cell per thread (each 0 or 1), and
   -- dispatch scans from thread 0 upward and returns the LOWEST ready thread. Safety tier only.
   record Impl(c0: U8, c1: U8, c2: U8, c3: U8, c4: U8, c5: U8, c6: U8, c7: U8)

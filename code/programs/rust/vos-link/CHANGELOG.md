@@ -4,6 +4,15 @@ All notable changes to this package are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Fixed (security review round 1)
+
+- Untrusted strings (file names, `vos.toml` values, document headers, argv) are quoted and escaped in every report.
+- Unique temporary file names (pid and counter); `.gitignore` covers `*.vos-link.tmp`.
+- Windows: the verbatim `\\?\` prefix of a canonical path is dropped and the comparison is case-insensitive there.
+- Every pass prints the R6 structural-lint note; the cone rule is a taint walk (vos-manifest).
+- Tests: strict `VOS_LINK_BLESS=1` (refused on CI), trailer variants, extra carried tier, `--root` disagreement, escapes, FIFO timeout guard, SKIPPED notice when root.
+- Dev-dependency on `vos-sched-contract` (build-tool selection).
+
 ### Added
 
 - VOS-033: `vos-link gen-doc` and `vos-link check-doc` (VOS02 sections 2, 6.8, 10, 10.1).

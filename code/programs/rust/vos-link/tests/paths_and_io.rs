@@ -250,7 +250,16 @@ mod unix {
             .status()
             .unwrap();
         assert!(st.success());
-        assert!(nv(vos_link::gen_doc(&r.pkg(SCAN), None)).contains("not a regular file"));
+        // A regression that opened the FIFO would block forever: bound it.
+        let pkg = r.pkg(SCAN);
+        let (tx, rx) = std::sync::mpsc::channel();
+        std::thread::spawn(move || {
+            let _ = tx.send(vos_link::gen_doc(&pkg, None));
+        });
+        let res = rx
+            .recv_timeout(std::time::Duration::from_secs(20))
+            .expect("gen_doc hung on a FIFO");
+        assert!(nv(res).contains("not a regular file"));
         let r = Repo::with("dirdoc", SCAN);
         std::fs::create_dir(r.path("code/specs/vos-fixture-scan.warrant")).unwrap();
         assert!(nv(vos_link::gen_doc(&r.pkg(SCAN), None)).contains("not a regular file"));
@@ -270,30 +279,53 @@ mod unix {
     }
 
     #[test]
-    fn a_stale_temporary_file_or_an_unwritable_directory_fails_the_write() {
+    fn a_stale_temporary_file_does_not_block_the_next_run() {
+        // The temporary name is unique per process and call (S-L2): a file a crashed run
+        // left behind, under the old fixed name or any other, is neither used nor in the way.
         let r = Repo::with("tmp1", SCAN);
-        std::fs::write(
-            r.path("code/specs/.vos-fixture-scan.warrant.vos-link.tmp"),
+        for stale in [
+            ".vos-fixture-scan.warrant.vos-link.tmp",
+            ".vos-fixture-scan.warrant.1.0.vos-link.tmp",
+        ] {
+            std::fs::write(r.path(&format!("code/specs/{stale}")), "stale").unwrap();
+        }
+        let g = vos_link::gen_doc(&r.pkg(SCAN), None).unwrap();
+        assert!(g.findings.is_empty());
+        assert_eq!(
+            std::fs::read_to_string(r.path("code/specs/.vos-fixture-scan.warrant.vos-link.tmp"))
+                .unwrap(),
             "stale",
-        )
-        .unwrap();
-        assert!(
-            nv(vos_link::gen_doc(&r.pkg(SCAN), None)).contains("cannot create the temporary file")
+            "the stale file is left alone"
         );
-        // A read-only specs directory (skipped when running as root, which ignores modes).
+        assert!(r.check(SCAN).findings.is_empty());
+    }
+
+    fn is_root() -> bool {
+        std::process::Command::new("id")
+            .arg("-u")
+            .output()
+            .map(|o| String::from_utf8_lossy(&o.stdout).trim() == "0")
+            .unwrap_or(false)
+    }
+
+    #[test]
+    fn an_unwritable_specs_directory_fails_the_write() {
         use std::os::unix::fs::PermissionsExt;
+        if is_root() {
+            eprintln!("SKIPPED: running as root, which ignores directory modes");
+            return;
+        }
         let r = Repo::with("tmp2", SCAN);
         std::fs::set_permissions(r.path("code/specs"), std::fs::Permissions::from_mode(0o555))
             .unwrap();
         let res = vos_link::gen_doc(&r.pkg(SCAN), None);
         std::fs::set_permissions(r.path("code/specs"), std::fs::Permissions::from_mode(0o755))
             .unwrap();
-        if let Err(e) = res {
-            assert!(
-                e.to_string().contains("cannot create the temporary file"),
-                "{e}"
-            );
-        }
+        let e = res.expect_err("a read-only directory must fail the write");
+        assert!(
+            e.to_string().contains("cannot create the temporary file"),
+            "{e}"
+        );
     }
 
     #[test]
@@ -334,4 +366,54 @@ fn check_doc_reports_input_findings_like_gen_doc() {
 #[test]
 fn the_filesystem_root_is_not_a_package_directory() {
     assert!(nv(vos_link::gen_doc(Path::new("/"), None)).contains("not a package directory"));
+}
+
+#[test]
+fn windows_path_text_is_compared_after_the_verbatim_prefix_is_dropped() {
+    // S-L3: `canonicalize` on Windows returns `\\?\C:\...`; the cleaned path the user typed
+    // is `C:\...`.  The helpers are pure string work, so they are tested on every platform.
+    assert_eq!(fsio::strip_verbatim(r"\\?\C:\repo\code"), r"C:\repo\code");
+    assert_eq!(
+        fsio::strip_verbatim(r"\\?\UNC\host\share\x"),
+        r"\\host\share\x"
+    );
+    assert_eq!(fsio::strip_verbatim("/usr/lib"), "/usr/lib");
+    assert!(fsio::same_path_text(
+        r"\\?\C:\Repo\code",
+        r"c:\repo\code",
+        true
+    ));
+    assert!(fsio::same_path_text(
+        r"\\?\C:\repo\code",
+        "C:/repo/code",
+        true
+    ));
+    assert!(!fsio::same_path_text(r"\\?\C:\repo", r"C:\other", true));
+    assert!(
+        !fsio::same_path_text("/a/B", "/a/b", false),
+        "Unix compares exactly"
+    );
+    assert!(fsio::same_path_text("/a/b", "/a/b", false));
+}
+
+#[cfg(target_os = "macos")]
+#[test]
+fn a_path_that_is_not_in_canonical_form_is_refused_not_trusted() {
+    // On macOS the temporary directory is reached through the symlink /var -> /private/var.
+    // The canonical root works (every other test); the same root typed through the symlink
+    // is refused, which is the check that must not be defeated by a Windows-style prefix.
+    let r = Repo::with("noncanon", SCAN);
+    let canon = r.root.to_string_lossy().into_owned();
+    if let Some(rest) = canon.strip_prefix("/private") {
+        let typed = std::path::PathBuf::from(format!("{rest}/code/packages/rust/{SCAN}"));
+        assert!(nv(vos_link::gen_doc(&typed, None)).contains("a component is a symlink"));
+    }
+}
+
+#[test]
+fn a_disagreeing_root_is_no_verdict_for_check_doc_too() {
+    let r = Repo::with("root3", SCAN);
+    let other = Repo::new("root4");
+    assert!(nv(vos_link::check_doc(&r.pkg(SCAN), Some(&other.root)))
+        .contains("is not the repository root"));
 }

@@ -40,8 +40,17 @@ impl Repo {
         let n = COUNTER.fetch_add(1, Ordering::SeqCst);
         let base =
             std::env::temp_dir().join(format!("vos-link-test-{}-{n}-{label}", std::process::id()));
-        let _ = fs::remove_dir_all(&base);
-        fs::create_dir_all(&base).unwrap();
+        // `create_dir` fails if the name exists: a test never reuses (or deletes) a
+        // directory it did not make.  The name carries the pid, a counter and the clock.
+        let nanos = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .map(|d| d.as_nanos())
+            .unwrap_or(0);
+        let base = base.with_file_name(format!(
+            "{}-{nanos}",
+            base.file_name().unwrap().to_string_lossy()
+        ));
+        fs::create_dir(&base).expect("a fresh unique test directory");
         let root = base.canonicalize().unwrap();
         fs::create_dir_all(root.join("code/specs")).unwrap();
         let real = here().join("../../../packages/rust/vos-sched-contract");

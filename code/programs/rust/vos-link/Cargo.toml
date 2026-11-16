@@ -24,6 +24,12 @@ vos-manifest = { path = "../../../packages/rust/vos-manifest" }
 # vos-manifest when check-profile lands.
 vos-shape-check = { path = "../../../packages/rust/vos-shape-check" }
 
+# A test-only edge (VOS-D058): the tests read the real contract package's files
+# (`include_bytes!` / copies), and the build tool selects a package's tests by its Cargo
+# dependency edges, so an edit to a `.part` or `contract.vos` must select them.
+[dev-dependencies]
+vos-sched-contract = { path = "../../../packages/rust/vos-sched-contract" }
+
 [[test]]
 name = "gen_and_check"
 path = "tests/gen_and_check.rs"

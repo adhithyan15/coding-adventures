@@ -327,7 +327,7 @@ fn nc17_a_reordered_marker_fails() {
     assert_eq!(layout_err(&moved).kind, DocErrorKind::Structure);
     // an end marker before its begin
     let swapped_ends = d.replacen("  -- vos02:contract-end\n", "  -- vos02:IMPL-TMP\n", 1);
-    assert!(parse_layout(swapped_ends.as_bytes()).is_err());
+    assert_eq!(layout_err(&swapped_ends).kind, DocErrorKind::Structure);
 }
 
 #[test]
@@ -436,19 +436,28 @@ fn a_blank_line_in_a_block_is_part_of_the_block() {
 }
 
 #[test]
-fn a_big_document_reads_in_reasonable_time() {
-    // About 900 KiB of block lines: the engine must not go quadratic on the line count.
-    let line = format!("  -- {}\n", "x".repeat(40));
-    let c = part(&line.repeat(15_000));
+fn reading_a_document_is_linear_in_its_size() {
+    // Not an absolute time (slow CI runners): the time at 4n against the time at n.  Linear
+    // code gives about 4, quadratic about 16; the bound is 10, and the best of three runs
+    // at each size is compared so one scheduling hiccup cannot decide it.
     let (_, i, _, _) = sample();
-    let d = build("x", "y", &c, &i, &[]);
-    assert!(d.len() > 600_000);
-    let t = std::time::Instant::now();
-    let l = parse_layout(d.as_bytes()).unwrap();
-    assert_eq!(l.contract.body, c.text());
+    let time = |lines: usize| {
+        let line = format!("  -- {}\n", "x".repeat(40));
+        let c = part(&line.repeat(lines));
+        let d = build("x", "y", &c, &i, &[]);
+        let mut best = std::time::Duration::MAX;
+        for _ in 0..3 {
+            let t = std::time::Instant::now();
+            let l = parse_layout(d.as_bytes()).unwrap();
+            assert_eq!(l.contract.body, c.text());
+            best = best.min(t.elapsed());
+        }
+        best
+    };
+    let small = time(4_000);
+    let big = time(16_000);
     assert!(
-        t.elapsed() < std::time::Duration::from_secs(60),
-        "{:?}",
-        t.elapsed()
+        big.as_secs_f64() < 10.0 * small.as_secs_f64().max(0.005),
+        "4n took {big:?} against {small:?} at n"
     );
 }

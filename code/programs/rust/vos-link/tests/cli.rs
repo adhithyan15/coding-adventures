@@ -99,3 +99,44 @@ fn usage_errors_exit_two() {
         assert!(err(&o).contains("usage: vos-link"), "{args:?}: {}", err(&o));
     }
 }
+
+#[test]
+fn a_root_that_disagrees_with_the_crate_exits_two() {
+    let r = Repo::with("cli5", SCAN);
+    let other = Repo::new("cli6");
+    for cmd in ["gen-doc", "check-doc"] {
+        let o = run(&[cmd, &pkg(&r), "--root", &other.root.to_string_lossy()]);
+        assert_eq!(o.status.code(), Some(2), "{cmd}");
+        assert!(
+            err(&o).contains("is not the repository root"),
+            "{}",
+            err(&o)
+        );
+    }
+}
+
+#[test]
+fn a_pass_prints_the_lint_note_and_an_escaped_usage_error() {
+    let r = Repo::with("cli7", SCAN);
+    let g = run(&["gen-doc", &pkg(&r)]);
+    assert!(
+        out(&g).contains("note: R6 cone rule: a STRUCTURAL LINT"),
+        "{}",
+        out(&g)
+    );
+    let o = run(&["--bad\u{1b}[31m"]);
+    assert_eq!(o.status.code(), Some(2));
+    assert!(!err(&o).contains('\u{1b}'), "{:?}", err(&o));
+}
+
+#[test]
+fn the_tests_that_read_the_contract_package_have_a_cargo_edge_to_it() {
+    // VOS-D058: see vos-manifest's twin of this test.
+    let manifest = include_str!("../Cargo.toml");
+    let dev = manifest
+        .split("[dev-dependencies]")
+        .nth(1)
+        .expect("a dev-dependencies table");
+    assert!(dev
+        .contains("vos-sched-contract = { path = \"../../../packages/rust/vos-sched-contract\" }"));
+}

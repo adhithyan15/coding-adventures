@@ -41,7 +41,13 @@ fn the_document_is_the_golden_text() {
     let r = Repo::with("golden", "vos-fixture-bitmap");
     r.gen("vos-fixture-bitmap");
     let doc = r.doc("vos-fixture-bitmap");
-    if std::env::var_os("VOS_LINK_BLESS").is_some() {
+    // Blessing rewrites a committed file: it must be asked for exactly (`1`) and is
+    // refused on CI, where a stale golden must fail, not heal itself.
+    if std::env::var("VOS_LINK_BLESS").as_deref() == Ok("1") {
+        assert!(
+            std::env::var_os("CI").is_none(),
+            "VOS_LINK_BLESS is refused when CI is set"
+        );
         std::fs::create_dir_all(golden_path().parent().unwrap()).unwrap();
         std::fs::write(golden_path(), &doc).unwrap();
     }
@@ -181,4 +187,27 @@ fn the_real_scheduler_contract_checks_out_as_a_contract_package() {
     let r = Repo::with("inputs", "vos-fixture-scan");
     let o = r.gen("vos-fixture-scan");
     assert!(o.findings.is_empty());
+}
+
+#[test]
+fn the_reference_fixture_shares_the_scan_models_on_purpose() {
+    // T-I7: the two impl.part files differ only by the reference fixture's explanatory
+    // comment.  The difference between them is the kind and the tiers in vos.toml.
+    let here = std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures/impls");
+    let scan = std::fs::read_to_string(here.join("vos-fixture-scan/warrant/impl.part")).unwrap();
+    let reference =
+        std::fs::read_to_string(here.join("vos-fixture-ref/warrant/impl.part")).unwrap();
+    let body: String = reference
+        .lines()
+        .skip_while(|l| l.starts_with("  -- vos-fixture-ref") || l.starts_with("  -- "))
+        .collect::<Vec<_>>()
+        .join("\n")
+        + "\n";
+    assert!(
+        scan.ends_with(&body) || reference.ends_with(&scan),
+        "the models are the scan models"
+    );
+    assert!(reference.starts_with("  -- vos-fixture-ref: a REFERENCE model"));
+    let toml = std::fs::read_to_string(here.join("vos-fixture-ref/vos.toml")).unwrap();
+    assert!(toml.contains("kind = \"reference\"") && toml.contains("obligations = [\"safety\"]"));
 }

@@ -155,3 +155,16 @@ fn the_document_lexer_keeps_every_byte_and_the_first_matching_definition_wins() 
     assert_eq!(kinds("  -- a vos02 remark\n", g)[0].0, "LINE");
     assert_eq!(kinds("\n", g)[0].0, "NEWLINE");
 }
+
+#[test]
+fn the_tests_that_read_the_contract_package_have_a_cargo_edge_to_it() {
+    // VOS-D058: the build tool selects tests by Cargo dependency edges.  These suites read
+    // the real vos-sched-contract files, so an edit to a .part or contract.vos must select
+    // them; the edge is a dev-dependency.  Removing it silently blinds CI.
+    let manifest = include_str!("../Cargo.toml");
+    let dev = manifest
+        .split("[dev-dependencies]")
+        .nth(1)
+        .expect("a dev-dependencies table");
+    assert!(dev.contains("vos-sched-contract = { path = \"../vos-sched-contract\" }"));
+}

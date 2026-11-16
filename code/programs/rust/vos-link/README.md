@@ -47,9 +47,20 @@ parse and type check, a weakened claim with an obligation's name (`claim_sha256`
 `gen-doc` runs all but regeneration on what it is about to write and writes nothing on a
 finding.
 
+## What a pass means
+
+The R6 cone rule is a **structural lint** (a taint walk over `build`: a field set from a
+constant, `x - x`, `* 0`, `bit_and(.., 0)` or an ignored argument is outside the cone); it is
+enforced at document level, not proof that the state has no oracle.  `kind`, `contract` and
+`obligations` are author-declared until the registry (VOS-D030) and `check-profile`
+(VOS-034) exist, so a production crate that lists only `["canonical"]` or an oracle crate
+that declares `reference` is not caught here.  What closes the residual risk, an oracle write
+path, is the bindings check (VOS-D060, required before any image profile), SH13/SH16 and the
+registry.  Every pass prints this as a `note:` line.
+
 ## Safety
 
-Paths have no `..` and no symlink; files are lstat'ed, opened `O_NOFOLLOW | O_NONBLOCK` and
+Paths have no `..` and no symlink (the Windows `\\?\` prefix of a canonical path is dropped before comparing); untrusted strings (file names, `vos.toml` values, document headers) are quoted and escaped in every report; the temporary file name is unique per process and call; files are lstat'ed, opened `O_NOFOLLOW | O_NONBLOCK` and
 re-checked on the open handle; caps are checked before reading; the one write goes through a
 fresh temporary file and a rename.  The Warrant analysis runs on a 256 MiB stack because
 `warrant-grammar`'s checker overflows a small stack on a long expression chain (VOS-D057).
@@ -58,7 +69,9 @@ fresh temporary file and a rename.  The Warrant analysis runs on a 256 MiB stack
 
 `cargo test` (from this directory): `gen_and_check` runs the real `vos-sched-contract`
 package through four fixture implementations (`tests/fixtures/impls`) and compares the
-output with a golden file (`VOS_LINK_BLESS=1 cargo test` accepts an intended change);
+output with a golden file (`VOS_LINK_BLESS=1 cargo test` accepts an intended change; the value must be exactly `1` and it is refused when `CI` is set);
 `negative_controls` covers NC1, NC2, NC4, NC4b, NC5, NC17 and the document-level NC18;
-`paths_and_io` the caps and path containment; `cli` the exit codes.  Line coverage is above
+`paths_and_io` the caps and path containment; `cli` the exit codes.  The symlink, FIFO and permission controls (NC18) are Unix-only
+(`cfg(unix)`); on Windows the path logic is covered by pure-string tests of the verbatim-prefix
+handling and the lstat checks.  Line coverage is above
 95% (llvm-cov, hand-instrumented).  The fixtures are not workspace members.

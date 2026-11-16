@@ -230,3 +230,6 @@ code/programs/rust/closurec/tests/oracle/.upstream-refusals-*.json
 /code/packages/rust/engram-wasm/pkg/
 /code/programs/typescript/visicalc-html/vendor/spreadsheet-engine-wasm.js
 /code/programs/go/scaffold-generator/scaffold-generator.exe
+
+# vos-link gen-doc temporary files (a crashed run can leave one)
+*.vos-link.tmp

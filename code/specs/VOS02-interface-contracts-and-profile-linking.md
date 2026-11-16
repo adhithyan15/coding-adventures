@@ -175,8 +175,10 @@ assembled as the contract block, then the hand-written **implementation block**,
 then the obligations blocks the implementation carries. Blocks 1 and 2 of R1 are
 copied verbatim between marker comments (section 2.3) with their SHA-256
 recorded. Block 3 (`contract.vos`) is **not** copied: it is not Warrant, it has no place
-in a `.warrant` document, and its digest is pinned by the lock (`ceilings-sha256`,
-section 6.3), so a change to a ceiling regenerates no document (section 10.1, D-GD1). A regeneration check (`vos-link check-doc`, section 10) fails on drift,
+in a `.warrant` document, and its digest **will be** pinned by the lock (`ceilings-sha256`,
+section 6.3; `check-profile`, VOS-034), so a change to a ceiling regenerates no document
+(section 10.1, D-GD1).  Until then `check-doc` binds only the tier list of `contract.vos`;
+the ceilings and `config N` are not yet compared with the bound rows (VOS-D055). A regeneration check (`vos-link check-doc`, section 10) fails on drift,
 in the style of `--check-module` (VER23a section 2.1) and `gen_evidence --check`
 (VER04h section 1).
 
@@ -1320,7 +1322,10 @@ one has a test.
 
 **D-GD1. What is copied, and what is not.** The document holds blocks 1 and 2 of R1 and
 the implementation block, nothing else (R2 as amended). `contract.vos` is parsed (it names
-the tiers and the instance) and pinned by digest in the lock, never copied.
+the tiers and the instance), never copied.  Its digest will be pinned by the lock (VOS-034);
+until then `check-doc` binds only its tier list (each `tier` row against the
+`obligations-*.part` files, both ways), and the ceilings and `config N` are compared with
+nothing (VOS-D055).
 
 **D-GD2. Which crate names which contract, and which tiers are embedded.** The crate's
 `vos.toml` has two more keys, both required for kind `production`, `reference` and `any`:
@@ -1371,11 +1376,16 @@ those canonical bytes.
 
 **D-GD7. `claim_sha256`.** VER29 section 5.3 defines it, and VER29 slice 2 is not
 implemented, so `vos-manifest` computes it with the same definition until the VER29
-function exists (VOS-D056): the real (non-layout) tokens of the claim declaration, from the
-Warrant lexer and layout pass of `warrant-grammar`, with comments already absent, joined
-by single spaces, hashed with SHA-256. The tokens inside the claim's source span are used;
-`Indent`, `Dedent` and `Newline` are layout, not text, so re-wrapping a claim changes
-no digest, and renaming a token or changing a literal changes it.
+function exists (VOS-D056). The canonicalisation, exactly: take the tokens of the claim
+declaration (those inside its source span) from the Warrant lexer and layout pass of
+`warrant-grammar`, comments already absent; drop the layout tokens `Indent`, `Dedent` and
+`Newline`; write each remaining token as its **raw source slice** (so a literal keeps its
+prefix and quotes: the lexer's own token text drops the quotes of some literals, and `b"00"`
+must not hash like `00`); join with single spaces; SHA-256, 64 lowercase hex. Re-wrapping a
+claim or editing a comment changes no digest; renaming a token or changing a literal does.
+For words, symbols and numbers the slice is the token text, so this is VER29 5.3's
+definition. All fifteen digests of VOS10 are pinned in `vos-manifest/tests/warrant.rs`,
+produced by an independent Python implementation (`tests/claim_sha256_reference.py`).
 
 **D-GD8. What `check-doc` checks, in order, and what each finding is.** The inputs have their own codes: `GD01` a part is not admitted or `impl.part` is missing, `GD02` `contract.vos` is invalid or names another package, `GD03` the `obligations-*.part` files and the `tier` rows disagree (either way), `GD04` an obligations part holds more than claims or a name repeats across tiers, `GD05` a `vos.toml` problem. The document checks all run on the
 document on disk; every finding is reported, none stops the others except where a later
@@ -1395,13 +1405,35 @@ check needs an earlier result.
 R6, as far as the document goes. `kind = production`: the document carries every
 `canonical` obligation and no `any` obligation, the crate name does not end in `-any`, and
 **every field of `Impl` is in the cone of `build`**: the `build` model must be an `Impl(..)`
-constructor application, and every argument must mention the model's parameter (a field set
-from a constant is an oracle or a register, not a function of M). `kind = any`: the document
+constructor application, and every argument must *depend on* the model's parameter, by a
+taint walk: a mention does not count when it is an operand of `and`, `bit_and` or `*` whose
+other operand is a literal `false` or zero, both sides of `x - x` or `bit_xor(x, x)`, or an
+argument to a `model` whose body does not depend on that parameter (a field set from a
+constant is an oracle or a register, not a function of M). `kind = any`: the document
 carries every `any` obligation, **no** `canonical` claim (by `claim_sha256`), the crate name
 ends in `-any`, and **at least one** `Impl` field is outside the cone of `build` (the oracle
 the `any` block names). `kind = reference`: the document has no `bound` row. A `build` that is
 not an `Impl(..)` application cannot be decided structurally and fails closed for
-`production` and `any`. Not decided here, and so not claimed: that `alpha` reads every field
+`production` and `any`.
+
+**What a pass of the cone rule is, stated plainly.** It is a **structural lint** at document
+level, not a proof that the state has no oracle. A syntactic walk is still evaded by a
+constant produced by arithmetic on literals (`shl(1u8, 8)`), a constant condition
+(`if true then 0u8 else m.p0`), a dependence hidden behind a bound operation, a projection of an
+untainted component out of a tuple that has a tainted one (projection is field-insensitive),
+and `x - x` written two ways; `vos-link` prints that statement with every pass. The argument that this
+is acceptable: an implementation whose `canonical`, `policy` and `safety` evidence holds
+behaves correctly whatever its fields are called. The real hazard is an oracle **write**
+path (a ghost export or binding that lets the harness set the field); that is closed by the
+bindings half of R6 (VOS-D060, a **hard prerequisite of any `image` profile**), SH13 and
+SH16, the central kind registry (VOS-D030) and `check-profile` (VOS-034), not by this lint.
+`kind`, `contract` and `obligations` are **author-declared** in `vos.toml` until VOS-D030 and
+VOS-034 compare them with a registry and a manifest row: `check-doc` does not catch a
+production crate that lists only `["canonical"]` or an oracle crate that declares
+`reference`. The gate is therefore described as *enforced at document level*, never as
+unbypassable.
+
+Not decided here, and so not claimed: that `alpha` reads every field
 (the ghost wrapper, SH17), that `evidence.bindings` binds no oracle write, the registry
 cross-check of kind and class (VOS-D030), the manifest row and the `image` rule (VOS-034).
 

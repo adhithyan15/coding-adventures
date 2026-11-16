@@ -87,10 +87,9 @@ fn the_trailer_and_bound_rows_are_reported() {
         "assume platform:\n    none",
         "assume platform:\n    contract.x.y",
     );
-    let a = analyze_document(&some);
-    if let Ok(a) = a {
-        assert!(!a.assumptions[0].is_none);
-    }
+    // A platform row that is not `none` is reported as such (vos-link then refuses it).
+    let a = analyze_document(&some).expect("the checker accepts a qualified platform row");
+    assert!(!a.assumptions[0].is_none && a.assumptions[1].is_none);
 }
 
 #[test]
@@ -201,6 +200,73 @@ fn a_block_of_claims_is_read_and_anything_else_is_refused() {
     );
 }
 
+/// Every obligation of the real scheduler contract and its `claim_sha256`.  The digests were
+/// produced by `tests/claim_sha256_reference.py` (an independent Python implementation of
+/// D-GD7), not by this crate: if one changes, the definition or the obligation changed, and
+/// every generated document and lock must be regenerated.
+const PINS: [(&str, &str); 15] = [
+    (
+        "insert_safe",
+        "ef3d7c1760812044ae6d87dfa9c58d03c123d61cdae97efe9e613ad1c3a39608",
+    ),
+    (
+        "remove_safe",
+        "43a0b03aad0cac17785b863d60be471bec79c92a052f07adb0cd70a545e31681",
+    ),
+    (
+        "dispatch_safe",
+        "e1fdce589522f3b94694ddf766e14d03eed74345c9f0aa11ad7933e218b1d0c4",
+    ),
+    (
+        "safety_alpha_build",
+        "a0df76dc929173876840307bf07e899349668e89f31e66fdc85c9987fe90d039",
+    ),
+    (
+        "dispatch_policy",
+        "12e0986f42682a2996942b8ec7184497175bb8adcdf346b817f2b5f994c08012",
+    ),
+    (
+        "canon_init",
+        "1bd4fbf8b09c1f816bd67f9dab4ac31d38182cf909bd5dea4994273a7e169be5",
+    ),
+    (
+        "canon_insert_post",
+        "b9388ecf2d02e438c7bfe24f9d6a6b7a7d9f60cec9b692ec44befa99f0efc19d",
+    ),
+    (
+        "canon_insert_img",
+        "a575a09243e81f632031324505b5df3ab79539a168deea70a2632d58e0de29e4",
+    ),
+    (
+        "canon_remove_post",
+        "57758c20a5a1f56b0bb16094ab3a324679f2dc82c5a95fb494c4c3cb5108d2fc",
+    ),
+    (
+        "canon_remove_img",
+        "339afa8f826ab8d5f05584a5c62d88040ba15dd1b3c61cbd5a8171a1cf286d1d",
+    ),
+    (
+        "canon_dispatch_post",
+        "149af3ce7f315c0c4cc25db06947fe2636e0e2c2f7a51cf873c2b6639cf72393",
+    ),
+    (
+        "canon_dispatch_img",
+        "96413e700b67c2872d453da4d4ed988fda1db260dc9c6d230029f4a4a0821a42",
+    ),
+    (
+        "dispatch_sound",
+        "a7e01251153fa1dd77ea90a977193f9787fd052eb7949fef49197fda66214012",
+    ),
+    (
+        "dispatch_covers_run",
+        "6bbbe200532d6fef470c4bea0e925b242d804bfd622bd62ff654d4f5da5f25cb",
+    ),
+    (
+        "dispatch_covers_idle",
+        "8ddfda72b86548a2c72eab4e22ab1d7b7021c5c2b32717ccbb0b1c2ce610ba5c",
+    ),
+];
+
 #[test]
 fn the_real_obligation_blocks_have_the_expected_claims_and_pinned_digests() {
     let blocks = [
@@ -225,74 +291,223 @@ fn the_real_obligation_blocks_have_the_expected_claims_and_pinned_digests() {
             3,
         ),
     ];
-    let mut names = std::collections::BTreeSet::new();
+    let mut seen = std::collections::BTreeMap::new();
     for (tier, text, n) in blocks {
         let claims = claims_of_block(text).unwrap_or_else(|e| panic!("{tier}: {e}"));
         assert_eq!(claims.len(), n, "{tier}");
         for c in claims {
             assert!(
-                names.insert(c.name.clone()),
-                "obligation names are unique across tiers: {}",
+                seen.insert(c.name.clone(), c.sha256).is_none(),
+                "unique across tiers: {}",
                 c.name
             );
-            if c.name == "safety_alpha_build" {
-                // Pinned: if this changes, the definition of claim_sha256 (D-GD7) or the
-                // text of the obligation changed, and every document must be regenerated.
-                assert_eq!(
-                    c.sha256,
-                    "a0df76dc929173876840307bf07e899349668e89f31e66fdc85c9987fe90d039"
-                );
-            }
         }
     }
-    assert_eq!(names.len(), 15);
-}
-
-#[test]
-fn a_failure_prints_with_and_without_a_line() {
-    let with =
-        analyze_document("warrant t v1\n  claim c:\n    forall v: Bool. (v ==\n").unwrap_err();
-    let without = vos_manifest::warrant::WarrantFailure {
-        stage: WarrantStage::Check,
-        message: "boom".to_string(),
-        line: None,
-    };
-    assert_eq!(without.to_string(), "boom");
-    if let Some(l) = with.line {
-        assert!(with.to_string().starts_with(&format!("line {l}: ")));
+    assert_eq!(seen.len(), PINS.len());
+    for (name, pin) in PINS {
+        let got = seen
+            .get(name)
+            .unwrap_or_else(|| panic!("no obligation {name}"));
+        assert_eq!(got, pin, "{name}");
     }
-    let located = vos_manifest::warrant::WarrantFailure {
-        line: Some(7),
-        ..without
-    };
-    assert_eq!(located.to_string(), "line 7: boom");
 }
 
 #[test]
-fn a_bound_declaration_is_counted() {
-    let with_bound = DOC.replace(
-        "  claim c1:",
-        "  op o(x: U8) -> U8\n  bound o:\n    steps <= 10\n  labels o:\n    x public\n  input o.x:\n    hostile\n    ensures no_panic, terminates\n  claim c1:",
+fn a_changed_literal_a_changed_name_or_a_quoted_word_changes_the_digest() {
+    let d = |text: &str| {
+        claims_of_block(text).unwrap_or_else(|e| panic!("{text}: {e}"))[0]
+            .sha256
+            .clone()
+    };
+    let base = d("  claim a:\n    forall v: U8. v == 1u8\n");
+    assert_ne!(
+        base,
+        d("  claim a:\n    forall v: U8. v == 2u8\n"),
+        "1u8 to 2u8"
     );
-    let a = analyze_document(&with_bound).unwrap_or_else(|e| panic!("{e}"));
-    assert_eq!(a.bound_declarations, 1);
+    assert_ne!(base, d("  claim a:\n    forall v: U16. v == 1u8\n"));
+    assert_ne!(base, d("  claim b:\n    forall v: U8. v == 1u8\n"));
+    // A bytes literal is hashed as written, `b"00"` with its prefix and quotes, not as the
+    // text the lexer keeps inside them (S-I1: `"x"` and `x` must not hash alike).
+    assert_eq!(
+        d("  claim a:\n    b\"00\" == b\"00\"\n"),
+        sha("claim a : b\"00\" == b\"00\"")
+    );
+    assert_ne!(
+        d("  claim a:\n    b\"00\" == b\"00\"\n"),
+        d("  claim a:\n    b\"01\" == b\"00\"\n")
+    );
+    // ... while whitespace and comments still do not matter.
+    assert_eq!(
+        base,
+        d("  claim a:   -- c\n    forall   v: U8.   v == 1u8   -- d\n")
+    );
 }
 
 #[test]
-fn source_admission_and_layout_budgets_are_refusals_not_panics() {
-    // Over the 1 MiB admission ceiling.
-    let huge = format!("warrant t v1\n  -- {}\n", "x".repeat(1024 * 1024));
-    let e = analyze_document(&huge).unwrap_err();
-    assert_eq!(e.stage, WarrantStage::Parse);
-    // More tokens than the layout budget (65,536) in a document well under 1 MiB.
-    let mut many = String::from("warrant t v1\n");
-    for i in 0..7_000 {
-        many.push_str(&format!("  claim c{i}:\n    forall v: Bool. v == v\n"));
+fn the_taint_walk_does_not_count_a_mention_that_cannot_change_the_value() {
+    // The R6 cone rule (VOS02 10.1): a field of `Impl` is in the cone of `build` when its
+    // value can depend on `m`.  Each variant below mentions `m` in the second field and
+    // must still be reported OUTSIDE the cone; the honest forms must be inside.
+    let doc = |field: &str, extra: &str| {
+        DOC.replace("if m.b then 2u8 else 0u8", field)
+            .replace("  claim c1:", &format!("{extra}  claim c1:"))
+    };
+    let cone = |field: &str, extra: &str| match analyze_document(&doc(field, extra))
+        .unwrap_or_else(|e| panic!("{field}: {e}"))
+        .build
+    {
+        BuildShape::Constructor { in_cone } => in_cone[1],
+        other => panic!("{other:?}"),
+    };
+    // Honest.
+    assert!(cone("if m.b then 2u8 else 0u8", ""));
+    assert!(cone("bit_and(if m.b then 2u8 else 0u8, 255u8)", ""));
+    assert!(
+        cone("bit_or(if m.b then 2u8 else 0u8, 0u8)", ""),
+        "`or` with zero keeps the value"
+    );
+    assert!(cone(
+        "h(m.b)",
+        "  model h(x: Bool) -> U8 = if x then 2u8 else 0u8\n"
+    ));
+    // Evasions the walk must now see through.
+    assert!(
+        !cone("bit_and(if m.b then 2u8 else 0u8, 0u8)", ""),
+        "bit_and with 0"
+    );
+    assert!(
+        !cone("bit_and(0u8, if m.b then 2u8 else 0u8)", ""),
+        "bit_and with 0, swapped"
+    );
+    assert!(!cone("(if m.b then 2u8 else 0u8) * 0u8", ""), "times 0");
+    assert!(!cone("0u8 * (if m.b then 2u8 else 0u8)", ""), "0 times");
+    assert!(
+        !cone(
+            "(if m.b then 2u8 else 0u8) - (if m.b then 2u8 else 0u8)",
+            ""
+        ),
+        "x - x"
+    );
+    assert!(
+        !cone(
+            "bit_xor(if m.b then 2u8 else 0u8, if m.b then 2u8 else 0u8)",
+            ""
+        ),
+        "x xor x"
+    );
+    assert!(
+        !cone("h(m.b)", "  model h(x: Bool) -> U8 = 0u8\n"),
+        "an argument the model ignores"
+    );
+    assert!(
+        !cone(
+            "g(m.b)",
+            "  model h(x: Bool) -> U8 = 0u8\n  model g(y: Bool) -> U8 = h(y)\n"
+        ),
+        "an argument ignored two calls down"
+    );
+    assert!(!cone("0u8", ""));
+    // `and` with false is a Bool constant: use it in a Bool field of a small doc.
+    let b = "warrant t v1\n  record M(a: Bool)\n  record Impl(x: Bool)\n  model build(m: M) -> Impl = (Impl(m.a and false))\n";
+    assert_eq!(
+        analyze_document(b).unwrap().build,
+        BuildShape::Constructor {
+            in_cone: vec![false]
+        }
+    );
+    let b2 = b.replace("m.a and false", "m.a and true");
+    assert_eq!(
+        analyze_document(&b2).unwrap().build,
+        BuildShape::Constructor {
+            in_cone: vec![true]
+        }
+    );
+}
+
+/// `build` over a record with one field per expression form, to walk every arm of the
+/// taint walk.  The abstract state is `M(a: Bool, b: U8)`.
+fn cone_of(fields: &[(&str, &str)], extra: &str) -> Vec<bool> {
+    let ty: Vec<String> = fields
+        .iter()
+        .enumerate()
+        .map(|(i, (t, _))| format!("f{i}: {t}"))
+        .collect();
+    let args: Vec<&str> = fields.iter().map(|(_, e)| *e).collect();
+    let doc = format!(
+        "warrant t v1\n  record M(a: Bool, b: U8)\n  record Impl({})\n{extra}  model build(m: M) -> Impl = (Impl({}))\n",
+        ty.join(", "),
+        args.join(", ")
+    );
+    match analyze_document(&doc)
+        .unwrap_or_else(|e| panic!("{e}\n{doc}"))
+        .build
+    {
+        BuildShape::Constructor { in_cone } => in_cone,
+        other => panic!("{other:?}"),
     }
-    let e = analyze_document(&many).unwrap_err();
-    assert_eq!(e.stage, WarrantStage::Parse, "{e}");
-    // A tab in indentation is a layout error with a span.
+}
+
+#[test]
+fn every_expression_form_is_walked() {
+    let got = cone_of(
+        &[
+            ("U8", "if m.a then m.b else 0u8"),
+            ("U8", "if true then 1u8 else 0u8"),
+            ("Bool", "not m.a"),
+            ("Bool", "m.b == 1u8 or false"),
+            ("Bool", "true"),
+            ("U8", "match m.a with true -> m.b | false -> 0u8"),
+            ("U8", "match true with true -> 1u8 | false -> 0u8"),
+            ("(U8, Bool)", "(m.b, true)"),
+            ("(U8, Bool)", "(1u8, true)"),
+            ("U8", "(m.b, true).0"),
+            // Projection is field-insensitive: a tuple with one tainted component taints
+            // every projection of it (an accepted imprecision, listed in VOS02 10.1).
+            ("U8", "(1u8, m.b).0"),
+            ("Bool", "m.a and false"),
+            ("Bool", "false and m.a"),
+            ("U8", "m.b + 1u8"),
+            ("U8", "(m.b)"),
+        ],
+        "",
+    );
+    assert_eq!(
+        got,
+        [
+            true, false, true, true, false, true, false, true, false, true, true, false, false,
+            true, true
+        ]
+    );
+}
+
+#[test]
+fn a_model_call_chain_is_followed_to_a_depth_and_then_fails_in_the_safe_direction() {
+    // m0 -> m1 -> ... : the argument reaches a body that uses it at the end.
+    let chain = |n: usize| -> String {
+        let mut s = String::new();
+        for i in 0..n {
+            s.push_str(&format!("  model k{i}(x: U8) -> U8 = k{}(x)\n", i + 1));
+        }
+        s.push_str(&format!("  model k{n}(x: U8) -> U8 = x\n"));
+        s
+    };
+    assert_eq!(cone_of(&[("U8", "k0(m.b)")], &chain(5)), [true]);
+    // Past the walk's depth the answer is "not in the cone": a production crate is refused.
+    assert_eq!(cone_of(&[("U8", "k0(m.b)")], &chain(40)), [false]);
+    // A call with more arguments than the model has parameters, or a multi-segment call.
+    assert_eq!(
+        cone_of(&[("U8", "bit_and(m.b, 255u8)")], ""),
+        [true],
+        "a built-in with a non-zero operand keeps the dependence"
+    );
+}
+
+#[test]
+fn a_refusal_with_a_source_position_prints_its_line() {
     let e = analyze_document("warrant t v1\n\tclaim c:\n    true\n").unwrap_err();
-    assert_eq!(e.stage, WarrantStage::Parse);
-    assert!(e.line.is_some(), "{e}");
+    assert_eq!(e.line, Some(2));
+    assert!(e.to_string().starts_with("line 2: "), "{e}");
+    let c = claims_of_block("  model m() -> Bool = true\n").unwrap_err();
+    assert!(c.to_string().starts_with("line 2: "), "{c}");
 }

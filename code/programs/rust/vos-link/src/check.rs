@@ -31,6 +31,7 @@ use vos_manifest::warrant::{
 use vos_manifest::Tier;
 
 use crate::error::{Finding, NoVerdict};
+use crate::fsio::esc;
 use crate::inputs::{ImplKind, Loaded};
 
 /// The stack the Warrant tools run on.
@@ -100,8 +101,8 @@ pub fn verify(loaded: &Loaded, doc: &[u8]) -> Result<Verified, NoVerdict> {
         v.findings.push(Finding::new(
             "CD01",
             format!(
-                "line 1: the header is `{}`, expected `warrant {impl_name} v1`",
-                layout.header
+                "line 1: the header is {}, expected `warrant {impl_name} v1`",
+                esc(&layout.header)
             ),
         ));
     }
@@ -109,8 +110,8 @@ pub fn verify(loaded: &Loaded, doc: &[u8]) -> Result<Verified, NoVerdict> {
         v.findings.push(Finding::new(
             "CD01",
             format!(
-                "the generated marker names contract package `{}`, expected `{contract_name}`",
-                layout.contract_package
+                "the generated marker names contract package {}, expected `{contract_name}`",
+                esc(&layout.contract_package)
             ),
         ));
     }

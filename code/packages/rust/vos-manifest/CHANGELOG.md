@@ -4,6 +4,12 @@ All notable changes to this package are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Changed (security review round 1)
+
+- The cone of `build` is a **taint walk**: a mention of the abstract state does not count as an operand of `and`/`bit_and`/`*` with a literal false or zero, in `x - x` or `bit_xor(x, x)`, or as an argument to a model that ignores it (`Taint`, `build_shape`).
+- `claim_sha256` hashes each token's raw source slice (a literal keeps its prefix and quotes); digests of words, symbols and numbers are unchanged.  All 15 obligation digests are pinned, with `tests/claim_sha256_reference.py` (independent, stdlib Python) as the cross-check.
+- Dev-dependency on `vos-sched-contract` so contract edits select these tests; time test is a 4n/n ratio.
+
 ### Added
 
 - VOS-033: the pure half of the VOS document tooling (VOS02 sections 2.3, 2.5, 6.8, 10.1).

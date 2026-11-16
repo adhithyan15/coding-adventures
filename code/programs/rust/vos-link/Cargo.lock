@@ -220,6 +220,7 @@ name = "vos-link"
 version = "0.1.0"
 dependencies = [
  "vos-manifest",
+ "vos-sched-contract",
  "vos-shape-check",
 ]
 
@@ -233,6 +234,10 @@ dependencies = [
  "lexer",
  "parser",
 ]
+
+[[package]]
+name = "vos-sched-contract"
+version = "0.1.0"
 
 [[package]]
 name = "vos-shape-check"
