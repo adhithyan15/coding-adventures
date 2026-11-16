@@ -713,6 +713,7 @@ members = [
     "palette-indexed",
     "sprite-oam",
     "tilemap2d",
+    "rpg-grid-world",
     "paint-vm-ascii",
     "paint-vm-cairo",
     "cuda-compute",
