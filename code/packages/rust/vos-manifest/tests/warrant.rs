@@ -482,7 +482,7 @@ fn every_expression_form_is_walked() {
 }
 
 #[test]
-fn a_model_call_chain_is_followed_to_a_depth_and_then_fails_in_the_safe_direction() {
+fn a_model_call_chain_is_followed_to_its_end() {
     // m0 -> m1 -> ... : the argument reaches a body that uses it at the end.
     let chain = |n: usize| -> String {
         let mut s = String::new();
@@ -493,8 +493,8 @@ fn a_model_call_chain_is_followed_to_a_depth_and_then_fails_in_the_safe_directio
         s
     };
     assert_eq!(cone_of(&[("U8", "k0(m.b)")], &chain(5)), [true]);
-    // Past the walk's depth the answer is "not in the cone": a production crate is refused.
-    assert_eq!(cone_of(&[("U8", "k0(m.b)")], &chain(40)), [false]);
+    // Per-model summaries have no depth limit: a long chain is followed all the way.
+    assert_eq!(cone_of(&[("U8", "k0(m.b)")], &chain(40)), [true]);
     // A call with more arguments than the model has parameters, or a multi-segment call.
     assert_eq!(
         cone_of(&[("U8", "bit_and(m.b, 255u8)")], ""),
@@ -510,4 +510,69 @@ fn a_refusal_with_a_source_position_prints_its_line() {
     assert!(e.to_string().starts_with("line 2: "), "{e}");
     let c = claims_of_block("  model m() -> Bool = true\n").unwrap_err();
     assert!(c.to_string().starts_with("line 2: "), "{c}");
+}
+
+/// The round-2 reviewer's input: f_i(x) = bit_or(f_{i+1}(x) x FANOUT), f_D(x) = 0u8, with the
+/// oracle field `f_1(m.b)`.  Following every call made this 3^depth.
+fn fanout_chain(depth: usize, fanout: usize) -> String {
+    let mut s = String::new();
+    for i in 1..depth {
+        let call = format!("f{}(x)", i + 1);
+        let mut e = call.clone();
+        for _ in 1..fanout {
+            e = format!("bit_or({e}, {call})");
+        }
+        s.push_str(&format!("  model f{i}(x: U8) -> U8 = {e}\n"));
+    }
+    s.push_str(&format!("  model f{depth}(x: U8) -> U8 = 0u8\n"));
+    s
+}
+
+#[test]
+fn a_fanout_chain_is_polynomial_not_exponential() {
+    // N1: depth 18, fanout 6 would be 6^18 calls without the memo.
+    let t = std::time::Instant::now();
+    let got = cone_of(&[("U8", "f1(m.b)")], &fanout_chain(18, 6));
+    let took = t.elapsed();
+    assert_eq!(got, [false], "the chain ends in the constant 0u8");
+    assert!(took < std::time::Duration::from_secs(5), "took {took:?}");
+    // Work grows linearly with depth: depth 4n against n, compared as a ratio.
+    let time = |d: usize| {
+        let t = std::time::Instant::now();
+        let _ = cone_of(&[("U8", "f1(m.b)")], &fanout_chain(d, 3));
+        t.elapsed().as_secs_f64()
+    };
+    let small = time(8).max(0.002);
+    let big = time(32);
+    assert!(
+        big < 40.0 * small,
+        "depth 32 took {big}s against {small}s at depth 8"
+    );
+}
+
+#[test]
+fn a_walk_that_runs_out_of_budget_gives_up_instead_of_answering() {
+    let doc = format!(
+        "warrant t v1\n  record M(a: Bool, b: U8)\n  record Impl(f0: U8)\n{}  model build(m: M) -> Impl = (Impl(f1(m.b)))\n",
+        fanout_chain(10, 2)
+    );
+    let ok = vos_manifest::warrant::analyze_document(&doc).unwrap();
+    assert_eq!(
+        ok.build,
+        BuildShape::Constructor {
+            in_cone: vec![false]
+        }
+    );
+    let tiny = vos_manifest::warrant::analyze_document_with_budget(&doc, 10).unwrap();
+    assert_eq!(tiny.build, BuildShape::BudgetExhausted);
+    assert_eq!(vos_manifest::warrant::TAINT_BUDGET, 1_000_000);
+}
+
+#[test]
+fn a_recursive_model_summary_is_conservative() {
+    // Warrant has no recursion, so the checker refuses this before the walk could see it;
+    // the guard is for the day it does not.
+    let doc = "warrant t v1\n  record M(a: Bool, b: U8)\n  record Impl(f0: U8)\n  model r(x: U8) -> U8 = r(x)\n  model build(m: M) -> Impl = (Impl(r(m.b)))\n";
+    let e = analyze_document(doc).unwrap_err();
+    assert_eq!(e.stage, WarrantStage::Check, "{e}");
 }

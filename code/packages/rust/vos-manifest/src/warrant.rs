@@ -35,6 +35,7 @@
 //! rule needs to know which fields of `Impl` the `build` model sets from the abstract
 //! state `m` (its cone).
 
+use std::cell::{Cell, RefCell};
 use std::collections::HashMap;
 
 use coding_adventures_warrant_grammar::checker::check_warrant;
@@ -85,6 +86,9 @@ pub enum BuildShape {
     Missing,
     /// A body that is not an application of the `Impl` constructor.
     NotConstructor,
+    /// The taint walk ran out of its step budget (`TAINT_BUDGET`): no answer, which
+    /// `vos-link` treats as a failure for production and `any` (fail closed).
+    BudgetExhausted,
     /// `Impl(e0, ..., en)`: for each field argument, whether it mentions the model's
     /// parameter (the abstract state), i.e. whether the field is in the cone of `build`.
     Constructor {
@@ -152,7 +156,9 @@ fn line_at(text: &str, offset: usize) -> u32 {
 }
 
 /// `claim_sha256` of the declaration whose source span is `span`.
-fn claim_digest(tokens: &[LayoutToken<'_>], norm: &str, span: (usize, usize)) -> String {
+/// `None` when a token's span is not a slice of the source: the digest cannot be trusted,
+/// so the caller fails closed instead of hashing a claim with a token missing.
+fn claim_digest(tokens: &[LayoutToken<'_>], norm: &str, span: (usize, usize)) -> Option<String> {
     // Tokens are in source order, so a binary search finds the first one in the span
     // and the walk stops at the first one past it: linear in the claim, not in the
     // document.
@@ -187,15 +193,23 @@ fn claim_digest(tokens: &[LayoutToken<'_>], norm: &str, span: (usize, usize)) ->
                 continue
             }
         }
-        let Some(text) = norm.get(start..end) else {
-            continue;
-        };
+        let text = norm.get(start..end)?;
         if !joined.is_empty() {
             joined.push(' ');
         }
         joined.push_str(text);
     }
-    sha256_hex(joined.as_bytes())
+    Some(sha256_hex(joined.as_bytes()))
+}
+
+/// The refusal for a claim whose token spans are not slices of the source.
+fn digest_failure(text: &str, span: (usize, usize)) -> WarrantFailure {
+    refuse(
+        WarrantStage::Parse,
+        text,
+        "a token of the claim is not a slice of the source: no claim_sha256".to_string(),
+        Some(span),
+    )
 }
 
 fn refuse(
@@ -248,7 +262,8 @@ pub fn claims_of_block(block: &str) -> Result<Vec<ClaimFact>, WarrantFailure> {
             match d {
                 Declaration::Claim(c) => out.push(ClaimFact {
                     name: c.name.to_string(),
-                    sha256: claim_digest(tokens, norm, c.span),
+                    sha256: claim_digest(tokens, norm, c.span)
+                        .ok_or_else(|| digest_failure(norm, c.span))?,
                 }),
                 other => {
                     let span = declaration_span(other);
@@ -287,6 +302,12 @@ fn declaration_span(d: &Declaration<'_>) -> (usize, usize) {
 /// Parse and type-check a whole document with `warrant-grammar` and report what the
 /// R6 checks need.
 pub fn analyze_document(text: &str) -> Result<Analysis, WarrantFailure> {
+    analyze_document_with_budget(text, TAINT_BUDGET)
+}
+
+/// [`analyze_document`] with an explicit step budget for the taint walk (tests use a tiny
+/// one to exercise the give-up path).
+pub fn analyze_document_with_budget(text: &str, budget: u64) -> Result<Analysis, WarrantFailure> {
     with_parsed(text, |file, tokens, norm| {
         check_warrant(file)
             .map_err(|e| refuse(WarrantStage::Check, text, format!("{e:?}"), None))?;
@@ -298,7 +319,7 @@ pub fn analyze_document(text: &str) -> Result<Analysis, WarrantFailure> {
                 _ => None,
             })
             .collect();
-        let taint = Taint { models, src: norm };
+        let taint = Taint::new(models, norm, budget);
         let mut a = Analysis {
             claims: Vec::new(),
             assumptions: Vec::new(),
@@ -310,7 +331,8 @@ pub fn analyze_document(text: &str) -> Result<Analysis, WarrantFailure> {
             match d {
                 Declaration::Claim(c) => a.claims.push(ClaimFact {
                     name: c.name.to_string(),
-                    sha256: claim_digest(tokens, norm, c.span),
+                    sha256: claim_digest(tokens, norm, c.span)
+                        .ok_or_else(|| digest_failure(norm, c.span))?,
                 }),
                 Declaration::Assumptions(AssumptionsDecl::Platform { rows, span }) => {
                     a.assumptions.push(AssumeFact {
@@ -340,15 +362,24 @@ pub fn analyze_document(text: &str) -> Result<Analysis, WarrantFailure> {
 }
 
 /// The facts the taint walk needs: the document's `model` declarations (to see through a
-/// call) and its source (to compare two sub-expressions by text).
+/// call), its source (to compare two sub-expressions by text), a memo of per-model
+/// summaries and a step budget.
 struct Taint<'a, 'b> {
     models: HashMap<&'b str, &'b ModelDecl<'a>>,
     src: &'b str,
+    /// For each model already summarised: bit `j` is set when its value depends on its
+    /// parameter `j`.  `None` while the model is being summarised (a recursion guard).
+    summaries: RefCell<HashMap<String, Option<u64>>>,
+    /// Steps left.  Exhaustion makes the walk give up, which the caller reports as a
+    /// failure for production and `any` crates (fail closed).
+    budget: Cell<u64>,
+    exhausted: Cell<bool>,
 }
 
-/// How deep a chain of model calls the walk follows before it gives up.  Giving up means
-/// "not tainted", which is the failing direction for a production crate.
-const TAINT_DEPTH: u32 = 16;
+/// The default step budget of the taint walk.  With per-model summaries the work is
+/// linear in the document, so a real document is far below it (the Warrant token budget
+/// of 65,536 bounds the nodes); it exists so no input can cost more than this.
+pub const TAINT_BUDGET: u64 = 1_000_000;
 
 fn span_of(e: &Expression<'_>) -> (usize, usize) {
     match e {
@@ -385,7 +416,17 @@ fn is_false(e: &Expression<'_>) -> bool {
     }
 }
 
-impl Taint<'_, '_> {
+impl<'a, 'b> Taint<'a, 'b> {
+    fn new(models: HashMap<&'b str, &'b ModelDecl<'a>>, src: &'b str, budget: u64) -> Self {
+        Taint {
+            models,
+            src,
+            summaries: RefCell::new(HashMap::new()),
+            budget: Cell::new(budget),
+            exhausted: Cell::new(false),
+        }
+    }
+
     /// The source text of an expression with its whitespace removed.
     fn text(&self, e: &Expression<'_>) -> String {
         let (a, b) = span_of(e);
@@ -402,33 +443,46 @@ impl Taint<'_, '_> {
         !t.is_empty() && t == self.text(b)
     }
 
-    /// Does the VALUE of `e` depend on the parameter `param`?  A mention is not enough
-    /// (VOS02 10.1, D-GD8): a mention does not count when it is
+    /// The bit of parameter `j` in a mask (a model with more than 64 parameters shares
+    /// the last bit, which only makes the answer more conservative).
+    fn bit(j: usize) -> u64 {
+        1u64 << j.min(63)
+    }
+
+    /// Which parameters (a bit per index of `params`) does the VALUE of `e` depend on?
+    /// A mention is not enough (VOS02 10.1, D-GD8): a mention does not count when it is
     ///
     /// * an operand of `and`, `bit_and` or `*` whose other operand is a literal zero or
     ///   `false` (the result is constant),
     /// * the two operands of `x - x` or `bit_xor(x, x)` (the text is identical),
-    /// * an argument to a `model` whose body does not depend on that parameter.
+    /// * an argument to a `model` whose value does not depend on that parameter.
     ///
-    /// Still evaded, by design of a syntactic walk: a constant produced by arithmetic on
-    /// a literal (`shl(1u8, 8)`), a constant condition (`if true then 0u8 else m.p0`),
-    /// a dependence hidden by a bound operation, and `x - x` written two ways.
-    fn depends(&self, e: &Expression<'_>, param: &str, depth: u32) -> bool {
+    /// A model's dependence is computed ONCE (`summary`) and memoised, so a model called
+    /// many times, or a chain of models each calling the next several times, costs one
+    /// walk per model and not one per call.  Still evaded, by design of a syntactic walk:
+    /// see VOS02 10.1 for the list.
+    fn deps(&self, e: &Expression<'_>, params: &[&str]) -> u64 {
+        let left = self.budget.get();
+        if left == 0 {
+            self.exhausted.set(true);
+            return 0;
+        }
+        self.budget.set(left - 1);
         match e {
-            Expression::Literal { .. } => false,
-            Expression::Grouped { inner, .. } => self.depends(inner, param, depth),
-            Expression::Unary { operand, .. } => self.depends(operand, param, depth),
-            Expression::Project { base, .. } => self.depends(base, param, depth),
+            Expression::Literal { .. } => 0,
+            Expression::Grouped { inner, .. } => self.deps(inner, params),
+            Expression::Unary { operand, .. } => self.deps(operand, params),
+            Expression::Project { base, .. } => self.deps(base, params),
             Expression::Binary {
                 op, left, right, ..
             } => {
                 match op {
-                    BinaryOp::And if is_false(left) || is_false(right) => return false,
-                    BinaryOp::Mul if is_zero(left) || is_zero(right) => return false,
-                    BinaryOp::Sub if self.same(left, right) => return false,
+                    BinaryOp::And if is_false(left) || is_false(right) => return 0,
+                    BinaryOp::Mul if is_zero(left) || is_zero(right) => return 0,
+                    BinaryOp::Sub if self.same(left, right) => return 0,
                     _ => {}
                 }
-                self.depends(left, param, depth) || self.depends(right, param, depth)
+                self.deps(left, params) | self.deps(right, params)
             }
             Expression::Conditional {
                 condition,
@@ -436,45 +490,65 @@ impl Taint<'_, '_> {
                 else_branch,
                 ..
             } => {
-                self.depends(condition, param, depth)
-                    || self.depends(then_branch, param, depth)
-                    || self.depends(else_branch, param, depth)
+                self.deps(condition, params)
+                    | self.deps(then_branch, params)
+                    | self.deps(else_branch, params)
             }
             Expression::Match { target, arms, .. } => {
-                self.depends(target, param, depth)
-                    || arms.iter().any(|a| self.depends(&a.body, param, depth))
+                arms.iter().fold(self.deps(target, params), |m, a| {
+                    m | self.deps(&a.body, params)
+                })
             }
             Expression::Tuple { elements, .. } | Expression::List { elements, .. } => {
-                elements.iter().any(|x| self.depends(x, param, depth))
+                elements.iter().fold(0, |m, x| m | self.deps(x, params))
             }
-            Expression::Quantified { body, .. } => self.depends(body, param, depth),
+            Expression::Quantified { body, .. } => self.deps(body, params),
             Expression::Reference { name, args, .. } => {
-                if name.segments.first() == Some(&param) {
-                    return true;
+                if let Some(j) = params.iter().position(|p| name.segments.first() == Some(p)) {
+                    return Self::bit(j);
                 }
-                let Some(args) = args else { return false };
+                let Some(args) = args else { return 0 };
+                let all = |this: &Self| args.iter().fold(0, |m, a| m | this.deps(a, params));
                 let [fname] = name.segments.as_slice() else {
-                    return args.iter().any(|a| self.depends(a, param, depth));
+                    return all(self);
                 };
                 match *fname {
-                    "bit_and" if args.iter().any(is_zero) => return false,
-                    "bit_xor" if args.len() == 2 && self.same(&args[0], &args[1]) => return false,
+                    "bit_and" if args.iter().any(is_zero) => return 0,
+                    "bit_xor" if args.len() == 2 && self.same(&args[0], &args[1]) => return 0,
                     _ => {}
                 }
-                if let Some(m) = self.models.get(fname) {
-                    if depth >= TAINT_DEPTH {
-                        return false;
-                    }
-                    return args.iter().zip(&m.params).any(|(a, p)| {
-                        self.depends(a, param, depth)
-                            && m.body
-                                .as_ref()
-                                .is_some_and(|b| self.depends(b, p.name, depth + 1))
-                    });
+                if self.models.contains_key(fname) {
+                    let summary = self.summary(fname);
+                    return args
+                        .iter()
+                        .enumerate()
+                        .filter(|(i, _)| summary & Self::bit(*i) != 0)
+                        .fold(0, |m, (_, a)| m | self.deps(a, params));
                 }
-                args.iter().any(|a| self.depends(a, param, depth))
+                all(self)
             }
         }
+    }
+
+    /// The parameters of model `name` its value depends on, computed once.  A model that
+    /// is being summarised when it is asked for again (a cycle the checker should have
+    /// refused) counts as depending on everything: conservative for the cone.
+    fn summary(&self, name: &str) -> u64 {
+        match self.summaries.borrow().get(name) {
+            Some(Some(m)) => return *m,
+            Some(None) => return u64::MAX,
+            None => {}
+        }
+        let Some(model) = self.models.get(name).copied() else {
+            return u64::MAX;
+        };
+        self.summaries.borrow_mut().insert(name.to_string(), None);
+        let params: Vec<&str> = model.params.iter().map(|p| p.name).collect();
+        let m = model.body.as_ref().map_or(0, |b| self.deps(b, &params));
+        self.summaries
+            .borrow_mut()
+            .insert(name.to_string(), Some(m));
+        m
     }
 }
 
@@ -502,6 +576,9 @@ fn build_shape(
     if name.segments.as_slice() != ["Impl"] {
         return BuildShape::NotConstructor;
     }
-    let in_cone = args.iter().map(|arg| t.depends(arg, param, 0)).collect();
+    let in_cone: Vec<bool> = args.iter().map(|arg| t.deps(arg, &[param]) != 0).collect();
+    if t.exhausted.get() {
+        return BuildShape::BudgetExhausted;
+    }
     BuildShape::Constructor { in_cone }
 }

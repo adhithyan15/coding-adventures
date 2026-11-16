@@ -1258,3 +1258,73 @@ fn untrusted_strings_are_escaped_in_findings() {
         show(&c)
     );
 }
+
+#[test]
+fn a_cone_walk_that_runs_out_of_budget_fails_closed_for_production_and_any() {
+    // N1: the walk gives up rather than answer; both kinds that need the answer fail.
+    for (fixture, kind_word) in [
+        (SCAN, "cone cannot be decided"),
+        (ANY, "oracle field cannot be found"),
+    ] {
+        let r = generated("budget", fixture);
+        let loaded = match vos_link::inputs::load(&r.pkg(fixture), None).unwrap() {
+            vos_link::inputs::Load::Ready(l) => *l,
+            vos_link::inputs::Load::Findings(f) => panic!("{f:?}"),
+        };
+        let doc = std::fs::read(r.path(&doc_path(fixture))).unwrap();
+        let v = vos_link::check::verify_with_budget(&loaded, &doc, 10).unwrap();
+        assert!(
+            v.findings.iter().any(|f| f.code == "CD07"
+                && f.message.contains("step budget")
+                && f.message.contains(kind_word)),
+            "{fixture}: {:?}",
+            v.findings
+        );
+        // With the real budget the same document passes.
+        assert!(vos_link::check::verify(&loaded, &doc)
+            .unwrap()
+            .findings
+            .is_empty());
+    }
+}
+
+#[test]
+fn a_fanout_chain_in_an_implementation_is_checked_quickly() {
+    // N1 end to end: the reviewer's chain (depth 18, fanout 6) as the oracle field.
+    let r = Repo::new("fanout");
+    copy_as(
+        &r,
+        ANY,
+        "vos-fixture-pretend",
+        &format!("kind = \"production\"\n{TOML_HEAD}obligations = [\"canonical\", \"safety\"]\n"),
+    );
+    let p = "code/packages/rust/vos-fixture-pretend/warrant/impl.part";
+    let mut chain = String::new();
+    for i in 1..18 {
+        let call = format!("f{}(x)", i + 1);
+        let mut e = call.clone();
+        for _ in 1..6 {
+            e = format!("bit_or({e}, {call})");
+        }
+        chain.push_str(&format!("  model f{i}(x: U8) -> U8 = {e}\n"));
+    }
+    chain.push_str("  model f18(x: U8) -> U8 = 0u8\n");
+    r.write(p, format!("{}{chain}", r.read(p)));
+    r.edit(
+        p,
+        ANY_BUILD_ORACLE,
+        "b2m(m.p6, 6)), b2m(m.p7, 7)), f1(b2m(m.p0, 0))))",
+    );
+    let t = std::time::Instant::now();
+    let g = r.gen("vos-fixture-pretend");
+    assert!(
+        has(&g, "CD07", "not set from the abstract state"),
+        "{}",
+        show(&g)
+    );
+    assert!(
+        t.elapsed() < std::time::Duration::from_secs(20),
+        "{:?}",
+        t.elapsed()
+    );
+}

@@ -1421,7 +1421,13 @@ level, not a proof that the state has no oracle. A syntactic walk is still evade
 constant produced by arithmetic on literals (`shl(1u8, 8)`), a constant condition
 (`if true then 0u8 else m.p0`), a dependence hidden behind a bound operation, a projection of an
 untainted component out of a tuple that has a tainted one (projection is field-insensitive),
-and `x - x` written two ways; `vos-link` prints that statement with every pass. The argument that this
+and `x - x` written two ways. Known evasions, each confirmed by review: `m.p0 * (1u8 - 1u8)`,
+`if false then m.p0 else 0u8` and `if true then 0u8 else m.p0`, `bit_and(x, shl(0u8, 1))`,
+`bit_and(x, bit_xor(1u8, 1u8))`, a model `zz(x) = if x then 0u8 else 0u8` (both arms equal),
+and a `match` whose arms are all constants. The walk is a lint: it computes each model's
+dependence once (a memo per model, a conservative answer for a model met while it is being
+summarised) and has a step budget of 1,000,000; exhausting it is a CD07 failure for
+`production` and `any` (fails closed); `vos-link` prints that statement with every pass. The argument that this
 is acceptable: an implementation whose `canonical`, `policy` and `safety` evidence holds
 behaves correctly whatever its fields are called. The real hazard is an oracle **write**
 path (a ghost export or binding that lets the harness set the field); that is closed by the

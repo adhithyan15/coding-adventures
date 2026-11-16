@@ -26,7 +26,8 @@ use std::collections::BTreeMap;
 
 use vos_manifest::document::{document_name, parse_layout, TRAILER};
 use vos_manifest::warrant::{
-    analyze_document, Analysis, AssumeKind, BuildShape, ClaimFact, WarrantFailure,
+    analyze_document_with_budget, Analysis, AssumeKind, BuildShape, ClaimFact, WarrantFailure,
+    TAINT_BUDGET,
 };
 use vos_manifest::Tier;
 
@@ -52,11 +53,14 @@ pub struct Verified {
 }
 
 /// Run the Warrant tools on a big stack.
-fn analyze_big_stack(text: String) -> Result<Result<Analysis, WarrantFailure>, NoVerdict> {
+fn analyze_big_stack(
+    text: String,
+    budget: u64,
+) -> Result<Result<Analysis, WarrantFailure>, NoVerdict> {
     let handle = std::thread::Builder::new()
         .name("vos-link-warrant".to_string())
         .stack_size(WARRANT_STACK_BYTES)
-        .spawn(move || analyze_document(&text))
+        .spawn(move || analyze_document_with_budget(&text, budget))
         .map_err(|e| NoVerdict::new(format!("cannot start the Warrant analysis thread: {e}")))?;
     handle
         .join()
@@ -79,6 +83,12 @@ pub fn first_difference_line(a: &str, b: &str) -> usize {
 /// Verify a document against the loaded inputs.  `CD08` (regeneration) is the caller's:
 /// it needs the on-disk bytes and the freshly assembled ones.
 pub fn verify(loaded: &Loaded, doc: &[u8]) -> Result<Verified, NoVerdict> {
+    verify_with_budget(loaded, doc, TAINT_BUDGET)
+}
+
+/// [`verify`] with an explicit step budget for the cone walk (tests use a tiny one to
+/// exercise the give-up path, which a real document cannot reach).
+pub fn verify_with_budget(loaded: &Loaded, doc: &[u8], budget: u64) -> Result<Verified, NoVerdict> {
     let mut v = Verified::default();
 
     // --- CD01: the marker skeleton ---------------------------------------------------
@@ -165,7 +175,7 @@ pub fn verify(loaded: &Loaded, doc: &[u8]) -> Result<Verified, NoVerdict> {
     }
 
     // --- CD04: warrant-grammar ----------------------------------------------------------
-    let analysis = match analyze_big_stack(text)? {
+    let analysis = match analyze_big_stack(text, budget)? {
         Ok(a) => a,
         Err(e) => {
             v.findings.push(Finding::new(
@@ -298,6 +308,9 @@ fn r6(
                 BuildShape::NotConstructor => cd07(cone_failure(
                     "is not an `Impl(..)` constructor application, so the cone cannot be decided structurally (fails closed)",
                 )),
+                BuildShape::BudgetExhausted => cd07(cone_failure(
+                    "exhausted the taint-walk step budget, so the cone cannot be decided (fails closed)",
+                )),
                 BuildShape::Constructor { in_cone } => {
                     let outside: Vec<String> = in_cone
                         .iter()
@@ -330,6 +343,9 @@ fn r6(
                 BuildShape::Missing => cd07(cone_failure("is missing, so the oracle field cannot be found")),
                 BuildShape::NotConstructor => cd07(cone_failure(
                     "is not an `Impl(..)` constructor application, so the oracle field cannot be found (fails closed)",
+                )),
+                BuildShape::BudgetExhausted => cd07(cone_failure(
+                    "exhausted the taint-walk step budget, so the oracle field cannot be found (fails closed)",
                 )),
                 BuildShape::Constructor { in_cone } => {
                     if !in_cone.iter().any(|c| !*c) {
