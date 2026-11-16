@@ -152,12 +152,13 @@ tested crates and the program prefers adapters around them over rewrites
 
 | Simulator | Limit that matters to VOS |
 |---|---|
-| `riscv-simulator` | CSRs are `mstatus`, `mtvec`, `mepc`, `mcause`, with only the MIE bit modelled. No PMP, no S-mode, no Sv39, no H extension |
-| `pdp11-simulator` | No MMU and no devices |
+| `riscv-simulator` | Five CSRs (`mstatus`, `mtvec`, `mscratch`, `mepc`, `mcause`); `mret` sets only `MIE`. The checked `Rv32ISimulator` is RV32I with no M extension, fetches only inside the loaded program, and reports faults as errors, not traps. No PMP, no S-mode, no Sv39, no H extension (EMU00 sections 2 and 15) |
+| `pdp11-simulator` | No MMU, no devices, no traps and no interrupts (an odd word address is an error, not a vector) |
 | `ibm704-simulator` | v1 defers I/O (its README, scope section) |
 | `ibm-system360-simulator` / `ibm-system370-simulator` | The 360 README defers privileged control, interrupts, protection and channels |
-| `pdp8-simulator` | Surfaces device IOTs as trace events. This is the right pattern for the bus boundary (section 5.3) |
-| `intel8080-simulator`, `z80-simulator` | 256 I/O ports each |
+| `pdp8-simulator` | Surfaces device IOTs as trace events and has an interrupt wire. This is the right pattern for the bus boundary (section 5.3) |
+| `intel8080-simulator`, `z80-simulator` | 256 input and 256 output port *latches* each, no hook (an adapter peeks at the next instruction). The 8080 has no interrupt delivery; the Z80 has `interrupt` and `nmi` methods but no EI delay |
+| `edsac-simulator`, `ge225-simulator` | Peripherals (tape, teleprinter; cards, tape, typewriter, controllers, program interrupt) live **inside** the simulator state |
 | `sim-pdp8-ge225-io-bridge` | Provides teletypes |
 | `system-board`, `cpu-simulator`, `device-simulator`, `device-driver-framework` | Teaching code, not framework cores |
 
@@ -494,7 +495,8 @@ the machine we trust has to be ours, for four reasons:
 
 ### 5.2 The same rules
 
-The emulator uses the same discipline as the kernel (section 4): pure step
+The emulator uses the same discipline as the kernel (section 4), scoped by
+crate class (EMU00 section 3.3; VOS01 section 1.6): pure step
 functions, single-owner state, a machine loop as the spine, and virtual time
 as an *input*. The result is that the emulator is itself a pool of
 replaceable verified components, and the kernel's refinement monitor
@@ -542,11 +544,15 @@ swappable.
 Memory-mapped I/O needs a *bus-generic step* for each ISA: the instruction
 fetch, load and store each become a request-reply pair rather than a direct
 array access. That is a real refactor of every simulator that wants to be a
-CPU core. Port-mapped and instruction-mapped I/O (EDSAC, the 704, the PDP-8,
-the 8080 and Z80, the GE-225) only need a *hook* at the I/O instruction.
+CPU core. Port-mapped and instruction-mapped I/O needs only an adapter at the
+I/O instruction, but the code shows the adapters differ (EMU00 sections 2.3
+and 7): the PDP-8 surfaces a trace event; the 8080 and Z80 expose latch arrays
+and need a peek at the next instruction; EDSAC and the GE-225 keep their
+peripherals inside the simulator state and must be wrapped; the 704 and
+PDP-11 have no I/O yet, so a simulator extension comes first.
 
 This asymmetry is why the *build order* differs from the *ladder order*
-(section 6.2): the cheap machines are the ones whose I/O is a hook, so they
+(section 6.2): the cheap machines are the ones whose I/O needs only an adapter, so they
 come up first and exercise the framework before the expensive RV32 privileged
 work.
 
