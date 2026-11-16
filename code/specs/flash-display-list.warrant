@@ -1,0 +1,80 @@
+-- SWF05 -- Flash Display List: Interactive Flash display-object hierarchy,
+-- timeline FSM, and retained-mode PaintScene generation and diffing.
+--
+-- Formal verification contract for bounded Flash display list operations.
+
+warrant flash_display_list v1
+  error DisplayListError = HierarchyDepthExceeded | InvalidDepth | InvalidClipDepth | InvalidFrame | SlotOccupied | SlotNotFound | InvalidRatio | TransformOverflow
+
+  model Unit = Bool
+
+  model valid_hierarchy_depth(d: Nat) -> Bool = d <= 64
+  model valid_display_depth(d: Int) -> Bool = d >= -16384 and d <= 65535
+  model valid_morph_ratio(r: Nat) -> Bool = r <= 65535
+
+  op validate_hierarchy_depth(d: Nat) -> Result<Bool, DisplayListError>
+  op validate_display_depth(d: Int) -> Result<Bool, DisplayListError>
+  op validate_morph_ratio(r: Nat) -> Result<Bool, DisplayListError>
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels validate_hierarchy_depth:
+    d public
+  labels validate_display_depth:
+    d public
+  labels validate_morph_ratio:
+    r public
+
+  input validate_hierarchy_depth.d:
+    hostile
+    ensures no_panic, terminates
+
+  input validate_display_depth.d:
+    hostile
+    ensures no_panic, terminates
+
+  input validate_morph_ratio.r:
+    hostile
+    ensures no_panic, terminates
+
+  bound validate_hierarchy_depth:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_display_depth:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_morph_ratio:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+
+  example hierarchy_depth_zero:
+    validate_hierarchy_depth(0) == Ok(true)
+  example hierarchy_depth_max:
+    validate_hierarchy_depth(64) == Ok(true)
+  example hierarchy_depth_exceeded:
+    validate_hierarchy_depth(65) == Err(DisplayListError.HierarchyDepthExceeded)
+  example display_depth_zero:
+    validate_display_depth(0) == Ok(true)
+  example display_depth_max:
+    validate_display_depth(65535) == Ok(true)
+  example display_depth_too_large:
+    validate_display_depth(70000) == Err(DisplayListError.InvalidDepth)
+  example morph_ratio_zero:
+    validate_morph_ratio(0) == Ok(true)
+  example morph_ratio_max:
+    validate_morph_ratio(65535) == Ok(true)
+  example morph_ratio_exceeded:
+    validate_morph_ratio(65536) == Err(DisplayListError.InvalidRatio)
+
+  claim validate_hierarchy_depth_agrees:
+    forall d: Nat. validate_hierarchy_depth(d) == (if valid_hierarchy_depth(d) then Ok(true) else Err(DisplayListError.HierarchyDepthExceeded))
+  claim validate_display_depth_agrees:
+    forall d: Int. validate_display_depth(d) == (if valid_display_depth(d) then Ok(true) else Err(DisplayListError.InvalidDepth))
+  claim validate_morph_ratio_agrees:
+    forall r: Nat. validate_morph_ratio(r) == (if valid_morph_ratio(r) then Ok(true) else Err(DisplayListError.InvalidRatio))

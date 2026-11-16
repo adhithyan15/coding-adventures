@@ -714,6 +714,7 @@ members = [
     "palette-indexed",
     "swf-container",
     "swf-shape-to-paint",
+    "flash-display-list",
     "sprite-oam",
     "tilemap2d",
     "rpg-grid-world",
