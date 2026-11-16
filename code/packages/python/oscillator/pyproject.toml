@@ -1,6 +1,6 @@
 [project]
 name = "coding-adventures-oscillator"
-version = "0.1.0"
+version = "0.1.2"
 description = "Virtual continuous oscillators and uniform samplers"
 requires-python = ">=3.9"
 dependencies = ["coding-adventures-trig"]
