@@ -712,6 +712,7 @@ members = [
     "paint-palette-blend",
     "palette-indexed",
     "swf-container",
+    "swf-shape-to-paint",
     "sprite-oam",
     "tilemap2d",
     "rpg-grid-world",

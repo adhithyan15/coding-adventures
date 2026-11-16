@@ -14086,6 +14086,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "swf-shape-to-paint"
+version = "0.1.0"
+dependencies = [
+ "bezier2d",
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "paint-instructions",
+ "point2d",
+ "swf-container",
+]
+
+[[package]]
 name = "symbolic-ir"
 version = "0.2.0"
 
