@@ -528,10 +528,11 @@ The decoder is strict: an invalid `S` or an out-of-set `I` in a `Char` field is
 | `Char` | `61`, 4 bytes little-endian scalar |
 
 `60` and `61` are the next free tags after those of VER04i §2.6 (`00 01 10 20 30
-40 41 50 51`). T1-S0 confirms they are still free against whatever tags the
-record and variant encoding of VER04j §12a has assigned by then, and takes the
-next two free values if not; the numbers are fixed in the VER04i text before any
-code lands. The type name in the stream context prefix is `Text` or `Char`.
+40 41 50 51`). They are **fixed and final** (2026-11-16): this is the earliest
+merged allocation in the `60` range, so VER04r (which first claimed `60` for
+tuples and records) moved to `64`/`65` and VER04p keeps `62`/`63`. The registry of
+every allocated tag, merged or draft, is VER04i §2.6.1; a later specification
+checks it before taking a tag. T1-S0 re-confirms against the registry only. The type name in the stream context prefix is `Text` or `Char`.
 Both streams (`inputs`, `expected`) are unchanged in structure.
 
 A lane decodes the corpus hex through its strict decoder (3.5) and compares the
@@ -770,7 +771,7 @@ lanes that do not declare `rejects:`.
 
 | Slice | Content | Acceptance |
 |---|---|---|
-| T1-S0 | errata pass on this spec against the then-current VER04j/k/i; confirm stream tags; mechanical check of in-repo v1 documents against the nine names; accept `v2` in the header parser | spec change record updated; checker accepts `v2`, refuses `v3` |
+| T1-S0 | errata pass on this spec against the then-current VER04j/k/i; confirm stream tags `60`/`61` against the VER04i §2.6.1 registry; mechanical check of in-repo v1 documents against the nine names; accept `v2` in the header parser | spec change record updated; checker accepts `v2`, refuses `v3` |
 | T1-S1 | checker and ground evaluator: types, literals, built-ins, `within` predicate, `len` refusal; model IR tags; three-way differential tests | section 16 groups A, B, E |
 | T1-S2 | domains (`char_full`, `char_edge`, `text_d1`, `text_over`), corpus encoding, independent Python oracle, conformance fixtures | groups C, D; `gen_corpus --check` and the oracle agree |
 | T1-S3 | Rust lane evidence: strict conversion, faults, probes (`unreachable`), manifest and report fields; pilot P1 | group F; P1 acceptance |
