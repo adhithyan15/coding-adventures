@@ -1,0 +1,1418 @@
+# VOS02 -- Interface Contracts and Profile Linking
+
+**Status:** Draft. The rules below are specified; no `vos-*` tool exists yet.
+The acceptance spike of section 13 ran the toy of
+[VOS01](VOS01-component-contract-model.md) section 5 through today's Warrant
+evidence generator (VER04h) with the ghost face of section 4: the document was
+generated and run, 10 exhaustive claims and 328,960 enumerated cases passed, and
+the spike found seven places where the generator and this program disagree
+(section 13.4). Those are recorded in section 13 and drive the interim rules of section 4.4 and the
+VER requests of section 9.3. The spike is not committed; the commands are in
+section 13 so it can be rerun.
+
+**Layer:** Program model, below VOS01. It answers the two questions VOS01
+left open: how several implementations realise one contract package (the
+interface-id decision, VOS-D003) and how a profile names, checks and ships a
+chosen set (VOS-D009). VOS10 and every later component spec cite this document
+for document layout, implementation kinds, the profile manifest and SH16.
+
+**Parent:** [VOS00](VOS00-verified-os-program.md) (the verified OS program),
+sections 4.4, 4.5, 4.7, 8 and 14.3 (decision D1).
+
+**Builds on:** [VOS01](VOS01-component-contract-model.md) (component shape,
+SH1-SH16, tiers, the `-any` recipe), [EMU00](EMU00-emulator-framework.md)
+(board format, section 5.1; the `stack` token, Q14),
+[VER29](VER29-layer-contract-linking.md) (contract ids, discharge, pins, reach),
+[VER04h](VER04h-warrant-derived-evidence.md) (generated evidence),
+[VER04j](VER04j-warrant-v1-extensions.md) (bindings, faults),
+[VER04m](VER04m-warrant-stateful-objects.md) (E8, E11, E15, E18, V9),
+[VER04n](VER04n-warrant-opaque-types.md) (opaque types),
+[VER04i](VER04i-polyglot-warrant-evidence.md) (lane manifests) and the
+[VER backlog](VER-BACKLOG.md) rows LV-002, LV-005, LV-006, LV-007, LV-008,
+WX-G, WX-S1, WX-SV, WX-O0/O1 and LP-012.
+
+---
+
+## 0. How to read this document
+
+Marks are those of VOS01 section 0: **today** means it exists on this branch in
+the spec or code cited; **NEW(row)** means a row of the [VOS
+backlog](VOS-BACKLOG.md) or the [VER backlog](VER-BACKLOG.md) closes it. A rule
+is stated once, with its reason, and every later section refers to it by number
+(`R1` to `R9`, `AM1` to `AM5`, `SH16` to `SH18`).
+
+Four words are used strictly.
+
+* **Contract package.** The package that owns an interface: its Rust trait, its
+  Warrant text and its ceilings (`vos-ready-contract`).
+* **Implementation.** A package that implements the trait. It has a **kind**
+  (section 3): `production`, `reference` or `any`.
+* **Profile.** One assembly of one implementation per interface, plus a spine and
+  a HAL, in a named **class**: `model`, `evidence` or `image` (section 6).
+* **Obligation.** A claim the contract package owns and every implementation
+  that wants a tier must carry, character for character (R1, R4).
+
+What this document does **not** do, so nobody expects it: it adds no contract id
+shape, no domain check of caller arguments (VER29 VQ12; the `site_` claims of
+section 5 stay VOS-owned), and no change to VER29 section 9.1 (no alias, no
+deprecation). VER29 is amended only in its reach rules and its feature rule
+(section 9.1).
+
+---
+
+## 1. Decision record
+
+### 1.1 What was open
+
+[VOS00](VOS00-verified-os-program.md) section 4.7 left one decision (D1 in
+section 14.3): the contract package owns the ids and implementations discharge
+them (option 1), or each implementation re-publishes under its own id with an
+equivalence claim (option 2). It said "the program's direction is option 1".
+Three backlog rows depended on it: VOS-D003 (how an implementation relates to
+the contract document), VOS-D006 (how a by-value component with private state is
+bound) and VOS-D009 (how a profile keeps `-any` and `ghost` out of an image).
+
+### 1.2 Facts that forced the answer
+
+* **VER29 is entirely unimplemented.** `warrant-grammar` has no `contract_id`,
+  `ca-assurance-report` has no `contracts` block, the bindings reader has no
+  `state=` key and the analyzer has no `--emit-uses` (checked by search on this
+  branch). Every choice below must work with a validator that reads files, and
+  must not need a VER29 slice that has not landed.
+* **VER29's ids are tied to the implementing package.** The `.warrant` stem is the
+  package directory (VER29 section 3.1), existence is read from the named
+  package's own document (section 3.2), a link follows a direct dependency edge
+  (sections 5.1(a) and 10), and one id has one text (the pin `claim_sha256`,
+  sections 5.3 and 9).
+* **VER04n does not solve the by-value state problem.** It forbids the shape;
+  section 1.4.
+
+### 1.3 Decision D1: option (c), generated documents with contract-owned text
+
+Ids stay stock VER29: `contract.<impl-pkg>.<claim>`, published by the
+implementation. "Interface conformance" is **digest equality**, checked by a VOS
+validator: the implementation's claim has exactly the token stream the contract
+package wrote. VER29 is amended only in reach (its section 8) and in its feature
+rule (sections 5.1.1 and VQ14), never in sections 3, 5.1(a)-(e), 6 or 9. The rules
+are R1 to R9 in section 2.1.
+
+This is a refinement of VOS00's option 2: each implementation publishes under its
+own id, as option 2 says, but the equivalence claim is replaced by copying, with
+a digest and a regeneration check, so that nothing can drift and nothing is typed
+twice.
+
+**Why not option (a), "interface ids realised by implementations".**
+
+| Reason | The VER29 text it collides with |
+|---|---|
+| An interface document has only lemmas, and a lemma earns no strength (VER04m V9, VOS-D005), so the contract package has nothing to publish | Section 3.2: existence is read from the named package's own `.warrant` |
+| The realiser is chosen by the profile, which is a sibling of the spine, not a dependency of it | Sections 5.1(a) and 10: a link follows a direct dependency edge |
+| Refinement claims mention the implementation's own concrete state, so "one id, one text" cannot hold across implementations | Sections 5.3 and 9: `claim_sha256` means one id has one text |
+| Making (a) work needs a new id family and a resolver, which is a rewrite of slice 2 before slice 2 exists | Section 13: slice 2 is frozen for LV-006 |
+
+**Why not a bare option (b), implementations simply publish their own ids.**
+Nothing would tie an implementation's `pick_safe` to the contract's obligation:
+an implementation could publish a weaker claim of the same name and every link
+would resolve. Digest equality (R4) is the missing tie.
+
+**Costs, stated.** The Warrant text is duplicated into N documents (mitigated by
+generation, R2). The conformance authority is a VOS tool, which adds to the trusted
+base (section 10). R5 excludes representations that are not canonical from the
+cheap path (they take `mode=representation`, reviewed).
+
+### 1.4 Decision D2: VER04n does not help, so a ghost face now and WX-SV later
+
+VOS-D006 asked whether VER04n's opaque types let a component keep its `State`
+private. They do not; the shape is out of scope there:
+
+* VER04n OK2 forbids an opaque value in the result of an `op` and as `inout`;
+  OK3 says an operation that returns a handle is not an operation. A by-value step
+  `op(State, In) -> (Out, State)` returns the state.
+* Section 18 puts transformers (`T -> T`) out of scope (deferred as O5).
+* OB1: a handle binder is never `full`, so a step claim over handles could not be
+  `exhaustive`, which VOS01's bar needs.
+* OK2: no `==` on handles, and refinement is equality of abstract states.
+* It needs the `v2` header and the v2 corpus.
+
+OR5 routes "immutable, all fields readable, total builder" to the VER04m `codec`
+(E11), which is specified for `inout` state only. So the workaround for now needs
+no generator change: keep `State` private, and put a public-field **state image**
+and forwarding wrappers in a `ghost` module (section 4). The Warrant document is
+written against the image and does not change when a codec or a by-value codec
+arrives. The VER requests that make the wrapper unnecessary are one backlog row,
+WX-SV (section 9.3).
+
+### 1.5 Reversal of VOS00 section 4.7
+
+VOS00 section 4.7 stated option 1 as the program's direction. This document
+reverses that. The reasons are the table of section 1.3; the consequences are the
+rewrites of section 14 (VOS00 sections 4.5, 4.7 and 14.3; VOS01 sections 2.10, 5.3-5.6
+and Q9), made in the same PR, and a decision-log entry in the
+[backlog](VOS-BACKLOG.md).
+
+---
+## 2. Document layout: one generated document per implementation
+
+### 2.1 The rules
+
+These nine rules are the normative core. Each has its reason; sections 3 to 9
+apply them.
+
+**R1. Three kinds of text belong to the contract package.**
+
+1. The **contract block**: abstract state M, abstract operations, `inv`, the tier
+   relations, the `pre_` models and the lemmas (VOS01 section 2).
+2. One **obligations block** per tier: `safety`, `policy`, `canonical` and `any`.
+   Each is a list of whole `claim` declarations, as the contract author wrote
+   them.
+3. The **ceilings and configuration names** (section 2.5).
+
+*Why:* the text an implementation must satisfy has one author. An implementation
+author who may restate it may weaken it (section 1.3, option (b)).
+
+**R2. The implementation document is generated.** `code/specs/<impl>.warrant` is
+assembled as the contract block, then the hand-written **implementation block**,
+then the obligations blocks the implementation carries. Blocks 1 and 3 of R1 are
+copied verbatim between marker comments (section 2.3) with their SHA-256
+recorded. A regeneration check (`vos-link check-doc`, section 10) fails on drift,
+in the style of `--check-module` (VER23a section 2.1) and `gen_evidence --check`
+(VER04h section 1).
+
+*Why:* VER29 section 15 says a Warrant document has no imports and section 3.1
+says its stem is the package directory. Copying with a check is the only way to
+get one text in N documents without a module system.
+
+**R3. The implementation block declares a fixed vocabulary**, identical in every
+implementation:
+
+| Item | Form | Role |
+|---|---|---|
+| state record | `record Impl(...)` | the concrete state; fields differ, the name does not |
+| initial state | `op init() -> Impl` | VOS01 section 2.2 |
+| interface operations | `op <name>(...)` with the interface's own op names | the steps |
+| abstraction | `op alpha(s: Impl) -> M` | VOS01 section 2.3 (interim form: section 4.4) |
+| canonical builder | `model build(m: M) -> Impl` | a state of the image of M |
+| implementation invariant | `model inv_impl(s: Impl) -> Bool` | the states the implementation can reach |
+| configuration | `op cfg_<name>() -> ...` plus an `example` pinning it | VOS01 section 2.9 |
+
+The `lin_`, `any_` and per-implementation record names of VOS01's first draft are
+gone. *Why:* an obligation claim then has identical tokens in every
+implementation, hence an identical `claim_sha256` (VER29 section 5.3), and
+digest equality (R4) is decidable without understanding Warrant. What equal
+tokens do **not** pin is what `build` and `alpha` mean in each implementation;
+the `canonical` block (R5) and review constrain those, and section 12 lists the
+residue.
+
+**R4. Conformance means two things for every obligation the profile needs.**
+
+1. `claim_sha256(contract.<impl>.<obligation>)` equals the contract package's
+   digest of that claim, and
+2. VER29 sections 5.1(b) to (e) hold for it: the claim is in the implementation's
+   manifest, every suite passed, at least one is not an example, the
+   implementation's own report passes `--check`, and it is not under a fault mode.
+
+This is VER04n OF1's "restate and match" done by copy instead of by restatement.
+Condition (a), the dependency edge, is carried by the profile package (R7).
+
+**R5. Obligations quantify over `build(M)`.** The `safety` and `policy`
+obligations state each step claim for every concrete state `build(m)`, `m` ranging
+over M (section 2.6), so the binder is a complete domain of the abstract state
+and the claim is `exhaustive` where the instance fits the budget (VOS01 section
+5.6). The `canonical` block adds, for every step, `build(alpha(post)) == post` and
+`alpha(build(m)) == m`: the reachable states are exactly the image of `build`.
+*Why:* without the canonical block, "every state `build(m)` behaves" says nothing
+about a state the step reaches that is not in the image. An implementation whose
+representation has history (a ring buffer's head position) is not canonical; it
+declares `mode=representation` (section 6.2), writes `<op>_rep` claims over
+`inv_impl` states instead, and is flagged in the manifest and reviewed. This is
+VER04m E15's `codec-roundtrip` and `rebuild-equivalence` idea for by-value
+state.
+
+**R6. Kind is keyed on evidence, not on a crate name.**
+
+| Kind | Must discharge | May not be used for |
+|---|---|---|
+| `production` | the `canonical` block (or, for `mode=representation`, the determinism claim), and every tier the profile needs | nothing |
+| `any` | the `any` block (soundness and coverage); it cannot discharge `canonical` because `alpha` drops the oracle | an `image` profile (SH16) |
+| `reference` | a deterministic executable model with no `bound` rows | an `image` profile |
+
+This makes VOS-D009 independent of crate names: the name pattern `vos-*-any` is a
+two-way lint (section 7), never the authority.
+
+**R7. The spine's document assumes no implementation ids.** The **profile
+package** is the package with the direct dependency edges (VER29 section 5.1(a)),
+so its generated `.warrant` carries the `assume platform:` rows, derived from the
+manifest. A swap is one authored manifest line plus regenerated rows. Because the
+links change but no claim text does, the commit needs no `Contract-Change-Accepted`
+trailer (VER29 section 5.3.1: a new or removed link needs none).
+
+**R8. Transfer from `-any` is a printed derived row, never a rung.** "Refines
+safety", "`any` covers safety" and "this theorem holds over `-any`" appear in the
+profile report as a derived line, `transferred, single-trace` (section 11). VER29
+has no rung for it and this document adds none (VOS01 section 3.4, VOS-D007).
+
+**R9. Keep the contract-block source inside the contract package directory** and
+generate the `code/specs` copy. Until LV-002 lands, an edit to
+`code/specs/*.warrant` selects nothing in CI (VER29 section 11.1); a contract
+block edited inside the contract package selects every package that depends on
+it by path prefix, which includes every implementation.
+
+### 2.2 Where each block lives
+
+```text
+code/packages/rust/vos-ready-contract/        contract package (class K, trait only)
+    src/lib.rs                                the Rust trait, Upd, Pick, Profile
+    warrant/contract.part                     R1.1, the contract block source
+    warrant/obligations-safety.part           R1.2, one file per tier
+    warrant/obligations-policy.part
+    warrant/obligations-canonical.part
+    warrant/obligations-any.part
+    contract.vos                              R1.3, section 2.5
+code/packages/rust/vos-ready-bitmap/          implementation, kind production
+    src/lib.rs                                private State, impl ReadySet, ghost module
+    warrant/impl.part                         the hand-written implementation block
+    evidence.bindings                         VER04h bindings (section 4.5)
+code/specs/vos-ready-bitmap.warrant           GENERATED by vos-link gen-doc; never edited
+```
+
+The generated document has no author. Review of a swap reads three things: the
+contract package's `.part` files (changed only by a contract change), the
+implementation's `impl.part` and its Rust, and the diff of the profile manifest.
+
+### 2.3 Marker comments and digests
+
+A marker is a Warrant comment line, so the document type-checks unchanged
+(section 13 confirmed it). Markers are the only syntax this document adds.
+
+```text
+-- vos02:generated by vos-link gen-doc; do not edit; contract-package=<crate>
+-- vos02:contract-begin sha256=<64 hex>
+...                                  the contract block, byte for byte
+-- vos02:contract-end
+-- vos02:impl-begin
+...                                  the implementation block
+-- vos02:impl-end
+-- vos02:obligations-begin tier=<safety|policy|canonical|any> sha256=<64 hex>
+...                                  that tier's obligations, byte for byte
+-- vos02:obligations-end
+```
+
+The digest of a copied block is the SHA-256 of the bytes between its begin and end
+marker lines, exclusive, with LF line endings (the `.part` files already carry the
+two-space indentation, so the copy is the file and its digest is the file's). The marker carries it so a reader can see drift without the tool.
+Separately, each obligation has its VER29 `claim_sha256` (the comment-free token
+stream of the claim, section 5.3 there), which is what the lock pins (section 6.3).
+A marker digest is a file-level check; `claim_sha256` is the identity.
+
+### 2.4 A generated document, worked
+
+The listing is the real output of the acceptance spike (section 13), elided where
+marked: the VOS01 section 5 toy, implementation 1 (the bitmap), carrying all three
+tiers it can. The digests are real. The names `insert_out`, `insert_img`,
+`alpha_w` and `dec` are the interim vocabulary of section 4.4; they exist because
+today's generator can bind no fault to a tuple result.
+
+```text
+warrant vos_ready_bitmap v1
+  -- vos02:generated by vos-link gen-doc; do not edit; contract-package=vos_ready_contract
+  -- vos02:contract-begin sha256=ce96dafc6e7b521126786ebc700a9ceb340d18ebe2a0bd0e8c87287b9954bb12
+  variant Upd = Changed | Unchanged | OutOfRange
+  variant Pick = NoneReady | Member(p: U8)
+  ... 23 more lines of the contract block, byte for byte from vos-ready-contract/warrant/contract.part
+  -- vos02:contract-end
+  -- vos02:impl-begin
+  record Impl(mask: U8)
+  record AbsW(w: U8)
+  record CfgN(v: U8)
+  model dec(x: AbsW) -> Ready = (
+  ...                                   (the 8-way bit_and body of dec)
+  op init() -> Impl
+  op insert_out(s: Impl, p: U8) -> Upd
+  op insert_img(s: Impl, p: U8) -> Impl
+  op remove_out(s: Impl, p: U8) -> Upd
+  op remove_img(s: Impl, p: U8) -> Impl
+  op pick_out(s: Impl) -> Pick
+  op pick_img(s: Impl) -> Impl
+  op alpha_w(s: Impl) -> AbsW
+  op cfg_n() -> CfgN
+
+  model b2m(b: Bool, k: Nat) -> U8 = if b then shl(1u8, k) else 0u8
+  model build(m: Ready) -> Impl = (
+    Impl(bit_or(bit_or(bit_or(bit_or(bit_or(bit_or(bit_or(b2m(m.p0, 0), b2m(m.p1, 1)), b2m(m.p2, 2)), b2m(m.p3, 3)),
+           b2m(m.p4, 4)), b2m(m.p5, 5)), b2m(m.p6, 6)), b2m(m.p7, 7))))
+  model inv_impl(s: Impl) -> Bool = true
+
+  example n_is_eight:
+    cfg_n() == CfgN(8u8)
+  example init_is_build_of_empty:
+    init() == build(empty())
+  example alpha_reads_bit_i_as_priority_i:
+    dec(alpha_w(Impl(5u8))) == Ready(true, false, true, false, false, false, false, false)
+  labels insert_out: ... labels alpha_w:    (7 labels rows, all `public`)
+  ...                                   (bound rows against the ceilings of contract.vos go here)
+  -- vos02:impl-end
+  -- vos02:obligations-begin tier=safety sha256=9ce29b29ff60f33c81bf1b5e4e1d398029f6a31a788b6ad401e0926df6663073
+  claim insert_safe:
+    forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool, p: U8. (
+      insert_out(build(Ready(b0, b1, b2, b3, b4, b5, b6, b7)), p) == abs_insert(Ready(b0, b1, b2, b3, b4, b5, b6, b7), p).0 and
+      dec(alpha_w(insert_img(build(Ready(b0, b1, b2, b3, b4, b5, b6, b7)), p))) == abs_insert(Ready(b0, b1, b2, b3, b4, b5, b6, b7), p).1)
+  ...                                   (remove_safe, pick_safe)
+  -- vos02:obligations-end
+  -- vos02:obligations-begin tier=policy sha256=69693029bde7044f65d0282fa56b222f774e8ea82e8a82e670f190b5a8b17cbd
+  claim pick_policy:
+  ...                                   (pick_policy: the same shape, with policy_pick)
+  -- vos02:obligations-end
+  -- vos02:obligations-begin tier=canonical sha256=3880c68f72bfad98ce37f3b03fb61dc4527b2ad9b4ab7b7711cfd97802189666
+  claim canon_alpha_build:
+    forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool. (
+      dec(alpha_w(build(Ready(b0, b1, b2, b3, b4, b5, b6, b7)))) == Ready(b0, b1, b2, b3, b4, b5, b6, b7))
+  claim canon_build_alpha:
+    forall mask: U8. build(dec(alpha_w(Impl(mask)))) == Impl(mask)
+  ...                                   (canon_insert_post, canon_insert_img, canon_remove_img, canon_pick_img)
+  -- vos02:obligations-end
+  assume platform:
+    none
+  assume environment:
+    none
+```
+
+What the author wrote: `impl.part` (lines from `impl-begin` to `impl-end`) and,
+in the contract package, the `.part` files. Everything else is assembled. Two
+properties to check in the listing: the claim `insert_safe` is the same text in the
+linear-scan implementation's document (only `build`, `alpha_w` and the `Impl`
+fields differ, and those live in the implementation block), and the document ends
+with `assume platform: none`, because an implementation assumes nothing; the
+profile package's document carries the rows (R7, section 6.4).
+
+### 2.5 The contract file: ceilings and configuration
+
+`contract.vos` is the contract package's authored text outside Warrant: the
+interface name, the tiers it defines, the configuration names with their values,
+and the ceilings. It uses the canonical-text discipline of section 6.1 (one
+spelling, so its digest is its identity).
+
+```text
+vos-contract 1
+name vos-ready-contract
+iface ready-set
+tier any
+tier canonical
+tier policy
+tier safety
+config N 8
+ceiling init steps 160
+ceiling insert depth 2
+ceiling insert heap 0
+ceiling insert steps 160
+ceiling pick depth 2
+ceiling pick heap 0
+ceiling pick steps 160
+ceiling remove depth 2
+ceiling remove heap 0
+ceiling remove steps 160
+end
+```
+
+The figures are VOS01 section 5.1's placeholders (`16 N + 32 = 160` steps). The
+validator compares each implementation's `bound` rows with them (section 8) and
+the lock pins the file's digest.
+
+### 2.6 The vocabulary, and which names are free
+
+Fixed by R3: `Impl`, `init`, the interface op names, `alpha`, `build`,
+`inv_impl`, `cfg_<name>`. Fixed by the contract: every model and claim of the
+contract block and the obligations. One document is generated **per instance**: `config N 8` in `contract.vos`
+is the instance, and the `.part` files spell it out (VOS01 Q1: a template generator
+is later work). Free to the implementation: the fields of
+`Impl`, any helper model (`b2m`), any extra `claim` or `example` (named with no
+collision: a name equal to an obligation's is an error, which the Warrant checker
+already reports as a duplicate declaration). Extra claims are published by VER29
+like any other and printed as `impl-own` in the report; they never count towards
+conformance (R4 reads obligations only).
+
+### 2.7 Modes
+
+| Mode | Meaning | Extra obligation |
+|---|---|---|
+| `canonical` (default) | Every reachable state is in the image of `build` (R5) | the `canonical` block |
+| `representation` | The implementation's state carries history; `alpha` forgets it | authored `<op>_rep` claims over `inv_impl` states, a determinism claim, flagged `mode=representation` in the lock and in every report line, and human review |
+
+A `representation` implementation is never silently equal to a canonical one: the
+profile report prints the mode next to the kind.
+
+---
+## 3. Implementation kinds and the `-any` discipline
+
+### 3.1 Three kinds, keyed on evidence (R6)
+
+VOS01 section 3 gave `-any` its recipe (a bitmap plus an oracle register that
+`alpha` drops, propose-validate-default, soundness and coverage with witnesses).
+This section fixes how a *kind* is decided, because VOS-D009 asked that SH16 not
+depend on the crate name.
+
+| Kind | What the evidence is | What it earns | Where it may appear |
+|---|---|---|---|
+| `production` | the `canonical` block, and the tier blocks it carries | real behaviour; ceilings met | model, evidence, image |
+| `reference` | a deterministic model with no `bound` rows, no ceilings claim | an executable oracle for monitors and tests | model, evidence |
+| `any` | the `any` block: soundness, coverage and its negative controls | every safety-tier behaviour, for single-trace theorems (R8) | model, evidence |
+
+A crate declares its kind in its `Cargo.toml`:
+
+```toml
+[package.metadata.vos]
+kind = "production"             # or "reference", "any"
+evidence-features = ["ghost"]   # features that exist for evidence only (section 4.4)
+```
+
+The kind is **checked against the evidence**, not merely trusted: a crate that
+declares `production` must have a generated document whose carries include
+`canonical` (or the representation-mode determinism claim), and a crate that
+declares `any` must carry the `any` block and cannot carry `canonical`. The name
+pattern `vos-<iface>-any` is a lint in both directions: a crate named `-any` that
+declares `production` is an error, and a `production` crate that carries an `any`
+block is an error (negative controls NC4 and NC5, section 12).
+
+### 3.2 Why `any` cannot discharge `canonical`
+
+`-any` is the bitmap plus an oracle register `choice` (VOS01 section 3.2), so its
+`Impl` is `Impl(mask: U8, choice: U8)` and `alpha` drops `choice`. Then
+`alpha(build(m)) == m` holds (build sets `choice` to 0) but
+`build(alpha(s)) == s` fails for any state with `choice != 0`. That failure is the
+point: a state with an oracle is not a function of the abstract state, so `-any`
+is not canonical, and the `canonical` block (R5), which production must discharge,
+would reject it. R6 therefore needs no list of names: "may not be shipped" is the
+same fact as "does not discharge `canonical`".
+
+### 3.3 The `any` block, in the fixed vocabulary
+
+The soundness and coverage claims of VOS01 sections 3.3 and 5.5 move into the
+contract package as the `any` obligations block, in the R3 names. They quantify
+over `Impl(mask, c)` with the oracle as a binder, which is why they live in a
+different block from the tier obligations (which quantify over `build(M)`):
+
+```text
+  -- obligations-any.part (illustrative; the oracle is a binder, so Impl has two fields)
+  claim pick_sound:
+    forall mask: U8, c: U8. (
+      safe_pick(alpha(Impl(mask, c)), pick(Impl(mask, c)).0, alpha(pick(Impl(mask, c)).1)) and
+      pick(Impl(mask, c)).1.choice == c)
+  claim pick_covers_members:
+    forall mask: U8, p: U8 | p < 8u8. (
+      mem(alpha(Impl(mask, p)), p) => pick(Impl(mask, p)).0 == Member(p))
+  claim pick_covers_none:
+    forall mask: U8. pick(Impl(mask, 255u8)).0 == NoneReady
+```
+
+The text names fields of `Impl` (`choice`), so these obligations can only be
+carried by an implementation whose state has them: carrying them is the `any`
+kind. Coverage is itself falsifiable (a sabotaged `-any` must be rejected); that
+needs variant faults inside tuple components, which is WX-SV item 2 (section 9.3).
+Until it lands, the coverage claims have no negative control and the report prints
+`controls: none (WX-SV item 2)`, not a label the controls would earn (VOS01 section
+7, item 19).
+
+### 3.4 What a profile may do with the kinds
+
+A profile that uses `-any` for an interface says so on every theorem it
+evidences (section 11, `rests on -any`). A `hyper` theorem (noninterference) may
+cite only interfaces realised by a `production` implementation carrying `policy`
+(VOS-D007): refinement can remove nondeterminism in a way that breaks a
+hyperproperty, so a theorem over `-any` does not transfer (R8, VOS01 section 3.4).
+
+---
+
+## 4. The ghost face
+
+### 4.1 The conflict
+
+VOS00 rule 2 wants `State` fields private. The generator builds and reads a by-value
+record from a `struct T path=P fields=...` binding line, which needs public fields
+(VER04j section 14.1, item 22). VER04m E11's `codec` line is the designed answer
+but is specified for `inout` state only and depends on WX-G, which is queued
+behind WX-D2, WX-F and LP-012 (VER-BACKLOG, WX-S1). VOS01 Q3 recommended private
+fields plus a ghost builder and deferred the binding support to VOS-D006; this
+section resolves it with the generator that exists.
+
+### 4.2 The shape
+
+```rust
+// vos-ready-bitmap/src/lib.rs  (the spike's source, shown in its natural form;
+// what ran is the interim form of section 4.4)
+#![no_std]
+#![forbid(unsafe_code)]
+use vos_ready_contract::{Pick, ReadySet, Upd};
+
+#[derive(Copy, Clone, PartialEq, Eq)] pub struct Bitmap { mask: u8 }   // private: rule 2
+pub struct BitmapReady;
+impl ReadySet for BitmapReady { type State = Bitmap; const N: u8 = 8; /* init, insert, remove, pick */ }
+
+#[cfg(feature = "ghost")]                       // SH13: evidence build only
+pub mod ghost {
+    use super::*;
+    pub struct Image { pub mask: u8 }            // public fields, equal to State's (SH17)
+    pub fn insert(s: Image, p: u8) -> (Upd, Image) {
+        let (o, Bitmap { mask }) = <BitmapReady as ReadySet>::insert(Bitmap { mask: s.mask }, p);
+        (o, Image { mask })                      // exhaustive destructure, one UFCS call, restructure
+    }
+    /* init, remove, pick, alpha, cfg_n: the same four-line shape */
+}
+#[cfg(feature = "ghost")]
+pub use ghost::{alpha, cfg_n, init, insert, pick, remove};   // see section 4.3
+```
+
+The wrappers forward to the production code through the same UFCS call the spine
+uses (section 5), so the code the evidence runs **is** the code that ships, behind a
+four-line adapter that a lexical rule can read.
+
+### 4.3 Why wrappers, and why at the crate root
+
+The spike resolved the first probe (section 13): a trait's associated function has
+no `self`, and the bindings reader accepts only a **plain Rust identifier** as an
+`export=` (`binding.rs`, `is_rust_identifier`; a path such as
+`vos_ready_bitmap::ghost::insert` is rejected with "is not a Rust identifier").
+The generated harness resolves every export through `use <crate>::*;`. So an
+operation can be bound only if the crate root exports a free function of that
+name; `BitmapReady::insert` is not nameable. Therefore each ghost wrapper is
+re-exported at the root, under the same feature, by a `pub use`. The brief's
+`export=...::ghost::insert` form needs VER04k section 4.6's path-valued `export=`,
+which is implemented with WX-G.
+
+### 4.4 The interim vocabulary
+
+The spike found that today's generator cannot attach a negative control to the
+natural form of the toy (section 13.3). Until WX-SV item 2 lands, the ghost
+face of a **tuple-returning** operation exposes it as a projection pair, and the
+abstraction and configuration are returned as one-field records of integers:
+
+| Natural form (target, after WX-SV) | Interim form (today) | Why |
+|---|---|---|
+| `op insert(s: Impl, p: U8) -> (Upd, Impl)` | `insert_out(s, p) -> Upd` and `insert_img(s, p) -> Impl` | no fault applies to a tuple whose second component is not an integer |
+| `op alpha(s: Impl) -> M` | `alpha_w(s: Impl) -> AbsW`, `model dec(x: AbsW) -> M` | no fault applies to a record of `Bool`s; `field-zero` needs an integer field |
+| `op cfg_n() -> Nat` | `op cfg_n() -> CfgN`, `record CfgN(v: U8)` | no fault applies to a nullary scalar |
+
+The interim names are part of the vocabulary of R3 for as long as they are needed.
+When WX-SV lands the obligation text changes (one claim per operation instead of
+an `_out` claim and an `_img` claim), the obligations digests change, every
+implementation regenerates, and that is a **contract-text change event**
+(VOS00 section 8), planned, in-tree and mechanical. It is the price of having run
+today; the alternative was no evidence at all.
+
+The `canonical` block uses a second spike finding. A negative control attaches to
+a claim by its **subject operation**, the first operation found by a shallow,
+left-to-right search (`find_operation_in_expr` in `warrant-grammar/src/codegen.rs`).
+A refinement claim written `dec(alpha_w(insert_img(...))) == ...` has subject
+`alpha_w`, so `insert_img` has no control that can catch a fault in it. The fix is
+a claim whose subject is the image operation itself, the commuting form
+`insert_img(build(m), p) == build(abs_insert(m, p).1)`, which needs no `alpha` and
+is equivalent to refinement given `alpha(build(m)) == m`. R5's canonical block
+carries these (`canon_insert_img`, `canon_remove_img`, `canon_pick_img`).
+
+### 4.5 The bindings file
+
+The generated harness needs bindings (VER04 section 6, VER04j section 14.1). The
+spike's, for the bitmap, abridged:
+
+```text
+package vos_ready_bitmap
+spec code/specs/vos_ready_bitmap.warrant
+output code/packages/rust/vos_ready_bitmap/tests/generated/warrant_evidence.rs
+struct Impl path=vos_ready_bitmap::ghost::Image fields=mask:u8
+struct AbsW path=vos_ready_bitmap::ghost::AbsW fields=w:u8
+enum Upd path=vos_ready_contract::Upd ctors=Changed,Unchanged,OutOfRange
+enum Pick path=vos_ready_contract::Pick ctors=NoneReady,Member(0:u8)
+op insert_out export=insert_out args=Impl,u8 ret=Upd faults=wrong-ctor
+op insert_img export=insert_img args=Impl,u8 ret=Impl faults=field-zero
+op alpha_w export=alpha_w args=Impl ret=AbsW faults=field-zero
+```
+
+The package declares the test target with `required-features = ["ghost"]` and
+the dev-dependencies the generated harness needs (`coding_adventures_sha256`,
+`coding_adventures_test_bootstrap`), so a plain `cargo build` never compiles
+the ghost module and a plain `cargo test` never runs the evidence.
+
+### 4.6 SH17 and SH18, new shape rules
+
+These extend VOS01 section 1.4's table (the shape check, VOS-D002).
+
+| Id | Rule | Why | Checked by |
+|---|---|---|---|
+| SH17 | In the `ghost` module: every `Image` struct has exactly the fields of the `State` struct it mirrors, same names, types and order; every wrapper body is an **exhaustive destructure** of the production `State` (a struct pattern with no `..`), one UFCS call into the production trait, and a restructure into the image; no other statement | a field added to `State` and forgotten in the image breaks the build (the spike confirmed E0027 and E0063), so the image cannot silently describe a different state than the one that ships | NEW(VOS-D002): lexical, VER08a lexer |
+| SH18 | No path containing `ghost::`, no `use` of a ghost item and no `cfg(feature = "ghost")` item appears in **non-ghost class K source**, except the `mod ghost` item itself and `pub use ghost::...` items that are themselves gated by the same feature | the ghost face must not become reachable from the shipped build; a gated re-export (section 4.3) is the one exception, and it is gated | NEW(VOS-D002): lexical |
+
+SH17 is the structural half of "the ghost face is faithful": the wrapper cannot
+compute anything, so what it forwards is what the production code returns. It
+does not prove the image's *fields* are the abstraction the claims need; `alpha`
+and the `canonical` block do that.
+
+### 4.7 The `realises=` key
+
+A binding-level key used by the reach pass (AM2, section 9.1): each `op` line of the
+implementation's `evidence.bindings` may name the trait item it implements,
+`realises=vos_ready_contract::ReadySet::insert`. It is the only place the
+implementation's export (a ghost wrapper) is tied to the interface's trait item.
+Until LV-008 lands, `vos-link check-doc` checks the keys against the contract
+crate's trait by name (section 10).
+
+---
+## 5. The UFCS rule, the `impl Profile` audit target and `site_` claims
+
+### 5.1 The rule
+
+Spine call sites use UFCS through the profile's associated type
+(VOS01 section 1.2):
+
+```rust
+let (upd, ready) = <P::Ready as ReadySet>::insert(k.ready, t);
+```
+
+`ReadySet` is a trait of the **contract crate**, which is a direct dependency of
+the spine. The path `<P::Ready as ReadySet>::insert` therefore names an
+*interface item* `(vos_ready_contract, ReadySet, insert)`, never an implementation.
+The spine source is the same for every profile (rule 5 of VOS00 section 4.3), and
+its Cargo manifest depends on contract crates and `core` only.
+
+### 5.2 The audit target: the `impl Profile` block
+
+One `impl Profile for <ProfileType>` block per profile type names the
+implementations:
+
+```rust
+pub struct RtosMin;
+impl Profile for RtosMin { type Ready = vos_ready_bitmap::BitmapReady; /* one line per interface */ }
+```
+
+The audit target of a profile is that block plus the profile manifest
+(section 6). Rules, all lexical and checked by the shape check once it exists
+(`vos-shape-check`, section 10), by hand until then:
+
+1. Exactly one `impl <Profile trait> for <T>` item per profile type `T`
+   (AM5, negative control NC12).
+2. Each `type A = <path>;` names a type of a crate that is a manifest row (the
+   closed world of SH16 step 2).
+3. The spine and the leaf crates contain no path into an implementation crate.
+4. Every interface use in the spine is UFCS through `P::<Assoc>` (VOS00 rule 5); a
+   method-call form is a finding.
+
+### 5.3 What the reach pass cannot see, and the amendment
+
+VER29 section 8.2 resolves paths the binding closure can resolve into the lower
+crate and lists generics and trait paths as not reachable (limit 4, "calls through
+... generics"). The UFCS form is a stopgap: it keeps a grep-level audit possible
+until the pass learns trait paths. AM1 to AM3 (section 9.1) teach it exactly this
+one shape, and nothing else.
+
+### 5.4 `site_` claims
+
+VOS01 section 6.3 requires **one claim per spine call site**, in the spine's
+document, named `site_<entry>_<step>`: the arguments satisfy the contract's
+`pre_` model, discharged from the safety tier and the spine invariant. This
+document adds two things.
+
+* The match between a UFCS call site and its claim is lexical: a call site with no
+  `site_` claim of that name is a conformance failure, and a `site_` claim with
+  no call site is a stale claim. Checked by hand until `vos-shape-check` reads
+  call sites (NEW(VOS-D002), second half).
+* The `site_` claims stay VOS-owned. No VER29 domain check (VQ12) is requested:
+  `covered (domain unchecked)` is printed and the `site_` claims are the actual
+  evidence that the domain holds.
+
+---
+
+## 6. Profile and board manifests
+
+### 6.1 Canonical text, authored and generated
+
+EMU00 section 5.1 already fixed a canonical text format for boards: one record per
+line, LF endings, ASCII only, one spelling per object, the file's SHA-256 is its
+identity, and `parse` followed by `re-emit` must be byte-equal. **No board
+manifest is invented here**: a profile references the board by name and the lock
+pins its digest. The profile uses the same discipline, split like Cargo's pair:
+
+| File | Who writes it | Role |
+|---|---|---|
+| `profile.vos` | a person | the authored choice: which implementation realises which interface, in which class |
+| `profile.lock` | `vos-link check-profile --write-lock` | the derived pins, in VER29 section 5.3's names |
+
+A swap is one authored line plus a regenerated lock. Both files are parsed by
+`vos-manifest` (class P, section 10): total, no panic, size caps before
+allocation, fail closed, and a re-emit equal to the input, so no two byte strings
+describe one profile.
+
+### 6.2 The authored grammar
+
+```text
+profile  = "vos-profile 1" LF
+           "name " IDENT LF
+           "class " ( "model" | "evidence" | "image" ) LF
+           [ "target " TRIPLE LF ]                        ; image only
+           [ "board " IDENT LF ]                          ; names an EMU00 board file
+           { "slot " IDENT SP "artifact=" IDENT LF }      ; image slots, sorted by slot
+           [ "config " KEY "=" DEC { SP KEY "=" DEC } LF ]; keys sorted
+           { "iface " IDENT SP "contract=" PKG SP "needs=" TIERS LF }   ; sorted by iface
+           { "impl " IDENT SP "crate=" PKG SP "kind=" KIND SP "mode=" MODE LF }
+           "spine crate=" PKG LF
+           [ "hal crate=" PKG LF ]
+           { "theorem " IDENT SP "needs=" NEEDS SP "property=" ( "trace" | "hyper" ) LF }
+           { "build " BUILDNAME SP "target=" TRIPLE SP "features=" FEATURES LF }
+           "end" LF
+KIND     = "production" | "reference" | "any"
+MODE     = "canonical" | "representation" | "none"   ; "none" only with kind=any (section 3.2)
+TIERS    = TIER { "," TIER }            ; sorted: any, canonical, policy, safety
+NEEDS    = IFACE "." TIER { "," IFACE "." TIER }
+BUILDNAME= "evidence" | "image"
+FEATURES = "none" | IDENT { "," IDENT }
+IDENT    = [a-z] [a-z0-9-]{0,31}        PKG = IDENT        DEC = "0" | [1-9][0-9]*
+TRIPLE   = "host" | [a-z0-9_.-]+       ; a rustc target triple, or "host" for the evidence build
+KEY      = [A-Za-z] [A-Za-z0-9_]{0,31}   VALUE = [0-9A-Za-z_.,=-]+    ; VALUE only in the lock
+```
+
+Ordering is fixed (header, `name`, `class`, `target`, `board`, `slot`s, `config`,
+`iface`s sorted by name, `impl`s sorted by interface name, `spine`, `hal`,
+`theorem`s, `build`s, `end`), no comments, no blank lines, no trailing space. The class decides which rows are required: `model` and
+`evidence` need no `board`, `slot` or `target`; an `image` profile needs `target`,
+`board`, at least one `slot` and both builds.
+
+### 6.3 The lock
+
+The lock carries nothing a person decides. Every row is derived and every pin name
+is VER29 section 5.3's, so when LV-008 and slice 2 land the `contracts` block of the
+profile package's report is derived from the same inputs and migration is nil.
+
+```text
+lock = "vos-lock 1" LF
+       "profile-sha256 " HEX LF
+       [ "board " IDENT SP "sha256=" HEX SP "stack=emu:" IDENT "@" HEX16 LF ]  ; EMU00 Q14
+       { "iface " IDENT SP "contract-sha256=" HEX SP "ceilings-sha256=" HEX
+              { SP "obligations." TIER "=" HEX } LF }
+       { "impl " IDENT SP "crate=" PKG SP "kind=" KIND SP "mode=" MODE SP "carries=" TIERS LF
+         "pin " IDENT SP KEY "=" VALUE { SP KEY "=" VALUE } LF      ; spec_sha256 source_sha256 cargo_sha256
+                                                                     ; build_rs_sha256 manifests report_sha256
+                                                                     ; certificate_sha256 toolchain features
+         { "obl " IDENT "." TIER "." CLAIM SP "claim_sha256=" HEX SP "claim_entries_sha256=" HEX LF }
+         { "cfg " IDENT SP KEY "=" DEC SP "example=" IDENT LF } }
+       { "theorem " IDENT SP "profile-sha256=" HEX SP "transfer=" ( "none" | "single-trace" ) LF }
+       "end" LF
+```
+
+`features=` on an `impl` pin is the resolved feature set of that crate in **each
+named build** (`evidence` and `image`, section 7). `cfg` rows record that the
+`cfg_<name>` example literal was found and equals the authored `config` value, and
+that a `const` assert in the profile crate repeats it (VOS01 section 2.9).
+
+### 6.4 Worked example 1: a two-interface evidence profile
+
+Illustrative: the second interface and its `-any` do not exist yet (VOS10, VOS-012).
+The profile checks the scheduler's safety-tier theorem over `-any` and its
+policy tier on the bitmap.
+
+```text
+vos-profile 1
+name sched-evidence
+class evidence
+config N=8
+iface ready contract=vos-ready-contract needs=policy,safety
+iface sleepq contract=vos-sleepq-contract needs=safety
+impl ready crate=vos-ready-bitmap kind=production mode=canonical
+impl sleepq crate=vos-sleepq-any kind=any mode=none
+spine crate=vos-spine
+theorem ready-in-set needs=ready.safety,sleepq.safety property=trace
+theorem top-priority-runs needs=ready.policy property=trace
+build evidence target=host features=ghost
+end
+```
+
+An `any` implementation has no mode of its own (it is not canonical, section 3.2), so
+its row reads `mode=none`, which is legal only with `kind=any`; `production` and
+`reference` rows declare `canonical` or `representation`.
+
+The generated lock for it, digests abbreviated to 16 hex:
+
+```text
+vos-lock 1
+profile-sha256 <64 hex>
+iface ready contract-sha256=ce96dafc6e7b5211... ceilings-sha256=... obligations.canonical=3880c68f72bfad98... obligations.policy=69693029bde7044f... obligations.safety=9ce29b29ff60f33c...
+iface sleepq contract-sha256=... ceilings-sha256=... obligations.any=... obligations.safety=...
+impl ready crate=vos-ready-bitmap kind=production mode=canonical carries=canonical,policy,safety
+pin ready spec_sha256=... source_sha256=... cargo_sha256=... build_rs_sha256=absent report_sha256=... certificate_sha256=... toolchain=<rustc version and target> features=ghost
+obl ready.safety.insert_safe claim_sha256=... claim_entries_sha256=...
+obl ready.safety.remove_safe claim_sha256=... claim_entries_sha256=...
+obl ready.safety.pick_safe claim_sha256=... claim_entries_sha256=...
+obl ready.policy.pick_policy claim_sha256=... claim_entries_sha256=...
+cfg ready N=8 example=n_is_eight
+impl sleepq crate=vos-sleepq-any kind=any mode=none carries=any,safety
+...
+theorem ready-in-set profile-sha256=<64 hex> transfer=single-trace
+theorem top-priority-runs profile-sha256=<64 hex> transfer=none
+end
+```
+
+The `contract-sha256` and `obligations.*` values of `ready` are the spike's real
+digests for the toy, cut to 16 hex (section 2.4); `<64 hex>` and `...` stand for
+values this document does not compute. `transfer=single-trace` on the first
+theorem is R8: it rests on `-any`; the second rests on a production implementation
+and transfers nothing.
+
+### 6.5 Worked example 2: an image profile on the RV32 board
+
+The board is EMU00 section 5.2's `rv32-virt-lite` (`isa rv32i`, a UART, a timer,
+RAM with a `kernel` slot and a ROM with a `bootrom` slot). The profile references
+it by name; the lock pins its SHA-256 and the `stack` token EMU00 Q14 defines.
+The image has **two named builds** (section 7): the `evidence` build on the host with
+`ghost` on, and the `image` build for the target with no features.
+
+```text
+vos-profile 1
+name rtos-min
+class image
+target riscv32i-unknown-none-elf
+board rv32-virt-lite
+slot bootrom artifact=bootrom
+slot kernel artifact=kernel
+config N=8
+iface ready contract=vos-ready-contract needs=policy,safety
+iface threads contract=vos-threads-contract needs=safety
+impl ready crate=vos-ready-bitmap kind=production mode=canonical
+impl threads crate=vos-threads-table kind=production mode=canonical
+spine crate=vos-spine
+hal crate=vos-hal-rv32
+theorem isolation needs=ready.safety,threads.safety property=trace
+build evidence target=host features=ghost
+build image target=riscv32i-unknown-none-elf features=none
+end
+```
+
+Illustrative names: `vos-threads-table` and `vos-hal-rv32` are VOS-024 and VOS-025.
+The lock's board row reads
+
+```text
+board rv32-virt-lite sha256=<board file digest> stack=emu:rv32-virt-lite@<first 16 hex>
+```
+
+and `check-profile` requires the board's `isa` (`rv32i`) to equal the target's ISA
+(the `riscv32i-` prefix) and every `slot` named in the profile to be an `image` slot
+of the board (EMU00 section 5.1, rule V2 and V10). Every `impl` of an image profile
+must be `production`; `any` and `reference` rows are errors here.
+
+### 6.6 Eligibility
+
+| Kind | `model` profile | `evidence` profile | `image` profile |
+|---|---|---|---|
+| `production` | yes | yes | yes |
+| `reference` (deterministic, no `bound` rows) | yes | yes | no |
+| `any` | yes | yes | no (SH16) |
+
+Further checks, each a named negative control (section 12):
+
+1. `needs` must be a subset of the implementation's `carries` (an implementation
+   that does not carry `policy` cannot be required to).
+2. A theorem with `property=hyper` needs every cited interface realised by a
+   `production` implementation that carries `policy` (VOS-D007).
+3. An implementation's `bound` rows are at or under the contract's ceilings
+   (section 8, resource).
+4. The board's `isa` equals the target ISA, and the `class` rows required by
+   section 6.2 are present.
+5. Every obligation the profile needs for an implementation satisfies R4.
+6. A `config` value equals the implementation's pinned `cfg_<name>` example literal
+   and a `const` assert in the profile crate.
+
+### 6.7 What a swap changes
+
+The swap of VOS01 section 5.8 is, at the profile level: one `impl` line in
+`profile.vos`; a regenerated lock; a regenerated profile `.warrant` whose
+`assume platform:` rows follow the manifest (R7); and the per-image artifacts VOS01
+lists. The spine, the other implementations, the contract and their documents are
+byte-identical, which `check-doc` proves by digest.
+
+---
+
+## 7. SH16 and the closed world
+
+### 7.1 The gate
+
+SH16 (VOS01 section 1.4, VOS-D009) says no `-any` crate and no `ghost` feature may
+be in the resolved graph of an `image` profile. It binds the profile's **image
+build**, not the evidence build, which has `ghost` on by design.
+
+### 7.2 The algorithm
+
+1. **Parse.** Read `profile.vos` and `profile.lock` with `vos-manifest`; require
+   `class image`.
+2. **Closed world.** Every node of the resolved **normal and build** dependency graph
+   of the profile package for the image target must be a manifest row, or `core`,
+   or `compiler_builtins`. Every source must be an in-tree path: no registry, no
+   git, no `[patch]`, no `[replace]`, no `package =` rename (VER29 section 5.1.1's
+   requirements, reused).
+3. **Kind.** Each node's manifest kind must be one of `contract`, `production`,
+   `spine`, `hal`, `profile`.
+4. **Features.** Each node's resolved feature set must **equal** the lock's recorded
+   set for the `image` build (normally empty), and must not intersect the
+   evidence-only set: `ghost`, `cov`, and any feature a package lists in
+   `[package.metadata.vos] evidence-features`.
+5. **Kind check.** `[package.metadata.vos] kind` equals the manifest kind, and the R6
+   evidence agrees (a `production` crate carries `canonical`; no node carries an
+   `any` block). The `*-any` name pattern is a two-way lint only.
+6. **Lexical.** SH18 over every class K crate in the graph.
+7. **Later, with the first image (VOS-026):** a symbol-origin check on the link map:
+   no symbol originates in a ghost or `-any` crate.
+
+### 7.3 Features come from the invocation
+
+The tool reads the resolved graph by running the **image build's own invocation**:
+
+```text
+cargo tree -p <profile-package> --target <target> -e normal,build --prefix none --format '{p} [{f}]'
+```
+
+`cargo metadata` resolves the whole workspace and would show `ghost` on whenever any
+evidence profile in the workspace enables it. The spike measured this with a
+three-crate workspace (section 13.4): `cargo metadata` listed `imp` with
+`["ghost"]` while `cargo tree -p img` showed `imp` with no features and
+`cargo build -p img -v` compiled `imp` without `feature="ghost"`. Conversely,
+`cargo build -p img -p evid` compiled `imp` **with** ghost: Cargo unifies features
+across the selected packages. So the CI rule is part of SH16: **the image is built
+with `-p <profile-package>` alone, never `--workspace` and never with another
+profile in the same invocation**, and the tool runs `cargo tree` with exactly the
+flags the image build uses.
+
+### 7.4 Negative controls (each must fail, the last must pass)
+
+| # | Setup | Expected |
+|---|---|---|
+| S1 | `ghost` enabled for the image through a third crate (`img3` depends on `imp` and on `mid`, which enables `ghost`) | step 4 fails: `imp` resolves with `ghost` |
+| S2 | an `-any` crate renamed (`vos-ready-foo`, declares `kind = "any"`) in the image graph | step 3 fails by kind, not by name |
+| S3 | an `-any` implementation relabelled `production` in `profile.vos` | step 5 fails: the crate carries an `any` block and no `canonical` |
+| S4 | `ghost` listed in a crate's `default` features | step 4 fails: the resolved set intersects the evidence-only set |
+| S5 | a `[patch]` or `package =` rename in the graph | step 2 fails |
+| S6 | `ghost` enabled only through a **dev-dependency** | **passes**: `cargo tree -e normal,build` excludes it (the spike confirmed this) and `cargo build -p` does not build dev-dependencies |
+
+---
+## 8. The four id kinds: what works now, what waits
+
+VOS00 section 4.7 and VOS01 section 2.10 require the decision to cover all four
+kinds of VER29 section 3.1. VER29 publishes only the functional kind in slice 2
+and nothing in the other three. The table says, for each, what a validator that
+reads files can check **now** and what the `contract.<impl>.<...>` id would add
+**later**. The lock uses VER29 section 5.3's pin names, so nothing migrates.
+
+| Kind | Now | Later (id shape of VER29 section 3.1) |
+|---|---|---|
+| functional | Obligation digests (R4) plus the implementation's VER04h manifest and `ca-assurance-report --check`. The report prints VER04h domain kinds and LP-012 kinds, not VER29 rungs: the H3 classifier does not exist, and a rung printed without it would round a sample up (VER29 section 6.2) | `contract.<impl>.<obligation>` rows in the profile's `.warrant` (LV-008 and slice 2) |
+| resource | The implementation's `bound` row is at or under the contract ceiling for the same operation and metric, compared mechanically. The evidence is an emulator count (VOS01 section 2.5), capped at `example` (VER29 section 7.1, VOS-D004) | `contract.<impl>.resource.<op>.<metric>` |
+| capability | Read `effect_certificate.json` and the capability audit; require the empty set. Permanent until VQ5 settles how a capability strength is classified | `contract.<impl>.capability.<category>` |
+| timing | `timing: none claimed`. A profile that requires a timing tier fails closed (VOS-031) | `contract.<impl>.timing.<op>` |
+
+### 8.1 A new finding: contract-less dependencies withhold three kinds
+
+VER29 section 7.2.1 says a timing, resource or capability strength is **withheld**
+for any used dependency with no contract of that kind, and its text names `std` and
+external crates; `core` is such a dependency too. Every class K crate depends on
+`core` (SH1). So, once the reach pass attributes uses, no VOS component can print a
+resource, timing or capability strength until a VER13 catalogue entry covers
+`core`. That is a request to the VER backlog (section 9.3, row AS-008), not a
+VOS rule: the VOS checks above (empty effect set, ceilings) hold without it, but
+they are VOS-owned checks, not VER29 strengths.
+
+---
+
+## 9. The VER29 amendment and the VER requests
+
+### 9.1 The amendment (normative text)
+
+VER29 is amended in two places only: its reach rules (section 8) and its feature rule
+(section 5.1.1 and VQ14). It lands as VER04m and VER04n did: a dated pointer
+paragraph at the top of VER29 (written in the same PR as this document), the
+normative text **here**, and the code applied by a new **slice 7, "interface reach"**,
+in VER29 section 13, after slice 4 (the reach-around check; slice 6 is VER04n's).
+The backlog row is **LV-008** (LV-007 is the publish gate), with a pointer sentence
+on LV-005. The amendment changes no id shape, adds no rung and does not touch
+sections 3, 5.1(a)-(e), 6, 9 or 9.1.
+
+**AM1 (VER29 section 8.2).** In the table of what the pass can and cannot reach,
+add to the "Reachable" column: a path `<P::A as T>::f` or
+`<<P as Q>::A as T>::f`, where `T` resolves by **defining path** (the rule of
+section 8.2: through the crate's module tree and `pub use`) to a trait declared in a
+crate that is a **direct dependency** of the analysed package, is an **interface
+use** `(crate, T, f)`. Item identity is the trait item `T::f`. It is not
+classified `opaque` and not `unresolved`. Any other generic, trait-object or method
+call into a lower type is unchanged.
+
+**AM2 (VER29 section 8.3).** Add the class `interface-use`. In a package that
+contains exactly one `impl <ProfileTrait> for <ProfileType>` item per profile type
+(the profile package), each `type A = <path>;` item of that impl composes the
+interface use `(crate, T, f)` of every use whose bound `A: T` is declared by the
+`ProfileTrait`, to the implementation item `<path>::f`. The pass resolves the
+implementation item by a new binding key `realises=<crate>::<T>::<f>` on an `op`
+line of the implementation's `evidence.bindings` (section 4.7), then classifies it
+as usual (`covered`, `uncontracted-op`, `unbound-item`). Interface uses found in the
+generic source of the profile package's direct dependencies that are parameterised
+by `ProfileTrait` (the spine) are attributed to the profile package's report: the
+spine is monomorphised at the profile, so its uses are the profile's uses. A use
+with no `type A` in the block, or an implementation item with no `realises=` key,
+is `uncontracted-op`, never silently covered.
+
+**AM3 (VER29 section 8.5 and VQ13).** A use of the exact shape of AM1 that AM2 has
+resolved counts as **resolved**: it contributes nothing to the `opaque` count and
+does not force `call-level-partial`. Every other generic still counts as `opaque`.
+VQ13's default ("never partial to full") is unchanged for them.
+
+**AM4 (VER29 section 5.1.1 and VQ14).** The evidence manifests record the **features
+and `cfg` list** of the evidence build (today the manifest has neither; the spike
+checked). A feature the lower package declares in
+`[package.metadata.vos] evidence-features` is an **evidence-only feature**. An
+evidence-only feature that gates exactly one `mod` item, plus `pub use` items that
+re-export from that module and are gated by the same feature, is **not**
+`build-config-unpinned`: the link reads the profile lock's resolved features for the
+**image** build instead (section 7), which must not contain it. Any other feature
+difference is `build-config-unpinned` as today. Without this clause every
+ghost-built implementation's link would be open. (The "plus `pub use`" is a spike
+correction: the bindings reader needs the wrappers at the crate root, section 4.3.)
+
+**AM5 (negative controls for slice 7).** Each must fail with the named result:
+
+1. two `impl Profile for T` blocks for one profile type: a new error
+   `InterfaceAmbiguous` (slice 7) naming both blocks;
+2. an implementation item with no `realises=` key: the use is `uncontracted-op`;
+3. a wrapper that does not forward (SH17 violated: it computes instead of calling
+   the production trait): the realising item's `claim_sha256` still matches, so the
+   pass must read the `realises=` key from the binding and the shape check must
+   fail the wrapper; neither alone is enough (the pair of controls is the test);
+4. a `type A = <path>` into a crate that is not a manifest row: not a VER29 result;
+   `check-profile` and SH16 step 2 reject it (the closed world);
+5. a use `<P::A as T>::f` where `T` resolves to a trait of a crate that is **not** a
+   direct dependency (AM1's condition): `opaque`, as before.
+
+**Not requested.** Any id shape; a VQ12 domain check; any change to section 9.1; a
+second pass in the analyzer (the pass is the VER29 slice 4 mode extended, in
+`ca-capability-analyzer`'s `--emit-uses`, and this document adds no mode to that
+crate: a change there selects every link check, VER29 section 11.2).
+
+### 9.2 Slice 7 in VER29 section 13
+
+| Slice | Scope | Would-build (estimate) |
+|---|---|---|
+| 7. Interface reach | `ca-capability-analyzer --emit-uses`: AM1 (interface use) and AM2 (`type A` composition, `realises=` key); `ca-assurance-report`: AM3, AM4, the manifest `features` and `cfg` fields and `InterfaceAmbiguous`; the AM5 controls; the `realises=` key in the bindings reader | about 6: the analyzer, `ca-assurance-report`, `warrant-grammar` (bindings), and the adopters whose manifests regenerate; re-measure with the build tool's plan |
+
+### 9.3 Requests to the VER backlog
+
+Two rows are filed in the same PR (VER-BACKLOG: LV-008 and WX-SV; the catalogue
+request is AS-008).
+
+**WX-SV, by-value explicit state.** A carve-out of WX-S1 that must **not** depend
+on WX-G. WX-S1 is queued behind WX-G, WX-D2, WX-F and LP-012; WX-SV needs only the
+by-value step of VOS01 section 1.1, which has no `inout`.
+
+| # | Item | Priority | Why VOS needs it |
+|---|---|---|---|
+| 1 | The E11 `codec` line (`build=fn:...`, `observe=...`) for **by-value argument and result positions**, with E15's two codec obligations (`codec-roundtrip`, `rebuild-equivalence`) required for the H3 rung once it exists | P2 | removes the ghost face's wrappers; the state may stay private |
+| 2 | VER04j section 4.8 faults applied **inside tuple components** (`wrong-ctor` of component 0 of `(Upd, Impl)`, `field-zero` and friends on a tuple's records), plus `drop-state-update` (the by-value twin of `stale-post`), plus a fault that changes a record's `Bool`/enum/integer field when the initial value is already zero | P1 | the negative controls of refinement and of `-any` coverage; without them no by-value step has any control (section 13.3) |
+| 3 | VER04m E8 `closure:` and `init:` lines for `state=none` steps, and the `lemma` kind (E18, V9) | P2 | covers VOS-D005: VOS00's X1 needs closure and init evidenced for by-value components |
+| 4 | A manifest `config` object, fed by a `config=<NAME>` key on nullary ops and printed in labels | P2 | VOS00 section 9.3's printing rule; removes the `CfgN` carrier of section 4.4 |
+
+**Probe (ii) answered.** The brief hoped `wrong-ctor` would reach tuple component 0
+and make `const-variant:<Ctor>` unnecessary. It does not: VER04j section 4.8 and
+item 23 apply faults to a top-level result or inside `Ok`/`Some` only, and the
+generator rejects every fault on `(Upd, Impl)` (section 13.3). Item 2 is therefore
+wider than first stated, and `const-variant:<Ctor>` stays on the table until a
+component-level `wrong-ctor` exists (it is not requested separately).
+
+**AS-008, a VER13 catalogue entry for `core`.** Section 8.1: so resource, timing
+and capability strengths are not withheld for class K (VER29 section 7.2.1).
+
+---
+
+## 10. Tools and where they live
+
+| Tool | Class | Home | What it does |
+|---|---|---|---|
+| `vos-manifest` | P (parser) | `code/packages/rust/vos-manifest` | parsers and canonical emitters for `contract.vos`, `profile.vos`, `profile.lock`; total, bounded, fail closed, a fuzz target per parser (VER06, as VOS-D001 requires of EMU00); `alloc` allowed (VOS01 section 1.6) |
+| `vos-link` | H (host) | `code/programs/rust/vos-link` | `gen-doc`, `check-doc`, `check-profile` (`--write-lock`), `sh16`; may run `cargo tree` and read files; owns no capability but the filesystem and a subprocess |
+| `vos-shape-check` | tool (class H) | `code/packages/rust/vos-shape-check` | SH1-SH15, SH17, SH18, class tags; uses the VER08a lexer as a **library**; reads each crate's class from its README (VOS01 section 1.6) |
+
+**Do not add modes to `ca-capability-analyzer`.** A change to that crate selects
+every link check in CI (VER29 section 11.2), and SH rules are VOS policy, not
+analyzer behaviour. `vos-shape-check` depends on the VER08a lexer crate as a
+library, so VOS changes select only VOS crates.
+
+`gen-doc` and `check-doc` are backlog row **VOS-033**, ahead of VOS-011: they are
+small, they have a prototype (section 13.1), and they make R2 true. `check-profile`
+and `sh16` (steps 1 to 6) are **VOS-034**, with VOS-012 (the first interface with two
+implementations); the image part of SH16 (step 7) arrives with VOS-026. The shape
+rules SH17 and SH18 and the audits of section 5 are VOS-D002 and VOS-D024. The trusted-base cost is that
+the conformance authority is `vos-link`: its negative controls (section 12) are
+its evidence, and its digest comparison is the whole of R4.
+
+Commands, as the CI invocation will read them:
+
+```text
+vos-link gen-doc     code/packages/rust/vos-ready-bitmap            # writes code/specs/vos-ready-bitmap.warrant
+vos-link check-doc   code/packages/rust/vos-ready-bitmap            # exit 1 on any drift
+vos-link check-profile profiles/rtos-min/profile.vos [--write-lock]
+vos-link sh16        profiles/rtos-min/profile.vos --build image
+```
+
+---
+
+## 11. Report lines
+
+The profile package's report prints the following, derived from the lock and the
+implementations' reports. Nothing is typed by hand (VOS00 section 9.3, rule 2).
+
+**Instance constants (printing rule 1 of VOS00 section 9.3).**
+
+```text
+vos-ready-bitmap  kind production  mode canonical  N=8
+  refinement   exhaustive (full, max 65,536/claim, 328,960 cases)  stack host-rustc
+  conformance  safety 3/3  policy 1/1  canonical 6/6  (obligations digest-equal)
+  configuration  N=8  example n_is_eight  const-assert in vos-sched-profile
+```
+
+(The case total is the spike's, section 13.2; it prints from the manifest.)
+
+**Rests on `-any`.**
+
+```text
+theorem ready-in-set  trace
+  rests on vos-sleepq-any (kind any): soundness 1/1, coverage 2/2 (controls: none, WX-SV item 2)
+  transferred, single-trace
+```
+
+**The derived transfer row (R8).** `transferred, single-trace` is printed, never
+scored: it states that the theorem was evidenced over `-any` and holds for every
+safety-tier implementation **for single-trace properties**. A `property=hyper`
+theorem prints `transfer: none` and needs production implementations with the
+policy tier (section 6.6).
+
+**Per kind (section 8).**
+
+```text
+resource    insert <= 24 steps (ceiling 160)  example, emulator count  [capped, VOS-D004; VOS01 5.7 placeholder]
+capability  empty effect set  effect_certificate current  (VOS-owned check, not a VER29 strength)
+timing      none claimed
+```
+
+**Mode.** `mode=representation` is printed beside the kind on every line.
+
+---
+## 12. Conformance, negative controls and open questions
+
+### 12.1 The checklist
+
+A PR that adds or changes an implementation, a contract package or a profile
+applies this list in addition to VOS01 section 7. An item that does not apply is
+marked `n/a` with a reason.
+
+1. The implementation's `code/specs/<impl>.warrant` is **generated**: `vos-link
+   check-doc` is clean (R2).
+2. The contract block digest in the marker equals the contract package's
+   (`contract-sha256` in the lock), and so does every obligations digest.
+3. For every tier the profile needs, every obligation has the contract's
+   `claim_sha256` and passes VER29 sections 5.1(b)-(e) (R4).
+4. The implementation block uses the fixed vocabulary of R3 (and, until WX-SV, the
+   interim vocabulary of section 4.4) and declares no claim named like an
+   obligation.
+5. The kind is declared in `[package.metadata.vos]` and agrees with the evidence
+   (R6): `production` carries `canonical` or the representation-mode determinism
+   claim; `any` carries the `any` block and no `canonical`.
+6. The ghost face passes SH17 and SH18, is behind a feature listed in
+   `evidence-features`, and the test target has `required-features`.
+7. The profile is canonical text (parse then re-emit is byte-equal), the lock is
+   current, and `check-profile` passes its six checks (section 6.6).
+8. An `image` profile passes SH16 steps 1-6 on the image build's own invocation,
+   and the image is built with `-p <profile-package>` alone (section 7.3).
+9. The report prints the instance constants, `rests on -any` and the transfer row
+   (section 11). Any resource figure printed is marked `example`.
+10. A contract change (any `.part` file) lists every implementation and profile it
+    regenerates; a swap changes none of the files of section 6.7's "byte-identical" list.
+
+### 12.2 Negative controls
+
+Each must be rejected by the check named. A control that passes is a defect of
+the gate (VER04h section 6).
+
+| # | Control | Rejected by |
+|---|---|---|
+| NC1 | a hand edit inside the copied contract block | `check-doc` (marker digest and regeneration) |
+| NC2 | an obligation weakened in the implementation block with the same name | `check-doc` (duplicate declaration) and `claim_sha256` mismatch |
+| NC3 | an implementation that omits an obligation its profile needs | `check-profile` (`needs` is not a subset of `carries`) |
+| NC4 | a `-any` crate declared `production` | R6: no `canonical` evidence |
+| NC5 | a `production` crate carrying an `any` block | R6 |
+| NC6 | a stale lock after a contract change | `check-profile` (digest mismatch) |
+| NC7 | an `any` implementation in an `image` profile | eligibility, SH16 step 3 |
+| NC8 | a `hyper` theorem over an `any` or non-policy interface | `check-profile` (VOS-D007) |
+| NC9 | an implementation whose `bound` row exceeds the ceiling | `check-profile` (resource) |
+| NC10 | a board whose `isa` differs from the target | `check-profile` |
+| NC11 | `ghost` reachable through a third crate, a renamed `-any`, a relabelled `-any`, `ghost` in `default` | SH16 steps 3-5 (S1-S4 of section 7.4) |
+| NC12 | two `impl Profile` blocks; a missing `realises=`; a wrapper that does not forward | AM5 controls 1-3 |
+| NC13 | an `Image` that lacks a field of `State`; a wrapper with `..` or extra statements | SH17 |
+| NC14 | a `ghost::` path in non-ghost class K source | SH18 |
+| NC15 | profile text with two spellings of one profile (reordered rows, different case) | `vos-manifest` (parse then re-emit) |
+| NC16 | a `config` value that differs from the implementation's `cfg_<name>` example | `check-profile` |
+
+### 12.3 What equal tokens do not establish (the residue of R3)
+
+Digest equality proves the obligation text is the contract's. It does not prove
+that `build`, `alpha` or the interim carriers mean the same thing in each
+implementation. Three things bound the residue: the `canonical` block (R5)
+constrains `build` and `alpha` against each other; SH17 makes the ghost wrappers
+non-computing; and `alpha` is reviewed (VOS01 Q2). A wrong `alpha` that is
+consistent with a wrong `build` is a defect these checks do not see, which is
+VOS01 section 7 item 7's `alpha_covers_m` review item, now with a digest to point
+at.
+
+### 12.4 Open questions
+
+Each has a recommended answer, which this document assumes until decided.
+
+| # | Question | Recommendation |
+|---|---|---|
+| Q1 | Interim projection vocabulary (section 4.4) or wait for WX-SV item 2? | Interim now, because it produced real evidence and its replacement is mechanical; record the sunset in the backlog so the digest change is planned |
+| Q2 | Should the `canonical` block use the commuting form for **all** steps (no `alpha` in refinement)? | Yes for canonical implementations: it attaches negative controls to the image operation (section 4.4) and is equivalent given the `alpha(build(m)) == m` claim |
+| Q3 | Which package's report carries the reach for spine uses (AM2)? | The profile package's, because the spine is monomorphised there; confirm when slice 7 is designed |
+| Q4 | Is `vos-link` the right home for SH16, or `vos-shape-check`? | `vos-link`: it needs `cargo tree` and the lock; the lexical half (SH18) is in `vos-shape-check` |
+| Q5 | Should `reference` implementations exist in the first VOS-012 or wait? | Wait: no use until a monitor needs one (VOS-027) |
+| Q6 | The `contract.vos` format (section 2.5): a new file or Warrant-side ceilings? | A new canonical-text file: ceilings are not Warrant (VER04 section 7 bounds are per document) and a compared constant needs one spelling |
+| Q7 | Marker digests duplicate the lock's. Keep both? | Keep: the marker lets a reader see drift without the tool; the lock is the authority |
+
+---
+
+## 13. Acceptance spike
+
+**Why.** VOS01 said "no evidence was generated". Every [probe] item of this
+document depended on running the toy through today's generator, so the spike was
+the acceptance test of the PR. It is **uncommitted**; its throwaway crates live in
+the working scratch area of the session that wrote this document. The commands
+below reproduce it from a checkout.
+
+### 13.1 What was built
+
+A scratch workspace laid out like the repository (`code/specs/`,
+`code/packages/rust/`), because the generator reads
+`code/packages/rust/<pkg>/evidence.bindings` and `code/specs/<pkg>.warrant`
+relative to its repository root:
+
+* `vos_ready_contract`: the VOS01 section 1.2 trait (`ReadySet`, `Upd`, `Pick`,
+  `Profile`, `Kernel<P>`), `#![no_std]`.
+* `vos_ready_bitmap`: a private-field `Bitmap`, `BitmapReady`, the section 5.3
+  `clz8` and `pick`, a `ghost` module (feature `ghost`) with the image, the
+  wrappers of section 4.4 and a root `pub use`; the bindings of section 4.5; the
+  evidence test target with `required-features = ["ghost"]`.
+* `driver`: a verbatim copy of `warrant-grammar`'s `gen_evidence.rs` example,
+  placed so its `CARGO_MANIFEST_DIR.ancestors().nth(4)` lands on the scratch root,
+  with path dependencies on the repository's `warrant-grammar` and `sha256` crates.
+* A prototype `assemble.py` (about 40 lines): builds the document of section 2.4
+  from `.part` files with marker digests and implements `--check`.
+* A second workspace of five tiny crates for probe (iii).
+
+The `mise` shim of this repository fails when `rustc` runs below the worktree, so
+the spike used the real toolchain (`RUSTC=/opt/homebrew/bin/rustc`, Rust 1.94.0).
+
+### 13.2 Commands and results
+
+```text
+python3 assemble.py && python3 assemble.py --check          # document built; drift check clean
+cargo run -q -p driver                                      # gen_evidence: writes tests/generated/warrant_evidence.rs (2,766 lines)
+cargo test -q -p vos_ready_bitmap --features ghost --test warrant_evidence      # 3 s
+WARRANT_EVIDENCE_OUT=manifest.json  cargo test ...          # writes the evidence manifest
+```
+
+| Result | Value |
+|---|---|
+| Document type-checks (markers are comments, nullary ops need no `labels`) | yes |
+| Generated harness compiles and runs | yes, about 3 s |
+| Tests | 53 `ok`, 1 `not ok` (below) |
+| Exhaustive claims | 10, all `pass`: `insert_safe`, `remove_safe`, `canon_insert_post`, `canon_insert_img`, `canon_remove_img` at 65,536 cases each; `pick_safe`, `pick_policy`, `canon_alpha_build`, `canon_build_alpha`, `canon_pick_img` at 256 |
+| Exhaustive total | 328,960 cases (matches VOS01 section 5.6's 65,536-per-claim figure); every binder `Bool set(2)` or `U8 full(256)`, discarded 0 |
+| Property, fuzz | 10 and 10, all `pass` |
+| Examples | 3, all `pass` |
+| Negative controls | 21 entries; 20 `pass`, 1 `fail` (`init` / `field-zero`: finding F4) |
+| Drift control (`assemble.py --check` after a hand edit in the contract block) | exit 1, then 0 after regeneration |
+| SH17 (a field added to `State`) | ghost build fails: 4 x E0027 and 6 x E0063; the non-ghost build still compiles |
+
+### 13.3 The three probes
+
+**(i) Can a trait associated function be named by a plain `export=` path, or are
+wrappers required?** Wrappers are required, and they must be at the crate root.
+`export=` must be a Rust *identifier* (a path is rejected: "export
+`vos_ready_bitmap::ghost::insert_out` is not a Rust identifier"), and the harness
+uses `use <crate>::*;` to resolve it. The brief's `export=...::ghost::insert`
+therefore does not work today. Fix: the gated `pub use ghost::{...}` of section 4.3.
+
+**(ii) Does `wrong-ctor` reach tuple component 0?** No. For the natural
+`insert(s, p) -> (Upd, Impl)` the generator refuses generation (W0701) for every one
+of the eight faults tried (`wrong-ctor`, `field-zero`, `drop-consumed`,
+`swap-components`, `ok-as-err`, `off-by-one-consumed`, `missing-error`,
+`flip-result-bit`): "fault `X` does not apply to the result type of the operation".
+The applicability table (`composite_adapter` in `warrant-grammar/src/evidence.rs`)
+tests the **whole result** or the inside of `Ok`/`Some`: a tuple takes
+`drop-consumed` only if its second component is an integer, `swap-components` only
+if it is homogeneous, `field-zero` only a single-constructor record with an integer
+field, `wrong-ctor` only a variant of two or more constructors. And every `op` line
+needs at least one fault (`needs faults= (at least one)`), so an operation with
+no applicable fault cannot be bound at all. This is the strongest single argument
+for WX-SV item 2.
+
+**(iii) Does `cargo metadata` show `ghost` on through workspace unification while
+`cargo tree -p X -e features` for the image invocation does not?** Yes, and the
+combined invocation shows why SH16 must read the invocation.
+
+```text
+workspace: imp (feature ghost), evid -> imp[ghost], img -> imp, mid -> imp[ghost],
+           img3 -> imp + mid, imgdev -> imp, dev-dependency mid
+cargo metadata (whole workspace)                  imp features: ["ghost"]
+cargo tree -p img  -e normal,build,features       imp feature "default" only
+cargo tree -p evid -e normal,build,features       imp feature "ghost"
+cargo tree -p img3 -e normal,build,features       imp feature "ghost"    (through mid)
+cargo tree -p imgdev -e normal,build,features     no ghost               (dev-dependency only)
+cargo build -p img -v                             imp compiled without feature="ghost"
+cargo build -p img -p evid -v                     imp compiled WITH   feature="ghost"
+cargo tree -p img3 -e normal,build --prefix none --format '{p} [{f}]'    prints "imp ... [ghost]"
+```
+
+The `--format '{p} [{f}]'` form lists each node's resolved features per package and
+works for any `--target`, which is what SH16 step 4 reads.
+
+### 13.4 Findings that changed the brief
+
+| # | Finding | Effect |
+|---|---|---|
+| F1 | `export=` is a bare identifier resolved through `use <crate>::*` (probe i) | sections 4.3, 9.1 AM4: the gated `pub use` at the crate root |
+| F2 | No fault applies to a tuple result whose second component is not an integer (probe ii), nor to a record of `Bool`s, a nullary scalar, or a scalar with composite parameters | interim vocabulary (section 4.4); WX-SV item 2 widened (section 9.3) |
+| F3 | A negative control attaches to a claim by its **subject operation**: the first operation found by shallow search. In `dec(alpha_w(insert_img(...))) == ...` the subject is `alpha_w`, so `insert_img` had no control that could pass (3 negctls `not ok` until the commuting claims were added) | R5's canonical block uses the commuting form (section 4.4) |
+| F4 | `field-zero` on `init` is **inert** when the initial state's field is already 0: no claim can distinguish the faulted from the real value, so the `init` control fails (an example over the zero state had the same defect for `alpha_w` until it used a non-zero state) | WX-SV item 2 asks for a fault that changes a zero field; until then the `init` control is a known failure, recorded in the lock as `controls: init field-zero inert` |
+| F5 | The evidence manifest has no `features`, `cfg` or `config` field | AM4 (features and `cfg`) and WX-SV item 4 (`config`) |
+| F6 | The generated harness needs `coding_adventures_sha256` and `coding_adventures_test_bootstrap` as dev-dependencies | VOS-D002 must state that SH12 reads normal dependencies only (VOS01 section 1.4 does not say); the closed-world check of section 7.2 excludes dev-dependencies (S6) |
+| F7 | AM4 as briefed said "a feature that gates exactly one module item"; the root re-export is a second gated item | AM4 allows `pub use` items from that module (section 9.1) |
+
+Findings F1, F2 and F7 contradict the instructions this PR was written from (a
+path-valued `export=`, a `wrong-ctor` that reaches tuple components, an AM4 that
+gates one item); each is adjusted where it applies. To rerun, recreate the layout
+of section 13.1 and use the commands above; the `.warrant` source is the document of
+section 2.4 and the bindings are those of section 4.5.
+
+---
+
+## 14. What changes elsewhere in the same PR
+
+The reversal of section 1.5 is applied, not left as a follow-up (the rule of
+[the backlog](VOS-BACKLOG.md), "Discovered work").
+
+| Document | Change |
+|---|---|
+| VOS00 sections 4.5, 4.7, 14.3 | section 4.7 rewritten to the decision of section 1.3 with a pointer here; the two options become a record of the reversal; section 4.5 and D1 point to VOS02 |
+| VOS01 section 2.10, Q9, Q10 | the "document per implementation" design is now this document's R1 to R9; Q9's answer is "from the implementation's own claims, conforming by digest"; both point here |
+| VOS01 sections 5.3-5.6 | the `lin_` and `any_` prefixes and per-implementation record names become the fixed vocabulary of R3, with a note that the listings are the natural form and today's generator needs the interim form of section 4.4 |
+| VER29 | a dated pointer paragraph at the top announcing slice 7 and AM1-AM5; no other section edited |
+| [VER backlog](VER-BACKLOG.md) | rows LV-008, WX-SV and AS-008; a pointer sentence on LV-005 |
+| [VOS backlog](VOS-BACKLOG.md) | VOS-003 done, VOS-004 in review; D003, D006 and D009 resolved here with implementation rows; new rows VOS-033 and VOS-034 for `vos-link` and discovered work VOS-D021 to VOS-D025; D002 extended (SH17, SH18, class tags); the accepted ordering and the decision of this document in the decision log |
+
+### Sources
+
+[VOS00](VOS00-verified-os-program.md) sections 4.4-4.7, 8, 14.3;
+[VOS01](VOS01-component-contract-model.md) sections 1.2, 1.4, 1.6, 2.10, 3, 5, 6.3;
+[EMU00](EMU00-emulator-framework.md) section 5.1 and Q14; VER29 sections 3.1, 3.2,
+5.1, 5.1.1, 5.3, 5.3.1, 7.1, 7.2.1, 8.2, 8.3, 9, 11.1, 13, 15, VQ12-VQ14; VER04j
+sections 4.8 and 14.1 (items 22, 23); VER04m E8, E11, E15, E18, V9; VER04n OK2,
+OK3, OB1, OF1, OR5 and section 18; and, in `code/packages/rust/warrant-grammar`,
+`src/binding.rs` (`is_rust_identifier` on `export=`), `src/evidence.rs`
+(`composite_adapter`, negative-control attachment) and `src/codegen.rs`
+(`find_operation_in_expr`).
