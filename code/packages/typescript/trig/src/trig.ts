@@ -1,165 +1,226 @@
 // ============================================================================
-// trig.ts — Trigonometric Functions from First Principles
+// trig — Trigonometric functions from first principles (TRIG-REF-1)
 // ============================================================================
 //
-// This module computes sin(x) and cos(x) using their Maclaurin series
-// (Taylor series centered at zero). No built-in Math.sin or Math.cos
-// is used — everything is derived from basic arithmetic.
+// `sin`, `cos`, `radians` and `degrees` use addition, subtraction,
+// multiplication and comparison only: no Math.sin, no division.  JavaScript has
+// one number type (binary64), every operation rounds once and nothing is fused,
+// so the answer is bit for bit the same in all seventeen language ports.  The
+// algorithm is PHY00a (code/specs/PHY00a-trig-convergence.md); the shared
+// vectors are code/specs/fixtures/trig-reference-v1.
 //
-// Why Taylor series?
-// ------------------
-// Brook Taylor (1715) and Colin Maclaurin (1742) showed that smooth
-// functions can be expressed as infinite sums of polynomial terms.
-// For trigonometry, these series converge for ALL real numbers,
-// making them a universal computation method.
+// The big idea: a sine repeats, so an angle splits into whole quarter-turns and
+// a small leftover,
 //
-// The Maclaurin series for sine:
+//     x = k * (pi/2) + r,      |r| <= pi/4,      k a whole number
 //
-//   sin(x) = x - x³/3! + x⁵/5! - x⁷/7! + ...
-//          = Σ (-1)^n · x^(2n+1) / (2n+1)!    for n = 0, 1, 2, ...
+// sin x is one of  sin r, cos r, -sin r, -cos r  chosen by k mod 4, and cos x
+// one of  cos r, -sin r, -cos r, sin r.
 //
-// The Maclaurin series for cosine:
+// Step 1, the quotient.  MAGIC = 1.5 * 2^52 has its units digit in the last
+// place of the significand, so (t + MAGIC) - MAGIC rounds t to the nearest whole
+// number with only + and - (no floor, no cast, nothing special at NaN).
 //
-//   cos(x) = 1 - x²/2! + x⁴/4! - x⁶/6! + ...
-//          = Σ (-1)^n · x^(2n) / (2n)!        for n = 0, 1, 2, ...
+// Step 2, the remainder (Cody-Waite).  pi/2 is irrational, so a 53-bit pi/2
+// times a big k loses the digits we need.  We store pi/2 as FIVE pieces, the
+// first four with at most 24 significant bits so that k * piece is exact
+// (24 + 29 bits = 53):
 //
-// Each successive term is smaller than the last (for |x| < some bound),
-// so the series converges quickly — especially after range reduction.
+//   x ---------------------------------------------------------- the angle
+//   |-- k*PIO2_1 --|                                              24 bits
+//                  |-- k*PIO2_2 --|                               next 24
+//                                 |-- k*PIO2_3 --|                next 24
+//                                                |- k*PIO2_4 -|   next 24
+//                                                             |k*PIO2_5| rounds
+//
+// Step 3, the kernels: Maclaurin series on |r| <= pi/4, Horner's rule,
+// coefficients (-1)^n/(2n+1)! and (-1)^n/(2n)! stored as bit patterns:
+//
+//   sin r = r + r*z*(S1 + S2 z + ... + S9 z^8)           z = r*r
+//   cos r = 1 - z/2 + z*z*(C2 + C3 z + ... + C9 z^7)
+//
+// Domain: |x| <= 2^29.  NaN, the infinities and larger values return NaN (a
+// finite answer there would be wrong but look right).  Accuracy: 3 ulp.
 // ============================================================================
 
 // ----------------------------------------------------------------------------
-// Constants
+// Constants (PHY00a 3.2): bit patterns are authoritative.
 // ----------------------------------------------------------------------------
-// PI to double-precision accuracy (same as Math.PI). This is the ratio of
-// a circle's circumference to its diameter — the most fundamental constant
-// in trigonometry.
 
+const scratch = new DataView(new ArrayBuffer(8));
+
+/** The double whose IEEE 754 bit pattern is `bits` (a decimal parser cannot misround it). */
+export function fromBits(bits: bigint): number {
+  scratch.setBigUint64(0, bits);
+  return scratch.getFloat64(0);
+}
+
+/** The IEEE 754 bit pattern of `x`. */
+export function toBits(x: number): bigint {
+  scratch.setFloat64(0, x);
+  return scratch.getBigUint64(0);
+}
+
+/** The ratio of a circle's circumference to its diameter (0x400921FB54442D18). */
 export const PI = 3.141592653589793;
 
-// TWO_PI represents one full revolution (360°). We use it for range
-// reduction: since sin and cos are periodic with period 2π, we can
-// always reduce the input to a small range before computing the series.
+/** 2/pi, the double nearest to it. */
+export const INV_PIO2 = fromBits(0x3fe45f306dc9c883n);
+/** pi/2 as five pieces: four of at most 24 significant bits, then the remainder. */
+export const PIO2: readonly number[] = [
+  fromBits(0x3ff921fb40000000n),
+  fromBits(0x3e74442d00000000n),
+  fromBits(0x3cf8469880000000n),
+  fromBits(0x3b78cc5160000000n),
+  fromBits(0x39f01b839a25204an),
+];
+/** 1.5 * 2^52: add then subtract it to round to the nearest integer. */
+export const MAGIC = fromBits(0x4338000000000000n);
+/** The edge of the domain, 2^29. */
+export const LIMIT = fromBits(0x41c0000000000000n);
+/** Below 2^-27, sin(x) === x exactly and cos(x) === 1. */
+export const TINY = fromBits(0x3e40000000000000n);
+/** pi/180 and 180/pi, pre-divided so a conversion is one multiply. */
+export const RAD_PER_DEG = fromBits(0x3f91df46a2529d39n);
+export const DEG_PER_RAD = fromBits(0x404ca5dc1a63c1f8n);
 
-const TWO_PI = 2.0 * PI;
+/**
+ * Sine coefficients S[n] = (-1)^n/(2n+1)!, n = 1..9 (index 0 is unused):
+ * -1/3!, +1/5!, -1/7!, +1/9!, -1/11!, +1/13!, -1/15!, +1/17!, -1/19!
+ */
+export const S: readonly number[] = [
+  0,
+  fromBits(0xbfc5555555555555n),
+  fromBits(0x3f81111111111111n),
+  fromBits(0xbf2a01a01a01a01an),
+  fromBits(0x3ec71de3a556c734n),
+  fromBits(0xbe5ae64567f544e4n),
+  fromBits(0x3de6124613a86d09n),
+  fromBits(0xbd6ae7f3e733b81fn),
+  fromBits(0x3ce952c77030ad4an),
+  fromBits(0xbc62f49b46814157n),
+];
+
+/**
+ * Cosine coefficients C[n] = (-1)^n/(2n)!, n = 2..9 (indices 0 and 1 unused; the
+ * n = 1 term, -1/2, is the exact product 0.5 * z):
+ * +1/4!, -1/6!, +1/8!, -1/10!, +1/12!, -1/14!, +1/16!, -1/18!
+ */
+export const C: readonly number[] = [
+  0,
+  0,
+  fromBits(0x3fa5555555555555n),
+  fromBits(0xbf56c16c16c16c17n),
+  fromBits(0x3efa01a01a01a01an),
+  fromBits(0xbe927e4fb7789f5cn),
+  fromBits(0x3e21eed8eff8d898n),
+  fromBits(0xbda93974a8c07c9dn),
+  fromBits(0x3d2ae7f3e733b81fn),
+  fromBits(0xbca6827863b97d97n),
+];
 
 // ----------------------------------------------------------------------------
-// Range Reduction
+// Range reduction and kernels
 // ----------------------------------------------------------------------------
-// The Taylor series converges fastest when |x| is small. Since sin and cos
-// repeat every 2π, we can subtract multiples of 2π to bring x into [-π, π].
-//
-// Example: sin(1000π) = sin(0) = 0, because 1000π is an exact multiple of π.
-//
-// Without range reduction, computing sin(1000) would require many more terms
-// to converge, and floating-point errors would accumulate badly.
 
-function rangeReduce(x: number): number {
-  // Step 1: Reduce modulo 2π to get into [0, 2π) or (-2π, 0]
-  x = x % TWO_PI;
-
-  // Step 2: Shift into [-π, π] for optimal convergence
-  // If x > π, subtract 2π to bring it to the negative side
-  if (x > PI) {
-    x -= TWO_PI;
+/**
+ * `[k, r]` with x = k*(pi/2) + r and |r| <= pi/4 (about).  Precondition:
+ * |x| <= 2^29, so k is a finite whole number below 2^29.  Every product and the
+ * subtraction that uses it are separate statements (never fused).
+ */
+function reduce(x: number): [number, number] {
+  const t = x * INV_PIO2;
+  const k = (t + MAGIC) - MAGIC;
+  let r = x;
+  for (const piece of PIO2) {
+    const m = k * piece;
+    r = r - m;
   }
-  // If x < -π, add 2π to bring it to the positive side
-  if (x < -PI) {
-    x += TWO_PI;
-  }
+  return [k, r];
+}
 
-  return x;
+/** sin(r) for |r| <= pi/4, Horner on the stored coefficients. */
+function sinK(r: number): number {
+  const z = r * r;
+  let p = S[9] as number;
+  for (let n = 8; n >= 1; n--) {
+    p = p * z;
+    p = p + (S[n] as number);
+  }
+  let w = r * z;
+  w = w * p;
+  return r + w;
+}
+
+/** cos(r) for |r| <= pi/4: (1 - z/2) + z*z*(C2 + ... + C9 z^7). */
+function cosK(r: number): number {
+  const z = r * r;
+  let q = C[9] as number;
+  for (let n = 8; n >= 2; n--) {
+    q = q * z;
+    q = q + (C[n] as number);
+  }
+  let u = 0.5 * z; // exact
+  u = 1.0 - u;
+  let v = z * z;
+  v = v * q;
+  return u + v;
 }
 
 // ----------------------------------------------------------------------------
-// sin(x) — Sine via Maclaurin Series
+// Sine and cosine
 // ----------------------------------------------------------------------------
-// Computes sin(x) using the iterative form of the Maclaurin series.
-//
-// Instead of computing x^n and n! separately (which overflow quickly),
-// we compute each term from the previous one:
-//
-//   term_0 = x
-//   term_n = term_{n-1} * (-x²) / ((2n)(2n+1))
-//
-// This is numerically stable and avoids large intermediate values.
-//
-// We use 20 terms, which gives approximately 15 digits of precision
-// for inputs in [-π, π] — more than enough for double-precision floats.
 
+/**
+ * Sine of x radians for |x| <= 2^29; NaN for NaN, the infinities and anything
+ * larger.  sin(-0) is -0; |x| < 2^-27 returns x.
+ *
+ * The guard is a *negated* <=: a NaN fails every comparison, so one test covers
+ * NaN, both infinities and every finite value beyond the domain.
+ */
 export function sin(x: number): number {
-  x = rangeReduce(x);
-
-  let sum = 0.0;
-  let term = x; // First term: x¹/1! = x
-
-  for (let n = 1; n <= 20; n++) {
-    // Accumulate this term into the running sum
-    sum += term;
-
-    // Derive the next term from the current one:
-    //   next = current * (-x²) / ((2n)(2n+1))
-    //
-    // This works because:
-    //   term_n   = (-1)^(n-1) · x^(2(n-1)+1) / (2(n-1)+1)!
-    //   term_n+1 = (-1)^n     · x^(2n+1)     / (2n+1)!
-    //   ratio    = -x² / ((2n)(2n+1))
-    term *= (-x * x) / (2 * n * (2 * n + 1));
+  if (!(Math.abs(x) <= LIMIT)) return NaN;
+  if (Math.abs(x) < TINY) return x;
+  const [k, r] = reduce(x);
+  // k is a whole number below 2^29: `& 3` (ToInt32) is exact and is k mod 4
+  // (two's complement, so -1 & 3 === 3).
+  switch (k & 3) {
+    case 0:
+      return sinK(r);
+    case 1:
+      return cosK(r);
+    case 2:
+      return -sinK(r);
+    default:
+      return -cosK(r);
   }
-
-  return sum;
 }
 
-// ----------------------------------------------------------------------------
-// cos(x) — Cosine via Maclaurin Series
-// ----------------------------------------------------------------------------
-// Same approach as sin(x), but starting from term_0 = 1 (the constant term)
-// and using even powers of x:
-//
-//   term_0 = 1
-//   term_n = term_{n-1} * (-x²) / ((2n-1)(2n))
-//
-// The recurrence ratio differs slightly from sine because cosine uses
-// even-indexed terms: x⁰/0!, x²/2!, x⁴/4!, etc.
-
+/** Cosine of x radians for |x| <= 2^29; NaN outside the domain. cos(+-0) = 1. */
 export function cos(x: number): number {
-  x = rangeReduce(x);
-
-  let sum = 0.0;
-  let term = 1.0; // First term: x⁰/0! = 1
-
-  for (let n = 1; n <= 20; n++) {
-    // Accumulate this term
-    sum += term;
-
-    // Derive next term:
-    //   next = current * (-x²) / ((2n-1)(2n))
-    //
-    // The denominator uses (2n-1)(2n) because cosine terms are:
-    //   1, -x²/2!, x⁴/4!, -x⁶/6!, ...
-    // and 2!/0! = 2·1, 4!/2! = 4·3, 6!/4! = 6·5, etc.
-    term *= (-x * x) / ((2 * n - 1) * (2 * n));
+  if (!(Math.abs(x) <= LIMIT)) return NaN;
+  if (Math.abs(x) < TINY) return 1.0;
+  const [k, r] = reduce(x);
+  switch (k & 3) {
+    case 0:
+      return cosK(r);
+    case 1:
+      return -sinK(r);
+    case 2:
+      return -cosK(r);
+    default:
+      return sinK(r);
   }
-
-  return sum;
 }
 
-// ----------------------------------------------------------------------------
-// Unit Conversions
-// ----------------------------------------------------------------------------
-// Degrees and radians are two ways to measure angles:
-//   - Degrees: a full circle = 360°  (convenient for humans)
-//   - Radians: a full circle = 2π    (natural for mathematics)
-//
-// Conversion formulas:
-//   radians = degrees × (π / 180)
-//   degrees = radians × (180 / π)
-
+/** Degrees to radians: one multiply by a pre-divided, bit-pinned constant. */
 export function radians(deg: number): number {
-  return deg * (PI / 180.0);
+  return deg * RAD_PER_DEG;
 }
 
+/** Radians to degrees: one multiply by a pre-divided, bit-pinned constant. */
 export function degrees(rad: number): number {
-  return rad * (180.0 / PI);
+  return rad * DEG_PER_RAD;
 }
 
 // ----------------------------------------------------------------------------
@@ -393,6 +454,9 @@ export function atan(x: number): number {
 //        y < 0
 
 export function atan2(y: number, x: number): number {
+  // A NaN fails every comparison below and would fall through to 0.0; a finite
+  // answer to an undefined question is wrong (PHY00a 3.9).
+  if (Number.isNaN(x) || Number.isNaN(y)) return NaN;
   if (x > 0.0) {
     // First or fourth quadrant: standard atan works fine.
     return atan(y / x);

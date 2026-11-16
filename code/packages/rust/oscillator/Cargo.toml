@@ -1,12 +1,13 @@
 [package]
 name = "oscillator"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "OSC00: Virtual continuous oscillators and uniform samplers"
 license = "MIT"
 readme = "README.md"
 
 [dependencies]
+trig = { path = "../trig" }
 
 [dev-dependencies]
 coding_adventures_test_bootstrap = { path = "../test-bootstrap" }

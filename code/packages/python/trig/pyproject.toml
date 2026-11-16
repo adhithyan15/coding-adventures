@@ -1,6 +1,6 @@
 [project]
 name = "coding-adventures-trig"
-version = "0.1.0"
+version = "0.3.0"
 description = "Trigonometric functions from first principles using Taylor series"
 requires-python = ">=3.9"
 
