@@ -1,0 +1,212 @@
+{
+  "schema_version": "ver24-effect-cert-v1",
+  "package": "rust/game-monster-rpg",
+  "source_digest": "e40700af7a2512afe12d2841d1cde00334df91ffa7b9840a696823a3f468976f",
+  "manifest_digest": "7b698c5a1685c814be1b5f6a1add94722ccb06915fa42b06b0ef4abd27ef1b24",
+  "declared_effects": [],
+  "entry_points": [
+    {
+      "name": "validate_map_id",
+      "signature": "pub fn validate_map_id(id: usize) -> Result<bool, RpgError>",
+      "effects": []
+    },
+    {
+      "name": "validate_party_index",
+      "signature": "pub fn validate_party_index(idx: usize) -> Result<bool, RpgError>",
+      "effects": []
+    },
+    {
+      "name": "validate_move_slot",
+      "signature": "pub fn validate_move_slot(slot: usize) -> Result<bool, RpgError>",
+      "effects": []
+    },
+    {
+      "name": "validate_fade_fraction",
+      "signature": "pub fn validate_fade_fraction(frac: u32) -> Result<bool, RpgError>",
+      "effects": []
+    },
+    {
+      "name": "validate_step_rate",
+      "signature": "pub fn validate_step_rate(rate: u32) -> Result<bool, RpgError>",
+      "effects": []
+    },
+    {
+      "name": "validate_rpg_config",
+      "signature": "pub fn validate_rpg_config(&self) -> Result<(), RpgError>",
+      "effects": []
+    },
+    {
+      "name": "default_rpg_config",
+      "signature": "pub fn default_rpg_config() -> RpgConfig",
+      "effects": []
+    },
+    {
+      "name": "walk_dir",
+      "signature": "pub fn walk_dir(dir: WalkDirection) -> Self",
+      "effects": []
+    },
+    {
+      "name": "walk_up",
+      "signature": "pub fn walk_up() -> Self",
+      "effects": []
+    },
+    {
+      "name": "walk_down",
+      "signature": "pub fn walk_down() -> Self",
+      "effects": []
+    },
+    {
+      "name": "walk_left",
+      "signature": "pub fn walk_left() -> Self",
+      "effects": []
+    },
+    {
+      "name": "walk_right",
+      "signature": "pub fn walk_right() -> Self",
+      "effects": []
+    },
+    {
+      "name": "interact_button",
+      "signature": "pub fn interact_button() -> Self",
+      "effects": []
+    },
+    {
+      "name": "battle_fight",
+      "signature": "pub fn battle_fight(slot: usize) -> Self",
+      "effects": []
+    },
+    {
+      "name": "battle_ball",
+      "signature": "pub fn battle_ball() -> Self",
+      "effects": []
+    },
+    {
+      "name": "battle_run",
+      "signature": "pub fn battle_run() -> Self",
+      "effects": []
+    },
+    {
+      "name": "battle_switch",
+      "signature": "pub fn battle_switch(index: usize) -> Self",
+      "effects": []
+    },
+    {
+      "name": "matches_tile_coord",
+      "signature": "pub fn matches_tile_coord(&self, map_id: u8, x: u8, y: u8) -> bool",
+      "effects": []
+    },
+    {
+      "name": "init_audio_state",
+      "signature": "pub fn init_audio_state() -> Self",
+      "effects": []
+    },
+    {
+      "name": "advance_audio_clock",
+      "signature": "pub fn advance_audio_clock(&mut self, sfx: &mut SfxBank<4>, mode: GameMode)",
+      "effects": []
+    },
+    {
+      "name": "create_monster",
+      "signature": "pub fn create_monster(species_id: u8, level: u8) -> Result<Creature, RpgError>",
+      "effects": []
+    },
+    {
+      "name": "get_map_tile_attr",
+      "signature": "pub fn get_map_tile_attr(map_id: u8, x: u8, y: u8) -> u8",
+      "effects": []
+    },
+    {
+      "name": "merge_frame_events",
+      "signature": "pub fn merge_frame_events(&mut self, other: &RpgFrameEvents)",
+      "effects": []
+    },
+    {
+      "name": "active_game_mode",
+      "signature": "pub fn active_game_mode(&self) -> GameMode",
+      "effects": []
+    },
+    {
+      "name": "current_map_id",
+      "signature": "pub fn current_map_id(&self) -> u8",
+      "effects": []
+    },
+    {
+      "name": "player_tile_pos",
+      "signature": "pub fn player_tile_pos(&self) -> (u8, u8)",
+      "effects": []
+    },
+    {
+      "name": "party_count",
+      "signature": "pub fn party_count(&self) -> usize",
+      "effects": []
+    },
+    {
+      "name": "party_creature",
+      "signature": "pub fn party_creature(&self, index: usize) -> Option<&Creature>",
+      "effects": []
+    },
+    {
+      "name": "heal_entire_party",
+      "signature": "pub fn heal_entire_party(&mut self)",
+      "effects": []
+    },
+    {
+      "name": "trigger_wild_encounter",
+      "signature": "pub fn trigger_wild_encounter(&mut self, species_id: u8, level: u8) -> Result<(), RpgError>",
+      "effects": []
+    },
+    {
+      "name": "trigger_trainer_encounter",
+      "signature": "pub fn trigger_trainer_encounter(&mut self, trainer: RpgNpcKind) -> Result<(), RpgError>",
+      "effects": []
+    },
+    {
+      "name": "active_battle",
+      "signature": "pub fn active_battle(&self) -> Option<&Battle>",
+      "effects": []
+    },
+    {
+      "name": "is_dialogue_open",
+      "signature": "pub fn is_dialogue_open(&self) -> bool",
+      "effects": []
+    },
+    {
+      "name": "active_dialogue_text",
+      "signature": "pub fn active_dialogue_text(&self) -> Option<&str>",
+      "effects": []
+    },
+    {
+      "name": "init_rpg_game",
+      "signature": "pub fn init_rpg_game(config: RpgConfig, seed: u64) -> Result<RpgGame, RpgError>",
+      "effects": []
+    },
+    {
+      "name": "step_rpg_frame",
+      "signature": "pub fn step_rpg_frame( game: &mut RpgGame, input: &RpgInput, sfx: &mut SfxBank<4>, ) -> Result<RpgFrameEvents, RpgError>",
+      "effects": []
+    },
+    {
+      "name": "step_rpg_with_clock",
+      "signature": "pub fn step_rpg_with_clock( clock: &mut GameClockState, delta_ns: u64, game: &mut RpgGame, input: &RpgInput, sfx: &mut SfxBank<4>, ) -> Result<ClockRpgResult, RpgError>",
+      "effects": []
+    },
+    {
+      "name": "build_rpg_sprites",
+      "signature": "pub fn build_rpg_sprites(game: &RpgGame, out: &mut [SpriteQuad]) -> Result<usize, RpgError>",
+      "effects": []
+    },
+    {
+      "name": "lower_rpg_to_paint_scene",
+      "signature": "pub fn lower_rpg_to_paint_scene(game: &RpgGame) -> Result<PaintScene, RpgError>",
+      "effects": []
+    },
+    {
+      "name": "render_rpg_audio_into",
+      "signature": "pub fn render_rpg_audio_into<const CAP: usize>( sfx: &mut SfxBank<4>, ring: &mut PcmRingBuffer<CAP>, scratch: &mut [i16], ) -> Result<usize, RpgError>",
+      "effects": []
+    }
+  ],
+  "unconditional_roots": [],
+  "banned_construct_exceptions": [],
+  "label": "proved"
+}

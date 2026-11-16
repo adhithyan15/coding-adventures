@@ -1,0 +1,42 @@
+[package]
+name = "game-monster-rpg"
+version = "0.1.0"
+edition = "2021"
+description = "Deterministic zero-allocation GBA-style monster-collecting RPG vertical slice with overworld, turn-based battle engine, PaintScene lowering and chiptune audio"
+license = "MIT"
+
+[lib]
+name = "game_monster_rpg"
+path = "src/lib.rs"
+
+[dependencies]
+arcade-sfx = { path = "../arcade-sfx" }
+audio-mixer-realtime = { path = "../audio-mixer-realtime" }
+game-clock = { path = "../game-clock" }
+paint-batch-tiles = { path = "../paint-batch-tiles" }
+paint-instructions = { path = "../paint-instructions" }
+paint-palette-blend = { path = "../paint-palette-blend" }
+palette-indexed = { path = "../palette-indexed" }
+rpg-battle-engine = { path = "../rpg-battle-engine" }
+rpg-grid-world = { path = "../rpg-grid-world" }
+sprite-oam = { path = "../sprite-oam" }
+tilemap2d = { path = "../tilemap2d" }
+
+[dev-dependencies]
+coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
+coding_adventures_sha256 = { path = "../sha256" }
+capability-runtime-conformance = { path = "../capability-runtime-conformance" }
+
+[[test]]
+name = "conformance"
+path = "tests/conformance.rs"
+
+[[test]]
+name = "microbenchmarks"
+path = "tests/microbenchmarks.rs"
+harness = false
+
+[[test]]
+name = "runtime_capability"
+path = "tests/runtime_capability.rs"
+harness = false

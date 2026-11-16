@@ -1,0 +1,120 @@
+-- GAME25 -- Game Monster RPG: Complete playable GBA/Pokémon-style RPG vertical slice combining Era 2 crates.
+--
+-- Warrant document for game-monster-rpg (VER04j and VER04m: state=explicit).
+-- Formal verification contract for the resource and bounds guards of the monster RPG engine.
+
+warrant game_monster_rpg v1
+  -- Contract mapping: validate_map_id guards map transitions (5 maps: Town, Route, TallGrass, HealingCenter, Gym);
+  -- validate_party_index guards party slots (0..5, MAX_PARTY = 6);
+  -- validate_move_slot guards creature move selection (0..3, MAX_MOVES = 4);
+  -- validate_fade_fraction guards palette blend fraction (0..=255);
+  -- validate_step_rate guards encounter rate probability calculations (0..=256).
+  -- Every index, coordinate, and step calculation is bounded and checked (CWE-20, CWE-125, CWE-190, CWE-787).
+  error RpgError = InvalidMapId | InvalidPartyIndex | InvalidMoveSlot | InvalidFadeFraction | InvalidStepRate
+
+  model Unit = Bool
+
+  model valid_map_id(n: Nat) -> Bool = n < 5
+  model valid_party_index(n: Nat) -> Bool = n < 6
+  model valid_move_slot(n: Nat) -> Bool = n < 4
+  model valid_fade_fraction(n: Nat) -> Bool = n <= 255
+  model valid_step_rate(n: Nat) -> Bool = n <= 256
+
+  op validate_map_id(n: Nat) -> Result<Bool, RpgError>
+  op validate_party_index(n: Nat) -> Result<Bool, RpgError>
+  op validate_move_slot(n: Nat) -> Result<Bool, RpgError>
+  op validate_fade_fraction(n: Nat) -> Result<Bool, RpgError>
+  op validate_step_rate(n: Nat) -> Result<Bool, RpgError>
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels validate_map_id:
+    n public
+  labels validate_party_index:
+    n public
+  labels validate_move_slot:
+    n public
+  labels validate_fade_fraction:
+    n public
+  labels validate_step_rate:
+    n public
+
+  input validate_map_id.n:
+    hostile
+    ensures no_panic, terminates
+  input validate_party_index.n:
+    hostile
+    ensures no_panic, terminates
+  input validate_move_slot.n:
+    hostile
+    ensures no_panic, terminates
+  input validate_fade_fraction.n:
+    hostile
+    ensures no_panic, terminates
+  input validate_step_rate.n:
+    hostile
+    ensures no_panic, terminates
+
+  bound validate_map_id:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_party_index:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_move_slot:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_fade_fraction:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_step_rate:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+
+  example map_id_first:
+    validate_map_id(0) == Ok(true)
+  example map_id_last:
+    validate_map_id(4) == Ok(true)
+  example map_id_out_of_range:
+    validate_map_id(5) == Err(RpgError.InvalidMapId)
+  example party_first:
+    validate_party_index(0) == Ok(true)
+  example party_last:
+    validate_party_index(5) == Ok(true)
+  example party_out_of_range:
+    validate_party_index(6) == Err(RpgError.InvalidPartyIndex)
+  example move_first:
+    validate_move_slot(0) == Ok(true)
+  example move_last:
+    validate_move_slot(3) == Ok(true)
+  example move_out_of_range:
+    validate_move_slot(4) == Err(RpgError.InvalidMoveSlot)
+  example fade_min:
+    validate_fade_fraction(0) == Ok(true)
+  example fade_max:
+    validate_fade_fraction(255) == Ok(true)
+  example fade_over:
+    validate_fade_fraction(256) == Err(RpgError.InvalidFadeFraction)
+  example rate_max:
+    validate_step_rate(256) == Ok(true)
+  example rate_over:
+    validate_step_rate(257) == Err(RpgError.InvalidStepRate)
+
+  claim validate_map_id_agrees:
+    forall n: Nat. validate_map_id(n) == (if valid_map_id(n) then Ok(true) else Err(RpgError.InvalidMapId))
+  claim validate_party_index_agrees:
+    forall n: Nat. validate_party_index(n) == (if valid_party_index(n) then Ok(true) else Err(RpgError.InvalidPartyIndex))
+  claim validate_move_slot_agrees:
+    forall n: Nat. validate_move_slot(n) == (if valid_move_slot(n) then Ok(true) else Err(RpgError.InvalidMoveSlot))
+  claim validate_fade_fraction_agrees:
+    forall n: Nat. validate_fade_fraction(n) == (if valid_fade_fraction(n) then Ok(true) else Err(RpgError.InvalidFadeFraction))
+  claim validate_step_rate_agrees:
+    forall n: Nat. validate_step_rate(n) == (if valid_step_rate(n) then Ok(true) else Err(RpgError.InvalidStepRate))
