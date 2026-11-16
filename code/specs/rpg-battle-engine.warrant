@@ -11,6 +11,7 @@ warrant rpg_battle_engine v1
 
   model Unit = Bool
   variant Phase = Intro | CommandSelect | TurnResolution | SwitchPrompt | Victory | Defeat | Fled
+  -- NoStatus is the code's Status::None (renamed here: None is a reserved builtin constructor).
   variant Status = NoStatus | Burn | Paralysis | Poison | Sleep | Freeze
 
   record Command(slot: Nat, index: Nat)

@@ -7,7 +7,9 @@ warrant arcade_sfx v1
   error SfxError = InvalidSampleRate | InvalidFrequency | InvalidDutyCycle | InvalidParameter | VoiceLimitExceeded | BufferTooSmall | MixerIntegrationError
 
   model clamp_pcm16_model(v: Int) -> Int = if v > 32767 then 32767 else (if v < 0 - 32768 then 0 - 32768 else v)
-  model scale_gain_model(sample: Int, gain_q16: Nat) -> Int = unwrap_or(div(sample * gain_q16, 65536), 0)
+  -- scale_gain widens to i64, shifts right 16 (floor) and saturates to the i32 range.
+  model clamp_i32_model(v: Int) -> Int = if v > 2147483647 then 2147483647 else (if v < 0 - 2147483648 then 0 - 2147483648 else v)
+  model scale_gain_model(sample: Int, gain_q16: Nat) -> Int = clamp_i32_model(unwrap_or(div(sample * gain_q16, 65536), 0))
   model valid_sample_rate(rate: Nat) -> Bool = rate >= 1 and rate <= 192000
   model valid_frequency(freq_hz: Nat, sample_rate_hz: Nat) -> Bool = freq_hz <= unwrap_or(div(sample_rate_hz, 2), 0)
 
