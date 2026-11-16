@@ -19,7 +19,7 @@ It enables bit-for-bit and sample-level parity testing across Python, Rust, and 
 
 ## Regeneration history
 
-- 2026-11-16 (TRIG-CONV TC-2): `pcm16_le_sha256` changed from `15c793ee...364766` to `25bc4eb1...4acee1` and was changed **once, for all three lanes together**. The old value depended on the inaccurate pre-convergence `trig` ports (the hash-style noise in `percussion-kit` multiplies `sin` by 43758.5, so a sine error of 1e-12 flips a 16-bit sample). Since PHY00a every lane takes every sine from the bit-exact `trig` port, so the three lanes render the same bytes. Rule: this digest changes only when Python, Rust and TypeScript all produce the new bits in the same pull request.
+- 2026-11-16 (TRIG-CONV TC-2): `pcm16_le_sha256` changed from `15c793ee...364766` to `25bc4eb1...4acee1` and was changed **once, for all three lanes together**. The old value depended on the inaccurate pre-convergence `trig` ports (the hash-style noise in `percussion-kit` multiplies `sin` by 43758.5, so a sine error of 1e-12 flips a 16-bit sample). Since PHY00a every lane takes every sine from the bit-exact `trig` port, so the three lanes render the same bytes. The consumers of the digest are: Python `music-machine` (reads the JSON), Rust `music-machine-core` and `music-machine-ffi` (hard-coded in `tests/test_golden_parity.rs` and `tests/test_ffi_golden.rs`), and TypeScript `music-machine-node` (reads the JSON); `git grep` for the old digest before changing it. Rule: this digest changes only when Python, Rust and TypeScript all produce the new bits in the same pull request.
 
 ## Parity Verification Requirements
 

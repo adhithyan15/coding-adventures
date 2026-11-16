@@ -1248,7 +1248,7 @@ noise reduction, which moves a few dozen more samples by 1 LSB; the final digest
 `25bc4eb1b0d7a10d40a55afc0f8b0b4d65132a82f538245ee2698700ff4acee1`. The old digest was an
 artefact of the inaccurate old `trig` (the noise multiplies `sin` by 43758.5, amplifying a
 1e-12 error into a flipped sample). The TypeScript lane had no golden test, which TC-2
-adds. A pull request that changes a shared golden shows the three lanes' sample dumps
+adds. The Rust `music-machine-ffi` crate pins the same digest in two tests (`tests/test_ffi_golden.rs`, the portable text and JSON paths) and was missed by the first two regenerations; it is updated with the others. A pull request that changes a shared golden shows the three lanes' sample dumps
 equal sample for sample.
 
 Each port PR has the same shape (`feat(trig-<lang>): converge on TRIG-REF-1`):
