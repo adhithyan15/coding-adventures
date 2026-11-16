@@ -139,24 +139,35 @@ def test_a_real_manifest_validates(manifest_bytes, corpus) -> None:
     validate_manifest(manifest_bytes, corpus, REL, REGISTRY_PATH.read_bytes())
 
 
-def test_the_planned_registry_row_is_not_active(manifest_bytes, corpus) -> None:
+def test_a_planned_registry_row_is_not_active(manifest_bytes, corpus) -> None:
+    # The checked-in registry is active since WD-004b1, so the planned case is
+    # built from a copy of it with the Python row put back to planned.
+    planned = json.loads(REGISTRY_PATH.read_text())
+    row = next(r for r in planned["consumers"] if r["package"] == "python/ct-compare")
+    row["status"] = "planned"
+    validate_manifest(manifest_bytes, corpus, REL, json.dumps(planned).encode())
     with pytest.raises(CorpusError, match="not active"):
         validate_manifest(
-            manifest_bytes, corpus, REL, REGISTRY_PATH.read_bytes(), require_active=True
+            manifest_bytes, corpus, REL, json.dumps(planned).encode(), require_active=True
         )
-    active = json.loads(REGISTRY_PATH.read_text())
-    active["consumers"][0]["status"] = "active"
+    # The real, active row passes --require-active.
     validate_manifest(
-        manifest_bytes, corpus, REL, json.dumps(active).encode(), require_active=True
+        manifest_bytes, corpus, REL, REGISTRY_PATH.read_bytes(), require_active=True
     )
 
 
 def test_registry_joins(manifest_bytes, corpus) -> None:
     registry = json.loads(REGISTRY_PATH.read_text())
+
+    def mine(r):
+        # The registry is sorted by package and lists several lanes since
+        # WD-004b1, so pick this lane's row by identity, not by position.
+        return next(x for x in r["consumers"] if x["package"] == "python/ct-compare")
+
     for change in (
         lambda r: r.update(consumers=[]),
-        lambda r: r["consumers"][0].update(module="other"),
-        lambda r: r["consumers"].append(dict(r["consumers"][0])),
+        lambda r: mine(r).update(module="other"),
+        lambda r: r["consumers"].append(dict(mine(r))),
         lambda r: r.update(consumers=3),
     ):
         broken = copy.deepcopy(registry)

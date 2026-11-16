@@ -113,10 +113,18 @@ func TestManifestShapeAndValidation(t *testing.T) {
 	if validated["lane"] != "go" {
 		t.Fatal("validate")
 	}
+	// The checked-in registry lists go/ct-compare as active since WD-004b1, so a
+	// Go manifest joins it, with and without --require-active.
 	registry := mustRead(t, filepath.Join(f.corpusDir, "consumers.json"))
-	wantCode(t, "registry", func() { validateManifest(text, corpus, relative, registry, false) }) // go/ct-compare is not registered
-	python := strings.NewReplacer("go/ct-compare", "python/ct-compare")
-	_ = python
+	validateManifest(text, corpus, relative, registry, false)
+	validateManifest(text, corpus, relative, registry, true)
+	// The unregistered and planned cases are built from the registry, not
+	// assumed of it: drop the Go row, then put it back as planned.
+	dropped := strings.Replace(string(registry), "go/ct-compare", "go/other-compare", 1)
+	wantCode(t, "registry", func() { validateManifest(text, corpus, relative, []byte(dropped), false) })
+	planned := strings.Replace(string(registry), `"status": "active"`, `"status": "planned"`, 1)
+	validateManifest(text, corpus, relative, []byte(planned), false)
+	wantCode(t, "registry", func() { validateManifest(text, corpus, relative, []byte(planned), true) })
 }
 
 // mutateManifest re-renders the manifest with change applied to a parsed copy.
