@@ -778,6 +778,7 @@ members = [
     "sim-teletype-asr33",
     "sim-pdp8-ge225-io-bridge",
     "sim-discrete-arcade-logic",
+    "sim-crt-vector-beam",
     "game-clock",
     "game-pong",
     "game-breakout",

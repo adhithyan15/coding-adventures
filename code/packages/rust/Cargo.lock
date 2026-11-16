@@ -12298,6 +12298,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "sim-crt-vector-beam"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "paint-instructions",
+ "pixel-container",
+]
+
+[[package]]
 name = "sim-discrete-arcade-logic"
 version = "0.1.0"
 dependencies = [
