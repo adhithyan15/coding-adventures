@@ -548,9 +548,9 @@ nondeterministic operation **proposes** the output the oracle encodes,
 output otherwise:
 
 ```rust
-// vos-ready-any/src/lib.rs  (illustrative; inside `impl ReadySet for ReadyAny`)
+// vos-ready-any/src/lib.rs  (illustrative; inside `impl ReadySet for AnyReady`)
 pub struct AnyReady { mask: u8, choice: u8 }          // choice: the oracle register
-const _: () = assert!(<ReadyAny as ReadySet>::N <= 8);  // N fits the u8 mask
+const _: () = assert!(<AnyReady as ReadySet>::N <= 8);  // N fits the u8 mask
 // ghost::set_oracle(s, c) is the only writer of `choice` (SH13, SH16)
 fn pick(s: AnyReady) -> (Pick, AnyReady) {
     let c = s.choice;
