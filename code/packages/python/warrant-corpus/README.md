@@ -109,6 +109,22 @@ suite from its domain descriptors: `full` (the descriptor enumerates the whole t
 fixed strict subset) or `sample` (reserved). Use its `cases_by_label`, not a summed "exhaustive" total:
 suite-level totals conflate the kinds until backlog **LP-012** lands.
 
+## Shared conformance fixture (WD-100)
+
+`tests/test_conformance_fixture.py` runs every case of
+`code/specs/fixtures/warrant-corpus-conformance-v1/` (VER04i 9.1) through this
+lane's own reader, renderer, tagged-value decoder, containment helper and label
+digest: 397 cases covering duplicate keys, integers above 2^53, fractions and
+exponents, invalid UTF-8, unpaired surrogates, BOMs, nesting depth, `__proto__`
+keys, canonical key order and escaping, Windows cross-drive and UNC paths, and
+the toolchain-name label digest. The checker that validates the fixture itself
+is `python3 code/scripts/warrant_corpus_conformance.py`.
+
+Reader profile in one line: UTF-8 only, no BOM, no duplicate keys (after
+unescaping), integers in `+-(2^53 - 1)` only, no unpaired surrogate escapes, at
+most 256 nested containers. `containment.relative_inside` compares parsed
+paths, so another drive or share is never "inside".
+
 ## Bounded work
 
 Before any case runs, a suite's domain product must equal its declared `cases + discarded` and stay

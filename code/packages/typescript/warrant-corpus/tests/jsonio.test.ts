@@ -158,4 +158,19 @@ describe("readBytes", () => {
     symlinkSync(join(dir, "real"), join(dir, "link"));
     expect(() => readBytes(join(dir, "link"), 10)).toThrow(/not a regular file/);
   });
+
+  it("renders a bigint as plain decimal and orders keys by code point (WD-100)", () => {
+    expect(renderJson({ b: 18446744073709551615n, a: [] })).toBe('{\n  "a": [],\n  "b": 18446744073709551615\n}\n');
+    expect(renderJson({ "\u{1f600}": 1, "\uffff": 2, "\u{1f600}x": 3 })).toBe(
+      '{\n  "\\uffff": 2,\n  "\\ud83d\\ude00": 1,\n  "\\ud83d\\ude00x": 3\n}\n',
+    );
+  });
+
+  it("refuses to render what the reader could never have produced (review of WD-100)", () => {
+    for (const bad of [undefined, Number.NaN, Infinity, 1.5, 1e21, -0, 2 ** 53, () => 1, Symbol("x")]) {
+      expect(() => renderJson({ a: bad }), String(bad)).toThrow(CorpusError);
+    }
+    expect(() => renderJson(undefined)).toThrow(/render/);
+    expect(renderJson([0, -1, 2 ** 53 - 1])).toBe("[\n  0,\n  -1,\n  9007199254740991\n]\n");
+  });
 });

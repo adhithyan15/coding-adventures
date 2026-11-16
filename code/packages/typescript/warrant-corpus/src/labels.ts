@@ -24,6 +24,7 @@
 
 import type { Corpus } from "./corpus.ts";
 import { CorpusError } from "./errors.ts";
+import { renderJson, sha256Hex } from "./jsonio.ts";
 
 export const SCHEMA = "warrant-lane-domain-labels-v1";
 export const NOTE =
@@ -32,6 +33,20 @@ export const NOTE =
   "manifest's exhaustive total, as the headline.";
 const RANK: Readonly<Record<string, number>> = { full: 0, "bounded-set": 1, sample: 2 };
 const BYTES_N = /^bytes_n\(([0-9]+)\)$/;
+
+/**
+ * The digest that binds a label sidecar to one manifest (VER04i 9.1).
+ *
+ * SHA-256 of the manifest's canonical rendering with `toolchain.version`
+ * blanked. The toolchain *name* stays in the digest and is read from the
+ * manifest, never a literal: swapping runtimes is drift, a patch release of the
+ * same runtime is not.
+ */
+export function manifestLabelDigest(manifest: Record<string, unknown>): string {
+  const toolchain = manifest["toolchain"] as Record<string, unknown>;
+  const stable = { ...manifest, toolchain: { name: toolchain["name"], version: "" } };
+  return sha256Hex(new TextEncoder().encode(renderJson(stable)));
+}
 
 /** The label of one domain descriptor (see the module comment). */
 export function domainLabel(descriptor: string): string {
