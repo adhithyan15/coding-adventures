@@ -77,4 +77,4 @@ product that feeds a sum sits in its own statement, so no port can differ.
 ## Tests
 
 `pytest tests/` runs the example tests plus `tests/test_conformance.py`, which decodes
-all 61,854 shared vectors by bit cast and requires bit-exact results.
+all 62,154 shared vectors by bit cast and requires bit-exact results.

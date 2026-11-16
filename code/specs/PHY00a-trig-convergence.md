@@ -1267,7 +1267,7 @@ measure is that the reference's Part II (3.9) as specified is reproduced bit for
 by two independent transcriptions (C and Rust).
 
 **TC-2 status (2026-11-16).** Python (`trig` 0.3.0), Rust (`trig` 0.3.0) and TypeScript
-(`trig` 0.3.0; the 0.2.0 of those two changelogs was already taken) match all 61,854
+(`trig` 0.3.0; the 0.2.0 of those two changelogs was already taken) match all 62,154
 vectors bit for bit. `oscillator` (0.2.0 in all three lanes), `musical-instruments` and
 `percussion-kit` take every sine from `trig` instead of `f64::sin` / `Math.sin`, so a
 rendered note is the same in all three lanes.

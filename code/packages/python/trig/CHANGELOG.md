@@ -52,7 +52,7 @@ version (owner decision OQ-12).
 
 - `tests/test_conformance.py` decodes every row of
   [`trig-reference-v1`](../../../specs/fixtures/trig-reference-v1/README.md)
-  (61,854 vectors: `sin`, `cos`, `tan`, `radians`, `degrees`, `sqrt`, `atan`,
+  (62,154 vectors: `sin`, `cos`, `tan`, `radians`, `degrees`, `sqrt`, `atan`,
   `atan2`) by a bit cast and requires the result bits to match **exactly**
   (NaN as a class, `error` as `ValueError`), asserts every embedded constant's
   bits, the domain guard, signed zero and the pinned `atan2` conventions, and

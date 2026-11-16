@@ -39,7 +39,7 @@
 
 ### Tests
 
-- `conformance` tests decode every row of `trig-reference-v1` (61,854 vectors, Part II
+- `conformance` tests decode every row of `trig-reference-v1` (62,154 vectors, Part II
   included) by a bit cast and require identical result bits; constants' bits are asserted.
 
 ## [0.2.0] - 2026-04-03

@@ -178,10 +178,17 @@ def test_accuracy_against_the_correctly_rounded_column() -> None:
         return -mag if bits >> 63 else mag
 
     limit = {"sin": 3, "cos": 3, "radians": 1, "degrees": 1}
+    # PHY00a 3.8 makes NO accuracy claim for tan (it is sin/cos plus a division and a
+    # pinned pole sentinel), although the fixture carries a ``cr`` column on tan rows.
+    # A tan gate is a separate backlog follow-up; until then tan is skipped by name.
+    no_claim = {"tan"}
     worst = dict.fromkeys(limit, 0)
     for _g, op, x, _y, cr, _flags in ROWS:
-        if cr == "-":
+        if cr == "-" or op in no_claim:
             continue
+        # Fail closed: any other op with a ``cr`` value must have a stated limit, so a
+        # future op cannot be skipped silently.
+        assert op in limit, f"op {op!r} has a cr value but no accuracy limit"
         got = float_to_bits(call(op, x))
         steps = abs(ordered(got) - ordered(int(cr, 16)))
         worst[op] = max(worst[op], steps)
