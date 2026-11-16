@@ -66,14 +66,18 @@ python -m coding_adventures_warrant_oracle verify-v1 \
 # The oracle's own v2 enumeration digests for any document (slim or full depth),
 # ready to diff against S2/S3 generator output.
 python -m coding_adventures_warrant_oracle emit-v2 \
-    --spec code/specs/gf256.warrant --out scratch/gf256-v2.json --depth slim
+    --spec code/specs/gf256.warrant --profile corpus.profile \
+    --out scratch/gf256-v2.json --depth slim
 
+# Exit 3 means some suites were not-live or refused; --allow-partial accepts that.
 # Parse and lower a document; print what level each suite needs.
 python -m coding_adventures_warrant_oracle check --spec code/specs/lzw.warrant
 ```
 
 Exit status: `0` the gate passed, `1` a mismatch, `2` an input was unreadable or
-refused (size cap, symbolic link, malformed document). Failure messages name a
+refused (size cap, symbolic link, malformed document, an output path that is an
+input or lies in `code/specs`), `3` (`emit-v2`) some suites were `not-live` or
+`refused`. Failure messages name a
 suite and a check, never input bytes.
 
 ### The ct-compare gate
@@ -93,15 +97,16 @@ committed in `ct-compare-warrant-v1/corpus.json`:
 
 These are facts the S3/S8 owners need; none is hidden by a flag.
 
-* **`MAX_IR_COST = 2,000` cannot hold gf256's models.** Read as VER04i 6.2 says
-  (charge every branch of an `if`, every `model_call` at full body cost) `xor8`
-  alone costs 294,900 and `ginv` 92,014,191. Even charging only the larger branch
-  `gmul` costs 2,011 and `ginv` 26,204. Under the spec bound the oracle *refuses*
-  7 of gf256's 38 suites (`emit-v2` records them `refused: limit`, it does not skip
-  them). `--max-ir-cost N --cost-model taken-path` is an explicit **diagnostic**
-  override that lets the oracle enumerate all 38 so digests exist to compare; the
-  output records the bound it ran under. Either the bound or gf256's models must
-  change before S8.
+* **`MAX_IR_COST = 2,000` cannot hold gf256 as first written (VER04r 16.1 amended).**
+  Charging both branches of an `if` (the VER04i 6.2 reading) `xor8` costs 294,900.
+  The amended rule is the **worst path** (one branch of an `if`): `gmul` costs
+  2,011, `ginv` 26,204, the largest gf256 expression 26,210, and four of its 38
+  suites exceed the default 2,000, so `emit-v2` records them `refused: limit`.
+  A corpus raises the bound only with a `max_ir_cost N` line in `corpus.profile`
+  (`--profile`; 2,000 to 65,536); there is no command-line or environment
+  override. Each suite row carries `ir_cost` (admit + body + expected) and the
+  total work (cases and IR work) is metered against `MAX_TOTAL_WORK_*` and
+  `MAX_IR_WORK_*`.
 * **gf256 never wraps** (`wraps == 0` on every suite it enumerates), so the VER04r
   3.3 guard for a v0 document passes rule 2.
 * **Composite demotion differs from VER04j.** VER04j 14.1 item 20 demotes both
@@ -110,10 +115,6 @@ These are facts the S3/S8 owners need; none is hidden by a flag.
   chunk-wise and never materialises a domain, so this oracle demotes by product
   size only. If the generator keeps the VER04j rule the descriptor comparison will
   say so.
-* **VER04r section 10.2 names `code/scripts/warrant_oracle/`.** The build tool
-  discovers packages only under `code/packages` and `code/programs`, so this
-  package lives at `code/packages/python/warrant-oracle` where its BUILD runs in CI.
-  The spec path should be amended when S4 lands.
 * **Reserved words.** VER04 section 2 reserves `op`, but `arithmetic.warrant` has a
   parameter named `op`; the reader treats declaration keywords as contextual.
 * **Assumptions where the spec is silent** (each is a place the first v2 corpus may

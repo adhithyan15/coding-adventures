@@ -14,10 +14,10 @@ The generator never noticed because it evaluates models by running them, not by
 costing them, and the spec text was written before any model recursed eight
 levels. Seven of gf256's 38 suites are refused under the spec bound.
 
-Fix (in the oracle, not the spec): the bound is a parameter; the spec value stays
-the default so the finding is visible, `--max-ir-cost` is a labelled diagnostic
-override, and the output records the bound and cost model it ran under. The spec
-(or gf256's models) must change before slice S8.
+Fix: VER04r was amended to cost the worst path (one branch of an `if`) with a
+default of 2,000 that a corpus raises only through a `max_ir_cost` profile line
+(ceiling 65,536), a per-suite `ir_cost` and a total IR-work bound. The oracle
+has no override flag, so the limit lives in exactly one place.
 
 Do differently: when a spec states a static bound, compute it for every adopter
 that will be held to it *before* the spec is accepted, with the evaluator that
