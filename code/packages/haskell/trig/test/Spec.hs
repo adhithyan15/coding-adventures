@@ -1,5 +1,6 @@
 import Test.Hspec (hspec)
-import TrigSpec (spec)
+import qualified ConformanceSpec
+import qualified TrigSpec
 
 main :: IO ()
-main = hspec spec
+main = hspec (TrigSpec.spec >> ConformanceSpec.spec)
