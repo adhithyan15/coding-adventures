@@ -1,7 +1,7 @@
 {
   "schema_version": "ver24-effect-cert-v1",
   "package": "rust/paint-palette-blend",
-  "source_digest": "949ce40e41aab15e36515fbc50964fb5a1842bcc865944210ef5ec41ba8b3c2d",
+  "source_digest": "c21c5bd6e12784c448960f2ce6926ca1b70f493306ba87ef21a1bb64be109da3",
   "manifest_digest": "5fcbad759a2b06814f1f5bbd0726095c16554c4d6931e3ee5e6506072bf7f31c",
   "declared_effects": [],
   "entry_points": [

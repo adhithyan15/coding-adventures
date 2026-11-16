@@ -462,11 +462,16 @@ fn blit_pixel(chunk: &mut [u8], index: u8, palette: &[Rgba8], params: &BlitParam
 fn blit_row(dst: &mut [u8], indices: &[u8], palette: &[Rgba8], params: &BlitParams) -> usize {
     let mut drawn = 0;
     if params.h_flip {
-        for (chunk, &index) in dst.chunks_exact_mut(4).zip(indices.iter().rev()) {
+        for (chunk, &index) in dst
+            .as_chunks_mut::<4>()
+            .0
+            .iter_mut()
+            .zip(indices.iter().rev())
+        {
             drawn += usize::from(blit_pixel(chunk, index, palette, params));
         }
     } else {
-        for (chunk, &index) in dst.chunks_exact_mut(4).zip(indices.iter()) {
+        for (chunk, &index) in dst.as_chunks_mut::<4>().0.iter_mut().zip(indices.iter()) {
             drawn += usize::from(blit_pixel(chunk, index, palette, params));
         }
     }
@@ -523,9 +528,8 @@ pub fn blend_solid_span(
         });
     }
     let mut count = 0;
-    for chunk in dst.chunks_exact_mut(4) {
-        let out = blend_pixel(mode, color, [chunk[0], chunk[1], chunk[2], chunk[3]], alpha);
-        chunk.copy_from_slice(&out);
+    for chunk in dst.as_chunks_mut::<4>().0 {
+        *chunk = blend_pixel(mode, color, *chunk, alpha);
         count += 1;
     }
     Ok(count)
@@ -557,14 +561,13 @@ pub fn blend_rgba_scanline(
         });
     }
     let mut count = 0;
-    for (d, s) in dst.chunks_exact_mut(4).zip(src.chunks_exact(4)) {
-        let out = blend_pixel(
-            mode,
-            [s[0], s[1], s[2], s[3]],
-            [d[0], d[1], d[2], d[3]],
-            alpha,
-        );
-        d.copy_from_slice(&out);
+    for (d, s) in dst
+        .as_chunks_mut::<4>()
+        .0
+        .iter_mut()
+        .zip(src.as_chunks::<4>().0.iter())
+    {
+        *d = blend_pixel(mode, *s, *d, alpha);
         count += 1;
     }
     Ok(count)
