@@ -3,7 +3,7 @@ name = "coding-adventures-oscillator"
 version = "0.2.0"
 description = "Virtual continuous oscillators and uniform samplers"
 requires-python = ">=3.9"
-dependencies = ["coding-adventures-trig"]
+dependencies = ["coding-adventures-trig>=0.3.0"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
