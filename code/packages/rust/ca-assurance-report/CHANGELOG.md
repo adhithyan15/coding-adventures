@@ -2,6 +2,31 @@
 
 ## Unreleased
 
+- **Lane rungs in the package report, `--check-lane`, `--require-active`** (WD-004b2, VER04i 8.3).  New
+  `lane_report` module and a required `lanes` array in `assurance_report.json`: one rung per registry lane, `live`
+  only when `load_lane` passes every named readiness check, `planned`, or `absent`; `release_ready` is always `false`
+  and `sandbox` always `absent` (no lane arms a jail yet, CAP-RT-1xx).  Derived from the consumer registry and the
+  loader only; the Rust proof, effect and weakness evidence, the rungs E0 to E5 and the verdict are not read or
+  changed.  `--check` re-derives the lanes (`LaneMismatch`, `LabelOverclaim`, `StaleEvidence`) and the offline checker
+  refuses a malformed array (`InvalidLaneRung`).  An `active` row that fails to load fails `Evidence::load`; no registry
+  file is an empty lane list; a broken or linked registry is an error.  New CLI: `--check-lane <lane>/<name>
+  [--repo-root D] [--require-active]` (absent and planned exit 0 and are printed as ABSENT or PLANNED unless
+  `--require-active`; an active lane that fails to load exits 1).  `Evidence` gains `lanes`, `AssuranceReport` gains
+  `lanes`, `CheckError` gains `InvalidLaneRung`, `EvidenceCheckError` gains `LaneMismatch` and `LabelOverclaim`.
+  Regenerated with `--generate` (keeping each `--commit`): the six adopters that use this tool (arithmetic,
+  ct-compare, gf256, logic-gates, lzw, wasm-leb128); the only field that changed in each is `lanes` (ct-compare: go,
+  python and typescript live; the others: three absent rungs).  `effect_certificate.json` regenerated (only
+  `source_digest` moved; declared effects and capabilities unchanged).
+- **`source_sha256` and `runner.src_sha256` are recomputed** (WD-004b2).  `lane_loader::source_tree_digest`,
+  `runner_root`, `binding_source`, `SourceKind`.  Per-lane rules (python `*.py`, `*.pyi`, `py.typed`; typescript `*.ts`
+  except `*.test.ts`; go `*.go` except `*_test.go`), the walk reaches its root under the loader's path rules and
+  examines every entry with `symlink_metadata` before its name (links are refused even under a skipped name), skips
+  non-regular files unopened, refuses non-UTF-8 names, and is bounded (depth 32, 8 MiB a file, 4096 files, 64 MiB in
+  total).  The checked-in digests written by the Python, TypeScript and Go runners are reproduced exactly.  Readiness
+  is ten checks (`source-fresh`, `runner-source-fresh` added); the unclaimed list is three.  New load codes
+  `source-tree`, `stale-source`, `stale-runner`; the loader's sandbox word is now `absent`.  Still open: the
+  check-to-open window (documented), junction and reparse-point tests on a Windows runner, the sandbox.
+
 - **WD-100b security-review follow-up.**  `refused_component` also refuses any win32 child component with a `:`
   (alternate data streams and device suffixes), takes the reserved stem before the first `.` with trailing spaces
   trimmed (`CON .txt`), and adds `CONIN$`, `CONOUT$` and `COM`/`LPT` with a superscript 1, 2 or 3.  `CLOCK$` and
