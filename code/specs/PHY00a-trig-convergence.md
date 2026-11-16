@@ -1,6 +1,6 @@
 # PHY00a: Trig Convergence (TRIG-CONV): One Reference Algorithm for Every Port
 
-**Status:** Specification, adversarially reviewed once (section 10); TC-1 implemented; TC-1b survey and PR grouping written (8.1). This document itself changes no port. It is the
+**Status:** **Complete: all seventeen ports have converged on TRIG-REF-1 and merged** (TC-1 and TC-2 through TC-17; per-port pull requests in section 8; TC-18 close-out recorded there). Specification, adversarially reviewed once (section 10); TC-1 implemented; TC-1b survey and PR grouping written (8.1). Open follow-ups: TRIG-CONV-CR2 (Part II `cr` column) and a `tan` accuracy gate (backlog). It is the
 normative text for backlog item TRIG-CONV (owner decision 16, 2026-11-16, VER30
 track C16; VER04p FL-15). The implementation work is the slice list in section 8:
 one fixture slice, then one pull request per port. **TC-1 landed 2026-11-16** (the fixture only; no port
@@ -1231,21 +1231,21 @@ repeats it.
 | **TC-2** | the **music trio**, in one pull request: `python`, `rust` and `typescript` `trig`; `oscillator`, `musical-instruments` and `percussion-kit` in those lanes so every sine of the render path comes from `trig`, with the phase-in-cycles fix (7); the shared `music-machine` golden regenerated **once** | the three lanes share `fixtures/music-machine`, whose digest depends on the last bits of every sine, so they cannot converge one at a time. **Rule: a golden shared by several lanes changes only in the one PR in which all of them produce the new bits; group such ports** | TC-1 |
 | ~~TC-2~~ | **rust** | merged into the music trio (TC-2) | TC-1 |
 | ~~TC-3~~ | **typescript** | merged into the music trio (TC-2) | TC-1 |
-| TC-4 | **c** | flag hazards (`-ffp-contract=off`, `FLT_EVAL_METHOD`); the build file gains the flag and a second `-mfma` build that must **fail** the vectors (the fusion canary) | TC-1 |
-| TC-5 | **cpp** | same hazards as C, header-only | TC-4 |
-| TC-6 | **go** | FMA on arm64; the `float64()` rule; the arm64 assembly check as a CI step | TC-1 |
-| TC-7 | **java** | strict by default; replaces `%` | TC-1 |
-| TC-8 | **kotlin** | JVM again, no hex float literal | TC-7 |
-| TC-9 | **csharp** | .NET, decimal literals plus bit assert | TC-1 |
-| TC-10 | **fsharp** | .NET, G2 grouping disappears | TC-9 |
-| TC-11 | **swift** | 21 terms to 10, `Int(k) & 3` | TC-1 |
-| TC-12 | **haskell** | removes `mod'`/`floor`; constants by `castWord64ToDouble` | TC-1 |
-| TC-13 | **ruby** | floored `%` disappears | TC-1 |
-| TC-14 | **lua** | integer subtype, `math.modf` removed, `tan` sentinel added | TC-1 |
-| TC-15 | **perl** | `int()` pitfalls, constants from bits, `tan` sentinel, `degrees(-0)` | TC-1 |
-| TC-16 | **dart** | zero-filesystem embedding of the vectors; `%` Euclidean disappears; `atan` grouping | TC-1 |
-| TC-17 | **elixir** | BEAM non-finite handling; `Float.round` disappears; `nonfinite`, `out-of-domain` and `beam-raises` flags exercised (explicit `raise ArithmeticError` beyond `LIMIT`) | TC-1 |
-| TC-18 | close-out: amend PHY00 sections 3.2 to 3.4, 5 and 6 (they say 20 terms and `round(x/2pi)`), the backlog row to done, VER04p 15.1 to cite this document | none | all 17 merged |
+| TC-4 | **c** | flag hazards (`-ffp-contract=off`, `FLT_EVAL_METHOD`); the build file gains the flag and a second `-mfma` build that must **fail** the vectors (the fusion canary) **Done: merged in #19510.** | TC-1 |
+| TC-5 | **cpp** | same hazards as C, header-only **Done: merged in #19511.** | TC-4 |
+| TC-6 | **go** | FMA on arm64; the `float64()` rule; the arm64 assembly check as a CI step **Done: merged in #19525.** | TC-1 |
+| TC-7 | **java** | strict by default; replaces `%` **Done: merged in #19514.** | TC-1 |
+| TC-8 | **kotlin** | JVM again, no hex float literal **Done: merged in #19520.** | TC-7 |
+| TC-9 | **csharp** | .NET, decimal literals plus bit assert **Done: merged in #19518.** | TC-1 |
+| TC-10 | **fsharp** | .NET, G2 grouping disappears **Done: merged in #19519.** | TC-9 |
+| TC-11 | **swift** | 21 terms to 10, `Int(k) & 3` **Done: merged in #19517.** | TC-1 |
+| TC-12 | **haskell** | removes `mod'`/`floor`; constants by `castWord64ToDouble` **Done: merged in #19515.** | TC-1 |
+| TC-13 | **ruby** | floored `%` disappears **Done: merged in #19512.** | TC-1 |
+| TC-14 | **lua** | integer subtype, `math.modf` removed, `tan` sentinel added **Done: merged in #19521.** | TC-1 |
+| TC-15 | **perl** | `int()` pitfalls, constants from bits, `tan` sentinel, `degrees(-0)` **Done: merged in #19523.** | TC-1 |
+| TC-16 | **dart** | zero-filesystem embedding of the vectors; `%` Euclidean disappears; `atan` grouping **Done: merged in #19526.** | TC-1 |
+| TC-17 | **elixir** | BEAM non-finite handling; `Float.round` disappears; `nonfinite`, `out-of-domain` and `beam-raises` flags exercised (explicit `raise ArithmeticError` beyond `LIMIT`) **Done: merged in #19522.** | TC-1 |
+| TC-18 | close-out: amend PHY00 sections 3.2 to 3.4, 5 and 6 (they say 20 terms and `round(x/2pi)`), the backlog row to done, VER04p 15.1 to cite this document | none | all 17 merged **Spec and backlog part done (TC-18 close-out); the PHY00 and VER04p amendments are not part of that commit.** |
 
 **TC-1 status (2026-11-16).** Landed in the TC-1 pull request: the fixture
 (`fixtures/trig-reference-v1`, 62,154 vectors; generator, validator, both host
@@ -1295,6 +1295,29 @@ artefact of the inaccurate old `trig` (the noise multiplies `sin` by 43758.5, am
 1e-12 error into a flipped sample). The TypeScript lane had no golden test, which TC-2
 adds. The Rust `music-machine-ffi` crate pins the same digest in two tests (`tests/test_ffi_golden.rs`, the portable text and JSON paths) and was missed by the first two regenerations; it is updated with the others. A pull request that changes a shared golden shows the three lanes' sample dumps
 equal sample for sample.
+
+**Close-out status (2026-11-16): all seventeen ports are converged and merged.** Python, Rust and
+TypeScript in TC-2 (#19506); then C #19510, C++ #19511, Ruby #19512, Java #19514, Haskell #19515,
+Swift #19517, C# #19518, F# #19519, Kotlin #19520, Lua #19521, Elixir #19522, Perl #19523,
+Go #19525 and Dart #19526. Every port matches the 62,154 vectors bit for bit. The build tool
+now selects every one of the seventeen `trig` packages when a file of `trig-reference-v1` changes
+(Dart through its generated vector source, whose generator and drift test select `python/trig`).
+Per-port notes that the plan did not foresee:
+
+* **Elixir** raises `ArithmeticError` for arguments beyond `LIMIT` (3.3) and for the other
+  unrepresentable results; 85 vector rows are unrepresentable on the BEAM and are checked as raises.
+* **Dart** is VM-only (no web target) and reads a generated vector source
+  (`test/generated/trig_reference_vectors.dart`, from `code/scripts/generate_trig_reference_dart_fixtures.py`),
+  not the TSV files.
+* **Swift** adds `sqrtChecked` beside `sqrt` (which keeps the pinned behaviour).
+* **F#**'s assembly names are distinct from the C# port's.
+* **Go** has FMA guards in its `BUILD` (the fused-multiply-add canary and check of 5).
+* **Lua, Perl and Go** `wave` and `oscillator` reduce the phase in cycles, as TC-2 did for the
+  music trio (7).
+
+**Still open (backlog):** TRIG-CONV-CR2 (the correctly rounded `cr` column for Part II) and a `tan`
+accuracy gate: `tan` rows carry a correctly rounded column but the 3-ulp gate has not been extended to
+`tan`'s own bound (3.8).
 
 ### 8.1 TC-1b: survey of the remaining ports
 
@@ -1641,6 +1664,7 @@ changes the sections named.
 | 2026-11-16 | TC-1 implementation. 3.2: the hex float of `PIO2_3` read `0x1.84698p-48` and is `0x1.846988p-48` (the bit pattern was right; found by the C cross-check). 6.2: flag semantics pinned (`nonfinite=unrepresentable` and `=rejects` never together; `signed-zero` and `nan-class` describe the result). 6.3: counts as generated; halfway cases are stood in for by ulp neighbours (a midpoint is not a double); 128 reduction tie cases added. 6.4: gates (b) and (c) amended with the measured masked list (16 constants and 20 sites that no sampled vector can see; 5 sites provably inert), generator file names. 8: TC-1 is fixture-only, the music trio converges together in TC-2 (shared golden), Dart source deferred to TC-16, the Part II survey of other ports deferred to TC-1b |
 | 2026-11-16 | TC-1 review fixes. 6.4: the masked list was **false** (it exempted 16 constants and 20 sites as unreachable; a search found inputs that reach `C3`, `S3`, `C4`, `S4`, `C5`, `S5`, `sin.h2`, `sin.h3`, `cos.h2`, `cos.h3` and `cos.h4`): those eleven are now directed witnesses (30 inputs, 6.3) and the gate requires each, the list shrinks to 10 constants and 15 sites (search of 1.2e9 inputs per item, stated), and the gate fails in both directions (a masked item that is detected is an error). 6.4 step 3: the exact reference no longer imports the soft-float model's encoder and decoder (it has its own, tested to agree), and the text says 1200-bit pi and a 240-bit series (it said 400 and 220). 6.2, 6.3, 3.8: `tan` rows now carry `cr` (except `pole-sentinel` and out-of-domain rows); Part II still has none, stated as a gap with a backlog row. 6.4 step 5: `python/trig`'s BUILD runs the generator's `--check`; the build tool selects it on any generator or fixture file. Counts: 62,154 vectors (2,854 edge rows) |
 | 2026-11-16 | TC-1b: survey of the fourteen unconverged ports (read at `origin/main` a4723983852, one Python probe of the `atan` variants), their versions, callers and golden consumption, a blast-radius grouping of TC-4 to TC-17 into four waves, and eight corrections to the survey (8.1.7). Section 8 gains 8.1 and 8.2; the per-port PR shape moves to 8.2 and step 4 now runs the vectors against the unchanged port first |
+| 2026-11-16 | TC-1 to TC-17 complete, TC-18 close-out: every port converged (section 8 lists the pull requests: #19506, #19510 to #19512, #19514, #19515, #19517 to #19523, #19525, #19526), status header and TC-n rows updated, per-port notes recorded (Elixir `ArithmeticError` with 85 unrepresentable rows, Dart VM-only with a generated vector source, Swift `sqrtChecked`, distinct F# assembly names, Go FMA guards in BUILD, Lua/Perl/Go `wave`/`oscillator` phase reduction); build-tool registration extended to all seventeen ports. No normative text changed. |
 
 ## Appendix A. Reference implementation (Python, normative as a transcription)
 

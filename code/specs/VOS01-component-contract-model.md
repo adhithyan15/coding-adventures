@@ -117,9 +117,18 @@ pub trait ReadySet {
     fn remove(s: Self::State, p: u8) -> (Upd, Self::State);
     fn pick(s: Self::State) -> (Pick, Self::State);
 }
+```
+
+`Profile` and `Kernel<P>` are **not** in the contract crate. A profile has one
+associated type per interface, so no single contract crate can own it without
+depending on every other contract crate; they live in the spine crate (or a profile
+crate), which depends on all the contract crates (VOS-D052, VOS10 section 14):
+
+```rust
+// vos-spine/src/lib.rs   (illustrative)
 // One associated type per interface; the profile crate binds each to ONE implementation.
 pub trait Profile { type Ready: ReadySet; /* one line per interface */ }
-pub struct Kernel<P: Profile> { pub ready: <P::Ready as ReadySet>::State, /* one field per component */ }
+pub struct Kernel<P: Profile> { ready: <P::Ready as ReadySet>::State, /* one field per component */ }
 ```
 
 A spine call site reads `let (upd, ready) = <P::Ready as ReadySet>::insert(k.ready, t);`.
@@ -169,7 +178,7 @@ item can name them. VOS02 names the tool.
 | SH9 | Overflowing arithmetic uses `wrapping_*`, `checked_*` or `saturating_*`, never bare `+ - *`. Every non-literal shift amount of `<<` or `>>` uses `wrapping_shl/shr` or `checked_shl/shr`, or is provably below the bit width (a literal, or guarded as in the `-any` listing's `c < N` plus a `const` assert that `N` fits the type) | debug overflow panics and release wraps: two builds, two functions | `clippy::arithmetic_side_effects` denied (**today** as a lint; the CI wiring is NEW(VOS-owned)) |
 | SH10 | Fixed-width types only (section 1.3) | host and image compute one function | NEW(VOS-owned) |
 | SH11 | No `f32`, `f64` | no float unit on RV32I; rounding and formatting differ by host | NEW(VOS-owned) |
-| SH12 | Dependencies are `core` and the interface's own contract crate; a third-party dependency is an error, not the `WARN` of VER08a section 3.6 | VER08a does not analyse dependencies, so the footprint would not cover them (VER23a section 3.2) | NEW(VOS-owned) policy over **today's** report |
+| SH12 | Dependencies (normal, build and target-specific) are `core` and the interface's own contract crate; dev-dependencies are a **closed allowlist** (the generated harness's `coding_adventures_sha256` and `coding_adventures_test_bootstrap`, and contract crates), not ignored (VOS03 SH12). Warrant-tooling tests of a contract therefore live in a sibling class H crate (VOS03 section 1). A third-party dependency is an error, not the `WARN` of VER08a section 3.6 | VER08a does not analyse dependencies, so the footprint would not cover them (VER23a section 3.2) | NEW(VOS-owned) policy over **today's** report |
 | SH13 | `alpha` and the state builder live in a `ghost` module behind a cargo feature the image build must not enable | they exist for evidence, not the kernel; features are pinned only at manifest level (VER29 section 15, limit 10) | NEW(VOS-owned) |
 | SH14 | A `State` field is touched only by its owning component; the spine passes `k.field` only to operations of that field's interface | rule 2; privacy gives it inside a crate, the spine needs the UFCS reach pass | privacy **today**; spine check NEW(VER29 slice 4) |
 | SH15 | No `macro_rules!` in a component; only pure `core` macros. Also banned: `include!`, `include_str!`, `include_bytes!`, `#[path]`, `#[link_section]`, `#[no_mangle]`, `#[export_name]`, a `build.rs`, and the `links` key in `Cargo.toml` | a macro, an included file, a relocated module or a build script puts code or symbols out of a lexical analyzer's sight (VER08a gap G-6 and `CAP003`) | NEW(VOS-owned) |
@@ -339,6 +348,17 @@ inside it:
   forall s: Impl, i: In with inv_impl(s).
       safe_op(alpha(s), i, impl_op(s, i).0, alpha(impl_op(s, i).1))  and  inv_impl(impl_op(s, i).1)
 ```
+
+**Shape B for a destructive operation.** When the operation consumes what it returns
+(a scheduler's `dispatch` chooses a thread and removes it), the abstract successor is
+not a function of `m` alone: it depends on the *choice*. The relation then relates the
+new state to the output, `safe_dispatch(m, o, m') = valid(m, o) and m' == after(m, o)`,
+where `after(m, o)` is the abstract successor given the output `o` (the set without the
+chosen thread). Refinement claims use the implementation's own output,
+`safe_dispatch(alpha(s), out(s), alpha(op(s).1))`, and the canonical commuting claim
+takes its successor from it too (`img(build(m)) == build(after(m, out(build(m))))`).
+The toy's `pick` is a read, `m' == m`, the degenerate case. VOS10 section 3.2 is the
+worked instance.
 
 A is the case of B whose relation is `out == f(m, i) and m' == g(m, i)`; the spec
 keeps both because A is what a newcomer reads at a glance and B is what `-any` is
@@ -1011,7 +1031,7 @@ section 3 (`remove_safe` is elided like its twin); the names are the fixed vocab
   claim pick_covers_none:
     forall mask: U8. pick(Impl(mask, 255u8)).0 == NoneReady
   -- insert and remove are deterministic, so -any is the model; oracle fixed at 0 (section 5.5).
-  claim alpha_build_with_oracle:      -- impl-own, not an obligation: -any is not canonical (VOS02 R6)
+  claim alpha_build_with_oracle:      -- impl-own, not an obligation: names -any's own state (VOS02 R6)
     forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool, c: U8. (
       alpha(build_with_oracle(Ready(b0, b1, b2, b3, b4, b5, b6, b7), c)) == Ready(b0, b1, b2, b3, b4, b5, b6, b7))
   claim insert_safe:                    -- the safety obligation, at oracle 0 (R5: build(M))

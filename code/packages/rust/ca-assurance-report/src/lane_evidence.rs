@@ -114,6 +114,11 @@ pub struct LaneEvidenceManifest {
     pub toolchain_version: String,
     pub evidence_seed: u64,
     pub faulted: bool,
+    /// The Python runner ran under a private bytecode cache (`sys.pycache_prefix`),
+    /// so no `__pycache__` in the checkout was ever executed (VER04i 8.1).  Only
+    /// the Python lane records it (and must); every other lane's manifest is
+    /// refused if it carries the field.
+    pub pycache_isolated: bool,
     pub tests: Vec<LaneTestEntry>,
 }
 
@@ -145,28 +150,45 @@ pub struct LaneConsumerRegistry {
 pub fn parse_lane_manifest(bytes: &[u8]) -> Result<LaneEvidenceManifest, LaneEvidenceError> {
     let root = parse_json(bytes, MAX_MANIFEST_BYTES as usize, "lane manifest")?;
     let object = object(&root, "lane manifest")?;
-    exact_fields(
-        object,
-        &[
-            "schema",
-            "lane",
-            "package",
-            "module",
-            "spec",
-            "spec_sha256",
-            "corpus",
-            "corpus_sha256",
-            "cases_sha256",
-            "runner",
-            "binding_sha256",
-            "source_sha256",
-            "toolchain",
-            "evidence_seed",
-            "faulted",
-            "tests",
-        ],
-        "lane manifest",
-    )?;
+    // `pycache_isolated` is the one lane-specific key: required (and true) for the
+    // Python lane, forbidden for every other lane.
+    let lane_is_python = object.get("lane").and_then(JsonValue::as_str) == Some("python");
+    let mut keys = vec![
+        "schema",
+        "lane",
+        "package",
+        "module",
+        "spec",
+        "spec_sha256",
+        "corpus",
+        "corpus_sha256",
+        "cases_sha256",
+        "runner",
+        "binding_sha256",
+        "source_sha256",
+        "toolchain",
+        "evidence_seed",
+        "faulted",
+        "tests",
+    ];
+    if lane_is_python {
+        keys.push("pycache_isolated");
+    }
+    if lane_is_python && !object.contains_key("pycache_isolated") {
+        return fail("pycache_isolated is required for the Python lane (VER04i 8.1)");
+    }
+    if !lane_is_python && object.contains_key("pycache_isolated") {
+        return fail("pycache_isolated is only recorded by the Python lane");
+    }
+    exact_fields(object, &keys, "lane manifest")?;
+    let pycache_isolated = if lane_is_python {
+        if !boolean(object, "pycache_isolated", "lane manifest")? {
+            return fail("pycache_isolated must be true for the Python lane");
+        }
+        true
+    } else {
+        false
+    };
     if string(object, "schema", "lane manifest")? != "warrant-lane-evidence-v1" {
         return fail("unsupported lane manifest schema");
     }
@@ -252,6 +274,7 @@ pub fn parse_lane_manifest(bytes: &[u8]) -> Result<LaneEvidenceManifest, LaneEvi
         toolchain_version,
         evidence_seed,
         faulted,
+        pycache_isolated,
         tests,
     })
 }

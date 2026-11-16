@@ -74,6 +74,11 @@ func TestWarrantLaneArtifactsSelectGrammarAndAssuranceConsumers(t *testing.T) {
 		{Name: "go/warrant-corpus", Language: "go"},
 		{Name: "go/ct-compare", Language: "go"},
 		{Name: "python/warrant-oracle", Language: "python"},
+		{Name: "rust/arithmetic", Language: "rust"},
+		{Name: "rust/gf256", Language: "rust"},
+		{Name: "rust/logic-gates", Language: "rust"},
+		{Name: "rust/lzw", Language: "rust"},
+		{Name: "rust/wasm-leb128", Language: "rust"},
 	}
 	for _, input := range []string{
 		"code/specs/ct-compare.warrant",
@@ -101,6 +106,12 @@ func TestWarrantLaneArtifactsSelectGrammarAndAssuranceConsumers(t *testing.T) {
 			// spec, corpus and registry.
 			want["go/warrant-corpus"] = true
 			want["go/ct-compare"] = true
+		}
+		if isWarrantLaneRegistryInput(input) {
+			// WD-004b2: every assurance_report.json lists a rung per registry lane.
+			for _, name := range []string{"arithmetic", "ct-compare", "gf256", "logic-gates", "lzw", "wasm-leb128"} {
+				want["rust/"+name] = true
+			}
 		}
 		if isWarrantOracleInput(input) {
 			// VER04r S4: the independent oracle parses the spec and gates the corpus.

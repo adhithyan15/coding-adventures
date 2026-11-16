@@ -9,3 +9,5 @@ uv pip install -e . pytest --quiet
 # tests when gcc, rustc and bc exist (they are skipped, not faked, when absent).
 .venv/bin/python ../../../scripts/generate_trig_reference_fixture.py --check --no-external
 .venv/bin/python -m unittest discover -s ../../../scripts/tests -p test_trig_reference_fixture.py
+.venv/bin/python ../../../scripts/generate_trig_reference_dart_fixtures.py --check
+.venv/bin/python -m unittest discover -s ../../../scripts/tests -p test_trig_reference_dart_fixtures.py

@@ -199,7 +199,24 @@ export function validateManifest(
   registryBytes: Uint8Array | null = null,
   requireActive = false,
 ): Record<string, unknown> {
-  const root = obj(parseJson(manifestBytes), MANIFEST_KEYS, "manifest");
+  const parsed = parseJson(manifestBytes);
+  // `pycache_isolated` is the one lane-specific key (VER04i 8.1): required, and
+  // exactly true, for the Python lane; forbidden for every other lane. The lane
+  // is read before the closed key check because the key set depends on it.
+  let keys: readonly string[] = MANIFEST_KEYS;
+  if (isObject(parsed)) {
+    const has = Object.hasOwn(parsed, "pycache_isolated");
+    if (parsed["lane"] === "python") {
+      need(has, "manifest", "pycache_isolated is required for the Python lane (VER04i 8.1)");
+      keys = [...MANIFEST_KEYS, "pycache_isolated"];
+    } else {
+      need(!has, "manifest", "pycache_isolated is only recorded by the Python lane");
+    }
+  }
+  const root = obj(parsed, keys, "manifest");
+  if (Object.hasOwn(root, "pycache_isolated")) {
+    need(root["pycache_isolated"] === true, "manifest", "pycache_isolated must be true for the Python lane");
+  }
   need(root["schema"] === SCHEMA, "manifest", "unsupported schema");
   const lane = root["lane"];
   const packageName = root["package"];

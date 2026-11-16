@@ -156,6 +156,7 @@ fn test_checker_rejects_illegal_cwe208_exclusion_for_crypto_package() {
             e4: "pass".into(),
             e5: "pass".into(),
         },
+        lanes: vec![],
         capabilities: CapabilitiesSummary {
             declared: vec![],
             analyzer: "pass".into(),
@@ -244,6 +245,7 @@ fn test_non_crypto_package_reaches_pass_verdict_with_cwe208_excluded() {
             e4: "pass".into(),
             e5: "pass".into(),
         },
+        lanes: vec![],
         capabilities: CapabilitiesSummary {
             declared: vec![],
             analyzer: "pass".into(),

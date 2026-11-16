@@ -1,0 +1,3 @@
+## Unreleased - source-input boundary sync (ct-compare lanes)
+
+- `code/packages/go/ct-compare`, `code/packages/python/ct-compare`, and `code/packages/typescript/ct-compare` added to `rust-root-workspace-manifest-cross-consumers`: their BUILD files run cargo against the Rust workspace (WD-004b2) without syncing the repository boundary. The checked repository source-input boundary added all three roots, the projection was regenerated, and the pinned boundary digest moved from `16dddd56...` to `2bfdfd58...`. The boundary has 504 scopes and 518 authorizations (were 501 and 515). No behaviour change in the tool.

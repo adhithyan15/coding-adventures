@@ -147,10 +147,12 @@ var (
 	trigReferenceInputPaths = []string{
 		"code/specs/fixtures/trig-reference-v1",
 		"code/scripts/generate_trig_reference_fixture.py",
+		"code/scripts/generate_trig_reference_dart_fixtures.py",
 		"code/scripts/trig_ref_exact.py",
 		"code/scripts/trig_ref_softfloat.py",
 		"code/scripts/trig_reference_xcheck",
 		"code/scripts/tests/test_trig_reference_fixture.py",
+		"code/scripts/tests/test_trig_reference_dart_fixtures.py",
 	}
 
 	rngCorpusPaths         = []string{"code/specs/fixtures/rng-v1"}
@@ -381,6 +383,93 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		name:     "cpp/trig",
 		language: "cpp",
 		inputs:   "the shared TRIG-REF-1 bit-exact conformance corpus",
+		matches:  isTrigReferenceCorpus,
+		paths:    trigReferenceCorpusPaths,
+	},
+	{
+		name:     "ruby/trig",
+		language: "ruby",
+		inputs:   "the shared TRIG-REF-1 bit-exact conformance corpus",
+		matches:  isTrigReferenceCorpus,
+		paths:    trigReferenceCorpusPaths,
+	},
+	{
+		name:     "haskell/trig",
+		language: "haskell",
+		inputs:   "the shared TRIG-REF-1 bit-exact conformance corpus",
+		matches:  isTrigReferenceCorpus,
+		paths:    trigReferenceCorpusPaths,
+	},
+	{
+		name:     "java/trig",
+		language: "java",
+		inputs:   "the shared TRIG-REF-1 bit-exact conformance corpus",
+		matches:  isTrigReferenceCorpus,
+		paths:    trigReferenceCorpusPaths,
+	},
+	{
+		name:     "kotlin/trig",
+		language: "kotlin",
+		inputs:   "the shared TRIG-REF-1 bit-exact conformance corpus",
+		matches:  isTrigReferenceCorpus,
+		paths:    trigReferenceCorpusPaths,
+	},
+	{
+		name:     "swift/trig",
+		language: "swift",
+		inputs:   "the shared TRIG-REF-1 bit-exact conformance corpus",
+		matches:  isTrigReferenceCorpus,
+		paths:    trigReferenceCorpusPaths,
+	},
+	{
+		name:     "csharp/trig",
+		language: "csharp",
+		inputs:   "the shared TRIG-REF-1 bit-exact conformance corpus",
+		matches:  isTrigReferenceCorpus,
+		paths:    trigReferenceCorpusPaths,
+	},
+	{
+		name:     "fsharp/trig",
+		language: "fsharp",
+		inputs:   "the shared TRIG-REF-1 bit-exact conformance corpus",
+		matches:  isTrigReferenceCorpus,
+		paths:    trigReferenceCorpusPaths,
+	},
+	{
+		name:     "lua/trig",
+		language: "lua",
+		inputs:   "the shared TRIG-REF-1 bit-exact conformance corpus",
+		matches:  isTrigReferenceCorpus,
+		paths:    trigReferenceCorpusPaths,
+	},
+	{
+		name:     "perl/trig",
+		language: "perl",
+		inputs:   "the shared TRIG-REF-1 bit-exact conformance corpus",
+		matches:  isTrigReferenceCorpus,
+		paths:    trigReferenceCorpusPaths,
+	},
+	{
+		name:     "elixir/trig",
+		language: "elixir",
+		inputs:   "the shared TRIG-REF-1 bit-exact conformance corpus",
+		matches:  isTrigReferenceCorpus,
+		paths:    trigReferenceCorpusPaths,
+	},
+	{
+		name:     "go/trig",
+		language: "go",
+		inputs:   "the shared TRIG-REF-1 bit-exact conformance corpus",
+		matches:  isTrigReferenceCorpus,
+		paths:    trigReferenceCorpusPaths,
+	},
+	{
+		// Dart's test reads the generated trig_reference_vectors.dart, not the TSVs;
+		// python/trig's BUILD --check keeps that file in step with the corpus, and a
+		// corpus change re-runs these tests against it.
+		name:     "dart/trig",
+		language: "dart",
+		inputs:   "the shared TRIG-REF-1 corpus, via the generated Dart vector source",
 		matches:  isTrigReferenceCorpus,
 		paths:    trigReferenceCorpusPaths,
 	},
@@ -708,6 +797,48 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		paths:    warrantAssurancePaths,
 	},
 	{
+		name:     "rust/arithmetic",
+		language: "rust",
+		inputs:   "the Warrant consumer registry its assurance_report.json lists lane rungs from (VER04i 8.3)",
+		matches:  isWarrantLaneRegistryInput,
+		paths:    warrantLaneRegistryPaths,
+	},
+	{
+		name:     "rust/ct-compare",
+		language: "rust",
+		inputs:   "the Warrant consumer registry its assurance_report.json lists lane rungs from (VER04i 8.3)",
+		matches:  isWarrantLaneRegistryInput,
+		paths:    warrantLaneRegistryPaths,
+	},
+	{
+		name:     "rust/gf256",
+		language: "rust",
+		inputs:   "the Warrant consumer registry its assurance_report.json lists lane rungs from (VER04i 8.3)",
+		matches:  isWarrantLaneRegistryInput,
+		paths:    warrantLaneRegistryPaths,
+	},
+	{
+		name:     "rust/logic-gates",
+		language: "rust",
+		inputs:   "the Warrant consumer registry its assurance_report.json lists lane rungs from (VER04i 8.3)",
+		matches:  isWarrantLaneRegistryInput,
+		paths:    warrantLaneRegistryPaths,
+	},
+	{
+		name:     "rust/lzw",
+		language: "rust",
+		inputs:   "the Warrant consumer registry its assurance_report.json lists lane rungs from (VER04i 8.3)",
+		matches:  isWarrantLaneRegistryInput,
+		paths:    warrantLaneRegistryPaths,
+	},
+	{
+		name:     "rust/wasm-leb128",
+		language: "rust",
+		inputs:   "the Warrant consumer registry its assurance_report.json lists lane rungs from (VER04i 8.3)",
+		matches:  isWarrantLaneRegistryInput,
+		paths:    warrantLaneRegistryPaths,
+	},
+	{
 		name:     "python/warrant-corpus",
 		language: "python",
 		inputs:   "the Warrant spec, corpus and consumer registry its tests run",
@@ -756,6 +887,18 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		matches:  isWarrantGoLanePilotInput,
 		paths:    warrantGoLanePilotPaths,
 	},
+}
+
+// warrantLaneRegistryPaths is the consumer registry. Every Rust package that
+// uses ca-assurance-report records one rung per registry lane in its
+// assurance_report.json (WD-004b2), so adding, flipping or removing a row
+// stales all of their reports; their BUILD runs `--check`, which re-derives the
+// rungs. Listed by name because the registry is data no Cargo graph edge sees.
+var warrantLaneRegistryPaths = []string{"code/specs/fixtures/ct-compare-warrant-v1/consumers.json"}
+
+// isWarrantLaneRegistryInput is true only for the registry file itself.
+func isWarrantLaneRegistryInput(changed string) bool {
+	return changed == "code/specs/fixtures/ct-compare-warrant-v1/consumers.json"
 }
 
 // The assurance report validates the shared Warrant lane artifacts directly.
@@ -992,9 +1135,11 @@ func isTrigReferenceInput(changed string) bool {
 	}
 	switch changed {
 	case "code/scripts/generate_trig_reference_fixture.py",
+		"code/scripts/generate_trig_reference_dart_fixtures.py",
 		"code/scripts/trig_ref_exact.py",
 		"code/scripts/trig_ref_softfloat.py",
-		"code/scripts/tests/test_trig_reference_fixture.py":
+		"code/scripts/tests/test_trig_reference_fixture.py",
+		"code/scripts/tests/test_trig_reference_dart_fixtures.py":
 		return true
 	}
 	return strings.HasPrefix(changed, "code/scripts/trig_reference_xcheck/")

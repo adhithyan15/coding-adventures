@@ -270,6 +270,10 @@ pub struct Evidence {
     pub package_id: String,
     /// The VER13 catalogue, evidence kinds and non-claims, with their digests.
     pub catalogue: CatalogueSet,
+    /// The lane rungs of this package (VER04i 8.3), derived from the consumer
+    /// registry and the lane loader.  Read by nothing that derives a Rust
+    /// claim, rung or verdict.
+    pub lanes: Vec<crate::lane_report::LaneRung>,
     /// SHA-256 (hex) of each manifest's bytes, by manifest name
     /// (`test`, `proof`, `bench`); AC-3 compares catalogue digests with it.
     pub manifest_sha256: BTreeMap<String, String>,
@@ -952,6 +956,12 @@ impl Evidence {
                 .ok_or_else(|| EvidenceError("package directory has no usable name".into()))?
         );
 
+        // The lane rungs come from the registry above the package and the lane
+        // loader, never from this package's own manifests (VER04i 8.3).  An
+        // `active` lane that does not load fails the whole load.
+        let lanes = crate::lane_report::derive_lane_rungs(spec_root, &package_id)
+            .map_err(|e| EvidenceError(format!("lane evidence: {e}")))?;
+
         // The audit profile is the package's own file; a missing or malformed
         // one fails the load, so no report is ever produced under a guessed
         // profile.
@@ -983,6 +993,7 @@ impl Evidence {
             proofs_dir: dir.join("proofs"),
             package_id,
             catalogue,
+            lanes,
             manifest_sha256,
             pinned,
         })
@@ -1563,6 +1574,13 @@ pub enum EvidenceCheckError {
     TrivialCertificateUnmarked(String),
     /// A VER13 assumption rule (AC-1..AC-14) failed.
     Assumption(AssumptionCheckError),
+    /// The report's lanes differ from the registry's, or name another lane's
+    /// package (VER04i 9 check 17).
+    LaneMismatch(String),
+    /// The report claims more for a lane than the registry and the loader
+    /// support: a stronger rung, a release or sandbox claim, more cases under
+    /// a label (VER04i 9 check 24).
+    LabelOverclaim(String),
 }
 
 impl fmt::Display for EvidenceCheckError {
@@ -1578,6 +1596,8 @@ impl fmt::Display for EvidenceCheckError {
             Self::Load(m) => ("cannot load evidence", m),
             Self::DuplicateId(m) => ("duplicate id", m),
             Self::TrivialCertificateUnmarked(m) => ("trivial certificate presented as a full proof", m),
+            Self::LaneMismatch(m) => ("lane mismatch", m),
+            Self::LabelOverclaim(m) => ("lane label overclaim", m),
             Self::Assumption(a) => return write!(f, "{a}"),
         };
         write!(f, "{name}: {m}")
@@ -2047,6 +2067,16 @@ pub fn verify_evidence(
             "rungs are {:?} but the manifests say {:?}",
             report.rungs, want_rungs
         )));
+    }
+
+    // Lane rungs: re-derived from the registry and the lane artifacts, never
+    // from the Rust manifests above (VER04i 8.3).
+    use crate::lane_report::{compare_lane_rungs, LaneDiff};
+    match compare_lane_rungs(&report.lanes, &ev.lanes) {
+        Ok(()) => {}
+        Err(LaneDiff::Mismatch(m)) => return Err(E::LaneMismatch(m)),
+        Err(LaneDiff::Overclaim(m)) => return Err(E::LabelOverclaim(m)),
+        Err(LaneDiff::Stale(m)) => return Err(E::StaleEvidence(m)),
     }
 
     Ok(unverified)

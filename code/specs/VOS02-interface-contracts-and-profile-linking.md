@@ -218,8 +218,12 @@ Condition (a), the dependency edge, is carried by the profile package (R7).
 obligations state each step claim for every concrete state `build(m)`, `m` ranging
 over M (section 2.6), so the binder is a complete domain of the abstract state
 and the claim is `exhaustive` where the instance fits the budget (VOS01 section
-5.6). The `canonical` block adds, for every step, `build(alpha(post)) == post` and
-`alpha(build(m)) == m`: the reachable states are exactly the image of `build`.
+5.6). The `canonical` block adds, for every step, `build(alpha(post)) == post`: the
+reachable states are exactly the image of `build`. `alpha(build(m)) == m` is a
+**safety-tier** obligation (VOS10 names it `safety_alpha_build`), not a canonical one:
+it is field-agnostic and every implementation needs `build`, `alpha` and `dec` pinned,
+including the representation-mode and `any` implementations that do not carry
+`canonical`.
 *Why:* without the canonical block, "every state `build(m)` behaves" says nothing
 about a state the step reaches that is not in the image. An implementation whose
 representation has history (a ring buffer's head position) is not canonical; it
@@ -228,16 +232,56 @@ declares `mode=representation` (section 6.2), writes `<op>_rep` claims over
 VER04m E15's `codec-roundtrip` and `rebuild-equivalence` idea for by-value
 state.
 
-**R6. Kind is keyed on evidence, not on a crate name.**
+**R6. Kind is a `vos-link`-enforced rule over a declared kind, not something evidence alone establishes.**
 
 | Kind | Must discharge | May not be used for |
 |---|---|---|
 | `production` | the `canonical` block (or, for `mode=representation`, the determinism claim), and every tier the profile needs | nothing |
-| `any` | the `any` block (soundness and coverage); it cannot discharge `canonical` because `alpha` drops the oracle | an `image` profile (SH16) |
+| `any` | the `any` block (soundness and coverage); it may **not** carry `canonical` (a rule of `vos-link`, below) | an `image` profile (SH16) |
 | `reference` | a deterministic executable model with no `bound` rows | an `image` profile |
 
-This makes VOS-D009 independent of crate names: the name pattern `vos-*-any` is a
-two-way lint (section 7.2), never the authority.
+**What `vos-link` enforces (the authority).** The kind is declared in the crate's
+`vos.toml` and in the profile manifest row. Two author-written values that agree prove
+nothing, so `vos-link` compares **both against a central crate-to-class-and-kind
+registry** that it owns (backlog VOS-D030, the authority list of section 7.4); a crate
+absent from the registry has no kind and cannot be a manifest row. For each crate
+`vos-link` then checks, from the generated document and the crate's files (never from
+evidence alone):
+
+1. `kind = any`: the document carries the `any` block and **carries no `canonical`
+   claim** (matched by `claim_sha256`); the `any` obligations type-check against its
+   `Impl`, which therefore has the oracle field they name (`choice`), a structural
+   check made by the Warrant type checker on the generated document; the crate name ends
+   in `-any`; the kind never appears in an `image` profile (SH16).
+2. `kind = production`: the document carries `canonical` (or the representation-mode
+   determinism claim) **and no `any` block**, and a **structural** state check holds:
+   every field of `Impl` is in the cone of `alpha` and `build` (the Warrant `build` model
+   sets it from M, and the ghost `alpha` wrapper reads it, SH17), so no field is an oracle
+   or history register outside that cone; the crate's `evidence.bindings` binds no
+   oracle-write export (the ghost `set_oracle` path). For `kind = any` the converse holds:
+   at least one `Impl` field is outside the cone (the oracle the `any` block names). This
+   is a check on the state's structure, not on any name; the crate name is only the lint
+   below.
+3. `kind = reference`: no `bound` rows, never in an `image` profile.
+
+**What this rule is not.** It separates `any` from `production` in the *documents*; it is
+not the barrier that keeps `-any` out of a shipped image. That barrier is SH13 (the
+oracle-write path and `alpha` live behind the `ghost` feature), SH16 (no `-any` crate and
+no evidence feature in the **resolved** graph of an `image` profile), the closed-world
+manifest rows of section 7.2 and the hermetic build of VOS22. A mislabelled kind could
+fool rule 2; it could not get past those.
+
+**What canonical evidence does and does not exclude.** The canonical block (R5) starts
+from `build(M)` and says every step lands back in the image of `build`. It excludes an
+implementation whose representation carries history that `alpha` forgets (a rotation
+pointer): that is why a round-robin scheduler is `mode=representation`. It does **not**
+exclude `-any`: `build` sets the oracle to 0, an oracle nothing moves is canonical, and
+the evaluation in `vos-sched-contract-check` shows an oracle scheduler passing every
+canonical claim. A claim that did exclude it (the first draft's `canon_build_alpha`)
+would have to name the fields of `Impl`, so it cannot be one text with one digest across
+implementations (R3). So the separation of `any` from `production` is the rule above,
+checked structurally by `vos-link` (VOS-033, VOS-034), and the name pattern `vos-*-any`
+is a two-way lint (section 7.2), never the authority.
 
 **R7. The spine's document assumes no implementation ids.** The **profile
 package** is the package with the direct dependency edges (VER29 section 5.1(a)),
@@ -382,8 +426,6 @@ warrant vos_ready_bitmap v1
   claim canon_alpha_build:
     forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool. (
       dec(alpha_w(build(Ready(b0, b1, b2, b3, b4, b5, b6, b7)))) == Ready(b0, b1, b2, b3, b4, b5, b6, b7))
-  claim canon_build_alpha:
-    forall mask: U8. build(dec(alpha_w(Impl(mask)))) == Impl(mask)
   ...                                   (canon_insert_post, canon_insert_img, canon_remove_img, canon_pick_img)
   -- vos02:obligations-end
   assume platform:
@@ -391,6 +433,9 @@ warrant vos_ready_bitmap v1
   assume environment:
     none
 ```
+
+(The `canon_alpha_build` of this listing is, in VOS10's real contract package, the
+**safety** claim `safety_alpha_build`: R5 above.)
 
 What the author wrote: `impl.part` (lines from `impl-begin` to `impl-end`) and,
 in the contract package, the `.part` files. Everything else is assembled. Two
@@ -436,9 +481,10 @@ caps of section 6.8):
 contract = "vos-contract 1" LF "name " PKG LF "iface " IDENT LF
            { "tier " TIER LF }                         ; sorted: any, canonical, policy, safety
            { "config " KEY SP DEC LF }                 ; sorted by key
-           { "ceiling " IDENT SP METRIC SP DEC LF }    ; sorted by (op, metric)
+           { "ceiling " OPNAME SP METRIC SP DEC LF }   ; sorted by (op, metric)
            "end" LF
 METRIC   = "depth" | "heap" | "steps"
+OPNAME   = [a-z] [a-z0-9_]{0,31}      ; a Rust and Warrant operation name: underscores allowed (VOS-D051)
 ```
 
 The figures are VOS01 section 5.1's placeholders (`16 N + 32 = 160` steps). The
@@ -471,7 +517,7 @@ profile report prints the mode next to the kind.
 ---
 ## 3. Implementation kinds and the `-any` discipline
 
-### 3.1 Three kinds, keyed on evidence (R6)
+### 3.1 Three kinds, enforced by `vos-link` (R6)
 
 VOS01 section 3 gave `-any` its recipe (a bitmap plus an oracle register that
 `alpha` drops, propose-validate-default, soundness and coverage with witnesses).
@@ -492,24 +538,34 @@ kind = "production"             # or "reference", "any"
 evidence-features = ["ghost"]   # features that exist for evidence only; must be in the central list of section 7.3
 ```
 
-The kind is **checked against the evidence**, not merely trusted: a crate that
-declares `production` must have a generated document whose carries include
-`canonical` (or the representation-mode determinism claim), and a crate that
-declares `any` must carry the `any` block and cannot carry `canonical`. The name
+The kind is **checked by `vos-link`**, not merely trusted, with the rules listed under
+R6: a crate that declares `production` must have a generated document whose carries
+include `canonical` (or the representation-mode determinism claim) and no `any` block,
+and a crate that declares `any` must carry the `any` block, may not carry `canonical`
+and has the oracle field the `any` block names. These are rules over the declared kind
+and the document structure; canonical evidence alone does not separate the two (see
+"What canonical evidence does and does not exclude" under R6). The name
 pattern `vos-<iface>-any` is a lint in both directions: a crate named `-any` that
 declares `production` is an error, and a `production` crate that carries an `any`
-block is an error (negative controls NC4 and NC5, section 12).
+block is an error (negative controls NC4 and NC5, section 12), as is an `any` crate
+that carries `canonical` (NC4b).
 
-### 3.2 Why `any` cannot discharge `canonical`
+### 3.2 Why `any` is kept out of `canonical`, and by what
 
 `-any` is the bitmap plus an oracle register `choice` (VOS01 section 3.2), so its
-`Impl` is `Impl(mask: U8, choice: U8)` and `alpha` drops `choice`. Then
-`alpha(build(m)) == m` holds (build sets `choice` to 0) but
-`build(alpha(s)) == s` fails for any state with `choice != 0`. That failure is the
-point: a state with an oracle is not a function of the abstract state, so `-any`
-is not canonical, and the `canonical` block (R5), which production must discharge,
-would reject it. R6 therefore needs no list of names: "may not be shipped" is the
-same fact as "does not discharge `canonical`".
+`Impl` is `Impl(mask: U8, choice: U8)` and `alpha` drops `choice`. A state with an
+oracle is not a function of the abstract state, so `-any` is not canonical in the
+sense of "every state of `Impl` is `build` of its abstraction"
+(`build(alpha(s)) == s` fails for `choice != 0`). **But the canonical block of R5 cannot
+say that**: the claim would name `Impl`'s fields, which differ per implementation, and
+the block starts from `build(M)`, where the oracle is 0. Every step from such a state
+keeps `choice` where it was, so an `-any` passes the R5 claims (evaluated in
+`vos-sched-contract-check`). The earlier draft of this section and the listing in 2.4
+claimed otherwise; that was wrong. The separation is therefore the `vos-link` rule of R6
+(declared kind plus the structural checks), and SH16 (never in an `image`) and the
+closed-world manifest rows of section 7.2 carry the safety consequence: `-any` cannot be
+shipped because the manifest and the resolved graph say so, not because canonical
+evidence fails.
 
 ### 3.3 The `any` block, in the fixed vocabulary
 
@@ -1016,7 +1072,8 @@ dropped by the split.
 3. **Kinds.** Each node's kind is `contract`, `production`, `spine`, `hal` or `profile`;
    its `vos.toml` kind equals the manifest's and agrees with the evidence (a `production`
    crate's **parsed** claims match the `canonical` obligations by `claim_sha256`; no node
-   carries an `any` block). The `*-any` name is a lint only (R6).
+   carries an `any` block, and no `any` node carries `canonical`; R6 states what `vos-link`
+   checks, as rules over the declared kind). The `*-any` name is a lint only (R6).
 4. **Features, as resolved by the manifests.** Every non-default feature of every node is
    off, and no node enables an evidence feature (section 7.3). This is a static reading of
    `Cargo.toml`; it is **not** proof of what was compiled (VOS22 closes that).
@@ -1319,9 +1376,9 @@ marked `n/a` with a reason.
 4. The implementation block uses the fixed vocabulary of R3 (and, until WX-SV, the
    interim vocabulary of section 4.4) and declares no claim named like an
    obligation.
-5. The kind is declared in the crate's `vos.toml` and agrees with the evidence
-   (R6): `production` carries `canonical` or the representation-mode determinism
-   claim; `any` carries the `any` block and no `canonical`.
+5. The kind is declared in the crate's `vos.toml` and passes the `vos-link` rules of R6:
+   `production` carries `canonical` or the representation-mode determinism claim and no
+   `any` block; `any` carries the `any` block, no `canonical`, and has the oracle field.
 6. The ghost face passes SH17 and SH18, is behind a feature listed in
    `evidence-features`, and the test target has `required-features`.
 7. The profile is canonical text (parse then re-emit is byte-equal), the lock is
@@ -1343,7 +1400,8 @@ the gate (VER04h section 6).
 | NC1 | a hand edit inside the copied contract block | `check-doc` (marker digest and regeneration) |
 | NC2 | an obligation weakened in the implementation block with the same name | `check-doc` (duplicate declaration) and `claim_sha256` mismatch |
 | NC3 | an implementation that omits an obligation its profile needs | `check-profile` (`needs` is not a subset of `carries`) |
-| NC4 | a `-any` crate declared `production` | R6: no `canonical` evidence |
+| NC4 | a `-any` crate declared `production` | R6: it carries the `any` block (and its `Impl` has the oracle field) |
+| NC4b | an `-any` crate whose document also carries `canonical` | R6: the rule `any` may not carry `canonical` (it would pass the claims, VOS10 section 14) |
 | NC5 | a `production` crate carrying an `any` block | R6 |
 | NC6 | a stale lock after a contract change | `check-profile` (digest mismatch) |
 | NC7 | an `any` implementation in an `image` profile | eligibility, section 7.2 rule 3 |
@@ -1443,7 +1501,7 @@ WARRANT_EVIDENCE_OUT=manifest.json  cargo test ...          # writes the evidenc
 | Document type-checks (markers are comments, nullary ops need no `labels`) | yes |
 | Generated harness compiles and runs | yes, about 3 s |
 | Tests | 53 `ok`, 1 `not ok` (below) |
-| Exhaustive claims | 10, all `pass`: `insert_safe`, `remove_safe`, `canon_insert_post`, `canon_insert_img`, `canon_remove_img` at 65,536 cases each; `pick_safe`, `pick_policy`, `canon_alpha_build`, `canon_build_alpha`, `canon_pick_img` at 256 |
+| Exhaustive claims | 10, all `pass`: `insert_safe`, `remove_safe`, `canon_insert_post`, `canon_insert_img`, `canon_remove_img` at 65,536 cases each; `pick_safe`, `pick_policy`, `canon_alpha_build`, `canon_build_alpha` (spike only, dropped from the obligations: it names `Impl`'s fields, R6), `canon_pick_img` at 256 |
 | Exhaustive total | 328,960 cases (matches VOS01 section 5.6's 65,536-per-claim figure); every binder `Bool set(2)` or `U8 full(256)`, discarded 0 |
 | Property, fuzz | 10 and 10, all `pass` |
 | Examples | 3, all `pass` |
@@ -1503,7 +1561,7 @@ works for any `--target`; it is only a cross-check, while what was compiled is V
 | F3 | A negative control attaches to a claim by its **subject operation**: the first operation found by shallow search. In `dec(alpha_w(insert_img(...))) == ...` the subject is `alpha_w`, so `insert_img` had no control that could pass (3 negctls `not ok` until the commuting claims were added) | R5's canonical block uses the commuting form (section 4.4) |
 | F4 | `field-zero` on `init` is **inert** when the initial state's field is already 0: no claim can distinguish the faulted from the real value, so the `init` control fails (an example over the zero state had the same defect for `alpha_w` until it used a non-zero state) | WX-SV item 2 asks for a fault that changes a zero field; until then the `init` control is a known failure, recorded in the lock as `controls: init field-zero inert` |
 | F5 | The evidence manifest has no `features`, `cfg` or `config` field | AM4 (features and `cfg`) and WX-SV item 4 (`config`) |
-| F6 | The generated harness needs `coding_adventures_sha256` and `coding_adventures_test_bootstrap` as dev-dependencies | VOS-D002 must state that SH12 reads normal dependencies only (VOS01 section 1.4 does not say); the static closed-world rule of section 7.2 reads normal and build dependencies only (S6) |
+| F6 | The generated harness needs `coding_adventures_sha256` and `coding_adventures_test_bootstrap` as dev-dependencies | SH12 reads normal and build dependencies strictly and dev-dependencies against a closed allowlist (VOS03 SH12, VOS01 section 1.4), not "not at all"; the static closed-world rule of section 7.2 reads normal and build dependencies only (S6) |
 | F7 | AM4 as briefed said "a feature that gates exactly one module item"; the root re-export is a second gated item | AM4 allows `pub use` items from that module (section 9.1) |
 | F8 | Resolver 1 makes `cargo tree -e normal,build` report no `ghost` while the build compiles it (dev-dependency unification); `RUSTFLAGS` cfgs are invisible to `cargo tree`; `--unit-graph` is nightly-only | VOS22 (hermetic, recorded build); see the appendix |
 

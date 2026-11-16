@@ -15531,6 +15531,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "vos-sched-contract"
+version = "0.1.0"
+
+[[package]]
+name = "vos-sched-contract-check"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_warrant_grammar",
+ "vos-sched-contract",
+]
+
+[[package]]
 name = "vos-shape-check"
 version = "0.1.0"
 dependencies = [

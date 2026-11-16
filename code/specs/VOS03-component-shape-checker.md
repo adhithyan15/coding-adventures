@@ -89,6 +89,16 @@ VOS02 R1-R4, are what bind the harness). The dev-dependencies they use are an
 allowlist (SH12), and whether the harness sources should themselves be scanned
 is backlog VOS-D035.
 
+**The sibling-crate pattern for Warrant checks.** The allowlist is closed, so a
+class K contract or component crate cannot depend on the Warrant tooling
+(`coding_adventures_warrant_grammar`) even in `[dev-dependencies]`. A contract package
+that wants its Warrant text parsed, type-checked and evaluated before `vos-link gen-doc`
+exists (VOS-033) puts those tests in a test-only sibling crate with `class = "H"` in its
+`vos.toml`, which depends normally on the contract crate (so the build graph reruns it
+when the contract changes) and on `warrant-grammar`. `vos-sched-contract-check` is the
+first (VOS10 section 12); it is folded into `vos-link`'s tests when VOS-033 lands
+(VOS-D049).
+
 **`#[cfg(test)]` items are masked.** An item whose attribute list contains
 exactly `cfg(test)` is removed from the token stream before any rule runs. It
 is not compiled into an image or into the generated evidence (the evidence

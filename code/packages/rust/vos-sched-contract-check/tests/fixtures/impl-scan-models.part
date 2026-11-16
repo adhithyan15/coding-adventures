@@ -1,0 +1,36 @@
+  -- A different representation of the same contract: one cell per thread (each 0 or 1), and
+  -- dispatch scans from thread 0 upward and returns the LOWEST ready thread. Safety tier only.
+  record Impl(c0: U8, c1: U8, c2: U8, c3: U8, c4: U8, c5: U8, c6: U8, c7: U8)
+  record AbsW(w: U8)
+  record CfgN(v: U8)
+  model dec(x: AbsW) -> Ready = (
+    Ready(not (bit_and(x.w, 1u8) == 0u8), not (bit_and(x.w, 2u8) == 0u8), not (bit_and(x.w, 4u8) == 0u8),
+          not (bit_and(x.w, 8u8) == 0u8), not (bit_and(x.w, 16u8) == 0u8), not (bit_and(x.w, 32u8) == 0u8),
+          not (bit_and(x.w, 64u8) == 0u8), not (bit_and(x.w, 128u8) == 0u8)))
+  model b2u(b: Bool) -> U8 = if b then 1u8 else 0u8
+  model build(m: Ready) -> Impl = (
+    Impl(b2u(m.p0), b2u(m.p1), b2u(m.p2), b2u(m.p3), b2u(m.p4), b2u(m.p5), b2u(m.p6), b2u(m.p7)))
+  model inv_impl(s: Impl) -> Bool = (
+    s.c0 <= 1u8 and s.c1 <= 1u8 and s.c2 <= 1u8 and s.c3 <= 1u8 and s.c4 <= 1u8 and s.c5 <= 1u8 and s.c6 <= 1u8 and s.c7 <= 1u8)
+  model cfg_n() -> CfgN = CfgN(8u8)
+  model init() -> Impl = Impl(0u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8)
+  model cell(s: Impl, i: U8) -> U8 = (
+    if i == 0u8 then s.c0 else (if i == 1u8 then s.c1 else (if i == 2u8 then s.c2 else (if i == 3u8 then s.c3 else
+    (if i == 4u8 then s.c4 else (if i == 5u8 then s.c5 else (if i == 6u8 then s.c6 else (if i == 7u8 then s.c7 else 0u8))))))))
+  model setc(s: Impl, i: U8, v: U8) -> Impl = (
+    Impl(if i == 0u8 then v else s.c0, if i == 1u8 then v else s.c1, if i == 2u8 then v else s.c2, if i == 3u8 then v else s.c3,
+         if i == 4u8 then v else s.c4, if i == 5u8 then v else s.c5, if i == 6u8 then v else s.c6, if i == 7u8 then v else s.c7))
+  model first(s: Impl) -> U8 = (
+    if s.c0 == 1u8 then 0u8 else (if s.c1 == 1u8 then 1u8 else (if s.c2 == 1u8 then 2u8 else (if s.c3 == 1u8 then 3u8 else
+    (if s.c4 == 1u8 then 4u8 else (if s.c5 == 1u8 then 5u8 else (if s.c6 == 1u8 then 6u8 else (if s.c7 == 1u8 then 7u8 else 8u8))))))))
+  model insert_out(s: Impl, t: U8) -> Upd = (
+    if t >= 8u8 then OutOfRange else (if cell(s, t) == 1u8 then Unchanged else Changed))
+  model insert_img(s: Impl, t: U8) -> Impl = if t >= 8u8 then s else setc(s, t, 1u8)
+  model remove_out(s: Impl, t: U8) -> Upd = (
+    if t >= 8u8 then OutOfRange else (if cell(s, t) == 1u8 then Changed else Unchanged))
+  model remove_img(s: Impl, t: U8) -> Impl = if t >= 8u8 then s else setc(s, t, 0u8)
+  model dispatch_out(s: Impl) -> Pick = if first(s) == 8u8 then Idle else Run(first(s))
+  model dispatch_img(s: Impl) -> Impl = if first(s) == 8u8 then s else setc(s, first(s), 0u8)
+  model alpha_w(s: Impl) -> AbsW = (
+    AbsW(bit_or(bit_or(bit_or(bit_or(bit_or(bit_or(bit_or(shl(s.c0, 0), shl(s.c1, 1)), shl(s.c2, 2)), shl(s.c3, 3)),
+         shl(s.c4, 4)), shl(s.c5, 5)), shl(s.c6, 6)), shl(s.c7, 7))))
