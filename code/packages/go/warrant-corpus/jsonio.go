@@ -41,19 +41,22 @@ import (
 //     with strconv.ParseUint;
 //   - an unpaired surrogate escape ("\ud800" with no low half, or a lone low
 //     half) is an error, so corpus text is well-formed Unicode;
-//   - nesting deeper than maxJSONDepth is an error;
+//   - more than maxJSONDepth (256) nested containers is an error; a scalar does
+//     not count as a level;
 //   - trailing data after the document is an error.
 //
 // A parsed value is one of: nil, bool, int64, string, []any, map[string]any.
 // Go maps have no prototype, so a "__proto__" key is plain data.
 //
-// Output is canonical: sorted keys, two-space indent, LF, ASCII-only escapes
-// (the same ones Python's ensure_ascii writes), and a trailing newline, so a
+// Output is canonical: keys sorted by code point, two-space indent, LF,
+// ASCII-only escapes (the same ones Python's ensure_ascii writes: every
+// character outside U+0020..U+007E, DEL included, is a lowercase \uXXXX), and a trailing newline, so a
 // regenerated file is byte-identical to the committed one in every lane.
 const (
 	maxCorpusBytes = 32 * 1024 * 1024
 	maxTextBytes   = 8 * 1024 * 1024
-	// maxJSONDepth: a 64-deep model IR is about 130 levels of JSON.
+	// maxJSONDepth is the most nested containers a document may hold (a 64-deep
+	// model IR is about 130 levels of JSON).
 	maxJSONDepth = 256
 	// maxSafeInt is 2^53 - 1, the largest integer a double holds exactly. Every
 	// other lane refuses a bigger JSON number, so this one must too.
@@ -125,12 +128,13 @@ func (r *jsonReader) expect(literal string) {
 }
 
 func (r *jsonReader) value(depth int) any {
-	need(depth <= maxJSONDepth, "malformed-json", "JSON nests too deeply")
 	r.space()
 	switch r.peek() {
 	case '{':
+		need(depth < maxJSONDepth, "malformed-json", "JSON nests too deeply")
 		return r.object(depth)
 	case '[':
+		need(depth < maxJSONDepth, "malformed-json", "JSON nests too deeply")
 		return r.array(depth)
 	case '"':
 		return r.str()
@@ -352,9 +356,9 @@ func writeJSONString(out *strings.Builder, s string) {
 			out.WriteString(`\r`)
 		case c == '\t':
 			out.WriteString(`\t`)
-		case c < ' ':
-			unit(c)
-		case c <= 0x7F:
+		case c < ' ' || c == 0x7F:
+			unit(c) // every control character, DEL included, is \u00XX and never raw
+		case c <= 0x7E:
 			out.WriteRune(c)
 		case c < 0x10000:
 			unit(c)

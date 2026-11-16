@@ -106,9 +106,11 @@ func TestParseJSONRejectsInvalidUTF8(t *testing.T) {
 func nested(depth int) string { return strings.Repeat("[", depth) + strings.Repeat("]", depth) }
 
 func TestParseJSONDepthLimit(t *testing.T) {
-	parses(t, nested(maxJSONDepth+1)) // depth counts from 0: 256 levels of nesting below the root
-	refuses(t, nested(maxJSONDepth+2))
-	refuses(t, strings.Repeat(`{"a":`, maxJSONDepth+2)+"1"+strings.Repeat("}", maxJSONDepth+2))
+	// At most 256 nested containers; the 257th is refused. A scalar is no level.
+	parses(t, nested(maxJSONDepth))
+	refuses(t, nested(maxJSONDepth+1))
+	parses(t, strings.Repeat(`{"a":`, maxJSONDepth)+"1"+strings.Repeat("}", maxJSONDepth))
+	refuses(t, strings.Repeat(`{"a":`, maxJSONDepth+1)+"1"+strings.Repeat("}", maxJSONDepth+1))
 }
 
 func TestRenderJSONIsCanonical(t *testing.T) {
@@ -142,7 +144,7 @@ func TestRenderJSONIsCanonical(t *testing.T) {
     }
   ],
   "d": false,
-  "quote": "say \"hi\"\\ \b\f\n\r\t\u0001\u001f` + "\x7f" + `",
+  "quote": "say \"hi\"\\ \b\f\n\r\t\u0001\u001f\u007f",
   "wide": "\u00e9\u20ac\ud83d\ude00\u2028"
 }
 `
