@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/percussion-kit",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Deterministic unpitched percussion voices, standard 15-voice kit, and sequence rendering with hi-hat choke",
   "type": "module",
   "main": "dist/index.js",
@@ -19,7 +19,8 @@
   "license": "MIT",
   "dependencies": {
     "@coding-adventures/oscillator": "file:../oscillator",
-    "@coding-adventures/pcm-audio": "file:../pcm-audio"
+    "@coding-adventures/pcm-audio": "file:../pcm-audio",
+    "trig": "file:../trig"
   },
   "devDependencies": {
     "@coding-adventures/test-bootstrap": "file:../test-bootstrap",

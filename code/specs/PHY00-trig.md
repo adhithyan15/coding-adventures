@@ -4,8 +4,8 @@
 > `sin`, `cos`, `radians` and `degrees` is now fixed to the bit by the reference
 > algorithm TRIG-REF-1, and sections 2, 3.2 to 3.5, 5 and 6 below are amended to say
 > so. Ports converge one pull request at a time (PHY00a section 8): a port that has
-> not yet converged still follows the older text of its own `README` (no port has
-> converged yet; Python, Rust and TypeScript go first, together, in TC-2). When the last port merges (TC-18) the
+> not yet converged still follows the older text of its own `README` (**Python, Rust and
+> TypeScript converged together in TC-2**, because they share the `music-machine` golden). When the last port merges (TC-18) the
 > amendments become unconditional.
 
 ## 1. Overview

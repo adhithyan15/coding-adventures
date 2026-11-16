@@ -14,6 +14,7 @@ Covers MUS05 §4-§8, §10, and VER15 security/weakness matrix invariants:
 from __future__ import annotations
 
 import ast
+import math
 from math import inf, nan
 from pathlib import Path
 
@@ -777,3 +778,13 @@ def test_pbt_splitmix64_note_render_bounds_and_determinism() -> None:
             assert -1.0 <= s <= 1.0
         for p in r1.pcm_buffer.samples:
             assert -32768 <= p <= 32767
+
+
+def test_non_finite_partial_phase_is_nan_not_an_exception() -> None:
+    # frequency * time overflows to inf; Rust and TypeScript return NaN, so must Python.
+    signal = InstrumentSignal(
+        fundamental_hz=440.0,
+        instrument=get_instrument("sine"),
+        note_duration_seconds=0.1,
+    )
+    assert math.isnan(signal.value_at(1e308))

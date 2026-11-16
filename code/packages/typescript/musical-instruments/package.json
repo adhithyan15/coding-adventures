@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/musical-instruments",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Naive musical instrument profiles, timbre models, and additive note rendering",
   "type": "module",
   "main": "dist/index.js",
@@ -20,7 +20,8 @@
   "dependencies": {
     "@coding-adventures/note-frequency": "file:../note-frequency",
     "@coding-adventures/oscillator": "file:../oscillator",
-    "@coding-adventures/pcm-audio": "file:../pcm-audio"
+    "@coding-adventures/pcm-audio": "file:../pcm-audio",
+    "trig": "file:../trig"
   },
   "devDependencies": {
     "@coding-adventures/test-bootstrap": "file:../test-bootstrap",

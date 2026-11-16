@@ -2,6 +2,7 @@
  * Pure continuous waveform oscillators (OSC00).
  */
 
+import { sin } from "trig/dist/trig.js";
 import { TWO_PI } from "./constants.js";
 import type { ContinuousSignal } from "./types.js";
 import {
@@ -13,7 +14,13 @@ import {
 } from "./validation.js";
 
 export function evaluateSineRaw(phaseCycles: number): number {
-  return Math.sin(TWO_PI * phaseCycles);
+  // trig.sin is defined for |x| <= 2^29 radians and returns NaN beyond it
+  // (PHY00a 3.4.1).  A phase kept in cycles grows without bound (a 440 Hz tone
+  // passes 2^29 radians after about 54 hours), so reduce it to [0, 1) cycles
+  // first.  `phase - floor(phase)` is exact in binary64, and more accurate than
+  // multiplying a huge phase by 2*pi.
+  const cycles = phaseCycles - Math.floor(phaseCycles);
+  return sin(TWO_PI * cycles);
 }
 
 export function evaluateSquareRaw(pos: number, dutyCycle = 0.5): number {

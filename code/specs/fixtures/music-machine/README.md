@@ -17,6 +17,10 @@ It enables bit-for-bit and sample-level parity testing across Python, Rust, and 
 - `canonical_score.json`: Deterministic canonical JSON serialization of the parsed `PortableScore`.
 - `expected_render.json`: Exact expected synthesis PCM metrics, including SHA-256 digest of little-endian signed 16-bit mono PCM bytes, sample counts, and sample values.
 
+## Regeneration history
+
+- 2026-11-16 (TRIG-CONV TC-2): `pcm16_le_sha256` changed from `15c793ee...364766` to `25bc4eb1...4acee1` and was changed **once, for all three lanes together**. The old value depended on the inaccurate pre-convergence `trig` ports (the hash-style noise in `percussion-kit` multiplies `sin` by 43758.5, so a sine error of 1e-12 flips a 16-bit sample). Since PHY00a every lane takes every sine from the bit-exact `trig` port, so the three lanes render the same bytes. The consumers of the digest are: Python `music-machine` (reads the JSON), Rust `music-machine-core` and `music-machine-ffi` (hard-coded in `tests/test_golden_parity.rs` and `tests/test_ffi_golden.rs`), and TypeScript `music-machine-node` (reads the JSON); `git grep` for the old digest before changing it. Rule: this digest changes only when Python, Rust and TypeScript all produce the new bits in the same pull request.
+
 ## Parity Verification Requirements
 
 Downstream implementations (e.g. Rust crate `coding-adventures-music-machine` and TypeScript package `@coding-adventures/music-machine`) must:
@@ -25,5 +29,5 @@ Downstream implementations (e.g. Rust crate `coding-adventures-music-machine` an
 3. Render score to signed 16-bit mono PCM at 44,100 Hz and assert:
    - `total_samples == 96138`
    - `clipped_sample_count == 0`
-   - `pcm16_le_sha256 == "15c793ee23103560f177d96fab2e200594041d9c06e7dd4f22b0204254364766"`
+   - `pcm16_le_sha256 == "25bc4eb1b0d7a10d40a55afc0f8b0b4d65132a82f538245ee2698700ff4acee1"`
    - First 32 and last 32 sample arrays match `expected_render.json`.

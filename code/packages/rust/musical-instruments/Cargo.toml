@@ -1,12 +1,13 @@
 [package]
 name = "musical-instruments"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "MUS05: Naive musical instrument profiles, timbre models, and additive note rendering"
 license = "MIT"
 readme = "README.md"
 
 [dependencies]
+trig = { path = "../trig" }
 oscillator = { path = "../oscillator" }
 pcm-audio = { path = "../pcm-audio" }
 

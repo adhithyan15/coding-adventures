@@ -5,6 +5,16 @@ All notable changes to the `musical-instruments` crate will be documented in thi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2026-11-16
+
+### Changed
+
+- Partial phases are reduced to [0, 1) cycles before `sin` (`phase - floor(phase)`, exact), because `trig.sin` is NaN beyond 2^29 radians (PHY00a 3.4.1, 7); identical in Python, Rust and TypeScript. Last-bit change in long notes.
+- Partial sines come from the bit-exact `trig` crate (TRIG-REF-1, PHY00a) instead of
+  `f64::sin`, so rendered notes are byte-identical to the Python and TypeScript lanes
+  (the shared `music-machine` golden). Note-local times keep every angle far below the
+  2^29-radian domain of `trig::sin`.
+
 ## [0.1.0] - 2026-11-15
 
 ### Added
