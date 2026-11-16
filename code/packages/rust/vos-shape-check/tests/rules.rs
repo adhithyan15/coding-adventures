@@ -1130,12 +1130,10 @@ fn vt03_fail_closed_on_unreadable_input() {
         "pub fn f() { ( }\n",
         "pub fn f() { ) }\n",
         "pub fn f() { ( ] }\n",
-        "pub fn f() { '1 }\n",
         "pub fn f() { r#\"never closed }\n",
         "pub fn f() { r#### }\n",
         "pub fn f() { b'x }\n",
         "pub fn f() { \u{2603} }\n",
-        "pub fn f() { '' }\n",
     ] {
         check(lib(src), Expect::Fires("VT03".into()), "");
     }

@@ -184,7 +184,6 @@ fn m4_real_generics_are_not_shifts() {
     let _b = Batch::begin();
     for src in [
         "pub fn f(_a: Option<Option<u8>>) {}",
-        "pub struct S(Option<Option<u8>>);",
         "pub struct T { a: Option<Option<u8>> }",
         "pub fn f() -> Option<Option<u8>> { None }",
         "pub fn f<T: Into<Option<Option<u8>>>>(_t: T) {}",
@@ -305,4 +304,68 @@ fn ghost_exports_are_exact_names_not_prefixes() {
             ok,
         );
     }
+}
+
+// round 3 ------------------------------------------------------------------
+
+#[test]
+fn r3_m1_expression_comparisons_are_not_generics_even_with_brace_or_path_follow() {
+    let _b = Batch::begin();
+    for src in [
+        // reviewer's m4: `c < d >> { n }` after a call argument comma
+        "pub fn g(a: bool, b: bool) {}\npub fn f(a: u8, b: u8, c: u8, d: u8, n: u8) { g(a < b, c < d >> { n }); }",
+        // reviewer's m4b: `<<` then `> ::` with a cast in between
+        "pub fn f(n: u32, y: u32) -> bool { let t = n << y as u32 > ::core::u32::MAX; t }",
+        // variants: struct literal field, let binding, parenthesised, `::` follow
+        "pub struct S { f: bool, g: bool }\npub fn f(a: u8, b: u8, c: u8, d: u8, n: u8) -> S { S { f: a < b, g: c < d >> { n } } }",
+        "pub fn f(a: u8, b: u8, c: u8, d: u8, n: u8) -> bool { let t = (a < b, c < d >> (n)); t.0 }",
+        "pub fn f(a: u8, b: u8, c: u8, d: u8) -> bool { a < b && c < d >> ::core::u8::MAX }",
+        "pub fn f(a: u8, b: u8, c: u8, d: u8, n: u8) -> bool { let _ = [a < b, c < d >> { n }]; true }",
+    ] {
+        has(&format!("{src}\n"), "SH9");
+    }
+}
+
+#[test]
+fn r3_intended_false_positives_are_exactly_the_documented_ones() {
+    let _b = Batch::begin();
+    // a REAL generic in tuple-field position or behind `&` is reported: the safe direction (VOS03 section 6)
+    for src in [
+        "pub struct S(Option<Option<u8>>);",
+        "pub fn f(_x: &Option<Option<u8>>) {}",
+    ] {
+        has(&format!("{src}\n"), "SH9");
+    }
+    // while the declaration positions stay clean
+    for src in [
+        "pub fn f(_a: Option<Option<u8>>) {}",
+        "pub fn f() -> Option<Option<u8>> { None }",
+        "pub fn f<T: Into<Option<Option<u8>>>>(_t: T) {}",
+        "pub trait Tr<T> {}\nimpl Tr<Option<Option<u8>>> for u8 {}",
+        "pub trait Tr<T> {}\npub struct Z;\nimpl Tr<u8> for Option<Option<u8>> {}",
+        "pub fn f() { let _x: Option<Option<u8>> = None; }",
+        "pub fn f(_x: Result<Option<u8>, Option<Option<u8>>>) {}",
+        "pub fn f() { let _x = Option::<Option<u8>>::None; }",
+    ] {
+        lacks(&format!("{src}\n"), "SH9");
+    }
+}
+
+#[test]
+fn r3_one_hostile_crate_does_not_fail_the_others() {
+    let forged = "__vos_shape_check_file_boundary__";
+    let hostile = body(&format!("pub fn f() {{ {forged}; }}\n"));
+    let clean = body("pub fn g() {}\n");
+    let r = run_all(&[hostile, clean.clone(), clean]);
+    assert!(
+        r[0].findings.iter().any(|f| f.rule.id() == "VT03"),
+        "{}",
+        r[0].render()
+    );
+    assert!(
+        r[1].passed() && r[2].passed(),
+        "{}\n{}",
+        r[1].render(),
+        r[2].render()
+    );
 }

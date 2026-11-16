@@ -525,52 +525,92 @@ fn ends_operand(n: &Token) -> bool {
     }
 }
 
-/// Can the token after `>>` follow a type?  (`;`, `,`, `)`, `{`, `=`, `::`,
-/// `where`, ...).  An operand (`n`, `1`, `*n`, `(x)`) cannot: that is a shift.
+/// Can the token after `>>` follow a type?  Only these: `> , ; ) ] } = + : ?`
+/// and `where`, `as`, `for`.  An operand (`n`, `1`, `*n`, `(x)`, `{ n }`) cannot,
+/// and neither can `::` (`x >> y > ::core::u32::MAX`): those are shifts.  `{`
+/// and `(` follow a type only in declarations and are decided by the caller.
 fn generic_follow(after: Option<&Token>) -> bool {
     match after {
         None => true,
-        Some(a) if a.kind == Kind::Punct => matches!(
-            a.text.as_str(),
-            ">" | "," | ";" | ")" | "]" | "{" | "}" | "=" | "::" | "+" | ":" | "?"
-        ),
+        Some(a) if a.kind == Kind::Punct => {
+            matches!(
+                a.text.as_str(),
+                ">" | "," | ";" | ")" | "]" | "}" | "=" | "+" | ":" | "?"
+            )
+        }
         Some(a) => a.kind == Kind::Ident && matches!(a.text.as_str(), "where" | "as" | "for"),
     }
 }
 
-/// Can the `<` at `i` open a generic list in TYPE position?  After `::`
-/// (turbofish), or after a name that itself follows a type-position token
-/// (`:`, `->`, `<`, `,`, `&`, `(`, `=`, `|`-free) or `impl`, `dyn`, `as`,
-/// `for`, `mut`.  `a < b` after `if`, `&&` or a literal is a comparison.
-fn generic_open(t: &[Token], i: usize) -> bool {
+/// The nearest `<` before `k` (within 256 tokens, in the same statement) that
+/// no `>` has closed: the generic list `k` sits inside, if any.
+fn enclosing_lt(t: &[Token], pair: &[usize], k: usize) -> Option<usize> {
+    let lo = k.saturating_sub(256);
+    let mut j = k;
+    let mut closes = 0usize;
+    while j > lo {
+        j -= 1;
+        let x = &t[j];
+        if x.kind != Kind::Punct {
+            continue;
+        }
+        match x.text.as_str() {
+            ";" | "{" | "}" => return None,
+            ")" | "]" => j = pair[j],
+            ">" => closes += 1,
+            "<" => {
+                if closes == 0 {
+                    return Some(j);
+                }
+                closes -= 1;
+            }
+            _ => {}
+        }
+    }
+    None
+}
+
+/// Can the `<` at `i` OPEN a generic list in type position?  Conservatively:
+/// only after `::` (turbofish), after `impl`, or after a NAME that follows
+/// `dyn`, `for`, `as`, a declaration keyword (`fn struct enum trait type union
+/// mod`), `->`, or a type-introducing `:`; or, inside a list that is itself
+/// such an open, after `<`, `,`, `&`, a lifetime or `mut`.  Everything else
+/// (`(`, `=`, `,` outside generics, literals, operators) is a COMPARISON, so
+/// a real generic written in expression position (`g(Option<Option<u8>>::None)`)
+/// is reported (an intended false positive, VOS03 section 6).
+fn generic_open(t: &[Token], pair: &[usize], i: usize, depth: usize) -> bool {
     let Some(prev) = i.checked_sub(1).map(|p| &t[p]) else {
         return false;
     };
-    if prev.is_punct("::") {
+    if prev.is_punct("::") || prev.is_ident("impl") {
         return true;
-    }
-    if prev.is_ident("impl") {
-        return true; // `impl<T> ..`
     }
     if prev.kind != Kind::Ident || (is_keyword(&prev.text) && prev.text != "Self") {
         return false;
     }
-    match i.checked_sub(2).map(|p| &t[p]) {
-        None => true,
-        Some(p) if p.kind == Kind::Lifetime => true, // `&'a Option<..>`
-        Some(p) if p.kind == Kind::Punct => {
-            matches!(
-                p.text.as_str(),
-                "::" | ":" | "->" | "<" | "," | "&" | "(" | "="
-            )
+    let Some(pi) = i.checked_sub(2) else {
+        return false;
+    };
+    let p = &t[pi];
+    match p.kind {
+        Kind::Punct => match p.text.as_str() {
+            ":" | "->" => true,
+            // nested inside another generic list that must itself be a real open
+            "<" if depth < 8 => generic_open(t, pair, pi, depth + 1),
+            "," | "&" if depth < 8 => {
+                enclosing_lt(t, pair, pi).is_some_and(|o| generic_open(t, pair, o, depth + 1))
+            }
+            _ => false,
+        },
+        Kind::Lifetime if depth < 8 => {
+            enclosing_lt(t, pair, pi).is_some_and(|o| generic_open(t, pair, o, depth + 1))
         }
-        Some(p) => matches!(
+        Kind::Ident => matches!(
             p.text.as_str(),
             "impl"
                 | "dyn"
                 | "as"
                 | "for"
-                | "mut"
                 | "fn"
                 | "struct"
                 | "enum"
@@ -579,6 +619,7 @@ fn generic_open(t: &[Token], i: usize) -> bool {
                 | "union"
                 | "mod"
         ),
+        _ => false,
     }
 }
 
@@ -657,24 +698,39 @@ fn closes_two_generics(t: &[Token], pair: &[usize], i: usize, after: Option<&Tok
             _ => {}
         }
     }
-    if opens.len() != 2
-        || !opens.iter().all(|&o| generic_open(t, o))
-        || !type_ish(t, pair, opens[1] + 1, i)
-    {
+    if opens.len() != 2 || !type_ish(t, pair, opens[1] + 1, i) {
         return false;
     }
-    // What follows must be able to follow a type.  `(` can only follow the
-    // generics of a DECLARATION (`fn f<T: Into<Vec<u8>>>(x: T)`), never a
-    // type in an expression, where `x >> (n)` is a shift.
-    let declares = opens[1].checked_sub(2).is_some_and(|p| {
+    // The OUTER open must be a real generic open (strict); the inner one must
+    // directly follow a type name or `::` (it lies inside the outer list, and
+    // the window between them is type-ish).
+    let (inner, outer) = (opens[0], opens[1]);
+    let inner_ok = inner > 0
+        && (t[inner - 1].is_punct("::")
+            || (t[inner - 1].kind == Kind::Ident && !is_keyword(&t[inner - 1].text)));
+    if !inner_ok || !generic_open(t, pair, outer, 0) {
+        return false;
+    }
+    // What follows must be able to follow a type.  `(` follows the generics of
+    // a DECLARATION only (`fn f<T: Into<Vec<u8>>>(x: T)`); `{` follows a
+    // return type, an `impl .. for` header or `impl<..>` only.  In an
+    // expression both are operands: `x >> (n)`, `x >> { n }` are shifts.
+    let before = outer.checked_sub(2).map(|p| &t[p]);
+    let declares = before.is_some_and(|p| {
         matches!(
-            t[p].text.as_str(),
+            p.text.as_str(),
             "fn" | "struct" | "enum" | "trait" | "type" | "union"
         )
-    }) || opens[1]
-        .checked_sub(1)
-        .is_some_and(|p| t[p].is_ident("impl"));
-    generic_follow(after) || (declares && after.is_some_and(|a| a.is_punct("(")))
+    }) || outer.checked_sub(1).is_some_and(|p| t[p].is_ident("impl"));
+    let brace_ok = before.is_some_and(|p| p.is_punct("->") || p.is_ident("for"))
+        || outer.checked_sub(1).is_some_and(|p| t[p].is_ident("impl"));
+    // `Vec::<Vec<u8>>::new()`: `::` follows the generics of a TURBOFISH only
+    let turbofish_path = outer.checked_sub(1).is_some_and(|p| t[p].is_punct("::"))
+        && after.is_some_and(|a| a.is_punct("::"));
+    generic_follow(after)
+        || turbofish_path
+        || (declares && after.is_some_and(|a| a.is_punct("(")))
+        || (brace_ok && after.is_some_and(|a| a.is_punct("{")))
 }
 
 /// `Vec<<T as X>::Y>`: the `<<` at `i` is a generic open + qualified-self open,
@@ -682,7 +738,7 @@ fn closes_two_generics(t: &[Token], pair: &[usize], i: usize, after: Option<&Tok
 /// closes right before `::`, and the group holds an `as` between type-ish tokens.
 /// `1u32 << s > ::core::u32::MAX` has none of that and is a shift.
 fn opens_qself_generic(t: &[Token], pair: &[usize], i: usize) -> bool {
-    let first_ok = (i > 0 && t[i - 1].is_punct("::")) || generic_open(t, i);
+    let first_ok = generic_open(t, pair, i, 0);
     if !first_ok {
         return false;
     }

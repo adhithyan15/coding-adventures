@@ -337,3 +337,18 @@ fn token_cap_is_enforced() {
     let r = many(&[&too_many]);
     assert!(r[0].as_ref().unwrap_err().message.contains("token cap"));
 }
+
+#[test]
+fn a_nested_comment_inside_a_doc_block_comment_is_refused_by_the_grammar() {
+    // The adapter counts depth for doc comments too, so it no longer relies on
+    // this; the pin documents that the RS01 pair (divergence RD4) refuses it.
+    let r = many(&[
+        "/** a /* b */ c */ x",
+        "/*! a /* b */ c */ x",
+        "/** a */ x",
+        "/*! a */ y",
+    ]);
+    assert!(r[0].is_err() && r[1].is_err());
+    assert_eq!(texts(ok(&r[2])), vec!["x"]);
+    assert_eq!(texts(ok(&r[3])), vec!["y"]);
+}

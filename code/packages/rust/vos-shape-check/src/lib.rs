@@ -293,6 +293,30 @@ pub fn check_crates(inputs: &[CrateInput], policy: &Policy) -> Vec<Report> {
             lexed[ci][di] = Some(r);
         }
     }
+    // One hostile crate must not fail the others.  A forged or swallowed
+    // boundary, or a batch that ran out of attempts, marks every file of the
+    // batch; so each crate that got such an error is lexed again ALONE (its own
+    // lexer), and only it keeps the failure if the failure is really its own.
+    for ci in 0..prepared.len() {
+        let hit = lexed[ci].iter().any(|r| {
+            matches!(r, Some(Err(e)) if e.message.starts_with("not lexed")
+                || e.message.starts_with("the file-boundary check failed"))
+        });
+        if !hit {
+            continue;
+        }
+        let texts: Vec<&str> = prepared[ci]
+            .docs
+            .iter()
+            .map(|&si| inputs[ci].sources[si].text.as_str())
+            .collect();
+        for (di, r) in lexer::lex_documents(&texts, prepared[ci].edition)
+            .into_iter()
+            .enumerate()
+        {
+            lexed[ci][di] = Some(r);
+        }
+    }
     let mut reports = Vec::with_capacity(inputs.len());
     for (ci, input) in inputs.iter().enumerate() {
         let p = std::mem::replace(

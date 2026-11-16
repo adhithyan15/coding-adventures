@@ -4,6 +4,19 @@ All notable changes to this package are documented here.
 
 ## [Unreleased]
 
+### Fixed (round 3 of the security review)
+
+- SH9: a `<` counts as a generic open only after `::`, `impl`, or a name that
+  follows `dyn`, `for`, `as`, a declaration keyword, `->` or a type-introducing
+  `:` (nested opens only inside such a list); `{` and `::` no longer follow a
+  `>>` generic except after a return type / `impl` header and a turbofish.
+  `g(a < b, c < d >> { n })` and `n << y as u32 > ::core::u32::MAX` are reported.
+  Intended false positives are listed in VOS03 section 6.
+- The block-comment adapter counts depth for doc comments too (it no longer
+  relies on the grammar refusing a nested comment in a doc comment).
+- `check_crates` re-lexes a crate alone when a batch failure (a forged boundary,
+  exhausted attempts) marked it, so one hostile crate cannot fail the others.
+
 ### Changed (round 2 of the security review)
 
 - **Rust and TOML are read with the repository's grammar-driven crates**, not a

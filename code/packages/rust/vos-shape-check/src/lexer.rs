@@ -322,10 +322,10 @@ fn adapt(raw: &[RawToken]) -> Result<Vec<Mid>, (usize, String)> {
                 continue;
             }
             Some("BC_OPEN" | "INNER_BC_OPEN" | "OUTER_BC_OPEN") => {
-                // A nested plain comment opens with BC_OPEN and counts depth;
-                // a doc block comment (`/*!`, `/**x`) is flat.
-                let mut depth = usize::from(name == Some("BC_OPEN"));
-                let doc = depth == 0;
+                // Every block comment, doc or plain, counts depth from 1 and
+                // closes only when it returns to 0, so the adapter does not rely
+                // on the grammar refusing a nested comment inside a doc comment.
+                let mut depth = 1usize;
                 let open_line = t.line;
                 let mut j = i + 1;
                 let mut closed = false;
@@ -341,7 +341,7 @@ fn adapt(raw: &[RawToken]) -> Result<Vec<Mid>, (usize, String)> {
                             }
                         }
                         Some("BC_CLOSE") => {
-                            if (doc && depth == 0) || depth == 1 {
+                            if depth == 1 {
                                 closed = true;
                                 j += 1;
                                 break;
