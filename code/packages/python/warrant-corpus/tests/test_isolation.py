@@ -46,7 +46,9 @@ def test_a_prefix_the_runner_did_not_create_is_refused(monkeypatch, tmp_path):
         verify_isolated_cache()
 
 
-def test_a_prefix_that_is_not_a_private_directory_under_temp_is_refused(monkeypatch, tmp_path):
+def test_a_prefix_that_is_not_a_private_directory_under_temp_is_refused(
+    monkeypatch, tmp_path
+):
     for bad in (tmp_path / "missing", REPO_ROOT / "code"):
         monkeypatch.setattr(sys, "pycache_prefix", str(bad))
         monkeypatch.setenv(ENV_PRIVATE, str(bad))
@@ -72,7 +74,9 @@ def test_a_shared_or_linked_cache_directory_is_refused(monkeypatch):
         verify_isolated_cache()
 
 
-def test_run_check_and_sabotage_refuse_to_start_without_the_cache(monkeypatch, tmp_path, capsys):
+def test_run_check_and_sabotage_refuse_to_start_without_the_cache(
+    monkeypatch, tmp_path, capsys
+):
     monkeypatch.setattr(sys, "pycache_prefix", None)
     root, corpus_dir = mini_corpus(tmp_path)
     _name, package_dir, binding_path = new_library(tmp_path, monkeypatch)
@@ -96,8 +100,12 @@ def test_the_validator_requires_the_isolation_field(corpus, full_run):
     relative = "code/specs/fixtures/ct-compare-warrant-v1"
     good = json.loads(json.dumps(outcome.manifest))
     validate_manifest(render_json(good).encode(), corpus, relative)
-    for edit in (lambda d: d.pop("pycache_isolated"), lambda d: d.update(pycache_isolated=False),
-                 lambda d: d.update(pycache_isolated=1), lambda d: d.update(pycache_isolated="true")):
+    for edit in (
+        lambda d: d.pop("pycache_isolated"),
+        lambda d: d.update(pycache_isolated=False),
+        lambda d: d.update(pycache_isolated=1),
+        lambda d: d.update(pycache_isolated="true"),
+    ):
         bad = json.loads(json.dumps(good))
         edit(bad)
         with pytest.raises(LaneError):
