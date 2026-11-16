@@ -5,11 +5,15 @@
     <Nullable>enable</Nullable>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageId>CodingAdventures.Trig.CSharp</PackageId>
-    <Version>0.1.0</Version>
+    <Version>0.2.0</Version>
     <Authors>Adhithya Rajasekaran</Authors>
     <Description>Trigonometric functions from first principles using Taylor series</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="CodingAdventures.Trig.Tests" />
+  </ItemGroup>
 
   <ItemGroup>
     <Compile Remove="tests\\**\\*.cs" />

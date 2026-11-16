@@ -3,6 +3,7 @@
  * Zero allocations in valueAt().
  */
 
+import { sin } from "trig/dist/trig.js";
 import {
   type ContinuousSignal,
   SampleBuffer,
@@ -25,6 +26,11 @@ import {
 } from "./validation.js";
 
 const TWO_PI = 2.0 * Math.PI;
+
+/** Fractional cycle in [0, 1): trig.sin is NaN beyond 2^29 radians (PHY00a 3.4.1, 7). */
+function fractionalCycles(phase: number): number {
+  return phase - Math.floor(phase);
+}
 
 export class PercussionSignal implements ContinuousSignal {
   readonly voice: PercussionVoiceProfile;
@@ -73,7 +79,7 @@ export class PercussionSignal implements ContinuousSignal {
       raw +=
         mode.amplitude *
         Math.exp(-time / mode.decaySeconds) *
-        Math.sin(TWO_PI * (mode.frequencyHz * time + mode.phaseCycles));
+        sin(TWO_PI * fractionalCycles(mode.frequencyHz * time + mode.phaseCycles));
     }
 
     if (this.voice.noiseProfile !== null) {

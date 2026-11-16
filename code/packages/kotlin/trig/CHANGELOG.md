@@ -1,6 +1,57 @@
 # Changelog — trig (Kotlin)
 
-## [Unreleased]
+## [0.2.0] — 2026-11-16
+
+Converged on the shared reference algorithm TRIG-REF-1 of
+[PHY00a](../../../specs/PHY00a-trig-convergence.md) (slice TC-8). `sin`, `cos`,
+`tan`, `radians` and `degrees` now return the same 64 bits as every other
+converged port, checked against all 62,154 vectors of
+[`trig-reference-v1`](../../../specs/fixtures/trig-reference-v1/README.md).
+
+### Changed (behaviour)
+
+- **`sin`, `cos`: new algorithm, result bits change for almost every input.**
+  Nearest-integer Cody-Waite range reduction (`k = (x * 2/pi + MAGIC) - MAGIC`,
+  `pi/2` held as five pieces, four of 24 bits so `k * piece` is exact), then a
+  fixed ten-term Horner polynomial on stored coefficients, then quadrant
+  selection with `k.toInt() and 3`. There is no division and no `Math` call.
+  This replaces `x % TWO_PI` (which drifted by `k * 2.4e-16` rad) and the
+  20-term recurrence. Accuracy is within 3 ulp of the exact value (observed
+  worst 2.38 ulp) over the whole domain.
+- **`sin`, `cos`, `tan` return NaN for `|x| > 2^29` (536870912), for NaN and for
+  the infinities.** Previously they returned a finite number that grew less
+  accurate with `|x|`. Callers that accumulate a phase must reduce it first.
+- **`sin(-0.0)` is now `-0.0`** (was `+0.0`); `|x| < 2^-27` returns `x` exactly
+  (`sin`) or `1.0` (`cos`).
+- `tan` is `sin / cos` of the new functions with the unchanged `+-1e308` pole
+  sentinel; it now inherits the NaN domain. No accuracy claim is made for `tan`.
+- **`radians` / `degrees`** multiply by the bit-pinned constants `pi/180`
+  (`0x3F91DF46A2529D39`) and `180/pi` (`0x404CA5DC1A63C1F8`): the same values
+  `deg * (PI / 180.0)` produced, so their bits do not change; the constants are
+  now explicit and asserted.
+- **`atan2` returns NaN when either argument is NaN** (it returned `0.0` for a
+  NaN `x`).
+- `TWO_PI` and `HALF_PI` are `internal` (test access) instead of `private`.
+- Version `0.1.0` to `0.2.0` in `build.gradle.kts`.
+
+### Unchanged
+
+- `sqrt`, `atan` and `atan2` (apart from the NaN guard) keep their pinned
+  Part II algorithm, and the vectors confirm them bit for bit.
+
+### Tests
+
+- Add `ConformanceTest`: decodes every `x` with `Double.fromBits`, compares the
+  result bits as integers (NaN matches any NaN) over the four fixture groups,
+  checks accuracy against the `cr` column (sin/cos 3 steps, radians/degrees 1
+  step; `tan` carries no claim; any other op with a `cr` and an unknown op
+  fail), the fixture's own hashes, and the named contract points of PHY00a 3.3.
+- Add `ConstantsTest`: every reference constant's bits against the manifest.
+- Run against the unchanged 0.1.0 port the conformance test failed on: sin
+  9,257 rows, cos 8,298, tan 9,677, atan2 6 (of 12,408 rows per trig op);
+  `radians`, `degrees`, `sqrt` and `atan` had no failing row.
+
+## Carried into 0.2.0 (previously Unreleased)
 
 ### Changed
 

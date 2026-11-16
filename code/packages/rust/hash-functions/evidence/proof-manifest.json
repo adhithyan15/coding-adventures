@@ -1,0 +1,23 @@
+{
+  "max_len": 0,
+  "module": "hash_functions",
+  "proofs": [
+    {
+      "certificates": [],
+      "function": "siphash_2_4",
+      "id": "warrant/hash_functions/proof/siphash_2_4/constant-time",
+      "kind": "constant-time",
+      "label": "not-live",
+      "max_len": 0,
+      "note": "parse refused at src/algorithms.rs:3:5: Expected item, found Const (line: `pub const DJB2_OFFSET_BASIS: u64 = 5_381;`); per export, djb2: alone: parse refused (Expected loop variable, found And); fnv1a_32: alone: parse refused (Expected loop variable, found And); fnv1a_64: alone: parse refused (Expected loop variable, found And); murmur3_32: alone: lowers (loop-free, table-free body); murmur3_32_with_seed: alone: parse refused (Expected variable name, found LParen); polynomial_rolling: alone: lowering refused (Variable 'POLYNOMIAL_ROLLING_DEFAULT_BASE' not found in scope); polynomial_rolling_with_params: alone: parse refused (Expected loop variable, found And); siphash_2_4: alone: parse refused (Expected variable name, found LParen)",
+      "op": "siphash_2_4",
+      "runs": 0,
+      "verdict": "not-live"
+    }
+  ],
+  "schema": "warrant-proof-evidence-v1",
+  "source": "code/packages/rust/hash-functions/src/algorithms.rs",
+  "source_sha256": "586a7ea14c5c16801b5e84047612a57711e0e45159a816b96c055b6b6f461079",
+  "spec": "code/specs/hash-functions.warrant",
+  "spec_sha256": "92328b8316b0f2f8bac1a5f541d5096f9d0409da74676d1c071e2dc1ab9b926f"
+}

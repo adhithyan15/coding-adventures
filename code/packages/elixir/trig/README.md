@@ -15,7 +15,10 @@ or infinity as ordinary BEAM floats, so those two shared fixture cases are
 explicitly not applicable in this lane. Finite boundary behavior is checked
 against [`trig.json`](../../../specs/fixtures/phy00-phy01-v1/cases/trig.json).
 
-Trigonometric functions implemented from first principles using Maclaurin (Taylor) series. No external dependencies, no `:math` module — just basic arithmetic building up to `sin`, `cos`, and angle conversions.
+Trigonometric functions implemented from first principles, bit for bit the
+reference algorithm **TRIG-REF-1** of
+[PHY00a](../../../specs/PHY00a-trig-convergence.md). No `:math` module, no
+external dependencies: only `+ - * /` on IEEE 754 doubles.
 
 ## Layer
 
@@ -23,24 +26,49 @@ PHY00 — Physics layer 0. This is a leaf package with no dependencies.
 
 ## How It Works
 
-The **Maclaurin series** (Taylor series centered at 0) lets us compute transcendental functions using only addition, multiplication, and division:
+A sine repeats, so `sin` is computed from a reduced angle and a quadrant:
+
+1. **Reduce.** `k = nearest integer to x / (pi/2)` (the add-and-subtract
+   `(t + MAGIC) - MAGIC` trick), then `r = x - k*pi/2` by Cody-Waite
+   subtraction with pi/2 stored as five pieces, so `|r| <= pi/4`.
+2. **Pick the quadrant** `q = k &&& 3`.
+3. **Evaluate** a ten-term Maclaurin polynomial in `r` by Horner's rule on stored
+   coefficients (`1/3!`, `1/5!`, ...). No division.
 
 ```
-sin(x) = x - x^3/3! + x^5/5! - x^7/7! + ...
-cos(x) = 1 - x^2/2! + x^4/4! - x^6/6! + ...
+sin(x) = [ sinK(r), cosK(r), -sinK(r), -cosK(r) ][q]
+cos(x) = [ cosK(r), -sinK(r), -cosK(r), sinK(r) ][q]
 ```
 
-We use 20 terms with **range reduction** (normalizing input to [-pi, pi]) for numerical stability across all input magnitudes.
+`radians`/`degrees` are one multiply by a stored constant. `tan` is `sin / cos`
+with a `+-1e308` sentinel where `|cos| < 1e-15`.
+
+## Domain and the BEAM
+
+`sin`, `cos` and `tan` are defined for `|x| <= 2^29` (about 5.4e8 radians). The
+reference returns NaN outside it. **A BEAM float cannot be NaN or infinite**, so
+this port **raises `ArithmeticError`** for `|x| > 2^29`, as it does for every
+non-finite result (`degrees(1.7e308)`; `atan2` when `y / x` overflows).
+
+## Accuracy
+
+Within 3 ulp of the correctly rounded value for `sin` and `cos` on the whole
+domain, within 1 ulp for `radians` and `degrees`. `tan` makes no accuracy claim.
+`sqrt`, `atan` and `atan2` (Part II) are unchanged from the earlier port and are
+pinned bit for bit, not claimed accurate.
 
 ## API
 
 | Function       | Description                              |
 |----------------|------------------------------------------|
 | `Trig.pi()`    | Pi to double-precision (IEEE 754 float64)|
-| `Trig.sin(x)`  | Sine via Maclaurin series, radians input |
-| `Trig.cos(x)`  | Cosine via Maclaurin series, radians input|
-| `Trig.radians(deg)` | Convert degrees to radians          |
-| `Trig.degrees(rad)` | Convert radians to degrees          |
+| `Trig.sin(x)`  | Sine, radians; raises beyond `2^29`      |
+| `Trig.cos(x)`  | Cosine, radians; raises beyond `2^29`    |
+| `Trig.tan(x)`  | Tangent with pole sentinel               |
+| `Trig.radians(deg)` | Degrees to radians                  |
+| `Trig.degrees(rad)` | Radians to degrees                  |
+| `Trig.sqrt/1`, `Trig.atan/1`, `Trig.atan2/2` | Part II        |
+| `Trig.constants()` | Every PHY00a constant by spec name   |
 
 ## Usage
 
@@ -49,6 +77,7 @@ Trig.sin(Trig.pi() / 2)   #=> 1.0
 Trig.cos(0)                #=> 1.0
 Trig.radians(180)          #=> 3.141592653589793
 Trig.degrees(Trig.pi())    #=> 180.0
+Trig.sin(1.0e20)           # raises ArithmeticError (outside the domain)
 ```
 
 ## Running Tests
@@ -56,3 +85,8 @@ Trig.degrees(Trig.pi())    #=> 180.0
 ```sh
 mix test
 ```
+
+`test/conformance_test.exs` checks all 62,154 shared vectors in
+`code/specs/fixtures/trig-reference-v1` bit for bit. Rows whose input is NaN or
+infinity cannot be built as a BEAM float; they are counted and skipped by name
+(PHY00a 6.5 (d)), and rows whose result is non-finite require the raise.

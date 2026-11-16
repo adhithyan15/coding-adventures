@@ -1,0 +1,14 @@
+[package]
+name = "vos-ready-bitmap"
+version = "0.1.0"
+edition = "2021"
+
+[features]
+ghost = []
+default = ["ghost"]
+
+[dependencies]
+vos-ready-contract = { path = "../vos-ready-contract" }
+
+[dev-dependencies]
+coding_adventures_sha256 = { path = "../sha256" }

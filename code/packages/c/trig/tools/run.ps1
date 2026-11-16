@@ -16,3 +16,6 @@ $harness = Join-Path $d 'code\packages\c\iso-harness'
 $env:ISO_INCLUDE = "include $harness\include"
 . (Join-Path $harness 'lib\iso-lib.ps1')
 Iso-BuildAndRun -Lang c -Name trig-tests -Sources @("tests\trig_test.c", "src\trig.c")
+# TRIG-REF-1 bit-exact conformance (PHY00a 6): every row of the shared vectors in
+# code\specs\fixtures\trig-reference-v1 must match to the last bit.
+Iso-BuildAndRun -Lang c -Name trig-conformance -Sources @("tests\conformance_test.c", "src\trig.c")

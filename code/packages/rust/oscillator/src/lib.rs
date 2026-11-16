@@ -343,7 +343,13 @@ impl ContinuousSignal for SineOscillator {
     fn value_at(&self, time_seconds: f64) -> Result<f64, OscillatorError> {
         let t = validate_finite("time_seconds", time_seconds)?;
         let phase = self.frequency_hz * t + self.phase_cycles;
-        Ok(self.offset + self.amplitude * (TWO_PI * phase).sin())
+        // trig::sin is defined for |x| <= 2^29 radians and returns NaN beyond it
+        // (PHY00a 3.4.1).  A phase kept in cycles grows without bound (a 440 Hz
+        // tone passes 2^29 radians after about 54 hours), so reduce it to [0, 1)
+        // cycles first.  `phase - floor(phase)` is exact in binary64, and more
+        // accurate than multiplying a huge phase by 2*pi.
+        let cycles = phase - phase.floor();
+        Ok(self.offset + self.amplitude * trig::sin(TWO_PI * cycles))
     }
 }
 

@@ -129,7 +129,11 @@ impl ContinuousSignal for PercussionSignal {
         for mode in &self.voice.modes {
             raw += mode.amplitude
                 * (-time_seconds / mode.decay_seconds).exp()
-                * trig::sin(2.0 * trig::PI * (mode.frequency_hz * time_seconds + mode.phase_cycles));
+                * {
+                    // Reduce to [0, 1) cycles first: trig::sin is NaN beyond 2^29 radians.
+                    let phase = mode.frequency_hz * time_seconds + mode.phase_cycles;
+                    trig::sin(2.0 * trig::PI * (phase - phase.floor()))
+                };
         }
 
         if let Some(ref noise) = self.voice.noise_profile {

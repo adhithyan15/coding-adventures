@@ -1,3 +1,6 @@
 go build ./...
 go vet ./...
 go test ./... -v -cover
+sh -c 'out=$(GOARCH=arm64 go build -gcflags=-S . 2>&1) || { echo "$out" | tail -20; exit 1; }; if echo "$out" | grep -q "FMADD\|FMSUB\|FNMSUB\|FNMADD"; then echo "TRIG-REF-1: fused multiply-add in the arm64 assembly"; exit 1; fi'
+sh -c 'out=$(GOARCH=amd64 GOAMD64=v3 go build -gcflags=-S . 2>&1) || { echo "$out" | tail -20; exit 1; }; if echo "$out" | grep -q "VFMADD\|VFNMADD\|VFMSUB\|VFNMSUB"; then echo "TRIG-REF-1: fused multiply-add in the amd64 v3 assembly"; exit 1; fi'
+GOAMD64=v3 go test ./... -count=1

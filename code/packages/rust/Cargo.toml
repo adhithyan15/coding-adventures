@@ -1509,4 +1509,5 @@ members = [
   "https-reviewed-server-path-binding",
   "x509-rsa-reviewed-anchor-self-signature-binding",
   "x509-rsa-reviewed-server-path-anchor-self-signature-binding",
+  "vos-shape-check",
 ]

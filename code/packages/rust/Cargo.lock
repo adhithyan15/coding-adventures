@@ -4745,6 +4745,9 @@ dependencies = [
 name = "coding_adventures_hash_functions"
 version = "0.1.0"
 dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
  "getrandom 0.2.17",
 ]
 
@@ -10257,11 +10260,12 @@ dependencies = [
 
 [[package]]
 name = "musical-instruments"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "coding_adventures_test_bootstrap",
  "oscillator",
  "pcm-audio",
+ "trig",
 ]
 
 [[package]]
@@ -10838,9 +10842,10 @@ dependencies = [
 
 [[package]]
 name = "oscillator"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "coding_adventures_test_bootstrap",
+ "trig",
 ]
 
 [[package]]
@@ -11195,7 +11200,7 @@ dependencies = [
 
 [[package]]
 name = "percussion-kit"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "coding_adventures_test_bootstrap",
  "oscillator",
@@ -14866,7 +14871,7 @@ version = "0.1.0"
 
 [[package]]
 name = "trig"
-version = "0.1.0"
+version = "0.3.0"
 
 [[package]]
 name = "tungstenite"
@@ -15523,6 +15528,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "de437e2a6208b014ab52972a27e59b33fa2920d3e00fe05026167a1c509d19cc"
 dependencies = [
  "vcell",
+]
+
+[[package]]
+name = "vos-shape-check"
+version = "0.1.0"
+dependencies = [
+ "coding-adventures-toml-lexer",
+ "coding-adventures-toml-parser",
+ "grammar-tools",
+ "lexer",
+ "parser",
 ]
 
 [[package]]

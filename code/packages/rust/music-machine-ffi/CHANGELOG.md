@@ -5,6 +5,12 @@ All notable changes to `music-machine-ffi` will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+
+- `tests/test_ffi_golden.rs` carries the new shared Tier-0 golden digest `25bc4eb1b0d7a10d40a55afc0f8b0b4d65132a82f538245ee2698700ff4acee1` (was `15c793ee...364766`), regenerated once for the Python, Rust and TypeScript lanes after TRIG-CONV TC-2 (PHY00a). Both FFI golden parity tests (portable text and JSON) pass.
+
 ## [0.1.0] - 2026-11-15
 
 ### Added

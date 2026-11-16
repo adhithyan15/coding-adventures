@@ -183,7 +183,15 @@ class SineOscillator:
         """Evaluate `offset + amplitude * sin(2*pi*(f*t + phase))`."""
         time = _finite_float("time_seconds", time_seconds)
         phase = self.frequency_hz * time + self.phase_cycles
-        return self.offset + self.amplitude * sin(TWO_PI * phase)
+        # trig.sin is defined for |x| <= 2**29 radians and returns NaN beyond it
+        # (PHY00a 3.4.1).  A phase kept in cycles grows without bound (a 440 Hz
+        # tone passes 2**29 radians after about 54 hours), so reduce it to
+        # [0, 1) cycles first.  `phase - floor(phase)` is exact in binary64, and
+        # it is also more accurate than multiplying a huge phase by 2*pi.
+        # A non-finite phase (frequency * time overflowed) gives NaN, as in the Rust
+        # and TypeScript lanes; math.floor would raise OverflowError instead.
+        cycles = phase - floor(phase) if isfinite(phase) else float("nan")
+        return self.offset + self.amplitude * sin(TWO_PI * cycles)
 
 
 @dataclass(frozen=True)

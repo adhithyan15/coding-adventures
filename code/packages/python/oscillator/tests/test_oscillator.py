@@ -90,6 +90,23 @@ class TestSineOscillator:
 
         assert signal.value_at(-0.25) == pytest.approx(-1.0, abs=ABS_TOLERANCE)
 
+    def test_phase_beyond_two_to_the_29_radians_stays_finite(self) -> None:
+        # trig.sin returns NaN beyond 2**29 radians; the oscillator reduces its
+        # phase in cycles first, so a 440 Hz tone is still a sine after a week.
+        signal = SineOscillator(frequency_hz=440.0)
+        week = 7 * 24 * 3600.0
+        assert 2 * math.pi * 440.0 * week > 2.0**29
+
+        value = signal.value_at(week + 0.25 / 440.0)
+
+        assert math.isfinite(value)
+        assert value == pytest.approx(1.0, abs=1e-9)
+
+    def test_phase_in_cycles_is_exactly_periodic(self) -> None:
+        signal = SineOscillator(frequency_hz=1.0, phase_cycles=0.125)
+
+        assert signal.value_at(1.0e9) == signal.value_at(0.0)
+
     def test_sine_is_immutable(self) -> None:
         signal = SineOscillator(frequency_hz=1.0)
 
@@ -456,3 +473,9 @@ def test_splitmix64_pbt_uniform_sampler_determinism() -> None:
         assert buf1.samples == buf2.samples
         assert buf1.sample_count() == buf2.sample_count()
         assert buf1.duration_seconds() == buf2.duration_seconds()
+
+
+def test_non_finite_phase_is_nan_not_an_exception() -> None:
+    # frequency * time overflows to inf; floor(inf) would raise OverflowError, but
+    # the Rust and TypeScript lanes return NaN, so Python must too.
+    assert math.isnan(SineOscillator(440).value_at(1e308))
