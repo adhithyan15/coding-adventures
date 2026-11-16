@@ -13822,6 +13822,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "sprite-oam"
+version = "0.1.0"
+dependencies = [
+ "affine2d",
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "paint-batch-tiles",
+ "palette-indexed",
+]
+
+[[package]]
 name = "sqlite-file"
 version = "0.19.0"
 dependencies = [

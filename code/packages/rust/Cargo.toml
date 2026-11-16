@@ -711,6 +711,7 @@ members = [
     "paint-batch-tiles",
     "paint-palette-blend",
     "palette-indexed",
+    "sprite-oam",
     "paint-vm-ascii",
     "paint-vm-cairo",
     "cuda-compute",

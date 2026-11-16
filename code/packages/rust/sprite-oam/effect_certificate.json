@@ -1,0 +1,237 @@
+{
+  "schema_version": "ver24-effect-cert-v1",
+  "package": "rust/sprite-oam",
+  "source_digest": "a5d75f91fd48c3a129c83548f8c6a089df028a4b93d0bbe4d6e52432ceffdd78",
+  "manifest_digest": "386531b948216ebead683b2877d35e1dbaf652d09f05df8568ae137cf01e25b0",
+  "declared_effects": [],
+  "entry_points": [
+    {
+      "name": "dimensions",
+      "signature": "pub const fn dimensions(self, size: SpriteSize) -> (u32, u32)",
+      "effects": []
+    },
+    {
+      "name": "identity_params",
+      "signature": "pub const fn identity_params() -> Self",
+      "effects": []
+    },
+    {
+      "name": "to_matrix",
+      "signature": "pub fn to_matrix(&self) -> Affine2D",
+      "effects": []
+    },
+    {
+      "name": "from_matrix",
+      "signature": "pub fn from_matrix(m: &Affine2D) -> Result<Self, OamError>",
+      "effects": []
+    },
+    {
+      "name": "map_offset",
+      "signature": "pub const fn map_offset(&self, dx: i32, dy: i32) -> (i32, i32)",
+      "effects": []
+    },
+    {
+      "name": "blank_entry",
+      "signature": "pub const fn blank_entry() -> Self",
+      "effects": []
+    },
+    {
+      "name": "check_entry",
+      "signature": "pub fn check_entry(&self) -> Result<(), OamError>",
+      "effects": []
+    },
+    {
+      "name": "display_size",
+      "signature": "pub const fn display_size(&self) -> (u32, u32)",
+      "effects": []
+    },
+    {
+      "name": "is_visible",
+      "signature": "pub const fn is_visible(&self) -> bool",
+      "effects": []
+    },
+    {
+      "name": "covers_scanline",
+      "signature": "pub const fn covers_scanline(&self, y: i32) -> bool",
+      "effects": []
+    },
+    {
+      "name": "blank_table",
+      "signature": "pub const fn blank_table() -> Self",
+      "effects": []
+    },
+    {
+      "name": "clear_all",
+      "signature": "pub fn clear_all(&mut self)",
+      "effects": []
+    },
+    {
+      "name": "entries",
+      "signature": "pub fn entries(&self) -> &[OamEntry]",
+      "effects": []
+    },
+    {
+      "name": "entry",
+      "signature": "pub fn entry(&self, slot: usize) -> Result<&OamEntry, OamError>",
+      "effects": []
+    },
+    {
+      "name": "set_entry",
+      "signature": "pub fn set_entry(&mut self, slot: usize, entry: OamEntry) -> Result<(), OamError>",
+      "effects": []
+    },
+    {
+      "name": "hide_slot",
+      "signature": "pub fn hide_slot(&mut self, slot: usize) -> Result<(), OamError>",
+      "effects": []
+    },
+    {
+      "name": "set_affine",
+      "signature": "pub fn set_affine(&mut self, slot: usize, params: AffineParams) -> Result<(), OamError>",
+      "effects": []
+    },
+    {
+      "name": "affine_params",
+      "signature": "pub fn affine_params(&self, slot: usize) -> Result<AffineParams, OamError>",
+      "effects": []
+    },
+    {
+      "name": "visible_count",
+      "signature": "pub fn visible_count(&self) -> usize",
+      "effects": []
+    },
+    {
+      "name": "priority_counts",
+      "signature": "pub fn priority_counts(&self) -> [usize",
+      "effects": []
+    },
+    {
+      "name": "draw_order_into",
+      "signature": "pub fn draw_order_into(&self, out: &mut [u8]) -> Result<usize, OamError>",
+      "effects": []
+    },
+    {
+      "name": "scanline_sprites_into",
+      "signature": "pub fn scanline_sprites_into( &self, y: i32, limit: usize, out: &mut [u8], ) -> Result<ScanlineReport, OamError>",
+      "effects": []
+    },
+    {
+      "name": "scanline_stats",
+      "signature": "pub fn scanline_stats( &self, screen_height: u32, limit: usize, ) -> Result<ScanlineStats, OamError>",
+      "effects": []
+    },
+    {
+      "name": "texel_at",
+      "signature": "pub fn texel_at(&self, slot: usize, sx: i32, sy: i32) -> Result<Option<(u32, u32)>, OamError>",
+      "effects": []
+    },
+    {
+      "name": "stamp_frame",
+      "signature": "pub fn stamp_frame( &mut self, first_slot: usize, frame: &MetaFrame, origin_x: i32, origin_y: i32, mirror_h: bool, mirror_v: bool, ) -> Result<usize, OamError>",
+      "effects": []
+    },
+    {
+      "name": "lower_to_quads_into",
+      "signature": "pub fn lower_to_quads_into( &self, palette: Option<&Palette>, tint_index: u8, out: &mut [SpriteQuad], ) -> Result<usize, OamError>",
+      "effects": []
+    },
+    {
+      "name": "lower_to_paint_scene",
+      "signature": "pub fn lower_to_paint_scene( &self, width: f64, height: f64, background: &str, palette: Option<&Palette>, tint_index: u8, ) -> Result<PaintScene, OamError>",
+      "effects": []
+    },
+    {
+      "name": "quad_id_for_slot",
+      "signature": "pub const fn quad_id_for_slot(slot: usize) -> u32",
+      "effects": []
+    },
+    {
+      "name": "slot_from_quad_id",
+      "signature": "pub const fn slot_from_quad_id(id: u32) -> Option<usize>",
+      "effects": []
+    },
+    {
+      "name": "bank_tint",
+      "signature": "pub fn bank_tint(palette: &Palette, bank: u8, tint_index: u8) -> Result<Rgb8, OamError>",
+      "effects": []
+    },
+    {
+      "name": "blank_frame",
+      "signature": "pub const fn blank_frame() -> Self",
+      "effects": []
+    },
+    {
+      "name": "frame_from_parts",
+      "signature": "pub fn frame_from_parts(parts: &[OamEntry], duration: u16) -> Result<Self, OamError>",
+      "effects": []
+    },
+    {
+      "name": "check_frame",
+      "signature": "pub fn check_frame(&self) -> Result<(), OamError>",
+      "effects": []
+    },
+    {
+      "name": "bind",
+      "signature": "pub fn bind(frames: &'a [MetaFrame], mode: PlayMode) -> Result<Self, OamError>",
+      "effects": []
+    },
+    {
+      "name": "frames",
+      "signature": "pub const fn frames(&self) -> &'a [MetaFrame]",
+      "effects": []
+    },
+    {
+      "name": "mode",
+      "signature": "pub const fn mode(&self) -> PlayMode",
+      "effects": []
+    },
+    {
+      "name": "total_ticks",
+      "signature": "pub fn total_ticks(&self) -> u32",
+      "effects": []
+    },
+    {
+      "name": "start",
+      "signature": "pub const fn start() -> Self",
+      "effects": []
+    },
+    {
+      "name": "rewind",
+      "signature": "pub fn rewind(&mut self)",
+      "effects": []
+    },
+    {
+      "name": "frame_index",
+      "signature": "pub const fn frame_index(&self) -> usize",
+      "effects": []
+    },
+    {
+      "name": "elapsed_ticks",
+      "signature": "pub const fn elapsed_ticks(&self) -> u32",
+      "effects": []
+    },
+    {
+      "name": "is_finished",
+      "signature": "pub const fn is_finished(&self) -> bool",
+      "effects": []
+    },
+    {
+      "name": "loops_completed",
+      "signature": "pub const fn loops_completed(&self) -> u32",
+      "effects": []
+    },
+    {
+      "name": "current_frame",
+      "signature": "pub fn current_frame<'a>(&self, anim: &Animation<'a>) -> Result<&'a MetaFrame, OamError>",
+      "effects": []
+    },
+    {
+      "name": "advance",
+      "signature": "pub fn advance(&mut self, anim: &Animation<'_>, ticks: u32) -> Result<AnimStep, OamError>",
+      "effects": []
+    }
+  ],
+  "unconditional_roots": [],
+  "banned_construct_exceptions": [],
+  "label": "proved"
+}
