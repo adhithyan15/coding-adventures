@@ -1178,8 +1178,8 @@ result.
 | `corpus-digests` | spec, corpus and TFV raw digests |
 | `corpus-join` | the WD-004a join: ids, counts, stream digests, controls |
 | `binding-digest` | `binding_sha256` against the binding file |
-| `labels-bound` | sidecar identity, labels digest, descriptor labels, join |
 | `runner-identity` | `runner.name` is `warrant-corpus` and `runner.lane` is the lane |
+| `labels-bound` | sidecar identity, labels digest, descriptor labels, join |
 | `build-routing` | each build file is text that names `evidence/test-manifest.json` and `sabotage` |
 
 `build-routing` is a text search. It shows the routing was written; it does not
@@ -1623,11 +1623,9 @@ dependency graph.
   corpus is read by a strict JSON parser that rejects duplicate keys and any
   non-safe-integer number. (4) The failure-id set, work bounds, CLI and
   manifest of §6.2 and §8 are unchanged. (5) Still open: the
-  `warrant-corpus-conformance-v1` fixture; the registry row for
-  `typescript/ct-compare` (the checked-in registry lists only
-  `python/ct-compare`, and the TypeScript BUILD therefore validates the
-  manifest without `--registry`); the VER08b sandbox run (CAP-RT-1xx,
-  TypeScript/Node).
+  `warrant-corpus-conformance-v1` fixture; the VER08b sandbox run
+  (CAP-RT-1xx, TypeScript/Node). The registry row for `typescript/ct-compare`
+  and the BUILD `--registry` flag were open here and are done in WD-004b1.
 * **WD-100 (shared runner conformance fixture).** §9.1 pins the reader profile,
   the canonical writer, the containment profile and the label digest, and the
   fixture `warrant-corpus-conformance-v1` (with its independent checker) now
@@ -1654,10 +1652,10 @@ dependency graph.
   contained with a cross-drive-safe check whose `Rel` error is a refusal. (6) The
   failure-id set, work bounds, CLI and manifest of §6.2 and §8 are unchanged; the
   Go lane's case count equals the other lanes' (572,109). (7) Still open: the
-  `warrant-corpus-conformance-v1` fixture; the registry row for `go/ct-compare`
-  (the checked-in registry lists only `python/ct-compare`, so the Go BUILD
-  validates the manifest without `--registry`); the VER08b sandbox run
-  (CAP-RT-1xx, Go: OS sandbox around the test binary).
+  `warrant-corpus-conformance-v1` fixture; the VER08b sandbox run
+  (CAP-RT-1xx, Go: OS sandbox around the test binary). The registry row for
+  `go/ct-compare` and the BUILD `--registry` flag were open here and are done
+  in WD-004b1.
 * **WD-004b1 (lane loader) amendments.** (1) Section 8.2 is new: bounded,
   contained, symlink-refusing reads of the registry, spec, corpus, TFV,
   manifest, labels sidecar, binding file and build files; the raw digest list;
@@ -1670,6 +1668,11 @@ dependency graph.
   section 8.1's, so the freshness check (section 9, check 23) stays with
   WD-004b2. (4) The Python, TypeScript and Go runners' own tests no longer
   pin the checked-in registry to `planned` or to a single Python row; they
-  build the planned and unregistered cases from synthetic registries. (5) Still
-  open: report and CLI integration, absent rungs, the sandbox, and the
-  `--registry` flag in the TypeScript and Go BUILD lines.
+  build the planned and unregistered cases from synthetic registries; the
+  TypeScript and Go BUILD lines now pass `--registry`. (5) Security-review
+  hardening: the sidecar is read with the manifest's strict integer-token
+  rules, its case sums are overflow-checked, and registry paths refuse Windows
+  reserved device names and trailing dots. (6) Still open: report and CLI
+  integration, absent rungs, the sandbox, the check-to-open race (documented in
+  section 8.2), BUILD lines passing `--require-active`, and junction or
+  reparse-point tests on a Windows runner (all WD-004b2).

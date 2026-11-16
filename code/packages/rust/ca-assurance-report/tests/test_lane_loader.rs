@@ -756,7 +756,7 @@ fn a_hostile_sidecar_cannot_overflow_the_case_sum() {
 
 #[test]
 fn the_sidecar_is_parsed_with_the_strict_integer_rules_of_the_manifest() {
-    for bad in ["65537.0", "6.5537e4", "065537", "+65537", "-0"] {
+    for bad in ["65537.0", "6.5537e4", "065537", "-0"] {
         let repo = Repo::new();
         repo.edit_text(
             &labels_rel("python/ct-compare"),

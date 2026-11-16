@@ -59,9 +59,9 @@ use coding_adventures_sha256::sha256_hex;
 use crate::evidence::MAX_MANIFEST_BYTES;
 use crate::json::JsonValue;
 use crate::lane_evidence::{
-    parse_consumer_registry, parse_lane_manifest, validate_lane_evidence, validate_repo_path,
-    ExhaustiveEntry, LaneConsumer, LaneEvidenceError, LaneEvidenceManifest, LaneTestEntry,
-    CORPUS_FILE, SPEC_FILE,
+    parse_consumer_registry, parse_lane_manifest, validate_integer_tokens, validate_lane_evidence,
+    validate_repo_path, ExhaustiveEntry, LaneConsumer, LaneEvidenceError, LaneEvidenceManifest,
+    LaneTestEntry, CORPUS_FILE, SPEC_FILE,
 };
 
 // ---------------------------------------------------------------------------
@@ -610,6 +610,13 @@ pub fn parse_domain_labels(bytes: &[u8]) -> Result<DomainLabels, LaneLoadError> 
         code: "labels",
         message: "sidecar must be UTF-8".into(),
     })?;
+    // The same strict number rules as the manifest (VER04i 8.2): canonical
+    // non-negative integers within 2^53 only, so `65537.0`, `6.5537e4` and
+    // `065537` are refused before the f64-based parser can round them.
+    lift(
+        "labels",
+        validate_integer_tokens(bytes, "domain-labels sidecar"),
+    )?;
     let root = JsonValue::parse(source).map_err(|e| LaneLoadError {
         code: "labels",
         message: format!("invalid sidecar JSON: {e}"),
@@ -688,7 +695,11 @@ pub fn parse_domain_labels(bytes: &[u8]) -> Result<DomainLabels, LaneLoadError> 
                 "suite {id} label is not its weakest binder's label"
             ));
         }
-        *summed.entry(label.to_owned()).or_insert(0) += cases;
+        let total = summed.entry(label.to_owned()).or_insert(0_u64);
+        *total = total.checked_add(cases).ok_or_else(|| LaneLoadError {
+            code: "labels",
+            message: "cases_by_label sum overflows u64".into(),
+        })?;
         suites.push(SuiteLabel {
             id: id.to_owned(),
             label: label.to_owned(),
