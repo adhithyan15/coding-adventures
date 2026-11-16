@@ -1433,17 +1433,28 @@ fixture is 440 cases; no existing expectation changed) and are applied by the Py
 TypeScript and Go lanes and by the Rust loader's `lexical_containment`; the checker's
 reference and its string-level second opinion derive them independently.
 
-1. **Windows reserved device names are refused.** A path component is *reserved*
-   if, after removing any trailing dots and spaces, and then removing everything
-   from the first `.` onward (the extension, so `CON.txt` and `nul.tar.gz` are
-   reserved), the remainder equals `CON`, `PRN`, `AUX`, `NUL`, `COM1` to `COM9` or
-   `LPT1` to `LPT9`, compared ASCII case-insensitively. A component that merely
-   ends in a dot or a space (`name.`, `name `) is also refused, because Windows
-   silently strips them and two spellings would name one file. A path containing a
-   reserved or trailing-dot-or-space component is **refused** by the lane's
+1. **Windows reserved device names are refused.** A path component is *refused*
+   if any of these holds (security review of WD-100b widened the first draft, which
+   missed real device paths):
+   (a) it contains a colon (`CON:`, `CON:stream`, `nul::$DATA`, `file.txt:NUL`:
+   an alternate data stream or device suffix);
+   (b) it ends in a dot or a space (`name.`, `name `), because Windows silently
+   strips them and two spellings would name one file;
+   (c) its *stem* is reserved. The stem is the part before the **first** `.`, with
+   trailing spaces then removed (so `CON.txt`, `nul.tar.gz` and `CON .txt` are
+   reserved). The reserved set is `CON`, `PRN`, `AUX`, `NUL`, `COM1` to `COM9`,
+   `LPT1` to `LPT9`, `CONIN$`, `CONOUT$`, and the superscript forms `COM` or `LPT`
+   followed by U+00B9, U+00B2 or U+00B3 (Windows treats them as devices), compared
+   with ASCII case-insensitivity: only `A` to `Z` fold, so the superscripts match
+   exactly. `CLOCK$` (removed from current Windows) and fullwidth `ＣＯＮ` (not a
+   device: Windows does not fold it) stay ordinary names, as do `CONsole`, `COM10`
+   and `LPT0`.
+   A path containing a
+   refused component is **refused** by the lane's
    artifact-path acceptance on **every host flavour** (an artifact written on Linux
    must load on Windows) and, under `win32`, a containment query with such a
    component in `child` answers `inside: false`. As implemented: the check
+   (win32 children only; a colon is ordinary in `posix`: `a.b:c` is inside)
    runs on the **child's** components after `.` and `..` are normalised (so
    `D:\repo\CON\..\x` is `D:\repo\x`), never on the anchor (drive or share)
    and never on `root`; `posix` containment has no such rule (`/repo/NUL` is
