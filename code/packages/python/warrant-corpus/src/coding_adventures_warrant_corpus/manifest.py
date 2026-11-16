@@ -150,7 +150,7 @@ def build_manifest(
 _MANIFEST_KEYS = {
     "schema", "lane", "package", "module", "spec", "spec_sha256", "corpus",
     "corpus_sha256", "cases_sha256", "runner", "binding_sha256", "source_sha256",
-    "toolchain", "evidence_seed", "faulted", "pycache_isolated", "tests",
+    "toolchain", "evidence_seed", "faulted", "tests",
 }  # fmt: skip
 _ROW_KEYS = {
     "example": {"id", "layer", "kind", "op", "cases", "verdict"},
@@ -199,7 +199,26 @@ def validate_manifest(
     consistent -- that is what regenerating (``check``) is for.
     """
     document = parse_json(manifest_bytes)
-    root = _obj(document, _MANIFEST_KEYS, "manifest")
+    # ``pycache_isolated`` is the one lane-specific key (VER04i 8.1): required,
+    # and exactly true, for the Python lane; forbidden for every other lane. The
+    # lane is read before the closed key check because the key set depends on it.
+    keys = _MANIFEST_KEYS
+    if type(document) is dict:
+        has_pycache = "pycache_isolated" in document
+        if document.get("lane") == "python":
+            need(
+                has_pycache,
+                "manifest",
+                "pycache_isolated is required for the Python lane (VER04i 8.1)",
+            )
+            keys = _MANIFEST_KEYS | {"pycache_isolated"}
+        else:
+            need(
+                not has_pycache,
+                "manifest",
+                "pycache_isolated is only recorded by the Python lane",
+            )
+    root = _obj(document, keys, "manifest")
     need(root["schema"] == SCHEMA, "manifest", "unsupported schema")
     lane, package, module = root["lane"], root["package"], root["module"]
     need(
@@ -250,11 +269,12 @@ def validate_manifest(
         "evidence_seed must be a canonical u64 decimal string",
     )
     need(root["faulted"] is False, "manifest", "faulted manifests are not accepted")
-    need(
-        root["pycache_isolated"] is True,
-        "manifest",
-        "pycache_isolated must be true (VER04i 8.1)",
-    )
+    if lane == "python":
+        need(
+            root["pycache_isolated"] is True,
+            "manifest",
+            "pycache_isolated must be true for the Python lane",
+        )
 
     tests = root["tests"]
     expected_rows = len(corpus.examples) + len(corpus.suites) + len(corpus.controls)

@@ -1,4 +1,4 @@
-import { mkdirSync, symlinkSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, symlinkSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { beforeAll, describe, expect, it } from "vitest";
@@ -226,6 +226,39 @@ describe("validateManifest", () => {
       const changed = copy();
       mutate(changed);
       expect(() => validateManifest(bytesOf(changed), corpus, RELATIVE), name).toThrow(CorpusError);
+    }
+  });
+
+  it("records pycache_isolated only for the Python lane (VER04i 8.1)", () => {
+    // A TypeScript manifest without the key passes (the baseline); with it, it fails.
+    expect(manifest["pycache_isolated"]).toBeUndefined();
+    const withKey = copy();
+    withKey["pycache_isolated"] = true;
+    expect(() => validateManifest(bytesOf(withKey), corpus, RELATIVE)).toThrow(/only recorded by the Python lane/);
+    // A Go-lane manifest with the key fails too.
+    const asGo = copy();
+    asGo["lane"] = "go";
+    asGo["package"] = "go/ct-compare";
+    asGo["runner"]["lane"] = "go";
+    asGo["pycache_isolated"] = true;
+    expect(() => validateManifest(bytesOf(asGo), corpus, RELATIVE)).toThrow(/only recorded by the Python lane/);
+    // A Python manifest without the key, or with it false, fails.
+    const asPython = copy();
+    asPython["lane"] = "python";
+    asPython["package"] = "python/ct-compare";
+    asPython["runner"]["lane"] = "python";
+    expect(() => validateManifest(bytesOf(asPython), corpus, RELATIVE)).toThrow(/required for the Python lane/);
+    asPython["pycache_isolated"] = false;
+    expect(() => validateManifest(bytesOf(asPython), corpus, RELATIVE)).toThrow(/must be true/);
+    asPython["pycache_isolated"] = true;
+    expect(validateManifest(bytesOf(asPython), corpus, RELATIVE)["lane"]).toBe("python");
+  });
+
+  it("validates the other lanes' committed manifests (WD-102)", () => {
+    for (const lane of ["python", "go"]) {
+      const path = join(REPO_ROOT, "code", "packages", lane, "ct-compare", "evidence", "test-manifest.json");
+      if (!existsSync(path)) continue;
+      expect(validateManifest(new Uint8Array(readFileSync(path)), corpus, RELATIVE)["lane"]).toBe(lane);
     }
   });
 
