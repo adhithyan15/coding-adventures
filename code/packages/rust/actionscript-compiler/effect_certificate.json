@@ -1,7 +1,7 @@
 {
   "schema_version": "ver24-effect-cert-v1",
   "package": "rust/actionscript-compiler",
-  "source_digest": "db42072635e68f7bc75dfcbff512b82325b8b1242a2c8c88bf5849c5430d7e83",
+  "source_digest": "c5535fd8c9415c0fb3d73326751770658eefb63590cb3b4f839489d8fcfb193e",
   "manifest_digest": "18226bf103e906b4e693bd045df1883067847ca0eb4b88adc1bc1958ec35a4c9",
   "declared_effects": [],
   "entry_points": [

@@ -12,7 +12,7 @@
 
 use actionscript_compiler::{
     compile_actionscript, run_actionscript, validate_dialect, validate_instruction_count,
-    validate_token_count, AsCompilerError, AsDialect, AsLexer, AsVmRunner, TokenKind,
+    validate_token_count, AsCompilerError, AsDialect, AsLexer, AsParser, AsVmRunner, TokenKind,
     MAX_AST_DEPTH, MAX_INSTRUCTIONS, MAX_TOKENS,
 };
 
@@ -309,4 +309,103 @@ fn test_token_limit_protection() {
         "expected TokenLimitExceeded, got: {:?}",
         res
     );
+}
+
+#[test]
+fn test_recursion_depth_nested_vectors() {
+    // Generate deeply nested Vector.<Vector.<...int...>> exceeding MAX_AST_DEPTH
+    let mut src = String::from("var x: ");
+    for _ in 0..(MAX_AST_DEPTH + 10) {
+        src.push_str("Vector.<");
+    }
+    src.push_str("int");
+    for _ in 0..(MAX_AST_DEPTH + 10) {
+        src.push('>');
+    }
+    src.push(';');
+
+    let res = compile_actionscript(&src, AsDialect::As3, "depth_vector");
+    assert!(
+        matches!(res, Err(AsCompilerError::RecursionDepthExceeded)),
+        "expected RecursionDepthExceeded, got: {:?}",
+        res
+    );
+}
+
+#[test]
+fn test_recursion_depth_unary_chains() {
+    // Generate deeply nested unary operators exceeding MAX_AST_DEPTH
+    let mut src = String::from("var x = ");
+    for _ in 0..(MAX_AST_DEPTH + 10) {
+        src.push('!');
+    }
+    src.push_str("true;");
+
+    let res = compile_actionscript(&src, AsDialect::As1, "depth_unary");
+    assert!(
+        matches!(res, Err(AsCompilerError::RecursionDepthExceeded)),
+        "expected RecursionDepthExceeded, got: {:?}",
+        res
+    );
+}
+
+#[test]
+fn test_recursion_depth_new_chains() {
+    // Generate deeply nested new expressions exceeding MAX_AST_DEPTH
+    let mut src = String::from("var x = ");
+    for _ in 0..(MAX_AST_DEPTH + 10) {
+        src.push_str("new ");
+    }
+    src.push_str("Object();");
+
+    let res = compile_actionscript(&src, AsDialect::As1, "depth_new");
+    assert!(
+        matches!(res, Err(AsCompilerError::RecursionDepthExceeded)),
+        "expected RecursionDepthExceeded, got: {:?}",
+        res
+    );
+}
+
+#[test]
+fn test_recursion_depth_assignment_chains() {
+    // Generate deeply nested assignment chains exceeding MAX_AST_DEPTH
+    let mut src = String::from("var a = 0;\n");
+    for _ in 0..(MAX_AST_DEPTH + 10) {
+        src.push_str("a = ");
+    }
+    src.push_str("1;");
+
+    let res = compile_actionscript(&src, AsDialect::As1, "depth_assign");
+    assert!(
+        matches!(res, Err(AsCompilerError::RecursionDepthExceeded)),
+        "expected RecursionDepthExceeded, got: {:?}",
+        res
+    );
+}
+
+#[test]
+fn test_recursion_depth_ternary_chains() {
+    // Generate deeply nested ternary expressions exceeding MAX_AST_DEPTH
+    let mut src = String::from("var x = ");
+    for _ in 0..(MAX_AST_DEPTH + 10) {
+        src.push_str("true ? 1 : ");
+    }
+    src.push_str("0;");
+
+    let res = compile_actionscript(&src, AsDialect::As1, "depth_ternary");
+    assert!(
+        matches!(res, Err(AsCompilerError::RecursionDepthExceeded)),
+        "expected RecursionDepthExceeded, got: {:?}",
+        res
+    );
+}
+
+#[test]
+fn test_parser_empty_tokens_protection() {
+    let mut parser = AsParser::parser_new(Vec::new(), AsDialect::As1);
+    let prog = parser.parser_parse_program().expect("parse empty tokens");
+    assert!(prog.statements.is_empty());
+
+    let empty_src_res = compile_actionscript("", AsDialect::As1, "empty_src");
+    assert!(empty_src_res.is_ok());
 }

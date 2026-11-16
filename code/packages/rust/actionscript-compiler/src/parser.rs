@@ -8,7 +8,7 @@ use crate::ast::{
 };
 use crate::dialect::AsDialect;
 use crate::error::{AsCompilerError, MAX_AST_DEPTH, MAX_AST_NODES};
-use crate::token::{Token, TokenKind};
+use crate::token::{Span, Token, TokenKind};
 
 /// Parser state machine.
 pub struct AsParser {
@@ -17,17 +17,20 @@ pub struct AsParser {
     dialect: AsDialect,
     depth: usize,
     node_count: usize,
+    eof_token: Token,
 }
 
 impl AsParser {
     /// Create a new parser.
     pub fn parser_new(tokens: Vec<Token>, dialect: AsDialect) -> Self {
+        let eof_token = Token::token_new(TokenKind::Eof, Span::span_empty(), String::new());
         Self {
             tokens,
             cursor: 0,
             dialect,
             depth: 0,
             node_count: 0,
+            eof_token,
         }
     }
 
@@ -67,22 +70,30 @@ impl AsParser {
     }
 
     fn parser_is_at_end(&self) -> bool {
-        self.cursor >= self.tokens.len() || self.tokens[self.cursor].kind == TokenKind::Eof
+        self.cursor >= self.tokens.len()
+            || self
+                .tokens
+                .get(self.cursor)
+                .is_none_or(|t| t.kind == TokenKind::Eof)
     }
 
     fn parser_peek(&self) -> &TokenKind {
         if self.cursor < self.tokens.len() {
             &self.tokens[self.cursor].kind
+        } else if let Some(last) = self.tokens.last() {
+            &last.kind
         } else {
-            &TokenKind::Eof
+            &self.eof_token.kind
         }
     }
 
     fn parser_peek_token(&self) -> &Token {
         if self.cursor < self.tokens.len() {
             &self.tokens[self.cursor]
+        } else if let Some(last) = self.tokens.last() {
+            last
         } else {
-            &self.tokens[self.tokens.len() - 1]
+            &self.eof_token
         }
     }
 
@@ -91,8 +102,10 @@ impl AsParser {
             let tok = self.tokens[self.cursor].clone();
             self.cursor += 1;
             tok
+        } else if let Some(last) = self.tokens.last() {
+            last.clone()
         } else {
-            self.tokens[self.tokens.len() - 1].clone()
+            self.eof_token.clone()
         }
     }
 
@@ -191,7 +204,7 @@ impl AsParser {
         // Modifiers for Class / Function / Var in AS2 / AS3
         if self.dialect != AsDialect::As1 {
             let mut visibility = Visibility::Public;
-            let mut is_static = false;
+            let mut member_static = false;
             let mut is_final = false;
             let mut is_dynamic = false;
             let mut saw_modifier = false;
@@ -204,7 +217,7 @@ impl AsParser {
                     visibility = Visibility::Private;
                     saw_modifier = true;
                 } else if self.parser_match(&TokenKind::Static) {
-                    is_static = true;
+                    member_static = true;
                     saw_modifier = true;
                 } else if self.dialect == AsDialect::As3 && self.parser_match(&TokenKind::Internal)
                 {
@@ -231,7 +244,7 @@ impl AsParser {
 
             if saw_modifier {
                 if self.parser_check(&TokenKind::Function) {
-                    let func = self.parser_parse_function_decl(is_static, visibility)?;
+                    let func = self.parser_parse_function_decl(member_static, visibility)?;
                     return Ok(Stmt::FunctionDecl(func));
                 }
                 if self.parser_match(&TokenKind::Var) {
@@ -577,6 +590,14 @@ impl AsParser {
     }
 
     fn parser_parse_type_annotation(&mut self) -> Result<TypeAnnotation, AsCompilerError> {
+        self.parser_enter_scope()?;
+        self.parser_charge_node()?;
+        let res = self.parser_parse_type_annotation_inner();
+        self.parser_exit_scope();
+        res
+    }
+
+    fn parser_parse_type_annotation_inner(&mut self) -> Result<TypeAnnotation, AsCompilerError> {
         if self.dialect == AsDialect::As3 && self.parser_match(&TokenKind::Vector) {
             self.parser_expect(&TokenKind::DotLt)?;
             let inner = self.parser_parse_type_annotation()?;
@@ -822,14 +843,18 @@ impl AsParser {
     // ------------------------------------------------------------------------
 
     fn parser_parse_expression(&mut self) -> Result<Expr, AsCompilerError> {
+        self.parser_parse_assignment()
+    }
+
+    fn parser_parse_assignment(&mut self) -> Result<Expr, AsCompilerError> {
         self.parser_enter_scope()?;
         self.parser_charge_node()?;
-        let res = self.parser_parse_assignment();
+        let res = self.parser_parse_assignment_inner();
         self.parser_exit_scope();
         res
     }
 
-    fn parser_parse_assignment(&mut self) -> Result<Expr, AsCompilerError> {
+    fn parser_parse_assignment_inner(&mut self) -> Result<Expr, AsCompilerError> {
         let left = self.parser_parse_conditional()?;
 
         let assign_op = if self.parser_match(&TokenKind::Eq) {
@@ -861,6 +886,14 @@ impl AsParser {
     }
 
     fn parser_parse_conditional(&mut self) -> Result<Expr, AsCompilerError> {
+        self.parser_enter_scope()?;
+        self.parser_charge_node()?;
+        let res = self.parser_parse_conditional_inner();
+        self.parser_exit_scope();
+        res
+    }
+
+    fn parser_parse_conditional_inner(&mut self) -> Result<Expr, AsCompilerError> {
         let mut expr = self.parser_parse_binary(0)?;
 
         if self.parser_match(&TokenKind::Question) {
@@ -913,6 +946,7 @@ impl AsParser {
             }
 
             self.parser_advance();
+            self.parser_charge_node()?;
             let right = self.parser_parse_binary(r_bp)?;
             left = Expr::Binary {
                 op,
@@ -925,6 +959,14 @@ impl AsParser {
     }
 
     fn parser_parse_unary(&mut self) -> Result<Expr, AsCompilerError> {
+        self.parser_enter_scope()?;
+        self.parser_charge_node()?;
+        let res = self.parser_parse_unary_inner();
+        self.parser_exit_scope();
+        res
+    }
+
+    fn parser_parse_unary_inner(&mut self) -> Result<Expr, AsCompilerError> {
         if self.parser_match(&TokenKind::Minus) {
             let expr = self.parser_parse_unary()?;
             return Ok(Expr::Unary {
@@ -1091,48 +1133,20 @@ impl AsParser {
 
         // New
         if self.parser_match(&TokenKind::New) {
-            // Check for new Vector.<T>() in AS3
-            if self.dialect == AsDialect::As3 && self.parser_match(&TokenKind::Vector) {
-                self.parser_expect(&TokenKind::DotLt)?;
-                let item_type = self.parser_parse_type_annotation()?;
-                self.parser_expect(&TokenKind::Gt)?;
-                self.parser_expect(&TokenKind::LParen)?;
-                let mut items = Vec::new();
-                if !self.parser_check(&TokenKind::RParen) {
-                    loop {
-                        items.push(self.parser_parse_expression()?);
-                        if !self.parser_match(&TokenKind::Comma) {
-                            break;
-                        }
-                    }
-                }
-                self.parser_expect(&TokenKind::RParen)?;
-                return Ok(Expr::VectorLit { item_type, items });
-            }
-
-            let callee = self.parser_parse_primary()?;
-            let mut args = Vec::new();
-            if self.parser_match(&TokenKind::LParen) {
-                if !self.parser_check(&TokenKind::RParen) {
-                    loop {
-                        args.push(self.parser_parse_expression()?);
-                        if !self.parser_match(&TokenKind::Comma) {
-                            break;
-                        }
-                    }
-                }
-                self.parser_expect(&TokenKind::RParen)?;
-            }
-            return Ok(Expr::New {
-                callee: Box::new(callee),
-                args,
-            });
+            self.parser_enter_scope()?;
+            self.parser_charge_node()?;
+            let res = self.parser_parse_new_inner();
+            self.parser_exit_scope();
+            return res;
         }
 
         // Parenthesized expression
         if self.parser_match(&TokenKind::LParen) {
+            self.parser_enter_scope()?;
+            self.parser_charge_node()?;
             let expr = self.parser_parse_expression()?;
             self.parser_expect(&TokenKind::RParen)?;
+            self.parser_exit_scope();
             return Ok(expr);
         }
 
@@ -1199,5 +1213,44 @@ impl AsParser {
             self.parser_peek(),
             self.parser_peek_token().span.line
         )))
+    }
+
+    fn parser_parse_new_inner(&mut self) -> Result<Expr, AsCompilerError> {
+        // Check for new Vector.<T>() in AS3
+        if self.dialect == AsDialect::As3 && self.parser_match(&TokenKind::Vector) {
+            self.parser_expect(&TokenKind::DotLt)?;
+            let item_type = self.parser_parse_type_annotation()?;
+            self.parser_expect(&TokenKind::Gt)?;
+            self.parser_expect(&TokenKind::LParen)?;
+            let mut items = Vec::new();
+            if !self.parser_check(&TokenKind::RParen) {
+                loop {
+                    items.push(self.parser_parse_expression()?);
+                    if !self.parser_match(&TokenKind::Comma) {
+                        break;
+                    }
+                }
+            }
+            self.parser_expect(&TokenKind::RParen)?;
+            return Ok(Expr::VectorLit { item_type, items });
+        }
+
+        let callee = self.parser_parse_primary()?;
+        let mut args = Vec::new();
+        if self.parser_match(&TokenKind::LParen) {
+            if !self.parser_check(&TokenKind::RParen) {
+                loop {
+                    args.push(self.parser_parse_expression()?);
+                    if !self.parser_match(&TokenKind::Comma) {
+                        break;
+                    }
+                }
+            }
+            self.parser_expect(&TokenKind::RParen)?;
+        }
+        Ok(Expr::New {
+            callee: Box::new(callee),
+            args,
+        })
     }
 }
