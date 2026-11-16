@@ -1,0 +1,102 @@
+-- Secure in-memory wiping (code/packages/rust/zeroize), a PILOT of the Warrant
+-- generator's `inout` parameters and `ensures` postconditions (VER04k section 4,
+-- WX-G).  It proves the generator path end to end: a `&mut [u8]`, a `&mut [u8; 32]`,
+-- a `&mut u64` and a `&mut Vec<u8>` are each called with a COPY of the pre-state,
+-- the post-state is read back from the buffer the crate was given, the `ensures`
+-- rows judge every call, and sabotage (a mutation lost on a copy, a skipped last
+-- write, a cursor off by one) is caught.  It is NOT an adoption of the crate: no
+-- secret labels (the buffers are labelled `public` because this pilot makes no
+-- constant-time or secrecy claim), no report, no jail.
+--
+-- What this evidence CANNOT see (VER04k section 4.12): that the stores survive
+-- optimisation when the buffer is never read afterwards (CWE-14, dead-store
+-- elimination on drop).  The harness reads every buffer back, which makes the
+-- stores observable, so the compiler may not remove them *in the test*.  The
+-- optimised-IR check (VER20) owns that; the zeroize report keeps CWE-14 as an
+-- exemption until it exists.  Nor does it see the spare capacity a `Vec<u8>`
+-- wipe also scrubs: no Warrant value contains spare capacity.
+--
+-- Domains (what the manifest labels each claim; nothing here is claimed beyond it):
+--   Bytes<0>, Bytes<1>   full      every value (1 and 256 buffers)
+--   Bytes<2>             sample    16 of the 65,536 buffers (bytes from 00 01 80 ff)
+--   Bytes<32>            sample    100 of 2^256 buffers
+--   Bytes                set       a fixed set of 347 buffers of 0 to 8 bytes; the
+--                                  property and fuzz suites add random buffers of
+--                                  0 to 64 bytes
+--   U64                  edge      377 boundary values, not all 2^64
+warrant zeroize v1
+
+  -- The all-zero byte string of length n, for n < 256: one block of 2^i zero bytes
+  -- for each set bit i of n.  (The generator draws `Bytes` of at most 64 bytes, so
+  -- every length it can produce is covered; it does not emit the WX-D1
+  -- `replicate` yet, VER04k section 4.13 item 9, so the model is built by hand.)
+  model chunk(n: Nat, i: Nat, z: Bytes) -> Bytes = if bit(wrap<U8>(n), i) then z else b""
+  model zeros(n: Nat) -> Bytes = concat(concat(concat(concat(concat(concat(concat(chunk(n, 0, b"00"), chunk(n, 1, b"0000")), chunk(n, 2, b"00000000")), chunk(n, 3, b"0000000000000000")), chunk(n, 4, b"00000000000000000000000000000000")), chunk(n, 5, b"0000000000000000000000000000000000000000000000000000000000000000")), chunk(n, 6, b"00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000")), chunk(n, 7, b"0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"))
+
+  -- zeroize_bytes(&mut [u8]): every byte of the buffer becomes 0, the length is unchanged.
+  op zeroize_bytes(buf: inout Bytes) -> Bytes
+  -- <[u8; 32] as Zeroize>::zeroize(&mut self).
+  op zeroize_array32(buf: inout Bytes<32>) -> Bytes<32>
+  -- <u64 as Zeroize>::zeroize(&mut self): the value becomes 0.
+  op zeroize_u64(x: inout U64) -> U64
+  -- <Vec<u8> as Zeroize>::zeroize(&mut self): the buffer is wiped and then cleared,
+  -- so the post-state is the empty vector.
+  op zeroize_vec(buf: inout Bytes) -> Bytes
+
+  labels zeroize_bytes:
+    buf public
+  labels zeroize_array32:
+    buf public
+  labels zeroize_u64:
+    x public
+  labels zeroize_vec:
+    buf public
+
+  -- The postcondition of each call, stated against the pre-state (the parameter)
+  -- and the post-state (`result`).  The monitor evaluates these rows after EVERY
+  -- call the generated tests make, and the generated `<op>/post` suites enumerate
+  -- them over the operation's whole domain.
+  ensures zeroize_bytes:
+    len(result) == len(buf)
+    result == zeros(len(buf))
+  ensures zeroize_array32:
+    len(result) == 32
+    result == zeros(32)
+  ensures zeroize_u64:
+    result == 0u64
+  ensures zeroize_vec:
+    len(result) == 0
+
+  example zeroize_three_bytes:
+    zeroize_bytes(b"01a5ff") == b"000000"
+  example zeroize_nothing:
+    zeroize_bytes(b"") == b""
+  example zeroize_array_of_ones:
+    zeroize_array32(b"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff") == b"0000000000000000000000000000000000000000000000000000000000000000"
+  example zeroize_max_u64:
+    zeroize_u64(18446744073709551615u64) == 0u64
+  example zeroize_vec_clears:
+    zeroize_vec(b"010203") == b""
+
+  -- Every byte becomes 0 and the length is unchanged: the whole domain of the
+  -- small widths (full), a sample of the 2-byte and 32-byte buffers, and the set.
+  claim zeroizes_the_empty_buffer:
+    forall buf: Bytes<0>. zeroize_bytes(buf) == b""
+  claim zeroizes_every_one_byte_buffer:
+    forall buf: Bytes<1>. zeroize_bytes(buf) == b"00"
+  claim zeroizes_a_sample_of_two_byte_buffers:
+    forall buf: Bytes<2>. zeroize_bytes(buf) == b"0000"
+  -- A bounded SET of 347 buffers (0 to 8 bytes), not every buffer: see the domain table.
+  claim zeroizes_every_byte_of_the_347_buffer_set:
+    forall buf: Bytes. zeroize_bytes(buf) == zeros(len(buf))
+  claim keeps_the_length:
+    forall buf: Bytes. len(zeroize_bytes(buf)) == len(buf)
+  -- The result is idempotent: wiping a wiped buffer changes nothing.
+  claim is_idempotent:
+    forall buf: Bytes. zeroize_bytes(zeroize_bytes(buf)) == zeroize_bytes(buf)
+  claim zeroizes_a_sample_of_32_byte_arrays:
+    forall buf: Bytes<32>. zeroize_array32(buf) == b"0000000000000000000000000000000000000000000000000000000000000000"
+  claim zeroizes_the_edge_u64_values:
+    forall x: U64. zeroize_u64(x) == 0u64
+  claim clears_the_vector:
+    forall buf: Bytes. zeroize_vec(buf) == b""

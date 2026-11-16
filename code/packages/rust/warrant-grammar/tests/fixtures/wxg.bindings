@@ -1,0 +1,23 @@
+# VER04k WX-G test fixture: how the in-test subject (`wxg_subject`) implements each
+# operation of wxg.warrant, which host form carries each inout parameter, and which
+# faults attack it (section 4.6, 4.8 and 4.13).
+package wxg_subject
+revision 0.0.0
+spec code/packages/rust/warrant-grammar/tests/fixtures/wxg.warrant
+output code/packages/rust/warrant-grammar/tests/generated/wxg_evidence.rs
+seed 0x5758475f45564944
+property_cases 2048
+fuzz_iterations 1200
+negctl_fuzz_iterations 800
+exhaustive_budget 400000
+struct Cell path=wxg_subject::Cell fields=a:u8,on:bool
+op wipe export=wipe inout=buf:slice faults=stale-post,skip-last-write
+op wipe4 export=wipe4 inout=buf:array faults=stale-post,skip-last-write
+op bump export=bump inout=x:int:u8 faults=stale-post,cursor-off-by-one
+op toggle export=toggle inout=flag:bool faults=stale-post
+op set_on export=set_on inout=c:struct:Cell faults=stale-post
+op push_byte export=push_byte ret=usize inout=out:vec faults=stale-post,drop-last-push,clobber-prefix
+op clear_nonempty export=clear_nonempty error=TOO_SHORT inout=buf:slice faults=stale-post,missing-error
+op pair export=pair ret=(u8,u8) inout=buf:slice faults=stale-post
+op clr export=clr err_any=TOO_SHORT inout=buf:slice faults=stale-post,missing-error
+op encode export=encode ret=usize err_any=TOO_SHORT inout=out:slice faults=stale-post,missing-error
