@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+- dsp-stft.warrant was invalid Warrant (`/` in bound expressions); rewritten with `div`. Document only.
+
 ## 0.1.0
 
 - Initial release of `@coding-adventures/dsp-stft`.

@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/discovery"
+	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/globmatch"
 )
 
 func TestWarrantGrammarInputsSelectOnlyTheirConsumer(t *testing.T) {
@@ -70,6 +71,8 @@ func TestWarrantLaneArtifactsSelectGrammarAndAssuranceConsumers(t *testing.T) {
 		{Name: "python/ct-compare", Language: "python"},
 		{Name: "typescript/warrant-corpus", Language: "typescript"},
 		{Name: "typescript/ct-compare", Language: "typescript"},
+		{Name: "go/warrant-corpus", Language: "go"},
+		{Name: "go/ct-compare", Language: "go"},
 	}
 	for _, input := range []string{
 		"code/specs/ct-compare.warrant",
@@ -92,6 +95,12 @@ func TestWarrantLaneArtifactsSelectGrammarAndAssuranceConsumers(t *testing.T) {
 			want["typescript/warrant-corpus"] = true
 			want["typescript/ct-compare"] = true
 		}
+		if isWarrantGoLaneCorpusInput(input) {
+			// WD-103: the Go lane runner and its ct-compare pilot read the same
+			// spec, corpus and registry.
+			want["go/warrant-corpus"] = true
+			want["go/ct-compare"] = true
+		}
 		if err != nil || !reflect.DeepEqual(got, want) {
 			t.Fatalf("%s: got %v, err %v", input, got, err)
 		}
@@ -104,12 +113,18 @@ func TestWarrantLaneArtifactsSelectGrammarAndAssuranceConsumers(t *testing.T) {
 	for _, input := range []string{
 		"code/specs/fixtures/ct-compare-warrant-v10/corpus.json",
 		"code/specs/fixtures/ct-compare-warrant-v1/consumers.backup.json",
-		"docs/code/specs/ct-compare.warrant",
 	} {
 		got, err := repositoryInputConsumersForChange([]string{input}, packages, "all")
 		if err != nil || len(got) != 0 {
 			t.Errorf("lookalike %s: got %v, err %v", input, got, err)
 		}
+	}
+	// A lookalike *path* to the ct-compare document is still a .warrant file,
+	// so it selects the grammar guard (and only that): the guard checks every
+	// document wherever it lives.
+	got, err = repositoryInputConsumersForChange([]string{"docs/code/specs/ct-compare.warrant"}, packages, "all")
+	if err != nil || !reflect.DeepEqual(got, map[string]bool{"rust/warrant-grammar": true}) {
+		t.Errorf("nested ct-compare.warrant: got %v, err %v", got, err)
 	}
 }
 
@@ -138,7 +153,7 @@ func TestPythonWarrantLaneInputsSelectTheirConsumers(t *testing.T) {
 		if _, err := repositoryInputConsumersForChange([]string{input}, packages[:1], "python"); err == nil {
 			t.Fatalf("%s: a missing Python lane consumer must fail closed", input)
 		}
-		if got, err := repositoryInputConsumersForChange([]string{input}, packages, "go"); err != nil || len(got) != 0 {
+		if got, err := repositoryInputConsumersForChange([]string{input}, packages, "ruby"); err != nil || len(got) != 0 {
 			t.Fatalf("%s: language filtering: %v, %v", input, got, err)
 		}
 	}
@@ -191,7 +206,7 @@ func TestTypeScriptWarrantLaneInputsSelectTheirConsumers(t *testing.T) {
 		if _, err := repositoryInputConsumersForChange([]string{input}, packages[:1], "typescript"); err == nil {
 			t.Fatalf("%s: a missing TypeScript lane consumer must fail closed", input)
 		}
-		if got, err := repositoryInputConsumersForChange([]string{input}, packages, "go"); err != nil || len(got) != 0 {
+		if got, err := repositoryInputConsumersForChange([]string{input}, packages, "ruby"); err != nil || len(got) != 0 {
 			t.Fatalf("%s: language filtering: %v, %v", input, got, err)
 		}
 	}
@@ -216,6 +231,167 @@ func TestTypeScriptWarrantLaneInputsSelectTheirConsumers(t *testing.T) {
 	} {
 		if isWarrantTypeScriptLanePilotInput(input) {
 			t.Errorf("lookalike selected the pilot: %s", input)
+		}
+	}
+}
+
+// WD-103: the Go Warrant lane. The pilot's go.mod requires the runner (a graph
+// edge), but its committed manifest embeds the runner's source digest, so a
+// runner edit selects the pilot by an explicit registered prefix too.
+func TestGoWarrantLaneInputsSelectTheirConsumers(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "go/warrant-corpus", Language: "go"},
+		{Name: "go/ct-compare", Language: "go"},
+	}
+	corpusFiles := []string{
+		"code/specs/ct-compare.warrant",
+		"code/specs/fixtures/ct-compare-warrant-v1/cases.tfv",
+		"code/specs/fixtures/ct-compare-warrant-v1/corpus.json",
+		"code/specs/fixtures/ct-compare-warrant-v1/consumers.json",
+	}
+	for _, input := range corpusFiles {
+		// The language filter isolates the Go consumers from the Rust, Python
+		// and TypeScript ones that read the same spec and corpus.
+		got, err := repositoryInputConsumersForChange([]string{input}, packages, "go")
+		want := map[string]bool{"go/warrant-corpus": true, "go/ct-compare": true}
+		if err != nil || !reflect.DeepEqual(got, want) {
+			t.Fatalf("%s: got %v, err %v", input, got, err)
+		}
+		if _, err := repositoryInputConsumersForChange([]string{input}, packages[:1], "go"); err == nil {
+			t.Fatalf("%s: a missing Go lane consumer must fail closed", input)
+		}
+		if got, err := repositoryInputConsumersForChange([]string{input}, packages, "ruby"); err != nil || len(got) != 0 {
+			t.Fatalf("%s: language filtering: %v, %v", input, got, err)
+		}
+	}
+
+	// An edit to the runner selects the pilot (the runner selects itself through
+	// the normal package mapping, not through this table).
+	got, err := repositoryInputConsumersForChange([]string{"code/packages/go/warrant-corpus/runner.go"}, packages, "go")
+	want := map[string]bool{"go/ct-compare": true}
+	if err != nil || !reflect.DeepEqual(got, want) {
+		t.Fatalf("runner edit: got %v, err %v", got, err)
+	}
+
+	for _, input := range []string{
+		"code/specs/fixtures/ct-compare-warrant-v10/corpus.json",
+		"code/specs/fixtures/ct-compare-warrant-v1/consumers.schema.json",
+		"code/specs/fixtures/ct-compare-warrant-v1/consumers.backup.json",
+		"code/packages/go/warrant-corpus-extra/x.go",
+		"code/packages/go/warrant-corpus",
+		"code/packages/typescript/warrant-corpus/src/runner.ts",
+		"docs/code/specs/ct-compare.warrant",
+		`code\packages\go\warrant-corpus\x.go`,
+	} {
+		if isWarrantGoLanePilotInput(input) {
+			t.Errorf("lookalike selected the pilot: %s", input)
+		}
+	}
+}
+
+// WD-100: the shared runner conformance fixture is read by every lane runner's
+// own tests, so an edit selects each runner package and nothing else; a
+// lookalike directory selects nothing, and a missing runner fails closed.
+func TestWarrantConformanceFixtureSelectsEveryRunnerPackage(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "python/warrant-corpus", Language: "python"},
+		{Name: "python/ct-compare", Language: "python"},
+		{Name: "typescript/warrant-corpus", Language: "typescript"},
+		{Name: "typescript/ct-compare", Language: "typescript"},
+	}
+	for _, input := range []string{
+		"code/specs/fixtures/warrant-corpus-conformance-v1/json.json",
+		"code/specs/fixtures/warrant-corpus-conformance-v1/index.json",
+		"code/specs/fixtures/warrant-corpus-conformance-v1/.gitattributes",
+	} {
+		got, err := repositoryInputConsumersForChange([]string{input}, packages, "all")
+		want := map[string]bool{"python/warrant-corpus": true, "typescript/warrant-corpus": true}
+		if err != nil || !reflect.DeepEqual(got, want) {
+			t.Fatalf("%s: got %v, err %v", input, got, err)
+		}
+		if _, err := repositoryInputConsumersForChange([]string{input}, packages[1:2], "python"); err == nil {
+			t.Fatalf("%s: a missing runner package must fail closed", input)
+		}
+	}
+	for _, input := range []string{
+		"code/specs/fixtures/warrant-corpus-conformance-v10/json.json",
+		"code/specs/fixtures/warrant-corpus-conformance-v1",
+		"docs/code/specs/fixtures/warrant-corpus-conformance-v1/json.json",
+	} {
+		got, err := repositoryInputConsumersForChange([]string{input}, packages, "all")
+		if err != nil || len(got) != 0 {
+			t.Errorf("lookalike %s: got %v, err %v", input, got, err)
+		}
+	}
+}
+
+// A .warrant document anywhere in the repository selects rust/warrant-grammar,
+// whose v0_compat test parses and checks every one of them. Without this, a
+// PR that adds an invalid document never runs the only test that would catch
+// it (#19417-#19474), and a later unrelated PR fails on the stale file.
+func TestAnyWarrantDocumentSelectsOnlyTheGrammarGuard(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "rust/warrant-grammar", Language: "rust"},
+		{Name: "rust/ca-assurance-report", Language: "rust"},
+		{Name: "rust/ct-compare", Language: "rust"},
+		{Name: "python/x", Language: "python"},
+	}
+	want := map[string]bool{"rust/warrant-grammar": true}
+	for _, input := range []string{
+		"code/specs/foo.warrant",
+		"code/packages/python/x/x.warrant",
+		"code/packages/rust/y/y.warrant",
+		"code/packages/typescript/z/src/deep/z.warrant",
+		"docs/outside-code.warrant",
+		"a.warrant",
+	} {
+		if !isWarrantDocument(input) {
+			t.Errorf("%s: not recognised as a Warrant document", input)
+		}
+		got, err := repositoryInputConsumersForChange([]string{input}, packages, "all")
+		if err != nil || !reflect.DeepEqual(got, want) {
+			t.Errorf("%s: got %v, err %v; want only rust/warrant-grammar", input, got, err)
+		}
+		if got, err := repositoryInputConsumersForChange([]string{input}, packages, "python"); err != nil || len(got) != 0 {
+			t.Errorf("%s: language filtering: %v, %v", input, got, err)
+		}
+	}
+	for _, input := range []string{
+		"code/specs/foo.warrant.draft",
+		"code/packages/python/x/x.warrant.draft",
+		"code/specs/foo.warrant.bak",
+		"code/specs/foo.warrants",
+		"code/specs/.warrant",
+		"code/specs/foo.Warrant",
+		"code/specs/warrant/readme.md",
+		"code/specs/foo.warrant/readme.md",
+		`code\specs\foo.warrant`,
+	} {
+		if isWarrantDocument(input) {
+			t.Errorf("%s: wrongly recognised as a Warrant document", input)
+		}
+		got, err := repositoryInputConsumersForChange([]string{input}, packages, "all")
+		if err != nil || len(got) != 0 {
+			t.Errorf("%s: must select nothing, got %v, err %v", input, got, err)
+		}
+	}
+	// Fail closed when the guard is missing from discovery.
+	if _, err := repositoryInputConsumersForChange([]string{"code/specs/foo.warrant"}, packages[1:], "all"); err == nil {
+		t.Fatal("missing Warrant guard must fail closed")
+	}
+}
+
+// The declared glob must agree with the predicate, so the Kiln export keys the
+// guard on the same files change detection selects it for.
+func TestWarrantDocumentGlobAgreesWithPredicate(t *testing.T) {
+	for _, c := range []string{
+		"code/specs/foo.warrant", "code/packages/python/x/x.warrant", "a.warrant", "docs/a.warrant",
+		"code/specs/foo.warrant.draft", "code/specs/.warrant", "code/specs/foo.Warrant",
+		"code/specs/foo.warrant/readme.md", "code/specs/foo.warrants",
+	} {
+		hit := globmatch.MatchPath(warrantDocumentGlob, c)
+		if want := isWarrantDocument(c); hit != want {
+			t.Errorf("%q: glob=%v predicate=%v", c, hit, want)
 		}
 	}
 }

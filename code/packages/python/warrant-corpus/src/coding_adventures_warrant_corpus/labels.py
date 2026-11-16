@@ -26,10 +26,12 @@ The labels live in a sidecar, ``evidence/domain-labels.json``, because the
 
 from __future__ import annotations
 
+import hashlib
 import re
 
 from .corpus import Corpus
 from .errors import CorpusError
+from .jsonio import render_json
 
 SCHEMA = "warrant-lane-domain-labels-v1"
 NOTE = (
@@ -39,6 +41,21 @@ NOTE = (
 )
 _RANK = {"full": 0, "bounded-set": 1, "sample": 2}
 _BYTES_N = re.compile(r"bytes_n\(([0-9]+)\)")
+
+
+def manifest_label_digest(manifest: dict[str, object]) -> str:
+    """The digest that binds a label sidecar to one manifest (VER04i 9.1).
+
+    SHA-256 of the manifest's canonical rendering with ``toolchain.version``
+    blanked.  The toolchain *name* stays in the digest and is read from the
+    manifest, never a literal: swapping runtimes is drift, a patch release of
+    the same runtime is not.
+    """
+    stable = dict(manifest)
+    toolchain = manifest["toolchain"]
+    assert isinstance(toolchain, dict)
+    stable["toolchain"] = {"name": toolchain["name"], "version": ""}
+    return hashlib.sha256(render_json(stable).encode("utf-8")).hexdigest()
 
 
 def domain_label(descriptor: str) -> str:

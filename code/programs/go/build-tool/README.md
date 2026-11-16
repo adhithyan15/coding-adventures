@@ -266,7 +266,32 @@ On Windows, use the compiled `.exe`:
 | `-emit-kiln-graph` | (none) | Write the `kiln-legacy-graph/1` export (KILN03 section 2) to this path and exit: every package, all three OSes, implies `-force` and `-language all`. Go-only; the other ports do not implement it |
 | `-emit-kiln-steps` | (none) | Only with `-emit-kiln-graph`: also write the `kiln-legacy-steps/1` export (per package, the lines `executor.EffectiveStepLines` returns for this OS) from the same discovery pass; KILN04 section 4.8 |
 | `-exec-wrapper` | (none) | JSON array of strings: a prefix for every BUILD step, run as `wrapper... sh -c <line>`. The wrapper (not the BUILD) gets `KILN_ACTION`, `KILN_STEP`, `KILN_STEP_COUNT`. Incompatible with `-clippy` and `-prune-leaf-targets` |
+| `-command-timeout` | `90m` | Kill any single BUILD command that runs longer than this (Go duration such as `45m`; `0` disables; negative is an error). See [Command timeout](#command-timeout) |
 | `-emit-results` | (none) | After the run, write the `kiln-legacy-results/1` record (status and step counts per package) to this path |
+
+### Command timeout
+
+Every BUILD command runs under a timer (`-command-timeout`, default 90 minutes,
+`0` to disable). A command that outlives it has its whole process tree killed
+(a process group on Unix, `taskkill /T /F` on Windows), the wait for its output
+pipes is bounded so a leftover grandchild cannot hold the build, and the package
+FAILS with return code 124. The package's output ends with a line like:
+
+```
+rust/lzw: command 2 of 3 `cargo test` timed out after 1h30m0s (limit 1h30m0s); killed its process tree
+```
+
+All output buffered before the hang is printed as for any failure. The clock is
+per command (it restarts for each BUILD line), and there are no per-package
+overrides. The default exists because a single hung Windows command once idled a
+CI job for 4h47m, with no log of which command it was. Because each command runs in its own process group, Ctrl-C (SIGINT) and SIGTERM
+are caught by the tool and kill every running command's tree; the run then
+exits 130 and reports it was interrupted. A command that exits cleanly but
+leaves a background process holding its output fails, and that leftover group
+is killed. On Windows the tree kill needs `taskkill`; if it is missing from
+PATH the tool falls back to killing only the shell, so descendants may linger
+(the wait for their pipes is still bounded). See
+`code/specs/12-build-system.md`, "Per-Command Timeout".
 
 ### Kiln legacy graph export
 
@@ -665,6 +690,15 @@ one-line layout edit. Selection uses raw Git paths (deletions count), honors
 `-language`, and fails the plan if the consumer is missing from discovery.
 It applies to Git-diff mode only; `-force` and the hash fallback already
 build everything they consider changed.
+
+`rust/warrant-grammar` is a second guard of this kind. Its `v0_compat` test
+parses and checks every `.warrant` document in the repository, wherever it
+lives, so any changed path ending in `.warrant` (the glob `**/?*.warrant`, a
+bare `.warrant` excluded) selects it. A PR that adds an invalid document is
+therefore checked by the PR that adds it, instead of failing a later unrelated
+PR that rebuilds `warrant-grammar`. `*.warrant.draft` files are not documents
+and do not select it. Only that one package is selected, with its
+prerequisites, not the Warrant adopters.
 
 ### Package-local metadata does not rebuild dependents
 

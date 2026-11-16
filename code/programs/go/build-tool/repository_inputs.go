@@ -152,6 +152,12 @@ var (
 		"code/specs/fixtures/ct-compare-warrant-v1/consumers.json",
 		"code/specs/fixtures/ct-compare-warrant-v1/consumers.schema.json",
 	}
+	// warrantConformanceFixture is the shared runner conformance fixture
+	// (VER04i 9.1, WD-100). Every lane's runner package runs all of its cases
+	// in its own tests, so an edit to any case selects each runner package.
+	// The ct-compare pilots do not read it: their BUILD runs the corpus, not
+	// the runner's own tests.
+	warrantConformanceFixture = "code/specs/fixtures/warrant-corpus-conformance-v1"
 	// warrantPythonLaneInputs are the files the Python Warrant lane reads
 	// from outside its own package: the spec the corpus was compiled from,
 	// the corpus itself and its consumer registry. The ct-compare package's
@@ -167,7 +173,7 @@ var (
 	// editable from a sibling directory (a dev dependency, not a graph edge),
 	// so an edit to the runner must select the pilot lane explicitly.
 	warrantPythonRunnerPackage   = "code/packages/python/warrant-corpus"
-	warrantPythonLaneCorpusPaths = warrantPythonLaneInputs
+	warrantPythonLaneCorpusPaths = append(append([]string{}, warrantPythonLaneInputs...), warrantConformanceFixture)
 	warrantPythonLanePilotPaths  = append(append([]string{}, warrantPythonLaneInputs...), warrantPythonRunnerPackage)
 	// The TypeScript Warrant lane (WD-102) reads the same spec, corpus and
 	// registry. Its ct-compare BUILD re-runs the corpus, fails when the
@@ -180,8 +186,20 @@ var (
 	// an explicit prefix too: the selection must not depend on the dependency
 	// resolver noticing a dev-only edge.
 	warrantTypeScriptRunnerPackage   = "code/packages/typescript/warrant-corpus"
-	warrantTypeScriptLaneCorpusPaths = warrantTypeScriptLaneInputs
+	warrantTypeScriptLaneCorpusPaths = append(append([]string{}, warrantTypeScriptLaneInputs...), warrantConformanceFixture)
 	warrantTypeScriptLanePilotPaths  = append(append([]string{}, warrantTypeScriptLaneInputs...), warrantTypeScriptRunnerPackage)
+	// The Go Warrant lane (WD-103) reads the same spec, corpus and registry. Its
+	// ct-compare BUILD re-runs the corpus, fails when the committed manifest
+	// drifted, proves every negative control and validates the manifest; the
+	// runner package's own tests run the real corpus once.
+	warrantGoLaneInputs = warrantPythonLaneInputs
+	// warrantGoRunnerPackage is the shared runner. ct-compare's go.mod requires
+	// it (a graph edge), but the committed manifest embeds the runner's source
+	// digest, so the pilot is selected by an explicit prefix too: the selection
+	// must not depend on the dependency resolver noticing the edge.
+	warrantGoRunnerPackage   = "code/packages/go/warrant-corpus"
+	warrantGoLaneCorpusPaths = warrantGoLaneInputs
+	warrantGoLanePilotPaths  = append(append([]string{}, warrantGoLaneInputs...), warrantGoRunnerPackage)
 	// warrantAssurancePaths are the shared Warrant lane artifacts the
 	// assurance report validates directly (see isWarrantAssuranceInput).
 	// The Kiln graph export reads them, so they must list every path the
@@ -611,6 +629,7 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "canonical Warrant grammars, syntax corpus, vector fixtures and transport gate",
 		matches:  isWarrantGrammarInput,
 		paths:    warrantGrammarPaths,
+		globs:    []string{warrantDocumentGlob},
 	},
 	{
 		name:     "rust/ca-assurance-report",
@@ -623,7 +642,7 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		name:     "python/warrant-corpus",
 		language: "python",
 		inputs:   "the Warrant spec, corpus and consumer registry its tests run",
-		matches:  isWarrantPythonLaneCorpusInput,
+		matches:  isWarrantPythonRunnerInput,
 		paths:    warrantPythonLaneCorpusPaths,
 	},
 	{
@@ -637,7 +656,7 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		name:     "typescript/warrant-corpus",
 		language: "typescript",
 		inputs:   "the Warrant spec, corpus and consumer registry its tests run",
-		matches:  isWarrantTypeScriptLaneCorpusInput,
+		matches:  isWarrantTypeScriptRunnerInput,
 		paths:    warrantTypeScriptLaneCorpusPaths,
 	},
 	{
@@ -646,6 +665,20 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "the Warrant spec, corpus, consumer registry and the shared TypeScript runner",
 		matches:  isWarrantTypeScriptLanePilotInput,
 		paths:    warrantTypeScriptLanePilotPaths,
+	},
+	{
+		name:     "go/warrant-corpus",
+		language: "go",
+		inputs:   "the Warrant spec, corpus and consumer registry its tests run",
+		matches:  isWarrantGoLaneCorpusInput,
+		paths:    warrantGoLaneCorpusPaths,
+	},
+	{
+		name:     "go/ct-compare",
+		language: "go",
+		inputs:   "the Warrant spec, corpus, consumer registry and the shared Go runner",
+		matches:  isWarrantGoLanePilotInput,
+		paths:    warrantGoLanePilotPaths,
 	},
 }
 
@@ -677,6 +710,24 @@ func isWarrantPythonLaneCorpusInput(changed string) bool {
 	return false
 }
 
+// isWarrantConformanceInput reports whether a changed path is a file of the
+// shared runner conformance fixture. A slash-delimited prefix, so a lookalike
+// directory such as warrant-corpus-conformance-v10 is not selected.
+func isWarrantConformanceInput(changed string) bool {
+	return strings.HasPrefix(changed, warrantConformanceFixture+"/")
+}
+
+// isWarrantPythonRunnerInput selects python/warrant-corpus for the corpus
+// inputs and the conformance fixture its tests run.
+func isWarrantPythonRunnerInput(changed string) bool {
+	return isWarrantPythonLaneCorpusInput(changed) || isWarrantConformanceInput(changed)
+}
+
+// isWarrantTypeScriptRunnerInput is the TypeScript counterpart.
+func isWarrantTypeScriptRunnerInput(changed string) bool {
+	return isWarrantTypeScriptLaneCorpusInput(changed) || isWarrantConformanceInput(changed)
+}
+
 // isWarrantPythonLanePilotInput selects python/ct-compare for the same files
 // plus anything beneath the shared runner package, which the pilot installs
 // as a sibling editable dev dependency.
@@ -699,11 +750,49 @@ func isWarrantTypeScriptLanePilotInput(changed string) bool {
 		strings.HasPrefix(changed, "code/packages/typescript/warrant-corpus/")
 }
 
+// isWarrantGoLaneCorpusInput selects the Go runner package when the spec, corpus
+// or registry its tests run changes. Exact paths only: a lookalike version of the
+// fixture directory must not select it.
+func isWarrantGoLaneCorpusInput(changed string) bool {
+	return isWarrantPythonLaneCorpusInput(changed)
+}
+
+// isWarrantGoLanePilotInput selects go/ct-compare for the same files plus
+// anything beneath the shared runner package.
+func isWarrantGoLanePilotInput(changed string) bool {
+	return isWarrantGoLaneCorpusInput(changed) ||
+		strings.HasPrefix(changed, "code/packages/go/warrant-corpus/")
+}
+
+// warrantDocumentGlob is exactly isWarrantDocument as a glob: the `?` keeps a
+// bare ".warrant" out, and the suffix keeps ".warrant.draft" out.
+const warrantDocumentGlob = "**/?*.warrant"
+
+// isWarrantDocument reports whether a changed path is a Warrant document, in
+// any directory. rust/warrant-grammar's v0_compat test parses and checks every
+// .warrant file in the repository, so adding or editing one anywhere must run
+// it; otherwise an invalid document lands on main unchecked and fails a later,
+// unrelated PR that does rebuild warrant-grammar. Drafts are not documents.
+//
+//	code/specs/foo.warrant                     → true
+//	code/packages/python/x/x.warrant           → true
+//	code/specs/foo.warrant.draft, .warrant.bak → false
+//	code/specs/.warrant, code/specs/foo.Warrant → false
+//	code\specs\foo.warrant  (not a Git path)   → false
+func isWarrantDocument(changed string) bool {
+	if strings.Contains(changed, "\\") {
+		return false
+	}
+	base := path.Base(changed)
+	return strings.HasSuffix(base, ".warrant") && len(base) > len(".warrant")
+}
+
 // Canonical inputs live outside the Rust artifact package. Exact file paths
 // and slash-delimited prefixes avoid selecting lookalike versions/directories.
 // Validator-test edits select the consumer too: its BUILD runs those tests.
 func isWarrantGrammarInput(changed string) bool {
-	return strings.HasPrefix(changed, "code/grammars/warrant/") ||
+	return isWarrantDocument(changed) ||
+		strings.HasPrefix(changed, "code/grammars/warrant/") ||
 		strings.HasPrefix(changed, "code/specs/fixtures/warrant-syntax-v1/") ||
 		// WX-E: the pinned vector tables the package's tests load (the pin in
 		// the .warrant document fails closed when these bytes change).

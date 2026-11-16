@@ -16,7 +16,7 @@ warrant palette_indexed v1
 
   model valid_dimension(n: Nat) -> Bool = n >= 1 and n <= 16384
   model valid_fade(step: Nat, steps: Nat) -> Bool = steps >= 1 and steps <= 1024 and step <= steps
-  model lerp_model(from: Nat, to: Nat, step: Nat, steps: Nat) -> Nat = (from * (steps - step) + to * step + steps / 2) / steps
+  model lerp_model(from: Nat, to: Nat, step: Nat, steps: Nat) -> Int = unwrap_or(div(from * (steps - step) + to * step + unwrap_or(div(steps, 2), 0), steps), 0)
 
   op validate_dimension(n: Nat) -> Result<Bool, PaletteError>
   op validate_fade(step: Nat, steps: Nat) -> Result<Bool, PaletteError>

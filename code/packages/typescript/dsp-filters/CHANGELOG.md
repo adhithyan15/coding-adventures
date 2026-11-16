@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+- `dsp-filters.warrant` was invalid Warrant (`max` is not a builtin); the iir steps bound now uses `imax`. Document only.
+
 ## 0.1.0
 
 - Initial release of `@coding-adventures/dsp-filters`.
