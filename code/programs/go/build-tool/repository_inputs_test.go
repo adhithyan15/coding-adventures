@@ -99,6 +99,8 @@ func TestTrigReferenceCorpusSelectsConvertedPorts(t *testing.T) {
 	packages := []discovery.Package{
 		{Name: "python/trig", Language: "python"},
 		{Name: "rust/trig", Language: "rust"},
+		{Name: "typescript/trig", Language: "typescript"},
+		{Name: "go/trig", Language: "go"},
 		{Name: "python/rng", Language: "python"},
 	}
 	for _, changed := range []string{
@@ -110,12 +112,19 @@ func TestTrigReferenceCorpusSelectsConvertedPorts(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		if want := map[string]bool{"python/trig": true}; !reflect.DeepEqual(got, want) {
+		if want := map[string]bool{"python/trig": true, "rust/trig": true, "typescript/trig": true}; !reflect.DeepEqual(got, want) {
 			t.Fatalf("%s selected %v, want %v", changed, got, want)
 		}
 	}
-	if got, _ := repositoryInputConsumersForChange([]string{"code/specs/fixtures/trig-reference-v1/edge.tsv"}, packages, "rust"); len(got) != 0 {
-		t.Fatalf("rust-only run selected %v", got)
+	for lang, want := range map[string]string{"rust": "rust/trig", "typescript": "typescript/trig", "python": "python/trig"} {
+		got, _ := repositoryInputConsumersForChange([]string{"code/specs/fixtures/trig-reference-v1/edge.tsv"}, packages, lang)
+		if !reflect.DeepEqual(got, map[string]bool{want: true}) {
+			t.Fatalf("%s-only run selected %v, want only %s", lang, got, want)
+		}
+	}
+	// go/trig has not adopted the corpus yet (TC-6) and must not be selected.
+	if got, _ := repositoryInputConsumersForChange([]string{"code/specs/fixtures/trig-reference-v1/edge.tsv"}, packages, "go"); len(got) != 0 {
+		t.Fatalf("go run selected %v", got)
 	}
 	for path, want := range map[string]bool{
 		"code/specs/fixtures/trig-reference-v1/edge.tsv":  true,

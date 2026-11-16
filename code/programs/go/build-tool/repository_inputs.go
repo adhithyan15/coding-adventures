@@ -136,8 +136,8 @@ var (
 	}
 	// trigReferenceCorpusPaths is the bit-exact TRIG-REF-1 conformance corpus
 	// (PHY00a section 6). Every converged trig port's tests decode it, so an
-	// edit to any of its files selects each converted port. Slices TC-1..TC-17
-	// add one consumer row per port as the port adopts the corpus.
+	// edit to any of its files selects each converted port. Python, Rust and
+	// TypeScript adopted it in TC-2; each later slice adds one consumer row.
 	trigReferenceCorpusPaths = []string{"code/specs/fixtures/trig-reference-v1"}
 
 	rngCorpusPaths         = []string{"code/specs/fixtures/rng-v1"}
@@ -339,6 +339,20 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	{
 		name:     "python/trig",
 		language: "python",
+		inputs:   "the shared TRIG-REF-1 bit-exact conformance corpus",
+		matches:  isTrigReferenceCorpus,
+		paths:    trigReferenceCorpusPaths,
+	},
+	{
+		name:     "rust/trig",
+		language: "rust",
+		inputs:   "the shared TRIG-REF-1 bit-exact conformance corpus",
+		matches:  isTrigReferenceCorpus,
+		paths:    trigReferenceCorpusPaths,
+	},
+	{
+		name:     "typescript/trig",
+		language: "typescript",
 		inputs:   "the shared TRIG-REF-1 bit-exact conformance corpus",
 		matches:  isTrigReferenceCorpus,
 		paths:    trigReferenceCorpusPaths,
