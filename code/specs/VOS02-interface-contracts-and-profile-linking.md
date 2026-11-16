@@ -1,6 +1,6 @@
 # VOS02 -- Interface Contracts and Profile Linking
 
-**Status:** Draft. The rules below are specified; no `vos-*` tool exists yet.
+**Status:** Draft. The rules below are specified. `vos-manifest` (the `contract.vos`, part and document parsers) and `vos-link gen-doc` / `check-doc` exist (VOS-033, section 10.1); `check-profile`, `check-owners` and the profile parsers do not (VOS-034).
 The acceptance spike of section 13 ran the toy of
 [VOS01](VOS01-component-contract-model.md) section 5 through today's Warrant
 evidence generator (VER04h) with the ghost face of section 4: the document was
@@ -1377,7 +1377,7 @@ by single spaces, hashed with SHA-256. The tokens inside the claim's source span
 `Indent`, `Dedent` and `Newline` are layout, not text, so re-wrapping a claim changes
 no digest, and renaming a token or changing a literal changes it.
 
-**D-GD8. What `check-doc` checks, in order, and what each finding is.** All run on the
+**D-GD8. What `check-doc` checks, in order, and what each finding is.** The inputs have their own codes: `GD01` a part is not admitted or `impl.part` is missing, `GD02` `contract.vos` is invalid or names another package, `GD03` the `obligations-*.part` files and the `tier` rows disagree (either way), `GD04` an obligations part holds more than claims or a name repeats across tiers, `GD05` a `vos.toml` problem. The document checks all run on the
 document on disk; every finding is reported, none stops the others except where a later
 check needs an earlier result.
 
@@ -1388,7 +1388,7 @@ check needs an earlier result.
 | CD03 | the contract block and each obligations block equal the contract package's `.part` file for that tier, byte for byte |
 | CD04 | the document parses and type-checks with `warrant-grammar`; its trailer is D-GD4's |
 | CD05 | no claim in the document carries the name of a contract obligation with a different `claim_sha256` (NC2) |
-| CD06 | `carries` is computed from the parsed claims; a tier is carried when every obligation of the tier appears with the contract's `claim_sha256`, and a **partly** carried tier is a finding |
+| CD06 | `carries` is computed from the parsed claims; a tier is carried when every obligation of the tier appears with the contract's `claim_sha256`, and a **partly** carried tier is a finding; the carried set must equal the `obligations` of `vos.toml` |
 | CD07 | the R6 rules that the document alone decides (below) |
 | CD08 | regeneration: the document equals, byte for byte, what `gen-doc` would write now |
 
