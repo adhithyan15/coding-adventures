@@ -1,0 +1,34 @@
+[package]
+name = "flash-display-list"
+version = "0.1.0"
+edition = "2021"
+description = "Interactive Flash display-object hierarchy, timeline FSM, and retained-mode PaintScene generation and diffing (SWF05)"
+license = "MIT"
+
+[dependencies]
+swf-container = { path = "../swf-container" }
+swf-shape-to-paint = { path = "../swf-shape-to-paint" }
+paint-instructions = { path = "../paint-instructions" }
+paint-palette-blend = { path = "../paint-palette-blend" }
+affine2d = { path = "../affine2d" }
+point2d = { path = "../point2d" }
+bezier2d = { path = "../bezier2d" }
+
+[dev-dependencies]
+coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
+coding_adventures_sha256 = { path = "../sha256" }
+capability-runtime-conformance = { path = "../capability-runtime-conformance" }
+
+[[test]]
+name = "conformance"
+path = "tests/conformance.rs"
+
+[[test]]
+name = "microbenchmarks"
+path = "tests/microbenchmarks.rs"
+harness = false
+
+[[test]]
+name = "runtime_capability"
+path = "tests/runtime_capability.rs"
+harness = false

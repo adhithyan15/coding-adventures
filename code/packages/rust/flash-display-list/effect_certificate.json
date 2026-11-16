@@ -1,0 +1,27 @@
+{
+  "schema_version": "ver24-effect-cert-v1",
+  "package": "rust/flash-display-list",
+  "source_digest": "b229d00e9aea838f617a2976d83e6ae05d30d5b0232c28b9f9e3b39f9f5bbd92",
+  "manifest_digest": "f3f6b6f32488693184e2e2e5220e429eb7d598f3c6b6fc9797e652643ffc7c6a",
+  "declared_effects": [],
+  "entry_points": [
+    {
+      "name": "validate_hierarchy_depth",
+      "signature": "pub fn validate_hierarchy_depth(depth: usize) -> Result<bool, DisplayListError>",
+      "effects": []
+    },
+    {
+      "name": "validate_display_depth",
+      "signature": "pub fn validate_display_depth(depth: i32) -> Result<bool, DisplayListError>",
+      "effects": []
+    },
+    {
+      "name": "validate_morph_ratio",
+      "signature": "pub fn validate_morph_ratio(ratio: usize) -> Result<bool, DisplayListError>",
+      "effects": []
+    }
+  ],
+  "unconditional_roots": [],
+  "banned_construct_exceptions": [],
+  "label": "proved"
+}
