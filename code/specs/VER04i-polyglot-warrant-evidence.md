@@ -2,7 +2,7 @@
 
 **Parent:** [VER00 §7–§9](VER00-verified-shipping-program.md), [VER01](VER01-assurance-report.md), [VER04 §5–§8](VER04-warrant-language.md), [VER04e](VER04e-warrant-codegen.md), [VER04f](VER04f-claims-to-properties.md), [VER04g](VER04g-typescript-warrant-compiler.md), [VER04h](VER04h-warrant-derived-evidence.md), [TF00](TF00-portable-test-framework.md), [TF01](TF01-bootstrap-harness.md), [TF01a](TF01a-typescript-test-bootstrap.md), [VER26](VER26-ct-compare-pilot.md). Runtime capability conformance: VER08b (in flight on branch `worktree-agent-a9f1811c0377a9acf`; referenced by name, not yet on `main`).
 
-**Status:** WD-003 is merged: it implements Rust corpus generation and the independent Python validator for the ct-compare Warrant v0 profile. WD-004a is merged as PR #19236: it delivers the strict lane-manifest parser, planned consumer registry, and corpus structural validator. WD-101 delivers the first non-Rust lane runner and manifest (Python, `ct-compare`: §5.1, §6.2, §15); the consumer row stays `planned` until WD-004b1 can load a lane artifact, so no report consumes it yet. WD-004b report integration, other lanes, native suites, samples, and proofs are not delivered.
+**Status:** WD-003 is merged: it implements Rust corpus generation and the independent Python validator for the ct-compare Warrant v0 profile. WD-004a is merged as PR #19236: it delivers the strict lane-manifest parser, planned consumer registry, and corpus structural validator. WD-101 delivers the first non-Rust lane runner and manifest (Python, `ct-compare`: §5.1, §6.2, §15), WD-102 the TypeScript lane (§5.2) and WD-103 the Go lane (§5.3); the consumer row stays `planned` until WD-004b1 can load a lane artifact, so no report consumes it yet. WD-004b report integration, other lanes, native suites, samples, and proofs are not delivered.
 
 **Implementation queue and receipts:** the current WD-003/WD-004/WX queue,
 CI receipts, and subsequent discoveries are maintained in the
@@ -686,6 +686,108 @@ package `typescript/warrant-corpus` (`@coding-adventures/warrant-corpus`, entry
 `src/bin.ts`); the manifest's `toolchain` is `{"name": "node", "version": ...}`
 and its `version` is, as for Python, diagnostic and ignored by `check`.
 
+### 5.3 The Go binding file -- WD-103 amendment
+
+The Go lane uses the same line-file grammar as §5.1 and §5.2 (`evidence.bindings`,
+data only, one directive per line). Go differs from the interpreted lanes in one
+structural way, and every other rule follows from it: **a Go program cannot
+import a package by name at run time.** The set of exports is fixed when the
+entry program is compiled, so the binding file names them and a small, compiled
+adapter table supplies them.
+
+```text
+lane go
+package go/ct-compare
+module ct_compare
+import github.com/adhithyan15/coding-adventures/code/packages/go/ct-compare
+source .
+seed 0x5741_5252_414e_5421
+values Bool=bool Bytes=[]byte Nat=uint64 U64=uint64
+op eq export=CTEq
+op eq_fixed export=CTEqFixed width=implicit
+op select_bytes export=CTSelectBytes errors=CT_SELECT_LENGTH_MISMATCH:ErrLengthMismatch
+op eq_u64 export=CTEqU64
+```
+
+| Directive | Go rule |
+|---|---|
+| `import` | The Go **import path** of the one package that holds every export. It is a path, never a file, because Go resolves packages by import path. The runner proves it is the code that runs by checking each export's compiled symbol (below) |
+| `source` | A package-relative directory (`.` is the package directory itself); §8.1 digests the `*.go` files beneath it. The entry program and its adapters therefore live inside the source root, so the digest covers the code that translates values and errors as well as the library |
+| `values` | The only accepted representations are `Bool=bool`, `Bytes=[]byte`, `U8=uint8`, `U64=uint64`, `Nat=uint64`. `U64` is a native `uint64`, parsed unsigned; `int`, `int64` and `float64` are refused (`BindingInvalid`) |
+| `errors=` | `<VARIANT>:<SentinelName>` where the name is `Err` followed by an identifier and resolves, in the compiled registry, to an `error` **value**. A returned error maps only when it is that value by identity (`err == sentinel`): a wrapped error, an equal-looking `errors.New`, a different sentinel and any panic that escapes the adapter are all `unexpected-error`. There is no class or message matching, so the weakness of §5.1 and §5.2 (a different failure of the same class passes) does not exist in this lane |
+
+**The registry.** The entry program (for `ct-compare`: `cmd/warrant-evidence`)
+passes the runner a table with, per export name, an `Impl` (the library function
+itself) and a `Call` adapter, plus the sentinel table. An adapter may translate
+values and errors and nothing else; it holds no computed answer, retry or
+fallback. For `ct-compare` it turns the Warrant `Bool` choice into the `int` bit
+that `CTSelectBytes` requires, and it turns the library's length-mismatch panic
+into `ErrLengthMismatch` (re-panicking any other panic, so an unmapped failure is
+`unexpected-error`). Because the adapter is code, not data, it is part of the
+reviewed and digested surface (§11 item 3 applies to it); the binding file stays
+data.
+
+**Provenance (`source-mismatch`).** The runner never calls `Impl`; it inspects
+it. `runtime.FuncForPC` must name exactly `<import>.<export>` (so a closure, a
+method or another package's function is refused) and the function's recorded
+source file must be an absolute path that lies under the `source` root after
+symlink resolution, with the cross-drive-safe containment check of §6.2. A build
+that strips paths (`-trimpath`) therefore cannot run the lane: the check fails
+closed rather than guess.
+
+Result typing is exact, using Go's own distinctions: `Bool` is a `bool`;
+`U64` and `Nat` a `uint64`; `U8` a `uint8`; `Bytes` is exactly `[]byte` (a named
+byte-slice type fails the type assertion); a `nil` interface is
+`type-mismatch`. `Bytes` is mutable, as in §5.2, so rule 4 is enforced by
+mutation rather than discharged by construction: every `Bytes` argument is the
+runner's own fresh copy, and for a `fresh` op the runner flips the returned bytes
+and requires every argument to be unchanged, then flips each argument and
+requires the result to be unchanged. Either direction changing is
+`type-mismatch`.
+
+Error handling needs no exceptions. An export returns `(value, error)` through
+its adapter; a `nil` error is `Ok(value)` for a `Result` op and the value itself
+otherwise. A panic that reaches the runner is `unexpected-error`, never swallowed
+and never mapped.
+
+**Strict JSON.** Go's `encoding/json` keeps the last of two equal keys and
+replaces invalid UTF-8 and lone surrogate escapes with U+FFFD, so the runner has
+its own reader. It rejects duplicate keys, invalid UTF-8 (no replacement), an
+unpaired or reversed surrogate escape, `NaN`, trailing data, nesting deeper than
+256 levels, fractions, exponents, `-0` and any integer whose magnitude exceeds
+2^53 - 1. `U64` values cross the corpus as tagged decimal text, parsed with
+`strconv.ParseUint`. Output is canonical: sorted keys, two-space indent, LF,
+ASCII-only escapes (lowercase `\u00xx`, surrogate pairs for astral characters) and
+a final newline, byte-identical to the Python and TypeScript lanes.
+
+**Containment.** The corpus directory, the binding file and the package
+directory must each lie strictly inside `--repo-root`. The check resolves
+symlinks, computes `filepath.Rel`, **treats its error as a refusal** (on Windows
+`Rel` fails across drives), refuses an absolute result, and refuses a result that
+is exactly `..` or starts with `..` plus a path separator; a directory named
+`..foo` is inside. A bare `strings.HasPrefix(rel, "..")` is never used.
+
+**Source digest (§8.1).** `*.go` files at any depth beneath the source root,
+excluding `*_test.go`, and skipping `vendor`, `testdata` and directories whose
+name starts with `.` or `_` (the directories the `go` tool itself ignores).
+`runner.src_sha256` is the same framing over the runner's own non-test `*.go`
+files, which the runner embeds at compile time (`go:embed`), so it digests the
+bytes that were actually compiled and does not depend on the working directory.
+
+**Sabotage.** `sabotage` re-executes the running binary (`os.Executable`) once
+per control with `WARRANT_EVIDENCE_FAULT=<fault>:<op>` and
+`WARRANT_EVIDENCE_FILTER=/exhaustive/`, so the entry program must be a program
+that runs the same command line (`cmd/warrant-evidence`). The commands,
+environment variables, exit statuses, failure ids and work bounds of §6.2, the
+fault registry of §4.2 and the manifest of §8 are identical to the other lanes;
+`toolchain` is `{"name": "go", "version": "<runtime version without the go prefix>"}`
+and its `version` is diagnostic and ignored by `check`. The label sidecar digest
+binds to the manifest's own `toolchain.name`.
+
+The runner is the package `go/warrant-corpus` (module
+`github.com/adhithyan15/coding-adventures/code/packages/go/warrant-corpus`),
+a library; the leaf package carries the entry program.
+
 ## 6. The L0 runner protocol (identical in every lane)
 
 ```text
@@ -1280,3 +1382,22 @@ dependency graph.
   `python/ct-compare`, and the TypeScript BUILD therefore validates the
   manifest without `--registry`); the VER08b sandbox run (CAP-RT-1xx,
   TypeScript/Node).
+* **WD-103 (Go lane) amendments.** (1) The Go binding is the same
+  `evidence.bindings` line file with Go representations (`Bool=bool`,
+  `Bytes=[]byte`, `U64=uint64`, `Nat=uint64`, `U8=uint8`), a Go import path as
+  `import` and a directory as `source` (§5.3). (2) Because Go cannot load a
+  package at run time, the entry program passes a compiled registry of adapters;
+  `Impl` is verified by symbol name and source file, so the binding still
+  describes the code that ran. (3) Errors map by sentinel **identity**, not by
+  class or message, which is stricter than §5.1 and §5.2; a panic that escapes
+  an adapter is `unexpected-error`. (4) Result checks are exact; a `fresh`
+  op is checked by mutating the result and each argument (§5.3). (5) The corpus
+  is read by a strict JSON reader that also rejects invalid UTF-8 and unpaired
+  surrogate escapes; the repository, corpus, binding and package paths are
+  contained with a cross-drive-safe check whose `Rel` error is a refusal. (6) The
+  failure-id set, work bounds, CLI and manifest of §6.2 and §8 are unchanged; the
+  Go lane's case count equals the other lanes' (572,109). (7) Still open: the
+  `warrant-corpus-conformance-v1` fixture; the registry row for `go/ct-compare`
+  (the checked-in registry lists only `python/ct-compare`, so the Go BUILD
+  validates the manifest without `--registry`); the VER08b sandbox run
+  (CAP-RT-1xx, Go: OS sandbox around the test binary).
