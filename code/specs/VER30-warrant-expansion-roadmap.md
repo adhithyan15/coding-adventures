@@ -301,7 +301,7 @@ as defects of the first six adoptions.
 | Order | Item | Backlog id | Entry | Exit |
 |---:|---|---|---|---|
 | A1 | Data-driven assurance-report profiles | VER30-A1 (new) | none | a new package adopts a report profile by adding a data file beside its `.warrant`; no edit to `ca-assurance-report` code |
-| A2 | Domain-kind counting | LP-012 | none (design exists) | every claim declares `full`, `sampled` or `bounded-set`; the manifest counts per kind; the report calls only `full` exhaustive |
+| A2 | Domain-kind counting | LP-012 | none (design exists) | every claim declares `full`, `sample` or `bounded-set`; the manifest counts per kind; the report calls only `full` exhaustive |
 | A3 | CI re-selection | LV-002 | none | a change to an adopter's `.warrant`, a pinned fixture, `warrant-grammar`, `warrant-ir` or `ca-assurance-report` re-selects every adopter |
 | A4 | Runtime evidence in the report; strict CI wiring | CAP-RT-002, CAP-RT-004 | CAP-RT-001 (done) | the report has a runtime rung that `--check` requires on Linux; `RCG_STRICT=1` set on Linux runners |
 | A5 | CWE-409 profile pin | LP-010b | none | `--check` cannot verify an `Excluded` CWE-409 row for a decompressor whose BUILD omitted `--profile` |
@@ -320,7 +320,7 @@ report-profile edits are serialised (section 5.3).
 **Notes on the others.**
 
 - A2 (LP-012) is a correctness item, not a scaling one: the headline case count
-  of arithmetic (2,655,437) is 859,848 exhaustive, 1,279,161 sampled and 516,428
+  of arithmetic (2,655,437) is 859,848 exhaustive, 1,279,161 `sample` and 516,428
   bounded-set. Wave 1 of track B must not report numbers that carry this flaw
   into 20 more crates.
 - A6 is cheap and large: `Bytes<N>` is a primary blocker for 128 crates, and the
@@ -394,7 +394,7 @@ without all of it:
    before the push.
 5. **The strict runtime jail** (CAP-RT-003): the capability-runtime gate runs
    with `RCG_STRICT=1` on Linux.
-6. **Honest case counts**: exhaustive, sampled and bounded-set reported
+6. **Honest case counts**: exhaustive, `sample` and bounded-set reported
    separately (A2); no number in the PR text that the manifest does not carry.
 7. **A would-build check**: the build tool's plan for the PR's diff is printed
    and read before pushing (section 5.4); a change that selects the whole
@@ -667,7 +667,7 @@ Tracked per inventory snapshot and reported in the PR that lands each item:
 |---|---|
 | Crates adopted, per tier | adopted count out of the tier's crates (T0 119, T1 21, T2 35, T3 1056) |
 | Ports covered | ports (of the port-sum, 3,569 total) whose lane runs the corpus with a live runner, not merely a port that exists |
-| Exhaustive versus sampled | cases per kind (`full`, `sampled`, `bounded-set`) once LP-012 lands; before it, the headline figure is flagged unaudited |
+| Exhaustive versus sampled | cases per kind (`full`, `sample`, `bounded-set`) once LP-012 lands; before it, the headline figure is flagged unaudited |
 | Jail coverage | adopters whose runtime-jail rung is live in strict mode, per lane |
 | Classifier error | the spot-check rate (8.3% at the 2026-11-14 snapshot), re-measured on each run |
 
@@ -849,3 +849,21 @@ Owner decisions, later on 2026-11-16.
     non-ASCII compared exactly (fail closed), where Go and Python currently differ
     on `ſ`, `Σ` and `İ`. The rules are written into VER04i section 9.1 now, marked
     pending implementation.
+
+Owner decisions, 2026-11-16, on VER04o's open questions.
+
+21. **VER04o OWN-6: verify first, and the generics pilot moves down a layer.**
+    `hash-functions` is verified first (backlog WX-P1a; `Bytes<N>` has landed,
+    and its T0 functions are adopted first). `hash-map` becomes the generics
+    pilot (WX-P1; it needs collections, generics and stateful objects, and its
+    only path dependency is `hash-functions`). `hash-set` follows as the second
+    adopter (WX-P1b). Consistent with decision 17; no exception.
+22. **VER04o OWN-1: the evidence label is `sample`, not `sampled`.** It is the
+    owner's original wording and the value manifests already emit. VER04o,
+    VER04l, VER04m, VER04p, this document and the LP-012 backlog row are
+    changed; `exhaustive-sampled` (a VER29 rung) is a different word and stays.
+23. **VER04o OWN-2: hash-flooding evidence is not a language-wide shipping
+    gate.** It is decided per crate, and the report always prints
+    `flood-resistance: not evidenced`.
+24. **VER04o OWN-5: generic claims across VER29 layers fail closed**
+    (`generic-not-published`, VER04o CT10).

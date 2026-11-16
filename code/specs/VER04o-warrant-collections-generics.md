@@ -117,7 +117,7 @@ What is added:
 Slices: **C1** collections (sets and maps, the domains, `ir.coll`, the Rust and
 Python lanes, pilot `csv-parser`), **C2** the lane rollout for collections, **G1**
 generics (type parameters, constraints, `instantiate`, monomorphisation, generic
-opaque types, the four lane modes, pilot `hash-set`), **G2** the generics lane
+opaque types, the four lane modes, pilot `hash-map` then `hash-set`, OWN-6), **G2** the generics lane
 rollout. A rule binds the slices that implement what it names. G1 depends on C1
 (the `Ord` constraint is the key order) and on VER04n's O1 (generic containers are
 opaque types). Section 21 lists the slices and their prerequisites.
@@ -132,7 +132,7 @@ opaque types). Section 21 lists the slices and their prerequisites.
 | b | **One canonical map order.** A host with unspecified iteration order cannot bind to a `List` result | 3.3, 9.2 |
 | c | **Generic claims are never `exhaustive`.** Evidence covers the listed instances, except `all-instances(n/n)` over a closed universe. Coverage is counted per lane **and** per instance | 6.5, 6.6, 9.6, 12 |
 | d | **Honest labels** (`full`, `bounded-set`, `sample`: the LP-012 kinds, spelled as in 12.1), fail closed, layered verification (a lower contract is assumed above, never re-proved), and the runtime capability jail stays mandatory | 12, 13 |
-| e | Pilots: `csv-parser` for collections, `hash-set` for generics | 14, 15 |
+| e | Pilots: `csv-parser` for collections, `hash-set` for generics (generics pilot since moved to `hash-map`, then `hash-set`: OWN-6) | 14, 15 |
 | f | **Recursive types are lifted too**, but get their own later specification, **VER04s**, written after this one. Collections and generics are designed so recursive algebraic types can be added cleanly; this document says what VER04s will need and specifies no recursion | 3.8, 19 |
 | g | **Map iteration order is deterministic in the corpus**: every collection in a stream, a descriptor or a result is in canonical order | 3.3, 8 |
 | h | **Per-lane mapping** for languages without generics (C, Lua, Perl) and with erased generics (Java, Kotlin) | 9.5 |
@@ -1488,8 +1488,8 @@ author listed) and **`sample`** (a draw from a space too large). The third kind 
 spelled **`sample`**, the owner's original wording and the value that is already
 machine-read: the VER04i section 8 sidecar, the `domain_label` field of VER04r 9.1
 and 9.3, and VER04n OB1 all print `sample`. VER04l, VER04m, VER04p, VER30 and the
-LP-012 backlog row write `sampled` in prose for the same kind; this document does
-not edit them (owner question OWN-1 lists them). The VER29 rung
+LP-012 backlog row wrote `sampled` in prose for the same kind; they now say
+`sample` too (OWN-1, resolved 2026-11-16). The VER29 rung
 `exhaustive-sampled` is a different word and is unchanged. A claim's kind is the
 weakest among its binders; a refinement never improves it; "exhaustive" is never a
 total.
@@ -1617,8 +1617,7 @@ caps the file sizes already fixed by VER04r 14 before parsing.
   exactly this case: from reading, `hash-map` offers unkeyed FNV-1a, djb2 and
   Murmur3 as hash functions, and a SipHash used with a **constant** key, so
   colliding keys can be computed offline (15.5, stage C). Whether a
-  security-flagged hash container must carry such evidence before it ships is the
-  owner's decision (OWN-2).
+  security-flagged hash container must carry such evidence before it ships is decided per crate (OWN-2, resolved).
 
 **CT5.** **The comparator is part of the trusted base and is tested as such.** Every
 `ord` implementation in every lane passes the witness rows of 5.1 and the
@@ -1763,9 +1762,14 @@ share or whose difference the owner accepts.
    adapter problem.
 6. The report prints `flood-resistance: not evidenced` for every op.
 
-## 15. The pilot for generics: `hash-set`
+## 15. The pilots for generics: `hash-map`, then `hash-set`
 
 ### 15.1 Why this crate
+
+The pilot order is set by OWN-6 (22.1): `hash-functions` is verified, `hash-map` is
+the generics pilot, and `hash-set` follows. The rest of this section designs
+`hash-set` in detail because it was analysed first; that design carries over to
+the second adopter.
 
 `hash-set` (DT19) is security-flagged in the memo, has ports in 16 of the eighteen
 lanes (every lane but dart and ocaml; counted from `code/packages/*/hash-set` and
@@ -1773,7 +1777,9 @@ lanes (every lane but dart and ocaml; counted from `code/packages/*/hash-set` an
 collections and generics only, and lands in every lane class of 9.5: static (rust
 cpp csharp fsharp go haskell swift), erased (java kotlin typescript), dynamic
 (python ruby elixir lua perl) and c. Its Rust crate depends on `hash-map`, which
-depends on `hash-functions`; neither has Warrant evidence (OWN-6).
+depends on `hash-functions`; neither has Warrant evidence, so `hash-functions` is
+verified first, `hash-map` is itself the generics pilot, and `hash-set` runs only
+after both (OWN-6, resolved: stage P-0 of 15.5).
 From reading `hash-set` and `hash-map`: the Rust `HashSet<T: Eq + Debug>` is a
 wrapper of `HashMap<T, ()>` whose hash is computed over the **`Debug` text** of the
 key (`format!("{:?}", key)`), with a chosen function (SipHash 2-4 with a constant
@@ -1913,9 +1919,10 @@ identity-compared (9.5).
 
 | Stage | Content | Prerequisites |
 |---|---|---|
-| **P-a** | Rust (static) and Python (dynamic), instances `Bool`, `U8` and `Bytes` (the smallest block GM5 accepts: two scalars and one by-reference-hazard type that needs no `Text`); the grounding claims, `contains_agrees` | G1-S0 to G1-S3, VER04n O1-S3; T1-S1 and T1-S2 for `within` (VER04l 4), which the maker domains use even at scalar instances |
+| **P-0** | **the pilot moves down a layer** (OWN-6): `hash-functions` is verified first (backlog WX-P1a; its primary blocker `Bytes<N>` has landed, and its T0 functions are adopted first); the generics pilot is then **`hash-map`** (WX-P1: collections, generics and stateful objects, with `hash-functions` its only path dependency); **this section's stages P-a to P-c are the design of the second adopter `hash-set`** (WX-P1b), which starts on fully verified dependencies | WX-P1a; WX-M1 and WX-S1 (all three features exist before the generics slice in the `warrant-grammar` queue); the `hash-map` claim design is a follow-up amendment to this section |
+| **P-a** | Rust (static) and Python (dynamic), instances `Bool`, `U8` and `Bytes` (the smallest block GM5 accepts: two scalars and one by-reference-hazard type that needs no `Text`); the grounding claims, `contains_agrees` | P-0 (WX-P1a, then the `hash-map` pilot WX-P1), G1-S0 to G1-S3, VER04n O1-S3; T1-S1 and T1-S2 for `within` (VER04l 4), which the maker domains use even at scalar instances |
 | **P-b** | all six instances; Rust, Python, TypeScript (erased) and Go (static); the controls `host-ord`, `identity-eq`, `specialise` in their fixtures | G1-S4; T1 complete (the `Text` instance) |
-| **P-c** | the remaining lanes (G2 waves); the **flood bound**: for the stage's hash functions, a hostile-key table of keys that collide under FNV-1a and under djb2 (computed offline by the document author) and a `bound steps` row on `contains`, in the lanes that have the observer; the report then adds the `hostile-key bound` line of CT4 and still prints `flood-resistance: not evidenced` | G2a to G2c; OWN-2 decides whether it is required |
+| **P-c** | the remaining lanes (G2 waves); the **flood bound**: for the stage's hash functions, a hostile-key table of keys that collide under FNV-1a and under djb2 (computed offline by the document author) and a `bound steps` row on `contains`, in the lanes that have the observer; the report then adds the `hostile-key bound` line of CT4 and still prints `flood-resistance: not evidenced` | G2a to G2c; not a language-wide shipping gate (OWN-2): decided for this crate at the VER00 shipping gate |
 
 Acceptance for P-b:
 
@@ -2137,8 +2144,8 @@ VER29: a contract id naming a generic claim resolves as open with the reason
 `generic-not-published` until a later slice gives the id an instance segment
 (CT10, OWN-5). VER30: a change record (the freeze on collections and generics is
 lifted; the order sentence of the memo's section 5). Backlog: section 21.2; the
-WX-R0 row says VER04s "takes stream tags from `66`", which after this document is
-`68` (the row cites the registry, so the registry is what binds).
+WX-R0 row said VER04s "takes stream tags from `66`"; it now says `68` (the row
+cites the registry, so the registry is what binds).
 
 ## 19. What VER04s (recursive types) will need
 
@@ -2211,7 +2218,7 @@ statement that the two documents fit.
 | **G1-S1** | checker: parameters, constraints, explicit arguments, `instantiate`, the minimum set, `witness<T>`, `all_values<T>`, generic opaque declarations | C1-S1; VER04n O1-S1 |
 | **G1-S2** | generator: monomorphisation, the `schemas` section, instance ids, the `widths` compatibility gate (item 18), the matrix, faults CS11 to CS15, the oracle's independent monomorphiser | G1-S1; C1-S2; VER04n O1-S2 |
 | **G1-S3** | Rust (static) and Python (dynamic) lanes: modes, the instance bindings, CO4, the fixture with `specialise` and `identity-eq` | G1-S2; C1-S4; VER04n O1-S3 |
-| **G1-S4** | pilot `hash-set`, stages P-a and P-b (Rust, Python, TypeScript, Go) | G1-S3; T1 (`within` for the maker domains at P-a, `Text` at P-b) |
+| **G1-S4** | the pilot (`hash-map`, WX-P1) and then `hash-set` (WX-P1b): stages P-a and P-b of 15.5 (Rust, Python, TypeScript, Go) | G1-S3; T1 (`within` for the maker domains at P-a, `Text` at P-b) |
 | **G2a** | lanes typescript (erased), go (static), then ruby (dynamic), java, kotlin (erased), c (`c-per-type`, `c-void-ptr`) | G1-S4; C2a |
 | **G2b, G2c** | the remaining lanes; P-c of the pilot | G2a |
 | **later** | VER04s, callbacks (memo P3), interfaces (P2), `eq=observational` | demand |
@@ -2233,8 +2240,9 @@ C1-S0, not after C1-S4. The `hash-set` pilot needs no `ir.seq`.
 * **WX-M2a, WX-M2b, WX-M2c**: lane rollout, with the `collections-fixture` port per
   lane as its own package (BUILD, README, CHANGELOG, `required_capabilities.json`).
 * **WX-P0**: spec generics, the first slice (sections 6, 7, 9.5, 9.6, 11.3, 15).
-* **WX-P1** (G1-S0 to G1-S4): the generics slices, pilot `hash-set`; depends on
-  WX-M1 and on VER04n O1.
+* **WX-P1** (G1-S0 to G1-S4): the generics slices, pilot `hash-map`;
+  depends on WX-M1, WX-S1, VER04n O1 and WX-P1a (verify
+  `hash-functions` first, OWN-6); `hash-set` follows as WX-P1b.
 * **WX-P2a, WX-P2b, WX-P2c**: the generics lane rollout, per lane class.
 * **WX-MP-REVIEW**: the adversarial review of owner decision (a): three reviewers
   (polyglot lane and host hazards; type system and generics; security, resource
@@ -2244,7 +2252,7 @@ C1-S0, not after C1-S4. The `hash-set` pilot needs no `ir.seq`.
   (decision f); section 19 is its input.
 * **LP-012 amendment**: the kinds of the new domains (`set_d1`, `subset_of`,
   `maps_over`, `map_d1`, `one_of`, instance suites), and the one spelling `sample`
-  across the specifications that write `sampled` (OWN-1).
+  across the specifications that wrote `sampled` (OWN-1, done in the PR that resolved it).
 * **VER04n amendment** (18.1) and **VER04r amendment** (18.2), both now merged
   specifications, so each is an amendment PR of its own; **VER04i amendment** request (18.3).
 * **VER29**: the open state `generic-not-published` (CT10).
@@ -2259,17 +2267,16 @@ C1-S0, not after C1-S4. The `hash-set` pilot needs no `ir.seq`.
 
 ### 22.1 For the owner
 
-Four questions are choices of policy or scope. Each has a recommendation, and the
-text above already encodes it, so a "yes" needs no edit here. (The earlier OWN-3
-and OWN-4 were engineering and are resolved as CQ-18 and CQ-19; the numbers are
-not reused.)
+All four owner questions were answered on 2026-11-16 and are resolved decisions.
+(The earlier OWN-3 and OWN-4 were engineering and are resolved as CQ-18 and CQ-19;
+the numbers are not reused.) The text above already encodes them.
 
-| # | Question | Recommendation |
-|---|---|---|
-| OWN-1 | **Spelling of the third kind: `sample` or `sampled`.** Your original wording was `full` / `bounded-set` / `sample`, and that is what every machine-read field prints (the VER04i section 8 sidecar, VER04r `domain_label`, VER04n OB1, the v1 manifests). VER04l, VER04m, VER04p, VER30 (A2 and the count tables), and the LP-012 backlog row write `sampled` in prose (VER04n's own review, its R20, already ruled that `sampled` is not an LP-012 kind). | **`sample`, everywhere.** It is the emitted value, so choosing `sampled` would change a manifest field and the lanes that already write it; choosing `sample` changes only prose. This document now uses `sample` (12.1). The other specifications are not edited here; fix them in one small PR with the LP-012 count split. `exhaustive-sampled` (a VER29 rung) and `*_16_bit_sampled` (claim names) are different words and stay |
-| OWN-2 | **Flooding evidence as a shipping gate for `hash-set`.** Must a security-flagged hash container carry a `bound steps` row and a hostile-key table before it ships (CT4)? | **No, as a language rule; printed `flood-resistance: not evidenced`, always.** No harness can show resistance: the collision set is per hash function, per lane and per subject, and nothing here verifies that supplied keys collide. Decide it per crate at the VER00 shipping gate. For this crate the honest finding is already known from reading: unkeyed FNV-1a, djb2, Murmur3 and a constant-key SipHash are floodable by construction, so the gate question is whether `hash-set` may ship with that printed, not whether a table exists |
-| OWN-5 | **Generic claims across VER29 layers.** Fail closed: a contract id naming a generic claim resolves open with `generic-not-published` (CT10), so no upper layer can lean on one. Accept until a package needs to cite one? | **Yes.** An id with an instance segment is a VER29 design question with no adopter yet, and the cost of waiting is only that a user of `hash-set` re-tests what it uses. The alternative, publishing the schema, would let one instance stand for another across a layer, which decision c forbids |
-| OWN-6 | **`hash-set`'s unverified lower crates.** Its Rust crate is a thin wrapper of `hash-map` (which holds the table, the strategies and the hashing) over `hash-functions`; neither has Warrant evidence. No foreign handle is cited, so VER04n OWN-4 does not bind in its letter, but its reason (no unverified crate under a pilot) does in spirit. Pilot `hash-set` as planned, or verify `hash-map` first? | **Pilot `hash-set` as planned, with both lower crates named as unverified in the report's `tcb` line.** Every claim is end to end through the wrapper, so the lower code is exercised, not assumed, and `hash-map` itself needs two type parameters, `Map` values and its mutable API (VER04m), a larger first step. If you want OWN-4 applied uniformly, the order becomes `hash-functions`, `hash-map`, `hash-set`, and the generics pilot starts two adoptions later |
+| # | Decision (2026-11-16) |
+|---|---|
+| OWN-1 | **Resolved: the third kind is spelled `sample`, everywhere.** It is the owner's original wording and the value manifests already emit (the VER04i section 8 sidecar, VER04r `domain_label`, VER04n OB1), so only prose changes. VER04l, VER04m, VER04p, VER30 and the LP-012 backlog row are changed to `sample` in the same PR. `exhaustive-sampled` (a VER29 rung) and `*_16_bit_sampled` (claim names) are different words and stay |
+| OWN-2 | **Resolved: hash-flooding evidence is not a language-wide shipping gate.** It is decided per crate at the VER00 shipping gate, and the report always prints `flood-resistance: not evidenced`. No harness can show resistance: the collision set is per hash function, per lane and per subject. For `hash-set` the known finding (unkeyed FNV-1a, djb2, Murmur3 and a constant-key SipHash are floodable by construction) is printed, and whether it may ship so is that crate's gate question |
+| OWN-5 | **Resolved: generic claims across VER29 layers fail closed.** A contract id naming a generic claim resolves open with `generic-not-published` (CT10), so no upper layer can lean on one. Publishing the schema is not done, since it would let one instance stand for another across a layer, which decision c forbids |
+| OWN-6 | **Resolved: verify first, and the pilot moves down a layer**, consistent with the RSA pilot (VER30 decision 17). `hash-functions` is verified first (WX-P1a; `Bytes<N>` has landed, and its T0 functions are adopted first). **`hash-map` becomes the generics pilot** (WX-P1; it needs collections, generics and stateful objects, and WX-S1 lands before the generics slice). **`hash-set` follows** as the second generics adopter (WX-P1b) on fully verified dependencies. Verify-first has no exception. This supersedes the earlier recommendation to pilot `hash-set` with both lower crates named unverified in the `tcb` line |
 
 ### 22.2 Engineering questions
 
@@ -2290,7 +2297,7 @@ not reused.)
 | CQ-13 | Do instance suites each get their own slim set? | Yes (VER04r 5.6 per suite); the report prints it per instance |
 | CQ-14 | `T = *` for a `Finite` parameter? | No (GM6a); only `Bits` |
 | CQ-15 | More built-ins (`set_min`, `set_max`, `map_merge`, `map_fold`, `map_filter`)? | Not until an adopter needs one; each is another IR tag in eighteen evaluators |
-| CQ-16 | The unkeyed hash functions of `hash-map`: report them? | The report prints, per hash container, `flood-resistance: not evidenced`; whether to name the unkeyed functions is the owner's (OWN-2) |
+| CQ-16 | The unkeyed hash functions of `hash-map`: report them? | The report prints, per hash container, `flood-resistance: not evidenced`; naming the unkeyed functions is decided per crate (OWN-2, resolved) |
 | CQ-17 | A recipe large enough to force a resize or a long bucket chain in a generic container? | Not in G1: a generic body has no literal of `T`, so the largest ground set is `witness<T>()` (`from_all`, at most 10). The sizes are printed (CQ3b). Reopen with a ground `range`-like generator per constraint if an adopter's defect class needs it |
 | CQ-18 | More closed universes (a `Finite` type list or a `Nat` range declared closed by the document)? Was OWN-3 | **No, resolved in review.** A document that declares its own universe closed asserts the thing the label exists to check; only the language closes a universe (GM6a) |
 | CQ-19 | The dependency chain. Was OWN-4 | **Resolved in review; it is a fact, not a choice.** `csv-parser` needs T1, C1-S5 and the `ir.seq` amendment at every stage (14.2); `hash-set` needs T1 (`within`), C1, VER04n O1 and G1 (15.5), and no `ir.seq` |
@@ -2382,5 +2389,5 @@ not reused.)
 * Cross-document state: the overlap of VER04l, VER04p and VER04r on tags `60` to
   `62` was settled on 2026-11-16 by the VER04i 2.6.1 registry (VER04r moved to `64`,
   `65`); VER04n holds `80`, `81` and `W0750` to `W0759`. Other specifications that
-  write `sampled` for the kind `sample`, listed for OWN-1 and not edited here:
-  VER04l, VER04m, VER04p, VER30 and the LP-012 row of `VER-BACKLOG.md`.
+  wrote `sampled` for the kind `sample`, all now changed under OWN-1: VER04l,
+  VER04m, VER04p, VER30 and the LP-012 row of `VER-BACKLOG.md`.
