@@ -4,6 +4,14 @@ All notable changes to this package are documented here.
 
 ## [Unreleased]
 
+### Fixed (CI)
+
+- The performance tests (`item11`, `item12`, `l3`) no longer assert absolute
+  wall-clock limits, which failed on slow shared runners.  They time the
+  workload at n, 4n and 16n and compare the two increments (the fixed lexer
+  build cost cancels): about 4 for linear code, about 16 for quadratic, bound
+  10.  A 120 s hang guard remains.
+
 ### Fixed (round 3 of the security review)
 
 - SH9: a `<` counts as a generic open only after `::`, `impl`, or a name that

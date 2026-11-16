@@ -35,19 +35,68 @@ fn with_features(src: &str) -> CrateInput {
     i
 }
 
-fn within(limit: Duration, what: &str, f: impl FnOnce()) {
-    let t = Instant::now();
-    f();
-    let d = t.elapsed();
-    // instrumented (coverage) builds run several times slower
-    let scale = if std::env::var_os("LLVM_PROFILE_FILE").is_some() {
-        25
-    } else {
-        1
-    };
+/// Asserts that `work` scales (at worst) linearly in its size argument.
+///
+/// An absolute wall-clock limit depends on the host: a shared CI runner can be
+/// several times slower than a laptop and fail a perfectly linear scan.  What a
+/// quadratic regression changes is the *shape* of the curve, so measure that.
+///
+/// Every `check_crate` call pays a fixed cost (building the grammar-driven
+/// lexers) that is large next to the size-dependent part and that jitters from
+/// run to run.  So do not compare raw times: time `work` at `n`, `k * n` and
+/// `k * k * n` and compare the two *increments*, which cancel the fixed cost:
+///
+/// ```text
+///   linear:     (t3 - t2) / (t2 - t1) = k      (cost c * size)
+///   quadratic:  (t3 - t2) / (t2 - t1) = k * k  (cost c * size * size)
+/// ```
+///
+/// and require the ratio to stay under 10 for k = 4 (linear 4, quadratic 16) or
+/// 3.2 for k = 2 (linear 2, quadratic 4).  Each size keeps the best (minimum) of
+/// up to three runs, which discards scheduler noise: one run per size is taken
+/// first and more only while the ratio still looks too high, so a quiet host
+/// pays for one pass while a noisy one gets three; a real quadratic fails all
+/// three.  `n` is chosen so the increments are tens to hundreds of
+/// milliseconds; the denominator is floored at 5 ms so a timer-resolution-sized
+/// difference cannot inflate the ratio.  The absolute backstop is only a hang
+/// guard, far above any real runner's speed.
+fn scales_linearly(what: &str, n: usize, k: usize, work: impl Fn(usize)) {
+    const BACKSTOP: Duration = Duration::from_secs(120);
+    // linear is k, quadratic k * k: k = 4 leaves 2.5x of noise headroom
+    // below the bound, k = 2 (only used where the 4096-fn cap forbids more)
+    // is tighter
+    let limit = if k == 2 { 3.2 } else { 10.0 };
+    let sizes = [n, k * n, k * k * n];
+    let mut best = [Duration::MAX; 3];
+    let mut ratio = f64::MAX;
+    for _ in 0..3 {
+        for (slot, size) in best.iter_mut().zip(sizes) {
+            let t = Instant::now();
+            work(size);
+            *slot = (*slot).min(t.elapsed());
+        }
+        let [t1, t2, t3] = best;
+        assert!(
+            t3 < BACKSTOP,
+            "{what}: the largest run took {t3:?} (hang guard {BACKSTOP:?})"
+        );
+        let step = |hi: Duration, lo: Duration| {
+            hi.saturating_sub(lo)
+                .max(Duration::from_millis(5))
+                .as_secs_f64()
+        };
+        ratio = step(t3, t2) / step(t2, t1);
+        eprintln!(
+            "perf {what}: n={n} k={k}: {t1:?} {t2:?} {t3:?}, ratio {ratio:.2} (limit {limit:.2})"
+        );
+        if ratio < limit {
+            break;
+        }
+    }
     assert!(
-        d < limit * scale,
-        "{what} took {d:?} (limit {limit:?} x {scale})"
+        ratio < limit,
+        "{what}: growth ratio {ratio:.1} >= {limit:.1}; linear is about {k}, quadratic about {}",
+        k * k
     );
 }
 
@@ -413,47 +462,51 @@ fn item10_every_cfg_other_than_the_ghost_gate_is_a_finding() {
 #[test]
 fn item11_item_scanning_is_linear() {
     let _batch = Batch::begin();
-    within(Duration::from_secs(5), "100k `type a`", || {
-        let src = format!("{HEADER}{}", "type a ".repeat(100_000));
+    scales_linearly("`type a`", 5_000, 4, |n| {
+        let src = format!("{HEADER}{}", "type a ".repeat(n));
         let _ = run(&lib(&src));
     });
-    within(Duration::from_secs(5), "100k `struct S<`", || {
-        let src = format!("{HEADER}{}", "struct S< ".repeat(50_000));
+    scales_linearly("`struct S<`", 1_500, 4, |n| {
+        let src = format!("{HEADER}{}", "struct S< ".repeat(n));
         let _ = run(&lib(&src));
     });
-    within(Duration::from_secs(5), "50k `#[cfg(test)] a`", || {
-        let src = format!("{HEADER}{}", "#[cfg(test)] a ".repeat(50_000));
+    scales_linearly("`#[cfg(test)] a`", 1_200, 4, |n| {
+        let src = format!("{HEADER}{}", "#[cfg(test)] a ".repeat(n));
         let _ = run(&lib(&src));
     });
-    within(Duration::from_secs(5), "40k nested `#[`", || {
-        let src = format!("{HEADER}{}{}", "#[".repeat(40_000), "]".repeat(40_000));
+    scales_linearly("nested `#[`", 1_700, 4, |n| {
+        let src = format!("{HEADER}{}{}", "#[".repeat(n), "]".repeat(n));
         let _ = run(&lib(&src));
     });
-    for (name, unit) in [
-        ("const _:", "const _: u8 "),
-        ("gated use", "#[cfg(feature = \"ghost\")] pub use ghost::x "),
-        ("fn", "fn f "),
-        ("impl", "impl X "),
-        ("trait", "trait T "),
-        ("mod ghost", "mod ghost { "),
+    for (name, unit, n) in [
+        ("const _:", "const _: u8 ", 1_700),
+        (
+            "gated use",
+            "#[cfg(feature = \"ghost\")] pub use ghost::x ",
+            1_000,
+        ),
+        ("fn", "fn f ", 5_000),
+        ("impl", "impl X ", 5_000),
+        ("trait", "trait T ", 5_000),
+        ("mod ghost", "mod ghost { ", 3_000),
     ] {
-        within(Duration::from_secs(8), name, || {
-            let src = format!("{HEADER}{}", unit.repeat(15_000));
+        scales_linearly(name, n, 4, |n| {
+            let src = format!("{HEADER}{}", unit.repeat(n));
             let _ = run(&lib(&src));
         });
     }
-    within(Duration::from_secs(5), "50k `for`", || {
-        let src = format!("{HEADER}fn f() {{ {} }}", "for x ".repeat(50_000));
+    scales_linearly("`for`", 5_000, 4, |n| {
+        let src = format!("{HEADER}fn f() {{ {} }}", "for x ".repeat(n));
         let _ = run(&lib(&src));
     });
-    // wrapper structs chained 3,000 deep resolve without a quadratic sweep
-    within(Duration::from_secs(5), "3,000 chained wrappers", || {
+    // wrapper structs chained deep resolve without a quadratic sweep
+    scales_linearly("chained wrappers", 250, 4, |n| {
         let mut s = String::from(HEADER);
         s.push_str("struct W0 { c: Cell<u8> }\n");
-        for n in 1..3000 {
-            s.push_str(&format!("struct W{n} {{ w: W{} }}\n", n - 1));
+        for k in 1..n {
+            s.push_str(&format!("struct W{k} {{ w: W{} }}\n", k - 1));
         }
-        s.push_str("const D: W2999 = loop_free();\n");
+        s.push_str(&format!("const D: W{} = loop_free();\n", n - 1));
         let r = run(&lib(&s));
         assert!(
             r.findings.iter().any(|f| f.rule.id() == "SH3"),
@@ -466,30 +519,28 @@ fn item11_item_scanning_is_linear() {
 #[test]
 fn item12_call_graph_is_linear_and_fails_closed_on_edge_explosions() {
     let _batch = Batch::begin();
-    within(
-        Duration::from_secs(5),
-        "4,000 colliding method names",
-        || {
-            let mut s = String::from(HEADER);
-            for n in 0..4000 {
-                s.push_str(&format!(
-                    "pub struct T{n}; impl T{n} {{ pub fn f(self) {{ self.f() }} }}\n"
-                ));
-            }
-            let r = run(&lib(&s));
-            assert!(rules(&r).contains(&"VT03"), "edge cap must fail closed");
-        },
-    );
-    // a long single cycle is found in linear time, with one finding per node
-    within(Duration::from_secs(5), "3,000-node cycle", || {
+    // every size is past the edge cap (about 450 colliding methods), so this
+    // also checks that the cap itself is reached in linear time
+    scales_linearly("colliding method names", 500, 2, |n| {
         let mut s = String::from(HEADER);
-        for n in 0..3000 {
-            s.push_str(&format!("fn f{n}() {{ f{}() }}\n", (n + 1) % 3000));
+        for k in 0..n {
+            s.push_str(&format!(
+                "pub struct T{k}; impl T{k} {{ pub fn f(self) {{ self.f() }} }}\n"
+            ));
+        }
+        let r = run(&lib(&s));
+        assert!(rules(&r).contains(&"VT03"), "edge cap must fail closed");
+    });
+    // a long single cycle is found in linear time, with one finding per node
+    scales_linearly("single cycle", 250, 4, |n| {
+        let mut s = String::from(HEADER);
+        for k in 0..n {
+            s.push_str(&format!("fn f{k}() {{ f{}() }}\n", (k + 1) % n));
         }
         let r = run(&lib(&s));
         // findings are capped at 1,000 printed; the rest are counted
-        let n = rules(&r).iter().filter(|x| **x == "SH5").count() + r.dropped;
-        assert_eq!(n, 3000);
+        let found = rules(&r).iter().filter(|x| **x == "SH5").count() + r.dropped;
+        assert_eq!(found, n);
     });
     // two cycles and a self-loop are all reported
     let r = run(&body("fn a() { b() }\nfn b() { a() }\nfn c() { d() }\nfn d() { c() }\nfn e() { e() }\nfn ok() { a2() }\nfn a2() {}\n"));
