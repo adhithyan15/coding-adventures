@@ -8,7 +8,6 @@ license = "MIT"
 [dependencies]
 interpreter-ir = { path = "../interpreter-ir" }
 vm-core = { path = "../vm-core" }
-swf-container = { path = "../swf-container" }
 
 [dev-dependencies]
 coding_adventures_test_bootstrap = { path = "../test-bootstrap" }

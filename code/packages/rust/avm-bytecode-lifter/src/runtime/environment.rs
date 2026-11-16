@@ -71,10 +71,7 @@ impl AvmEnvironment {
             return true;
         }
         let full_path = format!("{}.{}", target_name, prop_name);
-        if self.frozen_prototypes.contains(&full_path) {
-            return true;
-        }
-        false
+        self.frozen_prototypes.contains(&full_path)
     }
 
     /// Guard property assignment against CWE-1321.
