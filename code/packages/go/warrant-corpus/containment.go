@@ -28,7 +28,11 @@ import (
 // same helper with the same rules: there is no variant that skips the device
 // rule.
 //
-//   - win32 compares case-insensitively, accepts `/` and `\` as separators
+//   - win32 compares case-insensitively **for ASCII only** (A-Z fold to a-z,
+//     every other code point is compared exactly: strings.EqualFold's Unicode
+//     simple folding would equate U+017F with s and U+212A with k, which a
+//     fail-closed boundary must not), refuses a child with a Windows reserved
+//     device name or a component ending in a dot or space (WD-100b), accepts `/` and `\` as separators
 //     (normalised BEFORE any prefix rule, so `\/?\D:\r` is a device path too),
 //     and refuses a device path (`\\?\`, `\\.\`, including `\\?\UNC\...`).
 //   - posix is case-sensitive and `\` is an ordinary character; a path with
@@ -98,7 +102,7 @@ func lexicalPath(text, flavor string) (anchor string, parts []string, ok bool) {
 // The anchor is lowercased: win32 comparison is case-insensitive.
 func splitWindowsAnchor(text string) (string, string) {
 	if len(text) >= 2 && text[1] == ':' && (text[0]|0x20) >= 'a' && (text[0]|0x20) <= 'z' {
-		drive := strings.ToLower(text[:2])
+		drive := asciiLower(text[:2])
 		if strings.HasPrefix(text[2:], `\`) {
 			return drive + `\`, text[2:]
 		}
@@ -107,7 +111,7 @@ func splitWindowsAnchor(text string) (string, string) {
 	if strings.HasPrefix(text, `\\`) && !strings.HasPrefix(text, `\\\`) {
 		fields := strings.SplitN(text[2:], `\`, 3)
 		if len(fields) >= 2 && fields[0] != "" && fields[1] != "" {
-			anchor := strings.ToLower(`\\` + fields[0] + `\` + fields[1] + `\`)
+			anchor := asciiLower(`\\` + fields[0] + `\` + fields[1] + `\`)
 			rest := ""
 			if len(fields) == 3 {
 				rest = fields[2]
@@ -133,14 +137,77 @@ func relativeInside(root, child, flavor string) (string, bool) {
 	}
 	for i, part := range rootParts {
 		if flavor == flavorWin32 {
-			if !strings.EqualFold(part, childParts[i]) {
+			if asciiLower(part) != asciiLower(childParts[i]) {
 				return "", false
 			}
 		} else if part != childParts[i] {
 			return "", false
 		}
 	}
+	if flavor == flavorWin32 {
+		for _, part := range childParts {
+			if refusedComponent(part) {
+				return "", false
+			}
+		}
+	}
 	return strings.Join(childParts[len(rootParts):], "/"), true
+}
+
+// asciiLower maps A-Z to a-z and nothing else. strings.ToLower and
+// strings.EqualFold apply Unicode case rules (U+212A lower-cases to k), which
+// is the accident VER04i 9.1 replaces with a defined behaviour.
+func asciiLower(text string) string {
+	for i := 0; i < len(text); i++ {
+		if c := text[i]; 'A' <= c && c <= 'Z' {
+			b := []byte(text)
+			for j := i; j < len(b); j++ {
+				if 'A' <= b[j] && b[j] <= 'Z' {
+					b[j] += 'a' - 'A'
+				}
+			}
+			return string(b)
+		}
+	}
+	return text
+}
+
+// refusedComponent reports a win32 path component that must be refused
+// (VER04i 9.1): one containing a colon (an alternate data stream or device
+// suffix: `CON:`, `nul::$DATA`, `file.txt:NUL`), one ending in a dot or a space
+// (Windows strips them, so two spellings would name one file), or one whose
+// stem is a device name. The stem is the part before the FIRST dot with
+// trailing spaces removed, so CON.txt, com1.tar.gz and "CON .txt" are devices;
+// console.txt, COM10, LPT0 and CONx are ordinary. The set is CON, PRN, AUX,
+// NUL, COM1-COM9, LPT1-LPT9, CONIN$, CONOUT$ and COM/LPT followed by a
+// superscript 1, 2 or 3, ASCII case-insensitively (superscripts exactly).
+// Fullwidth CON and CLOCK$ stay ordinary.
+func refusedComponent(name string) bool {
+	if strings.Contains(name, ":") || strings.HasSuffix(name, ".") || strings.HasSuffix(name, " ") {
+		return true
+	}
+	stem, _, _ := strings.Cut(name, ".")
+	stem = asciiLower(strings.TrimRight(stem, " "))
+	switch stem {
+	case "con", "prn", "aux", "nul", "conin$", "conout$":
+		return true
+	}
+	if rest, ok := strings.CutPrefix(stem, "com"); ok {
+		return isDeviceDigit(rest)
+	}
+	if rest, ok := strings.CutPrefix(stem, "lpt"); ok {
+		return isDeviceDigit(rest)
+	}
+	return false
+}
+
+// isDeviceDigit: one of 1-9, or the superscripts U+00B9, U+00B2, U+00B3.
+func isDeviceDigit(rest string) bool {
+	switch rest {
+	case "1", "2", "3", "4", "5", "6", "7", "8", "9", "\u00b9", "\u00b2", "\u00b3":
+		return true
+	}
+	return false
 }
 
 // realPath makes path absolute and resolves symlinks, so a link inside the

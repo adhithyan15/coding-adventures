@@ -20,9 +20,11 @@ What is checked, and why it is not circular
 
 from __future__ import annotations
 
+import ast
 import hashlib
 import json
 import os
+import random
 import shutil
 import sys
 import unittest
@@ -32,13 +34,19 @@ REPO = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(REPO / "code" / "scripts"))
 
 import generate_trig_reference_fixture as gen
+import trig_ref_exact
 from trig_ref_exact import (
     cr_sincos,
+    cr_tan,
+    pack,
     round_fraction,
     to_fraction,
     ulp_dist,
+    unpack,
 )
 from trig_ref_softfloat import CONSTANTS, SITES, Model
+from trig_ref_softfloat import _round as model_round
+from trig_ref_softfloat import decode as model_decode
 
 FIXTURE = REPO / "code" / "specs" / "fixtures" / "trig-reference-v1"
 HEX = set("0123456789abcdef")
@@ -120,6 +128,183 @@ class ModelMatchesTheSpecification(unittest.TestCase):
         self.assertEqual(sb, 0x3FEAED548F090CEE)
         self.assertEqual(cb, 0x3FE14A280FB5068C)
         self.assertEqual(ulp_dist(0x3FF0000000000000, 0x3FF0000000000002), 2)
+
+
+class ExactReferenceIsIndependent(unittest.TestCase):
+    """PHY00a 6.4: the exact reference shares no code with the soft-float model.
+
+    The one place it needed binary64 encoding and decoding, it used to import the
+    model's.  It now has its own (``unpack`` and ``pack``); these tests pin that no
+    import crept back, and that the two implementations agree everywhere we can
+    look: edge patterns, random patterns, rounding ties, subnormals and overflow.
+    """
+
+    def test_no_import_from_the_model(self):
+        tree = ast.parse(Path(trig_ref_exact.__file__).read_text())
+        for node in ast.walk(tree):
+            if isinstance(node, ast.ImportFrom):
+                self.assertNotIn("softfloat", node.module or "", node.lineno)
+            if isinstance(node, ast.Import):
+                for alias in node.names:
+                    self.assertNotIn("softfloat", alias.name, node.lineno)
+
+    def test_unpack_agrees_with_the_models_decode_and_with_struct(self):
+        import struct
+        from fractions import Fraction
+
+        rng = random.Random(20261116)
+        patterns = [0, 1, 2, 0x000FFFFFFFFFFFFF, 0x0010000000000000, 0x3FF0000000000000]
+        patterns += [0x7FEFFFFFFFFFFFFF, 0x8000000000000001, 0xBFF0000000000000]
+        patterns += [rng.getrandbits(64) for _ in range(20000)]
+        for b in patterns:
+            if (b >> 52) & 0x7FF == 0x7FF:
+                continue
+            sign, mant, exp = model_decode(b)
+            theirs = Fraction(mant) * Fraction(2) ** exp
+            theirs = -theirs if sign else theirs
+            self.assertEqual(unpack(b), theirs, hex(b))
+            host = struct.unpack(">d", b.to_bytes(8, "big"))[0]
+            self.assertEqual(unpack(b), Fraction(host), hex(b))
+
+    def test_pack_agrees_with_the_models_rounding_and_with_the_host(self):
+        import struct
+        from fractions import Fraction
+
+        rng = random.Random(7)
+        cases = []
+        for _ in range(20000):  # arbitrary rationals across the whole range
+            num = rng.getrandbits(rng.randint(1, 120)) + 1
+            den = rng.getrandbits(rng.randint(1, 120)) + 1
+            shift = rng.randint(-1100, 1030)
+            v = Fraction(num, den) * Fraction(2) ** shift
+            cases.append(-v if rng.random() < 0.5 else v)
+        for e in (-1074, -1022, -1, 0, 52, 53, 1023):  # ties and neighbours of ties
+            base = Fraction(2) ** e
+            for k in (0, 1, 2, 3):
+                ulp = Fraction(2) ** max(e - 52, -1074)
+                for tie in (
+                    Fraction(1, 2),
+                    Fraction(1, 2) - Fraction(1, 4096),
+                    Fraction(1, 2) + Fraction(1, 4096),
+                ):
+                    cases.append(base + (k + tie) * ulp)
+        cases += [
+            Fraction(2) ** 1024,
+            Fraction(2) ** 1024 - 2**970,
+            Fraction(1, 2**1075),
+            Fraction(3, 2**1076),
+        ]
+        for v in cases:
+            host = float(v) if abs(v) < Fraction(2) ** 1024 - 2**970 else None
+            mine = pack(v)
+            # the model's route: significand and exponent in, bits out
+            a = abs(v)
+            e = a.numerator.bit_length() - a.denominator.bit_length() - 60
+            low = max(e - 4, -1074 - 4)
+            scaled = a / (Fraction(2) ** low)
+            m, rem = divmod(scaled.numerator, scaled.denominator)
+            m = (m << 1) | (1 if rem else 0)
+            theirs = model_round(1 if v < 0 else 0, m, low - 1)
+            self.assertEqual(mine, theirs, v)
+            if host is not None:
+                self.assertEqual(
+                    mine, int.from_bytes(struct.pack(">d", host), "big"), v
+                )
+
+    def test_round_trip_and_special_cases(self):
+        self.assertEqual(pack(unpack(0x3FF0000000000000)), 0x3FF0000000000000)
+        self.assertEqual(pack(unpack(1)), 1)  # smallest subnormal
+        self.assertEqual(pack(unpack(0x7FEFFFFFFFFFFFFF)), 0x7FEFFFFFFFFFFFFF)
+        self.assertEqual(pack(unpack(0xBFF0000000000000)), 0xBFF0000000000000)
+        from fractions import Fraction
+
+        self.assertEqual(pack(Fraction(0)), 0)
+        self.assertEqual(
+            pack(Fraction(2) ** 1024), 0x7FF0000000000000
+        )  # overflow to inf
+        self.assertEqual(
+            pack(Fraction(-1, 2**1076)), 0x8000000000000000
+        )  # underflow keeps sign
+        self.assertEqual(pack(Fraction(1, 2**1075)), 0)  # a tie rounds to even (zero)
+        self.assertEqual(pack(Fraction(3, 2**1075)), 2)  # 1.5 ulp rounds to even (2)
+
+
+class TangentColumn(unittest.TestCase):
+    """The tan rows carry a correctly rounded column, except at the sentinel."""
+
+    def test_known_values(self):
+        # tan(1) and tan(0.5), each also checked against the host (a sanity check
+        # only: the host's tan is not an oracle, but it is within an ulp here)
+        import math
+        import struct
+
+        for x in (
+            0x3FF0000000000000,
+            0x3FE0000000000000,
+            0xBFF0000000000000,
+            0x4008000000000000,
+        ):
+            host = math.tan(struct.unpack(">d", x.to_bytes(8, "big"))[0])
+            hb = int.from_bytes(struct.pack(">d", host), "big")
+            self.assertLessEqual(ulp_dist(cr_tan(x), hb), 1, hex(x))
+        self.assertEqual(cr_tan(0), 0)
+        self.assertEqual(cr_tan(0x8000000000000000), 0x8000000000000000)
+        self.assertEqual(
+            cr_tan(0x3E00000000000000), 0x3E00000000000000
+        )  # tiny: tan x = x
+
+    def test_rows_in_the_fixture(self):
+        tan_rows = 0
+        for raw in read_groups().values():
+            for line in raw.decode().split("\n")[:-1]:
+                op, _x, y, cr, flags = line.split("\t")
+                if op != "tan":
+                    continue
+                tan_rows += 1
+                got = set(flags.split(",")) - {""}
+                if (
+                    "pole-sentinel" in got
+                    or "nan-class" in got
+                    or "nonfinite=rejects" in got
+                ):
+                    self.assertEqual(cr, "-", line)
+                else:
+                    self.assertNotEqual(cr, "-", line)
+                    # no accuracy claim is made for tan (3.8); this only catches a
+                    # transcription slip, an error orders of magnitude out of range
+                    self.assertLessEqual(ulp_dist(int(y, 16), int(cr, 16)), 16, line)
+        self.assertGreater(tan_rows, 10000)
+
+
+class DirectedWitnesses(unittest.TestCase):
+    """Each constant and fused site a sweep sees rarely has directed vectors (6.4)."""
+
+    def test_every_witness_is_an_edge_input_of_every_op_in_both_signs(self):
+        rows = {
+            tuple(line.split("\t")[:2])
+            for line in read_groups()["edge"].decode().split("\n")[:-1]
+        }
+        for xs in gen.WITNESSES.values():
+            for x in xs:
+                for op in gen.TRIG_OPS:
+                    self.assertIn((op, f"{x:016x}"), rows)
+                    self.assertIn((op, f"{x | (1 << 63):016x}"), rows)
+
+    def test_witness_items_are_not_on_the_masked_lists(self):
+        for name in gen.WITNESSES:
+            self.assertNotIn(name, gen.MASKED_MUTATION)
+            self.assertNotIn(name, gen.MASKED_FUSION)
+
+    def test_each_witness_sees_its_own_item(self):
+        # quick (no full scan): flip or fuse the item and look only at its witnesses
+        for name, xs in gen.WITNESSES.items():
+            variant = (
+                Model(fuse={name})
+                if name in SITES
+                else Model(consts={name: CONSTANTS[name] ^ 1})
+            )
+            hit = gen._scan(variant, xs, ("sin", "cos"))
+            self.assertIsNotNone(hit, name)
 
 
 class PrngKnownAnswers(unittest.TestCase):
@@ -253,6 +438,8 @@ class Reproduction(unittest.TestCase):
         report = gen.gate_sensitivity(inputs)
         undetected = {k for k, v in report["fusion"].items() if v is None}
         self.assertEqual(undetected, set(gen.MASKED_FUSION))
+        unseen = {k for k, v in report["mutation"].items() if v is None}
+        self.assertEqual(unseen, set(gen.MASKED_MUTATION))
         self.assertTrue(all(v is not None for v in report["guard"].values()))
 
 

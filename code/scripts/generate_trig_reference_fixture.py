@@ -44,6 +44,7 @@ sys.path.insert(0, str(HERE))
 from trig_ref_exact import (
     cr_conversion,
     cr_sincos,
+    cr_tan,
     cr_tiny,
     pi_fraction,
     round_fraction,
@@ -107,27 +108,58 @@ MUTATED = [
 # Fusing a product that is exact (24-bit chunk x 29-bit integer, or 0.5*z) changes
 # nothing, so those sites cannot be "noticed"; the gate asserts they are inert.
 EXACT_PRODUCT_SITES = ("red.1", "red.2", "red.3", "red.4", "cos.half")
-# Sites and constants whose effect on a result is *masked by the final rounding*.
-# Fusing the fifth reduction step or a high-order Horner step moves an intermediate
-# by about 1e-31 of its size; flipping the last bit of S3..S9, C3..C9, PIO2_5 or TINY
-# moves a result by under 1e-20 of an ulp.  No sampled vector can see that (the
-# chance per input is below 1e-4 for S3 and below 1e-16 for the rest), so the gate
-# of PHY00a 6.4 (b) and (c) cannot require it.  The generator reports these
-# explicitly; everything else must be detected, and a port still pins the constants
-# by asserting their bits (PHY00a 6.5 e).
+# Sites and constants that NO input can be shown to reach (PHY00a 6.4 masked list).
+# This list used to be longer, and was wrong: a 20-million-input search found inputs
+# that DO see C3 (about 1 in 15,000 in [1/2, pi/4)), S3, C4, S4, C5 and the fused
+# Horner steps sin.h2, sin.h3, cos.h2, cos.h3.  Those are now covered by the directed
+# WITNESSES below, and the gate requires every one of them to be seen.  What is left
+# was searched with 4e8 random inputs in each of three domains per item (1.2e9 per
+# item; code/scripts/trig_reference_xcheck/search.c, PHY00a 6.4) and never showed a single hit:
+# fusing the fifth reduction step, or a Horner step of degree 4 or higher, moves an
+# intermediate by about 1e-31 of its size, and flipping the last bit of S5..S9, C6..C9
+# or PIO2_5 moves a result by under 1e-9 of an ulp.  TINY is a *threshold*: just below
+# it the general path returns the same x (or 1) the early return does.  The gate
+# also fails if a masked item DOES show a hit, so this list cannot go stale.
+# A port still pins the constants by asserting their bits (PHY00a 6.5 e).
 MASKED_FUSION = (
     *EXACT_PRODUCT_SITES,
     "red.5",
-    *[f"sin.h{n}" for n in range(8, 1, -1)],
-    *[f"cos.h{n}" for n in range(8, 2, -1)],
-    "cos.h2",
+    *[f"sin.h{n}" for n in range(8, 3, -1)],
+    *[f"cos.h{n}" for n in range(8, 4, -1)],
 )
 MASKED_MUTATION = (
     "PIO2_5",
     "TINY",
-    *[f"S{n}" for n in range(3, 10)],
-    *[f"C{n}" for n in range(3, 10)],
+    *[f"S{n}" for n in range(6, 10)],
+    *[f"C{n}" for n in range(6, 10)],
 )
+
+# Directed vectors for the items a sampled sweep sees only about once in 10**4 to
+# 10**8 inputs (the way the reduction tie cases serve red.t).  All lie in
+# [1/2, pi/4), where k = 0 and the series argument is the largest, so rounding of the
+# polynomial matters most (S5 is the exception: its one hit is a large argument).  Found by trig_reference_xcheck/search.c (a C re-implementation of the
+# model with a switchable constant or fused site) and pinned here as bit patterns;
+# the generator re-verifies, with the soft-float model, that each item changes the
+# result at each of its own witnesses, so a stale or mistyped witness fails.  The
+# keys are mutation names (constant names) or fusion site names.
+WITNESSES = {
+    "S3": (0x3FE77B719DFDAE9C, 0x3FE5A13E770EEBC7, 0x3FE6BE8C1E56031D),
+    "S5": (0x40F3887A0C735405,),
+    "S4": (0x3FE53D75119F2874, 0x3FE737CD6D1CDE5F, 0x3FE62C59846B9E4D),
+    "C3": (0x3FEA3BBD501A4A0C, 0x3FE76DBB6C7AD751, 0x3FE5FC30B6DC9CAD),
+    "C4": (0x3FE6D92BE3356357, 0x3FE4F476D62D0CB1, 0x3FE5307080622894),
+    "C5": (0x3FE671BA4CAAEDBC, 0x3FE7362A798DEA59, 0x3FE155F83DDD44B3),
+    "sin.h2": (0x3FE63CF1F8A2EF64, 0x3FE7D30409706D62, 0x3FE514D6AC127A20),
+    "sin.h3": (0x3FE878C6C500C62F, 0x3FE6A797F7E6F365, 0x3FE2A7F7B8DCEAEC),
+    "cos.h2": (0x3FE827D05F0B473F, 0x3FE48D26AA88AA0C, 0x3FE6795F245CD5C3),
+    "cos.h4": (0x3FE7362A798DEA59, 0x3FE747FD631D27BA, 0x3FE35C0117623F07),
+    "cos.h3": (0x3FE809ADAFEBAF94, 0x3FE34BDD4040936B, 0x3FE5AA78AE7B4E87),
+}
+
+
+def sensitivity_witnesses() -> list[int]:
+    """Every witness input, in table order, duplicates removed."""
+    return dedupe(b for xs in WITNESSES.values() for b in xs)
 
 
 # ---------------------------------------------------------------------------
@@ -329,6 +361,8 @@ def trig_points() -> list[int]:
     )
     # worst cases on record (4.1); any input later found worse is added here
     out += [0x41BB531AD2E28013, 0x41B08A633012E355]
+    # directed witnesses for the constants and fused sites a sweep sees rarely (6.4)
+    out += both_signs(sensitivity_witnesses())
     # quadrant edges
     for num in (1, 3, 5, 7):
         out += both_signs(with_neighbours(fl(Fraction(num) * pi / 4), 1))
@@ -564,6 +598,10 @@ def correct_rounded(op: str, xb: int):
             return cr_tiny(op, xb), None
         sb, sv, cb, cv = _sincos_cache(xb)
         return (sb, sv) if op == "sin" else (cb, cv)
+    if op == "tan":
+        if not is_finite(xb) or not (fabs(xb) <= LIMIT):
+            return None, None
+        return cr_tan(xb), None
     if op in ("radians", "degrees"):
         if not is_finite(xb):
             return None, None
@@ -609,7 +647,7 @@ def make_row(op: str, arg: str) -> Row:
     ):
         flags.add("beam-raises")
     cr, exact = (None, None)
-    if "," not in arg:
+    if "," not in arg and "pole-sentinel" not in flags:
         cr, exact = correct_rounded(op, ins[0])
     row.cr = hx(cr) if cr is not None else "-"
     row.exact = exact
@@ -851,19 +889,33 @@ def _scan(variant: Model, inputs, ops):
 
 
 def gate_sensitivity(inputs):
-    """Mutation, fusion and guard sensitivity; returns a report, raises on failure."""
+    """Mutation, fusion and guard sensitivity; returns a report, raises on failure.
+
+    Every item is in exactly one of three classes: *detected* (some vector changes),
+    *inert* (a product that is exact, so no vector may change) or *masked* (listed
+    above, and no vector may change either: a hit means the list is stale).  An item
+    with directed witnesses must also be detected at one of its own witnesses.
+    """
     report = {"mutation": {}, "fusion": {}, "guard": {}}
     sc = ("sin", "cos")
     for name in MUTATED:
         ops = ("radians", "degrees") if name in ("RAD_PER_DEG", "DEG_PER_RAD") else sc
-        hit = _scan(Model(consts={name: CONSTANTS[name] ^ 1}), inputs, ops)
+        variant = Model(consts={name: CONSTANTS[name] ^ 1})
+        hit = _scan(variant, inputs, ops)
         report["mutation"][name] = hit
         if hit is None and name not in MASKED_MUTATION:
             raise GateFailure(
                 f"a last-bit flip of {name} is not detected by any vector"
             )
+        if hit is not None and name in MASKED_MUTATION:
+            raise GateFailure(
+                f"{name} is listed as masked but {hit} detects it: shrink MASKED_MUTATION"
+            )
+        if name in WITNESSES and _scan(variant, WITNESSES[name], sc) is None:
+            raise GateFailure(f"no witness of {name} detects a flip of it")
     for site in SITES:
-        hit = _scan(Model(fuse={site}), inputs, sc)
+        variant = Model(fuse={site})
+        hit = _scan(variant, inputs, sc)
         report["fusion"][site] = hit
         if site in EXACT_PRODUCT_SITES:
             if hit is not None:
@@ -872,6 +924,12 @@ def gate_sensitivity(inputs):
                 )
         elif hit is None and site not in MASKED_FUSION:
             raise GateFailure(f"fusion at {site} is not detected by any vector")
+        elif hit is not None and site in MASKED_FUSION:
+            raise GateFailure(
+                f"{site} is listed as masked but {hit} detects it: shrink MASKED_FUSION"
+            )
+        if site in WITNESSES and _scan(variant, WITNESSES[site], sc) is None:
+            raise GateFailure(f"no witness of {site} detects fusing it")
     for label, model in (
         ("gt-guard", Model(guard="gt")),
         ("limit+1ulp", Model(consts={"LIMIT": LIMIT + 1})),
@@ -953,7 +1011,7 @@ def cross_check_bc(groups):
     for name, rows in groups.items():
         for i, r in enumerate(rows):
             if (
-                r.op in ("sin", "cos")
+                r.op in ("sin", "cos", "tan")
                 and r.cr != "-"
                 and (name == "edge" or i % 8 == 0)
                 and fabs(int(r.x, 16)) >= TINY
@@ -962,8 +1020,11 @@ def cross_check_bc(groups):
     lines = ["scale=100"]
     for r in picked:
         xf = to_fraction(int(r.x, 16))
-        fn = "s" if r.op == "sin" else "c"
-        lines.append(f"{fn}(({xf.numerator})/({xf.denominator}))")
+        arg = f"(({xf.numerator})/({xf.denominator}))"
+        if r.op == "tan":
+            lines.append(f"s{arg}/c{arg}")  # bc has no tangent
+        else:
+            lines.append(f"{'s' if r.op == 'sin' else 'c'}{arg}")
     env = dict(os.environ, BC_LINE_LENGTH="0")
     out = subprocess.run(
         [bc, "-l"],
@@ -1022,7 +1083,7 @@ One vector per line, five tab-separated fields, `\\n` line ends, UTF-8 without B
 | `op` | `sin cos tan radians degrees sqrt atan atan2` |
 | `x` | the input's IEEE binary64 bits, 16 lowercase hex digits. `atan2` has `<y>,<x>` (33 characters, the first argument first) |
 | `y` | the TRIG-REF-1 result bits, 16 lowercase hex digits. A NaN result is written `7ff8000000000000` and matches **any** NaN (VER04p `same`); `error` for `sqrt` of a negative |
-| `cr` | the correctly rounded value of the mathematical function at the exact input, 16 hex digits, or `-` when none is claimed (NaN or infinite result, every `tan` row, Part II) |
+| `cr` | the correctly rounded value of the mathematical function at the exact input, 16 hex digits, or `-` when none is claimed (NaN or infinite result, a `pole-sentinel` row, Part II) |
 | `flags` | comma-separated, closed set: `nan-class`, `nonfinite=unrepresentable` (an input that cannot exist as a BEAM float; such a row never also carries `nonfinite=rejects`), `nonfinite=rejects` (a non-finite result from a representable input), `out-of-domain` (finite `|x| > 2^29` given to `sin`/`cos`/`tan`), `pole-sentinel` (a `tan` result of +-1e308), `beam-raises` (`atan2` whose `y/x` overflows), `signed-zero` (the result is +-0) |
 
 A decimal number, an exponent letter, a `0x` prefix, upper-case hex or whitespace inside a
@@ -1035,8 +1096,9 @@ field is a corpus error (one value has one spelling, so hashes are stable).
 {groups}
 
 `edge.tsv` holds, for each of `sin cos tan radians degrees`, VER04p 11.1's edge list
-plus the trig-specific points of PHY00a 6.3, then the Part II rows (`sqrt`, `atan`,
-`atan2`). The three sweeps are bounded sets (never "exhaustive"): `sweep-binade`
+plus the trig-specific points of PHY00a 6.3 (including the directed *witnesses* for the
+constants and fused sites a sweep sees only rarely, see PHY00a 6.4), then the Part II rows
+(`sqrt`, `atan`, `atan2`; no `cr` is claimed for these, PHY00a 6.2). The three sweeps are bounded sets (never "exhaustive"): `sweep-binade`
 (`2^e (1 + j/32)`, `e` in [-30, 30], both signs), `sweep-cw` (neighbours of `fl(k pi/2)`
 for `k` up to 3.4e8, the continued-fraction hard cases, and 512 binade-drop inputs
 `fl(k pi/2 + r)` with `r` just above 1/2, 1/4, 1/8), and `sweep-prng` (1,024 raw bit
@@ -1067,8 +1129,9 @@ seed XOR 1. Log-uniform: `u = next()`, sign `u >> 63`, exponent `-27 + u mod 56`
 (`code/scripts/trig_ref_softfloat.py`) and cross-checked against two unrelated host
 implementations (`code/scripts/trig_reference_xcheck/xcheck.c` built with
 `-ffp-contract=off`, and `xcheck.rs`); the generator stops on any disagreement. `cr` is
-computed from exact rational arithmetic (`code/scripts/trig_ref_exact.py`) and
-cross-checked against GNU `bc -l` at 100 digits. No host `sin`, `cos` or `float()`
+computed from exact rational arithmetic (`code/scripts/trig_ref_exact.py`, which has its own
+binary64 encoder and decoder and imports nothing from the model) and cross-checked
+against GNU `bc -l` at 100 digits (`tan` as `s(x)/c(x)`). No host `sin`, `cos` or `float()`
 touches a corpus value.
 
 ## Regenerate and check

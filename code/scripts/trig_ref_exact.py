@@ -18,9 +18,73 @@ from __future__ import annotations
 
 from fractions import Fraction
 
-from trig_ref_softfloat import SIGN, _round, decode, is_finite
+# Deliberately no import from trig_ref_softfloat: the exact reference must not share
+# a single line of code with the model whose answers it checks (PHY00a 6.4).  The
+# binary64 encoding and decoding it needs are written out again below, by a
+# different method (exact rationals, not the model's guard/round/sticky integers);
+# tests/test_trig_reference_fixture.py asserts that the two agree.
+SIGN = 1 << 63
+EXP_MASK = 0x7FF << 52
+FRAC_BITS = 52
+BIAS = 1023
 
 _PI_CACHE: dict[int, int] = {}
+
+
+def is_finite(bits: int) -> bool:
+    """True unless the exponent field is all ones (infinity or NaN)."""
+    return (bits & EXP_MASK) != EXP_MASK
+
+
+def unpack(bits: int) -> Fraction:
+    """The exact value of a finite binary64 bit pattern, as a Fraction.
+
+    ``(-1)**sign * (1 + frac/2**52) * 2**(exp-1023)`` for a normal number and
+    ``(-1)**sign * frac * 2**-1074`` for a subnormal one; negative zero is 0.
+    """
+    assert is_finite(bits)
+    exp_field = (bits >> FRAC_BITS) & 0x7FF
+    frac = bits & ((1 << FRAC_BITS) - 1)
+    if exp_field == 0:
+        magnitude = Fraction(frac, 1 << 1074)
+    else:
+        significand = (1 << FRAC_BITS) | frac
+        shift = exp_field - BIAS - FRAC_BITS
+        magnitude = Fraction(significand) * (Fraction(2) ** shift)
+    return -magnitude if bits & SIGN else magnitude
+
+
+def pack(v: Fraction) -> int:
+    """The binary64 bit pattern of the double nearest ``v`` (ties to even).
+
+    Method: find ``e`` with ``2**e <= |v| < 2**(e+1)``; the spacing of doubles there
+    is ``q = 2**(e-52)`` (or ``2**-1074`` below the normal range); ``|v| / q`` is a
+    rational whose floor is a candidate integer significand; the remainder is compared
+    *exactly* with one half.  Carrying a rounded-up significand of ``2**53`` into the
+    exponent field, and a subnormal one of ``2**52`` into the first normal number, is
+    done by simple addition, because the fields are adjacent.
+    """
+    if v == 0:
+        return 0
+    sign = SIGN if v < 0 else 0
+    a = abs(v)
+    e = a.numerator.bit_length() - a.denominator.bit_length()
+    if Fraction(2) ** e > a:
+        e -= 1
+    # now 2**e <= a < 2**(e+1)
+    q_exp = max(e - FRAC_BITS, -1074)
+    n = a / (Fraction(2) ** q_exp)
+    f, rem = divmod(n.numerator, n.denominator)
+    twice = 2 * rem
+    if twice > n.denominator or (twice == n.denominator and f & 1):
+        f += 1
+    if q_exp == -1074 and f < (1 << FRAC_BITS):
+        bits = f  # subnormal (or zero): exponent field 0
+    else:
+        # f is in [2**52, 2**53]; 2**53 carries into the exponent field.
+        bits = ((q_exp + FRAC_BITS + BIAS) << FRAC_BITS) + (f - (1 << FRAC_BITS))
+    bits = min(bits, EXP_MASK)  # anything at or past the top is infinity
+    return sign | bits
 
 
 def _atan_inv(n: int, bits: int) -> int:
@@ -57,27 +121,12 @@ def pi_fraction() -> Fraction:
 def to_fraction(bits: int) -> Fraction:
     """Exact value of a finite double."""
     assert is_finite(bits)
-    s, m, e = decode(bits)
-    f = Fraction(m) * (Fraction(2) ** e)
-    return -f if s else f
+    return unpack(bits)
 
 
 def round_fraction(v: Fraction) -> int:
     """Correctly rounded binary64 bits of an exact rational (ties to even)."""
-    if v == 0:
-        return 0
-    sign = 1 if v < 0 else 0
-    num, den = abs(v.numerator), v.denominator
-    # Pick L, the exponent of the last kept bit, from the leading-bit exponent.
-    e = num.bit_length() - den.bit_length()
-    if (num << max(0, -e)) < (den << max(0, e)):
-        e -= 1  # now 2**e <= v < 2**(e+1)
-    low = max(e - 52, -1074)
-    n = num << max(0, -low)
-    d = den << max(0, low)
-    q4, r4 = divmod(n << 3, d)
-    m = (q4 << 1) | (1 if r4 else 0)  # value = m * 2**(low - 4)
-    return _round(sign, m, low - 4)
+    return pack(v)
 
 
 def round_interval(lo: Fraction, hi: Fraction):
@@ -183,6 +232,42 @@ def cr_tiny(op: str, xbits: int) -> int:
     if op == "sin" and x == 0:
         return xbits
     return got
+
+
+def cr_tan(xbits: int) -> int:
+    """Correctly rounded tan bits for an in-domain finite x (|x| <= 2**29).
+
+    tan = sin / cos of the exact input.  Each of sin and cos is known only to within
+    its error bound, so the quotient is bracketed by the four extreme ratios, which is
+    a valid enclosure because the cosine interval excludes zero (the cosine of a
+    nonzero double is never within 2**-100 of zero).  If the bracket straddles a
+    rounding boundary the precision is doubled, as in ``cr_sincos``.  The reference
+    ``tan`` returns a sentinel instead near the poles; the caller omits ``cr`` there.
+    """
+    x = to_fraction(xbits)
+    if x == 0:
+        return xbits  # tan(+-0) = +-0
+    if abs(x) < Fraction(1, 1 << 27):
+        # tan x = x + x**3/3 + ... lies strictly between x and x + x**3/2 for 0 < x < 1.
+        a, b = x, x + x**3 / 2
+        lo, hi = (a, b) if x > 0 else (b, a)
+        got = round_interval(lo, hi)
+        if got is None:
+            raise RuntimeError("tiny-argument tan interval straddles a boundary")
+        return got
+    prec = 240
+    while True:
+        (sv, se), (cv, ce) = sincos_exact(xbits, prec)
+        c_lo, c_hi = cv - ce, cv + ce
+        if c_lo < 0 < c_hi or c_lo == 0 or c_hi == 0:
+            raise RuntimeError(f"cosine interval contains zero for {xbits:#x}")
+        quotients = [sn / cn for sn in (sv - se, sv + se) for cn in (c_lo, c_hi)]
+        got = round_interval(min(quotients), max(quotients))
+        if got is not None:
+            return got
+        prec *= 2
+        if prec > 4000:
+            raise RuntimeError(f"cr_tan did not converge for {xbits:#x}")
 
 
 def cr_conversion(op: str, xbits: int):

@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+- **WD-100b security-review follow-up.**  `refused_component` also refuses any win32 child component with a `:`
+  (alternate data streams and device suffixes), takes the reserved stem before the first `.` with trailing spaces
+  trimmed (`CON .txt`), and adds `CONIN$`, `CONOUT$` and `COM`/`LPT` with a superscript 1, 2 or 3.  `CLOCK$` and
+  fullwidth `CON` stay ordinary.  Fixture test now 141 cases.  `effect_certificate.json` regenerated again (only
+  `source_digest`; capabilities unchanged).
+- **WD-100b: ASCII-only win32 folding and reserved names in `lexical_containment`.**  The win32 flavour folded
+  names (and the UNC server and share) with `str::to_lowercase`, which is full Unicode (the Kelvin sign equalled
+  `k`); it now uses `to_ascii_lowercase`, so every non-ASCII code point is compared exactly and a non-ASCII case
+  variant is "not inside" (fails closed).  A win32 child with a reserved device name (`CON`, `PRN`, `AUX`, `NUL`,
+  `COM1`..`COM9`, `LPT1`..`LPT9`, with or without an extension) or a component ending in a dot or space is never
+  inside (`refused_component`).  The shared-fixture test now runs 120 cases (43 new) and a new test pins the names,
+  look-alikes and the non-ASCII pairs.  `effect_certificate.json` regenerated (only `source_digest` moved; declared
+  effects and capabilities unchanged).  `validate_repo_path` (registry paths) already refused these names and is
+  unchanged.
+
 - **Safe lane artifact loader** (WD-004b1, VER04i 8.2).  New `lane_loader` module (library only; no CLI or
   report change, those are WD-004b2): `read_repo_file` (bounded, lexically contained in the host path flavour,
   every symbolic link refused, regular files only), `lexical_containment` (the lane runners' shared rule, both

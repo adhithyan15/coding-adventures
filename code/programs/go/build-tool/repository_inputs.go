@@ -139,6 +139,19 @@ var (
 	// edit to any of its files selects each converted port. Python, Rust and
 	// TypeScript adopted it in TC-2; each later slice adds one consumer row.
 	trigReferenceCorpusPaths = []string{"code/specs/fixtures/trig-reference-v1"}
+	// trigReferenceInputPaths adds what regenerates and validates the corpus. The
+	// python/trig BUILD runs the generator's --check (byte-for-byte regeneration, the
+	// sensitivity gates and the C/Rust/bc cross-checks) and the validator tests, so
+	// an edit to any of these files must select it, or the generator could change
+	// without anything running it.
+	trigReferenceInputPaths = []string{
+		"code/specs/fixtures/trig-reference-v1",
+		"code/scripts/generate_trig_reference_fixture.py",
+		"code/scripts/trig_ref_exact.py",
+		"code/scripts/trig_ref_softfloat.py",
+		"code/scripts/trig_reference_xcheck",
+		"code/scripts/tests/test_trig_reference_fixture.py",
+	}
 
 	rngCorpusPaths         = []string{"code/specs/fixtures/rng-v1"}
 	hamurabiCorpusPaths    = []string{"code/specs/fixtures/hamurabi-v1"}
@@ -339,9 +352,9 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	{
 		name:     "python/trig",
 		language: "python",
-		inputs:   "the shared TRIG-REF-1 bit-exact conformance corpus",
-		matches:  isTrigReferenceCorpus,
-		paths:    trigReferenceCorpusPaths,
+		inputs:   "the TRIG-REF-1 bit-exact corpus and the generator, oracle and validator its BUILD runs (--check)",
+		matches:  isTrigReferenceInput,
+		paths:    trigReferenceInputPaths,
 	},
 	{
 		name:     "rust/trig",
@@ -948,6 +961,29 @@ func isRngCorpus(changed string) bool {
 // directory such as trig-reference-v10 is not selected.
 func isTrigReferenceCorpus(changed string) bool {
 	return strings.HasPrefix(changed, "code/specs/fixtures/trig-reference-v1/")
+}
+
+// isTrigReferenceInput reports whether a changed path is the TRIG-REF-1 corpus or
+// one of the files that generates and validates it. The python/trig BUILD runs the
+// generator's --check, so each of these must select that package:
+//
+//	code/specs/fixtures/trig-reference-v1/edge.tsv            → true
+//	code/scripts/generate_trig_reference_fixture.py           → true
+//	code/scripts/trig_reference_xcheck/xcheck.c               → true
+//	code/scripts/trig_ref_exact.py                            → true
+//	code/scripts/generate_trig_reference_fixture.py.bak       → false (exact filenames)
+func isTrigReferenceInput(changed string) bool {
+	if isTrigReferenceCorpus(changed) {
+		return true
+	}
+	switch changed {
+	case "code/scripts/generate_trig_reference_fixture.py",
+		"code/scripts/trig_ref_exact.py",
+		"code/scripts/trig_ref_softfloat.py",
+		"code/scripts/tests/test_trig_reference_fixture.py":
+		return true
+	}
+	return strings.HasPrefix(changed, "code/scripts/trig_reference_xcheck/")
 }
 
 // isHamurabiCorpus reports whether a changed path is in the shared hamurabi corpus,
