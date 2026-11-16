@@ -1,0 +1,47 @@
+{
+  "schema_version": "ver24-effect-cert-v1",
+  "package": "rust/avm-bytecode-lifter",
+  "source_digest": "17a5718e2aea1f859b58a2b3aa9dee7f476f858265a5fd77a4884620b93db2d4",
+  "manifest_digest": "863f4dc0b01536893052345d2a002a2f9c1766e63d40b5e5233bd51c004e6e4f",
+  "declared_effects": [],
+  "entry_points": [
+    {
+      "name": "lift_avm1",
+      "signature": "pub fn lift_avm1( bytecode: &[u8], module_name: &str, ) -> Result<interpreter_ir::module::IIRModule, LifterError>",
+      "effects": []
+    },
+    {
+      "name": "lift_avm2",
+      "signature": "pub fn lift_avm2( bytecode: &[u8], module_name: &str, ) -> Result<interpreter_ir::module::IIRModule, LifterError>",
+      "effects": []
+    },
+    {
+      "name": "run_avm1",
+      "signature": "pub fn run_avm1(bytecode: &[u8]) -> Result<String, LifterError>",
+      "effects": []
+    },
+    {
+      "name": "run_avm2",
+      "signature": "pub fn run_avm2(bytecode: &[u8]) -> Result<String, LifterError>",
+      "effects": []
+    },
+    {
+      "name": "validate_stack_depth",
+      "signature": "pub fn validate_stack_depth(depth: usize) -> Result<bool, LifterError>",
+      "effects": []
+    },
+    {
+      "name": "validate_instruction_count",
+      "signature": "pub fn validate_instruction_count(n: usize) -> Result<bool, LifterError>",
+      "effects": []
+    },
+    {
+      "name": "validate_constant_count",
+      "signature": "pub fn validate_constant_count(n: usize) -> Result<bool, LifterError>",
+      "effects": []
+    }
+  ],
+  "unconditional_roots": [],
+  "banned_construct_exceptions": [],
+  "label": "proved"
+}
