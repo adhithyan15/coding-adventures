@@ -10,3 +10,6 @@ WARRANT_EVIDENCE_FAULT=ignore-high-bit:eq_u64 WARRANT_EVIDENCE_FILTER=/exhaustiv
 WARRANT_EVIDENCE_FAULT=invert:eq_u64 WARRANT_EVIDENCE_FILTER=/exhaustive/ go run ./cmd/warrant-evidence run 2>/dev/null | grep -q '^not ok '
 WARRANT_EVIDENCE_FAULT=missing-error:select_bytes WARRANT_EVIDENCE_FILTER=/exhaustive/ go run ./cmd/warrant-evidence run 2>/dev/null | grep -q '^not ok '
 WARRANT_EVIDENCE_FAULT=swap-choice:select_bytes WARRANT_EVIDENCE_FILTER=/exhaustive/ go run ./cmd/warrant-evidence run 2>/dev/null | grep -q '^not ok '
+# WD-004b2 (VER04i 8.3): the Rust loader re-checks the lane (digests, source freshness, labels);
+# --require-active makes an absent, planned or unloadable lane a build failure.
+cargo run --quiet --manifest-path ../../rust/ca-assurance-report/Cargo.toml -- --check-lane go/ct-compare --repo-root ../../../.. --require-active
