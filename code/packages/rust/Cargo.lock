@@ -15528,6 +15528,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "vos-shape-check"
+version = "0.1.0"
+dependencies = [
+ "coding-adventures-toml-lexer",
+ "coding-adventures-toml-parser",
+ "grammar-tools",
+ "lexer",
+ "parser",
+]
+
+[[package]]
 name = "wall-clock"
 version = "0.1.0"
 
