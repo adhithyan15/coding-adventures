@@ -118,6 +118,8 @@ Every integer is text. That removes the JavaScript safe-integer hazard at the so
 
 `warrant-stream-v2` extends the VER04i section 2.6 table; every row of that table keeps its bytes.
 
+**Tag allocation (changed 2026-11-16).** This draft first took `60` (tuple, record) and `62` (variant), which collide with VER04l (`60` `Text`, `61` `Char`, merged 2026-11-13) and VER04p (`62` `F32`, `63` `F64`, merged earlier on 2026-11-16). The earliest-merged allocation wins, so VER04l and VER04p keep theirs and this document uses **`64`** (tuple, record) and **`65`** (variant). `11` (signed integers) was free and stays. The single registry of every allocated tag is VER04i section 2.6.1.
+
 | Value | Bytes |
 |---|---|
 | `Bool` | `00` or `01` |
@@ -127,13 +129,13 @@ Every integer is text. That removes the JavaScript safe-integer hazard at the so
 | `List<T>` | `30`, u32-LE count, elements |
 | `Option<T>` | `40` (none) or `41` plus the inner value |
 | `Ok(v)` / `Err(E.V)` | `50` plus inner / `51`, u32-LE length, UTF-8 case name |
-| tuple, record | `60`, u32-LE component count, components in order |
-| variant | `62`, u32-LE length, UTF-8 constructor name, u32-LE field count, fields in order |
+| tuple, record | `64`, u32-LE component count, components in order |
+| variant | `65`, u32-LE length, UTF-8 constructor name, u32-LE field count, fields in order |
 
-The two streams, the context prefix, the type names in the prefix and the absence of per-case delimiters are exactly VER04i section 2.6, with `warrant-stream-v2\0` as the header when any type in the suite context is outside the v1 set (section 1.2). A top-level binder tuple remains a plain concatenation of its binder values, as in v1; a tuple *value* (a binder of tuple type, a tuple result) carries the `60` tag. Why a count and a tag where v1 used neither: v1 tuples never occurred nested, so position alone sufficed. Nested composites need self-delimiting values or two different values can serialise to the same bytes.
+The two streams, the context prefix, the type names in the prefix and the absence of per-case delimiters are exactly VER04i section 2.6, with `warrant-stream-v2\0` as the header when any type in the suite context is outside the v1 set (section 1.2). A top-level binder tuple remains a plain concatenation of its binder values, as in v1; a tuple *value* (a binder of tuple type, a tuple result) carries the `64` tag. Why a count and a tag where v1 used neither: v1 tuples never occurred nested, so position alone sufficed. Nested composites need self-delimiting values or two different values can serialise to the same bytes.
 
 A worked example. The record `Point(x: U8, y: U8)` with value `Point(1, 2)` encodes as
-`60 02000000 10 0100000000000000 10 0200000000000000`. The signed value `-1` as `I8` encodes as `11 ffffffffffffffff`: the type name in the context says it is eight bits, the stream does not.
+`64 02000000 10 0100000000000000 10 0200000000000000`. The signed value `-1` as `I8` encodes as `11 ffffffffffffffff`: the type name in the context says it is eight bits, the stream does not.
 
 ### 2.5 TFV
 
@@ -175,7 +177,7 @@ The generator can evaluate only **subject-independent** nodes: those with no `su
 
 A **v0 document's Rust harness** still evaluates `U8` as `Nat` (WD-013 keeps that frozen so v0 output stays byte-identical). A v2 corpus and that harness can therefore disagree on a case where a `U8` node wraps, and the evidence would split in two without anyone noticing. v2 does not paper over it:
 
-1. The generator counts, per suite, the **subject-independent** fixed-width node evaluations whose wrapped result differs from the exact result (`wraps`, recorded in the suite row; the oracle reproduces it).
+1. The generator counts, per suite, the **subject-independent** fixed-width node evaluations whose wrapped result differs from the exact result (`wraps`, recorded in the suite row; the oracle reproduces it). The count is defined on the **unmemoised** evaluation: every evaluation of a node counts, a memo hit (section 10.4) counts what the recomputation would have counted, and the nodes counted are those of `admit`, of `expected`, of pure call-count guards and of every subject-independent argument of a `subject_op` (`power(a, e + 1u64)` contains one), each once per admitted case (`admit` once per product ordinal). A count that depends on cache state or on which suite ran first is not reproducible and is a defect (section 16.1).
 2. For a **v0 document**, `wraps > 0` is a generation error: `W0701: U8 arithmetic wraps; v0 harness evaluates U8 as Nat`.
 3. For a **v0 document**, a fixed-width `+ - *` or unary `-` node with a `subject_op` beneath it is refused **statically** with the same code. Counting cannot cover it: whether it wraps depends on what the subject returns, so no generation-time count can prove the two evaluators agree. (`mul(a,b) == mul(b,a)` is unaffected: it has no IR arithmetic node.)
 4. The adopter that hits rule 2 or 3 migrates the document to v1 (where the Rust harness wraps as well) or reformulates the model. This is the erratum to VER04i section 2.7 stated in section 16.
@@ -214,7 +216,29 @@ A suite that needs a level the lane does not declare is recorded **`not-live`** 
 3. `subject_op(name, args[, widths])` dispatches through the lane's binding to the real export. It is forbidden inside every model body and inside every fault expression. `model_call(name, args)` invokes a pure model. Built-in pure operators (`eq`, `lt`, `add`) are IR tags and never resolve through the binding table (VER04i section 2.5, unchanged).
 4. Literals keep the v1 typed form `["lit", {"type": T, "value": V}]` with `V` per section 2.3; a Bool literal is `["lit", true]`.
 5. Equality is structural and type-directed (VER04 section 3): sequence order matters, errors are nominal, `Bool` is not `U8`, allocation identity is never compared.
-6. A static **cost bound** per expression: `MAX_IR_COST = 2,000` node evaluations, counting each `model_call` at its body's full cost (VER04i section 6.2). The bound is computed before the first case and exceeding it is a corpus error. Because the IR has no loop and no recursion, this static bound is the whole fuel: no run-time step meter is needed at `ir.core`, `ir.fixed` or `ir.data`.
+6. A static **cost bound** per expression, computed before the first case; exceeding it is a corpus error. Because the IR has no loop and no recursion, this static bound is the whole fuel: no run-time step meter is needed at `ir.core`, `ir.fixed` or `ir.data`. (Amended 2026-11-16, section 16.1; the v1 profile keeps the wording of VER04i section 6.2.)
+
+   **Cost model: worst path.** The cost of an expression is the largest number of node evaluations any single evaluation of it can perform under rule 2:
+
+   | Node | Cost |
+   |---|---|
+   | `lit`, `var`, `err` | 1 |
+   | `if` | 1 + cost(condition) + **max**(cost(then), cost(else)) |
+   | `match` (`ir.data`) | 1 + cost(scrutinee) + **max** over the arms |
+   | `model_call` | 1 + the sum of its arguments + the cost of the model's body |
+   | `subject_op` | 1 + the sum of its arguments (the subject's own work is not IR work) |
+   | every other tag, `and`/`or`/`implies` included | 1 + the sum of its operands (a short circuit is never credited) |
+
+   A model body's cost is computed **once per model, in declaration order**, so the computation is linear in the size of the corpus IR. Memoisation (section 10.4) is never credited. The arithmetic is checked: a chain `m_k(x) = m_(k-1)(m_(k-1)(x))` doubles the cost per level, so an implementation stops and reports the violation as soon as a partial sum exceeds the ceiling below; it never wraps and never builds a big number. This is a sound bound and not an estimate, because rule 2 obliges every evaluator to evaluate exactly one branch of an `if` and one arm of a `match`: an evaluator that visits more nodes than the worst-path cost is nonconforming for a reason unrelated to cost. Charging both branches (the reading of VER04i section 6.2) is also sound but is not a bound on work, it is the size of the fully inlined tree, and it is exponential in model depth for the ordinary idiom of a bit-sliced model whose four branches each call the previous model once.
+
+   **The bound: a default, a declared budget and a hard ceiling.**
+
+   * `MAX_IR_COST = 2,000` is the **default** bound per expression (each `admit`, `body`, `expected` and fault expression separately).
+   * A corpus whose models need more declares `max_ir_cost N` in `corpus.profile` (section 8.4) with `2,000 <= N <= MAX_IR_COST_CEILING = 65,536`. The compiler copies `N` into `corpus.json` as `max_ir_cost`; every consumer uses the recorded value, and a recorded value above the ceiling, or an expression above the recorded value, is a corpus error. The profile line is the **only** way to raise the bound: no compiler, oracle or lane has a command-line or environment override, because an override is a second place for the limit to live and the report could not show it.
+   * Each suite row records `ir_cost`, the sum of the worst-path costs of its `admit`, its `body` and (for a `reference` suite) its `expected`. The compiler computes it, the oracle reproduces it (section 10.3 check 2), and a lane recomputes it before the first case and treats a difference as a corpus error. Three independent implementations therefore agree on the cost model, not only on the limit.
+   * **Total IR work is bounded as well**, which is what keeps the resource guarantee when the per-expression bound rises. The IR work of a suite in a run is `ir_cost` times the number of product ordinals in the chunks that run executes; the sum over all suites, counted as `MAX_TOTAL_WORK_*` counts cases (section 14, control re-runs included), is at most `MAX_IR_WORK_SLIM = 64,000,000,000` for a `slim` run and `MAX_IR_WORK_FULL = 8,589,934,592,000` for a `full` run. These are exactly `32,000,000 x 2,000` and `2^32 x 2,000`, the products the case limits and the old cost bound already implied; the amendment states them instead of leaving them implicit, so a corpus may spend a larger cost on few cases or a small cost on many, never both. Checked before the first case, in checked arithmetic.
+
+   Measured on gf256 with the S4 oracle (section 16.1): charging both branches, `xor8` costs 294,900 and `ginv` 92,014,191; on the worst path `gmul` costs 2,011 and `ginv` 26,204, the largest expression is 26,210, four of the 38 suites exceed 2,000, and the whole document needs under `2 x 10^9` node evaluations at `full`. gf256 therefore declares `max_ir_cost 32768`. ct-compare's largest expression costs 9 and declares nothing.
    A node count does not bound **value size**: `m1(x) = concat(x, x)` composed with itself through nine model levels (`m2(x) = m1(m1(x))`, and so on) costs about 1,500 nodes and multiplies a length by `2^256`. Therefore every `Bytes` or list value an evaluator produces is at most `MAX_IR_VALUE = 65,536` bytes or elements, checked **before** the allocation; the generator enforces it on subject-independent nodes (`W0701`), and a lane reports a violation as `ir-overflow` under the split of section 3.2 (corpus error when subject-independent, case failure otherwise). Exact integers are bounded by section 3.2 and shift counts by the operand width.
 7. Unknown tags, unknown built-ins and any construct of an undeclared level are errors in every consumer. An unknown tag is never skipped.
 
@@ -488,10 +512,13 @@ Fault selection and the knobs of this document live in a **neutral line file**, 
 budget 16777216
 chunk_size 65536
 slim_stride auto
+max_ir_cost 32768
 fault multiply generator-shift
 fault multiply alt-poly
 fault zeroize stale-post
 ```
+
+`max_ir_cost` is optional (default 2,000, at most 65,536; section 4.2 rule 6).
 
 The compiler checks that its fault names equal the Rust bindings' `faults=` lists for the same module, so the two cannot drift; the oracle checks the same file against `corpus.json`.
 
@@ -538,12 +565,12 @@ Today's oracle re-reads the `.warrant` source with its own reader and shares no 
 
 ### 10.2 Shape
 
-A stdlib-only package `code/scripts/warrant_oracle/` with five parts, each independently testable: `reader` (source text to AST; fail-closed), `lower` (AST to IR), `eval` (the IR evaluator with the section 3 rule), `domains` (descriptor trees, `size`/`nth`, enumeration and chunking), `stream` (the section 2.4 encoders and SHA-256 framing). The old `code/scripts/warrant_corpus_oracle.py` is the v1 oracle and stays until S13.
+A stdlib-only package at **`code/packages/python/warrant-oracle/`** (distribution `coding-adventures-warrant-oracle`, import package `coding_adventures_warrant_oracle`) with five parts, each independently testable: the reader (`lexer`, `parser`, `ast`: source text to AST; fail-closed), `lower` (AST to IR), `ir_eval` (the IR evaluator with the section 3 rule), `domains` and `suites` (descriptor trees, `size`/`nth`, enumeration and chunking), `stream` (the section 2.4 encoders and SHA-256 framing). It is a package and not a directory under `code/scripts/` (the path this section named before the amendment of section 16.1) because the build tool discovers a `BUILD` file only under `code/packages/` and `code/programs/`: under `code/scripts/` its tests, its lint and the gate itself would not run in CI, and an oracle that CI does not run gates nothing. Living under `packages/` gives it no licence to depend on anything: it has no runtime dependency, imports no other package of this repository, and its `BUILD` runs the gate of section 1.2. The old `code/scripts/warrant_corpus_oracle.py` is the v1 oracle and stays until S13.
 
 ### 10.3 The three checks
 
 1. **Lowering.** The oracle's own lowering of the spec equals the IR in `corpus.json`, compared as canonical JSON (the v1 canonical writer of VER04i section 9.1). Two independent implementations can only agree byte for byte if lowering is **syntax-directed and unoptimised**: one IR node per source construct, operands in source order, no constant folding, no reassociation, no common-subexpression sharing, no inlining of models, desugarings (`a != b`, `x.0`, refinements into `admit`) exactly as section 4 and Appendix A name them. Any normalisation the generator performs is a spec change here first. A generator that lowers `a - b` as `b - a` is caught here and nowhere else.
-2. **Enumeration and evaluation.** The oracle's own enumeration and evaluation reproduce, for every suite and every chunk it verifies: `cases`, `discarded`, `first_admitted`, `calls`, `inputs_sha256`, and for `reference` suites `expected_sha256`, plus the suite digests, `slim_chunks` and `slim_sha256`, `expected_calls` and `wraps`.
+2. **Enumeration and evaluation.** The oracle's own enumeration and evaluation reproduce, for every suite and every chunk it verifies: `cases`, `discarded`, `first_admitted`, `calls`, `inputs_sha256`, and for `reference` suites `expected_sha256`, plus the suite digests, `slim_chunks` and `slim_sha256`, `expected_calls`, `wraps` and `ir_cost` (and the corpus `max_ir_cost` against `corpus.profile`).
 3. **Faults and controls.** It re-derives every fault instantiation, `fault_models`, control row and `required_claims` set from the spec, the op signatures and `corpus.profile`, and compares them with `corpus.json`.
 
 ### 10.4 Scaling rule and cost
@@ -619,7 +646,7 @@ The VER29 section 5.1 dependency reader is Rust-only. Non-Rust lanes report **`l
 | S1 | spec | This document, plus the VER04i pointer and erratum | no | review; spec self-consistent with VER04i/h/j/k and VER29 |
 | S2 | generator | `warrant-grammar`: publish the resolved-domain enumerator and the post-slot resolver as public API. No behaviour change. Lands after PR #19369 (WX-G) | **yes** | `gen_evidence --check` shows no drift for every adopter |
 | S3 | generator | New leaf crate `rust/warrant-corpus-gen`: v2 emitter at `ir.core`, predicate claims, call counts, chunks, fault IR, `corpus.profile`. Emits ct-compare v2 | no | section 1.2: nine v1 digests reproduced |
-| S4 | oracle | `code/scripts/warrant_oracle/` at `ir.core`, with chunk verification and memoisation | no | the three checks of section 10.3 pass on ct-compare v2 and on a seeded-wrong corpus fail |
+| S4 | oracle | `code/packages/python/warrant-oracle/` at `ir.core`, with chunk verification and memoisation | no | the three checks of section 10.3 pass on ct-compare v2 and on a seeded-wrong corpus fail |
 | S5 | fixture | the v2 categories of section 11 at `ir.core`. Prerequisite: `warrant-corpus-conformance-v1` (branch `claude/warrant-lane-conformance`) is on `main` | no | oracle verifies; Python and TypeScript runners fail a deliberately wrong evaluator |
 | S6 | lane | Python runner reads v2 as well as v1; `python/ct-compare` moves to v2 | no | manifest v2 `--check` green at slim and at full |
 | S7 | lane | TypeScript runner, the same. **Go**: the in-flight Go lane finishes on v1 for ct-compare [D5]; it ports to v2 in its own PR in this slice or after, but before S13 | no | same |
@@ -651,7 +678,8 @@ A corpus, a chunk file, a binding and a `.warrant` spec are all inputs a PR auth
 | total cases per `full` run (`MAX_TOTAL_WORK_FULL`) | `2^32`; the nightly job also has a wall-clock limit |
 | binders per claim; tuple arity; record fields; variant constructors | 8; 8; 32; 64 |
 | descriptor tree depth; type depth; IR depth | 16; 16; 64 |
-| `MAX_IR_COST` per expression | 2,000 node evaluations, models charged at full body cost; static, so it is the fuel (section 4.2) |
+| `MAX_IR_COST` per expression | 2,000 node evaluations by default on the **worst path** (one branch of an `if`, models at their body's worst-path cost); a corpus may declare `max_ir_cost` up to `MAX_IR_COST_CEILING = 65,536`; static, so it is the fuel (section 4.2) |
+| total IR work per run (`MAX_IR_WORK_SLIM`, `MAX_IR_WORK_FULL`) | 64,000,000,000 and 8,589,934,592,000 node evaluations: the sum over suites of `ir_cost` times the product ordinals run (section 4.2) |
 | `MAX_IR_VALUE`, any `Bytes` or list an evaluator produces | 65,536 bytes or elements, checked before allocation |
 | `Bytes<N>`; a `Bytes` value in the corpus; list length in a value | `N <= 4096`; 4,096 bytes; 4,096 elements |
 | decimal integer text | at most 20 digits (`Int` intermediates are bounded by `2^127` at generation, section 3.2) |
@@ -673,9 +701,9 @@ A corpus, a chunk file, a binding and a `.warrant` spec are all inputs a PR auth
 
 ## 15. Open questions
 
-### 15.1 For the owner
+### 15.1 Decided by the owner (2026-11-16)
 
-1. **Where does the `full` result live, and which manifest does the report read?** The committed `evidence/test-manifest.json` must be reproducible by PR CI, so it is a `slim` manifest; the nightly `full` result exists only as a CI artifact. The two options are (a) a bot commits a second file, `evidence/test-manifest.full.json`, after each green nightly run, or (b) nothing is committed and `ca-assurance-report` accepts `--full-manifest <artifact>` and prints both depths. **Recommendation: (b).** A committed full manifest is stale the moment a source file changes and no PR job can re-derive it, which is the evidence-written-by-something-other-than-the-check pattern this family of specs exists to prevent; (a) also needs a bot with write access to `main`. Under (b) the report prints `full` only when given an artifact whose `corpus_sha256`, `source_sha256` and binding digest equal the committed slim manifest's, and prints `slim(n of m chunks)` otherwise. This is the owner's call because it sets CI and bot policy. Until decided, every report derived from the committed file says `slim` for each suite with more than 16 chunks, which is honest under either option.
+1. **Where does the `full` result live, and which manifest does the report read? Resolved 2026-11-16 (owner): option (b).** The committed `evidence/test-manifest.json` is the `slim` manifest, because PR CI must be able to reproduce it; the nightly `full` result exists only as a CI artifact. **Only `slim` is committed, and there are no bot commits**: no second file `evidence/test-manifest.full.json`, and no bot with write access to `main`. `ca-assurance-report` reads the nightly `full` manifest as a **digest-matched artifact** (`--full-manifest <artifact>`) and prints both depths. It prints `full` only when the artifact's `corpus_sha256`, `source_sha256` and binding digest equal the committed slim manifest's, and prints `slim(n of m chunks)` otherwise. Why not (a): a committed full manifest is stale the moment a source file changes and no PR job can re-derive it, the evidence-written-by-something-other-than-the-check pattern this family of specs exists to prevent. Every report derived from the committed file alone says `slim` for each suite with more than 16 chunks.
 
 ### 15.2 Resolved in review (2026-11-16), recorded so they are not reopened by accident
 
@@ -700,7 +728,9 @@ A corpus, a chunk file, a binding and a `.warrant` spec are all inputs a PR auth
 * The slim subset is written into the corpus as an explicit list and committed with its own digest (section 5.6), with the formula normative for the compiler and the oracle only.
 * The manifest has a run-level `depth` and a per-suite `depth` (a suite with at most 16 chunks is `full` in every run).
 
-**Changes made by the adversarial review of 2026-11-16.** Subject-dependent nodes: `ir-overflow` there is a case failure, and the v0 guard refuses them statically (sections 3.2, 3.3). `MAX_IR_VALUE` closes a memory bomb the node-count bound did not (section 4.2). Chunk count capped at 4,096 and chunk size at `2^16`, because the earlier limits allowed an 11 MiB chunk file against a 2 MiB cap and a 16-million-case "slim" suite (sections 5.4, 14). Chunk file names derived, never read (sections 5.5, 14). Witness chunks and the only-more-chunks rule for the stride (section 5.6). `unreachable_calls` and the recomputed `unreachable_by_type`, because skipped calls contradicted the call-count check and were a way to call nothing (section 7.2). `monitored_calls` restricted to subject-independent calls (section 7.6). Host-form applicability of WX-G controls (section 8.2). `bytes_n(N>=2)` is `sample`, resolving a contradiction between two lines of section 9.3. Unoptimised lowering and full oracle verification before merge (section 10). The v1 compiler is not moved in S3 (section 13). Nine of the ten open questions resolved (section 15).
+**Changes made by the adversarial review of 2026-11-16.** Subject-dependent nodes: `ir-overflow` there is a case failure, and the v0 guard refuses them statically (sections 3.2, 3.3). `MAX_IR_VALUE` closes a memory bomb the node-count bound did not (section 4.2). Chunk count capped at 4,096 and chunk size at `2^16`, because the earlier limits allowed an 11 MiB chunk file against a 2 MiB cap and a 16-million-case "slim" suite (sections 5.4, 14). Chunk file names derived, never read (sections 5.5, 14). Witness chunks and the only-more-chunks rule for the stride (section 5.6). `unreachable_calls` and the recomputed `unreachable_by_type`, because skipped calls contradicted the call-count check and were a way to call nothing (section 7.2). `monitored_calls` restricted to subject-independent calls (section 7.6). Host-form applicability of WX-G controls (section 8.2). `bytes_n(N>=2)` is `sample`, resolving a contradiction between two lines of section 9.3. Unoptimised lowering and full oracle verification before merge (section 10). The v1 compiler is not moved in S3 (section 13). All ten open questions resolved (section 15; question 1 by the owner on 2026-11-16).
+
+**Changes made after the review, 2026-11-16.** Open question 1 resolved as option (b) (section 15.1). Stream tags for tuple, record and variant moved from `60`/`62` to `64`/`65` to remove the collision with VER04l and VER04p (section 2.4; registry in VER04i section 2.6.1).
 
 **Follow-ups outside this slice.**
 
@@ -709,6 +739,22 @@ A corpus, a chunk file, a binding and a `.warrant` spec are all inputs a PR auth
 * **F3** amend VER29 section 5.2 to the section 1.3 path. **Done in this slice.**
 * **F4** structured `binders` array in the manifest row for VER29 section 6.2 (VER29's own follow-up, slice 2 of its section 13).
 * **F5** when S13 lands, remove the v1 text of VER04i that this document supersedes and leave a tombstone pointing here.
+
+### 16.1 Amendments of 2026-11-16 from slice S4 (oracle path, IR cost)
+
+Building the oracle (slice S4) found two places where this document could not be implemented as written. Both are decided here.
+
+**Oracle path (section 10.2, section 13 row S4).** `code/scripts/warrant_oracle/` becomes `code/packages/python/warrant-oracle/`. Reason: build discovery (section 10.2). Nothing else about the oracle changes; in particular section 10.1 is untouched, and the package shares no code, data file or generated table with the generator.
+
+**IR cost (section 4.2 rule 6, sections 8.4, 10.3 and 14).** `MAX_IR_COST = 2,000` with both branches of an `if` charged could not hold the second adopter: it refuses 7 of gf256's 38 suites, and no constant would have fixed it, because the both-branches count of `ginv` is 92,014,191 while no evaluation of `ginv` visits more than 26,204 nodes. The decision has three parts, and each is needed:
+
+1. *Worst-path costing* replaces both-branches costing. It is the tight sound bound on what an evaluator does; the old count measured the inlined tree.
+2. *A declared budget under a hard ceiling* (`max_ir_cost` in `corpus.profile`, at most 65,536) replaces the single constant. Worst-path costing alone is not enough: `gmul` costs 2,011 and lzw's `units1024` costs 4,093. Raising the constant for everyone would hide the cost of a heavy document; a declared line is reviewed, recorded in `corpus.json` and printed.
+3. *A total IR-work bound* (`MAX_IR_WORK_SLIM`, `MAX_IR_WORK_FULL`) keeps the guarantee the old pair of limits gave only implicitly. Without it a 65,536 ceiling would multiply the worst case of a slim run by about 32.
+
+Rejected: a run-time step meter (eighteen evaluators would each need one and the count would become part of the conformance surface); costing the path actually taken per case (not static, so it is a meter by another name); rewriting gf256's models to fit 2,000 (the bit-sliced XOR is the honest v0 formulation, and a rewrite would change the frozen gf256 v0 harness for the sake of a counting rule). The S4 oracle's diagnostic flags `--max-ir-cost` and `--cost-model taken-path` are superseded: the model it calls `taken-path` is the worst-path model above and becomes the only one, the bound comes from `corpus.profile`, and the flags are removed (section 4.2 forbids an override).
+
+**gf256 and the section 3.3 guard (WD-013).** Measured with the S4 oracle's evaluator, memoisation off, at full depth over every suite that evaluates a model or arithmetic: no fixed-width node wraps on any admitted case, and no arithmetic node has a `subject_op` beneath it. The three arithmetic nodes that sit in subject arguments (`e + 1u64`, `e + 255u64`, `e + e`) are refined to at most `2^32` and cannot wrap a `U64`. gf256 therefore passes rules 2 and 3 as a v0 document: exact (`Nat`) evaluation in the frozen Rust harness and wrapping evaluation in v2 agree on every case, the conversion changes no expected value, and WD-013 is not reopened. Two consequences are recorded so the result is not over-read. First, gf256 gives **no evidence that a lane wraps correctly**: the single rule of section 3.2 is exercised only by the conformance cases of section 3.4, which are therefore a hard prerequisite of every lane and cannot be traded against gf256 passing. Second, the measurement had to be made with memoisation off and by reading the subject arguments, because the S4 oracle's `wraps` counter skipped memo hits and never evaluated subject arguments; section 3.3 rule 1 now defines the count so that it cannot depend on either.
 
 ## Appendix A. `ir.core` tags
 

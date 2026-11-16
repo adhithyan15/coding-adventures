@@ -5,6 +5,11 @@ All notable changes to `paint-batch-tiles` will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+- Parked `code/specs/paint-batch-tiles.warrant` as `paint-batch-tiles.warrant.draft`: it uses `F64`, which Warrant does not implement yet, so it failed warrant-grammar's repo-wide check. Restore it once VER04p floats (WX-FL1) land. No code change.
+
 ## [0.1.0] - 2026-11-15
 
 ### Added
@@ -20,4 +25,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Zero ambient capability enforcement (`CAP001`, `"capabilities": []`).
   - Safe Rust only (`#![forbid(unsafe_code)]`).
 - Conformance test suite (`tests/conformance.rs`), microbenchmark harness (`tests/microbenchmarks.rs`), and runtime capability conformance gate (`tests/runtime_capability.rs`).
-- Formal verification artifacts: `paint-batch-tiles.warrant`, `assurance-profile.json`, `assurance_report.json`, and `effect_certificate.json`.
+- Formal verification artifacts: `paint-batch-tiles.warrant.draft` (parked: uses `F64`), `assurance-profile.json`, `assurance_report.json`, and `effect_certificate.json`.

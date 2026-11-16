@@ -10,8 +10,8 @@
 warrant musical_instruments v1
   error InstrumentError = INVALID_ARGUMENT | BUDGET_EXCEEDED
 
-  op render_instrument_note(duration_ms: Nat, sample_rate_hz: Nat, partial_count: Nat) -> Nat
-  op instrument_signal_sample(frequency_hz: Nat, sample_rate_hz: Nat) -> Nat
+  op render_instrument_note(duration_ms: Nat, sample_rate_hz: Nat, partial_count: Nat) -> Result<Nat, InstrumentError>
+  op instrument_signal_sample(frequency_hz: Nat, sample_rate_hz: Nat) -> Result<Nat, InstrumentError>
 
   assume platform:
     none
@@ -64,23 +64,21 @@ warrant musical_instruments v1
     steps <= 256 * duration_ms + 1024
     heap <= 4096
     depth <= 16
-    total_samples <= 16777216
+    -- total output samples <= 16777216 is not a bound metric (only steps, heap, depth and
+    -- collection-typed `output` are); the limit is asserted by the claim on this operation.
 
   bound instrument_signal_sample:
-    steps <= 64 * partial_count + 128
+    steps <= 64 * 64 + 128
     heap <= 1024
     depth <= 16
 
   -- Determinism and budget claims: identical inputs produce identical synthesized PCM output
   -- and sample count never exceeds MAX_SAMPLE_COUNT.
   claim note_rendering_is_deterministic:
-    forall d: Nat, r: Nat, p: Nat | d <= 60000 and r > 0 and r <= 192000 and p <= 64.
-      render_instrument_note(d, r, p) == render_instrument_note(d, r, p)
+    forall d: Nat, r: Nat, p: Nat | d <= 60000 and r > 0 and r <= 192000 and p <= 64. render_instrument_note(d, r, p) == render_instrument_note(d, r, p)
 
   claim note_sample_budget_bounded:
-    forall d: Nat, r: Nat, p: Nat | d <= 60000 and r > 0 and r <= 192000 and p <= 64.
-      render_instrument_note(d, r, p) <= 16777216
+    forall d: Nat, r: Nat, p: Nat | d <= 60000 and r > 0 and r <= 192000 and p <= 64. match render_instrument_note(d, r, p) with Ok(total) -> total <= 16777216 | Err(_) -> true
 
   claim signal_sample_is_deterministic:
-    forall f: Nat, r: Nat | f > 0 and f < 96000 and r > 0 and r <= 192000.
-      instrument_signal_sample(f, r) == instrument_signal_sample(f, r)
+    forall f: Nat, r: Nat | f > 0 and f < 96000 and r > 0 and r <= 192000. instrument_signal_sample(f, r) == instrument_signal_sample(f, r)

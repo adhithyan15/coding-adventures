@@ -14,7 +14,8 @@ not hold the shared-crate queue.
 runners, the polyglot rule), [VER04j](VER04j-warrant-v1-extensions.md) (header,
 fixed-width types, WX-B bitwise, WX-E tables), [VER04k](VER04k-warrant-v1-wave4.md)
 (WX-D folds, WX-F drivers), [VER04l](VER04l-warrant-text.md) (style, header `v2`,
-stream tags `60`/`61`, LP-012 kinds), [VER30](VER30-warrant-expansion-roadmap.md)
+stream tags `60`/`61`, LP-012 kinds), [VER04i](VER04i-polyglot-warrant-evidence.md)
+section 2.6.1 (the stream-tag and diagnostic-code registry), [VER30](VER30-warrant-expansion-roadmap.md)
 (the frozen features), [VER-BACKLOG](VER-BACKLOG.md) LP-012.
 
 **Section references.** As in VER04l, where this document needs a corpus or
@@ -397,9 +398,13 @@ approximation predicates. Their **semantics are fixed, written out and printed**
   adjacent representable values differ by exactly 1 (the zeros coincide).
   `ulp_dist(x, y) = |m(x) - m(y)|` over `Int` (exact; no overflow, because `Int`
   is mathematical). **`ulp_dist` is infinite, and `within_ulps` false, if either
-  argument is NaN**, and between a finite value and an infinity it is the
-  difference of the mapped integers (so `max_finite` and `+inf` are 1 apart: that
-  is stated, not hidden; FL-14 asks whether it should be stricter).
+  argument is NaN**, and also if exactly one argument is an infinity (a finite
+  value against an infinity, or `+inf` against `-inf`). `within_ulps` holds at an
+  infinity only when both arguments are the **same** infinity, whatever `k`
+  (decision FL-14, 2026-11-16: the strict rule, the same as `rel_err_le`; a
+  subject that overflows where the reference is finite, or the reverse, is a
+  defect and no tolerance hides it). `m` is therefore defined on the finite
+  values only, and `max_finite` and `+inf` are **not** one step apart.
   `within_ulps(x, y, k)` holds iff `ulp_dist(x, y) <= k`,
   `k: Nat`, `k < 2^64`, `k` a literal or a bound parameter (never computed from the
   subject). Three consequences an author must know, printed with the claim:
@@ -428,9 +433,9 @@ approximation predicates. Their **semantics are fixed, written out and printed**
   correctly rounded values with its generator pinned (the table is data; its
   hash is in the manifest); (iii) another subject operation of the same lane
   (differential claims only; labelled `differential`, never `reference`).
-* **The label carries the tolerance**: `sampled  f64_edge(214)  approx(<=4 ulp)`
+* **The label carries the tolerance**: `sample  f64_edge(214)  approx(<=4 ulp)`
   or `... approx(rel<=1/2^50)`. A tolerance claim **never publishes as a
-  bit-exact contract** under VER29 and never lifts a `sampled` label.
+  bit-exact contract** under VER29 and never lifts a `sample` label.
 * **The vacuity guard.** Every claim `within_ulps(.., k)` must fail the fault
   `drift(k+1)` (13), which replaces the subject's result by the value `k+1` steps
   from the **reference** (not from the subject's own result: a subject already
@@ -539,12 +544,14 @@ The model is the oracle, so it is verified harder than anything it checks.
    This is a nightly job, not per-PR, and it is the evidence behind the label
    `bounded-set` (not `full`) for the binary operations. It runs on **one** model
    (minutes per operation in compiled code); the other lanes inherit it through
-   item 3, which is why item 3 must hold exactly. Cost: FL-10.
+   item 3, which is why item 3 must hold exactly. Cost: FL-10. The model's
+   exhaustive self-check runs on the **Rust** model only (decision FL-10,
+   2026-11-16); no other lane runs it.
 2a. **Binary64 has no exhaustive check, and that is printed.** The binary64
    operations get the vectors (item 1), the rational reference (item 2b) and a
    nightly hardware cross-check on a seeded pseudo-random and stratified set
-   (seed and count in the manifest, kind `sampled`). The report line for the
-   model says so: `softfloat: f32 unary full, f32 binary bounded-set, f64 sampled`.
+   (seed and count in the manifest, kind `sample`). The report line for the
+   model says so: `softfloat: f32 unary full, f32 binary bounded-set, f64 sample`.
 2b. **An exact rational reference.** The corpus generator carries a second
    implementation of every operation that is structurally unlike the softfloat:
    decode the operands to exact rationals with unbounded integers, compute the
@@ -661,7 +668,7 @@ corpus or manifest.** This is decision (c) and a mechanical check.
 
 | Place | Encoding |
 |---|---|
-| canonical stream (VER04i 2.6) | `62` then 4 bytes little-endian for `F32`; `63` then 8 bytes little-endian for `F64`. (`60`/`61` are VER04l's; `62`/`63` are the next free tags; FL1-S0 reconfirms against the then-current VER04i/l/m.) |
+| canonical stream (VER04i 2.6) | `62` then 4 bytes little-endian for `F32`; `63` then 8 bytes little-endian for `F64`. (`60`/`61` are VER04l's. `62`/`63` are this document's, as recorded in the registry of VER04i section 2.6.1; VER04r, which first claimed `62` for variants, moved to `64`/`65` on 2026-11-16. FL1-S0 reconfirms against the registry.) |
 | `cases.tfv` (TF01 TFV) | a TFV string value `S` holding the lowercase hex bit pattern, 8 digits for `F32`, 16 for `F64`, no `0x` prefix, under a key that carries the width. **Not** a TFV integer, because a U64 parsed as a signed 64-bit integer by a lane would be a defect for patterns above 2^63 |
 | `corpus.json` | a JSON **string** of the same hex; a JSON number, or a string that is not exactly 8/16 **lowercase** hex digits (uppercase, a `0x` prefix, a sign, whitespace), is a **corpus error**, so one value has one spelling and hashes are stable |
 | manifest result fields | same hex strings; tolerances `k`, `num`, `den` are integers |
@@ -701,8 +708,8 @@ TF01 and VER04i fix at FL1-S2).
 
 | Descriptor | Order and content | Kind |
 |---|---|---|
-| `f32_edge` | the edge list below, in order | `sampled` |
-| `f64_edge` | the same shapes in binary64 | `sampled` |
+| `f32_edge` | the edge list below, in order | `sample` |
+| `f64_edge` | the same shapes in binary64 | `sample` |
 | `f32_all` | all 2^32 patterns ascending as unsigned integers | `full`, only under 11.3 |
 | `f32_set(name)` | a named, enumerable, **finite** set, such as the TestFloat level-1 set or the stratified binary32 set of 8.2 | `bounded-set` |
 | `f64_set(name)` | a named finite set of the same kind | `bounded-set` |
@@ -736,9 +743,9 @@ recorded as `domain_sha256` in the manifest. `f64_edge` is about 214 entries,
 
 | Claim shape | Kind | Printed as |
 |---|---|---|
-| any binder `F64`, any domain | never `full` | `sampled` (edge) or `bounded-set` (named set) |
+| any binder `F64`, any domain | never `full` | `sample` (edge) or `bounded-set` (named set) |
 | `F64` binder, `f64_all` | **W0706**: not constructible | refused: 2^64 exceeds every budget |
-| one `F32` binder, `f32_edge` | `sampled` | `x: F32 edge(190)` |
+| one `F32` binder, `f32_edge` | `sample` | `x: F32 edge(190)` |
 | one `F32` binder, a named `f32_set` | `bounded-set` | `x: F32 set(<name>, n)` |
 | one `F32` binder, `f32_all`, declared 2^32 (11.3) | `full` | `x: F32 full(4294967296)` |
 | two or more float binders | never `full` | the weaker of the binders' kinds, and for `f32_all` x anything W0706 (2^64) |
@@ -747,8 +754,8 @@ recorded as `domain_sha256` in the manifest. `f64_edge` is about 214 entries,
 
 A claim's kind is the **weakest binder kind** (VER04l 6.1); a refinement or
 demotion never improves it. **Floats add no new kind**; they use LP-012's
-`full`/`bounded-set`/`sampled` and never print an unqualified "exhaustive".
-(The owner's shorthand "sample" is the existing `sampled`.) The honest sentence an
+`full`/`bounded-set`/`sample` and never print an unqualified "exhaustive".
+The honest sentence an
 `F64` claim may print is "N edge points, M sets", never "all doubles".
 
 ### 11.3 The declared 2^32 domain for `F32`
@@ -777,9 +784,15 @@ and **only** under these conditions, all mechanical:
    in its manifest, and `full` is printed only when the shards of **one** source
    hash and **one** `float_env_sha256` tile `[0, 2^32)` exactly, with no gap and
    no overlap; shards from different nights or builds never combine;
-5. the lane's float probe passed in that same run (9).
+5. the lane's float probe passed in that same run (9);
+6. the lane is a **compiled lane** (decision FL-10, 2026-11-16; the compiled set
+   of VER04r section 5: rust, go, c, cpp, java, kotlin, csharp, fsharp, swift,
+   haskell, ocaml, dart-native). An interpreted lane (Python, Ruby,
+   Perl, Lua, Elixir) prints `not-run` for an `f32_all` claim; it is never queued
+   and never demoted silently. The model's own exhaustive self-check (8.2 item 2)
+   runs on the Rust model only.
 
-Anything not meeting all five is demoted to `sampled` or refused with W0706; there
+Anything not meeting all six is demoted to `sample` or refused with W0706; there
 is no path by which an unmet condition still prints `full`. `F64` has no such
 path at all.
 
@@ -803,7 +816,7 @@ lane's goodwill. A lane that does not (yet) implement them has no float claims:
 |---|---|
 | **C, C++** | `-ffp-contract=off`, no `-ffast-math`/`-Ofast`/`-funsafe-math-optimizations`/`-fassociative-math`/`-ffinite-math-only`; `-fno-fast-math` explicit; `FLT_EVAL_METHOD == 0` asserted at compile time and probed at run time; `-msse2 -mfpmath=sse` on x86 (x87 targets, 32-bit x86 without SSE2, are **refused**); `-frounding-math` NOT used because the default is RNE; `-fno-builtin` is not required but the probe's P11 detects constant folding. Compilers pinned (`gcc -std=c11`, `clang`); MSVC `/fp:precise` or `/fp:strict`, never `/fp:fast`; Intel `icx`/`icc` default to a fast model and need `-fp-model=precise`. FTZ/DAZ bits in MXCSR are probed (P3/P4) because `-ffast-math` and some libraries set them at load time. C's out-of-range float-to-integer cast is undefined: a subject that uses one has no portable contract (15) |
 | **Rust** | no fusion by default (Rust never contracts); i586/x87 targets refused (probed); `f32`/`f64` bit-casts via `to_bits`/`from_bits`; NaN bits are not guaranteed (hence `same`); `payloads` declared per target; `std` libm calls are subjects only |
-| **Go** | the spec **permits** fusing `x*y + z`, for `float32` and `float64`, and the compiler does on arm64, ppc64, s390x, riscv64 and others; there is **no flag** to turn it off, so on those targets P2 fails and Go floats are `not-live` (FL-16). Constant expressions are evaluated exactly at compile time, unlike the same expression at run time (P11). An out-of-range `int(x)` is implementation-defined and differs between amd64 and arm64; the explicit `float64(x*y) + z` conversion prevents fusion in a hand-written model but the probe P2 is the arbiter, and a fused build **fails honestly** (`not-live`, not a workaround). `math.Float64bits`/`Float64frombits` for I/O. `math.FMA` is the subject for `fma` |
+| **Go** | the spec **permits** fusing `x*y + z`, for `float32` and `float64`, and the compiler does on arm64, ppc64, s390x, riscv64 and others; there is **no flag** to turn it off, so on those targets P2 fails and Go floats are `not-live` (FL-16). **Go float evidence is amd64-only** (decision FL-16, 2026-11-16): the Go lane's manifest records `GOARCH`, evidence from any other architecture is not float evidence, and the report says so; a subject written with explicit `float64(x*y)` conversions does not opt in. Constant expressions are evaluated exactly at compile time, unlike the same expression at run time (P11). An out-of-range `int(x)` is implementation-defined and differs between amd64 and arm64; the explicit `float64(x*y) + z` conversion prevents fusion in a hand-written model but the probe P2 is the arbiter, and a fused build **fails honestly** (`not-live`, not a workaround). `math.Float64bits`/`Float64frombits` for I/O. `math.FMA` is the subject for `fma` |
 | **Java, Kotlin (JVM)** | strict IEEE semantics since Java 17 (JEP 306); **Java 16 and older and Kotlin targeting them are refused** unless the class is `strictfp` and the JVM option set is probed; `Float.floatToRawIntBits` (never `floatToIntBits`, which canonicalises NaN) and `Double.doubleToRawLongBits`; `Math.fma` for `fma`; `StrictMath` vs `Math` is a *subject* choice, never an oracle; Kotlin's `Float`/`Double` use the same raw-bits functions |
 | **C#, F#** | .NET Core 3.0+ and .NET 5+ only (RyuJIT, SSE2, IEEE-conforming); the legacy x87 JIT (.NET Framework 32-bit) refused; `BitConverter.DoubleToInt64Bits`/`SingleToInt32Bits`; `Math.FusedMultiplyAdd`; JIT tiering is probed by P11 (opaque inputs) |
 | **JS/TS (Node, Bun, Deno), Dart web** | **only binary64 exists**; `F64` is `number`; `F32` is computed as `Math.fround(op(...))` after **each** `+ - * / sqrt` of `Math.fround`ed operands, which is *exact* by the double-rounding-innocuity theorem for these operations (53 >= 2*24 + 2), and is **not** valid for `fma` or for any chain narrowed only at its end. **JavaScript has no `fma` at all**, in either width: a subject `fma` binding does not exist in these lanes (a documented `not-live` row), and a subject that emulates one is an ordinary subject checked against the model. An `F32` lives in a `number`, so signalling binary32 NaNs are quieted in transit: `payloads=lost` for `F32`. Floats cross as `BigInt` bits through `DataView` (`setBigUint64`/`getFloat64`), never as `number` parsed from text; engines may rewrite NaN payloads, so `payloads=lost` unless P8 proves otherwise; Dart web is the same; Dart VM is native. `Number` is never used as a corpus value type |
@@ -934,7 +947,13 @@ assumption is **false today**, and it changes what the pilot must do first:
 
 None of this is a reason to drop `trig`: a pilot that exposes five real cross-port
 divergences before any tool runs is doing its job. It is a reason to **order the
-work** (FL-15):
+work** (FL-15, decided 2026-11-16: the ports converge on one reference
+algorithm, as separate work with its own specification first, every port changed
+in its own PR, and **the `trig` pilot waits for it**; backlog row TRIG-CONV):
+
+Under that decision all three stages below run **after** convergence; the text
+that follows keeps the stage structure but no stage starts before TRIG-CONV is
+done.
 
 * **Stage A, bit-exact on the smallest op.** `radians` and `degrees`
   (`deg * PI / 180`, one multiply and one divide, no reduction) are claimed
@@ -960,7 +979,7 @@ work** (FL-15):
 Pilot obligations (the acceptance for FL1-S6):
 
 1. Every bit-exact claim (Stage A, and `sin_bit_exact` once Stage C lands) is kind
-   `sampled  f64_edge(214)`; **never** `full`.
+   `sample  f64_edge(214)`; **never** `full`.
 2. `sin_accurate` carries `approx(<=4 ulp)` and passes the `drift(5)` vacuity guard.
 3. The probe is required in every lane that claims `trig`; a Go arm64 build with
    fusion on is expected to be `not-live` (a result, not a failure of the spec).
@@ -1001,7 +1020,7 @@ weight and that is stated, not hidden.
 | FL1-S3 | the exhaustive binary32 nightly cross-check job (C reference build, SSE2) and the `f32_all` streaming domain (11.3), `W0706` for the rest | a deliberately wrong model is caught; per-PR runs print `not-run` for `full` |
 | FL1-S4 | tolerance predicates (`within_ulps`, `rel_err_le`), the label printing, the `compare` key on bindings | `drift(k+1)` guard fires; exact-rational check has no float arithmetic |
 | FL1-S5 | first two lanes (Python and Rust) end to end: model, probe, runner, faults; the manifest fields (`float_env_sha256`, `payloads`) and the report rows | both lanes pass the pilot; the bad-environment simulator fails each probe |
-| FL1-S6 | pilot `trig` in the hazard-class lanes of 15, in the stages of 15.1: A (`radians`/`degrees` bit-exact, after the one-line port alignments), B (`sin`/`cos` tolerance); then the remaining lanes one at a time. Stage C (bit-exact `sin`/`cos`) waits for the `trig` convergence specification and port changes (FL-15) and is not an FL1 exit condition | pilot acceptance 1 to 5 for the stages claimed |
+| FL1-S6 | pilot `trig` in the hazard-class lanes of 15, in the stages of 15.1: A (`radians`/`degrees` bit-exact, after the one-line port alignments), B (`sin`/`cos` tolerance); then the remaining lanes one at a time. the whole pilot, Stage C (bit-exact `sin`/`cos`) included, waits for the `trig` convergence specification and the per-port changes (FL-15, TRIG-CONV, decided 2026-11-16) | pilot acceptance 1 to 5 for the stages claimed |
 | FL1-S7 | convenience slice: `frem`, `ffloor`/`fceil`/`ftrunc`/`fround` over bits, `fmin`/`fmax` with the IEEE 2019 definitions (decision FL-6) | each defined as exact bit-level models with vectors |
 | FL2 | float to text and back (needs T1; version-pinned) | separate specification |
 
@@ -1020,7 +1039,9 @@ This document does not edit `VER-BACKLOG.md` or VER30. The rows it needs:
 | a VER13 assumption | A-FLOAT-ENV: "the lane's float probe is complete for the hazards the lane can have" (discharged per lane by the probe set of 9.1) |
 | a VER04i amendment request | the stream tags `62`/`63`; TFV `S`-hex encoding of floats; per-lane `float_env=`, `payloads=`, `nonfinite=` keys; the probe files |
 
-## 19. Open questions
+## 19. Open questions and decisions
+
+FL-10, FL-14, FL-15 and FL-16 were resolved by the owner on 2026-11-16 and are decisions; the other rows keep their defaults.
 
 | # | Question | Default |
 |---|---|---|
@@ -1033,17 +1054,18 @@ This document does not edit `VER-BACKLOG.md` or VER30. The rows it needs:
 | FL-7 | `f_to_int` truncates toward zero; should rounding variants exist? | truncate only, others written over `fclass` and `f64_of_int` |
 | FL-8 | The vector source: Berkeley TestFloat (BSD-3 licence) vendored, or a generator we own? | vendor generated vector files with provenance; the generator is not vendored; the licence is checked at FL1-S1 |
 | FL-9 | Should an exactly-representable decimal literal (`1.5f64`) be accepted for readability? | no in FL1; bits only; reconsider with FL2 |
-| FL-10 | A nightly `f32_all` cost: acceptable at about 2^32 cases per lane per op? | one op per lane per night, sharded across the nightly matrix (11.3 item 4); if it exceeds the budget, binary32 `full` is simply never claimed in that lane (fail closed). Review: the **model's** own exhaustive check (8.2 item 2) runs on the Rust model only and costs minutes per operation. A **subject** `f32_all` claim runs model and subject per case: minutes in compiled lanes, but several hours per operation in the interpreted ones (Python, Ruby, Perl, Lua, Elixir at microseconds per softfloat call). Recommended: allow `f32_all` in compiled lanes only at first; interpreted lanes print `not-run` for it rather than queueing nights of work |
+| FL-10 | A nightly `f32_all` cost: acceptable at about 2^32 cases per lane per op? | **Resolved 2026-11-16 (owner).** Accepted for compiled lanes only. `f32_all` claims run on compiled lanes only (11.3 item 6); interpreted lanes print `not-run`. The model's exhaustive self-check runs on the Rust model only (8.2 item 2). One op per lane per night, sharded across the nightly matrix (11.3 item 4); if a lane exceeds the budget, binary32 `full` is never claimed in it (fail closed). |
 | FL-11 | Is the NaN rule "arithmetic returns the canonical NaN" too strong for lanes that propagate payloads (`payloads=preserved` subject)? | the claim is under `same`; payload claims only on bit-ops; revisit if a customer needs `fadd` payloads |
 | FL-12 | Should the shipping gate (VER00) treat a `not-live` float rung as blocking per lane or per package? | per lane, reported; the package-level policy is VER00's, not this document's |
 | FL-13 | Are the probes sufficient? | the first review added P12 (x87 with 53-bit precision control), P13 (unmasked exceptions), the inexact case of P3, the isolated-input case of P4, division in P7, per-width payload checks in P8, and the where-and-when rules of 9.1. Still open: a probe cannot show what the compiler did to a **given** subject expression (rule 3 of 9.1); the remaining reviewers are asked to attack that |
-| FL-14 | Should `within_ulps` treat an infinity as one step past the largest finite (5.4), or hold only when both are the same infinity? | one step past, as drafted. Review recommends the **strict** rule: a subject that overflows where the reference is finite (or the reverse) is usually a real defect, and the strict rule matches `rel_err_le` |
-| FL-15 | The `trig` ports do not share one algorithm (15.1). Converge them, or weaken the pilot? | stage the pilot A, B, C as in 15.1. Review recommends converging the ports under a `trig` specification as separate work; it changes result bits in some ports, which is an owner call |
-| FL-16 | Go fuses on arm64, ppc64, s390x and riscv64 with no flag to stop it, so P2 makes every Go float claim `not-live` there. Accept, or allow a subject written with explicit `float64(x*y)` conversions to opt in? | accept: Go float evidence comes from amd64 only, and the report says so. An opt-in would make the probe depend on trusting the subject's source |
+| FL-14 | Should `within_ulps` treat an infinity as one step past the largest finite (5.4), or hold only when both are the same infinity? | **Resolved 2026-11-16 (owner).** The strict rule. `within_ulps` at an infinity holds only when both arguments are the same infinity; a finite value against an infinity is never within any `k` (5.4). It matches `rel_err_le`. |
+| FL-15 | The `trig` ports do not share one algorithm (15.1). Converge them, or weaken the pilot? | **Resolved 2026-11-16 (owner).** Converge. The `trig` ports are converged on one reference algorithm as separate work (backlog row TRIG-CONV): a `trig` specification first, then every port updated in its own PR. The floats pilot waits for it (15.1, FL1-S6). It changes result bits in some ports; the owner has accepted that. |
+| FL-16 | Go fuses on arm64, ppc64, s390x and riscv64 with no flag to stop it, so P2 makes every Go float claim `not-live` there. Accept, or allow a subject written with explicit `float64(x*y)` conversions to opt in? | **Resolved 2026-11-16 (owner).** Accept. Go float evidence is amd64-only, and the report says so (12.2). No opt-in for explicit `float64(x*y)` conversions: it would make the probe depend on trusting the subject's source. |
 
 ## 20. Specification change record
 
 | Date | Change |
 |---|---|
 | 2026-11-16 | First draft: lifts the freeze (owner decision a); fixes RNE (3.2); stream tags `62`/`63`; floats join header `v2` |
-| 2026-11-16 | Adversarial review 1 (numerics, lanes, security). **Semantics:** zero-sign table for every operation, `fma` included (3.4); overflow threshold and tininess (3.2); signalling NaNs and `fma(0, inf, c)` (3.3); `total_le` defined by an integer key (4.3); `f32_of_f64` subnormal results are rounded, not exact (5.3); `f_of_int` "width by context" replaced by `f32_of_int` and `f64_of_int`. **Tolerance:** same-width rule, the unit is representable steps, blindness to the sign of zero, infinities and NaN references in `rel_err_le`, caps on `k`, `num`, `den`; `drift` and `rel-drift` are measured from the reference, not from the subject's result; vacuity is W0601. **Model verification:** an exact rational reference; `f32_of_f64` checked on rounding boundaries instead of exact values; binary64 printed as `sampled`; cross-lane agreement named a transcription check. **Probes:** P1 made concrete, P3, P4, P7, P8, P10 corrected, P12 and P13 added, the probe bracketed around the run in the subject's build, process and thread. **Lanes:** JavaScript has no `fma`; Python `struct` raises on binary32 overflow and Python, Perl and Ruby raise instead of returning non-finite values; Go targets and constants; a non-existent GHC flag removed. **Compatibility:** `f32(0x..)` in a v1 document is an ordinary call, not W0101 (byte identity); all new names reserved in v2; no new diagnostic code (`W0301w` removed, the `secret` refusal is W0401, uncaught controls follow VER04i 4). **Pilot:** the `trig` ports differ in term count, range reduction and out-of-range behaviour, and `sin(-0)` is probably `+0`; the pilot is staged (15.1). New open questions FL-14 to FL-16 |
+| 2026-11-16 | Adversarial review 1 (numerics, lanes, security). **Semantics:** zero-sign table for every operation, `fma` included (3.4); overflow threshold and tininess (3.2); signalling NaNs and `fma(0, inf, c)` (3.3); `total_le` defined by an integer key (4.3); `f32_of_f64` subnormal results are rounded, not exact (5.3); `f_of_int` "width by context" replaced by `f32_of_int` and `f64_of_int`. **Tolerance:** same-width rule, the unit is representable steps, blindness to the sign of zero, infinities and NaN references in `rel_err_le`, caps on `k`, `num`, `den`; `drift` and `rel-drift` are measured from the reference, not from the subject's result; vacuity is W0601. **Model verification:** an exact rational reference; `f32_of_f64` checked on rounding boundaries instead of exact values; binary64 printed as `sample`; cross-lane agreement named a transcription check. **Probes:** P1 made concrete, P3, P4, P7, P8, P10 corrected, P12 and P13 added, the probe bracketed around the run in the subject's build, process and thread. **Lanes:** JavaScript has no `fma`; Python `struct` raises on binary32 overflow and Python, Perl and Ruby raise instead of returning non-finite values; Go targets and constants; a non-existent GHC flag removed. **Compatibility:** `f32(0x..)` in a v1 document is an ordinary call, not W0101 (byte identity); all new names reserved in v2; no new diagnostic code (`W0301w` removed, the `secret` refusal is W0401, uncaught controls follow VER04i 4). **Pilot:** the `trig` ports differ in term count, range reduction and out-of-range behaviour, and `sin(-0)` is probably `+0`; the pilot is staged (15.1). New open questions FL-14 to FL-16 |
+| 2026-11-16 | Owner decisions (VER30 decisions 16, 18 and 19): FL-14 `within_ulps` is strict at infinity (5.4); FL-15 the `trig` ports converge first, as separate work, and the pilot waits (15.1, FL1-S6, backlog TRIG-CONV); FL-16 Go float evidence is amd64-only (12.2); FL-10 `f32_all` runs on compiled lanes only and the model self-check on Rust only (8.2, 11.3 item 6). Stream tags `62`/`63` kept; VER04r moved to `64`/`65` (VER04i 2.6.1 registry) |
