@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/discovery"
+	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/globmatch"
 )
 
 func TestWarrantGrammarInputsSelectOnlyTheirConsumer(t *testing.T) {
@@ -117,12 +118,18 @@ func TestWarrantLaneArtifactsSelectGrammarAndAssuranceConsumers(t *testing.T) {
 	for _, input := range []string{
 		"code/specs/fixtures/ct-compare-warrant-v10/corpus.json",
 		"code/specs/fixtures/ct-compare-warrant-v1/consumers.backup.json",
-		"docs/code/specs/ct-compare.warrant",
 	} {
 		got, err := repositoryInputConsumersForChange([]string{input}, packages, "all")
 		if err != nil || len(got) != 0 {
 			t.Errorf("lookalike %s: got %v, err %v", input, got, err)
 		}
+	}
+	// A lookalike *path* to the ct-compare document is still a .warrant file,
+	// so it selects the grammar guard (and only that): the guard checks every
+	// document wherever it lives.
+	got, err = repositoryInputConsumersForChange([]string{"docs/code/specs/ct-compare.warrant"}, packages, "all")
+	if err != nil || !reflect.DeepEqual(got, map[string]bool{"rust/warrant-grammar": true}) {
+		t.Errorf("nested ct-compare.warrant: got %v, err %v", got, err)
 	}
 }
 
@@ -348,9 +355,10 @@ func TestWarrantOracleInputsSelectOnlyTheOracle(t *testing.T) {
 			t.Fatalf("%s did not select the oracle: %v, err %v", input, got, err)
 		}
 	}
-	// A spec only the oracle reads selects nothing else in this table.
+	// A spec the oracle reads selects the oracle and, because every .warrant document
+	// does (isWarrantDocument), the grammar guard; nothing else in this table.
 	got, err := repositoryInputConsumersForChange([]string{"code/specs/gf256.warrant"}, packages, "all")
-	if err != nil || !reflect.DeepEqual(got, map[string]bool{"python/warrant-oracle": true}) {
+	if err != nil || !reflect.DeepEqual(got, map[string]bool{"python/warrant-oracle": true, "rust/warrant-grammar": true}) {
 		t.Fatalf("gf256 spec: got %v, err %v", got, err)
 	}
 	for _, input := range []string{
@@ -360,6 +368,77 @@ func TestWarrantOracleInputsSelectOnlyTheOracle(t *testing.T) {
 		got, err := repositoryInputConsumersForChange([]string{input}, packages, "all")
 		if err != nil || got["python/warrant-oracle"] {
 			t.Fatalf("%s selected the oracle: %v, err %v", input, got, err)
+		}
+	}
+}
+
+// A .warrant document anywhere in the repository selects rust/warrant-grammar,
+// whose v0_compat test parses and checks every one of them. Without this, a
+// PR that adds an invalid document never runs the only test that would catch
+// it (#19417-#19474), and a later unrelated PR fails on the stale file.
+func TestAnyWarrantDocumentSelectsOnlyTheGrammarGuard(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "rust/warrant-grammar", Language: "rust"},
+		{Name: "rust/ca-assurance-report", Language: "rust"},
+		{Name: "rust/ct-compare", Language: "rust"},
+		{Name: "python/x", Language: "python"},
+	}
+	want := map[string]bool{"rust/warrant-grammar": true}
+	for _, input := range []string{
+		"code/specs/foo.warrant",
+		"code/packages/python/x/x.warrant",
+		"code/packages/rust/y/y.warrant",
+		"code/packages/typescript/z/src/deep/z.warrant",
+		"docs/outside-code.warrant",
+		"a.warrant",
+	} {
+		if !isWarrantDocument(input) {
+			t.Errorf("%s: not recognised as a Warrant document", input)
+		}
+		got, err := repositoryInputConsumersForChange([]string{input}, packages, "all")
+		if err != nil || !reflect.DeepEqual(got, want) {
+			t.Errorf("%s: got %v, err %v; want only rust/warrant-grammar", input, got, err)
+		}
+		if got, err := repositoryInputConsumersForChange([]string{input}, packages, "python"); err != nil || len(got) != 0 {
+			t.Errorf("%s: language filtering: %v, %v", input, got, err)
+		}
+	}
+	for _, input := range []string{
+		"code/specs/foo.warrant.draft",
+		"code/packages/python/x/x.warrant.draft",
+		"code/specs/foo.warrant.bak",
+		"code/specs/foo.warrants",
+		"code/specs/.warrant",
+		"code/specs/foo.Warrant",
+		"code/specs/warrant/readme.md",
+		"code/specs/foo.warrant/readme.md",
+		`code\specs\foo.warrant`,
+	} {
+		if isWarrantDocument(input) {
+			t.Errorf("%s: wrongly recognised as a Warrant document", input)
+		}
+		got, err := repositoryInputConsumersForChange([]string{input}, packages, "all")
+		if err != nil || len(got) != 0 {
+			t.Errorf("%s: must select nothing, got %v, err %v", input, got, err)
+		}
+	}
+	// Fail closed when the guard is missing from discovery.
+	if _, err := repositoryInputConsumersForChange([]string{"code/specs/foo.warrant"}, packages[1:], "all"); err == nil {
+		t.Fatal("missing Warrant guard must fail closed")
+	}
+}
+
+// The declared glob must agree with the predicate, so the Kiln export keys the
+// guard on the same files change detection selects it for.
+func TestWarrantDocumentGlobAgreesWithPredicate(t *testing.T) {
+	for _, c := range []string{
+		"code/specs/foo.warrant", "code/packages/python/x/x.warrant", "a.warrant", "docs/a.warrant",
+		"code/specs/foo.warrant.draft", "code/specs/.warrant", "code/specs/foo.Warrant",
+		"code/specs/foo.warrant/readme.md", "code/specs/foo.warrants",
+	} {
+		hit := globmatch.MatchPath(warrantDocumentGlob, c)
+		if want := isWarrantDocument(c); hit != want {
+			t.Errorf("%q: glob=%v predicate=%v", c, hit, want)
 		}
 	}
 }

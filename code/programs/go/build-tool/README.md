@@ -691,6 +691,15 @@ one-line layout edit. Selection uses raw Git paths (deletions count), honors
 It applies to Git-diff mode only; `-force` and the hash fallback already
 build everything they consider changed.
 
+`rust/warrant-grammar` is a second guard of this kind. Its `v0_compat` test
+parses and checks every `.warrant` document in the repository, wherever it
+lives, so any changed path ending in `.warrant` (the glob `**/?*.warrant`, a
+bare `.warrant` excluded) selects it. A PR that adds an invalid document is
+therefore checked by the PR that adds it, instead of failing a later unrelated
+PR that rebuilds `warrant-grammar`. `*.warrant.draft` files are not documents
+and do not select it. Only that one package is selected, with its
+prerequisites, not the Warrant adopters.
+
 ### Package-local metadata does not rebuild dependents
 
 Adding or editing a package's root `CHANGELOG.md`, a direct

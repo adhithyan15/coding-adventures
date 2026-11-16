@@ -340,7 +340,9 @@ reject a tag it does not know).
 | `63` | `F64` | VER04p 10 | merged 2026-11-16 |
 | `64` | tuple, record | VER04r 2.4 | renumbered 2026-11-16 (was `60`) |
 | `65` | variant | VER04r 2.4 | renumbered 2026-11-16 (was `62`) |
-| `66` to `79` | free; the next specification (VER04o collections, VER04s recursive types) takes from `66` | none | free |
+| `66` | `Set` | VER04o 8.2 | spec only (2026-11-16) |
+| `67` | `Map` | VER04o 8.2 | spec only (2026-11-16) |
+| `68` to `79` | free; the next specification (VER04s recursive types, if it needs one) takes from `68` | none | free |
 | `80` | opaque recipe | VER04n 9.1 | merged 2026-11-16 |
 | `81` | opaque observation tuple | VER04n 9.1 | merged 2026-11-16 |
 | `82` to `8f` | reserved for VER04n | VER04n 9.1 | reserved |
@@ -348,7 +350,7 @@ reject a tag it does not know).
 
 VER04s (recursive types) is expected to need no tag of its own: a value of a
 recursive type is a variant (`65`) whose fields nest. If its design needs one, it
-takes `66`.
+takes `68` (VER04o took `66` and `67`).
 
 **Diagnostic codes** (`W` codes of the Warrant checker and generator).
 
@@ -363,7 +365,8 @@ takes `66`.
 | `W0730` to `W0733` | stateful objects | VER04m | merged |
 | `W0734` to `W0749` | free | none | free |
 | `W0750` to `W0759` | opaque types (`W0750` to `W0753` assigned) | VER04n | merged; the block is reserved |
-| `W0760` and up | free | none | free |
+| `W0760` to `W0769` | collections and generics (`W0760` to `W0765` assigned) | VER04o | spec only (2026-11-16); the block is reserved |
+| `W0770` and up | free | none | free |
 
 On 2026-11-16 the registry was built by reading every specification under
 `code/specs` that allocates either kind. **Stream tags had three collisions**
