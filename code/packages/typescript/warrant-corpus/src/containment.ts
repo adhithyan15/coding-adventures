@@ -54,6 +54,9 @@ export const RESERVED_NAMES: ReadonlySet<string> = new Set([
   "NUL",
   ...Array.from({ length: 9 }, (_, i) => `COM${i + 1}`),
   ...Array.from({ length: 9 }, (_, i) => `LPT${i + 1}`),
+  "CONIN$",
+  "CONOUT$",
+  ...["COM", "LPT"].flatMap((d) => ["\u00b9", "\u00b2", "\u00b3"].map((sup) => d + sup)),
 ]);
 
 /** `A`..`Z` mapped to `a`..`z` and nothing else (`toLowerCase` would fold U+212A to `k`). */
@@ -62,15 +65,19 @@ export function asciiFold(text: string): string {
 }
 
 /**
- * Is this a reserved device name, or a component ending in a dot or space?
- * `CON`, `con`, `CON.txt`, `com1.tar.gz`, `NUL.` and `nul ` are refused;
- * `console.txt`, `COM10`, `LPT0` and `CONx` are ordinary.
+ * Is this win32 component refused: a colon, a trailing dot or space, or a device stem?
+ * A colon means an alternate data stream or device suffix (`CON:`, `nul::$DATA`,
+ * `file.txt:NUL`). The stem is the part before the first dot with trailing
+ * spaces removed, so `CON.txt`, `com1.tar.gz` and `CON .txt` are devices while
+ * `console.txt`, `COM10`, `LPT0` and `CONx` are not. The set has `CONIN$`,
+ * `CONOUT$` and the superscript digits; only `A`..`Z` fold, so those match
+ * exactly, and fullwidth `CON` and `CLOCK$` stay ordinary.
  */
 export function refusedComponent(name: string): boolean {
-  if (name.endsWith(".") || name.endsWith(" ")) return true;
+  if (name.includes(":") || name.endsWith(".") || name.endsWith(" ")) return true;
   const dot = name.indexOf(".");
-  const stem = dot < 0 ? name : name.slice(0, dot);
-  return RESERVED_NAMES.has(asciiFold(stem).toUpperCase()) && /^[\x00-\x7f]*$/.test(stem);
+  const stem = (dot < 0 ? name : name.slice(0, dot)).replace(/ +$/, "");
+  return RESERVED_NAMES.has(stem.replace(/[a-z]/g, (c) => String.fromCharCode(c.charCodeAt(0) - 32)));
 }
 
 /** The slice of a `node:path` module this check needs (`posix` or `win32`). */

@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- **WD-100b security-review follow-up.**  `refused_component` also refuses any win32 child component with a `:`
+  (alternate data streams and device suffixes), takes the reserved stem before the first `.` with trailing spaces
+  trimmed (`CON .txt`), and adds `CONIN$`, `CONOUT$` and `COM`/`LPT` with a superscript 1, 2 or 3.  `CLOCK$` and
+  fullwidth `CON` stay ordinary.  Fixture test now 141 cases.  `effect_certificate.json` regenerated again (only
+  `source_digest`; capabilities unchanged).
 - **WD-100b: ASCII-only win32 folding and reserved names in `lexical_containment`.**  The win32 flavour folded
   names (and the UNC server and share) with `str::to_lowercase`, which is full Unicode (the Kelvin sign equalled
   `k`); it now uses `to_ascii_lowercase`, so every non-ASCII code point is compared exactly and a non-ASCII case

@@ -47,12 +47,15 @@ _DEVICE_PREFIXES = ("\\\\?\\", "\\\\.\\")
 
 
 _ASCII_FOLD = {code: code + 32 for code in range(ord("A"), ord("Z") + 1)}
+_ASCII_UPPER = {code: code - 32 for code in range(ord("a"), ord("z") + 1)}
 
 #: The Windows device names, upper-case (VER04i 9.1, WD-100b).
 RESERVED_NAMES = frozenset(
     {"CON", "PRN", "AUX", "NUL"}
     | {f"COM{n}" for n in range(1, 10)}
     | {f"LPT{n}" for n in range(1, 10)}
+    | {"CONIN$", "CONOUT$"}
+    | {f"{d}{sup}" for d in ("COM", "LPT") for sup in ("\u00b9", "\u00b2", "\u00b3")}
 )
 
 
@@ -62,18 +65,23 @@ def ascii_fold(text: str) -> str:
 
 
 def refused_component(name: str) -> bool:
-    """Is this a reserved device name, or a component ending in a dot or space?
+    """Is this win32 component refused: a colon, a trailing dot/space or a device stem?
 
-    ``CON``, ``con``, ``CON.txt``, ``com1.tar.gz``, ``NUL.`` and ``nul `` are
-    refused; ``console.txt``, ``COM10``, ``LPT0`` and ``CONx`` are ordinary.
-    The part before the first dot is compared with the device names, ASCII
-    case-insensitively (a name that ends in a dot or space is refused first,
-    because Windows strips them and two spellings would name one file).
+    * a colon (``CON:``, ``nul::$DATA``, ``file.txt:NUL``): an alternate data
+      stream or device suffix;
+    * a trailing dot or space: Windows strips them, so two spellings would name
+      one file;
+    * a reserved *stem*: the part before the **first** dot with trailing spaces
+      removed, so ``CON.txt``, ``com1.tar.gz`` and ``CON .txt`` are devices
+      while ``console.txt``, ``COM10`` and ``LPT0`` are not.  The set also has
+      ``CONIN$``, ``CONOUT$`` and the superscript digits (``COM\u00b9``).  Only
+      ``A``..``Z`` fold, so the superscripts match exactly; fullwidth ``CON``
+      and ``CLOCK$`` stay ordinary.
     """
-    if name.endswith((".", " ")):
+    if ":" in name or name.endswith((".", " ")):
         return True
-    stem = ascii_fold(name.split(".", 1)[0])
-    return stem.upper() in RESERVED_NAMES and stem.isascii()
+    stem = name.split(".", 1)[0].rstrip(" ")
+    return stem.translate(_ASCII_UPPER) in RESERVED_NAMES
 
 
 #: A path reduced to ``(anchor, components)``, original case kept.

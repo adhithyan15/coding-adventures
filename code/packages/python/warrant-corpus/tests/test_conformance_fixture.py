@@ -149,9 +149,9 @@ def test_containment_helper_relative_text() -> None:
 def test_reserved_names_and_trailing_dots_are_refused_components() -> None:
     from coding_adventures_warrant_corpus.containment import refused_component
 
-    for name in ("CON", "con", "CON.txt", "NUL.", "nul ", "COM1", "com9.log", "LPT1", "com1.tar.gz", "x."):
+    for name in ("CON", "con", "CON.txt", "NUL.", "nul ", "COM1", "com9.log", "LPT1", "com1.tar.gz", "x.", "CON .txt", "NUL  .tar", "CON:stream", "CON:", "nul::$DATA", "file.txt:NUL", "COM\u00b9", "LPT\u00b2.txt", "CONIN$", "conout$"):
         assert refused_component(name), name
-    for name in ("console.txt", "COM10", "LPT0", "COM0", "CONx", "xCON", ".hidden", "a.CON.b", "\u017fon"):
+    for name in ("console.txt", "COM10", "LPT0", "COM0", "CONx", "xCON", ".hidden", "a.CON.b", "\u017fon", "CONsole", "CLOCK$", "\uff23\uff2f\uff2e", "CONIN$x", "COM\u2074"):
         assert not refused_component(name), name
 
 

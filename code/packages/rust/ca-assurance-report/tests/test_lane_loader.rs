@@ -862,7 +862,7 @@ fn the_shared_containment_fixture_passes_in_both_flavours_on_any_host() {
     .unwrap();
     let doc = JsonValue::parse(&text).unwrap();
     let cases = doc.get("cases").and_then(JsonValue::as_array).unwrap();
-    assert_eq!(cases.len(), 120, "a case added to the fixture must be run");
+    assert_eq!(cases.len(), 141, "a case added to the fixture must be run");
     for case in cases {
         let id = case.get("id").and_then(JsonValue::as_str).unwrap();
         let flavor = match case.get("flavor").and_then(JsonValue::as_str).unwrap() {
@@ -891,18 +891,24 @@ fn win32_refuses_reserved_names_and_folds_ascii_only() {
     let root = r"D:\repo";
     for name in [
         "CON", "con", "CON.txt", "NUL.", "nul ", "COM1", "com9.log", "LPT1", "com1.tar.gz", "x.",
+        "CON .txt", "NUL  .tar", "CON:stream", "CON:", "nul::$DATA", "file.txt:NUL", "COM\u{b9}",
+        "LPT\u{b2}.txt", "com\u{b3}", "CONIN$", "conout$", "CONOUT$.log",
     ] {
         let child = format!(r"{root}\{name}");
         assert_eq!(inside(Win32, root, &child), (false, false), "{name}");
     }
     assert_eq!(inside(Win32, root, r"D:\repo\AUX\x"), (false, false));
     assert_eq!(inside(Win32, root, "D:/repo/AUX/"), (false, false));
-    for name in ["console.txt", "COM10", "LPT0", "COM0", "CONx", "xCON", ".hidden", "a.CON.b"] {
+    for name in [
+        "console.txt", "COM10", "LPT0", "COM0", "CONx", "xCON", ".hidden", "a.CON.b", "CONsole", "CLOCK$",
+        "\u{ff23}\u{ff2f}\u{ff2e}", "CONIN$x", "COM\u{2074}", "a$b",
+    ] {
         let child = format!(r"{root}\{name}");
         assert_eq!(inside(Win32, root, &child), (true, false), "{name}");
     }
     // Reserved names are a win32 rule only; posix keeps them as ordinary names.
     assert_eq!(inside(Posix, "/repo", "/repo/NUL"), (true, false));
+    assert_eq!(inside(Posix, "/repo", "/repo/CON:stream"), (true, false));
     // ASCII folds, everything else is exact.
     assert_eq!(inside(Win32, r"D:\Repo", r"d:\rEPO\x"), (true, false));
     for (a, b) in [

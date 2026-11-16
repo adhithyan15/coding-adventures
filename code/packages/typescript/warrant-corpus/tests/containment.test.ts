@@ -59,10 +59,10 @@ describe("relativeInside", () => {
 
 describe("WD-100b: reserved names and ASCII-only folding", () => {
   it("refuses reserved device names and trailing dots or spaces", () => {
-    for (const name of ["CON", "con", "CON.txt", "NUL.", "nul ", "COM1", "com9.log", "LPT1", "com1.tar.gz", "x."]) {
+    for (const name of ["CON", "con", "CON.txt", "NUL.", "nul ", "COM1", "com9.log", "LPT1", "com1.tar.gz", "x.", "CON .txt", "NUL  .tar", "CON:stream", "CON:", "nul::$DATA", "file.txt:NUL", "COM\u00b9", "LPT\u00b2.txt", "CONIN$", "conout$"]) {
       expect(refusedComponent(name), name).toBe(true);
     }
-    for (const name of ["console.txt", "COM10", "LPT0", "COM0", "CONx", "xCON", ".hidden", "a.CON.b", "\u017fon"]) {
+    for (const name of ["console.txt", "COM10", "LPT0", "COM0", "CONx", "xCON", ".hidden", "a.CON.b", "\u017fon", "CONsole", "CLOCK$", "\uff23\uff2f\uff2e", "CONIN$x", "COM\u2074"]) {
       expect(refusedComponent(name), name).toBe(false);
     }
   });

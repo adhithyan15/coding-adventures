@@ -273,20 +273,31 @@ fn normalize(flavor: PathFlavor, path: &str) -> Option<Normal> {
     }
 }
 
-/// Is this a Windows path component that must be refused: a reserved device
-/// name (`CON`, `PRN`, `AUX`, `NUL`, `COM1`-`COM9`, `LPT1`-`LPT9`, with or
-/// without an extension, ASCII case-insensitively) or a name ending in a dot or
-/// a space (Windows strips them, so two spellings would name one file)?
-/// `console.txt`, `COM10`, `LPT0` and `CONx` are ordinary names.
+/// Is this a Windows path component that must be refused (VER04i 9.1)?  Any
+/// of: a colon (an alternate data stream or device suffix: `CON:`,
+/// `nul::$DATA`, `file.txt:NUL`); a trailing dot or space (Windows strips
+/// them, so two spellings would name one file); or a *stem* that is a device
+/// name.  The stem is the part before the first `.` with trailing spaces
+/// removed (`CON.txt`, `com1.tar.gz` and `CON .txt` are devices).  The set is
+/// `CON`, `PRN`, `AUX`, `NUL`, `COM1`-`COM9`, `LPT1`-`LPT9`, `CONIN$`,
+/// `CONOUT$` and `COM`/`LPT` plus a superscript 1, 2 or 3; only ASCII folds,
+/// so fullwidth `CON` and `CLOCK$` stay ordinary, as do `console.txt`,
+/// `COM10`, `LPT0` and `CONx`.
 fn refused_component(name: &str) -> bool {
-    if name.ends_with('.') || name.ends_with(' ') {
+    if name.contains(':') || name.ends_with('.') || name.ends_with(' ') {
         return true;
     }
-    let stem = name.split('.').next().unwrap_or("").to_ascii_uppercase();
+    let stem = name.split('.').next().unwrap_or("").trim_end_matches(' ');
+    let stem = stem.to_ascii_uppercase();
     match stem.as_str() {
-        "CON" | "PRN" | "AUX" | "NUL" => true,
+        "CON" | "PRN" | "AUX" | "NUL" | "CONIN$" | "CONOUT$" => true,
         _ => {
-            let digit = |rest: &str| matches!(rest.as_bytes(), [b'1'..=b'9']);
+            let digit = |rest: &str| {
+                matches!(
+                    rest,
+                    "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "\u{b9}" | "\u{b2}" | "\u{b3}"
+                )
+            };
             stem.strip_prefix("COM").is_some_and(digit) || stem.strip_prefix("LPT").is_some_and(digit)
         }
     }
