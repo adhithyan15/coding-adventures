@@ -1260,7 +1260,7 @@ is the same digest.
 subject result of §2.5 are not in this fixture; each lane covers them with its
 falsification tests until a later category lands (case files are only *added* to
 `-v1`; changing an expectation means `-v2`). The Go lane (WD-103) merged before the
-fixture existed and adopts it in a follow-up.
+fixture existed and now passes it.
 
 ## 10. Layer C: proofs per lane (not-live)
 
