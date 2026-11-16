@@ -24,12 +24,13 @@ saturated value.  (A Python ``int`` cannot overflow, so the check is explicit.)
 Resource bounds (VER04r section 14)
 -----------------------------------
 * ``MAX_IR_DEPTH = 64``: IR nesting.
-* ``MAX_IR_COST = 2000``: a *static* bound on node evaluations, charging each
-  ``model_call`` its body's full cost.  The IR has no loops or recursion, so
-  this is the whole fuel.  ``cost_model`` selects how an ``if`` is charged:
-  ``"all-branches"`` (the VER04i / VER04r wording and the default: both
-  branches) or ``"taken-path"`` (the larger branch only).  See the README for
-  why the difference matters to ``gf256``.
+* ``MAX_IR_COST = 2000`` (default; a corpus may declare up to 65,536 in
+  ``corpus.profile``): a *static* bound on node evaluations on the **worst path**
+  (VER04r 4.2 rule 6, as amended): one branch of an ``if`` (the larger), each
+  ``model_call`` at its body's cost, memoisation never credited.  The IR has no
+  loops or recursion, so this is the whole fuel.  There is no override other
+  than the profile line.
+* ``MAX_MODEL_DEPTH = 64``: nested model calls (VER04 section 2: 64 active frames).
 * ``MAX_IR_VALUE = 65536``: no ``Bytes`` value an evaluator produces may exceed
   this, checked *before* the allocation (``concat`` of two 40,000-byte values is
   refused, it is not built and then measured).
@@ -49,6 +50,7 @@ from .lower import BOOL, BYTES, FIXED, INT, NAT, _substitute, _unify
 from .lower import _assignable as _strict_assignable
 
 MAX_IR_DEPTH = 64
+MAX_MODEL_DEPTH = 64
 MAX_IR_COST = 2000
 MAX_IR_VALUE = 65_536
 EXACT_BOUND = (1 << 127) - 1
@@ -164,10 +166,17 @@ class Compiled:
 
 
 class Stats:
-    """Counters the evaluator maintains (``wraps``, section 3.3)."""
+    """Counters the evaluator maintains (``wraps``, section 3.3).
+
+    ``wraps`` only moves while ``counting`` is true: the oracle runs one dedicated
+    counting pass per suite (with its own memo table, which stores each pure model
+    call's wrap count and replays it on a hit), so the total never depends on
+    memoisation, suite order or the depth of the run.
+    """
 
     def __init__(self) -> None:
         self.wraps = 0
+        self.counting = False
 
 
 def wrap_to(value: int, bits: int, signed: bool) -> int:
@@ -225,19 +234,13 @@ class Program:
         models: dict[str, ModelDef],
         ops: dict,
         *,
-        cost_model: str = "all-branches",
         stats: Stats | None = None,
         memo: bool = True,
         max_cost: int = MAX_IR_COST,
     ) -> None:
-        if cost_model not in ("all-branches", "taken-path"):
-            raise ValueError("unknown cost model")
         self.models = models
         self.ops = ops
-        self.cost_model = cost_model
-        #: The spec value is 2,000.  A larger value is a *diagnostic* setting: it
-        #: lets the oracle evaluate a document the spec bound would refuse (gf256's
-        #: ``ginv`` costs far more than 2,000) so the finding can be measured.
+        #: 2,000 unless the corpus profile declares more (never above 65,536).
         self.max_cost = max_cost
         self.stats = stats or Stats()
         self._compiled: dict[str, tuple[Compiled, list[str]]] = {}
@@ -246,13 +249,24 @@ class Program:
         self._ctx: int | None = None  # index of the model being compiled
         self._memo_on = memo
         self._memo: dict[str, dict] = {}
+        self._memo_w: dict[str, dict] = {}
         self._memo_size = 0
+        self._depth: dict[str, int] = {}
+        self._dstack: list[list[int]] = []
 
     # -- public ----------------------------------------------------------------
 
     def compile(self, ir: object, tenv: dict[str, A.Ty], allow_subject: bool = True) -> Compiled:
         """Compile a top-level expression and enforce ``MAX_IR_COST`` on it."""
-        c = self._compile(ir, tenv, allow_subject, 0)
+        if self.max_cost > 65_536:
+            raise OracleError("limit", "max_ir_cost exceeds the 65,536 ceiling")
+        self._dstack.append([])
+        try:
+            c = self._compile(ir, tenv, allow_subject, 0)
+        except RecursionError as exc:
+            raise OracleError("limit", "IR nests too deeply") from exc
+        finally:
+            self._dstack.pop()
         if c.cost > self.max_cost:
             raise OracleError("limit", "ir-cost: expression exceeds MAX_IR_COST")
         return c
@@ -271,14 +285,24 @@ class Program:
         if name in self._in_progress:
             raise OracleError("ir", "a model calls itself")
         m = self.models[name]
+        # Compile every earlier model first, in declaration order, so a long chain
+        # of models never recurses (a 400-model chain would exhaust the stack).
+        for earlier in self._order[: self._order.index(name)]:
+            if earlier not in self._compiled and earlier not in self._in_progress:
+                self._model(earlier)
         # Rule 4.2.1: a model may call only models declared *before* it.
         self._in_progress.add(name)
         saved, self._ctx = self._ctx, self._order.index(name)
+        self._dstack.append([])
         try:
             body = self._compile(m.ir, dict(m.params), False, 0)
         finally:
             self._ctx = saved
             self._in_progress.discard(name)
+            callee_depths = self._dstack.pop()
+        self._depth[name] = 1 + max(callee_depths, default=0)
+        if self._depth[name] > MAX_MODEL_DEPTH:
+            raise OracleError("limit", "model calls nest deeper than 64 frames")
         if not _assignable(body.ty, m.ret):
             raise OracleError("ir", "a model body does not have its declared type")
         if body.cost > self.max_cost:
@@ -395,6 +419,9 @@ class Program:
         if self._ctx is not None and self._order.index(name) >= self._ctx:
             raise OracleError("ir", "a model calls itself or a later model (rule 4.2.1)")
         body, pnames = self._model(name)
+        self._dstack[-1].append(self._depth[name])
+        if 1 + self._depth[name] > MAX_MODEL_DEPTH + 1:
+            raise OracleError("limit", "model calls nest deeper than 64 frames")
         m = self.models[name]
         if len(node[2]) != len(m.params):
             raise OracleError("ir", "a model call has the wrong arity")
@@ -410,16 +437,30 @@ class Program:
             p.head in FIXED or p.head in ("Bool", "Nat", "Int", "Bytes") for _, p in m.params
         )
         table = self._memo.setdefault(name, {})
+        table_w = self._memo_w.setdefault(name, {})
         prog = self
+        stats = self.stats
 
         def call(env: dict) -> object:
             args = tuple(f(env) for f in fns)
-            if memo_ok:
-                hit = table.get(args, table)
-                if hit is not table:
-                    return hit
+            if not memo_ok:
+                return body_fn(dict(zip(pnames, args)))
+            if stats.counting:
+                hit = table_w.get(args, table_w)
+                if hit is not table_w:
+                    stats.wraps += hit[1]  # replay the wraps the body performed
+                    return hit[0]
+                before = stats.wraps
+                value = body_fn(dict(zip(pnames, args)))
+                if prog._memo_size < MAX_MEMO:
+                    table_w[args] = (value, stats.wraps - before)
+                    prog._memo_size += 1
+                return value
+            hit = table.get(args, table)
+            if hit is not table:
+                return hit
             value = body_fn(dict(zip(pnames, args)))
-            if memo_ok and prog._memo_size < MAX_MEMO:
+            if prog._memo_size < MAX_MEMO:
                 table[args] = value
                 prog._memo_size += 1
             return value
@@ -464,7 +505,7 @@ class Program:
                 def neg_fixed(env: dict) -> int:
                     x = af(env)
                     r = wrap_to(-x, bits, signed)
-                    if r != -x:
+                    if stats.counting and r != -x:
                         stats.wraps += 1
                     return r
 
@@ -494,8 +535,7 @@ class Program:
             if common is None:
                 raise OracleError("ir", "the branches of an if have no common type")
             cf, tf, ef = c.fn, t.fn, e.fn
-            if self.cost_model == "taken-path":
-                cost = 1 + c.cost + max(t.cost, e.cost)
+            cost = 1 + c.cost + max(t.cost, e.cost)  # worst path: one branch
             return Compiled(common, lambda env: tf(env) if cf(env) else ef(env), cost, subj)
         if tag in ("concat", "take", "drop"):
             return self._bytes_op(tag, kids, cost, subj)
@@ -576,7 +616,7 @@ class Program:
                 r = x & mask
                 if signed and r >= half:
                     r -= span
-                if r != x:
+                if stats.counting and r != x:
                     stats.wraps += 1
                 return r
 
@@ -651,10 +691,103 @@ def compile_calls(prog: Program, ir: object, tenv: dict) -> int | Callable:
                 runs_when = (lambda v: not v) if tag == "or" else (lambda v: bool(v))
                 return lambda env: (rc(env) if callable(rc) else rc) if runs_when(lf(env)) else 0
             return count(left, depth + 1)
+        if tag == "model_call":
+            # The arguments are IR; the name is not.  ``inc(bump(a))`` has one call.
+            return _sum(0, [count(a, depth + 1) for a in node[2]])
         children = [count(c, depth + 1) for c in node[1:] if isinstance(c, list)]
         return _sum(0, children)
 
     return count(ir)
+
+
+_ARITH_TAGS = frozenset({"add", "sub", "mul", "neg"})
+
+
+def may_wrap(prog: Program, ir: object, _seen: set | None = None) -> bool:
+    """Could evaluating ``ir`` (or a model it calls) perform ``+ - *`` or unary minus?"""
+    seen = _seen if _seen is not None else set()
+    stack = [ir]
+    while stack:
+        node = stack.pop()
+        if not (isinstance(node, list) and node and isinstance(node[0], str)):
+            continue
+        tag = node[0]
+        if tag in _ARITH_TAGS:
+            return True
+        if tag in ("lit", "var", "err"):
+            continue
+        if tag == "model_call":
+            if node[1] not in seen and node[1] in prog.models:
+                seen.add(node[1])
+                if may_wrap(prog, prog.models[node[1]].ir, seen):
+                    return True
+            stack.extend(node[2])
+        elif tag == "subject_op":
+            stack.extend(node[2])
+        else:
+            stack.extend(node[1:])
+    return False
+
+
+def compile_trace(prog: Program, ir: object, tenv: dict) -> Callable | None:
+    """A closure that evaluates, for effect, every *pure* node on the pure trace.
+
+    This is what ``wraps`` is counted on (VER04r section 3.3): the generator
+    evaluates the subject-independent nodes, which include the pure arguments of a
+    subject call (``f(e + 1u64)``) and the expected side, but never a node whose
+    evaluation depends on what a subject returned.  The walk mirrors
+    :func:`compile_calls`: a pure guard is evaluated and the taken branch followed;
+    an operand that only runs under a subject-dependent short circuit is skipped.
+    Returns ``None`` when nothing on the trace can wrap.
+    """
+
+    def tr(node: object, depth: int = 0) -> list[Callable]:
+        if depth > MAX_IR_DEPTH:
+            raise OracleError("limit", "IR nesting exceeds 64 levels")
+        if not has_subject(node):
+            if may_wrap(prog, node):
+                return [prog.compile(node, tenv, False).fn]
+            return []
+        tag = node[0]
+        if tag == "subject_op" or tag == "model_call":
+            return [f for a in node[2] for f in tr(a, depth + 1)]
+        if tag == "if":
+            cond, then, other = node[1], node[2], node[3]
+            if has_subject(then) or has_subject(other):
+                cf = prog.compile(cond, tenv, False).fn
+                tt, et = tr(then, depth + 1), tr(other, depth + 1)
+
+                def run_if(env: dict) -> None:
+                    for f in tt if cf(env) else et:
+                        f(env)
+
+                return [run_if]
+            return tr(cond, depth + 1)
+        if tag in ("and", "or", "implies"):
+            left, right = node[1], node[2]
+            if has_subject(right):
+                lf = prog.compile(left, tenv, False).fn
+                rt = tr(right, depth + 1)
+                runs = (lambda v: not v) if tag == "or" else bool
+
+                def run_sc(env: dict) -> None:
+                    if runs(lf(env)):
+                        for f in rt:
+                            f(env)
+
+                return [run_sc]
+            return tr(left, depth + 1)
+        return [f for c in node[1:] if isinstance(c, list) for f in tr(c, depth + 1)]
+
+    fns = tr(ir)
+    if not fns:
+        return None
+
+    def run_all(env: dict) -> None:
+        for f in fns:
+            f(env)
+
+    return run_all
 
 
 def _sum(base: int, parts: list) -> int | Callable:

@@ -20,10 +20,10 @@ import json
 
 from .corpus_v1 import build_program
 from .errors import OracleError
-from .ir_eval import MAX_IR_COST
 from .lower import Spec, lower_document
 from .parser import parse_source
-from .suites import DEFAULT_BUDGET, DEFAULT_CHUNK_SIZE, SuitePlan, SuiteResult
+from .profile import Profile
+from .suites import DEFAULT_BUDGET, DEFAULT_CHUNK_SIZE, SuitePlan, SuiteResult, Work
 
 
 def suite_row(result: SuiteResult) -> dict:
@@ -47,6 +47,7 @@ def suite_row(result: SuiteResult) -> dict:
         "discarded": result.discarded,
         "expected_calls": result.expected_calls,
         "wraps": result.wraps,
+        "ir_cost": result.ir_cost,
         "slim_chunks": result.slim_chunks,
         "slim_inputs_sha256": result.slim_inputs_sha256,
         "slim_expected_sha256": result.slim_expected_sha256,
@@ -66,18 +67,25 @@ def emit(
     only: set[str] | None = None,
     chunk_size: int = DEFAULT_CHUNK_SIZE,
     budget: int = DEFAULT_BUDGET,
-    max_ir_cost: int = MAX_IR_COST,
-    cost_model: str = "all-branches",
+    profile: Profile | None = None,
 ) -> dict:
-    """Parse, lower and enumerate every suite of a document; return the JSON tree."""
+    """Parse, lower and enumerate every suite of a document; return the JSON tree.
+
+    ``profile`` (a parsed ``corpus.profile``) is the only way to change the IR cost
+    bound: ``max_ir_cost`` defaults to 2,000 and is at most 65,536 (VER04r 4.2).
+    """
+    if profile is not None:
+        chunk_size, budget = profile.chunk_size, profile.budget
+    max_ir_cost = profile.max_ir_cost if profile is not None else 2_000
     spec = lower_document(parse_source(spec_bytes))
-    prog = build_program(spec, max_cost=max_ir_cost, cost_model=cost_model)
+    prog = build_program(spec, max_cost=max_ir_cost)
+    work = Work(depth)
     rows: dict = {}
     for suite in spec.suites:
         if only is not None and suite.claim not in only:
             continue
         try:
-            plan = SuitePlan(spec, prog, suite, chunk_size=chunk_size, budget=budget)
+            plan = SuitePlan(spec, prog, suite, chunk_size=chunk_size, budget=budget, work=work)
             rows[suite.claim] = suite_row(plan.run(depth))
         except OracleError as exc:
             if exc.code == "level":
@@ -96,8 +104,7 @@ def emit(
         "depth": depth,
         "chunk_size": chunk_size,
         "budget": budget,
-        "ir_cost_bound": max_ir_cost,
-        "ir_cost_model": cost_model,
+        "max_ir_cost": max_ir_cost,
         "levels_implemented": ["ir.core"],
         "suites": rows,
         "summary": _summary(rows),

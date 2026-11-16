@@ -50,6 +50,7 @@ FIXED = {
     "I32": (32, True),
     "I64": (64, True),
 }
+MAX_EXPR_DEPTH = 64
 _PRIMITIVES = frozenset({"Bool", "Int", "Nat", "Bytes", *FIXED})
 
 #: Source built-ins and the IR level each needs (VER04r section 4.1).  The core
@@ -357,6 +358,7 @@ class _Lowerer:
         self.spec = spec
         self.scope: dict[str, A.Ty] = {}
         self.order: list[str] = []  # models lowered so far, for "declared before"
+        self._nest = 0
 
     # -- helpers ---------------------------------------------------------------
 
@@ -492,7 +494,22 @@ class _Lowerer:
     # -- expressions -------------------------------------------------------------
 
     def expr(self, e, expected: A.Ty | None) -> tuple[object, A.Ty]:
-        """Lower ``e``; ``expected`` types bare literals and ``Ok``/``Err``."""
+        """Lower ``e``; ``expected`` types bare literals and ``Ok``/``Err``.
+
+        Nesting is capped at 64 (VER04 section 2: "64 nested expression nodes on any
+        path"): a left-associative chain of 2,000 additions is a path of depth 2,000.
+        """
+        self._nest += 1
+        try:
+            if self._nest > MAX_EXPR_DEPTH:
+                raise OracleError("limit", "an expression nests deeper than 64 nodes")
+            return self._expr(e, expected)
+        except RecursionError as exc:
+            raise OracleError("limit", "an expression nests too deeply") from exc
+        finally:
+            self._nest -= 1
+
+    def _expr(self, e, expected: A.Ty | None) -> tuple[object, A.Ty]:
         spec = self.spec
         if isinstance(e, A.BoolLit):
             return ["lit", e.value], BOOL

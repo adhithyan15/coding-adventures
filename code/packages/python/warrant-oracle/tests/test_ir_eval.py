@@ -76,6 +76,7 @@ def test_wrap_helper_matches_the_table():
 
 def test_wraps_counter_counts_only_nodes_whose_wrapped_result_differs():
     prog = Program({}, {})
+    prog.stats.counting = True
     assert run(["add", lit("U8", 3), lit("U8", 4)], prog=prog) == 7
     assert prog.stats.wraps == 0
     run(["add", lit("U8", 255), lit("U8", 1)], prog=prog)
@@ -324,14 +325,10 @@ def test_cost_bound_counts_model_bodies_at_full_cost():
         Program(models, {}).compile(["model_call", "f11", [["lit", True]]], {})
 
 
-def test_cost_models_differ_only_on_if():
+def test_cost_is_the_worst_path_one_branch_of_an_if():
     body = ["if", ["lit", True], ["and", ["lit", True], ["lit", True]], ["lit", True]]
     m = {"m": ModelDef("m", [], T("Bool"), body)}
-    strict = Program(m, {}, cost_model="all-branches").model("m").cost
-    path = Program(m, {}, cost_model="taken-path").model("m").cost
-    assert strict == 1 + 1 + 3 + 1 and path == 1 + 1 + 3
-    with pytest.raises(ValueError):
-        Program(m, {}, cost_model="cheapest")
+    assert Program(m, {}).model("m").cost == 1 + 1 + 3  # the larger branch only
 
 
 def test_a_raised_cost_bound_is_a_diagnostic_setting():
@@ -339,7 +336,9 @@ def test_a_raised_cost_bound_is_a_diagnostic_setting():
     for k in range(1, 12):
         c = ["model_call", f"f{k - 1}", [["var", "x"]]]
         models[f"f{k}"] = ModelDef(f"f{k}", [("x", T("Bool"))], T("Bool"), ["and", c, c])
-    assert Program(models, {}, max_cost=10**9).model("f11").cost > MAX_IR_COST
+    with pytest.raises(OracleError):
+        Program(models, {}, max_cost=10**9).compile(["lit", True], {})  # above the ceiling
+    assert Program(models, {}, max_cost=65_536).model("f11").cost == 12_283
 
 
 def test_ir_nesting_is_capped_at_64():

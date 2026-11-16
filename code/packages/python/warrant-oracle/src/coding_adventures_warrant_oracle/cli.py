@@ -10,7 +10,8 @@
 
 Exit status: ``0`` the gate passed; ``1`` a mismatch (the corpus and the oracle
 disagree); ``2`` the input could not be read or refused (a resource bound, a
-malformed document).  Failures print a suite id and a check name, never input bytes.
+malformed document); ``3`` (``emit-v2``) some suites are ``not-live`` or ``refused``
+(the partial result is written; ``--allow-partial`` turns this into ``0``).  Failures print a suite id and a check name, never input bytes.
 """
 
 from __future__ import annotations
@@ -22,9 +23,9 @@ import sys
 from .corpus_v1 import verify_v1
 from .emit import census, dumps, emit, suite_row
 from .errors import OracleError
-from .ir_eval import MAX_IR_COST
 from .lower import lower_document
 from .parser import parse_source
+from .profile import parse_profile
 from .suites import DEFAULT_BUDGET, DEFAULT_CHUNK_SIZE
 
 MAX_SPEC_READ = (1 << 20) + 1
@@ -62,51 +63,81 @@ def build_parser() -> argparse.ArgumentParser:
     e.add_argument("--suite", action="append", default=None)
     e.add_argument("--chunk-size", type=int, default=DEFAULT_CHUNK_SIZE)
     e.add_argument("--budget", type=int, default=DEFAULT_BUDGET)
+    e.add_argument("--profile", help="a corpus.profile (the only way to raise max_ir_cost)")
     e.add_argument(
-        "--max-ir-cost",
-        type=int,
-        default=MAX_IR_COST,
-        help="diagnostic override of MAX_IR_COST (spec value 2000)",
+        "--allow-partial",
+        action="store_true",
+        help="exit 0 even if suites are not-live or refused (they are still listed)",
     )
-    e.add_argument("--cost-model", choices=("all-branches", "taken-path"), default="all-branches")
     c = sub.add_parser("check", help="parse and lower a document; report levels")
     c.add_argument("--spec", required=True)
     return ap
 
 
+def _check_out(path: str, inputs: list[str]) -> None:
+    """Refuse an output path that could clobber an input or a committed spec."""
+    out = pathlib.Path(path)
+    if out.is_symlink():
+        raise OracleError("source", "the output path must not be a symbolic link")
+    resolved = out.resolve()
+    for other in inputs:
+        if resolved == pathlib.Path(other).resolve():
+            raise OracleError("source", "the output path is an input file")
+    parts = resolved.parts
+    if any(a == "code" and b == "specs" for a, b in zip(parts, parts[1:])):
+        raise OracleError("source", "the output path lies inside the specification tree")
+
+
 def run(argv: list[str]) -> int:
     args = build_parser().parse_args(argv)
     try:
-        spec_bytes = _read(args.spec, MAX_SPEC_READ - 1)
-        if args.command == "check":
-            sys.stdout.write(dumps(census(lower_document(parse_source(spec_bytes)))))
-            return 0
-        if args.command == "emit-v2":
-            tree = emit(
-                spec_bytes,
-                depth=args.depth,
-                only=set(args.suite) if args.suite else None,
-                chunk_size=args.chunk_size,
-                budget=args.budget,
-                max_ir_cost=args.max_ir_cost,
-                cost_model=args.cost_model,
-            )
-            _write(args.out, dumps(tree))
-            print(f"warrant-oracle: emit-v2: {tree['module']}: {tree['summary']}")
-            return 0
-        corpus_raw = _read(args.corpus, 16 << 20)
-        report, results = verify_v1(spec_bytes, corpus_raw)
-        if args.emit_v2:
-            tree = {
-                "schema": "warrant-oracle-enumeration-v0",
-                "depth": "full",
-                "chunk_size": DEFAULT_CHUNK_SIZE,
-                "suites": {r.claim: suite_row(r) for r in results},
-            }
-            _write(args.emit_v2, dumps(tree))
+        return _run(args)
+    except RecursionError:
+        print("warrant-oracle: limit: input nests too deeply", file=sys.stderr)
+        return 2
     except OracleError as exc:
         print(f"warrant-oracle: {exc.code}: {exc.message}", file=sys.stderr)
         return 2
+
+
+def _run(args: argparse.Namespace) -> int:
+    spec_bytes = _read(args.spec, MAX_SPEC_READ - 1)
+    if args.command == "check":
+        sys.stdout.write(dumps(census(lower_document(parse_source(spec_bytes)))))
+        return 0
+    if args.command == "emit-v2":
+        _check_out(args.out, [args.spec] + ([args.profile] if args.profile else []))
+        profile = parse_profile(_read(args.profile, 64 * 1024)) if args.profile else None
+        tree = emit(
+            spec_bytes,
+            depth=args.depth,
+            only=set(args.suite) if args.suite else None,
+            chunk_size=args.chunk_size,
+            budget=args.budget,
+            profile=profile,
+        )
+        _write(args.out, dumps(tree))
+        print(f"warrant-oracle: emit-v2: {tree['module']}: {tree['summary']}")
+        partial = tree["summary"]["not-live"] + tree["summary"]["refused"]
+        if partial and not args.allow_partial:
+            print(
+                f"warrant-oracle: emit-v2: PARTIAL: {partial} suite(s) not-live or refused",
+                file=sys.stderr,
+            )
+            return 3
+        return 0
+    if args.emit_v2:
+        _check_out(args.emit_v2, [args.spec, args.corpus])
+    corpus_raw = _read(args.corpus, 16 << 20)
+    report, results = verify_v1(spec_bytes, corpus_raw)
+    if args.emit_v2:
+        tree = {
+            "schema": "warrant-oracle-enumeration-v0",
+            "depth": "full",
+            "chunk_size": DEFAULT_CHUNK_SIZE,
+            "suites": {r.claim: suite_row(r) for r in results},
+        }
+        _write(args.emit_v2, dumps(tree))
     for miss in report.mismatches:
         print(
             f"warrant-oracle: MISMATCH {miss['code']} {miss['where']}: {miss['message']}",

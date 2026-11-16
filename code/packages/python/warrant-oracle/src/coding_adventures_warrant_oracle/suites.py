@@ -36,7 +36,7 @@ from dataclasses import dataclass, field
 from . import ast as A
 from .domains import Desc, _Listed, check_budget, demote, descriptor_for
 from .errors import OracleError
-from .ir_eval import Program, compile_calls
+from .ir_eval import Program, compile_calls, compile_trace, may_wrap
 from .lower import BOOL, LoweredSuite, Spec, walk
 from .stream import (
     chunk_digest_framing,
@@ -46,6 +46,38 @@ from .stream import (
     suite_header,
     u32,
 )
+
+#: Total-work bounds (VER04r sections 4.2 and 14).  "Work" counts product ordinals the
+#: oracle visits (a hashed chunk, an admission walk, a counting walk); IR work is
+#: ordinals times the suite's ``ir_cost``.
+MAX_TOTAL_WORK_SLIM = 32_000_000
+MAX_TOTAL_WORK_FULL = 1 << 32
+MAX_IR_WORK_SLIM = 64_000_000_000
+MAX_IR_WORK_FULL = 8_589_934_592_000
+
+
+class Work:
+    """A shared meter for one oracle run; exceeding a bound is a ``limit`` error."""
+
+    def __init__(self, depth: str = "full", cases: int | None = None, ir_work: int | None = None):
+        slim = depth == "slim"
+        self.max_cases = (
+            cases if cases is not None else (MAX_TOTAL_WORK_SLIM if slim else MAX_TOTAL_WORK_FULL)
+        )
+        self.max_ir = (
+            ir_work if ir_work is not None else (MAX_IR_WORK_SLIM if slim else MAX_IR_WORK_FULL)
+        )
+        self.cases = 0
+        self.ir = 0
+
+    def charge(self, ordinals: int, ir_cost: int) -> None:
+        self.cases += ordinals
+        self.ir += ordinals * ir_cost
+        if self.cases > self.max_cases:
+            raise OracleError("limit", "total work bound exceeded")
+        if self.ir > self.max_ir:
+            raise OracleError("limit", "total IR work bound exceeded")
+
 
 DEFAULT_CHUNK_SIZE = 1 << 16
 MAX_CHUNKS = 4096
@@ -93,6 +125,7 @@ class SuiteResult:
     v1_inputs_sha256: str | None = None
     v1_expected_sha256: str | None = None
     result_type: str = "Bool"
+    ir_cost: int = 0
 
 
 class _Binder:
@@ -137,7 +170,9 @@ class SuitePlan:
         *,
         chunk_size: int = DEFAULT_CHUNK_SIZE,
         budget: int = DEFAULT_BUDGET,
+        work: Work | None = None,
     ) -> None:
+        self.work = work if work is not None else Work("full")
         if suite.unsupported is not None:
             raise suite.unsupported
         if chunk_size & (chunk_size - 1) or not (1 << 10) <= chunk_size <= (1 << 16):
@@ -158,6 +193,7 @@ class SuitePlan:
             raise OracleError("generation", "more than 4096 chunks; raise chunk_size")
         tenv = dict(suite.binders)
         admit = prog.compile(suite.admit, tenv, allow_subject=False)
+        costs = [admit.cost]
         if admit.ty != BOOL:
             raise OracleError("type", "admit must be Bool")
         self.admit_ir = suite.admit
@@ -173,16 +209,23 @@ class SuitePlan:
                 raise OracleError("generation", "a suite admits zero cases")
             self.admit_const = True
         body = prog.compile(suite.body, tenv, allow_subject=True)
+        costs.append(body.cost)
         if body.ty != BOOL:
             raise OracleError("type", "a claim body must be Bool")
+        self._trace = compile_trace(prog, suite.body, tenv)
+        self._wraps_needed = may_wrap(prog, suite.admit) or self._trace is not None
+        self._wraps: int | None = None
         self.calls = compile_calls(prog, suite.body, tenv)
         self.expected = None
         self.enc_result = None
         if suite.kind == "reference":
             exp = prog.compile(suite.expected, tenv, allow_subject=False)
+            costs.append(exp.cost)
             prog.compile(suite.subject, tenv, allow_subject=True)
             self.expected = exp.fn
             self.enc_result = make_encoder(spec, suite.result)
+        #: VER04r 4.2: the sum of the worst-path costs of admit, body and expected.
+        self.ir_cost = sum(costs)
         types = [t for _, t in suite.binders]
         self.header = suite_header(types, suite.result)
         self.prefix = context_prefix(suite.id, types, suite.result, self.header)
@@ -212,6 +255,7 @@ class SuitePlan:
         pre = 1
         for s in sizes[:k]:
             pre *= s
+        self.work.charge(pre, self.ir_cost)
         adm = bytearray(pre)
         names = [b.name for b in self.binders[:k]]
         admit = self.admit
@@ -269,6 +313,7 @@ class SuitePlan:
         (used for the unchunked v1 whole-suite digest).
         """
         lo, hi = self.chunk_bounds(c)
+        self.work.charge(hi - lo, self.ir_cost)
         first = self.admitted_before(lo)
         want = self.admitted_before(hi) - first
         h_in = hashlib.sha256(self.prefix + u32(c))
@@ -363,6 +408,7 @@ class SuitePlan:
         if not callable(self.calls):
             return self.total_cases() * self.calls
         total = 0
+        self.work.charge(self.product, self.ir_cost)
         bs = self.binders
         names = [b.name for b in bs]
         cols = [b.values(0, b.size) for b in bs]
@@ -383,6 +429,47 @@ class SuitePlan:
                 j -= 1
         return total
 
+    def wraps_exact(self) -> int:
+        """Wrapped fixed-width node evaluations over the whole product (section 3.3).
+
+        One dedicated counting pass: ``admit`` for every product tuple and the pure
+        trace of the body (expected side, pure subject arguments, guards) for every
+        admitted one.  Independent of memoisation, suite order and run depth.
+        """
+        if self._wraps is not None:
+            return self._wraps
+        if not self._wraps_needed:
+            self._wraps = 0
+            return 0
+        self.work.charge(self.product, self.ir_cost)
+        stats = self.prog.stats
+        bs = self.binders
+        names = [b.name for b in bs]
+        cols = [b.values(0, b.size) for b in bs]
+        sizes = [b.size for b in bs]
+        idx = [0] * len(bs)
+        env = {n: c[0] for n, c in zip(names, cols)}
+        trace = self._trace
+        before = stats.wraps
+        stats.counting = True
+        try:
+            for _ in range(self.product):
+                if self.admit(env) and trace is not None:
+                    trace(env)
+                j = len(bs) - 1
+                while j >= 0:
+                    idx[j] += 1
+                    if idx[j] < sizes[j]:
+                        env[names[j]] = cols[j][idx[j]]
+                        break
+                    idx[j] = 0
+                    env[names[j]] = cols[j][0]
+                    j -= 1
+        finally:
+            stats.counting = False
+        self._wraps = stats.wraps - before
+        return self._wraps
+
     def run(
         self, depth: str = "slim", chunks: list[int] | None = None, want_v1: bool = True
     ) -> SuiteResult:
@@ -395,7 +482,6 @@ class SuitePlan:
         if full and want_v1 and self.header.startswith(b"warrant-stream-v1"):
             whole_in = hashlib.sha256(self.prefix)
             whole_ex = hashlib.sha256(self.prefix) if self.expected is not None else None
-        stats_before = self.prog.stats.wraps
         results = []
         for c in chunks:
             if full and whole_in is not None:
@@ -423,7 +509,8 @@ class SuitePlan:
             cases=cases,
             discarded=self.product - cases,
             expected_calls=self.expected_calls_exact(),
-            wraps=self.prog.stats.wraps - stats_before,
+            wraps=self.wraps_exact(),
+            ir_cost=self.ir_cost,
             header=self.header[:-1].decode(),
             chunks=results,
             slim_chunks=slim_base_set(self.suite.id, m),

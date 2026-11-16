@@ -63,9 +63,9 @@ def test_bytes_rows():
 
 def test_composite_rows():
     point = enc(T("Point"), (1, 2))  # the worked example of section 2.4
-    assert point == b"\x60" + u32(2) + b"\x10" + le(1) + b"\x10" + le(2)
-    assert point.hex() == "6002000000" + "10" + "0100000000000000" + "10" + "0200000000000000"
-    assert enc(T("()", (T("Bool"), T("U8"))), (True, 3)) == b"\x60" + u32(
+    assert point == b"\x64" + u32(2) + b"\x10" + le(1) + b"\x10" + le(2)
+    assert point.hex() == "6402000000" + "10" + "0100000000000000" + "10" + "0200000000000000"
+    assert enc(T("()", (T("Bool"), T("U8"))), (True, 3)) == b"\x64" + u32(
         2
     ) + b"\x01" + b"\x10" + le(3)
     assert enc(T("Option", (T("Bool"),)), ("none",)) == b"\x40"
@@ -74,10 +74,10 @@ def test_composite_rows():
     res = T("Result", (T("Bool"), T("E")))
     assert enc(res, ("ok", True)) == b"\x50\x01"
     assert enc(res, ("err", "BAD")) == b"\x51" + u32(3) + b"BAD"
-    assert enc(T("D"), ("Short", ())) == b"\x62" + u32(5) + b"Short" + u32(0)
+    assert enc(T("D"), ("Short", ())) == b"\x65" + u32(5) + b"Short" + u32(0)
     done = enc(T("D"), ("Done", (7, b"\x01")))
     assert (
-        done == b"\x62" + u32(4) + b"Done" + u32(2) + b"\x10" + le(7) + b"\x20" + u32(1) + b"\x01"
+        done == b"\x65" + u32(4) + b"Done" + u32(2) + b"\x10" + le(7) + b"\x20" + u32(1) + b"\x01"
     )
 
 

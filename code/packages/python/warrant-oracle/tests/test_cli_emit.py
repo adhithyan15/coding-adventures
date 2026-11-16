@@ -13,6 +13,9 @@ from coding_adventures_warrant_oracle.emit import census, dumps, emit
 from coding_adventures_warrant_oracle.errors import OracleError
 from coding_adventures_warrant_oracle.lower import lower_document
 from coding_adventures_warrant_oracle.parser import parse_source
+from coding_adventures_warrant_oracle.profile import parse_profile
+
+PROFILE = parse_profile(b"max_ir_cost 32768\n")
 
 
 def cli(*argv):
@@ -111,30 +114,27 @@ def test_emit_v2_for_ct_compare_agrees_with_verify_v1(tmp_path):
 
 
 def test_emit_is_deterministic():
-    a = dumps(emit(adopter_bytes("gf256"), max_ir_cost=10**9, cost_model="taken-path"))
-    b = dumps(emit(adopter_bytes("gf256"), max_ir_cost=10**9, cost_model="taken-path"))
+    a = dumps(emit(adopter_bytes("gf256"), profile=PROFILE))
+    b = dumps(emit(adopter_bytes("gf256"), profile=PROFILE))
     assert a == b
 
 
 def test_gf256_under_the_spec_cost_bound_is_refused_not_skipped():
     tree = emit(adopter_bytes("gf256"))
-    assert tree["summary"]["ok"] == 31 and tree["summary"]["refused"] == 7
+    assert tree["summary"]["ok"] == 34 and tree["summary"]["refused"] == 4
     refused = {k for k, v in tree["suites"].items() if v["status"] == "refused"}
     assert refused == {
-        "add_matches_xor_model",
         "inverse_is_an_involution",
         "inverse_matches_peasant_model",
-        "multiply_by_generator_is_xtime",
         "multiply_by_model_inverse_is_one",
         "multiply_matches_peasant_model",
-        "subtract_matches_xor_model",
     }
     assert all(tree["suites"][k]["code"] == "limit" for k in refused)
-    assert tree["ir_cost_bound"] == 2000 and tree["ir_cost_model"] == "all-branches"
+    assert tree["max_ir_cost"] == 2000
 
 
-def test_gf256_enumerates_everything_with_a_diagnostic_cost_bound():
-    tree = emit(adopter_bytes("gf256"), max_ir_cost=10**9, cost_model="taken-path")
+def test_gf256_enumerates_everything_under_its_declared_profile():
+    tree = emit(adopter_bytes("gf256"), profile=PROFILE)
     assert tree["summary"] == {"ok": 38, "not-live": 0, "refused": 0, "not_live_by_level": {}}
     rows = tree["suites"]
     assert all(r["wraps"] == 0 for r in rows.values())  # the section 3.3 guard: gf256 never wraps
@@ -159,7 +159,7 @@ def test_gf256_evaluator_agrees_with_the_documented_examples():
     from coding_adventures_warrant_oracle.corpus_v1 import build_program
 
     spec = lower_document(parse_source(adopter_bytes("gf256")))
-    prog = build_program(spec, max_cost=10**9, cost_model="taken-path")
+    prog = build_program(spec, max_cost=32768)
     f = prog.compile(
         ["model_call", "gmul", [["var", "a"], ["var", "b"]]], {"a": A.Ty("U8"), "b": A.Ty("U8")}
     ).fn
@@ -183,7 +183,7 @@ def test_gf256_evaluator_agrees_with_the_documented_examples():
     ],
 )
 def test_later_adopters_report_not_live_by_level(name, levels):
-    tree = emit(adopter_bytes(name), max_ir_cost=10**9, cost_model="taken-path")
+    tree = emit(adopter_bytes(name), profile=PROFILE)
     assert tree["summary"]["not_live_by_level"] == levels
     assert tree["summary"]["not-live"] == sum(levels.values())
     live = tree["summary"]["ok"] + tree["summary"]["refused"]
@@ -218,7 +218,7 @@ def test_emit_can_select_suites_and_depth(tmp_path):
 
 
 def test_a_budget_refusal_is_recorded_per_suite():
-    tree = emit(adopter_bytes("gf256"), budget=1 << 10, max_ir_cost=10**9, cost_model="taken-path")
+    tree = emit(adopter_bytes("gf256"), profile=parse_profile(b"budget 1024\nmax_ir_cost 32768\n"))
     assert tree["summary"]["refused"] > 0
     assert any("W0706" in r["reason"] for r in tree["suites"].values() if r["status"] == "refused")
 

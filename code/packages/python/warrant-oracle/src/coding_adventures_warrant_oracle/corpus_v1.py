@@ -148,6 +148,9 @@ def v1_controls(spec: Spec, faults: list[dict]) -> list[dict]:
                 "target_kind": "exhaustive",
             }
         )
+    # The generator lists controls sorted by (operation, fault), whereas the fault
+    # registry is in declaration order; both orders are part of the corpus.
+    rows.sort(key=lambda r: (r["op"], r["fault"]))
     return rows
 
 
@@ -155,12 +158,39 @@ def _canon(value: object) -> str:
     return json.dumps(value, sort_keys=True, separators=(",", ":"))
 
 
-def _same_rows(actual: object, expected: list) -> bool:
-    if not isinstance(actual, list) or len(actual) != len(expected):
+def same(a: object, b: object) -> bool:
+    """Type-strict equality by canonical JSON bytes.
+
+    Python's ``==`` says ``True == 1 == 1.0``; a corpus comparison must not
+    (``["lit", 1]`` is not ``["lit", true]``, ``"discarded": false`` is not ``0``,
+    a float ``cases`` is not an integer).  Canonical JSON writes each of those
+    differently, and fixes key order, so equal text means equal value *and* type.
+    """
+    try:
+        return _canon(a) == _canon(b)
+    except (TypeError, ValueError):
         return False
-    a = sorted(_canon(r) for r in actual)
-    b = sorted(_canon(r) for r in expected)
-    return a == b and len(set(a)) == len(a)
+
+
+SUITE_KEYS = frozenset(
+    [
+        "id",
+        "kind",
+        "claim",
+        "ops",
+        "binders",
+        "admit",
+        "lhs",
+        "rhs",
+        "cases",
+        "discarded",
+        "expected_calls",
+        "domain_text",
+        "inputs_sha256",
+        "expected_sha256",
+        "result_type",
+    ]
+)
 
 
 # -- the gate -------------------------------------------------------------------------------
@@ -200,8 +230,12 @@ def verify_v1(
     }
     if set(corpus) != keys:
         raise OracleError("corpus", "corpus has unexpected or missing top-level fields")
-    if corpus["profile"] != "warrant-corpus-v1" or corpus["schema_version"] != 1:
+    version = corpus["schema_version"]
+    if corpus["profile"] != "warrant-corpus-v1" or type(version) is not int or version != 1:
         raise OracleError("corpus", "not a warrant-corpus-v1 document")
+    rows = corpus["suites"]
+    if not isinstance(rows, list) or not all(isinstance(r, dict) for r in rows):
+        raise OracleError("corpus", "suites must be a list of objects")
     doc = parse_source(spec_bytes)
     spec = lower_document(doc)
     if corpus["module"] != spec.name:
@@ -209,43 +243,60 @@ def verify_v1(
     if corpus["spec_sha256"] != hashlib.sha256(spec_bytes).hexdigest():
         report.miss("spec-digest", "spec_sha256", "spec digest differs")
     # -- check 1: lowering ---------------------------------------------------------------
-    if corpus["ops"] != {n: o.corpus_row() for n, o in spec.ops.items()}:
+    if not same(corpus["ops"], {n: o.corpus_row() for n, o in spec.ops.items()}):
         report.miss("lowering", "ops", "operation signatures differ")
-    if corpus["types"] != {n: list(c) for n, c in spec.errors.items()}:
+    if not same(corpus["types"], {n: list(c) for n, c in spec.errors.items()}):
         report.miss("lowering", "types", "error types differ")
     mine = {
         n: {"params": [p for p, _ in m.params], "body": m.ir}
         for n, m in spec.models.items()
         if m.unsupported is None
     }
-    if corpus["models"] != mine:
-        for name in sorted(set(mine) | set(corpus["models"])):
-            if mine.get(name) != corpus["models"].get(name):
+    theirs = corpus["models"] if isinstance(corpus["models"], dict) else None
+    if theirs is None:
+        report.miss("lowering", "models", "models must be an object")
+    else:
+        unchecked = {n for n, m in spec.models.items() if m.unsupported is not None}
+        for name in sorted(set(mine) | set(theirs) | unchecked):
+            if name in spec.models and spec.models[name].unsupported is not None:
+                # Never agreement: a model the oracle cannot lower is *unchecked*.
+                report.miss(
+                    "level",
+                    f"models.{name}",
+                    "model needs a level the oracle does not implement; not checked",
+                )
+            elif not same(mine.get(name), theirs.get(name)):
                 report.miss(
                     "lowering", f"models.{name}", "model IR differs from the oracle's lowering"
                 )
     prog = build_program(spec)
     _check_examples(spec, prog, corpus["examples"], report)
-    # -- check 3: faults and controls ------------------------------------------------------
+    # -- check 3: faults and controls (order is part of the corpus) ------------------------
     try:
         faults = v1_faults(spec.ops)
-        if not _same_rows(corpus["faults"], faults):
-            report.miss("faults", "faults", "fault registry differs")
-        if not _same_rows(corpus["controls"], v1_controls(spec, faults)):
-            report.miss("controls", "controls", "control rows differ")
+        if not same(corpus["faults"], faults):
+            report.miss("faults", "faults", "fault registry differs (set or order)")
+        if not same(corpus["controls"], v1_controls(spec, faults)):
+            report.miss("controls", "controls", "control rows differ (set or order)")
     except OracleError as exc:
         report.miss("faults", "faults", exc.message)
     # -- check 1 and 2 per suite -------------------------------------------------------------
     results = []
-    rows = corpus["suites"]
-    if not isinstance(rows, list) or [r.get("claim") for r in rows] != [
-        s.claim for s in spec.suites
-    ]:
+    if [r.get("claim") for r in rows] != [s.claim for s in spec.suites]:
         report.miss("suite-set", "suites", "suite set or order differs from the claims of the spec")
         return report, results
     for suite, row in zip(spec.suites, rows):
         where = f"suites.{suite.claim}"
-        plan = SuitePlan(spec, prog, suite, chunk_size=chunk_size, budget=V1_BUDGET)
+        if set(row) != SUITE_KEYS:
+            report.miss("suite-keys", where, "suite row has unexpected or missing keys")
+            continue
+        try:
+            plan = SuitePlan(spec, prog, suite, chunk_size=chunk_size, budget=V1_BUDGET)
+        except OracleError as exc:
+            if exc.code != "level":
+                raise
+            report.miss("level", where, "suite needs a level the oracle does not implement")
+            continue
         want = {
             "id": suite.id,
             "kind": "exhaustive",
@@ -259,7 +310,7 @@ def verify_v1(
             "domain_text": " x ".join(f"{b.ty}[{b.size}]" for b in plan.binders),
         }
         for key, value in want.items():
-            if row.get(key) != value:
+            if not same(row[key], value):
                 report.miss("lowering", f"{where}.{key}", f"suite {key} differs from the oracle")
         if suite.kind != "reference":
             report.miss("lowering", where, "a v1 suite must be a reference claim")
@@ -276,7 +327,7 @@ def verify_v1(
             "expected_sha256": result.v1_expected_sha256,
         }
         for key, value in checks.items():
-            if row.get(key) != value:
+            if not same(row[key], value):
                 report.miss("enumeration", f"{where}.{key}", f"suite {key} differs from the oracle")
         report.suites[suite.claim] = {
             "cases": result.cases,
@@ -313,7 +364,7 @@ def _check_examples(spec: Spec, prog: Program, corpus_examples: object, report: 
                 "width": node[3][0] if len(node) == 4 else None,
             }
         )
-    if corpus_examples != mine:
+    if not same(corpus_examples, mine):
         report.miss(
             "lowering", "examples", "examples differ from the oracle's evaluation of the source"
         )

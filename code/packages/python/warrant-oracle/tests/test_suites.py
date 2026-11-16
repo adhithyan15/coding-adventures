@@ -346,7 +346,7 @@ def test_composite_binders_enumerate_through_nth():
     assert r.cases == 4 and r.header == "warrant-stream-v2"
     assert r.descriptors[0]["d"] == "tuple" and r.label == "full"
     body = b"".join(
-        b"\x60" + le32(2) + bytes([x]) + bytes([y]) for x, y in itertools.product((0, 1), repeat=2)
+        b"\x64" + le32(2) + bytes([x]) + bytes([y]) for x, y in itertools.product((0, 1), repeat=2)
     )
     assert r.chunks[0].inputs == hashlib.sha256(plan.prefix + le32(0) + body).digest()
     plan, _ = plan_for(src, "rec")

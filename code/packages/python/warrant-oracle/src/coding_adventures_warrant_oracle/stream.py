@@ -16,12 +16,12 @@ Value encodings (``warrant-stream-v2``; every ``v1`` row keeps its bytes)
 ``List<T>``            ``30`` then u32-LE count, then the elements
 ``Option<T>``          ``40`` (none) / ``41`` plus the inner value
 ``Ok(v)`` / ``Err(E.C)`` ``50`` plus inner / ``51``, u32-LE length, UTF-8 case
-tuple, record          ``60``, u32-LE component count, components
-variant                ``62``, u32 length + UTF-8 constructor, u32 field count, fields
+tuple, record          ``64``, u32-LE component count, components
+variant                ``65``, u32 length + UTF-8 constructor, u32 field count, fields
 =====================  ====================================================
 
 A top-level binder tuple is a plain *concatenation* of its binders' values; a
-tuple *value* carries the ``60`` tag, because nested composites must be
+tuple *value* carries the ``64`` tag, because nested composites must be
 self-delimiting or two different values could serialise to the same bytes.
 
 Framing
@@ -98,10 +98,10 @@ def make_encoder(spec: Spec, ty: A.Ty):
         return lambda v: b"\x50" + inner(v[1]) if v[0] == "ok" else b"\x51" + field(v[1])
     if head == "()":
         parts = [make_encoder(spec, t) for t in ty.args]
-        return lambda v: b"\x60" + u32(len(parts)) + b"".join(e(x) for e, x in zip(parts, v))
+        return lambda v: b"\x64" + u32(len(parts)) + b"".join(e(x) for e, x in zip(parts, v))
     if head in spec.records:
         parts = [make_encoder(spec, t) for _, t in spec.records[head]]
-        return lambda v: b"\x60" + u32(len(parts)) + b"".join(e(x) for e, x in zip(parts, v))
+        return lambda v: b"\x64" + u32(len(parts)) + b"".join(e(x) for e, x in zip(parts, v))
     if head in spec.variants:
         table = {
             name: [make_encoder(spec, t) for _, t in fields] for name, fields in spec.variants[head]
@@ -111,7 +111,7 @@ def make_encoder(spec: Spec, ty: A.Ty):
             name, fields = v
             encs = table[name]
             return (
-                b"\x62"
+                b"\x65"
                 + field(name)
                 + u32(len(encs))
                 + b"".join(e(x) for e, x in zip(encs, fields))
