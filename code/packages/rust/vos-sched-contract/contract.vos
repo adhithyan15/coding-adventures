@@ -1,0 +1,21 @@
+vos-contract 1
+name vos-sched-contract
+iface sched
+tier any
+tier canonical
+tier policy
+tier safety
+config N 8
+ceiling dispatch depth 2
+ceiling dispatch heap 0
+ceiling dispatch steps 160
+ceiling init depth 2
+ceiling init heap 0
+ceiling init steps 80
+ceiling insert depth 2
+ceiling insert heap 0
+ceiling insert steps 160
+ceiling remove depth 2
+ceiling remove heap 0
+ceiling remove steps 160
+end

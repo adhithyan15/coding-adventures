@@ -1,0 +1,19 @@
+  -- The reachable states are exactly the image of build (VOS02 R5). The commuting claims have
+  -- the image operation as their subject, so a fault in it has a negative control (VOS02 4.4).
+  claim canon_init:
+    forall b: Bool. init() == build(empty())
+  claim canon_alpha_build:
+    forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool. dec(alpha_w(build(ready_of(b0, b1, b2, b3, b4, b5, b6, b7)))) == ready_of(b0, b1, b2, b3, b4, b5, b6, b7)
+  claim canon_insert_post:
+    forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool, t: U8. build(dec(alpha_w(insert_img(build(ready_of(b0, b1, b2, b3, b4, b5, b6, b7)), t)))) == insert_img(build(ready_of(b0, b1, b2, b3, b4, b5, b6, b7)), t)
+  claim canon_insert_img:
+    forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool, t: U8. insert_img(build(ready_of(b0, b1, b2, b3, b4, b5, b6, b7)), t) == build(abs_insert(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), t).1)
+  claim canon_remove_post:
+    forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool, t: U8. build(dec(alpha_w(remove_img(build(ready_of(b0, b1, b2, b3, b4, b5, b6, b7)), t)))) == remove_img(build(ready_of(b0, b1, b2, b3, b4, b5, b6, b7)), t)
+  claim canon_remove_img:
+    forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool, t: U8. remove_img(build(ready_of(b0, b1, b2, b3, b4, b5, b6, b7)), t) == build(abs_remove(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), t).1)
+  claim canon_dispatch_post:
+    forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool. build(dec(alpha_w(dispatch_img(build(ready_of(b0, b1, b2, b3, b4, b5, b6, b7)))))) == dispatch_img(build(ready_of(b0, b1, b2, b3, b4, b5, b6, b7)))
+  -- dispatch's successor depends on the choice, which is the implementation's own output.
+  claim canon_dispatch_img:
+    forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool. dispatch_img(build(ready_of(b0, b1, b2, b3, b4, b5, b6, b7))) == build(after(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), dispatch_out(build(ready_of(b0, b1, b2, b3, b4, b5, b6, b7)))))
