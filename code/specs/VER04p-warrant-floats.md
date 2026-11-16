@@ -469,7 +469,7 @@ for four reasons:
 
 Consequently a subject function's float result under a bit-exact claim is allowed
 only against an algorithmic model that is part of the specification (the `trig`
-pilot's 20-term series, section 15), and otherwise the claim must be a tolerance
+pilot's TRIG-REF-1 reference algorithm of PHY00a, section 15), and otherwise the claim must be a tolerance
 claim. Constants such as pi are written as bits.
 
 ## 7. Evaluation semantics
@@ -915,24 +915,39 @@ each was caught. An uncaught control is handled by the existing rule of VER04i 4
 
 ## 15. The pilot: `trig`
 
-The pilot package is `trig` (16 ports, 5 dependents; the memo's inventory). Its
-documented algorithm is a 20-term series (but see 15.1), so both the bit-exact model and the FMA
+The pilot package is `trig` (17 ports, 5 dependents; the memo's inventory counted
+sixteen, `origin/main` holds seventeen: PHY00a OQ-7). Its algorithm is now the
+reference algorithm TRIG-REF-1 of [PHY00a](PHY00a-trig-convergence.md) (Cody-Waite
+reduction and ten-term Horner kernels; the first draft of this sketch assumed a
+20-term series, see 15.1), so both the bit-exact model and the FMA
 probe **bite**: a port that contracts or reorders the series produces different
 bits and fails the probe or the claim.
 
 ```text
 op sin(x: F64) -> F64
-model sin_ref(x: F64) -> F64 = fold(range(20), ...)   -- the documented series,
-                                                      -- fadd/fmul in its order
+model sin_ref(x: F64) -> F64 = trig_ref1_sin(x)       -- PHY00a 3.6: reduction, Horner
+                                                      -- kernel, fadd/fmul in its order
 claim sin_bit_exact: forall x: F64 in f64_edge. same(sin(x), sin_ref(x))
 claim sin_accurate:  forall r: SinRow in sin_table.
                        within_ulps(sin(r.x), r.y, 4)  -- r.y from a pinned WX-E table
 example neg_zero: bits_eq(sin(f64(0x8000000000000000)), f64(0x8000000000000000))
+                                                      -- true under TRIG-REF-1 (PHY00a 3.3)
 ```
 
-### 15.1 What the ports actually do (review finding, 2026-11-16)
+### 15.1 What the ports actually did (review finding, 2026-11-16), and what replaced it
 
-The sketch above assumes one documented algorithm. Reading five of the sixteen
+**Status (TC-18).** The divergences in the table below are **history**. They were
+resolved by TRIG-CONV: [PHY00a](PHY00a-trig-convergence.md) fixes one reference
+algorithm, TRIG-REF-1 (section 3: Cody-Waite reduction to `|x| <= 2^29` with NaN
+beyond, ten-term Horner kernels, `sin(-0) = -0`, pre-divided degree constants, the
+pinned `tan` sentinel and `atan2` NaN rule), publishes bit-exact vectors
+(section 6) and an accuracy statement (section 4: within 3 ulp on the domain), and
+**all seventeen ports** (not sixteen: PHY00a OQ-7) have converged and merged
+(PHY00a section 8, TC-1 to TC-17). Each row's "consequence" below is therefore
+answered by the PHY00a section named in the table that follows it; the stages
+after it are no longer blocked on convergence.
+
+The sketch above originally assumed one documented algorithm. Reading five of the sixteen
 ports at this commit (Go, C, Python, Elixir, Lua; read, not run) shows that
 assumption is **false today**, and it changes what the pilot must do first:
 
@@ -957,7 +972,7 @@ done.
 
 * **Stage A, bit-exact on the smallest op.** `radians` and `degrees`
   (`deg * PI / 180`, one multiply and one divide, no reduction) are claimed
-  under `same` over `f64_edge` in every lane. A reading pass over all sixteen
+  under `same` over `f64_edge` in every lane. A reading pass over all seventeen
   ports comes first, and the ports that group the constant differently (C, at
   least) get a one-line change. This exercises the whole float pipeline (model,
   corpus, probe, faults, labels) on an op whose only dispute is one
@@ -966,7 +981,9 @@ done.
   the pinned table, on a domain where every port's reduction is defined (the
   table's rows; no value whose quotient leaves the 64-bit integer range). This
   needs no port change and is honest about being `approx`.
-* **Stage C, bit-exact `sin` and `cos`, only after convergence.** A `trig`
+* **Stage C, bit-exact `sin` and `cos`, only after convergence.** (Convergence
+  is done: PHY00a 3 is that specification, with the answers below; the model
+  `sin_ref` is its section 3.6.) A `trig`
   specification fixes the term count, the reduction (truncation through
   `f_to_int`, with the result for a NaN, an infinity and an out-of-range quotient
   written down), the operand order and the sign of `sin(-0)`; the ports are
