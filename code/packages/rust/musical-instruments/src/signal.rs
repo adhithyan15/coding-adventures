@@ -174,7 +174,7 @@ impl InstrumentSignal {
             if partial_hz >= nyquist_hz {
                 continue;
             }
-            raw += partial.amplitude * (TWO_PI * (partial_hz * time + partial.phase_cycles)).sin();
+            raw += partial.amplitude * trig::sin(TWO_PI * (partial_hz * time + partial.phase_cycles));
         }
 
         let envelope = self

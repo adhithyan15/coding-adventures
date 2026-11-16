@@ -5,6 +5,13 @@ All notable changes to `percussion-kit` will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.1] - 2026-11-16
+
+### Changed
+
+- Output changes in the last bits (and, through the hash-style noise, in a few 16-bit
+  samples) because `trig::sin` is now TRIG-REF-1 (`trig` 0.2.0). No source change.
+
 ## [0.1.0] - 2026-11-15
 
 ### Added
