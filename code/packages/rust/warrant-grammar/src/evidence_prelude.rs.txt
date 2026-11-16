@@ -1430,6 +1430,13 @@ pub fn run_table(
 //@if bytefaults
 /// Fault `flip-result-bit`: the lowest bit of the first byte of a byte-string
 /// result (inside an `Ok` or a `Some`) is flipped; an empty result gains a byte.
+//@if fixedfault
+/// A fixed-width integer result (a checksum or hash, `Bytes -> U32`) has its
+/// lowest bit flipped.  The model value is the canonical integer, signed or not,
+/// of the declared width; `x ^ 1` swaps the pair `2k, 2k+1` (two's complement
+/// for a negative `x`), and both members of a pair share a width's range, so
+/// the result stays in range and keeps its width.
+//@endif
 fn fault_flip_result_bit(v: V) -> V {
     match v {
         V::Bytes(mut b) => {
@@ -1439,6 +1446,9 @@ fn fault_flip_result_bit(v: V) -> V {
             }
             V::Bytes(b)
         }
+//@if fixedfault
+        V::Fixed(f, x) => V::Fixed(f, x ^ 1),
+//@endif
         V::Ok(x) => V::Ok(Box::new(fault_flip_result_bit(*x))),
         V::Opt(Some(x)) => V::Opt(Some(Box::new(fault_flip_result_bit(*x)))),
         other => other,

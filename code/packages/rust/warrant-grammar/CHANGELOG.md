@@ -1,5 +1,18 @@
 # Changelog
 
+## Unreleased — WX-FAULT1 `flip-result-bit` for a fixed-width integer result
+
+- Generator: the composite adapter accepts `flip-result-bit` for a `Bytes -> U32/U64`
+  (any `Fx`/`FxEdge`, inside an `Ok` or `Some`) result, so a checksum or hash operation
+  has a negative control. `drop-last-result-byte` is still bytes only (W0701 otherwise).
+- Prelude: `fault_flip_result_bit` gains `V::Fixed(f, x) => V::Fixed(f, x ^ 1)` (width
+  kept, in range for signed and unsigned) in a new `fixedfault` region, emitted only when
+  such an operation is bound. Every existing adopter and the WX-N/WX-V fixtures regenerate
+  byte-identically (`gen_evidence --check` for all eight, `regenerate --check`).
+- Tests: three in `wxe_edges` (the control for `U32` and `U64`, the arm absent for a byte
+  result, the refusals that remain).
+- Specification: VER04j 14.1 item 46 and the VER-BACKLOG row.
+
 ## 0.7.0 — WX-G `inout` parameters and `ensures` postconditions (VER04k section 4)
 
 - Language: `name: inout T` (contextual, op parameters only; `x: inout` alone is still
