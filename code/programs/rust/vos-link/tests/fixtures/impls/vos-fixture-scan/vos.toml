@@ -1,0 +1,4 @@
+class = "K"
+kind = "production"
+contract = "vos-sched-contract"
+obligations = ["canonical", "safety"]

@@ -1,0 +1,4 @@
+class = "K"
+kind = "reference"
+contract = "vos-sched-contract"
+obligations = ["safety"]
