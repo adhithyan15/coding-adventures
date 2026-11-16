@@ -762,6 +762,71 @@
       "type": "Result<Bool,SelectError>"
     },
     {
+      "expect": {
+        "error": "unsupported-type",
+        "outcome": "reject"
+      },
+      "id": "tagged/list-u8-unsupported",
+      "input_hex": "7b2274797065223a224c6973743c55383e222c2276616c7565223a5b5d7d",
+      "summary": "List<T> is outside the closed v1 profile",
+      "type": "List<U8>"
+    },
+    {
+      "expect": {
+        "error": "unsupported-type",
+        "outcome": "reject"
+      },
+      "id": "tagged/list-bool-unsupported",
+      "input_hex": "7b2274797065223a224c6973743c426f6f6c3e222c2276616c7565223a5b747275655d7d",
+      "summary": "List<Bool>",
+      "type": "List<Bool>"
+    },
+    {
+      "expect": {
+        "error": "unsupported-type",
+        "outcome": "reject"
+      },
+      "id": "tagged/option-u8-unsupported",
+      "input_hex": "7b2274797065223a224f7074696f6e3c55383e222c2276616c7565223a5b5d7d",
+      "summary": "Option<T> is outside the closed v1 profile",
+      "type": "Option<U8>"
+    },
+    {
+      "expect": {
+        "error": "unsupported-type",
+        "outcome": "reject"
+      },
+      "id": "tagged/option-bytes-unsupported",
+      "input_hex": "7b2274797065223a224f7074696f6e3c42797465733e222c2276616c7565223a5b7b2274797065223a224279746573222c2276616c7565223a223030227d5d7d",
+      "summary": "Option<Bytes> with a value",
+      "type": "Option<Bytes>"
+    },
+    {
+      "expect": {
+        "error": "unsupported-type",
+        "outcome": "reject"
+      },
+      "id": "tagged/option-option-unsupported",
+      "input_hex": "7b2274797065223a224f7074696f6e3c4f7074696f6e3c55383e3e222c2276616c7565223a5b5d7d",
+      "summary": "Option<Option<U8>>",
+      "type": "Option<Option<U8>>"
+    },
+    {
+      "errors": {
+        "SelectError": [
+          "CT_SELECT_LENGTH_MISMATCH"
+        ]
+      },
+      "expect": {
+        "error": "unsupported-type",
+        "outcome": "reject"
+      },
+      "id": "tagged/result-list-unsupported",
+      "input_hex": "7b2274797065223a22526573756c743c4c6973743c55383e2c53656c6563744572726f723e222c2276616c7565223a7b226f6b223a7b2274797065223a224c6973743c55383e222c2276616c7565223a5b5d7d7d7d",
+      "summary": "a Result whose payload is a List",
+      "type": "Result<List<U8>,SelectError>"
+    },
+    {
       "errors": {
         "SelectError": [
           "CT_SELECT_LENGTH_MISMATCH"

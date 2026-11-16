@@ -49,6 +49,42 @@ class ReferenceReader(unittest.TestCase):
         self.assertNotEqual(conf.label_digest(base), conf.label_digest({"toolchain": {"name": "node", "version": "1"}}))
 
 
+class ReviewFindings(unittest.TestCase):
+    def test_huge_integers_reject_cleanly(self) -> None:
+        for digits in (17, 4301, 100_000):
+            with self.assertRaises(conf.Reject) as caught:
+                conf.read_json(b"9" * digits)
+            self.assertEqual(caught.exception.reason, "unsafe-integer")
+
+    def test_device_and_double_slash_paths_are_refused(self) -> None:
+        for flavor, root, child in (
+            ("win32", "D:\\r", "\\/?\\D:\\r"),
+            ("win32", "D:\\r", "/\\?/D:/r"),
+            ("win32", "D:\\r", "\\\\?/D:\\r"),
+            ("win32", "D:\\r", "\\\\./D:\\r"),
+            ("win32", "\\\\?\\D:\\r", "D:\\r\\x"),
+            ("posix", "/", "//x"),
+            ("posix", "//", "/r"),
+        ):
+            self.assertEqual(conf.contains(flavor, root, child), {"inside": False, "same": False})
+            self.assertEqual(conf.alt_contains(flavor, root, child), {"inside": False, "same": False})
+        self.assertTrue(conf.contains("posix", "/", "///x")["inside"])
+
+    def test_the_second_opinion_is_a_different_algorithm_that_agrees(self) -> None:
+        for _slug, _s, flavor, root, child, inside, same in conf.CONTAINMENT_CASES:
+            self.assertEqual(conf.alt_contains(flavor, root, child), {"inside": inside, "same": same})
+
+    def test_list_and_option_reference_encoder(self) -> None:
+        u8 = lambda n: {"type": "U8", "value": str(n)}  # noqa: E731
+        self.assertEqual(conf.encode_extended({"type": "List<U8>", "value": [u8(1), u8(2)]}, "List<U8>").hex(), "3002000000" + "10" + "01" + "00" * 7 + "10" + "02" + "00" * 7)
+        self.assertEqual(conf.encode_extended({"type": "Option<U8>", "value": []}, "Option<U8>"), b"\x40")
+        self.assertEqual(conf.encode_extended({"type": "Option<U8>", "value": [u8(0)]}, "Option<U8>").hex(), "41" + "10" + "00" * 8)
+        with self.assertRaises(conf.ValueReject):
+            conf.encode_extended({"type": "Option<U8>", "value": [u8(0), u8(1)]}, "Option<U8>")
+        with self.assertRaises(conf.TypeReject):
+            conf.decode_and_encode({"type": "List<U8>", "value": []}, "List<U8>", {})
+
+
 class Fixture(unittest.TestCase):
     def test_checked_in_fixture_matches_the_reference(self) -> None:
         self.assertEqual(conf.main([]), 0)

@@ -1,22 +1,22 @@
 {
   "files": [
     {
-      "cases": 223,
+      "cases": 231,
       "category": "json",
       "path": "json.json",
-      "sha256": "85345dfe6a2106f3948eb189b323b9f43527e2225c1afbfe6fd7a695a5536099"
+      "sha256": "eeed61d544e84cc2667da96175ef328ff2fb4f451abab77bf6730306200cd878"
     },
     {
-      "cases": 70,
+      "cases": 76,
       "category": "tagged",
       "path": "tagged.json",
-      "sha256": "2d6d2830b83016cf81251932de658fd725e32c5791d5a1fe42e1cbdea29c363d"
+      "sha256": "938f68423461969bfa88a6cf838e6d070143d98647809a9bb30e031315091eb2"
     },
     {
-      "cases": 53,
+      "cases": 77,
       "category": "containment",
       "path": "containment.json",
-      "sha256": "91fc6b175e3e0be4d88c9cd33473986332e7cf108306d220d551b32dfd77c72c"
+      "sha256": "c2af375c4e6115dc5875a07a159c94631f1737cb34d2f902e2e146d40a659ab2"
     },
     {
       "cases": 13,
@@ -26,5 +26,5 @@
     }
   ],
   "schema": "warrant-corpus-conformance-v1",
-  "total_cases": 359
+  "total_cases": 397
 }

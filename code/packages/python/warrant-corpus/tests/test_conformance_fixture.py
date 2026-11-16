@@ -75,8 +75,8 @@ def test_json_case(case: dict) -> None:
 def test_tagged_case(case: dict) -> None:
     expect = case["expect"]
     errors = case.get("errors", {})
-    ty = parse_type(case["type"])
     try:
+        ty = parse_type(case["type"])
         value = decode_json(parse_json(bytes.fromhex(case["input_hex"])), ty, errors)
     except CorpusError as error:
         assert expect["outcome"] == "reject", case["id"]
@@ -105,15 +105,42 @@ def test_label_digest_case(case: dict) -> None:
         assert digests[case["id"]] != digests[case["differs_from"]]
 
 
+def test_production_calls_apply_the_host_flavour_rules(monkeypatch) -> None:
+    """`corpus_relative` and the binding's source check call the helper with no
+    flavour; the device and `//` rules must apply on that path too."""
+    from coding_adventures_warrant_corpus import containment
+    from coding_adventures_warrant_corpus.errors import BindingError
+    from coding_adventures_warrant_corpus.session import corpus_relative
+
+    class Fake:
+        def __init__(self, text: str) -> None:
+            self.text = text
+
+        def resolve(self) -> "Fake":
+            return self
+
+        def __str__(self) -> str:
+            return self.text
+
+    monkeypatch.setattr(containment, "HOST_FLAVOR", "win32")
+    assert corpus_relative(Fake("D:\\repo"), Fake("D:\\repo\\specs")) == "specs"
+    for child in ("\\/?\\D:\\repo\\x", "//?/D:/repo/x", "\\\\?\\UNC\\s\\h\\x", "C:\\tmp"):
+        with pytest.raises(BindingError):
+            corpus_relative(Fake("D:\\repo"), Fake(child))
+    monkeypatch.setattr(containment, "HOST_FLAVOR", "posix")
+    for child in ("//repo/x", "/rr"):
+        with pytest.raises(BindingError):
+            corpus_relative(Fake("/repo"), Fake(child))
+
+
 def test_containment_helper_refuses_an_unknown_flavor() -> None:
     with pytest.raises(ValueError):
         relative_inside("/r", "/r/x", "amiga")
 
 
-def test_containment_helper_on_resolved_pure_paths() -> None:
-    from pathlib import PurePosixPath, PureWindowsPath
-
-    assert relative_inside(PurePosixPath("/r"), PurePosixPath("/r/.hidden/x")) == ".hidden/x"
-    assert relative_inside(PurePosixPath("/r"), PurePosixPath("/r")) == ""
-    assert relative_inside(PurePosixPath("/r"), PurePosixPath("/rr")) is None
-    assert relative_inside(PureWindowsPath("D:/r"), PureWindowsPath("C:/r/x")) is None
+def test_containment_helper_relative_text() -> None:
+    assert relative_inside("/r", "/r/.hidden/x", "posix") == ".hidden/x"
+    assert relative_inside("/r", "/r", "posix") == ""
+    assert relative_inside("/r", "/rr", "posix") is None
+    assert relative_inside("D:/r", "d:/R/x/y", "win32") == "x/y"
+    assert relative_inside("D:/r", "C:/r/x", "win32") is None

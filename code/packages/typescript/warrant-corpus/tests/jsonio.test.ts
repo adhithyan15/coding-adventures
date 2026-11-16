@@ -165,4 +165,12 @@ describe("readBytes", () => {
       '{\n  "\\uffff": 2,\n  "\\ud83d\\ude00": 1,\n  "\\ud83d\\ude00x": 3\n}\n',
     );
   });
+
+  it("refuses to render what the reader could never have produced (review of WD-100)", () => {
+    for (const bad of [undefined, Number.NaN, Infinity, 1.5, 1e21, -0, 2 ** 53, () => 1, Symbol("x")]) {
+      expect(() => renderJson({ a: bad }), String(bad)).toThrow(CorpusError);
+    }
+    expect(() => renderJson(undefined)).toThrow(/render/);
+    expect(renderJson([0, -1, 2 ** 53 - 1])).toBe("[\n  0,\n  -1,\n  9007199254740991\n]\n");
+  });
 });

@@ -76,9 +76,10 @@ describe("tagged", () => {
     it(item["id"], () => {
       const expected = item["expect"];
       const errors = new Map<string, string[]>(Object.entries(item["errors"] ?? {}));
-      const ty = parseType(item["type"]);
+      let ty!: ReturnType<typeof parseType>;
       let value: unknown;
       try {
+        ty = parseType(item["type"]);
         value = decodeJson(parseJson(fromHex(item["input_hex"])), ty, errors);
       } catch (error) {
         expect(expected["outcome"], item["id"]).toBe("reject");

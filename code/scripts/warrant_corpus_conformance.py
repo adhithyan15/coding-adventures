@@ -220,6 +220,10 @@ class _Reader:
         text = "".join(chr(c) for c in self.cps[start : self.at])
         if text == "-0":
             raise Reject("number-form")
+        # Bound the digit count BEFORE converting: int() raises ValueError on
+        # more than 4300 digits, and 16 digits already exceed 2**53 - 1.
+        if len(text.lstrip("-")) > 16:
+            raise Reject("unsafe-integer")
         number = int(text)
         if abs(number) > SAFE_MAX:
             raise Reject("unsafe-integer")
@@ -402,6 +406,10 @@ def sha256_hex(data: bytes) -> str:
 # ---------------------------------------------------------------------------
 # 3. Tagged values and the warrant-stream-v1 encoding (VER04i 2.6, 2.7)
 # ---------------------------------------------------------------------------
+class TypeReject(Exception):
+    """The type is outside the closed warrant-corpus-v1 profile."""
+
+
 class ValueReject(Exception):
     """A well-formed JSON value that is not a valid tagged Warrant value."""
 
@@ -420,7 +428,7 @@ def _split_result(text: str) -> tuple[str, str]:
         depth -= char == ">"
         if char == "," and depth == 0:
             return inner[:index], inner[index + 1 :]
-    raise ValueReject("type")
+    raise TypeReject(type_text)
 
 
 def _u32(number: int) -> bytes:
@@ -429,12 +437,16 @@ def _u32(number: int) -> bytes:
 
 def decode_and_encode(raw: Any, type_text: str, errors: dict[str, list[str]]) -> bytes:
     """Decode ``raw`` as ``type_text`` and return its stream bytes."""
+    if re.match(r"(?:List|Option)<", type_text):
+        raise TypeReject(type_text)
     if type_text == "Bool":
         if type(raw) is not bool:
             raise ValueReject("Bool must be a JSON boolean")
         return b"\x01" if raw else b"\x00"
     if type_text.startswith("Result<"):
         ok_type, error_type = _split_result(type_text)
+        if re.match(r"(?:List|Option)<", ok_type):
+            raise TypeReject(type_text)
         if not (type(raw) is dict and set(raw) == {"type", "value"} and raw["type"] == type_text):
             raise ValueReject("Result must be tagged")
         body = raw["value"]
@@ -468,6 +480,31 @@ def decode_and_encode(raw: Any, type_text: str, errors: dict[str, list[str]]) ->
     raise ValueReject("type")
 
 
+def encode_extended(raw: Any, type_text: str) -> bytes:
+    """Reference ``List<T>`` / ``Option<T>`` stream bytes (NOT in the v1 fixture).
+
+    VER04i 2.6/2.7: ``List`` is ``30`` + u32 count + elements; ``Option`` is
+    ``40`` (none) or ``41`` + inner.  The tagged JSON shape mirrors the TFV
+    mapping: ``{"type": T, "value": [elements]}`` (an Option's array has 0 or 1
+    entries).  Scalars delegate to :func:`decode_and_encode`.  The fixture does
+    not use this: v1 lanes refuse these types (``unsupported-type``); the
+    reference exists so a later category has a checked decoder to start from.
+    """
+    for head, is_list in (("List<", True), ("Option<", False)):
+        if type_text.startswith(head) and type_text.endswith(">"):
+            inner = type_text[len(head) : -1]
+            if not (type(raw) is dict and set(raw) == {"type", "value"} and raw["type"] == type_text):
+                raise ValueReject("tagged object expected")
+            items = raw["value"]
+            if type(items) is not list or (not is_list and len(items) > 1):
+                raise ValueReject("array expected")
+            body = b"".join(encode_extended(item, inner) for item in items)
+            if is_list:
+                return b"\x30" + _u32(len(items)) + body
+            return b"\x41" + body if items else b"\x40"
+    return decode_and_encode(raw, type_text, {})
+
+
 # ---------------------------------------------------------------------------
 # 4. The reference lexical containment check
 # ---------------------------------------------------------------------------
@@ -480,8 +517,9 @@ def decode_and_encode(raw: Any, type_text: str, errors: dict[str, list[str]]) ->
 # * a string prefix that is not a path prefix ("/rr" vs "/r");
 # * a ".." at the root (it stays at the root: there is no parent of "/").
 #
-# ``split`` returns (anchor, components) or None for a device-namespace path,
-# which is never inside anything (and nothing is inside it).
+# ``split`` returns (anchor, components) or None for a device-namespace path or
+# a POSIX path with exactly two leading slashes: never inside anything, and
+# nothing is inside it.  Separators are normalised BEFORE the device test.
 def _walk(parts: list[str]) -> list[str]:
     out: list[str] = []
     for part in parts:
@@ -499,6 +537,10 @@ def split_path(flavor: str, path: str) -> tuple[str, list[str]] | None:
     if flavor == "posix":
         if not path.startswith("/"):
             raise ValueError("fixture paths are absolute")
+        # Exactly two leading slashes are implementation-defined in POSIX:
+        # refuse them like a device path (three or more collapse to one).
+        if path.startswith("//") and not path.startswith("///"):
+            return None
         return "/", _walk(path.split("/"))
     text = path.replace("/", "\\")
     if text.startswith("\\\\?\\") or text.startswith("\\\\.\\"):
@@ -589,6 +631,10 @@ JSON_CASES: list[JsonCase] = [
     ("int-400-digits", "an integer of 401 digits", b"1" + b"0" * 400, "unsafe-integer"),
     ("int-unsafe-in-array", "an unsafe integer nested in an array", b"[1,9007199254740992]", "unsafe-integer"),
     ("int-unsafe-in-object", "an unsafe integer nested in an object", b'{"count":9007199254740993}', "unsafe-integer"),
+    ("int-5000-digits", "5,000 digits: int() would raise ValueError above 4300", b"1" + b"0" * 4999, "unsafe-integer"),
+    ("int-negative-5000-digits", "a negative integer of 5,000 digits", b"-" + b"9" * 5000, "unsafe-integer"),
+    ("int-4301-digits", "4,301 digits, the first length Python refuses to convert", b"9" * 4301, "unsafe-integer"),
+    ("int-5000-digits-in-object", "a 5,000-digit integer nested in an object", b'{"n":' + b"7" * 5000 + b"}", "unsafe-integer"),
     ("tagged-u64-as-number", "a U64 written as a JSON number is refused", b'{"type":"U64","value":18446744073709551615}', "unsafe-integer"),
     # --- numbers that are not integers ---------------------------------------
     ("num-minus-zero", "-0 is refused (it has no integer spelling)", b"-0", "number-form"),
@@ -780,6 +826,10 @@ JSON_CASES: list[JsonCase] = [
     ("depth-257-arrays-scalar-leaf", "a scalar inside 257 arrays", _nest_arrays(257, b"1"), "depth"),
     ("depth-256-alternating", "256 alternating arrays and objects", _alternating(256), None),
     ("depth-257-alternating", "257 alternating arrays and objects", _alternating(257), "depth"),
+    ("depth-1000-arrays", "1,000 nested arrays", _nest_arrays(1000), "depth"),
+    ("depth-5000-arrays", "5,000 nested arrays (beyond most recursion limits)", _nest_arrays(5000), "depth"),
+    ("depth-5000-objects", "5,000 nested objects", _nest_objects(5000), "depth"),
+    ("depth-5000-unclosed", "5,000 opening brackets and nothing else", b"[" * 5000, "depth"),
     # --- keys that are special in some runtimes ---------------------------------------------------------------
     ("key-proto", "__proto__ is an ordinary key", b'{"__proto__":1}', None),
     ("key-proto-object", "__proto__ holding an object must not reach a prototype", b'{"__proto__":{"polluted":true}}', None),
@@ -880,6 +930,12 @@ TAGGED_CASES: list[TaggedCase] = [
     ("result-wrong-tag", "the wrong outer type tag", RES_B, SELECT, _tag("Result<Bool,SelectError>", '{"ok":true}'), "value"),
     ("result-body-not-object", "a body that is not an object", RES_B, SELECT, _tag(RES_B, '"ok"'), "value"),
     ("result-ok-bool", "Ok holding a bare Bool", "Result<Bool,SelectError>", SELECT, _tag("Result<Bool,SelectError>", '{"ok":true}'), None),
+    ("list-u8-unsupported", "List<T> is outside the closed v1 profile", "List<U8>", None, '{"type":"List<U8>","value":[]}', "unsupported-type"),
+    ("list-bool-unsupported", "List<Bool>", "List<Bool>", None, '{"type":"List<Bool>","value":[true]}', "unsupported-type"),
+    ("option-u8-unsupported", "Option<T> is outside the closed v1 profile", "Option<U8>", None, '{"type":"Option<U8>","value":[]}', "unsupported-type"),
+    ("option-bytes-unsupported", "Option<Bytes> with a value", "Option<Bytes>", None, '{"type":"Option<Bytes>","value":[{"type":"Bytes","value":"00"}]}', "unsupported-type"),
+    ("option-option-unsupported", "Option<Option<U8>>", "Option<Option<U8>>", None, '{"type":"Option<Option<U8>>","value":[]}', "unsupported-type"),
+    ("result-list-unsupported", "a Result whose payload is a List", "Result<List<U8>,SelectError>", SELECT, '{"type":"Result<List<U8>,SelectError>","value":{"ok":{"type":"List<U8>","value":[]}}}', "unsupported-type"),
     ("result-ok-wrong-inner", "Ok holding the wrong inner shape", RES_B, SELECT, _tag(RES_B, '{"ok":true}'), "value"),
 ]
 
@@ -910,6 +966,13 @@ CONTAINMENT_CASES: list[ContainmentCase] = [
     ("posix-backslash-is-a-name", "a backslash is an ordinary character on posix", P, "/repo", "/repo/a\\..\\b", True, False),
     ("posix-dotdot-at-root-clamps", "/.. is / (there is no parent of the root)", P, "/repo", "/../repo/x", True, False),
     ("posix-root-normalised", "the root is normalised too", P, "/a/b/../c", "/a/c/d", True, False),
+    ("posix-double-slash-child", "exactly two leading slashes are refused (implementation-defined)", P, "/", "//x", False, False),
+    ("posix-double-slash-only", "// alone is refused", P, "/", "//", False, False),
+    ("posix-double-slash-root", "a // root contains nothing", P, "//", "/repo", False, False),
+    ("posix-double-slash-both", "// root and // child are both refused", P, "//", "//x", False, False),
+    ("posix-double-slash-repo-child", "//repo/x is not /repo/x", P, "/repo", "//repo/x", False, False),
+    ("posix-triple-slash-collapses", "three or more leading slashes collapse to one", P, "/", "///x", True, False),
+    ("posix-triple-slash-root", "a ///repo root is /repo", P, "///repo", "/repo/x", True, False),
     ("win32-child", "a nested child", W, "D:\\repo", "D:\\repo\\x", True, False),
     ("win32-root-itself", "the root is inside itself", W, "D:\\repo", "D:\\repo", True, True),
     ("win32-cross-drive", "C: is another drive: path.relative would return an ABSOLUTE path", W, "D:\\repo", "C:\\tmp\\x", False, False),
@@ -939,6 +1002,23 @@ CONTAINMENT_CASES: list[ContainmentCase] = [
     ("win32-drive-root-unc-child", "a UNC path is never inside a drive root", W, "D:\\repo", "\\\\server\\share\\repo", False, False),
     ("win32-unc-root-drive-child", "a drive path is never inside a UNC root", W, "\\\\server\\share\\repo", "D:\\repo\\x", False, False),
     ("win32-device-namespace-question", "a \\\\?\\ device path is never inside an ordinary root", W, "D:\\repo", "\\\\?\\D:\\repo\\x", False, False),
+    ("win32-device-mixed-backslash-slash", "separators are normalised before the device rule: \\/?\\", W, "D:\\repo", "\\/?\\D:\\repo\\x", False, False),
+    ("win32-device-mixed-slash-backslash", "/\\?/ is a device prefix too", W, "D:\\repo", "/\\?/D:/repo/x", False, False),
+    ("win32-device-mixed-tail-slash", "\\\\?/ is a device prefix too", W, "D:\\repo", "\\\\?/D:\\repo\\x", False, False),
+    ("win32-device-mixed-dot", "\\\\./ is a device prefix too", W, "D:\\repo", "\\\\./D:\\repo", False, False),
+    ("win32-device-forward-question", "//?/ is a device prefix", W, "D:\\repo", "//?/D:/repo/x", False, False),
+    ("win32-device-forward-dot", "//./ is a device prefix", W, "D:\\repo", "//./D:/repo", False, False),
+    ("win32-device-unc", "\\\\?\\UNC\\ is a device path, not a UNC one", W, "\\\\server\\share\\repo", "\\\\?\\UNC\\server\\share\\repo\\x", False, False),
+    ("win32-device-root", "a device-path root contains nothing", W, "\\\\?\\D:\\repo", "D:\\repo\\x", False, False),
+    ("win32-device-root-same-device-child", "even a child of the same device path is refused", W, "\\\\.\\D:\\repo", "\\\\.\\D:\\repo\\x", False, False),
+    ("win32-device-mixed-both-sides", "a mixed-separator device root and child are still refused", W, "\\/?\\D:\\repo", "\\/?\\D:\\repo\\x", False, False),
+    ("win32-device-mixed-slash-both-sides", "/\\?/ root and child", W, "/\\?/D:/repo", "/\\?/D:/repo/x", False, False),
+    ("win32-device-mixed-dot-both-sides", "\\\\./ root and child", W, "\\\\./D:\\repo", "\\\\./D:\\repo\\x", False, False),
+    ("win32-device-forward-both-sides", "//?/ root and child", W, "//?/D:/repo", "//?/D:/repo/x", False, False),
+    ("win32-unc-forward-slashes", "a UNC root written with forward slashes", W, "//server/share/repo", "//server/share/repo/x", True, False),
+    ("win32-unc-mixed-separators", "a UNC root with mixed separators", W, "\\\\server/share\\repo", "//server\\share/repo\\x", True, False),
+    ("win32-unc-forward-other-share", "another share, forward slashes", W, "//server/share/repo", "//server/other/repo/x", False, False),
+    ("win32-unc-forward-sibling-prefix", "repo2 on a forward-slash share", W, "//server/share/repo", "//server/share/repo2", False, False),
     ("win32-device-namespace-dot", "a \\\\.\\ device path is never inside an ordinary root", W, "D:\\repo", "\\\\.\\D:\\repo", False, False),
 ]
 
@@ -1016,6 +1096,9 @@ def build_cases() -> dict[str, list[dict[str, Any]]]:
         else:
             try:
                 stream = decode_and_encode(raw, type_text, errors or {})
+            except TypeReject:
+                outcome = {"outcome": "reject", "error": "unsupported-type"}
+                got = "unsupported-type"
             except ValueReject:
                 outcome = {"outcome": "reject", "error": "value"}
                 got = "value"
@@ -1109,6 +1192,62 @@ def structural_problems(files: dict[str, str]) -> list[str]:
     return problems
 
 
+def _pathlib_applicable(flavor: str, root: str, child: str) -> bool:
+    """pathlib only models the ordinary cases; the special rules have none."""
+    both = (root, child)
+    if any(p.replace("/", "\\").startswith(("\\\\?\\", "\\\\.\\")) for p in both if flavor == "win32"):
+        return False
+    if flavor == "win32" and any(p.replace("/", "\\").startswith("\\\\") for p in both):
+        return False
+    return not (flavor == "posix" and any(p.startswith("//") and not p.startswith("///") for p in both))
+
+
+def alt_contains(flavor: str, root: str, child: str) -> dict[str, bool]:
+    """A deliberately different algorithm: canonical STRINGS and a boundary test.
+
+    The main reference compares component *lists*.  This one rebuilds each path
+    as one canonical string (anchor + "/" + components) and asks whether the
+    child string equals the root string or starts with the root string followed
+    by a separator.  It re-implements device, UNC and ``//`` handling in its own
+    words (regular expressions, not slicing), so a shared misreading is unlikely.
+    """
+
+    def canon(path: str) -> str | None:
+        if flavor == "posix":
+            if re.match(r"//(?!/)", path):
+                return None
+            anchor, rest = "/", path
+        else:
+            path = path.replace("/", "\\").lower()
+            if re.match(r"\\\\[?.]\\", path):
+                return None
+            unc = re.match(r"\\\\([^\\]+)\\([^\\]+)(.*)$", path)
+            drive = re.match(r"([a-z]:)(\\.*)$", path)
+            if unc:
+                anchor, rest = "\\\\" + unc.group(1) + "\\" + unc.group(2), unc.group(3)
+            elif drive:
+                anchor, rest = drive.group(1), drive.group(2)
+            else:
+                raise ValueError("absolute path expected")
+            rest = rest.replace("\\", "/")
+        stack: list[str] = []
+        for part in re.split(r"/+", rest):
+            if part == "..":
+                if stack:
+                    stack.pop()
+            elif part not in ("", "."):
+                stack.append(part)
+        return anchor + "".join("/" + part for part in stack) + ("/" if not stack else "")
+
+    a, b = canon(root), canon(child)
+    if a is None or b is None:
+        return {"inside": False, "same": False}
+    a_dir = a if a.endswith("/") else a + "/"
+    same = b.rstrip("/") == a.rstrip("/")
+    inside = same or b.startswith(a_dir)
+    return {"inside": inside, "same": same}
+
+
 def second_opinions() -> list[str]:
     """Cross-check the reference against the stdlib where the two must agree.
 
@@ -1130,16 +1269,17 @@ def second_opinions() -> list[str]:
         if reference != stdlib:
             problems.append(f"json/{slug}: UTF-8 decoder disagrees with the stdlib")
     for slug, _s, flavor, root, child, inside, same in CONTAINMENT_CASES:
-        if "\\\\?\\" in child or "\\\\.\\" in child or (flavor == "win32" and child.startswith("\\\\")):
-            continue
-        if flavor == "posix":
-            pure, norm = PurePosixPath, posixpath.normpath
-        else:
-            pure, norm = PureWindowsPath, ntpath.normpath
-        base, target = pure(norm(root)), pure(norm(child))
-        stdlib_inside = target == base or base in target.parents
-        if stdlib_inside != inside or (target == base) != same:
-            problems.append(f"containment/{slug}: pathlib disagrees with the reference")
+        if alt_contains(flavor, root, child) != {"inside": inside, "same": same}:
+            problems.append(f"containment/{slug}: the string-level second opinion disagrees")
+        if _pathlib_applicable(flavor, root, child):
+            if flavor == "posix":
+                pure, norm = PurePosixPath, posixpath.normpath
+            else:
+                pure, norm = PureWindowsPath, ntpath.normpath
+            base, target = pure(norm(root)), pure(norm(child))
+            stdlib_inside = target == base or base in target.parents
+            if stdlib_inside != inside or (target == base) != same:
+                problems.append(f"containment/{slug}: pathlib disagrees with the reference")
     return problems
 
 

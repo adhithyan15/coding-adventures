@@ -254,6 +254,83 @@
       "summary": "the root is normalised too"
     },
     {
+      "child": "//x",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "posix",
+      "id": "containment/posix-double-slash-child",
+      "root": "/",
+      "summary": "exactly two leading slashes are refused (implementation-defined)"
+    },
+    {
+      "child": "//",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "posix",
+      "id": "containment/posix-double-slash-only",
+      "root": "/",
+      "summary": "// alone is refused"
+    },
+    {
+      "child": "/repo",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "posix",
+      "id": "containment/posix-double-slash-root",
+      "root": "//",
+      "summary": "a // root contains nothing"
+    },
+    {
+      "child": "//x",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "posix",
+      "id": "containment/posix-double-slash-both",
+      "root": "//",
+      "summary": "// root and // child are both refused"
+    },
+    {
+      "child": "//repo/x",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "posix",
+      "id": "containment/posix-double-slash-repo-child",
+      "root": "/repo",
+      "summary": "//repo/x is not /repo/x"
+    },
+    {
+      "child": "///x",
+      "expect": {
+        "inside": true,
+        "same": false
+      },
+      "flavor": "posix",
+      "id": "containment/posix-triple-slash-collapses",
+      "root": "/",
+      "summary": "three or more leading slashes collapse to one"
+    },
+    {
+      "child": "/repo/x",
+      "expect": {
+        "inside": true,
+        "same": false
+      },
+      "flavor": "posix",
+      "id": "containment/posix-triple-slash-root",
+      "root": "///repo",
+      "summary": "a ///repo root is /repo"
+    },
+    {
       "child": "D:\\repo\\x",
       "expect": {
         "inside": true,
@@ -571,6 +648,193 @@
       "id": "containment/win32-device-namespace-question",
       "root": "D:\\repo",
       "summary": "a \\\\?\\ device path is never inside an ordinary root"
+    },
+    {
+      "child": "\\/?\\D:\\repo\\x",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-device-mixed-backslash-slash",
+      "root": "D:\\repo",
+      "summary": "separators are normalised before the device rule: \\/?\\"
+    },
+    {
+      "child": "/\\?/D:/repo/x",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-device-mixed-slash-backslash",
+      "root": "D:\\repo",
+      "summary": "/\\?/ is a device prefix too"
+    },
+    {
+      "child": "\\\\?/D:\\repo\\x",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-device-mixed-tail-slash",
+      "root": "D:\\repo",
+      "summary": "\\\\?/ is a device prefix too"
+    },
+    {
+      "child": "\\\\./D:\\repo",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-device-mixed-dot",
+      "root": "D:\\repo",
+      "summary": "\\\\./ is a device prefix too"
+    },
+    {
+      "child": "//?/D:/repo/x",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-device-forward-question",
+      "root": "D:\\repo",
+      "summary": "//?/ is a device prefix"
+    },
+    {
+      "child": "//./D:/repo",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-device-forward-dot",
+      "root": "D:\\repo",
+      "summary": "//./ is a device prefix"
+    },
+    {
+      "child": "\\\\?\\UNC\\server\\share\\repo\\x",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-device-unc",
+      "root": "\\\\server\\share\\repo",
+      "summary": "\\\\?\\UNC\\ is a device path, not a UNC one"
+    },
+    {
+      "child": "D:\\repo\\x",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-device-root",
+      "root": "\\\\?\\D:\\repo",
+      "summary": "a device-path root contains nothing"
+    },
+    {
+      "child": "\\\\.\\D:\\repo\\x",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-device-root-same-device-child",
+      "root": "\\\\.\\D:\\repo",
+      "summary": "even a child of the same device path is refused"
+    },
+    {
+      "child": "\\/?\\D:\\repo\\x",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-device-mixed-both-sides",
+      "root": "\\/?\\D:\\repo",
+      "summary": "a mixed-separator device root and child are still refused"
+    },
+    {
+      "child": "/\\?/D:/repo/x",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-device-mixed-slash-both-sides",
+      "root": "/\\?/D:/repo",
+      "summary": "/\\?/ root and child"
+    },
+    {
+      "child": "\\\\./D:\\repo\\x",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-device-mixed-dot-both-sides",
+      "root": "\\\\./D:\\repo",
+      "summary": "\\\\./ root and child"
+    },
+    {
+      "child": "//?/D:/repo/x",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-device-forward-both-sides",
+      "root": "//?/D:/repo",
+      "summary": "//?/ root and child"
+    },
+    {
+      "child": "//server/share/repo/x",
+      "expect": {
+        "inside": true,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-unc-forward-slashes",
+      "root": "//server/share/repo",
+      "summary": "a UNC root written with forward slashes"
+    },
+    {
+      "child": "//server\\share/repo\\x",
+      "expect": {
+        "inside": true,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-unc-mixed-separators",
+      "root": "\\\\server/share\\repo",
+      "summary": "a UNC root with mixed separators"
+    },
+    {
+      "child": "//server/other/repo/x",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-unc-forward-other-share",
+      "root": "//server/share/repo",
+      "summary": "another share, forward slashes"
+    },
+    {
+      "child": "//server/share/repo2",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-unc-forward-sibling-prefix",
+      "root": "//server/share/repo",
+      "summary": "repo2 on a forward-slash share"
     },
     {
       "child": "\\\\.\\D:\\repo",
