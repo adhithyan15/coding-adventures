@@ -3,7 +3,7 @@
 -- Warrant document for rpg-grid-world (VER04j and VER04m: state=explicit).
 -- Formal verification contract for the resource guards of the grid-world engine.
 
-warrant rpg-grid-world v1
+warrant rpg_grid_world v1
   -- Contract mapping: validate_speed models GridActor::set_speed; validate_reach models the
   -- guard of interact_target; validate_page_count models the guard of DialogueBox::open;
   -- validate_text_speed models DialogueBox::set_text_speed; validate_rate models the

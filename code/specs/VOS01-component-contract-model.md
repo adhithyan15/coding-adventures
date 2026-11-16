@@ -201,6 +201,29 @@ public fields. VER04m E11's `codec` line builds through a function
 state. Recommended: private fields, a `ghost`-gated `from_parts`/`parts` pair, and
 extending the by-value binding to take `fn:` builders (backlog VOS-D006).
 
+### 1.6 Which rules bind which crate (classes)
+
+SH1-SH16 exist so a component compiles to RV32 and can be proved on the
+image. A crate that is not in an image has no such need, and the emulator
+wraps audited simulators that use heap, `String` and `std::error`. So the
+rules bind by class (EMU00 section 3.3 defines the emulator classes):
+
+| Class | Crates | Rules |
+|---|---|---|
+| **K** (kernel) | every component, `-any`, spine and HAL-facing crate that can enter an image | SH1-SH16 in full, as above |
+| **C**, **S** (emulator contract, spine) | `emu-core`, `emu-dev-*` | SH2-SH11 and SH13-SH15; no `alloc` in state or step; closed device enums, no `dyn`; empty effect certificate |
+| **M** (model) | `emu-cpu-*` and the simulators they wrap | Exempt from SH1, SH10, SH12; `forbid(unsafe_code)`; no capability beyond memory |
+| **P** (parser) | `emu-image` | `alloc` allowed; total, panic-free, bounds before allocation (EMU00 section 8.3) |
+| **H** (host) | `emu-host` | `std` allowed; the only crate with capabilities |
+
+*Why:* evidence over a reduced instance needs a total, bounded, by-value step
+(classes C and S), while input handling and the trusted ISA models have a
+different evidence route (EMU00 sections 8 and 11). The class is recorded in
+the crate's README and read by the shape check (VOS-D002). Class K is the
+default: a crate with no class tag is class K. SH16 is unchanged and applies
+to class K and image-class profiles only: classes M, P and H never enter an
+image, because the emulator runs the image rather than being part of it.
+
 ---
 
 ## 2. Contract anatomy

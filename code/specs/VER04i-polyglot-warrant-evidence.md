@@ -312,6 +312,70 @@ core Perl; Lua and OCaml's stdlib `Digest` is MD5, so those two lanes carry a
 vetted 80-line SHA-256 in `warrant-corpus`, itself checked against NIST
 vectors in the lane's own tests).
 
+### 2.6.1 Allocation registry: stream tags and diagnostic codes
+
+Added 2026-11-16 (owner decision, VER30 decision 19). VER04l, VER04r and VER04p
+had each taken tags in `60` to `63` without sight of one another, and the draft
+VER04n had to check the rest by hand. This table is the **one place** that lists
+every allocation. A specification that needs a tag or a code **checks this
+registry first, takes the lowest free value, and adds its row in the same PR**;
+a collision found later is resolved in favour of the **earliest-merged**
+allocation, and the later specification renumbers. Reserved ranges are rows too.
+
+**Stream tags** (`warrant-stream-v1` and `warrant-stream-v2`; a lane decoder MUST
+reject a tag it does not know).
+
+| Tag | Meaning | Specification | Status |
+|---|---|---|---|
+| `00`, `01` | `Bool` false, true | VER04i 2.6 | merged |
+| `10` | `U8`..`U64`, `Nat` (8 bytes LE) | VER04i 2.6 | merged |
+| `11` | `I8`..`I64` (8 bytes, two's complement) | VER04r 2.4 | merged (spec only) |
+| `20` | `Bytes`, `Bytes<N>` | VER04i 2.6 | merged |
+| `30` | `List` | VER04i 2.6 | merged |
+| `40`, `41` | `Option` none, some | VER04i 2.6 | merged |
+| `50`, `51` | `Ok`, `Err` | VER04i 2.6 | merged |
+| `60` | `Text` | VER04l 7.2 | merged 2026-11-13 |
+| `61` | `Char` | VER04l 7.2 | merged 2026-11-13 |
+| `62` | `F32` | VER04p 10 | merged 2026-11-16 |
+| `63` | `F64` | VER04p 10 | merged 2026-11-16 |
+| `64` | tuple, record | VER04r 2.4 | renumbered 2026-11-16 (was `60`) |
+| `65` | variant | VER04r 2.4 | renumbered 2026-11-16 (was `62`) |
+| `66` | `Set` | VER04o 8.2 | spec only (2026-11-16) |
+| `67` | `Map` | VER04o 8.2 | spec only (2026-11-16) |
+| `68` to `79` | free; the next specification (VER04s recursive types, if it needs one) takes from `68` | none | free |
+| `80` | opaque recipe | VER04n 9.1 | merged 2026-11-16 |
+| `81` | opaque observation tuple | VER04n 9.1 | merged 2026-11-16 |
+| `82` to `8f` | reserved for VER04n | VER04n 9.1 | reserved |
+| `90` to `ff` | free | none | free |
+
+VER04s (recursive types) is expected to need no tag of its own: a value of a
+recursive type is a variant (`65`) whose fields nest. If its design needs one, it
+takes `68` (VER04o took `66` and `67`).
+
+**Diagnostic codes** (`W` codes of the Warrant checker and generator).
+
+| Codes | Meaning | Specification | Status |
+|---|---|---|---|
+| `W0001` to `W0602` (the v0 set, by hundreds: `W00` lexical and admission, `W01` syntax, `W02` names and types, `W03` operations, `W04` claims, `W05` domains, `W06` budgets) | the v0 set | VER04 and VER04a to VER04f | merged |
+| `W0701` to `W0705` | generation and binding | VER04e | merged |
+| `W0706`, `W0707` | exhaustive budget, derived-evidence generation | VER04h | merged |
+| `W0708` to `W0710` | v1 extensions | VER04j | merged |
+| `W0711` to `W0713` | wave 4 (WX-D, WX-F, WX-G) | VER04k | merged |
+| `W0714` to `W0729` | free | none | free |
+| `W0730` to `W0733` | stateful objects | VER04m | merged |
+| `W0734` to `W0749` | free | none | free |
+| `W0750` to `W0759` | opaque types (`W0750` to `W0753` assigned) | VER04n | merged; the block is reserved |
+| `W0760` to `W0769` | collections and generics (`W0760` to `W0765` assigned) | VER04o | spec only (2026-11-16); the block is reserved |
+| `W0770` and up | free | none | free |
+
+On 2026-11-16 the registry was built by reading every specification under
+`code/specs` that allocates either kind. **Stream tags had three collisions**
+(`60` among VER04l and VER04r, `62` among VER04p and VER04r, and the unresolved
+choice between them), settled as above. **Diagnostic codes had none**: VER04l,
+VER04p and VER04r allocate no new code (they reuse `W0101`, `W0201`, `W0203`,
+`W0202`, `W0401`, `W0601`, `W0706`), and the blocks of VER04j, VER04k, VER04m and
+VER04n are disjoint.
+
 ### 2.7 Value encoding for Warrant types (TFV mapping)
 
 `cases.tfv` reuses TFV v1 unchanged (TF01 §2). Types map onto the value model
@@ -1359,6 +1423,38 @@ Windows, `posix` elsewhere) through the same helper the fixture drives: a helper
 whose default skips the device rule tests something production never calls. Symlinks are out of
 scope for the cases: resolving them (`realpath`) is the caller's job and must happen
 *before* this check; a lane that skips it must say so.
+
+**Pending implementation: two cross-lane path rules (2026-11-16, backlog
+`WD-100b`).** A review of the conformance kit found two places where the lanes
+disagree with the Rust loader (PR #19492) or with each other. Both rules below are
+**normative now** and **not yet implemented**: they are pinned in
+`warrant-corpus-conformance-v1` as new cases (added only, never changing an
+existing expectation; if one existing case turns out to say otherwise, that
+expectation moves to `-v2`) and applied to the Python, TypeScript and Go lanes and
+to the Rust loader. Until a lane passes them it must say so in its manifest, and it
+does not count as passing the kit.
+
+1. **Windows reserved device names are refused.** A path component is *reserved*
+   if, after removing any trailing dots and spaces, and then removing everything
+   from the first `.` onward (the extension, so `CON.txt` and `nul.tar.gz` are
+   reserved), the remainder equals `CON`, `PRN`, `AUX`, `NUL`, `COM1` to `COM9` or
+   `LPT1` to `LPT9`, compared ASCII case-insensitively. A component that merely
+   ends in a dot or a space (`name.`, `name `) is also refused, because Windows
+   silently strips them and two spellings would name one file. A path containing a
+   reserved or trailing-dot-or-space component is **refused** by the lane's
+   artifact-path acceptance on **every host flavour** (an artifact written on Linux
+   must load on Windows) and, under `win32`, a containment query with such a
+   component in `child` answers `inside: false`. The Rust loader already refuses
+   these; the lanes do not.
+2. **`win32` case-insensitive comparison folds ASCII only.** Under `win32` two
+   components are equal if they are equal after mapping `A` to `Z` onto `a` to `z`
+   and **nothing else**: every non-ASCII code point is compared exactly, so
+   `ſ` (U+017F), the Kelvin sign (U+212A), `İ` (U+0130) and `Σ`/`σ`/`ς` never match an ASCII
+   letter or each other by case. This fails closed: a path that differs from the
+   root only by a non-ASCII case variant is **not inside** it. Go (`strings.EqualFold`
+   with its Unicode simple folding) and Python (`casefold`/`lower`) differ today
+   on exactly those characters, so the rule is a defined behaviour in place of two
+   different accidents.
 
 **Label digest.** The `domain-labels.json` digest is the SHA-256 of the canonical
 rendering of the manifest with `toolchain.version` replaced by the empty string.
