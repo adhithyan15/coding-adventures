@@ -143,6 +143,10 @@ comment, unbalanced `() [] {}`, a character the lexer cannot classify, more
 than 262,144 tokens) is **VT03** and the run FAILs; the file is never "skipped".
 A `Cargo.toml` outside the supported TOML subset is VT03 too.
 
+**Caps in the binary.** The binary refuses (exit 2) a `Cargo.toml` or `vos.toml`
+over its cap before reading; the library, given the same text, reports VT01 or
+VT03 (exit 1). Both are fail closed.
+
 **Filesystem (binary only).** The library is pure (text in, report out). The
 binary reads with the VOS02 section 6.8 discipline: it `lstat`s every path and
 refuses a symlink at any entry it visits, reads only regular files, checks the

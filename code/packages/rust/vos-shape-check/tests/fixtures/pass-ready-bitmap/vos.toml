@@ -1,0 +1,4 @@
+# The VOS01 section 5.3 bitmap, with the VOS02 section 4.2 ghost face.
+class = "K"
+kind = "production"
+evidence-features = ["ghost"]

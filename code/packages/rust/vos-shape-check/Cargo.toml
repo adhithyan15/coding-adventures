@@ -1,0 +1,15 @@
+[package]
+name = "vos-shape-check"
+version = "0.1.0"
+edition = "2021"
+description = "Lexical component shape checker for the verified-OS program (VOS-D002, VOS03): SH1-SH15, SH17, SH18 and the class tag"
+
+[lib]
+name = "vos_shape_check"
+path = "src/lib.rs"
+
+[[bin]]
+name = "vos-shape-check"
+path = "src/main.rs"
+
+[dependencies]
