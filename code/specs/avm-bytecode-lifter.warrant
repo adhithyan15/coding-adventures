@@ -1,0 +1,80 @@
+-- SWF04 -- AVM Bytecode Lifter: deterministic AVM1 and AVM2 binary bytecode
+-- lifter targeting InterpreterIR and vm-core.
+--
+-- Formal verification contract for bounded bytecode lifting and CFG/stack validation.
+
+warrant avm_bytecode_lifter v1
+  error LifterError = InvalidBranchTarget | StackUnderflow | StackOverflow | UnexpectedEof | InvalidBytecode | UnsupportedOpcode | ConstantPoolLimitExceeded | FunctionLimitExceeded | InstructionLimitExceeded | MethodBodyLimitExceeded | ExecutionError | PrototypePollutionBlocked | ScriptTimeout
+
+  model Unit = Bool
+
+  model valid_stack_depth(depth: Nat) -> Bool = depth <= 1024
+  model valid_instruction_count(n: Nat) -> Bool = n <= 100000
+  model valid_constant_count(n: Nat) -> Bool = n <= 65536
+
+  op validate_stack_depth(depth: Nat) -> Result<Bool, LifterError>
+  op validate_instruction_count(n: Nat) -> Result<Bool, LifterError>
+  op validate_constant_count(n: Nat) -> Result<Bool, LifterError>
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels validate_stack_depth:
+    depth public
+  labels validate_instruction_count:
+    n public
+  labels validate_constant_count:
+    n public
+
+  input validate_stack_depth.depth:
+    hostile
+    ensures no_panic, terminates
+
+  input validate_instruction_count.n:
+    hostile
+    ensures no_panic, terminates
+
+  input validate_constant_count.n:
+    hostile
+    ensures no_panic, terminates
+
+  bound validate_stack_depth:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_instruction_count:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_constant_count:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+
+  example stack_depth_zero:
+    validate_stack_depth(0) == Ok(true)
+  example stack_depth_max:
+    validate_stack_depth(1024) == Ok(true)
+  example stack_depth_overflow:
+    validate_stack_depth(1025) == Err(LifterError.StackOverflow)
+  example instruction_count_zero:
+    validate_instruction_count(0) == Ok(true)
+  example instruction_count_max:
+    validate_instruction_count(100000) == Ok(true)
+  example instruction_count_exceeded:
+    validate_instruction_count(100001) == Err(LifterError.InstructionLimitExceeded)
+  example constant_count_zero:
+    validate_constant_count(0) == Ok(true)
+  example constant_count_max:
+    validate_constant_count(65536) == Ok(true)
+  example constant_count_exceeded:
+    validate_constant_count(65537) == Err(LifterError.ConstantPoolLimitExceeded)
+
+  claim validate_stack_depth_agrees:
+    forall depth: Nat. validate_stack_depth(depth) == (if valid_stack_depth(depth) then Ok(true) else Err(LifterError.StackOverflow))
+  claim validate_instruction_count_agrees:
+    forall n: Nat. validate_instruction_count(n) == (if valid_instruction_count(n) then Ok(true) else Err(LifterError.InstructionLimitExceeded))
+  claim validate_constant_count_agrees:
+    forall n: Nat. validate_constant_count(n) == (if valid_constant_count(n) then Ok(true) else Err(LifterError.ConstantPoolLimitExceeded))

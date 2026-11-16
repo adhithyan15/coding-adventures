@@ -691,6 +691,18 @@ name = "avl-tree"
 version = "0.1.0"
 
 [[package]]
+name = "avm-bytecode-lifter"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "interpreter-ir",
+ "swf-container",
+ "vm-core",
+]
+
+[[package]]
 name = "avr-classic-simulator"
 version = "0.1.0"
 
