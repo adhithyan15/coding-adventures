@@ -123,3 +123,13 @@ The suite runs the whole real corpus (572,109 cases) through a reference library
 defined in the tests, plus a deliberately wrong library per defect; the plumbing
 tests use a two-suite slice of it. Fixtures are copied as bytes, never read and
 rewritten as text.
+
+## Shared conformance kit
+
+`conformance_test.go` runs every case of `code/specs/fixtures/warrant-corpus-conformance-v1`
+(VER04i 9.1, WD-100) through this lane's own functions: `parseJSON` then `renderJSON`
+(json), `parseType` + `decodeJSON` + the stream encoder (tagged), `relativeInside` with the
+case's `posix` or `win32` flavour (containment) and `manifestLabelDigest` (label-digest).
+All four categories run, and the per-category counts are compared with `index.json`.
+Production calls the same containment helper with `hostFlavor`, so the device-path and `//`
+rules apply there too. Symlinks are resolved by `resolveInside` before the lexical check.
