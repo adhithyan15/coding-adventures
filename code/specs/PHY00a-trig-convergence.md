@@ -1159,6 +1159,17 @@ must:
      more accurate at every time. That change lands in the same PR as the `trig`
      port of that lane, or before it.
      **Done in TC-2 for Python, Rust and TypeScript** (the phase is reduced in cycles).
+   * `percussion-kit`'s pseudo-noise is **not safe either**, and the first TC-2 draft
+     wrongly said it was: it computes `sin(2*pi*(i+1)*(seed*0.1618+0.618))` with the
+     sample index `i` and the seed unbounded, so the angle passes 2^29 at sample 0 for
+     seed 1e9, after about 43,000 samples for seed 12345 and at 29.6 s at 192 kHz for the
+     stock seed 89 (Python raised `ValueError` from `floor(NaN)`; Rust and TypeScript
+     returned NaN). **Rule: a hash-noise or sample-index phase is an accumulator.**
+     It is reduced to its fractional cycle, `phase - floor(phase)` (exact), before the
+     `2*pi` multiply, identically in the three lanes. The same reduction is applied to
+     every sine whose phase is `frequency * time + phase` (`percussion-kit` modes,
+     `musical-instruments` partials), because a note-local time is bounded only by the
+     note duration, not by anything the callers check.
    * every other consumer (audio, music, geometry, CAS) is checked the same way
      in the port PR: a dependent that accumulates phase reduces it itself; a
      dependent that passes a user's angle through documents the domain.
@@ -1212,19 +1223,33 @@ vectors) needs the other toolchains and is the follow-up slice TC-1b; what TC-1 
 measure is that the reference's Part II (3.9) as specified is reproduced bit for bit
 by two independent transcriptions (C and Rust).
 
-**TC-2 status (2026-11-16).** Python (`trig` 0.3.0), Rust (`trig` 0.2.0) and TypeScript
-(`trig` 0.2.0) match all 61,854 vectors bit for bit. `oscillator` (0.1.2 Python, 0.2.0
-Rust and TypeScript) and `musical-instruments` (Rust, TypeScript 0.2.0) now take their
-sines from `trig` instead of `f64::sin` / `Math.sin`, and `percussion-kit` TypeScript does
-too, so a rendered note is the same in all three lanes. The sine oscillators reduce
-their phase in cycles (7). `musical-instruments` and `percussion-kit` evaluate sines of
-`2*pi*f*t` with `t` the note-local time, which is bounded by the note duration, so they
-stay far below 2^29 radians and need no reduction. The shared golden changed once:
-`pcm16_le_sha256` `15c793ee...364766` -> `8b578c82...c730aa` (33 of 96,138 samples moved by
-1 LSB). The old digest was an artefact of the inaccurate old `trig` (the percussion
-noise multiplies `sin` by 43758.5, amplifying a 1e-12 error into a flipped sample);
-`Math.sin` already produced the new digest, and the TypeScript lane had no golden test,
-which TC-2 adds.
+**TC-2 status (2026-11-16).** Python (`trig` 0.3.0), Rust (`trig` 0.3.0) and TypeScript
+(`trig` 0.3.0; the 0.2.0 of those two changelogs was already taken) match all 61,854
+vectors bit for bit. `oscillator` (0.2.0 in all three lanes), `musical-instruments` and
+`percussion-kit` take every sine from `trig` instead of `f64::sin` / `Math.sin`, so a
+rendered note is the same in all three lanes.
+
+*Audit of every caller of `trig` `sin`, `cos`, `tan` in the three lanes* (done after review
+found the `percussion-kit` noise failing):
+
+| Caller | Argument | Unbounded? | Action |
+|---|---|---|---|
+| `oscillator` `SineOscillator` (py, rs, ts) | `2*pi*(f*t + phase)` | yes (time) | phase reduced to cycles |
+| `percussion-kit` pseudo-noise (py, rs, ts) | `2*pi*(i+1)*(seed*0.1618+0.618)` | **yes** (index, seed) | phase reduced to cycles |
+| `percussion-kit` modes (py, rs, ts) | `2*pi*(f*t + phase)` | by note length | phase reduced to cycles |
+| `musical-instruments` partials (py, rs, ts) | `2*pi*(f*t + phase)` | by note length | phase reduced to cycles |
+| `wave` (py, rs, ts) | `2*pi*f*(t mod period) + phase mod 2*pi` | no | already reduced by `fmod`/`%` |
+| `affine2d`, `arc2d`, `collision2d` (py, rs, ts) | a caller-supplied rotation or arc angle | no (a documented user angle, not an accumulator) | none: beyond 2^29 radians the answer is NaN, the contract |
+| `point2d`, `bezier2d`, `cas-*` | `sqrt` / `atan2` only, or symbolic | n/a | none |
+
+The shared golden changed twice in this PR series and is final: the first regeneration
+(`15c793ee...364766` -> `8b578c82...c730aa`) was invalidated by the `percussion-kit`
+noise reduction, which moves a few dozen more samples by 1 LSB; the final digest is
+`25bc4eb1b0d7a10d40a55afc0f8b0b4d65132a82f538245ee2698700ff4acee1`. The old digest was an
+artefact of the inaccurate old `trig` (the noise multiplies `sin` by 43758.5, amplifying a
+1e-12 error into a flipped sample). The TypeScript lane had no golden test, which TC-2
+adds. A pull request that changes a shared golden shows the three lanes' sample dumps
+equal sample for sample.
 
 Each port PR has the same shape (`feat(trig-<lang>): converge on TRIG-REF-1`):
 
