@@ -1,6 +1,9 @@
 # Changelog
 
-## Unreleased
+## 0.3.0 - 2026-11-16
+
+### Changed
+- A non-finite phase (e.g. `frequency * time` overflowing to inf) now yields NaN instead of raising `OverflowError` from `math.floor`, matching the Rust and TypeScript lanes. Finite inputs are bit-identical (the shared music-machine golden is unchanged).
 
 ### Changed
 - Partial phases are reduced to [0, 1) cycles before `sin` (`phase - floor(phase)`, exact), because `trig.sin` is NaN beyond 2^29 radians (PHY00a 3.4.1, 7); identical in Python, Rust and TypeScript. Last-bit change in long notes.

@@ -2,6 +2,8 @@
 
 ## 0.2.0 - 2026-11-16
 
+- A non-finite phase (`frequency * time` overflowing to inf) yields NaN instead of raising `OverflowError`, matching the Rust and TypeScript lanes; finite inputs are bit-identical.
+
 - `SineOscillator.value_at` reduces its phase to [0, 1) cycles
   (`phase - floor(phase)`, exact in binary64) before multiplying by `2*pi`.
   `trig.sin` now returns NaN beyond 2**29 radians (PHY00a 3.4.1, TRIG-CONV), and a

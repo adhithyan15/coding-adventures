@@ -1,6 +1,9 @@
 # Changelog
 
-## Unreleased
+## 0.3.0 - 2026-11-16
+
+### Changed
+- A non-finite phase (e.g. `frequency * time` overflowing to inf) now yields NaN instead of raising `OverflowError` from `math.floor`, matching the Rust and TypeScript lanes. Finite inputs are bit-identical (the shared music-machine golden is unchanged).
 
 ### Changed
 - **Fix (review of TRIG-CONV TC-2):** the pseudo-noise phase `(i + 1) * (seed * 0.1618 + 0.618)` is unbounded, and `trig.sin` is NaN beyond 2^29 radians (PHY00a 3.4.1), so the noise failed at sample 0 for seed 1e9, after about 43,000 samples for seed 12345 and at 29.6 s at 192 kHz for seed 89. The phase is now reduced to its fractional cycle (`phase - floor(phase)`, exact) before the `2*pi` multiply, identically in Python, Rust and TypeScript; the mode sines are reduced the same way. Noise samples change in the last bits. Tests at the failing seeds and counts, with the same expected values in all three lanes.

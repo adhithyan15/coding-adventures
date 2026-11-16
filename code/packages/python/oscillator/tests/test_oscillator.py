@@ -473,3 +473,9 @@ def test_splitmix64_pbt_uniform_sampler_determinism() -> None:
         assert buf1.samples == buf2.samples
         assert buf1.sample_count() == buf2.sample_count()
         assert buf1.duration_seconds() == buf2.duration_seconds()
+
+
+def test_non_finite_phase_is_nan_not_an_exception() -> None:
+    # frequency * time overflows to inf; floor(inf) would raise OverflowError, but
+    # the Rust and TypeScript lanes return NaN, so Python must too.
+    assert math.isnan(SineOscillator(440).value_at(1e308))

@@ -116,6 +116,9 @@ def _positive_int(name: str, value: int) -> int:
 
 def _fractional_part(value: float) -> float:
     """Return the fractional part of a floating-point value: x - floor(x)."""
+    if not isfinite(value):
+        # NaN, like the Rust and TypeScript lanes (math.floor would raise).
+        return float("nan")
     return value - floor(value)
 
 

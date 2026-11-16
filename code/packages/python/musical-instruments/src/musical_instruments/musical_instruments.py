@@ -562,7 +562,12 @@ class InstrumentSignal:
             # Reduce the phase to [0, 1) cycles before sin: trig.sin is NaN beyond
             # 2**29 radians (PHY00a 3.4.1, 7).  The subtraction is exact.
             phase_cycles = partial_hz * time + partial.phase_cycles
-            cycles = phase_cycles - floor(phase_cycles)
+            # A non-finite phase gives NaN (as in Rust and TypeScript), not an error.
+            cycles = (
+                phase_cycles - floor(phase_cycles)
+                if isfinite(phase_cycles)
+                else float("nan")
+            )
             raw += partial.amplitude * sin(TWO_PI * cycles)
 
         envelope = self.effective_envelope.value_at(

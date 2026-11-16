@@ -47,3 +47,9 @@ def test_cross_lane_values() -> None:
     # The same values are asserted in the Rust and TypeScript lanes.
     for (index, seed), want in zip(CASES, EXPECTED, strict=True):
         assert _pseudo_noise(index, seed) == want
+
+
+def test_non_finite_phase_is_nan_not_an_exception() -> None:
+    # An overflowing phase gives NaN (as in the Rust and TypeScript lanes), not
+    # the OverflowError math.floor would raise.
+    assert math.isnan(_pseudo_noise(int(1e308), 10**9))
