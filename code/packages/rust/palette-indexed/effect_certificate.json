@@ -1,7 +1,7 @@
 {
   "schema_version": "ver24-effect-cert-v1",
   "package": "rust/palette-indexed",
-  "source_digest": "3d2aaed78f9819ef51ecbae76ab6af90b54a07f6dcab531efcdfaadb089f349b",
+  "source_digest": "f90b2524a89782d7f40d12a2fde446e790b47a7afbf411767230875644b88403",
   "manifest_digest": "302f6321c7dbca93b2cd7831f4cf1445d4e981fe802997ef2d0cae9fb5b36ca8",
   "declared_effects": [],
   "entry_points": [

@@ -1021,9 +1021,15 @@ pub fn expand_row_to_rgba_into(
             actual: out.len(),
         });
     }
-    for (x, px) in out.chunks_exact_mut(4).take(width as usize).enumerate() {
+    for (x, px) in out
+        .as_chunks_mut::<4>()
+        .0
+        .iter_mut()
+        .take(width as usize)
+        .enumerate()
+    {
         let index = raw_index(depth, packed, x).ok_or(PaletteError::OutOfBounds)?;
-        px.copy_from_slice(&palette.resolve(index, color0_transparent)?);
+        *px = palette.resolve(index, color0_transparent)?;
     }
     Ok(bytes)
 }
