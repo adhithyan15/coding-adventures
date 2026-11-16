@@ -640,7 +640,9 @@
       "unclaimed": [
         "toolchain authenticity",
         "build execution",
-        "sandbox"
+        "sandbox",
+        "go.mod go directive version",
+        "contents of directories the Go tool ignores"
       ]
     },
     {
@@ -668,7 +670,9 @@
       "unclaimed": [
         "toolchain authenticity",
         "build execution",
-        "sandbox"
+        "sandbox",
+        "go.mod go directive version",
+        "contents of directories the Go tool ignores"
       ]
     },
     {
@@ -696,7 +700,9 @@
       "unclaimed": [
         "toolchain authenticity",
         "build execution",
-        "sandbox"
+        "sandbox",
+        "go.mod go directive version",
+        "contents of directories the Go tool ignores"
       ]
     }
   ],

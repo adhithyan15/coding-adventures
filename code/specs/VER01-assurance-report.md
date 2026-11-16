@@ -92,7 +92,7 @@ The canonical report is emitted as `<package_root>/assurance_report.json` with t
   },
   "lanes": [
     { "lane": "go", "package": "go/ct-compare", "rung": "live", "checks": ["<ten named checks>"],
-      "cases_by_label": { "bounded-set": 506572, "full": 65537 }, "unclaimed": ["toolchain authenticity", "build execution", "sandbox"],
+      "cases_by_label": { "bounded-set": 506572, "full": 65537 }, "unclaimed": ["<the five names of VER04i 8.2>"],
       "release_ready": false, "sandbox": "absent" },
     { "lane": "python", "package": "python/ct-compare", "rung": "live", "...": "as above" },
     { "lane": "typescript", "package": "typescript/ct-compare", "rung": "live", "...": "as above" }

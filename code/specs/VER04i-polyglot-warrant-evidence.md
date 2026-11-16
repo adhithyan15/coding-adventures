@@ -1255,25 +1255,46 @@ a digest that differs from the manifest is `stale-source` (`source_sha256`) or
 `stale-runner` (`runner.src_sha256`).
 
 *Nothing in the root may escape the rule (fail closed).* The digest covers only
-the files the rule selects, so the walk also refuses a root that holds a file the
-rule does not cover: any regular file that is neither selected nor in the ignore
-set is `uncovered-source`, naming the file. Extensions are matched exactly, so
-`EVIL.PY`, `lib.JS` and `Evil.GO` are uncovered, not digested (the runners would
-not digest them either); a `.so`, `.node`, `.s`, `.syso`, `.c` or `.json` file is
-uncovered. The ignore set is exactly this, names compared case-insensitively:
-`README`, `README.md`, `CHANGELOG.md`, `LICENSE`, `LICENSE.md`, `.DS_Store`,
-`.gitkeep`; TypeScript `*.test.ts`; Go `*_test.go` and, directly in the root only,
-`go.mod`, `go.sum`, `BUILD`, `BUILD_windows`, `required_capabilities.json`,
-`evidence.bindings`, plus the root directories `evidence` and `CHANGELOG.d`. A
-`go.mod` anywhere but the root starts a new module and is uncovered. The Go
-dependency files `go.mod` and `go.sum` are therefore a **listed residual**: they
-change what the build links but the Go runner does not digest them (closing this
-needs a runner change and a regenerated manifest, not a loader change). `__pycache__`
-is derived output and is not descended into for the digest, but each entry must
-be a regular `<module>.<tag>.pyc` with `<module>.py` beside it; an orphan
-bytecode file is `uncovered-source`. (A forged `.pyc` beside real source is the
-residual of that rule.) Directories the lane rule skips (`dist`, `node_modules`,
-`vendor`, `testdata`, names starting `.` or `_`) are not examined.
+the files the rule selects, so the walk also refuses a root that holds anything
+the rule does not cover. Any regular file that is neither selected nor in the
+ignore set is `uncovered-source`, naming the file. Extensions are matched
+exactly, so `EVIL.PY`, `lib.JS` and `Evil.GO` are uncovered, not digested (the
+runners would not digest them either); a `.so`, `.node`, `.s`, `.syso`, `.c` or
+`.json` file is uncovered. The ignore set is exactly this, names compared
+case-insensitively: `README`, `README.md`, `CHANGELOG.md`, `LICENSE`,
+`LICENSE.md`, `.DS_Store`, `.gitkeep`; TypeScript `*.test.ts`; Go `*_test.go` and,
+directly in the root only, `go.mod`, `BUILD`, `BUILD_windows`,
+`required_capabilities.json`, `evidence.bindings`, plus the root directories
+`evidence` and `CHANGELOG.d`. Three further rules close ways a directory can
+replace what the digest covers:
+
+* **Bytecode is refused, not inspected.** Python runs a cached `.pyc` instead of
+  its source. A hash-based pyc (PEP 552 flags nonzero) is never revalidated, and
+  a timestamp pyc can be forged to carry the source's mtime and size, so no
+  header check is sound. A `__pycache__` directory in the source or runner root
+  must be empty: any entry is `uncovered-source`. The Python lane's `BUILD` and
+  `BUILD_windows` therefore remove the `__pycache__` directories of the package's
+  `src` and of the runner before the loader check. (Consequence: a checkout in
+  which any Python ran against these two trees will not load until its caches
+  are removed.)
+* **`vendor`, `node_modules` and `dist` are refused, not skipped.** A Go
+  `vendor/` or a TypeScript `node_modules/` or `dist/` directory anywhere in the
+  source or runner root is `uncovered-source`; none exists today.
+* **The Go module files are pinned, not digested.** `go.mod` sets which
+  directory the runner module is built from (`replace`), so it is checked exactly
+  (`go-mod`): the package's `go.mod` may hold only `module
+  github.com/adhithyan15/coding-adventures/<package_root>`, a `go <major.minor>`
+  line, `require <runner module> v0.0.0` and `replace <runner module> =>
+  ../warrant-corpus`; the runner's own `go.mod` only its `module` and `go` lines.
+  Any other directive, block form, module path or replace target fails. A `go.sum`
+  is not in the ignore set (it would mean external dependencies nothing covers),
+  and a `go.mod` anywhere but the root is uncovered.
+
+Directories the lane rule skips (Go `testdata` and names starting `.` or `_`)
+are not examined. These are the **residuals**, and they are printed with every
+readiness result and carried in the report's `unclaimed` list rather than left
+to prose: `go.mod go directive version` (the one value of `go.mod` that is only
+format-checked) and `contents of directories the Go tool ignores`.
 
 What this establishes: the manifest's two digests describe the trees as they are
 now, so editing a production source file or the runner without regenerating the
@@ -1304,12 +1325,12 @@ result.
 | `runner-identity` | `runner.name` is `warrant-corpus` and `runner.lane` is the lane |
 | `labels-bound` | sidecar identity, labels digest, descriptor labels, join |
 | `build-routing` | each build file is text that names `evidence/test-manifest.json` and `sabotage` |
-| `source-fresh` | `source_sha256` equals the recomputed digest of the source root |
+| `source-fresh` | `source_sha256` equals the recomputed digest of the source root, and the root holds nothing the rule leaves uncovered (with the Go module pins) |
 | `runner-source-fresh` | `runner.src_sha256` equals the recomputed digest of the runner root |
 
 `build-routing` is a text search. It shows the routing was written; it does not
 show the BUILD ran or passed. Readiness output always ends with the unclaimed
-list: toolchain authenticity, build execution and the sandbox. The sandbox is `absent` (not armed, section 12) in every lane
+list: toolchain authenticity, build execution, the sandbox and the two Go residuals of section 8.2 (five entries). The sandbox is `absent` (not armed, section 12) in every lane
 today, so `release_ready` is `false` and no readiness result can be read as
 release-ready. The loader makes no authenticity claim about the source, the
 build or the toolchain beyond the named checks above.
@@ -1940,8 +1961,11 @@ dependency graph.
   and `runner.src_sha256` are recomputed (per-lane rules, a contained,
   link-refusing walk with the loader's own file and byte bounds), so the readiness
   list is ten checks (`source-fresh`, `runner-source-fresh` added) and the
-  unclaimed list is three (source freshness and the runner source digest are
-  removed). New load codes `source-tree`, `uncovered-source`, `stale-source`, `stale-runner`.
+  unclaimed list is five (source freshness and the runner source digest are
+  removed; two Go residuals added). The walk refuses uncovered files, any
+  `__pycache__` content, `vendor`, `node_modules` and `dist`, and pins the Go
+  `go.mod` files exactly. New load codes `source-tree`, `uncovered-source`,
+  `go-mod`, `stale-source`, `stale-runner`.
   (2) Section 8.3 is new: the report's required `lanes` array (a rung per
   registry lane: `live`, `planned`, `absent`; `release_ready` false and `sandbox`
   `absent` always), `LaneMismatch` and `LabelOverclaim` report checks, isolation

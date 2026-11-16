@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- **Review round 2** (WD-004b2).  Every `.pyc` is refused (any `__pycache__` content is `uncovered-source`; the Python lane BUILD removes the caches first), `vendor`, `node_modules` and `dist` are refused instead of skipped, `go.sum` is no longer ignored, and both Go `go.mod` files are pinned exactly (`go-mod`: module path, `go` line, one `require` and one `replace` of the runner to `../warrant-corpus`).  The unclaimed list is five (adds `go.mod go directive version` and `contents of directories the Go tool ignores`); `rust/ct-compare`'s report regenerated (only the three lanes' `unclaimed`).  `effect_certificate.json` regenerated (only `source_digest`).
 - **Security-review follow-up** (WD-004b2).  `source-fresh` now fails closed: a regular file in the source root (or runner root) that no digest rule selects and that is not in the spec-listed ignore set is `uncovered-source` (`.so`, `.node`, `.s`, `.syso`, `.c`, `.json`, wrong-case `EVIL.PY`, a nested `go.mod`, an orphan `__pycache__/*.pyc`); root `go.mod` and `go.sum` stay a listed residual (the Go runner does not digest them).  `--check-lane` prints the absolute `repo root:` it checked.  `effect_certificate.json` regenerated (only `source_digest`).
 - **Lane rungs in the package report, `--check-lane`, `--require-active`** (WD-004b2, VER04i 8.3).  New
   `lane_report` module and a required `lanes` array in `assurance_report.json`: one rung per registry lane, `live`

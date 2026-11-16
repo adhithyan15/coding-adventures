@@ -100,7 +100,13 @@ pub const READINESS_CHECKS: [&str; 10] = [
 
 /// What a successful load deliberately does **not** establish.  The output of
 /// [`LoadedLane::render_readiness`] always prints this list.
-pub const UNCLAIMED: [&str; 3] = ["toolchain authenticity", "build execution", "sandbox"];
+pub const UNCLAIMED: [&str; 5] = [
+    "toolchain authenticity",
+    "build execution",
+    "sandbox",
+    "go.mod go directive version",
+    "contents of directories the Go tool ignores",
+];
 
 // ---------------------------------------------------------------------------
 // Errors
@@ -113,7 +119,7 @@ pub const UNCLAIMED: [&str; 3] = ["toolchain authenticity", "build execution", "
 /// Codes: `path`, `symlink`, `not-regular`, `too-large`, `io`, `registry`,
 /// `not-registered`, `not-active`, `manifest`, `digest`, `join`,
 /// `runner-identity`, `labels`, `build-routing`, `source-tree`,
-/// `uncovered-source`, `stale-source`, `stale-runner`.
+/// `uncovered-source`, `go-mod`, `stale-source`, `stale-runner`.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct LaneLoadError {
     pub code: &'static str,
@@ -540,7 +546,14 @@ struct SourceRule {
     ignore_file: fn(&str, bool) -> bool,
     /// Directories at the root that are listed as not source (Go package data).
     ignore_root_dir: fn(&str) -> bool,
-    /// Python: `__pycache__` holds derived bytecode, accepted only beside its source.
+    /// Directories that may not exist at all, at any depth: they can shadow or
+    /// replace what the digest covers (Go `vendor`, TypeScript `node_modules`
+    /// and `dist`).  Refused, never skipped.
+    refuse_dir: fn(&str) -> bool,
+    /// Python: `__pycache__` may exist but must hold nothing.  Python runs a
+    /// cached `.pyc` instead of its source, and no header check can tell a real
+    /// cache from a forged one (a hash-based pyc is never revalidated; a
+    /// timestamp pyc can be made to match the source's mtime and size).
     pycache: bool,
 }
 
@@ -568,24 +581,21 @@ fn source_rule(lane: &str, kind: SourceKind) -> Option<SourceRule> {
             recursive: true,
             ignore_file: |_, _| false,
             ignore_root_dir: |_| false,
+            refuse_dir: |_| false,
             pycache: true,
         }),
         "typescript" => Some(SourceRule {
             select: |name| name.ends_with(".ts") && !name.ends_with(".test.ts"),
-            skip_dir: |name| name == "dist" || name == "node_modules",
+            skip_dir: |_| false,
             recursive: true,
             ignore_file: |lower, _| lower.ends_with(".test.ts"),
             ignore_root_dir: |_| false,
+            refuse_dir: |name| name == "dist" || name == "node_modules",
             pycache: false,
         }),
         "go" => Some(SourceRule {
             select: |name| name.ends_with(".go") && !name.ends_with("_test.go"),
-            skip_dir: |name| {
-                name == "vendor"
-                    || name == "testdata"
-                    || name.starts_with('.')
-                    || name.starts_with('_')
-            },
+            skip_dir: |name| name == "testdata" || name.starts_with('.') || name.starts_with('_'),
             recursive: kind == SourceKind::Production,
             // Tests, and the two dependency files at the root: `go.mod` and `go.sum`
             // pin dependencies and are NOT digested (a listed residual, VER04i 8.1);
@@ -596,7 +606,6 @@ fn source_rule(lane: &str, kind: SourceKind) -> Option<SourceRule> {
                         && matches!(
                             lower,
                             "go.mod"
-                                | "go.sum"
                                 | "build"
                                 | "build_windows"
                                 | "required_capabilities.json"
@@ -604,6 +613,7 @@ fn source_rule(lane: &str, kind: SourceKind) -> Option<SourceRule> {
                         ))
             },
             ignore_root_dir: |name| name == "evidence" || name == "CHANGELOG.d",
+            refuse_dir: |name| name == "vendor",
             pycache: false,
         }),
         _ => None,
@@ -705,8 +715,13 @@ impl Walk {
             }
             let at_root = rel.is_empty();
             if meta.is_dir() {
-                if self.rule.pycache && name == "__pycache__" {
-                    self.pycache(&path, dir, &shown)?;
+                if (self.rule.refuse_dir)(&name) {
+                    return err(
+                        "uncovered-source",
+                        format!("{shown} may not exist in a source root: it can replace what the digest covers (VER04i 8.1)"),
+                    );
+                } else if self.rule.pycache && name == "__pycache__" {
+                    self.pycache(&path, &shown)?;
                 } else if at_root && (self.rule.ignore_root_dir)(&name) {
                     // listed as not source
                 } else if self.rule.recursive && !(self.rule.skip_dir)(&name) {
@@ -732,49 +747,25 @@ impl Walk {
         Ok(())
     }
 
-    /// `__pycache__` is derived output, but a `.pyc` the interpreter would load
-    /// must have its source beside it: every entry must be a regular file named
-    /// `<module>.<tag>.pyc` whose `<module>.py` exists in the parent directory.
-    fn pycache(&self, cache: &Path, parent: &Path, shown: &str) -> Result<(), LaneLoadError> {
-        let listing = fs::read_dir(cache).map_err(|e| LaneLoadError {
+    /// `__pycache__` must be empty: any entry is bytecode (or something else)
+    /// the interpreter could run in place of the source.
+    fn pycache(&self, cache: &Path, shown: &str) -> Result<(), LaneLoadError> {
+        let mut listing = fs::read_dir(cache).map_err(|e| LaneLoadError {
             code: "io",
             message: format!("cannot list {shown}: {e}"),
         })?;
-        for entry in listing {
+        if let Some(entry) = listing.next() {
             let entry = entry.map_err(|e| LaneLoadError {
                 code: "io",
                 message: format!("cannot list {shown}: {e}"),
             })?;
-            let Ok(name) = entry.file_name().into_string() else {
-                return source_fail("non-UTF-8 file name in the source tree");
-            };
-            let meta = fs::symlink_metadata(entry.path()).map_err(|e| LaneLoadError {
-                code: "io",
-                message: format!("{shown}/{name}: {e}"),
-            })?;
-            if is_link(&meta) {
-                return err(
-                    "symlink",
-                    format!("{shown}/{name} is a symbolic link; links are refused"),
-                );
-            }
-            let module = name
-                .strip_suffix(".pyc")
-                .and_then(|stem| stem.split('.').next());
-            let source_beside = module.is_some_and(|m| {
-                !m.is_empty()
-                    && fs::symlink_metadata(parent.join(format!("{m}.py")))
-                        .map(|m| m.is_file())
-                        .unwrap_or(false)
-            });
-            if !meta.is_file() || !source_beside {
-                return err(
-                    "uncovered-source",
-                    format!(
-                        "{shown}/{name} is not bytecode for a source file beside it (VER04i 8.1)"
-                    ),
-                );
-            }
+            return err(
+                "uncovered-source",
+                format!(
+                    "{shown}/{} is bytecode or other content in __pycache__: Python can run it instead of the source, so none is accepted (VER04i 8.1)",
+                    entry.file_name().to_string_lossy()
+                ),
+            );
         }
         Ok(())
     }
@@ -844,6 +835,125 @@ pub fn source_tree_digest(
     walk.directory(&root, "", 0)?;
     let framed = coding_adventures_test_bootstrap::manifest::frame_sources(&walk.files);
     Ok(sha256_hex(&framed))
+}
+
+// ---------------------------------------------------------------------------
+// The Go module files (WD-004b2 review)
+// ---------------------------------------------------------------------------
+//
+// `go.mod` is not part of the Go digest, yet its `replace` line chooses which
+// directory the runner module is built from.  So it is pinned exactly instead:
+// only the directives below, with only the values below, or the load fails.
+
+const GO_MODULE_BASE: &str = "github.com/adhithyan15/coding-adventures/";
+
+fn go_mod_fail<T>(file: &str, message: impl Into<String>) -> Result<T, LaneLoadError> {
+    err("go-mod", format!("{file}: {}", message.into()))
+}
+
+/// Pin one `go.mod`: `module <module>`, `go <major.minor[.patch]>`, and, when
+/// `runner` is given, exactly one `require <runner module> v0.0.0` and one
+/// `replace <runner module> => <target>`.  Blank lines and `//` comments are
+/// harmless; any other directive, block form or value is an error.
+fn pin_go_mod(
+    file: &str,
+    text: &str,
+    module: &str,
+    runner: Option<(&str, &str)>,
+) -> Result<(), LaneLoadError> {
+    let (mut seen_module, mut seen_go, mut seen_require, mut seen_replace) =
+        (false, false, false, false);
+    let version_ok = |v: &str| {
+        (2..=3).contains(&v.split('.').count())
+            && v.split('.')
+                .all(|p| !p.is_empty() && p.bytes().all(|b| b.is_ascii_digit()))
+    };
+    for line in text.lines() {
+        let line = line.trim();
+        if line.is_empty() || line.starts_with("//") {
+            continue;
+        }
+        let tokens: Vec<&str> = line.split_whitespace().collect();
+        if line.ends_with('(') {
+            return go_mod_fail(file, "a block form hides directives from the pin");
+        }
+        match tokens.as_slice() {
+            ["module", path] if *path == module && !seen_module => seen_module = true,
+            ["module", ..] => {
+                return go_mod_fail(file, format!("module path must be exactly {module}"));
+            }
+            ["go", version] if version_ok(version) && !seen_go => seen_go = true,
+            ["require", path, "v0.0.0"]
+                if runner.is_some_and(|(m, _)| m == *path) && !seen_require =>
+            {
+                seen_require = true;
+            }
+            ["replace", path, "=>", target]
+                if runner.is_some_and(|(m, t)| m == *path && t == *target) && !seen_replace =>
+            {
+                seen_replace = true;
+            }
+            ["replace", ..] => {
+                return go_mod_fail(
+                    file,
+                    format!(
+                        "replace must be exactly the runner module => {}",
+                        runner.map_or("(none allowed)", |(_, t)| t)
+                    ),
+                );
+            }
+            [directive, ..] => {
+                return go_mod_fail(file, format!("unexpected directive `{directive}`"));
+            }
+            [] => {}
+        }
+    }
+    if !seen_module {
+        return go_mod_fail(file, "missing module directive");
+    }
+    if !seen_go {
+        return go_mod_fail(file, "missing go directive");
+    }
+    if runner.is_some() && !(seen_require && seen_replace) {
+        return go_mod_fail(
+            file,
+            "missing the runner module require and replace directives",
+        );
+    }
+    Ok(())
+}
+
+/// Pin the Go lane's two `go.mod` files: the package's (module path from its
+/// registry `package_root`, the runner module required and replaced with the
+/// sibling `../<runner dir>`) and the runner's own (module and go version only).
+fn check_go_modules(
+    repo_root: &Path,
+    package_root: &str,
+    runner_dir: &str,
+) -> Result<(), LaneLoadError> {
+    let parent = |p: &str| p.rsplit_once('/').map(|(d, _)| d.to_owned());
+    let runner_name = runner_dir.rsplit('/').next().unwrap_or("");
+    if parent(package_root) != parent(runner_dir) {
+        return go_mod_fail(package_root, "the runner must be a sibling of the package");
+    }
+    let runner_module = format!("{GO_MODULE_BASE}{runner_dir}");
+    let target = format!("../{runner_name}");
+    for (rel_dir, module, runner) in [
+        (
+            package_root,
+            format!("{GO_MODULE_BASE}{package_root}"),
+            Some((runner_module.as_str(), target.as_str())),
+        ),
+        (runner_dir, runner_module.clone(), None),
+    ] {
+        let path = format!("{rel_dir}/go.mod");
+        let bytes = read_repo_file(repo_root, &path, MAX_BUILD_FILE_BYTES)?;
+        let Ok(text) = std::str::from_utf8(&bytes) else {
+            return go_mod_fail(&path, "not UTF-8");
+        };
+        pin_go_mod(&path, text, &module, runner)?;
+    }
+    Ok(())
 }
 
 // ---------------------------------------------------------------------------
@@ -1371,6 +1481,9 @@ pub fn load_lane(repo_root: &Path, package: &str) -> Result<LoadedLane, LaneLoad
     let Some(runner_dir) = runner_root(&consumer.lane) else {
         return source_fail(format!("no source rule for lane {}", consumer.lane));
     };
+    if consumer.lane == "go" {
+        check_go_modules(repo_root, &consumer.package_root, runner_dir)?;
+    }
     let runner_digest =
         source_tree_digest(repo_root, runner_dir, &consumer.lane, SourceKind::Runner)?;
     if runner_digest != manifest.runner_src_sha256 {

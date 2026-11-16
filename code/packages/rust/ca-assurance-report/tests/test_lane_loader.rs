@@ -1041,7 +1041,13 @@ fn the_readiness_list_has_ten_checks_and_the_unclaimed_list_three() {
     );
     assert_eq!(
         UNCLAIMED,
-        ["toolchain authenticity", "build execution", "sandbox"]
+        [
+            "toolchain authenticity",
+            "build execution",
+            "sandbox",
+            "go.mod go directive version",
+            "contents of directories the Go tool ignores",
+        ]
     );
 }
 
@@ -1115,10 +1121,8 @@ fn files_the_rule_skips_by_directory_or_name_do_not_change_the_digest() {
     let go = lane_source_rel("go/ct-compare");
     let repo = Repo::new();
     let ignored = [
-        // Directories the rules skip (not descended).
-        format!("{ts}/dist/a.ts"),
-        format!("{ts}/node_modules/a.ts"),
-        format!("{go}/vendor/a.go"),
+        // Directories the Go rule skips (not descended); vendor, dist and node_modules
+        // are refused instead (see the uncovered-source probes).
         format!("{go}/testdata/a.go"),
         format!("{go}/_scratch/a.go"),
         format!("{go}/.hidden/a.go"),
@@ -1135,10 +1139,8 @@ fn files_the_rule_skips_by_directory_or_name_do_not_change_the_digest() {
         fs::create_dir_all(path.parent().unwrap()).unwrap();
         fs::write(path, b"not production source\n").unwrap();
     }
-    // A cached bytecode file beside its source is derived output.
-    let cache = repo.root.join(&python).join("__pycache__");
-    fs::create_dir_all(&cache).unwrap();
-    fs::write(cache.join("__init__.cpython-312.pyc"), b"derived").unwrap();
+    // An empty `__pycache__` holds nothing the interpreter could load.
+    fs::create_dir_all(repo.root.join(&python).join("__pycache__")).unwrap();
     for package in PACKAGES {
         repo.load(package)
             .unwrap_or_else(|e| panic!("{package}: {e}"));
@@ -1189,7 +1191,7 @@ fn a_file_in_the_source_root_that_no_rule_digests_fails_source_fresh() {
             format!("{python}/sub/notes.txt"),
             "notes.txt",
         ),
-        // An orphan bytecode file: no source beside it, so it is not derived output.
+        // Bytecode is refused outright: Python runs a pyc instead of its source.
         (
             "python/ct-compare",
             format!("{python}/__pycache__/evil.cpython-312.pyc"),
@@ -1214,9 +1216,30 @@ fn a_file_in_the_source_root_that_no_rule_digests_fails_source_fresh() {
         ("go/ct-compare", format!("{go}/asm_amd64.s"), "asm_amd64.s"),
         ("go/ct-compare", format!("{go}/blob.syso"), "blob.syso"),
         ("go/ct-compare", format!("{go}/shim.c"), "shim.c"),
-        // go.mod at the root is the listed residual; a nested one is a new module.
+        // A nested go.mod is a new module.
         ("go/ct-compare", format!("{go}/cmd/go.mod"), "go.mod"),
         ("go/ct-compare", format!("{go}/Evil.GO"), "Evil.GO"),
+        // A go.sum would mean external dependencies no digest covers.
+        ("go/ct-compare", format!("{go}/go.sum"), "go.sum"),
+        // vendor/ and the TypeScript output and module directories are refused,
+        // not skipped, in the source root and the runner root.
+        ("go/ct-compare", format!("{go}/vendor/a.go"), "vendor"),
+        (
+            "go/ct-compare",
+            format!("{}/vendor/a.go", runner_root("go").unwrap()),
+            "vendor",
+        ),
+        (
+            "typescript/ct-compare",
+            format!("{ts}/node_modules/a.ts"),
+            "node_modules",
+        ),
+        ("typescript/ct-compare", format!("{ts}/dist/a.ts"), "dist"),
+        (
+            "typescript/ct-compare",
+            format!("{}/node_modules/a.ts", runner_root("typescript").unwrap()),
+            "node_modules",
+        ),
     ];
     for (package, rel, name) in probes {
         let repo = Repo::new();
@@ -1225,9 +1248,102 @@ fn a_file_in_the_source_root_that_no_rule_digests_fails_source_fresh() {
         fs::write(&path, b"x").unwrap();
         expect_code(repo.load(package), "uncovered-source", name);
     }
-    // The checked-in root go.mod is the one listed exception and still loads.
+    // The checked-in root go.mod is pinned (below) and still loads.
     assert!(real_root().join(format!("{go}/go.mod")).is_file());
     load_lane(&real_root(), "go/ct-compare").unwrap();
+}
+
+/// A pyc header: magic, then the PEP 552 flags word, then (for flags 0) mtime
+/// and size or (for flags 1..3) an 8-byte source hash.
+fn pyc(flags: u32) -> Vec<u8> {
+    let mut bytes = vec![0xcb, 0x0d, 0x0d, 0x0a];
+    bytes.extend_from_slice(&flags.to_le_bytes());
+    bytes.extend_from_slice(&[0; 8]);
+    bytes
+}
+
+#[test]
+fn a_forged_pyc_beside_its_source_is_refused_whatever_its_header() {
+    // An unchecked-hash pyc (flags 1) runs INSTEAD of the real source; a
+    // timestamp pyc can be forged to match the source's mtime and size. No header
+    // inspection is sound, so every bytecode file is refused and the lane BUILD
+    // removes the caches before the check.
+    let python = lane_source_rel("python/ct-compare");
+    let runner = runner_root("python").unwrap();
+    for (root, flags) in [
+        (python.as_str(), 0),
+        (python.as_str(), 1),
+        (python.as_str(), 3),
+        (runner, 1),
+    ] {
+        let repo = Repo::new();
+        let cache = repo.root.join(root).join("__pycache__");
+        fs::create_dir_all(&cache).unwrap();
+        // The source exists beside it, as a real cache would have.
+        let module = if root == runner { "cli" } else { "__init__" };
+        assert!(repo.root.join(root).join(format!("{module}.py")).is_file());
+        fs::write(cache.join(format!("{module}.cpython-312.pyc")), pyc(flags)).unwrap();
+        expect_code(repo.load("python/ct-compare"), "uncovered-source", ".pyc");
+    }
+    // Removing the cache restores the load: the check is about bytecode, not the directory.
+    let repo = Repo::new();
+    repo.load("python/ct-compare").unwrap();
+}
+
+#[test]
+fn the_go_module_files_are_pinned_exactly() {
+    let go_mod = "code/packages/go/ct-compare/go.mod";
+    let runner_mod = format!("{}/go.mod", runner_root("go").unwrap());
+    let base = "github.com/adhithyan15/coding-adventures/code/packages/go";
+    let ct = |from: &str, to: &str, needle: &'static str| {
+        (go_mod.to_string(), from.to_string(), to.to_string(), needle)
+    };
+    let rn = |from: &str, to: &str, needle: &'static str| {
+        (runner_mod.clone(), from.to_string(), to.to_string(), needle)
+    };
+    let probes: Vec<(String, String, String, &str)> = vec![
+        // A replace that points the runner module at another directory.
+        ct("=> ../warrant-corpus", "=> ../evil", "../warrant-corpus"),
+        // An extra replace, require, exclude or toolchain directive.
+        ct("\n\n", "\n\nreplace example.com/x => ../x\n", "replace"),
+        ct("\n\n", "\n\nrequire example.com/x v1.0.0\n", "require"),
+        ct("go 1.26", "go 1.26\ntoolchain go1.99", "toolchain"),
+        ct(
+            "go 1.26",
+            "go 1.26\nexclude example.com/x v1.0.0",
+            "exclude",
+        ),
+        // A block form hides directives from a line parser.
+        ct("replace ", "replace (\n\t", "block"),
+        // Another module path, or a missing directive.
+        ct(
+            &format!("module {base}/ct-compare"),
+            &format!("module {base}/other"),
+            "module path",
+        ),
+        ct("go 1.26\n", "", "go directive"),
+        ct("require ", "// require ", "require"),
+        // The runner's own go.mod may declare nothing but its module and go version.
+        rn(
+            "go 1.26",
+            "go 1.26\nreplace example.com/x => ../x",
+            "replace",
+        ),
+        rn(
+            "go 1.26",
+            "go 1.26\nrequire example.com/x v1.0.0",
+            "require",
+        ),
+    ];
+    for (file, from, to, needle) in probes {
+        let repo = Repo::new();
+        repo.edit_text(&file, &from, &to);
+        expect_code(repo.load("go/ct-compare"), "go-mod", needle);
+    }
+    // An absent root go.mod cannot be pinned.
+    let repo = Repo::new();
+    fs::remove_file(repo.root.join(go_mod)).unwrap();
+    assert!(repo.load("go/ct-compare").is_err());
 }
 
 #[test]
