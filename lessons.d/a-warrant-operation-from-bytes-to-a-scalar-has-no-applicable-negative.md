@@ -27,7 +27,7 @@ of each distinct signature shape (parameter types and result type) and run
 and the one that failed, long after the models were written. Related: the
 negative-control lesson `a-warrant-negative-control-for-an-operation-is-answered-only-by-claims`.
 
-## Resolution (WX-P1a, branch `claude/warrant-hash-functions`)
+**Resolution (WX-P1a, branch `claude/warrant-hash-functions`).**
 
 WX-FAULT1 let `flip-result-bit` apply to a fixed-width integer result and the
 `hash-functions` adoption was wired on top of it: all eight operations bind, the
