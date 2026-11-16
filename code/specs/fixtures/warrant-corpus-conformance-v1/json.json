@@ -1,0 +1,2232 @@
+{
+  "cases": [
+    {
+      "expect": {
+        "canonical": "null\n",
+        "canonical_sha256": "38e0b9de817f645c4bec37c0d4a3e58baecccb040f5718dc069a72c7385a0bed",
+        "outcome": "accept"
+      },
+      "id": "json/scalar-null",
+      "input_hex": "6e756c6c",
+      "summary": "a bare null is a document"
+    },
+    {
+      "expect": {
+        "canonical": "true\n",
+        "canonical_sha256": "a17fcf0a2f50e2d495e4f90ce263410edc183add6c62699a2facbccf60410f74",
+        "outcome": "accept"
+      },
+      "id": "json/scalar-true",
+      "input_hex": "74727565",
+      "summary": "a bare true is a document"
+    },
+    {
+      "expect": {
+        "canonical": "false\n",
+        "canonical_sha256": "2ed27c1421e6928dbe13dbfdb5c59e1045b30341fe7ebe05700006bc5ac572c0",
+        "outcome": "accept"
+      },
+      "id": "json/scalar-false",
+      "input_hex": "66616c7365",
+      "summary": "a bare false is a document"
+    },
+    {
+      "expect": {
+        "canonical": "0\n",
+        "canonical_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "outcome": "accept"
+      },
+      "id": "json/scalar-zero",
+      "input_hex": "30",
+      "summary": "zero"
+    },
+    {
+      "expect": {
+        "canonical": "-7\n",
+        "canonical_sha256": "71f24bf62be4ee171b9cf3b871966bb02bab0739dc01597afab02242a8378c03",
+        "outcome": "accept"
+      },
+      "id": "json/scalar-negative",
+      "input_hex": "2d37",
+      "summary": "a negative integer"
+    },
+    {
+      "expect": {
+        "canonical": "\"\"\n",
+        "canonical_sha256": "bd85bcdb8d4e613a79cb62d0903946ad10c83e63dc75f67614c159c0dbf4d184",
+        "outcome": "accept"
+      },
+      "id": "json/scalar-empty-string",
+      "input_hex": "2222",
+      "summary": "the empty string"
+    },
+    {
+      "expect": {
+        "canonical": "[]\n",
+        "canonical_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "outcome": "accept"
+      },
+      "id": "json/empty-array",
+      "input_hex": "5b5d",
+      "summary": "an empty array renders as []"
+    },
+    {
+      "expect": {
+        "canonical": "{}\n",
+        "canonical_sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+        "outcome": "accept"
+      },
+      "id": "json/empty-object",
+      "input_hex": "7b7d",
+      "summary": "an empty object renders as {}"
+    },
+    {
+      "expect": {
+        "canonical": "[\n  1\n]\n",
+        "canonical_sha256": "fa81ea526219857828f87f11fa5521a61121e9c90a85a0856d3ae62d77ae19ad",
+        "outcome": "accept"
+      },
+      "id": "json/whitespace-all-four",
+      "input_hex": "20090d0a5b20090d0a3120090d0a5d20090d0a",
+      "summary": "space, tab, CR and LF are all whitespace"
+    },
+    {
+      "expect": {
+        "canonical": "{\n  \"a\": 1\n}\n",
+        "canonical_sha256": "5e36b6560513586ced65eca0e8b025fe88edbcab82ba2cb67a5fcb2d7b202383",
+        "outcome": "accept"
+      },
+      "id": "json/crlf-between-tokens",
+      "input_hex": "7b0d0a2261223a0d0a310d0a7d0d0a",
+      "summary": "CRLF input becomes LF output"
+    },
+    {
+      "expect": {
+        "canonical": "{\n  \"a\": [],\n  \"b\": {},\n  \"c\": [\n    1,\n    [\n      2,\n      3\n    ],\n    {\n      \"d\": null\n    }\n  ]\n}\n",
+        "canonical_sha256": "05ceeaa459f179f3bcf3f931a43ce3b611b5791b7e9dff390edb08b46a844ec0",
+        "outcome": "accept"
+      },
+      "id": "json/nested-document",
+      "input_hex": "7b2263223a5b312c5b322c335d2c7b2264223a6e756c6c7d5d2c2262223a7b7d2c2261223a5b5d7d",
+      "summary": "indentation and sorting of a mixed document"
+    },
+    {
+      "expect": {
+        "canonical": "{\n  \"a\": {\n    \"b\": {\n      \"c\": [\n        true,\n        false\n      ]\n    }\n  }\n}\n",
+        "canonical_sha256": "2fd6f06725c6594f7a145b7bb2a617c0d7a305b0c5fe697b8500c32d33de439e",
+        "outcome": "accept"
+      },
+      "id": "json/nested-objects",
+      "input_hex": "7b2261223a7b2262223a7b2263223a5b747275652c66616c73655d7d7d7d",
+      "summary": "two-space indent per level"
+    },
+    {
+      "expect": {
+        "canonical": "{\n  \"type\": \"U64\",\n  \"value\": \"18446744073709551615\"\n}\n",
+        "canonical_sha256": "a582cf8768d29abbcf02ab89b83ec1d918e20c27c9fc82a77826b629d5fc7893",
+        "outcome": "accept"
+      },
+      "id": "json/tagged-u64-text",
+      "input_hex": "7b2274797065223a22553634222c2276616c7565223a223138343436373434303733373039353531363135227d",
+      "summary": "a tagged U64 is decimal TEXT and passes through untouched"
+    },
+    {
+      "expect": {
+        "canonical": "\"9007199254740993\"\n",
+        "canonical_sha256": "2f85ac65b7522c2123bbd4bf003f8daf9c9dc0978d3f116ef83d7a5d9c22cab2",
+        "outcome": "accept"
+      },
+      "id": "json/large-number-as-string",
+      "input_hex": "223930303731393932353437343039393322",
+      "summary": "digits inside a string are not a number"
+    },
+    {
+      "expect": {
+        "canonical": "9007199254740991\n",
+        "canonical_sha256": "e713b6bcff7750474627ed671354bc097fd0ce37b9d0803493049762e1b1bb97",
+        "outcome": "accept"
+      },
+      "id": "json/int-max-safe",
+      "input_hex": "39303037313939323534373430393931",
+      "summary": "2^53 - 1 is the largest accepted integer"
+    },
+    {
+      "expect": {
+        "canonical": "-9007199254740991\n",
+        "canonical_sha256": "e58147f9976310eb53bf3209c23234a87b2e0de44616835b4bfbb2354483b236",
+        "outcome": "accept"
+      },
+      "id": "json/int-min-safe",
+      "input_hex": "2d39303037313939323534373430393931",
+      "summary": "-(2^53 - 1) is the smallest accepted integer"
+    },
+    {
+      "expect": {
+        "canonical": "[\n  -1,\n  0,\n  1\n]\n",
+        "canonical_sha256": "170be30439f10f2ffe332723e96c5bc57dffd36c0d805825bef2fe4222425fb5",
+        "outcome": "accept"
+      },
+      "id": "json/int-array",
+      "input_hex": "5b2d312c302c315d",
+      "summary": "negative, zero and positive integers"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "unsafe-integer"
+      },
+      "id": "json/int-2^53",
+      "input_hex": "39303037313939323534373430393932",
+      "summary": "2^53 is refused, not rounded"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "unsafe-integer"
+      },
+      "id": "json/int-neg-2^53",
+      "input_hex": "2d39303037313939323534373430393932",
+      "summary": "-2^53 is refused"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "unsafe-integer"
+      },
+      "id": "json/int-2^53+1",
+      "input_hex": "39303037313939323534373430393933",
+      "summary": "2^53 + 1 would silently round to 2^53 in a double"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "unsafe-integer"
+      },
+      "id": "json/int-i64-max",
+      "input_hex": "39323233333732303336383534373735383037",
+      "summary": "2^63 - 1"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "unsafe-integer"
+      },
+      "id": "json/int-i64-overflow",
+      "input_hex": "39323233333732303336383534373735383038",
+      "summary": "2^63"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "unsafe-integer"
+      },
+      "id": "json/int-i64-min",
+      "input_hex": "2d39323233333732303336383534373735383038",
+      "summary": "-2^63"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "unsafe-integer"
+      },
+      "id": "json/int-u64-max",
+      "input_hex": "3138343436373434303733373039353531363135",
+      "summary": "2^64 - 1 as a JSON number (U64 travels as text)"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "unsafe-integer"
+      },
+      "id": "json/int-u64-overflow",
+      "input_hex": "3138343436373434303733373039353531363136",
+      "summary": "2^64"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "unsafe-integer"
+      },
+      "id": "json/int-400-digits",
+      "input_hex": "3130303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030",
+      "summary": "an integer of 401 digits"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "unsafe-integer"
+      },
+      "id": "json/int-unsafe-in-array",
+      "input_hex": "5b312c393030373139393235343734303939325d",
+      "summary": "an unsafe integer nested in an array"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "unsafe-integer"
+      },
+      "id": "json/int-unsafe-in-object",
+      "input_hex": "7b22636f756e74223a393030373139393235343734303939337d",
+      "summary": "an unsafe integer nested in an object"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "unsafe-integer"
+      },
+      "id": "json/tagged-u64-as-number",
+      "input_hex": "7b2274797065223a22553634222c2276616c7565223a31383434363734343037333730393535313631357d",
+      "summary": "a U64 written as a JSON number is refused"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "number-form"
+      },
+      "id": "json/num-minus-zero",
+      "input_hex": "2d30",
+      "summary": "-0 is refused (it has no integer spelling)"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "number-form"
+      },
+      "id": "json/num-minus-zero-float",
+      "input_hex": "2d302e30",
+      "summary": "-0.0"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "number-form"
+      },
+      "id": "json/num-fraction",
+      "input_hex": "312e30",
+      "summary": "1.0 is a fraction even though it equals 1"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "number-form"
+      },
+      "id": "json/num-fraction-half",
+      "input_hex": "302e35",
+      "summary": "0.5"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "number-form"
+      },
+      "id": "json/num-fraction-nested",
+      "input_hex": "7b2261223a312e357d",
+      "summary": "a fraction nested in an object"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "number-form"
+      },
+      "id": "json/num-fraction-in-array",
+      "input_hex": "5b312e305d",
+      "summary": "a fraction nested in an array"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "number-form"
+      },
+      "id": "json/num-exponent",
+      "input_hex": "316532",
+      "summary": "1e2 is an exponent even though it equals 100"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "number-form"
+      },
+      "id": "json/num-exponent-plus",
+      "input_hex": "31452b32",
+      "summary": "1E+2"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "number-form"
+      },
+      "id": "json/num-exponent-minus",
+      "input_hex": "31652d32",
+      "summary": "1e-2"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "number-form"
+      },
+      "id": "json/num-zero-exponent",
+      "input_hex": "306530",
+      "summary": "0e0"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "number-form"
+      },
+      "id": "json/num-huge-exponent",
+      "input_hex": "3165343030",
+      "summary": "1e400 overflows a double to infinity"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "number-form"
+      },
+      "id": "json/num-fraction-exponent",
+      "input_hex": "312e356533",
+      "summary": "1.5e3"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "number-form"
+      },
+      "id": "json/num-trailing-dot",
+      "input_hex": "312e",
+      "summary": "1. has no digits after the point"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "number-form"
+      },
+      "id": "json/num-leading-dot",
+      "input_hex": "2e35",
+      "summary": ".5 has no integer part"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "number-form"
+      },
+      "id": "json/num-leading-plus",
+      "input_hex": "2b31",
+      "summary": "+1"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "number-form"
+      },
+      "id": "json/num-leading-zero",
+      "input_hex": "3031",
+      "summary": "01"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "number-form"
+      },
+      "id": "json/num-leading-zero-negative",
+      "input_hex": "2d3031",
+      "summary": "-01"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "number-form"
+      },
+      "id": "json/num-double-zero",
+      "input_hex": "3030",
+      "summary": "00"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "number-form"
+      },
+      "id": "json/num-bare-minus",
+      "input_hex": "2d",
+      "summary": "a lone minus sign"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "number-form"
+      },
+      "id": "json/num-minus-space",
+      "input_hex": "2d2031",
+      "summary": "- 1"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "number-form"
+      },
+      "id": "json/num-double-minus",
+      "input_hex": "2d2d31",
+      "summary": "--1"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "number-form"
+      },
+      "id": "json/num-bare-exponent",
+      "input_hex": "3165",
+      "summary": "1e with no digits"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "trailing-data"
+      },
+      "id": "json/num-hex",
+      "input_hex": "30783130",
+      "summary": "0x10 reads as 0 then trailing data"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "trailing-data"
+      },
+      "id": "json/num-underscore",
+      "input_hex": "315f303030",
+      "summary": "1_000 reads as 1 then trailing data"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "literal"
+      },
+      "id": "json/literal-true-truncated",
+      "input_hex": "747275",
+      "summary": "tru"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "literal"
+      },
+      "id": "json/literal-null-truncated",
+      "input_hex": "6e756c",
+      "summary": "nul"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "literal"
+      },
+      "id": "json/literal-capital-true",
+      "input_hex": "54727565",
+      "summary": "True is not JSON"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "literal"
+      },
+      "id": "json/literal-capital-null",
+      "input_hex": "4e554c4c",
+      "summary": "NULL is not JSON"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "literal"
+      },
+      "id": "json/literal-nan",
+      "input_hex": "4e614e",
+      "summary": "NaN is not JSON"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "literal"
+      },
+      "id": "json/literal-infinity",
+      "input_hex": "496e66696e697479",
+      "summary": "Infinity is not JSON"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "literal"
+      },
+      "id": "json/literal-neg-infinity",
+      "input_hex": "2d496e66696e697479",
+      "summary": "-Infinity is not JSON"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "literal"
+      },
+      "id": "json/literal-undefined",
+      "input_hex": "756e646566696e6564",
+      "summary": "undefined is not JSON"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "empty"
+      },
+      "id": "json/empty-input",
+      "input_hex": "",
+      "summary": "no bytes at all"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "empty"
+      },
+      "id": "json/whitespace-only",
+      "input_hex": "200a09",
+      "summary": "only whitespace"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "syntax"
+      },
+      "id": "json/open-object",
+      "input_hex": "7b",
+      "summary": "an unclosed object"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "syntax"
+      },
+      "id": "json/open-array",
+      "input_hex": "5b",
+      "summary": "an unclosed array"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "syntax"
+      },
+      "id": "json/key-only",
+      "input_hex": "7b226122",
+      "summary": "a key with no colon"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "syntax"
+      },
+      "id": "json/key-colon-only",
+      "input_hex": "7b2261223a",
+      "summary": "a key and colon with no value"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "syntax"
+      },
+      "id": "json/value-no-close",
+      "input_hex": "7b2261223a31",
+      "summary": "a pair with no closing brace"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "syntax"
+      },
+      "id": "json/array-no-close",
+      "input_hex": "5b31",
+      "summary": "an element with no closing bracket"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "syntax"
+      },
+      "id": "json/trailing-comma-array",
+      "input_hex": "5b312c5d",
+      "summary": "[1,]"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "syntax"
+      },
+      "id": "json/trailing-comma-object",
+      "input_hex": "7b2261223a312c7d",
+      "summary": "{\"a\":1,}"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "syntax"
+      },
+      "id": "json/leading-comma-array",
+      "input_hex": "5b2c315d",
+      "summary": "[,1]"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "syntax"
+      },
+      "id": "json/missing-comma-array",
+      "input_hex": "5b3120325d",
+      "summary": "[1 2]"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "syntax"
+      },
+      "id": "json/missing-colon",
+      "input_hex": "7b22612220317d",
+      "summary": "{\"a\" 1}"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "syntax"
+      },
+      "id": "json/unquoted-key",
+      "input_hex": "7b613a317d",
+      "summary": "{a:1}"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "syntax"
+      },
+      "id": "json/single-quoted-key",
+      "input_hex": "7b2761273a317d",
+      "summary": "{'a':1}"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "syntax"
+      },
+      "id": "json/number-key",
+      "input_hex": "7b313a327d",
+      "summary": "{1:2}"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "syntax"
+      },
+      "id": "json/unterminated-string",
+      "input_hex": "22616263",
+      "summary": "an opening quote with no end"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "syntax"
+      },
+      "id": "json/unterminated-string-in-array",
+      "input_hex": "5b226122",
+      "summary": "an unterminated string inside an array"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "syntax"
+      },
+      "id": "json/comment-block",
+      "input_hex": "2f2a782a2f31",
+      "summary": "/* */ comments are not JSON"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "syntax"
+      },
+      "id": "json/comment-line",
+      "input_hex": "2f2f780a31",
+      "summary": "// comments are not JSON"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "syntax"
+      },
+      "id": "json/comment-in-array",
+      "input_hex": "5b312c2f2a782a2f325d",
+      "summary": "a comment between elements"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "syntax"
+      },
+      "id": "json/stray-close-bracket",
+      "input_hex": "5d",
+      "summary": "]"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "syntax"
+      },
+      "id": "json/stray-close-brace",
+      "input_hex": "7d",
+      "summary": "}"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "syntax"
+      },
+      "id": "json/stray-colon",
+      "input_hex": "3a",
+      "summary": ":"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "syntax"
+      },
+      "id": "json/stray-comma",
+      "input_hex": "2c",
+      "summary": ","
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "syntax"
+      },
+      "id": "json/whitespace-form-feed",
+      "input_hex": "0c31",
+      "summary": "form feed is not JSON whitespace"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "syntax"
+      },
+      "id": "json/whitespace-vertical-tab",
+      "input_hex": "0b31",
+      "summary": "vertical tab is not JSON whitespace"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "syntax"
+      },
+      "id": "json/whitespace-nbsp",
+      "input_hex": "c2a031",
+      "summary": "U+00A0 is not JSON whitespace"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "syntax"
+      },
+      "id": "json/whitespace-line-separator",
+      "input_hex": "e280a831",
+      "summary": "U+2028 is not JSON whitespace"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "trailing-data"
+      },
+      "id": "json/trailing-letter",
+      "input_hex": "7b7d2078",
+      "summary": "garbage after an object"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "trailing-data"
+      },
+      "id": "json/trailing-second-object",
+      "input_hex": "7b7d7b7d",
+      "summary": "two objects"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "trailing-data"
+      },
+      "id": "json/trailing-bracket",
+      "input_hex": "5b315d5d",
+      "summary": "an extra closing bracket"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "trailing-data"
+      },
+      "id": "json/trailing-second-number",
+      "input_hex": "312032",
+      "summary": "two numbers"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "trailing-data"
+      },
+      "id": "json/trailing-second-null",
+      "input_hex": "6e756c6c206e756c6c",
+      "summary": "two nulls"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "trailing-data"
+      },
+      "id": "json/trailing-nul-byte",
+      "input_hex": "7b7d00",
+      "summary": "a NUL byte after the document"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "trailing-data"
+      },
+      "id": "json/trailing-after-string",
+      "input_hex": "22612262",
+      "summary": "a letter after a string"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "trailing-data"
+      },
+      "id": "json/trailing-comma-top",
+      "input_hex": "312c",
+      "summary": "a comma after the document"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "bom"
+      },
+      "id": "json/bom-before-object",
+      "input_hex": "efbbbf7b7d",
+      "summary": "a UTF-8 BOM before the document"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "bom"
+      },
+      "id": "json/bom-alone",
+      "input_hex": "efbbbf",
+      "summary": "a BOM and nothing else"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "bom"
+      },
+      "id": "json/bom-after-whitespace",
+      "input_hex": "20efbbbf7b7d",
+      "summary": "a BOM after leading whitespace"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "utf8"
+      },
+      "id": "json/bom-utf16-le",
+      "input_hex": "fffe7b007d00",
+      "summary": "a UTF-16 LE document is not UTF-8"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "utf8"
+      },
+      "id": "json/bom-utf16-be",
+      "input_hex": "feff007b007d",
+      "summary": "a UTF-16 BE document is not UTF-8"
+    },
+    {
+      "expect": {
+        "canonical": "\"\\ufeff\"\n",
+        "canonical_sha256": "b7c58cde73867e91b418bf117613d7a09ddfed3c8aaa2f7fc0a0665c1cec679b",
+        "outcome": "accept"
+      },
+      "id": "json/bom-inside-string",
+      "input_hex": "22efbbbf22",
+      "summary": "U+FEFF inside a string is just a character"
+    },
+    {
+      "expect": {
+        "canonical": "\"\\\"\\\\/\\b\\f\\n\\r\\t\"\n",
+        "canonical_sha256": "9e6d8585a7ec65ec3d1ddedb773890d6d60087fe9f5ec870ba54adfff0bd289a",
+        "outcome": "accept"
+      },
+      "id": "json/string-short-escapes",
+      "input_hex": "225c225c5c5c2f5c625c665c6e5c725c7422",
+      "summary": "every short escape, and the solidus"
+    },
+    {
+      "expect": {
+        "canonical": "\"a/b\"\n",
+        "canonical_sha256": "c9b47208da986d09f70287c6a08647cd9abbcc8e8a283902e71ba5756bd656b2",
+        "outcome": "accept"
+      },
+      "id": "json/string-solidus-escape",
+      "input_hex": "22615c2f6222",
+      "summary": "\\/ is read as / and written as /"
+    },
+    {
+      "expect": {
+        "canonical": "\"a\\\"b\"\n",
+        "canonical_sha256": "8c580f4d30983db1cdb195434db41fc6ec24c1169bea04ebeddb6cce37695f6a",
+        "outcome": "accept"
+      },
+      "id": "json/string-quote-escape",
+      "input_hex": "22615c226222",
+      "summary": "an escaped quote stays escaped"
+    },
+    {
+      "expect": {
+        "canonical": "\"\\u00e9\\u20ac\"\n",
+        "canonical_sha256": "cf9ad21435c2b33aed22f3ad07f83fddbc641fec24729de8e5e9b38c2943071d",
+        "outcome": "accept"
+      },
+      "id": "json/string-bmp-escapes",
+      "input_hex": "225c75303065395c753230616322",
+      "summary": "\\u escapes for BMP characters"
+    },
+    {
+      "expect": {
+        "canonical": "\"\\u00e9\\u20ac\"\n",
+        "canonical_sha256": "cf9ad21435c2b33aed22f3ad07f83fddbc641fec24729de8e5e9b38c2943071d",
+        "outcome": "accept"
+      },
+      "id": "json/string-bmp-raw-quoted",
+      "input_hex": "22c3a9e282ac22",
+      "summary": "raw UTF-8 inside quotes renders as escapes"
+    },
+    {
+      "expect": {
+        "canonical": "\"\\ud83d\\ude00\"\n",
+        "canonical_sha256": "987ba74ef5e732bfa79659dd63cf124e8eccb53eabd625e177143bcd3f7260b9",
+        "outcome": "accept"
+      },
+      "id": "json/string-astral-raw",
+      "input_hex": "22f09f988022",
+      "summary": "a raw astral character renders as a surrogate pair"
+    },
+    {
+      "expect": {
+        "canonical": "\"\\ud83d\\ude00\"\n",
+        "canonical_sha256": "987ba74ef5e732bfa79659dd63cf124e8eccb53eabd625e177143bcd3f7260b9",
+        "outcome": "accept"
+      },
+      "id": "json/string-astral-escaped-pair",
+      "input_hex": "225c75643833645c756465303022",
+      "summary": "an escaped surrogate pair is one character"
+    },
+    {
+      "expect": {
+        "canonical": "\"\\ud83d\\ude00\"\n",
+        "canonical_sha256": "987ba74ef5e732bfa79659dd63cf124e8eccb53eabd625e177143bcd3f7260b9",
+        "outcome": "accept"
+      },
+      "id": "json/string-astral-escaped-pair-upper",
+      "input_hex": "225c75443833445c754445303022",
+      "summary": "uppercase hex in a pair, rendered lowercase"
+    },
+    {
+      "expect": {
+        "canonical": "\"\\u00ff\"\n",
+        "canonical_sha256": "e916ae565a3d0684cf8167dce185b1807f98f3f8d2bb77e975fce65586ebceb6",
+        "outcome": "accept"
+      },
+      "id": "json/string-escape-upper-hex",
+      "input_hex": "225c753030464622",
+      "summary": "\\u00FF renders as \\u00ff"
+    },
+    {
+      "expect": {
+        "canonical": "\"\\u0000\"\n",
+        "canonical_sha256": "d464af7a7667fff9ad0247e7d24d2504b08f338183f0b3f9f32f6b18a7df2b78",
+        "outcome": "accept"
+      },
+      "id": "json/string-escape-nul",
+      "input_hex": "225c753030303022",
+      "summary": "\\u0000 is allowed as an escape"
+    },
+    {
+      "expect": {
+        "canonical": "\"\\u001f\"\n",
+        "canonical_sha256": "1c311b28f916631015b3592859a9f91cc2f3fb1a41509d370ddd0bdcccb7b3a1",
+        "outcome": "accept"
+      },
+      "id": "json/string-escape-unit-separator",
+      "input_hex": "225c753030316622",
+      "summary": "\\u001f is allowed as an escape"
+    },
+    {
+      "expect": {
+        "canonical": "\"\\u007f\"\n",
+        "canonical_sha256": "bfc038fd010b9f98d4c0f34dd55876435442b2e47c68d938bba1a0c775665d46",
+        "outcome": "accept"
+      },
+      "id": "json/string-escape-del",
+      "input_hex": "225c753030376622",
+      "summary": "\\u007f renders as \\u007f"
+    },
+    {
+      "expect": {
+        "canonical": "\"\\u007f\"\n",
+        "canonical_sha256": "bfc038fd010b9f98d4c0f34dd55876435442b2e47c68d938bba1a0c775665d46",
+        "outcome": "accept"
+      },
+      "id": "json/string-raw-del",
+      "input_hex": "227f22",
+      "summary": "a raw DEL byte is allowed in a string and renders as \\u007f"
+    },
+    {
+      "expect": {
+        "canonical": "\" ~\"\n",
+        "canonical_sha256": "eb1451cb00829e4394e06887e6c63179afb137aa3f6ac5558876ca687f80993d",
+        "outcome": "accept"
+      },
+      "id": "json/string-raw-space-tilde",
+      "input_hex": "22207e22",
+      "summary": "raw space and tilde are the printable edges"
+    },
+    {
+      "expect": {
+        "canonical": "\"\\ufffe\"\n",
+        "canonical_sha256": "fbae594d756ca50669515ca29206361e06a6378b497b25ec901fad205a36ac1d",
+        "outcome": "accept"
+      },
+      "id": "json/string-noncharacter-escape",
+      "input_hex": "225c756666666522",
+      "summary": "\\ufffe is a noncharacter but well-formed"
+    },
+    {
+      "expect": {
+        "canonical": "\"\\uffff\"\n",
+        "canonical_sha256": "bdf8bafd3c030eeacc250165210da3a6c33f6a44fc42f16ab5d9c49490964edf",
+        "outcome": "accept"
+      },
+      "id": "json/string-raw-ffff",
+      "input_hex": "22efbfbf22",
+      "summary": "a raw U+FFFF"
+    },
+    {
+      "expect": {
+        "canonical": "\"\\udbff\\udfff\"\n",
+        "canonical_sha256": "0335505dcf3623d67f0a90bbb7c5c5f6ae45f42da458732163013beef12bb2df",
+        "outcome": "accept"
+      },
+      "id": "json/string-raw-10ffff",
+      "input_hex": "22f48fbfbf22",
+      "summary": "a raw U+10FFFF"
+    },
+    {
+      "expect": {
+        "canonical": "\"\\u2028\"\n",
+        "canonical_sha256": "489bf90500ac14a9f96d73527013012d0f5942f5d46c53ea4d538a41eca405f7",
+        "outcome": "accept"
+      },
+      "id": "json/string-raw-line-separator",
+      "input_hex": "22e280a822",
+      "summary": "a raw U+2028 is data inside a string"
+    },
+    {
+      "expect": {
+        "canonical": "\"\\u0080\\u07ff\\u0800\\ud7ff\\ue000\\uffff\\ud800\\udc00\\udbff\\udfff\"\n",
+        "canonical_sha256": "6e90f6f080b96ee13e57ef57b71105ff8aaa7c92e40b4e8c3706d218bd9c989a",
+        "outcome": "accept"
+      },
+      "id": "json/string-utf8-boundaries",
+      "input_hex": "22c280dfbfe0a080ed9fbfee8080efbfbff0908080f48fbfbf22",
+      "summary": "the first and last code point of each UTF-8 length"
+    },
+    {
+      "expect": {
+        "canonical": "{\n  \"\\u0000\": 2,\n  \"\\n\": 1,\n  \"\\u00e9\": 3\n}\n",
+        "canonical_sha256": "9107945c60f1f923cb7a1283d637dfc57ea66b611ea345b8925b03e67e65a4a5",
+        "outcome": "accept"
+      },
+      "id": "json/key-escapes",
+      "input_hex": "7b22c3a9223a332c225c6e223a312c225c7530303030223a327d",
+      "summary": "keys are escaped and sorted by code point"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "control-char"
+      },
+      "id": "json/control-nul-raw",
+      "input_hex": "220022",
+      "summary": "a raw NUL in a string"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "control-char"
+      },
+      "id": "json/control-soh-raw",
+      "input_hex": "220122",
+      "summary": "a raw U+0001 in a string"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "control-char"
+      },
+      "id": "json/control-tab-raw",
+      "input_hex": "220922",
+      "summary": "a raw tab in a string"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "control-char"
+      },
+      "id": "json/control-lf-raw",
+      "input_hex": "220a22",
+      "summary": "a raw LF in a string"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "control-char"
+      },
+      "id": "json/control-cr-raw",
+      "input_hex": "220d22",
+      "summary": "a raw CR in a string"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "control-char"
+      },
+      "id": "json/control-us-raw",
+      "input_hex": "221f22",
+      "summary": "a raw U+001F in a string"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "control-char"
+      },
+      "id": "json/control-tab-in-key",
+      "input_hex": "7b22610962223a317d",
+      "summary": "a raw tab in a key"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "control-char"
+      },
+      "id": "json/control-lf-in-key",
+      "input_hex": "7b22610a62223a317d",
+      "summary": "a raw LF in a key"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "bad-escape"
+      },
+      "id": "json/escape-hex-x",
+      "input_hex": "225c78343122",
+      "summary": "\\x41 is not a JSON escape"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "bad-escape"
+      },
+      "id": "json/escape-bell",
+      "input_hex": "225c6122",
+      "summary": "\\a is not a JSON escape"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "bad-escape"
+      },
+      "id": "json/escape-single-quote",
+      "input_hex": "225c2722",
+      "summary": "\\' is not a JSON escape"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "bad-escape"
+      },
+      "id": "json/escape-capital-u",
+      "input_hex": "225c553030343122",
+      "summary": "\\U0041 is not a JSON escape"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "bad-escape"
+      },
+      "id": "json/escape-short-hex",
+      "input_hex": "225c75313222",
+      "summary": "\\u12 has two hex digits"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "bad-escape"
+      },
+      "id": "json/escape-bad-hex",
+      "input_hex": "225c753132473422",
+      "summary": "\\u12G4 has a non-hex digit"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "bad-escape"
+      },
+      "id": "json/escape-no-hex",
+      "input_hex": "225c7522",
+      "summary": "\\u with nothing after it"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "bad-escape"
+      },
+      "id": "json/escape-space",
+      "input_hex": "225c2022",
+      "summary": "backslash space"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "bad-escape"
+      },
+      "id": "json/escape-zero",
+      "input_hex": "225c3022",
+      "summary": "\\0 is not a JSON escape"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "bad-escape"
+      },
+      "id": "json/escape-backslash-at-end",
+      "input_hex": "225c",
+      "summary": "a lone backslash at the end of input"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "unpaired-surrogate"
+      },
+      "id": "json/surrogate-high-alone",
+      "input_hex": "225c756438303022",
+      "summary": "a lone high surrogate \\ud800"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "unpaired-surrogate"
+      },
+      "id": "json/surrogate-high-max-alone",
+      "input_hex": "225c756462666622",
+      "summary": "a lone high surrogate \\udbff"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "unpaired-surrogate"
+      },
+      "id": "json/surrogate-low-alone",
+      "input_hex": "225c756463303022",
+      "summary": "a lone low surrogate \\udc00"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "unpaired-surrogate"
+      },
+      "id": "json/surrogate-low-max-alone",
+      "input_hex": "225c756466666622",
+      "summary": "a lone low surrogate \\udfff"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "unpaired-surrogate"
+      },
+      "id": "json/surrogate-high-upper-hex",
+      "input_hex": "225c754438303022",
+      "summary": "a lone high surrogate \\uD800 in upper-case hex"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "unpaired-surrogate"
+      },
+      "id": "json/surrogate-high-then-bmp",
+      "input_hex": "225c75643830305c753030343122",
+      "summary": "a high surrogate then an ordinary escape"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "unpaired-surrogate"
+      },
+      "id": "json/surrogate-high-then-raw",
+      "input_hex": "225c75643830307822",
+      "summary": "a high surrogate then a raw character"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "unpaired-surrogate"
+      },
+      "id": "json/surrogate-high-then-high",
+      "input_hex": "225c75643830305c756438303022",
+      "summary": "two high surrogates"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "unpaired-surrogate"
+      },
+      "id": "json/surrogate-low-then-high",
+      "input_hex": "225c75646330305c756438303022",
+      "summary": "a pair in the wrong order"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "unpaired-surrogate"
+      },
+      "id": "json/surrogate-pair-then-high",
+      "input_hex": "225c75643833645c75646530305c756438336422",
+      "summary": "a good pair then a lone high"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "unpaired-surrogate"
+      },
+      "id": "json/surrogate-low-then-pair",
+      "input_hex": "225c75646530305c75643833645c756465303022",
+      "summary": "a lone low then a good pair"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "unpaired-surrogate"
+      },
+      "id": "json/surrogate-high-then-pair",
+      "input_hex": "225c75643830305c75643833645c756465303022",
+      "summary": "a lone high then a good pair"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "unpaired-surrogate"
+      },
+      "id": "json/surrogate-high-at-end",
+      "input_hex": "22615c756438303022",
+      "summary": "a lone high surrogate after text"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "unpaired-surrogate"
+      },
+      "id": "json/surrogate-high-then-newline-escape",
+      "input_hex": "225c75643830305c6e22",
+      "summary": "a high surrogate then \\n"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "unpaired-surrogate"
+      },
+      "id": "json/surrogate-in-key",
+      "input_hex": "7b225c7564383030223a317d",
+      "summary": "a lone surrogate in a KEY"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "unpaired-surrogate"
+      },
+      "id": "json/surrogate-in-nested-value",
+      "input_hex": "7b2261223a5b225c7564633030225d7d",
+      "summary": "a lone surrogate in a nested value"
+    },
+    {
+      "expect": {
+        "canonical": "\"\\ud800\\udc00\\udbff\\udfff\"\n",
+        "canonical_sha256": "1b80ea570ff6bf247c55275dbcd7870bd79c0e7a3676402e590582fe1c446026",
+        "outcome": "accept"
+      },
+      "id": "json/surrogate-pair-boundaries",
+      "input_hex": "225c75643830305c75646330305c75646266665c756466666622",
+      "summary": "the lowest and highest valid pairs"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "utf8"
+      },
+      "id": "json/utf8-continuation-alone",
+      "input_hex": "228022",
+      "summary": "a stray continuation byte 0x80"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "utf8"
+      },
+      "id": "json/utf8-continuation-bf",
+      "input_hex": "22bf22",
+      "summary": "a stray continuation byte 0xBF"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "utf8"
+      },
+      "id": "json/utf8-ff",
+      "input_hex": "22ff22",
+      "summary": "the byte 0xFF"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "utf8"
+      },
+      "id": "json/utf8-fe",
+      "input_hex": "22fe22",
+      "summary": "the byte 0xFE"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "utf8"
+      },
+      "id": "json/utf8-overlong-nul",
+      "input_hex": "22c08022",
+      "summary": "C0 80: an overlong NUL"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "utf8"
+      },
+      "id": "json/utf8-overlong-slash",
+      "input_hex": "22c0af22",
+      "summary": "C0 AF: an overlong solidus"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "utf8"
+      },
+      "id": "json/utf8-overlong-c1",
+      "input_hex": "22c1bf22",
+      "summary": "C1 BF: an overlong U+007F"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "utf8"
+      },
+      "id": "json/utf8-overlong-3-byte",
+      "input_hex": "22e0808022",
+      "summary": "E0 80 80: an overlong 3-byte NUL"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "utf8"
+      },
+      "id": "json/utf8-overlong-3-byte-max",
+      "input_hex": "22e09fbf22",
+      "summary": "E0 9F BF: an overlong 3-byte U+07FF"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "utf8"
+      },
+      "id": "json/utf8-overlong-4-byte",
+      "input_hex": "22f080808022",
+      "summary": "F0 80 80 80: an overlong 4-byte NUL"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "utf8"
+      },
+      "id": "json/utf8-overlong-4-byte-max",
+      "input_hex": "22f08fbfbf22",
+      "summary": "F0 8F BF BF: an overlong 4-byte U+FFFF"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "utf8"
+      },
+      "id": "json/utf8-encoded-surrogate-low",
+      "input_hex": "22eda08022",
+      "summary": "ED A0 80: U+D800 encoded directly"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "utf8"
+      },
+      "id": "json/utf8-encoded-surrogate-high",
+      "input_hex": "22edbfbf22",
+      "summary": "ED BF BF: U+DFFF encoded directly"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "utf8"
+      },
+      "id": "json/utf8-cesu-pair",
+      "input_hex": "22eda0bdedb88022",
+      "summary": "a surrogate pair encoded as two 3-byte sequences (CESU-8)"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "utf8"
+      },
+      "id": "json/utf8-above-max",
+      "input_hex": "22f490808022",
+      "summary": "F4 90 80 80: U+110000"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "utf8"
+      },
+      "id": "json/utf8-f5",
+      "input_hex": "22f580808022",
+      "summary": "F5 80 80 80: a lead byte above F4"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "utf8"
+      },
+      "id": "json/utf8-five-byte",
+      "input_hex": "22f88880808022",
+      "summary": "F8 88 80 80 80: a 5-byte form"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "utf8"
+      },
+      "id": "json/utf8-truncated-2-byte",
+      "input_hex": "22c322",
+      "summary": "a 2-byte lead cut off by the closing quote"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "utf8"
+      },
+      "id": "json/utf8-truncated-3-byte",
+      "input_hex": "22e28222",
+      "summary": "a 3-byte sequence with one continuation"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "utf8"
+      },
+      "id": "json/utf8-truncated-4-byte",
+      "input_hex": "22f09f9822",
+      "summary": "a 4-byte sequence with two continuations"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "utf8"
+      },
+      "id": "json/utf8-truncated-at-end",
+      "input_hex": "22c3",
+      "summary": "a 2-byte lead as the last byte of the input"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "utf8"
+      },
+      "id": "json/utf8-in-key",
+      "input_hex": "7b22ff223a317d",
+      "summary": "invalid UTF-8 in a key"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "utf8"
+      },
+      "id": "json/utf8-outside-string",
+      "input_hex": "ff",
+      "summary": "invalid UTF-8 where a token should be"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "utf8"
+      },
+      "id": "json/utf8-in-array",
+      "input_hex": "5bff5d",
+      "summary": "invalid UTF-8 between array elements"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "utf8"
+      },
+      "id": "json/utf8-continuation-after-valid",
+      "input_hex": "22c3a98022",
+      "summary": "a valid character then a stray continuation"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "duplicate-key"
+      },
+      "id": "json/dup-top-level",
+      "input_hex": "7b2261223a312c2261223a327d",
+      "summary": "the same key twice, different values"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "duplicate-key"
+      },
+      "id": "json/dup-same-value",
+      "input_hex": "7b2261223a312c2261223a317d",
+      "summary": "the same key twice, same value"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "duplicate-key"
+      },
+      "id": "json/dup-three-keys",
+      "input_hex": "7b2261223a312c2262223a322c2261223a337d",
+      "summary": "a duplicate that is not adjacent"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "duplicate-key"
+      },
+      "id": "json/dup-after-container",
+      "input_hex": "7b2261223a7b2278223a317d2c2261223a327d",
+      "summary": "a duplicate after a container value"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "duplicate-key"
+      },
+      "id": "json/dup-nested-object",
+      "input_hex": "7b226f223a7b226b223a312c226b223a327d7d",
+      "summary": "a duplicate inside a nested object"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "duplicate-key"
+      },
+      "id": "json/dup-in-array",
+      "input_hex": "5b7b2278223a7b226b223a312c226b223a317d7d5d",
+      "summary": "a duplicate inside an object inside an array"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "duplicate-key"
+      },
+      "id": "json/dup-deep",
+      "input_hex": "7b2261223a7b2262223a7b2263223a7b2264223a312c2264223a327d7d7d7d",
+      "summary": "a duplicate four levels down"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "duplicate-key"
+      },
+      "id": "json/dup-escaped-equivalent",
+      "input_hex": "7b2261223a312c225c7530303631223a327d",
+      "summary": "\"a\" and \"\\u0061\" are the same key"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "duplicate-key"
+      },
+      "id": "json/dup-escaped-capital",
+      "input_hex": "7b225c7530303431223a312c2241223a327d",
+      "summary": "\"\\u0041\" and \"A\" are the same key"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "duplicate-key"
+      },
+      "id": "json/dup-empty-key",
+      "input_hex": "7b22223a312c22223a327d",
+      "summary": "the empty key twice"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "duplicate-key"
+      },
+      "id": "json/dup-proto",
+      "input_hex": "7b225f5f70726f746f5f5f223a312c225f5f70726f746f5f5f223a327d",
+      "summary": "a duplicated __proto__ key"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "duplicate-key"
+      },
+      "id": "json/dup-astral-equivalent",
+      "input_hex": "7b22f09f9880223a312c225c75643833645c7564653030223a327d",
+      "summary": "a raw astral key and its escaped pair are the same key"
+    },
+    {
+      "expect": {
+        "canonical": "{\n  \"A\": 2,\n  \"a\": 1\n}\n",
+        "canonical_sha256": "4482280970c2e06af7700d73203f28752ae85259130e57a01debd717dfe5d789",
+        "outcome": "accept"
+      },
+      "id": "json/dup-absent-different-case",
+      "input_hex": "7b2261223a312c2241223a327d",
+      "summary": "keys differing only in case are different keys"
+    },
+    {
+      "expect": {
+        "canonical": "[\n  {\n    \"a\": 1\n  },\n  {\n    \"a\": 2\n  }\n]\n",
+        "canonical_sha256": "c094454e51cc03f0408f91100f756d3c758feb90307053d961c2c30f6132bbd1",
+        "outcome": "accept"
+      },
+      "id": "json/dup-absent-different-objects",
+      "input_hex": "5b7b2261223a317d2c7b2261223a327d5d",
+      "summary": "the same key in two sibling objects is fine"
+    },
+    {
+      "expect": {
+        "canonical": "{\n  \"a\": {\n    \"a\": 1\n  }\n}\n",
+        "canonical_sha256": "f78be6922b2d8c371646a269501a72b53e1e9caaa60f41c654fd75dffd8367ae",
+        "outcome": "accept"
+      },
+      "id": "json/dup-absent-nested-same-name",
+      "input_hex": "7b2261223a7b2261223a317d7d",
+      "summary": "a nested key may reuse its parent's name"
+    },
+    {
+      "expect": {
+        "canonical": "{\n  \"\": 1\n}\n",
+        "canonical_sha256": "14e7bd7c9f234c1b8e20f5cd960af97797110ac2570ff606a7d2dab74ab7ef16",
+        "outcome": "accept"
+      },
+      "id": "json/dup-absent-empty-key-once",
+      "input_hex": "7b22223a317d",
+      "summary": "one empty key is fine"
+    },
+    {
+      "expect": {
+        "canonical_sha256": "90808f33acbcc3037dd909c6abb171e262985897310b6c1336403fb111be16ec",
+        "outcome": "accept"
+      },
+      "id": "json/depth-256-arrays",
+      "input_hex": "5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d",
+      "summary": "256 nested arrays are accepted"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "depth"
+      },
+      "id": "json/depth-257-arrays",
+      "input_hex": "5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d",
+      "summary": "257 nested arrays are refused"
+    },
+    {
+      "expect": {
+        "canonical_sha256": "6a3f66dd273c8079c53fd43abc98c8ca67eac51f1c464fc07aa71eead3c07a4c",
+        "outcome": "accept"
+      },
+      "id": "json/depth-256-objects",
+      "input_hex": "7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d",
+      "summary": "256 nested objects are accepted"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "depth"
+      },
+      "id": "json/depth-257-objects",
+      "input_hex": "7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b2261223a7b7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d7d",
+      "summary": "257 nested objects are refused"
+    },
+    {
+      "expect": {
+        "canonical_sha256": "a8cbb1f4af211cee9bb6c2b97f22a478c1fdbfa78cecbb125759c132cbab0107",
+        "outcome": "accept"
+      },
+      "id": "json/depth-256-arrays-scalar-leaf",
+      "input_hex": "5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b315d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d",
+      "summary": "a scalar inside 256 arrays does not add a level"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "depth"
+      },
+      "id": "json/depth-257-arrays-scalar-leaf",
+      "input_hex": "5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b315d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d",
+      "summary": "a scalar inside 257 arrays"
+    },
+    {
+      "expect": {
+        "canonical_sha256": "44649bf3c7e609199347f709740628d9d4927d526c57b2bb91e238aa35e63673",
+        "outcome": "accept"
+      },
+      "id": "json/depth-256-alternating",
+      "input_hex": "5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d",
+      "summary": "256 alternating arrays and objects"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject",
+        "reason": "depth"
+      },
+      "id": "json/depth-257-alternating",
+      "input_hex": "5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b7b2261223a5b5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d",
+      "summary": "257 alternating arrays and objects"
+    },
+    {
+      "expect": {
+        "canonical": "{\n  \"__proto__\": 1\n}\n",
+        "canonical_sha256": "1de8fd38bf45e1a46a1e0c340f83b14a6137fb26849af7e52d66477f553f00c2",
+        "outcome": "accept"
+      },
+      "id": "json/key-proto",
+      "input_hex": "7b225f5f70726f746f5f5f223a317d",
+      "summary": "__proto__ is an ordinary key"
+    },
+    {
+      "expect": {
+        "canonical": "{\n  \"__proto__\": {\n    \"polluted\": true\n  }\n}\n",
+        "canonical_sha256": "c8d836de16011d6fd304205323d53b9a24a64aa1cd8aef2e808d390eb80308bd",
+        "outcome": "accept"
+      },
+      "id": "json/key-proto-object",
+      "input_hex": "7b225f5f70726f746f5f5f223a7b22706f6c6c75746564223a747275657d7d",
+      "summary": "__proto__ holding an object must not reach a prototype"
+    },
+    {
+      "expect": {
+        "canonical": "[\n  {\n    \"__proto__\": []\n  }\n]\n",
+        "canonical_sha256": "17f2e9b608800d1b84ff03294c154b95cbcb7b24cff0ebbf70bff54b186726a0",
+        "outcome": "accept"
+      },
+      "id": "json/key-proto-in-array",
+      "input_hex": "5b7b225f5f70726f746f5f5f223a5b5d7d5d",
+      "summary": "__proto__ inside an array element"
+    },
+    {
+      "expect": {
+        "canonical": "{\n  \"constructor\": 1\n}\n",
+        "canonical_sha256": "ad3af45d3d082dbe868e97f01bc180ec6276438049d2331a5c31f5ddf18ec929",
+        "outcome": "accept"
+      },
+      "id": "json/key-constructor",
+      "input_hex": "7b22636f6e7374727563746f72223a317d",
+      "summary": "constructor is an ordinary key"
+    },
+    {
+      "expect": {
+        "canonical": "{\n  \"toString\": 1\n}\n",
+        "canonical_sha256": "2b51454113c98b76218d26321a8489af890379fe37a33e5b71e49616043dfb0f",
+        "outcome": "accept"
+      },
+      "id": "json/key-to-string",
+      "input_hex": "7b22746f537472696e67223a317d",
+      "summary": "toString is an ordinary key"
+    },
+    {
+      "expect": {
+        "canonical": "{\n  \"hasOwnProperty\": 1\n}\n",
+        "canonical_sha256": "17f3a87e2bd34673863ae8715886d3293f1e05c9bfe133e1be770aef105302b1",
+        "outcome": "accept"
+      },
+      "id": "json/key-has-own-property",
+      "input_hex": "7b226861734f776e50726f7065727479223a317d",
+      "summary": "hasOwnProperty is an ordinary key"
+    },
+    {
+      "expect": {
+        "canonical": "{\n  \"valueOf\": 1\n}\n",
+        "canonical_sha256": "452e06e5b0de5c7b92acf72a33ba2963d01364ce00f5a1f7da5e92e4ead88ce7",
+        "outcome": "accept"
+      },
+      "id": "json/key-value-of",
+      "input_hex": "7b2276616c75654f66223a317d",
+      "summary": "valueOf is an ordinary key"
+    },
+    {
+      "expect": {
+        "canonical": "{\n  \"prototype\": 1\n}\n",
+        "canonical_sha256": "a8527be98adb3a4771079d5c541a77a8a16acc54b08516399b2a51242c6f7e57",
+        "outcome": "accept"
+      },
+      "id": "json/key-prototype",
+      "input_hex": "7b2270726f746f74797065223a317d",
+      "summary": "prototype is an ordinary key"
+    },
+    {
+      "expect": {
+        "canonical": "{\n  \"__proto__\": 3,\n  \"a\": 4,\n  \"constructor\": 2,\n  \"hasOwnProperty\": 6,\n  \"toString\": 1,\n  \"valueOf\": 5\n}\n",
+        "canonical_sha256": "c259165f3041f520f1a82decebdeb796d9b010c13f8b1d4b043de976eeca3a05",
+        "outcome": "accept"
+      },
+      "id": "json/key-specials-sorted",
+      "input_hex": "7b22746f537472696e67223a312c22636f6e7374727563746f72223a322c225f5f70726f746f5f5f223a332c2261223a342c2276616c75654f66223a352c226861734f776e50726f7065727479223a367d",
+      "summary": "special keys sort like any other key"
+    },
+    {
+      "expect": {
+        "canonical": "{\n  \"0\": 5,\n  \"1\": 4,\n  \"10\": 1,\n  \"2\": 3,\n  \"9\": 2\n}\n",
+        "canonical_sha256": "3a2a9223ae7bda461f769166c496e5ad5b8c5b1b6de2515a56713b7748d47b7e",
+        "outcome": "accept"
+      },
+      "id": "json/key-integer-like-sorted",
+      "input_hex": "7b223130223a312c2239223a322c2232223a332c2231223a342c2230223a357d",
+      "summary": "integer-like keys sort as text (10 before 2), not as numbers"
+    },
+    {
+      "expect": {
+        "canonical": "{\n  \"B\": 3,\n  \"Z\": 5,\n  \"_\": 4,\n  \"a\": 2,\n  \"b\": 1\n}\n",
+        "canonical_sha256": "182ff575688336cd31f368b935160639cf6009fdb7df500f80be3c4caa8673e8",
+        "outcome": "accept"
+      },
+      "id": "json/key-order-ascii",
+      "input_hex": "7b2262223a312c2261223a322c2242223a332c225f223a342c225a223a357d",
+      "summary": "uppercase sorts before underscore before lowercase"
+    },
+    {
+      "expect": {
+        "canonical": "{\n  \"a\": 2,\n  \"ab\": 1,\n  \"b\": 3\n}\n",
+        "canonical_sha256": "aff55dba4d699c45e7cd1d9d6271d1d2f06b4cdc8522400b903dccafd1b7fa97",
+        "outcome": "accept"
+      },
+      "id": "json/key-order-prefix",
+      "input_hex": "7b226162223a312c2261223a322c2262223a337d",
+      "summary": "a key sorts before its extensions"
+    },
+    {
+      "expect": {
+        "canonical": "{\n  \"z\": 2,\n  \"\\u00e9\": 1\n}\n",
+        "canonical_sha256": "7811e8e3e898d08c7fba69c212eda41f0f617a07138903f87fe93e6ef2ff1bec",
+        "outcome": "accept"
+      },
+      "id": "json/key-order-latin1",
+      "input_hex": "7b22c3a9223a312c227a223a327d",
+      "summary": "U+00E9 sorts after z"
+    },
+    {
+      "expect": {
+        "canonical": "{\n  \"\\uffff\": 2,\n  \"\\ud83d\\ude00\": 1\n}\n",
+        "canonical_sha256": "648859209d961d8d2ceace60680061234b8a91342f423c17ae83a9a528190d89",
+        "outcome": "accept"
+      },
+      "id": "json/key-order-bmp-vs-astral",
+      "input_hex": "7b225c75643833645c7564653030223a312c225c7566666666223a327d",
+      "summary": "U+FFFF sorts BEFORE U+1F600 (UTF-16 order would reverse them)"
+    },
+    {
+      "expect": {
+        "canonical": "{\n  \"\\ue000\": 2,\n  \"\\ud800\\udc00\": 1\n}\n",
+        "canonical_sha256": "61b1d8b497219a227202abd06a5492b987ddda5cc52bd2ad805709120e9229bc",
+        "outcome": "accept"
+      },
+      "id": "json/key-order-private-use-vs-astral",
+      "input_hex": "7b225c75643830305c7564633030223a312c225c7565303030223a327d",
+      "summary": "U+E000 sorts before U+10000"
+    }
+  ],
+  "category": "json",
+  "schema": "warrant-corpus-conformance-v1"
+}

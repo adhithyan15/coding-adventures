@@ -1,0 +1,589 @@
+{
+  "cases": [
+    {
+      "child": "/repo/a/b",
+      "expect": {
+        "inside": true,
+        "same": false
+      },
+      "flavor": "posix",
+      "id": "containment/posix-child",
+      "root": "/repo",
+      "summary": "a nested child"
+    },
+    {
+      "child": "/repo",
+      "expect": {
+        "inside": true,
+        "same": true
+      },
+      "flavor": "posix",
+      "id": "containment/posix-root-itself",
+      "root": "/repo",
+      "summary": "the root is inside itself"
+    },
+    {
+      "child": "/repo/",
+      "expect": {
+        "inside": true,
+        "same": true
+      },
+      "flavor": "posix",
+      "id": "containment/posix-child-trailing-slash",
+      "root": "/repo",
+      "summary": "the root with a trailing slash"
+    },
+    {
+      "child": "/repo/x",
+      "expect": {
+        "inside": true,
+        "same": false
+      },
+      "flavor": "posix",
+      "id": "containment/posix-root-trailing-slash",
+      "root": "/repo/",
+      "summary": "a root written with a trailing slash"
+    },
+    {
+      "child": "/repo2",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "posix",
+      "id": "containment/posix-sibling-prefix",
+      "root": "/repo",
+      "summary": "/repo2 shares a string prefix but is not inside /repo"
+    },
+    {
+      "child": "/repo-evil/x",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "posix",
+      "id": "containment/posix-sibling-prefix-deep",
+      "root": "/repo",
+      "summary": "/repo-evil/x shares a string prefix"
+    },
+    {
+      "child": "/repo",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "posix",
+      "id": "containment/posix-parent",
+      "root": "/repo/sub",
+      "summary": "the parent directory"
+    },
+    {
+      "child": "/repo/..",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "posix",
+      "id": "containment/posix-dotdot-child",
+      "root": "/repo",
+      "summary": "/repo/.. is the parent of the root"
+    },
+    {
+      "child": "/repo/../other",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "posix",
+      "id": "containment/posix-dotdot-escape",
+      "root": "/repo",
+      "summary": "/repo/../other escapes"
+    },
+    {
+      "child": "/repo/../repo/x",
+      "expect": {
+        "inside": true,
+        "same": false
+      },
+      "flavor": "posix",
+      "id": "containment/posix-dotdot-return",
+      "root": "/repo",
+      "summary": "/repo/../repo/x comes back in"
+    },
+    {
+      "child": "/repo/a/../../etc",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "posix",
+      "id": "containment/posix-dotdot-deep-escape",
+      "root": "/repo",
+      "summary": "a deep path that climbs out"
+    },
+    {
+      "child": "/repo/..foo",
+      "expect": {
+        "inside": true,
+        "same": false
+      },
+      "flavor": "posix",
+      "id": "containment/posix-dotdot-prefix-name",
+      "root": "/repo",
+      "summary": "..foo is an ordinary directory name"
+    },
+    {
+      "child": "/repo/..foo/bar",
+      "expect": {
+        "inside": true,
+        "same": false
+      },
+      "flavor": "posix",
+      "id": "containment/posix-dotdot-prefix-name-nested",
+      "root": "/repo",
+      "summary": "..foo/bar is inside"
+    },
+    {
+      "child": "/repo/...",
+      "expect": {
+        "inside": true,
+        "same": false
+      },
+      "flavor": "posix",
+      "id": "containment/posix-three-dots-name",
+      "root": "/repo",
+      "summary": "... is an ordinary directory name"
+    },
+    {
+      "child": "/repo/./a//b",
+      "expect": {
+        "inside": true,
+        "same": false
+      },
+      "flavor": "posix",
+      "id": "containment/posix-dot-and-double-slash",
+      "root": "/repo",
+      "summary": ". and // components are dropped"
+    },
+    {
+      "child": "/other",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "posix",
+      "id": "containment/posix-other-tree",
+      "root": "/repo",
+      "summary": "an unrelated tree"
+    },
+    {
+      "child": "/",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "posix",
+      "id": "containment/posix-filesystem-root-child",
+      "root": "/repo",
+      "summary": "the filesystem root is not inside /repo"
+    },
+    {
+      "child": "/anything/at/all",
+      "expect": {
+        "inside": true,
+        "same": false
+      },
+      "flavor": "posix",
+      "id": "containment/posix-root-is-slash",
+      "root": "/",
+      "summary": "everything is inside /"
+    },
+    {
+      "child": "/",
+      "expect": {
+        "inside": true,
+        "same": true
+      },
+      "flavor": "posix",
+      "id": "containment/posix-root-is-slash-same",
+      "root": "/",
+      "summary": "/ is inside /"
+    },
+    {
+      "child": "/Repo/x",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "posix",
+      "id": "containment/posix-case-sensitive",
+      "root": "/repo",
+      "summary": "posix compares case-sensitively"
+    },
+    {
+      "child": "/repo/a\\..\\b",
+      "expect": {
+        "inside": true,
+        "same": false
+      },
+      "flavor": "posix",
+      "id": "containment/posix-backslash-is-a-name",
+      "root": "/repo",
+      "summary": "a backslash is an ordinary character on posix"
+    },
+    {
+      "child": "/../repo/x",
+      "expect": {
+        "inside": true,
+        "same": false
+      },
+      "flavor": "posix",
+      "id": "containment/posix-dotdot-at-root-clamps",
+      "root": "/repo",
+      "summary": "/.. is / (there is no parent of the root)"
+    },
+    {
+      "child": "/a/c/d",
+      "expect": {
+        "inside": true,
+        "same": false
+      },
+      "flavor": "posix",
+      "id": "containment/posix-root-normalised",
+      "root": "/a/b/../c",
+      "summary": "the root is normalised too"
+    },
+    {
+      "child": "D:\\repo\\x",
+      "expect": {
+        "inside": true,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-child",
+      "root": "D:\\repo",
+      "summary": "a nested child"
+    },
+    {
+      "child": "D:\\repo",
+      "expect": {
+        "inside": true,
+        "same": true
+      },
+      "flavor": "win32",
+      "id": "containment/win32-root-itself",
+      "root": "D:\\repo",
+      "summary": "the root is inside itself"
+    },
+    {
+      "child": "C:\\tmp\\x",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-cross-drive",
+      "root": "D:\\repo",
+      "summary": "C: is another drive: path.relative would return an ABSOLUTE path"
+    },
+    {
+      "child": "C:\\repo\\x",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-cross-drive-same-path",
+      "root": "D:\\repo",
+      "summary": "the same path on another drive"
+    },
+    {
+      "child": "C:\\",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-cross-drive-root-child",
+      "root": "D:\\repo",
+      "summary": "another drive's root"
+    },
+    {
+      "child": "D:\\repo2",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-sibling-prefix",
+      "root": "D:\\repo",
+      "summary": "D:\\repo2 is not inside D:\\repo"
+    },
+    {
+      "child": "D:\\repo\\..",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-dotdot-child",
+      "root": "D:\\repo",
+      "summary": "D:\\repo\\.. is the parent"
+    },
+    {
+      "child": "D:\\repo\\..\\other",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-dotdot-escape",
+      "root": "D:\\repo",
+      "summary": "D:\\repo\\..\\other escapes"
+    },
+    {
+      "child": "D:\\repo\\..\\REPO\\x",
+      "expect": {
+        "inside": true,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-dotdot-return",
+      "root": "D:\\repo",
+      "summary": "a path that leaves and re-enters"
+    },
+    {
+      "child": "D:\\repo\\..foo",
+      "expect": {
+        "inside": true,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-dotdot-prefix-name",
+      "root": "D:\\repo",
+      "summary": "..foo is an ordinary directory name"
+    },
+    {
+      "child": "D:\\..\\repo\\x",
+      "expect": {
+        "inside": true,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-dotdot-at-root-clamps",
+      "root": "D:\\repo",
+      "summary": "D:\\.. is D:\\"
+    },
+    {
+      "child": "D:\\repo\\a\\..\\..",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-dotdot-climbs-out-of-two",
+      "root": "D:\\repo",
+      "summary": "two levels up"
+    },
+    {
+      "child": "d:\\REPO\\x",
+      "expect": {
+        "inside": true,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-case-insensitive",
+      "root": "D:\\repo",
+      "summary": "drive letter and names compare case-insensitively"
+    },
+    {
+      "child": "D:/repo/x",
+      "expect": {
+        "inside": true,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-forward-slashes",
+      "root": "D:\\repo",
+      "summary": "/ is a separator too"
+    },
+    {
+      "child": "D:\\repo\\x",
+      "expect": {
+        "inside": true,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-root-trailing-backslash",
+      "root": "D:\\repo\\",
+      "summary": "a root written with a trailing backslash"
+    },
+    {
+      "child": "D:\\x",
+      "expect": {
+        "inside": true,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-drive-root",
+      "root": "D:\\",
+      "summary": "everything on D: is inside D:\\"
+    },
+    {
+      "child": "D:\\",
+      "expect": {
+        "inside": true,
+        "same": true
+      },
+      "flavor": "win32",
+      "id": "containment/win32-drive-root-same",
+      "root": "D:\\",
+      "summary": "D:\\ is inside D:\\"
+    },
+    {
+      "child": "E:\\x",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-drive-root-other-drive",
+      "root": "D:\\",
+      "summary": "E:\\x is not inside D:\\"
+    },
+    {
+      "child": "\\\\server\\share\\repo\\x",
+      "expect": {
+        "inside": true,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-unc-child",
+      "root": "\\\\server\\share\\repo",
+      "summary": "a child of a UNC root"
+    },
+    {
+      "child": "\\\\server\\share\\repo",
+      "expect": {
+        "inside": true,
+        "same": true
+      },
+      "flavor": "win32",
+      "id": "containment/win32-unc-root-itself",
+      "root": "\\\\server\\share\\repo",
+      "summary": "a UNC root is inside itself"
+    },
+    {
+      "child": "\\\\server\\other\\repo\\x",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-unc-other-share",
+      "root": "\\\\server\\share\\repo",
+      "summary": "another share on the same server"
+    },
+    {
+      "child": "\\\\server2\\share\\repo\\x",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-unc-other-server",
+      "root": "\\\\server\\share\\repo",
+      "summary": "another server"
+    },
+    {
+      "child": "\\\\SERVER\\Share\\Repo\\x",
+      "expect": {
+        "inside": true,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-unc-case-insensitive",
+      "root": "\\\\server\\share\\repo",
+      "summary": "server, share and names compare case-insensitively"
+    },
+    {
+      "child": "\\\\server\\share\\a",
+      "expect": {
+        "inside": true,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-unc-share-root",
+      "root": "\\\\server\\share",
+      "summary": "a child of the share root"
+    },
+    {
+      "child": "\\\\server\\share\\repo2",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-unc-sibling-prefix",
+      "root": "\\\\server\\share\\repo",
+      "summary": "repo2 is not inside repo on a share"
+    },
+    {
+      "child": "\\\\server\\share\\..\\..\\x",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-unc-dotdot-clamps-to-share",
+      "root": "\\\\server\\share\\repo",
+      "summary": ".. cannot climb above the share"
+    },
+    {
+      "child": "\\\\server\\share\\repo",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-drive-root-unc-child",
+      "root": "D:\\repo",
+      "summary": "a UNC path is never inside a drive root"
+    },
+    {
+      "child": "D:\\repo\\x",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-unc-root-drive-child",
+      "root": "\\\\server\\share\\repo",
+      "summary": "a drive path is never inside a UNC root"
+    },
+    {
+      "child": "\\\\?\\D:\\repo\\x",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-device-namespace-question",
+      "root": "D:\\repo",
+      "summary": "a \\\\?\\ device path is never inside an ordinary root"
+    },
+    {
+      "child": "\\\\.\\D:\\repo",
+      "expect": {
+        "inside": false,
+        "same": false
+      },
+      "flavor": "win32",
+      "id": "containment/win32-device-namespace-dot",
+      "root": "D:\\repo",
+      "summary": "a \\\\.\\ device path is never inside an ordinary root"
+    }
+  ],
+  "category": "containment",
+  "schema": "warrant-corpus-conformance-v1"
+}

@@ -1,0 +1,782 @@
+{
+  "cases": [
+    {
+      "expect": {
+        "outcome": "accept",
+        "stream_hex": "01",
+        "stream_sha256": "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a"
+      },
+      "id": "tagged/bool-true",
+      "input_hex": "74727565",
+      "summary": "a Bool is a bare JSON boolean",
+      "type": "Bool"
+    },
+    {
+      "expect": {
+        "outcome": "accept",
+        "stream_hex": "00",
+        "stream_sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+      },
+      "id": "tagged/bool-false",
+      "input_hex": "66616c7365",
+      "summary": "false",
+      "type": "Bool"
+    },
+    {
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "tagged/bool-string",
+      "input_hex": "227472756522",
+      "summary": "the string \"true\" is not a Bool",
+      "type": "Bool"
+    },
+    {
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "tagged/bool-number",
+      "input_hex": "31",
+      "summary": "1 is not a Bool",
+      "type": "Bool"
+    },
+    {
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "tagged/bool-tagged",
+      "input_hex": "7b2274797065223a22426f6f6c222c2276616c7565223a747275657d",
+      "summary": "a Bool is not tagged",
+      "type": "Bool"
+    },
+    {
+      "expect": {
+        "outcome": "accept",
+        "stream_hex": "100000000000000000",
+        "stream_sha256": "ba80c236eb51b48f327f8cce2664b5556634c6ac05b50a7b163d9bfd7417c459"
+      },
+      "id": "tagged/u8-zero",
+      "input_hex": "7b2274797065223a225538222c2276616c7565223a2230227d",
+      "summary": "U8 lower bound",
+      "type": "U8"
+    },
+    {
+      "expect": {
+        "outcome": "accept",
+        "stream_hex": "10ff00000000000000",
+        "stream_sha256": "944639eae53669788cb951ec6af993b3a3d143ad7190e7fd5762ed89a8e943fa"
+      },
+      "id": "tagged/u8-max",
+      "input_hex": "7b2274797065223a225538222c2276616c7565223a22323535227d",
+      "summary": "U8 upper bound",
+      "type": "U8"
+    },
+    {
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "tagged/u8-overflow",
+      "input_hex": "7b2274797065223a225538222c2276616c7565223a22323536227d",
+      "summary": "U8 above 255",
+      "type": "U8"
+    },
+    {
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "tagged/u8-negative",
+      "input_hex": "7b2274797065223a225538222c2276616c7565223a222d31227d",
+      "summary": "U8 below 0",
+      "type": "U8"
+    },
+    {
+      "expect": {
+        "outcome": "accept",
+        "stream_hex": "100000000000000000",
+        "stream_sha256": "ba80c236eb51b48f327f8cce2664b5556634c6ac05b50a7b163d9bfd7417c459"
+      },
+      "id": "tagged/u64-zero",
+      "input_hex": "7b2274797065223a22553634222c2276616c7565223a2230227d",
+      "summary": "U64 lower bound",
+      "type": "U64"
+    },
+    {
+      "expect": {
+        "outcome": "accept",
+        "stream_hex": "100100000000000000",
+        "stream_sha256": "740b7a79538d41520f1ca25c0fde2462cad4e9cc131cfd4efb3f33c99fdb271e"
+      },
+      "id": "tagged/u64-one",
+      "input_hex": "7b2274797065223a22553634222c2276616c7565223a2231227d",
+      "summary": "U64 one",
+      "type": "U64"
+    },
+    {
+      "expect": {
+        "outcome": "accept",
+        "stream_hex": "100000000000002000",
+        "stream_sha256": "39c96433d4aa26e3ed3ad956f0c2f53502986d33192da164b77e701af2e29dd5"
+      },
+      "id": "tagged/u64-2^53",
+      "input_hex": "7b2274797065223a22553634222c2276616c7565223a2239303037313939323534373430393932227d",
+      "summary": "U64 2^53 is exact as text",
+      "type": "U64"
+    },
+    {
+      "expect": {
+        "outcome": "accept",
+        "stream_hex": "100100000000002000",
+        "stream_sha256": "42453cb20e320434d4b467db66af6648935f48fa1f6ec305d5c68197602c8c37"
+      },
+      "id": "tagged/u64-2^53+1",
+      "input_hex": "7b2274797065223a22553634222c2276616c7565223a2239303037313939323534373430393933227d",
+      "summary": "U64 2^53 + 1 is exact as text (a double would round it)",
+      "type": "U64"
+    },
+    {
+      "expect": {
+        "outcome": "accept",
+        "stream_hex": "100000000000000080",
+        "stream_sha256": "72b862f2fe02fe63ff972e3490b481b9104d8877aa297e8603ff24a3814b549d"
+      },
+      "id": "tagged/u64-2^63",
+      "input_hex": "7b2274797065223a22553634222c2276616c7565223a2239323233333732303336383534373735383038227d",
+      "summary": "U64 2^63",
+      "type": "U64"
+    },
+    {
+      "expect": {
+        "outcome": "accept",
+        "stream_hex": "10ffffffffffffffff",
+        "stream_sha256": "80ef0101880fe38cfabaa6a779905a8e82ed5918f01667b0ea2ae7720487ab02"
+      },
+      "id": "tagged/u64-max",
+      "input_hex": "7b2274797065223a22553634222c2276616c7565223a223138343436373434303733373039353531363135227d",
+      "summary": "U64 upper bound",
+      "type": "U64"
+    },
+    {
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "tagged/u64-overflow",
+      "input_hex": "7b2274797065223a22553634222c2276616c7565223a223138343436373434303733373039353531363136227d",
+      "summary": "U64 above 2^64 - 1",
+      "type": "U64"
+    },
+    {
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "tagged/u64-huge",
+      "input_hex": "7b2274797065223a22553634222c2276616c7565223a22393939393939393939393939393939393939393939393939393939393939227d",
+      "summary": "U64 with 30 digits",
+      "type": "U64"
+    },
+    {
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "tagged/u64-leading-zero",
+      "input_hex": "7b2274797065223a22553634222c2276616c7565223a223031227d",
+      "summary": "leading zero",
+      "type": "U64"
+    },
+    {
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "tagged/u64-double-zero",
+      "input_hex": "7b2274797065223a22553634222c2276616c7565223a223030227d",
+      "summary": "00",
+      "type": "U64"
+    },
+    {
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "tagged/u64-plus",
+      "input_hex": "7b2274797065223a22553634222c2276616c7565223a222b31227d",
+      "summary": "+1",
+      "type": "U64"
+    },
+    {
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "tagged/u64-minus-zero",
+      "input_hex": "7b2274797065223a22553634222c2276616c7565223a222d30227d",
+      "summary": "-0",
+      "type": "U64"
+    },
+    {
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "tagged/u64-empty",
+      "input_hex": "7b2274797065223a22553634222c2276616c7565223a22227d",
+      "summary": "empty text",
+      "type": "U64"
+    },
+    {
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "tagged/u64-leading-space",
+      "input_hex": "7b2274797065223a22553634222c2276616c7565223a222031227d",
+      "summary": "leading space",
+      "type": "U64"
+    },
+    {
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "tagged/u64-trailing-space",
+      "input_hex": "7b2274797065223a22553634222c2276616c7565223a223120227d",
+      "summary": "trailing space",
+      "type": "U64"
+    },
+    {
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "tagged/u64-trailing-newline",
+      "input_hex": "7b2274797065223a22553634222c2276616c7565223a22315c6e227d",
+      "summary": "trailing newline",
+      "type": "U64"
+    },
+    {
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "tagged/u64-hex",
+      "input_hex": "7b2274797065223a22553634222c2276616c7565223a2230783130227d",
+      "summary": "0x10",
+      "type": "U64"
+    },
+    {
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "tagged/u64-exponent",
+      "input_hex": "7b2274797065223a22553634222c2276616c7565223a22316533227d",
+      "summary": "1e3",
+      "type": "U64"
+    },
+    {
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "tagged/u64-fraction",
+      "input_hex": "7b2274797065223a22553634222c2276616c7565223a22312e30227d",
+      "summary": "1.0",
+      "type": "U64"
+    },
+    {
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "tagged/u64-arabic-digits",
+      "input_hex": "7b2274797065223a22553634222c2276616c7565223a225c75303636315c7530363632227d",
+      "summary": "non-ASCII decimal digits",
+      "type": "U64"
+    },
+    {
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "tagged/u64-small-number",
+      "input_hex": "7b2274797065223a22553634222c2276616c7565223a357d",
+      "summary": "a JSON number where text is required",
+      "type": "U64"
+    },
+    {
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "tagged/u64-null",
+      "input_hex": "7b2274797065223a22553634222c2276616c7565223a6e756c6c7d",
+      "summary": "null where text is required",
+      "type": "U64"
+    },
+    {
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "tagged/u64-array",
+      "input_hex": "7b2274797065223a22553634222c2276616c7565223a5b2231225d7d",
+      "summary": "an array where text is required",
+      "type": "U64"
+    },
+    {
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "tagged/u64-bare-string",
+      "input_hex": "223122",
+      "summary": "an untagged string",
+      "type": "U64"
+    },
+    {
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "tagged/u64-wrong-tag",
+      "input_hex": "7b2274797065223a225538222c2276616c7565223a2231227d",
+      "summary": "a U8 tag on a U64",
+      "type": "U64"
+    },
+    {
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "tagged/u64-missing-type",
+      "input_hex": "7b2276616c7565223a2231227d",
+      "summary": "no type key",
+      "type": "U64"
+    },
+    {
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "tagged/u64-extra-key",
+      "input_hex": "7b2274797065223a22553634222c2276616c7565223a2231222c2278223a317d",
+      "summary": "an extra key",
+      "type": "U64"
+    },
+    {
+      "expect": {
+        "outcome": "accept",
+        "stream_hex": "100700000000000000",
+        "stream_sha256": "76ed9d9dd8a03b4f2e175d2780be63e4482157f416c68468fe67a45885f65d64"
+      },
+      "id": "tagged/u64-key-order",
+      "input_hex": "7b2276616c7565223a2237222c2274797065223a22553634227d",
+      "summary": "key order does not matter",
+      "type": "U64"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject"
+      },
+      "id": "tagged/u64-json-number-above-2^53",
+      "input_hex": "7b2274797065223a22553634222c2276616c7565223a393030373139393235343734303939337d",
+      "summary": "a U64 as a JSON number above 2^53 never reaches the decoder",
+      "type": "U64"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject"
+      },
+      "id": "tagged/u64-json-exponent",
+      "input_hex": "7b2274797065223a22553634222c2276616c7565223a3165337d",
+      "summary": "a U64 as 1e3",
+      "type": "U64"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject"
+      },
+      "id": "tagged/u64-duplicate-key",
+      "input_hex": "7b2274797065223a22553634222c2276616c7565223a2231222c2276616c7565223a2232227d",
+      "summary": "a duplicate key in the tagged object",
+      "type": "U64"
+    },
+    {
+      "expect": {
+        "error": "malformed-json",
+        "outcome": "reject"
+      },
+      "id": "tagged/u64-lone-surrogate-text",
+      "input_hex": "7b2274797065223a22553634222c2276616c7565223a225c7564383030227d",
+      "summary": "a lone surrogate escape in the text",
+      "type": "U64"
+    },
+    {
+      "expect": {
+        "outcome": "accept",
+        "stream_hex": "100000000000000000",
+        "stream_sha256": "ba80c236eb51b48f327f8cce2664b5556634c6ac05b50a7b163d9bfd7417c459"
+      },
+      "id": "tagged/nat-zero",
+      "input_hex": "7b2274797065223a224e6174222c2276616c7565223a2230227d",
+      "summary": "Nat lower bound",
+      "type": "Nat"
+    },
+    {
+      "expect": {
+        "outcome": "accept",
+        "stream_hex": "10ffffffffffffffff",
+        "stream_sha256": "80ef0101880fe38cfabaa6a779905a8e82ed5918f01667b0ea2ae7720487ab02"
+      },
+      "id": "tagged/nat-max",
+      "input_hex": "7b2274797065223a224e6174222c2276616c7565223a223138343436373434303733373039353531363135227d",
+      "summary": "Nat upper bound (the checked width is 64 bits)",
+      "type": "Nat"
+    },
+    {
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "tagged/nat-overflow",
+      "input_hex": "7b2274797065223a224e6174222c2276616c7565223a223138343436373434303733373039353531363136227d",
+      "summary": "Nat above the checked width",
+      "type": "Nat"
+    },
+    {
+      "expect": {
+        "outcome": "accept",
+        "stream_hex": "2000000000",
+        "stream_sha256": "ccef7d892e752044c89d5471eac8af79087c0e04e45c9ae566b05be88de30d1c"
+      },
+      "id": "tagged/bytes-empty",
+      "input_hex": "7b2274797065223a224279746573222c2276616c7565223a22227d",
+      "summary": "the empty byte string",
+      "type": "Bytes"
+    },
+    {
+      "expect": {
+        "outcome": "accept",
+        "stream_hex": "200200000000ff",
+        "stream_sha256": "f4ad4a3f824fbfce84ad92a5895022911905fe8a80545c1ce231a0cc20b19d3a"
+      },
+      "id": "tagged/bytes-ascii",
+      "input_hex": "7b2274797065223a224279746573222c2276616c7565223a2230306666227d",
+      "summary": "bytes 00 and ff",
+      "type": "Bytes"
+    },
+    {
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "tagged/bytes-uppercase",
+      "input_hex": "7b2274797065223a224279746573222c2276616c7565223a224646227d",
+      "summary": "uppercase hex is refused",
+      "type": "Bytes"
+    },
+    {
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "tagged/bytes-mixed-case",
+      "input_hex": "7b2274797065223a224279746573222c2276616c7565223a226142227d",
+      "summary": "mixed-case hex is refused",
+      "type": "Bytes"
+    },
+    {
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "tagged/bytes-odd-length",
+      "input_hex": "7b2274797065223a224279746573222c2276616c7565223a22616263227d",
+      "summary": "an odd number of hex digits",
+      "type": "Bytes"
+    },
+    {
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "tagged/bytes-non-hex",
+      "input_hex": "7b2274797065223a224279746573222c2276616c7565223a227a7a227d",
+      "summary": "a non-hex digit",
+      "type": "Bytes"
+    },
+    {
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "tagged/bytes-space",
+      "input_hex": "7b2274797065223a224279746573222c2276616c7565223a223030206666227d",
+      "summary": "a space inside the hex",
+      "type": "Bytes"
+    },
+    {
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "tagged/bytes-prefix",
+      "input_hex": "7b2274797065223a224279746573222c2276616c7565223a2230783030227d",
+      "summary": "a 0x prefix",
+      "type": "Bytes"
+    },
+    {
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "tagged/bytes-number",
+      "input_hex": "7b2274797065223a224279746573222c2276616c7565223a307d",
+      "summary": "a number instead of text",
+      "type": "Bytes"
+    },
+    {
+      "expect": {
+        "outcome": "accept",
+        "stream_hex": "20020000000102",
+        "stream_sha256": "dd5af07378b742690b5c4d0d26e8834c10f2ad027ad61fd6cdda5b98afa54156"
+      },
+      "id": "tagged/bytes-fixed-ok",
+      "input_hex": "7b2274797065223a2242797465733c323e222c2276616c7565223a2230313032227d",
+      "summary": "Bytes<2> with two bytes",
+      "type": "Bytes<2>"
+    },
+    {
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "tagged/bytes-fixed-short",
+      "input_hex": "7b2274797065223a2242797465733c323e222c2276616c7565223a223031227d",
+      "summary": "Bytes<2> with one byte",
+      "type": "Bytes<2>"
+    },
+    {
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "tagged/bytes-fixed-long",
+      "input_hex": "7b2274797065223a2242797465733c323e222c2276616c7565223a22303130323033227d",
+      "summary": "Bytes<2> with three bytes",
+      "type": "Bytes<2>"
+    },
+    {
+      "expect": {
+        "outcome": "accept",
+        "stream_hex": "2000000000",
+        "stream_sha256": "ccef7d892e752044c89d5471eac8af79087c0e04e45c9ae566b05be88de30d1c"
+      },
+      "id": "tagged/bytes-fixed-zero",
+      "input_hex": "7b2274797065223a2242797465733c303e222c2276616c7565223a22227d",
+      "summary": "Bytes<0> with no bytes",
+      "type": "Bytes<0>"
+    },
+    {
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "tagged/bytes-fixed-zero-nonempty",
+      "input_hex": "7b2274797065223a2242797465733c303e222c2276616c7565223a223030227d",
+      "summary": "Bytes<0> with a byte",
+      "type": "Bytes<0>"
+    },
+    {
+      "errors": {
+        "SelectError": [
+          "CT_SELECT_LENGTH_MISMATCH"
+        ]
+      },
+      "expect": {
+        "outcome": "accept",
+        "stream_hex": "5020020000000aff",
+        "stream_sha256": "482582eacbcf9392a68164a4fa41d667022145dfa6a5eb5098643c12127c299a"
+      },
+      "id": "tagged/result-ok-bytes",
+      "input_hex": "7b2274797065223a22526573756c743c42797465732c53656c6563744572726f723e222c2276616c7565223a7b226f6b223a7b2274797065223a224279746573222c2276616c7565223a2230616666227d7d7d",
+      "summary": "Ok holding Bytes",
+      "type": "Result<Bytes,SelectError>"
+    },
+    {
+      "errors": {
+        "SelectError": [
+          "CT_SELECT_LENGTH_MISMATCH"
+        ]
+      },
+      "expect": {
+        "outcome": "accept",
+        "stream_hex": "502000000000",
+        "stream_sha256": "44013286c4a3d67640015cb566acd5bf4858d58e38c5ce55addeeb03d46a6e7d"
+      },
+      "id": "tagged/result-ok-bytes-empty",
+      "input_hex": "7b2274797065223a22526573756c743c42797465732c53656c6563744572726f723e222c2276616c7565223a7b226f6b223a7b2274797065223a224279746573222c2276616c7565223a22227d7d7d",
+      "summary": "Ok holding the empty Bytes",
+      "type": "Result<Bytes,SelectError>"
+    },
+    {
+      "errors": {
+        "SelectError": [
+          "CT_SELECT_LENGTH_MISMATCH"
+        ]
+      },
+      "expect": {
+        "outcome": "accept",
+        "stream_hex": "511900000043545f53454c4543545f4c454e4754485f4d49534d41544348",
+        "stream_sha256": "80c48fa8702cc9d0f8bf08f72a987647f0ace2dcde6f4ad682ab0bddbeba9a51"
+      },
+      "id": "tagged/result-err-declared",
+      "input_hex": "7b2274797065223a22526573756c743c42797465732c53656c6563744572726f723e222c2276616c7565223a7b22657272223a2243545f53454c4543545f4c454e4754485f4d49534d41544348227d7d",
+      "summary": "Err with a declared variant",
+      "type": "Result<Bytes,SelectError>"
+    },
+    {
+      "errors": {
+        "SelectError": [
+          "CT_SELECT_LENGTH_MISMATCH"
+        ]
+      },
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "tagged/result-err-undeclared",
+      "input_hex": "7b2274797065223a22526573756c743c42797465732c53656c6563744572726f723e222c2276616c7565223a7b22657272223a224f54484552227d7d",
+      "summary": "Err with a variant the module did not declare",
+      "type": "Result<Bytes,SelectError>"
+    },
+    {
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "tagged/result-err-no-errors-known",
+      "input_hex": "7b2274797065223a22526573756c743c42797465732c53656c6563744572726f723e222c2276616c7565223a7b22657272223a2243545f53454c4543545f4c454e4754485f4d49534d41544348227d7d",
+      "summary": "Err when no error type is declared",
+      "type": "Result<Bytes,SelectError>"
+    },
+    {
+      "errors": {
+        "SelectError": [
+          "CT_SELECT_LENGTH_MISMATCH"
+        ]
+      },
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "tagged/result-err-number",
+      "input_hex": "7b2274797065223a22526573756c743c42797465732c53656c6563744572726f723e222c2276616c7565223a7b22657272223a317d7d",
+      "summary": "Err with a non-text variant",
+      "type": "Result<Bytes,SelectError>"
+    },
+    {
+      "errors": {
+        "SelectError": [
+          "CT_SELECT_LENGTH_MISMATCH"
+        ]
+      },
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "tagged/result-both-keys",
+      "input_hex": "7b2274797065223a22526573756c743c42797465732c53656c6563744572726f723e222c2276616c7565223a7b226f6b223a7b2274797065223a224279746573222c2276616c7565223a22227d2c22657272223a2243545f53454c4543545f4c454e4754485f4d49534d41544348227d7d",
+      "summary": "ok and err together",
+      "type": "Result<Bytes,SelectError>"
+    },
+    {
+      "errors": {
+        "SelectError": [
+          "CT_SELECT_LENGTH_MISMATCH"
+        ]
+      },
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "tagged/result-empty-body",
+      "input_hex": "7b2274797065223a22526573756c743c42797465732c53656c6563744572726f723e222c2276616c7565223a7b7d7d",
+      "summary": "neither ok nor err",
+      "type": "Result<Bytes,SelectError>"
+    },
+    {
+      "errors": {
+        "SelectError": [
+          "CT_SELECT_LENGTH_MISMATCH"
+        ]
+      },
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "tagged/result-wrong-tag",
+      "input_hex": "7b2274797065223a22526573756c743c426f6f6c2c53656c6563744572726f723e222c2276616c7565223a7b226f6b223a747275657d7d",
+      "summary": "the wrong outer type tag",
+      "type": "Result<Bytes,SelectError>"
+    },
+    {
+      "errors": {
+        "SelectError": [
+          "CT_SELECT_LENGTH_MISMATCH"
+        ]
+      },
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "tagged/result-body-not-object",
+      "input_hex": "7b2274797065223a22526573756c743c42797465732c53656c6563744572726f723e222c2276616c7565223a226f6b227d",
+      "summary": "a body that is not an object",
+      "type": "Result<Bytes,SelectError>"
+    },
+    {
+      "errors": {
+        "SelectError": [
+          "CT_SELECT_LENGTH_MISMATCH"
+        ]
+      },
+      "expect": {
+        "outcome": "accept",
+        "stream_hex": "5001",
+        "stream_sha256": "5be9f96cecf3f618a6be49e939858b1638b3f57b76a3b10028af9189921808ea"
+      },
+      "id": "tagged/result-ok-bool",
+      "input_hex": "7b2274797065223a22526573756c743c426f6f6c2c53656c6563744572726f723e222c2276616c7565223a7b226f6b223a747275657d7d",
+      "summary": "Ok holding a bare Bool",
+      "type": "Result<Bool,SelectError>"
+    },
+    {
+      "errors": {
+        "SelectError": [
+          "CT_SELECT_LENGTH_MISMATCH"
+        ]
+      },
+      "expect": {
+        "error": "value",
+        "outcome": "reject"
+      },
+      "id": "tagged/result-ok-wrong-inner",
+      "input_hex": "7b2274797065223a22526573756c743c42797465732c53656c6563744572726f723e222c2276616c7565223a7b226f6b223a747275657d7d",
+      "summary": "Ok holding the wrong inner shape",
+      "type": "Result<Bytes,SelectError>"
+    }
+  ],
+  "category": "tagged",
+  "schema": "warrant-corpus-conformance-v1"
+}
