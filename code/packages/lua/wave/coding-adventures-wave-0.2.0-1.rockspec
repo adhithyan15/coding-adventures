@@ -1,5 +1,5 @@
 package = "coding-adventures-wave"
-version = "0.1.0-1"
+version = "0.2.0-1"
 source = {
     url = "git://github.com/adhithyan15/coding-adventures.git",
 }
@@ -9,7 +9,7 @@ description = {
 }
 dependencies = {
     "lua >= 5.4",
-    "coding-adventures-trig >= 0.1.0",
+    "coding-adventures-trig >= 0.3.0",
 }
 build = {
     type = "builtin",

@@ -340,4 +340,45 @@ subtest 'mix_waves' => sub {
     ok(dies { mix_waves([\@w1, \@w2]) }, 'dies on different lengths');
 };
 
+# ---------------------------------------------------------------------------
+# Large cycle counts (TRIG-CONV TC-15)
+# ---------------------------------------------------------------------------
+# sin_approx / cos_approx return NaN beyond 2^29 radians (about 8.5e7 cycles).
+# sine_wave and cosine_wave keep the phase in cycles and reduce it to the
+# fractional cycle first, so they must stay finite and correct however long
+# they run.  With sample_rate 1 and frequency 1e8 + 0.25, sample i is at
+# 1e8*i + 0.25*i cycles: every value is exact in binary64, and the fractional
+# cycle is 0, 1/4, 1/2, 3/4 for i = 0..3, far beyond 2^29 radians.
+subtest 'huge cycle counts stay finite and correct' => sub {
+    my $f = 1e8 + 0.25;
+    my @s = sine_wave($f, 1.0, 0.0, 1, 4);
+    ok(approx_eq($s[0],  0.0, 1e-12), 'sine i=0');
+    ok(approx_eq($s[1],  1.0, 1e-12), 'sine i=1: quarter cycle after 1e8 cycles');
+    ok(approx_eq($s[2],  0.0, 1e-12), 'sine i=2: half cycle after 2e8 cycles');
+    ok(approx_eq($s[3], -1.0, 1e-12), 'sine i=3: three-quarter cycle after 3e8 cycles');
+
+    my @c = cosine_wave($f, 1.0, 0.0, 1, 4);
+    ok(approx_eq($c[0],  1.0, 1e-12), 'cosine i=0');
+    ok(approx_eq($c[1],  0.0, 1e-12), 'cosine i=1');
+    ok(approx_eq($c[2], -1.0, 1e-12), 'cosine i=2');
+    ok(approx_eq($c[3],  0.0, 1e-12), 'cosine i=3');
+
+    # The angle itself is far beyond the trig domain: prove the test bites.
+    ok($CodingAdventures::Wave::TWO_PI * $f * 1 > 2**29,
+       'the unreduced angle at i=1 exceeds 2^29 radians');
+
+    # A large phase (radians) is reduced too, and the result stays a number in range.
+    my @p = sine_wave(1.0, 1.0, 1e12, 8, 8);
+    for my $i (0 .. $#p) {
+        ok($p[$i] == $p[$i] && abs($p[$i]) <= 1.0, "huge phase sample $i is finite and in [-1, 1]");
+    }
+
+    # An exact phase offset still works after the change: sin(x + pi/2) = cos(x).
+    my @q = sine_wave(1.0, 1.0, $CodingAdventures::Wave::TWO_PI / 4, 8, 8);
+    my @r = cosine_wave(1.0, 1.0, 0.0, 8, 8);
+    for my $i (0 .. 7) {
+        ok(approx_eq($q[$i], $r[$i], 1e-12), "pi/2 phase turns sine into cosine at sample $i");
+    }
+};
+
 done_testing;

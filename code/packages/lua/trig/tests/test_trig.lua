@@ -52,7 +52,7 @@ describe("constants", function()
     end)
 
     it("has a version string", function()
-        assert.are.equal("0.1.0", trig.VERSION)
+        assert.are.equal("0.3.0", trig.VERSION)
     end)
 end)
 

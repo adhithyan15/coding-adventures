@@ -56,6 +56,15 @@ harness = false
 name = "lzw_proofs"
 path = "tests/lzw_proofs.rs"
 
+# hash-functions: the SipHash key is `secret`, so one constant-time obligation, and no
+# `bound` rows, attempted on the real hash-functions algorithms.rs.  The front end
+# refuses the file, so this target records the obligation `not-live` with the
+# precise blocker.
+[[test]]
+name = "hash_functions_proofs"
+path = "tests/hash_functions_proofs.rs"
+harness = false
+
 # arithmetic: no secret labels, so only the steps/depth rows, attempted on the real
 # adders.rs and alu.rs.  The front end refuses them (if it does), so this target
 # records the steps-bound obligations `not-live` with the precise blocker.

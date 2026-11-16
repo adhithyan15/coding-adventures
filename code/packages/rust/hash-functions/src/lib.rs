@@ -14,3 +14,10 @@ pub use algorithms::{
     FNV64_PRIME, POLYNOMIAL_ROLLING_DEFAULT_BASE, POLYNOMIAL_ROLLING_DEFAULT_MODULUS,
 };
 pub use analysis::{avalanche_score, distribution_test};
+
+// Compile and run the README's usage example as a doctest, so its asserted values
+// cannot drift from the crate (`cargo test --doc`).  Only under `cfg(doctest)`:
+// it adds nothing to the library or its public documentation.
+#[cfg(doctest)]
+#[doc = include_str!("../README.md")]
+struct ReadmeDoctests;
