@@ -1059,7 +1059,12 @@ flavour, say) states so in its README; it never omits one silently.
 closed set: `empty`, `syntax`, `literal`, `utf8`, `bom`, `trailing-data`,
 `control-char`, `bad-escape`, `duplicate-key`, `unpaired-surrogate`, `number-form`,
 `unsafe-integer`, `depth`. The *error class* is what a lane must match, and it is
-the lane's existing machine-readable code (`malformed-json`, `value`).
+the lane's existing machine-readable code (`malformed-json`, `value`, and
+`unsupported-type` for a type outside the closed `warrant-corpus-v1` profile: in v1
+that includes `List<T>` and `Option<T>`, which §2.7 maps but no corpus uses, so a
+lane refuses them rather than half-supporting them). An integer of any length is
+read without a conversion that can itself fail (a 5,000-digit integer is
+`unsafe-integer`, never an uncaught exception).
 
 **Reader profile (what "strict JSON" means to every lane).**
 
@@ -1111,7 +1116,16 @@ component named `..foo` is an ordinary name, so `/r/..foo` is inside `/r` while
 `/r/..` is not, and `/rr` is not inside `/r` (compare whole components, never string
 prefixes). `win32` compares case-insensitively, accepts `/` and `\` as separators and
 treats a device-namespace path (`\\?\` or `\\.\`) as never inside anything (and nothing is inside it);
-`posix` is case-sensitive and `\` is an ordinary character. Symlinks are out of
+`posix` is case-sensitive and `\` is an ordinary character. Separators are
+normalised **before** any prefix rule (`\/?\D:\r`, `/\?/D:/r` and `\\?/D:\r` are
+device paths too), and `\\?\UNC\server\share` is a device path, not a UNC one.
+A POSIX path that begins with **exactly two** slashes (`//x`) is
+implementation-defined by POSIX, so the conservative rule applies: like a device
+path it is never inside anything and nothing is inside it; three or more leading
+slashes collapse to one, as POSIX says, and `//` inside a path is an ordinary
+separator. Production code applies the rules of the **host** flavour (`win32` on
+Windows, `posix` elsewhere) through the same helper the fixture drives: a helper
+whose default skips the device rule tests something production never calls. Symlinks are out of
 scope for the cases: resolving them (`realpath`) is the caller's job and must happen
 *before* this check; a lane that skips it must say so.
 
