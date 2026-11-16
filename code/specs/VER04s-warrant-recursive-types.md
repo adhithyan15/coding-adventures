@@ -12,9 +12,9 @@ package does are "from reading": the public signatures and the code named in the
 text were read, not run. The freeze is lifted **spec first, with adversarial
 review**; one adversarial review ran on 2026-11-16 and its findings and fixes
 are recorded in section 21. The lane-specialist read of the per-lane table of
-8.3 (WX-R-REVIEW, 19.2) is still owed before the lane rollout R2. Section 20.1 lists the two
-questions that are the owner's to answer; every other open question carries a
-recommended default that the text already applies.
+8.3 (WX-R-REVIEW, 19.2) is still owed before the lane rollout R2. Section 20.1 records the two
+owner questions, both **resolved on 2026-11-16** (OWN-R1, OWN-R2); every other open
+question carries a recommended default that the text already applies.
 
 **Parent:** [VER04 §2 to §8](VER04-warrant-language.md) (§3 values and equality, §4
 `match`, the acyclic-model rule, §5 static parameters),
@@ -2280,7 +2280,8 @@ Implementation order. VER30 puts WX-R1 **after the four features** (decision 15,
 C15). By dependency, R1-S0 to R1-S4 need only VER04o C1-S1 and the `v2` header, and
 the pilot needs T1, WX-D2 and the `ir.seq` meter, and none of floats (WX-FL1),
 opaque types (WX-O1) or generics (WX-P1); the section 20.1 question asks whether
-to keep the VER30 order or let the spec and checker slices start earlier.
+to keep the VER30 order or let the spec and checker slices start earlier. The owner
+answered on 2026-11-16 (OWN-R1): **keep the VER30 order**; only R1-S0 may start early.
 
 ### 19.2 Backlog rows needed (this document does not edit `VER-BACKLOG.md` or VER30)
 
@@ -2320,8 +2321,8 @@ to keep the VER30 order or let the spec and checker slices start earlier.
 
 | # | Question | Recommended default (encoded above) |
 |---|---|---|
-| OWN-R1 | Keep the VER30 order (WX-R1 after floats, opaque types, collections and generics), or let R1-S0 to R1-S4 start after VER04o C1-S1 alone? | **Open; the owner's.** Recommended: **keep the VER30 order.** Three reasons found in review. The `warrant-grammar` queue is serial (VER30 5.3), so starting R1-S1 early delays the four features rather than running beside them. R1 changes rules that the four are still landing on (VER04k's depth and work meter, VER04r 4.2 rule 6, VER04o CM5 and its key table), so an early start means amending moving text. And the pilot cannot finish early in any case: it needs T1, WX-D2 and the `ir.seq` meter. The one thing worth doing now is **R1-S0** (the errata pass and the measurement of the fuel totals, RB8), which writes no checker code and tells the owner whether the pilot fits PR CI |
-| OWN-R2 | Confirm the pilot: `canonical-cbor` (17 lanes, no dependencies, canonical form is the property), `bounded-json` second; and accept that it is a **partial** adoption (3 of 8 public entries, 14.1) | **Open; the owner's.** Recommended: **confirm `canonical-cbor`, labelled partial.** Review re-checked the facts against the tree: zero dependencies in Rust and Python, 16 ports, depth 128 accepted and 129 refused, the encoder sorts and rejects duplicates, the decoder demands strict order. The alternative `bounded-json` has three lanes and needs FL2. What the owner is asked to accept is that the pilot's report says `3 of 8`, that `encode` is `not-live` in ports without it, and that the pilot is not called done on Rust alone |
+| OWN-R1 | Keep the VER30 order (WX-R1 after floats, opaque types, collections and generics), or let R1-S0 to R1-S4 start after VER04o C1-S1 alone? | **Resolved 2026-11-16 (owner): keep the VER30 order.** Recursive types are implemented after the four features (opaque types, collections, generics, floats); only the groundwork slice **R1-S0** may start early (VER30 decision 25). The reasoning that was recommended and is now adopted: **keep the VER30 order.** Three reasons found in review. The `warrant-grammar` queue is serial (VER30 5.3), so starting R1-S1 early delays the four features rather than running beside them. R1 changes rules that the four are still landing on (VER04k's depth and work meter, VER04r 4.2 rule 6, VER04o CM5 and its key table), so an early start means amending moving text. And the pilot cannot finish early in any case: it needs T1, WX-D2 and the `ir.seq` meter. The one thing worth doing now is **R1-S0** (the errata pass and the measurement of the fuel totals, RB8), which writes no checker code and tells the owner whether the pilot fits PR CI |
+| OWN-R2 | Confirm the pilot: `canonical-cbor` (17 lanes, no dependencies, canonical form is the property), `bounded-json` second; and accept that it is a **partial** adoption (3 of 8 public entries, 14.1) | **Resolved 2026-11-16 (owner): `canonical-cbor` is confirmed as the pilot, as a partial adoption of 3 of 8 entries (`encode`, `try_encode`, `decode`); the other five are tabled as not covered. `bounded-json` is the second adopter** (VER30 decision 25). The reasoning that was recommended and is now adopted: **confirm `canonical-cbor`, labelled partial.** Review re-checked the facts against the tree: zero dependencies in Rust and Python, 16 ports, depth 128 accepted and 129 refused, the encoder sorts and rejects duplicates, the decoder demands strict order. The alternative `bounded-json` has three lanes and needs FL2. What the owner is asked to accept is that the pilot's report says `3 of 8`, that `encode` is `not-live` in ports without it, and that the pilot is not called done on Rust alone |
 
 ### 20.2 Engineering questions
 
@@ -2414,3 +2415,4 @@ to keep the VER30 order or let the spec and checker slices start earlier.
   signatures and the code named in section 14 was not run; the interaction of RR4
   with the real `fold` forms of VER04k 2.3 is argued, not tested; the constants of
   6.1 are provisional until R1-S0 measures them.
+* Owner decisions (2026-11-16): OWN-R1 resolved, keep the VER30 order, with only R1-S0 allowed early; OWN-R2 resolved, `canonical-cbor` is the pilot as a partial adoption of 3 of 8 entries (the other five tabled as not covered), `bounded-json` second. Recorded as VER30 decision 25; backlog rows updated per 19.2. No normative rule changed.
