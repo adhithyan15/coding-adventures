@@ -17,6 +17,7 @@ malformed document); ``3`` (``emit-v2``) some suites are ``not-live`` or ``refus
 from __future__ import annotations
 
 import argparse
+import os
 import pathlib
 import sys
 
@@ -82,6 +83,9 @@ def _check_out(path: str, inputs: list[str]) -> None:
     resolved = out.resolve()
     for other in inputs:
         if resolved == pathlib.Path(other).resolve():
+            raise OracleError("source", "the output path is an input file")
+        # A hard link has a different path but is the same file.
+        if out.exists() and pathlib.Path(other).exists() and os.path.samefile(out, other):
             raise OracleError("source", "the output path is an input file")
     parts = resolved.parts
     if any(a == "code" and b == "specs" for a, b in zip(parts, parts[1:])):

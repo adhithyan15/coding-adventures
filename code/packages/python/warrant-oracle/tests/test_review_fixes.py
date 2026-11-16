@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import copy
 import json
+import os
 
 import pytest
 from conftest import SPECS, V1_CORPUS, adopter_bytes
@@ -235,7 +236,7 @@ def test_out_may_not_overwrite_an_input_or_land_in_the_spec_tree(tmp_path):
 def test_the_total_work_bound_is_enforced_across_suites():
     src = b"warrant big\n  op f(a: U8, b: U8, c: U8) -> U8\n  claim c3:\n    forall a: U8, b: U8, c: U8 | c == a. f(a, b, c) == f(a, b, c)\n"
     spec = lower_document(parse_source(src))
-    work = Work("slim", cases=100_000)
+    work = Work("slim", cases=100_000)  # the slim chunks (about 983,000 ordinals) exceed it
     with pytest.raises(OracleError) as e:
         SuitePlan(spec, build_program(spec), spec.suites[0], work=work).run("slim")
     assert e.value.code == "limit" and "work" in e.value.message
@@ -329,3 +330,31 @@ def test_the_cli_has_no_cost_override(capsys):
                 "taken-path",
             ]
         )
+
+
+def test_analysis_walks_are_not_charged_to_the_slim_case_budget():
+    # 2^20 ordinals, a pure guard (so the call count needs a full-product walk) and a
+    # budget that fits the one hashed pass but not the hashed pass plus the walk.
+    src = (
+        b"warrant g\n  op f(a: U8, b: U8, p: Bool, q: Bool, r: Bool, s: Bool) -> U8\n"
+        b"  claim c:\n    forall a: U8, b: U8, p: Bool, q: Bool, r: Bool, s: Bool."
+        b" if p then true else f(a, b, p, q, r, s) == f(a, b, p, q, r, s)\n"
+    )
+    work = Work("slim", cases=1_500_000)
+    p = plan(src, "c", work=work)
+    assert callable(p.calls)
+    r = p.run("slim")
+    assert r.cases == 1 << 20 and r.expected_calls == 2 * (1 << 19)
+    assert work.cases == 1 << 20 and work.walked >= 1 << 20
+
+
+def test_a_hard_link_to_an_input_is_refused(tmp_path):
+    spec = tmp_path / "x.warrant"
+    spec.write_bytes(SPEC)
+    link = tmp_path / "hard.json"
+    try:
+        os.link(spec, link)
+    except OSError:  # pragma: no cover - filesystem without hard links
+        pytest.skip("hard links unavailable")
+    assert run(["emit-v2", "--spec", str(spec), "--out", str(link)]) == 2
+    assert spec.read_bytes() == SPEC

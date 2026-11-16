@@ -69,6 +69,20 @@ class Work:
         )
         self.cases = 0
         self.ir = 0
+        self.walked = 0
+
+    def walk(self, ordinals: int) -> None:
+        """Meter an *analysis* walk (admission, call counting, wraps).
+
+        VER04r 10.4: the oracle verifies every chunk's ``cases``/``first_admitted``
+        by an admission-only pass whatever the depth, so these walks are not part
+        of the ``slim`` case budget (that budget bounds the chunks that are run and
+        hashed).  They are still bounded: each is at most one product
+        (``2^28``) and all of them together stay under the ``full`` limit.
+        """
+        self.walked += ordinals
+        if self.walked > MAX_TOTAL_WORK_FULL:
+            raise OracleError("limit", "total analysis work bound exceeded")
 
     def charge(self, ordinals: int, ir_cost: int) -> None:
         self.cases += ordinals
@@ -255,7 +269,7 @@ class SuitePlan:
         pre = 1
         for s in sizes[:k]:
             pre *= s
-        self.work.charge(pre, self.ir_cost)
+        self.work.walk(pre)
         adm = bytearray(pre)
         names = [b.name for b in self.binders[:k]]
         admit = self.admit
@@ -408,7 +422,7 @@ class SuitePlan:
         if not callable(self.calls):
             return self.total_cases() * self.calls
         total = 0
-        self.work.charge(self.product, self.ir_cost)
+        self.work.walk(self.product)
         bs = self.binders
         names = [b.name for b in bs]
         cols = [b.values(0, b.size) for b in bs]
@@ -441,7 +455,7 @@ class SuitePlan:
         if not self._wraps_needed:
             self._wraps = 0
             return 0
-        self.work.charge(self.product, self.ir_cost)
+        self.work.walk(self.product)
         stats = self.prog.stats
         bs = self.binders
         names = [b.name for b in bs]
