@@ -1,0 +1,122 @@
+{
+  "accuracy": {
+    "cos": {
+      "gate_ulp": 3,
+      "worst_steps": 2,
+      "worst_steps_x": "41b08a633012e355",
+      "worst_ulp": "2.3738",
+      "worst_ulp_x": "41b08a633012e355"
+    },
+    "degrees": {
+      "gate_ulp": 1,
+      "worst_steps": 1,
+      "worst_steps_x": "401f6a7a29553860",
+      "worst_ulp": "0.8042",
+      "worst_ulp_x": "40916a693ef35acc"
+    },
+    "radians": {
+      "gate_ulp": 1,
+      "worst_steps": 1,
+      "worst_steps_x": "3fefffffffffffff",
+      "worst_ulp": "0.6486",
+      "worst_ulp_x": "41ac61fd6279f390"
+    },
+    "sin": {
+      "gate_ulp": 3,
+      "worst_steps": 2,
+      "worst_steps_x": "41bb531ad2e28013",
+      "worst_ulp": "2.3829",
+      "worst_ulp_x": "41bb531ad2e28013"
+    }
+  },
+  "algorithm": "TRIG-REF-1",
+  "constants": {
+    "ATAN_TERM": "3c670ef54646d497",
+    "C2": "3fa5555555555555",
+    "C3": "bf56c16c16c16c17",
+    "C4": "3efa01a01a01a01a",
+    "C5": "be927e4fb7789f5c",
+    "C6": "3e21eed8eff8d898",
+    "C7": "bda93974a8c07c9d",
+    "C8": "3d2ae7f3e733b81f",
+    "C9": "bca6827863b97d97",
+    "DEG_PER_RAD": "404ca5dc1a63c1f8",
+    "HALF_PI": "3ff921fb54442d18",
+    "INV_PIO2": "3fe45f306dc9c883",
+    "LIMIT": "41c0000000000000",
+    "MAGIC": "4338000000000000",
+    "PI": "400921fb54442d18",
+    "PIO2_1": "3ff921fb40000000",
+    "PIO2_2": "3e74442d00000000",
+    "PIO2_3": "3cf8469880000000",
+    "PIO2_4": "3b78cc5160000000",
+    "PIO2_5": "39f01b839a25204a",
+    "RAD_PER_DEG": "3f91df46a2529d39",
+    "S1": "bfc5555555555555",
+    "S2": "3f81111111111111",
+    "S3": "bf2a01a01a01a01a",
+    "S4": "3ec71de3a556c734",
+    "S5": "be5ae64567f544e4",
+    "S6": "3de6124613a86d09",
+    "S7": "bd6ae7f3e733b81f",
+    "S8": "3ce952c77030ad4a",
+    "S9": "bc62f49b46814157",
+    "SQRT_REL": "3cd203af9ee75616",
+    "SQRT_TINY": "01a56e1fc2f8f359",
+    "TAN_BIG": "7fe1ccf385ebc8a0",
+    "TAN_POLE": "3cd203af9ee75616",
+    "TINY": "3e40000000000000",
+    "TWO_PI": "401921fb54442d18"
+  },
+  "domains": {
+    "f64_edge": {
+      "count": 178,
+      "sha256": "a33c67dcbe10cd210a8b70f14e610fe0e59cc6a23aca85ac192fbba3df89d14e"
+    },
+    "sweep-binade": {
+      "count": 3904,
+      "sha256": "180397a51938b688d7c93ee91c6ce36100aecb7c206872ef29dc692772ea7b41"
+    },
+    "sweep-cw": {
+      "count": 3860,
+      "sha256": "c339eb90224a24cbea6ccb242d10588d290441e03534660afc7a0101c6e142e0"
+    },
+    "sweep-prng": {
+      "count": 4096,
+      "sha256": "828bf44adf260d9eae688f224fac3024e8ed8f59e0efeeef99c7291d8ba9b17e"
+    },
+    "trig_points": {
+      "count": 366,
+      "sha256": "aa2c272a7c28bb3502673a32721551a665e6bc2b393c0f0f2605308f6271a6ae"
+    }
+  },
+  "generator_version": "1",
+  "groups": [
+    {
+      "file": "edge.tsv",
+      "name": "edge",
+      "rows": 2554,
+      "sha256": "a4ea98b0b042392d9362ab00eb11e21384e455180f79cfbfc44645cd53f6ec90"
+    },
+    {
+      "file": "sweep-binade.tsv",
+      "name": "sweep-binade",
+      "rows": 19520,
+      "sha256": "ef02cb282664b381ca83da40fb4c7df6b488a8ec55b0ffd2154d9ed342171cab"
+    },
+    {
+      "file": "sweep-cw.tsv",
+      "name": "sweep-cw",
+      "rows": 19300,
+      "sha256": "edadb491872457794704e600935fc1c0c2602b8a4cc5dd2af729cfa22b09b6cf"
+    },
+    {
+      "file": "sweep-prng.tsv",
+      "name": "sweep-prng",
+      "rows": 20480,
+      "sha256": "565cc3c9e67c74091ad4bcf355126faa6464abe6eddfa4e48720737f755101a6"
+    }
+  ],
+  "seed": "545249472d524546",
+  "version": 1
+}
