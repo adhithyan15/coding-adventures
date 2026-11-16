@@ -5,6 +5,11 @@ All notable changes to `arcade-sfx` will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+- `code/specs/arcade-sfx.warrant` was not valid Warrant: `scale_gain_model` and `valid_frequency` used `/`, which Warrant does not have. Rewritten with `unwrap_or(div(a, b), 0)`. `div` floors, which matches the crate's `(sample * gain) >> 16` (arithmetic shift) exactly, including negative samples. No Rust code and no claim changed.
+
 ## [0.1.0] - 2026-11-15
 
 ### Added

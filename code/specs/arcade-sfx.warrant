@@ -7,9 +7,9 @@ warrant arcade_sfx v1
   error SfxError = InvalidSampleRate | InvalidFrequency | InvalidDutyCycle | InvalidParameter | VoiceLimitExceeded | BufferTooSmall | MixerIntegrationError
 
   model clamp_pcm16_model(v: Int) -> Int = if v > 32767 then 32767 else (if v < 0 - 32768 then 0 - 32768 else v)
-  model scale_gain_model(sample: Int, gain_q16: Nat) -> Int = (sample * gain_q16) / 65536
+  model scale_gain_model(sample: Int, gain_q16: Nat) -> Int = unwrap_or(div(sample * gain_q16, 65536), 0)
   model valid_sample_rate(rate: Nat) -> Bool = rate >= 1 and rate <= 192000
-  model valid_frequency(freq_hz: Nat, sample_rate_hz: Nat) -> Bool = freq_hz <= sample_rate_hz / 2
+  model valid_frequency(freq_hz: Nat, sample_rate_hz: Nat) -> Bool = freq_hz <= unwrap_or(div(sample_rate_hz, 2), 0)
 
   record AdsrEnvelope(attack_samples: U32, decay_samples: U32, sustain_level_q16: U32, release_samples: U32)
   record SfxVoiceState(active: Bool, sample_rate_hz: U32, current_sample: U32, total_samples: U32, phase_acc: U32, lfsr_state: U16, voice_id: U32, priority: U8)
