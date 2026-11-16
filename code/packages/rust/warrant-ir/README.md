@@ -22,8 +22,8 @@ stated bound, writing content-addressed DRAT files and a manifest when
 byte-slice operations.
 
 `tests/gf256_proofs.rs`, `tests/wasm_leb128_proofs.rs`,
-`tests/logic_gates_proofs.rs`, `tests/lzw_proofs.rs` and `tests/arithmetic_proofs.rs` do the same for
-`gf256.warrant`, `wasm-leb128.warrant`, `logic-gates.warrant`, `lzw.warrant` and
+`tests/logic_gates_proofs.rs`, `tests/lzw_proofs.rs`, `tests/hash_functions_proofs.rs` and `tests/arithmetic_proofs.rs` do the same for
+`gf256.warrant`, `wasm-leb128.warrant`, `logic-gates.warrant`, `lzw.warrant`, `hash-functions.warrant` and
 `arithmetic.warrant` (logic-gates and arithmetic read two source files each:
 `gates.rs` and `combinational.rs`, `adders.rs` and `alu.rs`). The front end refuses all the real
 sources, so they record every constant-time and steps-bound obligation

@@ -12,7 +12,9 @@ WriteMakefile(
     PREREQ_PM        => {
     },
     TEST_REQUIRES    => {
-        'Test2::V0' => 0,
+        'Test2::V0'   => 0,
+        'JSON::PP'    => 0,
+        'Digest::SHA' => 0,
     },
     META_MERGE       => {
         'meta-spec' => { version => 2 },
