@@ -710,7 +710,7 @@ Why this follows from the rules:
 * Rule 3 (spine invariant over abstract states) means the cross-component
   invariant mentions only the contract's state, which the new implementation
   refines.
-* Rule 4 (`-any`) means system theorems were proved over every possible safety
+* Rule 4 (`-any`) means system theorems were evidenced (at the bar printed for each, section 9) over every possible safety
   behaviour, so a refining implementation is already covered.
 
 A concrete first exercise (backlog VOS-011 and VOS-012): the fixed-priority
