@@ -8,7 +8,8 @@
  * show *how* these functions are calculated:
  *
  *   - sin / cos      Maclaurin (Taylor-at-zero) series, after reducing the
- *                    argument into [-PI, PI] so the series converges fast:
+ *                    argument into [-PI/4, PI/4] (Cody-Waite) so the series
+ *                    converges fast (TRIG-REF-1, see PHY00a):
  *                        sin(x) = x - x^3/3! + x^5/5! - ...
  *                        cos(x) = 1 - x^2/2! + x^4/4! - ...
  *   - sqrt           Newton's (Babylonian) method: the average of `guess` and
@@ -43,16 +44,19 @@ typedef enum {
     TRIG_ERR_DOMAIN /* input outside the function's domain (e.g. sqrt of < 0) */
 } TrigStatus;
 
-/* sin / cos of `x` (radians), via a 20-term Maclaurin series. */
+/* sin / cos of `x` (radians): TRIG-REF-1 (PHY00a) -- nearest-integer Cody-Waite
+ * reduction, ten-term Horner kernels, bit-exact against the shared vectors.
+ * Within 3 ulp on |x| <= 2^29; NaN for NaN, +/-inf and |x| > 2^29. sin(-0) = -0. */
 double trig_sin(double x);
 double trig_cos(double x);
 
-/* tan(x) = sin(x)/cos(x); near a pole (|cos x| < 1e-15) returns +/-1e308. */
+/* tan(x) = sin(x)/cos(x); near a pole (|cos x| < 1e-15) returns +/-1e308 (a
+ * pinned legacy convention). NaN outside the sin/cos domain. */
 double trig_tan(double x);
 
 /* Angle conversions. */
-double trig_radians(double deg); /* deg * (PI/180) */
-double trig_degrees(double rad); /* rad * (180/PI) */
+double trig_radians(double deg); /* deg * RAD_PER_DEG: one multiply, one rounding */
+double trig_degrees(double rad); /* rad * DEG_PER_RAD: one multiply, one rounding */
 
 /* Square root via Newton's method. Writes the root to *out and returns TRIG_OK,
  * or returns TRIG_ERR_DOMAIN (leaving *out untouched) when x < 0. */
@@ -60,7 +64,7 @@ TrigStatus trig_sqrt(double x, double *out);
 
 /* Arctangent in (-PI/2, PI/2), via a Taylor series with range reduction. */
 double trig_atan(double x);
-/* Four-quadrant arctangent of (y, x) in (-PI, PI]. */
+/* Four-quadrant arctangent of (y, x) in (-PI, PI]; NaN if either is NaN. */
 double trig_atan2(double y, double x);
 
 #ifdef __cplusplus
