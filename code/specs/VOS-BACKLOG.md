@@ -99,6 +99,7 @@ review, a CI failure, a measurement, a PR) and the item it came from.
 | VOS-D017 | VOS-003 (EMU00 drafting) | Model-fidelity gaps to list in the `mc.<isa>.model-faithful` entries and to fix in the adapters: Z80 has no EI one-instruction delay; 8080 has no interrupt delivery (so VOS-014/015 can have no timer interrupt); the Z80 adapter (`emu-cpu-z80`, the L7 "then z80" step) has no backlog row. | P3: schedule with VOS-015 | queued |
 | VOS-D018 | VOS-003 (EMU00 drafting) | VER06 has no coverage instrumentation (its audit item 10), so fuzzing the `emu-image` parsers is black-box. `emu-image` should expose an edge counter behind a `cov` feature, or the VER06 backlog should supply a source. | P2: VOS-005 | queued |
 | VOS-D019 | VOS-003 (EMU00 drafting) | VOS-016 (L3) needs several teletypes on the GE-225; the simulator has eight controller plugs but no row builds a multi-terminal device behind them. Add it to VOS-016's scope or to VOS-013. | P2: before VOS-016 | queued |
+| VOS-D020 | EMU00 security review | Known guest-reachable panic paths in class M models: `IBM704Simulator::reset` calls `expect`; `Rv32ISimulator`'s CSR arm contains `unreachable!()`. Remove or guard them in the adapters (or additively upstream), and audit every wrapped simulator for `unwrap`, `expect`, indexing and `unreachable!` reachable from guest bytes. `emu-host` contains the rest with `catch_unwind` (EMU00 section 7.5). | P2: with each adapter (VOS-007, 008, 014, 016, 017, 020) | queued |
 
 ## Decision log
 

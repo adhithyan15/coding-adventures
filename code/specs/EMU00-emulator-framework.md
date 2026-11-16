@@ -391,6 +391,7 @@ spine hands it (virtual time).
 | `timer_monotone` | `advance(t)` requires `t >= now` (a caller obligation, VOS01 section 2.8) and otherwise changes nothing and reports `TimeWentBack`; `read` never decreases |
 | `timer_exact` | After `advance(t)`, the output line is asserted iff `compare` is set and `compare <= t`; the exact compare tick is recorded in `fired_at` and equals `compare`, never `t`, so interrupt latency is never conflated with the compare value |
 | `timer_past_compare` | Writing a `compare` that is `<= now` asserts the line at once (RISC-V `mtimecmp` semantics) |
+| `timer_never` | `advance(t)` also requires `t <= MAX_TICK`; a `compare` above `MAX_TICK` (for example all ones, as RISC-V software writes to mean "never") is stored as no compare, so no deadline is ever scheduled beyond `MAX_TICK` |
 | `timer_virtual` | The crate has no capability and no clock; the only source of time is the `Tick` argument |
 
 ### 4.5 Console, UART and teleprinter
@@ -494,7 +495,7 @@ board    = "emu-board 1" LF
            { "device " IDENT SP DEVKIND [SP PARAMS] LF } ; sorted by name
            { "map " IDENT SP HEX SP HEX SP IDENT LF }    ; space base size device
            { "irq " IDENT SP IDENT SP IDENT SP DEC SP MODE LF } ; src signal sink line mode
-           { "image " IDENT SP IMAGEKIND SP DEC LF }     ; slot kind max-bytes
+           { "image " IDENT SP IMAGEKIND SP HEX LF }     ; slot kind max-bytes (a size: hex)
            "end" LF
 KIND     = "mem" | "port" | "iot" | "chan"
 MODE     = "level" | "edge"
@@ -505,8 +506,11 @@ PARAMS   = key "=" value { SP key "=" value }   ; keys sorted; value HEX, DEC or
 ```
 
 Each device kind and each parameter key has a declared value spelling in a
-closed registry in `emu-image` (hex for addresses and sizes, decimal for
-counts and bit widths), so `0x10` and `16` cannot both be valid for `size`.
+closed registry in `emu-image` (hex for addresses, sizes and byte capacities
+such as `log-cap` and the `image` maximum; decimal for counts, bit widths and
+line numbers, such as `frame-bits`, `rx-fifo`, `sources`), so `0x10` and `16`
+cannot both be valid for `size`. Each key also has a ceiling in the same
+registry (section 8.2), checked by V9.
 Ordering is fixed: header, `cpu`, spaces by name, devices by name, maps by
 (space, base), irqs by (source, signal), images by slot, `end`. The parser
 accepts only this form: after parsing it re-emits the board and requires
@@ -570,7 +574,7 @@ cpu reset-pc=0x80000000
 space mem mem 32 8
 device clint timer harts=1
 device plic irq-ctl sources=8 targets=1
-device ram0 ram owner=bus size=0x1000000
+device ram0 ram owner=bus size=0x1000000 slot=kernel
 device rom0 rom size=0x10000 slot=bootrom
 device uart0 console rx-fifo=16 tx-fifo=16 log-cap=0x10000
 map mem 0x1000 0x10000 rom0
@@ -582,7 +586,7 @@ irq clint msip cpu 3 level
 irq clint mtip cpu 7 level
 irq plic out cpu 11 level
 irq uart0 rx plic 1 level
-image bootrom meminit 0x1000000
+image bootrom meminit 0x10000
 image kernel meminit 0x1000000
 end
 ```
@@ -606,14 +610,15 @@ negative-control vector:
 | V1 | `isa` is in the closed ISA registry and `cpu` parameters are the ones that ISA declares |
 | V2 | Every `space`, `device` and `image` name is unique; every referenced name exists |
 | V3 | Every `map` names a device whose kind is allowed in that space's kind |
-| V4 | `base + size` is computed with checked arithmetic and does not exceed `2^addr-bits`; `size > 0`; `base` and `size` are multiples of the device kind's granule |
+| V4 | `addr-bits` is in `1..=MAX_ADDR_BITS` and `unit-bits` in `1..=64` (section 8.2); `2^addr-bits` is computed in `u128`, never by a shift in the address type; `base + size` is computed with checked arithmetic and does not exceed it; `size > 0`; `base` and `size` are multiples of the device kind's granule |
 | V5 | Within a space the ranges are pairwise disjoint (sort by base, compare neighbours) |
 | V6 | Every bus-owned device is mapped at least once; an `owner=cpu` device is mapped exactly once and its size equals the size the adapter supports (for example 0x400 for the EDSAC store) |
 | V7 | Every `irq` source signal is one the source's kind declares; the sink line is below the sink's line count; no two sources drive one sink line unless the sink kind declares it shared |
 | V8 | Required devices for the ISA exist (the RV32 board must map the reset PC into a `ram` or `rom` range) |
-| V9 | Counts are within the caps of section 8.2 |
+| V9 | Every counted and sized parameter is at or below its per-kind ceiling in section 8.2 (`MAX_RAM_BYTES`, `MAX_FIFO`, `MAX_LOG_CAP`, disk blocks and bytes, irq sources) and the sum of every device's declared state is at most `MAX_TOTAL_STATE_BYTES`; the line and device counts are within their caps |
+| V10 | An `image` slot's max-bytes is at most the kind's container cap (section 8.2) and, when the slot is bound to a sized device (`slot=` on a `ram`, `rom` or `disk`), at most that device's size. A slot bound to no device is a V2 error |
 
-Claims, all over the validator and exhaustive on a reduced instance in the
+Both worked boards above were checked by hand against this grammar and these rules (canonical spelling, ordering, ceilings, V10). Claims, all over the validator and exhaustive on a reduced instance in the
 sense of VOS00 section 9.2 X1: `board_canonical` (accepted implies re-emit is
 identical), `board_disjoint` (accepted implies the ranges of every space are
 disjoint, checked against a naive pairwise reference), `board_total_ids`
@@ -628,11 +633,17 @@ the accepted bytes). The digest is pinned in every OS report (VOS00 section
 ### 6.1 The spine
 
 ```text
+struct RunBudget { max_ticks: Tick, max_output_bytes: u64,
+                   max_trace_bytes: u64, max_input_log_bytes: u64 }  -- mandatory
 struct Machine   { cpu: CpuState, bus: Bus, now: Tick, board: Digest,
-                   status: Status, trace: TraceRing }
+                   budget: RunBudget, used: Usage, status: Status, trace: TraceRing }
 struct HostEvent { at: Tick, dev: DevId, payload: [u8; <= MAX_EVENT_BYTES] }
 struct Inputs    { events: [HostEvent]  }       -- tick-stamped, sorted, bounded
-enum   Status    { Running, Halted, Quiescent, TraceFull, Fault(MachineFault) }
+enum   Status    { Running, Halted, Quiescent, TraceFull,
+                   BudgetExhausted(Budget),            -- which of the four ran out
+                   Fault(MachineFault) }               -- RunawayInstruction, TimeOverflow,
+                                                       -- ModelPanic, ProtocolViolation
+const MAX_TICK: Tick = 1 << 62;                        -- headroom: ticks never reach u64::MAX
 
 machine_step(Machine, Inputs) -> Machine        -- advances one retired instruction
 ```
@@ -650,13 +661,30 @@ call is fixed, because replay depends on it:
    `Request` through `bus_access`. Each answered request is appended to the
    trace. More than `MAX_REQUESTS` (a per-ISA constant) requests without a
    retirement is `Fault(RunawayInstruction)`, a value.
-5. **Advance time:** `now += cost`, with `cost >= 1`. A retire with cost 0 is a
-   protocol fault, because it could stall time and with it every timer.
+5. **Advance time:** `now = now.checked_add(cost)`, with `cost >= 1`; overflow, or
+   a result above `MAX_TICK`, is `Fault(TimeOverflow)`, a value. A retire with
+   cost 0 is a protocol fault, because it could stall time and with it every
+   timer. Before every call the spine checks the budget below.
 6. **Classify:** `Halt` sets `Halted`. `WaitForInterrupt` sets the machine
    idle: the next call jumps `now` to the earliest of the next host event and
-   the next device deadline (`advance_to_event`); if there is none the status
+   the next device deadline (`advance_to_event`), but never past
+   `budget.max_ticks`: if the target lies beyond it, `now` is set to
+   `max_ticks` and the status is `BudgetExhausted(Ticks)`, not a long jump. A
+   deadline above `MAX_TICK` is never scheduled (a timer `compare` above
+   `MAX_TICK` means "never", and a host event `at` above `MAX_TICK` is rejected
+   by the input-log parser). If there is no event and no deadline the status
    is `Quiescent`, a terminal state that says "nothing can ever wake this
    machine", which a report must not confuse with a clean halt.
+
+**Run budget.** Every run carries a `RunBudget`: a configuration with no
+default, so a host cannot start an unbounded run by omission. `max_ticks`
+bounds virtual time; `max_output_bytes` bounds drained console and punch
+output; `max_trace_bytes` the drained trace; `max_input_log_bytes` the recorded
+input log (itself at most `MAX_INPUT_LOG_BYTES`). Exceeding any one ends the run
+with `BudgetExhausted(<which>)`, distinct from `Halted` and `Quiescent`, and
+the run report records the status, the counters and the budget, so an
+exhausted run can never be read as a clean one. `emu-host`'s writers enforce
+the three byte budgets as they write.
 
 Trace and logs are bounded rings drained by the host between calls. A full
 trace ring sets `TraceFull` and the machine refuses to step; it never drops a
@@ -697,7 +725,8 @@ excluded:
 **Claim `input_recorded`:** every host event delivered to a device is also
 appended to the input log with its tick, and `machine_step` consumes events
 only from that log's replay. A replay needs the board, the images and the
-log, and no host adapter at all.
+log, and no host adapter at all. The log is itself untrusted input, parsed under
+section 8 (`inputlog`), so a hostile log cannot do more than a hostile image.
 
 **Claim `time_monotone`:** `now` never decreases and strictly increases on
 every retired instruction.
@@ -715,10 +744,15 @@ recorder every reply and every device state are identical).
 
 ### 6.4 The host adapter
 
-`emu-host` (class H) does what the core must not: opens image files (with the
-size cap checked first and a read of at most `cap + 1` bytes, section 8.3),
-polls a terminal, paces a real-time session with the wall clock, and writes
-drained logs. It decides *when* an input arrives, but only by stamping the
+`emu-host` (class H) does what the core must not: opens image files (once,
+then `fstat` on the open descriptor, which must be a regular file no larger
+than the kind's cap, then a read of at most `cap + 1` bytes from that same
+descriptor; symlinks are not followed, `O_NOFOLLOW` or the platform
+equivalent; section 8.3 P9), polls a terminal, paces a real-time session with
+the wall clock, and writes drained logs and the input log. Outputs are created
+exclusively (`O_EXCL`) inside a per-run directory, an input path is never
+reused as an output, and the writers stop at the run budget. The host also
+wraps every `machine_step` in `catch_unwind` (section 7.5). It decides *when* an input arrives, but only by stamping the
 event with a virtual tick, `at = now + 1` or later, and recording it. After
 that the wall clock has no part in the run. The adapter's paths come from the
 run configuration, never from an image or a board (rule P10, section 8.3).
@@ -744,7 +778,7 @@ identically (E4).
   applied (exactly what `Pdp8TeletypeBridge::step_sim` does); recompute the
   IRQ wire every step with `set_interrupt_request`, because the CPU clears it
   on entry. *8080 and Z80:* `IN` reads a latch, so the value must be placed
-  before the step: the adapter **peeks** the byte at PC, and if the
+  before the step: the adapter **peeks** the byte at PC (and, on the Z80, the prefix bytes after it) using `wrapping_add` on the 16-bit address, as the simulators' own fetch does, so a PC at 0xFFFF cannot overflow, and reading only the simulator's own `mem` through its public read method, never through the bus; if the
   instruction is an input it requests the port first and writes
   `input_ports[p]`; after the step an output is read from `output_ports[p]`
   and requested. The peek table is *derived from the decoder*, not typed by
@@ -822,7 +856,7 @@ oracle is the RISC-V privileged architecture and the QEMU lane of section 11,
 not the old simulator. The PDP-11 core (`emu-cpu-pdp11`) follows the same
 rule: the old crate stays, and agreement is claimed on non-faulting programs.
 
-### 7.4 The differential corpus
+### 7.4 The differential corpus and the adapter fuzz target
 
 Each adapter is exercised by (a) the simulator's own test programs run
 through both paths; (b) an exhaustive single-instruction sweep where the
@@ -830,7 +864,28 @@ decode space is small (the 256 first bytes of the 8080 and Z80, the 4,096
 PDP-8 instruction words with representative state); (c) sampled operand
 sweeps for wide ISAs, labelled `exhaustive-sampled` and never `exhaustive`
 (VER29 section 6.1; VOS00 section 9.3); and (d) sabotage runs: an adapter with
-the port peek disabled, or with a skip ignored, must fail a named test.
+the port peek disabled, or with a skip ignored, must fail a named test. Each adapter also has a fuzz and property target
+`emu/fuzz/cpu-<isa>`: arbitrary program bytes are loaded into the board's
+null-bus configuration and run for a bounded number of ticks; the properties
+are that nothing panics, that every `cpu_step` issues at most `MAX_REQUESTS`
+requests before retiring, and that the final status is one of the defined
+`Status` values.
+
+### 7.5 Containing model panics
+
+Class M crates are exempt from the no-panic shape rules (section 3.3), and two
+panic paths are already known: `IBM704Simulator::reset` calls `expect`, and
+`Rv32ISimulator`'s CSR arm contains `unreachable!()` (VOS-D020). A guest
+program must never be able to take the host down, so `emu-host` runs every
+`machine_step` under `std::panic::catch_unwind` and turns a panic into
+`Fault(ModelPanic)`; the machine value is then discarded (its state is
+unknown), and the report records the fault, the last good state digest and the
+trace so far. This **requires `panic = "unwind"`**, the default: `emu-host` and
+every binary that links a class M crate must not be built with `panic =
+"abort"`, and a CI check reads the resolved profile. `catch_unwind` is
+containment, not a safety proof: the crates `forbid(unsafe_code)`, so a panic
+cannot corrupt memory, but it is no substitute for removing the known paths,
+which the adapters do (guard or avoid the call) as part of VOS-D020.
 
 ---
 
@@ -841,7 +896,7 @@ the port peek disabled, or with a skip ignored, must fail a named test.
 VOS-D001 (found in the VOS-001 security review) asks for the following to be
 bounded: tape, paper-tape, card and disk images, and board definitions. EMU00
 widens the set to everything that crosses into the machine as bytes: the boot
-`meminit` image, and the **snapshot** (it is restored state, but whoever
+`meminit` image, the recorded **input log** that a replay consumes, and the **snapshot** (it is restored state, but whoever
 supplied the file chose every byte). Nothing in an image is ever executed by
 the host, and nothing in an image can name a host path.
 
@@ -865,8 +920,19 @@ raise it.
 | Disk | block sizes | 128, 256, 512, 1,024, 2,048, 4,096 |
 | | `MAX_DISK_BLOCKS`, `MAX_DISK_BYTES` | 524,288, 64 MiB |
 | Boot `meminit` | `MAX_SEGMENTS`, `MAX_MEMINIT_BYTES` | 64, 32 MiB |
-| Snapshot | `MAX_SNAPSHOT_BYTES` | the lesser of 128 MiB and the board's bound: every component's declared maximum state plus 64 KiB |
-| Host event | `MAX_EVENT_BYTES` | 4,096 |
+| Snapshot | `MAX_SNAPSHOT_BYTES` | 257 MiB: a constant, `MAX_TOTAL_STATE_BYTES` plus 1 MiB of framing; a board's own bound may be lower |
+| Input log | `MAX_INPUT_EVENTS`, `MAX_EVENT_BYTES` | 1,048,576, 4,096 |
+| | `MAX_INPUT_LOG_BYTES` | 64 MiB |
+| Time | `MAX_TICK` | 2^62 |
+| Board address space | `MAX_ADDR_BITS`, unit bits | 1..=32 (an RV64 board needs an EMU00 amendment first), 1..=64 |
+| Board device sizes | `MAX_RAM_BYTES` (any `ram` or `rom`) | 128 MiB |
+| | `MAX_FIFO` (entries), `MAX_LOG_CAP` (bytes) | 4,096, 16 MiB |
+| | disk device | at most `MAX_DISK_BLOCKS` blocks and `MAX_DISK_BYTES` |
+| | `MAX_IRQ_SOURCES` per controller | 64 |
+| | `MAX_TOTAL_STATE_BYTES` (sum over all devices) | 256 MiB |
+
+The container caps of the binary kinds are total bytes including the 16-byte
+header (and the 32-byte trailer for a snapshot).
 
 The values are chosen to be far above any rung's need (an EDSAC tape is
 kilobytes; a CP/M disk is under a megabyte) and low enough that a hostile
@@ -889,7 +955,7 @@ has a negative-control vector (section 8.5).
 | P6 | **Canonical only.** Reserved fields and flags must be zero, trailing bytes are `Trailing`, counts must equal what the payload holds, and a board must re-emit byte-identically (section 5.1) |
 | P7 | **Bounded work.** One forward pass; the only super-linear step is the sort of at most 64 ranges; work is at most `64 * len + 4096` basic operations, which the fuzz targets enforce |
 | P8 | **No recursion.** Every format is flat |
-| P9 | **Pure.** `&[u8]` in, value out. File access belongs to `emu-host`, which `stat`s the file, refuses it above the cap, and reads at most `cap + 1` bytes |
+| P9 | **Pure.** `&[u8]` in, value out. File access belongs to `emu-host`: it opens once, `fstat`s the open descriptor, requires a regular file within the cap, reads at most `cap + 1` bytes from that descriptor, and does not follow symlinks (`O_NOFOLLOW` or equivalent), so a path cannot change between check and read. Outputs are `O_EXCL` in a run directory and never an input path |
 | P10 | **Data cannot choose paths or effects.** Slot-to-file binding is in the run configuration; a name inside an image or board is a label, never a path |
 
 ### 8.4 The container format
@@ -900,7 +966,8 @@ none.
 ```text
 offset  size  field
 0       4     magic       "EMUP" ptape, "EMUC" cards, "EMUT" mtape,
-                          "EMUD" disk,  "EMUM" meminit, "EMUS" snapshot
+                          "EMUD" disk,  "EMUM" meminit, "EMUS" snapshot,
+                          "EMUL" input log
 4       2     version     must be 1
 6       2     flags       must be 0
 8       4     count       frames, cards, records, blocks, segments or sections
@@ -915,6 +982,7 @@ offset  size  field
 | `mtape` | records back to back, each `u32 len` then `len` bytes; `len == 0` is a tape mark; end of payload is end of tape. `count` equals the number of records and marks |
 | `disk` | `u32 block_size`, `u32 block_count` (equal to `count`), then exactly `block_size * block_count` bytes, the product taken in `u64` |
 | `meminit` | `count` segments, each `u32 base`, `u32 len` (non-zero) and `len` bytes; sorted by `base`, pairwise disjoint |
+| `inputlog` | `count` events, each `u64 at`, `u8 dev`, `u8 reserved` (zero), `u16 len` (at most `MAX_EVENT_BYTES`) and `len` bytes; `at` is non-decreasing and at most `MAX_TICK`; `count` at most `MAX_INPUT_EVENTS`. At attach, `dev` must be below the board's device count and name a device that accepts host events, or `BadDevice` |
 
 Whether a frame fits the attached device (5-bit frames, 36-bit words packed in
 five bytes, a segment inside one RAM or ROM range) is checked at *attach*
@@ -943,12 +1011,30 @@ the expected `ImageErrorKind` and offset). Every parser has at least:
   unknown device kind, a duplicate name, a dangling name, an irq line out of
   range, a `0X10` and a `16` where `0x10` is the only spelling, a CRLF line, a
   tab, a non-ASCII byte, a line of 129 bytes, 513 lines, a missing `end`;
+* **board value bombs:** `addr-bits` 0, 33 and 255; `unit-bits` 0 and 65; a `ram`
+  size of `0xffffffffffffffff`, of `MAX_RAM_BYTES + 1` and of exactly
+  `MAX_RAM_BYTES` (accepted); an `rx-fifo` or `tx-fifo` of `MAX_FIFO + 1`; a
+  `log-cap` of `MAX_LOG_CAP + 1`; a disk of `MAX_DISK_BLOCKS + 1`; devices each
+  at their ceiling whose sum exceeds `MAX_TOTAL_STATE_BYTES`; a hex token of 17
+  digits; an `image` slot above its kind cap and above its bound device;
+* **time vectors:** an event with `at = MAX_TICK + 1` (rejected) and `at =
+  MAX_TICK` (accepted); a timer `compare` of `u64::MAX` (means never); and, on
+  the toy machine, `now = MAX_TICK - 1` with a retire of cost 2 (`TimeOverflow`)
+  and an idle jump to a deadline beyond `max_ticks` (`BudgetExhausted(Ticks)`);
+* **input-log vectors:** ticks out of order; `len = 0xFFFF`; `dev` beyond the
+  board; non-zero `reserved`; `count = 0xFFFFFFFF` in a 16-byte file;
 * snapshot-specific: section 9.
 
 **The guard is pinned at the sink.** An allocation-counting test binary runs
 every vector and asserts peak allocation is at most `2 * len + 4 KiB`, the
-bound P3 promises. A sabotage build (`--cfg emu_sabotage`) raises every cap to
-`usize::MAX`; the bomb vectors must then fail. A guard whose test still passes
+bound P3 promises. A sabotage mode (`--cfg emu_sabotage`) raises every cap to
+`usize::MAX`; the bomb vectors must then fail. It is test-only by construction:
+`emu-image` contains `compile_error!` when `emu_sabotage` is set and `test` is
+not, so no release or library build can carry it, and a CI step asserts the cfg
+is absent from the release jobs' flags. The sabotage tests live inside
+`emu-image`'s own `#[cfg(test)]` modules. This was chosen over a separate
+test-crate copy because a copy of the parsers would drift from the shipped
+ones, and a test that exercises a copy proves nothing about the original. A guard whose test still passes
 with the guard removed is not a guard (the repository's standing lesson on
 DoS guards).
 
@@ -961,6 +1047,8 @@ One VER06 target per parser, in the `test-bootstrap` harness style
 |---|---|---|
 | `emu/fuzz/board` | any bytes | `validate` never panics; `Ok(b)` implies re-emit equals input; peak allocation within P3; work within P7 |
 | `emu/fuzz/ptape`, `cards`, `mtape`, `disk`, `meminit` | any bytes | parse never panics; `Ok(x)` implies `encode(x)` equals input; allocation and work bounds |
+| `emu/fuzz/inputlog` | any bytes, attached to a fixed small board | parse never panics; `Ok(x)` implies `encode(x)` equals input; ticks monotone and at most `MAX_TICK`; allocation and work bounds |
+| `emu/fuzz/cpu-<isa>` | arbitrary program bytes (section 7.4) | no panic; at most `MAX_REQUESTS` per retire; defined final status |
 | `emu/fuzz/snapshot` | any bytes, restored against a fixed small board | restore never panics; on `Err` the live machine is unchanged; on `Ok` the restored machine re-snapshots to the input bytes |
 
 Seeds are the valid vectors and the negative vectors. VER06 audit item 10
@@ -979,8 +1067,10 @@ VOS-D001 is **resolved in this specification**: maximum sizes and counts
 (section 8.2), fail-closed value-returning parsing that cannot panic and
 cannot allocate from an unvalidated length (rules P1-P10), a fuzz target per
 parser (section 8.6) and negative-control vectors with a sabotage build
-(section 8.5). The implementation lands in VOS-005 (container, board,
-`meminit`, snapshot), VOS-006 (paper tape), VOS-008 (cards, magnetic tape) and
+(section 8.5). Its parsers are the seven binary kinds (`ptape`, `cards`, `mtape`,
+`disk`, `meminit`, `inputlog`, `snapshot`) and the board text format, each with
+a target and vectors. The implementation lands in VOS-005 (container, board,
+`meminit`, input log, snapshot), VOS-006 (paper tape), VOS-008 (cards, magnetic tape) and
 VOS-014 (disk). Until each parser exists, no image of that kind is accepted
 by any machine.
 
@@ -996,7 +1086,7 @@ device sections), then
  8 bytes   now: Tick (u64)
  4 bytes   cpu_len (u32), then cpu_len bytes: the adapter's canonical state
  per device, in device-index order, no gaps:
-   2 bytes   device index (u16)   4 bytes  len (u32)   then len bytes
+   1 byte    device index (u8, equal to its position)   4 bytes  len (u32)   then len bytes
 32 bytes   trailer: SHA-256 of every byte before it
 ```
 
@@ -1005,14 +1095,20 @@ order, and the first failure returns an error and leaves the live machine
 untouched: (1) size cap; (2) header and flags; (3) the board digest equals the
 running board's, or `WrongBoard`; (4) `cpu_len` and each device `len` are at
 most that component's declared maximum state size (a per-component constant,
-the source of the board-derived bound in section 8.2); (5) every device
-appears once, in order; (6) the trailer digest matches; (7) each component's
+the source of the board-derived bound; the constant ceiling is
+`MAX_SNAPSHOT_BYTES`, section 8.2); (5) every device appears once, its index
+equal to its position (a `u8`, as `DevId` and `MAX_DEVICES` allow), and the
+section lengths sum exactly to `payload_len`, so the sections end exactly at
+the trailer with no gap and no byte left over; (6) the trailer digest matches; (7) each component's
 own `validate_state` (the invariant `inv(M)` of its contract; for the
 simulators with a validating `restore`, that function) accepts its section;
 (8) only then is a new `Machine` built and swapped in. A passing digest proves
 the bytes are the ones that were written; it does not prove they are a legal
 machine state, and an attacker who builds a snapshot computes the digest
-too. Step 7 is what makes the snapshot safe to load. Restore is atomic.
+too. The SHA-256 trailer detects accidental corruption only; it does not detect
+tampering, and the snapshot is never called tamper-proof. Authenticating one
+would need an HMAC or a signature under a key the host holds, which is out of
+scope. Step 7 is what makes the snapshot safe to load. Restore is atomic.
 
 **Versioning.** `version` is 1. Any other value is `BadVersion`; there is no
 silent upgrade. A format change is a new version plus a separate migration
@@ -1024,7 +1120,7 @@ tool that reads version `n`, writes version `n+1` and records both digests.
 |---|---|
 | `snapshot_roundtrip` | `restore(snapshot(m)) == m` structurally, and running `k` steps from either gives identical traces |
 | `snapshot_canonical` | `snapshot(restore(b)) == b` for every accepted `b` |
-| `snapshot_tamper` | Flipping any one byte of a valid toy snapshot yields an error, never an accepted different machine; enumerated over every byte position and all 255 other values (about 51,000 cases for a 200-byte toy), `exhaustive` for that instance |
+| `snapshot_corruption` | Flipping any one byte of a valid toy snapshot yields an error, never an accepted different machine; enumerated over every byte position and all 255 other values (about 51,000 cases for a 200-byte toy), `exhaustive` for that instance |
 | `snapshot_invariant` | A snapshot whose digest is valid but whose component state violates `inv(M)` is rejected at step 7 (negative control: a hand-built snapshot with a recomputed digest) |
 
 State digests also serve evidence: a report may pin the digest of the machine
@@ -1066,7 +1162,7 @@ exact on this machine, because a tick is one retired instruction (section
 nothing here changes that: **an emulator measurement is labelled `example`
 even for a complete sweep**, until a bench-kind manifest entry can declare its
 domain complete (VOS-D004). Every such observation prints its *stack* as
-`emu:<board>@<digest8>` (the first 8 hex digits of the pinned board digest), so a
+`emu:<board>@<digest16>` (the first 16 hex digits of the pinned board digest; a report also carries the full digest, and the VER13 AC-7 equality compares the full pinned digest, never the label), so a
 reader sees that it was measured on our model, not on a host binary
 (`host-rustc`) or on silicon (Q14).
 
@@ -1119,7 +1215,7 @@ are different classes (section 3.3): `emu-image` (class P) and `emu-host`
 | Crate | Class | Contents | Delivered by |
 |---|---|---|---|
 | `emu-core` | C, S | Types of section 4.0, bus map and validator use, `machine_step`, device trait (static dispatch), recording bus, trace ring, the toy machine used for X1 | VOS-005 |
-| `emu-image` | P | Board and image parsers, validator, snapshot codec, vector corpus, fuzz targets, `cov` feature | VOS-005 (container, board, `meminit`, snapshot); VOS-006 (ptape); VOS-008 (cards, mtape); VOS-014 (disk) |
+| `emu-image` | P | Board and image parsers (including the input log), validator, snapshot codec, vector corpus, fuzz targets, `cov` feature | VOS-005 (container, board, `meminit`, input log, snapshot); VOS-006 (ptape); VOS-008 (cards, mtape); VOS-014 (disk) |
 | `emu-host` | H | Bounded file reads, terminal, pacing, input log writer, logs | VOS-006 (console) and VOS-007 (first runnable) |
 | `emu-dev-console` | C | `uart` and `teleprinter` | VOS-006 |
 | `emu-dev-ptape` | C | Paper tape reader and punch | VOS-006 |
@@ -1162,7 +1258,7 @@ Each has a recommended answer, which this document assumes until decided.
 | Q11 | New RV32 core or extend `Rv32ISimulator`? | New core `emu-cpu-rv32` reusing the decoder; old crate untouched (section 7.3) |
 | Q12 | Torn writes and power loss on disks and tape? | Out of scope for v1; block writes are atomic in the model |
 | Q13 | More than one CPU? | Out of scope; one hart, one CPU |
-| Q14 | The `stack` token for emulator observations? | `emu:<board>@<digest8>` (section 10); VER13 AC-7 compares it for equality, so it needs no schema change |
+| Q14 | The `stack` token for emulator observations? | `emu:<board>@<digest16>` (section 10); the label is for reading and AC-7 compares the full pinned digest, so it needs no schema change |
 
 ---
 
@@ -1181,6 +1277,12 @@ Each has a recommended answer, which this document assumes until decided.
   later row.
 * **No implementation.** D001 is resolved in specification only; until the
   parsers exist the machine accepts no image.
+* **No containment beyond unwinding.** A panic in a wrapped model is caught
+  and reported (`Fault(ModelPanic)`, section 7.5); that needs `panic =
+  "unwind"` and is not a safety proof. A run is always bounded by its budget
+  (section 6.1), but the budget bounds resources, not correctness.
+* **No authenticated snapshots or logs.** Digests detect corruption, not
+  tampering (section 9).
 * **No speed.** Per-step cloning (section 2.3 C5) is accepted until measured.
 * **No proof of `rustc` and no `proved` label for any emulator component**
   (section 10).
