@@ -77,6 +77,10 @@ impl Repo {
             let source = binding_source(binding.as_bytes()).expect("checked-in binding source");
             repo.copy_tree(&real, &source_rel(&row.package_root, &source));
             repo.copy_tree(&real, runner_root(&row.lane).expect("runner root"));
+            // A Python lane's runner package is scanned whole (WD-004b3).
+            if row.lane == "python" {
+                repo.copy_tree(&real, "code/packages/python/warrant-corpus");
+            }
         }
         repo
     }
@@ -1731,6 +1735,48 @@ fn sourceless_bytecode_outside_a_pycache_is_refused_in_a_python_package() {
     );
     // The clean case.
     load_lane(&real_root(), "python/ct-compare").unwrap();
+}
+
+#[test]
+fn the_runner_package_is_scanned_for_stray_bytecode_too() {
+    // WD-004b3: python/warrant-corpus/tests is outside the digested runner root.
+    let runner = "code/packages/python/warrant-corpus";
+    for rel in [
+        format!("{runner}/tests/shutil.pyc"),
+        format!("{runner}/tests/shutil.pyo"),
+        format!("{runner}/tests/sub/SHUTIL.PYC"),
+        format!("{runner}/conftest.pyc"),
+    ] {
+        let repo = Repo::new();
+        repo.write_deep(&rel, &pyc(0));
+        expect_code(
+            repo.load("python/ct-compare"),
+            "uncovered-source",
+            "bytecode",
+        );
+        // Only the Python lane is affected.
+        repo.load("typescript/ct-compare").unwrap();
+        repo.load("go/ct-compare").unwrap();
+    }
+    // Neutralised inside __pycache__; the package-root .venv is not scanned.
+    let repo = Repo::new();
+    repo.write_deep(
+        &format!("{runner}/tests/__pycache__/shutil.cpython-312.pyc"),
+        &pyc(1),
+    );
+    repo.write_deep(&format!("{runner}/.venv/lib/stray.pyc"), &pyc(1));
+    repo.load("python/ct-compare").unwrap();
+    // A nested .venv is still scanned, and a symlink is refused.
+    repo.write_deep(&format!("{runner}/tests/.venv/stray.pyc"), &pyc(1));
+    expect_code(
+        repo.load("python/ct-compare"),
+        "uncovered-source",
+        "stray.pyc",
+    );
+    // The missing runner package fails closed (the loader cannot vouch for it).
+    let repo = Repo::new();
+    fs::remove_dir_all(repo.root.join(runner)).unwrap();
+    assert!(repo.load("python/ct-compare").is_err());
 }
 
 // ---------------------------------------------------------------------------
