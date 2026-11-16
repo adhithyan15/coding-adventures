@@ -1280,19 +1280,21 @@ mod tests {
     }
 
     #[test]
-    fn performance_many_labeled_blocks() {
-        // Issue #17882: Many labeled blocks must not trigger pathological O(N^2)
-        // retry loops or fail parse because speculative ASI missed block semicolons.
+    fn speculation_parses_many_labeled_blocks_without_retries() {
+        // #17882: Each retry re-parses the entire input. Check that speculation
+        // handles every block and the resulting stream parses in one attempt.
+        let grammar = crate::_grammar::parser_grammar("es2025").unwrap();
+        let block_count = 400;
         for pattern in ["l:{a()}\n", "l:{break l}\n", "l:{let x}\n"] {
-            let src = pattern.repeat(400);
-            let start = std::time::Instant::now();
-            let ok = parses_with_asi(&src);
-            let elapsed = start.elapsed();
-            assert!(ok, "Must parse successfully with ASI: {pattern}");
-            assert!(
-                elapsed < std::time::Duration::from_secs(2),
-                "Pattern {pattern} took too long: {elapsed:?}"
-            );
+            let mut tokens = tokenize(&pattern.repeat(block_count));
+            normalize_member_access_keywords(&mut tokens);
+            let (tokens, original) = force_restricted_semicolons(tokens);
+            let (speculated, _) = speculate_line_semicolons(&tokens, &original);
+            assert_eq!(speculated.len(), tokens.len() + block_count, "{pattern}");
+            GrammarParser::new(speculated, grammar.clone())
+                .with_max_depth(DEFAULT_MAX_RULE_DEPTH)
+                .parse()
+                .unwrap_or_else(|error| panic!("Speculative parse failed for {pattern:?}: {error:?}"));
         }
     }
 
