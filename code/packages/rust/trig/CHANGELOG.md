@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.2.0] - 2026-11-16
+
+### Changed
+
+- **Numeric change (TRIG-CONV, PHY00a):** `sin`, `cos`, `radians` and `degrees` follow
+  TRIG-REF-1 and match the shared vectors in `fixtures/trig-reference-v1` bit for bit:
+  nearest-integer Cody-Waite reduction, ten-term Horner kernels on stored coefficients,
+  constants from bit patterns, no division. The last bits of every result change and large
+  arguments change materially; minor version bump (owner decision OQ-12).
+- **`sin`, `cos` and `tan` return NaN for `|x| > 2**29`, NaN and the infinities.**
+- `sin(-0)` is now `-0`; `radians`/`degrees` are one multiply by a pre-divided constant;
+  `atan2` returns NaN when either argument is NaN; `tan` keeps its `+-1e308` pole sentinel.
+
+### Tests
+
+- `conformance` tests decode every row of `trig-reference-v1` (61,854 vectors, Part II
+  included) by a bit cast and require identical result bits; constants' bits are asserted.
+
 ## [Unreleased]
 
 ### Changed
