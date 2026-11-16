@@ -1,5 +1,40 @@
 # trig (C)
 
+## Converged on TRIG-REF-1 (0.2.0)
+
+`trig_sin`, `trig_cos`, `trig_radians` and `trig_degrees` follow the reference
+algorithm of [PHY00a](../../../specs/PHY00a-trig-convergence.md) **bit for bit**, and
+`trig_tan`, `trig_sqrt`, `trig_atan` and `trig_atan2` are pinned to the same vectors. All
+62,154 rows of
+[`trig-reference-v1`](../../../specs/fixtures/trig-reference-v1/README.md) are checked by
+`tests/conformance_test.c` (it decodes each hex bit pattern by a bit cast and compares result
+bits as integers; a NaN result matches any NaN).
+
+* **Reduction.** `t = x * (2/pi)`, `k = (t + MAGIC) - MAGIC` rounds to the nearest integer
+  with one add and one subtract (`MAGIC = 1.5 * 2^52`), then five Cody-Waite subtractions
+  `r = r - k*PIO2_i` remove `k` quarter-turns. The first four pieces of pi/2 have at most
+  24 bits, so their products with `|k| < 2^29` are exact. No `floor`, `fmod` or integer
+  cast of an unbounded value is used. The quadrant is `(int)k & 3`.
+* **Kernels.** Ten-term Horner polynomials on the stored coefficients `1/3!, 1/5!, ...`
+  (sin) and `1/4!, 1/6!, ...` (cos); no division and no per-term recurrence.
+* **Accuracy.** Within **3 ulp** of the correctly rounded value on `|x| <= 2^29` (worst
+  observed 2 steps against the `cr` column; 2.38 ulp against the exact value). `radians` and
+  `degrees` are one multiply by a pre-divided constant, within 1 ulp. `tan` makes no accuracy
+  claim.
+* **Domain.** `trig_sin`, `trig_cos` and `trig_tan` return **NaN** for NaN, the infinities
+  and `|x| > 2^29` (about 5.4e8 radians). Reduce long-running phases yourself (in cycles)
+  before calling.
+* **Edges.** `trig_sin(-0.0)` is `-0.0`. `|x| < 2^-27` returns `x` (sin) or `1` (cos)
+  unchanged. `trig_atan2` returns NaN if either argument is NaN. `trig_tan` keeps its
+  pinned `+-1e308` pole sentinel; the `atan2` branch conventions
+  (`atan2(-0, -1) = +pi`, `atan2(0, 0) = 0`) are pinned, not IEEE's.
+* **No fused multiply-add.** Fusing `a*b + c` changes the result bits, so the source
+  switches contraction off per compiler (`#pragma STDC FP_CONTRACT OFF` on clang,
+  `#pragma GCC optimize("fp-contract=off")` on GCC, `#pragma fp_contract(off)` on MSVC),
+  and refuses to compile under `-ffast-math` or when `FLT_EVAL_METHOD != 0` (32-bit x87).
+  Do not build it with clang's `-ffp-contract=fast`; the command-line flag overrides the
+  pragma, and the vectors then fail. Supported targets are x86-64 (SSE2) and arm64.
+
 ## Exact small arctangent
 
 `trig_atan` returns `x` unchanged when `|x| <= 2^-27`, before any half-angle
@@ -27,14 +62,14 @@ else's black box. This library builds `sin`, `cos`, `tan`, `sqrt`, `atan`, and
 
 | Function | Method |
 |----------|--------|
-| `sin` / `cos` | 20-term Maclaurin series after reducing the angle into `[-pi, pi]` |
+| `sin` / `cos` | Cody-Waite reduction to `[-pi/4, pi/4]`, then ten-term Horner Maclaurin kernels (TRIG-REF-1) |
 | `sqrt` | Newton's (Babylonian) method — quadratic convergence |
 | `tan` | `sin(x) / cos(x)`, saturating near the `cos = 0` poles |
 | `atan` / `atan2` | Taylor series with two layers of range reduction |
-| `radians` / `degrees` | the linear `*pi/180` and `*180/pi` conversions |
+| `radians` / `degrees` | one multiply by the pre-divided constants `pi/180` and `180/pi` |
 
-Range reduction (`x mod 2pi`, truncation) is likewise implemented without libm,
-so the package has zero external dependencies.
+Range reduction is likewise implemented without libm, so the package has zero
+external dependencies.
 
 ## API
 
@@ -61,7 +96,8 @@ function is total and returns a `double` directly, exactly like the Rust crate.
 ## Building
 
 ```sh
-sh BUILD    # builds & runs the tests under every C compiler present
+sh BUILD    # builds & runs the unit tests and the TRIG-REF-1 conformance test
+            # under every C compiler present
 ```
 
 Pure ISO C17, no `<math.h>`. Builds clean under GCC, Clang, and MSVC with
