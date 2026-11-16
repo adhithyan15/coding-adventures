@@ -38,7 +38,7 @@ this table. They differ on purpose (VOS00 section 6.2).
 
 | ID | Track | Title | Deliverable | Depends on | State |
 |---|---|---|---|---|---|
-| VOS-001 CP | all | Umbrella | VOS00 and this backlog | - | in review (this PR) |
+| VOS-001 CP | all | Umbrella | VOS00 and this backlog | - | done (#19485) |
 | VOS-002 CP | all | Component contract model | VOS01: anatomy, the eight rules, by-value steps, tiers, X1-X3 | 001 | in review (this PR) |
 | VOS-003 CP | E | Emulator framework spec | EMU00: contracts, machine loop, board format, determinism, relation to SIM00, VER13 entries | 002 | queued |
 | VOS-004 CP | all | Interface contracts and profile/board linking | VOS02: contract packages, manifests, UFCS rule, `-any` discipline, VER29 amendment text | 002 | queued |
