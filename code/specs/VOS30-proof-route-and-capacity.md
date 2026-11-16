@@ -1188,7 +1188,8 @@ cone can mention an input bit and still ignore it):
   does. (Where an instance is small, a SAT query "two inputs differing only in
   this bit give different outputs" replaces the sampling.) `entropy_bits` is the
   number of sensitive bits.
-* A row is `collapsed` if fewer than **50% of the declared bits are sensitive**, or
+* A row is `collapsed` if, on **either** side's output cone (the rule must hold for
+  both sides, so it fails closed), fewer than **50% of the declared bits are sensitive**, or
   if the AND count of the miter cone is below **25% of the AND count of the same
   generator at the same length with divergence 100%**. These are the defaults; a
   change to any is a reviewed change.
