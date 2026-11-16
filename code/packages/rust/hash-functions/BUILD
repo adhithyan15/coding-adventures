@@ -1,1 +1,34 @@
-cargo test -p coding_adventures_hash_functions -- --nocapture
+cargo test -q -p coding_adventures_hash_functions --lib -- --nocapture
+cargo test -q -p coding_adventures_hash_functions --doc
+# VER08b: the eight covered byte-string hashes run inside a seccomp/Landlock jail derived from
+# required_capabilities.json (no capabilities), watched by an independent strace.
+# The jail is Linux-only, so on macOS this plain run reports the gate NOT-LIVE (RCG010)
+# without failing; Linux uses BUILD_linux, which runs the same line with RCG_STRICT=1.
+# (Windows uses BUILD_windows.)  Everything else in BUILD_linux is identical to this file.
+cargo test -q -p coding_adventures_hash_functions --test runtime_capability
+# VER04h: the evidence harness is generated from code/specs/hash-functions.warrant and
+# evidence.bindings.  Fail if the checked-in file drifted, rewrite the evidence manifest from a
+# real run, and prove each sabotage mode makes a cheap exhaustive claim about the faulted
+# operation report `not ok`.  The first (WX-FAULT1) controls attack a Bytes -> U32/U64 result:
+# flip-result-bit XORs the least significant bit of the integer.
+cargo run -q -p coding_adventures_warrant_grammar --example gen_evidence -- --check hash-functions
+WARRANT_EVIDENCE_OUT=evidence/test-manifest.json cargo test -q -p coding_adventures_hash_functions --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=flip-result-bit WARRANT_EVIDENCE_FILTER=/exhaustive/fnv1a_32_one_byte_matches_both_models cargo test -q -p coding_adventures_hash_functions --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=flip-result-bit WARRANT_EVIDENCE_FILTER=/exhaustive/fnv1a_64_one_byte_matches_both_models cargo test -q -p coding_adventures_hash_functions --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=flip-result-bit WARRANT_EVIDENCE_FILTER=/exhaustive/djb2_one_byte_matches_both_models cargo test -q -p coding_adventures_hash_functions --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=flip-result-bit WARRANT_EVIDENCE_FILTER=/exhaustive/polynomial_rolling_one_byte_is_the_byte cargo test -q -p coding_adventures_hash_functions --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/polynomial_params_zero_modulus_is_rejected cargo test -q -p coding_adventures_hash_functions --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=flip-result-bit WARRANT_EVIDENCE_FILTER=/exhaustive/murmur3_32_one_byte_matches_the_model cargo test -q -p coding_adventures_hash_functions --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=flip-result-bit WARRANT_EVIDENCE_FILTER=/exhaustive/murmur3_seed_len_0 cargo test -q -p coding_adventures_hash_functions --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=flip-result-bit WARRANT_EVIDENCE_FILTER=/exhaustive/siphash_len_0 cargo test -q -p coding_adventures_hash_functions --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+# siphash_2_4's key is `secret`: its constant-time obligation is attempted on the real source,
+# the front end refuses it, and the proof manifest records it `not-live` with the blocker.
+WARRANT_PROOF_OUT=$PWD/evidence cargo test -q -p coding_adventures_warrant_ir --test hash_functions_proofs
+# NOT WIRED (DT17a section 7, owner call): the capability analyzer line and the
+# ca-assurance-report `--check` line.  The crate's analysis.rs draws OS randomness
+# (getrandom, for avalanche_score), so the analyzer fails against the declared
+# `"capabilities": []` (CAP001 rand:read:*); declaring rand:read:* instead makes the
+# VER08b jail's rand-syscall negative control undetectable (RCG009) and leaves the
+# report's CWE-330 row open.  The report also needs `bound` rows (CWE-400) that the
+# document does not declare yet.  No assurance_report.json or effect_certificate.json
+# is committed.
