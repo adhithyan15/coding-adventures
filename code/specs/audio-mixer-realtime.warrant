@@ -7,7 +7,7 @@ warrant audio_mixer_realtime v1
   error MixerError = InvalidSampleRate | InvalidParameter | ChannelLimitExceeded | ChannelIndexOutOfBounds | RingBufferOverrun | RingBufferUnderrun | EmptyBuffer | BufferTooSmall | SinkBufferError
 
   model clamp_pcm16_model(v: Int) -> Int = if v > 32767 then 32767 else (if v < 0 - 32768 then 0 - 32768 else v)
-  model scale_voice_model(sample: Int, gain_q16: Nat, master_gain_q16: Nat) -> Int = (((sample * gain_q16) / 65536) * master_gain_q16) / 65536
+  model scale_voice_model(sample: Int, gain_q16: Nat, master_gain_q16: Nat) -> Int = unwrap_or(div(unwrap_or(div(sample * gain_q16, 65536), 0) * master_gain_q16, 65536), 0)
   model valid_sample_rate(rate: Nat) -> Bool = rate >= 1 and rate <= 192000
 
   record VoiceSlot(active: Bool, voice_id: U32, priority: U8, cursor: Nat, gain_q16: U32, pan_q16: I32, pitch_step_q16: U32, phase_q16: U64, looping: Bool)
