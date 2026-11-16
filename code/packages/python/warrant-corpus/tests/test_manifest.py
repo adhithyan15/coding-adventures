@@ -235,6 +235,53 @@ def test_validation_rejects_every_kind_of_disagreement(
         validate_manifest(mutated(manifest_bytes, change), corpus, REL)
 
 
+def _as_lane(document, lane: str) -> None:
+    document["lane"] = lane
+    document["package"] = f"{lane}/ct-compare"
+    document["runner"]["lane"] = lane
+
+
+def test_pycache_isolated_is_python_only(manifest_bytes, corpus) -> None:
+    """VER04i 8.1: required (and true) for Python, forbidden for every other lane."""
+    document = json.loads(manifest_bytes)
+    assert document["lane"] == "python" and document["pycache_isolated"] is True
+    # A python manifest without the key, or with it false, fails.
+    with pytest.raises(CorpusError, match="required for the Python lane"):
+        validate_manifest(
+            mutated(manifest_bytes, lambda d: d.pop("pycache_isolated")), corpus, REL
+        )
+    with pytest.raises(CorpusError, match="must be true"):
+        validate_manifest(
+            mutated(manifest_bytes, lambda d: d.update(pycache_isolated=False)),
+            corpus,
+            REL,
+        )
+    # A go or typescript manifest WITH the key fails.
+    for lane in ("go", "typescript"):
+        with pytest.raises(CorpusError, match="only recorded by the Python lane"):
+            validate_manifest(
+                mutated(manifest_bytes, lambda d, lane=lane: _as_lane(d, lane)),
+                corpus,
+                REL,
+            )
+
+    # A non-python manifest without the key passes.
+    def go_without_key(d) -> None:
+        _as_lane(d, "go")
+        del d["pycache_isolated"]
+
+    validate_manifest(mutated(manifest_bytes, go_without_key), corpus, REL)
+
+
+@pytest.mark.parametrize("lane", ["go", "typescript"])
+def test_other_lanes_committed_manifests_validate(corpus, lane) -> None:
+    """Every lane's validator accepts every other lane's real manifest (WD-102)."""
+    path = REPO_ROOT / "code" / "packages" / lane / "ct-compare" / "evidence" / "test-manifest.json"
+    if not path.exists():
+        pytest.skip(f"the {lane} lane artifact is not present")
+    assert validate_manifest(path.read_bytes(), corpus, REL)["lane"] == lane
+
+
 def test_validation_rejects_malformed_json(corpus) -> None:
     with pytest.raises(CorpusError):
         validate_manifest(b"{", corpus, REL)

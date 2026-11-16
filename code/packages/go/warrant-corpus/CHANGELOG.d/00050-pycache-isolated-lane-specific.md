@@ -1,0 +1,3 @@
+## Unreleased
+
+- `validate-manifest` now applies the VER04i 8.1 rule for `pycache_isolated`, the one lane-specific manifest key: it is required, and must be exactly `true`, when `lane` is `python`, and it is refused for every other lane (the lane is read before the closed key check). Messages mirror the Rust loader. This fixes the cross-lane validation of the committed Python manifest, which the closed key set rejected as "unexpected fields". Tests cover a python manifest without the key or with it false, a non-python manifest with the key, a non-python manifest without it, and the other lanes' real manifests. The `ct-compare` manifest and label sidecar of each lane were regenerated because the runner source digest changed.

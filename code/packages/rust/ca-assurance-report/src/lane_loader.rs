@@ -21,13 +21,17 @@
 //!
 //! ## What this module is not
 //!
-//! * It is not a report generator and has no CLI (WD-004b2).
+//! * It is not a report generator and has no CLI: the report rungs live in
+//!   [`crate::lane_report`] and the `--check-lane` command in `main.rs`
+//!   (WD-004b2), both of which call [`load_lane`].
 //! * It never touches the legacy Rust loader in [`crate::evidence`]: a Rust
 //!   package is not in the consumer registry, so [`load_lane`] refuses it with
 //!   `not-registered`, and a Rust `warrant-test-evidence-v1` manifest is never
 //!   read as a lane manifest.
-//! * It does not recompute `source_sha256` or `runner.src_sha256` (they need a
-//!   per-lane source rule and a runner root the registry does not carry).
+//! * It makes no claim that a manifest was *produced* by running the source
+//!   whose digest it records: `source_sha256` and `runner.src_sha256` are
+//!   recomputed from the tree on disk (WD-004b2) and compared, which shows the
+//!   manifest is not stale, not that it was earned.
 //!
 //! ## Reading order of one [`load_lane`]
 //!
@@ -41,7 +45,8 @@
 //!      ├─ binding file ──► sha256 equals manifest.binding_sha256
 //!      ├─ runner identity (name + lane)
 //!      ├─ labels sidecar ──► closed schema, labels re-derived, digest bound
-//!      └─ runner entry + build files ──► exist, contained, build routing text
+//!      ├─ runner entry + build files ──► exist, contained, build routing text
+//!      └─ source root + runner root ──► recomputed `warrant-src-v1` digests
 //! ```
 //!
 //! Any failure is an `Err`; there is no partial result.
@@ -80,7 +85,7 @@ pub const RUNNER_NAME: &str = "warrant-corpus";
 
 /// The static readiness checks, in the order a successful load reports them.
 /// The names are the ones VER04i 8.2 lists; a test pins the two together.
-pub const READINESS_CHECKS: [&str; 8] = [
+pub const READINESS_CHECKS: [&str; 10] = [
     "paths-contained",
     "registry-active",
     "corpus-digests",
@@ -89,16 +94,18 @@ pub const READINESS_CHECKS: [&str; 8] = [
     "runner-identity",
     "labels-bound",
     "build-routing",
+    "source-fresh",
+    "runner-source-fresh",
 ];
 
 /// What a successful load deliberately does **not** establish.  The output of
 /// [`LoadedLane::render_readiness`] always prints this list.
 pub const UNCLAIMED: [&str; 5] = [
-    "source freshness",
-    "runner source digest",
     "toolchain authenticity",
     "build execution",
     "sandbox",
+    "go.mod go directive version",
+    "contents of directories the Go tool ignores",
 ];
 
 // ---------------------------------------------------------------------------
@@ -111,7 +118,8 @@ pub const UNCLAIMED: [&str; 5] = [
 ///
 /// Codes: `path`, `symlink`, `not-regular`, `too-large`, `io`, `registry`,
 /// `not-registered`, `not-active`, `manifest`, `digest`, `join`,
-/// `runner-identity`, `labels`, `build-routing`.
+/// `runner-identity`, `labels`, `build-routing`, `source-tree`,
+/// `uncovered-source`, `go-mod`, `stale-source`, `stale-runner`.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct LaneLoadError {
     pub code: &'static str,
@@ -295,10 +303,21 @@ fn refused_component(name: &str) -> bool {
             let digit = |rest: &str| {
                 matches!(
                     rest,
-                    "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "\u{b9}" | "\u{b2}" | "\u{b3}"
+                    "1" | "2"
+                        | "3"
+                        | "4"
+                        | "5"
+                        | "6"
+                        | "7"
+                        | "8"
+                        | "9"
+                        | "\u{b9}"
+                        | "\u{b2}"
+                        | "\u{b3}"
                 )
             };
-            stem.strip_prefix("COM").is_some_and(digit) || stem.strip_prefix("LPT").is_some_and(digit)
+            stem.strip_prefix("COM").is_some_and(digit)
+                || stem.strip_prefix("LPT").is_some_and(digit)
         }
     }
 }
@@ -348,14 +367,51 @@ fn is_link(meta: &fs::Metadata) -> bool {
     meta.file_type().is_symlink()
 }
 
-/// Read the repository-relative file `rel` under `repo_root`, refusing anything
-/// but a bounded regular file reached without a symbolic link.
-///
-/// The repository root itself is trusted (it may be a symlink); every
-/// component *beneath* it is inspected with `symlink_metadata`.  This is a
-/// defence against a hostile checkout, not against a process that can rewrite
-/// the tree while the load runs.
-pub fn read_repo_file(repo_root: &Path, rel: &str, cap: u64) -> Result<Vec<u8>, LaneLoadError> {
+/// Turn the extended-length spelling the Windows API hands back for a path
+/// (`\\?\D:\a\repo`, `\\?\UNC\server\share\x`) into the plain one
+/// (`D:\a\repo`, `\\server\share\x`).  It is for paths the *operating
+/// system* produced (a canonicalised repository root), never for caller input:
+/// [`lexical_containment`] keeps refusing `\\?\` as a device path.  Only the
+/// two exact verbatim forms are converted (a verbatim path is not normalised
+/// by Windows, so any `.`, `..` or `/` inside would change meaning, and such
+/// text is left alone to be refused).  The POSIX flavour never changes.
+pub fn plain_root_text(flavor: PathFlavor, text: &str) -> String {
+    if flavor != PathFlavor::Win32 {
+        return text.to_owned();
+    }
+    let Some(rest) = text.strip_prefix("\\\\?\\") else {
+        return text.to_owned();
+    };
+    let clean = |s: &str| !s.contains('/') && !s.split('\\').any(|c| c == "." || c == "..");
+    if !clean(rest) {
+        return text.to_owned();
+    }
+    if let Some(unc) = rest.strip_prefix("UNC\\") {
+        return format!("\\\\{unc}");
+    }
+    let b = rest.as_bytes();
+    if b.len() >= 3 && b[0].is_ascii_alphabetic() && b[1] == b':' && b[2] == b'\\' {
+        return rest.to_owned();
+    }
+    text.to_owned()
+}
+
+/// What the last component of a contained path must be.
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum Kind {
+    File,
+    Dir,
+}
+
+/// Steps 1 to 3 of every read: the registry's lexical rules, the shared
+/// containment rule in the host flavour, and a component-by-component walk that
+/// refuses links.  Returns the path to open and its absolute text (the base
+/// for the containment questions a directory walk asks later).
+fn contained_path(
+    repo_root: &Path,
+    rel: &str,
+    kind: Kind,
+) -> Result<(std::path::PathBuf, String), LaneLoadError> {
     // Step 1: the registry's lexical rules (ASCII, slash-separated, no empty,
     // `.` or `..` component, portable characters).  Cheap, and it runs before
     // any filesystem call.
@@ -373,6 +429,12 @@ pub fn read_repo_file(repo_root: &Path, rel: &str, cap: u64) -> Result<Vec<u8>, 
         code: "path",
         message: "repository root is not UTF-8".into(),
     })?;
+    // The root usually arrives from `Path::canonicalize`, which on Windows
+    // returns an extended-length `\\?\D:\...` path.  The conformance rule
+    // refuses every `\\?\` path as a device path, so the OS's own spelling of
+    // the *root* is turned into the plain form first.  `rel` is never touched.
+    let root_plain = plain_root_text(PathFlavor::host(), root_text);
+    let root_text = root_plain.as_str();
     let joined = format!("{}/{rel}", root_text.trim_end_matches(['/', '\\']));
     let verdict = lexical_containment(PathFlavor::host(), root_text, &joined);
     if !verdict.inside || verdict.same {
@@ -381,7 +443,7 @@ pub fn read_repo_file(repo_root: &Path, rel: &str, cap: u64) -> Result<Vec<u8>, 
             format!("{rel}: resolves outside the repository root"),
         );
     }
-    // Step 3: walk the components, refusing links and non-regular targets.
+    // Step 3: walk the components, refusing links and wrong-kind targets.
     let parts: Vec<&str> = rel.split('/').collect();
     let mut current = repo_root.to_path_buf();
     let mut shown = String::new();
@@ -402,13 +464,29 @@ pub fn read_repo_file(repo_root: &Path, rel: &str, cap: u64) -> Result<Vec<u8>, 
             );
         }
         let last = index + 1 == parts.len();
-        if last && !meta.is_file() {
+        if last && kind == Kind::File && !meta.is_file() {
             return err("not-regular", format!("{rel} is not a regular file"));
+        }
+        if last && kind == Kind::Dir && !meta.is_dir() {
+            return err("not-regular", format!("{rel} is not a directory"));
         }
         if !last && !meta.is_dir() {
             return err("not-regular", format!("{shown} is not a directory"));
         }
     }
+    Ok((current, joined))
+}
+
+/// Read the repository-relative file `rel` under `repo_root`, refusing anything
+/// but a bounded regular file reached without a symbolic link.
+///
+/// The repository root itself is trusted (it may be a symlink); every
+/// component *beneath* it is inspected with `symlink_metadata`.  This is a
+/// defence against a hostile checkout, not against a process that can rewrite
+/// the tree while the load runs (the check-to-open window of VER04i 8.2, still
+/// open).
+pub fn read_repo_file(repo_root: &Path, rel: &str, cap: u64) -> Result<Vec<u8>, LaneLoadError> {
+    let (current, _) = contained_path(repo_root, rel, Kind::File)?;
     // Step 4: bounded read.  The size check rejects the common case without
     // reading; `take` makes the cap hold even if the file grows meanwhile.
     let file = fs::File::open(&current).map_err(|e| LaneLoadError {
@@ -442,6 +520,616 @@ pub fn read_repo_file(repo_root: &Path, rel: &str, cap: u64) -> Result<Vec<u8>, 
         );
     }
     Ok(bytes)
+}
+
+// ---------------------------------------------------------------------------
+// Source digests (WD-004b2, VER04i 8.2 "Source digests")
+// ---------------------------------------------------------------------------
+//
+// `source_sha256` is the `warrant-src-v1` digest of a lane's production source
+// and `runner.src_sha256` that of the runner's own.  Both are recomputed here
+// from the tree on disk.  The framing is `test_bootstrap`'s, shared with the
+// Rust producer; the *selection* of files is each lane's rule, which has to
+// match the runner that wrote the manifest byte for byte.
+//
+//   directory ──► every entry: symlink_metadata first (link ⇒ refuse)
+//                   ├─ directory ──► skipped by name?  no ⇒ descend
+//                   ├─ regular file selected by the rule? ⇒ contained, bounded read
+//                   └─ anything else (FIFO, socket, device) ⇒ stepped over, never opened
+//
+// The link check comes *before* the name rule, as in the runners, so a link
+// named `notes.txt` or `__pycache__` is still refused.
+
+/// A runner's per-file limit; the loader adds the two totals below.
+const MAX_SOURCE_FILE_BYTES: u64 = 8 * 1024 * 1024;
+const MAX_SOURCE_DEPTH: usize = 32;
+const MAX_SOURCE_FILES: usize = 4096;
+/// Entries the package-wide bytecode scan will look at before giving up.
+const MAX_PACKAGE_ENTRIES: usize = 100_000;
+const MAX_SOURCE_TOTAL_BYTES: u64 = 64 * 1024 * 1024;
+
+/// Which of a lane's two digests a walk computes.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum SourceKind {
+    /// `source_sha256`: the package's production source.
+    Production,
+    /// `runner.src_sha256`: the `warrant-corpus` runner's own source.
+    Runner,
+}
+
+/// The runner's own source root, relative to the repository (VER04i 8.2).  The
+/// registry carries no runner root, so it is fixed per lane.  `None` for a lane
+/// with no rule.
+pub fn runner_root(lane: &str) -> Option<&'static str> {
+    match lane {
+        "python" => {
+            Some("code/packages/python/warrant-corpus/src/coding_adventures_warrant_corpus")
+        }
+        "typescript" => Some("code/packages/typescript/warrant-corpus/src"),
+        "go" => Some("code/packages/go/warrant-corpus"),
+        _ => None,
+    }
+}
+
+/// How one lane selects its files.
+struct SourceRule {
+    select: fn(&str) -> bool,
+    skip_dir: fn(&str) -> bool,
+    /// `false` for the Go runner, which embeds only its own directory's `*.go`.
+    recursive: bool,
+    /// The lane's own part of the ignore set: a file that is not selected but is
+    /// known not to change behaviour (tests).  Arguments: lower-cased name, and
+    /// whether the file is directly in the root.
+    ignore_file: fn(&str, bool) -> bool,
+    /// Directories at the root that are listed as not source (Go package data).
+    ignore_root_dir: fn(&str) -> bool,
+    /// Directories that may not exist at all, at any depth: they can shadow or
+    /// replace what the digest covers (Go `vendor`, TypeScript `node_modules`
+    /// and `dist`).  Refused, never skipped.
+    refuse_dir: fn(&str) -> bool,
+    /// Python: `__pycache__` may exist but must hold nothing.  Python runs a
+    /// cached `.pyc` instead of its source, and no header check can tell a real
+    /// cache from a forged one (a hash-based pyc is never revalidated; a
+    /// timestamp pyc can be made to match the source's mtime and size).
+    pycache: bool,
+}
+
+/// The ignore set every lane shares (VER04i 8.1): documentation and editor
+/// litter, compared case-insensitively.  Anything else a rule does not select
+/// is an `uncovered-source` failure.
+fn common_ignore(lower: &str) -> bool {
+    matches!(
+        lower,
+        "readme"
+            | "readme.md"
+            | "changelog.md"
+            | "license"
+            | "license.md"
+            | ".ds_store"
+            | ".gitkeep"
+    )
+}
+
+fn source_rule(lane: &str, kind: SourceKind) -> Option<SourceRule> {
+    match lane {
+        "python" => Some(SourceRule {
+            select: |name| name.ends_with(".py") || name.ends_with(".pyi") || name == "py.typed",
+            skip_dir: |name| name == "__pycache__",
+            recursive: true,
+            ignore_file: |_, _| false,
+            ignore_root_dir: |_| false,
+            refuse_dir: |_| false,
+            pycache: true,
+        }),
+        "typescript" => Some(SourceRule {
+            select: |name| name.ends_with(".ts") && !name.ends_with(".test.ts"),
+            skip_dir: |_| false,
+            recursive: true,
+            ignore_file: |lower, _| lower.ends_with(".test.ts"),
+            ignore_root_dir: |_| false,
+            refuse_dir: |name| name == "dist" || name == "node_modules",
+            pycache: false,
+        }),
+        "go" => Some(SourceRule {
+            select: |name| name.ends_with(".go") && !name.ends_with("_test.go"),
+            skip_dir: |name| name == "testdata" || name.starts_with('.') || name.starts_with('_'),
+            recursive: kind == SourceKind::Production,
+            // Tests, and the two dependency files at the root: `go.mod` and `go.sum`
+            // pin dependencies and are NOT digested (a listed residual, VER04i 8.1);
+            // a go.mod anywhere else starts a new module and is refused.
+            ignore_file: |lower, at_root| {
+                lower.ends_with("_test.go")
+                    || (at_root
+                        && matches!(
+                            lower,
+                            "go.mod"
+                                | "build"
+                                | "build_windows"
+                                | "required_capabilities.json"
+                                | "evidence.bindings"
+                        ))
+            },
+            ignore_root_dir: |name| name == "evidence" || name == "CHANGELOG.d",
+            refuse_dir: |name| name == "vendor",
+            pycache: false,
+        }),
+        _ => None,
+    }
+}
+
+fn source_fail<T>(message: impl Into<String>) -> Result<T, LaneLoadError> {
+    err("source-tree", message)
+}
+
+/// The `source` line of a binding file: `.` (the package root) or a relative,
+/// slash-separated path under it.  Exactly one line, exactly one value, under
+/// the registry's path rules, so the joined path cannot leave the package.
+pub fn binding_source(bytes: &[u8]) -> Result<String, LaneLoadError> {
+    let Ok(text) = std::str::from_utf8(bytes) else {
+        return source_fail("binding file is not UTF-8");
+    };
+    let mut found: Option<String> = None;
+    for line in text.lines() {
+        let line = line.trim();
+        if line.is_empty() || line.starts_with('#') {
+            continue;
+        }
+        let mut tokens = line.split_whitespace();
+        if tokens.next() != Some("source") {
+            continue;
+        }
+        let (Some(value), None) = (tokens.next(), tokens.next()) else {
+            return source_fail("binding `source` line must have exactly one value");
+        };
+        if found.is_some() {
+            return source_fail("binding has more than one `source` line");
+        }
+        if value != "." {
+            if let Err(LaneEvidenceError(message)) = validate_repo_path(value) {
+                return source_fail(format!("binding source {value:?}: {message}"));
+            }
+        }
+        found = Some(value.to_owned());
+    }
+    match found {
+        Some(value) => Ok(value),
+        None => source_fail("binding has no `source` line"),
+    }
+}
+
+struct Walk {
+    rule: SourceRule,
+    /// Absolute text of the walk's root, the base of every containment question.
+    root_text: String,
+    files: Vec<(String, Vec<u8>)>,
+    total: u64,
+}
+
+impl Walk {
+    fn directory(&mut self, dir: &Path, rel: &str, depth: usize) -> Result<(), LaneLoadError> {
+        if depth > MAX_SOURCE_DEPTH {
+            return source_fail("source tree is nested too deeply");
+        }
+        let listing = fs::read_dir(dir).map_err(|e| LaneLoadError {
+            code: "io",
+            message: format!(
+                "cannot list {}: {e}",
+                if rel.is_empty() {
+                    "the source root"
+                } else {
+                    rel
+                }
+            ),
+        })?;
+        let mut entries: Vec<(String, std::path::PathBuf)> = Vec::new();
+        for entry in listing {
+            let entry = entry.map_err(|e| LaneLoadError {
+                code: "io",
+                message: format!("cannot list the source tree: {e}"),
+            })?;
+            let Ok(name) = entry.file_name().into_string() else {
+                return source_fail("non-UTF-8 file name in the source tree");
+            };
+            entries.push((name, entry.path()));
+        }
+        // Byte order, like the runners; the final sort is by relative path.
+        entries.sort_by(|a, b| a.0.as_bytes().cmp(b.0.as_bytes()));
+        for (name, path) in entries {
+            let shown = if rel.is_empty() {
+                name.clone()
+            } else {
+                format!("{rel}/{name}")
+            };
+            let meta = fs::symlink_metadata(&path).map_err(|e| LaneLoadError {
+                code: "io",
+                message: format!("{shown}: {e}"),
+            })?;
+            if is_link(&meta) {
+                return err(
+                    "symlink",
+                    format!("{shown} is a symbolic link; links are refused"),
+                );
+            }
+            let at_root = rel.is_empty();
+            if meta.is_dir() {
+                if (self.rule.refuse_dir)(&name) {
+                    return err(
+                        "uncovered-source",
+                        format!("{shown} may not exist in a source root: it can replace what the digest covers (VER04i 8.1)"),
+                    );
+                } else if self.rule.pycache && name == "__pycache__" {
+                    self.pycache(&path, &shown)?;
+                } else if at_root && (self.rule.ignore_root_dir)(&name) {
+                    // listed as not source
+                } else if self.rule.recursive && !(self.rule.skip_dir)(&name) {
+                    self.directory(&path, &shown, depth + 1)?;
+                }
+            } else if meta.is_file() {
+                if (self.rule.select)(&name) {
+                    self.file(&path, &shown, meta.len())?;
+                } else {
+                    let lower = name.to_ascii_lowercase();
+                    if !common_ignore(&lower) && !(self.rule.ignore_file)(&lower, at_root) {
+                        return err(
+                            "uncovered-source",
+                            format!(
+                                "{shown} is in the source root but no digest rule covers it and it is not in the ignore set (VER04i 8.1)"
+                            ),
+                        );
+                    }
+                }
+            }
+            // A FIFO, socket or device is neither: stepped over, never opened.
+        }
+        Ok(())
+    }
+
+    /// `__pycache__` must be empty: any entry is bytecode (or something else)
+    /// the interpreter could run in place of the source.
+    fn pycache(&self, cache: &Path, shown: &str) -> Result<(), LaneLoadError> {
+        let mut listing = fs::read_dir(cache).map_err(|e| LaneLoadError {
+            code: "io",
+            message: format!("cannot list {shown}: {e}"),
+        })?;
+        if let Some(entry) = listing.next() {
+            let entry = entry.map_err(|e| LaneLoadError {
+                code: "io",
+                message: format!("cannot list {shown}: {e}"),
+            })?;
+            return err(
+                "uncovered-source",
+                format!(
+                    "{shown}/{} is bytecode or other content in __pycache__: Python can run it instead of the source, so none is accepted (VER04i 8.1)",
+                    entry.file_name().to_string_lossy()
+                ),
+            );
+        }
+        Ok(())
+    }
+
+    fn file(&mut self, path: &Path, shown: &str, size: u64) -> Result<(), LaneLoadError> {
+        let child = format!("{}/{shown}", self.root_text);
+        let verdict = lexical_containment(PathFlavor::host(), &self.root_text, &child);
+        if !verdict.inside || verdict.same {
+            return err("path", format!("{shown}: resolves outside the source root"));
+        }
+        if self.files.len() >= MAX_SOURCE_FILES {
+            return source_fail(format!("more than {MAX_SOURCE_FILES} source files"));
+        }
+        if size > MAX_SOURCE_FILE_BYTES {
+            return source_fail(format!(
+                "{shown} is {size} bytes, over the {MAX_SOURCE_FILE_BYTES}-byte limit"
+            ));
+        }
+        let file = fs::File::open(path).map_err(|e| LaneLoadError {
+            code: "io",
+            message: format!("{shown}: {e}"),
+        })?;
+        let mut bytes = Vec::new();
+        file.take(MAX_SOURCE_FILE_BYTES + 1)
+            .read_to_end(&mut bytes)
+            .map_err(|e| LaneLoadError {
+                code: "io",
+                message: format!("{shown}: {e}"),
+            })?;
+        if bytes.len() as u64 > MAX_SOURCE_FILE_BYTES {
+            return source_fail(format!(
+                "{shown} grew past the {MAX_SOURCE_FILE_BYTES}-byte limit while reading"
+            ));
+        }
+        self.total += bytes.len() as u64;
+        if self.total > MAX_SOURCE_TOTAL_BYTES {
+            return source_fail(format!(
+                "the source files exceed {MAX_SOURCE_TOTAL_BYTES} bytes in total"
+            ));
+        }
+        self.files.push((shown.to_owned(), bytes));
+        Ok(())
+    }
+}
+
+/// The `warrant-src-v1` digest (SHA-256, lowercase hex) of the tree at the
+/// repository-relative `rel_root` under `lane`'s rule for `kind`.  The root is
+/// reached under the same rules as every other read (validated, lexically
+/// contained, links refused per component, must be a directory); the walk is
+/// described above.  A lane with no rule is `source-tree`.
+pub fn source_tree_digest(
+    repo_root: &Path,
+    rel_root: &str,
+    lane: &str,
+    kind: SourceKind,
+    pycache_isolated: bool,
+) -> Result<String, LaneLoadError> {
+    let Some(mut rule) = source_rule(lane, kind) else {
+        return source_fail(format!("no source rule for lane {lane}"));
+    };
+    // A manifest that records a private bytecode cache (the Python runner ran
+    // with `sys.pycache_prefix` set, so no `__pycache__` in the tree was ever
+    // executed) makes a `__pycache__` directory irrelevant: it is skipped like
+    // any derived directory.  Without that record it must be empty.
+    if pycache_isolated && rule.pycache {
+        rule.pycache = false;
+        rule.skip_dir = |name| name == "__pycache__";
+    }
+    let (root, root_text) = contained_path(repo_root, rel_root, Kind::Dir)?;
+    let mut walk = Walk {
+        rule,
+        root_text,
+        files: Vec::new(),
+        total: 0,
+    };
+    walk.directory(&root, "", 0)?;
+    let framed = coding_adventures_test_bootstrap::manifest::frame_sources(&walk.files);
+    Ok(sha256_hex(&framed))
+}
+
+// ---------------------------------------------------------------------------
+// The Go module files (WD-004b2 review)
+// ---------------------------------------------------------------------------
+//
+// `go.mod` is not part of the Go digest, yet its `replace` line chooses which
+// directory the runner module is built from.  So it is pinned exactly instead:
+// only the directives below, with only the values below, or the load fails.
+
+const GO_MODULE_BASE: &str = "github.com/adhithyan15/coding-adventures/";
+
+fn go_mod_fail<T>(file: &str, message: impl Into<String>) -> Result<T, LaneLoadError> {
+    err("go-mod", format!("{file}: {}", message.into()))
+}
+
+/// Pin one `go.mod`: `module <module>`, `go <major.minor[.patch]>`, and, when
+/// `runner` is given, exactly one `require <runner module> v0.0.0` and one
+/// `replace <runner module> => <target>`.  Blank lines and `//` comments are
+/// harmless; any other directive, block form or value is an error.
+fn pin_go_mod(
+    file: &str,
+    text: &str,
+    module: &str,
+    runner: Option<(&str, &str)>,
+) -> Result<(), LaneLoadError> {
+    let (mut seen_module, mut seen_go, mut seen_require, mut seen_replace) =
+        (false, false, false, false);
+    let version_ok = |v: &str| {
+        (2..=3).contains(&v.split('.').count())
+            && v.split('.')
+                .all(|p| !p.is_empty() && p.bytes().all(|b| b.is_ascii_digit()))
+    };
+    for line in text.lines() {
+        let line = line.trim();
+        if line.is_empty() || line.starts_with("//") {
+            continue;
+        }
+        let tokens: Vec<&str> = line.split_whitespace().collect();
+        if line.ends_with('(') {
+            return go_mod_fail(file, "a block form hides directives from the pin");
+        }
+        match tokens.as_slice() {
+            ["module", path] if *path == module && !seen_module => seen_module = true,
+            ["module", ..] => {
+                return go_mod_fail(file, format!("module path must be exactly {module}"));
+            }
+            ["go", version] if version_ok(version) && !seen_go => seen_go = true,
+            ["require", path, "v0.0.0"]
+                if runner.is_some_and(|(m, _)| m == *path) && !seen_require =>
+            {
+                seen_require = true;
+            }
+            ["replace", path, "=>", target]
+                if runner.is_some_and(|(m, t)| m == *path && t == *target) && !seen_replace =>
+            {
+                seen_replace = true;
+            }
+            ["replace", ..] => {
+                return go_mod_fail(
+                    file,
+                    format!(
+                        "replace must be exactly the runner module => {}",
+                        runner.map_or("(none allowed)", |(_, t)| t)
+                    ),
+                );
+            }
+            [directive, ..] => {
+                return go_mod_fail(file, format!("unexpected directive `{directive}`"));
+            }
+            [] => {}
+        }
+    }
+    if !seen_module {
+        return go_mod_fail(file, "missing module directive");
+    }
+    if !seen_go {
+        return go_mod_fail(file, "missing go directive");
+    }
+    if runner.is_some() && !(seen_require && seen_replace) {
+        return go_mod_fail(
+            file,
+            "missing the runner module require and replace directives",
+        );
+    }
+    Ok(())
+}
+
+/// Pin the Go lane's two `go.mod` files: the package's (module path from its
+/// registry `package_root`, the runner module required and replaced with the
+/// sibling `../<runner dir>`) and the runner's own (module and go version only).
+fn check_go_modules(
+    repo_root: &Path,
+    package_root: &str,
+    runner_dir: &str,
+) -> Result<(), LaneLoadError> {
+    let parent = |p: &str| p.rsplit_once('/').map(|(d, _)| d.to_owned());
+    let runner_name = runner_dir.rsplit('/').next().unwrap_or("");
+    if parent(package_root) != parent(runner_dir) {
+        return go_mod_fail(package_root, "the runner must be a sibling of the package");
+    }
+    let runner_module = format!("{GO_MODULE_BASE}{runner_dir}");
+    let target = format!("../{runner_name}");
+    for (rel_dir, module, runner) in [
+        (
+            package_root,
+            format!("{GO_MODULE_BASE}{package_root}"),
+            Some((runner_module.as_str(), target.as_str())),
+        ),
+        (runner_dir, runner_module.clone(), None),
+    ] {
+        let path = format!("{rel_dir}/go.mod");
+        let bytes = read_repo_file(repo_root, &path, MAX_BUILD_FILE_BYTES)?;
+        let Ok(text) = std::str::from_utf8(&bytes) else {
+            return go_mod_fail(&path, "not UTF-8");
+        };
+        pin_go_mod(&path, text, &module, runner)?;
+    }
+    Ok(())
+}
+
+/// Refuse a Go workspace file anywhere the `go` command could find one.
+///
+/// `go.work` (and its `go.work.sum`) is read from the working directory
+/// upward, and its `replace` and `use` directives override every `go.mod`, so
+/// a `go.work` in any ancestor can swap the runner module for another
+/// directory while the pinned `go.mod` files still look right.  Every
+/// directory from each of the two roots up to and including the repository
+/// root is checked, and *any* entry with either name (a file, a directory, a
+/// link) is refused: absence is the only accepted state.  The BUILD files also
+/// run `go` with `GOWORK=off`; this check is the loader's own, since it cannot
+/// see the environment the runner was started in.
+fn check_go_workspace(
+    repo_root: &Path,
+    package_root: &str,
+    runner_dir: &str,
+) -> Result<(), LaneLoadError> {
+    let mut checked: Vec<String> = Vec::new();
+    for root in [package_root, runner_dir] {
+        let mut dir = root.to_owned();
+        loop {
+            if !checked.contains(&dir) {
+                checked.push(dir.clone());
+                // The directory is reached with the usual rules (contained,
+                // links refused per component) before its listing is trusted.
+                if !dir.is_empty() {
+                    contained_path(repo_root, &dir, Kind::Dir)?;
+                }
+                for name in ["go.work", "go.work.sum"] {
+                    let rel = if dir.is_empty() {
+                        name.to_owned()
+                    } else {
+                        format!("{dir}/{name}")
+                    };
+                    match fs::symlink_metadata(repo_root.join(&rel)) {
+                        Err(e) if e.kind() == std::io::ErrorKind::NotFound => {}
+                        Err(e) => return go_mod_fail(&rel, format!("cannot be inspected: {e}")),
+                        Ok(_) => {
+                            return go_mod_fail(
+                                &rel,
+                                "a Go workspace file can replace the runner module; none may exist in the package, the runner or any directory above them (VER04i 8.1)",
+                            );
+                        }
+                    }
+                }
+            }
+            match dir.rsplit_once('/') {
+                Some((parent, _)) => dir = parent.to_owned(),
+                None if !dir.is_empty() => dir = String::new(),
+                None => break,
+            }
+        }
+    }
+    Ok(())
+}
+
+// ---------------------------------------------------------------------------
+// Sourceless bytecode in a Python package (WD-004b2 review)
+// ---------------------------------------------------------------------------
+//
+// The source digest walks only the binding's source root, so `tests/` is never
+// examined.  A legacy sourceless `tests/shutil.pyc` is imported by the
+// interpreter in preference to nothing at all, and (with the test directory on
+// `sys.path`) in preference to the standard library module of the same name.
+// So no `*.pyc` or `*.pyo` may exist under the package root unless it sits in
+// a `__pycache__` directory, which the private `sys.pycache_prefix` makes
+// irrelevant.  The package-root `.venv` is the build's own environment, wiped
+// and recreated by `uv venv --clear` on every build, and is not scanned.
+
+fn check_python_bytecode(repo_root: &Path, package_root: &str) -> Result<(), LaneLoadError> {
+    let (root, _) = contained_path(repo_root, package_root, Kind::Dir)?;
+    let mut seen = 0usize;
+    scan_bytecode(&root, package_root, 0, &mut seen)
+}
+
+fn scan_bytecode(
+    dir: &Path,
+    shown: &str,
+    depth: usize,
+    seen: &mut usize,
+) -> Result<(), LaneLoadError> {
+    if depth > MAX_SOURCE_DEPTH {
+        return source_fail("package tree is nested too deeply");
+    }
+    let listing = fs::read_dir(dir).map_err(|e| LaneLoadError {
+        code: "io",
+        message: format!("cannot list {shown}: {e}"),
+    })?;
+    for entry in listing {
+        let entry = entry.map_err(|e| LaneLoadError {
+            code: "io",
+            message: format!("cannot list {shown}: {e}"),
+        })?;
+        *seen += 1;
+        if *seen > MAX_PACKAGE_ENTRIES {
+            return source_fail(format!(
+                "more than {MAX_PACKAGE_ENTRIES} entries in {shown}"
+            ));
+        }
+        let Ok(name) = entry.file_name().into_string() else {
+            return source_fail("non-UTF-8 file name in the package tree");
+        };
+        let path = format!("{shown}/{name}");
+        let meta = fs::symlink_metadata(entry.path()).map_err(|e| LaneLoadError {
+            code: "io",
+            message: format!("{path}: {e}"),
+        })?;
+        if is_link(&meta) {
+            return err(
+                "symlink",
+                format!("{path} is a symbolic link; links are refused"),
+            );
+        }
+        if meta.is_dir() {
+            let build_env = depth == 0 && name == ".venv";
+            if name != "__pycache__" && !build_env {
+                scan_bytecode(&entry.path(), &path, depth + 1, seen)?;
+            }
+        } else {
+            let lower = name.to_ascii_lowercase();
+            if lower.ends_with(".pyc") || lower.ends_with(".pyo") {
+                return err(
+                    "uncovered-source",
+                    format!("{path} is sourceless bytecode outside __pycache__: Python runs it in place of source, so none is accepted (VER04i 8.1)"),
+                );
+            }
+        }
+    }
+    Ok(())
 }
 
 // ---------------------------------------------------------------------------
@@ -777,7 +1465,7 @@ pub struct LaneReadiness {
     /// Always `false` today: the sandbox rung (VER04i 12) is not armed in any
     /// lane, and no lane is release-ready without it.
     pub release_ready: bool,
-    /// Always `"not-armed"` until VER08b lands.
+    /// Always `"absent"` (no sandbox is armed) until VER08b lands.
     pub sandbox: &'static str,
 }
 
@@ -805,7 +1493,7 @@ impl LoadedLane {
              static checks passed: {checks}\n\
              cases_by_label: {labels}\n\
              release_ready: {ready}\n\
-             sandbox: {sandbox}\n\
+             sandbox: {sandbox} (not armed: no lane runs under a runtime jail yet)\n\
              This loader makes no claim about the authenticity of the source, the build or the \
              toolchain beyond the checks named above.\n\
              not checked: {unclaimed}\n",
@@ -839,6 +1527,22 @@ fn read_registry(
     let bytes = read_repo_file(repo_root, &path, MAX_MANIFEST_BYTES)?;
     let registry = lift("registry", parse_consumer_registry(&bytes))?;
     Ok((bytes, registry))
+}
+
+/// The consumer registry, or `None` when the registry file does not exist at
+/// all (an unknown lane universe, not an empty one).  A registry that exists
+/// but is a link, too large or malformed is an error, never `None`: a hostile
+/// checkout must not be able to hide its lanes by breaking the file.
+pub fn load_registry(
+    repo_root: &Path,
+) -> Result<Option<crate::lane_evidence::LaneConsumerRegistry>, LaneLoadError> {
+    let path = sibling(CORPUS_FILE, "consumers.json");
+    match fs::symlink_metadata(repo_root.join(&path)) {
+        Err(e) if e.kind() == std::io::ErrorKind::NotFound => Ok(None),
+        // Any other answer, including an error, goes through the safe reader,
+        // which names the problem.
+        _ => read_registry(repo_root).map(|(_, registry)| Some(registry)),
+    }
 }
 
 /// Load one registered lane: open its artifacts safely, run the raw digest
@@ -931,6 +1635,55 @@ pub fn load_lane(repo_root: &Path, package: &str) -> Result<LoadedLane, LaneLoad
         let bytes = read_repo_file(repo_root, build_file, MAX_BUILD_FILE_BYTES)?;
         check_build_routing(build_file, &bytes)?;
     }
+    // The workspace and bytecode refusals come first: they are about files the
+    // digest walks would otherwise report under a vaguer class.
+    if consumer.lane == "go" {
+        if let Some(runner_dir) = runner_root("go") {
+            check_go_workspace(repo_root, &consumer.package_root, runner_dir)?;
+        }
+    }
+    // Source freshness (VER04i 9 check 23): both digests recomputed from the tree.
+    let source = binding_source(&binding)?;
+    let source_root = if source == "." {
+        consumer.package_root.clone()
+    } else {
+        format!("{}/{source}", consumer.package_root)
+    };
+    let source_digest = source_tree_digest(
+        repo_root,
+        &source_root,
+        &consumer.lane,
+        SourceKind::Production,
+        manifest.pycache_isolated,
+    )?;
+    if source_digest != manifest.source_sha256 {
+        return err(
+            "stale-source",
+            format!("source_sha256 does not match the recomputed digest of {source_root}"),
+        );
+    }
+    let Some(runner_dir) = runner_root(&consumer.lane) else {
+        return source_fail(format!("no source rule for lane {}", consumer.lane));
+    };
+    if consumer.lane == "go" {
+        check_go_modules(repo_root, &consumer.package_root, runner_dir)?;
+    }
+    if consumer.lane == "python" {
+        check_python_bytecode(repo_root, &consumer.package_root)?;
+    }
+    let runner_digest = source_tree_digest(
+        repo_root,
+        runner_dir,
+        &consumer.lane,
+        SourceKind::Runner,
+        manifest.pycache_isolated,
+    )?;
+    if runner_digest != manifest.runner_src_sha256 {
+        return err(
+            "stale-runner",
+            format!("runner.src_sha256 does not match the recomputed digest of {runner_dir}"),
+        );
+    }
 
     Ok(LoadedLane {
         consumer,
@@ -939,7 +1692,7 @@ pub fn load_lane(repo_root: &Path, package: &str) -> Result<LoadedLane, LaneLoad
         readiness: LaneReadiness {
             passed: READINESS_CHECKS.to_vec(),
             release_ready: false,
-            sandbox: "not-armed",
+            sandbox: "absent",
         },
     })
 }

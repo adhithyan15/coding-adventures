@@ -54,13 +54,13 @@ are size-capped while reading (catalogue 1 MiB, evidence kinds 256 KiB,
 non-claims 64 KiB). Every rule has a falsification test in
 `tests/test_assumptions.rs`.
 
-## Lane artifact loader (WD-004b1)
+## Lane artifact loader (WD-004b1) and lane rungs (WD-004b2)
 
 `lane_loader` is the safe loader for the per-lane evidence of VER04i section 8.2
 (`warrant-lane-evidence-v1` manifests, the consumer registry and the
-`domain-labels.json` sidecar). It is a library: the report and the CLI do not
-call it yet (WD-004b2), and the legacy Rust loader that `--check` and
-`--generate` use is unchanged.
+`domain-labels.json` sidecar). `lane_report` puts its result in the package
+report and the CLI (VER04i section 8.3). The legacy Rust loader that `--check`
+and `--generate` use for the Rust manifests is unchanged.
 
 ```rust
 use coding_adventures_ca_assurance_report::lane_loader::load_lane;
@@ -74,15 +74,36 @@ as a bounded regular file inside the repository (symbolic links refused); the
 spec, corpus, TFV and binding file match the manifest's recorded SHA-256;
 the manifest joins the corpus (ids, counts, stream digests, controls); the labels
 sidecar is internally consistent and binds this manifest (the digest ignores
-`toolchain.version`, keeps `toolchain.name`); the runner is `warrant-corpus`; and
-each BUILD file mentions the manifest and the sabotage step.
+`toolchain.version`, keeps `toolchain.name`); the runner is `warrant-corpus`;
+each BUILD file mentions the manifest and the sabotage step; and `source_sha256`
+and `runner.src_sha256` equal the digests recomputed from the source tree and the
+runner tree (per-lane rules, a link-refusing walk).
 
-What it does **not** establish, and prints every time: source freshness
-(`source_sha256` is format-checked, not recomputed), the runner source digest,
-toolchain authenticity, that any build ran, and the sandbox. `release_ready` is
-always `false` (sandbox `not-armed`). No claim about the source, the build or the
-toolchain is made beyond the named checks. Failures carry a code (`path`,
-`symlink`, `too-large`, `digest`, `join`, `labels`, `build-routing`, ...).
+What it does **not** establish, and prints every time: toolchain authenticity,
+that any build ran, and the sandbox. `release_ready` is always `false` (sandbox
+`absent`: no lane arms a runtime jail yet). Failures carry a code (`path`,
+`symlink`, `too-large`, `digest`, `join`, `labels`, `build-routing`,
+`source-tree`, `stale-source`, `stale-runner`, ...).
+
+### In the report
+
+A Rust package's `assurance_report.json` has a required `lanes` array: one rung
+per lane the consumer registry lists (`go`, `python`, `typescript`), `live` only
+when the loader passed every named check, `planned`, or `absent` (no registry row
+for `<lane>/<name>`, which is every package but `ct-compare` today). Lane rungs
+come from the registry and the loader only; they never read or change the Rust
+proof, effect or verdict evidence. `--check` re-derives them and fails with
+`LaneMismatch`, `LabelOverclaim` or `StaleEvidence`.
+
+### `--check-lane`
+
+```bash
+# Load a lane and print its readiness (exit 1 if an active lane fails to load)
+cargo run -p coding_adventures_ca_assurance_report -- --check-lane python/ct-compare --repo-root ../../../..
+
+# Also exit 1 when the lane is absent or only planned: what the lanes' BUILD files use
+cargo run -p coding_adventures_ca_assurance_report -- --check-lane python/ct-compare --repo-root ../../../.. --require-active
+```
 
 ## Usage
 

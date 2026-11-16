@@ -408,6 +408,38 @@
       "rationale": "computed exemption (unapproved): no step-bound proof is live, so the Warrant steps bounds are declarations that no tool checks (parse refused at src/lib.rs:85:42: Unexpected byte: ''' (line: `fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {`); per export, decode_signed: alone: parse refused (Expected LBrace, found Lt); decode_signed_bounded: alone: parse refused (Unexpected byte: '?'); decode_unsigned: alone: parse refused (Expected LBrace, found Lt); decode_unsigned_bounded: alone: parse refused (Unexpected byte: '?'); encode_signed: alone: parse refused (Expected ';' after expression, found LBrace); encode_unsigned: alone: parse refused (Expected ';' after expression, found LBrace))"
     }
   ],
+  "lanes": [
+    {
+      "cases_by_label": {},
+      "checks": [],
+      "lane": "go",
+      "package": "go/wasm-leb128",
+      "release_ready": false,
+      "rung": "absent",
+      "sandbox": "absent",
+      "unclaimed": []
+    },
+    {
+      "cases_by_label": {},
+      "checks": [],
+      "lane": "python",
+      "package": "python/wasm-leb128",
+      "release_ready": false,
+      "rung": "absent",
+      "sandbox": "absent",
+      "unclaimed": []
+    },
+    {
+      "cases_by_label": {},
+      "checks": [],
+      "lane": "typescript",
+      "package": "typescript/wasm-leb128",
+      "release_ready": false,
+      "rung": "absent",
+      "sandbox": "absent",
+      "unclaimed": []
+    }
+  ],
   "package": "rust/wasm-leb128",
   "profile": "varint-codec",
   "profile_sha256": "dd06097e1ba879ef8797587ecbe37192be7391eadc8a3b84202c58e1eefc01ef",
