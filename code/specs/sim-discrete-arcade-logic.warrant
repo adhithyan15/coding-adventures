@@ -14,9 +14,9 @@ warrant sim_discrete_arcade_logic v1
   model valid_channel_quad(ch: Nat) -> Bool = ch < 4
   model valid_channel_dual(ch: Nat) -> Bool = ch < 2
 
-  model bcd_advance_model(val: Nat) -> Nat = if val >= 9 then 0 else val + 1
-  model binary_advance_model(val: Nat) -> Nat = if val >= 15 then 0 else val + 1
-  model dot_advance_model(dot: Nat) -> Nat = if dot >= 454 then 0 else dot + 1
+  model bcd_advance_model(val: Nat) -> Int = if val >= 9 then 0 else val + 1
+  model binary_advance_model(val: Nat) -> Int = if val >= 15 then 0 else val + 1
+  model dot_advance_model(dot: Nat) -> Int = if dot >= 454 then 0 else dot + 1
 
   op nand_eval_op(channel: Nat, a: Nat, b: Nat) -> Result<Nat, LogicError>
   op nor_eval_op(channel: Nat, a: Nat, b: Nat) -> Result<Nat, LogicError>

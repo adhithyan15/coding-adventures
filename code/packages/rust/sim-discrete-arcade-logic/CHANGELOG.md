@@ -5,6 +5,11 @@ All notable changes to the `sim-discrete-arcade-logic` crate will be documented 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Fixed
+- `code/specs/sim-discrete-arcade-logic.warrant` was ill-typed Warrant (Nat declared, Int produced by `val + 1`); the three advance models now return Int. Document only.
+
 ## 0.1.0 — 2026-11-15
 
 ### Added
