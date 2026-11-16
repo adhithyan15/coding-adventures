@@ -1005,6 +1005,7 @@ polyglot check needs:
   "toolchain": { "name": "python", "version": "3.12.4" },
   "evidence_seed": "<u64>",
   "faulted": false,
+  "pycache_isolated": true,   // Python lane only (section 8.1)
   "tests": [
     { "id": "warrant/ct_compare/example/eq_empty", "layer": "portable",
       "kind": "example", "op": "eq", "cases": 1, "verdict": "pass" },
@@ -1268,15 +1269,32 @@ directly in the root only, `go.mod`, `BUILD`, `BUILD_windows`,
 `evidence` and `CHANGELOG.d`. Three further rules close ways a directory can
 replace what the digest covers:
 
-* **Bytecode is refused, not inspected.** Python runs a cached `.pyc` instead of
-  its source. A hash-based pyc (PEP 552 flags nonzero) is never revalidated, and
-  a timestamp pyc can be forged to carry the source's mtime and size, so no
-  header check is sound. A `__pycache__` directory in the source or runner root
-  must be empty: any entry is `uncovered-source`. The Python lane's `BUILD` and
-  `BUILD_windows` therefore remove the `__pycache__` directories of the package's
-  `src` and of the runner before the loader check. (Consequence: a checkout in
-  which any Python ran against these two trees will not load until its caches
-  are removed.)
+* **Bytecode: the Python lane runs under a private cache, and says so.**
+  Python runs a cached `__pycache__/*.pyc` instead of its source. A hash-based
+  pyc (PEP 552 flags nonzero) is never revalidated and a timestamp pyc can be
+  forged to carry the source's mtime and size, so no inspection of a pyc is
+  sound, and refusing every pyc would make the result depend on whether any
+  Python ran in the checkout before the check. What is sound is never consulting
+  the tree's caches: with `sys.pycache_prefix` set, CPython reads and writes
+  bytecode only under that directory. So (1) the Python lane's entry script
+  (`tests/warrant_evidence.py`, `isolate_bytecode_cache`) creates a fresh private
+  directory (`mkdtemp`: under the temporary directory, owned by the user, mode
+  0700, empty), re-runs itself with `PYTHONPYCACHEPREFIX` and
+  `WARRANT_PYCACHE_PRIVATE` naming it, and removes it afterwards, all before
+  anything from the checkout is imported; sabotage children inherit it. (2) The
+  runner's `run`, `check` and `sabotage` refuse to start with the named error
+  `pycache-isolation` unless `sys.pycache_prefix` is set to exactly that
+  directory, a plain directory under the temporary directory, owned by the user
+  and not group or world accessible. (3) The manifest records
+  `"pycache_isolated": true`. It is a Python-lane field: required, and only
+  `true`, in a Python manifest, and refused in any other lane's (`manifest`).
+  (4) Only a manifest that records it lets the loader ignore `__pycache__` in the
+  source and runner roots; any other lane's `__pycache__` is walked like every
+  directory (an empty one is fine, a file in it is uncovered). Freshness of the
+  directory is by construction (only the child ever receives its name), not by
+  inspecting its contents at the child's start, which the interpreter has
+  already written to. The order of earlier jobs in the same checkout therefore
+  cannot change the verdict.
 * **`vendor`, `node_modules` and `dist` are refused, not skipped.** A Go
   `vendor/` or a TypeScript `node_modules/` or `dist/` directory anywhere in the
   source or runner root is `uncovered-source`; none exists today.
@@ -1963,8 +1981,10 @@ dependency graph.
   list is ten checks (`source-fresh`, `runner-source-fresh` added) and the
   unclaimed list is five (source freshness and the runner source digest are
   removed; two Go residuals added). The walk refuses uncovered files, any
-  `__pycache__` content, `vendor`, `node_modules` and `dist`, and pins the Go
-  `go.mod` files exactly. New load codes `source-tree`, `uncovered-source`,
+  `vendor`, `node_modules` and `dist`, and pins the Go `go.mod` files exactly.
+  The Python lane runs under a private bytecode cache (`sys.pycache_prefix`) and
+  its manifest records `pycache_isolated: true`, the only lane-specific manifest
+  field; only then is `__pycache__` ignored. New load codes `source-tree`, `uncovered-source`,
   `go-mod`, `stale-source`, `stale-runner`.
   (2) Section 8.3 is new: the report's required `lanes` array (a rung per
   registry lane: `live`, `planned`, `absent`; `release_ready` false and `sandbox`

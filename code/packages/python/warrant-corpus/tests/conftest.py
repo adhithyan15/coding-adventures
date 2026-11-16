@@ -3,11 +3,33 @@
 from __future__ import annotations
 
 import json
+import os
+import shutil
+import sys
+import tempfile
 
 import pytest
 from helpers import CORPUS_DIR, REPO_ROOT, new_library
 
 from coding_adventures_warrant_corpus import RunConfig, execute, load_corpus, prepare
+from coding_adventures_warrant_corpus.isolation import ENV_PRIVATE
+
+
+@pytest.fixture(scope="session", autouse=True)
+def private_pycache():
+    """Run the whole suite the way the entry script runs the runner (VER04i 8.1).
+
+    A manifest can only be built under a private bytecode cache, so every test
+    that builds one needs ``sys.pycache_prefix`` set to a fresh directory this
+    process owns.  The tests that exercise a missing or wrong cache override it.
+    """
+    directory = tempfile.mkdtemp(prefix="warrant-pycache-")
+    with pytest.MonkeyPatch.context() as monkeypatch:
+        monkeypatch.setattr(sys, "pycache_prefix", directory)
+        monkeypatch.setenv(ENV_PRIVATE, directory)
+        yield directory
+    shutil.rmtree(directory, ignore_errors=True)
+    assert not os.path.exists(directory)
 
 
 @pytest.fixture(scope="session")

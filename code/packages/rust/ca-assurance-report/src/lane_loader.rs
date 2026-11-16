@@ -821,10 +821,19 @@ pub fn source_tree_digest(
     rel_root: &str,
     lane: &str,
     kind: SourceKind,
+    pycache_isolated: bool,
 ) -> Result<String, LaneLoadError> {
-    let Some(rule) = source_rule(lane, kind) else {
+    let Some(mut rule) = source_rule(lane, kind) else {
         return source_fail(format!("no source rule for lane {lane}"));
     };
+    // A manifest that records a private bytecode cache (the Python runner ran
+    // with `sys.pycache_prefix` set, so no `__pycache__` in the tree was ever
+    // executed) makes a `__pycache__` directory irrelevant: it is skipped like
+    // any derived directory.  Without that record it must be empty.
+    if pycache_isolated && rule.pycache {
+        rule.pycache = false;
+        rule.skip_dir = |name| name == "__pycache__";
+    }
     let (root, root_text) = contained_path(repo_root, rel_root, Kind::Dir)?;
     let mut walk = Walk {
         rule,
@@ -1471,6 +1480,7 @@ pub fn load_lane(repo_root: &Path, package: &str) -> Result<LoadedLane, LaneLoad
         &source_root,
         &consumer.lane,
         SourceKind::Production,
+        manifest.pycache_isolated,
     )?;
     if source_digest != manifest.source_sha256 {
         return err(
@@ -1484,8 +1494,13 @@ pub fn load_lane(repo_root: &Path, package: &str) -> Result<LoadedLane, LaneLoad
     if consumer.lane == "go" {
         check_go_modules(repo_root, &consumer.package_root, runner_dir)?;
     }
-    let runner_digest =
-        source_tree_digest(repo_root, runner_dir, &consumer.lane, SourceKind::Runner)?;
+    let runner_digest = source_tree_digest(
+        repo_root,
+        runner_dir,
+        &consumer.lane,
+        SourceKind::Runner,
+        manifest.pycache_isolated,
+    )?;
     if runner_digest != manifest.runner_src_sha256 {
         return err(
             "stale-runner",

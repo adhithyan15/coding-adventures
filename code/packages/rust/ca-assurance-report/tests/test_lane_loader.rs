@@ -1064,6 +1064,7 @@ fn the_checked_in_digests_are_reproduced_from_the_tree() {
             &lane_source_rel(package),
             lane,
             SourceKind::Production,
+            loaded.manifest.pycache_isolated,
         )
         .unwrap();
         assert_eq!(source, loaded.manifest.source_sha256, "{package} source");
@@ -1072,6 +1073,7 @@ fn the_checked_in_digests_are_reproduced_from_the_tree() {
             runner_root(lane).unwrap(),
             lane,
             SourceKind::Runner,
+            loaded.manifest.pycache_isolated,
         )
         .unwrap();
         assert_eq!(
@@ -1191,17 +1193,6 @@ fn a_file_in_the_source_root_that_no_rule_digests_fails_source_fresh() {
             format!("{python}/sub/notes.txt"),
             "notes.txt",
         ),
-        // Bytecode is refused outright: Python runs a pyc instead of its source.
-        (
-            "python/ct-compare",
-            format!("{python}/__pycache__/evil.cpython-312.pyc"),
-            "evil.cpython-312.pyc",
-        ),
-        (
-            "python/ct-compare",
-            format!("{python}/__pycache__/notes.txt"),
-            "notes.txt",
-        ),
         (
             "python/ct-compare",
             format!("{runner_py}/blob.so"),
@@ -1263,31 +1254,99 @@ fn pyc(flags: u32) -> Vec<u8> {
 }
 
 #[test]
-fn a_forged_pyc_beside_its_source_is_refused_whatever_its_header() {
-    // An unchecked-hash pyc (flags 1) runs INSTEAD of the real source; a
-    // timestamp pyc can be forged to match the source's mtime and size. No header
-    // inspection is sound, so every bytecode file is refused and the lane BUILD
-    // removes the caches before the check.
+fn a_python_manifest_records_the_isolated_cache_and_the_others_do_not() {
+    for package in PACKAGES {
+        let loaded = load_lane(&real_root(), package).unwrap();
+        assert_eq!(
+            loaded.manifest.pycache_isolated,
+            package.starts_with("python/"),
+            "{package}"
+        );
+    }
+}
+
+#[test]
+fn a_cache_already_in_the_tree_does_not_change_the_verdict() {
+    // Order independence: the Python lane runs under a private bytecode cache
+    // (sys.pycache_prefix), so whatever __pycache__ the checkout holds, including
+    // a forged unchecked-hash pyc (PEP 552 flags 1), was never consulted and is
+    // not part of the evidence.  The loader ignores it for a manifest that says
+    // `pycache_isolated`.
     let python = lane_source_rel("python/ct-compare");
     let runner = runner_root("python").unwrap();
-    for (root, flags) in [
-        (python.as_str(), 0),
-        (python.as_str(), 1),
-        (python.as_str(), 3),
-        (runner, 1),
+    let baseline = load_lane(&real_root(), "python/ct-compare").unwrap();
+    for (root, flags, module) in [
+        (python.as_str(), 0, "__init__"),
+        (python.as_str(), 1, "__init__"),
+        (python.as_str(), 3, "__init__"),
+        (runner, 1, "cli"),
+        (python.as_str(), 1, "no_such_module"),
     ] {
         let repo = Repo::new();
         let cache = repo.root.join(root).join("__pycache__");
         fs::create_dir_all(&cache).unwrap();
-        // The source exists beside it, as a real cache would have.
-        let module = if root == runner { "cli" } else { "__init__" };
-        assert!(repo.root.join(root).join(format!("{module}.py")).is_file());
         fs::write(cache.join(format!("{module}.cpython-312.pyc")), pyc(flags)).unwrap();
-        expect_code(repo.load("python/ct-compare"), "uncovered-source", ".pyc");
+        fs::write(cache.join("notes.txt"), b"anything").unwrap();
+        let loaded = repo.load("python/ct-compare");
+        assert!(loaded.is_ok(), "flags {flags} in {root}: {loaded:?}");
     }
-    // Removing the cache restores the load: the check is about bytecode, not the directory.
+    assert_eq!(baseline.readiness.passed, READINESS_CHECKS.to_vec());
+    // Only the Python lane gets this: a TypeScript or Go tree still refuses
+    // content in a __pycache__ it never expected (uncovered file).
+    let ts = lane_source_rel("typescript/ct-compare");
     let repo = Repo::new();
-    repo.load("python/ct-compare").unwrap();
+    let cache = repo.root.join(&ts).join("__pycache__");
+    fs::create_dir_all(&cache).unwrap();
+    fs::write(cache.join("x.pyc"), pyc(1)).unwrap();
+    expect_code(
+        repo.load("typescript/ct-compare"),
+        "uncovered-source",
+        "x.pyc",
+    );
+}
+
+#[test]
+fn without_the_isolation_record_the_python_lane_fails_closed() {
+    let rel = manifest_rel("python/ct-compare");
+    let repo = Repo::new();
+    repo.edit_text(&rel, "  \"pycache_isolated\": true,\n", "");
+    expect_code(
+        repo.load("python/ct-compare"),
+        "manifest",
+        "pycache_isolated",
+    );
+    // A false, a non-boolean and a record on another lane are refused too.
+    let repo = Repo::new();
+    repo.edit_text(
+        &rel,
+        "\"pycache_isolated\": true",
+        "\"pycache_isolated\": false",
+    );
+    expect_code(
+        repo.load("python/ct-compare"),
+        "manifest",
+        "pycache_isolated",
+    );
+    let repo = Repo::new();
+    repo.edit_text(
+        &rel,
+        "\"pycache_isolated\": true",
+        "\"pycache_isolated\": \"yes\"",
+    );
+    expect_code(
+        repo.load("python/ct-compare"),
+        "manifest",
+        "pycache_isolated",
+    );
+    for package in ["typescript/ct-compare", "go/ct-compare"] {
+        let repo = Repo::new();
+        repo.edit_text(
+            &manifest_rel(package),
+            "  \"faulted\": false,\n",
+            "  \"faulted\": false,\n  \"pycache_isolated\": true,\n",
+        );
+        expect_code(repo.load(package), "manifest", "pycache_isolated");
+    }
 }
 
 #[test]
@@ -1409,6 +1468,7 @@ fn a_lane_without_a_source_rule_cannot_be_digested() {
             "code/packages/python/ct-compare",
             "ruby",
             SourceKind::Production,
+            false,
         ),
         "source-tree",
         "ruby",
