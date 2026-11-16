@@ -4,6 +4,11 @@ All notable changes to this package are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Changed (VOS-011 PR)
+
+- Doc comments only: the contract package's non-embedded `warrant/lemmas.part` (VOS02 R1.4) is
+  admitted by the same `admit_part`.
+
 ### Changed (security review round 1)
 
 - The cone of `build` is a **taint walk**: a mention of the abstract state does not count as an operand of `and`/`bit_and`/`*` with a literal false or zero, in `x - x` or `bit_xor(x, x)`, or as an argument to a model that ignores it (`Taint`, `build_shape`).

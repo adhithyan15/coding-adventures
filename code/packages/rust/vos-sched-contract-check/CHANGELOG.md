@@ -4,6 +4,12 @@ All notable changes to this package are documented here.
 
 ## [Unreleased]
 
+### Changed (VOS-011 PR, VOS-D064)
+
+- The lemmas are evaluated from the contract's new `warrant/lemmas.part` (joined after the
+  contract block); the contract block alone must hold no claim.  `parts_follow_the_marker_discipline`
+  admits `lemmas.part` and checks that it holds exactly the nine lemmas.  The lemma mutants are kept.
+
 ### Changed (VOS-033, backlog VOS-D049)
 
 - `parts_follow_the_marker_discipline` now applies `vos_manifest::part::admit_part` (the rules

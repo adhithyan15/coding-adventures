@@ -1,7 +1,8 @@
 //! # Admitting a `.part` file
 //!
 //! The text of a generated document comes from files a contributor writes: the contract
-//! package's `warrant/contract.part` and `warrant/obligations-<tier>.part`, and an
+//! package's `warrant/contract.part`, `warrant/obligations-<tier>.part` and the optional,
+//! never-embedded `warrant/lemmas.part`, and an
 //! implementation's `warrant/impl.part`.  Before one is copied into a document it is
 //! **admitted**, and only an admitted [`Part`] can be assembled (the type is the proof).
 //!

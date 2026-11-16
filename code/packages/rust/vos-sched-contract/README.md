@@ -39,7 +39,8 @@ most-general scheduler) is the safety tier's witness.
 | Path | What |
 |---|---|
 | `src/lib.rs` | `trait Sched`, `Upd`, `Pick`: declarations only, `no_std`, no dependency |
-| `warrant/contract.part` | the contract block: M, abstract operations, `inv`, tier relations, `pre_` models, lemmas |
+| `warrant/contract.part` | the contract block (models only): M, abstract operations, `inv`, tier relations, `pre_` models |
+| `warrant/lemmas.part` | the nine model-level lemmas: **not embedded** in any document, evaluated by `vos-sched-contract-check` (VOS02 R1.4) |
 | `warrant/obligations-{safety,policy,canonical,any}.part` | the claims an implementation of that tier must carry, character for character |
 | `contract.vos` | ceilings (steps, heap, depth per operation) and the instance, `N 8` |
 | `vos.toml` | class K, kind `contract` (read by `vos-shape-check`) |
