@@ -266,7 +266,26 @@ On Windows, use the compiled `.exe`:
 | `-emit-kiln-graph` | (none) | Write the `kiln-legacy-graph/1` export (KILN03 section 2) to this path and exit: every package, all three OSes, implies `-force` and `-language all`. Go-only; the other ports do not implement it |
 | `-emit-kiln-steps` | (none) | Only with `-emit-kiln-graph`: also write the `kiln-legacy-steps/1` export (per package, the lines `executor.EffectiveStepLines` returns for this OS) from the same discovery pass; KILN04 section 4.8 |
 | `-exec-wrapper` | (none) | JSON array of strings: a prefix for every BUILD step, run as `wrapper... sh -c <line>`. The wrapper (not the BUILD) gets `KILN_ACTION`, `KILN_STEP`, `KILN_STEP_COUNT`. Incompatible with `-clippy` and `-prune-leaf-targets` |
+| `-command-timeout` | `90m` | Kill any single BUILD command that runs longer than this (Go duration such as `45m`; `0` disables; negative is an error). See [Command timeout](#command-timeout) |
 | `-emit-results` | (none) | After the run, write the `kiln-legacy-results/1` record (status and step counts per package) to this path |
+
+### Command timeout
+
+Every BUILD command runs under a timer (`-command-timeout`, default 90 minutes,
+`0` to disable). A command that outlives it has its whole process tree killed
+(a process group on Unix, `taskkill /T /F` on Windows), the wait for its output
+pipes is bounded so a leftover grandchild cannot hold the build, and the package
+FAILS with return code 124. The package's output ends with a line like:
+
+```
+rust/lzw: command 2 of 3 `cargo test` timed out after 1h30m0s (limit 1h30m0s); killed its process tree
+```
+
+All output buffered before the hang is printed as for any failure. The clock is
+per command (it restarts for each BUILD line), and there are no per-package
+overrides. The default exists because a single hung Windows command once idled a
+CI job for 4h47m, with no log of which command it was. See
+`code/specs/12-build-system.md`, "Per-Command Timeout".
 
 ### Kiln legacy graph export
 
