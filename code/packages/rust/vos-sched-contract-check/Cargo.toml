@@ -2,7 +2,7 @@
 name = "vos-sched-contract-check"
 version = "0.1.0"
 edition = "2021"
-description = "Parses, type-checks and evaluates the Warrant text of vos-sched-contract (VOS-010) with the repository's Warrant tooling, until vos-link gen-doc (VOS-033) exists"
+description = "Parses, type-checks and evaluates the Warrant text of vos-sched-contract (VOS-010) with the repository's Warrant tooling; the document checks themselves are vos-link's (VOS-033)"
 
 [lib]
 name = "vos_sched_contract_check"
@@ -18,6 +18,8 @@ vos-sched-contract = { path = "../vos-sched-contract" }
 # harness dev-dependencies, so the contract crate itself carries no Warrant
 # tooling.
 coding_adventures_warrant_grammar = { path = "../warrant-grammar" }
+# The tool's part admission and claim reader, applied to the real parts.
+vos-manifest = { path = "../vos-manifest" }
 
 [[test]]
 name = "warrant_contract"

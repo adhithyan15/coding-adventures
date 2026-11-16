@@ -15550,6 +15550,7 @@ name = "vos-sched-contract-check"
 version = "0.1.0"
 dependencies = [
  "coding_adventures_warrant_grammar",
+ "vos-manifest",
  "vos-sched-contract",
 ]
 
