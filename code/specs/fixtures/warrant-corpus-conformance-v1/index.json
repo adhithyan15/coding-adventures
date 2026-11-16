@@ -1,0 +1,30 @@
+{
+  "files": [
+    {
+      "cases": 231,
+      "category": "json",
+      "path": "json.json",
+      "sha256": "eeed61d544e84cc2667da96175ef328ff2fb4f451abab77bf6730306200cd878"
+    },
+    {
+      "cases": 76,
+      "category": "tagged",
+      "path": "tagged.json",
+      "sha256": "938f68423461969bfa88a6cf838e6d070143d98647809a9bb30e031315091eb2"
+    },
+    {
+      "cases": 77,
+      "category": "containment",
+      "path": "containment.json",
+      "sha256": "c2af375c4e6115dc5875a07a159c94631f1737cb34d2f902e2e146d40a659ab2"
+    },
+    {
+      "cases": 13,
+      "category": "label-digest",
+      "path": "label-digest.json",
+      "sha256": "eaffd7adb2162eaa6cf5abc7e462671b2a0bda12762266d427e90791eca8a9a5"
+    }
+  ],
+  "schema": "warrant-corpus-conformance-v1",
+  "total_cases": 397
+}

@@ -24,6 +24,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from .binding import Binding, Subject, parse_binding, resolve_exports
+from .containment import relative_inside
 from .corpus import Corpus, load_corpus
 from .errors import BindingError, UsageError
 from .faults import FAULTS
@@ -116,19 +117,17 @@ def check_filter_rules(fault_text: str | None, filter_text: str | None) -> None:
 def corpus_relative(repo_root: Path, corpus_dir: Path) -> str:
     """The corpus directory as a repository-relative POSIX path, or a refusal.
 
-    ``Path.relative_to`` is the safe containment test here: unlike
-    ``os.path.relpath`` (which raises across Windows drives) or the JavaScript
-    ``path.relative`` (which returns an *absolute* path across drives), it
-    raises ``ValueError`` for anything not beneath the root -- a parent, a
-    sibling, or another drive. That error must become a clean refusal (exit 2),
-    not an uncaught traceback.
+    The check is :func:`containment.relative_inside`, which compares parsed
+    paths (drive, then whole components): another drive, a sibling or a parent
+    is simply "not inside", never an absolute-looking relative string.  That
+    must become a clean refusal (exit 2), not an uncaught traceback.
     """
-    try:
-        return corpus_dir.resolve().relative_to(repo_root.resolve()).as_posix()
-    except ValueError:
+    relative = relative_inside(repo_root.resolve(), corpus_dir.resolve())
+    if relative is None:
         raise BindingError(
             "corpus-path", "the corpus must lie inside the repository root"
-        ) from None
+        )
+    return relative or "."
 
 
 def prepare(config: RunConfig) -> Prepared:

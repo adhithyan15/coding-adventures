@@ -29,7 +29,7 @@ import { listControlRows, loadCorpus, type Corpus } from "./corpus.ts";
 import { relativeInside } from "./containment.ts";
 import { LaneError, UsageError } from "./errors.ts";
 import { isObject, MAX_TEXT_BYTES, parseJson, readBytes, renderJson, sha256Hex, decodeUtf8 } from "./jsonio.ts";
-import { deriveLabels } from "./labels.ts";
+import { deriveLabels, manifestLabelDigest } from "./labels.ts";
 import { sourceDigest, validateManifest } from "./manifest.ts";
 import {
   checkFilterRules,
@@ -128,13 +128,11 @@ function runConfig(args: Args, fault: string | null, faultOp: string | null, fil
  * `check` does, so a different Node patch release is not label drift.
  */
 export function labelsFor(corpus: Corpus, manifest: Record<string, unknown>): Record<string, unknown> {
-  const toolchain = manifest["toolchain"] as Record<string, unknown>;
-  const stable = { ...manifest, toolchain: { name: toolchain["name"], version: "" } };
   return deriveLabels(
     corpus,
     String(manifest["package"]),
     String(manifest["module"]),
-    sha256Hex(new TextEncoder().encode(renderJson(stable))),
+    manifestLabelDigest(manifest),
   );
 }
 

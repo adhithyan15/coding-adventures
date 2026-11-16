@@ -42,4 +42,17 @@ describe("relativeInside", () => {
   it("defaults to the host path module", () => {
     expect(relativeInside("/", "/")).toBe("");
   });
+
+  it("treats a device-namespace path as never inside, on either side (WD-100)", () => {
+    expect(relativeInside("D:\\repo", "\\\\?\\D:\\repo\\x", win32)).toBeNull();
+    expect(relativeInside("\\\\.\\D:\\repo", "D:\\repo\\x", win32)).toBeNull();
+    expect(relativeInside("/r", "/r/\\\\?\\x", posix)).toBe("\\\\?\\x");
+  });
+
+  it("refuses exactly two leading slashes on posix and collapses three (review of WD-100)", () => {
+    expect(relativeInside("/", "//x", posix)).toBeNull();
+    expect(relativeInside("//", "/r", posix)).toBeNull();
+    expect(relativeInside("/", "///x", posix)).toBe("x");
+    expect(relativeInside("/r", "/r//x", posix)).toBe("x");
+  });
 });
