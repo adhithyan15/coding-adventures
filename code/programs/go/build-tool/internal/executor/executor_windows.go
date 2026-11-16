@@ -4,6 +4,7 @@ package executor
 
 import (
 	"os/exec"
+	"strconv"
 	"syscall"
 )
 
@@ -24,4 +25,26 @@ import (
 // the command's shape.
 func setRawWindowsCmdLine(cmd *exec.Cmd, command string) {
 	cmd.SysProcAttr = &syscall.SysProcAttr{CmdLine: "/C " + command}
+}
+
+// prepareProcessTree is a no-op on Windows: there is no process group to join
+// before the start, and the tree is found at kill time by taskkill instead.
+func prepareProcessTree(cmd *exec.Cmd) {}
+
+// killProcessTree is the Cancel hook for a timed-out command.
+//
+// `taskkill /T /F /PID <pid>` kills the cmd.exe shell AND every process it
+// started (/T walks the tree, /F forces it). Plain Process.Kill would end only
+// cmd.exe and orphan the build it launched, which is exactly the hang this
+// exists to stop. If taskkill itself cannot run, fall back to killing the
+// shell so the command at least does not outlive the timeout by much.
+func killProcessTree(cmd *exec.Cmd) error {
+	if cmd.Process == nil {
+		return nil
+	}
+	kill := exec.Command("taskkill", "/T", "/F", "/PID", strconv.Itoa(cmd.Process.Pid))
+	if err := kill.Run(); err != nil {
+		return cmd.Process.Kill()
+	}
+	return nil
 }

@@ -1129,7 +1129,14 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 	emitKilnSteps := flag.String("emit-kiln-steps", "", "With -emit-kiln-graph only: also write the kiln-legacy-steps/1 export (the lines executor.EffectiveStepLines returns for this OS, per package) to this path, from the same discovery pass")
 	emitResults := flag.String("emit-results", "", "After the run, write the kiln-legacy-results/1 record (status and step counts per package) to this path")
 
+	commandTimeout := flag.Duration("command-timeout", executor.DefaultCommandTimeout, "Kill any single BUILD command that runs longer than this (Go duration, e.g. 90m); 0 disables. The package fails and the message names the command")
+
 	flag.Parse()
+
+	if *commandTimeout < 0 {
+		fmt.Fprintf(os.Stderr, "Error: -command-timeout must not be negative (got %s); use 0 to disable.\n", *commandTimeout)
+		return 1
+	}
 
 	// -exec-wrapper and -emit-results (KILN04 section 4.3).
 	var execWrapper []string
@@ -1727,6 +1734,7 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 	executor.PruneLeafCargoTargets = *pruneLeafTargets
 	executor.ExecWrapper = execWrapper
 	executor.ExecWrapperRepoRoot = repoRoot
+	executor.CommandTimeout = *commandTimeout
 	results := executor.ExecuteBuilds(
 		packages,
 		graph,
