@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+	"time"
 )
 
 type captured struct{ out, err bytes.Buffer }
@@ -58,6 +59,23 @@ func TestMainRunWritesManifestAndLabelsAndCheckPasses(t *testing.T) {
 	}
 	if string(mustRead(t, viaEnv)) != string(manifest) && !strings.Contains(string(mustRead(t, viaEnv)), `"schema"`) {
 		t.Fatal("env output")
+	}
+}
+
+// toolchain.version is copied from the committed manifest into the fresh one
+// before the byte comparison, so a non-text version must be refused, not echoed.
+func TestMainCheckRefusesANonTextToolchainVersion(t *testing.T) {
+	f := newFixture(t, fixtureOptions{mini: true})
+	out := filepath.Join(f.pkgDir, "evidence", "test-manifest.json")
+	runMain(t, f, nil, f.args("run", "--out", out)...)
+	good := string(mustRead(t, out))
+	was := `"version": "` + toolchainVersion() + `"`
+	for _, version := range []string{"7", "null", "{}", "[]", "true"} {
+		mustWrite(t, out, []byte(strings.Replace(good, was, `"version": `+version, 1)))
+		status, stdout, _ := runMain(t, f, nil, f.args("check", out)...)
+		if status != 1 || !strings.Contains(stdout, "not ok manifest: the committed manifest is not a lane manifest") {
+			t.Errorf("version %s: %d\n%s", version, status, stdout)
+		}
 	}
 }
 
@@ -283,6 +301,35 @@ func TestMainSabotageRunsOneChildPerControl(t *testing.T) {
 	io.ExeArgs = []string{"-test.run=^$"}
 	if status := Main(f.args("sabotage"), io, refRegistry()); status != 1 || !strings.Contains(e.out.String(), "not ok sabotage") {
 		t.Fatalf("%d\n%s", status, e.out.String())
+	}
+}
+
+// hangEnv makes TestHangingChild sleep: it is the "library that never returns"
+// a sabotage child can turn into.
+const hangEnv = "WARRANT_TEST_HANG"
+
+func TestHangingChild(t *testing.T) {
+	if os.Getenv(hangEnv) != "" {
+		time.Sleep(time.Minute)
+	}
+}
+
+func TestSabotageKillsAChildThatHangs(t *testing.T) {
+	f := newFixture(t, fixtureOptions{mini: true})
+	saved := sabotageTimeout
+	sabotageTimeout = 300 * time.Millisecond
+	defer func() { sabotageTimeout = saved }()
+	var c captured
+	io := c.io(hangEnv + "=1")
+	io.Exe = os.Args[0]
+	io.ExeArgs = []string{"-test.run=^TestHangingChild$"}
+	start := time.Now()
+	status := Main(f.args("sabotage"), io, refRegistry())
+	if status != 1 || !strings.Contains(c.out.String(), "not ok sabotage") || !strings.Contains(c.out.String(), "timed out") {
+		t.Fatalf("%d\n%s", status, c.out.String())
+	}
+	if time.Since(start) > 30*time.Second {
+		t.Fatal("the hanging children were not killed at the deadline")
 	}
 }
 

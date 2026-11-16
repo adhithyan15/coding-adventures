@@ -2,6 +2,7 @@ package warrantcorpus
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"fmt"
 	"io"
@@ -10,6 +11,7 @@ import (
 	"path/filepath"
 	"sort"
 	"strings"
+	"time"
 )
 
 // # The warrant-corpus command line (VER04i sections 5.3 and 6.2)
@@ -270,6 +272,12 @@ func reparse(text string, fresh map[string]any) (old, current map[string]any, ok
 		if !isObject || !hasToolchain {
 			fail("manifest", "not a manifest")
 		}
+		// The committed version is the one field copied into the fresh manifest
+		// before the byte comparison, so it must be text: a number or null there
+		// would be echoed back and wave a malformed manifest through.
+		if _, isText := oldToolchain["version"].(string); !isText {
+			fail("manifest", "toolchain.version must be text")
+		}
 		old = parsed
 		current = map[string]any{}
 		for key, value := range fresh {
@@ -318,6 +326,11 @@ func (a *args) commonFlags() []string {
 	return out
 }
 
+// sabotageTimeout bounds one sabotage child. The real ct-compare child runs in
+// seconds; this is generous enough for a slow CI machine yet finite. A variable
+// so tests can shrink it.
+var sabotageTimeout = 10 * time.Minute
+
 // sabotage re-runs `run` once per control with a fault set; each must fail loudly.
 func sabotage(a *args, stdio IO) int {
 	a.runConfig("", "", "") // refuse early if --binding/--package-dir are missing
@@ -331,11 +344,18 @@ func sabotage(a *args, stdio IO) int {
 	for _, row := range listControlRows(a.flags["--corpus"]) {
 		argv := append(append([]string(nil), stdio.ExeArgs...), "run")
 		argv = append(argv, a.commonFlags()...)
-		child := exec.Command(exe, argv...)
+		// A child that hangs (a library under a fault can loop) must not hang the
+		// whole sabotage command: it is killed at the deadline and counts as NOT
+		// caught, because a timeout is not a loud `not ok` failure.
+		ctx, cancel := context.WithTimeout(context.Background(), sabotageTimeout)
+		child := exec.CommandContext(ctx, exe, argv...)
+		child.WaitDelay = 5 * time.Second
 		child.Env = childEnv(stdio.Env, row)
 		stdout := &limitedBuffer{max: 64 * 1024 * 1024}
 		child.Stdout = stdout
 		runErr := child.Run()
+		timedOut := ctx.Err() != nil
+		cancel()
 		status := 0
 		var exit *exec.ExitError
 		if errors.As(runErr, &exit) {
@@ -343,7 +363,7 @@ func sabotage(a *args, stdio IO) int {
 		} else if runErr != nil {
 			status = -1
 		}
-		caught := status == 1
+		caught := status == 1 && !timedOut
 		if caught {
 			caught = false
 			for _, line := range strings.Split(stdout.buffer.String(), "\n") {
@@ -356,7 +376,11 @@ func sabotage(a *args, stdio IO) int {
 		} else {
 			failures++
 		}
-		writeLine(stdio.Out, fmt.Sprintf("%s sabotage %s (exit %d)", verdict, row, status))
+		note := ""
+		if timedOut {
+			note = " timed out"
+		}
+		writeLine(stdio.Out, fmt.Sprintf("%s sabotage %s (exit %d%s)", verdict, row, status, note))
 	}
 	if failures > 0 {
 		return 1
