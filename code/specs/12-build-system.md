@@ -690,6 +690,10 @@ hands to `sh -c` / `cmd /C`) with a timeout:
   naming the package, the 1-based index and text of the command, the configured
   limit and the elapsed time. All output buffered so far is printed exactly as
   for any other failure, and dependants are dep-skipped as usual.
+- **Interrupt:** SIGINT/SIGTERM cancel all running commands the same way (exit
+  130, packages failed), since process groups no longer receive the terminal's
+  Ctrl-C. A clean exit that leaves a pipe-holding descendant fails and the
+  leftover group is killed.
 - **Not supported:** per-package overrides. BUILD files have no metadata
   channel for execution settings today, so the limit is global.
 

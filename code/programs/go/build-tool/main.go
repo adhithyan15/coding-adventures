@@ -30,15 +30,18 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"flag"
 	"fmt"
 	"os"
+	"os/signal"
 	"path/filepath"
 	"runtime"
 	"sort"
 	"strings"
+	"syscall"
 
 	directedgraph "github.com/adhithyan15/coding-adventures/code/packages/go/directed-graph"
 	progress "github.com/adhithyan15/coding-adventures/code/packages/go/progress-bar"
@@ -1735,6 +1738,13 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 	executor.ExecWrapper = execWrapper
 	executor.ExecWrapperRepoRoot = repoRoot
 	executor.CommandTimeout = *commandTimeout
+	// BUILD commands run in their own process groups, so Ctrl-C no longer
+	// reaches them from the terminal. Turn SIGINT/SIGTERM into cancellation of
+	// the executor's root context, which kills every running command's group.
+	sigCtx, stopSignals := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stopSignals()
+	executor.RootContext = sigCtx
+	defer func() { executor.RootContext = nil }()
 	results := executor.ExecuteBuilds(
 		packages,
 		graph,
@@ -1768,6 +1778,12 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 			fmt.Fprintf(os.Stderr, "Error writing %s: %v\n", *emitResults, err)
 			return 1
 		}
+	}
+
+	// An interrupted run is never a success, whatever the results say.
+	if sigCtx.Err() != nil {
+		fmt.Fprintln(os.Stderr, "Interrupted: build stopped by signal; running commands were killed.")
+		return 130
 	}
 
 	// Step 11: Exit with code 1 if any builds failed.

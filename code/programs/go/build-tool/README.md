@@ -284,7 +284,13 @@ rust/lzw: command 2 of 3 `cargo test` timed out after 1h30m0s (limit 1h30m0s); k
 All output buffered before the hang is printed as for any failure. The clock is
 per command (it restarts for each BUILD line), and there are no per-package
 overrides. The default exists because a single hung Windows command once idled a
-CI job for 4h47m, with no log of which command it was. See
+CI job for 4h47m, with no log of which command it was. Because each command runs in its own process group, Ctrl-C (SIGINT) and SIGTERM
+are caught by the tool and kill every running command's tree; the run then
+exits 130 and reports it was interrupted. A command that exits cleanly but
+leaves a background process holding its output fails, and that leftover group
+is killed. On Windows the tree kill needs `taskkill`; if it is missing from
+PATH the tool falls back to killing only the shell, so descendants may linger
+(the wait for their pipes is still bounded). See
 `code/specs/12-build-system.md`, "Per-Command Timeout".
 
 ### Kiln legacy graph export

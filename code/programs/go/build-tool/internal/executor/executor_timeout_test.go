@@ -1,6 +1,7 @@
 package executor
 
 import (
+	"context"
 	"os/exec"
 	"path/filepath"
 	"runtime"
@@ -211,5 +212,78 @@ func TestFormatTimeoutMessage(t *testing.T) {
 		if !strings.Contains(msg, want) {
 			t.Errorf("message %q missing %q", msg, want)
 		}
+	}
+}
+
+// withRootContext installs a cancellable root context (what main wires to
+// SIGINT/SIGTERM) for one test.
+func withRootContext(t *testing.T) context.CancelFunc {
+	t.Helper()
+	ctx, cancel := context.WithCancel(context.Background())
+	old := RootContext
+	RootContext = ctx
+	t.Cleanup(func() { RootContext = old; cancel() })
+	return cancel
+}
+
+// Cancelling the root context (an interrupt) kills a running command's whole
+// process group through the same Cancel path as a timeout, and the package
+// FAILS saying it was interrupted. Setpgid detaches children from the
+// terminal's Ctrl-C, so this is the only thing that stops them.
+func TestInterruptKillsRunningCommandGroup(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("marker-file probe uses a POSIX shell")
+	}
+	withCommandTimeout(t, 0)
+	cancel := withRootContext(t)
+	pkg := timeoutPkg(t, "(sleep 2 && echo alive > survived.txt) & sleep 60")
+
+	go func() {
+		time.Sleep(300 * time.Millisecond)
+		cancel()
+	}()
+	began := time.Now()
+	result := runPackageBuild(pkg, false)
+	if took := time.Since(began); took > 20*time.Second {
+		t.Fatalf("interrupt did not stop the command: %v", took)
+	}
+	if result.Status != "failed" || result.ReturnCode != interruptReturnCode {
+		t.Fatalf("status/code = %q/%d, want failed/%d", result.Status, result.ReturnCode, interruptReturnCode)
+	}
+	if !strings.Contains(result.Stderr, "interrupted") || strings.Contains(result.Stderr, "timed out") {
+		t.Errorf("stderr should say interrupted: %s", result.Stderr)
+	}
+	time.Sleep(2500 * time.Millisecond)
+	if matches, _ := filepath.Glob(filepath.Join(pkg.Path, "survived.txt")); len(matches) != 0 {
+		t.Fatalf("child group outlived the interrupt: %v", matches)
+	}
+}
+
+// An already-cancelled root context stops later commands from starting at all.
+func TestInterruptBeforeStartFails(t *testing.T) {
+	cancel := withRootContext(t)
+	cancel()
+	result := runPackageBuild(timeoutPkg(t, "echo should-not-run"), false)
+	if result.Status != "failed" || strings.Contains(result.Stdout, "should-not-run") {
+		t.Fatalf("status=%q stdout=%q", result.Status, result.Stdout)
+	}
+}
+
+// A command that exits cleanly but leaves a same-group daemon holding stdout
+// fails (WaitDelay), and the leftover group is killed so it does not outlive
+// the build.
+func TestWaitDelayKillsLeftoverGroup(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("marker-file probe uses a POSIX shell")
+	}
+	withCommandTimeout(t, 30*time.Second)
+	pkg := timeoutPkg(t, "(sleep 2 && echo alive > survived.txt) & echo done")
+	result := runPackageBuild(pkg, false)
+	if result.Status != "failed" {
+		t.Fatalf("status = %q, want failed", result.Status)
+	}
+	time.Sleep(2500 * time.Millisecond)
+	if matches, _ := filepath.Glob(filepath.Join(pkg.Path, "survived.txt")); len(matches) != 0 {
+		t.Fatalf("leftover daemon survived the build: %v", matches)
 	}
 }

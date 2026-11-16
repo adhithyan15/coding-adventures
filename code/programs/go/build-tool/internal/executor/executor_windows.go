@@ -37,7 +37,10 @@ func prepareProcessTree(cmd *exec.Cmd) {}
 // started (/T walks the tree, /F forces it). Plain Process.Kill would end only
 // cmd.exe and orphan the build it launched, which is exactly the hang this
 // exists to stop. If taskkill itself cannot run, fall back to killing the
-// shell so the command at least does not outlive the timeout by much.
+// shell so the command at least does not outlive the timeout by much. In that
+// fallback (taskkill missing from PATH, which is unusual on Windows) the shell's
+// descendants are NOT killed; they may linger, and WaitDelay still bounds the
+// build's wait for their output pipes.
 func killProcessTree(cmd *exec.Cmd) error {
 	if cmd.Process == nil {
 		return nil

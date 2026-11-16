@@ -116,6 +116,18 @@ var CommandTimeout time.Duration
 // the pipe open for as long as it lives. A variable so tests can shorten it.
 var commandWaitDelay = 5 * time.Second
 
+// RootContext, when set, is the parent of every command's context. main binds
+// it to SIGINT/SIGTERM. It matters because each command runs in its own process
+// group (see prepareProcessTree), so a terminal Ctrl-C is no longer delivered
+// to BUILD children; cancelling this context kills each running command's group
+// through the same Cancel path a timeout uses, and commands not yet started
+// fail immediately. Nil means context.Background (never cancelled).
+var RootContext context.Context
+
+// interruptReturnCode is the status for a command stopped by RootContext:
+// 130, the shell convention for death by SIGINT.
+const interruptReturnCode = 130
+
 // timeoutReturnCode is the exit status reported for a timed-out command: 124,
 // the GNU `timeout(1)` convention, distinct from ordinary BUILD failures.
 const timeoutReturnCode = 124
@@ -475,6 +487,12 @@ func runCommands(pkg discovery.Package, commands []string, start time.Time) Buil
 		timed, cancel := boundCommand(cmd, CommandTimeout)
 		err := timed.Run()
 		timedOut := timed.ctxErr() == context.DeadlineExceeded
+		interrupted := timed.ctxErr() == context.Canceled
+		if err != nil && errors.Is(err, exec.ErrWaitDelay) && !timedOut && !interrupted {
+			// Exited cleanly but a descendant still holds the pipe: kill the
+			// leftover group so it cannot outlive the build.
+			_ = killProcessTree(timed.Cmd)
+		}
 		cancel()
 		allStdout = append(allStdout, stdout.String())
 		allStderr = append(allStderr, stderr.String())
@@ -483,7 +501,12 @@ func runCommands(pkg discovery.Package, commands []string, start time.Time) Buil
 			elapsed := time.Since(start).Seconds()
 			exitCode := 1
 			stepsRun := i + 1
-			if timedOut {
+			if interrupted {
+				exitCode = interruptReturnCode
+				allStderr = append(allStderr, fmt.Sprintf(
+					"%s: command %d of %d `%s` interrupted by signal after %s; killed its process tree\n",
+					pkg.Name, i+1, len(commands), command, time.Since(stepStart).Round(100*time.Millisecond)))
+			} else if timedOut {
 				// A timeout is a failure, never a pass or a skip, and the
 				// message goes AFTER the buffered output so it is the last
 				// thing a reader sees.
@@ -556,8 +579,8 @@ func (c *timedCmd) ctxErr() error {
 	return c.ctx.Err()
 }
 
-// boundCommand returns cmd bounded by limit (zero or negative: not
-// bounded, cmd returned as is). Three pieces cooperate:
+// boundCommand returns cmd bounded by limit and by RootContext (no limit and
+// no root context: not bounded, cmd returned as is). Three pieces cooperate:
 //
 //   - exec.CommandContext arms a timer; when it fires, cmd.Cancel runs.
 //   - cmd.Cancel (killProcessTree) kills the shell AND its descendants, not
@@ -569,10 +592,20 @@ func (c *timedCmd) ctxErr() error {
 // exec.Cmd cannot be given a context after construction, and the command may
 // already have been rebuilt by wrapCommand, so this clones it field by field.
 func boundCommand(cmd *exec.Cmd, limit time.Duration) (*timedCmd, context.CancelFunc) {
-	if limit <= 0 {
+	parent := RootContext
+	if parent == nil {
+		parent = context.Background()
+	}
+	if limit <= 0 && RootContext == nil {
 		return &timedCmd{Cmd: cmd}, func() {}
 	}
-	ctx, cancel := context.WithTimeout(context.Background(), limit)
+	var ctx context.Context
+	var cancel context.CancelFunc
+	if limit > 0 {
+		ctx, cancel = context.WithTimeout(parent, limit)
+	} else {
+		ctx, cancel = context.WithCancel(parent)
+	}
 	clone := exec.CommandContext(ctx, cmd.Path, cmd.Args[1:]...)
 	clone.Path = cmd.Path
 	clone.Args = cmd.Args
