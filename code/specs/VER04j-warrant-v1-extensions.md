@@ -1566,6 +1566,12 @@ The numbering continues from 14.1.
     to only and are checked against the result type at generation (W0701).  A
     `Bytes<N>` result (never a parameter) is now accepted by the composite adapter,
     with the same host mapping as `Bytes`.
+    WX-FAULT1 extends `flip-result-bit` to a fixed-width integer result
+    (`Bytes -> U32`, a checksum or non-cryptographic hash, inside an `Ok` or
+    `Some`): the lowest bit of the canonical value is flipped (`x ^ 1` stays in
+    range and keeps the width); `drop-last-result-byte` still applies to byte
+    strings only.  The `V::Fixed` arm is emitted only when a bound operation
+    needs it, so no other harness changes by a byte.
 47. **Rows are cases, a table is one test.**  The suite registers one test per table,
     `warrant/<module>/table/<name>`; each row is a case named `vectors/<name>/<row id>`
     in the failure message and in `failed_ids`.  A row whose `holds` panics, or

@@ -2282,9 +2282,12 @@ fn composite_adapter<'a>(
             "missing-error" => is_result,
             // WX-H: the limit faults rewrite the one numeric parameter the
             // operation's `output` bound mentions.
-            "flip-result-bit" | "drop-last-result-byte" => {
-                matches!(&core, Ty::Bytes | Ty::BytesN(_))
+            // WX-FAULT1: `flip-result-bit` also applies to a fixed-width
+            // integer result (`Bytes -> U32`, a checksum or hash).
+            "flip-result-bit" => {
+                matches!(&core, Ty::Bytes | Ty::BytesN(_) | Ty::Fx(_) | Ty::FxEdge(_))
             }
+            "drop-last-result-byte" => matches!(&core, Ty::Bytes | Ty::BytesN(_)),
             "ignore-limit" | "off-by-one-limit" | "limit-after-alloc" => limit.is_some(),
             "truncate-silently" => {
                 limit.is_some()
@@ -2454,6 +2457,25 @@ fn composite_adapter<'a>(
         let _ = write!(s, "    match fault {{\n{arms}        _ => v,\n    }}\n}}\n\n");
     }
     Ok(s)
+}
+
+/// WX-FAULT1: whether the composite result of `op`, inside any `Result` or
+/// `Option`, is a fixed-width integer.  Only then does the generated
+/// `fault_flip_result_bit` need its `V::Fixed` arm, so every other harness stays
+/// byte-identical.
+fn flips_fixed_result(op: &OpDecl<'_>, env: &TyEnv<'_>) -> bool {
+    let Ok(full) = ty_of_type(&op.return_type, env, true, op.span, 0) else {
+        return false;
+    };
+    let payload = match full {
+        Ty::Res(t, _) => *t,
+        other => other,
+    };
+    let core = match payload {
+        Ty::Opt(t) => *t,
+        other => other,
+    };
+    matches!(core, Ty::Fx(_) | Ty::FxEdge(_))
 }
 
 /// The declared error cases of the `Result` return type of an operation.
@@ -3510,6 +3532,11 @@ pub fn generate_evidence_harness_with_tables(
             op_faults.insert(op.name.to_string(), list);
         } else if shape == Shape::Composite {
             features.insert("scoped");
+            if binding.negative_controls.iter().any(|f| f == "flip-result-bit")
+                && flips_fixed_result(op, &env)
+            {
+                features.insert("fixedfault");
+            }
             adapters.push_str(&composite_adapter(
                 op,
                 &env,
