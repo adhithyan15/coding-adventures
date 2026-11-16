@@ -1,6 +1,6 @@
 {
   "name": "trig",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Trigonometric functions from first principles using Taylor series",
   "main": "src/trig.ts",
   "scripts": {
