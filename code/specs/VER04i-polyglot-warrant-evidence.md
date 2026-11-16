@@ -1237,10 +1237,11 @@ with no rule here cannot be loaded (`source-tree`).
 *The walk cannot be steered by the tree.* The root is reached by the path rules
 above (validated, lexically contained, every component below the repository root
 examined with `symlink_metadata`, final component a directory). Every entry of
-every directory is then examined with `symlink_metadata` **before** its name is
-considered: a symbolic link or Windows reparse point anywhere under the root is
-an error, even one the lane's rule would skip (a link named `notes.txt` fails,
-as it does in the runners). A name must be UTF-8. A selected file's absolute path
+every directory the walk lists is then examined with `symlink_metadata`
+**before** its name is considered: a symbolic link or Windows reparse point is an
+error even where the lane's rule would skip it (a link named `notes.txt`, or
+`__pycache__`, fails, as it does in the runners). A skipped directory is not
+descended into, so what it holds is not examined, exactly as in the runners. A name must be UTF-8. A selected file's absolute path
 must pass the lexical containment rule in the host flavour, which on Windows
 also refuses reserved device names and trailing dots or spaces. Entries that are
 neither a regular file nor a directory (FIFOs, sockets, devices) are skipped

@@ -12,8 +12,9 @@ use std::sync::atomic::{AtomicU32, Ordering};
 use coding_adventures_ca_assurance_report::json::JsonValue;
 use coding_adventures_ca_assurance_report::lane_evidence::parse_consumer_registry;
 use coding_adventures_ca_assurance_report::lane_loader::{
-    canonical_json, labels_manifest_digest, lexical_containment, load_active_lanes, load_lane,
-    parse_domain_labels, read_repo_file, LaneLoadError, PathFlavor, READINESS_CHECKS, UNCLAIMED,
+    binding_source, canonical_json, labels_manifest_digest, lexical_containment, load_active_lanes,
+    load_lane, parse_domain_labels, read_repo_file, runner_root, source_tree_digest, LaneLoadError,
+    PathFlavor, SourceKind, READINESS_CHECKS, UNCLAIMED,
 };
 
 const PACKAGES: [&str; 3] = [
@@ -70,8 +71,38 @@ impl Repo {
             {
                 repo.copy_from(&real, rel);
             }
+            // The source root named by the binding and the lane's runner root,
+            // which the freshness checks (WD-004b2) walk.
+            let binding = String::from_utf8(repo.read(&row.binding)).unwrap();
+            let source = binding_source(binding.as_bytes()).expect("checked-in binding source");
+            repo.copy_tree(&real, &source_rel(&row.package_root, &source));
+            repo.copy_tree(&real, runner_root(&row.lane).expect("runner root"));
         }
         repo
+    }
+
+    /// Copy a directory tree, leaving out what the digests never read and what
+    /// a build may have left behind.
+    fn copy_tree(&self, real: &Path, rel: &str) {
+        fn walk(from: &Path, to: &Path) {
+            fs::create_dir_all(to).unwrap();
+            for entry in fs::read_dir(from).unwrap() {
+                let entry = entry.unwrap();
+                let name = entry.file_name().to_string_lossy().into_owned();
+                if ["__pycache__", "node_modules", ".venv", "dist", "target"]
+                    .contains(&name.as_str())
+                {
+                    continue;
+                }
+                let meta = fs::symlink_metadata(entry.path()).unwrap();
+                if meta.is_dir() {
+                    walk(&entry.path(), &to.join(&name));
+                } else if meta.is_file() {
+                    fs::copy(entry.path(), to.join(&name)).unwrap();
+                }
+            }
+        }
+        walk(&real.join(rel), &self.root.join(rel));
     }
 
     fn copy_from(&self, real: &Path, rel: &str) {
@@ -103,6 +134,22 @@ impl Drop for Repo {
     fn drop(&mut self) {
         let _ = fs::remove_dir_all(&self.root);
     }
+}
+
+fn source_rel(package_root: &str, source: &str) -> String {
+    if source == "." {
+        package_root.to_owned()
+    } else {
+        format!("{package_root}/{source}")
+    }
+}
+
+/// The repository-relative source root of a checked-in lane.
+fn lane_source_rel(package: &str) -> String {
+    let (lane, name) = package.split_once('/').unwrap();
+    let root = format!("code/packages/{lane}/{name}");
+    let binding = fs::read(real_root().join(format!("{root}/evidence.bindings"))).unwrap();
+    source_rel(&root, &binding_source(&binding).unwrap())
 }
 
 fn manifest_rel(package: &str) -> String {
@@ -800,7 +847,7 @@ fn the_readiness_list_is_pinned_to_the_spec_table_in_order() {
         fs::read_to_string(real_root().join("code/specs/VER04i-polyglot-warrant-evidence.md"))
             .unwrap();
     let start = spec
-        .find("**Static readiness checks (the whole list).**")
+        .find("**Static readiness checks (the whole list")
         .expect("spec section");
     let names: Vec<String> = spec[start..]
         .lines()
@@ -890,9 +937,28 @@ fn win32_refuses_reserved_names_and_folds_ascii_only() {
     use PathFlavor::{Posix, Win32};
     let root = r"D:\repo";
     for name in [
-        "CON", "con", "CON.txt", "NUL.", "nul ", "COM1", "com9.log", "LPT1", "com1.tar.gz", "x.",
-        "CON .txt", "NUL  .tar", "CON:stream", "CON:", "nul::$DATA", "file.txt:NUL", "COM\u{b9}",
-        "LPT\u{b2}.txt", "com\u{b3}", "CONIN$", "conout$", "CONOUT$.log",
+        "CON",
+        "con",
+        "CON.txt",
+        "NUL.",
+        "nul ",
+        "COM1",
+        "com9.log",
+        "LPT1",
+        "com1.tar.gz",
+        "x.",
+        "CON .txt",
+        "NUL  .tar",
+        "CON:stream",
+        "CON:",
+        "nul::$DATA",
+        "file.txt:NUL",
+        "COM\u{b9}",
+        "LPT\u{b2}.txt",
+        "com\u{b3}",
+        "CONIN$",
+        "conout$",
+        "CONOUT$.log",
     ] {
         let child = format!(r"{root}\{name}");
         assert_eq!(inside(Win32, root, &child), (false, false), "{name}");
@@ -900,8 +966,20 @@ fn win32_refuses_reserved_names_and_folds_ascii_only() {
     assert_eq!(inside(Win32, root, r"D:\repo\AUX\x"), (false, false));
     assert_eq!(inside(Win32, root, "D:/repo/AUX/"), (false, false));
     for name in [
-        "console.txt", "COM10", "LPT0", "COM0", "CONx", "xCON", ".hidden", "a.CON.b", "CONsole", "CLOCK$",
-        "\u{ff23}\u{ff2f}\u{ff2e}", "CONIN$x", "COM\u{2074}", "a$b",
+        "console.txt",
+        "COM10",
+        "LPT0",
+        "COM0",
+        "CONx",
+        "xCON",
+        ".hidden",
+        "a.CON.b",
+        "CONsole",
+        "CLOCK$",
+        "\u{ff23}\u{ff2f}\u{ff2e}",
+        "CONIN$x",
+        "COM\u{2074}",
+        "a$b",
     ] {
         let child = format!(r"{root}\{name}");
         assert_eq!(inside(Win32, root, &child), (true, false), "{name}");
@@ -925,9 +1003,399 @@ fn win32_refuses_reserved_names_and_folds_ascii_only() {
         let (r, c) = (format!(r"D:\{a}"), format!(r"D:\{b}\x"));
         assert_eq!(inside(Win32, &r, &c), (false, false), "{a:?} vs {b:?}");
     }
-    assert_eq!(inside(Win32, "D:\\\u{17f}", "D:\\\u{17f}\\x"), (true, false));
     assert_eq!(
-        inside(Win32, "\\\\\u{17f}erver\\share\\r", "\\\\server\\share\\r\\x"),
+        inside(Win32, "D:\\\u{17f}", "D:\\\u{17f}\\x"),
+        (true, false)
+    );
+    assert_eq!(
+        inside(
+            Win32,
+            "\\\\\u{17f}erver\\share\\r",
+            "\\\\server\\share\\r\\x"
+        ),
         (false, false)
     );
+}
+
+// ---------------------------------------------------------------------------
+// WD-004b2: `source_sha256` and `runner.src_sha256` are recomputed.
+// ---------------------------------------------------------------------------
+
+/// A production file that every lane's rule selects, under the lane's source root.
+fn production_file(package: &str) -> String {
+    let lane = package.split('/').next().unwrap();
+    let ext = match lane {
+        "python" => "py",
+        "typescript" => "ts",
+        _ => "go",
+    };
+    format!("{}/zz_added.{ext}", lane_source_rel(package))
+}
+
+#[test]
+fn the_readiness_list_has_ten_checks_and_the_unclaimed_list_three() {
+    assert_eq!(READINESS_CHECKS.len(), 10);
+    assert_eq!(
+        &READINESS_CHECKS[8..],
+        &["source-fresh", "runner-source-fresh"]
+    );
+    assert_eq!(
+        UNCLAIMED,
+        ["toolchain authenticity", "build execution", "sandbox"]
+    );
+}
+
+#[test]
+fn the_checked_in_digests_are_reproduced_from_the_tree() {
+    // The three runners (Python, TypeScript, Go) wrote these values; the Rust
+    // loader reproduces them from the files, so the framing and the per-lane
+    // rules agree across four implementations.
+    for package in PACKAGES {
+        let lane = package.split('/').next().unwrap();
+        let loaded = load_lane(&real_root(), package).unwrap();
+        let source = source_tree_digest(
+            &real_root(),
+            &lane_source_rel(package),
+            lane,
+            SourceKind::Production,
+        )
+        .unwrap();
+        assert_eq!(source, loaded.manifest.source_sha256, "{package} source");
+        let runner = source_tree_digest(
+            &real_root(),
+            runner_root(lane).unwrap(),
+            lane,
+            SourceKind::Runner,
+        )
+        .unwrap();
+        assert_eq!(
+            runner, loaded.manifest.runner_src_sha256,
+            "{package} runner"
+        );
+        assert!(loaded.readiness.passed.contains(&"source-fresh"));
+        assert!(loaded.readiness.passed.contains(&"runner-source-fresh"));
+    }
+}
+
+#[test]
+fn an_edited_production_file_is_stale_source_for_that_lane_only() {
+    for package in PACKAGES {
+        let repo = Repo::new();
+        let extra = production_file(package);
+        repo.write(&extra, b"added\n");
+        expect_code(repo.load(package), "stale-source", "source_sha256");
+        for other in PACKAGES.iter().filter(|p| **p != package) {
+            repo.load(other)
+                .expect("an edit in one lane leaves the others loading");
+        }
+        // Removing it restores the load: the digest is a function of the tree.
+        fs::remove_file(repo.root.join(&extra)).unwrap();
+        repo.load(package).expect("the original tree loads");
+    }
+}
+
+#[test]
+fn a_changed_byte_of_an_existing_production_file_is_stale_source() {
+    let repo = Repo::new();
+    let rel = format!("{}/__init__.py", lane_source_rel("python/ct-compare"));
+    let mut bytes = repo.read(&rel);
+    bytes.push(b'\n');
+    repo.write(&rel, &bytes);
+    expect_code(
+        repo.load("python/ct-compare"),
+        "stale-source",
+        "source_sha256",
+    );
+}
+
+#[test]
+fn files_outside_each_lanes_rule_do_not_change_the_digest() {
+    let python = lane_source_rel("python/ct-compare");
+    let ts = lane_source_rel("typescript/ct-compare");
+    let go = lane_source_rel("go/ct-compare");
+    let repo = Repo::new();
+    let ignored = [
+        // Python: derived output and non-source files.
+        format!("{python}/__pycache__/x.py"),
+        format!("{python}/notes.txt"),
+        format!("{python}/data.json"),
+        // TypeScript: tests, build output, vendored modules, other extensions.
+        format!("{ts}/index.test.ts"),
+        format!("{ts}/dist/a.ts"),
+        format!("{ts}/node_modules/a.ts"),
+        format!("{ts}/readme.md"),
+        // Go: tests, vendored and underscored or dotted directories.
+        format!("{go}/zz_test.go"),
+        format!("{go}/vendor/a.go"),
+        format!("{go}/testdata/a.go"),
+        format!("{go}/_scratch/a.go"),
+        format!("{go}/.hidden/a.go"),
+    ];
+    for rel in &ignored {
+        let path = repo.root.join(rel);
+        fs::create_dir_all(path.parent().unwrap()).unwrap();
+        fs::write(path, b"not production source\n").unwrap();
+    }
+    for package in PACKAGES {
+        repo.load(package)
+            .unwrap_or_else(|e| panic!("{package}: {e}"));
+    }
+    // ... and the rules select what they should: each of these changes the digest.
+    for rel in [
+        format!("{python}/py.typed"),
+        format!("{python}/zz.pyi"),
+        format!("{python}/sub/zz.py"),
+        format!("{ts}/sub/zz.ts"),
+        format!("{go}/sub/zz.go"),
+    ] {
+        let repo = Repo::new();
+        let path = repo.root.join(&rel);
+        fs::create_dir_all(path.parent().unwrap()).unwrap();
+        fs::write(&path, b"x\n").unwrap();
+        let package = if rel.starts_with(&python) {
+            "python/ct-compare"
+        } else if rel.starts_with(&ts) {
+            "typescript/ct-compare"
+        } else {
+            "go/ct-compare"
+        };
+        expect_code(repo.load(package), "stale-source", "source_sha256");
+    }
+}
+
+#[test]
+fn a_runner_edit_is_stale_runner_for_its_lane_only() {
+    let repo = Repo::new();
+    let file = format!("{}/zz_runner.py", runner_root("python").unwrap());
+    repo.write(&file, b"x = 1\n");
+    expect_code(
+        repo.load("python/ct-compare"),
+        "stale-runner",
+        "runner.src_sha256",
+    );
+    repo.load("typescript/ct-compare").unwrap();
+    repo.load("go/ct-compare").unwrap();
+
+    // The Go runner digests its own directory's `*.go` only: a nested file is not
+    // part of it, a top-level one is.
+    let repo = Repo::new();
+    let nested = format!("{}/zz/nested.go", runner_root("go").unwrap());
+    let path = repo.root.join(&nested);
+    fs::create_dir_all(path.parent().unwrap()).unwrap();
+    fs::write(&path, b"package zz\n").unwrap();
+    repo.load("go/ct-compare")
+        .expect("a nested file is outside the Go runner rule");
+    repo.write(
+        &format!("{}/zz_added.go", runner_root("go").unwrap()),
+        b"package main\n",
+    );
+    expect_code(
+        repo.load("go/ct-compare"),
+        "stale-runner",
+        "runner.src_sha256",
+    );
+}
+
+#[test]
+fn a_missing_source_or_runner_root_is_refused() {
+    let repo = Repo::new();
+    fs::remove_dir_all(repo.root.join(lane_source_rel("python/ct-compare"))).unwrap();
+    assert_eq!(repo.load("python/ct-compare").unwrap_err().code, "io");
+
+    let repo = Repo::new();
+    fs::remove_dir_all(repo.root.join(runner_root("typescript").unwrap())).unwrap();
+    assert_eq!(repo.load("typescript/ct-compare").unwrap_err().code, "io");
+
+    // A file where a directory must be.
+    let repo = Repo::new();
+    let root = repo.root.join(runner_root("typescript").unwrap());
+    fs::remove_dir_all(&root).unwrap();
+    fs::write(&root, b"file").unwrap();
+    assert_eq!(
+        repo.load("typescript/ct-compare").unwrap_err().code,
+        "not-regular"
+    );
+}
+
+#[test]
+fn a_lane_without_a_source_rule_cannot_be_digested() {
+    assert!(runner_root("ruby").is_none());
+    expect_code(
+        source_tree_digest(
+            &real_root(),
+            "code/packages/python/ct-compare",
+            "ruby",
+            SourceKind::Production,
+        ),
+        "source-tree",
+        "ruby",
+    );
+}
+
+#[test]
+fn the_binding_source_line_is_read_strictly() {
+    assert_eq!(binding_source(b"lane go\nsource .\n").unwrap(), ".");
+    assert_eq!(
+        binding_source(b"# c\nsource   src/pkg_a  \n").unwrap(),
+        "src/pkg_a"
+    );
+    for (bad, why) in [
+        (&b"lane go\n"[..], "no source line"),
+        (b"source a\nsource b\n", "two source lines"),
+        (b"source\n", "empty value"),
+        (b"source a b\n", "extra token"),
+        (b"source ../x\n", "dotdot"),
+        (b"source a/../b\n", "inner dotdot"),
+        (b"source /abs\n", "absolute"),
+        (b"source a\\b\n", "backslash"),
+        (b"source a//b\n", "empty component"),
+        (b"source ./a\n", "dot component"),
+        (b"source caf\xc3\xa9\n", "non ASCII"),
+        (b"source a:b\n", "colon"),
+        (b"\xff\n", "not UTF-8"),
+    ] {
+        let error = binding_source(bad).expect_err(why);
+        assert_eq!(error.code, "source-tree", "{why}: {error}");
+    }
+}
+
+#[test]
+fn a_source_tree_cannot_be_too_deep_too_big_or_too_numerous() {
+    let python = lane_source_rel("python/ct-compare");
+
+    // Depth 33 under the root.
+    let repo = Repo::new();
+    let mut deep = repo.root.join(&python);
+    for _ in 0..33 {
+        deep.push("d");
+    }
+    fs::create_dir_all(&deep).unwrap();
+    expect_code(repo.load("python/ct-compare"), "source-tree", "deeply");
+
+    // One file over the 8 MiB per-file limit.
+    let repo = Repo::new();
+    repo.write(
+        &format!("{python}/big.py"),
+        &vec![b'a'; 8 * 1024 * 1024 + 1],
+    );
+    expect_code(repo.load("python/ct-compare"), "source-tree", "8388608");
+
+    // Exactly the limit is accepted by the walk (the digest then differs).
+    let repo = Repo::new();
+    repo.write(&format!("{python}/big.py"), &vec![b'a'; 8 * 1024 * 1024]);
+    expect_code(
+        repo.load("python/ct-compare"),
+        "stale-source",
+        "source_sha256",
+    );
+
+    // More than 4096 selected files.
+    let repo = Repo::new();
+    let many = repo.root.join(&python).join("many");
+    fs::create_dir_all(&many).unwrap();
+    for i in 0..4097 {
+        fs::write(many.join(format!("f{i}.py")), b"").unwrap();
+    }
+    expect_code(repo.load("python/ct-compare"), "source-tree", "4096");
+
+    // More than 64 MiB of selected bytes in total.
+    let repo = Repo::new();
+    let heavy = repo.root.join(&python).join("heavy");
+    fs::create_dir_all(&heavy).unwrap();
+    for i in 0..9 {
+        fs::write(heavy.join(format!("h{i}.py")), vec![b'a'; 8 * 1024 * 1024]).unwrap();
+    }
+    expect_code(repo.load("python/ct-compare"), "source-tree", "total");
+}
+
+#[cfg(unix)]
+#[test]
+fn a_link_anywhere_in_a_source_tree_is_refused_even_under_a_skipped_name() {
+    use std::os::unix::fs::symlink;
+    let python = lane_source_rel("python/ct-compare");
+    let ts_runner = runner_root("typescript").unwrap();
+    let go_runner = runner_root("go").unwrap();
+    for (package, parent, name) in [
+        // A file link whose name no rule selects.
+        ("python/ct-compare", python.clone(), "notes.txt"),
+        // A link that takes the name of a directory the rule skips: the link
+        // check comes before the skip, as in the runners.
+        ("python/ct-compare", python.clone(), "__pycache__"),
+        // A directory link in the runner root.
+        ("typescript/ct-compare", ts_runner.to_owned(), "linked"),
+        // The Go runner digests only the top directory, and still refuses a link
+        // there, whatever it is named.
+        ("go/ct-compare", go_runner.to_owned(), "elsewhere"),
+    ] {
+        let repo = Repo::new();
+        let outside = repo.root.join("outside");
+        fs::create_dir_all(&outside).unwrap();
+        let dir = repo.root.join(&parent);
+        fs::create_dir_all(&dir).unwrap();
+        symlink(&outside, dir.join(name)).unwrap();
+        expect_code(repo.load(package), "symlink", name);
+    }
+}
+
+#[cfg(unix)]
+#[test]
+fn a_symlinked_source_root_or_ancestor_is_refused() {
+    use std::os::unix::fs::symlink;
+    // The source root itself.
+    let repo = Repo::new();
+    let root = repo.root.join(lane_source_rel("python/ct-compare"));
+    let moved = repo.root.join("moved-src");
+    fs::rename(&root, &moved).unwrap();
+    symlink(&moved, &root).unwrap();
+    expect_code(
+        repo.load("python/ct-compare"),
+        "symlink",
+        "coding_adventures_ct_compare",
+    );
+
+    // An ancestor of the runner root.
+    let repo = Repo::new();
+    let ancestor = repo.root.join("code/packages/typescript/warrant-corpus");
+    let moved = repo.root.join("moved-runner");
+    fs::rename(&ancestor, &moved).unwrap();
+    symlink(&moved, &ancestor).unwrap();
+    expect_code(
+        repo.load("typescript/ct-compare"),
+        "symlink",
+        "warrant-corpus",
+    );
+}
+
+#[cfg(unix)]
+#[test]
+fn a_fifo_that_looks_like_source_is_skipped_unopened() {
+    use std::process::Command;
+    let repo = Repo::new();
+    let fifo = repo
+        .root
+        .join(lane_source_rel("python/ct-compare"))
+        .join("pipe.py");
+    let made = Command::new("mkfifo").arg(&fifo).status();
+    if !matches!(made, Ok(status) if status.success()) {
+        eprintln!("mkfifo unavailable; skipping");
+        return;
+    }
+    // Opening it would block forever; the walk must step over it, as the runners
+    // do, and the digest is unchanged.
+    repo.load("python/ct-compare")
+        .expect("a FIFO is not source");
+}
+
+#[cfg(unix)]
+#[test]
+fn a_non_utf8_file_name_is_refused() {
+    use std::ffi::OsString;
+    use std::os::unix::ffi::OsStringExt;
+    let repo = Repo::new();
+    let dir = repo.root.join(lane_source_rel("python/ct-compare"));
+    let name = OsString::from_vec(vec![b'b', b'a', b'd', 0xff, b'.', b'p', b'y']);
+    if fs::write(dir.join(name), b"x").is_err() {
+        return; // a filesystem that cannot hold the name cannot hold the attack
+    }
+    expect_code(repo.load("python/ct-compare"), "source-tree", "UTF-8");
 }

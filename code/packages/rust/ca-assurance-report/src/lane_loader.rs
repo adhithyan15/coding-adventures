@@ -21,13 +21,17 @@
 //!
 //! ## What this module is not
 //!
-//! * It is not a report generator and has no CLI (WD-004b2).
+//! * It is not a report generator and has no CLI: the report rungs live in
+//!   [`crate::lane_report`] and the `--check-lane` command in `main.rs`
+//!   (WD-004b2), both of which call [`load_lane`].
 //! * It never touches the legacy Rust loader in [`crate::evidence`]: a Rust
 //!   package is not in the consumer registry, so [`load_lane`] refuses it with
 //!   `not-registered`, and a Rust `warrant-test-evidence-v1` manifest is never
 //!   read as a lane manifest.
-//! * It does not recompute `source_sha256` or `runner.src_sha256` (they need a
-//!   per-lane source rule and a runner root the registry does not carry).
+//! * It makes no claim that a manifest was *produced* by running the source
+//!   whose digest it records: `source_sha256` and `runner.src_sha256` are
+//!   recomputed from the tree on disk (WD-004b2) and compared, which shows the
+//!   manifest is not stale, not that it was earned.
 //!
 //! ## Reading order of one [`load_lane`]
 //!
@@ -41,7 +45,8 @@
 //!      ├─ binding file ──► sha256 equals manifest.binding_sha256
 //!      ├─ runner identity (name + lane)
 //!      ├─ labels sidecar ──► closed schema, labels re-derived, digest bound
-//!      └─ runner entry + build files ──► exist, contained, build routing text
+//!      ├─ runner entry + build files ──► exist, contained, build routing text
+//!      └─ source root + runner root ──► recomputed `warrant-src-v1` digests
 //! ```
 //!
 //! Any failure is an `Err`; there is no partial result.
@@ -80,7 +85,7 @@ pub const RUNNER_NAME: &str = "warrant-corpus";
 
 /// The static readiness checks, in the order a successful load reports them.
 /// The names are the ones VER04i 8.2 lists; a test pins the two together.
-pub const READINESS_CHECKS: [&str; 8] = [
+pub const READINESS_CHECKS: [&str; 10] = [
     "paths-contained",
     "registry-active",
     "corpus-digests",
@@ -89,17 +94,13 @@ pub const READINESS_CHECKS: [&str; 8] = [
     "runner-identity",
     "labels-bound",
     "build-routing",
+    "source-fresh",
+    "runner-source-fresh",
 ];
 
 /// What a successful load deliberately does **not** establish.  The output of
 /// [`LoadedLane::render_readiness`] always prints this list.
-pub const UNCLAIMED: [&str; 5] = [
-    "source freshness",
-    "runner source digest",
-    "toolchain authenticity",
-    "build execution",
-    "sandbox",
-];
+pub const UNCLAIMED: [&str; 3] = ["toolchain authenticity", "build execution", "sandbox"];
 
 // ---------------------------------------------------------------------------
 // Errors
@@ -111,7 +112,8 @@ pub const UNCLAIMED: [&str; 5] = [
 ///
 /// Codes: `path`, `symlink`, `not-regular`, `too-large`, `io`, `registry`,
 /// `not-registered`, `not-active`, `manifest`, `digest`, `join`,
-/// `runner-identity`, `labels`, `build-routing`.
+/// `runner-identity`, `labels`, `build-routing`, `source-tree`,
+/// `stale-source`, `stale-runner`.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct LaneLoadError {
     pub code: &'static str,
@@ -295,10 +297,21 @@ fn refused_component(name: &str) -> bool {
             let digit = |rest: &str| {
                 matches!(
                     rest,
-                    "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "\u{b9}" | "\u{b2}" | "\u{b3}"
+                    "1" | "2"
+                        | "3"
+                        | "4"
+                        | "5"
+                        | "6"
+                        | "7"
+                        | "8"
+                        | "9"
+                        | "\u{b9}"
+                        | "\u{b2}"
+                        | "\u{b3}"
                 )
             };
-            stem.strip_prefix("COM").is_some_and(digit) || stem.strip_prefix("LPT").is_some_and(digit)
+            stem.strip_prefix("COM").is_some_and(digit)
+                || stem.strip_prefix("LPT").is_some_and(digit)
         }
     }
 }
@@ -348,14 +361,22 @@ fn is_link(meta: &fs::Metadata) -> bool {
     meta.file_type().is_symlink()
 }
 
-/// Read the repository-relative file `rel` under `repo_root`, refusing anything
-/// but a bounded regular file reached without a symbolic link.
-///
-/// The repository root itself is trusted (it may be a symlink); every
-/// component *beneath* it is inspected with `symlink_metadata`.  This is a
-/// defence against a hostile checkout, not against a process that can rewrite
-/// the tree while the load runs.
-pub fn read_repo_file(repo_root: &Path, rel: &str, cap: u64) -> Result<Vec<u8>, LaneLoadError> {
+/// What the last component of a contained path must be.
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum Kind {
+    File,
+    Dir,
+}
+
+/// Steps 1 to 3 of every read: the registry's lexical rules, the shared
+/// containment rule in the host flavour, and a component-by-component walk that
+/// refuses links.  Returns the path to open and its absolute text (the base
+/// for the containment questions a directory walk asks later).
+fn contained_path(
+    repo_root: &Path,
+    rel: &str,
+    kind: Kind,
+) -> Result<(std::path::PathBuf, String), LaneLoadError> {
     // Step 1: the registry's lexical rules (ASCII, slash-separated, no empty,
     // `.` or `..` component, portable characters).  Cheap, and it runs before
     // any filesystem call.
@@ -381,7 +402,7 @@ pub fn read_repo_file(repo_root: &Path, rel: &str, cap: u64) -> Result<Vec<u8>, 
             format!("{rel}: resolves outside the repository root"),
         );
     }
-    // Step 3: walk the components, refusing links and non-regular targets.
+    // Step 3: walk the components, refusing links and wrong-kind targets.
     let parts: Vec<&str> = rel.split('/').collect();
     let mut current = repo_root.to_path_buf();
     let mut shown = String::new();
@@ -402,13 +423,29 @@ pub fn read_repo_file(repo_root: &Path, rel: &str, cap: u64) -> Result<Vec<u8>, 
             );
         }
         let last = index + 1 == parts.len();
-        if last && !meta.is_file() {
+        if last && kind == Kind::File && !meta.is_file() {
             return err("not-regular", format!("{rel} is not a regular file"));
+        }
+        if last && kind == Kind::Dir && !meta.is_dir() {
+            return err("not-regular", format!("{rel} is not a directory"));
         }
         if !last && !meta.is_dir() {
             return err("not-regular", format!("{shown} is not a directory"));
         }
     }
+    Ok((current, joined))
+}
+
+/// Read the repository-relative file `rel` under `repo_root`, refusing anything
+/// but a bounded regular file reached without a symbolic link.
+///
+/// The repository root itself is trusted (it may be a symlink); every
+/// component *beneath* it is inspected with `symlink_metadata`.  This is a
+/// defence against a hostile checkout, not against a process that can rewrite
+/// the tree while the load runs (the check-to-open window of VER04i 8.2, still
+/// open).
+pub fn read_repo_file(repo_root: &Path, rel: &str, cap: u64) -> Result<Vec<u8>, LaneLoadError> {
+    let (current, _) = contained_path(repo_root, rel, Kind::File)?;
     // Step 4: bounded read.  The size check rejects the common case without
     // reading; `take` makes the cap hold even if the file grows meanwhile.
     let file = fs::File::open(&current).map_err(|e| LaneLoadError {
@@ -442,6 +479,259 @@ pub fn read_repo_file(repo_root: &Path, rel: &str, cap: u64) -> Result<Vec<u8>, 
         );
     }
     Ok(bytes)
+}
+
+// ---------------------------------------------------------------------------
+// Source digests (WD-004b2, VER04i 8.2 "Source digests")
+// ---------------------------------------------------------------------------
+//
+// `source_sha256` is the `warrant-src-v1` digest of a lane's production source
+// and `runner.src_sha256` that of the runner's own.  Both are recomputed here
+// from the tree on disk.  The framing is `test_bootstrap`'s, shared with the
+// Rust producer; the *selection* of files is each lane's rule, which has to
+// match the runner that wrote the manifest byte for byte.
+//
+//   directory ──► every entry: symlink_metadata first (link ⇒ refuse)
+//                   ├─ directory ──► skipped by name?  no ⇒ descend
+//                   ├─ regular file selected by the rule? ⇒ contained, bounded read
+//                   └─ anything else (FIFO, socket, device) ⇒ stepped over, never opened
+//
+// The link check comes *before* the name rule, as in the runners, so a link
+// named `notes.txt` or `__pycache__` is still refused.
+
+/// A runner's per-file limit; the loader adds the two totals below.
+const MAX_SOURCE_FILE_BYTES: u64 = 8 * 1024 * 1024;
+const MAX_SOURCE_DEPTH: usize = 32;
+const MAX_SOURCE_FILES: usize = 4096;
+const MAX_SOURCE_TOTAL_BYTES: u64 = 64 * 1024 * 1024;
+
+/// Which of a lane's two digests a walk computes.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum SourceKind {
+    /// `source_sha256`: the package's production source.
+    Production,
+    /// `runner.src_sha256`: the `warrant-corpus` runner's own source.
+    Runner,
+}
+
+/// The runner's own source root, relative to the repository (VER04i 8.2).  The
+/// registry carries no runner root, so it is fixed per lane.  `None` for a lane
+/// with no rule.
+pub fn runner_root(lane: &str) -> Option<&'static str> {
+    match lane {
+        "python" => {
+            Some("code/packages/python/warrant-corpus/src/coding_adventures_warrant_corpus")
+        }
+        "typescript" => Some("code/packages/typescript/warrant-corpus/src"),
+        "go" => Some("code/packages/go/warrant-corpus"),
+        _ => None,
+    }
+}
+
+/// How one lane selects its files.
+struct SourceRule {
+    select: fn(&str) -> bool,
+    skip_dir: fn(&str) -> bool,
+    /// `false` for the Go runner, which embeds only its own directory's `*.go`.
+    recursive: bool,
+}
+
+fn source_rule(lane: &str, kind: SourceKind) -> Option<SourceRule> {
+    match lane {
+        "python" => Some(SourceRule {
+            select: |name| name.ends_with(".py") || name.ends_with(".pyi") || name == "py.typed",
+            skip_dir: |name| name == "__pycache__",
+            recursive: true,
+        }),
+        "typescript" => Some(SourceRule {
+            select: |name| name.ends_with(".ts") && !name.ends_with(".test.ts"),
+            skip_dir: |name| name == "dist" || name == "node_modules",
+            recursive: true,
+        }),
+        "go" => Some(SourceRule {
+            select: |name| name.ends_with(".go") && !name.ends_with("_test.go"),
+            skip_dir: |name| {
+                name == "vendor"
+                    || name == "testdata"
+                    || name.starts_with('.')
+                    || name.starts_with('_')
+            },
+            recursive: kind == SourceKind::Production,
+        }),
+        _ => None,
+    }
+}
+
+fn source_fail<T>(message: impl Into<String>) -> Result<T, LaneLoadError> {
+    err("source-tree", message)
+}
+
+/// The `source` line of a binding file: `.` (the package root) or a relative,
+/// slash-separated path under it.  Exactly one line, exactly one value, under
+/// the registry's path rules, so the joined path cannot leave the package.
+pub fn binding_source(bytes: &[u8]) -> Result<String, LaneLoadError> {
+    let Ok(text) = std::str::from_utf8(bytes) else {
+        return source_fail("binding file is not UTF-8");
+    };
+    let mut found: Option<String> = None;
+    for line in text.lines() {
+        let line = line.trim();
+        if line.is_empty() || line.starts_with('#') {
+            continue;
+        }
+        let mut tokens = line.split_whitespace();
+        if tokens.next() != Some("source") {
+            continue;
+        }
+        let (Some(value), None) = (tokens.next(), tokens.next()) else {
+            return source_fail("binding `source` line must have exactly one value");
+        };
+        if found.is_some() {
+            return source_fail("binding has more than one `source` line");
+        }
+        if value != "." {
+            if let Err(LaneEvidenceError(message)) = validate_repo_path(value) {
+                return source_fail(format!("binding source {value:?}: {message}"));
+            }
+        }
+        found = Some(value.to_owned());
+    }
+    match found {
+        Some(value) => Ok(value),
+        None => source_fail("binding has no `source` line"),
+    }
+}
+
+struct Walk {
+    rule: SourceRule,
+    /// Absolute text of the walk's root, the base of every containment question.
+    root_text: String,
+    files: Vec<(String, Vec<u8>)>,
+    total: u64,
+}
+
+impl Walk {
+    fn directory(&mut self, dir: &Path, rel: &str, depth: usize) -> Result<(), LaneLoadError> {
+        if depth > MAX_SOURCE_DEPTH {
+            return source_fail("source tree is nested too deeply");
+        }
+        let listing = fs::read_dir(dir).map_err(|e| LaneLoadError {
+            code: "io",
+            message: format!(
+                "cannot list {}: {e}",
+                if rel.is_empty() {
+                    "the source root"
+                } else {
+                    rel
+                }
+            ),
+        })?;
+        let mut entries: Vec<(String, std::path::PathBuf)> = Vec::new();
+        for entry in listing {
+            let entry = entry.map_err(|e| LaneLoadError {
+                code: "io",
+                message: format!("cannot list the source tree: {e}"),
+            })?;
+            let Ok(name) = entry.file_name().into_string() else {
+                return source_fail("non-UTF-8 file name in the source tree");
+            };
+            entries.push((name, entry.path()));
+        }
+        // Byte order, like the runners; the final sort is by relative path.
+        entries.sort_by(|a, b| a.0.as_bytes().cmp(b.0.as_bytes()));
+        for (name, path) in entries {
+            let shown = if rel.is_empty() {
+                name.clone()
+            } else {
+                format!("{rel}/{name}")
+            };
+            let meta = fs::symlink_metadata(&path).map_err(|e| LaneLoadError {
+                code: "io",
+                message: format!("{shown}: {e}"),
+            })?;
+            if is_link(&meta) {
+                return err(
+                    "symlink",
+                    format!("{shown} is a symbolic link; links are refused"),
+                );
+            }
+            if meta.is_dir() {
+                if self.rule.recursive && !(self.rule.skip_dir)(&name) {
+                    self.directory(&path, &shown, depth + 1)?;
+                }
+            } else if meta.is_file() && (self.rule.select)(&name) {
+                self.file(&path, &shown, meta.len())?;
+            }
+            // A FIFO, socket or device is neither: stepped over, never opened.
+        }
+        Ok(())
+    }
+
+    fn file(&mut self, path: &Path, shown: &str, size: u64) -> Result<(), LaneLoadError> {
+        let child = format!("{}/{shown}", self.root_text);
+        let verdict = lexical_containment(PathFlavor::host(), &self.root_text, &child);
+        if !verdict.inside || verdict.same {
+            return err("path", format!("{shown}: resolves outside the source root"));
+        }
+        if self.files.len() >= MAX_SOURCE_FILES {
+            return source_fail(format!("more than {MAX_SOURCE_FILES} source files"));
+        }
+        if size > MAX_SOURCE_FILE_BYTES {
+            return source_fail(format!(
+                "{shown} is {size} bytes, over the {MAX_SOURCE_FILE_BYTES}-byte limit"
+            ));
+        }
+        let file = fs::File::open(path).map_err(|e| LaneLoadError {
+            code: "io",
+            message: format!("{shown}: {e}"),
+        })?;
+        let mut bytes = Vec::new();
+        file.take(MAX_SOURCE_FILE_BYTES + 1)
+            .read_to_end(&mut bytes)
+            .map_err(|e| LaneLoadError {
+                code: "io",
+                message: format!("{shown}: {e}"),
+            })?;
+        if bytes.len() as u64 > MAX_SOURCE_FILE_BYTES {
+            return source_fail(format!(
+                "{shown} grew past the {MAX_SOURCE_FILE_BYTES}-byte limit while reading"
+            ));
+        }
+        self.total += bytes.len() as u64;
+        if self.total > MAX_SOURCE_TOTAL_BYTES {
+            return source_fail(format!(
+                "the source files exceed {MAX_SOURCE_TOTAL_BYTES} bytes in total"
+            ));
+        }
+        self.files.push((shown.to_owned(), bytes));
+        Ok(())
+    }
+}
+
+/// The `warrant-src-v1` digest (SHA-256, lowercase hex) of the tree at the
+/// repository-relative `rel_root` under `lane`'s rule for `kind`.  The root is
+/// reached under the same rules as every other read (validated, lexically
+/// contained, links refused per component, must be a directory); the walk is
+/// described above.  A lane with no rule is `source-tree`.
+pub fn source_tree_digest(
+    repo_root: &Path,
+    rel_root: &str,
+    lane: &str,
+    kind: SourceKind,
+) -> Result<String, LaneLoadError> {
+    let Some(rule) = source_rule(lane, kind) else {
+        return source_fail(format!("no source rule for lane {lane}"));
+    };
+    let (root, root_text) = contained_path(repo_root, rel_root, Kind::Dir)?;
+    let mut walk = Walk {
+        rule,
+        root_text,
+        files: Vec::new(),
+        total: 0,
+    };
+    walk.directory(&root, "", 0)?;
+    let framed = coding_adventures_test_bootstrap::manifest::frame_sources(&walk.files);
+    Ok(sha256_hex(&framed))
 }
 
 // ---------------------------------------------------------------------------
@@ -930,6 +1220,36 @@ pub fn load_lane(repo_root: &Path, package: &str) -> Result<LoadedLane, LaneLoad
     for build_file in &consumer.build_files {
         let bytes = read_repo_file(repo_root, build_file, MAX_BUILD_FILE_BYTES)?;
         check_build_routing(build_file, &bytes)?;
+    }
+    // Source freshness (VER04i 9 check 23): both digests recomputed from the tree.
+    let source = binding_source(&binding)?;
+    let source_root = if source == "." {
+        consumer.package_root.clone()
+    } else {
+        format!("{}/{source}", consumer.package_root)
+    };
+    let source_digest = source_tree_digest(
+        repo_root,
+        &source_root,
+        &consumer.lane,
+        SourceKind::Production,
+    )?;
+    if source_digest != manifest.source_sha256 {
+        return err(
+            "stale-source",
+            format!("source_sha256 does not match the recomputed digest of {source_root}"),
+        );
+    }
+    let Some(runner_dir) = runner_root(&consumer.lane) else {
+        return source_fail(format!("no source rule for lane {}", consumer.lane));
+    };
+    let runner_digest =
+        source_tree_digest(repo_root, runner_dir, &consumer.lane, SourceKind::Runner)?;
+    if runner_digest != manifest.runner_src_sha256 {
+        return err(
+            "stale-runner",
+            format!("runner.src_sha256 does not match the recomputed digest of {runner_dir}"),
+        );
     }
 
     Ok(LoadedLane {
