@@ -1,0 +1,31 @@
+[package]
+name = "game-clock"
+version = "0.1.0"
+edition = "2021"
+description = "Deterministic integer-nanosecond fixed-timestep accumulator and frame pacer"
+license = "MIT"
+
+[lib]
+name = "game_clock"
+path = "src/lib.rs"
+
+[dependencies]
+
+[dev-dependencies]
+coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
+coding_adventures_sha256 = { path = "../sha256" }
+capability-runtime-conformance = { path = "../capability-runtime-conformance" }
+
+[[test]]
+name = "conformance"
+path = "tests/conformance.rs"
+
+[[test]]
+name = "microbenchmarks"
+path = "tests/microbenchmarks.rs"
+harness = false
+
+[[test]]
+name = "runtime_capability"
+path = "tests/runtime_capability.rs"
+harness = false

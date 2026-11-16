@@ -1032,21 +1032,11 @@
       "id": "EXEMPT-CWE-400-NO-STEP-PROOF",
       "kind": "no-live-proof",
       "rationale": "computed exemption (unapproved): no step-bound proof is live, so the Warrant steps bounds are declarations that no tool checks (src/gates.rs: lowering refused: Unsupported custom type in WIR lowering: str; parse refused at src/combinational.rs:54:5: Expected item, found Const (line: `pub const MAX_DECODER_WIDTH: usize = 16;`); per export, and_gate: alone: lowering refused (Variable 'None' not found in scope); and_n: alone: lowering refused (Unsupported method call 'iter' in WIR lowering); decoder: alone: parse refused (Unexpected token in expression: Or); demux: alone: parse refused (Unexpected token in expression: Or); encoder: alone: parse refused (Unexpected token in expression: Or); mux2: alone: lowers (loop-free, table-free body); mux4: alone: lowers (loop-free, table-free body); mux_n: alone: lowering refused (Unsupported custom type in WIR lowering: f64); nand_and: alone: lowers (loop-free, table-free body); nand_gate: alone: lowering refused (Variable 'None' not found in scope); nand_not: alone: lowers (loop-free, table-free body); nand_or: alone: lowers (loop-free, table-free body); nand_xor: alone: lowers (loop-free, table-free body); nor_gate: alone: lowering refused (Variable 'None' not found in scope); not_gate: alone: lowering refused (Variable 'None' not found in scope); or_gate: alone: lowering refused (Variable 'None' not found in scope); or_n: alone: lowering refused (Unsupported method call 'iter' in WIR lowering); priority_encoder: alone: parse refused (Expected RParen, found Ident(\"Vec\")); tri_state: alone: parse refused (Expected LBrace, found Lt); xnor_gate: alone: lowering refused (Variable 'None' not found in scope); xor_gate: alone: lowering refused (Variable 'None' not found in scope); xor_n: alone: lowering refused (Unsupported method call 'iter' in WIR lowering))"
-    },
-    {
-      "approved": false,
-      "assumptions": [],
-      "cwe": 208,
-      "evidence": [
-        "warrant-spec::all-operands-public"
-      ],
-      "id": "EXEMPT-CWE-208-NO-SECRET-OPERANDS",
-      "kind": "not-applicable",
-      "rationale": "not applicable: no secret operands; the Warrant document labels every operand of every operation public, so it states no constant-time obligation and none was run. Recorded as an unapproved exemption rather than an exclusion because the registry defines no safe subset for CWE-208, and because the labels are the specification's own classification, which no analyzer here confirms"
     }
   ],
   "package": "rust/logic-gates",
   "profile": "boolean-logic",
+  "profile_sha256": "e6dcd154fb4801acbdfe317068f46d8b0fe15a1b83e71b018d13bfe9490707f9",
   "public_symbols_without_claims": [],
   "rungs": {
     "E0": "pass",
@@ -1226,14 +1216,14 @@
       "status": "excluded"
     },
     {
-      "approved": false,
       "cwe": 208,
       "evidence": [
+        "capability-audit::no-secret-inputs",
         "warrant-spec::all-operands-public"
       ],
       "name": "Observable Timing Discrepancy",
-      "reason": "not applicable: no secret operands; the Warrant document labels every operand of every operation public, so it states no constant-time obligation and none was run. Recorded as an unapproved exemption rather than an exclusion because the registry defines no safe subset for CWE-208, and because the labels are the specification's own classification, which no analyzer here confirms",
-      "status": "exemption"
+      "reason": "no secret inputs: package contains no secret operands or cryptographic comparison operations; timing variation reveals no sensitive data",
+      "status": "excluded"
     },
     {
       "cwe": 330,

@@ -134,8 +134,10 @@ var (
 		"code/scripts/tfv.py",
 		"code/scripts/bootstrap_harness_conformance.py",
 	}
-	rngCorpusPaths      = []string{"code/specs/fixtures/rng-v1"}
-	warrantGrammarPaths = []string{
+	rngCorpusPaths         = []string{"code/specs/fixtures/rng-v1"}
+	hamurabiCorpusPaths    = []string{"code/specs/fixtures/hamurabi-v1"}
+	lunarLanderCorpusPaths = []string{"code/specs/fixtures/lunar-lander-v1"}
+	warrantGrammarPaths    = []string{
 		"code/grammars/warrant",
 		"code/specs/fixtures/warrant-syntax-v1",
 		"code/specs/fixtures/warrant-vectors-synthetic-v1",
@@ -301,6 +303,188 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "the shared rng conformance corpus",
 		matches:  isRngCorpus,
 		paths:    rngCorpusPaths,
+	},
+	{
+		name:     "rust/hamurabi",
+		language: "rust",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "go/hamurabi",
+		language: "go",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "python/hamurabi",
+		language: "python",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "typescript/hamurabi",
+		language: "typescript",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "rust/lunar-lander",
+		language: "rust",
+		inputs:   "the shared lunar lander conformance corpus",
+		matches:  isLunarLanderCorpus,
+		paths:    lunarLanderCorpusPaths,
+	},
+	{
+		name:     "csharp/hamurabi",
+		language: "csharp",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "fsharp/hamurabi",
+		language: "fsharp",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "java/hamurabi",
+		language: "java",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "kotlin/hamurabi",
+		language: "kotlin",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "dart/hamurabi",
+		language: "dart",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "swift/hamurabi",
+		language: "swift",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "haskell/hamurabi",
+		language: "haskell",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "c/hamurabi",
+		language: "c",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "cpp/hamurabi",
+		language: "cpp",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "ocaml/hamurabi",
+		language: "ocaml",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "ruby/hamurabi",
+		language: "ruby",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "elixir/hamurabi",
+		language: "elixir",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "lua/hamurabi",
+		language: "lua",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "perl/hamurabi",
+		language: "perl",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "go/lunar-lander",
+		language: "go",
+		inputs:   "the shared lunar lander conformance corpus",
+		matches:  isLunarLanderCorpus,
+		paths:    lunarLanderCorpusPaths,
+	},
+	{
+		name:     "python/lunar-lander",
+		language: "python",
+		inputs:   "the shared lunar lander conformance corpus",
+		matches:  isLunarLanderCorpus,
+		paths:    lunarLanderCorpusPaths,
+	},
+	{
+		name:     "typescript/lunar-lander",
+		language: "typescript",
+		inputs:   "the shared lunar lander conformance corpus",
+		matches:  isLunarLanderCorpus,
+		paths:    lunarLanderCorpusPaths,
+	},
+	{
+		name:     "ruby/lunar-lander",
+		language: "ruby",
+		inputs:   "the shared lunar lander conformance corpus",
+		matches:  isLunarLanderCorpus,
+		paths:    lunarLanderCorpusPaths,
+	},
+	{
+		name:     "elixir/lunar_lander",
+		language: "elixir",
+		inputs:   "the shared lunar lander conformance corpus",
+		matches:  isLunarLanderCorpus,
+		paths:    lunarLanderCorpusPaths,
+	},
+	{
+		name:     "lua/lunar-lander",
+		language: "lua",
+		inputs:   "the shared lunar lander conformance corpus",
+		matches:  isLunarLanderCorpus,
+		paths:    lunarLanderCorpusPaths,
+	},
+	{
+		name:     "perl/lunar-lander",
+		language: "perl",
+		inputs:   "the shared lunar lander conformance corpus",
+		matches:  isLunarLanderCorpus,
+		paths:    lunarLanderCorpusPaths,
 	},
 	{
 		name:     "go/rng",
@@ -608,6 +792,20 @@ func isKilnToolchainPinInput(changed string) bool {
 //	code/specs/rng.md                         → false (prose; the corpus pins behaviour)
 func isRngCorpus(changed string) bool {
 	return strings.HasPrefix(changed, "code/specs/fixtures/rng-v1/")
+}
+
+// isHamurabiCorpus reports whether a changed path is in the shared hamurabi corpus,
+// which the hamurabi package tests read.
+//
+//	code/specs/fixtures/hamurabi-v1/cases.json  → true
+//	code/specs/fixtures/hamurabi-v10/cases.json → false
+func isHamurabiCorpus(changed string) bool {
+	return strings.HasPrefix(changed, "code/specs/fixtures/hamurabi-v1/")
+}
+
+// isLunarLanderCorpus reports whether a changed path is in the shared lunar lander corpus.
+func isLunarLanderCorpus(changed string) bool {
+	return strings.HasPrefix(changed, "code/specs/fixtures/lunar-lander-v1/")
 }
 
 // isMosaicRepositorySource reports whether a changed path is one the Mosaic

@@ -9,6 +9,7 @@ use std::fmt;
 
 use crate::evidence::DecompressionBounds;
 use crate::json::JsonValue;
+use crate::profile::AuditProfile;
 use crate::registry::{WeaknessClass, WeaknessRegistry};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -164,9 +165,16 @@ pub struct AuditEvidence {
     /// default -- means "not attested", never "no secrets": with no
     /// constant-time evidence either, the CWE-208 row stays open.
     pub no_secret_operand_ids: Vec<String>,
-    /// What kind of package the three attestation rows (CWE-326/327/407)
-    /// describe; see [`AuditProfile`].
+    /// The package's audit profile (`assurance-profile.json`): the wording of
+    /// the three attestation rows (CWE-326/327/407) and what kind of package it
+    /// is; see [`AuditProfile`].  Data supplies sentences; the checks below
+    /// decide whether a declared exclusion may stand.
     pub profile: AuditProfile,
+    /// The Warrant document has at least one operation and every operation
+    /// declares a `steps` bound row.  A declared CWE-407 exclusion ("bounded
+    /// work per call") needs it: a profile cannot call work bounded that the
+    /// document does not bound.
+    pub all_ops_step_bounded: bool,
     /// The CWE-409 (decompression bomb) facts: the operations with an `output`
     /// bound row and the generated evidence that supports or fails to support
     /// them.  Empty -- the default -- means "the document bounds no output",
@@ -174,78 +182,42 @@ pub struct AuditEvidence {
     pub decompression: DecompressionBounds,
 }
 
-/// What the package does, for the rows whose rationale is a static statement
-/// about the package rather than a derived fact.  Those rows already carry the
-/// `unverified::` evidence prefix; this only selects which true sentence they
-/// carry.
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
-pub enum AuditProfile {
-    /// Constant-time comparison / selection primitives (rust/ct-compare).
+/// Language memory safety profile determining how Family 1 (Memory Safety)
+/// weakness rows are evaluated across multiple languages (VER15 / VER00 §8.2).
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub enum LanguageSafetyProfile {
+    /// Safe Rust with no unsafe blocks and no FFI reachability.
     #[default]
-    Comparison,
-    /// Table-driven finite-field arithmetic (rust/gf256).
-    FieldArithmetic,
-    /// A variable-length integer codec (rust/wasm-leb128): bytes in, integers
-    /// out and back, no key material, no cryptography.
-    VarintCodec,
-    /// Pure Boolean logic (rust/logic-gates): logic gates and combinational
-    /// blocks over single-bit values.  No bytes-as-keys, no cryptography.
-    BooleanLogic,
-    /// Adders and an arithmetic logic unit over bit vectors (rust/arithmetic):
-    /// a bit vector of the caller's width in, a bit vector of the same width out.
-    /// No bytes-as-keys, no cryptography.  Distinct from `BooleanLogic`, whose
-    /// sentences say "single-bit values only" and name a 2^n decoder bound, both
-    /// false for an adder over a 16-bit operand.
-    BitArithmetic,
-    /// A lossless compressor and decompressor (rust/lzw): bytes in, bytes out
-    /// and back, an output that can be far larger than the input, no key
-    /// material, no cryptography.  Unlike every other profile this one
-    /// *decompresses hostile input*, so CWE-409 is never excluded for it: the
-    /// row is evidenced by the document's `output`/`heap` bound rows or the
-    /// report cannot be generated (see [`DecompressionBounds`]).
-    LosslessCompression,
+    SafeRust,
+    /// Garbage-collected or managed runtime (e.g. TypeScript, Python, Go, Java, C#).
+    GcManaged { language: String },
+    /// Manually memory-managed language or unsafe code (e.g. C, C++, Rust with unsafe/FFI).
+    /// Memory safety rows cannot be excluded; they must be discharged via evidence/proofs.
+    ManualMemoryChecked { language: String },
 }
 
-impl AuditProfile {
-    /// Does a package with this profile expand attacker-controlled input?
-    /// CWE-409 is then applicable by definition, whatever the document says.
-    pub fn decompresses(self) -> bool {
-        matches!(self, AuditProfile::LosslessCompression)
+impl LanguageSafetyProfile {
+    /// Returns true if this profile is Safe Rust.
+    pub fn is_safe_rust(&self) -> bool {
+        matches!(self, LanguageSafetyProfile::SafeRust)
     }
 
-    /// The name `--profile` accepts and a report records (`FromStr`'s inverse).
-    /// It is the on-disk spelling, so it must never change for an existing variant.
-    pub fn as_str(self) -> &'static str {
+    /// Returns true if this profile is a GC-managed runtime.
+    pub fn is_gc_managed(&self) -> bool {
+        matches!(self, LanguageSafetyProfile::GcManaged { .. })
+    }
+
+    /// Returns true if this profile requires manual memory checks.
+    pub fn is_manual_memory_checked(&self) -> bool {
+        matches!(self, LanguageSafetyProfile::ManualMemoryChecked { .. })
+    }
+
+    /// Return the language name for this profile.
+    pub fn language_name(&self) -> &str {
         match self {
-            AuditProfile::Comparison => "comparison",
-            AuditProfile::FieldArithmetic => "field-arithmetic",
-            AuditProfile::VarintCodec => "varint-codec",
-            AuditProfile::BooleanLogic => "boolean-logic",
-            AuditProfile::BitArithmetic => "bit-arithmetic",
-            AuditProfile::LosslessCompression => "lossless-compression",
-        }
-    }
-}
-
-impl std::fmt::Display for AuditProfile {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.write_str(self.as_str())
-    }
-}
-
-impl std::str::FromStr for AuditProfile {
-    type Err = String;
-    fn from_str(s: &str) -> Result<Self, String> {
-        match s {
-            "comparison" => Ok(AuditProfile::Comparison),
-            "field-arithmetic" => Ok(AuditProfile::FieldArithmetic),
-            "varint-codec" => Ok(AuditProfile::VarintCodec),
-            "boolean-logic" => Ok(AuditProfile::BooleanLogic),
-            "bit-arithmetic" => Ok(AuditProfile::BitArithmetic),
-            "lossless-compression" => Ok(AuditProfile::LosslessCompression),
-            other => Err(format!(
-                "unknown profile `{other}` (comparison | field-arithmetic | varint-codec | boolean-logic | bit-arithmetic | lossless-compression)"
-            )),
+            LanguageSafetyProfile::SafeRust => "rust",
+            LanguageSafetyProfile::GcManaged { language } => language.as_str(),
+            LanguageSafetyProfile::ManualMemoryChecked { language } => language.as_str(),
         }
     }
 }
@@ -253,14 +225,63 @@ impl std::str::FromStr for AuditProfile {
 #[derive(Clone, Debug)]
 pub struct PackageAuditContext {
     pub package_id: String,
+    /// Backwards-compatible flag for safe Rust. Kept in sync with `language_safety`.
     pub is_safe_rust: bool,
+    /// Language memory safety profile (SafeRust, GcManaged, ManualMemoryChecked).
+    pub language_safety: LanguageSafetyProfile,
+    /// Whether any operation in the specification declares secret operands.
+    pub has_secret_ops: bool,
+    /// Claims specifying constant-time obligations. If empty, the package is considered non-crypto.
+    pub constant_time_claims: Vec<String>,
     pub declared_capabilities: Vec<String>,
     pub has_wir_timing_proof: bool,
     pub has_instruction_benchmarks: bool,
     pub has_zero_alloc_proof: bool,
     pub has_pbt_coverage: bool,
     pub has_fuzz_coverage: bool,
+    /// Whether static analysis verified the absence of dynamic eval (eval/exec/Function).
+    pub has_eval_analyzer_evidence: bool,
+    /// Whether static analysis verified the absence of prototype pollution.
+    pub has_prototype_analyzer_evidence: bool,
     pub evidence: AuditEvidence,
+}
+
+impl Default for PackageAuditContext {
+    fn default() -> Self {
+        Self {
+            package_id: String::new(),
+            is_safe_rust: false,
+            language_safety: LanguageSafetyProfile::ManualMemoryChecked {
+                language: "unknown".to_string(),
+            },
+            has_secret_ops: false,
+            constant_time_claims: Vec::new(),
+            declared_capabilities: Vec::new(),
+            has_wir_timing_proof: false,
+            has_instruction_benchmarks: false,
+            has_zero_alloc_proof: false,
+            has_pbt_coverage: false,
+            has_fuzz_coverage: false,
+            has_eval_analyzer_evidence: false,
+            has_prototype_analyzer_evidence: false,
+            evidence: AuditEvidence::default(),
+        }
+    }
+}
+
+impl PackageAuditContext {
+    /// Helper to resolve the effective language safety profile, taking into account
+    /// both `language_safety` and the legacy `is_safe_rust` boolean flag.
+    pub fn effective_safety_profile(&self) -> LanguageSafetyProfile {
+        match (&self.language_safety, self.is_safe_rust) {
+            (LanguageSafetyProfile::SafeRust, false) => {
+                LanguageSafetyProfile::ManualMemoryChecked {
+                    language: "rust".to_string(),
+                }
+            }
+            (other, _) => other.clone(),
+        }
+    }
 }
 
 #[derive(Debug)]
@@ -328,13 +349,32 @@ pub fn build_weakness_matrix(
 fn cwe_409(class: &WeaknessClass, ctx: &PackageAuditContext) -> Result<WeaknessRow, MatrixError> {
     let d = &ctx.evidence.decompression;
     let applies = ctx.evidence.profile.decompresses() || !d.ops.is_empty();
+    // A profile that declares CWE-409 excluded is claiming the class does not
+    // apply; an `output` row (or, defensively, a decompressor kind) contradicts
+    // the claim, and no wording can outvote the document.
+    if applies && ctx.evidence.profile.row_reason(409).is_some() {
+        return Err(MatrixError::InvalidExclusion(format!(
+            "CWE-409: profile `{}` declares the class excluded, but it applies ({}): the declaration is refused",
+            ctx.evidence.profile.name,
+            if ctx.evidence.profile.decompresses() {
+                "the profile is a decompressor".to_string()
+            } else {
+                format!("the document declares an `output` row for {}", d.ops.join(", "))
+            }
+        )));
+    }
     if !applies {
         return Ok(WeaknessRow {
             cwe: 409,
             name: class.name.clone(),
             status: WeaknessStatus::Excluded,
             approved: None,
-            reason: "pure computation: package implements no decompression or archive decoding routines".into(),
+            reason: ctx
+                .evidence
+                .profile
+                .row_reason(409)
+                .unwrap_or("pure computation: package implements no decompression or archive decoding routines")
+                .into(),
             evidence: vec!["unverified::ast-audit::no-compression-routines".into()],
         });
     }
@@ -365,19 +405,53 @@ fn cwe_409(class: &WeaknessClass, ctx: &PackageAuditContext) -> Result<WeaknessR
     })
 }
 
+/// The reason sentence of a static attestation row, taken from the profile, but
+/// only when the evidence does not contradict the declaration.
+///
+/// The profile supplies *words*; this function is where the words are held to
+/// the facts, so a data file can never claim more than the evidence allows:
+///
+/// ```text
+///  CWE-326, CWE-327  excluded  <-  no `rand:` capability (key material needs entropy)
+///  CWE-407           excluded  <-  the document has operations, and every one has a `steps` bound row
+/// ```
+fn declared_exclusion(ctx: &PackageAuditContext, cwe: u32) -> Result<String, MatrixError> {
+    let profile = &ctx.evidence.profile;
+    let reason = profile.row_reason(cwe).ok_or_else(|| {
+        MatrixError::MissingEvidence(format!(
+            "profile `{}` declares no CWE-{cwe} row (an audit profile must declare 326, 327 and 407)",
+            profile.name
+        ))
+    })?;
+    let contradiction = match cwe {
+        326 | 327 if ctx.declared_capabilities.iter().any(|c| c.starts_with("rand:")) => {
+            Some("the package declares a `rand:` capability, so it can generate key material")
+        }
+        407 if !ctx.evidence.all_ops_step_bounded => {
+            Some("the Warrant document has an operation with no `steps` bound row, so its work is not declared bounded")
+        }
+        _ => None,
+    };
+    match contradiction {
+        Some(why) => Err(MatrixError::InvalidExclusion(format!(
+            "CWE-{cwe}: profile `{}` declares the class excluded, but {why}",
+            profile.name
+        ))),
+        None => Ok(reason.to_string()),
+    }
+}
+
 fn evaluate_row(
     class: &WeaknessClass,
     ctx: &PackageAuditContext,
 ) -> Result<WeaknessRow, MatrixError> {
     match class.cwe {
-        // Memory safety: excluded by construction in safe Rust, but only when
-        // the effect certificate declares no `unsafe_code` exception.  With an
-        // exception the exclusion is false, so the row is derived from evidence:
-        // out-of-bounds read/write are discharged by bounds-checked symbolic
-        // execution of the lowered code (bounded), the rest stay unapproved
-        // exemptions until a tool (for example Miri) produces evidence.
-        416 | 787 | 125 | 415 | 476 | 190 => {
-            if ctx.is_safe_rust {
+        // Memory safety: Family 1 (CWE-416, 787, 125, 415, 476, 190)
+        // Excluded by construction in safe Rust and garbage-collected runtimes;
+        // for manual memory management (C, C++, Rust with unsafe/FFI), Family 1
+        // must be discharged via evidence/proofs rather than excluded.
+        416 | 787 | 125 | 415 | 476 | 190 => match ctx.effective_safety_profile() {
+            LanguageSafetyProfile::SafeRust => {
                 Ok(WeaknessRow {
                     cwe: class.cwe,
                     name: class.name.clone(),
@@ -386,35 +460,119 @@ fn evaluate_row(
                     reason: "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption".into(),
                     evidence: vec!["analyzer::no-unsafe-or-ffi".into(), "effect-certificate::proved".into()],
                 })
-            } else if matches!(class.cwe, 125 | 787) && !ctx.evidence.oob_ids.is_empty() {
-                Ok(WeaknessRow {
-                    cwe: class.cwe,
-                    name: class.name.clone(),
-                    status: WeaknessStatus::Discharged,
-                    approved: None,
-                    reason: format!(
-                        "unsafe exception declared ({}): every memory access of the lowered code is bounds-checked by symbolic execution for all length shapes covered by {}; not a proof for larger buffers and not a check of the real unsafe block under Miri",
-                        ctx.evidence.unsafe_exceptions.join("; "),
-                        ctx.evidence.oob_label
-                    ),
-                    evidence: {
-                        let mut ids = ctx.evidence.oob_ids.clone();
-                        ids.push("effect-certificate::unsafe-exception".into());
-                        ids
-                    },
-                })
-            } else {
-                Ok(WeaknessRow {
-                    cwe: class.cwe,
-                    name: class.name.clone(),
-                    status: WeaknessStatus::Exemption,
-                    approved: Some(false),
-                    reason: format!(
-                        "computed exemption (unapproved): unsafe exception declared ({}); no evidence for this class beyond inspection (Miri not run)",
-                        ctx.evidence.unsafe_exceptions.join("; ")
-                    ),
-                    evidence: vec!["effect-certificate::unsafe-exception".into()],
-                })
+            }
+            LanguageSafetyProfile::GcManaged { ref language } => {
+                // GcManaged may ONLY exclude Family 1 memory-safety CWEs when
+                // ctx.evidence.unsafe_exceptions.is_empty(). If FFI/unsafe is present,
+                // fail closed into ManualMemoryChecked-style discharge/exemption.
+                if !ctx.evidence.unsafe_exceptions.is_empty() {
+                    if matches!(class.cwe, 125 | 787) && !ctx.evidence.oob_ids.is_empty() {
+                        let reason = format!(
+                            "unsafe exception declared ({}): managed runtime ({language}) with FFI/unsafe blocks; every memory access of the lowered code is bounds-checked by symbolic execution for all length shapes covered by {}; not a proof for larger buffers",
+                            ctx.evidence.unsafe_exceptions.join("; "),
+                            ctx.evidence.oob_label
+                        );
+                        Ok(WeaknessRow {
+                            cwe: class.cwe,
+                            name: class.name.clone(),
+                            status: WeaknessStatus::Discharged,
+                            approved: None,
+                            reason,
+                            evidence: {
+                                let mut ids = ctx.evidence.oob_ids.clone();
+                                ids.push("effect-certificate::unsafe-exception".into());
+                                ids
+                            },
+                        })
+                    } else {
+                        let reason = format!(
+                            "computed exemption (unapproved): managed runtime ({language}) with declared unsafe/FFI exceptions ({}); no formal memory safety proof for this class beyond runtime checks",
+                            ctx.evidence.unsafe_exceptions.join("; ")
+                        );
+                        Ok(WeaknessRow {
+                            cwe: class.cwe,
+                            name: class.name.clone(),
+                            status: WeaknessStatus::Exemption,
+                            approved: Some(false),
+                            reason,
+                            evidence: vec!["effect-certificate::unsafe-exception".into()],
+                        })
+                    }
+                } else {
+                    let reason = match class.cwe {
+                        416 => format!("garbage-collected runtime ({language}): automatic garbage collection manages object lifetimes; no manual deallocation or dangling pointers possible in FFI-free and unsafe-free code"),
+                        787 => format!("garbage-collected runtime ({language}): managed runtime enforces automatic buffer bounds checks in FFI-free code; indexing outside array boundaries throws checked exceptions or panics"),
+                        125 => format!("garbage-collected runtime ({language}): managed runtime enforces automatic buffer bounds checks in FFI-free code; read operations past buffer boundaries throw checked exceptions or panics"),
+                        415 => format!("garbage-collected runtime ({language}): automatic garbage collection prevents manual memory deallocation in FFI-free code; double free is structurally impossible"),
+                        476 => format!("garbage-collected runtime ({language}): managed runtime memory safety prevents raw pointer dereference in FFI-free code; null/undefined references trigger safe exceptions or are prevented by the type system"),
+                        190 => format!("garbage-collected runtime ({language}): checked arithmetic or bounded numbers combined with runtime bounds checking prevent integer-overflow-induced memory corruption in FFI-free code"),
+                        _ => format!("garbage-collected runtime ({language}): managed runtime enforces memory safety"),
+                    };
+                    Ok(WeaknessRow {
+                        cwe: class.cwe,
+                        name: class.name.clone(),
+                        status: WeaknessStatus::Excluded,
+                        approved: None,
+                        reason,
+                        evidence: vec![
+                            format!("runtime-memory-safety::{language}"),
+                            "effect-certificate::proved".into(),
+                        ],
+                    })
+                }
+            }
+            LanguageSafetyProfile::ManualMemoryChecked { ref language } => {
+                if matches!(class.cwe, 125 | 787) && !ctx.evidence.oob_ids.is_empty() {
+                    let reason = if !ctx.evidence.unsafe_exceptions.is_empty() {
+                        format!(
+                            "unsafe exception declared ({}): every memory access of the lowered code is bounds-checked by symbolic execution for all length shapes covered by {}; not a proof for larger buffers and not a check of the real unsafe block under Miri",
+                            ctx.evidence.unsafe_exceptions.join("; "),
+                            ctx.evidence.oob_label
+                        )
+                    } else {
+                        format!(
+                            "manual memory checked ({language}): every memory access of the lowered code is bounds-checked by symbolic execution for all length shapes covered by {}; not a proof for larger buffers",
+                            ctx.evidence.oob_label
+                        )
+                    };
+                    Ok(WeaknessRow {
+                        cwe: class.cwe,
+                        name: class.name.clone(),
+                        status: WeaknessStatus::Discharged,
+                        approved: None,
+                        reason,
+                        evidence: {
+                            let mut ids = ctx.evidence.oob_ids.clone();
+                            if !ctx.evidence.unsafe_exceptions.is_empty() {
+                                ids.push("effect-certificate::unsafe-exception".into());
+                            }
+                            ids
+                        },
+                    })
+                } else {
+                    let reason = if !ctx.evidence.unsafe_exceptions.is_empty() {
+                        format!(
+                            "computed exemption (unapproved): unsafe exception declared ({}); no evidence for this class beyond inspection (Miri not run)",
+                            ctx.evidence.unsafe_exceptions.join("; ")
+                        )
+                    } else {
+                        format!(
+                            "computed exemption (unapproved): manual memory management ({language}); no formal memory safety proof or bounds-checked execution evidence for this class",
+                        )
+                    };
+                    Ok(WeaknessRow {
+                        cwe: class.cwe,
+                        name: class.name.clone(),
+                        status: WeaknessStatus::Exemption,
+                        approved: Some(false),
+                        reason,
+                        evidence: if !ctx.evidence.unsafe_exceptions.is_empty() {
+                            vec!["effect-certificate::unsafe-exception".into()]
+                        } else {
+                            vec![]
+                        },
+                    })
+                }
             }
         }
 
@@ -472,14 +630,75 @@ fn evaluate_row(
             }
         }
         94 => {
-            Ok(WeaknessRow {
-                cwe: 94,
-                name: class.name.clone(),
-                status: WeaknessStatus::Excluded,
-                approved: None,
-                reason: "compiled Rust: language has no dynamic code evaluation or runtime eval primitives; analyzer verified no dynamic loading".into(),
-                evidence: vec!["capability-audit::banned-constructs-clean".into()],
-            })
+            let profile = ctx.effective_safety_profile();
+            match profile {
+                LanguageSafetyProfile::SafeRust => {
+                    Ok(WeaknessRow {
+                        cwe: 94,
+                        name: class.name.clone(),
+                        status: WeaknessStatus::Excluded,
+                        approved: None,
+                        reason: "compiled Rust: language has no dynamic code evaluation or runtime eval primitives; analyzer verified no dynamic loading".into(),
+                        evidence: vec!["capability-audit::banned-constructs-clean".into()],
+                    })
+                }
+                LanguageSafetyProfile::GcManaged { ref language } => {
+                    let lang_lower = language.to_lowercase();
+                    if lang_lower == "typescript"
+                        || lang_lower == "javascript"
+                        || lang_lower == "ts"
+                        || lang_lower == "js"
+                        || lang_lower == "python"
+                        || lang_lower == "py"
+                    {
+                        if ctx.has_eval_analyzer_evidence
+                            || ctx.declared_capabilities.iter().any(|c| c == "analyzer:no-dynamic-eval")
+                        {
+                            Ok(WeaknessRow {
+                                cwe: 94,
+                                name: class.name.clone(),
+                                status: WeaknessStatus::Discharged,
+                                approved: None,
+                                reason: format!("dynamic language ({language}): static analyzer verified zero dynamic code evaluation (eval/exec/Function)"),
+                                evidence: vec!["analyzer::no-dynamic-eval".into()],
+                            })
+                        } else {
+                            Ok(WeaknessRow {
+                                cwe: 94,
+                                name: class.name.clone(),
+                                status: WeaknessStatus::Exemption,
+                                approved: Some(false),
+                                reason: format!("computed exemption (unapproved): dynamic language ({language}) supports dynamic code evaluation; no static analysis proved absence of eval/exec"),
+                                evidence: vec![],
+                            })
+                        }
+                    } else {
+                        Ok(WeaknessRow {
+                            cwe: 94,
+                            name: class.name.clone(),
+                            status: WeaknessStatus::Excluded,
+                            approved: None,
+                            reason: format!("managed runtime ({language}): compiled or managed language with static class loading; no dynamic eval primitives"),
+                            evidence: vec!["capability-audit::banned-constructs-clean".into()],
+                        })
+                    }
+                }
+                LanguageSafetyProfile::ManualMemoryChecked { ref language } => {
+                    let reason = if language.to_lowercase().starts_with("rust") {
+                        "compiled Rust: language has no dynamic code evaluation or runtime eval primitives; analyzer verified no dynamic loading".into()
+                    } else {
+                        format!("compiled language ({language}): statically compiled binary without dynamic code evaluation or runtime eval primitives")
+                    };
+                    Ok(WeaknessRow {
+                        cwe: 94,
+                        name: class.name.clone(),
+                        status: WeaknessStatus::Excluded,
+                        approved: None,
+                        reason,
+                        evidence: vec!["capability-audit::banned-constructs-clean".into()],
+                    })
+                }
+            }
         }
         116 => {
             Ok(WeaknessRow {
@@ -571,80 +790,84 @@ fn evaluate_row(
                 name: class.name.clone(),
                 status: WeaknessStatus::Excluded,
                 approved: None,
-                reason: match ctx.evidence.profile {
-                    AuditProfile::Comparison => "linear complexity: algorithms operate in strict linear time O(n) independent of input values",
-                    AuditProfile::FieldArithmetic => "constant work per call: every operation is a bounded number of table lookups and arithmetic steps after a one-time 255-iteration table build; no input-dependent iteration",
-                    AuditProfile::VarintCodec => "bounded work per call: a LEB128 encoder emits at most ceil(64/7) = 10 bytes and a decoder reads at most ceil(max_bits/7) bytes from its offset (10 for the documented widths, max_bits <= 64), one constant-time step per byte; no other input-dependent iteration",
-                    AuditProfile::LosslessCompression => "bounded work per call: the encoder performs one dictionary lookup per input byte and the decoder writes each delivered byte once, through a dictionary of at most 65,536 fixed-size entries, delivering at most the documented output cap; no other input-dependent iteration",
-                    AuditProfile::BooleanLogic => "bounded work per call: a gate is a fixed number of CMOS evaluations, an n-input gate or multiplexer is linear in its inputs, and a decoder or demultiplexer produces 2^n lines for at most 16 inputs (a width cap enforced by a panic); no other input-dependent iteration",
-                    AuditProfile::BitArithmetic => "bounded work per call: a half or full adder is a fixed number of gate evaluations, a ripple-carry adder and every ALU operation make a constant number of passes over their operands, linear in the operand length, and the result is exactly as long as the operands (no width-driven allocation); no other input-dependent iteration",
-                }
-                .into(),
+                reason: declared_exclusion(ctx, 407)?,
                 evidence: vec!["unverified::warrant-ir::cost-semantics-linear".into()],
             })
         }
 
         // Cryptography: CWE-208 observable timing discrepancy
         208 => {
-            if ctx.has_wir_timing_proof
-                && ctx.has_instruction_benchmarks
-                && ctx.evidence.ct_unproven.is_empty()
-            {
-                // Computed exemption: proof floor is proved-to-gate-level (CPU netlist).
-                // Backed by the WIR self-composition proofs and the benchmark
-                // manifest, but gate-level proof is deferred to the Busicom
-                // track, and release approval is blocked by VER00 §12.1.
-                let mut ids = ctx.evidence.ct_proof_ids.clone();
-                ids.extend(ctx.evidence.bench_ids.iter().cloned());
-                Ok(WeaknessRow {
-                    cwe: 208,
-                    name: class.name.clone(),
-                    status: WeaknessStatus::Exemption,
-                    approved: Some(false),
-                    reason: format!(
-                        "computed exemption (unapproved): floor requires proof to gate-level CPU netlist; backed by WIR-level 2-safety proofs at label {} and microbenchmark runs (no retired-instruction evidence is claimed: hardware counters are host-dependent and recorded in evidence/bench-manifest.json)",
-                        ctx.evidence.ct_proof_label
-                    ),
-                    evidence: ids,
-                })
-            } else if !ctx.evidence.ct_not_live.is_empty() {
-                // Applicable and unaddressed: the package is labelled secret,
-                // no constant-time proof exists, and the manifest says why.
-                Ok(WeaknessRow {
-                    cwe: 208,
-                    name: class.name.clone(),
-                    status: WeaknessStatus::Exemption,
-                    approved: Some(false),
-                    reason: format!(
-                        "computed exemption (unapproved): applicable and unaddressed; operands are labelled secret but no constant-time proof is live and no benchmark evidence exists ({})",
-                        ctx.evidence.not_live_note
-                    ),
-                    evidence: vec![],
-                })
+            let has_ct_claims = !ctx.constant_time_claims.is_empty()
+                || !ctx.evidence.ct_proof_ids.is_empty()
+                || !ctx.evidence.ct_unproven.is_empty()
+                || !ctx.evidence.ct_not_live.is_empty()
+                || ctx.has_wir_timing_proof
+                || ctx.has_secret_ops;
+
+            if has_ct_claims {
+                if ctx.has_wir_timing_proof
+                    && ctx.has_instruction_benchmarks
+                    && ctx.evidence.ct_unproven.is_empty()
+                {
+                    // Computed exemption: proof floor is proved-to-gate-level (CPU netlist).
+                    // Backed by the WIR self-composition proofs and the benchmark
+                    // manifest, but gate-level proof is deferred to the Busicom
+                    // track, and release approval is blocked by VER00 §12.1.
+                    let mut ids = ctx.evidence.ct_proof_ids.clone();
+                    ids.extend(ctx.evidence.bench_ids.iter().cloned());
+                    Ok(WeaknessRow {
+                        cwe: 208,
+                        name: class.name.clone(),
+                        status: WeaknessStatus::Exemption,
+                        approved: Some(false),
+                        reason: format!(
+                            "computed exemption (unapproved): floor requires proof to gate-level CPU netlist; backed by WIR-level 2-safety proofs at label {} and microbenchmark runs (no retired-instruction evidence is claimed: hardware counters are host-dependent and recorded in evidence/bench-manifest.json)",
+                            ctx.evidence.ct_proof_label
+                        ),
+                        evidence: ids,
+                    })
+                } else if !ctx.evidence.ct_not_live.is_empty() {
+                    // Applicable and unaddressed: the package is labelled secret,
+                    // no constant-time proof exists, and the manifest says why.
+                    Ok(WeaknessRow {
+                        cwe: 208,
+                        name: class.name.clone(),
+                        status: WeaknessStatus::Exemption,
+                        approved: Some(false),
+                        reason: format!(
+                            "computed exemption (unapproved): applicable and unaddressed; operands are labelled secret but no constant-time proof is live and no benchmark evidence exists ({})",
+                            ctx.evidence.not_live_note
+                        ),
+                        evidence: vec![],
+                    })
+                } else {
+                    Err(MatrixError::OpenRow("CWE-208 timing discrepancy lacks WIR or benchmark evidence".into()))
+                }
             } else if !ctx.evidence.no_secret_operand_ids.is_empty()
+                && ctx.constant_time_claims.is_empty()
                 && ctx.evidence.ct_proof_ids.is_empty()
-                && ctx.evidence.ct_unproven.is_empty()
-                && ctx.evidence.ct_not_live.is_empty()
+                && !ctx.has_secret_ops
             {
-                // Not applicable: the document labels every operand public, so
-                // it states no constant-time obligation, and the proof manifest
-                // holds none.  This is a separate branch with its own
-                // precondition (an attestation the checker re-derives from the
-                // spec on disk), not a relaxation of the two above: any
-                // constant-time entry at all, proven or not, keeps the old
-                // outcome.  The registry gives CWE-208 no safe subset, so the
-                // row cannot be `excluded` (VER15 section 4, rule 2); it is an
-                // unapproved exemption whose reason says why it does not apply.
+                // Non-crypto package (Music and DSP packages, pure computation):
+                // All operands labelled public by Warrant document, zero constant-time claims or obligations,
+                // and no secret operations.
+                // Excluded under the `no_secret_inputs` safe subset rather than an unapproved
+                // exemption, enabling check_gate to pass for non-cryptographic packages.
                 Ok(WeaknessRow {
                     cwe: 208,
                     name: class.name.clone(),
-                    status: WeaknessStatus::Exemption,
-                    approved: Some(false),
-                    reason: "not applicable: no secret operands; the Warrant document labels every operand of every operation public, so it states no constant-time obligation and none was run. Recorded as an unapproved exemption rather than an exclusion because the registry defines no safe subset for CWE-208, and because the labels are the specification's own classification, which no analyzer here confirms".into(),
-                    evidence: ctx.evidence.no_secret_operand_ids.clone(),
+                    status: WeaknessStatus::Excluded,
+                    approved: None,
+                    reason: "no secret inputs: package contains no secret operands or cryptographic comparison operations; timing variation reveals no sensitive data".into(),
+                    evidence: vec![
+                        "capability-audit::no-secret-inputs".into(),
+                        crate::evidence::NO_SECRET_OPERANDS_ATTESTATION.into(),
+                    ],
                 })
             } else {
-                Err(MatrixError::OpenRow("CWE-208 timing discrepancy lacks WIR or benchmark evidence".into()))
+                // Fail-closed: missing constant-time proofs and missing all-operands-public attestation.
+                // Never fall into Excluded!
+                Err(MatrixError::OpenRow("CWE-208 timing discrepancy lacks constant-time proof or all-operands-public attestation".into()))
             }
         }
         330 => {
@@ -667,15 +890,7 @@ fn evaluate_row(
                 name: class.name.clone(),
                 status: WeaknessStatus::Excluded,
                 approved: None,
-                reason: match ctx.evidence.profile {
-                    AuditProfile::Comparison => "primitive comparison: package implements constant-time comparison primitives rather than legacy ciphers",
-                    AuditProfile::FieldArithmetic => "field arithmetic: package implements GF(2^8) arithmetic only, no cipher, hash or MAC",
-                    AuditProfile::VarintCodec => "integer encoding: package implements LEB128 variable-length integer encoding only, no cipher, hash or MAC",
-                    AuditProfile::BooleanLogic => "boolean logic: package implements logic gates and combinational blocks over single-bit values only, no cipher, hash or MAC",
-                    AuditProfile::BitArithmetic => "bit arithmetic: package implements adders and an arithmetic logic unit over bit vectors only, no cipher, hash or MAC",
-                    AuditProfile::LosslessCompression => "lossless compression: package implements LZW compression and decompression only, no cipher, hash or MAC",
-                }
-                .into(),
+                reason: declared_exclusion(ctx, 327)?,
                 evidence: vec!["unverified::ast-audit::no-legacy-ciphers".into()],
             })
         }
@@ -685,15 +900,7 @@ fn evaluate_row(
                 name: class.name.clone(),
                 status: WeaknessStatus::Excluded,
                 approved: None,
-                reason: match ctx.evidence.profile {
-                    AuditProfile::Comparison => "arbitrary buffer lengths: comparison functions accept arbitrary slice lengths without fixed sub-strength keys",
-                    AuditProfile::FieldArithmetic => "no keys: the package takes and generates no key material; operands are field elements, not key bytes of a fixed strength",
-                    AuditProfile::VarintCodec => "no keys: the package takes and generates no key material; operands are integers and LEB128 byte strings, not key bytes of a fixed strength",
-                    AuditProfile::BooleanLogic => "no keys: the package takes and generates no key material; operands are single bits and short bit vectors, not key bytes of a fixed strength",
-                    AuditProfile::BitArithmetic => "no keys: the package takes and generates no key material; operands are bits and bit vectors of the caller's width, not key bytes of a fixed strength",
-                    AuditProfile::LosslessCompression => "no keys: the package takes and generates no key material; operands are byte strings to compress and compressed streams, not key bytes of a fixed strength",
-                }
-                .into(),
+                reason: declared_exclusion(ctx, 326)?,
                 evidence: vec!["unverified::type-signatures::unconstrained-slices".into()],
             })
         }
@@ -740,14 +947,73 @@ fn evaluate_row(
             })
         }
         1321 => {
-            Ok(WeaknessRow {
-                cwe: 1321,
-                name: class.name.clone(),
-                status: WeaknessStatus::Excluded,
-                approved: None,
-                reason: "strongly typed language: Rust has no object prototypes or dynamic prototype inheritance chains".into(),
-                evidence: vec!["unverified::language-type-system::no-prototype-pollution".into()],
-            })
+            let profile = ctx.effective_safety_profile();
+            match profile {
+                LanguageSafetyProfile::SafeRust => {
+                    Ok(WeaknessRow {
+                        cwe: 1321,
+                        name: class.name.clone(),
+                        status: WeaknessStatus::Excluded,
+                        approved: None,
+                        reason: "strongly typed language: Rust has no object prototypes or dynamic prototype inheritance chains".into(),
+                        evidence: vec!["unverified::language-type-system::no-prototype-pollution".into()],
+                    })
+                }
+                LanguageSafetyProfile::GcManaged { ref language } => {
+                    let lang_lower = language.to_lowercase();
+                    if lang_lower == "typescript"
+                        || lang_lower == "javascript"
+                        || lang_lower == "ts"
+                        || lang_lower == "js"
+                    {
+                        if ctx.has_prototype_analyzer_evidence
+                            || ctx.declared_capabilities.iter().any(|c| c == "analyzer:no-prototype-pollution")
+                        {
+                            Ok(WeaknessRow {
+                                cwe: 1321,
+                                name: class.name.clone(),
+                                status: WeaknessStatus::Discharged,
+                                approved: None,
+                                reason: format!("prototype-based language ({language}): static analyzer proved absence of prototype pollution and Object.prototype mutation"),
+                                evidence: vec!["analyzer::no-prototype-pollution".into()],
+                            })
+                        } else {
+                            Ok(WeaknessRow {
+                                cwe: 1321,
+                                name: class.name.clone(),
+                                status: WeaknessStatus::Exemption,
+                                approved: Some(false),
+                                reason: format!("computed exemption (unapproved): prototype-based language ({language}) is susceptible to prototype pollution; no static analysis proved absence of prototype tampering"),
+                                evidence: vec![],
+                            })
+                        }
+                    } else {
+                        Ok(WeaknessRow {
+                            cwe: 1321,
+                            name: class.name.clone(),
+                            status: WeaknessStatus::Excluded,
+                            approved: None,
+                            reason: format!("strongly typed/class-based language ({language}): language has no object prototypes or dynamic prototype inheritance chains"),
+                            evidence: vec!["unverified::language-type-system::no-prototype-pollution".into()],
+                        })
+                    }
+                }
+                LanguageSafetyProfile::ManualMemoryChecked { ref language } => {
+                    let reason = if language.to_lowercase().starts_with("rust") {
+                        "strongly typed language: Rust has no object prototypes or dynamic prototype inheritance chains".into()
+                    } else {
+                        format!("strongly typed language ({language}): language has no object prototypes or dynamic prototype inheritance chains")
+                    };
+                    Ok(WeaknessRow {
+                        cwe: 1321,
+                        name: class.name.clone(),
+                        status: WeaknessStatus::Excluded,
+                        approved: None,
+                        reason,
+                        evidence: vec!["unverified::language-type-system::no-prototype-pollution".into()],
+                    })
+                }
+            }
         }
 
         other => Err(MatrixError::MissingClass(other)),

@@ -5,3 +5,4 @@ edition = "2021"
 description = "Bounded allocation-free HTTP/1 fixed request-body length binding"
 
 [dependencies]
+http1-request-header-field = { path = "../http1-request-header-field" }

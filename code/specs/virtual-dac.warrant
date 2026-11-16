@@ -1,0 +1,56 @@
+warrant virtual_dac
+  error DacError = INVALID_PARAMETER | OUT_OF_BOUNDS
+
+  model is_in_pcm16_bounds(sample: Int) -> Bool = sample >= 0 - 32768 and sample <= 32767
+  model scale_voltage(v: Int, gain: Int) -> Int = v * gain
+
+  op check_sample_bounds(sample: Int) -> Bool
+  op mul_voltage(v: Int, gain: Int) -> Int
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels check_sample_bounds:
+    sample public
+  labels mul_voltage:
+    v public
+    gain public
+
+  input check_sample_bounds.sample:
+    hostile
+    ensures no_panic, terminates
+  input mul_voltage.v:
+    hostile
+    ensures no_panic, terminates
+  input mul_voltage.gain:
+    hostile
+    ensures no_panic, terminates
+
+  bound check_sample_bounds:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound mul_voltage:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+
+  example bounds_zero:
+    check_sample_bounds(0) == true
+  example bounds_max:
+    check_sample_bounds(32767) == true
+  example bounds_min:
+    check_sample_bounds(0 - 32768) == true
+  example bounds_overflow:
+    check_sample_bounds(32768) == false
+  example bounds_underflow:
+    check_sample_bounds(0 - 32769) == false
+  example mul_one:
+    mul_voltage(10, 2) == 20
+
+  claim check_sample_bounds_agrees:
+    forall s: Int. check_sample_bounds(s) == is_in_pcm16_bounds(s)
+  claim mul_voltage_agrees:
+    forall v: Int, g: Int. mul_voltage(v, g) == scale_voltage(v, g)

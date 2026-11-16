@@ -9,6 +9,10 @@ note frequency + harmonic profile + ADSR envelope -> sampled PCM
 That is not a faithful physical simulation yet. It is a stable teaching layer
 that lets a score, keyboard, or orchestra package select a named timbre while
 the internals remain inspectable.
+
+This module enforces CWE-400 resource exhaustion ceilings, CWE-674 recursion
+elimination, and CWE-1333/94 regular expression and code injection freedom
+in compliance with VER15.
 """
 
 from __future__ import annotations
@@ -18,19 +22,44 @@ from math import isfinite
 from numbers import Integral, Real
 
 from note_frequency import Note, parse_note
-from oscillator import SampleBuffer, UniformSampler, sample_count_for_duration
+from oscillator import SampleBuffer, UniformSampler
 from pcm_audio import DEFAULT_SAMPLE_RATE_HZ, PCMBuffer, PCMFormat, encode_sample_buffer
 from trig import PI, sin
 
-TWO_PI = 2.0 * PI
-DEFAULT_MAX_PARTIAL_COUNT = 64
-DEFAULT_MAX_SAMPLE_COUNT = 10_000_000
-SYNTHESIS_KINDS = frozenset({"sine", "additive", "silence"})
+# =============================================================================
+# § 1. Mathematical Constants and Security Bounds (VER15 / CWE-400 / CWE-674)
+# =============================================================================
+# In accordance with CWE-400 (Uncontrolled Resource Consumption), all memory
+# allocations, harmonic partial counts, time windows, and sample buffers are
+# bounded by explicit upper ceilings. All synthesis routines are strictly
+# iterative, ensuring provable resistance to CWE-674 (Uncontrolled Recursion).
+# Zero regular expression or dynamic evaluation libraries are imported,
+# eliminating CWE-1333 (ReDoS) and CWE-94 (Code Injection).
+
+TWO_PI: float = 2.0 * PI
+
+MAX_PARTIALS: int = 64
+MAX_NOTE_DURATION_SECONDS: float = 60.0
+MAX_SAMPLE_RATE_HZ: float = 192_000.0
+MAX_SAMPLE_COUNT: int = 16_777_216
+
+DEFAULT_MAX_PARTIAL_COUNT: int = MAX_PARTIALS
+DEFAULT_MAX_SAMPLE_COUNT: int = 10_000_000
+SYNTHESIS_KINDS: frozenset[str] = frozenset({"sine", "additive", "silence"})
 
 NoteInput = Note | str
 
 
+# =============================================================================
+# § 2. Defensive Validation Helpers (VER15 / CWE-190 / CWE-20 / CWE-400)
+# =============================================================================
+# Every input parameter passes through strict numeric validation: rejecting
+# NaN, infinities, negative values, and non-numeric types before entering the
+# signal generation pipeline.
+
+
 def _finite_float(name: str, value: Real) -> float:
+    """Convert a real number to float and reject non-finite values."""
     if isinstance(value, bool) or not isinstance(value, Real):
         raise ValueError(f"{name} must be a finite real number, got {value!r}")
     converted = float(value)
@@ -40,6 +69,7 @@ def _finite_float(name: str, value: Real) -> float:
 
 
 def _non_negative_float(name: str, value: Real) -> float:
+    """Convert a real number to float and ensure it is >= 0.0."""
     converted = _finite_float(name, value)
     if converted < 0.0:
         raise ValueError(f"{name} must be >= 0.0, got {converted}")
@@ -47,13 +77,35 @@ def _non_negative_float(name: str, value: Real) -> float:
 
 
 def _positive_float(name: str, value: Real) -> float:
+    """Convert a real number to float and ensure it is > 0.0."""
     converted = _finite_float(name, value)
     if converted <= 0.0:
         raise ValueError(f"{name} must be > 0.0, got {converted}")
     return converted
 
 
+def _sample_rate(name: str, value: Real) -> float:
+    """Convert and validate audio sampling rate within (0, MAX_SAMPLE_RATE_HZ]."""
+    converted = _positive_float(name, value)
+    if converted > MAX_SAMPLE_RATE_HZ:
+        raise ValueError(
+            f"{name} {converted} exceeds MAX_SAMPLE_RATE_HZ={MAX_SAMPLE_RATE_HZ}"
+        )
+    return converted
+
+
+def _safe_round_sample(time_val: float, rate: float) -> int:
+    """Safely multiply time by sample rate and round to integer index (CWE-190)."""
+    if not isfinite(time_val) or not isfinite(rate):
+        raise ValueError("time and rate must be finite")
+    prod = time_val * rate
+    if not isfinite(prod):
+        raise ValueError("time * rate product must be finite")
+    return int(round(prod))
+
+
 def _unit_float(name: str, value: Real) -> float:
+    """Convert a real number to float and ensure it falls within [0.0, 1.0]."""
     converted = _finite_float(name, value)
     if not 0.0 <= converted <= 1.0:
         raise ValueError(f"{name} must be in [0.0, 1.0], got {converted}")
@@ -61,6 +113,7 @@ def _unit_float(name: str, value: Real) -> float:
 
 
 def _positive_int(name: str, value: int) -> int:
+    """Convert an integral value to int and ensure it is > 0."""
     if isinstance(value, bool) or not isinstance(value, Integral):
         raise ValueError(f"{name} must be an integer > 0, got {value!r}")
     converted = int(value)
@@ -70,11 +123,62 @@ def _positive_int(name: str, value: int) -> int:
 
 
 def _parse_note_input(note: NoteInput) -> Note:
+    """Resolve NoteInput to a validated Note instance."""
     if isinstance(note, Note):
         return note
     if isinstance(note, str):
         return parse_note(note)
     raise ValueError(f"note must be a note string or Note, got {note!r}")
+
+
+# =============================================================================
+# § 3. Deterministic SplitMix64 PRNG Engine (VER05 §2.1 / TF01 §5.1)
+# =============================================================================
+# Pure-Python deterministic SplitMix64 pseudo-random number generator.
+# Operates strictly on 64-bit unsigned integers modulo 2^64 with zero ambient
+# entropy, eliminating timing side-channels and non-determinism.
+
+
+class SplitMix64:
+    """Pure-Python deterministic SplitMix64 PRNG (VER05 §2.1 / TF01 §5.1).
+
+    Generates reproducible 64-bit pseudo-random streams with zero ambient
+    entropy and zero third-party dependencies, discharging CWE-330 for
+    non-cryptographic deterministic timbre variation.
+    """
+
+    __slots__ = ("_state",)
+
+    def __init__(self, seed: int) -> None:
+        if isinstance(seed, bool) or not isinstance(seed, Integral):
+            raise ValueError(f"seed must be an integer, got {seed!r}")
+        self._state: int = int(seed) & 0xFFFF_FFFF_FFFF_FFFF
+
+    def next_u64(self) -> int:
+        """Advance internal state and return next 64-bit pseudo-random word."""
+        self._state = (self._state + 0x9E37_79B9_7F4A_7C15) & 0xFFFF_FFFF_FFFF_FFFF
+        z = self._state
+        z = ((z ^ (z >> 30)) * 0xBF58_476D_1CE4_E5B9) & 0xFFFF_FFFF_FFFF_FFFF
+        z = ((z ^ (z >> 27)) * 0x94D0_49BB_1331_11EB) & 0xFFFF_FFFF_FFFF_FFFF
+        return (z ^ (z >> 31)) & 0xFFFF_FFFF_FFFF_FFFF
+
+    def next_float_signed(self) -> float:
+        """Return a uniform pseudo-random float in [-1.0, 1.0]."""
+        val = self.next_u64()
+        return (val / 9223372036854775807.5) - 1.0
+
+    def next_float_unit(self) -> float:
+        """Return a uniform pseudo-random float in [0.0, 1.0]."""
+        val = self.next_u64()
+        return val / 18446744073709551615.0
+
+
+# =============================================================================
+# § 4. Harmonic Profiles and Partial Oscillators (MUS05 §5)
+# =============================================================================
+# In additive synthesis, each musical timbre is decomposed into a sum of
+# discrete sine partials, each characterized by a frequency multiplier,
+# relative amplitude, and initial phase cycle offset.
 
 
 @dataclass(frozen=True)
@@ -103,6 +207,14 @@ class HarmonicPartial:
         )
 
 
+# =============================================================================
+# § 5. ADSR Envelopes and Loudness Shapes (MUS05 §6)
+# =============================================================================
+# Standard 4-stage loudness envelope: attack, decay, sustain, and release.
+# Stage durations are strictly bounded by MAX_NOTE_DURATION_SECONDS to prevent
+# uncontrolled sample budget inflation (CWE-400).
+
+
 @dataclass(frozen=True)
 class ADSREnvelope:
     """Attack, decay, sustain, and release loudness shape."""
@@ -113,49 +225,64 @@ class ADSREnvelope:
     release_seconds: float
 
     def __post_init__(self) -> None:
-        object.__setattr__(
-            self,
-            "attack_seconds",
-            _non_negative_float("attack_seconds", self.attack_seconds),
-        )
-        object.__setattr__(
-            self,
-            "decay_seconds",
-            _non_negative_float("decay_seconds", self.decay_seconds),
-        )
+        atk = _non_negative_float("attack_seconds", self.attack_seconds)
+        if atk > MAX_NOTE_DURATION_SECONDS:
+            raise ValueError(
+                f"attack_seconds {atk} exceeds "
+                f"MAX_NOTE_DURATION_SECONDS={MAX_NOTE_DURATION_SECONDS}"
+            )
+        object.__setattr__(self, "attack_seconds", atk)
+
+        dec = _non_negative_float("decay_seconds", self.decay_seconds)
+        if dec > MAX_NOTE_DURATION_SECONDS:
+            raise ValueError(
+                f"decay_seconds {dec} exceeds "
+                f"MAX_NOTE_DURATION_SECONDS={MAX_NOTE_DURATION_SECONDS}"
+            )
+        object.__setattr__(self, "decay_seconds", dec)
+
         object.__setattr__(
             self,
             "sustain_level",
             _unit_float("sustain_level", self.sustain_level),
         )
-        object.__setattr__(
-            self,
-            "release_seconds",
-            _non_negative_float("release_seconds", self.release_seconds),
-        )
+
+        rel = _non_negative_float("release_seconds", self.release_seconds)
+        if rel > MAX_NOTE_DURATION_SECONDS:
+            raise ValueError(
+                f"release_seconds {rel} exceeds "
+                f"MAX_NOTE_DURATION_SECONDS={MAX_NOTE_DURATION_SECONDS}"
+            )
+        object.__setattr__(self, "release_seconds", rel)
 
     def rendered_duration_seconds(self, note_duration_seconds: Real) -> float:
-        return _non_negative_float("note_duration_seconds", note_duration_seconds) + (
-            self.release_seconds
-        )
+        """Compute total duration including post-note release tail."""
+        note_dur = _non_negative_float("note_duration_seconds", note_duration_seconds)
+        if note_dur > MAX_NOTE_DURATION_SECONDS:
+            raise ValueError(
+                f"note_duration_seconds {note_dur} exceeds "
+                f"MAX_NOTE_DURATION_SECONDS={MAX_NOTE_DURATION_SECONDS}"
+            )
+        return note_dur + self.release_seconds
 
     def value_at(self, time_seconds: Real, note_duration_seconds: Real) -> float:
         """Return the envelope gain for a rendered note-local time."""
-
         time = _non_negative_float("time_seconds", time_seconds)
         note_duration = _non_negative_float(
             "note_duration_seconds",
             note_duration_seconds,
         )
+        if note_duration > MAX_NOTE_DURATION_SECONDS:
+            raise ValueError(
+                f"note_duration_seconds {note_duration} exceeds "
+                f"MAX_NOTE_DURATION_SECONDS={MAX_NOTE_DURATION_SECONDS}"
+            )
+
         if time < self.attack_seconds:
-            if self.attack_seconds == 0.0:
-                return 1.0
             return time / self.attack_seconds
 
         decay_end = self.attack_seconds + self.decay_seconds
         if time < decay_end:
-            if self.decay_seconds == 0.0:
-                return self.sustain_level
             progress = (time - self.attack_seconds) / self.decay_seconds
             return 1.0 + (self.sustain_level - 1.0) * progress
 
@@ -168,41 +295,75 @@ class ADSREnvelope:
         return self.sustain_level * (1.0 - release_time / self.release_seconds)
 
 
+# =============================================================================
+# § 6. Seeded Variation Profiles (MUS05 §7)
+# =============================================================================
+# Knobs controlling subtle micro-variations in pitch, amplitude, attack
+# timing, and overtone distribution. When seed is provided, variation is
+# driven strictly by SplitMix64, ensuring reproducible humanization.
+
+
 @dataclass(frozen=True)
 class VariationProfile:
-    """Reserved deterministic imperfection knobs for future realism."""
+    """Deterministic variation profile for natural instrument imperfections."""
 
-    pitch_jitter_cents: float = 0.0
+    pitch_cents_jitter: float = 0.0
     amplitude_jitter: float = 0.0
-    timing_jitter_seconds: float = 0.0
-    harmonic_jitter: float = 0.0
+    attack_jitter_ms: float = 0.0
     seed: int | None = None
+    harmonic_jitter: float = 0.0
 
-    def __post_init__(self) -> None:
-        object.__setattr__(
-            self,
-            "pitch_jitter_cents",
-            _non_negative_float("pitch_jitter_cents", self.pitch_jitter_cents),
-        )
-        object.__setattr__(
-            self,
-            "amplitude_jitter",
-            _non_negative_float("amplitude_jitter", self.amplitude_jitter),
-        )
-        object.__setattr__(
-            self,
-            "timing_jitter_seconds",
-            _non_negative_float("timing_jitter_seconds", self.timing_jitter_seconds),
-        )
-        object.__setattr__(
-            self,
-            "harmonic_jitter",
-            _non_negative_float("harmonic_jitter", self.harmonic_jitter),
-        )
-        if self.seed is not None:
-            if isinstance(self.seed, bool) or not isinstance(self.seed, Integral):
+    def __init__(
+        self,
+        pitch_cents_jitter: Real = 0.0,
+        amplitude_jitter: Real = 0.0,
+        attack_jitter_ms: Real = 0.0,
+        seed: int | None = None,
+        *,
+        pitch_jitter_cents: Real | None = None,
+        timing_jitter_seconds: Real | None = None,
+        harmonic_jitter: Real = 0.0,
+    ) -> None:
+        if pitch_jitter_cents is not None:
+            pitch_cents_jitter = pitch_jitter_cents
+        if timing_jitter_seconds is not None:
+            attack_jitter_ms = (
+                _non_negative_float("timing_jitter_seconds", timing_jitter_seconds)
+                * 1000.0
+            )
+
+        p_jitter = _non_negative_float("pitch_cents_jitter", pitch_cents_jitter)
+        a_jitter = _non_negative_float("amplitude_jitter", amplitude_jitter)
+        atk_jitter = _non_negative_float("attack_jitter_ms", attack_jitter_ms)
+        h_jitter = _non_negative_float("harmonic_jitter", harmonic_jitter)
+
+        norm_seed: int | None = None
+        if seed is not None:
+            if isinstance(seed, bool) or not isinstance(seed, Integral):
                 raise ValueError("seed must be an integer or None")
-            object.__setattr__(self, "seed", int(self.seed))
+            norm_seed = int(seed)
+
+        object.__setattr__(self, "pitch_cents_jitter", p_jitter)
+        object.__setattr__(self, "amplitude_jitter", a_jitter)
+        object.__setattr__(self, "attack_jitter_ms", atk_jitter)
+        object.__setattr__(self, "seed", norm_seed)
+        object.__setattr__(self, "harmonic_jitter", h_jitter)
+
+    @property
+    def pitch_jitter_cents(self) -> float:
+        """Alias for pitch_cents_jitter."""
+        return self.pitch_cents_jitter
+
+    @property
+    def timing_jitter_seconds(self) -> float:
+        """Alias for attack_jitter_ms in seconds."""
+        return self.attack_jitter_ms / 1000.0
+
+
+# =============================================================================
+# § 7. Instrument Profiles and Timbre Catalog (MUS05 §4 & §8)
+# =============================================================================
+# Naive instrument profiles with harmonic recipes and envelope shapes.
 
 
 @dataclass(frozen=True)
@@ -229,12 +390,18 @@ class InstrumentProfile:
         if self.synthesis_kind not in SYNTHESIS_KINDS:
             raise ValueError(f"unsupported synthesis_kind {self.synthesis_kind!r}")
         object.__setattr__(self, "gain", _unit_float("gain", self.gain))
-        object.__setattr__(self, "harmonic_profile", tuple(self.harmonic_profile))
+
+        partials = tuple(self.harmonic_profile)
+        if len(partials) > MAX_PARTIALS:
+            raise ValueError(
+                f"harmonic_profile partial count {len(partials)} exceeds "
+                f"MAX_PARTIALS={MAX_PARTIALS}"
+            )
+        object.__setattr__(self, "harmonic_profile", partials)
+
         for index, partial in enumerate(self.harmonic_profile):
             if not isinstance(partial, HarmonicPartial):
-                raise ValueError(
-                    f"harmonic_profile[{index}] must be a HarmonicPartial"
-                )
+                raise ValueError(f"harmonic_profile[{index}] must be a HarmonicPartial")
         if self.synthesis_kind != "silence" and not self.harmonic_profile:
             raise ValueError("non-silent instruments need at least one partial")
         if not isinstance(self.envelope_profile, ADSREnvelope):
@@ -249,8 +416,14 @@ class InstrumentProfile:
         object.__setattr__(self, "family", str(self.family))
 
     def amplitude_normalizer(self) -> float:
+        """Sum of partial amplitudes for safe unity scaling before gain."""
         total = sum(partial.amplitude for partial in self.harmonic_profile)
         return total if total > 0.0 else 1.0
+
+
+# =============================================================================
+# § 8. General MIDI Program Map (MUS05 §4)
+# =============================================================================
 
 
 @dataclass(frozen=True)
@@ -272,6 +445,14 @@ class GMProgram:
         object.__setattr__(self, "instrument_id", str(self.instrument_id))
 
 
+# =============================================================================
+# § 9. Continuous Instrument Signal Generation (MUS05 §10)
+# =============================================================================
+# Evaluates the instantaneous amplitude of an instrument voice at any continuous
+# time t >= 0.0. Jitter variations are applied deterministically via SplitMix64
+# during signal construction, ensuring zero allocation inside value_at().
+
+
 @dataclass(frozen=True)
 class InstrumentSignal:
     """Continuous signal for one instrument playing one fundamental frequency."""
@@ -281,52 +462,117 @@ class InstrumentSignal:
     note_duration_seconds: float
     amplitude: float = 1.0
     sample_rate_hz: float = DEFAULT_SAMPLE_RATE_HZ
+    variation_profile: VariationProfile | None = None
 
     def __post_init__(self) -> None:
-        object.__setattr__(
-            self,
-            "fundamental_hz",
-            _positive_float("fundamental_hz", self.fundamental_hz),
-        )
+        fund_hz = _positive_float("fundamental_hz", self.fundamental_hz)
+        object.__setattr__(self, "fundamental_hz", fund_hz)
         if not isinstance(self.instrument, InstrumentProfile):
             raise ValueError("instrument must be an InstrumentProfile")
-        object.__setattr__(
-            self,
-            "note_duration_seconds",
-            _non_negative_float("note_duration_seconds", self.note_duration_seconds),
-        )
+
+        dur = _non_negative_float("note_duration_seconds", self.note_duration_seconds)
+        if dur > MAX_NOTE_DURATION_SECONDS:
+            raise ValueError(
+                f"note_duration_seconds {dur} exceeds "
+                f"MAX_NOTE_DURATION_SECONDS={MAX_NOTE_DURATION_SECONDS}"
+            )
+        object.__setattr__(self, "note_duration_seconds", dur)
+
         object.__setattr__(self, "amplitude", _unit_float("amplitude", self.amplitude))
-        object.__setattr__(
-            self,
-            "sample_rate_hz",
-            _positive_float("sample_rate_hz", self.sample_rate_hz),
-        )
+        sr = _sample_rate("sample_rate_hz", self.sample_rate_hz)
+        object.__setattr__(self, "sample_rate_hz", sr)
+
+        var = self.variation_profile
+        if var is None:
+            var = self.instrument.variation_profile
+        elif not isinstance(var, VariationProfile):
+            raise ValueError("variation_profile must be a VariationProfile or None")
+        object.__setattr__(self, "variation_profile", var)
+
+        # Deterministic micro-variation via SplitMix64 PRNG
+        if var.seed is not None:
+            rng = SplitMix64(var.seed)
+
+            # 1. Pitch jitter in cents: f' = f * 2^(cents / 1200)
+            pitch_draw = rng.next_float_signed()
+            delta_cents = pitch_draw * var.pitch_cents_jitter
+            ratio = 2.0 ** (delta_cents / 1200.0)
+            eff_fund = fund_hz * ratio
+
+            # 2. Amplitude jitter
+            amp_draw = rng.next_float_signed()
+            amp_factor = 1.0 + amp_draw * var.amplitude_jitter
+            eff_amp = max(0.0, min(1.0, self.amplitude * amp_factor))
+
+            # 3. Attack jitter (ms to seconds)
+            atk_draw = rng.next_float_signed()
+            atk_delta = atk_draw * (var.attack_jitter_ms / 1000.0)
+            base_env = self.instrument.envelope_profile
+            eff_atk = max(
+                0.0, min(MAX_NOTE_DURATION_SECONDS, base_env.attack_seconds + atk_delta)
+            )
+            eff_env = ADSREnvelope(
+                attack_seconds=eff_atk,
+                decay_seconds=base_env.decay_seconds,
+                sustain_level=base_env.sustain_level,
+                release_seconds=base_env.release_seconds,
+            )
+
+            # 4. Harmonic jitter
+            if var.harmonic_jitter > 0.0:
+                varied_partials: list[HarmonicPartial] = []
+                for p in self.instrument.harmonic_profile:
+                    h_draw = rng.next_float_signed()
+                    p_factor = 1.0 + h_draw * var.harmonic_jitter
+                    p_amp = max(0.0, p.amplitude * p_factor)
+                    varied_partials.append(
+                        HarmonicPartial(p.frequency_multiplier, p_amp, p.phase_cycles)
+                    )
+                eff_partials = tuple(varied_partials)
+            else:
+                eff_partials = self.instrument.harmonic_profile
+        else:
+            eff_fund = fund_hz
+            eff_amp = self.amplitude
+            eff_env = self.instrument.envelope_profile
+            eff_partials = self.instrument.harmonic_profile
+
+        object.__setattr__(self, "effective_fundamental_hz", eff_fund)
+        object.__setattr__(self, "effective_amplitude", eff_amp)
+        object.__setattr__(self, "effective_envelope", eff_env)
+        object.__setattr__(self, "effective_harmonic_profile", eff_partials)
+
+        total = sum(p.amplitude for p in eff_partials)
+        norm = total if total > 0.0 else 1.0
+        object.__setattr__(self, "_normalizer", norm)
 
     def value_at(self, time_seconds: float) -> float:
+        """Compute the instantaneous amplitude at note-local time_seconds."""
         time = _non_negative_float("time_seconds", time_seconds)
         if self.instrument.synthesis_kind == "silence":
             return 0.0
 
         nyquist_hz = self.sample_rate_hz / 2.0
         raw = 0.0
-        for partial in self.instrument.harmonic_profile:
-            partial_hz = self.fundamental_hz * partial.frequency_multiplier
+        eff_fund = self.effective_fundamental_hz
+        for partial in self.effective_harmonic_profile:
+            partial_hz = eff_fund * partial.frequency_multiplier
             if partial_hz >= nyquist_hz:
                 continue
             raw += partial.amplitude * sin(
                 TWO_PI * (partial_hz * time + partial.phase_cycles)
             )
 
-        envelope = self.instrument.envelope_profile.value_at(
+        envelope = self.effective_envelope.value_at(
             time,
             self.note_duration_seconds,
         )
         return (
-            self.amplitude
+            self.effective_amplitude
             * self.instrument.gain
             * envelope
             * raw
-            / self.instrument.amplitude_normalizer()
+            / self._normalizer
         )
 
 
@@ -348,6 +594,10 @@ def _partials(*values: tuple[float, float]) -> tuple[HarmonicPartial, ...]:
         for multiplier, amplitude in values
     )
 
+
+# =============================================================================
+# Built-in Preset Library (MUS05 §8)
+# =============================================================================
 
 SINE = InstrumentProfile(
     id="sine",
@@ -431,7 +681,6 @@ PLUCK_NAIVE = InstrumentProfile(
     envelope_profile=ADSREnvelope(0.003, 0.450, 0.05, 0.080),
     family="plucked",
 )
-
 BRASS_NAIVE = InstrumentProfile(
     id="brass_naive",
     display_name="Naive Brass",
@@ -584,8 +833,7 @@ NOISE_EFFECT_NAIVE = InstrumentProfile(
     family="sound effects",
 )
 
-
-_PRESETS = {
+_PRESETS: dict[str, InstrumentProfile] = {
     profile.id: profile
     for profile in (
         SINE,
@@ -743,25 +991,22 @@ _GM_PROGRAM_ROWS: tuple[tuple[int, str, str, str], ...] = (
     (128, "Gunshot", "sound effects", "effect_naive"),
 )
 
-_GM_PROGRAMS = tuple(GMProgram(*row) for row in _GM_PROGRAM_ROWS)
-_GM_BY_PROGRAM = {entry.program: entry for entry in _GM_PROGRAMS}
+_GM_PROGRAMS: tuple[GMProgram, ...] = tuple(GMProgram(*row) for row in _GM_PROGRAM_ROWS)
+_GM_BY_PROGRAM: dict[int, GMProgram] = {entry.program: entry for entry in _GM_PROGRAMS}
 
 
 def all_instruments() -> tuple[InstrumentProfile, ...]:
     """Return the built-in naive instrument profiles."""
-
     return tuple(_PRESETS.values())
 
 
 def all_gm_programs() -> tuple[GMProgram, ...]:
     """Return the full 128-entry GM-style melodic program catalog."""
-
     return _GM_PROGRAMS
 
 
 def get_instrument(instrument: str | InstrumentProfile) -> InstrumentProfile:
     """Resolve a built-in profile id or return an already-built profile."""
-
     if isinstance(instrument, InstrumentProfile):
         return instrument
     if not isinstance(instrument, str):
@@ -774,7 +1019,6 @@ def get_instrument(instrument: str | InstrumentProfile) -> InstrumentProfile:
 
 def get_gm_program(program: int) -> GMProgram:
     """Return one GM-style program entry by 1-based program number."""
-
     checked = _positive_int("program", program)
     try:
         return _GM_BY_PROGRAM[checked]
@@ -784,8 +1028,14 @@ def get_gm_program(program: int) -> GMProgram:
 
 def instrument_for_gm_program(program: int) -> InstrumentProfile:
     """Return the naive profile currently assigned to a GM-style program."""
-
     return get_instrument(get_gm_program(program).instrument_id)
+
+
+# =============================================================================
+# § 10. Note Rendering Pipeline (MUS05 §10)
+# =============================================================================
+# Renders a musical note event into floating-point audio samples and 16-bit PCM.
+# Enforces sample budgets and frequency/duration bounds before allocating.
 
 
 def _validate_render_budget(
@@ -793,11 +1043,18 @@ def _validate_render_budget(
     sample_rate_hz: float,
     max_sample_count: int,
 ) -> None:
-    count = sample_count_for_duration(duration_seconds, sample_rate_hz)
-    limit = _positive_int("max_sample_count", max_sample_count)
-    if count > limit:
+    """Ensure synthesis does not exceed allowed sample limits (CWE-400)."""
+    sample_limit = _positive_int("max_sample_count", max_sample_count)
+    if sample_limit > MAX_SAMPLE_COUNT:
         raise ValueError(
-            f"render would create {count} samples, above max_sample_count={limit}"
+            f"max_sample_count {sample_limit} exceeds "
+            f"MAX_SAMPLE_COUNT={MAX_SAMPLE_COUNT}"
+        )
+    count = _safe_round_sample(duration_seconds, sample_rate_hz)
+    if count > sample_limit:
+        raise ValueError(
+            f"render would create {count} samples, "
+            f"above max_sample_count={sample_limit}"
         )
 
 
@@ -809,28 +1066,45 @@ def render_instrument_note(
     sample_rate_hz: Real = DEFAULT_SAMPLE_RATE_HZ,
     amplitude: Real = 1.0,
     start_time_seconds: Real = 0.0,
+    variation_profile: VariationProfile | None = None,
     max_sample_count: int = DEFAULT_MAX_SAMPLE_COUNT,
     max_partial_count: int = DEFAULT_MAX_PARTIAL_COUNT,
 ) -> InstrumentNoteRender:
     """Render one note with a selectable naive instrument profile."""
-
     parsed_note = _parse_note_input(note)
     note_duration = _non_negative_float("duration_seconds", duration_seconds)
-    sample_rate = _positive_float("sample_rate_hz", sample_rate_hz)
+    if note_duration > MAX_NOTE_DURATION_SECONDS:
+        raise ValueError(
+            f"duration_seconds {note_duration} exceeds "
+            f"MAX_NOTE_DURATION_SECONDS={MAX_NOTE_DURATION_SECONDS}"
+        )
+
+    sample_rate = _sample_rate("sample_rate_hz", sample_rate_hz)
     profile = get_instrument(instrument)
+
     partial_limit = _positive_int("max_partial_count", max_partial_count)
+    if partial_limit > MAX_PARTIALS:
+        raise ValueError(
+            f"max_partial_count {partial_limit} exceeds MAX_PARTIALS={MAX_PARTIALS}"
+        )
     if len(profile.harmonic_profile) > partial_limit:
         raise ValueError(
             f"instrument has {len(profile.harmonic_profile)} partials, "
             f"above max_partial_count={partial_limit}"
         )
 
-    fundamental_hz = parsed_note.frequency()
-    if fundamental_hz >= sample_rate / 2.0:
+    fundamental_hz = _positive_float("fundamental_hz", parsed_note.frequency())
+    nyquist_hz = sample_rate / 2.0
+    if fundamental_hz >= nyquist_hz:
         raise ValueError(
-            f"fundamental_hz {fundamental_hz} must be below Nyquist "
-            f"{sample_rate / 2.0}"
+            f"fundamental_hz {fundamental_hz} must be below Nyquist {nyquist_hz}"
         )
+
+    if variation_profile is not None and not isinstance(
+        variation_profile, VariationProfile
+    ):
+        raise ValueError("variation_profile must be a VariationProfile or None")
+
     rendered_duration = profile.envelope_profile.rendered_duration_seconds(
         note_duration
     )
@@ -842,11 +1116,13 @@ def render_instrument_note(
         note_duration_seconds=note_duration,
         amplitude=_unit_float("amplitude", amplitude),
         sample_rate_hz=sample_rate,
+        variation_profile=variation_profile,
     )
+    start_time = _finite_float("start_time_seconds", start_time_seconds)
     samples = UniformSampler(sample_rate).sample(
         signal,
         rendered_duration,
-        _finite_float("start_time_seconds", start_time_seconds),
+        start_time,
     )
     pcm_format = PCMFormat(sample_rate_hz=sample_rate)
     pcm_buffer = encode_sample_buffer(samples, pcm_format)

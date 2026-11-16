@@ -1,0 +1,80 @@
+-- GAME22 -- Sprite OAM: deterministic zero-allocation 128-sprite hardware OAM manager, priority sorter and metasprite animation sequencer.
+--
+-- Warrant document for sprite-oam (VER04j and VER04m: state=explicit).
+-- Formal verification contract for pure sprite attribute management.
+
+warrant sprite_oam v1
+  -- Contract mapping: validate_slot models the slot guard in OamTable::set_entry / entry / hide_slot /
+  -- stamp_frame; validate_priority models the priority guard in OamEntry::check_entry;
+  -- validate_tick models the tick-delta guard in Animator::advance.
+  error OamError = SlotOutOfRange | AffineSlotOutOfRange | InvalidPriority | InvalidPaletteBank | InvalidTile | CoordinateOutOfRange | DoubleSizeWithoutAffine | InvalidScanlineLimit | InvalidScreenHeight | BufferTooSmall | InvalidFrameCount | InvalidFrameDuration | InvalidPartCount | TickTooLarge | AnimatorMismatch | AffineNotRepresentable | PaletteEntryUnavailable | InvalidSceneSize | LoweringRejected
+
+  model Unit = Bool
+  variant SpriteShape = Square | Wide | Tall
+  variant SpriteSize = Size0 | Size1 | Size2 | Size3
+  variant PlayMode = OneShot | Loop | PingPong
+
+  model valid_slot(n: Nat) -> Bool = n < 128
+  model valid_priority(p: Nat) -> Bool = p <= 3
+  model valid_tick(t: Nat) -> Bool = t <= 65535
+
+  op validate_slot(n: Nat) -> Result<Bool, OamError>
+  op validate_priority(p: Nat) -> Result<Bool, OamError>
+  op validate_tick(t: Nat) -> Result<Bool, OamError>
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels validate_slot:
+    n public
+  labels validate_priority:
+    p public
+  labels validate_tick:
+    t public
+
+  input validate_slot.n:
+    hostile
+    ensures no_panic, terminates
+  input validate_priority.p:
+    hostile
+    ensures no_panic, terminates
+  input validate_tick.t:
+    hostile
+    ensures no_panic, terminates
+
+  bound validate_slot:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_priority:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_tick:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+
+  example slot_min:
+    validate_slot(0) == Ok(true)
+  example slot_max:
+    validate_slot(127) == Ok(true)
+  example slot_past_end:
+    validate_slot(128) == Err(OamError.SlotOutOfRange)
+  example priority_max:
+    validate_priority(3) == Ok(true)
+  example priority_too_high:
+    validate_priority(4) == Err(OamError.InvalidPriority)
+  example tick_max:
+    validate_tick(65535) == Ok(true)
+  example tick_too_large:
+    validate_tick(65536) == Err(OamError.TickTooLarge)
+
+  claim validate_slot_agrees:
+    forall n: Nat. validate_slot(n) == (if valid_slot(n) then Ok(true) else Err(OamError.SlotOutOfRange))
+  claim validate_priority_agrees:
+    forall p: Nat. validate_priority(p) == (if valid_priority(p) then Ok(true) else Err(OamError.InvalidPriority))
+  claim validate_tick_agrees:
+    forall t: Nat. validate_tick(t) == (if valid_tick(t) then Ok(true) else Err(OamError.TickTooLarge))

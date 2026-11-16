@@ -14,6 +14,16 @@
     },
     {
       "symbology": "itf",
+      "language": "dart",
+      "package_root": "code/packages/dart/itf",
+      "test_path": "code/packages/dart/itf/test/itf_conformance_test.dart",
+      "normalize": "normalizeItf",
+      "encode": "encodeItf",
+      "pair_binary_pattern": "EncodedPair.binaryPattern",
+      "error_identifier": "InvalidItfInputError.errorId"
+    },
+    {
+      "symbology": "itf",
       "language": "elixir",
       "package_root": "code/packages/elixir/itf",
       "test_path": "code/packages/elixir/itf/test/itf_conformance_test.exs",
@@ -51,6 +61,26 @@
       "encode": "encodeItf",
       "pair_binary_pattern": "encodedPairBinaryPattern",
       "error_identifier": "itfErrorId"
+    },
+    {
+      "symbology": "itf",
+      "language": "java",
+      "package_root": "code/packages/java/itf",
+      "test_path": "code/packages/java/itf/src/test/java/com/codingadventures/itf/ItfConformanceTest.java",
+      "normalize": "Itf.normalizeItf",
+      "encode": "Itf.encodeItf",
+      "pair_binary_pattern": "EncodedPair.binaryPattern",
+      "error_identifier": "InvalidItfInputException.getErrorId"
+    },
+    {
+      "symbology": "itf",
+      "language": "kotlin",
+      "package_root": "code/packages/kotlin/itf",
+      "test_path": "code/packages/kotlin/itf/src/test/kotlin/com/codingadventures/itf/ItfConformanceTest.kt",
+      "normalize": "Itf.normalizeItf",
+      "encode": "Itf.encodeItf",
+      "pair_binary_pattern": "EncodedPair.binaryPattern",
+      "error_identifier": "InvalidItfInputException.errorId"
     },
     {
       "symbology": "itf",

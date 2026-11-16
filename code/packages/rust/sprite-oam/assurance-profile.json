@@ -1,0 +1,19 @@
+{
+  "schema": "warrant-assurance-profile-v1",
+  "name": "sprite-oam",
+  "kind": "transform",
+  "rows": {
+    "326": {
+      "applicability": "excluded",
+      "reason": "no keys: the package takes and generates no key material; operands are bounded slot indices, sprite attributes and buffer lengths"
+    },
+    "327": {
+      "applicability": "excluded",
+      "reason": "pure sprite management: package implements OAM bookkeeping, sorting, scanline evaluation and animation sequencing only, no cipher, hash or MAC"
+    },
+    "407": {
+      "applicability": "excluded",
+      "reason": "bounded work per call: sort and scanline evaluation are linear in OAM_SLOTS = 128, scanline statistics are capped by MAX_SCREEN_HEIGHT = 4096 and animation ticks by MAX_TICK_DELTA = 65535"
+    }
+  }
+}

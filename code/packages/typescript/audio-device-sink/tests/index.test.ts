@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, it, expect, assertProperty, Gen } from "../../test-bootstrap/dist/index.js";
 
 import {
   AudioSinkError,
@@ -8,9 +8,9 @@ import {
   PcmFormat,
   PcmPlaybackBuffer,
   VERSION,
-} from "../src/index.js";
+} from "../dist/index.js";
 
-describe("audio-device-sink", () => {
+describe("audio-device-sink core functionality", () => {
   it("records valid PCM metadata", () => {
     const format = new PcmFormat(44_100, 1, 16);
 
@@ -72,5 +72,100 @@ describe("audio-device-sink", () => {
       "unsupported platform: Core Audio requires macOS",
     );
     expect(AudioSinkError.backendFailure("write failed").message).toBe("audio backend failure: write failed");
+  });
+});
+
+describe("CWE-1321: Prototype Pollution & Object Key Hardening", () => {
+  it("rejects prototype property names as backendName in NoopAudioSink", () => {
+    for (const key of ["__proto__", "constructor", "prototype", "toString"]) {
+      expect(() => new NoopAudioSink(key)).toThrow();
+    }
+  });
+
+  it("rejects invalid or prototype-polluting error kinds in AudioSinkError", () => {
+    // @ts-expect-error Testing invalid error kinds
+    expect(() => new AudioSinkError("__proto__", "msg")).toThrow();
+    // @ts-expect-error Testing invalid error kinds
+    expect(() => new AudioSinkError("constructor", "msg")).toThrow();
+    // @ts-expect-error Testing invalid error kinds
+    expect(() => new AudioSinkError("prototype", "msg")).toThrow();
+  });
+
+  it("verifies global Object.prototype remains unpolluted", () => {
+    const testObj: Record<string, unknown> = {};
+    expect(testObj["backendName"]).toBeUndefined();
+    expect(testObj["invalid_format"]).toBeUndefined();
+  });
+});
+
+describe("CWE-400: Resource Exhaustion & Unbounded Iterables", () => {
+  it("prevents infinite generator from causing memory exhaustion", () => {
+    function* infiniteSamples(): Generator<number> {
+      while (true) {
+        yield 0;
+      }
+    }
+    const format = new PcmFormat(10, 1, 16); // max = 10 * 600 = 6000 samples
+    expect(() => new PcmPlaybackBuffer(infiniteSamples(), format)).toThrow(AudioSinkError);
+  });
+});
+
+describe("CWE-20: Improper Input Validation & Type Guards", () => {
+  it("rejects non-finite numbers in PcmFormat", () => {
+    for (const badRate of [NaN, Infinity, -Infinity, 44100.5]) {
+      expect(() => new PcmFormat(badRate, 1, 16)).toThrow(AudioSinkError);
+    }
+  });
+
+  it("rejects non-finite samples in buffer", () => {
+    const format = new PcmFormat(44100, 1, 16);
+    for (const badSample of [NaN, Infinity, -Infinity]) {
+      expect(() => new PcmPlaybackBuffer([badSample], format)).toThrow(AudioSinkError);
+    }
+  });
+
+  it("rejects non-string backendName in NoopAudioSink", () => {
+    // @ts-expect-error Runtime validation
+    expect(() => new NoopAudioSink(1234)).toThrow(TypeError);
+    // @ts-expect-error Runtime validation
+    expect(() => new NoopAudioSink(null)).toThrow(TypeError);
+  });
+});
+
+describe("PBT & Invariant Verification (VER05a)", () => {
+  it("proves frameCount and duration invariants for arbitrary valid buffers", () => {
+    const sampleGen = Gen.integer(-32768, 32767);
+    const listGen = Gen.list(0, 100, sampleGen);
+
+    assertProperty(listGen, (samples) => {
+      const format = new PcmFormat(48000, 1, 16);
+      const numSamples = samples.map((n) => Number(n));
+      const buffer = new PcmPlaybackBuffer(numSamples, format);
+      const sink = new NoopAudioSink("pbt-sink");
+      const report = sink.playBlocking(buffer);
+
+      expect(report.framesPlayed).toBe(numSamples.length);
+      expect(report.sampleRateHz).toBe(48000);
+      expect(report.channelCount).toBe(1);
+      expect(Number.isFinite(report.durationSeconds)).toBe(true);
+      return true;
+    }, { numRuns: 50 });
+  });
+
+  it("fuzzes sample normalization fail-closed bounds", () => {
+    const hostileSampleGen = Gen.oneOf(
+      Gen.integer(-100000, -32769),
+      Gen.integer(32768, 100000)
+    );
+
+    assertProperty(hostileSampleGen, (outOfBounds) => {
+      const format = new PcmFormat(44100, 1, 16);
+      try {
+        new PcmPlaybackBuffer([Number(outOfBounds)], format);
+        return false; // Should not reach here
+      } catch (err) {
+        return err instanceof AudioSinkError && err.kind === "invalid_samples";
+      }
+    }, { numRuns: 50 });
   });
 });

@@ -107,26 +107,21 @@ pub fn mel_filterbank(
     n_fft: u32,
     sample_rate: f32,
 ) -> Vec<f32> {
-    let n_mels = n_mels as usize;
+    let n_mels_usize = n_mels as usize;
     let nf = n_fft as usize;
-    let bins = nf / 2 + 1;
-    if n_mels == 0 || nf == 0 {
+    if n_mels_usize == 0 || nf == 0 || n_mels_usize > crate::MAX_SAMPLES || nf > crate::MAX_FFT_LEN {
         return Vec::new();
     }
-    // Defensive guard: a non-finite or non-positive `sample_rate`
-    // would propagate NaN through `bin_per_hz` and the mel/Hz
-    // conversions, poisoning the entire filterbank.  `mel_filterbank`
-    // is `pub`, so direct callers (bypassing `mel_spectrogram`'s
-    // entry-point validation) need the same protection.  Return an
-    // empty `Vec` for invalid inputs — consistent with the
-    // `n_mels == 0` / `n_fft == 0` degenerate cases above.
-    //
-    // `!(sample_rate > 0.0)` is the standard NaN-safe check:
-    // any comparison with NaN is `false`, so this catches NaN
-    // as well as negative and zero.
+    let bins = nf / 2 + 1;
+    let total_len = match n_mels_usize.checked_mul(bins) {
+        Some(len) if len <= crate::MAX_SAMPLES => len,
+        _ => return Vec::new(),
+    };
     if !(sample_rate > 0.0) || !sample_rate.is_finite() {
         return Vec::new();
     }
+
+    let n_mels = n_mels_usize;
 
     // n_mels + 2 equally-spaced anchor points on the mel axis,
     // converted back to Hz, then to fractional FFT bin indices.
@@ -146,7 +141,7 @@ pub fn mel_filterbank(
         })
         .collect();
 
-    let mut filterbank = vec![0.0_f32; n_mels * bins];
+    let mut filterbank = vec![0.0_f32; total_len];
 
     // ── Triangular filter rasterisation ──────────────────────
     //
@@ -222,20 +217,48 @@ pub fn mel_spectrogram(
             "n_mels must be > 0".into(),
         ));
     }
-    if !(sample_rate > 0.0) {
+    if (n_mels as usize) > crate::MAX_SAMPLES {
+        return Err(StftError::InvalidParam(format!(
+            "n_mels {} exceeds MAX_SAMPLES {}",
+            n_mels, crate::MAX_SAMPLES
+        )));
+    }
+    if !(sample_rate > 0.0) || !sample_rate.is_finite() {
         return Err(StftError::InvalidParam(
-            "sample_rate must be > 0".into(),
+            "sample_rate must be positive and finite".into(),
         ));
     }
-    let power = spectrogram(signal, n_fft, hop_length, window)?;
     let bins = (n_fft as usize) / 2 + 1;
     let nm = n_mels as usize;
+    let fb_len = nm.checked_mul(bins).ok_or_else(|| {
+        StftError::InvalidParam("mel filterbank size overflow".into())
+    })?;
+    if fb_len > crate::MAX_SAMPLES {
+        return Err(StftError::InvalidParam(format!(
+            "mel filterbank size {} exceeds MAX_SAMPLES {}",
+            fb_len, crate::MAX_SAMPLES
+        )));
+    }
+    let power = spectrogram(signal, n_fft, hop_length, window)?;
     debug_assert_eq!(power.len() % bins, 0);
     let num_frames = power.len() / bins;
+    let out_len = num_frames.checked_mul(nm).ok_or_else(|| {
+        StftError::InvalidParam("mel spectrogram output length overflow".into())
+    })?;
+    if out_len > crate::MAX_SAMPLES {
+        return Err(StftError::InvalidParam(format!(
+            "mel spectrogram length {} exceeds MAX_SAMPLES {}",
+            out_len, crate::MAX_SAMPLES
+        )));
+    }
     let fb = mel_filterbank(n_mels, n_fft, sample_rate);
-    debug_assert_eq!(fb.len(), nm * bins);
+    if fb.len() != fb_len {
+        return Err(StftError::InvalidParam(
+            "mel_filterbank generation failed".into(),
+        ));
+    }
 
-    let mut out = vec![0.0_f32; num_frames * nm];
+    let mut out = vec![0.0_f32; out_len];
     for t in 0..num_frames {
         let p_row = &power[t * bins..(t + 1) * bins];
         for m in 0..nm {
@@ -295,7 +318,16 @@ pub fn mfcc(
         mel.iter().map(|&v| (v + EPS).ln()).collect();
 
     // DCT-II per frame, keep first n_mfcc coefficients.
-    let mut out = Vec::with_capacity(num_frames * nc);
+    let total_mfcc_len = num_frames.checked_mul(nc).ok_or_else(|| {
+        StftError::InvalidParam("MFCC output length overflow".into())
+    })?;
+    if total_mfcc_len > crate::MAX_SAMPLES {
+        return Err(StftError::InvalidParam(format!(
+            "MFCC output length {} exceeds MAX_SAMPLES {}",
+            total_mfcc_len, crate::MAX_SAMPLES
+        )));
+    }
+    let mut out = Vec::with_capacity(total_mfcc_len);
     for t in 0..num_frames {
         let row = &log_mel[t * nm..(t + 1) * nm];
         let coeffs = dct(row, DctType::II, DctNorm::Ortho)
@@ -565,5 +597,20 @@ mod tests {
         for &v in &out {
             assert!(v.is_finite(), "non-finite MFCC: {}", v);
         }
+    }
+
+    #[test]
+    fn mel_spectrogram_rejects_oversized_filterbank_product() {
+        let signal = vec![0.5_f32; 1024];
+        // n_fft = 65536 -> bins = 32769. If n_mels = 1000, 32769 * 1000 = 32,769,000 > MAX_SAMPLES (16,777,216).
+        let err = mel_spectrogram(
+            &signal,
+            65536,
+            32768,
+            1000,
+            16_000.0,
+            WindowType::Hann,
+        );
+        assert!(err.is_err());
     }
 }

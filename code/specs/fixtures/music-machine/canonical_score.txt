@@ -1,0 +1,29 @@
+format: music-machine-score/v2
+title: Tier 0 Canonical Score
+ppq: 120
+sample_rate: 44100
+tempo 0 120
+meter 0 4/4
+
+instrument lead profile=flute_naive gain=0.6
+instrument comp profile=piano_naive gain=0.5
+instrument synth kind=additive harmonics=1:1.0,2:0.5 envelope=0.01,0.05,0.7,0.1 gain=0.5
+instrument drums kind=drumkit kit=standard_kit gain=0.8
+
+track melody instrument=lead
+track chords instrument=comp
+track bass instrument=synth
+track rhythm instrument=drums
+
+event melody 0 120 note C5 velocity=0.8
+event melody 120 120 note D5 velocity=0.8
+event melody 240 120 note E5 velocity=0.8
+event melody 360 120 note G5 velocity=0.8
+event chords 0 240 note C4,E4,G4 velocity=0.6
+event chords 240 240 note C4,F4,A4 velocity=0.6
+event bass 0 240 note C3 velocity=0.7
+event bass 240 240 note F2 velocity=0.7
+event rhythm 0 120 hit kick velocity=0.9
+event rhythm 120 120 hit snare velocity=0.85
+event rhythm 240 60 hit open_hihat velocity=0.7
+event rhythm 300 60 hit closed_hihat velocity=0.8

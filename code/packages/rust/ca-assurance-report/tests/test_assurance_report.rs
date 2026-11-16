@@ -7,10 +7,11 @@ mod common;
 use coding_adventures_ca_assurance_report::checker::{
     verify_assurance_report, CheckError, CheckVerdict,
 };
-use coding_adventures_ca_assurance_report::generate_ct_compare_report;
+use coding_adventures_ca_assurance_report::{generate_ct_compare_report, AuditProfile};
 use coding_adventures_ca_assurance_report::json::JsonValue;
 use coding_adventures_ca_assurance_report::matrix::{
-    build_weakness_matrix, AuditEvidence, PackageAuditContext, WeaknessStatus,
+    build_weakness_matrix, AuditEvidence, LanguageSafetyProfile, PackageAuditContext,
+    WeaknessStatus,
 };
 use coding_adventures_ca_assurance_report::Evidence;
 use coding_adventures_ca_assurance_report::registry::WeaknessRegistry;
@@ -47,6 +48,10 @@ fn evid() -> AuditEvidence {
         hw_counters: "not-live".into(),
         oob_ids: vec!["warrant/m/proof/op/constant-time".into()],
         oob_label: "bounded(8)".into(),
+        // Profiles are data: the ct-compare adopter's own file supplies the static sentences.
+        profile: AuditProfile::load(&std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../ct-compare"))
+            .expect("ct-compare profile loads"),
+        all_ops_step_bounded: true,
         ..AuditEvidence::default()
     }
 }
@@ -61,7 +66,7 @@ fn test_registry_parsing_and_invariants() {
     assert_eq!(cwe_208.name, "Observable Timing Discrepancy");
     assert_eq!(cwe_208.family, "cryptography");
     assert_eq!(cwe_208.minimum_proof_label, "proved-to-gate-level");
-    assert!(cwe_208.safe_subsets.is_empty());
+    assert_eq!(cwe_208.safe_subsets, vec!["no_secret_inputs".to_string()]);
 
     let cwe_416 = registry.find_class(416).expect("CWE-416 must exist");
     assert_eq!(cwe_416.name, "Use After Free");
@@ -86,7 +91,12 @@ fn test_weakness_matrix_generation_safe_rust() {
     let registry = WeaknessRegistry::embedded();
     let ctx = PackageAuditContext {
         package_id: "rust/ct-compare".into(),
+        language_safety: LanguageSafetyProfile::SafeRust,
         is_safe_rust: true,
+        has_secret_ops: false,
+        has_eval_analyzer_evidence: false,
+        has_prototype_analyzer_evidence: false,
+        constant_time_claims: vec![],
         declared_capabilities: vec![],
         has_wir_timing_proof: true,
         has_instruction_benchmarks: true,
@@ -226,7 +236,7 @@ fn test_sabotage_unauthorized_cwe208_exclusion() {
     match err {
         CheckError::InvalidExclusion(msg) => {
             assert!(msg.contains("208"));
-            assert!(msg.contains("no safe subset"));
+            assert!(msg.contains("cannot be excluded") || msg.contains("no safe subset"));
         }
         other => panic!("unexpected error: {:?}", other),
     }
@@ -689,7 +699,14 @@ fn test_matrix_builder_violations() {
     unsafe_ev.unsafe_exceptions = vec!["volatile barrier".into()];
     let ctx = PackageAuditContext {
         package_id: "rust/ct-compare".into(),
+        language_safety: LanguageSafetyProfile::ManualMemoryChecked {
+            language: "rust".into(),
+        },
         is_safe_rust: false,
+        has_secret_ops: false,
+        has_eval_analyzer_evidence: false,
+        has_prototype_analyzer_evidence: false,
+        constant_time_claims: vec![],
         declared_capabilities: vec![],
         has_wir_timing_proof: true,
         has_instruction_benchmarks: true,
@@ -720,7 +737,12 @@ fn test_matrix_builder_violations() {
     // Undeclared / unhandled capability triggers open row error
     let ctx = PackageAuditContext {
         package_id: "rust/ct-compare".into(),
+        language_safety: LanguageSafetyProfile::SafeRust,
         is_safe_rust: true,
+        has_secret_ops: false,
+        has_eval_analyzer_evidence: false,
+        has_prototype_analyzer_evidence: false,
+        constant_time_claims: vec![],
         declared_capabilities: vec!["proc:exec:*".into()],
         has_wir_timing_proof: true,
         has_instruction_benchmarks: true,
@@ -734,7 +756,12 @@ fn test_matrix_builder_violations() {
     // No step-bound evidence ids: CWE-400 cannot be discharged on a bare flag.
     let ctx = PackageAuditContext {
         package_id: "rust/ct-compare".into(),
+        language_safety: LanguageSafetyProfile::SafeRust,
         is_safe_rust: true,
+        has_secret_ops: false,
+        has_eval_analyzer_evidence: false,
+        has_prototype_analyzer_evidence: false,
+        constant_time_claims: vec![],
         declared_capabilities: vec![],
         has_wir_timing_proof: true,
         has_instruction_benchmarks: true,
@@ -748,7 +775,12 @@ fn test_matrix_builder_violations() {
     // Missing zero alloc proof
     let ctx = PackageAuditContext {
         package_id: "rust/ct-compare".into(),
+        language_safety: LanguageSafetyProfile::SafeRust,
         is_safe_rust: true,
+        has_secret_ops: false,
+        has_eval_analyzer_evidence: false,
+        has_prototype_analyzer_evidence: false,
+        constant_time_claims: vec![],
         declared_capabilities: vec![],
         has_wir_timing_proof: true,
         has_instruction_benchmarks: true,
@@ -762,7 +794,12 @@ fn test_matrix_builder_violations() {
     // Missing timing proof
     let ctx = PackageAuditContext {
         package_id: "rust/ct-compare".into(),
+        language_safety: LanguageSafetyProfile::SafeRust,
         is_safe_rust: true,
+        has_secret_ops: false,
+        has_eval_analyzer_evidence: false,
+        has_prototype_analyzer_evidence: false,
+        constant_time_claims: vec![],
         declared_capabilities: vec![],
         has_wir_timing_proof: false,
         has_instruction_benchmarks: true,

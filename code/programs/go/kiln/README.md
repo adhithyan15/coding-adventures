@@ -561,9 +561,22 @@ lines, 48 MB, written in a third of a second and hashed in 20 ms) and
 ecosystems). `VerifyPre` hashes the tree on every step but decodes it only when a
 step classifies (`Pre.Tree`).
 
+**The in-sandbox structure probe (stage 4 PR 2b-2c-2, decision P14).** After
+`CheckHost`, `prepare` starts the real sandbox under the real `strace` four times
+(`internal/record/probe.go`, `probe_run.go`), exactly as `step` starts a step:
+`pipes` (the step's descriptors 1 and 2 are pipes), `walk` (no socket or FIFO
+anywhere in the sandbox outside `/proc`, the read-only roots and the checkout),
+`shadow` (none beneath a host mount point inside a read-only root, the checkout or
+a state root; run only when there is one) and `signals` (a self-check that this
+strace prints signal deaths and that `daemon-left` fires for a survivor). Each run
+must show no write event, the exact argv, the sealed configuration's digests and
+a known init exit line; any failure fails `prepare` with nothing sealed. The
+result is the sealed `pre/probes.json` (digest of every trace) and the traces
+themselves in `<dir>/probe/` (never sealed, never read by `collect`). Unit tests
+inject `Options.Structure`; the real run is the Linux test `TestSandboxRecordProbe`.
+
 `kiln record step` and `kiln record collect` are the next sections. Not done by
-`prepare`, by design: gates and toolchain probes and the in-sandbox socket probe
-(2b-2c).
+`prepare`, by design: gates and toolchain probes (2b-2c).
 
 **The recorder's PATH and its git.** `git` is resolved once from `--git` (default
 `/usr/bin/git`) and every host-side Git call runs that file by absolute path;

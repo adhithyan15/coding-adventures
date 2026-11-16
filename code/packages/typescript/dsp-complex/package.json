@@ -1,0 +1,26 @@
+{
+  "name": "@coding-adventures/dsp-complex",
+  "version": "0.1.0",
+  "description": "Pure, bounded complex number and array representations for the DSP layer",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "node node_modules/typescript/bin/tsc",
+    "test": "node node_modules/typescript/bin/tsc -p tsconfig.test.json && node --experimental-test-coverage --test-coverage-exclude=dist-test/tests/** --test-coverage-lines=95 --test dist-test/tests/*.test.js",
+    "test:coverage": "node node_modules/typescript/bin/tsc -p tsconfig.test.json && node --experimental-test-coverage --test-coverage-exclude=dist-test/tests/** --test-coverage-lines=95 --test dist-test/tests/*.test.js"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^5.0.0"
+  }
+}

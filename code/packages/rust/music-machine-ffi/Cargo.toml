@@ -1,0 +1,18 @@
+[package]
+name = "music-machine-ffi"
+version = "0.1.0"
+edition = "2021"
+description = "C ABI FFI wrapper for music-machine-core"
+license = "MIT"
+readme = "README.md"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+music-machine-core = { path = "../music-machine-core" }
+pcm-audio = { path = "../pcm-audio" }
+
+[dev-dependencies]
+coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
+coding_adventures_sha256 = { path = "../sha256" }

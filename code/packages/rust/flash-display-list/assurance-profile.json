@@ -1,0 +1,19 @@
+{
+  "schema": "warrant-assurance-profile-v1",
+  "name": "flash-display-list",
+  "kind": "transform",
+  "rows": {
+    "326": {
+      "applicability": "excluded",
+      "reason": "no keys: the package takes and generates no key material; operands are bounded display objects, timeline states, and paint instructions"
+    },
+    "327": {
+      "applicability": "excluded",
+      "reason": "pure display hierarchy transform: package implements Flash display tree management, timeline FSM, and PaintScene lowering only, no cipher, hash or MAC"
+    },
+    "407": {
+      "applicability": "excluded",
+      "reason": "bounded work per call: hierarchy depth capped by MAX_HIERARCHY_DEPTH = 64, depths bounded by MAX_DEPTH, and scene diffing operates over bounded instructions"
+    }
+  }
+}

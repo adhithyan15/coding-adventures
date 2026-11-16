@@ -1,0 +1,147 @@
+{
+  "schema_version": "ver24-effect-cert-v1",
+  "package": "rust/collision2d",
+  "source_digest": "bfe01c822930e678bdfa97fa46c4f83f9fb04afe2683d124e69d182b0ef4b759",
+  "manifest_digest": "9ff99dca5c817bef6341264891cc2c48795ecf6eef409fe00cd4797c13752584",
+  "declared_effects": [],
+  "entry_points": [
+    {
+      "name": "validate_coord",
+      "signature": "pub fn validate_coord(val: f64) -> Result<(), CollisionError>",
+      "effects": []
+    },
+    {
+      "name": "validate_point",
+      "signature": "pub fn validate_point(p: Point) -> Result<(), CollisionError>",
+      "effects": []
+    },
+    {
+      "name": "validate_rect",
+      "signature": "pub fn validate_rect(r: Rect) -> Result<(), CollisionError>",
+      "effects": []
+    },
+    {
+      "name": "new",
+      "signature": "pub fn new(center: Point, radius: f64) -> Result<Self, CollisionError>",
+      "effects": []
+    },
+    {
+      "name": "validate",
+      "signature": "pub fn validate(&self) -> Result<(), CollisionError>",
+      "effects": []
+    },
+    {
+      "name": "new",
+      "signature": "pub fn new(center: Point, half_extents: Point, rotation_rad: f64) -> Result<Self, CollisionError>",
+      "effects": []
+    },
+    {
+      "name": "validate",
+      "signature": "pub fn validate(&self) -> Result<(), CollisionError>",
+      "effects": []
+    },
+    {
+      "name": "axes",
+      "signature": "pub fn axes(&self) -> (Point, Point)",
+      "effects": []
+    },
+    {
+      "name": "corners",
+      "signature": "pub fn corners(&self) -> [Point; 4]",
+      "effects": []
+    },
+    {
+      "name": "new",
+      "signature": "pub fn new(origin: Point, dir: Point, max_toi: f64) -> Result<Self, CollisionError>",
+      "effects": []
+    },
+    {
+      "name": "validate",
+      "signature": "pub fn validate(&self) -> Result<(), CollisionError>",
+      "effects": []
+    },
+    {
+      "name": "point_at",
+      "signature": "pub fn point_at(&self, t: f64) -> Point",
+      "effects": []
+    },
+    {
+      "name": "new",
+      "signature": "pub fn new(x: i64, y: i64, width: i64, height: i64) -> Result<Self, CollisionError>",
+      "effects": []
+    },
+    {
+      "name": "validate",
+      "signature": "pub fn validate(&self) -> Result<(), CollisionError>",
+      "effects": []
+    },
+    {
+      "name": "new",
+      "signature": "pub fn new(cx: i64, cy: i64, radius: i64) -> Result<Self, CollisionError>",
+      "effects": []
+    },
+    {
+      "name": "validate",
+      "signature": "pub fn validate(&self) -> Result<(), CollisionError>",
+      "effects": []
+    },
+    {
+      "name": "aabb_vs_aabb",
+      "signature": "pub fn aabb_vs_aabb(a: Rect, b: Rect) -> Result<Option<ContactManifold>, CollisionError>",
+      "effects": []
+    },
+    {
+      "name": "circle_vs_circle",
+      "signature": "pub fn circle_vs_circle(a: Circle, b: Circle) -> Result<Option<ContactManifold>, CollisionError>",
+      "effects": []
+    },
+    {
+      "name": "circle_vs_aabb",
+      "signature": "pub fn circle_vs_aabb(circle: Circle, rect: Rect) -> Result<Option<ContactManifold>, CollisionError>",
+      "effects": []
+    },
+    {
+      "name": "obb_vs_obb_sat",
+      "signature": "pub fn obb_vs_obb_sat(a: Obb2D, b: Obb2D) -> Result<Option<ContactManifold>, CollisionError>",
+      "effects": []
+    },
+    {
+      "name": "raycast_aabb",
+      "signature": "pub fn raycast_aabb(ray: Ray2D, rect: Rect) -> Result<Option<SweepHit>, CollisionError>",
+      "effects": []
+    },
+    {
+      "name": "raycast_circle",
+      "signature": "pub fn raycast_circle(ray: Ray2D, circle: Circle) -> Result<Option<SweepHit>, CollisionError>",
+      "effects": []
+    },
+    {
+      "name": "sweep_aabb_aabb",
+      "signature": "pub fn sweep_aabb_aabb( moving: Rect, velocity: Point, target: Rect, ) -> Result<Option<SweepHit>, CollisionError>",
+      "effects": []
+    },
+    {
+      "name": "sweep_circle_aabb",
+      "signature": "pub fn sweep_circle_aabb( circle: Circle, velocity: Point, target: Rect, ) -> Result<Option<SweepHit>, CollisionError>",
+      "effects": []
+    },
+    {
+      "name": "reflect_velocity",
+      "signature": "pub fn reflect_velocity( velocity: Point, normal: Point, restitution: f64, ) -> Result<Point, CollisionError>",
+      "effects": []
+    },
+    {
+      "name": "fixed_aabb_vs_aabb",
+      "signature": "pub fn fixed_aabb_vs_aabb( a: FixedRectI64, b: FixedRectI64, ) -> Result<Option<FixedOverlapI64>, CollisionError>",
+      "effects": []
+    },
+    {
+      "name": "fixed_circle_vs_aabb",
+      "signature": "pub fn fixed_circle_vs_aabb( c: FixedCircleI64, r: FixedRectI64, ) -> Result<Option<FixedOverlapI64>, CollisionError>",
+      "effects": []
+    }
+  ],
+  "unconditional_roots": [],
+  "banned_construct_exceptions": [],
+  "label": "proved"
+}

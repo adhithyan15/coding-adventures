@@ -1,0 +1,212 @@
+{
+  "schema_version": "ver24-effect-cert-v1",
+  "package": "rust/palette-indexed",
+  "source_digest": "f90b2524a89782d7f40d12a2fde446e790b47a7afbf411767230875644b88403",
+  "manifest_digest": "302f6321c7dbca93b2cd7831f4cf1445d4e981fe802997ef2d0cae9fb5b36ca8",
+  "declared_effects": [],
+  "entry_points": [
+    {
+      "name": "bits",
+      "signature": "pub const fn bits(self) -> usize",
+      "effects": []
+    },
+    {
+      "name": "color_count",
+      "signature": "pub const fn color_count(self) -> usize",
+      "effects": []
+    },
+    {
+      "name": "pixels_per_byte",
+      "signature": "pub const fn pixels_per_byte(self) -> usize",
+      "effects": []
+    },
+    {
+      "name": "packed_row_len",
+      "signature": "pub fn packed_row_len(depth: BitDepth, width: u32) -> Result<usize, PaletteError>",
+      "effects": []
+    },
+    {
+      "name": "required_buffer_len",
+      "signature": "pub fn required_buffer_len( depth: BitDepth, width: u32, height: u32, stride: usize, ) -> Result<usize, PaletteError>",
+      "effects": []
+    },
+    {
+      "name": "pack_row_into",
+      "signature": "pub fn pack_row_into( depth: BitDepth, indices: &[u8], out: &mut [u8], ) -> Result<usize, PaletteError>",
+      "effects": []
+    },
+    {
+      "name": "unpack_row_into",
+      "signature": "pub fn unpack_row_into( depth: BitDepth, packed: &[u8], width: u32, out: &mut [u8], ) -> Result<(), PaletteError>",
+      "effects": []
+    },
+    {
+      "name": "get_index",
+      "signature": "pub fn get_index(depth: BitDepth, packed: &[u8], x: usize) -> Result<u8, PaletteError>",
+      "effects": []
+    },
+    {
+      "name": "set_index",
+      "signature": "pub fn set_index( depth: BitDepth, packed: &mut [u8], x: usize, index: u8, ) -> Result<(), PaletteError>",
+      "effects": []
+    },
+    {
+      "name": "blank",
+      "signature": "pub const fn blank(depth: BitDepth) -> Self",
+      "effects": []
+    },
+    {
+      "name": "from_colors",
+      "signature": "pub fn from_colors(depth: BitDepth, colors: &[Rgba8]) -> Result<Self, PaletteError>",
+      "effects": []
+    },
+    {
+      "name": "palette_depth",
+      "signature": "pub const fn palette_depth(&self) -> BitDepth",
+      "effects": []
+    },
+    {
+      "name": "entry_count",
+      "signature": "pub const fn entry_count(&self) -> usize",
+      "effects": []
+    },
+    {
+      "name": "active_entries",
+      "signature": "pub fn active_entries(&self) -> &[Rgba8]",
+      "effects": []
+    },
+    {
+      "name": "entry",
+      "signature": "pub fn entry(&self, index: u8) -> Result<Rgba8, PaletteError>",
+      "effects": []
+    },
+    {
+      "name": "set_entry",
+      "signature": "pub fn set_entry(&mut self, index: u8, color: Rgba8) -> Result<(), PaletteError>",
+      "effects": []
+    },
+    {
+      "name": "resolve",
+      "signature": "pub fn resolve(&self, index: u8, color0_transparent: bool) -> Result<Rgba8, PaletteError>",
+      "effects": []
+    },
+    {
+      "name": "channel_width",
+      "signature": "pub const fn channel_width(self) -> u32",
+      "effects": []
+    },
+    {
+      "name": "quantize_channel",
+      "signature": "pub fn quantize_channel(value: u8, bits: ChannelBits) -> u8",
+      "effects": []
+    },
+    {
+      "name": "quantize_color",
+      "signature": "pub fn quantize_color(color: Rgba8, bits: ChannelBits) -> Rgba8",
+      "effects": []
+    },
+    {
+      "name": "fade_color",
+      "signature": "pub fn fade_color( from: Rgba8, to: Rgba8, step: u16, steps: u16, bits: ChannelBits, ) -> Result<Rgba8, PaletteError>",
+      "effects": []
+    },
+    {
+      "name": "fade_palette_into",
+      "signature": "pub fn fade_palette_into( src: &Palette, dst: &mut Palette, target: Rgba8, step: u16, steps: u16, bits: ChannelBits, ) -> Result<(), PaletteError>",
+      "effects": []
+    },
+    {
+      "name": "crossfade_palette_into",
+      "signature": "pub fn crossfade_palette_into( a: &Palette, b: &Palette, dst: &mut Palette, step: u16, steps: u16, bits: ChannelBits, ) -> Result<(), PaletteError>",
+      "effects": []
+    },
+    {
+      "name": "view",
+      "signature": "pub fn view( depth: BitDepth, width: u32, height: u32, stride: usize, data: &'a [u8], ) -> Result<Self, PaletteError>",
+      "effects": []
+    },
+    {
+      "name": "bit_depth",
+      "signature": "pub const fn bit_depth(&self) -> BitDepth",
+      "effects": []
+    },
+    {
+      "name": "width",
+      "signature": "pub const fn width(&self) -> u32",
+      "effects": []
+    },
+    {
+      "name": "height",
+      "signature": "pub const fn height(&self) -> u32",
+      "effects": []
+    },
+    {
+      "name": "stride",
+      "signature": "pub const fn stride(&self) -> usize",
+      "effects": []
+    },
+    {
+      "name": "row_bytes",
+      "signature": "pub fn row_bytes(&self, y: u32) -> Option<&'a [u8]>",
+      "effects": []
+    },
+    {
+      "name": "index_at",
+      "signature": "pub fn index_at(&self, x: u32, y: u32) -> Option<u8>",
+      "effects": []
+    },
+    {
+      "name": "unpack_scanline_into",
+      "signature": "pub fn unpack_scanline_into(&self, y: u32, out: &mut [u8]) -> Result<(), PaletteError>",
+      "effects": []
+    },
+    {
+      "name": "attach",
+      "signature": "pub fn attach( depth: BitDepth, width: u32, height: u32, stride: usize, data: &'a mut [u8], ) -> Result<Self, PaletteError>",
+      "effects": []
+    },
+    {
+      "name": "as_image",
+      "signature": "pub fn as_image(&self) -> IndexedImage<'_>",
+      "effects": []
+    },
+    {
+      "name": "peek_index",
+      "signature": "pub fn peek_index(&self, x: u32, y: u32) -> Option<u8>",
+      "effects": []
+    },
+    {
+      "name": "put_index",
+      "signature": "pub fn put_index(&mut self, x: u32, y: u32, index: u8) -> Result<(), PaletteError>",
+      "effects": []
+    },
+    {
+      "name": "clear_indices",
+      "signature": "pub fn clear_indices(&mut self, index: u8) -> Result<(), PaletteError>",
+      "effects": []
+    },
+    {
+      "name": "blit_indexed",
+      "signature": "pub fn blit_indexed( &mut self, src: &IndexedImage<'_>, dst_x: i32, dst_y: i32, opts: BlitOptions, ) -> Result<usize, PaletteError>",
+      "effects": []
+    },
+    {
+      "name": "expand_row_to_rgba_into",
+      "signature": "pub fn expand_row_to_rgba_into( depth: BitDepth, packed: &[u8], width: u32, palette: &Palette, color0_transparent: bool, out: &mut [u8], ) -> Result<usize, PaletteError>",
+      "effects": []
+    },
+    {
+      "name": "blit_scanline_to_container",
+      "signature": "pub fn blit_scanline_to_container( img: &IndexedImage<'_>, src_y: u32, palette: &Palette, opts: BlitOptions, dst: &mut PixelContainer, dst_x: i32, dst_y: i32, ) -> Result<usize, PaletteError>",
+      "effects": []
+    },
+    {
+      "name": "blit_indexed_to_container",
+      "signature": "pub fn blit_indexed_to_container( img: &IndexedImage<'_>, palette: &Palette, opts: BlitOptions, dst: &mut PixelContainer, dst_x: i32, dst_y: i32, ) -> Result<usize, PaletteError>",
+      "effects": []
+    }
+  ],
+  "unconditional_roots": [],
+  "banned_construct_exceptions": [],
+  "label": "proved"
+}

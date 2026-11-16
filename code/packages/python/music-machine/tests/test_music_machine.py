@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import sys
+from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
@@ -9,6 +10,13 @@ from pcm_audio import PCMBuffer, PCMFormat
 from music_machine import (
     DEFAULT_INSTRUMENT_ID,
     HAPPY_BIRTHDAY_TEXT,
+    MAX_DURATION_SECONDS,
+    MAX_EVENTS,
+    MAX_INSTRUMENTS,
+    MAX_SAMPLE_COUNT,
+    MAX_SAMPLE_RATE_HZ,
+    MAX_SCORE_BYTES,
+    MAX_TRACKS,
     MINI_ORCHESTRA_TEXT,
     PITCHED_PERCUSSION_MIX_TEXT,
     ArrangementSection,
@@ -29,7 +37,9 @@ from music_machine import (
     TrackDeclaration,
     beats_for_duration_symbol,
     parse_portable_score,
+    parse_portable_score_file,
     parse_score,
+    parse_score_file,
     play_portable_score,
     play_portable_score_text,
     play_score,
@@ -1032,13 +1042,11 @@ def test_parse_portable_score_rejects_invalid_input(
             "tempo start_tick must be >= 0",
         ),
         (
-            "format: music-machine-score/v2\n"
-            "instrument lead program=1 profile=sine",
+            "format: music-machine-score/v2\ninstrument lead program=1 profile=sine",
             "only one",
         ),
         (
-            "format: music-machine-score/v2\n"
-            "instrument lead profile=sine kind=sine",
+            "format: music-machine-score/v2\ninstrument lead profile=sine kind=sine",
             "only one",
         ),
         (
@@ -1303,3 +1311,1251 @@ def test_play_portable_score_text_delegates_to_injected_sink() -> None:
     )
 
     assert result == "portable text played"
+
+
+# =============================================================================
+# Hardened Security & Determinism Audits (CWE-1333 / CWE-400 / CWE-20 / CWE-22)
+# =============================================================================
+
+
+def test_ast_audit_zero_regex_and_eval() -> None:
+    import ast
+    from pathlib import Path
+
+    src_root = Path(__file__).resolve().parent.parent / "src" / "music_machine"
+    assert src_root.is_dir()
+    py_files = list(src_root.glob("*.py"))
+    assert len(py_files) >= 3
+
+    for py_file in py_files:
+        content = py_file.read_text(encoding="utf-8")
+        tree = ast.parse(content, filename=str(py_file))
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Import):
+                for alias in node.names:
+                    assert alias.name != "re", f"Found 'import re' in {py_file.name}"
+            elif isinstance(node, ast.ImportFrom):
+                assert node.module != "re", (
+                    f"Found 'from re import ...' in {py_file.name}"
+                )
+            elif isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
+                assert node.func.id not in {"eval", "exec"}, (
+                    f"Found forbidden call {node.func.id}() in {py_file.name}"
+                )
+
+
+def test_additive_instrument_parsing_and_rendering() -> None:
+    score_text = """format: music-machine-score/v2
+title: Additive Test
+ppq: 120
+sample_rate: 8000
+tempo 0 120
+meter 0 4/4
+
+instrument synth kind=additive harmonics=1:1.0,2:0.5 envelope=0.01,0.05,0.7,0.1 gain=0.6
+track lead instrument=synth
+event lead 0 120 note C4 velocity=0.8
+"""
+    score = parse_portable_score(score_text)
+    assert len(score.instruments) == 1
+    inst = score.instruments[0]
+    assert inst.kind == "additive"
+    assert inst.custom_profile is not None
+    assert inst.harmonics is not None
+    assert inst.harmonics[0].frequency_multiplier == 1.0
+    assert inst.harmonics[0].amplitude == 1.0
+    assert inst.harmonics[1].frequency_multiplier == 2.0
+    assert inst.harmonics[1].amplitude == 0.5
+    assert inst.envelope is not None
+    assert inst.envelope.attack_seconds == 0.01
+
+    rendered = render_portable_score_to_pcm(score)
+    assert rendered.pcm_buffer.sample_count() > 0
+    assert any(s != 0 for s in rendered.pcm_buffer.samples)
+
+
+def test_drumkit_parsing_and_hihat_choke() -> None:
+    score_text = """format: music-machine-score/v2
+title: Drum Test
+ppq: 120
+sample_rate: 8000
+tempo 0 120
+meter 0 4/4
+
+instrument drums kind=drumkit kit=standard gain=0.8
+track rhythm instrument=drums
+event rhythm 0 120 hit open_hihat velocity=0.8
+event rhythm 60 60 hit closed_hihat velocity=0.8
+"""
+    score = parse_portable_score(score_text)
+    assert len(score.instruments) == 1
+    inst = score.instruments[0]
+    assert inst.kind == "drumkit"
+    assert inst.kit == "standard_kit"
+    assert len(score.events) == 2
+    assert score.events[0].kind == "hit"
+    assert score.events[0].hit_id == "open_hihat"
+    assert score.events[1].hit_id == "closed_hihat"
+
+    rendered = render_portable_score_to_pcm(score)
+    assert rendered.pcm_buffer.sample_count() > 0
+    assert len(rendered.rendered_hits) == 2
+
+
+def test_drumkit_and_pitched_track_mismatch_fails() -> None:
+    bad_note_on_drum = """format: music-machine-score/v2
+ppq: 120
+sample_rate: 8000
+instrument drums kind=drumkit
+track rhythm instrument=drums
+event rhythm 0 120 note C4 velocity=0.8
+"""
+    with pytest.raises(ValueError, match="cannot play note events"):
+        render_portable_score_to_pcm(parse_portable_score(bad_note_on_drum))
+
+    bad_hit_on_pitched = """format: music-machine-score/v2
+ppq: 120
+sample_rate: 8000
+instrument lead kind=sine
+track melody instrument=lead
+event melody 0 120 hit snare velocity=0.8
+"""
+    with pytest.raises(ValueError, match="cannot play hit events"):
+        render_portable_score_to_pcm(parse_portable_score(bad_hit_on_pitched))
+
+
+def test_portable_score_json_roundtrip_and_rejections() -> None:
+    import json
+
+    score = parse_portable_score(PORTABLE_DUET_TEXT)
+    as_dict = score.to_dict()
+    assert as_dict["format_version"] == "music-machine-score/v2"
+    assert as_dict["title"] == "Tiny Duet"
+
+    rebuilt = PortableScore.from_dict(as_dict)
+    assert rebuilt == score
+
+    json_str = score.to_json()
+    assert isinstance(json_str, str)
+    from_json_score = PortableScore.from_json(json_str)
+    assert from_json_score == score
+
+    # Reject non-string
+    with pytest.raises(ValueError, match="json_text must be a string"):
+        PortableScore.from_json(123)  # type: ignore[arg-type]
+
+    # Reject oversized JSON
+    with pytest.raises(ValueError, match="exceeds max_bytes"):
+        score.from_json(json_str, max_bytes=10)
+
+    # Reject non-finite constants
+    nan_json = json.dumps({"title": "NaN", "tempo": float("nan")})
+    with pytest.raises(ValueError, match="non-finite"):
+        PortableScore.from_json(nan_json)
+
+    inf_json = '{"title": "Inf", "tempo": Infinity}'
+    with pytest.raises(ValueError, match="non-finite|Expecting value"):
+        PortableScore.from_json(inf_json)
+
+    # Reject invalid dict schema
+    with pytest.raises(ValueError, match="dictionary|mapping"):
+        PortableScore.from_dict([])  # type: ignore[arg-type]
+    with pytest.raises(ValueError, match="format_version"):
+        PortableScore.from_dict({"format_version": "unsupported/v99"})
+
+
+def test_file_path_validation_and_cwe22(tmp_path: pytest.TempPathFactory) -> None:
+    from pathlib import Path
+
+    # Null bytes rejection
+    with pytest.raises(ValueError, match="null byte"):
+        parse_score_file("test\0bad.txt")
+    with pytest.raises(ValueError, match="null byte"):
+        parse_portable_score_file("test\0bad.txt")
+
+    # Non-existent file rejection
+    with pytest.raises(FileNotFoundError):
+        parse_score_file("nonexistent_score_file_12345.txt")
+    with pytest.raises(FileNotFoundError):
+        parse_portable_score_file("nonexistent_score_file_12345.txt")
+
+    # Valid file reading
+    temp_dir = Path(str(tmp_path))
+    score_file = temp_dir / "valid_score.txt"
+    score_file.write_text("A4/q B4/q", encoding="utf-8")
+    loaded = parse_score_file(score_file)
+    assert len(loaded.events) == 2
+
+    port_file = temp_dir / "valid_port.txt"
+    port_file.write_text(PORTABLE_DUET_TEXT, encoding="utf-8")
+    loaded_port = parse_portable_score_file(port_file)
+    assert loaded_port.title == "Tiny Duet"
+
+
+class SplitMix64:
+    """Minimal SplitMix64 PRNG for deterministic property-based testing."""
+
+    def __init__(self, seed: int) -> None:
+        self.state = seed & 0xFFFFFFFFFFFFFFFF
+
+    def next_u64(self) -> int:
+        self.state = (self.state + 0x9E3779B97F4A7C15) & 0xFFFFFFFFFFFFFFFF
+        z = self.state
+        z = (z ^ (z >> 30)) * 0xBF58476D1CE4E5B9 & 0xFFFFFFFFFFFFFFFF
+        z = (z ^ (z >> 27)) * 0x94D049BB133111EB & 0xFFFFFFFFFFFFFFFF
+        return (z ^ (z >> 31)) & 0xFFFFFFFFFFFFFFFF
+
+    def next_int(self, low: int, high: int) -> int:
+        return low + (self.next_u64() % (high - low + 1))
+
+
+def test_splitmix64_property_based_rendering() -> None:
+    notes = ["C4", "D4", "E4", "F4", "G4", "A4", "B4"]
+    for seed in [1337, 42, 9999]:
+        rng = SplitMix64(seed)
+        builder = PortableScoreBuilder(
+            title=f"PBT_{seed}", ppq=120, sample_rate_hz=4000
+        )
+        builder.add_tempo(0, rng.next_int(80, 160))
+        builder.add_meter(0, "4/4")
+        builder.add_instrument("lead", kind="sine", gain=0.4)
+        builder.add_track("melody", instrument_id="lead")
+
+        current_tick = 0
+        for _ in range(5):
+            note = notes[rng.next_int(0, len(notes) - 1)]
+            dur = rng.next_int(60, 120)
+            vel = 0.5 + (rng.next_int(0, 50) / 100.0)
+            builder.add_note("melody", current_tick, dur, note, velocity=vel)
+            current_tick += dur
+
+        score1 = builder.build()
+        render1 = render_portable_score_to_pcm(score1)
+        render2 = render_portable_score_to_pcm(score1)
+
+        # Exact bit-for-bit determinism
+        assert render1.pcm_buffer.samples == render2.pcm_buffer.samples
+        assert all(-32768 <= s <= 32767 for s in render1.pcm_buffer.samples)
+
+
+def test_hostile_inputs_and_bounds() -> None:
+    # 0. Assert resource bounds constants
+    assert MAX_DURATION_SECONDS == 600.0
+    assert MAX_EVENTS == 10_000
+    assert MAX_INSTRUMENTS == 128
+    assert MAX_TRACKS == 128
+    assert MAX_SCORE_BYTES == 1_000_000
+
+    # 1. Oversized score text
+    oversized = "A4/q\n" * 300_000
+    with pytest.raises(ValueError, match="exceeds"):
+        parse_score(oversized, max_score_bytes=100)
+
+    # 2. Exceeding MAX_SAMPLE_RATE_HZ
+    with pytest.raises(ValueError, match="MAX_SAMPLE_RATE_HZ"):
+        parse_score(f"sample_rate: {int(MAX_SAMPLE_RATE_HZ + 1)}\nA4/q")
+
+    # 3. Exceeding MAX_DURATION_SECONDS
+    score_long = parse_score(
+        "tempo: 0.1\nsample_rate: 100\nA4/w\n",
+        max_event_count=100,
+    )
+    with pytest.raises(ValueError, match="MAX_DURATION_SECONDS"):
+        render_score_to_pcm(score_long, max_sample_count=MAX_SAMPLE_COUNT)
+
+    # 4. Hostile ReDoS-style line with repeated spaces
+    adversarial = " " * 8_000 + "A4/q"
+    parsed = parse_score(adversarial)
+    assert len(parsed.events) == 1
+
+    oversized_line = " " * 15_000 + "A4/q"
+    with pytest.raises(ValueError, match="exceeds max_line_length"):
+        parse_score(oversized_line)
+
+    # 5. Invalid identifier characters
+    with pytest.raises(ValueError, match="identifier"):
+        InstrumentDeclaration("bad id with spaces", "sine")
+
+
+def test_comprehensive_defensive_validations_and_scanners() -> None:
+    from music_machine.music_machine import (
+        MAX_NOTE_DURATION_SECONDS,
+        MAX_PARTIALS,
+        _finite_float,
+        _integer_directive,
+        _integer_valued_sample_rate,
+        _is_identifier,
+        _is_valid_meter,
+        _non_negative_float,
+        _non_negative_integer,
+        _parse_directive_line,
+        _parse_envelope,
+        _parse_float_directive,
+        _parse_harmonics,
+        _parse_properties,
+        _parse_tick,
+        _positive_float,
+        _positive_integer,
+        _safe_round_sample,
+        _signed_integer,
+        _unit_float,
+        _validate_identifier,
+        _validate_meter,
+    )
+
+    # _finite_float
+    assert _finite_float("x", 42) == 42.0
+    with pytest.raises(ValueError, match="finite real"):
+        _finite_float("x", True)
+    with pytest.raises(ValueError, match="finite real"):
+        _finite_float("x", "42")
+    with pytest.raises(ValueError, match="finite"):
+        _finite_float("x", float("nan"))
+    with pytest.raises(ValueError, match="finite"):
+        _finite_float("x", float("inf"))
+
+    # _positive_float
+    assert _positive_float("x", 0.5) == 0.5
+    with pytest.raises(ValueError, match="> 0.0"):
+        _positive_float("x", 0.0)
+    with pytest.raises(ValueError, match="> 0.0"):
+        _positive_float("x", -1.0)
+
+    # _non_negative_float
+    assert _non_negative_float("x", 0.0) == 0.0
+    with pytest.raises(ValueError, match=">= 0.0"):
+        _non_negative_float("x", -0.1)
+
+    # _unit_float
+    assert _unit_float("x", 0.0) == 0.0
+    assert _unit_float("x", 1.0) == 1.0
+    with pytest.raises(ValueError, match=r"\[0.0, 1.0\]"):
+        _unit_float("x", -0.1)
+    with pytest.raises(ValueError, match=r"\[0.0, 1.0\]"):
+        _unit_float("x", 1.1)
+
+    # _positive_integer
+    assert _positive_integer("x", 10) == 10
+    with pytest.raises(ValueError, match="integer > 0"):
+        _positive_integer("x", True)
+    with pytest.raises(ValueError, match="integer > 0"):
+        _positive_integer("x", 1.5)  # type: ignore[arg-type]
+    with pytest.raises(ValueError, match="> 0"):
+        _positive_integer("x", 0)
+
+    # _non_negative_integer
+    assert _non_negative_integer("x", 0) == 0
+    with pytest.raises(ValueError, match="integer >= 0"):
+        _non_negative_integer("x", False)
+    with pytest.raises(ValueError, match=">= 0"):
+        _non_negative_integer("x", -1)
+
+    # _signed_integer
+    assert _signed_integer("x", -5) == -5
+    with pytest.raises(ValueError, match="integer"):
+        _signed_integer("x", True)
+
+    # _integer_valued_sample_rate
+    assert _integer_valued_sample_rate("44100") == 44100
+    with pytest.raises(ValueError, match="sample_rate must be an integer"):
+        _integer_valued_sample_rate("fast")
+    with pytest.raises(ValueError, match="sample_rate must be an integer"):
+        _integer_valued_sample_rate("44100.5")
+    with pytest.raises(ValueError, match="sample_rate must be > 0"):
+        _integer_valued_sample_rate("0")
+    with pytest.raises(ValueError, match="exceeds MAX_SAMPLE_RATE_HZ"):
+        _integer_valued_sample_rate("200000")
+
+    # _integer_directive
+    assert _integer_directive("ppq", "120") == 120
+    with pytest.raises(ValueError, match="ppq must be an integer"):
+        _integer_directive("ppq", "abc")
+    with pytest.raises(ValueError, match="ppq must be an integer"):
+        _integer_directive("ppq", "120.4")
+
+    # _parse_float_directive
+    assert _parse_float_directive("gain", "0.5") == 0.5
+    with pytest.raises(ValueError, match="gain must be a number"):
+        _parse_float_directive("gain", "loud")
+    with pytest.raises(ValueError, match="gain must be a number"):
+        _parse_float_directive("gain", "nan")
+
+    # _parse_directive_line
+    assert _parse_directive_line("title: Foo") == ("title", "Foo")
+    assert _parse_directive_line("no_colon") is None
+    assert _parse_directive_line(": empty_key") is None
+    assert _parse_directive_line("123bad: val") is None
+    assert _parse_directive_line("bad key: val") is None
+
+    # _is_identifier & _validate_identifier
+    assert _is_identifier("valid_id-1")
+    assert not _is_identifier("")
+    assert not _is_identifier("123bad")
+    assert not _is_identifier("has space")
+    assert _validate_identifier("track", "lead_1") == "lead_1"
+    with pytest.raises(ValueError, match="must be an identifier"):
+        _validate_identifier("track", "bad id")
+
+    # _is_valid_meter & _validate_meter
+    assert _is_valid_meter("4/4")
+    assert _is_valid_meter("6/8")
+    assert not _is_valid_meter("4")
+    assert not _is_valid_meter("4/4/4")
+    assert not _is_valid_meter("0/4")
+    assert not _is_valid_meter("4/0")
+    assert not _is_valid_meter("a/b")
+    assert _validate_meter("3/4") == "3/4"
+    with pytest.raises(ValueError, match="meter must look like"):
+        _validate_meter("tomato")
+
+    # _parse_properties
+    assert _parse_properties(["gain=0.5", "profile=flute_naive"]) == {
+        "gain": "0.5",
+        "profile": "flute_naive",
+    }
+    with pytest.raises(ValueError, match="must be key=value"):
+        _parse_properties(["no_equals"])
+    with pytest.raises(ValueError, match="must be key=value"):
+        _parse_properties(["=val"])
+    with pytest.raises(ValueError, match="must be key=value"):
+        _parse_properties(["key="])
+    with pytest.raises(ValueError, match="duplicate property"):
+        _parse_properties(["key=1", "key=2"])
+
+    # _parse_tick
+    assert _parse_tick("120", "tick") == 120
+    with pytest.raises(ValueError, match="tick must be an integer"):
+        _parse_tick("bad", "tick")
+
+    # _safe_round_sample
+    assert _safe_round_sample(-1.0, 44100) == 0
+    assert _safe_round_sample(float("nan"), 44100) == 0
+    assert _safe_round_sample(1000000.0, 44100) == 16_777_216
+    assert _safe_round_sample(1.0, 100) == 100
+
+    # _parse_harmonics
+    h3 = _parse_harmonics("1:1.0:0.1, 2:0.5:0.2")
+    assert len(h3) == 2
+    assert h3[0].phase_cycles == 0.1
+    with pytest.raises(ValueError, match="at least one partial"):
+        _parse_harmonics("")
+    with pytest.raises(ValueError, match="exceeds MAX_PARTIALS"):
+        _parse_harmonics(",".join(f"{i}:1.0" for i in range(1, MAX_PARTIALS + 2)))
+    with pytest.raises(ValueError, match="must be multiplier:amplitude"):
+        _parse_harmonics("1:2:3:4")
+
+    # _parse_envelope
+    env = _parse_envelope("0.01, 0.02, 0.8, 0.05")
+    assert env.attack_seconds == 0.01
+    assert env.sustain_level == 0.8
+    with pytest.raises(ValueError, match="must be attack,decay,sustain,release"):
+        _parse_envelope("0.01, 0.02, 0.8")
+    with pytest.raises(
+        ValueError, match=f"times must be <= {MAX_NOTE_DURATION_SECONDS}"
+    ):
+        _parse_envelope(f"{MAX_NOTE_DURATION_SECONDS + 1}, 0.01, 0.5, 0.01")
+
+
+def test_portable_score_structural_validations() -> None:
+    inst1 = InstrumentDeclaration("lead", "sine", gain=0.5)
+    trk1 = TrackDeclaration("melody", "lead")
+    ev1 = PortableScoreEvent("melody", 0, 120, "note", ("C4",))
+
+    # Duplicate instrument
+    with pytest.raises(ValueError, match="unique"):
+        PortableScore(
+            format_version="music-machine-score/v2",
+            title="Dup Inst",
+            ppq=120,
+            sample_rate_hz=8000,
+            tempo_events=(TempoEvent(0, 120),),
+            meter_events=(MeterEvent(0, "4/4"),),
+            instruments=(inst1, inst1),
+            tracks=(trk1,),
+            events=(ev1,),
+        )
+
+    # Duplicate track
+    with pytest.raises(ValueError, match="unique"):
+        PortableScore(
+            format_version="music-machine-score/v2",
+            title="Dup Trk",
+            ppq=120,
+            sample_rate_hz=8000,
+            tempo_events=(TempoEvent(0, 120),),
+            meter_events=(MeterEvent(0, "4/4"),),
+            instruments=(inst1,),
+            tracks=(trk1, trk1),
+            events=(ev1,),
+        )
+
+    # Unknown instrument on track
+    with pytest.raises(ValueError, match="unknown instrument"):
+        PortableScore(
+            format_version="music-machine-score/v2",
+            title="Unk Inst",
+            ppq=120,
+            sample_rate_hz=8000,
+            tempo_events=(TempoEvent(0, 120),),
+            meter_events=(MeterEvent(0, "4/4"),),
+            instruments=(inst1,),
+            tracks=(TrackDeclaration("melody", "unknown_inst"),),
+            events=(ev1,),
+        )
+
+    # Unknown track on event
+    with pytest.raises(ValueError, match="unknown track"):
+        PortableScore(
+            format_version="music-machine-score/v2",
+            title="Unk Trk",
+            ppq=120,
+            sample_rate_hz=8000,
+            tempo_events=(TempoEvent(0, 120),),
+            meter_events=(MeterEvent(0, "4/4"),),
+            instruments=(inst1,),
+            tracks=(trk1,),
+            events=(PortableScoreEvent("unknown_track", 0, 120, "note", ("C4",)),),
+        )
+
+    # PortableScoreEvent validations
+    with pytest.raises(ValueError, match="kind must be"):
+        PortableScoreEvent("melody", 0, 120, "invalid_kind")  # type: ignore[arg-type]
+    with pytest.raises(ValueError, match="at least one note"):
+        PortableScoreEvent("melody", 0, 120, "note", notes=())
+    with pytest.raises(ValueError, match="rest events cannot include notes"):
+        PortableScoreEvent("melody", 0, 120, "rest", notes=("C4",))
+    with pytest.raises(ValueError, match="hit events cannot include notes"):
+        PortableScoreEvent("melody", 0, 120, "hit", notes=("C4",))
+    with pytest.raises(ValueError, match="hit events must include a hit_id"):
+        PortableScoreEvent("melody", 0, 120, "hit", hit_id=None)
+
+    # to_text round-trip
+    score = PortableScore(
+        format_version="music-machine-score/v2",
+        title="Roundtrip Song",
+        ppq=120,
+        sample_rate_hz=8000,
+        tempo_events=(TempoEvent(0, 120),),
+        meter_events=(MeterEvent(0, "4/4"),),
+        instruments=(inst1,),
+        tracks=(trk1,),
+        events=(ev1,),
+    )
+    serialized = score.to_text()
+    assert "format: music-machine-score/v2" in serialized
+    reparsed = parse_portable_score(serialized)
+    assert reparsed.title == score.title
+    assert len(reparsed.events) == 1
+
+
+def test_tier0_golden_fixtures() -> None:
+    import hashlib
+    import json
+    import struct
+    from pathlib import Path
+
+    fix_dir = (
+        Path(__file__).resolve().parents[4] / "specs" / "fixtures" / "music-machine"
+    )
+    score_txt = (fix_dir / "canonical_score.txt").read_text(encoding="utf-8")
+    score_json = (fix_dir / "canonical_score.json").read_text(encoding="utf-8")
+    expected_render = json.loads(
+        (fix_dir / "expected_render.json").read_text(encoding="utf-8")
+    )
+
+    parsed = parse_portable_score(score_txt)
+    reconstructed = PortableScore.from_json(score_json)
+    assert parsed == reconstructed
+
+    rendered = render_portable_score_to_pcm(parsed)
+    samples = rendered.pcm_buffer.samples
+    assert len(samples) == expected_render["total_samples"]
+    assert (
+        rendered.pcm_buffer.clipped_sample_count
+        == expected_render["clipped_sample_count"]
+    )
+
+    raw_bytes = struct.pack(f"<{len(samples)}h", *samples)
+    pcm_sha = hashlib.sha256(raw_bytes).hexdigest()
+    assert pcm_sha == expected_render["pcm16_le_sha256"]
+    assert list(samples[:32]) == expected_render["first_32_samples"]
+    assert list(samples[-32:]) == expected_render["last_32_samples"]
+
+
+def test_dict_serialization_edge_cases() -> None:
+    # InstrumentDeclaration.from_dict error branches
+    with pytest.raises(ValueError, match="mapping"):
+        InstrumentDeclaration.from_dict("not a map")  # type: ignore[arg-type]
+
+    with pytest.raises(ValueError, match="list of partials"):
+        InstrumentDeclaration.from_dict({"id": "inst", "harmonics": "not_list"})
+
+    with pytest.raises(ValueError, match="malformed partial"):
+        InstrumentDeclaration.from_dict({"id": "inst", "harmonics": [["bad partial"]]})
+
+    with pytest.raises(ValueError, match=r"\[atk, dec, sus, rel\]"):
+        InstrumentDeclaration.from_dict({"id": "inst", "envelope": [0.01, 0.02]})
+
+    # PortableScore.from_dict error branches
+    base_dict = parse_portable_score(PORTABLE_DUET_TEXT).to_dict()
+
+    bad_keys = dict(base_dict)
+    bad_keys["unexpected_key"] = 123
+    with pytest.raises(ValueError, match="unknown score keys"):
+        PortableScore.from_dict(bad_keys)
+
+    bad_tempo = dict(base_dict)
+    bad_tempo["tempo_events"] = "not_list"
+    with pytest.raises(ValueError, match="tempo_events must be a list"):
+        PortableScore.from_dict(bad_tempo)
+
+    bad_meter = dict(base_dict)
+    bad_meter["meter_events"] = "not_list"
+    with pytest.raises(ValueError, match="meter_events must be a list"):
+        PortableScore.from_dict(bad_meter)
+
+    bad_inst = dict(base_dict)
+    bad_inst["instruments"] = "not_list"
+    with pytest.raises(ValueError, match="instruments must be a list"):
+        PortableScore.from_dict(bad_inst)
+
+    bad_tracks = dict(base_dict)
+    bad_tracks["tracks"] = "not_list"
+    with pytest.raises(ValueError, match="tracks must be a list"):
+        PortableScore.from_dict(bad_tracks)
+
+    bad_events = dict(base_dict)
+    bad_events["events"] = "not_list"
+    with pytest.raises(ValueError, match="events must be a list"):
+        PortableScore.from_dict(bad_events)
+
+
+def test_text_score_drumkit_and_validation() -> None:
+    hit_ev1 = ScoreEvent(
+        kind="hit",
+        note=None,
+        duration_symbol="q",
+        beat_count=1.0,
+        duration_seconds=0.5,
+        source_token="kick/q",
+        hit_id="kick",
+    )
+    hit_ev2 = ScoreEvent(
+        kind="hit",
+        note=None,
+        duration_symbol="q",
+        beat_count=1.0,
+        duration_seconds=0.5,
+        source_token="snare/q",
+        hit_id="snare",
+    )
+    score = TextScore(
+        title="Drums",
+        tempo_bpm=120.0,
+        meter="4/4",
+        amplitude=0.8,
+        sample_rate_hz=8000,
+        instrument_id="drumkit",
+        gm_program=None,
+        events=(hit_ev1, hit_ev2),
+    )
+    rendered = render_score_to_pcm(score)
+    assert rendered.pcm_buffer.sample_count() > 0
+
+    # TextScore error branches
+    with pytest.raises(ValueError, match=r"\[1, 128\]"):
+        TextScore(
+            title="Bad GM",
+            tempo_bpm=120,
+            meter="4/4",
+            amplitude=0.5,
+            sample_rate_hz=8000,
+            instrument_id="piano_naive",
+            gm_program=130,
+            events=(hit_ev1,),
+        )
+
+    # RenderedScore error branch
+    with pytest.raises(ValueError, match="rendered_hits\\[0\\]"):
+        RenderedScore(
+            score=score,
+            pcm_buffer=rendered.pcm_buffer,
+            rendered_notes=(),
+            rendered_hits=("not_a_hit",),  # type: ignore[arg-type]
+        )
+
+
+def test_builder_beats_ticks_measure_helpers() -> None:
+    builder = PortableScoreBuilder(ppq=120)
+    builder.add_instrument("lead", kind="sine")
+    builder.add_instrument("drums", kind="drumkit")
+    builder.add_track("melody", instrument_id="lead")
+    builder.add_track("rhythm", instrument_id="drums")
+
+    # add_hit and add_rest
+    builder.add_hit("rhythm", 0, 120, "kick", velocity=0.9)
+    builder.add_rest("melody", 0, 120)
+
+    # beats_to_ticks validations
+    with pytest.raises(ValueError, match="beat_count must be >= 0.0"):
+        builder.beats_to_ticks(-1.0)
+    with pytest.raises(ValueError, match="not representable at ppq"):
+        builder.beats_to_ticks(0.333333333)
+
+    # measure_start_tick validations
+    with pytest.raises(ValueError, match="integer >= 1"):
+        builder.measure_start_tick("one")  # type: ignore[arg-type]
+    with pytest.raises(ValueError, match="measure_number must be >= 1"):
+        builder.measure_start_tick(0)
+    assert builder.measure_start_tick(1) == 0
+    assert builder.measure_start_tick(2) == 480
+
+
+def test_motif_and_section_edge_cases() -> None:
+    from music_machine.music_machine import _validated_track_map
+
+    # PhraseMotifEvent with hit
+    hit_motif_ev = PhraseMotifEvent(0, 120, "hit", notes=(), hit_id="kick")
+    assert hit_motif_ev.hit_id == "kick"
+
+    with pytest.raises(ValueError, match="unknown hit_id"):
+        PhraseMotifEvent(0, 120, "hit", notes=(), hit_id="unknown_drum_hit")
+
+    with pytest.raises(ValueError, match="motif event extends beyond"):
+        PhraseMotif(
+            duration_tick=100,
+            events=(PhraseMotifEvent(0, 120, "note", ("C4",)),),
+        )
+
+    # _validated_track_map with non-mapping
+    with pytest.raises(ValueError, match="track_map must be a mapping"):
+        _validated_track_map("not a mapping")  # type: ignore[arg-type]
+
+
+def test_meter_and_instrument_resolution_coverage() -> None:
+    from music_machine.music_machine import (
+        DEFAULT_INSTRUMENT_ID,
+        _is_valid_meter,
+        _validate_meter,
+        resolve_instrument_id,
+    )
+
+    assert not _is_valid_meter("4")
+    assert not _is_valid_meter("4/4/4")
+    assert not _is_valid_meter("/4")
+    assert not _is_valid_meter("4/")
+    assert not _is_valid_meter("04/4")
+    assert not _is_valid_meter("4/04")
+    assert not _is_valid_meter("a/b")
+    assert _is_valid_meter("4/4")
+
+    with pytest.raises(ValueError, match="meter must look like"):
+        _validate_meter("invalid_meter")
+
+    assert resolve_instrument_id() == DEFAULT_INSTRUMENT_ID
+    assert resolve_instrument_id(instrument_id="standard_kit") == "standard_kit"
+    assert resolve_instrument_id(instrument_id="standard") == "standard"
+
+
+def test_score_event_and_text_score_edge_cases() -> None:
+    from music_machine.music_machine import (
+        MAX_EVENTS,
+        MeterEvent,
+        TempoEvent,
+        TrackDeclaration,
+    )
+
+    with pytest.raises(ValueError, match="hit events must include a hit_id"):
+        ScoreEvent(
+            kind="hit",
+            note=None,
+            hit_id=None,
+            duration_symbol="q",
+            beat_count=1.0,
+            duration_seconds=0.5,
+            source_token="x",
+        )
+
+    with pytest.raises(ValueError, match="unknown hit_id"):
+        ScoreEvent(
+            kind="hit",
+            note=None,
+            hit_id="unknown_drum_voice",
+            duration_symbol="q",
+            beat_count=1.0,
+            duration_seconds=0.5,
+            source_token="x",
+        )
+
+    ev = ScoreEvent("note", "C4", "q", 1.0, 0.5, "C4/q")
+    with pytest.raises(ValueError, match="exceeds MAX_EVENTS"):
+        TextScore(
+            title="Too Many",
+            tempo_bpm=120.0,
+            meter="4/4",
+            amplitude=0.5,
+            sample_rate_hz=8000,
+            instrument_id="piano_naive",
+            gm_program=None,
+            events=(ev,) * (MAX_EVENTS + 1),
+        )
+
+    with pytest.raises(ValueError, match="start_tick"):
+        TempoEvent(start_tick=-1, bpm=120.0)
+
+    with pytest.raises(ValueError, match="meter must look like"):
+        MeterEvent(start_tick=0, meter="bad_meter")
+
+    with pytest.raises(ValueError, match="track id"):
+        TrackDeclaration(id="", instrument_id="inst")
+
+
+def test_instrument_declaration_additional_edge_cases() -> None:
+    from musical_instruments import ADSREnvelope, HarmonicPartial, InstrumentProfile
+
+    with pytest.raises(ValueError, match="unknown drum kit"):
+        InstrumentDeclaration(
+            id="bad_kit",
+            profile_id="drumkit",
+            kind="drumkit",
+            kit="unknown_kit",
+        )
+
+    with pytest.raises(ValueError, match="must provide harmonics"):
+        InstrumentDeclaration(
+            id="bad_add",
+            profile_id="bad",
+            kind="additive",
+            harmonics=None,
+        )
+
+    custom_prof = InstrumentProfile(
+        id="custom_prof",
+        display_name="Custom Profile",
+        synthesis_kind="additive",
+        gain=1.0,
+        harmonic_profile=(HarmonicPartial(1, 1.0, 0.0),),
+        envelope_profile=ADSREnvelope(0.01, 0.02, 0.8, 0.05),
+    )
+    inst = InstrumentDeclaration(
+        id="custom_prof",
+        profile_id="custom_prof",
+        kind="additive",
+        custom_profile=custom_prof,
+    )
+    assert inst.harmonics == (HarmonicPartial(1, 1.0, 0.0),)
+    assert inst.envelope == custom_prof.envelope_profile
+
+
+def test_portable_score_event_and_builder_edge_cases() -> None:
+    from musical_instruments import HarmonicPartial
+
+    with pytest.raises(ValueError, match="hit events cannot include notes"):
+        PortableScoreEvent("trk", 0, 120, "hit", notes=("C4",), hit_id="kick")
+
+    with pytest.raises(ValueError, match="unknown hit_id"):
+        PortableScoreEvent("trk", 0, 120, "hit", hit_id="unknown_drum")
+
+    with pytest.raises(ValueError, match="start_tick"):
+        PortableScoreEvent("trk", -1, 120, "note", notes=("C4",))
+
+    with pytest.raises(ValueError, match="duration_tick"):
+        PortableScoreEvent("trk", 0, 0, "note", notes=("C4",))
+
+    with pytest.raises(ValueError, match="malformed JSON"):
+        PortableScore.from_json("{broken json")
+
+    with pytest.raises(ValueError, match="JSON score root must be an object"):
+        PortableScore.from_json('["not_a_dict"]')
+
+    inst1 = InstrumentDeclaration("lead", profile_id="sine", kind="sine")
+    trk1 = TrackDeclaration("melody", "lead")
+    ev1 = PortableScoreEvent("melody", 0, 120, "note", ("C4",))
+
+    with pytest.raises(ValueError, match="exceeds MAX_PPQ"):
+        PortableScore(
+            format_version="music-machine-score/v2",
+            title="Empty",
+            ppq=200000,
+            sample_rate_hz=8000,
+            tempo_events=(TempoEvent(0, 120.0),),
+            meter_events=(MeterEvent(0, "4/4"),),
+            instruments=(inst1,),
+            tracks=(trk1,),
+            events=(ev1,),
+        )
+
+    with pytest.raises(ValueError, match="exceeds MAX_SAMPLE_RATE_HZ"):
+        PortableScore(
+            format_version="music-machine-score/v2",
+            title="Empty",
+            ppq=120,
+            sample_rate_hz=200000,
+            tempo_events=(TempoEvent(0, 120.0),),
+            meter_events=(MeterEvent(0, "4/4"),),
+            instruments=(inst1,),
+            tracks=(trk1,),
+            events=(ev1,),
+        )
+
+    with pytest.raises(ValueError, match="exceeds MAX_EVENTS"):
+        PortableScore(
+            format_version="music-machine-score/v2",
+            title="Empty",
+            ppq=120,
+            sample_rate_hz=8000,
+            tempo_events=(TempoEvent(0, 120.0),),
+            meter_events=(MeterEvent(0, "4/4"),),
+            instruments=(inst1,),
+            tracks=(trk1,),
+            events=(ev1,) * (MAX_EVENTS + 1),
+        )
+
+    with pytest.raises(ValueError, match="format_version must be"):
+        PortableScoreBuilder(format_version="wrong_version")
+
+    b = PortableScoreBuilder(ppq=120, sample_rate_hz=8000)
+    b.add_instrument("lead_preset", profile="piano_naive")
+    b.add_instrument(
+        "add_inst", kind="additive", harmonics=(HarmonicPartial(1, 1.0, 0.0),)
+    )
+    with pytest.raises(
+        ValueError, match="kind must be sine, silence, drumkit, or additive"
+    ):
+        b.add_instrument("bad_inst", kind="unknown_kind")
+
+    b.add_track("melody", instrument_id="lead_preset")
+    b.add_note("melody", 0, 120, "C4")
+    b.add_rest("melody", 120, 120)
+
+    with pytest.raises(ValueError, match="end_tick must be >= start_tick"):
+        b.capture_motif("melody", start_tick=100, end_tick=50)
+
+    with pytest.raises(ValueError, match="motif must be a PhraseMotif"):
+        b.apply_motif("not_a_motif", "melody", 0)  # type: ignore[arg-type]
+
+    with pytest.raises(ValueError, match="end_tick must be >= start_tick"):
+        b.capture_section(start_tick=100, end_tick=50)
+
+    with pytest.raises(ValueError, match="track_ids must be an iterable"):
+        b.capture_section(start_tick=0, end_tick=100, track_ids="string_id")  # type: ignore[arg-type]
+
+    with pytest.raises(ValueError, match="section must be an ArrangementSection"):
+        b.apply_section("not_a_section", 0)  # type: ignore[arg-type]
+
+
+def test_phrase_builder_and_section_application() -> None:
+    from music_machine.music_machine import (
+        ArrangementSection,
+        ArrangementSectionEvent,
+        PhraseBuilder,
+        PhraseMotifEvent,
+    )
+
+    with pytest.raises(
+        ValueError, match="score_builder must be a PortableScoreBuilder"
+    ):
+        PhraseBuilder("not_builder", "melody")  # type: ignore[arg-type]
+
+    with pytest.raises(ValueError, match="origin_tick"):
+        PhraseBuilder(PortableScoreBuilder(), "melody", start_tick=0, origin_tick=-1)
+
+    builder = PortableScoreBuilder(ppq=120, sample_rate_hz=8000)
+    builder.add_instrument("lead", kind="sine")
+    builder.add_instrument("drums", kind="drumkit")
+    builder.add_track("melody", instrument_id="lead")
+    builder.add_track("rhythm", instrument_id="drums")
+
+    pb = PhraseBuilder(builder, "melody")
+    pb.chord(["C4", "E4", "G4"], 1.0, velocity=0.8)
+    pb.rest(1.0)
+    pb.advance_beats(1.0)
+    pb.jump_to_measure(2, beat_offset=0.5)
+
+    pb_drum = PhraseBuilder(builder, "rhythm")
+    pb_drum.hit("kick", 1.0, velocity=0.9)
+    pb_drum.hit("snare", 1.0, velocity=0.8)
+
+    motif = pb.motif(start_tick=0)
+    pb.apply_motif(
+        motif,
+        transpose_semitones=2,
+        velocity_scale=0.8,
+        repeat_count=2,
+        spacing_beats=2.0,
+    )
+
+    # Section with note, hit, and rest applied with track_map,
+    # dictionary transpose, and dictionary velocity scale
+    section_events = (
+        ArrangementSectionEvent("melody", 0, 120, "note", ("C4",), velocity=0.9),
+        ArrangementSectionEvent(
+            "rhythm", 0, 120, "hit", notes=(), hit_id="kick", velocity=0.8
+        ),
+        ArrangementSectionEvent("melody", 120, 120, "rest", notes=()),
+    )
+    section = ArrangementSection(duration_tick=240, events=section_events)
+    builder.apply_section(
+        section,
+        start_tick=480,
+        track_map={"melody": "melody", "rhythm": "rhythm"},
+        transpose_semitones={"melody": 4, "rhythm": 0},
+        velocity_scale={"melody": 0.7, "rhythm": 0.9},
+    )
+
+    # ArrangementSectionEvent validations
+    with pytest.raises(ValueError, match="kind must be"):
+        ArrangementSectionEvent("melody", 0, 120, "invalid")  # type: ignore[arg-type]
+
+    with pytest.raises(ValueError, match="at least one note"):
+        ArrangementSectionEvent("melody", 0, 120, "note", notes=())
+
+    with pytest.raises(ValueError, match="rest section events cannot include notes"):
+        ArrangementSectionEvent("melody", 0, 120, "rest", notes=("C4",))
+
+    with pytest.raises(ValueError, match="hit section events cannot include notes"):
+        ArrangementSectionEvent("melody", 0, 120, "hit", notes=("C4",))
+
+    with pytest.raises(ValueError, match="hit section events must include a hit_id"):
+        ArrangementSectionEvent("melody", 0, 120, "hit", hit_id=None)
+
+    with pytest.raises(ValueError, match="unknown hit_id"):
+        ArrangementSectionEvent("melody", 0, 120, "hit", hit_id="unknown_drum")
+
+    # PhraseMotifEvent validations
+    with pytest.raises(ValueError, match="kind must be"):
+        PhraseMotifEvent(0, 120, "invalid")  # type: ignore[arg-type]
+
+    with pytest.raises(ValueError, match="at least one note"):
+        PhraseMotifEvent(0, 120, "note", notes=())
+
+    with pytest.raises(ValueError, match="rest motif events cannot include notes"):
+        PhraseMotifEvent(0, 120, "rest", notes=("C4",))
+
+    with pytest.raises(ValueError, match="hit motif events cannot include notes"):
+        PhraseMotifEvent(0, 120, "hit", notes=("C4",))
+
+    with pytest.raises(ValueError, match="hit motif events must include a hit_id"):
+        PhraseMotifEvent(0, 120, "hit", hit_id=None)
+
+
+def test_render_pcm_additional_edge_cases() -> None:
+    from music_machine.music_machine import MAX_SAMPLE_COUNT
+
+    # Mixed note and hit render in TextScore
+    score = TextScore(
+        title="Mixed",
+        tempo_bpm=120.0,
+        meter="4/4",
+        amplitude=0.5,
+        sample_rate_hz=8000,
+        instrument_id="piano_naive",
+        gm_program=None,
+        events=(
+            ScoreEvent("note", "C4", "q", 1.0, 0.1, "C4/q"),
+            ScoreEvent("hit", None, "q", 1.0, 0.1, "kick/q", hit_id="kick"),
+            ScoreEvent("rest", None, "q", 1.0, 0.1, "r/q"),
+        ),
+    )
+    rendered = render_score_to_pcm(score)
+    assert len(rendered.pcm_buffer.samples) > 0
+
+    # render_portable_score_to_pcm validations
+    with pytest.raises(ValueError, match="score must be a PortableScore"):
+        render_portable_score_to_pcm("not_a_portable_score")  # type: ignore[arg-type]
+
+    b = PortableScoreBuilder(ppq=120, sample_rate_hz=8000)
+    b.add_instrument("lead", kind="sine")
+    b.add_track("melody", instrument_id="lead")
+    b.add_note("melody", 0, 120, "C4")
+    pscore = b.build()
+
+    with pytest.raises(ValueError, match="exceeds MAX_SAMPLE_COUNT"):
+        render_portable_score_to_pcm(pscore, max_sample_count=MAX_SAMPLE_COUNT + 1)
+
+    # Note on drumkit track
+    b_drum = PortableScoreBuilder(ppq=120, sample_rate_hz=8000)
+    b_drum.add_instrument("drums", kind="drumkit")
+    b_drum.add_track("rhythm", instrument_id="drums")
+    b_drum.add_note("rhythm", 0, 120, "C4")
+    score_bad_drum = b_drum.build()
+    with pytest.raises(ValueError, match="cannot play note events"):
+        render_portable_score_to_pcm(score_bad_drum)
+
+    # Hit on pitched track
+    b_pitched = PortableScoreBuilder(ppq=120, sample_rate_hz=8000)
+    b_pitched.add_instrument("lead", kind="sine")
+    b_pitched.add_track("melody", instrument_id="lead")
+    b_pitched.add_hit("melody", 0, 120, "kick")
+    score_bad_pitched = b_pitched.build()
+    with pytest.raises(ValueError, match="cannot play hit events"):
+        render_portable_score_to_pcm(score_bad_pitched)
+
+    # Score exceeding MAX_DURATION_SECONDS
+    with pytest.raises(ValueError, match="exceeds MAX_DURATION_SECONDS"):
+        render_portable_score_to_pcm(
+            PortableScore(
+                format_version="music-machine-score/v2",
+                title="Long",
+                ppq=120,
+                sample_rate_hz=8000,
+                tempo_events=(TempoEvent(0, 120.0),),
+                meter_events=(MeterEvent(0, "4/4"),),
+                instruments=(
+                    InstrumentDeclaration("lead", profile_id="sine", kind="sine"),
+                ),
+                tracks=(TrackDeclaration("melody", "lead"),),
+                events=(PortableScoreEvent("melody", 0, 100_000_000, "rest"),),
+            )
+        )
+
+
+def test_security_review_fixes(tmp_path: Path) -> None:
+    from unittest.mock import patch
+
+    from musical_instruments import MAX_NOTE_DURATION_SECONDS, MAX_PARTIALS
+
+    # 1. CWE-22: Symlink rejection
+    target_file = tmp_path / "valid.txt"
+    target_file.write_text("C4 1/4\n", encoding="utf-8")
+    symlink_file = tmp_path / "symlink.txt"
+    try:
+        symlink_file.symlink_to(target_file)
+        has_symlink = True
+    except (OSError, NotImplementedError):
+        has_symlink = False
+
+    if has_symlink:
+        with pytest.raises(ValueError, match="symlinks are not permitted"):
+            parse_score_file(symlink_file)
+        with pytest.raises(ValueError, match="symlinks are not permitted"):
+            parse_portable_score_file(symlink_file)
+
+    # 2. CWE-400: Bounded file read before read_text
+    oversized_file = tmp_path / "large.txt"
+    oversized_file.write_text("x" * 200, encoding="utf-8")
+    with pytest.raises(ValueError, match="exceeds limit"):
+        parse_score_file(oversized_file, max_score_length=50)
+    with pytest.raises(ValueError, match="exceeds limit"):
+        parse_portable_score_file(oversized_file, max_score_length=50)
+
+    # 3. CWE-400 / CWE-20: Missing keys & non-string types in submodel from_dict
+    with pytest.raises(ValueError, match="missing required keys"):
+        TempoEvent.from_dict({"start_tick": 0})
+    with pytest.raises(ValueError, match="missing required keys"):
+        MeterEvent.from_dict({"start_tick": 0})
+    with pytest.raises(ValueError, match="must be a string"):
+        MeterEvent.from_dict({"start_tick": 0, "meter": 123})
+    with pytest.raises(ValueError, match="missing 'id'"):
+        InstrumentDeclaration.from_dict({})
+    with pytest.raises(ValueError, match="must be a string"):
+        InstrumentDeclaration.from_dict({"id": 123})
+    with pytest.raises(ValueError, match="must be a string"):
+        InstrumentDeclaration.from_dict({"id": "inst", "kind": 123})
+    with pytest.raises(ValueError, match="must be a string"):
+        InstrumentDeclaration.from_dict({"id": "inst", "kit": 123})
+    with pytest.raises(ValueError, match="must be a string"):
+        InstrumentDeclaration.from_dict({"id": "inst", "profile_id": 123})
+    with pytest.raises(ValueError, match="exceeds MAX_PARTIALS"):
+        InstrumentDeclaration.from_dict(
+            {"id": "inst", "harmonics": [[1, 1.0]] * (MAX_PARTIALS + 1)}
+        )
+    with pytest.raises(ValueError, match="envelope times must be"):
+        InstrumentDeclaration.from_dict(
+            {
+                "id": "inst",
+                "envelope": [
+                    MAX_NOTE_DURATION_SECONDS + 1.0,
+                    0.01,
+                    0.8,
+                    0.01,
+                ],
+            }
+        )
+    with pytest.raises(ValueError, match="missing required keys"):
+        TrackDeclaration.from_dict({"id": "trk"})
+    with pytest.raises(ValueError, match="must be a string"):
+        TrackDeclaration.from_dict({"id": 123, "instrument_id": "inst"})
+    with pytest.raises(ValueError, match="must be a string"):
+        TrackDeclaration.from_dict({"id": "trk", "instrument_id": 123})
+    with pytest.raises(ValueError, match="missing required key"):
+        PortableScoreEvent.from_dict({"track_id": "trk"})
+    with pytest.raises(ValueError, match="must be a string"):
+        PortableScoreEvent.from_dict(
+            {"track_id": 123, "start_tick": 0, "duration_tick": 120, "kind": "note"}
+        )
+    with pytest.raises(ValueError, match="must be a string"):
+        PortableScoreEvent.from_dict(
+            {"track_id": "trk", "start_tick": 0, "duration_tick": 120, "kind": 123}
+        )
+    with pytest.raises(ValueError, match="must be a list or tuple"):
+        PortableScoreEvent.from_dict(
+            {
+                "track_id": "trk",
+                "start_tick": 0,
+                "duration_tick": 120,
+                "kind": "note",
+                "notes": "not_a_list",
+            }
+        )
+    with pytest.raises(ValueError, match="must be a string"):
+        PortableScoreEvent.from_dict(
+            {
+                "track_id": "trk",
+                "start_tick": 0,
+                "duration_tick": 120,
+                "kind": "hit",
+                "hit_id": 123,
+            }
+        )
+
+    # PortableScore.from_dict allocation pre-checks
+    valid_dict = parse_portable_score(PORTABLE_DUET_TEXT).to_dict()
+    bad_events_dict = dict(valid_dict)
+    bad_events_dict["events"] = [valid_dict["events"][0]] * (MAX_EVENTS + 1)
+    with pytest.raises(ValueError, match="events count .* exceeds MAX_EVENTS"):
+        PortableScore.from_dict(bad_events_dict)
+
+    bad_tempos_dict = dict(valid_dict)
+    bad_tempos_dict["tempo_events"] = [
+        {"start_tick": i, "bpm": 120.0} for i in range(MAX_EVENTS + 1)
+    ]
+    with pytest.raises(ValueError, match="tempo_events count .* exceeds MAX_EVENTS"):
+        PortableScore.from_dict(bad_tempos_dict)
+
+    # RecursionError catch in from_json
+    with (
+        patch("json.loads", side_effect=RecursionError("deep")),
+        pytest.raises(ValueError, match="malformed JSON"),
+    ):
+        PortableScore.from_json('{"title": "x"}')
+
+    # 4. CWE-407 / CWE-400: Sample rate bounds and drumkit budget validation
+    with pytest.raises(ValueError, match="exceeds MAX_SAMPLE_RATE_HZ"):
+        TextScore(
+            title="Fast",
+            tempo_bpm=120.0,
+            meter="4/4",
+            amplitude=0.5,
+            sample_rate_hz=200_000,
+            instrument_id="piano_naive",
+            gm_program=None,
+            events=(ScoreEvent("note", "C4", "q", 1.0, 0.5, "C4/q"),),
+        )
+
+    with pytest.raises(ValueError, match="exceeds MAX_SAMPLE_RATE_HZ"):
+        PortableScoreBuilder(sample_rate_hz=200_000)
+
+    # Drumkit budget pre-flight check in render_score_to_pcm
+    drum_score = TextScore(
+        title="Drums",
+        tempo_bpm=120.0,
+        meter="4/4",
+        amplitude=0.8,
+        sample_rate_hz=8000,
+        instrument_id="drumkit",
+        gm_program=None,
+        events=(ScoreEvent("hit", None, "q", 1.0, 1.0, "kick/q", hit_id="kick"),),
+    )
+    with pytest.raises(ValueError, match="above max_sample_count"):
+        render_score_to_pcm(drum_score, max_sample_count=10)

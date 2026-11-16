@@ -5,6 +5,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { defaultCurriculumRoot, loadTaskShapeInventory } from "../src/loader.js";
 import { listMockAssessmentStatuses } from "../src/mock-assessment.js";
+import { gurmukhiTokens, introducedAndPractised } from "../src/mock-book-prerequisites.js";
+import type { ParsedLesson } from "../src/parse.js";
 import * as mockEvidenceReader from "../src/mock-evidence-read.js";
 import { runAssessmentArtifactCli } from "../src/assessment-artifact-cli.js";
 import type { TaskShapeInventory } from "../src/task-shapes.js";
@@ -62,6 +64,36 @@ beforeEach(() => {
 afterEach(() => rmSync(root, { recursive: true, force: true }));
 
 describe("full-mock coverage measurement", () => {
+  it("compares exact Gurmukhi tokens, not fragments or related words", () => {
+    const tested = gurmukhiTokens("ਪੰਜਾਬੀ ਪੰਜਾਬ");
+    expect([...tested]).toEqual(["ਪੰਜਾਬੀ", "ਪੰਜਾਬ"]);
+    expect(gurmukhiTokens("ਪੰਜਾਬੀ").has("ਪੰਜਾਬ")).toBe(false);
+    expect(gurmukhiTokens("<!-- ਪੰਜਾਬ --> ਪੰਜਾਬੀ")).toEqual(new Set(["ਪੰਜਾਬੀ"]));
+  });
+  it("does not mistake comment-only lesson prose or practice for book teaching", () => {
+    const atom = "MW-FUNCTION-A1-PREFERENCE";
+    const lesson = (teaching: string, prompt: string): ParsedLesson => ({
+      frontmatter: { "introduces.knowledge": [atom] },
+      blocks: [{
+        knowledge: { introduces: [atom] }, markdown: teaching,
+        activities: [{ assesses: [atom], prompt, answer: "I prefer this." }],
+      }],
+    }) as unknown as ParsedLesson;
+    expect(introducedAndPractised([lesson("<!-- hidden explanation -->", "Say your preference")], atom)).toBe(false);
+    expect(introducedAndPractised([lesson("I prefer this.", "<!-- hidden prompt -->")], atom)).toBe(false);
+    expect(introducedAndPractised([lesson("I prefer this.", "Say your preference")], atom)).toBe(true);
+  });
+  it("blocks known book-taught gaps without hiding an independent ready mock", () => {
+    const statuses = listMockAssessmentStatuses(source);
+    expect(statuses.find((status) => status.language === "marwadi" && status.level === "A1"))
+      .toMatchObject({ missingMocks: ["a1-mock-1", "a1-mock-2"],
+        blockedBy: ["book-teaching/marwadi/A1/a1-mock-1/functional-frames"] });
+    expect(statuses.find((status) => status.language === "punjabi" && status.level === "A2"))
+      .toMatchObject({ missingMocks: ["a2-mock-1", "a2-mock-2"],
+        blockedBy: ["book-teaching/punjabi/A2/a2-mock-1/surface-closure"] });
+    expect(statuses.find((status) => status.language === "russian" && status.level === "pre-A1"))
+      .toMatchObject({ blockedBy: [] });
+  });
   it("counts only the mock with a present paper, distinct key and rubric, and valid manifest", () => {
     const statuses = listMockAssessmentStatuses(root);
     expect(statuses.find((status) => status.level === "A1")).toMatchObject({

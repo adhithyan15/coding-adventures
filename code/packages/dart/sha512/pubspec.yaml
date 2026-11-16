@@ -1,0 +1,12 @@
+name: coding_adventures_sha512
+version: 0.1.0
+description: SHA-512 cryptographic hash function (FIPS 180-4) implemented from scratch in pure Dart.
+repository: https://github.com/adhithyan15/coding-adventures
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dev_dependencies:
+  coverage: ^1.15.0
+  test: ^1.25.0

@@ -1,0 +1,82 @@
+-- GAME21 -- Tilemap2D: deterministic zero-allocation multi-layer scrolling tilemap engine.
+--
+-- Warrant document for tilemap2d (VER04j and VER04m: state=explicit).
+-- Formal verification contract for the resource guards of the tilemap engine.
+
+warrant tilemap2d v1
+  -- Contract mapping: validate_map_dim models the guard in TileLayer::attach (map width and
+  -- height); validate_tile_size models the guard shared by TileLayer::attach and
+  -- Tileset::attach_tiles; validate_viewport_dim models validate_viewport (and the render-target
+  -- guard of render_layers_to_container). Every divisor used by the culling and collision paths
+  -- is a validated tile size (CWE-369), so the guards below discharge it.
+  error TilemapError = InvalidMapSize | InvalidTileSize | InvalidViewport
+
+  model Unit = Bool
+  variant WrapMode = Wrap | Clamp | Void
+
+  record Camera(x: Nat, y: Nat)
+
+  model valid_map_dim(n: Nat) -> Bool = n >= 1 and n <= 4096
+  model valid_tile_size(n: Nat) -> Bool = n >= 1 and n <= 256
+  model valid_viewport_dim(n: Nat) -> Bool = n >= 1 and n <= 8192
+
+  op validate_map_dim(n: Nat) -> Result<Bool, TilemapError>
+  op validate_tile_size(n: Nat) -> Result<Bool, TilemapError>
+  op validate_viewport_dim(n: Nat) -> Result<Bool, TilemapError>
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels validate_map_dim:
+    n public
+  labels validate_tile_size:
+    n public
+  labels validate_viewport_dim:
+    n public
+
+  input validate_map_dim.n:
+    hostile
+    ensures no_panic, terminates
+  input validate_tile_size.n:
+    hostile
+    ensures no_panic, terminates
+  input validate_viewport_dim.n:
+    hostile
+    ensures no_panic, terminates
+
+  bound validate_map_dim:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_tile_size:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_viewport_dim:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+
+  example map_dim_min:
+    validate_map_dim(1) == Ok(true)
+  example map_dim_max:
+    validate_map_dim(4096) == Ok(true)
+  example map_dim_zero:
+    validate_map_dim(0) == Err(TilemapError.InvalidMapSize)
+  example tile_size_max:
+    validate_tile_size(256) == Ok(true)
+  example tile_size_zero:
+    validate_tile_size(0) == Err(TilemapError.InvalidTileSize)
+  example viewport_max:
+    validate_viewport_dim(8192) == Ok(true)
+  example viewport_zero:
+    validate_viewport_dim(0) == Err(TilemapError.InvalidViewport)
+
+  claim validate_map_dim_agrees:
+    forall n: Nat. validate_map_dim(n) == (if valid_map_dim(n) then Ok(true) else Err(TilemapError.InvalidMapSize))
+  claim validate_tile_size_agrees:
+    forall n: Nat. validate_tile_size(n) == (if valid_tile_size(n) then Ok(true) else Err(TilemapError.InvalidTileSize))
+  claim validate_viewport_dim_agrees:
+    forall n: Nat. validate_viewport_dim(n) == (if valid_viewport_dim(n) then Ok(true) else Err(TilemapError.InvalidViewport))

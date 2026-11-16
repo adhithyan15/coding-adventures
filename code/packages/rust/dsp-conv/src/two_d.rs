@@ -31,7 +31,7 @@
 //! - Laplacian, sharpen, emboss — short non-separable kernels
 //!   where `conv2d` is the natural API.
 
-use crate::{extend_index, BoundaryMode, ConvError};
+use crate::{extend_index, BoundaryMode, ConvError, MAX_KERNEL_LEN, MAX_SAMPLES};
 
 /// Same-size 2-D convolution on a row-major `[H, W]` real
 /// image.
@@ -71,6 +71,12 @@ pub fn conv2d(
             h, w
         ))
     })?;
+    if expected_image_len > MAX_SAMPLES {
+        return Err(ConvError::InvalidInput(format!(
+            "image size {} exceeds MAX_SAMPLES {}",
+            expected_image_len, MAX_SAMPLES
+        )));
+    }
     if image.len() != expected_image_len {
         return Err(ConvError::ImageSizeMismatch(format!(
             "image length {} does not match {}×{} = {}",
@@ -86,6 +92,12 @@ pub fn conv2d(
             kh, kw
         ))
     })?;
+    if expected_kernel_len > MAX_KERNEL_LEN {
+        return Err(ConvError::InvalidInput(format!(
+            "kernel size {} exceeds MAX_KERNEL_LEN {}",
+            expected_kernel_len, MAX_KERNEL_LEN
+        )));
+    }
     if kernel.len() != expected_kernel_len {
         return Err(ConvError::ImageSizeMismatch(format!(
             "kernel length {} does not match {}×{} = {}",
@@ -94,6 +106,16 @@ pub fn conv2d(
             kw,
             expected_kernel_len
         )));
+    }
+    for &px in image {
+        if !px.is_finite() {
+            return Err(ConvError::InvalidInput("non-finite float in image".into()));
+        }
+    }
+    for &k in kernel {
+        if !k.is_finite() {
+            return Err(ConvError::InvalidInput("non-finite float in kernel".into()));
+        }
     }
     // V1 simplification: require kernel to fit inside the image.
     // Reflect mode's boundary extension formula assumes

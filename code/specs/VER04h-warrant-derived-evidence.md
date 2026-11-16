@@ -480,6 +480,106 @@ Further checks added by the security review (each has a falsification test in
     cites a different id set, or records an exemption, is `EvidenceMismatch`.
     The audit profile gains `lossless-compression`.
 
+22. **Audit profiles are data, not code** (VER-P030 follow-up; closes backlog
+    AR-001, narrows LP-010b).  Items 20 and 21 each added an enum variant, a
+    `FromStr` arm, usage text and wording `match` arms to this crate, so every
+    adopter edited shared source, re-emitted this crate's effect certificate and
+    forced a rebuild of everything that depends on it.  The audit profile is now a
+    declarative file, `assurance-profile.json`, beside the package's `Cargo.toml`.
+    A new adopter adds that file and edits no Rust in `ca-assurance-report`.
+
+    *Where the file lives, and why not in the Warrant document.*  The Warrant
+    document is bound into every test and proof manifest by `spec_sha256`: a
+    wording change there would invalidate the manifests and force the exhaustive
+    suites and the DRAT certificates to be regenerated for a sentence.  It is also a
+    language shared with the type checker, the code generators and the polyglot
+    lanes (VER04i), so a new section would be a grammar change in shared crates, the
+    same coupling this item removes.  The profile says nothing about behaviour; it is
+    audit wording about the report's static rows.  It is therefore a sibling file,
+    bound separately (below).
+
+    *Shape* (`schema` `warrant-assurance-profile-v1`; every object has exactly the
+    keys shown, any other key is refused, and the file is read with the manifest size
+    cap):
+
+    ```json
+    { "schema": "warrant-assurance-profile-v1",
+      "name": "varint-codec",
+      "kind": "transform",
+      "rows": { "326": { "applicability": "excluded", "reason": "..." },
+                "327": { "applicability": "excluded", "reason": "..." },
+                "407": { "applicability": "excluded", "reason": "..." } } }
+    ```
+
+    `name` is a label (`[a-z0-9-]{1,64}`) the report records; `--profile NAME`
+    remains an optional pin that must equal it.  `kind` is a closed vocabulary
+    whose semantics live in code: `transform` (nothing expands attacker-controlled
+    input) or `decompressor`.  `rows` must declare CWE-326, CWE-327 and CWE-407
+    (an absent row refuses the file: nothing defaults to a sentence) and may
+    declare CWE-409 for a `transform` only; no other CWE may be declared.
+    `applicability` has exactly one value, `excluded`; a profile cannot declare a
+    row discharged, an exemption or approved.  `reason` is one line of printable
+    ASCII, 1 to 2048 bytes, without the reserved suffix the matrix appends itself.
+
+    *What stays in code, and cannot be weakened by data.*  The profile supplies the
+    wording of a row and the declaration that it is excluded; the matrix still
+    refuses the declaration when the evidence contradicts it.
+
+    | Row | A declared exclusion is refused when |
+    |-----|--------------------------------------|
+    | CWE-326, 327 | the effect certificate declares a `rand:` capability (key material needs entropy) |
+    | CWE-407 | the document has no operation, or an operation with no `steps` bound row |
+    | CWE-409 | the kind is `decompressor` (refused when the file is loaded), or the document declares an `output` row |
+
+    Every other row (memory safety, CWE-208, CWE-400, the capability rows) is not
+    declarable and is computed exactly as before.  CWE-409 is still derived from the
+    document's `output`/`heap` rows and the test manifest (item 21), and the rule
+    "a decompressor's CWE-409 is never `excluded`" is code keyed on
+    `kind: "decompressor"`: that kind applies the class and is an open row without
+    `output`/`heap` evidence.
+
+    *The BUILD pin binds the kind, not only the name.*  `name` and `kind` are both
+    author data, so `--profile NAME` alone would let an author keep
+    `name: lossless-compression`, flip `kind` to `transform`, regenerate the report
+    and still pass.  `--check` and `--generate` therefore also accept
+    `--profile-kind transform|decompressor`, and refuse a profile file whose `kind`
+    differs.  A package's BUILD line pins both (`rust/lzw`: `--profile
+    lossless-compression --profile-kind decompressor`; `rust/arithmetic`: `--profile
+    bit-arithmetic --profile-kind transform`), so changing the kind is a visible
+    BUILD change as well as a data change.  This keeps for a package with a pinned
+    BUILD line what the old enum-keyed `--profile` pin gave.
+
+    *Symlinks.*  `assurance-profile.json` is read like the other manifests, through
+    symlinks.  That is acceptable because `profile_sha256` binds the content that was
+    read, so a redirected link changes the digest and is refused.
+
+    *Binding.*  The report records `profile_sha256`, the SHA-256 of the file's exact
+    bytes, beside `profile` (the name).  `Evidence::load` reads and hashes the file;
+    a missing or malformed file is a load error, so there is no default profile.
+    `--check` refuses a report whose `profile_sha256` differs from the file on disk
+    (an edited profile) or whose `profile` differs from the file's `name`.
+
+    *Re-derivation (AR-001).*  `--check` rebuilds the weakness matrix from the
+    evidence and the bound profile and compares it row by row with the report
+    (`cwe`, `name`, `status`, `approved`, `reason`, `evidence`), and compares each
+    exemption's rationale with its row.  Edited reason text, a report generated
+    under another profile, and a profile that claims applicability the evidence
+    contradicts (which makes the rebuild itself fail) are each `EvidenceMismatch`.
+    `verify_evidence` runs the binding and the CWE-409 kind rule for every library
+    caller; the re-derivation is `verify_rederivation`.
+
+    *LP-010b stays open, narrowed.*  Deriving "decompresses" from the Warrant
+    document alone is not possible: the only fact the document carries is the
+    `output` row, which already applies the class, and a decompressor that forgot
+    the row is exactly the case with nothing to derive from.  What changed is that
+    the profile can no longer be omitted (no flag, no default) and is hash-bound and
+    visible in review; a decompressor can still declare `kind: "transform"`.
+
+    The wording the six adopters carried as code (comparison, field-arithmetic,
+    varint-codec, boolean-logic, bit-arithmetic, lossless-compression) moved
+    verbatim into their `assurance-profile.json`; each committed report changes only
+    by the added `profile_sha256` line.
+
 Evidence ids come from three places: manifest entries (`warrant/...`,
 `bench/...`; must exist and have verdict `pass`), attestations derived from the
 effect certificate (`effect-certificate::proved`, `capability-audit::*-empty`,

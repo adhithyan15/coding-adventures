@@ -29,16 +29,16 @@ The registry establishes three non-negotiable invariants:
 The canonical weakness registry data file is located at `code/specs/data/weakness-registry-v1.json`. It defines 26 canonical classes across 6 primary security families:
 
 ### 2.1 Family 1: Memory Safety
-Applies to C, C++, Rust `unsafe`, and FFI boundaries. Excluded by construction in safe Rust, Go (with race-freedom), and garbage-collected runtimes.
+Applies to C, C++, Rust `unsafe`, and FFI boundaries. Excluded by construction in safe Rust, Go (with race-freedom), and garbage-collected runtimes strictly free of FFI and `unsafe` operations.
 
 | CWE | Name | Description | Floor | Exclusion Rationale |
 |---|---|---|---|---|
-| **CWE-416** | Use After Free | Pointer dereferenced after memory release | `proved` | Safe Rust ownership/borrow model prevents manual deallocation; verified by analyzer (`no unsafe/ffi`). |
-| **CWE-787** | Out-of-bounds Write | Write operation past buffer bounds | `proved` | Safe Rust bounds checks on indexing and slice operations; verified by analyzer. |
-| **CWE-125** | Out-of-bounds Read | Read operation past buffer bounds | `proved` | Safe Rust bounds checks on indexing and slice operations; verified by analyzer. |
-| **CWE-415** | Double Free | Free called twice on same allocation | `proved` | Automatic single-ownership drop semantics; verified by analyzer. |
-| **CWE-476** | NULL Pointer Dereference | Dereferencing null pointer | `proved` | Non-nullable references (`&T`, `&mut T`) and checked `Option<T>`; verified by analyzer. |
-| **CWE-190** | Integer Overflow to Buffer Bounds | Arithmetic wraparound causing buffer miscalculation | `proved` | Overflow checks in debug/release or explicitly bounded math with checked indexing. |
+| **CWE-416** | Use After Free | Pointer dereferenced after memory release | `proved` | Safe Rust ownership/borrow model prevents manual deallocation; GC runtimes prevent manual deallocation in FFI-free and unsafe-free code; verified by analyzer (`no unsafe/ffi`). |
+| **CWE-787** | Out-of-bounds Write | Write operation past buffer bounds | `proved` | Safe Rust bounds checks on indexing and slice operations; managed runtime bounds checking in FFI-free code; verified by analyzer. |
+| **CWE-125** | Out-of-bounds Read | Read operation past buffer bounds | `proved` | Safe Rust bounds checks on indexing and slice operations; managed runtime bounds checking in FFI-free code; verified by analyzer. |
+| **CWE-415** | Double Free | Free called twice on same allocation | `proved` | Automatic single-ownership drop semantics or automatic GC deallocation in FFI-free code; verified by analyzer. |
+| **CWE-476** | NULL Pointer Dereference | Dereferencing null pointer | `proved` | Non-nullable references (`&T`, `&mut T`) and checked `Option<T>` or managed runtime null pointer safety in FFI-free code; verified by analyzer. |
+| **CWE-190** | Integer Overflow to Buffer Bounds | Arithmetic wraparound causing buffer miscalculation | `proved` | Overflow checks in debug/release or explicitly bounded/checked arithmetic with checked indexing in FFI-free code. |
 
 ### 2.2 Family 2: Injection
 Applies to packages with ambient process, shell, filesystem, database, or network capabilities.
@@ -69,7 +69,7 @@ Applies to security-sensitive data manipulation, comparison, and cryptographic p
 
 | CWE | Name | Description | Floor | Evidence Required |
 |---|---|---|---|---|
-| **CWE-208** | Observable Timing Discrepancy | Execution time or cache pattern reveals secret | `proved-to-gate-level` | Constant-time trace proof (self-composition), equal instruction counts, microarchitectural bounds. |
+| **CWE-208** | Observable Timing Discrepancy | Execution time or cache pattern reveals secret | `proved-to-gate-level` | Constant-time trace proof (self-composition), equal instruction counts, microarchitectural bounds. Excluded under `no_secret_inputs` for non-crypto packages with no secret operands. |
 | **CWE-330** | Insufficiently Random Values | Weak PRNG seeds in cryptographic operations | `proved` | Package uses verified CSPRNG with `rand` capability; excluded if pure computation. |
 | **CWE-327** | Broken or Risky Cryptography | Obsolete cipher or digest algorithms | `proved` | Verified modern primitives (ChaCha20, SHA-256) per specification. |
 | **CWE-326** | Inadequate Encryption Strength | Insufficient key or block lengths | `proved` | Minimum parameter sizes enforced by compile-time type refinements. |
@@ -105,8 +105,8 @@ Applies to object deserializers, dynamic typing, and reflection.
       "family": "cryptography",
       "description": "Differences in execution time, memory access patterns, or microarchitectural state vary with secret data, allowing secret extraction via timing side channels.",
       "applies_to": ["cryptography", "constant_time_comparison", "secret_handling"],
-      "safe_subsets": [],
-      "exclusion_rationale": null,
+      "safe_subsets": ["no_secret_inputs"],
+      "exclusion_rationale": "Package performs no cryptographic operations or secret comparisons; all operands and execution paths process public, non-sensitive data.",
       "attack_patterns": [
         "Early return on byte mismatch in secret comparison",
         "Secret-dependent memory indexing causing cache line hits/misses",

@@ -112,6 +112,7 @@
 //! - **f32 dtype only.**
 //! - **No matrix-IR lowering** — Phase 6.
 
+#![forbid(unsafe_code)]
 #![warn(rust_2018_idioms)]
 
 mod filters;
@@ -230,15 +231,16 @@ impl std::error::Error for WaveletError {}
 // pyramid depth (signal length `≥ 2^31` is unreachable on practical
 // memory; even at 16-bit-sample / 1-channel / 44.1 kHz, that's >50
 // years of audio).
-pub(crate) const MAX_LEVELS: u32 = 31;
+/// Maximum supported signal/output/image length in samples (2^24 = 16,777,216).
+pub const MAX_SAMPLES: usize = 1 << 24;
 
-// `output_length` is `u32`; an unbounded value flows straight into
-// `vec![0.0; target_len]` in the synthesis path (≈ 16 GB on 64-bit
-// at u32::MAX, panic-on-OOM the caller can't trap).  Cap at 2^30
-// samples = 4 GB of f32 — same kind of "well above realistic, well
-// below catastrophic" bound the matrix execution layer already
-// uses internally.
-pub(crate) const MAX_SAMPLES: u32 = 1u32 << 30;
+/// Maximum supported wavelet decomposition levels.
+pub const MAX_WAVELET_LEVELS: u32 = 31;
+
+/// Maximum continuous wavelet transform scales.
+pub const MAX_SCALES: usize = 1024;
+
+pub(crate) const MAX_LEVELS: u32 = MAX_WAVELET_LEVELS;
 
 // ────────────────────── Public API ──────────────────────
 
@@ -317,7 +319,7 @@ pub fn idwt_1d(
             "output_length must be > 0".into(),
         ));
     }
-    if output_length > MAX_SAMPLES {
+    if (output_length as usize) > MAX_SAMPLES {
         return Err(WaveletError::InvalidParam(format!(
             "output_length {} exceeds the defensive cap of {} samples \
              (see MAX_SAMPLES)",
@@ -325,12 +327,17 @@ pub fn idwt_1d(
         )));
     }
     check_levels(levels)?;
-    if coeffs.len() > MAX_SAMPLES as usize {
+    if coeffs.len() > MAX_SAMPLES {
         return Err(WaveletError::InvalidParam(format!(
             "coeffs length {} exceeds the defensive cap of {} samples",
             coeffs.len(),
             MAX_SAMPLES
         )));
+    }
+    if !coeffs.iter().all(|x| x.is_finite()) {
+        return Err(WaveletError::InvalidCoefficients(
+            "coeffs contains non-finite floats (NaN or Inf)".into(),
+        ));
     }
     check_supported_wavelet(wavelet)?;
     check_supported_boundary(boundary)?;
@@ -417,7 +424,7 @@ pub fn split_levels(
             "signal_len must be > 0".into(),
         ));
     }
-    if signal_len > MAX_SAMPLES as usize {
+    if signal_len > MAX_SAMPLES {
         return Err(WaveletError::InvalidParam(format!(
             "signal_len {} exceeds defensive cap of {} samples",
             signal_len, MAX_SAMPLES
@@ -492,6 +499,142 @@ pub fn slice_level(
         (offsets[idx], offsets[idx + 1])
     };
     Ok(&coeffs[start..end])
+}
+
+/// Continuous wavelet transform (CWT).
+///
+/// At each scale `s ∈ scales` and each sample `n ∈ [0, signal.len())`,
+/// computes the inner product of the signal with the scaled wavelet.
+///
+/// Returns a flattened row-major `[scales.len(), signal.len()]` vector
+/// of real amplitudes (magnitudes for complex wavelets such as `Morlet`,
+/// real responses for `MexicanHat`).
+///
+/// Evaluated iteratively without recursion (CWE-674), bounded against
+/// CWE-400, CWE-190, and CWE-20.
+#[allow(clippy::needless_range_loop)]
+pub fn cwt(
+    signal: &[f32],
+    scales: &[f32],
+    wavelet: WaveletType,
+) -> Result<Vec<f32>, WaveletError> {
+    if signal.is_empty() {
+        return Err(WaveletError::EmptySignal);
+    }
+    if scales.is_empty() {
+        return Err(WaveletError::InvalidParam("scales must be non-empty".into()));
+    }
+    if signal.len() > MAX_SAMPLES {
+        return Err(WaveletError::InvalidParam(format!(
+            "signal length {} exceeds MAX_SAMPLES {}",
+            signal.len(),
+            MAX_SAMPLES
+        )));
+    }
+    if scales.len() > MAX_SCALES {
+        return Err(WaveletError::InvalidParam(format!(
+            "scales length {} exceeds MAX_SCALES {}",
+            scales.len(),
+            MAX_SCALES
+        )));
+    }
+    let total_len = scales
+        .len()
+        .checked_mul(signal.len())
+        .ok_or_else(|| WaveletError::InvalidParam("CWT output length overflow".into()))?;
+    if total_len > MAX_SAMPLES {
+        return Err(WaveletError::InvalidParam(format!(
+            "CWT output length {} exceeds MAX_SAMPLES {}",
+            total_len, MAX_SAMPLES
+        )));
+    }
+    for &s in scales {
+        if !s.is_finite() || s <= 0.0 {
+            return Err(WaveletError::InvalidParam(
+                "scales must be positive and finite".into(),
+            ));
+        }
+    }
+    if !signal.iter().all(|x| x.is_finite()) {
+        return Err(WaveletError::InvalidParam(
+            "signal contains non-finite floats (NaN or Inf)".into(),
+        ));
+    }
+
+    match wavelet {
+        WaveletType::Morlet | WaveletType::MexicanHat => {}
+        _ => {
+            return Err(WaveletError::InvalidParam(format!(
+                "CWT supports Morlet and MexicanHat wavelets only (got {:?})",
+                wavelet
+            )));
+        }
+    }
+
+    let n = signal.len();
+    let mut out = Vec::with_capacity(total_len);
+    let pi_pow_neg_quarter = std::f32::consts::PI.powf(-0.25);
+
+    match wavelet {
+        WaveletType::Morlet => {
+            // ψ(t) = π^(-1/4) * e^(i ω_0 t) * e^(-t^2 / 2), with ω_0 = 6.0
+            // W_s[n] = 1/√s * Σ_k x[k] * ψ*((k - n) / s)
+            // Magnitude |W_s[n]| is returned.
+            const OMEGA_0: f32 = 6.0;
+            for &s in scales {
+                let inv_sqrt_s = 1.0 / s.sqrt();
+                let inv_s = 1.0 / s;
+                let half_support = (8.0 * s).ceil().min(n as f32) as isize;
+
+                for i in 0..n {
+                    let mut re_acc = 0.0f32;
+                    let mut im_acc = 0.0f32;
+                    let start_k = 0.max((i as isize).saturating_sub(half_support)) as usize;
+                    let end_k = (n - 1).min((i as isize).saturating_add(half_support).max(0) as usize);
+
+                    for k in start_k..=end_k {
+                        let t = (k as f32 - i as f32) * inv_s;
+                        let envelope = pi_pow_neg_quarter * (-0.5 * t * t).exp();
+                        let phase = OMEGA_0 * t;
+                        let re_psi = envelope * phase.cos();
+                        let im_psi = -envelope * phase.sin();
+                        let x = signal[k];
+                        re_acc += x * re_psi;
+                        im_acc += x * im_psi;
+                    }
+                    let mag = inv_sqrt_s * (re_acc * re_acc + im_acc * im_acc).sqrt();
+                    out.push(mag);
+                }
+            }
+        }
+        WaveletType::MexicanHat => {
+            // ψ(t) = 2/√3 * π^(-1/4) * (1 - t^2) * e^(-t^2 / 2)
+            // W_s[n] = 1/√s * Σ_k x[k] * ψ((k - n) / s)
+            let c = (2.0 / 3.0f32.sqrt()) * pi_pow_neg_quarter;
+            for &s in scales {
+                let inv_sqrt_s = 1.0 / s.sqrt();
+                let inv_s = 1.0 / s;
+                let half_support = (8.0 * s).ceil().min(n as f32) as isize;
+
+                for i in 0..n {
+                    let mut acc = 0.0f32;
+                    let start_k = 0.max((i as isize).saturating_sub(half_support)) as usize;
+                    let end_k = (n - 1).min((i as isize).saturating_add(half_support).max(0) as usize);
+
+                    for k in start_k..=end_k {
+                        let t = (k as f32 - i as f32) * inv_s;
+                        let psi = c * (1.0 - t * t) * (-0.5 * t * t).exp();
+                        acc += signal[k] * psi;
+                    }
+                    out.push(inv_sqrt_s * acc);
+                }
+            }
+        }
+        _ => unreachable!(),
+    }
+
+    debug_assert_eq!(out.len(), total_len);
+    Ok(out)
 }
 
 // ────────────────── Internal: filter banks ──────────────────
@@ -781,6 +924,22 @@ fn sample_with_boundary(
         return signal[idx as usize];
     }
     match boundary {
+        WaveletBoundary::Zero => 0.0,
+        WaveletBoundary::Replicate => {
+            let clamped = idx.clamp(0, n - 1);
+            signal[clamped as usize]
+        }
+        WaveletBoundary::Reflect => {
+            if n == 1 {
+                return signal[0];
+            }
+            let period = 2 * (n - 1);
+            let mut m = idx.rem_euclid(period);
+            if m >= n {
+                m = 2 * (n - 1) - m;
+            }
+            signal[m as usize]
+        }
         WaveletBoundary::Periodic => {
             // Mod-N with negative-correct rounding: `((idx % n) + n) % n`.
             let m = ((idx % n) + n) % n;
@@ -797,14 +956,6 @@ fn sample_with_boundary(
             }
             signal[m as usize]
         }
-        // The remaining variants are pre-rejected by
-        // check_supported_boundary at the top of every public entry
-        // point, so reaching this branch is a bug.  Return 0.0
-        // (matches Zero-padding behaviour) just in case
-        // sample_with_boundary is called inadvertently.
-        WaveletBoundary::Zero
-        | WaveletBoundary::Replicate
-        | WaveletBoundary::Reflect => 0.0,
     }
 }
 
@@ -822,13 +973,18 @@ fn validate_dwt_inputs(
     check_levels(levels)?;
     check_supported_wavelet(wavelet)?;
     check_supported_boundary(boundary)?;
-    if signal.len() > MAX_SAMPLES as usize {
+    if signal.len() > MAX_SAMPLES {
         return Err(WaveletError::InvalidParam(format!(
             "signal length {} exceeds the defensive cap of {} samples \
              (see MAX_SAMPLES)",
             signal.len(),
             MAX_SAMPLES
         )));
+    }
+    if !signal.iter().all(|x| x.is_finite()) {
+        return Err(WaveletError::InvalidParam(
+            "signal contains non-finite floats (NaN or Inf)".into(),
+        ));
     }
     // For Haar (filter length 2), each level halves the length.  After
     // J levels the approximation must have at least 1 sample, so
@@ -889,11 +1045,11 @@ fn check_supported_wavelet(w: WaveletType) -> Result<(), WaveletError> {
 
 fn check_supported_boundary(b: WaveletBoundary) -> Result<(), WaveletError> {
     match b {
-        WaveletBoundary::Symmetric | WaveletBoundary::Periodic => Ok(()),
-        _ => Err(WaveletError::InvalidParam(format!(
-            "unsupported boundary {:?} (Phase 1+2 implements Symmetric and Periodic only)",
-            b
-        ))),
+        WaveletBoundary::Symmetric
+        | WaveletBoundary::Periodic
+        | WaveletBoundary::Zero
+        | WaveletBoundary::Replicate
+        | WaveletBoundary::Reflect => Ok(()),
     }
 }
 
@@ -1052,20 +1208,19 @@ mod tests {
     }
 
     #[test]
-    fn rejects_unsupported_boundary() {
-        // Zero / Replicate / Reflect are Phase ...+; should error in Phase 1+2.
+    fn boundaries_zero_replicate_reflect_supported() {
+        let signal = vec![1.0f32, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0];
         for b in [
             WaveletBoundary::Zero,
             WaveletBoundary::Replicate,
             WaveletBoundary::Reflect,
+            WaveletBoundary::Symmetric,
+            WaveletBoundary::Periodic,
         ] {
-            let err = dwt_1d(&[1.0; 16], WaveletType::Haar, 2, b).unwrap_err();
-            assert!(
-                matches!(err, WaveletError::InvalidParam(_)),
-                "expected InvalidParam for boundary {:?}, got {:?}",
-                b,
-                err
-            );
+            let coeffs = dwt_1d(&signal, WaveletType::Haar, 2, b).unwrap();
+            assert_eq!(coeffs.len(), signal.len());
+            let recon = idwt_1d(&coeffs, WaveletType::Haar, 2, b, signal.len() as u32).unwrap();
+            assert_eq!(recon.len(), signal.len());
         }
     }
 
@@ -1467,5 +1622,93 @@ mod tests {
         // Invalid: target_level = 0.
         let err = slice_level(&coeffs, signal.len(), 3, 0, Band::Detail).unwrap_err();
         assert!(matches!(err, WaveletError::InvalidParam(_)));
+    }
+
+    #[test]
+    fn cwt_morlet_and_mexican_hat() {
+        // Pure sinusoid cos(omega * t), omega = 0.5 rad/sample.
+        // Morlet has omega_0 = 6.0, so the response peaks at scale s = omega_0 / omega = 12.0.
+        let n = 256;
+        let omega = 0.5f32;
+        let signal: Vec<f32> = (0..n).map(|i| (omega * (i as f32)).cos()).collect();
+        let scales = vec![4.0f32, 8.0, 12.0, 16.0, 24.0];
+        let out = cwt(&signal, &scales, WaveletType::Morlet).unwrap();
+        assert_eq!(out.len(), scales.len() * n);
+
+        // Check center sample (skip edge boundary effects) across scales.
+        let mid = n / 2;
+        let mag_s12 = out[2 * n + mid]; // scale 12 is index 2
+        let mag_s4 = out[mid];
+        let mag_s24 = out[4 * n + mid];
+        assert!(
+            mag_s12 > mag_s4 && mag_s12 > mag_s24,
+            "Morlet scaleogram at center sample: s=12 (mag {}) should peak over s=4 ({}) and s=24 ({})",
+            mag_s12, mag_s4, mag_s24
+        );
+
+        // Mexican hat response on centered impulse
+        let mut impulse = vec![0.0f32; 64];
+        impulse[32] = 1.0;
+        let mh_out = cwt(&impulse, &[2.0f32], WaveletType::MexicanHat).unwrap();
+        assert_eq!(mh_out.len(), 64);
+        // Mexican hat peaks at impulse center
+        let peak = mh_out[32];
+        assert!(peak > 0.0);
+        assert!(peak > mh_out[30]);
+        assert!(peak > mh_out[34]);
+
+        // Huge finite scale should not overflow signed isize
+        let huge_scale = 1e30f32;
+        let cwt_huge = cwt(&[1.0; 16], &[huge_scale], WaveletType::Morlet).unwrap();
+        assert_eq!(cwt_huge.len(), 16);
+        let cwt_mh_huge = cwt(&[1.0; 16], &[huge_scale], WaveletType::MexicanHat).unwrap();
+        assert_eq!(cwt_mh_huge.len(), 16);
+    }
+
+    #[test]
+    fn hostile_inputs_rejected() {
+        // Non-finite floats
+        assert!(dwt_1d(&[1.0, f32::NAN], WaveletType::Haar, 1, WaveletBoundary::Periodic).is_err());
+        assert!(dwt_1d(&[1.0, f32::INFINITY], WaveletType::Haar, 1, WaveletBoundary::Periodic).is_err());
+        assert!(idwt_1d(&[1.0, f32::NAN], WaveletType::Haar, 1, WaveletBoundary::Periodic, 2).is_err());
+        assert!(cwt(&[1.0, f32::NAN], &[1.0], WaveletType::Morlet).is_err());
+        assert!(cwt(&[1.0; 16], &[f32::NAN], WaveletType::Morlet).is_err());
+        assert!(cwt(&[1.0; 16], &[-2.0], WaveletType::Morlet).is_err());
+        assert!(cwt(&[1.0; 16], &[1.0], WaveletType::Haar).is_err());
+
+        // Oversized parameters
+        assert!(dwt_1d(&[1.0; 16], WaveletType::Haar, 32, WaveletBoundary::Periodic).is_err());
+        assert!(idwt_1d(&[1.0; 16], WaveletType::Haar, 32, WaveletBoundary::Periodic, 16).is_err());
+        assert!(idwt_1d(&[1.0; 16], WaveletType::Haar, 1, WaveletBoundary::Periodic, (MAX_SAMPLES + 1) as u32).is_err());
+    }
+
+    #[test]
+    fn pbt_splitmix64_wavelets_round_trip() {
+        use coding_adventures_test_bootstrap::prng::SplitMix64;
+
+        let mut rng = SplitMix64::new(0xfeed_face_0123_4567);
+        for &n in &[16usize, 32, 64] {
+            let mut sig = Vec::with_capacity(n);
+            for _ in 0..n {
+                let u = rng.next_u64();
+                let mantissa = (u & 0x00ff_ffff) as f32 / (0x0100_0000 as f32);
+                sig.push((mantissa * 2.0) - 1.0);
+            }
+
+            // Haar round-trip under Periodic
+            let coeffs_haar = dwt_1d(&sig, WaveletType::Haar, 2, WaveletBoundary::Periodic).unwrap();
+            let rec_haar = idwt_1d(&coeffs_haar, WaveletType::Haar, 2, WaveletBoundary::Periodic, n as u32).unwrap();
+            assert_close(&rec_haar, &sig, 1e-4, "Haar PR Periodic");
+
+            // Haar round-trip under Symmetric
+            let coeffs_sym = dwt_1d(&sig, WaveletType::Haar, 2, WaveletBoundary::Symmetric).unwrap();
+            let rec_sym = idwt_1d(&coeffs_sym, WaveletType::Haar, 2, WaveletBoundary::Symmetric, n as u32).unwrap();
+            assert_close(&rec_sym, &sig, 1e-4, "Haar PR Symmetric");
+
+            // Db2 round-trip under Periodic
+            let coeffs_db2 = dwt_1d(&sig, WaveletType::Daubechies(2), 2, WaveletBoundary::Periodic).unwrap();
+            let rec_db2 = idwt_1d(&coeffs_db2, WaveletType::Daubechies(2), 2, WaveletBoundary::Periodic, n as u32).unwrap();
+            assert_close(&rec_db2, &sig, 1e-4, "Db2 PR Periodic");
+        }
     }
 }

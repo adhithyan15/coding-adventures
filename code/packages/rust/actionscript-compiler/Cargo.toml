@@ -1,0 +1,29 @@
+[package]
+name = "actionscript-compiler"
+version = "0.1.0"
+edition = "2021"
+description = "Deterministic ActionScript 1.0, 2.0, and 3.0 compiler targeting InterpreterIR and vm-core (SWF03)"
+license = "MIT"
+
+[dependencies]
+interpreter-ir = { path = "../interpreter-ir" }
+vm-core = { path = "../vm-core" }
+
+[dev-dependencies]
+capability-runtime-conformance = { path = "../capability-runtime-conformance" }
+coding_adventures_sha256 = { path = "../sha256" }
+coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
+
+[[test]]
+name = "conformance"
+path = "tests/conformance.rs"
+
+[[test]]
+name = "microbenchmarks"
+path = "tests/microbenchmarks.rs"
+harness = false
+
+[[test]]
+name = "runtime_capability"
+path = "tests/runtime_capability.rs"
+harness = false
