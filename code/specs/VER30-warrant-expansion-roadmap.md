@@ -876,3 +876,4 @@ Owner decisions, 2026-11-16, on VER04o's open questions.
     `bounded-json` is the second adopter (WX-R-PILOT2). Backlog rows WX-R0 to
     WX-R-PILOT2 and the VER04s amendment rows are in `VER-BACKLOG.md` and the
     portable Warrant queue.
+26. PHY00a (trig convergence) owner answers: NaN beyond 2^29, 3-ulp gate, pinned tan/atan2 conventions, minor version bump per port (2026-11-16).
