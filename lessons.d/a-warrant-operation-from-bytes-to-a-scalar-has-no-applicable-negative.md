@@ -26,3 +26,20 @@ of each distinct signature shape (parameter types and result type) and run
 `gen_evidence` on it. Generator acceptance of the shape is the cheapest check
 and the one that failed, long after the models were written. Related: the
 negative-control lesson `a-warrant-negative-control-for-an-operation-is-answered-only-by-claims`.
+
+## Resolution (WX-P1a, branch `claude/warrant-hash-functions`)
+
+WX-FAULT1 let `flip-result-bit` apply to a fixed-width integer result and the
+`hash-functions` adoption was wired on top of it: all eight operations bind, the
+generated harness (273 tests) compiles the new `V::Fixed` arm unchanged and passes,
+and each of the eight sabotage lines is caught. The lesson's advice held: binding
+one operation of each signature shape first would have surfaced the blocker before
+the 489-line document was written.
+
+A second, different mismatch surfaced only at the last step, and the same advice
+applies to it: before writing the document, run the package's capability analyzer
+and the report generator on the crate. `hash-functions` declared
+`"capabilities": []` but its `analysis.rs` calls `getrandom`, so the analyzer
+fails; declaring `rand:read:*` instead breaks the VER08b jail's `rand-syscall`
+negative control (RCG009) and leaves the report's CWE-330 row open. The pure
+functions and the randomness need to live apart (DT17a section 7).

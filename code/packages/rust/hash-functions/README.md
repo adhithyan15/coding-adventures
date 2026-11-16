@@ -56,14 +56,25 @@ cargo test -p coding_adventures_hash_functions -- --nocapture
 
 ## Warrant status
 
-Draft, not wired. [`code/specs/hash-functions.warrant`](../../../specs/hash-functions.warrant)
-covers the eight byte-string hashes (`fnv1a_32`, `fnv1a_64`, `djb2`,
+[`code/specs/hash-functions.warrant`](../../../specs/hash-functions.warrant) covers
+the eight byte-string hashes (`fnv1a_32`, `fnv1a_64`, `djb2`,
 `polynomial_rolling`, `polynomial_rolling_with_params`, `murmur3_32`,
-`murmur3_32_with_seed`, `siphash_2_4`), with 67 known-answer examples that
-agree with this crate. It has not been run as evidence yet: the evidence
-generator has no negative control for a bytes-to-integer operation, so there is
-no harness, sabotage line, assurance profile or report. Not covered, with
-reasons: `hash_str_*` (text), `avalanche_score` and `distribution_test` (floats
-and a generic closure), the `HashFunction` trait and its structs (stateful
-objects), and the constants. See
-[DT17a](../../../specs/DT17a-hash-functions-warrant.md).
+`murmur3_32_with_seed`, `siphash_2_4`): 67 known-answer examples plus bounded
+exhaustive, property and fuzz suites, in `tests/generated/warrant_evidence.rs`
+(generated, never edit it; `BUILD` fails if it drifts) and run against the real
+exports. Eight sabotage lines in `BUILD` prove a deliberately broken result is
+caught (`flip-result-bit` on each `u32`/`u64` result, `missing-error` on the
+zero-modulus rejection). `tests/runtime_capability.rs` runs the covered hashes
+inside a no-capability sandbox on Linux.
+
+Not wired yet, and why: the capability analyzer and the `ca-assurance-report`
+package report. `avalanche_score` draws OS randomness, which the pure-computation
+manifest does not allow the analyzer to accept. Not covered, with reasons:
+`hash_str_*` (text), `avalanche_score` and `distribution_test` (floats and a
+generic closure), the `HashFunction` trait and its structs (stateful objects),
+and the constants. See [DT17a](../../../specs/DT17a-hash-functions-warrant.md).
+
+```bash
+# Regenerate the harness after editing the .warrant document
+cargo run -p coding_adventures_warrant_grammar --example gen_evidence -- hash-functions
+```

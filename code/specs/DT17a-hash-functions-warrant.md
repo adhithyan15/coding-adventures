@@ -1,7 +1,10 @@
 # DT17a: Warrant contract for `hash-functions` (WX-P1a)
 
-Status: **blocked on a generator gap (section 5); the Warrant document is a
-draft and nothing is wired into BUILD.**
+Status: **evidence wired on `claude/warrant-hash-functions`, PR pending
+(section 7 lists what is not wired).** The generator gap of section 5 is closed
+by WX-FAULT1, the evidence manifest, harness, sabotage lines, jail and proof
+manifest exist, and the analyzer and the package report remain blocked on an
+owner call (section 7).
 
 This is the contract document that VER30 section 4.2 (Track B, step 1) asks for
 before any `.warrant` file. It says what `rust/hash-functions` promises, which
@@ -81,7 +84,7 @@ case counts come from the generated manifest once it exists; this document
 states none, and the owner's standard is to say `sample` for a `Bytes` or
 `Bytes<N>` binder.
 
-## 5. Blocker: no negative control exists for a scalar result
+## 5. Blocker (resolved by WX-FAULT1): no negative control existed for a scalar result
 
 `gen_evidence` requires every bound operation to name at least one fault
 (`evidence.bindings: op ... needs faults= (at least one)`), and a fault must
@@ -125,10 +128,55 @@ unaffected. The remaining work on this adoption, once it is closed:
    is a new file in a shared crate; whether an adoption may add one, or the
    package carries its own, is an owner call.
 
-## 6. Draft status of `hash-functions.warrant`
+**Resolution.** WX-FAULT1 (`claude/warrant-fault-fixed-int`, merged into this
+branch) made `flip-result-bit` apply to a fixed-width integer result. The first
+harness to compile its `V::Fixed` arm is this one: it compiled and behaved as
+designed without any change to the generator, and every `flip-result-bit` control
+is caught (section 6).
 
-The document parses and type-checks (`check_warrant`) as a `v1` document. It has
-**not** been run through the harness generator, because the generator stops at
-the binding step above, so none of its claims has been executed against the
-crate; only its 67 examples have (section 4). Nothing else in the repository
-refers to it: no `evidence.bindings`, no BUILD line, no report.
+## 6. What is wired
+
+* `evidence.bindings`: eight `op` lines. Seven take `faults=flip-result-bit`;
+  `polynomial_rolling_with_params` takes `args=bytes,u64,u64`,
+  `error=MODULUS_ZERO`, `faults=missing-error`; `murmur3_32_with_seed` takes
+  `args=bytes,u32`; `siphash_2_4` takes `args=bytes,bytes<16>`.
+* `tests/generated/warrant_evidence.rs` and `evidence/test-manifest.json`: 273
+  tests, all passing (67 examples, 58 exhaustive, 58 property, 58 fuzz, 32
+  negative controls). Domains the manifest labels: every `Bytes` binder is a
+  `set`/`sample`, `U8` is `full`, `U32`/`U64` are `edge`, so none of the
+  inductive claims is a proof for all lengths.
+* BUILD, BUILD_linux and BUILD_windows: unit and doc tests, the jail,
+  `gen_evidence --check`, the evidence run, eight sabotage lines (one per
+  operation, each aimed at a cheap exhaustive claim), the proof manifest.
+* `tests/runtime_capability.rs` (VER08b): the eight covered hashes on known
+  answers inside the no-capability jail, strict on Linux.
+* `warrant-ir/tests/hash_functions_proofs.rs`: the proof test (owner call of
+  the earlier draft: it follows the existing pattern and lives in `warrant-ir`).
+  The `siphash_2_4` constant-time obligation is `not-live`: the front end
+  refuses `algorithms.rs` at its first `pub const`.
+
+## 7. Divergence from the lzw / wasm-leb128 pattern: analyzer and report not wired
+
+Every earlier adopter runs the capability analyzer and `ca-assurance-report
+--check` in BUILD and commits `effect_certificate.json`,
+`assurance-profile.json` and `assurance_report.json`. This adoption does not,
+because the crate does not fit the pattern as it stands:
+
+1. `src/analysis.rs` calls `getrandom` (`avalanche_score`), so the analyzer fails
+   (`CAP001 rand:read:*`) against the existing `"capabilities": []`, which was
+   never checked before (the old BUILD did not run the analyzer).
+2. Declaring `rand:read:*` makes the analyzer pass and the certificate emit, but
+   (a) the VER08b jail then allows the `rand` syscall, so its `rand-syscall`
+   negative control is not detected (`RCG009`), and (b) the report matrix leaves
+   CWE-330 open (`rand capability present without CSPRNG entropy audit`).
+3. Independently of the capability, the report stops at CWE-400
+   (`resource exhaustion evidence missing`) because `hash-functions.warrant`
+   declares no `bound` rows; adding `steps` rows would turn that row into the
+   usual unapproved exemption.
+
+The sound fix is structural and not made here: separate the randomness from the
+pure hashes (move `analysis.rs` to its own crate, or its own capability
+declaration), then declare `bound` rows and add the profile. The `analysis`
+module is public API, so that is an owner call. The jail line is kept because
+it is true as written: the eight covered functions run with no capability.
+
