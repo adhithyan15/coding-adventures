@@ -1158,6 +1158,7 @@ must:
      (`phase - floor(phase)`, exact) before multiplying by `2*pi`, which is also
      more accurate at every time. That change lands in the same PR as the `trig`
      port of that lane, or before it.
+     **Done in TC-2 for Python, Rust and TypeScript** (the phase is reduced in cycles).
    * every other consumer (audio, music, geometry, CAS) is checked the same way
      in the port PR: a dependent that accumulates phase reduces it itself; a
      dependent that passes a user's angle through documents the domain.
@@ -1173,9 +1174,9 @@ repeats it.
 |---|---|---|---|
 | **TC-0** | this specification (merged) and the backlog row | none | review |
 | **TC-1** | the fixture of section 6 (generator, validator, `edge.tsv`, sweeps, manifest, README), the build-tool registration, and the spec amendments. **No port changes** | the oracle and its cross-checks (C, Rust, `bc`) must be green | validator passes; `TC-0` accepted |
-| **TC-2** | the **music trio**: `python`, `rust` and `typescript` `trig`, `oscillator` wherever 7 requires it, and the shared `music-machine` golden regenerated once | the three lanes share `fixtures/music-machine`, so they converge together (a golden changes once, when all three produce the new bits) | TC-1 |
-| (TC-2) | **rust** | compiled, strict; the model lane for VER04p's softfloat self-check | TC-1 |
-| (TC-2) | **typescript** | f64-only, JS `%` and `0.0 + x` quirks go away; the web side of Dart shares its semantics | TC-1 |
+| **TC-2** | the **music trio**, in one pull request: `python`, `rust` and `typescript` `trig`; `oscillator`, `musical-instruments` and `percussion-kit` in those lanes so every sine of the render path comes from `trig`, with the phase-in-cycles fix (7); the shared `music-machine` golden regenerated **once** | the three lanes share `fixtures/music-machine`, whose digest depends on the last bits of every sine, so they cannot converge one at a time. **Rule: a golden shared by several lanes changes only in the one PR in which all of them produce the new bits; group such ports** | TC-1 |
+| ~~TC-2~~ | **rust** | merged into the music trio (TC-2) | TC-1 |
+| ~~TC-3~~ | **typescript** | merged into the music trio (TC-2) | TC-1 |
 | TC-4 | **c** | flag hazards (`-ffp-contract=off`, `FLT_EVAL_METHOD`); the build file gains the flag and a second `-mfma` build that must **fail** the vectors (the fusion canary) | TC-1 |
 | TC-5 | **cpp** | same hazards as C, header-only | TC-4 |
 | TC-6 | **go** | FMA on arm64; the `float64()` rule; the arm64 assembly check as a CI step | TC-1 |
@@ -1211,6 +1212,20 @@ vectors) needs the other toolchains and is the follow-up slice TC-1b; what TC-1 
 measure is that the reference's Part II (3.9) as specified is reproduced bit for bit
 by two independent transcriptions (C and Rust).
 
+**TC-2 status (2026-11-16).** Python (`trig` 0.3.0), Rust (`trig` 0.2.0) and TypeScript
+(`trig` 0.2.0) match all 61,854 vectors bit for bit. `oscillator` (0.1.2 Python, 0.2.0
+Rust and TypeScript) and `musical-instruments` (Rust, TypeScript 0.2.0) now take their
+sines from `trig` instead of `f64::sin` / `Math.sin`, and `percussion-kit` TypeScript does
+too, so a rendered note is the same in all three lanes. The sine oscillators reduce
+their phase in cycles (7). `musical-instruments` and `percussion-kit` evaluate sines of
+`2*pi*f*t` with `t` the note-local time, which is bounded by the note duration, so they
+stay far below 2^29 radians and need no reduction. The shared golden changed once:
+`pcm16_le_sha256` `15c793ee...364766` -> `8b578c82...c730aa` (33 of 96,138 samples moved by
+1 LSB). The old digest was an artefact of the inaccurate old `trig` (the percussion
+noise multiplies `sin` by 43758.5, amplifying a 1e-12 error into a flipped sample);
+`Math.sin` already produced the new digest, and the TypeScript lane had no golden test,
+which TC-2 adds.
+
 Each port PR has the same shape (`feat(trig-<lang>): converge on TRIG-REF-1`):
 
 1. read `lessons.d` for the language (CLAUDE.md rule 7); branch from `origin/main`;
@@ -1232,6 +1247,8 @@ Each port PR has the same shape (`feat(trig-<lang>): converge on TRIG-REF-1`):
 each port's vectors green in CI; the Go arm64 and C `-mfma` canaries green; the
 generator's regeneration job green; PHY00 amended; backlog row marked done; then
 (and only then) the floats pilot of VER04p, Stage C, may start.
+
+**Grouping rule (added at TC-2).** Before a port PR, `git grep` the repository for fixtures that other languages also consume and that depend on a `trig` result (the `music-machine` golden is the one found so far; the `phy00-phy01-v1` corpus is tolerance-based and is not). Ports that share such a fixture converge in one PR and the fixture changes once. Where no shared golden exists, ports stay independent.
 
 **Parallelism.** TC-2 to TC-17 are independent once TC-1 is merged; they are listed
 in an order, not a chain, and may proceed in parallel except for the stated
@@ -1280,6 +1297,7 @@ changes the sections named.
 |---|---|
 | 2026-11-16 | First draft. Survey of seventeen ports at `origin/main` 046c2d8b84b (nine run, eight read). Reference algorithm TRIG-REF-1 (nearest-integer Cody-Waite with five 24-bit chunks to 2^29, folded beyond, ten-term Horner kernels on stored coefficients, quadrant selection, pre-divided degree constants, early returns for `\|x\| < 2^-27` and NaN and infinity). Prototyped in Python and nine other languages; bit-identical on 30,025 inputs. Accuracy measured at 2.21 ulp (`sin`), 2.16 (`cos`), 0.81 (`degrees`). Conformance corpus format and generator; migration plan TC-0 to TC-18; open questions OQ-1 to OQ-14 |
 | 2026-11-16 | Adversarial review 1. **Domain:** the fold beyond 2^29 is removed; `sin`, `cos`, `tan` return NaN there (BEAM: raise), by one negated comparison that also covers NaN and infinity (3.3, 3.4.1, 3.6, Appendix A); the stated reason for the fold was checked against all fifteen `wave` ports and is false; `oscillator` is named as the dependent that must reduce its phase (7). **Arithmetic:** the claim that the Cody-Waite subtraction "loses nothing until the last term" is false (subtractions 3 to 5 round; measured) and is corrected, with the error budget rebuilt on it (3.4, 4.2); chunks have at most 24 bits, not 24 each; all constants re-derived and confirmed. **Accuracy:** "2.21 ulp worst case" was the peak of a random sample; a targeted search found 2.38 (`sin`) and 2.37 (`cos`); the statement is split into gated (3 ulp), argued (about 2.7) and observed, and the worst inputs and their class enter the vectors (4, 6.3). **Lanes:** Haskell, Swift, Dart (VM) and C# prototyped and bit-identical; Perl's integer path corrected (it applies to integer-valued operands however written, measured); GCC ignores `#pragma STDC FP_CONTRACT` and clang's `-ffp-contract=fast` overrides it (measured), so header-only C++ gets in-source guards and two canaries; `GOAMD64=v3` added to the Go assembly check; bit comparison never through printed floats (Perl, Lua, BEAM); non-float arguments scoped (5). **Part II:** "unchanged" was a reading, now a TC-1 measurement; `atan2` of a NaN returned `0.0` and now returns NaN; the non-IEEE conventions and the `tan` sentinel are listed and labelled (3.8, 3.9). **Vectors:** flags `out-of-domain`, `pole-sentinel`, `beam-raises`; guard-sensitivity gates; `same` named as the comparison (6). **Open questions:** ten resolved, four left for the owner (9) |
+| 2026-11-16 | TC-2 (music trio): 8 gains a grouping rule for ports that share a golden; TC-2 is the Python, Rust and TypeScript `trig` ports together with `oscillator`/`musical-instruments`/`percussion-kit` and one regeneration of the `music-machine` golden. |
 | 2026-11-16 | TC-1 implementation. 3.2: the hex float of `PIO2_3` read `0x1.84698p-48` and is `0x1.846988p-48` (the bit pattern was right; found by the C cross-check). 6.2: flag semantics pinned (`nonfinite=unrepresentable` and `=rejects` never together; `signed-zero` and `nan-class` describe the result). 6.3: counts as generated; halfway cases are stood in for by ulp neighbours (a midpoint is not a double); 128 reduction tie cases added. 6.4: gates (b) and (c) amended with the measured masked list (16 constants and 20 sites that no sampled vector can see; 5 sites provably inert), generator file names. 8: TC-1 is fixture-only, the music trio converges together in TC-2 (shared golden), Dart source deferred to TC-16, the Part II survey of other ports deferred to TC-1b |
 
 ## Appendix A. Reference implementation (Python, normative as a transcription)
