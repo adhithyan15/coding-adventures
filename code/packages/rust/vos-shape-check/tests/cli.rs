@@ -23,6 +23,12 @@ fn out(o: &Output) -> String {
     String::from_utf8_lossy(&o.stdout).into_owned()
 }
 
+/// True if some line of the report STARTS with `prefix` (`RULE FILE:LINE`): a
+/// finding, not a substring of a message that happens to mention it.
+fn has_finding(o: &Output, prefix: &str) -> bool {
+    out(o).lines().any(|l| l.starts_with(prefix))
+}
+
 fn err(o: &Output) -> String {
     String::from_utf8_lossy(&o.stderr).into_owned()
 }
@@ -46,7 +52,7 @@ fn exit_1_and_findings_for_broken_toys() {
         let o = run_in(&d, &[]);
         assert_eq!(code(&o), 1, "{name}");
         let s = out(&o);
-        assert!(s.contains(&format!("{rule} ")), "{s}");
+        assert!(has_finding(&o, &format!("{rule} ")), "{s}");
         assert!(s.contains("result: FAIL"), "{s}");
     }
 }
@@ -59,17 +65,102 @@ fn the_report_is_byte_identical_across_runs() {
     assert_eq!(a.stdout, b.stdout);
 }
 
+#[cfg(unix)]
 #[test]
 fn the_build_rs_file_is_found_even_if_it_is_a_symlink() {
     // `build.rs` is detected by name from the directory listing, never read.
     let d = materialize("pass-ready-bitmap", "cli-buildrs-link");
-    #[cfg(unix)]
-    {
-        std::os::unix::fs::symlink("/nonexistent", d.join("build.rs")).unwrap();
+    std::os::unix::fs::symlink("/nonexistent", d.join("build.rs")).unwrap();
+    let o = run_in(&d, &[]);
+    assert_eq!(code(&o), 1, "{}", out(&o));
+    assert!(has_finding(&o, "SH15 build.rs:1"), "{}", out(&o));
+}
+
+/// On a platform without the Unix filesystem tests, say so instead of going
+/// silently green.
+#[cfg(not(unix))]
+#[test]
+fn unix_only_filesystem_tests_are_skipped_loudly() {
+    eprintln!("SKIPPED: symlink, FIFO and permission tests need Unix; only the lstat and is_file checks apply here");
+}
+
+#[test]
+fn root_entries_are_matched_in_any_case() {
+    // `Build.rs` is the build script on a case-insensitive filesystem
+    let d = materialize("pass-ready-bitmap", "cli-Build");
+    fs::write(d.join("Build.rs"), "fn main() {}\n").unwrap();
+    let o = run_in(&d, &[]);
+    assert_eq!(code(&o), 1, "{}", out(&o));
+    assert!(has_finding(&o, "SH15 Build.rs:1"), "{}", out(&o));
+    let d = materialize("pass-ready-bitmap", "cli-dotcargo");
+    fs::create_dir(d.join(".cargo")).unwrap();
+    fs::write(d.join("rust-toolchain.toml"), "[toolchain]\n").unwrap();
+    let o = run_in(&d, &[]);
+    assert_eq!(code(&o), 1);
+    assert!(
+        has_finding(&o, "SH15 .cargo:1") && has_finding(&o, "SH15 rust-toolchain.toml:1"),
+        "{}",
+        out(&o)
+    );
+}
+
+#[test]
+fn exit_2_on_rs_files_spelled_in_another_case_and_on_case_collisions() {
+    let d = materialize("pass-ready-bitmap", "cli-case");
+    fs::write(d.join("src/Extra.RS"), "pub fn x() {}\n").unwrap();
+    let o = run_in(&d, &[]);
+    assert_eq!(code(&o), 2, "{}", out(&o));
+    assert!(err(&o).contains("other case"), "{}", err(&o));
+    // two entries that differ only in case (only possible on a case-sensitive filesystem)
+    let d = materialize("pass-ready-bitmap", "cli-collide");
+    fs::write(d.join("src/a.rs"), "").unwrap();
+    fs::write(d.join("src/A.rs"), "").unwrap();
+    if fs::read_dir(d.join("src")).unwrap().count() == 2 {
+        eprintln!("SKIPPED the case-collision refusal: this filesystem folds case");
+    } else {
         let o = run_in(&d, &[]);
-        assert_eq!(code(&o), 1, "{}", out(&o));
-        assert!(out(&o).contains("SH15 build.rs:1"));
+        assert_eq!(code(&o), 2);
+        assert!(err(&o).contains("differ only in case"), "{}", err(&o));
     }
+}
+
+#[test]
+fn exit_2_when_the_walk_exceeds_its_total_caps() {
+    // 9 files of 1,000,000 bytes: each under the per-file cap, over the 8 MiB total
+    let d = materialize("pass-ready-bitmap", "cli-total");
+    for n in 0..9 {
+        fs::write(
+            d.join(format!("src/big{n}.rs")),
+            format!("// {}\n", "x".repeat(990_000)),
+        )
+        .unwrap();
+    }
+    let o = run_in(&d, &[]);
+    assert_eq!(code(&o), 2, "{}", out(&o));
+    assert!(err(&o).contains("total source size"), "{}", err(&o));
+    // more than 4,096 entries in one directory
+    let d = materialize("pass-ready-bitmap", "cli-dir-entries");
+    for n in 0..4100 {
+        fs::write(d.join(format!("src/f{n}.txt")), "").unwrap();
+    }
+    let o = run_in(&d, &[]);
+    assert_eq!(code(&o), 2);
+    assert!(err(&o).contains("too many entries"), "{}", err(&o));
+}
+
+#[cfg(unix)]
+#[test]
+fn a_fifo_in_place_of_cargo_toml_is_refused_without_blocking() {
+    let d = materialize("pass-ready-bitmap", "cli-fifo-cargo");
+    fs::remove_file(d.join("Cargo.toml")).unwrap();
+    let st = Command::new("mkfifo")
+        .arg(d.join("Cargo.toml"))
+        .status()
+        .unwrap();
+    assert!(st.success());
+    let o = run_in(&d, &[]);
+    assert_eq!(code(&o), 2);
+    assert!(err(&o).contains("not a regular file"), "{}", err(&o));
 }
 
 #[test]
@@ -113,7 +204,7 @@ fn the_central_evidence_feature_list_is_an_argument() {
     // `ghost` is not in this central list, so vos.toml declaring it is VT01 and the gating is SH18
     let o = run_in(&d, &["--evidence-features", "cov"]);
     assert_eq!(code(&o), 1);
-    assert!(out(&o).contains("VT01 vos.toml"), "{}", out(&o));
+    assert!(has_finding(&o, "VT01 vos.toml"), "{}", out(&o));
     let o = run_in(&d, &["--evidence-features", "ghost,cov"]);
     assert_eq!(code(&o), 0, "{}", out(&o));
 }
@@ -148,7 +239,7 @@ fn exit_2_on_symlinks_anywhere_under_the_crate() {
         base.file_name().unwrap().to_string_lossy()
     ));
     let _ = fs::remove_file(&link);
-    symlink(&base, &link).unwrap();
+    symlink(&*base, &link).unwrap();
     assert_eq!(code(&run_in(&link, &[])), 2);
     fs::remove_file(&link).unwrap();
     // a source file
@@ -232,7 +323,7 @@ fn nested_modules_and_non_rust_files_are_read_or_ignored() {
     .unwrap();
     let o = run_in(&d, &[]);
     assert_eq!(code(&o), 1);
-    assert!(out(&o).contains("SH7 src/sub/mod.rs:1"), "{}", out(&o));
+    assert!(has_finding(&o, "SH7 src/sub/mod.rs:1"), "{}", out(&o));
 }
 
 #[test]
@@ -241,7 +332,7 @@ fn a_crate_without_a_src_directory_has_no_crate_root() {
     fs::remove_dir_all(d.join("src")).unwrap();
     let o = run_in(&d, &[]);
     assert_eq!(code(&o), 1);
-    assert!(out(&o).contains("VT03"), "{}", out(&o));
+    assert!(has_finding(&o, "VT03 "), "{}", out(&o));
 }
 
 #[test]
@@ -293,7 +384,11 @@ fn exit_2_for_non_regular_files_and_unreadable_entries() {
         let readable = fs::read(&p).is_ok();
         let o = run_in(&d, &[]);
         fs::set_permissions(&p, fs::Permissions::from_mode(0o644)).unwrap();
-        if !readable {
+        if readable {
+            // running as root: chmod 000 does not stop us, so assert what DOES hold
+            eprintln!("SKIPPED the unreadable-file refusal: this user can read mode-000 files");
+            assert_eq!(code(&o), 0, "{}", out(&o));
+        } else {
             assert_eq!(code(&o), 2);
         }
         // an unreadable src directory
@@ -303,7 +398,12 @@ fn exit_2_for_non_regular_files_and_unreadable_entries() {
         let readable = fs::read_dir(&s).is_ok();
         let o = run_in(&d, &[]);
         fs::set_permissions(&s, fs::Permissions::from_mode(0o755)).unwrap();
-        if !readable {
+        if readable {
+            eprintln!(
+                "SKIPPED the unreadable-directory refusal: this user can list mode-000 directories"
+            );
+            assert_eq!(code(&o), 0, "{}", out(&o));
+        } else {
             assert_eq!(code(&o), 2);
         }
     }

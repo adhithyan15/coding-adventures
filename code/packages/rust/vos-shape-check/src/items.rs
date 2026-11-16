@@ -14,7 +14,7 @@
 //! not count).
 
 use crate::lexer::{Kind, Token};
-use crate::syntax::{angle_close, item_end, FileCtx};
+use crate::syntax::{angle_close, FileCtx};
 
 /// A field of a named-field struct.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -125,6 +125,116 @@ fn parse_fields(f: &FileCtx, open: usize, close: usize) -> Vec<Field> {
     out
 }
 
+/// Most identifiers stored per item (bounds memory on adversarial input).
+const MAX_IDENTS_PER_ITEM: usize = 1024;
+/// Most tokens one item's extent may cover.
+const MAX_ITEM_TOKENS: usize = 4096;
+
+/// Keywords that begin another item: the extent of a type definition ends
+/// before one, so `type a type a type a ...` costs two tokens per item and
+/// not the rest of the file (a quadratic scan found by the security review).
+fn begins_item(t: &Token) -> bool {
+    t.kind == Kind::Ident
+        && matches!(
+            t.text.as_str(),
+            "struct"
+                | "enum"
+                | "union"
+                | "type"
+                | "fn"
+                | "impl"
+                | "trait"
+                | "mod"
+                | "use"
+                | "static"
+                | "const"
+        )
+}
+
+/// The last token of the type definition at `start`: the first `;` or `,` at
+/// depth 0, or the end of the first `{ .. }` group (and a trailing `;`), but
+/// never past the next item keyword or [`MAX_ITEM_TOKENS`] tokens.
+fn type_extent(f: &FileCtx, start: usize) -> usize {
+    let t = &f.toks;
+    let limit = (start + MAX_ITEM_TOKENS).min(t.len());
+    let mut k = start + 1;
+    while k < limit {
+        if begins_item(&t[k]) {
+            return k - 1;
+        }
+        if t[k].kind == Kind::Punct {
+            match t[k].text.as_str() {
+                "(" | "[" => {
+                    k = f.pair[k] + 1;
+                    continue;
+                }
+                "{" => {
+                    let e = f.pair[k];
+                    return if t.get(e + 1).is_some_and(|x| x.is_punct(";")) {
+                        e + 1
+                    } else {
+                        e
+                    };
+                }
+                ";" | "," => return k,
+                ")" | "]" | "}" => return k - 1,
+                _ => {}
+            }
+        }
+        k += 1;
+    }
+    limit.saturating_sub(1)
+}
+
+/// `struct S(pub u8, u8);`: the fields of a tuple body, named by position.
+fn parse_tuple_fields(f: &FileCtx, open: usize, close: usize) -> Vec<Field> {
+    let t = &f.toks;
+    let mut out = Vec::new();
+    let mut j = open + 1;
+    let mut index = 0usize;
+    while j < close {
+        while j < close && t[j].is_punct("#") && t.get(j + 1).is_some_and(|x| x.is_punct("[")) {
+            j = f.pair[j + 1] + 1;
+        }
+        if j >= close {
+            break;
+        }
+        let line = t[j].line;
+        let mut public = false;
+        if t[j].is_ident("pub") {
+            if t.get(j + 1).is_some_and(|x| x.is_punct("(")) {
+                j = f.pair[j + 1] + 1;
+            } else {
+                public = true;
+                j += 1;
+            }
+        }
+        let ty_start = j;
+        let mut depth = 0usize;
+        while j < close {
+            if t[j].kind == Kind::Punct {
+                match t[j].text.as_str() {
+                    "(" | "[" | "{" => j = f.pair[j],
+                    "<" => depth += 1,
+                    ">" => depth = depth.saturating_sub(1),
+                    "," if depth == 0 => break,
+                    _ => {}
+                }
+            }
+            j += 1;
+        }
+        out.push(Field {
+            name: index.to_string(),
+            ty: join(&t[ty_start..j.min(close)]),
+            public,
+            line,
+        });
+        index += 1;
+        j += 1;
+    }
+    out
+}
+
 /// Collect every `struct`, `enum`, `union` and `type` of every file.
 pub fn collect_types(files: &[FileCtx]) -> Vec<TypeDef> {
     let mut out = Vec::new();
@@ -147,12 +257,12 @@ pub fn collect_types(files: &[FileCtx]) -> Vec<TypeDef> {
             let Some(name_tok) = t.get(i + 1).filter(|x| x.kind == Kind::Ident) else {
                 continue;
             };
-            let end = item_end(t, &f.pair, i);
-            let last = end.min(t.len() - 1);
-            let idents: Vec<String> = if last >= i + 2 {
-                t[i + 2..=last]
+            let end = type_extent(f, i);
+            let idents: Vec<String> = if end >= i + 2 {
+                t[i + 2..=end]
                     .iter()
                     .filter(|x| x.kind == Kind::Ident)
+                    .take(MAX_IDENTS_PER_ITEM)
                     .map(|x| x.text.clone())
                     .collect()
             } else {
@@ -172,6 +282,8 @@ pub fn collect_types(files: &[FileCtx]) -> Vec<TypeDef> {
                 }
                 if k <= end && t[k].is_punct("{") {
                     fields = parse_fields(f, k, f.pair[k]);
+                } else if k <= end && t[k].is_punct("(") {
+                    fields = parse_tuple_fields(f, k, f.pair[k]);
                 }
             }
             out.push(TypeDef {

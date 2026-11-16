@@ -60,14 +60,54 @@ pub fn load(name: &str) -> CrateInput {
     }
 }
 
+/// A temporary crate tree that deletes itself when dropped (also on panic),
+/// restoring permissions first so a `chmod 000` test cannot strand it.
+pub struct Tmp(PathBuf);
+
+impl std::ops::Deref for Tmp {
+    type Target = Path;
+    fn deref(&self) -> &Path {
+        &self.0
+    }
+}
+
+fn make_writable(p: &Path) {
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::PermissionsExt;
+        if let Ok(m) = fs::symlink_metadata(p) {
+            if !m.file_type().is_symlink() {
+                let _ = fs::set_permissions(p, fs::Permissions::from_mode(0o755));
+            }
+            if m.is_dir() {
+                if let Ok(rd) = fs::read_dir(p) {
+                    for e in rd.flatten() {
+                        make_writable(&e.path());
+                    }
+                }
+            }
+        }
+    }
+    #[cfg(not(unix))]
+    let _ = p;
+}
+
+impl Drop for Tmp {
+    fn drop(&mut self) {
+        make_writable(&self.0);
+        let _ = fs::remove_dir_all(&self.0);
+    }
+}
+
 /// Copy a fixture to a fresh temp directory laid out as a real crate.
-pub fn materialize(name: &str, tag: &str) -> PathBuf {
+pub fn materialize(name: &str, tag: &str) -> Tmp {
     let src = fixtures_dir().join(name);
     let dst = Path::new(env!("CARGO_TARGET_TMPDIR"))
         .join(format!("vos-shape-check-{}-{tag}", std::process::id()));
+    make_writable(&dst);
     let _ = fs::remove_dir_all(&dst);
     copy_dir(&src, &dst);
-    dst
+    Tmp(dst)
 }
 
 fn copy_dir(src: &Path, dst: &Path) {
@@ -130,4 +170,10 @@ pub fn mutate(mut input: CrateInput, from: &str, to: &str) -> CrateInput {
     assert!(f.text.contains(from), "mutation pattern not found: {from}");
     f.text = f.text.replacen(from, to, 1);
     input
+}
+
+impl AsRef<Path> for Tmp {
+    fn as_ref(&self) -> &Path {
+        &self.0
+    }
 }

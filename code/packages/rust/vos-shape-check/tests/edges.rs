@@ -34,9 +34,9 @@ fn impl_headers_of_every_shape_resolve_to_their_type() {
     fires("pub trait Tr { fn f(); }\npub struct S;\nimpl Tr for &'static mut S { fn f() { Self::f() } }\n", "SH5");
     // a where clause with a tuple argument
     fires("pub trait Tr3<T> {}\npub struct S<T>(T);\nimpl<T> S<T> where T: Tr3<(u8, u8)> { fn m() { Self::m() } }\n", "SH5");
-    // an array self type has no name: its fns are treated as free functions
+    // an array self type has no name: it gets a synthetic type key, so `self.f()` still has an edge
     fires(
-        "pub trait Tr { fn f(); }\nimpl Tr for [u8; 2] { fn f() { f() } }\n",
+        "pub trait Tr { fn f(self); }\nimpl Tr for [u8; 2] { fn f(self) { self.f() } }\n",
         "SH5",
     );
     // a header with no body is skipped without a panic
@@ -87,7 +87,7 @@ fn struct_bodies_and_generics_are_read_correctly() {
         "SH10",
     );
     // a field named like a keyword-ish ident, and a method called `union`
-    clean("pub struct S { pub union: u8 }\npub fn f(s: S) -> u8 { s.union }\n");
+    clean("pub struct S { union: u8 }\npub fn f(s: S) -> u8 { s.union }\n");
     clean("pub fn union(a: u8) -> u8 { a }\npub fn g() -> u8 { union(1) }\n");
     // attributes on fields and a tuple-like body do not confuse the field reader
     let mut i = body("pub struct S { #[doc = \"x\"] pub a: u8, (u8), pub b: u8 }\n");
@@ -112,7 +112,9 @@ fn cfg_test_masking_in_odd_positions() {
     clean("pub fn f() {}\n#[cfg(test)]\nconst X: f32 = 1.0");
     clean("pub fn f() {}\n#[cfg(test)]");
     // cfg(test) on a field and on a statement
-    clean("pub struct S { #[cfg(test)] a: f32, pub b: u8 }\npub fn f() { #[cfg(test)] let _x = 1.0; }\n");
+    clean(
+        "pub struct S { #[cfg(test)] a: f32, b: u8 }\npub fn f() { #[cfg(test)] let _x = 1.0; }\n",
+    );
     // an attribute that is not exactly cfg(test) is not a mask
     fires("#[cfg(not(test))]\nstruct T { a: f32 }\n", "SH11");
 }
@@ -120,7 +122,7 @@ fn cfg_test_masking_in_odd_positions() {
 #[test]
 fn attributes_between_the_gate_and_the_ghost_item() {
     let mk = |attr_line: &str, vis: &str| {
-        let mut i = body(&format!("#[cfg(feature = \"ghost\")]\n{attr_line}{vis}mod ghost {{ pub fn vos_ghost_x() -> u8 {{ 1 }} }}\n"));
+        let mut i = body(&format!("#[cfg(feature = \"ghost\")]\n{attr_line}{vis}mod ghost {{ pub fn vos_ghost_alpha() -> u8 {{ 1 }} }}\n"));
         i.cargo_toml = Some(format!("{MANIFEST}\n[features]\nghost = []\n"));
         run(&i)
     };
@@ -135,7 +137,7 @@ fn attributes_between_the_gate_and_the_ghost_item() {
         assert!(r.findings.is_empty(), "{attr:?} {vis:?}\n{}", r.render());
     }
     // `pub use self::ghost::..` is accepted when gated
-    let mut i = body("#[cfg(feature = \"ghost\")]\npub mod ghost { pub fn vos_ghost_x() -> u8 { 1 } }\n#[cfg(feature = \"ghost\")]\npub use self::ghost::vos_ghost_x;\n");
+    let mut i = body("#[cfg(feature = \"ghost\")]\npub mod ghost { pub fn vos_ghost_alpha() -> u8 { 1 } }\n#[cfg(feature = \"ghost\")]\npub use self::ghost::vos_ghost_alpha;\n");
     i.cargo_toml = Some(format!("{MANIFEST}\n[features]\nghost = []\n"));
     let r = run(&i);
     assert!(r.findings.is_empty(), "{}", r.render());
@@ -158,17 +160,17 @@ fn ghost_scope_shapes_for_sh17() {
         run(&i)
     };
     // a function-pointer type and a bodiless declaration inside ghost
-    let r = ghost("pub fn vos_ghost_a(_f: fn(u8)) {}\npub trait X { fn vos_ghost_b(); }");
+    let r = ghost("pub fn vos_ghost_alpha_a(_f: fn(u8)) {}\npub trait X { fn vos_ghost_cfg_b(); }");
     assert!(rules(&r).contains(&"SH4"), "{}", r.render());
     assert!(!rules(&r).contains(&"SH17"), "{}", r.render());
     // a stray `> ::f(` with no `<` is not a UFCS call, so the fn is an export
-    let r = ghost("pub fn vos_ghost_c() -> bool { 1 > ::core::convert::identity(1) }");
+    let r = ghost("pub fn vos_ghost_alpha_c() -> bool { 1 > ::core::convert::identity(1) }");
     assert!(!rules(&r).contains(&"SH17"), "{}", r.render());
     // a nested group in a destructure
-    let r = ghost("pub struct S { a: (u8, u8) }\npub fn vos_ghost_d() -> u8 { let S { a: (x, _y) } = <S as T>::make(); x }");
+    let r = ghost("pub struct S { a: (u8, u8) }\npub fn vos_ghost_alpha_d() -> u8 { let S { a: (x, _y) } = <S as T>::make(); x }");
     assert!(!rules(&r).contains(&"SH17"), "{}", r.render());
     // a `<` in a UFCS qualifier with nested generics
-    let r = ghost("pub fn vos_ghost_e() -> u8 { <Foo<Bar<u8>> as T>::make() }");
+    let r = ghost("pub fn vos_ghost_alpha_e() -> u8 { <Foo<Bar<u8>> as T>::make() }");
     assert!(!rules(&r).contains(&"SH17"), "{}", r.render());
     // an `as` outside the call is computation
     let r = ghost("pub fn vos_ghost_f() -> u8 { let x = <Foo as T>::make(); x as u8 }");

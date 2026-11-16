@@ -284,7 +284,14 @@ impl Lexer {
                     self.pos += 1;
                 }
                 let name: String = self.chars[s2..self.pos].iter().collect();
-                return self.push(Kind::Ident, format!("r#{name}"), line);
+                // `r#unwrap` IS the identifier `unwrap`: only a *keyword* keeps
+                // its `r#` (so `r#unsafe` is not the keyword `unsafe`).
+                let text = if crate::syntax::is_keyword(&name) {
+                    format!("r#{name}")
+                } else {
+                    name
+                };
+                return self.push(Kind::Ident, text, line);
             }
             return self.err(line, "malformed raw string or raw identifier");
         }
@@ -346,6 +353,12 @@ impl Lexer {
                 float = true;
                 self.pos += 1;
                 digits(self);
+            } else if self.peek(0) == Some('.')
+                && !self.peek(1).is_some_and(|c| c == '.' || is_ident_start(c))
+            {
+                // `1.` followed by `;`, `)`, space...: a float literal (SH11).
+                float = true;
+                self.pos += 1;
             }
             if matches!(self.peek(0), Some('e' | 'E')) {
                 let sign = matches!(self.peek(1), Some('+' | '-'));
@@ -390,6 +403,37 @@ impl Lexer {
     }
 }
 
+/// Is the first thing after `#!`, skipping whitespace and comments, a `[`?
+fn next_significant_is_bracket(c: &[char]) -> bool {
+    let mut i = 0;
+    while i < c.len() {
+        if c[i].is_whitespace() {
+            i += 1;
+        } else if c[i] == '/' && c.get(i + 1) == Some(&'/') {
+            while i < c.len() && c[i] != '\n' {
+                i += 1;
+            }
+        } else if c[i] == '/' && c.get(i + 1) == Some(&'*') {
+            let mut depth = 1usize;
+            i += 2;
+            while i < c.len() && depth > 0 {
+                if c[i] == '/' && c.get(i + 1) == Some(&'*') {
+                    depth += 1;
+                    i += 2;
+                } else if c[i] == '*' && c.get(i + 1) == Some(&'/') {
+                    depth -= 1;
+                    i += 2;
+                } else {
+                    i += 1;
+                }
+            }
+        } else {
+            return c[i] == '[';
+        }
+    }
+    false
+}
+
 /// Tokenise `src`, or say exactly why that is impossible.
 ///
 /// Brackets are checked to balance (`()`, `[]`, `{}`) by [`pair_brackets`],
@@ -402,8 +446,10 @@ pub fn lex(src: &str) -> Result<Vec<Token>, LexError> {
         line: 1,
         out: Vec::new(),
     };
-    // A shebang line is not Rust.  `#![` is an attribute, not a shebang.
-    if text.starts_with("#!") && !text.starts_with("#![") {
+    // A shebang line is not Rust, but `#! [attr]` (spaces or comments
+    // between `#!` and `[`) IS an inner attribute: rustc strips a shebang
+    // only when the next significant token is not `[`.
+    if text.starts_with("#!") && !next_significant_is_bracket(&lx.chars[2..]) {
         while lx.peek(0).is_some_and(|c| c != '\n') {
             lx.pos += 1;
         }

@@ -45,7 +45,7 @@ use crate::lexer::{Kind, Token};
 use crate::manifest::Kind as VKind;
 use crate::report::Rule;
 use crate::rules::Ctx;
-use crate::syntax::{is_keyword, item_end, Attr, FileCtx};
+use crate::syntax::{is_keyword, item_end, matching_lt, scan_to_body, Attr, FileCtx};
 
 const GHOST_PREFIX: &str = "vos_ghost_";
 
@@ -106,27 +106,6 @@ fn gates_ghost_item(f: &FileCtx, a: &Attr) -> bool {
     }
 }
 
-/// The index of the `<` matching the `>` at `gt`, scanning backwards.
-fn matching_lt(t: &[Token], gt: usize) -> Option<usize> {
-    let mut depth = 0usize;
-    let mut k = gt;
-    let floor = gt.saturating_sub(256);
-    loop {
-        if t[k].is_punct(">") {
-            depth += 1;
-        } else if t[k].is_punct("<") {
-            depth = depth.saturating_sub(1);
-            if depth == 0 {
-                return Some(k);
-            }
-        }
-        if k == floor {
-            return None;
-        }
-        k -= 1;
-    }
-}
-
 /// Run SH13, SH14, SH17 and SH18 over the crate.
 pub fn ghost_rules(cx: &mut Ctx<'_>) {
     let files = cx.files;
@@ -170,6 +149,36 @@ fn cfg_gating(cx: &mut Ctx<'_>, f: &FileCtx) {
         }
     }
     let mut msgs: Vec<(u32, String)> = Vec::new();
+    // EVERY cfg predicate varies the build between the evidence host and the
+    // image (`cfg(target_arch = ..)` gives two different crates), so the only
+    // cfg a shape-checked crate may carry is the exact gate of `mod ghost` /
+    // `pub use ghost::..` (the `cfg(test)` items are masked earlier).
+    for a in &f.attrs {
+        let body = f.attr_body(a);
+        let Some(first) = body.first() else { continue };
+        if !(first.is_ident("cfg") || first.is_ident("cfg_attr")) {
+            continue;
+        }
+        let gate_ok = exact_cfg_feature(f, a).is_some_and(|ft| cx.evidence.contains(&ft))
+            && gates_ghost_item(f, a);
+        if !gate_ok {
+            msgs.push((
+                first.line,
+                format!(
+                    "`{}` varies the build; only `#[cfg(feature = \"ghost\")]` on `mod ghost` or `pub use ghost::..` is allowed",
+                    first.text
+                ),
+            ));
+        }
+    }
+    for i in 0..t.len() {
+        if !f.in_attr[i] && t[i].is_ident("cfg") && t.get(i + 1).is_some_and(|x| x.is_punct("!")) {
+            msgs.push((
+                t[i].line,
+                "`cfg!` varies the build between the evidence host and the image".to_string(),
+            ));
+        }
+    }
     for (feat, line, plain_cfg, attr) in uses {
         if !declared(&feat) {
             msgs.push((
@@ -208,9 +217,10 @@ fn cfg_gating(cx: &mut Ctx<'_>, f: &FileCtx) {
 fn ghost_leaks(cx: &mut Ctx<'_>, f: &FileCtx) {
     let t = &f.toks;
     // Token ranges of gated `pub use ghost::..` items.
-    let mut allowed: Vec<(usize, usize)> = Vec::new();
+    let mut allowed = vec![false; t.len()];
+    let mut covered = 0usize;
     for i in 0..t.len() {
-        if f.in_attr[i] || !t[i].is_ident("use") || f.in_ghost(i) {
+        if i < covered || f.in_attr[i] || !t[i].is_ident("use") || f.in_ghost(i) {
             continue;
         }
         let attrs = f.attrs_before(i);
@@ -219,14 +229,18 @@ fn ghost_leaks(cx: &mut Ctx<'_>, f: &FileCtx) {
                 && gates_ghost_item(f, a)
         });
         if gated && i > 0 && (t[i - 1].is_ident("pub") || t[i - 1].is_punct(")")) {
-            allowed.push((i, item_end(t, &f.pair, i)));
+            let end = item_end(t, &f.pair, i);
+            covered = end + 1;
+            for a in &mut allowed[i..=end.min(t.len() - 1)] {
+                *a = true;
+            }
         }
     }
     for i in 0..t.len() {
         if f.in_attr[i] || f.in_ghost(i) || t[i].kind != Kind::Ident {
             continue;
         }
-        if allowed.iter().any(|&(a, b)| i >= a && i <= b) {
+        if allowed[i] {
             continue;
         }
         let prev_mod = i > 0 && t[i - 1].is_ident("mod");
@@ -345,10 +359,14 @@ fn default_features(cx: &mut Ctx<'_>) {
 
 /// SH14, field-privacy half.
 fn state_privacy(cx: &mut Ctx<'_>) {
-    if !matches!(
+    // A component implementation keeps its state private.  An UNSPECIFIED kind
+    // in class K is treated as `production`: a missing vos.toml must not turn
+    // the rule off (fail closed).
+    let component = matches!(
         cx.kind,
         Some(VKind::Production | VKind::Reference | VKind::Any)
-    ) {
+    ) || (cx.kind.is_none() && cx.class == crate::manifest::Class::K);
+    if !component {
         return;
     }
     let files = cx.files;
@@ -356,7 +374,7 @@ fn state_privacy(cx: &mut Ctx<'_>) {
     for td in cx
         .types
         .iter()
-        .filter(|t| t.keyword == "struct" && !t.in_ghost)
+        .filter(|t| (t.keyword == "struct" || t.keyword == "union") && !t.in_ghost)
     {
         for fld in td.fields.iter().filter(|x| x.public) {
             msgs.push((
@@ -432,12 +450,18 @@ fn wrappers(cx: &mut Ctx<'_>) {
                     ),
                 ));
             }
-            let mut b = i + 2;
-            while b < t.len() && !t[b].is_punct("{") && !t[b].is_punct(";") {
-                if t[b].kind == Kind::Punct && matches!(t[b].text.as_str(), "(" | "[") {
-                    b = f.pair[b];
-                }
-                b += 1;
+            let b = scan_to_body(t, &f.pair, i + 2);
+            if b < t.len() && !t[b].is_punct("{") && !t[b].is_punct(";") {
+                // the header scan gave up: do not let a long signature skip the
+                // wrapper checks (fail closed)
+                msgs.push((
+                    f.path.clone(),
+                    name.line,
+                    format!(
+                        "ghost function `{}` has a header too long to check",
+                        name.text
+                    ),
+                ));
             }
             if b >= t.len() || !t[b].is_punct("{") {
                 continue;
@@ -465,8 +489,9 @@ fn wrappers(cx: &mut Ctx<'_>) {
 /// SH17 (a), re-export half: every leaf of `pub use ghost::..` is prefixed.
 fn reexport_prefixes(f: &FileCtx, msgs: &mut Vec<(String, u32, String)>) {
     let t = &f.toks;
+    let mut covered = 0usize;
     for i in 0..t.len() {
-        if f.in_attr[i] || f.in_ghost(i) || !t[i].is_ident("use") {
+        if i < covered || f.in_attr[i] || f.in_ghost(i) || !t[i].is_ident("use") {
             continue;
         }
         let mut k = i + 1;
@@ -481,6 +506,7 @@ fn reexport_prefixes(f: &FileCtx, msgs: &mut Vec<(String, u32, String)>) {
             continue;
         }
         let end = item_end(t, &f.pair, i);
+        covered = end + 1;
         let mut j = k + 2;
         while j <= end && j < t.len() {
             let x = &t[j];
@@ -558,13 +584,27 @@ fn wrapper_body(
             }
         }
     }
-    if ufcs.is_empty() {
-        return; // an export (alpha, configuration): free body
-    }
     let line = name.line;
     let fname = &name.text;
     let path = &f.path;
     let mut bad = |l: u32, m: String| msgs.push((path.clone(), l, m));
+    if ufcs.is_empty() {
+        // Only a CLOSED list of exports may have a free body: the abstraction
+        // `alpha` (and the interim `alpha_w`) and the configuration `cfg_*`
+        // exports of VOS02 section 4.4.  Every other ghost function is a
+        // wrapper and MUST contain its one UFCS call; otherwise it could
+        // reimplement the operation and the evidence would cover a lookalike.
+        let export = fname == "vos_ghost_alpha"
+            || fname.starts_with("vos_ghost_alpha_")
+            || fname.starts_with("vos_ghost_cfg_");
+        if !export {
+            bad(
+                line,
+                format!("ghost function `{fname}` has no UFCS call `<T as Trait>::f(..)`; only `vos_ghost_alpha*` and `vos_ghost_cfg_*` may have a free body, every other ghost function is a wrapper"),
+            );
+        }
+        return;
+    }
     if ufcs.len() != 1 {
         bad(line, format!("wrapper `{fname}` must contain exactly one UFCS call `<T as Trait>::f(..)`, found {}", ufcs.len()));
     }
@@ -575,7 +615,7 @@ fn wrapper_body(
     for k in b + 1..end {
         if t[k].is_ident("let") {
             let mut e = k + 1;
-            while e < end && !t[e].is_punct("=") {
+            while e < end && !t[e].is_punct("=") && !t[e].is_punct(";") && !t[e].is_ident("let") {
                 if t[e].kind == Kind::Punct && matches!(t[e].text.as_str(), "(" | "[" | "{") {
                     e = f.pair[e];
                 }

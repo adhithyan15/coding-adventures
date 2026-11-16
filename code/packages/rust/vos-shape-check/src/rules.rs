@@ -32,13 +32,15 @@
 //! unambiguous context says otherwise.  A contributor rewrites a line; nobody
 //! reviews a violation the check silently chose to ignore.
 
-use std::collections::BTreeSet;
+use std::collections::{BTreeMap, BTreeSet};
 
 use crate::items::TypeDef;
 use crate::lexer::{Kind, Token};
 use crate::manifest::{CargoFacts, Class, Kind as VKind};
 use crate::report::{Finding, Rule};
-use crate::syntax::{angle_close, is_const_name, is_keyword, item_end, FileCtx};
+use crate::syntax::{
+    angle_close, is_const_name, is_keyword, item_end, scan_to_body, FileCtx, MAX_HEADER_TOKENS,
+};
 
 /// Everything a rule needs, plus the findings it appends to.
 pub struct Ctx<'a> {
@@ -108,7 +110,6 @@ const PANIC_METHODS: &[&str] = &[
 const ASM_MACROS: &[&str] = &["asm", "global_asm", "naked_asm", "llvm_asm"];
 const CORE_MACROS: &[&str] = &[
     "matches",
-    "cfg",
     "compile_error",
     "concat",
     "stringify",
@@ -164,7 +165,14 @@ const ITER_METHODS: &[&str] = &[
     "scan",
     "cycle",
     "nth",
+    "count",
+    "reduce",
+    "find",
 ];
+/// Methods whose overflow or shift-amount behaviour differs between the debug
+/// host build and the release image (SH9): `x.pow(n)` panics on overflow in
+/// debug, `Shl::shl` shifts unchecked.
+const OVERFLOW_METHODS: &[&str] = &["pow", "shl", "shr"];
 const IM_BASE: &[&str] = &[
     "Cell",
     "RefCell",
@@ -190,25 +198,32 @@ fn is_interior_name(s: &str) -> bool {
 /// type of the crate whose definition mentions one (to a fixed point, so a
 /// wrapper struct around a `Cell` is caught).
 pub fn interior_mutable(types: &[TypeDef]) -> BTreeSet<String> {
-    let is_base = is_interior_name;
-    let mut set: BTreeSet<String> = BTreeSet::new();
-    loop {
-        let mut changed = false;
-        for td in types {
-            if !set.contains(&td.name)
-                && td
-                    .idents
-                    .iter()
-                    .any(|x| is_base(x) || set.contains(x.as_str()))
-            {
-                set.insert(td.name.clone());
-                changed = true;
-            }
-        }
-        if !changed {
-            return set;
+    // Reverse map: identifier -> the definitions that mention it, so each
+    // newly interior-mutable name wakes exactly its users (a worklist, linear
+    // in the number of mentions, not a quadratic fixed-point sweep).
+    let mut users: BTreeMap<&str, Vec<usize>> = BTreeMap::new();
+    for (n, td) in types.iter().enumerate() {
+        for id in &td.idents {
+            users.entry(id.as_str()).or_default().push(n);
         }
     }
+    let mut set: BTreeSet<String> = BTreeSet::new();
+    let mut work: Vec<String> = Vec::new();
+    for td in types {
+        if td.idents.iter().any(|x| is_interior_name(x)) && set.insert(td.name.clone()) {
+            work.push(td.name.clone());
+        }
+    }
+    while let Some(name) = work.pop() {
+        if let Some(defs) = users.get(name.as_str()) {
+            for &n in defs {
+                if set.insert(types[n].name.clone()) {
+                    work.push(types[n].name.clone());
+                }
+            }
+        }
+    }
+    set
 }
 
 /// True if `text` is the integer zero (any spelling of decimal 0 with an
@@ -243,6 +258,86 @@ struct LoopInfo {
     var: Option<String>,
     /// Token range inside the body braces.
     body: (usize, usize),
+    /// First token index at which a `let` re-binds the loop variable
+    /// (`usize::MAX` if none): an index after it is not by the loop variable.
+    shadow: usize,
+}
+
+/// Mark the tokens of every `impl` header (from `impl` to its `{` or `;`):
+/// a `for` there is `impl Trait for Type`, not a loop.
+fn impl_header_mask(f: &FileCtx) -> Vec<bool> {
+    let t = &f.toks;
+    let mut mask = vec![false; t.len()];
+    for i in 0..t.len() {
+        if f.in_attr[i] || !t[i].is_ident("impl") {
+            continue;
+        }
+        let item_start = i == 0
+            || (t[i - 1].kind == Kind::Punct
+                && matches!(t[i - 1].text.as_str(), ";" | "}" | "{" | "]"))
+            || t[i - 1].is_ident("unsafe");
+        if !item_start {
+            continue;
+        }
+        let mut k = i;
+        while k < t.len() {
+            let x = &t[k];
+            if x.kind == Kind::Punct {
+                match x.text.as_str() {
+                    "(" | "[" => {
+                        mask[k] = true;
+                        k = f.pair[k];
+                    }
+                    "{" | ";" => break,
+                    _ => {}
+                }
+            } else if k > i
+                && x.kind == Kind::Ident
+                && matches!(
+                    x.text.as_str(),
+                    "impl" | "fn" | "trait" | "struct" | "enum" | "mod"
+                )
+            {
+                break;
+            }
+            mask[k] = true;
+            k += 1;
+        }
+    }
+    mask
+}
+
+/// The first `let` in `body` (token range) whose pattern binds `var`.
+fn shadow_position(f: &FileCtx, body: (usize, usize), var: &str) -> usize {
+    let t = &f.toks;
+    // A loop body this large is scanned no further: report "shadowed from the
+    // start" (no index in it is exempt), which is the safe direction and keeps
+    // deeply nested loops from costing a full pass each.
+    if body.1.saturating_sub(body.0) > 8192 {
+        return body.0;
+    }
+    let mut k = body.0;
+    while k < body.1 {
+        if t[k].is_ident("let") {
+            let mut e = k + 1;
+            while e < body.1 && !t[e].is_punct("=") && !t[e].is_punct(";") && !t[e].is_ident("let")
+            {
+                if t[e].is_ident(var) {
+                    return k;
+                }
+                if t[e].kind == Kind::Punct && matches!(t[e].text.as_str(), "(" | "[" | "{") {
+                    // look inside the group too
+                    if t[e + 1..f.pair[e]].iter().any(|x| x.is_ident(var)) {
+                        return k;
+                    }
+                    e = f.pair[e];
+                }
+                e += 1;
+            }
+        }
+        k += 1;
+    }
+    usize::MAX
 }
 
 /// SH6: find every `for` loop, report the ones that are not `for i in 0..K`
@@ -250,33 +345,57 @@ struct LoopInfo {
 fn for_loops(cx: &mut Ctx<'_>, f: &FileCtx) -> Vec<LoopInfo> {
     let t = &f.toks;
     let mut good = Vec::new();
+    let in_impl_header = impl_header_mask(f);
     for i in 0..t.len() {
-        if f.in_attr[i] || !t[i].is_ident("for") || t.get(i + 1).is_some_and(|x| x.is_punct("<")) {
+        if f.in_attr[i]
+            || !t[i].is_ident("for")
+            || in_impl_header[i]
+            || t.get(i + 1).is_some_and(|x| x.is_punct("<"))
+        {
             continue;
         }
-        // Find `in` before any `{` or `;`; otherwise this is `impl X for Y`.
+        // A `for` that is not part of an `impl` header (or `for<'a>`) is a
+        // loop.  Find its `in`, skipping bracket groups so a pattern such as
+        // `S { a }` is read whole; stop at anything a pattern cannot contain.
         let mut k = i + 1;
         let mut in_at = None;
-        while k < t.len() && k < i + 64 {
-            if t[k].kind == Kind::Punct {
-                match t[k].text.as_str() {
-                    "(" | "[" => k = f.pair[k],
-                    "{" | ";" => break,
+        while k < t.len() {
+            let x = &t[k];
+            if x.kind == Kind::Punct {
+                match x.text.as_str() {
+                    "(" | "[" | "{" => k = f.pair[k],
+                    ";" => break,
                     _ => {}
                 }
-            } else if t[k].is_ident("in") {
-                in_at = Some(k);
-                break;
+            } else if x.kind == Kind::Ident {
+                if x.text == "in" {
+                    in_at = Some(k);
+                    break;
+                }
+                if matches!(
+                    x.text.as_str(),
+                    "for" | "while" | "loop" | "fn" | "let" | "impl" | "trait"
+                ) {
+                    break;
+                }
             }
             k += 1;
         }
-        let Some(p) = in_at else { continue };
+        let Some(p) = in_at else {
+            cx.add(
+                Rule::Sh6,
+                &f.path,
+                t[i].line,
+                "`for` that is neither a loop `for i in 0..K` nor part of an `impl` header",
+            );
+            continue;
+        };
         let pattern = &t[i + 1..p];
         let var =
             (pattern.len() == 1 && pattern[0].kind == Kind::Ident).then(|| pattern[0].text.clone());
         // The range expression runs to the body brace.
         let mut j = p + 1;
-        while j < t.len() && !t[j].is_punct("{") && !t[j].is_punct(";") {
+        while j < t.len() && !t[j].is_punct("{") && !t[j].is_punct(";") && !t[j].is_ident("for") {
             if matches!(t[j].text.as_str(), "(" | "[") && t[j].kind == Kind::Punct {
                 j = f.pair[j];
             }
@@ -304,10 +423,11 @@ fn for_loops(cx: &mut Ctx<'_>, f: &FileCtx) -> Vec<LoopInfo> {
                 }
         };
         if ok_shape {
-            good.push(LoopInfo {
-                var,
-                body: (j + 1, f.pair[j]),
-            });
+            let body = (j + 1, f.pair[j]);
+            let shadow = var
+                .as_deref()
+                .map_or(usize::MAX, |v| shadow_position(f, body, v));
+            good.push(LoopInfo { var, body, shadow });
         } else {
             cx.add(
                 Rule::Sh6,
@@ -324,16 +444,86 @@ fn for_loops(cx: &mut Ctx<'_>, f: &FileCtx) -> Vec<LoopInfo> {
 fn const_underscore_ranges(f: &FileCtx) -> Vec<(usize, usize)> {
     let t = &f.toks;
     let mut out = Vec::new();
+    // Items already inside a previous `const _` item are not rescanned, so a
+    // file of unterminated `const _:` costs one pass, not one per item.
+    let mut covered = 0usize;
     for i in 0..t.len() {
-        if !f.in_attr[i]
+        if i >= covered
+            && !f.in_attr[i]
             && t[i].is_ident("const")
             && t.get(i + 1).is_some_and(|x| x.is_ident("_"))
             && t.get(i + 2).is_some_and(|x| x.is_punct(":"))
         {
-            out.push((i, item_end(t, &f.pair, i)));
+            let end = item_end(t, &f.pair, i);
+            covered = end + 1;
+            // `assert!` is compile time only if the initializer defines no
+            // function or impl that could run at runtime (VOS03 SH8).
+            let defines_code = t[i..=end]
+                .iter()
+                .any(|x| x.is_ident("fn") || x.is_ident("impl"));
+            if !defines_code {
+                out.push((i, end));
+            }
         }
     }
     out
+}
+
+/// Can the token after a literal end an operand?  (`;`, `)`, a comparison...)
+fn ends_operand(n: &Token) -> bool {
+    match n.kind {
+        Kind::Punct => matches!(
+            n.text.as_str(),
+            ";" | ")"
+                | "]"
+                | "}"
+                | "{"
+                | ","
+                | "|"
+                | "&"
+                | "^"
+                | "="
+                | "<"
+                | ">"
+                | "?"
+                | ":"
+                | "!"
+                | "=>"
+        ),
+        Kind::Ident => n.text == "as",
+        _ => false,
+    }
+}
+
+/// Is the `>>` at `i` provably the end of two open generic lists?  Scan back
+/// within the statement (stopping at `;`, `{`, `}`) counting `<` not closed
+/// by a `>`: two or more unmatched means `Vec<Vec<u8>>`; fewer means a shift
+/// (`x >> *n`, `x >> {n}`).
+fn closes_two_generics(t: &[Token], pair: &[usize], i: usize) -> bool {
+    let lo = i.saturating_sub(256);
+    let mut k = i;
+    let (mut opens, mut closes) = (0usize, 0usize);
+    while k > lo {
+        k -= 1;
+        let x = &t[k];
+        if x.kind != Kind::Punct {
+            continue;
+        }
+        match x.text.as_str() {
+            ";" | "{" | "}" => break,
+            ")" | "]" => k = pair[k],
+            ">" => closes += 1,
+            "<" => {
+                if closes > 0 {
+                    closes -= 1;
+                } else {
+                    opens += 1;
+                }
+            }
+            _ => {}
+        }
+    }
+    opens >= 2
 }
 
 /// Is the token before a `|` one after which a closure can start?
@@ -342,9 +532,14 @@ fn closure_can_follow(prev: Option<&Token>) -> bool {
         None => true,
         Some(p) if p.kind == Kind::Punct => matches!(
             p.text.as_str(),
-            "(" | "," | "=" | "{" | ";" | "[" | ":" | "=>" | "->"
+            "(" | "," | "=" | "{" | ";" | "[" | ":" | "=>" | "->" | "&" | "*" | "!"
         ),
-        Some(p) => matches!(p.text.as_str(), "return" | "move" | "async") && p.kind == Kind::Ident,
+        Some(p) => {
+            matches!(
+                p.text.as_str(),
+                "return" | "move" | "async" | "else" | "in" | "break" | "yield" | "await"
+            ) && p.kind == Kind::Ident
+        }
     }
 }
 
@@ -409,24 +604,26 @@ fn punct_rules(cx: &mut Ctx<'_>, f: &FileCtx, i: usize, loops: &[LoopInfo], skip
             // re-read its second character as the start of another pair
             // (`Into<Vec<u8>>>` must not look like `>> ident`).
             *skip_to = i + 2;
-            let prev_colons = i > 0 && t[i - 1].is_punct("::");
             let compound =
                 t.get(i + 2).is_some_and(|x| x.is_punct("=")) && next.is_some_and(|n| n.joint);
-            let after = if compound { t.get(i + 3) } else { t.get(i + 2) };
+            let op_end = i + 2 + usize::from(compound);
+            let after = t.get(op_end);
             let is_shift = if tok.text == "<" {
-                let generic_qself = t.get(i + 2).is_some_and(|x| x.kind == Kind::Ident)
-                    && t.get(i + 3).is_some_and(|x| x.is_ident("as"));
-                !prev_colons && !generic_qself
+                // `Vec<<T as X>::Y>`: generic only after `::`, or when the
+                // group opened by the second `<` closes right before `::`.
+                let generic = !compound
+                    && (i > 0 && t[i - 1].is_punct("::")
+                        || angle_close(t, &f.pair, i + 1)
+                            .is_some_and(|c| t.get(c + 1).is_some_and(|x| x.is_punct("::"))));
+                !generic
             } else {
-                compound
-                    || after.is_some_and(|a| {
-                        matches!(a.kind, Kind::Int | Kind::Float)
-                            || a.is_punct("(")
-                            || (a.kind == Kind::Ident
-                                && !matches!(a.text.as_str(), "where" | "as" | "for" | "in"))
-                    })
+                compound || !closes_two_generics(t, &f.pair, i)
             };
-            if is_shift && !after.is_some_and(|a| a.kind == Kind::Int) {
+            // A literal amount is allowed only as the WHOLE right operand:
+            // `x << 1 + n` and `x << 1.max(n)` are not literal shifts.
+            let whole_literal = after.is_some_and(|a| a.kind == Kind::Int)
+                && t.get(op_end + 1).is_none_or(ends_operand);
+            if is_shift && !whole_literal {
                 cx.add(
                     Rule::Sh9,
                     &f.path,
@@ -458,10 +655,38 @@ fn punct_rules(cx: &mut Ctx<'_>, f: &FileCtx, i: usize, loops: &[LoopInfo], skip
             let Some(p) = i.checked_sub(1).map(|p| &t[p]) else {
                 return;
             };
-            let indexes = (p.kind == Kind::Ident && !is_keyword(&p.text))
-                || p.is_punct(")")
-                || p.is_punct("]");
-            if !indexes {
+            // An allowlist of what may PRECEDE a `[` that starts an array
+            // literal, an array type or an attribute; every other `[` is an
+            // index (`w.0[i]`, `f()?[i]`, `{..}[i]`, `self[i]`, `b"ab"[n]`).
+            let array_start = match p.kind {
+                Kind::Lifetime => true,
+                Kind::Ident => is_keyword(&p.text) && !matches!(p.text.as_str(), "self" | "Self"),
+                Kind::Punct => matches!(
+                    p.text.as_str(),
+                    "=" | "("
+                        | ","
+                        | ";"
+                        | "{"
+                        | ":"
+                        | "#"
+                        | "!"
+                        | "&"
+                        | "<"
+                        | "->"
+                        | "=>"
+                        | "["
+                        | "|"
+                        | ".."
+                        | "+"
+                        | "-"
+                        | "*"
+                        | "/"
+                        | "%"
+                        | "^"
+                ),
+                _ => false,
+            };
+            if array_start {
                 return;
             }
             let inner = &t[i + 1..f.pair[i]];
@@ -471,6 +696,7 @@ fn punct_rules(cx: &mut Ctx<'_>, f: &FileCtx, i: usize, loops: &[LoopInfo], skip
                     l.var.as_deref() == Some(inner[0].text.as_str())
                         && i >= l.body.0
                         && i < l.body.1
+                        && i < l.shadow
                 });
             if !allowed {
                 cx.add(
@@ -603,7 +829,12 @@ fn ident_rules(
         ),
         // SH1: std and alloc paths.
         "std" | "alloc" => {
-            let second_segment = i >= 2 && t[i - 1].is_punct("::") && t[i - 2].kind == Kind::Ident;
+            // `core::alloc::Layout`: `alloc` is a later segment.  `return ::std::x`
+            // and `use ::std::x` have a KEYWORD before the `::`, so are paths from the root.
+            let second_segment = i >= 2
+                && t[i - 1].is_punct("::")
+                && t[i - 2].kind == Kind::Ident
+                && !is_keyword(&t[i - 2].text);
             let after_use = prev.is_some_and(|p| p.is_ident("use"));
             if !second_segment && (next.is_some_and(|n| n.is_punct("::")) || after_use) {
                 cx.add(
@@ -627,7 +858,20 @@ fn ident_rules(
             format!("`{name}`; State, In and Out are fixed-width, constant-length data"),
         );
     }
-    if prev_dot && PANIC_METHODS.contains(&name) && is_call_next(t, i) {
+    // After `.` (a method call) and after `::` (UFCS: `Option::unwrap(o)`).
+    let prev_colons = prev.is_some_and(|p| p.is_punct("::"));
+    let named_call = (prev_dot || prev_colons) && is_call_next(t, i);
+    if named_call && OVERFLOW_METHODS.contains(&name) {
+        cx.add(
+            Rule::Sh9,
+            path,
+            line,
+            format!(
+                "`{name}` overflows or shifts unchecked; use wrapping_*, checked_* or a literal"
+            ),
+        );
+    }
+    if named_call && PANIC_METHODS.contains(&name) {
         cx.add(
             Rule::Sh8,
             path,
@@ -635,7 +879,7 @@ fn ident_rules(
             format!("`{name}` is a path to a panic"),
         );
     }
-    if prev_dot && ITER_METHODS.contains(&name) && is_call_next(t, i) {
+    if named_call && ITER_METHODS.contains(&name) {
         cx.add(
             Rule::Sh6,
             path,
@@ -708,7 +952,8 @@ fn macro_call(cx: &mut Ctx<'_>, f: &FileCtx, i: usize, const_us: &[(usize, usize
 fn signature_refs(cx: &mut Ctx<'_>, f: &FileCtx, fn_idx: usize) {
     let t = &f.toks;
     let mut k = fn_idx + 1;
-    while k < t.len() && !t[k].is_punct("{") && !t[k].is_punct(";") {
+    let end = scan_to_body(t, &f.pair, fn_idx + 1);
+    while k < end {
         if t[k].kind == Kind::Punct {
             match t[k].text.as_str() {
                 "(" | "[" => {
@@ -753,7 +998,8 @@ fn type_body_refs(cx: &mut Ctx<'_>, f: &FileCtx, i: usize) {
             k = c + 1;
         }
     }
-    while k < t.len() && !t[k].is_punct("{") && !t[k].is_punct("(") && !t[k].is_punct(";") {
+    let limit = (k + MAX_HEADER_TOKENS).min(t.len());
+    while k < limit && !t[k].is_punct("{") && !t[k].is_punct("(") && !t[k].is_punct(";") {
         k += 1;
     }
     if k < t.len() && (t[k].is_punct("{") || t[k].is_punct("(")) {
@@ -785,7 +1031,9 @@ fn const_item(cx: &mut Ctx<'_>, f: &FileCtx, i: usize, im: &BTreeSet<String>) {
     }
     let mut k = i + 3;
     let mut depth = 0usize;
-    while k < t.len() {
+    // a const's type is short; do not scan further than 256 tokens for its end
+    let limit = (k + 256).min(t.len());
+    while k < limit {
         let x = &t[k];
         if x.kind == Kind::Punct {
             match x.text.as_str() {

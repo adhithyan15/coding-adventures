@@ -233,23 +233,19 @@ pub fn check_crate(input: &CrateInput, policy: &Policy) -> Report {
         }
     }
 
-    let root = files
-        .iter()
-        .find(|f| f.path == "src/lib.rs")
-        .or_else(|| files.iter().find(|f| f.path == "src/main.rs"));
-    if root.is_none()
-        && !input
-            .sources
-            .iter()
-            .any(|s| s.path == "src/lib.rs" || s.path == "src/main.rs")
-    {
-        input_finding(
-            &mut early,
-            "src/lib.rs",
-            1,
-            "no crate root (src/lib.rs or src/main.rs)",
-        );
+    // A component crate is a library: `src/lib.rs` is its one root.  Binaries
+    // (`src/main.rs`, `src/bin/**`) are second roots the root checks would
+    // not cover, so they are findings (SH15), not alternative roots.
+    let root = files.iter().find(|f| f.path == "src/lib.rs");
+    if root.is_none() && !input.sources.iter().any(|s| s.path == "src/lib.rs") {
+        input_finding(&mut early, "src/lib.rs", 1, "no crate root (src/lib.rs)");
     }
+    let binaries: Vec<&str> = input
+        .sources
+        .iter()
+        .map(|s| s.path.as_str())
+        .filter(|p| *p == "src/main.rs" || p.starts_with("src/bin/"))
+        .collect();
 
     let mut evidence: BTreeSet<String> = policy.evidence_features.iter().cloned().collect();
     evidence.extend(declared);
@@ -271,6 +267,14 @@ pub fn check_crate(input: &CrateInput, policy: &Policy) -> Report {
     }
     if let Some(r) = root {
         cargo_rules::root_rules(&mut cx, r);
+    }
+    for p in binaries {
+        cx.add(
+            Rule::Sh15,
+            p,
+            1,
+            "binary target file; a component crate is a library",
+        );
     }
     graph::recursion(&mut cx);
     ghost::ghost_rules(&mut cx);

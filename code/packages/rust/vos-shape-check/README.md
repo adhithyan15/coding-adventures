@@ -64,7 +64,7 @@ println!("{}", report.render());
 violating case per rule, the VOS01 section 5 toy crates (which must pass) and
 broken variants (which must fail) under `tests/fixtures/`, CLI exit codes and
 filesystem refusals. Fixture manifests are stored as `Cargo.toml.fixture` so no
-nested Cargo root exists under the package. Line coverage 99% (llvm-cov).
+nested Cargo root exists under the package. Per-item security regression tests live in `tests/security.rs`. Line coverage 98% (llvm-cov).
 
 ## Zero dependencies
 

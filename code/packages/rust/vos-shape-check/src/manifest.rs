@@ -307,8 +307,12 @@ pub struct CargoFacts {
     pub links_keys: Vec<u32>,
     /// `(line, why)` for a proc-macro marker.
     pub proc_macro: Vec<(u32, String)>,
-    /// `(line, why)` for a `[lib]`/`[[bin]]` path outside `src/`.
+    /// `(line, why)` for a target `path` that is not where its kind lives
+    /// (`[lib]` exactly `src/lib.rs`; tests, examples and benches under their
+    /// own directories).
     pub bad_paths: Vec<(u32, String)>,
+    /// Lines of every `[[bin]]` (or `bin = [..]`): binaries are not allowed.
+    pub bin_targets: Vec<u32>,
     /// Every dependency, in file order.
     pub deps: Vec<Dep>,
     /// Declared features: name to (line, entries).
@@ -338,7 +342,11 @@ pub fn parse_cargo(text: &str) -> Result<CargoFacts, toml::TomlError> {
     };
     for Entry { path, value, line } in &entries {
         let line = *line;
-        let p: Vec<&str> = path.iter().map(String::as_str).collect();
+        let mut p: Vec<&str> = path.iter().map(String::as_str).collect();
+        // `[project]` is the old spelling of `[package]`: Cargo still reads it.
+        if p.first() == Some(&"project") {
+            p[0] = "package";
+        }
         match p.as_slice() {
             ["package", "name"] => {
                 if let Value::Str(s) = value {
@@ -377,24 +385,44 @@ pub fn parse_cargo(text: &str) -> Result<CargoFacts, toml::TomlError> {
                     .push((line, "`crate-type` names `proc-macro`".to_string()));
             }
         }
-        let is_target_path =
-            p.last() == Some(&"path") && (p.first() == Some(&"lib") || p.first() == Some(&"bin"));
-        if is_target_path {
-            match value {
-                Value::Str(s) => {
-                    let n = s.replace('\\', "/");
-                    let escapes = n.starts_with('/')
-                        || n.contains(':')
-                        || n.split('/').any(|c| c == "..")
-                        || !n.starts_with("src/");
-                    if escapes {
-                        f.bad_paths
-                            .push((line, format!("target path `{s}` is not under `src/`")));
+        if p == ["bin"] {
+            f.bin_targets.push(line);
+        }
+        if p.len() >= 2 && p.last() == Some(&"path") {
+            let required: Option<(&str, bool)> = match p[0] {
+                "lib" => Some(("src/lib.rs", true)),
+                "test" => Some(("tests/", false)),
+                "example" => Some(("examples/", false)),
+                "bench" => Some(("benches/", false)),
+                _ => None,
+            };
+            if let Some((want, exact)) = required {
+                match value {
+                    Value::Str(s) => {
+                        let n = s.replace('\\', "/");
+                        let ok = !n.split('/').any(|c| c == "..")
+                            && !n.starts_with('/')
+                            && !n.contains(':')
+                            && if exact {
+                                n == want
+                            } else {
+                                n.starts_with(want)
+                            };
+                        if !ok {
+                            f.bad_paths.push((
+                                line,
+                                format!(
+                                    "`[{}] path = \"{s}\"` must be {}`{want}`",
+                                    p[0],
+                                    if exact { "exactly " } else { "under " }
+                                ),
+                            ));
+                        }
                     }
+                    _ => f
+                        .bad_paths
+                        .push((line, "target path is not a plain string".to_string())),
                 }
-                _ => f
-                    .bad_paths
-                    .push((line, "target path is not a plain string".to_string())),
             }
         }
         // Dependency tables: top level or under `target.<cfg>.`.

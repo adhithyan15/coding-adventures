@@ -60,6 +60,8 @@ pub struct FileCtx {
     pub ghost_file: bool,
     /// Every `mod ghost` item.
     pub ghost_mods: Vec<GhostMod>,
+    /// True for tokens inside an inline `mod ghost { .. }` body.
+    ghost_mask: Vec<bool>,
 }
 
 /// Rust keywords (strict and reserved), used to tell `name[` from `in [`.
@@ -119,11 +121,14 @@ pub fn is_keyword(s: &str) -> bool {
     )
 }
 
-/// Find every attribute in `toks`.
+/// Find every attribute in `toks`, outermost only: a `#[` that sits inside
+/// another attribute's brackets is part of that attribute's body (so 40,000
+/// nested `#[` cost one attribute, not a quadratic number of ranges).
 pub fn find_attrs(toks: &[Token], pair: &[usize]) -> Vec<Attr> {
-    let mut out = Vec::new();
+    let mut out: Vec<Attr> = Vec::new();
+    let mut next_free = 0usize;
     for i in 0..toks.len() {
-        if !toks[i].is_punct("#") {
+        if i < next_free || !toks[i].is_punct("#") {
             continue;
         }
         let inner = toks.get(i + 1).is_some_and(|t| t.is_punct("!"));
@@ -135,6 +140,7 @@ pub fn find_attrs(toks: &[Token], pair: &[usize]) -> Vec<Attr> {
                 close: pair[open],
                 inner,
             });
+            next_free = pair[open] + 1;
         }
     }
     out
@@ -188,8 +194,11 @@ fn is_cfg_test(toks: &[Token], a: &Attr) -> bool {
 fn mask_cfg_test(toks: Vec<Token>, pair: &[usize]) -> Vec<Token> {
     let attrs = find_attrs(&toks, pair);
     let mut drop = vec![false; toks.len()];
+    // Attributes that start inside an already-masked region are skipped, so
+    // the whole pass is linear however many `#[cfg(test)]` there are.
+    let mut masked_to = 0usize;
     for a in &attrs {
-        if a.inner || !is_cfg_test(&toks, a) {
+        if a.start < masked_to || a.inner || !is_cfg_test(&toks, a) {
             continue;
         }
         // Skip any further attributes between this one and the item.
@@ -204,9 +213,11 @@ fn mask_cfg_test(toks: Vec<Token>, pair: &[usize]) -> Vec<Token> {
         } else {
             toks.len() - 1
         };
-        for d in &mut drop[a.start..=end.max(a.close)] {
+        let stop = end.max(a.close);
+        for d in &mut drop[a.start..=stop] {
             *d = true;
         }
+        masked_to = stop + 1;
     }
     toks.into_iter()
         .zip(drop)
@@ -241,6 +252,21 @@ impl FileCtx {
                 ghost_mods.push(GhostMod { mod_idx: i, body });
             }
         }
+        let mut ghost_mask = vec![false; toks.len()];
+        // Mods are in token order and nest or are disjoint, so marking from the
+        // highest point reached keeps this linear however deep they nest.
+        let mut hi = 0usize;
+        for g in &ghost_mods {
+            if let Some((a, b)) = g.body {
+                let from = a.max(hi);
+                if b > from {
+                    for m in &mut ghost_mask[from..b] {
+                        *m = true;
+                    }
+                    hi = b;
+                }
+            }
+        }
         let ghost_file = path == "src/ghost.rs" || path.starts_with("src/ghost/");
         Ok(FileCtx {
             path: path.to_string(),
@@ -250,16 +276,13 @@ impl FileCtx {
             attrs,
             ghost_file,
             ghost_mods,
+            ghost_mask,
         })
     }
 
     /// True if token `i` is inside the ghost module.
     pub fn in_ghost(&self, i: usize) -> bool {
-        self.ghost_file
-            || self
-                .ghost_mods
-                .iter()
-                .any(|g| g.body.is_some_and(|(a, b)| i >= a && i < b))
+        self.ghost_file || self.ghost_mask.get(i).copied().unwrap_or(false)
     }
 
     /// The attributes attached to the item whose first keyword is at `idx`
@@ -279,8 +302,8 @@ impl FileCtx {
         while j >= 1 && self.toks[j - 1].is_punct("]") {
             let open = self.pair[j - 1];
             if open >= 1 && self.toks[open - 1].is_punct("#") {
-                if let Some(a) = self.attrs.iter().find(|a| a.open == open) {
-                    out.push(*a);
+                if let Ok(n) = self.attrs.binary_search_by_key(&open, |a| a.open) {
+                    out.push(self.attrs[n]);
                 }
                 j = open - 1;
             } else {
@@ -300,11 +323,11 @@ impl FileCtx {
 /// Given the index of a `<`, the index of its matching `>` (not counting the
 /// `>` of `->` or `=>`, which the lexer merges), or `None` when the group
 /// is not a plausible generic list (a `;`, `{` or `}` at depth 1, or more
-/// than 4,096 tokens).
+/// than 256 tokens).
 pub fn angle_close(toks: &[Token], pair: &[usize], open: usize) -> Option<usize> {
     let mut depth = 0usize;
     let mut k = open;
-    let limit = (open + 4_096).min(toks.len());
+    let limit = (open + 256).min(toks.len());
     while k < limit {
         let t = &toks[k];
         if t.kind == Kind::Punct {
@@ -334,4 +357,64 @@ pub fn is_const_name(s: &str) -> bool {
     s.chars().any(|c| c.is_ascii_uppercase())
         && s.chars()
             .all(|c| c.is_ascii_uppercase() || c.is_ascii_digit() || c == '_')
+}
+
+/// The index of the `<` matching the `>` at `gt`, scanning backwards (at most
+/// 256 tokens).  Used for `<A as B>::f` and `Foo::<u8>::f` qualifiers.
+pub fn matching_lt(t: &[Token], gt: usize) -> Option<usize> {
+    let mut depth = 0usize;
+    let mut k = gt;
+    let floor = gt.saturating_sub(256);
+    loop {
+        if t[k].is_punct(">") {
+            depth += 1;
+        } else if t[k].is_punct("<") {
+            depth = depth.saturating_sub(1);
+            if depth == 0 {
+                return Some(k);
+            }
+        }
+        if k == floor {
+            return None;
+        }
+        k -= 1;
+    }
+}
+
+/// The farthest a header scan (from `fn`, `impl`, `trait`, `struct` to its
+/// body) may travel, in tokens.  Real headers are far shorter; the bound keeps
+/// a file of 100,000 unterminated `fn f` from costing a scan to the end of the
+/// file each (a quadratic found by the security review).
+pub const MAX_HEADER_TOKENS: usize = 1024;
+
+/// Scan forward from `from` to the token that ends an item header: the first
+/// `{` or `;` at bracket depth 0 (groups `( )` and `[ ]` are skipped whole),
+/// stopping early at a keyword that always starts a NEW item (`struct`, `enum`,
+/// `union`, `trait`, `mod`, `use`) or after [`MAX_HEADER_TOKENS`].  The result
+/// is the index of that token (callers test `is_punct("{")`), or the index
+/// where the scan gave up.
+pub fn scan_to_body(t: &[Token], pair: &[usize], from: usize) -> usize {
+    let limit = (from + MAX_HEADER_TOKENS).min(t.len());
+    let mut k = from;
+    while k < limit {
+        let x = &t[k];
+        match x.kind {
+            Kind::Punct => match x.text.as_str() {
+                "{" | ";" => return k,
+                "(" | "[" => k = pair[k],
+                _ => {}
+            },
+            Kind::Ident
+                if matches!(
+                    x.text.as_str(),
+                    "struct" | "enum" | "union" | "trait" | "mod" | "use"
+                ) =>
+            {
+                return k;
+            }
+            _ => {}
+        }
+        k += 1;
+    }
+    limit
 }

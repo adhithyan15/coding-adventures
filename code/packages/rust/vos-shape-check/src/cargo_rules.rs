@@ -32,6 +32,12 @@ use crate::report::Rule;
 use crate::rules::Ctx;
 use crate::syntax::FileCtx;
 
+/// The in-repo crates the generated evidence harness needs (VOS-D022).
+const DEV_ALLOWLIST: &[&str] = &[
+    "coding-adventures-sha256",
+    "coding-adventures-test-bootstrap",
+];
+
 /// Names a SH15 attribute may not contain, and the rule that owns each.
 const ATTR_BANS: &[(&str, Rule)] = &[
     ("path", Rule::Sh15),
@@ -73,16 +79,38 @@ pub fn attr_rules(cx: &mut Ctx<'_>, f: &FileCtx) {
 }
 
 /// The crate-root checks: `#![no_std]` and `#![forbid(unsafe_code)]`.
+///
+/// Only the inner attributes at CRATE level count: the leading run of `#![..]`
+/// at the very start of `src/lib.rs`.  An attribute inside `mod m { #![no_std] }`
+/// applies to `m`, not to the crate, so it must not satisfy the rule.
 pub fn root_rules(cx: &mut Ctx<'_>, root: &FileCtx) {
+    let t = &root.toks;
+    let mut crate_level: Vec<usize> = Vec::new();
+    let mut j = 0usize;
+    while t.get(j).is_some_and(|x| x.is_punct("#"))
+        && t.get(j + 1).is_some_and(|x| x.is_punct("!"))
+        && t.get(j + 2).is_some_and(|x| x.is_punct("["))
+    {
+        crate_level.push(j);
+        j = root.pair[j + 2] + 1;
+    }
     let mut no_std = false;
     let mut forbid = false;
-    for a in root.attrs.iter().filter(|a| a.inner) {
+    for a in root
+        .attrs
+        .iter()
+        .filter(|a| a.inner && crate_level.contains(&a.start))
+    {
         let body = root.attr_body(a);
         if body.len() == 1 && body[0].is_ident("no_std") {
             no_std = true;
         }
-        if body.first().is_some_and(|x| x.is_ident("forbid"))
-            && body.iter().any(|x| x.is_ident("unsafe_code"))
+        // exactly `forbid(unsafe_code)`, nothing else in the list
+        if body.len() == 4
+            && body[0].is_ident("forbid")
+            && body[1].is_punct("(")
+            && body[2].is_ident("unsafe_code")
+            && body[3].is_punct(")")
         {
             forbid = true;
         }
@@ -92,16 +120,11 @@ pub fn root_rules(cx: &mut Ctx<'_>, root: &FileCtx) {
             Rule::Sh1,
             &root.path,
             1,
-            "the crate root lacks `#![no_std]`",
+            "the crate root lacks `#![no_std]` as a crate-level inner attribute",
         );
     }
     if !forbid {
-        cx.add(
-            Rule::Sh2,
-            &root.path,
-            1,
-            "the crate root lacks `#![forbid(unsafe_code)]`",
-        );
+        cx.add(Rule::Sh2, &root.path, 1, "the crate root lacks exactly `#![forbid(unsafe_code)]` as a crate-level inner attribute");
     }
 }
 
@@ -124,13 +147,28 @@ pub fn manifest_rules(cx: &mut Ctx<'_>, c: &CargoFacts, root_entries: &[String])
         None => cx.add(Rule::Sh4, "Cargo.toml", c.edition_line, "edition is not the literal \"2021\" or \"2024\" (an inherited or missing edition cannot be verified)"),
     }
     // SH15: build scripts, links, proc macros, relocated targets.
-    if root_entries.iter().any(|e| e == "build.rs") {
-        cx.add(
-            Rule::Sh15,
-            "build.rs",
-            1,
-            "`build.rs` exists; Cargo runs it before the crate",
-        );
+    // Names are compared case-insensitively: on a case-insensitive filesystem
+    // `Build.rs` is the build script Cargo runs.
+    for e in root_entries {
+        let lower = e.to_ascii_lowercase();
+        if lower == "build.rs" {
+            cx.add(
+                Rule::Sh15,
+                e,
+                1,
+                "`build.rs` exists; Cargo runs it before the crate",
+            );
+        } else if lower == ".cargo" || lower.starts_with("rust-toolchain") {
+            cx.add(
+                Rule::Sh15,
+                e,
+                1,
+                format!("`{e}` changes how the crate is built (flags, linker, toolchain); it is not part of a component"),
+            );
+        }
+    }
+    for &l in &c.bin_targets {
+        cx.add(Rule::Sh15, "Cargo.toml", l, "`[[bin]]` target; a component crate is a library (a binary is a second crate root the checks would not cover)");
     }
     for &l in &c.build_keys {
         cx.add(Rule::Sh15, "Cargo.toml", l, "`build` key (any value, `false` included); a build script runs code the lexer does not see");
@@ -157,6 +195,21 @@ pub fn manifest_rules(cx: &mut Ctx<'_>, c: &CargoFacts, root_entries: &[String])
     // SH12: dependencies.
     for d in &c.deps {
         if d.table == "dev-dependencies" {
+            // Dev-dependencies build only under `cargo test`, never into the
+            // image, but they DO run in the evidence harness, so they are an
+            // allowlist of in-repo path crates (VOS03 SH12), not "anything".
+            let norm = d.name.replace('_', "-");
+            let allowed = d.keys.len() == 1
+                && d.keys.contains("path")
+                && (DEV_ALLOWLIST.contains(&norm.as_str()) || is_contract_name(&d.name));
+            if !allowed {
+                cx.add(
+                    Rule::Sh12,
+                    "Cargo.toml",
+                    d.line,
+                    format!("[dev-dependencies] `{}` is not an allowed in-repo path crate (allowed: {}, and contract crates)", d.name, DEV_ALLOWLIST.join(", ")),
+                );
+            }
             continue;
         }
         let source_keys: Vec<&str> = d.keys.iter().map(String::as_str).collect();

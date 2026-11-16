@@ -429,7 +429,7 @@ fn sh9_bare_arithmetic_is_deliberately_not_checked() {
 
 #[test]
 fn sh10_clean_fixed_width() {
-    clean("pub struct S { pub a: u8, pub b: [u16; 4], pub c: bool }\npub fn f(s: S) -> (u32, i64, S) { (1u32, 2i64, s) }\n");
+    clean("pub struct S { a: u8, b: [u16; 4], c: bool }\npub fn f(s: S) -> (u32, i64, S) { (1u32, 2i64, s) }\n");
     clean("pub const LEN: usize = 4;\npub fn f(i: u8) -> u8 { let _j = i as usize; i }\n");
     clean("pub fn f<const N: usize>(_a: [u8; N]) {}\n");
 }
@@ -498,7 +498,7 @@ fn sh11_float_types_and_literals() {
 #[test]
 fn sh12_clean_contract_core_and_dev_dependencies() {
     manifest_clean("\n[dependencies]\nvos-ready-contract = { path = \"../vos-ready-contract\" }\nvos_timer_contract = { path = \"../t\" }\ncore = {}\n");
-    manifest_clean("\n[dev-dependencies]\ncoding_adventures_sha256 = { path = \"../sha256\" }\nserde = \"1\"\n");
+    manifest_clean("\n[dev-dependencies]\ncoding_adventures_sha256 = { path = \"../sha256\" }\ncoding_adventures_test_bootstrap = { path = \"../tb\" }\nvos-ready-contract = { path = \"../c\" }\n");
     manifest_clean("\n[dependencies.vos-ready-contract]\npath = \"../c\"\n");
 }
 
@@ -570,7 +570,7 @@ fn sh13_ghost_file_without_a_module_declaration() {
     let mut i = body("pub fn f() {}\n");
     i.sources.push(SourceFile {
         path: "src/ghost.rs".into(),
-        text: "pub fn vos_ghost_x() {}\n".into(),
+        text: "pub fn vos_ghost_alpha() {}\n".into(),
     });
     assert!(rules(&run(&i)).contains(&"SH13"));
 }
@@ -581,7 +581,7 @@ fn sh13_gated_out_of_line_ghost_module_with_ghost_file_is_clean() {
     i.cargo_toml = Some(format!("{MANIFEST}{GHOSTLESS_FEATURES}"));
     i.sources.push(SourceFile {
         path: "src/ghost.rs".into(),
-        text: "pub fn vos_ghost_x() -> u8 { 1 }\n".into(),
+        text: "pub fn vos_ghost_alpha() -> u8 { 1 }\n".into(),
     });
     let r = run(&i);
     assert!(r.findings.is_empty(), "{}", r.render());
@@ -620,16 +620,18 @@ fn sh14_spine_contract_and_unknown_kind_may_have_pub_fields() {
             "{k}"
         );
     }
-    assert!(run(&body("pub struct S { pub a: u8 }\n"))
-        .findings
-        .is_empty());
+    // an UNSPECIFIED kind in class K is treated as production (fail closed)
+    assert!(rules(&run(&body("pub struct S { pub a: u8 }\n"))).contains(&"SH14"));
 }
 
 // ---------------------------------------------------------------- SH15
 
 #[test]
 fn sh15_clean_core_macros() {
-    clean("pub fn f(x: u8) -> bool { matches!(x, 1) }\npub fn g() -> bool { cfg!(test) }\n");
+    clean("pub fn f(x: u8) -> bool { matches!(x, 1) }\n");
+    // `cfg!` varies the build between the evidence host and the image
+    fires("pub fn g() -> bool { cfg!(test) }\n", "SH15");
+    fires("pub fn g() -> bool { cfg!(test) }\n", "SH18");
     clean("pub const S: u8 = { let _a = concat!(\"a\", \"b\"); let _b = stringify!(x); let _c = file!(); let _d = column!(); let _e = module_path!(); 1 };\n");
 }
 
@@ -1134,10 +1136,15 @@ fn vt03_size_caps() {
 }
 
 #[test]
-fn a_main_rs_crate_root_is_accepted() {
+fn a_binary_target_file_is_a_finding_and_not_a_crate_root() {
     let mut i = body("fn main() {}\n");
     i.sources[0].path = "src/main.rs".into();
-    assert!(run(&i).findings.is_empty());
+    let r = run(&i);
+    assert!(
+        rules(&r).contains(&"SH15") && rules(&r).contains(&"VT03"),
+        "{}",
+        r.render()
+    );
 }
 
 // ---------------------------------------------------------------- classes
