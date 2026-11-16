@@ -1470,8 +1470,13 @@ pub fn step_rpg_frame(
                     }
                     Phase::SwitchPrompt => {
                         // Automatically switch to first alive monster
-                        for i in 0..game.party_len.min(MAX_PARTY) {
-                            if let Some(c) = game.party[i] {
+                        for (i, slot) in game
+                            .party
+                            .iter()
+                            .take(game.party_len.min(MAX_PARTY))
+                            .enumerate()
+                        {
+                            if let Some(c) = slot {
                                 if c.hp > 0 {
                                     let _ = battle.switch_in(i as u8);
                                     break;
