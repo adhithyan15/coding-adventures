@@ -118,6 +118,8 @@ Every integer is text. That removes the JavaScript safe-integer hazard at the so
 
 `warrant-stream-v2` extends the VER04i section 2.6 table; every row of that table keeps its bytes.
 
+**Tag allocation (changed 2026-11-16).** This draft first took `60` (tuple, record) and `62` (variant), which collide with VER04l (`60` `Text`, `61` `Char`, merged 2026-11-13) and VER04p (`62` `F32`, `63` `F64`, merged earlier on 2026-11-16). The earliest-merged allocation wins, so VER04l and VER04p keep theirs and this document uses **`64`** (tuple, record) and **`65`** (variant). `11` (signed integers) was free and stays. The single registry of every allocated tag is VER04i section 2.6.1.
+
 | Value | Bytes |
 |---|---|
 | `Bool` | `00` or `01` |
@@ -127,13 +129,13 @@ Every integer is text. That removes the JavaScript safe-integer hazard at the so
 | `List<T>` | `30`, u32-LE count, elements |
 | `Option<T>` | `40` (none) or `41` plus the inner value |
 | `Ok(v)` / `Err(E.V)` | `50` plus inner / `51`, u32-LE length, UTF-8 case name |
-| tuple, record | `60`, u32-LE component count, components in order |
-| variant | `62`, u32-LE length, UTF-8 constructor name, u32-LE field count, fields in order |
+| tuple, record | `64`, u32-LE component count, components in order |
+| variant | `65`, u32-LE length, UTF-8 constructor name, u32-LE field count, fields in order |
 
-The two streams, the context prefix, the type names in the prefix and the absence of per-case delimiters are exactly VER04i section 2.6, with `warrant-stream-v2\0` as the header when any type in the suite context is outside the v1 set (section 1.2). A top-level binder tuple remains a plain concatenation of its binder values, as in v1; a tuple *value* (a binder of tuple type, a tuple result) carries the `60` tag. Why a count and a tag where v1 used neither: v1 tuples never occurred nested, so position alone sufficed. Nested composites need self-delimiting values or two different values can serialise to the same bytes.
+The two streams, the context prefix, the type names in the prefix and the absence of per-case delimiters are exactly VER04i section 2.6, with `warrant-stream-v2\0` as the header when any type in the suite context is outside the v1 set (section 1.2). A top-level binder tuple remains a plain concatenation of its binder values, as in v1; a tuple *value* (a binder of tuple type, a tuple result) carries the `64` tag. Why a count and a tag where v1 used neither: v1 tuples never occurred nested, so position alone sufficed. Nested composites need self-delimiting values or two different values can serialise to the same bytes.
 
 A worked example. The record `Point(x: U8, y: U8)` with value `Point(1, 2)` encodes as
-`60 02000000 10 0100000000000000 10 0200000000000000`. The signed value `-1` as `I8` encodes as `11 ffffffffffffffff`: the type name in the context says it is eight bits, the stream does not.
+`64 02000000 10 0100000000000000 10 0200000000000000`. The signed value `-1` as `I8` encodes as `11 ffffffffffffffff`: the type name in the context says it is eight bits, the stream does not.
 
 ### 2.5 TFV
 
@@ -673,9 +675,9 @@ A corpus, a chunk file, a binding and a `.warrant` spec are all inputs a PR auth
 
 ## 15. Open questions
 
-### 15.1 For the owner
+### 15.1 Decided by the owner (2026-11-16)
 
-1. **Where does the `full` result live, and which manifest does the report read?** The committed `evidence/test-manifest.json` must be reproducible by PR CI, so it is a `slim` manifest; the nightly `full` result exists only as a CI artifact. The two options are (a) a bot commits a second file, `evidence/test-manifest.full.json`, after each green nightly run, or (b) nothing is committed and `ca-assurance-report` accepts `--full-manifest <artifact>` and prints both depths. **Recommendation: (b).** A committed full manifest is stale the moment a source file changes and no PR job can re-derive it, which is the evidence-written-by-something-other-than-the-check pattern this family of specs exists to prevent; (a) also needs a bot with write access to `main`. Under (b) the report prints `full` only when given an artifact whose `corpus_sha256`, `source_sha256` and binding digest equal the committed slim manifest's, and prints `slim(n of m chunks)` otherwise. This is the owner's call because it sets CI and bot policy. Until decided, every report derived from the committed file says `slim` for each suite with more than 16 chunks, which is honest under either option.
+1. **Where does the `full` result live, and which manifest does the report read? Resolved 2026-11-16 (owner): option (b).** The committed `evidence/test-manifest.json` is the `slim` manifest, because PR CI must be able to reproduce it; the nightly `full` result exists only as a CI artifact. **Only `slim` is committed, and there are no bot commits**: no second file `evidence/test-manifest.full.json`, and no bot with write access to `main`. `ca-assurance-report` reads the nightly `full` manifest as a **digest-matched artifact** (`--full-manifest <artifact>`) and prints both depths. It prints `full` only when the artifact's `corpus_sha256`, `source_sha256` and binding digest equal the committed slim manifest's, and prints `slim(n of m chunks)` otherwise. Why not (a): a committed full manifest is stale the moment a source file changes and no PR job can re-derive it, the evidence-written-by-something-other-than-the-check pattern this family of specs exists to prevent. Every report derived from the committed file alone says `slim` for each suite with more than 16 chunks.
 
 ### 15.2 Resolved in review (2026-11-16), recorded so they are not reopened by accident
 
@@ -700,7 +702,9 @@ A corpus, a chunk file, a binding and a `.warrant` spec are all inputs a PR auth
 * The slim subset is written into the corpus as an explicit list and committed with its own digest (section 5.6), with the formula normative for the compiler and the oracle only.
 * The manifest has a run-level `depth` and a per-suite `depth` (a suite with at most 16 chunks is `full` in every run).
 
-**Changes made by the adversarial review of 2026-11-16.** Subject-dependent nodes: `ir-overflow` there is a case failure, and the v0 guard refuses them statically (sections 3.2, 3.3). `MAX_IR_VALUE` closes a memory bomb the node-count bound did not (section 4.2). Chunk count capped at 4,096 and chunk size at `2^16`, because the earlier limits allowed an 11 MiB chunk file against a 2 MiB cap and a 16-million-case "slim" suite (sections 5.4, 14). Chunk file names derived, never read (sections 5.5, 14). Witness chunks and the only-more-chunks rule for the stride (section 5.6). `unreachable_calls` and the recomputed `unreachable_by_type`, because skipped calls contradicted the call-count check and were a way to call nothing (section 7.2). `monitored_calls` restricted to subject-independent calls (section 7.6). Host-form applicability of WX-G controls (section 8.2). `bytes_n(N>=2)` is `sample`, resolving a contradiction between two lines of section 9.3. Unoptimised lowering and full oracle verification before merge (section 10). The v1 compiler is not moved in S3 (section 13). Nine of the ten open questions resolved (section 15).
+**Changes made by the adversarial review of 2026-11-16.** Subject-dependent nodes: `ir-overflow` there is a case failure, and the v0 guard refuses them statically (sections 3.2, 3.3). `MAX_IR_VALUE` closes a memory bomb the node-count bound did not (section 4.2). Chunk count capped at 4,096 and chunk size at `2^16`, because the earlier limits allowed an 11 MiB chunk file against a 2 MiB cap and a 16-million-case "slim" suite (sections 5.4, 14). Chunk file names derived, never read (sections 5.5, 14). Witness chunks and the only-more-chunks rule for the stride (section 5.6). `unreachable_calls` and the recomputed `unreachable_by_type`, because skipped calls contradicted the call-count check and were a way to call nothing (section 7.2). `monitored_calls` restricted to subject-independent calls (section 7.6). Host-form applicability of WX-G controls (section 8.2). `bytes_n(N>=2)` is `sample`, resolving a contradiction between two lines of section 9.3. Unoptimised lowering and full oracle verification before merge (section 10). The v1 compiler is not moved in S3 (section 13). All ten open questions resolved (section 15; question 1 by the owner on 2026-11-16).
+
+**Changes made after the review, 2026-11-16.** Open question 1 resolved as option (b) (section 15.1). Stream tags for tuple, record and variant moved from `60`/`62` to `64`/`65` to remove the collision with VER04l and VER04p (section 2.4; registry in VER04i section 2.6.1).
 
 **Follow-ups outside this slice.**
 

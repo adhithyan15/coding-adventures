@@ -148,7 +148,7 @@ cited rules.
 | N1 | the model sees `obs(h)`; the generator groups recipes by observation tuple; the source of `obs(h)` is not stated | each maker carries a pure **`means`** model giving the observation tuple from its arguments; `admits` says when it must succeed (OM3, OX3) | the corpus is enumerated in-lane and the expected stream is computed by the model evaluator **without the subject** (VER04i section 2.2). If observations came from the subject, a maker that parsed the wrong modulus and an observer that reported it would agree with a model fed by both |
 | N2 | `opaque T from contract.<pkg>.opaque.T` "imports another package's type with its makers and observers" | the upper document **restates** the full interface after `from`; the resolver compares the restatement to the lower document and pins its digest (OF1, OF3) | VER04 section 2: "imports ... do not exist"; VER29 section 3.3: a contract entry "adds no name to the symbol namespace". A restated, pinned, exactly-equal interface keeps the upper document self-contained for generation and keeps VER29 rule (c) (exact linking) |
 | N3 | obligations O1 adequacy, O2 immutability, O3 unforgeability | five obligations, renamed (`adequacy`, `immutability`, `unforgeability`, `freshness`, `grounding`); adequacy is **implied by the claim shape** plus a multiplicity guard, and is `n/a (injective)` when the means are injective (OV3 to OV8) | with `means` the equal-observation classes are known to the generator, so adequacy is a coverage question, not a separate test; this also avoids the memo's `O1`/`O2` clashing with the slice names |
-| N4 | `eq=observational`, opt-in (memo O-1) | **not in O1**. A claim over an explicit `op key_eq(a: K, b: K) -> Bool` states the same thing with no new feature (owner question OWN-1) | a language feature whose meaning is "equal observations" adds nothing the observers do not already say, and `==` on a handle stays unconditionally an error, after the `len(t)` precedent (VER04l decision b) |
+| N4 | `eq=observational`, opt-in (memo O-1) | **not in O1**. A claim over an explicit `op key_eq(a: K, b: K) -> Bool` states the same thing with no new feature (owner decision OWN-1, 2026-11-16) | a language feature whose meaning is "equal observations" adds nothing the observers do not already say, and `==` on a handle stays unconditionally an error, after the `len(t)` precedent (VER04l decision b) |
 | N5 | `D(T)` is the makers applied to their argument domains, "kept when the result is `Ok`" | kept when `admits` holds, a **model-side** filter; the label counts `admitted of tried` (OV1) | the subject's own verdict cannot choose the domain it is then tested on |
 | N6 | no rule for secret material | a maker parameter or observer result classed `secret` is refused (W0750, OT2) | recipes are written into a committed corpus (OC1) |
 | N7 | "lanes without enforced privacy print not established" | one four-valued sealing vocabulary and a per-lane in-lane probe for all eighteen lanes (OL2) | Go's zero value, C# `default`, Kotlin `copy` and Python's `object.__new__` are forging paths in "private" lanes; the status must come from a probe, not from the language's reputation |
@@ -787,10 +787,11 @@ corpus is language-independent and a foreign handle's layout is irrelevant.
 
 **OC2.** (Tags.) `80` and `81` are free. Checked on 2026-11-16 against every
 specification that allocates stream tags, merged or draft: VER04i section 2.6
-(`00 01 10 20 30 40 41 50 51`), VER04l (`60 61`), draft VER04r (`11 60 62`) and
-draft VER04p (`62 63`). The `8x` row is reserved for this document. (Those four
-texts do not agree with each other about `60` to `62`; that is theirs to settle and
-does not touch `8x`.) A lane decoder MUST reject an unknown tag.
+(`00 01 10 20 30 40 41 50 51`), VER04l (`60 61`), VER04r (`11 64 65`, after its 2026-11-16 renumbering) and
+VER04p (`62 63`). The `8x` row is reserved for this document. The overlap among
+VER04l, VER04r and VER04p over `60` to `62` was settled on 2026-11-16 (VER30
+decision 19); the single registry of every allocation is VER04i section 2.6.1, and
+nothing there touches `8x`. A lane decoder MUST reject an unknown tag.
 
 **OC3.** (JSON and TFV.) In `corpus.json` a recipe value is
 `{"make": "<maker>", "args": [v1, ..]}`, each argument in the JSON form of its
@@ -1284,11 +1285,20 @@ values of the lower crate and of two further crates, so the lower maker is a pla
   crate and nothing about an operation over a handle; that half of O1 is accepted on
   the ByteSet fixture (conformance item 7). It needs no VER29 change.
 * **Stage P-b (slice O3 and O4, foreign handle).** The key handle, cited through
-  `contract.x509-rsa-public-key.opaque.ValidatedRsaPublicKey`. **Blocked until
-  `x509-rsa-public-key` has an adopted Warrant document and the VER29 slice that
-  publishes the opaque id has landed** (decision b, OF6). The fallback pilot, if the
-  lower adoption is late, is `x509-rsa-algorithm-policy` (6 dependents); it is
-  recorded so the schedule does not stall, not chosen here (owner question OWN-4).
+  `contract.x509-rsa-public-key.opaque.ValidatedRsaPublicKey`. **Blocked until the
+  whole lower chain has Warrant evidence of its own** (owner decision OWN-4,
+  2026-11-16, which reverses this document's earlier recommendation): the two
+  crates the lower maker plan calls into, **`x509-subject-public-key-info`** (the
+  SPKI view, `X509SubjectPublicKeyInfo`) and **`der-asn1`** (the ASN.1 limits,
+  `Asn1Limits`), must each be **verified first**, that is, each has its own adopted
+  Warrant document and evidence; then `x509-rsa-public-key` itself has an adopted
+  Warrant document; and the VER29 slice that publishes the opaque id has landed
+  (decision b, OF6). (The two crates are the two path dependencies of
+  `x509-rsa-public-key` in its `Cargo.toml`; the text above names them only by
+  role.) P-b therefore starts three adoptions later than the earlier plan, and no
+  foreign handle's trust base contains an unverified crate at the pilot. The
+  fallback pilot, if the chain is late, remains `x509-rsa-algorithm-policy`
+  (6 dependents); it is recorded so the schedule does not stall, not chosen here.
 
 ### 14.3 The upper document (sketch)
 
@@ -1347,7 +1357,7 @@ not need to be.** The evaluated `Nat` is a `u64` in the shipped Rust evaluator
 (VER04e) and an exact integer of magnitude at most `2^127` under draft VER04r
 section 3.2. A 2,048-bit modulus fits neither, and widening `Nat` to unbounded
 integers in eighteen lane evaluators is a language change this document does not
-make (owner question OWN-3). The pilot instead states the success value in three
+make (owner decision OWN-3, 2026-11-16). The pilot instead states the success value in three
 layers, each labelled for what it is:
 
 1. **`recover_matches_model`: a full model on toy keys.** The lower validator's
@@ -1409,7 +1419,7 @@ this document, fixes the real sets.
 * **The design is wrong** if `recover` cannot be stated over a handle it did not
   build (the key) while running the real lower plan with no mock, or if no policy
   the lower package can publish admits a modulus of at most four bytes (then layer 1
-  has no domain and the question of OWN-3 must be answered first).
+  has no domain; OWN-3, no big-integer model, is then reopened).
 
 ## 15. Diagnostics
 
@@ -1606,7 +1616,7 @@ another change updates the backlog and VER30.
 * **Types with no observer** (capability tokens, section 4.5).
 * **Drop semantics as behaviour** (only that destructors run armed, OL4); `dyn Trait`
   objects; stored callbacks; serialised handles; handles sent across threads.
-* **`eq=observational`** (N4, owner question OWN-1).
+* **`eq=observational`** (N4, owner decision OWN-1, 2026-11-16).
 * **Proofs**: all opaque rows are `not-live` for the proof rung at first, as in
   VER04m, acknowledged in the binding.
 * **Reflection, unsafe code and FFI forging** (OT4); **timing** of handle
@@ -1628,7 +1638,7 @@ another change updates the backlog and VER30.
 | **O2b** | lanes ruby, c, cpp, java, kotlin, csharp, fsharp, elixir; the c and cpp memory checker (OT8) | O2a |
 | **O2c** | lanes lua, perl, haskell, swift, dart, ocaml | O2b; toolchains in CI first, as VER04i requires |
 | **O3** | foreign handles: the VER29 slice 6 of 17.1, the `from` checker rule, the interface and binding digests, the lower plan read from the lower binding, `lower-fault`; the O3-checker work of OF1 to OF9 (Rust lane only, OF9) | O1-S3; VER29 slice 2 (resolution and discharge); the lower package adopted |
-| **O4** | pilot **Stage P-b**: `rsa-public-operation` over the foreign key | O3; `x509-rsa-public-key` Warrant adoption |
+| **O4** | pilot **Stage P-b**: `rsa-public-operation` over the foreign key | O3; Warrant evidence for `x509-subject-public-key-info` and `der-asn1` first (OWN-4), then `x509-rsa-public-key` Warrant adoption |
 | **O5** (deferred) | transformers, nested handles, generic opaque types | demand, VER04o |
 
 ### 19.2 Backlog rows needed (this document does not edit `VER-BACKLOG.md`)
@@ -1642,24 +1652,29 @@ another change updates the backlog and VER30.
 * **WX-O3**: foreign handles and the VER29 slice 6 (`LV-` row for the id family
   `contract.<pkg>.opaque.<T>`).
 * **WX-O4**: pilot Stage P-b.
-* **Prerequisite**: adopt `x509-rsa-public-key` (a Warrant document and evidence); a
-  VER30 wave-2 crate, "may be T3" there, now unblocked as the lower layer.
+* **Prerequisites, in this order (OWN-4, 2026-11-16)**: (1) verify
+  `x509-subject-public-key-info` and (2) verify `der-asn1` (each a Warrant document
+  and evidence, with its own backlog row, VER-BACKLOG `WX-O4a` and `WX-O4b`); then
+  (3) adopt `x509-rsa-public-key` (a Warrant document and evidence); a VER30 wave-2
+  crate, "may be T3" there, now unblocked as the lower layer.
 * **VER30 / inventory**: re-measure the opaque-types row with a `recursive-types`
   note, as the memo recommends, before scheduling adopters beyond the pilot.
 
 ## 20. Open questions
 
-### 20.1 For the owner
+### 20.1 Decided by the owner (2026-11-16)
 
-Four questions are choices of policy or scope, not of engineering. Each has a
-recommendation, and the text above already encodes it, so a "yes" needs no edit.
+Four questions were choices of policy or scope, not of engineering. The owner
+resolved them on 2026-11-16. OWN-1 to OWN-3 accept the recommendation the text
+already encoded, so they need no edit; **OWN-4 reverses the recommendation**, and
+section 14.2, section 19 and the pilot staging are updated to match.
 
-| # | Question | Recommendation |
+| # | Question | Decision (2026-11-16) |
 |---|---|---|
-| OWN-1 | **`eq=observational`.** The design memo proposed (O-1) that an opaque type may opt in to `==` meaning "equal observations". This document leaves it out (N4). Confirm the departure? | **Leave it out.** `==` on a handle stays an error. Where a library exposes equality, state it as an operation: `op key_eq(a: K, b: K) -> Bool` with the claim `key_eq(a, b) == (obs(a) == obs(b))`, which is checked against the real function and needs no new feature. An implicit `==` would be a second, unchecked meaning of equality. Reconsider only if two adopters need handles as map keys (VER04o) |
-| OWN-2 | **Does a sealing status gate adoption?** Dynamic lanes can never print `enforced` (OL8). Should a security-flagged crate's `sealed` type be adoptable in a lane that prints `not-established`? | **Yes, adoptable, printed, never a rung.** `forgeable` fails the lane's row; `not-established` is printed and blocks only `--require-closed`. Making `enforced` mandatory would exclude five lanes from every sealed type for a property the language cannot offer, while the other four obligations are as strong there as anywhere |
-| OWN-3 | **A big-integer model.** Should Warrant gain an unbounded integer (or a model level for multi-limb arithmetic) so that RSAVP1 at real sizes is a model claim and not a table? | **Not for the pilot.** It is a language and eighteen-evaluator change for one adopter. The three layers of 14.3 (a full model on toy keys, three key-dependent fixed points at real sizes, pinned known answers) are honest about what each covers. Revisit when a second big-integer adopter appears, as a VER04r feature level |
-| OWN-4 | **Pilot stage P-b and its lower chain.** P-b waits for `x509-rsa-public-key` to be adopted, and that package's maker plan calls into two further crates (the SPKI view and ASN.1 limits) that have no Warrant evidence; under OL1 they sit in the printed trust base of the type. Accept that for the pilot, or adopt those crates first? | **Accept it, printed.** The grounding claim tests the whole plan end to end on its domain, so the unverified crates are exercised, not assumed away, and the report's `tcb` line names them. Requiring the whole chain first delays the first foreign handle by three adoptions. Use the fallback (`x509-rsa-algorithm-policy`) only if the lower adoption slips past the O3 slice |
+| OWN-1 | **`eq=observational`.** The design memo proposed (O-1) that an opaque type may opt in to `==` meaning "equal observations". This document leaves it out (N4). | **Resolved: no `eq=observational`.** `==` on a handle stays an error. Where a library exposes equality, state it as an explicit operation, `op key_eq(a: K, b: K) -> Bool`, with the claim `key_eq(a, b) == (obs(a) == obs(b))`, which is checked against the real function and needs no new feature. An implicit `==` would be a second, unchecked meaning of equality. Reconsider only if two adopters need handles as map keys (VER04o) |
+| OWN-2 | **Does a sealing status gate adoption?** Dynamic lanes can never print `enforced` (OL8). | **Resolved: sealing is not an adoption gate.** `forgeable` fails the lane's row; `not-established` is printed and blocks only `--require-closed`; it is never a rung. Making `enforced` mandatory would exclude five lanes from every sealed type for a property the language cannot offer, while the other four obligations are as strong there as anywhere |
+| OWN-3 | **A big-integer model.** Should Warrant gain an unbounded integer (or a model level for multi-limb arithmetic) so that RSAVP1 at real sizes is a model claim and not a table? | **Resolved: no big-integer model for the RSA pilot.** It is a language and eighteen-evaluator change for one adopter. The three layers of 14.3 (a full model on toy keys, three key-dependent fixed points at real sizes, pinned known answers) are honest about what each covers. Revisit when a second big-integer adopter appears, as a VER04r feature level |
+| OWN-4 | **Pilot stage P-b and its lower chain.** P-b waits for `x509-rsa-public-key` to be adopted, and that package's maker plan calls into two further crates (the SPKI view and ASN.1 limits) that have no Warrant evidence; under OL1 they sit in the printed trust base of the type. Accept that for the pilot, or adopt those crates first? | **Resolved: verify the two lower crates first. This reverses the earlier recommendation ("accept it, printed").** The crates are `x509-subject-public-key-info` and `der-asn1`. P-b waits until both have their own Warrant evidence, then until `x509-rsa-public-key` is adopted, then until the VER29 opaque-id slice has landed (14.2, 19.1 O4). Two backlog rows verify the two crates (`WX-O4a`, `WX-O4b`; 19.2). The cost, which the owner accepted, is that the first foreign handle comes three adoptions later; the gain is that no foreign handle in the pilot has an unverified crate in its `tcb` line. The fallback pilot `x509-rsa-algorithm-policy` stays recorded for a late chain |
 
 ### 20.2 Resolved by the review (engineering)
 
@@ -1757,6 +1772,8 @@ recommendation, and the text above already encodes it, so a "yes" needs no edit.
     success value and an explicit account of what the table is (14.3).
   * R24 A host type could be described by two mechanisms, and a type with no
     observer fell between them (OK11, OR5).
-  * Not this document's to fix, reported to the owner: VER04l (`60`, `61`), draft
-    VER04r (`60`, `62`) and draft VER04p (`62`, `63`) allocate overlapping stream
-    tags among themselves.
+  * Reported to the owner, and settled on 2026-11-16: VER04l (`60`, `61`), VER04r
+    (`60`, `62`) and VER04p (`62`, `63`) allocated overlapping stream tags among
+    themselves. The earliest-merged allocation was kept (VER04l, then VER04p) and
+    VER04r moved to `64`, `65`; the registry is VER04i section 2.6.1.
+* **Owner decisions (2026-11-16).** Section 20.1 resolved: OWN-1 no `eq=observational` (explicit `key_eq`); OWN-2 sealing is not an adoption gate; OWN-3 no big-integer model for the pilot; **OWN-4 reversed**, so pilot Stage P-b waits until `x509-subject-public-key-info` and `der-asn1` each have their own Warrant evidence (14.2, 19.1, 19.2). Stream tags `80`, `81` unchanged; the cross-spec overlap on `60` to `62` was settled by VER04i 2.6.1 (OC2). The diagnostic block `W0750` to `W0759` is unchanged and collides with no other specification.
