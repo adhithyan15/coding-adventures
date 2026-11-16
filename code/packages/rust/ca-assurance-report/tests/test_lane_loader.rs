@@ -714,3 +714,173 @@ fn the_host_flavour_is_what_production_uses() {
     };
     assert_eq!(PathFlavor::host(), expected);
 }
+
+// ---------------------------------------------------------------------------
+// Security-review follow-ups: overflow, strict integer tokens, reserved
+// names, the spec-pinned readiness list, more negative cases, and the shared
+// containment fixture.
+// ---------------------------------------------------------------------------
+
+/// A sidecar with `suites` suites of `cases` cases each, all `full` over `bool`.
+fn synthetic_sidecar(suites: usize, cases: u64, label: &str, binders: &[(&str, &str)]) -> Vec<u8> {
+    let binders_json: Vec<String> = binders
+        .iter()
+        .map(|(domain, l)| format!("{{\"name\":\"x\",\"domain\":\"{domain}\",\"label\":\"{l}\"}}"))
+        .collect();
+    // Declared total: the true sum, capped at the loader's 2^53 count bound.
+    let declared = (suites as u128 * cases as u128).min(1 << 53);
+    let rows: Vec<String> = (0..suites)
+        .map(|i| {
+            format!(
+                "{{\"id\":\"s{i:06}\",\"label\":\"{label}\",\"domain\":\"d\",\"cases\":{cases},\"binders\":[{}]}}",
+                binders_json.join(",")
+            )
+        })
+        .collect();
+    format!(
+        "{{\"schema\":\"warrant-lane-domain-labels-v1\",\"package\":\"p/q\",\"module\":\"m\",\
+         \"manifest_sha256\":\"{}\",\"note\":\"n\",\"cases_by_label\":{{\"{label}\":{declared}}},\"suites\":[{}]}}",
+        "0".repeat(64),
+        rows.join(",")
+    )
+    .into_bytes()
+}
+
+#[test]
+fn a_hostile_sidecar_cannot_overflow_the_case_sum() {
+    // 2,100 suites at 2^53 cases sum past u64::MAX; this must be a clean
+    // refusal, not a debug panic or a release wrap.
+    let bytes = synthetic_sidecar(2_100, 1 << 53, "full", &[("bool", "full")]);
+    expect_code(parse_domain_labels(&bytes), "labels", "overflow");
+}
+
+#[test]
+fn the_sidecar_is_parsed_with_the_strict_integer_rules_of_the_manifest() {
+    for bad in ["65537.0", "6.5537e4", "065537", "+65537", "-0"] {
+        let repo = Repo::new();
+        repo.edit_text(
+            &labels_rel("python/ct-compare"),
+            "\"full\": 65537",
+            &format!("\"full\": {bad}"),
+        );
+        expect_code(repo.load("python/ct-compare"), "labels", "integer");
+    }
+}
+
+#[test]
+fn windows_reserved_device_names_and_trailing_dots_are_refused() {
+    let repo = Repo::new();
+    for bad in [
+        "code/CON",
+        "code/nul.txt",
+        "code/Aux.tar.gz",
+        "code/prn",
+        "code/com1",
+        "code/LPT9.log",
+        "code/packages/COM5.json",
+        "code/trailing.",
+    ] {
+        expect_code(read_repo_file(&repo.root, bad, 1024), "path", "");
+    }
+    // Names that merely contain or extend a reserved word stay legal.
+    for ok in [
+        "code/console",
+        "code/com10",
+        "code/nullable.txt",
+        "code/auxiliary",
+    ] {
+        let error = read_repo_file(&repo.root, ok, 1024).unwrap_err();
+        assert_eq!(error.code, "io", "{ok}: {error}");
+    }
+}
+
+#[test]
+fn the_readiness_list_is_pinned_to_the_spec_table_in_order() {
+    let spec =
+        fs::read_to_string(real_root().join("code/specs/VER04i-polyglot-warrant-evidence.md"))
+            .unwrap();
+    let start = spec
+        .find("**Static readiness checks (the whole list).**")
+        .expect("spec section");
+    let names: Vec<String> = spec[start..]
+        .lines()
+        .skip_while(|l| !l.starts_with("| Name"))
+        .skip(2)
+        .take_while(|l| l.starts_with('|'))
+        .map(|l| l.split('`').nth(1).expect("backticked name").to_owned())
+        .collect();
+    let code: Vec<String> = READINESS_CHECKS.iter().map(|s| s.to_string()).collect();
+    assert_eq!(names, code);
+}
+
+#[test]
+fn more_manifest_and_sidecar_identity_failures_are_refused() {
+    // runner.lane differing from the manifest lane.
+    let repo = Repo::new();
+    repo.edit_text(
+        &manifest_rel("go/ct-compare"),
+        "\"lane\": \"go\",\n    \"name\"",
+        "\"lane\": \"python\",\n    \"name\"",
+    );
+    expect_code(repo.load("go/ct-compare"), "manifest", "runner lane");
+    // The sidecar's module.
+    let repo = Repo::new();
+    repo.edit_text(
+        &labels_rel("go/ct-compare"),
+        "\"module\": \"ct_compare\"",
+        "\"module\": \"other\"",
+    );
+    expect_code(repo.load("go/ct-compare"), "labels", "module");
+    // A suite id that the manifest does not have (still sorted and unique).
+    let repo = Repo::new();
+    repo.edit_text(
+        &labels_rel("go/ct-compare"),
+        "warrant/ct_compare/exhaustive/select_rejects_mismatch",
+        "warrant/ct_compare/exhaustive/zz_select_rejects_mismatch",
+    );
+    expect_code(repo.load("go/ct-compare"), "labels", "suites differ");
+    // A non-UTF-8 BUILD file.
+    let repo = Repo::new();
+    repo.write("code/packages/go/ct-compare/BUILD", &[0xff, 0xfe, b'\n']);
+    expect_code(repo.load("go/ct-compare"), "build-routing", "UTF-8");
+}
+
+#[test]
+fn a_suite_is_as_weak_as_its_weakest_binder() {
+    let mixed = [("bool", "full"), ("bytes_d1", "bounded-set")];
+    let bytes = synthetic_sidecar(1, 5, "full", &mixed);
+    expect_code(parse_domain_labels(&bytes), "labels", "weakest");
+    let ok = synthetic_sidecar(1, 5, "bounded-set", &mixed);
+    parse_domain_labels(&ok).expect("the weakest binder's label is accepted");
+}
+
+#[test]
+fn the_shared_containment_fixture_passes_in_both_flavours_on_any_host() {
+    let text = fs::read_to_string(
+        real_root().join("code/specs/fixtures/warrant-corpus-conformance-v1/containment.json"),
+    )
+    .unwrap();
+    let doc = JsonValue::parse(&text).unwrap();
+    let cases = doc.get("cases").and_then(JsonValue::as_array).unwrap();
+    assert_eq!(cases.len(), 77, "a case added to the fixture must be run");
+    for case in cases {
+        let id = case.get("id").and_then(JsonValue::as_str).unwrap();
+        let flavor = match case.get("flavor").and_then(JsonValue::as_str).unwrap() {
+            "posix" => PathFlavor::Posix,
+            "win32" => PathFlavor::Win32,
+            other => panic!("{id}: unknown flavor {other}"),
+        };
+        let root = case.get("root").and_then(JsonValue::as_str).unwrap();
+        let child = case.get("child").and_then(JsonValue::as_str).unwrap();
+        let expect = case.get("expect").unwrap();
+        let want = (
+            expect.get("inside").and_then(JsonValue::as_bool).unwrap(),
+            expect.get("same").and_then(JsonValue::as_bool).unwrap(),
+        );
+        assert_eq!(
+            inside(flavor, root, child),
+            want,
+            "{id}: {root:?} vs {child:?}"
+        );
+    }
+}
