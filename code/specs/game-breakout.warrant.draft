@@ -1,3 +1,14 @@
+-- PARKED DRAFT: this document is NOT valid Warrant today.
+--
+-- It uses F64, which Warrant does not implement yet (checker error W0202,
+-- UnboundType("F64")).  It also had a syntax error (a `labels default_config:`
+-- block whose body was a bare `none`; default_config() takes no inputs, so the
+-- block should simply be deleted).  It is parked as a .draft so the repo-wide
+-- test in warrant-grammar (tests/v0_compat.rs, which globs *.warrant only)
+-- skips it.  Parked until VER04p floats (backlog WX-FL1) land.  When they do,
+-- rename it back to game-breakout.warrant, delete that labels block, and make it parse and
+-- pass check_warrant.
+--
 -- GAME14 -- Game Breakout: Deterministic Arcade Breakout State Machine & PaintVM Renderer
 --
 -- Warrant document for game-breakout (VER04j and VER04m: state=explicit).

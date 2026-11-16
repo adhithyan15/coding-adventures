@@ -7,7 +7,9 @@ warrant sim_discrete_audio_timer v1
   error TimerAudioError = InvalidSampleRate | ZeroResistance | ZeroCapacitance | FrequencyTooHigh | InvalidParameter | BufferTooSmall | CreditOverflow | MixerIntegrationError
 
   model clamp_pcm16_model(v: Int) -> Int = if v > 32767 then 32767 else (if v < 0 - 32768 then 0 - 32768 else v)
-  model scale_gain_model(sample: Int, gain_q16: Nat) -> Int = (sample * gain_q16) / 65536
+  -- scale_gain widens to i64, shifts right 16 (floor) and saturates to the i32 range.
+  model clamp_i32_model(v: Int) -> Int = if v > 2147483647 then 2147483647 else (if v < 0 - 2147483648 then 0 - 2147483648 else v)
+  model scale_gain_model(sample: Int, gain_q16: Nat) -> Int = clamp_i32_model(unwrap_or(div(sample * gain_q16, 65536), 0))
   model valid_sample_rate(rate: Nat) -> Bool = rate >= 1 and rate <= 192000
 
   record TimerState(r1_ohms: U32, r2_ohms: U32, c_picofarads: U64, sample_rate_hz: U32, frequency_hz: U32, duty_q16: U16)

@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+- `percussion-kit` Warrant document fixed: `| guard.` claims put on one line, invalid `total_samples` bound replaced by the existing claim, ops with `rejects` now return Result. Document only.
+
 ## 0.2.0
 
 - Completed `MUS07` §6 and §11 starter kit: added all 5 remaining starter voices

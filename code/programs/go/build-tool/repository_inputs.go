@@ -200,6 +200,21 @@ var (
 	warrantGoRunnerPackage   = "code/packages/go/warrant-corpus"
 	warrantGoLaneCorpusPaths = warrantGoLaneInputs
 	warrantGoLanePilotPaths  = append(append([]string{}, warrantGoLaneInputs...), warrantGoRunnerPackage)
+	// warrantOraclePaths are the files the independent Warrant oracle
+	// (python/warrant-oracle, VER04r section 10) reads: every adopter
+	// specification it parses and the one v1 corpus it gates against. The
+	// oracle re-derives everything from the source, so a change to any of
+	// these files must re-run it (that is the gate of VER04r 10.4).
+	warrantOraclePaths = []string{
+		"code/specs/ct-compare.warrant",
+		"code/specs/gf256.warrant",
+		"code/specs/wasm-leb128.warrant",
+		"code/specs/logic-gates.warrant",
+		"code/specs/lzw.warrant",
+		"code/specs/arithmetic.warrant",
+		"code/specs/x25519.warrant",
+		"code/specs/fixtures/ct-compare-warrant-v1/corpus.json",
+	}
 	// warrantAssurancePaths are the shared Warrant lane artifacts the
 	// assurance report validates directly (see isWarrantAssuranceInput).
 	// The Kiln graph export reads them, so they must list every path the
@@ -646,6 +661,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		paths:    warrantPythonLaneCorpusPaths,
 	},
 	{
+		name:     "python/warrant-oracle",
+		language: "python",
+		inputs:   "the adopter Warrant specs and the v1 ct-compare corpus the oracle gates",
+		matches:  isWarrantOracleInput,
+		paths:    warrantOraclePaths,
+	},
+	{
 		name:     "python/ct-compare",
 		language: "python",
 		inputs:   "the Warrant spec, corpus, consumer registry and the shared Python runner",
@@ -692,6 +714,17 @@ func isWarrantAssuranceInput(changed string) bool {
 		"code/specs/fixtures/ct-compare-warrant-v1/consumers.schema.json",
 		"code/scripts/tfv.py":
 		return true
+	}
+	return false
+}
+
+// isWarrantOracleInput selects python/warrant-oracle when an adopter spec it
+// parses, or the v1 corpus it gates, changes. Exact paths only.
+func isWarrantOracleInput(changed string) bool {
+	for _, path := range warrantOraclePaths {
+		if changed == path {
+			return true
+		}
 	}
 	return false
 }

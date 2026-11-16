@@ -124,6 +124,6 @@ warrant dsp_filters v1
 
   bound iir:
     output <= len(signal)
-    steps <= 16 * len(signal) * max(len(b), len(a)) + 4096
+    steps <= 16 * len(signal) * imax(len(b), len(a)) + 4096
     heap <= 4 * len(signal) + 4096
     depth <= 32
