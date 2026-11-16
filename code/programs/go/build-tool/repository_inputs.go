@@ -129,6 +129,18 @@ var (
 		"code/specs/data/toolchain-pins.json",
 		".github/workflows/ci.yml",
 	}
+	// vosGrammarPaths are the grammar pairs vos-manifest and vos-link embed with
+	// include_str! (VOS-033); vosShapeGrammarPaths the Rust lexical pair
+	// vos-shape-check embeds. Neither is a Cargo edge, so without a row an edit
+	// to them runs no test (VOS-D058).
+	vosGrammarPaths = []string{
+		"code/grammars/vos_contract",
+		"code/grammars/vos_document",
+	}
+	vosShapeGrammarPaths = []string{
+		"code/grammars/rust/rust1.97.0-e2021.tokens",
+		"code/grammars/rust/rust1.97.0-e2024.tokens",
+	}
 	testBootstrapPaths = []string{
 		"code/specs/fixtures/test-bootstrap-v1",
 		"code/scripts/tfv.py",
@@ -252,6 +264,27 @@ var (
 )
 
 var repositoryInputConsumers = []repositoryInputConsumer{
+	{
+		name:     "rust/vos-manifest",
+		language: "rust",
+		inputs:   "the vos_contract and vos_document grammar pairs it embeds",
+		matches:  isVosGrammarInput,
+		paths:    vosGrammarPaths,
+	},
+	{
+		name:     "rust/programs/vos-link",
+		language: "rust",
+		inputs:   "the vos_contract and vos_document grammar pairs vos-manifest embeds",
+		matches:  isVosGrammarInput,
+		paths:    vosGrammarPaths,
+	},
+	{
+		name:     "rust/vos-shape-check",
+		language: "rust",
+		inputs:   "the Rust 2021 and 2024 lexical token grammars it embeds",
+		matches:  isVosShapeGrammarInput,
+		paths:    vosShapeGrammarPaths,
+	},
 	{
 		name: "perl/conduit", language: "perl",
 		inputs:  "the native Perl build helper and shared Rust XS bridge",
@@ -1006,6 +1039,23 @@ func isCtCompareInput(changed string) bool {
 		changed == "code/scripts/ct_compare_tfv.py" ||
 		changed == "code/scripts/ct_compare_conformance.py" ||
 		changed == "code/scripts/tfv.py"
+}
+
+// isVosGrammarInput reports whether a changed path is in a VOS grammar pair
+// that vos-manifest embeds (slash-delimited prefixes: no lookalike directory).
+//
+//	code/grammars/vos_contract/vos_contract.tokens → true
+//	code/grammars/vos_contract2/x                  → false
+func isVosGrammarInput(changed string) bool {
+	return strings.HasPrefix(changed, "code/grammars/vos_contract/") ||
+		strings.HasPrefix(changed, "code/grammars/vos_document/")
+}
+
+// isVosShapeGrammarInput reports whether a changed path is one of the two Rust
+// token grammars vos-shape-check embeds.
+func isVosShapeGrammarInput(changed string) bool {
+	return changed == "code/grammars/rust/rust1.97.0-e2021.tokens" ||
+		changed == "code/grammars/rust/rust1.97.0-e2024.tokens"
 }
 
 // isCtCompareCorpus selects the CT01 lanes whose tests read cases.json directly
