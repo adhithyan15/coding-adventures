@@ -13,10 +13,10 @@
       "sha256": "938f68423461969bfa88a6cf838e6d070143d98647809a9bb30e031315091eb2"
     },
     {
-      "cases": 77,
+      "cases": 120,
       "category": "containment",
       "path": "containment.json",
-      "sha256": "c2af375c4e6115dc5875a07a159c94631f1737cb34d2f902e2e146d40a659ab2"
+      "sha256": "5bc2cae0a10541cdf594a3b7b8492ff26e9e9266e5006e66a9701cb76f04c0fc"
     },
     {
       "cases": 13,
@@ -26,5 +26,5 @@
     }
   ],
   "schema": "warrant-corpus-conformance-v1",
-  "total_cases": 397
+  "total_cases": 440
 }
