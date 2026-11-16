@@ -230,7 +230,9 @@ def _child_env(base: dict[str, str], fault: str) -> dict[str, str]:
 
 
 def _module_args() -> list[str]:
-    return ["-m", "coding_adventures_warrant_corpus"]
+    # -P (3.11+): never put the current directory on sys.path, so a planted
+    # stdlib-named file there cannot shadow the standard library (VER04i 8.1).
+    return ["-P", "-m", "coding_adventures_warrant_corpus"]
 
 
 def _common_flags(args: argparse.Namespace) -> list[str]:

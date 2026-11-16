@@ -1281,7 +1281,13 @@ replace what the digest covers:
   directory (`mkdtemp`: under the temporary directory, owned by the user, mode
   0700, empty), re-runs itself with `PYTHONPYCACHEPREFIX` and
   `WARRANT_PYCACHE_PRIVATE` naming it, and removes it afterwards, all before
-  anything from the checkout is imported; sabotage children inherit it. (2) The
+  anything from the checkout is imported; sabotage children inherit it. The
+  entry first removes its own directory from `sys.path` (before any import that
+  is not built in or already loaded) and runs the child, and the runner's
+  sabotage children, with `python -P`, so no file beside the entry (a planted
+  `shutil.py`, `shutil.cpython-*.so`, `.abi3.so` or `.pyd`) or in the working
+  directory can be imported before isolation or instead of the standard
+  library. (2) The
   runner's `run`, `check` and `sabotage` refuse to start with the named error
   `pycache-isolation` unless `sys.pycache_prefix` is set to exactly that
   directory, a plain directory under the temporary directory, owned by the user
@@ -1315,7 +1321,9 @@ replace what the digest covers:
 * **Sourceless bytecode is refused in a Python package.** Any `*.pyc` or `*.pyo`
   under the package root outside a `__pycache__` directory (so `tests/` too) is
   `uncovered-source`; the package-root `.venv`, recreated by every build, is not
-  scanned.
+  scanned. The same scan covers the runner's own package
+  (`code/packages/python/warrant-corpus`, whole), because its `tests/` lies
+  outside the digested runner root.
 
 Directories the lane rule skips (Go `testdata` and names starting `.` or `_`)
 are not examined. These are the **residuals**, and they are printed with every
