@@ -367,6 +367,35 @@ fn is_link(meta: &fs::Metadata) -> bool {
     meta.file_type().is_symlink()
 }
 
+/// Turn the extended-length spelling the Windows API hands back for a path
+/// (`\\?\D:\a\repo`, `\\?\UNC\server\share\x`) into the plain one
+/// (`D:\a\repo`, `\\server\share\x`).  It is for paths the *operating
+/// system* produced (a canonicalised repository root), never for caller input:
+/// [`lexical_containment`] keeps refusing `\\?\` as a device path.  Only the
+/// two exact verbatim forms are converted (a verbatim path is not normalised
+/// by Windows, so any `.`, `..` or `/` inside would change meaning, and such
+/// text is left alone to be refused).  The POSIX flavour never changes.
+pub fn plain_root_text(flavor: PathFlavor, text: &str) -> String {
+    if flavor != PathFlavor::Win32 {
+        return text.to_owned();
+    }
+    let Some(rest) = text.strip_prefix("\\\\?\\") else {
+        return text.to_owned();
+    };
+    let clean = |s: &str| !s.contains('/') && !s.split('\\').any(|c| c == "." || c == "..");
+    if !clean(rest) {
+        return text.to_owned();
+    }
+    if let Some(unc) = rest.strip_prefix("UNC\\") {
+        return format!("\\\\{unc}");
+    }
+    let b = rest.as_bytes();
+    if b.len() >= 3 && b[0].is_ascii_alphabetic() && b[1] == b':' && b[2] == b'\\' {
+        return rest.to_owned();
+    }
+    text.to_owned()
+}
+
 /// What the last component of a contained path must be.
 #[derive(Clone, Copy, PartialEq, Eq)]
 enum Kind {
@@ -400,6 +429,12 @@ fn contained_path(
         code: "path",
         message: "repository root is not UTF-8".into(),
     })?;
+    // The root usually arrives from `Path::canonicalize`, which on Windows
+    // returns an extended-length `\\?\D:\...` path.  The conformance rule
+    // refuses every `\\?\` path as a device path, so the OS's own spelling of
+    // the *root* is turned into the plain form first.  `rel` is never touched.
+    let root_plain = plain_root_text(PathFlavor::host(), root_text);
+    let root_text = root_plain.as_str();
     let joined = format!("{}/{rel}", root_text.trim_end_matches(['/', '\\']));
     let verdict = lexical_containment(PathFlavor::host(), root_text, &joined);
     if !verdict.inside || verdict.same {

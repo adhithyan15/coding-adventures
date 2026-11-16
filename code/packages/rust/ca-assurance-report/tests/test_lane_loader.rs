@@ -13,7 +13,7 @@ use coding_adventures_ca_assurance_report::json::JsonValue;
 use coding_adventures_ca_assurance_report::lane_evidence::parse_consumer_registry;
 use coding_adventures_ca_assurance_report::lane_loader::{
     binding_source, canonical_json, labels_manifest_digest, lexical_containment, load_active_lanes,
-    load_lane, parse_domain_labels, read_repo_file, runner_root, source_tree_digest, LaneLoadError,
+    load_lane, parse_domain_labels, plain_root_text, read_repo_file, runner_root, source_tree_digest, LaneLoadError,
     PathFlavor, SourceKind, READINESS_CHECKS, UNCLAIMED,
 };
 
@@ -1731,4 +1731,63 @@ fn sourceless_bytecode_outside_a_pycache_is_refused_in_a_python_package() {
     );
     // The clean case.
     load_lane(&real_root(), "python/ct-compare").unwrap();
+}
+
+// ---------------------------------------------------------------------------
+// WD-004b2: the repository root arrives from `Path::canonicalize`, which on
+// Windows is an extended-length `\\?\D:\...` path.  The rule refuses that as a
+// device path, so the loader converts the OS-produced root first.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn a_canonicalised_windows_root_is_plain_before_the_containment_question() {
+    use PathFlavor::{Posix, Win32};
+    let verbatim = r"\\?\D:\a\coding-adventures\coding-adventures";
+    let rel = "code/specs/fixtures/ct-compare-warrant-v1/consumers.json";
+    let joined = |root: &str| format!("{}/{rel}", root.trim_end_matches(['/', '\\']));
+
+    // The bug: the verbatim root is a device path, so the real file looked outside.
+    assert_eq!(inside(Win32, verbatim, &joined(verbatim)), (false, false));
+
+    // The fix: the loader's helper yields the plain spelling, and the question passes.
+    let plain = plain_root_text(Win32, verbatim);
+    assert_eq!(plain, r"D:\a\coding-adventures\coding-adventures");
+    assert_eq!(inside(Win32, &plain, &joined(&plain)), (true, false));
+    // A trailing separator and a lower-case drive letter are fine too.
+    let with_slash = plain_root_text(Win32, r"\\?\d:\a\repo\");
+    assert_eq!(inside(Win32, &with_slash, &joined(&with_slash)), (true, false));
+
+    // UNC verbatim form.
+    let unc = plain_root_text(Win32, r"\\?\UNC\server\share\repo");
+    assert_eq!(unc, r"\\server\share\repo");
+    assert_eq!(inside(Win32, &unc, &joined(&unc)), (true, false));
+
+    // Anything else stays as it was and is still refused.
+    for odd in [
+        r"\\?\D:\a\..\b",
+        r"\\?\D:\a\.\b",
+        r"\\?\D:/a/b",
+        r"\\?\Volume{1234}\a",
+        r"\\.\D:\a",
+        r"\\?\D:",
+    ] {
+        let kept = plain_root_text(Win32, odd);
+        assert_eq!(kept, odd, "{odd}");
+        assert_eq!(inside(Win32, &kept, &joined(&kept)), (false, false), "{odd}");
+    }
+    // Already-plain text and the POSIX flavour are untouched.
+    assert_eq!(plain_root_text(Win32, r"D:\a\repo"), r"D:\a\repo");
+    assert_eq!(plain_root_text(Posix, verbatim), verbatim);
+
+    // Stripping the prefix does not loosen anything: device names and `..`
+    // beneath a converted root are still refused.
+    assert_eq!(inside(Win32, &plain, &format!("{plain}/code/CON.txt")), (false, false));
+    assert_eq!(inside(Win32, &plain, &format!("{plain}/../x")), (false, false));
+}
+
+#[test]
+fn a_verbatim_unc_root_with_no_share_is_still_refused() {
+    let plain = plain_root_text(PathFlavor::Win32, r"\\?\UNC\server");
+    assert_eq!(plain, r"\\server");
+    assert_eq!(inside(PathFlavor::Win32, &plain, r"\\server/x"), (false, false));
 }
