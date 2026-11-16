@@ -1425,15 +1425,13 @@ whose default skips the device rule tests something production never calls. Syml
 scope for the cases: resolving them (`realpath`) is the caller's job and must happen
 *before* this check; a lane that skips it must say so.
 
-**Pending implementation: two cross-lane path rules (2026-11-16, backlog
-`WD-100b`).** A review of the conformance kit found two places where the lanes
-disagree with the Rust loader (PR #19492) or with each other. Both rules below are
-**normative now** and **not yet implemented**: they are pinned in
-`warrant-corpus-conformance-v1` as new cases (added only, never changing an
-existing expectation; if one existing case turns out to say otherwise, that
-expectation moves to `-v2`) and applied to the Python, TypeScript and Go lanes and
-to the Rust loader. Until a lane passes them it must say so in its manifest, and it
-does not count as passing the kit.
+**Two cross-lane path rules (implemented 2026-11-16, backlog `WD-100b`).** A review
+of the conformance kit found two places where the lanes disagreed with the Rust
+loader (PR #19492) or with each other. Both rules below are pinned in
+`warrant-corpus-conformance-v1` as 43 added containment cases (77 to 120; the
+fixture is 440 cases; no existing expectation changed) and are applied by the Python,
+TypeScript and Go lanes and by the Rust loader's `lexical_containment`; the checker's
+reference and its string-level second opinion derive them independently.
 
 1. **Windows reserved device names are refused.** A path component is *reserved*
    if, after removing any trailing dots and spaces, and then removing everything
@@ -1445,8 +1443,15 @@ does not count as passing the kit.
    reserved or trailing-dot-or-space component is **refused** by the lane's
    artifact-path acceptance on **every host flavour** (an artifact written on Linux
    must load on Windows) and, under `win32`, a containment query with such a
-   component in `child` answers `inside: false`. The Rust loader already refuses
-   these; the lanes do not.
+   component in `child` answers `inside: false`. As implemented: the check
+   runs on the **child's** components after `.` and `..` are normalised (so
+   `D:\repo\CON\..\x` is `D:\repo\x`), never on the anchor (drive or share)
+   and never on `root`; `posix` containment has no such rule (`/repo/NUL` is
+   inside `/repo`), because the refusal for a path that will be *written* is the
+   artifact-path acceptance's job. The three lanes expose the containment helper
+   only, so the every-host artifact-path acceptance is applied today by the Rust
+   registry-path validator (`validate_repo_path`); a lane that adds an artifact
+   loader must refuse the same names on every host.
 2. **`win32` case-insensitive comparison folds ASCII only.** Under `win32` two
    components are equal if they are equal after mapping `A` to `Z` onto `a` to `z`
    and **nothing else**: every non-ASCII code point is compared exactly, so
@@ -1455,7 +1460,10 @@ does not count as passing the kit.
    root only by a non-ASCII case variant is **not inside** it. Go (`strings.EqualFold`
    with its Unicode simple folding) and Python (`casefold`/`lower`) differ today
    on exactly those characters, so the rule is a defined behaviour in place of two
-   different accidents.
+   different accidents. The comparison also covers the drive letter and the UNC
+   server and share. Node's `path.win32.relative` and the Rust `to_lowercase`
+   fold Unicode too, so all four implementations replaced their library
+   comparison with an explicit ASCII fold.
 
 **Label digest.** The `domain-labels.json` digest is the SHA-256 of the canonical
 rendering of the manifest with `toolchain.version` replaced by the empty string.

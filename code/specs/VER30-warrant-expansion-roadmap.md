@@ -839,7 +839,7 @@ Owner decisions, later on 2026-11-16.
     `80`/`81`. Diagnostic codes had no collision (VER04n's `W0750` to `W0759` is
     disjoint from every other block). Future specifications check the registry
     and add their row in the same PR.
-20. **Conformance-kit follow-up** (backlog WD-100b, no code in this change). Two
+20. **Conformance-kit follow-up** (backlog WD-100b, implemented on branch `claude/warrant-conformance-reserved-names`). Two
     cross-lane gaps found in review are pinned in
     `warrant-corpus-conformance-v1` and applied to Python, TypeScript, Go and the
     Rust loader: Windows reserved device names (`CON`, `NUL`, `COM1` to `COM9`,
@@ -847,8 +847,8 @@ Owner decisions, later on 2026-11-16.
     and spaces) are refused, as the Rust loader in PR #19492 already does and the
     lanes do not; and `win32` case-insensitive comparison folds ASCII only, with
     non-ASCII compared exactly (fail closed), where Go and Python currently differ
-    on `ſ`, `Σ` and `İ`. The rules are written into VER04i section 9.1 now, marked
-    pending implementation.
+    on `ſ`, `Σ` and `İ`. The rules are written into VER04i section 9.1 and are implemented in
+    all four places.
 
 Owner decisions, 2026-11-16, on VER04o's open questions.
 
