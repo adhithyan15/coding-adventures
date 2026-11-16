@@ -130,9 +130,12 @@ impl Stage {
                 let hit = if let Some(inv) = affine.invert() {
                     let local_pt = inv.apply_to_point(Point::new(x, y));
                     let bounds = if let Some(h) = b.button_hit_record() {
-                        h.obj_bounds_pixels()
+                        h.obj_bounds_pixels_bounded(0)
+                            .unwrap_or((0.0, 0.0, 0.0, 0.0))
                     } else if let Some(active) = b.button_active_record() {
-                        active.obj_bounds_pixels()
+                        active
+                            .obj_bounds_pixels_bounded(0)
+                            .unwrap_or((0.0, 0.0, 0.0, 0.0))
                     } else {
                         (0.0, 0.0, 0.0, 0.0)
                     };
@@ -171,9 +174,12 @@ impl Stage {
                 let hit = if let Some(inv) = affine.invert() {
                     let local_pt = inv.apply_to_point(Point::new(self.mouse_x, self.mouse_y));
                     let bounds = if let Some(h) = b.button_hit_record() {
-                        h.obj_bounds_pixels()
+                        h.obj_bounds_pixels_bounded(0)
+                            .unwrap_or((0.0, 0.0, 0.0, 0.0))
                     } else if let Some(active) = b.button_active_record() {
-                        active.obj_bounds_pixels()
+                        active
+                            .obj_bounds_pixels_bounded(0)
+                            .unwrap_or((0.0, 0.0, 0.0, 0.0))
                     } else {
                         (0.0, 0.0, 0.0, 0.0)
                     };
@@ -212,9 +218,12 @@ impl Stage {
                 let hit = if let Some(inv) = affine.invert() {
                     let local_pt = inv.apply_to_point(Point::new(self.mouse_x, self.mouse_y));
                     let bounds = if let Some(h) = b.button_hit_record() {
-                        h.obj_bounds_pixels()
+                        h.obj_bounds_pixels_bounded(0)
+                            .unwrap_or((0.0, 0.0, 0.0, 0.0))
                     } else if let Some(active) = b.button_active_record() {
-                        active.obj_bounds_pixels()
+                        active
+                            .obj_bounds_pixels_bounded(0)
+                            .unwrap_or((0.0, 0.0, 0.0, 0.0))
                     } else {
                         (0.0, 0.0, 0.0, 0.0)
                     };

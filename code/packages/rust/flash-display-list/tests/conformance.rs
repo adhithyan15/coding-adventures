@@ -498,3 +498,71 @@ fn test_stage_event_dispatch_and_retained_diffing() {
     assert_eq!(summary.modified, 0);
     assert_eq!(summary.unchanged, 0); // frame1 button has no active display object, so 0 insts in frame 1
 }
+
+#[test]
+fn test_deep_hierarchy_bounds_evaluation_cwe674() {
+    // Construct a deeply nested MovieClip chain of 70 levels (> MAX_HIERARCHY_DEPTH = 64)
+    let shape = make_test_shape(1, ColorRgba::rgba(255, 0, 0, 255));
+    let mut current = DisplayObject::Shape(shape);
+
+    for _ in 0..70 {
+        let mut parent = MovieClip::new(1);
+        parent
+            .clip_insert_slot(DisplaySlot::new(1, current))
+            .unwrap();
+        current = DisplayObject::Clip(parent);
+    }
+
+    // Direct bounded evaluation should fail with HierarchyDepthExceeded
+    let res = current.obj_bounds_pixels_bounded(0);
+    assert_eq!(res, Err(DisplayListError::HierarchyDepthExceeded));
+
+    // Fallback unwrap helper returns safe zero bounds
+    let bounds = current.obj_bounds_pixels();
+    assert_eq!(bounds, (0.0, 0.0, 0.0, 0.0));
+}
+
+#[test]
+fn test_morph_shape_extremal_coordinates_cwe190() {
+    // Test morph with extremal coordinates (i32::MIN, i32::MAX) and asymmetric control points
+    let s0 = ParsedShape {
+        tag_code: 46,
+        shape_id: 1,
+        bounds: SwfRect::create_rect(i32::MIN / 2, i32::MAX / 2, i32::MIN / 2, i32::MAX / 2),
+        edge_bounds: None,
+        uses_non_zero_winding: false,
+        fill_styles: vec![SwfFillStyle::Solid(ColorRgba::rgba(0, 0, 0, 255))],
+        line_styles: vec![],
+        edges: vec![ShapeEdge {
+            start: (i32::MIN, i32::MAX),
+            end: (i32::MAX, i32::MIN),
+            control: Some((0, 0)),
+            fill_style0: 1,
+            fill_style1: 0,
+            line_style: 0,
+        }],
+    };
+
+    let s1 = ParsedShape {
+        tag_code: 46,
+        shape_id: 1,
+        bounds: SwfRect::create_rect(i32::MIN / 2, i32::MAX / 2, i32::MIN / 2, i32::MAX / 2),
+        edge_bounds: None,
+        uses_non_zero_winding: false,
+        fill_styles: vec![SwfFillStyle::Solid(ColorRgba::rgba(255, 255, 255, 255))],
+        line_styles: vec![],
+        edges: vec![ShapeEdge {
+            start: (i32::MAX, i32::MIN),
+            end: (i32::MIN, i32::MAX),
+            control: None, // This tests i32::midpoint(i32::MAX, i32::MIN)
+            fill_style0: 1,
+            fill_style1: 0,
+            line_style: 0,
+        }],
+    };
+
+    let morph = MorphShape::new(s0, s1);
+    let interp = morph.morph_evaluate_at_ratio(32768).unwrap();
+    assert_eq!(interp.edges.len(), 1);
+    assert!(interp.edges[0].control.is_some());
+}

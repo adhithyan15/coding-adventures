@@ -25,8 +25,13 @@ pub fn swf_matrix_to_affine(m: &SwfMatrix) -> Affine2D {
 }
 
 /// Extracts path commands and bounds from a mask display object.
-fn extract_mask_geometry(obj: &DisplayObject) -> (f64, f64, f64, f64, Option<Vec<PathCommand>>) {
-    let bounds = obj.obj_bounds_pixels();
+fn extract_mask_geometry(
+    obj: &DisplayObject,
+    hierarchy_depth: usize,
+) -> (f64, f64, f64, f64, Option<Vec<PathCommand>>) {
+    let bounds = obj
+        .obj_bounds_pixels_bounded(hierarchy_depth)
+        .unwrap_or((0.0, 0.0, 0.0, 0.0));
     let width = (bounds.2 - bounds.0).max(1.0);
     let height = (bounds.3 - bounds.1).max(1.0);
 
@@ -226,7 +231,8 @@ pub fn lower_clip_to_instructions(
         if let Some(mask_clip_depth) = slot.clip_depth {
             if mask_clip_depth > slot.depth {
                 // This slot acts as a stencil mask for subsequent sibling slots
-                let (mx, my, mw, mh, mask_path) = extract_mask_geometry(&slot.object);
+                let (mx, my, mw, mh, mask_path) =
+                    extract_mask_geometry(&slot.object, hierarchy_depth + 1);
 
                 // Find and lower all slots masked by this clipping mask (depths slot.depth + 1 ..= mask_clip_depth)
                 let mut masked_children = Vec::new();

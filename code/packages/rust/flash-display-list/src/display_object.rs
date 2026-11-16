@@ -4,8 +4,9 @@ use swf_container::{SwfColorTransform, SwfMatrix};
 use swf_shape_to_paint::ParsedShape;
 
 use crate::button::SimpleButton;
+use crate::error::DisplayListError;
 use crate::morph::MorphShape;
-use crate::movie_clip::MovieClip;
+use crate::movie_clip::{MovieClip, MAX_HIERARCHY_DEPTH};
 use crate::text::TextField;
 
 /// A node in the Flash display object hierarchy.
@@ -114,47 +115,55 @@ impl DisplayObject {
         }
     }
 
-    /// Computes the unscaled local bounding box `(min_x, min_y, max_x, max_y)` in pixels.
-    pub fn obj_bounds_pixels(&self) -> (f64, f64, f64, f64) {
+    /// Computes the unscaled local bounding box `(min_x, min_y, max_x, max_y)` in pixels,
+    /// enforcing `MAX_HIERARCHY_DEPTH = 64` bounds across button and clip hierarchies.
+    pub fn obj_bounds_pixels_bounded(
+        &self,
+        hierarchy_depth: usize,
+    ) -> Result<(f64, f64, f64, f64), DisplayListError> {
+        if hierarchy_depth >= MAX_HIERARCHY_DEPTH {
+            return Err(DisplayListError::HierarchyDepthExceeded);
+        }
+
         match self {
-            Self::Shape(s) => (
+            Self::Shape(s) => Ok((
                 s.bounds.xmin as f64 / 20.0,
                 s.bounds.ymin as f64 / 20.0,
                 s.bounds.xmax as f64 / 20.0,
                 s.bounds.ymax as f64 / 20.0,
-            ),
-            Self::Morph(m) => (
+            )),
+            Self::Morph(m) => Ok((
                 m.start_shape.bounds.xmin as f64 / 20.0,
                 m.start_shape.bounds.ymin as f64 / 20.0,
                 m.start_shape.bounds.xmax as f64 / 20.0,
                 m.start_shape.bounds.ymax as f64 / 20.0,
-            ),
-            Self::Text(t) => (
+            )),
+            Self::Text(t) => Ok((
                 t.bounds.0,
                 t.bounds.1,
                 t.bounds.0 + t.bounds.2,
                 t.bounds.1 + t.bounds.3,
-            ),
+            )),
             Self::Button(b) => {
                 if let Some(active) = b.button_active_record() {
-                    active.obj_bounds_pixels()
+                    active.obj_bounds_pixels_bounded(hierarchy_depth + 1)
                 } else if let Some(hit) = b.button_hit_record() {
-                    hit.obj_bounds_pixels()
+                    hit.obj_bounds_pixels_bounded(hierarchy_depth + 1)
                 } else {
-                    (0.0, 0.0, 0.0, 0.0)
+                    Ok((0.0, 0.0, 0.0, 0.0))
                 }
             }
             Self::Clip(c) => {
                 let slots = c.clip_slots_depth_order();
                 if slots.is_empty() {
-                    return (0.0, 0.0, 0.0, 0.0);
+                    return Ok((0.0, 0.0, 0.0, 0.0));
                 }
                 let mut min_x = f64::INFINITY;
                 let mut min_y = f64::INFINITY;
                 let mut max_x = f64::NEG_INFINITY;
                 let mut max_y = f64::NEG_INFINITY;
                 for slot in slots {
-                    let b = slot.object.obj_bounds_pixels();
+                    let b = slot.object.obj_bounds_pixels_bounded(hierarchy_depth + 1)?;
                     let tx = slot.transform.matrix_translate_pixels();
                     let (sx, sy) = slot.transform.matrix_scale();
                     let (x0, y0) = (b.0 * sx + tx.0, b.1 * sy + tx.1);
@@ -165,12 +174,19 @@ impl DisplayObject {
                     max_y = max_y.max(y0.max(y1));
                 }
                 if min_x.is_infinite() {
-                    (0.0, 0.0, 0.0, 0.0)
+                    Ok((0.0, 0.0, 0.0, 0.0))
                 } else {
-                    (min_x, min_y, max_x, max_y)
+                    Ok((min_x, min_y, max_x, max_y))
                 }
             }
         }
+    }
+
+    /// Computes the unscaled local bounding box `(min_x, min_y, max_x, max_y)` in pixels.
+    #[inline]
+    pub fn obj_bounds_pixels(&self) -> (f64, f64, f64, f64) {
+        self.obj_bounds_pixels_bounded(0)
+            .unwrap_or((0.0, 0.0, 0.0, 0.0))
     }
 }
 

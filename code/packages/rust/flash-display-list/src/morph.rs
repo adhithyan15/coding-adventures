@@ -8,7 +8,7 @@ use crate::error::DisplayListError;
 /// Linear interpolation for signed 32-bit twips.
 fn lerp_i32(a: i32, b: i32, t: f64) -> i32 {
     let diff = (b as f64) - (a as f64);
-    (a as f64 + diff * t).round() as i32
+    ((a as f64 + diff * t).round()).clamp(i32::MIN as f64, i32::MAX as f64) as i32
 }
 
 /// Linear interpolation for unsigned 8-bit channel.
@@ -161,11 +161,17 @@ impl MorphShape {
                         Some((lerp_i32(c0.0, c1.0, t), lerp_i32(c0.1, c1.1, t)))
                     }
                     (Some(c0), None) => {
-                        let c1 = ((e1.start.0 + e1.end.0) / 2, (e1.start.1 + e1.end.1) / 2);
+                        let c1 = (
+                            i32::midpoint(e1.start.0, e1.end.0),
+                            i32::midpoint(e1.start.1, e1.end.1),
+                        );
                         Some((lerp_i32(c0.0, c1.0, t), lerp_i32(c0.1, c1.1, t)))
                     }
                     (None, Some(c1)) => {
-                        let c0 = ((e0.start.0 + e0.end.0) / 2, (e0.start.1 + e0.end.1) / 2);
+                        let c0 = (
+                            i32::midpoint(e0.start.0, e0.end.0),
+                            i32::midpoint(e0.start.1, e0.end.1),
+                        );
                         Some((lerp_i32(c0.0, c1.0, t), lerp_i32(c0.1, c1.1, t)))
                     }
                     (None, None) => None,
