@@ -44,3 +44,7 @@ code/programs/typescript/language-ladder/CHANGELOG.d/*.md whitespace=-blank-at-e
 
 # Content-addressed evidence must survive checkout without byte normalization.
 code/specs/data/adj-stdlib-provenance/cas/objects/** binary
+
+# PHY00a TRIG-REF-1 conformance vectors: bit patterns whose bytes are hashed in the
+# manifest; no checkout may rewrite a line ending or normalise a file.
+code/specs/fixtures/trig-reference-v1/** -text whitespace=-trailing-space,-blank-at-eof

@@ -18,6 +18,14 @@
 ### Tests
 
 - Cover the shared PHY00 `atan` signed-zero and tiny/subnormal boundaries.
+
+### Build
+
+- `BUILD` and `BUILD_windows` now run the TRIG-REF-1 fixture generator's
+  `--check` (byte-for-byte regeneration plus the sensitivity gates) and its validator
+  tests (PHY00a 6.4 step 5). The package's own behaviour is unchanged: it does not
+  read the fixture until slice TC-2 converges it. It is the package the build tool
+  selects when the fixture, its generator, oracle or validator changes.
 - Cover the shared PHY00 square-root boundaries from
   [`trig.json`](../../../specs/fixtures/phy00-phy01-v1/cases/trig.json) with
   relative-error assertions for finite nonzero results.
