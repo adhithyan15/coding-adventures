@@ -22,11 +22,14 @@ vos-sched-contract = { path = "../vos-sched-contract" }
 coding_adventures_sha256 = { path = "../sha256" }
 coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
 
-# The evidence target (VOS02 section 4.5) is parked until the generator can read the document
-# (VOS-D064): warrant/warrant_evidence.rs.pending is its shim.  When it returns it is
-#   [[test]] name = "warrant_evidence", path = "tests/warrant_evidence.rs", harness = false,
-#   required-features = ["ghost"]
-# so a plain `cargo test` skips it.
+# Generated from code/specs/vos-sched-fp-bitmap.warrant (VER04h): examples, exhaustive suites,
+# property suites, fuzz suites and sabotage controls.  It needs the ghost face, so a plain
+# `cargo test` skips it (VOS02 section 4.5).
+[[test]]
+name = "warrant_evidence"
+path = "tests/warrant_evidence.rs"
+harness = false
+required-features = ["ghost"]
 
 [[test]]
 name = "behaviour"

@@ -11,10 +11,19 @@ cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .
 # standalone cargo root (code/programs/rust/vos-link), so it is run by manifest path, the way
 # its own BUILD runs vos-shape-check from the workspace.
 cargo run -q --manifest-path ../../../programs/rust/vos-link/Cargo.toml -- check-doc .
-# NOT YET HERE (VOS-D063): the VER04h evidence harness.  The generator refuses the document
-# (W0701 `claim closure_at_m calls no operation`: the nine lemmas of the contract block need
-# the `lemma` entry kind, VER-BACKLOG WX-SV item 3), so there is no
-# tests/generated/warrant_evidence.rs to check for drift or to run.  Once it exists, add
-#   cargo run -q -p coding_adventures_warrant_grammar --example gen_evidence -- --check vos-sched-fp-bitmap
-#   cargo test -q -p vos-sched-fp-bitmap --features ghost --test warrant_evidence
-# and the sabotage lines (WARRANT_EVIDENCE_FAULT=... WARRANT_EVIDENCE_FILTER=...).
+# VER04h: the evidence harness is generated from code/specs/vos-sched-fp-bitmap.warrant and
+# evidence.bindings.  Fail if the checked-in file drifted.
+cargo run -q -p coding_adventures_warrant_grammar --example gen_evidence -- --check vos-sched-fp-bitmap
+# Run it and rewrite the evidence manifest.  Three controls are known to fail (VOS-D065);
+# warrant/check_evidence.sh names them and demands exactly those.
+sh warrant/check_evidence.sh
+# Sabotage: each fault makes the model-pinned suite of its operation report `not ok`.
+WARRANT_EVIDENCE_FAULT=wrong-ctor WARRANT_EVIDENCE_FILTER=/exhaustive/insert_safe cargo test -q -p vos-sched-fp-bitmap --features ghost --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/exhaustive/canon_insert_img cargo test -q -p vos-sched-fp-bitmap --features ghost --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=wrong-ctor WARRANT_EVIDENCE_FILTER=/exhaustive/remove_safe cargo test -q -p vos-sched-fp-bitmap --features ghost --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/exhaustive/canon_remove_img cargo test -q -p vos-sched-fp-bitmap --features ghost --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=wrong-ctor WARRANT_EVIDENCE_FILTER=/exhaustive/dispatch_policy cargo test -q -p vos-sched-fp-bitmap --features ghost --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/exhaustive/canon_dispatch_img cargo test -q -p vos-sched-fp-bitmap --features ghost --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/exhaustive/safety_alpha_build cargo test -q -p vos-sched-fp-bitmap --features ghost --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/example/n_is_eight cargo test -q -p vos-sched-fp-bitmap --features ghost --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/example/insert_three_sets_bit_three cargo test -q -p vos-sched-fp-bitmap --features ghost --test warrant_evidence 2>/dev/null | grep -q '^not ok '

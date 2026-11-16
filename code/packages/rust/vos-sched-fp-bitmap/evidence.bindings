@@ -1,8 +1,3 @@
-# Parked, not active (VOS-D064).  Renamed from `evidence.bindings` because the generator
-# (gen_evidence, and warrant-grammar's v0_compat test) treats every package with that file name
-# as having a checked-in harness, and none can be generated until the contract block's lemmas
-# are supported or moved.  Rename it back and run gen_evidence when VOS-D064 is resolved.
-#
 # Warrant binding manifest (VER04 section 6, VER04j section 4.6) for
 # code/specs/vos-sched-fp-bitmap.warrant, which `vos-link gen-doc` generates (VOS02 10.1):
 # never edit that document by hand.
@@ -14,8 +9,9 @@
 #
 # faults=: the deliberate faults the negative controls attack each operation with.  The
 # tuple-returning operations are bound as a projection pair (`_out`, `_img`) so a fault applies
-# to each (VOS02 4.4, VOS-D021).  `init` is bound with `field-zero`, which is inert on a zero
-# initial state (VOS02 13.4 F4): no control for `init` can pass.
+# to each (VOS02 4.4, VOS-D021).  `init` is bound with `field-zero`, the only fault the generator
+# has for a record result, which is inert on a zero initial state (VOS02 13.4 F4, VOS-D065): the
+# three `negctl/*/init/field-zero` controls can never pass, and BUILD names them as known.
 package vos_sched_fp_bitmap
 revision 0.1.0
 spec code/specs/vos-sched-fp-bitmap.warrant

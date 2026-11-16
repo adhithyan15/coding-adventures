@@ -21,8 +21,9 @@ All notable changes to this package are documented here.
 - `tests/behaviour.rs`: every state and every id against a plain reference model, with and
   without the ghost face; 100% line coverage.
 
-### Not yet
-
-- The VER04h evidence harness (`tests/generated/warrant_evidence.rs`) and its BUILD
-  regeneration check: blocked by the contract block's model-level lemmas (VOS-D064); the
-  bindings are parked as `warrant/evidence.bindings.pending`.
+- The VER04h evidence: `evidence.bindings` (every operation bound to a `vos_ghost_` wrapper),
+  `tests/generated/warrant_evidence.rs` and its shim, `evidence/test-manifest.json`, the
+  regeneration check and sabotage lines in BUILD. 12 exhaustive claims, 394,498 cases, all
+  at or below 65,536; the `init` / `field-zero` controls are known-inert (VOS-D065) and named
+  in `warrant/check_evidence.sh`.
+- `heap <= 0` rows only on `insert_out` and `remove_out` (VOS-D063).
