@@ -371,6 +371,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		paths:    trigReferenceCorpusPaths,
 	},
 	{
+		name:     "c/trig",
+		language: "c",
+		inputs:   "the shared TRIG-REF-1 bit-exact conformance corpus",
+		matches:  isTrigReferenceCorpus,
+		paths:    trigReferenceCorpusPaths,
+	},
+	{
 		name:     "rust/rng",
 		language: "rust",
 		inputs:   "the shared rng conformance corpus",
