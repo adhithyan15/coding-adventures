@@ -437,6 +437,38 @@
       "rationale": "computed exemption (unapproved): no step-bound proof is live, so the Warrant steps bounds are declarations that no tool checks (parse refused at src/adders.rs:71:37: Expected RParen, found Ident(\"u8\") (line: `pub fn half_adder(a: u8, b: u8) -> (u8, u8) {`); parse refused at src/alu.rs:35:5: Expected item, found Ident(\"enum\") (line: `pub enum AluOp {`); per export, alu: alone: parse refused (Expected variable name, found LParen); full_adder: alone: parse refused (Expected RParen, found Ident(\"u8\")); half_adder: alone: parse refused (Expected RParen, found Ident(\"u8\")); ripple_carry_adder: alone: parse refused (Expected variable name, found LParen); ripple_carry_adder_with_carry: alone: parse refused (Expected variable name, found LParen))"
     }
   ],
+  "lanes": [
+    {
+      "cases_by_label": {},
+      "checks": [],
+      "lane": "go",
+      "package": "go/arithmetic",
+      "release_ready": false,
+      "rung": "absent",
+      "sandbox": "absent",
+      "unclaimed": []
+    },
+    {
+      "cases_by_label": {},
+      "checks": [],
+      "lane": "python",
+      "package": "python/arithmetic",
+      "release_ready": false,
+      "rung": "absent",
+      "sandbox": "absent",
+      "unclaimed": []
+    },
+    {
+      "cases_by_label": {},
+      "checks": [],
+      "lane": "typescript",
+      "package": "typescript/arithmetic",
+      "release_ready": false,
+      "rung": "absent",
+      "sandbox": "absent",
+      "unclaimed": []
+    }
+  ],
   "package": "rust/arithmetic",
   "profile": "bit-arithmetic",
   "profile_sha256": "2a313a37cc6a8f236f32fe0ea55a2a1fa9db016352b0c449ebeb8bce5cd939f3",

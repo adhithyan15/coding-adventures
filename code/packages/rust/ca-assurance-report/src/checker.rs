@@ -32,6 +32,8 @@ pub enum CheckError {
     CapabilitiesViolation(String),
     UncoveredSymbols(Vec<String>),
     CorruptReport(String),
+    /// A report's `lanes` do not have the shape VER04i 8.3 allows.
+    InvalidLaneRung(String),
 }
 
 impl fmt::Display for CheckError {
@@ -51,6 +53,7 @@ impl fmt::Display for CheckError {
                 write!(f, "Public exported symbols without claims: {:?}", syms)
             }
             CheckError::CorruptReport(e) => write!(f, "Corrupt report: {e}"),
+            CheckError::InvalidLaneRung(e) => write!(f, "Invalid lane rung: {e}"),
         }
     }
 }
@@ -309,6 +312,11 @@ pub fn verify_assurance_report(
             non_live_rungs
         )));
     }
+
+    // 9b. Lane rungs (VER04i 8.3).  They are about other languages' evidence and
+    // never change the verdict; they only have to be shaped honestly.
+    crate::lane_report::check_lane_shape(&report.package, &report.lanes)
+        .map_err(CheckError::InvalidLaneRung)?;
 
     // 10. Unapproved exemptions check
     let unapproved_exemptions: Vec<&str> = report

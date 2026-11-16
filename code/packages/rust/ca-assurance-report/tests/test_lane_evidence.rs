@@ -158,6 +158,8 @@ impl Artifacts {
             ),
             ("evidence_seed", string_value("0")),
             ("faulted", JsonValue::Bool(false)),
+            // The Python lane records its private bytecode cache (VER04i 8.1).
+            ("pycache_isolated", JsonValue::Bool(true)),
             ("tests", JsonValue::Array(tests)),
         ]))
     }

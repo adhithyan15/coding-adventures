@@ -14,6 +14,7 @@ use coding_adventures_ca_assurance_report::{
     check_assumptions, generate_package_report, verify_assurance_report, verify_evidence, verify_profile,
     verify_rederivation, AssuranceReport, CheckVerdict, ProfileKind, Evidence, WeaknessRegistry,
 };
+use coding_adventures_ca_assurance_report::lane_report::{lane_status, render_not_live, LaneStatus};
 
 /// `rust/<directory name>` and the `version = "..."` of the package's
 /// `Cargo.toml`: the report names the package it was generated for, it does not
@@ -57,6 +58,12 @@ fn print_usage() {
     eprintln!();
     eprintln!("The VER13 assumption catalogue (code/assumptions/) is found above the package directory;");
     eprintln!("--check fails closed when the report's catalogue pin differs from it (AC-14).");
+    eprintln!("  --check-lane <PKG>     Load one non-Rust lane (<lane>/<name>, e.g. python/ct-compare) with the lane loader");
+    eprintln!("                         and print its readiness (VER04i section 8.3). An active lane that fails to load");
+    eprintln!("                         exits 1. A lane the registry lacks (ABSENT) or only plans (PLANNED) is reported and");
+    eprintln!("                         exits 0, unless --require-active is given");
+    eprintln!("  --require-active       With --check-lane: exit 1 unless the lane is active and every readiness check passed");
+    eprintln!("  --repo-root <DIR>      With --check-lane: the repository root (default: .)");
     eprintln!("  --registry <FILE>      Path to weakness-registry-v1.json");
     eprintln!("  --commit <SHA>         Commit SHA to record in generated report");
     eprintln!("  --help                 Display this help message");
@@ -102,6 +109,9 @@ fn main() {
     let mut strict = false;
     let mut registry_file: Option<PathBuf> = None;
     let mut commit_sha = "HEAD".to_string();
+    let mut check_lane: Option<String> = None;
+    let mut require_active = false;
+    let mut repo_root: Option<PathBuf> = None;
     // Set only by an explicit `--profile`: the profile file's name must equal it.
     let mut profile_requested: Option<String> = None;
     let mut profile_kind_requested: Option<ProfileKind> = None;
@@ -130,6 +140,25 @@ fn main() {
             }
             "--allow-unverified" => {
                 allow_unverified = true;
+            }
+            "--check-lane" => {
+                i += 1;
+                if i >= args.len() {
+                    eprintln!("Error: --check-lane requires an argument");
+                    exit(2);
+                }
+                check_lane = Some(args[i].clone());
+            }
+            "--require-active" => {
+                require_active = true;
+            }
+            "--repo-root" => {
+                i += 1;
+                if i >= args.len() {
+                    eprintln!("Error: --repo-root requires an argument");
+                    exit(2);
+                }
+                repo_root = Some(PathBuf::from(&args[i]));
             }
             "--strict" => {
                 strict = true;
@@ -183,6 +212,43 @@ fn main() {
             }
         }
         i += 1;
+    }
+
+    // Lane check (VER04i 8.3): a different mode from --check and --generate, which are
+    // about one Rust package's report; refuse a mix rather than guess which was meant.
+    if check_lane.is_none() && (require_active || repo_root.is_some()) {
+        eprintln!("Error: --require-active and --repo-root are only meaningful with --check-lane");
+        exit(2);
+    }
+    if let Some(package) = check_lane {
+        if check_file.is_some() || generate {
+            eprintln!("Error: --check-lane cannot be combined with --check or --generate");
+            exit(2);
+        }
+        let root = repo_root.unwrap_or_else(|| PathBuf::from("."));
+        // Say which tree was checked: a wrong --repo-root must be visible.
+        let shown_root = std::path::absolute(&root).unwrap_or_else(|_| root.clone()).display().to_string();
+        match lane_status(&root, &package) {
+            Ok(LaneStatus::Live(loaded)) => {
+                println!("repo root: {shown_root}");
+                println!("rung: LIVE");
+                print!("{}", loaded.render_readiness());
+                exit(0);
+            }
+            Ok(status) => {
+                println!("repo root: {shown_root}");
+                print!("{}", render_not_live(&package, &status));
+                if require_active {
+                    eprintln!("LANE CHECK FAILED: {package} is not an active lane (--require-active)");
+                    exit(1);
+                }
+                exit(0);
+            }
+            Err(e) => {
+                eprintln!("LANE CHECK FAILED: {e}");
+                exit(1);
+            }
+        }
     }
 
     let registry = if let Some(path) = registry_file {

@@ -303,3 +303,47 @@ func TestRealLaneManifestsFromOtherLanesAreValidated(t *testing.T) {
 		}
 	}
 }
+
+func TestPycacheIsolatedIsRequiredForPythonAndRefusedElsewhere(t *testing.T) {
+	// VER04i 8.1: `pycache_isolated` is the one lane-specific key. Required, and
+	// exactly true, for the Python lane; forbidden for every other lane.
+	corpus := realCorpusLoaded(t)
+	const relative = "code/specs/fixtures/ct-compare-warrant-v1"
+	pythonPath := filepath.Join(realRepoRoot, "code", "packages", "python", "ct-compare", "evidence", "test-manifest.json")
+	pythonBytes, err := os.ReadFile(pythonPath)
+	if err != nil {
+		t.Skip("the python lane artifact is not present")
+	}
+	python := parseJSON(pythonBytes).(map[string]any)
+	if python["pycache_isolated"] != true {
+		t.Fatal("the committed python manifest must record pycache_isolated: true")
+	}
+	refused := map[string]func(m map[string]any){
+		"python without the key": func(m map[string]any) { delete(m, "pycache_isolated") },
+		"python with false":      func(m map[string]any) { m["pycache_isolated"] = false },
+		"python with a non-bool": func(m map[string]any) { m["pycache_isolated"] = "true" },
+		"go with the key": func(m map[string]any) {
+			m["lane"] = "go"
+			m["package"] = "go/ct-compare"
+			m["runner"].(map[string]any)["lane"] = "go"
+		},
+		"typescript with the key": func(m map[string]any) {
+			m["lane"] = "typescript"
+			m["package"] = "typescript/ct-compare"
+			m["runner"].(map[string]any)["lane"] = "typescript"
+		},
+	}
+	for name, change := range refused {
+		text := mutateManifest(t, python, change)
+		if code := laneCode(t, func() { validateManifest(text, corpus, relative, nil, false) }); code != "manifest" {
+			t.Errorf("%s: code %q", name, code)
+		}
+	}
+	// A non-Python manifest WITHOUT the key passes: the freshly built Go manifest.
+	f := newFixture(t, fixtureOptions{mini: true})
+	miniCorpus, manifest, miniRelative := fullManifest(t, f)
+	if _, has := manifest["pycache_isolated"]; has {
+		t.Fatal("the Go lane must not record pycache_isolated")
+	}
+	validateManifest([]byte(renderJSON(manifest)), miniCorpus, miniRelative, nil, false)
+}

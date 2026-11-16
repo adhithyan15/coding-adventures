@@ -1034,6 +1034,38 @@
       "rationale": "computed exemption (unapproved): no step-bound proof is live, so the Warrant steps bounds are declarations that no tool checks (src/gates.rs: lowering refused: Unsupported custom type in WIR lowering: str; parse refused at src/combinational.rs:54:5: Expected item, found Const (line: `pub const MAX_DECODER_WIDTH: usize = 16;`); per export, and_gate: alone: lowering refused (Variable 'None' not found in scope); and_n: alone: lowering refused (Unsupported method call 'iter' in WIR lowering); decoder: alone: parse refused (Unexpected token in expression: Or); demux: alone: parse refused (Unexpected token in expression: Or); encoder: alone: parse refused (Unexpected token in expression: Or); mux2: alone: lowers (loop-free, table-free body); mux4: alone: lowers (loop-free, table-free body); mux_n: alone: lowering refused (Unsupported custom type in WIR lowering: f64); nand_and: alone: lowers (loop-free, table-free body); nand_gate: alone: lowering refused (Variable 'None' not found in scope); nand_not: alone: lowers (loop-free, table-free body); nand_or: alone: lowers (loop-free, table-free body); nand_xor: alone: lowers (loop-free, table-free body); nor_gate: alone: lowering refused (Variable 'None' not found in scope); not_gate: alone: lowering refused (Variable 'None' not found in scope); or_gate: alone: lowering refused (Variable 'None' not found in scope); or_n: alone: lowering refused (Unsupported method call 'iter' in WIR lowering); priority_encoder: alone: parse refused (Expected RParen, found Ident(\"Vec\")); tri_state: alone: parse refused (Expected LBrace, found Lt); xnor_gate: alone: lowering refused (Variable 'None' not found in scope); xor_gate: alone: lowering refused (Variable 'None' not found in scope); xor_n: alone: lowering refused (Unsupported method call 'iter' in WIR lowering))"
     }
   ],
+  "lanes": [
+    {
+      "cases_by_label": {},
+      "checks": [],
+      "lane": "go",
+      "package": "go/logic-gates",
+      "release_ready": false,
+      "rung": "absent",
+      "sandbox": "absent",
+      "unclaimed": []
+    },
+    {
+      "cases_by_label": {},
+      "checks": [],
+      "lane": "python",
+      "package": "python/logic-gates",
+      "release_ready": false,
+      "rung": "absent",
+      "sandbox": "absent",
+      "unclaimed": []
+    },
+    {
+      "cases_by_label": {},
+      "checks": [],
+      "lane": "typescript",
+      "package": "typescript/logic-gates",
+      "release_ready": false,
+      "rung": "absent",
+      "sandbox": "absent",
+      "unclaimed": []
+    }
+  ],
   "package": "rust/logic-gates",
   "profile": "boolean-logic",
   "profile_sha256": "e6dcd154fb4801acbdfe317068f46d8b0fe15a1b83e71b018d13bfe9490707f9",

@@ -797,6 +797,48 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		paths:    warrantAssurancePaths,
 	},
 	{
+		name:     "rust/arithmetic",
+		language: "rust",
+		inputs:   "the Warrant consumer registry its assurance_report.json lists lane rungs from (VER04i 8.3)",
+		matches:  isWarrantLaneRegistryInput,
+		paths:    warrantLaneRegistryPaths,
+	},
+	{
+		name:     "rust/ct-compare",
+		language: "rust",
+		inputs:   "the Warrant consumer registry its assurance_report.json lists lane rungs from (VER04i 8.3)",
+		matches:  isWarrantLaneRegistryInput,
+		paths:    warrantLaneRegistryPaths,
+	},
+	{
+		name:     "rust/gf256",
+		language: "rust",
+		inputs:   "the Warrant consumer registry its assurance_report.json lists lane rungs from (VER04i 8.3)",
+		matches:  isWarrantLaneRegistryInput,
+		paths:    warrantLaneRegistryPaths,
+	},
+	{
+		name:     "rust/logic-gates",
+		language: "rust",
+		inputs:   "the Warrant consumer registry its assurance_report.json lists lane rungs from (VER04i 8.3)",
+		matches:  isWarrantLaneRegistryInput,
+		paths:    warrantLaneRegistryPaths,
+	},
+	{
+		name:     "rust/lzw",
+		language: "rust",
+		inputs:   "the Warrant consumer registry its assurance_report.json lists lane rungs from (VER04i 8.3)",
+		matches:  isWarrantLaneRegistryInput,
+		paths:    warrantLaneRegistryPaths,
+	},
+	{
+		name:     "rust/wasm-leb128",
+		language: "rust",
+		inputs:   "the Warrant consumer registry its assurance_report.json lists lane rungs from (VER04i 8.3)",
+		matches:  isWarrantLaneRegistryInput,
+		paths:    warrantLaneRegistryPaths,
+	},
+	{
 		name:     "python/warrant-corpus",
 		language: "python",
 		inputs:   "the Warrant spec, corpus and consumer registry its tests run",
@@ -845,6 +887,18 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		matches:  isWarrantGoLanePilotInput,
 		paths:    warrantGoLanePilotPaths,
 	},
+}
+
+// warrantLaneRegistryPaths is the consumer registry. Every Rust package that
+// uses ca-assurance-report records one rung per registry lane in its
+// assurance_report.json (WD-004b2), so adding, flipping or removing a row
+// stales all of their reports; their BUILD runs `--check`, which re-derives the
+// rungs. Listed by name because the registry is data no Cargo graph edge sees.
+var warrantLaneRegistryPaths = []string{"code/specs/fixtures/ct-compare-warrant-v1/consumers.json"}
+
+// isWarrantLaneRegistryInput is true only for the registry file itself.
+func isWarrantLaneRegistryInput(changed string) bool {
+	return changed == "code/specs/fixtures/ct-compare-warrant-v1/consumers.json"
 }
 
 // The assurance report validates the shared Warrant lane artifacts directly.

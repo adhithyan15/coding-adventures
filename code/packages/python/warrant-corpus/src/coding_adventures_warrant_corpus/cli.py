@@ -31,6 +31,7 @@ from pathlib import Path
 
 from .corpus import list_control_rows, load_corpus
 from .errors import LaneError, UsageError
+from .isolation import ENV_PRIVATE, verify_isolated_cache
 from .jsonio import MAX_TEXT_BYTES, read_bytes, render_json
 from .labels import derive_labels, manifest_label_digest
 from .manifest import source_digest, validate_manifest
@@ -217,6 +218,11 @@ def _child_env(base: dict[str, str], fault: str) -> dict[str, str]:
     ]
     env = dict(base)
     env["PYTHONPATH"] = os.pathsep.join([own, *existing])
+    # The child produces no manifest, but it runs the same library: it uses the
+    # same private bytecode cache, never the checkout's (VER04i 8.1).
+    if sys.pycache_prefix is not None:
+        env["PYTHONPYCACHEPREFIX"] = sys.pycache_prefix
+        env[ENV_PRIVATE] = sys.pycache_prefix
     env[ENV_FAULT] = fault
     env[ENV_FILTER] = "/exhaustive/"
     env.pop(ENV_OUT, None)
@@ -271,6 +277,10 @@ def main(argv: list[str] | None = None) -> int:
     """Entry point; returns the process exit status."""
     args = _parser().parse_args(argv)
     try:
+        if args.command in ("run", "check", "sabotage"):
+            # Refuse before touching the corpus or the library: a run that
+            # produces evidence needs the private bytecode cache (VER04i 8.1).
+            verify_isolated_cache()
         if args.command in ("run", "check"):
             return _run(args)
         if args.command == "sabotage":

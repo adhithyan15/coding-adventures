@@ -1005,6 +1005,7 @@ polyglot check needs:
   "toolchain": { "name": "python", "version": "3.12.4" },
   "evidence_seed": "<u64>",
   "faulted": false,
+  "pycache_isolated": true,   // Python lane only (section 8.1)
   "tests": [
     { "id": "warrant/ct_compare/example/eq_empty", "layer": "portable",
       "kind": "example", "op": "eq", "cases": 1, "verdict": "pass" },
@@ -1115,7 +1116,8 @@ The digest is the same `warrant-src-v1` framing as Rust (VER04h §8):
 length-prefixed, sorted by path bytes, paths relative to the *source root*,
 symlink / non-UTF-8 / oversized / too-deep entries are errors. Only the
 *definition of which files* is lane-specific. It must cover every file that can
-change what the implementation does and nothing that changes only tests, so it
+change what the implementation does and nothing that changes only tests (the
+loader enforces this by refusing an uncovered file, section 8.2), so it
 is a **production-source** subset of the existing
 `build-tool-v1/language-source-input-registry.json` (which is a build-input
 registry that includes tests and build scripts; reuse its component
@@ -1154,12 +1156,12 @@ Lanes never re-implement the framing.
 ### 8.2 The lane artifact loader and static readiness (WD-004b1)
 
 WD-004a parses bytes. WD-004b1 adds the first code that *opens* the lane
-artifacts: `ca-assurance-report`'s `lane_loader` module (library only; no CLI
-and no report output, which are WD-004b2). The legacy Rust loader
-(`warrant-test-evidence-v1`, `evidence.rs`) is untouched, a Rust package's
-`assurance_report.json` does not change, and a legacy manifest is still never
-read as a lane manifest: the loader only reads packages that the consumer
-registry lists, and `rust/*` is not in the registry.
+artifacts: `ca-assurance-report`'s `lane_loader` module. WD-004b1 shipped it as
+a library; WD-004b2 puts its output in the package report and the CLI (section
+8.3). The legacy Rust loader (`warrant-test-evidence-v1`, `evidence.rs`) is
+untouched, and a legacy manifest is still never read as a lane manifest: the
+loader only reads packages that the consumer registry lists, and `rust/*` is not
+in the registry.
 
 **Artifact set.** For one registered package the loader reads, in this order:
 the registry (`<corpus>/consumers.json`), the spec, `corpus.json`, `cases.tfv`,
@@ -1217,22 +1219,126 @@ sidecar's suite ids, domains and case counts to equal the manifest's
 exhaustive rows and `cases_by_label` to be their sum. The report quotes
 `cases_by_label`, never the manifest's "exhaustive" total (LP-012).
 
-**What is not digest-checked.** `runner.src_sha256` and `source_sha256` are
-format-checked (64 lowercase hex) and recorded, **not recomputed**. Recomputing
-them needs a per-lane production-source rule (section 8.1) and a runner package
-root, neither of which the registry carries; the freshness check (section 9,
-check 23) belongs to WD-004b2. `toolchain.version` is never evidence.
+**Source digests (WD-004b2).** `source_sha256` and `runner.src_sha256` are
+recomputed from the files on disk and compared with the manifest; they are no
+longer only format-checked. The framing is the one `warrant-src-v1` of section
+8.1, called through `test_bootstrap::manifest::frame_sources`; the loader never
+re-implements it. The *source root* is the registry's `package_root` joined with
+the binding file's single `source` line (`.` is the package root itself); the
+*runner root* is fixed per lane, because the registry does not carry one:
+
+| Lane | Source files (any depth) | Directories skipped | Runner root | Runner files |
+|---|---|---|---|---|
+| `python` | `*.py`, `*.pyi`, `py.typed` | `__pycache__` | `code/packages/python/warrant-corpus/src/coding_adventures_warrant_corpus` | same rule, any depth |
+| `typescript` | `*.ts` except `*.test.ts` | `dist`, `node_modules` | `code/packages/typescript/warrant-corpus/src` | same rule, any depth |
+| `go` | `*.go` except `*_test.go` | `vendor`, `testdata`, names starting `.` or `_` | `code/packages/go/warrant-corpus` | same rule, top directory only (the runner embeds that directory's `*.go`) |
+
+These are the rules the three runners apply (sections 5.1 to 5.3, 8.1). A lane
+with no rule here cannot be loaded (`source-tree`).
+
+*The walk cannot be steered by the tree.* The root is reached by the path rules
+above (validated, lexically contained, every component below the repository root
+examined with `symlink_metadata`, final component a directory). Every entry of
+every directory the walk lists is then examined with `symlink_metadata`
+**before** its name is considered: a symbolic link or Windows reparse point is an
+error even where the lane's rule would skip it (a link named `notes.txt`, or
+`__pycache__`, fails, as it does in the runners). A skipped directory is not
+descended into, so what it holds is not examined, exactly as in the runners. A name must be UTF-8. A selected file's absolute path
+must pass the lexical containment rule in the host flavour, which on Windows
+also refuses reserved device names and trailing dots or spaces. Entries that are
+neither a regular file nor a directory (FIFOs, sockets, devices) are skipped
+without being opened, as the runners skip them; a skipped entry is never
+opened, so it cannot block the load. Depth is at most 32, one file at most
+8 MiB (the runners' limits), and the loader adds two of its own: at most 4096
+selected files and 64 MiB in total. Files are read with the same bounded
+`take(cap + 1)` read as every other artifact. Failure to walk is `source-tree`;
+a digest that differs from the manifest is `stale-source` (`source_sha256`) or
+`stale-runner` (`runner.src_sha256`).
+
+*Nothing in the root may escape the rule (fail closed).* The digest covers only
+the files the rule selects, so the walk also refuses a root that holds anything
+the rule does not cover. Any regular file that is neither selected nor in the
+ignore set is `uncovered-source`, naming the file. Extensions are matched
+exactly, so `EVIL.PY`, `lib.JS` and `Evil.GO` are uncovered, not digested (the
+runners would not digest them either); a `.so`, `.node`, `.s`, `.syso`, `.c` or
+`.json` file is uncovered. The ignore set is exactly this, names compared
+case-insensitively: `README`, `README.md`, `CHANGELOG.md`, `LICENSE`,
+`LICENSE.md`, `.DS_Store`, `.gitkeep`; TypeScript `*.test.ts`; Go `*_test.go` and,
+directly in the root only, `go.mod`, `BUILD`, `BUILD_windows`,
+`required_capabilities.json`, `evidence.bindings`, plus the root directories
+`evidence` and `CHANGELOG.d`. Three further rules close ways a directory can
+replace what the digest covers:
+
+* **Bytecode: the Python lane runs under a private cache, and says so.**
+  Python runs a cached `__pycache__/*.pyc` instead of its source. A hash-based
+  pyc (PEP 552 flags nonzero) is never revalidated and a timestamp pyc can be
+  forged to carry the source's mtime and size, so no inspection of a pyc is
+  sound, and refusing every pyc would make the result depend on whether any
+  Python ran in the checkout before the check. What is sound is never consulting
+  the tree's caches: with `sys.pycache_prefix` set, CPython reads and writes
+  bytecode only under that directory. So (1) the Python lane's entry script
+  (`tests/warrant_evidence.py`, `isolate_bytecode_cache`) creates a fresh private
+  directory (`mkdtemp`: under the temporary directory, owned by the user, mode
+  0700, empty), re-runs itself with `PYTHONPYCACHEPREFIX` and
+  `WARRANT_PYCACHE_PRIVATE` naming it, and removes it afterwards, all before
+  anything from the checkout is imported; sabotage children inherit it. (2) The
+  runner's `run`, `check` and `sabotage` refuse to start with the named error
+  `pycache-isolation` unless `sys.pycache_prefix` is set to exactly that
+  directory, a plain directory under the temporary directory, owned by the user
+  and not group or world accessible. (3) The manifest records
+  `"pycache_isolated": true`. It is a Python-lane field: required, and only
+  `true`, in a Python manifest, and refused in any other lane's (`manifest`).
+  (4) Only a manifest that records it lets the loader ignore `__pycache__` in the
+  source and runner roots; any other lane's `__pycache__` is walked like every
+  directory (an empty one is fine, a file in it is uncovered). Freshness of the
+  directory is by construction (only the child ever receives its name), not by
+  inspecting its contents at the child's start, which the interpreter has
+  already written to. The order of earlier jobs in the same checkout therefore
+  cannot change the verdict.
+* **`vendor`, `node_modules` and `dist` are refused, not skipped.** A Go
+  `vendor/` or a TypeScript `node_modules/` or `dist/` directory anywhere in the
+  source or runner root is `uncovered-source`; none exists today.
+* **The Go module files are pinned, not digested.** `go.mod` sets which
+  directory the runner module is built from (`replace`), so it is checked exactly
+  (`go-mod`): the package's `go.mod` may hold only `module
+  github.com/adhithyan15/coding-adventures/<package_root>`, a `go <major.minor>`
+  line, `require <runner module> v0.0.0` and `replace <runner module> =>
+  ../warrant-corpus`; the runner's own `go.mod` only its `module` and `go` lines.
+  Any other directive, block form, module path or replace target fails. A `go.sum`
+  is not in the ignore set (it would mean external dependencies nothing covers),
+  and a `go.mod` anywhere but the root is uncovered.
+* **A Go workspace file is refused.** `go.work` and `go.work.sum` (any entry of
+  that name) in the package root, the runner root or any directory above either,
+  up to the repository root, fail with `go-mod`: a workspace `replace` overrides
+  the pinned `go.mod` files. The Go lane's BUILD lines also run `go` with
+  `GOWORK=off`.
+* **Sourceless bytecode is refused in a Python package.** Any `*.pyc` or `*.pyo`
+  under the package root outside a `__pycache__` directory (so `tests/` too) is
+  `uncovered-source`; the package-root `.venv`, recreated by every build, is not
+  scanned.
+
+Directories the lane rule skips (Go `testdata` and names starting `.` or `_`)
+are not examined. These are the **residuals**, and they are printed with every
+readiness result and carried in the report's `unclaimed` list rather than left
+to prose: `go.mod go directive version` (the one value of `go.mod` that is only
+format-checked) and `contents of directories the Go tool ignores`.
+
+What this establishes: the manifest's two digests describe the trees as they are
+now, so editing a production source file or the runner without regenerating the
+manifest fails the load. What it does not: that the manifest was *produced* by
+running that source (build execution stays unclaimed), or that the toolchain is
+genuine. `toolchain.version` is never evidence.
 
 **Registry join.** A package is loadable only if the registry has exactly one
 row for it and that row is `active`. `status: "active"` now means exactly
 this: the binding, runner entry, evidence manifest and build files named by
 the row exist, open safely, and pass the checks of this section. It does not
-say the runner ran, the sources are fresh or the toolchain is genuine.
+say the runner ran or the toolchain is genuine.
 `planned` rows (none today) still cannot authorize a lane result. The
 checked-in registry lists `go/ct-compare`, `python/ct-compare` and
 `typescript/ct-compare`, all `active`, `active_consumer_count` 3.
 
-**Static readiness checks (the whole list).** A successful load carries the
+**Static readiness checks (the whole list: ten).** A successful load carries the
 names of the checks that passed; any failure is an error, never a partial
 result.
 
@@ -1246,19 +1352,103 @@ result.
 | `runner-identity` | `runner.name` is `warrant-corpus` and `runner.lane` is the lane |
 | `labels-bound` | sidecar identity, labels digest, descriptor labels, join |
 | `build-routing` | each build file is text that names `evidence/test-manifest.json` and `sabotage` |
+| `source-fresh` | `source_sha256` equals the recomputed digest of the source root, and the root holds nothing the rule leaves uncovered (with the Go module pins) |
+| `runner-source-fresh` | `runner.src_sha256` equals the recomputed digest of the runner root |
 
 `build-routing` is a text search. It shows the routing was written; it does not
 show the BUILD ran or passed. Readiness output always ends with the unclaimed
-list: source freshness, runner source digest, toolchain authenticity, build
-execution and the sandbox. The sandbox is `not-armed` (section 12) in every lane
+list: toolchain authenticity, build execution, the sandbox and the two Go residuals of section 8.2 (five entries). The sandbox is `absent` (not armed, section 12) in every lane
 today, so `release_ready` is `false` and no readiness result can be read as
 release-ready. The loader makes no authenticity claim about the source, the
 build or the toolchain beyond the named checks above.
 
-**Hooks left for WD-004b2.** `load_lane` and `load_active_lanes` return typed
-values (manifest, labels, readiness) for report integration; they do not
-generate a report, change `--check`, render absent rungs or touch the Rust
-proof and effect attestations.
+### 8.3 Lane rungs in the package report, `--check-lane`, `--require-active` (WD-004b2)
+
+**Isolation.** The lane rungs are derived from the consumer registry and the lane
+loader of section 8.2 and from nothing else. They never read or write the Rust
+proof manifest, the effect certificate, the weakness matrix, the claims, the
+rungs E0 to E5 or the verdict of the report that carries them, and Rust
+evidence never feeds a lane: a Rust proof or effect attestation proves nothing
+about a Python, TypeScript or Go implementation, and a lane's `live` rung proves
+nothing about the Rust one. The verdict of a Rust package report is unchanged by
+its lane rungs.
+
+**The `lanes` field.** A Rust package's `assurance_report.json` carries a required
+top-level `lanes` array (a report without it is refused: stripping it would hide
+a lane). One entry per lane that the consumer registry lists, sorted by lane (for
+the checked-in registry: `go`, `python`, `typescript`). A package `rust/<name>`
+is matched with the registry row `<lane>/<name>`. Each entry has exactly these
+fields:
+
+| Field | Meaning |
+|---|---|
+| `lane` | the lane name |
+| `package` | `<lane>/<name>`, present even when absent (the package that would carry it) |
+| `rung` | `live`, `planned` or `absent` |
+| `checks` | the passed check names of section 8.2, in order, exactly the ten of the table when `live`; `[]` otherwise |
+| `cases_by_label` | the sidecar's per-label case counts when `live`; `{}` otherwise (the report quotes these, never the manifest's `exhaustive` total, LP-012) |
+| `unclaimed` | the unclaimed list of section 8.2 when `live`; `[]` otherwise |
+| `release_ready` | always `false` |
+| `sandbox` | always `absent` |
+
+`live` means the registry has an `active` row for `<lane>/<name>` and
+`load_lane` passed every named check; no other state is `live`. `planned` means
+the row exists and is `planned`. `absent` means the registry has no row for that
+package in that lane, which is the honest answer for every package but
+`ct-compare` today. An `active` row whose load fails is **not** a rung: the
+report cannot be generated and `--check` fails, with the loader's error code,
+because `active` is a promise that the lane loads. A registry file that does not
+exist at all means the lane universe is unknown and `lanes` is `[]`; a registry
+that exists but is unreadable, a link or malformed is an error.
+
+The sandbox rung is `absent` in every entry, live or not, and `release_ready`
+is `false`: no lane arms a runtime jail yet (section 12, CAP-RT-1xx), and
+no readiness result is release-ready without it. It is never reported as passing.
+The loader's own `sandbox` field (section 8.2) uses the same word.
+
+**Checking.** Two layers, both in `--check`. The offline shape check
+(`verify_assurance_report`) requires a sorted, unique lane list; `package` equal
+to `<lane>/<name>` of the report's package; a known `rung`; for `live` the ten
+check names in order, the unclaimed list of section 8.2 and known labels only; for
+every other rung empty `checks`, `cases_by_label` and `unclaimed`; and
+`release_ready` false and `sandbox` `absent` always. The re-derivation
+(`verify_evidence`) loads the lanes again from the repository and holds the report
+to them: a different lane set or package id is `LaneMismatch` (VER04i 9 check
+17), a stronger claim than the loader supports (a `live` rung for a lane that is
+`planned` or `absent`, `release_ready` true, a `sandbox` other than `absent`, more
+cases under a label than the sidecar says) is `LabelOverclaim` (check 24), and
+any other difference is `StaleEvidence` (regenerate). The source freshness of
+check 23 is the `source-fresh` and `runner-source-fresh` checks of section 8.2.
+
+**CLI.**
+
+```
+ca-assurance-report-rs --check-lane <lane>/<name> [--repo-root <DIR>] [--require-active]
+```
+
+`--repo-root` defaults to `.`. The command loads the lane with `load_lane` and
+prints `render_readiness`, preceded by the absolute `repo root:` it checked. Exit 0 when the lane loaded. When the registry has no
+row, or a `planned` row, for the package: without `--require-active` it prints
+`ABSENT` or `PLANNED` and the reason and exits 0 (an honest report, not a gate);
+with `--require-active` it exits 1. An `active` row that fails to load exits 1
+with the loader's code, with or without the flag. `--require-active` without
+`--check-lane` is a usage error (exit 2). The three lanes' `ct-compare` `BUILD`
+and `BUILD_windows` run it with `--require-active` as their last line, so a lane
+edit re-runs the loader check and a lane that stops loading fails its own build:
+
+```
+cargo run --quiet --manifest-path ../../rust/ca-assurance-report/Cargo.toml -- --check-lane <lane>/ct-compare --repo-root ../../../.. --require-active
+```
+
+**Still open after WD-004b2.** The check-to-open window of section 8.2 (a process
+that can rewrite the tree while a load runs can still race it; documented, not
+closed). Junction and reparse-point tests on a Windows runner (the code refuses
+reparse points; no Windows test exercises one). The sandbox (CAP-RT-1xx): every
+rung says `absent`. Authenticity of the source, build and toolchain, and build
+execution. A change to the loader itself does not re-run the lane `BUILD`s, and a
+lane edit does not re-run `rust/ct-compare`'s `--check`, so the committed
+`rust/ct-compare` report records the lane state at its last regeneration; the
+lane `BUILD`s are the gate for the lanes.
 
 ## 9. Report generation and fail-closed checking per lane
 
@@ -1303,7 +1493,9 @@ where they make sense; ids are never accepted from a different lane):
 23. **Source freshness.** `source_sha256` equals the recomputed
     `warrant-src-v1` digest of the lane source tree (§8.1); editing a source
     file without rerunning makes `--check` fail, as `src/capabilities.rs` does
-    for Rust.
+    for Rust. Implemented by WD-004b2 as the `source-fresh` and
+    `runner-source-fresh` readiness checks (§8.2); the report carries the result
+    as the lane rung (§8.3).
 24. **Labels are lane-honest.** In a lane whose proof layer is not live every
     `proof.label` is `unchecked`, property/fuzz are `not-run` until layer B's
     gates are green, and `--check` fails a report that states anything
@@ -1580,8 +1772,8 @@ this is the expectation each lane's rollout row must meet):
 | haskell, ocaml, swift, dart | OS sandbox around the toolchain-produced binary / VM |
 
 Because VER08b is not on `main`, a lane's `release-ready` status in §13 is
-conditioned on it: before VER08b lands, `sandbox` is `not-armed` and the
-report says so; no lane can be `release-ready` with `sandbox: not-armed`.
+conditioned on it: before VER08b lands, `sandbox` is `absent` (not armed) and the
+report says so; no lane can be `release-ready` with `sandbox: absent`.
 
 ## 13. Rollout order and acceptance per lane
 
@@ -1792,3 +1984,24 @@ dependency graph.
   integration, absent rungs, the sandbox, the check-to-open race (documented in
   section 8.2), BUILD lines passing `--require-active`, and junction or
   reparse-point tests on a Windows runner (all WD-004b2).
+* **WD-004b2 (lane rungs, CLI) amendments.** (1) Section 8.2: `source_sha256`
+  and `runner.src_sha256` are recomputed (per-lane rules, a contained,
+  link-refusing walk with the loader's own file and byte bounds), so the readiness
+  list is ten checks (`source-fresh`, `runner-source-fresh` added) and the
+  unclaimed list is five (source freshness and the runner source digest are
+  removed; two Go residuals added). The walk refuses uncovered files, any
+  `vendor`, `node_modules` and `dist`, pins the Go `go.mod` files exactly,
+  refuses a `go.work` above the Go lane, and refuses stray `*.pyc` and `*.pyo`
+  in a Python package.
+  The Python lane runs under a private bytecode cache (`sys.pycache_prefix`) and
+  its manifest records `pycache_isolated: true`, the only lane-specific manifest
+  field; only then is `__pycache__` ignored. New load codes `source-tree`, `uncovered-source`,
+  `go-mod`, `stale-source`, `stale-runner`.
+  (2) Section 8.3 is new: the report's required `lanes` array (a rung per
+  registry lane: `live`, `planned`, `absent`; `release_ready` false and `sandbox`
+  `absent` always), `LaneMismatch` and `LabelOverclaim` report checks, isolation
+  from the Rust proof and effect evidence, and the `--check-lane` and
+  `--require-active` CLI. (3) Every Rust package's `assurance_report.json` gains
+  the `lanes` field; no other field changes. (4) Still open: the check-to-open
+  race, junction and reparse-point tests on a Windows runner, and the sandbox
+  (CAP-RT-1xx).

@@ -223,7 +223,24 @@ func manifestObject(value any, keys []string, where string) map[string]any {
 // hand-written file that happens to be consistent -- that is what regenerating
 // (`check`) is for.
 func validateManifest(manifestBytes []byte, corpus *Corpus, corpusRelative string, registryBytes []byte, requireActive bool) map[string]any {
-	root := manifestObject(parseJSON(manifestBytes), manifestKeys, "manifest")
+	parsed := parseJSON(manifestBytes)
+	// `pycache_isolated` is the one lane-specific key (VER04i 8.1): required, and
+	// exactly true, for the Python lane; forbidden for every other lane. The lane
+	// is read before the closed key check because the key set depends on it.
+	keys := manifestKeys
+	if object, isObject := parsed.(map[string]any); isObject {
+		_, has := object["pycache_isolated"]
+		if object["lane"] == "python" {
+			need(has, "manifest", "pycache_isolated is required for the Python lane (VER04i 8.1)")
+			keys = append(append([]string{}, manifestKeys...), "pycache_isolated")
+		} else {
+			need(!has, "manifest", "pycache_isolated is only recorded by the Python lane")
+		}
+	}
+	root := manifestObject(parsed, keys, "manifest")
+	if _, has := root["pycache_isolated"]; has {
+		need(root["pycache_isolated"] == true, "manifest", "pycache_isolated must be true for the Python lane")
+	}
 	need(root["schema"] == ManifestSchema, "manifest", "unsupported schema")
 	lane, laneIsString := root["lane"].(string)
 	need(laneIsString && identRE.MatchString(lane), "manifest", "bad lane")
