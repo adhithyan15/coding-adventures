@@ -4,6 +4,21 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Removed
+
+- BREAKING: `avalanche_score` and `distribution_test` (module `analysis`) are no
+  longer exported from this crate, and the `getrandom` dependency is gone. They
+  moved, unchanged, to the new crate `coding_adventures_hash_analysis`
+  (`code/packages/rust/hash-analysis`), because `avalanche_score` draws OS
+  randomness and this crate is pure computation (WX-P1a2, DT17a section 7). No
+  other package in the repository used them. Migration: depend on
+  `coding_adventures_hash_analysis` and import them from there. The crate version
+  is 0.2.0 (minor bump, public API removed).
+
+### Changed
+
+- The README usage example no longer imports the analysis helpers.
+
 ### Fixed
 
 - README usage example: the SipHash-2-4 assertion `0x726f_db47_dd0e_0e31` is the
