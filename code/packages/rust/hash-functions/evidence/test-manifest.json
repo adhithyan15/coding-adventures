@@ -2,9 +2,9 @@
   "evidence_seed": "5206534214518197843",
   "module": "hash_functions",
   "schema": "warrant-test-evidence-v1",
-  "source_sha256": "05bd602160fb735bb51c050064337b84530c2df84793c392404a3ae1adbc40a4",
+  "source_sha256": "586a7ea14c5c16801b5e84047612a57711e0e45159a816b96c055b6b6f461079",
   "spec": "code/specs/hash-functions.warrant",
-  "spec_sha256": "15cda737e0d6b6900458ba411a556f29317c9934fc3e891ee992b93cc62ab36f",
+  "spec_sha256": "92328b8316b0f2f8bac1a5f541d5096f9d0409da74676d1c071e2dc1ab9b926f",
   "tests": [
     {
       "cases": 1,
@@ -393,6 +393,22 @@
     {
       "cases": 1,
       "claim": "",
+      "id": "warrant/hash_functions/example/murmur3_32_five_blocks",
+      "kind": "example",
+      "op": "murmur3_32",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/hash_functions/example/murmur3_32_with_seed_five_blocks",
+      "kind": "example",
+      "op": "murmur3_32_with_seed",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
       "id": "warrant/hash_functions/example/murmur3_32_with_seed_fox",
       "kind": "example",
       "op": "murmur3_32_with_seed",
@@ -530,6 +546,38 @@
       "cases": 1,
       "claim": "",
       "id": "warrant/hash_functions/example/siphash_2_4_len_16",
+      "kind": "example",
+      "op": "siphash_2_4",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/hash_functions/example/siphash_2_4_len_17",
+      "kind": "example",
+      "op": "siphash_2_4",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/hash_functions/example/siphash_2_4_len_24",
+      "kind": "example",
+      "op": "siphash_2_4",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/hash_functions/example/siphash_2_4_len_32",
+      "kind": "example",
+      "op": "siphash_2_4",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/hash_functions/example/siphash_2_4_len_63",
       "kind": "example",
       "op": "siphash_2_4",
       "verdict": "pass"
@@ -1099,41 +1147,6 @@
       "kind": "fuzz",
       "op": "polynomial_rolling",
       "seed": "3761244361192964307",
-      "unreachable_by_type": 0,
-      "verdict": "pass"
-    },
-    {
-      "cases": 347,
-      "claim": "polynomial_rolling_is_the_default_parameters",
-      "demoted": [],
-      "discarded": 0,
-      "domain": "d: Bytes set(347)",
-      "id": "warrant/hash_functions/exhaustive/polynomial_rolling_is_the_default_parameters",
-      "kind": "exhaustive",
-      "op": "polynomial_rolling",
-      "unreachable_by_type": 0,
-      "verdict": "pass"
-    },
-    {
-      "cases": 4096,
-      "claim": "polynomial_rolling_is_the_default_parameters",
-      "discarded": 0,
-      "equal_cases": 0,
-      "id": "warrant/hash_functions/property/polynomial_rolling_is_the_default_parameters",
-      "kind": "property",
-      "op": "polynomial_rolling",
-      "seed": "11039327699310667271",
-      "unreachable_by_type": 0,
-      "verdict": "pass"
-    },
-    {
-      "admitted": 5008,
-      "claim": "polynomial_rolling_is_the_default_parameters",
-      "id": "warrant/hash_functions/fuzz/polynomial_rolling_is_the_default_parameters",
-      "iterations": 5000,
-      "kind": "fuzz",
-      "op": "polynomial_rolling",
-      "seed": "14822949744120753723",
       "unreachable_by_type": 0,
       "verdict": "pass"
     },
@@ -1729,41 +1742,6 @@
       "kind": "fuzz",
       "op": "murmur3_32",
       "seed": "3223990602508817994",
-      "unreachable_by_type": 0,
-      "verdict": "pass"
-    },
-    {
-      "cases": 347,
-      "claim": "murmur3_32_with_seed_zero_is_murmur3_32",
-      "demoted": [],
-      "discarded": 0,
-      "domain": "d: Bytes set(347)",
-      "id": "warrant/hash_functions/exhaustive/murmur3_32_with_seed_zero_is_murmur3_32",
-      "kind": "exhaustive",
-      "op": "murmur3_32_with_seed",
-      "unreachable_by_type": 0,
-      "verdict": "pass"
-    },
-    {
-      "cases": 4096,
-      "claim": "murmur3_32_with_seed_zero_is_murmur3_32",
-      "discarded": 0,
-      "equal_cases": 0,
-      "id": "warrant/hash_functions/property/murmur3_32_with_seed_zero_is_murmur3_32",
-      "kind": "property",
-      "op": "murmur3_32_with_seed",
-      "seed": "10747042592857493625",
-      "unreachable_by_type": 0,
-      "verdict": "pass"
-    },
-    {
-      "admitted": 5008,
-      "claim": "murmur3_32_with_seed_zero_is_murmur3_32",
-      "id": "warrant/hash_functions/fuzz/murmur3_32_with_seed_zero_is_murmur3_32",
-      "iterations": 5000,
-      "kind": "fuzz",
-      "op": "murmur3_32_with_seed",
-      "seed": "12986214457693636231",
       "unreachable_by_type": 0,
       "verdict": "pass"
     },
@@ -2823,10 +2801,30 @@
       "verdict": "pass"
     },
     {
+      "caught_by": "polynomial_params_abc_base_37_mod_1e9_7",
+      "claim": "",
+      "fault": "flip-result-bit",
+      "id": "warrant/hash_functions/negctl/example/polynomial_rolling_with_params/flip-result-bit",
+      "kind": "negctl",
+      "op": "polynomial_rolling_with_params",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
       "caught_by": "polynomial_params_zero_modulus_is_rejected",
       "claim": "",
       "fault": "missing-error",
       "id": "warrant/hash_functions/negctl/exhaustive/polynomial_rolling_with_params/missing-error",
+      "kind": "negctl",
+      "op": "polynomial_rolling_with_params",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "polynomial_params_default_is_polynomial_rolling",
+      "claim": "",
+      "fault": "flip-result-bit",
+      "id": "warrant/hash_functions/negctl/exhaustive/polynomial_rolling_with_params/flip-result-bit",
       "kind": "negctl",
       "op": "polynomial_rolling_with_params",
       "target": "exhaustive",
@@ -2843,10 +2841,30 @@
       "verdict": "pass"
     },
     {
+      "caught_by": "polynomial_params_default_is_polynomial_rolling",
+      "claim": "",
+      "fault": "flip-result-bit",
+      "id": "warrant/hash_functions/negctl/property/polynomial_rolling_with_params/flip-result-bit",
+      "kind": "negctl",
+      "op": "polynomial_rolling_with_params",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
       "caught_by": "polynomial_params_zero_modulus_is_rejected",
       "claim": "",
       "fault": "missing-error",
       "id": "warrant/hash_functions/negctl/fuzz/polynomial_rolling_with_params/missing-error",
+      "kind": "negctl",
+      "op": "polynomial_rolling_with_params",
+      "target": "fuzz",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "polynomial_params_default_is_polynomial_rolling",
+      "claim": "",
+      "fault": "flip-result-bit",
+      "id": "warrant/hash_functions/negctl/fuzz/polynomial_rolling_with_params/flip-result-bit",
       "kind": "negctl",
       "op": "polynomial_rolling_with_params",
       "target": "fuzz",

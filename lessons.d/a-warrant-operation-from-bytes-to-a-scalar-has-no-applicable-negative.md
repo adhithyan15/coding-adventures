@@ -2,7 +2,7 @@
 category: Testing & coverage
 ---
 
-# A Warrant operation from bytes to a scalar has no applicable negative control, so gen_evidence cannot bind it
+# A Warrant operation from bytes to a scalar has no applicable negative control, so gen_evidence cannot bind it (fixed by WX-FAULT1, #19508)
 
 The WX-P1a adoption of `hash-functions` (eight functions of the shape
 `&[u8] -> u32/u64`) was written, type-checked and its 67 examples confirmed
@@ -17,7 +17,7 @@ limit faults for an `output` bound. The arithmetic faults (`narrow-width`,
 bytes-to-scalar operation (a hash, a checksum, a length) therefore has no
 fault, and a document with an unbindable operation cannot be generated at all.
 
-Fix (not made here, because the generator is a shared crate): let
+Fix (made in WX-FAULT1, PR #19508; it was not made in the adoption because the generator is a shared crate): let
 `flip-result-bit` apply to a fixed-width integer result, in the fault check of
 `composite_adapter` and in `fault_flip_result_bit` of `evidence_prelude.rs.txt`.
 
@@ -31,8 +31,8 @@ negative-control lesson `a-warrant-negative-control-for-an-operation-is-answered
 
 WX-FAULT1 let `flip-result-bit` apply to a fixed-width integer result and the
 `hash-functions` adoption was wired on top of it: all eight operations bind, the
-generated harness (273 tests) compiles the new `V::Fixed` arm unchanged and passes,
-and each of the eight sabotage lines is caught. The lesson's advice held: binding
+generated harness (277 tests) compiles the new `V::Fixed` arm unchanged and passes,
+and each of the nine sabotage lines is caught. The lesson's advice held: binding
 one operation of each signature shape first would have surfaced the blocker before
 the 489-line document was written.
 

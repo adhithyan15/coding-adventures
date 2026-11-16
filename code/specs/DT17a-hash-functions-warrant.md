@@ -68,18 +68,18 @@ therefore stated two ways that together fix it:
   length. The domain of `d` is a sample, so it is evidence for every length and
   not a proof of it.
 
-**Examples.** 67 known answers: the published FNV-1a test vectors ("", "a",
+**Examples.** 73 known answers (the first 67 below were cross-checked against the crate before the document was written; six more were added in review): the published FNV-1a test vectors ("", "a",
 "b", "c", "foobar"), Murmur3 "Hello, world!" under seed `0x9747b28c`, SipHash
-lengths 0, 1 and 15 under the key `00 01 .. 0f`, and the rest computed by an
+lengths 0, 1 and 15 under the key `00 01 .. 0f` (and 17, 24, 32, 63 and a five-block Murmur3 input, added in review), and the rest computed by an
 independent Python implementation that reproduces every published value. All 67
-were cross-checked against the real crate (out of tree, 0 differences) before
+original answers were cross-checked against the real crate (out of tree, 0 differences) before
 this document was written.
 
 **Labels.** `data`, `base`, `modulus` and `seed` are `public`. The SipHash
 `key` is `secret`: its secrecy is the whole point of the algorithm, and
 labelling it public would hide CWE-208 from the report. The package does not
-claim a constant-time proof, so the report records that row as applicable and
-unaddressed, as it does for gf256. Domain labels (`full`, `bounded-set`, `sample`) and
+claim a constant-time proof, so a report would record that row as applicable and
+unaddressed, as it does for gf256 (no report exists yet, section 7). Domain labels (`full`, `bounded-set`, `sample`) and
 case counts come from the generated manifest once it exists; this document
 states none, and the owner's standard is to say `sample` for a `Bytes` or
 `Bytes<N>` binder.
@@ -128,7 +128,7 @@ unaffected. The remaining work on this adoption, once it is closed:
    is a new file in a shared crate; whether an adoption may add one, or the
    package carries its own, is an owner call.
 
-**Resolution.** WX-FAULT1 (`claude/warrant-fault-fixed-int`, merged into this
+**Resolution.** WX-FAULT1 (`claude/warrant-fault-fixed-int`, PR #19508, merged into this
 branch) made `flip-result-bit` apply to a fixed-width integer result. The first
 harness to compile its `V::Fixed` arm is this one: it compiled and behaved as
 designed without any change to the generator, and every `flip-result-bit` control
@@ -138,22 +138,32 @@ is caught (section 6).
 
 * `evidence.bindings`: eight `op` lines. Seven take `faults=flip-result-bit`;
   `polynomial_rolling_with_params` takes `args=bytes,u64,u64`,
-  `error=MODULUS_ZERO`, `faults=missing-error`; `murmur3_32_with_seed` takes
+  `error=MODULUS_ZERO`, `faults=missing-error,flip-result-bit` (the second flips
+  the hash inside `Ok`; `ok-as-err` is refused for it); `murmur3_32_with_seed` takes
   `args=bytes,u32`; `siphash_2_4` takes `args=bytes,bytes<16>`.
-* `tests/generated/warrant_evidence.rs` and `evidence/test-manifest.json`: 273
-  tests, all passing (67 examples, 58 exhaustive, 58 property, 58 fuzz, 32
+* `tests/generated/warrant_evidence.rs` and `evidence/test-manifest.json`: 277
+  tests, all passing (73 examples, 56 exhaustive, 56 property, 56 fuzz, 36
   negative controls). Domains the manifest labels: every `Bytes` binder is a
   `set`/`sample`, `U8` is `full`, `U32`/`U64` are `edge`, so none of the
   inductive claims is a proof for all lengths.
 * BUILD, BUILD_linux and BUILD_windows: unit and doc tests, the jail,
-  `gen_evidence --check`, the evidence run, eight sabotage lines (one per
-  operation, each aimed at a cheap exhaustive claim), the proof manifest.
+  `gen_evidence --check`, the evidence run, nine sabotage lines (one per
+  operation, two for `polynomial_rolling_with_params`, each aimed at a cheap
+  exhaustive claim), the proof manifest, and `git diff --exit-code -- evidence/`.
+  Both manifests are deterministic (fixed seed, content hashes, no timestamps or
+  toolchain data; the repo forces LF), so this check stands in for the report's
+  `--check`, which is not wired. It needs the manifests committed first.
 * `tests/runtime_capability.rs` (VER08b): the eight covered hashes on known
   answers inside the no-capability jail, strict on Linux.
 * `warrant-ir/tests/hash_functions_proofs.rs`: the proof test (owner call of
   the earlier draft: it follows the existing pattern and lives in `warrant-ir`).
   The `siphash_2_4` constant-time obligation is `not-live`: the front end
   refuses `algorithms.rs` at its first `pub const`.
+
+**Zero modulus.** The real `polynomial_rolling_with_params` panics on
+`modulus == 0` (`assert!(modulus > 0)`). The document's `ensures no_panic` on that
+operand holds of the harness adapter, which catches any panic and reports it as
+`MODULUS_ZERO`, not of the crate; the adapter cannot tell this panic from another.
 
 ## 7. Divergence from the lzw / wasm-leb128 pattern: analyzer and report not wired
 

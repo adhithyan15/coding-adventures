@@ -16,14 +16,12 @@
 //! The front end does not accept the file.  What it refuses is recorded
 //! verbatim (the front end's own message, position and the offending source
 //! line), together with a per-function probe that says which exports lower on
-//! their own and which construct stops each of the others.  Every steps-bound
-//! obligation is then written to `proof-manifest.json` with label `not-live` and
-//! verdict `not-live`, never `proved`, never omitted.  `heap`/`depth` rows are
-//! `unchecked` (no prover tracks them).  The encoders' `heap` rows are
-//! nevertheless *observed*: in a v1 document every instance of an operation
-//! with a `heap` row runs under the generated harness's allocation observer
-//! (VER04j section 6.3), and the test manifest records `max_observed_heap`; the
-//! note says so rather than leaving "unchecked" to imply nothing ran.
+//! their own and which construct stops each of the others.  The one obligation
+//! (the `siphash_2_4` constant-time obligation) is then written to
+//! `proof-manifest.json` with label `not-live` and verdict `not-live`, never
+//! `proved`, never omitted.  The generic `bound` handling below (steps, heap and
+//! depth rows) is inherited from the template and records nothing here: the
+//! document declares no `bound` rows.
 //!
 //! The `lowering-blocker` test passes only while the real source is refused:
 //! the day the front end accepts it, it fails and says the obligations can now

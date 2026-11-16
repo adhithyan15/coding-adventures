@@ -17,7 +17,7 @@
   ],
   "schema": "warrant-proof-evidence-v1",
   "source": "code/packages/rust/hash-functions/src/algorithms.rs",
-  "source_sha256": "05bd602160fb735bb51c050064337b84530c2df84793c392404a3ae1adbc40a4",
+  "source_sha256": "586a7ea14c5c16801b5e84047612a57711e0e45159a816b96c055b6b6f461079",
   "spec": "code/specs/hash-functions.warrant",
-  "spec_sha256": "15cda737e0d6b6900458ba411a556f29317c9934fc3e891ee992b93cc62ab36f"
+  "spec_sha256": "92328b8316b0f2f8bac1a5f541d5096f9d0409da74676d1c071e2dc1ab9b926f"
 }

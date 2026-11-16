@@ -18,12 +18,17 @@ WARRANT_EVIDENCE_FAULT=flip-result-bit WARRANT_EVIDENCE_FILTER=/exhaustive/fnv1a
 WARRANT_EVIDENCE_FAULT=flip-result-bit WARRANT_EVIDENCE_FILTER=/exhaustive/djb2_one_byte_matches_both_models cargo test -q -p coding_adventures_hash_functions --test warrant_evidence 2>/dev/null | grep -q '^not ok '
 WARRANT_EVIDENCE_FAULT=flip-result-bit WARRANT_EVIDENCE_FILTER=/exhaustive/polynomial_rolling_one_byte_is_the_byte cargo test -q -p coding_adventures_hash_functions --test warrant_evidence 2>/dev/null | grep -q '^not ok '
 WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/polynomial_params_zero_modulus_is_rejected cargo test -q -p coding_adventures_hash_functions --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=flip-result-bit WARRANT_EVIDENCE_FILTER=/exhaustive/polynomial_params_abc_every_parameter_pair cargo test -q -p coding_adventures_hash_functions --test warrant_evidence 2>/dev/null | grep -q '^not ok '
 WARRANT_EVIDENCE_FAULT=flip-result-bit WARRANT_EVIDENCE_FILTER=/exhaustive/murmur3_32_one_byte_matches_the_model cargo test -q -p coding_adventures_hash_functions --test warrant_evidence 2>/dev/null | grep -q '^not ok '
 WARRANT_EVIDENCE_FAULT=flip-result-bit WARRANT_EVIDENCE_FILTER=/exhaustive/murmur3_seed_len_0 cargo test -q -p coding_adventures_hash_functions --test warrant_evidence 2>/dev/null | grep -q '^not ok '
 WARRANT_EVIDENCE_FAULT=flip-result-bit WARRANT_EVIDENCE_FILTER=/exhaustive/siphash_len_0 cargo test -q -p coding_adventures_hash_functions --test warrant_evidence 2>/dev/null | grep -q '^not ok '
 # siphash_2_4's key is `secret`: its constant-time obligation is attempted on the real source,
 # the front end refuses it, and the proof manifest records it `not-live` with the blocker.
 WARRANT_PROOF_OUT=$PWD/evidence cargo test -q -p coding_adventures_warrant_ir --test hash_functions_proofs
+# Staleness: the two manifests written above are deterministic (fixed seed, content hashes, no
+# timestamps or toolchain data) and the repo forces LF, so the committed files must equal the
+# fresh ones.  This stands in for ca-assurance-report --check, which is not wired here.
+git diff --exit-code -- evidence/
 # NOT WIRED (DT17a section 7, owner call): the capability analyzer line and the
 # ca-assurance-report `--check` line.  The crate's analysis.rs draws OS randomness
 # (getrandom, for avalanche_score), so the analyzer fails against the declared

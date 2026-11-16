@@ -4,7 +4,8 @@
 -- generated harness runs every claim below against the real crate.  The
 -- analyzer and the ca-assurance-report package report are NOT wired (DT17a
 -- section 7).  Negative controls: `flip-result-bit` on each U32/U64 result
--- (WX-FAULT1) and `missing-error` on the zero-modulus rejection.
+-- (WX-FAULT1, including the hash inside the `Ok` of polynomial_rolling_with_params)
+-- and `missing-error` on the zero-modulus rejection.
 --
 -- Warrant document for rust/hash-functions (VER04h, VER04j section 14.4, WX-P1a).
 -- Every example and claim below is compiled into tests/generated/warrant_evidence.rs
@@ -130,11 +131,12 @@ warrant hash_functions v1
   assume environment:
     none
 
-  -- Nothing here is secret: the package hashes public keys for hash tables.  The
-  -- SipHash key is a secret in deployment (it is what makes hash flooding
-  -- impractical) but this package neither generates nor stores it, and the
-  -- operation is not constant-time-claimed; the label therefore states the
-  -- threat model of the *tested* values, which are fixed public vectors.
+  -- Labels.  `data`, `base`, `modulus` and `seed` are public: the package hashes
+  -- public keys for hash tables.  The SipHash `key` is `secret`: its secrecy is
+  -- what makes hash flooding impractical, so the label states the real threat
+  -- model, and the package does not claim a constant-time proof (the report would
+  -- record CWE-208 applicable and unaddressed, as for gf256).  The tested key
+  -- values are fixed public vectors, which is why the examples can name them.
   labels fnv1a_32:
     data public
   labels fnv1a_64:
@@ -193,6 +195,9 @@ warrant hash_functions v1
     hostile
     rejects modulus == 0u64 with PolyError.MODULUS_ZERO
     ensures no_panic, terminates
+    -- Caveat: `no_panic` here holds of the harness adapter, not of the crate.  The
+    -- real `polynomial_rolling_with_params` PANICS on `assert!(modulus > 0)`; the
+    -- generated adapter catches any panic and reports it as MODULUS_ZERO.
 
   -- ---- known answers: FNV-1a 32 (draft-eastlake-fnv test vectors and the DT17 vectors)
   example fnv1a_32_empty:
@@ -298,6 +303,11 @@ warrant hash_functions v1
     murmur3_32_with_seed(b"54686520717569636b2062726f776e20666f78206a756d7073206f76657220746865206c617a7920646f67", 2538058380u32) == 799549133u32
   example murmur3_32_fox:
     murmur3_32(b"54686520717569636b2062726f776e20666f78206a756d7073206f76657220746865206c617a7920646f67") == 776992547u32
+  -- Five blocks (20 bytes 01 02 .. 14), unseeded and at the reference seed.
+  example murmur3_32_five_blocks:
+    murmur3_32(b"0102030405060708090a0b0c0d0e0f1011121314") == 2631643533u32
+  example murmur3_32_with_seed_five_blocks:
+    murmur3_32_with_seed(b"0102030405060708090a0b0c0d0e0f1011121314", 2538058380u32) == 937835026u32
   example murmur3_32_with_seed_fox:
     murmur3_32_with_seed(b"54686520717569636b2062726f776e20666f78206a756d7073206f76657220746865206c617a7920646f67", 0u32) == 776992547u32
   -- SipHash-2-4, key 00 01 .. 0f, input 00 01 .. (n-1).  Lengths 0, 1 and 15 are
@@ -336,6 +346,17 @@ warrant hash_functions v1
     siphash_2_4(b"000102030405060708090a0b0c0d0e", b"000102030405060708090a0b0c0d0e0f") == 11613035633349379557u64
   example siphash_2_4_len_16:
     siphash_2_4(b"000102030405060708090a0b0c0d0e0f", b"000102030405060708090a0b0c0d0e0f") == 4551675220716592091u64
+  -- Beyond one block: reference vectors for lengths 17, 24, 32 and 63 (message
+  -- 00 01 02 ..., key 00 01 .. 0f), computed by an independent implementation
+  -- that reproduces the published vectors at lengths 0, 1, 15 and 16.
+  example siphash_2_4_len_17:
+    siphash_2_4(b"000102030405060708090a0b0c0d0e0f10", b"000102030405060708090a0b0c0d0e0f") == 7609651759622801300u64
+  example siphash_2_4_len_24:
+    siphash_2_4(b"000102030405060708090a0b0c0d0e0f1011121314151617", b"000102030405060708090a0b0c0d0e0f") == 13307381289415454612u64
+  example siphash_2_4_len_32:
+    siphash_2_4(b"000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f", b"000102030405060708090a0b0c0d0e0f") == 8153574914611379406u64
+  example siphash_2_4_len_63:
+    siphash_2_4(b"000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e", b"000102030405060708090a0b0c0d0e0f") == 10775480364379293042u64
   example siphash_2_4_zero_key_hello:
     siphash_2_4(b"68656c6c6f", b"00000000000000000000000000000000") == 10142490492830962361u64
 
@@ -382,10 +403,8 @@ warrant hash_functions v1
     forall a: U8, b: U8. polynomial_rolling(concat(be_bytes(a), be_bytes(b))) == widen<U64>(a) * 31u64 + widen<U64>(b)
   claim polynomial_rolling_append_is_one_step:
     forall d: Bytes, x: U8. polynomial_rolling(concat(d, be_bytes(x))) == polystep(polynomial_rolling(d), x, 31u64, 2305843009213693951u64)
-  -- The default is the parameterised function at base 31 and modulus 2^61 - 1,
-  -- pinned in both orders.
-  claim polynomial_rolling_is_the_default_parameters:
-    forall d: Bytes. polynomial_rolling(d) == (match polynomial_rolling_with_params(d, 31u64, 2305843009213693951u64) with Ok(h) -> h | Err(e) -> 0u64)
+  -- The default is the parameterised function at base 31 and modulus 2^61 - 1
+  -- (and the parameterised call is Ok, never Err, there).
   claim polynomial_params_default_is_polynomial_rolling:
     forall d: Bytes. polynomial_rolling_with_params(d, 31u64, 2305843009213693951u64) == Ok(polynomial_rolling(d))
   -- Parameterised appends, for two fixed parameter sets (a small prime modulus
@@ -414,7 +433,8 @@ warrant hash_functions v1
     forall s: U32, t: Bytes<2>. murmur3_32_with_seed(t, s) == mmfin(mmtail(s, from_le<U32>(concat(t, b"0000"))), 2u32)
   claim murmur3_seed_len_3:
     forall s: U32, t: Bytes<3>. murmur3_32_with_seed(t, s) == mmfin(mmtail(s, from_le<U32>(concat(t, b"00"))), 3u32)
-  -- One block, every seed and every word (313 x 313 cases).
+  -- One block, over the U32 edge set for the seed and for the word (an edge
+  -- sample, 313 x 313 cases, not every value).
   claim murmur3_seed_len_4:
     forall s: U32, w: U32. murmur3_32_with_seed(le_bytes(w), s) == mmfin(mmround(s, w), 4u32)
   -- Block plus tail, and two blocks, at the reference seed.
@@ -429,12 +449,11 @@ warrant hash_functions v1
   -- Two blocks and a three-byte tail (11 bytes), the first block fixed.
   claim murmur3_seed_len_11:
     forall n: Bytes<4>, t: Bytes<3>. murmur3_32_with_seed(concat(concat(b"01020304", n), t), 1u32) == mmfin(mmtail(mmround(mmround(1u32, 67305985u32), from_le<U32>(n)), from_le<U32>(concat(t, b"00"))), 11u32)
-  -- The unseeded function is the seeded one at seed 0, in both orders, and the
-  -- model pins it directly for short inputs (every byte, every pair, every word).
+  -- The unseeded function is the seeded one at seed 0, and the
+  -- model pins it directly for short inputs (every byte, every pair of bytes, and
+  -- an edge sample of words).
   claim murmur3_32_is_seed_zero:
     forall d: Bytes. murmur3_32(d) == murmur3_32_with_seed(d, 0u32)
-  claim murmur3_32_with_seed_zero_is_murmur3_32:
-    forall d: Bytes. murmur3_32_with_seed(d, 0u32) == murmur3_32(d)
   claim murmur3_32_one_byte_matches_the_model:
     forall a: U8. murmur3_32(be_bytes(a)) == mmfin(mmtail(0u32, widen<U32>(a)), 1u32)
   claim murmur3_32_two_bytes_match_the_model:
@@ -481,8 +500,9 @@ warrant hash_functions v1
     forall m: Bytes<8>, t: Bytes<7>. siphash_2_4(concat(m, t), b"000102030405060708090a0b0c0d0e0f") == sipfinal(sipabsorb(sipabsorb(sipinit(506097522914230528u64, 1084818905618843912u64), from_le<U64>(m)), siplast(15u64, concat(t, b"00"))))
   claim siphash_len_16:
     forall m: Bytes<8>, n: Bytes<8>. siphash_2_4(concat(m, n), b"000102030405060708090a0b0c0d0e0f") == sipfinal(sipabsorb(sipabsorb(sipabsorb(sipinit(506097522914230528u64, 1084818905618843912u64), from_le<U64>(m)), from_le<U64>(n)), siplast(16u64, b"0000000000000000")))
-  -- Every key (313 x 313 values of the two key halves, little-endian), on the
-  -- empty input and on nine bytes (one block and a one-byte tail).
+  -- An edge sample of keys (the U64 edge set for each key half, 377 x 377 =
+  -- 142,129 keys, little-endian; not every key), on the empty input and on nine
+  -- bytes (one block and a one-byte tail).
   claim siphash_every_key_empty_input:
     forall k0: U64, k1: U64. siphash_2_4(b"", concat(le_bytes(k0), le_bytes(k1))) == sipfinal(sipabsorb(sipinit(k0, k1), siplast(0u64, b"0000000000000000")))
   claim siphash_every_key_nine_bytes:

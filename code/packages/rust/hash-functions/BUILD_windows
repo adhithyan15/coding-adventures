@@ -10,8 +10,10 @@ set WARRANT_EVIDENCE_FAULT=flip-result-bit&& set WARRANT_EVIDENCE_FILTER=/exhaus
 set WARRANT_EVIDENCE_FAULT=flip-result-bit&& set WARRANT_EVIDENCE_FILTER=/exhaustive/djb2_one_byte_matches_both_models&& cargo test -q -p coding_adventures_hash_functions --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
 set WARRANT_EVIDENCE_FAULT=flip-result-bit&& set WARRANT_EVIDENCE_FILTER=/exhaustive/polynomial_rolling_one_byte_is_the_byte&& cargo test -q -p coding_adventures_hash_functions --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
 set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/polynomial_params_zero_modulus_is_rejected&& cargo test -q -p coding_adventures_hash_functions --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=flip-result-bit&& set WARRANT_EVIDENCE_FILTER=/exhaustive/polynomial_params_abc_every_parameter_pair&& cargo test -q -p coding_adventures_hash_functions --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
 set WARRANT_EVIDENCE_FAULT=flip-result-bit&& set WARRANT_EVIDENCE_FILTER=/exhaustive/murmur3_32_one_byte_matches_the_model&& cargo test -q -p coding_adventures_hash_functions --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
 set WARRANT_EVIDENCE_FAULT=flip-result-bit&& set WARRANT_EVIDENCE_FILTER=/exhaustive/murmur3_seed_len_0&& cargo test -q -p coding_adventures_hash_functions --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
 set WARRANT_EVIDENCE_FAULT=flip-result-bit&& set WARRANT_EVIDENCE_FILTER=/exhaustive/siphash_len_0&& cargo test -q -p coding_adventures_hash_functions --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
 set WARRANT_PROOF_OUT=%CD%\evidence&& cargo test -q -p coding_adventures_warrant_ir --test hash_functions_proofs
+git diff --exit-code -- evidence/
 # The analyzer and report lines are not wired: see BUILD (DT17a section 7).
