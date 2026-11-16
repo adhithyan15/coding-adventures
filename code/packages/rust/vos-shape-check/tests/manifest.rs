@@ -34,9 +34,7 @@ fn every_spelling_of_a_key_flattens_to_one_path() {
         "[ package ]\n  build  =  \"x\"  ",
         "[package]\nbuild = \"\"\"x\"\"\"",
         "[package]\nbuild = '''x'''",
-        "[package]\nbuild = '''\nx'''",
-        "[package]\nbuild = \"\"\"\nx\"\"\"",
-        "[package]\nbuild = \"\"\"x\\\n   \"\"\"",
+        "[package]\nbuild = \"\"\"x\"\"\"",
     ] {
         assert_eq!(value_of(t, "package.build"), want, "{t:?}");
     }
@@ -76,11 +74,21 @@ fn values_arrays_tables_and_arrays_of_tables() {
 }
 
 #[test]
-fn string_escapes_and_lines() {
-    assert_eq!(
-        value_of("k = \"a\\tb\\n\\\\\\\"\\u00e9\\U0001F600\\r\\b\\f\"", "k"),
-        Value::Str("a\tb\n\\\"\u{e9}\u{1F600}\r\u{8}\u{c}".into())
-    );
+fn escapes_are_refused_and_lines_are_kept() {
+    // The TOML lexer leaves escapes of basic strings undecoded, so a basic or
+    // multi-line basic string with a backslash (a key OR a value) is refused
+    // (fail closed); literal strings have no escapes and are fine.
+    for bad in [
+        "k = \"a\\tb\"",
+        "k = \"\\u00e9\"",
+        "\"pack\\u0061ge\".build = 1",
+        "k = \"\"\"x\\\n y\"\"\"",
+        "[\"a\\nb\"]",
+    ] {
+        let e = parse(bad).unwrap_err();
+        assert!(e.message.contains("escape"), "{bad:?}: {}", e.message);
+    }
+    assert_eq!(value_of("k = 'a\\tb'", "k"), Value::Str("a\\tb".into()));
     let e = parse("a = 1\nb = 2\n[t]\nc = \"x\"\n").unwrap();
     assert_eq!(
         e.iter().map(|x| x.line).collect::<Vec<_>>(),
@@ -121,9 +129,29 @@ fn toml_errors_fail_closed() {
     ] {
         assert!(parse(t).is_err(), "{t:?} should not parse");
     }
-    let deep = format!("a = {}{}", "[".repeat(40), "]".repeat(40));
-    assert!(parse(&deep).unwrap_err().message.contains("deep"));
-    assert_eq!(parse("a = 1\nb = @").unwrap_err().line, 2);
+    // nesting is bounded by the grammar parser's own recursion cap (about 53
+    // levels of arrays), beyond which it refuses
+    let ok_depth = format!("a = {}{}", "[".repeat(20), "]".repeat(20));
+    assert!(parse(&ok_depth).is_ok());
+    for n in [70usize, 300] {
+        let deep = format!("a = {}{}", "[".repeat(n), "]".repeat(n));
+        assert!(parse(&deep).is_err(), "{n} levels");
+    }
+    // the grammar crates give no position for a lexical or syntax error
+    assert_eq!(parse("a = 1\nb = @").unwrap_err().line, 1);
+    // duplicate keys are refused (the grammar crate accepts them), also via dotted
+    // keys and inline tables; the same key under two `[[x]]` tables is fine
+    for dup in [
+        "a = 1\na = 2\n",
+        "a.b = 1\na = { b = 2 }\na.b = 3\n",
+        "[t]\nx = 1\nx = 2\n",
+    ] {
+        assert!(
+            parse(dup).unwrap_err().message.contains("duplicate"),
+            "{dup:?}"
+        );
+    }
+    assert!(parse("[[b]]\nn = 1\n[[b]]\nn = 2\n").is_ok());
 }
 
 #[test]
@@ -178,8 +206,8 @@ fn cargo_facts_build_links_proc_macro_and_paths() {
     assert_eq!(c.links_keys.len(), 1);
     assert_eq!(c.proc_macro.len(), 2);
     assert_eq!(c.bad_paths.len(), 1);
-    let c = parse_cargo("[lib]\nproc-macro = false\ncrate-type = 3\npath = \"a\\\\..\\\\b.rs\"\n")
-        .unwrap();
+    let c =
+        parse_cargo("[lib]\nproc-macro = false\ncrate-type = 3\npath = 'a\\..\\b.rs'\n").unwrap();
     assert!(c.proc_macro.is_empty());
     assert_eq!(c.bad_paths.len(), 1);
     let c = parse_cargo("[lib]\npath = \"C:/x/src/lib.rs\"\n").unwrap();

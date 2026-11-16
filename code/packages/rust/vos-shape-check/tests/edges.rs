@@ -7,25 +7,16 @@ use common::*;
 use vos_shape_check::SourceFile;
 
 fn fires(src: &str, id: &str) {
-    let r = run(&body(src));
-    assert!(
-        rules(&r).contains(&id),
-        "expected {id}:\n{src}\n{}",
-        r.render()
-    );
+    check(body(src), Expect::Fires(id.into()), src);
 }
 
 fn clean(src: &str) {
-    let r = run(&body(src));
-    assert!(
-        r.findings.is_empty(),
-        "expected clean:\n{src}\n{}",
-        r.render()
-    );
+    check(body(src), Expect::Clean, src);
 }
 
 #[test]
 fn impl_headers_of_every_shape_resolve_to_their_type() {
+    let _batch = Batch::begin();
     // path type, generics on the impl and the type
     fires("mod a { pub struct B; }\npub trait Tr { fn f(); }\nimpl<T> Tr for a::B { fn f() { Self::f() } }\n", "SH5");
     // generics containing brackets
@@ -47,6 +38,7 @@ fn impl_headers_of_every_shape_resolve_to_their_type() {
 
 #[test]
 fn trait_headers_and_default_methods() {
+    let _batch = Batch::begin();
     fires("pub(crate) trait T2 { fn h() { Self::h() } }\n", "SH5");
     fires(
         "pub trait Tr<T> {}\npub trait V: Tr<(u8,)> { fn v() { Self::v() } }\n",
@@ -58,20 +50,26 @@ fn trait_headers_and_default_methods() {
 
 #[test]
 fn call_qualifiers_that_name_nothing() {
+    let _batch = Batch::begin();
     // a free function using `Self::` outside an impl is a free call
     fires("fn z() { Self::z() }\n", "SH5");
     // qualifiers that are neither a path nor a qualified type name no edge
     // lexical shapes with a `>` before `::name(` and no matching `<` must not panic
-    let r = run(&body(
-        "pub fn w(a: u8) -> bool { a > ::g(1) }\npub fn g(_x: u8) -> u8 { 0 }\n",
-    ));
-    assert!(!rules(&r).contains(&"SH5"), "{}", r.render());
-    let r = run(&body("pub fn w(a: u8) -> bool { (a)::g(1); true }\n"));
-    assert!(!rules(&r).contains(&"SH5"), "{}", r.render());
+    check(
+        body("pub fn w(a: u8) -> bool { a > ::g(1) }\npub fn g(_x: u8) -> u8 { 0 }\n"),
+        Expect::Silent("SH5".into()),
+        "",
+    );
+    check(
+        body("pub fn w(a: u8) -> bool { (a)::g(1); true }\n"),
+        Expect::Silent("SH5".into()),
+        "",
+    );
 }
 
 #[test]
 fn the_ufcs_call_graph_follows_qualified_self_types() {
+    let _batch = Batch::begin();
     fires(
         "pub struct S;\npub trait T { fn f(); }\nimpl T for S { fn f() { <Self as T>::f() } }\n",
         "SH5",
@@ -81,6 +79,7 @@ fn the_ufcs_call_graph_follows_qualified_self_types() {
 
 #[test]
 fn struct_bodies_and_generics_are_read_correctly() {
+    let _batch = Batch::begin();
     // generic struct with a where clause: fields still found, refs still caught
     fires(
         "pub struct S<T> where T: Copy { pub a: &'static u8, pub b: T }\n",
@@ -92,11 +91,9 @@ fn struct_bodies_and_generics_are_read_correctly() {
     // attributes on fields and a tuple-like body do not confuse the field reader
     let mut i = body("pub struct S { #[doc = \"x\"] pub a: u8, (u8), pub b: u8 }\n");
     i.vos_toml = Some("kind = \"production\"\n".into());
-    let r = run(&i);
-    assert!(rules(&r).contains(&"SH14"), "{}", r.render());
-    // a truncated item at end of file is lexically fine and judged as far as it goes
-    let r = run(&body("pub struct S"));
-    assert!(r.findings.is_empty(), "{}", r.render());
+    check(i.clone(), Expect::Fires("SH14".into()), "");
+    // a truncated item at end of file cannot be read to its end: VT03 (fail closed)
+    check(body("pub struct S"), Expect::Fires("VT03".into()), "");
     // a union with generics is parsed like a struct
     fires(
         "pub union U<T: Copy> { pub a: &'static u8, pub b: T }\n",
@@ -106,6 +103,7 @@ fn struct_bodies_and_generics_are_read_correctly() {
 
 #[test]
 fn cfg_test_masking_in_odd_positions() {
+    let _batch = Batch::begin();
     // an attribute stack after cfg(test)
     clean("#[cfg(test)]\n#[derive(Clone)]\nstruct T { a: f32 }\npub fn f() {}\n");
     // a cfg(test) item with no terminator, and a trailing attribute with no item
@@ -121,6 +119,7 @@ fn cfg_test_masking_in_odd_positions() {
 
 #[test]
 fn attributes_between_the_gate_and_the_ghost_item() {
+    let _batch = Batch::begin();
     let mk = |attr_line: &str, vis: &str| {
         let mut i = body(&format!("#[cfg(feature = \"ghost\")]\n{attr_line}{vis}mod ghost {{ pub fn vos_ghost_alpha() -> u8 {{ 1 }} }}\n"));
         i.cargo_toml = Some(format!("{MANIFEST}\n[features]\nghost = []\n"));
@@ -139,19 +138,19 @@ fn attributes_between_the_gate_and_the_ghost_item() {
     // `pub use self::ghost::..` is accepted when gated
     let mut i = body("#[cfg(feature = \"ghost\")]\npub mod ghost { pub fn vos_ghost_alpha() -> u8 { 1 } }\n#[cfg(feature = \"ghost\")]\npub use self::ghost::vos_ghost_alpha;\n");
     i.cargo_toml = Some(format!("{MANIFEST}\n[features]\nghost = []\n"));
-    let r = run(&i);
-    assert!(r.findings.is_empty(), "{}", r.render());
+    check(i.clone(), Expect::Clean, "");
     // a gated `pub fn`/`use` that is not a ghost item is not a gate for it
     let mut i = body("#[cfg(feature = \"ghost\")]\npub fn other() {}\n");
     i.cargo_toml = Some(format!("{MANIFEST}\n[features]\nghost = []\n"));
-    assert!(rules(&run(&i)).contains(&"SH18"));
+    check(i.clone(), Expect::Fires("SH18".into()), "");
     let mut i = body("#[cfg(feature = \"ghost\")]\nuse core::cmp::min;\n");
     i.cargo_toml = Some(format!("{MANIFEST}\n[features]\nghost = []\n"));
-    assert!(rules(&run(&i)).contains(&"SH18"));
+    check(i.clone(), Expect::Fires("SH18".into()), "");
 }
 
 #[test]
 fn ghost_scope_shapes_for_sh17() {
+    let _batch = Batch::begin();
     let ghost = |inner: &str| {
         let mut i = body(&format!(
             "#[cfg(feature = \"ghost\")]\npub mod ghost {{\n{inner}\n}}\n"
@@ -160,17 +159,17 @@ fn ghost_scope_shapes_for_sh17() {
         run(&i)
     };
     // a function-pointer type and a bodiless declaration inside ghost
-    let r = ghost("pub fn vos_ghost_alpha_a(_f: fn(u8)) {}\npub trait X { fn vos_ghost_cfg_b(); }");
+    let r = ghost("pub fn vos_ghost_alpha(_f: fn(u8)) {}\npub trait X { fn vos_ghost_cfg_n(); }");
     assert!(rules(&r).contains(&"SH4"), "{}", r.render());
     assert!(!rules(&r).contains(&"SH17"), "{}", r.render());
     // a stray `> ::f(` with no `<` is not a UFCS call, so the fn is an export
-    let r = ghost("pub fn vos_ghost_alpha_c() -> bool { 1 > ::core::convert::identity(1) }");
+    let r = ghost("pub fn vos_ghost_alpha() -> bool { 1 > ::core::convert::identity(1) }");
     assert!(!rules(&r).contains(&"SH17"), "{}", r.render());
     // a nested group in a destructure
-    let r = ghost("pub struct S { a: (u8, u8) }\npub fn vos_ghost_alpha_d() -> u8 { let S { a: (x, _y) } = <S as T>::make(); x }");
+    let r = ghost("pub struct S { a: (u8, u8) }\npub fn vos_ghost_alpha() -> u8 { let S { a: (x, _y) } = <S as T>::make(); x }");
     assert!(!rules(&r).contains(&"SH17"), "{}", r.render());
     // a `<` in a UFCS qualifier with nested generics
-    let r = ghost("pub fn vos_ghost_alpha_e() -> u8 { <Foo<Bar<u8>> as T>::make() }");
+    let r = ghost("pub fn vos_ghost_alpha() -> u8 { <Foo<Bar<u8>> as T>::make() }");
     assert!(!rules(&r).contains(&"SH17"), "{}", r.render());
     // an `as` outside the call is computation
     let r = ghost("pub fn vos_ghost_f() -> u8 { let x = <Foo as T>::make(); x as u8 }");
@@ -179,24 +178,25 @@ fn ghost_scope_shapes_for_sh17() {
 
 #[test]
 fn default_feature_cycles_do_not_hang() {
+    let _batch = Batch::begin();
     let mut i = body("pub fn f() {}\n");
     i.cargo_toml = Some(format!(
         "{MANIFEST}\n[features]\ndefault = [\"a\"]\na = [\"b\"]\nb = [\"a\", \"dep:x\", \"y/z\"]\n"
     ));
-    assert!(run(&i).findings.is_empty());
+    check(i.clone(), Expect::Clean, "");
 }
 
 #[test]
 fn tokens_at_the_very_start_of_a_file() {
+    let _batch = Batch::begin();
     // a `|` or `[` with no previous token
-    let r = run(&lib("|x| x"));
-    assert!(rules(&r).contains(&"SH4"), "{}", r.render());
-    let r = run(&lib("[0u8; 2];"));
-    assert!(!rules(&r).contains(&"SH8"), "{}", r.render());
+    check(lib("|x| x"), Expect::Fires("SH4".into()), "");
+    check(lib("[0u8; 2];"), Expect::Silent("SH8".into()), "");
 }
 
 #[test]
 fn ghost_files_in_subdirectories_are_ghost_scope() {
+    let _batch = Batch::begin();
     let mut i = body("#[cfg(feature = \"ghost\")]\npub mod ghost;\n");
     i.cargo_toml = Some(format!("{MANIFEST}\n[features]\nghost = []\n"));
     i.sources.push(SourceFile {
@@ -207,6 +207,5 @@ fn ghost_files_in_subdirectories_are_ghost_scope() {
         path: "src/ghost/inner.rs".into(),
         text: "pub fn not_prefixed() {}\n".into(),
     });
-    let r = run(&i);
-    assert!(rules(&r).contains(&"SH17"), "{}", r.render());
+    check(i.clone(), Expect::Fires("SH17".into()), "");
 }

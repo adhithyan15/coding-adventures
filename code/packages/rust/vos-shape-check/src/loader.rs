@@ -41,34 +41,71 @@ const MAX_DIR_ENTRIES: usize = 4_096;
 /// Most entries seen in the whole walk.
 const MAX_TOTAL_ENTRIES: usize = 16_384;
 
-/// `O_NOFOLLOW | O_NONBLOCK` for the platforms we know, inlined (no `libc`).
+/// `O_NOFOLLOW | O_NONBLOCK`, from an EXPLICIT per-target table.  The values
+/// are not portable (Linux alone has two `O_NOFOLLOW` values by architecture),
+/// so a target that is not listed is **refused at runtime** (`None`): a wrong
+/// constant would silently open the file with some other flag, and `0` would
+/// silently turn the protection off.  Add a target only after checking its
+/// `<fcntl.h>`.
+///
+/// | target | `O_NOFOLLOW` | `O_NONBLOCK` |
+/// |---|---|---|
+/// | macOS, iOS, FreeBSD, DragonFly, NetBSD, OpenBSD | `0x100` | `0x4` |
+/// | Linux x86, x86_64 | `0o400000` | `0o4000` |
+/// | Linux aarch64, arm, powerpc, powerpc64 | `0o100000` | `0o4000` |
+/// | any other Linux (riscv64, loongarch64, s390x, mips, ...) | not verified: refused | |
 #[cfg(all(
     unix,
-    any(target_os = "macos", target_os = "ios", target_os = "freebsd")
+    any(
+        target_os = "macos",
+        target_os = "ios",
+        target_os = "freebsd",
+        target_os = "dragonfly",
+        target_os = "netbsd",
+        target_os = "openbsd"
+    )
 ))]
-const OPEN_FLAGS: i32 = 0x100 | 0x4;
+const OPEN_FLAGS: Option<i32> = Some(0x100 | 0x4);
 #[cfg(all(
     unix,
     target_os = "linux",
-    any(target_arch = "aarch64", target_arch = "arm")
+    any(target_arch = "x86", target_arch = "x86_64")
 ))]
-const OPEN_FLAGS: i32 = 0o100000 | 0o4000;
+const OPEN_FLAGS: Option<i32> = Some(0o400000 | 0o4000);
 #[cfg(all(
     unix,
     target_os = "linux",
-    not(any(target_arch = "aarch64", target_arch = "arm"))
+    any(
+        target_arch = "aarch64",
+        target_arch = "arm",
+        target_arch = "powerpc",
+        target_arch = "powerpc64"
+    )
 ))]
-const OPEN_FLAGS: i32 = 0o400000 | 0o4000;
+const OPEN_FLAGS: Option<i32> = Some(0o100000 | 0o4000);
 #[cfg(all(
     unix,
     not(any(
         target_os = "macos",
         target_os = "ios",
         target_os = "freebsd",
-        target_os = "linux"
+        target_os = "dragonfly",
+        target_os = "netbsd",
+        target_os = "openbsd",
+        all(
+            target_os = "linux",
+            any(
+                target_arch = "x86",
+                target_arch = "x86_64",
+                target_arch = "aarch64",
+                target_arch = "arm",
+                target_arch = "powerpc",
+                target_arch = "powerpc64"
+            )
+        )
     ))
 ))]
-const OPEN_FLAGS: i32 = 0;
+const OPEN_FLAGS: Option<i32> = None;
 
 /// What the walk has consumed so far.
 #[derive(Default)]
@@ -83,7 +120,13 @@ fn open_no_follow(path: &Path) -> std::io::Result<File> {
     #[cfg(unix)]
     {
         use std::os::unix::fs::OpenOptionsExt;
-        o.custom_flags(OPEN_FLAGS);
+        let Some(flags) = OPEN_FLAGS else {
+            return Err(std::io::Error::new(
+                std::io::ErrorKind::Unsupported,
+                "this platform has no verified O_NOFOLLOW/O_NONBLOCK constants; refused (see loader.rs)",
+            ));
+        };
+        o.custom_flags(flags);
     }
     o.open(path)
 }

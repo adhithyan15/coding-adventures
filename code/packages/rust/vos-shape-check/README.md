@@ -19,8 +19,13 @@ every occurrence a lexer can see, per rule, with file and line. It is **lexical*
 a pass means "no occurrence the lexer can see". What it cannot see (macro
 expansion, name resolution, callees in other crates, bare `+ - *`) is listed rule
 by rule in VOS03 section 6 and is the job of the image-level companions
-(VOS-026, VOS-028). It carries its own lexer because VER08a exposes no token API
-and `ca-capability-analyzer` must not be modified (VOS03 section 0).
+(VOS-026, VOS-028). It reads Rust with the repository's **grammar-driven lexer** on the RS01 lexical
+pair for the crate's edition, and TOML (`Cargo.toml`, `vos.toml`) with the
+repository's TOML lexer and parser: no hand-written lexer or parser. The
+structural layer over the tokens (headers, impl types, the call graph, the ghost
+shapes) is heuristic and **fails closed**: a scan that gives up is a `VT03` finding,
+never a skipped item. See VOS03 section 0 for the architecture and the one-lexer
+per run design.
 
 ## Where it fits
 
@@ -64,8 +69,11 @@ println!("{}", report.render());
 violating case per rule, the VOS01 section 5 toy crates (which must pass) and
 broken variants (which must fail) under `tests/fixtures/`, CLI exit codes and
 filesystem refusals. Fixture manifests are stored as `Cargo.toml.fixture` so no
-nested Cargo root exists under the package. Per-item security regression tests live in `tests/security.rs`. Line coverage 98% (llvm-cov).
+nested Cargo root exists under the package. Per-item security regression tests live in `tests/security.rs`. Line coverage is reported by llvm-cov (see the changelog).
 
-## Zero dependencies
+## Dependencies
 
-No third-party crates and no dependency on `ca-capability-analyzer`.
+Only in-repo crates: `grammar-tools`, `lexer`, `parser`, `coding-adventures-toml-lexer`
+and `coding-adventures-toml-parser` (and, through them, `regex`). No dependency on
+`ca-capability-analyzer`. The RS01 token grammar is embedded at compile time
+(`include_str!` of `code/grammars/rust/rust1.97.0-e{2021,2024}.tokens`).

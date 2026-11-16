@@ -12,7 +12,8 @@
 //!
 //! ## What it is, and is not
 //!
-//! It is a **lexical** check: it tokenises the source and `Cargo.toml` and
+//! It is a **lexical** check: it tokenises the source (with the repository's
+//! grammar-driven lexer, never a hand-written one) and `Cargo.toml` and
 //! looks for tokens.  A pass means "no occurrence the lexer can see".  It does
 //! not expand macros (it bans them), resolve names, or run anything.  What a
 //! lexical check cannot see is written down rule by rule in
@@ -22,8 +23,10 @@
 //! ## Layout
 //!
 //! ```text
-//!   lexer        source text  -> tokens (with lines), bracket pairing
-//!   toml         Cargo.toml   -> flattened  path = value  entries
+//!   lexer        source text  -> tokens, via the grammar-driven RS01 lexer
+//!                (shebang and comment hooks, one lexer per run), bracket pairing
+//!   toml         Cargo.toml   -> flattened  path = value  entries, via the
+//!                repository's TOML lexer and parser (duplicates, escapes refused)
 //!   manifest     vos.toml (class, kind, evidence features), Cargo facts
 //!   syntax       attributes, item extents, the #[cfg(test)] mask
 //!   items        struct / enum / type definitions
@@ -83,8 +86,8 @@ pub const DEFAULT_EVIDENCE_FEATURES: &[&str] = &["ghost", "cov"];
 pub const MAX_SOURCE_BYTES: usize = 1024 * 1024;
 /// Most source files in one crate.
 pub const MAX_SOURCE_FILES: usize = 512;
-/// Most source bytes in one crate.
-pub const MAX_TOTAL_BYTES: usize = 8 * 1024 * 1024;
+/// Most source bytes in one crate (the tokens of all files are held at once).
+pub const MAX_TOTAL_BYTES: usize = 1024 * 1024;
 
 /// One source file: crate-relative `/`-separated path and its text.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -135,8 +138,24 @@ fn input_finding(out: &mut Vec<Finding>, file: &str, line: u32, message: impl In
     });
 }
 
-/// Check one crate.  Pure: the same input always yields the same report.
-pub fn check_crate(input: &CrateInput, policy: &Policy) -> Report {
+/// The lexing outcome of one source file (`None`: not lexed at all).
+type Lexed = Option<Result<Vec<lexer::Token>, lexer::LexError>>;
+
+/// Everything decided about one crate before its sources are lexed.
+struct Prepared {
+    early: Vec<Finding>,
+    package: Option<String>,
+    cargo: Option<manifest::CargoFacts>,
+    class: Class,
+    class_source: ClassSource,
+    kind: Option<manifest::Kind>,
+    declared: Vec<String>,
+    edition: lexer::Edition,
+    /// Indexes into `input.sources`, sorted by path, of the files to lex.
+    docs: Vec<usize>,
+}
+
+fn prepare(input: &CrateInput, policy: &Policy) -> Prepared {
     let mut early: Vec<Finding> = Vec::new();
 
     // vos.toml: class, kind, declared evidence features.
@@ -202,31 +221,128 @@ pub fn check_crate(input: &CrateInput, policy: &Policy) -> Report {
             }
         },
     };
+    // The lexical pair is chosen by the declared edition (SH4 allows 2021 and
+    // 2024); anything else is an SH4 finding elsewhere and is lexed as 2021.
+    let edition = match cargo.as_ref().and_then(|c| c.edition.as_deref()) {
+        Some("2024") => lexer::Edition::E2024,
+        _ => lexer::Edition::E2021,
+    };
 
-    // Source caps and lexing.
-    let mut sources: Vec<&SourceFile> = input.sources.iter().collect();
-    sources.sort_by(|a, b| a.path.cmp(&b.path));
-    let total: usize = sources.iter().map(|s| s.text.len()).sum();
-    if sources.len() > MAX_SOURCE_FILES || total > MAX_TOTAL_BYTES {
+    // Source caps.
+    let mut order: Vec<usize> = (0..input.sources.len()).collect();
+    order.sort_by(|&a, &b| input.sources[a].path.cmp(&input.sources[b].path));
+    let total: usize = input.sources.iter().map(|s| s.text.len()).sum();
+    if input.sources.len() > MAX_SOURCE_FILES || total > MAX_TOTAL_BYTES {
         input_finding(
             &mut early,
             "src",
             1,
-            "source file count or total size is over the cap (512 files, 8 MiB)",
+            "source file count or total size is over the cap (512 files, 1 MiB)",
         );
-        sources.clear();
+        order.clear();
     }
-    let mut files: Vec<FileCtx> = Vec::new();
-    for s in sources {
+    let mut docs = Vec::new();
+    for i in order {
+        let s = &input.sources[i];
         if s.text.len() > MAX_SOURCE_BYTES {
             input_finding(&mut early, &s.path, 1, "source file is over 1 MiB");
+        } else {
+            docs.push(i);
+        }
+    }
+    Prepared {
+        early,
+        package,
+        cargo,
+        class,
+        class_source,
+        kind,
+        declared,
+        edition,
+        docs,
+    }
+}
+
+/// Check one crate.  Pure: the same input always yields the same report.
+pub fn check_crate(input: &CrateInput, policy: &Policy) -> Report {
+    check_crates(std::slice::from_ref(input), policy).remove(0)
+}
+
+/// Check several crates, lexing ALL their sources with one grammar lexer per
+/// edition (a `GrammarLexer` costs about 175 ms to build and cannot be reused,
+/// so a run builds it once; see [`lexer`]).  Report `i` is for `inputs[i]`.
+pub fn check_crates(inputs: &[CrateInput], policy: &Policy) -> Vec<Report> {
+    let mut prepared: Vec<Prepared> = inputs.iter().map(|i| prepare(i, policy)).collect();
+    // Lex every document of every crate, grouped by edition.
+    let mut lexed: Vec<Vec<Lexed>> = prepared.iter().map(|p| vec![None; p.docs.len()]).collect();
+    for edition in [lexer::Edition::E2021, lexer::Edition::E2024] {
+        let mut slots: Vec<(usize, usize)> = Vec::new();
+        let mut texts: Vec<&str> = Vec::new();
+        for (ci, p) in prepared.iter().enumerate() {
+            if p.edition == edition {
+                for (di, &si) in p.docs.iter().enumerate() {
+                    slots.push((ci, di));
+                    texts.push(inputs[ci].sources[si].text.as_str());
+                }
+            }
+        }
+        if texts.is_empty() {
             continue;
         }
-        match FileCtx::load(&s.path, &s.text) {
+        for ((ci, di), r) in slots.into_iter().zip(lexer::lex_documents(&texts, edition)) {
+            lexed[ci][di] = Some(r);
+        }
+    }
+    let mut reports = Vec::with_capacity(inputs.len());
+    for (ci, input) in inputs.iter().enumerate() {
+        let p = std::mem::replace(
+            &mut prepared[ci],
+            Prepared {
+                early: Vec::new(),
+                package: None,
+                cargo: None,
+                class: Class::K,
+                class_source: ClassSource::Default,
+                kind: None,
+                declared: Vec::new(),
+                edition: lexer::Edition::E2021,
+                docs: Vec::new(),
+            },
+        );
+        let results = std::mem::take(&mut lexed[ci]);
+        reports.push(analyse(input, policy, p, results));
+    }
+    reports
+}
+
+fn analyse(input: &CrateInput, policy: &Policy, p: Prepared, results: Vec<Lexed>) -> Report {
+    let Prepared {
+        mut early,
+        package,
+        cargo,
+        class,
+        class_source,
+        kind,
+        declared,
+        docs,
+        ..
+    } = p;
+    let mut files: Vec<FileCtx> = Vec::new();
+    for (&si, r) in docs.iter().zip(results) {
+        let path = &input.sources[si].path;
+        let outcome = match r {
+            Some(Ok(toks)) => FileCtx::from_tokens(path, toks),
+            Some(Err(e)) => Err(e),
+            None => Err(lexer::LexError {
+                line: 1,
+                message: "not lexed".to_string(),
+            }),
+        };
+        match outcome {
             Ok(f) => files.push(f),
             Err(e) => input_finding(
                 &mut early,
-                &s.path,
+                path,
                 e.line,
                 format!("cannot lex: {} (fail closed)", e.message),
             ),
@@ -249,7 +365,7 @@ pub fn check_crate(input: &CrateInput, policy: &Policy) -> Report {
 
     let mut evidence: BTreeSet<String> = policy.evidence_features.iter().cloned().collect();
     evidence.extend(declared);
-    let types: Vec<items::TypeDef> = items::collect_types(&files);
+    let (types, gaps) = items::collect_types(&files);
     let im = rules::interior_mutable(&types);
     let mut cx = Ctx {
         class,
@@ -260,6 +376,10 @@ pub fn check_crate(input: &CrateInput, policy: &Policy) -> Report {
         evidence: &evidence,
         out: early,
     };
+    for g in &gaps {
+        let file = files[g.file].path.clone();
+        cx.add(Rule::Vt03, &file, g.line, g.message.clone());
+    }
     let all = cx.files;
     for f in all {
         rules::file_rules(&mut cx, f, &im);

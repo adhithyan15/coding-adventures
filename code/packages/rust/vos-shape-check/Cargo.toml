@@ -13,3 +13,10 @@ name = "vos-shape-check"
 path = "src/main.rs"
 
 [dependencies]
+# Rust and TOML are read with the repository's grammar-driven crates (RS01,
+# toml.tokens/.grammar), never a hand-written lexer or parser.
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }
+parser = { path = "../parser" }
+coding-adventures-toml-lexer = { path = "../toml-lexer" }
+coding-adventures-toml-parser = { path = "../toml-parser" }

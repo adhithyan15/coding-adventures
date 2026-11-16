@@ -9,43 +9,24 @@ use std::time::{Duration, Instant};
 use vos_shape_check::{CrateInput, SourceFile};
 
 fn has_msg(input: &CrateInput, id: &str, needle: &str) {
-    let r = run(input);
-    assert!(
-        r.findings
-            .iter()
-            .any(|f| f.rule.id() == id && f.message.contains(needle)),
-        "expected {id} mentioning {needle:?}, got:\n{}",
-        r.render()
-    );
+    check(input.clone(), Expect::Msg(id.into(), needle.into()), id);
 }
 
 fn has(input: &CrateInput, id: &str) -> bool {
-    let r = run(input);
-    let ok = rules(&r).contains(&id);
-    assert!(ok, "expected {id}, got:\n{}", r.render());
-    ok
+    check(input.clone(), Expect::Fires(id.into()), id);
+    true
 }
 
 fn src_has(src: &str, id: &str) {
-    has(&body(src), id);
+    check(body(src), Expect::Fires(id.into()), src);
 }
 
 fn src_lacks(src: &str, id: &str) {
-    let r = run(&body(src));
-    assert!(
-        !rules(&r).contains(&id),
-        "did not expect {id}:\n{src}\n{}",
-        r.render()
-    );
+    check(body(src), Expect::Silent(id.into()), src);
 }
 
 fn clean(src: &str) {
-    let r = run(&body(src));
-    assert!(
-        r.findings.is_empty(),
-        "expected clean:\n{src}\n{}",
-        r.render()
-    );
+    check(body(src), Expect::Clean, src);
 }
 
 fn with_features(src: &str) -> CrateInput {
@@ -58,13 +39,23 @@ fn within(limit: Duration, what: &str, f: impl FnOnce()) {
     let t = Instant::now();
     f();
     let d = t.elapsed();
-    assert!(d < limit, "{what} took {d:?} (limit {limit:?})");
+    // instrumented (coverage) builds run several times slower
+    let scale = if std::env::var_os("LLVM_PROFILE_FILE").is_some() {
+        25
+    } else {
+        1
+    };
+    assert!(
+        d < limit * scale,
+        "{what} took {d:?} (limit {limit:?} x {scale})"
+    );
 }
 
 // 1 ---------------------------------------------------------------- shebang
 
 #[test]
 fn item1_shebang_lookalike_is_an_inner_attribute_not_a_skipped_line() {
+    let _batch = Batch::begin();
     // rustc reads `#! [attr]` as an inner attribute: the `unsafe` after it is code.
     // (Assert the `unsafe` finding itself, not just any SH2: the root also
     // lacks `forbid`, which would satisfy a bare rule-id check.)
@@ -82,10 +73,11 @@ fn item1_shebang_lookalike_is_an_inner_attribute_not_a_skipped_line() {
     unsafe_found("#!/* c */[allow(dead_code)] unsafe fn evil() {}\n");
     unsafe_found("#!\n// c\n[allow(dead_code)] unsafe fn evil() {}\n");
     // a real shebang is still skipped (the line, not the rest of the file)
-    let r = run(&lib(
-        "#!/usr/bin/env run\n#![no_std]\n#![forbid(unsafe_code)]\npub fn f() {}\n",
-    ));
-    assert!(r.passed(), "{}", r.render());
+    check(
+        lib("#!/usr/bin/env run\n#![no_std]\n#![forbid(unsafe_code)]\npub fn f() {}\n"),
+        Expect::Clean,
+        "",
+    );
     unsafe_found("#!/usr/bin/env run\nunsafe fn evil() {}\n");
 }
 
@@ -93,6 +85,7 @@ fn item1_shebang_lookalike_is_an_inner_attribute_not_a_skipped_line() {
 
 #[test]
 fn item2_raw_identifiers_are_normalised_so_name_rules_still_fire() {
+    let _batch = Batch::begin();
     let table: &[(&str, &str)] = &[
         ("SH8", "pub fn f(o: Option<u8>) -> u8 { o.r#unwrap() }"),
         (
@@ -149,6 +142,7 @@ fn ghost_with(inner: &str) -> CrateInput {
 
 #[test]
 fn item3_a_ghost_function_without_a_ufcs_call_is_a_finding() {
+    let _batch = Batch::begin();
     // the operation reimplemented inline: evidence would cover a lookalike
     let inline = "    pub fn vos_ghost_insert(s: Image, p: u8) -> (u8, Image) { (1, Image { mask: s.mask | p }) }";
     has_msg(&ghost_with(inline), "SH17", "no UFCS call");
@@ -184,6 +178,7 @@ fn item3_a_ghost_function_without_a_ufcs_call_is_a_finding() {
 
 #[test]
 fn item4_root_attributes_must_be_crate_level() {
+    let _batch = Batch::begin();
     // inside a module they apply to the module
     let r = run(&lib(
         "mod m { #![no_std] #![forbid(unsafe_code)] }\npub fn f() {}\n",
@@ -194,13 +189,17 @@ fn item4_root_attributes_must_be_crate_level() {
         r.render()
     );
     // after an item they are no longer crate-level inner attributes
-    let r = run(&lib("pub fn f() {}\n#![no_std]\n#![forbid(unsafe_code)]\n"));
-    assert!(rules(&r).contains(&"SH1"), "{}", r.render());
+    check(
+        lib("pub fn f() {}\n#![no_std]\n#![forbid(unsafe_code)]\n"),
+        Expect::Fires("SH1".into()),
+        "",
+    );
     // a leading run of inner attributes (and comments) is fine
-    let r = run(&lib(
-        "// c\n#![allow(dead_code)]\n#![no_std]\n/* c */ #![forbid(unsafe_code)]\n",
-    ));
-    assert!(r.passed(), "{}", r.render());
+    check(
+        lib("// c\n#![allow(dead_code)]\n#![no_std]\n/* c */ #![forbid(unsafe_code)]\n"),
+        Expect::Clean,
+        "",
+    );
 }
 
 // 5 --------------------------------------------------------- crate roots
@@ -213,6 +212,7 @@ fn manifest_input(cargo: &str) -> CrateInput {
 
 #[test]
 fn item5_lib_path_bins_and_other_targets_are_pinned() {
+    let _batch = Batch::begin();
     let head = "[package]\nname = \"vos-demo\"\nversion = \"0.1.0\"\nedition = \"2021\"\n";
     has(
         &manifest_input(&format!("{head}[lib]\npath = \"src/other.rs\"\n")),
@@ -247,8 +247,7 @@ fn item5_lib_path_bins_and_other_targets_are_pinned() {
         "SH15",
     );
     // the proper homes are accepted
-    let r = run(&manifest_input(&format!("{head}[lib]\npath = \"src/lib.rs\"\n[[test]]\nname = \"t\"\npath = \"tests/t.rs\"\n[[example]]\nname = \"e\"\npath = \"examples/e.rs\"\n[[bench]]\nname = \"b\"\npath = \"benches/b.rs\"\n")));
-    assert!(r.passed(), "{}", r.render());
+    check(manifest_input(&format!("{head}[lib]\npath = \"src/lib.rs\"\n[[test]]\nname = \"t\"\npath = \"tests/t.rs\"\n[[example]]\nname = \"e\"\npath = \"examples/e.rs\"\n[[bench]]\nname = \"b\"\npath = \"benches/b.rs\"\n")), Expect::Clean, "");
     // `[project]` is the old spelling of `[package]`
     let mut i = body("pub fn f() {}\n");
     i.cargo_toml =
@@ -267,6 +266,7 @@ fn item5_lib_path_bins_and_other_targets_are_pinned() {
 
 #[test]
 fn item6_every_index_form_is_reported() {
+    let _batch = Batch::begin();
     for src in [
         "pub struct W(pub [u8; 4]);\npub fn f(w: W, i: usize) -> u8 { w.0[i] }",
         "pub fn f(r: Result<[u8; 4], u8>, i: usize) -> Option<u8> { Some(r.ok()?[i]) }",
@@ -287,6 +287,7 @@ fn item6_every_index_form_is_reported() {
 
 #[test]
 fn item7_shift_evasions() {
+    let _batch = Batch::begin();
     for src in [
         "pub fn f(x: u32, n: &u32) -> u32 { x >> *n }",
         "pub fn f(x: u32, y: u32) -> u32 { x >> !y }",
@@ -315,6 +316,7 @@ fn item7_shift_evasions() {
 
 #[test]
 fn item7_panic_and_iterator_paths_after_double_colon() {
+    let _batch = Batch::begin();
     src_has(
         "pub fn f(o: Option<u8>) -> u8 { Option::unwrap(o) }\n",
         "SH8",
@@ -338,6 +340,7 @@ fn item7_panic_and_iterator_paths_after_double_colon() {
 
 #[test]
 fn item7_more_closure_positions() {
+    let _batch = Batch::begin();
     for src in [
         "pub fn c() -> u8 { let f = &|x: u8| x; f(1) }",
         "pub fn c() -> u8 { let f = *|x: u8| x; 0 }",
@@ -353,6 +356,7 @@ fn item7_more_closure_positions() {
 
 #[test]
 fn item8_a_for_that_is_not_provably_an_impl_header_is_reported() {
+    let _batch = Batch::begin();
     src_has("pub struct S { pub a: u8 }\npub fn f() -> u8 { let mut t = 0; for S { a } in core::iter::repeat(S { a: 1 }) { t = a; } t }\n", "SH6");
     src_has("pub fn f(z: [(u8, u8); 2]) { for (a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, zz) in z { } }\n", "SH6");
     // a `for` with no `in` and no impl header
@@ -365,6 +369,7 @@ fn item8_a_for_that_is_not_provably_an_impl_header_is_reported() {
 
 #[test]
 fn item9_turbofish_qualifiers_and_impls_on_unnamed_types() {
+    let _batch = Batch::begin();
     src_has(
         "pub struct Foo<T>(T);\nimpl<T> Foo<T> { pub fn go(n: u8) -> u8 { Foo::<u8>::go(n) } }\n",
         "SH5",
@@ -381,6 +386,7 @@ fn item9_turbofish_qualifiers_and_impls_on_unnamed_types() {
 
 #[test]
 fn item10_every_cfg_other_than_the_ghost_gate_is_a_finding() {
+    let _batch = Batch::begin();
     for src in [
         "#[cfg(target_arch = \"riscv32\")] pub fn f() -> u8 { 1 }\n#[cfg(not(target_arch = \"riscv32\"))] pub fn f() -> u8 { 2 }",
         "#[cfg(debug_assertions)] pub fn f() {}",
@@ -399,14 +405,14 @@ fn item10_every_cfg_other_than_the_ghost_gate_is_a_finding() {
     // `cfg!` is not a pure core macro either
     src_has("pub fn f() -> bool { cfg!(debug_assertions) }\n", "SH15");
     // the gate and the cfg(test) mask are the only exceptions
-    let r = run(&with_features("#[cfg(feature = \"ghost\")]\npub mod ghost { pub fn vos_ghost_alpha() -> u8 { 1 } }\n#[cfg(test)]\nmod t { #[cfg(unix)] fn x() {} }\n"));
-    assert!(r.passed(), "{}", r.render());
+    check(with_features("#[cfg(feature = \"ghost\")]\npub mod ghost { pub fn vos_ghost_alpha() -> u8 { 1 } }\n#[cfg(test)]\nmod t { #[cfg(unix)] fn x() {} }\n"), Expect::Clean, "");
 }
 
 // 11, 12 -------------------------------------------------- performance
 
 #[test]
 fn item11_item_scanning_is_linear() {
+    let _batch = Batch::begin();
     within(Duration::from_secs(5), "100k `type a`", || {
         let src = format!("{HEADER}{}", "type a ".repeat(100_000));
         let _ = run(&lib(&src));
@@ -459,6 +465,7 @@ fn item11_item_scanning_is_linear() {
 
 #[test]
 fn item12_call_graph_is_linear_and_fails_closed_on_edge_explosions() {
+    let _batch = Batch::begin();
     within(
         Duration::from_secs(5),
         "4,000 colliding method names",
@@ -498,31 +505,29 @@ fn item12_call_graph_is_linear_and_fails_closed_on_edge_explosions() {
 
 #[test]
 fn item14_build_scripts_and_cargo_config_by_any_case() {
-    for name in ["build.rs", "Build.rs", "BUILD.RS", "bUiLd.rS"] {
-        let mut i = body("pub fn f() {}\n");
-        i.root_entries.push(name.into());
-        let r = run(&i);
-        assert!(
-            r.findings
-                .iter()
-                .any(|f| f.rule.id() == "SH15" && f.file == name),
-            "{name}\n{}",
-            r.render()
-        );
-    }
-    for name in [
+    let names = [
+        "build.rs",
+        "Build.rs",
+        "BUILD.RS",
+        "bUiLd.rS",
         ".cargo",
         "rust-toolchain",
         "rust-toolchain.toml",
         "Rust-Toolchain",
-    ] {
-        let mut i = body("pub fn f() {}\n");
-        i.root_entries.push(name.into());
-        let r = run(&i);
+    ];
+    let inputs: Vec<CrateInput> = names
+        .iter()
+        .map(|name| {
+            let mut i = body("pub fn f() {}\n");
+            i.root_entries.push((*name).into());
+            i
+        })
+        .collect();
+    for (name, r) in names.iter().zip(run_all(&inputs)) {
         assert!(
             r.findings
                 .iter()
-                .any(|f| f.rule.id() == "SH15" && f.file == name),
+                .any(|f| f.rule.id() == "SH15" && f.file == *name),
             "{name}\n{}",
             r.render()
         );
@@ -533,20 +538,22 @@ fn item14_build_scripts_and_cargo_config_by_any_case() {
 
 #[test]
 fn item15_unspecified_kind_in_class_k_is_treated_as_production() {
+    let _batch = Batch::begin();
     src_has("pub struct S { pub a: u8 }\n", "SH14");
     // but a declared spine, contract, hal or profile may have public fields, and so may other classes
     for k in ["spine", "contract", "hal", "profile"] {
         let mut i = body("pub struct S { pub a: u8 }\n");
         i.vos_toml = Some(format!("kind = \"{k}\"\n"));
-        assert!(run(&i).passed(), "{k}");
+        check(i.clone(), Expect::Clean, "");
     }
     let mut i = body("pub struct S { pub a: u8 }\n");
     i.vos_toml = Some("class = \"C\"\n".into());
-    assert!(run(&i).passed());
+    check(i.clone(), Expect::Clean, "");
 }
 
 #[test]
 fn item25_tuple_structs_and_unions_are_covered_and_enum_variants_are_not_fields() {
+    let _batch = Batch::begin();
     src_has("pub struct S(pub u8);\n", "SH14");
     src_has("pub struct S(u8, pub [u8; 2]);\n", "SH14");
     src_has("pub union U { pub a: u8, b: u8 }\n", "SH14");
@@ -559,6 +566,7 @@ fn item25_tuple_structs_and_unions_are_covered_and_enum_variants_are_not_fields(
 
 #[test]
 fn item16_every_spelling_of_build_is_found_or_the_parse_fails() {
+    let _batch = Batch::begin();
     let head = "name = \"vos-demo\"\nedition = \"2021\"\n";
     for cargo in [
         format!("[package]\n{head}\"build\" = \"x\"\n"),
@@ -580,7 +588,13 @@ fn item16_every_spelling_of_build_is_found_or_the_parse_fails() {
             "spelling must be caught:\n{cargo}\n{}",
             r.render()
         );
-        assert!(rules(&r).contains(&"SH15"), "and be recognised as SH15:\n{cargo}\n{}", r.render());
+        // an escape in a key is refused outright (the TOML lexer leaves
+        // escapes undecoded, so `"pack\u0061ge"` cannot be normalised here)
+        if cargo.contains("\\u0061") {
+            assert!(rules(&r).contains(&"VT03"), "{cargo}\n{}", r.render());
+        } else {
+            assert!(rules(&r).contains(&"SH15"), "and be recognised as SH15:\n{cargo}\n{}", r.render());
+        }
     }
 }
 
@@ -588,6 +602,7 @@ fn item16_every_spelling_of_build_is_found_or_the_parse_fails() {
 
 #[test]
 fn item17_strings_chars_and_comments_never_hide_the_next_violation() {
+    let _batch = Batch::begin();
     let preludes = [
         "let _c = '\"';",
         "let _c = '\\\\';",
@@ -620,11 +635,10 @@ fn item17_strings_chars_and_comments_never_hide_the_next_violation() {
             } else {
                 src
             };
-            let r = run(&body(&src));
-            assert!(
-                rules(&r).contains(&id),
-                "{id} after {p:?}\n{src}\n{}",
-                r.render()
+            check(
+                body(&src),
+                Expect::Fires(id.into()),
+                &format!("{id} after {p:?}"),
             );
         }
     }
@@ -641,6 +655,7 @@ fn item17_strings_chars_and_comments_never_hide_the_next_violation() {
 
 #[test]
 fn item18_masking_stops_exactly_at_the_masked_item() {
+    let _batch = Batch::begin();
     for masked in [
         "#[cfg(test)]\nuse core::cmp::min;\n",
         "#[cfg(test)]\nconst X: [u8; 2] = { let a = [1, 2]; a };\n",
@@ -680,6 +695,7 @@ fn item18_masking_stops_exactly_at_the_masked_item() {
 
 #[test]
 fn item19_a_const_underscore_that_defines_code_gets_no_assert_exemption() {
+    let _batch = Batch::begin();
     src_has(
         "const _: () = { struct X; impl X { pub fn f() { assert!(false) } } };\n",
         "SH8",
@@ -694,6 +710,7 @@ fn item19_a_const_underscore_that_defines_code_gets_no_assert_exemption() {
 
 #[test]
 fn item20_dev_dependencies_are_an_allowlist_of_in_repo_path_crates() {
+    let _batch = Batch::begin();
     for extra in [
         "[dev-dependencies]\nserde = \"1\"\n",
         "[dev-dependencies]\nrand = { version = \"0.8\" }\n",
@@ -704,18 +721,18 @@ fn item20_dev_dependencies_are_an_allowlist_of_in_repo_path_crates() {
     ] {
         let mut i = body("pub fn f() {}\n");
         i.cargo_toml = Some(format!("{MANIFEST}\n{extra}"));
-        let r = run(&i);
-        assert!(rules(&r).contains(&"SH12"), "{extra}\n{}", r.render());
+        check(i.clone(), Expect::Fires("SH12".into()), "");
     }
     let mut i = body("pub fn f() {}\n");
     i.cargo_toml = Some(format!("{MANIFEST}\n[dev-dependencies]\ncoding-adventures-sha256 = {{ path = \"../s\" }}\n[target.'cfg(unix)'.dev-dependencies]\ncoding_adventures_test_bootstrap = {{ path = \"../t\" }}\n"));
-    assert!(run(&i).passed());
+    check(i.clone(), Expect::Clean, "");
 }
 
 // 21, 22, 23 -------------------------------------------- attribute details
 
 #[test]
 fn item21_a_path_after_a_keyword_is_rooted_at_the_crate_graph() {
+    let _batch = Batch::begin();
     src_has("use ::std::collections::BTreeMap;\n", "SH1");
     src_has(
         "pub fn f() -> usize { return ::std::mem::size_of::<u8>() as usize; }\n",
@@ -731,25 +748,33 @@ fn item21_a_path_after_a_keyword_is_rooted_at_the_crate_graph() {
 
 #[test]
 fn item22_forbid_must_be_exactly_unsafe_code() {
+    let _batch = Batch::begin();
     for attr in [
         "#![forbid(dead_code)]",
         "#![forbid(unsafe_code, dead_code)]",
         "#![forbid(unsafe_code, unsafe_op_in_unsafe_fn)]",
         "#![forbid()]",
     ] {
-        let r = run(&lib(&format!("#![no_std]\n{attr}\n")));
-        assert!(rules(&r).contains(&"SH2"), "{attr}\n{}", r.render());
+        check(
+            lib(&format!("#![no_std]\n{attr}\n")),
+            Expect::Fires("SH2".into()),
+            "",
+        );
     }
-    let r = run(&lib("#![no_std]\n#![forbid(unsafe_code)]\n"));
-    assert!(r.passed());
+    check(
+        lib("#![no_std]\n#![forbid(unsafe_code)]\n"),
+        Expect::Clean,
+        "",
+    );
 }
 
 #[test]
 fn item23_link_and_link_name_are_sh2_not_sh15() {
+    let _batch = Batch::begin();
     for attr in ["#[link(name = \"c\")]", "#[link_name = \"c\"]"] {
-        let r = run(&body(&format!("{attr} pub fn f() {{}}\n")));
-        assert!(rules(&r).contains(&"SH2"), "{attr}\n{}", r.render());
-        assert!(!rules(&r).contains(&"SH15"), "{attr}\n{}", r.render());
+        let input = body(&format!("{attr} pub fn f() {{}}\n"));
+        check(input.clone(), Expect::Fires("SH2".into()), attr);
+        check(input, Expect::Silent("SH15".into()), attr);
     }
     // and the SH15 attribute bans keep SH15
     src_has("#[no_mangle] pub fn f() {}\n", "SH15");
@@ -759,6 +784,7 @@ fn item23_link_and_link_name_are_sh2_not_sh15() {
 
 #[test]
 fn item24_a_let_that_rebinds_the_loop_variable_ends_the_exemption() {
+    let _batch = Batch::begin();
     src_has("pub fn f(a: [u8; 4], x: usize) -> u8 { let mut s = 0; for i in 0..4 { let i = x; s = a[i]; } s }\n", "SH8");
     src_has("pub fn f(a: [u8; 4], x: (usize, usize)) -> u8 { let mut s = 0; for i in 0..4 { let (i, _j) = x; s = a[i]; } s }\n", "SH8");
     src_has("pub fn f(a: [u8; 4], x: Option<usize>) -> u8 { let mut s = 0; for i in 0..4 { if let Some(i) = x { s = a[i]; } } s }\n", "SH8");
@@ -773,6 +799,7 @@ fn item24_a_let_that_rebinds_the_loop_variable_ends_the_exemption() {
 
 #[test]
 fn item26_the_dropped_findings_line_carries_rule_vt03() {
+    let _batch = Batch::begin();
     let mut s = String::from(HEADER);
     for n in 0..1100 {
         s.push_str(&format!("pub fn g{n}(x: u8) -> u8 {{ x / 2 }}\n"));
@@ -789,8 +816,9 @@ fn item26_the_dropped_findings_line_carries_rule_vt03() {
 // headers too long to scan fail closed (the bound that keeps scans linear)
 
 #[test]
-fn an_overlong_header_is_vt03_for_functions_and_sh17_for_ghost_wrappers() {
-    let long = "+ a ".repeat(1_200);
+fn an_overlong_header_is_vt03_for_functions_and_ghost_wrappers() {
+    let _batch = Batch::begin();
+    let long = "+ a ".repeat(2_700);
     let r = run(&body(&format!(
         "pub fn f(a: u8) -> u8 {{ a }}\npub fn g() -> u8 where u8: Sized {long} {{ 0 }}\n"
     )));
@@ -807,7 +835,7 @@ fn an_overlong_header_is_vt03_for_functions_and_sh17_for_ghost_wrappers() {
     assert!(
         r.findings
             .iter()
-            .any(|f| f.rule.id() == "SH17" && f.message.contains("header too long")),
+            .any(|f| f.rule.id() == "VT03" && f.message.contains("ghost function")),
         "{}",
         r.render()
     );
@@ -815,6 +843,7 @@ fn an_overlong_header_is_vt03_for_functions_and_sh17_for_ghost_wrappers() {
 
 #[test]
 fn a_literal_shift_amount_may_be_followed_by_a_cast() {
+    let _batch = Batch::begin();
     clean("pub fn f(x: u32) -> u32 { x << 1 as u32 }\n");
     // a nested block comment between `#!` and `[` is still an attribute
     let r = run(&lib(

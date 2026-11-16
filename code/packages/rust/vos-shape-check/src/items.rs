@@ -14,7 +14,7 @@
 //! not count).
 
 use crate::lexer::{Kind, Token};
-use crate::syntax::{angle_close, FileCtx};
+use crate::syntax::{angle_close, scan_header, FileCtx, Header};
 
 /// A field of a named-field struct.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -127,63 +127,17 @@ fn parse_fields(f: &FileCtx, open: usize, close: usize) -> Vec<Field> {
 
 /// Most identifiers stored per item (bounds memory on adversarial input).
 const MAX_IDENTS_PER_ITEM: usize = 1024;
-/// Most tokens one item's extent may cover.
-const MAX_ITEM_TOKENS: usize = 4096;
 
-/// Keywords that begin another item: the extent of a type definition ends
-/// before one, so `type a type a type a ...` costs two tokens per item and
-/// not the rest of the file (a quadratic scan found by the security review).
-fn begins_item(t: &Token) -> bool {
-    t.kind == Kind::Ident
-        && matches!(
-            t.text.as_str(),
-            "struct"
-                | "enum"
-                | "union"
-                | "type"
-                | "fn"
-                | "impl"
-                | "trait"
-                | "mod"
-                | "use"
-                | "static"
-                | "const"
-        )
-}
-
-/// The last token of the type definition at `start`: the first `;` or `,` at
-/// depth 0, or the end of the first `{ .. }` group (and a trailing `;`), but
-/// never past the next item keyword or [`MAX_ITEM_TOKENS`] tokens.
-fn type_extent(f: &FileCtx, start: usize) -> usize {
-    let t = &f.toks;
-    let limit = (start + MAX_ITEM_TOKENS).min(t.len());
-    let mut k = start + 1;
-    while k < limit {
-        if begins_item(&t[k]) {
-            return k - 1;
-        }
-        if t[k].kind == Kind::Punct {
-            match t[k].text.as_str() {
-                "(" | "[" => {
-                    k = f.pair[k] + 1;
-                    continue;
-                }
-                "{" => {
-                    let e = f.pair[k];
-                    return if t.get(e + 1).is_some_and(|x| x.is_punct(";")) {
-                        e + 1
-                    } else {
-                        e
-                    };
-                }
-                ";" | "," => return k,
-                ")" | "]" | "}" => return k - 1,
-                _ => {}
-            }
-        }
-        k += 1;
-    }
-    limit.saturating_sub(1)
+/// A place where a structural scan gave up.  Every gap becomes a **VT03**
+/// finding (fail closed): the check never skips an item it could not read.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Gap {
+    /// Index into the file list.
+    pub file: usize,
+    /// 1-based line.
+    pub line: u32,
+    /// What could not be read.
+    pub message: String,
 }
 
 /// `struct S(pub u8, u8);`: the fields of a tuple body, named by position.
@@ -235,9 +189,16 @@ fn parse_tuple_fields(f: &FileCtx, open: usize, close: usize) -> Vec<Field> {
     out
 }
 
-/// Collect every `struct`, `enum`, `union` and `type` of every file.
-pub fn collect_types(files: &[FileCtx]) -> Vec<TypeDef> {
+/// Collect every `struct`, `enum`, `union` and `type` of every file, and the
+/// [`Gap`]s where a header could not be read to its end.
+///
+/// A definition's header is read in order: the name, then a generic list
+/// (skipped with [`angle_close`], so `struct B<const N: usize>` does not end at
+/// the `const`), then the body or `;` (found with [`scan_header`]).  If any
+/// step gives up, a gap is recorded and the identifiers read so far are kept.
+pub fn collect_types(files: &[FileCtx]) -> (Vec<TypeDef>, Vec<Gap>) {
     let mut out = Vec::new();
+    let mut gaps = Vec::new();
     for (fi, f) in files.iter().enumerate() {
         let t = &f.toks;
         for i in 0..t.len() {
@@ -257,9 +218,62 @@ pub fn collect_types(files: &[FileCtx]) -> Vec<TypeDef> {
             let Some(name_tok) = t.get(i + 1).filter(|x| x.kind == Kind::Ident) else {
                 continue;
             };
-            let end = type_extent(f, i);
-            let idents: Vec<String> = if end >= i + 2 {
-                t[i + 2..=end]
+            let mut gap = |line: u32, what: &str| {
+                gaps.push(Gap {
+                    file: fi,
+                    line,
+                    message: format!(
+                        "{what} of `{keyword} {}` could not be read (fail closed)",
+                        name_tok.text
+                    ),
+                });
+            };
+            let mut k = i + 2;
+            let mut readable = true;
+            if t.get(k).is_some_and(|x| x.is_punct("<")) {
+                match angle_close(t, &f.pair, k) {
+                    Some(c) => k = c + 1,
+                    None => {
+                        gap(t[k].line, "the generic list");
+                        readable = false;
+                    }
+                }
+            }
+            let mut fields = Vec::new();
+            let mut end = (i + 1).min(t.len() - 1);
+            if readable {
+                if keyword != "enum"
+                    && keyword != "type"
+                    && t.get(k).is_some_and(|x| x.is_punct("("))
+                {
+                    let close = f.pair[k];
+                    fields = parse_tuple_fields(f, k, close);
+                    end = match scan_header(t, &f.pair, close + 1) {
+                        Header::End(e) => e,
+                        Header::GaveUp(g) => {
+                            gap(t[k].line, "the where clause");
+                            g.saturating_sub(1).max(close)
+                        }
+                    };
+                } else {
+                    match scan_header(t, &f.pair, k) {
+                        Header::End(b) if t[b].is_punct("{") => {
+                            if keyword == "struct" || keyword == "union" {
+                                fields = parse_fields(f, b, f.pair[b]);
+                            }
+                            end = f.pair[b];
+                        }
+                        Header::End(b) => end = b,
+                        Header::GaveUp(g) => {
+                            gap(t[i].line, "the header");
+                            end = g.saturating_sub(1).max(i + 1);
+                        }
+                    }
+                }
+            }
+            let last = end.min(t.len() - 1);
+            let idents: Vec<String> = if last >= i + 2 {
+                t[i + 2..=last]
                     .iter()
                     .filter(|x| x.kind == Kind::Ident)
                     .take(MAX_IDENTS_PER_ITEM)
@@ -268,24 +282,6 @@ pub fn collect_types(files: &[FileCtx]) -> Vec<TypeDef> {
             } else {
                 Vec::new()
             };
-            let mut fields = Vec::new();
-            if keyword == "struct" || keyword == "union" {
-                let mut k = i + 2;
-                if t.get(k).is_some_and(|x| x.is_punct("<")) {
-                    if let Some(c) = angle_close(t, &f.pair, k) {
-                        k = c + 1;
-                    }
-                }
-                while k <= end && !t[k].is_punct("{") && !t[k].is_punct(";") && !t[k].is_punct("(")
-                {
-                    k += 1;
-                }
-                if k <= end && t[k].is_punct("{") {
-                    fields = parse_fields(f, k, f.pair[k]);
-                } else if k <= end && t[k].is_punct("(") {
-                    fields = parse_tuple_fields(f, k, f.pair[k]);
-                }
-            }
             out.push(TypeDef {
                 keyword,
                 name: name_tok.text.clone(),
@@ -297,5 +293,5 @@ pub fn collect_types(files: &[FileCtx]) -> Vec<TypeDef> {
             });
         }
     }
-    out
+    (out, gaps)
 }

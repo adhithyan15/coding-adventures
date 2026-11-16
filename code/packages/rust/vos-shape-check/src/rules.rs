@@ -39,7 +39,7 @@ use crate::lexer::{Kind, Token};
 use crate::manifest::{CargoFacts, Class, Kind as VKind};
 use crate::report::{Finding, Rule};
 use crate::syntax::{
-    angle_close, is_const_name, is_keyword, item_end, scan_to_body, FileCtx, MAX_HEADER_TOKENS,
+    angle_close, is_const_name, is_keyword, item_end, scan_header, FileCtx, Header,
 };
 
 /// Everything a rule needs, plus the findings it appends to.
@@ -318,6 +318,36 @@ fn shadow_position(f: &FileCtx, body: (usize, usize), var: &str) -> usize {
     }
     let mut k = body.0;
     while k < body.1 {
+        if t[k].is_punct("=>") {
+            // A match arm's pattern may bind the variable: `i => a[i]`.  Read
+            // back to the arm's start (`,` or the opening `{`, skipping groups).
+            let mut j = k;
+            let mut start = None;
+            let floor = k.saturating_sub(512).max(body.0);
+            while j > floor {
+                j -= 1;
+                let x = &t[j];
+                if x.kind == Kind::Punct {
+                    match x.text.as_str() {
+                        ")" | "]" | "}" => j = f.pair[j],
+                        "," | "{" => {
+                            start = Some(j);
+                            break;
+                        }
+                        _ => {}
+                    }
+                }
+            }
+            match start {
+                // an arm that cannot be delimited within 512 tokens: unsafe direction
+                None => return body.0,
+                Some(st) => {
+                    if t[st + 1..k].iter().any(|x| x.is_ident(var)) {
+                        return st;
+                    }
+                }
+            }
+        }
         if t[k].is_ident("let") {
             let mut e = k + 1;
             while e < body.1 && !t[e].is_punct("=") && !t[e].is_punct(";") && !t[e].is_ident("let")
@@ -495,14 +525,115 @@ fn ends_operand(n: &Token) -> bool {
     }
 }
 
+/// Can the token after `>>` follow a type?  (`;`, `,`, `)`, `{`, `=`, `::`,
+/// `where`, ...).  An operand (`n`, `1`, `*n`, `(x)`) cannot: that is a shift.
+fn generic_follow(after: Option<&Token>) -> bool {
+    match after {
+        None => true,
+        Some(a) if a.kind == Kind::Punct => matches!(
+            a.text.as_str(),
+            ">" | "," | ";" | ")" | "]" | "{" | "}" | "=" | "::" | "+" | ":" | "?"
+        ),
+        Some(a) => a.kind == Kind::Ident && matches!(a.text.as_str(), "where" | "as" | "for"),
+    }
+}
+
+/// Can the `<` at `i` open a generic list in TYPE position?  After `::`
+/// (turbofish), or after a name that itself follows a type-position token
+/// (`:`, `->`, `<`, `,`, `&`, `(`, `=`, `|`-free) or `impl`, `dyn`, `as`,
+/// `for`, `mut`.  `a < b` after `if`, `&&` or a literal is a comparison.
+fn generic_open(t: &[Token], i: usize) -> bool {
+    let Some(prev) = i.checked_sub(1).map(|p| &t[p]) else {
+        return false;
+    };
+    if prev.is_punct("::") {
+        return true;
+    }
+    if prev.is_ident("impl") {
+        return true; // `impl<T> ..`
+    }
+    if prev.kind != Kind::Ident || (is_keyword(&prev.text) && prev.text != "Self") {
+        return false;
+    }
+    match i.checked_sub(2).map(|p| &t[p]) {
+        None => true,
+        Some(p) if p.kind == Kind::Lifetime => true, // `&'a Option<..>`
+        Some(p) if p.kind == Kind::Punct => {
+            matches!(
+                p.text.as_str(),
+                "::" | ":" | "->" | "<" | "," | "&" | "(" | "="
+            )
+        }
+        Some(p) => matches!(
+            p.text.as_str(),
+            "impl"
+                | "dyn"
+                | "as"
+                | "for"
+                | "mut"
+                | "fn"
+                | "struct"
+                | "enum"
+                | "trait"
+                | "type"
+                | "union"
+                | "mod"
+        ),
+    }
+}
+
+/// Is every token in `t[from..to]` plausible INSIDE a generic argument list:
+/// names, `::`, `,`, `&`, `+`, lifetimes, nested `< >`, bracket groups, and
+/// `dyn`/`mut`/`impl`/`as`?  `b && c`, `b || c`, and two names in a row (an
+/// expression) are not.
+fn type_ish(t: &[Token], pair: &[usize], from: usize, to: usize) -> bool {
+    let mut k = from;
+    let mut prev_ident = false;
+    while k < to {
+        let x = &t[k];
+        match x.kind {
+            Kind::Ident => {
+                let joiner = matches!(
+                    x.text.as_str(),
+                    "dyn" | "mut" | "impl" | "as" | "const" | "for"
+                );
+                if prev_ident && !joiner {
+                    return false;
+                }
+                prev_ident = !matches!(x.text.as_str(), "dyn" | "mut" | "impl" | "as" | "for");
+            }
+            Kind::Lifetime => prev_ident = false,
+            Kind::Punct => {
+                prev_ident = false;
+                match x.text.as_str() {
+                    // `:` is a bound (`T: Into<..>`), `;` an array length
+                    "::" | "," | "+" | "<" | ">" | ";" | ":" => {}
+                    "&" => {
+                        if x.joint && t.get(k + 1).is_some_and(|n| n.is_punct("&")) {
+                            return false; // `&&` is a logical and
+                        }
+                    }
+                    "(" | "[" => k = pair[k],
+                    _ => return false,
+                }
+            }
+            _ => return false,
+        }
+        k += 1;
+    }
+    true
+}
+
 /// Is the `>>` at `i` provably the end of two open generic lists?  Scan back
-/// within the statement (stopping at `;`, `{`, `}`) counting `<` not closed
-/// by a `>`: two or more unmatched means `Vec<Vec<u8>>`; fewer means a shift
-/// (`x >> *n`, `x >> {n}`).
-fn closes_two_generics(t: &[Token], pair: &[usize], i: usize) -> bool {
+/// within the statement (stopping at `;`, `{`, `}`) for two `<` not closed by a
+/// `>`; both must be in type position ([`generic_open`]) and only type-ish
+/// tokens may lie between the outer `<` and the `>>` ([`type_ish`]).  On any
+/// doubt: not generic, so the `>>` is reported as a shift.
+fn closes_two_generics(t: &[Token], pair: &[usize], i: usize, after: Option<&Token>) -> bool {
     let lo = i.saturating_sub(256);
     let mut k = i;
-    let (mut opens, mut closes) = (0usize, 0usize);
+    let mut closes = 0usize;
+    let mut opens: Vec<usize> = Vec::new();
     while k > lo {
         k -= 1;
         let x = &t[k];
@@ -517,13 +648,50 @@ fn closes_two_generics(t: &[Token], pair: &[usize], i: usize) -> bool {
                 if closes > 0 {
                     closes -= 1;
                 } else {
-                    opens += 1;
+                    opens.push(k);
+                    if opens.len() == 2 {
+                        break;
+                    }
                 }
             }
             _ => {}
         }
     }
-    opens >= 2
+    if opens.len() != 2
+        || !opens.iter().all(|&o| generic_open(t, o))
+        || !type_ish(t, pair, opens[1] + 1, i)
+    {
+        return false;
+    }
+    // What follows must be able to follow a type.  `(` can only follow the
+    // generics of a DECLARATION (`fn f<T: Into<Vec<u8>>>(x: T)`), never a
+    // type in an expression, where `x >> (n)` is a shift.
+    let declares = opens[1].checked_sub(2).is_some_and(|p| {
+        matches!(
+            t[p].text.as_str(),
+            "fn" | "struct" | "enum" | "trait" | "type" | "union"
+        )
+    }) || opens[1]
+        .checked_sub(1)
+        .is_some_and(|p| t[p].is_ident("impl"));
+    generic_follow(after) || (declares && after.is_some_and(|a| a.is_punct("(")))
+}
+
+/// `Vec<<T as X>::Y>`: the `<<` at `i` is a generic open + qualified-self open,
+/// not a shift, only if it follows `::` or a type-position name, its second `<`
+/// closes right before `::`, and the group holds an `as` between type-ish tokens.
+/// `1u32 << s > ::core::u32::MAX` has none of that and is a shift.
+fn opens_qself_generic(t: &[Token], pair: &[usize], i: usize) -> bool {
+    let first_ok = (i > 0 && t[i - 1].is_punct("::")) || generic_open(t, i);
+    if !first_ok {
+        return false;
+    }
+    let Some(c) = angle_close(t, pair, i + 1) else {
+        return false;
+    };
+    t.get(c + 1).is_some_and(|x| x.is_punct("::"))
+        && t[i + 2..c].iter().any(|x| x.is_ident("as"))
+        && type_ish(t, pair, i + 2, c)
 }
 
 /// Is the token before a `|` one after which a closure can start?
@@ -609,15 +777,11 @@ fn punct_rules(cx: &mut Ctx<'_>, f: &FileCtx, i: usize, loops: &[LoopInfo], skip
             let op_end = i + 2 + usize::from(compound);
             let after = t.get(op_end);
             let is_shift = if tok.text == "<" {
-                // `Vec<<T as X>::Y>`: generic only after `::`, or when the
-                // group opened by the second `<` closes right before `::`.
-                let generic = !compound
-                    && (i > 0 && t[i - 1].is_punct("::")
-                        || angle_close(t, &f.pair, i + 1)
-                            .is_some_and(|c| t.get(c + 1).is_some_and(|x| x.is_punct("::"))));
-                !generic
+                !(!compound && opens_qself_generic(t, &f.pair, i))
             } else {
-                compound || !closes_two_generics(t, &f.pair, i)
+                // `>>` closes generics only when what FOLLOWS can follow a type
+                // AND two type-position `<` are provably open (VOS03 SH9).
+                compound || !closes_two_generics(t, &f.pair, i, after)
             };
             // A literal amount is allowed only as the WHOLE right operand:
             // `x << 1 + n` and `x << 1.max(n)` are not literal shifts.
@@ -660,7 +824,31 @@ fn punct_rules(cx: &mut Ctx<'_>, f: &FileCtx, i: usize, loops: &[LoopInfo], skip
             // index (`w.0[i]`, `f()?[i]`, `{..}[i]`, `self[i]`, `b"ab"[n]`).
             let array_start = match p.kind {
                 Kind::Lifetime => true,
-                Kind::Ident => is_keyword(&p.text) && !matches!(p.text.as_str(), "self" | "Self"),
+                // only these keywords can precede an array literal or type
+                // (`.await[i]`, `self[i]`, `crate[..]` are indexes)
+                Kind::Ident => matches!(
+                    p.text.as_str(),
+                    "in" | "return"
+                        | "break"
+                        | "else"
+                        | "if"
+                        | "match"
+                        | "let"
+                        | "as"
+                        | "mut"
+                        | "ref"
+                        | "dyn"
+                        | "impl"
+                        | "where"
+                        | "for"
+                        | "move"
+                        | "const"
+                        | "static"
+                        | "type"
+                        | "use"
+                        | "unsafe"
+                        | "yield"
+                ),
                 Kind::Punct => matches!(
                     p.text.as_str(),
                     "=" | "("
@@ -952,7 +1140,18 @@ fn macro_call(cx: &mut Ctx<'_>, f: &FileCtx, i: usize, const_us: &[(usize, usize
 fn signature_refs(cx: &mut Ctx<'_>, f: &FileCtx, fn_idx: usize) {
     let t = &f.toks;
     let mut k = fn_idx + 1;
-    let end = scan_to_body(t, &f.pair, fn_idx + 1);
+    let end = match scan_header(t, &f.pair, fn_idx + 1) {
+        Header::End(e) => e,
+        Header::GaveUp(g) => {
+            cx.add(
+                Rule::Vt03,
+                &f.path,
+                t[fn_idx].line,
+                "a function signature could not be read to its end (fail closed)",
+            );
+            g
+        }
+    };
     while k < end {
         if t[k].kind == Kind::Punct {
             match t[k].text.as_str() {
@@ -994,15 +1193,37 @@ fn type_body_refs(cx: &mut Ctx<'_>, f: &FileCtx, i: usize) {
     }
     let mut k = i + 2;
     if t.get(k).is_some_and(|x| x.is_punct("<")) {
-        if let Some(c) = angle_close(t, &f.pair, k) {
-            k = c + 1;
+        match angle_close(t, &f.pair, k) {
+            Some(c) => k = c + 1,
+            None => {
+                cx.add(
+                    Rule::Vt03,
+                    &f.path,
+                    t[i].line,
+                    "the generic list of a type definition could not be read (fail closed)",
+                );
+                return;
+            }
         }
     }
-    let limit = (k + MAX_HEADER_TOKENS).min(t.len());
-    while k < limit && !t[k].is_punct("{") && !t[k].is_punct("(") && !t[k].is_punct(";") {
-        k += 1;
-    }
-    if k < t.len() && (t[k].is_punct("{") || t[k].is_punct("(")) {
+    let body = if t.get(k).is_some_and(|x| x.is_punct("(")) && t[i].text != "enum" {
+        Some(k)
+    } else {
+        match scan_header(t, &f.pair, k) {
+            Header::End(b) if t[b].is_punct("{") => Some(b),
+            Header::End(_) => None,
+            Header::GaveUp(_) => {
+                cx.add(
+                    Rule::Vt03,
+                    &f.path,
+                    t[i].line,
+                    "the header of a type definition could not be read (fail closed)",
+                );
+                None
+            }
+        }
+    };
+    if let Some(k) = body {
         for x in &t[k + 1..f.pair[k]] {
             if x.is_punct("&") {
                 cx.add(
@@ -1033,6 +1254,7 @@ fn const_item(cx: &mut Ctx<'_>, f: &FileCtx, i: usize, im: &BTreeSet<String>) {
     let mut depth = 0usize;
     // a const's type is short; do not scan further than 256 tokens for its end
     let limit = (k + 256).min(t.len());
+    let mut terminated = false;
     while k < limit {
         let x = &t[k];
         if x.kind == Kind::Punct {
@@ -1040,12 +1262,16 @@ fn const_item(cx: &mut Ctx<'_>, f: &FileCtx, i: usize, im: &BTreeSet<String>) {
                 "<" => depth += 1,
                 ">" => {
                     if depth == 0 {
+                        terminated = true;
                         break;
                     }
                     depth -= 1;
                 }
                 "(" | "[" => k = f.pair[k],
-                "=" | ";" | "," if depth == 0 => break,
+                "=" | ";" | "," if depth == 0 => {
+                    terminated = true;
+                    break;
+                }
                 _ => {}
             }
         } else if x.kind == Kind::Ident
@@ -1062,5 +1288,13 @@ fn const_item(cx: &mut Ctx<'_>, f: &FileCtx, i: usize, im: &BTreeSet<String>) {
             );
         }
         k += 1;
+    }
+    if !terminated {
+        cx.add(
+            Rule::Vt03,
+            &f.path,
+            t[i].line,
+            "the type of a `const` could not be read to its end (fail closed)",
+        );
     }
 }

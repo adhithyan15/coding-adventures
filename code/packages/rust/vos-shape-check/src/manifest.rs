@@ -148,22 +148,10 @@ fn bad<T>(line: usize, m: &str) -> Result<T, VosTomlError> {
     Err((u32::try_from(line).unwrap_or(u32::MAX), m.to_string()))
 }
 
-/// Parse a double-quoted string at the start of `s`; return it and the rest.
-fn quoted(s: &str, line: usize) -> Result<(String, &str), VosTomlError> {
-    let Some(rest) = s.strip_prefix('"') else {
-        return bad(line, "expected a double-quoted string");
-    };
-    let Some(end) = rest.find('"') else {
-        return bad(line, "unterminated string");
-    };
-    let body = &rest[..end];
-    if body.contains('\\') {
-        return bad(line, "escapes are not allowed in vos.toml strings");
-    }
-    Ok((body.to_string(), &rest[end + 1..]))
-}
-
-/// Parse `vos.toml`.  Everything outside the grammar is an error.
+/// Parse `vos.toml`.  The file is TOML, read by the repository's TOML crates
+/// (see [`crate::toml`]); this function adds the bounds of VOS02 section 6.8
+/// BEFORE parsing and the closed vocabulary AFTER it.  Everything outside the
+/// grammar is an error.
 pub fn parse_vos_toml(text: &str) -> Result<VosToml, VosTomlError> {
     if text.len() > VOS_TOML_MAX_BYTES {
         return bad(1, "vos.toml is over 4 KiB");
@@ -171,12 +159,14 @@ pub fn parse_vos_toml(text: &str) -> Result<VosToml, VosTomlError> {
     if !text.is_ascii() {
         return bad(1, "vos.toml must be ASCII");
     }
-    let mut out = VosToml {
-        class: None,
-        kind: None,
-        evidence_features: Vec::new(),
-    };
-    let mut seen: BTreeSet<String> = BTreeSet::new();
+    if text.contains('\\') {
+        return bad(1, "escapes (a backslash) are not allowed in vos.toml");
+    }
+    for (n, raw) in text.lines().enumerate() {
+        if raw.len() > VOS_TOML_MAX_LINE {
+            return bad(n + 1, "line over 1,024 bytes");
+        }
+    }
     // The cap is on lines that carry a key, counted before anything else is
     // judged, so it holds however the keys are spelled.
     let key_lines = text
@@ -189,32 +179,24 @@ pub fn parse_vos_toml(text: &str) -> Result<VosToml, VosTomlError> {
     if key_lines > VOS_TOML_MAX_KEYS {
         return bad(1, "more than 16 keys");
     }
-    for (n, raw) in text.lines().enumerate() {
-        let line = n + 1;
-        if raw.len() > VOS_TOML_MAX_LINE {
-            return bad(line, "line over 1,024 bytes");
-        }
-        let t = raw.trim();
-        if t.is_empty() || t.starts_with('#') {
-            continue;
-        }
-        let Some((key, value)) = t.split_once('=') else {
-            return bad(line, "expected `key = value`");
+    let entries = toml::parse(text).map_err(|e| (e.line, e.message))?;
+    let mut out = VosToml {
+        class: None,
+        kind: None,
+        evidence_features: Vec::new(),
+    };
+    for Entry { path, value, line } in entries {
+        let line = line as usize;
+        let [key] = path.as_slice() else {
+            return bad(
+                line,
+                "unknown key or table (allowed: class, kind, evidence-features)",
+            );
         };
-        let key = key.trim();
-        if !seen.insert(key.to_string()) {
-            return bad(line, "duplicate key");
-        }
-        let value = value.trim();
-        let tail_ok = |rest: &str| {
-            let r = rest.trim();
-            r.is_empty() || r.starts_with('#')
-        };
-        match key {
-            "class" => {
-                let (v, rest) = quoted(value, line)?;
-                if !tail_ok(rest) {
-                    return bad(line, "text after the value");
+        match (key.as_str(), value) {
+            ("class", Value::Str(v)) => {
+                if out.class.is_some() {
+                    return bad(line, "duplicate key");
                 }
                 out.class = Some(match v.as_str() {
                     "K" => Class::K,
@@ -226,10 +208,9 @@ pub fn parse_vos_toml(text: &str) -> Result<VosToml, VosTomlError> {
                     _ => return bad(line, "class must be one of K, C, S, M, P, H"),
                 });
             }
-            "kind" => {
-                let (v, rest) = quoted(value, line)?;
-                if !tail_ok(rest) {
-                    return bad(line, "text after the value");
+            ("kind", Value::Str(v)) => {
+                if out.kind.is_some() {
+                    return bad(line, "duplicate key");
                 }
                 let Some(k) = Kind::parse(&v) else {
                     return bad(
@@ -239,33 +220,22 @@ pub fn parse_vos_toml(text: &str) -> Result<VosToml, VosTomlError> {
                 };
                 out.kind = Some(k);
             }
-            "evidence-features" => {
-                let Some(mut rest) = value.strip_prefix('[') else {
-                    return bad(line, "evidence-features must be a one-line array");
-                };
-                loop {
-                    rest = rest.trim_start();
-                    if let Some(r) = rest.strip_prefix(']') {
-                        if !tail_ok(r) {
-                            return bad(line, "text after the array");
-                        }
-                        break;
-                    }
-                    let (v, r) = quoted(rest, line)?;
-                    if v.is_empty() || v.len() > 32 {
+            ("evidence-features", Value::Array(items)) => {
+                for item in items {
+                    let Value::Str(name) = item else {
+                        return bad(line, "evidence-features holds strings");
+                    };
+                    if name.is_empty() || name.len() > 32 {
                         return bad(line, "a feature name is 1 to 32 bytes");
                     }
                     if out.evidence_features.len() >= MAX_EVIDENCE_NAMES {
                         return bad(line, "more than 64 evidence features");
                     }
-                    out.evidence_features.push(v);
-                    rest = r.trim_start();
-                    if let Some(r) = rest.strip_prefix(',') {
-                        rest = r;
-                    } else if !rest.starts_with(']') {
-                        return bad(line, "expected `,` or `]`");
-                    }
+                    out.evidence_features.push(name);
                 }
+            }
+            ("class" | "kind" | "evidence-features", _) => {
+                return bad(line, "wrong type of value for this key")
             }
             _ => {
                 return bad(

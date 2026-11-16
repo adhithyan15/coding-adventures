@@ -45,7 +45,7 @@ use crate::lexer::{Kind, Token};
 use crate::manifest::Kind as VKind;
 use crate::report::Rule;
 use crate::rules::Ctx;
-use crate::syntax::{is_keyword, item_end, matching_lt, scan_to_body, Attr, FileCtx};
+use crate::syntax::{is_keyword, item_end, matching_lt, scan_header, Attr, FileCtx, Header};
 
 const GHOST_PREFIX: &str = "vos_ghost_";
 
@@ -430,6 +430,7 @@ fn wrappers(cx: &mut Ctx<'_>) {
     let types = cx.types.clone();
     let mut paired: BTreeSet<String> = BTreeSet::new();
     let mut msgs: Vec<(String, u32, String)> = Vec::new();
+    let mut gaps: Vec<(String, u32, String)> = Vec::new();
     for f in files {
         let t = &f.toks;
         reexport_prefixes(f, &mut msgs);
@@ -450,20 +451,22 @@ fn wrappers(cx: &mut Ctx<'_>) {
                     ),
                 ));
             }
-            let b = scan_to_body(t, &f.pair, i + 2);
-            if b < t.len() && !t[b].is_punct("{") && !t[b].is_punct(";") {
-                // the header scan gave up: do not let a long signature skip the
-                // wrapper checks (fail closed)
-                msgs.push((
-                    f.path.clone(),
-                    name.line,
-                    format!(
-                        "ghost function `{}` has a header too long to check",
-                        name.text
-                    ),
-                ));
-            }
-            if b >= t.len() || !t[b].is_punct("{") {
+            let b = match scan_header(t, &f.pair, i + 2) {
+                Header::End(b) => b,
+                Header::GaveUp(_) => {
+                    // never let an unreadable header skip the wrapper checks
+                    gaps.push((
+                        f.path.clone(),
+                        name.line,
+                        format!(
+                            "the header of ghost function `{}` could not be read (fail closed)",
+                            name.text
+                        ),
+                    ));
+                    continue;
+                }
+            };
+            if !t[b].is_punct("{") {
                 continue;
             }
             wrapper_body(f, &types, name, b, &mut paired, &mut msgs);
@@ -483,6 +486,9 @@ fn wrappers(cx: &mut Ctx<'_>) {
     }
     for (p, l, m) in msgs {
         cx.add(Rule::Sh17, &p, l, m);
+    }
+    for (p, l, m) in gaps {
+        cx.add(Rule::Vt03, &p, l, m);
     }
 }
 
@@ -594,13 +600,16 @@ fn wrapper_body(
         // exports of VOS02 section 4.4.  Every other ghost function is a
         // wrapper and MUST contain its one UFCS call; otherwise it could
         // reimplement the operation and the evidence would cover a lookalike.
-        let export = fname == "vos_ghost_alpha"
-            || fname.starts_with("vos_ghost_alpha_")
-            || fname.starts_with("vos_ghost_cfg_");
+        // EXACT names (VOS02 section 4.4): a prefix would let
+        // `vos_ghost_alpha_evil` keep a free body.
+        let export = matches!(
+            fname.as_str(),
+            "vos_ghost_alpha" | "vos_ghost_alpha_w" | "vos_ghost_cfg_n"
+        );
         if !export {
             bad(
                 line,
-                format!("ghost function `{fname}` has no UFCS call `<T as Trait>::f(..)`; only `vos_ghost_alpha*` and `vos_ghost_cfg_*` may have a free body, every other ghost function is a wrapper"),
+                format!("ghost function `{fname}` has no UFCS call `<T as Trait>::f(..)`; only `vos_ghost_alpha`, `vos_ghost_alpha_w` and `vos_ghost_cfg_n` may have a free body, every other ghost function is a wrapper"),
             );
         }
         return;

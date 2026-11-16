@@ -1,33 +1,46 @@
-//! # A tiny, fail-closed TOML reader
+//! # TOML, read with the repository's grammar-driven crates
 //!
 //! `Cargo.toml` decides things the Rust source never shows: a `build = ".."`
 //! key compiles a script before the crate, `proc-macro = true` makes the crate
 //! run at compile time, a dependency table pulls in foreign code.  To police
 //! those we must *read* the manifest, and a line-by-line `grep` is easy to
 //! evade (`package = { build = ".." }`, a quoted table name `["lib"]`, a
-//! multi-line array whose body looks like a header).  So this module
-//! tokenises the whole document, **flattens every value to a full key path**
-//! and lets the rules look at paths, however the author spelled them:
+//! multi-line array whose body looks like a header).
+//!
+//! The repository forbids hand-written lexers and parsers, so this module is a
+//! thin wrapper over `coding-adventures-toml-parser` (which runs the generic
+//! `GrammarLexer` / `GrammarParser` on `code/grammars/toml/toml.{tokens,grammar}`).
+//! It does three things the grammar crates leave to the consumer:
+//!
+//! 1. **Flatten every value to a full key path**, so the rules look at paths,
+//!    however the author spelled them:
 //!
 //! ```text
 //!   [package]                      path ["package","build"]  = Str("x")
 //!   build = "x"
-//!
 //!   package.build = "x"            same path
 //!   package = { build = "x" }      same path
-//!   [lib]                          path ["lib","proc-macro"] = Bool(true)
-//!   proc-macro = true
-//!   [dependencies.foo]             path ["dependencies","foo","path"] = Str(..)
-//!   path = "../foo"
+//!   "build" = "x"                  same path (quotes are not part of the key)
 //!   bin = [{ path = "x.rs" }]      path ["bin","[]","path"] = Str("x.rs")
 //! ```
 //!
-//! Supported subset: comments, bare and quoted keys, dotted keys, `[table]`
-//! and `[[array-of-tables]]` headers, basic and literal strings (single and
-//! multi-line), booleans, numbers and dates (kept as opaque text), arrays and
-//! inline tables.  Anything else is an error, and an error is a finding
-//! (fail closed, VOS03 section 3): we never guess what an unreadable manifest
-//! means.
+//! 2. **Fail closed on duplicates.**  The grammar accepts `a = 1` then `a = 2`
+//!    (its header says key uniqueness is a post-parse pass that the crate does
+//!    not run), so a repeated non-table path is an error here, never a silent
+//!    last-wins.
+//!
+//! 3. **Refuse escapes.**  The TOML lexer strips the quotes of a string token
+//!    but leaves its escapes undecoded (`"package"` arrives as the text
+//!    `package`).  Decoding is a second implementation to trust, so a
+//!    backslash in a basic or multi-line basic string (a key or a value) is an
+//!    error: `"package".build` cannot slip past as a key we failed to
+//!    normalise.  Literal strings (`'..'`) have no escapes and are fine.
+//!
+//! The parser's own recursion cap (165 levels) bounds nesting; anything it
+//! refuses is a [`TomlError`] and so a finding (fail closed, VOS03 section 3).
+
+use coding_adventures_toml_parser::{try_parse_toml, TomlParseError};
+use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 
 /// A flattened value.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -41,8 +54,8 @@ pub enum Value {
     /// An array (elements that are tables are flattened separately, see
     /// [`Entry`]; they appear here as [`Value::Table`]).
     Array(Vec<Value>),
-    /// An inline table or an empty table header; its members are separate
-    /// entries with a longer path.
+    /// An inline table or a table header; its members are separate entries
+    /// with a longer path.
     Table,
 }
 
@@ -60,378 +73,190 @@ pub struct Entry {
 /// A parse failure.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct TomlError {
-    /// 1-based line.
+    /// 1-based line (1 when the grammar crates give no position, as for a
+    /// lexical or syntax error).
     pub line: u32,
     /// Reason.
     pub message: String,
 }
 
-struct P {
-    c: Vec<char>,
-    i: usize,
-    line: u32,
-    out: Vec<Entry>,
+fn err<T>(line: u32, message: &str) -> Result<T, TomlError> {
+    Err(TomlError {
+        line,
+        message: message.to_string(),
+    })
 }
 
-type R<T> = Result<T, TomlError>;
+fn line_of(n: &GrammarASTNode) -> u32 {
+    u32::try_from(n.start_line.unwrap_or(1)).unwrap_or(u32::MAX)
+}
 
-impl P {
-    fn err<T>(&self, m: &str) -> R<T> {
-        Err(TomlError {
-            line: self.line,
-            message: m.to_string(),
-        })
-    }
+fn child_nodes(n: &GrammarASTNode) -> impl Iterator<Item = &GrammarASTNode> {
+    n.children.iter().filter_map(|c| match c {
+        ASTNodeOrToken::Node(m) => Some(m),
+        ASTNodeOrToken::Token(_) => None,
+    })
+}
 
-    fn peek(&self) -> Option<char> {
-        self.c.get(self.i).copied()
-    }
-
-    fn at(&self, off: usize) -> Option<char> {
-        self.c.get(self.i + off).copied()
-    }
-
-    /// Skip spaces and tabs only.
-    fn ws(&mut self) {
-        while matches!(self.peek(), Some(' ' | '\t')) {
-            self.i += 1;
+/// The one token of a node that wraps exactly one token.
+fn only_token(n: &GrammarASTNode) -> Option<(&str, &str)> {
+    match n.children.as_slice() {
+        [ASTNodeOrToken::Token(t)] => {
+            Some((t.type_name.as_deref().unwrap_or(""), t.value.as_str()))
         }
+        _ => None,
     }
+}
 
-    fn comment(&mut self) {
-        if self.peek() == Some('#') {
-            while self.peek().is_some_and(|c| c != '\n') {
-                self.i += 1;
-            }
-        }
-    }
-
-    /// Skip whitespace, comments and newlines (inside arrays and tables).
-    fn skip_all(&mut self) {
-        loop {
-            self.ws();
-            self.comment();
-            match self.peek() {
-                Some('\n') => {
-                    self.line += 1;
-                    self.i += 1;
-                }
-                Some('\r') => self.i += 1,
-                _ => return,
-            }
-        }
-    }
-
-    fn key_part(&mut self) -> R<String> {
-        match self.peek() {
-            Some('"') => self.basic_string(),
-            Some('\'') => self.literal_string(),
-            Some(c) if c.is_ascii_alphanumeric() || c == '_' || c == '-' => {
-                let s = self.i;
-                while self
-                    .peek()
-                    .is_some_and(|c| c.is_ascii_alphanumeric() || c == '_' || c == '-')
-                {
-                    self.i += 1;
-                }
-                Ok(self.c[s..self.i].iter().collect())
-            }
-            _ => self.err("expected a key"),
-        }
-    }
-
-    fn dotted_key(&mut self) -> R<Vec<String>> {
-        let mut parts = vec![self.key_part()?];
-        loop {
-            self.ws();
-            if self.peek() == Some('.') {
-                self.i += 1;
-                self.ws();
-                parts.push(self.key_part()?);
-            } else {
-                return Ok(parts);
-            }
-        }
-    }
-
-    fn escape(&mut self) -> R<char> {
-        let Some(c) = self.peek() else {
-            return self.err("unterminated string");
+/// `a . "b" . 'c'` as its parts.
+fn key_path(key: &GrammarASTNode) -> Result<Vec<String>, TomlError> {
+    let line = line_of(key);
+    let mut parts = Vec::new();
+    for simple in child_nodes(key) {
+        let Some((kind, text)) = only_token(simple) else {
+            return err(line, "unsupported key form");
         };
-        self.i += 1;
-        Ok(match c {
-            'n' => '\n',
-            't' => '\t',
-            'r' => '\r',
-            'b' => '\u{8}',
-            'f' => '\u{c}',
-            '"' => '"',
-            '\\' => '\\',
-            'u' | 'U' => {
-                let n = if c == 'u' { 4 } else { 8 };
-                let mut v = 0u32;
-                for _ in 0..n {
-                    let Some(d) = self.peek().and_then(|c| c.to_digit(16)) else {
-                        return self.err("bad unicode escape");
-                    };
-                    v = v.wrapping_mul(16).wrapping_add(d);
-                    self.i += 1;
-                }
-                match char::from_u32(v) {
-                    Some(c) => c,
-                    None => return self.err("bad unicode escape"),
-                }
+        match kind {
+            "BARE_KEY" | "LITERAL_STRING" | "TRUE" | "FALSE" | "INTEGER" => {
+                parts.push(text.to_string())
             }
-            _ => return self.err("unknown escape"),
-        })
-    }
-
-    fn basic_string(&mut self) -> R<String> {
-        if self.at(1) == Some('"') && self.at(2) == Some('"') {
-            self.i += 3;
-            if self.peek() == Some('\n') {
-                self.line += 1;
-                self.i += 1;
+            "BASIC_STRING" => {
+                if text.contains('\\') {
+                    return err(
+                        line,
+                        "escape in a quoted key is not supported (fail closed)",
+                    );
+                }
+                parts.push(text.to_string());
             }
-            let mut s = String::new();
-            loop {
-                match self.peek() {
-                    None => return self.err("unterminated multi-line string"),
-                    Some('"') if self.at(1) == Some('"') && self.at(2) == Some('"') => {
-                        self.i += 3;
-                        return Ok(s);
-                    }
-                    Some('\\') => {
-                        self.i += 1;
-                        if matches!(self.peek(), Some('\n' | ' ' | '\t' | '\r')) {
-                            // line-ending backslash trims following whitespace
-                            while matches!(self.peek(), Some('\n' | ' ' | '\t' | '\r')) {
-                                if self.peek() == Some('\n') {
-                                    self.line += 1;
-                                }
-                                self.i += 1;
-                            }
-                        } else {
-                            let c = self.escape()?;
-                            s.push(c);
-                        }
-                    }
-                    Some(c) => {
-                        if c == '\n' {
-                            self.line += 1;
-                        }
-                        s.push(c);
-                        self.i += 1;
-                    }
-                }
-            }
-        }
-        self.i += 1;
-        let mut s = String::new();
-        loop {
-            match self.peek() {
-                None | Some('\n') => return self.err("unterminated string"),
-                Some('"') => {
-                    self.i += 1;
-                    return Ok(s);
-                }
-                Some('\\') => {
-                    self.i += 1;
-                    let c = self.escape()?;
-                    s.push(c);
-                }
-                Some(c) => {
-                    s.push(c);
-                    self.i += 1;
-                }
-            }
+            _ => return err(line, "unsupported key form (fail closed)"),
         }
     }
-
-    fn literal_string(&mut self) -> R<String> {
-        if self.at(1) == Some('\'') && self.at(2) == Some('\'') {
-            self.i += 3;
-            if self.peek() == Some('\n') {
-                self.line += 1;
-                self.i += 1;
-            }
-            let mut s = String::new();
-            loop {
-                match self.peek() {
-                    None => return self.err("unterminated multi-line string"),
-                    Some('\'') if self.at(1) == Some('\'') && self.at(2) == Some('\'') => {
-                        self.i += 3;
-                        return Ok(s);
-                    }
-                    Some(c) => {
-                        if c == '\n' {
-                            self.line += 1;
-                        }
-                        s.push(c);
-                        self.i += 1;
-                    }
-                }
-            }
-        }
-        self.i += 1;
-        let mut s = String::new();
-        loop {
-            match self.peek() {
-                None | Some('\n') => return self.err("unterminated string"),
-                Some('\'') => {
-                    self.i += 1;
-                    return Ok(s);
-                }
-                Some(c) => {
-                    s.push(c);
-                    self.i += 1;
-                }
-            }
-        }
+    if parts.is_empty() {
+        return err(line, "empty key");
     }
+    Ok(parts)
+}
 
-    /// Parse a value; `path` is where it lives, for flattening tables.
-    fn value(&mut self, path: &[String], depth: usize) -> R<Value> {
-        if depth > 32 {
-            return self.err("nesting too deep");
+fn value(node: &GrammarASTNode, path: &[String], out: &mut Vec<Entry>) -> Result<Value, TomlError> {
+    let line = line_of(node);
+    if let Some((kind, text)) = only_token(node) {
+        return Ok(match kind {
+            "BASIC_STRING" | "ML_BASIC_STRING" => {
+                if text.contains('\\') {
+                    return err(
+                        line,
+                        "escape in a TOML string is not supported (fail closed)",
+                    );
+                }
+                Value::Str(text.to_string())
+            }
+            "LITERAL_STRING" | "ML_LITERAL_STRING" => Value::Str(text.to_string()),
+            "TRUE" => Value::Bool(true),
+            "FALSE" => Value::Bool(false),
+            _ => Value::Other(text.to_string()),
+        });
+    }
+    // array or inline table
+    let Some(inner) = child_nodes(node).next() else {
+        return err(line, "empty value");
+    };
+    match inner.rule_name.as_str() {
+        "array" => {
+            let mut sub = path.to_vec();
+            sub.push("[]".to_string());
+            let mut items = Vec::new();
+            for values in child_nodes(inner) {
+                for v in child_nodes(values) {
+                    items.push(value(v, &sub, out)?);
+                }
+            }
+            Ok(Value::Array(items))
         }
-        match self.peek() {
-            Some('"') => Ok(Value::Str(self.basic_string()?)),
-            Some('\'') => Ok(Value::Str(self.literal_string()?)),
-            Some('[') => {
-                self.i += 1;
-                let mut items = Vec::new();
-                let mut sub = path.to_vec();
-                sub.push("[]".to_string());
-                loop {
-                    self.skip_all();
-                    match self.peek() {
-                        Some(']') => {
-                            self.i += 1;
-                            return Ok(Value::Array(items));
-                        }
-                        None => return self.err("unterminated array"),
-                        _ => {}
-                    }
-                    items.push(self.value(&sub, depth + 1)?);
-                    self.skip_all();
-                    match self.peek() {
-                        Some(',') => self.i += 1,
-                        Some(']') => {}
-                        _ => return self.err("expected `,` or `]` in array"),
-                    }
-                }
+        "inline_table" => {
+            for kv in child_nodes(inner) {
+                let mut full = path.to_vec();
+                let mut nodes = child_nodes(kv);
+                let (Some(k), Some(v)) = (nodes.next(), nodes.next()) else {
+                    return err(line, "malformed inline table member");
+                };
+                full.extend(key_path(k)?);
+                let val = value(v, &full, out)?;
+                out.push(Entry {
+                    path: full,
+                    value: val,
+                    line: line_of(kv),
+                });
             }
-            Some('{') => {
-                self.i += 1;
-                loop {
-                    self.skip_all();
-                    match self.peek() {
-                        Some('}') => {
-                            self.i += 1;
-                            return Ok(Value::Table);
-                        }
-                        None => return self.err("unterminated inline table"),
-                        _ => {}
-                    }
-                    let l = self.line;
-                    let key = self.dotted_key()?;
-                    self.ws();
-                    if self.peek() != Some('=') {
-                        return self.err("expected `=` in inline table");
-                    }
-                    self.i += 1;
-                    self.ws();
-                    let mut full = path.to_vec();
-                    full.extend(key);
-                    let v = self.value(&full, depth + 1)?;
-                    self.out.push(Entry {
-                        path: full,
-                        value: v,
-                        line: l,
-                    });
-                    self.skip_all();
-                    match self.peek() {
-                        Some(',') => self.i += 1,
-                        Some('}') => {}
-                        _ => return self.err("expected `,` or `}` in inline table"),
-                    }
-                }
-            }
-            Some(c) if c.is_ascii_alphanumeric() || matches!(c, '+' | '-' | '.' | '_' | ':') => {
-                let s = self.i;
-                while self.peek().is_some_and(|c| {
-                    c.is_ascii_alphanumeric() || matches!(c, '+' | '-' | '.' | '_' | ':')
-                }) {
-                    self.i += 1;
-                }
-                let t: String = self.c[s..self.i].iter().collect();
-                match t.as_str() {
-                    "true" => Ok(Value::Bool(true)),
-                    "false" => Ok(Value::Bool(false)),
-                    _ => Ok(Value::Other(t)),
-                }
-            }
-            _ => self.err("expected a value"),
+            Ok(Value::Table)
         }
+        _ => err(line, "unsupported value form"),
     }
 }
 
 /// Parse `text` into flattened entries, in document order.
 pub fn parse(text: &str) -> Result<Vec<Entry>, TomlError> {
-    let mut p = P {
-        c: text.chars().collect(),
-        i: 0,
+    let ast = try_parse_toml(text).map_err(|e| TomlError {
         line: 1,
-        out: Vec::new(),
-    };
+        message: match e {
+            TomlParseError::Lexical => "TOML tokenization failed".to_string(),
+            TomlParseError::Syntax => "TOML parsing failed".to_string(),
+        },
+    })?;
+    let mut out: Vec<Entry> = Vec::new();
     let mut prefix: Vec<String> = Vec::new();
-    loop {
-        p.skip_all();
-        let Some(c) = p.peek() else { break };
-        let line = p.line;
-        if c == '[' {
-            let array = p.at(1) == Some('[');
-            p.i += if array { 2 } else { 1 };
-            p.ws();
-            let key = p.dotted_key()?;
-            p.ws();
-            let closers = if array { "]]" } else { "]" };
-            for want in closers.chars() {
-                if p.peek() != Some(want) {
-                    return p.err("malformed table header");
+    // Each `[[x]]` header starts a NEW table of the array `x`, so the same
+    // key under two of them is not a duplicate.
+    let mut generation = 0usize;
+    let mut generations: Vec<usize> = Vec::new();
+    for expr in child_nodes(&ast) {
+        let Some(inner) = child_nodes(expr).next() else {
+            continue;
+        };
+        let line = line_of(inner);
+        let before = out.len();
+        match inner.rule_name.as_str() {
+            "table_header" | "array_table_header" => {
+                if inner.rule_name == "array_table_header" {
+                    generation += 1;
                 }
-                p.i += 1;
+                let Some(key) = child_nodes(inner).next() else {
+                    return err(line, "malformed table header");
+                };
+                prefix = key_path(key)?;
+                out.push(Entry {
+                    path: prefix.clone(),
+                    value: Value::Table,
+                    line,
+                });
             }
-            prefix = key;
-            p.out.push(Entry {
-                path: prefix.clone(),
-                value: Value::Table,
-                line,
-            });
-        } else {
-            let key = p.dotted_key()?;
-            p.ws();
-            if p.peek() != Some('=') {
-                return p.err("expected `=` after key");
+            "keyval" => {
+                let mut nodes = child_nodes(inner);
+                let (Some(k), Some(v)) = (nodes.next(), nodes.next()) else {
+                    return err(line, "malformed key/value");
+                };
+                let mut full = prefix.clone();
+                full.extend(key_path(k)?);
+                let val = value(v, &full, &mut out)?;
+                out.push(Entry {
+                    path: full,
+                    value: val,
+                    line,
+                });
             }
-            p.i += 1;
-            p.ws();
-            let mut full = prefix.clone();
-            full.extend(key);
-            let v = p.value(&full, 0)?;
-            p.out.push(Entry {
-                path: full,
-                value: v,
-                line,
-            });
+            _ => return err(line, "unsupported expression"),
         }
-        p.ws();
-        p.comment();
-        match p.peek() {
-            None | Some('\n') | Some('\r') => {}
-            _ => return p.err("unexpected text after a value or header"),
+        generations.extend(std::iter::repeat_n(generation, out.len() - before));
+    }
+    // The grammar crate does not enforce key uniqueness; do it here.
+    let mut seen: std::collections::BTreeSet<(usize, &Vec<String>)> =
+        std::collections::BTreeSet::new();
+    for (e, g) in out.iter().zip(&generations) {
+        // elements of an array of inline tables share the path `.. [] ..`
+        let in_array = e.path.iter().any(|p| p == "[]");
+        if e.value != Value::Table && !in_array && !seen.insert((*g, &e.path)) {
+            return err(e.line, "duplicate key");
         }
     }
-    Ok(p.out)
+    Ok(out)
 }

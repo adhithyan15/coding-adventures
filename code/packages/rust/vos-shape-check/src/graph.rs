@@ -30,12 +30,11 @@
 
 use std::collections::{BTreeMap, BTreeSet, VecDeque};
 
+use crate::items::Gap;
 use crate::lexer::{Kind, Token};
 use crate::report::Rule;
 use crate::rules::Ctx;
-use crate::syntax::{
-    angle_close, is_keyword, matching_lt, scan_to_body, FileCtx, MAX_HEADER_TOKENS,
-};
+use crate::syntax::{angle_close, is_keyword, matching_lt, scan_header, FileCtx, Header};
 
 /// The synthetic type key of an `impl` whose self type has no name.
 const ANON_TYPE: &str = "_anon";
@@ -46,7 +45,7 @@ pub const MAX_EDGES: usize = 200_000;
 /// Most `fn` items the graph will hold; more is VT03 (fail closed).
 pub const MAX_FNS: usize = 4_096;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
 enum Call {
     Free(String),
     Typed(String, String),
@@ -54,8 +53,6 @@ enum Call {
 }
 
 struct Node {
-    /// The header scan gave up before a `{` or `;` (fail closed, VT03).
-    overlong: bool,
     ty: Option<String>,
     name: String,
     file: usize,
@@ -63,31 +60,64 @@ struct Node {
     calls: Vec<Call>,
 }
 
-/// The type an `impl` header names: `impl<T> Tr for a::B<T> {` gives `B`.
-fn impl_type(t: &[Token], pair: &[usize], i: usize) -> Option<(String, usize)> {
+/// The type an `impl` header names: `impl<T> Tr for a::B<T> {` gives `B`, and
+/// the index of the body `{`.  `None` means there is no block to enter
+/// (`impl X;`) **or the header could not be read**, in which case a [`Gap`] has
+/// been recorded and the crate fails with VT03.
+fn impl_type(
+    t: &[Token],
+    pair: &[usize],
+    i: usize,
+    fi: usize,
+    gaps: &mut Vec<Gap>,
+) -> Option<(String, usize)> {
+    let mut gap = |idx: usize, what: &str| {
+        gaps.push(Gap {
+            file: fi,
+            line: t[idx.min(t.len() - 1)].line,
+            message: format!("{what} of an `impl` could not be read (fail closed)"),
+        });
+    };
     let mut k = i + 1;
     if t.get(k)?.is_punct("<") {
-        k = angle_close(t, pair, k)? + 1;
+        match angle_close(t, pair, k) {
+            Some(c) => k = c + 1,
+            None => {
+                gap(k, "the generic list");
+                return None;
+            }
+        }
     }
     let start = k;
-    let mut for_at = None;
-    let limit = (i + MAX_HEADER_TOKENS).min(t.len());
-    while k < limit && !t[k].is_punct("{") && !t[k].is_punct(";") && !t[k].is_ident("where") {
-        if t[k].kind == Kind::Punct && matches!(t[k].text.as_str(), "(" | "[") {
-            k = pair[k];
-        } else if t[k].is_ident("for") && !t.get(k + 1).is_some_and(|x| x.is_punct("<")) {
-            for_at = Some(k);
+    let b = match scan_header(t, pair, start) {
+        Header::End(b) => b,
+        Header::GaveUp(g) => {
+            gap(g, "the header");
+            return None;
         }
-        k += 1;
+    };
+    if !t[b].is_punct("{") {
+        return None; // `impl X;`
     }
-    // The body brace may come after a `where` clause.
-    let b = scan_to_body(t, pair, k);
-    if b >= t.len() || !t[b].is_punct("{") {
-        return None;
+    // The last top-level `for` starts the self type; a `where` ends it.
+    let mut for_at = None;
+    let mut stop = b;
+    let mut j = start;
+    while j < b {
+        let x = &t[j];
+        if x.kind == Kind::Punct && matches!(x.text.as_str(), "(" | "[") {
+            j = pair[j];
+        } else if x.is_ident("where") {
+            stop = j;
+            break;
+        } else if x.is_ident("for") && !t.get(j + 1).is_some_and(|n| n.is_punct("<")) {
+            for_at = Some(j);
+        }
+        j += 1;
     }
     let from = for_at.map_or(start, |f| f + 1);
     let mut j = from;
-    while j < k {
+    while j < stop {
         let x = &t[j];
         let skippable =
             x.kind == Kind::Lifetime || x.is_punct("&") || x.is_ident("mut") || x.is_ident("dyn");
@@ -129,7 +159,13 @@ fn qself_type(t: &[Token], gt: usize) -> Option<String> {
         .map(|x| x.text.clone())
 }
 
-fn collect_file(f: &FileCtx, fi: usize, nodes: &mut Vec<Node>, traits: &mut BTreeSet<String>) {
+fn collect_file(
+    f: &FileCtx,
+    fi: usize,
+    nodes: &mut Vec<Node>,
+    traits: &mut BTreeSet<String>,
+    gaps: &mut Vec<Gap>,
+) {
     let t = &f.toks;
     let mut ty_stack: Vec<(usize, Option<String>)> = Vec::new();
     let mut fn_stack: Vec<(usize, usize)> = Vec::new();
@@ -151,7 +187,7 @@ fn collect_file(f: &FileCtx, fi: usize, nodes: &mut Vec<Node>, traits: &mut BTre
         let cur_ty = ty_stack.last().and_then(|(_, ty)| ty.clone());
         match t[i].text.as_str() {
             "impl" if item_start => {
-                if let Some((name, brace)) = impl_type(t, &f.pair, i) {
+                if let Some((name, brace)) = impl_type(t, &f.pair, i, fi, gaps) {
                     ty_stack.push((f.pair[brace], Some(name)));
                 }
             }
@@ -162,9 +198,19 @@ fn collect_file(f: &FileCtx, fi: usize, nodes: &mut Vec<Node>, traits: &mut BTre
                 if after_vis {
                     if let Some(n) = t.get(i + 1).filter(|x| x.kind == Kind::Ident) {
                         traits.insert(n.text.clone());
-                        let b = scan_to_body(t, &f.pair, i + 2);
-                        if b < t.len() && t[b].is_punct("{") {
-                            ty_stack.push((f.pair[b], Some(n.text.clone())));
+                        match scan_header(t, &f.pair, i + 2) {
+                            Header::End(b) if t[b].is_punct("{") => {
+                                ty_stack.push((f.pair[b], Some(n.text.clone())));
+                            }
+                            Header::End(_) => {}
+                            Header::GaveUp(g) => gaps.push(Gap {
+                                file: fi,
+                                line: t[g.min(t.len() - 1)].line,
+                                message: format!(
+                                    "the header of `trait {}` could not be read (fail closed)",
+                                    n.text
+                                ),
+                            }),
                         }
                     }
                 }
@@ -172,25 +218,22 @@ fn collect_file(f: &FileCtx, fi: usize, nodes: &mut Vec<Node>, traits: &mut BTre
             "fn" => {
                 if let Some(n) = t.get(i + 1).filter(|x| x.kind == Kind::Ident) {
                     nodes.push(Node {
-                        overlong: false,
                         ty: cur_ty,
                         name: n.text.clone(),
                         file: fi,
                         line: n.line,
                         calls: Vec::new(),
                     });
-                    let b = scan_to_body(t, &f.pair, i + 2);
-                    if let Some(node) = nodes.last_mut() {
-                        node.overlong = b < t.len()
-                            && !t[b].is_punct("{")
-                            && !t[b].is_punct(";")
-                            && !matches!(
-                                t[b].text.as_str(),
-                                "struct" | "enum" | "union" | "trait" | "mod" | "use"
-                            );
-                    }
-                    if b < t.len() && t[b].is_punct("{") {
-                        fn_stack.push((f.pair[b], nodes.len() - 1));
+                    match scan_header(t, &f.pair, i + 2) {
+                        Header::End(b) if t[b].is_punct("{") => {
+                            fn_stack.push((f.pair[b], nodes.len() - 1));
+                        }
+                        Header::End(_) => {}
+                        Header::GaveUp(g) => gaps.push(Gap {
+                            file: fi,
+                            line: t[g.min(t.len() - 1)].line,
+                            message: format!("the header of `fn {}` could not be read, so its body was not scanned (fail closed)", n.text),
+                        }),
                     }
                 }
             }
@@ -238,17 +281,13 @@ pub fn recursion(cx: &mut Ctx<'_>) {
     let files = cx.files;
     let mut nodes: Vec<Node> = Vec::new();
     let mut traits: BTreeSet<String> = BTreeSet::new();
+    let mut gaps: Vec<Gap> = Vec::new();
     for (fi, f) in files.iter().enumerate() {
-        collect_file(f, fi, &mut nodes, &mut traits);
+        collect_file(f, fi, &mut nodes, &mut traits, &mut gaps);
     }
-    for node in nodes.iter().filter(|n| n.overlong) {
-        let file = files[node.file].path.clone();
-        cx.add(
-            Rule::Vt03,
-            &file,
-            node.line,
-            format!("header of `fn {}` is over {MAX_HEADER_TOKENS} tokens; its body was not scanned (fail closed)", node.name),
-        );
+    for g in &gaps {
+        let file = files[g.file].path.clone();
+        cx.add(Rule::Vt03, &file, g.line, g.message.clone());
     }
     if nodes.len() > MAX_FNS {
         cx.add(
@@ -274,23 +313,24 @@ pub fn recursion(cx: &mut Ctx<'_>) {
     let mut edges = 0usize;
     for (n, node) in nodes.iter().enumerate() {
         let mut to: BTreeSet<usize> = BTreeSet::new();
-        for c in &node.calls {
-            let found: Vec<usize> = match c {
+        // Many call sites of one callee are one edge: dedupe BEFORE resolving
+        // (4,000 methods x 344,000 call sites took 15 s without this).
+        let unique: BTreeSet<&Call> = node.calls.iter().collect();
+        for c in unique {
+            let found: &[usize] = match c {
                 Call::Free(name) => by_key
                     .get(&(None, name.clone()))
-                    .cloned()
-                    .unwrap_or_default(),
-                Call::Method(name) => by_name.get(name).cloned().unwrap_or_default(),
+                    .map_or(&[][..], Vec::as_slice),
+                Call::Method(name) => by_name.get(name).map_or(&[][..], Vec::as_slice),
                 // A path through a trait of the crate may reach any impl of it.
                 Call::Typed(ty, name) if traits.contains(ty) => {
-                    by_name.get(name).cloned().unwrap_or_default()
+                    by_name.get(name).map_or(&[][..], Vec::as_slice)
                 }
                 Call::Typed(ty, name) => by_key
                     .get(&(Some(ty.clone()), name.clone()))
-                    .cloned()
-                    .unwrap_or_default(),
+                    .map_or(&[][..], Vec::as_slice),
             };
-            to.extend(found);
+            to.extend(found.iter().copied());
             // Fail closed before the work, not after it: a crate whose method
             // names collide thousands of times is refused, not ground through.
             if edges + to.len() > MAX_EDGES {

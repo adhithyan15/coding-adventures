@@ -177,3 +177,113 @@ impl AsRef<Path> for Tmp {
         &self.0
     }
 }
+
+// ---------------------------------------------------------------------------
+// Batched checks
+//
+// Building the grammar lexer costs about 0.7 s in a debug build (RS01 section
+// 4.1: 175 ms in release) and cannot be reused for a second source, so a test
+// that checks 30 snippets one by one would cost 20 s.  `check_crates` lexes many
+// crates with ONE lexer.  A test that starts a `Batch` queues its `fires`,
+// `clean` and `silent` helper calls and the batch runs them together when the
+// test function ends (in `Drop`, unless the test is already panicking).
+// ---------------------------------------------------------------------------
+
+use std::cell::RefCell;
+use vos_shape_check::check_crates;
+
+pub enum Expect {
+    Fires(String),
+    Clean,
+    Silent(String),
+    Msg(String, String),
+}
+
+struct Queued {
+    input: CrateInput,
+    expect: Expect,
+    label: String,
+}
+
+thread_local! {
+    static QUEUE: RefCell<Option<Vec<Queued>>> = const { RefCell::new(None) };
+}
+
+pub struct Batch;
+
+impl Batch {
+    pub fn begin() -> Batch {
+        QUEUE.with(|q| *q.borrow_mut() = Some(Vec::new()));
+        Batch
+    }
+}
+
+fn verify(q: &Queued, r: &Report) -> Option<String> {
+    let ids = rules(r);
+    match &q.expect {
+        Expect::Fires(id) if !ids.contains(&id.as_str()) => Some(format!("expected {id}")),
+        Expect::Clean if !r.findings.is_empty() => Some("expected clean".to_string()),
+        Expect::Silent(id) if ids.contains(&id.as_str()) => Some(format!("did not expect {id}")),
+        Expect::Msg(id, needle)
+            if !r
+                .findings
+                .iter()
+                .any(|f| f.rule.id() == id && f.message.contains(needle.as_str())) =>
+        {
+            Some(format!("expected {id} mentioning {needle:?}"))
+        }
+        _ => None,
+    }
+}
+
+/// Queue a check (run when the test's `Batch` is dropped) or run it now.
+pub fn check(input: CrateInput, expect: Expect, label: &str) {
+    let q = Queued {
+        input,
+        expect,
+        label: label.to_string(),
+    };
+    let now = QUEUE.with(|cell| match cell.borrow_mut().as_mut() {
+        Some(v) => {
+            v.push(q);
+            None
+        }
+        None => Some(q),
+    });
+    if let Some(q) = now {
+        let r = run(&q.input);
+        if let Some(why) = verify(&q, &r) {
+            panic!("{why}\n{}\n{}", q.label, r.render());
+        }
+    }
+}
+
+impl Drop for Batch {
+    fn drop(&mut self) {
+        let items = QUEUE.with(|q| q.borrow_mut().take()).unwrap_or_default();
+        if std::thread::panicking() || items.is_empty() {
+            return;
+        }
+        let inputs: Vec<CrateInput> = items.iter().map(|i| i.input.clone()).collect();
+        let reports = check_crates(&inputs, &Policy::default());
+        let mut failures = Vec::new();
+        for (q, r) in items.iter().zip(&reports) {
+            if let Some(why) = verify(q, r) {
+                failures.push(format!("{why}\n  input: {}\n{}", q.label, r.render()));
+            }
+        }
+        if !failures.is_empty() {
+            panic!(
+                "{} of {} batched checks failed:\n{}",
+                failures.len(),
+                items.len(),
+                failures.join("\n---\n")
+            );
+        }
+    }
+}
+
+/// Check many crates with one grammar lexer (see the module notes above).
+pub fn run_all(inputs: &[CrateInput]) -> Vec<Report> {
+    check_crates(inputs, &Policy::default())
+}

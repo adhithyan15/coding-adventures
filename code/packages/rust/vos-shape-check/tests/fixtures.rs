@@ -180,18 +180,20 @@ fn single_mutations_of_the_linear_scan_each_break_their_rule() {
 
 #[test]
 fn the_contract_crate_mutations_break_their_rules() {
-    let r = run(&mutate(
-        load("pass-ready-contract"),
-        "const N: u8;",
-        "const N: f64;",
-    ));
-    assert!(rules(&r).contains(&"SH11"));
-    let r = run(&mutate(
-        load("pass-ready-contract"),
-        "fn init() -> Self::State;",
-        "fn init(&self) -> Self::State;",
-    ));
-    assert!(rules(&r).contains(&"SH10"));
+    check(
+        mutate(load("pass-ready-contract"), "const N: u8;", "const N: f64;"),
+        Expect::Fires("SH11".into()),
+        "",
+    );
+    check(
+        mutate(
+            load("pass-ready-contract"),
+            "fn init() -> Self::State;",
+            "fn init(&self) -> Self::State;",
+        ),
+        Expect::Fires("SH10".into()),
+        "",
+    );
 }
 
 #[test]
@@ -202,12 +204,12 @@ fn a_third_party_dependency_or_proc_macro_fails_the_toy() {
             .unwrap()
             .replace("[dependencies]\n", "[dependencies]\nserde = \"1\"\n"),
     );
-    assert!(rules(&run(&i)).contains(&"SH12"));
+    check(i.clone(), Expect::Fires("SH12".into()), "");
     let mut i = load("pass-ready-bitmap");
     i.cargo_toml = Some(
         i.cargo_toml
             .unwrap()
             .replace("[features]", "[lib]\nproc-macro = true\n\n[features]"),
     );
-    assert!(rules(&run(&i)).contains(&"SH15"));
+    check(i.clone(), Expect::Fires("SH15".into()), "");
 }

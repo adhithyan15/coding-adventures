@@ -226,9 +226,15 @@ fn mask_cfg_test(toks: Vec<Token>, pair: &[usize]) -> Vec<Token> {
 }
 
 impl FileCtx {
-    /// Lex and index one file.
+    /// Lex and index one file (single-document convenience; a run with many
+    /// files lexes them together and calls [`FileCtx::from_tokens`]).
     pub fn load(path: &str, src: &str) -> Result<FileCtx, LexError> {
-        let raw = lex(src)?;
+        FileCtx::from_tokens(path, lex(src)?)
+    }
+
+    /// Index the tokens of one file: bracket pairs, the `cfg(test)` mask,
+    /// attributes and the ghost module.
+    pub fn from_tokens(path: &str, raw: Vec<Token>) -> Result<FileCtx, LexError> {
         let pair0 = pair_brackets(&raw)?;
         let toks = mask_cfg_test(raw, &pair0);
         let pair = pair_brackets(&toks)?;
@@ -321,28 +327,30 @@ impl FileCtx {
 }
 
 /// Given the index of a `<`, the index of its matching `>` (not counting the
-/// `>` of `->` or `=>`, which the lexer merges), or `None` when the group
-/// is not a plausible generic list (a `;`, `{` or `}` at depth 1, or more
-/// than 256 tokens).
+/// `>` of `->` or `=>`, which the lexer merges), or `None` when it gives up:
+/// a `;` or `}` at depth 1, or more than [`MAX_HEADER_TOKENS`] tokens.  A `{ .. }`
+/// group inside the list is a const-generic expression and is skipped whole.
+/// **`None` is not "no generics"**: callers that need the list report VT03
+/// (fail closed) rather than skip what follows.
 pub fn angle_close(toks: &[Token], pair: &[usize], open: usize) -> Option<usize> {
     let mut depth = 0usize;
     let mut k = open;
-    let limit = (open + 256).min(toks.len());
+    let limit = (open + MAX_HEADER_TOKENS).min(toks.len());
     while k < limit {
         let t = &toks[k];
         if t.kind == Kind::Punct {
             match t.text.as_str() {
                 "<" => depth += 1,
                 ">" => {
-                    depth -= 1;
+                    depth = depth.saturating_sub(1);
                     if depth == 0 {
                         return Some(k);
                     }
                 }
-                "(" | "[" => {
+                "(" | "[" | "{" => {
                     k = pair[k];
                 }
-                ";" | "{" | "}" => return None,
+                ";" | "}" => return None,
                 _ => {}
             }
         }
@@ -382,39 +390,69 @@ pub fn matching_lt(t: &[Token], gt: usize) -> Option<usize> {
 }
 
 /// The farthest a header scan (from `fn`, `impl`, `trait`, `struct` to its
-/// body) may travel, in tokens.  Real headers are far shorter; the bound keeps
-/// a file of 100,000 unterminated `fn f` from costing a scan to the end of the
-/// file each (a quadratic found by the security review).
-pub const MAX_HEADER_TOKENS: usize = 1024;
+/// body) may travel, in tokens.  Real headers are far shorter.
+pub const MAX_HEADER_TOKENS: usize = 4096;
 
-/// Scan forward from `from` to the token that ends an item header: the first
-/// `{` or `;` at bracket depth 0 (groups `( )` and `[ ]` are skipped whole),
-/// stopping early at a keyword that always starts a NEW item (`struct`, `enum`,
-/// `union`, `trait`, `mod`, `use`) or after [`MAX_HEADER_TOKENS`].  The result
-/// is the index of that token (callers test `is_punct("{")`), or the index
-/// where the scan gave up.
-pub fn scan_to_body(t: &[Token], pair: &[usize], from: usize) -> usize {
+/// How a header scan ended.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Header {
+    /// The index of the `{` or `;` that ends the header.
+    End(usize),
+    /// The scan gave up at this index: the header is over the cap, ran into
+    /// the next item, or ran off the end of the file.  **Callers must report
+    /// VT03 (fail closed); skipping the item would hide its body.**
+    GaveUp(usize),
+}
+
+/// Does an item keyword at `k` start a NEW item (so the header being scanned
+/// is unterminated)?  `fn f` after an unfinished header is a new function;
+/// `fn(` is a function-pointer type, `impl Trait` after `->` is a type, and
+/// `use<..>` is precise capturing, so none of those end the scan.
+fn starts_new_item(t: &[Token], k: usize) -> bool {
+    let x = &t[k];
+    if x.kind != Kind::Ident {
+        return false;
+    }
+    let next = t.get(k + 1);
+    let next_is_ident = next.is_some_and(|n| n.kind == Kind::Ident);
+    match x.text.as_str() {
+        "fn" | "struct" | "enum" | "trait" | "mod" | "type" => next_is_ident,
+        "use" => next.is_some_and(|n| !n.is_punct("<")),
+        "impl" => {
+            k > 0
+                && (t[k - 1].kind == Kind::Ident
+                    || t[k - 1].is_punct(">")
+                    || t[k - 1].is_punct(")"))
+        }
+        _ => false,
+    }
+}
+
+/// Scan an item header forward from `from`: to the first `{` or `;` at bracket
+/// depth 0.  Groups `( )` and `[ ]` are skipped whole; a `{ .. }` inside a
+/// generic list (`Foo<{ N }>`) is a const expression, not the body.  Gives up
+/// (see [`Header::GaveUp`]) at a keyword that starts a new item, or after
+/// [`MAX_HEADER_TOKENS`].
+pub fn scan_header(t: &[Token], pair: &[usize], from: usize) -> Header {
     let limit = (from + MAX_HEADER_TOKENS).min(t.len());
     let mut k = from;
+    let mut angle = 0usize;
     while k < limit {
         let x = &t[k];
-        match x.kind {
-            Kind::Punct => match x.text.as_str() {
-                "{" | ";" => return k,
+        if x.kind == Kind::Punct {
+            match x.text.as_str() {
+                "{" if angle == 0 => return Header::End(k),
+                "{" => k = pair[k],
+                ";" => return Header::End(k),
                 "(" | "[" => k = pair[k],
+                "<" => angle += 1,
+                ">" => angle = angle.saturating_sub(1),
                 _ => {}
-            },
-            Kind::Ident
-                if matches!(
-                    x.text.as_str(),
-                    "struct" | "enum" | "union" | "trait" | "mod" | "use"
-                ) =>
-            {
-                return k;
             }
-            _ => {}
+        } else if starts_new_item(t, k) {
+            return Header::GaveUp(k);
         }
         k += 1;
     }
-    limit
+    Header::GaveUp(limit)
 }
