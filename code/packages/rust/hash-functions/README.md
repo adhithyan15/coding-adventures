@@ -53,3 +53,17 @@ assert!(score >= 0.0 && score <= 1.0);
 ```bash
 cargo test -p coding_adventures_hash_functions -- --nocapture
 ```
+
+## Warrant status
+
+Draft, not wired. [`code/specs/hash-functions.warrant`](../../../specs/hash-functions.warrant)
+covers the eight byte-string hashes (`fnv1a_32`, `fnv1a_64`, `djb2`,
+`polynomial_rolling`, `polynomial_rolling_with_params`, `murmur3_32`,
+`murmur3_32_with_seed`, `siphash_2_4`), with 67 known-answer examples that
+agree with this crate. It has not been run as evidence yet: the evidence
+generator has no negative control for a bytes-to-integer operation, so there is
+no harness, sabotage line, assurance profile or report. Not covered, with
+reasons: `hash_str_*` (text), `avalanche_score` and `distribution_test` (floats
+and a generic closure), the `HashFunction` trait and its structs (stateful
+objects), and the constants. See
+[DT17a](../../../specs/DT17a-hash-functions-warrant.md).

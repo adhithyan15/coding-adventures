@@ -2,6 +2,16 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- Draft Warrant document `code/specs/hash-functions.warrant` and contract
+  `code/specs/DT17a-hash-functions-warrant.md` (WX-P1a) for the eight byte-string
+  hashes. Documentation only: no code, test, BUILD or dependency changed, and no
+  evidence has been generated (the generator has no negative control for a
+  bytes-to-integer operation; see DT17a section 5).
+
 ## [0.1.0] - 2026-04-10
 
 ### Added
