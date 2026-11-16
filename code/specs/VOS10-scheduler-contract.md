@@ -802,7 +802,7 @@ obligation, which needs `RV32SYM` and is withheld until then.
 
 ## 14. Findings against VOS01 and VOS02, and discovered work
 
-Found while writing a real contract. Each is logged in the
+Found while writing a real contract. F1 to F4 and the SH12 wording were **amended in VOS01, VOS02 and VOS03 in the same PR** (the reconciliation commit); the effect columns below describe the state before, and the backlog rows say what remains (F1: the `vos-link` implementation). Each is logged in the
 [backlog](VOS-BACKLOG.md); where the fix is text, the spec that owns it is named.
 
 | # | Finding | Effect here | Row |
