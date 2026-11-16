@@ -20,9 +20,9 @@ const MAX_CORPUS_BYTES: usize = 32 * 1024 * 1024;
 const MAX_SPEC_BYTES: usize = 4 * 1024 * 1024;
 const MAX_TEST_CASES: u64 = 1 << 53;
 const MAX_MANIFEST_ROWS: usize = 29;
-const CORPUS_DIR: &str = "code/specs/fixtures/ct-compare-warrant-v1";
-const CORPUS_FILE: &str = "code/specs/fixtures/ct-compare-warrant-v1/corpus.json";
-const SPEC_FILE: &str = "code/specs/ct-compare.warrant";
+pub const CORPUS_DIR: &str = "code/specs/fixtures/ct-compare-warrant-v1";
+pub const CORPUS_FILE: &str = "code/specs/fixtures/ct-compare-warrant-v1/corpus.json";
+pub const SPEC_FILE: &str = "code/specs/ct-compare.warrant";
 
 /// A parse or structural-validation failure. Error text is intended for CI
 /// diagnostics and deliberately does not echo complete untrusted input.
@@ -1065,7 +1065,7 @@ fn is_package_name(value: &str) -> bool {
             .all(|byte| byte.is_ascii_lowercase() || byte.is_ascii_digit() || byte == b'-')
 }
 
-fn validate_repo_path(value: &str) -> Result<(), LaneEvidenceError> {
+pub(crate) fn validate_repo_path(value: &str) -> Result<(), LaneEvidenceError> {
     if value.starts_with('/') || value.contains('\\') || !value.is_ascii() {
         return fail("registry path must be ASCII, repository-relative, and slash-separated");
     }

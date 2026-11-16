@@ -56,10 +56,17 @@ impl Repo {
         let registry = fs::read(real.join(fixture).join("consumers.json")).unwrap();
         let registry = parse_consumer_registry(&registry).expect("checked-in registry parses");
         for row in &registry.consumers {
-            let labels = row.evidence_manifest.replace("test-manifest.json", "domain-labels.json");
-            for rel in [&row.binding, &row.runner_entry, &row.evidence_manifest, &labels]
-                .into_iter()
-                .chain(row.build_files.iter())
+            let labels = row
+                .evidence_manifest
+                .replace("test-manifest.json", "domain-labels.json");
+            for rel in [
+                &row.binding,
+                &row.runner_entry,
+                &row.evidence_manifest,
+                &labels,
+            ]
+            .into_iter()
+            .chain(row.build_files.iter())
             {
                 repo.copy_from(&real, rel);
             }
@@ -126,14 +133,17 @@ fn expect_code<T>(result: Result<T, LaneLoadError>, code: &str, needle: &str) {
 #[test]
 fn every_checked_in_lane_loads_with_its_named_checks_and_no_release_claim() {
     for package in PACKAGES {
-        let lane = load_lane(&real_root(), package)
-            .unwrap_or_else(|e| panic!("{package} must load: {e}"));
+        let lane =
+            load_lane(&real_root(), package).unwrap_or_else(|e| panic!("{package} must load: {e}"));
         assert_eq!(lane.consumer.package, package);
         assert_eq!(lane.manifest.package, package);
         assert_eq!(lane.manifest.tests.len(), 29);
         // The honest headline is the label split, never the manifest's total.
         assert_eq!(lane.labels.cases_by_label.get("full"), Some(&65_537));
-        assert_eq!(lane.labels.cases_by_label.get("bounded-set"), Some(&506_572));
+        assert_eq!(
+            lane.labels.cases_by_label.get("bounded-set"),
+            Some(&506_572)
+        );
         assert_eq!(lane.readiness.passed, READINESS_CHECKS.to_vec());
         assert!(!lane.readiness.release_ready);
         assert_eq!(lane.readiness.sandbox, "not-armed");
@@ -149,10 +159,9 @@ fn every_checked_in_lane_loads_with_its_named_checks_and_no_release_claim() {
 
 #[test]
 fn the_checked_in_registry_is_active_for_exactly_the_three_lanes() {
-    let bytes = fs::read(
-        real_root().join("code/specs/fixtures/ct-compare-warrant-v1/consumers.json"),
-    )
-    .unwrap();
+    let bytes =
+        fs::read(real_root().join("code/specs/fixtures/ct-compare-warrant-v1/consumers.json"))
+            .unwrap();
     let registry = parse_consumer_registry(&bytes).unwrap();
     let rows: Vec<(&str, &str)> = registry
         .consumers
@@ -169,7 +178,10 @@ fn the_checked_in_registry_is_active_for_exactly_the_three_lanes() {
     );
     assert_eq!(registry.active_consumer_count, 3);
     let lanes = load_active_lanes(&real_root()).expect("all active lanes load");
-    let loaded: Vec<&str> = lanes.iter().map(|lane| lane.consumer.package.as_str()).collect();
+    let loaded: Vec<&str> = lanes
+        .iter()
+        .map(|lane| lane.consumer.package.as_str())
+        .collect();
     assert_eq!(loaded, PACKAGES.to_vec());
 }
 
@@ -177,7 +189,11 @@ fn the_checked_in_registry_is_active_for_exactly_the_three_lanes() {
 fn a_rust_package_is_not_a_lane_package() {
     // The legacy loader owns `rust/*`; a Rust manifest is never read as a lane.
     let repo = Repo::new();
-    expect_code(repo.load("rust/ct-compare"), "not-registered", "rust/ct-compare");
+    expect_code(
+        repo.load("rust/ct-compare"),
+        "not-registered",
+        "rust/ct-compare",
+    );
 }
 
 // ---------------------------------------------------------------------------
@@ -216,7 +232,8 @@ fn a_planned_row_cannot_authorize_a_load_but_its_siblings_still_load() {
     let repo = Repo::new();
     set_python_status(&repo, "planned");
     expect_code(repo.load("python/ct-compare"), "not-active", "planned");
-    repo.load("go/ct-compare").expect("an active sibling is unaffected");
+    repo.load("go/ct-compare")
+        .expect("an active sibling is unaffected");
     let lanes = load_active_lanes(&repo.root).expect("two active lanes load");
     assert_eq!(lanes.len(), 2);
 }
@@ -233,8 +250,15 @@ fn a_manifest_for_another_package_is_refused() {
 #[test]
 fn a_registry_that_does_not_parse_is_refused() {
     let repo = Repo::new();
-    repo.write("code/specs/fixtures/ct-compare-warrant-v1/consumers.json", b"{}");
-    expect_code(repo.load("python/ct-compare"), "registry", "consumer registry");
+    repo.write(
+        "code/specs/fixtures/ct-compare-warrant-v1/consumers.json",
+        b"{}",
+    );
+    expect_code(
+        repo.load("python/ct-compare"),
+        "registry",
+        "consumer registry",
+    );
 }
 
 // ---------------------------------------------------------------------------
@@ -244,8 +268,14 @@ fn a_registry_that_does_not_parse_is_refused() {
 #[test]
 fn a_changed_corpus_spec_or_tfv_byte_is_a_digest_failure() {
     for (rel, needle) in [
-        ("code/specs/fixtures/ct-compare-warrant-v1/corpus.json", "corpus_sha256"),
-        ("code/specs/fixtures/ct-compare-warrant-v1/cases.tfv", "cases_sha256"),
+        (
+            "code/specs/fixtures/ct-compare-warrant-v1/corpus.json",
+            "corpus_sha256",
+        ),
+        (
+            "code/specs/fixtures/ct-compare-warrant-v1/cases.tfv",
+            "cases_sha256",
+        ),
         ("code/specs/ct-compare.warrant", "spec_sha256"),
     ] {
         let repo = Repo::new();
@@ -280,7 +310,10 @@ fn a_manifest_row_edit_that_keeps_the_schema_is_caught_by_the_join() {
     let text = String::from_utf8(repo.read(&rel)).unwrap();
     let marker = "\"cases\": 120409";
     assert!(text.contains(marker));
-    repo.write(&rel, text.replacen(marker, "\"cases\": 120408", 1).as_bytes());
+    repo.write(
+        &rel,
+        text.replacen(marker, "\"cases\": 120408", 1).as_bytes(),
+    );
     expect_code(repo.load("python/ct-compare"), "join", "");
 }
 
@@ -289,7 +322,11 @@ fn a_manifest_that_fails_the_strict_parser_is_refused() {
     let repo = Repo::new();
     let rel = manifest_rel("typescript/ct-compare");
     // A duplicate key is rejected by the existing duplicate-key-rejecting parser.
-    repo.edit_text(&rel, "\"faulted\": false,", "\"faulted\": false,\n  \"faulted\": false,");
+    repo.edit_text(
+        &rel,
+        "\"faulted\": false,",
+        "\"faulted\": false,\n  \"faulted\": false,",
+    );
     expect_code(repo.load("typescript/ct-compare"), "manifest", "");
 }
 
@@ -299,7 +336,9 @@ fn a_manifest_that_fails_the_strict_parser_is_refused() {
 
 fn sidecar_digest(package: &str) -> String {
     let bytes = fs::read(real_root().join(labels_rel(package))).unwrap();
-    parse_domain_labels(&bytes).expect("checked-in sidecar parses").manifest_sha256
+    parse_domain_labels(&bytes)
+        .expect("checked-in sidecar parses")
+        .manifest_sha256
 }
 
 #[test]
@@ -334,7 +373,8 @@ fn a_different_toolchain_version_still_loads_but_a_different_name_does_not() {
     let repo = Repo::new();
     let rel = manifest_rel("python/ct-compare");
     repo.edit_text(&rel, "\"version\": \"3.13.18\"", "\"version\": \"9.9.9\"");
-    repo.load("python/ct-compare").expect("toolchain.version is not evidence");
+    repo.load("python/ct-compare")
+        .expect("toolchain.version is not evidence");
     repo.edit_text(&rel, "\"name\": \"python\"", "\"name\": \"pypy\"");
     expect_code(repo.load("python/ct-compare"), "labels", "manifest_sha256");
 }
@@ -358,15 +398,31 @@ fn sidecar_tampering_is_refused() {
         // A label stronger than the descriptors allow.
         ("\"label\": \"bounded-set\"", "\"label\": \"full\"", "label"),
         // A stale binding digest.
-        ("\"manifest_sha256\": \"", "\"manifest_sha256\": \"0", "manifest_sha256"),
+        (
+            "\"manifest_sha256\": \"",
+            "\"manifest_sha256\": \"0",
+            "manifest_sha256",
+        ),
         // A case count that no longer matches the manifest row.
         ("\"cases\": 120409", "\"cases\": 120408", "cases"),
         // A different package identity.
-        ("\"package\": \"python/ct-compare\"", "\"package\": \"python/other\"", "package"),
+        (
+            "\"package\": \"python/ct-compare\"",
+            "\"package\": \"python/other\"",
+            "package",
+        ),
         // A different schema.
-        ("warrant-lane-domain-labels-v1", "warrant-lane-domain-labels-v2", "schema"),
+        (
+            "warrant-lane-domain-labels-v1",
+            "warrant-lane-domain-labels-v2",
+            "schema",
+        ),
         // An unknown descriptor cannot be labelled.
-        ("\"domain\": \"u64_edge\"", "\"domain\": \"u64_any\"", "descriptor"),
+        (
+            "\"domain\": \"u64_edge\"",
+            "\"domain\": \"u64_any\"",
+            "descriptor",
+        ),
     ];
     for (from, to, needle) in cases {
         let repo = Repo::new();
@@ -392,7 +448,11 @@ fn a_sidecar_with_an_extra_key_or_a_missing_file_is_refused() {
 #[test]
 fn the_cases_by_label_total_must_be_the_sum_of_the_suites() {
     let repo = Repo::new();
-    repo.edit_text(&labels_rel("python/ct-compare"), "\"full\": 65537", "\"full\": 65536");
+    repo.edit_text(
+        &labels_rel("python/ct-compare"),
+        "\"full\": 65537",
+        "\"full\": 65536",
+    );
     expect_code(repo.load("python/ct-compare"), "labels", "cases_by_label");
 }
 
@@ -408,19 +468,35 @@ fn the_runner_identity_is_checked() {
         "\"name\": \"warrant-corpus\"",
         "\"name\": \"home-made\"",
     );
-    expect_code(repo.load("go/ct-compare"), "runner-identity", "warrant-corpus");
+    expect_code(
+        repo.load("go/ct-compare"),
+        "runner-identity",
+        "warrant-corpus",
+    );
 }
 
 #[test]
 fn each_build_file_must_route_the_manifest_and_the_sabotage_step() {
     for (rel, from, needle) in [
-        ("code/packages/python/ct-compare/BUILD", "evidence/test-manifest.json", "test-manifest"),
-        ("code/packages/go/ct-compare/BUILD_windows", "sabotage", "sabotage"),
+        (
+            "code/packages/python/ct-compare/BUILD",
+            "evidence/test-manifest.json",
+            "test-manifest",
+        ),
+        (
+            "code/packages/go/ct-compare/BUILD_windows",
+            "sabotage",
+            "sabotage",
+        ),
     ] {
         let repo = Repo::new();
         let text = String::from_utf8(repo.read(rel)).unwrap();
         repo.write(rel, text.replace(from, "removed").as_bytes());
-        let package = if rel.contains("/python/") { "python/ct-compare" } else { "go/ct-compare" };
+        let package = if rel.contains("/python/") {
+            "python/ct-compare"
+        } else {
+            "go/ct-compare"
+        };
         expect_code(repo.load(package), "build-routing", needle);
     }
 }
@@ -448,12 +524,23 @@ fn reads_are_bounded_before_the_bytes_are_used() {
     let repo = Repo::new();
     let rel = "code/packages/python/ct-compare/BUILD";
     let size = repo.read(rel).len() as u64;
-    assert_eq!(read_repo_file(&repo.root, rel, size).unwrap().len() as u64, size);
-    expect_code(read_repo_file(&repo.root, rel, size - 1), "too-large", "limit");
+    assert_eq!(
+        read_repo_file(&repo.root, rel, size).unwrap().len() as u64,
+        size
+    );
+    expect_code(
+        read_repo_file(&repo.root, rel, size - 1),
+        "too-large",
+        "limit",
+    );
     // The real manifest cap: one byte over 16 MiB is refused on size alone.
     let big = vec![b' '; 16 * 1024 * 1024 + 1];
     repo.write(&manifest_rel("python/ct-compare"), &big);
-    expect_code(repo.load("python/ct-compare"), "too-large", "test-manifest.json");
+    expect_code(
+        repo.load("python/ct-compare"),
+        "too-large",
+        "test-manifest.json",
+    );
 }
 
 #[test]
@@ -478,7 +565,11 @@ fn paths_that_could_leave_the_repository_are_refused_before_any_io() {
 #[test]
 fn a_directory_is_not_a_regular_file() {
     let repo = Repo::new();
-    expect_code(read_repo_file(&repo.root, "code/packages", 1024), "not-regular", "regular file");
+    expect_code(
+        read_repo_file(&repo.root, "code/packages", 1024),
+        "not-regular",
+        "regular file",
+    );
 }
 
 #[cfg(unix)]
@@ -506,7 +597,11 @@ fn a_symlink_file_or_directory_component_is_refused() {
 
     // A link in the middle of a registered path, read directly.
     expect_code(
-        read_repo_file(&repo.root, "code/packages/python/ct-compare/evidence/test-manifest.json", 1 << 20),
+        read_repo_file(
+            &repo.root,
+            "code/packages/python/ct-compare/evidence/test-manifest.json",
+            1 << 20,
+        ),
         "symlink",
         "evidence",
     );
@@ -578,8 +673,14 @@ fn win32_containment_has_no_cross_drive_or_device_escape() {
     assert_eq!(inside(Win32, "C:\\r", "C:r\\a"), (false, false));
     assert_eq!(inside(Win32, "C:\\r", "r\\a"), (false, false));
     // UNC shares compare server and share case-insensitively.
-    assert_eq!(inside(Win32, "\\\\S\\share\\r", "\\\\s\\SHARE\\r\\a"), (true, false));
-    assert_eq!(inside(Win32, "\\\\s\\share\\r", "\\\\s\\other\\r\\a"), (false, false));
+    assert_eq!(
+        inside(Win32, "\\\\S\\share\\r", "\\\\s\\SHARE\\r\\a"),
+        (true, false)
+    );
+    assert_eq!(
+        inside(Win32, "\\\\s\\share\\r", "\\\\s\\other\\r\\a"),
+        (false, false)
+    );
     assert_eq!(inside(Win32, "\\\\s\\share\\r", "C:\\r\\a"), (false, false));
 }
 
@@ -595,13 +696,21 @@ fn win32_device_paths_are_never_inside_whatever_the_separators() {
         "\\\\?\\UNC\\server\\share\\r\\a",
     ] {
         assert_eq!(inside(Win32, "C:\\r", device), (false, false), "{device}");
-        assert_eq!(inside(Win32, device, "C:\\r\\a"), (false, false), "{device}");
+        assert_eq!(
+            inside(Win32, device, "C:\\r\\a"),
+            (false, false),
+            "{device}"
+        );
         assert_eq!(inside(Win32, device, device), (false, false), "{device}");
     }
 }
 
 #[test]
 fn the_host_flavour_is_what_production_uses() {
-    let expected = if cfg!(windows) { PathFlavor::Win32 } else { PathFlavor::Posix };
+    let expected = if cfg!(windows) {
+        PathFlavor::Win32
+    } else {
+        PathFlavor::Posix
+    };
     assert_eq!(PathFlavor::host(), expected);
 }
