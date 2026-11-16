@@ -19,7 +19,9 @@ mostly unimplemented), [VER04i](VER04i-polyglot-warrant-evidence.md) (lanes),
 **Backlog:** rows LP-*, WX-*, WD-004 / WD-1xx, LV-*, CAP-RT-*, LP-010b, LP-012,
 AR-001 and ARITH-001 of [VER-BACKLOG](VER-BACKLOG.md), which now point here for
 their order, and the new rows WX-T0/T1, WX-S0/S1, WX-B2, WX-I128, VER30-A1 and
-VER30-INV that section 4 introduces.
+VER30-INV that section 4 introduces, plus (2026-11-16) WX-O0/O1, WX-M0/M1,
+WX-P1, WX-FL0/FL1, VER30-INV2, the corpus v2 slices CV2-S1 to CV2-S13, WD-100,
+WD-HARN1 and BT-TIMEOUT.
 
 **Data:** [`data/warrant-inventory/summary-2026-11-14.md`](data/warrant-inventory/summary-2026-11-14.md)
 and [`inventory-2026-11-14.csv`](data/warrant-inventory/inventory-2026-11-14.csv)
@@ -31,6 +33,14 @@ this text has a bug.
 short: the feature freeze is lifted for text and stateful objects (spec both
 now); the polyglot track starts now, in parallel with Rust adoption; and this
 roadmap is a committed spec.
+
+**Direction (owner, 2026-11-16):** ten further decisions, recorded in section 8
+(decisions 4 to 13). In short: the priority is two goals pursued together,
+Warrant evidence in every language the repository uses and filling the language
+gaps that make code harder to validate; the freeze is lifted for floats,
+collections, opaque types and generics (specs VER04n, VER04o, VER04p, written
+by other branches); the corpus moves to a `warrant-corpus-v2` profile; and the
+shared-crate queue is fixed (section 5.3).
 
 ---
 
@@ -173,7 +183,14 @@ two features and for no others.
 
 Floats, collections, opaque types and generics each add 100 to 300 crates, but
 mostly simulators, layout engines, compilers and smart-home glue rather than
-security code. They stay frozen until the demand is re-assessed (section 6).
+security code. They were frozen on 2026-11-14 until the demand was
+re-assessed; decision 5 of section 8 (2026-11-16) lifts that freeze. The
+654 crates in step 9 to 12 of the table are an **upper bound**: counted alone
+the four features unblock only about 26 (floats), 4 (collections), 35 (opaque
+types) and 36 (generics) crates, and recursive types (`JsonValue`, `CborValue`,
+every tree crate) block most of the rest. Decision 6 re-runs the inventory
+with a `recursive-types` tag (VER30-INV2) before the order of the four is
+treated as final.
 
 Two cautions on the numbers. 985 of the 1,459 crates have no ports at all
 (mostly TLS, X.509 and HTTP framing, smart home, board-vm, chief-of-staff);
@@ -318,10 +335,37 @@ already specced.
 | C5 | Stateful objects: specification | WX-S0 (new) | in parallel; 268 crates once text exists |
 | C6 | Text: implementation | WX-T1 (new) | after the WX-T0 spec is approved |
 | C7 | Stateful objects: implementation | WX-S1 (new) | after the WX-S0 spec is approved, and after C2 (it shares the driver machinery) |
+| C8 | Opaque types: specification, VER04n with VER29 and VER04m amendments | WX-O0 (new) | first of the four new specs; foreign handles only through VER29 published lower contracts; it is the mechanism the `*-link` and `*-binding` validators wait for |
+| C9 | Floats: specification, VER04p | WX-FL0 (new) | written in parallel with VER04n; integer-only softfloat model, never host libm |
+| C10 | Collections plus the first generics slice: specification, VER04o | WX-M0 (new) | after VER04n (shares the key order and the customer set) |
+| C11 | Implementation, in this order: opaque types, collections, generics, floats | WX-O1, WX-M1, WX-P1, WX-FL1 (new) | after WX-G, WX-D2, WX-F, LP-012, WX-S1 and WX-T1 (C1 to C3, A2, C6, C7); pilots `rsa-public-operation`, `csv-parser`, `hash-set`, `trig` |
+| C12 | Re-run the inventory with a `recursive-types` tag | VER30-INV2 (new) | before the order of C11 is treated as final; 654 is an upper bound |
+| C13 | Model arithmetic semantics | WD-013 (existing), CV2-S1 | resolve to the VER04 section 3 wrapping semantics before gf256 v2 (risk 12) |
 
-**Frozen, by decision 1:** floats, collections (maps, sets, `BinaryHeap`),
-opaque types and generics. No spec, no implementation, until the inventory is
-re-run and the demand is re-assessed (section 6).
+**Unfrozen, by decision 5 (2026-11-16):** floats, collections (maps, sets,
+`BinaryHeap`), opaque types and generics. Decision 1 (2026-11-14) froze them;
+decision 5 lifts the freeze, spec first, each spec reviewed adversarially
+before any implementation. The designs come from the frozen-features design
+memo; this roadmap records only the order and the adopted defaults:
+
+- Specs: VER04n (opaque types, with VER29 and VER04m amendments) and VER04p
+  (floats) in parallel; VER04o (collections plus the first generics slice)
+  after VER04n. Other branches write them; this roadmap does not.
+- Implementation order: opaque types, collections, generics, floats, after
+  WX-G, WX-D2, WX-F, LP-012, WX-S1 and WX-T1. Pilots, in that order:
+  `rsa-public-operation`, `csv-parser`, `hash-set`, `trig`.
+- Foreign opaque handles only through VER29 published lower contracts; no
+  handle without a published lower contract.
+- Generic claims are never `exhaustive`, except `all-instances(n/n)` over a
+  closed universe; coverage is counted per lane and per instance.
+- Floats: an integer-only softfloat model in every lane, never the host libm;
+  a lane that fails the environment probe reports `not-live`; float values
+  travel as bit patterns; float `==` is a type error (use `bits_eq`, `same` or
+  `ieee_eq`).
+- Collections: one canonical map order; a host whose iteration order is
+  unspecified cannot bind to a `List` result.
+- Recursive types are a fifth blocker the classifier folds into these four;
+  VER30-INV2 re-measures before the counts are trusted.
 
 **What the two new specs must say.** The designs come from a separate design
 memo, not from this roadmap, so this section states requirements only.
@@ -366,6 +410,45 @@ parallel with Rust adoption, because it does not depend on the T0 list.
 | D3 | Per-language runners: Python, TypeScript, Go first | WD-1xx | one PR per lane: corpus runner, sabotage, manifest, report, for ct-compare first; then the other lanes (ruby, c, cpp, java, kotlin, csharp, fsharp, elixir) |
 | D4 | Per-language runtime jails | CAP-RT-1xx | arm the filter after interpreter or VM startup (Python, Node, Go, JVM, .NET and so on) |
 | D5 | Fan-out | per adoption | the 428 ports of the T0 crates, as each Rust adoption lands |
+| D6 | Lane conformance kit | WD-100 | `warrant-corpus-conformance-v1` (VER04i section 9.1), delivered on branch `claude/warrant-lane-conformance`; every new lane must pass it; the Go lane adopts it in a follow-up |
+| D7 | Corpus v2 (`warrant-corpus-v2`) | CV2-S1 to CV2-S13 | in-lane enumeration plus a model IR the lane re-evaluates; gf256 is the first adopter after ct-compare (slice S8); slices and rules below |
+| D8 | Lane order after Go | WD-1xx | ruby, java, csharp, kotlin, fsharp, c, cpp, elixir, lua, perl, haskell, swift, dart, ocaml, two at a time, each on corpus v2 once CV2-S6 and CV2-S7 land, each passing WD-100 |
+| D9 | Harness supervisor hardening | WD-HARN1 | wait timeout, never block exit, poison recovery (from the 2026-11-14 Windows `rust/lzw` hang); second in the `warrant-grammar` queue (section 5.3) |
+
+**Priority (decision 4, 2026-11-16).** Two goals are pursued together: (a)
+Warrant evidence in every language used in the repository (about 18 lane
+languages, every one already with a ct-compare port), and (b) filling the
+Warrant language gaps that make code harder to validate and verify (tracks C
+and A). Track D carries (a); track C carries (b). Neither waits for the other.
+
+**Corpus v2 slices** (from the corpus design memo; `warrant-corpus-v2` is
+specified by an amendment to VER04i, written on another branch):
+
+| Slice | Kind | Content | Touches `warrant-grammar` |
+|---|---|---|---|
+| CV2-S1 | spec | amend VER04i with the v2 profile, the binding grammar, the arithmetic erratum, the manifest path decision | no |
+| CV2-S2 | generator | export the resolved-domain enumerator and the post-slot resolver as public API; no behaviour change | yes |
+| CV2-S3 | generator | new leaf crate `rust/warrant-corpus-gen`; ct-compare digests must equal v1 | no |
+| CV2-S4 | oracle | `warrant_oracle` package: a FULL independent `.warrant` source reader, gating each adopter | no |
+| CV2-S5 | fixture | `warrant-corpus-conformance-v1` at `ir.core` (shares WD-100) | no |
+| CV2-S6 | lane | Python runner reads v2; `python/ct-compare` moves to v2 | no |
+| CV2-S7 | lane | TypeScript runner, the same | no |
+| CV2-S8 | adopter | gf256 (v2), then `python/gf256`, `typescript/gf256`, `go/gf256` | no |
+| CV2-S9 | report | generic v2 lane validator in `ca-assurance-report`, joined to WD-004b1 | no (`ca-assurance-report` once) |
+| CV2-S10 | level | `ir.fixed` and tuples; then wasm-leb128, lzw, x25519 | no |
+| CV2-S11 | level | `ir.data`; then logic-gates, then arithmetic (the first VER29 lane link) | no |
+| CV2-S12 | feature | `inout` and `ensures`; then zeroize | no |
+| CV2-S13 | cleanup | delete v1 `corpus.rs`, `gen_corpus`, the old oracle and the v1 fixture | yes |
+
+**Owner choices on corpus v2 (decision 7).**
+- PR CI runs a corpus-chosen `slim` chunk subset; the `full` depth runs nightly
+  on compiled lanes; the depth is shown in the labels.
+- The oracle is a FULL independent `.warrant` source reader and gates each
+  adopter (CV2-S4).
+- The Go lane finishes on v1 and is ported to v2 alongside the Python and
+  TypeScript lanes (CV2-S6, CV2-S7).
+- The corpus compiler is a new leaf crate after one export PR (CV2-S2,
+  CV2-S3); the remaining `warrant-grammar` touches are S2 and S13 only.
 
 D5 is the payoff. Every Rust adoption in track B creates a corpus; D1 to D4 make
 that corpus runnable in the lanes. A lane without a runner reports an honest
@@ -444,6 +527,26 @@ serialised**: one open PR at a time may touch `ca-assurance-report`. After A1,
 only edits to the shared code itself are serialised; an adoption no longer
 touches it.
 
+**The `warrant-grammar` queue (decision 12, 2026-11-16).** Edits to
+`warrant-grammar` are serialised in this order, one open PR at a time:
+
+1. WX-G (PR #19369);
+2. harness supervisor hardening, WD-HARN1 (wait timeout, never block exit,
+   poison recovery; from the 2026-11-14 Windows `rust/lzw` hang);
+3. corpus v2 S2 export, CV2-S2;
+4. WX-F;
+5. WX-T1;
+6. WX-S1;
+7. WX-I128;
+8. the four new features (WX-O1, WX-M1, WX-P1, WX-FL1).
+
+CV2-S13 (the v1 deletion) follows the last adopter conversion and is queued
+behind item 8 unless the owner reorders it.
+
+**Build-tool timeout.** PR #19483 adds a per-command timeout to the build tool
+so a hung command can no longer consume a CI job silently (BT-TIMEOUT). It is
+independent of the queue above and is the CI-side half of the WD-HARN1 fix.
+
 ### 5.4 The would-build discipline
 
 Before pushing any Warrant PR, run the build tool in plan mode against the
@@ -478,7 +581,7 @@ scripts are not committed; backlog row VER30-INV lands them as
 is one command, writing a dated `inventory-YYYY-MM-DD.csv` and
 `summary-YYYY-MM-DD.md` beside the 2026-11-14 pair. The re-run schedule: at the
 end of each adoption wave, and whenever a track-C item lands (which changes the
-unblock table), and before the frozen features are reconsidered. The
+unblock table), and before the order of the four unfrozen features is treated as final (VER30-INV2 adds the `recursive-types` tag). The
 hand-overrides recorded in the CSV `notes` column must be carried forward by
 the script, not recomputed.
 
@@ -510,14 +613,24 @@ the script, not recomputed.
 8. **Review capacity.** One security review per adoption (checklist item 4) is
    the real limit on wave speed; the limit of 3 concurrent agents (5.5) assumes
    reviews keep pace.
-9. **The frozen features.** Floats, collections, opaque types and generics
-   together add 654 crates (107 + 124 + 108 + 315) but little security-weighted
-   value. The re-assessment criterion is not defined yet: proposed, the first
-   re-run after wave 2 of track B.
+9. **The frozen features. Resolved (2026-11-16, decision 5).** The freeze on
+   floats, collections, opaque types and generics is lifted, spec first.
+   The 654 crates (107 + 124 + 108 + 315) are an upper bound: alone the four
+   unblock about 26, 4, 35 and 36, and recursive types block most of the rest
+   (VER30-INV2, decision 6). What remains open is the order inside the four,
+   not whether to proceed.
 10. **Disk headroom.** No threshold is set for starting a new worktree (5.2).
 11. **Contract linking order.** A9 depends on A1 and A3, which are not done;
     if the 4004 upper layers become urgent, VER29 slices could land first, at
     the cost of a heavier shared-crate queue.
+12. **Model arithmetic has three semantics today.** The spec (VER04 section 3
+    and VER04i section 2.7) wraps fixed-width arithmetic, both lane runners
+    refuse an overflow, and the independent oracle uses unbounded Python
+    integers; the v0 harness additionally evaluates `U8` as `Nat` (WD-013).
+    ct-compare has no model arithmetic, so nothing has collided; gf256 does.
+    Mitigation: resolve to the VER04 section 3 wrapping semantics (an overflow
+    on `Nat` is a generation error) in CV2-S1, with differential tests in the
+    oracle and both runners, before gf256 v2 (CV2-S8). Link: WD-013.
 
 ## 8. Decisions log
 
@@ -525,8 +638,59 @@ Owner decisions, 2026-11-14.
 
 1. **Lift the feature freeze for text and stateful objects.** Spec both now;
    implementation follows each spec's approval. Floats, collections, opaque
-   types and generics stay frozen until demand is re-assessed.
+   types and generics stay frozen until demand is re-assessed
+   (superseded by decision 5, 2026-11-16).
 2. **Start the polyglot track now,** in parallel with Rust adoption: the
    cross-language report (WD-004b) and the per-language runners (WD-1xx), with
    Python, TypeScript and Go first.
 3. **This roadmap is committed as a specification** (VER30).
+
+Owner decisions, 2026-11-16.
+
+4. **Priority: two goals together.** (a) Warrant evidence in every language
+   used in the repository (about 18 lane languages; every one already has a
+   ct-compare port); (b) filling the Warrant language gaps that make code
+   harder to validate and verify.
+5. **Lift the freeze on floats, collections, opaque types and generics,** spec
+   first, each spec reviewed adversarially. Spec documents and order, from the
+   frozen-features memo: VER04n opaque types (with VER29 and VER04m
+   amendments); VER04p floats, written in parallel with VER04n; VER04o
+   collections plus the first generics slice, after VER04n. Implementation
+   order: opaque types, collections, generics, floats, after WX-G, WX-D2,
+   WX-F, LP-012, WX-S1 and WX-T1. Pilots: `rsa-public-operation`,
+   `csv-parser`, `hash-set`, `trig`.
+6. **Recursive types.** The memo found they block most of the 654 counted
+   crates; the four features alone unblock about 26, 4, 35 and 36. Re-run the
+   inventory with a `recursive-types` tag before deciding (VER30-INV2). 654 is
+   an upper bound.
+7. **Corpus v2 (`warrant-corpus-v2`).** In-lane enumeration plus a model IR,
+   adopted per the corpus memo, with slices S1 to S13 (CV2-S1 to CV2-S13) and
+   gf256 as the first adopter after ct-compare. PR CI runs a corpus-chosen
+   `slim` chunk subset and the `full` depth runs nightly on compiled lanes,
+   with depth shown in the labels; the oracle is a FULL independent `.warrant`
+   source reader that gates each adopter; the Go lane finishes on v1 and is
+   ported to v2 alongside Python and TypeScript. The memo's flagged problem,
+   that model arithmetic has three semantics today (the spec wraps, the
+   runners refuse, the oracle is unbounded), must be resolved to the VER04
+   section 3 wrapping semantics before gf256 v2 (risk 12, WD-013).
+8. **Floats.** An integer-only softfloat model in every lane, never the host
+   libm. Lanes failing the environment probe are `not-live`; float values
+   travel as bit patterns.
+9. **Other defaults adopted from the memos.** Foreign opaque handles only
+   through VER29 published lower contracts; generic claims are never
+   `exhaustive` except `all-instances(n/n)` over a closed universe, with
+   coverage counted per lane and instance; float `==` is a type error (use
+   `bits_eq`, `same` or `ieee_eq`); one canonical map order, and an
+   unspecified-order host cannot bind to a `List` result; the corpus compiler
+   is a new leaf crate after one export PR.
+10. **Lane conformance kit.** WD-100 (`warrant-corpus-conformance-v1`, VER04i
+    section 9.1) is delivered on branch `claude/warrant-lane-conformance`.
+    Every new lane must pass it; the Go lane adopts it in a follow-up.
+11. **Lane order after Go:** ruby, java, csharp, kotlin, fsharp, c, cpp,
+    elixir, lua, perl, haskell, swift, dart, ocaml, two at a time, each on
+    corpus v2 once CV2-S6 and CV2-S7 land.
+12. **Shared-crate queue.** `warrant-grammar` is serialised in the order given
+    in section 5.3: WX-G (PR #19369), harness supervisor hardening (WD-HARN1),
+    corpus v2 S2 export, WX-F, WX-T1, WX-S1, WX-I128, the four new features.
+13. **Build-tool timeout.** PR #19483 adds a per-command timeout so a hung
+    command can no longer consume a CI job silently (BT-TIMEOUT).
