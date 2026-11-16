@@ -1,0 +1,14 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/vos-shape-check",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "*",
+      "justification": "The command-line binary reads the Cargo.toml, vos.toml and src/**/*.rs of the one crate directory its caller names, bounded by byte caps, regular files only, refusing symlinks. The library performs no I/O."
+    }
+  ],
+  "justification": "A lexical shape checker: reads the crate directory it is given and writes only to standard output."
+}
