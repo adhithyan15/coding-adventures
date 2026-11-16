@@ -1,122 +1,55 @@
 package warrantcorpus
 
 import (
-	"errors"
 	"os"
 	"path/filepath"
-	"strings"
 	"testing"
 )
 
-// winOps behaves like Go's filepath on Windows for the handful of paths these
-// tests use: separators are backslashes, a volume prefix ("D:") is its own root,
-// and Rel REFUSES to cross volumes (an error), as filepath.Rel does on Windows.
-func winOps() pathOps {
-	volume := func(p string) string {
-		if len(p) >= 2 && p[1] == ':' {
-			return strings.ToUpper(p[:2])
-		}
-		return ""
-	}
-	return pathOps{
-		sep:   '\\',
-		isAbs: func(p string) bool { return volume(p) != "" && len(p) > 2 && p[2] == '\\' },
-		rel: func(base, target string) (string, error) {
-			if volume(base) != volume(target) {
-				return "", errors.New("Rel: can't make " + target + " relative to " + base)
-			}
-			b := strings.Split(strings.Trim(base[len(volume(base)):], `\`), `\`)
-			tt := strings.Split(strings.Trim(target[len(volume(target)):], `\`), `\`)
-			if len(b) == 1 && b[0] == "" {
-				b = nil
-			}
-			if len(tt) == 1 && tt[0] == "" {
-				tt = nil
-			}
-			shared := 0
-			for shared < len(b) && shared < len(tt) && strings.EqualFold(b[shared], tt[shared]) {
-				shared++
-			}
-			var parts []string
-			for i := shared; i < len(b); i++ {
-				parts = append(parts, "..")
-			}
-			parts = append(parts, tt[shared:]...)
-			if len(parts) == 0 {
-				return ".", nil
-			}
-			return strings.Join(parts, `\`), nil
-		},
-	}
-}
-
-func TestRelativeInsideWindowsShapes(t *testing.T) {
-	win := winOps()
-	inside := map[string]string{
-		`D:\repo\code\specs`: `code\specs`,
-		`D:\repo\..foo`:      `..foo`, // a directory NAMED ..foo is inside
-		`D:\repo\...`:        `...`,
-		`d:\REPO\x`:          `x`,
-	}
-	for child, want := range inside {
-		if got, ok := relativeInside(`D:\repo`, child, win); !ok || got != want {
-			t.Errorf("%s: got (%q, %v), want (%q, true)", child, got, ok, want)
-		}
-	}
-	for _, child := range []string{
-		`C:\tmp\x`,      // another drive: Rel returns an error
-		`D:\other`,      // sibling
-		`D:\`,           // the parent
-		`D:\repo\..\x`,  // climbs out
-		`D:\repository`, // a prefix of the name is not containment
+func TestRelativeInsideReturnsTheRelativeText(t *testing.T) {
+	for _, c := range []struct{ root, child, flavor, want string }{
+		{"/r", "/r/.hidden/x", flavorPosix, ".hidden/x"},
+		{"/r", "/r", flavorPosix, ""},
+		{`D:\r`, `d:/R/x/y`, flavorWin32, "x/y"},
+		{`D:\repo`, `D:\repo\..foo`, flavorWin32, "..foo"},
+		{`\\s\h`, `\\S\H\a`, flavorWin32, "a"},
+		{`\r`, `\r\x`, flavorWin32, "x"},
+		{`d:r`, `d:r\x`, flavorWin32, "x"},
+		{`\\\r`, `\r\x`, flavorWin32, "x"},
 	} {
-		if got, ok := relativeInside(`D:\repo`, child, win); ok {
-			t.Errorf("%s: accepted as %q", child, got)
+		if got, ok := relativeInside(c.root, c.child, c.flavor); !ok || got != c.want {
+			t.Errorf("%s in %s: got (%q, %v), want (%q, true)", c.child, c.root, got, ok, c.want)
 		}
 	}
-	// The root itself is inside, as the empty relative path.
-	if got, ok := relativeInside(`D:\repo`, `D:\repo`, win); !ok || got != "" {
-		t.Errorf("root: (%q, %v)", got, ok)
-	}
-}
-
-func TestRelativeInsideRefusesAnAbsoluteResult(t *testing.T) {
-	// A path module that reports an absolute target instead of failing (Node's
-	// behaviour across drives) must still be refused: `C:\tmp\x` has no leading
-	// "..", so a prefix test alone would wave it through.
-	win := winOps()
-	win.rel = func(base, target string) (string, error) { return `C:\tmp\x`, nil }
-	if got, ok := relativeInside(`D:\repo`, `C:\tmp\x`, win); ok {
-		t.Fatalf("accepted an absolute result: %q", got)
-	}
-}
-
-func TestRelativeInsideDotDotPrefixRules(t *testing.T) {
-	// The bare prefix test is wrong in both directions; check the three results.
-	for rel, wantInside := range map[string]bool{
-		"..":      false,
-		"../x":    false,
-		"..foo":   true,
-		"..foo/x": true,
-		"...":     true,
-		"a/..b":   true,
-		".":       true,
-		"":        true,
+	for _, c := range []struct{ root, child, flavor string }{
+		{"/r", "/rr", flavorPosix},
+		{`D:\r`, `C:\r\x`, flavorWin32},
+		{`\\s\h`, `\\s`, flavorWin32},
+		{`D:\r`, `\r\x`, flavorWin32},
+		{"r", "../x", flavorPosix},
 	} {
-		ops := pathOps{sep: '/', isAbs: func(string) bool { return false },
-			rel: func(string, string) (string, error) { return rel, nil }}
-		if _, ok := relativeInside("/root", "/child", ops); ok != wantInside {
-			t.Errorf("rel %q: inside = %v, want %v", rel, ok, wantInside)
+		if got, ok := relativeInside(c.root, c.child, c.flavor); ok {
+			t.Errorf("%s in %s: accepted as %q", c.child, c.root, got)
 		}
+	}
+	if got, ok := relativeInside("a", "a/../a/b", flavorPosix); !ok || got != "b" {
+		t.Errorf("relative paths: (%q, %v)", got, ok)
 	}
 }
 
-func TestOSPathAgreesOnThisHost(t *testing.T) {
+func TestHostFlavorMatchesTheHost(t *testing.T) {
+	want := flavorPosix
+	if filepath.Separator == '\\' {
+		want = flavorWin32
+	}
+	if hostFlavor != want {
+		t.Fatalf("hostFlavor = %q, want %q", hostFlavor, want)
+	}
 	root := t.TempDir()
-	if got, ok := relativeInside(root, filepath.Join(root, "a", "b"), osPath); !ok || got != filepath.Join("a", "b") {
+	if got, ok := relativeInside(root, filepath.Join(root, "a", "b"), hostFlavor); !ok || got != "a/b" {
 		t.Fatalf("(%q, %v)", got, ok)
 	}
-	if _, ok := relativeInside(root, filepath.Dir(root), osPath); ok {
+	if _, ok := relativeInside(root, filepath.Dir(root), hostFlavor); ok {
 		t.Fatal("the parent is not inside")
 	}
 }

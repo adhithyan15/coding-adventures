@@ -139,6 +139,15 @@ func (a *args) runConfig(fault, faultOp, filter string) RunConfig {
 // manifest being checked, never hard-coded (every lane's runner must accept every
 // other lane's manifest).
 func labelsFor(corpus *Corpus, manifest map[string]any) map[string]any {
+	packageName, _ := manifest["package"].(string)
+	module, _ := manifest["module"].(string)
+	return deriveLabels(corpus, packageName, module, manifestLabelDigest(manifest))
+}
+
+// manifestLabelDigest is the SHA-256 of the canonical rendering of manifest with
+// toolchain.version blanked (VER04i 9.1, label digest). The shared conformance
+// fixture drives this function directly.
+func manifestLabelDigest(manifest map[string]any) string {
 	stable := map[string]any{}
 	for key, value := range manifest {
 		stable[key] = value
@@ -148,9 +157,7 @@ func labelsFor(corpus *Corpus, manifest map[string]any) map[string]any {
 		name, _ = toolchain["name"].(string)
 	}
 	stable["toolchain"] = map[string]any{"name": name, "version": ""}
-	packageName, _ := manifest["package"].(string)
-	module, _ := manifest["module"].(string)
-	return deriveLabels(corpus, packageName, module, sha256Hex([]byte(renderJSON(stable))))
+	return sha256Hex([]byte(renderJSON(stable)))
 }
 
 func writeLine(w io.Writer, line string) { fmt.Fprintln(w, line) }
