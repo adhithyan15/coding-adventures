@@ -355,9 +355,12 @@ case, not a code review.
 overflow, the Python oracle used unbounded integers, and the Rust v0 harness
 evaluates `U8` as `Nat` (WD-013). The rule is: `+ - *` and unary `-` on **every**
 fixed-width type wrap modulo `2^w`; `Nat` and `Int` are exact and bounded by `2^127`
-at generation time. A v1 corpus never produces an overflow, so the v1 runners are
-unchanged; the rule binds the v2 profile, where VER04r section 3.3 also refuses a v0
-document whose `U8` arithmetic would wrap.
+at generation time. The only `warrant-corpus-v1` corpus, ct-compare, has no model
+arithmetic, so no case reaches the difference and the v1 runners are unchanged; for
+that reason no second adopter may be added to the v1 profile. The rule binds the v2
+profile, where VER04r section 3.3 also refuses a v0 *document* whose `U8` arithmetic
+wraps or could wrap on a subject result. WD-013 is not reopened: its v0 residual
+stays accepted until gf256 becomes a v1 document.
 
 ### 2.8 Regeneration and drift checks
 
