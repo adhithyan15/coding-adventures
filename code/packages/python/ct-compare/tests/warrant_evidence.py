@@ -7,6 +7,8 @@ runner, ``coding_adventures_warrant_corpus``::
     python tests/warrant_evidence.py run --out evidence/test-manifest.json
     python tests/warrant_evidence.py check evidence/test-manifest.json
     python tests/warrant_evidence.py sabotage
+    python tests/warrant_evidence.py validate-manifest evidence/test-manifest.json
+    python tests/warrant_evidence.py exec -m pytest tests/
 
 ``run --out`` regenerates the committed manifest from a real execution;
 ``check`` regenerates it in memory and fails if the committed file drifted;
@@ -66,9 +68,20 @@ def isolate_bytecode_cache() -> None:
 
 def run(argv: list[str]) -> int:
     """Forward ``argv`` (``<command> [options]``) with this package's paths."""
+    command, rest = argv[0], argv[1:]
+    if command == "exec":
+        # `exec -m MODULE [args]`: run another module (the BUILD's pytest) in this
+        # same isolated interpreter, so no BUILD line imports the runner or the
+        # library outside the private bytecode cache.
+        import runpy
+
+        if len(rest) < 2 or rest[0] != "-m":
+            raise SystemExit("usage: warrant_evidence.py exec -m MODULE [args]")
+        sys.argv = [rest[1], *rest[2:]]
+        runpy.run_module(rest[1], run_name="__main__", alter_sys=True)
+        return 0
     from coding_adventures_warrant_corpus import main
 
-    command, rest = argv[0], argv[1:]
     common = [
         "--repo-root", str(REPO_ROOT),
         "--corpus", str(CORPUS),

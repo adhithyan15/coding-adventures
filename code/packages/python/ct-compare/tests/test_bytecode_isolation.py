@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import os
 import py_compile
+import shutil
 import subprocess
 import sys
 import textwrap
@@ -102,3 +103,95 @@ def test_the_entry_script_runs_the_runner_under_the_isolated_cache() -> None:
     )  # fmt: skip
     assert done.returncode == 0, done.stdout + done.stderr
     assert "ok manifest test-manifest.json matches" in done.stdout
+
+
+def forged_runner_copy(tmp_path: Path) -> Path:
+    """A copy of the runner source whose ``cli`` and ``__init__`` have forged pycs.
+
+    The forgery exits with a marker, so any process that imports the runner from
+    this copy through the cache prints it and fails.
+    """
+    runner = TESTS.parent.parent / "warrant-corpus" / "src"
+    copy = tmp_path / "runner-src"
+    shutil.copytree(runner, copy, ignore=shutil.ignore_patterns("__pycache__"))
+    package = copy / "coding_adventures_warrant_corpus"
+    evil = tmp_path / "evil.py"
+    marker = "raise SystemExit('FORGED RUNNER PYC EXECUTED')\n"
+    evil.write_text(marker, encoding="utf-8")
+    cache = package / "__pycache__"
+    cache.mkdir()
+    for module in ("__init__", "cli", "manifest", "isolation", "__main__"):
+        py_compile.compile(
+            str(evil),
+            cfile=str(cache / f"{module}.{sys.implementation.cache_tag}.pyc"),
+            doraise=True,
+            invalidation_mode=py_compile.PycInvalidationMode.UNCHECKED_HASH,
+        )
+    return copy
+
+
+def build_lines(name: str) -> list[str]:
+    text = (TESTS.parent / name).read_text(encoding="utf-8")
+    return [
+        line.strip()
+        for line in text.splitlines()
+        if line.strip() and not line.lstrip().startswith("#")
+    ]
+
+
+def test_no_build_line_imports_the_runner_outside_the_isolated_entry() -> None:
+    # Both BUILD fronts: every line that starts a Python process must go through
+    # the entry script (which re-runs under a private pycache prefix); none may
+    # use `-m` of the runner or pytest directly.
+    for name in ("BUILD", "BUILD_windows"):
+        python_lines = [
+            line
+            for line in build_lines(name)
+            if line.startswith((".venv/bin/python", ".venv\\Scripts\\python"))
+        ]
+        assert len(python_lines) >= 4, name
+        for line in python_lines:
+            assert "tests/warrant_evidence.py" in line.replace("\\", "/"), (name, line)
+            assert " -m coding_adventures_warrant_corpus" not in line, (name, line)
+        joined = "\n".join(python_lines)
+        for command in ("exec -m pytest", "check", "sabotage", "validate-manifest"):
+            assert command in joined, (name, command)
+
+
+def test_a_forged_runner_pyc_runs_when_started_directly(tmp_path: Path) -> None:
+    # The control: the old BUILD line (`python -m coding_adventures_warrant_corpus`)
+    # executes the forgery, which is why it is no longer used.
+    copy = forged_runner_copy(tmp_path)
+    env = {k: v for k, v in os.environ.items() if k != "PYTHONPYCACHEPREFIX"}
+    env["PYTHONPATH"] = str(copy)
+    done = subprocess.run(  # noqa: S603 - fixed argv
+        [sys.executable, "-m", "coding_adventures_warrant_corpus", "list-faults"],
+        env=env, capture_output=True, text=True, check=False,
+    )  # fmt: skip
+    assert "FORGED RUNNER PYC EXECUTED" in done.stdout + done.stderr
+
+
+def test_a_forged_runner_pyc_is_never_run_by_an_entry_command(tmp_path: Path) -> None:
+    copy = forged_runner_copy(tmp_path)
+    package = TESTS.parent
+    repo = package.parents[3]
+    corpus = repo / "code/specs/fixtures/ct-compare-warrant-v1"
+    env = {k: v for k, v in os.environ.items() if k != "PYTHONPYCACHEPREFIX"}
+    env["PYTHONPATH"] = os.pathsep.join([str(copy), str(package / "src")])
+    manifest = str(package / "evidence" / "test-manifest.json")
+    commands = {
+        "validate-manifest": [
+            "validate-manifest", manifest,
+            "--registry", str(corpus / "consumers.json"),
+        ],
+        "check": ["check", manifest],
+        "exec": ["exec", "-m", "pytest", "--version", "-p", "no:cacheprovider"],
+    }  # fmt: skip
+    for name, args in commands.items():
+        done = subprocess.run(  # noqa: S603 - fixed argv
+            [sys.executable, str(TESTS / "warrant_evidence.py"), *args],
+            env=env, capture_output=True, text=True, check=False,
+        )  # fmt: skip
+        output = done.stdout + done.stderr
+        assert "FORGED RUNNER PYC EXECUTED" not in output, (name, output)
+        assert done.returncode == 0, (name, output)
