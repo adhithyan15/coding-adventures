@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.2 - 2026-11-16
+## 0.2.0 - 2026-11-16
 
 - `SineOscillator.value_at` reduces its phase to [0, 1) cycles
   (`phase - floor(phase)`, exact in binary64) before multiplying by `2*pi`.

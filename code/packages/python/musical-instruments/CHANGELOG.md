@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### Changed
+- Partial phases are reduced to [0, 1) cycles before `sin` (`phase - floor(phase)`, exact), because `trig.sin` is NaN beyond 2^29 radians (PHY00a 3.4.1, 7); identical in Python, Rust and TypeScript. Last-bit change in long notes.
+
 ### Fixed
 - `musical-instruments` Warrant document fixed: `| guard.` claims put on one line, invalid `total_samples` bound replaced by the existing claim, ops with `rejects` now return Result. Document only. Note: the `instrument_signal_sample` bound `steps <= 64 * partial_count + 128` became `64 * 64 + 128` (`partial_count` is not that operation's parameter); this loosens it to the worst case and is sound because `MAX_PARTIALS = 64`.
 

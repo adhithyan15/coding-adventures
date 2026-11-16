@@ -1,6 +1,6 @@
 # trig
 
-## Converged on TRIG-REF-1 (0.2.0)
+## Converged on TRIG-REF-1 (0.3.0)
 
 `sin`, `cos`, `radians` and `degrees` now follow the reference algorithm of
 [PHY00a](../../../specs/PHY00a-trig-convergence.md), bit for bit, and are checked against
