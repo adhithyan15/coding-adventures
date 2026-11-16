@@ -788,6 +788,7 @@ members = [
     "game-clock",
     "game-pong",
     "game-breakout",
+    "game-monster-rpg",
     "perl-bridge",
     "polynomial-c",
     "wasm-execution",

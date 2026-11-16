@@ -6860,6 +6860,26 @@ dependencies = [
 ]
 
 [[package]]
+name = "game-monster-rpg"
+version = "0.1.0"
+dependencies = [
+ "arcade-sfx",
+ "audio-mixer-realtime",
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "game-clock",
+ "paint-batch-tiles",
+ "paint-instructions",
+ "paint-palette-blend",
+ "palette-indexed",
+ "rpg-battle-engine",
+ "rpg-grid-world",
+ "sprite-oam",
+ "tilemap2d",
+]
+
+[[package]]
 name = "game-pong"
 version = "0.1.0"
 dependencies = [
