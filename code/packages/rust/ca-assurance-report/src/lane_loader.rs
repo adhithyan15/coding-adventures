@@ -153,7 +153,7 @@ pub enum PathFlavor {
 impl PathFlavor {
     /// The flavour of the platform this binary runs on.
     pub fn host() -> PathFlavor {
-        if cfg!(windows) {
+        if cfg!(target_os = "windows") {
             PathFlavor::Win32
         } else {
             PathFlavor::Posix
@@ -295,7 +295,7 @@ pub fn lexical_containment(flavor: PathFlavor, root: &str, child: &str) -> Conta
 /// Is this metadata a symbolic link or, on Windows, any reparse point (which
 /// covers junctions and mount points as well as symlinks)?
 fn is_link(meta: &fs::Metadata) -> bool {
-    #[cfg(windows)]
+    #[cfg(target_os = "windows")]
     {
         use std::os::windows::fs::MetadataExt;
         const FILE_ATTRIBUTE_REPARSE_POINT: u32 = 0x400;
