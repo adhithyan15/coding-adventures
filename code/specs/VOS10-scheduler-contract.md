@@ -178,7 +178,7 @@ function of the *choice*: `after(m, o)` is `m` for `Idle` and `m` without `t` fo
 ill-formed state to exclude (a Boolean per thread cannot be corrupted). `init`
 returns the empty set. **Closure** says every operation maps an `inv` state to an
 `inv` state; it is trivial for a total `inv`, but it is still stated, as the
-lemma `closure_at_m` (a **trivial** lemma, evaluated but not counted as evidence), so that a later M with structure cannot change `inv`
+lemma `closure_at_m` (a **trivial** lemma, in `lemmas.part`, evaluated but not counted as evidence), so that a later M with structure cannot change `inv`
 without restating it (VOS01 section 2.2).
 
 The implementation-level pair is the one VOS01 describes: `inv_impl(S)` is the
@@ -374,7 +374,7 @@ section 4.4.
 ### 9.2 The contract block
 
 The document header and the implementation block are not part of it. This is
-`warrant/contract.part`, byte for byte:
+`warrant/contract.part`, byte for byte (models only; the lemmas are section 9.2a):
 
 ```text
   variant Upd = Changed | Unchanged | OutOfRange
@@ -434,7 +434,23 @@ The document header and the implementation block are not part of it. This is
   model safe_dispatch(m: Ready, o: Pick, m2: Ready) -> Bool = valid_pick(m, o) and m2 == after(m, o)
   -- Policy tier: the fixed-priority function. What the hard-RTOS and flight profiles add.
   model policy_dispatch(m: Ready, o: Pick, m2: Ready) -> Bool = o == top(m) and m2 == after(m, o)
+```
 
+### 9.2a The lemmas part
+
+`warrant/lemmas.part` holds the nine model-level lemmas. It is a contract-package part
+(VOS02 R1.4) that is **not embedded** in any implementation's document: a lemma calls no
+bound operation, so it is never subject evidence (VER04m V9), and the generator has no
+lemma kind (VOS-D005, found at VOS-011: it refuses such a claim with W0701). The lemmas
+are evaluated by `vos-sched-contract-check` over the contract block, with a mutant per
+lemma, and by nothing else. Re-embedding them is for the day a Warrant lemma kind exists.
+Byte for byte:
+
+```text
+  -- The contract's model-level lemmas (VOS10 section 9.2).  NOT embedded in any implementation's
+  -- document: a lemma calls no bound operation, so it is a fact about the abstract model and never
+  -- subject evidence (VER04m V9), and the generator has no lemma kind yet (VOS-D005, WX-SV item 3).
+  -- vos-sched-contract-check evaluates it over the contract block, with a mutant per lemma.
   -- Lemmas (VER04m V9): no bound operation is called, so no subject evidence and no strength.
   -- closure_at_m is a TRIVIAL lemma (inv is `true`): it documents the shape, and is not counted as
   -- evidence of anything (VOS10 section 4).
@@ -612,7 +628,7 @@ counts the evaluation of section 12 measured, not typed by hand.
 
 | Claim | Binders | Product | Admitted | % budget |
 |---|---|---|---|---|
-| **Contract-block lemmas** | | | | |
+| **Lemmas (`lemmas.part`; counted by `vos-sched-contract-check` only, never by an implementation's evidence)** | | | | |
 | `closure_at_m` | 8 Bool, `t: U8` | 65,536 | 65,536 | 16.38 |
 | `insert_outside_pre_changes_nothing` | 8 Bool, `t: U8` | 65,536 | 65,536 | 16.38 |
 | `remove_outside_pre_changes_nothing` | 8 Bool, `t: U8` | 65,536 | 65,536 | 16.38 |
@@ -720,7 +736,7 @@ the repository's Warrant tooling (`coding_adventures_warrant_grammar`: parser,
    `vos-sched-contract-check` (class H), which joins the `.part` files into documents by
    string concatenation and calls the repository's `warrant-grammar` for everything
    else. The Rust-level checks are in the contract crate's own `tests/trait_usable.rs`.
-1. **The contract block type-checks** alone, and its nine model-level lemmas hold
+1. **The contract block type-checks** alone (models only), and the nine model-level lemmas of `lemmas.part` hold
    over their **whole domains** (table above; no failure).
 2. **A generated-shape document type-checks**: header, contract block, an
    implementation block with real `op` declarations and its `labels`, `input` and
@@ -859,7 +875,7 @@ Found while writing a real contract. F1 to F4 and the SH12 wording were **amende
 | F5 | A claim with no use of its binders (`canon_init: forall b: Bool. init() == build(empty())`) is a convention not exercised by the generator; if VER04h rejects an unused binder, `canon_init` becomes an `example` in the implementation block and the obligation list loses an entry (a contract-text change) | settled at VOS-011: the generator accepts the unused binder (`canon_init` ran, 2 cases); the claim stays | VOS-D054 |
 | F6 | VER04h finds a claim's negative-control subject by a shallow left-to-right search (VOS02 section 13.3). The `any` claims (`dispatch_sound`) lead with `safe_dispatch(...)`, a non-operation call; the subject found may be `dispatch_out` or `alpha_w` depending on how arguments are searched. Whether each obligation has a control that can catch a fault in the operation it is *about* is not checked until a generator runs | settled in part at VOS-011: the carried claims' subjects are the operations they are about; `dispatch_sound` (`-any`) has subject `alpha_w` by reading the search, to be confirmed at VOS-012 | VOS-D054 |
 | F7 | VOS02 section 2.5 gives `contract.vos` a `tier` line for each of `any`, `canonical`, `policy`, `safety`; nothing says that a tier line and the files `warrant/obligations-<tier>.part` must correspond. A tier with no file, or a file with no tier, is a silent mismatch until `vos-manifest` exists. `contract.vos` has its own grammar and its parser is `vos-manifest`, so this PR does not read it (no ad-hoc parser) | `vos-manifest` / `gen-doc` (VOS-033) must cross-check tiers, files and `config` against `Sched::N` and the `8`s in the text | VOS-D049 |
-| F8 | The nine contract-block lemmas are claims that call no operation. Section 9.2 and the case-count table of section 10 treat them as generated claims, but the generator refuses them (`W0701 claim ... calls no operation`) until the `lemma` entry kind exists (VER04m V9, WX-SV item 3, VOS-D005). They were only ever evaluated by `vos-sched-contract-check` | No implementation's evidence can be generated from a document that embeds the contract block as it stands. The 394,498 total of section 10 is what the 20 operation-calling claims enumerate (measured on a scratch copy with the lemmas stripped); the lemma rows are the contract-check crate's, not the generator's | VOS-D064 |
+| F8 | The nine lemmas call no operation and the generator refuses them (`W0701 claim ... calls no operation`) until the `lemma` entry kind exists (VER04m V9, WX-SV item 3, VOS-D005). They were only ever evaluated by `vos-sched-contract-check`, yet sat in the embedded contract block | **Resolved in the VOS-011 PR:** the lemmas moved to `warrant/lemmas.part`, not embedded (VOS02 R1.4). The contract-block digest changed; every obligation's `claim_sha256` and every obligations-block digest is unchanged. The 394,498 total of this section is what the 12 carried claims of a production scheduler enumerate | VOS-D064 |
 | F9 | The evidence harness's `heap` observer wraps the whole adapter call, including the allocation that builds a record or a payload-carrying variant as a Warrant value (64 bytes). `heap <= 0` can only hold for scalar or payload-free results | The ceiling `heap 0` is declared (and evidenced) only on `insert_out` and `remove_out`; the other six bound operations omit the `heap` row, with a comment in `impl.part` | VOS-D063 |
 | F10 | VOS02 13.4 F4 on the real crate: the three `init` / `field-zero` controls cannot pass (zero initial field), so a bare run of the generated suite exits non-zero. An example over the zero state also fails the example control of its subject | `impl.part` uses a non-zero worked example; the `init` controls are a known failure | VOS-D065 |
 
@@ -871,7 +887,8 @@ Found while writing a real contract. F1 to F4 and the SH12 wording were **amende
 code/packages/rust/vos-sched-contract/
     Cargo.toml  vos.toml              class K, kind contract; no dependencies
     src/lib.rs                        trait Sched, Upd, Pick
-    warrant/contract.part             section 9.2
+    warrant/contract.part             section 9.2 (models only)
+    warrant/lemmas.part               section 9.2a (not embedded)
     warrant/obligations-{safety,policy,canonical,any}.part      section 9.3
     contract.vos                      section 7 (ceilings, N = 8)
     tests/trait_usable.rs             the Rust-level checks of section 12 (item 6)
