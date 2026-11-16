@@ -41,6 +41,9 @@ addopts = "--cov=coding_adventures_warrant_oracle --cov-report=term-missing --co
 
 [tool.coverage.run]
 source = ["src/coding_adventures_warrant_oracle"]
+# The enumeration tests run hot loops; sys.monitoring (3.12+) is ~7x faster than
+# the default tracer and falls back automatically where unavailable.
+core = "sysmon"
 
 [tool.coverage.report]
 fail_under = 95
