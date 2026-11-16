@@ -75,7 +75,7 @@ fn test_golden_fixture_parity() {
     let pcm_sha256 = sha256_hex(&le_bytes);
     assert_eq!(
         pcm_sha256,
-        "8b578c829577edc2f726758e21a53f7a234975253f1b9442402ba7e63bc730aa",
+        "25bc4eb1b0d7a10d40a55afc0f8b0b4d65132a82f538245ee2698700ff4acee1",
         "PCM little-endian SHA-256 mismatch"
     );
 

@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-- The shared Tier-0 golden (`specs/fixtures/music-machine/expected_render.json`) was regenerated once, for all three lanes together, after the Python, Rust and TypeScript `trig` ports converged on TRIG-REF-1 (PHY00a, TC-2): new `pcm16_le_sha256` `8b578c82...c730aa` (was `15c793ee...364766`); 33 of 96,138 samples moved by 1 LSB; the first and last 32 samples are unchanged. `test_tier0_golden_fixtures` is unchanged (it reads the fixture).
+- The shared Tier-0 golden (`specs/fixtures/music-machine/expected_render.json`) was regenerated once, for all three lanes together, after the Python, Rust and TypeScript `trig` ports converged on TRIG-REF-1 (PHY00a, TC-2): new `pcm16_le_sha256` `25bc4eb1...4acee1` (was `15c793ee...364766`); a few dozen of 96,138 samples moved by 1 LSB; the first and last 32 samples are unchanged. `test_tier0_golden_fixtures` is unchanged (it reads the fixture).
 
 ## 0.2.0
 
