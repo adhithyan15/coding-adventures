@@ -107,11 +107,71 @@ static evl_control just_count_handler(const void *event, void *user) {
     return EVL_CONTINUE;
 }
 
-/* Worker thread: nap, then stop the loop via its handle. */
+/* ── Cross-thread stop, without guessing how long the loop takes to start ─────
+ *
+ * event_loop_run() CLEARS the stop flag when it begins (so a loop can be re-run). A
+ * stop requested before run() has started is therefore erased, and the loop would
+ * spin forever. The old worker napped 5 ms and then stopped the loop; on a busy CI
+ * machine run() can start later than that, which hangs the test (the F# and C#
+ * ports of this test hung a CI shard for 150 minutes that way).
+ *
+ * So the worker waits for PROOF that the loop is running: the source's poll() sets
+ * `running` under a mutex and signals a condition variable, and the worker stops
+ * the loop only after seeing it. poll() runs inside run(), after the flag was
+ * cleared, so the stop can no longer be lost.
+ *
+ * A watchdog thread turns any remaining hang into a failure: if the loop has not
+ * finished after ~30 s it stops the loop itself and records that it had to. */
+struct cross_stop {
+    osp_mutex *lock;
+    osp_cond *cond;
+    int running;        /* set by poll(): the loop is inside run() */
+    int finished;       /* set by main once run() has returned */
+    int watchdog_fired; /* set by the watchdog if it had to stop the loop */
+    evl_stop *handle;
+    struct counter_src cs;
+};
+
+static size_t signalling_counter_poll(void *ctx, const void **out, size_t cap) {
+    struct cross_stop *st = (struct cross_stop *)ctx;
+    osp_mutex_lock(st->lock);
+    st->running = 1;
+    osp_cond_broadcast(st->cond);
+    osp_mutex_unlock(st->lock);
+    return counter_poll(&st->cs, out, cap);
+}
+
+/* Worker thread: wait until the loop is running, then stop it via its handle. */
 static void *stopper_thread(void *arg) {
-    evl_stop *h = (evl_stop *)arg;
-    osp_sleep_ns(5000000u); /* 5 ms — let the loop spin a few iterations first */
-    evl_stop_signal(h);
+    struct cross_stop *st = (struct cross_stop *)arg;
+    osp_mutex_lock(st->lock);
+    while (!st->running) {
+        osp_cond_wait(st->cond, st->lock);
+    }
+    osp_mutex_unlock(st->lock);
+    evl_stop_signal(st->handle);
+    return NULL;
+}
+
+/* Watchdog thread: never lets a lost stop hang the test. Polls every 20 ms for up to
+ * ~30 s and exits as soon as main reports the loop finished. */
+static void *watchdog_thread(void *arg) {
+    struct cross_stop *st = (struct cross_stop *)arg;
+    int i;
+    for (i = 0; i < 1500; i++) {
+        int done;
+        osp_mutex_lock(st->lock);
+        done = st->finished;
+        osp_mutex_unlock(st->lock);
+        if (done) {
+            return NULL;
+        }
+        osp_sleep_ns(20000000u); /* 20 ms */
+    }
+    osp_mutex_lock(st->lock);
+    st->watchdog_fired = 1;
+    osp_mutex_unlock(st->lock);
+    evl_stop_signal(st->handle);
     return NULL;
 }
 
@@ -277,26 +337,39 @@ int main(void) {
     /* ── CROSS-THREAD stop: a worker thread stops the loop from outside ─────── */
     {
         event_loop *lp = NULL;
-        struct counter_src cs;
+        struct cross_stop st;
         int count = 0;
-        evl_stop *handle = NULL;
         osp_thread *worker = NULL;
+        osp_thread *watchdog = NULL;
 
-        cs.cur = 0;
+        st.running = 0;
+        st.finished = 0;
+        st.watchdog_fired = 0;
+        st.cs.cur = 0;
+        ISO_CHECK(osp_mutex_init(&st.lock) == OSP_OK);
+        ISO_CHECK(osp_cond_init(&st.cond) == OSP_OK);
         ISO_CHECK(event_loop_create(&lp) == OSP_OK);
-        ISO_CHECK(event_loop_add_source(lp, counter_poll, &cs) == OSP_OK);
+        ISO_CHECK(event_loop_add_source(lp, signalling_counter_poll, &st) == OSP_OK);
         ISO_CHECK(event_loop_on_event(lp, just_count_handler, &count) == OSP_OK);
-        handle = event_loop_stop_handle(lp);
-        ISO_CHECK(handle != NULL);
+        st.handle = event_loop_stop_handle(lp);
+        ISO_CHECK(st.handle != NULL);
 
-        /* Spawn a worker that will stop the loop after ~5 ms, then block in run()
-         * until it does. This is the whole point of the thread-bucket port: the
-         * osp_mutex-guarded flag is written by the worker and read by the loop. */
-        ISO_CHECK(osp_thread_spawn(&worker, stopper_thread, handle) == OSP_OK);
+        /* The worker stops the loop once it is provably running, then run() below
+         * returns. This is the point of the thread-bucket port: the osp_mutex-guarded
+         * flag is written by the worker and read by the loop. */
+        ISO_CHECK(osp_thread_spawn(&worker, stopper_thread, &st) == OSP_OK);
+        ISO_CHECK(osp_thread_spawn(&watchdog, watchdog_thread, &st) == OSP_OK);
         ISO_CHECK(event_loop_run(lp) == OSP_OK); /* returns once the worker stops it */
+        osp_mutex_lock(st.lock);
+        st.finished = 1;
+        osp_mutex_unlock(st.lock);
         ISO_CHECK(osp_thread_join(worker, NULL) == OSP_OK);
+        ISO_CHECK(osp_thread_join(watchdog, NULL) == OSP_OK);
+        ISO_CHECK_MSG(!st.watchdog_fired, "the stop was lost: the watchdog had to stop the loop");
         ISO_CHECK_MSG(count > 0, "the loop should have processed events before the stop");
         ISO_CHECK(event_loop_destroy(lp) == OSP_OK);
+        ISO_CHECK(osp_cond_destroy(st.cond) == OSP_OK);
+        ISO_CHECK(osp_mutex_destroy(st.lock) == OSP_OK);
     }
 
     /* ── a pre-stopped loop returns immediately from run() ─────────────────── */

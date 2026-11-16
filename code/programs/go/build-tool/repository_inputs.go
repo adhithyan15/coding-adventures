@@ -152,6 +152,12 @@ var (
 		"code/specs/fixtures/ct-compare-warrant-v1/consumers.json",
 		"code/specs/fixtures/ct-compare-warrant-v1/consumers.schema.json",
 	}
+	// warrantConformanceFixture is the shared runner conformance fixture
+	// (VER04i 9.1, WD-100). Every lane's runner package runs all of its cases
+	// in its own tests, so an edit to any case selects each runner package.
+	// The ct-compare pilots do not read it: their BUILD runs the corpus, not
+	// the runner's own tests.
+	warrantConformanceFixture = "code/specs/fixtures/warrant-corpus-conformance-v1"
 	// warrantPythonLaneInputs are the files the Python Warrant lane reads
 	// from outside its own package: the spec the corpus was compiled from,
 	// the corpus itself and its consumer registry. The ct-compare package's
@@ -167,7 +173,7 @@ var (
 	// editable from a sibling directory (a dev dependency, not a graph edge),
 	// so an edit to the runner must select the pilot lane explicitly.
 	warrantPythonRunnerPackage   = "code/packages/python/warrant-corpus"
-	warrantPythonLaneCorpusPaths = warrantPythonLaneInputs
+	warrantPythonLaneCorpusPaths = append(append([]string{}, warrantPythonLaneInputs...), warrantConformanceFixture)
 	warrantPythonLanePilotPaths  = append(append([]string{}, warrantPythonLaneInputs...), warrantPythonRunnerPackage)
 	// The TypeScript Warrant lane (WD-102) reads the same spec, corpus and
 	// registry. Its ct-compare BUILD re-runs the corpus, fails when the
@@ -180,7 +186,7 @@ var (
 	// an explicit prefix too: the selection must not depend on the dependency
 	// resolver noticing a dev-only edge.
 	warrantTypeScriptRunnerPackage   = "code/packages/typescript/warrant-corpus"
-	warrantTypeScriptLaneCorpusPaths = warrantTypeScriptLaneInputs
+	warrantTypeScriptLaneCorpusPaths = append(append([]string{}, warrantTypeScriptLaneInputs...), warrantConformanceFixture)
 	warrantTypeScriptLanePilotPaths  = append(append([]string{}, warrantTypeScriptLaneInputs...), warrantTypeScriptRunnerPackage)
 	// The Go Warrant lane (WD-103) reads the same spec, corpus and registry. Its
 	// ct-compare BUILD re-runs the corpus, fails when the committed manifest
@@ -650,7 +656,7 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		name:     "python/warrant-corpus",
 		language: "python",
 		inputs:   "the Warrant spec, corpus and consumer registry its tests run",
-		matches:  isWarrantPythonLaneCorpusInput,
+		matches:  isWarrantPythonRunnerInput,
 		paths:    warrantPythonLaneCorpusPaths,
 	},
 	{
@@ -671,7 +677,7 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		name:     "typescript/warrant-corpus",
 		language: "typescript",
 		inputs:   "the Warrant spec, corpus and consumer registry its tests run",
-		matches:  isWarrantTypeScriptLaneCorpusInput,
+		matches:  isWarrantTypeScriptRunnerInput,
 		paths:    warrantTypeScriptLaneCorpusPaths,
 	},
 	{
@@ -734,6 +740,24 @@ func isWarrantPythonLaneCorpusInput(changed string) bool {
 		return true
 	}
 	return false
+}
+
+// isWarrantConformanceInput reports whether a changed path is a file of the
+// shared runner conformance fixture. A slash-delimited prefix, so a lookalike
+// directory such as warrant-corpus-conformance-v10 is not selected.
+func isWarrantConformanceInput(changed string) bool {
+	return strings.HasPrefix(changed, warrantConformanceFixture+"/")
+}
+
+// isWarrantPythonRunnerInput selects python/warrant-corpus for the corpus
+// inputs and the conformance fixture its tests run.
+func isWarrantPythonRunnerInput(changed string) bool {
+	return isWarrantPythonLaneCorpusInput(changed) || isWarrantConformanceInput(changed)
+}
+
+// isWarrantTypeScriptRunnerInput is the TypeScript counterpart.
+func isWarrantTypeScriptRunnerInput(changed string) bool {
+	return isWarrantTypeScriptLaneCorpusInput(changed) || isWarrantConformanceInput(changed)
 }
 
 // isWarrantPythonLanePilotInput selects python/ct-compare for the same files

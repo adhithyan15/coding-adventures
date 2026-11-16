@@ -31,8 +31,8 @@ from pathlib import Path
 
 from .corpus import list_control_rows, load_corpus
 from .errors import LaneError, UsageError
-from .jsonio import MAX_TEXT_BYTES, read_bytes, render_json, sha256_hex
-from .labels import derive_labels
+from .jsonio import MAX_TEXT_BYTES, read_bytes, render_json
+from .labels import derive_labels, manifest_label_digest
 from .manifest import source_digest, validate_manifest
 from .session import (
     ENV_FAULT,
@@ -120,17 +120,11 @@ def _labels_for(corpus, manifest: dict[str, object]) -> dict:  # noqa: ANN001
     The digest ignores ``toolchain.version`` (diagnostic, VER04i 8), exactly as
     ``check`` does, so a different CPython patch release is not label drift.
     """
-    stable = dict(manifest)
-    # The toolchain *name* stays in the digest (a lane that swapped runtimes is
-    # drift); only its version is diagnostic.  Reading the name from the
-    # manifest, not hard-coding "python", lets this validator accept the labels
-    # of another lane's manifest (the TypeScript lane's toolchain is "node").
-    stable["toolchain"] = {"name": manifest["toolchain"]["name"], "version": ""}  # type: ignore[index]
     return derive_labels(
         corpus,
         str(manifest["package"]),
         str(manifest["module"]),
-        sha256_hex(render_json(stable).encode("utf-8")),
+        manifest_label_digest(manifest),
     )
 
 

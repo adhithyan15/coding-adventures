@@ -312,6 +312,67 @@ core Perl; Lua and OCaml's stdlib `Digest` is MD5, so those two lanes carry a
 vetted 80-line SHA-256 in `warrant-corpus`, itself checked against NIST
 vectors in the lane's own tests).
 
+### 2.6.1 Allocation registry: stream tags and diagnostic codes
+
+Added 2026-11-16 (owner decision, VER30 decision 19). VER04l, VER04r and VER04p
+had each taken tags in `60` to `63` without sight of one another, and the draft
+VER04n had to check the rest by hand. This table is the **one place** that lists
+every allocation. A specification that needs a tag or a code **checks this
+registry first, takes the lowest free value, and adds its row in the same PR**;
+a collision found later is resolved in favour of the **earliest-merged**
+allocation, and the later specification renumbers. Reserved ranges are rows too.
+
+**Stream tags** (`warrant-stream-v1` and `warrant-stream-v2`; a lane decoder MUST
+reject a tag it does not know).
+
+| Tag | Meaning | Specification | Status |
+|---|---|---|---|
+| `00`, `01` | `Bool` false, true | VER04i 2.6 | merged |
+| `10` | `U8`..`U64`, `Nat` (8 bytes LE) | VER04i 2.6 | merged |
+| `11` | `I8`..`I64` (8 bytes, two's complement) | VER04r 2.4 | merged (spec only) |
+| `20` | `Bytes`, `Bytes<N>` | VER04i 2.6 | merged |
+| `30` | `List` | VER04i 2.6 | merged |
+| `40`, `41` | `Option` none, some | VER04i 2.6 | merged |
+| `50`, `51` | `Ok`, `Err` | VER04i 2.6 | merged |
+| `60` | `Text` | VER04l 7.2 | merged 2026-11-13 |
+| `61` | `Char` | VER04l 7.2 | merged 2026-11-13 |
+| `62` | `F32` | VER04p 10 | merged 2026-11-16 |
+| `63` | `F64` | VER04p 10 | merged 2026-11-16 |
+| `64` | tuple, record | VER04r 2.4 | renumbered 2026-11-16 (was `60`) |
+| `65` | variant | VER04r 2.4 | renumbered 2026-11-16 (was `62`) |
+| `66` to `79` | free; the next specification (VER04o collections, VER04s recursive types) takes from `66` | none | free |
+| `80` | opaque recipe | VER04n 9.1 | merged 2026-11-16 |
+| `81` | opaque observation tuple | VER04n 9.1 | merged 2026-11-16 |
+| `82` to `8f` | reserved for VER04n | VER04n 9.1 | reserved |
+| `90` to `ff` | free | none | free |
+
+VER04s (recursive types) is expected to need no tag of its own: a value of a
+recursive type is a variant (`65`) whose fields nest. If its design needs one, it
+takes `66`.
+
+**Diagnostic codes** (`W` codes of the Warrant checker and generator).
+
+| Codes | Meaning | Specification | Status |
+|---|---|---|---|
+| `W0001` to `W0602` (the v0 set, by hundreds: `W00` lexical and admission, `W01` syntax, `W02` names and types, `W03` operations, `W04` claims, `W05` domains, `W06` budgets) | the v0 set | VER04 and VER04a to VER04f | merged |
+| `W0701` to `W0705` | generation and binding | VER04e | merged |
+| `W0706`, `W0707` | exhaustive budget, derived-evidence generation | VER04h | merged |
+| `W0708` to `W0710` | v1 extensions | VER04j | merged |
+| `W0711` to `W0713` | wave 4 (WX-D, WX-F, WX-G) | VER04k | merged |
+| `W0714` to `W0729` | free | none | free |
+| `W0730` to `W0733` | stateful objects | VER04m | merged |
+| `W0734` to `W0749` | free | none | free |
+| `W0750` to `W0759` | opaque types (`W0750` to `W0753` assigned) | VER04n | merged; the block is reserved |
+| `W0760` and up | free | none | free |
+
+On 2026-11-16 the registry was built by reading every specification under
+`code/specs` that allocates either kind. **Stream tags had three collisions**
+(`60` among VER04l and VER04r, `62` among VER04p and VER04r, and the unresolved
+choice between them), settled as above. **Diagnostic codes had none**: VER04l,
+VER04p and VER04r allocate no new code (they reuse `W0101`, `W0201`, `W0203`,
+`W0202`, `W0401`, `W0601`, `W0706`), and the blocks of VER04j, VER04k, VER04m and
+VER04n are disjoint.
+
 ### 2.7 Value encoding for Warrant types (TFV mapping)
 
 `cases.tfv` reuses TFV v1 unchanged (TF01 §2). Types map onto the value model
@@ -1145,6 +1206,155 @@ Each check has a falsification test in `tests/test_evidence_lane.rs` (copy a
 manifest, change one field, expect the named error), following VER04h's
 practice.
 
+### 9.1 The runner conformance fixture (`warrant-corpus-conformance-v1`) -- WD-100 amendment
+
+Every lane's `warrant-corpus` runner reads an untrusted corpus, writes a canonical
+manifest and refuses paths outside the repository. The first two lanes each
+re-discovered the same bugs in review: duplicate keys accepted, integers above 2^53
+rounded, unpaired surrogate escapes accepted, a `__proto__` key dropped, a Windows
+cross-drive path accepted (`path.relative` returns an *absolute* path), a toolchain
+name hard-coded into a digest, and canonical output that differed between runtimes.
+§9.1 pins those behaviours **once, as data**, so a lane proves them by running cases
+instead of by surviving review. The fixture is
+`code/specs/fixtures/warrant-corpus-conformance-v1/`; the independent stdlib-only
+checker is `code/scripts/warrant_corpus_conformance.py`.
+
+**Layout.** `index.json` lists the case files, their case counts and their SHA-256;
+each category is one JSON file of the shape
+`{"schema": "warrant-corpus-conformance-v1", "category": C, "cases": [...]}`. A
+`.gitattributes` with `* -text` keeps every byte exact on a Windows checkout (no
+CRLF conversion). Case ids are `<category>/<slug>`, unique across the fixture. Input
+*bytes* are never stored as JSON strings (a JSON string cannot hold invalid UTF-8, a
+lone surrogate or a BOM); they are lowercase hex in `input_hex`. A lane's test counts
+its cases per category and compares the counts with `index.json`, so a case added
+later cannot be silently skipped. A lane that cannot run a category (no path
+flavour, say) states so in its README; it never omits one silently.
+
+| Category | Case fields | The lane runs | Expected outcome |
+|---|---|---|---|
+| `json` | `input_hex` | its corpus reader on the bytes, then its canonical renderer on the result | `{"outcome":"accept","canonical_sha256":H[,"canonical":T]}` (`H` is the SHA-256 of the UTF-8 rendering; `T`, when present, is the rendering itself, present when it is at most 2,048 bytes) or `{"outcome":"reject","error":"malformed-json","reason":R}` |
+| `tagged` | `type`, `errors` (type name to variant names, optional), `input_hex` | reader, then the tagged-value decoder of §2.7, then the `warrant-stream-v1` encoder of §2.6 | `{"outcome":"accept","stream_hex":X}` or `{"outcome":"reject","error":"value"}` (or `"malformed-json"` when the bytes are not acceptable JSON) |
+| `containment` | `flavor` (`"posix"` or `"win32"`), `root`, `child` | the lane's own containment helper, using that flavour's path rules, on the two paths *as text* | `{"inside":B,"same":S}`: `S` means the child is the root itself (so `inside` is also true) |
+| `label-digest` | `manifest` (a JSON object), `sha256`, and optionally `same_as` or `differs_from` (another case id) | the lane's manifest digest function (§8, coverage labels) | the digest equals `sha256`; the `same_as` / `differs_from` relation holds between the two digests |
+
+`reason` is informational (the lane need not distinguish them) and comes from a
+closed set: `empty`, `syntax`, `literal`, `utf8`, `bom`, `trailing-data`,
+`control-char`, `bad-escape`, `duplicate-key`, `unpaired-surrogate`, `number-form`,
+`unsafe-integer`, `depth`. The *error class* is what a lane must match, and it is
+the lane's existing machine-readable code (`malformed-json`, `value`, and
+`unsupported-type` for a type outside the closed `warrant-corpus-v1` profile: in v1
+that includes `List<T>` and `Option<T>`, which §2.7 maps but no corpus uses, so a
+lane refuses them rather than half-supporting them). An integer of any length is
+read without a conversion that can itself fail (a 5,000-digit integer is
+`unsafe-integer`, never an uncaught exception).
+
+**Reader profile (what "strict JSON" means to every lane).**
+
+1. The input is UTF-8, decoded strictly: an overlong encoding, an encoded surrogate
+   (`ED A0..BF xx`), a code point above U+10FFFF, a stray continuation byte or a
+   truncated sequence is `malformed-json`. A leading BOM (U+FEFF, `EF BB BF`) is
+   rejected as data before the document (a BOM *inside* a string is just a
+   character).
+2. Whitespace is exactly space, tab, LF and CR. One value, then optional
+   whitespace, then end of input; anything else after the value (including a second
+   value or a NUL) is `trailing-data`. No comments, trailing commas, single quotes or
+   unquoted keys; `NaN`, `Infinity` and a literal with the wrong case are errors.
+3. A number is an **integer** in the safe range `-(2^53 - 1) ..= 2^53 - 1`.
+   A fraction, an exponent (even `1e2`), `-0`, a leading zero or `+`, and any value
+   outside the safe range are `malformed-json`; a lane must not round, wrap or
+   promote. (`U64`/`Nat` values are tagged decimal *text*, §2.7, and never use
+   this path.)
+4. A string contains no raw control character (`U+0000..U+001F`; DEL `U+007F` is
+   allowed raw). The escapes are exactly `\" \\ \/ \b \f \n \r \t \uXXXX`
+   (hex digits of either case). A `\u` high surrogate must be followed
+   *immediately* by a `\u` low surrogate (together they are one astral character);
+   any other surrogate escape, in a key or a value, is `malformed-json`.
+5. **Duplicate keys are an error, compared after unescaping**: `{"a":1,"a":2}`
+   is a duplicate. This holds at every depth.
+6. A document may contain at most **256 nested containers**; the 257th is
+   `malformed-json`. Scalars do not count.
+7. Every key is data. `__proto__`, `constructor`, `toString`, `hasOwnProperty` and
+   an integer-like key such as `"10"` survive parse and render unchanged; a lane
+   whose object type has special keys builds objects without them (a null-prototype
+   object, a `Map`).
+
+**Canonical writer profile.** The rendering of a value is: object keys sorted by
+**Unicode code point** (equivalently UTF-8 byte order; *not* UTF-16 code-unit order,
+which differs for U+E000..U+FFFF against astral keys, and *not* the insertion order
+a runtime may impose on integer-like keys); two-space indent; `,` then LF between
+members and `: ` after a key; an empty container is `[]` or `{}`; LF line endings and
+one final LF; integers in plain decimal; every character outside `U+0020..U+007E`
+escaped as `\uXXXX` with **lowercase** hex (so every control character, DEL U+007F included, is `\u007f`-style and never raw; the spec was silent on DEL before WD-100 and Python's `ensure_ascii` already escaped it; an astral
+character is a lowercase surrogate pair), and `"` and `\` escaped as `\"` and `\\`,
+and `\b \f \n \r \t` written in short form, `/` never escaped.
+
+**Containment profile.** A containment check is a security boundary and is
+**lexical**: both inputs are absolute, the lane normalises `.` and `..` (a `..` at the
+root stays at the root), and the verdict is "every component of `root` is a leading
+component of `child`". Two paths on different Windows drives, or UNC shares, have no
+common root: never inside, whatever the runtime's `relative()` returns (it returns an
+*absolute* path across drives, so "no leading `..`" is not proof of containment). A
+component named `..foo` is an ordinary name, so `/r/..foo` is inside `/r` while
+`/r/..` is not, and `/rr` is not inside `/r` (compare whole components, never string
+prefixes). `win32` compares case-insensitively, accepts `/` and `\` as separators and
+treats a device-namespace path (`\\?\` or `\\.\`) as never inside anything (and nothing is inside it);
+`posix` is case-sensitive and `\` is an ordinary character. Separators are
+normalised **before** any prefix rule (`\/?\D:\r`, `/\?/D:/r` and `\\?/D:\r` are
+device paths too), and `\\?\UNC\server\share` is a device path, not a UNC one.
+A POSIX path that begins with **exactly two** slashes (`//x`) is
+implementation-defined by POSIX, so the conservative rule applies: like a device
+path it is never inside anything and nothing is inside it; three or more leading
+slashes collapse to one, as POSIX says, and `//` inside a path is an ordinary
+separator. Production code applies the rules of the **host** flavour (`win32` on
+Windows, `posix` elsewhere) through the same helper the fixture drives: a helper
+whose default skips the device rule tests something production never calls. Symlinks are out of
+scope for the cases: resolving them (`realpath`) is the caller's job and must happen
+*before* this check; a lane that skips it must say so.
+
+**Pending implementation: two cross-lane path rules (2026-11-16, backlog
+`WD-100b`).** A review of the conformance kit found two places where the lanes
+disagree with the Rust loader (PR #19492) or with each other. Both rules below are
+**normative now** and **not yet implemented**: they are pinned in
+`warrant-corpus-conformance-v1` as new cases (added only, never changing an
+existing expectation; if one existing case turns out to say otherwise, that
+expectation moves to `-v2`) and applied to the Python, TypeScript and Go lanes and
+to the Rust loader. Until a lane passes them it must say so in its manifest, and it
+does not count as passing the kit.
+
+1. **Windows reserved device names are refused.** A path component is *reserved*
+   if, after removing any trailing dots and spaces, and then removing everything
+   from the first `.` onward (the extension, so `CON.txt` and `nul.tar.gz` are
+   reserved), the remainder equals `CON`, `PRN`, `AUX`, `NUL`, `COM1` to `COM9` or
+   `LPT1` to `LPT9`, compared ASCII case-insensitively. A component that merely
+   ends in a dot or a space (`name.`, `name `) is also refused, because Windows
+   silently strips them and two spellings would name one file. A path containing a
+   reserved or trailing-dot-or-space component is **refused** by the lane's
+   artifact-path acceptance on **every host flavour** (an artifact written on Linux
+   must load on Windows) and, under `win32`, a containment query with such a
+   component in `child` answers `inside: false`. The Rust loader already refuses
+   these; the lanes do not.
+2. **`win32` case-insensitive comparison folds ASCII only.** Under `win32` two
+   components are equal if they are equal after mapping `A` to `Z` onto `a` to `z`
+   and **nothing else**: every non-ASCII code point is compared exactly, so
+   `ſ` (U+017F), the Kelvin sign (U+212A), `İ` (U+0130) and `Σ`/`σ`/`ς` never match an ASCII
+   letter or each other by case. This fails closed: a path that differs from the
+   root only by a non-ASCII case variant is **not inside** it. Go (`strings.EqualFold`
+   with its Unicode simple folding) and Python (`casefold`/`lower`) differ today
+   on exactly those characters, so the rule is a defined behaviour in place of two
+   different accidents.
+
+**Label digest.** The `domain-labels.json` digest is the SHA-256 of the canonical
+rendering of the manifest with `toolchain.version` replaced by the empty string.
+`toolchain.name` stays in the digest, read from the manifest and never a literal
+(`"python"`, `"node"`): a different name is a different digest, a different version
+is the same digest.
+
+**Not in v1.** The TFV parser, the model IR evaluator and the deliberately wrong
+subject result of §2.5 are not in this fixture; each lane covers them with its
+falsification tests until a later category lands (case files are only *added* to
+`-v1`; changing an expectation means `-v2`). The Go lane (WD-103) merged before the
+fixture existed and adopts it in a follow-up.
+
 ## 10. Layer C: proofs per lane (not-live)
 
 VER04h §7 proves `labels`/`bound` obligations by lowering the real Rust
@@ -1401,6 +1611,17 @@ dependency graph.
   `python/ct-compare`, and the TypeScript BUILD therefore validates the
   manifest without `--registry`); the VER08b sandbox run (CAP-RT-1xx,
   TypeScript/Node).
+* **WD-100 (shared runner conformance fixture).** §9.1 pins the reader profile,
+  the canonical writer, the containment profile and the label digest, and the
+  fixture `warrant-corpus-conformance-v1` (with its independent checker) now
+  exists. It closes the "fixture does not exist" gaps of WD-101 item 7 and
+  WD-102 item 5. Spec changes it forced: the reader rejects every fraction and
+  exponent for all lanes, not only TypeScript; the nesting limit is 256
+  containers for all lanes (Python had none); canonical keys sort by code point
+  and DEL is escaped (the TypeScript renderer used UTF-16 order and left DEL raw);
+  Python now rejects unpaired surrogate escapes. The Go lane (WD-103, merged in
+  #19484) adopts the fixture in a follow-up: DEL as `\u007f`, a posix path with
+  exactly two leading slashes refused, and the 256-container nesting limit.
 * **WD-103 (Go lane) amendments.** (1) The Go binding is the same
   `evidence.bindings` line file with Go representations (`Bool=bool`,
   `Bytes=[]byte`, `U64=uint64`, `Nat=uint64`, `U8=uint8`), a Go import path as

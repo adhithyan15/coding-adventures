@@ -19,6 +19,17 @@ driver, and any claim over a bounded set of call sequences, is never `exhaustive
 id, no rung of the label set and no other rule changes. The mechanism (the `state=explicit` key,
 reach classes, obligations, labels) is VER04m.
 
+**Amendment (2026-11-16), owner decision, with [VER04n](VER04n-warrant-opaque-types.md):**
+foreign opaque handles are cited through a new contract id shape,
+`contract.<package>.opaque.<Type>` (section 3.1), recognised also after `from` in an
+`opaque` declaration (section 3.3), pinned by an interface digest and a binding digest
+(section 5.3) and discharged from the maker grounding evidence, the lower controls and
+the lower sealing status (sections 5.1, 5.5); `ContractInterfaceMismatch`
+is a new error (section 5.2) and a binder of opaque type is never a complete domain
+(section 6.2). The normative text of each edit is VER04n section 17.1 and is applied by
+the implementation slice that makes it true (slice 6 below); no existing id, rung or
+rule changes.
+
 **Parent:** [VER27](VER27-layered-validation-roadmap.md) (P9; sections 4.13,
 4.14 and 4.15; conflict C14; question Q8), [VER00](VER00-verified-shipping-program.md)
 (section 7.5, assume-guarantee; section 7.5.6, owned layers).

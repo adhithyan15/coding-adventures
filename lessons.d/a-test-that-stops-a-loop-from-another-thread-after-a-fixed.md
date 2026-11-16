@@ -28,4 +28,8 @@ threads. A shared `Foo` made `mathematica_user_function_camel` fail about 3% of 
 Also in F#: `TimeSpan.FromSeconds(30)` inside a lambda is an ambiguous overload on newer
 compilers (FS0041); pass an int millisecond timeout (`Wait(30000)`) instead.
 
-C's `event-loop` test (`stopper_thread` naps 5 ms) has the same shape and is not yet fixed.
+C's `event-loop` test (`stopper_thread` napped 5 ms) had the same shape and is fixed too, with no
+new API: `os-platform` already has `osp_mutex` and `osp_cond`, so the source's `poll` sets a flag under
+the mutex and broadcasts, the worker waits on it, and a watchdog thread converts a lost stop into a
+failure. (A timed condition-variable wait would be a nicer bounded guard than a polling watchdog, but
+is not needed.)

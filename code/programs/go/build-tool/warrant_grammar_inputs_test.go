@@ -291,6 +291,42 @@ func TestGoWarrantLaneInputsSelectTheirConsumers(t *testing.T) {
 	}
 }
 
+// WD-100: the shared runner conformance fixture is read by every lane runner's
+// own tests, so an edit selects each runner package and nothing else; a
+// lookalike directory selects nothing, and a missing runner fails closed.
+func TestWarrantConformanceFixtureSelectsEveryRunnerPackage(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "python/warrant-corpus", Language: "python"},
+		{Name: "python/ct-compare", Language: "python"},
+		{Name: "typescript/warrant-corpus", Language: "typescript"},
+		{Name: "typescript/ct-compare", Language: "typescript"},
+	}
+	for _, input := range []string{
+		"code/specs/fixtures/warrant-corpus-conformance-v1/json.json",
+		"code/specs/fixtures/warrant-corpus-conformance-v1/index.json",
+		"code/specs/fixtures/warrant-corpus-conformance-v1/.gitattributes",
+	} {
+		got, err := repositoryInputConsumersForChange([]string{input}, packages, "all")
+		want := map[string]bool{"python/warrant-corpus": true, "typescript/warrant-corpus": true}
+		if err != nil || !reflect.DeepEqual(got, want) {
+			t.Fatalf("%s: got %v, err %v", input, got, err)
+		}
+		if _, err := repositoryInputConsumersForChange([]string{input}, packages[1:2], "python"); err == nil {
+			t.Fatalf("%s: a missing runner package must fail closed", input)
+		}
+	}
+	for _, input := range []string{
+		"code/specs/fixtures/warrant-corpus-conformance-v10/json.json",
+		"code/specs/fixtures/warrant-corpus-conformance-v1",
+		"docs/code/specs/fixtures/warrant-corpus-conformance-v1/json.json",
+	} {
+		got, err := repositoryInputConsumersForChange([]string{input}, packages, "all")
+		if err != nil || len(got) != 0 {
+			t.Errorf("lookalike %s: got %v, err %v", input, got, err)
+		}
+	}
+}
+
 // VER04r S4: the independent oracle re-derives a corpus from the adopter specs,
 // so each spec and the v1 corpus it gates select it, and nothing else does (a
 // lookalike path must not).

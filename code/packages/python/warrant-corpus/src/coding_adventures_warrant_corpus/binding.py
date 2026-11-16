@@ -42,6 +42,7 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from .containment import relative_inside
 from .errors import UNEXPECTED_ERROR, BindingError, CorpusError
 from .faults import Fault
 from .values import OpSig
@@ -207,7 +208,7 @@ def resolve_exports(
         ) from error
     root = (package_dir / binding.source).resolve()
     origin = getattr(module, "__file__", None)
-    if origin is None or not Path(origin).resolve().is_relative_to(root):
+    if origin is None or relative_inside(root, Path(origin).resolve()) is None:
         raise BindingError(
             "source-mismatch",
             f"`{binding.import_name}` was not imported from the declared source root",
