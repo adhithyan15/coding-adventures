@@ -410,6 +410,33 @@ fn texel_at_honours_flips_and_bounds() {
 }
 
 #[test]
+fn cwe_190_texel_at_extreme_coordinates() {
+    let mut t = OamTable::blank_table();
+    let mut e = sprite(COORD_MIN, COORD_MAX, 0);
+    t.set_entry(0, e).unwrap();
+    e.affine = true;
+    e.double_size = true;
+    t.set_entry(1, e).unwrap();
+    for slot in [0usize, 1] {
+        for (sx, sy) in [
+            (i32::MIN, i32::MIN),
+            (i32::MAX, i32::MAX),
+            (i32::MIN, i32::MAX),
+            (i32::MAX, i32::MIN),
+            (0, i32::MIN),
+            (i32::MAX, 0),
+        ] {
+            assert_eq!(t.texel_at(slot, sx, sy), Ok(None));
+        }
+    }
+    // the far corner of a box at the coordinate limits is still reachable
+    assert_eq!(
+        t.texel_at(0, i32::from(COORD_MIN), i32::from(COORD_MAX)),
+        Ok(Some((0, 0)))
+    );
+}
+
+#[test]
 fn texel_at_affine_identity_and_scale() {
     let mut t = OamTable::blank_table();
     let mut e = sprite(0, 0, 0);

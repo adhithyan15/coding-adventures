@@ -1,7 +1,7 @@
 {
   "schema_version": "ver24-effect-cert-v1",
   "package": "rust/sprite-oam",
-  "source_digest": "a5d75f91fd48c3a129c83548f8c6a089df028a4b93d0bbe4d6e52432ceffdd78",
+  "source_digest": "51bc1a4354c88d8a799dc47f58e9d7af6ad9c4ba4889372fc940689347cf0c0c",
   "manifest_digest": "386531b948216ebead683b2877d35e1dbaf652d09f05df8568ae137cf01e25b0",
   "declared_effects": [],
   "entry_points": [
@@ -102,7 +102,7 @@
     },
     {
       "name": "priority_counts",
-      "signature": "pub fn priority_counts(&self) -> [usize",
+      "signature": "pub fn priority_counts(&self) -> PriorityCounts",
       "effects": []
     },
     {

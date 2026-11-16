@@ -93,6 +93,9 @@ pub const AFFINE_ONE: i16 = 256;
 /// An RGB colour `[red, green, blue]`.
 pub type Rgb8 = [u8; 3];
 
+/// Visible sprite count per priority level (index = priority).
+pub type PriorityCounts = [usize; 4];
+
 /// Fixed storage for the parts of one metasprite frame.
 pub type MetaParts = [OamEntry; MAX_PARTS];
 
@@ -639,7 +642,7 @@ impl OamTable {
     }
 
     /// Visible sprite count per priority level (index = priority).
-    pub fn priority_counts(&self) -> [usize; 4] {
+    pub fn priority_counts(&self) -> PriorityCounts {
         let mut counts = [0usize; 4];
         for e in self.entries.iter().filter(|e| e.is_visible()) {
             if let Some(c) = counts.get_mut(usize::from(e.priority)) {
@@ -769,11 +772,14 @@ impl OamTable {
         let e = self.entry(slot)?;
         let (w, h) = e.shape.dimensions(e.size);
         let (dw, dh) = e.display_size();
-        let dx = sx - i32::from(e.x);
-        let dy = sy - i32::from(e.y);
-        if dx < 0 || dy < 0 || dx >= dw as i32 || dy >= dh as i32 {
+        // i64 so hostile i32::MIN / i32::MAX coordinates cannot overflow (CWE-190).
+        let dx64 = i64::from(sx) - i64::from(e.x);
+        let dy64 = i64::from(sy) - i64::from(e.y);
+        if dx64 < 0 || dy64 < 0 || dx64 >= i64::from(dw) || dy64 >= i64::from(dh) {
             return Ok(None);
         }
+        // In range 0..128 after the check above, so the narrowing is lossless.
+        let (dx, dy) = (dx64 as i32, dy64 as i32);
         let (wi, hi) = (w as i32, h as i32);
         let (tx, ty) = if e.affine {
             let m = self.affine_params(usize::from(e.affine_slot))?;
