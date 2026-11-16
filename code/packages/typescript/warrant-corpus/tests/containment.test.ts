@@ -6,7 +6,7 @@
  */
 import { posix, win32 } from "node:path";
 import { describe, expect, it } from "vitest";
-import { relativeInside } from "../src/containment.ts";
+import { asciiFold, refusedComponent, relativeInside } from "../src/containment.ts";
 
 describe("relativeInside", () => {
   it("shows the hazard: win32 relative across drives is absolute", () => {
@@ -54,5 +54,31 @@ describe("relativeInside", () => {
     expect(relativeInside("//", "/r", posix)).toBeNull();
     expect(relativeInside("/", "///x", posix)).toBe("x");
     expect(relativeInside("/r", "/r//x", posix)).toBe("x");
+  });
+});
+
+describe("WD-100b: reserved names and ASCII-only folding", () => {
+  it("refuses reserved device names and trailing dots or spaces", () => {
+    for (const name of ["CON", "con", "CON.txt", "NUL.", "nul ", "COM1", "com9.log", "LPT1", "com1.tar.gz", "x."]) {
+      expect(refusedComponent(name), name).toBe(true);
+    }
+    for (const name of ["console.txt", "COM10", "LPT0", "COM0", "CONx", "xCON", ".hidden", "a.CON.b", "\u017fon"]) {
+      expect(refusedComponent(name), name).toBe(false);
+    }
+  });
+
+  it("folds A..Z only", () => {
+    expect(asciiFold("Repo-\u00c9")).toBe("repo-\u00c9");
+    for (const text of ["\u017f", "\u212a", "\u0130", "\u03a3", "\u03c2"]) expect(asciiFold(text)).toBe(text);
+  });
+
+  it("applies both rules to a win32 query", () => {
+    expect(relativeInside("D:\\repo", "d:\\REPO\\x", win32)).toBe("x");
+    expect(relativeInside("D:\\repo", "D:\\repo\\console.txt", win32)).toBe("console.txt");
+    for (const child of ["D:\\repo\\NUL", "D:\\repo\\con.txt", "D:\\repo\\AUX\\x", "D:\\repo\\a."]) {
+      expect(relativeInside("D:\\repo", child, win32), child).toBeNull();
+    }
+    expect(relativeInside("D:\\\u212a", "D:\\k\\x", win32)).toBeNull();
+    expect(relativeInside("/\u212a", "/k/x", posix)).toBeNull();
   });
 });
