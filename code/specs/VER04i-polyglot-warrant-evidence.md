@@ -10,6 +10,13 @@ CI receipts, and subsequent discoveries are maintained in the
 shard is authoritative for current implementation status; the design and
 historical rollout snapshots below remain part of this specification.
 
+**Corpus v2.** The closed profile `warrant-corpus-v2` (structural types, chunked
+digests with `slim`/`full` depth, predicate claims, data faults, `inout`/`ensures`,
+the independent oracle and the one wrapping arithmetic rule) is specified in
+[VER04r](VER04r-warrant-corpus-v2.md). It is a new profile beside this one: every
+section of this document describes `warrant-corpus-v1` and stays authoritative for it
+until VER04r slice S13 deletes v1.
+
 ## 0. Why this exists
 
 VER04h made one lane honest. For `rust/ct-compare`, every number in the
@@ -342,6 +349,18 @@ of a spec-declared width is a corpus error at *generation time*, so a lane never
 sees one). The corpus includes the 377-value `u64_edge` domain precisely so a
 lane that silently holds `U64` in a 63-bit or double type fails an exhaustive
 case, not a code review.
+
+**Erratum (VER04r section 3, 2026-11-16).** The wrapping rule above is stated for
+`U64` only, and three evaluators disagreed with it: the shipped runners refuse an
+overflow, the Python oracle used unbounded integers, and the Rust v0 harness
+evaluates `U8` as `Nat` (WD-013). The rule is: `+ - *` and unary `-` on **every**
+fixed-width type wrap modulo `2^w`; `Nat` and `Int` are exact and bounded by `2^127`
+at generation time. The only `warrant-corpus-v1` corpus, ct-compare, has no model
+arithmetic, so no case reaches the difference and the v1 runners are unchanged; for
+that reason no second adopter may be added to the v1 profile. The rule binds the v2
+profile, where VER04r section 3.3 also refuses a v0 *document* whose `U8` arithmetic
+wraps or could wrap on a subject result. WD-013 is not reopened: its v0 residual
+stays accepted until gf256 becomes a v1 document.
 
 ### 2.8 Regeneration and drift checks
 
@@ -1126,6 +1145,123 @@ Each check has a falsification test in `tests/test_evidence_lane.rs` (copy a
 manifest, change one field, expect the named error), following VER04h's
 practice.
 
+### 9.1 The runner conformance fixture (`warrant-corpus-conformance-v1`) -- WD-100 amendment
+
+Every lane's `warrant-corpus` runner reads an untrusted corpus, writes a canonical
+manifest and refuses paths outside the repository. The first two lanes each
+re-discovered the same bugs in review: duplicate keys accepted, integers above 2^53
+rounded, unpaired surrogate escapes accepted, a `__proto__` key dropped, a Windows
+cross-drive path accepted (`path.relative` returns an *absolute* path), a toolchain
+name hard-coded into a digest, and canonical output that differed between runtimes.
+§9.1 pins those behaviours **once, as data**, so a lane proves them by running cases
+instead of by surviving review. The fixture is
+`code/specs/fixtures/warrant-corpus-conformance-v1/`; the independent stdlib-only
+checker is `code/scripts/warrant_corpus_conformance.py`.
+
+**Layout.** `index.json` lists the case files, their case counts and their SHA-256;
+each category is one JSON file of the shape
+`{"schema": "warrant-corpus-conformance-v1", "category": C, "cases": [...]}`. A
+`.gitattributes` with `* -text` keeps every byte exact on a Windows checkout (no
+CRLF conversion). Case ids are `<category>/<slug>`, unique across the fixture. Input
+*bytes* are never stored as JSON strings (a JSON string cannot hold invalid UTF-8, a
+lone surrogate or a BOM); they are lowercase hex in `input_hex`. A lane's test counts
+its cases per category and compares the counts with `index.json`, so a case added
+later cannot be silently skipped. A lane that cannot run a category (no path
+flavour, say) states so in its README; it never omits one silently.
+
+| Category | Case fields | The lane runs | Expected outcome |
+|---|---|---|---|
+| `json` | `input_hex` | its corpus reader on the bytes, then its canonical renderer on the result | `{"outcome":"accept","canonical_sha256":H[,"canonical":T]}` (`H` is the SHA-256 of the UTF-8 rendering; `T`, when present, is the rendering itself, present when it is at most 2,048 bytes) or `{"outcome":"reject","error":"malformed-json","reason":R}` |
+| `tagged` | `type`, `errors` (type name to variant names, optional), `input_hex` | reader, then the tagged-value decoder of §2.7, then the `warrant-stream-v1` encoder of §2.6 | `{"outcome":"accept","stream_hex":X}` or `{"outcome":"reject","error":"value"}` (or `"malformed-json"` when the bytes are not acceptable JSON) |
+| `containment` | `flavor` (`"posix"` or `"win32"`), `root`, `child` | the lane's own containment helper, using that flavour's path rules, on the two paths *as text* | `{"inside":B,"same":S}`: `S` means the child is the root itself (so `inside` is also true) |
+| `label-digest` | `manifest` (a JSON object), `sha256`, and optionally `same_as` or `differs_from` (another case id) | the lane's manifest digest function (§8, coverage labels) | the digest equals `sha256`; the `same_as` / `differs_from` relation holds between the two digests |
+
+`reason` is informational (the lane need not distinguish them) and comes from a
+closed set: `empty`, `syntax`, `literal`, `utf8`, `bom`, `trailing-data`,
+`control-char`, `bad-escape`, `duplicate-key`, `unpaired-surrogate`, `number-form`,
+`unsafe-integer`, `depth`. The *error class* is what a lane must match, and it is
+the lane's existing machine-readable code (`malformed-json`, `value`, and
+`unsupported-type` for a type outside the closed `warrant-corpus-v1` profile: in v1
+that includes `List<T>` and `Option<T>`, which §2.7 maps but no corpus uses, so a
+lane refuses them rather than half-supporting them). An integer of any length is
+read without a conversion that can itself fail (a 5,000-digit integer is
+`unsafe-integer`, never an uncaught exception).
+
+**Reader profile (what "strict JSON" means to every lane).**
+
+1. The input is UTF-8, decoded strictly: an overlong encoding, an encoded surrogate
+   (`ED A0..BF xx`), a code point above U+10FFFF, a stray continuation byte or a
+   truncated sequence is `malformed-json`. A leading BOM (U+FEFF, `EF BB BF`) is
+   rejected as data before the document (a BOM *inside* a string is just a
+   character).
+2. Whitespace is exactly space, tab, LF and CR. One value, then optional
+   whitespace, then end of input; anything else after the value (including a second
+   value or a NUL) is `trailing-data`. No comments, trailing commas, single quotes or
+   unquoted keys; `NaN`, `Infinity` and a literal with the wrong case are errors.
+3. A number is an **integer** in the safe range `-(2^53 - 1) ..= 2^53 - 1`.
+   A fraction, an exponent (even `1e2`), `-0`, a leading zero or `+`, and any value
+   outside the safe range are `malformed-json`; a lane must not round, wrap or
+   promote. (`U64`/`Nat` values are tagged decimal *text*, §2.7, and never use
+   this path.)
+4. A string contains no raw control character (`U+0000..U+001F`; DEL `U+007F` is
+   allowed raw). The escapes are exactly `\" \\ \/ \b \f \n \r \t \uXXXX`
+   (hex digits of either case). A `\u` high surrogate must be followed
+   *immediately* by a `\u` low surrogate (together they are one astral character);
+   any other surrogate escape, in a key or a value, is `malformed-json`.
+5. **Duplicate keys are an error, compared after unescaping**: `{"a":1,"a":2}`
+   is a duplicate. This holds at every depth.
+6. A document may contain at most **256 nested containers**; the 257th is
+   `malformed-json`. Scalars do not count.
+7. Every key is data. `__proto__`, `constructor`, `toString`, `hasOwnProperty` and
+   an integer-like key such as `"10"` survive parse and render unchanged; a lane
+   whose object type has special keys builds objects without them (a null-prototype
+   object, a `Map`).
+
+**Canonical writer profile.** The rendering of a value is: object keys sorted by
+**Unicode code point** (equivalently UTF-8 byte order; *not* UTF-16 code-unit order,
+which differs for U+E000..U+FFFF against astral keys, and *not* the insertion order
+a runtime may impose on integer-like keys); two-space indent; `,` then LF between
+members and `: ` after a key; an empty container is `[]` or `{}`; LF line endings and
+one final LF; integers in plain decimal; every character outside `U+0020..U+007E`
+escaped as `\uXXXX` with **lowercase** hex (so every control character, DEL U+007F included, is `\u007f`-style and never raw; the spec was silent on DEL before WD-100 and Python's `ensure_ascii` already escaped it; an astral
+character is a lowercase surrogate pair), and `"` and `\` escaped as `\"` and `\\`,
+and `\b \f \n \r \t` written in short form, `/` never escaped.
+
+**Containment profile.** A containment check is a security boundary and is
+**lexical**: both inputs are absolute, the lane normalises `.` and `..` (a `..` at the
+root stays at the root), and the verdict is "every component of `root` is a leading
+component of `child`". Two paths on different Windows drives, or UNC shares, have no
+common root: never inside, whatever the runtime's `relative()` returns (it returns an
+*absolute* path across drives, so "no leading `..`" is not proof of containment). A
+component named `..foo` is an ordinary name, so `/r/..foo` is inside `/r` while
+`/r/..` is not, and `/rr` is not inside `/r` (compare whole components, never string
+prefixes). `win32` compares case-insensitively, accepts `/` and `\` as separators and
+treats a device-namespace path (`\\?\` or `\\.\`) as never inside anything (and nothing is inside it);
+`posix` is case-sensitive and `\` is an ordinary character. Separators are
+normalised **before** any prefix rule (`\/?\D:\r`, `/\?/D:/r` and `\\?/D:\r` are
+device paths too), and `\\?\UNC\server\share` is a device path, not a UNC one.
+A POSIX path that begins with **exactly two** slashes (`//x`) is
+implementation-defined by POSIX, so the conservative rule applies: like a device
+path it is never inside anything and nothing is inside it; three or more leading
+slashes collapse to one, as POSIX says, and `//` inside a path is an ordinary
+separator. Production code applies the rules of the **host** flavour (`win32` on
+Windows, `posix` elsewhere) through the same helper the fixture drives: a helper
+whose default skips the device rule tests something production never calls. Symlinks are out of
+scope for the cases: resolving them (`realpath`) is the caller's job and must happen
+*before* this check; a lane that skips it must say so.
+
+**Label digest.** The `domain-labels.json` digest is the SHA-256 of the canonical
+rendering of the manifest with `toolchain.version` replaced by the empty string.
+`toolchain.name` stays in the digest, read from the manifest and never a literal
+(`"python"`, `"node"`): a different name is a different digest, a different version
+is the same digest.
+
+**Not in v1.** The TFV parser, the model IR evaluator and the deliberately wrong
+subject result of §2.5 are not in this fixture; each lane covers them with its
+falsification tests until a later category lands (case files are only *added* to
+`-v1`; changing an expectation means `-v2`). The Go lane (WD-103) merged before the
+fixture existed and adopts it in a follow-up.
+
 ## 10. Layer C: proofs per lane (not-live)
 
 VER04h §7 proves `labels`/`bound` obligations by lowering the real Rust
@@ -1382,6 +1518,17 @@ dependency graph.
   `python/ct-compare`, and the TypeScript BUILD therefore validates the
   manifest without `--registry`); the VER08b sandbox run (CAP-RT-1xx,
   TypeScript/Node).
+* **WD-100 (shared runner conformance fixture).** §9.1 pins the reader profile,
+  the canonical writer, the containment profile and the label digest, and the
+  fixture `warrant-corpus-conformance-v1` (with its independent checker) now
+  exists. It closes the "fixture does not exist" gaps of WD-101 item 7 and
+  WD-102 item 5. Spec changes it forced: the reader rejects every fraction and
+  exponent for all lanes, not only TypeScript; the nesting limit is 256
+  containers for all lanes (Python had none); canonical keys sort by code point
+  and DEL is escaped (the TypeScript renderer used UTF-16 order and left DEL raw);
+  Python now rejects unpaired surrogate escapes. The Go lane (WD-103, merged in
+  #19484) adopts the fixture in a follow-up: DEL as `\u007f`, a posix path with
+  exactly two leading slashes refused, and the 256-container nesting limit.
 * **WD-103 (Go lane) amendments.** (1) The Go binding is the same
   `evidence.bindings` line file with Go representations (`Bool=bool`,
   `Bytes=[]byte`, `U64=uint64`, `Nat=uint64`, `U8=uint8`), a Go import path as

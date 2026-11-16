@@ -662,6 +662,45 @@ Parallelism is bounded by a configurable job count (default: number of CPU cores
 
 If a package fails to build, all packages that transitively depend on it are marked "dep-skipped" and not executed. This avoids wasting time on builds that will definitely fail.
 
+### Per-Command Timeout
+
+A BUILD line that never returns must not be able to consume a whole CI job.
+In 2026 one `rust/lzw` line hung on Windows CI and the job sat idle for 4h47m
+until GitHub's 300-minute step limit killed it; because each package's output
+is buffered until the package finishes, the log never said which command hung.
+
+The Go build tool therefore bounds every BUILD command (each line the executor
+hands to `sh -c` / `cmd /C`) with a timeout:
+
+- **Flag:** `-command-timeout <duration>` (Go duration syntax, e.g. `90m`).
+  **Default `90m`.** `0` disables the timeout. Negative values are rejected.
+- **Why 90m:** the Linux build step is limited to 150 minutes and the Windows
+  step to 300. The slowest legitimate single package seen on CI takes about 19
+  minutes, so 90 minutes never kills real work, while a hang is cut off with at
+  least an hour of Linux budget (3.5 hours on Windows) left to print
+  diagnostics.
+- **Scope:** per command, not per package. The clock restarts for each line.
+- **Process tree:** on timeout the whole tree is killed, not just the shell
+  (Unix: the command runs in its own process group and `-pgid` is signalled;
+  Windows: `taskkill /T /F /PID`). After the kill, waiting for the output pipes
+  is itself bounded (a short `WaitDelay`), so a grandchild that escaped the
+  kill and still holds stdout open cannot block the build.
+- **Outcome:** the package is `failed` (never passed or skipped), with return
+  code 124 (the GNU `timeout` convention). Its stderr ends with a line
+  naming the package, the 1-based index and text of the command, the configured
+  limit and the elapsed time. All output buffered so far is printed exactly as
+  for any other failure, and dependants are dep-skipped as usual.
+- **Interrupt:** SIGINT/SIGTERM cancel all running commands the same way (exit
+  130, packages failed), since process groups no longer receive the terminal's
+  Ctrl-C. A clean exit that leaves a pipe-holding descendant fails and the
+  leftover group is killed.
+- **Not supported:** per-package overrides. BUILD files have no metadata
+  channel for execution settings today, so the limit is global.
+
+The timeout is **OPTIONAL for every implementation other than Go**. It is not
+part of the portable CLI grammar or any conformance fixture, and no other
+implementation is required to add the flag.
+
 ## CLI Interface
 
 The implementations intentionally share the same overall CLI shape, but they
@@ -684,6 +723,7 @@ Flags:
   -jobs <N>             Max parallel workers (default: CPU count)
   -language <lang>      Filter: implementation-dependent; Go supports python, ruby, go, rust, typescript, elixir, all
   -cache-file <path>    Path to cache file (default: .build-cache.json)
+  -command-timeout <d>  Go only: per-BUILD-command timeout (default 90m, 0 disables)
 ```
 
 The portable form uses `--root`, `--diff-base`, `--force`, `--dry-run`,
