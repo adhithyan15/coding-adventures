@@ -629,6 +629,7 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "canonical Warrant grammars, syntax corpus, vector fixtures and transport gate",
 		matches:  isWarrantGrammarInput,
 		paths:    warrantGrammarPaths,
+		globs:    []string{warrantDocumentGlob},
 	},
 	{
 		name:     "rust/ca-assurance-report",
@@ -763,11 +764,35 @@ func isWarrantGoLanePilotInput(changed string) bool {
 		strings.HasPrefix(changed, "code/packages/go/warrant-corpus/")
 }
 
+// warrantDocumentGlob is exactly isWarrantDocument as a glob: the `?` keeps a
+// bare ".warrant" out, and the suffix keeps ".warrant.draft" out.
+const warrantDocumentGlob = "**/?*.warrant"
+
+// isWarrantDocument reports whether a changed path is a Warrant document, in
+// any directory. rust/warrant-grammar's v0_compat test parses and checks every
+// .warrant file in the repository, so adding or editing one anywhere must run
+// it; otherwise an invalid document lands on main unchecked and fails a later,
+// unrelated PR that does rebuild warrant-grammar. Drafts are not documents.
+//
+//	code/specs/foo.warrant                     → true
+//	code/packages/python/x/x.warrant           → true
+//	code/specs/foo.warrant.draft, .warrant.bak → false
+//	code/specs/.warrant, code/specs/foo.Warrant → false
+//	code\specs\foo.warrant  (not a Git path)   → false
+func isWarrantDocument(changed string) bool {
+	if strings.Contains(changed, "\\") {
+		return false
+	}
+	base := path.Base(changed)
+	return strings.HasSuffix(base, ".warrant") && len(base) > len(".warrant")
+}
+
 // Canonical inputs live outside the Rust artifact package. Exact file paths
 // and slash-delimited prefixes avoid selecting lookalike versions/directories.
 // Validator-test edits select the consumer too: its BUILD runs those tests.
 func isWarrantGrammarInput(changed string) bool {
-	return strings.HasPrefix(changed, "code/grammars/warrant/") ||
+	return isWarrantDocument(changed) ||
+		strings.HasPrefix(changed, "code/grammars/warrant/") ||
 		strings.HasPrefix(changed, "code/specs/fixtures/warrant-syntax-v1/") ||
 		// WX-E: the pinned vector tables the package's tests load (the pin in
 		// the .warrant document fails closed when these bytes change).
