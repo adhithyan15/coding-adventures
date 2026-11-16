@@ -116,7 +116,7 @@ def test_production_calls_apply_the_host_flavour_rules(monkeypatch) -> None:
         def __init__(self, text: str) -> None:
             self.text = text
 
-        def resolve(self) -> "Fake":
+        def resolve(self) -> Fake:
             return self
 
         def __str__(self) -> str:

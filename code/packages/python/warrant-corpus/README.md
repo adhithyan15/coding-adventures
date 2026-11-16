@@ -114,7 +114,7 @@ suite-level totals conflate the kinds until backlog **LP-012** lands.
 `tests/test_conformance_fixture.py` runs every case of
 `code/specs/fixtures/warrant-corpus-conformance-v1/` (VER04i 9.1) through this
 lane's own reader, renderer, tagged-value decoder, containment helper and label
-digest: 359 cases covering duplicate keys, integers above 2^53, fractions and
+digest: 397 cases covering duplicate keys, integers above 2^53, fractions and
 exponents, invalid UTF-8, unpaired surrogates, BOMs, nesting depth, `__proto__`
 keys, canonical key order and escaping, Windows cross-drive and UNC paths, and
 the toolchain-name label digest. The checker that validates the fixture itself
