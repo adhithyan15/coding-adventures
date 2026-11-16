@@ -520,6 +520,51 @@ def encode_extended(raw: Any, type_text: str) -> bytes:
 # ``split`` returns (anchor, components) or None for a device-namespace path or
 # a POSIX path with exactly two leading slashes: never inside anything, and
 # nothing is inside it.  Separators are normalised BEFORE the device test.
+def ascii_lower(text: str) -> str:
+    """Map ``A``..``Z`` to ``a``..``z`` and **nothing else** (VER04i 9.1, WD-100b).
+
+    ``str.lower`` would also fold ``K`` (U+212A KELVIN SIGN) to ``k`` and turn
+    ``\u0130`` into two characters; ``casefold`` would map ``\u017f`` (long s)
+    to ``s``.  Windows compares much more loosely than that, but a containment
+    check must fail *closed*: two names that differ by a non-ASCII case variant
+    are different names here, so the second is simply "not inside".
+    """
+    return "".join(chr(ord(c) + 32) if "A" <= c <= "Z" else c for c in text)
+
+
+#: The Windows device names (VER04i 9.1, WD-100b), upper-case.
+RESERVED_NAMES = frozenset(
+    {"CON", "PRN", "AUX", "NUL"}
+    | {f"COM{n}" for n in range(1, 10)}
+    | {f"LPT{n}" for n in range(1, 10)}
+    | {"CONIN$", "CONOUT$"}
+    | {f"{d}{sup}" for d in ("COM", "LPT") for sup in ("\u00b9", "\u00b2", "\u00b3")}
+)
+
+
+def refused_component(name: str) -> bool:
+    """Is this win32 path component refused? (VER04i 9.1, WD-100b)
+
+    Three independent reasons, any one is enough:
+
+    * it contains ``:`` (an alternate data stream or device suffix:
+      ``CON:``, ``nul::$DATA``, ``file.txt:NUL``);
+    * it ends in a dot or a space (Windows strips them, so two spellings would
+      name one file);
+    * its *stem* is a device name.  The stem is the part before the FIRST dot
+      with trailing spaces removed, so ``CON.txt``, ``com1.tar.gz`` and
+      ``CON .txt`` are devices while ``console.txt``, ``COM10`` and ``LPT0``
+      are not.  The set includes ``CONIN$``, ``CONOUT$`` and the superscript
+      digits ``COM\u00b9``..``LPT\u00b3``.  Only ``a``..``z`` fold, so the
+      superscripts match exactly, and fullwidth ``\uff23\uff2f\uff2e`` and
+      ``CLOCK$`` stay ordinary.
+    """
+    if ":" in name or name.endswith((".", " ")):
+        return True
+    stem = name.split(".", 1)[0].rstrip(" ")
+    return "".join(chr(ord(c) - 32) if "a" <= c <= "z" else c for c in stem) in RESERVED_NAMES
+
+
 def _walk(parts: list[str]) -> list[str]:
     out: list[str] = []
     for part in parts:
@@ -531,6 +576,9 @@ def _walk(parts: list[str]) -> list[str]:
             continue
         out.append(part)
     return out
+
+
+_ASCII_LETTERS = frozenset("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
 
 def split_path(flavor: str, path: str) -> tuple[str, list[str]] | None:
@@ -549,11 +597,11 @@ def split_path(flavor: str, path: str) -> tuple[str, list[str]] | None:
         pieces = text[2:].split("\\")
         if len(pieces) < 2 or not pieces[0] or not pieces[1]:
             raise ValueError("malformed UNC path")
-        return "\\\\" + pieces[0].lower() + "\\" + pieces[1].lower(), _walk(
-            [p.lower() for p in pieces[2:]]
+        return "\\\\" + ascii_lower(pieces[0]) + "\\" + ascii_lower(pieces[1]), _walk(
+            [ascii_lower(p) for p in pieces[2:]]
         )
-    if len(text) >= 3 and text[0].isalpha() and text[1] == ":" and text[2] == "\\":
-        return text[:2].lower(), _walk([p.lower() for p in text[3:].split("\\")])
+    if len(text) >= 3 and text[0] in _ASCII_LETTERS and text[1] == ":" and text[2] == "\\":
+        return ascii_lower(text[:2]), _walk([ascii_lower(p) for p in text[3:].split("\\")])
     raise ValueError("fixture paths are absolute")
 
 
@@ -561,6 +609,10 @@ def contains(flavor: str, root: str, child: str) -> dict[str, bool]:
     """``{"inside": ..., "same": ...}`` for ``child`` against ``root``."""
     a, b = split_path(flavor, root), split_path(flavor, child)
     if a is None or b is None:
+        return {"inside": False, "same": False}
+    # Under win32 a child with a reserved device name or a trailing dot/space
+    # component is never inside anything (WD-100b).
+    if flavor == "win32" and any(refused_component(part) for part in b[1]):
         return {"inside": False, "same": False}
     inside = a[0] == b[0] and b[1][: len(a[1])] == a[1]
     return {"inside": inside, "same": inside and a[1] == b[1]}
@@ -1020,6 +1072,77 @@ CONTAINMENT_CASES: list[ContainmentCase] = [
     ("win32-unc-forward-other-share", "another share, forward slashes", W, "//server/share/repo", "//server/other/repo/x", False, False),
     ("win32-unc-forward-sibling-prefix", "repo2 on a forward-slash share", W, "//server/share/repo", "//server/share/repo2", False, False),
     ("win32-device-namespace-dot", "a \\\\.\\ device path is never inside an ordinary root", W, "D:\\repo", "\\\\.\\D:\\repo", False, False),
+    # --- WD-100b: Windows reserved device names (VER04i 9.1) -------------------
+    # A child with a reserved name, or a component ending in a dot or space, is
+    # never inside (the lanes' artifact-path acceptance also refuses these on
+    # every host; the containment cases pin the win32 side).
+    ("win32-reserved-con", "CON is a device, not a file", W, "D:\\repo", "D:\\repo\\CON", False, False),
+    ("win32-reserved-con-lower", "reserved names compare ASCII case-insensitively", W, "D:\\repo", "D:\\repo\\con", False, False),
+    ("win32-reserved-con-extension", "an extension does not make CON a file", W, "D:\\repo", "D:\\repo\\CON.txt", False, False),
+    ("win32-reserved-nul-trailing-dot", "a trailing dot is stripped by Windows: NUL. is NUL", W, "D:\\repo", "D:\\repo\\NUL.", False, False),
+    ("win32-reserved-nul-trailing-space", "a trailing space is stripped by Windows: the name is NUL", W, "D:\\repo", "D:\\repo\\nul ", False, False),
+    ("win32-reserved-com1", "COM1 is a device", W, "D:\\repo", "D:\\repo\\COM1", False, False),
+    ("win32-reserved-com9-extension", "com9.log is COM9", W, "D:\\repo", "D:\\repo\\com9.log", False, False),
+    ("win32-reserved-com1-double-extension", "only the part before the first dot counts: com1.tar.gz", W, "D:\\repo", "D:\\repo\\com1.tar.gz", False, False),
+    ("win32-reserved-lpt1", "LPT1 is a device", W, "D:\\repo", "D:\\repo\\LPT1", False, False),
+    ("win32-reserved-prn-mixed-case", "PRN in mixed case", W, "D:\\repo", "D:\\repo\\PrN", False, False),
+    ("win32-reserved-aux-directory", "a reserved name as a directory component", W, "D:\\repo", "D:\\repo\\AUX\\x", False, False),
+    ("win32-reserved-aux-trailing-slash", "a reserved name as the last component with a trailing slash", W, "D:\\repo", "D:/repo/AUX/", False, False),
+    ("win32-reserved-in-the-middle", "a reserved component deep in the path", W, "D:\\repo", "D:\\repo\\a\\PRN\\b", False, False),
+    ("win32-reserved-unc", "a reserved name beneath a UNC root", W, "\\\\server\\share\\repo", "\\\\server\\share\\repo\\NUL", False, False),
+    ("win32-trailing-dot-name", "a name ending in a dot", W, "D:\\repo", "D:\\repo\\name.", False, False),
+    ("win32-trailing-space-name", "a name ending in a space", W, "D:\\repo", "D:\\repo\\name ", False, False),
+    ("win32-trailing-dot-directory", "a directory ending in a dot", W, "D:\\repo", "D:\\repo\\a.\\b", False, False),
+    ("win32-three-dots-name", "... ends in a dot", W, "D:\\repo", "D:\\repo\\...", False, False),
+    # Review follow-up: real device paths the first draft let through.
+    ("win32-reserved-space-before-extension", "a space before the extension: CON .txt is CON", W, "D:\\repo", "D:\\repo\\CON .txt", False, False),
+    ("win32-reserved-double-space-extension", "NUL  .tar is NUL", W, "D:\\repo", "D:\\repo\\NUL  .tar", False, False),
+    ("win32-colon-device-stream", "CON:stream is the CON device", W, "D:\\repo", "D:\\repo\\CON:stream", False, False),
+    ("win32-colon-device-bare", "CON: is the CON device", W, "D:\\repo", "D:\\repo\\CON:", False, False),
+    ("win32-colon-data-stream", "nul::$DATA is NUL", W, "D:\\repo", "D:\\repo\\nul::$DATA", False, False),
+    ("win32-colon-stream-suffix", "file.txt:NUL is an alternate data stream", W, "D:\\repo", "D:\\repo\\file.txt:NUL", False, False),
+    ("win32-colon-ordinary-stream", "any colon is refused, not only device names", W, "D:\\repo", "D:\\repo\\a.b:c", False, False),
+    ("win32-reserved-superscript-com", "COM\u00b9 is COM1 to Windows", W, "D:\\repo", "D:\\repo\\COM\u00b9", False, False),
+    ("win32-reserved-superscript-lpt-extension", "LPT\u00b2.txt is LPT2", W, "D:\\repo", "D:\\repo\\LPT\u00b2.txt", False, False),
+    ("win32-reserved-superscript-com3", "COM\u00b3 is COM3", W, "D:\\repo", "D:\\repo\\com\u00b3", False, False),
+    ("win32-reserved-conin", "CONIN$ is the console input device", W, "D:\\repo", "D:\\repo\\CONIN$", False, False),
+    ("win32-reserved-conout-lower", "conout$ is the console output device", W, "D:\\repo", "D:\\repo\\conout$", False, False),
+    ("win32-reserved-conout-extension", "CONOUT$.log is CONOUT$", W, "D:\\repo", "D:\\repo\\CONOUT$.log", False, False),
+    ("win32-lookalike-consoles", "CONsole is an ordinary name", W, "D:\\repo", "D:\\repo\\CONsole", True, False),
+    ("win32-lookalike-clock", "CLOCK$ is not a device on current Windows", W, "D:\\repo", "D:\\repo\\CLOCK$", True, False),
+    ("win32-lookalike-fullwidth-con", "fullwidth CON (U+FF23 U+FF2F U+FF2E) is not folded by Windows", W, "D:\\repo", "D:\\repo\\\uff23\uff2f\uff2e", True, False),
+    ("win32-lookalike-conin-extra", "CONIN$x is an ordinary name", W, "D:\\repo", "D:\\repo\\CONIN$x", True, False),
+    ("win32-lookalike-superscript-4", "COM with U+2074 (superscript four) is not a device", W, "D:\\repo", "D:\\repo\\COM\u2074", True, False),
+    ("win32-lookalike-dollar", "a dollar sign alone is ordinary", W, "D:\\repo", "D:\\repo\\a$b", True, False),
+    ("posix-colon-is-ordinary", "a colon is an ordinary character on posix", P, "/repo", "/repo/a.b:c", True, False),
+    ("posix-device-stream-is-ordinary", "CON:stream is an ordinary name on posix", P, "/repo", "/repo/CON:stream", True, False),
+    # Look-alikes that are NOT reserved stay inside.
+    ("win32-lookalike-console", "console.txt only begins with CON", W, "D:\\repo", "D:\\repo\\console.txt", True, False),
+    ("win32-lookalike-com10", "COM10 is not COM1..COM9", W, "D:\\repo", "D:\\repo\\COM10", True, False),
+    ("win32-lookalike-lpt0", "LPT0 is not LPT1..LPT9", W, "D:\\repo", "D:\\repo\\LPT0", True, False),
+    ("win32-lookalike-com0", "COM0 is not COM1..COM9", W, "D:\\repo", "D:\\repo\\COM0", True, False),
+    ("win32-lookalike-conx", "CONx is an ordinary name", W, "D:\\repo", "D:\\repo\\CONx", True, False),
+    ("win32-lookalike-xcon", "xCON is an ordinary name", W, "D:\\repo", "D:\\repo\\xCON", True, False),
+    ("win32-lookalike-con-inside-name", "a reserved name inside a longer one", W, "D:\\repo", "D:\\repo\\a.CON.b", True, False),
+    ("win32-lookalike-dot-prefixed-name", "a leading dot is an ordinary name", W, "D:\\repo", "D:\\repo\\.hidden", True, False),
+    # --- WD-100b: win32 case-insensitive comparison folds ASCII only -----------
+    ("win32-ascii-case-pair", "A..Z fold to a..z on win32", W, "D:\\Repo", "D:\\rEPO\\x", True, False),
+    ("win32-ascii-case-pair-same", "an ASCII case variant of the root is the root", W, "D:\\Repo", "d:\\REPO", True, True),
+    ("win32-ascii-fold-keeps-non-ascii-exact", "caf\u00e9 vs CAF\u00e9: ASCII folds, \u00e9 is compared exactly", W, "D:\\caf\u00e9", "D:\\CAF\u00e9\\x", True, False),
+    ("win32-non-ascii-case-differs", "\u00c9 and \u00e9 differ only by a non-ASCII case: not the same name", W, "D:\\caf\u00e9", "D:\\caf\u00c9\\x", False, False),
+    ("win32-non-ascii-exact-match", "the same non-ASCII name matches itself", W, "D:\\\u017f", "D:\\\u017f\\x", True, False),
+    ("win32-long-s-is-not-s", "U+017F (long s) does not fold to s", W, "D:\\s", "D:\\\u017f\\x", False, False),
+    ("win32-s-is-not-long-s", "s does not match U+017F either", W, "D:\\\u017f", "D:\\s\\x", False, False),
+    ("win32-sigma-final-is-not-sigma", "\u03a3 (capital sigma) does not match \u03c3 (sigma)", W, "D:\\\u03a3", "D:\\\u03c3\\x", False, False),
+    ("win32-sigma-is-not-final-sigma", "\u03c3 (sigma) does not match \u03c2 (final sigma)", W, "D:\\\u03c3", "D:\\\u03c2\\x", False, False),
+    ("win32-capital-sigma-is-not-final-sigma", "\u03a3 does not match \u03c2", W, "D:\\\u03a3", "D:\\\u03c2\\x", False, False),
+    ("win32-dotted-capital-i-is-not-i", "U+0130 (dotted capital I) does not fold to i", W, "D:\\\u0130", "D:\\i\\x", False, False),
+    ("win32-i-is-not-dotted-capital-i", "i does not match U+0130", W, "D:\\i", "D:\\\u0130\\x", False, False),
+    ("win32-kelvin-is-not-k", "U+212A (Kelvin sign) does not fold to k", W, "D:\\\u212a", "D:\\k\\x", False, False),
+    ("win32-k-is-not-kelvin", "k does not match U+212A", W, "D:\\k", "D:\\\u212a\\x", False, False),
+    ("win32-non-ascii-unc-server", "a non-ASCII UNC server name is compared exactly", W, "\\\\\u017ferver\\share\\repo", "\\\\server\\share\\repo\\x", False, False),
+    ("posix-non-ascii-case-differs", "posix compares every character exactly", P, "/\u00e9", "/\u00c9/x", False, False),
+    ("posix-ascii-case-pair-differs", "posix does not fold ASCII either", P, "/Repo", "/rEPO/x", False, False),
 ]
 
 # Label-digest cases: (slug, summary, manifest, same_as, differs_from).
@@ -1192,14 +1315,39 @@ def structural_problems(files: dict[str, str]) -> list[str]:
     return problems
 
 
+def _alt_refused_path(path: str) -> bool:
+    return any(_alt_refused(part) for part in re.split(r"[\\/]+", path) if part not in ("", ".", ".."))
+
+
 def _pathlib_applicable(flavor: str, root: str, child: str) -> bool:
     """pathlib only models the ordinary cases; the special rules have none."""
     both = (root, child)
+    # pathlib folds case with full Unicode and knows nothing of reserved names:
+    # the WD-100b rules are exactly where it must not be asked.
+    if flavor == "win32" and (not all(p.isascii() for p in both) or _alt_refused_path(child)):
+        return False
     if any(p.replace("/", "\\").startswith(("\\\\?\\", "\\\\.\\")) for p in both if flavor == "win32"):
         return False
     if flavor == "win32" and any(p.replace("/", "\\").startswith("\\\\") for p in both):
         return False
     return not (flavor == "posix" and any(p.startswith("//") and not p.startswith("///") for p in both))
+
+
+#: ``str.translate`` table that lower-cases ``A``..``Z`` and nothing else.
+_ASCII_FOLD = {code: code + 32 for code in range(ord("A"), ord("Z") + 1)}
+_RESERVED_RE = re.compile(
+    r"(?:con|prn|aux|nul|com[1-9\u00b9\u00b2\u00b3]|lpt[1-9\u00b9\u00b2\u00b3]|conin\$|conout\$) *(?:\..*)?",
+    re.IGNORECASE | re.ASCII,
+)
+
+
+def _alt_refused(name: str) -> bool:
+    """The second opinion on :func:`refused_component`, written as one regex.
+
+    ``re.ASCII`` matters: without it ``IGNORECASE`` would let U+212A (Kelvin)
+    match ``k`` and U+017F match ``s``, the very folding the rule forbids.
+    """
+    return bool(re.search(r"[:]|[. ]$", name)) or _RESERVED_RE.fullmatch(name) is not None
 
 
 def alt_contains(flavor: str, root: str, child: str) -> dict[str, bool]:
@@ -1218,7 +1366,7 @@ def alt_contains(flavor: str, root: str, child: str) -> dict[str, bool]:
                 return None
             anchor, rest = "/", path
         else:
-            path = path.replace("/", "\\").lower()
+            path = path.replace("/", "\\").translate(_ASCII_FOLD)
             if re.match(r"\\\\[?.]\\", path):
                 return None
             unc = re.match(r"\\\\([^\\]+)\\([^\\]+)(.*)$", path)
@@ -1237,10 +1385,14 @@ def alt_contains(flavor: str, root: str, child: str) -> dict[str, bool]:
                     stack.pop()
             elif part not in ("", "."):
                 stack.append(part)
+        if flavor == "win32" and any(_alt_refused(part) for part in stack):
+            return "refused"
         return anchor + "".join("/" + part for part in stack) + ("/" if not stack else "")
 
     a, b = canon(root), canon(child)
     if a is None or b is None:
+        return {"inside": False, "same": False}
+    if b == "refused":
         return {"inside": False, "same": False}
     a_dir = a if a.endswith("/") else a + "/"
     same = b.rstrip("/") == a.rstrip("/")

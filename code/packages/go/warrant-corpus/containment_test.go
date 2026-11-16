@@ -107,3 +107,46 @@ func TestStatIsRegular(t *testing.T) {
 		t.Fatal("statIsRegular")
 	}
 }
+
+// WD-100b: reserved device names and ASCII-only win32 folding.
+
+func TestRefusedComponent(t *testing.T) {
+	for _, name := range []string{"CON", "con", "CON.txt", "NUL.", "nul ", "COM1", "com9.log", "LPT1", "com1.tar.gz", "x.", "CON .txt", "NUL  .tar", "CON:stream", "CON:", "nul::$DATA", "file.txt:NUL", "COM\u00b9", "LPT\u00b2.txt", "CONIN$", "conout$"} {
+		if !refusedComponent(name) {
+			t.Errorf("%q must be refused", name)
+		}
+	}
+	for _, name := range []string{"console.txt", "COM10", "LPT0", "COM0", "CONx", "xCON", ".hidden", "a.CON.b", "\u017fon", "com\u0661", "CONsole", "CLOCK$", "\uff23\uff2f\uff2e", "CONIN$x", "COM\u2074"} {
+		if refusedComponent(name) {
+			t.Errorf("%q is an ordinary name", name)
+		}
+	}
+}
+
+func TestAsciiLowerFoldsOnlyAToZ(t *testing.T) {
+	if got := asciiLower("Repo-\u00c9"); got != "repo-\u00c9" {
+		t.Errorf("got %q", got)
+	}
+	for _, text := range []string{"", "abc", "\u017f", "\u212a", "\u0130", "\u03a3", "\u03c2"} {
+		if got := asciiLower(text); got != text {
+			t.Errorf("asciiLower(%q) = %q, want it unchanged", text, got)
+		}
+	}
+}
+
+func TestWin32RulesThroughTheHostHelper(t *testing.T) {
+	if rel, ok := relativeInside(`D:\repo`, `d:\REPO\x`, flavorWin32); !ok || rel != "x" {
+		t.Errorf("ASCII case pair: %q %v", rel, ok)
+	}
+	for _, child := range []string{`D:\repo\NUL`, `D:\repo\con.txt`, `D:\repo\AUX\x`, `D:\repo\a.`} {
+		if _, ok := relativeInside(`D:\repo`, child, flavorWin32); ok {
+			t.Errorf("%q must be outside", child)
+		}
+	}
+	if _, ok := relativeInside("D:\\\u212a", `D:\k\x`, flavorWin32); ok {
+		t.Error("the Kelvin sign must not match k")
+	}
+	if _, ok := relativeInside("/\u212a", "/k/x", flavorPosix); ok {
+		t.Error("posix is exact")
+	}
+}
