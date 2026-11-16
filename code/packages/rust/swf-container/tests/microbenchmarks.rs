@@ -101,21 +101,10 @@ fn check_tag_iter_zero_alloc(_ctx: &Ctx) -> Verdict {
     // Tag 12 (DoAction, len 4) -> 2 header bytes + 4 payload
     // Tag 0 (End, len 0) -> 2 header bytes
     let tag_stream = [
-        (9u8 << 6) | 3,
-        0x00,
-        0xFF,
-        0xAA,
-        0x55,
-        1u8 << 6,
-        0x00,
-        (12u8 << 6) | 4,
-        0x00,
-        0x01,
-        0x02,
-        0x03,
-        0x04,
-        0x00,
-        0x00,
+        0x43, 0x02, // Tag 9, len 3 ((9 << 6) | 3)
+        0xFF, 0xAA, 0x55, 0x40, 0x00, // Tag 1, len 0 (1 << 6)
+        0x04, 0x03, // Tag 12, len 4 ((12 << 6) | 4)
+        0x01, 0x02, 0x03, 0x04, 0x00, 0x00, // Tag 0, len 0
     ];
 
     bench_zero_alloc("tag_iter_zero_alloc", || {
