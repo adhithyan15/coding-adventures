@@ -72,6 +72,7 @@ func TestWarrantLaneArtifactsSelectGrammarAndAssuranceConsumers(t *testing.T) {
 		{Name: "typescript/ct-compare", Language: "typescript"},
 		{Name: "go/warrant-corpus", Language: "go"},
 		{Name: "go/ct-compare", Language: "go"},
+		{Name: "python/warrant-oracle", Language: "python"},
 	}
 	for _, input := range []string{
 		"code/specs/ct-compare.warrant",
@@ -99,6 +100,10 @@ func TestWarrantLaneArtifactsSelectGrammarAndAssuranceConsumers(t *testing.T) {
 			// spec, corpus and registry.
 			want["go/warrant-corpus"] = true
 			want["go/ct-compare"] = true
+		}
+		if isWarrantOracleInput(input) {
+			// VER04r S4: the independent oracle parses the spec and gates the corpus.
+			want["python/warrant-oracle"] = true
 		}
 		if err != nil || !reflect.DeepEqual(got, want) {
 			t.Fatalf("%s: got %v, err %v", input, got, err)
@@ -128,6 +133,7 @@ func TestPythonWarrantLaneInputsSelectTheirConsumers(t *testing.T) {
 	packages := []discovery.Package{
 		{Name: "python/warrant-corpus", Language: "python"},
 		{Name: "python/ct-compare", Language: "python"},
+		{Name: "python/warrant-oracle", Language: "python"},
 	}
 	corpusFiles := []string{
 		"code/specs/ct-compare.warrant",
@@ -140,6 +146,9 @@ func TestPythonWarrantLaneInputsSelectTheirConsumers(t *testing.T) {
 		// ones that read the same spec and corpus.
 		got, err := repositoryInputConsumersForChange([]string{input}, packages, "python")
 		want := map[string]bool{"python/warrant-corpus": true, "python/ct-compare": true}
+		if isWarrantOracleInput(input) {
+			want["python/warrant-oracle"] = true
+		}
 		if err != nil || !reflect.DeepEqual(got, want) {
 			t.Fatalf("%s: got %v, err %v", input, got, err)
 		}
@@ -278,6 +287,43 @@ func TestGoWarrantLaneInputsSelectTheirConsumers(t *testing.T) {
 	} {
 		if isWarrantGoLanePilotInput(input) {
 			t.Errorf("lookalike selected the pilot: %s", input)
+		}
+	}
+}
+
+// VER04r S4: the independent oracle re-derives a corpus from the adopter specs,
+// so each spec and the v1 corpus it gates select it, and nothing else does (a
+// lookalike path must not).
+func TestWarrantOracleInputsSelectOnlyTheOracle(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "rust/warrant-grammar", Language: "rust"},
+		{Name: "rust/ca-assurance-report", Language: "rust"},
+		{Name: "python/warrant-corpus", Language: "python"},
+		{Name: "python/ct-compare", Language: "python"},
+		{Name: "typescript/warrant-corpus", Language: "typescript"},
+		{Name: "typescript/ct-compare", Language: "typescript"},
+		{Name: "go/warrant-corpus", Language: "go"},
+		{Name: "go/ct-compare", Language: "go"},
+		{Name: "python/warrant-oracle", Language: "python"},
+	}
+	for _, input := range warrantOraclePaths {
+		got, err := repositoryInputConsumersForChange([]string{input}, packages, "python")
+		if err != nil || !got["python/warrant-oracle"] {
+			t.Fatalf("%s did not select the oracle: %v, err %v", input, got, err)
+		}
+	}
+	// A spec only the oracle reads selects nothing else in this table.
+	got, err := repositoryInputConsumersForChange([]string{"code/specs/gf256.warrant"}, packages, "all")
+	if err != nil || !reflect.DeepEqual(got, map[string]bool{"python/warrant-oracle": true}) {
+		t.Fatalf("gf256 spec: got %v, err %v", got, err)
+	}
+	for _, input := range []string{
+		"code/specs/ct-compare.warrant.bak", "code/specs/fixtures/ct-compare-warrant-v10/corpus.json",
+		"code/specs/gf256.warrant/x", "code/specs/zzz.warrant", "code/specs/x25519.warrant~",
+	} {
+		got, err := repositoryInputConsumersForChange([]string{input}, packages, "all")
+		if err != nil || got["python/warrant-oracle"] {
+			t.Fatalf("%s selected the oracle: %v, err %v", input, got, err)
 		}
 	}
 }
