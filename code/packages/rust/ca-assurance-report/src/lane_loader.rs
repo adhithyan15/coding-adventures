@@ -182,8 +182,10 @@ struct Normal {
 }
 
 /// Split `rest` on `/`, dropping empty and `.` components and letting `..`
-/// pop (a `..` at the root stays at the root).  `fold` lower-cases for the
-/// case-insensitive Windows flavour.
+/// pop (a `..` at the root stays at the root).  `fold` lower-cases **ASCII
+/// only** for the case-insensitive Windows flavour (VER04i 9.1, WD-100b):
+/// `str::to_lowercase` is full Unicode and would equate the Kelvin sign with
+/// `k`, so a non-ASCII case variant must stay a different name (fail closed).
 fn components(rest: &str, fold: bool) -> Vec<String> {
     let mut parts: Vec<String> = Vec::new();
     for part in rest.split('/') {
@@ -193,7 +195,7 @@ fn components(rest: &str, fold: bool) -> Vec<String> {
                 parts.pop();
             }
             other => parts.push(if fold {
-                other.to_lowercase()
+                other.to_ascii_lowercase()
             } else {
                 other.to_owned()
             }),
@@ -241,7 +243,11 @@ fn normalize(flavor: PathFlavor, path: &str) -> Option<Normal> {
                 let share = names.next()?;
                 let tail: Vec<&str> = names.collect();
                 return Some(Normal {
-                    prefix: format!("//{}/{}", server.to_lowercase(), share.to_lowercase()),
+                    prefix: format!(
+                        "//{}/{}",
+                        server.to_ascii_lowercase(),
+                        share.to_ascii_lowercase()
+                    ),
                     parts: components(&tail.join("/"), true),
                 });
             }
@@ -267,6 +273,25 @@ fn normalize(flavor: PathFlavor, path: &str) -> Option<Normal> {
     }
 }
 
+/// Is this a Windows path component that must be refused: a reserved device
+/// name (`CON`, `PRN`, `AUX`, `NUL`, `COM1`-`COM9`, `LPT1`-`LPT9`, with or
+/// without an extension, ASCII case-insensitively) or a name ending in a dot or
+/// a space (Windows strips them, so two spellings would name one file)?
+/// `console.txt`, `COM10`, `LPT0` and `CONx` are ordinary names.
+fn refused_component(name: &str) -> bool {
+    if name.ends_with('.') || name.ends_with(' ') {
+        return true;
+    }
+    let stem = name.split('.').next().unwrap_or("").to_ascii_uppercase();
+    match stem.as_str() {
+        "CON" | "PRN" | "AUX" | "NUL" => true,
+        _ => {
+            let digit = |rest: &str| matches!(rest.as_bytes(), [b'1'..=b'9']);
+            stem.strip_prefix("COM").is_some_and(digit) || stem.strip_prefix("LPT").is_some_and(digit)
+        }
+    }
+}
+
 /// Is `child` inside `root`?  Purely lexical: both inputs must be absolute and
 /// nothing is looked up on disk, so symbolic links are the caller's concern
 /// ([`read_repo_file`] refuses them).  Whole components are compared, never
@@ -280,6 +305,12 @@ pub fn lexical_containment(flavor: PathFlavor, root: &str, child: &str) -> Conta
         return NEVER;
     }
     if child.parts[..root.parts.len()] != root.parts[..] {
+        return NEVER;
+    }
+    // Under win32 a child with a reserved device name or a trailing dot/space
+    // component is never inside anything (WD-100b).  The parts are already
+    // ASCII-lowercased, which the case-insensitive check does not mind.
+    if flavor == PathFlavor::Win32 && child.parts.iter().any(|part| refused_component(part)) {
         return NEVER;
     }
     Containment {
