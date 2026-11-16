@@ -1,5 +1,13 @@
 # PHY00: Trigonometry from First Principles
 
+> **Amended by [PHY00a](PHY00a-trig-convergence.md) (TRIG-CONV).** The arithmetic of
+> `sin`, `cos`, `radians` and `degrees` is now fixed to the bit by the reference
+> algorithm TRIG-REF-1, and sections 2, 3.2 to 3.5, 5 and 6 below are amended to say
+> so. Ports converge one pull request at a time (PHY00a section 8): a port that has
+> not yet converged still follows the older text of its own `README`; **the Python
+> port converged in TC-1 (`trig` 0.3.0)**. When the last port merges (TC-18) the
+> amendments become unconditional.
+
 ## 1. Overview
 
 The `trig` package is the foundational mathematical library for the Physics suite. Rather than delegating to opaque standard-library implementations, it computes trigonometric functions from first principles using Taylor (Maclaurin) series expansions. This teaches the actual algorithm that silicon uses under the hood — and provides a zero-dependency leaf package that every physics computation can build on.
@@ -9,7 +17,7 @@ The `trig` package is the foundational mathematical library for the Physics suit
 When you call `Math.sin(x)` in any language, the runtime ultimately evaluates a polynomial approximation — the exact same Taylor series we implement here. By writing it ourselves we learn:
 
 1. **How polynomials approximate transcendental functions** — the Maclaurin series converges because each successive term is smaller than the last.
-2. **Why range reduction matters** — the series converges fastest near zero, so we fold any input into $[-\pi, \pi]$ first.
+2. **Why range reduction matters** — the series converges fastest near zero, so we fold any input into $[-\pi/4, \pi/4]$ first, keeping count of the quarter-turns removed.
 3. **The precision/performance tradeoff** — more terms = more digits = more multiplications.
 
 ## 3. The Mathematics
@@ -30,11 +38,7 @@ $$\sin(x) = x - \frac{x^3}{3!} + \frac{x^5}{5!} - \frac{x^7}{7!} + \frac{x^9}{9!
 
 **How to read this:** Start with $x$ itself. Then subtract $x^3/6$. Then add $x^5/120$. Each term alternates sign and gets dramatically smaller (because the factorial in the denominator grows much faster than the power in the numerator). After about 10-12 terms, the remaining terms are smaller than floating-point precision can represent.
 
-**Implementation strategy:** Rather than computing $x^n$ and $n!$ separately (which overflow quickly), we compute each term from the previous one:
-
-$$\text{term}_{n+1} = \text{term}_n \times \frac{-x^2}{(2n+2)(2n+3)}$$
-
-This is numerically stable and avoids overflow entirely.
+**Implementation strategy (TRIG-REF-1, PHY00a 3.5):** the coefficients $(-1)^n/(2n+1)!$ are stored once, each rounded once to a double and pinned by bit pattern, and the polynomial in $z = r^2$ is summed by Horner's rule, smallest term first, ten terms. There is no per-term division and no recurrence, so every port rounds identically. (Before TC-1 each port built every term from the previous one, $\text{term}_{n+1} = \text{term}_n \times -x^2 / ((2n+2)(2n+3))$, with twenty or twenty-one terms; the grouping of that multiplication differed between ports and so did the last bits.)
 
 ### 3.3 Cosine — The Maclaurin Series
 
@@ -46,9 +50,9 @@ Same idea as sine but starting at 1 instead of $x$, using even powers instead of
 
 The Taylor series converges for all real $x$, but converges fastest when $|x|$ is small. Since sine and cosine are periodic with period $2\pi$, we can always reduce the input:
 
-$$x_{\text{reduced}} = x - 2\pi \times \text{round}(x / 2\pi)$$
+$$k = \text{round}(x / (\pi/2)), \qquad r = x - k \cdot \pi/2, \qquad |r| \le \pi/4$$
 
-This maps any input to the range $[-\pi, \pi]$ where the series converges within 12-15 terms.
+and the quadrant $k \bmod 4$ selects $\pm\sin r$ or $\pm\cos r$. The rounding is done with an add-and-subtract of $1.5 \cdot 2^{52}$, and $\pi/2$ is held as five short pieces so that $k \cdot \text{piece}$ is exact (the Cody-Waite device, PHY00a 3.4). **Domain:** `sin`, `cos` and `tan` are defined for $|x| \le 2^{29}$ (about $5.4 \times 10^8$ radians); outside it, and for NaN and the infinities, they return NaN (a finite value there would be wrong but look right; PHY00a 3.4.1).
 
 ### 3.5 Degree/Radian Conversion
 
@@ -56,6 +60,8 @@ Radians are the natural unit for trigonometry (the Taylor series requires radian
 
 $$\text{radians} = \text{degrees} \times \frac{\pi}{180}$$
 $$\text{degrees} = \text{radians} \times \frac{180}{\pi}$$
+
+computed as **one multiply by a pre-divided constant** (`0x3F91DF46A2529D39` and `0x404CA5DC1A63C1F8`), not as `d * PI / 180`: one rounding, no intermediate overflow (PHY00a 3.7).
 
 ### 3.6 Tangent
 
@@ -221,7 +227,11 @@ names and `atan2(y, x)` argument order.
 
 At ordinary finite points, implementations must agree with IEEE 754
 double-precision standard-library results to within $1 \times 10^{-10}$ (10
-decimal places) for inputs in the range $[-10^6, 10^6]$. The documented
+decimal places) for inputs in the range $[-10^6, 10^6]$. A converged port is
+far stronger than that: `sin` and `cos` are within **3 ulp of the exact value** on
+$|x| \le 2^{29}$ (worst case measured: 2.38 ulp), `radians` and `degrees` within
+1 ulp, and every result is **bit-identical** to the shared vectors of
+[`fixtures/trig-reference-v1`](fixtures/trig-reference-v1/README.md) (PHY00a 4 and 6). The documented
 tangent pole sentinel and `atan2` branch-cut convention are explicit contract
 cases, not standard-library-agreement points.
 
@@ -248,8 +258,9 @@ The package is implemented across all 15 established implementation lanes:
 **C#, Dart, Elixir, F#, Go, Haskell, Java, Kotlin, Lua, Perl, Python, Ruby,
 Rust, Swift, and TypeScript**. The emerging C and C++ lanes also carry native
 implementations but do not enter the established-lane denominator. Every
-implementation uses the same first-principles algorithm (iterative term
-computation and range reduction) and consumes or is being reconciled against
+implementation uses the same first-principles algorithm (PHY00a's TRIG-REF-1:
+range reduction to $[-\pi/4, \pi/4]$ and a Horner series; converged ports match its
+vectors bit for bit) and consumes or is being reconciled against
 the versioned shared cases. The v1 corpus carries constants, representative
 finite points, tangent poles, quadrant and signed-zero `atan2`, conversions,
 and square-root boundaries. Together with package-native extensions, the full

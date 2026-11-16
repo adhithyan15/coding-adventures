@@ -1,9 +1,10 @@
 # PHY00a: Trig Convergence (TRIG-CONV): One Reference Algorithm for Every Port
 
-**Status:** Specification only, adversarially reviewed once (section 10). No port is changed by this document. It is the
+**Status:** Specification, adversarially reviewed once (section 10); TC-1 implemented. This document itself changes no port. It is the
 normative text for backlog item TRIG-CONV (owner decision 16, 2026-11-16, VER30
 track C16; VER04p FL-15). The implementation work is the slice list in section 8:
-one fixture slice, then one pull request per port.
+one fixture slice, then one pull request per port. **TC-1 landed 2026-11-16** (the fixture and the Python
+port; see the TC-1 status in section 8).
 
 **Parent:** [PHY00](PHY00-trig.md) (what `trig` is for and what it exports),
 [VER04p](VER04p-warrant-floats.md) (the floats feature whose pilot waits for this
@@ -247,7 +248,7 @@ constant in this section is the correctly rounded value it is said to be.)
 | `INV_PIO2` | `0x3FE45F306DC9C883` | `0x1.45f306dc9c883p-1` | `0.6366197723675814` |
 | `PIO2_1` | `0x3FF921FB40000000` | `0x1.921fb4p+0` | `1.570796251296997` |
 | `PIO2_2` | `0x3E74442D00000000` | `0x1.4442dp-24` | `7.549789415861596e-08` |
-| `PIO2_3` | `0x3CF8469880000000` | `0x1.84698p-48` | `5.390302529957765e-15` |
+| `PIO2_3` | `0x3CF8469880000000` | `0x1.846988p-48` | `5.390302529957765e-15` |
 | `PIO2_4` | `0x3B78CC5160000000` | `0x1.8cc516p-72` | `3.282003415807913e-22` |
 | `PIO2_5` | `0x39F01B839A25204A` | `0x1.01b839a25204ap-96` | `1.2706558760139879e-29` |
 | `MAGIC` | `0x4338000000000000` | `0x1.8p+52` | `6755399441055744.0` |
@@ -876,8 +877,9 @@ in `cosK`, the 7 Horner steps `q*z + C[n]`, the `1.0 - 0.5*z`, and the final
 `u + (z*z)*q`; in the reduction, the 5 steps `r - k*PIO2_i` and the `t + MAGIC`
 where `t = x*INV_PIO2`. The pseudo-code writes each product on its own line. A
 conforming port makes sure the language keeps them separate; the table says how.
-(The generator's fusion-sensitivity gate, 6.4, checks that each of the 24 matters
-to at least one vector.)
+(The generator's fusion-sensitivity gate, 6.4, measures which of the 24 a vector can
+see: four can, five are provably inert because their product is exact, and fifteen
+change no result in practice.)
 
 | Family | Rules for the port |
 |---|---|
@@ -962,7 +964,7 @@ op <TAB> x <TAB> y <TAB> cr <TAB> flags
 | `x` | exactly 16 **lowercase** hex digits: the input's IEEE bits. `atan2` has two inputs, `x` then `y`, as `x` field `"<y>,<x>"`: 33 characters |
 | `y` | the **reference result bits** (the TRIG-REF-1 result), 16 lowercase hex digits, compared under VER04p's `same`: bit for bit, except that a NaN result is written `7ff8000000000000` and matches **any** NaN; the word `error` for a `sqrt` of a negative |
 | `cr` | the correctly rounded value of the *mathematical* function at the input, as 16 hex digits, or `-` when none is claimed (a NaN or infinite result, which includes every `\|x\| > LIMIT` row of `sin`, `cos`, `tan`; every `tan` row; Part II ops) |
-| `flags` | comma-separated, may be empty: `nan-class`, `nonfinite=unrepresentable` (an input that cannot exist as a BEAM float), `nonfinite=rejects` (a non-finite reference result, which raises in BEAM), `out-of-domain` (a finite `\|x\| > LIMIT` given to `sin`, `cos` or `tan`: the reference is NaN, and the row also carries `nan-class` and `nonfinite=rejects`), `pole-sentinel` (a `tan` row whose result is `+-1e308`), `beam-raises` (the reference result is finite but an intermediate overflows, so BEAM raises: `atan2` with `\|y/x\|` overflowing), `signed-zero`. The set of flags is closed; the validator rejects any other |
+| `flags` | comma-separated, may be empty: `nan-class`, `nonfinite=unrepresentable` (an input that cannot exist as a BEAM float), `nonfinite=rejects` (a non-finite reference result, which raises in BEAM), `out-of-domain` (a finite `\|x\| > LIMIT` given to `sin`, `cos` or `tan`: the reference is NaN, and the row also carries `nan-class` and `nonfinite=rejects`), `pole-sentinel` (a `tan` row whose result is `+-1e308`), `beam-raises` (the reference result is finite but an intermediate overflows, so BEAM raises: `atan2` with `\|y/x\|` overflowing), `signed-zero`. The set of flags is closed; the validator rejects any other. A row whose input is unrepresentable never also carries `nonfinite=rejects` (the row is skipped, so there is nothing to require); `signed-zero` marks a row whose *result* is `+0` or `-0`; `nan-class` marks a NaN *result*. Flags are written in the order listed here |
 
 Decimal numbers, exponent letters, `0x` prefixes, uppercase hex and whitespace
 inside a field are a **corpus error** (VER04p 10: one value has one spelling, so
@@ -974,7 +976,7 @@ hashes are stable). The validator rejects them mechanically.
 `radians`, `degrees`: the whole of VER04p 11.1's `f64_edge` list (about 214 values:
 the zeros, subnormals and their neighbours, normals, the largest finite, the
 infinities and every NaN shape, the integer boundaries 2^53 and 2^63 and 2^64, and
-the halfway cases) **plus** the trig-specific points:
+the halfway cases: a midpoint of two adjacent doubles needs 54 bits and is not an input, so the doubles one ulp either side of 1 and of `2^k` stand in for it) **plus** the trig-specific points:
 
 | Point set | Values |
 |---|---|
@@ -986,7 +988,7 @@ the halfway cases) **plus** the trig-specific points:
 | poles for `tan` | `fl(pi/2)` and neighbours, `fl(3pi/2)`, `fl(-pi/2)` |
 | conversions | 180, 90, 45, 360, `PI`, `PI/2`, `PI/4`, `2*PI` and negatives; `max finite` (overflow to `inf` in `degrees`); `min subnormal` (underflow in `radians`) |
 
-plus a Part II set for `sqrt` (0, -0, 1, 2, 4, 0.25, 1e-300, `max finite`, `+inf`,
+plus the **reduction tie cases** (inputs next to an odd multiple of `pi/4`, found by a deterministic search, where fusing `x*INV_PIO2 + MAGIC` changes a result: the only way a sampled vector can see that site, 6.4 gate c), plus a Part II set for `sqrt` (0, -0, 1, 2, 4, 0.25, 1e-300, `max finite`, `+inf`,
 NaN, and negatives and `-inf` as `error`), `atan` (the boundaries 7.45e-9 and its
 neighbours, +-1, +-2, +-1e300, +-inf, NaN) and `atan2` (the nine quadrant and axis
 cases with both signs of zero; every row of the conventions table of 3.9; NaN in
@@ -1002,11 +1004,10 @@ a generator-recorded SHA-256 in the manifest):
 | `sweep-cw` | for `k = 1..256`, and for 64 values `k_i` spread to 3.4e8 by a fixed rule: `fl(k*pi/2)` and its +-1, +-2 ulp neighbours, both signs; plus the continued-fraction hard cases of 4.2; plus the **binade-drop class** of 4.2 and 4.3: 512 inputs `fl(k*pi/2 + r)` with `\|k\|` in [2^26, 3.4e8] and `r` just above 0.5, 0.25 and 0.125, from the PRNG | about 3,800 |
 | `sweep-prng` | 1,024 raw 64-bit patterns (for `sin`/`cos`/`tan` about 97% of these are NaN, out of domain or below `TINY`: they test the guards, and they are the main test of `radians`/`degrees`), 1,024 log-uniform in magnitude from 2^-27 to 2^29 with random sign, and 2,048 uniform doubles in [-2^29, 2^29], from the specified generator (below) | 4,096 |
 
-The PRNG is **xoshiro256\*\*** seeded with SplitMix64 of the 64-bit integer given by
+The PRNG (derivations of each class are pinned in the fixture README) is **xoshiro256\*\*** seeded with SplitMix64 of the 64-bit integer given by
 the ASCII bytes `TRIG-REF` (big-endian), a fully specified, language-neutral
-integer generator; the generator does not use any language's `random`. About 11,500
-inputs per operation (`sin`, `cos`, `tan`, `radians`, `degrees`) and about 58,000
-lines in all (about 3.5 MB); the sweep is sized so that a port's whole conformance
+integer generator; the generator does not use any language's `random`. As generated (TC-1): 3,904 + 3,860 + 4,096 sweep inputs per operation, 2,554 edge rows
+(488 edge inputs for each of the five operations, 178 of them the `f64_edge` list of VER04p 11.1, plus 114 Part II rows) and **61,854 lines in all (3.4 MB)**; the sweep is sized so that a port's whole conformance
 test runs in a few seconds even in the slowest interpreters.
 
 **Why bounded sets, not "exhaustive"**: 2^64 doubles cannot be enumerated, and
@@ -1015,10 +1016,13 @@ described that way everywhere.
 
 ### 6.4 How the vectors are generated, independently
 
-The generator is `code/scripts/generate_trig_reference_fixture.py` (to be written in
-slice TC-1, section 8); its validator is
-`code/scripts/tests/test_trig_reference_fixture.py`. It is **independent of every
-port and of every host libm**:
+The generator is `code/scripts/generate_trig_reference_fixture.py` (written in
+slice TC-1, section 8) over `trig_ref_softfloat.py` (the soft-float model) and
+`trig_ref_exact.py` (the exact reference); the two host cross-checks are
+`code/scripts/trig_reference_xcheck/xcheck.c` and `xcheck.rs`; its validator is
+`code/scripts/tests/test_trig_reference_fixture.py`. `--check` regenerates in memory and
+fails on any byte of difference. It is **independent of every port and of every host
+libm**:
 
 1. **Inputs** come from the lists above and the PRNG, as integers. No `float()`, no
    `math.sin`, no `random` is called on a corpus value (VER04p 10, "the generator
@@ -1031,7 +1035,11 @@ port and of every host libm**:
    the generator carries its own. **Cross-check:** every `y` is also computed by two
    unrelated host implementations built with fusion off (C `-ffp-contract=off`
    and Rust), and the generator **fails** on any disagreement, so a transcription
-   error in any one of the three cannot reach the fixture.
+   error in any one of the three cannot reach the fixture. (It did its job at TC-1:
+   the first C transcription disagreed on `sin(0x419fffffffffffff)` because the hex
+   float of `PIO2_3` in 3.2 had lost a digit, `0x1.84698p-48` for the correct
+   `0x1.846988p-48`. The bit pattern was right and is authoritative; the text is
+   fixed, and the C cross-check now builds every constant from its bits.)
 3. **`cr` (correctly rounded)** is computed by **exact rational arithmetic**:
    `pi` to 400 bits (Machin's formula over big integers), the argument reduced
    modulo `2*pi` exactly (`Fraction`), a Taylor series summed in fixed point at
@@ -1040,8 +1048,8 @@ port and of every host libm**:
    straddles a midpoint (the table-maker's dilemma) precision is doubled and the
    row recomputed. **Cross-check:** GNU `bc -l` (`s()`, `c()` at `scale=100`) is
    run on every edge row and on a pinned 1-in-8 of each sweep, and the generator
-   fails if a rounded value differs; `mpmath` or MPFR is accepted instead when
-   present. For `sin(x)` this covers `|x| <= 2^29`, the whole domain; above it the
+   fails if a rounded value differs (3,351 rows as generated); `mpmath` or MPFR is
+   accepted instead when present. For `sin(x)` this covers `|x| <= 2^29`, the whole domain; above it the
    reference result is NaN and `cr` is `-`.
 4. **Gates, at generation time:** (a) on every row with a `cr`, the error of `y`
    against the **exact** value (the rational the generator already holds) is at
@@ -1049,14 +1057,35 @@ port and of every host libm**:
    5.4's `ulp_dist(y, cr)` is at most 3 and 1 steps respectively (the two
    definitions differ at binade edges; both are gated); (b) **mutation sensitivity**: flipping the last bit of each constant
    in 3.2 (one at a time) must change at least one `y` in the fixture, else the
-   fixture could not detect a typo in that constant and the generator fails; (c)
-   **fusion sensitivity**: the model re-run with each fusable site fused
-   (computed exactly then rounded once) must change at least one `y`, for each of
-   the 24 sites; (d) **guard sensitivity**: the model re-run with the domain guard written as
+   fixture could not detect a typo in that constant and the generator fails,
+   **except for the constants whose last bit cannot reach a result** (see the
+   masked list below); (c) **fusion sensitivity**: the model re-run with each
+   fusable site fused (computed exactly then rounded once) must change at least one
+   `y`, **except for the sites in the masked list**; the sites whose product is
+   exact (below) must change *none*; (d) **guard sensitivity**: the model re-run with the domain guard written as
    `|x| > LIMIT` (the wrong form of 3.6), with `LIMIT` one ulp larger, and with the
    guard removed must each change at least one `y` or fail on a NaN input; (e) no
    row with a finite `|x| > LIMIT` has a finite `y` for `sin`, `cos` or `tan`;
    (f) the manifest's SHA-256s match.
+   **The masked list (measured at TC-1, a correction to the first draft, which
+   required all 24 sites and all 28 constants to be visible).** Sampled vectors cannot
+   see everything, and the generator now says so instead of failing. *Constants whose
+   last-bit flip changes no `y`* (16 of 28): `PIO2_5`, `TINY`, `S3` to `S9`, `C3` to
+   `C9`. A last-bit change of `S3` moves a result by at most about `1e-4` ulp
+   and that of the higher coefficients by far less, and `TINY` is a
+   *threshold*, not a value (just below it the general path returns the same `x`
+   the early return does); for each of these the port's own bit assertion (6.5 e) is
+   the protection. *Fusable sites that change no `y`* (20 of 24): `red.1` to `red.4`
+   and `cos.half` are **provably inert** (the product is exact: a 24-bit chunk times
+   a 29-bit integer, or `0.5 * z`), so fusing them cannot change anything and the
+   generator asserts that; `red.5` and every Horner step except `sin.h1` change an
+   intermediate by about `1e-31` of its size and never a result. Only `red.t`,
+   `sin.h1`, `sin.fin` and `cos.fin` are visible, and `red.t` only because the
+   fixture carries 128 *reduction tie cases* (6.3), found by a search, where the
+   unrounded `x*INV_PIO2` and its rounding lie on different sides of a half-integer.
+   The consequence for 5: a port that fuses *any* of the 24 sites is detected only if
+   it fuses one of those four; the build flags and probes of 5 remain the arbiter
+   for the other twenty, which cannot change a result in practice.
 5. **Determinism:** the generator's output is byte-identical on every run and
    platform; a CI job regenerates it and fails on a diff.
 
@@ -1162,6 +1191,23 @@ repeats it.
 | TC-17 | **elixir** | BEAM non-finite handling; `Float.round` disappears; `nonfinite`, `out-of-domain` and `beam-raises` flags exercised (explicit `raise ArithmeticError` beyond `LIMIT`) | TC-1 |
 | TC-18 | close-out: amend PHY00 sections 3.2 to 3.4, 5 and 6 (they say 20 terms and `round(x/2pi)`), the backlog row to done, VER04p 15.1 to cite this document | none | all 17 merged |
 
+**TC-1 status (2026-11-16).** Landed in the TC-1 pull request: the fixture
+(`fixtures/trig-reference-v1`, 61,854 vectors; generator, validator, both host
+cross-checks and the `bc` check of `cr` green); the build-tool registration of the fixture
+for `python/trig`; and the **Python port** (`trig` 0.3.0), bit-exact on every vector,
+together with `oscillator` 0.1.2 (the phase reduction 7 requires in the same PR as the
+lane's port). Measured worst case: **2.3829 ulp** (`sin`, `0x41BB531AD2E28013`), 2.3738
+(`cos`, `0x41B08A633012E355`), 0.6486 (`radians`), 0.8042 (`degrees`), exactly the
+review's targeted-search figures, now reproduced by independent code; no row of the
+fixture exceeds the 3-ulp gate. **Deferred, not dropped:** (a) the generated Dart
+source (the base64 mirror of `phy00-phy01-v1/dart`) moves to TC-16, because it has no
+consumer until Dart adopts the vectors and would add 4.7 MB of source with none;
+(b) the Part II **survey table** (every other port's *current* `sqrt`, `atan`, `atan2`
+and `tan` run against the vectors) needs the sixteen other toolchains and is the
+follow-up slice TC-1b; what TC-1 did measure is that the reference's Part II (3.9) as
+specified is reproduced bit for bit by two independent transcriptions (C and Rust)
+and by the Python port.
+
 Each port PR has the same shape (`feat(trig-<lang>): converge on TRIG-REF-1`):
 
 1. read `lessons.d` for the language (CLAUDE.md rule 7); branch from `origin/main`;
@@ -1231,6 +1277,7 @@ changes the sections named.
 |---|---|
 | 2026-11-16 | First draft. Survey of seventeen ports at `origin/main` 046c2d8b84b (nine run, eight read). Reference algorithm TRIG-REF-1 (nearest-integer Cody-Waite with five 24-bit chunks to 2^29, folded beyond, ten-term Horner kernels on stored coefficients, quadrant selection, pre-divided degree constants, early returns for `\|x\| < 2^-27` and NaN and infinity). Prototyped in Python and nine other languages; bit-identical on 30,025 inputs. Accuracy measured at 2.21 ulp (`sin`), 2.16 (`cos`), 0.81 (`degrees`). Conformance corpus format and generator; migration plan TC-0 to TC-18; open questions OQ-1 to OQ-14 |
 | 2026-11-16 | Adversarial review 1. **Domain:** the fold beyond 2^29 is removed; `sin`, `cos`, `tan` return NaN there (BEAM: raise), by one negated comparison that also covers NaN and infinity (3.3, 3.4.1, 3.6, Appendix A); the stated reason for the fold was checked against all fifteen `wave` ports and is false; `oscillator` is named as the dependent that must reduce its phase (7). **Arithmetic:** the claim that the Cody-Waite subtraction "loses nothing until the last term" is false (subtractions 3 to 5 round; measured) and is corrected, with the error budget rebuilt on it (3.4, 4.2); chunks have at most 24 bits, not 24 each; all constants re-derived and confirmed. **Accuracy:** "2.21 ulp worst case" was the peak of a random sample; a targeted search found 2.38 (`sin`) and 2.37 (`cos`); the statement is split into gated (3 ulp), argued (about 2.7) and observed, and the worst inputs and their class enter the vectors (4, 6.3). **Lanes:** Haskell, Swift, Dart (VM) and C# prototyped and bit-identical; Perl's integer path corrected (it applies to integer-valued operands however written, measured); GCC ignores `#pragma STDC FP_CONTRACT` and clang's `-ffp-contract=fast` overrides it (measured), so header-only C++ gets in-source guards and two canaries; `GOAMD64=v3` added to the Go assembly check; bit comparison never through printed floats (Perl, Lua, BEAM); non-float arguments scoped (5). **Part II:** "unchanged" was a reading, now a TC-1 measurement; `atan2` of a NaN returned `0.0` and now returns NaN; the non-IEEE conventions and the `tan` sentinel are listed and labelled (3.8, 3.9). **Vectors:** flags `out-of-domain`, `pole-sentinel`, `beam-raises`; guard-sensitivity gates; `same` named as the comparison (6). **Open questions:** ten resolved, four left for the owner (9) |
+| 2026-11-16 | TC-1 implementation. 3.2: the hex float of `PIO2_3` read `0x1.84698p-48` and is `0x1.846988p-48` (the bit pattern was right; found by the C cross-check). 6.2: flag semantics pinned (`nonfinite=unrepresentable` and `=rejects` never together; `signed-zero` and `nan-class` describe the result). 6.3: counts as generated; halfway cases are stood in for by ulp neighbours (a midpoint is not a double); 128 reduction tie cases added. 6.4: gates (b) and (c) amended with the measured masked list (16 constants and 20 sites that no sampled vector can see; 5 sites provably inert), generator file names. 8: TC-1 status, Dart source deferred to TC-16, the Part II survey of other ports deferred to TC-1b |
 
 ## Appendix A. Reference implementation (Python, normative as a transcription)
 
