@@ -15,7 +15,12 @@ export function pseudoNoise(sampleIndex: number, seed: number | bigint): number 
   const seedNum = typeof seed === "bigint" ? Number(seed & 0xffff_ffffn) : Number(seed);
   const phase =
     (sampleIndex + 1.0) * (seedNum * 0.1618033988749895 + 0.61803398875);
-  const val = sin(2.0 * Math.PI * phase) * 43758.5453123;
+  // trig.sin is NaN beyond 2^29 radians (PHY00a 3.4.1) and this phase grows
+  // without bound (seed 1e9 is past it at sample 0).  The sine has period 1 in
+  // cycles, so keep only the fractional cycle first (PHY00a 7); the subtraction
+  // is exact in binary64.  Python, Rust and TypeScript do exactly this.
+  const cycles = phase - Math.floor(phase);
+  const val = sin(2.0 * Math.PI * cycles) * 43758.5453123;
   const frac = val - Math.floor(val);
   return 2.0 * frac - 1.0;
 }

@@ -74,7 +74,12 @@ impl PercussionNoiseProfile {
 #[inline]
 pub fn pseudo_noise(sample_index: usize, seed: u64) -> f64 {
     let phase = (sample_index as f64 + 1.0) * (seed as f64 * 0.161_803_398_874_989_5 + 0.618_033_988_75);
-    let val = trig::sin(2.0 * trig::PI * phase) * 43_758.545_312_3;
+    // trig::sin is NaN beyond 2^29 radians (PHY00a 3.4.1) and this phase grows
+    // without bound (seed 1e9 is past it at sample 0).  The sine has period 1 in
+    // cycles, so keep only the fractional cycle first (PHY00a 7); the subtraction
+    // is exact in binary64.  Python, Rust and TypeScript do exactly this.
+    let cycles = phase - phase.floor();
+    let val = trig::sin(2.0 * trig::PI * cycles) * 43_758.545_312_3;
     let frac = val - val.floor();
     2.0 * frac - 1.0
 }

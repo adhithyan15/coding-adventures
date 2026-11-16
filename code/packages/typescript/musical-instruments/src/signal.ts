@@ -152,7 +152,10 @@ export class InstrumentSignal implements ContinuousSignal {
       if (partialHz >= nyquistHz) {
         continue;
       }
-      raw += partial.amplitude * sin(TWO_PI * (partialHz * time + partial.phaseCycles));
+      // Reduce to [0, 1) cycles first: trig.sin is NaN beyond 2^29 radians
+      // (PHY00a 3.4.1, 7).  The subtraction is exact.
+      const phase = partialHz * time + partial.phaseCycles;
+      raw += partial.amplitude * sin(TWO_PI * (phase - Math.floor(phase)));
     }
 
     const envelope = this.effectiveEnvelope.valueAt(time, this.noteDurationSeconds);

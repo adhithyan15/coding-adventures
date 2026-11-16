@@ -174,7 +174,10 @@ impl InstrumentSignal {
             if partial_hz >= nyquist_hz {
                 continue;
             }
-            raw += partial.amplitude * trig::sin(TWO_PI * (partial_hz * time + partial.phase_cycles));
+            // Reduce to [0, 1) cycles first: trig::sin is NaN beyond 2^29 radians
+            // (PHY00a 3.4.1, 7).  The subtraction is exact.
+            let phase = partial_hz * time + partial.phase_cycles;
+            raw += partial.amplitude * trig::sin(TWO_PI * (phase - phase.floor()));
         }
 
         let envelope = self

@@ -126,7 +126,12 @@ def _pseudo_noise(sample_index: int, seed: int) -> float:
     statistically uniform noise without allocating state or using external PRNGs.
     """
     phase = (sample_index + 1) * (seed * 0.161_803_398_874_989_5 + 0.618_033_988_75)
-    return 2.0 * _fractional_part(sin(TWO_PI * phase) * 43_758.545_312_3) - 1.0
+    # trig.sin is NaN beyond 2**29 radians (PHY00a 3.4.1) and this phase grows
+    # without bound (seed 1e9 is past it at sample 0).  The sine has period 1 in
+    # cycles, so keep only the fractional cycle first (PHY00a 7); the subtraction
+    # is exact in binary64.  Python, Rust and TypeScript do exactly this.
+    cycles = _fractional_part(phase)
+    return 2.0 * _fractional_part(sin(TWO_PI * cycles) * 43_758.545_312_3) - 1.0
 
 
 # =============================================================================
@@ -404,7 +409,10 @@ class PercussionSignal:
             raw += (
                 mode.amplitude
                 * exp(-time / mode.decay_seconds)
-                * sin(TWO_PI * (mode.frequency_hz * time + mode.phase_cycles))
+                * sin(
+                    TWO_PI
+                    * _fractional_part(mode.frequency_hz * time + mode.phase_cycles)
+                )
             )
 
         if self.voice.noise_profile is not None:

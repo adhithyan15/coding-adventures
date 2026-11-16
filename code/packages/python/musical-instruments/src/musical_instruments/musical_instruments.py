@@ -18,7 +18,7 @@ in compliance with VER15.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from math import isfinite
+from math import floor, isfinite
 from numbers import Integral, Real
 
 from note_frequency import Note, parse_note
@@ -559,9 +559,11 @@ class InstrumentSignal:
             partial_hz = eff_fund * partial.frequency_multiplier
             if partial_hz >= nyquist_hz:
                 continue
-            raw += partial.amplitude * sin(
-                TWO_PI * (partial_hz * time + partial.phase_cycles)
-            )
+            # Reduce the phase to [0, 1) cycles before sin: trig.sin is NaN beyond
+            # 2**29 radians (PHY00a 3.4.1, 7).  The subtraction is exact.
+            phase_cycles = partial_hz * time + partial.phase_cycles
+            cycles = phase_cycles - floor(phase_cycles)
+            raw += partial.amplitude * sin(TWO_PI * cycles)
 
         envelope = self.effective_envelope.value_at(
             time,
