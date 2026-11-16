@@ -16,8 +16,11 @@ from-scratch educational philosophy of the coding-adventures stack.
 logic_gates → arithmetic → trig → wave
 ```
 
-The `trig` package provides `sin_approx` and `cos_approx` computed via
-Maclaurin series. The `wave` package uses these to generate sampled waveforms.
+The `trig` package provides `sin` and `cos` computed from first principles (TRIG-REF-1;
+accurate for `|angle| <= 2^29` radians and NaN beyond). The `wave` package uses these to
+generate sampled waveforms. Since 0.2.0, `sine_wave` and `cosine_wave` reduce the phase to
+its fractional cycle (`cycles - floor(cycles)`) before calling `trig`, so a very long
+signal never reaches the domain limit.
 
 The additive `wave.Wave` object implements the continuous PHY01 contract while
 preserving every existing sampled-wave function. `wave.Wave.new(amplitude,

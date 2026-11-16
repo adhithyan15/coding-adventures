@@ -56,7 +56,7 @@ use POSIX qw(floor fmod isfinite);
 use Scalar::Util qw(looks_like_number);
 use CodingAdventures::Trig qw(sin_approx cos_approx);
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 use Exporter 'import';
 our @EXPORT_OK = qw(
@@ -74,6 +74,34 @@ our @EXPORT_OK = qw(
 # All periodic waveforms repeat every 2*pi radians. We re-export this constant
 # from the Trig module so callers don't need to import it themselves.
 our $TWO_PI = $CodingAdventures::Trig::TWO_PI;
+
+# ============================================================================
+# _angle — the angle for sample time $t, with the phase kept in CYCLES
+# ============================================================================
+#
+# sin_approx and cos_approx are defined for |x| <= 2^29 radians (about
+# 8.5e7 cycles) and return NaN beyond it (PHY00a 3.4.1, TRIG-REF-1).  The
+# textbook angle  2*pi*f*t + phase  grows without bound: a 440 Hz tone passes
+# 2^29 radians after about 53 hours of samples, and from then on every sample
+# would be NaN.
+#
+# The cure is to count in CYCLES and keep only the fractional cycle:
+#
+#     cycles = f*t + phase/(2*pi)
+#     angle  = 2*pi * (cycles - floor(cycles))          in [0, 2*pi)
+#
+# `x - floor(x)` is exact in binary64 (it only removes the integer part), so
+# the reduction costs nothing and is more accurate than multiplying a huge
+# phase by 2*pi.  A non-finite cycle count stays NaN (Inf - Inf).
+#
+# @param $frequency  Hz.   @param $t  seconds.   @param $phase  radians.
+# @return            angle in radians, in [0, 2*pi), or NaN.
+
+sub _angle {
+    my ( $frequency, $t, $phase ) = @_;
+    my $cycles = $frequency * $t + $phase / $TWO_PI;
+    return $TWO_PI * ( $cycles - floor($cycles) );
+}
 
 # ============================================================================
 # sine_wave — Pure sinusoidal oscillation
@@ -94,6 +122,10 @@ our $TWO_PI = $CodingAdventures::Trig::TWO_PI;
 #   - 2*pi converts cycles to radians (one full cycle = 2*pi radians).
 #   - phase shifts the wave left/right in time (measured in radians).
 #   - amplitude scales the peak value.
+#
+# The code keeps the phase in cycles and reduces it to its fractional cycle
+# before calling sin_approx (see _angle), so a long run never leaves the
+# domain of sin_approx.
 #
 # EXAMPLE: 1 Hz at 8 samples/sec (8 samples = one full cycle)
 #
@@ -118,7 +150,7 @@ sub sine_wave {
     my @samples;
     for my $i ( 0 .. $num_samples - 1 ) {
         my $t     = $i / $sample_rate;
-        my $angle = $TWO_PI * $frequency * $t + $phase;
+        my $angle = _angle( $frequency, $t, $phase );
         push @samples, $amplitude * sin_approx($angle);
     }
     return @samples;
@@ -150,7 +182,7 @@ sub cosine_wave {
     my @samples;
     for my $i ( 0 .. $num_samples - 1 ) {
         my $t     = $i / $sample_rate;
-        my $angle = $TWO_PI * $frequency * $t + $phase;
+        my $angle = _angle( $frequency, $t, $phase );
         push @samples, $amplitude * cos_approx($angle);
     }
     return @samples;
@@ -562,7 +594,7 @@ Returns the element-wise sum of all waves. All must be the same length.
 
 =head1 VERSION
 
-0.01
+0.02
 
 =head1 AUTHOR
 
