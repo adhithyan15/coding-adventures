@@ -1,7 +1,7 @@
 ## Unreleased
 
 - Runs the shared `warrant-corpus-conformance-v1` fixture (VER04i 9.1, WD-100):
-  359 cases across `json`, `tagged`, `containment` and `label-digest`, in
+  397 cases across `json`, `tagged`, `containment` and `label-digest`, in
   `tests/conformance-fixture.test.ts`.
 - **Fix:** `renderJson` sorted keys by UTF-16 code unit (wrong for U+E000..U+FFFF
   against astral keys), emitted integer-like keys in numeric order (JavaScript

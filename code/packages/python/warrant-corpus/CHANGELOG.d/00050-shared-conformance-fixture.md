@@ -1,7 +1,7 @@
 ## Unreleased
 
 - Runs the shared `warrant-corpus-conformance-v1` fixture (VER04i 9.1, WD-100):
-  359 cases across `json`, `tagged`, `containment` and `label-digest`, in
+  397 cases across `json`, `tagged`, `containment` and `label-digest`, in
   `tests/test_conformance_fixture.py`.
 - **Fix:** `parse_json` accepted a lone-surrogate escape (`"\\ud800"`); it now
   rejects it in keys and values, so every lane reads the same set of documents.
