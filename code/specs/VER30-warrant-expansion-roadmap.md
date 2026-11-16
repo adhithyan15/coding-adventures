@@ -867,3 +867,4 @@ Owner decisions, 2026-11-16, on VER04o's open questions.
     `flood-resistance: not evidenced`.
 24. **VER04o OWN-5: generic claims across VER29 layers fail closed**
     (`generic-not-published`, VER04o CT10).
+25. PHY00a (trig convergence) owner answers: NaN beyond 2^29, 3-ulp gate, pinned tan/atan2 conventions, minor version bump per port (2026-11-16).
