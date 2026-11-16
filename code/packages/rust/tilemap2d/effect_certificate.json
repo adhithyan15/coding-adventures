@@ -1,0 +1,192 @@
+{
+  "schema_version": "ver24-effect-cert-v1",
+  "package": "rust/tilemap2d",
+  "source_digest": "7bf5abfb54b7b963fc48ee97c2ca1ba8886a6ba99b920737171993f83b308d53",
+  "manifest_digest": "0cd7d21a82bca3acf930c1014ac5a685d175d412412b10c8e25c21448c869f89",
+  "declared_effects": [],
+  "entry_points": [
+    {
+      "name": "tile",
+      "signature": "pub const fn tile(tile_id: u16) -> Self",
+      "effects": []
+    },
+    {
+      "name": "with_flip",
+      "signature": "pub const fn with_flip(mut self, h_flip: bool, v_flip: bool) -> Self",
+      "effects": []
+    },
+    {
+      "name": "with_bank",
+      "signature": "pub const fn with_bank(mut self, bank: u8) -> Self",
+      "effects": []
+    },
+    {
+      "name": "with_attr",
+      "signature": "pub const fn with_attr(mut self, attr: u8) -> Self",
+      "effects": []
+    },
+    {
+      "name": "flips_h",
+      "signature": "pub const fn flips_h(self) -> bool",
+      "effects": []
+    },
+    {
+      "name": "flips_v",
+      "signature": "pub const fn flips_v(self) -> bool",
+      "effects": []
+    },
+    {
+      "name": "is_blank",
+      "signature": "pub const fn is_blank(self) -> bool",
+      "effects": []
+    },
+    {
+      "name": "attach",
+      "signature": "pub fn attach( cells: &'a [TileCell], cols: u32, rows: u32, tile_w: u32, tile_h: u32, ) -> Result<Self, TilemapError>",
+      "effects": []
+    },
+    {
+      "name": "layer_cols",
+      "signature": "pub const fn layer_cols(&self) -> u32",
+      "effects": []
+    },
+    {
+      "name": "layer_rows",
+      "signature": "pub const fn layer_rows(&self) -> u32",
+      "effects": []
+    },
+    {
+      "name": "layer_tile_w",
+      "signature": "pub const fn layer_tile_w(&self) -> u32",
+      "effects": []
+    },
+    {
+      "name": "layer_tile_h",
+      "signature": "pub const fn layer_tile_h(&self) -> u32",
+      "effects": []
+    },
+    {
+      "name": "layer_cells",
+      "signature": "pub const fn layer_cells(&self) -> &'a [TileCell]",
+      "effects": []
+    },
+    {
+      "name": "world_px_w",
+      "signature": "pub const fn world_px_w(&self) -> i64",
+      "effects": []
+    },
+    {
+      "name": "world_px_h",
+      "signature": "pub const fn world_px_h(&self) -> i64",
+      "effects": []
+    },
+    {
+      "name": "cell_at_tile",
+      "signature": "pub fn cell_at_tile(layer: &TileLayer<'_>, col: i64, row: i64) -> Option<TileCell>",
+      "effects": []
+    },
+    {
+      "name": "validate_viewport",
+      "signature": "pub fn validate_viewport(view: Viewport) -> Result<(), TilemapError>",
+      "effects": []
+    },
+    {
+      "name": "layer_scroll",
+      "signature": "pub fn layer_scroll( layer: &TileLayer<'_>, view: Viewport, camera: Camera, ) -> Result<PixelPos, TilemapError>",
+      "effects": []
+    },
+    {
+      "name": "screen_to_layer",
+      "signature": "pub fn screen_to_layer( layer: &TileLayer<'_>, view: Viewport, camera: Camera, screen_x: i32, screen_y: i32, ) -> Result<PixelPos, TilemapError>",
+      "effects": []
+    },
+    {
+      "name": "cull_layer",
+      "signature": "pub fn cull_layer( layer: &TileLayer<'_>, view: Viewport, camera: Camera, ) -> Result<VisibleRect, TilemapError>",
+      "effects": []
+    },
+    {
+      "name": "attr_at_tile",
+      "signature": "pub fn attr_at_tile(layer: &TileLayer<'_>, col: i64, row: i64) -> u8",
+      "effects": []
+    },
+    {
+      "name": "attr_at_point",
+      "signature": "pub fn attr_at_point(layer: &TileLayer<'_>, x: i64, y: i64) -> u8",
+      "effects": []
+    },
+    {
+      "name": "point_has_attr",
+      "signature": "pub fn point_has_attr(layer: &TileLayer<'_>, x: i64, y: i64, mask: u8) -> bool",
+      "effects": []
+    },
+    {
+      "name": "aabb_attrs",
+      "signature": "pub fn aabb_attrs(layer: &TileLayer<'_>, aabb: Aabb) -> Result<u8, TilemapError>",
+      "effects": []
+    },
+    {
+      "name": "aabb_has_attr",
+      "signature": "pub fn aabb_has_attr(layer: &TileLayer<'_>, aabb: Aabb, mask: u8) -> Result<bool, TilemapError>",
+      "effects": []
+    },
+    {
+      "name": "aabb_first_hit",
+      "signature": "pub fn aabb_first_hit( layer: &TileLayer<'_>, aabb: Aabb, mask: u8, ) -> Result<Option<TileHit>, TilemapError>",
+      "effects": []
+    },
+    {
+      "name": "aabb_blocked",
+      "signature": "pub fn aabb_blocked( layer: &TileLayer<'_>, aabb: Aabb, motion: MotionHint, ) -> Result<bool, TilemapError>",
+      "effects": []
+    },
+    {
+      "name": "lower_layer_cells_into",
+      "signature": "pub fn lower_layer_cells_into( layer: &TileLayer<'_>, rect: &VisibleRect, bank_colors: &[Rgb8], out: &mut [TileBatchCell], ) -> Result<usize, TilemapError>",
+      "effects": []
+    },
+    {
+      "name": "count_visible_cells",
+      "signature": "pub fn count_visible_cells( layer: &TileLayer<'_>, rect: &VisibleRect, ) -> Result<usize, TilemapError>",
+      "effects": []
+    },
+    {
+      "name": "lower_layers_to_paint_scene",
+      "signature": "pub fn lower_layers_to_paint_scene( layers: &[TileLayer<'_>], view: Viewport, camera: Camera, bank_colors: &[Rgb8], background: &str, ) -> Result<PaintScene, TilemapError>",
+      "effects": []
+    },
+    {
+      "name": "attach_tiles",
+      "signature": "pub fn attach_tiles( depth: BitDepth, data: &'a [u8], tile_w: u32, tile_h: u32, tile_count: u32, ) -> Result<Self, TilemapError>",
+      "effects": []
+    },
+    {
+      "name": "tiles_count",
+      "signature": "pub const fn tiles_count(&self) -> u32",
+      "effects": []
+    },
+    {
+      "name": "tiles_depth",
+      "signature": "pub const fn tiles_depth(&self) -> BitDepth",
+      "effects": []
+    },
+    {
+      "name": "unpack_tile_row",
+      "signature": "pub fn unpack_tile_row( &self, tile_id: u16, y: u32, h_flip: bool, v_flip: bool, out: &mut [u8], ) -> Result<(), TilemapError>",
+      "effects": []
+    },
+    {
+      "name": "render_layer_scanline",
+      "signature": "pub fn render_layer_scanline( layer: &TileLayer<'_>, tileset: &Tileset<'_>, banks: &[Palette], view: Viewport, camera: Camera, y: u32, line: &mut [u8], ) -> Result<usize, TilemapError>",
+      "effects": []
+    },
+    {
+      "name": "render_layers_to_container",
+      "signature": "pub fn render_layers_to_container( layers: &[TileLayer<'_>], tileset: &Tileset<'_>, banks: &[Palette], camera: Camera, clear: Option<Rgba8>, dst: &mut PixelContainer, ) -> Result<usize, TilemapError>",
+      "effects": []
+    }
+  ],
+  "unconditional_roots": [],
+  "banned_construct_exceptions": [],
+  "label": "proved"
+}

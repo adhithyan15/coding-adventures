@@ -1,0 +1,31 @@
+[package]
+name = "tilemap2d"
+version = "0.1.0"
+edition = "2021"
+description = "Deterministic zero-allocation multi-layer scrolling tilemap engine: parallax, culling, tile-attribute collision, paint-batch-tiles lowering and indexed scanline rendering"
+license = "MIT"
+
+[dependencies]
+paint-batch-tiles = { path = "../paint-batch-tiles" }
+paint-palette-blend = { path = "../paint-palette-blend" }
+palette-indexed = { path = "../palette-indexed" }
+pixel-container = { path = "../pixel-container" }
+
+[dev-dependencies]
+coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
+coding_adventures_sha256 = { path = "../sha256" }
+capability-runtime-conformance = { path = "../capability-runtime-conformance" }
+
+[[test]]
+name = "conformance"
+path = "tests/conformance.rs"
+
+[[test]]
+name = "microbenchmarks"
+path = "tests/microbenchmarks.rs"
+harness = false
+
+[[test]]
+name = "runtime_capability"
+path = "tests/runtime_capability.rs"
+harness = false

@@ -712,6 +712,7 @@ members = [
     "paint-palette-blend",
     "palette-indexed",
     "sprite-oam",
+    "tilemap2d",
     "paint-vm-ascii",
     "paint-vm-cairo",
     "cuda-compute",
