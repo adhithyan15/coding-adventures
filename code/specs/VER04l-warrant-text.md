@@ -414,7 +414,7 @@ The pattern for parsers is a *constructive* claim over structured binders plus a
 
 ### 6.1 Kinds (LP-012)
 
-Backlog LP-012 splits case counts into `full`, `sampled` and `bounded-set`, and
+Backlog LP-012 splits case counts into `full`, `sample` and `bounded-set`, and
 only `full` may be shown as exhaustive. This document assigns text domains to
 kinds and states how a claim's kind is combined; LP-012 is a prerequisite of T1
 (12.1) and this section is the text input to it.
@@ -422,13 +422,13 @@ kinds and states how a claim's kind is combined; LP-012 is a prerequisite of T1
 | Domain | Kind | Manifest text |
 |---|---|---|
 | `char_full` | `full` | `c: Char full(1112064)` |
-| `char_edge` | `sampled` | `c: Char edge(151)` |
+| `char_edge` | `sample` | `c: Char edge(151)` |
 | `text_d1` | `bounded-set` | `t: Text set(418)` |
 | `text_over(A, K)` | `bounded-set` | `t: Text over(12, <=5) = 271453` |
-| WX-F `lengths` hints on `Text` | `sampled` | `+lengths(255,256,2048)` |
+| WX-F `lengths` hints on `Text` | `sample` | `+lengths(255,256,2048)` |
 
-**Claim kind** is the weakest binder kind: if any binder is `sampled` (including
-`edge` of `U16`, `I32`, ...), the claim is `sampled`; otherwise if any is
+**Claim kind** is the weakest binder kind: if any binder is `sample` (including
+`edge` of `U16`, `I32`, ...), the claim is `sample`; otherwise if any is
 `bounded-set`, the claim is `bounded-set`; otherwise `full`. A refinement or a
 demotion never improves a kind. Only a claim of kind `full` may be printed as
 exhaustive. (LP-012 may refine the combination rule; the invariant that must
@@ -444,7 +444,7 @@ reported as exhaustive.)
 * `char_edge` (default, 151 values): all of ASCII `0x00..=0x7F` (128); then,
   ascending, U+0080, U+0085, U+00DF, U+00E9, U+00FF, U+0130, U+0131, U+017F,
   U+0301, U+07FF, U+0800, U+200D, U+2028, U+202E, U+212A, U+D7FF, U+E000, U+FEFF,
-  U+FFFD, U+FFFF, U+10000, U+1F600, U+10FFFF (23). Kind `sampled`.
+  U+FFFD, U+FFFF, U+10000, U+1F600, U+10FFFF (23). Kind `sample`.
 * **Demotion** extends VER04j §2.6 rule 2: every `Char` binder starts `full` and,
   while the product exceeds `B`, the leftmost binder that is currently `full` and
   of type `U16`, `I16` or `Char` is demoted to `edge`. The manifest prints
@@ -651,7 +651,7 @@ question T-4, resolved.) A `Text` fault on an operation whose result has no
 
 ### 9.3 Properties and fuzz
 
-Section 6.6. Property suites report the claim kind of 6.1 as `sampled`.
+Section 6.6. Property suites report the claim kind of 6.1 as `sample`.
 
 ### 9.4 Reports
 
@@ -845,14 +845,14 @@ unchanged.
 
 | Claim | Binders | Cases | Kind |
 |---|---|---|---|
-| `encrypt_is_the_model` | `Text` `text_d1` 418 x `I32` edge 559 | 233,662 | `sampled` (the `I32` edge binder) |
-| `decrypt_inverts_encrypt` | same | 233,662 | `sampled` |
+| `encrypt_is_the_model` | `Text` `text_d1` 418 x `I32` edge 559 | 233,662 | `sample` (the `I32` edge binder) |
+| `decrypt_inverts_encrypt` | same | 233,662 | `sample` |
 | `rot13_is_shift_13` | `Text` `text_d1` | 418 | `bounded-set` |
-| `letters_every_shift` | `text_over(6 symbols, <=3)` = 259 x 559 | 144,781 | `sampled` |
-| `non_ascii_untouched` | `text_over(5 symbols, <=3)` = 156 x 559 | 87,204 | `sampled` |
+| `letters_every_shift` | `text_over(6 symbols, <=3)` = 259 x 559 | 144,781 | `sample` |
+| `non_ascii_untouched` | `text_over(5 symbols, <=3)` = 156 x 559 | 87,204 | `sample` |
 
 The `I32` edge domain has 559 values (VER04j §2.6); every `I32` claim is therefore
-`sampled`, whatever the `Text` side is. `letters_every_shift` has no non-ASCII
+`sample`, whatever the `Text` side is. `letters_every_shift` has no non-ASCII
 symbol, so it supports no non-ASCII claim; `non_ascii_untouched` supplies the
 non-ASCII members (a `non_ascii_members` count of 5, `astral_members` 1, from the
 manifest fields of 6.7), and its alphabet includes U+0130 and U+212A, which a
@@ -889,7 +889,7 @@ Checks: `155 - 65 = 90` (`A` to `Z`), `155 - 90 = 65`; `219 - 97 = 122`
 identity elsewhere. `atbash_char_is_the_model` has one `Char` binder: with the
 package's `exhaustive_budget` raised to at least 1,112,064 it is **`full`**,
 1,112,064 cases, 40,034,304 domain bytes (6.2); at the default `B = 400,000` the
-rule of 6.2 demotes the binder to `char_edge` (151 cases, `sampled`) and the
+rule of 6.2 demotes the binder to `char_edge` (151 cases, `sample`) and the
 manifest prints `demoted: ["c"]`. The other two claims are `bounded-set`, 418
 cases each. This is the one place a text claim is honestly `full`: every scalar
 value, by a stateless function.
@@ -1127,7 +1127,7 @@ generated Rust, lane IR evaluator) agrees on every built-in.
 `text_d1` has 418; `text_over(t"ba", 2)` enumerates `"" b a bb ba ab aa`.
 (13) Sizes of 4.3 (259, 781, 55,987, 177,156, 271,453) reproduce. (14) Budget:
 `text_over(17 symbols, <=6)` is W0706; a `Char` binder demotes per 6.2.
-(15) Kinds: a claim with a `U16 edge` binder and a `text_d1` binder is `sampled`;
+(15) Kinds: a claim with a `U16 edge` binder and a `text_d1` binder is `sample`;
 `Char full` alone is `full`; a `within` claim is never `exhaustive`.
 
 **D. Corpus.** (16) TFV and stream round trip for every row of 7.3 and every
