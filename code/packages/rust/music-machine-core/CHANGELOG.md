@@ -5,6 +5,12 @@ All notable changes to `music-machine-core` will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+
+- The shared Tier-0 golden (`specs/fixtures/music-machine/expected_render.json`) was regenerated once, for all three lanes together, after the Python, Rust and TypeScript `trig` ports converged on TRIG-REF-1 (PHY00a, TC-2): new `pcm16_le_sha256` `8b578c82...c730aa` (was `15c793ee...364766`); 33 of 96,138 samples moved by 1 LSB; the first and last 32 samples are unchanged. `test_golden_parity` carries the new digest.
+
 ## [0.1.0] - 2026-11-15
 
 ### Added
