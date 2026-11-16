@@ -1,0 +1,12 @@
+[package]
+name = "coding_adventures_hash_analysis"
+version = "0.1.0"
+edition = "2021"
+description = "Avalanche and distribution quality measures for hash functions (split out of hash-functions; draws OS randomness)"
+
+[dependencies]
+getrandom = "0.2"
+
+[dev-dependencies]
+# The hash functions the examples and tests measure.
+coding_adventures_hash_functions = { path = "../hash-functions" }
