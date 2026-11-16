@@ -54,6 +54,36 @@ are size-capped while reading (catalogue 1 MiB, evidence kinds 256 KiB,
 non-claims 64 KiB). Every rule has a falsification test in
 `tests/test_assumptions.rs`.
 
+## Lane artifact loader (WD-004b1)
+
+`lane_loader` is the safe loader for the per-lane evidence of VER04i section 8.2
+(`warrant-lane-evidence-v1` manifests, the consumer registry and the
+`domain-labels.json` sidecar). It is a library: the report and the CLI do not
+call it yet (WD-004b2), and the legacy Rust loader that `--check` and
+`--generate` use is unchanged.
+
+```rust
+use coding_adventures_ca_assurance_report::lane_loader::load_lane;
+
+let lane = load_lane(repo_root, "python/ct-compare")?;
+print!("{}", lane.render_readiness());
+```
+
+What a successful `load_lane` means, and only this: every registered file opened
+as a bounded regular file inside the repository (symbolic links refused); the
+spec, corpus, TFV and binding file match the manifest's recorded SHA-256;
+the manifest joins the corpus (ids, counts, stream digests, controls); the labels
+sidecar is internally consistent and binds this manifest (the digest ignores
+`toolchain.version`, keeps `toolchain.name`); the runner is `warrant-corpus`; and
+each BUILD file mentions the manifest and the sabotage step.
+
+What it does **not** establish, and prints every time: source freshness
+(`source_sha256` is format-checked, not recomputed), the runner source digest,
+toolchain authenticity, that any build ran, and the sandbox. `release_ready` is
+always `false` (sandbox `not-armed`). No claim about the source, the build or the
+toolchain is made beyond the named checks. Failures carry a code (`path`,
+`symlink`, `too-large`, `digest`, `join`, `labels`, `build-routing`, ...).
+
 ## Usage
 
 ```bash

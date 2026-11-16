@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+- **Safe lane artifact loader** (WD-004b1, VER04i 8.2).  New `lane_loader` module (library only; no CLI or
+  report change, those are WD-004b2): `read_repo_file` (bounded, lexically contained in the host path flavour,
+  every symbolic link refused, regular files only), `lexical_containment` (the lane runners' shared rule, both
+  flavours), `canonical_json` and `labels_manifest_digest` (`toolchain.version` blanked, name kept; reproduces the
+  Python, TypeScript and Go runners' `manifest_sha256`), `parse_domain_labels` (closed schema, labels re-derived from
+  domain descriptors), `load_lane` and `load_active_lanes` (registry join, raw digests of spec, corpus, TFV and binding,
+  the WD-004a join, eight named static readiness checks).  `LoadedLane::render_readiness` ends with the unclaimed list
+  (source freshness, runner source digest, toolchain authenticity, build execution, sandbox) and `release_ready: false`.
+  `runner.src_sha256` and `source_sha256` are format-checked only.  `lane_evidence` only widened `CORPUS_DIR`,
+  `CORPUS_FILE`, `SPEC_FILE` to `pub` and `validate_repo_path` to `pub(crate)`.  The legacy Rust loader and every Rust
+  adopter's `assurance_report.json` are unchanged.
+- **Registry flip.**  `consumers.json` lists `go/ct-compare`, `python/ct-compare` and `typescript/ct-compare`, all
+  `active`; `test_lane_evidence.rs` no longer pins the Python row to `planned` and builds its planned case from the
+  checked-in registry.
+
 - **Multi-language `LanguageSafetyProfile` and fail-closed non-crypto CWE-208 exclusion** (VER-W0-A; closes blockers for Music and DSP packages):
   - **CWE-208 (`Observable Timing Discrepancy`)**: When `ctx.constant_time_claims.is_empty()`, `ctx.evidence.ct_proof_ids.is_empty()`, `!ctx.has_secret_ops`, and `!ctx.evidence.no_secret_operand_ids.is_empty()`, mark CWE-208 as `Excluded` under the `no_secret_inputs` safe subset citing both `"capability-audit::no-secret-inputs"` and `"warrant-spec::all-operands-public"`. Any missing attestation, unproven constant-time obligation, or secret operation strictly fails closed (`MatrixError::OpenRow`). `verify_evidence` and `checker.rs` cross-check both attestations and verify zero secret ops or constant-time claims/proofs exist.
   - **Multi-language `LanguageSafetyProfile`**: Introduced `LanguageSafetyProfile` enum (`SafeRust`, `GcManaged { language: String }`, `ManualMemoryChecked { language: String }`) to model language memory safety invariants for Family 1 (CWE-416, 787, 125, 415, 476, 190).
