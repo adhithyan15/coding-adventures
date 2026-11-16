@@ -11,7 +11,7 @@ warrant rpg_battle_engine v1
 
   model Unit = Bool
   variant Phase = Intro | CommandSelect | TurnResolution | SwitchPrompt | Victory | Defeat | Fled
-  variant Status = None | Burn | Paralysis | Poison | Sleep | Freeze
+  variant Status = NoStatus | Burn | Paralysis | Poison | Sleep | Freeze
 
   record Command(slot: Nat, index: Nat)
 
