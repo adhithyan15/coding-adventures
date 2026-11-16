@@ -576,7 +576,7 @@ device clint timer harts=1
 device plic irq-ctl sources=8 targets=1
 device ram0 ram owner=bus size=0x1000000 slot=kernel
 device rom0 rom size=0x10000 slot=bootrom
-device uart0 console rx-fifo=16 tx-fifo=16 log-cap=0x10000
+device uart0 console log-cap=0x10000 rx-fifo=16 tx-fifo=16
 map mem 0x1000 0x10000 rom0
 map mem 0x2000000 0x10000 clint
 map mem 0xc000000 0x600000 plic
@@ -618,7 +618,7 @@ negative-control vector:
 | V9 | Every counted and sized parameter is at or below its per-kind ceiling in section 8.2 (`MAX_RAM_BYTES`, `MAX_FIFO`, `MAX_LOG_CAP`, disk blocks and bytes, irq sources) and the sum of every device's declared state is at most `MAX_TOTAL_STATE_BYTES`; the line and device counts are within their caps |
 | V10 | An `image` slot's max-bytes is at most the kind's container cap (section 8.2) and, when the slot is bound to a sized device (`slot=` on a `ram`, `rom` or `disk`), at most that device's size. A slot bound to no device is a V2 error |
 
-Both worked boards above were checked by hand against this grammar and these rules (canonical spelling, ordering, ceilings, V10). Claims, all over the validator and exhaustive on a reduced instance in the
+Both worked boards above were checked by hand against this grammar and these rules (canonical spelling, ordering including sorted parameter keys on every `device` and `cpu` line, ceilings, V10), and **both are test inputs**: `emu-image` has a test that runs each worked board through `validate` and requires `Ok`, and the spec text is the test fixture, so the examples cannot drift from the grammar. Claims, all over the validator and exhaustive on a reduced instance in the
 sense of VOS00 section 9.2 X1: `board_canonical` (accepted implies re-emit is
 identical), `board_disjoint` (accepted implies the ranges of every space are
 disjoint, checked against a naive pairwise reference), `board_total_ids`
@@ -678,7 +678,7 @@ call is fixed, because replay depends on it:
 
 **Run budget.** Every run carries a `RunBudget`: a configuration with no
 default, so a host cannot start an unbounded run by omission. `max_ticks`
-bounds virtual time; `max_output_bytes` bounds drained console and punch
+bounds virtual time and must be at most `MAX_TICK` (budget validation rejects a larger one); `max_output_bytes` bounds drained console and punch
 output; `max_trace_bytes` the drained trace; `max_input_log_bytes` the recorded
 input log (itself at most `MAX_INPUT_LOG_BYTES`). Exceeding any one ends the run
 with `BudgetExhausted(<which>)`, distinct from `Halted` and `Quiescent`, and
@@ -753,7 +753,7 @@ the wall clock, and writes drained logs and the input log. Outputs are created
 exclusively (`O_EXCL`) inside a per-run directory, an input path is never
 reused as an output, and the writers stop at the run budget. The host also
 wraps every `machine_step` in `catch_unwind` (section 7.5). It decides *when* an input arrives, but only by stamping the
-event with a virtual tick, `at = now + 1` or later, and recording it. After
+event with a virtual tick, `at = now + 1` or later, and recording it. If the tick it would stamp is above `MAX_TICK`, the host refuses to stamp it and ends the run with `BudgetExhausted(Ticks)`, so every recorded log stays within what the input-log parser accepts and a recorded run stays replayable. After
 that the wall clock has no part in the run. The adapter's paths come from the
 run configuration, never from an image or a board (rule P10, section 8.3).
 
@@ -878,9 +878,17 @@ panic paths are already known: `IBM704Simulator::reset` calls `expect`, and
 `Rv32ISimulator`'s CSR arm contains `unreachable!()` (VOS-D020). A guest
 program must never be able to take the host down, so `emu-host` runs every
 `machine_step` under `std::panic::catch_unwind` and turns a panic into
-`Fault(ModelPanic)`; the machine value is then discarded (its state is
-unknown), and the report records the fault, the last good state digest and the
-trace so far. This **requires `panic = "unwind"`**, the default: `emu-host` and
+`Fault(ModelPanic)`; the machine value is then discarded (`machine_step` consumed it by value, so
+its state is lost). To keep something to report, the host records a state
+digest at checkpoints, every `checkpoint_steps` retired instructions (a
+required `emu-host` configuration field) and at every budget check, and the
+panic report gives the last checkpoint's digest and step number and the trace
+so far. The panic hook must not print guest-derived data (register values,
+memory, console bytes) to the host terminal; it writes the model name and the
+source location only. Stack overflow and out-of-memory abort the process
+instead of unwinding, so they are not contained by this section: the resource
+caps (sections 8.2 and 6.1) remain the primary control and `catch_unwind` is a
+backstop. This **requires `panic = "unwind"`**, the default: `emu-host` and
 every binary that links a class M crate must not be built with `panic =
 "abort"`, and a CI check reads the resolved profile. `catch_unwind` is
 containment, not a safety proof: the crates `forbid(unsafe_code)`, so a panic
@@ -1021,6 +1029,7 @@ the expected `ImageErrorKind` and offset). Every parser has at least:
   MAX_TICK` (accepted); a timer `compare` of `u64::MAX` (means never); and, on
   the toy machine, `now = MAX_TICK - 1` with a retire of cost 2 (`TimeOverflow`)
   and an idle jump to a deadline beyond `max_ticks` (`BudgetExhausted(Ticks)`);
+* **budget vectors:** a `RunBudget` with `max_ticks = MAX_TICK + 1` (rejected) and with `max_ticks = MAX_TICK` (accepted); a live host asked to stamp an event beyond `MAX_TICK` (the run ends with `BudgetExhausted(Ticks)` and the recorded log still parses);
 * **input-log vectors:** ticks out of order; `len = 0xFFFF`; `dev` beyond the
   board; non-zero `reserved`; `count = 0xFFFFFFFF` in a 16-byte file;
 * snapshot-specific: section 9.
@@ -1066,7 +1075,7 @@ shrunken constants (VOS00 section 9.3 rule 1).
 VOS-D001 is **resolved in this specification**: maximum sizes and counts
 (section 8.2), fail-closed value-returning parsing that cannot panic and
 cannot allocate from an unvalidated length (rules P1-P10), a fuzz target per
-parser (section 8.6) and negative-control vectors with a sabotage build
+parser (section 8.6) and negative-control vectors with a sabotage mode
 (section 8.5). Its parsers are the seven binary kinds (`ptape`, `cards`, `mtape`,
 `disk`, `meminit`, `inputlog`, `snapshot`) and the board text format, each with
 a target and vectors. The implementation lands in VOS-005 (container, board,
@@ -1109,6 +1118,8 @@ too. The SHA-256 trailer detects accidental corruption only; it does not detect
 tampering, and the snapshot is never called tamper-proof. Authenticating one
 would need an HMAC or a signature under a key the host holds, which is out of
 scope. Step 7 is what makes the snapshot safe to load. Restore is atomic.
+
+**Size accounting.** Storage is counted once. An `owner=cpu` store (the EDSAC `store`) is a `ram` device in the board, so V9 counts its `size` toward `MAX_TOTAL_STATE_BYTES`; the adapter's `cpu_len` section holds that storage together with the registers. Its declared maximum is therefore `size` of every `owner=cpu` device plus a fixed per-ISA register allowance, and restore buffers are sized from the sum of the declared device sizes plus those allowances, which V9 has already bounded, never from a field in the file. The `MAX_SNAPSHOT_BYTES` ceiling covers `MAX_TOTAL_STATE_BYTES` plus the allowances and framing.
 
 **Versioning.** `version` is 1. Any other value is `BadVersion`; there is no
 silent upgrade. A format change is a new version plus a separate migration
