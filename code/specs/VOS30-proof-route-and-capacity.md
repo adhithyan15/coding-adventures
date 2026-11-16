@@ -252,6 +252,29 @@ executor. This is the heart of X3 and the obligation that explodes when
 monolithic (section 2.2). With cut points it is replaced by the chained
 obligations of section 4.2.
 
+### 3.2a Model decomposition (the model side is obligated too)
+
+Cut points split the *model* step as well: the chain of section 4.2 uses
+`step_seg_1 .. step_seg_n` (model fragments) between model points `s_0 .. s_n`.
+If those fragments did not compose to the real model step, every segment could
+be proved against a fragment that is not the Warrant model and the chain would
+prove a different statement. So the decomposition is itself an obligation:
+
+```
+  for the path's input state s_0 and input in:
+      step_seg_n( ... step_seg_2( step_seg_1(s_0, in) ) ... )  =  model_step(s_0, in)
+  (and the same for the output), under PC_i
+```
+
+This is a miter between the fragment composition and the whole model step; it is
+UNSAT with its own DRAT certificate, listed in the manifest as kind
+`model-decomposition`. When the fragments are literally the model's own
+sub-expressions (the usual case) the two sides are the same AIG node and the
+miter collapses legitimately; the obligation is then recorded with
+`collapsed_reason = "identical-structure"` (section 4.5) and the checker confirms
+the identity structurally (section 6.2). It is never omitted: an omitted
+decomposition obligation is a rejected manifest.
+
 ### 3.3 Closure of `inv`
 
 The contract's invariant must hold after the step: `inv(alpha(m0)) /\ pre /\
@@ -279,6 +302,23 @@ and free (section 4.4).
 Registers are part of the frame: callee-saved registers and `sp` must be
 restored; the contract says which registers are outputs.
 
+Memory-access conditions are explicit obligations, not by-products of the miter
+(an RV32 store can overwrite the code, and a misaligned or out-of-range access is
+a fault the model does not describe):
+
+* **Store address outside code.** Every store's address range is disjoint from
+  the image's executable range (and from every read-only region): the machine
+  does not rewrite the instructions the proof read. Without it, the proof of a
+  fixed image says nothing about a run that modifies itself.
+* **Alignment.** Every `lw` and `sw` address satisfies the alignment the model
+  of `riscv-simulator` requires (or the model's behaviour on a misaligned access
+  is the stated fault path).
+* **Fault conditions.** Every access address lies in a mapped region of the
+  board; a path that reaches an access fault is a declared fault path with its
+  own path condition, never silently dropped.
+
+Each is a per-access obligation under `PC_i` with kind `access` in the manifest.
+
 ### 3.5 Step bound
 
 The maximum number of RV32 instructions over all paths, as a number `K`. Two
@@ -288,6 +328,13 @@ outcomes, matching VOS00 section 9.3:
   the bound is the maximum path length and the label is `proved`;
 * a loop was unrolled to a limit: the label is `bounded-proof(k=K)` and the
   proof says so (VER20 section 4.2 is the model).
+
+The residual of a `bounded-proof(k=K)` is part of the claim and of the label:
+**executions that run longer than K steps are not covered**. The label prints
+`bounded-proof(k=K; executions longer than K unproved)` and the manifest records
+the unwinding limit and the loop or back-edge that was cut. A bound that is only
+`bounded-proof` cannot discharge a "terminates" or "step bound" claim of the
+contract; it can discharge only a claim stated at k.
 
 The bound is *derived from the paths*, not a separate formula, but coverage
 (section 3.1) is what makes it a bound: it is a bound over *all* paths only
@@ -312,6 +359,14 @@ existing pattern. Self-composition doubles the circuit, so it is probed
 separately (section 9, experiments C1 and C2). It also needs a *negative*
 control that must be SAT: a secret-indexed load (a table lookup on a secret).
 
+**Relational cut points are deferred.** Cutting a *pair* of runs needs relational
+hypotheses (the two copies' cut states related by public equality plus the
+secret-independence of the trace so far) and a composition rule for relations,
+which this document does not specify. Until a later revision does, two-safety
+obligations are **monolithic per path** (no cuts) and are sized by C1 and C2;
+an entry whose self-composition obligation is not green is reported red, not
+cut. VOS-029 does not include two-safety on a real entry (section 10).
+
 On a concrete-PC executor the pc trace of a path is constant, so the `pc` part
 of the observation is free; the address and count parts are where the work is.
 
@@ -324,9 +379,15 @@ VOS-D002) and VOS02's appendix:
 * **No panic path.** No reachable instruction sequence in a class K entry jumps
   to the panic handler. Checked on the compiled image by reachability over the
   decoded control-flow graph from each entry; an edge to the handler's address
-  range is a finding.
-* **Stack bound.** A static maximum stack depth per entry, from the frame sizes
-  recorded in the image and the (acyclic) call graph SH5 guarantees.
+  range is a finding. **The check fails closed**: an unresolved indirect jump
+  (`jalr` whose target is not a proved constant or a declared table), a word
+  that fails to decode, data inside an executable range, or a branch target
+  outside the image makes the check *fail*, never be skipped.
+* **Stack bound.** A static maximum stack depth per entry, from the `sp`
+  adjustments **read from the disassembled image** (not from recorded frame
+  sizes, which a compiler or a hand edit can falsify) summed along the acyclic
+  call graph SH5 guarantees. An `sp` write the analysis cannot interpret (a
+  computed `sp`) fails closed.
 
 These are graph checks, not SAT obligations, but they are certificates of the
 same family: each is recorded in the manifest with its image digest and tool
@@ -368,6 +429,11 @@ Replace the single path obligation of section 3.2 with a chain over cuts
               /\ s' = step_{seg j}(s)                   =>  R_{c_j}(m', s')
   final    :  R_{c_n}(m, s)                             =>  alpha(m) = s_final
                                                           (and sections 3.3, 3.4)
+  model    :  step_seg_n o ... o step_seg_1  =  model_step   (section 3.2a)
+
+  Every R_c contains, as conjuncts: pc = c; the live registers related to the
+  model state; and  FRAME(m, m0): every location outside the footprint equals
+  its value at entry.
 ```
 
 Each line is its own miter: the segment's *input* is a set of **fresh symbolic
@@ -386,22 +452,29 @@ pieces really add up. A proof of the chain is an induction over `j`, and each of
 the following has to be true *by construction*, not by luck, and has to be checked
 by the composition checker (section 6.2):
 
-1. **Hypothesis equals conclusion.** The hypothesis of segment `j` is, as a
-   formula, *the same one* that segment `j-1` concluded (identical digest of the
-   relation, identical variable mapping). If it were weaker than what was proved,
+1. **Hypothesis equals conclusion, checked on the CNF.** The hypothesis clause
+   set of segment `j` equals the clause set of the **negated conclusion** of the
+   predecessor's obligation, under one fixed variable mapping that the checker
+   recomputes (section 6.2): not a digest the manifest asserts, but clause sets
+   the checker builds and compares. If it were weaker than what was proved,
    the segment would prove its conclusion from less than we know and be sound but
    incomplete (it fails loud). If it were *stronger* than what was proved, the
    segment would assume something never established, and the chain is unsound.
    The checker rejects any hypothesis not discharged by the previous conclusion.
-2. **Complete state.** The cut variables must cover everything segment `j` can
-   read. A register or memory word the segment reads but the relation does not
-   mention is silently treated as unconstrained fresh (sound, but possibly
-   spuriously SAT) or, worse, if it is *not* made fresh and instead takes the
-   value from the executor's single run, unsound for other paths. The rule:
-   every location in the segment's read set is either (a) constrained by
-   `R_{c_{j-1}}` or (b) declared "frame, unchanged since entry" and proved so in
-   the frame obligation. The executor computes read sets; the checker verifies
-   them (the cone-of-influence of section 4.4).
+2. **Complete state, with the frame carried, not declared.** The cut variables
+   must cover everything segment `j` can read. A register or memory word the
+   segment reads but the relation does not mention is silently treated as
+   unconstrained fresh (sound, but possibly spuriously SAT) or, worse, if it is
+   *not* made fresh and instead takes the value from the executor's single run,
+   unsound for other paths. The rule: every location in the segment's read set is
+   constrained by `R_{c_{j-1}}`. In particular, "unchanged since entry" is **a
+   conjunct `FRAME(m, m0)` of every cut relation**: segment `j` assumes it in its
+   hypothesis and *re-concludes* it for the state it produces (its stores are
+   proved to hit only footprint locations). It is never a side declaration
+   discharged only by the final obligation, which would be circular (the segments
+   would rely on a frame fact whose proof itself relies on the segments). The
+   checker verifies that every `R_c` contains the FRAME conjunct and that read
+   sets are covered (the cone-of-influence of section 4.4).
 3. **Same model point.** `s` at the cut is the model state after exactly the
    model steps that correspond to the machine segment. The *model-step
    boundaries* are part of the cut definition and are recorded in the manifest
@@ -412,10 +485,17 @@ by the composition checker (section 6.2):
 5. **Path condition carried.** Each segment inherits `PC_i`; a segment proved
    under a weaker condition than its path's is fine, under a stronger one it
    silently narrows coverage.
+6. **The model side composes.** The model-decomposition obligation of section 3.2a
+   exists, is UNSAT, and its fragments are the ones the segments used.
+7. **Inputs are bound.** Each obligation's CNF is a deterministic function of
+   `(image slice, cut relation, model fragment, path condition)` and the image
+   digest is among those inputs (section 6.2). A manifest whose digests do not
+   match a regenerated CNF is rejected.
 
 Soundness theorem of the composition (to be written and checked in the
-composition checker's own tests): if the base, every segment and the final
-obligation are UNSAT and conditions 1 to 5 hold, then for every initial state
+composition checker's own tests): if the base, every segment, the final
+obligation and the model-decomposition obligation are UNSAT and conditions 1 to 7
+hold, then for every initial state
 satisfying `pre` and `PC_i`, the whole-path obligation of section 3.2 holds.
 Proof by induction on `j`: `R_{c_j}` holds of the actual run because the actual
 states satisfy the hypothesis (induction) and the segment obligation says the
@@ -432,7 +512,7 @@ construction" and is the fallback of section 8.5.
 **A cut relation is a trusted definition.** `R` for each cut is written
 (generated) by the tool; a wrong `R` that is too weak yields SAT (loud), one that
 is too strong yields an unprovable *previous* segment (loud). Only the pairing
-rule (condition 1) can make it silent, and that is checked. The relation family
+rule (condition 1) can make it silent, and that is checked on regenerated CNFs. The relation family
 is part of the trusted base (section 7).
 
 ### 4.3 Index case-splitting in place of arrays
@@ -496,10 +576,37 @@ The rule is to **label it, never hide it**. Every row (probe) and every
 obligation (VOS-029) records the number of AND nodes in the miter's cone and a
 `collapsed` flag (CNF of at most two clauses, or zero conflicts). A collapsed
 *capacity* row is reported `collapsed` and never counted as a capacity datum. A
-collapsed *proof* obligation is allowed only when the manifest says why
-("frame: untouched") and it is not the sole certificate for the entry's
-refinement. The `pick` proof of VOS-029 must carry a non-collapsed certificate
+collapsed
+*proof* obligation is allowed only when the manifest gives a `collapsed_reason`
+from a closed enum, and the checker **verifies it structurally** (it does not
+read the reason as a claim). The enum: `identical-structure` (the two sides are
+the same AIG node, confirmed by comparing the cones), `frame-untouched` (the
+location is not in the segment's write set), `constant-fold` (both sides fold to
+the same constant on a stated input). Any other reason is rejected. A collapsed
+obligation is never the sole certificate for the entry's refinement. The `pick` proof of VOS-029 must carry a non-collapsed certificate
 and a SAT sabotage control (section 10).
+
+### 4.6 Vacuity: an UNSAT proof needs witnesses that the premises can hold
+
+An UNSAT miter proves "no state satisfying the premises differs". If the premises
+are contradictory the miter is UNSAT for a worthless reason (the VER-P030 failure
+in another form). So the premises are shown *satisfiable*, by witnesses, and a
+witness is run on the concrete machine:
+
+1. **`pre` is satisfiable**: a SAT witness for `pre(m0)` alone.
+2. **At least one feasible path per entry.** "Feasible" means *SAT with a replayed
+   model*: the path condition is satisfied by a witness that is replayed end to end
+   on `riscv-simulator` (the real simulator runs the image from the witness state
+   and takes the path). An entry whose every path is "infeasible" proves nothing.
+3. **A witness for each cut hypothesis**: `R_{c_{j-1}}` is satisfiable together with
+   `PC_i` (a hypothesis that no state satisfies makes segment `j` vacuous).
+4. At least one witness (per entry) is replayed end to end through all segments on
+   the concrete simulator and its final state is checked against the model step,
+   computed by an evaluator independent of the executor.
+
+Witnesses are recorded in the manifest (obligation kind `witness`, the model, its
+digest); the composition checker verifies each against its CNF and replays at
+least one.
 
 ---
 
@@ -514,15 +621,18 @@ Every X3 label prints, derived from the manifest and never typed by hand
   paths <k> (feasible <..>, infeasible <..>)  cuts <..>  obligations <..>
   step bound <K> (proved | bounded-proof(k=K))
   largest obligation: <ands> ANDs, <conflicts> conflicts, DRAT <bytes>
-  collapsed obligations: <n> (all labelled)
+  collapsed obligations: <n> (all labelled, reasons verified)
+  trusted: alpha (randomized differential), stepper (differential), composition checker
 ```
 
 ### 5.1 The X3 instance may differ from the X1 instance
 
 X1 is enumerated at a *reduced* configuration (N = 8, VOS01 section 5.6). X3 for
-a bitmap component is width-insensitive: a clz-based `pick` miter over 64 bits
-solves in milliseconds (section 8.2, tables A), so the X3 instance may be the
-shipped N. The label prints both: an X1 instance and an X3 instance, so nobody
+a bitmap component is *plausibly* width-insensitive: a clz-based `pick` miter over
+64 bits solves in milliseconds on hand-written code (section 8.2, table A), so the
+X3 instance may turn out to be the shipped N, **pending the compiled-image re-run**
+of VOS-029 (section 10 item 7); until then the label prints the instance it was
+proved at and claims nothing wider. The label prints both: an X1 instance and an X3 instance, so nobody
 reads "N = 8 exhaustive" as "N = 64 proved" or the reverse. For table-indexed
 state the X3 instance is *smaller* than the shipped table unless the case-split
 total is affordable (section 4.3), and the label says so.
@@ -553,8 +663,16 @@ cannot retire any assumption that VER13 scopes to `owned-rv32i` (such as
 
 Each obligation is a *separate CNF* with its own DRAT proof, produced by
 `cdcl-sat` with proof logging and checked by `drat-check` (VER11).
-Obligations are content-addressed: the certificate id is
-`sha256(DIMACS || DRAT)` and the manifest lists it.
+Obligations are content-addressed with a **length-prefixed** digest, so no
+(CNF, proof) pair can be re-split into another:
+
+```
+  certificate_id = sha256( u64be(len(DIMACS)) || DIMACS || u64be(len(DRAT)) || DRAT )
+```
+
+(plain `sha256(DIMACS || DRAT)` would let bytes migrate across the boundary and
+give two different pairs one id). The manifest lists `cnf_sha256` (of the DIMACS
+alone), `drat_sha256` (of the DRAT alone) and the combined id.
 
 Why separate CNFs, not one incremental solver with assumptions. UNSAT under
 assumptions does *not* end in an empty clause (VER11 section 4: such proofs
@@ -571,33 +689,68 @@ composition:
   are many. No solver change. This is the route VOS-029 can start on and the one
   the probe measures as "certified" (section 9, B3).
 * **Route B, lemma logging in `cdcl-sat` (needs a change).** After an UNSAT
-  under assumptions, emit the failed-assumption clause as a DRAT lemma, and let
-  `drat-check` accept a proof that *derives a stated clause* (VER11 section 4
-  promises exactly this). Then one incremental solver can serve many segments
-  with one certified proof. This is logged as a discovered-work row
-  (VOS-D045, with its VER-BACKLOG twin).
+  under assumptions, the solver logs the failed-assumption clause as a DRAT
+  lemma. Three rules keep it sound:
+  1. **Bind the pair.** The certificate is for `(original CNF, stated clause)`:
+     its id covers the digest of the CNF *without* any hypothesis clauses and the
+     stated clause. A proof of a clause is meaningless detached from the formula it
+     was derived from.
+  2. **Hypotheses are assumptions, never permanent clauses.** In an incremental
+     solver, a segment's hypothesis added as a permanent clause would stay in the
+     database for every later segment and silently strengthen them. Segment
+     hypotheses are passed as assumptions only, and the stated clause is the
+     negation of exactly those assumptions.
+  3. **Do not grow the trusted kernel.** The checker does not get a new "derives
+     this clause" accept mode. Instead the *caller* appends the negated stated
+     clause as unit clauses to the original formula and runs the existing
+     `drat-check` for the empty clause (the clause is implied iff the formula plus
+     its negation is refuted). Any genuinely new accept mode needs its own review
+     of the kernel (VER11 section 3.4).
+  This is VOS-D045 with VER-BACKLOG row VER-SAT2.
 
-### 6.2 The composition manifest
+### 6.2 The composition manifest and what the checker recomputes
 
 A machine-readable manifest per X3 label lists, for the entry:
 
 | Field | Meaning |
 |---|---|
 | `entry`, `image_sha256`, `board_sha256`, `model_digest` | what was proved, about what |
-| `paths[]` | id, path-condition digest, feasible flag, instruction range |
-| `obligations[]` | id, kind (section 3), path id, segment range, `cnf_sha256`, `drat_sha256`, `ands`, `collapsed`, `collapsed_reason`, conflicts, check work |
-| `hypotheses` per obligation | the ids of the obligations whose conclusions it assumed, with the relation digest |
+| `paths[]` | id, path-condition digest, feasible flag with its witness id, instruction range |
+| `obligations[]` | id, kind (section 3, including `model-decomposition`, `access`, `witness`), path id, segment range, `cnf_sha256`, `drat_sha256`, `certificate_id`, `ands`, `collapsed`, `collapsed_reason` (the enum of section 4.5), conflicts, check work |
+| `inputs` per obligation | digests of the **inputs the CNF was generated from**: the image slice (bytes and range), the cut relation, the model fragment, the path condition; `image_sha256` is among them |
+| `hypotheses` per obligation | the ids of the obligations whose conclusions it assumed |
 | `read_set` per obligation | the locations the segment can read (cone of influence) |
 | `coverage` | the coverage obligation id for the entry, and the path list it covers |
-| `step_bound` | `K` and whether `proved` or `bounded-proof(k=K)` |
+| `step_bound` | `K`, whether `proved` or `bounded-proof(k=K)`, and the residual statement (section 3.5) |
 
-The **composition checker** (a small tool, part of the trusted base) re-reads the
-manifest and verifies conditions 1 to 5 of section 4.2: hypotheses are
-conclusions of predecessors with equal digests; read sets are covered; model
-boundaries match; segments partition the path; path conditions carry; coverage
-lists every path exactly once. It re-runs `drat-check` on every certificate under
-the limits below. It does not trust the executor's claim that it saw everything;
-the coverage obligation is the evidence.
+**The composition checker does not trust the manifest.** The manifest is a
+claim; the checker is a tool that re-derives it. A digest the manifest states is
+only data; nothing is accepted because a field says so. The checker:
+
+1. **Regenerates each obligation's CNF** from `(image slice, cut relation, model
+   fragment, path condition)` with a builder that is *separate from the
+   executor's* (a small builder over `riscv-simulator::decode` and the `Aig`;
+   independent code, so a bug shared by executor and checker is the only way both
+   err), and compares the canonical clause set to the CNF whose certificate it is
+   about to check. The CNF is a **deterministic function of its inputs**, and the
+   image digest is bound into every obligation's inputs: a CNF built from another
+   image, or by hand, does not regenerate. (Where regenerating is not possible for
+   a kind, the checker parses the CNF and checks its structure against the kind's
+   shape; a kind with neither is rejected.)
+2. **Verifies the hypothesis pairing on clause sets.** Under one fixed variable
+   mapping that it recomputes (variables allocated by `(location name, bit)` in a
+   canonical order), the hypothesis clause set of segment `j` must equal the
+   negated-conclusion clause set of segment `j-1`'s obligation. Equality of
+   *digests the manifest provides* is never enough.
+3. Verifies conditions 1 to 7 of section 4.2: read sets covered, the FRAME
+   conjunct in every cut relation, model boundaries and model decomposition,
+   segments partition the path, path conditions carry, coverage lists every path
+   exactly once, witnesses of section 4.6 present and replayed.
+4. Re-runs `drat-check` on every certificate under the limits of section 6.3.
+5. Verifies every `collapsed_reason` structurally (section 4.5).
+
+It does not trust the executor's claim that it saw everything; the coverage
+obligation and the witnesses are the evidence.
 
 ### 6.3 Default `drat-check` limits are a requirement
 
@@ -620,9 +773,13 @@ reports it per row (`pass_default_limits`) and counts it in "green".
 
 Every UNSAT obligation of a capacity or proof run has a paired SAT negative
 control (section 9.4, guard G3): a one-instruction mutation whose counterexample
-is *replayed* on the concrete `riscv-simulator`. That ties the bit-blasted
-stepper to the simulator on every run (section 7), and proves the obligation is
-not UNSAT merely because the formula is unsatisfiable for an unrelated reason.
+is *replayed* by an **independent concrete evaluator** (the concrete
+`riscv-simulator` for the code side; a separately written evaluator for the
+reference side, never the stepper's own circuit evaluated again). The control
+shows the obligation is not UNSAT merely because the formula is unsatisfiable for
+an unrelated reason. It does **not** by itself show the stepper agrees with the
+simulator in general (one counterexample covers one input); that is the job of the
+randomized differential of section 7.
 
 ---
 
@@ -633,9 +790,9 @@ toolchain). X3 adds:
 
 | Item | Why it is trusted | How it is checked |
 |---|---|---|
-| The symbolic stepper | It decides what formula stands for an instruction | A differential against `riscv-simulator` on random concrete states, instruction by instruction; SAT negative controls whose counterexamples replay concretely; the stepper is *not* the simulator and never shares code with it beyond the decoder |
-| The composition checker | It is the only thing that makes the chain add up | Its own unit tests with a negative control per condition of section 4.2 (hypothesis too strong, read set uncovered, gap, overlap, dropped path) |
-| `alpha` on machine state | The refinement is about its image | Differential against the host `alpha` on sampled and exhaustive reduced states (the VOS01 section 1.5 ghost code, evaluated on the same data) |
+| The symbolic stepper | It decides what formula stands for an instruction | A **randomized differential** against `riscv-simulator` on random concrete states, instruction by instruction, over every opcode and operand shape (this, not one replayed counterexample, is what ties it to the simulator); SAT negative controls replayed by an independent evaluator (section 6.4); the stepper is *not* the simulator and never shares code with it beyond the decoder |
+| The composition checker | It is the only thing that makes the chain add up | It **regenerates the CNFs and the hypothesis pairing itself** (section 6.2) and trusts no manifest field; its own unit tests carry a negative control per condition of section 4.2 (hypothesis too strong, FRAME conjunct missing, read set uncovered, gap, overlap, dropped path, model fragments not composing, a CNF built from a different image) |
+| `alpha` on machine state | The refinement is about its image; **it is trusted, and only randomized-differential evidence backs it** (the label says so, section 5) | Differential against the host `alpha` on sampled and exhaustive reduced states (the VOS01 section 1.5 ghost code, evaluated on the same data) |
 | The cut relations | They define what is carried between segments | Generated, digested, and cross-checked by condition 1 |
 | The bit-blasted model's faithfulness | The model circuit stands for the Warrant model | The pattern of `bit-blaster/tests/faithfulness.rs`: the circuit evaluated exhaustively or on corner cases against a reference semantics |
 | `drat-check` and its limits | It is the kernel | VER11 section 3.4; limits never raised (section 6.3) |
@@ -750,24 +907,51 @@ installed; VOS22 does not exist).
 Stated in conflicts and checker work first, seconds second (seconds depend on
 the machine, conflicts do not).
 
-An obligation is **GREEN** only if all of:
+**Seeds.** Every knob is run with **at least 5 seeds**. The row that drives a
+verdict and the table is the **maximum** over seeds (the worst conflicts, the
+largest DRAT, the largest RSS); a median would let one hard instance hide. The
+minimum and the seed count are recorded as well.
 
-* UNSAT, with its SAT negative control passing;
+An obligation is **GREEN** only if all of, in its worst seed:
+
+* UNSAT, with its SAT negative control passing and replayed;
 * at most 100,000 conflicts and at most 10 s solve;
 * DRAT at most 32 MB;
 * `drat-check` accepts under the **default** `Limits` (work at most 2^32);
-* peak resident memory at most 1 GB.
+* peak resident memory at most 1 GB;
+* not `collapsed`, `unknown`, `killed`, `oom` or `crashed`.
 
 An entry is **feasible** when it decomposes into at most about 1,000 green
 obligations totalling under 10 minutes.
 
-Decision table:
+**Which numbers drive which row.** The monolithic experiment B2 is the baseline
+and *drives no row*: its job is to show the cliff. The compositional numbers
+drive every row: B3 (certified mode, section 9.5; the incremental mode is
+informational), D3 and D4 for memory, A1 and A2 for the bitmap shapes, and C1 and
+C2 for two-safety. B4 constrains the SH lint only.
 
-| Outcome | Numbers | Consequence |
-|---|---|---|
-| Feasible as planned | A1 and A2 green at N = 32, 64; B3 green at 1000 instructions with worst step at most 10k conflicts and total at most 60 s; D2 and D3 green at T*k = 64*16; C1 green at 1000 | Fund VOS-029 with the compositional design; X3 instances may be the shipped sizes for bitmap components |
-| Feasible, reduced and mitigated | B3 green only with cuts at 8 instructions or fewer, or only up to about 200 instructions; D3 green only for T at most 16; B4 only n at most 4; any required obligation exceeds the default `drat-check` limit | Fund VOS-029 with a required mitigation list (per-path splitting, cone-of-influence, cut points plus a composition checker, index case-splitting, concrete frame addresses, incremental solving with lemma logging); print reduced instance sizes on X3 labels; add an SH rule or lint keeping multi-term arithmetic out of class K code where there is no cut point |
-| Infeasible: re-plan X3 | B3 worst step above 1M conflicts, or a timeout at 200 instructions with 25% divergence; D3 not green at T = 8; A1 not green at N = 32; C1 timeout at 200 | Do not fund VOS-029. Options: the owned-compile lane (VER13 section 4.3 item 1, where a source map gives cut points by construction); waiting for arrays plus equivalence sweeping (VOS00 section 12 row 9); or keeping X2 plus the monitor as the ceiling |
+**Evaluation order and precedence.** Rows are evaluated **worst case first**; the
+first row whose condition holds is the outcome, so a later (better) row can never
+override an earlier (worse) one.
+
+| Order | Outcome | Condition (any one) | Consequence |
+|---|---|---|---|
+| 1 | Infeasible: re-plan X3 | A required obligation shape (A1 at N = 32, D3 at T = 8, the B3 grid at 200 instructions with 25% divergence, C1 at 200) has a worst-seed result that is not green **at the finest decomposition tested** (every instruction for B3, one obligation per index for D3) because of: more than 100,000 conflicts in a step, a timeout, `killed`, `oom`, `crashed`, a proof rejected by the **default** `drat-check` limits, or an unreplayed control | Do not fund VOS-029. Options: the owned-compile lane (VER13 section 4.3 item 1, where a source map gives cut points by construction); waiting for arrays plus equivalence sweeping (VOS00 section 12 row 9); or keeping X2 plus the monitor as the ceiling |
+| 2 | Feasible, reduced and mitigated | Not row 1, and any of: B3 green only with cuts at 8 instructions or fewer, or only up to about 200 instructions; D3 green only for T at most 16; B4 only n at most 4 | Fund VOS-029 with a required mitigation list (per-path splitting, cone-of-influence, cut points plus a composition checker, index case-splitting, concrete frame addresses, incremental solving with lemma logging); print reduced instance sizes on X3 labels; add an SH rule or lint keeping multi-term arithmetic out of class K code where there is no cut point |
+| 3 | Feasible as planned | Not rows 1 or 2, and all of: A1 and A2 green at N = 32 and 64; B3 green at 1000 instructions with worst step at most 10k conflicts and total at most 60 s; D2 and D3 green at T*k = 64*16; C1 green at 1000 | Fund VOS-029 with the compositional design; X3 instances *may* be the shipped sizes for bitmap components (to be confirmed on the compiled image) |
+
+**A proof the default limits reject can never be "reduced".** A *required*
+obligation whose certificate is rejected by `drat-check` under its default limits
+is a row-1 failure at that decomposition. The remedy is a finer decomposition
+(which is then tested, and may place the entry in row 2 *if the finer obligations
+are green*), never a raised limit (section 6.3) and never the "reduced" row on the
+strength of the same oversized obligation.
+
+**The 100,000 to 1,000,000 gap.** The earlier draft left a worst step between
+100k and 1M conflicts unclassified. It is classified: a step above the green cap
+of 100,000 conflicts at the finest cut is **row 1**. (Row 2 is reached only by
+steps at or below 100,000 conflicts that need a finer cut or smaller instance to
+get there.) The 1M figure of the earlier text is dropped.
 
 Why "worst step" and not only the total: a chain is only as strong as its
 hardest hop, and one hop that is not green blocks the whole entry regardless of
@@ -878,9 +1062,10 @@ vos-capacity-probe table
   resident memory is attributable (the run script wraps each child with
   `/usr/bin/time -l` on macOS or `-v` on Linux; the tool parses it), and
   appends one row per `(experiment, knob)`.
-* `check` validates a results file against the schema and the guards (section
-  9.6) and exits non-zero on any violation; it also re-verifies the instance
-  digests where the instance is cheap to regenerate.
+* `check` validates a results file against the schema and the guards, **re-runs
+  every quick-tier row** and compares digests, verdicts, controls and conflict
+  counts, and exits non-zero on any violation; full-tier rows are validated for
+  schema and guards only and are regenerated by a reviewer (section 9.6).
 * `table` renders the markdown table of section 9.8 from the committed results
   file; with `--check` it fails if the VOS30 spec's generated block differs.
 
@@ -889,70 +1074,114 @@ vos-capacity-probe table
 The BUILD file runs the unit tests and `run --tier quick` only. The quick tier
 takes the smallest knob of each experiment, finishes in **under 30 seconds**, and
 asserts **verdicts and SAT controls, never timings** (timings differ per host;
-asserting them would be a flaky gate). The full tier is run by hand or nightly
-and its output committed by a person reviewing it, as in the "file the probe"
-rule.
+asserting them would be a flaky gate). **The quick tier fails BUILD on any row
+that is `unknown`, `killed`, `oom`, `crashed` or `refused`**, with one exception:
+the E1 `N = 11` row, which *must* be `refused` with W0706 (a missing refusal
+fails). A guard violation (section 9.4) fails BUILD. The full tier is run by hand
+or nightly; its output is committed by a person who reviews it (section 9.6, "what
+`check` can and cannot verify").
 
 ### 9.4 Validity guards, on every row
 
 These are the lessons of the VER-P030 audit and of the calibration; a row that
 fails a guard is *invalid*, never a capacity datum.
 
-**G1. Collapse accounting.** Record the number of AND nodes in the miter's cone
-(`ands`) and a `collapsed` flag: the CNF has at most two clauses, or the solver
-used zero conflicts. A collapsed row is reported with `result = "collapsed"` and
-excluded from every threshold and table statistic. Experiment B1 (a sequence
-against itself, divergence 0%) *must* report collapsed; it measures build time
-and memory only.
+**G1. Collapse accounting, measured from the AIG.** Record the number of AND
+nodes in the miter's **output cone** (`ands`), computed by walking the `Aig` from
+the miter output, not taken from the generator, and a `collapsed` flag: the CNF
+has at most two clauses, or the solver used zero conflicts. A collapsed row is
+reported with `result = "collapsed"` and excluded from every threshold and table
+statistic. Experiment B1 (a sequence against itself, divergence 0%) *must* report
+collapsed; it measures build time and memory only. `collapsed_reason` is a closed
+enum (`identical-structure`, `frame-untouched`, `constant-fold`) and `check`
+verifies it by re-deriving it from the instance.
 
-**G2. Liveness of generated programs.** Generators keep programs live: inject a
-fresh symbolic load every few instructions (default every 6), and cap the share
-of entropy-killing operations (`sltu`, shifts, `and` with small constants) at a
-stated fraction (default 20%). The generator computes the entropy it kept
-(distinct live symbolic inputs reaching the output cone) and records it; a row
-whose output cone depends on fewer than a stated number of symbolic bits
-(default 8) is `collapsed`. This is the guard against the n of 200 or more rows
-of table B2.
+**G2. Liveness of generated programs, measured on the output cone.** Generators
+keep programs live: inject a fresh symbolic load every few instructions (default
+every 6), and cap the share of entropy-killing operations (`sltu`, shifts, `and`
+with small constants) at a stated fraction (default 20%). But the guard is
+*measured*, not claimed: the tool computes, from the AIG's output cone, the number
+of **symbolic input bits the cone depends on** (`entropy_bits`) and the AND count,
+and compares them with the instance's declared inputs. A row is `collapsed` if its
+cone depends on fewer than **half of the declared symbolic input bits** (a
+fraction, not a constant: a constant such as 8 bits is trivially met by any
+program with one live byte) or if its AND count is below a stated fraction of the
+unmodified generator's count at the same length. This is the guard against the
+n of 200 or more rows of table B2.
 
-**G3. SAT negative control.** Every UNSAT experiment has a paired SAT control:
-the same instance with **one mutated instruction** in the code side. The control
-must be SAT, and its counterexample (a register and memory assignment) is
-*replayed on the concrete `riscv-simulator`*: running the mutated sequence from
-the model's assignment must produce an output that differs from the reference.
-A control that is UNSAT, or whose counterexample does not replay, fails the row.
-This simultaneously tests the stepper against the simulator (section 7).
+**G3. SAT negative control, per experiment and per mode.** Every UNSAT experiment
+has a paired SAT control. The rules:
+
+* the control is the same instance with **one mutated instruction** (or, for
+  memory experiments D1 to D4, one mutated access: a wrong index, a dropped
+  store, a wrong stride; for E1 and E2, one mutated generated claim that the
+  harness must report as failing, and a record whose width bound is violated that
+  must be refused);
+* it must be **SAT**, and the model is validated: the SAT model **satisfies the
+  CNF** (re-evaluated by a small CNF evaluator, not trusting the solver's flag);
+* its counterexample is **replayed**: the code side on the concrete
+  `riscv-simulator`, the reference side on an **independent concrete evaluator**
+  (written separately from the stepper; it must not call into the stepper's
+  circuit), and the two outputs must differ;
+* a **control per mode**: the cut experiments (B3, D4) have a control in the
+  incremental mode and another in the certified mode, and the self-composition
+  experiments (C1, C2) have a control that is a leaking variant, replayed by
+  running two concrete runs that agree on public inputs and differ in trace;
+* a control that is UNSAT, or whose model does not satisfy the CNF, or whose
+  counterexample does not replay, fails the row. The control instance has its own
+  digest (`control_instance_sha256`).
+
+A single counterexample does not show the stepper agrees with the simulator; the
+real test is the randomized differential of section 7 (the probe has a quick-tier
+differential on 1,000 random states per opcode for the same reason).
 
 **G4. Determinism.** The generator is seeded; the seed is a recorded field. A row
 reproduces bit-for-bit (same DIMACS digest) from `(experiment, knob, seed)`.
 
-### 9.5 Measurements per row, and the timeout
+### 9.5 Measurements per row, limits and the timeout
 
 Per row (see the schema of section 9.6): `ands`, `vars`, `clauses`, `result`
-(`unsat`, `sat`, `unknown`, `collapsed`, `refused`), `conflicts`,
-`propagations`, `solve_ms` (wall), `drat_bytes`, `check_ms` (wall) and
-`check_work` (the `Accepted.work` of `drat-check`), `pass_default_limits`
+(`unsat`, `sat`, `unknown`, `collapsed`, `refused`, `killed`, `oom`, `crashed`),
+`conflicts`, `propagations`, `solve_ms` (wall), `drat_bytes`, `check_ms` (wall)
+and `check_work` (the `Accepted.work` of `drat-check`), `pass_default_limits`
 (checked under `Limits::default()`; the probe never raises limits, so a row too
 big for the defaults records `false` and the reason), `peak_rss_kb`.
 
-**Timeout: 120 s wall per row**, implemented as a loop over
-`set_conflict_budget(Some(20_000))` with a clock check between slices
-(`cdcl-sat/src/solver.rs:422`; the budget counts down per slice, so it is reset
-each iteration). A timeout is `result = "unknown"` with the conflicts used so
-far; **it is never dropped** (an `unknown` row is the data that says "red").
-When proof logging is on and the solve times out, the DRAT bytes so far are
-recorded and the check is skipped.
+**Resource limits** (the probe runs hostile-sized instances by design; these keep
+it from taking the machine down, and a limit that trips is a red row, never a
+silent drop):
+
+1. **Conflict cap with proof logging.** Whenever proof logging is on, the solve
+   stops at **1,000,000 conflicts** (the proof is held in memory, about 350 MB per
+   million conflicts); past it the row is `unknown`.
+2. **Wall timeout, 120 s per row**, as a loop over `set_conflict_budget(Some(20_000))`
+   with a clock check between slices (`cdcl-sat/src/solver.rs:422`; the budget
+   counts down per slice, so it is reset each iteration). A timeout is
+   `result = "unknown"` with the conflicts used so far.
+3. **Whole-process-group kill.** The row runs as a child in its **own process
+   group**; the parent kills the *group* on the wall timeout, covering **every
+   stage**: instance generation and CNF writing, the solve, and `drat-check`, not
+   only the solver loop. A stage that never returns (a pathological generator, a
+   checker running to its work limit) is thereby bounded too. Result `killed`.
+4. **Enforced memory cap per child**: the parent polls the child's resident set
+   (`/usr/bin/time` output is only a final figure) and kills the group above
+   **2 GB** (result `oom`). `RLIMIT_AS` is *not* relied on: it is unreliable on
+   macOS (it does not bound resident memory the way it does on Linux).
+5. **A crash** (a panic, a signal) is `crashed`, with the exit status in `note`.
+6. **Peak RSS must be parsed.** If the `/usr/bin/time` figure cannot be parsed the
+   row **fails**; it is never defaulted to 0.
+
+`unknown`, `killed`, `oom` and `crashed` are all **red** and are never dropped
+from the table: they are the data that says "does not fit".
 
 **Two modes for cut experiments.** Where a cut-point experiment is measured,
 both are run and recorded:
 
 * `mode = "incremental"`: one solver, assumptions per segment, no proof logging
-  (fast; the form of the advisor's table B3);
+  (fast; the form of the advisor's table B3); informational;
 * `mode = "certified"`: one fresh CNF per segment with the hypothesis as clauses,
   DRAT logged and checked under default limits (the form that would ship;
-  section 6.1 route A).
-
-The gap between them is itself a finding (the cost of certification), and the
-decision uses the **certified** numbers.
+  section 6.1 route A). **The decision uses the certified numbers.**
 
 ### 9.6 The result file
 
@@ -960,13 +1189,16 @@ decision uses the **certified** numbers.
 
 ```
 {
-  "schema": 1,
-  "tool": { "name": "vos-capacity-probe", "version": "<semver>" },
+  "schema": 2,
+  "tool": { "name": "vos-capacity-probe", "version": "<semver>",
+            "binary_sha256": "<sha256 of the running executable>",
+            "dirty_tree": <true|false> },
   "host": { "triple": "<target triple>", "rustc": "<rustc --version>", "os": "..." },
   "revisions": { "bit-blaster": "<git rev>", "cdcl-sat": "<git rev>",
                  "drat-check": "<git rev>", "riscv-simulator": "<git rev>",
                  "repo": "<git rev>" },
-  "limits": { "timeout_s": 120, "conflict_slice": 20000,
+  "limits": { "timeout_s": 120, "conflict_slice": 20000, "proof_conflict_cap": 1000000,
+              "rss_cap_kb": 2097152, "seeds": 5,
               "drat_check": { "max_vars": 1048576, "max_work": 4294967296 } },
   "rows": [ Row, ... ]
 }
@@ -978,25 +1210,43 @@ decision uses the **certified** numbers.
 |---|---|---|
 | `experiment`, `knob` | string, object | e.g. `"B3"`, `{ "length": 100, "divergence": 0.25, "cut": "every8" }` |
 | `mode` | string | `monolithic`, `incremental`, `certified`, `split`, `enum` |
-| `seed` | integer | generator seed (G4) |
+| `seed`, `seeds` | integer | the seed of this row, and the seeds run for the knob (at least 5); the table uses the maximum (section 8.3) |
 | `instance_sha256` | string | SHA-256 of the DIMACS text |
-| `ands`, `vars`, `clauses` | integer | size of the miter cone and CNF |
-| `entropy_bits` | integer | live symbolic bits reaching the output cone (G2) |
-| `result` | string | `unsat`, `sat`, `unknown`, `collapsed`, `refused` |
-| `control` | object | `{ "result": "sat", "replayed": true }` for the SAT control (G3) |
+| `drat_sha256` | string or null | SHA-256 of the DRAT text |
+| `control_instance_sha256` | string | SHA-256 of the control's DIMACS |
+| `ands`, `vars`, `clauses` | integer | size of the miter cone (measured from the AIG) and CNF |
+| `entropy_bits`, `declared_bits` | integer | symbolic input bits the output cone depends on, and the declared inputs (G2) |
+| `result` | string | `unsat`, `sat`, `unknown`, `collapsed`, `refused`, `killed`, `oom`, `crashed` |
+| `collapsed_reason` | string or null | the enum of section 4.5 |
+| `control` | object | `{ "result": "sat", "model_checks_cnf": true, "replayed": true }` (G3) |
 | `conflicts`, `propagations` | integer | solver counters (summed over steps for chains) |
 | `worst_step_conflicts` | integer or null | for chains and splits |
 | `solve_ms` | number | wall time of the solve |
 | `drat_bytes` | integer or null | DRAT size |
 | `check_ms`, `check_work` | number, integer or null | `drat-check` wall and work |
 | `pass_default_limits` | boolean or null | accepted under `Limits::default()` |
-| `peak_rss_kb` | integer | child process peak RSS |
+| `peak_rss_kb` | integer | child process peak RSS; a row with an unparsed value is invalid |
 | `green` | boolean | computed by the tool from section 8.3, never typed |
 | `note` | string | a refusal reason or an anomaly |
 
-`check` enforces: every UNSAT row has a replayed SAT control; no `collapsed` row
-is `green`; every experiment of the selected tier has at least one row;
-`green` equals the section 8.3 predicate recomputed from the other fields.
+**What `check` verifies, and what it cannot.**
+
+* Schema and guards, always, on every row: every UNSAT row has a replayed control
+  whose model satisfies the CNF; no `collapsed`, `unknown`, `killed`, `oom` or
+  `crashed` row is `green`; `green` equals the section 8.3 predicate recomputed
+  from the other fields; peak RSS present; seeds at least 5 per knob;
+  `dirty_tree` is `false` for a committed file (a dirty-tree run may not be
+  committed).
+* **Re-runs**: `check` **re-runs every quick-tier row** (the smallest knob of each
+  experiment, deterministic from the recorded seed) and compares the instance
+  digest, the verdict, the control result and the **conflict count** (equal, since
+  the solver is deterministic); any difference fails. It also re-checks every
+  recorded DRAT of those rows with `drat-check`.
+* **Full-tier rows are not verifiable by `check`** (they take hours and their
+  seconds are host-dependent). It validates their schema and guards only. A
+  reviewer **regenerates the full tier** on a stated host before the numbers are
+  accepted, and the PR says so. A result file that a reviewer has not regenerated
+  carries the banner "full tier not independently regenerated" in the table.
 
 ### 9.7 The experiments
 
@@ -1009,7 +1259,7 @@ the quick tier uses the smallest value only.
 | **A2** | *Insert/remove miter*: `mask | (1 << p)` against a per-`Bool` update with the `p >= N` guard | N = 8 up to 64 |
 | **B1** | A straight-line sequence against itself (divergence 0%) | lengths 200, 500, 1000; **must report `collapsed`**; measures build time and memory only |
 | **B2** | *Monolithic*, a share of instructions encoded differently in the reference | length 25, 50, 100, 200, 500, 1000, times divergence 5%, 25%, 100% |
-| **B3** | B2 with cut points: per instruction, then per block every 8 and every 32. **Total and worst-step conflicts: the number that funds VOS-029.** | same grid; both modes of section 9.5 |
+| **B3** | B2 with cut points: per instruction, then per block every 8 and every 32. **Total and worst-step conflicts, certified mode: the number that funds VOS-029.** | same grid; both modes of section 9.5, at least 5 seeds |
 | **B4** | *Arithmetic with no cut point*: n-term re-association; `x*5` against `(x<<2)+x`; `base + i*12` against shift-add | n = 2 to 7 at W = 32; W = 8, 16, 32 |
 | **C1** | *Self-composition* of A and B: two copies, public inputs shared, secrets fresh, observable = pc/address/count trace plus public outputs (as `prove_with_custom_inputs`, `warrant-ir/src/ct_proof.rs:222`, and VER20 section 2.3) | the same sweeps as A and B |
 | **C2** | A secret-dependent load index (**must be SAT**) and a padded constant-time variant (UNSAT) | T = 8, 16, 64 |
@@ -1017,8 +1267,8 @@ the quick tier uses the smallest value only.
 | **D2** | D1 with concrete offsets | same grid |
 | **D3** | D1 case-split on the index: T obligations, reported as **sum and max** | same grid |
 | **D4** | Both sides share the mux structure, with cut points after each access | same grid |
-| **E1** | *Enumeration throughput* of the generated by-value harness on the committed fixture `vos-probe-ready`. Run-only cases per second, compile time separate. Binder product 256, 65,536, 262,144 (insert at N = 10) and 393,216; **N = 11 must be refused (W0706)**. The `Impl(mask: U8)` form against the 8-`Bool` form | as stated |
-| **E2** | *Enumeration memory*: record widths 1, 8, 64, 256 bytes times case counts; where the 64 MiB domain bound (VER04m E10) bites before 400,000 cases | as stated |
+| **E1** | *Enumeration throughput* of the generated by-value harness on the committed fixture `vos-probe-ready`. Run-only cases per second, compile time separate. Binder product 256, 65,536, 262,144 (insert at N = 10) and 393,216; **N = 11 must be refused (W0706)**. The `Impl(mask: U8)` form against the 8-`Bool` form. G3 control: a mutated generated claim that the harness must report failing | as stated |
+| **E2** | *Enumeration memory*: record widths 1, 8, 64, 256 bytes times case counts; where the 64 MiB domain bound (VER04m E10) bites before 400,000 cases. G3 control: a record whose width violates the bound must be refused | as stated |
 | **F** | DRAT size and check time on every UNSAT row: pass under default limits, bytes per conflict, check/solve ratio | derived from all UNSAT rows |
 
 Notes on a few of them, because the shape explains the choice:
@@ -1042,15 +1292,26 @@ Notes on a few of them, because the shape explains the choice:
 
 ### 9.8 The generated table and its check mode
 
-`vos-capacity-probe table` reads the committed results file and emits a
-markdown table with one line per experiment-knob group:
+`vos-capacity-probe table` reads the committed results file and emits, for each
+experiment-knob group, one line using the **maximum over seeds** (section 8.3):
 
 ```
-| Experiment | Knob | Mode | ANDs | Conflicts (total / worst) | Solve | DRAT | Check work | Default limits | RSS | Verdict |
+| Experiment | Knob | Mode | ANDs | Vars | Clauses | Entropy bits | Seeds | Conflicts (total / worst) | Solve | DRAT | Check work | Default limits | RSS | Control | Verdict |
 ```
 
-`Verdict` is `GREEN`, `red (reason)`, `collapsed` or `unknown (timeout)`, computed
-from section 8.3. The table is placed in this document between the markers
+`Control` is `replayed` or the failure; `Verdict` is `GREEN`, `red (reason)`,
+`collapsed`, `unknown (timeout)`, `killed`, `oom` or `crashed`, computed from
+section 8.3. The generated block **begins with a fixed banner and the validity
+limits** (section 8.4, all six), so a table can never be read without them:
+
+```
+PROXY: synthetic hand-written code with synthetic divergence, not compiler
+output. These numbers bound solver capacity per obligation shape; they do not
+prove any entry verifiable. Seeds >= 5, maximum shown. <full-tier regeneration
+banner if applicable>
+```
+
+The table is placed in this document between the markers
 
 ```
 <!-- vos30-table:begin -->
@@ -1060,10 +1321,11 @@ from section 8.3. The table is placed in this document between the markers
 by VOS-028b (the markers are not present in the spec until a generated table
 exists, because an empty block would look like a result). `table --check`
 regenerates the block and compares it byte for byte with the spec, failing on
-**drift**; `check` also fails if the spec's block is present and the results file
-is absent. **No number in the table is hand-typed.** VOS-028b also replaces the
-tables of section 8.2 with a pointer to the generated one and states the decision
-of section 8.5 from it (one of the three rows of section 8.3).
+**drift**. It **also fails if section 8.5 states a decision** (one of the three
+rows of section 8.3) **while the generated block is absent or empty**, and if the
+results file is absent while the block is present. **No number in the table is
+hand-typed.** VOS-028b also replaces the tables of section 8.2 with a pointer to
+the generated one and states the decision of section 8.5 from it.
 
 ### 9.9 Timeline
 
@@ -1092,10 +1354,16 @@ first two rows of section 8.3.
 3. **Cut-point support with certified composition.** This needs either:
    * route A of section 6.1 (a CNF per segment with the hypotheses as clauses
      and the manifest recording them), which works today; or
-   * route B: `cdcl-sat` logging the failed-assumption clause as a DRAT lemma and
-     `drat-check` accepting a derived-clause proof (VOS-D045, VER-BACKLOG twin).
+   * route B: `cdcl-sat` logging the failed-assumption clause as a DRAT lemma,
+     bound to `(original CNF, stated clause)`, hypotheses as assumptions only,
+     and checked by appending the negated clause as units and running the
+     existing `drat-check` (no new accept mode; VOS-D045, VER-SAT2).
    Today a `solve_with_assumptions` UNSAT leaves no checkable lemma. The
-   composition checker of section 6.2 is part of the deliverable.
+   composition checker of section 6.2 (which regenerates CNFs and the hypothesis
+   pairing and trusts no manifest field) is part of the deliverable, together with
+   the model-decomposition obligation (section 3.2a), the FRAME conjunct in every
+   cut relation (section 4.2), the witnesses of section 4.6 (one replayed end to
+   end on the concrete simulator), and the access obligations of section 3.4.
 4. **Index case-splitting** (section 4.3) and concrete frame addresses
    (section 4.4).
 5. **A streaming proof sink.** `cdcl-sat` keeps the whole DRAT in memory
