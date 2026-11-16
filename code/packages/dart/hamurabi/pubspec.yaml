@@ -1,0 +1,13 @@
+name: coding_adventures_hamurabi
+version: 0.1.0
+description: >
+  Deterministic simulation core for the seminal 1968 mainframe resource allocation game Hamurabi.
+repository: https://github.com/adhithyan15/coding-adventures
+
+environment:
+  sdk: ^3.0.0
+
+dependencies: {}
+
+dev_dependencies:
+  test: ^1.25.0

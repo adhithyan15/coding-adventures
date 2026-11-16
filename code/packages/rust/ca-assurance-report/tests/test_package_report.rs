@@ -11,7 +11,7 @@ use std::path::{Path, PathBuf};
 
 use coding_adventures_ca_assurance_report::{
     generate_ct_compare_report, generate_package_report, verify_assurance_report, verify_evidence,
-    AssuranceReport, AuditProfile, CheckVerdict, Evidence, EvidenceCheckError as E,
+    AssuranceReport, CheckVerdict, Evidence, EvidenceCheckError as E,
     WeaknessRegistry, WeaknessStatus,
 };
 
@@ -26,7 +26,6 @@ fn build(ev: &Evidence) -> AssuranceReport {
         "c0ffee",
         &WeaknessRegistry::embedded(),
         ev,
-        AuditProfile::FieldArithmetic,
     )
     .expect("report derives from the gf256 manifests")
 }
@@ -60,6 +59,7 @@ impl Copy {
         }
         fs::copy(real.join("effect_certificate.json"), pkg.join("effect_certificate.json")).unwrap();
         fs::copy(real.join("evidence.bindings"), pkg.join("evidence.bindings")).unwrap();
+        fs::copy(real.join("assurance-profile.json"), pkg.join("assurance-profile.json")).unwrap();
         fs::create_dir_all(root.join("code/specs")).unwrap();
         fs::copy(
             Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../specs/gf256.warrant"),
@@ -108,7 +108,6 @@ fn gf256_report_derives_verifies_and_matches_the_checked_in_file() {
         &on_disk.commit,
         &WeaknessRegistry::embedded(),
         &ev,
-        AuditProfile::FieldArithmetic,
     )
     .unwrap();
     assert_eq!(fresh.to_json_string(), on_disk.to_json_string(), "regenerate assurance_report.json");
@@ -236,7 +235,6 @@ fn promoting_a_not_live_obligation_to_pass_needs_a_certificate() {
         "x",
         &WeaknessRegistry::embedded(),
         &ev,
-        AuditProfile::FieldArithmetic,
     );
     assert!(derived.is_err(), "no certificates behind the forged `proved` entries");
 }

@@ -1,0 +1,84 @@
+-- SWF03 -- ActionScript Compiler: deterministic lexer, AST parser, and
+-- InterpreterIR code generator for ActionScript 1.0, 2.0, and 3.0.
+--
+-- Formal verification contract for bounded ActionScript compilation.
+
+warrant actionscript_compiler v1
+  error AsCompilerError = UnsupportedDialect | RecursionDepthExceeded | TokenLimitExceeded | InstructionLimitExceeded | SyntaxError | LoweringError
+
+  model Unit = Bool
+
+  model valid_dialect(d: Nat) -> Bool = d >= 1 and d <= 3
+  model valid_token_count(n: Nat) -> Bool = n <= 100000
+  model valid_instruction_count(n: Nat) -> Bool = n <= 200000
+
+  op validate_dialect(d: Nat) -> Result<Bool, AsCompilerError>
+  op validate_token_count(n: Nat) -> Result<Bool, AsCompilerError>
+  op validate_instruction_count(n: Nat) -> Result<Bool, AsCompilerError>
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels validate_dialect:
+    d public
+  labels validate_token_count:
+    n public
+  labels validate_instruction_count:
+    n public
+
+  input validate_dialect.d:
+    hostile
+    ensures no_panic, terminates
+
+  input validate_token_count.n:
+    hostile
+    ensures no_panic, terminates
+
+  input validate_instruction_count.n:
+    hostile
+    ensures no_panic, terminates
+
+  bound validate_dialect:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_token_count:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_instruction_count:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+
+  example dialect_as1:
+    validate_dialect(1) == Ok(true)
+  example dialect_as2:
+    validate_dialect(2) == Ok(true)
+  example dialect_as3:
+    validate_dialect(3) == Ok(true)
+  example dialect_zero:
+    validate_dialect(0) == Err(AsCompilerError.UnsupportedDialect)
+  example dialect_as4:
+    validate_dialect(4) == Err(AsCompilerError.UnsupportedDialect)
+  example token_count_zero:
+    validate_token_count(0) == Ok(true)
+  example token_count_max:
+    validate_token_count(100000) == Ok(true)
+  example token_count_exceeded:
+    validate_token_count(100001) == Err(AsCompilerError.TokenLimitExceeded)
+  example instruction_count_zero:
+    validate_instruction_count(0) == Ok(true)
+  example instruction_count_max:
+    validate_instruction_count(200000) == Ok(true)
+  example instruction_count_exceeded:
+    validate_instruction_count(200001) == Err(AsCompilerError.InstructionLimitExceeded)
+
+  claim validate_dialect_agrees:
+    forall d: Nat. validate_dialect(d) == (if valid_dialect(d) then Ok(true) else Err(AsCompilerError.UnsupportedDialect))
+  claim validate_token_count_agrees:
+    forall n: Nat. validate_token_count(n) == (if valid_token_count(n) then Ok(true) else Err(AsCompilerError.TokenLimitExceeded))
+  claim validate_instruction_count_agrees:
+    forall n: Nat. validate_instruction_count(n) == (if valid_instruction_count(n) then Ok(true) else Err(AsCompilerError.InstructionLimitExceeded))

@@ -5,8 +5,12 @@ edition = "2021"
 description = "Exact DNS identity binding across X.509 SAN, TLS SNI, and HTTP Host"
 
 [dependencies]
+coding_adventures_oauth = { path = "../oauth" }
 der-asn1 = { path = "../der-asn1" }
+http1-fixed-request-body = { path = "../http1-fixed-request-body" }
+http1-request-header-field = { path = "../http1-request-header-field" }
 http1-request-host-authority = { path = "../http1-request-host-authority" }
+http1-request-line = { path = "../http1-request-line" }
 tls-server-identity = { path = "../tls-server-identity" }
 tls13-server-name = { path = "../tls13-server-name" }
 x509-certificate = { path = "../x509-certificate" }

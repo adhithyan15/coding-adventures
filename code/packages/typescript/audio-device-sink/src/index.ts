@@ -1,3 +1,14 @@
+/**
+ * MUS02: Audio Device Sink (TypeScript implementation).
+ *
+ * Backend-neutral audio device sink contract, PCM validation, and noop playback reporting.
+ *
+ * Hardened against:
+ * - CWE-1321 (Prototype Pollution): Closed set validation for error kinds, prototype property rejection.
+ * - CWE-400 (Uncontrolled Resource Consumption): Streaming length guard against unbounded iterables.
+ * - CWE-20 (Improper Input Validation): Strict Number.isFinite, Number.isInteger, and boundary checks.
+ */
+
 export const VERSION = "0.1.0";
 export const MAX_BLOCKING_DURATION_SECONDS = 10 * 60;
 export const MAX_SAMPLE_RATE_HZ = 384_000;
@@ -5,6 +16,16 @@ export const SUPPORTED_BIT_DEPTH = 16;
 export const SUPPORTED_CHANNEL_COUNT = 1;
 export const PCM16_MIN = -32_768;
 export const PCM16_MAX = 32_767;
+
+const BANNED_PROPERTIES = new Set(["__proto__", "constructor", "prototype", "toString", "valueOf"]);
+
+const VALID_ERROR_KINDS: ReadonlySet<string> = new Set([
+  "invalid_format",
+  "invalid_samples",
+  "unsupported_platform",
+  "backend_unavailable",
+  "backend_failure",
+]);
 
 export type AudioSinkErrorKind =
   | "invalid_format"
@@ -15,7 +36,11 @@ export type AudioSinkErrorKind =
 
 export class AudioSinkError extends Error {
   constructor(readonly kind: AudioSinkErrorKind, message: string) {
-    super(formatError(kind, message));
+    if (!VALID_ERROR_KINDS.has(kind) || BANNED_PROPERTIES.has(kind)) {
+      throw new Error(`Invalid audio sink error kind: ${String(kind)}`);
+    }
+    const safeMessage = typeof message === "string" ? message.slice(0, 1024) : String(message);
+    super(formatError(kind, safeMessage));
     this.name = "AudioSinkError";
   }
 
@@ -50,16 +75,31 @@ export class PcmFormat {
   }
 
   validate(): void {
-    if (!Number.isInteger(this.sampleRateHz) || this.sampleRateHz <= 0) {
-      throw AudioSinkError.invalidFormat("sample_rate_hz must be greater than zero");
+    if (
+      typeof this.sampleRateHz !== "number" ||
+      !Number.isFinite(this.sampleRateHz) ||
+      !Number.isInteger(this.sampleRateHz) ||
+      this.sampleRateHz <= 0
+    ) {
+      throw AudioSinkError.invalidFormat("sample_rate_hz must be a positive finite integer");
     }
     if (this.sampleRateHz > MAX_SAMPLE_RATE_HZ) {
       throw AudioSinkError.invalidFormat(`sample_rate_hz must be <= ${MAX_SAMPLE_RATE_HZ}`);
     }
-    if (this.channelCount !== SUPPORTED_CHANNEL_COUNT) {
+    if (
+      typeof this.channelCount !== "number" ||
+      !Number.isFinite(this.channelCount) ||
+      !Number.isInteger(this.channelCount) ||
+      this.channelCount !== SUPPORTED_CHANNEL_COUNT
+    ) {
       throw AudioSinkError.invalidFormat(`only mono PCM is supported in V1, got ${this.channelCount} channels`);
     }
-    if (this.bitDepth !== SUPPORTED_BIT_DEPTH) {
+    if (
+      typeof this.bitDepth !== "number" ||
+      !Number.isFinite(this.bitDepth) ||
+      !Number.isInteger(this.bitDepth) ||
+      this.bitDepth !== SUPPORTED_BIT_DEPTH
+    ) {
       throw AudioSinkError.invalidFormat(`only signed 16-bit PCM is supported in V1, got ${this.bitDepth} bits`);
     }
   }
@@ -74,11 +114,31 @@ export class PcmPlaybackBuffer {
   readonly format: PcmFormat;
 
   constructor(samples: Iterable<number>, format: PcmFormat) {
+    if (!format || !(format instanceof PcmFormat)) {
+      throw AudioSinkError.invalidFormat("Invalid PcmFormat instance provided");
+    }
     format.validate();
-    const normalized = Array.from(samples, normalizeSample);
-    this.samples = Int16Array.from(normalized);
+
+    if (!samples || typeof (samples as any)[Symbol.iterator] !== "function") {
+      throw AudioSinkError.invalidSamples("samples must be an iterable");
+    }
+
+    const maxSamples = format.sampleRateHz * MAX_BLOCKING_DURATION_SECONDS;
+    const collected: number[] = [];
+    let count = 0;
+
+    for (const rawSample of samples) {
+      if (count >= maxSamples) {
+        throw AudioSinkError.invalidSamples(
+          `blocking playback is limited to ${MAX_BLOCKING_DURATION_SECONDS} seconds`,
+        );
+      }
+      collected.push(normalizeSample(rawSample, count));
+      count++;
+    }
+
+    this.samples = Int16Array.from(collected);
     this.format = format;
-    this.validateSize();
   }
 
   sampleCount(): number {
@@ -96,15 +156,6 @@ export class PcmPlaybackBuffer {
   durationSeconds(): number {
     return this.frameCount() / this.format.sampleRateHz;
   }
-
-  private validateSize(): void {
-    const maxSamples = this.format.sampleRateHz * MAX_BLOCKING_DURATION_SECONDS;
-    if (this.sampleCount() > maxSamples) {
-      throw AudioSinkError.invalidSamples(
-        `blocking playback is limited to ${MAX_BLOCKING_DURATION_SECONDS} seconds`,
-      );
-    }
-  }
 }
 
 export interface PlaybackReport {
@@ -120,9 +171,22 @@ export interface AudioSink {
 }
 
 export class NoopAudioSink implements AudioSink {
-  constructor(readonly backendName = "noop") {}
+  readonly backendName: string;
+
+  constructor(backendName = "noop") {
+    if (typeof backendName !== "string") {
+      throw new TypeError("backendName must be a string");
+    }
+    if (BANNED_PROPERTIES.has(backendName)) {
+      throw new Error(`Forbidden backendName: ${backendName}`);
+    }
+    this.backendName = backendName.slice(0, 256);
+  }
 
   playBlocking(buffer: PcmPlaybackBuffer): PlaybackReport {
+    if (!buffer || !(buffer instanceof PcmPlaybackBuffer)) {
+      throw AudioSinkError.invalidSamples("buffer must be an instance of PcmPlaybackBuffer");
+    }
     return {
       framesPlayed: buffer.frameCount(),
       sampleRateHz: buffer.format.sampleRateHz,
@@ -134,8 +198,8 @@ export class NoopAudioSink implements AudioSink {
 }
 
 function normalizeSample(sample: number, index: number): number {
-  if (!Number.isInteger(sample)) {
-    throw AudioSinkError.invalidSamples(`samples[${index}] must be an integer`);
+  if (typeof sample !== "number" || !Number.isFinite(sample) || !Number.isInteger(sample)) {
+    throw AudioSinkError.invalidSamples(`samples[${index}] must be a finite integer, got ${sample}`);
   }
   if (sample < PCM16_MIN || sample > PCM16_MAX) {
     throw AudioSinkError.invalidSamples(`samples[${index}] must fit signed 16-bit PCM, got ${sample}`);

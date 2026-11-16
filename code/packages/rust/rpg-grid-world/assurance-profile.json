@@ -1,0 +1,19 @@
+{
+  "schema": "warrant-assurance-profile-v1",
+  "name": "rpg-grid-world",
+  "kind": "transform",
+  "rows": {
+    "326": {
+      "applicability": "excluded",
+      "reason": "no keys: the package takes and generates no key material; operands are bounded tile coordinates, table indices, step counts and buffer lengths"
+    },
+    "327": {
+      "applicability": "excluded",
+      "reason": "pure game-logic state machine: package implements grid movement, warps, NPC queries, step encounters and dialogue only, no cipher, hash or MAC"
+    },
+    "407": {
+      "applicability": "excluded",
+      "reason": "bounded work per call: every query is O(1) or linear in a table capped by MAX_WARPS = 256, MAX_NPCS = 256, MAX_ENCOUNTER_ENTRIES = 32, MAX_INTERACT_RANGE = 4, MAX_PAGES = 64 and MAX_DIALOGUE_CELLS = 4096"
+    }
+  }
+}

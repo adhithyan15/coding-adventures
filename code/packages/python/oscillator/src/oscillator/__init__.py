@@ -1,4 +1,9 @@
 from .oscillator import (
+    INTEGER_TOLERANCE,
+    MAX_DURATION_SECONDS,
+    MAX_SAMPLE_RATE_HZ,
+    MAX_SAMPLES,
+    TWO_PI,
     ContinuousSignal,
     SampleBuffer,
     SineOscillator,
@@ -10,6 +15,11 @@ from .oscillator import (
 )
 
 __all__ = [
+    "INTEGER_TOLERANCE",
+    "MAX_DURATION_SECONDS",
+    "MAX_SAMPLES",
+    "MAX_SAMPLE_RATE_HZ",
+    "TWO_PI",
     "ContinuousSignal",
     "SampleBuffer",
     "SineOscillator",

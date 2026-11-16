@@ -1,0 +1,5 @@
+cd ..\warrant-corpus && npm ci --silent
+npm ci && npm run build && npx vitest run --coverage
+node --experimental-strip-types tests/warrant-evidence.ts check evidence/test-manifest.json
+node --experimental-strip-types tests/warrant-evidence.ts sabotage
+node --experimental-strip-types ..\warrant-corpus\src\bin.ts validate-manifest evidence/test-manifest.json --repo-root ../../../.. --corpus ../../../specs/fixtures/ct-compare-warrant-v1

@@ -16,6 +16,7 @@ remain historical and must not be read as the current queue.
 | WD-004b1 | Add the safe lane artifact loader, registry join, raw digest checks, and static readiness checks | After WD-004a; preserve the legacy Rust loader and make no source/build/toolchain authenticity claim beyond the named checks. |
 | WD-004b2 | Integrate lane-aware package reports, CLI/check behavior, and honest absent rungs | After WD-004b1; keep Rust-only proof/effect attestations isolated from non-Rust lanes. |
 | WD-101 (Python L0 runner) | First non-Rust lane: `python/warrant-corpus` runner, `python/ct-compare` binding and committed lane manifest, BUILD drift/sabotage/validate lines, repository-input registration | Delivered on branch `claude/warrant-python-lane` (not yet merged). 12 examples; 9 exhaustive suites, 572,109 cases enumerated in Python over finite domains (`Bytes[347]` x `Bytes[347]`, `Bytes<0/1/2/4/16>`, `U64[377]` x `U64[377]`), every `inputs_sha256`/`expected_sha256`/call count equal to the Rust-emitted corpus; 8 negative controls, each caught by a required claim; each `sabotage` child exits 1 with `not ok`. The consumer row stays `planned`: `ca-assurance-report`'s own test pins the checked-in registry to `planned`, and flipping it belongs with WD-004b1. Not delivered: report integration, sandbox arming (CAP-RT-1xx Python), native (layer B) suites, the shared `warrant-corpus-conformance-v1` fixture of VER04i section 9. |
+| WD-102 (TypeScript L0 runner) | Second non-Rust lane: `typescript/warrant-corpus` runner (`@coding-adventures/warrant-corpus`, zero runtime dependencies, runs as TypeScript by Node type stripping), `typescript/ct-compare` binding and committed lane manifest and label sidecar, BUILD and BUILD_windows `check`/`sabotage`/`validate-manifest` lines, repository-input registration | Delivered on branch `claude/warrant-typescript-lane` (not yet merged). Same corpus as WD-101: 12 examples; 9 exhaustive suites, 572,109 cases enumerated in TypeScript (65,537 `full`, 506,572 `bounded-set`), every `inputs_sha256`/`expected_sha256`/call count equal to the Rust-emitted corpus and every manifest row equal to the Python lane's; 8 negative controls, each caught by a required claim; each `sabotage` child exits 1 with `not ok`. `U64`/`Nat` are `bigint`, `Bytes` results must be an exact `Uint8Array` and a `fresh` result may not alias an argument (VER04i 5.2); the corpus is read by a strict JSON reader. 183 tests, line coverage 99.7%. Same open items as WD-101: the consumer registry has no `typescript/ct-compare` row (the checked-in registry lists only `python/ct-compare` and `ca-assurance-report` pins it), so BUILD validates the manifest without `--registry`; no sandbox arming (CAP-RT-1xx TypeScript/Node); no layer B (native) suites; no `warrant-corpus-conformance-v1` fixture. |
 
 WX implementation continues under the existing WX-001 owner and IDs; this
 shard does not create a duplicate feature owner. WX-H/E prerequisites merged
@@ -125,3 +126,18 @@ and before a separate GF256 portable-corpus rollout. This is package-parity
 work, not a Warrant syntax, compiler, or report port. The missing Warrant
 language features remain WX-D, WX-F, and WX-G under their existing WX owner and
 IDs.
+
+## Follow-ups from WD-102
+
+- **Registry row for the TypeScript lane.** Add `typescript/ct-compare` (`planned`) to
+  `code/specs/fixtures/ct-compare-warrant-v1/consumers.json` and its count, with the Rust tests that pin the checked-in
+  registry (`test_lane_evidence.rs`), then add `--registry` to the TypeScript `validate-manifest` BUILD line. It was left
+  out because the registry belongs to WD-004a's Rust validator and this branch does not run Rust.
+- **Shared runner fixes found by the second lane.** The Python runner hard-coded `toolchain.name == "python"` in the label
+  digest; fixed in WD-102 (see `lessons.d`). Any further lane should validate its manifest with *both* existing runners
+  before it is called shared.
+- **Dedicated error class per declared error.** `ctSelectBytes` throws a plain `RangeError` for the length mismatch and
+  for an out-of-range byte, so the exact-prototype binding cannot tell them apart; the corpus passes only `Uint8Array`s.
+  Same recommendation as the Python lane: one named error class per declared error.
+- **LP-012.** The TypeScript lane writes the same `domain-labels.json` sidecar (65,537 `full`, 506,572 `bounded-set`).
+- **Layer B.** TypeScript is the lane with property and fuzz engines (VER05a, VER06b); native suites remain WD-2xx.

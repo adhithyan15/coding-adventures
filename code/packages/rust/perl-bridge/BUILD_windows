@@ -5,3 +5,4 @@
 # Strawberry Perl once, then runs the same steps as the Unix BUILD (cargo test,
 # build, clippy -D warnings, the perl_bridge_smoke build and tests\smoke.pl).
 powershell -NoProfile -ExecutionPolicy Bypass -File tests\run-windows.ps1
+# tests\run-windows.ps1 puts Strawberry gcc first on PATH (the scheduled full build also installs Ruby and Haskell).

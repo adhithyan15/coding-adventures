@@ -79,6 +79,12 @@ fn generate_msvc_lib(dll_name: &str, so_name: &str, out_dir: &str) -> bool {
         ("rb_eRuntimeError", true),
         // paint_vm_metal_native-specific:
         ("rb_str_new", false),
+        ("rb_eval_string", false),
+        ("rb_float_new", false),
+        ("rb_hash_aset", false),
+        ("rb_hash_new", false),
+        ("rb_num2dbl", false),
+        ("rb_string_value_ptr", false),
     ];
 
     let def_path = PathBuf::from(out_dir).join(format!("{}.def", so_name));

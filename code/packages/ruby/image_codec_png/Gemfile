@@ -1,0 +1,8 @@
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+gemspec
+
+gem "coding_adventures_lzss", path: "../lzss"
+gem "coding_adventures_zip", path: "../zip"
+gem "coding-adventures-pixel-container", path: "../pixel_container"

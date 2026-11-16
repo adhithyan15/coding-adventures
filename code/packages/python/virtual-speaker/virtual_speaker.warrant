@@ -1,0 +1,54 @@
+warrant virtual_speaker
+  error SpeakerError = INVALID_PARAMETER | OUT_OF_BOUNDS
+
+  model scale_gain(voltage: Int, gain: Int) -> Int = voltage * gain
+  model is_bounded_gain(gain: Int) -> Bool = gain >= 0 - 1000000 and gain <= 1000000
+
+  op apply_speaker_gain(voltage: Int, gain: Int) -> Int
+  op check_gain_bounds(gain: Int) -> Bool
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels apply_speaker_gain:
+    voltage public
+    gain public
+
+  labels check_gain_bounds:
+    gain public
+
+  input apply_speaker_gain.voltage:
+    hostile
+    ensures no_panic, terminates
+  input apply_speaker_gain.gain:
+    hostile
+    ensures no_panic, terminates
+
+  input check_gain_bounds.gain:
+    hostile
+    ensures no_panic, terminates
+
+  bound apply_speaker_gain:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound check_gain_bounds:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+
+  example scale_unit:
+    apply_speaker_gain(5, 1) == 5
+  example scale_gain_two:
+    apply_speaker_gain(3, 2) == 6
+  example gain_safe:
+    check_gain_bounds(100) == true
+  example gain_unsafe:
+    check_gain_bounds(2000000) == false
+
+  claim apply_speaker_gain_agrees:
+    forall v: Int, g: Int. apply_speaker_gain(v, g) == scale_gain(v, g)
+  claim check_gain_bounds_agrees:
+    forall g: Int. check_gain_bounds(g) == is_bounded_gain(g)

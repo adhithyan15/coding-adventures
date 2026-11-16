@@ -1,0 +1,52 @@
+{
+  "schema_version": "ver24-effect-cert-v1",
+  "package": "rust/lunar-lander",
+  "source_digest": "4642ba3a483fe655822261782e28e011f2c854f1bab39b8afd202d0d15c1b2dd",
+  "manifest_digest": "c594cb5e81bb3065dc75189587765bd158480148587eaa160f661aef8eda2cfe",
+  "declared_effects": [],
+  "entry_points": [
+    {
+      "name": "new_flight",
+      "signature": "pub fn new_flight() -> LanderState",
+      "effects": []
+    },
+    {
+      "name": "isqrt_u128",
+      "signature": "pub fn isqrt_u128(n: u128) -> u128",
+      "effects": []
+    },
+    {
+      "name": "validate_burn",
+      "signature": "pub fn validate_burn(state: &LanderState, cmd: &BurnCommand) -> Result<(), LanderError>",
+      "effects": []
+    },
+    {
+      "name": "step_burn",
+      "signature": "pub fn step_burn(state: &LanderState, cmd: &BurnCommand) -> Result<LanderState, LanderError>",
+      "effects": []
+    },
+    {
+      "name": "to_paint_scene",
+      "signature": "pub fn to_paint_scene(state: &LanderState, last_burn_rate_lbs_s: u32) -> PaintScene",
+      "effects": []
+    },
+    {
+      "name": "telemetry_scene",
+      "signature": "pub fn telemetry_scene(state: &LanderState) -> PaintScene",
+      "effects": []
+    },
+    {
+      "name": "render_telemetry_ascii",
+      "signature": "pub fn render_telemetry_ascii(state: &LanderState, last_burn_rate_lbs_s: u32) -> String",
+      "effects": []
+    },
+    {
+      "name": "render_telemetry",
+      "signature": "pub fn render_telemetry(state: &LanderState) -> String",
+      "effects": []
+    }
+  ],
+  "unconditional_roots": [],
+  "banned_construct_exceptions": [],
+  "label": "proved"
+}

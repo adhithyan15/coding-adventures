@@ -1,0 +1,80 @@
+-- SWF01 -- SWF Container: deterministic zero-dependency binary SWF container reader,
+-- anti-bomb decompressor, and streaming tag parser.
+--
+-- Formal verification contract for bounded SWF container reading.
+
+warrant swf_container v1
+  error SwfError = InvalidSignature | UnsupportedVersion | InvalidFileLength | DecompressionBombDetected | OutputLimitExceeded | ChecksumMismatch | UnexpectedEof | InvalidTagLength | InvalidBitField | CorruptedData
+
+  model Unit = Bool
+
+  model valid_version(v: Nat) -> Bool = v >= 1 and v <= 50
+  model valid_tag_code(c: Nat) -> Bool = c <= 1023
+  model valid_ratio(bytes_out: Nat, bytes_in: Nat) -> Bool = if bytes_out <= 1048576 then true else (bytes_out <= bytes_in * 50)
+
+  op validate_version(v: Nat) -> Result<Bool, SwfError>
+  op validate_tag_code(c: Nat) -> Result<Bool, SwfError>
+  op validate_ratio(bytes_out: Nat, bytes_in: Nat) -> Result<Bool, SwfError>
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels validate_version:
+    v public
+  labels validate_tag_code:
+    c public
+  labels validate_ratio:
+    bytes_out public
+    bytes_in public
+
+  input validate_version.v:
+    hostile
+    ensures no_panic, terminates
+
+  input validate_tag_code.c:
+    hostile
+    ensures no_panic, terminates
+
+  input validate_ratio.bytes_out:
+    hostile
+    ensures no_panic, terminates
+  input validate_ratio.bytes_in:
+    hostile
+    ensures no_panic, terminates
+
+  bound validate_version:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_tag_code:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_ratio:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+
+  example version_min:
+    validate_version(1) == Ok(true)
+  example version_max:
+    validate_version(50) == Ok(true)
+  example version_zero:
+    validate_version(0) == Err(SwfError.UnsupportedVersion)
+  example tag_code_end:
+    validate_tag_code(0) == Ok(true)
+  example tag_code_invalid:
+    validate_tag_code(1024) == Err(SwfError.InvalidTagLength)
+  example ratio_safe:
+    validate_ratio(2000000, 50000) == Ok(true)
+  example ratio_bomb:
+    validate_ratio(60000000, 1000000) == Err(SwfError.DecompressionBombDetected)
+
+  claim validate_version_agrees:
+    forall v: Nat. validate_version(v) == (if valid_version(v) then Ok(true) else Err(SwfError.UnsupportedVersion))
+  claim validate_tag_code_agrees:
+    forall c: Nat. validate_tag_code(c) == (if valid_tag_code(c) then Ok(true) else Err(SwfError.InvalidTagLength))
+  claim validate_ratio_agrees:
+    forall out: Nat, in_: Nat. validate_ratio(out, in_) == (if valid_ratio(out, in_) then Ok(true) else Err(SwfError.DecompressionBombDetected))

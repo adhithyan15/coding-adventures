@@ -1,0 +1,203 @@
+-- GAME15a -- Discrete TTL Arcade Logic & Timing Simulator
+--
+-- Warrant document for sim-discrete-arcade-logic (VER04j and VER04m: state=explicit).
+-- Formal verification contract for 7400-series TTL ICs, arcade raster sync generator, and paddle ADC.
+
+warrant sim_discrete_arcade_logic v1
+  error LogicError = InvalidLogicLevel | InvalidChannel | InvalidParameter | DivisionByZero | CounterOverflow
+
+  model nand_model(a: Nat, b: Nat) -> Nat = if a == 1 and b == 1 then 0 else 1
+  model nor_model(a: Nat, b: Nat) -> Nat = if a == 0 and b == 0 then 1 else 0
+  model mux_model(s0: Nat, s1: Nat, str_b: Nat, c0: Nat, c1: Nat, c2: Nat, c3: Nat) -> Nat = if str_b != 0 then 0 else (if s1 == 0 and s0 == 0 then c0 else (if s1 == 0 and s0 == 1 then c1 else (if s1 == 1 and s0 == 0 then c2 else c3)))
+
+  model valid_logic_bit(b: Nat) -> Bool = b <= 1
+  model valid_channel_quad(ch: Nat) -> Bool = ch < 4
+  model valid_channel_dual(ch: Nat) -> Bool = ch < 2
+
+  model bcd_advance_model(val: Nat) -> Nat = if val >= 9 then 0 else val + 1
+  model binary_advance_model(val: Nat) -> Nat = if val >= 15 then 0 else val + 1
+  model dot_advance_model(dot: Nat) -> Nat = if dot >= 454 then 0 else dot + 1
+
+  op nand_eval_op(channel: Nat, a: Nat, b: Nat) -> Result<Nat, LogicError>
+  op nor_eval_op(channel: Nat, a: Nat, b: Nat) -> Result<Nat, LogicError>
+  op mux_eval_op(section: Nat, s0: Nat, s1: Nat, str_b: Nat, c0: Nat, c1: Nat, c2: Nat, c3: Nat) -> Result<Nat, LogicError>
+  op dff_step_op(pre_b: Nat, clr_b: Nat, clk_edge: Bool, d: Nat, prev_q: Nat) -> Result<Nat, LogicError>
+  op bcd_step_op(current_bcd: Nat) -> Result<Nat, LogicError>
+  op binary_step_op(current_val: Nat) -> Result<Nat, LogicError>
+  op sync_next_dot(current_dot: Nat) -> Nat
+  op paddle_calc_clocks(pot_norm: Nat, clk_hz: Nat, cap_pf: Nat, max_r: Nat) -> Result<Nat, LogicError>
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels nand_eval_op:
+    channel public
+    a public
+    b public
+  labels nor_eval_op:
+    channel public
+    a public
+    b public
+  labels mux_eval_op:
+    section public
+    s0 public
+    s1 public
+    str_b public
+    c0 public
+    c1 public
+    c2 public
+    c3 public
+  labels dff_step_op:
+    pre_b public
+    clr_b public
+    clk_edge public
+    d public
+    prev_q public
+  labels bcd_step_op:
+    current_bcd public
+  labels binary_step_op:
+    current_val public
+  labels sync_next_dot:
+    current_dot public
+  labels paddle_calc_clocks:
+    pot_norm public
+    clk_hz public
+    cap_pf public
+    max_r public
+
+  input nand_eval_op.channel:
+    hostile
+    ensures no_panic, terminates
+  input nand_eval_op.a:
+    hostile
+    ensures no_panic, terminates
+  input nand_eval_op.b:
+    hostile
+    ensures no_panic, terminates
+
+  input nor_eval_op.channel:
+    hostile
+    ensures no_panic, terminates
+  input nor_eval_op.a:
+    hostile
+    ensures no_panic, terminates
+  input nor_eval_op.b:
+    hostile
+    ensures no_panic, terminates
+
+  input mux_eval_op.section:
+    hostile
+    ensures no_panic, terminates
+  input mux_eval_op.s0:
+    hostile
+    ensures no_panic, terminates
+  input mux_eval_op.s1:
+    hostile
+    ensures no_panic, terminates
+  input mux_eval_op.str_b:
+    hostile
+    ensures no_panic, terminates
+  input mux_eval_op.c0:
+    hostile
+    ensures no_panic, terminates
+  input mux_eval_op.c1:
+    hostile
+    ensures no_panic, terminates
+  input mux_eval_op.c2:
+    hostile
+    ensures no_panic, terminates
+  input mux_eval_op.c3:
+    hostile
+    ensures no_panic, terminates
+
+  input dff_step_op.pre_b:
+    hostile
+    ensures no_panic, terminates
+  input dff_step_op.clr_b:
+    hostile
+    ensures no_panic, terminates
+  input dff_step_op.clk_edge:
+    hostile
+    ensures no_panic, terminates
+  input dff_step_op.d:
+    hostile
+    ensures no_panic, terminates
+  input dff_step_op.prev_q:
+    hostile
+    ensures no_panic, terminates
+
+  input bcd_step_op.current_bcd:
+    hostile
+    ensures no_panic, terminates
+
+  input binary_step_op.current_val:
+    hostile
+    ensures no_panic, terminates
+
+  input sync_next_dot.current_dot:
+    hostile
+    ensures no_panic, terminates
+
+  input paddle_calc_clocks.pot_norm:
+    hostile
+    ensures no_panic, terminates
+  input paddle_calc_clocks.clk_hz:
+    hostile
+    ensures no_panic, terminates
+  input paddle_calc_clocks.cap_pf:
+    hostile
+    ensures no_panic, terminates
+  input paddle_calc_clocks.max_r:
+    hostile
+    ensures no_panic, terminates
+
+  bound nand_eval_op:
+    steps <= 32
+    heap <= 0
+  bound nor_eval_op:
+    steps <= 32
+    heap <= 0
+  bound mux_eval_op:
+    steps <= 64
+    heap <= 0
+  bound dff_step_op:
+    steps <= 32
+    heap <= 0
+  bound bcd_step_op:
+    steps <= 32
+    heap <= 0
+  bound binary_step_op:
+    steps <= 32
+    heap <= 0
+  bound sync_next_dot:
+    steps <= 16
+    heap <= 0
+  bound paddle_calc_clocks:
+    steps <= 64
+    heap <= 0
+
+  example nand_00:
+    nand_eval_op(0, 0, 0) == Ok(1)
+  example nand_11:
+    nand_eval_op(0, 1, 1) == Ok(0)
+  example nor_00:
+    nor_eval_op(0, 0, 0) == Ok(1)
+  example nor_01:
+    nor_eval_op(0, 0, 1) == Ok(0)
+  example mux_select_0:
+    mux_eval_op(0, 0, 0, 0, 1, 0, 0, 0) == Ok(1)
+  example mux_strobed_low:
+    mux_eval_op(0, 0, 0, 1, 1, 0, 0, 0) == Ok(0)
+
+  claim nand_agrees:
+    forall ch: Nat, a: Nat, b: Nat. nand_eval_op(ch, a, b) == (if valid_channel_quad(ch) and valid_logic_bit(a) and valid_logic_bit(b) then Ok(nand_model(a, b)) else (if not valid_channel_quad(ch) then Err(LogicError.InvalidChannel) else Err(LogicError.InvalidLogicLevel)))
+  claim nor_agrees:
+    forall ch: Nat, a: Nat, b: Nat. nor_eval_op(ch, a, b) == (if valid_channel_quad(ch) and valid_logic_bit(a) and valid_logic_bit(b) then Ok(nor_model(a, b)) else (if not valid_channel_quad(ch) then Err(LogicError.InvalidChannel) else Err(LogicError.InvalidLogicLevel)))
+  claim bcd_advance_agrees:
+    forall v: Nat. bcd_step_op(v) == (if v <= 9 then Ok(bcd_advance_model(v)) else Err(LogicError.InvalidParameter))
+  claim binary_advance_agrees:
+    forall v: Nat. binary_step_op(v) == (if v <= 15 then Ok(binary_advance_model(v)) else Err(LogicError.InvalidParameter))
+  claim sync_dot_advance:
+    forall d: Nat. sync_next_dot(d) == dot_advance_model(d)

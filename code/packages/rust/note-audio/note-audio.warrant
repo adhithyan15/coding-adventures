@@ -1,0 +1,59 @@
+warrant note_audio
+  error NoteAudioError = INVALID_PARAMETER | OUT_OF_BOUNDS | SAMPLE_RATE_TOO_HIGH | SAMPLE_COUNT_TOO_LARGE
+
+  model note_sample_budget(dur_ms: Int, rate: Int) -> Option<Int> = div(dur_ms * rate, 1000)
+  model nyquist_valid(freq: Int, rate: Int) -> Bool = freq * 2 < rate
+
+  op calc_sample_count(dur_ms: Int, rate: Int) -> Option<Int>
+  op is_nyquist_safe(freq: Int, rate: Int) -> Bool
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels calc_sample_count:
+    dur_ms public
+    rate public
+
+  labels is_nyquist_safe:
+    freq public
+    rate public
+
+  input calc_sample_count.dur_ms:
+    hostile
+    ensures no_panic, terminates
+  input calc_sample_count.rate:
+    hostile
+    ensures no_panic, terminates
+
+  input is_nyquist_safe.freq:
+    hostile
+    ensures no_panic, terminates
+  input is_nyquist_safe.rate:
+    hostile
+    ensures no_panic, terminates
+
+  bound calc_sample_count:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+
+  bound is_nyquist_safe:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+
+  example sample_count_1s_44k:
+    calc_sample_count(1000, 44100) == Some(44100)
+  example sample_count_half_s:
+    calc_sample_count(500, 48000) == Some(24000)
+  example nyquist_safe_a4:
+    is_nyquist_safe(440, 44100) == true
+  example nyquist_unsafe_high:
+    is_nyquist_safe(25000, 44100) == false
+
+  claim calc_sample_count_agrees:
+    forall d: Int, r: Int. calc_sample_count(d, r) == note_sample_budget(d, r)
+  claim is_nyquist_safe_agrees:
+    forall f: Int, r: Int. is_nyquist_safe(f, r) == nyquist_valid(f, r)

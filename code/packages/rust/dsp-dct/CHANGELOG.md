@@ -1,5 +1,24 @@
 # Changelog — dsp-dct
 
+## 0.3.0 — 2026-06-15
+
+### Added — DSP02 Phase 3 (O(N log N) DCT-III via FFT reduction)
+
+- Upgraded DCT-III from naive $O(N^2)$ to $O(N \log N)$ via `dsp_fft` inverse Makhoul shuffle reduction (`dct_iii_via_fft`), maintaining exact numerical parity with textbook reference sums and existing test suites.
+- Added SplitMix64 property-based testing (PBT) round-trip suites (`idct(dct(x)) ≈ x` for 1-D and 2-D transforms) via `test-bootstrap`.
+- Added hostile input test suites covering non-finite floats (`NaN`, `±Inf`), oversized inputs, empty slices, zero dimensions, and dimension mismatches.
+- Added formal capability manifest `required_capabilities.json` declaring `capabilities: []`.
+- Added formal warrant specification `dsp-dct.warrant` declaring `all-operands-public`, bounds, and round-trip claims.
+
+### Security & Hardening (VER15 / CWE-400 / CWE-190 / CWE-674)
+
+- Enforced `#![forbid(unsafe_code)]` at the crate root.
+- Added defensive CWE-400 / CWE-190 bounds: `MAX_DCT_LEN = 1 << 20` (1,048,576 samples) and `MAX_SAMPLES = 1 << 24` (16,777,216 samples).
+- Added `checked_mul` overflow checks on all 2-D dimension and buffer size calculations in `two_d.rs`.
+- Added finite-input validation (`!x.is_finite()`): non-finite inputs (`NaN`, `±Inf`) are cleanly rejected with `DctError::InvalidInput` instead of panicking.
+- Verified strictly iterative algorithms (CWE-674 recursion defense) and zero regex or ambient authority (CWE-1333 / CWE-78 / CWE-22).
+- Literate Knuth-style module and function documentation.
+
 ## 0.2.0 — 2026-05-15
 
 ### Added — DSP02 Phase 4 (2-D DCT for image / JPEG workloads)

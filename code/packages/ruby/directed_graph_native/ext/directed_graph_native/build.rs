@@ -93,6 +93,8 @@ fn generate_msvc_lib(dll_name: &str, so_name: &str, out_dir: &str) -> bool {
         ("rb_raise", false),
         ("rb_str_strlen", false),
         ("rb_eval_string", false),
+        ("rb_check_typeddata", false),
+        ("rb_define_singleton_method", false),
         ("rb_cObject", true),
         ("rb_eStandardError", true),
         ("rb_eArgError", true),

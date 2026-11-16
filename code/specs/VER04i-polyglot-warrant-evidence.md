@@ -625,6 +625,67 @@ for `true` or a mutable buffer for `Bytes` fails with `type-mismatch`. This
 also discharges rule 4 (fresh outputs) by construction: a result that must be
 exactly `bytes` is immutable, so there is no buffer to alias or mutate.
 
+### 5.2 The TypeScript binding file -- WD-102 amendment
+
+The TypeScript lane uses the same line-file grammar as §5.1 (`evidence.bindings`,
+data only, one directive per line) with these lane-specific rules:
+
+```text
+lane typescript
+package typescript/ct-compare
+module ct_compare
+import src/index.ts
+source src
+seed 0x5741_5252_414e_5421
+values Bool=boolean Bytes=Uint8Array U64=bigint Nat=bigint
+op eq export=ctEq
+op eq_fixed export=ctEqFixed width=implicit
+op select_bytes export=ctSelectBytes errors=CT_SELECT_LENGTH_MISMATCH:RangeError
+op eq_u64 export=ctEqU64
+```
+
+| Directive | TypeScript rule |
+|---|---|
+| `import` | A package-relative POSIX path to the one module that holds every export (`src/index.ts`), loaded with a dynamic `import()` of its `file:` URL. It is a path, not a bare specifier, so no `node_modules` copy can stand in for the code under test. Its real path **must** lie under `source` (`source-mismatch` otherwise) |
+| `source` | `src` (§8.1: `**/*.ts` except `**/*.test.ts`, `dist/`) |
+| `values` | The only accepted representations are `Bool=boolean`, `Bytes=Uint8Array`, `U8=number`, `U64=bigint`, `Nat=bigint`. `U64` and `Nat` are **`bigint` always**, never `number` (a `number` cannot hold a `u64_edge` value, §2.7). Anything else is `BindingInvalid` |
+| `errors=` | `<VARIANT>:<ClassName>` where the class is one of the built-in `RangeError`, `TypeError`, `SyntaxError`, `ReferenceError`, `EvalError`, `URIError`; `Error` itself is refused, as `Exception` is in §5.1. A thrown value maps only when its prototype **is** that class's prototype (`Object.getPrototypeOf(e) === RangeError.prototype`), so a subclass, a duck-typed object and a thrown non-`Error` (a string) are all `unexpected-error` |
+
+Result typing is exact, as in §5.1, using the language's own distinctions rather
+than `typeof` alone: `Bool` is `typeof === "boolean"`; `U64`/`Nat` are a
+`bigint` in `0..2^64-1` (a `number` result is `type-mismatch`, even `1`);
+`U8` is an integral `number` in `0..255`; `Bytes` is a `Uint8Array` whose
+prototype is exactly `Uint8Array.prototype` (a Node `Buffer`, any other typed
+array, an `ArrayBuffer`, a plain array and a subclass all fail), not detached.
+
+Mutability is the difference from Python. A `Uint8Array` is mutable, so rule 4
+(fresh outputs) is **not** discharged by construction here: the runner passes
+every `Bytes` argument as its own fresh copy, so the library can never corrupt
+the enumerated domain, and for a `fresh` op the result must not share an
+`ArrayBuffer` with any argument it was given. A result that aliases an input is
+`type-mismatch` (§6.2's closed failure-id set is unchanged).
+
+The runner is TypeScript executed by Node's type stripping
+(`node --experimental-strip-types`), with `.ts` import specifiers and no
+syntax that needs a transform (`tsc --noEmit` with `erasableSyntaxOnly`
+checks that), so the code that runs is the code that is digested and no build
+output can drift from it. It has no runtime dependency and uses `node:crypto`
+for SHA-256.
+
+JSON is read by the runner's own strict parser, not `JSON.parse`, which keeps
+the *last* of two equal keys and silently rounds a large integer. The parser
+rejects duplicate keys, `NaN`, trailing data, unpaired surrogate escapes (corpus text is well-formed Unicode) and nesting deeper than 256 levels, builds
+objects with no prototype (a `__proto__` key is data), and refuses any number
+that is not a safe integer. Every count and counter in the corpus is far below
+2^53; a larger one is a corpus error, never a rounded value. `U64` values
+cross the corpus as tagged decimal text and are parsed with `BigInt`.
+
+The commands, environment variables, exit statuses, failure ids, work bounds
+(§6.2) and manifest (§8) are identical to the Python lane's. The runner is the
+package `typescript/warrant-corpus` (`@coding-adventures/warrant-corpus`, entry
+`src/bin.ts`); the manifest's `toolchain` is `{"name": "node", "version": ...}`
+and its `version` is, as for Python, diagnostic and ignored by `check`.
+
 ## 6. The L0 runner protocol (identical in every lane)
 
 ```text
@@ -1205,3 +1266,17 @@ dependency graph.
   `ca-assurance-report`'s own tests pin the checked-in row to `planned`, and
   flipping it belongs with WD-004b1's loader; the VER08b sandbox run (§12) is
   not armed for Python (backlog CAP-RT-1xx).
+* **WD-102 (TypeScript lane) amendments.** (1) The TypeScript binding is the same
+  `evidence.bindings` line file, with the representations, the exact-prototype
+  error mapping and the path-valued `import` of §5.2. (2) `U64` and `Nat` are
+  `bigint`, `U8` is `number`; result checks are exact (`typeof`, exact
+  `Uint8Array` prototype), and a `fresh` op's result may not alias an argument
+  (§5.2), which is how rule 4 is discharged for a mutable byte type. (3) The
+  corpus is read by a strict JSON parser that rejects duplicate keys and any
+  non-safe-integer number. (4) The failure-id set, work bounds, CLI and
+  manifest of §6.2 and §8 are unchanged. (5) Still open: the
+  `warrant-corpus-conformance-v1` fixture; the registry row for
+  `typescript/ct-compare` (the checked-in registry lists only
+  `python/ct-compare`, and the TypeScript BUILD therefore validates the
+  manifest without `--registry`); the VER08b sandbox run (CAP-RT-1xx,
+  TypeScript/Node).

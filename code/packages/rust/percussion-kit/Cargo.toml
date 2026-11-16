@@ -1,0 +1,15 @@
+[package]
+name = "percussion-kit"
+version = "0.1.0"
+edition = "2021"
+description = "MUS07: Deterministic unpitched percussion voices, standard drum kit, and choke sequences"
+license = "MIT"
+readme = "README.md"
+
+[dependencies]
+oscillator = { path = "../oscillator" }
+pcm-audio = { path = "../pcm-audio" }
+trig = { path = "../trig" }
+
+[dev-dependencies]
+coding_adventures_test_bootstrap = { path = "../test-bootstrap" }

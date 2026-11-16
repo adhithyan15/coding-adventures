@@ -1,0 +1,46 @@
+warrant wav_sink
+  error WavSinkError = INVALID_PARAMETER | MALFORMED_PATH | OVERSIZED_WAV
+
+  model total_wav_bytes(payload: Int) -> Int = 44 + payload
+  model is_wav_size_bounded(size: Int) -> Bool = size >= 44 and size <= 67108864
+
+  op calc_total_wav_bytes(payload: Int) -> Int
+  op check_wav_size_bounds(size: Int) -> Bool
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels calc_total_wav_bytes:
+    payload public
+  labels check_wav_size_bounds:
+    size public
+
+  input calc_total_wav_bytes.payload:
+    hostile
+    ensures no_panic, terminates
+  input check_wav_size_bounds.size:
+    hostile
+    ensures no_panic, terminates
+
+  bound calc_total_wav_bytes:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound check_wav_size_bounds:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+
+  example total_sample:
+    calc_total_wav_bytes(100) == 144
+  example size_safe:
+    check_wav_size_bounds(1000) == true
+  example size_too_large:
+    check_wav_size_bounds(70000000) == false
+
+  claim total_wav_bytes_agrees:
+    forall p: Int. calc_total_wav_bytes(p) == total_wav_bytes(p)
+  claim size_bounds_agrees:
+    forall s: Int. check_wav_size_bounds(s) == is_wav_size_bounded(s)

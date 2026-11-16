@@ -203,5 +203,133 @@ int main(void) {
         irc_framer_free(f);
     }
 
+    /* ════════════════════════════════════════════════════════════════════
+     * SEC-011: a peer that never sends LF must not grow the buffer.
+     *
+     * The cap on an unterminated line is 511 bytes: 510 content bytes plus
+     * a CR whose LF has not arrived yet (RFC 1459 / RFC 2812 section 2.3:
+     * 512 bytes including CRLF).  These tests mirror the Rust crate's.
+     * ════════════════════════════════════════════════════════════════════ */
+
+    /* ── 16 MiB in 4 KiB chunks, no LF: the buffer never exceeds 512 ────── */
+    {
+        IrcFramer *f = irc_framer_new();
+        unsigned char chunk[4096];
+        memset(chunk, 'A', sizeof chunk);
+        size_t worst = 0;
+        for (size_t i = 0; i < (16u * 1024u * 1024u) / sizeof chunk; i++) {
+            irc_framer_feed(f, chunk, sizeof chunk);
+            if (irc_framer_buffer_size(f) > worst) worst = irc_framer_buffer_size(f);
+        }
+        ISO_CHECK(worst <= 512u);
+        IrcFrames fr;
+        ISO_CHECK(irc_framer_frames(f, &fr) == 0);
+        ISO_CHECK_EQ_UINT(fr.count, 0u);
+        irc_frames_free(&fr);
+        irc_framer_free(f);
+    }
+
+    /* ── 16 MiB in ONE feed, no LF: bounded ─────────────────────────────── */
+    {
+        size_t big = 16u * 1024u * 1024u;
+        unsigned char *data = malloc(big);
+        ISO_CHECK(data != NULL);
+        if (data) {
+            memset(data, 'A', big);
+            IrcFramer *f = irc_framer_new();
+            ISO_CHECK(irc_framer_feed(f, data, big) == 0);
+            ISO_CHECK(irc_framer_buffer_size(f) <= 512u);
+            IrcFrames fr;
+            irc_framer_frames(f, &fr);
+            ISO_CHECK_EQ_UINT(fr.count, 0u);
+            irc_frames_free(&fr);
+            irc_framer_free(f);
+            free(data);
+        }
+    }
+
+    /* ── recovery: the flooded line is dropped whole, the next frames ───── */
+    {
+        IrcFramer *f = irc_framer_new();
+        unsigned char blk[4096];
+        memset(blk, 'A', sizeof blk);
+        irc_framer_feed(f, blk, sizeof blk);
+        memset(blk, 'B', sizeof blk);
+        irc_framer_feed(f, blk, sizeof blk);
+        feed_str(f, "tail\r\nNICK alice\r\n");
+        IrcFrames fr;
+        irc_framer_frames(f, &fr);
+        ISO_CHECK_EQ_UINT(fr.count, 1u);
+        chk_frame(&fr, 0, "NICK alice");
+        ISO_CHECK_EQ_UINT(irc_framer_buffer_size(f), 0u);
+        irc_frames_free(&fr);
+        irc_framer_free(f);
+    }
+
+    /* ── 510 content bytes + CR is a legal pending line: kept ───────────── */
+    {
+        IrcFramer *f = irc_framer_new();
+        unsigned char line[511];
+        memset(line, 'A', 510);
+        line[510] = '\r';
+        irc_framer_feed(f, line, sizeof line);
+        ISO_CHECK_EQ_UINT(irc_framer_buffer_size(f), 511u);
+        feed_str(f, "\n");
+        IrcFrames fr;
+        irc_framer_frames(f, &fr);
+        ISO_CHECK_EQ_UINT(fr.count, 1u);
+        if (fr.count == 1) ISO_CHECK_EQ_UINT(fr.frames[0].len, 510u);
+        irc_frames_free(&fr);
+        irc_framer_free(f);
+    }
+
+    /* ── 512 bytes with no LF: dropped, then skip to the LF ─────────────── */
+    {
+        IrcFramer *f = irc_framer_new();
+        unsigned char line[512];
+        memset(line, 'A', sizeof line);
+        irc_framer_feed(f, line, sizeof line);
+        ISO_CHECK_EQ_UINT(irc_framer_buffer_size(f), 0u);
+        feed_str(f, "\r\nPING x\r\n");
+        IrcFrames fr;
+        irc_framer_frames(f, &fr);
+        ISO_CHECK_EQ_UINT(fr.count, 1u);
+        chk_frame(&fr, 0, "PING x");
+        irc_frames_free(&fr);
+        irc_framer_free(f);
+    }
+
+    /* ── complete lines that arrived before the flood survive ───────────── */
+    {
+        IrcFramer *f = irc_framer_new();
+        unsigned char data[8 + 2000];
+        memcpy(data, "NICK a\r\n", 8);
+        memset(data + 8, 'A', 2000);
+        irc_framer_feed(f, data, sizeof data);
+        IrcFrames fr;
+        irc_framer_frames(f, &fr);
+        ISO_CHECK_EQ_UINT(fr.count, 1u);
+        chk_frame(&fr, 0, "NICK a");
+        ISO_CHECK_EQ_UINT(irc_framer_buffer_size(f), 0u);
+        irc_frames_free(&fr);
+        irc_framer_free(f);
+    }
+
+    /* ── reset() ends the skip-to-LF state ──────────────────────────────── */
+    {
+        IrcFramer *f = irc_framer_new();
+        unsigned char line[600];
+        memset(line, 'A', sizeof line);
+        irc_framer_feed(f, line, sizeof line);
+        irc_framer_reset(f);
+        feed_str(f, "NICK a\r\n");
+        IrcFrames fr;
+        irc_framer_frames(f, &fr);
+        ISO_CHECK_EQ_UINT(fr.count, 1u);
+        chk_frame(&fr, 0, "NICK a");
+        irc_frames_free(&fr);
+        irc_framer_free(f);
+    }
+
     return ISO_TEST_RESULT();
 }

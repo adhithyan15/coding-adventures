@@ -130,6 +130,13 @@ fn generate_msvc_lib(dll_name: &str, so_name: &str, out_dir: &str) -> bool {
         ("rb_intern", false),
         ("rb_funcallv", false),
         ("rb_eval_string", false),
+        ("rb_define_module_function", false),
+        ("rb_float_new", false),
+        ("rb_hash_aset", false),
+        ("rb_hash_new", false),
+        ("rb_num2dbl", false),
+        ("rb_str_new", false),
+        ("rb_string_value_ptr", false),
     ];
 
     // Write the .def file

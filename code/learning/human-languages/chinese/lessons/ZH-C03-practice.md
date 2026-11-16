@@ -19,6 +19,9 @@ requires:
   knowledge: [ZH-LEX-NUM-YI, ZH-LEX-NUM-ER, ZH-LEX-NUM-SAN, ZH-LEX-NUM-SI, ZH-LEX-NUM-WU, ZH-SCRIPT-NUM-YI, ZH-SCRIPT-NUM-ER, ZH-SCRIPT-NUM-SAN, ZH-SCRIPT-NUM-SI, ZH-SCRIPT-NUM-WU, ZH-METHOD-STROKE-COUNT]
 introduces:
   knowledge: [ZH-DIALOGUE-COUNT]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [ZH-LEX-NUM-YI, ZH-LEX-NUM-ER, ZH-LEX-NUM-SAN, ZH-LEX-NUM-SI, ZH-LEX-NUM-WU, ZH-SCRIPT-NUM-YI, ZH-SCRIPT-NUM-ER, ZH-SCRIPT-NUM-SAN, ZH-SCRIPT-NUM-SI, ZH-SCRIPT-NUM-WU, ZH-METHOD-STROKE-COUNT, ZH-DIALOGUE-COUNT, ZH-TONE-LEXICAL]
 skills: [listening, speaking, reading]
@@ -42,11 +45,7 @@ your eyes on the characters:
 ## Script — the same five, shuffled
 <!-- hl-knowledge: introduces=[ZH-DIALOGUE-COUNT]; assesses=[ZH-SCRIPT-NUM-YI, ZH-SCRIPT-NUM-ER, ZH-SCRIPT-NUM-SAN, ZH-SCRIPT-NUM-SI, ZH-SCRIPT-NUM-WU] -->
 
-Counting in order is slightly dishonest: the sequence carries you, and you can
-recite *yī èr sān* without reading anything.
-
-So here they are shuffled. Name each before moving on, without letting your eye
-run back to the row above:
+The sequence can carry you. Now read them out of order without looking back:
 
 > 四 一 五 二 三
 >
@@ -66,11 +65,12 @@ That is why five are already useful; you are not waiting on grammar:
 >
 > **You say:** *sān* — third floor.
 
-And when the panel reads
+And if a panel reads
 
 > 一 二 三 五
 
-with no 四 between three and five, you know why, and you are not confused by it.
+with no 四 between three and five, the sound link from the previous lesson is
+one documented reason a building might label it that way.
 
 ## The exchange
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-DIALOGUE-COUNT, ZH-TONE-LEXICAL] -->
@@ -84,9 +84,6 @@ Two voices, using only what this book has given you:
 > **A:** [pointing at a panel] 五 — *wǔ*
 >
 > **B:** 五 — *wǔ*
-
-Small, and entirely real: repeating a floor number back is what people do in a
-lift, in any language.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-NUM-YI, ZH-LEX-NUM-ER, ZH-LEX-NUM-SAN, ZH-LEX-NUM-SI, ZH-LEX-NUM-WU, ZH-DIALOGUE-COUNT] -->
@@ -111,10 +108,10 @@ that none of them hurt.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-DIALOGUE-COUNT, ZH-LEX-NUM-SI] -->
-<!-- hl-activity: {"id":"ZH-C03-practice-lift","kind":"text","assesses":["ZH-DIALOGUE-COUNT"],"prompt":"A lift panel reads 一 二 三 五. Which floor number is missing, and why?","answer":"four","accepted":["4","四","four, because si sounds like the word for die","four - sounds like die","4 - unlucky"],"feedback":{"correct":"Four. sì sits one tone away from sǐ 'die', so some buildings skip it.","incorrect":"Four is missing — sì is a tone away from sǐ 'die', so some buildings leave it out."},"response_seconds":15} -->
+<!-- hl-activity: {"id":"ZH-C03-practice-lift","kind":"text","assesses":["ZH-DIALOGUE-COUNT"],"prompt":"A lift panel reads 一 二 三 五. Which floor label is missing?","answer":"four","accepted":["4","四","four, because si sounds like the word for die","four - sounds like die","4 - unlucky"],"feedback":{"correct":"Four. Some panels omit it; Mandarin sì 'four' is one tone away from sǐ 'die'.","incorrect":"The missing label is four, 四. A sound link can help explain an omission, but not every building skips it."},"response_seconds":15} -->
 
-You can read the five characters cold, in any order, with no sentence around
-them. A panel reads 一 二 三 五 — which number is missing, and why? (**四**,
-because *sì* sits one tone from *sǐ*.)
+A panel reads 一 二 三 五. Which label is missing? (**四**.) The sound link can
+help explain an omission; not every building skips it.
 
-Source: [Unicode CJK Unified Ideographs chart](https://www.unicode.org/charts/PDF/U4E00.pdf)
+Sources: [Unicode CJK Unified Ideographs chart](https://www.unicode.org/charts/PDF/U4E00.pdf)
+and [Shanghai lift panel, fig. 5 in the AKDN volume](https://static.the.akdn/53832/1650573508-2016_akaa_shaping_cities.pdf).

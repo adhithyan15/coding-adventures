@@ -32,7 +32,7 @@
 //! image, then quantise the coefficients).  Phase 5 will add
 //! a specialised 8-point DCT-II for the 8×8 hot path.
 
-use crate::{dct, idct, DctError, DctNorm, DctType};
+use crate::{dct, idct, DctError, DctNorm, DctType, MAX_DCT_LEN, MAX_SAMPLES};
 
 /// Forward 2-D DCT on a row-major `[H, W]` real image.
 ///
@@ -92,6 +92,12 @@ where
     }
     let h = height as usize;
     let w = width as usize;
+    if h > MAX_DCT_LEN || w > MAX_DCT_LEN {
+        return Err(DctError::InvalidInput(format!(
+            "dimension exceeds MAX_DCT_LEN ({}): {}×{}",
+            MAX_DCT_LEN, h, w
+        )));
+    }
     // `h * w` can overflow on 32-bit usize for huge dims, but the
     // checked_mul guard catches it.  On 64-bit, u32 × u32 fits.
     let expected_len = match h.checked_mul(w) {
@@ -103,6 +109,12 @@ where
             )))
         }
     };
+    if expected_len > MAX_SAMPLES {
+        return Err(DctError::InvalidInput(format!(
+            "image sample count {} exceeds MAX_SAMPLES ({})",
+            expected_len, MAX_SAMPLES
+        )));
+    }
     if image.len() != expected_len {
         return Err(DctError::InvalidInput(format!(
             "image length {} does not match {}×{} = {}",
@@ -111,6 +123,11 @@ where
             w,
             expected_len
         )));
+    }
+    if image.iter().any(|&x| !x.is_finite()) {
+        return Err(DctError::InvalidInput(
+            "input contains non-finite float (NaN or Inf)".into(),
+        ));
     }
     if image.is_empty() {
         // h == 0 || w == 0 is already handled above; this branch
@@ -355,5 +372,57 @@ mod tests {
         // Both dimensions non-power-of-two — exercises Bluestein
         // along both axes.
         round_trip_2d_ortho(3, 5, 1e-3);
+    }
+
+    use coding_adventures_test_bootstrap::prng::SplitMix64;
+
+    fn sample_f32(rng: &mut SplitMix64) -> f32 {
+        let u = rng.next_u64();
+        let mantissa = (u & 0x00ff_ffff) as f32 / (0x0100_0000 as f32);
+        (mantissa * 2.0) - 1.0
+    }
+
+    #[test]
+    fn pbt_splitmix64_round_trip_2d() {
+        let mut rng = SplitMix64::new(0xca11_ab1e_d00d_feed);
+        let dims = [(2u32, 2u32), (3, 4), (4, 4), (5, 3), (8, 8), (7, 6)];
+        for &(h, w) in &dims {
+            let n = (h as usize) * (w as usize);
+            let mut img = Vec::with_capacity(n);
+            for _ in 0..n {
+                img.push(sample_f32(&mut rng));
+            }
+            let coeffs = dct_2d(&img, h, w, DctType::II, DctNorm::Ortho).unwrap();
+            assert_eq!(coeffs.len(), n);
+            let recovered = idct_2d(&coeffs, h, w, DctType::III, DctNorm::Ortho).unwrap();
+            assert_close(&recovered, &img, 1e-3);
+        }
+    }
+
+    #[test]
+    fn hostile_2d_non_finite_inputs_rejected() {
+        let img = vec![1.0, f32::NAN, 3.0, 4.0];
+        assert!(matches!(
+            dct_2d(&img, 2, 2, DctType::II, DctNorm::Ortho),
+            Err(DctError::InvalidInput(_))
+        ));
+        let img_inf = vec![1.0, 2.0, f32::INFINITY, 4.0];
+        assert!(matches!(
+            idct_2d(&img_inf, 2, 2, DctType::III, DctNorm::Ortho),
+            Err(DctError::InvalidInput(_))
+        ));
+    }
+
+    #[test]
+    fn hostile_2d_oversized_dimensions_rejected() {
+        let img = vec![1.0, 2.0];
+        assert!(matches!(
+            dct_2d(&img, (MAX_DCT_LEN + 1) as u32, 2, DctType::II, DctNorm::Ortho),
+            Err(DctError::InvalidInput(_))
+        ));
+        assert!(matches!(
+            dct_2d(&img, u32::MAX, u32::MAX, DctType::II, DctNorm::Ortho),
+            Err(DctError::InvalidInput(_))
+        ));
     }
 }

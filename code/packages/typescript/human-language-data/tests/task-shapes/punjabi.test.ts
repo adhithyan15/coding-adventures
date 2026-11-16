@@ -164,4 +164,43 @@ describe("Punjabi task-shape inventories", () => {
     expect(Object.values(inventory.passRule.independentSkillThresholds)).toEqual([0.6, 0.6, 0.6, 0.6]);
     expect(inventory.passRule).toMatchObject({ maximumPoints: 400, passPoints: 240 });
   });
+
+  it("pins the project-owned B1 four-skill paper to the Punjabi specification", () => {
+    const inventory = loadTaskShapeInventory("punjabi", "B1");
+    expect(inventory.target).toEqual({
+      name: "Coding Adventures Punjabi B1 Assessment — project-defined equivalent",
+      basis: "project-defined",
+    });
+    expect(inventory.sources.some((source) => source.id === "ca-punjabi-assessment" &&
+      source.url.endsWith("/punjabi/assessment-spec.md") &&
+      source.published === "2026-08-21" && source.accessed === "2026-11-14")).toBe(true);
+    expect(inventory.administration).toMatchObject({
+      writtenMinutes: 125, speakingMinutes: 15, speakingPreparationMinutes: 10,
+    });
+    expect(inventory.sections.map((section) => section.minutes)).toEqual([45, 35, 45, 15]);
+    expect(inventory.sections.map((section) => section.parts.length)).toEqual([4, 4, 2, 4]);
+
+    const [reading, listening, writing, speaking] = inventory.sections;
+    expect(reading?.parts.reduce((sum, part) => sum + part.items, 0)).toBe(28);
+    expect(reading?.parts.reduce((sum, part) => sum + (part.stimulusLength?.minimum ?? 0), 0)).toBe(1100);
+    expect(reading?.parts.reduce((sum, part) => sum + (part.stimulusLength?.maximum ?? 0), 0)).toBe(1400);
+    expect(reading?.parts.every((part) => part.aids.forbidden.includes("Shahmukhi substitution"))).toBe(true);
+    expect(listening?.parts.map((part) => part.replayCount)).toEqual([2, 2, 1, 1]);
+    expect(listening?.parts.every((part) =>
+      part.promptModes.includes("recorded Punjabi at 130-150 words per minute"))).toBe(true);
+    expect(listening?.parts.every((part) => part.aids.forbidden.includes("romanization"))).toBe(true);
+    expect(writing?.parts.map((part) => part.responseLength)).toEqual([
+      { unit: "words", minimum: 50, maximum: 70, approximate: false },
+      { unit: "words", minimum: 130, maximum: 170, approximate: false },
+    ]);
+    expect(speaking?.parts[1]?.responseLength?.maximum).toBe(180);
+    expect(reading?.parts.every((part) => part.promptModes.includes("written-gurmukhi"))).toBe(true);
+    expect(writing?.parts.every((part) =>
+      part.responseModes.some((mode) => mode.includes("Gurmukhi")) &&
+      ["copyable answer model", "romanization", "Shahmukhi substitution", "dictionary", "translator", "spell-checker"]
+        .every((aid) => part.aids.forbidden.includes(aid)))).toBe(true);
+    expect(inventory.sections.map((section) =>
+      section.parts.reduce((sum, part) => sum + (part.scoring.maxRawPoints ?? 0), 0))).toEqual([100, 100, 100, 100]);
+    expect(Object.values(inventory.passRule.independentSkillThresholds)).toEqual([0.6, 0.6, 0.6, 0.6]);
+  });
 });

@@ -1,0 +1,22 @@
+[package]
+name = "music-machine-core"
+version = "0.1.0"
+edition = "2021"
+description = "MUS01/03/04/07: Pure Rust deterministic sheet music parser, multi-track synthesizer, and WAV generator"
+license = "MIT"
+readme = "README.md"
+
+[dependencies]
+note-frequency = { package = "coding-adventures-note-frequency", path = "../note-frequency" }
+oscillator = { path = "../oscillator" }
+pcm-audio = { path = "../pcm-audio" }
+note-audio = { path = "../note-audio" }
+virtual-dac = { path = "../virtual-dac" }
+virtual-speaker = { path = "../virtual-speaker" }
+wav-sink = { path = "../wav-sink" }
+musical-instruments = { path = "../musical-instruments" }
+percussion-kit = { path = "../percussion-kit" }
+
+[dev-dependencies]
+coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
+coding_adventures_sha256 = { path = "../sha256" }

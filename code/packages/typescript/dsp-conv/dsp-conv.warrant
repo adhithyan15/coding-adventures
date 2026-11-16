@@ -1,0 +1,122 @@
+-- DSP-CONV -- Convolution and Image Filters for the DSP layer
+--
+-- Warrant specification for typescript/dsp-conv (VER04h / DSP04).
+-- Covers memory safety, resource bounding (CWE-400), integer overflow prevention (CWE-190),
+-- strictly iterative execution (CWE-674), and all-operands-public guarantees.
+
+warrant dsp_conv v1
+  error ConvError = EMPTY_SIGNAL | EMPTY_KERNEL | IMAGE_SIZE_MISMATCH | KERNEL_TOO_LARGE | INVALID_INPUT
+
+  op conv1d(signal: Bytes, kernel: Bytes, mode: Nat) -> Result<Bytes, ConvError>
+  op conv2d(image: Bytes, kernel: Bytes, height: Nat, width: Nat, kh: Nat, kw: Nat, mode: Nat) -> Result<Bytes, ConvError>
+  op sep_conv2d(image: Bytes, h_kernel: Bytes, v_kernel: Bytes, height: Nat, width: Nat, mode: Nat) -> Result<Bytes, ConvError>
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  -- All operands are public signal / pixel data.
+  labels conv1d:
+    signal public
+    kernel public
+    mode public
+  labels conv2d:
+    image public
+    kernel public
+    height public
+    width public
+    kh public
+    kw public
+    mode public
+  labels sep_conv2d:
+    image public
+    h_kernel public
+    v_kernel public
+    height public
+    width public
+    mode public
+
+  input conv1d.signal:
+    hostile
+    rejects len(signal) == 0 with ConvError.EMPTY_SIGNAL
+    rejects len(signal) > 67108864 with ConvError.INVALID_INPUT
+    ensures no_panic, terminates
+  input conv1d.kernel:
+    hostile
+    rejects len(kernel) == 0 with ConvError.EMPTY_KERNEL
+    rejects len(kernel) > 4194304 with ConvError.INVALID_INPUT
+    ensures no_panic, terminates
+  input conv1d.mode:
+    hostile
+    ensures no_panic, terminates
+
+  input conv2d.image:
+    hostile
+    rejects len(image) == 0 with ConvError.IMAGE_SIZE_MISMATCH
+    rejects len(image) > 67108864 with ConvError.INVALID_INPUT
+    ensures no_panic, terminates
+  input conv2d.kernel:
+    hostile
+    rejects len(kernel) == 0 with ConvError.EMPTY_KERNEL
+    rejects len(kernel) > 4194304 with ConvError.INVALID_INPUT
+    ensures no_panic, terminates
+  input conv2d.height:
+    hostile
+    ensures no_panic, terminates
+  input conv2d.width:
+    hostile
+    ensures no_panic, terminates
+  input conv2d.kh:
+    hostile
+    ensures no_panic, terminates
+  input conv2d.kw:
+    hostile
+    ensures no_panic, terminates
+  input conv2d.mode:
+    hostile
+    ensures no_panic, terminates
+
+  input sep_conv2d.image:
+    hostile
+    rejects len(image) == 0 with ConvError.IMAGE_SIZE_MISMATCH
+    rejects len(image) > 67108864 with ConvError.INVALID_INPUT
+    ensures no_panic, terminates
+  input sep_conv2d.h_kernel:
+    hostile
+    rejects len(h_kernel) == 0 with ConvError.EMPTY_KERNEL
+    rejects len(h_kernel) > 4194304 with ConvError.INVALID_INPUT
+    ensures no_panic, terminates
+  input sep_conv2d.v_kernel:
+    hostile
+    rejects len(v_kernel) == 0 with ConvError.EMPTY_KERNEL
+    rejects len(v_kernel) > 4194304 with ConvError.INVALID_INPUT
+    ensures no_panic, terminates
+  input sep_conv2d.height:
+    hostile
+    ensures no_panic, terminates
+  input sep_conv2d.width:
+    hostile
+    ensures no_panic, terminates
+  input sep_conv2d.mode:
+    hostile
+    ensures no_panic, terminates
+
+  -- Declared bounds: linear in N for 1-D same, O(N * K) worst case.
+  bound conv1d:
+    output <= len(signal)
+    steps <= 32 * len(signal) * len(kernel) + 4096
+    heap <= 4 * len(signal) + 8192
+    depth <= 32
+
+  bound conv2d:
+    output <= len(image)
+    steps <= 32 * len(image) * (kh * kw) + 4096
+    heap <= 4 * len(image) + 8192
+    depth <= 32
+
+  bound sep_conv2d:
+    output <= len(image)
+    steps <= 32 * len(image) * (len(h_kernel) + len(v_kernel)) + 4096
+    heap <= 8 * len(image) + 8192
+    depth <= 32

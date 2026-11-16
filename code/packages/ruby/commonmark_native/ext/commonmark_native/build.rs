@@ -123,6 +123,19 @@ fn generate_msvc_lib(dll_name: &str, so_name: &str, out_dir: &str) -> bool {
         // Functions from ruby-bridge (define_module_function_raw, path2class):
         ("rb_define_module_function", false),
         ("rb_path2class", false),
+        ("rb_check_typeddata", false),
+        ("rb_data_object_wrap", false),
+        ("rb_define_alloc_func", false),
+        ("rb_define_class_under", false),
+        ("rb_define_method", false),
+        ("rb_define_singleton_method", false),
+        ("rb_eval_string", false),
+        ("rb_float_new", false),
+        ("rb_hash_aset", false),
+        ("rb_hash_new", false),
+        ("rb_num2dbl", false),
+        ("rb_str_new", false),
+        ("rb_string_value_ptr", false),
     ];
 
     // Write the .def file.

@@ -68,6 +68,8 @@ func TestWarrantLaneArtifactsSelectGrammarAndAssuranceConsumers(t *testing.T) {
 		{Name: "rust/test-bootstrap", Language: "rust"},
 		{Name: "python/warrant-corpus", Language: "python"},
 		{Name: "python/ct-compare", Language: "python"},
+		{Name: "typescript/warrant-corpus", Language: "typescript"},
+		{Name: "typescript/ct-compare", Language: "typescript"},
 	}
 	for _, input := range []string{
 		"code/specs/ct-compare.warrant",
@@ -83,6 +85,12 @@ func TestWarrantLaneArtifactsSelectGrammarAndAssuranceConsumers(t *testing.T) {
 			// read the spec, the corpus and the registry.
 			want["python/warrant-corpus"] = true
 			want["python/ct-compare"] = true
+		}
+		if isWarrantTypeScriptLaneCorpusInput(input) {
+			// WD-102: the TypeScript lane runner and its ct-compare pilot
+			// read the same spec, corpus and registry.
+			want["typescript/warrant-corpus"] = true
+			want["typescript/ct-compare"] = true
 		}
 		if err != nil || !reflect.DeepEqual(got, want) {
 			t.Fatalf("%s: got %v, err %v", input, got, err)
@@ -153,6 +161,60 @@ func TestPythonWarrantLaneInputsSelectTheirConsumers(t *testing.T) {
 		`code\packages\python\warrant-corpus\src\x.py`,
 	} {
 		if isWarrantPythonLanePilotInput(input) {
+			t.Errorf("lookalike selected the pilot: %s", input)
+		}
+	}
+}
+
+// WD-102: the TypeScript Warrant lane. The pilot names the runner as a file:
+// devDependency, but its committed manifest embeds the runner's source digest,
+// so a runner edit selects the pilot by an explicit registered prefix too.
+func TestTypeScriptWarrantLaneInputsSelectTheirConsumers(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "typescript/warrant-corpus", Language: "typescript"},
+		{Name: "typescript/ct-compare", Language: "typescript"},
+	}
+	corpusFiles := []string{
+		"code/specs/ct-compare.warrant",
+		"code/specs/fixtures/ct-compare-warrant-v1/cases.tfv",
+		"code/specs/fixtures/ct-compare-warrant-v1/corpus.json",
+		"code/specs/fixtures/ct-compare-warrant-v1/consumers.json",
+	}
+	for _, input := range corpusFiles {
+		// The language filter isolates the TypeScript consumers from the Rust
+		// and Python ones that read the same spec and corpus.
+		got, err := repositoryInputConsumersForChange([]string{input}, packages, "typescript")
+		want := map[string]bool{"typescript/warrant-corpus": true, "typescript/ct-compare": true}
+		if err != nil || !reflect.DeepEqual(got, want) {
+			t.Fatalf("%s: got %v, err %v", input, got, err)
+		}
+		if _, err := repositoryInputConsumersForChange([]string{input}, packages[:1], "typescript"); err == nil {
+			t.Fatalf("%s: a missing TypeScript lane consumer must fail closed", input)
+		}
+		if got, err := repositoryInputConsumersForChange([]string{input}, packages, "go"); err != nil || len(got) != 0 {
+			t.Fatalf("%s: language filtering: %v, %v", input, got, err)
+		}
+	}
+
+	// An edit to the runner selects the pilot (the runner selects itself
+	// through the normal package mapping, not through this table).
+	got, err := repositoryInputConsumersForChange([]string{"code/packages/typescript/warrant-corpus/src/runner.ts"}, packages, "typescript")
+	want := map[string]bool{"typescript/ct-compare": true}
+	if err != nil || !reflect.DeepEqual(got, want) {
+		t.Fatalf("runner edit: got %v, err %v", got, err)
+	}
+
+	for _, input := range []string{
+		"code/specs/fixtures/ct-compare-warrant-v10/corpus.json",
+		"code/specs/fixtures/ct-compare-warrant-v1/consumers.schema.json",
+		"code/specs/fixtures/ct-compare-warrant-v1/consumers.backup.json",
+		"code/packages/typescript/warrant-corpus-extra/src/x.ts",
+		"code/packages/typescript/warrant-corpus",
+		"code/packages/python/warrant-corpus/src/coding_adventures_warrant_corpus/runner.py",
+		"docs/code/specs/ct-compare.warrant",
+		`code\packages\typescript\warrant-corpus\src\x.ts`,
+	} {
+		if isWarrantTypeScriptLanePilotInput(input) {
 			t.Errorf("lookalike selected the pilot: %s", input)
 		}
 	}

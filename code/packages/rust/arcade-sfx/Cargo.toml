@@ -1,0 +1,33 @@
+[package]
+name = "arcade-sfx"
+version = "0.1.0"
+edition = "2021"
+description = "Deterministic fixed-point arcade sound generator and preset synthesis engine"
+license = "MIT"
+
+[lib]
+name = "arcade_sfx"
+path = "src/lib.rs"
+
+[dependencies]
+pcm-audio = { path = "../pcm-audio" }
+audio-mixer-realtime = { path = "../audio-mixer-realtime" }
+
+[dev-dependencies]
+coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
+coding_adventures_sha256 = { path = "../sha256" }
+capability-runtime-conformance = { path = "../capability-runtime-conformance" }
+
+[[test]]
+name = "conformance"
+path = "tests/conformance.rs"
+
+[[test]]
+name = "microbenchmarks"
+path = "tests/microbenchmarks.rs"
+harness = false
+
+[[test]]
+name = "runtime_capability"
+path = "tests/runtime_capability.rs"
+harness = false

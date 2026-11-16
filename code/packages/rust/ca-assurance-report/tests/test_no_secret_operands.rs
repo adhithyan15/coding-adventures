@@ -36,7 +36,7 @@ use std::path::{Path, PathBuf};
 use coding_adventures_ca_assurance_report::{
     build_weakness_matrix, generate_package_report, verify_assurance_report, verify_evidence,
     AssuranceReport, AuditEvidence, AuditProfile, CheckVerdict, Evidence, EvidenceCheckError as E,
-    PackageAuditContext, WeaknessRegistry, WeaknessStatus,
+    LanguageSafetyProfile, PackageAuditContext, WeaknessRegistry, WeaknessStatus,
 };
 
 const ATTEST: &str = "warrant-spec::all-operands-public";
@@ -53,7 +53,6 @@ fn leb_report(ev: &Evidence) -> AssuranceReport {
         "c0ffee",
         &WeaknessRegistry::embedded(),
         ev,
-        AuditProfile::VarintCodec,
     )
     .expect("report derives from the wasm-leb128 manifests")
 }
@@ -65,7 +64,6 @@ fn gf_report(ev: &Evidence) -> AssuranceReport {
         "c0ffee",
         &WeaknessRegistry::embedded(),
         ev,
-        AuditProfile::FieldArithmetic,
     )
     .expect("report derives from the gf256 manifests")
 }
@@ -75,7 +73,12 @@ fn gf_report(ev: &Evidence) -> AssuranceReport {
 fn ctx(evidence: AuditEvidence) -> PackageAuditContext {
     PackageAuditContext {
         package_id: "rust/example".into(),
+        language_safety: LanguageSafetyProfile::SafeRust,
         is_safe_rust: true,
+        has_secret_ops: false,
+        has_eval_analyzer_evidence: false,
+        has_prototype_analyzer_evidence: false,
+        constant_time_claims: vec![],
         declared_capabilities: vec![],
         has_wir_timing_proof: false,
         has_instruction_benchmarks: false,
@@ -83,6 +86,8 @@ fn ctx(evidence: AuditEvidence) -> PackageAuditContext {
         has_pbt_coverage: true,
         has_fuzz_coverage: true,
         evidence: AuditEvidence {
+            profile: AuditProfile::load(&pkg_dir("wasm-leb128")).expect("an adopter's profile loads"),
+            all_ops_step_bounded: true,
             step_not_live: vec!["warrant/m/proof/op/steps-bound".into()],
             step_unproven: vec!["warrant/m/proof/op/steps-bound".into()],
             not_live_note: "front end refused".into(),
@@ -108,10 +113,17 @@ fn no_secret_operand_and_no_ct_obligation_is_not_applicable() {
         ..AuditEvidence::default()
     })
     .expect("the attested case is a row, not an open row");
-    assert_eq!(row.status, WeaknessStatus::Exemption);
-    assert_eq!(row.approved, Some(false), "no exemption is approved without a signature");
-    assert!(row.reason.starts_with("not applicable: no secret operands"), "{}", row.reason);
-    assert_eq!(row.evidence, vec![ATTEST.to_string()], "cites the derived attestation only");
+    assert_eq!(row.status, WeaknessStatus::Excluded);
+    assert_eq!(row.approved, None, "excluded rows have no approval field");
+    assert!(row.reason.starts_with("no secret inputs"), "{}", row.reason);
+    assert_eq!(
+        row.evidence,
+        vec![
+            "capability-audit::no-secret-inputs".to_string(),
+            ATTEST.to_string(),
+        ],
+        "cites the no-secret-inputs capability audit and the derived attestation"
+    );
 }
 
 #[test]
@@ -185,7 +197,7 @@ impl Copy {
                 fs::copy(entry.path(), pkg.join("src").join(entry.file_name())).unwrap();
             }
         }
-        for f in ["effect_certificate.json", "evidence.bindings", "Cargo.toml"] {
+        for f in ["effect_certificate.json", "evidence.bindings", "Cargo.toml", "assurance-profile.json"] {
             fs::copy(real.join(f), pkg.join(f)).unwrap();
         }
         fs::create_dir_all(root.join("code/specs")).unwrap();
@@ -249,12 +261,16 @@ fn wasm_leb128_report_derives_verifies_and_matches_the_checked_in_file() {
     assert_eq!(report.claims.len(), 6, "one claim per Warrant operation");
 
     let r208 = report.weaknesses.iter().find(|w| w.cwe == 208).unwrap();
-    assert_eq!(r208.status, WeaknessStatus::Exemption);
-    assert!(r208.reason.starts_with("not applicable: no secret operands"), "{}", r208.reason);
-    assert_eq!(r208.evidence, vec![ATTEST.to_string()]);
-    let na = report.exemptions.iter().find(|x| x.id == NA_ID).expect("not-applicable exemption");
-    assert_eq!((na.cwe, na.approved, na.kind.as_str()), (208, false, "not-applicable"));
-    assert!(na.assumptions.is_empty(), "an inapplicable class relies on no assumption");
+    assert_eq!(r208.status, WeaknessStatus::Excluded);
+    assert!(r208.reason.starts_with("no secret inputs"), "{}", r208.reason);
+    assert_eq!(
+        r208.evidence,
+        vec![
+            "capability-audit::no-secret-inputs".to_string(),
+            ATTEST.to_string(),
+        ]
+    );
+    assert!(!report.exemptions.iter().any(|x| x.id == NA_ID));
     assert!(report.exemptions.iter().any(|x| x.id == "EXEMPT-CWE-400-NO-STEP-PROOF"));
 
     // The static rows describe a varint codec, not GF(2^8) or comparisons.
@@ -273,7 +289,6 @@ fn wasm_leb128_report_derives_verifies_and_matches_the_checked_in_file() {
         &on_disk.commit,
         &WeaknessRegistry::embedded(),
         &ev,
-        AuditProfile::VarintCodec,
     )
     .unwrap();
     assert_eq!(fresh.to_json_string(), on_disk.to_json_string(), "regenerate assurance_report.json");
@@ -318,10 +333,14 @@ fn a_package_with_secrets_cannot_use_the_not_applicable_exemption() {
 }
 
 #[test]
-fn the_boolean_logic_profile_parses_and_unknown_profiles_list_it() {
-    assert_eq!("boolean-logic".parse::<AuditProfile>(), Ok(AuditProfile::BooleanLogic));
-    let err = "lzw".parse::<AuditProfile>().unwrap_err();
-    assert!(err.contains("boolean-logic"), "{err}");
+fn the_boolean_logic_profile_is_a_data_file_that_names_itself() {
+    // The profile is `assurance-profile.json` beside the package, not an enum variant.
+    let p = AuditProfile::load(&pkg_dir("logic-gates")).unwrap();
+    assert_eq!(p.name, "boolean-logic");
+    assert!(!p.decompresses());
+    for cwe in [326, 327, 407] {
+        assert!(p.row_reason(cwe).is_some(), "CWE-{cwe}");
+    }
 }
 
 #[test]
@@ -333,7 +352,6 @@ fn the_logic_gates_report_uses_the_boolean_logic_sentences_and_matches_its_manif
         "c0ffee",
         &WeaknessRegistry::embedded(),
         &ev,
-        AuditProfile::BooleanLogic,
     )
     .expect("report derives from the logic-gates manifests");
     for cwe in [326, 327, 407] {
@@ -345,8 +363,9 @@ fn the_logic_gates_report_uses_the_boolean_logic_sentences_and_matches_its_manif
     }
     let row = report.weaknesses.iter().find(|w| w.cwe == 407).unwrap();
     assert!(row.reason.contains("at most 16 inputs"), "{}", row.reason);
-    // The CWE-208 row is the not-applicable exemption: every operand is public.
-    assert!(report.exemptions.iter().any(|x| x.id == NA_ID));
+    // The CWE-208 row is excluded under no-secret-inputs: every operand is public.
+    assert!(report.weaknesses.iter().any(|w| w.cwe == 208 && w.status == WeaknessStatus::Excluded));
+    assert!(!report.exemptions.iter().any(|x| x.id == NA_ID));
     // And the checked-in report is exactly what the manifests derive.
     let text = fs::read_to_string(pkg_dir("logic-gates").join("assurance_report.json")).unwrap();
     let on_disk = AssuranceReport::from_json_str(&text).unwrap();
@@ -357,17 +376,20 @@ fn the_logic_gates_report_uses_the_boolean_logic_sentences_and_matches_its_manif
         &on_disk.commit,
         &WeaknessRegistry::embedded(),
         &ev,
-        AuditProfile::BooleanLogic,
     )
     .unwrap();
     assert_eq!(fresh.to_json_string(), on_disk.to_json_string(), "regenerate assurance_report.json");
 }
 
 #[test]
-fn the_bit_arithmetic_profile_parses_and_unknown_profiles_list_it() {
-    assert_eq!("bit-arithmetic".parse::<AuditProfile>(), Ok(AuditProfile::BitArithmetic));
-    let err = "lzw".parse::<AuditProfile>().unwrap_err();
-    assert!(err.contains("bit-arithmetic"), "{err}");
+fn the_bit_arithmetic_profile_is_a_data_file_that_names_itself() {
+    // The profile is `assurance-profile.json` beside the package, not an enum variant.
+    let p = AuditProfile::load(&pkg_dir("arithmetic")).unwrap();
+    assert_eq!(p.name, "bit-arithmetic");
+    assert!(!p.decompresses());
+    for cwe in [326, 327, 407] {
+        assert!(p.row_reason(cwe).is_some(), "CWE-{cwe}");
+    }
 }
 
 #[test]
@@ -379,7 +401,6 @@ fn the_arithmetic_report_uses_the_bit_arithmetic_sentences_and_matches_its_manif
         "c0ffee",
         &WeaknessRegistry::embedded(),
         &ev,
-        AuditProfile::BitArithmetic,
     )
     .expect("report derives from the arithmetic manifests");
     for cwe in [326, 327, 407] {
@@ -401,8 +422,9 @@ fn the_arithmetic_report_uses_the_bit_arithmetic_sentences_and_matches_its_manif
     }
     let row = report.weaknesses.iter().find(|w| w.cwe == 407).unwrap();
     assert!(row.reason.contains("linear in the operand length"), "{}", row.reason);
-    // The CWE-208 row is the not-applicable exemption: every operand is public.
-    assert!(report.exemptions.iter().any(|x| x.id == NA_ID));
+    // The CWE-208 row is excluded under no-secret-inputs: every operand is public.
+    assert!(report.weaknesses.iter().any(|w| w.cwe == 208 && w.status == WeaknessStatus::Excluded));
+    assert!(!report.exemptions.iter().any(|x| x.id == NA_ID));
     // And the checked-in report is exactly what the manifests derive.
     let text = fs::read_to_string(pkg_dir("arithmetic").join("assurance_report.json")).unwrap();
     let on_disk = AssuranceReport::from_json_str(&text).unwrap();
@@ -413,17 +435,20 @@ fn the_arithmetic_report_uses_the_bit_arithmetic_sentences_and_matches_its_manif
         &on_disk.commit,
         &WeaknessRegistry::embedded(),
         &ev,
-        AuditProfile::BitArithmetic,
     )
     .unwrap();
     assert_eq!(fresh.to_json_string(), on_disk.to_json_string(), "regenerate assurance_report.json");
 }
 
 #[test]
-fn the_varint_profile_parses_and_unknown_profiles_list_it() {
-    assert_eq!("varint-codec".parse::<AuditProfile>(), Ok(AuditProfile::VarintCodec));
-    let err = "lzw".parse::<AuditProfile>().unwrap_err();
-    assert!(err.contains("varint-codec"), "{err}");
+fn the_varint_codec_profile_is_a_data_file_that_names_itself() {
+    // The profile is `assurance-profile.json` beside the package, not an enum variant.
+    let p = AuditProfile::load(&pkg_dir("wasm-leb128")).unwrap();
+    assert_eq!(p.name, "varint-codec");
+    assert!(!p.decompresses());
+    for cwe in [326, 327, 407] {
+        assert!(p.row_reason(cwe).is_some(), "CWE-{cwe}");
+    }
 }
 
 /// wasm-leb128's genuine report with the CWE-208 exemption relabelled to the
@@ -433,8 +458,20 @@ fn the_varint_profile_parses_and_unknown_profiles_list_it() {
 fn leb_attestation_under_another_exemption() -> (AssuranceReport, Evidence) {
     let ev = Evidence::load(&pkg_dir("wasm-leb128")).unwrap();
     let mut report = leb_report(&ev);
-    let x = report.exemptions.iter_mut().find(|x| x.id == NA_ID).unwrap();
-    x.id = "EXEMPT-CWE-208-GATE-LEVEL".into();
+    let row = report.weaknesses.iter_mut().find(|w| w.cwe == 208).unwrap();
+    row.status = WeaknessStatus::Exemption;
+    row.approved = Some(false);
+    row.reason = "not applicable: no secret operands".into();
+    row.evidence = vec![ATTEST.into()];
+    report.exemptions.push(coding_adventures_ca_assurance_report::ComputedExemption {
+        id: "EXEMPT-CWE-208-GATE-LEVEL".into(),
+        kind: "weakness-floor".into(),
+        cwe: 208,
+        approved: false,
+        rationale: "not applicable: no secret operands".into(),
+        evidence: vec![ATTEST.into()],
+        assumptions: vec![],
+    });
     (report, ev)
 }
 

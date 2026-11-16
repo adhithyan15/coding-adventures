@@ -387,6 +387,7 @@
   ],
   "package": "rust/gf256",
   "profile": "field-arithmetic",
+  "profile_sha256": "fe0420a66e764a1db03f8cfba1d61d57330388585a512d7d70480ca8e5f9cff0",
   "public_symbols_without_claims": [],
   "rungs": {
     "E0": "pass",

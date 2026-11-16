@@ -1,5 +1,17 @@
 # Changelog — dsp-complex
 
+## 0.2.0 — 2026-11-15
+
+### Changed — Security Hardening and CWE Mitigations
+
+- Enforced `#![forbid(unsafe_code)]` unconditionally.
+- Added `MAX_SAMPLES = 1 << 24` resource bound (CWE-400 / CWE-190).
+- Added `try_from_real` checked constructor with clean `Result::Err` handling.
+- Added finite-input checks (`!is_finite()` rejected cleanly with `ComplexError::InvalidInput`) across all constructors, preventing arithmetic poisoning and NaN propagation.
+- Added Knuth-style literate comments detailing algorithmic structure and invariants.
+- Added property-based testing suite driven by `coding_adventures_test_bootstrap::prng::SplitMix64` and hostile tests for `NaN`, `Inf`, and oversized lengths.
+- Added `dsp-complex.warrant` contract specification.
+
 ## 0.1.0 — 2026-05-13
 
 ### Added — DSP01 Phase 2 (scalar `ComplexTensor`)

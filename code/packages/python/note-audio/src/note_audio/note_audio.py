@@ -19,6 +19,9 @@ from numbers import Integral, Real
 
 from note_frequency import Note, parse_note
 from oscillator import (
+    MAX_DURATION_SECONDS,
+    MAX_SAMPLE_RATE_HZ,
+    MAX_SAMPLES,
     SampleBuffer,
     SineOscillator,
     UniformSampler,
@@ -46,7 +49,8 @@ from virtual_speaker import (
 from wav_sink import OutputPath, to_wav_bytes, write_wav
 
 DEFAULT_AMPLITUDE = 0.8
-DEFAULT_MAX_SAMPLE_COUNT = 10_000_000
+MAX_SAMPLE_COUNT = MAX_SAMPLES
+DEFAULT_MAX_SAMPLE_COUNT = MAX_SAMPLES
 
 NoteInput = Note | str
 
@@ -58,6 +62,10 @@ __all__ = [
     "DEFAULT_MAX_SAMPLE_COUNT",
     "DEFAULT_SAMPLE_RATE_HZ",
     "DEFAULT_SPEAKER_GAIN",
+    "MAX_DURATION_SECONDS",
+    "MAX_SAMPLES",
+    "MAX_SAMPLE_COUNT",
+    "MAX_SAMPLE_RATE_HZ",
     "AnalogSignal",
     "LinearSpeakerSignal",
     "NoteEvent",
@@ -81,7 +89,6 @@ __all__ = [
 
 def _finite_float(name: str, value: Real) -> float:
     """Convert a finite real value to ``float`` and reject slippery inputs."""
-
     if isinstance(value, bool) or not isinstance(value, Real):
         raise ValueError(f"{name} must be a finite real number, got {value!r}")
 
@@ -134,11 +141,13 @@ class NoteEvent:
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "note", _parse_note_input(self.note))
-        object.__setattr__(
-            self,
-            "duration_seconds",
-            _non_negative_float("duration_seconds", self.duration_seconds),
-        )
+        duration = _non_negative_float("duration_seconds", self.duration_seconds)
+        if duration > MAX_DURATION_SECONDS:
+            raise ValueError(
+                f"duration_seconds {duration} exceeds "
+                f"MAX_DURATION_SECONDS={MAX_DURATION_SECONDS}"
+            )
+        object.__setattr__(self, "duration_seconds", duration)
         object.__setattr__(
             self,
             "amplitude",
@@ -173,6 +182,8 @@ class RenderedNote:
 
 def _validate_sample_budget(sample_count: int, max_sample_count: int) -> None:
     limit = _non_negative_int("max_sample_count", max_sample_count)
+    if limit > MAX_SAMPLES:
+        raise ValueError(f"max_sample_count {limit} exceeds MAX_SAMPLES={MAX_SAMPLES}")
     if sample_count > limit:
         raise ValueError(
             f"render would create {sample_count} samples, "
@@ -193,14 +204,19 @@ def render_note_to_sound_chain(
     max_sample_count: int = DEFAULT_MAX_SAMPLE_COUNT,
 ) -> RenderedNote:
     """Render a note while keeping every MUS01 layer available for inspection."""
-
     event = NoteEvent(
         note=note,
-        duration_seconds=_non_negative_float("duration_seconds", duration_seconds),
-        amplitude=_non_negative_float("amplitude", amplitude),
-        start_time_seconds=_finite_float("start_time_seconds", start_time_seconds),
+        duration_seconds=duration_seconds,
+        amplitude=amplitude,
+        start_time_seconds=start_time_seconds,
     )
     sample_rate = _positive_float("sample_rate_hz", sample_rate_hz)
+    if sample_rate > MAX_SAMPLE_RATE_HZ:
+        raise ValueError(
+            f"sample_rate_hz {sample_rate} exceeds "
+            f"MAX_SAMPLE_RATE_HZ={MAX_SAMPLE_RATE_HZ}"
+        )
+
     frequency = event.note.frequency()
     if frequency >= sample_rate / 2.0:
         raise ValueError(

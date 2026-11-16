@@ -1,0 +1,72 @@
+{
+  "schema_version": "ver24-effect-cert-v1",
+  "package": "rust/game-clock",
+  "source_digest": "a561710791889bf4cadc60e904d4666badd6823d016114d8fb58f9c8f569d15b",
+  "manifest_digest": "9009f7956229717f283f0b044e02aa1c0642e2af96363edd673dfdaf8c5ad9b1",
+  "declared_effects": [],
+  "entry_points": [
+    {
+      "name": "standard_60hz",
+      "signature": "pub const fn standard_60hz() -> Self",
+      "effects": []
+    },
+    {
+      "name": "standard_120hz",
+      "signature": "pub const fn standard_120hz() -> Self",
+      "effects": []
+    },
+    {
+      "name": "from_hz",
+      "signature": "pub fn from_hz(hz: u32, max_frame_steps: u32) -> Result<Self, ClockError>",
+      "effects": []
+    },
+    {
+      "name": "new",
+      "signature": "pub fn new( fixed_dt_ns: u64, max_frame_steps: u32, max_frame_delta_ns: u64, ) -> Result<Self, ClockError>",
+      "effects": []
+    },
+    {
+      "name": "validate",
+      "signature": "pub fn validate(&self) -> Result<(), ClockError>",
+      "effects": []
+    },
+    {
+      "name": "new",
+      "signature": "pub fn new(config: GameClockConfig) -> Result<Self, ClockError>",
+      "effects": []
+    },
+    {
+      "name": "advance",
+      "signature": "pub fn advance(&mut self, raw_frame_delta_ns: u64) -> Result<ClockStepResult, ClockError>",
+      "effects": []
+    },
+    {
+      "name": "validate",
+      "signature": "pub fn validate(&self) -> Result<(), ClockError>",
+      "effects": []
+    },
+    {
+      "name": "alpha_f64",
+      "signature": "pub fn alpha_f64(&self) -> f64",
+      "effects": []
+    },
+    {
+      "name": "new_clock",
+      "signature": "pub fn new_clock(config: GameClockConfig) -> Result<GameClockState, ClockError>",
+      "effects": []
+    },
+    {
+      "name": "validate_state",
+      "signature": "pub fn validate_state(state: &GameClockState) -> Result<(), ClockError>",
+      "effects": []
+    },
+    {
+      "name": "advance_frame",
+      "signature": "pub fn advance_frame( state: &GameClockState, raw_frame_delta_ns: u64, ) -> Result<ClockStepResult, ClockError>",
+      "effects": []
+    }
+  ],
+  "unconditional_roots": [],
+  "banned_construct_exceptions": [],
+  "label": "proved"
+}

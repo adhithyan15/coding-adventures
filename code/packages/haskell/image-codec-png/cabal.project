@@ -1,0 +1,9 @@
+packages: .
+          ../pixel-container
+          ../zip
+          ../lzss
+
+allow-newer: zip:containers, lzss:containers
+
+package image-codec-png
+  coverage: True

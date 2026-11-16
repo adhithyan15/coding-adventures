@@ -19,6 +19,9 @@ requires:
   knowledge: [ZH-SCRIPT-NUM-SAN, ZH-METHOD-STROKE-COUNT]
 introduces:
   knowledge: [ZH-LEX-NUM-SAN]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [ZH-LEX-NUM-SAN, ZH-SCRIPT-NUM-SAN, ZH-METHOD-STROKE-COUNT, ZH-LEX-NUM-YI, ZH-LEX-NUM-ER]
 skills: [listening, speaking, reading]
@@ -54,15 +57,10 @@ listener recognises — before any of the individual words.
 ## Why it's said this way — the pattern stops here
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-METHOD-STROKE-COUNT] -->
 
-Three characters in, one stroke per unit, a system so regular it barely needs
-teaching. **It stops here**, and you should know why before it happens.
-
-Every counting system humans have built hits the same wall in the same place.
-Roman numerals go I, II, III and then break to IV, because stacked marks stop
-being readable at about three. This one breaks for exactly the same reason.
-
-You are being told now so that the next character feels like a solved problem
-rather than a broken promise.
+In the three number characters you have met, the stroke count matches the
+number: 一, 二, 三. **That local pattern stops here.** The next character uses a
+different shape, so do not try to guess it by stacking another bar. You will
+learn its shape directly in the next lesson.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -78,8 +76,8 @@ Baxter's transcription). The final *m* has since become *n*.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-NUM-SAN, ZH-METHOD-STROKE-COUNT] -->
-<!-- hl-activity: {"id":"ZH-C03-san-next","kind":"text","assesses":["ZH-METHOD-STROKE-COUNT"],"prompt":"Do you expect the character for four to have four strokes? Why or why not?","answer":"no","accepted":["four bars would be unreadable","you would have to count it","stacked bars stop being readable"],"feedback":{"correct":"No — four stacked bars would have to be counted rather than read.","incorrect":"No. Stacked marks stop being readable at about three."},"response_seconds":12} -->
+<!-- hl-activity: {"id":"ZH-C03-san-next","kind":"text","assesses":["ZH-METHOD-STROKE-COUNT"],"prompt":"Can you infer the character for four by adding one more bar to 三?","answer":"no","accepted":["no, it uses a different shape","four has a different shape","not by stacking bars"],"feedback":{"correct":"Right. The first three match their stroke counts; four uses a different shape.","incorrect":"No. Learn the next character as its own shape, not as another stacked bar."},"response_seconds":12} -->
 
-Three characters, three stroke counts, nothing memorised. That ends now.
+Three characters, three matching stroke counts. The next shape must be learned.
 
 Source: [Unicode CJK Unified Ideographs chart](https://www.unicode.org/charts/PDF/U4E00.pdf)

@@ -1,0 +1,80 @@
+-- GAME15b -- CRT Raster Beam Deflection & Vector Beam Display: Dual CRT simulation, phosphor decay & vector stroke rasterization.
+--
+-- Warrant document for sim-crt-vector-beam (VER04j and VER04m: state=explicit).
+-- Formal verification contract for pure deterministic CRT beam simulation.
+
+warrant sim_crt_vector_beam v1
+  error CrtError = InvalidDimensions | InvalidTiming | InvalidPhosphorDecay | InvalidSlewRate | BufferTooSmall | BufferOverflow | CoordinateOutOfBounds | NonFiniteCoordinate | LoweringError
+
+  model Unit = Bool
+  variant PhosphorType = P4White | P31Green | P1Green | Custom(decay_q16: U32)
+
+  record RasterTiming(visible_width: U32, visible_height: U32, h_front_porch: U32, h_sync: U32, h_back_porch: U32, v_front_porch: U32, v_sync: U32, v_back_porch: U32)
+  record BeamFlags(in_hblank: Bool, in_vblank: Bool, in_hsync: Bool, in_vsync: Bool, frame_completed: Bool, line_completed: Bool, visible_pixel: Bool)
+  record VectorStroke(x0: F64, y0: F64, x1: F64, y1: F64, intensity: U8, dwell_ticks: U32)
+  record VectorBeamPoint(x: F64, y: F64, blanked: Bool, intensity: U8, settled: Bool)
+
+  op decay_phosphor_sample(sample: U16, decay_factor_q16: U32) -> U16
+  op accumulate_intensity(current: U16, add_intensity: U16) -> U16
+  op validate_raster_timing(timing: RasterTiming) -> Result<Unit, CrtError>
+  op validate_slew_rate(slew_rate: F64) -> Result<Unit, CrtError>
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels decay_phosphor_sample:
+    sample public
+    decay_factor_q16 public
+  labels accumulate_intensity:
+    current public
+    add_intensity public
+  labels validate_raster_timing:
+    timing public
+  labels validate_slew_rate:
+    slew_rate public
+
+  input decay_phosphor_sample.sample:
+    hostile
+    ensures no_panic, terminates
+  input decay_phosphor_sample.decay_factor_q16:
+    hostile
+    ensures no_panic, terminates
+
+  input accumulate_intensity.current:
+    hostile
+    ensures no_panic, terminates
+  input accumulate_intensity.add_intensity:
+    hostile
+    ensures no_panic, terminates
+
+  input validate_raster_timing.timing:
+    hostile
+    ensures no_panic, terminates
+
+  input validate_slew_rate.slew_rate:
+    hostile
+    ensures no_panic, terminates
+
+  bound decay_phosphor_sample:
+    steps <= 32
+    heap <= 0
+
+  bound accumulate_intensity:
+    steps <= 16
+    heap <= 0
+
+  bound validate_raster_timing:
+    steps <= 64
+    heap <= 0
+
+  bound validate_slew_rate:
+    steps <= 32
+    heap <= 0
+
+  claim decay_sample_monotone:
+    forall v: U16, d: U32. (d <= 65536u32) implies (decay_phosphor_sample(v, d) <= v)
+
+  claim accumulate_intensity_saturates:
+    forall c: U16, a: U16. accumulate_intensity(c, a) >= c

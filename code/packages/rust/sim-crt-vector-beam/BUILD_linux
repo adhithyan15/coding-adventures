@@ -1,0 +1,4 @@
+cargo test -p sim-crt-vector-beam -- --nocapture
+cargo test -p sim-crt-vector-beam --release -- --nocapture
+cargo run --manifest-path ../ca-capability-analyzer/Cargo.toml -- --dir . --check-module
+cargo run --manifest-path ../ca-capability-analyzer/Cargo.toml -- --dir . --verify-cert effect_certificate.json

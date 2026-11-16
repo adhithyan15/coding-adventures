@@ -1,0 +1,35 @@
+# Warrant binding table (VER04i section 5.2) for code/specs/ct-compare.warrant.
+#
+# One line per Warrant operation: which public export implements it and how a
+# thrown error becomes a declared `Err` variant.  This file is data, not
+# code -- it cannot compute an answer, retry or fall back; the runner
+# (`@coding-adventures/warrant-corpus`) reads nothing else about this package.
+#
+# `import` is a path inside this package, never a bare package name, and its
+# real path must lie under `source`, so the digest of `src` describes the code
+# that actually ran.
+#
+# `width=implicit`: `ctEqFixed` infers the width N from its buffers; the runner
+# asserts every Bytes<N> argument really has length N and does not pass N.
+#
+# U64 and Nat are `bigint`, never `number`: a double cannot hold the corpus's
+# 377 `u64_edge` values (MAX and MAX^1 would round to the same number).
+#
+# The `errors=` row maps by EXACT class (the thrown value's prototype must be
+# RangeError.prototype), not message and not subclass.  But `toBytes` also throws
+# a plain RangeError for an out-of-range byte, so any such RangeError would read
+# as the length-mismatch error.  The corpus only passes Uint8Arrays, so that
+# cannot happen today; a dedicated error class would close it (backlog, portable
+# Warrant queue).  That remaining limit is VER04i section 11, item 3.
+lane typescript
+package typescript/ct-compare
+module ct_compare
+import src/index.ts
+source src
+seed 0x5741_5252_414e_5421
+values Bool=boolean Bytes=Uint8Array Nat=bigint U64=bigint
+
+op eq export=ctEq
+op eq_fixed export=ctEqFixed width=implicit
+op select_bytes export=ctSelectBytes errors=CT_SELECT_LENGTH_MISMATCH:RangeError
+op eq_u64 export=ctEqU64

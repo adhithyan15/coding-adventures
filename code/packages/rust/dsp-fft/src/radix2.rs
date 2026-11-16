@@ -60,7 +60,7 @@
 //!   tightens the cross-backend test harness.
 
 use crate::Direction;
-use crate::FftError;
+use crate::{FftError, MAX_FFT_LEN, MAX_SAMPLES};
 use matrix_ir::{DType, Graph, GraphBuilder, Shape, Tensor, TensorId};
 
 /// Build a `matrix_ir::Graph` that computes the FFT (or inverse
@@ -74,6 +74,13 @@ use matrix_ir::{DType, Graph, GraphBuilder, Shape, Tensor, TensorId};
 pub fn build_fft_graph(n: u32, direction: Direction) -> Result<Graph, FftError> {
     if n < 2 || !n.is_power_of_two() {
         return Err(FftError::NotPowerOfTwo(n as usize));
+    }
+    if (n as usize) > MAX_FFT_LEN {
+        return Err(FftError::InvalidInput(format!(
+            "FFT length {} exceeds MAX_FFT_LEN ({})",
+            n,
+            MAX_FFT_LEN
+        )));
     }
     let mut b = GraphBuilder::new();
 
@@ -130,6 +137,12 @@ pub fn add_radix2_fft_to_builder(
     n: u32,
     direction: Direction,
 ) -> Result<Tensor, FftError> {
+    if (n as usize) > MAX_FFT_LEN {
+        return Err(FftError::InvalidInput(format!(
+            "radix-2 length {} exceeds MAX_FFT_LEN ({})",
+            n, MAX_FFT_LEN
+        )));
+    }
     if n < 2 || !n.is_power_of_two() {
         return Err(FftError::NotPowerOfTwo(n as usize));
     }
@@ -236,6 +249,18 @@ pub fn build_fft_graph_with_input(
     direction: Direction,
 ) -> Result<(Graph, TensorId), FftError> {
     let n = signal.len() as u32;
+    if signal.len() > MAX_SAMPLES || signal.len() > MAX_FFT_LEN {
+        return Err(FftError::InvalidInput(format!(
+            "signal length {} exceeds bounds ({})",
+            signal.len(),
+            MAX_FFT_LEN
+        )));
+    }
+    if signal.iter().any(|&x| !x.is_finite()) {
+        return Err(FftError::InvalidInput(
+            "input contains non-finite float (NaN or Inf)".into(),
+        ));
+    }
     if n < 2 || !n.is_power_of_two() {
         return Err(FftError::NotPowerOfTwo(signal.len()));
     }
@@ -553,5 +578,14 @@ mod tests {
                 recovered[2 * i + 1]
             );
         }
+    }
+
+    #[test]
+    fn test_add_radix2_fft_to_builder_oversized_rejected() {
+        let mut b = GraphBuilder::new();
+        let oversized = (MAX_FFT_LEN as u32) * 2;
+        let dummy = b.constant(DType::F32, Shape::from(&[2, 2]), vec![0u8; 16]);
+        let res = add_radix2_fft_to_builder(&mut b, dummy, oversized, Direction::Forward);
+        assert!(matches!(res, Err(FftError::InvalidInput(_))));
     }
 }

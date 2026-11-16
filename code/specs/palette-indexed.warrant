@@ -1,0 +1,69 @@
+-- GAME20 -- Palette Indexed: deterministic zero-allocation indexed-colour pixel formats, palette fading and blitting.
+--
+-- Warrant document for palette-indexed (VER04j and VER04m: state=explicit).
+-- Formal verification contract for pure indexed-colour pixel transformation.
+
+warrant palette_indexed v1
+  -- Contract mapping: validate_dimension models the guard in packed_row_len (and every size
+  -- computation built on it); validate_fade models the guard in ade_color / ade_palette_into.
+  error PaletteError = InvalidDimensions | DimensionTooLarge | SizeOverflow | StrideTooSmall | BufferTooSmall | IndexOutOfRange | PaletteTooSmall | TooManyColors | InvalidFadeStep | DepthMismatch | OutOfBounds | ContainerMismatch
+
+  model Unit = Bool
+  variant BitDepth = Bpp2 | Bpp4 | Bpp8
+  variant ChannelBits = Bits8 | Bits6 | Bits5 | Bits4 | Bits3 | Bits2
+
+  record BlitOptions(color0_transparent: Bool, h_flip: Bool, v_flip: Bool)
+
+  model valid_dimension(n: Nat) -> Bool = n >= 1 and n <= 16384
+  model valid_fade(step: Nat, steps: Nat) -> Bool = steps >= 1 and steps <= 1024 and step <= steps
+  model lerp_model(from: Nat, to: Nat, step: Nat, steps: Nat) -> Nat = (from * (steps - step) + to * step + steps / 2) / steps
+
+  op validate_dimension(n: Nat) -> Result<Bool, PaletteError>
+  op validate_fade(step: Nat, steps: Nat) -> Result<Bool, PaletteError>
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels validate_dimension:
+    n public
+  labels validate_fade:
+    step public
+    steps public
+
+  input validate_dimension.n:
+    hostile
+    ensures no_panic, terminates
+
+  input validate_fade.step:
+    hostile
+    ensures no_panic, terminates
+  input validate_fade.steps:
+    hostile
+    ensures no_panic, terminates
+
+  bound validate_dimension:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_fade:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+
+  example dimension_min:
+    validate_dimension(1) == Ok(true)
+  example dimension_max:
+    validate_dimension(16384) == Ok(true)
+  example dimension_zero:
+    validate_dimension(0) == Err(PaletteError.InvalidDimensions)
+  example fade_endpoint:
+    validate_fade(16, 16) == Ok(true)
+  example fade_zero_steps:
+    validate_fade(0, 0) == Err(PaletteError.InvalidFadeStep)
+
+  claim validate_dimension_agrees:
+    forall n: Nat. validate_dimension(n) == (if valid_dimension(n) then Ok(true) else Err(PaletteError.InvalidDimensions))
+  claim validate_fade_agrees:
+    forall s: Nat, t: Nat. validate_fade(s, t) == (if valid_fade(s, t) then Ok(true) else Err(PaletteError.InvalidFadeStep))

@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased - M4 timing budget
+
+- The M4 denial-of-service regression tests now allow 10 s per input (`M4_BUDGET`) instead of 2 s.
+  `m4_glob_count_is_capped` failed on a macOS runner saturated by the full build (2.04 s; 0.35-0.4 s
+  locally). The inputs are built so a quadratic or exponential implementation takes minutes or
+  exhausts memory, so the budget only needs to separate those cases. Test-only.
+
 ## Unreleased - Round-3 security review fixes (VER08a divergence D25 onwards)
 
 Each fix has a regression in `tests/test_secreview_round3.rs` built from the

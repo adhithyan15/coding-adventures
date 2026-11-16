@@ -2,6 +2,39 @@
 
 ## Unreleased
 
+- **Multi-language `LanguageSafetyProfile` and fail-closed non-crypto CWE-208 exclusion** (VER-W0-A; closes blockers for Music and DSP packages):
+  - **CWE-208 (`Observable Timing Discrepancy`)**: When `ctx.constant_time_claims.is_empty()`, `ctx.evidence.ct_proof_ids.is_empty()`, `!ctx.has_secret_ops`, and `!ctx.evidence.no_secret_operand_ids.is_empty()`, mark CWE-208 as `Excluded` under the `no_secret_inputs` safe subset citing both `"capability-audit::no-secret-inputs"` and `"warrant-spec::all-operands-public"`. Any missing attestation, unproven constant-time obligation, or secret operation strictly fails closed (`MatrixError::OpenRow`). `verify_evidence` and `checker.rs` cross-check both attestations and verify zero secret ops or constant-time claims/proofs exist.
+  - **Multi-language `LanguageSafetyProfile`**: Introduced `LanguageSafetyProfile` enum (`SafeRust`, `GcManaged { language: String }`, `ManualMemoryChecked { language: String }`) to model language memory safety invariants for Family 1 (CWE-416, 787, 125, 415, 476, 190).
+    - `PackageAuditContext::default()` is strictly fail-closed (`is_safe_rust: false`, `ManualMemoryChecked("unknown")`).
+    - `GcManaged` qualifies GC runtimes as FFI-free and `unsafe`-free; any presence of `unsafe_exceptions` fails closed into `ManualMemoryChecked` discharge/exemption.
+    - `GcManaged` prevents blind exclusion of CWE-94 (Code Injection) and CWE-1321 (Prototype Pollution): TypeScript/JavaScript require static analyzer evidence (`has_eval_analyzer_evidence`, `has_prototype_analyzer_evidence`) or fail to unapproved exemptions; Python requires analyzer evidence for CWE-94 while CWE-1321 is excluded (no JS prototype chain).
+    - `ManualMemoryChecked` (C, C++, FFI, unsafe Rust): Family 1 cannot be excluded and must be `Discharged` via evidence/proofs or recorded as an unapproved exemption; only cites `"effect-certificate::unsafe-exception"` when exceptions actually exist.
+  - **Registry synchronization**: Updated `weakness-registry-v1.json`, `VER15-weakness-registry.md`, and `VER01-assurance-report.md` to define the `no_secret_inputs` safe subset for CWE-208 and qualify `gc_runtimes` for Family 1 as FFI-free and unsafe-free with checked/bounded arithmetic.
+  - **Adopter reports**: Regenerated `assurance_report.json` for non-crypto adopters (`wasm-leb128`, `logic-gates`, `arithmetic`, `lzw`) reflecting the clean `Excluded` status under `no_secret_inputs`.
+  - **Tests**: Added comprehensive literate unit tests in `tests/test_language_safety_and_cwe208.rs` covering all fail-closed security review conditions, and updated existing integration test assertions.
+
+- **`--profile-kind` pins the profile kind** (security review finding).  `--check` and `--generate` accept
+  `--profile-kind transform|decompressor` and refuse a profile file with another kind
+  (`AuditProfile::verify_pin`); lzw's BUILD lines pin `decompressor`, arithmetic's `transform`.
+  Spec notes that profile files are read through symlinks, bound by `profile_sha256`.
+- **Audit profiles are data, not code** (VER04h section 9 item 22; closes backlog AR-001,
+  narrows LP-010b).  The `AuditProfile` enum, its `FromStr` and the per-variant wording
+  `match` arms are gone; `AuditProfile` is now a struct loaded by the new `profile` module
+  from `<package>/assurance-profile.json` (`warrant-assurance-profile-v1`: `name`, `kind`
+  `transform|decompressor`, `rows` 326/327/407 and optionally 409 for a transform; exact
+  keys, unknown keys refused, `excluded` the only applicability).  `Evidence::load` reads it
+  (no file, no report; there is no default profile) and `generate_package_report` lost its
+  `profile` argument.  `AssuranceReport.profile` is the name and the new
+  `profile_sha256` binds the file's exact bytes: `verify_evidence` refuses an edited profile
+  (`StaleEvidence`) and a name mismatch.  The security semantics stay in code: CWE-326/327
+  exclusions are refused beside a `rand:` capability, CWE-407 beside an operation with no
+  `steps` bound, CWE-409 for a `decompressor` (rejected at load) or beside an `output` row.
+  New `verify_rederivation` (run by `--check`, closes AR-001) rebuilds the matrix from the
+  evidence and the profile and compares every row and exemption rationale.  `verify_profile`
+  now takes `Option<&str>`; `--profile NAME` is an optional pin.  The six adopters'
+  `assurance-profile.json` carry the previous wording verbatim and their
+  `assurance_report.json` files differ by one added `profile_sha256` line.  Tests:
+  `tests/test_assurance_profile.rs`.  Effect certificate re-emitted.
 - **The audit profile is recorded in the report and checked** (CWE-409 security review,
   finding 1, low).  `AssuranceReport` gains `profile` (`AuditProfile::as_str` / `Display`,
   emitted as one `"profile"` string, so the JSON stays deterministic and byte-stable;

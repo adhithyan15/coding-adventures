@@ -35,6 +35,12 @@ visible per-part spans in the learner paper, rubric, and answer key. The plan's
 `mock-assessment/<language>/<level>` family counts mocks still missing a
 distinct paper, rubric, key, or valid manifest; undeclared legacy manifests
 remain visible debt rather than becoming a parse error.
+Individual mocks can also declare `bookPrerequisites`: knowledge atoms that
+must be introduced and practised in an eligible lesson, or exact Gurmukhi
+surface tokens that must appear in the level's taught book before the learner
+and examiner stimuli count as fair. A declaration is an obligation, not proof;
+missing source drafts and untaught material keep the mock blocked in the plan.
+The planner reports stable blocker IDs without exposing unpublished mock text.
 For present full-mock evidence, the validator uses the repository's Python 3
 handle-relative reader so a concurrent symlink or Windows junction swap cannot
 redirect the manifest, paper, rubric, or key outside the audited track. Python 3
@@ -253,7 +259,7 @@ the discovery mechanism; it has no hand-maintained index, manifest, or aggregate
 | `validate.ts` | the round-trip validator (errors fail CI; warnings tolerated) | ✅ |
 | `queries.ts` | `allConcepts` / `conceptsByLanguage` / `languagesForConcept` / `coverageByLanguage` | ✅ |
 | `modality.ts` | per-lesson channel (voice/sight/pen) and per-chapter drivable prefix | ✅ |
-| `drivable-instructions.ts` | the steps a narrator would say plainly that need eyes or hands (`eyes-or-hands-step`) | ✅ |
+| `drivable-instructions.ts` | the steps a narrator would say plainly that need eyes or hands (`eyes-or-hands-step`), including page-following and paired reading | ✅ |
 | `narration-cues.ts` | what one cue sounds like (spoken or deferred) and where a paragraph's cues are | ✅ |
 | `for-the-ear.ts` | a typed activity prompt and a heading, reworded for a listener ("Type …" → "Say …"; a label without its asking) | ✅ |
 | `speech.ts` | Markdown → speakable words; Markdown tables → spoken utterances or a reasoned refusal | ✅ |
@@ -404,6 +410,10 @@ new contracts must never name missing evidence. See
 [`HL15`](../../../specs/HL15-the-completion-plan.md).
 The separate `mock-assessment` item is blocked on an absent task-shape
 inventory; it cannot infer a complete timed paper from `timed: true` alone.
+Marwadi and Punjabi now have project-defined B1 four-skill shape inventories
+grounded in their own assessment specifications. These describe intended form
+envelopes, not assembled recordings, native-speaker review, or book-only B1
+attainment; the mock and human-validation gates remain independent.
 
 For a human review of Spanish mock question vocabulary, run
 `npm run report:mock-stem-coverage -- --level A2` (or `pre-A1`/`A1`). The
