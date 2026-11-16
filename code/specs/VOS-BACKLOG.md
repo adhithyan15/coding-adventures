@@ -75,11 +75,12 @@ Spec numbering is in VOS00 section 13.
 
 ## Discovered work
 
-_None yet. Rows are added here the moment work is discovered, with the source
-(a review, a CI failure, a measurement, a PR) and the item it came from._
+Rows are added here the moment work is discovered, with the source (a
+review, a CI failure, a measurement, a PR) and the item it came from.
 
 | ID | Found by | Description | Priority | State |
 |---|---|---|---|---|
+| VOS-D001 | VOS-001 security review | Tape, paper-tape, card and disk images and board definitions are untrusted input to the emulator. EMU00 must bound them: maximum image and record sizes, maximum board-definition size and range count, fail-closed parsing with no panics, and a fuzz target per parser (VER06). | P1: fold into VOS-003 (EMU00); implement in VOS-005/006/008/014 | queued |
 
 ## Decision log
 
