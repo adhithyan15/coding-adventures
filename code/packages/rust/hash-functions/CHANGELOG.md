@@ -4,6 +4,13 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- README usage example: the SipHash-2-4 assertion `0x726f_db47_dd0e_0e31` is the
+  published vector for the reference key `00 01 .. 0f`, but the example built an
+  all-zero key (which gives `0x1e92_4b9d_7377_00d7`). The example now uses the
+  reference key.
+
 ### Added
 
 - Warrant adoption of the eight byte-string hashes (WX-P1a): the Warrant document

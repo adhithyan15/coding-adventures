@@ -22,7 +22,9 @@ use coding_adventures_hash_functions::{
     SipHash24,
 };
 
-let key = [0u8; 16];
+// The SipHash-2-4 reference key 00 01 .. 0f, so the first published test
+// vector (empty message) applies.
+let key: [u8; 16] = core::array::from_fn(|i| i as u8);
 
 assert_eq!(fnv1a_32(b"abc"), 0x1a47_e90b);
 assert_eq!(fnv1a_64(b"abc"), 0xaf63_dc4c_8601_ec8c);
