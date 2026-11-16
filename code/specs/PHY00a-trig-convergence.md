@@ -1,6 +1,6 @@
 # PHY00a: Trig Convergence (TRIG-CONV): One Reference Algorithm for Every Port
 
-**Status:** Specification, adversarially reviewed once (section 10); TC-1 implemented. This document itself changes no port. It is the
+**Status:** Specification, adversarially reviewed once (section 10); TC-1 implemented; TC-1b survey and PR grouping written (8.1). This document itself changes no port. It is the
 normative text for backlog item TRIG-CONV (owner decision 16, 2026-11-16, VER30
 track C16; VER04p FL-15). The implementation work is the slice list in section 8:
 one fixture slice, then one pull request per port. **TC-1 landed 2026-11-16** (the fixture only; no port
@@ -141,7 +141,7 @@ Other behaviours found on the way:
 | Port | Finding |
 |---|---|
 | lua, perl | `tan` has **no pole sentinel** (every other port returns +-1e308 when `\|cos\| < 1e-15`; PHY00 3.6 documents it) |
-| lua | on 5.3+, `-x*x` is **integer** arithmetic for an integer argument and wraps silently for large ones |
+| lua | on 5.3+, `-x*x` is **integer** arithmetic for an integer argument and wraps silently for large ones: true of an implementation that has no division before the series (TRIG-REF-1); the current port is not affected, because `x / TWO_PI` makes the reduced angle a float (corrected in TC-1b, 8.1.7) |
 | perl | `degrees(-0.0)` is `+0.0` (measured), because `* 180.0` takes an integer path; `radians(-0.0)` is `-0.0` |
 | go | `int(x / TwoPI)` is implementation-defined out of range: `sin(1e20)` is `NaN` on amd64 (measured), and arm64 differs |
 | c, cpp, lua, perl | the truncating cast or `modf` of a huge quotient leaves `x - m*q` as rounding residue: `sin(1e20) = 0` and `cos(1e20) = 1` (measured) |
@@ -616,7 +616,8 @@ division); the fixture's worst observed distance from `cr` is 4 representable st
 ### 3.9 Part II: `sqrt`, `atan`, `atan2` (unchanged, pinned)
 
 The survey **read** these and did not run them: sixteen of seventeen ports appear
-to write `atan` the same way and all seventeen `sqrt` and `atan2`. That is a
+to write `atan` the same way and all seventeen `sqrt` and `atan2` (TC-1b, 8.1.3, found F# and Haskell
+with no early exit, bit-equal, and Dart and Haskell `atan2` without an `x == 0` test). That is a
 reading, not evidence, and Part II was not run in the prototypes of 3.11. So the
 claim is stated as an obligation: **slice TC-1 runs Part II of every port against
 the vectors before any port PR, and publishes the table of which ports differ**;
@@ -672,7 +673,7 @@ Each `(2n-1)` and `(2n+1)` is the exact small integer converted to double. Dart'
 sixty rounds on NaN; the shared corpus already requires it) and `atan(NaN)` is NaN
 by the same route. `atan2` is the exception: as the ports are written today, a
 NaN `x` (or a NaN `y` with `x < 0`) fails every comparison and falls to the last
-branch, which returns **`0.0`**. A finite answer for an undefined question is the
+branch, which returns **`0.0`** (twelve ports; **Dart and Haskell return `+-HALF_PI`** for a NaN `x` with `y /= 0`, 8.1.7). A finite answer for an undefined question is the
 same defect as the fold of 3.4.1, so the reference adds the first line above and
 every port's `atan2` gains it. The shared corpus has no NaN case for `atan2`, so
 nothing there changes.
@@ -893,11 +894,11 @@ change no result in practice.)
 | **Python** | CPython `float` is binary64; no contraction. `int(k) & 3` (exact, floor-mod for negatives). `abs(x) == float('inf')` rather than `math.isinf` (either is fine), `x != x` for NaN. **No division occurs, so Python's raise-on-zero-divide never triggers** (`tan`'s guard keeps `c != 0`). Never call `int()` on a non-finite value (it raises): the guards in 3.6 run first. `repr(float)` constants round-trip. |
 | **Haskell** | GHC with the default native code generator on x86-64 (SSE2) or LLVM without fast-math; no `-fexcess-precision`; 32-bit x86 refused. GHC fuses only an explicit `fmaddDouble`. `truncate k :: Int` then `.&. 3` (`Data.Bits`): exact on an integer-valued double. Constants by `castWord64ToDouble 0x...` (`GHC.Float`) or decimal (Haskell's literal is correctly rounded via `fromRational`) with the bit assert. Do **not** use `mod'` or `floor` for reduction (the current port does; `mod'` multiplies `fromInteger (floor (x/y))` by `y`, a product that rounds for large `x`, and its behaviour at infinity is not the NaN of 3.3). GHC folds arithmetic on float *literals* at compile time through exact `Rational`s; the algorithm has no constant-only expression, the vectors feed values decoded at run time, and probe P11 arbitrates. Checked in review: GHC 9.4 at `-O2` and `-O0` gives identical bits on 20,018 inputs. |
 | **Elixir / Erlang (BEAM)** | floats cannot be NaN or infinite. A NaN or infinity **input** is unrepresentable as a float (it crosses as bits only); the vectors mark those rows `nonfinite = unrepresentable` and the port's test skips them. A result that would be non-finite (`degrees(1.7e308)`, which is `+inf`) **raises `ArithmeticError`**; the vector expects `+inf` and the harness maps "raises" to that expectation (`nonfinite = rejects`, VER04p 12.2). `sin`/`cos`/`tan` of an **in-domain** value are always finite, so no raise happens there; for `\|x\| > LIMIT` the reference result is NaN, so the port **raises `ArithmeticError` explicitly** (`raise ArithmeticError`; the vector row is `out-of-domain` with `nonfinite=rejects`). The domain guard is `if abs(x) <= limit do ... else raise`, the same single comparison. `atan2` raises when `y / x` overflows although the reference result is finite (`beam-raises`). Integer arguments are converted first with `x * 1.0` (never `x + 0.0`: that turns `-0.0` into `+0.0`). `trunc(k) &&& 3` (`Bitwise.band`; two's complement, floor-mod for negatives). Constants as `<<0x...::float-64>>` patterns are exact on every OTP; OTP 27 distinguishes `0.0` from `-0.0` in `===` and pattern matches, so adapters compare bits (`<<b::64>> = <<v::float-64>>`), never printed floats and never `==` (which equates `0.0` and `-0.0`). |
-| **Lua** | build with `LUA_FLOAT_TYPE = double`. **On 5.3+ an integer argument is an integer subtype**: `-x*x` is integer arithmetic and wraps. Convert once at entry with `if math.type(x) == "integer" then x = x * 1.0 end` (not `x + 0.0`; see Elixir). `math.tointeger(k) & 3` (5.3+; `k` is a float subtype holding an integer value, including `-0.0`, which gives `0`); on 5.1/LuaJIT, where there is no integer subtype and no `&`, the quadrant is `k % 4` (Lua's float `%` is floored, and exact here because `k` is an integer below 2^29): this is the one sanctioned use of a division-like operator in the algorithm, and only in those lanes. Results are compared by bits (`string.pack('<d', v)`, or `string.format('%a', v)`), never through `tostring` or `..`, which print `%.14g` and lose three digits. Lua has hex floats since 5.2. `0.0/0.0` makes a NaN (with the sign bit set on x86: compared as a class). No `math.fmod`, `math.modf`, `math.floor` in the algorithm. Checked in review on 5.4.6: `-0.0 * 1.0` is `-0.0`, `math.tointeger(-5.0) & 3` is `3`. |
+| **Lua** | build with `LUA_FLOAT_TYPE = double`. **On 5.3+ an integer argument is an integer subtype**: `-x*x` is integer arithmetic and wraps. Convert once at entry with `if math.type(x) == "integer" then x = x * 1.0 end` (not `x + 0.0`; see Elixir). `math.tointeger(k) & 3` (5.3+; `k` is a float subtype holding an integer value, including `-0.0`, which gives `0`); on 5.1/LuaJIT (no such lane exists: the rockspec says `lua >= 5.4`, 8.1.7), where there is no integer subtype and no `&`, the quadrant is `k % 4` (Lua's float `%` is floored, and exact here because `k` is an integer below 2^29): this is the one sanctioned use of a division-like operator in the algorithm, and only in those lanes. Results are compared by bits (`string.pack('<d', v)`, or `string.format('%a', v)`), never through `tostring` or `..`, which print `%.14g` and lose three digits. Lua has hex floats since 5.2. `0.0/0.0` makes a NaN (with the sign bit set on x86: compared as a class). No `math.fmod`, `math.modf`, `math.floor` in the algorithm. Checked in review on 5.4.6: `-0.0 * 1.0` is `-0.0`, `math.tointeger(-5.0) & 3` is `3`. |
 | **Perl** | refuse a build whose `NV` is not 8 bytes (`$Config{nvsize} == 8`, VER04p 12.2). Perl dies on division by zero (no division occurs). `int($k) & 3`: for a negative integer, `&` works on the two's-complement 64-bit pattern, so `& 3` is floor-mod 4 (checked). **Perl's own decimal-to-NV parser has historically not been correctly rounded on every platform**, so build the constants from bits: `unpack('d<', pack('Q<', 0x...))`, once at module load, and assert them. NaN: `my $inf = 9**9**9; my $nan = $inf - $inf`. **Perl does integer arithmetic on integer-*valued* operands, however they are written** (`PERL_PRESERVE_IVUV`): when both operands of `+`, `-` or `*` hold whole numbers, the operation is done on integers, and an integer has no `-0`. Measured in review on 5.38: `-0.0 * 180.0`, `-0.0 * 1.0`, `-0.0 + -0.0` and `-0.0 - 0.0` are all **`+0`** (IEEE says `-0`); `-0.0 * 0.5` and `-0.0 / 1.0` are `-0`. Writing `180.0` instead of `180` does **not** help (the first draft said it did); that is why `degrees(-0.0)` is `+0` today. TRIG-REF-1 is safe as written, for three reasons that a port must not disturb: (i) every `-0` result is returned by an early return of the argument itself (`sin`, `atan`, `sqrt`) or comes from a multiply by a **non-integer** constant (`RAD_PER_DEG`, `DEG_PER_RAD`) or a division (`tan`); (ii) the only sums of two whole numbers are `t + MAGIC` and `(t + MAGIC) - MAGIC`, below 2^53, where integer and double arithmetic agree; (iii) nothing else in the algorithm has two integer-valued operands whose IEEE result is inexact or a negative zero. So: never "normalise" an argument with `* 1.0` or `+ 0.0`, and do not `use integer`. **Compare by bits** (`unpack('Q<', pack('d<', $v))`): Perl prints an NV with 15 significant digits (`0.1 + 0.2` prints `0.3`), so any comparison, hash key or fixture that passes through a string is wrong. |
 | **Ruby** | `Float` is binary64; no contraction. `k.to_i & 3`. `x.nan?`, `x.abs.infinite?`. Decimal float literals are parsed correctly rounded. Convert an `Integer` argument with `x.to_f` (preserves `-0.0` for floats). |
 | **Swift** | `Double`; never `-Ounchecked`; Swift does not contract (`addingProduct` is explicit and is not used). `Int(k) & 3` (traps only on non-finite `k`, which the guards exclude). Hex float literals (`0x1.8p52`) are supported. `Double.nan`. |
-| **Dart** | VM: native; web (`dart2js`): numbers are JavaScript `number`s and an `int` is a double that bitwise operators truncate to 32 bits, which is why `LIMIT = 2^29` (`k < 2^31`): `k.toInt() & 3` is exact on both. `double.nan`. Dart has no hex float literal: decimal with the bit assert (`ByteData.setFloat64` / `getUint64`). Never `%` on doubles in this algorithm (Euclidean). |
+| **Dart** | VM: native; web (`dart2js`): numbers are JavaScript `number`s and an `int` is a double that bitwise operators truncate to 32 bits, which is why `LIMIT = 2^29` (`k < 2^31`): `k.toInt() & 3` is exact on both. `double.nan`. Dart has no hex float literal: decimal with the bit assert (`ByteData.setFloat64` and two `getUint32` halves: `getUint64` and 64-bit integer literals are not usable under `dart2js`, believed, 8.1.5). Never `%` on doubles in this algorithm (Euclidean). |
 
 **Cross-cutting.** (1) *Literals*: a decimal constant is accepted in a language only
 if its bits are asserted in the port's tests (6.5), because "the literal parses to
@@ -1211,6 +1212,7 @@ must:
      every sine whose phase is `frequency * time + phase` (`percussion-kit` modes,
      `musical-instruments` partials), because a note-local time is bounded only by the
      note duration, not by anything the callers check.
+   * **`go/oscillator`** (TC-6) has the same unreduced `trig.Sin(twoPI*(f*t + phase_cycles))` as the Python one and gets the same phase-in-cycles fix in the same PR; `lua/wave` and `perl/wave` `sine_wave` pass `2pi*f*(i/sample_rate) + phase` unreduced (beyond 2^29 rad only after about 8.5e7 cycles, 8.1.4); the other TC-4..17 dependents reduce with `%`, `fmod` or `remainder` (TC-1b, 8.1.4).
    * every other consumer (audio, music, geometry, CAS) is checked the same way
      in the port PR: a dependent that accumulates phase reduces it itself; a
      dependent that passes a user's angle through documents the domain.
@@ -1262,7 +1264,7 @@ dropped:** (a) the generated Dart source (the base64 mirror of
 `phy00-phy01-v1/dart`) moves to TC-16, because it has no consumer until Dart adopts
 the vectors and would add 4.7 MB of source with none; (b) the Part II **survey
 table** (every port's *current* `sqrt`, `atan`, `atan2` and `tan` run against the
-vectors) needs the other toolchains and is the follow-up slice TC-1b; what TC-1 did
+vectors) needs the other toolchains and is the follow-up slice TC-1b (done by reading in 8.1, with the run moved into each port PR); what TC-1 did
 measure is that the reference's Part II (3.9) as specified is reproduced bit for bit
 by two independent transcriptions (C and Rust).
 
@@ -1294,6 +1296,276 @@ artefact of the inaccurate old `trig` (the noise multiplies `sin` by 43758.5, am
 adds. The Rust `music-machine-ffi` crate pins the same digest in two tests (`tests/test_ffi_golden.rs`, the portable text and JSON paths) and was missed by the first two regenerations; it is updated with the others. A pull request that changes a shared golden shows the three lanes' sample dumps
 equal sample for sample.
 
+### 8.1 TC-1b: survey of the remaining ports
+
+TC-1b is the survey of the fourteen ports that have not converged (c, cpp, csharp,
+dart, elixir, fsharp, go, haskell, java, kotlin, lua, perl, ruby, swift), the grouping
+of their port PRs (8.1.6), and the places where this specification's own survey was
+wrong (8.1.7). It changes no port and no fixture.
+
+#### 8.1.1 Method, and what this is not
+
+Read at `origin/main` a4723983852 (after TC-1 #19504 and TC-2 #19506) with `git show`,
+`git ls-tree` and `git grep` only; no toolchain was installed and no port was built or
+run. **Every entry below is therefore a reading unless it says "measured"**, and
+"measured" always cites section 2.2, whose nine probes were run on x86-64. This is a
+change from the plan of the TC-1 status ("every port's current `sqrt`, `atan`, `atan2`
+and `tan` run against the vectors"): the run needs fourteen toolchains and is **moved
+into each port PR**, where it costs nothing: step 4 of the port-PR shape (section 8.2)
+gains a sub-step "run the new vectors against the *unchanged* port first and paste the
+list of failing Part II rows into the PR". A reading has one risk, a misread language
+rule; the table flags the places where that risk is real.
+
+One thing was run, with Python only (scratch script, not in the repository): the three
+`atan` variants that differ in text from the majority, on 400,000 random cores (a third
+uniform in [-1, 1], a third scaled by 10^-9..1, a third `1/u`), same Newton `sqrt`:
+
+| Variant | Ports | Result bits differing from the reference `atanCore` |
+|---|---|---|
+| sums all 30 terms, no early exit | fsharp, haskell | **0 of 400,000** (every omitted term is below half an ulp of the sum, so it is rounded away) |
+| `term *= -sq * (2n-1) / (2n+1)` (quotient first) | dart | **946 of 400,000 (0.24%)**, last bit |
+
+#### 8.1.2 Table A: `sin`, `cos`, `radians`, `degrees` today
+
+Sources are `code/packages/<lang>/trig/...` as listed. "G1/G2" and "A/B" are defined in
+2.1. "Huge" means `|x|` beyond 2^29 (the TRIG-REF-1 domain). All fourteen build the
+sum ascending from `term = x` (or 1) with no use of a host `sin`/`cos`, and none uses a
+fixed-count Horner on stored coefficients, so **no port shares a line of its `sin`/`cos`
+with TRIG-REF-1**: the distance is a full rewrite of the kernels and the reduction in all
+fourteen. The columns say what the rewrite replaces.
+
+| Port (source) | Terms | Reduction, then clamp | Group | NaN / +-inf in | Huge in (abs(x) > 2^29) | `sin(-0)` | `radians`/`degrees` |
+|---|---|---|---|---|---|---|---|
+| c (`c/trig/src/trig.c`) | 20 | `x - 2pi*(double)(long long)(x/2pi)` (`d_trunc`; the quotient is passed through when `\|q\| >= 2^53`), both sides | G1 | NaN / NaN (`inf - inf`) | residue: `sin(1e20) = 0`, `cos = 1` (measured); finite but inexact for quotients below 2^53 | +0 (measured) | B |
+| cpp (`cpp/trig/include/trig.hpp`) | 20 | identical to C (header copy, `inline` free functions in `ca::trig`) | G1 | as C | as C | +0 (read) | B |
+| csharp (`csharp/trig/Trig.cs`) | 20 | `x % TwoPi` (exact fmod), both sides | G1 | NaN / NaN | finite, wrong by `k * 2.4e-16` rad (see below) | +0 (read) | B |
+| dart (`dart/trig/lib/src/trig.dart`) | 20 | `x % twoPi` (Euclidean), only `> pi` corrected: [0, pi] and (-pi, 0) | G1 (`-(reduced*reduced)` rebuilt each pass) | NaN / NaN | finite, wrong as C# | +0 (read) | A |
+| elixir (`elixir/trig/lib/trig.ex`) | 20 | `x - Float.round(x/2pi, 0) * 2pi`, both sides | G2 | **unrepresentable on the BEAM** | residue as C (read; `Float.round` of a huge float is the float) | +0 (read: `-0.0 - -0.0 = +0.0`) | A (`deg * @pi / 180.0`, accepts integers) |
+| fsharp (`fsharp/trig/Trig.fs`) | 20 | `x % twoPi`, both sides | G2 | NaN / NaN | finite, wrong as C# | +0 (read) | B |
+| go (`go/trig/trig.go`) | **21** (`n = 1..20`) | `x - TwoPI*float64(int(x/TwoPI))`, `if/else if` clamp; every function runs inside an `Operation` wrapper (`StartNew`, `gen_capabilities.go`) | G2 | NaN / NaN (the implementation-defined `int()` of NaN or inf still leaves a non-finite `x`) | **NaN on amd64** (measured); arm64 saturates the conversion and gives a different non-result | +0 (measured) | A |
+| haskell (`haskell/trig/src/Trig.hs`) | 20 (`foldl'` over `[1..19]`) | `x `mod'` twoPi`, only `> pi` corrected | G2 | NaN / NaN (read: `toRational` of NaN or inf is a huge finite rational, the product overflows, `x - inf` is NaN) | finite, inexact: `mod'` floors the *exact* rational quotient, then `fromInteger f * d` rounds | +0 (read) | A |
+| java (`java/trig/src/main/java/com/codingadventures/trig/Trig.java`) | 20 | `x % TWO_PI`, both sides | G1 | NaN / NaN | finite, wrong as C# (a number in the 9-port probe) | +0 (measured) | B |
+| kotlin (`kotlin/trig/src/main/kotlin/com/codingadventures/trig/Trig.kt`) | 20 | `x % TWO_PI`, both sides | G1 | NaN / NaN | as Java | +0 (read) | B |
+| lua (`lua/trig/src/coding_adventures/trig/init.lua`) | **21** | `x - TWO_PI*math.modf(x/TWO_PI)`, both sides | G2 | NaN / NaN | residue `sin = 0`, `cos = 1` (measured) | +0 (measured) | A |
+| perl (`perl/trig/lib/CodingAdventures/Trig.pm`) | **21** | `x - TWO_PI*int(x/TWO_PI)`, both sides | G2 | NaN / NaN | residue `0` / `1` (measured) | +0 (measured) | A (`degrees(-0.0)` is `+0`, 2.1) |
+| ruby (`ruby/trig/lib/trig.rb`) | 20 | `x % TWO_PI` (floored), only `> pi` corrected | G1 | NaN / NaN | finite, wrong as C# (measured) | +0 (measured) | A |
+| swift (`swift/trig/Sources/Trig/Trig.swift`) | **21** | `truncatingRemainder(dividingBy: TWO_PI)`, both sides | G1 | NaN / NaN | finite, wrong as C# | +0 (read) | B |
+
+The "wrong by `k * 2.4e-16`" ports (every exact-`%` port) reduce by the *double*
+`TWO_PI`, which is short of the real 2pi by 2.449e-16, so the reduced angle is off by
+`(x / 2pi) * 2.449e-16` radians: 3.9e-11 at `x = 1e6` (inside the 1e-10 tolerance every
+port test uses, which is why the corpus case `phy00/sin/large-positive` passes today),
+0.4 at 1e15. Nothing is pinned to the old values beyond that: a search of the fourteen
+port test files found **no `sin`, `cos` or `tan` call with an argument beyond 1e6** (the
+only large arguments are `atan(+-1e10)`, to 1e-5, which does not change, and the
+`tan(pi/2)` pole checks, which the sentinel still satisfies).
+
+Term count: 21 terms in go, lua, perl, swift; 20 in the other ten. Radians group A in
+dart, elixir, go, haskell, lua, perl, ruby (the seven that change `radians`/`degrees`);
+group B in c, cpp, csharp, fsharp, java, kotlin, swift (already `deg * (PI / 180)`,
+which equals `RAD_PER_DEG`, 3.2: **no change needed**).
+
+#### 8.1.3 Table B: Part II (`sqrt`, `atan`, `atan2`, `tan`) today
+
+"= ref" means the text matches 3.9 / 3.8 line for line (the same Newton loop with the
+power-of-four scaling, 60 rounds, `1e-15 * guess + 1e-300`; the same `atanCore` with the
+half-angle step and `1e-17` exit; the same four-branch `atan2`; the `|cos| < 1e-15`
+sentinel). Only differences are written out.
+
+| Port | `sqrt` | `atan` | `atan2` | `tan` |
+|---|---|---|---|---|
+| c | = ref; infinity test `x > DBL_MAX`; negative returns `TRIG_ERR_DOMAIN` (status + out-parameter) | = ref (`0x1p-27`) | = ref, no NaN guard (NaN `x` returns `0.0`) | = ref |
+| cpp | = ref; negative throws `std::domain_error` | = ref | = ref, no NaN guard | = ref |
+| csharp | = ref; `ArgumentOutOfRangeException` | = ref | = ref, no NaN guard | = ref |
+| dart | = ref; `isInfinite`; `ArgumentError` | **differs**: `term *= -squared * (2i-1) / (2i+1)` (0.24% of cores differ in the last bit, 8.1.1) | **no `x == 0` test** on the last two branches: NaN `x` with `y > 0` returns `HALF_PI`, with `y < 0` returns `-HALF_PI` (not `0.0`) | = ref |
+| elixir | = ref after `x / 1.0`; no infinity branch (cannot occur); negative raises `ArithmeticError` | = ref (`Enum.reduce_while`) | = ref after `/ 1.0`; `y / x` overflow raises | = ref |
+| fsharp | = ref (flag-controlled loop, same result); `ArgumentOutOfRangeException` | **no early exit**: `if abs term < 1e-17 then ()` does nothing, all 30 terms are summed; bit-equal to the reference (8.1.1) | = ref, no NaN guard | = ref |
+| go | = ref; negative panics with a string; inside an `Operation` for the non-error path | = ref | = ref, no NaN guard | = ref |
+| haskell | = ref; returns `Either String Double` (3.9.2) | **no early exit** (`foldl'` over `[1..30]`); bit-equal (8.1.1) | **no `x == 0` test** (guards are `y > 0`, `y < 0`): NaN `x` with `y /= 0` returns `+-HALF_PI` | = ref; the package's own test pins `tan halfPi == 1e308` |
+| java | = ref; `ArithmeticException` | = ref | = ref, no NaN guard | = ref |
+| kotlin | = ref; `ArithmeticException` | = ref | = ref, no NaN guard | = ref |
+| lua | = ref; `error(..., 2)`; `x == 0.0` returns the argument, so an integer `0` stays an integer | = ref after an integer-to-float step (`x + 0.0`, only for the integer subtype, so `-0.0` is safe) | = ref, no NaN guard | **no sentinel**: `sin(x) / cos(x)`, so `tan(fl(pi/2))` is about 1.6e16, not 1e308 |
+| perl | = ref; `die` | = ref | = ref, no NaN guard | **no sentinel** (`tan_approx`, and so `tan_deg`) |
+| ruby | = ref after `x.to_f`; `ArgumentError` | = ref | = ref, no NaN guard | = ref |
+| swift | = ref except the negative case is `preconditionFailure`: **a trap, not an error a test can catch** (8.1.5) | = ref | = ref, no NaN guard | = ref |
+
+So the Part II work per port is small: eleven ports add the NaN guard to `atan2`; Dart
+changes the `atan` grouping and fixes `atan2`; Haskell fixes `atan2`; Lua and Perl add the
+`tan` sentinel; F# and Haskell may keep their loops (bit-equal) but should adopt the early
+exit so the code matches the reference text. No `sqrt` differs in value anywhere.
+
+#### 8.1.4 Table C: versions, existing conformance tests, callers, goldens
+
+**Versions.** The manifest and the top released CHANGELOG entry disagree in five ports,
+so OQ-12's "minor bump" needs a stated target per port. The next unused version is the
+one above both:
+
+| Port | Manifest | Top released CHANGELOG | Port PR bumps to | Note |
+|---|---|---|---|---|
+| c, cpp | none (header and `BUILD`) | 0.1.0 | 0.2.0 | |
+| csharp, fsharp | `.csproj`/`.fsproj` 0.1.0 | 0.1.0 | 0.2.0 | |
+| dart | `pubspec.yaml` 0.1.0 | 0.1.0 | 0.2.0 | |
+| elixir | `mix.exs` 0.1.0 | **0.2.0** | 0.3.0 | manifest also moves 0.1.0 to 0.3.0 |
+| go | none (`go.mod` has no version) | **0.3.0** | 0.4.0 | |
+| haskell | `trig.cabal` 0.1.0 | 0.1.0 | 0.2.0 | **breaks four dependents**: `affine2d`, `arc2d`, `point2d`, `wave` declare `trig >=0.1 && <0.2` (`*.cabal`, two stanzas each); the PR must widen those bounds (or ship 0.1.1) |
+| java, kotlin | `build.gradle.kts` 0.1.0 | 0.1.0 | 0.2.0 | |
+| lua | rockspec `0.1.0-1`, `trig.VERSION = "0.1.0"` | **0.2.0** | 0.3.0 | rename `coding-adventures-trig-0.1.0-1.rockspec`; `wave` requires `>= 0.1.0` (fine) |
+| perl | `$VERSION = '0.01'` | **0.2.0** | 0.3.0 | `$VERSION` format differs from the changelog; `wave` requires `0.01` (fine) |
+| ruby | **no gemspec** | **0.2.0** | 0.3.0 | the package is not publishable today (repo rule 10); dependents `require_relative "../../trig/lib/trig"` |
+| swift | none (SwiftPM) | 0.1.0 | 0.2.0 | |
+
+**Conformance tests today.** None of the fourteen reads `trig-reference-v1`. Only Dart
+has a corpus test: `code/packages/dart/trig/test/conformance_fixture_test.dart` (and
+`code/packages/dart/wave/test/conformance_fixture_test.dart`) decode the generated
+`phy00-phy01-v1/dart/generated_cases.dart`, whose trig cases are tolerance-based (1e-10;
+exact only for `sin(0)`, `cos(0)`, the `tan` poles, four `atan` identities and `sqrt`
+identities; none moves under TRIG-REF-1). The other thirteen CHANGELOGs list the PHY00
+`atan` and `sqrt` boundary cases as "covered", but those are hand-copied examples in
+each port's own test file; no port's test file names a fixture path.
+
+**Callers.** Direct in-language dependents found by `git grep` of manifests, imports and
+calls at `origin/main` (`code/packages/*`, `code/programs/*`). "Changed" means the
+dependent calls `sin`, `cos`, `tan` or `atan2`, whose bits change; a dependent that only
+calls `sqrt` is **unaffected by TRIG-REF-1** (`sqrt` is pinned unchanged, 3.9). The build
+tool also rebuilds transitive dependents; those are not counted.
+
+| Port | Dependents with changed calls | `sqrt`-only dependents | Unbounded angle into `sin`/`cos`? | Dependents' shared fixtures (all tolerance-based) |
+|---|---|---|---|---|
+| c, cpp | none | none | n/a | none |
+| csharp | `affine2d` (`Sin`, `Cos`, `Tan`), `arc2d` (+`Atan2`), `wave` (`Sin`) | `bezier2d` | no: `wave` reduces time and phase with `%` | `geometry2d-v1` (arc2d) |
+| fsharp | same three | `bezier2d` | no (`%`) | `geometry2d-v1` (arc2d) |
+| java | `affine2d`, `arc2d`, `point2d` (`atan2`), `wave` | none (`bezier2d` needs no trig) | no (`%`) | `geometry2d-v1` (affine2d, arc2d, point2d) |
+| kotlin | same four | none | no (`%`) | `geometry2d-v1` (affine2d, arc2d, point2d) |
+| swift | `affine2d`, `arc2d`, `point2d`, `wave` | `bezier2d` | no (`truncatingRemainder`) | `bezier2d-flattening-v1` (bezier2d, sqrt only) |
+| haskell | `affine2d`, `arc2d`, `point2d`, `wave` | none | no (`signedRemainder`) | none |
+| ruby | `affine2d`, `arc2d`, `point2d`, `wave` | `bezier2d` | no (`remainder`) | `bezier2d-flattening-v1` (bezier2d, sqrt only) |
+| lua | `affine2d` (**`tan` in `skew_x`/`skew_y`: gains the sentinel**), `arc2d`, `point2d`, `wave` | `bezier2d` | **`wave.sine_wave` is not reduced**: `sin(2pi*f*(i/sample_rate) + phase)`; passes 2^29 rad after about 8.5e7 cycles (a 440 Hz tone after 53 hours of samples); `Wave:evaluate` reduces with `math.fmod` | `bezier2d-flattening-v1` (bezier2d, sqrt only) |
+| perl | same four (`tan_approx` in `affine2d` skew gains the sentinel) | `bezier2d` | same as Lua (`sine_wave` in `Wave.pm`) | `bezier2d-flattening-v1` (bezier2d, sqrt only) |
+| dart | `affine2d`, `arc2d`, `point2d`, `wave` | none | no (`%`) | `phy00-phy01-v1` (dart/trig and dart/wave, via generated Dart); `geometry2d-v1` (affine2d, arc2d, point2d) |
+| elixir | `affine2d`, `arc2d`, `point2d`, `wave` | `bezier2d` | no (`:math.fmod`); but a user angle beyond 2^29 now **raises** where it returned a number | `bezier2d-flattening-v1` (bezier2d, sqrt only) |
+| go | `affine2d`, `arc2d`, `point2d`, `wave`, **`oscillator`** | `bezier2d` | **yes, `oscillator`**: `ValueAt` computes `trig.Sin(twoPI*(f*t + phase_cycles))` unreduced (`code/packages/go/oscillator/oscillator.go`); the TC-2 phase-in-cycles fix applies here too and was not listed | `geometry2d-v1` (arc2d) |
+
+**Shared goldens.** The only bit-exact golden in the repository that depends on a
+`trig` result is `fixtures/music-machine` (`expected_render.json`; consumers
+`python/music-machine`, `rust/music-machine-core`, `rust/music-machine-ffi`,
+`typescript/music-machine-node`), already moved in TC-2. **No port of the fourteen feeds
+it, and no other golden consumed by a dependent of the fourteen compares a `sin`,
+`cos`, `tan` or `atan2` result better than an absolute 1e-12.** `geometry2d-v1`
+(`cases.json`, absolute 1e-12), `bezier2d-flattening-v1` (a geometric witness within a
+per-case tolerance of 1e-12, and the README forbids comparing vertices across
+languages) and `phy00-phy01-v1` (1e-10) are tolerance-based; the new `sin`/`cos` differ
+from the old by at most about 1e-15 relative below 2^20 radians and by 4e-11 at 1e6, and
+no dependent passes those fixtures an angle near 2^29. There is no `oscillator`,
+`percussion-kit` or `musical-instruments` outside Go, Python, Rust and TypeScript. The
+grouping rule of section 8.2 therefore forces **no cross-language PR** among the fourteen;
+the coupling that remains is in-language (8.1.6).
+
+#### 8.1.5 Can each port reproduce TRIG-REF-1 bit for bit?
+
+An estimate from the language rules in section 5 and the source above, not a result:
+"yes" means "no obstacle was found that section 5 does not already cover"; the probe
+(VER04p 9.1) and the 62,154 vectors remain the arbiter.
+
+| Port | Estimate | Language-level obstacles found, and what each PR must do |
+|---|---|---|
+| c | yes | **The build is `c/iso-harness`**: gcc and clang (Linux), `cl` (Windows), Apple clang, all with `-std=c17 -pedantic-errors -Wall -Wextra -Werror` and **no optimisation flag** (`code/packages/c/iso-harness/lib/iso-lib.sh`, `tools/run.sh`). The spec's in-header guards must survive `-Werror`: per 5, GCC *ignores* `#pragma STDC FP_CONTRACT`, which is a `-Wunknown-pragmas` diagnostic under `-Wall`, and clang does not know `#pragma GCC optimize`, so each pragma needs its own compiler `#if` (TC-4 verifies on both). Per GCC's documentation the default `-ffp-contract` is `off` under `-std=c17` but `fast` under `-std=c++17`, so the C canary and the C++ header differ. The `-mfma` fusion canary needs a second compile step outside the harness, which only takes `ISO_CSTD`/`ISO_INCLUDE`; hex float literals are already used (`0x1p-27`) and build on all three compilers. `BUILD_windows` exists and must stay green. |
+| cpp | yes | as C; header-only, so the consumer's flags apply (5); needs C++17 for hex floats (the harness passes `-std=c++17`). Two-step PR after C is learning order only (no code shared; standalone `trig.hpp`). |
+| csharp | yes | `net9.0`; no hex float literal, so decimal plus the `BitConverter.DoubleToInt64Bits` assert; `%` and the clamps go; RyuJIT does not contract. |
+| fsharp | yes | as C#; `int64 k &&& 3L`; the no-op early exit in `atan` is cleaned up. |
+| dart | yes on the VM; **not claimed on the web** | `dart test` runs on the VM only (`BUILD`). Tests may not read files: the 62,154 vectors must ship as generated source (TC-16, 4.7 MB). Bit constants must not be written as 64-bit integer literals or read with `ByteData.getUint64`: both fail or are unsupported under `dart2js` (believed, not run), so use two 32-bit halves. `double.nan` carries no payload on the web. |
+| elixir | yes, with the modelling of 5 | NaN and infinity cannot be inputs: the vectors skip `nonfinite=unrepresentable`, and `sin`/`cos`/`tan` beyond 2^29 must `raise ArithmeticError` (the port today returns a number there, so every dependent that passes a user angle changes behaviour from a wrong number to an exception). Integers stay accepted (`x * 1.0`, not `x + 0.0`). Compare bits with `<<b::64>>`, never `==`. The CI's OTP version was not checked (the `0.0` / `-0.0` distinction is OTP 27). |
+| go | yes, **with the `float64()` rule and the arm64 assembly check** | The dominant hazard (5): fusion on arm64 and others, no flag. Every function body lives in an `Operation` closure (`StartNew`, `gen_capabilities.go`), which the rewrite keeps; the fusable sites are inside those closures. Add the two CI greps of 5. The `oscillator` fix is part of the same PR. |
+| haskell | yes | GHC NCG, no fusion; constants by `castWord64ToDouble`; `mod'`/`floor` go (3.3 and 5 already say why). Widen the dependents' `trig >=0.1 && <0.2` bounds. |
+| java | yes | Java 21 release target, strict by default; hex float literals available. |
+| kotlin | yes | `Double.fromBits(0x...L)` is not a `const`, so constants are `val`s built at load with the bit assert, or decimals with the assert; JVM 21. |
+| lua | yes | **The only Lua lane is 5.4** (`lua >= 5.4` in the rockspec; 5.4.7 in CI): the 5.1/LuaJIT `k % 4` fallback of 5 is not needed. Current `sin`/`cos` never see an integer after the reduction (the `/` makes it a float), so the "integer wraps" finding is about the *new* code (8.1.7). Compare with `string.pack('<d', v)`; `tostring` prints 14 digits. Hex float literals are legal. |
+| perl | yes, **with the most care** | IV/NV integer path loses `-0` (5, measured in review); constants from bits; tests must build `-0` and NaN from bits (a literal `-0.0` may be constant-folded to an integer 0 by Perl; not checked); 15-digit printing; `Test2::V0`'s `is` on numbers must not be used for float bits. `sin_deg`/`cos_deg`/`tan_deg` keep their definition through the new `radians`. |
+| ruby | yes | MRI evaluates `*` and `+` as separate method calls: no fusion. `Float#to_i` raises on NaN and infinity, so the domain guard goes first. Constants as decimals (correctly rounded). **No gemspec** (the PR should add one; repo rule 10). |
+| swift | yes, **with one test caveat** | Swift does not contract; `Int(k) & 3`. `Trig.sqrt` of a negative is `preconditionFailure`, a process trap: an XCTest cannot assert the `expect = error` vector rows (6.5 (c)), so the PR skips them with a note or adds a non-trapping checked entry point; the production behaviour is unchanged. |
+
+#### 8.1.6 Grouping of TC-4 to TC-17
+
+**Rules.** (R1) Ports that feed the same *bit-exact* golden move in one PR: **none of the
+fourteen do** (8.1.4), so R1 forces no merge. (R2) A port's own dependents move with it:
+the PR runs and fixes them (section 7), and `go/oscillator` is part of TC-6. (R3)
+Otherwise one port per PR. (R4) Order by blast radius, smallest first: the number of
+direct dependents with changed calls (8.1.4), then whether the port changes the
+behaviour of a dependent (a sentinel gained, a raise gained) or needs new
+infrastructure. Ports in the same wave have no dependency on each other and run in
+parallel. **TC numbers are unchanged** (TC-16 stays Dart with generated source); only the
+merge order differs from the table in 8: the "after" arrows of 8 (TC-5 after TC-4, TC-8
+after TC-7, TC-10 after TC-9) are learning order, not code, because `cpp`, `kotlin` and
+`fsharp` each carry their own copy of the algorithm and import nothing from `c`, `java` or
+`csharp` (checked in the manifests).
+
+| Wave | PR | TC | Port | Changed-call dependents | In-PR obligations beyond 8.2 |
+|---|---|---|---|---|---|
+| 1 (no dependents; alone, parallel to everything) | 1 | TC-4 | c | 0 | harness flags and pragma guards under `-Werror`; the `-mfma` canary step; settles the C-family hazard |
+| 1 | 2 | TC-5 | cpp | 0 | the same, header-only; merge after PR 1 or review them together |
+| 2 (3 dependents) | 3 | TC-9 | csharp | 3 | `affine2d`, `arc2d`, `wave` (and `bezier2d`'s tests, which are unchanged) |
+| 2 | 4 | TC-10 | fsharp | 3 | same; `atan` early exit |
+| 2 (4 dependents, no behaviour change) | 5 | TC-7 | java | 4 | `affine2d`, `arc2d`, `point2d`, `wave` |
+| 2 | 6 | TC-8 | kotlin | 4 | same |
+| 2 | 7 | TC-11 | swift | 4 | same, plus `bezier2d` tests; the `sqrt` trap in the vector harness |
+| 2 | 8 | TC-12 | haskell | 4 | widen four `trig >=0.1 && <0.2` bounds; `atan2` guard |
+| 2 | 9 | TC-13 | ruby | 4 | add a gemspec; `bezier2d` tests |
+| 3 (a dependent changes behaviour, or new infrastructure) | 10 | TC-14 | lua | 4 | `tan` sentinel reaches `affine2d` skew; decide `sine_wave` reduction; rockspec rename |
+| 3 | 11 | TC-15 | perl | 4 | the same two, plus `degrees(-0)` and the `*_deg` wrappers |
+| 3 | 12 | TC-16 | dart | 4 | the generated 4.7 MB vector source and loader (reserved); `dart/trig` and `dart/wave` keep passing `phy00-phy01-v1`; `atan` and `atan2` fixes |
+| 3 | 13 | TC-17 | elixir | 4 | explicit `raise ArithmeticError` beyond 2^29 reaches `arc2d`/`affine2d`/`point2d`/`wave` callers; the `nonfinite`/`out-of-domain`/`beam-raises` flags |
+| 4 (largest radius) | 14 | TC-6 | go | 5 | `oscillator` phase in cycles (`ValueAt`); the arm64 and `GOAMD64=v3` assembly checks as CI steps; `Operation` wrappers kept |
+| close | 15 | TC-18 | none | n/a | as before; also records the version table of 8.1.4 |
+
+Go is last in blast-radius order although the spec's first draft put it third for its
+hazard class: its hazard is a CI check independent of the numeric change, which can be
+prototyped (a no-op arm64 assembly grep on the current code) while wave 1 and 2 are
+in review. Every PR adds its registry entry (`name: "<lang>/trig"`, `isTrigReferenceCorpus`)
+to `code/programs/go/build-tool/repository_inputs.go` and flips the matching line of
+`TestTrigReferenceCorpusSelectsConvertedPorts` in `repository_inputs_test.go`; those
+edits are adjacent, so PRs that are open together conflict textually and merge
+sequentially with a rebase, which is a coordination cost and not a reason to group.
+
+#### 8.1.7 Findings that contradict this specification
+
+1. **`atan2` of NaN (3.9).** "A NaN `x` falls to the last branch, which returns `0.0`"
+   is true of twelve ports and **false for Dart and Haskell**, whose last branches test
+   `y > 0` / `y < 0` without `x == 0`: a NaN `x` with `y /= 0` returns `+-HALF_PI`. The
+   reference's added NaN guard fixes both; the Part II rows for them differ more than
+   the text says.
+2. **"Sixteen of seventeen write `atan` the same way" (3.9).** True of the arithmetic,
+   not of the text: F# and Haskell sum all 30 terms (`if abs term < 1e-17 then ()` is a
+   no-op; `foldl'` has no exit). The result is bit-equal (8.1.1), so nothing changes in
+   behaviour, but "Dart is the only port that differs" should read "Dart is the only
+   port that differs in value".
+3. **Lua integers (2.1, 5).** The finding "on 5.3+, `-x*x` is integer arithmetic for an
+   integer argument and wraps" does not describe the current port: `x / TWO_PI` is a
+   float division, so `range_reduce` returns a float for an integer input and the series
+   never does integer arithmetic. The hazard is real for the *reference* (which has no
+   division before the series) and the `x * 1.0` entry rule stands. Likewise 5's
+   LuaJIT/5.1 branch has no lane in this repository.
+4. **`mod'` (2.1, 5).** Haskell's `mod'` is `n - fromInteger f * d` with `f` the floor of
+   the *exact rational* quotient (`Data.Fixed.div'`), not of the double quotient. The
+   product still rounds, so the conclusion (do not use it) is unchanged.
+5. **Dependents (7).** The list of dependents that can pass an unbounded angle missed
+   `go/oscillator` (identical to the Python one fixed in TC-2) and the unreduced
+   `sine_wave` in `lua/wave` and `perl/wave`.
+6. **Where the `trig` ports read the vectors (6.5).** "The test-only read capability its
+   other fixtures already use" exists only in dependents (`geometry2d-v1` readers); the
+   thirteen non-Dart `trig` packages read no fixture today, and six of the fourteen
+   (c, cpp, haskell, java, kotlin, perl) have no `required_capabilities.json` at all.
+   Python, Rust and TypeScript declare an empty list and read the TSV in tests, so the
+   precedent holds; the first read in each new lane is new ground, and in the C family it
+   goes through the ISO-only harness.
+7. **Version (OQ-12).** "A minor bump" is ambiguous in five ports whose manifest lags the
+   changelog, and breaks Haskell's dependents through an upper bound (8.1.4).
+8. **Swift `sqrt` (3.9.2).** "The port's test asserts an error of its own kind" cannot be
+   done for a trap.
+
+Nothing found moves a port from where the spec says it is: all fourteen live at
+`code/packages/<lang>/trig`, and no eighteenth `trig` package exists.
+
+### 8.2 Per-port PR shape, acceptance and rollback
+
 Each port PR has the same shape (`feat(trig-<lang>): converge on TRIG-REF-1`):
 
 1. read `lessons.d` for the language (CLAUDE.md rule 7); branch from `origin/main`;
@@ -1301,7 +1573,7 @@ Each port PR has the same shape (`feat(trig-<lang>): converge on TRIG-REF-1`):
    factorial table and the quadrant table go in the source comments;
 3. the constants of 3.2, by bits where the language needs it, each asserted in a
    test (6.5);
-4. switch the tests to the vectors; delete tests that pin superseded behaviour;
+4. switch the tests to the vectors, **first running them against the unchanged port and pasting the list of failing rows (above all the Part II rows) into the PR description** (this is the run that TC-1b could not do, 8.1.1); delete tests that pin superseded behaviour;
 5. update `README.md` (the algorithm, the domain, the accuracy statement of 4.1)
    and `CHANGELOG` (numeric change: last-bit differences everywhere; large `|x|`
    changes materially; **`sin`, `cos`, `tan` return NaN (BEAM: raise) beyond 2^29**;
@@ -1316,12 +1588,12 @@ each port's vectors green in CI; the Go arm64 and C `-mfma` canaries green; the
 generator's regeneration job green; PHY00 amended; backlog row marked done; then
 (and only then) the floats pilot of VER04p, Stage C, may start.
 
-**Grouping rule (added at TC-2).** Before a port PR, `git grep` the repository for fixtures that other languages also consume and that depend on a `trig` result (the `music-machine` golden is the one found so far; the `phy00-phy01-v1` corpus is tolerance-based and is not). Ports that share such a fixture converge in one PR and the fixture changes once. Where no shared golden exists, ports stay independent.
+**Grouping rule (added at TC-2).** Before a port PR, `git grep` the repository for fixtures that other languages also consume and that depend on a `trig` result (the `music-machine` golden is the one found so far; the `phy00-phy01-v1` corpus is tolerance-based and is not). Ports that share such a fixture converge in one PR and the fixture changes once. Where no shared golden exists, ports stay independent. **Result of applying the rule to the remaining fourteen (TC-1b, 8.1.4): no shared bit-exact golden exists**, so no further cross-language PR is forced; the coupling that remains is in-language dependents (8.1.6).
 
-**Parallelism.** TC-2 to TC-17 are independent once TC-1 is merged; they are listed
-in an order, not a chain, and may proceed in parallel except for the stated
-dependencies (TC-5 after TC-4, TC-8 after TC-7, TC-10 after TC-9). The sequence is the
-*recommended* order for learning, not a constraint.
+**Parallelism.** TC-4 to TC-17 are independent once TC-1 is merged and may proceed in
+parallel; the grouping and the merge order by blast radius are in 8.1.6 (waves 1 to 4). The three
+"after" arrows of the table above (TC-5 after TC-4, TC-8 after TC-7, TC-10 after TC-9) are
+learning order, not code: each of those ports carries its own copy of the algorithm.
 
 **Rollback.** Each port PR is a single commit's worth of numeric change and is
 reverted by reverting that PR; the vectors do not need to change (a port that
@@ -1368,6 +1640,7 @@ changes the sections named.
 | 2026-11-16 | TC-2 (music trio): 8 gains a grouping rule for ports that share a golden; TC-2 is the Python, Rust and TypeScript `trig` ports together with `oscillator`/`musical-instruments`/`percussion-kit` and one regeneration of the `music-machine` golden. |
 | 2026-11-16 | TC-1 implementation. 3.2: the hex float of `PIO2_3` read `0x1.84698p-48` and is `0x1.846988p-48` (the bit pattern was right; found by the C cross-check). 6.2: flag semantics pinned (`nonfinite=unrepresentable` and `=rejects` never together; `signed-zero` and `nan-class` describe the result). 6.3: counts as generated; halfway cases are stood in for by ulp neighbours (a midpoint is not a double); 128 reduction tie cases added. 6.4: gates (b) and (c) amended with the measured masked list (16 constants and 20 sites that no sampled vector can see; 5 sites provably inert), generator file names. 8: TC-1 is fixture-only, the music trio converges together in TC-2 (shared golden), Dart source deferred to TC-16, the Part II survey of other ports deferred to TC-1b |
 | 2026-11-16 | TC-1 review fixes. 6.4: the masked list was **false** (it exempted 16 constants and 20 sites as unreachable; a search found inputs that reach `C3`, `S3`, `C4`, `S4`, `C5`, `S5`, `sin.h2`, `sin.h3`, `cos.h2`, `cos.h3` and `cos.h4`): those eleven are now directed witnesses (30 inputs, 6.3) and the gate requires each, the list shrinks to 10 constants and 15 sites (search of 1.2e9 inputs per item, stated), and the gate fails in both directions (a masked item that is detected is an error). 6.4 step 3: the exact reference no longer imports the soft-float model's encoder and decoder (it has its own, tested to agree), and the text says 1200-bit pi and a 240-bit series (it said 400 and 220). 6.2, 6.3, 3.8: `tan` rows now carry `cr` (except `pole-sentinel` and out-of-domain rows); Part II still has none, stated as a gap with a backlog row. 6.4 step 5: `python/trig`'s BUILD runs the generator's `--check`; the build tool selects it on any generator or fixture file. Counts: 62,154 vectors (2,854 edge rows) |
+| 2026-11-16 | TC-1b: survey of the fourteen unconverged ports (read at `origin/main` a4723983852, one Python probe of the `atan` variants), their versions, callers and golden consumption, a blast-radius grouping of TC-4 to TC-17 into four waves, and eight corrections to the survey (8.1.7). Section 8 gains 8.1 and 8.2; the per-port PR shape moves to 8.2 and step 4 now runs the vectors against the unchanged port first |
 
 ## Appendix A. Reference implementation (Python, normative as a transcription)
 
