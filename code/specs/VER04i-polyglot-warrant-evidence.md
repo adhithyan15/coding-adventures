@@ -1307,6 +1307,15 @@ replace what the digest covers:
   Any other directive, block form, module path or replace target fails. A `go.sum`
   is not in the ignore set (it would mean external dependencies nothing covers),
   and a `go.mod` anywhere but the root is uncovered.
+* **A Go workspace file is refused.** `go.work` and `go.work.sum` (any entry of
+  that name) in the package root, the runner root or any directory above either,
+  up to the repository root, fail with `go-mod`: a workspace `replace` overrides
+  the pinned `go.mod` files. The Go lane's BUILD lines also run `go` with
+  `GOWORK=off`.
+* **Sourceless bytecode is refused in a Python package.** Any `*.pyc` or `*.pyo`
+  under the package root outside a `__pycache__` directory (so `tests/` too) is
+  `uncovered-source`; the package-root `.venv`, recreated by every build, is not
+  scanned.
 
 Directories the lane rule skips (Go `testdata` and names starting `.` or `_`)
 are not examined. These are the **residuals**, and they are printed with every
@@ -1981,7 +1990,9 @@ dependency graph.
   list is ten checks (`source-fresh`, `runner-source-fresh` added) and the
   unclaimed list is five (source freshness and the runner source digest are
   removed; two Go residuals added). The walk refuses uncovered files, any
-  `vendor`, `node_modules` and `dist`, and pins the Go `go.mod` files exactly.
+  `vendor`, `node_modules` and `dist`, pins the Go `go.mod` files exactly,
+  refuses a `go.work` above the Go lane, and refuses stray `*.pyc` and `*.pyo`
+  in a Python package.
   The Python lane runs under a private bytecode cache (`sys.pycache_prefix`) and
   its manifest records `pycache_isolated: true`, the only lane-specific manifest
   field; only then is `__pycache__` ignored. New load codes `source-tree`, `uncovered-source`,

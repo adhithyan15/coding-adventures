@@ -119,6 +119,13 @@ impl Repo {
         fs::write(self.root.join(rel), bytes).unwrap();
     }
 
+    /// Write a file, creating its directories.
+    fn write_deep(&self, rel: &str, bytes: &[u8]) {
+        let path = self.root.join(rel);
+        fs::create_dir_all(path.parent().unwrap()).unwrap();
+        fs::write(path, bytes).unwrap();
+    }
+
     fn edit_text(&self, rel: &str, from: &str, to: &str) {
         let text = String::from_utf8(self.read(rel)).unwrap();
         assert!(text.contains(from), "{rel} does not contain {from:?}");
@@ -1641,4 +1648,87 @@ fn a_non_utf8_file_name_is_refused() {
         return; // a filesystem that cannot hold the name cannot hold the attack
     }
     expect_code(repo.load("python/ct-compare"), "source-tree", "UTF-8");
+}
+
+#[test]
+fn a_go_workspace_file_anywhere_above_the_lane_is_refused() {
+    // `go.work` overrides every go.mod, so it may not exist in the package, the
+    // runner, or any directory above either, up to the repository root.  Any
+    // entry of that name counts (file, directory), and so does go.work.sum alone.
+    let go_pkg = "code/packages/go/ct-compare";
+    let runner = runner_root("go").unwrap();
+    let places = [
+        format!("{go_pkg}/go.work"),
+        format!("{runner}/go.work"),
+        "code/packages/go/go.work".to_string(),
+        "code/packages/go/go.work.sum".to_string(),
+        "code/packages/go.work".to_string(),
+        "code/go.work".to_string(),
+        "go.work".to_string(),
+        "go.work.sum".to_string(),
+    ];
+    for rel in places {
+        let repo = Repo::new();
+        repo.write_deep(&rel, b"go 1.26\nreplace x => ../evil\n");
+        expect_code(repo.load("go/ct-compare"), "go-mod", "go.work");
+        // Only the Go lane looks: the other lanes do not run `go`.
+        repo.load("python/ct-compare").unwrap();
+        repo.load("typescript/ct-compare").unwrap();
+    }
+    // A directory with that name is still refused.
+    let repo = Repo::new();
+    fs::create_dir_all(repo.root.join("code/packages/go/go.work")).unwrap();
+    expect_code(repo.load("go/ct-compare"), "go-mod", "go.work");
+    // The clean case loads, and so does a sibling's unrelated file name.
+    let repo = Repo::new();
+    repo.write_deep("code/packages/go/go.work.txt", b"not a workspace\n");
+    repo.load("go/ct-compare").unwrap();
+    load_lane(&real_root(), "go/ct-compare").unwrap();
+}
+
+#[test]
+fn sourceless_bytecode_outside_a_pycache_is_refused_in_a_python_package() {
+    let py = "code/packages/python/ct-compare";
+    let probes = [
+        format!("{py}/tests/shutil.pyc"),
+        format!("{py}/tests/shutil.pyo"),
+        format!("{py}/tests/sub/deep/SHUTIL.PYC"),
+        format!("{py}/conftest.pyc"),
+    ];
+    for rel in probes {
+        let repo = Repo::new();
+        repo.write_deep(&rel, &pyc(0));
+        expect_code(
+            repo.load("python/ct-compare"),
+            "uncovered-source",
+            "bytecode",
+        );
+        // Another lane's package is not scanned for Python bytecode.
+        repo.load("typescript/ct-compare").unwrap();
+    }
+    // In the source root the digest walk refuses it first (same class).
+    let repo = Repo::new();
+    repo.write_deep(
+        &format!("{}/x.pyc", lane_source_rel("python/ct-compare")),
+        &pyc(0),
+    );
+    expect_code(repo.load("python/ct-compare"), "uncovered-source", "x.pyc");
+    // Inside a __pycache__ (at any depth, tests/ included) it is neutralised by
+    // the private cache prefix, and a build's own .venv is not scanned.
+    let repo = Repo::new();
+    repo.write_deep(
+        &format!("{py}/tests/__pycache__/shutil.cpython-312.pyc"),
+        &pyc(1),
+    );
+    repo.write_deep(&format!("{py}/.venv/lib/stray.pyc"), &pyc(1));
+    repo.load("python/ct-compare").unwrap();
+    // A pyc below a nested .venv (not the package-root one) is still refused.
+    repo.write_deep(&format!("{py}/tests/.venv/stray.pyc"), &pyc(1));
+    expect_code(
+        repo.load("python/ct-compare"),
+        "uncovered-source",
+        "stray.pyc",
+    );
+    // The clean case.
+    load_lane(&real_root(), "python/ct-compare").unwrap();
 }

@@ -509,6 +509,8 @@ pub fn read_repo_file(repo_root: &Path, rel: &str, cap: u64) -> Result<Vec<u8>, 
 const MAX_SOURCE_FILE_BYTES: u64 = 8 * 1024 * 1024;
 const MAX_SOURCE_DEPTH: usize = 32;
 const MAX_SOURCE_FILES: usize = 4096;
+/// Entries the package-wide bytecode scan will look at before giving up.
+const MAX_PACKAGE_ENTRIES: usize = 100_000;
 const MAX_SOURCE_TOTAL_BYTES: u64 = 64 * 1024 * 1024;
 
 /// Which of a lane's two digests a walk computes.
@@ -961,6 +963,136 @@ fn check_go_modules(
             return go_mod_fail(&path, "not UTF-8");
         };
         pin_go_mod(&path, text, &module, runner)?;
+    }
+    Ok(())
+}
+
+/// Refuse a Go workspace file anywhere the `go` command could find one.
+///
+/// `go.work` (and its `go.work.sum`) is read from the working directory
+/// upward, and its `replace` and `use` directives override every `go.mod`, so
+/// a `go.work` in any ancestor can swap the runner module for another
+/// directory while the pinned `go.mod` files still look right.  Every
+/// directory from each of the two roots up to and including the repository
+/// root is checked, and *any* entry with either name (a file, a directory, a
+/// link) is refused: absence is the only accepted state.  The BUILD files also
+/// run `go` with `GOWORK=off`; this check is the loader's own, since it cannot
+/// see the environment the runner was started in.
+fn check_go_workspace(
+    repo_root: &Path,
+    package_root: &str,
+    runner_dir: &str,
+) -> Result<(), LaneLoadError> {
+    let mut checked: Vec<String> = Vec::new();
+    for root in [package_root, runner_dir] {
+        let mut dir = root.to_owned();
+        loop {
+            if !checked.contains(&dir) {
+                checked.push(dir.clone());
+                // The directory is reached with the usual rules (contained,
+                // links refused per component) before its listing is trusted.
+                if !dir.is_empty() {
+                    contained_path(repo_root, &dir, Kind::Dir)?;
+                }
+                for name in ["go.work", "go.work.sum"] {
+                    let rel = if dir.is_empty() {
+                        name.to_owned()
+                    } else {
+                        format!("{dir}/{name}")
+                    };
+                    match fs::symlink_metadata(repo_root.join(&rel)) {
+                        Err(e) if e.kind() == std::io::ErrorKind::NotFound => {}
+                        Err(e) => return go_mod_fail(&rel, format!("cannot be inspected: {e}")),
+                        Ok(_) => {
+                            return go_mod_fail(
+                                &rel,
+                                "a Go workspace file can replace the runner module; none may exist in the package, the runner or any directory above them (VER04i 8.1)",
+                            );
+                        }
+                    }
+                }
+            }
+            match dir.rsplit_once('/') {
+                Some((parent, _)) => dir = parent.to_owned(),
+                None if !dir.is_empty() => dir = String::new(),
+                None => break,
+            }
+        }
+    }
+    Ok(())
+}
+
+// ---------------------------------------------------------------------------
+// Sourceless bytecode in a Python package (WD-004b2 review)
+// ---------------------------------------------------------------------------
+//
+// The source digest walks only the binding's source root, so `tests/` is never
+// examined.  A legacy sourceless `tests/shutil.pyc` is imported by the
+// interpreter in preference to nothing at all, and (with the test directory on
+// `sys.path`) in preference to the standard library module of the same name.
+// So no `*.pyc` or `*.pyo` may exist under the package root unless it sits in
+// a `__pycache__` directory, which the private `sys.pycache_prefix` makes
+// irrelevant.  The package-root `.venv` is the build's own environment, wiped
+// and recreated by `uv venv --clear` on every build, and is not scanned.
+
+fn check_python_bytecode(repo_root: &Path, package_root: &str) -> Result<(), LaneLoadError> {
+    let (root, _) = contained_path(repo_root, package_root, Kind::Dir)?;
+    let mut seen = 0usize;
+    scan_bytecode(&root, package_root, 0, &mut seen)
+}
+
+fn scan_bytecode(
+    dir: &Path,
+    shown: &str,
+    depth: usize,
+    seen: &mut usize,
+) -> Result<(), LaneLoadError> {
+    if depth > MAX_SOURCE_DEPTH {
+        return source_fail("package tree is nested too deeply");
+    }
+    let listing = fs::read_dir(dir).map_err(|e| LaneLoadError {
+        code: "io",
+        message: format!("cannot list {shown}: {e}"),
+    })?;
+    for entry in listing {
+        let entry = entry.map_err(|e| LaneLoadError {
+            code: "io",
+            message: format!("cannot list {shown}: {e}"),
+        })?;
+        *seen += 1;
+        if *seen > MAX_PACKAGE_ENTRIES {
+            return source_fail(format!(
+                "more than {MAX_PACKAGE_ENTRIES} entries in {shown}"
+            ));
+        }
+        let Ok(name) = entry.file_name().into_string() else {
+            return source_fail("non-UTF-8 file name in the package tree");
+        };
+        let path = format!("{shown}/{name}");
+        let meta = fs::symlink_metadata(entry.path()).map_err(|e| LaneLoadError {
+            code: "io",
+            message: format!("{path}: {e}"),
+        })?;
+        if is_link(&meta) {
+            return err(
+                "symlink",
+                format!("{path} is a symbolic link; links are refused"),
+            );
+        }
+        if meta.is_dir() {
+            let build_env = depth == 0 && name == ".venv";
+            if name != "__pycache__" && !build_env {
+                scan_bytecode(&entry.path(), &path, depth + 1, seen)?;
+            }
+        } else {
+            let lower = name.to_ascii_lowercase();
+            if lower.ends_with(".pyc") || lower.ends_with(".pyo") {
+                return err(
+                    "uncovered-source",
+                    format!("{path} is sourceless bytecode outside __pycache__: Python runs it in place of source, so none is accepted (VER04i 8.1)"),
+                );
+            }
+        }
     }
     Ok(())
 }
@@ -1468,6 +1600,13 @@ pub fn load_lane(repo_root: &Path, package: &str) -> Result<LoadedLane, LaneLoad
         let bytes = read_repo_file(repo_root, build_file, MAX_BUILD_FILE_BYTES)?;
         check_build_routing(build_file, &bytes)?;
     }
+    // The workspace and bytecode refusals come first: they are about files the
+    // digest walks would otherwise report under a vaguer class.
+    if consumer.lane == "go" {
+        if let Some(runner_dir) = runner_root("go") {
+            check_go_workspace(repo_root, &consumer.package_root, runner_dir)?;
+        }
+    }
     // Source freshness (VER04i 9 check 23): both digests recomputed from the tree.
     let source = binding_source(&binding)?;
     let source_root = if source == "." {
@@ -1493,6 +1632,9 @@ pub fn load_lane(repo_root: &Path, package: &str) -> Result<LoadedLane, LaneLoad
     };
     if consumer.lane == "go" {
         check_go_modules(repo_root, &consumer.package_root, runner_dir)?;
+    }
+    if consumer.lane == "python" {
+        check_python_bytecode(repo_root, &consumer.package_root)?;
     }
     let runner_digest = source_tree_digest(
         repo_root,
