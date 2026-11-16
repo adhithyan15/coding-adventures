@@ -9,6 +9,13 @@ been run through the checker, and the case counts in them were computed by hand
 from the stated domains (each is re-derived in the text so a reviewer can redo it).
 Claims about what a crate does are "from reading": the source was read, not run.
 
+**Amendment (2026-11-16), owner decision, with [VER04n](VER04n-warrant-opaque-types.md):**
+opaque types are the immutable sibling of Mode P. VER04n section 17.2 gives the exact
+edits (sections 3.5, 4.4 E11, 6.1, 9.1 J2 and 14 O-8): a three-way table of transparent,
+hidden-mutable and hidden-immutable state, the rule that a type with a mutating method is
+never opaque, handle-typed constructor arguments in a `dispatch` driver, and the shared
+`observe` adapter code. No VER04m rule changes meaning.
+
 **Parent:** [VER04](VER04-warrant-language.md) (sections 3 to 8),
 [VER04h](VER04h-warrant-derived-evidence.md) (domains, budget, manifests, controls),
 [VER04i](VER04i-polyglot-warrant-evidence.md) (corpus, lanes),
