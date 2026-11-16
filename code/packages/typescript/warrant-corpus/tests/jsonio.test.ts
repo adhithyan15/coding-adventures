@@ -158,4 +158,11 @@ describe("readBytes", () => {
     symlinkSync(join(dir, "real"), join(dir, "link"));
     expect(() => readBytes(join(dir, "link"), 10)).toThrow(/not a regular file/);
   });
+
+  it("renders a bigint as plain decimal and orders keys by code point (WD-100)", () => {
+    expect(renderJson({ b: 18446744073709551615n, a: [] })).toBe('{\n  "a": [],\n  "b": 18446744073709551615\n}\n');
+    expect(renderJson({ "\u{1f600}": 1, "\uffff": 2, "\u{1f600}x": 3 })).toBe(
+      '{\n  "\\uffff": 2,\n  "\\ud83d\\ude00": 1,\n  "\\ud83d\\ude00x": 3\n}\n',
+    );
+  });
 });

@@ -42,4 +42,10 @@ describe("relativeInside", () => {
   it("defaults to the host path module", () => {
     expect(relativeInside("/", "/")).toBe("");
   });
+
+  it("treats a device-namespace path as never inside, on either side (WD-100)", () => {
+    expect(relativeInside("D:\\repo", "\\\\?\\D:\\repo\\x", win32)).toBeNull();
+    expect(relativeInside("\\\\.\\D:\\repo", "D:\\repo\\x", win32)).toBeNull();
+    expect(relativeInside("/r", "/r/\\\\?\\x", posix)).toBe("\\\\?\\x");
+  });
 });

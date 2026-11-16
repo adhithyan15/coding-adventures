@@ -16,9 +16,10 @@
  *   error, as invalid UTF-8 already is;
  * - objects are built with **no prototype**, so a `"__proto__"` key is just
  *   data and cannot reach `Object.prototype`;
- * - output is canonical: sorted keys, two-space indent, LF, ASCII-only (the
- *   same escapes Python's `ensure_ascii` writes), trailing newline, so a
- *   regenerated file is byte-identical to the committed one.
+ * - output is canonical: keys sorted by code point, two-space indent, LF,
+ *   ASCII-only (the same escapes Python's `ensure_ascii` writes, DEL included),
+ *   trailing newline, so a regenerated file is byte-identical to the committed
+ *   one in every lane.
  *
  * Because the parser is written here, it is also the only place that decides
  * what "JSON" means for the whole runner; nothing else calls `JSON.parse`.
@@ -31,7 +32,10 @@ import { CorpusError, need } from "./errors.ts";
 
 export const MAX_CORPUS_BYTES = 32 * 1024 * 1024;
 export const MAX_TEXT_BYTES = 8 * 1024 * 1024;
-/** JSON nesting limit. A 64-deep model IR is about 130 levels of JSON. */
+/**
+ * JSON nesting limit: at most this many nested containers (the next one is
+ * refused); scalars do not count. A 64-deep model IR is about 130 levels.
+ */
 export const MAX_JSON_DEPTH = 256;
 
 /** A parsed JSON value (objects have a null prototype). */
@@ -133,7 +137,6 @@ class Reader {
   }
 
   private value(depth: number): Json {
-    need(depth <= MAX_JSON_DEPTH, "malformed-json", "JSON nests too deeply");
     this.space();
     const char = this.text.charAt(this.at);
     if (char === "{") return this.object(depth);
@@ -206,6 +209,7 @@ class Reader {
   }
 
   private array(depth: number): Json[] {
+    need(depth < MAX_JSON_DEPTH, "malformed-json", "JSON nests too deeply");
     this.at += 1;
     const items: Json[] = [];
     this.space();
@@ -224,6 +228,7 @@ class Reader {
   }
 
   private object(depth: number): Json {
+    need(depth < MAX_JSON_DEPTH, "malformed-json", "JSON nests too deeply");
     this.at += 1;
     const result: { [key: string]: Json } = Object.create(null) as { [key: string]: Json };
     this.space();
@@ -254,25 +259,66 @@ export function parseJson(data: Uint8Array): Json {
   return new Reader(decodeUtf8(data)).parseDocument();
 }
 
-function sortKeys(value: unknown): unknown {
-  if (Array.isArray(value)) return value.map(sortKeys);
-  if (isObject(value)) {
-    // No prototype: on `{}` a `__proto__` key would set the prototype and vanish.
-    const sorted: Record<string, unknown> = Object.create(null) as Record<string, unknown>;
-    for (const key of Object.keys(value).sort()) {
-      sorted[key] = sortKeys(value[key]);
-    }
-    return sorted;
+/** Code point order: UTF-16 code unit order differs for U+E000..U+FFFF versus astral keys. */
+function compareCodePoints(left: string, right: string): number {
+  const a = Array.from(left, (char) => char.codePointAt(0) as number);
+  const b = Array.from(right, (char) => char.codePointAt(0) as number);
+  for (let at = 0; at < a.length && at < b.length; at += 1) {
+    if (a[at] !== b[at]) return (a[at] as number) < (b[at] as number) ? -1 : 1;
   }
-  return value;
+  return a.length - b.length;
 }
 
-/** Canonical rendering: sorted keys, 2-space indent, LF, ASCII, final newline. */
+const SHORT_ESCAPES: Record<string, string> = {
+  '"': '\\"',
+  "\\": "\\\\",
+  "\b": "\\b",
+  "\f": "\\f",
+  "\n": "\\n",
+  "\r": "\\r",
+  "\t": "\\t",
+};
+
+/** A JSON string literal, ASCII only: everything outside U+0020..U+007E is a lowercase \uXXXX. */
+function renderString(text: string): string {
+  let out = '"';
+  // Iterating UTF-16 code units emits an astral character as its surrogate pair.
+  for (let at = 0; at < text.length; at += 1) {
+    const char = text.charAt(at);
+    const unit = text.charCodeAt(at);
+    const short = SHORT_ESCAPES[char];
+    if (short !== undefined) out += short;
+    else if (unit >= 0x20 && unit <= 0x7e) out += char;
+    else out += `\\u${unit.toString(16).padStart(4, "0")}`;
+  }
+  return `${out}"`;
+}
+
+/**
+ * Render by hand, never through `JSON.stringify`: a runtime object enumerates
+ * integer-like keys ("2" before "10") before every other key whatever order
+ * they were inserted in, so the *sorted* order has to be applied to a list.
+ */
+function renderValue(value: unknown, level: number): string {
+  if (value === null) return "null";
+  if (typeof value === "boolean") return value ? "true" : "false";
+  if (typeof value === "number") return String(value);
+  if (typeof value === "bigint") return value.toString();
+  if (typeof value === "string") return renderString(value);
+  const pad = "  ".repeat(level);
+  const inner = "  ".repeat(level + 1);
+  if (Array.isArray(value)) {
+    if (value.length === 0) return "[]";
+    return `[\n${value.map((item) => inner + renderValue(item, level + 1)).join(",\n")}\n${pad}]`;
+  }
+  const record = value as Record<string, unknown>;
+  const keys = Object.keys(record).sort(compareCodePoints);
+  if (keys.length === 0) return "{}";
+  const members = keys.map((key) => `${inner}${renderString(key)}: ${renderValue(record[key], level + 1)}`);
+  return `{\n${members.join(",\n")}\n${pad}}`;
+}
+
+/** Canonical rendering: code point key order, 2-space indent, LF, ASCII, final newline. */
 export function renderJson(document: unknown): string {
-  const text = JSON.stringify(sortKeys(document), null, 2);
-  const ascii = text.replace(
-    /[\u0080-￿]/g,
-    (char) => `\\u${char.charCodeAt(0).toString(16).padStart(4, "0")}`,
-  );
-  return `${ascii}\n`;
+  return `${renderValue(document, 0)}\n`;
 }

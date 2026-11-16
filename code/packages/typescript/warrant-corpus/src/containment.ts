@@ -32,6 +32,8 @@
 
 import * as nodePath from "node:path";
 
+const DEVICE = /^[\\/]{2}[?.][\\/]/;
+
 /** The slice of a `node:path` module this check needs (`posix` or `win32`). */
 export type PathModule = Pick<typeof nodePath.posix, "isAbsolute" | "relative" | "resolve" | "sep">;
 
@@ -41,6 +43,8 @@ export type PathModule = Pick<typeof nodePath.posix, "isAbsolute" | "relative" |
  * descendant reject `""` as well.
  */
 export function relativeInside(root: string, child: string, mod: PathModule = nodePath): string | null {
+  // A device-namespace path (`\\?\`, `\\.\`) is never inside anything, and nothing is inside it.
+  if (mod.sep === "\\" && (DEVICE.test(root) || DEVICE.test(child))) return null;
   const path = mod.relative(mod.resolve(root), mod.resolve(child));
   if (mod.isAbsolute(path)) return null;
   if (path === ".." || path.startsWith(`..${mod.sep}`)) return null;
