@@ -186,7 +186,7 @@ class TestConformance < Minitest::Test
   # differ by exactly one, so |ordered(a) - ordered(b)| is the distance in steps.
   def ordered(bits)
     mag = bits & 0x7FFFFFFFFFFFFFFF
-    bits >> 63 == 1 ? -mag : mag
+    (bits >> 63 == 1) ? -mag : mag
   end
 
   def test_accuracy_against_the_correctly_rounded_column
@@ -207,7 +207,7 @@ class TestConformance < Minitest::Test
   end
 
   def test_unknown_ops_fail
-    assert_raises(NoMethodError) { Trig.public_send("no_such_op", 1.0) }
+    assert_raises(NoMethodError) { Trig.public_send(:no_such_op, 1.0) }
     ROWS.each { |row| assert_includes OPS, row[:op] }
   end
 

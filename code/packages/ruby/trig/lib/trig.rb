@@ -398,7 +398,7 @@ module Trig
 
     # Initial guess: x itself works for x >= 1 (large values converge faster
     # from x than from 1). For x < 1, start at 1.0 to avoid tiny denominators.
-    guess = scaled >= 1.0 ? scaled : 1.0
+    guess = (scaled >= 1.0) ? scaled : 1.0
 
     # Iterate to convergence (or up to 60 steps as a safety cap).
     60.times do
@@ -446,7 +446,7 @@ module Trig
 
     # Guard: at poles, cos is effectively zero.
     if c.abs < 1e-15
-      return s > 0 ? 1.0e308 : -1.0e308
+      return (s > 0) ? 1.0e308 : -1.0e308
     end
 
     s / c
