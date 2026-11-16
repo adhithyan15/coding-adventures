@@ -2,6 +2,12 @@
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <!-- Without this, AssemblyName defaults to the project file name, which
+         csharp/trig also produces (CodingAdventures.Trig.dll). Two libraries
+         with one assembly name make coverlet report a flat 0% when the build
+         tool runs them side by side (lessons.d: two packages that emit the
+         same assembly name will eventually collide). -->
+    <AssemblyName>CodingAdventures.Trig.FSharp</AssemblyName>
     <PackageId>CodingAdventures.Trig.FSharp</PackageId>
     <Version>0.2.0</Version>
     <Authors>Adhithya Rajasekaran</Authors>

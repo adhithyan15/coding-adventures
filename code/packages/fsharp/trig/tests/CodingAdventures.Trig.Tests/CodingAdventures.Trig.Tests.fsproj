@@ -2,6 +2,10 @@
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <IsPackable>false</IsPackable>
+    <!-- Same reason as the library's AssemblyName: csharp/trig's test assembly
+         is CodingAdventures.Trig.Tests, and coverlet keys its mapping file on
+         the test assembly name. -->
+    <AssemblyName>CodingAdventures.Trig.FSharp.Tests</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>

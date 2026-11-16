@@ -10,6 +10,11 @@ the reference form and keep their bits.
 
 ### Changed
 
+- The library assembly is now `CodingAdventures.Trig.FSharp` and the test
+  assembly `CodingAdventures.Trig.FSharp.Tests` (both matched their PackageId
+  only by accident before). `csharp/trig` emits `CodingAdventures.Trig`, and two
+  packages with one assembly name made coverlet report a flat 0% in CI.
+
 - `sin` and `cos`: nearest-integer Cody-Waite range reduction (`k` by the
   add-and-subtract-`MAGIC` trick, `r = x - k*pi/2` from five pieces, the first
   four with exact products), then ten-term Horner kernels on stored coefficients
