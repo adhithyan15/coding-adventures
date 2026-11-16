@@ -137,6 +137,17 @@ var (
 		"code/grammars/vos_contract",
 		"code/grammars/vos_document",
 	}
+	// vosToolPaths are the sources of the tools a VOS implementation's BUILD runs by
+	// `cargo run -p` or by manifest path (vos-shape-check, and vos-link, a standalone cargo
+	// root, with vos-manifest): none is a Cargo edge of the implementation, so without a row an
+	// edit to them re-runs no implementation's `check-doc` (VOS-D066).
+	vosToolPaths = []string{
+		"code/programs/rust/vos-link",
+		"code/packages/rust/vos-manifest",
+		"code/packages/rust/vos-shape-check",
+		"code/grammars/vos_contract",
+		"code/grammars/vos_document",
+	}
 	vosShapeGrammarPaths = []string{
 		"code/grammars/rust/rust1.97.0-e2021.tokens",
 		"code/grammars/rust/rust1.97.0-e2024.tokens",
@@ -277,6 +288,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "the vos_contract and vos_document grammar pairs vos-manifest embeds",
 		matches:  isVosGrammarInput,
 		paths:    vosGrammarPaths,
+	},
+	{
+		name:     "rust/vos-sched-fp-bitmap",
+		language: "rust",
+		inputs:   "the VOS tools its BUILD runs outside Cargo: vos-link check-doc, vos-shape-check, and their grammars",
+		matches:  isVosToolInput,
+		paths:    vosToolPaths,
 	},
 	{
 		name:     "rust/vos-shape-check",
@@ -1103,6 +1121,19 @@ func isCtCompareInput(changed string) bool {
 func isVosGrammarInput(changed string) bool {
 	return strings.HasPrefix(changed, "code/grammars/vos_contract/") ||
 		strings.HasPrefix(changed, "code/grammars/vos_document/")
+}
+
+// isVosToolInput reports whether a changed path is a source of a tool that a VOS
+// implementation's BUILD runs outside Cargo (VOS-D066): vos-link, vos-manifest,
+// vos-shape-check, or the two grammars vos-manifest embeds.
+//
+//	code/programs/rust/vos-link/src/check.rs   → true
+//	code/packages/rust/vos-manifest-x/src/a.rs → false
+func isVosToolInput(changed string) bool {
+	return strings.HasPrefix(changed, "code/programs/rust/vos-link/") ||
+		strings.HasPrefix(changed, "code/packages/rust/vos-manifest/") ||
+		strings.HasPrefix(changed, "code/packages/rust/vos-shape-check/") ||
+		isVosGrammarInput(changed)
 }
 
 // isVosShapeGrammarInput reports whether a changed path is one of the two Rust

@@ -43,3 +43,33 @@ func TestVosGrammarInputsSelectTheirConsumers(t *testing.T) {
 		}
 	}
 }
+
+// VOS-D066: the tools a VOS implementation's BUILD runs outside Cargo select that
+// implementation.
+func TestVosToolInputsSelectImplementations(t *testing.T) {
+	for path, want := range map[string]bool{
+		"code/programs/rust/vos-link/src/check.rs":       true,
+		"code/programs/rust/vos-link/Cargo.toml":         true,
+		"code/packages/rust/vos-manifest/src/part.rs":    true,
+		"code/packages/rust/vos-shape-check/src/a.rs":    true,
+		"code/grammars/vos_document/vos_document.tokens": true,
+		"code/programs/rust/vos-link":                    false,
+		"code/packages/rust/vos-manifest-x/src/a.rs":     false,
+		"code/programs/rust/vos-linker/src/a.rs":         false,
+		"code/packages/rust/vos-sched-contract/a.part":   false,
+		"code\\programs\\rust\\vos-link\\src\\a.rs":      false,
+	} {
+		if got := isVosToolInput(path); got != want {
+			t.Errorf("isVosToolInput(%q) = %v, want %v", path, got, want)
+		}
+	}
+	found := false
+	for _, r := range repositoryInputConsumers {
+		if r.name == "rust/vos-sched-fp-bitmap" {
+			found = r.language == "rust" && len(r.paths) > 0
+		}
+	}
+	if !found {
+		t.Error("no repository input row for rust/vos-sched-fp-bitmap")
+	}
+}
