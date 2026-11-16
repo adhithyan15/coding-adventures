@@ -15,3 +15,10 @@ share too). Two traps while doing it: a `re.IGNORECASE` second opinion needs `re
 or it re-introduces the Kelvin fold, and `str.upper()` of `ſ` is `S`, so a reserved-name
 test needs an explicit ASCII guard. Pin every disputed character, both directions, as
 shared fixture data, and only then change the lanes.
+
+A second lesson from the same review: a reserved-name rule written from memory of the
+docs missed real device paths (`CON .txt`, `CON:stream`, `COM¹`, `CONIN$`). Windows
+reserves the stem before the first dot after trimming spaces, treats any colon as a
+stream or device suffix, and counts superscript digits. Pin the bypasses as negative
+fixture cases before trusting the rule, and keep non-devices (`CLOCK$`, fullwidth `CON`)
+as explicit allowed look-alikes.

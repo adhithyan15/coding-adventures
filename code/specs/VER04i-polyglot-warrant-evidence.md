@@ -1428,8 +1428,8 @@ scope for the cases: resolving them (`realpath`) is the caller's job and must ha
 **Two cross-lane path rules (implemented 2026-11-16, backlog `WD-100b`).** A review
 of the conformance kit found two places where the lanes disagreed with the Rust
 loader (PR #19492) or with each other. Both rules below are pinned in
-`warrant-corpus-conformance-v1` as 43 added containment cases (77 to 120; the
-fixture is 440 cases; no existing expectation changed) and are applied by the Python,
+`warrant-corpus-conformance-v1` as 64 added containment cases (77 to 141; the
+fixture is 461 cases; no existing expectation changed) and are applied by the Python,
 TypeScript and Go lanes and by the Rust loader's `lexical_containment`; the checker's
 reference and its string-level second opinion derive them independently.
 
