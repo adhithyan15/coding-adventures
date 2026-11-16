@@ -29,16 +29,20 @@ impl Artifacts {
         }
     }
 
+    /// The checked-in registry.  Since WD-004b1 every row is `active`, so this
+    /// is the registry itself; the name keeps the call sites reading as intent.
     fn active_registry(&self) -> Vec<u8> {
+        self.consumers.clone()
+    }
+
+    /// The checked-in registry with the Python row put back to `planned`, the
+    /// shape WD-004a's registry had: the counters stay consistent.
+    fn planned_registry(&self) -> Vec<u8> {
         let mut registry = parse_json(&self.consumers);
         let object = object_mut(&mut registry);
-        set(object, "active_consumer_count", number(1));
-        let consumers = match object.get_mut("consumers") {
-            Some(JsonValue::Array(rows)) => rows,
-            _ => panic!("checked-in consumer registry has an array"),
-        };
-        let consumer = object_mut(&mut consumers[0]);
-        set(consumer, "status", string_value("active"));
+        set(object, "active_consumer_count", number(2));
+        let consumer = first_consumer_mut(&mut registry);
+        set(object_mut(consumer), "status", string_value("planned"));
         json_bytes(&registry)
     }
 
@@ -174,17 +178,19 @@ fn synthetic_active_consumer_joins_the_checked_in_corpus_without_claiming_execut
     )
     .expect("synthetic structural fixture joins corpus artifacts");
     assert_eq!(parsed.tests.len(), 29);
-    assert!(
-        parse_consumer_registry(&artifacts.consumers)
-            .expect("checked-in registry parses")
-            .consumers[0]
-            .status
-            == "planned"
-    );
+    // WD-004b1 flipped the checked-in rows: all three lanes are active.
+    let checked_in =
+        parse_consumer_registry(&artifacts.consumers).expect("checked-in registry parses");
+    assert!(checked_in
+        .consumers
+        .iter()
+        .all(|row| row.status == "active"));
+    assert_eq!(checked_in.active_consumer_count, 3);
+    // A planned row still cannot authorize a lane result (WD-004a rule).
     assert!(error_contains(
         validate_lane_evidence(
             &manifest,
-            &artifacts.consumers,
+            &artifacts.planned_registry(),
             &artifacts.spec,
             &artifacts.corpus,
             &artifacts.cases,
@@ -512,7 +518,7 @@ fn rejects_overflow_noncanonical_numeric_tokens_and_duplicate_keys() {
     let artifacts = Artifacts::load();
     let mut raw_number = String::from_utf8(artifacts.consumers).expect("UTF-8 registry");
     raw_number = raw_number.replace(
-        "\"consumer_count\": 1",
+        "\"consumer_count\": 3",
         "\"consumer_count\": 9007199254740993",
     );
     assert!(error_contains(
@@ -737,9 +743,14 @@ fn find_test_mut<'a>(manifest: &'a mut JsonValue, prefix: &str) -> &'a mut JsonV
         .expect("matching synthetic test row")
 }
 
+/// The Python row.  The checked-in registry is sorted by package, so it is no
+/// longer the first row, and the synthetic manifest is the Python lane's.
 fn first_consumer_mut(registry: &mut JsonValue) -> &mut JsonValue {
     match object_mut(registry).get_mut("consumers") {
-        Some(JsonValue::Array(rows)) => &mut rows[0],
+        Some(JsonValue::Array(rows)) => rows
+            .iter_mut()
+            .find(|row| read_string(object_ref(row), "package") == "python/ct-compare")
+            .expect("the registry lists python/ct-compare"),
         _ => panic!("consumer rows are an array"),
     }
 }

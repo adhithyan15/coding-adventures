@@ -20,9 +20,9 @@ const MAX_CORPUS_BYTES: usize = 32 * 1024 * 1024;
 const MAX_SPEC_BYTES: usize = 4 * 1024 * 1024;
 const MAX_TEST_CASES: u64 = 1 << 53;
 const MAX_MANIFEST_ROWS: usize = 29;
-const CORPUS_DIR: &str = "code/specs/fixtures/ct-compare-warrant-v1";
-const CORPUS_FILE: &str = "code/specs/fixtures/ct-compare-warrant-v1/corpus.json";
-const SPEC_FILE: &str = "code/specs/ct-compare.warrant";
+pub const CORPUS_DIR: &str = "code/specs/fixtures/ct-compare-warrant-v1";
+pub const CORPUS_FILE: &str = "code/specs/fixtures/ct-compare-warrant-v1/corpus.json";
+pub const SPEC_FILE: &str = "code/specs/ct-compare.warrant";
 
 /// A parse or structural-validation failure. Error text is intended for CI
 /// diagnostics and deliberately does not echo complete untrusted input.
@@ -920,7 +920,7 @@ fn parse_json(bytes: &[u8], cap: usize, label: &str) -> Result<JsonValue, LaneEv
 /// but a large integer token can round to an apparently valid count before a
 /// typed accessor sees it. Keep all numeric tokens canonical signed integers
 /// before using that parser, preserving exact count semantics.
-fn validate_integer_tokens(bytes: &[u8], label: &str) -> Result<(), LaneEvidenceError> {
+pub(crate) fn validate_integer_tokens(bytes: &[u8], label: &str) -> Result<(), LaneEvidenceError> {
     let mut index = 0;
     let mut in_string = false;
     let mut escaped = false;
@@ -1065,7 +1065,7 @@ fn is_package_name(value: &str) -> bool {
             .all(|byte| byte.is_ascii_lowercase() || byte.is_ascii_digit() || byte == b'-')
 }
 
-fn validate_repo_path(value: &str) -> Result<(), LaneEvidenceError> {
+pub(crate) fn validate_repo_path(value: &str) -> Result<(), LaneEvidenceError> {
     if value.starts_with('/') || value.contains('\\') || !value.is_ascii() {
         return fail("registry path must be ASCII, repository-relative, and slash-separated");
     }
@@ -1083,7 +1083,34 @@ fn validate_repo_path(value: &str) -> Result<(), LaneEvidenceError> {
     }) {
         return fail("registry path contains a non-portable component");
     }
+    // Windows quirks, refused everywhere so one registry means the same thing
+    // on every host: a trailing dot is silently stripped, and a reserved
+    // device name (with or without an extension) opens a device, not a file.
+    if components
+        .iter()
+        .any(|part| part.ends_with('.') || is_windows_reserved(part))
+    {
+        return fail("registry path contains a Windows-reserved component");
+    }
     Ok(())
+}
+
+/// `CON`, `PRN`, `AUX`, `NUL`, `COM1`-`COM9` and `LPT1`-`LPT9`, compared
+/// case-insensitively on the part before the first dot (`nul.txt` is `nul`).
+fn is_windows_reserved(component: &str) -> bool {
+    let stem = component
+        .split('.')
+        .next()
+        .unwrap_or("")
+        .to_ascii_uppercase();
+    match stem.as_str() {
+        "CON" | "PRN" | "AUX" | "NUL" => true,
+        _ => {
+            let digit = |rest: &str| matches!(rest.as_bytes(), [b'1'..=b'9']);
+            stem.strip_prefix("COM").is_some_and(digit)
+                || stem.strip_prefix("LPT").is_some_and(digit)
+        }
+    }
 }
 
 fn validate_file_under_root(value: &str, root: &str) -> Result<(), LaneEvidenceError> {

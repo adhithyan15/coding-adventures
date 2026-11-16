@@ -501,7 +501,7 @@ parallel with Rust adoption, because it does not depend on the T0 list.
 
 | Order | Item | Backlog id | Notes |
 |---:|---|---|---|
-| D1 | Lane artifact loader, registry join, digest checks | WD-004b1 | WD-004a is merged (PR #19236) |
+| D1 | Lane artifact loader, registry join, digest checks | WD-004b1 | WD-004a is merged (PR #19236); loader delivered on `claude/wd-004b1-lane-loader` (VER04i 8.2) |
 | D2 | Lane-aware reports, CLI and `--check`, honest absent rungs | WD-004b2 | the cross-language report; keep Rust-only proof and effect attestations isolated from the other lanes |
 | D3 | Per-language runners: Python, TypeScript, Go first | WD-1xx | one PR per lane: corpus runner, sabotage, manifest, report, for ct-compare first; then the other lanes (ruby, c, cpp, java, kotlin, csharp, fsharp, elixir) |
 | D4 | Per-language runtime jails | CAP-RT-1xx | arm the filter after interpreter or VM startup (Python, Node, Go, JVM, .NET and so on) |
