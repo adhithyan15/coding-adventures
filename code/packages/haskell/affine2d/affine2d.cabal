@@ -1,6 +1,6 @@
 cabal-version: 3.0
 name:          affine2d
-version:       0.1.0
+version:       0.1.1
 synopsis:      Immutable two-dimensional affine transformation matrices
 description:   Pure G2D01 affine matrix construction, composition, application, inversion, and classification.
 category:      Graphics
@@ -16,7 +16,7 @@ library
     exposed-modules:  Affine2D
     build-depends:    base >=4.14 && <5
                     , point2d >=0.1 && <0.2
-                    , trig >=0.1 && <0.2
+                    , trig >=0.1 && <0.3
     hs-source-dirs:   src
     ghc-options:      -Wall
     default-language: Haskell2010
@@ -30,6 +30,6 @@ test-suite spec
                     , base >=4.14 && <5
                     , hspec == 2.*
                     , point2d >=0.1 && <0.2
-                    , trig >=0.1 && <0.2
+                    , trig >=0.1 && <0.3
     ghc-options:      -Wall
     default-language: Haskell2010
