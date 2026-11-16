@@ -302,9 +302,14 @@ function renderString(text: string): string {
 function renderValue(value: unknown, level: number): string {
   if (value === null) return "null";
   if (typeof value === "boolean") return value ? "true" : "false";
-  if (typeof value === "number") return String(value);
+  if (typeof value === "number") {
+    // Only what the reader can produce: a safe integer (no NaN, fraction, 1e+21 or -0).
+    need(Number.isSafeInteger(value) && !Object.is(value, -0), "render", "number is not a safe integer");
+    return String(value);
+  }
   if (typeof value === "bigint") return value.toString();
   if (typeof value === "string") return renderString(value);
+  need(typeof value === "object", "render", "value has no JSON form");
   const pad = "  ".repeat(level);
   const inner = "  ".repeat(level + 1);
   if (Array.isArray(value)) {

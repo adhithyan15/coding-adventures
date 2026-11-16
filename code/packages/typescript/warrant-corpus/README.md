@@ -145,7 +145,7 @@ summed "exhaustive" total: suite-level totals conflate the kinds until backlog
 `tests/conformance-fixture.test.ts` runs every case of
 `code/specs/fixtures/warrant-corpus-conformance-v1/` (VER04i 9.1) through this
 lane's own reader, renderer, tagged-value decoder, containment helper (driven
-with `path.win32` and `path.posix`) and label digest: 359 cases. The fixture's
+with `path.win32` and `path.posix`) and label digest: 397 cases. The fixture's
 own checker is `python3 code/scripts/warrant_corpus_conformance.py`.
 
 Two behaviours JavaScript gets wrong by default, both pinned by cases: object
