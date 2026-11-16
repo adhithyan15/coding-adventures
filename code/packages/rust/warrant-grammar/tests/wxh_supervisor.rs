@@ -4,10 +4,11 @@
 //! compiled against a subject that never returns for some inputs and panics for
 //! others (`tests/support/wxh_subject_stalling.rs`), and the whole suite is run
 //! with a 300 ms wait bound.  It lives in its own test binary because every
-//! timed-out call abandons a worker and spends the process-wide timeout budget
-//! (`OBS_MAX_TIMEOUTS`), which the honest tests of `tests/wxh_evidence.rs`
-//! need.  The binary finishing at all is the "never blocks exit" evidence: the
-//! stalled workers are still sleeping when it ends.
+//! timed-out call abandons a worker, and a timeout in `obs_observe` is fatal for
+//! the process (exit status 70 after a `Bail out!` line), so those scenarios run
+//! in a child process (this binary re-run with `WXH_CHILD`).  The binary
+//! finishing at all is the "never blocks exit" evidence: the stalled workers are
+//! still sleeping when it ends.
 
 use std::time::{Duration, Instant};
 
@@ -22,15 +23,10 @@ mod harness {
         OBS_TIMEOUT_MS.store(ms, std::sync::atomic::Ordering::SeqCst);
     }
 
-    pub fn timeout_budget() -> usize {
-        OBS_MAX_TIMEOUTS
-    }
-
     pub enum Seen {
         Finished,
         Panicked,
         TimedOut,
-        RefusedStalled,
         Other,
     }
 
@@ -39,7 +35,6 @@ mod harness {
             Exec::Finished(Ok(_), _) => Seen::Finished,
             Exec::Finished(Err(_), _) => Seen::Panicked,
             Exec::TimedOut(_) => Seen::TimedOut,
-            Exec::RefusedStalled => Seen::RefusedStalled,
             _ => Seen::Other,
         }
     }
@@ -51,6 +46,39 @@ mod harness {
         drop(lock_or_recover(&OBS_STATS));
         drop(lock_or_recover(&SOURCE_SHA256));
         lock_or_recover(&META).len()
+    }
+
+    /// A call that never returns, observed inside the test `id` (the process
+    /// must bail out; this function must not return).
+    pub fn stall_in_observe(id: &str) {
+        shorten_timeout(300);
+        obs_begin_test(id);
+        let _ = obs_observe("decompress", None, || loop {
+            std::thread::sleep(std::time::Duration::from_secs(1));
+        });
+    }
+
+    /// The reply slot survives poisoning: a write and a bounded wait still work.
+    pub fn poisoned_slot_still_works() -> bool {
+        let slot: &'static Slot = Box::leak(Box::new(Slot {
+            state: Mutex::new(None),
+            ready: std::sync::Condvar::new(),
+        }));
+        let t = std::thread::spawn(move || {
+            let _g = slot.state.lock().unwrap();
+            panic!("poison the slot");
+        });
+        let _ = t.join();
+        if !slot.state.is_poisoned() {
+            return false;
+        }
+        *lock_or_recover(&slot.state) = Some(ObsReply::Tripped(1, 2));
+        let g = lock_or_recover(&slot.state);
+        let (g, _) = slot
+            .ready
+            .wait_timeout(g, std::time::Duration::from_millis(1))
+            .unwrap_or_else(|e| e.into_inner());
+        matches!(*g, Some(ObsReply::Tripped(1, 2)))
     }
 
     /// Poison `META` by panicking while holding it, then use it again.
@@ -69,46 +97,84 @@ use harness::Seen;
 
 include!("support/wxh_runner.rs");
 
-#[test]
-fn a_stalled_or_panicking_subject_fails_instances_in_bounded_time() {
-    std::panic::set_hook(Box::new(|_| ()));
-    harness::shorten_timeout(300);
-
-    // 1. A job that never answers is abandoned at the bound, and the same
-    //    thread can still use every lock while that worker is stalled.
+/// Re-run this test binary as the scenario `which` and return its output.
+fn run_child(which: &str) -> (std::process::Output, Duration) {
     let t = Instant::now();
-    let seen = harness::exec(|| {
-        loop {
-            std::thread::sleep(Duration::from_secs(1));
+    let out = std::process::Command::new(std::env::current_exe().unwrap())
+        .args(["child_scenario", "--exact", "--nocapture", "--test-threads=1"])
+        .env("WXH_CHILD", which)
+        .output()
+        .expect("the child runs");
+    (out, t.elapsed())
+}
+
+/// Only does anything in a child process (see `run_child`).
+#[test]
+fn child_scenario() {
+    std::panic::set_hook(Box::new(|_| ()));
+    match std::env::var("WXH_CHILD").as_deref() {
+        // A stall inside a negative control: the verdict of a negative control
+        // counts any failure as a caught fault, so this must not be a failure.
+        Ok("negctl") => harness::stall_in_observe("warrant/wxh/negctl/example/decompress/missing-error"),
+        // The whole generated suite against the stalling subject.
+        Ok("suite") => {
+            harness::shorten_timeout(300);
+            let run = run_once();
+            // Not reached: the run bails out at the first stalled instance.
+            panic!("the suite finished with {} failures", run.failed);
         }
+        _ => {}
+    }
+}
+
+fn assert_bailed_out(out: &std::process::Output, elapsed: Duration) {
+    let stdout = String::from_utf8_lossy(&out.stdout);
+    let stderr = String::from_utf8_lossy(&out.stderr);
+    assert_eq!(out.status.code(), Some(70), "stdout: {stdout}\nstderr: {stderr}");
+    assert!(stdout.contains("Bail out! observer-timeout: `decompress` did not return within 0.3 seconds"), "{stdout}");
+    assert!(stderr.contains("Bail out! observer-timeout:"), "{stderr}");
+    assert!(!stdout.lines().any(|l| l.starts_with("not ok ")), "a timeout printed `not ok`: {stdout}");
+    assert!(elapsed < Duration::from_secs(60), "took {elapsed:?}");
+}
+
+#[test]
+fn a_stall_inside_a_negative_control_bails_out_with_status_70() {
+    let (out, elapsed) = run_child("negctl");
+    assert_bailed_out(&out, elapsed);
+    let stdout = String::from_utf8_lossy(&out.stdout);
+    assert!(stdout.contains("negctl/example/decompress/missing-error"), "the bail-out names the test: {stdout}");
+}
+
+#[test]
+fn a_stalling_subject_bails_out_of_the_whole_suite_in_bounded_time() {
+    let (out, elapsed) = run_child("suite");
+    assert_bailed_out(&out, elapsed);
+}
+
+#[test]
+fn a_stalled_call_times_out_and_the_rest_of_the_harness_stays_usable() {
+    std::panic::set_hook(Box::new(|_| ()));
+    // 1. A job that never answers is abandoned at the bound (obs_exec itself only
+    //    reports it; `obs_observe` bails out), and this thread can still take
+    //    every lock while that worker is stalled.
+    harness::shorten_timeout(300);
+    let t = Instant::now();
+    let seen = harness::exec(|| loop {
+        std::thread::sleep(Duration::from_secs(1));
     });
     assert!(matches!(seen, Seen::TimedOut), "a stalled call must time out");
     assert!(t.elapsed() < Duration::from_secs(30), "took {:?}", t.elapsed());
     harness::take_every_shared_lock();
 
-    // 2. A panicking job is a reported panic, not a dead supervisor, and the
-    //    next call starts a fresh worker.
+    // 2. Back to a long bound, so a slow machine cannot flake the next steps.  A
+    //    panicking job is a reported panic, not a dead supervisor; the worker of
+    //    step 1 was abandoned, so these calls run on a fresh one.
+    harness::shorten_timeout(60_000);
     assert!(matches!(harness::exec(|| panic!("boom")), Seen::Panicked));
     assert!(matches!(harness::exec(|| harness::V::Bytes(vec![])), Seen::Finished));
 
-    // 3. A poisoned lock is recovered, not propagated.
+    // 3. Poisoned locks are recovered, not propagated.
     assert!(harness::poison_then_recover(), "the lock must have been poisoned");
-    harness::take_every_shared_lock();
-
-    // 4. The whole generated suite, against the stalling subject, finishes in
-    //    bounded time: timeouts and panics are failed verdicts with distinct
-    //    messages, and once the timeout budget is spent calls are refused
-    //    without waiting.  (Two timeouts are left in the budget after step 1.)
-    assert!(harness::timeout_budget() >= 2);
-    let t = Instant::now();
-    let run = run_once();
-    let elapsed = t.elapsed();
-    assert!(elapsed < Duration::from_secs(120), "the suite took {elapsed:?}");
-    assert!(run.failed > 0, "a stalling subject must fail the evidence");
-    let messages: Vec<String> = run.outcomes.iter().filter(|o| !o.passed()).map(message).collect();
-    assert!(
-        messages.iter().any(|m| m.contains("observer-timeout") && m.contains("did not return within 0.3 seconds")),
-        "no timeout verdict in {messages:?}"
-    );
+    assert!(harness::poisoned_slot_still_works(), "the reply slot must survive poisoning");
     harness::take_every_shared_lock();
 }

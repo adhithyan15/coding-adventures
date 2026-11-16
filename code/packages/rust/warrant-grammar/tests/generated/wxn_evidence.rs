@@ -1773,6 +1773,9 @@ fn reg(
 
 fn is_detected(v: &Verdict) -> bool {
     match v {
+        // An observer timeout is never a detection (it bails out before it can
+        // be reported; this is the second line of defence).
+        Verdict::Fail { message, .. } if message.contains("observer-timeout") => false,
         Verdict::Fail { failure_id, .. } => {
             coding_adventures_test_bootstrap::verdict::is_registered_failure_id(failure_id)
         }

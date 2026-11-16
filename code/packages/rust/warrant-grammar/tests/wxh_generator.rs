@@ -251,12 +251,19 @@ fn the_observer_supervisor_waits_with_a_timeout_and_never_joins_a_worker() {
     // Every wait is bounded: a deadline, `wait_timeout`, and a distinct verdict.
     assert!(text.contains("const OBS_CALL_TIMEOUT_MS: u64 = 120_000;"));
     assert!(text.contains(".wait_timeout(g, left)"));
-    assert!(text.contains("observer-timeout:"));
     // No unbounded condvar wait and no join of a worker anywhere in the observer.
     assert!(!text.contains("slot.ready.wait("), "an unbounded condvar wait");
     assert!(!text.contains(".join()"), "a thread join");
-    // A timed-out worker is abandoned (not joined) and counted.
-    assert!(text.contains("OBS_TIMEOUTS.fetch_add"));
+    // A timeout is fatal and distinguishable: a TAP bail-out line, stderr, a
+    // distinct status; never a failed instance (a negative control would count
+    // it as a caught fault).
+    assert!(text.contains("Bail out! observer-timeout:"));
+    assert!(text.contains("const OBS_TIMEOUT_EXIT: i32 = 70;"));
+    assert!(text.contains("std::process::exit(OBS_TIMEOUT_EXIT)"));
+    assert!(text.contains("Verdict::Fail { message, .. } if message.contains(\"observer-timeout\") => false"));
+    // The bound can be raised, never lowered, from the environment.
+    assert!(text.contains("WARRANT_OBS_TIMEOUT_SECS"));
+    assert!(text.contains("base.max(raise)"));
 }
 
 #[test]

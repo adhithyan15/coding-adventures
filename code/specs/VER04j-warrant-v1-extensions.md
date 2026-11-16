@@ -1617,11 +1617,19 @@ The numbering continues from 14.1.
     the `rust/lzw` evidence target idled for 4h47m until the job limit killed it.
     Three rules now hold in every generated harness.  (a) *Bounded wait*: the
     supervisor waits at most `OBS_CALL_TIMEOUT_MS` (120 s) per observed call, with one
-    deadline across spurious wakeups; an overrun fails the instance with
-    `observer-timeout: ... did not return within N seconds; the call was abandoned`
-    (a note on the same registered failure ids as `bound-heap-exceeded`, item 34), the
-    worker is abandoned, and after `OBS_MAX_TIMEOUTS` (3) such calls in one process
-    every later observed call fails at once with `observer-timeout: ... not run`.
+    deadline across spurious wakeups.  An overrun (or a lost worker) is **fatal for
+    the process, not a failed instance**: the harness prints the TAP line
+    `Bail out! observer-timeout: `op` did not return within N seconds (test ID)`,
+    writes it to stderr and exits with status 70 (`OBS_TIMEOUT_EXIT`; the runner
+    uses 0, 1 and 2), before any later TAP line or manifest.  A failed instance
+    would be wrong: a negative control counts any registered failure as a caught
+    fault, so a stall inside one would pass silently, and a BUILD sabotage line
+    (`... | grep -q '^not ok '`, filtered to one claim) would pass on the
+    stall.  Bailing out prints no `not ok`, so that line fails; `is_detected`
+    also refuses any verdict mentioning `observer-timeout`.  The bail-out also
+    ends the run before an abandoned, possibly spinning, worker can burn a
+    core.  `WARRANT_OBS_TIMEOUT_SECS` may raise the 120 s bound; a lower value is
+    ignored.
     (b) *Exit never waits*: an abandoned worker is never joined (its `JoinHandle` is
     dropped at spawn, its job channel when it is abandoned), nothing in `Drop` or the
     exit path waits on it, a worker takes only its own reply slot and never a lock of

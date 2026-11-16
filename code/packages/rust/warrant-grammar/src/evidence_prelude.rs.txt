@@ -845,10 +845,19 @@ fn attacking<T>(op: &'static str, body: impl FnOnce() -> T) -> T {
 //   * Every wait is a `Condvar::wait_timeout` against one deadline of
 //     `OBS_CALL_TIMEOUT_MS`.  A call that has not answered by then (a worker that
 //     spins without allocating, one that deadlocks inside the subject, one that
-//     died) is a failed instance (`observer-timeout`), and its worker is
-//     abandoned exactly like a tripped one.  `OBS_MAX_TIMEOUTS` such calls
-//     refuse every later observed call, so a subject that never answers costs
-//     at most that many timeouts, not one per instance.
+//     died) is FATAL for the process, not a failed instance: the harness
+//     prints the TAP line `Bail out! observer-timeout: ...` (naming the
+//     operation and the test), writes the same line to stderr and exits with
+//     status `OBS_TIMEOUT_EXIT` (70; the runner itself uses 0, 1 and 2).  A
+//     failed instance would be wrong twice over: a negative control counts any
+//     failure as "the fault was caught" (so a stall inside one would be a silent
+//     pass), and a sabotage run that is only checked for a `not ok` line would
+//     pass because of the stall.  Bailing out first prints no `not ok`, writes
+//     no manifest and stops at once, so the abandoned (possibly spinning)
+//     worker cannot burn a core for the rest of the run either.
+//     `WARRANT_OBS_TIMEOUT_SECS` may raise the 120 s bound (a slower machine);
+//     a value below the default is ignored, so it cannot be used to make a
+//     run time out sooner.
 //   * An abandoned worker is never joined: its `JoinHandle` is dropped at spawn
 //     (the thread is detached), its job channel is dropped when it is
 //     abandoned, and the process leaves through `process::exit`, which does not
@@ -866,6 +875,8 @@ use std::alloc::{GlobalAlloc, Layout, System};
 /// Workers that may be abandoned before observed calls are refused outright.
 const OBS_MAX_ABANDONED: usize = 64;
 /// Bytes the abandoned workers may hold between them (they are never freed).
+/// (It counts what each worker held when it tripped, so it under-counts what a
+/// worker had allocated before the window opened.)
 const OBS_MAX_HELD: u64 = 1 << 30;
 /// How long the supervisor waits for one observed call before it fails the
 /// instance (WD-HARN1).  Far above the slowest honest call (a 16 MiB
@@ -874,8 +885,43 @@ const OBS_MAX_HELD: u64 = 1 << 30;
 const OBS_CALL_TIMEOUT_MS: u64 = 120_000;
 /// The wait bound in force (a static so the supervisor's own tests can shorten it).
 static OBS_TIMEOUT_MS: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(OBS_CALL_TIMEOUT_MS);
-/// Calls that may time out in one process before observed calls are refused.
-const OBS_MAX_TIMEOUTS: usize = 3;
+/// Exit status of a process that bailed out because an observed call did not
+/// return (or its worker was lost).  Distinct from 0 (pass), 1 (failed tests)
+/// and 2 (usage), so no check of "the run failed" can mistake it for a result.
+const OBS_TIMEOUT_EXIT: i32 = 70;
+
+/// The bound in force: the (test-shortenable) default, raised, never lowered,
+/// by `WARRANT_OBS_TIMEOUT_SECS`.
+fn obs_timeout() -> std::time::Duration {
+    static RAISE_MS: std::sync::OnceLock<u64> = std::sync::OnceLock::new();
+    let raise = *RAISE_MS.get_or_init(|| {
+        std::env::var("WARRANT_OBS_TIMEOUT_SECS")
+            .ok()
+            .and_then(|v| v.trim().parse::<u64>().ok())
+            .map_or(0, |secs| secs.saturating_mul(1000))
+    });
+    let base = OBS_TIMEOUT_MS.load(std::sync::atomic::Ordering::SeqCst);
+    std::time::Duration::from_millis(base.max(raise))
+}
+
+thread_local! {
+    static OBS_TEST_ID: std::cell::RefCell<String> = const { std::cell::RefCell::new(String::new()) };
+}
+
+/// A supervisor wait failed: say so on TAP and on stderr, and leave at once.
+/// The runner's stdout lock is re-entrant, so this works from inside a test.
+fn obs_bail_out(why: &str) -> ! {
+    let id = OBS_TEST_ID.with(|t| t.borrow().clone());
+    let line = format!("Bail out! observer-timeout: {why} (test {id})");
+    {
+        use std::io::Write;
+        let mut out = std::io::stdout();
+        let _ = writeln!(out, "{line}");
+        let _ = out.flush();
+    }
+    eprintln!("{line}");
+    std::process::exit(OBS_TIMEOUT_EXIT)
+}
 
 /// The panic payload an observed instance raises when the observer fails it
 /// (`bound-heap-exceeded`, `bound-negative`, `output-bound-exceeded`).
@@ -1011,7 +1057,6 @@ fn obs_spawn() -> Worker {
 
 static OBS_ABANDONED: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
 static OBS_HELD: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
-static OBS_TIMEOUTS: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
 
 thread_local! {
     static OBS_WORKER: std::cell::RefCell<Option<Worker>> = const { std::cell::RefCell::new(None) };
@@ -1027,17 +1072,14 @@ enum Exec {
     Refused,
     /// The call did not answer within the wait timeout; its worker is abandoned.
     TimedOut(std::time::Duration),
-    /// Earlier calls of this process already timed out: the call was not started.
-    RefusedStalled,
+    /// The worker thread is gone: the job could not be handed to it.
+    Lost,
 }
 
 /// Run `job` on the observer worker inside an allocation window, waiting at most
 /// `OBS_CALL_TIMEOUT_MS` for the answer.
 fn obs_exec(job: impl FnOnce() -> V + Send + 'static) -> Exec {
-    let timeout = std::time::Duration::from_millis(OBS_TIMEOUT_MS.load(std::sync::atomic::Ordering::SeqCst));
-    if OBS_TIMEOUTS.load(std::sync::atomic::Ordering::SeqCst) >= OBS_MAX_TIMEOUTS {
-        return Exec::RefusedStalled;
-    }
+    let timeout = obs_timeout();
     if OBS_ABANDONED.load(std::sync::atomic::Ordering::SeqCst) >= OBS_MAX_ABANDONED
         || OBS_HELD.load(std::sync::atomic::Ordering::SeqCst) >= OBS_MAX_HELD
     {
@@ -1063,10 +1105,10 @@ fn obs_exec(job: impl FnOnce() -> V + Send + 'static) -> Exec {
             slot.ready.notify_one();
         });
         if worker.jobs.send(wrapped).is_err() {
-            // The worker is gone (its thread ended): drop it, so the next call
-            // starts a fresh one, and refuse this call instead of crashing.
+            // The worker is gone (its thread ended): drop it and report it as
+            // lost (fatal for the run, see `obs_observe`), not as a heap trip.
             *held = None;
-            return Exec::Refused;
+            return Exec::Lost;
         }
         // One deadline for the whole wait: a spurious wakeup does not extend it.
         let deadline = std::time::Instant::now() + timeout;
@@ -1080,7 +1122,6 @@ fn obs_exec(job: impl FnOnce() -> V + Send + 'static) -> Exec {
                 // here waits for it.
                 *held = None;
                 OBS_ABANDONED.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
-                OBS_TIMEOUTS.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
                 return Exec::TimedOut(timeout);
             }
             g = slot
@@ -1123,7 +1164,8 @@ thread_local! {
 
 static OBS_STATS: Mutex<BTreeMap<String, ObsAgg>> = Mutex::new(BTreeMap::new());
 
-fn obs_begin_test() {
+fn obs_begin_test(id: &str) {
+    OBS_TEST_ID.with(|t| *t.borrow_mut() = id.to_string());
     OBS_AGG.with(|a| *a.borrow_mut() = ObsAgg::default());
 }
 
@@ -1215,16 +1257,13 @@ fn obs_observe(op: &str, heap: Option<i128>, job: impl FnOnce() -> V + Send + 's
             ))
         }
         Exec::TimedOut(limit) => {
-            obs_fail(format!(
-                "observer-timeout: `{op}` did not return within {} seconds; the call was abandoned",
+            OBS_AGG.with(|a| a.borrow_mut().latched = true);
+            obs_bail_out(&format!(
+                "`{op}` did not return within {} seconds",
                 limit.as_secs_f64()
             ))
         }
-        Exec::RefusedStalled => {
-            obs_fail(format!(
-                "observer-timeout: `{op}` not run, earlier calls in this process already timed out"
-            ))
-        }
+        Exec::Lost => obs_bail_out(&format!("the observer worker of `{op}` is gone")),
     }
 }
 
@@ -2723,7 +2762,7 @@ fn reg(
     lock_or_recover(&META).push(meta);
     suite.add(id.clone(), move |_ctx| {
 //@if obs
-        obs_begin_test();
+        obs_begin_test(&id);
 //@endif
         let (verdict, stats, note) = body();
 //@if obs
@@ -2738,6 +2777,9 @@ fn reg(
 
 fn is_detected(v: &Verdict) -> bool {
     match v {
+        // An observer timeout is never a detection (it bails out before it can
+        // be reported; this is the second line of defence).
+        Verdict::Fail { message, .. } if message.contains("observer-timeout") => false,
         Verdict::Fail { failure_id, .. } => {
             coding_adventures_test_bootstrap::verdict::is_registered_failure_id(failure_id)
         }
