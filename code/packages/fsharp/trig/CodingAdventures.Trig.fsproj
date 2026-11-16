@@ -3,12 +3,13 @@
     <TargetFramework>net9.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageId>CodingAdventures.Trig.FSharp</PackageId>
-    <Version>0.1.0</Version>
+    <Version>0.2.0</Version>
     <Authors>Adhithya Rajasekaran</Authors>
-    <Description>Trigonometric functions from first principles using Taylor series</Description>
+    <Description>Trigonometric functions from first principles using Maclaurin series with Cody-Waite range reduction (TRIG-REF-1)</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Constants.fs" />
     <Compile Include="Trig.fs" />
   </ItemGroup>
 </Project>

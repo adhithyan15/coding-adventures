@@ -15,5 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="../../CodingAdventures.Trig.fsproj" />
     <Compile Include="TrigTests.fs" />
+    <Compile Include="ConformanceTests.fs" />
+    <Compile Include="ConstantsTests.fs" />
   </ItemGroup>
 </Project>
