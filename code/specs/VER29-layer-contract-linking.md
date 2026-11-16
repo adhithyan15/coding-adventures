@@ -30,6 +30,19 @@ is a new error (section 5.2) and a binder of opaque type is never a complete dom
 the implementation slice that makes it true (slice 6 below); no existing id, rung or
 rule changes.
 
+**Amendment (2026-11-16), owner decision, with [VOS02](VOS02-interface-contracts-and-profile-linking.md):**
+a new slice 7, "interface reach", is added to section 13 after slice 4 (VER04n's slice 6 is
+unchanged), backlog row LV-008. It amends only the reach rules of section 8 (a
+`<P::A as T>::f` path whose trait `T` is a direct dependency is an interface use, composed
+through the profile's `impl` block to the implementation item named by a new binding key
+`realises=`; generics count as resolved for that one shape) and the feature rule of section
+5.1.1 and VQ14 (the manifest records the evidence build's features, and a declared
+evidence-only feature that gates one module is not `build-config-unpinned`). The normative text
+(AM1 to AM5, with its negative controls) is VOS02 section 9.1 and is applied by slice 7; no id
+shape, rung or rule of sections 3, 5.1(a) to (e), 6 or 9 changes. Interface conformance itself
+is a VOS-validator check, digest equality of generated per-implementation documents
+(VOS02 sections 1 to 3), and needs nothing from this specification.
+
 **Parent:** [VER27](VER27-layered-validation-roadmap.md) (P9; sections 4.13,
 4.14 and 4.15; conflict C14; question Q8), [VER00](VER00-verified-shipping-program.md)
 (section 7.5, assume-guarantee; section 7.5.6, owned layers).
