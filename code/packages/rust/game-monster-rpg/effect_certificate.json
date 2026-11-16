@@ -1,7 +1,7 @@
 {
   "schema_version": "ver24-effect-cert-v1",
   "package": "rust/game-monster-rpg",
-  "source_digest": "e40700af7a2512afe12d2841d1cde00334df91ffa7b9840a696823a3f468976f",
+  "source_digest": "f1dcf86ca4626be665642f4e8f97d3fa0db0712689a0615370546a78101a523b",
   "manifest_digest": "7b698c5a1685c814be1b5f6a1add94722ccb06915fa42b06b0ef4abd27ef1b24",
   "declared_effects": [],
   "entry_points": [
@@ -133,6 +133,11 @@
     {
       "name": "player_tile_pos",
       "signature": "pub fn player_tile_pos(&self) -> (u8, u8)",
+      "effects": []
+    },
+    {
+      "name": "party_len",
+      "signature": "pub fn party_len(&self) -> usize",
       "effects": []
     },
     {

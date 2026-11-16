@@ -406,7 +406,9 @@ impl RpgInput {
             walk: WalkDirection::None,
             action: false,
             cancel: false,
-            battle_command: Some(Command::Fight { slot: slot as u8 }),
+            battle_command: Some(Command::Fight {
+                slot: u8::try_from(slot).unwrap_or(u8::MAX),
+            }),
         }
     }
 
@@ -436,7 +438,9 @@ impl RpgInput {
             walk: WalkDirection::None,
             action: false,
             cancel: false,
-            battle_command: Some(Command::Switch { index: index as u8 }),
+            battle_command: Some(Command::Switch {
+                index: u8::try_from(index).unwrap_or(u8::MAX),
+            }),
         }
     }
 }
@@ -556,10 +560,10 @@ impl RpgAudioState {
 
         if matches!(mode, GameMode::Overworld | GameMode::Dialogue) && self.tick.is_multiple_of(16)
         {
-            self.bgm_step = (self.bgm_step + 1) % 8;
+            self.bgm_step = self.bgm_step.wrapping_add(1) % 8;
             let _ = sfx.trigger_bank_preset(SfxPreset::PongPaddleHit);
         } else if matches!(mode, GameMode::Battle) && self.tick.is_multiple_of(8) {
-            self.bgm_step = (self.bgm_step + 1) % 8;
+            self.bgm_step = self.bgm_step.wrapping_add(1) % 8;
             let _ = sfx.trigger_bank_preset(SfxPreset::BreakoutBrickHit { row: self.bgm_step });
         }
     }
@@ -978,7 +982,7 @@ pub struct RpgGame {
     /// Player's monster party slots.
     pub party: [Option<Creature>; MAX_PARTY],
     /// Number of creatures in party `1..=6`.
-    pub party_len: usize,
+    party_len: usize,
     /// Active turn-based battle, if in battle mode.
     pub battle: Option<Battle>,
     /// Enemy creature for wild battle capture tracking.
@@ -1012,13 +1016,18 @@ impl RpgGame {
     }
 
     /// Number of creatures currently in the player's party.
+    pub fn party_len(&self) -> usize {
+        self.party_len.min(MAX_PARTY)
+    }
+
+    /// Number of creatures currently in the player's party.
     pub fn party_count(&self) -> usize {
-        self.party_len
+        self.party_len()
     }
 
     /// Immutable reference to creature at party slot.
     pub fn party_creature(&self, index: usize) -> Option<&Creature> {
-        if index < self.party_len {
+        if index < self.party_len.min(MAX_PARTY) {
             self.party[index].as_ref()
         } else {
             None
@@ -1027,7 +1036,7 @@ impl RpgGame {
 
     /// Fully restore all HP, PP, and status for every monster in the player's party.
     pub fn heal_entire_party(&mut self) {
-        for slot in &mut self.party[..self.party_len] {
+        for slot in &mut self.party[..self.party_len.min(MAX_PARTY)] {
             if let Some(c) = slot.as_mut() {
                 c.hp = c.max_hp;
                 c.status = Status::None;
@@ -1318,33 +1327,40 @@ pub fn step_rpg_frame(
         } => {
             step = step.saturating_add(1);
             if step >= FADE_TOTAL_STEPS {
-                // Initialize active Battle
-                let mut p_roster = Vec::new();
-                for c in game.party[..game.party_len].iter().flatten() {
-                    p_roster.push(*c);
-                }
-
-                let mut e_roster = Vec::new();
-                if wild {
-                    let enemy = create_monster(species, level)?;
-                    game.wild_enemy = Some(enemy);
-                    e_roster.push(enemy);
-                } else if let Some(tr) = trainer {
-                    match tr {
-                        RpgNpcKind::TrainerYoungster => {
-                            e_roster.push(create_monster(SPECIES_GRAVELING, 4)?);
-                        }
-                        RpgNpcKind::GymLeader => {
-                            e_roster.push(create_monster(SPECIES_GEOSTONE, 8)?);
-                        }
-                        _ => {
-                            e_roster.push(create_monster(SPECIES_GRAVELING, 5)?);
-                        }
+                // Initialize active Battle with stack-allocated rosters (zero-alloc)
+                let first_creature = match game.party[0] {
+                    Some(c) => c,
+                    None => return Err(RpgError::PartyEmpty),
+                };
+                let mut p_roster = [first_creature; MAX_PARTY];
+                let mut p_count = 0;
+                for c in game.party[..game.party_len.min(MAX_PARTY)].iter().flatten() {
+                    if p_count < MAX_PARTY {
+                        p_roster[p_count] = *c;
+                        p_count += 1;
                     }
                 }
 
+                let mut e_roster = [first_creature; MAX_PARTY];
+                let mut e_count = 0;
+                if wild {
+                    let enemy = create_monster(species, level)?;
+                    game.wild_enemy = Some(enemy);
+                    e_roster[0] = enemy;
+                    e_count = 1;
+                } else if let Some(tr) = trainer {
+                    let enemy = match tr {
+                        RpgNpcKind::TrainerYoungster => create_monster(SPECIES_GRAVELING, 4)?,
+                        RpgNpcKind::GymLeader => create_monster(SPECIES_GEOSTONE, 8)?,
+                        _ => create_monster(SPECIES_GRAVELING, 5)?,
+                    };
+                    e_roster[0] = enemy;
+                    e_count = 1;
+                }
+
                 let seed = game.rng_seed;
-                let mut battle = Battle::start(&p_roster, &e_roster, wild, seed)?;
+                let mut battle =
+                    Battle::start(&p_roster[..p_count], &e_roster[..e_count], wild, seed)?;
                 battle.begin()?;
                 game.battle = Some(battle);
                 game.mode = GameMode::Battle;
@@ -1380,10 +1396,12 @@ pub fn step_rpg_frame(
                                         events.creature_caught = true;
                                         events.victory = true;
                                         events.battle_ended = true;
-                                        if game.party_len < MAX_PARTY {
+                                        let current_len = game.party_len.min(MAX_PARTY);
+                                        if current_len < MAX_PARTY {
                                             if let Some(caught) = game.wild_enemy {
-                                                game.party[game.party_len] = Some(caught);
-                                                game.party_len += 1;
+                                                game.party[current_len] = Some(caught);
+                                                game.party_len =
+                                                    current_len.saturating_add(1).min(MAX_PARTY);
                                             }
                                         }
                                         game.mode = GameMode::BattleTransitionOut { step: 0 };
@@ -1407,16 +1425,17 @@ pub fn step_rpg_frame(
                         // Check if wild creature was captured
                         if battle.was_captured() {
                             events.creature_caught = true;
-                            if game.party_len < MAX_PARTY {
+                            let current_len = game.party_len.min(MAX_PARTY);
+                            if current_len < MAX_PARTY {
                                 if let Some(caught) = game.wild_enemy {
-                                    game.party[game.party_len] = Some(caught);
-                                    game.party_len += 1;
+                                    game.party[current_len] = Some(caught);
+                                    game.party_len = current_len.saturating_add(1).min(MAX_PARTY);
                                 }
                             }
                         }
 
                         // Copy updated creatures back to player party
-                        for i in 0..game.party_len {
+                        for i in 0..game.party_len.min(MAX_PARTY) {
                             if let Some(c) = battle.party_member(Side::Player, i as u8) {
                                 game.party[i] = Some(*c);
                             }
@@ -1451,7 +1470,7 @@ pub fn step_rpg_frame(
                     }
                     Phase::SwitchPrompt => {
                         // Automatically switch to first alive monster
-                        for i in 0..game.party_len {
+                        for i in 0..game.party_len.min(MAX_PARTY) {
                             if let Some(c) = game.party[i] {
                                 if c.hp > 0 {
                                     let _ = battle.switch_in(i as u8);

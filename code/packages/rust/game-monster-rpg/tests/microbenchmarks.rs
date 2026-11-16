@@ -25,7 +25,7 @@ use coding_adventures_test_bootstrap::run::{self, Ctx, Outcome, Suite};
 use coding_adventures_test_bootstrap::Verdict;
 use game_monster_rpg::{
     build_rpg_sprites, default_rpg_config, init_rpg_game, render_rpg_audio_into, step_rpg_frame,
-    PcmRingBuffer, RpgInput, SfxBank, SpriteQuad,
+    GameMode, PcmRingBuffer, RpgInput, SfxBank, SpriteQuad, WalkDirection, FADE_TOTAL_STEPS,
 };
 
 const FID_BENCH_FAIL: &str = "property-counterexample";
@@ -83,6 +83,48 @@ fn check_step_rpg_frame_zero_alloc(_ctx: &Ctx) -> Verdict {
         return Verdict::fail(
             FID_BENCH_FAIL,
             "step_rpg_frame exceeded zero allocation budget",
+        );
+    }
+
+    Verdict::Pass
+}
+
+fn check_battle_transition_zero_alloc(_ctx: &Ctx) -> Verdict {
+    let config = default_rpg_config();
+    let mut state = init_rpg_game(config, 0x1234_5678).expect("state init");
+    let mut sfx = SfxBank::<4>::empty(44_100).expect("sfx init");
+    let input = RpgInput::walk_dir(WalkDirection::None);
+
+    let harness = BenchmarkHarness::new(fast_bench_config(20));
+    let budget = Budget {
+        max_alloc_bytes: Some(0),
+        max_steps: Some(10_000),
+        ..Default::default()
+    };
+    let alloc = AllocCounter::new();
+
+    let res = harness.run_with_counter("battle_transition_zero_alloc", &budget, &alloc, || {
+        state.mode = GameMode::BattleTransitionIn {
+            step: FADE_TOTAL_STEPS - 1,
+            wild: true,
+            species: 1,
+            level: 3,
+            trainer: None,
+        };
+        state.battle = None;
+        let events = step_rpg_frame(
+            black_box(&mut state),
+            black_box(&input),
+            black_box(&mut sfx),
+        );
+        black_box(events).expect("step_rpg_frame must succeed");
+        assert_eq!(state.active_game_mode(), GameMode::Battle);
+    });
+
+    if !zero_alloc_ok(&res) {
+        return Verdict::fail(
+            FID_BENCH_FAIL,
+            "battle transition exceeded zero allocation budget",
         );
     }
 
@@ -232,6 +274,10 @@ fn main() {
     suite.add(
         "bench/step_rpg_frame/zero_alloc",
         check_step_rpg_frame_zero_alloc,
+    );
+    suite.add(
+        "bench/battle_transition/zero_alloc",
+        check_battle_transition_zero_alloc,
     );
     suite.add(
         "bench/build_rpg_sprites/zero_alloc",

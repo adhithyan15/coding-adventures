@@ -20,9 +20,10 @@ use game_monster_rpg::{
     build_rpg_sprites, create_monster, default_rpg_config, get_map_tile_attr, init_rpg_game,
     lower_rpg_to_paint_scene, render_rpg_audio_into, step_rpg_frame, step_rpg_with_clock,
     validate_fade_fraction, validate_map_id, validate_move_slot, validate_party_index,
-    validate_step_rate, Facing, GameMode, RpgError, RpgInput, RpgNpcKind, SpriteQuad, Status,
-    WalkDirection, ATTR_SOLID, ATTR_TALL_GRASS, ATTR_WARP, FADE_TOTAL_STEPS, MAP_COUNT, MAP_GYM,
-    MAP_HEALING_CENTER, MAP_ROUTE1, MAP_TALL_GRASS, MAP_TOWN, MAX_PARTY, SPECIES_PYROKID,
+    validate_step_rate, Command, Facing, GameMode, Phase, RpgError, RpgInput, RpgNpcKind,
+    SpriteQuad, Status, WalkDirection, ATTR_SOLID, ATTR_TALL_GRASS, ATTR_WARP, FADE_TOTAL_STEPS,
+    MAP_COUNT, MAP_GYM, MAP_HEALING_CENTER, MAP_ROUTE1, MAP_TALL_GRASS, MAP_TOWN, MAX_PARTY,
+    SPECIES_PYROKID,
 };
 
 #[test]
@@ -292,6 +293,53 @@ fn test_gym_leader_trainer_battle() {
         }
         let _ = step_rpg_frame(&mut game, &fight_input, &mut sfx);
     }
+}
+
+#[test]
+fn test_battle_input_bounds_and_truncation_guards() {
+    // Finding 2: Verify slot 256 and index 256 do not truncate silently to 0
+    let input_fight_256 = RpgInput::battle_fight(256);
+    assert_eq!(
+        input_fight_256.battle_command,
+        Some(Command::Fight { slot: u8::MAX })
+    );
+
+    let input_switch_256 = RpgInput::battle_switch(256);
+    assert_eq!(
+        input_switch_256.battle_command,
+        Some(Command::Switch { index: u8::MAX })
+    );
+
+    // Verify in an active battle that submitting slot: u8::MAX is rejected by the battle engine
+    let cfg = default_rpg_config();
+    let mut game = init_rpg_game(cfg, 0x1234).expect("valid game");
+    let mut sfx = SfxBank::<4>::empty(44_100).expect("valid sfx bank");
+
+    // Initiate wild battle
+    game.mode = GameMode::BattleTransitionIn {
+        step: FADE_TOTAL_STEPS,
+        wild: true,
+        species: 1,
+        level: 5,
+        trainer: None,
+    };
+    let _ = step_rpg_frame(
+        &mut game,
+        &RpgInput::walk_dir(WalkDirection::None),
+        &mut sfx,
+    );
+    assert_eq!(game.active_game_mode(), GameMode::Battle);
+
+    let battle = game.battle.as_mut().expect("active battle");
+    assert_eq!(battle.phase(), Phase::CommandSelect);
+
+    // Submitting turn with slot 255 (u8::MAX) fails validation
+    let enemy_cmd = battle.ai_choose();
+    let res = battle.submit_turn(Command::Fight { slot: u8::MAX }, enemy_cmd);
+    assert!(
+        res.is_err(),
+        "Move slot 255 must be rejected by battle engine"
+    );
 }
 
 #[test]
