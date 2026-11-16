@@ -653,8 +653,8 @@ fn target_geometry_validation() {
 #[test]
 fn image_blit_blend_modes_over_background() {
     let mut buf = vec![0u8; 3 * 2 * 4];
-    for px in buf.chunks_exact_mut(4) {
-        px.copy_from_slice(&[100, 100, 100, 255]);
+    for px in buf.as_chunks_mut::<4>().0 {
+        *px = [100, 100, 100, 255];
     }
     let mut t = target_of(3, 2, &mut buf);
     blit_indexed_image(
