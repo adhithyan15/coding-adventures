@@ -334,6 +334,9 @@ func Compile(tg *grammartools.TokenGrammar) (*Compiled, error) {
 	sort.Strings(names)
 	for _, name := range names {
 		group := tg.Groups[name]
+		if group == nil {
+			return nil, fmt.Errorf("lexer.Compile: pattern group %q is nil", name)
+		}
 		rules := make([]*rule, 0, len(group.Definitions))
 		for _, defn := range group.Definitions {
 			r, err := compileRule(defn, fmt.Sprintf("Failed to compile group pattern %s/%s", name, defn.Name))

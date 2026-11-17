@@ -118,6 +118,10 @@ func fingerprint(tg *grammartools.TokenGrammar) uint64 {
 	}
 	sort.Strings(names)
 	for _, n := range names {
+		if tg.Groups[n] == nil {
+			w("nilgroup") // Compile rejects this grammar; never cached
+			continue
+		}
 		defs("group "+n, tg.Groups[n].Definitions)
 	}
 	list("kw", tg.Keywords)
@@ -140,6 +144,7 @@ func fingerprint(tg *grammartools.TokenGrammar) uint64 {
 		list("on", t.OnTokens)
 		w(t.OnValue)
 		w(t.InMode)
+		w(strconv.Itoa(len(t.Actions)))
 		for _, a := range t.Actions {
 			w(a.Kind)
 			w(a.Target)

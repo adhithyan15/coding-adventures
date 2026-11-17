@@ -646,6 +646,20 @@ func TestConstructorCacheIsBounded(t *testing.T) {
 	}
 }
 
+func TestNilPatternGroupIsAnErrorNotAPanic(t *testing.T) {
+	g := &grammartools.TokenGrammar{CaseSensitive: true,
+		Groups: map[string]*grammartools.PatternGroup{"g": nil}}
+	if _, err := Compile(g); err == nil || !strings.Contains(err.Error(), `"g" is nil`) {
+		t.Errorf("Compile: %v", err)
+	}
+	if _, err := compiledFor(g); err == nil {
+		t.Error("compiledFor must return the error")
+	}
+	if _, ok := compileCache.Load(g); ok {
+		t.Error("errors must not be cached")
+	}
+}
+
 func TestCompileCopiesTransitions(t *testing.T) {
 	g := fixtureTransitionGrammar()
 	c, err := Compile(g)

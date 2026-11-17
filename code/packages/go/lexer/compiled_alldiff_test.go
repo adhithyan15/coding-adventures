@@ -78,6 +78,7 @@ func TestAllGrammarsDifferential(t *testing.T) {
 		"é\xff\"unterminated", "'''abc''' \"\"\"x\"\"\"")
 
 	grammars, comparisons := 0, 0
+	var nullableSkipped []string
 	for fi, f := range files {
 		if fi%stride != 0 {
 			continue
@@ -112,6 +113,7 @@ func TestAllGrammarsDifferential(t *testing.T) {
 			}
 		}
 		if nullable {
+			nullableSkipped = append(nullableSkipped, f)
 			continue
 		}
 		grammars++
@@ -140,6 +142,10 @@ func TestAllGrammarsDifferential(t *testing.T) {
 	if grammars < 20 && stride == 1 {
 		t.Errorf("only %d grammars compared; expected many more", grammars)
 	}
+	for _, f := range nullableSkipped {
+		t.Errorf("grammar %s has a rule that matches the empty string and was left out of the differential", f)
+	}
+	t.Logf("skipped %d nullable grammars", len(nullableSkipped))
 	t.Logf("compared %d grammars, %d comparisons", grammars, comparisons)
 }
 
