@@ -14612,6 +14612,10 @@ name = "tls13-compatibility-change-cipher-spec"
 version = "0.1.0"
 
 [[package]]
+name = "tls13-cookie"
+version = "0.1.0"
+
+[[package]]
 name = "tls13-encrypted-extensions-message"
 version = "0.1.0"
 dependencies = [
@@ -15691,6 +15695,15 @@ dependencies = [
 
 [[package]]
 name = "vos-sched-fp-bitmap"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "vos-sched-contract",
+]
+
+[[package]]
+name = "vos-sched-rr"
 version = "0.1.0"
 dependencies = [
  "coding_adventures_sha256",

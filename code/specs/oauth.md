@@ -5021,6 +5021,31 @@ composition, key schedule, certificate validation, TLS transport, and HTTP
 composition remain blockers. Concrete HTTPS and live-provider readiness
 remain unavailable.
 
+An allocation-free `tls13-cookie` prerequisite now owns the RFC 9846 section
+4.3.2 `cookie` extension-data structure needed by a later ClientHello retry
+transition policy. Construction and decoding require the exact non-empty
+two-byte-length-prefixed value, enforce one caller-selected maximum before
+exposing borrowed cookie bytes, and reject trailing or truncated data.
+Encoding validates the complete wire length and caller-owned output capacity
+before changing output. A separate echo binder consumes one decoded
+HelloRetryRequest cookie and one decoded second-ClientHello cookie, requires
+their complete encoded extension data to be byte-for-byte equal, and retains
+both non-copyable values as evidence. Stable failures and diagnostics retain
+no cookie bytes, encoded extension data, lengths, mismatch positions, or
+output contents.
+
+This cookie boundary treats the cookie as opaque peer-supplied data. It does
+not locate or authorize extension type 44 in either message, generate a
+cookie, authenticate or decrypt server state carried by a cookie, compare any
+other ClientHello field, require a retry to make progress, reject a second
+retry, apply the transcript `message_hash` rewrite, sequence a handshake, send
+alerts, derive keys, protect records, parse or validate certificates,
+establish trust, enforce revocation, perform I/O, authorize HTTP or OAuth
+transport, or open a network connection. Complete ClientHello retry-transition
+policy, connection state, transcript composition, key schedule, certificate
+validation, TLS transport, and HTTP composition remain blockers. Concrete
+HTTPS and live-provider readiness remain unavailable.
+
 An allocation-free `tls13-alpn` prerequisite now owns the RFC 7301
 `application_layer_protocol_negotiation` extension data needed to bind a
 future repository-owned TLS client to one application protocol. A client
