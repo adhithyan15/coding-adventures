@@ -1,5 +1,38 @@
 # Changelog
 
+## 0.8.0 — VER04r CV2-S2 public resolved-domain enumerator and post-slot resolver
+
+Published API for the v2 corpus emitter (slice S3).  **No behaviour change**: every
+adopter's generated `warrant_evidence.rs` (arithmetic, ct-compare, gf256,
+hash-functions, logic-gates, lzw, vos-sched-any, vos-sched-fp-bitmap, wasm-leb128,
+x25519, zeroize) is byte-identical to the one the previous generator emits, and
+`regenerate --check` and `gen_corpus --check` are unchanged.  (This is also the first
+release that contains the two `Unreleased` entries below.)
+
+- New `pub mod domain`: `Domain` (the generator's binder type `evidence::Ty`, now
+  `pub`, with `domain_size`, `domain_bytes` and the new `nth(i)` / `iter()` that
+  unrank any VER04r 5.1 descriptor without materialising it); `unrank_product`,
+  `rank_product` and `ProductIter` (row-major, last binder fastest, start at any
+  product ordinal); `DomainEnv` and `resolve_binders` (aliases, records, variants,
+  `NatCount`, the VER04j 2.6 demotion, `W0706`/`W0707`); `resolve_post_slot_of` and
+  `op_post_slot` (the VER04k 4.2 slot over domains); re-exports of the checker's
+  `resolve_post_slot`/`slot_shape`/`PostSlot`/`SlotShape`, `corpus::inout_descriptor`
+  and the budget constants.
+- Internal, same code: the inline per-claim resolution in
+  `generate_evidence_harness_with_tables` is now `resolve_claim_tys` (shared with
+  `resolve_binders`), and `inout::slot_of` delegates to `resolve_post_slot_of`.
+  `evidence::Ty`, `TyEnv`, `product_size`, `claim_domain` and the `Ty` size methods
+  are `pub` or `pub(crate)`; `corpus.rs` and `gen_corpus` are untouched (frozen until
+  S13).
+- Documented divergences, not changed: the harness prelude enumerates byte strings
+  first-byte-fastest while VER04i 2.6 and the v1 corpus are lexicographic (the API
+  follows the spec); the generator's `NatCount` is 73 values where VER04r 5.1 says
+  `0..=K`; the generator's signed edge sets are sorted and include `-1..=-255` where
+  VER04r 5.1 says "same order".  S3 decides how the corpus names them.
+- Tests: `tests/domain_api.rs` (23, from outside the crate, against an independent
+  eager oracle) and 8 doc examples.
+- Docs: README section, VER-BACKLOG CV2 row.
+
 ## Unreleased — WD-HARN1 harness supervisor hardening (from the 2026-11-14 Windows `rust/lzw` hang)
 
 - Prelude, observer supervisor: every wait on the worker is a `Condvar::wait_timeout`
