@@ -381,6 +381,18 @@ func RunStep(o StepOptions) (*StepResult, error) {
 	if err != nil {
 		return nil, err
 	}
+	// 4a. The first step of the shard (seq 0) looks at the state roots once more
+	// (P12): `prepare` required them empty, but the time since then is the time
+	// somebody could have restored a cache into them. Anything but "absent or an
+	// empty directory" leaves traces/.state-preloaded, which `collect` turns into
+	// the shard-void token `state-preloaded` (M4). The step still runs: the shard
+	// is void, not the build. A marker that cannot be left refuses the step; its
+	// number is taken, so `collect` sees the gap and voids the order.
+	if seq == 0 {
+		if err := markStatePreloaded(o.Dir, pre.Config.StateRoots); err != nil {
+			return nil, err
+		}
+	}
 	// strace's -o names its OWN descriptor, a pipe (see the header).
 	sargs, err := sandbox.StraceArgs("/proc/self/fd/" + strconv.Itoa(traceFD))
 	if err != nil {
