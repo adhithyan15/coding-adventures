@@ -18,6 +18,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"syscall"
 	"testing"
 
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/legacy"
@@ -48,20 +49,15 @@ func realHostRoots(t *testing.T) *legacy.HostRoots {
 	return hr
 }
 
-// withRealLists gives the harness the real ephemeral and absent-ok lists
-// ($HOME expanded to the harness's home); the harness roots stay as they are.
+// withRealLists gives the harness the real ephemeral and absent-ok lists,
+// unexpanded: traced's own prepare step expands $HOME and $TMPDIR, the same
+// code path production uses (the classify file carries the lists as written),
+// so there is no second expansion here to drift.  The harness roots stay.
 func withRealLists(t *testing.T, h *harness) {
 	t.Helper()
 	hr := realHostRoots(t)
-	exp := func(l []string) []string {
-		out := make([]string, len(l))
-		for i, s := range l {
-			out[i] = strings.Replace(s, "$HOME", h.cfg.Home, 1)
-		}
-		return out
-	}
-	h.cfg.HostRoots.Ephemeral = exp(hr.Ephemeral)
-	h.cfg.HostRoots.AbsentOK = exp(hr.AbsentOK)
+	h.cfg.HostRoots.Ephemeral = hr.Ephemeral
+	h.cfg.HostRoots.AbsentOK = hr.AbsentOK
 }
 
 func statfs(path string) trace.Event { return base("statfs", trace.KindMetadata, path) }
@@ -77,6 +73,7 @@ func TestSELinuxProbesWithTheRealPolicy(t *testing.T) {
 		{"absent statfs /selinux", fail(statfs("/selinux"), "ENOENT"), ""},
 		{"present /sys/fs/selinux", statfs("/sys/fs/selinux"), "host-read:/sys/fs/selinux"},
 		{"present /selinux", statfs("/selinux"), "host-read:/selinux"},
+		{"absent child of an absent entry", fail(statfs("/sys/fs/selinux/enforce"), "ENOENT"), ""},
 		{"selinux enforce", openAbs("/sys/fs/selinux/enforce"), "host-read:/sys/fs/selinux/enforce"},
 		{"proc mounts", openAbs("/proc/mounts"), "trace-incomplete:proc-path"},
 		{"proc self attr current", openAbs("/proc/self/attr/current"), "trace-incomplete:proc-path"},
@@ -139,4 +136,44 @@ func TestRealHostRootsSELinuxMembership(t *testing.T) {
 	if has(hr.AbsentOK, "/proc/mounts") || has(hr.Ephemeral, "/proc/mounts") {
 		t.Error("/proc/mounts must stay trace-incomplete")
 	}
+}
+
+// L1: a probe of a CHILD of an absent-ok entry is allowed only while the entry
+// itself is absent on the classifier's disk (ENOENT or ENOTDIR); a present
+// entry (even an empty directory) or any other answer is a host-read.
+func TestAbsentOKChildNeedsAbsentEntry(t *testing.T) {
+	child := func() trace.Event { return fail(stat("/sys/fs/selinux/enforce"), "ENOENT") }
+	exact := func() trace.Event { return fail(stat("/sys/fs/selinux"), "ENOENT") }
+	fresh := func() *harness {
+		h := newHarness(t)
+		withRealLists(t, h)
+		return h
+	}
+
+	wantNoReasons(t, fresh().run(child()))
+
+	// ENOTDIR from the disk (a file sits where the entry should be) is absent too.
+	h := fresh()
+	h.fs.errs["/sys/fs/selinux"] = syscall.ENOTDIR
+	wantNoReasons(t, h.run(child()))
+
+	// Present, empty directory: the failed child probe is not enough.
+	h = fresh()
+	h.fs.dir("/sys/fs/selinux")
+	wantReason(t, h.run(child()), "host-read:/sys/fs/selinux/enforce")
+
+	// The entry cannot be examined: fail closed.
+	h = fresh()
+	h.fs.errs["/sys/fs/selinux"] = syscall.EACCES
+	wantReason(t, h.run(child()), "host-read:/sys/fs/selinux/enforce")
+
+	// An exact probe uses the traced result alone, whatever the disk says.
+	h = fresh()
+	h.fs.errs["/sys/fs/selinux"] = syscall.EACCES
+	wantNoReasons(t, h.run(exact()))
+
+	// $HOME entries live in the fresh tmpfs: a child probe needs no disk answer.
+	h = fresh()
+	h.fs.dir("/home/runner/.config")
+	wantNoReasons(t, h.run(fail(stat("/home/runner/.config/x"), "ENOENT")))
 }

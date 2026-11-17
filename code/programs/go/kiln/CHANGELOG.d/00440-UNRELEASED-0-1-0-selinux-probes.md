@@ -17,3 +17,4 @@
 - KILN04: the record workflow and its consumers use one explicit
   `ubuntu-NN.04` label, never `ubuntu-latest`; `/proc/filesystems` is a named
   residual risk (section 14).
+- Absent-ok child probes (D27 review): a failed probe of a child of an `absent-ok` entry (for example `/sys/fs/selinux/enforce`) is allowed only while the entry itself is absent (`lstat` gives ENOENT or ENOTDIR); otherwise `host-read`. Entries under the fresh `$HOME` are unaffected. `kiln-sandbox` is also selected by changes under `code/kiln/legacy/**`.

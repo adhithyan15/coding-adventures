@@ -2711,7 +2711,14 @@ Four more rules apply:
   trust, and §14 names it.
 - **Absent probes.** An absent probe outside the repository is allowed only
   under an `image`, `tool` or `state` root, or in `absent-ok`. `$HOME`
-  dotfiles need explicit entries.
+  dotfiles need explicit entries. An `absent-ok` entry covers an exact probe
+  of itself on the traced result alone. A probe of a CHILD of an entry
+  (`X/y`) is allowed only if the entry itself is absent: an `lstat` of `X` on
+  the classifier's disk gives `ENOENT` or `ENOTDIR`. Any other answer (present,
+  even as an empty directory, or `EACCES`) is `host-read`, because a present
+  directory's contents are undeclared input. An entry inside the fresh `$HOME`
+  or `TMPDIR` is absent by construction, and the disk is never asked beneath
+  them.
 - **Temporary files.** A read of the action's own temporary files (paths
   it created, §5.2) is allowed. `$HOME` and `TMPDIR` are **fresh tmpfs**, so
   a stat or listing of those two directories is allowed, and the post-run
@@ -2736,17 +2743,26 @@ opens `/proc/filesystems` at start-up. Unlisted, those gave `host-read:` and
   one authoritative `/proc` list: there is no classifier allowance and no
   hard-coded `/proc` exception (§4.5, §5.5).
 - `/selinux` and `/sys/fs/selinux` in `absent-ok`, so they are allowed **only
-  while absent**. There is deliberately no `/sys/fs/selinux/**` entry anywhere
+  while absent**: a failed probe of a child such as `/sys/fs/selinux/enforce`
+  counts only if the entry itself is absent (the §5.3 absent-probe rule). There is deliberately no `/sys/fs/selinux/**` entry anywhere
   (not `ephemeral`, not a root): a present SELinux filesystem is a `host-read`.
 
-The invariant: **an SELinux-enabled host records nothing.** SELinux state
+The invariant, for libselinux users: **an SELinux-enabled host records
+nothing.** It holds because libselinux's start-up probe finds the present
+`/sys/fs/selinux` (a `host-read`), and any child probe under a present entry is
+also a `host-read`. A program that never touches those paths is unaffected, and
+needs no such guarantee, since it cannot see the filesystem. SELinux state
 changes outputs (`ls -Z`, `cp --preserve=context`), so it must never be
 silently pinned. On such a host the probe finds the directory (`host-read`), and
 libselinux goes on to read `/proc/mounts` and `/proc/self/attr/current`, which
 stay `trace-incomplete:proc-path`. `kiln:recorder` needs no version bump: the
 change is in `policy:host-roots.json`, which is in `consumed` and so in the
 digest. The `kiln-sandbox` CI job runs on both ubuntu-24.04 and ubuntu-26.04,
-so image drift is caught by a required job.
+so image drift is caught by a required job. That holds only because the
+sandbox tests' policy fixtures derive their `ephemeral` and `absent-ok` lists
+from the real `code/kiln/legacy/host-roots.json` (they once carried their own
+short lists); and a change to `code/kiln/legacy/**` selects the job in
+`ci-gates.json`.
 
 **One explicit image label.** The record workflow and every job that consumes
 its records use one explicit `ubuntu-NN.04` label, never `ubuntu-latest`: the
@@ -2856,7 +2872,8 @@ classified by its `-y` path.
 **Out of the repository.** The order is: made by this action, ephemeral list,
 `$HOME` or `TMPDIR` themselves, longest covering root, `absent-ok`, else
 `host-read`. `X/**` in the ephemeral list also covers `X`; `absent-ok` covers
-a path and what is under it, for absent probes only. An `image` file with a
+a path, and what is under it only while the entry itself is absent (§5.3), for
+absent probes only. An `image` file with a
 zero ctime or a failed lstat is `host-read`. A `state` root reads as
 `host-read` and an absent probe under it is allowed (the fetcher check is
 stage 5; `fetchersEnabled` is the switch); a write under it is `state-write`.

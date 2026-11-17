@@ -74,9 +74,28 @@ func (c *classifier) ephemeralMatch(p string) bool {
 	return false
 }
 
+// absentOK says an ABSENT probe of p is allowed by the absent-ok list.
+//
+// An exact probe of an entry is judged by the traced syscall result (the caller
+// has already established it was absent).  A probe of a CHILD of an entry (say
+// /sys/fs/selinux/enforce) is allowed only if the entry itself is absent on the
+// classifier's disk: Lstat of it gives ENOENT or ENOTDIR.  Any other answer
+// (present, EACCES, ...) means the entry is a real directory whose contents are
+// undeclared input, so the probe is a host-read (KILN04 D27, section 5.3).
+// An entry inside the fresh $HOME or TMPDIR is absent by construction (the
+// sandbox's tmpfs), and the disk is never asked beneath them (section 5.1).
 func (c *classifier) absentOK(p string) bool {
 	for _, a := range c.cfg.absentOK {
-		if covers(a, p) {
+		if p == a {
+			return true
+		}
+		if !covers(a, p) {
+			continue
+		}
+		if c.underTmp(a) {
+			return true
+		}
+		if _, err := c.cfg.FS.Lstat(a); err != nil && isNotExist(err) {
 			return true
 		}
 	}

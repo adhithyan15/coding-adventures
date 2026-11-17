@@ -610,6 +610,7 @@
         "go/programs/kiln"
       ],
       "paths": [
+        "code/kiln/legacy/**",
         "code/programs/go/kiln/**"
       ]
     }
