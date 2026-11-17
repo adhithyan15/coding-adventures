@@ -80,6 +80,7 @@ def build_parser() -> argparse.ArgumentParser:
     w.add_argument("--warrant", required=True, help="the .warrant source the corpus was made from")
     w.add_argument("--profile", required=True, help="the corpus.profile (budget, faults, ...)")
     w.add_argument("--bindings", help="an evidence.bindings whose faults= lists must match")
+    w.add_argument("--repo-root", help="the repository root the corpus's spec path is relative to")
     return ap
 
 
@@ -118,6 +119,7 @@ def _verify_v2(args: argparse.Namespace) -> int:
         pathlib.Path(args.warrant),
         pathlib.Path(args.profile),
         pathlib.Path(args.bindings) if args.bindings else None,
+        repo_root=pathlib.Path(args.repo_root) if args.repo_root else None,
     )
     for miss in report.mismatches:
         print(

@@ -47,7 +47,10 @@ def _int(text: str) -> int:
         or len(text) > 20
     ):
         raise OracleError("corpus", "a profile value is a canonical decimal integer")
-    return int(text)
+    value = int(text)
+    if value >= 1 << 64:
+        raise OracleError("corpus", "a profile value is at most 2^64 - 1")
+    return value
 
 
 def parse_profile(raw: bytes) -> Profile:

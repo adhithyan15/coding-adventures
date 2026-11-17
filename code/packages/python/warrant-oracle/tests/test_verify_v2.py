@@ -30,8 +30,8 @@ CORPUS = HERE / "corpus"
 CACHE: dict = {}  # one derivation per (spec, profile): the oracle's own enumeration takes seconds
 
 
-def check(root, warrant, profile, bindings=None):
-    return verify_v2(root, warrant, profile, bindings, cache=CACHE)
+def check(root, warrant, profile, bindings=None, repo_root=None):
+    return verify_v2(root, warrant, profile, bindings, cache=CACHE, repo_root=repo_root)
 
 
 def fresh(tmp_path: pathlib.Path) -> pathlib.Path:
@@ -49,7 +49,7 @@ def save(root: pathlib.Path, corpus: dict) -> None:
 
 
 def codes(root: pathlib.Path, **kw) -> set[str]:
-    report, _ = check(root, kw.get("warrant", WARRANT), kw.get("profile", PROFILE), kw.get("bindings"))
+    report, _ = check(root, kw.get("warrant", WARRANT), kw.get("profile", PROFILE), kw.get("bindings"), kw.get("repo_root"))
     return {m["code"] for m in report.mismatches}
 
 
@@ -532,8 +532,12 @@ def test_the_fixture_profile_must_equal_the_profile_argument(tmp_path):
 def test_the_spec_must_be_the_one_the_corpus_was_made_from(tmp_path):
     other = tmp_path / "synth.warrant"
     other.write_bytes(WARRANT.read_bytes().replace(b"b < 200u8", b"b < 201u8") + b"\n")
-    got = codes(CORPUS, warrant=other)
+    got = codes(CORPUS, warrant=other, repo_root=tmp_path)
     assert "header" in got  # spec_sha256 and the spec path
+    with pytest.raises(OracleError):  # no repository root above a bare temporary directory
+        check(CORPUS, other, PROFILE)
+    with pytest.raises(OracleError):  # --warrant outside the given root
+        check(CORPUS, WARRANT, PROFILE, repo_root=tmp_path)
 
 
 def test_bindings_must_agree_with_the_profile(tmp_path):
@@ -583,3 +587,92 @@ def test_ct_compare_v2_generated_by_the_rust_cli_verifies():  # pragma: no cover
         CODE / "packages/rust/ct-compare/evidence.bindings",
     )
     assert report.ok, report.mismatches
+
+
+# -- review fixes (M1, L1, L2, L3, L7) ---------------------------------------------------------------
+
+
+@pytest.mark.skipif(not hasattr(os, "mkfifo"), reason="needs POSIX FIFOs")
+@pytest.mark.parametrize("name", ["corpus.json", "cases.tfv", "chunks/cmp_agrees.txt"])
+def test_a_fifo_is_reported_without_hanging(tmp_path, name):
+    import multiprocessing
+
+    root = fresh(tmp_path)
+    (root / name).unlink()
+    os.mkfifo(root / name)
+
+    def attempt(queue):
+        try:
+            report, _ = verify_v2(root, WARRANT, PROFILE)
+            queue.put(("ok", sorted({m["code"] for m in report.mismatches})))
+        except OracleError as exc:
+            queue.put(("refused", exc.code))
+
+    queue = multiprocessing.Queue()
+    proc = multiprocessing.Process(target=attempt, args=(queue,))
+    proc.start()
+    proc.join(20)
+    hung = proc.is_alive()
+    if hung:  # pragma: no cover
+        proc.kill()
+    assert not hung, "a FIFO made verify-v2 block"
+    kind, detail = queue.get(timeout=5)
+    assert (kind, detail) in [("refused", "source"), ("ok", ["files"])]
+
+
+def test_the_spec_path_must_equal_the_repo_relative_path(tmp_path):
+    root = fresh(tmp_path)
+    for bad in ("synth.warrant", "elsewhere/synth.warrant", "../synth.warrant", 5, None):
+        corpus = load(root)
+        corpus["spec"] = bad
+        save(root, corpus)
+        assert "header" in codes(root), bad
+    corpus = load(root)
+    corpus["spec"] = "code/packages/python/warrant-oracle/tests/fixtures/synth-v2/synth.warrant"
+    save(root, corpus)
+    assert codes(root) == set()
+
+
+def test_cli_accepts_an_explicit_repo_root(tmp_path, capsys):
+    spec = tmp_path / "code" / "synth.warrant"
+    spec.parent.mkdir()
+    spec.write_bytes(WARRANT.read_bytes())
+    root = fresh(tmp_path)
+    corpus = load(root)
+    corpus["spec"] = "code/synth.warrant"
+    save(root, corpus)
+    argv = ["verify-v2", str(root), "--warrant", str(spec), "--profile", str(PROFILE)]
+    assert run([*argv, "--repo-root", str(tmp_path)]) == 0
+    assert run(argv) == 0  # the nearest ancestor with a code/ directory is tmp_path
+    capsys.readouterr()
+
+
+@pytest.mark.parametrize(
+    "generator",
+    [
+        {"name": "warrant-corpus-gen", "version": "0.3.0\n"},
+        {"name": "a b", "version": "1"},
+        {"name": "x\u2028y", "version": "1"},
+        {"name": "x\ud800", "version": "1"},
+        {"name": "n", "version": "é"},
+        {"name": "x" * 65, "version": "1"},
+        {"name": "", "version": "1"},
+        {"name": "n", "version": "1", "extra": "x"},
+    ],
+)
+def test_generator_strings_are_restricted(tmp_path, generator):
+    root = fresh(tmp_path)
+    corpus = load(root)
+    corpus["generator"] = generator
+    save(root, corpus)
+    assert "header" in codes(root)
+
+
+def test_a_symlinked_chunks_directory_is_reported_before_reading(tmp_path):
+    if not hasattr(os, "symlink") or os.name == "nt":  # pragma: no cover
+        pytest.skip("needs symlinks")
+    root = fresh(tmp_path)
+    shutil.move(root / "chunks", tmp_path / "moved")
+    (root / "chunks").symlink_to(tmp_path / "moved")
+    report, _ = check(root, WARRANT, PROFILE)
+    assert [(m["code"], m["where"]) for m in report.mismatches] == [("files", "chunks")]

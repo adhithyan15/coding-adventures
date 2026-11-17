@@ -38,12 +38,19 @@ from coding_adventures_warrant_oracle.suites import SuitePlan
         "slim_chunk c\n",
         "budget\n",
         "fault eq invert\r\n",
+        "budget 99999999999999999999\n",
+        "slim_stride 18446744073709551616\n",
+        "slim_chunk c 18446744073709551616\n",
     ],
 )
 def test_profile_strictness(text):
     with pytest.raises(OracleError) as err:
         parse_profile(text.encode())
     assert err.value.code == "corpus"
+
+
+def test_profile_integers_up_to_two_to_the_64_minus_1_are_read():
+    assert parse_profile(b"budget 18446744073709551615\n").budget == (1 << 64) - 1
 
 
 def test_profile_accepts_distinct_lines_and_blank_lines():

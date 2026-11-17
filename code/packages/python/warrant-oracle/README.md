@@ -132,8 +132,11 @@ These are facts the S3/S8 owners need; none is hidden by a flag.
 python -m coding_adventures_warrant_oracle verify-v2 code/specs/fixtures/ct-compare-warrant-v2 \
     --warrant code/specs/ct-compare.warrant \
     --profile code/specs/fixtures/ct-compare-warrant-v2/corpus.profile \
-    [--bindings code/packages/rust/ct-compare/evidence.bindings]
+    [--bindings code/packages/rust/ct-compare/evidence.bindings] [--repo-root .]
 ```
+
+`spec` in the corpus must equal the repo-relative path of `--warrant` (root: nearest ancestor with a
+`code/` directory, or `--repo-root`). The spec's effective size cap is the lexer's 1 MiB.
 
 The oracle **derives** the corpus (`corpus.json`, `chunks/*.txt`, `cases.tfv`) from the
 `.warrant` source and `corpus.profile` with its own reader, lowering, evaluator,

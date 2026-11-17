@@ -34,6 +34,7 @@ import hashlib
 import json
 import os
 import pathlib
+import re
 import stat
 
 from .corpus_v1 import Report, load_json
@@ -44,7 +45,7 @@ from .profile import parse_profile
 MAX_CORPUS_BYTES = 16 << 20
 MAX_CHUNK_BYTES = 2 << 20
 MAX_TFV_BYTES = 4 << 20
-MAX_SPEC_BYTES = 4 << 20
+MAX_SPEC_BYTES = 1 << 20  # the lexer's own 1 MiB cap is the effective limit (VER04a)
 MAX_SMALL_BYTES = 64 << 10
 MAX_DIFFS = 12  # per group: a corrupt corpus must not flood the report
 
@@ -71,9 +72,19 @@ _LOWERING_SUITE_KEYS = frozenset(
 def read_regular(path: pathlib.Path, cap: int) -> bytes:
     """Read a regular, non-symbolic-link file of at most ``cap`` bytes (section 14, Paths)."""
     try:
-        if path.is_symlink():
+        # lstat first: opening a FIFO for reading blocks until a writer appears, so a
+        # non-regular file must be refused *before* any open (a hostile fixture could hang CI).
+        mode = os.lstat(path).st_mode
+        if stat.S_ISLNK(mode):
             raise OracleError("source", "an input must not be a symbolic link")
-        flags = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0) | getattr(os, "O_BINARY", 0)
+        if not stat.S_ISREG(mode):
+            raise OracleError("source", "an input must be a regular file")
+        flags = (
+            os.O_RDONLY
+            | getattr(os, "O_NOFOLLOW", 0)
+            | getattr(os, "O_BINARY", 0)
+            | getattr(os, "O_NONBLOCK", 0)
+        )
         fd = os.open(path, flags)
     except OSError as exc:
         raise OracleError("source", "could not open an input file") from exc
@@ -202,25 +213,29 @@ def _compare_text(name: str, want: bytes, got: bytes, report: Report, group: str
 
 
 def _check_dir(root: pathlib.Path, derived: Derived, report: Report) -> None:
-    for name, want in sorted(derived.chunk_files.items()):
-        path = root / "chunks" / name
-        try:
-            got = read_regular(path, MAX_CHUNK_BYTES)
-        except OracleError as exc:
-            report.miss("files", f"chunks/{name}", exc.message)
-            continue
-        _compare_text(f"chunks/{name}", want, got, report)
     chunks = root / "chunks"
-    try:
-        present = sorted(entry.name for entry in os.scandir(chunks))
-    except OSError:
-        report.miss("files", "chunks", "the chunks directory is missing")
-        return
-    if chunks.is_symlink():
-        report.miss("files", "chunks", "the chunks directory is a symbolic link")
-    for name in present:
-        if name not in derived.chunk_files:
-            report.miss("files", "chunks", f"an undeclared file in chunks/ ({len(name)} bytes of name)")
+    isjunction = getattr(os.path, "isjunction", None)
+    if chunks.is_symlink() or (isjunction is not None and isjunction(chunks)):
+        # Reported before anything is read through it.
+        report.miss("files", "chunks", "the chunks directory is a symbolic link or junction")
+    else:
+        for name, want in sorted(derived.chunk_files.items()):
+            try:
+                got = read_regular(chunks / name, MAX_CHUNK_BYTES)
+            except OracleError as exc:
+                report.miss("files", f"chunks/{name}", exc.message)
+                continue
+            _compare_text(f"chunks/{name}", want, got, report)
+        try:
+            present = sorted(entry.name for entry in os.scandir(chunks))
+        except OSError:
+            report.miss("files", "chunks", "the chunks directory is missing")
+            present = []
+        for name in present:
+            if name not in derived.chunk_files:
+                report.miss(
+                    "files", "chunks", f"an undeclared file in chunks/ ({len(name)} bytes of name)"
+                )
     try:
         tfv_bytes = read_regular(root / "cases.tfv", MAX_TFV_BYTES)
     except OracleError as exc:
@@ -263,22 +278,34 @@ def _check_bindings(raw: bytes, profile_raw: bytes, report: Report) -> None:
 # -- the gate ---------------------------------------------------------------------------------
 
 
-def _spec_ref_ok(ref: object, warrant: pathlib.Path) -> bool:
-    """Is ``ref`` a repo-relative POSIX path that the ``--warrant`` argument ends with?"""
-    if not isinstance(ref, str) or not ref or ref.startswith("/") or "\\" in ref:
-        return False
-    parts = ref.split("/")
-    if any(p in ("", ".", "..") for p in parts):
-        return False
-    tail = warrant.resolve().as_posix().split("/")
-    return tail[-len(parts) :] == parts
+def find_repo_root(warrant: pathlib.Path) -> pathlib.Path | None:
+    """The nearest ancestor of the (resolved) warrant file that contains a ``code`` directory."""
+    for parent in warrant.resolve().parents:
+        if (parent / "code").is_dir():
+            return parent
+    return None
+
+
+def expected_spec_ref(warrant: pathlib.Path, repo_root: pathlib.Path | None) -> str:
+    """The repo-relative POSIX path the corpus must record as ``spec`` (section 1.4)."""
+    root = repo_root if repo_root is not None else find_repo_root(warrant)
+    if root is None:
+        raise OracleError("source", "no repository root found for --warrant; pass --repo-root")
+    try:
+        return warrant.resolve().relative_to(root.resolve()).as_posix()
+    except ValueError as exc:
+        raise OracleError("source", "--warrant is not inside the repository root") from exc
+
+
+_IDENT = re.compile(r"[A-Za-z0-9._+-]{1,64}")
 
 
 def _generator_ok(value: object) -> bool:
+    """``{name, version}``, each ``[A-Za-z0-9._+-]{1,64}`` (no escapes, no odd Unicode)."""
     return (
         isinstance(value, dict)
         and set(value) == {"name", "version"}
-        and all(isinstance(v, str) and 0 < len(v) <= 64 for v in value.values())
+        and all(isinstance(v, str) and _IDENT.fullmatch(v) for v in value.values())
     )
 
 
@@ -288,6 +315,7 @@ def verify_v2(
     profile: pathlib.Path,
     bindings: pathlib.Path | None = None,
     cache: dict | None = None,
+    repo_root: pathlib.Path | None = None,
 ) -> tuple[Report, Derived | None]:
     """Run the three oracle checks (and the integrity checks) on a v2 fixture directory.
 
@@ -304,10 +332,9 @@ def verify_v2(
     got = load_json(raw, MAX_CORPUS_BYTES)
     if not isinstance(got, dict):
         raise OracleError("corpus", "corpus root must be an object")
-    ref = got.get("spec")
-    if not _spec_ref_ok(ref, warrant):
-        report.miss("header", "spec", "spec is not a path that the --warrant argument ends with")
-        ref = warrant.as_posix()
+    ref = expected_spec_ref(warrant, repo_root)
+    if got.get("spec") != ref:
+        report.miss("header", "spec", "spec is not the repo-relative path of --warrant")
     generator = got.get("generator")
     if not _generator_ok(generator):
         report.miss("header", "generator", "generator is {name, version}, two short strings")
