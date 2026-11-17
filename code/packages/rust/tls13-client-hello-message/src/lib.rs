@@ -1,6 +1,6 @@
 //! Exact, bounded TLS 1.3 `ClientHello` message-body decoding.
 //!
-//! RFC 8446 section 4.1.2 fixes the legacy version and compression fields,
+//! RFC 9846 section 4.2.2 fixes the legacy version and compression fields,
 //! bounds the legacy session ID, and carries preference-ordered cipher suites
 //! plus a mandatory extension vector. This crate owns only that structural
 //! body shape and delegates extension framing to `tls13-extension-block`.
@@ -24,8 +24,8 @@ pub const MAX_LEGACY_SESSION_ID_LENGTH: usize = 32;
 /// RFC 8446's largest possible count of two-byte cipher-suite identifiers.
 pub const MAX_CIPHER_SUITE_COUNT: usize = 32_767;
 
-/// RFC 8446's minimum ClientHello extension-vector payload length.
-pub const MIN_CLIENT_HELLO_EXTENSION_PAYLOAD_LENGTH: usize = 8;
+/// RFC 9846's corrected minimum ClientHello extension-vector payload length.
+pub const MIN_CLIENT_HELLO_EXTENSION_PAYLOAD_LENGTH: usize = 7;
 
 /// Caller-selected resource limits for one ClientHello body.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]

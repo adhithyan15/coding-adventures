@@ -61,7 +61,7 @@ fn client_body(random: [u8; 32], session_id: &[u8], suites: &[u16], versions: &[
     }
     body.extend_from_slice(&[1, 0]);
     let version_data = version_extension_data(versions);
-    append_extensions(&mut body, &[(43, &version_data), (21, &[])]);
+    append_extensions(&mut body, &[(43, &version_data)]);
     body
 }
 
