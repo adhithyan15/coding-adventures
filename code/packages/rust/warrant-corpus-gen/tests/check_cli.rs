@@ -582,3 +582,17 @@ fn the_name_limit_is_the_spec_maximum() {
     let too_long = format!("chunks/{}.{}x.txt", "a".repeat(64), "b".repeat(64));
     assert!(guard(&too_long).is_err());
 }
+
+#[test]
+fn a_temporary_name_that_cannot_be_replaced_fails_the_write_without_damage() {
+    // a non-empty directory sits at the reserved temp name: it cannot be unlinked as a file, so
+    // the exclusive create fails and the write is refused (nothing is written through it)
+    let d = tmp("tmpdir");
+    fs::create_dir_all(d.join(".cases.tfv.tmp/inner")).unwrap();
+    let e = write_corpus(&d, ct()).unwrap_err();
+    assert_eq!(e.code, code::IO);
+    assert!(e.message.contains("temporary file cannot be created"), "{e}");
+    assert!(d.join(".cases.tfv.tmp/inner").exists());
+    assert!(!d.join("corpus.json").exists(), "corpus.json, the commit point, is written last");
+    let _ = fs::remove_dir_all(d);
+}
