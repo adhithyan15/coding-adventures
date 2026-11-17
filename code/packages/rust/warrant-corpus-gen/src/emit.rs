@@ -25,9 +25,13 @@
 //! ## Generation failures (VER04r 5.6)
 //!
 //! A control whose op no claim calls, and a control whose every candidate is **blind**, are
-//! errors (`fault`): the corpus could never notice the fault.  The spec lets
-//! `accepted_blind_faults` excuse the second, but names no source for that list, so this
-//! generator always writes it empty and the rule is absolute (VER04r 16.6, OPEN).
+//! errors (`fault`): the corpus could never notice the fault.  The profile can excuse the
+//! second, and only the second, with an `accept_blind <op> <fault>` line ([D15], VER04r
+//! 16.8): the control row is then emitted (no `required_claims`, every candidate in
+//! `blind_claims`, no `slim_witness`) and its **control id** is recorded in
+//! `accepted_blind_faults`, sorted by bytes.  An `accept_blind` line for a fault that is not
+//! all-blind (it has a witnessed, unproven or deferred claim) is a `profile` error, not a
+//! no-op: an acceptance that excuses nothing is a stale profile (fail closed).
 
 use std::collections::BTreeMap;
 
@@ -296,6 +300,7 @@ pub fn generate(input: &GenInput<'_>) -> Result<CorpusV2, GenError> {
 
     // controls
     let mut control_rows = Vec::new();
+    let mut accepted_blind: Vec<String> = Vec::new();
     let mut levels: Vec<&'static str> = vec![Level::Core.name()];
     for (fi, f) in faults.iter().enumerate() {
         if !levels.contains(&f.level.name()) {
@@ -338,21 +343,32 @@ pub fn generate(input: &GenInput<'_>) -> Result<CorpusV2, GenError> {
                 "no claim calls the faulted operation, so no claim could catch the fault",
             ));
         }
+        let control_id = format!(
+            "warrant/{}/negctl/exhaustive/{}/{}",
+            lowered.module, f.op, f.name
+        );
+        let accepted = profile
+            .accept_blind
+            .iter()
+            .any(|(o, n)| *o == f.op && *n == f.name);
         if required.is_empty() {
+            if !accepted {
+                return Err(GenError::new(
+                    code::FAULT,
+                    at,
+                    "every candidate claim is blind to this fault: the corpus could never notice it (VER04r 5.6); an accept_blind line would excuse it (VER04r 16.8)",
+                ));
+            }
+            accepted_blind.push(control_id.clone());
+        } else if accepted {
             return Err(GenError::new(
-                code::FAULT,
+                code::PROFILE,
                 at,
-                "every candidate claim is blind to this fault: the corpus could never notice it (VER04r 5.6)",
+                "an accept_blind line names a fault that is not all-blind: a claim can see it (VER04r 16.8)",
             ));
         }
         control_rows.push(Json::obj([
-            (
-                "id",
-                Json::str(format!(
-                    "warrant/{}/negctl/exhaustive/{}/{}",
-                    lowered.module, f.op, f.name
-                )),
-            ),
+            ("id", Json::str(control_id)),
             ("op", Json::str(f.op.as_str())),
             ("fault", Json::str(f.name.as_str())),
             ("target_kind", Json::str("exhaustive")),
@@ -363,6 +379,7 @@ pub fn generate(input: &GenInput<'_>) -> Result<CorpusV2, GenError> {
         ]));
     }
     levels.sort_unstable();
+    accepted_blind.sort_unstable_by(|a, b| a.as_bytes().cmp(b.as_bytes()));
 
     let types = Json::Obj(
         lowered
@@ -441,7 +458,7 @@ pub fn generate(input: &GenInput<'_>) -> Result<CorpusV2, GenError> {
         ("examples", Json::Arr(ex.rows.clone())),
         ("faults", Json::arr(faults.iter().map(Fault::to_json))),
         ("controls", Json::Arr(control_rows)),
-        ("accepted_blind_faults", Json::Arr(Vec::new())),
+        ("accepted_blind_faults", Json::strs(accepted_blind.iter())),
         ("assumes", Json::Arr(Vec::new())),
     ]);
     Ok(CorpusV2 {

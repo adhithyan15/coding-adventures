@@ -1,0 +1,50 @@
+warrant blindacc v1
+  model same(a: Bytes, b: Bytes) -> Bool = a == b
+  model keep(a: Bytes, c: Bool) -> Bool = a == a
+  op eq_fixed<N: Nat>(a: Bytes<N>, b: Bytes<N>) -> Bool
+  op flag(a: Bytes, choice: Bool) -> Bool
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels eq_fixed:
+    a.contents secret
+    a.length public
+    b.contents secret
+    b.length public
+  labels flag:
+    a.contents secret
+    a.length public
+    choice secret
+
+  input eq_fixed.a:
+    hostile
+    ensures no_panic, terminates
+  input eq_fixed.b:
+    hostile
+    ensures no_panic, terminates
+
+  input flag.a:
+    hostile
+    ensures no_panic, terminates
+  input flag.choice:
+    hostile
+    ensures no_panic, terminates
+
+  bound eq_fixed:
+    steps <= 64 * len(a) + 512
+    heap <= 2 * len(a)
+    depth <= 32
+
+  bound flag:
+    steps <= 64 * len(a) + 512
+    heap <= 2 * len(a)
+    depth <= 32
+
+  claim w0:
+    forall a: Bytes<0>, b: Bytes<0>. eq_fixed<0>(a, b) == same(a, b)
+
+  claim flag_ignores_choice:
+    forall a: Bytes, c: Bool. flag(a, c) == keep(a, c)

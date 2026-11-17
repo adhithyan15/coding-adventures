@@ -1,6 +1,6 @@
 [package]
 name = "coding_adventures_warrant_corpus_gen"
-version = "0.3.0"
+version = "0.4.0"
 edition = "2021"
 description = "Warrant corpus v2 emitter (VER04r slice S3): ir.core lowering, evaluator, enumeration, digests, fault IR and controls, corpus.json/chunk/cases.tfv emission and --check"
 license = "MIT"

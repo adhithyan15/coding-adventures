@@ -17,7 +17,7 @@ use coding_adventures_warrant_corpus_gen::fsio::{check_corpus, first_difference,
 use coding_adventures_warrant_corpus_gen::{code, generate, CorpusV2, GenInput};
 use support::*;
 
-const PROFILE: &str = include_str!("fixtures/ct-compare.corpus.profile");
+const PROFILE: &str = include_str!("../../../../specs/fixtures/ct-compare-warrant-v2/corpus.profile");
 
 fn ct() -> &'static CorpusV2 {
     static C: OnceLock<CorpusV2> = OnceLock::new();
@@ -291,7 +291,7 @@ fn cli(args: &[&str]) -> (i32, String, String) {
 }
 
 fn ct_args(out: &str) -> Vec<String> {
-    let p = root().join("code/packages/rust/warrant-corpus-gen/tests/fixtures/ct-compare.corpus.profile");
+    let p = root().join("code/specs/fixtures/ct-compare-warrant-v2/corpus.profile");
     let b = root().join("code/packages/rust/ct-compare/evidence.bindings");
     [
         "--warrant", "code/specs/ct-compare.warrant", "--profile", p.to_str().unwrap(),

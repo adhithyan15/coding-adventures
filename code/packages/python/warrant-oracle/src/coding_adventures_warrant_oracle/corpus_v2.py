@@ -219,8 +219,8 @@ def derive(
         )
         for s in spec.suites
     }
-    fault_rows, controls, witnesses = derive_controls(
-        spec, prog, plans, prof.faults, prof.chunk_size
+    fault_rows, controls, witnesses, accepted_blind = derive_controls(
+        spec, prog, plans, prof.faults, prof.chunk_size, prof.accept_blind
     )
     out = Derived(corpus={})
     suite_rows = []
@@ -263,7 +263,7 @@ def derive(
         "examples": examples,
         "faults": fault_rows,
         "controls": controls,
-        "accepted_blind_faults": [],
+        "accepted_blind_faults": accepted_blind,
         "assumes": [],
     }
     return out

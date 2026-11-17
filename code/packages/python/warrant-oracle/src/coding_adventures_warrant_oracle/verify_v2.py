@@ -309,6 +309,14 @@ def _generator_ok(value: object) -> bool:
     )
 
 
+def parse_expected_generator(text: str) -> tuple[str, str]:
+    """``name@version`` (each ``[A-Za-z0-9._+-]{1,64}``) as ``(name, version)``, else ``source``."""
+    name, at, version = text.partition("@")
+    if not at or not _IDENT.fullmatch(name) or not _IDENT.fullmatch(version):
+        raise OracleError("source", "--expect-generator is name@version (letters, digits, ._+-)")
+    return name, version
+
+
 def verify_v2(
     fixture: pathlib.Path,
     warrant: pathlib.Path,
@@ -316,12 +324,18 @@ def verify_v2(
     bindings: pathlib.Path | None = None,
     cache: dict | None = None,
     repo_root: pathlib.Path | None = None,
+    expect_generator: tuple[str, str] | None = None,
 ) -> tuple[Report, Derived | None]:
     """Run the three oracle checks (and the integrity checks) on a v2 fixture directory.
 
     ``cache`` (optional) memoises the derivation, which depends only on the spec, the
     profile, the recorded spec path and generator: a caller that verifies many corpora
     of one spec (the seeded-wrong tests) passes one dict and derives once.
+
+    ``expect_generator`` (optional, ``(name, version)``) pins the recorded ``generator``: the
+    oracle cannot derive the generator, so a build that wants a generator bump reviewed
+    passes the pair it expects, and any other value is a ``header`` difference (owner
+    decision [D13], section 16.8).
     """
     report = Report()
     spec_bytes = read_regular(warrant, MAX_SPEC_BYTES)
@@ -339,6 +353,8 @@ def verify_v2(
     if not _generator_ok(generator):
         report.miss("header", "generator", "generator is {name, version}, two short strings")
         generator = {"name": "?", "version": "?"}
+    elif expect_generator is not None and (generator["name"], generator["version"]) != expect_generator:
+        report.miss("header", "generator", "generator is not the expected name@version")
     key = (spec_bytes, profile_raw, ref, json.dumps(generator, sort_keys=True))
     if cache is not None and key in cache:
         derived = cache[key]

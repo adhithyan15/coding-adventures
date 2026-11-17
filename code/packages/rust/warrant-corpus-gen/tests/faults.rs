@@ -15,7 +15,7 @@ use coding_adventures_warrant_corpus_gen::{analyse, code};
 use support::minijson::parse;
 use support::*;
 
-const CT_PROFILE: &str = include_str!("fixtures/ct-compare.corpus.profile");
+const CT_PROFILE: &str = include_str!("../../../../specs/fixtures/ct-compare-warrant-v2/corpus.profile");
 
 fn gen(src: &str, profile: &str) -> Result<coding_adventures_warrant_corpus_gen::CorpusV2, coding_adventures_warrant_corpus_gen::GenError> {
     with_file(src, |f| {

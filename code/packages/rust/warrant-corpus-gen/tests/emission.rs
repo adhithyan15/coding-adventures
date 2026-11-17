@@ -29,7 +29,7 @@ use support::*;
 const V1_CORPUS: &str =
     include_str!("../../../../specs/fixtures/ct-compare-warrant-v1/corpus.json");
 const V1_TFV: &str = include_str!("../../../../specs/fixtures/ct-compare-warrant-v1/cases.tfv");
-pub const CT_PROFILE: &str = include_str!("fixtures/ct-compare.corpus.profile");
+pub const CT_PROFILE: &str = include_str!("../../../../specs/fixtures/ct-compare-warrant-v2/corpus.profile");
 const ORACLE_ENUM: &str = include_str!("fixtures/ct-compare.oracle-enumeration.json");
 
 pub fn gen(src: &str, path: &str, profile: &str) -> Result<CorpusV2, coding_adventures_warrant_corpus_gen::GenError> {
@@ -587,4 +587,146 @@ fn examples_write_signed_values_and_refuse_values_outside_their_type() {
     let e = gen(&bad, "s.warrant", "").unwrap_err();
     assert_eq!(e.code, code::W0701, "{e}");
     assert_eq!(e.at, "big");
+}
+
+// ---- accept_blind ([D15], VER04r 16.8) --------------------------------------------------
+
+const ACCEPT_ID: &str = "warrant/w0only/negctl/exhaustive/eq_fixed/ignore-last-byte";
+
+#[test]
+fn an_all_blind_fault_named_by_accept_blind_generates_and_is_recorded() {
+    let profile = "fault eq_fixed ignore-last-byte\nfault eq_fixed invert\naccept_blind eq_fixed ignore-last-byte\n";
+    let out = gen(W0_ONLY, "w.warrant", profile).unwrap();
+    let c = parse(&out.corpus_json).unwrap();
+    assert_eq!(c.get("accepted_blind_faults").strs(), [ACCEPT_ID]);
+    // the control row is still emitted: nothing required, the one candidate blind, no witness
+    let rows = c.get("controls").a();
+    assert_eq!(rows.len(), 2);
+    let row = rows.iter().find(|r| r.get("id").s() == ACCEPT_ID).unwrap();
+    assert!(row.get("required_claims").a().is_empty());
+    assert_eq!(row.get("blind_claims").strs(), ["warrant/w0only/exhaustive/w0"]);
+    assert!(row.get("slim_witness").a().is_empty());
+    // the fault row is still listed, and the witnessed fault is not accepted
+    assert_eq!(c.get("faults").a().len(), 2);
+    let other = rows.iter().find(|r| r.get("fault").s() == "invert").unwrap();
+    assert_eq!(other.get("required_claims").a().len(), 1);
+    // the same profile without the accept line still fails closed
+    let e = gen(W0_ONLY, "w.warrant", "fault eq_fixed ignore-last-byte\n").unwrap_err();
+    assert_eq!(e.code, code::FAULT);
+    assert!(e.message.contains("accept_blind"), "{e}");
+}
+
+#[test]
+fn accepted_blind_faults_are_sorted_by_control_id_whatever_the_line_order() {
+    let fixture = include_str!("../../../python/warrant-oracle/tests/fixtures/accept-blind-v2/corpus.profile");
+    // the committed profile lists flag before eq_fixed in both its fault and accept lines
+    let a = parse(&gen_fixture(fixture).corpus_json).unwrap();
+    assert_eq!(
+        a.get("accepted_blind_faults").strs(),
+        [
+            "warrant/blindacc/negctl/exhaustive/eq_fixed/ignore-last-byte",
+            "warrant/blindacc/negctl/exhaustive/flag/swap-choice",
+        ]
+    );
+    let reversed = "fault eq_fixed invert\nfault flag invert\nfault eq_fixed ignore-last-byte\n\
+                    fault flag swap-choice\naccept_blind eq_fixed ignore-last-byte\naccept_blind flag swap-choice\n";
+    let b = parse(&gen_fixture(reversed).corpus_json).unwrap();
+    assert_eq!(a.get("accepted_blind_faults").strs(), b.get("accepted_blind_faults").strs());
+    assert_eq!(a.get("controls"), b.get("controls"));
+}
+
+#[test]
+fn accept_blind_naming_a_fault_a_claim_can_see_is_a_profile_error() {
+    // `invert` is witnessed at chunk 0: accepting it would excuse nothing (a stale profile)
+    let e = gen(
+        W0_ONLY,
+        "w.warrant",
+        "fault eq_fixed invert\naccept_blind eq_fixed invert\n",
+    )
+    .unwrap_err();
+    assert_eq!(e.code, code::PROFILE, "{e}");
+    assert_eq!(e.at, "eq_fixed/invert");
+    assert!(e.message.contains("not all-blind"), "{e}");
+    // ... also next to a fault that is genuinely all-blind and accepted
+    let e = gen(
+        W0_ONLY,
+        "w.warrant",
+        "fault eq_fixed invert\nfault eq_fixed ignore-last-byte\n\
+         accept_blind eq_fixed ignore-last-byte\naccept_blind eq_fixed invert\n",
+    )
+    .unwrap_err();
+    assert_eq!(e.code, code::PROFILE, "{e}");
+    // an unproven claim is not blind either: ct-compare's predicate-free `eq` claim is
+    // witnessed, and a fault with only unproven candidates has required claims
+    let e = gen(CT_COMPARE, "x.warrant", &format!("{CT_PROFILE}accept_blind eq invert\n")).unwrap_err();
+    assert_eq!(e.code, code::PROFILE, "{e}");
+}
+
+#[test]
+fn accept_blind_without_a_fault_line_or_repeated_is_a_profile_error() {
+    for profile in [
+        "accept_blind eq_fixed ignore-last-byte\n",
+        "fault eq_fixed invert\naccept_blind eq_fixed ignore-last-byte\n",
+        "fault eq_fixed ignore-last-byte\naccept_blind eq_fixed ignore-last-byte\naccept_blind eq_fixed ignore-last-byte\n",
+    ] {
+        let e = gen(W0_ONLY, "w.warrant", profile).unwrap_err();
+        assert_eq!(e.code, code::PROFILE, "{profile:?}");
+    }
+}
+
+#[test]
+fn accept_blind_does_not_excuse_a_fault_no_claim_calls() {
+    let doc = CT_COMPARE.to_string();
+    let cut = doc.replace("  claim eq_agrees:\n    forall a: Bytes, b: Bytes. eq(a, b) == same(a, b)\n", "");
+    assert_ne!(cut, doc);
+    let e = gen(&cut, "x.warrant", "fault eq invert\naccept_blind eq invert\n").unwrap_err();
+    assert_eq!(e.code, code::FAULT, "{e}");
+    assert!(e.message.contains("no claim calls"), "{e}");
+}
+
+#[test]
+fn a_whitespace_only_profile_line_is_refused_whatever_follows() {
+    for line in [" ", "\t", "\x0b"] {
+        let e = gen(CT_COMPARE, "x.warrant", &format!("{CT_PROFILE}{line}\n")).unwrap_err();
+        assert_eq!(e.code, code::PROFILE, "{line:?}");
+    }
+}
+
+fn gen_fixture(profile: &str) -> CorpusV2 {
+    let spec = include_str!("../../../python/warrant-oracle/tests/fixtures/accept-blind-v2/blind.warrant");
+    gen(
+        spec,
+        "code/packages/python/warrant-oracle/tests/fixtures/accept-blind-v2/blind.warrant",
+        profile,
+    )
+    .expect("the accept-blind fixture generates")
+}
+
+/// The committed accept-blind fixture is exactly what this generator writes (and what the
+/// oracle's `verify-v2` accepts: `tests/test_accept_blind.py` in `python/warrant-oracle`).
+#[test]
+fn the_committed_accept_blind_fixture_is_what_the_generator_writes() {
+    let profile = include_str!("../../../python/warrant-oracle/tests/fixtures/accept-blind-v2/corpus.profile");
+    let out = gen_fixture(profile);
+    assert_eq!(
+        out.corpus_json,
+        include_str!("../../../python/warrant-oracle/tests/fixtures/accept-blind-v2/corpus/corpus.json")
+    );
+    assert_eq!(
+        out.cases_tfv,
+        include_str!("../../../python/warrant-oracle/tests/fixtures/accept-blind-v2/corpus/cases.tfv")
+    );
+    let committed: [(&str, &str); 2] = [
+        (
+            "flag_ignores_choice.txt",
+            include_str!("../../../python/warrant-oracle/tests/fixtures/accept-blind-v2/corpus/chunks/flag_ignores_choice.txt"),
+        ),
+        (
+            "w0.txt",
+            include_str!("../../../python/warrant-oracle/tests/fixtures/accept-blind-v2/corpus/chunks/w0.txt"),
+        ),
+    ];
+    let mut have: Vec<(&str, &str)> = out.chunk_files.iter().map(|(n, t)| (n.as_str(), t.as_str())).collect();
+    have.sort_unstable();
+    assert_eq!(have, committed);
 }

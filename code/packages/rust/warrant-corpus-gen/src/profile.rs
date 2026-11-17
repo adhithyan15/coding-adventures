@@ -10,6 +10,7 @@
 //!   max_ir_cost 32768
 //!   slim_chunk eq_agrees 3
 //!   fault multiply generator-shift
+//!   accept_blind multiply generator-shift
 //! ```
 //!
 //! `max_ir_cost` is the **only** way to raise the per-expression IR cost bound above its
@@ -21,10 +22,16 @@
 //! for rule, so the two cannot disagree about what a profile means:
 //!
 //! * UTF-8, LF only (a CR anywhere is an error), at most 64 KiB;
-//! * a line is single-space-separated tokens; a blank or whitespace-only line is skipped;
+//! * a line is single-space-separated tokens; only an **empty** line is skipped.  A line of
+//!   whitespace alone (`" "`, `"\t"`, `"\x0b"`) is an error, as in the oracle's reader (VER04r
+//!   16.7 item 3 named the earlier skipping an erratum; 16.8 closes it);
 //! * `budget`, `chunk_size`, `slim_stride` and `max_ir_cost` take one value and occur once;
-//!   `slim_chunk <claim> <index>` and `fault <op> <name>` may occur several times but never
-//!   as an exact repeat of an earlier line; nothing else is accepted;
+//!   `slim_chunk <claim> <index>`, `fault <op> <name>` and `accept_blind <op> <fault>` may
+//!   occur several times but never as an exact repeat of an earlier line; nothing else is
+//!   accepted;
+//! * `accept_blind <op> <fault>` ([D15], VER04r 16.8) excuses a fault that every candidate
+//!   claim is blind to.  It must repeat a `fault` line of the same file (checked here); that
+//!   the fault really is all-blind is checked against the document ([`crate::emit`]);
 //! * an empty token (two spaces in a row, a leading or trailing space) is an error, and so
 //!   are `budget 0` and `slim_stride 0` (VER04r 16.4 item 7; the oracle's reader accepts
 //!   these until S4 part 2);
@@ -68,6 +75,9 @@ pub struct Profile {
     pub slim_chunks: Vec<(String, u64)>,
     /// `fault <op> <name>` lines, in file order.
     pub faults: Vec<(String, String)>,
+    /// `accept_blind <op> <fault>` lines, in file order: the all-blind faults the corpus
+    /// accepts ([D15]); each is also a `fault` line.
+    pub accept_blind: Vec<(String, String)>,
     /// The SHA-256 of the file's bytes: `profile_sha256` in `corpus.json` (VER04r 1.4).
     pub sha256: String,
 }
@@ -82,6 +92,7 @@ impl Default for Profile {
             max_ir_cost: DEFAULT_MAX_IR_COST,
             slim_chunks: Vec::new(),
             faults: Vec::new(),
+            accept_blind: Vec::new(),
             sha256: sha256_hex(b""),
         }
     }
@@ -137,7 +148,9 @@ pub fn parse_profile(raw: &[u8]) -> Result<Profile, GenError> {
     };
     let mut seen: Vec<&str> = Vec::new();
     for line in text.split('\n') {
-        if line.trim().is_empty() {
+        // Only a truly empty line is skipped: whitespace alone is an error (it falls through
+        // to the empty-token or unknown-line refusal below), exactly as the oracle's reader.
+        if line.is_empty() {
             continue;
         }
         let parts: Vec<&str> = line.split(' ').collect();
@@ -182,8 +195,20 @@ pub fn parse_profile(raw: &[u8]) -> Result<Profile, GenError> {
                 }
                 prof.faults.push(entry);
             }
+            ("accept_blind", 3) => {
+                let entry = (parts[1].to_string(), parts[2].to_string());
+                if prof.accept_blind.contains(&entry) {
+                    return Err(bad("an accept_blind line may not repeat"));
+                }
+                prof.accept_blind.push(entry);
+            }
             _ => return Err(bad("an unknown or malformed profile line")),
         }
+    }
+    if prof.accept_blind.iter().any(|e| !prof.faults.contains(e)) {
+        return Err(bad(
+            "an accept_blind line must repeat a fault line of this profile",
+        ));
     }
     if !(DEFAULT_MAX_IR_COST..=MAX_IR_COST_CEILING).contains(&prof.max_ir_cost) {
         return Err(bad("max_ir_cost is 2,000..65,536"));
@@ -239,9 +264,57 @@ mod tests {
     }
 
     #[test]
-    fn a_numeric_slim_stride_and_blank_lines_are_accepted() {
-        let p = parse("\n  \nslim_stride 7\n\t\n").unwrap();
+    fn a_numeric_slim_stride_and_empty_lines_are_accepted() {
+        let p = parse("\n\nslim_stride 7\n\n").unwrap();
         assert_eq!(p.slim_stride, SlimStride::Every(7));
+    }
+
+    #[test]
+    fn a_whitespace_only_line_is_refused_as_in_the_oracle() {
+        // S4 part 2 erratum (VER04r 16.7 item 3): the reader used to skip these lines.
+        for text in [
+            " \n",
+            "\t\n",
+            "\x0b\n",
+            "\x0c\n",
+            "budget 1\n \nslim_stride 1\n",
+            "slim_stride 7\n\t",
+            "\u{a0}\n",
+            "\u{2003}\n",
+        ] {
+            assert_eq!(parse(text).unwrap_err().code, code::PROFILE, "{text:?}");
+        }
+        // an empty line, and the end of a file without a final LF, are still fine
+        assert!(parse("\n\nbudget 1").is_ok());
+    }
+
+    #[test]
+    fn accept_blind_lines_parse_in_order_and_need_a_matching_fault_line() {
+        let text = "fault a b\nfault c d\naccept_blind c d\naccept_blind a b\n";
+        let p = parse(text).unwrap();
+        assert_eq!(
+            p.accept_blind,
+            [
+                ("c".to_string(), "d".to_string()),
+                ("a".to_string(), "b".to_string())
+            ]
+        );
+        assert_eq!(p.sha256, sha256_hex(text.as_bytes()));
+        // the order of the lines does not matter, so a fault may come after its accept line
+        assert!(parse("accept_blind a b\nfault a b\n").is_ok());
+        for text in [
+            "accept_blind a b\n",
+            "fault a b\naccept_blind a c\n",
+            "fault a b\naccept_blind c b\n",
+            "fault a b\naccept_blind a b\naccept_blind a b\n",
+            "fault a b\naccept_blind a\n",
+            "fault a b\naccept_blind a b c\n",
+            "fault a b\naccept_blind  a b\n",
+            "fault a b\naccept_blind a b \n",
+            "fault a b\nACCEPT_BLIND a b\n",
+        ] {
+            assert_eq!(parse(text).unwrap_err().code, code::PROFILE, "{text:?}");
+        }
     }
 
     #[test]
