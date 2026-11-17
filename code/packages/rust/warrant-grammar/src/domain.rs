@@ -46,7 +46,7 @@
 //!   claim         product of the binders, row-major, LAST binder fastest
 //! ```
 //!
-//! ### Two things to know
+//! ### Three things to know
 //!
 //! * **Byte-string order.** `Bytes` and `Bytes<N>` list the length-2 and
 //!   length-3 strings over `A = [00, 01, 80, ff]` *lexicographically* (first
@@ -61,6 +61,13 @@
 //!   (VER04j 3.6).  VER04r 5.1 describes `nat_count` as `0..=K`; the two are not
 //!   the same set.  This module reports what the generator does; S3 decides how
 //!   the corpus names it.
+//! * **Signed edge sets.** A signed wide or demoted fixed-width leaf is the
+//!   edge bit patterns read in two's complement *plus* `-1..=-255`, sorted
+//!   ascending and de-duplicated (VER04j 2.6: `I16` 527 values, `I32` 559, `I64`
+//!   623).  VER04r 5.1 says "the same bit patterns ... in the same order", which
+//!   is the unsigned order and has no negatives.  The unsigned counts agree
+//!   (`u64` 377, `u32` 313).  Again this module reports the generator's set, which
+//!   the checked-in adopters' evidence pins; S3 and a VER04r erratum settle it.
 //!
 //! ## Refinements are not part of a domain
 //!
@@ -84,8 +91,7 @@
 //! A record is a `Con` with `record: true`, recognised as "one constructor,
 //! named like its type".
 
-use crate::checker::{PostSlot, SlotShape};
-pub use crate::checker::{resolve_post_slot, slot_shape};
+pub use crate::checker::{resolve_post_slot, slot_shape, PostSlot, SlotShape};
 pub use crate::corpus::{inout_descriptor, InoutDescriptor};
 use crate::codegen::{CodegenError, EvalValue};
 use crate::evidence::{resolve_claim_tys, ty_of_type, TyEnv};
