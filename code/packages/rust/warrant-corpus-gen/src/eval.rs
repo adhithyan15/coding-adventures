@@ -69,7 +69,7 @@ use crate::arith::{
 };
 use crate::error::{code, GenError};
 use crate::ir::{Arith, Cmp, Ir, Logic};
-use crate::lower::LoweredModel;
+use crate::lower::{LoweredModel, LoweredOp};
 use crate::value::{ill_typed, Value};
 
 /// The most model frames that may be active at once (VER04 section 2, VER04r 14).
@@ -124,6 +124,9 @@ pub type Vars<'v> = [(&'v str, Value)];
 #[derive(Debug, Clone)]
 pub struct Program<'a> {
     models: &'a [LoweredModel],
+    /// The document's operations: the trace checks every subject call against its
+    /// op's `admit` (VER04r 6, [D19]).  Empty unless [`Program::with_ops`] set it.
+    ops: &'a [LoweredOp],
     index: HashMap<&'a str, usize>,
     /// `wraps[i]`: model `i`'s call closure contains a fixed-width `add sub mul neg`.
     wraps: Vec<bool>,
@@ -166,12 +169,89 @@ impl<'a> Program<'a> {
         }
         Program {
             models,
+            ops: &[],
             index,
             wraps,
             fails,
             sabotage: Sabotage::None,
             max_tasks: MAX_EVAL_TASKS,
         }
+    }
+
+    /// The same program that also knows the document's operations, so that [`Program::trace`]
+    /// refuses a subject call whose arguments are outside its op's `admit` (VER04r 6, [D19]).
+    pub fn with_ops(mut self, ops: &'a [LoweredOp]) -> Program<'a> {
+        self.ops = ops;
+        self
+    }
+
+    /// The `admit` of operation `op`, with the op, if it has one.
+    fn op_admit(&self, op: &str) -> Option<(&'a LoweredOp, &'a Ir)> {
+        let lop = self.ops.iter().find(|o| o.name == op)?;
+        lop.admit.as_ref().map(|a| (lop, a))
+    }
+
+    /// Does `ir` contain a subject call of an operation that has an `admit`?  Only such a
+    /// body needs the per-case admit check (and so the trace).
+    pub fn calls_admitted_op(&self, ir: &Ir) -> bool {
+        let mut found = false;
+        ir.walk(&mut |n| {
+            if let Ir::Subject { op, .. } = n {
+                found |= self.op_admit(op).is_some();
+            }
+        });
+        found
+    }
+
+    /// The static half of [D19]: a call of an operation with an `admit` whose arguments
+    /// contain a subject call cannot be checked at generation (the generator never learns
+    /// what the inner call returns), so it is refused, never skipped.
+    ///
+    /// # Errors
+    ///
+    /// `W0701`.
+    pub fn check_admit_calls(&self, ir: &Ir) -> Result<(), GenError> {
+        let mut bad: Option<String> = None;
+        ir.walk(&mut |n| {
+            if let Ir::Subject { op, args, .. } = n {
+                if bad.is_none() && self.op_admit(op).is_some() && args.iter().any(Ir::has_subject) {
+                    bad = Some(op.clone());
+                }
+            }
+        });
+        match bad {
+            None => Ok(()),
+            Some(op) => Err(GenError::new(
+                code::W0701,
+                "",
+                format!(
+                    "a call of op `{op}` has an argument that depends on a subject result, \
+                     so the op's admit cannot be checked at generation (VER04r 6)"
+                ),
+            )),
+        }
+    }
+
+    /// Are the argument values `args` inside the `admit` of operation `op`?  An operation
+    /// without an `admit` admits everything.  Wraps counted here are not the document's
+    /// (VER04r 3.3 rule 1 counts the nodes of the claim, not this check).
+    ///
+    /// # Errors
+    ///
+    /// Every [`Program::eval`] error.
+    pub fn admits_call(&self, op: &str, args: &[Value]) -> Result<bool, GenError> {
+        let Some((lop, admit)) = self.op_admit(op) else {
+            return Ok(true);
+        };
+        let pvars: Vec<(&str, Value)> = lop
+            .params
+            .iter()
+            .map(|(n, _)| n.as_str())
+            .zip(args.iter().cloned())
+            .collect();
+        Ok(self
+            .eval(admit, &pvars, &mut Stats::default())?
+            .as_bool()?)
     }
 
     /// The same program with a seeded-wrong evaluator.
@@ -499,8 +579,19 @@ impl<'a> Program<'a> {
                 continue;
             }
             match node {
-                Ir::Subject { args, .. } => {
+                Ir::Subject { op, args, .. } => {
                     calls += 1;
+                    if self.op_admit(op).is_some() {
+                        // [D19]: this call is on the trace, so its arguments (pure: the
+                        // plan refuses the rest) must be inside the callee's `admit`.
+                        let mut vals = Vec::with_capacity(args.len());
+                        for a in args {
+                            vals.push(self.eval(a, vars, &mut Stats::default())?);
+                        }
+                        if !self.admits_call(op, &vals)? {
+                            return Err(outside_admit(op));
+                        }
+                    }
                     stack.extend(args.iter());
                 }
                 Ir::If(c, t, e) => {
@@ -560,6 +651,21 @@ impl<'a> Program<'a> {
         }
         Some(calls)
     }
+}
+
+/// The refusal of [D19] for a subject call outside its op's `admit` (the caller adds the
+/// claim and the admitted-case ordinal).
+pub fn outside_admit(op: &str) -> GenError {
+    GenError::new(
+        code::W0701,
+        "",
+        format!("a call of op `{op}` has arguments outside the op's admit (VER04r 6)"),
+    )
+}
+
+/// Is `e` the refusal [`outside_admit`] makes?
+pub fn is_outside_admit(e: &GenError) -> bool {
+    e.code == code::W0701 && e.message.contains("outside the op's admit")
 }
 
 /// The work items of the iterative evaluator.

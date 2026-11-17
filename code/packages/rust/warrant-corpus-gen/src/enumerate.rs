@@ -125,7 +125,7 @@ pub fn enumerate_analysed(
                 ));
             }
         }
-        let program = Program::new(&lowered.models);
+        let program = Program::new(&lowered.models).with_ops(&lowered.ops);
         let env = DomainEnv::new(file);
         let mut work = IrWork::new(Depth::Full);
         let mut ordinals = 0u64;

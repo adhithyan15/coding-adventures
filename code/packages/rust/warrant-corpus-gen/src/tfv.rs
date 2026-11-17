@@ -18,8 +18,9 @@
 //! example whose value does not fit (a `Nat` past `2^64-1`) is `W0701`, exactly as for a
 //! suite.  For ct-compare `cases.tfv` is byte-identical to the v1 file.
 
+use crate::arith::check_v0_wraps;
 use crate::error::{code, GenError};
-use crate::eval::{Program, Stats};
+use crate::eval::{outside_admit, Program, Stats};
 use crate::ir::Ir;
 use crate::json::Json;
 use crate::lower::Lowered;
@@ -88,6 +89,8 @@ pub fn examples(lowered: &Lowered, program: &Program<'_>) -> Result<Examples, Ge
         rows: Vec::new(),
         lines: Vec::new(),
     };
+    // The caller's program may not know the operations; this one does ([D19]).
+    let checker = program.clone().with_ops(&lowered.ops);
     for x in &lowered.examples {
         let at = |e: GenError| e.at(&x.name);
         let Ir::Subject { op, args, widths } = &x.reference.subject else {
@@ -111,7 +114,20 @@ pub fn examples(lowered: &Lowered, program: &Program<'_>) -> Result<Examples, Ge
             arg_json.push(json_value(&concrete, &v).map_err(at)?);
             fields.push((pname.clone(), tfv_value(&concrete, &v).map_err(at)?));
         }
+        // [D19]: an example is a call, so its arguments must be inside the op's `admit`.
+        if lop.admit.is_some() {
+            let mut vals = Vec::new();
+            for a in args {
+                vals.push(program.eval(a, &[], &mut Stats::default()).map_err(at)?);
+            }
+            if !checker.admits_call(op, &vals).map_err(at)? {
+                return Err(at(outside_admit(op)));
+            }
+        }
         let expected = program.eval(&x.reference.expected, &[], &mut st).map_err(at)?;
+        // [D18]: v0 rule 2 applies to the evaluation of an example, its arguments and its
+        // pure side, as it does to a claim: a wrap is a generation error in a v0 document.
+        check_v0_wraps(lowered.version, st.wraps).map_err(at)?;
         encode(&lop.ret, &expected, &mut Vec::new()).map_err(at)?;
         let mut row = vec![
             ("id".to_string(), Json::str(id.as_str())),
