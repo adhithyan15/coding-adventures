@@ -106,11 +106,16 @@ import (
 //     arrays (two rules per level). Hand-written code and data essentially
 //     never exceed a few dozen levels of nesting.
 //
-// Depth is also consumed by LEFT RECURSION: every successful growth step of a
-// left-recursive rule (`e = e PLUS NUMBER | NUMBER`) adds one level of tree
-// height, so a chain of more than about DefaultMaxDepth left-associative
-// terms is refused too. The tree height is therefore a bounded invariant,
-// which keeps every recursive consumer of the finished tree safe.
+// The TREE is bounded as well as the call path. Every memoised result records
+// the height of the subtree it built; reusing it (a memo hit) or growing it
+// (a left-recursive rule wrapping its previous result one more level, as in
+// `e = e PLUS NUMBER | NUMBER`) is refused when depth plus height would pass
+// MaxDepth. The invariant: a successful parse returns a tree of at most
+// MaxDepth levels (the root is level 1), so a chain of about DefaultMaxDepth
+// or more left-associative terms is refused. That keeps every recursive
+// consumer of the finished tree safe. (A rule referenced exactly at the
+// limit by a speculative attempt can be refused slightly early, so the usable
+// height can be one less than MaxDepth.)
 //
 // Callers who legitimately need more can raise Options.MaxDepth, up to
 // HardMaxDepth.
@@ -126,7 +131,11 @@ const DefaultMaxDepth = 10000
 // lookaheads, so a rule whose body is 50 elements deep costs 50 frames per
 // level. The engine therefore also charges every rule its element nesting
 // (see maxFrames) and refuses when the total would exceed HardMaxFrames,
-// whatever MaxDepth says.
+// whatever MaxDepth says. Consequently HardMaxDepth is only reachable through
+// rules of weight 4 or less (a body at most 2 elements deep, such as
+// `a = A B`): 200,000 / 4 = 50,000. Deeper rule bodies hit the frame budget
+// first, and an explicit large MaxDepth is silently undercut by it (the error
+// message then names the frame budget instead of MaxDepth).
 const HardMaxDepth = 50000
 
 // HardMaxFrames bounds the total of (element nesting + 2) over the rules on
@@ -498,6 +507,7 @@ type memoSlot struct {
 	endPos   int
 	rule     int32
 	next     int32 // next older slot at the same position, or -1
+	height   int32 // height of the subtree this result builds (1 = no node children)
 	ok       bool
 }
 
@@ -513,12 +523,17 @@ type parseState struct {
 	maxDepth int
 	frames   int // sum of rule weights on the call path (see HardMaxFrames)
 
+	// curMax is the greatest subtree height among the node children matched
+	// so far by the rule body being parsed (restored when matching backtracks).
+	curMax int32
+
 	maxSlots int
 
 	// exceeded is the sticky "a resource limit was hit" flag; see the file
 	// comment. limitErr says which limit (ErrMaxDepth or ErrMaxMemoSlots).
 	exceeded    bool
 	limitErr    error
+	limitDetail string // overrides the default message detail when set
 	exceededPos int
 
 	furthestPos      int
@@ -537,7 +552,8 @@ func (s *parseState) reset(tokens []lexer.Token, opts Options) {
 	s.pos = 0
 	s.depth, s.frames, s.maxDepth = 0, 0, opts.maxDepth()
 	s.maxSlots = opts.MaxMemoSlots
-	s.exceeded, s.limitErr, s.exceededPos = false, nil, 0
+	s.exceeded, s.limitErr, s.limitDetail, s.exceededPos = false, nil, "", 0
+	s.curMax = 0
 	s.furthestPos, s.furthestExpected = 0, s.furthestExpected[:0]
 	s.trace = opts.Trace
 	s.eof = lexer.Token{Type: lexer.TokenEOF, TypeName: "EOF"}
@@ -640,12 +656,15 @@ func (s *parseState) run(start int32) (*ASTNode, error) {
 	// A depth refusal always wins, even if the top rule "succeeded" by
 	// backtracking past it. Fail closed.
 	if s.exceeded {
-		limit := s.maxDepth
+		limit := fmt.Sprint(s.maxDepth)
 		if s.limitErr == ErrMaxMemoSlots {
-			limit = s.maxSlots
+			limit = fmt.Sprint(s.maxSlots)
+		}
+		if s.limitDetail != "" {
+			limit = s.limitDetail
 		}
 		return nil, &GrammarParseError{
-			Message: fmt.Sprintf("%s (%d)", s.limitErr.Error(), limit),
+			Message: fmt.Sprintf("%s (%s)", s.limitErr.Error(), limit),
 			Tok:     s.tokenAt(s.exceededPos),
 			Err:     s.limitErr,
 		}
@@ -737,13 +756,30 @@ func (s *parseState) parseRule(id int32) *ASTNode {
 		if !m.ok {
 			return nil
 		}
+		// The cached subtree may have been built higher up the tree than
+		// where it is being reused. Reusing it here puts its whole height
+		// below the current depth, so the tree-height bound must be checked
+		// again (see the file comment and DefaultMaxDepth).
+		if int64(s.depth)+int64(m.height) > int64(s.maxDepth) {
+			s.fail(ErrMaxDepth)
+			return nil
+		}
+		if m.height > s.curMax {
+			s.curMax = m.height
+		}
 		return &ASTNode{RuleName: rule.name, Children: m.children}
 	}
 
 	// The depth guards. Everything below this line recurses. Two budgets:
 	// rule levels (Options.MaxDepth) and stack frames (HardMaxFrames, which
 	// charges a rule for its internal element nesting).
-	if s.depth >= s.maxDepth || s.frames+rule.weight > HardMaxFrames {
+	if s.depth >= s.maxDepth {
+		s.fail(ErrMaxDepth)
+		return nil
+	}
+	if s.frames+rule.weight > HardMaxFrames {
+		s.limitDetail = fmt.Sprintf("stack-frame budget %d exceeded, %d frames in use at rule depth %d",
+			HardMaxFrames, s.frames, s.depth)
 		s.fail(ErrMaxDepth)
 		return nil
 	}
@@ -788,46 +824,57 @@ func (s *parseState) parseRuleBody(id int32, rule *compiledRule) *ASTNode {
 		return nil // memo table full; the sticky flag is up
 	}
 
+	// Tree height bookkeeping: outerMax is the caller's running maximum,
+	// restored on failure; inside the body curMax collects the heights of the
+	// node children matched.
+	outerMax := s.curMax
+	s.curMax = 0
 	children, ok := s.match(rule.body, nil)
+	height := s.curMax + 1
 	if ok {
 		// Memoised and returned children are never nil (a rule that matched
 		// nothing has an empty slice), so a memo hit and a first parse build
 		// identical nodes (JSON `[]`, not `null`).
 		children = nonNil(children)
 		s.slots[si].children, s.slots[si].endPos, s.slots[si].ok = children, s.pos, true
+		s.slots[si].height = height
 	} else {
 		s.slots[si].children, s.slots[si].endPos, s.slots[si].ok = nil, s.pos, false
 	}
 
 	if ok {
 		// Each successful growth step wraps the previous tree in one more
-		// level, without any recursion in the parser. Charge every step to
-		// the depth budget (and let nested rules in later steps see the
-		// larger depth) so the TREE height stays bounded by about
-		// MaxDepth, which is what keeps tree walkers safe. Restored on exit.
-		entryDepth := s.depth
+		// level, without any recursion in the parser. The seed's height is
+		// stored in its memo slot, so the next step's reference to it is a
+		// memo hit that re-checks the bound; and each new height is checked
+		// explicitly, so the finished tree is never taller than MaxDepth
+		// (counting this rule's own depth), which is what keeps recursive
+		// consumers of the tree safe.
 		for {
 			prevEnd := s.pos
 			s.pos = startPos
 			s.slots[si].children, s.slots[si].endPos, s.slots[si].ok = children, prevEnd, true
+			s.slots[si].height = height
+			s.curMax = 0
 			newChildren, newOk := s.match(rule.body, nil)
 			if !newOk || s.pos <= prevEnd {
 				// Could not grow the match: restore the best result.
 				s.pos = prevEnd
 				s.slots[si].children, s.slots[si].endPos, s.slots[si].ok = children, prevEnd, true
+				s.slots[si].height = height
 				break
 			}
 			children = nonNil(newChildren)
-			s.depth++
-			if s.depth > s.maxDepth {
+			height = s.curMax + 1
+			if int64(s.depth-1)+int64(height) > int64(s.maxDepth) {
 				s.fail(ErrMaxDepth)
 				break
 			}
 		}
-		s.depth = entryDepth
 	}
 
 	if !ok {
+		s.curMax = outerMax
 		if s.trace {
 			fmt.Fprintln(os.Stderr, " → fail")
 		}
@@ -835,6 +882,7 @@ func (s *parseState) parseRuleBody(id int32, rule *compiledRule) *ASTNode {
 		s.recordFailure(rule.name)
 		return nil
 	}
+	s.curMax = max(outerMax, height)
 
 	if s.trace {
 		fmt.Fprintln(os.Stderr, " → match")
@@ -864,6 +912,13 @@ func nonNil(children []interface{}) []interface{} {
 // Appending into one caller-owned slice, rather than returning a fresh slice
 // per element and concatenating, is what removes most of the per-token
 // allocations: a rule body builds exactly one children slice.
+//
+// Subtree heights (s.curMax) follow the children: wherever matching discards
+// children that were already matched (a failed alternative, a failed optional
+// or repetition iteration, a lookahead), curMax is restored with them. A
+// failed sequence needs no restore of its own because every caller that
+// continues after a failure is one of those places, and a rule that fails
+// outright restores its caller's value.
 func (s *parseState) match(n *node, out []interface{}) ([]interface{}, bool) {
 	if s.exceeded {
 		return out, false
@@ -884,6 +939,7 @@ func (s *parseState) match(n *node, out []interface{}) ([]interface{}, bool) {
 		return out, true
 
 	case kAlt:
+		cm := s.curMax
 		for _, choice := range n.subs {
 			s.pos = save
 			var ok bool
@@ -892,6 +948,7 @@ func (s *parseState) match(n *node, out []interface{}) ([]interface{}, bool) {
 				return out, true
 			}
 			out = out[:start]
+			s.curMax = cm
 		}
 		s.pos = save
 		return out, false
@@ -900,11 +957,13 @@ func (s *parseState) match(n *node, out []interface{}) ([]interface{}, bool) {
 		for {
 			saveRep := s.pos
 			mark := len(out)
+			cm := s.curMax
 			var ok bool
 			out, ok = s.match(n.sub, out)
 			if !ok {
 				s.pos = saveRep
 				out = out[:mark]
+				s.curMax = cm
 				break
 			}
 			if s.pos == saveRep {
@@ -914,11 +973,13 @@ func (s *parseState) match(n *node, out []interface{}) ([]interface{}, bool) {
 		return out, true
 
 	case kOpt:
+		cm := s.curMax
 		var ok bool
 		out, ok = s.match(n.sub, out)
 		if !ok {
 			// NB: s.pos is deliberately not restored here (historical
 			// behaviour: a failed literal may have consumed newlines).
+			s.curMax = cm
 			return out[:start], true
 		}
 		return out, true
@@ -951,15 +1012,19 @@ func (s *parseState) match(n *node, out []interface{}) ([]interface{}, bool) {
 
 	// Syntactic predicates: look without consuming.
 	case kPosLook:
+		cm := s.curMax
 		var ok bool
 		out, ok = s.match(n.sub, out)
 		s.pos = save
+		s.curMax = cm // matched children are discarded
 		return out[:start], ok
 
 	case kNegLook:
+		cm := s.curMax
 		var ok bool
 		out, ok = s.match(n.sub, out)
 		s.pos = save
+		s.curMax = cm
 		return out[:start], !ok
 
 	case kOneOrMore:
@@ -972,10 +1037,12 @@ func (s *parseState) match(n *node, out []interface{}) ([]interface{}, bool) {
 		for {
 			saveRep := s.pos
 			mark := len(out)
+			cm := s.curMax
 			out, ok = s.match(n.sub, out)
 			if !ok {
 				s.pos = saveRep
 				out = out[:mark]
+				s.curMax = cm
 				break
 			}
 			if s.pos == saveRep {
@@ -987,10 +1054,12 @@ func (s *parseState) match(n *node, out []interface{}) ([]interface{}, bool) {
 	case kSepRep:
 		// element { separator element }; zero occurrences is valid unless
 		// atLeastOne.
+		cm0 := s.curMax
 		var ok bool
 		out, ok = s.match(n.sub, out)
 		if !ok {
 			s.pos = save
+			s.curMax = cm0
 			if n.atLeastOne {
 				return out[:start], false
 			}
@@ -999,6 +1068,7 @@ func (s *parseState) match(n *node, out []interface{}) ([]interface{}, bool) {
 		for {
 			saveSep := s.pos
 			mark := len(out)
+			cm := s.curMax
 			out, ok = s.match(n.sep, out)
 			if !ok {
 				s.pos = saveSep
@@ -1009,6 +1079,7 @@ func (s *parseState) match(n *node, out []interface{}) ([]interface{}, bool) {
 			if !ok {
 				s.pos = saveSep
 				out = out[:mark]
+				s.curMax = cm // the separator's children were dropped too
 				break
 			}
 			if s.pos == saveSep {

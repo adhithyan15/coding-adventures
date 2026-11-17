@@ -203,8 +203,9 @@ an enclosing optional or repetition would have backtracked past the failed rule
 and "succeeded" on a prefix. Other implementations should do the same and keep
 a hostile-nesting test that asserts the error category.
 
-Depth is charged for every successful growth step of a left-recursive rule as
-well as for rule calls, so tree height is bounded by about `MaxDepth`; matcher
+Each memoised result records the height of its subtree; reusing or growing it
+(left recursion) is refused if depth plus height would pass `MaxDepth`, so a
+successful parse returns a tree of at most `MaxDepth` levels; matcher
 recursion through nested groups, optionals and lookaheads is charged to a
 global frame budget (`HardMaxFrames`) so `HardMaxDepth` really bounds the
 stack. Tree walkers (`WalkAST`, `FindNodes`, `CollectTokens`) are iterative.

@@ -168,6 +168,10 @@ func TestNestedElementsAreChargedToFrameBudget(t *testing.T) {
 	// 50,000 x 50 frames without the budget.
 	_, err = c.Parse(nestedTokens(1_000_000), Options{MaxDepth: int(^uint(0) >> 1)})
 	requireDepthError(t, err)
+	// The message names the budget that fired, not MaxDepth.
+	if !strings.Contains(err.Error(), "stack-frame budget") || !strings.Contains(err.Error(), "frames in use") {
+		t.Fatalf("message should name the frame budget: %v", err)
+	}
 	// And ordinary nesting well inside the budget still parses.
 	if _, err := c.Parse(nestedTokens(100), Options{}); err != nil {
 		t.Fatalf("shallow nesting failed: %v", err)
@@ -383,9 +387,10 @@ func TestCompiledGrammarCache(t *testing.T) {
 	}
 }
 
-// The cache is bounded: beyond maxCachedGrammars distinct grammars, parsers
-// still work (compiled per call) and the cache stops growing.
-func TestCompiledGrammarCacheIsBounded(t *testing.T) {
+// The cache is bounded with a generational reset: when it fills, it is
+// cleared and starts over, so a grammar used after the reset is cached again
+// (it must never degrade into "recompile on every call").
+func TestCompiledGrammarCacheIsBoundedAndRecovers(t *testing.T) {
 	var gs []*grammartools.ParserGrammar
 	t.Cleanup(func() {
 		for _, g := range gs {
@@ -393,17 +398,78 @@ func TestCompiledGrammarCacheIsBounded(t *testing.T) {
 		}
 	})
 	toks := []lexer.Token{benchTok("NUMBER", "1"), benchTok("EOF", "")}
-	for i := 0; i < maxCachedGrammars+20; i++ {
+	mk := func(i int) *grammartools.ParserGrammar {
 		g := &grammartools.ParserGrammar{Rules: []grammartools.GrammarRule{
 			{Name: fmt.Sprintf("r%d", i), Body: grammartools.RuleReference{Name: "NUMBER", IsToken: true}},
 		}}
 		gs = append(gs, g)
-		if _, err := NewGrammarParser(toks, g).Parse(); err != nil {
+		return g
+	}
+	for i := 0; i < 2*maxCachedGrammars+20; i++ {
+		if _, err := NewGrammarParser(toks, mk(i)).Parse(); err != nil {
 			t.Fatal(err)
 		}
+		compiledCacheMu.Lock()
+		n := compiledCacheSize
+		compiledCacheMu.Unlock()
+		if n > maxCachedGrammars {
+			t.Fatalf("cache grew to %d", n)
+		}
 	}
-	if n := compiledCacheSize.Load(); n > maxCachedGrammars {
-		t.Fatalf("cache grew to %d", n)
+	// A grammar added after several resets is cached: two parsers share it.
+	late := gs[len(gs)-1]
+	if NewGrammarParser(toks, late).compiled != NewGrammarParser(toks, late).compiled {
+		t.Fatal("recent grammar is not cached after generational resets")
+	}
+}
+
+// The fingerprint notices changes to the rule list (and top-level body
+// shape) automatically; an in-place edit that keeps the shape needs
+// ForgetGrammar, as documented.
+func TestCompiledGrammarCacheFingerprint(t *testing.T) {
+	num := grammartools.RuleReference{Name: "NUMBER", IsToken: true}
+	g := &grammartools.ParserGrammar{Rules: []grammartools.GrammarRule{{Name: "r", Body: num}}}
+	t.Cleanup(func() { ForgetGrammar(g) })
+	base := NewGrammarParser(nil, g).compiled
+	if NewGrammarParser(nil, g).compiled != base {
+		t.Fatal("unchanged grammar must hit the cache")
+	}
+
+	// Appending a rule (the slice may be reallocated and the length changes).
+	g.Rules = append(g.Rules, grammartools.GrammarRule{Name: "s", Body: num})
+	appended := NewGrammarParser(nil, g).compiled
+	if appended == base || len(appended.rules) != 2 {
+		t.Fatal("appended rule not noticed")
+	}
+	// Renaming a rule in place.
+	g.Rules[1].Name = "renamed"
+	renamed := NewGrammarParser(nil, g).compiled
+	if renamed == appended || renamed.rules[1].name != "renamed" {
+		t.Fatal("renamed rule not noticed")
+	}
+	// Replacing the body with a different shape.
+	g.Rules[0].Body = grammartools.Literal{Value: "x"}
+	shaped := NewGrammarParser(nil, g).compiled
+	if shaped == renamed {
+		t.Fatal("body shape change not noticed")
+	}
+	// Replacing the slice outright.
+	g.Rules = []grammartools.GrammarRule{{Name: "only", Body: num}}
+	if NewGrammarParser(nil, g).compiled == shaped {
+		t.Fatal("replaced rule list not noticed")
+	}
+
+	// A same-shape in-place edit is invisible to the fingerprint...
+	g.Rules[0].Body = grammartools.Literal{Value: "ab"}
+	stale := NewGrammarParser(nil, g).compiled
+	g.Rules[0].Body = grammartools.Literal{Value: "cd"}
+	if NewGrammarParser(nil, g).compiled != stale {
+		t.Fatal("expected the documented blind spot (same-shape in-place edit)")
+	}
+	// ...until ForgetGrammar.
+	ForgetGrammar(g)
+	if NewGrammarParser(nil, g).compiled == stale {
+		t.Fatal("ForgetGrammar must force a recompile")
 	}
 }
 
@@ -418,5 +484,29 @@ func TestEOFSemantics(t *testing.T) {
 	mid := []lexer.Token{benchTok("A", "a"), benchTok("EOF", ""), benchTok("B", "ignored"), benchTok("EOF", "")}
 	if _, err := c2.Parse(mid, Options{}); err != nil {
 		t.Fatalf("a mid-stream EOF ends the parse (documented): %v", err)
+	}
+}
+
+// The iterative WalkAST snapshots a node's Children when it enters it, like
+// the old recursive `range current.Children`: a visitor that appends to the
+// parent's children mid-walk neither crashes nor makes the walk visit the
+// appended child.
+func TestWalkSnapshotsChildren(t *testing.T) {
+	mk := func(name string, kids ...interface{}) *ASTNode { return &ASTNode{RuleName: name, Children: kids} }
+	b, c := mk("b"), mk("c")
+	a := mk("a", b, c)
+	var visited []string
+	out := WalkAST(a, ASTVisitor{Enter: func(n, p *ASTNode) *ASTNode {
+		visited = append(visited, n.RuleName)
+		if n.RuleName == "b" {
+			p.Children = append(p.Children, mk("extra"))
+		}
+		return nil
+	}})
+	if got := strings.Join(visited, ","); got != "a,b,c" {
+		t.Fatalf("visited %q, want a,b,c (the appended child must not be visited)", got)
+	}
+	if out != a || len(a.Children) != 3 {
+		t.Fatalf("walk should leave the (mutated) original in place: %d children", len(a.Children))
 	}
 }

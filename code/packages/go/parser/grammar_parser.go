@@ -3,7 +3,6 @@ package parser
 import (
 	"fmt"
 	"sync"
-	"sync/atomic"
 
 	grammartools "github.com/adhithyan15/coding-adventures/code/packages/go/grammar-tools"
 	"github.com/adhithyan15/coding-adventures/code/packages/go/lexer"
@@ -136,23 +135,90 @@ func NewGrammarParserWithTrace(tokens []lexer.Token, grammar *grammartools.Parse
 // constructor, so the constructor signature stays error-free like its
 // predecessors.
 //
-// The compiled form of a grammar is cached per *ParserGrammar pointer (see
-// ForgetGrammar), so building thousands of parsers against one grammar value
-// compiles it once. That makes one rule binding: a grammar must not be
-// mutated after it has first been handed to a constructor here. (Generated
+// The compiled form of a grammar is cached per *ParserGrammar pointer, so
+// building thousands of parsers against one grammar value compiles it once.
+// Each entry carries a cheap fingerprint of the grammar (rule count, address
+// of the first rule, a hash of the rule names and the top-level shape of each
+// body); if it no longer matches, the grammar is recompiled, so appending,
+// removing, renaming or replacing rules is noticed. An in-place edit deeper
+// inside a rule body is NOT noticed: call ForgetGrammar after such an edit,
+// or better, do not mutate a grammar once it has been used. (Generated
 // grammar data is package-level and immutable, which is the intended use.)
 func NewGrammarParserWithOptions(tokens []lexer.Token, grammar *grammartools.ParserGrammar, opts Options) *GrammarParser {
 	c, err := compileCached(grammar)
 	return &GrammarParser{tokens: tokens, compiled: c, compileErr: err, opts: opts}
 }
 
-// compiledCache maps *ParserGrammar to its *Compiled. Entries pin their
-// grammar for the life of the process, so the cache is bounded: past
-// maxCachedGrammars distinct grammars, further ones compile on every call
-// (the pre-cache behaviour) instead of growing without limit.
+// cacheEntry is a compiled grammar plus the fingerprint it was compiled from.
+type cacheEntry struct {
+	c  *Compiled
+	fp grammarFingerprint
+}
+
+// grammarFingerprint is a cheap (a few microseconds for a 180-rule grammar)
+// summary used to notice most mutations of a cached grammar.
+type grammarFingerprint struct {
+	n     int
+	first *grammartools.GrammarRule
+	hash  uint64
+}
+
+func fingerprintOf(g *grammartools.ParserGrammar) grammarFingerprint {
+	fp := grammarFingerprint{n: len(g.Rules)}
+	if fp.n > 0 {
+		fp.first = &g.Rules[0]
+	}
+	const prime = 1099511628211
+	h := uint64(14695981039346656037)
+	for i := range g.Rules {
+		r := &g.Rules[i]
+		for j := 0; j < len(r.Name); j++ {
+			h = (h ^ uint64(r.Name[j])) * prime
+		}
+		h = (h ^ bodyShape(r.Body)) * prime
+	}
+	fp.hash = h
+	return fp
+}
+
+// bodyShape is the element kind plus its immediate arity.
+func bodyShape(el grammartools.GrammarElement) uint64 {
+	switch e := el.(type) {
+	case grammartools.Sequence:
+		return 1 | uint64(len(e.Elements))<<8
+	case grammartools.Alternation:
+		return 2 | uint64(len(e.Choices))<<8
+	case grammartools.Repetition:
+		return 3
+	case grammartools.Optional:
+		return 4
+	case grammartools.Group:
+		return 5
+	case grammartools.RuleReference:
+		return 6 | uint64(len(e.Name))<<8
+	case grammartools.Literal:
+		return 7 | uint64(len(e.Value))<<8
+	case grammartools.PositiveLookahead:
+		return 8
+	case grammartools.NegativeLookahead:
+		return 9
+	case grammartools.OneOrMoreRepetition:
+		return 10
+	case grammartools.SeparatedRepetition:
+		return 11
+	}
+	return 0
+}
+
+// compiledCache maps *ParserGrammar to its *cacheEntry. Entries pin their
+// grammar, so the cache is bounded: when maxCachedGrammars distinct grammars
+// are cached, the whole map is cleared (a generational reset) and filling
+// starts over. Hot grammars recompile once after a reset and are cached
+// again, so the cache never degrades into "compile on every call".
 var (
 	compiledCache     sync.Map
-	compiledCacheSize atomic.Int64
+	compiledCacheMu   sync.Mutex // guards compiledCacheSize and inserts
+	compiledCacheSize int
 )
 
 const maxCachedGrammars = 512
@@ -161,28 +227,37 @@ func compileCached(grammar *grammartools.ParserGrammar) (*Compiled, error) {
 	if grammar == nil {
 		return CompileGrammar(nil)
 	}
+	fp := fingerprintOf(grammar)
 	if v, ok := compiledCache.Load(grammar); ok {
-		return v.(*Compiled), nil
+		if e := v.(*cacheEntry); e.fp == fp {
+			return e.c, nil
+		}
 	}
 	c, err := CompileGrammar(grammar)
 	if err != nil {
 		return nil, err
 	}
-	if compiledCacheSize.Load() >= maxCachedGrammars {
-		return c, nil
+	compiledCacheMu.Lock()
+	defer compiledCacheMu.Unlock()
+	if _, replacing := compiledCache.Load(grammar); !replacing {
+		if compiledCacheSize >= maxCachedGrammars {
+			compiledCache.Clear()
+			compiledCacheSize = 0
+		}
+		compiledCacheSize++
 	}
-	if actual, loaded := compiledCache.LoadOrStore(grammar, c); loaded {
-		return actual.(*Compiled), nil
-	}
-	compiledCacheSize.Add(1)
+	compiledCache.Store(grammar, &cacheEntry{c: c, fp: fp})
 	return c, nil
 }
 
-// ForgetGrammar drops a grammar's cached compiled form. Call it before
-// reusing the same *ParserGrammar value after mutating its rules.
+// ForgetGrammar drops a grammar's cached compiled form. Call it after
+// mutating a rule body in place (changes to the rule list itself are noticed
+// automatically), before the grammar is next used.
 func ForgetGrammar(grammar *grammartools.ParserGrammar) {
+	compiledCacheMu.Lock()
+	defer compiledCacheMu.Unlock()
 	if _, loaded := compiledCache.LoadAndDelete(grammar); loaded {
-		compiledCacheSize.Add(-1)
+		compiledCacheSize--
 	}
 }
 
@@ -450,8 +525,9 @@ func WalkAST(node *ASTNode, visitor ASTVisitor) *ASTNode {
 // walkFrame is the state of one node mid-walk: the recursive version's local
 // variables, made explicit.
 type walkFrame struct {
-	orig        *ASTNode // the node as the parent saw it
-	current     *ASTNode // after Enter's optional replacement
+	orig        *ASTNode      // the node as the parent saw it
+	current     *ASTNode      // after Enter's optional replacement
+	children    []interface{} // current.Children as of entering (a snapshot)
 	parent      *ASTNode
 	idx         int // next child to visit
 	newChildren []interface{}
@@ -472,6 +548,7 @@ func walkNode(node *ASTNode, parent *ASTNode, visitor ASTVisitor) *ASTNode {
 		stack = append(stack, walkFrame{
 			orig:        n,
 			current:     current,
+			children:    current.Children,
 			parent:      parent,
 			newChildren: make([]interface{}, len(current.Children)),
 		})
@@ -483,8 +560,8 @@ func walkNode(node *ASTNode, parent *ASTNode, visitor ASTVisitor) *ASTNode {
 
 		// Visit children until one is a node (descend into it) or we run out.
 		descended := false
-		for f.idx < len(f.current.Children) {
-			child := f.current.Children[f.idx]
+		for f.idx < len(f.children) {
+			child := f.children[f.idx]
 			if astChild, ok := child.(*ASTNode); ok {
 				enter(astChild, f.current) // may reallocate stack: f is stale now
 				descended = true
