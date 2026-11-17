@@ -21,6 +21,7 @@ pub const GF256: &str = include_str!("../../../../../specs/gf256.warrant");
 pub const CORE_V0: &str = include_str!("../fixtures/core_forms_v0.warrant");
 pub const CORE_V1: &str = include_str!("../fixtures/core_forms_v1.warrant");
 pub const ENUM_V1: &str = include_str!("../fixtures/enum_forms_v1.warrant");
+pub const ENUM_PROBE: &str = include_str!("../fixtures/enum_probe.warrant");
 pub const ENUM_V0: &str = include_str!("../fixtures/enum_forms_v0.warrant");
 
 /// The contract boilerplate every operation needs (labels, input contracts, bounds),

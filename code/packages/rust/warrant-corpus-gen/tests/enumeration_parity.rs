@@ -27,6 +27,7 @@ use support::*;
 const CT_FIXTURE: &str = include_str!("fixtures/ct-compare.oracle-enumeration.json");
 const V1_FIXTURE: &str = include_str!("fixtures/enum_forms_v1.oracle-enumeration.json");
 const V0_FIXTURE: &str = include_str!("fixtures/enum_forms_v0.oracle-enumeration.json");
+const PROBE_FIXTURE: &str = include_str!("fixtures/enum_probe.oracle-enumeration.json");
 
 fn run(src: &str, profile: &Profile) -> (Enumeration, String) {
     let e = with_file(src, |f| enumerate_document(f, profile).expect("enumerates"));
@@ -61,8 +62,23 @@ fn the_v0_synthetic_document_matches_the_oracle_byte_for_byte() {
 }
 
 #[test]
+fn the_probe_document_matches_the_oracle_byte_for_byte() {
+    // 13 suites over concat/take/drop, the connectives, ordering comparisons, exact Nat/Int
+    // arithmetic, U16/U32/U64 wraps, Bytes literals, a model call in `admit` and wrapping pure
+    // guards under `or` and `=>`: the constructs the other documents leave out
+    let (e, text) = run(ENUM_PROBE, &small());
+    assert_eq!(e.suites.len(), 13);
+    assert_eq!(text, PROBE_FIXTURE);
+}
+
+#[test]
 fn the_fixtures_are_canonical_json_with_one_final_newline_and_no_cr() {
-    for (name, f) in [("ct", CT_FIXTURE), ("v1", V1_FIXTURE), ("v0", V0_FIXTURE)] {
+    for (name, f) in [
+        ("ct", CT_FIXTURE),
+        ("v1", V1_FIXTURE),
+        ("v0", V0_FIXTURE),
+        ("probe", PROBE_FIXTURE),
+    ] {
         assert!(!f.contains('\r'), "{name}");
         assert!(f.ends_with("}\n") && !f.ends_with("\n\n"), "{name}");
         assert!(f.is_ascii(), "{name}");

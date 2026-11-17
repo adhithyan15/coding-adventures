@@ -189,12 +189,15 @@ impl BinderDomain {
     }
 
     /// Swap two cached values (and encodings): the seeded-wrong "reordered enumeration"
-    /// control.  `#[doc(hidden)]`; the values are only cached for small domains.
-    #[doc(hidden)]
+    /// control.  Only with the `test-hooks` feature; the values are only cached for small
+    /// domains, and an index out of range changes nothing.
+    #[cfg(any(test, feature = "test-hooks"))]
     pub fn sabotage_swap(&mut self, i: usize, j: usize) {
         if let (Some(v), Some(e)) = (self.values.as_mut(), self.encoded.as_mut()) {
-            v.swap(i, j);
-            e.swap(i, j);
+            if i < v.len() && j < v.len() {
+                v.swap(i, j);
+                e.swap(i, j);
+            }
         }
     }
 }

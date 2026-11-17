@@ -5370,9 +5370,10 @@ dependencies = [
 
 [[package]]
 name = "coding_adventures_warrant_corpus_gen"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "coding_adventures_sha256",
+ "coding_adventures_warrant_corpus_gen",
  "coding_adventures_warrant_grammar",
 ]
 

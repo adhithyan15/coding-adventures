@@ -891,7 +891,7 @@ fn the_full_ct_compare_enumeration_is_fast_enough_for_ci_in_the_debug_profile() 
 
 /// Run `claim` of `src` through the pipeline after `mutate` has tampered with its lowered
 /// suite or resolved domains, under a (possibly wrong) evaluator.
-fn tampered(
+fn tampered_try(
     src: &str,
     profile: &Profile,
     claim: &str,
@@ -901,7 +901,7 @@ fn tampered(
         &mut LoweredSuite,
         &mut Vec<coding_adventures_warrant_corpus_gen::domains::BinderDomain>,
     ),
-) -> SuiteResult {
+) -> Result<SuiteResult, GenError> {
     with_file(src, |file| {
         let an = analyse(file, profile).unwrap();
         let env = DomainEnv::new(file);
@@ -924,8 +924,22 @@ fn tampered(
             profile.chunk_size,
         )
         .unwrap();
-        plan.run(&SuiteOptions::default()).unwrap()
+        plan.run(&SuiteOptions::default())
     })
+}
+
+fn tampered(
+    src: &str,
+    profile: &Profile,
+    claim: &str,
+    sabotage: Sabotage,
+    mutate: impl FnOnce(
+        &mut Vec<LoweredModel>,
+        &mut LoweredSuite,
+        &mut Vec<coding_adventures_warrant_corpus_gen::domains::BinderDomain>,
+    ),
+) -> SuiteResult {
+    tampered_try(src, profile, claim, sabotage, mutate).unwrap()
 }
 
 fn pinned(claim: &str) -> &'static (&'static str, u64, u64, u64, &'static str, &'static str) {
@@ -1057,15 +1071,12 @@ fn control_an_off_by_one_discard_changes_counts_and_digests() {
 fn control_a_wrong_wrap_changes_the_digest_and_the_wraps_count() {
     let p = small_profile();
     let good = ct_v1("add_wraps");
-    let bad = tampered(ENUM_V1, &p, "add_wraps", Sabotage::NoWrap, |_, _, _| {});
-    assert_eq!(
-        bad.wraps, 0,
-        "an evaluator that never wraps counts no wraps"
-    );
     assert_eq!(good.wraps, 32_640);
-    assert_ne!(bad.expected_sha256, good.expected_sha256);
-    assert_ne!(bad.v1_expected_sha256, good.v1_expected_sha256);
-    assert_eq!(bad.inputs_sha256, good.inputs_sha256);
+    // an evaluator that never wraps produces 256 for a U8 sum: the stream encoder refuses a
+    // value outside its type, so a wrong wrap cannot even reach a digest
+    let e = tampered_try(ENUM_V1, &p, "add_wraps", Sabotage::NoWrap, |_, _, _| {}).unwrap_err();
+    assert_eq!(e.code, code::W0701);
+    assert!(e.message.contains("range"), "{e}");
     // wrapping the wrong way: sub behaving as add
     let good = ct_v1("sub_wraps");
     let bad = tampered(ENUM_V1, &p, "sub_wraps", Sabotage::SubIsAdd, |_, _, _| {});
@@ -1513,20 +1524,18 @@ fn profile_lines_are_checked_against_the_document() {
     assert!(base("slim_chunk bytes_eq 0\n").is_ok());
     // m <= 16: the stride is irrelevant and ignored
     assert!(base("slim_stride 3\n").is_ok());
-    // m = 64 (the synthetic v1 document at chunk 1024): auto stride 5; 5 and 6 are refused,
-    // 4 is allowed and gives more chunks
+    // m = 64 (the synthetic v1 document at chunk 1024): automatic stride 5.  A larger stride
+    // is clamped per suite to 5 (owner decision 2026-11-17), never an error
     let with = |text: &str| {
         let p = parse_profile(text.as_bytes()).unwrap();
         with_file(ENUM_V1, |f| enumerate_document(f, &p))
     };
-    assert_eq!(
-        with("chunk_size 1024\nslim_stride 5\n").unwrap_err().code,
-        code::PROFILE
-    );
-    assert_eq!(
-        with("chunk_size 1024\nslim_stride 9\n").unwrap_err().code,
-        code::PROFILE
-    );
+    for big in [5, 9, 1000] {
+        let clamped = with(&format!("chunk_size 1024\nslim_stride {big}\n")).unwrap();
+        for s in &clamped.suites {
+            assert_eq!(s.slim, ct_v1(&s.claim).slim, "{} stride {big}", s.claim);
+        }
+    }
     let denser = with("chunk_size 1024\nslim_stride 4\n").unwrap();
     assert!(
         denser.suite("add_wraps").unwrap().slim.chunks.len() > ct_v1("add_wraps").slim.chunks.len()

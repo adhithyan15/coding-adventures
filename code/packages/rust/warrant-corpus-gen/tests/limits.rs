@@ -319,3 +319,113 @@ fn totals_over_a_small_document() {
     };
     assert_eq!(err.code, code::PROFILE);
 }
+
+// ---------------------------------------------------------------------------
+// the evaluator at the documented bounds, on a default test thread (H1)
+// ---------------------------------------------------------------------------
+
+/// `nm` chained models `c_i(x) = c_{i-1}(x) + 1u8 (plus times)` and one claim that calls the
+/// last: `nm` active model frames, each `plus + 2` IR levels deep.
+fn chain_doc(nm: usize, plus: usize) -> String {
+    let mut models = String::new();
+    for i in 0..nm {
+        let inner = if i == 0 {
+            "x".to_string()
+        } else {
+            format!("c{}(x)", i - 1)
+        };
+        models += &format!(
+            "  model c{i}(x: U8) -> U8 = {inner}{}\n",
+            " + 1u8".repeat(plus)
+        );
+    }
+    v1_with(
+        &models,
+        &format!(
+            "  claim deep:\n    forall a: U8. op_inc(a) == c{}(a)\n",
+            nm - 1
+        ),
+    )
+}
+
+#[test]
+fn the_evaluator_runs_64_model_frames_of_deep_expressions_on_a_default_test_thread() {
+    // This is the real bound of VER04r 14 / VER04 section 2: 64 active model frames, each
+    // with a deep expression, evaluated per case in a DEBUG build on the harness's default
+    // 2 MiB test thread.  A recursive evaluator overflowed the stack at 8 frames here.
+    let ceiling = parse_profile(b"max_ir_cost 65536\n").unwrap();
+    for (nm, plus, p) in [
+        (64, 0, Profile::default()),
+        (64, 40, ceiling.clone()),
+        (64, 55, ceiling),
+    ] {
+        let src = chain_doc(nm, plus);
+        let e = with_file(&src, |f| enumerate_document(f, &p).unwrap());
+        let s = &e.suites[0];
+        assert_eq!(s.cases, 256, "{nm} {plus}");
+    }
+    // one frame more is a limit error, not a crash
+    let e = with_file(&chain_doc(65, 0), |f| {
+        enumerate_document(f, &Profile::default()).unwrap_err()
+    });
+    assert_eq!(e.code, code::LIMIT);
+    assert!(e.message.contains("64 frames"), "{e}");
+}
+
+#[test]
+fn a_pure_subject_argument_that_leaves_the_exact_window_is_refused_at_generation() {
+    // M1: with no fixed-width arithmetic the body used to be skipped, so this generated
+    // cleanly and every lane then hit `ir-overflow`
+    let src = v1_with(
+        "  model huge(n: Nat) -> Int = n * 18446744073709551615 * 18446744073709551615\n",
+        "  claim far:\n    forall a: Bytes. op_len(take(a, huge(len(a)))) == len(a)\n",
+    );
+    let e = with_file(&src, |f| {
+        enumerate_document(f, &Profile::default()).unwrap_err()
+    });
+    assert_eq!(e.code, code::W0701);
+    assert!(e.message.contains("2^127"), "{e}");
+}
+
+#[test]
+fn a_pure_subject_argument_over_max_ir_value_is_refused_at_generation() {
+    // m0(x) = x; m_k(x) = m_{k-1}(concat(x, x)): 14 doublings of an 8-byte input pass 65,536
+    let mut models = String::from("  model m0(x: Bytes) -> Bytes = x\n");
+    for k in 1..=14 {
+        models += &format!(
+            "  model m{k}(x: Bytes) -> Bytes = m{}(concat(x, x))\n",
+            k - 1
+        );
+    }
+    let src = v1_with(
+        &models,
+        "  claim grow:\n    forall a: Bytes. op_len(m14(a)) == len(a)\n",
+    );
+    let e = with_file(&src, |f| {
+        enumerate_document(f, &Profile::default()).unwrap_err()
+    });
+    assert_eq!(e.code, code::W0701);
+    assert!(e.message.contains("MAX_IR_VALUE"), "{e}");
+}
+
+#[test]
+fn every_bound_is_charged_before_any_suite_is_planned() {
+    // M3: suite 0 admits nothing (a planning refusal, after its admission table is built);
+    // later suites blow the total IR-work bound.  The bound is charged for ALL suites first,
+    // so the refusal is the limit, and no suite was planned.
+    let mut models = String::from("  model c0(a: U8) -> U8 = a\n");
+    for i in 1..=12 {
+        models += &format!("  model c{i}(a: U8) -> U8 = c{p}(c{p}(a))\n", p = i - 1);
+    }
+    let mut claims =
+        String::from("  claim none:\n    forall a: U8 | a > 255u8. op_inc(a) == inc(a)\n");
+    for k in 0..70 {
+        claims += &format!("  claim w{k}:\n    forall a: U8, b: U8, c: U8. op_inc(a) == c12(b)\n");
+    }
+    let p = parse_profile(b"max_ir_cost 65536\n").unwrap();
+    let e = with_file(&v1_with(&models, &claims), |f| {
+        enumerate_document(f, &p).unwrap_err()
+    });
+    assert_eq!(e.code, code::LIMIT, "{e}");
+    assert!(e.message.contains("IR work"), "{e}");
+}

@@ -233,7 +233,8 @@ impl SuiteResult {
 /// How the profile shapes one suite's slim set.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct SuiteOptions {
-    /// `slim_stride N`: only a value smaller than the automatic stride is legal.
+    /// `slim_stride N`: clamped per suite to the automatic stride `ceil(m/14)` (a larger value
+    /// changes nothing).
     pub stride: Option<u64>,
     /// The `slim_chunk <claim> <index>` lines of this claim.
     pub slim_chunks: Vec<u64>,
@@ -340,6 +341,13 @@ impl<'a> SuitePlan<'a> {
                 "the product of the domain sizes does not fit 64 bits",
             )));
         }
+        if product == 0 {
+            return Err(at(GenError::new(
+                code::W0706,
+                "",
+                "a binder domain is empty, so the product has no ordinals",
+            )));
+        }
         let chunks_total = product.div_ceil(chunk_size).max(1);
         if chunks_total > MAX_CHUNKS {
             return Err(at(GenError::new(
@@ -377,7 +385,7 @@ impl<'a> SuitePlan<'a> {
             )));
         }
         let static_calls = program.static_calls(&suite.body);
-        let trace = static_calls.is_none() || program.may_wrap(&suite.body);
+        let trace = static_calls.is_none() || program.may_fail_or_wrap(&suite.body);
         Ok(SuitePlan {
             suite,
             program,
@@ -589,22 +597,10 @@ impl<'a> SuitePlan<'a> {
     ///
     /// # Errors
     ///
-    /// As [`SuitePlan::run_chunk`]; `profile` for a stride that is not smaller than the
-    /// automatic one (for `m > 16`) or a `slim_chunk` past the last chunk.
+    /// As [`SuitePlan::run_chunk`]; `profile` for a `slim_chunk` past the last chunk.
     pub fn run(&self, opts: &SuiteOptions) -> Result<SuiteResult, GenError> {
         let at = |e: GenError| e.at(&self.suite.claim);
         let m = self.chunks_total;
-        if m > 16 {
-            if let Some(s) = opts.stride {
-                if s >= auto_stride(m) {
-                    return Err(at(GenError::new(
-                        code::PROFILE,
-                        "",
-                        "slim_stride may only be smaller than the automatic stride (VER04r 5.6)",
-                    )));
-                }
-            }
-        }
         if opts.slim_chunks.iter().any(|c| *c >= m) {
             return Err(at(GenError::new(
                 code::PROFILE,
@@ -636,7 +632,13 @@ impl<'a> SuitePlan<'a> {
         // At most 2^28 ordinals times 65,536 node evaluations per case (VER04r 14): far below
         // 2^64, so plain addition cannot overflow.
         let wraps = self.admit_wraps + chunks.iter().map(|c| c.wraps).sum::<u64>();
-        let mut slim_base = slim_base_set(&self.suite.id, m, opts.stride.filter(|_| m > 16));
+        let mut slim_base = slim_base_set(
+            &self.suite.id,
+            m,
+            // owner decision 2026-11-17: a profile stride is clamped per suite to the
+            // automatic stride (never an error); for m <= 16 every chunk is slim anyway
+            opts.stride.filter(|s| m > 16 && *s < auto_stride(m)),
+        );
         slim_base.extend_from_slice(&opts.slim_chunks);
         slim_base.sort_unstable();
         slim_base.dedup();

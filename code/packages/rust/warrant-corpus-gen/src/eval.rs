@@ -68,13 +68,17 @@ use crate::arith::{
     check_value_len, exact_neg, exact_op, fixed_neg, fixed_op, EXACT_BOUND, MAX_IR_VALUE,
 };
 use crate::error::{code, GenError};
-use crate::ir::{Arith, Cmp, Ir, Logic, MAX_IR_DEPTH};
+use crate::ir::{Arith, Cmp, Ir, Logic};
 use crate::lower::LoweredModel;
 use crate::value::{ill_typed, Value};
 
-/// The deepest evaluation recursion allowed: 64 model frames of up to 64 IR levels, plus
-/// the caller's own tree (VER04r 14: IR depth 64, model-call nesting 64).
-pub const MAX_EVAL_DEPTH: usize = (MAX_IR_DEPTH + 1) * 65;
+/// The most model frames that may be active at once (VER04 section 2, VER04r 14).
+pub const MAX_MODEL_FRAMES: usize = 64;
+
+/// The most pending tasks the evaluator's explicit work stack may hold.  64 model frames of
+/// 64 IR levels with up to three tasks per level is under 13,000; the bound is generous and
+/// protects the heap, not the call stack (the evaluator does not recurse).
+pub const MAX_EVAL_TASKS: usize = 1 << 16;
 
 /// The counters the evaluator maintains.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
@@ -85,20 +89,30 @@ pub struct Stats {
     pub wraps: u64,
 }
 
-/// A deliberately wrong evaluator, for the negative controls.  Not part of the API.
-#[doc(hidden)]
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
-pub enum Sabotage {
-    /// The correct evaluator.
-    #[default]
-    None,
-    /// `eq` answers `ne`.
-    EqIsNe,
-    /// `sub` adds (on every numeric type).
-    SubIsAdd,
-    /// Fixed-width arithmetic is exact and never wraps (the pre-[D4] oracle behaviour).
-    NoWrap,
+/// A deliberately wrong evaluator, for the negative controls.  Public only with the
+/// `test-hooks` feature (or in this crate's own unit tests); otherwise it is private and the
+/// only value is `None`.
+macro_rules! sabotage_enum {
+    ($vis:vis) => {
+        #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+        #[allow(dead_code)]
+        $vis enum Sabotage {
+            /// The correct evaluator.
+            #[default]
+            None,
+            /// `eq` answers `ne`.
+            EqIsNe,
+            /// `sub` adds (on every numeric type).
+            SubIsAdd,
+            /// Fixed-width arithmetic is exact and never wraps (the pre-[D4] oracle behaviour).
+            NoWrap,
+        }
+    };
 }
+#[cfg(any(test, feature = "test-hooks"))]
+sabotage_enum!(pub);
+#[cfg(not(any(test, feature = "test-hooks")))]
+sabotage_enum!(pub(crate));
 
 /// The variables in scope: binder or parameter names with their values.
 pub type Vars<'v> = [(&'v str, Value)];
@@ -110,9 +124,12 @@ pub struct Program<'a> {
     index: HashMap<&'a str, usize>,
     /// `wraps[i]`: model `i`'s call closure contains a fixed-width `add sub mul neg`.
     wraps: Vec<bool>,
+    /// `fails[i]`: model `i`'s call closure has an `add sub mul neg` of any type or a
+    /// `concat`, i.e. a node that can wrap or leave a bound.
+    fails: Vec<bool>,
     sabotage: Sabotage,
-    /// The recursion bound ([`MAX_EVAL_DEPTH`] unless a test lowers it).
-    max_depth: usize,
+    /// The work-stack bound ([`MAX_EVAL_TASKS`] unless a test lowers it).
+    max_tasks: usize,
 }
 
 impl<'a> Program<'a> {
@@ -125,7 +142,16 @@ impl<'a> Program<'a> {
             .map(|(i, m)| (m.name.as_str(), i))
             .collect();
         let mut wraps: Vec<bool> = Vec::with_capacity(models.len());
+        let mut fails: Vec<bool> = Vec::with_capacity(models.len());
         for m in models {
+            let f = may_fail_with(&m.body, &|name| {
+                index
+                    .get(name)
+                    .and_then(|i| fails.get(*i))
+                    .copied()
+                    .unwrap_or(false)
+            });
+            fails.push(f);
             let w = may_wrap_with(&m.body, &|name| {
                 index
                     .get(name)
@@ -139,23 +165,38 @@ impl<'a> Program<'a> {
             models,
             index,
             wraps,
+            fails,
             sabotage: Sabotage::None,
-            max_depth: MAX_EVAL_DEPTH,
+            max_tasks: MAX_EVAL_TASKS,
         }
     }
 
     /// The same program with a seeded-wrong evaluator.
-    #[doc(hidden)]
+    #[cfg(any(test, feature = "test-hooks"))]
     pub fn with_sabotage(mut self, s: Sabotage) -> Program<'a> {
         self.sabotage = s;
         self
     }
 
-    /// The same program with a lower recursion bound, to test the guard without a deep stack.
-    #[doc(hidden)]
-    pub fn with_max_depth(mut self, depth: usize) -> Program<'a> {
-        self.max_depth = depth.min(MAX_EVAL_DEPTH);
+    /// The same program with a lower work-stack bound, to test the guard.
+    #[cfg(any(test, feature = "test-hooks"))]
+    pub fn with_max_tasks(mut self, tasks: usize) -> Program<'a> {
+        self.max_tasks = tasks.min(MAX_EVAL_TASKS);
         self
+    }
+
+    /// Could evaluating `ir` perform any `add sub mul neg` (of any type: a fixed-width one
+    /// can wrap, an exact one can leave the 2^127 window) or `concat` (which can pass
+    /// `MAX_IR_VALUE`), directly or inside a model it calls?  Such a pure node on the trace
+    /// is evaluated so that a failure surfaces at generation (VER04r 3.2, 3.3).
+    pub fn may_fail_or_wrap(&self, ir: &Ir) -> bool {
+        may_fail_with(ir, &|name| {
+            self.index
+                .get(name)
+                .and_then(|i| self.fails.get(*i))
+                .copied()
+                .unwrap_or(false)
+        })
     }
 
     /// Could evaluating `ir` perform a fixed-width `+ - *` or unary `-` (directly or
@@ -182,239 +223,214 @@ impl<'a> Program<'a> {
     /// Evaluate a pure tree.  `st.wraps` is incremented for every fixed-width node whose
     /// wrapped result differs from the exact one.
     ///
+    /// The evaluator is **iterative**: an explicit heap-allocated work stack replaces the
+    /// call stack, so the documented bounds (IR depth 64, 64 model frames: VER04r 14) run on
+    /// a default 2 MiB thread in a debug build.
+    ///
     /// # Errors
     ///
     /// `W0701` for a subject call, an unbound variable, an ill-typed hand-built tree, an
     /// exact `Nat`/`Int` outside the 2^127 window or a `Bytes` result over
-    /// [`MAX_IR_VALUE`]; `limit` for a recursion deeper than [`MAX_EVAL_DEPTH`].
-    pub fn eval(&self, ir: &Ir, vars: &Vars<'_>, st: &mut Stats) -> Result<Value, GenError> {
-        self.go(ir, vars, st, 0)
-    }
-
-    /// The recursion.  Debug builds give every local of every `match` arm its own stack
-    /// slot, so the arms that need real work live in `#[inline(never)]` helpers: the frame
-    /// that is on the stack once per nesting level stays small.
-    fn go(
-        &self,
-        ir: &Ir,
+    /// [`MAX_IR_VALUE`]; `limit` for more than [`MAX_MODEL_FRAMES`] active model frames or a
+    /// work stack past [`MAX_EVAL_TASKS`].
+    pub fn eval<'t>(
+        &'t self,
+        ir: &'t Ir,
         vars: &Vars<'_>,
         st: &mut Stats,
-        depth: usize,
     ) -> Result<Value, GenError> {
-        if depth > self.max_depth {
-            return Err(GenError::new(
-                code::LIMIT,
-                "",
-                "evaluation nests deeper than the IR and model-call limits allow",
-            ));
-        }
-        let d = depth + 1;
-        match ir {
-            Ir::Bool(b) => Ok(Value::Bool(*b)),
-            Ir::Int { value, .. } => Ok(Value::Int(*value)),
-            Ir::Bytes(hex) => Ok(Value::bytes(&decode_hex(hex)?)),
-            Ir::Var(name) => Ok(lookup(vars, name)?.clone()),
-            Ir::Err(case) => Ok(Value::Err(Rc::from(case.as_str()))),
-            Ir::Subject { .. } => Err(GenError::new(
-                code::W0701,
-                "",
-                "a subject call cannot be evaluated by the generator (VER04r 4.2 rule 3)",
-            )),
-            Ir::Model { name, args } => self.model_call(name, args, vars, st, d),
-            Ir::Len(a) => self.len_of(a, vars, st, d),
-            Ir::Ok(a) => Ok(Value::Ok(Box::new(self.go(a, vars, st, d)?))),
-            Ir::Cmp(op, a, b) => self.cmp_node(*op, a, b, vars, st, d),
-            Ir::Arith(op, ty, a, b) => self.arith_node(*op, ty, a, b, vars, st, d),
-            Ir::Neg(ty, a) => self.neg_node(ty, a, vars, st, d),
-            Ir::Logic(op, a, b) => self.logic_node(*op, a, b, vars, st, d),
-            Ir::Not(a) => Ok(Value::Bool(!self.go(a, vars, st, d)?.as_bool()?)),
-            Ir::If(c, t, e) => self.if_node(c, t, e, vars, st, d),
-            Ir::Concat(a, b) => self.concat_node(a, b, vars, st, d),
-            Ir::Take(a, n) => self.cut_node(true, a, n, vars, st, d),
-            Ir::Drop(a, n) => self.cut_node(false, a, n, vars, st, d),
-            Ir::IsErr(a) => self.is_err_node(a, vars, st, d),
-        }
-    }
-
-    #[inline(never)]
-    fn model_call(
-        &self,
-        name: &str,
-        args: &[Ir],
-        vars: &Vars<'_>,
-        st: &mut Stats,
-        d: usize,
-    ) -> Result<Value, GenError> {
-        let i = *self
-            .index
-            .get(name)
-            .ok_or_else(|| GenError::new(code::W0701, "", "a call to an unknown model"))?;
-        let m = &self.models[i];
-        if m.params.len() != args.len() {
-            return Err(GenError::new(
-                code::W0701,
-                "",
-                "a model call has the wrong arity",
-            ));
-        }
-        let mut frame: Vec<(&str, Value)> = Vec::with_capacity(args.len());
-        for ((pname, _), a) in m.params.iter().zip(args) {
-            frame.push((pname.as_str(), self.go(a, vars, st, d)?));
-        }
-        self.go(&m.body, &frame, st, d)
-    }
-
-    #[inline(never)]
-    fn len_of(&self, a: &Ir, vars: &Vars<'_>, st: &mut Stats, d: usize) -> Result<Value, GenError> {
-        let v = self.go(a, vars, st, d)?;
-        Ok(Value::Int(v.as_bytes()?.len() as i128))
-    }
-
-    #[inline(never)]
-    fn cmp_node(
-        &self,
-        op: Cmp,
-        a: &Ir,
-        b: &Ir,
-        vars: &Vars<'_>,
-        st: &mut Stats,
-        d: usize,
-    ) -> Result<Value, GenError> {
-        let x = self.go(a, vars, st, d)?;
-        let y = self.go(b, vars, st, d)?;
-        Ok(Value::Bool(self.compare(op, &x, &y)?))
-    }
-
-    #[allow(clippy::too_many_arguments)]
-    #[inline(never)]
-    fn arith_node(
-        &self,
-        op: Arith,
-        ty: &crate::types::Ty,
-        a: &Ir,
-        b: &Ir,
-        vars: &Vars<'_>,
-        st: &mut Stats,
-        d: usize,
-    ) -> Result<Value, GenError> {
-        let x = self.go(a, vars, st, d)?.as_int()?;
-        let y = self.go(b, vars, st, d)?.as_int()?;
-        Ok(Value::Int(self.arith(op, ty.fixed(), x, y, st)?))
-    }
-
-    #[inline(never)]
-    fn neg_node(
-        &self,
-        ty: &crate::types::Ty,
-        a: &Ir,
-        vars: &Vars<'_>,
-        st: &mut Stats,
-        d: usize,
-    ) -> Result<Value, GenError> {
-        let x = self.go(a, vars, st, d)?.as_int()?;
-        Ok(Value::Int(match ty.fixed() {
-            Some(t) if self.sabotage != Sabotage::NoWrap => {
-                let (v, wrapped) = fixed_neg(t, x);
-                st.wraps += u64::from(wrapped);
-                v
+        let mut tasks: Vec<Task<'t>> = vec![Task::Eval(ir)];
+        let mut vals: Vec<Value> = Vec::new();
+        let mut frames: Vec<Vec<(&'t str, Value)>> = Vec::new();
+        while let Some(task) = tasks.pop() {
+            if tasks.len() > self.max_tasks {
+                return Err(GenError::new(
+                    code::LIMIT,
+                    "",
+                    "evaluation holds more pending work than the IR bounds allow",
+                ));
             }
-            _ => exact_neg(x)?,
-        }))
+            match task {
+                Task::Eval(node) => {
+                    let env: &Vars<'_> = frames.last().map_or(vars, |f| f.as_slice());
+                    self.start(node, env, &mut tasks, &mut vals)?;
+                }
+                Task::Apply(node) => self.apply(node, &mut vals, st)?,
+                Task::CallModel(i) => {
+                    let m = &self.models[i];
+                    let at = vals
+                        .len()
+                        .checked_sub(m.params.len())
+                        .ok_or_else(|| GenError::internal("a model call lost its arguments"))?;
+                    let frame: Vec<(&str, Value)> = m
+                        .params
+                        .iter()
+                        .map(|(n, _)| n.as_str())
+                        .zip(vals.drain(at..))
+                        .collect();
+                    frames.push(frame);
+                    if frames.len() > MAX_MODEL_FRAMES {
+                        return Err(GenError::new(
+                            code::LIMIT,
+                            "",
+                            "model calls nest deeper than 64 frames",
+                        ));
+                    }
+                    tasks.push(Task::PopFrame);
+                    tasks.push(Task::Eval(&m.body));
+                }
+                Task::PopFrame => {
+                    frames.pop();
+                }
+                Task::Logic(op, right) => {
+                    let left = pop(&mut vals)?.as_bool()?;
+                    // Short circuit: `and`/`implies` evaluate the right operand when the
+                    // left is true; `or` when it is false.  `implies` is `not left or right`.
+                    let (decided, value) = match op {
+                        Logic::And => (!left, false),
+                        Logic::Or => (left, true),
+                        Logic::Implies => (!left, true),
+                    };
+                    if decided {
+                        vals.push(Value::Bool(value));
+                    } else {
+                        tasks.push(Task::CheckBool);
+                        tasks.push(Task::Eval(right));
+                    }
+                }
+                Task::CheckBool => {
+                    let b = pop(&mut vals)?.as_bool()?;
+                    vals.push(Value::Bool(b));
+                }
+                Task::Branch(t, e) => {
+                    let c = pop(&mut vals)?.as_bool()?;
+                    tasks.push(Task::Eval(if c { t } else { e }));
+                }
+            }
+        }
+        pop(&mut vals)
     }
 
-    #[inline(never)]
-    fn logic_node(
-        &self,
-        op: Logic,
-        a: &Ir,
-        b: &Ir,
-        vars: &Vars<'_>,
-        st: &mut Stats,
-        d: usize,
-    ) -> Result<Value, GenError> {
-        let left = self.go(a, vars, st, d)?.as_bool()?;
-        // Short circuit: `and`/`implies` evaluate the right operand when the left is true;
-        // `or` when it is false.  `implies` is `not left or right`.
-        let (decided, value) = match op {
-            Logic::And => (!left, false),
-            Logic::Or => (left, true),
-            Logic::Implies => (!left, true),
+    /// Begin evaluating `node`: push a leaf's value, or schedule its operands and then its
+    /// application (operands are evaluated left to right).
+    fn start<'t>(
+        &'t self,
+        node: &'t Ir,
+        env: &Vars<'_>,
+        tasks: &mut Vec<Task<'t>>,
+        vals: &mut Vec<Value>,
+    ) -> Result<(), GenError> {
+        match node {
+            Ir::Bool(b) => vals.push(Value::Bool(*b)),
+            Ir::Int { value, .. } => vals.push(Value::Int(*value)),
+            Ir::Bytes(hex) => vals.push(Value::bytes(&decode_hex(hex)?)),
+            Ir::Var(name) => vals.push(lookup(env, name)?.clone()),
+            Ir::Err(case) => vals.push(Value::Err(Rc::from(case.as_str()))),
+            Ir::Subject { .. } => {
+                return Err(GenError::new(
+                    code::W0701,
+                    "",
+                    "a subject call cannot be evaluated by the generator (VER04r 4.2 rule 3)",
+                ))
+            }
+            Ir::Model { name, args } => {
+                let i = *self
+                    .index
+                    .get(name.as_str())
+                    .ok_or_else(|| GenError::new(code::W0701, "", "a call to an unknown model"))?;
+                if self.models[i].params.len() != args.len() {
+                    return Err(GenError::new(
+                        code::W0701,
+                        "",
+                        "a model call has the wrong arity",
+                    ));
+                }
+                tasks.push(Task::CallModel(i));
+                tasks.extend(args.iter().rev().map(Task::Eval));
+            }
+            Ir::Len(a) | Ir::Ok(a) | Ir::Not(a) | Ir::IsErr(a) | Ir::Neg(_, a) => {
+                tasks.push(Task::Apply(node));
+                tasks.push(Task::Eval(a));
+            }
+            Ir::Cmp(_, a, b)
+            | Ir::Arith(_, _, a, b)
+            | Ir::Concat(a, b)
+            | Ir::Take(a, b)
+            | Ir::Drop(a, b) => {
+                tasks.push(Task::Apply(node));
+                tasks.push(Task::Eval(b));
+                tasks.push(Task::Eval(a));
+            }
+            Ir::Logic(op, a, b) => {
+                tasks.push(Task::Logic(*op, b));
+                tasks.push(Task::Eval(a));
+            }
+            Ir::If(c, t, e) => {
+                tasks.push(Task::Branch(t, e));
+                tasks.push(Task::Eval(c));
+            }
+        }
+        Ok(())
+    }
+
+    /// Apply a node to its already-evaluated operands (on top of `vals`).
+    fn apply(&self, node: &Ir, vals: &mut Vec<Value>, st: &mut Stats) -> Result<(), GenError> {
+        let v = match node {
+            Ir::Len(_) => Value::Int(pop(vals)?.as_bytes()?.len() as i128),
+            Ir::Ok(_) => Value::Ok(Box::new(pop(vals)?)),
+            Ir::Not(_) => Value::Bool(!pop(vals)?.as_bool()?),
+            Ir::IsErr(_) => match pop(vals)? {
+                Value::Err(_) => Value::Bool(true),
+                Value::Ok(_) => Value::Bool(false),
+                _ => return Err(ill_typed("a Result operand")),
+            },
+            Ir::Neg(ty, _) => {
+                let x = pop(vals)?.as_int()?;
+                Value::Int(match ty.fixed() {
+                    Some(t) if self.sabotage != Sabotage::NoWrap => {
+                        let (v, wrapped) = fixed_neg(t, x);
+                        st.wraps += u64::from(wrapped);
+                        v
+                    }
+                    _ => exact_neg(x)?,
+                })
+            }
+            Ir::Cmp(op, ..) => {
+                let y = pop(vals)?;
+                let x = pop(vals)?;
+                Value::Bool(self.compare(*op, &x, &y)?)
+            }
+            Ir::Arith(op, ty, ..) => {
+                let y = pop(vals)?.as_int()?;
+                let x = pop(vals)?.as_int()?;
+                Value::Int(self.arith(*op, ty.fixed(), x, y, st)?)
+            }
+            Ir::Concat(..) => {
+                let y = pop(vals)?;
+                let x = pop(vals)?;
+                let (x, y) = (x.as_bytes()?, y.as_bytes()?);
+                // Checked BEFORE the allocation (VER04r 4.2 rule 6).
+                check_value_len((x.len() as u64) + (y.len() as u64))?;
+                let mut out = Vec::with_capacity(x.len() + y.len());
+                out.extend_from_slice(x);
+                out.extend_from_slice(y);
+                Value::Bytes(Rc::from(out))
+            }
+            Ir::Take(..) | Ir::Drop(..) => {
+                let n = pop(vals)?.as_int()?;
+                let x = pop(vals)?;
+                let x = x.as_bytes()?;
+                let at = clamp_count(n, x.len());
+                Value::bytes(if matches!(node, Ir::Take(..)) {
+                    &x[..at]
+                } else {
+                    &x[at..]
+                })
+            }
+            _ => return Err(GenError::internal("a node was applied without operands")),
         };
-        if decided {
-            Ok(Value::Bool(value))
-        } else {
-            Ok(Value::Bool(self.go(b, vars, st, d)?.as_bool()?))
-        }
-    }
-
-    #[inline(never)]
-    fn if_node(
-        &self,
-        c: &Ir,
-        t: &Ir,
-        e: &Ir,
-        vars: &Vars<'_>,
-        st: &mut Stats,
-        d: usize,
-    ) -> Result<Value, GenError> {
-        if self.go(c, vars, st, d)?.as_bool()? {
-            self.go(t, vars, st, d)
-        } else {
-            self.go(e, vars, st, d)
-        }
-    }
-
-    #[inline(never)]
-    fn concat_node(
-        &self,
-        a: &Ir,
-        b: &Ir,
-        vars: &Vars<'_>,
-        st: &mut Stats,
-        d: usize,
-    ) -> Result<Value, GenError> {
-        let x = self.go(a, vars, st, d)?;
-        let y = self.go(b, vars, st, d)?;
-        let (x, y) = (x.as_bytes()?, y.as_bytes()?);
-        // Checked BEFORE the allocation (VER04r 4.2 rule 6).
-        check_value_len((x.len() as u64) + (y.len() as u64))?;
-        let mut out = Vec::with_capacity(x.len() + y.len());
-        out.extend_from_slice(x);
-        out.extend_from_slice(y);
-        Ok(Value::Bytes(Rc::from(out)))
-    }
-
-    /// `take` (`keep_head`) or `drop`.
-    #[inline(never)]
-    fn cut_node(
-        &self,
-        keep_head: bool,
-        a: &Ir,
-        n: &Ir,
-        vars: &Vars<'_>,
-        st: &mut Stats,
-        d: usize,
-    ) -> Result<Value, GenError> {
-        let x = self.go(a, vars, st, d)?;
-        let n = self.go(n, vars, st, d)?.as_int()?;
-        let x = x.as_bytes()?;
-        let at = clamp_count(n, x.len());
-        Ok(Value::bytes(if keep_head { &x[..at] } else { &x[at..] }))
-    }
-
-    #[inline(never)]
-    fn is_err_node(
-        &self,
-        a: &Ir,
-        vars: &Vars<'_>,
-        st: &mut Stats,
-        d: usize,
-    ) -> Result<Value, GenError> {
-        match self.go(a, vars, st, d)? {
-            Value::Err(_) => Ok(Value::Bool(true)),
-            Value::Ok(_) => Ok(Value::Bool(false)),
-            _ => Err(ill_typed("a Result operand")),
-        }
+        vals.push(v);
+        Ok(())
     }
 
     fn compare(&self, op: Cmp, x: &Value, y: &Value) -> Result<bool, GenError> {
@@ -461,19 +477,6 @@ impl<'a> Program<'a> {
     /// `W0701` for a subject call under an impure guard (the lowering already refuses it)
     /// and every [`Program::eval`] error.
     pub fn trace(&self, ir: &Ir, vars: &Vars<'_>, st: &mut Stats) -> Result<u64, GenError> {
-        self.trace_at(ir, vars, st, 0)
-    }
-
-    fn trace_at(
-        &self,
-        ir: &Ir,
-        vars: &Vars<'_>,
-        st: &mut Stats,
-        depth: usize,
-    ) -> Result<u64, GenError> {
-        if depth > self.max_depth {
-            return Err(GenError::new(code::LIMIT, "", "the trace nests too deeply"));
-        }
         let impure = || {
             GenError::new(
                 code::W0701,
@@ -481,98 +484,102 @@ impl<'a> Program<'a> {
                 "a subject call under an impure guard (VER04r 4.4)",
             )
         };
-        if !ir.has_subject() {
-            if self.may_wrap(ir) {
-                self.go(ir, vars, st, depth)?;
-            }
-            return Ok(0);
-        }
-        let d = depth + 1;
-        match ir {
-            Ir::Subject { args, .. } => {
-                let mut n = 1u64;
-                for a in args {
-                    n += self.trace_at(a, vars, st, d)?;
+        let mut stack = vec![ir];
+        let mut calls = 0u64;
+        while let Some(node) = stack.pop() {
+            if !node.has_subject() {
+                // Every pure node on the trace that can wrap or leave a bound is evaluated,
+                // so a failure surfaces here and not in every lane (VER04r 3.2, 3.3).
+                if self.may_fail_or_wrap(node) {
+                    self.eval(node, vars, st)?;
                 }
-                Ok(n)
+                continue;
             }
-            Ir::If(c, t, e) => {
-                if t.has_subject() || e.has_subject() {
-                    if c.has_subject() {
-                        return Err(impure());
-                    }
-                    let taken = self.go(c, vars, st, d)?.as_bool()?;
-                    self.trace_at(if taken { t } else { e }, vars, st, d)
-                } else {
-                    self.trace_at(c, vars, st, d)
+            match node {
+                Ir::Subject { args, .. } => {
+                    calls += 1;
+                    stack.extend(args.iter());
                 }
-            }
-            Ir::Logic(op, a, b) => {
-                if b.has_subject() {
-                    if a.has_subject() {
-                        return Err(impure());
-                    }
-                    let left = self.go(a, vars, st, d)?.as_bool()?;
-                    let runs = match op {
-                        Logic::And | Logic::Implies => left,
-                        Logic::Or => !left,
-                    };
-                    if runs {
-                        self.trace_at(b, vars, st, d)
+                Ir::If(c, t, e) => {
+                    if t.has_subject() || e.has_subject() {
+                        if c.has_subject() {
+                            return Err(impure());
+                        }
+                        let taken = self.eval(c, vars, st)?.as_bool()?;
+                        stack.push(if taken { t } else { e });
                     } else {
-                        Ok(0)
+                        stack.push(c);
                     }
-                } else {
-                    self.trace_at(a, vars, st, d)
                 }
-            }
-            other => {
-                let mut n = 0u64;
-                for c in other.children() {
-                    n += self.trace_at(c, vars, st, d)?;
+                Ir::Logic(op, a, b) => {
+                    if b.has_subject() {
+                        if a.has_subject() {
+                            return Err(impure());
+                        }
+                        let left = self.eval(a, vars, st)?.as_bool()?;
+                        let runs = match op {
+                            Logic::And | Logic::Implies => left,
+                            Logic::Or => !left,
+                        };
+                        if runs {
+                            stack.push(b);
+                        }
+                    } else {
+                        stack.push(a);
+                    }
                 }
-                Ok(n)
+                other => stack.extend(other.children()),
             }
         }
+        Ok(calls)
     }
 
     /// The call count of `ir` when it does not depend on the case: no `if` or short
     /// circuit has a subject in a branch.  `None` means "trace each case".
     pub fn static_calls(&self, ir: &Ir) -> Option<u64> {
-        if !ir.has_subject() {
-            return Some(0);
-        }
-        match ir {
-            Ir::Subject { args, .. } => {
-                let mut n = 1u64;
-                for a in args {
-                    n += self.static_calls(a)?;
-                }
-                Some(n)
+        let mut stack = vec![ir];
+        let mut calls = 0u64;
+        while let Some(node) = stack.pop() {
+            if !node.has_subject() {
+                continue;
             }
-            Ir::If(c, t, e) => {
-                if t.has_subject() || e.has_subject() {
-                    None
-                } else {
-                    self.static_calls(c)
+            match node {
+                Ir::Subject { args, .. } => {
+                    calls += 1;
+                    stack.extend(args.iter());
                 }
-            }
-            Ir::Logic(_, a, b) => {
-                if b.has_subject() {
-                    None
-                } else {
-                    self.static_calls(a)
-                }
-            }
-            other => {
-                let mut n = 0u64;
-                for c in other.children() {
-                    n += self.static_calls(c)?;
-                }
-                Some(n)
+                Ir::If(_, t, e) if t.has_subject() || e.has_subject() => return None,
+                Ir::If(c, ..) => stack.push(c),
+                Ir::Logic(_, _, b) if b.has_subject() => return None,
+                Ir::Logic(_, a, _) => stack.push(a),
+                other => stack.extend(other.children()),
             }
         }
+        Some(calls)
     }
+}
+
+/// The work items of the iterative evaluator.
+enum Task<'t> {
+    /// Evaluate a node (push its value, or schedule its operands).
+    Eval(&'t Ir),
+    /// Apply a node to the operand values on top of the value stack.
+    Apply(&'t Ir),
+    /// Open the frame of model `i` over the argument values on the value stack.
+    CallModel(usize),
+    /// Close the innermost model frame.
+    PopFrame,
+    /// `and`/`or`/`implies`: the left value is on the stack; the right operand follows.
+    Logic(Logic, &'t Ir),
+    /// The right operand of a connective was evaluated: it must be a Bool.
+    CheckBool,
+    /// `if`: the condition is on the stack; take one branch.
+    Branch(&'t Ir, &'t Ir),
+}
+
+fn pop(vals: &mut Vec<Value>) -> Result<Value, GenError> {
+    vals.pop()
+        .ok_or_else(|| GenError::internal("the value stack ran dry"))
 }
 
 /// The largest exact intermediate of VER04r 3.2, re-exported for the tests.
@@ -616,6 +623,16 @@ fn decode_hex(hex: &str) -> Result<Vec<u8>, GenError> {
 
 /// Does `ir` contain a fixed-width `add sub mul neg`, or a call of a model for which
 /// `model_wraps` says yes?
+fn may_fail_with(ir: &Ir, model_fails: &dyn Fn(&str) -> bool) -> bool {
+    let mut found = false;
+    ir.walk(&mut |n| match n {
+        Ir::Arith(..) | Ir::Neg(..) | Ir::Concat(..) => found = true,
+        Ir::Model { name, .. } if model_fails(name) => found = true,
+        _ => {}
+    });
+    found
+}
+
 fn may_wrap_with(ir: &Ir, model_wraps: &dyn Fn(&str) -> bool) -> bool {
     let mut found = false;
     ir.walk(&mut |n| match n {
@@ -1025,33 +1042,57 @@ mod tests {
     }
 
     #[test]
-    fn evaluation_recursion_is_bounded() {
-        // a tree far deeper than lowering allows (the lowering caps it at 64) is refused
-        // rather than recursed into; the bound is lowered here so the test needs no deep stack
+    fn the_work_stack_and_the_model_frames_are_bounded_without_recursion() {
+        // a tree deeper than lowering allows (it caps at 64) is refused, not recursed into;
+        // the bound is lowered here to keep the test small
         let mut ir = Ir::Bool(true);
         for _ in 0..40 {
             ir = Ir::Not(Box::new(ir));
         }
-        let p = Program::new(&[]).with_max_depth(32);
+        let p = Program::new(&[]).with_max_tasks(32);
         assert_eq!(
             p.eval(&ir, &[], &mut Stats::default()).unwrap_err().code,
             code::LIMIT
         );
-        // the same tree is fine under the real bound
         assert!(Program::new(&[])
             .eval(&ir, &[], &mut Stats::default())
             .is_ok());
-        // the trace has the same guard (a subject at the bottom keeps it off the pure path)
-        let mut deep = subject("f", vec![]);
-        for _ in 0..40 {
-            deep = Ir::Not(Box::new(deep));
-        }
-        let e = p.trace(&deep, &[], &mut Stats::default()).unwrap_err();
-        assert_eq!(e.code, code::LIMIT);
-        // the bound can only be lowered, never raised past the documented limit
-        let q = Program::new(&[]).with_max_depth(usize::MAX);
+        let q = Program::new(&[]).with_max_tasks(usize::MAX);
         assert!(q.eval(&ir, &[], &mut Stats::default()).is_ok());
-        assert_eq!(MAX_EVAL_DEPTH, 65 * 65);
+        assert_eq!(MAX_EVAL_TASKS, 1 << 16);
+        // 64 active model frames are allowed, 65 are a limit error (VER04 section 2)
+        let chain = |n: usize| -> Vec<LoweredModel> {
+            let mut ms = vec![model("m0", &[("x", Ty::Bool)], Ty::Bool, *var("x").clone())];
+            for i in 1..n {
+                ms.push(model(
+                    &format!("m{i}"),
+                    &[("x", Ty::Bool)],
+                    Ty::Bool,
+                    Ir::Model {
+                        name: format!("m{}", i - 1),
+                        args: vec![Ir::Var("x".into())],
+                    },
+                ));
+            }
+            ms
+        };
+        let call = |n: usize| Ir::Model {
+            name: format!("m{}", n - 1),
+            args: vec![Ir::Bool(true)],
+        };
+        let ok = chain(64);
+        assert_eq!(
+            Program::new(&ok)
+                .eval(&call(64), &[], &mut Stats::default())
+                .unwrap(),
+            Value::Bool(true)
+        );
+        let deep = chain(65);
+        let e = Program::new(&deep)
+            .eval(&call(65), &[], &mut Stats::default())
+            .unwrap_err();
+        assert_eq!(e.code, code::LIMIT);
+        assert!(e.message.contains("64 frames"));
     }
 
     // -- trace, static_calls ------------------------------------------------------------

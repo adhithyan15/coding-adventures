@@ -6,8 +6,8 @@
 //!   WarrantFile ──analyse──▶ Lowered + costs            (S3a: lowering, level refusals, ir_cost)
 //!        │
 //!        ├─ DomainEnv + resolve_binders (S2) ──▶ domains per claim, 16.2 refusals
-//!        ├─ IR work bound (4.2 rule 6) and the total case bound, BEFORE the first case
-//!        ├─ SuitePlan::new  ──▶ admission, stream prefix, limits
+//!        ├─ IR work bound (4.2 rule 6) and the total ordinal bound for ALL suites, BEFORE any planning
+//!        ├─ SuitePlan::new  ──▶ admission, stream prefix, limits         (one suite at a time)
 //!        └─ SuitePlan::run  ──▶ SuiteResult: chunks, counts, 18 digests (ct-compare), slim
 //!                               then the v0 divergence guard, rule 2 (`wraps > 0` in a v0 document)
 //! ```
@@ -98,7 +98,11 @@ pub fn enumerate_document(
         let env = DomainEnv::new(file);
         let mut work = IrWork::new(Depth::Full);
         let mut ordinals = 0u64;
-        let mut plans = Vec::with_capacity(lowered.suites.len());
+        // Pass 1: resolve every claim's domains and charge every bound (IR work, product
+        // ordinals) BEFORE any suite is planned: planning builds the admission table, up to
+        // 2^28 `admit` evaluations, and must not run for suite i while suite i+1 would be
+        // refused (VER04r 14: bounds are checked before the first case).
+        let mut resolved = Vec::with_capacity(lowered.suites.len());
         for (suite, cost) in lowered.suites.iter().zip(&analysis.suite_costs) {
             let domains = resolve_claim(file, &env, suite, profile.budget)?;
             work.charge(cost.total, domains.product)
@@ -111,20 +115,21 @@ pub fn enumerate_document(
                     "the total product ordinals of a full run exceed 2^32 (VER04r 14)",
                 ));
             }
-            plans.push(SuitePlan::new(
-                &program,
-                suite,
-                domains,
-                cost.total,
-                profile.chunk_size,
-            )?);
+            resolved.push(domains);
         }
         let stride = match profile.slim_stride {
             SlimStride::Auto => None,
             SlimStride::Every(s) => Some(s),
         };
-        let mut results = Vec::with_capacity(plans.len());
-        for (suite, plan) in lowered.suites.iter().zip(&plans) {
+        // Pass 2: plan, run and drop one suite at a time.
+        let mut results = Vec::with_capacity(resolved.len());
+        for ((suite, cost), domains) in lowered
+            .suites
+            .iter()
+            .zip(&analysis.suite_costs)
+            .zip(resolved)
+        {
+            let plan = SuitePlan::new(&program, suite, domains, cost.total, profile.chunk_size)?;
             let opts = SuiteOptions {
                 stride,
                 slim_chunks: profile

@@ -52,7 +52,7 @@
 use coding_adventures_sha256::sha256_hex;
 
 use crate::error::{code, GenError};
-use crate::types::Ty;
+use crate::types::{Ty, Width};
 use crate::value::Value;
 
 /// `warrant-stream-v1\0`.
@@ -161,6 +161,11 @@ pub fn encode(ty: &Ty, v: &Value, out: &mut Vec<u8>) -> Result<(), GenError> {
     match (ty, v) {
         (Ty::Bool, Value::Bool(b)) => out.push(u8::from(*b)),
         (Ty::Nat | Ty::Fixed(_), Value::Int(i)) => {
+            if let Some(t) = ty.fixed() {
+                if *i < t.min() || *i > t.max() {
+                    return Err(bad("is outside the range of its fixed-width type"));
+                }
+            }
             let signed = ty.fixed().is_some_and(|t| t.signed());
             if signed {
                 let n = i64::try_from(*i).map_err(|_| bad("does not fit its signed type"))?;
@@ -172,7 +177,12 @@ pub fn encode(ty: &Ty, v: &Value, out: &mut Vec<u8>) -> Result<(), GenError> {
                 out.extend_from_slice(&n.to_le_bytes());
             }
         }
-        (Ty::Bytes(_), Value::Bytes(b)) => {
+        (Ty::Bytes(width), Value::Bytes(b)) => {
+            if let Some(Width::Lit(n)) = width {
+                if b.len() as u64 != *n {
+                    return Err(bad("does not have the declared Bytes<N> length"));
+                }
+            }
             out.push(0x20);
             put_u32(out, b.len())?;
             out.extend_from_slice(b);
@@ -309,6 +319,14 @@ mod tests {
         // a Nat value is 0..=2^64-1
         assert!(encode(&Ty::Nat, &Value::Int(1 << 64), &mut out).is_err());
         assert!(encode(&Ty::Nat, &Value::Int(-1), &mut out).is_err());
+        // fixed-width range (L2): U8 300 and I8 200 are not values of their types
+        assert!(encode(&Ty::Fixed(FixedTy::U8), &Value::Int(300), &mut out).is_err());
+        assert!(encode(&Ty::Fixed(FixedTy::U8), &Value::Int(255), &mut out).is_ok());
+        assert!(encode(&Ty::Fixed(FixedTy::I8), &Value::Int(200), &mut out).is_err());
+        assert!(encode(&Ty::Fixed(FixedTy::I8), &Value::Int(-128), &mut out).is_ok());
+        // Bytes<N> has exactly N bytes
+        assert!(encode(&Ty::bytes_n(2), &Value::bytes(&[1]), &mut out).is_err());
+        assert!(encode(&Ty::bytes_n(2), &Value::bytes(&[1, 2]), &mut out).is_ok());
         assert!(encode(&Ty::Fixed(FixedTy::U64), &Value::Int(-1), &mut out).is_err());
         assert!(encode(&Ty::Fixed(FixedTy::I64), &Value::Int(1 << 63), &mut out).is_err());
         // Int has no stream encoding
