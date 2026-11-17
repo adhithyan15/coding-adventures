@@ -4939,6 +4939,32 @@ repository-owned signature verification, certificate name/path validation,
 trust-root and revocation integration, TLS transport, and HTTP composition
 remain blockers. Concrete HTTPS remains unavailable.
 
+An allocation-free `tls13-server-hello-selection` prerequisite binds one
+structurally decoded ordinary `ServerHello` or `HelloRetryRequest` to the
+exact decoded `ClientHello` and its policy-bearing cipher-suite offer. Before
+accepting any server selection, the binder requires the offer's entry count,
+wire identifiers, and preference order to equal the cipher-suite vector
+retained by that exact `ClientHello`; detached, truncated, reordered, or
+otherwise substituted offer evidence fails closed. It then requires the
+server's legacy session-id echo to equal the exact client session ID and asks
+the same retained offer and data-driven cipher-suite policy to validate the
+server's selected wire identifier. Success retains the public ServerHello
+kind and returns the repository-owned selected-suite descriptor that binds the
+record algorithm, HKDF hash, key lengths, and per-key record ceiling. Stable
+failures and diagnostics retain no session ID, offer, selection, random,
+handshake, or policy payloads.
+
+This selection binding does not parse either handshake body, interpret or
+authorize extensions, require or validate `supported_versions`, compare a
+post-retry `ServerHello` with the earlier `HelloRetryRequest`, apply the
+transcript `message_hash` rewrite, sequence a handshake, send alerts, derive
+keys, protect records, parse or validate certificates, establish trust,
+enforce revocation, perform I/O, authorize HTTP or OAuth transport, or open a
+network connection. Extension policy, retry-state and transcript composition,
+key schedule, certificate validation, TLS transport, and HTTP composition
+remain blockers. Concrete HTTPS and live-provider readiness remain
+unavailable.
+
 An allocation-free `tls13-alpn` prerequisite now owns the RFC 7301
 `application_layer_protocol_negotiation` extension data needed to bind a
 future repository-owned TLS client to one application protocol. A client
