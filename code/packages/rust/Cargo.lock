@@ -14612,6 +14612,10 @@ name = "tls13-compatibility-change-cipher-spec"
 version = "0.1.0"
 
 [[package]]
+name = "tls13-cookie"
+version = "0.1.0"
+
+[[package]]
 name = "tls13-encrypted-extensions-message"
 version = "0.1.0"
 dependencies = [
