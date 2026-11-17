@@ -61,11 +61,12 @@ func TestNoThirdPartyDependencies(t *testing.T) {
 			if !strings.HasPrefix(to, "../") || strings.Contains(to, " ") {
 				t.Errorf("go.mod line %d: replace target is not a relative in-repo path: %q", n+1, to)
 			}
-			i := strings.Index(to, "/packages/go/")
-			if i < 0 {
-				t.Errorf("go.mod line %d: replace target is not under code/packages/go: %q", n+1, to)
-			} else if strings.Contains(to[i+len("/packages/go/"):], "..") {
-				t.Errorf("go.mod line %d: replace target climbs out of its package after packages/go: %q", n+1, to)
+			// kiln is code/programs/go/kiln, so this prefix reaches code/packages/go.
+			const wantPrefix = "../../../packages/go/"
+			if !strings.HasPrefix(to, wantPrefix) {
+				t.Errorf("go.mod line %d: replace target must start with %s: %q", n+1, wantPrefix, to)
+			} else if strings.Contains(to[len(wantPrefix):], "..") || strings.Contains(to[len(wantPrefix):], "/") {
+				t.Errorf("go.mod line %d: replace target must be one package directory: %q", n+1, to)
 			}
 			replaces[from] = true
 		default:

@@ -133,6 +133,20 @@ func TestSeqDiffSeeded(t *testing.T) {
 	t.Logf("%d sequences, failOpen=%d, other problems=%d; allowed rows: %v", n, failOpen, bad-failOpen, counts)
 }
 
+// A split call that is over its arity cap once glued, and has a later syntax
+// defect: the old scanner says arity, the grammar path says a syntax reason.  The
+// arity row is judged on the GLUED text (a resumed line has no call name).
+func TestGluedOverArityRow(t *testing.T) {
+	seq := []string{"1  fork( <unfinished ...>", "1  <... fork resumed>AT_FDCWD</w>>,) = ?"}
+	p, fo, rows := seqVerdict(seq, false)
+	if p != "" || fo {
+		t.Fatalf("%s (failOpen=%v)", p, fo)
+	}
+	if len(rows) != 1 || rows[0] != "too many arguments and a later error" {
+		t.Errorf("rows = %v", rows)
+	}
+}
+
 // FuzzSeqDiff: up to four lines (split on newline), shared state.
 func FuzzSeqDiff(f *testing.F) {
 	for _, s := range []string{
@@ -143,6 +157,7 @@ func FuzzSeqDiff(f *testing.F) {
 		"1  ???( <unfinished ...>\n1  <... ??? resumed>)  = ?\n1  <... ??? resumed>)  = ?",
 		"1  stat( <unfinished ...>\n1  stat(a) = 0",
 		"1  exit_group(0 <unfinished ...>\n1  <... exit_group resumed>) = ?",
+		"1  fork( <unfinished ...>\n1  <... fork resumed>AT_FDCWD</w>>,) = ?",
 	} {
 		f.Add(s)
 	}

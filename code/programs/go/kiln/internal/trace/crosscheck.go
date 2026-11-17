@@ -436,7 +436,7 @@ func stricterRow(line, oldReason, newReason string, data []byte, lineNo, maxLine
 		return "malformed resumed half with no matching pending call"
 	case newReason == reasonAmbiguous && oldReason == reasonUnparsable && (f.badAnnot || f.badQuoted || (f.errTok != "" && f.errAmbig)):
 		return "structural error and a later bad annotation or string"
-	case (newReason == reasonUnparsable || newReason == reasonAmbiguous) && oldReason == reasonArity && f.overArity:
+	case (newReason == reasonUnparsable || newReason == reasonAmbiguous) && oldReason == reasonArity && (f.overArity || glueOverArity(data, lineNo, f)):
 		return "too many arguments and a later error"
 	}
 	return ""
@@ -448,8 +448,23 @@ const reasonAmbiguous = reasonAmbiguousPath
 // pending prefix exceeds a cap the grammar path enforces.  It rebuilds the
 // prefix from the earlier lines of data, the way the pending map did.
 func gluedTooBig(data []byte, lineNo, maxLine int, f lineFacts) bool {
-	if !f.resumed || lineNo <= 0 {
+	cur := gluedText(data, lineNo, f)
+	if cur == "" {
 		return false
+	}
+	if len(cur) > maxLine {
+		return true
+	}
+	g := factsOf("1  " + cur)
+	return g.tokens > maxLineTokens || g.depth > straceparser.MaxBracketNesting
+}
+
+// gluedText rebuilds, for a resumed line, the call the old scanner glued: the
+// pending prefix of the same pid plus the text after "resumed>".  It is "" for
+// any other line.
+func gluedText(data []byte, lineNo int, f lineFacts) string {
+	if !f.resumed || lineNo <= 0 {
+		return ""
 	}
 	last := map[int]string{} // pid -> pending prefix
 	var cur string
@@ -478,12 +493,12 @@ func gluedTooBig(data []byte, lineNo, maxLine int, f lineFacts) bool {
 			delete(last, pid)
 		}
 	}
-	if cur == "" {
-		return false
-	}
-	if len(cur) > maxLine {
-		return true
-	}
-	g := factsOf("1  " + cur)
-	return g.tokens > maxLineTokens || g.depth > straceparser.MaxBracketNesting
+	return cur
+}
+
+// glueOverArity: a resumed line has no call name of its own, so the arity of the
+// call it completes is counted on the glued text.
+func glueOverArity(data []byte, lineNo int, f lineFacts) bool {
+	g := gluedText(data, lineNo, f)
+	return g != "" && factsOf("1  "+g).overArity
 }
