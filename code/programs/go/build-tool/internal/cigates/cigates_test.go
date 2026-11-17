@@ -300,7 +300,13 @@ func TestPathShardedLanguageDiffsStaySelective(t *testing.T) {
 		"bengali", "gujarati", "hindi", "kannada", "malayalam", "marathi",
 		"marwadi", "punjabi", "sanskrit", "tamil", "telugu", "urdu",
 	}
-	for _, count := range []int{256, 10_751} {
+	// 8,192 is the largest "big diff" kept strictly selective: the match-work
+	// ceiling (50,000,000 units, a normative cross-language constant in
+	// ci-gate-registry.md) is charged per distinct pattern x changed file pair,
+	// so it scales with the registry. At 10,751 paths the real registry (138
+	// distinct patterns, ~4.9k literal-prefix units) costs ~52M units and
+	// legitimately exceeds the ceiling; that size is covered separately below.
+	for _, count := range []int{256, 8_192} {
 		t.Run(fmt.Sprintf("%d-paths", count), func(t *testing.T) {
 			changed := make([]string, 0, count)
 			packageFiles := 8
@@ -331,6 +337,41 @@ func TestPathShardedLanguageDiffsStaySelective(t *testing.T) {
 				t.Fatalf("matcher calls = %d, want at most 100 after literal-segment filtering", calls)
 			}
 		})
+	}
+}
+
+// At 10,751 paths the registry may have outgrown the work ceiling. That is not
+// a bug: the ceiling is a hard planning failure that CI answers with a visible
+// run-all fallback (ci.yml, "CI_GATE_MATCH_LIMIT_EXCEEDED"). What must hold is
+// that the outcome is exactly one of: selective, or the stable limit error with
+// zero matcher calls. Any other error, or a limit error after matcher calls,
+// is a regression.
+func TestHugePathShardedDiffIsSelectiveOrBoundedFailure(t *testing.T) {
+	reg, err := Load(realRegistryPath)
+	if err != nil {
+		t.Fatalf("load real registry: %v", err)
+	}
+	changed := make([]string, 0, 10_751)
+	for index := 0; index < 10_751; index++ {
+		changed = append(changed, fmt.Sprintf(
+			"code/learning/human-languages/tamil/curriculum-membership.d/%05d-owner.json", index))
+	}
+	calls := 0
+	got, err := evaluateWithMatcher(reg, map[string]bool{}, changed, false, func(pattern, path string) bool {
+		calls++
+		return globmatch.MatchPath(pattern, path)
+	})
+	if err != nil {
+		if !errors.Is(err, ErrMatchWorkLimitExceeded) {
+			t.Fatalf("Evaluate: unexpected error %v", err)
+		}
+		if calls != 0 || len(got) != 0 {
+			t.Fatalf("limit error must precede every matcher call and return no gates; calls=%d gates=%d", calls, len(got))
+		}
+		return
+	}
+	if calls > 100 {
+		t.Fatalf("matcher calls = %d, want at most 100 after literal-segment filtering", calls)
 	}
 }
 
