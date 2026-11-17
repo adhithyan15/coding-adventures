@@ -34,7 +34,8 @@ package parser
 // the same memo entries (nothing is added: the memo is keyed by rule and
 // position, and the first run created every entry it needs), records the same
 // failures (already in the set), and ends the loop because the match did not
-// get longer. So running it changes no tree, position, error text, limit
+// get longer. (The seed is also consulted by the memo-hit height check, which
+// is why self-reaching at zero width, through EOF, still counts: see below.) So running it changes no tree, position, error text, limit
 // refusal, frame count, depth or memo-slot count, and skipping it changes
 // nothing either. The tests prove this by running every grammar both ways.
 //
@@ -58,7 +59,14 @@ package parser
 //   - A token reference named EOF, or of the EOF token type, counts as
 //     nullable: matching the synthetic EOF past the end of the tokens does not
 //     advance the position. A literal with empty text is nullable too (it can
-//     match the zero-width EOF).
+//     match the zero-width EOF). THESE TWO ARE REQUIRED, NOT MERELY CAUTIOUS.
+//     A rule like `a = EOF ( a NUM | Y | EOF )` really does reach itself at
+//     the same position at the end of the input. The growth loop can never
+//     lengthen a zero-width match there, but its re-run consults the rule's
+//     own seed, and that memo hit runs the tree-height check
+//     (depth + height > MaxDepth), which can raise the sticky ErrMaxDepth at
+//     a tight MaxDepth. Skipping the loop would turn that refusal into a
+//     success, so the rule must keep its loop.
 //   - The body of a lookahead is a left call (it runs at the current position).
 //   - A separated repetition contributes BOTH its element and its separator
 //     as left calls, even when the element is not nullable (strictly, the
@@ -66,9 +74,11 @@ package parser
 //   - A rule reference to an undefined rule can never match, so it neither is
 //     nullable nor calls anything.
 //
-// Over-approximating only costs speed (the loop runs when it need not); it
-// never changes a result, since the loop is a no-op for a non-left-recursive
-// rule anyway. Compiled's forceLeftRec knob exists so tests can check this.
+// Over-approximating only costs speed (the loop runs when it need not); the
+// loop's observable effects for a rule that cannot actually left-recurse are
+// nil. The converse is the dangerous direction: a rule wrongly left out can
+// lose a growth step or a MaxDepth refusal. Compiled's forceLeftRec knob and
+// the differential tests (including tight MaxDepth) exist to check this.
 
 import "github.com/adhithyan15/coding-adventures/code/packages/go/lexer"
 

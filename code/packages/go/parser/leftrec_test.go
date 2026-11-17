@@ -167,6 +167,10 @@ func statParse(c *Compiled, toks []lexer.Token, opts Options) string {
 
 var leftRecOptionSets = []Options{
 	{},
+	{MaxDepth: 1},
+	{MaxDepth: 2},
+	{MaxDepth: 3},
+	{MaxDepth: 4},
 	{MaxDepth: 5},
 	{MaxDepth: 12},
 	{MaxMemoSlots: 9},
