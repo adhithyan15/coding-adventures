@@ -1,0 +1,6 @@
+//! `coding_adventures_warrant_corpus_gen`: the Warrant corpus v2 emitter (VER04r slice S3).
+//!
+//! Work in progress across the S3a commits; the full crate documentation arrives with the last one.
+
+pub mod error;
+pub mod json;
