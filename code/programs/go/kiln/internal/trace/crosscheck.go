@@ -486,6 +486,15 @@ func gluedText(data []byte, lineNo int, f lineFacts) string {
 			}
 			break
 		}
+		if strings.HasPrefix(body, "--- ") && strings.HasSuffix(body, " ---") {
+			// A signal line leaves every pending call alone (the old scanner's
+			// handleLine returns before it touches pend, unless the pid's call
+			// was killed at entry, which is not a glued call).  strace prints
+			// one between the halves of a split call, so it must not forget the
+			// prefix.  Exit lines (+++) DO end the pid's pending call, and the
+			// branch below mirrors that by deleting it.
+			continue
+		}
 		if strings.HasSuffix(body, " <unfinished ...>") || strings.HasSuffix(body, "<unfinished ...>") {
 			j := strings.LastIndex(body, "<unfinished ...>")
 			last[pid] = strings.TrimSuffix(body[:j], " ")
