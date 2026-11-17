@@ -4,7 +4,7 @@ cargo clippy -p coding_adventures_warrant_corpus_gen --all-targets -- -D warning
 # declares it); the analyzer checks the source against that manifest.
 cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .
 # The dev-only test-hooks feature (seeded-wrong evaluators) must not reach the shipped binary.
-! cargo tree -e normal,features -p coding_adventures_warrant_corpus_gen | grep -q test-hooks
+f=$(cargo tree -e normal --depth 0 -f '{f}' -p coding_adventures_warrant_corpus_gen) && ! echo "$f" | grep -q test-hooks
 # The gate, end to end through the real binary: generate ct-compare into a temp directory, --check
 # it (must pass), flip a chunk line, --check again: it must FAIL with the located drift finding
 # (a panic or a usage error does not count). The committed fixture directory and a --check against

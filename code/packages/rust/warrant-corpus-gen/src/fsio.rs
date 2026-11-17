@@ -109,10 +109,15 @@ pub fn read_regular(path: &Path, cap: u64, follow: bool) -> Result<(Vec<u8>, u64
         return Err(io("file", "is not a regular file"));
     }
     let f = fs::File::open(path).map_err(|_| io("file", "missing or unreadable"))?;
-    let len = f
+    let hmeta = f
         .metadata()
-        .map_err(|_| io("file", "missing or unreadable"))?
-        .len();
+        .map_err(|_| io("file", "missing or unreadable"))?;
+    // the handle's own metadata: the entry may have been swapped for a device or directory
+    // between the path check and the open
+    if !hmeta.is_file() {
+        return Err(io("file", "is not a regular file"));
+    }
+    let len = hmeta.len();
     let mut buf = Vec::new();
     f.take(cap.saturating_add(1))
         .read_to_end(&mut buf)
@@ -165,7 +170,7 @@ pub fn write_corpus(out: &Path, c: &CorpusV2) -> Result<(), GenError> {
         return Err(io("chunks", "chunks is a symbolic link: refused"));
     }
     // a leftover temporary of ours from an interrupted run is not "someone else's file": it is
-    // overwritten (or refused if it is a symbolic link) when its own file is written
+    // unlinked and recreated exclusively (a link or hard link there is unlinked, never written through) when its own file is written
     let mut known = owned_names(c);
     known.extend(owned_names(c).iter().map(|n| format!(".{n}.tmp")));
     let extras = chunk_dir_extras(out, &known)?;
