@@ -88,6 +88,28 @@ def test_a_whitespace_only_profile_line_is_refused(line):
     assert parse_profile(b"\n\nbudget 1").budget == 1
 
 
+@pytest.mark.parametrize(
+    "text",
+    [
+        "budget 1\t\n",
+        "fault a\u00a0b c\n",
+        "fault a\u00a0 b\n",
+        "fault a b\u0085\n",
+        "fault a b\u001c\n",
+        "\ufeffbudget 1\n",
+        "fault a \u00a0\n",
+        "fault a\tb c\n",
+        "fault \u00e9 b\n",
+    ],
+)
+def test_profile_tokens_are_printable_ascii_only(text):
+    # the same table is in the generator's profile.rs tests
+    with pytest.raises(OracleError) as err:
+        parse_profile(text.encode())
+    assert err.value.code == "corpus"
+    assert parse_profile(b"fault a-b_c.d b~!\n").faults == [("a-b_c.d", "b~!")]
+
+
 # -- derivation ---------------------------------------------------------------------------------
 
 
@@ -223,4 +245,5 @@ def test_cli_expect_generator(capsys):
     assert run([*argv, "--expect-generator", f"{name}@{version}9"]) == 1
     assert "MISMATCH header generator" in capsys.readouterr().err
     assert run([*argv, "--expect-generator", "nonsense"]) == 2
+    assert run([*argv, "--expect-generator", ""]) == 2  # an empty value must not disable the pin
     assert run(argv) == 0

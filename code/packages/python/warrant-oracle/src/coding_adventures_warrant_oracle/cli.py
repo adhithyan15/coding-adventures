@@ -126,7 +126,7 @@ def _verify_v2(args: argparse.Namespace) -> int:
         pathlib.Path(args.bindings) if args.bindings else None,
         repo_root=pathlib.Path(args.repo_root) if args.repo_root else None,
         expect_generator=(
-            parse_expected_generator(args.expect_generator) if args.expect_generator else None
+            parse_expected_generator(args.expect_generator) if args.expect_generator is not None else None
         ),
     )
     for miss in report.mismatches:

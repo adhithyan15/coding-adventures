@@ -32,7 +32,8 @@
 //! * `accept_blind <op> <fault>` ([D15], VER04r 16.8) excuses a fault that every candidate
 //!   claim is blind to.  It must repeat a `fault` line of the same file (checked here); that
 //!   the fault really is all-blind is checked against the document ([`crate::emit`]);
-//! * an empty token (two spaces in a row, a leading or trailing space) is an error, and so
+//! * a token is printable ASCII (`!`..=`~`) and non-empty: two spaces in a row, a leading or
+//!   trailing space, a tab, a no-break space, NEL, a control character or a BOM are errors, and so
 //!   are `budget 0` and `slim_stride 0` (VER04r 16.4 item 7; the oracle's reader accepts
 //!   these until S4 part 2);
 //! * a number is canonical decimal: ASCII digits only, no leading zero except `"0"`, at
@@ -156,8 +157,13 @@ pub fn parse_profile(raw: &[u8]) -> Result<Profile, GenError> {
         let parts: Vec<&str> = line.split(' ').collect();
         // An empty token (`fault  eq`, a leading or trailing space) is a malformed line, not
         // a name (VER04r 16.4 item 7).
-        if parts.iter().any(|p| p.is_empty()) {
-            return Err(bad("a profile line has an empty token"));
+        // Every token is printable ASCII (`!`..=`~`), the oracle's rule: no tab, NBSP, NEL,
+        // control character or BOM can hide in or beside a name.
+        if parts
+            .iter()
+            .any(|p| p.is_empty() || !p.bytes().all(|b| (b'!'..=b'~').contains(&b)))
+        {
+            return Err(bad("a profile token is empty or not printable ASCII"));
         }
         match (parts[0], parts.len()) {
             (key @ ("budget" | "chunk_size" | "slim_stride" | "max_ir_cost"), 2) => {
@@ -286,6 +292,25 @@ mod tests {
         }
         // an empty line, and the end of a file without a final LF, are still fine
         assert!(parse("\n\nbudget 1").is_ok());
+    }
+
+    #[test]
+    fn tokens_are_printable_ascii_only() {
+        // the same table is in python/warrant-oracle/tests/test_accept_blind.py
+        for text in [
+            "budget 1\t\n",
+            "fault a\u{a0}b c\n",
+            "fault a\u{a0} b\n",
+            "fault a b\u{85}\n",
+            "fault a b\u{1c}\n",
+            "\u{feff}budget 1\n",
+            "fault a \u{a0}\n",
+            "fault a\tb c\n",
+            "fault \u{e9} b\n",
+        ] {
+            assert_eq!(parse(text).unwrap_err().code, code::PROFILE, "{text:?}");
+        }
+        assert!(parse("fault a-b_c.d b~!\n").is_ok());
     }
 
     #[test]

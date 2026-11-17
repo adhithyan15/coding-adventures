@@ -15,7 +15,7 @@ its default of 2,000 (ceiling 65,536); no command-line flag or environment
 variable can (section 4.2 rule 6: an override is a second place for the limit to
 live, and the report could not show it).  The reader is strict: LF only, one
 value per key, no duplicates, no unknown keys, ranges checked, and (section 16.4
-item 7, closed by slice S4 part 2) no empty token, no repeated ``fault`` or
+item 7, closed by slice S4 part 2) no token that is empty or not printable ASCII, no repeated ``fault`` or
 ``slim_chunk`` line, no ``budget 0`` and no ``slim_stride 0``.
 
 ``accept_blind <op> <fault>`` (owner decision [D15], section 16.8) excuses a fault that
@@ -26,6 +26,7 @@ checked against the document (:func:`.faults.derive_controls`).
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, field
 
 from .errors import OracleError
@@ -33,6 +34,9 @@ from .errors import OracleError
 DEFAULT_MAX_IR_COST = 2_000
 MAX_IR_COST_CEILING = 65_536
 MAX_PROFILE_BYTES = 64 * 1024
+# A token is printable ASCII only: no space, tab, NBSP, NEL, control character or BOM can hide
+# in a name, and the generator's reader applies the same byte rule.
+_TOKEN = re.compile(r"[!-~]+")
 
 
 @dataclass
@@ -76,8 +80,8 @@ def parse_profile(raw: bytes) -> Profile:
         if not line:
             continue
         parts = line.split(" ")
-        if any(not token or token != token.strip() for token in parts):
-            raise OracleError("corpus", "a profile line has an empty or padded token")
+        if not all(_TOKEN.fullmatch(token) for token in parts):
+            raise OracleError("corpus", "a profile token is empty or not printable ASCII")
         key = parts[0]
         if key in ("budget", "chunk_size", "slim_stride", "max_ir_cost"):
             if key in seen or len(parts) != 2:
