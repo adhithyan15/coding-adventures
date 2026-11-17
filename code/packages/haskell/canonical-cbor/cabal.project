@@ -1,0 +1,4 @@
+packages: .
+
+package canonical-cbor
+  coverage: True

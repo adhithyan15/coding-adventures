@@ -1,0 +1,19 @@
+{
+  "schema": "warrant-assurance-profile-v1",
+  "name": "swf-shape-to-paint",
+  "kind": "transform",
+  "rows": {
+    "326": {
+      "applicability": "excluded",
+      "reason": "no keys: the package takes and generates no key material; operands are bounded TWIPS coordinates, shape records, fill/line styles, and paint instructions"
+    },
+    "327": {
+      "applicability": "excluded",
+      "reason": "pure vector graphics transform: package implements SWF shape parsing, dual-fill loop reconstruction and paint-instructions lowering only, no cipher, hash or MAC"
+    },
+    "407": {
+      "applicability": "excluded",
+      "reason": "bounded work per call: shape parsing, loop reconstruction and lowering are bounded by MAX_STYLES = 65535, MAX_EDGES = 100000, and coordinate bounds"
+    }
+  }
+}

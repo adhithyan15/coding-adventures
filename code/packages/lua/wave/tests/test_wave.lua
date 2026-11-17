@@ -31,8 +31,8 @@ describe("wave", function()
     -- Meta / version
     -- -----------------------------------------------------------------------
 
-    it("has VERSION 0.1.0", function()
-        assert.equals("0.1.0", wave.VERSION)
+    it("has VERSION 0.2.0", function()
+        assert.equals("0.2.0", wave.VERSION)
     end)
 
     it("exports TWO_PI constant", function()
@@ -115,6 +115,57 @@ describe("wave", function()
     -- -----------------------------------------------------------------------
     -- cosine_wave
     -- -----------------------------------------------------------------------
+
+    -- -----------------------------------------------------------------------
+    -- Very large cycle counts (TRIG-CONV TC-14)
+    --
+    -- trig returns NaN beyond 2^29 radians.  The raw angle 2*pi*f*t + phase
+    -- passes that after about 8.5e7 cycles, so the phase must be reduced to
+    -- its fractional cycle before sin/cos.  Here f = 1e9 + 0.25 Hz sampled at
+    -- 1 Hz: sample i has 1e9*i + i/4 cycles, i.e. a raw angle of 6.3e9 * i
+    -- radians (12x the limit at i = 1), but a fractional cycle of just i/4.
+    -- -----------------------------------------------------------------------
+
+    describe("large cycle counts", function()
+
+        it("sine_wave stays finite and correct past 2^29 radians", function()
+            local s = wave.sine_wave(1e9 + 0.25, 1.0, 0, 1, 5)
+            -- fractional cycles 0, 1/4, 1/2, 3/4, 0
+            assert.is_true(approx_eq(s[1], 0.0, 1e-9))
+            assert.is_true(approx_eq(s[2], 1.0, 1e-9))
+            assert.is_true(approx_eq(s[3], 0.0, 1e-9))
+            assert.is_true(approx_eq(s[4], -1.0, 1e-9))
+            assert.is_true(approx_eq(s[5], 0.0, 1e-9))
+            for i = 1, #s do assert.is_true(s[i] == s[i], "NaN at sample " .. i) end
+        end)
+
+        it("cosine_wave stays finite and correct past 2^29 radians", function()
+            local c = wave.cosine_wave(1e9 + 0.25, 1.0, 0, 1, 5)
+            assert.is_true(approx_eq(c[1], 1.0, 1e-9))
+            assert.is_true(approx_eq(c[2], 0.0, 1e-9))
+            assert.is_true(approx_eq(c[3], -1.0, 1e-9))
+            assert.is_true(approx_eq(c[4], 0.0, 1e-9))
+            assert.is_true(approx_eq(c[5], 1.0, 1e-9))
+        end)
+
+        it("a huge phase offset is reduced, not turned into NaN", function()
+            -- 1e10 radians is far beyond 2^29; fmod brings it to [0, 2*pi).
+            local s = wave.sine_wave(1.0, 1.0, 1e10, 8, 4)
+            for i = 1, #s do assert.is_true(s[i] == s[i], "NaN at sample " .. i) end
+            local reduced = math.fmod(1e10, wave.TWO_PI)
+            local expected = wave.sine_wave(1.0, 1.0, reduced, 8, 4)
+            for i = 1, #s do assert.is_true(approx_eq(s[i], expected[i], 1e-9)) end
+        end)
+
+        it("matches the reference sine at a moderate time to 1e-9", function()
+            -- 440 Hz, 100000 samples at 44100 Hz (2.27 s, ~998 cycles).
+            local s = wave.sine_wave(440, 1.0, 0.5, 44100, 100000)
+            for _, i in ipairs({ 1, 17, 5000, 44100, 99999 }) do
+                local t = (i - 1) / 44100
+                assert.is_true(approx_eq(s[i], math.sin(2 * math.pi * 440 * t + 0.5), 1e-9), "i=" .. i)
+            end
+        end)
+    end)
 
     describe("cosine_wave", function()
 

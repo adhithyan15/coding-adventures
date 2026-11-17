@@ -1,0 +1,217 @@
+{
+  "schema_version": "ver24-effect-cert-v1",
+  "package": "rust/arcade-sfx",
+  "source_digest": "6128716cd63774614d42f8f92a59a611980abd94ad53e1e124733b520523233a",
+  "manifest_digest": "2541730e3ad447dd1d02c578e43027b7432a1b944050ee007202fb8fcfe9562e",
+  "declared_effects": [],
+  "entry_points": [
+    {
+      "name": "is_noise",
+      "signature": "pub const fn is_noise(&self) -> bool",
+      "effects": []
+    },
+    {
+      "name": "is_square",
+      "signature": "pub const fn is_square(&self) -> bool",
+      "effects": []
+    },
+    {
+      "name": "validate_waveform",
+      "signature": "pub fn validate_waveform(&self) -> Result<(), SfxError>",
+      "effects": []
+    },
+    {
+      "name": "from_ms",
+      "signature": "pub fn from_ms( attack_ms: u32, decay_ms: u32, sustain_level_q16: u32, release_ms: u32, sample_rate_hz: u32, ) -> Result<Self, SfxError>",
+      "effects": []
+    },
+    {
+      "name": "from_samples",
+      "signature": "pub fn from_samples( attack_samples: u32, decay_samples: u32, sustain_level_q16: u32, release_samples: u32, ) -> Result<Self, SfxError>",
+      "effects": []
+    },
+    {
+      "name": "total_envelope_samples",
+      "signature": "pub const fn total_envelope_samples(&self, sustain_samples: u32) -> u32",
+      "effects": []
+    },
+    {
+      "name": "compute_level",
+      "signature": "pub fn compute_level(&self, sample_idx: u32, sustain_samples: u32) -> u32",
+      "effects": []
+    },
+    {
+      "name": "compute_release_level",
+      "signature": "pub fn compute_release_level(&self, release_elapsed: u32, start_level_q16: u32) -> u32",
+      "effects": []
+    },
+    {
+      "name": "create_patch",
+      "signature": "pub fn create_patch( waveform: Waveform, start_freq_hz: u32, end_freq_hz: u32, freq_sweep_samples: u32, envelope: AdsrEnvelope, sustain_samples: u32, gain_q16: u32, ) -> Result<Self, SfxError>",
+      "effects": []
+    },
+    {
+      "name": "create_arpeggio_patch",
+      "signature": "pub fn create_arpeggio_patch( waveform: Waveform, start_freq_hz: u32, end_freq_hz: u32, freq_sweep_samples: u32, arpeggio_step_samples: u32, arpeggio_freq_hz: u32, envelope: AdsrEnvelope, sustain_samples: u32, gain_q16: u32, ) -> Result<Self, SfxError>",
+      "effects": []
+    },
+    {
+      "name": "default_patch",
+      "signature": "pub const fn default_patch() -> Self",
+      "effects": []
+    },
+    {
+      "name": "validate_patch",
+      "signature": "pub fn validate_patch(&self, sample_rate_hz: u32) -> Result<(), SfxError>",
+      "effects": []
+    },
+    {
+      "name": "patch_total_samples",
+      "signature": "pub const fn patch_total_samples(&self) -> u32",
+      "effects": []
+    },
+    {
+      "name": "to_patch",
+      "signature": "pub fn to_patch(&self, sample_rate_hz: u32) -> Result<SfxPatch, SfxError>",
+      "effects": []
+    },
+    {
+      "name": "new",
+      "signature": "pub fn new(sample_rate_hz: u32) -> Result<Self, SfxError>",
+      "effects": []
+    },
+    {
+      "name": "empty_voice",
+      "signature": "pub const fn empty_voice(sample_rate_hz: u32) -> Self",
+      "effects": []
+    },
+    {
+      "name": "trigger_preset",
+      "signature": "pub fn trigger_preset(&mut self, preset: SfxPreset) -> Result<(), SfxError>",
+      "effects": []
+    },
+    {
+      "name": "trigger_patch",
+      "signature": "pub fn trigger_patch(&mut self, patch: SfxPatch) -> Result<(), SfxError>",
+      "effects": []
+    },
+    {
+      "name": "trigger_release",
+      "signature": "pub fn trigger_release(&mut self)",
+      "effects": []
+    },
+    {
+      "name": "reset_voice",
+      "signature": "pub fn reset_voice(&mut self)",
+      "effects": []
+    },
+    {
+      "name": "is_active",
+      "signature": "pub const fn is_active(&self) -> bool",
+      "effects": []
+    },
+    {
+      "name": "current_voice_sample",
+      "signature": "pub const fn current_voice_sample(&self) -> u32",
+      "effects": []
+    },
+    {
+      "name": "total_voice_samples",
+      "signature": "pub const fn total_voice_samples(&self) -> u32",
+      "effects": []
+    },
+    {
+      "name": "route_voice_to_ring_buffer",
+      "signature": "pub fn route_voice_to_ring_buffer<const CAP: usize>( &mut self, ring: &mut audio_mixer_realtime::PcmRingBuffer<CAP>, scratch: &mut [i16], ) -> Result<usize, SfxError>",
+      "effects": []
+    },
+    {
+      "name": "empty",
+      "signature": "pub fn empty(sample_rate_hz: u32) -> Result<Self, SfxError>",
+      "effects": []
+    },
+    {
+      "name": "trigger_bank_preset",
+      "signature": "pub fn trigger_bank_preset(&mut self, preset: SfxPreset) -> Result<usize, SfxError>",
+      "effects": []
+    },
+    {
+      "name": "trigger_bank_patch",
+      "signature": "pub fn trigger_bank_patch(&mut self, patch: SfxPatch) -> Result<usize, SfxError>",
+      "effects": []
+    },
+    {
+      "name": "stop_bank_voice",
+      "signature": "pub fn stop_bank_voice(&mut self, voice_idx: usize) -> Result<(), SfxError>",
+      "effects": []
+    },
+    {
+      "name": "reset_bank",
+      "signature": "pub fn reset_bank(&mut self)",
+      "effects": []
+    },
+    {
+      "name": "active_bank_voices",
+      "signature": "pub fn active_bank_voices(&self) -> usize",
+      "effects": []
+    },
+    {
+      "name": "route_bank_to_ring_buffer",
+      "signature": "pub fn route_bank_to_ring_buffer<const CAP: usize>( &mut self, ring: &mut audio_mixer_realtime::PcmRingBuffer<CAP>, scratch: &mut [i16], ) -> Result<usize, SfxError>",
+      "effects": []
+    },
+    {
+      "name": "render_sfx_into",
+      "signature": "pub fn render_sfx_into(voice: &mut SfxVoice, out: &mut [i16]) -> Result<usize, SfxError>",
+      "effects": []
+    },
+    {
+      "name": "mix_bank_into",
+      "signature": "pub fn mix_bank_into<const N: usize>( bank: &mut SfxBank<N>, out: &mut [i16], ) -> Result<usize, SfxError>",
+      "effects": []
+    },
+    {
+      "name": "clamp_sample",
+      "signature": "pub const fn clamp_sample(v: i64) -> i16",
+      "effects": []
+    },
+    {
+      "name": "scale_gain",
+      "signature": "pub const fn scale_gain(sample: i32, gain_q16: u32) -> i32",
+      "effects": []
+    },
+    {
+      "name": "validate_sample_rate",
+      "signature": "pub const fn validate_sample_rate(sample_rate_hz: u32) -> Result<bool, SfxError>",
+      "effects": []
+    },
+    {
+      "name": "validate_frequency",
+      "signature": "pub const fn validate_frequency(freq_hz: u32, sample_rate_hz: u32) -> Result<bool, SfxError>",
+      "effects": []
+    },
+    {
+      "name": "lfsr_step_15",
+      "signature": "pub const fn lfsr_step_15(state: u16) -> u16",
+      "effects": []
+    },
+    {
+      "name": "lfsr_step_7",
+      "signature": "pub const fn lfsr_step_7(state: u16) -> u16",
+      "effects": []
+    },
+    {
+      "name": "export_sfx_to_pcm_audio",
+      "signature": "pub fn export_sfx_to_pcm_audio( patch: &SfxPatch, sample_rate_hz: u32, ) -> Result<pcm_audio::PcmAudio, SfxError>",
+      "effects": []
+    },
+    {
+      "name": "export_preset_to_pcm_audio",
+      "signature": "pub fn export_preset_to_pcm_audio( preset: SfxPreset, sample_rate_hz: u32, ) -> Result<pcm_audio::PcmAudio, SfxError>",
+      "effects": []
+    }
+  ],
+  "unconditional_roots": [],
+  "banned_construct_exceptions": [],
+  "label": "proved"
+}

@@ -1,0 +1,19 @@
+{
+  "schema": "warrant-assurance-profile-v1",
+  "name": "non-cryptographic-hash",
+  "kind": "transform",
+  "rows": {
+    "326": {
+      "applicability": "excluded",
+      "reason": "no keys generated or chosen: the package takes and generates no key material of a strength it must guarantee; the SipHash-2-4 key is a caller-supplied 128-bit operand of a keyed hash for hash-table flooding resistance, and the package draws no randomness (OS randomness lives in hash-analysis)"
+    },
+    "327": {
+      "applicability": "excluded",
+      "reason": "no cipher or cryptographic hash: FNV-1a, DJB2, a polynomial rolling hash and MurmurHash3 are non-cryptographic hashes for hash tables and sketches, and SipHash-2-4 is a keyed pseudorandom function against hash flooding; the package implements no encryption, no MAC for authentication and no collision-resistant digest, and its README (section Not cryptographic) says that none of them is one"
+    },
+    "407": {
+      "applicability": "excluded",
+      "reason": "bounded work per call: every operation is a single pass over its input with one constant-time step per byte (SipHash and MurmurHash3 one round per word) and a constant finalisation; no nested or input-dependent iteration beyond that one pass"
+    }
+  }
+}

@@ -1,1 +1,1 @@
-export * from "./note_frequency";
+export * from "./note_frequency.js";

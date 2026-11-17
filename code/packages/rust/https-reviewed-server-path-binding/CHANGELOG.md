@@ -7,6 +7,19 @@ All notable changes to this package will be documented in this file.
 ### Added
 
 - Exact-object composition between the complete HTTPS destination proof and
+  the exact recursive responder no-check complete fixed-path revocation policy,
+  deriving the leaf only through sealed repository-owned target evidence.
+- Exact-object composition between the complete HTTPS destination proof and
+  the exact alternative intermediate-status-responder revocation no-check
+  complete fixed-path policy, deriving the leaf only through sealed
+  repository-owned target evidence.
+- Exact-object composition between the complete HTTPS destination proof and
+  the exact double-nested no-check complete fixed-path revocation policy,
+  deriving the leaf only through sealed repository-owned target evidence.
+- Exact-object composition between the complete HTTPS destination proof and
+  the exact nested no-check complete fixed-path revocation policy, deriving
+  the leaf only through sealed repository-owned target evidence.
+- Exact-object composition between the complete HTTPS destination proof and
   the exact direct no-check complete fixed-path revocation policy, deriving the
   leaf only through sealed repository-owned target evidence.
 - Stronger exact-object composition between the complete HTTPS destination

@@ -1,0 +1,19 @@
+[package]
+name = "coding_adventures_music_analysis"
+version = "0.1.0"
+edition = "2021"
+description = "MUS08: Music Understanding, Analysis, and Sample-to-Score Transcription in pure safe Rust"
+license = "MIT"
+readme = "README.md"
+
+[dependencies]
+note-frequency = { package = "coding-adventures-note-frequency", path = "../note-frequency" }
+dsp-fft = { path = "../dsp-fft" }
+dsp-stft = { path = "../dsp-stft" }
+dsp-wavelets = { path = "../dsp-wavelets" }
+pcm-audio = { path = "../pcm-audio" }
+musical-instruments = { path = "../musical-instruments" }
+music-machine-core = { path = "../music-machine-core" }
+
+[dev-dependencies]
+coding_adventures_test_bootstrap = { path = "../test-bootstrap" }

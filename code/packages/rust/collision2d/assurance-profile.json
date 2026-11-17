@@ -1,0 +1,19 @@
+{
+  "schema": "warrant-assurance-profile-v1",
+  "name": "simulation",
+  "kind": "transform",
+  "rows": {
+    "326": {
+      "applicability": "excluded",
+      "reason": "no keys: the package takes and generates no key material; operands are bounded geometric quantities [attestation not machine-checked by any tool]"
+    },
+    "327": {
+      "applicability": "excluded",
+      "reason": "pure simulation: package implements 2D geometric collision routines only, no cipher, hash or MAC [attestation not machine-checked by any tool]"
+    },
+    "407": {
+      "applicability": "excluded",
+      "reason": "bounded work per call: all geometric queries run in constant O(1) time with bounded arithmetic and no unbounded loops [attestation not machine-checked by any tool]"
+    }
+  }
+}

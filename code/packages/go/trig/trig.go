@@ -1,322 +1,363 @@
 // Package trig provides trigonometric functions built from first principles.
 //
-// # Why Build Trig from Scratch?
+// # One algorithm, every language (TRIG-REF-1)
 //
-// Every programming language ships with sin() and cos() in its standard library.
-// So why would we reimplement them? Because understanding *how* these functions
-// work deepens our appreciation for mathematics and computing. The techniques
-// here — Taylor/Maclaurin series, range reduction, and iterative term computation
-// — are the same ideas used inside real math libraries (just with additional
-// optimizations like Chebyshev polynomials and table lookups).
+// This package is the Go port of the reference algorithm of PHY00a
+// (code/specs/PHY00a-trig-convergence.md). Every port of trig, in every
+// language of this repository, performs the same sequence of IEEE binary64
+// operations, so that Sin(x) is the same 64 bits everywhere. The shared vectors in
+// code/specs/fixtures/trig-reference-v1 check that bit for bit.
 //
-// # The Core Idea: Maclaurin Series
+// Every public function is still wrapped in an Operation, which gives each call
+// automatic timing, structured logging and panic recovery.
 //
-// A Maclaurin series is a way to express a function as an infinite sum of terms
-// computed from the function's derivatives at zero. For sine and cosine:
+// # The Core Idea: Maclaurin Series, After Range Reduction
+//
+// A Maclaurin series expresses a function as an infinite sum computed from its
+// derivatives at zero:
 //
 //	sin(x) = x - x^3/3! + x^5/5! - x^7/7! + ...
 //	cos(x) = 1 - x^2/2! + x^4/4! - x^6/6! + ...
 //
-// Each successive term is smaller than the last (for reasonable x), so after
-// enough terms the sum converges to the true value. We use 20 terms, which
-// gives us double-precision accuracy for inputs near zero.
+// The terms shrink fast when |x| is small, so we first *reduce* the argument:
+// sin and cos repeat every quarter turn (pi/2) up to a sign swap, so we find how
+// many quarter turns fit in x, subtract them with a very accurate pi/2 (the
+// Cody-Waite method), and run the series on what is left, which is at most about
+// pi/4. Then ten terms of the series, summed by Horner's rule, are more than
+// double precision can resolve.
 //
-// # Range Reduction
+// # The domain
 //
-// The Maclaurin series converges quickly for small x, but slowly for large x.
-// Since sin and cos are periodic (they repeat every 2*pi), we can always reduce
-// any input to the range [-pi, pi] without changing the result. This is called
-// "range reduction" and it's a critical step in every real trig implementation.
+// Sin, Cos and Tan are defined for |x| <= 2^29 (about 5.4e8 radians). Beyond that,
+// and for NaN and the infinities, they return NaN: the reduction is only exact up
+// to there, and a finite wrong answer would be worse than none. A caller with a
+// phase that grows without bound must reduce it first (see go/oscillator).
 //
-// # Operations
+// # No fused multiply-add
 //
-// Every public function is wrapped in an Operation, giving each call
-// automatic timing, structured logging, and panic recovery.
+// The algorithm is defined with one rounding per operation. Go is allowed by its
+// specification to fuse x*y + z into a single rounding (it does so on arm64,
+// ppc64, s390x and riscv64) and there is no flag to forbid it. The one thing the
+// specification guarantees is that an explicit conversion rounds: float64(x*y) is
+// always a rounded product. So every product that feeds an addition or
+// subtraction below is written float64(x*y). Do not remove those conversions: on
+// arm64 the results change, and CI checks the generated assembly for FMADD.
 package trig
 
-// ============================================================================
-// Constants
-// ============================================================================
+import "math"
 
-// PI is the ratio of a circle's circumference to its diameter.
+// ============================================================================
+// Constants (PHY00a 3.2)
+// ============================================================================
 //
-// This is one of the most fundamental constants in mathematics. It appears
-// everywhere: geometry, trigonometry, calculus, physics, statistics, and more.
-//
-// We define it to the full precision of a float64 (about 15-16 significant
-// digits). This matches the value in Go's standard math package.
+// Every constant is pinned by its IEEE bit pattern and built with
+// math.Float64frombits. We never combine them in constant expressions: Go
+// evaluates those exactly, with arbitrary precision, at compile time, so a
+// product of two constants would not be rounded the way the algorithm says. A
+// test asserts the bits of every one of these against the shared manifest.
+
+// PI is the ratio of a circle's circumference to its diameter (0x400921FB54442D18).
 const PI = 3.141592653589793
 
-// TwoPI is the full period of sine and cosine.
-//
-// Sine and cosine are "periodic" functions — they repeat the same pattern
-// over and over. The length of one complete cycle is 2*pi radians (360 degrees).
-// We precompute this constant to avoid repeated multiplication.
+// TwoPI is the full period of sine and cosine (0x401921FB54442D18).
 const TwoPI = 2 * PI
 
-// ============================================================================
-// Range Reduction
-// ============================================================================
+// halfPI is pi/2 (0x3FF921FB54442D18), used by atan and atan2.
+var halfPI = math.Float64frombits(0x3FF921FB54442D18)
 
-// rangeReduce normalizes an angle x (in radians) to the range [-pi, pi].
-//
-// # Why Is This Necessary?
-//
-// The Maclaurin series for sin and cos converges fastest when x is close to
-// zero. For large values of x (like 1000*pi), the series terms start out
-// enormous before cancelling, which causes floating-point precision loss.
-//
-// Since sin and cos repeat every 2*pi, we can subtract multiples of 2*pi
-// to bring x into [-pi, pi] without changing the function's value:
-//
-//	sin(x) = sin(x - 2*pi*k)  for any integer k
-//	cos(x) = cos(x - 2*pi*k)  for any integer k
-//
-// # How It Works
-//
-// We use Go's modulo-like approach:
-//  1. Divide x by 2*pi to find how many full cycles it contains.
-//  2. Subtract those full cycles.
-//  3. If the result is still outside [-pi, pi], adjust by one more 2*pi.
-//
-// This is the same approach used in production math libraries, though they
-// use more sophisticated techniques (like Cody-Waite reduction) for extreme
-// inputs to minimize rounding error.
-func rangeReduce(x float64) float64 {
-	// Step 1: Remove full rotations.
-	// We compute x mod 2*pi manually using division and truncation.
-	//
-	// int(x / TwoPI) gives us the number of complete cycles (truncated
-	// toward zero). Subtracting those cycles leaves the remainder.
-	x = x - TwoPI*float64(int(x/TwoPI))
+var (
+	// invPio2 is the double nearest 2/pi.
+	invPio2 = math.Float64frombits(0x3FE45F306DC9C883)
 
-	// Step 2: Ensure we're in [-pi, pi].
-	//
-	// After removing full rotations, x is in (-2*pi, 2*pi). We may need
-	// one more adjustment to land in [-pi, pi].
-	//
-	//   If x > pi:  subtract 2*pi  (e.g., 3.5 -> 3.5 - 6.28 = -2.78)
-	//   If x < -pi: add 2*pi       (e.g., -3.5 -> -3.5 + 6.28 = 2.78)
-	if x > PI {
-		x -= TwoPI
-	} else if x < -PI {
-		x += TwoPI
-	}
+	// The first four pieces of pi/2 have at most 24 significant bits each, so
+	// the product k*piece is EXACT whenever |k| < 2^29 (24 + 29 = 53 bits).
+	// The fifth is the remainder rounded to 53 bits. Together they carry pi/2 to
+	// 149 bits.
+	pio2P1 = math.Float64frombits(0x3FF921FB40000000)
+	pio2P2 = math.Float64frombits(0x3E74442D00000000)
+	pio2P3 = math.Float64frombits(0x3CF8469880000000)
+	pio2P4 = math.Float64frombits(0x3B78CC5160000000)
+	pio2P5 = math.Float64frombits(0x39F01B839A25204A)
 
-	return x
+	// magic is 1.5 * 2^52. (t + magic) - magic rounds t to the nearest whole
+	// number (ties to even) using only an add and a subtract.
+	magic = math.Float64frombits(0x4338000000000000)
+
+	// limit is 2^29: the largest |x| that sin, cos and tan accept.
+	limit = math.Float64frombits(0x41C0000000000000)
+
+	// tiny is 2^-27: below it sin(x) == x and cos(x) == 1 in binary64.
+	tiny = math.Float64frombits(0x3E40000000000000)
+
+	// radPerDeg is pi/180 and degPerRad is 180/pi, each rounded once.
+	radPerDeg = math.Float64frombits(0x3F91DF46A2529D39)
+	degPerRad = math.Float64frombits(0x404CA5DC1A63C1F8)
+)
+
+// sinCoef[i] is S[i+1] = (-1)^(i+1) / (2i+3)!, the Maclaurin coefficients of
+// sin(r) = r + r*z*(S1 + S2*z + ... + S9*z^8), with z = r*r. Reading the table
+// you can see the factorials:
+//
+//	S1 = -1/3!   S2 = +1/5!   S3 = -1/7!   S4 = +1/9!   S5 = -1/11!
+//	S6 = +1/13!  S7 = -1/15!  S8 = +1/17!  S9 = -1/19!
+var sinCoef = [9]float64{
+	math.Float64frombits(0xBFC5555555555555),
+	math.Float64frombits(0x3F81111111111111),
+	math.Float64frombits(0xBF2A01A01A01A01A),
+	math.Float64frombits(0x3EC71DE3A556C734),
+	math.Float64frombits(0xBE5AE64567F544E4),
+	math.Float64frombits(0x3DE6124613A86D09),
+	math.Float64frombits(0xBD6AE7F3E733B81F),
+	math.Float64frombits(0x3CE952C77030AD4A),
+	math.Float64frombits(0xBC62F49B46814157),
+}
+
+// cosCoef[i] is C[i+2] = (-1)^i / (2i+4)!, the coefficients of
+// cos(r) = 1 - z/2 + z^2*(C2 + C3*z + ... + C9*z^7). (The -1/2 term is applied
+// as 0.5*z, which is exact.)
+//
+//	C2 = +1/4!  C3 = -1/6!  C4 = +1/8!  C5 = -1/10!
+//	C6 = +1/12! C7 = -1/14! C8 = +1/16! C9 = -1/18!
+var cosCoef = [8]float64{
+	math.Float64frombits(0x3FA5555555555555),
+	math.Float64frombits(0xBF56C16C16C16C17),
+	math.Float64frombits(0x3EFA01A01A01A01A),
+	math.Float64frombits(0xBE927E4FB7789F5C),
+	math.Float64frombits(0x3E21EED8EFF8D898),
+	math.Float64frombits(0xBDA93974A8C07C9D),
+	math.Float64frombits(0x3D2AE7F3E733B81F),
+	math.Float64frombits(0xBCA6827863B97D97),
 }
 
 // ============================================================================
-// Sin — The Sine Function
+// Range Reduction (PHY00a 3.4)
 // ============================================================================
 
-// Sin computes the sine of x (in radians) using a Maclaurin series.
+// reduce splits x (with |x| <= 2^29) into a quarter-turn count and a remainder:
 //
-// # The Maclaurin Series for Sine
+//	x = k * (pi/2) + r,   |r| <= about pi/4,   quadrant = k mod 4
 //
-// The sine function can be expressed as an infinite polynomial:
+// Step 1, the quotient. t = x * (2/pi) is roughly "how many quarter turns".
+// Adding magic and subtracting it again rounds t to the nearest whole number k
+// with nothing but + and -: no floor, no round, no float-to-int conversion, hence
+// no behaviour to worry about for NaN or out-of-range values.
 //
-//	sin(x) = x - x^3/3! + x^5/5! - x^7/7! + x^9/9! - ...
+// Step 2, the remainder, by Cody-Waite subtraction. pi/2 is irrational, so
+// k*(pi/2) cannot be formed exactly in 53 bits. Instead pi/2 is stored as a sum
+// of five pieces, and each of the first four is so short (24 bits) that k times it
+// is exact. We subtract the slices one at a time:
 //
-// Written more compactly:
+//	x ---------------------------------------------------------- the angle
+//	|-- k*pio2P1 --|                                              24 bits of k*pi/2
+//	               |-- k*pio2P2 --|                               next 24
+//	                              |-- k*pio2P3 --|                next 24
+//	                                             |- k*pio2P4 -|   next 24
+//	                                                          |k*pio2P5| last, rounds
+//	r = what is left
 //
-//	sin(x) = sum_{n=0}^{inf} (-1)^n * x^(2n+1) / (2n+1)!
+// The first two subtractions are exact; the last three round (PHY00a 3.4).
 //
-// Each term uses odd powers of x (1, 3, 5, 7, ...) and alternates in sign.
+// Every product below feeds an addition or subtraction, so each is wrapped in
+// float64(): on arm64 Go would otherwise fuse "r - k*piece" into one FMSUB and
+// the last bits of r would differ from every other language. The same goes for
+// t + magic.
+func reduce(x float64) (k, r float64) {
+	t := float64(x * invPio2)
+	k = (t + magic) - magic
+	r = x - float64(k*pio2P1)
+	r = r - float64(k*pio2P2)
+	r = r - float64(k*pio2P3)
+	r = r - float64(k*pio2P4)
+	r = r - float64(k*pio2P5)
+	return k, r
+}
+
+// ============================================================================
+// The series kernels (PHY00a 3.5)
+// ============================================================================
+
+// sinKernel computes sin(r) for |r| <= pi/4 by Horner's rule on z = r*r:
 //
-// # Iterative Term Computation
+//	sin(r) = r + (r*z) * (S1 + z*(S2 + z*(... + z*S9)))
 //
-// A naive implementation would compute x^n and n! separately for each term.
-// This is wasteful and can overflow for large n. Instead, we compute each
-// term from the previous one:
+// Horner adds the smallest terms first, which is the accurate order, and needs no
+// division. The leading r is added last and unrounded in the polynomial, so the
+// big part of the answer carries a single rounding.
+func sinKernel(r float64) float64 {
+	z := float64(r * r)
+	p := sinCoef[8]
+	for n := 7; n >= 0; n-- {
+		p = float64(p*z) + sinCoef[n]
+	}
+	w := float64(r * z)
+	w = float64(w * p)
+	return r + w
+}
+
+// cosKernel computes cos(r) for |r| <= pi/4:
 //
-//	term_0 = x
-//	term_n = term_{n-1} * (-x^2) / ((2n)(2n+1))
+//	cos(r) = (1 - z/2) + z^2 * (C2 + z*(C3 + z*(... + z*C9)))
 //
-// This works because:
+// 0.5*z is exact, and (1 - z/2) is the dominant part, added to the much smaller
+// correction last.
+func cosKernel(r float64) float64 {
+	z := float64(r * r)
+	q := cosCoef[7]
+	for n := 6; n >= 0; n-- {
+		q = float64(q*z) + cosCoef[n]
+	}
+	u := float64(0.5 * z)
+	u = 1.0 - u
+	v := float64(z * z)
+	v = float64(v * q)
+	return u + v
+}
+
+// ============================================================================
+// Sin and Cos (PHY00a 3.6)
+// ============================================================================
+
+// Sin computes the sine of x (in radians).
 //
-//	term_n / term_{n-1} = (-1) * x^2 / ((2n)(2n+1))
+// # Special values
 //
-// The factor (2n)(2n+1) in the denominator comes from the factorial growth:
-// (2n+1)! / (2n-1)! = (2n)(2n+1).
+//	NaN, +-Inf, |x| > 2^29   NaN  (outside the domain)
+//	+0, -0                   +0, -0 (the sign of zero is kept)
+//	|x| < 2^-27              x itself (the next series term is below half an ulp)
 //
-// This "iterative term computation" trick avoids computing large factorials
-// and keeps every intermediate value small enough for floating-point.
+// # The quadrant table
 //
-// # Example: Sin(pi/6) = 0.5
+// With k the nearest whole number of quarter turns and r the remainder,
+// sin(r + k*pi/2) is one of four things depending on k mod 4:
 //
-//	x = 0.5236 (pi/6)
-//	term 0: +0.5236
-//	term 1: -0.0239  (multiply by -x^2 / (2*3))
-//	term 2: +0.0003  (multiply by -x^2 / (4*5))
-//	...
-//	sum converges to 0.5000
+//	k mod 4 | 0       | 1       | 2        | 3
+//	sin     | sin(r)  | cos(r)  | -sin(r)  | -cos(r)
+//
+// "k & 3" on a two's-complement integer is the floor modulus, so k = -1 gives 3.
+//
+// # Accuracy
+//
+// Within 3 ulp of the correctly rounded sine on |x| <= 2^29 (measured worst 2.38).
 func Sin(x float64) float64 {
 	result, _ := StartNew[float64]("trig.Sin", 0,
 		func(op *Operation[float64], rf *ResultFactory[float64]) *OperationResult[float64] {
 			op.AddProperty("x", x)
 
-			// Step 1: Range reduction.
-			// Bring x into [-pi, pi] so the series converges quickly.
-			x = rangeReduce(x)
-
-			// Step 2: Initialize the series.
-			// The first term of the Maclaurin series for sin is just x itself.
-			term := x   // Current term in the series: starts at x (the n=0 term)
-			sum := term // Running total: accumulates all terms
-
-			// Step 3: Accumulate terms.
-			// We compute 20 terms, which is more than enough for double precision.
-			// (In practice, the series converges in about 10-12 terms for |x| <= pi,
-			// but extra terms cost almost nothing and ensure accuracy.)
-			for n := 1; n <= 20; n++ {
-				// Compute the ratio between consecutive terms:
-				//   term_n = term_{n-1} * (-x^2) / ((2n)(2n+1))
-				//
-				// The denominator (2n)(2n+1) grows quadratically, so each term
-				// shrinks rapidly. The minus sign creates the alternating pattern.
-				denom := float64(2*n) * float64(2*n+1)
-				term = term * (-x * x) / denom
-				sum += term
+			// The negated comparison is deliberate: a NaN fails every
+			// comparison, so this one test rejects NaN, both infinities and
+			// every finite value beyond the limit. Writing "ax > limit" would
+			// let a NaN through.
+			ax := x
+			if ax < 0 {
+				ax = -ax
+			}
+			if !(ax <= limit) {
+				return rf.Generate(true, false, math.NaN())
+			}
+			if ax < tiny {
+				return rf.Generate(true, false, x)
 			}
 
-			return rf.Generate(true, false, sum)
+			k, r := reduce(x)
+			var v float64
+			switch int64(k) & 3 {
+			case 0:
+				v = sinKernel(r)
+			case 1:
+				v = cosKernel(r)
+			case 2:
+				v = -sinKernel(r)
+			default:
+				v = -cosKernel(r)
+			}
+			return rf.Generate(true, false, v)
 		}).GetResult()
 	return result
 }
 
-// ============================================================================
-// Cos — The Cosine Function
-// ============================================================================
-
-// Cos computes the cosine of x (in radians) using a Maclaurin series.
+// Cos computes the cosine of x (in radians).
 //
-// # The Maclaurin Series for Cosine
+// Special values mirror [Sin]: NaN outside |x| <= 2^29, and exactly 1 for
+// |x| < 2^-27. The quadrant table is:
 //
-// The cosine function's Maclaurin series uses even powers of x:
-//
-//	cos(x) = 1 - x^2/2! + x^4/4! - x^6/6! + x^8/8! - ...
-//
-// Written more compactly:
-//
-//	cos(x) = sum_{n=0}^{inf} (-1)^n * x^(2n) / (2n)!
-//
-// # Comparison with Sine
-//
-// Notice the structural similarity:
-//
-//	sin: odd powers   (1, 3, 5, 7, ...)   starting with x
-//	cos: even powers  (0, 2, 4, 6, ...)   starting with 1
-//
-// The iterative term computation works the same way, but the ratio between
-// consecutive terms is:
-//
-//	term_n = term_{n-1} * (-x^2) / ((2n-1)(2n))
-//
-// The denominator factors differ slightly because cosine uses even powers.
+//	k mod 4 | 0       | 1        | 2        | 3
+//	cos     | cos(r)  | -sin(r)  | -cos(r)  | sin(r)
 //
 // # The Pythagorean Identity
 //
-// One of the most important identities in trigonometry is:
-//
-//	sin^2(x) + cos^2(x) = 1
-//
-// This holds for ALL values of x. Our test suite verifies this identity
-// as a way to check that both functions are implemented correctly.
+// sin^2(x) + cos^2(x) = 1 holds for every x, which the tests use as a sanity
+// check on both functions.
 func Cos(x float64) float64 {
 	result, _ := StartNew[float64]("trig.Cos", 0,
 		func(op *Operation[float64], rf *ResultFactory[float64]) *OperationResult[float64] {
 			op.AddProperty("x", x)
 
-			// Step 1: Range reduction.
-			x = rangeReduce(x)
-
-			// Step 2: Initialize the series.
-			// The first term of the Maclaurin series for cos is 1 (the constant term).
-			term := 1.0 // Current term: starts at 1 (the n=0 term)
-			sum := term // Running total
-
-			// Step 3: Accumulate terms.
-			// Same strategy as Sin, but with even-power denominators.
-			for n := 1; n <= 20; n++ {
-				// The ratio between consecutive cosine terms:
-				//   term_n = term_{n-1} * (-x^2) / ((2n-1)(2n))
-				//
-				// Why (2n-1)(2n)? Because:
-				//   (2n)! / (2(n-1))! = (2n-1)(2n)
-				denom := float64(2*n-1) * float64(2*n)
-				term = term * (-x * x) / denom
-				sum += term
+			ax := x
+			if ax < 0 {
+				ax = -ax
+			}
+			if !(ax <= limit) {
+				return rf.Generate(true, false, math.NaN())
+			}
+			if ax < tiny {
+				return rf.Generate(true, false, 1.0)
 			}
 
-			return rf.Generate(true, false, sum)
+			k, r := reduce(x)
+			var v float64
+			switch int64(k) & 3 {
+			case 0:
+				v = cosKernel(r)
+			case 1:
+				v = -sinKernel(r)
+			case 2:
+				v = -cosKernel(r)
+			default:
+				v = sinKernel(r)
+			}
+			return rf.Generate(true, false, v)
 		}).GetResult()
 	return result
 }
 
 // ============================================================================
-// Angle Conversion
+// Angle Conversion (PHY00a 3.7)
 // ============================================================================
 
-// Radians converts an angle from degrees to radians.
+// Radians converts an angle from degrees to radians with ONE multiplication by
+// the stored constant pi/180.
 //
-// # Degrees vs Radians
-//
-// Degrees and radians are two ways to measure angles:
-//   - Degrees: a full circle = 360 degrees (arbitrary, from Babylonian astronomy)
-//   - Radians: a full circle = 2*pi radians (natural, based on the circle's geometry)
-//
-// The conversion formula comes from setting up a proportion:
-//
-//	degrees / 360 = radians / (2*pi)
-//
-// Solving for radians:
-//
-//	radians = degrees * (2*pi / 360) = degrees * (pi / 180)
-//
-// # Examples
+// A full circle is 360 degrees or 2*pi radians, so radians = degrees * (pi/180).
+// One rounding (not the two of "deg*PI/180"), no intermediate that overflows, and
+// better accuracy (worst 0.65 ulp). NaN propagates, infinities map to
+// infinities, and zero keeps its sign.
 //
 //	Radians(0)   = 0
-//	Radians(90)  = pi/2  (a right angle)
-//	Radians(180) = pi    (a straight line)
-//	Radians(360) = 2*pi  (a full circle)
+//	Radians(90)  = pi/2
+//	Radians(180) = pi
 func Radians(deg float64) float64 {
 	result, _ := StartNew[float64]("trig.Radians", 0,
 		func(op *Operation[float64], rf *ResultFactory[float64]) *OperationResult[float64] {
 			op.AddProperty("deg", deg)
-			return rf.Generate(true, false, deg*PI/180.0)
+			return rf.Generate(true, false, deg*radPerDeg)
 		}).GetResult()
 	return result
 }
 
-// Degrees converts an angle from radians to degrees.
+// Degrees converts an angle from radians to degrees with ONE multiplication by
+// the stored constant 180/pi. It is the inverse of [Radians].
 //
-// This is the inverse of [Radians]. The conversion formula is:
-//
-//	degrees = radians * (180 / pi)
-//
-// # Examples
-//
-//	Degrees(0)      = 0
-//	Degrees(pi/2)   = 90
-//	Degrees(pi)     = 180
-//	Degrees(2*pi)   = 360
+//	Degrees(0)    = 0
+//	Degrees(pi/2) = 90
+//	Degrees(pi)   = 180
 func Degrees(rad float64) float64 {
 	result, _ := StartNew[float64]("trig.Degrees", 0,
 		func(op *Operation[float64], rf *ResultFactory[float64]) *OperationResult[float64] {
 			op.AddProperty("rad", rad)
-			return rf.Generate(true, false, rad*180.0/PI)
+			return rf.Generate(true, false, rad*degPerRad)
 		}).GetResult()
 	return result
 }
-
-// ============================================================================
-// Constants used by the new functions
-// ============================================================================
-
-// halfPI is π/2, the boundary between atan's natural range and where
-// range reduction is needed. It also appears in atan2's quadrant rules.
-const halfPI = PI / 2.0
 
 // ============================================================================
 // Sqrt — Newton's (Babylonian) Method
@@ -382,7 +423,11 @@ func Sqrt(x float64) float64 {
 			// Iterate until convergence. The safety cap of 60 is extreme;
 			// quadratic convergence means real-world termination in ~15 steps.
 			for i := 0; i < 60; i++ {
-				next := (guess + scaled/guess) / 2.0
+				// Halving is exact, but the compiler turns "/ 2.0" into "* 0.5" and
+				// arm64 would then fuse that product into the subtraction below
+				// (harmless numerically, since the product is exact, but it would
+				// fail the no-FMA assembly check). The conversion keeps them apart.
+				next := float64((guess + scaled/guess) / 2.0)
 
 				// Stop when improvement is below the precision floor.
 				// 1e-15*guess handles relative precision for large values.
@@ -391,7 +436,7 @@ func Sqrt(x float64) float64 {
 				if improvement < 0 {
 					improvement = -improvement
 				}
-				if improvement < 1e-15*guess+1e-300 {
+				if improvement < float64(1e-15*guess)+1e-300 {
 					return rf.Generate(true, false, next*resultScale)
 				}
 
@@ -422,9 +467,13 @@ func Sqrt(x float64) float64 {
 // # Undefined Points (Poles)
 //
 // tan is undefined at x = π/2 + k·π for any integer k, because cos(x) = 0
-// there. Our implementation detects |cos(x)| < 1e-15 and returns the largest
-// representable float64 (magnitude ≈ 1.8e308) with appropriate sign, to
-// avoid a runtime division-by-zero panic.
+// there. Our implementation detects |cos(x)| < 1e-15 and returns the pinned
+// sentinel +-1e308 (not an infinity), with the sign of sin(x). That is a legacy
+// contract (PHY00 3.6), not an approximation: tan(fl(pi/2)) is about 1.6e16.
+//
+// Tan has the same domain as [Sin]: NaN for NaN, infinities and |x| > 2^29 (both
+// s and c are NaN, the sentinel test is false and NaN/NaN is NaN). No accuracy
+// claim is made for Tan (PHY00a 3.8).
 //
 // We call our own Sin and Cos — not math.Sin or math.Cos.
 func Tan(x float64) float64 {
@@ -480,7 +529,7 @@ func Tan(x float64) float64 {
 func atanCore(x float64) float64 {
 	// Half-angle: shrink x to a smaller argument.
 	// We call our own Sqrt here — no math.Sqrt.
-	reduced := x / (1.0 + Sqrt(1.0+x*x))
+	reduced := x / (1.0 + Sqrt(1.0+float64(x*x)))
 
 	t := reduced
 	tSq := t * t
@@ -584,6 +633,13 @@ func Atan2(y, x float64) float64 {
 		func(op *Operation[float64], rf *ResultFactory[float64]) *OperationResult[float64] {
 			op.AddProperty("y", y)
 			op.AddProperty("x", x)
+
+			// A NaN argument has no angle. Without this line a NaN x falls
+			// through every comparison below to the last branch and returns
+			// 0.0, a finite answer for an undefined question (PHY00a 3.9).
+			if math.IsNaN(x) || math.IsNaN(y) {
+				return rf.Generate(true, false, math.NaN())
+			}
 
 			var val float64
 			if x > 0.0 {

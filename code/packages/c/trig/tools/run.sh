@@ -29,3 +29,7 @@ fi
 
 . "$HARNESS/lib/iso-lib.sh"
 iso_build_and_run c trig-tests tests/trig_test.c src/trig.c
+# TRIG-REF-1 bit-exact conformance (PHY00a 6): every row of the shared vectors in
+# code/specs/fixtures/trig-reference-v1 must match to the last bit.  Run from
+# this directory so the corpus path "../../../specs/..." resolves.
+iso_build_and_run c trig-conformance tests/conformance_test.c src/trig.c

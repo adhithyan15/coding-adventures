@@ -99,7 +99,7 @@ func SampleCountForDuration(durationSeconds float64, sampleRateHz float64) (int,
 		return 0, err
 	}
 
-	rawCount := duration * sampleRate
+	rawCount := float64(duration * sampleRate) // explicit rounding: no FMA into the subtraction below
 	nearestInteger := math.Round(rawCount)
 	if math.Abs(rawCount-nearestInteger) <= integerTolerance {
 		return int(nearestInteger), nil
@@ -177,13 +177,26 @@ func NewSineOscillatorWithOptions(
 // ValueAt evaluates:
 //
 //	offset + amplitude * sin(2*pi*(frequency_hz*time_seconds + phase_cycles))
+//
+// The phase is reduced to a fractional cycle before it is converted to radians.
 func (s SineOscillator) ValueAt(timeSeconds float64) (float64, error) {
 	time, err := finiteFloat("time_seconds", timeSeconds)
 	if err != nil {
 		return 0, err
 	}
-	phase := s.FrequencyHz*time + s.PhaseCycles
-	return s.Offset + s.Amplitude*trig.Sin(twoPI*phase), nil
+	// trig.Sin is defined for |x| <= 2^29 radians and returns NaN beyond it
+	// (PHY00a 3.4.1). A phase kept in cycles grows without bound (a 440 Hz tone
+	// passes 2^29 radians after about 54 hours), so reduce it to [0, 1) cycles
+	// first. phase - floor(phase) is exact in binary64, and more accurate than
+	// multiplying a huge phase by 2*pi. This is the same fix, with the same bits,
+	// as the Python, Rust and TypeScript oscillators.
+	//
+	// Every product that feeds an addition is wrapped in float64(): Go may fuse
+	// x*y + z into one rounding on arm64 and other targets, and the other
+	// languages never do (PHY00a 5, "Go").
+	phase := float64(s.FrequencyHz*time) + s.PhaseCycles
+	cycles := fractionalPart(phase)
+	return s.Offset + float64(s.Amplitude*trig.Sin(float64(twoPI*cycles))), nil
 }
 
 // SquareOscillator switches between high and low values.
@@ -256,7 +269,7 @@ func (s SquareOscillator) ValueAt(timeSeconds float64) (float64, error) {
 	if err != nil {
 		return 0, err
 	}
-	position := fractionalPart(s.FrequencyHz*time + s.PhaseCycles)
+	position := fractionalPart(float64(s.FrequencyHz*time) + s.PhaseCycles)
 	if position < s.DutyCycle {
 		return s.High, nil
 	}

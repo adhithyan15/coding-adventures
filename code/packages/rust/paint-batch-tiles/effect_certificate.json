@@ -1,0 +1,82 @@
+{
+  "schema_version": "ver24-effect-cert-v1",
+  "package": "rust/paint-batch-tiles",
+  "source_digest": "cc03647cc79ec1baf3de9f22af639e4c0befad67e3eaa1d28a3b4f11a57bcfb2",
+  "manifest_digest": "be5d5e87b4777d7fefe389a1b2d09fbc513e966059234664844f1e50e8aede3a",
+  "declared_effects": [],
+  "entry_points": [
+    {
+      "name": "new",
+      "signature": "pub const fn new(id: u32, x: f64, y: f64, width: f64, height: f64) -> Self",
+      "effects": []
+    },
+    {
+      "name": "with_color",
+      "signature": "pub const fn with_color(mut self, rgb: [u8; 3]) -> Self",
+      "effects": []
+    },
+    {
+      "name": "with_z_priority",
+      "signature": "pub const fn with_z_priority(mut self, z: u8) -> Self",
+      "effects": []
+    },
+    {
+      "name": "with_flip",
+      "signature": "pub const fn with_flip(mut self, h_flip: bool, v_flip: bool) -> Self",
+      "effects": []
+    },
+    {
+      "name": "with_visible",
+      "signature": "pub const fn with_visible(mut self, visible: bool) -> Self",
+      "effects": []
+    },
+    {
+      "name": "new",
+      "signature": "pub const fn new(grid_col: u16, grid_row: u16, tile_id: u16) -> Self",
+      "effects": []
+    },
+    {
+      "name": "with_color",
+      "signature": "pub const fn with_color(mut self, rgb: [u8; 3]) -> Self",
+      "effects": []
+    },
+    {
+      "name": "with_palette",
+      "signature": "pub const fn with_palette(mut self, palette_id: u8) -> Self",
+      "effects": []
+    },
+    {
+      "name": "with_flip",
+      "signature": "pub const fn with_flip(mut self, h_flip: bool, v_flip: bool) -> Self",
+      "effects": []
+    },
+    {
+      "name": "instruction_base",
+      "signature": "pub fn instruction_base(instr: &PaintInstruction) -> &PaintBase",
+      "effects": []
+    },
+    {
+      "name": "diff_sprite_batches_into",
+      "signature": "pub fn diff_sprite_batches_into( prev: &[SpriteQuad], next: &[SpriteQuad], out_ops: &mut [SpriteDeltaOp], ) -> Result<usize, PaintBatchError>",
+      "effects": []
+    },
+    {
+      "name": "diff_paint_scenes",
+      "signature": "pub fn diff_paint_scenes( prev: &PaintScene, next: &PaintScene, ) -> Result<ScenePatch, PaintBatchError>",
+      "effects": []
+    },
+    {
+      "name": "lower_sprites_to_paint_scene",
+      "signature": "pub fn lower_sprites_to_paint_scene( width: f64, height: f64, background: &str, sprites: &[SpriteQuad], ) -> Result<PaintScene, PaintBatchError>",
+      "effects": []
+    },
+    {
+      "name": "lower_tile_batch_to_paint_scene",
+      "signature": "pub fn lower_tile_batch_to_paint_scene( scene_width: f64, scene_height: f64, tile_width: f64, tile_height: f64, background: &str, cells: &[TileBatchCell], ) -> Result<PaintScene, PaintBatchError>",
+      "effects": []
+    }
+  ],
+  "unconditional_roots": [],
+  "banned_construct_exceptions": [],
+  "label": "proved"
+}

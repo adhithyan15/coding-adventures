@@ -1,4 +1,3 @@
-
 defmodule CodingAdventures.ZipTest do
   use ExUnit.Case, async: true
   import Bitwise
@@ -39,6 +38,7 @@ defmodule CodingAdventures.ZipTest do
       {"b.txt", "Bob"},
       {"c.txt", "Charlie"}
     ]
+
     archive = Zip.zip(entries)
     result = Zip.unzip(archive)
     assert result["a.txt"] == "Alice"
@@ -67,6 +67,7 @@ defmodule CodingAdventures.ZipTest do
     data_offset = 38
     <<pre::binary-size(^data_offset), byte, rest::binary>> = archive
     corrupted = pre <> <<bxor(byte, 0xFF)>> <> rest
+
     assert_raise RuntimeError, ~r/CRC-32 mismatch/, fn ->
       Zip.unzip(corrupted)
     end
@@ -126,12 +127,13 @@ defmodule CodingAdventures.ZipTest do
   test "TC-11: nested paths" do
     entries = [
       {"a/b/c/d.txt", "deep"},
-      {"a/b/e.txt",   "mid"}
+      {"a/b/e.txt", "mid"}
     ]
+
     archive = Zip.zip(entries)
     result = Zip.unzip(archive)
     assert result["a/b/c/d.txt"] == "deep"
-    assert result["a/b/e.txt"]   == "mid"
+    assert result["a/b/e.txt"] == "mid"
   end
 
   # ─── TC-12: Empty archive ────────────────────────────────────────────────
@@ -175,6 +177,7 @@ defmodule CodingAdventures.ZipTest do
   test "read_by_name raises for missing entry" do
     archive = Zip.zip([{"a.txt", "hello"}])
     reader = Zip.new_reader(archive)
+
     assert_raise RuntimeError, ~r/not found/, fn ->
       Zip.read_by_name(reader, "missing.txt")
     end
@@ -197,6 +200,7 @@ defmodule CodingAdventures.ZipTest do
     corrupted = <<0xFF, 0xFF, 0xFF, 0xFF>> <> rest
     reader = Zip.new_reader(corrupted)
     [entry] = Zip.reader_entries(reader)
+
     assert_raise RuntimeError, ~r/local header/, fn ->
       Zip.reader_read(reader, entry)
     end
@@ -238,64 +242,86 @@ defmodule CodingAdventures.ZipTest do
 
   defp make_btype00_zip(name, data) do
     import Bitwise
-    crc  = Zip.crc32(data)
-    len  = byte_size(data)
+    crc = Zip.crc32(data)
+    len = byte_size(data)
     nlen = bxor(len, 0xFFFF)
     # DEFLATE BTYPE=00 stored block: BFINAL=1, BTYPE=00, align byte, LEN(2), NLEN(2), data
-    compressed = <<0x01, len :: little-16, nlen :: little-16>> <> data
-    comp_size  = byte_size(compressed)
-    name_bin   = name
-    name_len   = byte_size(name_bin)
-    local = <<
-      0x50, 0x4B, 0x03, 0x04,
-      20    :: little-16,
-      0x00, 0x08,
-      8     :: little-16,
-      0x00, 0x00, 0x21, 0x00,
-      crc       :: little-32,
-      comp_size :: little-32,
-      len       :: little-32,
-      name_len  :: little-16,
-      0         :: little-16
-    >> <> name_bin <> compressed
+    compressed = <<0x01, len::little-16, nlen::little-16>> <> data
+    comp_size = byte_size(compressed)
+    name_bin = name
+    name_len = byte_size(name_bin)
 
-    cd = <<
-      0x50, 0x4B, 0x01, 0x02,
-      0x1E, 0x03,
-      20    :: little-16,
-      0x00, 0x08,
-      8     :: little-16,
-      0x00, 0x00, 0x21, 0x00,
-      crc       :: little-32,
-      comp_size :: little-32,
-      len       :: little-32,
-      name_len  :: little-16,
-      0 :: little-16,
-      0 :: little-16,
-      0 :: little-16,
-      0 :: little-16,
-      0 :: little-32,
-      0 :: little-32
-    >> <> name_bin
+    local =
+      <<
+        0x50,
+        0x4B,
+        0x03,
+        0x04,
+        20::little-16,
+        0x00,
+        0x08,
+        8::little-16,
+        0x00,
+        0x00,
+        0x21,
+        0x00,
+        crc::little-32,
+        comp_size::little-32,
+        len::little-32,
+        name_len::little-16,
+        0::little-16
+      >> <> name_bin <> compressed
+
+    cd =
+      <<
+        0x50,
+        0x4B,
+        0x01,
+        0x02,
+        0x1E,
+        0x03,
+        20::little-16,
+        0x00,
+        0x08,
+        8::little-16,
+        0x00,
+        0x00,
+        0x21,
+        0x00,
+        crc::little-32,
+        comp_size::little-32,
+        len::little-32,
+        name_len::little-16,
+        0::little-16,
+        0::little-16,
+        0::little-16,
+        0::little-16,
+        0::little-32,
+        0::little-32
+      >> <> name_bin
 
     cd_offset = byte_size(local)
-    cd_size   = byte_size(cd)
+    cd_size = byte_size(cd)
+
     eocd = <<
-      0x50, 0x4B, 0x05, 0x06,
-      0 :: little-16,
-      0 :: little-16,
-      1 :: little-16,
-      1 :: little-16,
-      cd_size   :: little-32,
-      cd_offset :: little-32,
-      0 :: little-16
+      0x50,
+      0x4B,
+      0x05,
+      0x06,
+      0::little-16,
+      0::little-16,
+      1::little-16,
+      1::little-16,
+      cd_size::little-32,
+      cd_offset::little-32,
+      0::little-16
     >>
 
     local <> cd <> eocd
   end
 
   test "DEFLATE BTYPE=00 stored block round-trips correctly" do
-    data    = "hello world"
+    data = "hello world"
     archive = make_btype00_zip("btype00.txt", data)
     %{"btype00.txt" => result} = Zip.unzip(archive)
     assert result == data
@@ -307,43 +333,87 @@ defmodule CodingAdventures.ZipTest do
     # Build a stored-block ZIP with NLEN that does NOT complement LEN
     name = "x.txt"
     data = "hello"
-    crc  = Zip.crc32(data)
-    len  = byte_size(data)
+    crc = Zip.crc32(data)
+    len = byte_size(data)
     # Use wrong NLEN (should be bxor(len, 0xFFFF) but we use 0x0000)
-    compressed = <<0x01, len :: little-16, 0x00, 0x00>> <> data
-    comp_size  = byte_size(compressed)
-    name_len   = byte_size(name)
-    local = <<
-      0x50, 0x4B, 0x03, 0x04,
-      20    :: little-16, 0x00, 0x08, 8 :: little-16,
-      0x00, 0x00, 0x21, 0x00,
-      crc       :: little-32,
-      comp_size :: little-32,
-      len       :: little-32,
-      name_len  :: little-16, 0 :: little-16
-    >> <> name <> compressed
-    cd = <<
-      0x50, 0x4B, 0x01, 0x02, 0x1E, 0x03,
-      20    :: little-16, 0x00, 0x08, 8 :: little-16,
-      0x00, 0x00, 0x21, 0x00,
-      crc :: little-32, comp_size :: little-32, len :: little-32,
-      name_len :: little-16, 0 :: little-16, 0 :: little-16,
-      0 :: little-16, 0 :: little-16, 0 :: little-32, 0 :: little-32
-    >> <> name
+    compressed = <<0x01, len::little-16, 0x00, 0x00>> <> data
+    comp_size = byte_size(compressed)
+    name_len = byte_size(name)
+
+    local =
+      <<
+        0x50,
+        0x4B,
+        0x03,
+        0x04,
+        20::little-16,
+        0x00,
+        0x08,
+        8::little-16,
+        0x00,
+        0x00,
+        0x21,
+        0x00,
+        crc::little-32,
+        comp_size::little-32,
+        len::little-32,
+        name_len::little-16,
+        0::little-16
+      >> <> name <> compressed
+
+    cd =
+      <<
+        0x50,
+        0x4B,
+        0x01,
+        0x02,
+        0x1E,
+        0x03,
+        20::little-16,
+        0x00,
+        0x08,
+        8::little-16,
+        0x00,
+        0x00,
+        0x21,
+        0x00,
+        crc::little-32,
+        comp_size::little-32,
+        len::little-32,
+        name_len::little-16,
+        0::little-16,
+        0::little-16,
+        0::little-16,
+        0::little-16,
+        0::little-32,
+        0::little-32
+      >> <> name
+
     cd_offset = byte_size(local)
-    cd_size   = byte_size(cd)
+    cd_size = byte_size(cd)
+
     eocd = <<
-      0x50, 0x4B, 0x05, 0x06,
-      0 :: little-16, 0 :: little-16,
-      1 :: little-16, 1 :: little-16,
-      cd_size :: little-32, cd_offset :: little-32, 0 :: little-16
+      0x50,
+      0x4B,
+      0x05,
+      0x06,
+      0::little-16,
+      0::little-16,
+      1::little-16,
+      1::little-16,
+      cd_size::little-32,
+      cd_offset::little-32,
+      0::little-16
     >>
+
     archive = local <> cd <> eocd
     reader = Zip.new_reader(archive)
     [entry] = Zip.reader_entries(reader)
-    error = assert_raise CodingAdventures.Zip.RawInflateError, fn ->
-      Zip.reader_read(reader, entry)
-    end
+
+    error =
+      assert_raise CodingAdventures.Zip.RawInflateError, fn ->
+        Zip.reader_read(reader, entry)
+      end
 
     assert error.code == "stored-length-mismatch"
   end
@@ -352,7 +422,7 @@ defmodule CodingAdventures.ZipTest do
 
   test "unzip raises on duplicate entry names" do
     # Build a raw ZIP with two entries sharing the same name
-    name  = "dup.txt"
+    name = "dup.txt"
     data1 = "first"
     data2 = "second"
     name_len = byte_size(name)
@@ -360,45 +430,86 @@ defmodule CodingAdventures.ZipTest do
     make_local = fn data ->
       crc = Zip.crc32(data)
       len = byte_size(data)
+
       <<
-        0x50, 0x4B, 0x03, 0x04,
-        10 :: little-16, 0x00, 0x08, 0 :: little-16,
-        0x00, 0x00, 0x21, 0x00,
-        crc :: little-32, len :: little-32, len :: little-32,
-        name_len :: little-16, 0 :: little-16
+        0x50,
+        0x4B,
+        0x03,
+        0x04,
+        10::little-16,
+        0x00,
+        0x08,
+        0::little-16,
+        0x00,
+        0x00,
+        0x21,
+        0x00,
+        crc::little-32,
+        len::little-32,
+        len::little-32,
+        name_len::little-16,
+        0::little-16
       >> <> name <> data
     end
 
     make_cd = fn data, offset ->
       crc = Zip.crc32(data)
       len = byte_size(data)
+
       <<
-        0x50, 0x4B, 0x01, 0x02, 0x1E, 0x03,
-        10 :: little-16, 0x00, 0x08, 0 :: little-16,
-        0x00, 0x00, 0x21, 0x00,
-        crc :: little-32, len :: little-32, len :: little-32,
-        name_len :: little-16, 0 :: little-16, 0 :: little-16,
-        0 :: little-16, 0 :: little-16, 0 :: little-32,
-        offset :: little-32
+        0x50,
+        0x4B,
+        0x01,
+        0x02,
+        0x1E,
+        0x03,
+        10::little-16,
+        0x00,
+        0x08,
+        0::little-16,
+        0x00,
+        0x00,
+        0x21,
+        0x00,
+        crc::little-32,
+        len::little-32,
+        len::little-32,
+        name_len::little-16,
+        0::little-16,
+        0::little-16,
+        0::little-16,
+        0::little-16,
+        0::little-32,
+        offset::little-32
       >> <> name
     end
 
     local1 = make_local.(data1)
     local2 = make_local.(data2)
     offset2 = byte_size(local1)
-    cd1  = make_cd.(data1, 0)
-    cd2  = make_cd.(data2, offset2)
+    cd1 = make_cd.(data1, 0)
+    cd2 = make_cd.(data2, offset2)
     locals = local1 <> local2
-    cds    = cd1 <> cd2
+    cds = cd1 <> cd2
     cd_offset = byte_size(locals)
-    cd_size   = byte_size(cds)
+    cd_size = byte_size(cds)
+
     eocd = <<
-      0x50, 0x4B, 0x05, 0x06,
-      0 :: little-16, 0 :: little-16,
-      2 :: little-16, 2 :: little-16,
-      cd_size :: little-32, cd_offset :: little-32, 0 :: little-16
+      0x50,
+      0x4B,
+      0x05,
+      0x06,
+      0::little-16,
+      0::little-16,
+      2::little-16,
+      2::little-16,
+      cd_size::little-32,
+      cd_offset::little-32,
+      0::little-16
     >>
+
     archive = locals <> cds <> eocd
+
     assert_raise RuntimeError, ~r/duplicate entry/, fn ->
       Zip.unzip(archive)
     end
@@ -420,13 +531,20 @@ defmodule CodingAdventures.ZipTest do
   test "CD offset past EOCD raises error" do
     # EOCD with cd_offset pointing past itself
     eocd = <<
-      0x50, 0x4B, 0x05, 0x06,
-      0 :: little-16, 0 :: little-16,
-      0 :: little-16, 0 :: little-16,
-      0 :: little-32,
-      22 :: little-32,   # cd_offset = 22 > eocd_offset = 0
-      0 :: little-16
+      0x50,
+      0x4B,
+      0x05,
+      0x06,
+      0::little-16,
+      0::little-16,
+      0::little-16,
+      0::little-16,
+      0::little-32,
+      # cd_offset = 22 > eocd_offset = 0
+      22::little-32,
+      0::little-16
     >>
+
     assert_raise RuntimeError, ~r/CD offset/, fn ->
       Zip.unzip(eocd)
     end
@@ -438,48 +556,77 @@ defmodule CodingAdventures.ZipTest do
     # Build a ZIP claiming method=12 (bzip2 — not supported)
     name = "x.txt"
     name_len = byte_size(name)
-    local = <<
-      0x50, 0x4B, 0x03, 0x04,
-      20       :: little-16,
-      0x00, 0x08,
-      12       :: little-16,
-      0x00, 0x00, 0x21, 0x00,
-      0        :: little-32,
-      0        :: little-32,
-      0        :: little-32,
-      name_len :: little-16,
-      0        :: little-16
-    >> <> name
-    cd = <<
-      0x50, 0x4B, 0x01, 0x02,
-      0x1E, 0x03,
-      20       :: little-16,
-      0x00, 0x08,
-      12       :: little-16,
-      0x00, 0x00, 0x21, 0x00,
-      0        :: little-32,
-      0        :: little-32,
-      0        :: little-32,
-      name_len :: little-16,
-      0 :: little-16,
-      0 :: little-16,
-      0 :: little-16,
-      0 :: little-16,
-      0 :: little-32,
-      0 :: little-32
-    >> <> name
+
+    local =
+      <<
+        0x50,
+        0x4B,
+        0x03,
+        0x04,
+        20::little-16,
+        0x00,
+        0x08,
+        12::little-16,
+        0x00,
+        0x00,
+        0x21,
+        0x00,
+        0::little-32,
+        0::little-32,
+        0::little-32,
+        name_len::little-16,
+        0::little-16
+      >> <> name
+
+    cd =
+      <<
+        0x50,
+        0x4B,
+        0x01,
+        0x02,
+        0x1E,
+        0x03,
+        20::little-16,
+        0x00,
+        0x08,
+        12::little-16,
+        0x00,
+        0x00,
+        0x21,
+        0x00,
+        0::little-32,
+        0::little-32,
+        0::little-32,
+        name_len::little-16,
+        0::little-16,
+        0::little-16,
+        0::little-16,
+        0::little-16,
+        0::little-32,
+        0::little-32
+      >> <> name
+
     cd_offset = byte_size(local)
-    cd_size   = byte_size(cd)
+    cd_size = byte_size(cd)
+
     eocd = <<
-      0x50, 0x4B, 0x05, 0x06,
-      0 :: little-16, 0 :: little-16,
-      1 :: little-16, 1 :: little-16,
-      cd_size :: little-32, cd_offset :: little-32,
-      0 :: little-16
+      0x50,
+      0x4B,
+      0x05,
+      0x06,
+      0::little-16,
+      0::little-16,
+      1::little-16,
+      1::little-16,
+      cd_size::little-32,
+      cd_offset::little-32,
+      0::little-16
     >>
+
     archive = local <> cd <> eocd
     reader = Zip.new_reader(archive)
     [entry] = Zip.reader_entries(reader)
+
     assert_raise RuntimeError, ~r/unsupported compression method/, fn ->
       Zip.reader_read(reader, entry)
     end

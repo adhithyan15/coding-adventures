@@ -385,8 +385,41 @@
       "rationale": "computed exemption (unapproved): applicable and unaddressed; operands are labelled secret but no constant-time proof is live and no benchmark evidence exists (parse refused at src/lib.rs:193:17: Unexpected byte: ''' (line: `fn tables() -> &'static Tables {`); per export, add: alone: lowers (loop-free, table-free body); divide: alone: lowering refused (Unsupported method call 'log' in WIR lowering); inverse: alone: lowering refused (Unsupported method call 'log' in WIR lowering); multiply: alone: lowering refused (Unsupported method call 'log' in WIR lowering); power: alone: lowering refused (Unsupported expression variant in WIR lowering); subtract: alone: lowers (loop-free, table-free body))"
     }
   ],
+  "lanes": [
+    {
+      "cases_by_label": {},
+      "checks": [],
+      "lane": "go",
+      "package": "go/gf256",
+      "release_ready": false,
+      "rung": "absent",
+      "sandbox": "absent",
+      "unclaimed": []
+    },
+    {
+      "cases_by_label": {},
+      "checks": [],
+      "lane": "python",
+      "package": "python/gf256",
+      "release_ready": false,
+      "rung": "absent",
+      "sandbox": "absent",
+      "unclaimed": []
+    },
+    {
+      "cases_by_label": {},
+      "checks": [],
+      "lane": "typescript",
+      "package": "typescript/gf256",
+      "release_ready": false,
+      "rung": "absent",
+      "sandbox": "absent",
+      "unclaimed": []
+    }
+  ],
   "package": "rust/gf256",
   "profile": "field-arithmetic",
+  "profile_sha256": "fe0420a66e764a1db03f8cfba1d61d57330388585a512d7d70480ca8e5f9cff0",
   "public_symbols_without_claims": [],
   "rungs": {
     "E0": "pass",

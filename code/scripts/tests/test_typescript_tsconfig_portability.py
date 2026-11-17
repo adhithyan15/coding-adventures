@@ -451,16 +451,33 @@ console.log(prose, nested);
         # +1: pbt, the VER05 zero-dependency Level 2 property-based testing package.
         # +1: fuzz, the VER06 zero-dependency Level 2 coverage-guided fuzz engine package.
         # +1: test-matchers, the VER01 zero-dependency Level 1 matchers and assertions package.
-        self.assertEqual(summary.total_projects, 499)
+        # +1: hamurabi, the GAME01 isolated standalone simulation package.
+        # +1: ca-capability-analyzer, the TS static capability & VER15 CWE analyzer package.
+        # +4: dsp-complex, dsp-fft, dsp-dct, dsp-filters (DSP-W4-D1 standalone packages).
+        # +1: oscillator, the OSC00 isolated standalone waveform & sampler package.
+        # +3: dsp-conv, dsp-stft, dsp-wavelets (DSP-W4-D2 standalone packages).
+        # +2: musical-instruments and percussion-kit (MUS-W3-B standalone packages).
+        # +1: lunar-lander, the GAME02 isolated standalone simulation package.
+        # +2: music-machine-web and music-machine-node (MUS-W3-C standalone packages).
+        # +1: music-analysis (MUS-W5-B2 isolated standalone package).
+        self.assertEqual(summary.total_projects, 515)
         self.assertEqual(summary.shared_projects, 308)
         self.assertEqual(summary.inherited_root_dir, 135)
         self.assertEqual(summary.inherited_out_dir, 138)
         # forme-authoring-core, forme-authoring-editor,
         # forme-authoring-preview, forme-authoring-publish, and
         # forme-authoring-shell are isolated standalone emitters, adding five
-        # to both standalone inventories.
-        self.assertEqual(summary.standalone_emit_projects, 160)
-        self.assertEqual(summary.isolated_standalone_projects, 160)
+        # to both standalone inventories; hamurabi adds one more.
+        # +1: ca-capability-analyzer is an isolated standalone emitter.
+        # +4: dsp-complex, dsp-fft, dsp-dct, dsp-filters are isolated standalone emitters.
+        # +1: oscillator is an isolated standalone emitter.
+        # +3: dsp-conv, dsp-stft, dsp-wavelets are isolated standalone emitters.
+        # +2: musical-instruments and percussion-kit are isolated standalone emitters.
+        # +1: lunar-lander is an isolated standalone emitter.
+        # +2: music-machine-web and music-machine-node are isolated standalone emitters.
+        # +1: music-analysis is an isolated standalone emitter.
+        self.assertEqual(summary.standalone_emit_projects, 176)
+        self.assertEqual(summary.isolated_standalone_projects, 176)
         self.assertEqual(summary.unbounded_root_projects, 0)
         self.assertEqual(summary.outside_root_inputs, 0)
         # 94: +1 for script-ductus. Nothing the package SHIPS touches a Node
@@ -514,7 +531,8 @@ console.log(prose, nested);
         # +1: forme-shell-desktop uses Node APIs in its build and test inputs.
         # -1: the retired checklist-app (its Electron shell used Node APIs).
         # +1: neural-framework reads fixtures and checkpoint stdin in tests/CLI.
-        self.assertEqual(summary.node_api_projects, 88)
+        # +1: ca-capability-analyzer reads TypeScript packages off disk via Node APIs.
+        self.assertEqual(summary.node_api_projects, 89)
         # +1: script-ductus owns `@types/node` directly, because its tests
         # read the shipped fonts off disk to verify the pen paths.
         # +1: chief-of-staff-channel-store owns the test-only Node provider.
@@ -547,7 +565,8 @@ console.log(prose, nested);
         # +1: forme-shell-desktop directly owns its Node test/build provider.
         # -1: the retired checklist-app (its Electron shell used Node APIs).
         # +1: neural-framework directly owns its test/CLI Node type provider.
-        self.assertEqual(summary.node_provider_projects, 88)
+        # +1: ca-capability-analyzer owns `@types/node` directly.
+        self.assertEqual(summary.node_provider_projects, 89)
         self.assertEqual(summary.missing_node_provider_projects, 0)
         self.assertEqual(summary.stale_node_provider_locks, 0)
         # 0: matrix-rust-napi's lock exemption is retired; it commits a lock.
@@ -607,7 +626,16 @@ console.log(prose, nested);
         # +13: the dependency-pinning work committed locks for affine2d,
         # arc2d, bezier2d, deflate, matrix-rust-napi, point2d, progress-bar,
         # rpc, starlark-vm, tree-set, twig-vscode, hash-breaker and parrot.
-        self.assertEqual(summary.locked_compilers, 512)
+        # +1: hamurabi locks its standalone compiler and test toolchain.
+        # +1: ca-capability-analyzer locks its standalone compiler.
+        # +4: dsp-complex, dsp-fft, dsp-dct, dsp-filters lock their standalone compiler.
+        # +1: oscillator locks its standalone compiler.
+        # +3: dsp-conv, dsp-stft, dsp-wavelets lock their standalone compiler.
+        # +2: musical-instruments and percussion-kit lock their standalone compiler.
+        # +1: lunar-lander locks its standalone compiler and test toolchain.
+        # +2: music-machine-web and music-machine-node lock their standalone compiler.
+        # +1: music-analysis locks its standalone compiler.
+        self.assertEqual(summary.locked_compilers, 528)
 
 
 if __name__ == "__main__":

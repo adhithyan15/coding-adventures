@@ -30,15 +30,18 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"flag"
 	"fmt"
 	"os"
+	"os/signal"
 	"path/filepath"
 	"runtime"
 	"sort"
 	"strings"
+	"syscall"
 
 	directedgraph "github.com/adhithyan15/coding-adventures/code/packages/go/directed-graph"
 	progress "github.com/adhithyan15/coding-adventures/code/packages/go/progress-bar"
@@ -1129,7 +1132,14 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 	emitKilnSteps := flag.String("emit-kiln-steps", "", "With -emit-kiln-graph only: also write the kiln-legacy-steps/1 export (the lines executor.EffectiveStepLines returns for this OS, per package) to this path, from the same discovery pass")
 	emitResults := flag.String("emit-results", "", "After the run, write the kiln-legacy-results/1 record (status and step counts per package) to this path")
 
+	commandTimeout := flag.Duration("command-timeout", executor.DefaultCommandTimeout, "Kill any single BUILD command that runs longer than this (Go duration, e.g. 90m); 0 disables. The package fails and the message names the command")
+
 	flag.Parse()
+
+	if *commandTimeout < 0 {
+		fmt.Fprintf(os.Stderr, "Error: -command-timeout must not be negative (got %s); use 0 to disable.\n", *commandTimeout)
+		return 1
+	}
 
 	// -exec-wrapper and -emit-results (KILN04 section 4.3).
 	var execWrapper []string
@@ -1727,6 +1737,14 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 	executor.PruneLeafCargoTargets = *pruneLeafTargets
 	executor.ExecWrapper = execWrapper
 	executor.ExecWrapperRepoRoot = repoRoot
+	executor.CommandTimeout = *commandTimeout
+	// BUILD commands run in their own process groups, so Ctrl-C no longer
+	// reaches them from the terminal. Turn SIGINT/SIGTERM into cancellation of
+	// the executor's root context, which kills every running command's group.
+	sigCtx, stopSignals := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stopSignals()
+	executor.RootContext = sigCtx
+	defer func() { executor.RootContext = nil }()
 	results := executor.ExecuteBuilds(
 		packages,
 		graph,
@@ -1760,6 +1778,12 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 			fmt.Fprintf(os.Stderr, "Error writing %s: %v\n", *emitResults, err)
 			return 1
 		}
+	}
+
+	// An interrupted run is never a success, whatever the results say.
+	if sigCtx.Err() != nil {
+		fmt.Fprintln(os.Stderr, "Interrupted: build stopped by signal; running commands were killed.")
+		return 130
 	}
 
 	// Step 11: Exit with code 1 if any builds failed.

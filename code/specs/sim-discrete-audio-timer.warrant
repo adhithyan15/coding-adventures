@@ -1,0 +1,122 @@
+-- GAME15c -- Discrete Arcade Audio, 555-Timer & Coin Mechanism Simulator
+--
+-- Warrant document for sim-discrete-audio-timer (VER04j and VER04m: state=explicit).
+-- Formal verification contract for deterministic 555 timer, LFSR noise, and debounced coin logic.
+
+warrant sim_discrete_audio_timer v1
+  error TimerAudioError = InvalidSampleRate | ZeroResistance | ZeroCapacitance | FrequencyTooHigh | InvalidParameter | BufferTooSmall | CreditOverflow | MixerIntegrationError
+
+  model clamp_pcm16_model(v: Int) -> Int = if v > 32767 then 32767 else (if v < 0 - 32768 then 0 - 32768 else v)
+  -- scale_gain widens to i64, shifts right 16 (floor) and saturates to the i32 range.
+  model clamp_i32_model(v: Int) -> Int = if v > 2147483647 then 2147483647 else (if v < 0 - 2147483648 then 0 - 2147483648 else v)
+  model scale_gain_model(sample: Int, gain_q16: Nat) -> Int = clamp_i32_model(unwrap_or(div(sample * gain_q16, 65536), 0))
+  model valid_sample_rate(rate: Nat) -> Bool = rate >= 1 and rate <= 192000
+
+  record TimerState(r1_ohms: U32, r2_ohms: U32, c_picofarads: U64, sample_rate_hz: U32, frequency_hz: U32, duty_q16: U16)
+  record DebounceState(consecutive_high: U16, debounced_state: Bool, credits: U16)
+
+  op clamp_sample(v: Int) -> Int
+  op scale_gain(sample: Int, gain_q16: Nat) -> Int
+  op validate_sample_rate(sample_rate_hz: Nat) -> Result<Bool, TimerAudioError>
+  op diode_clip_sample(sample: Int, threshold: Int) -> Int
+  op lfsr15_step(state: Nat) -> Nat
+  op lfsr17_step(state: Nat) -> Nat
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels clamp_sample:
+    v public
+  labels scale_gain:
+    sample public
+    gain_q16 public
+  labels validate_sample_rate:
+    sample_rate_hz public
+  labels diode_clip_sample:
+    sample public
+    threshold public
+  labels lfsr15_step:
+    state public
+  labels lfsr17_step:
+    state public
+
+  input clamp_sample.v:
+    hostile
+    ensures no_panic, terminates
+
+  input scale_gain.sample:
+    hostile
+    ensures no_panic, terminates
+  input scale_gain.gain_q16:
+    hostile
+    ensures no_panic, terminates
+
+  input validate_sample_rate.sample_rate_hz:
+    hostile
+    ensures no_panic, terminates
+
+  input diode_clip_sample.sample:
+    hostile
+    ensures no_panic, terminates
+  input diode_clip_sample.threshold:
+    hostile
+    ensures no_panic, terminates
+
+  input lfsr15_step.state:
+    hostile
+    ensures no_panic, terminates
+
+  input lfsr17_step.state:
+    hostile
+    ensures no_panic, terminates
+
+  bound clamp_sample:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound scale_gain:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound validate_sample_rate:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound diode_clip_sample:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound lfsr15_step:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound lfsr17_step:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+
+  example clamp_zero:
+    clamp_sample(0) == 0
+  example clamp_max:
+    clamp_sample(32767) == 32767
+  example clamp_overflow:
+    clamp_sample(70000) == 32767
+  example clamp_min:
+    clamp_sample(0 - 32768) == 0 - 32768
+  example clamp_underflow:
+    clamp_sample(0 - 80000) == 0 - 32768
+
+  example scale_unity:
+    scale_gain(1000, 65536) == 1000
+
+  example rate_44100:
+    validate_sample_rate(44100) == Ok(true)
+
+  claim clamp_sample_agrees:
+    forall v: Int. clamp_sample(v) == clamp_pcm16_model(v)
+  claim scale_gain_agrees:
+    forall s: Int, g: Nat. scale_gain(s, g) == scale_gain_model(s, g)
+  claim validate_rate_agrees:
+    forall r: Nat. validate_sample_rate(r) == (if valid_sample_rate(r) then Ok(true) else Err(TimerAudioError.InvalidSampleRate))

@@ -1,0 +1,129 @@
+-- DSP-FILTERS -- FIR and IIR filters and filter design helpers for the DSP layer
+--
+-- Warrant specification for typescript/dsp-filters (VER04h / DSP03).
+-- Covers memory safety, resource bounding (CWE-400), integer overflow prevention (CWE-190),
+-- strictly iterative execution (CWE-674), and all-operands-public guarantees.
+
+warrant dsp_filters v1
+  error FilterError = EMPTY_SIGNAL | EMPTY_KERNEL | INVALID_COEFFICIENT | FFT
+
+  op fir(signal: Bytes, kernel: Bytes) -> Result<Bytes, FilterError>
+  op fir_fft(signal: Bytes, kernel: Bytes) -> Result<Bytes, FilterError>
+  op iir(signal: Bytes, b: Bytes, a: Bytes) -> Result<Bytes, FilterError>
+  op design_low_pass(cutoff_norm: Nat, num_taps: Nat, window: Nat) -> Bytes
+  op design_high_pass(cutoff_norm: Nat, num_taps: Nat, window: Nat) -> Bytes
+  op design_band_pass(low_norm: Nat, high_norm: Nat, num_taps: Nat, window: Nat) -> Bytes
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  -- All operands are public signal / filter coefficients.
+  labels fir:
+    signal public
+    kernel public
+  labels fir_fft:
+    signal public
+    kernel public
+  labels iir:
+    signal public
+    b public
+    a public
+  labels design_low_pass:
+    cutoff_norm public
+    num_taps public
+    window public
+  labels design_high_pass:
+    cutoff_norm public
+    num_taps public
+    window public
+  labels design_band_pass:
+    low_norm public
+    high_norm public
+    num_taps public
+    window public
+
+  input fir.signal:
+    hostile
+    rejects len(signal) == 0 with FilterError.EMPTY_SIGNAL
+    rejects len(signal) > 67108864 with FilterError.INVALID_COEFFICIENT
+    ensures no_panic, terminates
+  input fir.kernel:
+    hostile
+    rejects len(kernel) == 0 with FilterError.EMPTY_KERNEL
+    rejects len(kernel) > 4194304 with FilterError.INVALID_COEFFICIENT
+    ensures no_panic, terminates
+
+  input fir_fft.signal:
+    hostile
+    rejects len(signal) == 0 with FilterError.EMPTY_SIGNAL
+    rejects len(signal) > 67108864 with FilterError.INVALID_COEFFICIENT
+    ensures no_panic, terminates
+  input fir_fft.kernel:
+    hostile
+    rejects len(kernel) == 0 with FilterError.EMPTY_KERNEL
+    rejects len(kernel) > 4194304 with FilterError.INVALID_COEFFICIENT
+    ensures no_panic, terminates
+
+  input iir.signal:
+    hostile
+    rejects len(signal) == 0 with FilterError.EMPTY_SIGNAL
+    rejects len(signal) > 67108864 with FilterError.INVALID_COEFFICIENT
+    ensures no_panic, terminates
+  input iir.b:
+    hostile
+    rejects len(b) == 0 with FilterError.EMPTY_KERNEL
+    rejects len(b) > 4194304 with FilterError.INVALID_COEFFICIENT
+    ensures no_panic, terminates
+  input iir.a:
+    hostile
+    rejects len(a) == 0 with FilterError.EMPTY_KERNEL
+    rejects len(a) > 4194304 with FilterError.INVALID_COEFFICIENT
+    ensures no_panic, terminates
+
+  input design_low_pass.cutoff_norm:
+    hostile
+    ensures no_panic, terminates
+  input design_low_pass.num_taps:
+    hostile
+    ensures no_panic, terminates
+  input design_low_pass.window:
+    hostile
+    ensures no_panic, terminates
+
+  input design_high_pass.cutoff_norm:
+    hostile
+    ensures no_panic, terminates
+  input design_high_pass.num_taps:
+    hostile
+    ensures no_panic, terminates
+
+  input design_band_pass.low_norm:
+    hostile
+    ensures no_panic, terminates
+  input design_band_pass.high_norm:
+    hostile
+    ensures no_panic, terminates
+  input design_band_pass.num_taps:
+    hostile
+    ensures no_panic, terminates
+
+  -- Declared bounds: linear in N for direct/IIR, O(N log N) for fir_fft.
+  bound fir:
+    output <= len(signal) + len(kernel)
+    steps <= 32 * len(signal) * len(kernel) + 4096
+    heap <= 4 * (len(signal) + len(kernel)) + 8192
+    depth <= 32
+
+  bound fir_fft:
+    output <= len(signal) + len(kernel)
+    steps <= 64 * (len(signal) + len(kernel)) + 4096
+    heap <= 8 * (len(signal) + len(kernel)) + 16384
+    depth <= 32
+
+  bound iir:
+    output <= len(signal)
+    steps <= 16 * len(signal) * imax(len(b), len(a)) + 4096
+    heap <= 4 * len(signal) + 4096
+    depth <= 32

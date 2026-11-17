@@ -1,0 +1,105 @@
+-- HA01 -- Hamurabi: Mainframe Turn-Based Resource Allocation Simulation (GAME01).
+--
+-- Warrant document for hamurabi (VER04j and VER04m: state=explicit).
+-- Formal verification contract for the pure deterministic Sumerian economic simulation.
+
+warrant hamurabi v1
+  error HamurabiError = GameAlreadyEnded | InvalidOrderBounds | InsufficientBushelsForLand | InsufficientAcresToSell | InsufficientBushelsToFeed | InsufficientAcresToPlant | InsufficientPopulationToPlant | InsufficientGrainForSeed
+
+  model Unit = Bool
+  variant Rating = Charlemagne | Acre | Nero | Disaster
+  variant GameStatus = Playing | Won(rating: Rating) | Impeached(starved_this_turn: U32, percent: U32) | GameOverExtinction
+
+  record HamurabiState(year: U8, population: U32, bushels: U32, acres: U32, land_price: U32, harvest_per_acre: U32, rats_eaten: U32, starved_last_year: U32, starved_total: U32, percent_starved_sum: U32, immigrants_last_year: U32, plague_struck: Bool, status: GameStatus, rng_state: U64, rng_inc: U64)
+
+  record TurnOrder(acres_delta: I32, bushels_to_feed: U32, acres_to_plant: U32)
+
+  op new_game(seed: U64) -> HamurabiState
+  op validate_order(state: HamurabiState, order: TurnOrder) -> Result<Unit, HamurabiError>
+  op step_year(state: HamurabiState, order: TurnOrder) -> Result<HamurabiState, HamurabiError>
+
+  assume platform:
+    contract.rng.pcg32_deterministic
+  assume environment:
+    none
+
+  labels new_game:
+    seed public
+  labels validate_order:
+    state public
+    order public
+  labels step_year:
+    state public
+    order public
+
+  input new_game.seed:
+    hostile
+    ensures no_panic, terminates
+
+  input validate_order.state:
+    hostile
+    ensures no_panic, terminates
+  input validate_order.order:
+    hostile
+    ensures no_panic, terminates
+
+  input step_year.state:
+    hostile
+    ensures no_panic, terminates
+  input step_year.order:
+    hostile
+    ensures no_panic, terminates
+
+  bound new_game:
+    steps <= 64
+    heap <= 0
+
+  bound validate_order:
+    steps <= 128
+    heap <= 0
+
+  bound step_year:
+    steps <= 256
+    heap <= 0
+
+  -- State Invariant (VER04m)
+  model state_inv(s: HamurabiState) -> Bool = s.year >= 1u8 and s.year <= 11u8 and s.land_price >= 17u32 and s.land_price <= 26u32 and s.harvest_per_acre >= 1u32 and s.harvest_per_acre <= 5u32 and bit_and(s.rng_inc, 1u64) == 1u64
+
+  -- Initial state model
+  model initial_state(price: U32, state: U64, inc: U64) -> HamurabiState = HamurabiState(1u8, 100u32, 2800u32, 1000u32, price, 3u32, 200u32, 0u32, 0u32, 0u32, 5u32, false, Playing, state, inc)
+
+  claim initial_game_has_initial_reign_year:
+    forall seed: U64. new_game(seed).year == 1u8
+
+  claim initial_game_satisfies_invariant:
+    forall seed: U64. state_inv(new_game(seed))
+
+  claim initial_game_has_playing_status:
+    forall seed: U64. match new_game(seed).status with Playing -> true | _ -> false
+
+  claim initial_game_has_initial_population:
+    forall seed: U64. new_game(seed).population == 100u32
+
+  claim initial_game_has_initial_acres:
+    forall seed: U64. new_game(seed).acres == 1000u32
+
+  claim initial_game_has_initial_bushels:
+    forall seed: U64. new_game(seed).bushels == 2800u32
+
+  claim validate_refuses_when_not_playing_extinct:
+    forall s: HamurabiState, o: TurnOrder. (match s.status with GameOverExtinction -> validate_order(s, o) == Err(HamurabiError.GameAlreadyEnded) | _ -> true)
+
+  claim validate_refuses_when_not_playing_won:
+    forall s: HamurabiState, o: TurnOrder. (match s.status with Won(r) -> validate_order(s, o) == Err(HamurabiError.GameAlreadyEnded) | _ -> true)
+
+  claim validate_refuses_when_not_playing_impeached:
+    forall s: HamurabiState, o: TurnOrder. (match s.status with Impeached(st, p) -> validate_order(s, o) == Err(HamurabiError.GameAlreadyEnded) | _ -> true)
+
+  claim step_refuses_when_not_playing_extinct:
+    forall s: HamurabiState, o: TurnOrder. (match s.status with GameOverExtinction -> step_year(s, o) == Err(HamurabiError.GameAlreadyEnded) | _ -> true)
+
+  claim step_refuses_when_not_playing_won:
+    forall s: HamurabiState, o: TurnOrder. (match s.status with Won(r) -> step_year(s, o) == Err(HamurabiError.GameAlreadyEnded) | _ -> true)
+
+  claim step_refuses_when_not_playing_impeached:
+    forall s: HamurabiState, o: TurnOrder. (match s.status with Impeached(st, p) -> step_year(s, o) == Err(HamurabiError.GameAlreadyEnded) | _ -> true)

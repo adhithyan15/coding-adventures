@@ -1,0 +1,31 @@
+{
+  "name": "@coding-adventures/musical-instruments",
+  "version": "0.2.0",
+  "description": "Naive musical instrument profiles, timbre models, and additive note rendering",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "node node_modules/typescript/bin/tsc",
+    "test": "node node_modules/typescript/bin/tsc -p tsconfig.test.json && node --experimental-test-coverage --test-coverage-exclude=../** --test-coverage-exclude=dist-test/tests/** --test-coverage-lines=95 --test dist-test/tests/*.test.js"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/note-frequency": "file:../note-frequency",
+    "@coding-adventures/oscillator": "file:../oscillator",
+    "@coding-adventures/pcm-audio": "file:../pcm-audio",
+    "trig": "file:../trig"
+  },
+  "devDependencies": {
+    "@coding-adventures/test-bootstrap": "file:../test-bootstrap",
+    "@types/node": "^24.0.0",
+    "typescript": "^5.0.0"
+  }
+}

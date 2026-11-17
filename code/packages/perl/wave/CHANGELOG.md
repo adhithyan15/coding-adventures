@@ -1,6 +1,27 @@
 # Changelog — CodingAdventures::Wave (Perl)
 
-## Unreleased
+## [0.02] - 2026-11-16
+
+### Fixed
+
+- `sine_wave` and `cosine_wave` kept an unbounded angle (`2*pi*f*t + phase`) and
+  passed it straight to `sin_approx` / `cos_approx`. Since the TRIG-REF-1
+  convergence of `trig` (0.3.0, PHY00a TC-15) those return NaN beyond 2^29
+  radians (about 8.5e7 cycles; a 440 Hz tone reaches it after about 53 hours of
+  samples), so a long enough run would have turned every sample into NaN. The
+  phase is now kept in cycles and reduced to its fractional cycle with
+  `x - floor(x)` (`POSIX::floor`) before the call: `angle = 2*pi * (cycles -
+  floor(cycles))`, `cycles = f*t + phase/(2*pi)`. The reduction is exact in
+  binary64. Short runs give the same samples as before to within a few ulps.
+  `CodingAdventures::Wave->new(...)->evaluate` already reduced time and phase and
+  is unchanged.
+
+### Tests
+
+- Cover cycle counts far beyond 2^29 radians for `sine_wave` and `cosine_wave`,
+  a huge phase, and the pi/2 phase identity.
+
+### Carried from Unreleased
 
 ### Changed
 

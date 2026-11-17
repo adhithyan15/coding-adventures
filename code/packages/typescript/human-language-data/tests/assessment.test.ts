@@ -68,6 +68,41 @@ describe("assessment policy (HL16)", () => {
 describe("track assessment contracts", () => {
   const policy = loadAssessmentPolicy();
 
+  it("keeps per-form book prerequisites instead of treating a declaration as evidence", () => {
+    const raw = JSON.parse(readFileSync(join(defaultCurriculumRoot(), "marwadi", "assessment.json"), "utf8"));
+    const a1 = raw.levels.find((entry: { level: string }) => entry.level === "A1");
+    a1.fullMocks[0].bookPrerequisites = [{
+      id: "functional-frames",
+      kind: "lesson-knowledge",
+      knowledgeIds: ["MW-FUNCTION-A1-PREFERENCE"],
+    }];
+    const parsed = parseAssessmentContract(raw, "marwadi", policy);
+    expect(parsed.levels.find((entry) => entry.level === "A1")?.fullMocks[0]?.bookPrerequisites)
+      .toEqual(a1.fullMocks[0].bookPrerequisites);
+
+    a1.fullMocks[0].bookPrerequisites.push({
+      id: "functional-frames", kind: "exact-script-token-closure", script: "gurmukhi",
+      sources: ["mocks/a1/mock-1.md", "mocks/a1/mock-1-examiner-script.md"],
+    });
+    expect(() => parseAssessmentContract(raw, "marwadi", policy)).toThrow(/duplicate.*prerequisite/i);
+  });
+
+  it("rejects an empty or unsafe mock prerequisite instead of ranking it ready", () => {
+    const raw = JSON.parse(readFileSync(join(defaultCurriculumRoot(), "punjabi", "assessment.json"), "utf8"));
+    const a2 = raw.levels.find((entry: { level: string }) => entry.level === "A2");
+    a2.fullMocks[0].bookPrerequisites = [{
+      id: "surface-closure", kind: "exact-script-token-closure", script: "gurmukhi",
+      sources: ["../private/mock-1.md", "mocks/a2/mock-1-examiner-script.md"],
+    }];
+    expect(() => parseAssessmentContract(raw, "punjabi", policy)).toThrow(/unsafe|relative|path/i);
+    a2.fullMocks[0].bookPrerequisites[0].sources = [];
+    expect(() => parseAssessmentContract(raw, "punjabi", policy)).toThrow(/sources/i);
+    a2.fullMocks[0].bookPrerequisites[0].sources = [
+      "mocks/a2/decoy.md", "mocks/a2/decoy-examiner-script.md",
+    ];
+    expect(() => parseAssessmentContract(raw, "punjabi", policy)).toThrow(/this mock's paper and examiner script/);
+  });
+
   it("loads Hindi's seven-rung independent four-skill destination without claiming readiness", () => {
     const hindi = parseAssessmentContract(
       JSON.parse(readFileSync(join(defaultCurriculumRoot(), "hindi", "assessment.json"), "utf8")),

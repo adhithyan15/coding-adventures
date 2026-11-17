@@ -61,7 +61,23 @@
           "id": "a1-mock-1",
           "timed": true,
           "rubric": "mocks/a1/rubric.md",
-          "answerKey": "mocks/a1/mock-1-answer-key.md"
+          "answerKey": "mocks/a1/mock-1-answer-key.md",
+          "bookPrerequisites": [
+            {
+              "id": "functional-frames",
+              "kind": "lesson-knowledge",
+              "knowledgeIds": [
+                "MW-FUNCTION-A1-OPINION",
+                "MW-FUNCTION-A1-KNOWLEDGE",
+                "MW-FUNCTION-A1-ABILITY",
+                "MW-FUNCTION-A1-PREFERENCE",
+                "MW-FUNCTION-A1-DESIRE",
+                "MW-FUNCTION-A1-CLOCK-ARRANGEMENT",
+                "MW-FUNCTION-A1-SUSTAINED-DESCRIPTION",
+                "MW-FUNCTION-A1-TRANSACTION"
+              ]
+            }
+          ]
         },
         {
           "id": "a1-mock-2",

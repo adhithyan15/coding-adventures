@@ -1,7 +1,19 @@
 [package]
 name = "coding_adventures_zeroize"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 description = "Secure memory zeroization — volatile writes + compiler fence so the compiler cannot elide the zero"
 
 [dependencies]
+
+[dev-dependencies]
+coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
+# The generated evidence harness hashes the spec and the source tree.
+coding_adventures_sha256 = { path = "../sha256" }
+
+# Generated from code/specs/zeroize.warrant (VER04h, VER04k section 4): a pilot of
+# `inout` parameters and `ensures` postconditions across the host boundary.
+[[test]]
+name = "warrant_evidence"
+path = "tests/warrant_evidence.rs"
+harness = false

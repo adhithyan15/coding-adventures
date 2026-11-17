@@ -1,5 +1,24 @@
 # trig
 
+## Converged on TRIG-REF-1 (0.3.0)
+
+`sin`, `cos`, `radians` and `degrees` now follow the reference algorithm of
+[PHY00a](../../../specs/PHY00a-trig-convergence.md), bit for bit, and are checked against
+the shared vectors in
+[`trig-reference-v1`](../../../specs/fixtures/trig-reference-v1/README.md):
+
+* range reduction to [-pi/4, pi/4] by the add-and-subtract-`MAGIC` rounding and five
+  exact-product pieces of pi/2 (Cody-Waite), with the quadrant `k mod 4` picking
+  `+-sin r` or `+-cos r`;
+* ten-term Horner kernels on stored coefficients (`1/3!, 1/5!, ...`), no division;
+* every constant is a bit pattern; every operation rounds once and nothing is fused;
+* within **3 ulp** of the exact value on `|x| <= 2**29` (worst case 2.38 ulp);
+* **`sin`, `cos` and `tan` return NaN** for NaN, the infinities and `|x| > 2**29`;
+* `sin(-0)` is `-0`, `radians`/`degrees` are one multiply by a pre-divided constant,
+  `atan2` of a NaN is NaN, and `tan` keeps its pinned `+-1e308` pole sentinel.
+
+(The older 20-term recurrence text below describes the algorithm before this version.)
+
 ## Exact small arctangent
 
 `atan` returns `x` unchanged when `|x| <= 2^-27`, before any half-angle

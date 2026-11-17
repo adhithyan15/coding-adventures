@@ -1,0 +1,19 @@
+{
+  "schema": "warrant-assurance-profile-v1",
+  "name": "palette-indexed",
+  "kind": "transform",
+  "rows": {
+    "326": {
+      "applicability": "excluded",
+      "reason": "no keys: the package takes and generates no key material; operands are bounded pixel indices, palette colours and buffer lengths"
+    },
+    "327": {
+      "applicability": "excluded",
+      "reason": "pure graphics transform: package implements indexed-colour packing, palette fading and blitting only, no cipher, hash or MAC"
+    },
+    "407": {
+      "applicability": "excluded",
+      "reason": "bounded work per call: pack, fade and blit operations are linear in image area, capped by MAX_DIMENSION = 16384 per axis and MAX_FADE_STEPS = 1024"
+    }
+  }
+}

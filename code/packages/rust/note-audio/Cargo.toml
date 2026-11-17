@@ -1,0 +1,15 @@
+[package]
+name = "note-audio"
+version = "0.1.0"
+edition = "2021"
+description = "MUS01: Note-to-audio signal chain converting note names/MIDI/frequencies to oscillators and PCM audio"
+license = "MIT"
+readme = "README.md"
+
+[dependencies]
+note-frequency = { package = "coding-adventures-note-frequency", path = "../note-frequency" }
+oscillator = { path = "../oscillator" }
+pcm-audio = { path = "../pcm-audio" }
+
+[dev-dependencies]
+coding_adventures_test_bootstrap = { path = "../test-bootstrap" }

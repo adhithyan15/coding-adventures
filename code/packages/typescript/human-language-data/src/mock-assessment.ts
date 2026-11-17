@@ -4,6 +4,7 @@ import type { CefrLevel } from "./levels.js";
 import { auditTrackArtifacts } from "./assessment-artifacts.js";
 import { loadAssessmentContracts, loadAssessmentPolicy, loadTaskShapeInventory, listTaskShapeInventories, defaultCurriculumRoot } from "./loader.js";
 import { parseMockManifest, validateMockAnswerKey, validateMockPaper, validateMockRubric } from "./mock-manifest.js";
+import { unresolvedMockBookPrerequisites } from "./mock-book-prerequisites.js";
 import { readMockEvidence } from "./mock-evidence-read.js";
 import { parseLedgerText } from "./shard.js";
 
@@ -97,6 +98,12 @@ export function listMockAssessmentStatuses(root = defaultCurriculumRoot()): Mock
         };
       }
       const shape = loadTaskShapeInventory(language, level.level, root);
+      const unmetByMock = new Map(level.fullMocks.map((mock) => [
+        mock.id,
+        unresolvedMockBookPrerequisites(
+          root, language, level.level, mock.id, mock.bookPrerequisites ?? [],
+        ),
+      ]));
       const incompleteMocks = level.fullMocks.filter((mock) => {
         const references = [mock.paper, mock.rubric, mock.answerKey, mock.manifest];
         const paths = references.map((reference) => reference?.split("#", 1)[0]);
@@ -111,14 +118,15 @@ export function listMockAssessmentStatuses(root = defaultCurriculumRoot()): Mock
         validateMockPaper(parsed, requiredEvidence(evidence, paths[0]!));
         validateMockRubric(parsed, requiredEvidence(evidence, paths[1]!));
         validateMockAnswerKey(parsed, requiredEvidence(evidence, paths[2]!));
-        return false;
+        return (unmetByMock.get(mock.id)?.length ?? 0) > 0;
       }).map((mock) => mock.id);
       const completeMocks = level.fullMocks.length - incompleteMocks.length;
+      const missingMocks = incompleteMocks.slice(0, Math.max(0, requiredMocks - completeMocks));
       return {
         language, level: level.level, requiredMocks,
         completeMocks,
-        missingMocks: incompleteMocks.slice(0, Math.max(0, requiredMocks - completeMocks)),
-        blockedBy: [],
+        missingMocks,
+        blockedBy: [...new Set(missingMocks.flatMap((id) => unmetByMock.get(id) ?? []))],
       };
     });
   });

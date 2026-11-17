@@ -90,6 +90,13 @@ The canonical report is emitted as `<package_root>/assurance_report.json` with t
     "E4": "pass",
     "E5": "pass"
   },
+  "lanes": [
+    { "lane": "go", "package": "go/ct-compare", "rung": "live", "checks": ["<ten named checks>"],
+      "cases_by_label": { "bounded-set": 506572, "full": 65537 }, "unclaimed": ["<the five names of VER04i 8.2>"],
+      "release_ready": false, "sandbox": "absent" },
+    { "lane": "python", "package": "python/ct-compare", "rung": "live", "...": "as above" },
+    { "lane": "typescript", "package": "typescript/ct-compare", "rung": "live", "...": "as above" }
+  ],
   "public_symbols_without_claims": [],
   "exemptions": [
     {
@@ -126,6 +133,8 @@ The canonical report is emitted as `<package_root>/assurance_report.json` with t
 6. **E5 (Formal Proofs):**
    Requires formal WIR-level or SAT/DRAT verified proofs for all target claims.
 
+**Lane rungs (WD-004b2).** The `lanes` array holds one rung per registered non-Rust lane (`live`, `planned` or `absent`; format and checks in VER04i section 8.3). It is derived from the lane loader and the consumer registry only, never from the Rust proof or effect evidence above, and it does not enter the verdict: a Rust report is not made `pass` by a live lane, nor `report-only` by an absent one. `release_ready` is always `false` and `sandbox` always `absent` until a lane arms a runtime jail (VER04i section 12).
+
 ### 3.2 Symbol Claim Coverage
 The set of public symbols exported by the crate is extracted by the analyzer. Every exported symbol must be covered by at least one formal claim.
 $$\text{public\_symbols\_without\_claims} = \emptyset$$
@@ -141,7 +150,7 @@ Exemptions are **never declared by package authors**:
 ### 3.4 Verdict Determination
 The final `verdict` is computed as follows:
 - **`pass` (Publishable):**
-  All rungs E0–E5 are `"pass"`, all weakness rows are `"excluded"` or `"discharged"`, all exemptions are `approved: true`, and `public_symbols_without_claims` is empty.
+  All rungs E0–E5 are `"pass"`, all weakness rows are `"excluded"` or `"discharged"` (including CWE-208 excluded under `no_secret_inputs` for non-crypto packages), all exemptions are `approved: true`, and `public_symbols_without_claims` is empty.
 - **`report-only`:**
   The package is valid, honest, and completely audited for testing/research, but cannot be published to a distribution registry because:
   - At least one rung is `"not-live"` (e.g. E2 simulated host); OR

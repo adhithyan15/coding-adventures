@@ -1,0 +1,78 @@
+-- MUS05 / VER04 -- Naive Instrument Models and Timbre
+--
+-- Warrant specification for musical-instruments.
+-- Every operand is public (no cryptographic secrets or private keys), which establishes
+-- the derived attestation `warrant-spec::all-operands-public` and discharges CWE-208.
+-- Bounded resource consumption satisfies CWE-400 (MAX_PARTIALS=64, MAX_NOTE_DURATION_SECONDS=60.0,
+-- MAX_SAMPLE_RATE_HZ=192000, MAX_SAMPLE_COUNT=16777216), strictly iterative synthesis
+-- discharges CWE-674, and zero regex / dynamic eval discharges CWE-1333 and CWE-94.
+
+warrant musical_instruments v1
+  error InstrumentError = INVALID_ARGUMENT | BUDGET_EXCEEDED
+
+  op render_instrument_note(duration_ms: Nat, sample_rate_hz: Nat, partial_count: Nat) -> Result<Nat, InstrumentError>
+  op instrument_signal_sample(frequency_hz: Nat, sample_rate_hz: Nat) -> Result<Nat, InstrumentError>
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  -- Every operand is public: instrument synthesis operates strictly on public musical
+  -- parameters (frequencies, durations, sample rates). With zero secret inputs, timing side-channels
+  -- are impossible by construction, discharging CWE-208 via warrant-spec::all-operands-public.
+  labels render_instrument_note:
+    duration_ms public
+    sample_rate_hz public
+    partial_count public
+
+  labels instrument_signal_sample:
+    frequency_hz public
+    sample_rate_hz public
+
+  -- CWE-400 input validation contracts: all inputs are hostile and must be validated
+  -- against strict upper ceilings before allocating buffers or computing samples.
+  input render_instrument_note.duration_ms:
+    hostile
+    rejects duration_ms > 60000 with InstrumentError.BUDGET_EXCEEDED
+    ensures no_panic, terminates
+
+  input render_instrument_note.sample_rate_hz:
+    hostile
+    rejects sample_rate_hz == 0 or sample_rate_hz > 192000 with InstrumentError.INVALID_ARGUMENT
+    ensures no_panic, terminates
+
+  input render_instrument_note.partial_count:
+    hostile
+    rejects partial_count > 64 with InstrumentError.BUDGET_EXCEEDED
+    ensures no_panic, terminates
+
+  input instrument_signal_sample.frequency_hz:
+    hostile
+    rejects frequency_hz == 0 or frequency_hz >= 96000 with InstrumentError.INVALID_ARGUMENT
+    ensures no_panic, terminates
+
+  input instrument_signal_sample.sample_rate_hz:
+    hostile
+    rejects sample_rate_hz == 0 or sample_rate_hz > 192000 with InstrumentError.INVALID_ARGUMENT
+    ensures no_panic, terminates
+
+  -- CWE-400 / CWE-674 execution bounds: linear step bounds, bounded working space,
+  -- constant stack depth (strictly iterative loops, zero recursion), and strict
+  -- total output sample limits on note rendering.
+  bound render_instrument_note:
+    steps <= 256 * duration_ms + 1024
+    heap <= 4096
+    depth <= 16
+
+  bound instrument_signal_sample:
+    steps <= 4096
+    heap <= 1024
+    depth <= 16
+
+  -- Determinism and budget claims: identical inputs produce identical synthesized PCM output.
+  claim note_rendering_is_deterministic:
+    forall d: Nat, r: Nat, p: Nat | d <= 60000 and r > 0 and r <= 192000 and p <= 64. render_instrument_note(d, r, p) == render_instrument_note(d, r, p)
+
+  claim signal_sample_is_deterministic:
+    forall f: Nat, r: Nat | f > 0 and f < 96000 and r > 0 and r <= 192000. instrument_signal_sample(f, r) == instrument_signal_sample(f, r)

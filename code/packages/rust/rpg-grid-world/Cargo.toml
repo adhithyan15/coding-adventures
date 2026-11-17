@@ -1,0 +1,29 @@
+[package]
+name = "rpg-grid-world"
+version = "0.1.0"
+edition = "2021"
+description = "Deterministic zero-allocation overworld RPG grid-movement FSM, step encounters, warps, NPC triggers and typewriter dialogue box with paint-batch-tiles lowering"
+license = "MIT"
+
+[dependencies]
+paint-batch-tiles = { path = "../paint-batch-tiles" }
+tilemap2d = { path = "../tilemap2d" }
+
+[dev-dependencies]
+coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
+coding_adventures_sha256 = { path = "../sha256" }
+capability-runtime-conformance = { path = "../capability-runtime-conformance" }
+
+[[test]]
+name = "conformance"
+path = "tests/conformance.rs"
+
+[[test]]
+name = "microbenchmarks"
+path = "tests/microbenchmarks.rs"
+harness = false
+
+[[test]]
+name = "runtime_capability"
+path = "tests/runtime_capability.rs"
+harness = false

@@ -12,8 +12,9 @@ use std::process::exit;
 
 use coding_adventures_ca_assurance_report::{
     check_assumptions, generate_package_report, verify_assurance_report, verify_evidence, verify_profile,
-    AssuranceReport, AuditProfile, CheckVerdict, Evidence, WeaknessRegistry,
+    verify_rederivation, AssuranceReport, CheckVerdict, ProfileKind, Evidence, WeaknessRegistry,
 };
+use coding_adventures_ca_assurance_report::lane_report::{lane_status, render_not_live, LaneStatus};
 
 /// `rust/<directory name>` and the `version = "..."` of the package's
 /// `Cargo.toml`: the report names the package it was generated for, it does not
@@ -43,8 +44,11 @@ fn print_usage() {
     eprintln!("Options:");
     eprintln!("  --package-dir <DIR>    Package directory holding evidence/ (default: the report's directory, or .)");
     eprintln!("  --generate             Generate and emit assurance_report.json");
-    eprintln!("  --profile <P>          comparison (default) | field-arithmetic | varint-codec | boolean-logic | bit-arithmetic | lossless-compression: which true sentence the");
-    eprintln!("                         static attestation rows (CWE-326/327/407) carry");
+    eprintln!("  --profile <NAME>       Optional pin: the `name` the package's assurance-profile.json must declare.");
+    eprintln!("  --profile-kind <K>     Optional pin: the `kind` (transform | decompressor) the profile file must declare;");
+    eprintln!("                         a BUILD line pins it so the file's author cannot flip it and regenerate");
+    eprintln!("                         The profile itself is data: <package-dir>/assurance-profile.json (VER04h section 9");
+    eprintln!("                         item 22), hash-bound into the report as profile_sha256; there is no built-in profile");
     eprintln!("  --check <FILE>         Verify an existing assurance_report.json fail-closed");
     eprintln!("  --allow-unverified     Accept `unverified::` evidence ids (static attestations no tool checks);");
     eprintln!("                         without it --check fails on any such id");
@@ -54,6 +58,12 @@ fn print_usage() {
     eprintln!();
     eprintln!("The VER13 assumption catalogue (code/assumptions/) is found above the package directory;");
     eprintln!("--check fails closed when the report's catalogue pin differs from it (AC-14).");
+    eprintln!("  --check-lane <PKG>     Load one non-Rust lane (<lane>/<name>, e.g. python/ct-compare) with the lane loader");
+    eprintln!("                         and print its readiness (VER04i section 8.3). An active lane that fails to load");
+    eprintln!("                         exits 1. A lane the registry lacks (ABSENT) or only plans (PLANNED) is reported and");
+    eprintln!("                         exits 0, unless --require-active is given");
+    eprintln!("  --require-active       With --check-lane: exit 1 unless the lane is active and every readiness check passed");
+    eprintln!("  --repo-root <DIR>      With --check-lane: the repository root (default: .)");
     eprintln!("  --registry <FILE>      Path to weakness-registry-v1.json");
     eprintln!("  --commit <SHA>         Commit SHA to record in generated report");
     eprintln!("  --help                 Display this help message");
@@ -99,9 +109,12 @@ fn main() {
     let mut strict = false;
     let mut registry_file: Option<PathBuf> = None;
     let mut commit_sha = "HEAD".to_string();
-    let mut profile = AuditProfile::Comparison;
-    // Set only by an explicit `--profile`: `--check` holds the report's recorded profile to it.
-    let mut profile_requested: Option<AuditProfile> = None;
+    let mut check_lane: Option<String> = None;
+    let mut require_active = false;
+    let mut repo_root: Option<PathBuf> = None;
+    // Set only by an explicit `--profile`: the profile file's name must equal it.
+    let mut profile_requested: Option<String> = None;
+    let mut profile_kind_requested: Option<ProfileKind> = None;
 
     let mut i = 1;
     while i < args.len() {
@@ -128,6 +141,25 @@ fn main() {
             "--allow-unverified" => {
                 allow_unverified = true;
             }
+            "--check-lane" => {
+                i += 1;
+                if i >= args.len() {
+                    eprintln!("Error: --check-lane requires an argument");
+                    exit(2);
+                }
+                check_lane = Some(args[i].clone());
+            }
+            "--require-active" => {
+                require_active = true;
+            }
+            "--repo-root" => {
+                i += 1;
+                if i >= args.len() {
+                    eprintln!("Error: --repo-root requires an argument");
+                    exit(2);
+                }
+                repo_root = Some(PathBuf::from(&args[i]));
+            }
             "--strict" => {
                 strict = true;
             }
@@ -137,14 +169,21 @@ fn main() {
                     eprintln!("Error: --profile requires an argument");
                     exit(2);
                 }
-                profile = match args[i].parse() {
-                    Ok(p) => p,
+                profile_requested = Some(args[i].clone());
+            }
+            "--profile-kind" => {
+                i += 1;
+                if i >= args.len() {
+                    eprintln!("Error: --profile-kind requires an argument");
+                    exit(2);
+                }
+                profile_kind_requested = match args[i].parse() {
+                    Ok(k) => Some(k),
                     Err(e) => {
                         eprintln!("Error: {e}");
                         exit(2);
                     }
                 };
-                profile_requested = Some(profile);
             }
             "--registry" => {
                 i += 1;
@@ -173,6 +212,43 @@ fn main() {
             }
         }
         i += 1;
+    }
+
+    // Lane check (VER04i 8.3): a different mode from --check and --generate, which are
+    // about one Rust package's report; refuse a mix rather than guess which was meant.
+    if check_lane.is_none() && (require_active || repo_root.is_some()) {
+        eprintln!("Error: --require-active and --repo-root are only meaningful with --check-lane");
+        exit(2);
+    }
+    if let Some(package) = check_lane {
+        if check_file.is_some() || generate {
+            eprintln!("Error: --check-lane cannot be combined with --check or --generate");
+            exit(2);
+        }
+        let root = repo_root.unwrap_or_else(|| PathBuf::from("."));
+        // Say which tree was checked: a wrong --repo-root must be visible.
+        let shown_root = std::path::absolute(&root).unwrap_or_else(|_| root.clone()).display().to_string();
+        match lane_status(&root, &package) {
+            Ok(LaneStatus::Live(loaded)) => {
+                println!("repo root: {shown_root}");
+                println!("rung: LIVE");
+                print!("{}", loaded.render_readiness());
+                exit(0);
+            }
+            Ok(status) => {
+                println!("repo root: {shown_root}");
+                print!("{}", render_not_live(&package, &status));
+                if require_active {
+                    eprintln!("LANE CHECK FAILED: {package} is not an active lane (--require-active)");
+                    exit(1);
+                }
+                exit(0);
+            }
+            Err(e) => {
+                eprintln!("LANE CHECK FAILED: {e}");
+                exit(1);
+            }
+        }
     }
 
     let registry = if let Some(path) = registry_file {
@@ -219,7 +295,13 @@ fn main() {
                 exit(1);
             }
         };
-        if let Err(e) = verify_profile(&report, profile_requested) {
+        if let Err(e) = verify_profile(&report, profile_requested.as_deref()) {
+            eprintln!("ASSURANCE VERIFICATION FAILED: {e}");
+            exit(1);
+        }
+        // The pin is also held to the file itself (name and kind): BUILD may only assert which
+        // profile it means, and what kind of package it is.
+        if let Err(e) = evidence.profile.verify_pin(profile_requested.as_deref(), profile_kind_requested) {
             eprintln!("ASSURANCE VERIFICATION FAILED: {e}");
             exit(1);
         }
@@ -259,6 +341,13 @@ fn main() {
         // uses are flagged for removal (VER00 section 7.5.2): a warning by
         // default, an error under --strict.  (verify_evidence already ran
         // every other assumption rule.)
+        // AR-001: the matrix (and so every reason sentence, including the ones the profile
+        // supplies) is re-derived from the evidence and the bound profile.
+        if let Err(e) = verify_rederivation(&report, &evidence, &registry) {
+            eprintln!("ASSURANCE VERIFICATION FAILED: {e}");
+            exit(1);
+        }
+
         match check_assumptions(&report, &evidence, strict) {
             Ok(summary) => {
                 for id in &summary.unused {
@@ -303,6 +392,10 @@ fn main() {
                 exit(1);
             }
         };
+        if let Err(e) = evidence.profile.verify_pin(profile_requested.as_deref(), profile_kind_requested) {
+            eprintln!("Error: {e}");
+            exit(2);
+        }
         let (package_id, version) = match package_identity(&package_dir) {
             Ok(v) => v,
             Err(e) => {
@@ -316,7 +409,6 @@ fn main() {
             &commit_sha,
             &registry,
             &evidence,
-            profile,
         ) {
             Ok(r) => r,
             Err(e) => {
@@ -332,6 +424,10 @@ fn main() {
         }
         if let Err(e) = verify_evidence(&report, &evidence) {
             eprintln!("Generated report failed evidence verification: {e}");
+            exit(1);
+        }
+        if let Err(e) = verify_rederivation(&report, &evidence, &registry) {
+            eprintln!("Generated report failed re-derivation: {e}");
             exit(1);
         }
 

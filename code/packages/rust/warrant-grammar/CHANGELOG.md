@@ -1,5 +1,47 @@
 # Changelog
 
+## Unreleased — WX-FAULT1 `flip-result-bit` for a fixed-width integer result
+
+- Generator: the composite adapter accepts `flip-result-bit` for a `Bytes -> U32/U64`
+  (any `Fx`/`FxEdge`, inside an `Ok` or `Some`) result, so a checksum or hash operation
+  has a negative control. `drop-last-result-byte` is still bytes only (W0701 otherwise).
+- Prelude: `fault_flip_result_bit` gains `V::Fixed(f, x) => V::Fixed(f, x ^ 1)` (width
+  kept, in range for signed and unsigned) in a new `fixedfault` region, emitted only when
+  such an operation is bound. Every existing adopter and the WX-N/WX-V fixtures regenerate
+  byte-identically (`gen_evidence --check` for all eight, `regenerate --check`).
+- Tests: three in `wxe_edges` (the control for `U32` and `U64`, the arm absent for a byte
+  result, the refusals that remain).
+- Specification: VER04j 14.1 item 46 and the VER-BACKLOG row.
+
+## 0.7.0 — WX-G `inout` parameters and `ensures` postconditions (VER04k section 4)
+
+- Language: `name: inout T` (contextual, op parameters only; `x: inout` alone is still
+  an alias; W0101 in a v0 document) and `ensures op:` blocks (W0101 in v0). New
+  `Parameter::inout` and `Declaration::Ensures`; `Parameter`'s `Debug` is unchanged
+  unless `inout` is set, so the pinned v0 hashes do not move.
+- Checker: W0713 for an inadmissible `inout` type, more than four, `fresh`, no
+  post-state slot (S1 to S4) or an `ensures` row that calls an operation or quantifies;
+  `ensures` of an unknown operation (W0401), a duplicate block (W0201), more than 32
+  rows (W0602), a parameter named `result` (W0203), a non-Bool row (W0301). New public
+  `resolve_post_slot`, `SlotShape`, `PostSlot`, `slot_shape`; no field is added to
+  `CheckedWarrantModule`.
+- Bindings: `inout=<param>:<form>` (`slice`, `vec`, `array`, `int:<ht>`, `bool`,
+  `struct:<Name>`; the VER04m forms parse and are refused W0704), and an `export=` Rust
+  path of at most 8 segments for an operation with `inout=`.
+- Generator: `Shape::Inout`; pre-state isolation; fully qualified call; read-back from the
+  same buffer; S1 to S4 result assembly (a panic is `Err` with no post-state); the faults
+  `stale-post`, `skip-last-write`, `drop-last-push`, `clobber-prefix`,
+  `cursor-off-by-one` (W0701 where they do not apply); `ensures` monitors on every call,
+  `<op>/post` suites, `monitored_calls`/`postcondition_rows` in the manifest, W0601 for an
+  example that contradicts its rows. Gated: no other harness changes by a byte (all seven
+  existing adopters regenerate identically).
+- `corpus::inout_descriptor` gives the `inout` and `post_slot` fields VER04k 4.9 asks the
+  v1 corpus to carry; the corpus compiler itself is still the v0 `ct_compare` profile.
+- New diagnostic W0713 (checker) and W0501 (generator, malformed or stray `inout=` entry).
+- Tests: `wxg_syntax`, `wxg_checker`, `wxg_slots`, `wxg_generator`, `wxg_evidence`,
+  `wxg_broken`, `wxg_regen`.
+- Specification: VER04k section 4.13 records the implementation notes.
+
 ## 0.6.0 — WX-N fixed-length byte arrays across the host boundary (VER04j 14.4)
 
 - The language already had `Bytes<N>`; the gap was the binding and generator.

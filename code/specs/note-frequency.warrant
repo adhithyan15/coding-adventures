@@ -1,0 +1,46 @@
+warrant note_frequency
+  error NoteError = INVALID_NOTE
+  model valid_semitones(semitones: Int) -> Bool = semitones >= -1200 and semitones <= 1200
+  op semitones_from_a4(letter: Nat, accidental: Nat, octave: Int) -> Int
+  op note_to_frequency(semitones: Int) -> Nat
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels semitones_from_a4:
+    letter public
+    accidental public
+    octave public
+
+  labels note_to_frequency:
+    semitones public
+
+  input semitones_from_a4.letter:
+    hostile
+    ensures no_panic, terminates
+  input semitones_from_a4.accidental:
+    hostile
+    ensures no_panic, terminates
+  input semitones_from_a4.octave:
+    hostile
+    ensures no_panic, terminates
+
+  input note_to_frequency.semitones:
+    hostile
+    ensures no_panic, terminates
+
+  bound semitones_from_a4:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+  bound note_to_frequency:
+    steps <= 64
+    heap <= 0
+    depth <= 4
+
+  example a4_semitones:
+    semitones_from_a4(9, 0, 4) == 0
+  example a4_freq:
+    note_to_frequency(0) == 440

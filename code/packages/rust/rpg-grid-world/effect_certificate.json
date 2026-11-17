@@ -1,0 +1,222 @@
+{
+  "schema_version": "ver24-effect-cert-v1",
+  "package": "rust/rpg-grid-world",
+  "source_digest": "92ed7f34064dcbd20bcb51e4e0e966a0b61edae144bd077a7ebac660e750868d",
+  "manifest_digest": "5e9b046529b91f4bfc9ff4ac95a7745d49c6df2def19ac58ed89ba718a376dfc",
+  "declared_effects": [],
+  "entry_points": [
+    {
+      "name": "delta_xy",
+      "signature": "pub const fn delta_xy(self) -> (i32, i32)",
+      "effects": []
+    },
+    {
+      "name": "reversed",
+      "signature": "pub const fn reversed(self) -> Self",
+      "effects": []
+    },
+    {
+      "name": "tile_in_bounds",
+      "signature": "pub fn tile_in_bounds(layer: &TileLayer<'_>, x: i64, y: i64) -> bool",
+      "effects": []
+    },
+    {
+      "name": "seeded",
+      "signature": "pub const fn seeded(seed: u64) -> Self",
+      "effects": []
+    },
+    {
+      "name": "next_roll",
+      "signature": "pub fn next_roll(&mut self) -> u32",
+      "effects": []
+    },
+    {
+      "name": "roll_below",
+      "signature": "pub fn roll_below(&mut self, bound: u32) -> u32",
+      "effects": []
+    },
+    {
+      "name": "resolve_warp",
+      "signature": "pub fn resolve_warp(warps: &[WarpPad], x: i32, y: i32, event: WarpTrigger) -> Option<WarpTarget>",
+      "effects": []
+    },
+    {
+      "name": "validate_warp",
+      "signature": "pub fn validate_warp(layer: &TileLayer<'_>, warp: &WarpPad) -> Result<(), GridError>",
+      "effects": []
+    },
+    {
+      "name": "find_npc_at",
+      "signature": "pub fn find_npc_at(npcs: &[Npc], x: i32, y: i32) -> Option<usize>",
+      "effects": []
+    },
+    {
+      "name": "npc_blocks_tile",
+      "signature": "pub fn npc_blocks_tile(npcs: &[Npc], x: i64, y: i64) -> bool",
+      "effects": []
+    },
+    {
+      "name": "interact_target",
+      "signature": "pub fn interact_target( layer: &TileLayer<'_>, npcs: &[Npc], x: i32, y: i32, facing: Facing, reach: u8, ) -> Result<Option<usize>, GridError>",
+      "effects": []
+    },
+    {
+      "name": "npc_sees_actor",
+      "signature": "pub fn npc_sees_actor(layer: &TileLayer<'_>, npc: &Npc, x: i32, y: i32) -> bool",
+      "effects": []
+    },
+    {
+      "name": "face_npc_toward",
+      "signature": "pub fn face_npc_toward(npc: &mut Npc, actor_facing: Facing) -> bool",
+      "effects": []
+    },
+    {
+      "name": "validate_encounter_table",
+      "signature": "pub fn validate_encounter_table(index: usize, table: &EncounterTable<'_>) -> Result<(), GridError>",
+      "effects": []
+    },
+    {
+      "name": "start",
+      "signature": "pub const fn start(seed: u64) -> Self",
+      "effects": []
+    },
+    {
+      "name": "register_step",
+      "signature": "pub fn register_step(&mut self, table: &EncounterTable<'_>) -> Option<EncounterRoll>",
+      "effects": []
+    },
+    {
+      "name": "bind",
+      "signature": "pub fn bind( layer: &'a TileLayer<'a>, warps: &'a [WarpPad], npcs: &'a [Npc], encounters: &'a [EncounterTable<'a>], ) -> Result<Self, GridError>",
+      "effects": []
+    },
+    {
+      "name": "table_for_tile",
+      "signature": "pub fn table_for_tile(&self, x: i32, y: i32) -> Option<&'a EncounterTable<'a>>",
+      "effects": []
+    },
+    {
+      "name": "place",
+      "signature": "pub fn place(layer: &TileLayer<'_>, x: i32, y: i32, facing: Facing) -> Result<Self, GridError>",
+      "effects": []
+    },
+    {
+      "name": "set_speed",
+      "signature": "pub fn set_speed(&mut self, speed: u32) -> Result<(), GridError>",
+      "effects": []
+    },
+    {
+      "name": "set_turn_delay",
+      "signature": "pub fn set_turn_delay(&mut self, ticks: u32) -> Result<(), GridError>",
+      "effects": []
+    },
+    {
+      "name": "walk_progress",
+      "signature": "pub const fn walk_progress(&self) -> u32",
+      "effects": []
+    },
+    {
+      "name": "walk_distance",
+      "signature": "pub const fn walk_distance(&self) -> u32",
+      "effects": []
+    },
+    {
+      "name": "walk_dest",
+      "signature": "pub const fn walk_dest(&self) -> (i32, i32)",
+      "effects": []
+    },
+    {
+      "name": "freeze_actor",
+      "signature": "pub fn freeze_actor(&mut self)",
+      "effects": []
+    },
+    {
+      "name": "thaw_actor",
+      "signature": "pub fn thaw_actor(&mut self)",
+      "effects": []
+    },
+    {
+      "name": "pixel_position",
+      "signature": "pub fn pixel_position(&self, layer: &TileLayer<'_>) -> (i64, i64)",
+      "effects": []
+    },
+    {
+      "name": "hop_arc",
+      "signature": "pub fn hop_arc(&self, peak: u32) -> i64",
+      "effects": []
+    },
+    {
+      "name": "advance",
+      "signature": "pub fn advance( &mut self, world: &GridWorld<'_>, input: Option<Facing>, enc: &mut EncounterState, ) -> Result<TickReport, GridError>",
+      "effects": []
+    },
+    {
+      "name": "open",
+      "signature": "pub fn open(pages: &'a [DialoguePage<'a>]) -> Result<Self, GridError>",
+      "effects": []
+    },
+    {
+      "name": "set_text_speed",
+      "signature": "pub fn set_text_speed(&mut self, speed_q8: u32) -> Result<(), GridError>",
+      "effects": []
+    },
+    {
+      "name": "dialogue_state",
+      "signature": "pub const fn dialogue_state(&self) -> DialogueState",
+      "effects": []
+    },
+    {
+      "name": "page_index",
+      "signature": "pub const fn page_index(&self) -> usize",
+      "effects": []
+    },
+    {
+      "name": "cursor_index",
+      "signature": "pub const fn cursor_index(&self) -> u8",
+      "effects": []
+    },
+    {
+      "name": "last_choice_made",
+      "signature": "pub const fn last_choice_made(&self) -> Option<u8>",
+      "effects": []
+    },
+    {
+      "name": "revealed_chars",
+      "signature": "pub const fn revealed_chars(&self) -> u32",
+      "effects": []
+    },
+    {
+      "name": "current_page",
+      "signature": "pub fn current_page(&self) -> Option<&'a DialoguePage<'a>>",
+      "effects": []
+    },
+    {
+      "name": "visible_line",
+      "signature": "pub fn visible_line(&self, index: usize) -> &'a str",
+      "effects": []
+    },
+    {
+      "name": "tick_dialogue",
+      "signature": "pub fn tick_dialogue(&mut self, input: DialogueInput) -> Result<DialogueEvent, GridError>",
+      "effects": []
+    },
+    {
+      "name": "count_dialogue_cells",
+      "signature": "pub fn count_dialogue_cells(style: &DialogueStyle) -> Result<usize, GridError>",
+      "effects": []
+    },
+    {
+      "name": "lower_dialogue_cells_into",
+      "signature": "pub fn lower_dialogue_cells_into( dlg: &DialogueBox<'_>, style: &DialogueStyle, out: &mut [TileBatchCell], ) -> Result<usize, GridError>",
+      "effects": []
+    },
+    {
+      "name": "lower_dialogue_to_paint_scene",
+      "signature": "pub fn lower_dialogue_to_paint_scene( dlg: &DialogueBox<'_>, style: &DialogueStyle, tile_w: u32, tile_h: u32, view_w: u32, view_h: u32, background: &str, ) -> Result<PaintScene, GridError>",
+      "effects": []
+    }
+  ],
+  "unconditional_roots": [],
+  "banned_construct_exceptions": [],
+  "label": "proved"
+}

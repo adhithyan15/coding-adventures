@@ -1,0 +1,60 @@
+-- P2D10 -- Paint Palette Blend: Deterministic zero-allocation indexed-color scanline blits, hardware blend modes, and retained-mode scene diffing.
+--
+-- Warrant document for paint-palette-blend (VER04j and VER04m: state=explicit).
+-- Formal verification contract for pure graphics blit, blend and diff transformation.
+
+warrant paint_palette_blend v1
+  error PaletteBlendError = InvalidDimensions | InvalidStride | BufferTooSmall | ArithmeticOverflow | EmptyPalette | PaletteTooLarge | PaletteIndexOutOfRange | LengthMismatch | MisalignedSpan | InvalidBlendMode | InvalidAlpha | SceneTooLarge | MissingInstructionId | DuplicateInstructionId | PatchBufferTooSmall
+
+  model Unit = Bool
+  variant BlendMode = Normal | Add | Multiply | Screen | Alpha
+  variant PatchKind = Added | Modified | Removed
+
+  record BlitParams(mode: BlendMode, alpha: U8, has_transparent_index: Bool, transparent_index: U8, h_flip: Bool, v_flip: Bool)
+  record PatchOp(kind: PatchKind, old_index: U32, new_index: U32)
+
+  op blit_indexed_scanline(pixel_count: U32, palette_len: U32) -> Result<U32, PaletteBlendError>
+  op diff_paint_scene_into(prev_count: U32, next_count: U32) -> Result<U32, PaletteBlendError>
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels blit_indexed_scanline:
+    pixel_count public
+    palette_len public
+
+  labels diff_paint_scene_into:
+    prev_count public
+    next_count public
+
+  input blit_indexed_scanline.pixel_count:
+    hostile
+    ensures no_panic, terminates
+
+  input blit_indexed_scanline.palette_len:
+    hostile
+    ensures no_panic, terminates
+
+  input diff_paint_scene_into.prev_count:
+    hostile
+    ensures no_panic, terminates
+
+  input diff_paint_scene_into.next_count:
+    hostile
+    ensures no_panic, terminates
+
+  bound blit_indexed_scanline:
+    steps <= 8192
+    heap <= 0
+
+  bound diff_paint_scene_into:
+    steps <= 4096
+    heap <= 0
+
+  claim blit_indexed_scanline_bounds_pixels:
+    forall n: U32, p: U32. match blit_indexed_scanline(n, p) with Ok(c) -> c <= n | Err(_) -> true
+
+  claim diff_paint_scene_into_bounds_ops:
+    forall p: U32, n: U32. match diff_paint_scene_into(p, n) with Ok(c) -> c <= p + n | Err(_) -> true

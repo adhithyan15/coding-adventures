@@ -53,7 +53,7 @@
 
 local wave = {}
 
-wave.VERSION = "0.1.0"
+wave.VERSION = "0.2.0"
 
 -- ============================================================================
 -- Dependencies
@@ -75,6 +75,42 @@ local trig = require("coding_adventures.trig")
 --
 -- Value: 2 * 3.141592653589793 = 6.283185307179586
 wave.TWO_PI = trig.TWO_PI
+
+-- ============================================================================
+-- phase_angle -- an unreduced phase becomes a bounded angle (internal)
+-- ============================================================================
+
+--- Convert (frequency, time, phase) into an angle that trig can take.
+--
+-- trig (TRIG-REF-1, PHY00a) is accurate for |angle| <= 2^29 radians and
+-- returns NaN beyond it.  The raw angle 2*pi*f*t + phase grows without bound
+-- with the sample index, so it would cross 2^29 radians after about 8.5e7
+-- cycles (a 440 Hz tone after roughly 53 hours of samples) and every later
+-- sample would silently turn into NaN.
+--
+-- A phase that accumulates with time is an ACCUMULATOR, and an accumulator is
+-- reduced to its fractional cycle before the 2*pi multiply:
+--
+--     cycles = f * t
+--     frac   = cycles - floor(cycles)        -- in [0, 1), exact subtraction
+--     angle  = 2*pi*frac + fmod(phase, 2*pi)
+--
+-- Subtracting the whole cycles is exact (the result is representable), and a
+-- sine does not care how many whole cycles went by, so the answer is the same
+-- number mathematically -- and MORE accurate at every time, because the angle
+-- handed to trig is at most about 4*pi instead of millions of radians.
+-- The user's phase offset (radians) is reduced with math.fmod, as
+-- Wave:evaluate already does.
+--
+-- @param frequency  Hz
+-- @param t          seconds
+-- @param phase      radians
+-- @return           angle in radians, |angle| < 4*pi, or NaN for non-finite input
+local function phase_angle(frequency, t, phase)
+    local cycles = frequency * t
+    local frac = cycles - math.floor(cycles)
+    return wave.TWO_PI * frac + math.fmod(phase, wave.TWO_PI)
+end
 
 -- ============================================================================
 -- sine_wave — Pure sinusoidal oscillation
@@ -122,8 +158,9 @@ function wave.sine_wave(frequency, amplitude, phase, sample_rate, num_samples)
     for i = 0, num_samples - 1 do
         -- Time of this sample in seconds (fractional)
         local t = i / sample_rate
-        -- Instantaneous angle in radians: 2π * f * t + phase_offset
-        local angle = wave.TWO_PI * frequency * t + phase
+        -- Instantaneous angle in radians: 2π * f * t + phase_offset, with the
+        -- whole cycles removed first (see phase_angle).
+        local angle = phase_angle(frequency, t, phase)
         samples[i + 1] = amplitude * trig.sin(angle)
     end
     return samples
@@ -159,7 +196,7 @@ function wave.cosine_wave(frequency, amplitude, phase, sample_rate, num_samples)
     local samples = {}
     for i = 0, num_samples - 1 do
         local t     = i / sample_rate
-        local angle = wave.TWO_PI * frequency * t + phase
+        local angle = phase_angle(frequency, t, phase)
         samples[i + 1] = amplitude * trig.cos(angle)
     end
     return samples

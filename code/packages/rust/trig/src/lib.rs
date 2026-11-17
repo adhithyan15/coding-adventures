@@ -1,249 +1,210 @@
 // ============================================================================
-// trig — Trigonometric functions from first principles
+// trig — Trigonometric functions from first principles (TRIG-REF-1)
 // ============================================================================
 //
-// This library implements sin, cos, and angle-conversion functions using
-// nothing but basic arithmetic.  No `std::f64::sin` or `libm` anywhere —
-// every value is computed from the Maclaurin (Taylor-at-zero) series.
+// `sin`, `cos`, `radians` and `degrees` are built from addition, subtraction,
+// multiplication and comparison alone: no `f64::sin`, no libm, no division.
+// Every operation rounds once, nothing is fused (Rust never contracts `a*b+c`;
+// we never call `mul_add`), so the answer is *bit for bit* the same in all
+// seventeen language ports.  The algorithm is PHY00a
+// (code/specs/PHY00a-trig-convergence.md); the shared vectors are
+// code/specs/fixtures/trig-reference-v1.
 //
-// Why?  Because understanding *how* a sine is calculated is more valuable
-// than calling someone else's black box.  If you can build trig from
-// scratch, you truly understand what these functions do.
+// The big idea: a sine repeats, so an angle splits into whole quarter-turns
+// and a small leftover,
 //
+//     x = k * (pi/2) + r,      |r| <= pi/4,      k a whole number
+//
+// `sin x` is one of  sin r, cos r, -sin r, -cos r  chosen by k mod 4, and
+// `cos x` one of  cos r, -sin r, -cos r, sin r.
+//
+// Step 1, the quotient.  `MAGIC = 1.5 * 2^52` has its units digit in the last
+// place of the significand, so `(t + MAGIC) - MAGIC` rounds t to the nearest
+// whole number with only `+` and `-` (no floor, no cast, nothing special at NaN).
+//
+// Step 2, the remainder (Cody-Waite).  pi/2 is irrational, so a 53-bit pi/2
+// times a big k loses the digits we need.  We store pi/2 as FIVE pieces, the
+// first four with at most 24 significant bits so that k * piece is exact
+// (24 + 29 bits = 53):
+//
+//   x ---------------------------------------------------------- the angle
+//   |-- k*PIO2_1 --|                                              24 bits
+//                  |-- k*PIO2_2 --|                               next 24
+//                                 |-- k*PIO2_3 --|                next 24
+//                                                |- k*PIO2_4 -|   next 24
+//                                                             |k*PIO2_5| rounds
+//
+// Step 3, the kernels: Maclaurin series on |r| <= pi/4, Horner's rule,
+// coefficients (-1)^n/(2n+1)! and (-1)^n/(2n)! stored as bit patterns:
+//
+//   sin r = r + r*z*(S1 + S2 z + ... + S9 z^8)           z = r*r
+//   cos r = 1 - z/2 + z*z*(C2 + C3 z + ... + C9 z^7)
+//
+// Domain: |x| <= 2^29.  NaN, the infinities and larger values return NaN (a
+// finite answer there would be wrong but look right).  Accuracy: 3 ulp.
 // ============================================================================
-// Background: What is a Maclaurin Series?
-// ============================================================================
-//
-// A Maclaurin series expands a function as an infinite sum of terms derived
-// from the function's derivatives at zero:
-//
-//   f(x) = f(0) + f'(0)*x + f''(0)*x²/2! + f'''(0)*x³/3! + ...
-//
-// For sine, the derivatives cycle through {sin, cos, -sin, -cos}, and
-// evaluating at zero gives us:
-//
-//   sin(x) = x - x³/3! + x⁵/5! - x⁷/7! + ...
-//
-// Only odd powers appear (because sin is an odd function), and the signs
-// alternate.  For cosine (an even function) only even powers appear:
-//
-//   cos(x) = 1 - x²/2! + x⁴/4! - x⁶/6! + ...
-//
-// These series converge for every real number x, but they converge *fastest*
-// when x is close to zero.  That is where range reduction comes in.
-//
 
 // ============================================================================
-// Constants
+// Constants (PHY00a 3.2): bit patterns are authoritative
 // ============================================================================
 
-/// The ratio of a circle's circumference to its diameter.
-///
-/// We hard-code this to the same precision as `std::f64::consts::PI` so that
-/// our library is fully self-contained — no dependency on `std` constants.
-// This is an intentional, self-contained hand-written constant (the whole point
-// of the crate is not to depend on `std::f64::consts::PI`); not an approximation
-// to be replaced by the std constant.
+/// The ratio of a circle's circumference to its diameter (`0x400921FB54442D18`).
+// Intentionally hand-written: the crate does not depend on std's constant.
 #[allow(clippy::approx_constant)]
 pub const PI: f64 = 3.141592653589793;
 
-/// Two times pi — a full revolution in radians.
-///
-/// Pre-computing this avoids a multiply every time we do range reduction.
-const TWO_PI: f64 = 2.0 * PI;
+/// 2/pi, the double nearest to it.
+const INV_PIO2: u64 = 0x3FE45F306DC9C883;
+/// pi/2 as five pieces: four of at most 24 significant bits, then the remainder.
+const PIO2: [u64; 5] = [
+    0x3FF921FB40000000,
+    0x3E74442D00000000,
+    0x3CF8469880000000,
+    0x3B78CC5160000000,
+    0x39F01B839A25204A,
+];
+/// 1.5 * 2^52: add then subtract it to round to the nearest integer.
+const MAGIC: u64 = 0x4338000000000000;
+/// The edge of the domain, 2^29.
+const LIMIT: u64 = 0x41C0000000000000;
+/// Below 2^-27, sin(x) == x exactly and cos(x) == 1.
+const TINY: u64 = 0x3E40000000000000;
+/// pi/180 and 180/pi, pre-divided so a conversion is one multiply.
+const RAD_PER_DEG: u64 = 0x3F91DF46A2529D39;
+const DEG_PER_RAD: u64 = 0x404CA5DC1A63C1F8;
+/// Sine coefficients S[n] = (-1)^n/(2n+1)!, n = 1..9 (index 0 here is n = 1):
+/// -1/3!, +1/5!, -1/7!, +1/9!, -1/11!, +1/13!, -1/15!, +1/17!, -1/19!
+const SC: [u64; 9] = [
+    0xBFC5555555555555,
+    0x3F81111111111111,
+    0xBF2A01A01A01A01A,
+    0x3EC71DE3A556C734,
+    0xBE5AE64567F544E4,
+    0x3DE6124613A86D09,
+    0xBD6AE7F3E733B81F,
+    0x3CE952C77030AD4A,
+    0xBC62F49B46814157,
+];
+/// Cosine coefficients C[n] = (-1)^n/(2n)!, n = 2..9 (index 0 here is n = 2):
+/// +1/4!, -1/6!, +1/8!, -1/10!, +1/12!, -1/14!, +1/16!, -1/18!
+const CC: [u64; 8] = [
+    0x3FA5555555555555,
+    0xBF56C16C16C16C17,
+    0x3EFA01A01A01A01A,
+    0xBE927E4FB7789F5C,
+    0x3E21EED8EFF8D898,
+    0xBDA93974A8C07C9D,
+    0x3D2AE7F3E733B81F,
+    0xBCA6827863B97D97,
+];
 
-// ============================================================================
-// Range Reduction
-// ============================================================================
-//
-// The Maclaurin series converges for any x, but convergence is slow for
-// large |x|.  Worse, floating-point round-off accumulates when you raise a
-// large number to the 39th power.
-//
-// The fix: since sin and cos are periodic with period 2*pi, we can always
-// map x into the interval [-pi, pi] without changing the function's value.
-//
-//   1. Divide x by 2*pi and take the remainder  →  x is now in (-2pi, 2pi)
-//   2. If x > pi, subtract 2*pi                 →  x is now in [-pi, pi]
-//   3. If x < -pi, add 2*pi                     →  same guarantee
-//
-// After this, |x| <= pi ≈ 3.14, so our series terms shrink quickly.
-//
-
-/// Reduce `x` into the range [-pi, pi].
-///
-/// This preserves the value of any 2*pi-periodic function (sin, cos, etc.)
-/// while keeping the magnitude small for faster series convergence.
-fn range_reduce(x: f64) -> f64 {
-    // Step 1: use the remainder operator to land in (-2*pi, 2*pi).
-    let mut x = x % TWO_PI;
-
-    // Step 2 & 3: nudge into [-pi, pi].
-    if x > PI {
-        x -= TWO_PI;
-    }
-    if x < -PI {
-        x += TWO_PI;
-    }
-
-    x
+#[inline]
+fn f(bits: u64) -> f64 {
+    f64::from_bits(bits)
 }
 
 // ============================================================================
-// sin(x) — Maclaurin Series
+// Range reduction and kernels
 // ============================================================================
-//
-// Recall the series:
-//
-//   sin(x) = x - x³/3! + x⁵/5! - x⁷/7! + ...
-//
-// Writing out successive terms, notice a pattern in how each term relates
-// to the previous one:
-//
-//   term_0 = x
-//   term_1 = term_0 * (-x²) / (2 * 3)
-//   term_2 = term_1 * (-x²) / (4 * 5)
-//   term_k = term_{k-1} * (-x²) / (2k * (2k+1))
-//
-// This "iterative term computation" avoids computing factorials (which
-// overflow quickly) and avoids recomputing powers from scratch.
-//
 
-/// Compute the sine of `x` (in radians) using a 20-term Maclaurin series.
+/// `(k, r)` with `x = k*(pi/2) + r`, `|r| <= pi/4` (about).  Precondition:
+/// `|x| <= 2^29`, so `k` is a finite whole number below 2^29.  Every product and
+/// the subtraction that uses it are separate statements: they must stay two
+/// roundings, never a fused multiply-add.
+fn reduce(x: f64) -> (f64, f64) {
+    let t = x * f(INV_PIO2);
+    let k = (t + f(MAGIC)) - f(MAGIC);
+    let mut r = x;
+    for p in PIO2 {
+        let m = k * f(p);
+        r -= m;
+    }
+    (k, r)
+}
+
+/// sin(r) for |r| <= pi/4, Horner on the stored coefficients.
+fn sin_k(r: f64) -> f64 {
+    let z = r * r;
+    let mut p = f(SC[8]);
+    for n in (0..8).rev() {
+        p *= z;
+        p += f(SC[n]);
+    }
+    let mut w = r * z;
+    w *= p;
+    r + w
+}
+
+/// cos(r) for |r| <= pi/4: (1 - z/2) + z*z*(C2 + ... + C9 z^7).
+fn cos_k(r: f64) -> f64 {
+    let z = r * r;
+    let mut q = f(CC[7]);
+    for n in (0..7).rev() {
+        q *= z;
+        q += f(CC[n]);
+    }
+    let mut u = 0.5 * z; // exact
+    u = 1.0 - u;
+    let mut v = z * z;
+    v *= q;
+    u + v
+}
+
+// ============================================================================
+// Sine and cosine
+// ============================================================================
+
+/// Sine of `x` radians for `|x| <= 2^29`; NaN for NaN, the infinities and
+/// anything larger.  `sin(-0.0)` is `-0.0`; `|x| < 2^-27` returns `x`.
 ///
-/// # How it works
-///
-/// 1. Range-reduce `x` to [-pi, pi] so the series converges quickly.
-/// 2. Start with `term = x` (the first term of the series).
-/// 3. Multiply by `-x² / (2k)(2k+1)` to get the next term.
-/// 4. Accumulate 20 terms — more than enough for f64 precision.
-///
-/// # Examples
-///
-/// ```
-/// assert!((trig::sin(0.0)).abs() < 1e-10);
-/// assert!((trig::sin(trig::PI / 2.0) - 1.0).abs() < 1e-10);
-/// ```
+/// The guard is a *negated* `<=`: a NaN fails every comparison, so one test
+/// covers NaN, both infinities and every finite value beyond the domain.
+#[allow(clippy::neg_cmp_op_on_partial_ord)]
 pub fn sin(x: f64) -> f64 {
-    // --- Step 1: Range reduction -----------------------------------------
-    let x = range_reduce(x);
-
-    // --- Step 2: Pre-compute x² (we reuse it every iteration) ------------
-    let x_squared = x * x;
-
-    // --- Step 3: Iterative summation -------------------------------------
-    //
-    // `term` tracks the current series term.  We start with x (the k=0 term).
-    // `sum` accumulates the running total.
-    let mut term = x;
-    let mut sum = term;
-
-    for k in 1..20 {
-        // Each new term is the previous term multiplied by:
-        //   -x² / ( (2k) * (2k + 1) )
-        //
-        // The negation flips the sign each iteration (alternating series).
-        // The denominator incorporates the next two factorial factors.
-        let denom = (2 * k) as f64 * (2 * k + 1) as f64;
-        term *= -x_squared / denom;
-        sum += term;
+    if !(x.abs() <= f(LIMIT)) {
+        return f64::NAN;
     }
-
-    sum
+    if x.abs() < f(TINY) {
+        return x;
+    }
+    let (k, r) = reduce(x);
+    // k is a whole number below 2^29: the cast is exact, `& 3` is k mod 4
+    // (two's complement, so -1 & 3 == 3).
+    match (k as i64) & 3 {
+        0 => sin_k(r),
+        1 => cos_k(r),
+        2 => -sin_k(r),
+        _ => -cos_k(r),
+    }
 }
 
-// ============================================================================
-// cos(x) — Maclaurin Series
-// ============================================================================
-//
-// The cosine series uses even powers:
-//
-//   cos(x) = 1 - x²/2! + x⁴/4! - x⁶/6! + ...
-//
-// Iterative relation:
-//
-//   term_0 = 1
-//   term_k = term_{k-1} * (-x²) / ((2k-1) * 2k)
-//
-
-/// Compute the cosine of `x` (in radians) using a 20-term Maclaurin series.
-///
-/// # How it works
-///
-/// 1. Range-reduce `x` to [-pi, pi].
-/// 2. Start with `term = 1` (the zeroth term).
-/// 3. Multiply by `-x² / ((2k-1) * 2k)` to get the next term.
-/// 4. Accumulate 20 terms.
-///
-/// # Examples
-///
-/// ```
-/// assert!((trig::cos(0.0) - 1.0).abs() < 1e-10);
-/// assert!((trig::cos(trig::PI) + 1.0).abs() < 1e-10);
-/// ```
+/// Cosine of `x` radians for `|x| <= 2^29`; NaN outside the domain.
+/// `cos(+-0.0) == 1`, and `cos(x) == 1` for `|x| < 2^-27`.
+#[allow(clippy::neg_cmp_op_on_partial_ord)]
 pub fn cos(x: f64) -> f64 {
-    // --- Step 1: Range reduction -----------------------------------------
-    let x = range_reduce(x);
-
-    // --- Step 2: Pre-compute x² -----------------------------------------
-    let x_squared = x * x;
-
-    // --- Step 3: Iterative summation -------------------------------------
-    //
-    // `term` starts at 1 (the k=0 term of the cosine series).
-    let mut term: f64 = 1.0;
-    let mut sum = term;
-
-    for k in 1..20 {
-        // The denominator for cosine's k-th term uses (2k-1) and (2k),
-        // which are the next two integers in the factorial sequence.
-        let denom = (2 * k - 1) as f64 * (2 * k) as f64;
-        term *= -x_squared / denom;
-        sum += term;
+    if !(x.abs() <= f(LIMIT)) {
+        return f64::NAN;
     }
-
-    sum
+    if x.abs() < f(TINY) {
+        return 1.0;
+    }
+    let (k, r) = reduce(x);
+    match (k as i64) & 3 {
+        0 => cos_k(r),
+        1 => -sin_k(r),
+        2 => -cos_k(r),
+        _ => sin_k(r),
+    }
 }
 
-// ============================================================================
-// Angle Conversion
-// ============================================================================
-//
-// Degrees and radians are two ways to measure the same thing — how far
-// around a circle you've gone.
-//
-//   360 degrees = 2*pi radians  →  1 degree = pi/180 radians
-//                                   1 radian = 180/pi degrees
-//
-
-/// Convert degrees to radians.
-///
-/// # Formula
-///
-/// `radians = degrees * (pi / 180)`
-///
-/// # Examples
-///
-/// ```
-/// assert!((trig::radians(180.0) - trig::PI).abs() < 1e-10);
-/// ```
+/// Degrees to radians: one multiply by a pre-divided, bit-pinned constant.
 pub fn radians(deg: f64) -> f64 {
-    deg * (PI / 180.0)
+    deg * f(RAD_PER_DEG)
 }
 
-/// Convert radians to degrees.
-///
-/// # Formula
-///
-/// `degrees = radians * (180 / pi)`
-///
-/// # Examples
-///
-/// ```
-/// assert!((trig::degrees(trig::PI) - 180.0).abs() < 1e-10);
-/// ```
+/// Radians to degrees: one multiply by a pre-divided, bit-pinned constant.
 pub fn degrees(rad: f64) -> f64 {
-    rad * (180.0 / PI)
+    rad * f(DEG_PER_RAD)
 }
 
 // ============================================================================
@@ -489,6 +450,11 @@ pub fn atan(x: f64) -> f64 {
 /// assert!((trig::atan2(1.0, 0.0) - trig::PI/2.0).abs() < 1e-10);  // positive y-axis → π/2
 /// ```
 pub fn atan2(y: f64, x: f64) -> f64 {
+    // A NaN fails every comparison below and would fall through to 0.0; a
+    // finite answer to an undefined question is wrong (PHY00a 3.9).
+    if x.is_nan() || y.is_nan() {
+        return f64::NAN;
+    }
     if x > 0.0 {
         atan(y / x)
     } else if x < 0.0 && y >= 0.0 {
@@ -502,5 +468,42 @@ pub fn atan2(y: f64, x: f64) -> f64 {
     } else {
         // x == 0 and y == 0: undefined, return 0 by convention.
         0.0
+    }
+}
+
+// ============================================================================
+// Unit tests: the literals written in this file are the pinned bit patterns
+// ============================================================================
+//
+// "The literal parses to the nearest double" is a property of the compiler, so
+// the decimal literals the algorithm uses are asserted bit for bit.
+
+#[cfg(test)]
+mod constant_bits {
+    use super::*;
+
+    #[test]
+    fn decimal_literals_have_the_pinned_bits() {
+        assert_eq!(PI.to_bits(), 0x400921FB54442D18);
+        assert_eq!(HALF_PI.to_bits(), 0x3FF921FB54442D18);
+        assert_eq!(1e-15_f64.to_bits(), 0x3CD203AF9EE75616);
+        assert_eq!(1.0e308_f64.to_bits(), 0x7FE1CCF385EBC8A0);
+        assert_eq!(1e-17_f64.to_bits(), 0x3C670EF54646D497);
+        assert_eq!(1e-300_f64.to_bits(), 0x01A56E1FC2F8F359);
+        assert_eq!(7.450580596923828e-9_f64.to_bits(), f(TINY).to_bits());
+    }
+
+    #[test]
+    fn degree_constants_equal_the_divisions() {
+        assert_eq!(f(RAD_PER_DEG), PI / 180.0);
+        assert_eq!(f(DEG_PER_RAD), 180.0 / PI);
+    }
+
+    #[test]
+    fn the_reduction_pieces_have_at_most_24_significant_bits() {
+        for &p in &PIO2[..4] {
+            let mantissa = (p & 0x000F_FFFF_FFFF_FFFF) | (1 << 52);
+            assert!(53 - mantissa.trailing_zeros() <= 24);
+        }
     }
 }

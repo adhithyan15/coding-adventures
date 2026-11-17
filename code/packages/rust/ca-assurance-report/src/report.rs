@@ -8,7 +8,7 @@ use std::collections::BTreeMap;
 use std::fmt;
 
 use crate::json::JsonValue;
-use crate::matrix::{AuditProfile, WeaknessRow};
+use crate::matrix::WeaknessRow;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct CapabilitiesSummary {
@@ -129,11 +129,13 @@ pub struct AssuranceReport {
     pub package: String,
     pub version: String,
     pub commit: String,
-    /// The audit profile the report was generated under (`--profile`), recorded so that
-    /// `--check` can hold the report to it: a profile that decompresses may not exclude
-    /// CWE-409, and a profile the checker is told to expect must match this one.  It is
-    /// emitted as one string field, so the JSON stays deterministic and byte-stable.
-    pub profile: AuditProfile,
+    /// The name of the audit profile the report was generated under
+    /// (`assurance-profile.json`, `name`), recorded so that `--check` can hold the report to it.
+    /// It is emitted as one string field, so the JSON stays deterministic and byte-stable.
+    pub profile: String,
+    /// SHA-256 (hex) of the exact bytes of the profile file the report was generated from,
+    /// bound like `spec_sha256`: `--check` recomputes it, so an edited profile is refused.
+    pub profile_sha256: String,
     /// The pinned assumption catalogue (VER13 section 5.3).
     pub catalogue: CatalogueRef,
     /// Report-scope assumptions: catalogue entries about the weakness matrix,
@@ -145,6 +147,10 @@ pub struct AssuranceReport {
     pub weaknesses: Vec<WeaknessRow>,
     pub claims: Vec<ClaimEvidence>,
     pub rungs: RungsSummary,
+    /// One rung per language lane the consumer registry lists (VER04i 8.3).
+    /// Isolated from every Rust-only field of the report, and never part of
+    /// the verdict.
+    pub lanes: Vec<crate::lane_report::LaneRung>,
     pub public_symbols_without_claims: Vec<String>,
     pub exemptions: Vec<ComputedExemption>,
     pub verdict: String,
@@ -173,7 +179,8 @@ impl AssuranceReport {
         map.insert("package".into(), JsonValue::String(self.package.clone()));
         map.insert("version".into(), JsonValue::String(self.version.clone()));
         map.insert("commit".into(), JsonValue::String(self.commit.clone()));
-        map.insert("profile".into(), JsonValue::String(self.profile.as_str().into()));
+        map.insert("profile".into(), JsonValue::String(self.profile.clone()));
+        map.insert("profile_sha256".into(), JsonValue::String(self.profile_sha256.clone()));
 
         let mut cat = BTreeMap::new();
         cat.insert("schema".into(), JsonValue::String(self.catalogue.schema.clone()));
@@ -322,6 +329,9 @@ impl AssuranceReport {
         r_map.insert("E5".into(), JsonValue::String(self.rungs.e5.clone()));
         map.insert("rungs".into(), JsonValue::Object(r_map));
 
+        // Lane rungs (WD-004b2): one per registered language lane.
+        map.insert("lanes".into(), crate::lane_report::lanes_to_json(&self.lanes));
+
         // Public symbols without claims
         let sym_arr = self
             .public_symbols_without_claims
@@ -392,12 +402,21 @@ impl AssuranceReport {
 
         // The profile is required: a report that does not say which profile it was generated
         // under cannot be held to it, so it is refused rather than read as `comparison`.
-        let profile: AuditProfile = obj
+        let profile: String = obj
             .get("profile")
             .and_then(|v| v.as_str())
             .ok_or_else(|| ReportError::Validation("missing 'profile' (the audit profile the report was generated under)".into()))?
-            .parse()
-            .map_err(|e: String| ReportError::Validation(format!("profile: {e}")))?;
+            .to_string();
+        let profile_sha256: String = obj
+            .get("profile_sha256")
+            .and_then(|v| v.as_str())
+            .filter(|h| h.len() == 64 && h.bytes().all(|b| matches!(b, b'0'..=b'9' | b'a'..=b'f')))
+            .ok_or_else(|| {
+                ReportError::Validation(
+                    "missing or malformed 'profile_sha256' (64 lowercase hex digits: the digest of assurance-profile.json)".into(),
+                )
+            })?
+            .to_string();
 
         // The catalogue pin and the report-scope assumptions are required:
         // a report without them predates VER13 and cannot be checked against
@@ -658,6 +677,14 @@ impl AssuranceReport {
             e5,
         };
 
+        // Required: a report without `lanes` predates WD-004b2, and stripping the
+        // field would hide a lane, so it is refused rather than read as `[]`.
+        let lanes = crate::lane_report::lanes_from_json(
+            obj.get("lanes")
+                .ok_or_else(|| ReportError::Validation("missing 'lanes' (VER04i section 8.3)".into()))?,
+        )
+        .map_err(|e| ReportError::Validation(format!("lanes: {e}")))?;
+
         let public_symbols_without_claims = obj
             .get("public_symbols_without_claims")
             .and_then(|v| v.as_array())
@@ -710,6 +737,7 @@ impl AssuranceReport {
             version,
             commit,
             profile,
+            profile_sha256,
             catalogue,
             assumptions,
             closure,
@@ -717,6 +745,7 @@ impl AssuranceReport {
             weaknesses,
             claims,
             rungs,
+            lanes,
             public_symbols_without_claims,
             exemptions,
             verdict,

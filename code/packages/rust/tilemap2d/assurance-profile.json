@@ -1,0 +1,19 @@
+{
+  "schema": "warrant-assurance-profile-v1",
+  "name": "tilemap2d",
+  "kind": "transform",
+  "rows": {
+    "326": {
+      "applicability": "excluded",
+      "reason": "no keys: the package takes and generates no key material; operands are bounded tile ids, palette bank indices, scroll offsets and buffer lengths"
+    },
+    "327": {
+      "applicability": "excluded",
+      "reason": "pure graphics transform: package implements tilemap scrolling, culling, tile-attribute collision queries and scanline rendering only, no cipher, hash or MAC"
+    },
+    "407": {
+      "applicability": "excluded",
+      "reason": "bounded work per call: culling, collision and rendering are linear in visible area, capped by MAX_MAP_DIM = 4096, MAX_VIEWPORT = 8192, MAX_LAYERS = 8 and MAX_QUERY_TILES = 65536"
+    }
+  }
+}

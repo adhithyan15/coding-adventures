@@ -1,0 +1,19 @@
+{
+  "schema": "warrant-assurance-profile-v1",
+  "name": "rpg-battle-engine",
+  "kind": "transform",
+  "rows": {
+    "326": {
+      "applicability": "excluded",
+      "reason": "no keys: the package takes and generates no key material; operands are bounded type ids, levels, stats, party indices and move slots"
+    },
+    "327": {
+      "applicability": "excluded",
+      "reason": "pure game-logic state machine: package implements type effectiveness, damage, capture and XP arithmetic only, no cipher, hash or MAC"
+    },
+    "407": {
+      "applicability": "excluded",
+      "reason": "bounded work per call: a turn executes at most two actions over fixed-size parties (MAX_PARTY = 6, MAX_MOVES = 4) and logs at most MAX_EVENTS = 40 events"
+    }
+  }
+}

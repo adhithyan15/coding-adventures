@@ -1,0 +1,26 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "python/warrant-oracle",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "*",
+      "justification": "Reads one .warrant specification and, for the v1 gate, one corpus.json; both paths are supplied on the command line, are size-capped before parsing and must be regular files (symbolic links are refused)."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "*",
+      "justification": "Writes the oracle's own enumeration digests to the single file named by --out or --emit-v2; it never writes beside the corpus and never overwrites an input."
+    },
+    {
+      "category": "stdout",
+      "action": "write",
+      "target": "*",
+      "justification": "Prints the gate verdict and the level census."
+    }
+  ],
+  "justification": "Offline oracle: it parses and evaluates hostile .warrant text with no eval, exec or subprocess, opens no network connection and reads no environment variable."
+}

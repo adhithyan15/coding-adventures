@@ -1,5 +1,25 @@
 # Changelog
 
+## Unreleased - source-input boundary sync (ct-compare lanes)
+
+- `code/packages/go/ct-compare`, `code/packages/python/ct-compare`, and `code/packages/typescript/ct-compare` added to `rust-root-workspace-manifest-cross-consumers`: their BUILD files run cargo against the Rust workspace (WD-004b2) without syncing the repository boundary. The checked repository source-input boundary added all three roots, the projection was regenerated, and the pinned boundary digest moved from `16dddd56...` to `2bfdfd58...`. The boundary has 504 scopes and 518 authorizations (were 501 and 515). No behaviour change in the tool.
+
+## Unreleased - source-input boundary sync (python music-analysis package)
+
+- `code/packages/python/music-analysis` added to `python-uv-workspace-manifest`: added to `code/packages/python/pyproject.toml` without syncing the repository boundary. The checked repository source-input boundary added the root, the projection was regenerated, and the pinned boundary digest moved from `82d192d0...` to `16dddd56...`. The boundary has 501 scopes and 515 authorizations (were 500 and 514). No behaviour change in the tool.
+
+## Unreleased - source-input boundary sync (python dsp-conv/stft/wavelets packages)
+
+- `code/packages/python/dsp-conv`, `code/packages/python/dsp-stft`, and `code/packages/python/dsp-wavelets` added to `python-uv-workspace-manifest`: #19441 added these packages to `code/packages/python/pyproject.toml`. The checked repository source-input boundary added all three roots, the projection was regenerated, and the pinned boundary digest moved from `43a5ed7f...` to `82d192d0...`. The boundary has 500 scopes and 514 authorizations (were 497 and 511). No behaviour change in the tool.
+
+## Unreleased - source-input boundary sync (python dsp packages)
+
+- `code/packages/python/dsp-complex`, `code/packages/python/dsp-dct`, `code/packages/python/dsp-fft`, and `code/packages/python/dsp-filters` added to `python-uv-workspace-manifest`: #19437 added these packages to `code/packages/python/pyproject.toml`. The checked repository source-input boundary added all four roots, the projection was regenerated with the repository's generator, and the pinned boundary digest moved from `3f8aff75...` to `43a5ed7f...`. The boundary has 497 scopes and 511 authorizations (were 493 and 507). No behaviour change in the tool.
+
+## Unreleased - source-input boundary sync (python packages)
+
+- `code/packages/python/ca-capability-analyzer` and `code/packages/python/test-bootstrap` added to `python-uv-workspace-manifest`: #19424 added both packages to `code/packages/python/pyproject.toml`. The checked repository source-input boundary added both roots, the projection was regenerated with the repository's generator, and the pinned boundary digest moved from `f338935e...` to `3f8aff75...`. The boundary has 493 scopes and 507 authorizations (were 491 and 505). No behaviour change in the tool.
+
 ## Unreleased - source-input boundary sync (rust/arithmetic)
 
 - `code/packages/rust/arithmetic` is no longer a consumer of `starlark-rust-library-rule-consumers`: #19311 (Warrant adoption) rewrote its BUILD from a Starlark `rust_library` target into plain shell commands, so nothing loads `rust_library.star` there any more. The checked repository source-input boundary dropped that root, the projection was regenerated with the repository's generator, and the pinned boundary digest moved from `4569b531...` to `f338935e...`. The boundary has 491 scopes and 505 authorizations (were 492 and 506). No behaviour change in the tool.

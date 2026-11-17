@@ -1,0 +1,18 @@
+  -- insert and remove are deterministic in both tiers (shape A of VOS01 section 2.3).
+  claim insert_safe:
+    forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool, t: U8. (
+      insert_out(build(ready_of(b0, b1, b2, b3, b4, b5, b6, b7)), t) == abs_insert(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), t).0 and
+      dec(alpha_w(insert_img(build(ready_of(b0, b1, b2, b3, b4, b5, b6, b7)), t))) == abs_insert(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), t).1)
+  claim remove_safe:
+    forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool, t: U8. (
+      remove_out(build(ready_of(b0, b1, b2, b3, b4, b5, b6, b7)), t) == abs_remove(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), t).0 and
+      dec(alpha_w(remove_img(build(ready_of(b0, b1, b2, b3, b4, b5, b6, b7)), t))) == abs_remove(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), t).1)
+  -- dispatch is a relation (shape B): any permitted choice, and the chosen thread leaves.
+  claim dispatch_safe:
+    forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool. (
+      safe_dispatch(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), dispatch_out(build(ready_of(b0, b1, b2, b3, b4, b5, b6, b7))), dec(alpha_w(dispatch_img(build(ready_of(b0, b1, b2, b3, b4, b5, b6, b7)))))))
+  -- alpha is onto M (shape C of VOS01 section 2.3): build and alpha agree on every abstract state.
+  -- It pins build, alpha and dec for EVERY implementation: a representation-mode scheduler and -any
+  -- carry the safety tier but not canonical, and would otherwise have an alpha nothing constrains.
+  claim safety_alpha_build:
+    forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool. dec(alpha_w(build(ready_of(b0, b1, b2, b3, b4, b5, b6, b7)))) == ready_of(b0, b1, b2, b3, b4, b5, b6, b7)

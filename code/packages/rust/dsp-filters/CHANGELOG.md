@@ -1,5 +1,22 @@
 # Changelog — dsp-filters
 
+## 0.4.0 — 2026-11-15
+
+### Added — DSP03 Phase 3 (FIR via FFT) & Phase 5 additions (Band-Pass, Chebyshev-I)
+
+- Added `fir_fft(signal, kernel)`: $O(N \log N)$ FFT-based convolution via `dsp_fft::rfft_scalar` and `dsp_fft::irfft_scalar`.
+- Added `design_band_pass(low_cutoff_norm, high_cutoff_norm, num_taps, window)`: windowed-sinc band-pass filter with peak passband unit gain.
+- Added `chebyshev1_lowpass(order, ripple_db, cutoff_norm)`: order 1 and 2 Chebyshev Type I IIR lowpass filters via bilinear transform.
+
+### Changed — Security Hardening and CWE Mitigations
+
+- Enforced `#![forbid(unsafe_code)]` unconditionally.
+- Added defensive bounds: `MAX_SAMPLES = 1 << 24`, `MAX_TAPS = 1 << 20`, and `MAX_ORDER = 1024` (CWE-400 / CWE-190).
+- Added finite-float validation across all public APIs (`fir`, `fir_fft`, `iir`, `design_*`, `butterworth_lowpass`, `chebyshev1_lowpass`) before any heap allocation (CWE-20).
+- Verified strictly iterative execution throughout FIR convolution and IIR Direct-Form-II Transposed filtering (CWE-674).
+- Added `dsp-filters.warrant` contract specification and `required_capabilities.json` (`[]`).
+- Added SplitMix64 property-based testing and hostile input test suites.
+
 ## 0.3.0 — 2026-05-16
 
 ### Added — DSP03 Phase 5 (filter design helpers)
