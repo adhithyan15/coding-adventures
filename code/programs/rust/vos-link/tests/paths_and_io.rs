@@ -104,12 +104,23 @@ fn root_must_agree_with_the_crate_location() {
 #[test]
 fn dot_dot_is_refused_before_anything_is_resolved() {
     let r = Repo::with("dots", SCAN);
-    let p = r.path("code/packages/rust/vos-sched-contract/../vos-fixture-scan");
+    // Build the paths TEXTUALLY.  On Windows the test root is a canonical
+    // verbatim path (`\\?\C:\...`), and `PathBuf::join` onto a verbatim path
+    // resolves `..` while joining, so `r.path("a/../b")` would reach the tool
+    // with no `..` left and the test would prove nothing.  A path typed on a
+    // command line arrives as raw text, which is what this models.
+    let textual = |rel: &str| std::path::PathBuf::from(format!("{}/{rel}", r.root.display()));
+    let p = textual("code/packages/rust/vos-sched-contract/../vos-fixture-scan");
+    let root_arg = textual("code/..");
+    for arg in [&p, &root_arg] {
+        assert!(
+            arg.to_string_lossy().contains(".."),
+            "the test input lost its `..`: {}",
+            arg.display()
+        );
+    }
     assert!(nv(vos_link::gen_doc(&p, None)).contains("`..` is not allowed"));
-    assert!(
-        nv(vos_link::gen_doc(&r.pkg(SCAN), Some(&r.path("code/.."))))
-            .contains("`..` is not allowed")
-    );
+    assert!(nv(vos_link::gen_doc(&r.pkg(SCAN), Some(&root_arg))).contains("`..` is not allowed"));
     assert!(nv(vos_link::check_doc(&p, None)).contains("`..`"));
 }
 
