@@ -4966,6 +4966,33 @@ key schedule, certificate validation, TLS transport, and HTTP composition
 remain blockers. Concrete HTTPS and live-provider readiness remain
 unavailable.
 
+An allocation-free `tls13-server-hello-version-selection` prerequisite now
+extends that retained selection evidence through extension-context and
+`supported_versions` policy. The binder first validates the exact decoded
+ClientHello extension block and the exact decoded ordinary ServerHello or
+HelloRetryRequest extension block against one caller-supplied, data-driven
+context policy. It then requires exactly one `supported_versions` extension in
+both retained messages. Before trusting a supplied `ClientVersionOffer`, it
+requires the offer's complete encoded ClientHello extension data, including
+the vector length, identifier order, and every identifier, to equal the
+extension data retained by that exact decoded ClientHello. Finally, it asks
+the retained offer to validate the server's exact extension data as a version
+the client offered and as exactly TLS 1.3. Success moves the non-copyable prior
+selection binding into a new evidence value and retains the policy, exact
+version offer, and selected TLS 1.3 descriptor. Stable failures and diagnostics
+retain no extension data, version identifiers, message bytes, or policy
+payloads.
+
+This version binding does not compare a HelloRetryRequest selection with a
+later ServerHello, require the retry to change the ClientHello, compare retry
+cipher suites, apply the transcript `message_hash` rewrite, interpret
+`key_share`, sequence a handshake, send alerts, derive keys, protect records,
+parse or validate certificates, establish trust, enforce revocation, perform
+I/O, authorize HTTP or OAuth transport, or open a network connection. Retry
+state, transcript composition, key schedule, certificate validation, TLS
+transport, and HTTP composition remain blockers. Concrete HTTPS and
+live-provider readiness remain unavailable.
+
 An allocation-free `tls13-alpn` prerequisite now owns the RFC 7301
 `application_layer_protocol_negotiation` extension data needed to bind a
 future repository-owned TLS client to one application protocol. A client
