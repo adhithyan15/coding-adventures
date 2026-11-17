@@ -1031,6 +1031,9 @@ fn demote_for_budget(tys: &mut [Ty], budget: u64) -> Vec<(usize, Vec<String>)> {
     demoted
 }
 
+/// Budget demotions: binder index and component path, in the order applied.
+pub(crate) type Demoted = Vec<(usize, Vec<String>)>;
+
 /// The resolved binder domains of one claim: the declared types, the
 /// `NatCount` refinement of a `Nat` that flows into a shift count, and the
 /// budget demotion of VER04j section 2.6, then the budget check (`W0706`).
@@ -1049,7 +1052,7 @@ pub(crate) fn resolve_claim_tys<'a>(
     budget: u64,
     label: &str,
     span: (usize, usize),
-) -> Result<(Vec<Ty>, Vec<(usize, Vec<String>)>), CodegenError> {
+) -> Result<(Vec<Ty>, Demoted), CodegenError> {
     let mut tys: Vec<Ty> = binders
         .iter()
         .map(|b| ty_of(b, v1, env))

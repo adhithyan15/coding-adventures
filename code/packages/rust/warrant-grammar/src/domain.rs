@@ -282,7 +282,7 @@ fn bytes_d1_nth(i: u64) -> Vec<u8> {
         _ => {
             let k = i - 337;
             let len = 4 + (k / 2) as usize;
-            vec![if k % 2 == 0 { 0x00 } else { 0xa5 }; len]
+            vec![if k & 1 == 0 { 0x00 } else { 0xa5 }; len]
         }
     }
 }

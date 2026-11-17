@@ -300,7 +300,7 @@ fn a_size_that_does_not_fit_is_none_never_zero() {
     let seven = Domain::Tuple(vec![Domain::U8; 7]);
     assert_eq!(seven.domain_size(), Some(1u64 << 56));
     // A width over the cap has no domain.
-    assert!(MAX_FIXED_WIDTH == 4096);
+    assert_eq!(MAX_FIXED_WIDTH, 4096);
     assert_eq!(Domain::BytesN(MAX_FIXED_WIDTH + 1).domain_size(), None);
     assert_eq!(Domain::BytesN(MAX_FIXED_WIDTH).domain_size(), Some(3 * MAX_FIXED_WIDTH + 4));
     // An overflow nested anywhere propagates.
