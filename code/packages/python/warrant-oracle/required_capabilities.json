@@ -7,7 +7,7 @@
       "category": "fs",
       "action": "read",
       "target": "*",
-      "justification": "Reads one .warrant specification and, for the v1 gate, one corpus.json; both paths are supplied on the command line, are size-capped before parsing and must be regular files (symbolic links are refused)."
+      "justification": "Reads one .warrant specification and, for the v1 gate, one corpus.json; for verify-v2 also one corpus.profile, an optional evidence.bindings and, inside the fixture directory named on the command line, corpus.json, cases.tfv, optional corpus.profile and exactly the chunks/<claim>.txt files it derives. Every path is supplied on the command line or derived from a validated claim name, size-capped before parsing and must be a regular file (symbolic links are refused)."
     },
     {
       "category": "fs",
@@ -19,7 +19,7 @@
       "category": "stdout",
       "action": "write",
       "target": "*",
-      "justification": "Prints the gate verdict and the level census."
+      "justification": "Prints the gate verdict, the level census and, for a failed verify-v2, the group, path and message of each mismatch (never input bytes)."
     }
   ],
   "justification": "Offline oracle: it parses and evaluates hostile .warrant text with no eval, exec or subprocess, opens no network connection and reads no environment variable."

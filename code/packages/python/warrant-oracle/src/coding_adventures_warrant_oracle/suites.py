@@ -36,7 +36,7 @@ from dataclasses import dataclass, field
 from . import ast as A
 from .domains import Desc, _Listed, check_budget, demote, descriptor_for
 from .errors import OracleError
-from .ir_eval import Program, compile_calls, compile_trace, may_wrap
+from .ir_eval import Program, compile_calls, compile_trace, fixed_arith_over_subject, may_wrap
 from .lower import BOOL, LoweredSuite, Spec, walk
 from .stream import (
     chunk_digest_framing,
@@ -226,6 +226,13 @@ class SuitePlan:
         costs.append(body.cost)
         if body.ty != BOOL:
             raise OracleError("type", "a claim body must be Bool")
+        if spec.version == "v0" and fixed_arith_over_subject(prog, suite.body, tenv):
+            # Section 3.3 rule 3: the v0 harness evaluates U8 as Nat, so a fixed-width
+            # node above a subject result may wrap in v2 and not there.  Static refusal.
+            raise OracleError(
+                "generation",
+                "W0701: fixed-width arithmetic over a subject result in a v0 document",
+            )
         self._trace = compile_trace(prog, suite.body, tenv)
         self._wraps_needed = may_wrap(prog, suite.admit) or self._trace is not None
         self._wraps: int | None = None
@@ -484,13 +491,52 @@ class SuitePlan:
         self._wraps = stats.wraps - before
         return self._wraps
 
+    def iter_admitted(self):
+        """Yield ``(product ordinal, env)`` for every admitted tuple, in product order.
+
+        ``env`` is one dict mutated in place: a consumer evaluates immediately and keeps
+        nothing.  This is the walk the witness search of section 5.6 uses.
+        """
+        self.work.walk(self.product)
+        bs = self.binders
+        names = [b.name for b in bs]
+        cols = [b.values(0, b.size) for b in bs]
+        sizes = [b.size for b in bs]
+        idx = [0] * len(bs)
+        env = {n: c[0] for n, c in zip(names, cols)}
+        for ordinal in range(self.product):
+            if self.admit(env):
+                yield ordinal, env
+            j = len(bs) - 1
+            while j >= 0:
+                idx[j] += 1
+                if idx[j] < sizes[j]:
+                    env[names[j]] = cols[j][idx[j]]
+                    break
+                idx[j] = 0
+                env[names[j]] = cols[j][0]
+                j -= 1
+
     def run(
-        self, depth: str = "slim", chunks: list[int] | None = None, want_v1: bool = True
+        self,
+        depth: str = "slim",
+        chunks: list[int] | None = None,
+        want_v1: bool = True,
+        slim_chunks: list[int] | None = None,
+        stride: int | str = "auto",
     ) -> SuiteResult:
-        """Run the suite at ``depth`` (``"full"`` / ``"slim"``) or on explicit chunks."""
+        """Run the suite at ``depth`` (``"full"`` / ``"slim"``) or on explicit chunks.
+
+        ``slim_chunks`` is the final slim set (base set, witness chunks and profile
+        ``slim_chunk`` lines, decided by the caller); without it the set is the base set
+        under ``stride`` (a profile ``slim_stride``, clamped per suite).
+        """
         m = self.chunks_total
+        slim_set = (
+            list(slim_chunks) if slim_chunks is not None else slim_base_set(self.suite.id, m, stride)
+        )
         if chunks is None:
-            chunks = list(range(m)) if depth == "full" else slim_base_set(self.suite.id, m)
+            chunks = list(range(m)) if depth == "full" else list(slim_set)
         full = chunks == list(range(m))
         whole_in = whole_ex = None
         if full and want_v1 and self.header.startswith(b"warrant-stream-v1"):
@@ -527,11 +573,16 @@ class SuitePlan:
             ir_cost=self.ir_cost,
             header=self.header[:-1].decode(),
             chunks=results,
-            slim_chunks=slim_base_set(self.suite.id, m),
+            slim_chunks=list(slim_set),
             result_type=str(self.suite.result),
         )
         if cases == 0:
             raise OracleError("generation", "a suite admits zero cases")
+        if self.spec.version == "v0" and out.wraps > 0:
+            # Section 3.3 rule 2: the v0 harness evaluates U8 as Nat.
+            raise OracleError(
+                "generation", "W0701: U8 arithmetic wraps; v0 harness evaluates U8 as Nat"
+            )
         if full:
             out.inputs_sha256 = chunk_digest_framing([r.inputs for r in results])
             if self.expected is not None:

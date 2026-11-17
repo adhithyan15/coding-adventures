@@ -1,0 +1,7 @@
+tfv 1
+warrant/synth/example/bump_wraps R3 Kop S62756d70 Ka I255 Kexpect I0
+warrant/synth/example/cmp_diff R4 Kop S636d70 Ka X00 Kb X01 Kexpect F
+warrant/synth/example/pick_ok R5 Kop S7069636b Ka X00 Kb Xff Kchoice T Kexpect M1 S6f6b X00
+warrant/synth/example/pick_err R5 Kop S7069636b Ka X00 Kb X Kchoice F Kexpect M1 S657272 S424144
+warrant/synth/example/fixed_two R5 Kop S636d705f6669786564 Ka X0001 Kb X0001 Kwidth I2 Kexpect T
+warrant/synth/example/wide_zero R3 Kop S77696465 Ka I0 Kexpect I0

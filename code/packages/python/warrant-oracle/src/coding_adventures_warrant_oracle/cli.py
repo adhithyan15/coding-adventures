@@ -6,6 +6,8 @@
                              [--emit-v2 scratch.json]
     warrant-oracle emit-v2   --spec gf256.warrant --out scratch.json \
                              [--depth slim|full] [--suite NAME ...]
+    warrant-oracle verify-v2 <corpus-dir> --warrant x.warrant --profile corpus.profile \
+                             [--bindings evidence.bindings]
     warrant-oracle check     --spec x.warrant
 
 Exit status: ``0`` the gate passed; ``1`` a mismatch (the corpus and the oracle
@@ -28,6 +30,7 @@ from .lower import lower_document
 from .parser import parse_source
 from .profile import parse_profile
 from .suites import DEFAULT_BUDGET, DEFAULT_CHUNK_SIZE
+from .verify_v2 import verify_v2
 
 MAX_SPEC_READ = (1 << 20) + 1
 
@@ -72,6 +75,12 @@ def build_parser() -> argparse.ArgumentParser:
     )
     c = sub.add_parser("check", help="parse and lower a document; report levels")
     c.add_argument("--spec", required=True)
+    w = sub.add_parser("verify-v2", help="gate an on-disk warrant-corpus-v2 fixture (S4 part 2)")
+    w.add_argument("corpus_dir", help="a fixture directory: corpus.json, chunks/, cases.tfv")
+    w.add_argument("--warrant", required=True, help="the .warrant source the corpus was made from")
+    w.add_argument("--profile", required=True, help="the corpus.profile (budget, faults, ...)")
+    w.add_argument("--bindings", help="an evidence.bindings whose faults= lists must match")
+    w.add_argument("--repo-root", help="the repository root the corpus's spec path is relative to")
     return ap
 
 
@@ -104,7 +113,28 @@ def run(argv: list[str]) -> int:
         return 2
 
 
+def _verify_v2(args: argparse.Namespace) -> int:
+    report, _ = verify_v2(
+        pathlib.Path(args.corpus_dir),
+        pathlib.Path(args.warrant),
+        pathlib.Path(args.profile),
+        pathlib.Path(args.bindings) if args.bindings else None,
+        repo_root=pathlib.Path(args.repo_root) if args.repo_root else None,
+    )
+    for miss in report.mismatches:
+        print(
+            f"warrant-oracle: MISMATCH {miss['code']} {miss['where']}: {miss['message']}",
+            file=sys.stderr,
+        )
+    cases = sum(s["cases"] for s in report.suites.values())
+    status = "ok" if report.ok else "FAILED"
+    print(f"warrant-oracle: verify-v2: {status}: {cases} cases across {len(report.suites)} suites")
+    return 0 if report.ok else 1
+
+
 def _run(args: argparse.Namespace) -> int:
+    if args.command == "verify-v2":
+        return _verify_v2(args)
     spec_bytes = _read(args.spec, MAX_SPEC_READ - 1)
     if args.command == "check":
         sys.stdout.write(dumps(census(lower_document(parse_source(spec_bytes)))))

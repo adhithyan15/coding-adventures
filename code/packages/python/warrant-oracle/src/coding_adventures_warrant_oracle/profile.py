@@ -13,7 +13,9 @@ oracle's independent reader and by nothing else::
 its default of 2,000 (ceiling 65,536); no command-line flag or environment
 variable can (section 4.2 rule 6: an override is a second place for the limit to
 live, and the report could not show it).  The reader is strict: LF only, one
-value per key, no duplicates, no unknown keys, ranges checked.
+value per key, no duplicates, no unknown keys, ranges checked, and (section 16.4
+item 7, closed by slice S4 part 2) no empty token, no repeated ``fault`` or
+``slim_chunk`` line, no ``budget 0`` and no ``slim_stride 0``.
 """
 
 from __future__ import annotations
@@ -45,7 +47,10 @@ def _int(text: str) -> int:
         or len(text) > 20
     ):
         raise OracleError("corpus", "a profile value is a canonical decimal integer")
-    return int(text)
+    value = int(text)
+    if value >= 1 << 64:
+        raise OracleError("corpus", "a profile value is at most 2^64 - 1")
+    return value
 
 
 def parse_profile(raw: bytes) -> Profile:
@@ -61,9 +66,11 @@ def parse_profile(raw: bytes) -> Profile:
     prof = Profile()
     seen: set[str] = set()
     for line in text.split("\n"):
-        if not line.strip():
+        if not line:
             continue
         parts = line.split(" ")
+        if any(not token or token != token.strip() for token in parts):
+            raise OracleError("corpus", "a profile line has an empty or padded token")
         key = parts[0]
         if key in ("budget", "chunk_size", "slim_stride", "max_ir_cost"):
             if key in seen or len(parts) != 2:
@@ -71,12 +78,22 @@ def parse_profile(raw: bytes) -> Profile:
             seen.add(key)
             if key == "slim_stride":
                 prof.slim_stride = "auto" if parts[1] == "auto" else _int(parts[1])
+                if prof.slim_stride == 0:
+                    raise OracleError("corpus", "slim_stride 0 is refused (a positive integer)")
             else:
                 setattr(prof, key, _int(parts[1]))
+                if key == "budget" and prof.budget == 0:
+                    raise OracleError("corpus", "budget 0 is refused")
         elif key == "slim_chunk" and len(parts) == 3:
-            prof.slim_chunks.append((parts[1], _int(parts[2])))
+            row = (parts[1], _int(parts[2]))
+            if row in prof.slim_chunks:
+                raise OracleError("corpus", "a slim_chunk line is repeated")
+            prof.slim_chunks.append(row)
         elif key == "fault" and len(parts) == 3:
-            prof.faults.append((parts[1], parts[2]))
+            row = (parts[1], parts[2])
+            if row in prof.faults:
+                raise OracleError("corpus", "a fault line is repeated")
+            prof.faults.append(row)
         else:
             raise OracleError("corpus", "an unknown or malformed profile line")
     if not DEFAULT_MAX_IR_COST <= prof.max_ir_cost <= MAX_IR_COST_CEILING:

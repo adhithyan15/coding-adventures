@@ -22,7 +22,7 @@ It is **stdlib-only**, shares no code, data file or table with the generator, an
 **never reads the generator's IR as truth**: it parses the `.warrant` source and
 lowers it itself, then only *compares*.
 
-## What is here (slice S4, part 1)
+## What is here (slice S4, parts 1 and 2)
 
 | Part | Module | Notes |
 |---|---|---|
@@ -32,7 +32,8 @@ lowers it itself, then only *compares*.
 | domains | `domains` | every descriptor of VER04r 5.1, `size`/`nth`, budget demotion |
 | streams | `stream` | `warrant-stream-v1/v2` encoders, chunk and suite framing, FNV-1a slim selection |
 | suites | `suites` | product enumeration, admission arithmetic, chunking, per-chunk digests |
-| gate | `corpus_v1`, `emit`, `cli` | the ct-compare gate, v2 digest emitter, level census |
+| gate | `corpus_v1`, `emit`, `cli` | the ct-compare v1 gate, v2 digest emitter, level census |
+| v2 gate (part 2) | `corpus_v2`, `faults`, `tfv`, `verify_v2` | derives a whole v2 fixture from the `.warrant` and `corpus.profile`; `verify-v2` compares it with the directory |
 
 Every adopter parses: ct-compare, gf256, wasm-leb128, logic-gates, lzw,
 arithmetic, x25519 (and the WX-G `inout`/`ensures` syntax of zeroize).
@@ -122,19 +123,74 @@ These are facts the S3/S8 owners need; none is hidden by a flag.
   `Nat` when its context is `Nat` and `Int` otherwise; several refinements fold
   left into binary `and`; an unsigned `neg` is allowed at the IR level and refused
   by the source checker; `wraps` counts subject-independent nodes the oracle
-  evaluated (`admit`, `expected`, call-count guards); `slim_sha256` is emitted as
-  separate inputs and expected digests.
+  evaluated (`admit`, `expected`, call-count guards); the two slim digests are
+  `slim_inputs_sha256` and `slim_expected_sha256`.
 
-## Not yet done (part 2)
+## `verify-v2` (slice S4 part 2)
 
-* `verify-v2`: reading a v2 `corpus.json` and `chunks/*.txt` (no generator output
-  exists yet; `emit-v2` writes the oracle's side for the diff).
-* Check 3 for v2: re-deriving fault IR, `fault_models`, controls and
-  `required_claims` from `corpus.profile` (section 8).
-* Slim **witness chunks** (section 5.6) and `corpus.profile` parsing.
-* `ir.fixed`, `ir.data` (slices S10, S11) and `inout`/`ensures` monitoring (S12).
+```bash
+python -m coding_adventures_warrant_oracle verify-v2 code/specs/fixtures/ct-compare-warrant-v2 \
+    --warrant code/specs/ct-compare.warrant \
+    --profile code/specs/fixtures/ct-compare-warrant-v2/corpus.profile \
+    [--bindings code/packages/rust/ct-compare/evidence.bindings] [--repo-root .]
+```
+
+`spec` in the corpus must equal the repo-relative path of `--warrant` (root: nearest ancestor with a
+`code/` directory, or `--repo-root`). The spec's effective size cap is the lexer's 1 MiB.
+
+The oracle **derives** the corpus (`corpus.json`, `chunks/*.txt`, `cases.tfv`) from the
+`.warrant` source and `corpus.profile` with its own reader, lowering, evaluator,
+enumeration, stream writer, fault registry and witness search, then compares the result
+with the directory. It reads no generator code and no generator output beyond the
+directory it is asked to check, so a bug the generator wrote into a corpus is a mismatch
+here, not a shared assumption. The comparison groups what it finds by the three checks of
+VER04r section 10.3:
+
+| Check | Group | What is re-derived and compared |
+|---|---|---|
+| 1. Lowering | `lowering` | `types ops models model_order examples`, each suite's `id kind claim ops requires admit body oracle result_type`, binder types, and `cases.tfv` |
+| 2. Enumeration and evaluation | `enumeration` | `budget chunk_size max_ir_cost`, each binder's resolved descriptor, `cases discarded expected_calls wraps ir_cost product chunks stream domain_label demoted`, every chunk line (`first_admitted`, `calls`, both chunk digests), `chunks_sha256`, the suite digests, the v1 whole-suite digests, `slim_chunks` and both slim digests |
+| 3. Faults and controls | `faults`, `controls` | every fault row (incl. `rewrites` and the opaque `ir.fixed` expressions), every control row, `required_claims`, `blind_claims`, `slim_witness`, `accepted_blind_faults` (always `[]`) |
+
+Also: `header` (identity and digest binding: `profile module document spec spec_sha256
+profile_sha256 generator levels assumes`), `files` (exactly the derived chunk files, regular
+files only, size caps, no symbolic links), `bytes` (the canonical writer: key order,
+indent, LF, final LF) and `drift` (`corpus.profile` against the bindings' `faults=`).
+Exit status `0` pass, `1` mismatch, `2` an input was unreadable or the oracle refuses the
+document (a level above `ir.core`, a resource bound, a generation error).
+
+Bytes are compared exactly where VER04r fixes them (chunk files, `cases.tfv`, the canonical
+form of `corpus.json`) and structurally, type-strict and closed, where the `corpus.json`
+key set is provisional (section 1.4). The `generator` key (name and version) cannot be
+derived and is checked for shape only.
+
+A fault whose level this oracle lacks (`ir.fixed`, e.g. ct-compare's `ignore-high-bit`) is
+**instantiated and compared as opaque data, never evaluated**; its candidate claims are
+`deferred` (VER04r 10.4). The witness search is the one of section 5.6: the lowest admitted
+**product ordinal** at which the faulted expected value differs, as a chunk; a claim is
+*witnessed*, *blind* or *unproven*, and a fault every candidate is blind to fails generation.
+
+Gaps closed by part 2 (all were listed in VER04r 16.3 to 16.5 as "S4 part 2"): `corpus.profile`
+strictness (repeated `fault`/`slim_chunk` lines, an empty token, `budget 0`, `slim_stride 0`
+are errors); `concat` is evaluated on the pure trace (a result past `MAX_IR_VALUE` in a
+subject argument fails generation); v0 rules 2 and 3 of section 3.3 (also through a
+`model_call` whose callee's call closure wraps); the IR depth is 64 levels, not 65; the
+`slim_stride` clamp per suite; witness chunks and `slim_chunk` lines in the slim set.
+
+Tests use `tests/fixtures/synth-v2`, a small synthetic document and the corpus the Rust
+generator produced from it (its README says how). The ct-compare v2 fixture is **not**
+committed here ([D10]: it lands with S3d); the end-to-end run is
+`WARRANT_CT_COMPARE_V2=<dir> pytest tests/test_verify_v2.py -k ct_compare`, with `<dir>`
+generated by `warrant-corpus-gen`.
+
+## Not yet done
+
+* `ir.fixed`, `ir.data` (slices S10, S11) and `inout`/`ensures` monitoring (S12): a
+  document above `ir.core` is refused whole, naming the level.
 * The oracle's `domain_label`/`depth` rows are emitted but not yet compared with a
-  manifest.
+  lane manifest.
+* The shape of `assumes` and of `accepted_blind_faults` (VER04r 16.4 item 4, 16.6 OPEN 1);
+  `verify-v2` expects `[]` for both.
 
 ## Security
 

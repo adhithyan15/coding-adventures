@@ -24,7 +24,7 @@ def adopter_bytes(name: str) -> bytes:
 
 #: A tiny v0 document used all over the tests: three binders of different sizes,
 #: a refinement, a relational claim and a reference claim.
-TINY = b"""warrant tiny
+TINY = b"""warrant tiny v1
   error E = BAD | WORSE
   model inc(a: U8) -> U8 = a + 1u8
   model same(a: U8, b: U8) -> Bool = a == b
