@@ -123,7 +123,10 @@ pub fn fixed_op(op: Arith, ty: FixedTy, a: i128, b: i128) -> (i128, bool) {
 /// (`-1u8` is `255`, not `-1`).
 pub fn fixed_neg(ty: FixedTy, a: i128) -> (i128, bool) {
     let wrapped = fixed::neg(ty, a);
-    (wrapped, wrapped != -a)
+    (
+        wrapped,
+        a.checked_neg().is_none_or(|exact| wrapped != exact),
+    )
 }
 
 /// Does the length `len` of a `Bytes` or list value respect [`MAX_IR_VALUE`]?  Call before
@@ -223,6 +226,8 @@ mod tests {
         // the truth: -1u8 is 255
         assert_eq!(fixed_neg(U8, 1), (255, true));
         assert_eq!(fixed_neg(U8, 0), (0, false));
+        // an out-of-range operand at i128::MIN must not overflow the comparison
+        assert!(fixed_neg(I8, i128::MIN).1);
     }
 
     #[test]

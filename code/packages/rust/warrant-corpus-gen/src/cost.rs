@@ -71,6 +71,18 @@ pub const MAX_IR_WORK_SLIM: u64 = 64_000_000_000;
 /// Total IR work of a `full` run: `2^32 x 2,000`.
 pub const MAX_IR_WORK_FULL: u64 = 8_589_934_592_000;
 
+/// A recorded `max_ir_cost` above the ceiling is a corpus error (VER04r 4.2 rule 6).
+fn check_limit(limit: u64) -> Result<(), GenError> {
+    if limit > MAX_IR_COST_CEILING {
+        return Err(GenError::new(
+            code::LIMIT,
+            "",
+            "max_ir_cost exceeds the 65,536 ceiling",
+        ));
+    }
+    Ok(())
+}
+
 fn over(limit: u64) -> GenError {
     GenError::new(
         code::LIMIT,
@@ -95,6 +107,7 @@ impl ModelCosts {
     /// `limit` when a body (including the bodies it calls) costs more than `limit`, or
     /// nests model calls deeper than [`MAX_MODEL_DEPTH`]; `W0701` for a forward call.
     pub fn compute(models: &[LoweredModel], limit: u64) -> Result<ModelCosts, GenError> {
+        check_limit(limit)?;
         let mut costs = ModelCosts::default();
         for m in models {
             let cost = ir_cost(&m.body, &costs, limit).map_err(|e| e.at(&m.name))?;
@@ -143,6 +156,7 @@ impl ModelCosts {
 /// `limit` if any partial sum, or the total, exceeds `limit`, or the tree is deeper than
 /// [`MAX_IR_DEPTH`]; `W0701` for a call to a model that is not (yet) costed.
 pub fn ir_cost(ir: &Ir, models: &ModelCosts, limit: u64) -> Result<u64, GenError> {
+    check_limit(limit)?;
     if ir.depth() > MAX_IR_DEPTH {
         return Err(GenError::new(
             code::LIMIT,
@@ -156,11 +170,9 @@ pub fn ir_cost(ir: &Ir, models: &ModelCosts, limit: u64) -> Result<u64, GenError
 /// `acc + more`, refused as soon as it passes `limit`.  Both addends are at most `limit`
 /// (a child's cost is checked when it is computed), so the sum cannot overflow a `u64`.
 fn bump(acc: u64, more: u64, limit: u64) -> Result<u64, GenError> {
-    let sum = acc + more;
-    if sum > limit {
-        Err(over(limit))
-    } else {
-        Ok(sum)
+    match acc.checked_add(more) {
+        Some(sum) if sum <= limit => Ok(sum),
+        _ => Err(over(limit)),
     }
 }
 
@@ -324,6 +336,21 @@ mod tests {
     }
     fn c(ir: &Ir) -> u64 {
         ir_cost(ir, &ModelCosts::default(), 2_000).unwrap()
+    }
+
+    #[test]
+    fn a_limit_above_the_ceiling_is_refused() {
+        let e = ir_cost(
+            &Ir::Bool(true),
+            &ModelCosts::default(),
+            MAX_IR_COST_CEILING + 1,
+        )
+        .unwrap_err();
+        assert_eq!(e.code, code::LIMIT);
+        assert!(ModelCosts::compute(&[], u64::MAX).is_err());
+        assert!(ir_cost(&Ir::Bool(true), &ModelCosts::default(), MAX_IR_COST_CEILING).is_ok());
+        // checked addition: a partial sum at u64::MAX cannot wrap
+        assert!(bump(u64::MAX, 1, u64::MAX).is_err());
     }
 
     #[test]
