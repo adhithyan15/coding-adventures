@@ -204,6 +204,9 @@ type lineState struct {
 	// made the call and whether it has exec'd, and that is only known once the
 	// whole spawn structure has been read.
 	helper bool
+	// maxLine is the byte limit of one line, for the grammar path (zero means
+	// the default).  The old path enforces it in readLine.
+	maxLine int
 }
 
 type pending struct {
@@ -464,10 +467,14 @@ func atoiPid(s string) (int, bool) {
 // readRecords is pass 1.  It also returns the pid of the first line, which is
 // the root of the process tree.  Every record (calls, start markers and exit
 // lines alike) counts against MaxEvents.
-func readRecords(r io.Reader, lim Limits, helper bool) ([]record, int, *Error) {
+func readRecords(r io.Reader, lim Limits, helper, grammar bool) ([]record, int, *Error) {
 	br := bufio.NewReaderSize(r, 64<<10)
 	var recs []record
-	st := &lineState{pend: map[int]*pending{}, helper: helper}
+	st := &lineState{pend: map[int]*pending{}, helper: helper, maxLine: lim.MaxLineBytes}
+	handle := handleLine
+	if grammar {
+		handle = handleLineG
+	}
 	var total int64
 	lineNo := 0
 	for {
@@ -499,7 +506,7 @@ func readRecords(r io.Reader, lim Limits, helper bool) ([]record, int, *Error) {
 				st.root = pid
 			}
 		}
-		rec, e := handleLine(text, lineNo, st)
+		rec, e := handle(text, lineNo, st)
 		if e != nil {
 			return nil, 0, e
 		}
