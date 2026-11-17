@@ -1471,6 +1471,7 @@ members = [
   "tls13-extension-block",
   "tls13-record-nonce",
   "tls13-record-protection-state",
+  "tls13-record-protection",
   "tls13-aes128-gcm-record",
   "tls13-chacha20-poly1305-record",
   "tls13-cipher-suite-policy",
