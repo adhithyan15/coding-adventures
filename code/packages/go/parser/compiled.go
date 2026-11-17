@@ -1032,6 +1032,15 @@ const (
 const astChunk = 256
 
 func (s *parseState) toAST(root int32) *ASTNode {
+	// The root reference must be a plain node, never a memo hit: the
+	// top-level parseRule call happens when the memo is empty, so it always
+	// parses. If that ever changed, the root would have no node of its own
+	// to materialise, so fail closed (Parse turns a panic into an internal
+	// error and never returns this state to the pool) rather than build a
+	// wrong tree.
+	if root < 0 || root&1 != 0 {
+		panic("parser: root reference is not a parsed node")
+	}
 	nodes := s.nodes
 	n := len(nodes)
 	if cap(s.mark) < n {
@@ -1054,8 +1063,7 @@ func (s *parseState) toAST(root int32) *ASTNode {
 		s.boxed = s.boxed[:t]
 	}
 
-	// Pass 1: mark and count. The root is never a memo reference: the memo
-	// is empty when the start rule is first called.
+	// Pass 1: mark and count.
 	rootNode := int(root >> 1)
 	mark[rootNode] = needNode
 	nAST, nKids := 0, 0

@@ -529,7 +529,23 @@ func TestLeftRecursiveGrowthNodes(t *testing.T) {
 	}
 }
 
-// Memory must follow the grammar's own work, not replay counts. In
+// toAST refuses a memo-tagged root instead of building a wrong tree.
+func TestToASTRejectsTaggedRoot(t *testing.T) {
+	c := mustCompile(t, `p = A ;`)
+	s := c.pool.Get().(*parseState)
+	s.reset([]lexer.Token{tokAt("A", "a", 1, 1)}, Options{})
+	defer func() {
+		if recover() == nil {
+			t.Fatal("tagged root accepted")
+		}
+	}()
+	s.toAST(0<<1 | 1)
+}
+
+// Memory must not follow replay counts. This guards MEMO REPLAYS specifically
+// (the shape below); it is NOT a general invariant: grammars with
+// left-recursive growth chains, such as e = e X | X invoked at every position,
+// legitimately seal more than 2 nodes or 4 kids per memo slot. In
 // `r = { &( { a } ) a } ; a = X ;` the lookahead re-scans the rest of the
 // input at every position, replaying `a` from the memo O(n^2) times in n
 // tokens, while only O(n) results are ever memoised. Replays must be free of
