@@ -9,9 +9,10 @@
 #
 # faults=: the deliberate faults the negative controls attack each operation with.  The
 # tuple-returning operations are bound as a projection pair (`_out`, `_img`) so a fault applies
-# to each (VOS02 4.4, VOS-D021).  `init` is bound with `field-zero`, the only fault the generator
-# has for a record result, which is inert on a zero initial state (VOS02 13.4 F4, VOS-D065): the
-# three `negctl/*/init/field-zero` controls can never pass, and BUILD names them as known.
+# to each (VOS02 4.4, VOS-D021).  `init` and `alpha_w` are bound with `field-flip` (VER04j 4.8,
+# WX-SV2), the record fault that is never inert: `field-zero` changes nothing on the zero initial
+# state (VOS02 13.4 F4, VOS-D065), `field-flip` makes it a mask of 1.  A harness that names
+# `field-flip` also honours WARRANT_EVIDENCE_ATTACK=<op>, so BUILD can flip one operation at a time.
 package vos_sched_any
 revision 0.1.0
 spec code/specs/vos-sched-any.warrant

@@ -339,10 +339,30 @@
       "verdict": "pass"
     },
     {
+      "caught_by": "insert_three_sets_bit_three",
+      "claim": "",
+      "fault": "field-flip",
+      "id": "warrant/vos_sched_any/negctl/example/alpha_w/field-flip",
+      "kind": "negctl",
+      "op": "alpha_w",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
       "caught_by": "safety_alpha_build",
       "claim": "",
       "fault": "field-zero",
       "id": "warrant/vos_sched_any/negctl/exhaustive/alpha_w/field-zero",
+      "kind": "negctl",
+      "op": "alpha_w",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "safety_alpha_build",
+      "claim": "",
+      "fault": "field-flip",
+      "id": "warrant/vos_sched_any/negctl/exhaustive/alpha_w/field-flip",
       "kind": "negctl",
       "op": "alpha_w",
       "target": "exhaustive",
@@ -361,8 +381,28 @@
     {
       "caught_by": "safety_alpha_build",
       "claim": "",
+      "fault": "field-flip",
+      "id": "warrant/vos_sched_any/negctl/property/alpha_w/field-flip",
+      "kind": "negctl",
+      "op": "alpha_w",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "safety_alpha_build",
+      "claim": "",
       "fault": "field-zero",
       "id": "warrant/vos_sched_any/negctl/fuzz/alpha_w/field-zero",
+      "kind": "negctl",
+      "op": "alpha_w",
+      "target": "fuzz",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "safety_alpha_build",
+      "claim": "",
+      "fault": "field-flip",
+      "id": "warrant/vos_sched_any/negctl/fuzz/alpha_w/field-flip",
       "kind": "negctl",
       "op": "alpha_w",
       "target": "fuzz",
