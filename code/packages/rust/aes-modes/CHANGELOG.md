@@ -7,6 +7,10 @@
   primitive with fixed loop schedules and masked secret-derived decisions.
 - Wipe-on-drop ownership for GHASH products, multipliers, accumulators, and
   padded blocks, plus NIST and block-edge regression evidence.
+- A fixed-memory AES-128-GCM composition for the RFC 5116 96-bit nonce profile,
+  using only the repository-owned audited AES-128 and GHASH boundaries.
+- NIST empty, full-block, AAD, and partial-block vectors plus preflight,
+  authenticate-before-decrypt, tamper, and block-edge regression coverage.
 
 ### Security
 - Retained the strict optimized-IR branch gate after LLVM transformed a known
@@ -16,6 +20,10 @@
 - GHASH length validation now occurs before the fixed boundary changes caller
   output. This primitive is not a combined AES-GCM, TLS, HTTP, or OAuth
   transport boundary.
+- AES-128-GCM now checks output length, GHASH length domains, and payload
+  counter exhaustion before mutation; decryption compares the full tag before
+  plaintext release, and release-codegen gates retain allocator, ordering,
+  fixed-schedule comparison, and secret-scratch wipe evidence.
 
 ### Fixed
 

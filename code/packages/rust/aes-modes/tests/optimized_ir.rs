@@ -1,10 +1,12 @@
-//! Release-codegen regression gate for the fixed-memory GHASH boundary.
+//! Release-codegen regression gate for the fixed-memory GHASH and AES-128-GCM
+//! boundaries.
 //!
 //! The source uses fixed loops, masked field choices, and wipe-on-drop owners.
 //! This test asks the active compiler for optimized LLVM IR and verifies that
 //! the exported multiplication retains only its public fixed-count loop branch,
-//! neither fixed boundary reaches an allocator, caller output is ABI-owned, and
-//! the product, multiplier, accumulator, and padded block reach the repository
+//! no fixed boundary reaches an allocator, caller output is ABI-owned, tag
+//! comparison has no conditional control flow, plaintext is written only after
+//! authentication, and every key-derived scratch owner reaches the repository
 //! zeroize primitive on normal and unwind paths.
 
 use std::fs;
@@ -14,6 +16,10 @@ use std::time::{SystemTime, UNIX_EPOCH};
 
 const MULTIPLY_SYMBOL: &str = "coding_adventures_ghash_multiply_fixed_ir_audit";
 const GHASH_SYMBOL: &str = "coding_adventures_ghash_fixed_ir_audit";
+const AES128_BLOCK_SYMBOL: &str = "coding_adventures_aes128_encrypt_fixed_ir_audit";
+const AES128_GCM_ENCRYPT_SYMBOL: &str = "coding_adventures_aes128_gcm_encrypt_fixed_ir_audit";
+const AES128_GCM_DECRYPT_SYMBOL: &str = "coding_adventures_aes128_gcm_decrypt_fixed_ir_audit";
+const AES128_GCM_TAG_EQUAL_SYMBOL: &str = "coding_adventures_aes128_gcm_tag_equal_ir_audit";
 
 /// Finds the optimized LLVM IR file Cargo emitted for the library under test.
 ///
@@ -50,7 +56,7 @@ fn find_llvm_ir(release_dir: &Path, prefix: &str) -> Option<PathBuf> {
 }
 
 #[test]
-fn optimized_ghash_is_fixed_memory_masked_and_scrubbed() {
+fn optimized_ghash_and_aes128_gcm_are_fixed_memory_and_scrubbed() {
     let manifest_dir = Path::new(env!("CARGO_MANIFEST_DIR"));
     let workspace_dir = manifest_dir
         .parent()
@@ -94,7 +100,23 @@ fn optimized_ghash_is_fixed_memory_masked_and_scrubbed() {
     let multiply = exported_function_body(&ir, MULTIPLY_SYMBOL);
     let ghash = exported_function_body(&ir, GHASH_SYMBOL);
     let absorb = rust_function_body(&ir, "ghash_absorb");
-    for function in [multiply, ghash, absorb] {
+    let ghash_validated = rust_function_body(&ir, "ghash_fixed_validated");
+    let gcm_encrypt = exported_function_body(&ir, AES128_GCM_ENCRYPT_SYMBOL);
+    let gcm_decrypt = exported_function_body(&ir, AES128_GCM_DECRYPT_SYMBOL);
+    let gcm_ctr = rust_function_body(&ir, "aes128_gcm_ctr_xor_fixed");
+    let gcm_tag = rust_function_body(&ir, "aes128_gcm_tag_fixed");
+    let gcm_tag_equal = exported_function_body(&ir, AES128_GCM_TAG_EQUAL_SYMBOL);
+    for function in [
+        multiply,
+        ghash,
+        absorb,
+        ghash_validated,
+        gcm_encrypt,
+        gcm_decrypt,
+        gcm_ctr,
+        gcm_tag,
+        gcm_tag_equal,
+    ] {
         assert_no_allocator(function);
     }
 
@@ -129,14 +151,81 @@ fn optimized_ghash_is_fixed_memory_masked_and_scrubbed() {
     assert!(zeroize_calls(multiply, "%bit_mask", 1) >= 1);
     assert_output_precedes_wipes(multiply, &["%v", "%z", "%bit_mask"]);
 
-    assert_eq!(alloca_names(ghash, 16), ["%accumulator", "%block"]);
+    assert!(alloca_names(ghash, 16).is_empty());
     assert!(
-        ghash.contains(MULTIPLY_SYMBOL),
-        "complete GHASH must use the audited multiplication boundary:\n{ghash}"
+        ghash.contains("ghash_fixed_validated"),
+        "public GHASH must delegate to its prevalidated fixed-memory core:\n{ghash}"
     );
-    assert!(zeroize_calls(ghash, "%block", 16) >= 3);
-    assert!(zeroize_calls(ghash, "%accumulator", 16) >= 2);
-    assert_output_precedes_wipes(ghash, &["%block", "%accumulator"]);
+
+    assert_eq!(
+        alloca_names(ghash_validated, 16),
+        ["%accumulator", "%block"]
+    );
+    assert!(zeroize_calls(ghash_validated, "%block", 16) >= 3);
+    assert!(zeroize_calls(ghash_validated, "%accumulator", 16) >= 2);
+    assert_output_precedes_wipes(ghash_validated, &["%block", "%accumulator"]);
+
+    for (name, function) in [("encrypt", gcm_encrypt), ("decrypt", gcm_decrypt)] {
+        assert_eq!(
+            alloca_names(function, 16),
+            ["%computed_tag", "%hash_subkey"],
+            "fixed AES-128-GCM {name} must own only its hash subkey and computed tag:\n{function}"
+        );
+        assert!(
+            zeroize_calls(function, "%hash_subkey", 16) >= 2,
+            "fixed AES-128-GCM {name} must scrub the hash subkey on success and unwind:\n{function}"
+        );
+        assert!(
+            zeroize_calls(function, "%computed_tag", 16) >= 2,
+            "fixed AES-128-GCM {name} must scrub the computed tag on success and unwind:\n{function}"
+        );
+        assert!(
+            function.contains(AES128_BLOCK_SYMBOL),
+            "fixed AES-128-GCM {name} must derive H through audited AES-128:\n{function}"
+        );
+        assert!(
+            function.contains("aes128_gcm_tag_fixed"),
+            "fixed AES-128-GCM {name} must use the audited tag composition:\n{function}"
+        );
+    }
+
+    let compare_position = gcm_decrypt
+        .find(AES128_GCM_TAG_EQUAL_SYMBOL)
+        .expect("fixed AES-128-GCM decryption must compare the complete tag");
+    let plaintext_position = gcm_decrypt
+        .find("aes128_gcm_ctr_xor_fixed")
+        .expect("fixed AES-128-GCM decryption must invoke the CTR helper");
+    assert!(
+        compare_position < plaintext_position,
+        "fixed AES-128-GCM decryption must authenticate before writing plaintext:\n{gcm_decrypt}"
+    );
+
+    assert_eq!(alloca_names(gcm_ctr, 16), ["%counter_block", "%keystream"]);
+    assert!(gcm_ctr.contains(AES128_BLOCK_SYMBOL));
+    assert!(zeroize_calls(gcm_ctr, "%counter_block", 16) >= 2);
+    assert!(zeroize_calls(gcm_ctr, "%keystream", 16) >= 2);
+
+    assert_eq!(
+        alloca_names(gcm_tag, 16),
+        ["%encrypted_j0", "%ghash_result", "%j0"]
+    );
+    assert!(gcm_tag.contains(AES128_BLOCK_SYMBOL));
+    assert!(gcm_tag.contains("ghash_fixed_validated"));
+    for owner in ["%encrypted_j0", "%ghash_result", "%j0"] {
+        assert!(
+            zeroize_calls(gcm_tag, owner, 16) >= 2,
+            "AES-128-GCM tag helper must scrub {owner} on success and unwind:\n{gcm_tag}"
+        );
+    }
+    assert_output_precedes_wipes(gcm_tag, &["%encrypted_j0", "%ghash_result", "%j0"]);
+
+    assert_no_conditional_control_flow(gcm_tag_equal);
+    for forbidden in ["memcmp", "bcmp"] {
+        assert!(
+            !gcm_tag_equal.contains(forbidden),
+            "fixed tag comparison must not lower to early-exit {forbidden}:\n{gcm_tag_equal}"
+        );
+    }
 }
 
 fn assert_no_allocator(function: &str) {
@@ -150,6 +239,15 @@ fn assert_no_allocator(function: &str) {
         assert!(
             !function.contains(forbidden),
             "fixed-memory boundary unexpectedly references allocator symbol {forbidden}:\n{function}"
+        );
+    }
+}
+
+fn assert_no_conditional_control_flow(function: &str) {
+    for forbidden in ["br i1", "switch "] {
+        assert!(
+            !function.contains(forbidden),
+            "fixed-schedule core unexpectedly contains conditional control flow {forbidden}:\n{function}"
         );
     }
 }
@@ -200,7 +298,10 @@ fn assert_output_precedes_wipes(function: &str, owners: &[&str]) {
     let lines: Vec<&str> = function.lines().collect();
     let copy = lines
         .iter()
-        .position(|line| line.contains("memcpy") && line.contains("%output"))
+        .position(|line| {
+            (line.contains("memcpy") && line.contains("%output"))
+                || (line.trim_start().starts_with("store ") && line.contains("ptr %output"))
+        })
         .unwrap_or_else(|| panic!("fixed boundary must copy into caller output:\n{function}"));
     for owner in owners {
         assert!(
