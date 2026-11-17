@@ -2373,6 +2373,23 @@ byte as an `ERR_*` token), so it can never panic on hostile input.
 |---|---|---|---|---|
 | a line nested deeper than 64 | accepted | refused, `size` | bounds stack and memory against hostile lines | added in PR 5 |
 | a line of more than 65,536 tokens | accepted | refused, `size` | bounds memory and time against hostile lines | added in PR 5 |
+| a call line with trailing spaces | accepted | refused, `unparsable-line` | the lexer skips spaces, so the grammar cannot see a trailing one; refusing is the safe side | `TestStricterOnlyDivergences` (strace-parser) |
+| `+++ exited with +5 +++`, `-0` (a signed exit code) | accepted (`Atoi` takes a sign) | refused, `unparsable-line` | the exit code is digits only; no real strace prints a sign | `TestStricterOnlyDivergences` |
+| an `ERR_*` token in the text after a call's `)` (an unterminated quote, a bad `<`, a resume marker) | refused, `result` | refused, `unparsable-line` (or `ambiguous-path` for a bad annotation) | the lexer cannot know a quote is "in the result"; both refuse the whole trace | `TestStricterOnlyDivergences` |
+| a `<... NAME resumed>` whose NAME has a character outside `[A-Za-z0-9_?]` | refused, `unmatched-resume` | refused, `unparsable-line` | NAME is lexed as a name; anything else is a bad marker | `TestRefusals` (`ERR_RESUME`) |
+| a line with a structural error AND a later bad annotation | refused, `unparsable-line` (first problem wins) | refused, `ambiguous-path` | the parser reports a failure position only as the start of the failing rule, so a syntax error cannot be ordered against a later bad token; the bad token is reported | `TestBadTokenWinsOverEarlierSyntaxError` |
+
+**Grammar details recorded by PR 4.** Nesting depth 64 means 64 levels of
+brackets or nested calls (`parser.Options.MaxDepth` is in rule levels, 2 per
+bracket level plus 8, and a test pins that exactly 64 levels parse and 65 do
+not). Tokens that only begin a line's body (`+++ ... +++`, `<... NAME resumed>`,
+`???(`, `--- `) are lexed only right after the pid, so the same characters inside
+an argument list stay plain text, as they were for the scanner. The text of a
+`--- ... ---` signal line is lexed as space runs and non-space runs and is never
+tokenized, so a lone quote or bracket in it is still accepted. Spaces between
+tokens are skipped; `name(`, `word<...>`, the pid prefix and the exit line are
+single tokens so adjacency is part of the token. Leading and trailing spaces and
+newlines are refused by the `strace-parser` package.
 
 **Migration and gates.** The change lands in two phases.
 
