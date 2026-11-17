@@ -60,6 +60,9 @@ type ProbeOptions struct {
 	Run  ProbeRunner // nil: execute for real
 	// Total bounds all probes together; 0 means ProbeTotalTimeout.
 	Total time.Duration
+	// Timeout bounds one probe; 0 means ProbeTimeout.  The recorder raises it,
+	// because a probe in a sandbox pays for the sandbox's start.
+	Timeout time.Duration
 	// now is the clock, for tests: Windows' coarse timer can report no time
 	// passing between two calls, which made a 1 ns deadline flaky there.
 	now func() time.Time
@@ -261,6 +264,10 @@ func (t *Toolchains) Probe(names []string, osName string, opt ProbeOptions) (res
 		}
 	}()
 	env := []string{"PATH=" + pathVar, "LANG=C", "LC_ALL=C", "TZ=UTC", "HOME=" + dir}
+	each := opt.Timeout
+	if each <= 0 {
+		each = ProbeTimeout
+	}
 	total := opt.Total
 	if total <= 0 {
 		total = ProbeTotalTimeout
@@ -304,7 +311,7 @@ func (t *Toolchains) Probe(names []string, osName string, opt ProbeOptions) (res
 			}
 			// Run the path that was checked, under the name the PATH gave:
 			// multi-call binaries (rustup proxies, busybox) read argv[0].
-			out, runErr := run(ProbeRun{Path: real, Argv0: filepath.Base(bin), Args: argv[1:], Env: env, Dir: dir, Timeout: ProbeTimeout, Limit: ProbeOutputLimit})
+			out, runErr := run(ProbeRun{Path: real, Argv0: filepath.Base(bin), Args: argv[1:], Env: env, Dir: dir, Timeout: each, Limit: ProbeOutputLimit})
 			pin, versioned := e.Pins[tool]
 			if !versioned || pin == ImagePin {
 				note(tool, ProbeOK)

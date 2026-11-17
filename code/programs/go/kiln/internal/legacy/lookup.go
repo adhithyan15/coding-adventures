@@ -246,7 +246,9 @@ func newTracedOn(pl *planner, root string, flags []string) (*Traced, error) {
 	if err := pl.checkGraphMatchesSource(); err != nil {
 		return nil, err
 	}
-	return &Traced{pl: pl, root: root, args: args}, nil
+	t := &Traced{pl: pl, root: root, args: args}
+	t.prep.Do(func() {}) // BuildPlan already prepared this planner (gate.go)
+	return t, nil
 }
 
 // entryState describes an entry's current digest in words.

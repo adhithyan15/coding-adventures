@@ -377,10 +377,14 @@ Two consequences:
   waited for has its exit line printed when strace reaps it, before the
   parent's `wait4` returns, so it precedes the marker. The boundary is the
   call line, not the init child's `+++ exited +++` line: strace prints
-  `exit_group` when the group starts to die, and whether a survivor's line
-  falls before or after the init child's own exit line is **left open**
-  until a real-strace run settles it (the `daemon-left` subtest of
-  `TestSandboxStraceSignals` logs it). With no `exit_group` seen
+  `exit_group` when the group starts to die. **Observed (F2, the first
+  `kiln-sandbox` CI run on ubuntu-24.04, kernel 7.0):** the survivor's
+  `+++ killed by SIGKILL +++` line comes just after the init child's
+  `exit_group` start line and BEFORE the init child's own `+++ exited +++`
+  line (log: survivor pid 5150 exit line 369 is before init's exit line;
+  init `exit_group` at line 368), which is the order `zap_pid_ns_processes`
+  gives. The rule stays order-agnostic: it keys on the call line, so it holds
+  whichever side of the init child's exit line a survivor's line falls. With no `exit_group` seen
   (`InitExitLine == 0`: the init group made no exit call at all and died by a
   signal, so the step is already `failed` and incomplete) every such
   `SIGKILL` death counts, which fails closed (other exits cannot be placed
@@ -904,13 +908,15 @@ that calls `VerifyTree` and `Inventory`, which does not exist yet):
   pinned `strace`, which starts the pinned Kiln; gates and probes are
   **2b-2c**, where this is to be confirmed again). Confirm that no gate or probe (preconditions, toolchain probes, `kiln`'s own
   checks) runs repository code outside a traced step: untraced repository code
-  can write the tree with no trace at all. `prepare` runs no gate
-  (gates are **2b-2c**, decision P7) and no toolchain probe. Since **2b-2c-2** it
-  does run the in-sandbox structure probe (decision P14), but only as
-  `strace ... kiln sandbox-exec -- <fixed argv>`, every program of it inside the
-  sandbox and traced; the checkout's code is never run. The programs it starts
-  are Git, the build tool, `strace --version` and those four probe runs, all
-  resolved outside the checkout (decision P3).
+  can write the tree with no trace at all. `prepare` runs the gates (decision P7, **2b-2c-3**), which read the tracked tree
+  and run only the toolchain probes, and those only inside the sandbox
+  (`kiln sandbox-exec`, no strace, on an empty checkout: P7); the host never runs a
+  probe. Since **2b-2c-2** it also runs the in-sandbox structure probe (decision
+  P14), as `strace ... kiln sandbox-exec -- <fixed argv>`, every program of it
+  inside the sandbox and traced; the checkout's code is never run. The programs
+  it starts are Git, the build tool, `strace --version`, the four structure probe
+  runs and one `kiln sandbox-exec` per toolchain probe, all resolved outside the
+  checkout (decision P3).
 - **Done** (#19324). `recfmt.ShardRecord.Validate` refuses a record with `steps_run == 0` whose raw
   record has any content: a record that ran nothing was never classified.
 - **2b-2a** (the sidecar's `step_netns`) and **2b-2b-i** (`step`'s epilogue copies it into
@@ -924,11 +930,12 @@ that calls `VerifyTree` and `Inventory`, which does not exist yet):
   different disk.
 - **2b-2c.** The `daemon-left` ordering (a survivor's SIGKILL exit line after the init
   child's) needs a real-`strace` fixture on Linux CI; the canned traces only
-  assumed it. **Done for the rule and the argv (PR 1, D19):** the rule keys on
-  the init child's `exit_group` line, and `TestSandboxStraceSignals` runs the
-  signal shapes against real strace. Whether the survivor's exit line precedes
-  or follows the init child's own exit line is still to be read off the first
-  CI run's log.
+  assumed it. **Done (PR 1, D19, read off the CI log in 2b-2c-2):** the rule
+  keys on the init child's `exit_group` line, and `TestSandboxStraceSignals` runs
+  the signal shapes against real strace. The survivor's exit line comes BEFORE
+  the init child's own exit line (F2, §4.3); the rule does not depend on it.
+  The `-e signal=none` wrapper really does override `signal=all` (the
+  `signals` probe fails on it), so the probe is a true self-check.
 
 **Stage 4b-1: `kiln record prepare`.** Implemented by `internal/record`
 (`Prepare` and the files `place.go`, `scan.go`, `hostscan.go`, `sandboxcfg.go`,
@@ -1012,7 +1019,7 @@ under it is created `O_EXCL`. Layout of the part `prepare` writes:
 pre/binding.json  pre/host-facts.json  pre/inventory.json  pre/graph.json
 pre/steps.json    pre/build-plan.json  pre/sandbox.json     pre/exec-wrapper.json
 pre/tools.json  pre/classify.json  pre/tree                        (the last two: P13)
-pre/probes.json                                                     (P14)
+pre/probes.json                                                     (P14, P7)
 pre/actions/<sha256(action)>.json
 pre/SEALED        (sha256 and path of every other pre/ file, written last)
 ```
@@ -1075,14 +1082,54 @@ tool's file, not a Kiln format.
 selected by `env.json` (`legacy.RecordEnviron`) plus `HOME` and
 `TMPDIR=<tmpdir>`, never `PATH`. Then the weak key of every package the shard
 runs (`PackageNames(I)`) is computed from `Traced` over the verified tree and
-those facts. `pre/actions/<sha256(action)>.json` (`kiln-record-action/2`)
+those facts. `pre/actions/<sha256(action)>.json` (`kiln-record-action/3`)
 holds, per action: `action`, `language`, `weak` (hex) or `refusal` (the
-`Refusal` reason), `steps`, the lines `kiln-legacy-steps/1` gives for it
+`Refusal` reason), `gate`, `steps`, the lines `kiln-legacy-steps/1` gives for it
 (`[]` when it has no BUILD for Linux), and `tools`, the sorted names of the tools
 the key pins (P13). A package whose key is refused still
-gets an environment (`Traced.RecordEnv`), because it still runs. **Gates**
-(`gate`, `precondition:<gate>`) and the toolchain probes are **2b-2c**: they
-need `legacy.Gate` extracted from the planner, and `prepare` runs no probe.
+gets an environment (`Traced.RecordEnv`), because it still runs. **Gates and the
+toolchain probes (stage 4 PR 2b-2c-3).** `gate` is the reason the package must
+not be recorded as a measurement, computed by `Traced.Gate`: the very
+`gateFacts`/`gateFrom` that `legacy-plan`'s `record()` uses, so the plan and the
+recorder cannot drift. Priority: the never list, then the other hard reasons
+(`symlink:`, `unknown-repo-inputs:`, `unknown-toolchain:`, `no-build-file:`), then
+probes (`probe-mismatch:`, `probe-timeout:`, `probe-refused:`, `probe-absent:`); the smallest
+string wins within a priority. It is printable and clipped to 200 bytes. A gated
+package still RUNS (and may also be a refusal, as for an unknown toolchain); its
+record carries the gate and the merge turns it into `precondition:<gate>`, so it
+is never emitted. The toolchain probes (`Toolchains.Probe` over every language of
+the graph, D9) run on the first `Gate` call, in a sandbox, never on the host
+(`Probe` with no runner would exec on the host, so `prepare` ALWAYS passes
+`toolchainProber.Run`): plain `kiln sandbox-exec`, no strace, on
+`<dir>/probe/toolchains-sandbox.json`, whose `repo_root` is the empty
+`<dir>/probe/root` (cwd `.../root/p`), with `home`, `ro_roots` and `kiln_exe` as
+in `pre/sandbox.json`, **its own `tmpdir` `<dir>/probe/tmp`** (a probe's argv tail
+comes from the PR-editable `toolchains.json`, so it must not share the steps'
+writable TMPDIR: that would plant files later steps read unmeasured), no state
+roots, no masks, and the probe's
+environment (`PATH`, `LANG=C`, `LC_ALL=C`, `TZ=UTC`, `HOME` replaced by the
+sandbox's). The process gets `KILN_ACTION=p`, the safe `PATH`, `/dev/null` as stdin
+and one capped stream for stdout and stderr; 60 s per probe and 10 minutes in
+all (D8), the root killed with its process group at a deadline. A probe that
+mismatches, times out, is refused or whose sandbox exits 125 is a gate; so is a probe
+whose binary is **absent** from the fixed PATH and whose pin is a VERSION
+(`probe-absent:<tool>`, probe priority). For a versioned pin, absence means the
+version in the weak key was never checked, and otherwise a PR could point the
+tool's probe at a binary that does not exist and skip the check; the gate is
+fail-closed and the remedy is to declare the tool's root. An image pin is exempt: it
+makes no version claim (its identity is the image id, and absence is identical on every
+run of that image), a step cannot use a tool that is not there, so a gate would add
+nothing and only cost yield. `kiln legacy-plan` gates the same way, since both use
+`gateFacts`. Any other runner error (the sandbox cannot start, the
+configuration is refused, an unarmed or changed environment) fails `prepare`, and
+so does a probe sandbox that is systematically broken: when probes ran and EVERY
+one of them ended in exit 125 (a single 125 stays a mismatch). After the probes
+`prepare` re-runs the check of the structure probes on the REAL configuration:
+tmpdir and every state root must still be empty (`unscrubbed:*`).
+(`kiln legacy-plan --probe`, used by lookup, still probes on the HOST
+(`legacycmd.go`), unlike the recorder; both are version queries, so they are
+expected to agree.) The results are sealed in
+`pre/probes.json` `toolchains`.
 
 **P8. The host scan (D15).** Every `ro_roots` entry is walked on the host, one
 goroutine per root, with `lstat` only: it follows no symlink. A socket or a FIFO
@@ -1424,8 +1471,7 @@ must not exist. Two outcomes:
 
 *Per action.* The record's `status` is the build tool's (`not-run` when the
 results omit the action), `steps_total` the plan's, `steps_sha256` the digest of
-the sealed lines, `weak`/`refusal` those of the action file, `gate` empty (gates
-are 2b-2c). `steps_run` and the per-step summaries come from the started
+the sealed lines, `weak`/`refusal`/`gate` those of the action file. `steps_run` and the per-step summaries come from the started
 sidecars. The raw record is `record.json`'s, with `writes_complete` from the
 classifier's own answer through `recfmt.CompleteOf`. The write set is UNKNOWN
 (`unknown_writes`, an empty raw record, an explicit `writes_complete: false`;
@@ -1563,7 +1609,7 @@ host state roots. So:
 2. *Sealed inputs.* `prepare` also writes `pre/tree` (`kiln-record-tree/1`:
    every tracked path of the verified commit with mode, blob id and link text),
    `pre/classify.json` (the host roots and pinned ecosystems) and each action's
-   `tools` (action files become `kiln-record-action/2`). Neither `step` nor
+   `tools` (action files became `kiln-record-action/2`, and /3 with `gate`). Neither `step` nor
    `collect` builds a `legacy.Traced` or runs Git to classify.
 3. *Classification.* After the sidecar of the action's last step, or of a step
    that did not start or exited non-zero, and before releasing the lock, `step`
@@ -1710,8 +1756,10 @@ strictly (the bytes must equal what `EncodeProbes` writes for what they say):
  "runs":[{"name","argv","exit","trace_bytes","trace_sha256"}],"toolchains":[]}
 ```
 
-`toolchains` is reserved for the toolchain probes (PR 3) and is empty. `VerifyPre`
-decodes it and requires it to be exactly what the probe list for the sealed
+`toolchains` (since 2b-2c-3) is the toolchain probes' results, one
+`{"tool","status","detail"}` per probed tool (`detail` only on a `mismatch`),
+strictly sorted by tool, with a known status (P7), and empty for a shard with no
+action. `VerifyPre` decodes it and requires it to be exactly what the probe list for the sealed
 configuration is (names, order, argv, exit 0, a trace size and digest), so a
 dropped `pipes`, `walk` or `signals` probe is refused by every later command.
 `shadowed` itself is the probe's claim (sealed, but `VerifyPre` cannot recompute
@@ -1729,9 +1777,14 @@ sandbox binds every root) of a directory that has a locked child mount fails
 `ro_roots` entry, the checkout or a state root is expected to make the sandbox
 refuse to start, and `prepare` to fail on the first probe (strace exit 125, the
 helper's message in the quoted step output): fail-closed, with no probe needed.
-The `shadow` probe is then defence in depth. `TestSandboxRecordProbe` accepts
-exactly either outcome for a FIFO hidden beneath a tmpfs and logs
-`PROBE: shadow-outcome=...`; the first CI run says which applies.
+The `shadow` probe is then defence in depth. **Observed (the first
+`kiln-sandbox` CI run):** the kernel refused the bind, so the sandbox failed to
+start (`kiln sandbox-init: ro-root "...": invalid argument`, exit 125) and
+`prepare` failed at `probe pipes`. The locked-child-mount rule therefore closes
+the risk of content shadowed beneath a host mount, fail-closed: such a mount
+fails every step. `TestSandboxRecordProbe` still accepts either outcome for a
+FIFO hidden beneath a tmpfs. The same run showed `find /` clean inside the
+sandbox, with no permission errors.
 
 *Residue.* The probe is a sample of the host's state at `prepare`, not a lock:
 a socket created later, by something outside the sandbox, in a place the sandbox
@@ -3694,7 +3747,9 @@ point, not a measurement.
 4. recording runs inside the §4.3 sandbox;
 5. lookup applies `probe-mismatch`, the never list and the §6
    preconditions before it can skip, because the traced keys carry pins
-   only and none of these (§11.1).
+   only and none of these (§11.1). The recorder applies the same gate: a
+   gated package is recorded with its `gate` (P7) and is never emitted, and its
+   toolchain probes run in the sandbox, never on the host.
 6. skipping reads policy from the base revision, enforced in code before any
    skip mode exists; it requires `probes_ran == true`; and the open question
    of whether `unpinned:<lang>` gates is decided (§9.1).
@@ -3730,9 +3785,11 @@ These are known and named. They are measured rather than closed.
   an `ro_roots` entry non-recursively, so what the mount hides on the host is
   what the step sees. That is not scanned on the host; the `shadow` run of the
   in-sandbox structure probe (decision P14, stage 4 PR 2b-2c-2: a `find -xdev`
-  under every such mount point, in the sandbox's own view) covers it. The kernel's locked-mount rule is also expected to make such a mount
-  fail every step (the sandbox cannot bind the root: P14), which is fail-closed;
-  the probe is defence in depth, and the CI outcome confirms which applies.
+  under every such mount point, in the sandbox's own view) covers it. The kernel's locked-mount rule makes such a mount
+  fail every step, which is fail-closed. **Observed in CI:** the kernel refused
+  the bind (`ro-root ...: invalid argument`, exit 125) and `prepare` failed at
+  `probe pipes`, so the locked-child-mount rule closes this risk; the probe is
+  defence in depth (P14).
 
 - **The strace pin and the seccomp threshold move together.** The sandbox
   filter answers `ENOSYS` for every system call number above
