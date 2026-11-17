@@ -65,8 +65,11 @@ line before the parse (so hostile input costs one pass).
 asks "which shape is this line and where are its arguments" can use a reusable
 `LineParser` instead, which keeps the parse in the shared parser's flat
 `parser.Tree` and walks it by `NodeID`. It accepts and refuses exactly what
-`ParseLineTokens` does (same `*LineError`, same text); the ASTNode API is
-unchanged.
+`ParseLineTokens` does (same `*LineError`, same text), except that
+`Options.PostParse` hooks (which transform `*ASTNode`s) are refused; the ASTNode
+API is unchanged. `Tree()` is read-only (never call `Reset` or `ParseInto` on
+it), `Tokens()` must not be mutated, and the last line, tokens and tree stay
+pinned (up to `MaxLineBytes`) until the next `ParseLineInto` or `Reset`.
 
 ```go
 var lp straceparser.LineParser // zero value is ready; one per goroutine

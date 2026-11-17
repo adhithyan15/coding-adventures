@@ -1,6 +1,7 @@
 package straceparser
 
 import (
+	"errors"
 	"path/filepath"
 	"reflect"
 	"strings"
@@ -73,8 +74,11 @@ func sameResult(t testing.TB, lp *LineParser, line string, opts Options) {
 	if got, want := lp.RawArgs(), RawArgs(line, ast); !reflect.DeepEqual(got, want) {
 		t.Fatalf("%q: RawArgs %q, want %q", line, got, want)
 	}
-	if got, want := lp.AppendRawArgs(make([]string, 0, 4)), RawArgs(line, ast); len(want) > 0 && !reflect.DeepEqual(got, want) {
-		t.Fatalf("%q: AppendRawArgs %q, want %q", line, got, want)
+	// A non-empty dst is extended, never replaced, even when there is nothing
+	// to append.
+	want := RawArgs(line, ast)
+	if got := lp.AppendRawArgs([]string{"pre"}); !reflect.DeepEqual(got, append([]string{"pre"}, want...)) {
+		t.Fatalf("%q: AppendRawArgs(dst) %q, want pre + %q", line, got, want)
 	}
 	if got, want := lp.TextAfterClose(), TextAfterClose(line, ast); got != want {
 		t.Fatalf("%q: TextAfterClose %q, want %q", line, got, want)
@@ -115,7 +119,10 @@ func TestCompactEquivalenceCorpus(t *testing.T) {
 // The same random generator as TestParseNeverPanicsOnRandomInput, compared.
 func TestCompactEquivalenceRandom(t *testing.T) {
 	alpha := []string{"1  ", "f(", ")", "[", "]", "{", "}", ",", " ", "<", ">", "\"", "\\", "3</x>", "<unfinished ...>", "<... f resumed>",
-		"+++ exited with 0 +++", "--- ", " ---", "a", "=", "|", "x=", "\t", "???(", "...", "(", "O_RDONLY", "-1", "\n", "\"a\\n\"", "\\q"}
+		"+++ exited with 0 +++", "--- ", " ---", "a", "=", "|", "x=", "\t", "???(", "...", "(", "O_RDONLY", "-1", "\n", "\"a\\n\"", "\\q",
+		// non-ASCII spaces and BOM, raw control and high bytes, dead and resumed forms
+		"\u00a0", "\u2003", "\u3000", "\u1680", "\ufeff", "\x85", "\xa0", "\xff", "\x00", "\x7f",
+		"???( <unfinished ...>", "???()  = ?", "<... ??? resumed>)  = ?", "<... f resumed>)  = 0", "<... resumed>"}
 	seed := uint32(11)
 	next := func(n int) int {
 		seed = seed*1664525 + 1013904223
@@ -218,6 +225,89 @@ func TestLineParserNil(t *testing.T) {
 	if err := lp.ParseLineInto("1  f()", Options{}); err == nil {
 		t.Error("nil LineParser accepted")
 	}
+	lp.Reset()
+	if lp.Tree() != nil || lp.Tokens() != nil || lp.Body() != parser.NoNode || lp.BodyKind() != "" ||
+		lp.RawArgs() != nil || lp.TextAfterClose() != "" {
+		t.Error("nil LineParser returned a non-zero value")
+	}
+	if _, ok := lp.PrefixBeforeUnfinished(); ok {
+		t.Error("nil LineParser reported a prefix")
+	}
+	if got := lp.AppendRawArgs([]string{"x"}); len(got) != 1 {
+		t.Errorf("nil LineParser changed dst: %q", got)
+	}
+}
+
+// Options.PostParse hooks transform *ASTNodes, which this path never builds:
+// refused (KindSyntax), where the legacy path runs them.
+func TestCompactRefusesPostParse(t *testing.T) {
+	var lp LineParser
+	o := DefaultOptions()
+	o.PostParse = []parser.PostParseHook{func(a *parser.ASTNode) *parser.ASTNode { return a }}
+	line := `1  close(3</e>) = 0`
+	if _, _, err := ParseLineTokens(line, o); err != nil {
+		t.Fatalf("legacy refused PostParse: %v", err)
+	}
+	err := lp.ParseLineInto(line, o)
+	var le *LineError
+	if !errors.As(err, &le) || le.Kind != KindSyntax || !strings.Contains(err.Error(), "PostParse") {
+		t.Fatalf("compact: %v, want a KindSyntax PostParse refusal", err)
+	}
+	if lp.BodyKind() != "" {
+		t.Error("a refused line left a result")
+	}
+}
+
+// A caller who resets the tree behind the LineParser's back gets empty
+// results, not a panic.
+func TestCompactTreeResetBehindBack(t *testing.T) {
+	var lp LineParser
+	if err := lp.ParseLineInto(`1  openat(AT_FDCWD</w>, "/e" <unfinished ...>`, DefaultOptions()); err != nil {
+		t.Fatal(err)
+	}
+	lp.Tree().Reset()
+	if lp.Body() != parser.NoNode || lp.BodyKind() != "" || lp.RawArgs() != nil || lp.TextAfterClose() != "" {
+		t.Error("helpers returned results from a reset tree")
+	}
+	if _, ok := lp.PrefixBeforeUnfinished(); ok {
+		t.Error("prefix from a reset tree")
+	}
+	sameResult(t, &lp, `1  close(3</e>) = 0`, DefaultOptions()) // and it recovers
+}
+
+// Dead lines are single tokens: no ")" to cut after.
+func TestTextAfterCloseDeadLines(t *testing.T) {
+	for _, l := range []string{`1  ???( <unfinished ...>`, `1  ???()  = ?`, `1  <... ??? resumed>)  = ?`} {
+		ast, err := ParseLine(l, DefaultOptions())
+		if err != nil {
+			t.Fatalf("%q: %v", l, err)
+		}
+		if got := TextAfterClose(l, ast); got != "" {
+			t.Errorf("%q: %q", l, got)
+		}
+	}
+}
+
+// Many lines through ONE LineParser, with occasional Resets between them,
+// each compared with the legacy path.  Input bytes are split on 0x01 (up to 9
+// lines) so the fuzzer controls the sequence; Reset happens where a line
+// starts with 0x02.
+func FuzzCompactSequence(f *testing.F) {
+	all := corpusLines(f)
+	for i := 0; i+8 < len(all); i += 37 {
+		f.Add(strings.Join(all[i:i+9], "\x01"))
+	}
+	f.Add("1  f(" + "\x01" + "\x02" + "1  g()")
+	var lp LineParser
+	f.Fuzz(func(t *testing.T, in string) {
+		for i, l := range strings.SplitN(in, "\x01", 9) {
+			if strings.HasPrefix(l, "\x02") {
+				lp.Reset()
+				l = l[1:]
+			}
+			sameResult(t, &lp, l, compactOptions[(len(l)+i)%len(compactOptions)])
+		}
+	})
 }
 
 // A steady-state reuse allocates only what the lexer does (its token slice and

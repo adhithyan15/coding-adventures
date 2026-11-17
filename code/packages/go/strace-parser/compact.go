@@ -26,7 +26,8 @@ package straceparser
 // Nothing here re-implements a check.  ParseLineInto runs checkLine (the byte
 // limit, newline, spaces, lexing, ERR tokens, strict decoding: shared with
 // ParseLineTokens) and then the shared parser's ParseInto, which is documented to
-// accept and refuse exactly what Parse does.  A refusal is the same *LineError,
+// accept and refuse exactly what Parse does (except Options.PostParse hooks,
+// which are refused: see ParseLineInto).  A refusal is the same *LineError,
 // with the same text.  The helpers below are the ASTNode helpers of shape.go
 // rewritten over NodeIDs, and a test checks every one against its original on
 // the corpora, on random lines and under a fuzzer.
@@ -48,6 +49,13 @@ package straceparser
 // parser package) drops an array larger than its pooled cap at the next parse,
 // so one huge line does not pin memory forever.  The token slice is replaced on
 // every line, so it is never retained beyond the next call.
+//
+// What a LineParser pins between calls: the last line string, its token slice
+// and the Tree.  That is bounded by Options.MaxLineBytes (up to 1 MiB for a
+// default line, plus its tokens and tree) and is released by the next
+// ParseLineInto or by Reset.  Call Reset after a very large line if the
+// LineParser will then sit idle.  Do not mutate Tokens(): the tree and the
+// helpers index into it.
 //
 // # What is not yet allocation-free
 //
@@ -97,6 +105,12 @@ type LineParser struct {
 // same *LineError, and Tokens returns what ParseLineTokens returns as its token
 // slice (including alongside an error).  Every zero limit in opts is filled
 // from DefaultOptions.
+//
+// The one exception is Options.PostParse: those hooks transform *ASTNode
+// trees, which this path never builds, so a non-empty PostParse is REFUSED
+// (KindSyntax, "ParseInto does not support Options.PostParse"), where
+// ParseLineTokens would run the hooks.  Apply hooks yourself to
+// lp.Tree().ToAST() if you need them.
 func (lp *LineParser) ParseLineInto(line string, opts Options) error {
 	if lp == nil {
 		return errNilLineParser
@@ -119,24 +133,46 @@ func (lp *LineParser) ParseLineInto(line string, opts Options) error {
 
 // Reset forgets the last line and releases what the parser holds that is
 // larger than its pooled cap.  ParseLineInto does this itself.
+// A nil *LineParser is a no-op.
 func (lp *LineParser) Reset() {
+	if lp == nil {
+		return
+	}
 	lp.tree.Reset()
 	lp.line, lp.toks, lp.body, lp.valid = "", nil, parser.NoNode, false
 }
 
 // Tree returns the compact tree of the last successful line (empty after a
-// failed one).  Valid until the next ParseLineInto or Reset.
-func (lp *LineParser) Tree() *parser.Tree { return &lp.tree }
+// failed one; nil for a nil *LineParser).  Valid until the next ParseLineInto
+// or Reset.  It is READ-ONLY: it is the LineParser's own tree, so never call
+// Reset or ParseInto on it (the helpers then see an empty tree and return
+// empty results, but the next ParseLineInto is the only supported way to
+// refill it).
+func (lp *LineParser) Tree() *parser.Tree {
+	if lp == nil {
+		return nil
+	}
+	return &lp.tree
+}
 
 // Tokens returns the tokens of the last line, as ParseLineTokens returns them.
-// Valid until the next ParseLineInto or Reset; read-only.
-func (lp *LineParser) Tokens() []lexer.Token { return lp.toks }
+// Valid until the next ParseLineInto or Reset.  Read-only: the tree and the
+// helpers index into this slice, so mutating it (or its length) can make them
+// panic or return wrong text.
+func (lp *LineParser) Tokens() []lexer.Token {
+	if lp == nil {
+		return nil
+	}
+	return lp.toks
+}
 
 // Body returns the NodeID of the body node of the last line (the child of the
 // `line` rule after the pid), or parser.NoNode after a failed parse.  The
 // compact Body.
 func (lp *LineParser) Body() parser.NodeID {
-	if !lp.valid {
+	// Root() is checked too: if a caller reset the tree behind our back
+	// (lp.Tree().Reset()), the cached body id no longer means anything.
+	if lp == nil || !lp.valid || lp.tree.Root() == parser.NoNode {
 		return parser.NoNode
 	}
 	return lp.body
@@ -225,7 +261,8 @@ func (lp *LineParser) AppendRawArgs(dst []string) []string {
 func (lp *LineParser) RawArgs() []string { return lp.AppendRawArgs(nil) }
 
 // TextAfterClose is the compact TextAfterClose: the raw text after the closing
-// ")" of a call_line, resumed_line or dead_line, "" when there is none.
+// ")" of a call_line or resumed_line, "" when there is none.  (A dead_line is a
+// single token with no separate ")", so it always gives "".)
 func (lp *LineParser) TextAfterClose() string {
 	b := lp.Body()
 	if b == parser.NoNode {
