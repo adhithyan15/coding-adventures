@@ -1,16 +1,20 @@
 # Changelog
 
-## 0.8.0 — VER04r CV2-S2 public resolved-domain enumerator and post-slot resolver
+## 0.8.0 — CV2-S2 public domain API, WD-HARN1 harness hardening, WX-FAULT1
+
+Three changes ship together in this release; the first is new public API, the other two
+were previously listed as Unreleased and are folded in unchanged.
+
+### VER04r CV2-S2 public resolved-domain enumerator and post-slot resolver
 
 Published API for the v2 corpus emitter (slice S3).  **No behaviour change**: every
 adopter's generated `warrant_evidence.rs` (arithmetic, ct-compare, gf256,
 hash-functions, logic-gates, lzw, vos-sched-any, vos-sched-fp-bitmap, wasm-leb128,
 x25519, zeroize) is byte-identical to the one the previous generator emits, and
-`regenerate --check` and `gen_corpus --check` are unchanged.  (This is also the first
-release that contains the two `Unreleased` entries below.)
+`regenerate --check` and `gen_corpus --check` are unchanged.
 
 - New `pub mod domain`: `Domain` (the generator's binder type `evidence::Ty`, now
-  `pub`, with `domain_size`, `domain_bytes` and the new `nth(i)` / `iter()` that
+  `pub` and `#[non_exhaustive]`, with `domain_size`, `domain_bytes` and the new `nth(i)` / `iter()` that
   unrank any VER04r 5.1 descriptor without materialising it); `unrank_product`,
   `rank_product` and `ProductIter` (row-major, last binder fastest, start at any
   product ordinal); `DomainEnv` and `resolve_binders` (aliases, records, variants,
@@ -29,11 +33,20 @@ release that contains the two `Unreleased` entries below.)
   follows the spec); the generator's `NatCount` is 73 values where VER04r 5.1 says
   `0..=K`; the generator's signed edge sets are sorted and include `-1..=-255` where
   VER04r 5.1 says "same order".  S3 decides how the corpus names them.
-- Tests: `tests/domain_api.rs` (23, from outside the crate, against an independent
-  eager oracle) and 8 doc examples.
-- Docs: README section, VER-BACKLOG CV2 row.
+- `Ty::Res` now carries the error type name (`ErrName`, ignored by equality) and
+  `Ty::Data` the declaration's `record` flag, so `nth` produces evaluator-compatible
+  values (`x == E.CASE` and `match ... E.CASE` work on them). Neither changes the
+  generated output or any type comparison. `ResolvedBinders::sizes()` returns an
+  `Option`. `FxEdge` is documented for widths of 16 and up.
+- Correction to the first draft of these notes: the byte-string order difference is a
+  set difference for `List` of byte strings (the 16/4-value prefix differs); see the
+  module docs and VER04r 16.2.
+- Tests: `tests/domain_api.rs` (27, from outside the crate, against an independent
+  eager oracle, an evaluator round trip, and a recomputation of the checked-in v1
+  ct-compare `inputs_sha256` digests from `Domain` enumeration) and 8 doc examples.
+- Docs: README section, VER-BACKLOG CV2 row, VER04r section 16.2.
 
-## Unreleased — WD-HARN1 harness supervisor hardening (from the 2026-11-14 Windows `rust/lzw` hang)
+### WD-HARN1 harness supervisor hardening (from the 2026-11-14 Windows `rust/lzw` hang)
 
 - Prelude, observer supervisor: every wait on the worker is a `Condvar::wait_timeout`
   against one deadline of `OBS_CALL_TIMEOUT_MS` (120 s; `WARRANT_OBS_TIMEOUT_SECS` can
@@ -63,7 +76,7 @@ release that contains the two `Unreleased` entries below.)
   and `wxh_caps`. New support subject `tests/support/wxh_subject_stalling.rs`.
 - Specification: VER04j 14.2 item 53 (and a pointer from item 33), VER-BACKLOG row.
 
-## Unreleased — WX-FAULT1 `flip-result-bit` for a fixed-width integer result
+### WX-FAULT1 `flip-result-bit` for a fixed-width integer result
 
 - Generator: the composite adapter accepts `flip-result-bit` for a `Bytes -> U32/U64`
   (any `Fx`/`FxEdge`, inside an `Ok` or `Some`) result, so a checksum or hash operation

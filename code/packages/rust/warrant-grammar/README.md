@@ -374,7 +374,7 @@ python3 -m unittest discover -s ../../../scripts/tests -p test_warrant_corpus_or
 ```
 ## Resolved domains and the post-slot resolver (VER04r CV2-S2)
 
-`warrant_grammar::domain` publishes what the evidence generator uses to turn a
+`coding_adventures_warrant_grammar::domain` publishes what the evidence generator uses to turn a
 claim's binders into finite, ordered value sets, so a corpus emitter (the v2
 `warrant-corpus-gen`, slice S3) calls the same code instead of re-deriving it.
 Nothing about the generator's behaviour changed; the module is a public face.
@@ -400,7 +400,8 @@ assert_eq!(binders[1].nth(0), Some(coding_adventures_warrant_grammar::codegen::E
 A binder's refinement filters the product and is not part of its domain; the
 emitter evaluates it. The module documentation records two places where the
 generator and VER04r 5.1 differ (the `NatCount` set and the signed edge sets) and
-the byte-string order the harness prelude and VER04i 2.6 disagree on.
+the byte-string order the harness prelude and VER04i 2.6 disagree on (which
+also changes the case *set* of a `List` of byte strings).
 `corpus.rs` and `gen_corpus` (the v1 compiler) are unchanged and stay frozen
 until S13.
 
