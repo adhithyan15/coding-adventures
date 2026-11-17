@@ -21,3 +21,13 @@ All notable changes to this package are documented here.
   and the regeneration check and sabotage lines in BUILD.
 - `tests/behaviour.rs`: every mask and every oracle value against a reference, and a mutation
   sanity check of the soundness and coverage predicates. 100% line coverage measured once by hand.
+
+### Changed
+
+- WD-HARN1/WD-HARN1b: `tests/generated/warrant_evidence.rs` regenerated with `gen_evidence` for the
+  current Warrant prelude (it now carries `lock_or_recover`); the checked-in harness had been
+  generated from the pre-WD-HARN1 prelude, so `gen_evidence --check` and the warrant-grammar
+  `v0_compat` regeneration test failed. The evidence manifest is unchanged.
+- The sabotage lines in `BUILD` and `BUILD_windows` now fail when the sabotaged run prints
+  `Bail out!`, not only when it lacks a `not ok ` line (a hang after an intended failure no longer
+  passes silently).
