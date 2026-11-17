@@ -1,5 +1,6 @@
 //! Deterministic canonical JSON serialization and deserialization (CWE-674 / CWE-400 / CWE-20).
 
+use std::collections::btree_map::Entry;
 use std::collections::BTreeMap;
 
 use musical_instruments::{AdsrEnvelope, HarmonicPartial};
@@ -551,8 +552,17 @@ impl<'a> JsonParser<'a> {
             }
             self.pos += 1; // skip ':'
 
-            let val = self.parse_value()?;
-            map.insert(key, val);
+            match map.entry(key) {
+                Entry::Vacant(entry) => {
+                    let val = self.parse_value()?;
+                    entry.insert(val);
+                }
+                Entry::Occupied(_) => {
+                    return Err(MusicMachineError::ParseError(
+                        "duplicate JSON object member".into(),
+                    ));
+                }
+            }
 
             self.skip_whitespace();
             if self.pos >= self.input.len() {

@@ -5370,7 +5370,7 @@ dependencies = [
 
 [[package]]
 name = "coding_adventures_warrant_grammar"
-version = "0.7.0"
+version = "0.8.0"
 dependencies = [
  "coding_adventures_ct_compare",
  "coding_adventures_sha256",
@@ -14524,6 +14524,20 @@ dependencies = [
 [[package]]
 name = "tls-server-identity"
 version = "0.1.0"
+
+[[package]]
+name = "tls13-aes128-gcm-record"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_aes_modes",
+ "coding_adventures_hkdf",
+ "coding_adventures_zeroize",
+ "tls13-cipher-suite-policy",
+ "tls13-inner-plaintext",
+ "tls13-record",
+ "tls13-record-protection-state",
+ "tls13-traffic-key-material",
+]
 
 [[package]]
 name = "tls13-alert-message"

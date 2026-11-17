@@ -310,6 +310,7 @@ exit 0
 		t.Fatal(err)
 	}
 	defer fh.Close()
+	probeTrace(t, "record-step", tracePath)
 	tr, err := trace.ParseOptions(fh, pkgDir, trace.Options{HelperRoot: true, HelperExe: kiln})
 	if err != nil {
 		raw, _ := os.ReadFile(tracePath)

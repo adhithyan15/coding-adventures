@@ -4387,9 +4387,40 @@ per-key record ceiling, own traffic keys, frame or protect records, process a
 handshake, validate certificates, establish trust, enforce revocation, perform
 I/O, authorize HTTP or OAuth transport, or open a network connection. The
 allocation-returning and table-indexing legacy AES APIs remain compatibility
-and educational surfaces rather than production TLS composition. Reviewed
-AES-GCM composition remains a prerequisite, and concrete HTTPS remains
-unavailable.
+and educational surfaces rather than production TLS composition. The reviewed
+AES-GCM composition below remains distinct from TLS record protection, and
+concrete HTTPS remains unavailable.
+
+A bounded fixed-memory AES-128-GCM composition is now shipped as the next
+independently reviewable record-protection prerequisite. It accepts only an
+exact 128-bit key, the RFC 5116 96-bit nonce profile, caller-borrowed associated
+data and plaintext or ciphertext, an exact 128-bit tag, and caller-owned output
+whose length must equal the input length. It builds
+`J0 = nonce || 0x00000001`, starts payload counter mode at `inc32(J0)`, rejects
+a request that could exhaust the 32-bit counter or GCM's encoded length domains
+before changing caller output, and composes only the repository-owned
+fixed-memory AES-128 block and GHASH boundaries. Encryption authenticates the
+exact produced ciphertext. Decryption recomputes and compares the complete tag
+with a compiler-checked fixed schedule before releasing any plaintext, so
+authentication failure leaves caller output unchanged. The hash subkey,
+counters, keystream block, GHASH result, encrypted `J0`, and recomputed tag
+remain in fixed wipe-on-drop storage; no secret-derived byte crosses the ABI
+return slot by value. Release-codegen checks reject allocator reachability,
+early-exit tag comparison, missing scrubs, or plaintext writes before
+authentication.
+
+This pure in-process cryptographic boundary performs no credential access,
+edit, signing operation, provider action, audit or trace emission, I/O, or
+external effect. It does not select a TLS cipher suite, derive or own a
+traffic key, reserve a record nonce, enforce a negotiated per-key record
+ceiling, frame or protect a TLS record, reset record state after a key update,
+process a handshake, validate certificates, establish trust, enforce
+revocation, authorize HTTP or OAuth transport, or open a network connection. A
+later TLS record composition must bind it to the selected
+`TLS_AES_128_GCM_SHA256` route and the existing record-protection state.
+Complete handshake state, the AES record route, stream I/O, certificate
+validation, revocation, and HTTP composition remain blockers; concrete HTTPS
+remains unavailable.
 
 A bounded `tls13-finished` prerequisite now composes the repository-owned
 fixed-memory HKDF and HMAC paths for RFC 8446 Finished verify-data. It derives
@@ -4764,6 +4795,35 @@ connector. The caller must retain distinct read/write state and select the
 correct traffic epoch. Complete handshake state, the remaining record routes,
 stream I/O, certificate validation, revocation, and HTTP composition remain
 blockers; concrete HTTPS remains unavailable.
+
+A bounded `tls13-aes128-gcm-record` composition protects records only for the
+reviewed `TLS_AES_128_GCM_SHA256` route. It consumes selected-suite-bound
+`tls13-record-protection-state`, rejects AES-256-GCM and ChaCha20-Poly1305
+before reserving a sequence number, and binds the reserved 128-bit key and
+96-bit nonce directly to the repository-owned fixed-memory AES-128-GCM
+boundary. Sealing encodes one policy-authorized `TLSInnerPlaintext`,
+authenticates the exact five-byte `TLSCiphertext` header as associated data,
+appends the exact 16-byte tag, and wipes the exact caller-owned scratch prefix
+written after successful inner encoding on every subsequent return. Route and
+inner-encoding failures leave caller scratch unchanged. Opening validates one
+exact outer record before consuming a sequence, authenticates its exact
+retained header before releasing any cleartext, decodes only a
+policy-authorized inner content type, and returns a non-cloneable borrowed view
+whose drop path wipes the successfully opened caller-owned storage. Public
+framing, policy, and capacity failures occur before sequence consumption; an
+authentication failure consumes its reserved sequence and leaves caller output
+unchanged.
+
+This narrow composition does not enable AES-256-GCM or ChaCha20-Poly1305,
+derive traffic secrets, establish handshake epochs, process a transcript,
+authenticate `CertificateVerify` or `Finished`, validate certificates,
+construct or validate a path, check a hostname or revocation, perform key
+updates, read or write a stream, open a socket, authorize an HTTP or OAuth
+request, or provide a TLS connector. The caller must retain distinct
+read/write state and select the correct traffic epoch. Complete handshake
+state, the remaining record route, stream I/O, certificate validation,
+revocation, and HTTP composition remain blockers; concrete HTTPS remains
+unavailable.
 
 An allocation-free `tls13-supported-versions` prerequisite now owns the exact
 RFC 8446 `supported_versions` extension data emitted and consumed by a future

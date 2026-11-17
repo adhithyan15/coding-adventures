@@ -2,7 +2,7 @@
 
 **Parent:** [VER04i](VER04i-polyglot-warrant-evidence.md) (the v1 corpus, lanes, bindings and manifests; this document amends it), [VER04h](VER04h-warrant-derived-evidence.md) (domains, budgets, negative controls), [VER04j](VER04j-warrant-v1-extensions.md) §4.7 and §14.4 (composite domains, `Bytes<N>`, `err_any=`), [VER04k](VER04k-warrant-v1-wave4.md) §4 (WX-G `inout` and `ensures`), [VER04](VER04-warrant-language.md) §3 and §4 (value and arithmetic semantics), [VER29](VER29-layer-contract-linking.md) (layer contracts and strength propagation), [VER30](VER30-warrant-expansion-roadmap.md) §4.4 Track D.
 
-**Status:** specification only (slice S1 of the migration in section 13). Nothing in this document is implemented. The v1 corpus, runners and oracle keep working unchanged until slice S13. Owner decisions of 2026-11-16 are encoded in sections 1, 3, 5, 9, 10 and 13 and are marked **[D1]** (in-lane enumeration plus model IR as a new closed profile), **[D2]** (slim in PR CI, full nightly), **[D3]** (full independent oracle), **[D4]** (one wrapping rule), **[D5]** (Go finishes on v1; v1 deleted in S13) **[D6]** (honest labels preserved) and **[D7]** (every lane runner passes the conformance kit of section 11 before it may write a manifest) where they bind.
+**Status:** specification only (slice S1 of the migration in section 13). Nothing in this document is implemented. The v1 corpus, runners and oracle keep working unchanged until slice S13. Owner decisions of 2026-11-16 are encoded in sections 1, 3, 5, 9, 10 and 13 and are marked **[D1]** (in-lane enumeration plus model IR as a new closed profile), **[D2]** (slim in PR CI, full nightly), **[D3]** (full independent oracle), **[D4]** (one wrapping rule), **[D5]** (Go finishes on v1; v1 deleted in S13) **[D6]** (honest labels preserved) and **[D7]** (every lane runner passes the conformance kit of section 11 before it may write a manifest) where they bind. Owner decisions of 2026-11-17, taken at the start of slice S3, are marked **[D8]** (blind claims), **[D9]** (`ignore-high-bit` stays `ir.fixed`), **[D10]** (when the fixture may be committed) and **[D11]** (eight format details) and are recorded in section 16.3; the normative sections below already read as amended by them.
 
 **Placement.** This is a new spec, not a new section of VER04i. VER04i is already 1,280 lines and carries the history of two shipped lanes; a second profile with its own schema, stream, manifest and migration plan would make it unreadable, and keeping v2 in its own file lets slice S13 delete the v1 text from VER04i without touching this one. VER04i gets a pointer paragraph and one erratum (section 16).
 
@@ -37,10 +37,10 @@ What v2 does not change: the three layers of VER04i section 1, the L0 runner pro
 
 ```text
 code/specs/fixtures/<module>-warrant-v2/
-  corpus.json        authority: types, ops, models, suites, controls, faults, digests
+  corpus.json        authority: types, ops, models, suites, controls, faults, digests (key set: section 1.4)
   chunks/<file>.txt  per-suite chunk commitments; <file> is derived from the claim (section 5.5)
   corpus.profile     neutral line file: budget, chunk size, slim parameters, faults (section 8.4)
-  cases.tfv          examples, sabotage probes (TFV v1 value model, section 2.5)
+  cases.tfv          examples only (TFV v1 value model, section 2.5) [D11g]
   consumers.json  schema.json  consumers.schema.json  README.md  CHANGELOG.md
 ```
 
@@ -60,6 +60,19 @@ The generalised compiler is accepted only if **ct-compare compiled under v2 repr
 
 VER29 section 5.2 puts non-Rust manifests at `evidence/<lane>/test-manifest.json`; VER04i section 8 puts them at `evidence/test-manifest.json` and the shipped Python and TypeScript lanes use the latter. **v2 keeps the VER04i path**, `code/packages/<lane>/<pkg>/evidence/test-manifest.json`, because the lane is already the second path component of the package and a second lane segment would be redundant. VER29 section 5.2 named the other path and is amended by this slice to agree (F3, section 16).
 
+### 1.4 The `corpus.json` key set
+
+`corpus.json` is a **closed** key set: a reader rejects an unknown key, and a writer emits every key below (an empty object or list where there is nothing to say), so that two generators cannot differ by omission. The exceptions are the **conditional keys**, each marked "only" below: when the condition does not hold the key is **omitted**, never written as `null` or an empty string. **Provisional [D11]:** the owner ruled the key set provisional until the oracle's `verify-v2` (S4 part 2) reads it; it grows only by erratum to this section (for example the `applies_to_forms` key of the control row, section 8.3, and S12's `monitored_calls`). It is rendered with the VER04i section 9.1 canonical writer: keys sorted by code point, two-space indent, LF, one final LF, non-ASCII escaped. Sorting loses declaration order, and one rule needs it (a model may call only models declared *before* it, section 4.2 rule 1), so the order is carried as data in `model_order` [D11c]. Counts are JSON integers and every value is a string (section 2.3).
+
+Top level: `profile` (`"warrant-corpus-v2"`), `schema_version` (2), `module`, `document` (`"v0"` or `"v1"`), `spec` (its path), `spec_sha256`, `profile_sha256` (the digest of `corpus.profile`), `generator` (`{"name":..,"version":..}`), `budget`, `chunk_size`, `max_ir_cost`, `levels` (the union of every `requires`), `types`, `ops`, `models`, `model_order`, `fault_models`, `suites`, `examples`, `faults`, `controls`, `accepted_blind_faults`, `assumes`.
+
+* `models` is `{name: {"params": [[name, type]..], "body": IR}}` and `model_order` the array of the same names in declaration order; a consumer validates every `model_call` against that order and rejects a name missing from either.
+* `ops` is the shape of section 6.
+* `examples` is a list of `{"id", "op", "args", "expected", "result_type", "width"}` with the values untagged and decoded by declared type (section 2.3).
+* `faults` rows are those of section 8.1 and `controls` rows those of section 8.3 (`applies_to_forms` is present only on a WX-G control).
+
+A **suite row** has: `id`, `kind` (`"exhaustive"`), `claim`, `ops`, `requires`, `binders` (`[[name, {"type": T, "domain": <descriptor tree>}]..]`, section 5.1), `demoted`, `domain_label` (section 9.3), `admit` (IR), `body` (IR), `oracle` (`{"kind":"reference","subject":IR,"expected":IR}` or `{"kind":"predicate"}`), `result_type`, `stream` (`"warrant-stream-v1"` or `"warrant-stream-v2"`, section 1.2), `product`, `cases`, `discarded`, `expected_calls`, `wraps`, `ir_cost`, `chunks` (the count `m`), `chunks_sha256`, `inputs_sha256`, `expected_sha256` (`reference` suites only), `v1_inputs_sha256` and `v1_expected_sha256` (suites with the v1 header only; the second also only for `reference` suites), `slim_chunks`, `slim_inputs_sha256` and `slim_expected_sha256` (`reference` suites only). The two slim digests are named exactly as the independent oracle emits them [D11b].
+
 ## 2. Types and values
 
 ### 2.1 Canonical type names
@@ -78,7 +91,7 @@ type   = "Bool"
        | Name ;                          -- a record, variant or error type from `types`
 ```
 
-`Int` is the mathematical integer of VER04 section 3. It exists **inside the model IR only** and MUST NOT appear in an op signature, a binder, a stream context or a value: a generator meeting it there fails with `W0701`. `Bytes<N>` is accepted for every `N` up to `MAX_FIXED_WIDTH = 4096` (VER04h section 3), not only the five widths the v0 generator knows. Named widths (`Bytes<M>`) stay a static op parameter as in VER04i section 2.5 (`width_params`).
+`Int` is the mathematical integer of VER04 section 3. It exists **inside the model IR only**: as the type of an intermediate (`Nat - Nat`) and as the type of a `lit` node, `["lit", {"type": "Int", "value": "-3"}]`, which is how a bare decimal literal is written when its context is not `Nat` (a bare literal in a `Nat` context is typed `Nat`) [D11d]. It MUST NOT appear in an op signature, a binder, a stream context, an `examples` row or any other value: a generator meeting it there fails with `W0701`. The one place `Int` may be *written* in a corpus is therefore the `type` field of a `lit` node. (Amended 2026-11-17: the section read "MUST NOT appear in ... a value", which the independent oracle's lowering of a bare literal contradicted.) `Bytes<N>` is accepted for every `N` up to `MAX_FIXED_WIDTH = 4096` (VER04h section 3), not only the five widths the v0 generator knows. Named widths (`Bytes<M>`) stay a static op parameter as in VER04i section 2.5 (`width_params`).
 
 ### 2.2 `types` is structural
 
@@ -139,7 +152,7 @@ A worked example. The record `Point(x: U8, y: U8)` with value `Point(1, 2)` enco
 
 ### 2.5 TFV
 
-`cases.tfv` stays TFV v1. The VER04j section 4.9 requirements are adopted with one resolution of the conflict it recorded: **`Result` stays the `M` form of VER04i section 2.7** (`ok` or `err`). Variants are `L2 S<ctor> L<k> f1..fk`; tuples and records are `L<n> v1..vn`; signed integers are `I<decimal>` with a leading `-` allowed; nesting counts against TFV's 64-container limit. Examples and sabotage probes are small and stay materialised in `cases.tfv`; everything large is enumerated.
+`cases.tfv` stays TFV v1. The VER04j section 4.9 requirements are adopted with one resolution of the conflict it recorded: **`Result` stays the `M` form of VER04i section 2.7** (`ok` or `err`). Variants are `L2 S<ctor> L<k> f1..fk`; tuples and records are `L<n> v1..vn`; signed integers are `I<decimal>` with a leading `-` allowed; nesting counts against TFV's 64-container limit. Examples are small and stay materialised in `cases.tfv`; everything large is enumerated. `cases.tfv` holds **examples only**: the phrase "sabotage probes" of the first draft named something no section defined, and v1 has none (its sabotage is the controls of section 8.3, which are data, not cases). A later slice may define probes; until it does, v2 has none [D11g]. For ct-compare the file is byte-identical to the v1 `cases.tfv`.
 
 ## 3. Arithmetic: the single rule [D4]
 
@@ -207,14 +220,14 @@ Precomputed expected values fail on size and on relational claims, so the IR sta
 
 Semantics of the `ir.fixed` built-ins are those of VER04j (WX-B) and VER04k; slice S10 states each one a second time as conformance vectors (section 11) because eighteen evaluators will implement them. `ir.core` adds `concat`, `take`, `drop` and `is_err` relative to the v1 tag set (an erratum against memo-level plans, section 16): ct-compare's v1 faults (`ignore-last-byte`, `missing-error`) need byte surgery and a result test, and faults are IR from the first v2 slice (section 8).
 
-A suite that needs a level the lane does not declare is recorded **`not-live`** in the manifest with its id and a non-zero `not_live` count. It is never skipped silently (VER04j section 8, item 4) and a lane whose `not_live` is non-zero cannot be `release-ready` for that adopter.
+A suite that needs a level the lane does not declare is recorded **`not-live`** in the manifest with its id and counted in `not_live`. So is a **control** whose fault needs such a level (section 8.2): its manifest row has the state `not-live` and names the deferring level, and it counts in `not_live` too. `not_live` is the number of not-live suites **plus** the number of not-live controls. Nothing is skipped silently (VER04j section 8, item 4), and a lane whose `not_live` is non-zero cannot be `release-ready` for that adopter: release-ready requires both counts to be zero.
 
 ### 4.2 Evaluation rules
 
-1. Expressions are trees; there is no recursion, no loop and no mutable state. Models are pure and acyclic: model `m` may call only models declared *before* it.
+1. Expressions are trees; there is no recursion, no loop and no mutable state. Models are pure and acyclic: model `m` may call only models declared *before* it, where "before" is the order of the `model_order` array of `corpus.json` (section 1.4), not the key order of `models`.
 2. Arguments are evaluated left to right. `and`, `or`, `implies` and `if` **short-circuit**; an untaken branch is not evaluated and, for call counting, contributes no subject calls (section 4.4). A `match` evaluates exactly one arm.
 3. `subject_op(name, args[, widths])` dispatches through the lane's binding to the real export. It is forbidden inside every model body and inside every fault expression. `model_call(name, args)` invokes a pure model. Built-in pure operators (`eq`, `lt`, `add`) are IR tags and never resolve through the binding table (VER04i section 2.5, unchanged).
-4. Literals keep the v1 typed form `["lit", {"type": T, "value": V}]` with `V` per section 2.3; a Bool literal is `["lit", true]`.
+4. Literals keep the v1 typed form `["lit", {"type": T, "value": V}]` with `V` per section 2.3; a Bool literal is `["lit", true]`. `T` is also allowed to be `Int` (section 2.1): a bare decimal literal is typed `Nat` in a `Nat` context and `Int` otherwise, and a suffixed literal (`1u8`) has the type of its suffix.
 5. Equality is structural and type-directed (VER04 section 3): sequence order matters, errors are nominal, `Bool` is not `U8`, allocation identity is never compared.
 6. A static **cost bound** per expression, computed before the first case; exceeding it is a corpus error. Because the IR has no loop and no recursion, this static bound is the whole fuel: no run-time step meter is needed at `ir.core`, `ir.fixed` or `ir.data`. (Amended 2026-11-16, section 16.1; the v1 profile keeps the wording of VER04i section 6.2.)
 
@@ -332,9 +345,17 @@ A run has a **depth**:
 
 **Slim selection (normative, computed by the compiler and verified by the oracle).** Let `m` be the chunk count. If `m <= 16`, `slim_chunks` is every chunk (the suite is `full` even in a slim run). Otherwise let `k = ceil(m / 14)` and `o = FNV-1a-64(suite id) mod k`, where FNV-1a-64 is taken over the UTF-8 bytes of the suite id with offset basis `0xcbf29ce484222325` and prime `0x100000001b3`, in wrapping 64-bit arithmetic. The **base set** is `{0, m-1} ∪ { o + j*k | j >= 0, o + j*k < m }`: the first and last chunk, plus every `k`-th chunk from an offset derived from the suite id (at most 16 chunks; a 2^24 suite has `m = 256`, `k = 19`).
 
-**Witness chunks.** A stride cannot know where a fault becomes visible, so the corpus adds the chunks that prove its own controls are observable. For each control row and each of its `required_claims` that is a `reference` suite whose subject call takes the suite's binders directly as arguments, the compiler lets the reference stand in for the subject: it applies the fault (a `pre` fault re-evaluates `expected` at the rewritten binder; a `post` or `replace` fault rewrites `expected`'s value) and finds the **lowest admitted case** at which the faulted value differs from `expected`. That case is the control's *witness*; its chunk is added to `slim_chunks`, and the control row records `slim_witness: {"claim": C, "chunk": c}`. If no case differs, the fault is unobservable by that claim at any depth and generation fails unless `accepted_blind_faults` names it. For a `predicate` suite, or a subject call whose arguments are not plain binders, there is no stand-in and the row records `slim_witness: "unproven"`: the lane's control then either fails inside the slim set or is `uncaught-fault`, which fails the lane (section 8.3). It fails closed; the remedy is a `slim_chunk <claim> <index>` line in `corpus.profile`, which can only **add** a chunk.
+**Witness chunks.** A stride cannot know where a fault becomes visible, so the corpus adds the chunks that prove its own controls are observable. For each control row, take the *candidate claims*: every claim that mentions the control's op. For each candidate that is a `reference` suite whose subject call takes the suite's binders directly as arguments, the compiler lets the reference stand in for the subject: it applies the fault (a `pre` fault re-evaluates `expected` at the rewritten binders; a `post` or `replace` fault rewrites `expected`'s value) and searches for the **lowest admitted case** at which the faulted value differs from `expected`. A candidate is then one of three things:
 
-`slim_chunks` is the ascending, duplicate-free union of the base set, the witness chunks and the `slim_chunk` lines, at most `MAX_SLIM_CHUNKS = 32` per suite (more is a generation error), hence at most 2,097,152 cases. The list is written out in `corpus.json` (the lane never recomputes it) together with `slim_sha256`, the digest of the chosen chunks' digests under the same `warrant-chunks-v1` framing; the oracle recomputes the list, base set and witnesses included. `corpus.profile` may set `slim_stride` only to a value **smaller** than the automatic `k` (more chunks, never fewer) and can never remove the first or last chunk.
+* **witnessed**: a case differs. That case is the claim's *witness*; its chunk is added to `slim_chunks`;
+* **blind**: the stand-in exists and no admitted case differs, so the fault is unobservable by that claim at any depth [D8];
+* **unproven**: there is no stand-in (a `predicate` suite, or a subject call whose arguments are not plain binders), so nothing can be said before the lane runs.
+
+The control row lists the witnessed and unproven candidates, in suite order, as `required_claims`, and the blind candidates as `blind_claims`; `required_claims` therefore lists **the claims not proven blind** (the witnessed and the unproven), and a claim proven unable to catch a fault is never credited with catching it (section 8.3). Its `slim_witness` is a list with one entry per `required_claims` entry, in the same order, of exactly three shapes: `{"claim": C, "chunk": c}` for a witnessed claim; `{"claim": C, "unproven": true}` for an unproven one (no stand-in exists); and `{"claim": C, "deferred": "ir.fixed"}` (the level is the one named) for a claim that *has* a stand-in but whose fault the generator cannot yet evaluate because it has not implemented that level (section 8.2). A deferred entry is not unproven: S10's witness search replaces it with a `chunk` entry or moves the claim to `blind_claims`. An unproven claim fails closed as before: the lane's control either fails inside the slim set or is `uncaught-fault`, which fails the lane (section 8.3), and the remedy is a `slim_chunk <claim> <index>` line in `corpus.profile`, which can only **add** a chunk. **Generation fails only when every candidate claim is proven blind**: the fault is then unobservable by the whole corpus, and it is an error unless `accepted_blind_faults` names it. A control with no witnessed claim but at least one unproven (or deferred) one passes generation, and is caught or not at lane time (`uncaught-fault`, section 8.3); a blind-plus-unproven control is such a control. A claim that is blind for one fault is not an error: the claim may be there for other faults or for other ops.
+
+*Worked example (ct-compare, verified against the v1 fixture and `ct-compare.warrant`).* Three of v1's eight controls list a claim that can never catch the fault. `eq_fixed/ignore-last-byte` lists `eq_fixed_agrees_w0`, whose binders are `Bytes<0>`: there is no last byte to ignore (the fault is guarded by `len(p) > 0`), so no case differs. `select_bytes/missing-error` lists `select_picks`, which admits only `len(a) == len(b)`: `select_bytes` never returns `Err` there, so there is no error to go missing. `select_bytes/swap-choice` lists `select_rejects_mismatch`, which admits only `len(a) != len(b)`: the result is `Err` whichever way `choice` is flipped. Under the rule above the rows become `eq_fixed/ignore-last-byte`: `required_claims` `w1 w2 w4 w16`, `blind_claims` `w0`; `select_bytes/missing-error`: required `select_rejects_mismatch`, blind `select_picks`; `select_bytes/swap-choice`: required `select_picks`, blind `select_rejects_mismatch`. Each control keeps at least one witnessed claim, so generation succeeds, and the three `required_claims` lists differ from v1's (control ids do not, and the section 1.2 gate concerns digests only). Read literally, the earlier wording (every `required_claims` entry must be witnessed unless `accepted_blind_faults` names the fault) would have made v2 generation of ct-compare fail, or put three faults that the corpus *does* catch on the accepted-blind list.
+
+`slim_chunks` is the ascending, duplicate-free union of the base set, the witness chunks and the `slim_chunk` lines, at most `MAX_SLIM_CHUNKS = 32` per suite (more is a generation error), hence at most 2,097,152 cases. The list is written out in `corpus.json` (the lane never recomputes it) together with `slim_inputs_sha256` and (for a `reference` suite) `slim_expected_sha256`, the digests of the chosen chunks' inputs digests and expected digests under the same `warrant-chunks-v1` framing, parallel to the two suite digests of section 5.4 [D11b]; the oracle recomputes the list, base set and witnesses included. `corpus.profile` may set `slim_stride` only to a value **smaller** than the automatic `k` (more chunks, never fewer) and can never remove the first or last chunk.
 
 **What slim does and does not cover.** Product order is row-major, so a chunk is a contiguous run in which the *last* binders vary: binders whose joint size is at most `chunk_size` are enumerated completely in every slim chunk, boundary values included. What slim thins is the *leading* binders: for three `U8` binders it runs 16 of the 256 values of the first and all 65,536 pairs of the other two. Edge values of a leading binder other than its first and last (`2^63` in a leading `u64_edge`) are therefore usually **not** run at slim. That is a coverage reduction, not a soundness hole, for three reasons that the rest of this document enforces: the manifest and the report say `slim(n of m chunks)` and can never say more (section 9); every control must still be caught inside the slim set or the lane fails; and the missing chunks are exactly what the `full` depth runs. The offset `o` depends on the suite id, which a spec author chooses; an author could pick a name to steer the stride, but the author also writes the claims, the label is unaffected, and witness chunks do not depend on `o`.
 
@@ -462,18 +483,18 @@ VER04i section 4.2 made each fault a per-lane wrapper with a name-keyed table (`
 
 ```json
 {"fault": "generator-shift", "op": "multiply", "kind": "post",
- "expr": <pure IR over the op's params and r>, "requires": ["ir.core"]}
+ "expr": <pure IR over the op's params and result>, "requires": ["ir.core"]}
 ```
 
 There are exactly three kinds:
 
 | Kind | Effect |
 |---|---|
-| `pre` | rewrites one named parameter before the call: `{"param": "a", "expr": ...}`, the expression over all params |
-| `post` | rewrites the result: `expr` over params and `r` |
+| `pre` | rewrites parameters before the call: a `rewrites` list of `{"param": "a", "expr": ...}`, each expression over **all** the op's parameters as they were passed in, and all rewrites applied **simultaneously** (one rewrite never sees another's output). The row has `rewrites` instead of `expr`; a fault that rewrites every `Bytes` or every `U64` parameter (section 8.2) has one entry per such parameter [D11a] |
+| `post` | rewrites the result: `expr` over params and `result` |
 | `replace` | supplies the result without trusting the call's value (the call is still made and counted) |
 
-A lane implements these three wrappers **once** and deletes its per-fault table. Fault expressions use only tags of their declared level and **never `subject_op`**.
+`result` is the one reserved name for the call's result, in a fault expression and in an `ensures` row alike (section 6); an op with a parameter named `result` is a generation error (`W0701`) [D11a]. (The first draft wrote `r` here; two spellings would have been two reserved names.) A lane implements these three wrappers **once** and deletes its per-fault table. Fault expressions use only tags of their declared level and **never `subject_op`**.
 
 ### 8.2 Generic and adopter-specific faults
 
@@ -481,15 +502,17 @@ The portable names of VER04i section 4.2 become IR templates instantiated by sig
 
 | Fault | Kind | IR (sketch) | Level |
 |---|---|---|---|
-| `invert` | post | `["not", r]` | core |
-| `missing-error` | replace | `if is_err(r) then Ok(first Bytes arg) else r` | core |
+| `invert` | post | `["not", result]` | core |
+| `missing-error` | replace | `if is_err(result) then Ok(first Bytes arg) else result` | core |
 | `swap-choice` | pre on `choice` | `["not", choice]` | core |
-| `off-by-one` | post | `["add", r, ["lit", {type: T, value: "1"}]]` (wraps, section 3) | core |
-| `truncate-last` | post | `take(r, len(r) - 1)` guarded by `len(r) > 0` | core |
+| `off-by-one` | post | `["add", result, ["lit", {type: T, value: "1"}]]` (wraps, section 3) | core |
+| `truncate-last` | post | `take(result, len(result) - 1)` guarded by `len(result) > 0` | core |
 | `ignore-last-byte` | pre on each `Bytes` param | `concat(take(p, len(p) - 1), b"00")` guarded by `len(p) > 0` | core |
-| `xor-lsb` | post | `["bit_xor", r, 1]` | fixed |
+| `xor-lsb` | post | `["bit_xor", result, 1]` | fixed |
 | `ignore-high-bit` | pre on each `U64` param | `["bit_and", p, MAX >> 1]` | fixed |
 | `ok-as-err`, `wrong-ctor`, `field-zero`, `drop-consumed`, `swap-components` | post | composite rewrites of VER04j section 4.8 | data |
+
+**`ignore-high-bit` stays `ir.fixed` [D9].** ct-compare's `eq_u64` control uses it, and ct-compare is otherwise an `ir.core` document, so until slice S10 teaches the generator, the oracle and the lanes `ir.fixed`, that one control is recorded **`not-live`** in every lane (it is counted in `not_live`, never skipped and never an `uncaught-fault`), and the lane cannot be `release-ready` for ct-compare while it is (section 4.1). An `ir.core` rewriting of the same fault (`if p >= 2^63 then p - 2^63 else p`) was considered and declined by the owner: the table keeps one definition per fault, in the level whose built-in it names. Because a generator that has not implemented `ir.fixed` cannot evaluate this fault, it emits the fault row as data (`requires: ["ir.fixed"]`) and the control row with `requires: ["ir.fixed"]`, every candidate claim in `required_claims` and `slim_witness` entries `{"claim": C, "deferred": "ir.fixed"}` (section 5.6; these are not `unproven`, since `eq_u64_agrees` has a stand-in and only the evaluator is missing), and leaves the witness search to S10. The fail-closed rule that an unimplemented level refuses a *suite* (section 13, "Slice S3 in detail") does not apply to a fault whose level only gates a control, because no **suite or chunk digest** depends on the fault. The same is not true of the slim digests in general: a witness chunk feeds `slim_chunks` and so `slim_inputs_sha256`. For ct-compare nothing changes, because every suite has `m <= 16` and so is `full` in a slim run (section 5.6), but when S10 adds the witness search this control row changes (its `slim_witness` entries) and so can the slim sets of any suite with `m > 16`.
 
 **Adopter-specific faults** (`alt-poly`, `exp-mod-256` in gf256) reference **fault-only models** emitted under `fault_models`: pure model bodies that may exist *only* for a fault and may never appear in a claim, so the corpus cannot be made to depend on them.
 
@@ -500,7 +523,7 @@ The portable names of VER04i section 4.2 become IR templates instantiated by sig
 VER04i section 4 is otherwise unchanged and applies to v2:
 
 * Controls are per `(target suite kind, op, fault)`. Each perturbs **exactly one op**; a control passes iff the suite run with that single-op fault fails with a registered failure id. The scoping exists because a fault applied to every operation can cancel inside a relational claim: XOR-ing the low bit of every result turns `mul(a,b) == mul(b,a)` into `mul(a,b)^1 == mul(b,a)^1`, which is still true. This matters *more* in v2, where relational predicates are common.
-* Each control row lists `required_claims`; the manifest's `caught_by` must be a non-empty subset. An unrelated failure cannot credit a control. A control no claim can catch is `uncaught-fault` and fails the lane unless the spec's `accepted_blind_faults` names it.
+* Each control row lists `required_claims`, the claims not proven blind (section 5.6), and `blind_claims`, the claims proven unable to witness the fault; the manifest's `caught_by` must be a non-empty subset of `required_claims`. An unrelated failure cannot credit a control, and a blind claim never appears in `required_claims`. A control no claim can catch is `uncaught-fault` and fails the lane unless the spec's `accepted_blind_faults` names it. A **not-live** control (section 4.1) is the one exception: the lane does not run it, its manifest row has `caught_by: []` and the state `not-live` with its `level`, and it is neither caught nor `uncaught-fault`; it does not fail the lane, but it counts in `not_live` and so blocks `release-ready`. A not-live row with a non-empty `caught_by`, or a control recorded `not-live` whose `requires` levels the lane declares, is rejected by the manifest checker. The control row is `{"id": "warrant/<module>/negctl/exhaustive/<op>/<fault>", "op", "fault", "target_kind", "requires", "required_claims", "blind_claims", "slim_witness"}` plus `applies_to_forms` for the WX-G faults of section 8.2 (a key that is not applicable is omitted, section 1.4). `requires` is the level of the fault's expression, and is what a lane that lacks it uses to record the control `not-live` (section 4.1).
 * A faulted or filtered run **never writes a manifest**. The call counter (`calls == expected_calls`) and the fact that a faulted run must reach the real export remain the guards against a runner that never calls the library (VER04i section 4.4).
 * In a `slim` run controls run against the `slim` chunk set and stop at the first failing case.
 
@@ -531,7 +554,7 @@ The v1 manifest of VER04i section 8, as a new closed key set, plus:
 | Where | Field | Meaning |
 |---|---|---|
 | top level | `depth` | `"full"` iff every live suite ran every chunk, else `"slim"`; the depth of the *run*, set by the runner from what it executed, never copied from the binding or from a command-line flag. It says nothing about `not-live` suites, so every place that prints `depth` prints `not_live` beside it |
-| top level | `levels`, `not_live` | the IR levels implemented, and the count of suites recorded `not-live` |
+| top level | `levels`, `not_live` | the IR levels implemented, and the count of suites **and controls** recorded `not-live` (section 4.1) |
 | suite row | `depth` | `"full"` or `"slim"` for this suite (a suite with `m <= 16` is `full` in any run) |
 | suite row | `chunks_run`, `chunks_total`, `cases_run` | what actually executed |
 | suite row | `chunks` | for each executed chunk, its recomputed `inputs_sha256`/`expected_sha256` (the sidecar-free place the checker compares) |
@@ -542,7 +565,7 @@ The v1 manifest of VER04i section 8, as a new closed key set, plus:
 | top level | `conformance_sha256` | digest of the conformance fixture's `index.json` the runner passed (section 11) |
 | op row | `inout_form` | the host form used per `inout` parameter, so a `returned` binding shows as such |
 | `ensures` ops | `monitored_calls`, `postcondition_rows`, `monitored_dynamic` | the first two reproduced from the corpus for the depth run; the third informational (section 7.6) |
-| control row | `applicable` | `true`, or `not-applicable` with the host form (section 8.2) |
+| control row | `applicable` | `true`, `not-applicable` with the host form (section 8.2), or `not-live` with `level`, the level the corpus control row's `requires` names and the lane lacks (sections 4.1, 8.2); a `not-live` control has an empty `caught_by` (section 8.3) |
 
 The coverage-labels sidecar `domain-labels.json` of VER04i section 8 is **retired for v2**: its content is in the row, so one file cannot drift from the other.
 
@@ -551,7 +574,7 @@ The coverage-labels sidecar `domain-labels.json` of VER04i section 8 is **retire
 | Depth | `inputs_sha256`/`expected_sha256` of the suite | Report may say |
 |---|---|---|
 | `full` | equals the corpus suite digests (and, for v1-header suites, the v1 whole-suite digests) | the label of section 9.3 |
-| `slim` | equals the corpus `slim_sha256` over the chosen chunks; the suite digests cannot be recomputed | `slim(n of m chunks)`; never `full`, never `exhaustive` |
+| `slim` | equals the corpus `slim_inputs_sha256` and `slim_expected_sha256` over the chosen chunks; the suite digests cannot be recomputed | `slim(n of m chunks)`; never `full`, never `exhaustive` |
 
 ### 9.3 Honest labels [D6]
 
@@ -570,12 +593,12 @@ A stdlib-only package at **`code/packages/python/warrant-oracle/`** (distributio
 ### 10.3 The three checks
 
 1. **Lowering.** The oracle's own lowering of the spec equals the IR in `corpus.json`, compared as canonical JSON (the v1 canonical writer of VER04i section 9.1). Two independent implementations can only agree byte for byte if lowering is **syntax-directed and unoptimised**: one IR node per source construct, operands in source order, no constant folding, no reassociation, no common-subexpression sharing, no inlining of models, desugarings (`a != b`, `x.0`, refinements into `admit`) exactly as section 4 and Appendix A name them. Any normalisation the generator performs is a spec change here first. A generator that lowers `a - b` as `b - a` is caught here and nowhere else.
-2. **Enumeration and evaluation.** The oracle's own enumeration and evaluation reproduce, for every suite and every chunk it verifies: `cases`, `discarded`, `first_admitted`, `calls`, `inputs_sha256`, and for `reference` suites `expected_sha256`, plus the suite digests, `slim_chunks` and `slim_sha256`, `expected_calls`, `wraps` and `ir_cost` (and the corpus `max_ir_cost` against `corpus.profile`).
-3. **Faults and controls.** It re-derives every fault instantiation, `fault_models`, control row and `required_claims` set from the spec, the op signatures and `corpus.profile`, and compares them with `corpus.json`.
+2. **Enumeration and evaluation.** The oracle's own enumeration and evaluation reproduce, for every suite and every chunk it verifies: `cases`, `discarded`, `first_admitted`, `calls`, `inputs_sha256`, and for `reference` suites `expected_sha256`, plus the suite digests, `slim_chunks`, `slim_inputs_sha256` and `slim_expected_sha256`, `expected_calls`, `wraps` and `ir_cost` (and the corpus `max_ir_cost` against `corpus.profile`).
+3. **Faults and controls.** It re-derives every fault instantiation, `fault_models`, control row and `required_claims`, `blind_claims` and `slim_witness` set from the spec, the op signatures and `corpus.profile`, and compares them with `corpus.json`.
 
 ### 10.4 Scaling rule and cost
 
-The reader grows with the feature levels (section 4.1): it refuses, with a named error, every construct of a level it does not implement; **an unknown construct is never skipped**. A naive Python pass over 51 million gf256 cases is, by estimate (not measured), far too slow for PR CI. Two measures are specified:
+The reader grows with the feature levels (section 4.1): it refuses, with a named error, every construct of a level it does not implement in a suite, op or model; **an unknown construct is never skipped**. The one exception is a *fault row* (and its control) of a level the oracle lacks: check 3 must still re-derive it, so the oracle treats such a row as **data**, instantiating the template and comparing it without evaluating it (and expecting `deferred` witness entries, section 5.6). A naive Python pass over 51 million gf256 cases is, by estimate (not measured), far too slow for PR CI. Two measures are specified:
 
 * **Memoisation.** Pure model calls are memoised on scalar arguments in a bounded table. gf256's models are functions of two `U8` values, so a three-binder claim becomes table lookups. The table is a cache only: a hit and a recomputation MUST agree, and a test samples both.
 * **Parallel chunk verification.** A chunk is the unit of work, so verification parallelises across processes and CI jobs with no shared state.
@@ -645,9 +668,9 @@ The VER29 section 5.1 dependency reader is Rust-only. Non-Rust lanes report **`l
 |---|---|---|---|---|
 | S1 | spec | This document, plus the VER04i pointer and erratum | no | review; spec self-consistent with VER04i/h/j/k and VER29 |
 | S2 | generator | `warrant-grammar`: publish the resolved-domain enumerator and the post-slot resolver as public API. No behaviour change. Lands after PR #19369 (WX-G) | **yes** | `gen_evidence --check` shows no drift for every adopter |
-| S3 | generator | New leaf crate `rust/warrant-corpus-gen`: v2 emitter at `ir.core`, predicate claims, call counts, chunks, fault IR, `corpus.profile`. Emits ct-compare v2 | no | section 1.2: nine v1 digests reproduced |
-| S4 | oracle | `code/packages/python/warrant-oracle/` at `ir.core`, with chunk verification and memoisation | no | the three checks of section 10.3 pass on ct-compare v2 and on a seeded-wrong corpus fail |
-| S5 | fixture | the v2 categories of section 11 at `ir.core`. Prerequisite: `warrant-corpus-conformance-v1` (branch `claude/warrant-lane-conformance`) is on `main` | no | oracle verifies; Python and TypeScript runners fail a deliberately wrong evaluator |
+| S3 | generator | New leaf crate `rust/warrant-corpus-gen`: v2 emitter at `ir.core`, predicate claims, call counts, chunks, fault IR, `corpus.profile`. It can emit ct-compare v2; the committed fixture directory lands in S3d (below) [D10] | no | section 1.2: **the 18 v1 digests** (`inputs_sha256` and `expected_sha256` of all nine ct-compare suites) reproduced and pinned in the generator's own tests |
+| S4 | oracle | `code/packages/python/warrant-oracle/` at `ir.core`, with chunk verification and memoisation. **Part 1** (done): reader, lowering, enumeration, `verify-v1`, `emit-v2`. **Part 2**: `verify-v2`, check 3, witness chunks, `corpus.profile` | no | part 2: the three checks of section 10.3 pass on ct-compare v2 and on a seeded-wrong corpus fail |
+| S5 | fixture | the v2 categories of section 11 at `ir.core`. Prerequisite: `warrant-corpus-conformance-v1` (branch `claude/warrant-lane-conformance`) is on `main`. Independent of the ct-compare v2 fixture directory | no | oracle verifies; Python and TypeScript runners fail a deliberately wrong evaluator |
 | S6 | lane | Python runner reads v2 as well as v1; `python/ct-compare` moves to v2 | no | manifest v2 `--check` green at slim and at full |
 | S7 | lane | TypeScript runner, the same. **Go**: the in-flight Go lane finishes on v1 for ct-compare [D5]; it ports to v2 in its own PR in this slice or after, but before S13 | no | same |
 | S8 | adopter | **gf256**: `gf256-warrant-v2`, then one PR each for `python/gf256`, `typescript/gf256` (adds the dedicated error class), `go/gf256` (panic mapping) | no | all lanes green at slim; nightly full on compiled lanes; the section 3.3 guard passed or the document migrated to v1 |
@@ -657,9 +680,29 @@ The VER29 section 5.1 dependency reader is Rust-only. Non-Rust lanes report **`l
 | S12 | feature | `inout` and `ensures`, the same four PRs. Then **zeroize**, whose `all(result, is_zero)` row needs the reserved `ir.seq` level: either the `ir.seq` amendment lands first or zeroize's `/post` suite is `not-live` and says so | no | `stale-post` and the other applicable WX-G faults caught |
 | S13 | cleanup | Delete v1 `corpus.rs`, `gen_corpus`, the v1 oracle, the v1 fixture and the VER04i v1 text that v2 supersedes | **yes** | no consumer in any `consumers.json` still names the v1 profile |
 
+**Slice S3 in detail (decided 2026-11-17, section 16.3).**
+
+*Fixture timing [D10].* Section 10.1 is unchanged: a v2 corpus cannot merge until the oracle's three checks pass on it, and `verify-v2` is S4 part 2, which itself needs generator output. So S3 lands the **generator** with the 18 digests pinned in its own tests, and the committed `code/specs/fixtures/ct-compare-warrant-v2/` directory lands **with or after** the oracle's `verify-v2` (S4 part 2). Until then the evidence that the generator agrees with the oracle is the diff of the generator's chunk files against `emit-v2 --depth full` output, run by hand.
+
+*Fail-closed rule.* The generator computes a digest for every suite it emits, so it cannot emit a suite it cannot evaluate: a document with any op, model, claim or example beyond `ir.core` is refused as a whole (`GenError` naming the level, exit 2, nothing written), and a `match` over the grammar always ends in an explicit refusal, never a skip. **Fault rows are different:** a fault whose level is above the generator's is emitted as data with its `requires`, its control row carries `deferred` witnesses, and nothing is refused, because only a lane control, not a digest, depends on it (section 8.2).
+
+*No shared-crate change.* `coding_adventures_warrant_grammar::codegen::Evaluator` is public, so S3 needs nothing from a shared crate. S3 evaluates **its own lowered `ir.core`** with its own evaluator, because the digests must depend on the IR that is written to `corpus.json` (a lowering bug has to reach `expected_sha256`), because the grammar evaluator evaluates `U8` as `Nat` in a v0 document (contradicting [D4]) and has no `wraps` or call-count accounting. The grammar `Evaluator` is used only as a **test-time differential**: on ct-compare and on wrap-free synthetic documents the two must agree on every case.
+
+*PR breakdown.* Each PR is based on `main` after its predecessor merges (no stacked chain):
+
+| PR | Content |
+|---|---|
+| S3-0 | this erratum (section 16.3), VER-BACKLOG row; no code |
+| S3a | crate skeleton, workspace membership, canonical JSON writer, `corpus.profile` reader, lowering to `ir.core` with the level refusals, worst-path cost |
+| S3b | `ir.core` evaluator, descriptors and enumeration, chunk streams, suite digests, the **18 digests**, the slim base set, and the **census** of section 16.2 (which adopters have a list of byte strings, `nat_count`, a signed `fx_edge` or `FxEdge(16)` binder) |
+| S3c | fault IR and controls with blind claims, `corpus.json`, chunk files and `cases.tfv` emission, the `--check` mode |
+| S3d | the committed ct-compare v2 fixture directory, with or after S4 part 2 [D10], plus the build-tool row below |
+
+*Build-tool input row [D11h].* `code/specs/ct-compare.warrant`, the v2 fixture directory and `rust/ct-compare/evidence.bindings` lie outside the generator's crate, and the build tool maps a changed file to a package by path prefix, so a PR that edited only one of them would not run the generator's `--check`. A row in `code/programs/go/build-tool/repository_inputs.go` selects `rust/warrant-corpus-gen` for those paths. It is implemented in S3d, as its own reviewable change to the build tool; this document records the requirement. (The v1 `gen_corpus --check` has the same blind spot today.)
+
 **First adopter after ct-compare is gf256.** It is a v0 document, so it needs no v1 built-ins or composite types, and it forces the four structural changes: predicate claims, several calls per case, chunking at 2^24, and portable faults. It exists in 17 of the 18 lanes. **zeroize is last**: besides WX-G it has ports only in c, cpp, csharp and fsharp, so its first lane needs a C or C# runner or a new port.
 
-**Order and size.** Slices land in numeric order, except that S9 depends only on S5 and may land earlier than its number. Until S9 lands, a lane's own `check` is the only validator of a v2 manifest and no v2 lane row may be cited as report evidence. S7, S8, S10, S11 and S12 are each several PRs, listed in their rows; no single PR carries more than one of {generator, oracle, fixture, one lane runner, one adopter}.
+**Order and size.** Slices land in numeric order, except that S9 depends only on S5 and may land earlier than its number. Until S9 lands, a lane's own `check` is the only validator of a v2 manifest and no v2 lane row may be cited as report evidence. S7, S8, S10, S11 and S12 are each several PRs, listed in their rows; no single PR carries more than one of {generator, oracle, fixture, one lane runner, one adopter}. One exception to numeric order: S3d (the ct-compare v2 fixture directory) lands **after S3a to S3c and with or after S4 part 2** [D10]; "with" means merged together with S4 part 2's PR (adjacent merges, or a merge queue), **never in the same PR as the generator** and never before `verify-v2` exists.
 
 **Go.** Per [D5] the Go lane finishes on v1 so it is not blocked, and **v1 is deleted in S13 only after every lane has ported**: S13's precondition is a mechanical one (no v1 consumer left), not a date.
 
@@ -755,6 +798,51 @@ Building the oracle (slice S4) found two places where this document could not be
 Rejected: a run-time step meter (eighteen evaluators would each need one and the count would become part of the conformance surface); costing the path actually taken per case (not static, so it is a meter by another name); rewriting gf256's models to fit 2,000 (the bit-sliced XOR is the honest v0 formulation, and a rewrite would change the frozen gf256 v0 harness for the sake of a counting rule). The S4 oracle's diagnostic flags `--max-ir-cost` and `--cost-model taken-path` are superseded: the model it calls `taken-path` is the worst-path model above and becomes the only one, the bound comes from `corpus.profile`, and the flags are removed (section 4.2 forbids an override).
 
 **gf256 and the section 3.3 guard (WD-013).** Measured with the S4 oracle's evaluator, memoisation off, at full depth over every suite that evaluates a model or arithmetic: no fixed-width node wraps on any admitted case, and no arithmetic node has a `subject_op` beneath it. The three arithmetic nodes that sit in subject arguments (`e + 1u64`, `e + 255u64`, `e + e`) are refined to at most `2^32` and cannot wrap a `U64`. gf256 therefore passes rules 2 and 3 as a v0 document: exact (`Nat`) evaluation in the frozen Rust harness and wrapping evaluation in v2 agree on every case, the conversion changes no expected value, and WD-013 is not reopened. Two consequences are recorded so the result is not over-read. First, gf256 gives **no evidence that a lane wraps correctly**: the single rule of section 3.2 is exercised only by the conformance cases of section 3.4, which are therefore a hard prerequisite of every lane and cannot be traded against gf256 passing. Second, the measurement had to be made with memoisation off and by reading the subject arguments, because the S4 oracle's `wraps` counter skipped memo hits and never evaluated subject arguments; section 3.3 rule 1 now defines the count so that it cannot depend on either.
+
+### 16.2 Divergences found by slice S2 (generator versus section 5.1), for S3/S10 to settle
+
+Publishing the generator's resolved domains as `coding_adventures_warrant_grammar::domain` (S2) found five places where what the evidence generator enumerates is not what section 5.1 says. S2 changed none of them (the checked-in adopter evidence pins the generator's behaviour); each needs a decision before the v2 corpus relies on it, and the decision must be recorded here.
+
+1. **Byte-string order in the Rust harness prelude.** The prelude's `alpha_strings` lists the length-2 and length-3 strings over `[00,01,80,ff]` first-byte-fastest. VER04i section 2.6 (and so section 5.1) and the v1 corpus compiler are lexicographic, first byte slowest. The S2 API follows the spec. For a bare `Bytes`/`Bytes<N>` binder the two enumerate the same *set*.
+2. **That difference is a set difference for `List<T>`.** A list ranges over the first 16 (lengths 1, 2) and first 4 (length 3) values of `T`, so a different order of `T` is a different prefix: for `Bytes<2>` the first four values are `0000 0001 0080 00ff` (spec, S2 API) against `0000 0100 8000 ff00` (prelude). `List<Bytes<N>>`, `Option<List<..>>` and the like are different case sets in the corpus and in the Rust harness. Settle which is normative; if the corpus, the harness must be regenerated for every adopter that has such a binder (none of the current adopters does, to be confirmed by S3).
+3. **`nat_count`.** Section 5.1 says `0..=K`. The generator's shift-count domain (VER04j 3.6) is `0..=64` plus `65 127 128 129 255 256 65535 65536`: 73 values, not `K+1`.
+4. **Signed `fx_edge`.** Section 5.1 says the unsigned bit patterns reinterpreted in two's complement, in the same order. The generator sorts them ascending, adds `-1..=-255` and removes duplicates (VER04j 2.6: `i16` 527 values, `i32` 559, `i64` 623). The unsigned counts agree (377, 313).
+5. **`fx_edge` at 16 bits and below (open question, needs an owner decision; found in S2).** Section 5.1 defines `fx_edge` for 32 and 64 bits only. The generator's budget demotion (VER04j 2.6) also produces edge sets for 16-bit binders (`FxEdge(U16|I16)`, 281 and 527 values), which the corpus must be able to describe, and the unsigned edge formula repeats values at 8 bits (`0..=255` already contains `MAX` and the `MAX ^ (1<<i)` patterns), so an 8-bit edge set has duplicates; the generator never produces one (an 8-bit binder is always `fx_full`). Decide whether `fx_edge` extends to 16 bits (and whether 8 bits is excluded or de-duplicated).
+
+Also for S3: the descriptor depth limit of section 5.1 (16 levels) is the emitter's to enforce; the resolver allows the generator's 64 levels and 4,096 nodes.
+
+**Settled for S3 (2026-11-17, section 16.3 item 11e):** ct-compare hits none of the five (its binders are `Bytes`, `Bytes<N>`, `U64` and `Bool`). S3 refuses, naming section 16.2, a descriptor of kind `nat_count`, a signed `fx_edge`, `FxEdge(16)` or a list whose element domain is a byte string; S10 decides items 1 to 5 with the census S3b reports in hand.
+
+### 16.3 Owner decisions of 2026-11-17 (CV2-S3)
+
+Planning slice S3 (the generator) found one place where this document could not be implemented as written and several where it was silent or contradicted what the independent oracle already does. The owner decided each. The normative sections (1.1, 1.4, 2.1, 2.5, 4.2, 5.6, 8.1 to 8.3, 9.2, 10.3, 13, 16.2) were amended in the same change, so they read correctly without this list.
+
+**[D8] Blind pairs (section 5.6).** `required_claims` lists the claims that can witness the fault, in the sense of section 5.6: the claims not proven blind. A claim on which no enumerated case can witness the fault goes in a new control field `blind_claims`. Generation fails only when every candidate claim is proven blind. The motivating case is ct-compare's three blind pairs, each of which v1 lists in `required_claims`: `eq_fixed/ignore-last-byte` on `eq_fixed_agrees_w0` (`Bytes<0>` has no last byte), `select_bytes/missing-error` on `select_picks` (equal lengths never give `Err`) and `select_bytes/swap-choice` on `select_rejects_mismatch` (a length mismatch gives `Err` whichever way `choice` flips). Read literally, the earlier text made v2 generation of ct-compare fail.
+
+**[D8 refinement, accepted by the owner]** There are three claim states, not two: *witnessed*, *blind* and *unproven* (no stand-in). Unproven claims stay in `required_claims`. A control with no witnessed claim passes generation, and is caught or not at lane time (`uncaught-fault`); the owner confirmed that this includes a control whose candidates are blind plus unproven, which now passes generation. (The author's refinement of the owner's wording "fails only when a control has no witnessed claim", which read literally would have failed every control whose claims are all predicate suites.)
+
+**[D9] `ignore-high-bit` (section 8.2).** It stays `ir.fixed` (`bit_and`). At `ir.core` the ct-compare `eq_u64` control is reported `not-live`, honestly labelled, until S10. The owner declined the `ir.core` reformulation. **Consequence, confirmed by the owner:** a not-live control counts in `not_live` and blocks `release-ready` (section 4.1), so no ct-compare lane is release-ready until it implements `ir.fixed`.
+
+**[D10] Fixture timing (sections 10.1, 13).** Section 10.1 is unchanged. S3 lands the generator with the 18 digests (`inputs_sha256` and `expected_sha256` of all nine v1 suites) pinned in its own tests; the committed ct-compare v2 fixture directory lands with or after the oracle's `verify-v2` (S4 part 2). The S3, S4 and S5 rows of section 13 say so.
+
+**[D11] Eight format details**, accepted as proposed in the S3 plan:
+
+* **(a)** A `pre` fault that rewrites several parameters has a `rewrites` list of `{param, expr}`, applied simultaneously; `result` (not `r`) is the reserved result name, for faults and for `ensures` (section 8.1).
+* **(b)** Two slim digest fields, `slim_inputs_sha256` and `slim_expected_sha256` (the oracle's names), replace the single `slim_sha256` (sections 5.6, 9.2, 10.3, 1.4).
+* **(c)** An explicit `model_order` array preserves declaration order, which rule 4.2.1 needs, under sorted-key canonical JSON (sections 1.4, 4.2).
+* **(d)** `Int`-typed `lit` nodes are allowed, as the oracle emits them (section 2.1, 4.2 rule 4).
+* **(e)** S3 refuses the section 16.2 divergent descriptors and S10 decides, using the census from S3b (section 16.2).
+* **(f)** The chunk size stays 65,536 for ct-compare; the slim stride is exercised by synthetic tests at `chunk_size` 1,024, not by shrinking the real corpus (section 5.4; ct-compare's largest suite has at most four chunks, so it never exceeds the 16 that make slim differ from full).
+* **(g)** `cases.tfv` holds examples only; "sabotage probes" is removed (section 2.5).
+* **(h)** A build-tool `repository_inputs.go` row makes edits to the spec, the fixture or the binding run the generator's `--check`; implemented in S3d (section 13).
+
+**[Section 1.4, provisional, ruled by the owner.]** The closed key set of section 1.4 is provisional until S4 part 2 reads it, and grows only by erratum.
+
+**Author refinements (not owner decisions), made while applying the rulings above.** `slim_witness` is a list with three entry shapes (`chunk`, `unproven`, `deferred`, section 5.6); control rows carry `requires` and, for WX-G faults, `applies_to_forms`; the manifest control state `not-live` names its level and `not_live` counts suites plus controls (sections 4.1, 9.1); fault rows of a deferred level are data, for the generator and the oracle (sections 8.2, 10.4, 13); S3d merges with or after S4 part 2, never in the generator's PR (section 13); the manifest checker rejects a not-live control row with a non-empty `caught_by`, or one whose `requires` levels the lane declares (section 8.3).
+
+**Findings recorded, not decided.** S3 needs no shared-crate change (section 13). The oracle's `emit-v2` output is its own `warrant-oracle-enumeration-v0` JSON, not a v2 `corpus.json`, so the key set of section 1.4 is defined by this document and not copied from the oracle; what the oracle's `emit-v2` does bind is the chunk-line format, the digests (suite, v1 and slim), `cases`, `discarded`, `product`, `expected_calls`, `demoted`, `domain_label`, `result_type`, `ir_cost`, `wraps`, the descriptor JSON (`{"d":..,"size":..}`) and its lowering rules. Its `slim_chunks` is the **base set only**: witness chunks wait for S4 part 2, so the two will differ on any suite with `m > 16` and a witnessed control until then.
+
+**Follow-ups outside this slice.** The oracle README (`warrant-oracle/README.md`) still says "`slim_sha256` is emitted as separate inputs and expected digests"; it is accurate for the oracle and needs no change, but S4 part 2 must read `blind_claims` and the `rewrites` shape when it implements check 3. VER04i has no field named `slim_sha256` or `blind_claims`; VER04i sections 4 and 15 (`accepted_blind_faults`, `required_claims`) describe the v1 profile, which keeps `required_claims` as written until S13, and need no edit. VER04n and VER04p mention `accepted_blind_faults` only for v1-style controls and are unaffected. VER29 does not mention these fields.
 
 ## Appendix A. `ir.core` tags
 

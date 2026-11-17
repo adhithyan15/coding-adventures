@@ -14,6 +14,23 @@ import (
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/legacy"
 )
 
+// recStepEphemeral is the fixture's ephemeral list: exactly the committed
+// code/kiln/legacy/host-roots.json policy (sorted, as the decoder requires), so
+// the fixture is no more permissive about /proc and /sys than the real policy.
+// Ubuntu 26.04's binaries (libselinux 3.9, newer coreutils) read some of these
+// at start-up; 24.04's, in the kiln-sandbox job, do not.
+//
+// The one extra entry, /proc/filesystems, mirrors D27 (claude/kiln-d27-selinux),
+// which adds it to the real policy: libselinux on 26.04 reads it at start-up.
+// D27 will switch this fixture to derive its lists from the real file.
+const recStepEphemeral = `["/dev/fd/*", "/dev/null", "/dev/urandom", "/proc/cpuinfo", "/proc/filesystems", "/proc/meminfo",
+  "/proc/self/cgroup", "/proc/self/exe", "/proc/self/maps", "/proc/self/mountinfo", "/proc/stat",
+  "/sys/devices/system/cpu/**", "/sys/fs/cgroup/**"]`
+
+// recStepAbsentOK: libselinux's start-up probes of the SELinux mount points.
+// They are absent on a runner without SELinux; a present one still voids the run.
+const recStepAbsentOK = `["/selinux", "/sys/fs/selinux"]`
+
 // recStepPolicyFiles returns the fixture's code/kiln/legacy files. imagePaths
 // are the `image` roots, in any order and with duplicates: they are sorted and
 // de-duplicated the way the decoder requires (strictly ascending by path).
@@ -40,7 +57,7 @@ func recStepPolicyFiles(imagePaths []string) map[string]string {
 `,
 		"code/kiln/legacy/env.json":        `{"names": ["FIXTURE_*", "LANG"]}`,
 		legacy.BoundaryPath:                `{"schema_version": 1, "language_source_input_registry_sha256": "00", "boundaries": []}`,
-		"code/kiln/legacy/host-roots.json": `{"roots": [` + strings.Join(roots, ",") + `], "ephemeral": ["/dev/null"], "absent-ok": []}`,
+		"code/kiln/legacy/host-roots.json": `{"roots": [` + strings.Join(roots, ",") + `], "ephemeral": ` + recStepEphemeral + `, "absent-ok": ` + recStepAbsentOK + `}`,
 	}
 }
 

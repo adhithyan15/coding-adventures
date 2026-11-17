@@ -42,6 +42,36 @@ fn test_canonical_json_roundtrip() {
 }
 
 #[test]
+fn test_json_rejects_duplicate_object_members() {
+    let json_path = fixture_path("canonical_score.json");
+    let json_text = fs::read_to_string(&json_path).expect("read canonical_score.json");
+    let score = parse_portable_score_json(&json_text)
+        .expect("same member names in distinct objects remain valid");
+    assert_eq!(score.title, "Tier 0 Canonical Score");
+
+    let duplicate_outer = json_text.replacen(
+        r#""title": "Tier 0 Canonical Score""#,
+        r#""title": "Tier 0 Canonical Score", "title": "Tier 0 Canonical Score""#,
+        1,
+    );
+    let duplicate_nested =
+        json_text.replacen(r#""id": "lead""#, r#""id": "lead", "id": "lead""#, 1);
+    let duplicate_escaped = json_text.replacen(
+        r#""title": "Tier 0 Canonical Score""#,
+        r#""title": "Tier 0 Canonical Score", "\u0074itle": "Tier 0 Canonical Score""#,
+        1,
+    );
+
+    for malformed in [duplicate_outer, duplicate_nested, duplicate_escaped] {
+        assert!(matches!(
+            parse_portable_score_json(&malformed),
+            Err(MusicMachineError::ParseError(message))
+                if message == "duplicate JSON object member"
+        ));
+    }
+}
+
+#[test]
 fn test_additive_and_drumkit_json_roundtrip() {
     let text = "\
 format: music-machine-score/v2

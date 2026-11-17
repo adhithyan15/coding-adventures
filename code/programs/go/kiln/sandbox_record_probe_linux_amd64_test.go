@@ -195,7 +195,7 @@ func newProbeWorld(t *testing.T, kiln string, opts probeOpts) *probeWorld {
 		}
 		raw = append(raw, extra...)
 		sortByPath(t, raw)
-		files["code/kiln/legacy/host-roots.json"] = `{"roots": [` + strings.Join(raw, ",") + `], "ephemeral": ["/dev/null"], "absent-ok": []}`
+		files["code/kiln/legacy/host-roots.json"] = `{"roots": [` + strings.Join(raw, ",") + `], "ephemeral": ` + recStepEphemeral + `, "absent-ok": ` + recStepAbsentOK + `}`
 	}
 	const action = "code/packages/x/a"
 	for p, c := range map[string]string{
@@ -347,6 +347,7 @@ func TestSandboxRecordProbe(t *testing.T) {
 				t.Errorf("%s: the sealed digest or size is not the trace file's", r.Name)
 			}
 			t.Logf("PROBE: run %s argv=%d trace_bytes=%d", r.Name, len(r.Argv), r.TraceBytes)
+			probeTrace(t, "probe-"+r.Name, filepath.Join(w.recDir, record.ProbeDir, r.Name+".trace"))
 		}
 		t.Logf("PROBE: runs=%v shadowed=%v action=%s", names, rep.Shadowed, rep.Action)
 		if rep.Action != "code/packages/x/a" || len(names) < 3 || names[0] != "pipes" || names[1] != "walk" || names[len(names)-1] != "signals" {
