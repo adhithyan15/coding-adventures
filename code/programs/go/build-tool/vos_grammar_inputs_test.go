@@ -114,6 +114,34 @@ func TestVosToolInputsSelectImplementations(t *testing.T) {
 	}
 }
 
+// The registered row of the round-robin crate (VOS-012b): present, selects its own document and the
+// VOS tools, and nothing of its siblings (the swap exercise: replacing one implementation
+// regenerates only its own).
+func TestVosRoundRobinRowSelectsOnlyItsOwnDocument(t *testing.T) {
+	var rrRow *repositoryInputConsumer
+	for i := range repositoryInputConsumers {
+		if repositoryInputConsumers[i].name == "rust/vos-sched-rr" {
+			rrRow = &repositoryInputConsumers[i]
+		}
+	}
+	if rrRow == nil || rrRow.language != "rust" || len(rrRow.paths) == 0 {
+		t.Fatalf("no usable repository input row for rust/vos-sched-rr: %+v", rrRow)
+	}
+	for path, want := range map[string]bool{
+		"code/specs/vos-sched-rr.warrant":          true,
+		"code/specs/vos-sched-fp-bitmap.warrant":   false,
+		"code/specs/vos-sched-any.warrant":         false,
+		"code/specs/vos-sched-rr.warrant.x":        false,
+		"code/programs/rust/vos-link/src/check.rs": true,
+		"code/packages/rust/vos-manifest/src/a.rs": true,
+		"code/packages/rust/vos-sched-rr/src/a.rs": false,
+	} {
+		if got := rrRow.matches(path); got != want {
+			t.Errorf("rust/vos-sched-rr matches(%q) = %v, want %v", path, got, want)
+		}
+	}
+}
+
 // Every directory a VOS tool path names exists, so a rename cannot silently orphan the row.
 func TestVosToolPathsExist(t *testing.T) {
 	for _, p := range vosToolPaths {
