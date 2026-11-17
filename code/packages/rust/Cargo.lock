@@ -32,6 +32,17 @@ name = "aarch64-simulator"
 version = "0.1.0"
 
 [[package]]
+name = "actionscript-compiler"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "interpreter-ir",
+ "vm-core",
+]
+
+[[package]]
 name = "activation-functions"
 version = "0.1.0"
 
@@ -389,6 +400,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "arcade-sfx"
+version = "0.1.0"
+dependencies = [
+ "audio-mixer-realtime",
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "pcm-audio",
+]
+
+[[package]]
 name = "arduino-uno-r4-hal"
 version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -648,6 +670,17 @@ name = "audio-device-sink"
 version = "0.1.0"
 
 [[package]]
+name = "audio-mixer-realtime"
+version = "0.1.0"
+dependencies = [
+ "audio-device-sink",
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "pcm-audio",
+]
+
+[[package]]
 name = "autocfg"
 version = "1.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -656,6 +689,17 @@ checksum = "f2032f911046de80f0a198e0901378627c33f59ea0ac00e363d481118bd70a53"
 [[package]]
 name = "avl-tree"
 version = "0.1.0"
+
+[[package]]
+name = "avm-bytecode-lifter"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "interpreter-ir",
+ "vm-core",
+]
 
 [[package]]
 name = "avr-classic-simulator"
@@ -4698,10 +4742,20 @@ dependencies = [
 ]
 
 [[package]]
-name = "coding_adventures_hash_functions"
+name = "coding_adventures_hash_analysis"
 version = "0.1.0"
 dependencies = [
+ "coding_adventures_hash_functions",
  "getrandom 0.2.17",
+]
+
+[[package]]
+name = "coding_adventures_hash_functions"
+version = "0.2.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
 ]
 
 [[package]]
@@ -4732,6 +4786,20 @@ dependencies = [
 [[package]]
 name = "coding_adventures_md5"
 version = "0.1.0"
+
+[[package]]
+name = "coding_adventures_music_analysis"
+version = "0.1.0"
+dependencies = [
+ "coding-adventures-note-frequency",
+ "coding_adventures_test_bootstrap",
+ "dsp-fft",
+ "dsp-stft",
+ "dsp-wavelets",
+ "music-machine-core",
+ "musical-instruments",
+ "pcm-audio",
+]
 
 [[package]]
 name = "coding_adventures_oauth"
@@ -5302,7 +5370,7 @@ dependencies = [
 
 [[package]]
 name = "coding_adventures_warrant_grammar"
-version = "0.6.0"
+version = "0.7.0"
 dependencies = [
  "coding_adventures_ct_compare",
  "coding_adventures_sha256",
@@ -5346,7 +5414,23 @@ dependencies = [
 
 [[package]]
 name = "coding_adventures_zeroize"
+version = "0.1.1"
+dependencies = [
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+]
+
+[[package]]
+name = "collision2d"
 version = "0.1.0"
+dependencies = [
+ "affine2d",
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "point2d",
+ "trig",
+]
 
 [[package]]
 name = "com"
@@ -6259,31 +6343,35 @@ version = "0.1.0"
 
 [[package]]
 name = "dsp-complex"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
+ "coding_adventures_test_bootstrap",
  "matrix-ir",
 ]
 
 [[package]]
 name = "dsp-conv"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
+ "coding_adventures_test_bootstrap",
  "dsp-fft",
  "dsp-filters",
 ]
 
 [[package]]
 name = "dsp-dct"
-version = "0.2.0"
+version = "0.3.0"
 dependencies = [
+ "coding_adventures_test_bootstrap",
  "dsp-complex",
  "dsp-fft",
 ]
 
 [[package]]
 name = "dsp-fft"
-version = "0.7.1"
+version = "0.8.0"
 dependencies = [
+ "coding_adventures_test_bootstrap",
  "compute-ir",
  "dsp-complex",
  "executor-protocol",
@@ -6294,15 +6382,17 @@ dependencies = [
 
 [[package]]
 name = "dsp-filters"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
+ "coding_adventures_test_bootstrap",
  "dsp-fft",
 ]
 
 [[package]]
 name = "dsp-stft"
-version = "0.4.0"
+version = "0.5.0"
 dependencies = [
+ "coding_adventures_test_bootstrap",
  "compute-ir",
  "dsp-complex",
  "dsp-dct",
@@ -6316,7 +6406,10 @@ dependencies = [
 
 [[package]]
 name = "dsp-wavelets"
-version = "0.4.0"
+version = "0.5.0"
+dependencies = [
+ "coding_adventures_test_bootstrap",
+]
 
 [[package]]
 name = "dunce"
@@ -6579,6 +6672,22 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1c66915cc5391097de7a2b0b972e8505aa33c0df401fd3a6811dbdb32881ba48"
 
 [[package]]
+name = "flash-display-list"
+version = "0.1.0"
+dependencies = [
+ "affine2d",
+ "bezier2d",
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "paint-instructions",
+ "paint-palette-blend",
+ "point2d",
+ "swf-container",
+ "swf-shape-to-paint",
+]
+
+[[package]]
 name = "flate2"
 version = "1.1.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -6776,6 +6885,65 @@ dependencies = [
  "futures-task",
  "pin-project-lite",
  "slab",
+]
+
+[[package]]
+name = "game-breakout"
+version = "0.1.0"
+dependencies = [
+ "arcade-sfx",
+ "audio-mixer-realtime",
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "collision2d",
+ "game-clock",
+ "paint-batch-tiles",
+ "pcm-audio",
+]
+
+[[package]]
+name = "game-clock"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+]
+
+[[package]]
+name = "game-monster-rpg"
+version = "0.1.0"
+dependencies = [
+ "arcade-sfx",
+ "audio-mixer-realtime",
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "game-clock",
+ "paint-batch-tiles",
+ "paint-instructions",
+ "paint-palette-blend",
+ "palette-indexed",
+ "rpg-battle-engine",
+ "rpg-grid-world",
+ "sprite-oam",
+ "tilemap2d",
+]
+
+[[package]]
+name = "game-pong"
+version = "0.1.0"
+dependencies = [
+ "arcade-sfx",
+ "audio-mixer-realtime",
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "collision2d",
+ "game-clock",
+ "paint-batch-tiles",
+ "pcm-audio",
 ]
 
 [[package]]
@@ -7106,6 +7274,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "hamurabi"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "rng",
+]
+
+[[package]]
 name = "hardware-vm"
 version = "0.1.0"
 dependencies = [
@@ -7342,6 +7520,9 @@ version = "0.1.0"
 [[package]]
 name = "http1-fixed-request-body"
 version = "0.1.0"
+dependencies = [
+ "http1-request-header-field",
+]
 
 [[package]]
 name = "http1-request-header-field"
@@ -7373,8 +7554,12 @@ checksum = "6dbf3de79e51f3d586ab4cb9d5c3e2c14aa28ed23d180cf89b4df0454a69cc87"
 name = "https-destination-name-binding"
 version = "0.1.0"
 dependencies = [
+ "coding_adventures_oauth",
  "der-asn1",
+ "http1-fixed-request-body",
+ "http1-request-header-field",
  "http1-request-host-authority",
+ "http1-request-line",
  "tls-server-identity",
  "tls13-server-name",
  "x509-certificate",
@@ -9090,6 +9275,19 @@ name = "lua-bridge"
 version = "0.1.0"
 
 [[package]]
+name = "lunar-lander"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "paint-instructions",
+ "paint-vm-ascii",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "lz77"
 version = "0.1.0"
 
@@ -10041,6 +10239,43 @@ name = "multi-directed-graph"
 version = "0.1.0"
 
 [[package]]
+name = "music-machine-core"
+version = "0.1.0"
+dependencies = [
+ "coding-adventures-note-frequency",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "musical-instruments",
+ "note-audio",
+ "oscillator",
+ "pcm-audio",
+ "percussion-kit",
+ "virtual-dac",
+ "virtual-speaker",
+ "wav-sink",
+]
+
+[[package]]
+name = "music-machine-ffi"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "music-machine-core",
+ "pcm-audio",
+]
+
+[[package]]
+name = "musical-instruments"
+version = "0.2.0"
+dependencies = [
+ "coding_adventures_test_bootstrap",
+ "oscillator",
+ "pcm-audio",
+ "trig",
+]
+
+[[package]]
 name = "naga"
 version = "0.19.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -10290,6 +10525,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "note-audio"
+version = "0.1.0"
+dependencies = [
+ "coding-adventures-note-frequency",
+ "coding_adventures_test_bootstrap",
+ "oscillator",
+ "pcm-audio",
+]
+
+[[package]]
 name = "num"
 version = "0.4.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -10386,6 +10631,46 @@ dependencies = [
 [[package]]
 name = "nut-protocol"
 version = "0.1.0"
+
+[[package]]
+name = "oauth-client-secret-http1-binding"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_oauth",
+ "coding_adventures_oauth_client_secret_custody",
+ "coding_adventures_zeroize",
+ "http1-fixed-request-body",
+ "http1-request-header-field",
+]
+
+[[package]]
+name = "oauth-client-secret-http1-release"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_oauth",
+ "coding_adventures_oauth_client_secret_custody",
+ "coding_adventures_zeroize",
+ "der-asn1",
+ "http1-fixed-request-body",
+ "http1-request-header-field",
+ "http1-request-host-authority",
+ "http1-request-line",
+ "https-destination-name-binding",
+ "oauth-client-secret-http1-binding",
+ "tls13-server-name",
+ "x509-certificate",
+]
+
+[[package]]
+name = "oauth-client-secret-reviewed-server-binding"
+version = "0.1.0"
+dependencies = [
+ "https-reviewed-server-path-binding",
+ "oauth-client-secret-http1-release",
+ "x509-ocsp-authenticated-target-revocation",
+ "x509-ocsp-reviewed-server-revocation-binding",
+ "x509-rsa-reviewed-server-path-anchor-self-signature-binding",
+]
 
 [[package]]
 name = "objc"
@@ -10563,6 +10848,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "oscillator"
+version = "0.2.0"
+dependencies = [
+ "coding_adventures_test_bootstrap",
+ "trig",
+]
+
+[[package]]
 name = "pa-risc11-gatelevel"
 version = "0.1.0"
 dependencies = [
@@ -10584,6 +10877,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d2ad9b889f1b12e0b9ee24db044b5129150d5eada288edc800f789928dc8c0e3"
 dependencies = [
  "unicode-width",
+]
+
+[[package]]
+name = "paint-batch-tiles"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "paint-instructions",
+ "pixel-container",
 ]
 
 [[package]]
@@ -10619,6 +10923,17 @@ dependencies = [
  "paint-codec-png",
  "paint-instructions",
  "paint-vm-gpu-core",
+]
+
+[[package]]
+name = "paint-palette-blend"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "paint-instructions",
+ "pixel-container",
 ]
 
 [[package]]
@@ -10756,6 +11071,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "palette-indexed"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "pixel-container",
+]
+
+[[package]]
 name = "panic-halt"
 version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -10805,6 +11130,14 @@ name = "paste"
 version = "1.0.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "57c0d7b74b563b49d38dae00a0c37d4d6de9b432382b2892f0574ddcae73fd0a"
+
+[[package]]
+name = "pcm-audio"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_test_bootstrap",
+ "oscillator",
+]
 
 [[package]]
 name = "pdf"
@@ -10870,6 +11203,16 @@ dependencies = [
  "activation-functions",
  "loss-functions",
  "matrix",
+]
+
+[[package]]
+name = "percussion-kit"
+version = "0.1.1"
+dependencies = [
+ "coding_adventures_test_bootstrap",
+ "oscillator",
+ "pcm-audio",
+ "trig",
 ]
 
 [[package]]
@@ -11500,6 +11843,27 @@ name = "rope"
 version = "0.1.0"
 
 [[package]]
+name = "rpg-battle-engine"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "palette-indexed",
+]
+
+[[package]]
+name = "rpg-grid-world"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "paint-batch-tiles",
+ "tilemap2d",
+]
+
+[[package]]
 name = "rsa-pkcs1-v1-5-sha256"
 version = "0.1.0"
 
@@ -12047,6 +12411,75 @@ dependencies = [
  "fab-process-simulation",
  "mosfet-models",
  "ruby-bridge",
+]
+
+[[package]]
+name = "sim-crt-vector-beam"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "paint-instructions",
+ "pixel-container",
+]
+
+[[package]]
+name = "sim-discrete-arcade-logic"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "logic-gates",
+]
+
+[[package]]
+name = "sim-discrete-audio-timer"
+version = "0.1.0"
+dependencies = [
+ "audio-mixer-realtime",
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "logic-gates",
+ "oscillator",
+ "pcm-audio",
+]
+
+[[package]]
+name = "sim-pdp8-ge225-io-bridge"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding-adventures-ge225-simulator",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "ge225-gatelevel",
+ "hamurabi",
+ "logic-gates",
+ "lunar-lander",
+ "paint-instructions",
+ "paint-vm-ascii",
+ "pdp8-gatelevel",
+ "pdp8-simulator",
+ "serde",
+ "serde_json",
+ "sim-teletype-asr33",
+]
+
+[[package]]
+name = "sim-teletype-asr33"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "logic-gates",
+ "paint-instructions",
+ "paint-vm-ascii",
+ "serde",
+ "serde_json",
 ]
 
 [[package]]
@@ -13484,6 +13917,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "sprite-oam"
+version = "0.1.0"
+dependencies = [
+ "affine2d",
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "paint-batch-tiles",
+ "palette-indexed",
+]
+
+[[package]]
 name = "sqlite-file"
 version = "0.19.0"
 dependencies = [
@@ -13683,6 +14128,29 @@ version = "0.1.0"
 [[package]]
 name = "superh2-simulator"
 version = "0.1.0"
+
+[[package]]
+name = "swf-container"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "deflate",
+]
+
+[[package]]
+name = "swf-shape-to-paint"
+version = "0.1.0"
+dependencies = [
+ "bezier2d",
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "paint-instructions",
+ "point2d",
+ "swf-container",
+]
 
 [[package]]
 name = "symbolic-ir"
@@ -13991,6 +14459,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "tilemap2d"
+version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "paint-batch-tiles",
+ "paint-palette-blend",
+ "palette-indexed",
+ "pixel-container",
+]
+
+[[package]]
 name = "time"
 version = "0.3.55"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -14072,6 +14553,20 @@ name = "tls13-certificate-verify-message"
 version = "0.1.0"
 
 [[package]]
+name = "tls13-chacha20-poly1305-record"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_chacha20_poly1305",
+ "coding_adventures_hkdf",
+ "coding_adventures_zeroize",
+ "tls13-cipher-suite-policy",
+ "tls13-inner-plaintext",
+ "tls13-record",
+ "tls13-record-protection-state",
+ "tls13-traffic-key-material",
+]
+
+[[package]]
 name = "tls13-cipher-suite-offer"
 version = "0.1.0"
 dependencies = [
@@ -14125,6 +14620,13 @@ dependencies = [
 [[package]]
 name = "tls13-handshake"
 version = "0.1.0"
+
+[[package]]
+name = "tls13-handshake-reassembly"
+version = "0.1.0"
+dependencies = [
+ "tls13-handshake",
+]
 
 [[package]]
 name = "tls13-hkdf-label"
@@ -14397,7 +14899,7 @@ version = "0.1.0"
 
 [[package]]
 name = "trig"
-version = "0.1.0"
+version = "0.3.0"
 
 [[package]]
 name = "tungstenite"
@@ -14950,12 +15452,29 @@ name = "vigenere-cipher"
 version = "0.1.0"
 
 [[package]]
+name = "virtual-dac"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_test_bootstrap",
+ "oscillator",
+ "pcm-audio",
+]
+
+[[package]]
 name = "virtual-machine"
 version = "0.1.0"
 
 [[package]]
 name = "virtual-memory"
 version = "0.1.0"
+
+[[package]]
+name = "virtual-speaker"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_test_bootstrap",
+ "oscillator",
+]
 
 [[package]]
 name = "vis-connected-components"
@@ -15037,6 +15556,60 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "de437e2a6208b014ab52972a27e59b33fa2920d3e00fe05026167a1c509d19cc"
 dependencies = [
  "vcell",
+]
+
+[[package]]
+name = "vos-manifest"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_sha256",
+ "coding_adventures_warrant_grammar",
+ "grammar-tools",
+ "lexer",
+ "parser",
+ "vos-sched-contract",
+]
+
+[[package]]
+name = "vos-sched-any"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "vos-sched-contract",
+]
+
+[[package]]
+name = "vos-sched-contract"
+version = "0.1.0"
+
+[[package]]
+name = "vos-sched-contract-check"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_warrant_grammar",
+ "vos-manifest",
+ "vos-sched-contract",
+]
+
+[[package]]
+name = "vos-sched-fp-bitmap"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "vos-sched-contract",
+]
+
+[[package]]
+name = "vos-shape-check"
+version = "0.1.0"
+dependencies = [
+ "coding-adventures-toml-lexer",
+ "coding-adventures-toml-parser",
+ "grammar-tools",
+ "lexer",
+ "parser",
 ]
 
 [[package]]
@@ -15220,6 +15793,15 @@ dependencies = [
  "wasm-module-parser",
  "wasm-opcodes",
  "wasm-types",
+]
+
+[[package]]
+name = "wav-sink"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_test_bootstrap",
+ "oscillator",
+ "pcm-audio",
 ]
 
 [[package]]

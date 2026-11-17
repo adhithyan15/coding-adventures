@@ -59,8 +59,26 @@ pub fn istft(
     let nf = n_fft as usize;
     let hop = hop_length as usize;
     let out_len = output_length as usize;
+
+    if nf > crate::MAX_FFT_LEN {
+        return Err(StftError::InvalidParam(format!(
+            "n_fft {} exceeds MAX_FFT_LEN {}",
+            nf,
+            crate::MAX_FFT_LEN
+        )));
+    }
+    if out_len > crate::MAX_SAMPLES {
+        return Err(StftError::InvalidParam(format!(
+            "output_length {} exceeds MAX_SAMPLES {}",
+            out_len,
+            crate::MAX_SAMPLES
+        )));
+    }
+
     let bins = nf / 2 + 1;
-    let frame_floats = bins * 2;
+    let frame_floats = bins.checked_mul(2).ok_or_else(|| {
+        StftError::InvalidParam("frame_floats overflow".into())
+    })?;
 
     if !spectrogram.len().is_multiple_of(frame_floats) {
         return Err(StftError::InvalidSpectrogram(format!(
@@ -70,6 +88,19 @@ pub fn istft(
         )));
     }
     let num_frames = spectrogram.len() / frame_floats;
+    if num_frames > crate::MAX_FRAMES {
+        return Err(StftError::InvalidParam(format!(
+            "num_frames {} exceeds MAX_FRAMES {}",
+            num_frames,
+            crate::MAX_FRAMES
+        )));
+    }
+
+    if !spectrogram.iter().all(|x| x.is_finite()) {
+        return Err(StftError::InvalidSpectrogram(
+            "spectrogram contains non-finite floats (NaN or Inf)".into(),
+        ));
+    }
 
     let win = build_window(window, nf);
 
@@ -81,16 +112,17 @@ pub fn istft(
     let mut norm = vec![0.0f32; out_len];
 
     for m in 0..num_frames {
-        let frame_start_global = m * hop;
+        let frame_start_global = m.saturating_mul(hop);
+        let frame_start_floats = m.saturating_mul(frame_floats);
         let frame_slice =
-            &spectrogram[m * frame_floats..(m + 1) * frame_floats];
+            &spectrogram[frame_start_floats..frame_start_floats + frame_floats];
         // irfft returns a real Vec<f32> of length n_fft.
         let frame = irfft_scalar(frame_slice, n_fft).map_err(fft_err)?;
         debug_assert_eq!(frame.len(), nf);
 
         // Window the frame, then overlap-add into the output.
         for k in 0..nf {
-            let n = frame_start_global + k;
+            let n = frame_start_global.saturating_add(k);
             if n >= out_len {
                 break;
             }
@@ -116,6 +148,9 @@ pub fn istft(
 /// to keep modules independent — both copies follow the same
 /// formulas (`scipy.signal.get_window` with `sym=True`).
 fn build_window(window: WindowType, n_fft: usize) -> Vec<f32> {
+    if n_fft == 1 {
+        return vec![1.0];
+    }
     let m = (n_fft - 1) as f32;
     (0..n_fft)
         .map(|n| {

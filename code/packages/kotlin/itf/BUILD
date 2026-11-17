@@ -1,0 +1,1 @@
+mkdir -p ../../../../.build-locks && while ! mkdir ../../../../.build-locks/kotlin-itf.lock 2>/dev/null; do sleep 1; done; gradle --no-daemon --no-build-cache --max-workers=1 check; status=$?; rmdir ../../../../.build-locks/kotlin-itf.lock; exit $status

@@ -2,28 +2,36 @@
 
 This module is deliberately written as a teaching layer. The parser handles a
 small human-friendly score format, then the renderer hands every note to
-``note-audio`` so the lower abstractions stay visible:
+``musical-instruments`` and unpitched hits to ``percussion-kit`` so the lower
+abstractions stay visible:
 
 ```text
 note text -> frequency -> oscillator -> sampler -> PCM -> optional sink
+drum hit  -> excitation -> modes -> envelope -> PCM -> optional sink
 ```
 
-Rests are the one special case. A rest has no frequency or oscillator, so the
-music machine appends zero-valued PCM samples for the requested amount of time.
+All regular expressions have been eliminated (CWE-1333) in favor of deterministic,
+linear-time string scanning.
 """
 
 from __future__ import annotations
 
-import re
+import json
 from collections.abc import Callable, Iterable, Mapping
 from dataclasses import dataclass, field, replace
 from importlib import import_module
 from math import isfinite
 from numbers import Integral, Real
+from pathlib import Path
 from typing import Literal
 
 from musical_instruments import (
+    MAX_NOTE_DURATION_SECONDS,
+    MAX_PARTIALS,
+    ADSREnvelope,
+    HarmonicPartial,
     InstrumentNoteRender,
+    InstrumentProfile,
     get_instrument,
     instrument_for_gm_program,
     render_instrument_note,
@@ -32,18 +40,47 @@ from note_audio import DEFAULT_MAX_SAMPLE_COUNT
 from note_frequency import parse_note
 from oscillator import sample_count_for_duration
 from pcm_audio import DEFAULT_SAMPLE_RATE_HZ, PCMBuffer, PCMFormat
+from percussion_kit import (
+    PercussionHitEvent,
+    PercussionHitRender,
+    all_drum_kits,
+    all_standard_hit_ids,
+    render_percussion_sequence,
+)
 
-DEFAULT_TEMPO_BPM = 120.0
-DEFAULT_METER = "4/4"
-DEFAULT_AMPLITUDE = 0.18
-DEFAULT_INSTRUMENT_ID = "sine"
-DEFAULT_PPQ = 480
-DEFAULT_MAX_SCORE_LENGTH = 1_000_000
-DEFAULT_MAX_LINE_LENGTH = 10_000
-DEFAULT_MAX_EVENT_COUNT = 10_000
-BEAT_TICK_TOLERANCE = 1e-9
-SEMITONES_PER_OCTAVE = 12
-CANONICAL_SHARP_SPELLINGS = (
+# Canonical resource limits (CWE-400 / CWE-190 / CWE-20)
+MAX_SCORE_BYTES: int = 1_000_000
+MAX_SCORE_LENGTH: int = 1_000_000
+MAX_LINE_LENGTH: int = 10_000
+MAX_EVENTS: int = 10_000
+MAX_INSTRUMENTS: int = 128
+MAX_TRACKS: int = 128
+MAX_DRUM_HITS: int = 10_000
+MIN_SAMPLE_RATE_HZ: float = 1000.0
+MAX_SAMPLE_RATE_HZ: float = 192_000.0
+MAX_SAMPLE_COUNT: int = 16_777_216
+MAX_DURATION_SECONDS: float = 600.0
+MAX_PPQ: int = 100_000
+
+DEFAULT_TEMPO_BPM: float = 120.0
+DEFAULT_METER: str = "4/4"
+DEFAULT_AMPLITUDE: float = 0.18
+DEFAULT_INSTRUMENT_ID: str = "sine"
+DEFAULT_PPQ: int = 480
+DEFAULT_MAX_SCORE_LENGTH: int = 1_000_000
+DEFAULT_MAX_LINE_LENGTH: int = 10_000
+DEFAULT_MAX_EVENT_COUNT: int = 10_000
+BEAT_TICK_TOLERANCE: float = 1e-9
+SEMITONES_PER_OCTAVE: int = 12
+
+DEFAULT_ADDITIVE_ENVELOPE = ADSREnvelope(
+    attack_seconds=0.005,
+    decay_seconds=0.010,
+    sustain_level=0.90,
+    release_seconds=0.030,
+)
+
+CANONICAL_SHARP_SPELLINGS: tuple[str, ...] = (
     "C",
     "C#",
     "D",
@@ -58,7 +95,7 @@ CANONICAL_SHARP_SPELLINGS = (
     "B",
 )
 
-DURATION_BEATS = {
+DURATION_BEATS: dict[str, float] = {
     "w": 4.0,
     "h": 2.0,
     "q": 1.0,
@@ -66,7 +103,7 @@ DURATION_BEATS = {
     "s": 0.25,
 }
 
-DIRECTIVE_NAMES = frozenset(
+DIRECTIVE_NAMES: frozenset[str] = frozenset(
     {
         "title",
         "tempo",
@@ -75,15 +112,13 @@ DIRECTIVE_NAMES = frozenset(
         "sample_rate",
         "instrument",
         "program",
+        "drumkit",
     }
 )
 
-DIRECTIVE_PATTERN = re.compile(r"^([A-Za-z_][A-Za-z0-9_]*):\s*(.*)$")
-IDENTIFIER_PATTERN = re.compile(r"^[A-Za-z_][A-Za-z0-9_-]*$")
-METER_PATTERN = re.compile(r"^([1-9][0-9]*)/([1-9][0-9]*)$")
-PORTABLE_FORMAT_VERSION = "music-machine-score/v2"
+PORTABLE_FORMAT_VERSION: str = "music-machine-score/v2"
 
-HAPPY_BIRTHDAY_TEXT = """title: Happy Birthday
+HAPPY_BIRTHDAY_TEXT: str = """title: Happy Birthday
 tempo: 120
 meter: 3/4
 amplitude: 0.18
@@ -96,7 +131,7 @@ G4/e G4/e | G5/q E5/q C5/q | B4/q A4/q R/q |
 F5/e F5/e | E5/q C5/q D5/q | C5/h
 """
 
-MINI_ORCHESTRA_TEXT = """format: music-machine-score/v2
+MINI_ORCHESTRA_TEXT: str = """format: music-machine-score/v2
 title: Mini Orchestra
 ppq: 120
 sample_rate: 16000
@@ -148,13 +183,13 @@ event melody 1560 120 note E5 velocity=0.72
 event melody 1680 120 note D5 velocity=0.72
 event melody 1800 120 note C5 velocity=0.72
 event harmony 1440 240 note E4 velocity=0.48
-event harmony 1680 240 note G4 velocity=0.42
+event harmony 1680 240 note B4 velocity=0.42
 event comp 1440 240 note C4,E4,G4 velocity=0.42
 event comp 1680 240 note C4,E4,G4 velocity=0.36
 event low 1440 480 note C2 velocity=0.56
 """
 
-PITCHED_PERCUSSION_MIX_TEXT = """format: music-machine-score/v2
+PITCHED_PERCUSSION_MIX_TEXT: str = """format: music-machine-score/v2
 title: Pitched Percussion Mix
 ppq: 120
 sample_rate: 44100
@@ -219,16 +254,19 @@ event drum 960 120 note G2 velocity=0.34
 event drum 1440 120 note C3 velocity=0.34
 """
 
-ScoreEventKind = Literal["note", "rest"]
-PortableEventKind = Literal["note", "rest"]
+ScoreEventKind = Literal["note", "rest", "hit"]
+PortableEventKind = Literal["note", "rest", "hit"]
+
+
+# =============================================================================
+# Defensive Numeric & String Validation (VER15 / CWE-1333 / CWE-400 / CWE-20)
+# =============================================================================
 
 
 def _finite_float(name: str, value: Real) -> float:
     """Convert a finite real value to ``float`` and reject bool/string traps."""
-
     if isinstance(value, bool) or not isinstance(value, Real):
         raise ValueError(f"{name} must be a finite real number, got {value!r}")
-
     converted = float(value)
     if not isfinite(converted):
         raise ValueError(f"{name} must be finite, got {value!r}")
@@ -239,6 +277,13 @@ def _positive_float(name: str, value: Real) -> float:
     converted = _finite_float(name, value)
     if converted <= 0.0:
         raise ValueError(f"{name} must be > 0.0, got {converted}")
+    return converted
+
+
+def _non_negative_float(name: str, value: Real) -> float:
+    converted = _finite_float(name, value)
+    if converted < 0.0:
+        raise ValueError(f"{name} must be >= 0.0, got {converted}")
     return converted
 
 
@@ -268,12 +313,7 @@ def _non_negative_integer(name: str, value: int) -> int:
 
 
 def _non_negative_tick(name: str, value: int) -> int:
-    if isinstance(value, bool) or not isinstance(value, Integral):
-        raise ValueError(f"{name} must be an integer >= 0, got {value!r}")
-    converted = int(value)
-    if converted < 0:
-        raise ValueError(f"{name} must be >= 0, got {converted}")
-    return converted
+    return _non_negative_integer(name, value)
 
 
 def _signed_integer(name: str, value: int) -> int:
@@ -285,58 +325,107 @@ def _signed_integer(name: str, value: int) -> int:
 def _integer_valued_sample_rate(text: str) -> int:
     try:
         value = float(text)
-    except ValueError as exc:
+    except (ValueError, TypeError) as exc:
         raise ValueError(f"sample_rate must be an integer, got {text!r}") from exc
 
     if not isfinite(value) or value != round(value):
         raise ValueError(f"sample_rate must be an integer, got {text!r}")
-    return _positive_integer("sample_rate", int(round(value)))
+    rate = int(round(value))
+    if rate <= 0:
+        raise ValueError(f"sample_rate must be > 0, got {rate}")
+    if rate > MAX_SAMPLE_RATE_HZ:
+        raise ValueError(
+            f"sample_rate {rate} exceeds MAX_SAMPLE_RATE_HZ={MAX_SAMPLE_RATE_HZ}"
+        )
+    return rate
 
 
 def _integer_directive(name: str, text: str) -> int:
     try:
         value = float(text)
-    except ValueError as exc:
+    except (ValueError, TypeError) as exc:
         raise ValueError(f"{name} must be an integer, got {text!r}") from exc
 
     if not isfinite(value) or value != round(value):
         raise ValueError(f"{name} must be an integer, got {text!r}")
-    return _positive_integer(name, int(round(value)))
+    return int(round(value))
 
 
 def _parse_float_directive(name: str, text: str) -> float:
     try:
-        return float(text)
-    except ValueError as exc:
+        value = float(text)
+    except (ValueError, TypeError) as exc:
         raise ValueError(f"{name} must be a number, got {text!r}") from exc
 
+    if not isfinite(value):
+        raise ValueError(f"{name} must be a number, got {text!r}")
+    return value
 
-def _validate_meter(text: str) -> str:
-    match = METER_PATTERN.fullmatch(text)
-    if match is None:
-        raise ValueError(f"meter must look like positive beats/beat-unit, got {text!r}")
-    return text
+
+# CWE-1333 Linear-time scanners (replacing re.compile)
+
+
+def _parse_directive_line(line: str) -> tuple[str, str] | None:
+    """Parse a directive line matching ^([A-Za-z_][A-Za-z0-9_]*):\\s*(.*)$ linearly."""
+    colon_idx = line.find(":")
+    if colon_idx == -1:
+        return None
+    name = line[:colon_idx]
+    if not name:
+        return None
+    first = name[0]
+    if not (("a" <= first <= "z") or ("A" <= first <= "Z") or first == "_"):
+        return None
+    for ch in name[1:]:
+        if not (
+            ("a" <= ch <= "z") or ("A" <= ch <= "Z") or ("0" <= ch <= "9") or ch == "_"
+        ):
+            return None
+    value = line[colon_idx + 1 :].lstrip(" \t")
+    return name, value
+
+
+def _is_identifier(text: str) -> bool:
+    """Check text matches ^[A-Za-z_][A-Za-z0-9_-]*$ linearly."""
+    if not text:
+        return False
+    first = text[0]
+    if not (("a" <= first <= "z") or ("A" <= first <= "Z") or first == "_"):
+        return False
+    for ch in text[1:]:
+        if not (
+            ("a" <= ch <= "z")
+            or ("A" <= ch <= "Z")
+            or ("0" <= ch <= "9")
+            or ch in ("_", "-")
+        ):
+            return False
+    return True
 
 
 def _validate_identifier(name: str, value: str) -> str:
     converted = str(value)
-    if IDENTIFIER_PATTERN.fullmatch(converted) is None:
+    if not _is_identifier(converted):
         raise ValueError(f"{name} must be an identifier, got {value!r}")
     return converted
 
 
-def _scaled_velocity(velocity: float, scale: float) -> float:
-    return _unit_float("scaled velocity", velocity * scale)
+def _is_valid_meter(text: str) -> bool:
+    """Check meter matches ^([1-9][0-9]*)/([1-9][0-9]*)$ linearly."""
+    if text.count("/") != 1:
+        return False
+    num_str, den_str = text.split("/", 1)
+    if not num_str or not den_str:
+        return False
+    if not num_str.isdigit() or num_str.startswith("0"):
+        return False
+    return den_str.isdigit() and not den_str.startswith("0")
 
 
-def _transpose_note_text(text: str, semitone_offset: int) -> str:
-    parsed = parse_note(text)
-    absolute_index = (
-        (parsed.octave + 1) * SEMITONES_PER_OCTAVE + parsed.chromatic_index
-    )
-    transposed_index = absolute_index + semitone_offset
-    octave, chromatic_index = divmod(transposed_index, SEMITONES_PER_OCTAVE)
-    return f"{CANONICAL_SHARP_SPELLINGS[chromatic_index]}{octave - 1}"
+def _validate_meter(text: str) -> str:
+    if not _is_valid_meter(text):
+        raise ValueError(f"meter must look like positive beats/beat-unit, got {text!r}")
+    return text
 
 
 def _parse_properties(tokens: list[str]) -> dict[str, str]:
@@ -356,9 +445,115 @@ def _parse_properties(tokens: list[str]) -> dict[str, str]:
 def _parse_tick(text: str, name: str) -> int:
     try:
         value = int(text)
-    except ValueError as exc:
+    except (ValueError, TypeError) as exc:
         raise ValueError(f"{name} must be an integer, got {text!r}") from exc
     return _non_negative_tick(name, value)
+
+
+def _safe_round_sample(seconds: Real, rate: Real) -> int:
+    """Guard float-to-int sample rounding against overflow (CWE-190)."""
+    val = float(seconds) * float(rate)
+    if not isfinite(val) or val < 0.0:
+        return 0
+    if val > MAX_SAMPLE_COUNT:
+        return MAX_SAMPLE_COUNT
+    return int(round(val))
+
+
+def _validate_file_path(path: str | Path) -> Path:
+    """Validate path against null bytes, symlinks, and existence (CWE-22)."""
+    raw = str(path)
+    if "\0" in raw:
+        raise ValueError(f"file path contains null byte: {raw!r}")
+    p = Path(path)
+    if p.is_symlink():
+        raise ValueError(f"symlinks are not permitted: {raw!r}")
+    if not p.is_file():
+        raise FileNotFoundError(f"score file not found: {raw!r}")
+    return p
+
+
+# =============================================================================
+# Additive Harmonics & Envelope Parsers (MUS05 §9)
+# =============================================================================
+
+
+def _parse_harmonics(text: str) -> tuple[HarmonicPartial, ...]:
+    """Parse comma-separated harmonic partials e.g. '1:1.0,2:0.4,3:0.2'."""
+    partials: list[HarmonicPartial] = []
+    items = [item.strip() for item in text.split(",") if item.strip()]
+    if not items:
+        raise ValueError("harmonics must contain at least one partial")
+    if len(items) > MAX_PARTIALS:
+        raise ValueError(
+            f"harmonics count {len(items)} exceeds MAX_PARTIALS={MAX_PARTIALS}"
+        )
+
+    for item in items:
+        parts = item.split(":")
+        if len(parts) == 2:
+            mult_s, amp_s = parts
+            phase_s = "0.0"
+        elif len(parts) == 3:
+            mult_s, amp_s, phase_s = parts
+        else:
+            raise ValueError(
+                f"harmonic partial {item!r} must be multiplier:amplitude[:phase]"
+            )
+
+        mult = _positive_float(
+            "frequency_multiplier", _parse_float_directive("multiplier", mult_s)
+        )
+        amp = _non_negative_float(
+            "amplitude", _parse_float_directive("amplitude", amp_s)
+        )
+        phase = _finite_float(
+            "phase_cycles", _parse_float_directive("phase_cycles", phase_s)
+        )
+        partials.append(
+            HarmonicPartial(
+                frequency_multiplier=mult,
+                amplitude=amp,
+                phase_cycles=phase,
+            )
+        )
+    return tuple(partials)
+
+
+def _parse_envelope(text: str) -> ADSREnvelope:
+    """Parse comma-separated ADSR envelope 'attack,decay,sustain,release'."""
+    parts = [part.strip() for part in text.split(",")]
+    if len(parts) != 4:
+        raise ValueError(f"envelope must be attack,decay,sustain,release, got {text!r}")
+    atk = _non_negative_float(
+        "attack_seconds", _parse_float_directive("attack", parts[0])
+    )
+    dec = _non_negative_float(
+        "decay_seconds", _parse_float_directive("decay", parts[1])
+    )
+    sus = _unit_float("sustain_level", _parse_float_directive("sustain", parts[2]))
+    rel = _non_negative_float(
+        "release_seconds", _parse_float_directive("release", parts[3])
+    )
+
+    if (
+        atk > MAX_NOTE_DURATION_SECONDS
+        or dec > MAX_NOTE_DURATION_SECONDS
+        or rel > MAX_NOTE_DURATION_SECONDS
+    ):
+        raise ValueError(f"envelope times must be <= {MAX_NOTE_DURATION_SECONDS}")
+
+    return ADSREnvelope(
+        attack_seconds=atk,
+        decay_seconds=dec,
+        sustain_level=sus,
+        release_seconds=rel,
+    )
+
+
+# =============================================================================
+# Core Domain Models
+# =============================================================================
 
 
 def resolve_instrument_id(
@@ -367,24 +562,22 @@ def resolve_instrument_id(
     gm_program: int | None = None,
 ) -> str:
     """Resolve score instrument settings to a concrete profile id."""
-
     if instrument_id is not None and gm_program is not None:
         raise ValueError("score may specify instrument or program, not both")
     if gm_program is not None:
         return instrument_for_gm_program(gm_program).id
     if instrument_id is None:
         return DEFAULT_INSTRUMENT_ID
+    if (
+        instrument_id in {"drumkit", "standard_kit", "standard"}
+        or instrument_id in all_drum_kits()
+    ):
+        return instrument_id
     return get_instrument(instrument_id).id
 
 
 def beats_for_duration_symbol(symbol: str) -> float:
-    """Return how many quarter-note beats a duration symbol represents.
-
-    The base duration table is intentionally tiny. One optional dot adds half
-    the base value, which mirrors the common musical rule that a dotted note is
-    one-and-a-half times as long as the undotted note.
-    """
-
+    """Return how many quarter-note beats a duration symbol represents."""
     if not isinstance(symbol, str) or symbol == "":
         raise ValueError("duration symbol must be non-empty text")
     if symbol.count(".") > 1:
@@ -402,7 +595,7 @@ def beats_for_duration_symbol(symbol: str) -> float:
 
 @dataclass(frozen=True)
 class ScoreEvent:
-    """One musical instruction: play a note or be silent for a duration."""
+    """One musical instruction: play a note, rest, or strike a percussion hit."""
 
     kind: ScoreEventKind
     note: str | None
@@ -410,16 +603,31 @@ class ScoreEvent:
     beat_count: float
     duration_seconds: float
     source_token: str
+    hit_id: str | None = None
 
     def __post_init__(self) -> None:
-        if self.kind not in {"note", "rest"}:
-            raise ValueError(f"kind must be 'note' or 'rest', got {self.kind!r}")
+        if self.kind not in {"note", "rest", "hit"}:
+            raise ValueError(
+                f"kind must be 'note', 'rest', or 'hit', got {self.kind!r}"
+            )
         if self.kind == "note":
             if self.note is None:
                 raise ValueError("note events must include a note")
             object.__setattr__(self, "note", str(parse_note(self.note)))
-        elif self.note is not None:
-            raise ValueError("rest events cannot include a note")
+            object.__setattr__(self, "hit_id", None)
+        elif self.kind == "rest":
+            if self.note is not None:
+                raise ValueError("rest events cannot include a note")
+            object.__setattr__(self, "hit_id", None)
+        elif self.kind == "hit":
+            hit = self.hit_id or self.note
+            if hit is None:
+                raise ValueError("hit events must include a hit_id")
+            hit_str = str(hit).lower()
+            if hit_str not in all_standard_hit_ids():
+                raise ValueError(f"unknown hit_id {hit_str!r}")
+            object.__setattr__(self, "hit_id", hit_str)
+            object.__setattr__(self, "note", None)
 
         object.__setattr__(
             self,
@@ -447,6 +655,7 @@ class TextScore:
     instrument_id: str
     gm_program: int | None
     events: tuple[ScoreEvent, ...]
+    drumkit: str | None = None
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "title", str(self.title))
@@ -462,45 +671,62 @@ class TextScore:
             "sample_rate_hz",
             _positive_integer("sample_rate_hz", self.sample_rate_hz),
         )
+        if self.sample_rate_hz > MAX_SAMPLE_RATE_HZ:
+            raise ValueError(
+                f"sample_rate_hz {self.sample_rate_hz} exceeds "
+                f"MAX_SAMPLE_RATE_HZ={MAX_SAMPLE_RATE_HZ}"
+            )
         gm_program = None
         if self.gm_program is not None:
             gm_program = _positive_integer("gm_program", self.gm_program)
             if gm_program > 128:
                 raise ValueError("gm_program must be in [1, 128]")
         object.__setattr__(self, "gm_program", gm_program)
-        if gm_program is None:
-            resolved_instrument_id = resolve_instrument_id(
-                instrument_id=str(self.instrument_id),
+
+        if (
+            self.drumkit is not None
+            or self.instrument_id in {"drumkit", "standard_kit", "standard"}
+            or self.instrument_id in all_drum_kits()
+        ):
+            kit_name = self.drumkit or (
+                "standard_kit"
+                if self.instrument_id in {"drumkit", "standard_kit", "standard"}
+                else self.instrument_id
             )
+            if kit_name in {"standard", "standard_kit", "drumkit"}:
+                kit_name = "standard_kit"
+            object.__setattr__(self, "drumkit", kit_name)
+            object.__setattr__(self, "instrument_id", "drumkit")
         else:
-            resolved_instrument_id = resolve_instrument_id(gm_program=gm_program)
-        object.__setattr__(
-            self,
-            "instrument_id",
-            resolved_instrument_id,
-        )
+            if gm_program is None:
+                resolved_instrument_id = resolve_instrument_id(
+                    instrument_id=str(self.instrument_id),
+                )
+            else:
+                resolved_instrument_id = resolve_instrument_id(gm_program=gm_program)
+            object.__setattr__(self, "instrument_id", resolved_instrument_id)
+
         object.__setattr__(self, "events", tuple(self.events))
         if not self.events:
             raise ValueError("score must contain at least one event")
+        if len(self.events) > MAX_EVENTS:
+            raise ValueError(f"score event count exceeds MAX_EVENTS={MAX_EVENTS}")
 
     def seconds_per_beat(self) -> float:
-        """Return the duration of a quarter-note beat at this score tempo."""
-
         return 60.0 / self.tempo_bpm
 
     def total_duration_seconds(self) -> float:
-        """Return the sum of every note and rest duration."""
-
         return sum(event.duration_seconds for event in self.events)
 
 
 @dataclass(frozen=True)
 class RenderedScore:
-    """The joined PCM output plus inspectable per-note renderings."""
+    """The joined PCM output plus inspectable per-note and per-hit renderings."""
 
     score: TextScore
     pcm_buffer: PCMBuffer
     rendered_notes: tuple[InstrumentNoteRender, ...]
+    rendered_hits: tuple[PercussionHitRender, ...] = ()
 
     def __post_init__(self) -> None:
         if not isinstance(self.score, TextScore):
@@ -512,6 +738,12 @@ class RenderedScore:
             if not isinstance(rendered_note, InstrumentNoteRender):
                 raise ValueError(
                     f"rendered_notes[{index}] must be an InstrumentNoteRender"
+                )
+        object.__setattr__(self, "rendered_hits", tuple(self.rendered_hits))
+        for index, hit in enumerate(self.rendered_hits):
+            if not isinstance(hit, PercussionHitRender):
+                raise ValueError(
+                    f"rendered_hits[{index}] must be a PercussionHitRender"
                 )
 
 
@@ -530,6 +762,20 @@ class TempoEvent:
         )
         object.__setattr__(self, "bpm", _positive_float("bpm", self.bpm))
 
+    def to_dict(self) -> dict[str, object]:
+        return {"bpm": self.bpm, "start_tick": self.start_tick}
+
+    @classmethod
+    def from_dict(cls, data: Mapping[str, object]) -> TempoEvent:
+        if not isinstance(data, Mapping):
+            raise ValueError("TempoEvent must be a mapping")
+        if "start_tick" not in data or "bpm" not in data:
+            raise ValueError("TempoEvent missing required keys 'start_tick' and 'bpm'")
+        return cls(
+            start_tick=_non_negative_tick("start_tick", data["start_tick"]),  # type: ignore
+            bpm=_positive_float("bpm", data["bpm"]),  # type: ignore
+        )
+
 
 @dataclass(frozen=True)
 class MeterEvent:
@@ -546,6 +792,24 @@ class MeterEvent:
         )
         object.__setattr__(self, "meter", _validate_meter(self.meter))
 
+    def to_dict(self) -> dict[str, object]:
+        return {"meter": self.meter, "start_tick": self.start_tick}
+
+    @classmethod
+    def from_dict(cls, data: Mapping[str, object]) -> MeterEvent:
+        if not isinstance(data, Mapping):
+            raise ValueError("MeterEvent must be a mapping")
+        if "start_tick" not in data or "meter" not in data:
+            raise ValueError(
+                "MeterEvent missing required keys 'start_tick' and 'meter'"
+            )
+        if not isinstance(data["meter"], str):
+            raise ValueError("MeterEvent 'meter' must be a string")
+        return cls(
+            start_tick=_non_negative_tick("start_tick", data["start_tick"]),  # type: ignore
+            meter=_validate_meter(data["meter"]),
+        )
+
 
 @dataclass(frozen=True)
 class InstrumentDeclaration:
@@ -554,15 +818,164 @@ class InstrumentDeclaration:
     id: str
     profile_id: str
     gain: float = 1.0
+    kind: str = "preset"
+    kit: str | None = None
+    harmonics: tuple[HarmonicPartial, ...] | None = None
+    envelope: ADSREnvelope | None = None
+    custom_profile: InstrumentProfile | None = None
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "id", _validate_identifier("instrument id", self.id))
-        object.__setattr__(
-            self,
-            "profile_id",
-            resolve_instrument_id(instrument_id=self.profile_id),
-        )
         object.__setattr__(self, "gain", _unit_float("gain", self.gain))
+
+        kind = self.kind
+        if (
+            kind == "drumkit"
+            or self.profile_id.startswith("drumkit")
+            or self.kit is not None
+        ):
+            object.__setattr__(self, "kind", "drumkit")
+            kit_name = self.kit or "standard_kit"
+            if kit_name == "standard":
+                kit_name = "standard_kit"
+            valid_kit_ids = {k.id for k in all_drum_kits()} | {"standard_kit"}
+            if kit_name not in valid_kit_ids:
+                raise ValueError(f"unknown drum kit {kit_name!r}")
+            object.__setattr__(self, "kit", kit_name)
+            object.__setattr__(self, "profile_id", "drumkit")
+        elif kind == "additive" or self.custom_profile is not None:
+            object.__setattr__(self, "kind", "additive")
+            if self.harmonics is None and self.custom_profile is None:
+                raise ValueError("kind=additive must provide harmonics")
+            if self.custom_profile is None:
+                harmonics = tuple(self.harmonics) if self.harmonics else ()
+                envelope = self.envelope or DEFAULT_ADDITIVE_ENVELOPE
+                profile = InstrumentProfile(
+                    id=self.id,
+                    display_name=self.id,
+                    synthesis_kind="additive",
+                    gain=1.0,
+                    harmonic_profile=harmonics,
+                    envelope_profile=envelope,
+                )
+                object.__setattr__(self, "custom_profile", profile)
+                object.__setattr__(self, "harmonics", harmonics)
+                object.__setattr__(self, "envelope", envelope)
+            else:
+                object.__setattr__(
+                    self, "harmonics", self.custom_profile.harmonic_profile
+                )
+                object.__setattr__(
+                    self, "envelope", self.custom_profile.envelope_profile
+                )
+            object.__setattr__(self, "profile_id", self.id)
+        else:
+            resolved = resolve_instrument_id(instrument_id=self.profile_id)
+            object.__setattr__(self, "profile_id", resolved)
+            object.__setattr__(self, "kind", "preset")
+
+    def to_dict(self) -> dict[str, object]:
+        d: dict[str, object] = {
+            "id": self.id,
+            "profile_id": self.profile_id,
+            "gain": self.gain,
+            "kind": self.kind,
+        }
+        if self.kit is not None:
+            d["kit"] = self.kit
+        if self.harmonics is not None:
+            d["harmonics"] = [
+                [p.frequency_multiplier, p.amplitude, p.phase_cycles]
+                for p in self.harmonics
+            ]
+        if self.envelope is not None:
+            d["envelope"] = [
+                self.envelope.attack_seconds,
+                self.envelope.decay_seconds,
+                self.envelope.sustain_level,
+                self.envelope.release_seconds,
+            ]
+        return d
+
+    @classmethod
+    def from_dict(cls, data: Mapping[str, object]) -> InstrumentDeclaration:
+        if not isinstance(data, Mapping):
+            raise ValueError("InstrumentDeclaration must be a mapping")
+        if "id" not in data:
+            raise ValueError("InstrumentDeclaration missing 'id'")
+        if not isinstance(data["id"], str):
+            raise ValueError("InstrumentDeclaration 'id' must be a string")
+        inst_id = data["id"]
+        gain = _unit_float("gain", data.get("gain", 1.0))  # type: ignore
+
+        raw_kind = data.get("kind", "preset")
+        if not isinstance(raw_kind, str):
+            raise ValueError("InstrumentDeclaration 'kind' must be a string")
+        kind = raw_kind
+
+        raw_kit = data.get("kit")
+        if raw_kit is not None and not isinstance(raw_kit, str):
+            raise ValueError("InstrumentDeclaration 'kit' must be a string")
+        kit = raw_kit
+
+        harmonics = None
+        if "harmonics" in data and data["harmonics"] is not None:
+            raw_harmonics = data["harmonics"]
+            if not isinstance(raw_harmonics, (list, tuple)):
+                raise ValueError("harmonics must be a list of partials")
+            if len(raw_harmonics) > MAX_PARTIALS:
+                raise ValueError(
+                    f"harmonic partial count {len(raw_harmonics)} exceeds "
+                    f"MAX_PARTIALS={MAX_PARTIALS}"
+                )
+            h_list: list[HarmonicPartial] = []
+            for item in raw_harmonics:
+                if isinstance(item, (list, tuple)) and len(item) in (2, 3):
+                    m = _positive_float("multiplier", item[0])
+                    a = _non_negative_float("amplitude", item[1])
+                    p = _finite_float("phase", item[2] if len(item) == 3 else 0.0)
+                    h_list.append(HarmonicPartial(m, a, p))
+                else:
+                    raise ValueError(f"malformed partial {item!r}")
+            harmonics = tuple(h_list)
+
+        envelope = None
+        if "envelope" in data and data["envelope"] is not None:
+            raw_env = data["envelope"]
+            if not isinstance(raw_env, (list, tuple)) or len(raw_env) != 4:
+                raise ValueError("envelope must be [atk, dec, sus, rel]")
+            atk = _non_negative_float("attack", raw_env[0])
+            dec = _non_negative_float("decay", raw_env[1])
+            sus = _unit_float("sustain", raw_env[2])
+            rel = _non_negative_float("release", raw_env[3])
+            if (
+                atk > MAX_NOTE_DURATION_SECONDS
+                or dec > MAX_NOTE_DURATION_SECONDS
+                or rel > MAX_NOTE_DURATION_SECONDS
+            ):
+                raise ValueError(
+                    f"envelope times must be <= {MAX_NOTE_DURATION_SECONDS}"
+                )
+            envelope = ADSREnvelope(
+                attack_seconds=atk,
+                decay_seconds=dec,
+                sustain_level=sus,
+                release_seconds=rel,
+            )
+
+        raw_profile = data.get("profile_id", inst_id)
+        if not isinstance(raw_profile, str):
+            raise ValueError("InstrumentDeclaration 'profile_id' must be a string")
+        profile_id = raw_profile
+        return cls(
+            id=inst_id,
+            profile_id=profile_id,
+            gain=gain,
+            kind=kind,
+            kit=kit,
+            harmonics=harmonics,
+            envelope=envelope,
+        )
 
 
 @dataclass(frozen=True)
@@ -580,18 +993,39 @@ class TrackDeclaration:
             _validate_identifier("instrument_id", self.instrument_id),
         )
 
+    def to_dict(self) -> dict[str, object]:
+        return {"id": self.id, "instrument_id": self.instrument_id}
+
+    @classmethod
+    def from_dict(cls, data: Mapping[str, object]) -> TrackDeclaration:
+        if not isinstance(data, Mapping):
+            raise ValueError("TrackDeclaration must be a mapping")
+        if "id" not in data or "instrument_id" not in data:
+            raise ValueError(
+                "TrackDeclaration missing required keys 'id' and 'instrument_id'"
+            )
+        if not isinstance(data["id"], str):
+            raise ValueError("TrackDeclaration 'id' must be a string")
+        if not isinstance(data["instrument_id"], str):
+            raise ValueError("TrackDeclaration 'instrument_id' must be a string")
+        return cls(
+            id=data["id"],
+            instrument_id=data["instrument_id"],
+        )
+
 
 @dataclass(frozen=True)
 class PortableScoreEvent:
-    """An explicit timed note, chord, or rest event."""
+    """An explicit timed note, chord, rest, or percussion hit event."""
 
     track_id: str
     start_tick: int
     duration_tick: int
     kind: PortableEventKind
-    notes: tuple[str, ...]
+    notes: tuple[str, ...] = ()
     velocity: float = 1.0
     source_order: int = 0
+    hit_id: str | None = None
 
     def __post_init__(self) -> None:
         object.__setattr__(
@@ -609,19 +1043,88 @@ class PortableScoreEvent:
             "duration_tick",
             _positive_integer("duration_tick", self.duration_tick),
         )
-        if self.kind not in {"note", "rest"}:
-            raise ValueError(f"kind must be 'note' or 'rest', got {self.kind!r}")
-        notes = tuple(str(parse_note(note)) for note in self.notes)
-        if self.kind == "note" and not notes:
-            raise ValueError("note events must include at least one note")
-        if self.kind == "rest" and notes:
-            raise ValueError("rest events cannot include notes")
-        object.__setattr__(self, "notes", notes)
+        if self.kind not in {"note", "rest", "hit"}:
+            raise ValueError(
+                f"kind must be 'note', 'rest', or 'hit', got {self.kind!r}"
+            )
+
+        if self.kind == "note":
+            notes = tuple(str(parse_note(note)) for note in self.notes)
+            if not notes:
+                raise ValueError("note events must include at least one note")
+            object.__setattr__(self, "notes", notes)
+            object.__setattr__(self, "hit_id", None)
+        elif self.kind == "rest":
+            if self.notes:
+                raise ValueError("rest events cannot include notes")
+            object.__setattr__(self, "notes", ())
+            object.__setattr__(self, "hit_id", None)
+        elif self.kind == "hit":
+            if self.notes:
+                raise ValueError("hit events cannot include notes")
+            hit = self.hit_id
+            if hit is None:
+                raise ValueError("hit events must include a hit_id")
+            hit_str = str(hit).lower()
+            if hit_str not in all_standard_hit_ids():
+                raise ValueError(f"unknown hit_id {hit_str!r}")
+            object.__setattr__(self, "hit_id", hit_str)
+            object.__setattr__(self, "notes", ())
+
         object.__setattr__(self, "velocity", _unit_float("velocity", self.velocity))
         object.__setattr__(
             self,
             "source_order",
             _non_negative_tick("source_order", self.source_order),
+        )
+
+    def to_dict(self) -> dict[str, object]:
+        d: dict[str, object] = {
+            "duration_tick": self.duration_tick,
+            "kind": self.kind,
+            "notes": list(self.notes),
+            "source_order": self.source_order,
+            "start_tick": self.start_tick,
+            "track_id": self.track_id,
+            "velocity": self.velocity,
+        }
+        if self.hit_id is not None:
+            d["hit_id"] = self.hit_id
+        return d
+
+    @classmethod
+    def from_dict(cls, data: Mapping[str, object]) -> PortableScoreEvent:
+        if not isinstance(data, Mapping):
+            raise ValueError("PortableScoreEvent must be a mapping")
+        for key in ("track_id", "start_tick", "duration_tick", "kind"):
+            if key not in data:
+                raise ValueError(f"PortableScoreEvent missing required key {key!r}")
+        if not isinstance(data["track_id"], str):
+            raise ValueError("PortableScoreEvent 'track_id' must be a string")
+        if not isinstance(data["kind"], str):
+            raise ValueError("PortableScoreEvent 'kind' must be a string")
+
+        raw_notes = data.get("notes", ())
+        if not isinstance(raw_notes, (list, tuple)):
+            raise ValueError("PortableScoreEvent 'notes' must be a list or tuple")
+        notes = tuple(str(n) for n in raw_notes)
+
+        raw_hit_id = data.get("hit_id")
+        if raw_hit_id is not None and not isinstance(raw_hit_id, str):
+            raise ValueError("PortableScoreEvent 'hit_id' must be a string")
+        hit_id = raw_hit_id
+
+        return cls(
+            track_id=data["track_id"],
+            start_tick=_non_negative_tick("start_tick", data["start_tick"]),  # type: ignore
+            duration_tick=_positive_integer("duration_tick", data["duration_tick"]),  # type: ignore
+            kind=data["kind"],  # type: ignore
+            notes=notes,
+            hit_id=hit_id,
+            velocity=_unit_float("velocity", data.get("velocity", 1.0)),  # type: ignore
+            source_order=_non_negative_tick(
+                "source_order", data.get("source_order", 0)
+            ),  # type: ignore
         )
 
 
@@ -647,11 +1150,20 @@ class PortableScore:
             )
         object.__setattr__(self, "title", str(self.title))
         object.__setattr__(self, "ppq", _positive_integer("ppq", self.ppq))
+        if self.ppq > MAX_PPQ:
+            raise ValueError(f"ppq {self.ppq} exceeds MAX_PPQ={MAX_PPQ}")
+
         object.__setattr__(
             self,
             "sample_rate_hz",
             _positive_integer("sample_rate_hz", self.sample_rate_hz),
         )
+        if self.sample_rate_hz > MAX_SAMPLE_RATE_HZ:
+            raise ValueError(
+                f"sample_rate_hz {self.sample_rate_hz} exceeds "
+                f"MAX_SAMPLE_RATE_HZ={MAX_SAMPLE_RATE_HZ}"
+            )
+
         tempos = tuple(sorted(self.tempo_events, key=lambda event: event.start_tick))
         if not tempos or tempos[0].start_tick != 0:
             tempos = (TempoEvent(0, DEFAULT_TEMPO_BPM),) + tempos
@@ -675,6 +1187,30 @@ class PortableScore:
         self._validate_references()
 
     def _validate_references(self) -> None:
+        if len(self.tempo_events) > MAX_EVENTS:
+            raise ValueError(
+                f"tempo_events count {len(self.tempo_events)} exceeds "
+                f"MAX_EVENTS={MAX_EVENTS}"
+            )
+        if len(self.meter_events) > MAX_EVENTS:
+            raise ValueError(
+                f"meter_events count {len(self.meter_events)} exceeds "
+                f"MAX_EVENTS={MAX_EVENTS}"
+            )
+        if len(self.instruments) > MAX_INSTRUMENTS:
+            raise ValueError(
+                f"instrument count {len(self.instruments)} exceeds "
+                f"MAX_INSTRUMENTS={MAX_INSTRUMENTS}"
+            )
+        if len(self.tracks) > MAX_TRACKS:
+            raise ValueError(
+                f"track count {len(self.tracks)} exceeds MAX_TRACKS={MAX_TRACKS}"
+            )
+        if len(self.events) > MAX_EVENTS:
+            raise ValueError(
+                f"event count {len(self.events)} exceeds MAX_EVENTS={MAX_EVENTS}"
+            )
+
         instrument_ids = {instrument.id for instrument in self.instruments}
         if len(instrument_ids) != len(self.instruments):
             raise ValueError("instrument ids must be unique")
@@ -693,6 +1229,202 @@ class PortableScore:
 
     def track_map(self) -> dict[str, TrackDeclaration]:
         return {track.id: track for track in self.tracks}
+
+    def to_dict(self) -> dict[str, object]:
+        """Convert this score to a canonical JSON-serializable dictionary."""
+        return {
+            "events": [event.to_dict() for event in self.events],
+            "format_version": self.format_version,
+            "instruments": [inst.to_dict() for inst in self.instruments],
+            "meter_events": [meter.to_dict() for meter in self.meter_events],
+            "ppq": self.ppq,
+            "sample_rate_hz": self.sample_rate_hz,
+            "tempo_events": [tempo.to_dict() for tempo in self.tempo_events],
+            "title": self.title,
+            "tracks": [track.to_dict() for track in self.tracks],
+        }
+
+    def to_json(self, *, indent: int | None = 2) -> str:
+        """Deterministic canonical JSON serialization of this score."""
+        return json.dumps(
+            self.to_dict(),
+            indent=indent,
+            sort_keys=True,
+            allow_nan=False,
+        )
+
+    @classmethod
+    def from_dict(cls, data: Mapping[str, object]) -> PortableScore:
+        """Construct a PortableScore from a dictionary with strict validation."""
+        if not isinstance(data, Mapping):
+            raise ValueError("Score data must be a dictionary")
+
+        expected_keys = {
+            "format_version",
+            "title",
+            "ppq",
+            "sample_rate_hz",
+            "tempo_events",
+            "meter_events",
+            "instruments",
+            "tracks",
+            "events",
+        }
+        unknown = sorted(set(data) - expected_keys)
+        if unknown:
+            raise ValueError(f"unknown score keys: {', '.join(unknown)}")
+
+        format_version = str(data.get("format_version", ""))
+        title = str(data.get("title", "Untitled"))
+        ppq = _positive_integer("ppq", data.get("ppq", DEFAULT_PPQ))  # type: ignore
+        sample_rate_hz = _positive_integer(
+            "sample_rate_hz",
+            data.get("sample_rate_hz", int(DEFAULT_SAMPLE_RATE_HZ)),  # type: ignore
+        )
+
+        tempo_raw = data.get("tempo_events", ())
+        if not isinstance(tempo_raw, (list, tuple)):
+            raise ValueError("tempo_events must be a list")
+        if len(tempo_raw) > MAX_EVENTS:
+            raise ValueError(
+                f"tempo_events count {len(tempo_raw)} exceeds MAX_EVENTS={MAX_EVENTS}"
+            )
+
+        meter_raw = data.get("meter_events", ())
+        if not isinstance(meter_raw, (list, tuple)):
+            raise ValueError("meter_events must be a list")
+        if len(meter_raw) > MAX_EVENTS:
+            raise ValueError(
+                f"meter_events count {len(meter_raw)} exceeds MAX_EVENTS={MAX_EVENTS}"
+            )
+
+        inst_raw = data.get("instruments", ())
+        if not isinstance(inst_raw, (list, tuple)):
+            raise ValueError("instruments must be a list")
+        if len(inst_raw) > MAX_INSTRUMENTS:
+            raise ValueError(
+                f"instruments count {len(inst_raw)} exceeds "
+                f"MAX_INSTRUMENTS={MAX_INSTRUMENTS}"
+            )
+
+        track_raw = data.get("tracks", ())
+        if not isinstance(track_raw, (list, tuple)):
+            raise ValueError("tracks must be a list")
+        if len(track_raw) > MAX_TRACKS:
+            raise ValueError(
+                f"tracks count {len(track_raw)} exceeds MAX_TRACKS={MAX_TRACKS}"
+            )
+
+        event_raw = data.get("events", ())
+        if not isinstance(event_raw, (list, tuple)):
+            raise ValueError("events must be a list")
+        if len(event_raw) > MAX_EVENTS:
+            raise ValueError(
+                f"events count {len(event_raw)} exceeds MAX_EVENTS={MAX_EVENTS}"
+            )
+
+        tempo_events = tuple(TempoEvent.from_dict(item) for item in tempo_raw)
+        meter_events = tuple(MeterEvent.from_dict(item) for item in meter_raw)
+        instruments = tuple(InstrumentDeclaration.from_dict(item) for item in inst_raw)
+        tracks = tuple(TrackDeclaration.from_dict(item) for item in track_raw)
+        events = tuple(PortableScoreEvent.from_dict(item) for item in event_raw)
+
+        return cls(
+            format_version=format_version,
+            title=title,
+            ppq=ppq,
+            sample_rate_hz=sample_rate_hz,
+            tempo_events=tempo_events,
+            meter_events=meter_events,
+            instruments=instruments,
+            tracks=tracks,
+            events=events,
+        )
+
+    @classmethod
+    def from_json(
+        cls,
+        json_text: str,
+        *,
+        max_bytes: int = MAX_SCORE_BYTES,
+    ) -> PortableScore:
+        """Parse canonical JSON into a PortableScore.
+
+        Rejects NaN/Inf and oversized text.
+        """
+        if not isinstance(json_text, str):
+            raise ValueError("json_text must be a string")
+        encoded = json_text.encode("utf-8")
+        if len(encoded) > max_bytes:
+            raise ValueError(
+                f"JSON text length {len(encoded)} exceeds max_bytes={max_bytes}"
+            )
+
+        def _reject_constant(val: str) -> None:
+            raise ValueError(f"non-finite JSON constants are not allowed: {val!r}")
+
+        def _reject_duplicate_keys(
+            pairs: list[tuple[str, object]],
+        ) -> dict[str, object]:
+            result: dict[str, object] = {}
+            for key, value in pairs:
+                if key in result:
+                    raise ValueError("duplicate JSON object member")
+                result[key] = value
+            return result
+
+        try:
+            data = json.loads(
+                json_text,
+                parse_constant=_reject_constant,
+                object_pairs_hook=_reject_duplicate_keys,
+            )
+        except (json.JSONDecodeError, RecursionError) as exc:
+            raise ValueError(f"malformed JSON: {exc}") from exc
+
+        if not isinstance(data, dict):
+            raise ValueError("JSON score root must be an object")
+
+        return cls.from_dict(data)
+
+    def to_text(self) -> str:
+        """Serialize this PortableScore to canonical text representation."""
+        lines = [
+            f"format: {self.format_version}",
+            f"title: {self.title}",
+            f"ppq: {self.ppq}",
+            f"sample_rate: {self.sample_rate_hz}",
+        ]
+
+        lines.extend(
+            f"tempo {event.start_tick} {_format_portable_number(event.bpm)}"
+            for event in self.tempo_events
+        )
+        lines.extend(
+            f"meter {event.start_tick} {event.meter}" for event in self.meter_events
+        )
+
+        if self.instruments:
+            lines.append("")
+            lines.extend(_portable_instrument_line(item) for item in self.instruments)
+
+        if self.tracks:
+            lines.append("")
+            lines.extend(
+                f"track {track.id} instrument={track.instrument_id}"
+                for track in self.tracks
+            )
+
+        if self.events:
+            lines.append("")
+            lines.extend(_portable_event_line(event) for event in self.events)
+
+        return "\n".join(lines)
+
+
+# =============================================================================
+# Builders and Arranger Abstractions
+# =============================================================================
 
 
 @dataclass
@@ -734,6 +1466,11 @@ class PortableScoreBuilder:
         self.title = str(self.title)
         self.ppq = _positive_integer("ppq", self.ppq)
         self.sample_rate_hz = _positive_integer("sample_rate_hz", self.sample_rate_hz)
+        if self.sample_rate_hz > MAX_SAMPLE_RATE_HZ:
+            raise ValueError(
+                f"sample_rate_hz {self.sample_rate_hz} exceeds "
+                f"MAX_SAMPLE_RATE_HZ={MAX_SAMPLE_RATE_HZ}"
+            )
         if self.format_version != PORTABLE_FORMAT_VERSION:
             raise ValueError(
                 f"format_version must be {PORTABLE_FORMAT_VERSION!r}, "
@@ -755,11 +1492,12 @@ class PortableScoreBuilder:
         profile: str | None = None,
         program: int | None = None,
         kind: str | None = None,
+        kit: str | None = None,
+        harmonics: tuple[HarmonicPartial, ...] | None = None,
+        envelope: ADSREnvelope | None = None,
         gain: float = 1.0,
     ) -> PortableScoreBuilder:
-        selector_count = sum(
-            value is not None for value in (profile, program, kind)
-        )
+        selector_count = sum(value is not None for value in (profile, program, kind))
         if selector_count != 1:
             raise ValueError(
                 "instrument must specify exactly one of profile, program, or kind"
@@ -767,20 +1505,51 @@ class PortableScoreBuilder:
 
         if program is not None:
             profile_id = instrument_for_gm_program(program).id
-        elif profile is not None:
-            profile_id = resolve_instrument_id(instrument_id=profile)
-        else:
-            if kind not in {"sine", "silence"}:
-                raise ValueError("kind must be sine or silence in V2")
-            profile_id = kind
-
-        self._instruments.append(
-            InstrumentDeclaration(
+            decl = InstrumentDeclaration(
                 id=instrument_id,
                 profile_id=profile_id,
                 gain=gain,
+                kind="preset",
             )
-        )
+        elif profile is not None:
+            profile_id = resolve_instrument_id(instrument_id=profile)
+            decl = InstrumentDeclaration(
+                id=instrument_id,
+                profile_id=profile_id,
+                gain=gain,
+                kind="preset",
+            )
+        else:
+            if kind == "drumkit":
+                decl = InstrumentDeclaration(
+                    id=instrument_id,
+                    profile_id="drumkit",
+                    gain=gain,
+                    kind="drumkit",
+                    kit=kit or "standard",
+                )
+            elif kind == "additive":
+                decl = InstrumentDeclaration(
+                    id=instrument_id,
+                    profile_id=instrument_id,
+                    gain=gain,
+                    kind="additive",
+                    harmonics=harmonics,
+                    envelope=envelope,
+                )
+            elif kind in {"sine", "silence"}:
+                decl = InstrumentDeclaration(
+                    id=instrument_id,
+                    profile_id=kind,
+                    gain=gain,
+                    kind=kind,
+                )
+            else:
+                raise ValueError(
+                    f"kind must be sine, silence, drumkit, or additive, got {kind!r}"
+                )
+
+        self._instruments.append(decl)
         return self
 
     def add_track(self, track_id: str, *, instrument_id: str) -> PortableScoreBuilder:
@@ -828,6 +1597,29 @@ class PortableScoreBuilder:
                 duration_tick=duration_tick,
                 kind="note",
                 notes=tuple(notes),
+                velocity=velocity,
+                source_order=self._next_source_order(),
+            )
+        )
+        return self
+
+    def add_hit(
+        self,
+        track_id: str,
+        start_tick: int,
+        duration_tick: int,
+        hit_id: str,
+        *,
+        velocity: float = 1.0,
+    ) -> PortableScoreBuilder:
+        self._events.append(
+            PortableScoreEvent(
+                track_id=track_id,
+                start_tick=start_tick,
+                duration_tick=duration_tick,
+                kind="hit",
+                notes=(),
+                hit_id=hit_id,
                 velocity=velocity,
                 source_order=self._next_source_order(),
             )
@@ -927,6 +1719,7 @@ class PortableScoreBuilder:
                 duration_tick=event.duration_tick,
                 kind=event.kind,
                 notes=event.notes,
+                hit_id=event.hit_id,
                 velocity=event.velocity,
             )
             for event in self._events
@@ -947,44 +1740,60 @@ class PortableScoreBuilder:
     ) -> PortableScoreBuilder:
         if not isinstance(motif, PhraseMotif):
             raise ValueError("motif must be a PhraseMotif")
-
         checked_track = _validate_identifier("track id", track_id)
-        checked_start = _non_negative_tick("start_tick", start_tick)
-        checked_scale = _positive_float("velocity_scale", velocity_scale)
-        checked_repeat_count = _positive_integer("repeat_count", repeat_count)
-        spacing_tick = (
+        origin_tick = _non_negative_tick("start_tick", start_tick)
+        repeats = _positive_integer("repeat_count", repeat_count)
+        spacing = (
             motif.duration_tick
             if repeat_spacing_tick is None
-            else _non_negative_tick("repeat_spacing_tick", repeat_spacing_tick)
+            else _positive_integer("repeat_spacing_tick", repeat_spacing_tick)
         )
-        semitone_offset = _signed_integer("transpose_semitones", transpose_semitones)
+        scale = _unit_float("velocity_scale", velocity_scale)
+        transpose = _signed_integer("transpose_semitones", transpose_semitones)
 
-        for repeat_index in range(checked_repeat_count):
-            repeat_start = checked_start + repeat_index * spacing_tick
+        for repetition in range(repeats):
+            base_tick = origin_tick + repetition * spacing
             for event in motif.events:
-                event_start = repeat_start + event.offset_tick
-                if event.kind == "rest":
-                    self.add_rest(checked_track, event_start, event.duration_tick)
-                    continue
-                notes = tuple(
-                    _transpose_note_text(note, semitone_offset) for note in event.notes
-                )
-                velocity = _scaled_velocity(event.velocity, checked_scale)
-                if len(notes) == 1:
-                    self.add_note(
-                        checked_track,
-                        event_start,
-                        event.duration_tick,
-                        notes[0],
-                        velocity=velocity,
+                event_start = base_tick + event.offset_tick
+                event_velocity = min(1.0, event.velocity * scale)
+                if event.kind == "note":
+                    transposed_notes = tuple(
+                        _transpose_note_text(note, transpose) for note in event.notes
+                    )
+                    self._events.append(
+                        PortableScoreEvent(
+                            track_id=checked_track,
+                            start_tick=event_start,
+                            duration_tick=event.duration_tick,
+                            kind="note",
+                            notes=transposed_notes,
+                            velocity=event_velocity,
+                            source_order=self._next_source_order(),
+                        )
+                    )
+                elif event.kind == "hit":
+                    self._events.append(
+                        PortableScoreEvent(
+                            track_id=checked_track,
+                            start_tick=event_start,
+                            duration_tick=event.duration_tick,
+                            kind="hit",
+                            notes=(),
+                            hit_id=event.hit_id,
+                            velocity=event_velocity,
+                            source_order=self._next_source_order(),
+                        )
                     )
                 else:
-                    self.add_chord(
-                        checked_track,
-                        event_start,
-                        event.duration_tick,
-                        notes,
-                        velocity=velocity,
+                    self._events.append(
+                        PortableScoreEvent(
+                            track_id=checked_track,
+                            start_tick=event_start,
+                            duration_tick=event.duration_tick,
+                            kind="rest",
+                            notes=(),
+                            source_order=self._next_source_order(),
+                        )
                     )
         return self
 
@@ -1000,18 +1809,18 @@ class PortableScoreBuilder:
         if end < start:
             raise ValueError("end_tick must be >= start_tick")
 
-        selected_tracks: set[str] | None = None
+        active_tracks: set[str] | None = None
         if track_ids is not None:
             if isinstance(track_ids, str):
                 raise ValueError("track_ids must be an iterable of track ids")
-            selected_tracks = {
+            active_tracks = {
                 _validate_identifier("track id", track_id) for track_id in track_ids
             }
 
         section_duration = end - start
         section_events: list[ArrangementSectionEvent] = []
         for event in self._events:
-            if selected_tracks is not None and event.track_id not in selected_tracks:
+            if active_tracks is not None and event.track_id not in active_tracks:
                 continue
             if not start <= event.start_tick < end:
                 continue
@@ -1025,10 +1834,10 @@ class PortableScoreBuilder:
                     duration_tick=event.duration_tick,
                     kind=event.kind,
                     notes=event.notes,
+                    hit_id=event.hit_id,
                     velocity=event.velocity,
                 )
             )
-
         return ArrangementSection(
             duration_tick=section_duration,
             events=tuple(section_events),
@@ -1047,69 +1856,86 @@ class PortableScoreBuilder:
     ) -> PortableScoreBuilder:
         if not isinstance(section, ArrangementSection):
             raise ValueError("section must be an ArrangementSection")
-
-        checked_start = _non_negative_tick("start_tick", start_tick)
-        checked_repeat_count = _positive_integer("repeat_count", repeat_count)
-        spacing_tick = (
+        origin_tick = _non_negative_tick("start_tick", start_tick)
+        repeats = _positive_integer("repeat_count", repeat_count)
+        spacing = (
             section.duration_tick
             if repeat_spacing_tick is None
-            else _non_negative_tick("repeat_spacing_tick", repeat_spacing_tick)
+            else _positive_integer("repeat_spacing_tick", repeat_spacing_tick)
         )
-        checked_track_map = _validated_track_map(track_map)
-        scalar_transpose = (
-            0
-            if isinstance(transpose_semitones, Mapping)
-            else _signed_integer("transpose_semitones", transpose_semitones)
-        )
-        checked_transpose_map = _validated_track_integer_map(
+        validated_track_map = _validated_track_map(track_map)
+        transpose_by_track = _validated_track_integer_map(
             "transpose_semitones",
             transpose_semitones,
         )
-        scalar_velocity_scale = (
-            1.0
-            if isinstance(velocity_scale, Mapping)
-            else _positive_float("velocity_scale", velocity_scale)
-        )
-        checked_velocity_map = _validated_track_float_map(
+        scale_by_track = _validated_track_float_map(
             "velocity_scale",
             velocity_scale,
         )
+        default_transpose = (
+            _signed_integer("transpose_semitones", transpose_semitones)
+            if not isinstance(transpose_semitones, Mapping)
+            else 0
+        )
+        default_scale = (
+            _unit_float("velocity_scale", velocity_scale)
+            if not isinstance(velocity_scale, Mapping)
+            else 1.0
+        )
 
-        for repeat_index in range(checked_repeat_count):
-            repeat_start = checked_start + repeat_index * spacing_tick
+        for repetition in range(repeats):
+            base_tick = origin_tick + repetition * spacing
             for event in section.events:
-                target_track = checked_track_map.get(event.track_id, event.track_id)
-                semitone_offset = checked_transpose_map.get(
+                target_track = validated_track_map.get(
                     event.track_id,
-                    scalar_transpose,
-                )
-                event_velocity_scale = checked_velocity_map.get(
                     event.track_id,
-                    scalar_velocity_scale,
                 )
-                event_start = repeat_start + event.offset_tick
-                if event.kind == "rest":
-                    self.add_rest(target_track, event_start, event.duration_tick)
-                    continue
-                notes = tuple(
-                    _transpose_note_text(note, semitone_offset) for note in event.notes
+                transpose = transpose_by_track.get(
+                    event.track_id,
+                    default_transpose,
                 )
-                velocity = _scaled_velocity(event.velocity, event_velocity_scale)
-                if len(notes) == 1:
-                    self.add_note(
-                        target_track,
-                        event_start,
-                        event.duration_tick,
-                        notes[0],
-                        velocity=velocity,
+                scale = scale_by_track.get(event.track_id, default_scale)
+                event_start = base_tick + event.offset_tick
+                event_velocity = min(1.0, event.velocity * scale)
+
+                if event.kind == "note":
+                    transposed_notes = tuple(
+                        _transpose_note_text(note, transpose) for note in event.notes
+                    )
+                    self._events.append(
+                        PortableScoreEvent(
+                            track_id=target_track,
+                            start_tick=event_start,
+                            duration_tick=event.duration_tick,
+                            kind="note",
+                            notes=transposed_notes,
+                            velocity=event_velocity,
+                            source_order=self._next_source_order(),
+                        )
+                    )
+                elif event.kind == "hit":
+                    self._events.append(
+                        PortableScoreEvent(
+                            track_id=target_track,
+                            start_tick=event_start,
+                            duration_tick=event.duration_tick,
+                            kind="hit",
+                            notes=(),
+                            hit_id=event.hit_id,
+                            velocity=event_velocity,
+                            source_order=self._next_source_order(),
+                        )
                     )
                 else:
-                    self.add_chord(
-                        target_track,
-                        event_start,
-                        event.duration_tick,
-                        notes,
-                        velocity=velocity,
+                    self._events.append(
+                        PortableScoreEvent(
+                            track_id=target_track,
+                            start_tick=event_start,
+                            duration_tick=event.duration_tick,
+                            kind="rest",
+                            notes=(),
+                            source_order=self._next_source_order(),
+                        )
                     )
         return self
 
@@ -1127,38 +1953,7 @@ class PortableScoreBuilder:
         )
 
     def to_text(self) -> str:
-        score = self.build()
-        lines = [
-            f"format: {score.format_version}",
-            f"title: {score.title}",
-            f"ppq: {score.ppq}",
-            f"sample_rate: {score.sample_rate_hz}",
-        ]
-
-        lines.extend(
-            f"tempo {event.start_tick} {_format_portable_number(event.bpm)}"
-            for event in score.tempo_events
-        )
-        lines.extend(
-            f"meter {event.start_tick} {event.meter}" for event in score.meter_events
-        )
-
-        if score.instruments:
-            lines.append("")
-            lines.extend(_portable_instrument_line(item) for item in score.instruments)
-
-        if score.tracks:
-            lines.append("")
-            lines.extend(
-                f"track {track.id} instrument={track.instrument_id}"
-                for track in score.tracks
-            )
-
-        if score.events:
-            lines.append("")
-            lines.extend(_portable_event_line(event) for event in score.events)
-
-        return "\n".join(lines)
+        return self.build().to_text()
 
     def _next_source_order(self) -> int:
         source_order = self._source_order
@@ -1220,6 +2015,24 @@ class PhraseBuilder:
             self.start_tick,
             duration_tick,
             notes,
+            velocity=velocity,
+        )
+        self.start_tick += duration_tick
+        return self
+
+    def hit(
+        self,
+        hit_id: str,
+        duration_beats: Real,
+        *,
+        velocity: float = 1.0,
+    ) -> PhraseBuilder:
+        duration_tick = self.score_builder.beats_to_ticks(duration_beats)
+        self.score_builder.add_hit(
+            self.track_id,
+            self.start_tick,
+            duration_tick,
+            hit_id,
             velocity=velocity,
         )
         self.start_tick += duration_tick
@@ -1297,8 +2110,9 @@ class PhraseMotifEvent:
     offset_tick: int
     duration_tick: int
     kind: PortableEventKind
-    notes: tuple[str, ...]
+    notes: tuple[str, ...] = ()
     velocity: float = 1.0
+    hit_id: str | None = None
 
     def __post_init__(self) -> None:
         object.__setattr__(
@@ -1311,14 +2125,32 @@ class PhraseMotifEvent:
             "duration_tick",
             _positive_integer("duration_tick", self.duration_tick),
         )
-        if self.kind not in {"note", "rest"}:
-            raise ValueError(f"kind must be 'note' or 'rest', got {self.kind!r}")
-        notes = tuple(str(parse_note(note)) for note in self.notes)
-        if self.kind == "note" and not notes:
-            raise ValueError("note motif events must include at least one note")
-        if self.kind == "rest" and notes:
-            raise ValueError("rest motif events cannot include notes")
-        object.__setattr__(self, "notes", notes)
+        if self.kind not in {"note", "rest", "hit"}:
+            raise ValueError(
+                f"kind must be 'note', 'rest', or 'hit', got {self.kind!r}"
+            )
+        if self.kind == "note":
+            notes = tuple(str(parse_note(note)) for note in self.notes)
+            if not notes:
+                raise ValueError("note motif events must include at least one note")
+            object.__setattr__(self, "notes", notes)
+            object.__setattr__(self, "hit_id", None)
+        elif self.kind == "rest":
+            if self.notes:
+                raise ValueError("rest motif events cannot include notes")
+            object.__setattr__(self, "notes", ())
+            object.__setattr__(self, "hit_id", None)
+        elif self.kind == "hit":
+            if self.notes:
+                raise ValueError("hit motif events cannot include notes")
+            hit = self.hit_id
+            if hit is None:
+                raise ValueError("hit motif events must include a hit_id")
+            hit_str = str(hit).lower()
+            if hit_str not in all_standard_hit_ids():
+                raise ValueError(f"unknown hit_id {hit_str!r}")
+            object.__setattr__(self, "hit_id", hit_str)
+            object.__setattr__(self, "notes", ())
         object.__setattr__(self, "velocity", _unit_float("velocity", self.velocity))
 
 
@@ -1392,8 +2224,9 @@ class ArrangementSectionEvent:
     offset_tick: int
     duration_tick: int
     kind: PortableEventKind
-    notes: tuple[str, ...]
+    notes: tuple[str, ...] = ()
     velocity: float = 1.0
+    hit_id: str | None = None
 
     def __post_init__(self) -> None:
         object.__setattr__(
@@ -1411,14 +2244,32 @@ class ArrangementSectionEvent:
             "duration_tick",
             _positive_integer("duration_tick", self.duration_tick),
         )
-        if self.kind not in {"note", "rest"}:
-            raise ValueError(f"kind must be 'note' or 'rest', got {self.kind!r}")
-        notes = tuple(str(parse_note(note)) for note in self.notes)
-        if self.kind == "note" and not notes:
-            raise ValueError("note section events must include at least one note")
-        if self.kind == "rest" and notes:
-            raise ValueError("rest section events cannot include notes")
-        object.__setattr__(self, "notes", notes)
+        if self.kind not in {"note", "rest", "hit"}:
+            raise ValueError(
+                f"kind must be 'note', 'rest', or 'hit', got {self.kind!r}"
+            )
+        if self.kind == "note":
+            notes = tuple(str(parse_note(note)) for note in self.notes)
+            if not notes:
+                raise ValueError("note section events must include at least one note")
+            object.__setattr__(self, "notes", notes)
+            object.__setattr__(self, "hit_id", None)
+        elif self.kind == "rest":
+            if self.notes:
+                raise ValueError("rest section events cannot include notes")
+            object.__setattr__(self, "notes", ())
+            object.__setattr__(self, "hit_id", None)
+        elif self.kind == "hit":
+            if self.notes:
+                raise ValueError("hit section events cannot include notes")
+            hit = self.hit_id
+            if hit is None:
+                raise ValueError("hit section events must include a hit_id")
+            hit_str = str(hit).lower()
+            if hit_str not in all_standard_hit_ids():
+                raise ValueError(f"unknown hit_id {hit_str!r}")
+            object.__setattr__(self, "hit_id", hit_str)
+            object.__setattr__(self, "notes", ())
         object.__setattr__(self, "velocity", _unit_float("velocity", self.velocity))
 
 
@@ -1454,6 +2305,7 @@ class RenderedPortableScore:
     score: PortableScore
     pcm_buffer: PCMBuffer
     rendered_notes: tuple[InstrumentNoteRender, ...]
+    rendered_hits: tuple[PercussionHitRender | PercussionHitEvent, ...] = ()
 
     def __post_init__(self) -> None:
         if not isinstance(self.score, PortableScore):
@@ -1465,6 +2317,13 @@ class RenderedPortableScore:
             if not isinstance(rendered_note, InstrumentNoteRender):
                 raise ValueError(
                     f"rendered_notes[{index}] must be an InstrumentNoteRender"
+                )
+        object.__setattr__(self, "rendered_hits", tuple(self.rendered_hits))
+        for index, hit in enumerate(self.rendered_hits):
+            if not isinstance(hit, (PercussionHitRender, PercussionHitEvent)):
+                raise ValueError(
+                    f"rendered_hits[{index}] must be a "
+                    "PercussionHitRender or PercussionHitEvent"
                 )
 
 
@@ -1482,10 +2341,22 @@ def _score_event_from_token(token: str, tempo_bpm: float) -> ScoreEvent:
         raise ValueError(f"music token {token!r} must look like pitch/duration")
 
     beat_count, duration_seconds = _duration_seconds(duration_symbol, tempo_bpm)
-    if pitch_text.lower() in {"r", "rest"}:
+    lower_pitch = pitch_text.lower()
+    if lower_pitch in {"r", "rest"}:
         return ScoreEvent(
             kind="rest",
             note=None,
+            duration_symbol=duration_symbol,
+            beat_count=beat_count,
+            duration_seconds=duration_seconds,
+            source_token=token,
+        )
+
+    if lower_pitch in all_standard_hit_ids():
+        return ScoreEvent(
+            kind="hit",
+            note=None,
+            hit_id=lower_pitch,
             duration_symbol=duration_symbol,
             beat_count=beat_count,
             duration_seconds=duration_seconds,
@@ -1503,27 +2374,30 @@ def _score_event_from_token(token: str, tempo_bpm: float) -> ScoreEvent:
     )
 
 
+# =============================================================================
+# Parsers: TextScore & PortableScore
+# =============================================================================
+
+
 def parse_score(
     text: str,
     *,
     max_score_length: int = DEFAULT_MAX_SCORE_LENGTH,
+    max_score_bytes: int | None = None,
     max_line_length: int = DEFAULT_MAX_LINE_LENGTH,
     max_event_count: int = DEFAULT_MAX_EVENT_COUNT,
 ) -> TextScore:
-    """Parse beginner-friendly text sheet music into a ``TextScore``.
-
-    Directives apply from the top of the file to the whole score. Because event
-    durations depend on tempo, V1 requires tempo changes to be global rather
-    than interleaved with music tokens.
-    """
-
+    """Parse beginner-friendly text sheet music into a ``TextScore``."""
     if not isinstance(text, str):
         raise ValueError("score text must be a string")
 
-    score_limit = _non_negative_integer("max_score_length", max_score_length)
+    actual_max_len = (
+        max_score_bytes if max_score_bytes is not None else max_score_length
+    )
+    score_limit = _non_negative_integer("max_score_length", actual_max_len)
     line_limit = _non_negative_integer("max_line_length", max_line_length)
     event_limit = _non_negative_integer("max_event_count", max_event_count)
-    if len(text) > score_limit:
+    if len(text.encode("utf-8")) > score_limit:
         raise ValueError(
             f"score text length {len(text)} exceeds max_score_length={score_limit}"
         )
@@ -1536,6 +2410,7 @@ def parse_score(
     instrument_id = DEFAULT_INSTRUMENT_ID
     instrument_directive_seen = False
     gm_program: int | None = None
+    drumkit: str | None = None
     events: list[ScoreEvent] = []
 
     for line_number, raw_line in enumerate(text.splitlines(), start=1):
@@ -1549,9 +2424,9 @@ def parse_score(
         if line == "" or line.startswith("#"):
             continue
 
-        directive_match = DIRECTIVE_PATTERN.fullmatch(line)
+        directive_match = _parse_directive_line(line)
         if directive_match is not None:
-            name, value = directive_match.groups()
+            name, value = directive_match
             if events:
                 raise ValueError(
                     f"line {line_number}: directive {name!r} appears after music"
@@ -1577,16 +2452,25 @@ def parse_score(
                 )
             elif name == "sample_rate":
                 sample_rate_hz = _integer_valued_sample_rate(value)
+            elif name == "drumkit":
+                if value not in all_drum_kits():
+                    raise ValueError(f"line {line_number}: unknown drum kit {value!r}")
+                drumkit = value
+                instrument_id = "drumkit"
             elif name == "instrument":
                 if gm_program is not None:
                     raise ValueError(
                         f"line {line_number}: score may specify instrument or "
                         "program, not both"
                     )
-                try:
-                    instrument_id = get_instrument(value).id
-                except ValueError as exc:
-                    raise ValueError(f"line {line_number}: {exc}") from exc
+                if value in {"drumkit", "standard_kit"} or value in all_drum_kits():
+                    drumkit = value if value in all_drum_kits() else "standard"
+                    instrument_id = "drumkit"
+                else:
+                    try:
+                        instrument_id = get_instrument(value).id
+                    except ValueError as exc:
+                        raise ValueError(f"line {line_number}: {exc}") from exc
                 instrument_directive_seen = True
             elif name == "program":
                 if instrument_directive_seen:
@@ -1623,6 +2507,7 @@ def parse_score(
         instrument_id=instrument_id,
         gm_program=gm_program,
         events=tuple(events),
+        drumkit=drumkit,
     )
 
 
@@ -1630,23 +2515,25 @@ def parse_portable_score(
     text: str,
     *,
     max_score_length: int = DEFAULT_MAX_SCORE_LENGTH,
+    max_score_bytes: int | None = None,
     max_line_length: int = DEFAULT_MAX_LINE_LENGTH,
     max_event_count: int = DEFAULT_MAX_EVENT_COUNT,
 ) -> PortableScore:
-    """Parse canonical `music-machine-score/v2` multi-track score text."""
-
+    """Parse a canonical multi-track score in the portable format."""
     if not isinstance(text, str):
         raise ValueError("score text must be a string")
 
-    score_limit = _non_negative_integer("max_score_length", max_score_length)
+    actual_max_len = (
+        max_score_bytes if max_score_bytes is not None else max_score_length
+    )
+    score_limit = _non_negative_integer("max_score_length", actual_max_len)
     line_limit = _non_negative_integer("max_line_length", max_line_length)
     event_limit = _non_negative_integer("max_event_count", max_event_count)
-    if len(text) > score_limit:
+    if len(text.encode("utf-8")) > score_limit:
         raise ValueError(
             f"score text length {len(text)} exceeds max_score_length={score_limit}"
         )
 
-    saw_format = False
     title = "Untitled"
     ppq = DEFAULT_PPQ
     sample_rate_hz = int(DEFAULT_SAMPLE_RATE_HZ)
@@ -1655,6 +2542,7 @@ def parse_portable_score(
     instruments: list[InstrumentDeclaration] = []
     tracks: list[TrackDeclaration] = []
     events: list[PortableScoreEvent] = []
+    saw_format = False
 
     for line_number, raw_line in enumerate(text.splitlines(), start=1):
         if len(raw_line) > line_limit:
@@ -1662,35 +2550,35 @@ def parse_portable_score(
                 f"line {line_number}: line length {len(raw_line)} exceeds "
                 f"max_line_length={line_limit}"
             )
+
         line = raw_line.strip()
         if line == "" or line.startswith("#"):
             continue
 
-        if not saw_format:
-            if line != f"format: {PORTABLE_FORMAT_VERSION}":
-                raise ValueError(
-                    f"line {line_number}: first directive must be "
-                    f"'format: {PORTABLE_FORMAT_VERSION}'"
-                )
-            saw_format = True
-            continue
-
-        directive_match = DIRECTIVE_PATTERN.fullmatch(line)
+        directive_match = _parse_directive_line(line)
         if directive_match is not None:
-            name, value = directive_match.groups()
+            name, value = directive_match
             if name == "title":
                 title = value
             elif name == "ppq":
-                ppq = _integer_directive("ppq", value)
+                ppq = _positive_integer("ppq", _integer_directive("ppq", value))
             elif name == "sample_rate":
                 sample_rate_hz = _integer_valued_sample_rate(value)
+            elif name == "format":
+                if saw_format:
+                    raise ValueError(
+                        f"line {line_number}: format directive must only appear once"
+                    )
+                if value != PORTABLE_FORMAT_VERSION:
+                    raise ValueError(
+                        f"line {line_number}: unsupported score format {value!r}"
+                    )
+                saw_format = True
             else:
                 raise ValueError(f"line {line_number}: unknown directive {name!r}")
             continue
 
         tokens = line.split()
-        if not tokens:
-            continue
         command = tokens[0]
         try:
             if command == "tempo":
@@ -1723,9 +2611,7 @@ def parse_portable_score(
                     raise ValueError(
                         f"event count exceeds max_event_count={event_limit}"
                     )
-                events.append(
-                    _parse_portable_event_line(tokens, len(events))
-                )
+                events.append(_parse_portable_event_line(tokens, len(events)))
             else:
                 raise ValueError(f"unknown command {command!r}")
         except ValueError as exc:
@@ -1756,31 +2642,72 @@ def _parse_instrument_line(tokens: list[str]) -> InstrumentDeclaration:
         "gain",
         _parse_float_directive("gain", properties.get("gain", "1.0")),
     )
-    profile_id: str | None = None
+
+    allowed = {"gain", "program", "profile", "kind", "kit", "harmonics", "envelope"}
+    unknown = sorted(set(properties) - allowed)
+    if unknown:
+        raise ValueError(f"unknown instrument properties: {', '.join(unknown)}")
+
     if "program" in properties:
         if "profile" in properties or "kind" in properties:
             raise ValueError("instrument may specify only one of program/profile/kind")
         profile_id = instrument_for_gm_program(
             _integer_directive("program", properties["program"])
         ).id
-    elif "profile" in properties:
+        return InstrumentDeclaration(
+            id=instrument_id, profile_id=profile_id, gain=gain, kind="preset"
+        )
+
+    if "profile" in properties:
         if "kind" in properties:
             raise ValueError("instrument may specify only one of program/profile/kind")
         profile_id = resolve_instrument_id(instrument_id=properties["profile"])
-    elif "kind" in properties:
+        return InstrumentDeclaration(
+            id=instrument_id, profile_id=profile_id, gain=gain, kind="preset"
+        )
+
+    if "kind" in properties:
         kind = properties["kind"]
-        if kind not in {"sine", "silence"}:
-            raise ValueError("kind must be sine or silence in V2")
-        profile_id = kind
-    else:
-        raise ValueError("instrument must include program, profile, or kind")
+        if kind in {"sine", "silence"}:
+            return InstrumentDeclaration(
+                id=instrument_id, profile_id=kind, gain=gain, kind=kind
+            )
+        elif kind == "drumkit":
+            raw_kit = properties.get("kit", "standard_kit")
+            kit = "standard_kit" if raw_kit in {"standard", "standard_kit"} else raw_kit
+            valid_kit_ids = {k.id for k in all_drum_kits()} | {"standard_kit"}
+            if kit not in valid_kit_ids:
+                raise ValueError(f"unknown drum kit {raw_kit!r}")
+            return InstrumentDeclaration(
+                id=instrument_id,
+                profile_id="drumkit",
+                gain=gain,
+                kind="drumkit",
+                kit=kit,
+            )
+        elif kind == "additive":
+            if "harmonics" not in properties:
+                raise ValueError("kind=additive must provide harmonics")
+            harmonics = _parse_harmonics(properties["harmonics"])
+            envelope = (
+                _parse_envelope(properties["envelope"])
+                if "envelope" in properties
+                else DEFAULT_ADDITIVE_ENVELOPE
+            )
+            return InstrumentDeclaration(
+                id=instrument_id,
+                profile_id=instrument_id,
+                gain=gain,
+                kind="additive",
+                harmonics=harmonics,
+                envelope=envelope,
+            )
+        else:
+            raise ValueError(
+                f"kind must be sine, silence, drumkit, or additive, got {kind!r}"
+            )
 
-    allowed = {"gain", "program", "profile", "kind"}
-    unknown = sorted(set(properties) - allowed)
-    if unknown:
-        raise ValueError(f"unknown instrument properties: {', '.join(unknown)}")
-
-    return InstrumentDeclaration(instrument_id, profile_id, gain)
+    raise ValueError("instrument must include program, profile, or kind")
 
 
 def _parse_track_line(tokens: list[str]) -> TrackDeclaration:
@@ -1802,7 +2729,7 @@ def _parse_portable_event_line(
 ) -> PortableScoreEvent:
     if len(tokens) < 5:
         raise ValueError(
-            "event lines must be: event <track> <start> <duration> note|rest ..."
+            "event lines must be: event <track> <start> <duration> note|rest|hit ..."
         )
     track_id = _validate_identifier("track id", tokens[1])
     start_tick = _parse_tick(tokens[2], "event start_tick")
@@ -1822,8 +2749,33 @@ def _parse_portable_event_line(
             notes=(),
             source_order=source_order,
         )
+
+    if kind == "hit":
+        if len(tokens) < 6:
+            raise ValueError("hit events must include a hit_id")
+        hit_id = tokens[5].lower()
+        properties = _parse_properties(tokens[6:])
+        unknown = sorted(set(properties) - {"velocity"})
+        if unknown:
+            raise ValueError(f"unknown event properties: {', '.join(unknown)}")
+        velocity = _unit_float(
+            "velocity",
+            _parse_float_directive("velocity", properties.get("velocity", "1.0")),
+        )
+        return PortableScoreEvent(
+            track_id=track_id,
+            start_tick=start_tick,
+            duration_tick=duration_tick,
+            kind="hit",
+            notes=(),
+            hit_id=hit_id,
+            velocity=velocity,
+            source_order=source_order,
+        )
+
     if kind != "note":
-        raise ValueError("event kind must be note or rest")
+        raise ValueError(f"event kind must be note, rest, or hit, got {kind!r}")
+
     if len(tokens) < 6:
         raise ValueError("note events must include a pitch list")
     pitch_list = tokens[5]
@@ -1852,6 +2804,45 @@ def _format_portable_number(value: float) -> str:
 
 
 def _portable_instrument_line(instrument: InstrumentDeclaration) -> str:
+    if instrument.kind == "drumkit" or instrument.profile_id.startswith("drumkit"):
+        kit_str = (
+            f" kit={instrument.kit}"
+            if instrument.kit and instrument.kit != "standard"
+            else " kit=standard"
+        )
+        return (
+            f"instrument {instrument.id} kind=drumkit{kit_str} "
+            f"gain={_format_portable_number(instrument.gain)}"
+        )
+    if instrument.kind == "additive" or (
+        instrument.custom_profile
+        and instrument.custom_profile.synthesis_kind == "additive"
+    ):
+        harm_str = ""
+        if instrument.harmonics:
+            harm_str = " harmonics=" + ",".join(
+                f"{_format_portable_number(p.frequency_multiplier)}:{_format_portable_number(p.amplitude)}"
+                + (
+                    f":{_format_portable_number(p.phase_cycles)}"
+                    if p.phase_cycles != 0.0
+                    else ""
+                )
+                for p in instrument.harmonics
+            )
+        env_str = ""
+        if instrument.envelope:
+            env = instrument.envelope
+            env_str = (
+                f" envelope={_format_portable_number(env.attack_seconds)},"
+                f"{_format_portable_number(env.decay_seconds)},"
+                f"{_format_portable_number(env.sustain_level)},"
+                f"{_format_portable_number(env.release_seconds)}"
+            )
+        return (
+            f"instrument {instrument.id} kind=additive "
+            f"gain={_format_portable_number(instrument.gain)}"
+            f"{harm_str}{env_str}"
+        )
     selector = (
         f"kind={instrument.profile_id}"
         if instrument.profile_id in {"sine", "silence"}
@@ -1866,7 +2857,11 @@ def _portable_instrument_line(instrument: InstrumentDeclaration) -> str:
 def _portable_event_line(event: PortableScoreEvent) -> str:
     if event.kind == "rest":
         return f"event {event.track_id} {event.start_tick} {event.duration_tick} rest"
-
+    if event.kind == "hit":
+        return (
+            f"event {event.track_id} {event.start_tick} {event.duration_tick} "
+            f"hit {event.hit_id} velocity={_format_portable_number(event.velocity)}"
+        )
     notes = ",".join(event.notes)
     return (
         f"event {event.track_id} {event.start_tick} {event.duration_tick} "
@@ -1877,10 +2872,8 @@ def _portable_event_line(event: PortableScoreEvent) -> str:
 def _builder_meter(builder: PortableScoreBuilder, meter: str | None) -> str:
     if meter is not None:
         return _validate_meter(meter)
-
     if not builder._meter_events:
         return DEFAULT_METER
-
     return sorted(builder._meter_events, key=lambda event: event.start_tick)[0].meter
 
 
@@ -1890,30 +2883,113 @@ def _meter_parts(meter: str) -> tuple[int, int]:
     return int(numerator_text), int(denominator_text)
 
 
+def _transpose_note_text(text: str, semitone_offset: int) -> str:
+    if semitone_offset == 0:
+        return text
+    parsed = parse_note(text)
+    absolute_index = (parsed.octave + 1) * SEMITONES_PER_OCTAVE + parsed.chromatic_index
+    transposed_index = absolute_index + semitone_offset
+    octave, chromatic_index = divmod(transposed_index, SEMITONES_PER_OCTAVE)
+    return f"{CANONICAL_SHARP_SPELLINGS[chromatic_index]}{octave - 1}"
+
+
+# =============================================================================
+# Path Loaders (CWE-22)
+# =============================================================================
+
+
+def parse_score_file(
+    path: str | Path,
+    *,
+    max_score_length: int = DEFAULT_MAX_SCORE_LENGTH,
+    max_line_length: int = DEFAULT_MAX_LINE_LENGTH,
+    max_event_count: int = DEFAULT_MAX_EVENT_COUNT,
+) -> TextScore:
+    """Read and parse a text score from disk with strict path validation (CWE-22)."""
+    limit = min(max_score_length, MAX_SCORE_BYTES)
+    checked_path = _validate_file_path(path)
+    if checked_path.stat().st_size > limit:
+        raise ValueError(
+            f"score file size {checked_path.stat().st_size} "
+            f"exceeds limit of {limit} bytes"
+        )
+    text = checked_path.read_text(encoding="utf-8")
+    return parse_score(
+        text,
+        max_score_length=limit,
+        max_line_length=max_line_length,
+        max_event_count=max_event_count,
+    )
+
+
+def parse_portable_score_file(
+    path: str | Path,
+    *,
+    max_score_length: int = DEFAULT_MAX_SCORE_LENGTH,
+    max_line_length: int = DEFAULT_MAX_LINE_LENGTH,
+    max_event_count: int = DEFAULT_MAX_EVENT_COUNT,
+) -> PortableScore:
+    """Read and parse a portable score from disk with path validation (CWE-22)."""
+    limit = min(max_score_length, MAX_SCORE_BYTES)
+    checked_path = _validate_file_path(path)
+    if checked_path.stat().st_size > limit:
+        raise ValueError(
+            f"score file size {checked_path.stat().st_size} "
+            f"exceeds limit of {limit} bytes"
+        )
+    text = checked_path.read_text(encoding="utf-8")
+    return parse_portable_score(
+        text,
+        max_score_length=limit,
+        max_line_length=max_line_length,
+        max_event_count=max_event_count,
+    )
+
+
+# =============================================================================
+# Pre-Flight Resource Budgets & Audio Rendering
+# =============================================================================
+
+
 def _validate_total_sample_budget(
     events: tuple[ScoreEvent, ...],
     sample_rate_hz: int,
     instrument_id: str,
     max_sample_count: int,
 ) -> None:
-    limit = _positive_integer("max_sample_count", max_sample_count)
-    instrument = get_instrument(instrument_id)
-    total = sum(
-        sample_count_for_duration(
-            event.duration_seconds
-            + (
-                instrument.envelope_profile.release_seconds
-                if event.kind == "note"
-                else 0.0
-            ),
-            sample_rate_hz,
-        )
-        for event in events
-    )
-    if total > limit:
+    sample_limit = _positive_integer("max_sample_count", max_sample_count)
+    if sample_limit > MAX_SAMPLE_COUNT:
         raise ValueError(
-            f"render would create {total} samples, above max_sample_count={limit}"
+            f"max_sample_count {sample_limit} exceeds "
+            f"MAX_SAMPLE_COUNT={MAX_SAMPLE_COUNT}"
         )
+
+    rate = _positive_integer("sample_rate_hz", sample_rate_hz)
+    if rate > MAX_SAMPLE_RATE_HZ:
+        raise ValueError(
+            f"sample_rate_hz {rate} exceeds MAX_SAMPLE_RATE_HZ={MAX_SAMPLE_RATE_HZ}"
+        )
+
+    profile = (
+        get_instrument(instrument_id)
+        if instrument_id not in {"drumkit", "standard_kit"}
+        else None
+    )
+    release_seconds = (
+        profile.envelope_profile.release_seconds if profile is not None else 0.0
+    )
+
+    total_samples = 0
+    for event in events:
+        event_duration = event.duration_seconds
+        if event.kind == "note":
+            event_duration += release_seconds
+        total_samples += sample_count_for_duration(event_duration, rate)
+        if total_samples > sample_limit:
+            raise ValueError(
+                f"score render would require {total_samples} samples, "
+                f"above max_sample_count={sample_limit}"
+            )
 
 
 def render_score_to_pcm(
@@ -1921,10 +2997,22 @@ def render_score_to_pcm(
     *,
     max_sample_count: int = DEFAULT_MAX_SAMPLE_COUNT,
 ) -> RenderedScore:
-    """Render a parsed score into one signed 16-bit mono PCM buffer."""
-
+    """Render a parsed text score into one signed 16-bit mono PCM buffer."""
     if not isinstance(score, TextScore):
         raise ValueError("score must be a TextScore")
+
+    sample_limit = _positive_integer("max_sample_count", max_sample_count)
+    if sample_limit > MAX_SAMPLE_COUNT:
+        raise ValueError(
+            f"max_sample_count exceeds MAX_SAMPLE_COUNT={MAX_SAMPLE_COUNT}"
+        )
+
+    total_dur = score.total_duration_seconds()
+    if total_dur > MAX_DURATION_SECONDS:
+        raise ValueError(
+            f"total score duration {total_dur}s exceeds "
+            f"MAX_DURATION_SECONDS={MAX_DURATION_SECONDS}"
+        )
 
     _validate_total_sample_budget(
         score.events,
@@ -1935,9 +3023,52 @@ def render_score_to_pcm(
 
     pcm_samples: list[int] = []
     rendered_notes: list[InstrumentNoteRender] = []
+    rendered_hits: list[PercussionHitRender] = []
     clipped_sample_count = 0
     elapsed_seconds = 0.0
     cursor_sample_index = 0
+
+    # Group sequential drum hits to apply hi-hat choke attenuation (MUS07 §7)
+    has_hits = any(event.kind == "hit" for event in score.events)
+    if has_hits and all(event.kind in {"hit", "rest"} for event in score.events):
+        kit_events: list[PercussionHitEvent] = []
+        cur_t = 0.0
+        for event in score.events:
+            if event.kind == "hit" and event.hit_id:
+                kit_events.append(
+                    PercussionHitEvent(
+                        hit_id=event.hit_id,
+                        start_seconds=cur_t,
+                        duration_seconds=event.duration_seconds,
+                        velocity=score.amplitude,
+                    )
+                )
+            cur_t += event.duration_seconds
+
+        active_kit = score.drumkit or "standard_kit"
+        if active_kit in {"standard", "standard_kit", "drumkit"}:
+            active_kit = "standard_kit"
+        percussion_render = render_percussion_sequence(
+            kit_events,
+            sample_rate_hz=score.sample_rate_hz,
+            kit=active_kit,
+            max_sample_count=sample_limit,
+        )
+        total_samples = list(percussion_render.pcm_buffer.samples)
+        min_required = sample_count_for_duration(total_dur, score.sample_rate_hz)
+        if len(total_samples) < min_required:
+            total_samples.extend([0] * (min_required - len(total_samples)))
+
+        return RenderedScore(
+            score=score,
+            pcm_buffer=PCMBuffer(
+                samples=tuple(total_samples),
+                pcm_format=PCMFormat(sample_rate_hz=score.sample_rate_hz),
+                clipped_sample_count=percussion_render.pcm_buffer.clipped_sample_count,
+            ),
+            rendered_notes=(),
+            rendered_hits=tuple(rendered_hits),
+        )
 
     for event in score.events:
         if event.kind == "rest":
@@ -1947,9 +3078,34 @@ def render_score_to_pcm(
             )
             cursor_sample_index += silence_count
             if len(pcm_samples) < cursor_sample_index:
-                pcm_samples.extend(
-                    0 for _ in range(cursor_sample_index - len(pcm_samples))
+                pcm_samples.extend([0] * (cursor_sample_index - len(pcm_samples)))
+        elif event.kind == "hit":
+            kit_events = [
+                PercussionHitEvent(
+                    hit_id=event.hit_id or "kick",
+                    start_seconds=0.0,
+                    duration_seconds=event.duration_seconds,
+                    velocity=score.amplitude,
                 )
+            ]
+            active_kit = score.drumkit or "standard_kit"
+            if active_kit in {"standard", "standard_kit", "drumkit"}:
+                active_kit = "standard_kit"
+            seq_render = render_percussion_sequence(
+                kit_events,
+                sample_rate_hz=score.sample_rate_hz,
+                kit=active_kit,
+                max_sample_count=sample_limit,
+            )
+            clipped_sample_count += _mix_pcm_samples(
+                pcm_samples,
+                cursor_sample_index,
+                seq_render.pcm_buffer.samples,
+            )
+            cursor_sample_index += sample_count_for_duration(
+                event.duration_seconds,
+                score.sample_rate_hz,
+            )
         else:
             rendered_note = render_instrument_note(
                 event.note,
@@ -1961,16 +3117,12 @@ def render_score_to_pcm(
                 max_sample_count=max_sample_count,
             )
             rendered_notes.append(rendered_note)
-            required_count = (
-                cursor_sample_index + rendered_note.pcm_buffer.sample_count()
-            )
-            if len(pcm_samples) < required_count:
-                pcm_samples.extend(0 for _ in range(required_count - len(pcm_samples)))
-            for offset, sample in enumerate(rendered_note.pcm_buffer.samples):
-                sample_index = cursor_sample_index + offset
-                mixed = pcm_samples[sample_index] + sample
-                pcm_samples[sample_index] = max(-32_768, min(32_767, mixed))
             clipped_sample_count += rendered_note.pcm_buffer.clipped_sample_count
+            clipped_sample_count += _mix_pcm_samples(
+                pcm_samples,
+                cursor_sample_index,
+                rendered_note.pcm_buffer.samples,
+            )
             cursor_sample_index += sample_count_for_duration(
                 event.duration_seconds,
                 score.sample_rate_hz,
@@ -1985,7 +3137,54 @@ def render_score_to_pcm(
             clipped_sample_count=clipped_sample_count,
         ),
         rendered_notes=tuple(rendered_notes),
+        rendered_hits=tuple(rendered_hits),
     )
+
+
+class _TempoMap:
+    """Pre-computed cumulative seconds table with O(log T) binary search queries."""
+
+    __slots__ = ("ppq", "start_ticks", "bpms", "cumulative_seconds")
+
+    def __init__(
+        self,
+        tempo_events: tuple[TempoEvent, ...] | list[TempoEvent],
+        ppq: int,
+    ) -> None:
+        self.ppq = ppq
+        tempos = sorted(tempo_events, key=lambda e: e.start_tick)
+        if not tempos or tempos[0].start_tick != 0:
+            tempos = [TempoEvent(0, DEFAULT_TEMPO_BPM)] + tempos
+
+        self.start_ticks: list[int] = []
+        self.bpms: list[float] = []
+        self.cumulative_seconds: list[float] = []
+        cur_sec = 0.0
+
+        for i, t in enumerate(tempos):
+            if i > 0:
+                prev_tick = self.start_ticks[-1]
+                prev_bpm = self.bpms[-1]
+                cur_sec += (t.start_tick - prev_tick) * 60.0 / (prev_bpm * ppq)
+            self.start_ticks.append(t.start_tick)
+            self.bpms.append(t.bpm)
+            self.cumulative_seconds.append(cur_sec)
+
+    def seconds_at_tick(self, tick: int) -> float:
+        checked_tick = _non_negative_tick("tick", tick)
+        low = 0
+        high = len(self.start_ticks)
+        while low < high:
+            mid = (low + high) // 2
+            if checked_tick < self.start_ticks[mid]:
+                high = mid
+            else:
+                low = mid + 1
+        idx = max(0, low - 1)
+        base_tick = self.start_ticks[idx]
+        base_bpm = self.bpms[idx]
+        base_sec = self.cumulative_seconds[idx]
+        return base_sec + (checked_tick - base_tick) * 60.0 / (base_bpm * self.ppq)
 
 
 def _seconds_at_tick(
@@ -1993,41 +3192,30 @@ def _seconds_at_tick(
     ppq: int,
     tempo_events: tuple[TempoEvent, ...],
 ) -> float:
-    checked_tick = _non_negative_tick("tick", tick)
-    sorted_tempos = tuple(sorted(tempo_events, key=lambda event: event.start_tick))
-    seconds = 0.0
-    active_tick = sorted_tempos[0].start_tick
-    active_bpm = sorted_tempos[0].bpm
-
-    for tempo in sorted_tempos[1:]:
-        if tempo.start_tick >= checked_tick:
-            break
-        tick_delta = tempo.start_tick - active_tick
-        seconds += tick_delta * 60.0 / (active_bpm * ppq)
-        active_tick = tempo.start_tick
-        active_bpm = tempo.bpm
-
-    seconds += (checked_tick - active_tick) * 60.0 / (active_bpm * ppq)
-    return seconds
+    return _TempoMap(tempo_events, ppq).seconds_at_tick(tick)
 
 
 def _mix_pcm_samples(
     target: list[int],
     start_sample: int,
-    source: tuple[int, ...],
+    source: tuple[int, ...] | list[int],
 ) -> int:
     required_count = start_sample + len(source)
     if len(target) < required_count:
-        target.extend(0 for _ in range(required_count - len(target)))
+        target.extend([0] * (required_count - len(target)))
 
     clipped_count = 0
     for offset, sample in enumerate(source):
         target_index = start_sample + offset
         mixed = target[target_index] + sample
-        clipped = max(-32_768, min(32_767, mixed))
-        if clipped != mixed:
+        if mixed > 32_767:
+            target[target_index] = 32_767
             clipped_count += 1
-        target[target_index] = clipped
+        elif mixed < -32_768:
+            target[target_index] = -32_768
+            clipped_count += 1
+        else:
+            target[target_index] = mixed
     return clipped_count
 
 
@@ -2037,50 +3225,79 @@ def render_portable_score_to_pcm(
     max_sample_count: int = DEFAULT_MAX_SAMPLE_COUNT,
 ) -> RenderedPortableScore:
     """Render a parsed portable multi-track score into one PCM buffer."""
-
     if not isinstance(score, PortableScore):
         raise ValueError("score must be a PortableScore")
 
     sample_limit = _positive_integer("max_sample_count", max_sample_count)
+    if sample_limit > MAX_SAMPLE_COUNT:
+        raise ValueError(
+            f"max_sample_count {sample_limit} exceeds "
+            f"MAX_SAMPLE_COUNT={MAX_SAMPLE_COUNT}"
+        )
+
     instrument_by_id = score.instrument_map()
     track_by_id = score.track_map()
-    pcm_samples: list[int] = []
-    rendered_notes: list[InstrumentNoteRender] = []
-    clipped_sample_count = 0
+    tempo_map = _TempoMap(score.tempo_events, score.ppq)
+
+    # Pre-flight duration and track/instrument capability checks
+    last_tick = max((e.start_tick + e.duration_tick for e in score.events), default=0)
+    total_dur = tempo_map.seconds_at_tick(last_tick)
+    if total_dur > MAX_DURATION_SECONDS:
+        raise ValueError(
+            f"score duration {total_dur}s exceeds "
+            f"MAX_DURATION_SECONDS={MAX_DURATION_SECONDS}"
+        )
+
+    pre_samples = _safe_round_sample(total_dur, score.sample_rate_hz)
+    if pre_samples > sample_limit:
+        raise ValueError(
+            f"score render would require {pre_samples} samples, "
+            f"above max_sample_count={sample_limit}"
+        )
 
     for event in score.events:
-        start_seconds = _seconds_at_tick(
-            event.start_tick,
-            score.ppq,
-            score.tempo_events,
-        )
-        end_seconds = _seconds_at_tick(
-            event.start_tick + event.duration_tick,
-            score.ppq,
-            score.tempo_events,
-        )
+        track = track_by_id[event.track_id]
+        inst = instrument_by_id[track.instrument_id]
+        if event.kind == "note" and inst.kind == "drumkit":
+            raise ValueError(
+                f"track {track.id!r} uses drumkit instrument {inst.id!r} "
+                "and cannot play note events"
+            )
+        if event.kind == "hit" and inst.kind != "drumkit":
+            raise ValueError(
+                f"track {track.id!r} uses pitched instrument {inst.id!r} "
+                "and cannot play hit events"
+            )
+
+    pcm_samples: list[int] = []
+    rendered_notes: list[InstrumentNoteRender] = []
+    rendered_hits: list[PercussionHitRender] = []
+    clipped_sample_count = 0
+
+    # 1. Render Pitched Notes
+    for event in score.events:
+        if event.kind != "note":
+            continue
+
+        start_seconds = tempo_map.seconds_at_tick(event.start_tick)
+        end_seconds = tempo_map.seconds_at_tick(event.start_tick + event.duration_tick)
         duration_seconds = end_seconds - start_seconds
         start_sample = sample_count_for_duration(start_seconds, score.sample_rate_hz)
-
-        if event.kind == "rest":
-            rest_end = sample_count_for_duration(end_seconds, score.sample_rate_hz)
-            if rest_end > sample_limit:
-                raise ValueError(
-                    f"render would create {rest_end} samples, "
-                    f"above max_sample_count={sample_limit}"
-                )
-            if len(pcm_samples) < rest_end:
-                pcm_samples.extend(0 for _ in range(rest_end - len(pcm_samples)))
-            continue
 
         track = track_by_id[event.track_id]
         instrument = instrument_by_id[track.instrument_id]
         note_amplitude = event.velocity * instrument.gain / max(1, len(event.notes))
+        target_inst: str | InstrumentProfile = (
+            instrument.custom_profile
+            if instrument.custom_profile is not None
+            else instrument.profile_id
+        )
+
         for note in event.notes:
             rendered_note = render_instrument_note(
                 note,
                 duration_seconds,
-                instrument=instrument.profile_id,
+                instrument=target_inst,
                 sample_rate_hz=score.sample_rate_hz,
                 amplitude=note_amplitude,
                 max_sample_count=max_sample_count,
@@ -2115,6 +3332,70 @@ def render_portable_score_to_pcm(
                     f"above max_sample_count={sample_limit}"
                 )
 
+    # 2. Render Drum Hits with Hi-Hat Choking (MUS07 §7 & §9)
+    # Group hit events by drumkit kit
+    drum_kits_present = {
+        inst.kit or "standard_kit"
+        for inst in score.instruments
+        if inst.kind == "drumkit"
+    }
+
+    for kit_name in drum_kits_present:
+        kit_events: list[PercussionHitEvent] = []
+        for event in score.events:
+            if event.kind != "hit":
+                continue
+            track = track_by_id[event.track_id]
+            inst = instrument_by_id[track.instrument_id]
+            inst_kit = inst.kit or "standard_kit"
+            if inst_kit != kit_name:
+                continue
+
+            start_seconds = tempo_map.seconds_at_tick(event.start_tick)
+            end_seconds = tempo_map.seconds_at_tick(
+                event.start_tick + event.duration_tick
+            )
+            duration_seconds = end_seconds - start_seconds
+
+            kit_events.append(
+                PercussionHitEvent(
+                    hit_id=event.hit_id or "kick",
+                    start_seconds=start_seconds,
+                    duration_seconds=duration_seconds,
+                    velocity=event.velocity * inst.gain,
+                )
+            )
+
+        if kit_events:
+            percussion_render = render_percussion_sequence(
+                kit_events,
+                sample_rate_hz=score.sample_rate_hz,
+                kit=kit_name,
+                max_sample_count=sample_limit,
+            )
+            clipped_sample_count += percussion_render.pcm_buffer.clipped_sample_count
+            rendered_hits.extend(kit_events)
+            clipped_sample_count += _mix_pcm_samples(
+                pcm_samples,
+                0,
+                percussion_render.pcm_buffer.samples,
+            )
+
+    # 3. Handle Rest Bounds
+    for event in score.events:
+        if event.kind == "rest":
+            end_seconds = tempo_map.seconds_at_tick(
+                event.start_tick + event.duration_tick
+            )
+            rest_end = sample_count_for_duration(end_seconds, score.sample_rate_hz)
+            if rest_end > sample_limit:
+                raise ValueError(
+                    f"render would create {rest_end} samples, "
+                    f"above max_sample_count={sample_limit}"
+                )
+            if len(pcm_samples) < rest_end:
+                pcm_samples.extend([0] * (rest_end - len(pcm_samples)))
+
     if len(pcm_samples) > sample_limit:
         raise ValueError(
             f"render would create {len(pcm_samples)} samples, "
@@ -2129,84 +3410,117 @@ def render_portable_score_to_pcm(
             clipped_sample_count=clipped_sample_count,
         ),
         rendered_notes=tuple(rendered_notes),
+        rendered_hits=tuple(rendered_hits),
     )
 
 
+# =============================================================================
+# Playback Helpers (delegating to audio-device-sink lazily)
+# =============================================================================
+
 PlaybackSink = Callable[[PCMBuffer], object]
+SinkPlayer = PlaybackSink
 
 
 def _default_play_pcm_buffer(buffer: PCMBuffer) -> object:
     """Import the real audio sink only at the exact moment playback is requested."""
-
     sink = import_module("audio_device_sink")
-    play_pcm_buffer = sink.play_pcm_buffer
+    play_pcm_buffer = getattr(sink, "play_pcm_buffer", None)
     if not callable(play_pcm_buffer):
         raise TypeError("audio_device_sink.play_pcm_buffer must be callable")
     return play_pcm_buffer(buffer)
+
+
+def _load_default_sink_player() -> SinkPlayer:
+    return _default_play_pcm_buffer
 
 
 def play_score(
     score: TextScore,
     *,
     play_pcm_buffer: PlaybackSink | None = None,
+    player: SinkPlayer | None = None,
     max_sample_count: int = DEFAULT_MAX_SAMPLE_COUNT,
 ) -> object:
-    """Render a score and delegate its PCM buffer to an audio-device sink."""
-
-    rendered_score = render_score_to_pcm(score, max_sample_count=max_sample_count)
-    player = (
-        play_pcm_buffer
-        if play_pcm_buffer is not None
-        else _default_play_pcm_buffer
-    )
-    return player(rendered_score.pcm_buffer)
-
-
-def play_portable_score(
-    score: PortableScore,
-    *,
-    play_pcm_buffer: PlaybackSink | None = None,
-    max_sample_count: int = DEFAULT_MAX_SAMPLE_COUNT,
-) -> object:
-    """Render a portable multi-track score and delegate its PCM to a sink."""
-
-    rendered_score = render_portable_score_to_pcm(
+    """Render a text score and play it through an audio sink."""
+    rendered_score = render_score_to_pcm(
         score,
         max_sample_count=max_sample_count,
     )
-    player = (
-        play_pcm_buffer
-        if play_pcm_buffer is not None
-        else _default_play_pcm_buffer
-    )
-    return player(rendered_score.pcm_buffer)
+    active_player = play_pcm_buffer if play_pcm_buffer is not None else player
+    if active_player is None:
+        active_player = _default_play_pcm_buffer
+    return active_player(rendered_score.pcm_buffer)
 
 
 def play_score_text(
     text: str,
     *,
     play_pcm_buffer: PlaybackSink | None = None,
+    player: SinkPlayer | None = None,
+    max_score_length: int = DEFAULT_MAX_SCORE_LENGTH,
+    max_line_length: int = DEFAULT_MAX_LINE_LENGTH,
+    max_event_count: int = DEFAULT_MAX_EVENT_COUNT,
     max_sample_count: int = DEFAULT_MAX_SAMPLE_COUNT,
 ) -> object:
-    """Parse, render, and play a text score through a lazy playback sink."""
-
+    """Parse a text score, render it, and play it through an audio sink."""
+    score = parse_score(
+        text,
+        max_score_length=max_score_length,
+        max_line_length=max_line_length,
+        max_event_count=max_event_count,
+    )
     return play_score(
-        parse_score(text),
+        score,
         play_pcm_buffer=play_pcm_buffer,
+        player=player,
         max_sample_count=max_sample_count,
     )
+
+
+def play_portable_score(
+    score: PortableScore,
+    *,
+    play_pcm_buffer: PlaybackSink | None = None,
+    player: SinkPlayer | None = None,
+    max_sample_count: int = DEFAULT_MAX_SAMPLE_COUNT,
+) -> object:
+    """Render a portable multi-track score and play it through an audio sink."""
+    rendered_score = render_portable_score_to_pcm(
+        score,
+        max_sample_count=max_sample_count,
+    )
+    active_player = play_pcm_buffer if play_pcm_buffer is not None else player
+    if active_player is None:
+        active_player = _default_play_pcm_buffer
+    return active_player(rendered_score.pcm_buffer)
 
 
 def play_portable_score_text(
     text: str,
     *,
     play_pcm_buffer: PlaybackSink | None = None,
+    player: SinkPlayer | None = None,
+    max_score_length: int = DEFAULT_MAX_SCORE_LENGTH,
+    max_line_length: int = DEFAULT_MAX_LINE_LENGTH,
+    max_event_count: int = DEFAULT_MAX_EVENT_COUNT,
     max_sample_count: int = DEFAULT_MAX_SAMPLE_COUNT,
 ) -> object:
-    """Parse, render, and play portable multi-track score text."""
-
+    """Parse a portable score text, render it, and play it through an audio sink."""
+    score = parse_portable_score(
+        text,
+        max_score_length=max_score_length,
+        max_line_length=max_line_length,
+        max_event_count=max_event_count,
+    )
     return play_portable_score(
-        parse_portable_score(text),
+        score,
         play_pcm_buffer=play_pcm_buffer,
+        player=player,
+        max_sample_count=max_sample_count,
+    )
+    return play_portable_score(
+        score,
+        player=player,
         max_sample_count=max_sample_count,
     )

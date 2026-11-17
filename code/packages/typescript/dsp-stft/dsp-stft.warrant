@@ -1,0 +1,143 @@
+-- DSP-STFT -- Short-Time Fourier Transform for the DSP layer
+--
+-- Warrant specification for typescript/dsp-stft (VER04h / DSP05).
+-- Covers memory safety, resource bounding (CWE-400), integer overflow prevention (CWE-190),
+-- strictly iterative execution (CWE-674), and all-operands-public guarantees.
+
+warrant dsp_stft v1
+  error StftError = EMPTY_SIGNAL | INVALID_PARAM | SIGNAL_TOO_SHORT | INVALID_SPECTROGRAM | FFT
+
+  op stft(signal: Bytes, n_fft: Nat, hop_length: Nat, window: Nat) -> Result<Bytes, StftError>
+  op istft(spectrogram: Bytes, n_fft: Nat, hop_length: Nat, window: Nat, output_length: Nat) -> Result<Bytes, StftError>
+  op spectrogram(signal: Bytes, n_fft: Nat, hop_length: Nat, window: Nat) -> Result<Bytes, StftError>
+  op log_spectrogram(signal: Bytes, n_fft: Nat, hop_length: Nat, window: Nat) -> Result<Bytes, StftError>
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  -- All operands are public signal / spectral data.
+  labels stft:
+    signal public
+    n_fft public
+    hop_length public
+    window public
+  labels istft:
+    spectrogram public
+    n_fft public
+    hop_length public
+    window public
+    output_length public
+  labels spectrogram:
+    signal public
+    n_fft public
+    hop_length public
+    window public
+  labels log_spectrogram:
+    signal public
+    n_fft public
+    hop_length public
+    window public
+
+  input stft.signal:
+    hostile
+    rejects len(signal) == 0 with StftError.EMPTY_SIGNAL
+    rejects len(signal) > 67108864 with StftError.INVALID_PARAM
+    ensures no_panic, terminates
+  input stft.n_fft:
+    hostile
+    rejects n_fft == 0 with StftError.INVALID_PARAM
+    rejects n_fft > 1048576 with StftError.INVALID_PARAM
+    ensures no_panic, terminates
+  input stft.hop_length:
+    hostile
+    rejects hop_length == 0 with StftError.INVALID_PARAM
+    ensures no_panic, terminates
+  input stft.window:
+    hostile
+    ensures no_panic, terminates
+
+  input istft.spectrogram:
+    hostile
+    rejects len(spectrogram) == 0 with StftError.INVALID_SPECTROGRAM
+    rejects len(spectrogram) > 67108864 with StftError.INVALID_PARAM
+    ensures no_panic, terminates
+  input istft.n_fft:
+    hostile
+    rejects n_fft == 0 with StftError.INVALID_PARAM
+    rejects n_fft > 1048576 with StftError.INVALID_PARAM
+    ensures no_panic, terminates
+  input istft.hop_length:
+    hostile
+    rejects hop_length == 0 with StftError.INVALID_PARAM
+    ensures no_panic, terminates
+  input istft.window:
+    hostile
+    ensures no_panic, terminates
+  input istft.output_length:
+    hostile
+    rejects output_length == 0 with StftError.INVALID_PARAM
+    rejects output_length > 16777216 with StftError.INVALID_PARAM
+    ensures no_panic, terminates
+
+  input spectrogram.signal:
+    hostile
+    rejects len(signal) == 0 with StftError.EMPTY_SIGNAL
+    rejects len(signal) > 67108864 with StftError.INVALID_PARAM
+    ensures no_panic, terminates
+  input spectrogram.n_fft:
+    hostile
+    rejects n_fft == 0 with StftError.INVALID_PARAM
+    rejects n_fft > 1048576 with StftError.INVALID_PARAM
+    ensures no_panic, terminates
+  input spectrogram.hop_length:
+    hostile
+    rejects hop_length == 0 with StftError.INVALID_PARAM
+    ensures no_panic, terminates
+  input spectrogram.window:
+    hostile
+    ensures no_panic, terminates
+
+  input log_spectrogram.signal:
+    hostile
+    rejects len(signal) == 0 with StftError.EMPTY_SIGNAL
+    rejects len(signal) > 67108864 with StftError.INVALID_PARAM
+    ensures no_panic, terminates
+  input log_spectrogram.n_fft:
+    hostile
+    rejects n_fft == 0 with StftError.INVALID_PARAM
+    rejects n_fft > 1048576 with StftError.INVALID_PARAM
+    ensures no_panic, terminates
+  input log_spectrogram.hop_length:
+    hostile
+    rejects hop_length == 0 with StftError.INVALID_PARAM
+    ensures no_panic, terminates
+  input log_spectrogram.window:
+    hostile
+    ensures no_panic, terminates
+
+  -- Declared bounds: linear in signal length and number of frames.
+  bound stft:
+    output <= (1 + unwrap_or(div(len(signal), hop_length), 0)) * (n_fft + 2)
+    steps <= 64 * (1 + unwrap_or(div(len(signal), hop_length), 0)) * n_fft + 4096
+    heap <= 4 * (1 + unwrap_or(div(len(signal), hop_length), 0)) * (n_fft + 2) + 8192
+    depth <= 32
+
+  bound istft:
+    output <= output_length
+    steps <= 32 * len(spectrogram) + 4096
+    heap <= 8 * output_length + 8192
+    depth <= 32
+
+  bound spectrogram:
+    output <= (1 + unwrap_or(div(len(signal), hop_length), 0)) * (unwrap_or(div(n_fft, 2), 0) + 1)
+    steps <= 64 * (1 + unwrap_or(div(len(signal), hop_length), 0)) * n_fft + 4096
+    heap <= 4 * (1 + unwrap_or(div(len(signal), hop_length), 0)) * (unwrap_or(div(n_fft, 2), 0) + 1) + 8192
+    depth <= 32
+
+  bound log_spectrogram:
+    output <= (1 + unwrap_or(div(len(signal), hop_length), 0)) * (unwrap_or(div(n_fft, 2), 0) + 1)
+    steps <= 64 * (1 + unwrap_or(div(len(signal), hop_length), 0)) * n_fft + 4096
+    heap <= 4 * (1 + unwrap_or(div(len(signal), hop_length), 0)) * (unwrap_or(div(n_fft, 2), 0) + 1) + 8192
+    depth <= 32

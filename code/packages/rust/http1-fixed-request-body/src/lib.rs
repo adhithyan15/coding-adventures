@@ -7,6 +7,7 @@
 #![forbid(unsafe_code)]
 
 use core::fmt;
+use http1_request_header_field::Http1RequestHeaderField;
 
 /// Largest request body admitted by this deliberately narrow boundary.
 pub const MAX_HTTP1_FIXED_REQUEST_BODY_BYTES: usize = 1024 * 1024;
@@ -98,6 +99,61 @@ impl fmt::Display for Http1FixedRequestBodyError {
 
 impl std::error::Error for Http1FixedRequestBodyError {}
 
+/// Non-copyable evidence binding one exact body to one exact validated field.
+pub struct Http1FixedRequestContentLengthField<'body, 'field> {
+    body: Http1FixedRequestBody<'body>,
+    field: Http1RequestHeaderField<'field>,
+}
+
+impl<'body, 'field> Http1FixedRequestContentLengthField<'body, 'field> {
+    /// Return the exact fixed request body retained by this binding.
+    #[must_use]
+    pub const fn body(&self) -> &Http1FixedRequestBody<'body> {
+        &self.body
+    }
+
+    /// Return the exact validated Content-Length field retained by this binding.
+    #[must_use]
+    pub const fn field(&self) -> &Http1RequestHeaderField<'field> {
+        &self.field
+    }
+}
+
+impl fmt::Debug for Http1FixedRequestContentLengthField<'_, '_> {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("Http1FixedRequestContentLengthField")
+            .field("body", &"[REDACTED]")
+            .field("body_length", &self.body.content_length())
+            .field("field_name", &"[REDACTED]")
+            .field("field_name_length", &self.field.name().len())
+            .field("field_value", &"[REDACTED]")
+            .field("field_value_length", &self.field.value().len())
+            .finish()
+    }
+}
+
+/// Stable payload-free fixed request Content-Length binding failures.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum Http1FixedRequestContentLengthFieldError {
+    NotContentLength,
+    ContentLengthMismatch,
+}
+
+impl fmt::Display for Http1FixedRequestContentLengthFieldError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let message = match self {
+            Self::NotContentLength => "HTTP/1 fixed request-body field is not Content-Length",
+            Self::ContentLengthMismatch => {
+                "HTTP/1 fixed request-body Content-Length does not match the exact body length"
+            }
+        };
+        formatter.write_str(message)
+    }
+}
+
+impl std::error::Error for Http1FixedRequestContentLengthFieldError {}
+
 /// Bind one borrowed body to its exact byte length under caller limits.
 pub fn validate_http1_fixed_request_body<'input>(
     body: &'input [u8],
@@ -110,6 +166,35 @@ pub fn validate_http1_fixed_request_body<'input>(
         body,
         content_length_value_length: decimal_length(body.len()) as u8,
     })
+}
+
+/// Bind one exact fixed body to one exact validated Content-Length field.
+///
+/// The field name is matched with HTTP ASCII case-insensitivity. Its value must
+/// be the canonical shortest-decimal encoding of the retained body's exact
+/// byte length.
+pub fn bind_http1_fixed_request_content_length_field<'body, 'field>(
+    body: Http1FixedRequestBody<'body>,
+    field: Http1RequestHeaderField<'field>,
+) -> Result<
+    Http1FixedRequestContentLengthField<'body, 'field>,
+    Http1FixedRequestContentLengthFieldError,
+> {
+    if !field.name().eq_ignore_ascii_case(b"Content-Length") {
+        return Err(Http1FixedRequestContentLengthFieldError::NotContentLength);
+    }
+
+    let encoded_length = body.content_length_value_length();
+    if field.value().len() != encoded_length {
+        return Err(Http1FixedRequestContentLengthFieldError::ContentLengthMismatch);
+    }
+    let mut expected = [0u8; MAX_HTTP1_FIXED_REQUEST_CONTENT_LENGTH_BYTES];
+    write_decimal(body.content_length(), &mut expected[..encoded_length]);
+    if field.value() != &expected[..encoded_length] {
+        return Err(Http1FixedRequestContentLengthFieldError::ContentLengthMismatch);
+    }
+
+    Ok(Http1FixedRequestContentLengthField { body, field })
 }
 
 /// Encode the exact body length as canonical shortest decimal.

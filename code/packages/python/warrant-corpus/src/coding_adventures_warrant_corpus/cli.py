@@ -31,8 +31,9 @@ from pathlib import Path
 
 from .corpus import list_control_rows, load_corpus
 from .errors import LaneError, UsageError
-from .jsonio import MAX_TEXT_BYTES, read_bytes, render_json, sha256_hex
-from .labels import derive_labels
+from .isolation import ENV_PRIVATE, verify_isolated_cache
+from .jsonio import MAX_TEXT_BYTES, read_bytes, render_json
+from .labels import derive_labels, manifest_label_digest
 from .manifest import source_digest, validate_manifest
 from .session import (
     ENV_FAULT,
@@ -120,17 +121,11 @@ def _labels_for(corpus, manifest: dict[str, object]) -> dict:  # noqa: ANN001
     The digest ignores ``toolchain.version`` (diagnostic, VER04i 8), exactly as
     ``check`` does, so a different CPython patch release is not label drift.
     """
-    stable = dict(manifest)
-    # The toolchain *name* stays in the digest (a lane that swapped runtimes is
-    # drift); only its version is diagnostic.  Reading the name from the
-    # manifest, not hard-coding "python", lets this validator accept the labels
-    # of another lane's manifest (the TypeScript lane's toolchain is "node").
-    stable["toolchain"] = {"name": manifest["toolchain"]["name"], "version": ""}  # type: ignore[index]
     return derive_labels(
         corpus,
         str(manifest["package"]),
         str(manifest["module"]),
-        sha256_hex(render_json(stable).encode("utf-8")),
+        manifest_label_digest(manifest),
     )
 
 
@@ -223,6 +218,11 @@ def _child_env(base: dict[str, str], fault: str) -> dict[str, str]:
     ]
     env = dict(base)
     env["PYTHONPATH"] = os.pathsep.join([own, *existing])
+    # The child produces no manifest, but it runs the same library: it uses the
+    # same private bytecode cache, never the checkout's (VER04i 8.1).
+    if sys.pycache_prefix is not None:
+        env["PYTHONPYCACHEPREFIX"] = sys.pycache_prefix
+        env[ENV_PRIVATE] = sys.pycache_prefix
     env[ENV_FAULT] = fault
     env[ENV_FILTER] = "/exhaustive/"
     env.pop(ENV_OUT, None)
@@ -230,7 +230,9 @@ def _child_env(base: dict[str, str], fault: str) -> dict[str, str]:
 
 
 def _module_args() -> list[str]:
-    return ["-m", "coding_adventures_warrant_corpus"]
+    # -P (3.11+): never put the current directory on sys.path, so a planted
+    # stdlib-named file there cannot shadow the standard library (VER04i 8.1).
+    return ["-P", "-m", "coding_adventures_warrant_corpus"]
 
 
 def _common_flags(args: argparse.Namespace) -> list[str]:
@@ -277,6 +279,10 @@ def main(argv: list[str] | None = None) -> int:
     """Entry point; returns the process exit status."""
     args = _parser().parse_args(argv)
     try:
+        if args.command in ("run", "check", "sabotage"):
+            # Refuse before touching the corpus or the library: a run that
+            # produces evidence needs the private bytecode cache (VER04i 8.1).
+            verify_isolated_cache()
         if args.command in ("run", "check"):
             return _run(args)
         if args.command == "sabotage":

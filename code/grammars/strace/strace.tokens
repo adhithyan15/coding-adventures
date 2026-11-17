@@ -1,0 +1,220 @@
+# Token definitions for one line of `strace -f --quiet=attach -y -s 4096` output
+# @version 1
+#
+# This file defines the SYNTAX of a strace line (D24, KILN04 section 4.9).  It
+# is read by the shared lexer through code/packages/go/strace-lexer, one line
+# at a time.  Policy (which calls matter, what a refusal is called, limits)
+# lives in the consumer, never here.
+#
+# A line looks like one of
+#
+#   1234  openat(AT_FDCWD</w>, "/etc/passwd", O_RDONLY|O_CLOEXEC) = 3</etc/passwd>
+#   1234  wait4(-1,  <unfinished ...>
+#   1234  <... wait4 resumed>[{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 1235
+#   1234  +++ exited with 0 +++
+#   1234  --- SIGCHLD {si_signo=SIGCHLD, si_pid=1235} ---
+#   1234  ???( <unfinished ...>
+#
+# # Properties this file must keep
+#
+#  * CASE-SENSITIVE.  A case-insensitive grammar lexes a lower-cased copy of the
+#    source and re-reads some values from the original at the same offsets;
+#    lower-casing can change byte lengths, so values could come from the wrong
+#    place.  There is deliberately no `case_insensitive:` line.
+#  * TOTAL.  Every input lexes: whatever no real token matches ends up in an
+#    ERR_* token, which the parser then refuses.  The lexer therefore never
+#    returns an error for a single line without a newline (it cannot panic or
+#    stall on hostile input).
+#  * FAST.  Every rule is a plain literal or a shape the compiled lexer proves
+#    deterministic (see lexer.Compiled.SlowRules).  A rule that falls back to the
+#    regexp engine costs time proportional to the rest of the line per token;
+#    a test asserts SlowRules() is empty.
+#  * NO token name contains the substring STRING.  The lexer strips the first
+#    and last byte of any token whose name contains STRING and starts with a
+#    quote, which would silently mangle a path.  Quoted text is called QUOTED.
+#
+# # Spaces
+#
+# Spaces between tokens are skipped (see `skip:` below), so the parser sees
+# tokens and each token carries its 1-based byte Column.  Where a space (or its
+# ABSENCE) is part of the syntax, the token itself contains it:
+#
+#  * `name(` is ONE token (SYSCALL / FUNC): a space before "(" is not a call.
+#  * `word<...>` is ONE token (ANNOTATED): strace glues a -y annotation to its
+#    descriptor with no space; "3 <x>" is not an annotation.
+#  * the pid prefix, the `<... NAME resumed>` marker and the whole `+++ ... +++`
+#    exit line are single tokens.
+#  * a `--- ... ---` signal line is lexed in a mode where spaces ARE tokens (the
+#    closing " ---" must be preceded by a space).
+#
+# Tab, carriage return and every other control character are not skipped: they
+# are ERR_CTRL.  Leading and trailing spaces on the line are checked by the
+# consumer package, not here (skip cannot see them).
+#
+# # Modes
+#
+# The lexer starts in `line_start`, where only the pid prefix is legal.  After
+# the pid it is in `body_start`, where the tokens that may only BEGIN the body
+# of a line live (the exit line, the resume marker, the "???" lines, the signal opener),
+# then in the default mode for the rest of the line.  Keeping those tokens out of
+# the default mode means the same characters inside an argument list are plain
+# text, as the old hand-written scanner treated them.  After the signal opener
+# the lexer is in `signal` mode to the end of the line.
+
+start_mode: line_start
+
+# ---------------------------------------------------------------------------
+# Default mode tokens.  Order matters: the first rule that matches wins.
+# ---------------------------------------------------------------------------
+
+# The interruption marker.  strace prints it when another process's output
+# interleaves with a blocked call.  It is a plain literal.  It is tried first
+# so "<unfinished ...>" can never be mistaken for the start of an annotation;
+# a marker glued to a word ("0666<unfinished ...>") is an annotation by the old
+# parser's rule too and is caught by ANNOTATED, which starts at the word.
+UNFINISHED = "<unfinished ...>"
+
+# A system call name glued to its "(": lower case, digits and underscore, 1..64
+# long (the old parser's validName).  Nested calls in arguments such as htons(80)
+# lex as SYSCALL too; the grammar accepts both there.
+SYSCALL = /[a-z0-9_]{1,64}\(/
+
+# Any other identifier glued to "(": WIFEXITED(s), S_ISREG(x).
+FUNC = /[A-Za-z0-9_-]+\(/
+
+# A -y annotation: a word immediately followed by <body>.  The body may not
+# contain an unescaped "<" or ">" or a control character; a backslash escapes
+# any one following character.  Whether the escape is a VALID one (\n, \x41,
+# \101, \<) is not decided here; the consumer decodes every annotation strictly
+# (strace-string.tokens) and refuses a bad one.
+ANNOTATED = /[A-Za-z0-9_-]+<(?:[^<>\\\x00-\x1f\x7f]|\\[^\x00-\x1f\x7f])*>/
+
+# word<...> that is closed but not a valid annotation (an unescaped "<" or a
+# control character inside).  A backslash takes the next character, so "\>"
+# does not close it (the old scanner agrees: "\>" is an escape).
+ERR_ANNOT_BAD = /[A-Za-z0-9_-]+<(?:[^>\\\n]|\\[^\n])*>/
+
+# word< with no closing ">" anywhere.  Swallows the rest of the line.  The
+# consumer decides ambiguous vs unterminated by decoding the body.
+ERR_ANNOT_OPEN = /[A-Za-z0-9_-]+<[^\n]*/
+
+# A quoted string, with C escapes, optionally cut by -s: "abc"... .  The body
+# may not contain a raw control character; a backslash takes one character
+# after it, so \" does not end the string.  Escape validity is NOT checked here.
+QUOTED = /"(?:[^"\\\x00-\x1f\x7f]|\\[^\x00-\x1f\x7f])*"(?:\.\.\.)?/
+
+# An opening quote that never closes (or hits a control character first).
+ERR_QUOTE = /"[^\n]*/
+
+# `name=` as one token: struct fields, so "fd=3</x>" lexes the annotated 3 as
+# ANNOTATED (a word is only an annotation when the "<" follows the WHOLE run of
+# word characters, and a run must start at a token boundary).
+ASSIGN = /[A-Za-z0-9_-]+=/
+
+# A run of word characters: names, numbers, flags (O_RDONLY), 0x7f00, -1.
+WORD = /[A-Za-z0-9_-]+/
+
+COMMA    = ","
+LPAREN   = "("
+RPAREN   = ")"
+LBRACKET = "["
+RBRACKET = "]"
+LBRACE   = "{"
+RBRACE   = "}"
+
+# Operators and comment punctuation: | && == /* */ => ... ~ ? and every
+# non-ASCII byte.  Never contains a space, a bracket, a quote, "<" or a control
+# character.
+PUNCT = /[^A-Za-z0-9_\- ,()\[\]{}"<\x00-\x1f\x7f]+/
+
+# A "<" that starts nothing valid: the old parser's refusal for a bad "<".
+ERR_LT = "<"
+
+# A control character (tab, CR, ESC, DEL ...).  A raw newline never reaches the
+# lexer (the consumer refuses it first).
+ERR_CTRL = /[\x00-\x1f\x7f]/
+
+# Safety net so the lexer is total whatever the byte.
+ERR_ANY = /[^\n]/
+
+# ---------------------------------------------------------------------------
+# line_start mode: the pid prefix.
+# ---------------------------------------------------------------------------
+# strace -f prints the pid of the process, either "[pid 1234] " or "1234  ".
+# 1..9 digits, no leading zero, never 0 (the old parser's atoiPid).  A bare pid
+# must be followed by at least one space; "[pid N]" by any number (zero too).
+# Anything else at the start of a line is ERR_PID and swallows the line.
+group line_start:
+  PID_TAG = /\[pid [1-9][0-9]{0,8}\] */
+  PID = /[1-9][0-9]{0,8} +/
+  ERR_PID = /[^\n]+/
+
+# ---------------------------------------------------------------------------
+# body_start mode: tokens that can only begin the body of a line.  The default
+# rules follow these (a mode that is the target of set-mode inherits them), so
+# an ordinary call "name(" is lexed here too.
+# ---------------------------------------------------------------------------
+
+# The exact resume of a thread killed at syscall entry: "<... ??? resumed>)" and
+# a result of exactly "= ?" (the old parser's deadResumed + isUnknownResult).
+# It is its own token so a "???" resume that returned anything else is NOT an
+# ordinary resumed call: it falls to ERR_RESUME below.
+group body_start:
+  DEAD_RESUMED = /<\.\.\. \?\?\? resumed>\) +\= \?/
+
+  # The resume marker "<... NAME resumed>".  NAME is a syscall name (the "???"
+  # name of a killed-at-entry thread is DEAD_RESUMED above and nowhere else).
+  # Upper case is allowed so a mismatched name is a pending-name mismatch in the
+  # consumer, not a lexical error.
+  RESUMED = /<\.\.\. [A-Za-z0-9_]+ resumed>/
+
+  # Any other "<..." here is a bad resume marker.  It swallows the rest of the
+  # line.
+  ERR_RESUME = /<\.\.\.[^\n]*/
+
+  # The whole `+++ exited with N +++` line.  N is 1..9 digits (the old parser
+  # rejects more).  The closing " +++" must be preceded by at least one space,
+  # and there must be exactly one space inside "exited with N".
+  EXITED_LINE = /\+\+\+ +exited with [0-9]{1,9} +\+\+\+/
+
+  # `+++ killed by SIGNAME +++`, with and without ` (core dumped)`.
+  KILLED_LINE = /\+\+\+ +killed by SIG[A-Z0-9_]* +\+\+\+/
+  KILLED_CORE_LINE = /\+\+\+ +killed by SIG[A-Z0-9_]* \(core dumped\) +\+\+\+/
+
+  # Start of a signal line.  The text of a signal line is not interpreted, but
+  # its closing " ---" must follow a real space, so the lexer enters the
+  # `signal` mode here (see transitions) where spaces are tokens.
+  SIG_OPEN = "--- "
+
+  # A thread killed at syscall entry, in exactly the three spellings the old
+  # parser accepted: "???( <unfinished ...>" (one space), and "???()" followed by
+  # spaces and exactly "= ?".  "???" is not a valid syscall name, so these are
+  # whole-line tokens; anything else beginning "???(" is refused.
+  DEAD_OPEN = "???( <unfinished ...>"
+  DEAD_WHOLE = /\?\?\?\(\) +\= \?/
+
+# ---------------------------------------------------------------------------
+# signal mode: the text of a `--- ... ---` line, to the end of the line.
+# ---------------------------------------------------------------------------
+# Spaces are tokens, and everything else is a run of non-space text.  Control
+# characters are not text: they fall through to ERR_CTRL (inherited).  The
+# grammar finds the closing " ---" as the last space and the last "---".
+group signal:
+  SIG_SP = / +/
+  SIG_TEXT = /[^ \x00-\x1f\x7f]+/
+
+# ---------------------------------------------------------------------------
+# Transitions
+# ---------------------------------------------------------------------------
+# A first body token that is not one of these leaves the lexer in body_start;
+# the line is refused anyway, because the grammar needs one of these first.
+transitions:
+  on (PID_TAG | PID | ERR_PID) in line_start -> set-mode body_start
+  on SIG_OPEN in body_start -> set-mode signal, disable-skip
+  on (SYSCALL | RESUMED | ERR_RESUME | EXITED_LINE | KILLED_LINE | KILLED_CORE_LINE | DEAD_OPEN | DEAD_WHOLE | DEAD_RESUMED) in body_start -> set-mode default
+
+# ---------------------------------------------------------------------------
+# Skip: spaces only.
+# ---------------------------------------------------------------------------
+skip:
+  SPACES = / +/

@@ -1,0 +1,190 @@
+-- DSP-WAVELETS -- Discrete and Continuous Wavelet Transforms for the DSP layer
+--
+-- Warrant specification for c/dsp-wavelets (VER04h / DSP06).
+-- Covers memory safety, resource bounding (CWE-400), integer overflow prevention (CWE-190),
+-- strictly iterative execution (CWE-674), and all-operands-public guarantees.
+
+warrant dsp_wavelets v1
+  error WaveletError = EMPTY_SIGNAL | INVALID_PARAM | SIGNAL_TOO_SHORT | INVALID_COEFFICIENTS | FFT
+
+  op dwt_1d(signal: Bytes, wavelet: Nat, levels: Nat, boundary: Nat) -> Result<Bytes, WaveletError>
+  op idwt_1d(coeffs: Bytes, wavelet: Nat, levels: Nat, boundary: Nat, output_length: Nat) -> Result<Bytes, WaveletError>
+  op dwt_2d(image: Bytes, n_rows: Nat, n_cols: Nat, wavelet: Nat, levels: Nat, boundary: Nat) -> Result<Bytes, WaveletError>
+  op idwt_2d(coeffs: Bytes, n_rows: Nat, n_cols: Nat, wavelet: Nat, levels: Nat, boundary: Nat) -> Result<Bytes, WaveletError>
+  op cwt(signal: Bytes, scales: Bytes, wavelet: Nat) -> Result<Bytes, WaveletError>
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  -- All operands are public signal / coefficient data.
+  labels dwt_1d:
+    signal public
+    wavelet public
+    levels public
+    boundary public
+  labels idwt_1d:
+    coeffs public
+    wavelet public
+    levels public
+    boundary public
+    output_length public
+  labels dwt_2d:
+    image public
+    n_rows public
+    n_cols public
+    wavelet public
+    levels public
+    boundary public
+  labels idwt_2d:
+    coeffs public
+    n_rows public
+    n_cols public
+    wavelet public
+    levels public
+    boundary public
+  labels cwt:
+    signal public
+    scales public
+    wavelet public
+
+  input dwt_1d.signal:
+    hostile
+    rejects len(signal) == 0 with WaveletError.EMPTY_SIGNAL
+    rejects len(signal) > 67108864 with WaveletError.INVALID_PARAM
+    ensures no_panic, terminates
+  input dwt_1d.wavelet:
+    hostile
+    ensures no_panic, terminates
+  input dwt_1d.levels:
+    hostile
+    rejects levels == 0 with WaveletError.INVALID_PARAM
+    rejects levels > 31 with WaveletError.INVALID_PARAM
+    ensures no_panic, terminates
+  input dwt_1d.boundary:
+    hostile
+    ensures no_panic, terminates
+
+  input idwt_1d.coeffs:
+    hostile
+    rejects len(coeffs) == 0 with WaveletError.EMPTY_SIGNAL
+    rejects len(coeffs) > 67108864 with WaveletError.INVALID_PARAM
+    ensures no_panic, terminates
+  input idwt_1d.wavelet:
+    hostile
+    ensures no_panic, terminates
+  input idwt_1d.levels:
+    hostile
+    rejects levels == 0 with WaveletError.INVALID_PARAM
+    rejects levels > 31 with WaveletError.INVALID_PARAM
+    ensures no_panic, terminates
+  input idwt_1d.boundary:
+    hostile
+    ensures no_panic, terminates
+  input idwt_1d.output_length:
+    hostile
+    rejects output_length == 0 with WaveletError.INVALID_PARAM
+    rejects output_length > 16777216 with WaveletError.INVALID_PARAM
+    ensures no_panic, terminates
+
+  input dwt_2d.image:
+    hostile
+    rejects len(image) == 0 with WaveletError.EMPTY_SIGNAL
+    rejects len(image) > 67108864 with WaveletError.INVALID_PARAM
+    ensures no_panic, terminates
+  input dwt_2d.n_rows:
+    hostile
+    rejects n_rows == 0 with WaveletError.INVALID_PARAM
+    rejects n_rows > 16777216 with WaveletError.INVALID_PARAM
+    ensures no_panic, terminates
+  input dwt_2d.n_cols:
+    hostile
+    rejects n_cols == 0 with WaveletError.INVALID_PARAM
+    rejects n_cols > 16777216 with WaveletError.INVALID_PARAM
+    ensures no_panic, terminates
+  input dwt_2d.wavelet:
+    hostile
+    ensures no_panic, terminates
+  input dwt_2d.levels:
+    hostile
+    rejects levels == 0 with WaveletError.INVALID_PARAM
+    rejects levels > 31 with WaveletError.INVALID_PARAM
+    ensures no_panic, terminates
+  input dwt_2d.boundary:
+    hostile
+    ensures no_panic, terminates
+
+  input idwt_2d.coeffs:
+    hostile
+    rejects len(coeffs) == 0 with WaveletError.EMPTY_SIGNAL
+    rejects len(coeffs) > 67108864 with WaveletError.INVALID_PARAM
+    ensures no_panic, terminates
+  input idwt_2d.n_rows:
+    hostile
+    rejects n_rows == 0 with WaveletError.INVALID_PARAM
+    rejects n_rows > 16777216 with WaveletError.INVALID_PARAM
+    ensures no_panic, terminates
+  input idwt_2d.n_cols:
+    hostile
+    rejects n_cols == 0 with WaveletError.INVALID_PARAM
+    rejects n_cols > 16777216 with WaveletError.INVALID_PARAM
+    ensures no_panic, terminates
+  input idwt_2d.wavelet:
+    hostile
+    ensures no_panic, terminates
+  input idwt_2d.levels:
+    hostile
+    rejects levels == 0 with WaveletError.INVALID_PARAM
+    rejects levels > 31 with WaveletError.INVALID_PARAM
+    ensures no_panic, terminates
+  input idwt_2d.boundary:
+    hostile
+    ensures no_panic, terminates
+
+  input cwt.signal:
+    hostile
+    rejects len(signal) == 0 with WaveletError.EMPTY_SIGNAL
+    rejects len(signal) > 67108864 with WaveletError.INVALID_PARAM
+    ensures no_panic, terminates
+  input cwt.scales:
+    hostile
+    rejects len(scales) == 0 with WaveletError.INVALID_PARAM
+    rejects len(scales) > 4096 with WaveletError.INVALID_PARAM
+    ensures no_panic, terminates
+  input cwt.wavelet:
+    hostile
+    ensures no_panic, terminates
+
+  bound dwt_1d:
+    output <= len(signal) + 4096
+    steps <= 64 * len(signal) + 4096
+    heap <= 4 * len(signal) + 8192
+    depth <= 32
+
+  bound idwt_1d:
+    output <= 4 * output_length + 4096
+    steps <= 64 * output_length + 4096
+    heap <= 8 * output_length + 8192
+    depth <= 32
+
+  bound dwt_2d:
+    output <= len(image) + 4096
+    steps <= 64 * len(image) + 4096
+    heap <= 4 * len(image) + 8192
+    depth <= 32
+
+  bound idwt_2d:
+    output <= 4 * (n_rows * n_cols) + 4096
+    steps <= 64 * (n_rows * n_cols) + 4096
+    heap <= 8 * (n_rows * n_cols) + 8192
+    depth <= 32
+
+  bound cwt:
+    output <= len(signal) * len(scales) + 4096
+    steps <= 64 * len(signal) * len(scales) + 4096
+    heap <= 4 * len(signal) * len(scales) + 8192
+    depth <= 32
+
+  claim dwt_1d_round_trip:
+    forall s: Bytes. dwt_1d(s, 0, 1, 0) == Ok(s)

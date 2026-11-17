@@ -3,5 +3,5 @@
   "version": 1,
   "package": "fsharp/trig",
   "capabilities": [],
-  "justification": "Pure in-memory library and tests. No filesystem, process, environment, or network access needed."
+  "justification": "Pure in-memory library. The conformance tests read the shared trig-reference-v1 vectors from the repository (test-only), as the other trig lanes do."
 }

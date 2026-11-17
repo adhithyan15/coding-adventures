@@ -95,6 +95,102 @@ func TestRngCorpusSelectsEveryFixedLane(t *testing.T) {
 	}
 }
 
+func TestTrigReferenceCorpusSelectsConvertedPorts(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "python/trig", Language: "python"},
+		{Name: "rust/trig", Language: "rust"},
+		{Name: "typescript/trig", Language: "typescript"},
+		{Name: "c/trig", Language: "c"},
+		{Name: "cpp/trig", Language: "cpp"},
+		{Name: "ruby/trig", Language: "ruby"},
+		{Name: "haskell/trig", Language: "haskell"},
+		{Name: "java/trig", Language: "java"},
+		{Name: "kotlin/trig", Language: "kotlin"},
+		{Name: "swift/trig", Language: "swift"},
+		{Name: "csharp/trig", Language: "csharp"},
+		{Name: "fsharp/trig", Language: "fsharp"},
+		{Name: "lua/trig", Language: "lua"},
+		{Name: "perl/trig", Language: "perl"},
+		{Name: "elixir/trig", Language: "elixir"},
+		{Name: "go/trig", Language: "go"},
+		{Name: "dart/trig", Language: "dart"},
+		{Name: "python/rng", Language: "python"},
+	}
+	for _, changed := range []string{
+		"code/specs/fixtures/trig-reference-v1/edge.tsv",
+		"code/specs/fixtures/trig-reference-v1/manifest.json",
+		"code/specs/fixtures/trig-reference-v1/sweep-cw.tsv",
+	} {
+		got, err := repositoryInputConsumersForChange([]string{changed}, packages, "all")
+		if err != nil {
+			t.Fatal(err)
+		}
+		if want := map[string]bool{"python/trig": true, "rust/trig": true, "typescript/trig": true, "c/trig": true, "cpp/trig": true, "ruby/trig": true, "haskell/trig": true, "java/trig": true, "kotlin/trig": true, "swift/trig": true, "csharp/trig": true, "fsharp/trig": true, "lua/trig": true, "perl/trig": true, "elixir/trig": true, "go/trig": true, "dart/trig": true}; !reflect.DeepEqual(got, want) {
+			t.Fatalf("%s selected %v, want %v", changed, got, want)
+		}
+	}
+	for _, lang := range []string{"python", "rust", "typescript", "c", "cpp", "ruby", "haskell", "java", "kotlin", "swift", "csharp", "fsharp", "lua", "perl", "elixir", "go", "dart"} {
+		want := lang + "/trig"
+		got, _ := repositoryInputConsumersForChange([]string{"code/specs/fixtures/trig-reference-v1/edge.tsv"}, packages, lang)
+		if !reflect.DeepEqual(got, map[string]bool{want: true}) {
+			t.Fatalf("%s-only run selected %v, want only %s", lang, got, want)
+		}
+	}
+	for path, want := range map[string]bool{
+		"code/specs/fixtures/trig-reference-v1/edge.tsv":  true,
+		"code/specs/fixtures/trig-reference-v10/edge.tsv": false,
+		"code/specs/fixtures/trig-reference-v1":           false,
+		"code/specs/fixtures/phy00-phy01-v1/cases/x.json": false,
+	} {
+		if isTrigReferenceCorpus(path) != want {
+			t.Errorf("isTrigReferenceCorpus(%q) != %v", path, want)
+		}
+	}
+	// The generator, its oracle, the cross-checks and the validator select python/trig
+	// too, because its BUILD runs the generator's --check; lookalikes select nothing.
+	for path, want := range map[string]bool{
+		"code/scripts/generate_trig_reference_fixture.py":         true,
+		"code/scripts/generate_trig_reference_dart_fixtures.py":   true,
+		"code/scripts/tests/test_trig_reference_dart_fixtures.py": true,
+		"code/scripts/trig_ref_exact.py":                          true,
+		"code/scripts/trig_ref_softfloat.py":                      true,
+		"code/scripts/tests/test_trig_reference_fixture.py":       true,
+		"code/scripts/trig_reference_xcheck/xcheck.c":             true,
+		"code/scripts/trig_reference_xcheck/search.c":             true,
+		"code/specs/fixtures/trig-reference-v1/manifest.json":     true,
+		"code/scripts/generate_trig_reference_fixture.py.bak":     false,
+		"code/scripts/trig_ref_exact.pyc":                         false,
+		"code/scripts/trig_reference_xcheck2/x.c":                 false,
+		"code/scripts/generate_other_fixture.py":                  false,
+	} {
+		if isTrigReferenceInput(path) != want {
+			t.Errorf("isTrigReferenceInput(%q) != %v", path, want)
+		}
+		got, err := repositoryInputConsumersForChange([]string{path}, packages, "all")
+		if err != nil {
+			t.Fatal(err)
+		}
+		// The generator, oracle and cross-check select only python/trig, whose
+		// BUILD runs --check (the Dart generator and its test too); a corpus
+		// file selects every one of the seventeen converged ports.
+		wantCount := 0
+		if want {
+			wantCount = 1
+			if isTrigReferenceCorpus(path) {
+				wantCount = 17
+			}
+		}
+		if len(got) != wantCount || (want && !got["python/trig"]) {
+			t.Errorf("%s selected %v, want %d consumers including python/trig", path, got, wantCount)
+		}
+	}
+	// A converted port whose package is missing from discovery is a hard error,
+	// never a silent skip.
+	if _, err := repositoryInputConsumersForChange([]string{"code/specs/fixtures/trig-reference-v1/edge.tsv"}, nil, "all"); err == nil {
+		t.Fatal("missing consumer must be an error")
+	}
+}
+
 func TestCtCompareInputsSelectTheirConsumers(t *testing.T) {
 	corpusLanes := []string{"dart", "haskell", "lua", "ocaml", "perl", "swift"}
 	packages := []discovery.Package{

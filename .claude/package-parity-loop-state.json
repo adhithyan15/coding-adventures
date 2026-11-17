@@ -10029,45 +10029,53 @@
     {
       "id": "canonical-cbor-dart-lane-parity",
       "title": "Port canonical CBOR to Dart",
-      "status": "pending",
+      "status": "merged",
       "depends_on": [
         "canonical-cbor-language-neutral-conformance"
       ],
-      "branch": null,
-      "pr_number": null,
-      "notes": "Implement the closed canonical-CBOR contract in Dart and consume every language-neutral case."
+      "branch": "feat/canonical-cbor-dart-lane-parity",
+      "pr_number": 19396,
+      "notes": "Implement the closed canonical-CBOR contract in Dart and consume every language-neutral case.",
+      "merged_at": "2026-11-14T20:42:59Z",
+      "merge_commit": "d90925ebcbc"
     },
     {
       "id": "canonical-cbor-elixir-lane-parity",
       "title": "Port canonical CBOR to Elixir",
-      "status": "pending",
+      "status": "merged",
       "depends_on": [
         "canonical-cbor-language-neutral-conformance"
       ],
-      "branch": null,
-      "pr_number": null,
+      "branch": "feat/canonical-cbor-elixir-lane-parity",
+      "pr_number": 19407,
+      "merged_at": "2026-11-15T00:17:44Z",
+      "merge_commit": "bc705baf6a6",
       "notes": "Implement the closed canonical-CBOR contract in Elixir and consume every language-neutral case."
     },
     {
       "id": "canonical-cbor-go-lane-parity",
       "title": "Port canonical CBOR to Go",
-      "status": "pending",
+      "status": "merged",
       "depends_on": [
         "canonical-cbor-language-neutral-conformance"
       ],
-      "branch": null,
-      "pr_number": null,
-      "notes": "Implement the closed canonical-CBOR contract in Go and consume every language-neutral case."
+      "branch": "feat/canonical-cbor-go-lane-parity",
+      "pr_number": 19394,
+      "notes": "Implement the closed canonical-CBOR contract in Go and consume every language-neutral case.",
+      "merged_at": "2026-11-14T20:07:44Z",
+      "merge_commit": "b3fd9422fa8"
     },
     {
       "id": "canonical-cbor-haskell-lane-parity",
       "title": "Port canonical CBOR to Haskell",
-      "status": "pending",
+      "status": "merged",
       "depends_on": [
         "canonical-cbor-language-neutral-conformance"
       ],
-      "branch": null,
-      "pr_number": null,
+      "branch": "feat/canonical-cbor-haskell-lane-parity",
+      "pr_number": 19408,
+      "merged_at": "2026-11-15T00:52:58Z",
+      "merge_commit": "2ce3501e2ce",
       "notes": "Implement the closed canonical-CBOR contract in Haskell and consume every language-neutral case."
     },
     {
@@ -10098,23 +10106,27 @@
     {
       "id": "canonical-cbor-lua-lane-parity",
       "title": "Port canonical CBOR to Lua",
-      "status": "pending",
+      "status": "merged",
       "depends_on": [
         "canonical-cbor-language-neutral-conformance"
       ],
-      "branch": null,
-      "pr_number": null,
+      "branch": "feat/canonical-cbor-lua-lane-parity",
+      "pr_number": 19404,
+      "merged_at": "2026-11-14T22:33:53Z",
+      "merge_commit": "4f0aa930974",
       "notes": "Implement the closed canonical-CBOR contract in Lua and consume every language-neutral case."
     },
     {
       "id": "canonical-cbor-perl-lane-parity",
       "title": "Port canonical CBOR to Perl",
-      "status": "pending",
+      "status": "merged",
       "depends_on": [
         "canonical-cbor-language-neutral-conformance"
       ],
-      "branch": null,
-      "pr_number": null,
+      "branch": "feat/canonical-cbor-perl-lane-parity",
+      "pr_number": 19406,
+      "merged_at": "2026-11-14T23:28:23Z",
+      "merge_commit": "c996900a72f",
       "notes": "Implement the closed canonical-CBOR contract in Perl and consume every language-neutral case."
     },
     {
@@ -10141,23 +10153,27 @@
     {
       "id": "canonical-cbor-ruby-lane-parity",
       "title": "Port canonical CBOR to Ruby",
-      "status": "pending",
+      "status": "merged",
       "depends_on": [
         "canonical-cbor-language-neutral-conformance"
       ],
-      "branch": null,
-      "pr_number": null,
+      "branch": "feat/canonical-cbor-ruby-lane-parity",
+      "pr_number": 19402,
+      "merged_at": "2026-11-14T21:29:41Z",
+      "merge_commit": "cabd9888168",
       "notes": "Implement the closed canonical-CBOR contract in Ruby and consume every language-neutral case."
     },
     {
       "id": "canonical-cbor-swift-lane-parity",
       "title": "Port canonical CBOR to Swift",
-      "status": "pending",
+      "status": "merged",
       "depends_on": [
         "canonical-cbor-language-neutral-conformance"
       ],
-      "branch": null,
-      "pr_number": null,
+      "branch": "feat/canonical-cbor-swift-lane-parity",
+      "pr_number": 19409,
+      "merged_at": "2026-11-15T01:32:28Z",
+      "merge_commit": "30058d4cbeb",
       "notes": "Implement the closed canonical-CBOR contract in Swift and consume every language-neutral case."
     },
     {
@@ -11598,25 +11614,31 @@
     {
       "id": "elixir-zip-png-scale-raw-codec-hardening",
       "title": "Bound Elixir ZIP raw-codec memory and work before PNG-scale use",
-      "status": "pending",
+      "status": "merged",
       "depends_on": [
         "zip-raw-rfc1951-elixir-lane-parity"
       ],
-      "branch": null,
-      "pr_number": null,
+      "branch": "feat/elixir-zip-png-scale-raw-codec-hardening",
+      "pr_number": 19414,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19414",
+      "merged_at": "2026-11-15T06:51:49Z",
+      "merge_commit": "1a462b8bfc79c501dd1d748f19f595027108946e",
       "notes": "The post-#16909 read-only audit found raw deflate boxing the full input and rebuilding an array at each cursor, while counted inflate retains every output byte in an array. Before IC18 PNG's 134 MiB maximum RGBA surface, establish byte-backed bounded encode/decode behavior, stable counted/error semantics, foreign round trips, and measured ceiling tests while preserving all 34 RFC1951 fixtures. Exact and punctuation-insensitive owner-ID and live PR path checks found no collision."
     },
     {
       "id": "image-codec-png-elixir-lane-parity",
       "title": "Port IC18 image-codec-png to Elixir",
-      "status": "pending",
+      "status": "merged",
       "depends_on": [
         "image-codec-png-language-neutral-conformance",
         "image-codec-png-apng-neutral-rejection-conformance",
         "elixir-zip-png-scale-raw-codec-hardening"
       ],
-      "branch": null,
-      "pr_number": null,
+      "branch": "feat/image-codec-png-elixir-lane-parity",
+      "pr_number": 19423,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19423",
+      "merged_at": "2026-11-15T07:40:30Z",
+      "merge_commit": "2b900ff281ade8f83e4fd81257fc6ad02d3b2029",
       "notes": "Standalone Elixir child consuming the neutral PNG corpus and established ZIP raw/CRC surface with empty production capabilities, after bounded PNG-scale Elixir ZIP raw-codec hardening."
     },
     {
@@ -11643,13 +11665,16 @@
     {
       "id": "image-codec-png-haskell-lane-parity",
       "title": "Port IC18 image-codec-png to Haskell",
-      "status": "pending",
+      "status": "merged",
       "depends_on": [
         "image-codec-png-language-neutral-conformance",
         "image-codec-png-apng-neutral-rejection-conformance"
       ],
-      "branch": null,
-      "pr_number": null,
+      "branch": "feat/image-codec-png-haskell-lane-parity",
+      "pr_number": 19412,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19412",
+      "merged_at": "2026-11-15T03:48:06Z",
+      "merge_commit": "cbedb061a289b4f7d2eacd266be98148d348bb9f",
       "notes": "Standalone Haskell child consuming the neutral PNG corpus and established ZIP raw/CRC surface with empty production capabilities."
     },
     {
@@ -11697,13 +11722,16 @@
     {
       "id": "image-codec-png-perl-lane-parity",
       "title": "Port IC18 image-codec-png to Perl",
-      "status": "pending",
+      "status": "merged",
       "depends_on": [
         "image-codec-png-language-neutral-conformance",
         "image-codec-png-apng-neutral-rejection-conformance"
       ],
-      "branch": null,
-      "pr_number": null,
+      "branch": "feat/image-codec-png-perl-lane-parity",
+      "pr_number": 19411,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19411",
+      "merged_at": "2026-11-15T02:49:34Z",
+      "merge_commit": "8f7e7793634a579f310381ad59f3f8e2918c492a",
       "notes": "Standalone Perl child consuming the neutral PNG corpus and established ZIP raw/CRC surface with empty production capabilities."
     },
     {
@@ -11731,13 +11759,16 @@
     {
       "id": "image-codec-png-ruby-lane-parity",
       "title": "Port IC18 image-codec-png to Ruby",
-      "status": "pending",
+      "status": "merged",
       "depends_on": [
         "image-codec-png-language-neutral-conformance",
         "image-codec-png-apng-neutral-rejection-conformance"
       ],
-      "branch": null,
-      "pr_number": null,
+      "branch": "feat/image-codec-png-ruby-lane-parity",
+      "pr_number": 19410,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19410",
+      "merged_at": "2026-11-15T02:12:22Z",
+      "merge_commit": "922613efa9fce5dac671e68763aecb15952e0559",
       "notes": "Standalone Ruby child consuming the neutral PNG corpus and established ZIP raw/CRC surface with empty production capabilities."
     },
     {
@@ -15201,12 +15232,15 @@
     {
       "id": "sha512-java-kotlin-dart-lane-parity",
       "title": "Complete SHA-512 parity in Java, Kotlin, and Dart",
-      "status": "pending",
+      "status": "merged",
       "depends_on": [
         "sha512-existing-lane-hf04-conformance-audit"
       ],
-      "branch": null,
-      "pr_number": null,
+      "branch": "feat/sha512-java-kotlin-dart-lane-parity",
+      "pr_number": 19420,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19420",
+      "merged_at": "2026-11-15T07:33:43Z",
+      "merge_commit": "45c331ff862dbff63543e0e34bceff4e2be94e0e",
       "notes": "Port the reviewed HF04 SHA-512 core into the three missing established lanes. Use unsigned-safe word operations, Dart BigInt only where needed to preserve exact length arithmetic across VM and web targets, deterministic vectors, empty capability manifests, and no host-crypto substitution.",
       "postmerge_preparation_evidence": [
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/sha512-java-kotlin-dart-lane-parity"
@@ -16009,14 +16043,17 @@
     {
       "id": "itf-java-kotlin-dart-lane-parity",
       "title": "Complete ITF parity in Java, Kotlin, and Dart",
-      "status": "pending",
+      "status": "merged",
       "depends_on": [
         "barcode-symbologies-language-neutral-conformance",
         "itf-existing-lanes-v1-conformance",
         "barcode-layout-1d-java-kotlin-dart-lane-parity"
       ],
-      "branch": null,
-      "pr_number": null,
+      "branch": "feat/itf-java-kotlin-dart-lane-parity",
+      "pr_number": 19426,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19426",
+      "merged_at": "2026-11-15T08:26:17Z",
+      "merge_commit": "518331a7e8edb037be14cb172a188e0c046e8fa4",
       "notes": "Implement the neutral ITF encoder in all three missing lanes with strict nonempty even-length ASCII digits, exact patterns, checked bounds, stable payload-blind errors, and shared layout output."
     },
     {
@@ -18570,11 +18607,12 @@
     {
       "id": "ml02-gradient-descent-dart-java-kotlin-swift-parity",
       "title": "Port ML02 gradient descent across four missing lanes",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": [],
-      "branch": null,
-      "pr_number": null,
-      "notes": "Ten of fifteen lanes present; Dart, Java, Kotlin, Swift missing. Existing matrix, activation, and loss foundations permit independent lane-sized SGD ports with deterministic neutral cases.",
+      "branch": "feat/ml02-gradient-descent-dart-java-kotlin-swift-parity",
+      "pr_number": 19430,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19430",
+      "notes": "Eleven of fifteen lanes present; Dart, Java, Kotlin, Swift missing. Existing matrix, activation, and loss foundations permit independent lane-sized SGD ports with deterministic neutral cases.",
       "postmerge_preparation_evidence": [
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/ml02-gradient-descent-dart-java-kotlin-swift-parity"
       ],
@@ -19165,12 +19203,13 @@
     {
       "id": "dart-swift-java-lexer-lane-parity",
       "title": "Port the Java lexer to Dart and Swift",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": [
         "dart-swift-language-frontends-neutral-fixtures"
       ],
-      "branch": null,
-      "pr_number": null,
+      "branch": "feat/dart-swift-java-lexer-lane-parity",
+      "pr_number": 19428,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19428",
       "notes": "Java lexer is 13/15 and missing only Dart and Swift. Split by lane and preserve ten Java grammar versions. Java parser is already owned by parser-contextual-generic-closer-established-lane-parity; do not duplicate it.",
       "postmerge_preparation_evidence": [
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/dart-swift-java-lexer-lane-parity"
@@ -27562,6 +27601,57 @@
       "merged_at": "2026-10-26T04:30:17Z",
       "merge_revision": "bfc66cbaac24fea43af893c4a4a9cac5553ef115",
       "merge_notes": "PR #18259 completed guarded squash auto-merge after its exact reviewed head passed the required checks and GitHub reported no merge conflict. This receipt closes the stale in-progress lifecycle entry discovered during independent review of the Haskell/Swift Bezier tranche."
+    },
+    {
+      "id": "oauth-client-secret-http1-binding-boundary-classification",
+      "title": "Classify bounded OAuth client secret HTTP/1 binding and transport framing boundaries",
+      "status": "pending",
+      "depends_on": [
+        "oauth-client-secret-custody-portable-conformance"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "delivery_class": "boundary-classification",
+      "selection_blocked": true,
+      "package_paths": [
+        "code/packages/rust/oauth-client-secret-http1-binding"
+      ],
+      "discovered_revision": "d90925ebcbcb94f1488f523630e601bb8815e5d1",
+      "notes": "Classify the boundary of pure HTTP/1 request/response framing for OAuth client-secret authentication against portable custody prerequisites; keep raw socket I/O, TLS, and network authority out of the pure binding layer."
+    },
+    {
+      "id": "oauth-client-secret-http1-release-boundary-classification",
+      "title": "Classify bounded OAuth client secret HTTP/1 release protocol boundaries",
+      "status": "pending",
+      "depends_on": [
+        "oauth-client-secret-http1-binding-boundary-classification"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "delivery_class": "boundary-classification",
+      "selection_blocked": true,
+      "package_paths": [
+        "code/packages/rust/oauth-client-secret-http1-release"
+      ],
+      "discovered_revision": "cabd9888168adba577b962d53609318ede7f6f8d",
+      "notes": "Classify bounded OAuth client secret HTTP/1 release protocol boundaries against custody and transport framing invariants."
+    },
+    {
+      "id": "oauth-client-secret-reviewed-server-binding-boundary-classification",
+      "title": "Classify reviewed OAuth client secret server binding boundaries",
+      "status": "pending",
+      "depends_on": [
+        "oauth-client-secret-http1-release-boundary-classification"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "delivery_class": "boundary-classification",
+      "selection_blocked": true,
+      "package_paths": [
+        "code/packages/rust/oauth-client-secret-reviewed-server-binding"
+      ],
+      "discovered_revision": "cabd9888168adba577b962d53609318ede7f6f8d",
+      "notes": "Classify reviewed server binding boundaries for OAuth client secret validation; maintain boundary separation from socket I/O and process execution."
     }
   ],
   "postmerge_refresh": {

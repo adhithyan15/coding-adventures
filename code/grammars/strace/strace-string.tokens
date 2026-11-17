@@ -1,0 +1,49 @@
+# Token definitions for the BODY of a strace quoted string or -y annotation
+# @version 1
+#
+# Input to this lexer is the text BETWEEN the quotes of "..." (or between the
+# angle brackets of <...>), not including them.  It decodes strace's C-style
+# escapes.  Case-sensitive (no `case_insensitive:` line): `\x4a` and `\x4A` are
+# both fine, and `\N` is not `\n`.
+#
+# Every byte lexes: anything not recognised is an ERR_* token, and the consumer
+# refuses a body that contains one.  No token name contains the substring
+# STRING (the lexer would strip quote-looking bytes from its value).
+#
+# Rules, in order (first match wins):
+#
+#   ESC_SIMPLE   \"  \\  \n  \t  \r  \a  \b  \f  \v
+#   ESC_HEX      \xHH, exactly two hex digits
+#   ESC_OCT      \O, \OO or \OOO, 1 to 3 octal digits, greedy.  The VALUE must
+#                fit a byte (\400 and above are not bytes): the lexer cannot
+#                see numeric range, so the decoder checks it.
+#   ESC_ANGLE    \< and \>; only legal in an annotation (strace escapes the
+#                angle brackets there).  The decoder refuses it in a string.
+#   ERR_BSL      any other backslash sequence: a lone backslash at the end,
+#                \q, \x with fewer than two hex digits, ...
+#   ERR_CTRL     a raw control character: strace escapes every one of them.
+#   ERR_QUOTE    a raw double quote: strace escapes it in a string body.
+#   ERR_ANGLE    a raw < or >: strace escapes them in an annotation body.  (The
+#                decoder accepts them in a string body, where they are plain.)
+#   CHARS        a run of ordinary bytes (every other byte, including bytes
+#                above 0x7f).
+#
+# ERR_QUOTE and ERR_ANGLE are listed so a consumer can choose which are errors
+# for its context: the decoder in strace-lexer treats a raw quote as an error in
+# a string and a raw angle bracket as an error in an annotation.
+
+ESC_SIMPLE = /\\["\\ntrabfv]/
+ESC_HEX    = /\\x[0-9A-Fa-f]{2}/
+ESC_OCT    = /\\[0-7]{1,3}/
+ESC_ANGLE  = /\\[<>]/
+ERR_BSL    = /\\[^\x00-\x1f\x7f]?/
+ERR_CTRL   = /[\x00-\x1f\x7f]/
+ERR_QUOTE  = /"/
+ERR_ANGLE  = /[<>]/
+CHARS      = /[^\\"<>\x00-\x1f\x7f]+/
+
+# No skip: spaces are ordinary characters.  An empty skip section would mean the
+# built-in whitespace skip, which would drop spaces and tabs, so a skip rule
+# that can never match is declared instead.
+skip:
+  NEVER = /[^\x00-\x{10FFFF}]/

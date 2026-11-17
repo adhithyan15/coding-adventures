@@ -1,0 +1,45 @@
+# Token definitions for `contract.vos`, the authored text of a VOS contract
+# package outside Warrant (VOS02 sections 2.5 and 6.8, decision D-GD6).
+# @version 1
+#
+# A contract file is one record per line:
+#
+#   vos-contract 1
+#   name vos-sched-contract
+#   iface sched
+#   tier any
+#   config N 8
+#   ceiling dispatch steps 160
+#   end
+#
+# Three kinds of token are enough.  The words of the file ("name", "tier",
+# "ceiling", "depth", ...) are ordinary NAME tokens; the parser grammar names
+# them by value.  Which CLASS of name a NAME must be (a hyphen-only package
+# name, an underscore-only operation name, a letters-digits-underscore key,
+# at most 32 bytes) depends on the row it sits in, which one lexical pattern
+# cannot know, so `vos-manifest` checks the class of each value after the
+# parse.  The same goes for the numeric range of a DEC (see below).
+#
+# Whitespace.  A single space between the words of a row is skipped.  A tab, a
+# carriage return and every other byte outside the patterns below is a lexical
+# error (the lexer reports "Unexpected sequence"), so the file is ASCII text
+# with LF line ends by construction.  Doubled spaces, a trailing space and extra
+# line feeds after the `end` row are accepted by this grammar; the canonical-form
+# check (parse, re-emit, compare byte for byte) rejects them.  That is the
+# section 6.1 discipline: ONE spelling per object.
+
+skip:
+  SPACE = /[ ]+/
+
+# A line end.  The record structure is line-based, so it is a real token.
+NEWLINE = /\n/
+
+# A non-negative decimal number: `0`, or a digit run with no leading zero.  At
+# most 20 digits (the digit count of u64::MAX).  A longer run lexes as a DEC
+# followed by another DEC, which the parser grammar refuses.  That the value
+# also fits u64 is a numeric check the grammar cannot make (vos-manifest).
+DEC = /0|[1-9][0-9]{0,19}/
+
+# Every word and every name.  The first character is a letter, so a NAME never
+# starts like a number.
+NAME = /[A-Za-z][A-Za-z0-9_-]*/

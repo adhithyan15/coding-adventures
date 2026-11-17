@@ -1,0 +1,53 @@
+warrant oscillator
+  error OscillatorError = INVALID_PARAMETER | OUT_OF_BOUNDS | SAMPLE_RATE_TOO_HIGH | SAMPLE_COUNT_TOO_LARGE
+
+  model square_wave_high(pos_percent: Int, duty_percent: Int) -> Bool = pos_percent < duty_percent
+  model double_rate(half_rate: Int) -> Int = half_rate * 2
+
+  op calc_nyquist(sample_rate: Int) -> Option<Int>
+  op eval_square_duty(pos_percent: Int, duty_percent: Int) -> Bool
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels calc_nyquist:
+    sample_rate public
+  labels eval_square_duty:
+    pos_percent public
+    duty_percent public
+
+  input calc_nyquist.sample_rate:
+    hostile
+    ensures no_panic, terminates
+
+  input eval_square_duty.pos_percent:
+    hostile
+    ensures no_panic, terminates
+  input eval_square_duty.duty_percent:
+    hostile
+    ensures no_panic, terminates
+
+  bound calc_nyquist:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound eval_square_duty:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+
+  example nyquist_44100:
+    calc_nyquist(44100) == Some(22050)
+  example nyquist_48000:
+    calc_nyquist(48000) == Some(24000)
+  example square_duty_50_below:
+    eval_square_duty(25, 50) == true
+  example square_duty_50_above:
+    eval_square_duty(75, 50) == false
+
+  claim nyquist_div:
+    forall rate: Int. calc_nyquist(rate) == div(rate, 2)
+  claim square_duty_agrees:
+    forall pos: Int, duty: Int. eval_square_duty(pos, duty) == square_wave_high(pos, duty)

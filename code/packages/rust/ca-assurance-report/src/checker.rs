@@ -32,6 +32,8 @@ pub enum CheckError {
     CapabilitiesViolation(String),
     UncoveredSymbols(Vec<String>),
     CorruptReport(String),
+    /// A report's `lanes` do not have the shape VER04i 8.3 allows.
+    InvalidLaneRung(String),
 }
 
 impl fmt::Display for CheckError {
@@ -51,6 +53,7 @@ impl fmt::Display for CheckError {
                 write!(f, "Public exported symbols without claims: {:?}", syms)
             }
             CheckError::CorruptReport(e) => write!(f, "Corrupt report: {e}"),
+            CheckError::InvalidLaneRung(e) => write!(f, "Invalid lane rung: {e}"),
         }
     }
 }
@@ -112,6 +115,31 @@ pub fn verify_assurance_report(
                     "CWE-{} marked excluded without exclusion rationale",
                     row.cwe
                 )));
+            }
+            // For CWE-208, exclusion under `no_secret_inputs` is only valid for packages
+            // with no constant-time obligations or claims.
+            if row.cwe == 208 {
+                let has_ct_claims = report.claims.iter().any(|c| {
+                    c.id.starts_with("claim/ct_")
+                        || c.id.contains("constant-time")
+                        || c.id.contains("constant_time")
+                        || c.id.contains("secret")
+                        || c.evidence.iter().any(|e| {
+                            e.contains("constant-time") || e.contains("constant_time") || e.contains("secret")
+                        })
+                });
+                if has_ct_claims {
+                    return Err(CheckError::InvalidExclusion(
+                        "CWE-208 cannot be excluded for a package with constant-time claims; secret inputs exist".into(),
+                    ));
+                }
+                let has_audit = row.evidence.iter().any(|e| e == "capability-audit::no-secret-inputs");
+                let has_public = row.evidence.iter().any(|e| e == "warrant-spec::all-operands-public");
+                if !has_audit || !has_public {
+                    return Err(CheckError::InvalidExclusion(
+                        "CWE-208 cannot be excluded: exclusion requires both 'capability-audit::no-secret-inputs' and 'warrant-spec::all-operands-public' in evidence".into(),
+                    ));
+                }
             }
         }
 
@@ -284,6 +312,11 @@ pub fn verify_assurance_report(
             non_live_rungs
         )));
     }
+
+    // 9b. Lane rungs (VER04i 8.3).  They are about other languages' evidence and
+    // never change the verdict; they only have to be shaped honestly.
+    crate::lane_report::check_lane_shape(&report.package, &report.lanes)
+        .map_err(CheckError::InvalidLaneRung)?;
 
     // 10. Unapproved exemptions check
     let unapproved_exemptions: Vec<&str> = report

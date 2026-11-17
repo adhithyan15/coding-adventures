@@ -140,6 +140,20 @@ fixed strict subset) or `sample` (reserved). Use its `cases_by_label`, not a
 summed "exhaustive" total: suite-level totals conflate the kinds until backlog
 **LP-012** lands.
 
+## Shared conformance fixture (WD-100)
+
+`tests/conformance-fixture.test.ts` runs every case of
+`code/specs/fixtures/warrant-corpus-conformance-v1/` (VER04i 9.1) through this
+lane's own reader, renderer, tagged-value decoder, containment helper (driven
+with `path.win32` and `path.posix`) and label digest: 397 cases. The fixture's
+own checker is `python3 code/scripts/warrant_corpus_conformance.py`.
+
+Two behaviours JavaScript gets wrong by default, both pinned by cases: object
+keys must be sorted by **code point** (a plain `.sort()` uses UTF-16 order, and
+integer-like keys such as `"10"` are enumerated numerically no matter how they
+were inserted), and DEL (U+007F) is written `\u007f`. `renderJson` therefore
+serialises by hand instead of calling `JSON.stringify`.
+
 ## Bounded work
 
 Before any case runs, a suite's domain product must equal its declared

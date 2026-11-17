@@ -19,6 +19,9 @@ requires:
   knowledge: [ZH-TONE-LEXICAL, ZH-LEX-NIHAO]
 introduces:
   knowledge: [ZH-TONE-SANDHI-THIRD]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [ZH-TONE-LEXICAL, ZH-LEX-NIHAO, ZH-TONE-SANDHI-THIRD]
 skills: [listening, speaking]

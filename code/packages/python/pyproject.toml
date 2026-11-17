@@ -61,6 +61,16 @@ members = [
     "tcp-server",
     "radix-tree",
     "simulator-protocol",
+    "test-bootstrap",
+    "ca-capability-analyzer",
+    "dsp-complex",
+    "dsp-fft",
+    "dsp-dct",
+    "dsp-filters",
+    "dsp-conv",
+    "dsp-stft",
+    "dsp-wavelets",
+    "music-analysis",
 ]
 
 [tool.uv.sources]
@@ -120,6 +130,16 @@ coding-adventures-tree-set-native = { workspace = true }
 coding-adventures-tcp-server = { workspace = true }
 coding-adventures-radix-tree = { workspace = true }
 coding-adventures-simulator-protocol = { workspace = true }
+coding-adventures-test-bootstrap = { workspace = true }
+coding-adventures-ca-capability-analyzer = { workspace = true }
+coding-adventures-dsp-complex = { workspace = true }
+coding-adventures-dsp-fft = { workspace = true }
+coding-adventures-dsp-dct = { workspace = true }
+coding-adventures-dsp-filters = { workspace = true }
+coding-adventures-dsp-conv = { workspace = true }
+coding-adventures-dsp-stft = { workspace = true }
+coding-adventures-dsp-wavelets = { workspace = true }
+coding-adventures-music-analysis = { workspace = true }
 
 [dependency-groups]
 dev = [

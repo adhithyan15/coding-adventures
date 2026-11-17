@@ -2,7 +2,10 @@
 
 package record
 
-import "syscall"
+import (
+	"os/exec"
+	"syscall"
+)
 
 // childAttr: there is no Pdeathsig off Linux, and the recorder does not run
 // there (kiln record step refuses before it gets this far).
@@ -14,3 +17,7 @@ func setDataLimit(uint64) error { return nil }
 
 // adjustOOM: no oom_score_adj off Linux.
 func adjustOOM() {}
+
+// isolateProbe: no process groups or Pdeathsig to set off Linux; the deadline
+// still kills the process.
+func isolateProbe(*exec.Cmd) {}

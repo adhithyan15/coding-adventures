@@ -1,0 +1,14 @@
+[package]
+name = "wav-sink"
+version = "0.1.0"
+edition = "2021"
+description = "MUS01 Stage 8: Hardened WAV file sink and reader on top of the pcm-audio WAV codec"
+license = "MIT"
+readme = "README.md"
+
+[dependencies]
+pcm-audio = { path = "../pcm-audio" }
+
+[dev-dependencies]
+oscillator = { path = "../oscillator" }
+coding_adventures_test_bootstrap = { path = "../test-bootstrap" }

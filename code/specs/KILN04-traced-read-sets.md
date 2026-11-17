@@ -377,10 +377,14 @@ Two consequences:
   waited for has its exit line printed when strace reaps it, before the
   parent's `wait4` returns, so it precedes the marker. The boundary is the
   call line, not the init child's `+++ exited +++` line: strace prints
-  `exit_group` when the group starts to die, and whether a survivor's line
-  falls before or after the init child's own exit line is **left open**
-  until a real-strace run settles it (the `daemon-left` subtest of
-  `TestSandboxStraceSignals` logs it). With no `exit_group` seen
+  `exit_group` when the group starts to die. **Observed (F2, the first
+  `kiln-sandbox` CI run on ubuntu-24.04, kernel 7.0):** the survivor's
+  `+++ killed by SIGKILL +++` line comes just after the init child's
+  `exit_group` start line and BEFORE the init child's own `+++ exited +++`
+  line (log: survivor pid 5150 exit line 369 is before init's exit line;
+  init `exit_group` at line 368), which is the order `zap_pid_ns_processes`
+  gives. The rule stays order-agnostic: it keys on the call line, so it holds
+  whichever side of the init child's exit line a survivor's line falls. With no `exit_group` seen
   (`InitExitLine == 0`: the init group made no exit call at all and died by a
   signal, so the step is already `failed` and incomplete) every such
   `SIGKILL` death counts, which fails closed (other exits cannot be placed
@@ -649,7 +653,8 @@ pass, and each record keeps its source line. The defaults are 1 MiB per
 line, 64 MiB in total and 1,000,000 records, and every record counts
 (calls, start markers and exit lines). Argument counts are bounded while
 scanning: a handled call's arity, or 16 for any other name. Exceeding a cap
-is `size` or `arity`. A caller with a larger measured budget raises them.
+is `size` or `arity`. Limits may be lowered freely, but raised only by a
+spec revision with a DoS review and a worst-case benchmark (§4.9).
 
 **D19: signals in the trace.** `print_signalled` in strace 6.8
 (`strace.c`) prints `+++ killed by %s %s+++` only when
@@ -903,13 +908,15 @@ that calls `VerifyTree` and `Inventory`, which does not exist yet):
   pinned `strace`, which starts the pinned Kiln; gates and probes are
   **2b-2c**, where this is to be confirmed again). Confirm that no gate or probe (preconditions, toolchain probes, `kiln`'s own
   checks) runs repository code outside a traced step: untraced repository code
-  can write the tree with no trace at all. `prepare` runs no gate
-  (gates are **2b-2c**, decision P7) and no toolchain probe. Since **2b-2c-2** it
-  does run the in-sandbox structure probe (decision P14), but only as
-  `strace ... kiln sandbox-exec -- <fixed argv>`, every program of it inside the
-  sandbox and traced; the checkout's code is never run. The programs it starts
-  are Git, the build tool, `strace --version` and those four probe runs, all
-  resolved outside the checkout (decision P3).
+  can write the tree with no trace at all. `prepare` runs the gates (decision P7, **2b-2c-3**), which read the tracked tree
+  and run only the toolchain probes, and those only inside the sandbox
+  (`kiln sandbox-exec`, no strace, on an empty checkout: P7); the host never runs a
+  probe. Since **2b-2c-2** it also runs the in-sandbox structure probe (decision
+  P14), as `strace ... kiln sandbox-exec -- <fixed argv>`, every program of it
+  inside the sandbox and traced; the checkout's code is never run. The programs
+  it starts are Git, the build tool, `strace --version`, the four structure probe
+  runs and one `kiln sandbox-exec` per toolchain probe, all resolved outside the
+  checkout (decision P3).
 - **Done** (#19324). `recfmt.ShardRecord.Validate` refuses a record with `steps_run == 0` whose raw
   record has any content: a record that ran nothing was never classified.
 - **2b-2a** (the sidecar's `step_netns`) and **2b-2b-i** (`step`'s epilogue copies it into
@@ -923,11 +930,12 @@ that calls `VerifyTree` and `Inventory`, which does not exist yet):
   different disk.
 - **2b-2c.** The `daemon-left` ordering (a survivor's SIGKILL exit line after the init
   child's) needs a real-`strace` fixture on Linux CI; the canned traces only
-  assumed it. **Done for the rule and the argv (PR 1, D19):** the rule keys on
-  the init child's `exit_group` line, and `TestSandboxStraceSignals` runs the
-  signal shapes against real strace. Whether the survivor's exit line precedes
-  or follows the init child's own exit line is still to be read off the first
-  CI run's log.
+  assumed it. **Done (PR 1, D19, read off the CI log in 2b-2c-2):** the rule
+  keys on the init child's `exit_group` line, and `TestSandboxStraceSignals` runs
+  the signal shapes against real strace. The survivor's exit line comes BEFORE
+  the init child's own exit line (F2, §4.3); the rule does not depend on it.
+  The `-e signal=none` wrapper really does override `signal=all` (the
+  `signals` probe fails on it), so the probe is a true self-check.
 
 **Stage 4b-1: `kiln record prepare`.** Implemented by `internal/record`
 (`Prepare` and the files `place.go`, `scan.go`, `hostscan.go`, `sandboxcfg.go`,
@@ -1011,7 +1019,7 @@ under it is created `O_EXCL`. Layout of the part `prepare` writes:
 pre/binding.json  pre/host-facts.json  pre/inventory.json  pre/graph.json
 pre/steps.json    pre/build-plan.json  pre/sandbox.json     pre/exec-wrapper.json
 pre/tools.json  pre/classify.json  pre/tree                        (the last two: P13)
-pre/probes.json                                                     (P14)
+pre/probes.json                                                     (P14, P7)
 pre/actions/<sha256(action)>.json
 pre/SEALED        (sha256 and path of every other pre/ file, written last)
 ```
@@ -1074,14 +1082,54 @@ tool's file, not a Kiln format.
 selected by `env.json` (`legacy.RecordEnviron`) plus `HOME` and
 `TMPDIR=<tmpdir>`, never `PATH`. Then the weak key of every package the shard
 runs (`PackageNames(I)`) is computed from `Traced` over the verified tree and
-those facts. `pre/actions/<sha256(action)>.json` (`kiln-record-action/2`)
+those facts. `pre/actions/<sha256(action)>.json` (`kiln-record-action/3`)
 holds, per action: `action`, `language`, `weak` (hex) or `refusal` (the
-`Refusal` reason), `steps`, the lines `kiln-legacy-steps/1` gives for it
+`Refusal` reason), `gate`, `steps`, the lines `kiln-legacy-steps/1` gives for it
 (`[]` when it has no BUILD for Linux), and `tools`, the sorted names of the tools
 the key pins (P13). A package whose key is refused still
-gets an environment (`Traced.RecordEnv`), because it still runs. **Gates**
-(`gate`, `precondition:<gate>`) and the toolchain probes are **2b-2c**: they
-need `legacy.Gate` extracted from the planner, and `prepare` runs no probe.
+gets an environment (`Traced.RecordEnv`), because it still runs. **Gates and the
+toolchain probes (stage 4 PR 2b-2c-3).** `gate` is the reason the package must
+not be recorded as a measurement, computed by `Traced.Gate`: the very
+`gateFacts`/`gateFrom` that `legacy-plan`'s `record()` uses, so the plan and the
+recorder cannot drift. Priority: the never list, then the other hard reasons
+(`symlink:`, `unknown-repo-inputs:`, `unknown-toolchain:`, `no-build-file:`), then
+probes (`probe-mismatch:`, `probe-timeout:`, `probe-refused:`, `probe-absent:`); the smallest
+string wins within a priority. It is printable and clipped to 200 bytes. A gated
+package still RUNS (and may also be a refusal, as for an unknown toolchain); its
+record carries the gate and the merge turns it into `precondition:<gate>`, so it
+is never emitted. The toolchain probes (`Toolchains.Probe` over every language of
+the graph, D9) run on the first `Gate` call, in a sandbox, never on the host
+(`Probe` with no runner would exec on the host, so `prepare` ALWAYS passes
+`toolchainProber.Run`): plain `kiln sandbox-exec`, no strace, on
+`<dir>/probe/toolchains-sandbox.json`, whose `repo_root` is the empty
+`<dir>/probe/root` (cwd `.../root/p`), with `home`, `ro_roots` and `kiln_exe` as
+in `pre/sandbox.json`, **its own `tmpdir` `<dir>/probe/tmp`** (a probe's argv tail
+comes from the PR-editable `toolchains.json`, so it must not share the steps'
+writable TMPDIR: that would plant files later steps read unmeasured), no state
+roots, no masks, and the probe's
+environment (`PATH`, `LANG=C`, `LC_ALL=C`, `TZ=UTC`, `HOME` replaced by the
+sandbox's). The process gets `KILN_ACTION=p`, the safe `PATH`, `/dev/null` as stdin
+and one capped stream for stdout and stderr; 60 s per probe and 10 minutes in
+all (D8), the root killed with its process group at a deadline. A probe that
+mismatches, times out, is refused or whose sandbox exits 125 is a gate; so is a probe
+whose binary is **absent** from the fixed PATH and whose pin is a VERSION
+(`probe-absent:<tool>`, probe priority). For a versioned pin, absence means the
+version in the weak key was never checked, and otherwise a PR could point the
+tool's probe at a binary that does not exist and skip the check; the gate is
+fail-closed and the remedy is to declare the tool's root. An image pin is exempt: it
+makes no version claim (its identity is the image id, and absence is identical on every
+run of that image), a step cannot use a tool that is not there, so a gate would add
+nothing and only cost yield. `kiln legacy-plan` gates the same way, since both use
+`gateFacts`. Any other runner error (the sandbox cannot start, the
+configuration is refused, an unarmed or changed environment) fails `prepare`, and
+so does a probe sandbox that is systematically broken: when probes ran and EVERY
+one of them ended in exit 125 (a single 125 stays a mismatch). After the probes
+`prepare` re-runs the check of the structure probes on the REAL configuration:
+tmpdir and every state root must still be empty (`unscrubbed:*`).
+(`kiln legacy-plan --probe`, used by lookup, still probes on the HOST
+(`legacycmd.go`), unlike the recorder; both are version queries, so they are
+expected to agree.) The results are sealed in
+`pre/probes.json` `toolchains`.
 
 **P8. The host scan (D15).** Every `ro_roots` entry is walked on the host, one
 goroutine per root, with `lstat` only: it follows no symlink. A socket or a FIFO
@@ -1236,6 +1284,7 @@ would be run by `prepare` itself. So:
 tool runs it once per BUILD step through `-exec-wrapper` (P1). It runs
 outside the sandbox and is not traced itself; it traces the step and keeps
 the facts about the tracer that the trace cannot contain. It classifies the action after its final executed step (P13).
+(Amended by P15: the step that takes sequence number 0 first re-checks the state roots and, if one is not empty, leaves `traces/.state-preloaded` and still runs.)
 
 *Before the step* (any failure here runs nothing, writes nothing but a
 diagnostic on standard error, and exits 125):
@@ -1374,6 +1423,64 @@ helper unshares the network namespace; it is false when the process could not
 be started. `collect` copies it into `traced.Input.StepNetNS` only when the
 step's own `execve` is in the trace (a refused sandbox has none).
 
+**P15. `survivor` and `state-preloaded` (stage 4 PR 2b-2c-4).** Two header `void`
+tokens that the merge already knew (M3, M4) and nothing wrote until now.
+
+- **`survivor` (run-void).** Right after the exclusive lock and `VerifyPre`,
+  `collect` scans `/proc` (`collect_survivor.go`; a stub that fails closed off
+  Linux). A pid other than its own is a survivor when **S1** its `ns/mnt`
+  differs from `collect`'s and its mountinfo lists `repo_root` as a mount
+  point; **S2** a `cmdline` element is exactly `<dir>/pre/sandbox.json` or
+  `<dir>/probe/toolchains-sandbox.json` (any owner); or **S3** it is ours, it
+  started at or after `prepare`, and reading it fails with anything but
+  ENOENT/ESRCH (or a read hit the 4 MiB bound, whoever owns it). "Ours" is the
+  `Uid:` line of `/proc/<pid>/status` (real or effective equals our euid; an
+  unreadable or unparsable status is ours; the owner of `/proc/<pid>` is only a
+  further reason to say ours, never a reason to skip, because for a
+  non-dumpable task the kernel makes it the root of the task's user namespace,
+  which a hostile step could arrange to look like root). "Started after
+  `prepare`" compares field 22 of `/proc/<pid>/stat` (parsed after the last
+  `)`, plus `btime` from `/proc/stat`, 100 ticks per second) with the sealed
+  `binding.prepared_at` less 2 s; an unreadable or unparsable `stat` counts as
+  after. The rule exists because a real survivor is always inspectable from
+  `collect`: it lives in a user namespace our user owns, so we hold ptrace
+  access to it even if it made itself non-dumpable; what we cannot inspect is a
+  stranger's, or an OLD process of ours (a `systemd --user` manager, an
+  ssh-agent) that no build started, and counting those would void every run.
+  Each scan is bounded to 5 s (a `/proc` read can block on an uninterruptible
+  task); one that is not done counts as a survivor. The start-time gate compares
+  the wall-clock `prepared_at` with `btime`-derived start times, so a backward
+  wall-clock step of more than 2 s between `prepare` and `collect` can exclude a
+  new process from S3 only; S1 and S2 are unaffected, and a step cannot move
+  the clock. A monotonic, boot-relative comparison is a planned follow-up. (The
+  tick count is converted without overflow, and an absurd one, over 100 years,
+  counts as new.) There is **no cwd test**: a shell left in the
+  checkout writes nothing, and a cwd test would void every run launched from a
+  terminal in the repository. A process that vanishes while being read is not
+  one. The scan repeats every 200 ms for up to 10 s (`CollectOptions.SurvivorWait`;
+  negative means one look, for tests); a scan that cannot be made counts as a
+  survivor. If one is left, the header `void` gains `survivor` and every record
+  is an unknown write set (`markUnknown(rec, "survivor")`). `collect`'s report
+  prints `post-build problem: survivor: pid N: S1|S2|S3 ...`.
+- **`state-preloaded` (shard-void).** `prepare` and the probes require the
+  state roots empty, but the roots can be filled between `prepare` and the
+  build. `RunStep` therefore re-runs the `stateRootEmpty` check at sequence
+  number 0 (the first step of the shard, under the serial lock); a root that is
+  not absent or an empty real directory (any failure to say so counts) writes
+  `traces/.state-preloaded` (O_EXCL, containing that root's path), and the step
+  still runs. `collect` lstat's the marker, adds `state-preloaded` to the header
+  `void` when there is any entry of that name or `traces/` cannot be asked, and
+  `globalSeqCheck` knows the name, so the serial order still holds and records
+  stay believed (the merge voids the shard's records, M4). A marker that cannot
+  be written refuses the step, and that is a RUN-void rather than a shard-void:
+  its sequence number and trace file exist but no sidecar, so `collect` sees a
+  counter mismatch (`serial-violated`) and every record is unknown.
+
+*Divergences from the design:* the marker lives in `traces/`, not in an action's
+directory, so `scanAction`'s closed list needs no entry (only `globalSeqCheck`'s
+known set); `SurvivorWait` 0 means the 10 s default, and a negative value is the
+no-wait setting tests use.
+
 *Obligations of `collect` (**2b-2b-ii**, except the parse half of the third, which `step` applies, P13), from the review of P12.*
 
 - **2b-2b-ii. Done.** `collect` takes an **exclusive**, non-blocking `flock` on the
@@ -1423,8 +1530,7 @@ must not exist. Two outcomes:
 
 *Per action.* The record's `status` is the build tool's (`not-run` when the
 results omit the action), `steps_total` the plan's, `steps_sha256` the digest of
-the sealed lines, `weak`/`refusal` those of the action file, `gate` empty (gates
-are 2b-2c). `steps_run` and the per-step summaries come from the started
+the sealed lines, `weak`/`refusal`/`gate` those of the action file. `steps_run` and the per-step summaries come from the started
 sidecars. The raw record is `record.json`'s, with `writes_complete` from the
 classifier's own answer through `recfmt.CompleteOf`. The write set is UNKNOWN
 (`unknown_writes`, an empty raw record, an explicit `writes_complete: false`;
@@ -1562,7 +1668,7 @@ host state roots. So:
 2. *Sealed inputs.* `prepare` also writes `pre/tree` (`kiln-record-tree/1`:
    every tracked path of the verified commit with mode, blob id and link text),
    `pre/classify.json` (the host roots and pinned ecosystems) and each action's
-   `tools` (action files become `kiln-record-action/2`). Neither `step` nor
+   `tools` (action files became `kiln-record-action/2`, and /3 with `gate`). Neither `step` nor
    `collect` builds a `legacy.Traced` or runs Git to classify.
 3. *Classification.* After the sidecar of the action's last step, or of a step
    that did not start or exited non-zero, and before releasing the lock, `step`
@@ -1709,8 +1815,10 @@ strictly (the bytes must equal what `EncodeProbes` writes for what they say):
  "runs":[{"name","argv","exit","trace_bytes","trace_sha256"}],"toolchains":[]}
 ```
 
-`toolchains` is reserved for the toolchain probes (PR 3) and is empty. `VerifyPre`
-decodes it and requires it to be exactly what the probe list for the sealed
+`toolchains` (since 2b-2c-3) is the toolchain probes' results, one
+`{"tool","status","detail"}` per probed tool (`detail` only on a `mismatch`),
+strictly sorted by tool, with a known status (P7), and empty for a shard with no
+action. `VerifyPre` decodes it and requires it to be exactly what the probe list for the sealed
 configuration is (names, order, argv, exit 0, a trace size and digest), so a
 dropped `pipes`, `walk` or `signals` probe is refused by every later command.
 `shadowed` itself is the probe's claim (sealed, but `VerifyPre` cannot recompute
@@ -1728,9 +1836,14 @@ sandbox binds every root) of a directory that has a locked child mount fails
 `ro_roots` entry, the checkout or a state root is expected to make the sandbox
 refuse to start, and `prepare` to fail on the first probe (strace exit 125, the
 helper's message in the quoted step output): fail-closed, with no probe needed.
-The `shadow` probe is then defence in depth. `TestSandboxRecordProbe` accepts
-exactly either outcome for a FIFO hidden beneath a tmpfs and logs
-`PROBE: shadow-outcome=...`; the first CI run says which applies.
+The `shadow` probe is then defence in depth. **Observed (the first
+`kiln-sandbox` CI run):** the kernel refused the bind, so the sandbox failed to
+start (`kiln sandbox-init: ro-root "...": invalid argument`, exit 125) and
+`prepare` failed at `probe pipes`. The locked-child-mount rule therefore closes
+the risk of content shadowed beneath a host mount, fail-closed: such a mount
+fails every step. `TestSandboxRecordProbe` still accepts either outcome for a
+FIFO hidden beneath a tmpfs. The same run showed `find /` clean inside the
+sandbox, with no permission errors.
 
 *Residue.* The probe is a sample of the host's state at `prepare`, not a lock:
 a socket created later, by something outside the sandbox, in a place the sandbox
@@ -2195,6 +2308,143 @@ Such a trace has no step exec, which the parser refuses.
 platform gets a stub that prints why and exits 125. The integration tests need
 unprivileged user namespaces and skip where the kernel refuses them.
 
+### 4.9 Syntax layer: grammar-driven (D24)
+
+Stage 1a settled what the parser accepts and refuses. This section settles
+*how the text is read*. It changes the machinery under `internal/trace`, not
+its behaviour.
+
+**The rule.** The syntax of a strace line is defined by grammar files, not by
+hand-written scanning code:
+
+- `code/grammars/strace/strace.tokens` and `strace.grammar` define tokens and
+  structure;
+- `code/grammars/strace/strace-string.tokens` defines the escapes inside a
+  quoted string;
+- the shared Go grammar lexer and parser (`code/packages/go/lexer`,
+  `code/packages/go/parser`) read them, through two shared packages,
+  `code/packages/go/strace-lexer` and `code/packages/go/strace-parser`
+  (a line in, a syntax tree out, syntax only; the pattern is
+  `json-lexer`/`json-parser`).
+
+Kiln keeps all *policy*: the pending/resume state machine, the D18 rules,
+exit markers, refusal reasons, limits, and the byte pre-checks (the
+control-character alphabet scan and the `[ Process PID=` prefix check, which
+are validation, not lexing). Kiln has **no hand-crafted lexers or parsers for
+its own inputs**. This is a user directive (2026-11-16). It applies to KILN01
+as well, and to anything Kiln reads later.
+
+One consequence is recorded in KILN00 §17: Kiln may depend on in-repo Go
+modules (wired with `replace`), and still never on third-party modules.
+
+**Fail-closed parsing.** The shared parser does no error recovery: the first
+line that does not parse is a refusal of the whole trace, never a partial
+tree. It has a nesting depth limit and returns an error instead of
+overflowing the stack. The failing token maps to the reason the old scanner
+gave:
+
+| Failure | Reason |
+|---|---|
+| a bad `<...>` annotation (`ERR_ANNOT_BAD`), or an annotation that fails strict decoding | `ambiguous-path` |
+| an unterminated annotation, quote or `<`, a bad resume marker, or any structural failure | `unparsable-line` |
+| a failed `result` parse (stage 2) | `result` |
+| a wrong argument count after a successful parse | `arity` |
+| a recovered panic: the **whole trace** is refused; no partial tree or partial trace is ever returned | `unparsable-line` |
+
+Everything after the first pass runs the code it ran before.
+
+Two caps are new, because the grammar tools let them be stated: nesting depth
+**64** and **65,536 tokens per line**. Exceeding either is a refusal with
+reason `size`, which is already in the reason list of §4.5 (the caps reuse it).
+A recovered panic anywhere in the grammar path likewise refuses the whole trace. The lexer is total (the last token rules catch every remaining
+byte as an `ERR_*` token), so it can never panic on hostile input.
+
+**The divergence policy.** The old scanner and the grammar path must agree.
+
+1. Where the old parser refused, the new one accepting is **always a
+   failure**.
+2. When both accept, the `Trace` must be identical.
+3. `Reason` and `Line` must be exact on every existing test and fixture.
+4. A divergence found by fuzzing is allowed only if it is *stricter-only*
+   (accept to refuse, or refuse to refuse with a different reason), is listed
+   in the table below, has been reviewed, and is pinned by a test.
+
+| Input class | Old | New | Reason | Pinning test |
+|---|---|---|---|---|
+| a line nested deeper than 64 | accepted | refused, `size` | bounds stack and memory against hostile lines | added in PR 5 |
+| a line of more than 65,536 tokens (a signal line counts too: every run of spaces in its text is a token) | accepted | refused, `size` | bounds memory and time against hostile lines | added in PR 5 |
+| `[pid +5] ...` (a signed pid: `Atoi` accepts a sign) | accepted | refused, `unparsable-line` (`ERR_PID`) | the pid is 1 to 9 digits, no sign, no leading zero | `TestReviewDivergences` (strace-parser) |
+| a resumed half that is only valid glued to its prefix, such as `<... f resumed></x>) = 0` after a prefix ending in `3` (the old parser read `3</x>`), or a lone `"` or `<` at the seam | accepted | refused, `unparsable-line` (`ERR_LT`, `ERR_QUOTE`) | the resumed half is lexed on its own, a line at a time, so a construct may not span the seam; strace never splits a token | `TestReviewDivergences` |
+| a quoted string with a bad escape (`\q`, `\400`, `\x4`) in a call the old parser does not interpret | accepted (scanned leniently, decoded only in path arguments) | refused, `ambiguous-path` | every quoted string is decoded strictly (`Options.LenientQuoted` turns it off) | `TestStrictQuoted` |
+| a line of more than 1 MiB | refused, `size` | refused, `size` (checked before lexing) | none: the same limit, recorded because the grammar path enforces it itself | `TestMaxLineBytes` |
+| a bare `<unfinished ...>` after a call's closing `)`, such as `stat(a) = 0 <unfinished ...>`, `stat(a) <unfinished ...>`, `stat(a)<unfinished ...>`, `stat(a) = ? <unfinished ...>` | refused, `result` | refused, `unparsable-line` | no result can contain a bare marker, so the grammar refuses it; reason-only (`= 0<unfinished ...>`, one annotated token, is still accepted by both) | `TestMarkerAfterCloseRefused` (strace-parser) |
+| a call line with trailing spaces | accepted | refused, `unparsable-line` | the lexer skips spaces, so the grammar cannot see a trailing one; refusing is the safe side | `TestStricterOnlyDivergences` (strace-parser) |
+| `+++ exited with +5 +++`, `-0` (a signed exit code) | accepted (`Atoi` takes a sign) | refused, `unparsable-line` | the exit code is digits only; no real strace prints a sign | `TestStricterOnlyDivergences` |
+| an `ERR_*` token in the text after a call's `)` (an unterminated quote, a bad `<`, a resume marker) | refused, `result` | refused, `unparsable-line` (or `ambiguous-path` for a bad annotation) | the lexer cannot know a quote is "in the result"; both refuse the whole trace | `TestStricterOnlyDivergences` |
+| a `<... NAME resumed>` whose NAME has a character outside `[A-Za-z0-9_?]` | refused, `unmatched-resume` | refused, `unparsable-line` | NAME is lexed as a name; anything else is a bad marker | `TestRefusals` (`ERR_RESUME`) |
+| a line with a structural error AND a later bad annotation | refused, `unparsable-line` (first problem wins) | refused, `ambiguous-path` | the parser reports a failure position only as the start of the failing rule, so a syntax error cannot be ordered against a later bad token; the bad token is reported | `TestBadTokenWinsOverEarlierSyntaxError` |
+
+**Grammar details recorded by PR 4.** Nesting depth 64 means 64 levels of
+brackets or nested calls (`parser.Options.MaxDepth` is in rule levels, 2 per
+bracket level plus 8, and a test pins that exactly 64 levels parse and 65 do
+not). Tokens that only begin a line's body (`+++ ... +++`, `<... NAME resumed>`,
+`???( <unfinished ...>`, `???()  = ?`, `<... ??? resumed>)  = ?`, `--- `) are lexed only right after the pid, and the three `???` lines are whole-line tokens in exactly the spellings the old parser accepted (`???() = 0` and every other spelling is refused), so the same characters inside
+an argument list stay plain text, as they were for the scanner. The text of a
+`--- ... ---` signal line is lexed as space runs and non-space runs and is never
+tokenized, so a lone quote or bracket in it is still accepted. Spaces between
+tokens are skipped; `name(`, `word<...>`, the pid prefix and the exit line are
+single tokens so adjacency is part of the token. Leading and trailing spaces and
+newlines are refused by the `strace-parser` package.
+
+**Migration and gates.** The change lands in two phases.
+
+- **Phase A** parses structure only. The pending/resume machine, D18 and the
+  interpreters (`pathArg`, `parseFD`, `parseArgv`, `parseResult`, sockaddr,
+  `clone3`) are unchanged and read raw argument spans that are byte-identical
+  to the old scanner's.
+- **Phase B** moves the interpreters, one per PR, to consume the tree, and
+  moves escape decoding to `strace-string.tokens`.
+
+Old and new run side by side under a differential `crossCheck` hook, so every
+existing test runs both parsers and compares the `Trace`, `Reason` and `Line`.
+Beyond that: a pass-1 record diff, `FuzzParseDiff` and `FuzzLineDiff` with a
+committed corpus (at least 30 minutes locally per PR, nightly in CI), and
+`KILN_TRACE_DIFF=1` in the kiln-sandbox job, which cross-checks real traces and
+uploads an artifact on any mismatch. Those artifacts contain real trace
+data, so they are produced only on trusted CI runs (never for fork PRs), are
+kept for 7 days, hold only the mismatching trace, and are never published
+elsewhere. The default flips to the grammar path only
+when it lexes and parses at **at least 8 MB/s and within 3x of the old
+parser** on the committed benchmark (the old parser runs at about 23.7 MB/s;
+the unmodified toolchain at about 0.95 MB/s, hence the toolchain PRs below).
+If it cannot, the fallback is a worker pool for the stateless per-line
+lex/parse with the semantic pass kept sequential. The old scanner is deleted
+only after the flip has soaked with zero diffs; until then it is kept as a
+test-only oracle. The resource limits (1 GiB and 8M events, and the caps above) may be
+lowered freely, but raised only by a spec revision that includes a DoS review
+and a benchmark of the worst-case input, with the new values committed in the
+spec.
+
+**The PR split.**
+
+1. This spec, plus the KILN00 §17 and README amendment.
+2. G1, shared lexer: a compiled, panic-free `Tokenize` with first-byte
+   dispatch and a literal fast path (target 20 MB/s or better, committed
+   benchmark).
+3. G2, shared parser: `MaxDepth` (a deep input such as 200k `[` currently
+   overflows the stack and kills the process, for every grammar consumer, so
+   this is a denial-of-service fix for all of them), `StartRule`, a cheaper
+   memo, and a reusable compiled grammar. G3 (honour `errors:` in Go) is
+   optional; G4 is a Go grammar drift check as a per-package test.
+4. The grammar files, `strace-lexer`, `strace-parser`, and a drift test.
+5. Kiln wiring with the old parser still the default: `go.mod`
+   `require`/`replace` for the in-repo modules, the CI sandbox-job path
+   filter, `handleLineG`, `crossCheck`, the fuzzers, and a measurement of
+   real trace sizes.
+6. Flip the default (the gate above).
+7. Phase B conversions, one PR each.
+8. Delete the old scanner.
+
 ## 5. From trace to manifest
 
 ### 5.1 Resolving each observation
@@ -2317,6 +2567,23 @@ program could behave differently when traced. A read of either gives
 trace incomplete. That includes any numeric `/proc/<pid>/` path: the PIDs
 in the trace are the tracer's, not the action's. `/proc/self/root/…` and
 `/proc/<pid>/fd/…` could reach any file by another name.
+
+**`/proc` magic links (D28).** `cwd`, `root`, `exe`, `fd/N`, `map_files/X` and
+`ns/X` are links the kernel follows to wherever the process points them, and
+`/dev/fd` is a link to `/proc/self/fd`. The path is never walked through them;
+three rules keep it fail-closed. (1) A `..` after any `/proc` component is
+`trace-incomplete:proc-path` unless it is exact (`/proc/..`, `/proc/self/..`,
+`/proc/<pid>/..`); every `..` under `/dev/fd` is refused. (2) A path that goes
+THROUGH a magic link (a further component after `cwd`, `root`, `exe`, or after
+`fd/N`, `map_files/X`, `ns/X`, at any depth, `/dev/fd/N/x` included) is
+`proc-path` even when an ephemeral pattern matches it: **an ephemeral glob can
+never cover a path through a magic link**. (3) A successful open of a `/proc`
+name is compared with the descriptor's `-y` path: equal, or the same file with
+`self`/`thread-self` (and the links `/proc/mounts`, `/proc/net/…`) spelled with
+pids, is fine; another non-`/proc` path is classified as the file really read
+(so an open of `/proc/self/exe` is a read of the real binary), another `/proc`
+path is `proc-path`; and an open of a magic link itself with an empty or
+non-absolute, non-anonymous `-y` path is `proc-path`. See D28 in §5.5.
 
 ### 5.2 Mapping observations to entries
 
@@ -2700,6 +2967,24 @@ write could exist that the lists do not show.
   Otherwise the name says nothing about the object written. This covers Write-kind calls, writing opens,
   `rename`/`link` endpoints, a `bind` path and an `O_TMPFILE` file linked back
   by `linkat`.
+- **D28. `/proc` magic links and `..`.** `/proc/self/cwd`, `/proc/self/root`,
+  `/proc/<pid>/{cwd,root,exe}`, `fd/N`, `map_files/X`, `ns/X`, `thread-self`
+  (a link to `/proc/<pid>/task/<tid>`) and `/proc/net` (a link to `self/net`)
+  are links the kernel follows to wherever the process points them, and the
+  kernel takes a `..` after one from the TARGET's parent. Read lexically,
+  `open("/proc/self/cwd/../../filesystems")` is `/proc/filesystems` (an
+  allowed read) while really reading a file two levels above the working
+  directory, so the record would stay clean over an arbitrary host read. The
+  classifier fails closed: (1) a `..` after any `/proc` component is
+  `trace-incomplete:proc-path` unless exact (`/proc/..`, `/proc/self/..`,
+  `/proc/<pid>/..` keep resolving lexically; every deeper `..`, and every `..`
+  under `/dev/fd`, is refused); (2) a path through a magic link is `proc-path`
+  even when an ephemeral pattern matches it, `/dev/fd/N/x` counted as
+  `/proc/self/fd/N/x`; (3) a successful `/proc` open is checked against its
+  `-y` path (equal, or `self`/`thread-self`/`mounts`/`net` spelled with pids,
+  passes; another path is classified as the file really read, or `proc-path`
+  if it is another `/proc` file), and an open of a magic link itself with no
+  usable `-y` path is `proc-path`. Nothing relies on `/proc/thread-self/..`.
 - **W6. A path the record cannot hold.** `bad-path` (a path `key.ValidatePath`
   refuses) or `vcs-write` (a write under `.git`).
 - **W7. A write to the repository root itself** (`chmod .`, `utimes .`). The
@@ -3077,8 +3362,8 @@ pre-BUILD inventory.
 | M1 | run | Any unknown write set (G1), including truncated executions (M-1) and an unclean step. |
 | M2 | run | An untracked observation explained by neither `Inv(s)` nor another record's write **in the same shard**. |
 | M2b | run | `tracked_changed_unexplained > 0` (M-2). |
-| M3 | run | `post_inventory_unexplained > 0`, or a header `void` of `survivor`, `records-too-large` or an unknown token. |
-| M4 | shard | A header `void` of `tracked-changed` or `state-preloaded`. |
+| M3 | run | `post_inventory_unexplained > 0`, or a header `void` of `survivor`, `records-too-large` or an unknown token. Written by: `collect` (`survivor`: its /proc scan, P15; `records-too-large`: the size cap), and the post-build inventory count. |
+| M4 | shard | A header `void` of `tracked-changed` or `state-preloaded`. Written by: `collect` (`tracked-changed`: the post-build checks; `state-preloaded`: the `traces/.state-preloaded` marker `step` leaves at sequence number 0, P12/P15). |
 | M5 | action | An untracked observation overlaps `W(b)`, `b != a`: `reads-product`. |
 | M6 | action | An absent observation overlaps `W(b)`: `reads-product`. |
 | M7 | action | `list:d` with `w` in `W(b)`, `overlap(d, w)`: `reads-product`. |
@@ -3578,7 +3863,9 @@ point, not a measurement.
 4. recording runs inside the §4.3 sandbox;
 5. lookup applies `probe-mismatch`, the never list and the §6
    preconditions before it can skip, because the traced keys carry pins
-   only and none of these (§11.1).
+   only and none of these (§11.1). The recorder applies the same gate: a
+   gated package is recorded with its `gate` (P7) and is never emitted, and its
+   toolchain probes run in the sandbox, never on the host.
 6. skipping reads policy from the base revision, enforced in code before any
    skip mode exists; it requires `probes_ran == true`; and the open question
    of whether `unpinned:<lang>` gates is decided (§9.1).
@@ -3614,9 +3901,11 @@ These are known and named. They are measured rather than closed.
   an `ro_roots` entry non-recursively, so what the mount hides on the host is
   what the step sees. That is not scanned on the host; the `shadow` run of the
   in-sandbox structure probe (decision P14, stage 4 PR 2b-2c-2: a `find -xdev`
-  under every such mount point, in the sandbox's own view) covers it. The kernel's locked-mount rule is also expected to make such a mount
-  fail every step (the sandbox cannot bind the root: P14), which is fail-closed;
-  the probe is defence in depth, and the CI outcome confirms which applies.
+  under every such mount point, in the sandbox's own view) covers it. The kernel's locked-mount rule makes such a mount
+  fail every step, which is fail-closed. **Observed in CI:** the kernel refused
+  the bind (`ro-root ...: invalid argument`, exit 125) and `prepare` failed at
+  `probe pipes`, so the locked-child-mount rule closes this risk; the probe is
+  defence in depth (P14).
 
 - **The strace pin and the seccomp threshold move together.** The sandbox
   filter answers `ENOSYS` for every system call number above

@@ -139,24 +139,35 @@ def test_a_real_manifest_validates(manifest_bytes, corpus) -> None:
     validate_manifest(manifest_bytes, corpus, REL, REGISTRY_PATH.read_bytes())
 
 
-def test_the_planned_registry_row_is_not_active(manifest_bytes, corpus) -> None:
+def test_a_planned_registry_row_is_not_active(manifest_bytes, corpus) -> None:
+    # The checked-in registry is active since WD-004b1, so the planned case is
+    # built from a copy of it with the Python row put back to planned.
+    planned = json.loads(REGISTRY_PATH.read_text())
+    row = next(r for r in planned["consumers"] if r["package"] == "python/ct-compare")
+    row["status"] = "planned"
+    validate_manifest(manifest_bytes, corpus, REL, json.dumps(planned).encode())
     with pytest.raises(CorpusError, match="not active"):
         validate_manifest(
-            manifest_bytes, corpus, REL, REGISTRY_PATH.read_bytes(), require_active=True
+            manifest_bytes, corpus, REL, json.dumps(planned).encode(), require_active=True
         )
-    active = json.loads(REGISTRY_PATH.read_text())
-    active["consumers"][0]["status"] = "active"
+    # The real, active row passes --require-active.
     validate_manifest(
-        manifest_bytes, corpus, REL, json.dumps(active).encode(), require_active=True
+        manifest_bytes, corpus, REL, REGISTRY_PATH.read_bytes(), require_active=True
     )
 
 
 def test_registry_joins(manifest_bytes, corpus) -> None:
     registry = json.loads(REGISTRY_PATH.read_text())
+
+    def mine(r):
+        # The registry is sorted by package and lists several lanes since
+        # WD-004b1, so pick this lane's row by identity, not by position.
+        return next(x for x in r["consumers"] if x["package"] == "python/ct-compare")
+
     for change in (
         lambda r: r.update(consumers=[]),
-        lambda r: r["consumers"][0].update(module="other"),
-        lambda r: r["consumers"].append(dict(r["consumers"][0])),
+        lambda r: mine(r).update(module="other"),
+        lambda r: r["consumers"].append(dict(mine(r))),
         lambda r: r.update(consumers=3),
     ):
         broken = copy.deepcopy(registry)
@@ -222,6 +233,53 @@ def test_validation_rejects_every_kind_of_disagreement(
 ) -> None:
     with pytest.raises(CorpusError):
         validate_manifest(mutated(manifest_bytes, change), corpus, REL)
+
+
+def _as_lane(document, lane: str) -> None:
+    document["lane"] = lane
+    document["package"] = f"{lane}/ct-compare"
+    document["runner"]["lane"] = lane
+
+
+def test_pycache_isolated_is_python_only(manifest_bytes, corpus) -> None:
+    """VER04i 8.1: required (and true) for Python, forbidden for every other lane."""
+    document = json.loads(manifest_bytes)
+    assert document["lane"] == "python" and document["pycache_isolated"] is True
+    # A python manifest without the key, or with it false, fails.
+    with pytest.raises(CorpusError, match="required for the Python lane"):
+        validate_manifest(
+            mutated(manifest_bytes, lambda d: d.pop("pycache_isolated")), corpus, REL
+        )
+    with pytest.raises(CorpusError, match="must be true"):
+        validate_manifest(
+            mutated(manifest_bytes, lambda d: d.update(pycache_isolated=False)),
+            corpus,
+            REL,
+        )
+    # A go or typescript manifest WITH the key fails.
+    for lane in ("go", "typescript"):
+        with pytest.raises(CorpusError, match="only recorded by the Python lane"):
+            validate_manifest(
+                mutated(manifest_bytes, lambda d, lane=lane: _as_lane(d, lane)),
+                corpus,
+                REL,
+            )
+
+    # A non-python manifest without the key passes.
+    def go_without_key(d) -> None:
+        _as_lane(d, "go")
+        del d["pycache_isolated"]
+
+    validate_manifest(mutated(manifest_bytes, go_without_key), corpus, REL)
+
+
+@pytest.mark.parametrize("lane", ["go", "typescript"])
+def test_other_lanes_committed_manifests_validate(corpus, lane) -> None:
+    """Every lane's validator accepts every other lane's real manifest (WD-102)."""
+    path = REPO_ROOT / "code" / "packages" / lane / "ct-compare" / "evidence" / "test-manifest.json"
+    if not path.exists():
+        pytest.skip(f"the {lane} lane artifact is not present")
+    assert validate_manifest(path.read_bytes(), corpus, REL)["lane"] == lane
 
 
 def test_validation_rejects_malformed_json(corpus) -> None:

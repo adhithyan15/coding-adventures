@@ -1,11 +1,12 @@
 [package]
 name = "dsp-filters"
-version = "0.3.0"
+version = "0.4.0"
 edition = "2021"
-description = "DSP03 Phases 1-2 + 4 + 5: scalar reference FIR (direct convolution) + IIR (direct-form-II Transposed) + filter design helpers (windowed-sinc low/high-pass with Rectangular/Hamming/Hann/Blackman windows + 1st/2nd-order Butterworth via bilinear transform). IIR matches scipy.signal.lfilter(b, a, x). Phase 3 (FIR via FFT overlap-add) is deferred; Phase 6 lowers FIR onto the matrix execution layer."
+description = "DSP03 Phases 1-5: scalar reference FIR (direct convolution) + FIR via FFT (rfft/irfft) + IIR (direct-form-II Transposed) + filter design helpers (windowed-sinc low/high/band-pass with Rectangular/Hamming/Hann/Blackman windows + Butterworth/Chebyshev-I via bilinear transform). Hardened against CWE-400, CWE-190, CWE-674, CWE-20."
 license = "MIT"
 
 [dependencies]
 dsp-fft = { path = "../dsp-fft" }
 
 [dev-dependencies]
+coding_adventures_test_bootstrap = { path = "../test-bootstrap" }

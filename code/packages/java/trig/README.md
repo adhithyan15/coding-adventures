@@ -17,46 +17,70 @@ routine. Boundary behavior is checked against
 
 Trigonometric functions built from first principles using Maclaurin series.
 No `Math.sin`, `Math.cos`, or any other standard library math functions are
-used internally — every result is derived from addition, multiplication, and
-division alone.
+used internally — every result is derived from addition, subtraction and
+multiplication (plus division in `tan` and the Part II functions).
+
+Since 0.2.0 `sin`, `cos`, `tan`, `radians` and `degrees` follow the reference
+algorithm **TRIG-REF-1** of [PHY00a](../../../specs/PHY00a-trig-convergence.md)
+*bit for bit*, and `ConformanceTest` checks all 62,154 vectors of
+[`trig-reference-v1`](../../../specs/fixtures/trig-reference-v1/README.md).
 
 ## What It Implements
 
 | Function | Description |
 |----------|-------------|
-| `Trig.sin(x)` | Sine (radians), 20-term Maclaurin series |
-| `Trig.cos(x)` | Cosine (radians), 20-term Maclaurin series |
-| `Trig.tan(x)` | Tangent = sin/cos, with pole guard |
+| `Trig.sin(x)` | Sine (radians), Cody-Waite reduction + 10-term Horner kernel |
+| `Trig.cos(x)` | Cosine (radians), same machinery |
+| `Trig.tan(x)` | `sin/cos`, with the pinned `+-1e308` pole sentinel |
 | `Trig.sqrt(x)` | Square root via Newton's (Babylonian) method |
 | `Trig.atan(x)` | Arctangent, Taylor series with half-angle reduction |
-| `Trig.atan2(y, x)` | Four-quadrant arctangent |
-| `Trig.radians(deg)` | Degrees → radians |
-| `Trig.degrees(rad)` | Radians → degrees |
-| `Trig.PI` | π constant to full double precision |
+| `Trig.atan2(y, x)` | Four-quadrant arctangent (NaN in, NaN out) |
+| `Trig.radians(deg)` | Degrees to radians: one multiply by `pi/180` |
+| `Trig.degrees(rad)` | Radians to degrees: one multiply by `180/pi` |
+| `Trig.PI` | pi constant to full double precision |
+
+## Domain and accuracy
+
+- `sin`, `cos` and `tan` are defined for `|x| <= 2^29` (536870912). Outside it,
+  and for NaN and the infinities, they return **NaN**: a value that cannot be
+  mistaken for a sine. Reduce an accumulated phase (for example in whole cycles)
+  before calling.
+- `sin(-0.0)` is `-0.0`; `|x| < 2^-27` returns `x` (`sin`) or `1.0` (`cos`).
+- `sin` and `cos` are within **3 ulp** of the exact value over the domain
+  (observed worst 2.38 ulp); `radians` and `degrees` within 1 ulp. `tan` makes
+  no accuracy claim (its pole sentinel is a legacy convention, not an
+  approximation). Details: PHY00a section 4.
 
 ## How It Works
 
-### Maclaurin Series
+### Range reduction (nearest-integer Cody-Waite)
 
-Both `sin` and `cos` use the standard Maclaurin expansion:
-
-```
-sin(x) = x - x³/3! + x⁵/5! - x⁷/7! + ...
-cos(x) = 1 - x²/2! + x⁴/4! - x⁶/6! + ...
-```
-
-Rather than computing each term from scratch (which requires large factorials),
-each term is derived from the previous one by multiplying by a simple fraction:
+A sine repeats, so we only need to know how many quarter-turns `k` fit in `x`
+and what is left over:
 
 ```
-sin: term_k = term_{k-1} * (-x²) / (2k)(2k+1)
-cos: term_k = term_{k-1} * (-x²) / (2k-1)(2k)
+t = x * (2/pi)                   one rounding
+k = (t + 1.5*2^52) - 1.5*2^52    t rounded to the nearest integer, add and subtract only
+r = x - k*P1 - k*P2 - k*P3 - k*P4 - k*P5     pi/2 = P1+...+P5; P1..P4 have 24 bits
 ```
 
-### Range Reduction
+Because `P1..P4` have at most 24 significant bits, `k * Pi` is exact for
+`|k| < 2^29`, which is what makes the remainder accurate for large `x`. The
+quadrant `k & 3` then selects `sin r`, `cos r`, `-sin r` or `-cos r`.
 
-For large inputs the series is slow to converge. Since sin and cos are periodic
-with period 2π, we first reduce `x` into `[-π, π]` using `x % (2π)`.
+### Maclaurin series, evaluated by Horner's rule
+
+On `|r| <= pi/4`:
+
+```
+sin(r) = r + r*z*(S1 + S2*z + ... + S9*z^8)      z = r*r, S[n] = (-1)^n/(2n+1)!
+cos(r) = 1 - z/2 + z^2*(C2 + C3*z + ... + C9*z^7)    C[n] = (-1)^n/(2n)!
+```
+
+The coefficients are the Maclaurin factorials, stored as exact bit patterns
+(`Double.longBitsToDouble`). Each Horner step is one multiply and one add, no
+division. Java arithmetic is strict IEEE since Java 17 and the JIT never fuses
+`a*b + c` (this code never calls `Math.fma`), so the bits are portable.
 
 ### Square Root — Newton's Method
 
@@ -86,6 +110,7 @@ gradle test
 
 ## Part of the Coding Adventures series
 
-This package is the Java counterpart to the Python, Rust, Go, and TypeScript
-implementations of `trig`. All use the same algorithm so cross-language output
-is identical to full double precision.
+This package is the Java counterpart to the Python, Rust, C and TypeScript
+implementations of `trig` that have converged on TRIG-REF-1, so their
+`sin`, `cos`, `tan`, `radians` and `degrees` results are identical to the last
+bit.

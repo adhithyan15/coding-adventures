@@ -92,6 +92,117 @@ pub struct HostErrors {
     pub map: Vec<(String, String)>,
 }
 
+/// How one `inout` parameter is carried across the host boundary (VER04k
+/// section 4.6): the `<form>` of `inout=<param>:<form>`.
+///
+/// ```text
+/// slice        &mut [u8]                 Bytes, Bytes<N>      (length cannot change)
+/// vec          &mut Vec<u8> / Vec<ht>    Bytes, List<T>       (any length afterwards)
+/// array        &mut [u8; N]              Bytes<N>
+/// int:u8       &mut u8 ... &mut usize    fixed-width, Nat
+/// bool         &mut bool                 Bool
+/// struct:Cell  &mut Cell                 a record, field by field
+/// ```
+///
+/// The last four spellings are parsed so that a bindings file written for the
+/// stateful-objects slice (VER04m) is a *refusal* with a clear message here, not
+/// a syntax error; the generator reports them as not yet implemented (W0704).
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum InoutForm {
+    Slice,
+    Vec,
+    Array,
+    Int(String),
+    Bool,
+    Struct(String),
+    Returned,
+    SliceOfStruct(String),
+    VecOfStruct(String),
+    Codec(String),
+}
+
+impl InoutForm {
+    /// The text the bindings file spells the form with.
+    pub fn text(&self) -> String {
+        match self {
+            InoutForm::Slice => "slice".into(),
+            InoutForm::Vec => "vec".into(),
+            InoutForm::Array => "array".into(),
+            InoutForm::Int(t) => format!("int:{t}"),
+            InoutForm::Bool => "bool".into(),
+            InoutForm::Struct(n) => format!("struct:{n}"),
+            InoutForm::Returned => "returned".into(),
+            InoutForm::SliceOfStruct(n) => format!("slice-of:struct:{n}"),
+            InoutForm::VecOfStruct(n) => format!("vec-of:struct:{n}"),
+            InoutForm::Codec(n) => format!("codec:{n}"),
+        }
+    }
+}
+
+/// Parse one host form (the text after the first colon of an `inout=` entry).
+pub fn parse_inout_form(text: &str) -> Result<InoutForm, String> {
+    let name = |n: &str| -> Result<String, String> {
+        if is_rust_identifier(n) {
+            Ok(n.to_string())
+        } else {
+            Err(format!("`{n}` is not a type name"))
+        }
+    };
+    Ok(match text {
+        "slice" => InoutForm::Slice,
+        "vec" => InoutForm::Vec,
+        "array" => InoutForm::Array,
+        "bool" => InoutForm::Bool,
+        "returned" => InoutForm::Returned,
+        _ => {
+            if let Some(t) = text.strip_prefix("int:") {
+                if !HOST_INTS.contains(&t) {
+                    return Err(format!("`int:{t}`: the host integer is one of {HOST_INTS:?}"));
+                }
+                InoutForm::Int(t.to_string())
+            } else if let Some(n) = text.strip_prefix("slice-of:struct:") {
+                InoutForm::SliceOfStruct(name(n)?)
+            } else if let Some(n) = text.strip_prefix("vec-of:struct:") {
+                InoutForm::VecOfStruct(name(n)?)
+            } else if let Some(n) = text.strip_prefix("struct:") {
+                InoutForm::Struct(name(n)?)
+            } else if let Some(n) = text.strip_prefix("codec:") {
+                InoutForm::Codec(name(n)?)
+            } else {
+                return Err(format!("`{text}` is not an inout host form"));
+            }
+        }
+    })
+}
+
+/// `inout=buf:slice,n:int:u64`: the host form of each `inout` parameter, in the
+/// order written.  The parameter is the text before the *first* colon.
+fn parse_inout_entries(text: &str) -> Result<Vec<(String, InoutForm)>, String> {
+    let mut out: Vec<(String, InoutForm)> = Vec::new();
+    for entry in split_top(text) {
+        let (param, form) = entry
+            .split_once(':')
+            .ok_or_else(|| format!("inout entry `{entry}` is not `<param>:<form>`"))?;
+        if !is_rust_identifier(param) {
+            return Err(format!("inout entry `{entry}`: `{param}` is not a parameter name"));
+        }
+        if out.iter().any(|(p, _)| p == param) {
+            return Err(format!("inout parameter `{param}` is given a host form twice"));
+        }
+        if out.len() >= 4 {
+            return Err("more than 4 inout entries".to_string());
+        }
+        out.push((param.to_string(), parse_inout_form(form).map_err(|e| format!("inout entry `{entry}`: {e}"))?));
+    }
+    if out.is_empty() {
+        return Err("inout= needs at least one `<param>:<form>` entry".to_string());
+    }
+    Ok(out)
+}
+
+/// The most segments of an `export=` path (VER04k section 4.6).
+pub const MAX_EXPORT_SEGMENTS: usize = 8;
+
 /// The host signature of one operation (all parts optional; absent means the
 /// default derived from the Warrant type).
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
@@ -102,6 +213,8 @@ pub struct OpHost {
     /// `err_any=CASE` (VER04j section 14.4): the export returns `Result<T, E>`
     /// for an opaque `E`, and every `Err(_)` is the Warrant error case `CASE`.
     pub err_any: Option<String>,
+    /// WX-G: the host form of each `inout` parameter (VER04k section 4.6).
+    pub inout: Vec<(String, InoutForm)>,
 }
 
 /// Everything the bindings file says about host composites (VER04j section 4.6).
@@ -504,6 +617,7 @@ pub fn parse_evidence_bindings(text: &str) -> Result<EvidenceBindingFile, String
                 let mut ret = None;
                 let mut host_errors = None;
                 let mut err_any = None;
+                let mut inout: Vec<(String, InoutForm)> = Vec::new();
                 for w in words {
                     let (k, v) = w.split_once('=').unwrap_or((w, ""));
                     let list = || -> Vec<String> {
@@ -524,14 +638,29 @@ pub fn parse_evidence_bindings(text: &str) -> Result<EvidenceBindingFile, String
                             host_errors = Some(parse_host_errors(v).map_err(at)?)
                         }
                         "err_any" if is_rust_identifier(v) => err_any = Some(v.to_string()),
+                        "inout" if !v.is_empty() => {
+                            if !inout.is_empty() {
+                                return Err(at(format!("W0501: op `{name}`: `inout=` appears twice")));
+                            }
+                            inout = parse_inout_entries(v)
+                                .map_err(|e| at(format!("W0501: op `{name}`: {e}")))?;
+                        }
                         "faults" if !v.is_empty() => faults = list(),
                         "proofs_not_live" if !v.is_empty() => not_live = Some(v.to_string()),
                         _ => return Err(at(format!("op `{name}`: unknown or malformed option `{w}`"))),
                     }
                 }
                 let export = export.ok_or_else(|| at(format!("op `{name}` has no export=")))?;
-                if !is_rust_identifier(&export) {
-                    return Err(at(format!("op `{name}`: export `{export}` is not a Rust identifier")));
+                if inout.is_empty() {
+                    if !is_rust_identifier(&export) {
+                        return Err(at(format!("op `{name}`: export `{export}` is not a Rust identifier")));
+                    }
+                } else if !is_rust_path(&export) || export.split("::").count() > MAX_EXPORT_SEGMENTS {
+                    // VER04k section 4.6: an inout operation may name a method or a
+                    // function by a Rust path of at most 8 segments.
+                    return Err(at(format!(
+                        "W0501: op `{name}`: export `{export}` is not a Rust path of at most {MAX_EXPORT_SEGMENTS} segments"
+                    )));
                 }
                 if let Some(reason) = not_live {
                     proofs_not_live.insert(name.to_string(), reason);
@@ -552,7 +681,12 @@ pub fn parse_evidence_bindings(text: &str) -> Result<EvidenceBindingFile, String
                         "op `{name}`: err_any= excludes error= and errors="
                     )));
                 }
-                if host_args.is_some() || ret.is_some() || host_errors.is_some() || err_any.is_some() {
+                if host_args.is_some()
+                    || ret.is_some()
+                    || host_errors.is_some()
+                    || err_any.is_some()
+                    || !inout.is_empty()
+                {
                     hosts.ops.insert(
                         name.to_string(),
                         OpHost {
@@ -560,6 +694,7 @@ pub fn parse_evidence_bindings(text: &str) -> Result<EvidenceBindingFile, String
                             ret,
                             errors: host_errors,
                             err_any,
+                            inout,
                         },
                     );
                 }

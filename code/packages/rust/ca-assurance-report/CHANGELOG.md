@@ -2,6 +2,77 @@
 
 ## Unreleased
 
+- **Runner package scanned for stray bytecode** (WD-004b3).  For the Python lane the loader now also runs the sourceless-bytecode scan over the runner's package, `code/packages/python/warrant-corpus` (whole, `tests/` included, which the digested runner root `src/coding_adventures_warrant_corpus` never reads): a `*.pyc` or `*.pyo` outside `__pycache__` (case-insensitive) is `uncovered-source`, links are refused, only the package-root `.venv` is skipped; a missing runner package fails closed.  The test repo copies that package; new test `the_runner_package_is_scanned_for_stray_bytecode_too`.  `effect_certificate.json` regenerated (only `source_digest`).
+- **Windows root containment** (WD-004b2).  `Evidence::load` reaches the repository root through `Path::canonicalize`, which on Windows is an extended-length `\\?\D:\a\coding-adventures\coding-adventures` path; the shared containment rule refuses every `\\?\` path as a device path, so every real-evidence load failed with "resolves outside the repository root" on Windows only.  New `lane_loader::plain_root_text` rewrites the exact `\\?\X:\...` and `\\?\UNC\server\share\...` forms of the OS-produced root to their plain spelling before the containment question (the caller's `rel` is never changed, and a verbatim text containing `.`, `..` or `/`, a `Volume{}` or a `\\.\` path is left alone and refused).  `lexical_containment` and the conformance kit are unchanged, so device names and `..` are still refused.  Linux tests drive `PathFlavor::Win32` with the CI strings.  `effect_certificate.json` regenerated (only `source_digest`).
+- **Review round 5** (WD-004b2).  Go: a `go.work` or `go.work.sum` (file, directory or link) in the package root, the runner root or any directory above either, up to and including the repository root, is refused (`go-mod`), because a workspace `replace` overrides the pinned `go.mod` files and could point the runner module at another directory (checked before the digests; reached through the loader's contained, link-refusing path helper).  The Go lane BUILD and BUILD_windows files (`ct-compare`, `warrant-corpus`) now run every `go` with `GOWORK=off` (`set GOWORK=off&& ...` on Windows, the existing convention there).  Python: any `*.pyc` or `*.pyo` under the package root that is not inside a `__pycache__` directory is refused (`uncovered-source`, as is a stray compiled file in the source root); this closes a sourceless `tests/shutil.pyc`, which the digest walk never examined.  Links are refused during that scan, and the package-root `.venv` (recreated by `uv venv --clear`) is not scanned.  `effect_certificate.json` regenerated (only `source_digest`).
+- **Review round 2** (WD-004b2).  `vendor`, `node_modules` and `dist` are refused instead of skipped, `go.sum` is no longer ignored, and both Go `go.mod` files are pinned exactly (`go-mod`: module path, `go` line, one `require` and one `replace` of the runner to `../warrant-corpus`).  The Python lane records `pycache_isolated: true` in its manifest (the runner runs under a private `sys.pycache_prefix`, so a forged `__pycache__/*.pyc` is never executed whatever ran before): `parse_lane_manifest` requires it (true) for the Python lane and refuses it elsewhere, and only then does the loader ignore `__pycache__` (`source_tree_digest` takes a `pycache_isolated` argument).  The unclaimed list is five (adds `go.mod go directive version` and `contents of directories the Go tool ignores`); `rust/ct-compare`'s report regenerated (only the three lanes' `unclaimed`).  `effect_certificate.json` regenerated (only `source_digest`).
+- **Security-review follow-up** (WD-004b2).  `source-fresh` now fails closed: a regular file in the source root (or runner root) that no digest rule selects and that is not in the spec-listed ignore set is `uncovered-source` (`.so`, `.node`, `.s`, `.syso`, `.c`, `.json`, wrong-case `EVIL.PY`, a nested `go.mod`, an orphan `__pycache__/*.pyc`); root `go.mod` and `go.sum` stay a listed residual (the Go runner does not digest them).  `--check-lane` prints the absolute `repo root:` it checked.  `effect_certificate.json` regenerated (only `source_digest`).
+- **Lane rungs in the package report, `--check-lane`, `--require-active`** (WD-004b2, VER04i 8.3).  New
+  `lane_report` module and a required `lanes` array in `assurance_report.json`: one rung per registry lane, `live`
+  only when `load_lane` passes every named readiness check, `planned`, or `absent`; `release_ready` is always `false`
+  and `sandbox` always `absent` (no lane arms a jail yet, CAP-RT-1xx).  Derived from the consumer registry and the
+  loader only; the Rust proof, effect and weakness evidence, the rungs E0 to E5 and the verdict are not read or
+  changed.  `--check` re-derives the lanes (`LaneMismatch`, `LabelOverclaim`, `StaleEvidence`) and the offline checker
+  refuses a malformed array (`InvalidLaneRung`).  An `active` row that fails to load fails `Evidence::load`; no registry
+  file is an empty lane list; a broken or linked registry is an error.  New CLI: `--check-lane <lane>/<name>
+  [--repo-root D] [--require-active]` (absent and planned exit 0 and are printed as ABSENT or PLANNED unless
+  `--require-active`; an active lane that fails to load exits 1).  `Evidence` gains `lanes`, `AssuranceReport` gains
+  `lanes`, `CheckError` gains `InvalidLaneRung`, `EvidenceCheckError` gains `LaneMismatch` and `LabelOverclaim`.
+  Regenerated with `--generate` (keeping each `--commit`): the six adopters that use this tool (arithmetic,
+  ct-compare, gf256, logic-gates, lzw, wasm-leb128); the only field that changed in each is `lanes` (ct-compare: go,
+  python and typescript live; the others: three absent rungs).  `effect_certificate.json` regenerated (only
+  `source_digest` moved; declared effects and capabilities unchanged).
+- **`source_sha256` and `runner.src_sha256` are recomputed** (WD-004b2).  `lane_loader::source_tree_digest`,
+  `runner_root`, `binding_source`, `SourceKind`.  Per-lane rules (python `*.py`, `*.pyi`, `py.typed`; typescript `*.ts`
+  except `*.test.ts`; go `*.go` except `*_test.go`), the walk reaches its root under the loader's path rules and
+  examines every entry with `symlink_metadata` before its name (links are refused even under a skipped name), skips
+  non-regular files unopened, refuses non-UTF-8 names, and is bounded (depth 32, 8 MiB a file, 4096 files, 64 MiB in
+  total).  The checked-in digests written by the Python, TypeScript and Go runners are reproduced exactly.  Readiness
+  is ten checks (`source-fresh`, `runner-source-fresh` added); the unclaimed list is three.  New load codes
+  `source-tree`, `stale-source`, `stale-runner`; the loader's sandbox word is now `absent`.  Still open: the
+  check-to-open window (documented), junction and reparse-point tests on a Windows runner, the sandbox.
+
+- **WD-100b security-review follow-up.**  `refused_component` also refuses any win32 child component with a `:`
+  (alternate data streams and device suffixes), takes the reserved stem before the first `.` with trailing spaces
+  trimmed (`CON .txt`), and adds `CONIN$`, `CONOUT$` and `COM`/`LPT` with a superscript 1, 2 or 3.  `CLOCK$` and
+  fullwidth `CON` stay ordinary.  Fixture test now 141 cases.  `effect_certificate.json` regenerated again (only
+  `source_digest`; capabilities unchanged).
+- **WD-100b: ASCII-only win32 folding and reserved names in `lexical_containment`.**  The win32 flavour folded
+  names (and the UNC server and share) with `str::to_lowercase`, which is full Unicode (the Kelvin sign equalled
+  `k`); it now uses `to_ascii_lowercase`, so every non-ASCII code point is compared exactly and a non-ASCII case
+  variant is "not inside" (fails closed).  A win32 child with a reserved device name (`CON`, `PRN`, `AUX`, `NUL`,
+  `COM1`..`COM9`, `LPT1`..`LPT9`, with or without an extension) or a component ending in a dot or space is never
+  inside (`refused_component`).  The shared-fixture test now runs 120 cases (43 new) and a new test pins the names,
+  look-alikes and the non-ASCII pairs.  `effect_certificate.json` regenerated (only `source_digest` moved; declared
+  effects and capabilities unchanged).  `validate_repo_path` (registry paths) already refused these names and is
+  unchanged.
+
+- **Safe lane artifact loader** (WD-004b1, VER04i 8.2).  New `lane_loader` module (library only; no CLI or
+  report change, those are WD-004b2): `read_repo_file` (bounded, lexically contained in the host path flavour,
+  every symbolic link refused, regular files only), `lexical_containment` (the lane runners' shared rule, both
+  flavours), `canonical_json` and `labels_manifest_digest` (`toolchain.version` blanked, name kept; reproduces the
+  Python, TypeScript and Go runners' `manifest_sha256`), `parse_domain_labels` (closed schema, labels re-derived from
+  domain descriptors), `load_lane` and `load_active_lanes` (registry join, raw digests of spec, corpus, TFV and binding,
+  the WD-004a join, eight named static readiness checks).  `LoadedLane::render_readiness` ends with the unclaimed list
+  (source freshness, runner source digest, toolchain authenticity, build execution, sandbox) and `release_ready: false`.
+  `runner.src_sha256` and `source_sha256` are format-checked only.  `lane_evidence` only widened `CORPUS_DIR`,
+  `CORPUS_FILE`, `SPEC_FILE` to `pub` and `validate_repo_path` to `pub(crate)`.  The legacy Rust loader and every Rust
+  adopter's `assurance_report.json` are unchanged.
+- **Registry flip.**  `consumers.json` lists `go/ct-compare`, `python/ct-compare` and `typescript/ct-compare`, all
+  `active`; `test_lane_evidence.rs` no longer pins the Python row to `planned` and builds its planned case from the
+  checked-in registry.
+
+- **Multi-language `LanguageSafetyProfile` and fail-closed non-crypto CWE-208 exclusion** (VER-W0-A; closes blockers for Music and DSP packages):
+  - **CWE-208 (`Observable Timing Discrepancy`)**: When `ctx.constant_time_claims.is_empty()`, `ctx.evidence.ct_proof_ids.is_empty()`, `!ctx.has_secret_ops`, and `!ctx.evidence.no_secret_operand_ids.is_empty()`, mark CWE-208 as `Excluded` under the `no_secret_inputs` safe subset citing both `"capability-audit::no-secret-inputs"` and `"warrant-spec::all-operands-public"`. Any missing attestation, unproven constant-time obligation, or secret operation strictly fails closed (`MatrixError::OpenRow`). `verify_evidence` and `checker.rs` cross-check both attestations and verify zero secret ops or constant-time claims/proofs exist.
+  - **Multi-language `LanguageSafetyProfile`**: Introduced `LanguageSafetyProfile` enum (`SafeRust`, `GcManaged { language: String }`, `ManualMemoryChecked { language: String }`) to model language memory safety invariants for Family 1 (CWE-416, 787, 125, 415, 476, 190).
+    - `PackageAuditContext::default()` is strictly fail-closed (`is_safe_rust: false`, `ManualMemoryChecked("unknown")`).
+    - `GcManaged` qualifies GC runtimes as FFI-free and `unsafe`-free; any presence of `unsafe_exceptions` fails closed into `ManualMemoryChecked` discharge/exemption.
+    - `GcManaged` prevents blind exclusion of CWE-94 (Code Injection) and CWE-1321 (Prototype Pollution): TypeScript/JavaScript require static analyzer evidence (`has_eval_analyzer_evidence`, `has_prototype_analyzer_evidence`) or fail to unapproved exemptions; Python requires analyzer evidence for CWE-94 while CWE-1321 is excluded (no JS prototype chain).
+    - `ManualMemoryChecked` (C, C++, FFI, unsafe Rust): Family 1 cannot be excluded and must be `Discharged` via evidence/proofs or recorded as an unapproved exemption; only cites `"effect-certificate::unsafe-exception"` when exceptions actually exist.
+  - **Registry synchronization**: Updated `weakness-registry-v1.json`, `VER15-weakness-registry.md`, and `VER01-assurance-report.md` to define the `no_secret_inputs` safe subset for CWE-208 and qualify `gc_runtimes` for Family 1 as FFI-free and unsafe-free with checked/bounded arithmetic.
+  - **Adopter reports**: Regenerated `assurance_report.json` for non-crypto adopters (`wasm-leb128`, `logic-gates`, `arithmetic`, `lzw`) reflecting the clean `Excluded` status under `no_secret_inputs`.
+  - **Tests**: Added comprehensive literate unit tests in `tests/test_language_safety_and_cwe208.rs` covering all fail-closed security review conditions, and updated existing integration test assertions.
+
 - **`--profile-kind` pins the profile kind** (security review finding).  `--check` and `--generate` accept
   `--profile-kind transform|decompressor` and refuse a profile file with another kind
   (`AuditProfile::verify_pin`); lzw's BUILD lines pin `decompressor`, arithmetic's `transform`.

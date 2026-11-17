@@ -173,6 +173,29 @@ pub enum Declaration<'a> {
     Variant(VariantDecl<'a>),
     /// WX-E: `vectors Name:` with a pinned external table (v1 only).
     Vectors(VectorsDecl<'a>),
+    /// WX-G: `ensures op:` and one to 32 Bool rows over the parameters and
+    /// `result` (v1 only).
+    Ensures(EnsuresDecl<'a>),
+}
+
+/// `ensures NAME:` (VER04k section 4.2): the postcondition rows of one operation.
+///
+/// ```text
+/// ensures zeroize:
+///   len(result) == len(buf)
+///   result == zeros(len(buf))
+/// ```
+///
+/// In a row the operation's parameters denote the *pre-state* (the argument
+/// values) and the contextual name `result` the operation's return value, which
+/// carries the post-state of every `inout` parameter.  The parser keeps the rows
+/// as written; the 32-row cap, the typing and the "no operation, no quantifier"
+/// rules belong to the checker.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct EnsuresDecl<'a> {
+    pub op: &'a str,
+    pub rows: Vec<Expression<'a>>,
+    pub span: (usize, usize),
 }
 
 /// `vectors NAME:` (VER04j section 5.2): a table of known answers kept in a
@@ -380,12 +403,33 @@ pub struct BoundRow<'a> {
     pub span: (usize, usize),
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Clone, PartialEq, Eq)]
 pub struct Parameter<'a> {
     pub name: &'a str,
     pub param_type: TypeExpr<'a>,
     pub refinement: Option<Expression<'a>>,
+    /// WX-G (VER04k section 4.2): the parameter is written `name: inout T`.  Its
+    /// value at the call is the pre-state, and the operation's result carries
+    /// the post-state.  Only an operation's parameter can be `inout` (v1 only).
+    pub inout: bool,
     pub span: (usize, usize),
+}
+
+/// `Debug` prints exactly what the derive printed before WX-G added `inout`,
+/// and the extra field only when it is set.  The pinned hashes of the two v0
+/// specifications (`tests/v0_compat.rs`, VER04j section 1.3) are hashes of this
+/// text, so a field that only a v1 document can set must not appear in it.
+impl std::fmt::Debug for Parameter<'_> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let mut d = f.debug_struct("Parameter");
+        d.field("name", &self.name)
+            .field("param_type", &self.param_type)
+            .field("refinement", &self.refinement);
+        if self.inout {
+            d.field("inout", &self.inout);
+        }
+        d.field("span", &self.span).finish()
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -939,6 +983,7 @@ impl<'a> Parser<'a> {
                 Declaration::Record(r) => r.span,
                 Declaration::Variant(v) => v.span,
                 Declaration::Vectors(v) => v.span,
+                Declaration::Ensures(e) => e.span,
             })
             .unwrap_or(start_span);
 
@@ -980,6 +1025,13 @@ impl<'a> Parser<'a> {
             Some(LayoutTokenKind::Word("vectors")) => {
                 self.require_v1()?;
                 self.parse_vectors_decl().map(Declaration::Vectors)
+            }
+            // WX-G: `ensures` is reserved since VER04 section 2 but was only ever
+            // valid as the last row of an `input` block, so at declaration level
+            // it is new in v1 (VER04k section 1.2): W0101 in a v0 document.
+            Some(LayoutTokenKind::Word("ensures")) => {
+                self.require_v1()?;
+                self.parse_ensures_decl().map(Declaration::Ensures)
             }
             Some(_) => Err(ParserError::new(
                 ParserErrorKind::UnexpectedToken,
@@ -1092,7 +1144,7 @@ impl<'a> Parser<'a> {
         self.expect_symbol("(")?;
         let mut params = Vec::new();
         if !matches!(self.peek_kind(), Some(LayoutTokenKind::Symbol(")"))) {
-            params = self.parse_parameters()?;
+            params = self.parse_op_parameters()?;
         }
         self.expect_symbol(")")?;
         self.expect_symbol("->")?;
@@ -1637,19 +1689,50 @@ impl<'a> Parser<'a> {
     // ── Parameters & Types ──────────────────────────────────────────────────
 
     fn parse_parameters(&mut self) -> Result<Vec<Parameter<'a>>, ParserError> {
+        self.parse_parameter_list(false)
+    }
+
+    /// The parameters of an `op` line: the only place the `inout` mode exists.
+    fn parse_op_parameters(&mut self) -> Result<Vec<Parameter<'a>>, ParserError> {
+        self.parse_parameter_list(true)
+    }
+
+    fn parse_parameter_list(&mut self, allow_inout: bool) -> Result<Vec<Parameter<'a>>, ParserError> {
         let mut params = Vec::new();
-        params.push(self.parse_parameter()?);
+        params.push(self.parse_parameter(allow_inout)?);
         while matches!(self.peek_kind(), Some(LayoutTokenKind::Symbol(","))) {
             self.advance()?;
-            params.push(self.parse_parameter()?);
+            params.push(self.parse_parameter(allow_inout)?);
         }
         Ok(params)
     }
 
-    fn parse_parameter(&mut self) -> Result<Parameter<'a>, ParserError> {
+    /// Is the word `inout`, at the cursor, the WX-G parameter mode?
+    ///
+    /// `inout` is contextual (VER04k section 4.4): it is a mode only when it is
+    /// immediately followed by the start of a type, a NAME or `(`.  `x: inout`
+    /// followed by `,`, `)` or `|` is a type alias that happens to be called
+    /// `inout`, exactly as before WX-G.
+    fn at_inout_mode(&self) -> bool {
+        matches!(self.peek_kind(), Some(LayoutTokenKind::Word("inout")))
+            && matches!(
+                self.tokens.get(self.pos + 1).map(|t| t.kind),
+                Some(LayoutTokenKind::Word(_)) | Some(LayoutTokenKind::Symbol("("))
+            )
+    }
+
+    fn parse_parameter(&mut self, allow_inout: bool) -> Result<Parameter<'a>, ParserError> {
         self.count_node()?;
         let (name, start_span) = self.expect_name()?;
         self.expect_symbol(":")?;
+        let mut inout = false;
+        if allow_inout && self.at_inout_mode() {
+            // A v0 document has no such mode (no valid v0 text has two NAMEs
+            // after the colon): W0101, never a silent acceptance.
+            self.require_v1()?;
+            self.advance()?;
+            inout = true;
+        }
         let param_type = self.parse_type()?;
         let mut refinement = None;
         let mut end_span = self.type_span(&param_type);
@@ -1665,7 +1748,37 @@ impl<'a> Parser<'a> {
             name,
             param_type,
             refinement,
+            inout,
             span: (start_span.0, end_span.1),
+        })
+    }
+
+    /// `ensures NAME: NEWLINE INDENT row { row } DEDENT` (VER04k section 4.4).
+    fn parse_ensures_decl(&mut self) -> Result<EnsuresDecl<'a>, ParserError> {
+        let start_tok = self.expect_word("ensures")?;
+        let start_span = self.token_span_range(start_tok);
+        let (op, _) = self.expect_name()?;
+        self.expect_symbol(":")?;
+        self.expect_newline()?;
+        self.expect_indent()?;
+        let mut rows = Vec::new();
+        let mut end;
+        loop {
+            let row = self.parse_expression()?;
+            end = self.expr_span(&row);
+            self.expect_newline()?;
+            rows.push(row);
+            // The cap of 32 rows is the checker's (W0602); the parser only
+            // bounds what it is willing to hold by the node budget.
+            if matches!(self.peek_kind(), Some(LayoutTokenKind::Dedent)) {
+                break;
+            }
+        }
+        self.expect_dedent()?;
+        Ok(EnsuresDecl {
+            op,
+            rows,
+            span: (start_span.0, end.1),
         })
     }
 

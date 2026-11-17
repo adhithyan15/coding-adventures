@@ -11,10 +11,13 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 FIXTURE_ROOT = REPO_ROOT / "code/specs/fixtures/barcode-symbologies-v1"
 ESTABLISHED_ITF_LANGUAGES = {
     "csharp",
+    "dart",
     "elixir",
     "fsharp",
     "go",
     "haskell",
+    "java",
+    "kotlin",
     "lua",
     "perl",
     "python",

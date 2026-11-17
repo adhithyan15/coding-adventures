@@ -1,1 +1,2 @@
 powershell -NoProfile -ExecutionPolicy Bypass -File tools\run.ps1
+# tests\event_loop_test.c waits for the loop to be running before stopping it (no sleep-then-stop race).

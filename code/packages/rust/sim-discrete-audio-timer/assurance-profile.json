@@ -1,0 +1,19 @@
+{
+  "schema": "warrant-assurance-profile-v1",
+  "name": "sim-discrete-audio-timer",
+  "kind": "transform",
+  "rows": {
+    "326": {
+      "applicability": "excluded",
+      "reason": "no keys: the package takes and generates no key material; operands are audio sample arrays, timer resistances/capacitances, and debounce state"
+    },
+    "327": {
+      "applicability": "excluded",
+      "reason": "pure signal processing: package implements deterministic analog audio circuit simulation only, no cipher, hash or MAC"
+    },
+    "407": {
+      "applicability": "excluded",
+      "reason": "bounded work per call: sound rendering and debounce operate in linear time proportional to output buffer size and clock cycles; no unbounded iteration"
+    }
+  }
+}

@@ -19,6 +19,9 @@ requires:
   knowledge: [ZH-TONE-LEXICAL, ZH-SCRIPT-NI]
 introduces:
   knowledge: [ZH-SCRIPT-HAO, ZH-LEX-HAO, ZH-METHOD-COMPONENT-HOOK]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [ZH-TONE-LEXICAL, ZH-SCRIPT-NI, ZH-SCRIPT-HAO, ZH-LEX-HAO, ZH-METHOD-COMPONENT-HOOK]
 skills: [listening, speaking, reading]

@@ -224,9 +224,18 @@ describe("validate-manifest", () => {
     const result = await exec(["validate-manifest", "--repo-root", root, "--corpus", corpusDir, manifest]);
     expect(result.status).toBe(0);
     expect(result.out[0]).toBe("ok test-manifest.json is a structurally valid lane manifest");
-    // The checked-in registry lists only the Python lane, so a TypeScript manifest
-    // is correctly refused against it until the row exists.
-    const refused = await exec(["validate-manifest", "--repo-root", root, "--corpus", corpusDir, "--registry", REGISTRY_PATH, manifest]);
+    // Since WD-004b1 the checked-in registry lists typescript/ct-compare as
+    // active, so a TypeScript manifest joins it, even with --require-active.
+    const joined = await exec(["validate-manifest", "--repo-root", root, "--corpus", corpusDir, "--registry", REGISTRY_PATH, "--require-active", manifest]);
+    expect(joined.status).toBe(0);
+  });
+
+  it("refuses a registry that does not list the lane exactly once", async () => {
+    const { root, corpusDir, manifest } = await written();
+    const registry = join(tempDir(), "consumers.json");
+    const row = { lane: "python", package: "python/ct-compare", module: "ct_compare", status: "active" };
+    writeFileSync(registry, JSON.stringify({ consumers: [row] }));
+    const refused = await exec(["validate-manifest", "--repo-root", root, "--corpus", corpusDir, "--registry", registry, manifest]);
     expect(refused.status).toBe(2);
     expect(refused.err[0]).toMatch(/registered exactly once/);
   });

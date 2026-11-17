@@ -100,6 +100,52 @@ func parentOf(abs string) string {
 	return abs[:i]
 }
 
+// dotdotExact says a ".." written at cur, inside the virtual tree rooted at
+// virtBase, goes where the lexical parent says it does (D28).
+//
+// The attack: /proc/self/cwd is not a directory, it is a MAGIC LINK to the
+// process's working directory, and the kernel resolves the ".." after it from
+// that directory's parent.  So
+//
+//	open("/proc/self/cwd/../../filesystems")
+//
+// lexically lands on /proc/filesystems (an allowed read) while really opening
+// a file two levels above the working directory, anywhere on the disk.  The
+// same holds for /proc/self/root, /proc/<pid>/fd/N, exe, map_files/..,
+// thread-self (a link to /proc/<pid>/task/<tid>) and /proc/net (a link to
+// self/net).  The classifier therefore refuses every ".." it cannot prove
+// exact.  Exact cases, all of them real directories or the plain /proc/self
+// and /proc/<pid> forms:
+//
+//	/proc/..            leaving /proc itself (the parent of /proc is /)
+//	/proc/self/..       self is a link to /proc/<pid>, whose parent is /proc
+//	/proc/<pid>/..      a real directory
+//
+// Everything deeper, and anything under /dev/fd (itself a link to
+// /proc/self/fd), is refused as trace-incomplete:proc-path.
+func dotdotExact(cur, virtBase string) bool {
+	if virtBase != "/proc" {
+		return false
+	}
+	if cur == "/proc" {
+		return true
+	}
+	name, ok := strings.CutPrefix(cur, "/proc/")
+	return ok && (name == "self" || isDigits(name))
+}
+
+func isDigits(s string) bool {
+	if s == "" {
+		return false
+	}
+	for _, r := range s {
+		if r < '0' || r > '9' {
+			return false
+		}
+	}
+	return true
+}
+
 func isVirtualRoot(abs string) bool { return abs == "/proc" || abs == "/dev/fd" }
 
 func isVirtual(abs string) bool {
@@ -234,6 +280,11 @@ func (c *classifier) walk(full string, follow bool) (walkResult, string) {
 			if plain && !res.virtual {
 				res.dotdot = true
 				return res, ""
+			}
+			if res.virtual && !dotdotExact(cur, virtBase) {
+				// D28: "..", written after a /proc magic link, is taken by
+				// the kernel from the link's TARGET, not from the link.
+				return res, rProc
 			}
 			cur = parentOf(cur)
 			if res.virtual && !strings.HasPrefix(cur+"/", virtBase+"/") {

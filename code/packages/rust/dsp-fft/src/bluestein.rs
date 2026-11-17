@@ -94,7 +94,7 @@
 //!   comes from `rfft`.
 
 use crate::radix2::add_radix2_fft_to_builder;
-use crate::{fft_scalar, ifft_scalar, Direction, FftError};
+use crate::{fft_scalar, ifft_scalar, Direction, FftError, MAX_FFT_LEN, MAX_SAMPLES};
 use matrix_ir::{DType, Graph, GraphBuilder, Shape, Tensor, TensorId};
 
 /// Forward / inverse FFT via Bluestein's algorithm.  Accepts any
@@ -124,10 +124,29 @@ pub fn bluestein_scalar(
             signal.len()
         )));
     }
+    if signal.len() > MAX_SAMPLES {
+        return Err(FftError::InvalidInput(format!(
+            "signal length {} exceeds MAX_SAMPLES ({})",
+            signal.len(),
+            MAX_SAMPLES
+        )));
+    }
     let n = signal.len() / 2;
     if n == 0 {
         return Err(FftError::InvalidInput(
             "FFT length must be at least 1".into(),
+        ));
+    }
+    if n > MAX_FFT_LEN {
+        return Err(FftError::InvalidInput(format!(
+            "FFT length {} exceeds MAX_FFT_LEN ({})",
+            n,
+            MAX_FFT_LEN
+        )));
+    }
+    if signal.iter().any(|&x| !x.is_finite()) {
+        return Err(FftError::InvalidInput(
+            "input contains non-finite float (NaN or Inf)".into(),
         ));
     }
 
@@ -142,8 +161,21 @@ pub fn bluestein_scalar(
     // ── Step 0: pick the convolution length M = next_pow2(2N - 1).
     //   This is the smallest power of two that fits a linear
     //   convolution of two length-N sequences (length 2N - 1).
-    let conv_len = 2 * n - 1;
-    let m = conv_len.next_power_of_two();
+    let conv_len = n
+        .checked_mul(2)
+        .and_then(|x| x.checked_sub(1))
+        .ok_or_else(|| {
+            FftError::InvalidInput("FFT length causes integer overflow in convolution length".into())
+        })?;
+    let m = conv_len.checked_next_power_of_two().ok_or_else(|| {
+        FftError::InvalidInput("convolution length exceeds power of two capacity".into())
+    })?;
+    if m > MAX_FFT_LEN {
+        return Err(FftError::InvalidInput(format!(
+            "Bluestein convolution length {} exceeds MAX_FFT_LEN ({})",
+            m, MAX_FFT_LEN
+        )));
+    }
 
     // ── Step 1: build the chirp.  The pre-chirp factor for index
     //   `k` is `exp(sign · iπ · k² / N)` where `sign = -1` for
@@ -316,23 +348,50 @@ pub fn build_bluestein_graph_with_input(
             signal.len()
         )));
     }
+    if signal.len() > MAX_SAMPLES {
+        return Err(FftError::InvalidInput(format!(
+            "signal length {} exceeds MAX_SAMPLES ({})",
+            signal.len(),
+            MAX_SAMPLES
+        )));
+    }
     let n_usize = signal.len() / 2;
     if n_usize < 2 {
-        // N = 0 or 1 are degenerate.  N = 0 has no Const to
-        // embed; N = 1 has no FFT structure to lower (M = 1
-        // would underflow `add_radix2_fft_to_builder`'s N ≥ 2
-        // contract).  Callers should handle these via the
-        // scalar path.
         return Err(FftError::InvalidInput(format!(
             "matrix-ir Bluestein requires N ≥ 2; got N = {}",
             n_usize
         )));
     }
+    if n_usize > MAX_FFT_LEN {
+        return Err(FftError::InvalidInput(format!(
+            "FFT length {} exceeds MAX_FFT_LEN ({})",
+            n_usize,
+            MAX_FFT_LEN
+        )));
+    }
+    if signal.iter().any(|&x| !x.is_finite()) {
+        return Err(FftError::InvalidInput(
+            "input contains non-finite float (NaN or Inf)".into(),
+        ));
+    }
     let n = n_usize as u32;
 
     // ── Step 0: pick the convolution length M = next_pow2(2N - 1).
-    let conv_len = 2 * n_usize - 1;
-    let m_usize = conv_len.next_power_of_two();
+    let conv_len = n_usize
+        .checked_mul(2)
+        .and_then(|x| x.checked_sub(1))
+        .ok_or_else(|| {
+            FftError::InvalidInput("FFT length causes integer overflow in convolution length".into())
+        })?;
+    let m_usize = conv_len.checked_next_power_of_two().ok_or_else(|| {
+        FftError::InvalidInput("convolution length exceeds power of two capacity".into())
+    })?;
+    if m_usize > MAX_FFT_LEN {
+        return Err(FftError::InvalidInput(format!(
+            "Bluestein convolution length {} exceeds MAX_FFT_LEN ({})",
+            m_usize, MAX_FFT_LEN
+        )));
+    }
     let m = m_usize as u32;
 
     // ── Precompute chirp + bilateral-chirp values in Rust.
@@ -924,5 +983,16 @@ mod tests {
                 spectrum[2 * k + 1]
             );
         }
+    }
+
+    #[test]
+    fn test_bluestein_oversized_convolution_length_rejected() {
+        let n = (MAX_FFT_LEN / 2) + 1;
+        let signal = vec![0.0f32; 2 * n];
+        let res_scalar = bluestein_scalar(&signal, Direction::Forward);
+        assert!(matches!(res_scalar, Err(FftError::InvalidInput(_))));
+
+        let res_graph = build_bluestein_graph_with_input(&signal, Direction::Forward);
+        assert!(matches!(res_graph, Err(FftError::InvalidInput(_))));
     }
 }

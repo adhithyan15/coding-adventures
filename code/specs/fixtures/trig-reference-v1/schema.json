@@ -1,0 +1,126 @@
+{
+  "$id": "trig-reference-v1/schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "accuracy": {
+      "additionalProperties": {
+        "additionalProperties": false,
+        "properties": {
+          "gate_ulp": {
+            "type": "integer"
+          },
+          "worst_steps": {
+            "type": "integer"
+          },
+          "worst_steps_x": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "worst_ulp": {
+            "type": "string"
+          },
+          "worst_ulp_x": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "worst_ulp",
+          "worst_ulp_x",
+          "worst_steps",
+          "worst_steps_x",
+          "gate_ulp"
+        ],
+        "type": "object"
+      },
+      "type": "object"
+    },
+    "algorithm": {
+      "const": "TRIG-REF-1"
+    },
+    "constants": {
+      "additionalProperties": {
+        "pattern": "^[0-9a-f]{16}$",
+        "type": "string"
+      },
+      "type": "object"
+    },
+    "domains": {
+      "additionalProperties": {
+        "additionalProperties": false,
+        "properties": {
+          "count": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "sha256": {
+            "pattern": "^[0-9a-f]{64}$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "count",
+          "sha256"
+        ],
+        "type": "object"
+      },
+      "type": "object"
+    },
+    "generator_version": {
+      "type": "string"
+    },
+    "groups": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "file": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "rows": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "sha256": {
+            "pattern": "^[0-9a-f]{64}$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "file",
+          "rows",
+          "sha256"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "seed": {
+      "pattern": "^[0-9a-f]{16}$",
+      "type": "string"
+    },
+    "version": {
+      "const": 1
+    }
+  },
+  "required": [
+    "version",
+    "algorithm",
+    "generator_version",
+    "seed",
+    "constants",
+    "groups",
+    "domains",
+    "accuracy"
+  ],
+  "title": "trig-reference-v1 manifest",
+  "type": "object"
+}

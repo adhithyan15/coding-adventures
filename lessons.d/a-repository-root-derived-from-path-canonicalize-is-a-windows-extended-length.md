@@ -1,0 +1,7 @@
+---
+category: Cross-platform & Windows BUILD_windows
+---
+
+# A repository root derived from Path::canonicalize is a Windows extended-length path that a containment rule refuses as a device path: convert the OS-produced root to its plain form, never the caller's path
+
+On Windows `Path::canonicalize` returns an extended-length path (`\\?\D:\a\coding-adventures\coding-adventures`), and `std::path::absolute` keeps that prefix. `Evidence::load` finds the repository root by walking up from a canonicalised spec path, so the lane loader's `contained_path` built its root and child strings from the verbatim form. The shared containment rule (VER04i 9.1) refuses every `\\?\` path as a device path, so every real file read reported "resolves outside the repository root" and every adopter test that loads evidence failed on Windows only (ct-compare, gf256, logic-gates, lzw, wasm-leb128). The fix is `plain_root_text`, applied only to the OS-produced root: it rewrites the exact `\\?\X:\...` and `\\?\UNC\s\h\...` forms to `X:\...` and `\\s\h\...` and leaves anything with `.`, `..` or `/` (and `\\.\` or `Volume{}` forms) alone, so it is still refused. The rule itself is not loosened, and `rel` is never touched. Test it on Linux with the real CI strings under `PathFlavor::Win32`: the verbatim root is refused, the plain root is accepted, and device names and `..` are still refused. Do not feed canonicalised paths to a lexical containment rule without converting them first.

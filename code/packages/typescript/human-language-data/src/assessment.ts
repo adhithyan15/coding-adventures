@@ -43,7 +43,13 @@ export interface AssessmentFullMock {
    * assessment contract unreadable at once.
    */
   humanValidation?: string;
+  /** Per-form teaching debt; declarations alone never satisfy these requirements. */
+  bookPrerequisites?: AssessmentMockBookPrerequisite[];
 }
+
+export type AssessmentMockBookPrerequisite =
+  | { id: string; kind: "lesson-knowledge"; knowledgeIds: string[] }
+  | { id: string; kind: "exact-script-token-closure"; script: "gurmukhi"; sources: string[] };
 
 export interface AssessmentContract {
   version: number;
@@ -136,6 +142,46 @@ function artifactReference(value: unknown, where: string): string {
     throw new Error(`assessment: ${where} must be a safe relative artifact reference`);
   }
   return reference;
+}
+
+/** Parse obligations, not evidence. The status reader resolves them against books. */
+function mockBookPrerequisites(value: unknown, where: string): AssessmentMockBookPrerequisite[] {
+  if (!Array.isArray(value)) throw new Error(`assessment: ${where} must be an array`);
+  const parsed = value.map((item, index): AssessmentMockBookPrerequisite => {
+    const entry = object(item, `${where}[${index}]`);
+    const id = nonEmpty(entry.id, `${where}[${index}].id`);
+    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(id)) {
+      throw new Error(`assessment: ${where}[${index}].id must be a stable kebab-case id`);
+    }
+    if (entry.kind === "lesson-knowledge") {
+      if (!Array.isArray(entry.knowledgeIds) || entry.knowledgeIds.length === 0
+        || entry.knowledgeIds.some((atom) => typeof atom !== "string" || !/^[A-Z][A-Z0-9-]*$/.test(atom))
+        || new Set(entry.knowledgeIds).size !== entry.knowledgeIds.length) {
+        throw new Error(`assessment: ${where}[${index}].knowledgeIds must be distinct knowledge atom ids`);
+      }
+      return { id, kind: "lesson-knowledge", knowledgeIds: [...entry.knowledgeIds] as string[] };
+    }
+    if (entry.kind === "exact-script-token-closure") {
+      if (entry.script !== "gurmukhi") {
+        throw new Error(`assessment: ${where}[${index}].script must be gurmukhi`);
+      }
+      if (!Array.isArray(entry.sources) || entry.sources.length < 2) {
+        throw new Error(`assessment: ${where}[${index}].sources must name learner and examiner stimuli`);
+      }
+      const sources = entry.sources.map((source, sourceIndex) =>
+        artifactReference(source, `${where}[${index}].sources[${sourceIndex}]`));
+      if (sources.some((source) => !source.endsWith(".md") || source.includes("#"))
+        || new Set(sources).size !== sources.length) {
+        throw new Error(`assessment: ${where}[${index}].sources must be distinct Markdown files without fragments`);
+      }
+      return { id, kind: "exact-script-token-closure", script: "gurmukhi", sources };
+    }
+    throw new Error(`assessment: ${where}[${index}].kind is not a supported evidence kind`);
+  });
+  if (new Set(parsed.map((item) => item.id)).size !== parsed.length) {
+    throw new Error(`assessment: ${where} has duplicate prerequisite ids`);
+  }
+  return parsed;
 }
 
 export function parseAssessmentPolicy(value: unknown): AssessmentPolicy {
@@ -296,6 +342,7 @@ export function parseAssessmentContract(
     }
     const fullMocks = item.fullMocks.map((mock, mockIndex) => {
       const mockRaw = object(mock, `${expectedLanguage}.${current}.fullMocks[${mockIndex}]`);
+      const mockId = nonEmpty(mockRaw.id, `${expectedLanguage}.${current}.mock.id`);
       if (mockRaw.timed !== true) throw new Error(`assessment: ${expectedLanguage}.${current} mock must be timed`);
       const paper = mockRaw.paper === undefined
         ? undefined
@@ -314,18 +361,39 @@ export function parseAssessmentContract(
           );
       const rubric = artifactReference(mockRaw.rubric, `${expectedLanguage}.${current}.mock.rubric`);
       const answerKey = artifactReference(mockRaw.answerKey, `${expectedLanguage}.${current}.mock.answerKey`);
+      const bookPrerequisites = mockRaw.bookPrerequisites === undefined ? undefined
+        : mockBookPrerequisites(
+            mockRaw.bookPrerequisites,
+            `${expectedLanguage}.${current}.fullMocks[${mockIndex}].bookPrerequisites`,
+          );
+      for (const prerequisite of bookPrerequisites ?? []) {
+        if (prerequisite.kind !== "exact-script-token-closure") continue;
+        const levelSlug = current.toLowerCase();
+        const formName = mockId.startsWith(`${levelSlug}-`)
+          ? mockId.slice(levelSlug.length + 1) : "";
+        const conventionalPaper = /^mock-[1-9][0-9]*$/.test(formName)
+          ? `mocks/${levelSlug}/${formName}.md` : undefined;
+        const boundPaper = paper ?? conventionalPaper;
+        const examiner = boundPaper?.replace(/\.md$/, "-examiner-script.md");
+        if (boundPaper === undefined || !boundPaper.endsWith(".md")
+          || prerequisite.sources.length !== 2
+          || prerequisite.sources[0] !== boundPaper || prerequisite.sources[1] !== examiner) {
+          throw new Error(`assessment: ${expectedLanguage}.${current}.fullMocks[${mockIndex}].bookPrerequisites '${prerequisite.id}' must name this mock's paper and examiner script`);
+        }
+      }
       if (paper !== undefined && [rubric, answerKey].some((reference) =>
         reference.split("#", 1)[0] === paper.split("#", 1)[0])) {
         throw new Error(`assessment: ${expectedLanguage}.${current}.fullMocks[${mockIndex}].paper must be distinct from rubric and answerKey`);
       }
       return {
-        id: nonEmpty(mockRaw.id, `${expectedLanguage}.${current}.mock.id`),
+        id: mockId,
         timed: true,
         ...(paper === undefined ? {} : { paper }),
         ...(manifest === undefined ? {} : { manifest }),
         rubric,
         answerKey,
         ...(humanValidation === undefined ? {} : { humanValidation }),
+        ...(bookPrerequisites === undefined ? {} : { bookPrerequisites }),
       };
     });
     if (new Set(fullMocks.map((mock) => mock.id)).size !== fullMocks.length) {

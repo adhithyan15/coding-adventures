@@ -1,0 +1,237 @@
+{
+  "schema_version": "ver24-effect-cert-v1",
+  "package": "rust/sim-teletype-asr33",
+  "source_digest": "1e5e054c5f8299c88cf229d68140a8344d274a39c2c9b602a6d4bc30ea9eb337",
+  "manifest_digest": "9dac77413425c6749017a9ecf99ccd44c215504d8d6c198f8bb5235ad8adfc32",
+  "declared_effects": [],
+  "entry_points": [
+    {
+      "name": "parity_generator_7xor",
+      "signature": "pub fn parity_generator_7xor(b0: u8, b1: u8, b2: u8, b3: u8, b4: u8, b5: u8, b6: u8) -> u8",
+      "effects": []
+    },
+    {
+      "name": "compute_even_parity",
+      "signature": "pub fn compute_even_parity(b: u8) -> u8",
+      "effects": []
+    },
+    {
+      "name": "new",
+      "signature": "pub const fn new() -> Self",
+      "effects": []
+    },
+    {
+      "name": "tx_load",
+      "signature": "pub fn tx_load(&mut self, byte: u8)",
+      "effects": []
+    },
+    {
+      "name": "step_serial_bit",
+      "signature": "pub fn step_serial_bit(&mut self) -> u8",
+      "effects": []
+    },
+    {
+      "name": "rx_feed_bit",
+      "signature": "pub fn rx_feed_bit(&mut self, bit: u8) -> Option<u8>",
+      "effects": []
+    },
+    {
+      "name": "kbd_push_byte",
+      "signature": "pub fn kbd_push_byte(&mut self, byte: u8)",
+      "effects": []
+    },
+    {
+      "name": "kbd_read_clear",
+      "signature": "pub fn kbd_read_clear(&mut self) -> u8",
+      "effects": []
+    },
+    {
+      "name": "tp_clear_flag",
+      "signature": "pub fn tp_clear_flag(&mut self)",
+      "effects": []
+    },
+    {
+      "name": "print_byte",
+      "signature": "pub fn print_byte(&mut self, byte: u8)",
+      "effects": []
+    },
+    {
+      "name": "new",
+      "signature": "pub fn new() -> Self",
+      "effects": []
+    },
+    {
+      "name": "tx_load",
+      "signature": "pub fn tx_load(&mut self, byte: u8)",
+      "effects": []
+    },
+    {
+      "name": "step_serial_bit",
+      "signature": "pub fn step_serial_bit(&mut self) -> u8",
+      "effects": []
+    },
+    {
+      "name": "rx_feed_bit",
+      "signature": "pub fn rx_feed_bit(&mut self, bit: u8) -> Option<u8>",
+      "effects": []
+    },
+    {
+      "name": "kbd_push_byte",
+      "signature": "pub fn kbd_push_byte(&mut self, byte: u8)",
+      "effects": []
+    },
+    {
+      "name": "kbd_read_clear",
+      "signature": "pub fn kbd_read_clear(&mut self) -> u8",
+      "effects": []
+    },
+    {
+      "name": "tp_clear_flag",
+      "signature": "pub fn tp_clear_flag(&mut self)",
+      "effects": []
+    },
+    {
+      "name": "tp_flag",
+      "signature": "pub fn tp_flag(&self) -> bool",
+      "effects": []
+    },
+    {
+      "name": "kb_flag",
+      "signature": "pub fn kb_flag(&self) -> bool",
+      "effects": []
+    },
+    {
+      "name": "krb_byte",
+      "signature": "pub fn krb_byte(&self) -> u8",
+      "effects": []
+    },
+    {
+      "name": "tto_byte",
+      "signature": "pub fn tto_byte(&self) -> u8",
+      "effects": []
+    },
+    {
+      "name": "new",
+      "signature": "pub fn new() -> Self",
+      "effects": []
+    },
+    {
+      "name": "with_state",
+      "signature": "pub fn with_state(state: Asr33FrameState) -> Self",
+      "effects": []
+    },
+    {
+      "name": "state",
+      "signature": "pub fn state(&self) -> &Asr33FrameState",
+      "effects": []
+    },
+    {
+      "name": "state_mut",
+      "signature": "pub fn state_mut(&mut self) -> &mut Asr33FrameState",
+      "effects": []
+    },
+    {
+      "name": "tx_load",
+      "signature": "pub fn tx_load(&mut self, byte: u8)",
+      "effects": []
+    },
+    {
+      "name": "step_serial_bit",
+      "signature": "pub fn step_serial_bit(&mut self) -> u8",
+      "effects": []
+    },
+    {
+      "name": "rx_feed_bit",
+      "signature": "pub fn rx_feed_bit(&mut self, bit: u8) -> Option<u8>",
+      "effects": []
+    },
+    {
+      "name": "kbd_push_byte",
+      "signature": "pub fn kbd_push_byte(&mut self, byte: u8)",
+      "effects": []
+    },
+    {
+      "name": "kbd_read_clear",
+      "signature": "pub fn kbd_read_clear(&mut self) -> u8",
+      "effects": []
+    },
+    {
+      "name": "tp_clear_flag",
+      "signature": "pub fn tp_clear_flag(&mut self)",
+      "effects": []
+    },
+    {
+      "name": "tp_flag",
+      "signature": "pub fn tp_flag(&self) -> bool",
+      "effects": []
+    },
+    {
+      "name": "kb_flag",
+      "signature": "pub fn kb_flag(&self) -> bool",
+      "effects": []
+    },
+    {
+      "name": "tx_line",
+      "signature": "pub fn tx_line(&self) -> u8",
+      "effects": []
+    },
+    {
+      "name": "platen_col",
+      "signature": "pub fn platen_col(&self) -> u8",
+      "effects": []
+    },
+    {
+      "name": "platen_row",
+      "signature": "pub fn platen_row(&self) -> u32",
+      "effects": []
+    },
+    {
+      "name": "bel_count",
+      "signature": "pub fn bel_count(&self) -> u32",
+      "effects": []
+    },
+    {
+      "name": "print_char",
+      "signature": "pub fn print_char(&mut self, ch: u8)",
+      "effects": []
+    },
+    {
+      "name": "paper_roll_text",
+      "signature": "pub fn paper_roll_text(&self) -> String",
+      "effects": []
+    },
+    {
+      "name": "to_paint_scene",
+      "signature": "pub fn to_paint_scene(&self) -> PaintScene",
+      "effects": []
+    },
+    {
+      "name": "render_paper_roll_ascii",
+      "signature": "pub fn render_paper_roll_ascii(&self) -> String",
+      "effects": []
+    },
+    {
+      "name": "new_asr33",
+      "signature": "pub fn new_asr33() -> Asr33Functional",
+      "effects": []
+    },
+    {
+      "name": "new_asr33_gate_level",
+      "signature": "pub fn new_asr33_gate_level() -> Asr33GateLevel",
+      "effects": []
+    },
+    {
+      "name": "to_paint_scene",
+      "signature": "pub fn to_paint_scene(asr: &Asr33Functional) -> PaintScene",
+      "effects": []
+    },
+    {
+      "name": "render_paper_roll_ascii",
+      "signature": "pub fn render_paper_roll_ascii(asr: &Asr33Functional) -> String",
+      "effects": []
+    }
+  ],
+  "unconditional_roots": [],
+  "banned_construct_exceptions": [],
+  "label": "proved"
+}

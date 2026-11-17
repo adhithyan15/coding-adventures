@@ -4387,9 +4387,40 @@ per-key record ceiling, own traffic keys, frame or protect records, process a
 handshake, validate certificates, establish trust, enforce revocation, perform
 I/O, authorize HTTP or OAuth transport, or open a network connection. The
 allocation-returning and table-indexing legacy AES APIs remain compatibility
-and educational surfaces rather than production TLS composition. Reviewed
-AES-GCM composition remains a prerequisite, and concrete HTTPS remains
-unavailable.
+and educational surfaces rather than production TLS composition. The reviewed
+AES-GCM composition below remains distinct from TLS record protection, and
+concrete HTTPS remains unavailable.
+
+A bounded fixed-memory AES-128-GCM composition is now shipped as the next
+independently reviewable record-protection prerequisite. It accepts only an
+exact 128-bit key, the RFC 5116 96-bit nonce profile, caller-borrowed associated
+data and plaintext or ciphertext, an exact 128-bit tag, and caller-owned output
+whose length must equal the input length. It builds
+`J0 = nonce || 0x00000001`, starts payload counter mode at `inc32(J0)`, rejects
+a request that could exhaust the 32-bit counter or GCM's encoded length domains
+before changing caller output, and composes only the repository-owned
+fixed-memory AES-128 block and GHASH boundaries. Encryption authenticates the
+exact produced ciphertext. Decryption recomputes and compares the complete tag
+with a compiler-checked fixed schedule before releasing any plaintext, so
+authentication failure leaves caller output unchanged. The hash subkey,
+counters, keystream block, GHASH result, encrypted `J0`, and recomputed tag
+remain in fixed wipe-on-drop storage; no secret-derived byte crosses the ABI
+return slot by value. Release-codegen checks reject allocator reachability,
+early-exit tag comparison, missing scrubs, or plaintext writes before
+authentication.
+
+This pure in-process cryptographic boundary performs no credential access,
+edit, signing operation, provider action, audit or trace emission, I/O, or
+external effect. It does not select a TLS cipher suite, derive or own a
+traffic key, reserve a record nonce, enforce a negotiated per-key record
+ceiling, frame or protect a TLS record, reset record state after a key update,
+process a handshake, validate certificates, establish trust, enforce
+revocation, authorize HTTP or OAuth transport, or open a network connection. A
+later TLS record composition must bind it to the selected
+`TLS_AES_128_GCM_SHA256` route and the existing record-protection state.
+Complete handshake state, the AES record route, stream I/O, certificate
+validation, revocation, and HTTP composition remain blockers; concrete HTTPS
+remains unavailable.
 
 A bounded `tls13-finished` prerequisite now composes the repository-owned
 fixed-memory HKDF and HMAC paths for RFC 8446 Finished verify-data. It derives
@@ -4519,6 +4550,30 @@ must retain incomplete bytes until one complete declared message is available.
 Complete transcript and handshake state, repository-owned AEAD composition,
 certificate-path validation, revocation policy, TLS transport, and HTTP
 composition remain blockers. Concrete HTTPS remains unavailable.
+
+An allocation-free `tls13-handshake-reassembly` prerequisite now retains one
+TLS 1.3 handshake message across already authenticated record-content
+fragments in caller-owned storage. Each push consumes only the input prefix
+needed by that message and reports the exact consumed count, so coalesced
+messages and a partial next message remain with the caller for ordered replay.
+The reassembler validates the four-byte header as soon as it is complete,
+applies the caller's existing handshake-type and body-length policy, rejects a
+declared message that cannot fit the supplied storage, and borrows the exact
+completed encoding through `tls13-handshake`. Incomplete pushes retain their
+bounded prefix; completed-message and failure diagnostics retain no copied
+wire bytes, declared lengths, or body contents.
+
+Supplying only plaintext content from a record whose authenticity and inner
+handshake content type were already accepted is solely a caller precondition.
+The raw-byte API cannot distinguish authenticated from unauthenticated input.
+This slice does not decode or authenticate records, classify an inner content
+type, retain a coalesced tail, sequence handshake phases, update a transcript,
+parse a handshake body, derive keys, invoke an AEAD, validate certificates,
+establish trust, check revocation, perform I/O, authorize HTTP or OAuth
+transport, or open a network connection. Full handshake state, record
+authentication and composition, certificate-path and identity validation,
+revocation policy, TLS transport, and HTTP composition remain blockers.
+Concrete HTTPS remains unavailable.
 
 An allocation-free `tls13-encrypted-extensions-message` prerequisite now owns
 the exact RFC 8446 section 4.3.1 `EncryptedExtensions` handshake body. It
@@ -4712,6 +4767,34 @@ change, process a handshake, validate certificates, establish trust, enforce
 revocation, perform HTTP, authorize OAuth transport, or open a network
 connection. Repository-owned TLS record-protection composition and state
 remain prerequisites, and concrete HTTPS remains unavailable.
+
+A bounded `tls13-chacha20-poly1305-record` composition now protects records
+only for the reviewed `TLS_CHACHA20_POLY1305_SHA256` route. It consumes the
+selected-suite-bound `tls13-record-protection-state`, rejects every other AEAD
+before reserving a sequence number, and binds the reserved 256-bit key and
+96-bit nonce directly to the repository-owned fixed-memory ChaCha20-Poly1305
+boundary. Sealing encodes
+one policy-authorized `TLSInnerPlaintext`, authenticates the exact
+five-byte `TLSCiphertext` header as associated data, appends the exact 16-byte
+tag, and wipes the exact caller-owned scratch prefix written after successful
+inner encoding on every subsequent return. Route and inner-encoding failures
+leave caller scratch unchanged. Opening validates one exact outer record before
+consuming a sequence, authenticates its exact retained header before releasing
+any cleartext, decodes only a policy-authorized inner content type, and returns
+a non-cloneable borrowed view whose drop path wipes the successfully opened
+caller-owned storage. Public framing, policy, and capacity failures occur
+before sequence consumption; an authentication failure consumes its reserved
+sequence and leaves caller output unchanged.
+
+This narrow composition does not enable either AES-GCM suite, derive traffic
+secrets, establish handshake epochs, process a transcript, authenticate
+`CertificateVerify` or `Finished`, validate certificates, construct or validate
+a path, check a hostname or revocation, perform key updates, read or write a
+stream, open a socket, authorize an HTTP or OAuth request, or provide a TLS
+connector. The caller must retain distinct read/write state and select the
+correct traffic epoch. Complete handshake state, the remaining record routes,
+stream I/O, certificate validation, revocation, and HTTP composition remain
+blockers; concrete HTTPS remains unavailable.
 
 An allocation-free `tls13-supported-versions` prerequisite now owns the exact
 RFC 8446 `supported_versions` extension data emitted and consumed by a future
@@ -4930,6 +5013,163 @@ DNS or network I/O, authorize an external effect, or grant HTTPS, OAuth, or
 live-provider readiness. Those policy, protocol, transport, and effect
 compositions remain separate. Concrete HTTPS remains unavailable.
 
+The same `https-destination-name-binding` boundary now also consumes one
+strictly validated HTTP/1 request-header field together with that complete
+destination proof. It accepts only the `Host` field name under HTTP's
+case-insensitive field-name semantics and requires the field value to equal
+the retained Host authority's canonical encoding: the DNS name is lowercase,
+and any explicit port uses shortest decimal form. Success moves both
+non-copyable inputs into one result, so a field for another destination cannot
+be substituted after binding. Stable failures and Debug output retain no
+certificate, hostname, authority, field-name, field-value, port, or observed
+length payloads.
+
+The same boundary can now move that canonical Host proof into one bounded
+request-field-set proof together with the exact caller-borrowed slice of
+additional validated fields. An explicit caller-selected total-field ceiling,
+including Host, is hard-capped at 64 before the slice is scanned. Every
+additional field name is compared under HTTP's ASCII case-insensitive
+semantics, so any second Host spelling fails closed. Success retains the exact
+Host proof, additional-field slice, caller order, and count policy in one
+non-copyable result. Stable failures and Debug output retain no field name,
+field value, hostname, certificate, observed count, or limit violation
+payloads.
+
+The same boundary can now consume that exact request-field-set proof together
+with one exact fixed-body proof already bound to its canonical Content-Length
+field. The resulting non-copyable proof defines logical field order as Host,
+Content-Length, then the retained additional fields in caller order. The
+length field counts inside the same retained total-field ceiling, hard-capped
+at 64. Every additional name is checked under HTTP's ASCII case-insensitive
+semantics, so any second Content-Length or any Transfer-Encoding field fails
+closed. Success retains both complete input proofs; stable failures and Debug
+output retain no field, body, hostname, certificate, observed count, or limit
+violation payloads.
+
+The strict request-head boundary first requires data-driven provider policy to
+classify one exact validated request-line method and query-free origin-form
+target as public request metadata. This produces a non-copyable proof rather
+than accepting an unclassified target. The complete head composition consumes
+that proof with the exact fixed-body destination proof and rejects every
+additional field; potentially credential-bearing targets and fields instead
+require a later provider/trace-audited release proof. A caller-selected
+complete-head byte ceiling is bounded by the fixed package maximum before any
+output is written. Success retains both complete inputs and their exact encoded
+head length. Its allocation-free encoder delegates to the repository-owned
+request-line and field encoders and writes, in order, the public request line,
+canonical Host field, canonical Content-Length field, and terminating empty
+line. Insufficient output fails before mutation. The body remains retained but
+is not written. Stable failures and Debug output retain no method, target,
+field, body, hostname, certificate, observed length, limit, or output payloads.
+
+This stricter composition does not authorize transport, release an additional
+field, write the body, perform credential access or release, emit provider or
+trace audit events, perform TLS or HTTP I/O, open a socket, or grant network,
+OAuth, or live-provider authority. A later audited transport must consume this
+exact proof without substituting any retained request or destination input.
+Concrete HTTPS remains unavailable.
+
+An additive audited request-head release now admits a non-empty ordered slice
+of public additional fields only through exact data-driven provider policy.
+The policy retains one validated provider, public method and query-free path,
+validated DNS Host authority, and an ordered duplicate-free allowlist of exact
+public HTTP field names and values. This low-level boundary admits only the
+closed non-credential metadata names `Accept` and `Content-Type`;
+credential-bearing, custom, Host, Content-Length, and Transfer-Encoding fields
+remain unavailable. The release consumes the exact public request-line and
+fixed-body destination proofs, requires the retained method, path, Host
+authority, additional-field count, order, case-insensitive names, and exact
+values to match that provider policy, and preflights the complete bounded head
+and caller-owned output before any effect or mutation. A privacy-safe
+event containing only provider, trace, stable action, and closed outcome must
+be durably published before the repository-owned request-line and field
+encoders copy any bytes. Audit failure leaves output unchanged and releases no
+proof; successful encoding returns a non-copyable redacted wrapper retaining
+the exact audited provider, trace, and emitted head. Each wrapper requires one
+fresh audited encoding call, so one event cannot authorize another output
+release or be relabelled under another provider or trace.
+
+This audited release copies only exact public metadata classified by provider
+policy. It does not admit or access credential-bearing fields, obtain
+credentials from storage, interpret or edit a request body, sign, write the
+retained body, wipe caller-owned storage, authorize transport, perform TLS or
+HTTP I/O, open a socket, or grant network, OAuth, or live-provider authority.
+A later custody-bound credential-field, body, and transport composition must
+retain this exact provider, trace, request, destination, and release binding
+without substituting any input, and must apply its own audit gates before every
+credential access and external effect. Concrete HTTPS remains unavailable.
+
+A bounded `oauth-client-secret-http1-binding` prerequisite now binds
+one custody-built `ClientSecretAuthenticatedRequest` to strict HTTP/1 evidence
+constructed only inside the audited boundary. Before inspecting either
+credential-bearing body or Authorization bytes, the binder durably publishes
+an attempted event containing only the request's validated provider, trace,
+stable action, and closed outcome. It then uses the repository-owned fixed-body
+and field primitives to retain the request's original form-body allocation,
+encode and bind its canonical Content-Length in bounded caller storage, and,
+when custody produced Basic authentication, validate an `Authorization` field
+that retains the original Authorization allocation. Body authentication
+produces no Authorization field. The binder accepts no caller-supplied
+credential bytes or prebuilt evidence, but it does not revoke the owner's
+independent access to the already custody-released request; its proof attests
+only to reads and construction performed by this call. A closed rejected or
+succeeded event must be durable before the call returns an error or releases
+the non-copyable proof. Validation or audit failure leaves bounded caller
+storage unchanged and releases no proof. After terminal success, deterministic
+output binding rereads no credential-bearing input. Success retains the exact
+request reference, fixed-body/Content-Length proof, Authorization-field
+presence, provider, and trace so a later composition cannot substitute
+credential material or relabel the release.
+
+Stable failures and Debug output retain no endpoint, body, Authorization,
+field-name, field-value, credential, observed-length, or identity payloads.
+This identity boundary does not obtain credentials from storage, edit or sign
+them, encode or copy a head or body, authorize a method or endpoint, bind an
+HTTPS destination, perform TLS or HTTP I/O, open a socket, or authorize a
+transport effect. The audited complete-request release, destination binding,
+repository-owned TLS/HTTP composition, response policy, and every actual
+external effect remain separate blockers. Concrete HTTPS and live-provider
+readiness remain unavailable.
+
+A bounded `oauth-client-secret-http1-release` prerequisite composes that
+custody-bound material with one exact validated HTTP/1 request line and one
+existing `https-destination-name-binding` certificate/SNI/Host proof. Its
+data-driven policy retains the expected provider, method, exact form media
+type, and complete-request byte ceiling. The request endpoint must equal the
+exact lowercase `https://` origin retained by the canonical Host field plus
+the exact origin-form request target; detached endpoint, destination, method,
+provider, trace, media-type, Content-Length, body, and Authorization claims
+are unavailable. The only admitted wire order is request line, Host,
+Content-Length, Content-Type, optional Authorization for Basic authentication,
+the terminating empty line, and the exact custody-built form body. Post
+authentication therefore has no Authorization field, while Basic
+authentication has exactly the one field already retained by the binding.
+
+Each release publishes a privacy-safe attempted event for the request's own
+provider and trace before inspecting credential-bearing body or Authorization
+bytes. Policy, endpoint, framing, field-placement, length, allocation, and
+encoding rejection publishes a closed failed outcome. The complete request is
+prepared in repository-owned wipe-on-drop storage before a terminal succeeded
+event; after that event the implementation only moves the already prepared
+storage into a non-copyable returned proof, so it performs no later credential
+read or copy. Audit failure returns no request and wipe-on-drop storage covers
+every prepared failure path. Debug and errors reveal no provider, trace,
+endpoint, request, header, body, or credential bytes.
+
+The returned proof exposes complete wire bytes only through a further
+provider/trace audit-gated borrow. Audit failure withholds the slice, so every
+credential-byte access introduced by this package remains attributable even
+though the owner still retains independent access to the earlier custody-built
+request.
+
+This release is still pure in-memory evidence. The retained certificate proof
+does not add certificate role, purpose, algorithm, validity, signature, path,
+constraint, trust-root, or revocation validation. The package performs no DNS,
+socket, TLS, HTTP I/O, response handling, credential acquisition or edit, signing,
+or external transport effect and grants no HTTPS, OAuth, or live-provider
+readiness. Repository-owned TLS/HTTP composition, audited network effects, and
+response policy remain separate blockers.
+
 A bounded `https-reviewed-server-path-binding` prerequisite now consumes that
 complete HTTPS destination-name proof together with the strongest accumulated
 reviewed RSA server-path policy. It derives the path target only through the
@@ -5021,6 +5261,210 @@ validation, revocation, TLS, HTTP, OAuth transport, or network authority.
 Complete revocation policy, repository-owned TLS/HTTP, and audited transport
 remain separate blockers. Concrete HTTPS and live-provider readiness remain
 unavailable.
+
+A bounded `oauth-client-secret-reviewed-server-binding` prerequisite now joins
+one complete audited client-secret HTTP/1 release to that stronger signed
+reviewed HTTPS server-path boundary. It derives the request destination only
+through the retained canonical Host binding and the reviewed destination only
+through the retained path-and-anchor-self-signature proof. The two destinations
+must retain the same exact decoded certificate object, ASCII-case-insensitively
+equal SNI DNS names, and ASCII-case-insensitively equal Host DNS names with the
+same optional port. This closes independent destination substitution even when
+one certificate admits more than one SAN name. A byte-equal independently
+decoded certificate, different admitted SAN name, or different explicit port
+fails closed. Success moves both complete non-copyable inputs into one result;
+stable failures and Debug output retain no provider, trace, request, credential,
+certificate, hostname, authority, path, key, signature, algorithm, constraint,
+or trust-root payloads.
+
+This identity-only composition does not borrow or copy the released request
+bytes, so it introduces no credential access and emits no provider or trace
+audit event. The release's existing audit gate remains mandatory for every
+later request-byte borrow. The composition performs no parsing, new
+validation, cryptography, credential editing, signing, storage, clock
+acquisition, I/O, network access, or other external effect. It does not add
+trust-anchor semantics, complete RFC 5280 Name or path validation, revocation,
+TLS, HTTP, OAuth transport, or network authority. Complete revocation policy,
+repository-owned TLS/HTTP composition, audited network effects, and response
+policy remain separate blockers. Concrete HTTPS and live-provider readiness
+remain unavailable.
+
+The same bounded OAuth boundary now also consumes that complete audited
+request-to-signed-reviewed-server binding together with the exact HTTPS
+destination-bound direct no-check complete fixed-path revocation proof. The
+admitted direct completion must itself retain the exact signed reviewed-server
+path-and-anchor-self-signature proof shape. The composition derives both paths
+only through retained repository-owned evidence and requires the same exact
+decoded leaf, target-nearest issuer, and reviewed-anchor objects, ASCII-case-
+insensitively equal SNI DNS names, and ASCII-case-insensitively equal Host DNS
+names with the same optional port. Both retained accumulated paths must contain
+exactly one processed intermediate because this direct completion establishes
+status only for the target and that one intermediate; longer paths fail closed
+rather than inheriting an incomplete revocation claim. It then moves both
+complete non-copyable inputs into one result. Requiring the already-composed
+request/signed-server proof preserves the stronger path-and-anchor-self-
+signature boundary instead of admitting a revocation proof as a substitute
+for it. A byte-equal independent certificate decode, zero- or multi-
+intermediate path, alternate intermediate or reviewed-root path, different
+admitted SAN name, or different explicit port fails closed.
+Stable failures and Debug output retain no provider, trace, request,
+credential, certificate, hostname, authority, path, key, signature, algorithm,
+constraint, revocation, status, or trust-root payloads.
+
+This direct-branch composition does not borrow or copy the released request
+bytes, so it introduces no credential access and emits no provider or trace
+audit event. The release's existing audit gate remains mandatory for every
+later request-byte borrow. It performs no parsing, new validation,
+cryptography, credential editing, signing, storage, clock acquisition, status
+acquisition or refresh, I/O, network access, or other external effect. It does
+not generalize revocation or path construction, cover the other complete
+fixed-path revocation branches, add trust-anchor semantics, complete RFC 5280
+Name or path validation, build or run TLS or HTTP, authorize OAuth transport,
+or grant network authority. The other complete revocation branches,
+repository-owned TLS/HTTP composition, audited network effects, and response
+policy remain separate blockers. Concrete HTTPS and live-provider readiness
+remain unavailable.
+
+The bounded OAuth boundary now also admits the exact HTTPS destination-bound
+nested no-check complete fixed-path revocation proof as a separate nominal
+branch. The nested completion must retain the same exact signed reviewed-
+server path-and-anchor-self-signature proof shape used by the already-bound
+request/server evidence. The composition derives both path identities only
+through retained repository-owned evidence and requires the same exact decoded
+leaf, target-nearest issuer, and reviewed-anchor objects, ASCII-case-
+insensitively equal SNI DNS names, and ASCII-case-insensitively equal Host DNS
+names with the same optional port. Both accumulated server paths must contain
+exactly one processed intermediate. The nested completion adds its retained
+responder-revocation and responder no-check policy layers, but its server-chain
+coverage is still the target plus that one intermediate; zero- or multi-
+intermediate server paths therefore fail closed. Success moves the complete
+request/signed-server binding and complete nested-revocation proof into one
+non-copyable result. A byte-equal independent certificate decode, alternate
+intermediate or reviewed-root path, different admitted SAN name, or different
+explicit port also fails closed. Stable failures and Debug output retain no
+provider, trace, request, credential, certificate, hostname, authority, path,
+key, signature, algorithm, constraint, revocation, status, or trust-root
+payloads.
+
+This nested-branch composition does not borrow or copy released request bytes,
+so it introduces no credential access and emits no provider or trace audit
+event. The release's existing audit gate remains mandatory for every later
+request-byte borrow. It performs no parsing, new validation, cryptography,
+credential editing, signing, storage, clock acquisition, status acquisition or
+refresh, I/O, network access, or other external effect. It does not generalize
+revocation or path construction, cover the double-nested, recursive, or
+alternative intermediate-status-responder complete branches, add trust-anchor
+semantics, complete RFC 5280 Name or path validation, build or run TLS or HTTP,
+authorize OAuth transport, or grant network authority. Those remaining
+revocation branches, repository-owned TLS/HTTP composition, audited network
+effects, and response policy remain separate blockers. Concrete HTTPS and
+live-provider readiness remain unavailable.
+
+The bounded OAuth boundary now also admits the exact HTTPS destination-bound
+double-nested no-check complete fixed-path revocation proof under its own
+sealed nominal branch. The double-nested completion must retain the same exact
+signed reviewed-server path-and-anchor-self-signature proof shape already held
+by the request/server binding. The composition reaches that original server
+proof only through both retained responder-revocation layers, derives both
+server-path identities from repository-owned evidence, and requires the same
+exact decoded leaf, target-nearest issuer, and reviewed-anchor objects,
+ASCII-case-insensitively equal SNI DNS names, and ASCII-case-insensitively equal
+Host DNS names with the same optional port. Both retained server paths must
+contain exactly one processed intermediate: the additional responder paths do
+not extend the target-plus-intermediate server chain whose status the
+double-nested completion establishes. Zero- or multi-intermediate server paths
+therefore fail closed. Success moves the complete request/signed-server binding
+and complete double-nested-revocation proof into one non-copyable result. A
+byte-equal independent leaf decode, alternate intermediate or reviewed root,
+different admitted SAN name, or different explicit port also fails closed.
+Stable failures and Debug output retain no provider, trace, request,
+credential, certificate, hostname, authority, path, key, signature, algorithm,
+constraint, revocation, status, or trust-root payloads.
+
+This double-nested-branch composition does not borrow or copy released request
+bytes, so it introduces no credential access and emits no provider or trace
+audit event. The release's existing audit gate remains mandatory for every
+later request-byte borrow. It performs no parsing, new validation,
+cryptography, credential editing, signing, storage, clock acquisition, status
+acquisition or refresh, I/O, network access, or other external effect. It does
+not generalize revocation or path construction, cover the recursive or
+alternative intermediate-status-responder complete branches, add trust-anchor
+semantics, complete RFC 5280 Name or path validation, build or run TLS or HTTP,
+authorize OAuth transport, or grant network authority. Those remaining
+revocation branches, repository-owned TLS/HTTP composition, audited network
+effects, and response policy remain separate blockers. Concrete HTTPS and
+live-provider readiness remain unavailable.
+
+The bounded OAuth boundary now also admits the exact HTTPS destination-bound
+recursive-responder no-check complete fixed-path revocation proof under its
+own sealed nominal branch. The recursive completion must retain the same exact
+signed reviewed-server path-and-anchor-self-signature proof shape already held
+by the request/server binding. The composition traverses the retained
+recursive-responder no-check and authenticated responder-revocation layers
+back to that original server proof, derives both server-path identities only
+through repository-owned evidence, and requires the same exact decoded leaf,
+target-nearest issuer, and reviewed-anchor objects, ASCII-case-insensitively
+equal SNI DNS names, and ASCII-case-insensitively equal Host DNS names with the
+same optional port. Both retained server paths must contain exactly one
+processed intermediate. The recursive responder paths do not extend the
+target-plus-intermediate server chain whose status the branch-specific
+completion establishes, so zero- or multi-intermediate server paths fail
+closed. Success moves the complete request/signed-server binding and complete
+recursive-revocation proof into one non-copyable result. A byte-equal
+independent leaf decode, alternate intermediate or reviewed root, different
+admitted SAN name, or different explicit port also fails closed. Stable
+failures and Debug output retain no provider, trace, request, credential,
+certificate, hostname, authority, path, key, signature, algorithm, constraint,
+revocation, status, or trust-root payloads.
+
+This recursive-branch composition does not borrow or copy released request
+bytes, so it introduces no credential access and emits no provider or trace
+audit event. The release's existing audit gate remains mandatory for every
+later request-byte borrow. It performs no parsing, new validation,
+cryptography, credential editing, signing, storage, clock acquisition, status
+acquisition or refresh, I/O, network access, or other external effect. It does
+not generalize revocation or path construction, cover the alternative
+intermediate-status-responder complete branch, add trust-anchor semantics,
+complete RFC 5280 Name or path validation, build or run TLS or HTTP, authorize
+OAuth transport, or grant network authority. That remaining revocation branch,
+repository-owned TLS/HTTP composition, audited network effects, and response
+policy remain separate blockers. Concrete HTTPS and live-provider readiness
+remain unavailable.
+
+The bounded OAuth boundary now also admits the exact HTTPS destination-bound
+alternative intermediate-status-responder revocation no-check complete fixed-
+path proof under its own sealed nominal branch. The alternative completion
+must retain the same exact signed reviewed-server path-and-anchor-self-
+signature proof shape already held by the request/server binding. The
+composition traverses the retained intermediate-status-responder revocation,
+responder no-check, and authenticated responder-revocation layers back to that
+original server proof, derives both server-path identities only through
+repository-owned evidence, and requires the same exact decoded leaf, target-
+nearest issuer, and reviewed-anchor objects, ASCII-case-insensitively equal SNI
+DNS names, and ASCII-case-insensitively equal Host DNS names with the same
+optional port. Both retained server paths must contain exactly one processed
+intermediate. The alternative responder paths do not extend the target-plus-
+intermediate server chain whose status the branch-specific completion
+establishes, so zero- or multi-intermediate server paths fail closed. Success
+moves the complete request/signed-server binding and complete alternative-
+revocation proof into one non-copyable result. A byte-equal independent leaf
+decode, alternate intermediate or reviewed root, different admitted SAN name,
+or different explicit port also fails closed. Stable failures and Debug output
+retain no provider, trace, request, credential, certificate, hostname,
+authority, path, key, signature, algorithm, constraint, revocation, status, or
+trust-root payloads.
+
+This alternative-branch composition does not borrow or copy released request
+bytes, so it introduces no credential access and emits no provider or trace
+audit event. The release's existing audit gate remains mandatory for every
+later request-byte borrow. It performs no parsing, new validation,
+cryptography, credential editing, signing, storage, clock acquisition, status
+acquisition or refresh, I/O, network access, or other external effect. It does
+not generalize revocation or path construction, add trust-anchor semantics,
+complete RFC 5280 Name or path validation, build or run TLS or HTTP, authorize
+OAuth transport, or grant network authority. Repository-owned TLS/HTTP
+composition, audited network effects, and response policy remain separate
+blockers. Concrete HTTPS and live-provider readiness remain unavailable.
 
 The existing bounded `x509-ocsp-reviewed-server-revocation-binding`
 prerequisite now also provides an ordered entry point that consumes fully
@@ -5136,9 +5580,9 @@ acquisition, provider action, audit event, trace emission, I/O, network
 access, or other external effect. It does not bind an HTTPS destination,
 generalize revocation or path construction, build or run TLS or HTTP,
 authorize OAuth transport, or grant network authority. The composition below,
-the other remaining complete fixed-path revocation branches, repository-owned
-TLS/HTTP composition, and audited transport remain separate from this
-projection. Concrete HTTPS and live-provider readiness remain unavailable.
+the branch-specific compositions below, repository-owned TLS/HTTP composition,
+and audited transport remain separate from this projection. Concrete HTTPS and
+live-provider readiness remain unavailable.
 
 The `https-reviewed-server-path-binding` boundary now also joins the complete
 HTTPS destination proof to that exact double-nested no-check complete fixed-
@@ -5156,11 +5600,11 @@ This double-nested composition performs no parsing, new validation,
 cryptography, credential access or editing, signing, storage, clock
 acquisition, provider action, audit event, trace emission, I/O, network
 access, or other external effect. It does not generalize revocation or path
-construction, cover the other remaining complete fixed-path revocation
-branches, build or run TLS or HTTP, authorize OAuth transport, or grant
-network authority. Those remaining branches, repository-owned TLS/HTTP
-composition, and audited transport remain separate blockers. Concrete HTTPS
-and live-provider readiness remain unavailable.
+construction, cover the other complete fixed-path revocation branches, build
+or run TLS or HTTP, authorize OAuth transport, or grant
+network authority. The branch-specific compositions below, repository-owned
+TLS/HTTP composition, and audited transport remain separate boundaries.
+Concrete HTTPS and live-provider readiness remain unavailable.
 
 The existing `x509-ocsp-reviewed-server-revocation-binding` prerequisite now
 also carries its sealed exact-server-target projection through the complete
@@ -5177,10 +5621,31 @@ cryptography, credential access or editing, signing, storage, clock
 acquisition, provider action, audit event, trace emission, I/O, network
 access, or other external effect. It does not bind an HTTPS destination,
 generalize revocation or path construction, build or run TLS or HTTP,
-authorize OAuth transport, or grant network authority. Its HTTPS destination
-binding, repository-owned TLS/HTTP composition, and audited transport remain
-separate from this projection. Concrete HTTPS and live-provider readiness
-remain unavailable.
+authorize OAuth transport, or grant network authority. The composition below,
+repository-owned TLS/HTTP composition, and audited transport remain separate
+from this projection. Concrete HTTPS and live-provider readiness remain
+unavailable.
+
+The `https-reviewed-server-path-binding` boundary now also joins the complete
+HTTPS destination proof to that exact recursive responder no-check complete
+fixed-path revocation proof. The binder derives the server leaf only through
+the completion's sealed target projection, requires both non-copyable inputs
+to retain the same exact decoded certificate object, and moves both complete
+inputs into the result. A byte-equal independent decode fails closed, and the
+surface accepts no detached certificate, callback-shaped target claim, path,
+status result, or trust assertion. Stable failures and Debug output retain no
+certificate, hostname, authority, path, key, signature, algorithm, status,
+constraint, or root payloads. This branch neither requires nor implies the
+separate anchor-self-signature composition.
+
+This recursive-branch composition performs no parsing, new validation,
+cryptography, credential access or editing, signing, storage, clock
+acquisition, provider action, audit event, trace emission, I/O, network
+access, or other external effect. It does not generalize revocation or path
+construction, build or run TLS or HTTP, authorize OAuth transport, or grant
+network authority. Repository-owned TLS/HTTP composition and audited transport
+remain separate blockers. Concrete HTTPS and live-provider readiness remain
+unavailable.
 
 The existing `x509-ocsp-reviewed-server-revocation-binding` prerequisite now
 also carries its sealed exact-server-target projection through the complete
@@ -5197,10 +5662,9 @@ acquisition, provider action, audit event, trace emission, I/O, network
 access, or other external effect. It does not bind an HTTPS destination,
 generalize revocation or path construction, build or run TLS or HTTP,
 authorize OAuth transport, or grant network authority. Its HTTPS destination
-composition below, the recursive branch's separate HTTPS destination binding,
-repository-owned TLS/HTTP composition, and audited transport remain separate
-from this projection. Concrete HTTPS and live-provider readiness remain
-unavailable.
+composition below, repository-owned TLS/HTTP composition, and audited
+transport remain separate from this projection. Concrete HTTPS and live-
+provider readiness remain unavailable.
 
 The `https-reviewed-server-path-binding` boundary now also joins the complete
 HTTPS destination proof to that exact alternative intermediate-status-
@@ -5219,11 +5683,10 @@ This alternative-branch composition performs no parsing, new validation,
 cryptography, credential access or editing, signing, storage, clock
 acquisition, provider action, audit event, trace emission, I/O, network
 access, or other external effect. It does not generalize revocation or path
-construction, bind the recursive complete fixed-path revocation branch to its
-HTTPS destination, build or run TLS or HTTP, authorize OAuth transport, or
-grant network authority. That remaining binding, repository-owned TLS/HTTP
-composition, and audited transport remain separate blockers. Concrete HTTPS
-and live-provider readiness remain unavailable.
+construction, build or run TLS or HTTP, authorize OAuth transport, or grant
+network authority. Repository-owned TLS/HTTP composition and audited transport
+remain separate blockers. Concrete HTTPS and live-provider readiness remain
+unavailable.
 
 An allocation-free `form-urlencoded` prerequisite now validates an ordered,
 caller-borrowed sequence of UTF-8 name/value pairs under explicit field,
@@ -5294,13 +5757,24 @@ different body from being substituted without revalidation, and a small output
 remains unchanged. Stable failures retain no body, length, limit, or output
 bytes, and Debug redacts the body.
 
-This boundary does not create a `Content-Length` field line, authorize multiple
-or conflicting length fields, admit `Transfer-Encoding`, encode form data,
-interpret or release credentials, authorize a method or destination, compose a
-request, perform TLS or I/O, emit provider or trace audit events, or grant HTTP,
-OAuth, or live-provider transport. A later reviewed composition must emit
-exactly one field from this evidence, prohibit transfer coding, audit any
-credential release and external effect, and write exactly the retained body.
+The package can additionally consume that exact body evidence with one exact
+validated request-header field. The resulting non-copyable evidence proves the
+field name is `Content-Length` under HTTP ASCII case-insensitive comparison and
+its value is the canonical shortest-decimal form of the retained body's exact
+byte length. Success retains both original evidence objects and their borrowed
+bytes without normalization or substitution. Non-`Content-Length` names and
+noncanonical or mismatched values fail with stable payload-free errors; Debug
+redacts both retained body and field bytes.
+
+This package boundary does not create a `Content-Length` field line, authorize
+the surrounding field set, encode form data, interpret or release credentials,
+authorize a method or destination, compose a request, perform TLS or I/O, emit
+provider or trace audit events, or grant HTTP, OAuth, or live-provider
+transport. The reviewed `https-destination-name-binding` composition now
+consumes this exact proof to establish one length field and no transfer coding
+across its exact retained field set. That composition still does not authorize
+or encode the fields, audit credential release or external effects, or write
+the retained body.
 
 An allocation-free `http1-request-line` prerequisite now validates and encodes
 one deliberately narrow HTTP/1.0 or HTTP/1.1 request line into caller-owned
@@ -5316,9 +5790,15 @@ length, or output bytes, and Debug redacts both borrowed inputs.
 This syntax boundary does not authorize a method or target, validate URI or
 percent-encoding semantics, encode headers or a body, select body framing,
 interpret or release a credential, perform TLS, read or write a socket, emit
-provider or trace audit events, or authorize HTTP or OAuth transport. A later
-reviewed composition must supply those policies and external-effect authority.
-Concrete HTTPS remains unavailable.
+provider or trace audit events, or authorize HTTP or OAuth transport. The
+reviewed `https-destination-name-binding` request-head composition now consumes
+this exact syntax proof only after data-driven provider policy has classified
+its exact method and query-free target as public. It combines that proof with
+the exact fixed-body destination proof and encodes only the request line, Host,
+Content-Length, and terminating empty line into caller-owned storage.
+Potentially credential-bearing targets and additional fields remain behind a
+later provider/trace-audited release boundary. The composition still supplies
+no transport or external-effect authority. Concrete HTTPS remains unavailable.
 
 An allocation-free `http1-response-head` prerequisite now decodes one strict
 HTTP/1.0 or HTTP/1.1 response head from a caller-borrowed byte stream. Explicit

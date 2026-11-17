@@ -39,6 +39,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"sync"
 	"unicode"
 	"unicode/utf8"
 
@@ -129,6 +130,9 @@ type Traced struct {
 	own   memo[[32]byte]
 	state memo[[32]byte]
 	gitD  memo[[32]byte]
+	// prep runs the preparation Gate needs (gate.go) once.
+	prep    sync.Once
+	prepErr error
 }
 
 // CanonicalExecutorArgs is the `kiln:executor-args` value: the executor's flags

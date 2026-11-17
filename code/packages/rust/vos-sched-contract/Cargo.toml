@@ -1,0 +1,18 @@
+[package]
+name = "vos-sched-contract"
+version = "0.1.0"
+edition = "2021"
+description = "Scheduler interface contract of the verified-OS program (VOS-010, VOS10): the Sched trait, the Warrant contract block and the per-tier obligation blocks"
+
+[lib]
+name = "vos_sched_contract"
+path = "src/lib.rs"
+
+[dependencies]
+# SH12: a class K crate depends on `core` and nothing else. The contract crate
+# owns the trait; implementations depend on it, never the other way round.
+
+
+[[test]]
+name = "trait_usable"
+path = "tests/trait_usable.rs"

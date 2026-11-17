@@ -1,6 +1,6 @@
 cabal-version: 3.0
 name:          wave
-version:       0.1.0
+version:       0.1.1
 synopsis:      Simple harmonic waves from first principles
 description:   Validated sinusoidal waves built on the local trig package.
 category:      Physics
@@ -15,7 +15,7 @@ extra-doc-files:
 library
     exposed-modules:  Wave
     build-depends:    base >=4.14 && <5
-                    , trig >=0.1 && <0.2
+                    , trig >=0.1 && <0.3
     hs-source-dirs:   src
     default-language: Haskell2010
 
@@ -26,6 +26,6 @@ test-suite spec
     hs-source-dirs:   test
     build-depends:    base >=4.14 && <5
                     , hspec == 2.*
-                    , trig >=0.1 && <0.2
+                    , trig >=0.1 && <0.3
                     , wave
     default-language: Haskell2010

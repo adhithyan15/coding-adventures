@@ -1,0 +1,19 @@
+{
+  "schema": "warrant-assurance-profile-v1",
+  "name": "swf-container",
+  "kind": "transform",
+  "rows": {
+    "326": {
+      "applicability": "excluded",
+      "reason": "no keys: the package takes and generates no key material; operands are bounded SWF headers, tags and compressed bitstreams"
+    },
+    "327": {
+      "applicability": "excluded",
+      "reason": "pure container transform: package implements binary SWF container parsing, anti-bomb decompression and streaming tag framing only, no cipher, hash or MAC"
+    },
+    "407": {
+      "applicability": "excluded",
+      "reason": "bounded work per call: tag parsing and streaming are strictly linear in input byte size, bounded by MAX_UNCOMPRESSED_BYTES and tag payload lengths"
+    }
+  }
+}

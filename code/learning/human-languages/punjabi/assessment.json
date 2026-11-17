@@ -43,7 +43,14 @@
       },
       "writingStages": ["observe-trace", "guided-copy", "delayed-copy", "dictation-transcription", "controlled-composition", "connected-composition", "timed-assessment-production"],
       "fullMocks": [
-        { "id": "a2-mock-1", "timed": true, "rubric": "mocks/a2/rubric.md", "answerKey": "mocks/a2/mock-1-answer-key.md" },
+        {
+          "id": "a2-mock-1", "timed": true,
+          "rubric": "mocks/a2/rubric.md", "answerKey": "mocks/a2/mock-1-answer-key.md",
+          "bookPrerequisites": [{
+            "id": "surface-closure", "kind": "exact-script-token-closure", "script": "gurmukhi",
+            "sources": ["mocks/a2/mock-1.md", "mocks/a2/mock-1-examiner-script.md"]
+          }]
+        },
         { "id": "a2-mock-2", "timed": true, "rubric": "mocks/a2/rubric.md", "answerKey": "mocks/a2/mock-2-answer-key.md" }
       ]
     },

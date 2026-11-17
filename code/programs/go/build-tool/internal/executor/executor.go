@@ -42,7 +42,9 @@
 package executor
 
 import (
+	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"os/exec"
@@ -89,6 +91,46 @@ type BuildResult struct {
 // They are for the wrapper (e.g. `kiln sandbox-exec`, which scrubs them
 // before the step runs); a BUILD must never rely on them.
 var ExecWrapper []string
+
+// DefaultCommandTimeout is the per-command limit the build tool's
+// -command-timeout flag defaults to.
+//
+// Why 90 minutes: CI's Linux build step is capped at 150 minutes and the
+// Windows step at 300. The slowest legitimate package seen on CI runs for
+// about 19 minutes, so 90 never kills real work, yet a hung command is cut off
+// with an hour or more of the step budget left to print what hung. (The
+// incident that motivated this: one `rust/lzw` line hung on Windows and the
+// job idled 4h47m until GitHub's 300-minute step limit killed it, with no log
+// of which command it was.)
+const DefaultCommandTimeout = 90 * time.Minute
+
+// CommandTimeout bounds each BUILD command run by runCommands. The clock is
+// per command, not per package. Zero (the zero value, so every existing caller
+// and test is unaffected) disables the limit; the CLI installs
+// DefaultCommandTimeout unless -command-timeout says otherwise.
+var CommandTimeout time.Duration
+
+// commandWaitDelay bounds how long we wait for a command's output pipes to
+// close AFTER the command's process has exited or been killed. Without it,
+// cmd.Run blocks until EOF, and a background child that inherited stdout keeps
+// the pipe open for as long as it lives. A variable so tests can shorten it.
+var commandWaitDelay = 5 * time.Second
+
+// RootContext, when set, is the parent of every command's context. main binds
+// it to SIGINT/SIGTERM. It matters because each command runs in its own process
+// group (see prepareProcessTree), so a terminal Ctrl-C is no longer delivered
+// to BUILD children; cancelling this context kills each running command's group
+// through the same Cancel path a timeout uses, and commands not yet started
+// fail immediately. Nil means context.Background (never cancelled).
+var RootContext context.Context
+
+// interruptReturnCode is the status for a command stopped by RootContext:
+// 130, the shell convention for death by SIGINT.
+const interruptReturnCode = 130
+
+// timeoutReturnCode is the exit status reported for a timed-out command: 124,
+// the GNU `timeout(1)` convention, distinct from ordinary BUILD failures.
+const timeoutReturnCode = 124
 
 // ExecWrapperRepoRoot is the repository root that KILN_ACTION is relative to.
 var ExecWrapperRepoRoot string
@@ -441,7 +483,17 @@ func runCommands(pkg discovery.Package, commands []string, start time.Time) Buil
 		cmd.Stdout = &stdout
 		cmd.Stderr = &stderr
 
-		err := cmd.Run()
+		stepStart := time.Now()
+		timed, cancel := boundCommand(cmd, CommandTimeout)
+		err := timed.Run()
+		timedOut := timed.ctxErr() == context.DeadlineExceeded
+		interrupted := timed.ctxErr() == context.Canceled
+		if err != nil && errors.Is(err, exec.ErrWaitDelay) && !timedOut && !interrupted {
+			// Exited cleanly but a descendant still holds the pipe: kill the
+			// leftover group so it cannot outlive the build.
+			_ = killProcessTree(timed.Cmd)
+		}
+		cancel()
 		allStdout = append(allStdout, stdout.String())
 		allStderr = append(allStderr, stderr.String())
 
@@ -449,7 +501,26 @@ func runCommands(pkg discovery.Package, commands []string, start time.Time) Buil
 			elapsed := time.Since(start).Seconds()
 			exitCode := 1
 			stepsRun := i + 1
-			if exitErr, ok := err.(*exec.ExitError); ok {
+			if interrupted {
+				exitCode = interruptReturnCode
+				allStderr = append(allStderr, fmt.Sprintf(
+					"%s: command %d of %d `%s` interrupted by signal after %s; killed its process tree\n",
+					pkg.Name, i+1, len(commands), command, time.Since(stepStart).Round(100*time.Millisecond)))
+			} else if timedOut {
+				// A timeout is a failure, never a pass or a skip, and the
+				// message goes AFTER the buffered output so it is the last
+				// thing a reader sees.
+				exitCode = timeoutReturnCode
+				allStderr = append(allStderr, formatTimeoutMessage(
+					pkg.Name, i+1, len(commands), command, CommandTimeout, time.Since(stepStart)))
+			} else if errors.Is(err, exec.ErrWaitDelay) {
+				// The command itself succeeded, but a child it left behind
+				// still holds the output pipe. Without WaitDelay this would
+				// have hung the build; report it rather than hide it.
+				allStderr = append(allStderr, fmt.Sprintf(
+					"%s: command %d of %d `%s` exited but left a background process still holding its output open; gave up waiting after %s\n",
+					pkg.Name, i+1, len(commands), command, commandWaitDelay))
+			} else if exitErr, ok := err.(*exec.ExitError); ok {
 				exitCode = exitErr.ExitCode()
 			} else {
 				// The process never started (e.g. the wrapper cannot be
@@ -481,6 +552,72 @@ func runCommands(pkg discovery.Package, commands []string, start time.Time) Buil
 		StepsRun:    len(commands),
 		StepsTotal:  len(commands),
 	}
+}
+
+// formatTimeoutMessage is the stderr line appended to a package's output when a
+// command exceeds CommandTimeout. It names everything needed to find the hang
+// from the log alone: the package, which command (1-based) and its text, the
+// limit, and how long it actually ran.
+func formatTimeoutMessage(pkgName string, index, total int, command string, limit, elapsed time.Duration) string {
+	return fmt.Sprintf(
+		"%s: command %d of %d `%s` timed out after %s (limit %s); killed its process tree\n",
+		pkgName, index, total, command, elapsed.Round(100*time.Millisecond), limit)
+}
+
+// timedCmd is an exec.Cmd together with the context that bounds it, so the
+// caller can ask afterwards whether the deadline (rather than the command)
+// ended the run.
+type timedCmd struct {
+	*exec.Cmd
+	ctx context.Context
+}
+
+func (c *timedCmd) ctxErr() error {
+	if c.ctx == nil {
+		return nil
+	}
+	return c.ctx.Err()
+}
+
+// boundCommand returns cmd bounded by limit and by RootContext (no limit and
+// no root context: not bounded, cmd returned as is). Three pieces cooperate:
+//
+//   - exec.CommandContext arms a timer; when it fires, cmd.Cancel runs.
+//   - cmd.Cancel (killProcessTree) kills the shell AND its descendants, not
+//     just the shell, since the descendants are what actually hang.
+//   - cmd.WaitDelay bounds the wait for the output pipes after that, so a
+//     grandchild that escaped the kill (or a daemon the line left behind)
+//     cannot keep Run blocked.
+//
+// exec.Cmd cannot be given a context after construction, and the command may
+// already have been rebuilt by wrapCommand, so this clones it field by field.
+func boundCommand(cmd *exec.Cmd, limit time.Duration) (*timedCmd, context.CancelFunc) {
+	parent := RootContext
+	if parent == nil {
+		parent = context.Background()
+	}
+	if limit <= 0 && RootContext == nil {
+		return &timedCmd{Cmd: cmd}, func() {}
+	}
+	var ctx context.Context
+	var cancel context.CancelFunc
+	if limit > 0 {
+		ctx, cancel = context.WithTimeout(parent, limit)
+	} else {
+		ctx, cancel = context.WithCancel(parent)
+	}
+	clone := exec.CommandContext(ctx, cmd.Path, cmd.Args[1:]...)
+	clone.Path = cmd.Path
+	clone.Args = cmd.Args
+	clone.Env = cmd.Env
+	clone.Dir = cmd.Dir
+	clone.Stdout = cmd.Stdout
+	clone.Stderr = cmd.Stderr
+	clone.SysProcAttr = cmd.SysProcAttr
+	prepareProcessTree(clone)
+	clone.Cancel = func() error { return killProcessTree(clone) }
+	clone.WaitDelay = commandWaitDelay
+	return &timedCmd{Cmd: clone, ctx: ctx}, cancel
 }
 
 // EffectiveStepLines returns exactly the lines the executor runs for pkg's

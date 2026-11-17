@@ -1,0 +1,4 @@
+import { a, b as c } from "./m";
+import d from "d";
+export { a, c };
+export * from "f";

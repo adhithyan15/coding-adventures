@@ -2,6 +2,19 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+
+- Test bug, not a library bug: the mini-stream case built its input as
+  `vector(lit, lit + 17)` from two separate spellings of the same string
+  literal, relying on the compiler pooling them into one object. GCC and Clang do;
+  MSVC at `/Od` (the iso-harness default) does not, so `last - first` was
+  garbage and the constructor threw `length_error`, an uncaught exception that
+  exits `0xC0000409`. The test now uses one named array. Reproduced with real
+  `cl.exe` (`/W4 /WX`, also under `/fsanitize=address`), confirmed by `/GF`
+  (string pooling) making the old test pass, and verified on `cl` and `clang-cl`.
+
 ## [0.1.0] - 2026-07-13
 
 ### Added

@@ -210,6 +210,55 @@ suite-level "exhaustive" totals include these sampled cases; the per-claim
 (`[u32; 8]`) are not supported (backlog WD-015). The pilot is
 `code/specs/x25519.warrant`; the compiled fixture is `tests/fixtures/wxn.warrant`.
 
+## Warrant v1: `inout` parameters and `ensures` postconditions (VER04k WX-G)
+
+An operation may take a parameter by mutable reference. The document stays
+functional: the parameter's name denotes the **pre-state**, the operation's
+**result carries the post-state**, and an `ensures` block states a relation
+between them (`result` is the return value):
+
+```text
+op zeroize_bytes(buf: inout Bytes) -> Bytes
+ensures zeroize_bytes:
+  len(result) == len(buf)
+  result == zeros(len(buf))
+```
+
+The post-state slot is the first of S1 to S4 that matches the result type (`R = P1`;
+`Result<P1, E>`; a tuple whose last `k` components are the post-states; a `Result`
+of such a tuple), else **W0713**; so are an inadmissible `inout` type (an `Option`,
+a tuple), more than four `inout` parameters, `inout` on a `fresh` operation and an
+`ensures` row that calls an operation or quantifies. `inout` and the declaration-level
+`ensures` are **W0101** in a v0 document. `checker::resolve_post_slot` is the one
+slot resolver, tested against a brute-force enumerator.
+
+The binding names the host form of each mutable parameter and the export may be a
+Rust path (trait methods included):
+
+```text
+op zeroize_bytes   export=zeroize_bytes    inout=buf:slice    faults=stale-post,skip-last-write
+op zeroize_array32 export=Zeroize::zeroize inout=buf:array    faults=stale-post,skip-last-write
+op zeroize_u64     export=Zeroize::zeroize inout=x:int:u64    faults=stale-post,cursor-off-by-one
+op write_varint    export=varint::write ret=usize inout=out:vec faults=stale-post,drop-last-push
+```
+
+Forms: `slice` (`&mut [u8]`), `vec` (`&mut Vec<u8>` or `Vec<T>`), `array`
+(`&mut [u8; N]`), `int:<ht>`, `bool`, `struct:<Name>`; `returned`, `slice-of:struct:`,
+`vec-of:struct:` and `codec:` parse and are refused (W0704) until the stateful-objects
+slice (VER04m S1). The generated adapter **copies the pre-state** (the value the claims
+and rows use is never handed to the subject), calls the export by its fully qualified
+path, and **reads the post-state back from the same buffer**. Each call of an operation
+with an `ensures` block is monitored (`postcondition-violated: <op> row <i>`), and
+`<op>/post` suites enumerate the rows over the parameters' domains with their honest
+labels (`full`, `sample`, `set`, `edge`). Five faults (VER04k 4.8) make a broken
+mutation detectable; a fault that does not apply to the operation is W0701.
+
+Not emitted yet: WX-D1 forms (`take`, `replicate`, ...) in generated code (W0701), so a
+row states "all zero" with a hand-built model; the v1 corpus (the compiler is the v0
+`ct_compare` profile), for which `corpus::inout_descriptor` gives the `inout` and
+`post_slot` fields. The pilot is `code/specs/zeroize.warrant`; the compiled fixture is
+`tests/fixtures/wxg.warrant`.
+
 ## Warrant v1: output bounds (VER04j WX-H)
 
 A v1 `bound` block gains a fourth metric, `output`, that bounds the *size of the

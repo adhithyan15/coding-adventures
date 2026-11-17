@@ -129,13 +129,77 @@ var (
 		"code/specs/data/toolchain-pins.json",
 		".github/workflows/ci.yml",
 	}
+	// vosGrammarPaths are the grammar pairs vos-manifest and vos-link embed with
+	// include_str! (VOS-033); vosShapeGrammarPaths the Rust lexical pair
+	// vos-shape-check embeds. Neither is a Cargo edge, so without a row an edit
+	// to them runs no test (VOS-D058).
+	vosGrammarPaths = []string{
+		"code/grammars/vos_contract",
+		"code/grammars/vos_document",
+	}
+	// vosToolPaths are the sources a VOS implementation's BUILD reads or runs outside its own
+	// Cargo edges (VOS-D066): `vos-link check-doc` (a standalone cargo root, run by manifest
+	// path) with the crates it and `vos-shape-check` are built from, the evidence generator
+	// (`cargo run -p coding_adventures_warrant_grammar --example gen_evidence`) with its
+	// crates, the capability analyzer, and the two vos_* grammars vos-manifest embeds.  The
+	// list is the `cargo tree -e normal` closure of those tools on the day it was written;
+	// it covers no tool a BUILD does not run and does not follow a later new dependency
+	// (TestVosToolPathsAreWorkspaceCrates only checks that each directory exists).
+	// The implementation's own generated document is added per row (vosImplementationRow).
+	vosToolPaths = []string{
+		"code/programs/rust/vos-link",
+		"code/packages/rust/vos-manifest",
+		"code/packages/rust/vos-shape-check",
+		"code/packages/rust/warrant-grammar",
+		"code/packages/rust/ca-capability-analyzer",
+		"code/packages/rust/sha256",
+		"code/packages/rust/test-bootstrap",
+		"code/packages/rust/zeroize",
+		"code/packages/rust/grammar-tools",
+		"code/packages/rust/directed-graph",
+		"code/packages/rust/graph",
+		"code/packages/rust/lexer",
+		"code/packages/rust/parser",
+		"code/packages/rust/state-machine",
+		"code/packages/rust/toml-lexer",
+		"code/packages/rust/toml-parser",
+		"code/grammars/vos_contract",
+		"code/grammars/vos_document",
+	}
+	vosShapeGrammarPaths = []string{
+		"code/grammars/rust/rust1.97.0-e2021.tokens",
+		"code/grammars/rust/rust1.97.0-e2024.tokens",
+	}
 	testBootstrapPaths = []string{
 		"code/specs/fixtures/test-bootstrap-v1",
 		"code/scripts/tfv.py",
 		"code/scripts/bootstrap_harness_conformance.py",
 	}
-	rngCorpusPaths      = []string{"code/specs/fixtures/rng-v1"}
-	warrantGrammarPaths = []string{
+	// trigReferenceCorpusPaths is the bit-exact TRIG-REF-1 conformance corpus
+	// (PHY00a section 6). Every converged trig port's tests decode it, so an
+	// edit to any of its files selects each converted port. Python, Rust and
+	// TypeScript adopted it in TC-2, C++ in TC-5; each later slice adds one consumer row.
+	trigReferenceCorpusPaths = []string{"code/specs/fixtures/trig-reference-v1"}
+	// trigReferenceInputPaths adds what regenerates and validates the corpus. The
+	// python/trig BUILD runs the generator's --check (byte-for-byte regeneration, the
+	// sensitivity gates and the C/Rust/bc cross-checks) and the validator tests, so
+	// an edit to any of these files must select it, or the generator could change
+	// without anything running it.
+	trigReferenceInputPaths = []string{
+		"code/specs/fixtures/trig-reference-v1",
+		"code/scripts/generate_trig_reference_fixture.py",
+		"code/scripts/generate_trig_reference_dart_fixtures.py",
+		"code/scripts/trig_ref_exact.py",
+		"code/scripts/trig_ref_softfloat.py",
+		"code/scripts/trig_reference_xcheck",
+		"code/scripts/tests/test_trig_reference_fixture.py",
+		"code/scripts/tests/test_trig_reference_dart_fixtures.py",
+	}
+
+	rngCorpusPaths         = []string{"code/specs/fixtures/rng-v1"}
+	hamurabiCorpusPaths    = []string{"code/specs/fixtures/hamurabi-v1"}
+	lunarLanderCorpusPaths = []string{"code/specs/fixtures/lunar-lander-v1"}
+	warrantGrammarPaths    = []string{
 		"code/grammars/warrant",
 		"code/specs/fixtures/warrant-syntax-v1",
 		"code/specs/fixtures/warrant-vectors-synthetic-v1",
@@ -150,6 +214,12 @@ var (
 		"code/specs/fixtures/ct-compare-warrant-v1/consumers.json",
 		"code/specs/fixtures/ct-compare-warrant-v1/consumers.schema.json",
 	}
+	// warrantConformanceFixture is the shared runner conformance fixture
+	// (VER04i 9.1, WD-100). Every lane's runner package runs all of its cases
+	// in its own tests, so an edit to any case selects each runner package.
+	// The ct-compare pilots do not read it: their BUILD runs the corpus, not
+	// the runner's own tests.
+	warrantConformanceFixture = "code/specs/fixtures/warrant-corpus-conformance-v1"
 	// warrantPythonLaneInputs are the files the Python Warrant lane reads
 	// from outside its own package: the spec the corpus was compiled from,
 	// the corpus itself and its consumer registry. The ct-compare package's
@@ -165,7 +235,7 @@ var (
 	// editable from a sibling directory (a dev dependency, not a graph edge),
 	// so an edit to the runner must select the pilot lane explicitly.
 	warrantPythonRunnerPackage   = "code/packages/python/warrant-corpus"
-	warrantPythonLaneCorpusPaths = warrantPythonLaneInputs
+	warrantPythonLaneCorpusPaths = append(append([]string{}, warrantPythonLaneInputs...), warrantConformanceFixture)
 	warrantPythonLanePilotPaths  = append(append([]string{}, warrantPythonLaneInputs...), warrantPythonRunnerPackage)
 	// The TypeScript Warrant lane (WD-102) reads the same spec, corpus and
 	// registry. Its ct-compare BUILD re-runs the corpus, fails when the
@@ -178,8 +248,35 @@ var (
 	// an explicit prefix too: the selection must not depend on the dependency
 	// resolver noticing a dev-only edge.
 	warrantTypeScriptRunnerPackage   = "code/packages/typescript/warrant-corpus"
-	warrantTypeScriptLaneCorpusPaths = warrantTypeScriptLaneInputs
+	warrantTypeScriptLaneCorpusPaths = append(append([]string{}, warrantTypeScriptLaneInputs...), warrantConformanceFixture)
 	warrantTypeScriptLanePilotPaths  = append(append([]string{}, warrantTypeScriptLaneInputs...), warrantTypeScriptRunnerPackage)
+	// The Go Warrant lane (WD-103) reads the same spec, corpus and registry. Its
+	// ct-compare BUILD re-runs the corpus, fails when the committed manifest
+	// drifted, proves every negative control and validates the manifest; the
+	// runner package's own tests run the real corpus once.
+	warrantGoLaneInputs = warrantPythonLaneInputs
+	// warrantGoRunnerPackage is the shared runner. ct-compare's go.mod requires
+	// it (a graph edge), but the committed manifest embeds the runner's source
+	// digest, so the pilot is selected by an explicit prefix too: the selection
+	// must not depend on the dependency resolver noticing the edge.
+	warrantGoRunnerPackage   = "code/packages/go/warrant-corpus"
+	warrantGoLaneCorpusPaths = warrantGoLaneInputs
+	warrantGoLanePilotPaths  = append(append([]string{}, warrantGoLaneInputs...), warrantGoRunnerPackage)
+	// warrantOraclePaths are the files the independent Warrant oracle
+	// (python/warrant-oracle, VER04r section 10) reads: every adopter
+	// specification it parses and the one v1 corpus it gates against. The
+	// oracle re-derives everything from the source, so a change to any of
+	// these files must re-run it (that is the gate of VER04r 10.4).
+	warrantOraclePaths = []string{
+		"code/specs/ct-compare.warrant",
+		"code/specs/gf256.warrant",
+		"code/specs/wasm-leb128.warrant",
+		"code/specs/logic-gates.warrant",
+		"code/specs/lzw.warrant",
+		"code/specs/arithmetic.warrant",
+		"code/specs/x25519.warrant",
+		"code/specs/fixtures/ct-compare-warrant-v1/corpus.json",
+	}
 	// warrantAssurancePaths are the shared Warrant lane artifacts the
 	// assurance report validates directly (see isWarrantAssuranceInput).
 	// The Kiln graph export reads them, so they must list every path the
@@ -196,6 +293,29 @@ var (
 )
 
 var repositoryInputConsumers = []repositoryInputConsumer{
+	{
+		name:     "rust/vos-manifest",
+		language: "rust",
+		inputs:   "the vos_contract and vos_document grammar pairs it embeds",
+		matches:  isVosGrammarInput,
+		paths:    vosGrammarPaths,
+	},
+	{
+		name:     "rust/programs/vos-link",
+		language: "rust",
+		inputs:   "the vos_contract and vos_document grammar pairs vos-manifest embeds",
+		matches:  isVosGrammarInput,
+		paths:    vosGrammarPaths,
+	},
+	vosImplementationRow("vos-sched-fp-bitmap"),
+	vosImplementationRow("vos-sched-any"),
+	{
+		name:     "rust/vos-shape-check",
+		language: "rust",
+		inputs:   "the Rust 2021 and 2024 lexical token grammars it embeds",
+		matches:  isVosShapeGrammarInput,
+		paths:    vosShapeGrammarPaths,
+	},
 	{
 		name: "perl/conduit", language: "perl",
 		inputs:  "the native Perl build helper and shared Rust XS bridge",
@@ -296,11 +416,315 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		paths:    rngCorpusPaths,
 	},
 	{
+		name:     "python/trig",
+		language: "python",
+		inputs:   "the TRIG-REF-1 bit-exact corpus and the generator, oracle and validator its BUILD runs (--check)",
+		matches:  isTrigReferenceInput,
+		paths:    trigReferenceInputPaths,
+	},
+	{
+		name:     "rust/trig",
+		language: "rust",
+		inputs:   "the shared TRIG-REF-1 bit-exact conformance corpus",
+		matches:  isTrigReferenceCorpus,
+		paths:    trigReferenceCorpusPaths,
+	},
+	{
+		name:     "typescript/trig",
+		language: "typescript",
+		inputs:   "the shared TRIG-REF-1 bit-exact conformance corpus",
+		matches:  isTrigReferenceCorpus,
+		paths:    trigReferenceCorpusPaths,
+	},
+	{
+		name:     "c/trig",
+		language: "c",
+		inputs:   "the shared TRIG-REF-1 bit-exact conformance corpus",
+		matches:  isTrigReferenceCorpus,
+		paths:    trigReferenceCorpusPaths,
+	},
+	{
+		name:     "cpp/trig",
+		language: "cpp",
+		inputs:   "the shared TRIG-REF-1 bit-exact conformance corpus",
+		matches:  isTrigReferenceCorpus,
+		paths:    trigReferenceCorpusPaths,
+	},
+	{
+		name:     "ruby/trig",
+		language: "ruby",
+		inputs:   "the shared TRIG-REF-1 bit-exact conformance corpus",
+		matches:  isTrigReferenceCorpus,
+		paths:    trigReferenceCorpusPaths,
+	},
+	{
+		name:     "haskell/trig",
+		language: "haskell",
+		inputs:   "the shared TRIG-REF-1 bit-exact conformance corpus",
+		matches:  isTrigReferenceCorpus,
+		paths:    trigReferenceCorpusPaths,
+	},
+	{
+		name:     "java/trig",
+		language: "java",
+		inputs:   "the shared TRIG-REF-1 bit-exact conformance corpus",
+		matches:  isTrigReferenceCorpus,
+		paths:    trigReferenceCorpusPaths,
+	},
+	{
+		name:     "kotlin/trig",
+		language: "kotlin",
+		inputs:   "the shared TRIG-REF-1 bit-exact conformance corpus",
+		matches:  isTrigReferenceCorpus,
+		paths:    trigReferenceCorpusPaths,
+	},
+	{
+		name:     "swift/trig",
+		language: "swift",
+		inputs:   "the shared TRIG-REF-1 bit-exact conformance corpus",
+		matches:  isTrigReferenceCorpus,
+		paths:    trigReferenceCorpusPaths,
+	},
+	{
+		name:     "csharp/trig",
+		language: "csharp",
+		inputs:   "the shared TRIG-REF-1 bit-exact conformance corpus",
+		matches:  isTrigReferenceCorpus,
+		paths:    trigReferenceCorpusPaths,
+	},
+	{
+		name:     "fsharp/trig",
+		language: "fsharp",
+		inputs:   "the shared TRIG-REF-1 bit-exact conformance corpus",
+		matches:  isTrigReferenceCorpus,
+		paths:    trigReferenceCorpusPaths,
+	},
+	{
+		name:     "lua/trig",
+		language: "lua",
+		inputs:   "the shared TRIG-REF-1 bit-exact conformance corpus",
+		matches:  isTrigReferenceCorpus,
+		paths:    trigReferenceCorpusPaths,
+	},
+	{
+		name:     "perl/trig",
+		language: "perl",
+		inputs:   "the shared TRIG-REF-1 bit-exact conformance corpus",
+		matches:  isTrigReferenceCorpus,
+		paths:    trigReferenceCorpusPaths,
+	},
+	{
+		name:     "elixir/trig",
+		language: "elixir",
+		inputs:   "the shared TRIG-REF-1 bit-exact conformance corpus",
+		matches:  isTrigReferenceCorpus,
+		paths:    trigReferenceCorpusPaths,
+	},
+	{
+		name:     "go/trig",
+		language: "go",
+		inputs:   "the shared TRIG-REF-1 bit-exact conformance corpus",
+		matches:  isTrigReferenceCorpus,
+		paths:    trigReferenceCorpusPaths,
+	},
+	{
+		// Dart's test reads the generated trig_reference_vectors.dart, not the TSVs;
+		// python/trig's BUILD --check keeps that file in step with the corpus, and a
+		// corpus change re-runs these tests against it.
+		name:     "dart/trig",
+		language: "dart",
+		inputs:   "the shared TRIG-REF-1 corpus, via the generated Dart vector source",
+		matches:  isTrigReferenceCorpus,
+		paths:    trigReferenceCorpusPaths,
+	},
+	{
 		name:     "rust/rng",
 		language: "rust",
 		inputs:   "the shared rng conformance corpus",
 		matches:  isRngCorpus,
 		paths:    rngCorpusPaths,
+	},
+	{
+		name:     "rust/hamurabi",
+		language: "rust",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "go/hamurabi",
+		language: "go",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "python/hamurabi",
+		language: "python",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "typescript/hamurabi",
+		language: "typescript",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "rust/lunar-lander",
+		language: "rust",
+		inputs:   "the shared lunar lander conformance corpus",
+		matches:  isLunarLanderCorpus,
+		paths:    lunarLanderCorpusPaths,
+	},
+	{
+		name:     "csharp/hamurabi",
+		language: "csharp",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "fsharp/hamurabi",
+		language: "fsharp",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "java/hamurabi",
+		language: "java",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "kotlin/hamurabi",
+		language: "kotlin",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "dart/hamurabi",
+		language: "dart",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "swift/hamurabi",
+		language: "swift",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "haskell/hamurabi",
+		language: "haskell",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "c/hamurabi",
+		language: "c",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "cpp/hamurabi",
+		language: "cpp",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "ocaml/hamurabi",
+		language: "ocaml",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "ruby/hamurabi",
+		language: "ruby",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "elixir/hamurabi",
+		language: "elixir",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "lua/hamurabi",
+		language: "lua",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "perl/hamurabi",
+		language: "perl",
+		inputs:   "the shared hamurabi conformance corpus",
+		matches:  isHamurabiCorpus,
+		paths:    hamurabiCorpusPaths,
+	},
+	{
+		name:     "go/lunar-lander",
+		language: "go",
+		inputs:   "the shared lunar lander conformance corpus",
+		matches:  isLunarLanderCorpus,
+		paths:    lunarLanderCorpusPaths,
+	},
+	{
+		name:     "python/lunar-lander",
+		language: "python",
+		inputs:   "the shared lunar lander conformance corpus",
+		matches:  isLunarLanderCorpus,
+		paths:    lunarLanderCorpusPaths,
+	},
+	{
+		name:     "typescript/lunar-lander",
+		language: "typescript",
+		inputs:   "the shared lunar lander conformance corpus",
+		matches:  isLunarLanderCorpus,
+		paths:    lunarLanderCorpusPaths,
+	},
+	{
+		name:     "ruby/lunar-lander",
+		language: "ruby",
+		inputs:   "the shared lunar lander conformance corpus",
+		matches:  isLunarLanderCorpus,
+		paths:    lunarLanderCorpusPaths,
+	},
+	{
+		name:     "elixir/lunar_lander",
+		language: "elixir",
+		inputs:   "the shared lunar lander conformance corpus",
+		matches:  isLunarLanderCorpus,
+		paths:    lunarLanderCorpusPaths,
+	},
+	{
+		name:     "lua/lunar-lander",
+		language: "lua",
+		inputs:   "the shared lunar lander conformance corpus",
+		matches:  isLunarLanderCorpus,
+		paths:    lunarLanderCorpusPaths,
+	},
+	{
+		name:     "perl/lunar-lander",
+		language: "perl",
+		inputs:   "the shared lunar lander conformance corpus",
+		matches:  isLunarLanderCorpus,
+		paths:    lunarLanderCorpusPaths,
 	},
 	{
 		name:     "go/rng",
@@ -427,6 +851,7 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "canonical Warrant grammars, syntax corpus, vector fixtures and transport gate",
 		matches:  isWarrantGrammarInput,
 		paths:    warrantGrammarPaths,
+		globs:    []string{warrantDocumentGlob},
 	},
 	{
 		name:     "rust/ca-assurance-report",
@@ -436,11 +861,60 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		paths:    warrantAssurancePaths,
 	},
 	{
+		name:     "rust/arithmetic",
+		language: "rust",
+		inputs:   "the Warrant consumer registry its assurance_report.json lists lane rungs from (VER04i 8.3)",
+		matches:  isWarrantLaneRegistryInput,
+		paths:    warrantLaneRegistryPaths,
+	},
+	{
+		name:     "rust/ct-compare",
+		language: "rust",
+		inputs:   "the Warrant consumer registry its assurance_report.json lists lane rungs from (VER04i 8.3)",
+		matches:  isWarrantLaneRegistryInput,
+		paths:    warrantLaneRegistryPaths,
+	},
+	{
+		name:     "rust/gf256",
+		language: "rust",
+		inputs:   "the Warrant consumer registry its assurance_report.json lists lane rungs from (VER04i 8.3)",
+		matches:  isWarrantLaneRegistryInput,
+		paths:    warrantLaneRegistryPaths,
+	},
+	{
+		name:     "rust/logic-gates",
+		language: "rust",
+		inputs:   "the Warrant consumer registry its assurance_report.json lists lane rungs from (VER04i 8.3)",
+		matches:  isWarrantLaneRegistryInput,
+		paths:    warrantLaneRegistryPaths,
+	},
+	{
+		name:     "rust/lzw",
+		language: "rust",
+		inputs:   "the Warrant consumer registry its assurance_report.json lists lane rungs from (VER04i 8.3)",
+		matches:  isWarrantLaneRegistryInput,
+		paths:    warrantLaneRegistryPaths,
+	},
+	{
+		name:     "rust/wasm-leb128",
+		language: "rust",
+		inputs:   "the Warrant consumer registry its assurance_report.json lists lane rungs from (VER04i 8.3)",
+		matches:  isWarrantLaneRegistryInput,
+		paths:    warrantLaneRegistryPaths,
+	},
+	{
 		name:     "python/warrant-corpus",
 		language: "python",
 		inputs:   "the Warrant spec, corpus and consumer registry its tests run",
-		matches:  isWarrantPythonLaneCorpusInput,
+		matches:  isWarrantPythonRunnerInput,
 		paths:    warrantPythonLaneCorpusPaths,
+	},
+	{
+		name:     "python/warrant-oracle",
+		language: "python",
+		inputs:   "the adopter Warrant specs and the v1 ct-compare corpus the oracle gates",
+		matches:  isWarrantOracleInput,
+		paths:    warrantOraclePaths,
 	},
 	{
 		name:     "python/ct-compare",
@@ -453,7 +927,7 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		name:     "typescript/warrant-corpus",
 		language: "typescript",
 		inputs:   "the Warrant spec, corpus and consumer registry its tests run",
-		matches:  isWarrantTypeScriptLaneCorpusInput,
+		matches:  isWarrantTypeScriptRunnerInput,
 		paths:    warrantTypeScriptLaneCorpusPaths,
 	},
 	{
@@ -463,6 +937,32 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		matches:  isWarrantTypeScriptLanePilotInput,
 		paths:    warrantTypeScriptLanePilotPaths,
 	},
+	{
+		name:     "go/warrant-corpus",
+		language: "go",
+		inputs:   "the Warrant spec, corpus and consumer registry its tests run",
+		matches:  isWarrantGoLaneCorpusInput,
+		paths:    warrantGoLaneCorpusPaths,
+	},
+	{
+		name:     "go/ct-compare",
+		language: "go",
+		inputs:   "the Warrant spec, corpus, consumer registry and the shared Go runner",
+		matches:  isWarrantGoLanePilotInput,
+		paths:    warrantGoLanePilotPaths,
+	},
+}
+
+// warrantLaneRegistryPaths is the consumer registry. Every Rust package that
+// uses ca-assurance-report records one rung per registry lane in its
+// assurance_report.json (WD-004b2), so adding, flipping or removing a row
+// stales all of their reports; their BUILD runs `--check`, which re-derives the
+// rungs. Listed by name because the registry is data no Cargo graph edge sees.
+var warrantLaneRegistryPaths = []string{"code/specs/fixtures/ct-compare-warrant-v1/consumers.json"}
+
+// isWarrantLaneRegistryInput is true only for the registry file itself.
+func isWarrantLaneRegistryInput(changed string) bool {
+	return changed == "code/specs/fixtures/ct-compare-warrant-v1/consumers.json"
 }
 
 // The assurance report validates the shared Warrant lane artifacts directly.
@@ -479,6 +979,17 @@ func isWarrantAssuranceInput(changed string) bool {
 	return false
 }
 
+// isWarrantOracleInput selects python/warrant-oracle when an adopter spec it
+// parses, or the v1 corpus it gates, changes. Exact paths only.
+func isWarrantOracleInput(changed string) bool {
+	for _, path := range warrantOraclePaths {
+		if changed == path {
+			return true
+		}
+	}
+	return false
+}
+
 // isWarrantPythonLaneCorpusInput selects the Python runner package when the
 // spec, corpus or registry its tests run changes. Exact paths only: a lookalike
 // version of the fixture directory must not select it.
@@ -491,6 +1002,24 @@ func isWarrantPythonLaneCorpusInput(changed string) bool {
 		return true
 	}
 	return false
+}
+
+// isWarrantConformanceInput reports whether a changed path is a file of the
+// shared runner conformance fixture. A slash-delimited prefix, so a lookalike
+// directory such as warrant-corpus-conformance-v10 is not selected.
+func isWarrantConformanceInput(changed string) bool {
+	return strings.HasPrefix(changed, warrantConformanceFixture+"/")
+}
+
+// isWarrantPythonRunnerInput selects python/warrant-corpus for the corpus
+// inputs and the conformance fixture its tests run.
+func isWarrantPythonRunnerInput(changed string) bool {
+	return isWarrantPythonLaneCorpusInput(changed) || isWarrantConformanceInput(changed)
+}
+
+// isWarrantTypeScriptRunnerInput is the TypeScript counterpart.
+func isWarrantTypeScriptRunnerInput(changed string) bool {
+	return isWarrantTypeScriptLaneCorpusInput(changed) || isWarrantConformanceInput(changed)
 }
 
 // isWarrantPythonLanePilotInput selects python/ct-compare for the same files
@@ -515,11 +1044,49 @@ func isWarrantTypeScriptLanePilotInput(changed string) bool {
 		strings.HasPrefix(changed, "code/packages/typescript/warrant-corpus/")
 }
 
+// isWarrantGoLaneCorpusInput selects the Go runner package when the spec, corpus
+// or registry its tests run changes. Exact paths only: a lookalike version of the
+// fixture directory must not select it.
+func isWarrantGoLaneCorpusInput(changed string) bool {
+	return isWarrantPythonLaneCorpusInput(changed)
+}
+
+// isWarrantGoLanePilotInput selects go/ct-compare for the same files plus
+// anything beneath the shared runner package.
+func isWarrantGoLanePilotInput(changed string) bool {
+	return isWarrantGoLaneCorpusInput(changed) ||
+		strings.HasPrefix(changed, "code/packages/go/warrant-corpus/")
+}
+
+// warrantDocumentGlob is exactly isWarrantDocument as a glob: the `?` keeps a
+// bare ".warrant" out, and the suffix keeps ".warrant.draft" out.
+const warrantDocumentGlob = "**/?*.warrant"
+
+// isWarrantDocument reports whether a changed path is a Warrant document, in
+// any directory. rust/warrant-grammar's v0_compat test parses and checks every
+// .warrant file in the repository, so adding or editing one anywhere must run
+// it; otherwise an invalid document lands on main unchecked and fails a later,
+// unrelated PR that does rebuild warrant-grammar. Drafts are not documents.
+//
+//	code/specs/foo.warrant                     → true
+//	code/packages/python/x/x.warrant           → true
+//	code/specs/foo.warrant.draft, .warrant.bak → false
+//	code/specs/.warrant, code/specs/foo.Warrant → false
+//	code\specs\foo.warrant  (not a Git path)   → false
+func isWarrantDocument(changed string) bool {
+	if strings.Contains(changed, "\\") {
+		return false
+	}
+	base := path.Base(changed)
+	return strings.HasSuffix(base, ".warrant") && len(base) > len(".warrant")
+}
+
 // Canonical inputs live outside the Rust artifact package. Exact file paths
 // and slash-delimited prefixes avoid selecting lookalike versions/directories.
 // Validator-test edits select the consumer too: its BUILD runs those tests.
 func isWarrantGrammarInput(changed string) bool {
-	return strings.HasPrefix(changed, "code/grammars/warrant/") ||
+	return isWarrantDocument(changed) ||
+		strings.HasPrefix(changed, "code/grammars/warrant/") ||
 		strings.HasPrefix(changed, "code/specs/fixtures/warrant-syntax-v1/") ||
 		// WX-E: the pinned vector tables the package's tests load (the pin in
 		// the .warrant document fails closed when these bytes change).
@@ -557,6 +1124,56 @@ func isCtCompareInput(changed string) bool {
 		changed == "code/scripts/ct_compare_tfv.py" ||
 		changed == "code/scripts/ct_compare_conformance.py" ||
 		changed == "code/scripts/tfv.py"
+}
+
+// isVosGrammarInput reports whether a changed path is in a VOS grammar pair
+// that vos-manifest embeds (slash-delimited prefixes: no lookalike directory).
+//
+//	code/grammars/vos_contract/vos_contract.tokens → true
+//	code/grammars/vos_contract2/x                  → false
+func isVosGrammarInput(changed string) bool {
+	return strings.HasPrefix(changed, "code/grammars/vos_contract/") ||
+		strings.HasPrefix(changed, "code/grammars/vos_document/")
+}
+
+// isVosToolInput reports whether a changed path is a source of a tool that a VOS
+// implementation's BUILD runs outside Cargo (VOS-D066): a directory of vosToolPaths
+// (the repository-relative path with a trailing slash, never a lookalike) or one of the
+// two vos_* grammars.
+//
+//	code/programs/rust/vos-link/src/check.rs   → true
+//	code/packages/rust/vos-manifest-x/src/a.rs → false
+func isVosToolInput(changed string) bool {
+	for _, d := range vosToolPaths {
+		if strings.HasPrefix(changed, d+"/") {
+			return true
+		}
+	}
+	return false
+}
+
+// vosImplementationRow is the row of one VOS implementation crate (`code/packages/rust/<crate>`,
+// kind production, reference or any).  It selects the crate when a VOS tool changes
+// (isVosToolInput) and when ITS generated document `code/specs/<crate>.warrant` changes: that
+// file lives outside the package, so without the row a PR that edits only the document (say,
+// weakens a claim) selects nothing and `check-doc` and `gen_evidence --check` never run
+// (VOS02 D-GD3: the document name is exactly the crate name).
+func vosImplementationRow(crate string) repositoryInputConsumer {
+	doc := "code/specs/" + crate + ".warrant"
+	return repositoryInputConsumer{
+		name:     "rust/" + crate,
+		language: "rust",
+		inputs:   "its generated document " + doc + " and the VOS tools its BUILD runs outside Cargo (vos-link check-doc, vos-shape-check, the evidence generator, the capability analyzer)",
+		matches:  func(changed string) bool { return changed == doc || isVosToolInput(changed) },
+		paths:    append([]string{doc}, vosToolPaths...),
+	}
+}
+
+// isVosShapeGrammarInput reports whether a changed path is one of the two Rust
+// token grammars vos-shape-check embeds.
+func isVosShapeGrammarInput(changed string) bool {
+	return changed == "code/grammars/rust/rust1.97.0-e2021.tokens" ||
+		changed == "code/grammars/rust/rust1.97.0-e2024.tokens"
 }
 
 // isCtCompareCorpus selects the CT01 lanes whose tests read cases.json directly
@@ -608,6 +1225,52 @@ func isKilnToolchainPinInput(changed string) bool {
 //	code/specs/rng.md                         → false (prose; the corpus pins behaviour)
 func isRngCorpus(changed string) bool {
 	return strings.HasPrefix(changed, "code/specs/fixtures/rng-v1/")
+}
+
+// isTrigReferenceCorpus reports whether a changed path is a file of the shared
+// TRIG-REF-1 conformance corpus. A slash-delimited prefix, so a lookalike
+// directory such as trig-reference-v10 is not selected.
+func isTrigReferenceCorpus(changed string) bool {
+	return strings.HasPrefix(changed, "code/specs/fixtures/trig-reference-v1/")
+}
+
+// isTrigReferenceInput reports whether a changed path is the TRIG-REF-1 corpus or
+// one of the files that generates and validates it. The python/trig BUILD runs the
+// generator's --check, so each of these must select that package:
+//
+//	code/specs/fixtures/trig-reference-v1/edge.tsv            → true
+//	code/scripts/generate_trig_reference_fixture.py           → true
+//	code/scripts/trig_reference_xcheck/xcheck.c               → true
+//	code/scripts/trig_ref_exact.py                            → true
+//	code/scripts/generate_trig_reference_fixture.py.bak       → false (exact filenames)
+func isTrigReferenceInput(changed string) bool {
+	if isTrigReferenceCorpus(changed) {
+		return true
+	}
+	switch changed {
+	case "code/scripts/generate_trig_reference_fixture.py",
+		"code/scripts/generate_trig_reference_dart_fixtures.py",
+		"code/scripts/trig_ref_exact.py",
+		"code/scripts/trig_ref_softfloat.py",
+		"code/scripts/tests/test_trig_reference_fixture.py",
+		"code/scripts/tests/test_trig_reference_dart_fixtures.py":
+		return true
+	}
+	return strings.HasPrefix(changed, "code/scripts/trig_reference_xcheck/")
+}
+
+// isHamurabiCorpus reports whether a changed path is in the shared hamurabi corpus,
+// which the hamurabi package tests read.
+//
+//	code/specs/fixtures/hamurabi-v1/cases.json  → true
+//	code/specs/fixtures/hamurabi-v10/cases.json → false
+func isHamurabiCorpus(changed string) bool {
+	return strings.HasPrefix(changed, "code/specs/fixtures/hamurabi-v1/")
+}
+
+// isLunarLanderCorpus reports whether a changed path is in the shared lunar lander corpus.
+func isLunarLanderCorpus(changed string) bool {
+	return strings.HasPrefix(changed, "code/specs/fixtures/lunar-lander-v1/")
 }
 
 // isMosaicRepositorySource reports whether a changed path is one the Mosaic

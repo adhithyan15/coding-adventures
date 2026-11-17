@@ -1,0 +1,19 @@
+{
+  "schema": "warrant-assurance-profile-v1",
+  "name": "actionscript-compiler",
+  "kind": "transform",
+  "rows": {
+    "326": {
+      "applicability": "excluded",
+      "reason": "no keys: the package takes and generates no key material; operands are bounded ActionScript source strings, AST nodes, and InterpreterIR modules"
+    },
+    "327": {
+      "applicability": "excluded",
+      "reason": "pure compiler transform: package implements ActionScript lexing, AST parsing, and InterpreterIR lowering only, no cipher, hash or MAC"
+    },
+    "407": {
+      "applicability": "excluded",
+      "reason": "bounded work per call: parsing and lowering are bounded by MAX_TOKENS, MAX_AST_DEPTH, MAX_AST_NODES, and MAX_INSTRUCTIONS"
+    }
+  }
+}

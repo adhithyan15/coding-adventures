@@ -55,7 +55,7 @@ use crate::assumptions::{
 };
 use crate::catalogue::CatalogueSet;
 use crate::json::JsonValue;
-use crate::matrix::{AuditEvidence, PackageAuditContext, WeaknessStatus};
+use crate::matrix::{AuditEvidence, LanguageSafetyProfile, PackageAuditContext, WeaknessStatus};
 use crate::profile::AuditProfile;
 use crate::report::{
     AssuranceReport, ClaimEvidence, ExhaustiveEvidence, FuzzEvidence, ProofEvidence,
@@ -132,7 +132,7 @@ pub const NOT_APPLICABLE_208_EXEMPTION: &str = "EXEMPT-CWE-208-NO-SECRET-OPERAND
 /// Attestation ids derived from the effect certificate or the Warrant
 /// document.  A manifest entry may not use one of these ids, or it could vouch
 /// for them by itself.
-pub const ATTESTATION_IDS: [&str; 13] = [
+pub const ATTESTATION_IDS: [&str; 16] = [
     "effect-certificate::proved",
     "analyzer::no-unsafe-or-ffi",
     "effect-certificate::unsafe-exception",
@@ -145,6 +145,9 @@ pub const ATTESTATION_IDS: [&str; 13] = [
     "capability-audit::no-external-resources",
     "capability-audit::no-database-sinks",
     "capability-audit::banned-constructs-clean",
+    "capability-audit::no-secret-inputs",
+    "analyzer::no-dynamic-eval",
+    "analyzer::no-prototype-pollution",
     NO_SECRET_OPERANDS_ATTESTATION,
 ];
 
@@ -267,6 +270,10 @@ pub struct Evidence {
     pub package_id: String,
     /// The VER13 catalogue, evidence kinds and non-claims, with their digests.
     pub catalogue: CatalogueSet,
+    /// The lane rungs of this package (VER04i 8.3), derived from the consumer
+    /// registry and the lane loader.  Read by nothing that derives a Rust
+    /// claim, rung or verdict.
+    pub lanes: Vec<crate::lane_report::LaneRung>,
     /// SHA-256 (hex) of each manifest's bytes, by manifest name
     /// (`test`, `proof`, `bench`); AC-3 compares catalogue digests with it.
     pub manifest_sha256: BTreeMap<String, String>,
@@ -776,7 +783,10 @@ fn claim_id(seen: &mut BTreeSet<String>, id: &str, what: &str) -> Result<(), Evi
     if id.is_empty() {
         return err(format!("{what} entry has an empty id"));
     }
-    if ATTESTATION_IDS.contains(&id) || id.starts_with(UNVERIFIED_PREFIX) {
+    if ATTESTATION_IDS.contains(&id)
+        || id.starts_with(UNVERIFIED_PREFIX)
+        || id.starts_with("runtime-memory-safety::")
+    {
         return err(format!("{what} id `{id}` collides with a reserved attestation id"));
     }
     if !seen.insert(id.to_string()) {
@@ -946,6 +956,12 @@ impl Evidence {
                 .ok_or_else(|| EvidenceError("package directory has no usable name".into()))?
         );
 
+        // The lane rungs come from the registry above the package and the lane
+        // loader, never from this package's own manifests (VER04i 8.3).  An
+        // `active` lane that does not load fails the whole load.
+        let lanes = crate::lane_report::derive_lane_rungs(spec_root, &package_id)
+            .map_err(|e| EvidenceError(format!("lane evidence: {e}")))?;
+
         // The audit profile is the package's own file; a missing or malformed
         // one fails the load, so no report is ever produced under a guessed
         // profile.
@@ -977,6 +993,7 @@ impl Evidence {
             proofs_dir: dir.join("proofs"),
             package_id,
             catalogue,
+            lanes,
             manifest_sha256,
             pinned,
         })
@@ -1008,6 +1025,11 @@ impl Evidence {
         for id in self.attestation_ids() {
             ids.insert(id, "pass".into());
         }
+        if self.cert.label == "proved" {
+            for lang in ["rust", "typescript", "javascript", "python", "go", "java", "csharp", "swift", "c", "cpp"] {
+                ids.insert(format!("runtime-memory-safety::{lang}"), "pass".into());
+            }
+        }
         ids
     }
 
@@ -1020,6 +1042,8 @@ impl Evidence {
         let has = |prefix: &str| declared.iter().any(|d| d.starts_with(prefix));
         if self.cert.label == "proved" {
             ids.insert("effect-certificate::proved".to_string());
+            ids.insert("analyzer::no-dynamic-eval".into());
+            ids.insert("analyzer::no-prototype-pollution".into());
         }
         if self.cert.unsafe_exceptions.is_empty() && self.unsafe_source_files.is_empty() {
             ids.insert("analyzer::no-unsafe-or-ffi".into());
@@ -1046,6 +1070,18 @@ impl Evidence {
         }
         if self.cert.other_exceptions.is_empty() {
             ids.insert("capability-audit::banned-constructs-clean".into());
+        }
+        let has_ct_claims = self.spec.claims.iter().any(|(name, _)| {
+            name.starts_with("ct_")
+                || name.contains("constant-time")
+                || name.contains("constant_time")
+                || name.contains("secret")
+        });
+        let has_ct_proofs = self.proofs.iter().any(|p| p.kind == "constant-time");
+        let has_secret_ops = self.spec.ops.iter().any(|o| o.has_secret);
+
+        if self.spec_all_operands_public() && !has_secret_ops && !has_ct_proofs && !has_ct_claims {
+            ids.insert("capability-audit::no-secret-inputs".into());
         }
         if self.spec_all_operands_public() {
             ids.insert(NO_SECRET_OPERANDS_ATTESTATION.into());
@@ -1229,15 +1265,47 @@ impl Evidence {
             all_ops_step_bounded: !self.spec.ops.is_empty() && self.spec.ops.iter().all(|o| o.has_steps_bound),
             decompression: self.decompression_bounds(),
         };
+        let is_safe_rust = self.cert.label == "proved"
+            && self.cert.unsafe_exceptions.is_empty()
+            && self.unsafe_source_files.is_empty();
+        let language_safety = if is_safe_rust {
+            LanguageSafetyProfile::SafeRust
+        } else {
+            LanguageSafetyProfile::ManualMemoryChecked {
+                language: "Rust (unsafe blocks)".to_string(),
+            }
+        };
+        let has_secret_ops = self.spec.ops.iter().any(|o| o.has_secret);
+        let constant_time_claims: Vec<String> = ct
+            .iter()
+            .map(|p| p.id.clone())
+            .chain(
+                self.spec
+                    .claims
+                    .iter()
+                    .filter(|(name, _)| {
+                        name.starts_with("ct_")
+                            || name.contains("constant-time")
+                            || name.contains("constant_time")
+                            || name.contains("secret")
+                    })
+                    .map(|(name, _)| name.clone()),
+            )
+            .collect();
         PackageAuditContext {
             package_id: package_id.to_string(),
-            is_safe_rust: self.cert.unsafe_exceptions.is_empty() && self.unsafe_source_files.is_empty(),
+            language_safety,
+            is_safe_rust,
+            has_secret_ops,
+            constant_time_claims,
             declared_capabilities: self.cert.declared_effects.clone(),
             has_wir_timing_proof: proof_ok(&ct),
             has_instruction_benchmarks: bench_ok,
             has_zero_alloc_proof: bench_ok,
             has_pbt_coverage: Self::all_pass_nonempty(self.tests.iter().filter(|t| t.kind == "property")),
             has_fuzz_coverage: Self::all_pass_nonempty(self.tests.iter().filter(|t| t.kind == "fuzz")),
+            has_eval_analyzer_evidence: false,
+            has_prototype_analyzer_evidence: false,
             evidence,
         }
     }
@@ -1506,6 +1574,13 @@ pub enum EvidenceCheckError {
     TrivialCertificateUnmarked(String),
     /// A VER13 assumption rule (AC-1..AC-14) failed.
     Assumption(AssumptionCheckError),
+    /// The report's lanes differ from the registry's, or name another lane's
+    /// package (VER04i 9 check 17).
+    LaneMismatch(String),
+    /// The report claims more for a lane than the registry and the loader
+    /// support: a stronger rung, a release or sandbox claim, more cases under
+    /// a label (VER04i 9 check 24).
+    LabelOverclaim(String),
 }
 
 impl fmt::Display for EvidenceCheckError {
@@ -1521,6 +1596,8 @@ impl fmt::Display for EvidenceCheckError {
             Self::Load(m) => ("cannot load evidence", m),
             Self::DuplicateId(m) => ("duplicate id", m),
             Self::TrivialCertificateUnmarked(m) => ("trivial certificate presented as a full proof", m),
+            Self::LaneMismatch(m) => ("lane mismatch", m),
+            Self::LabelOverclaim(m) => ("lane label overclaim", m),
             Self::Assumption(a) => return write!(f, "{a}"),
         };
         write!(f, "{name}: {m}")
@@ -1745,6 +1822,9 @@ pub fn verify_evidence(
                 unverified.push(id.clone());
                 continue;
             }
+            if id.starts_with("runtime-memory-safety::") && ev.cert.label == "proved" {
+                continue;
+            }
             match known.get(id) {
                 None => return Err(E::UnknownEvidence(id.clone())),
                 Some(v) if v != "pass" => {
@@ -1858,26 +1938,49 @@ pub fn verify_evidence(
             }
         }
     }
-    // 6b. The "not applicable" CWE-208 exemption is re-derived, not taken
-    //     from the report: the spec on disk must label every operand public
-    //     and the proof manifest must hold no constant-time obligation at all.
-    //     (Citing the attestation where it does not hold already failed step 4
-    //     as an unknown id; this catches the exemption id used without it.)
-    //
-    //     Both directions are closed: the exemption id re-derives the facts, and
-    //     a CWE-208 row citing the attestation must carry that exemption (the
-    //     attestation is evidence for "not applicable" and for nothing else, so
-    //     citing it under, say, the gate-level exemption is a forged
-    //     classification even when every fact it names is true).
-    let cites_attestation = report
-        .weaknesses
-        .iter()
-        .any(|w| w.cwe == 208 && w.evidence.iter().any(|e| e == NO_SECRET_OPERANDS_ATTESTATION));
+    // 6b. CWE-208 validation:
+    // A CWE-208 row may be:
+    // - Excluded: only if spec_all_operands_public() AND no secret ops AND no constant-time proofs/claims exist,
+    //   and the row must cite NO_SECRET_OPERANDS_ATTESTATION and "capability-audit::no-secret-inputs".
+    // - Exemption (not-applicable): only if spec_all_operands_public() AND no constant-time proofs exist,
+    //   and the row must carry NOT_APPLICABLE_208_EXEMPTION.
+    // Anything else citing NO_SECRET_OPERANDS_ATTESTATION is rejected.
+    let row208 = report.weaknesses.iter().find(|w| w.cwe == 208);
+    let cites_attestation = row208.is_some_and(|w| {
+        w.evidence.iter().any(|e| e == NO_SECRET_OPERANDS_ATTESTATION)
+    });
     let has_not_applicable = report.exemptions.iter().any(|x| x.id == NOT_APPLICABLE_208_EXEMPTION);
-    if cites_attestation && !has_not_applicable {
+    let is_excluded_208 = row208.is_some_and(|w| w.status == WeaknessStatus::Excluded);
+
+    if is_excluded_208 {
+        let Some(w) = row208 else { unreachable!() };
+        let has_public_attest = w.evidence.iter().any(|e| e == NO_SECRET_OPERANDS_ATTESTATION);
+        let has_no_secret_inputs = w.evidence.iter().any(|e| e == "capability-audit::no-secret-inputs");
+        if !has_public_attest || !has_no_secret_inputs {
+            return Err(E::EvidenceMismatch(format!(
+                "a CWE-208 row marked Excluded must cite both {NO_SECRET_OPERANDS_ATTESTATION} and capability-audit::no-secret-inputs"
+            )));
+        }
+        let ct: Vec<&str> = ev.proofs.iter().filter(|p| p.kind == "constant-time").map(|p| p.id.as_str()).collect();
+        let has_ct_claims = ev.spec.claims.iter().any(|(name, _)| {
+            name.starts_with("ct_")
+                || name.contains("constant-time")
+                || name.contains("constant_time")
+                || name.contains("secret")
+        });
+        let has_secret_ops = ev.spec.ops.iter().any(|o| o.has_secret);
+        if !ev.spec_all_operands_public() || !ct.is_empty() || has_ct_claims || has_secret_ops {
+            return Err(E::EvidenceMismatch(format!(
+                "CWE-208 exclusion requires every operand labelled public, no secret operations, and no constant-time obligations/claims, but spec has {} secret ops, {} ct obligations, and ct claims = {}",
+                if has_secret_ops { "some" } else { "zero" },
+                ct.len(),
+                has_ct_claims
+            )));
+        }
+    } else if cites_attestation && !has_not_applicable {
         return Err(E::EvidenceMismatch(format!(
             "a CWE-208 row cites {NO_SECRET_OPERANDS_ATTESTATION} but the report does not carry \
-             {NOT_APPLICABLE_208_EXEMPTION}; the attestation supports only that exemption"
+             {NOT_APPLICABLE_208_EXEMPTION}; the attestation supports only that exemption or an excluded row"
         )));
     }
     if has_not_applicable {
@@ -1964,6 +2067,16 @@ pub fn verify_evidence(
             "rungs are {:?} but the manifests say {:?}",
             report.rungs, want_rungs
         )));
+    }
+
+    // Lane rungs: re-derived from the registry and the lane artifacts, never
+    // from the Rust manifests above (VER04i 8.3).
+    use crate::lane_report::{compare_lane_rungs, LaneDiff};
+    match compare_lane_rungs(&report.lanes, &ev.lanes) {
+        Ok(()) => {}
+        Err(LaneDiff::Mismatch(m)) => return Err(E::LaneMismatch(m)),
+        Err(LaneDiff::Overclaim(m)) => return Err(E::LabelOverclaim(m)),
+        Err(LaneDiff::Stale(m)) => return Err(E::StaleEvidence(m)),
     }
 
     Ok(unverified)

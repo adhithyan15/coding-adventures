@@ -3,5 +3,5 @@
   "version": 1,
   "package": "rust/hash-functions",
   "capabilities": [],
-  "justification": "Pure computation. Uses OS randomness only for analysis sampling, not for file, network, process, or environment access."
+  "justification": "Pure computation: hashing of caller-supplied bytes with no file, network, process, environment, clock or randomness access. The statistical analysis helpers that drew OS randomness moved to the hash-analysis crate."
 }

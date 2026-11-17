@@ -1,0 +1,29 @@
+[package]
+name = "paint-palette-blend"
+version = "0.1.0"
+edition = "2021"
+description = "Deterministic zero-allocation indexed-color scanline blits, hardware blend modes, and retained-mode scene diffing"
+license = "MIT"
+
+[dependencies]
+paint-instructions = { path = "../paint-instructions" }
+pixel-container = { path = "../pixel-container" }
+
+[dev-dependencies]
+coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
+coding_adventures_sha256 = { path = "../sha256" }
+capability-runtime-conformance = { path = "../capability-runtime-conformance" }
+
+[[test]]
+name = "conformance"
+path = "tests/conformance.rs"
+
+[[test]]
+name = "microbenchmarks"
+path = "tests/microbenchmarks.rs"
+harness = false
+
+[[test]]
+name = "runtime_capability"
+path = "tests/runtime_capability.rs"
+harness = false

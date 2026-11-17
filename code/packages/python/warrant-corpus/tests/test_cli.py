@@ -81,7 +81,8 @@ def test_run_writes_a_manifest_and_check_accepts_it(
     out.write_bytes((render_json(document)).encode())
     assert main(["check", *common, str(out)]) == 0
 
-    # The same manifest, validated structurally, with the planned registry row.
+    # The same manifest, validated against the checked-in registry: the Python
+    # row is active (WD-004b1), so --require-active passes too.
     assert (
         main(["validate-manifest", *common, str(out), "--registry", str(REGISTRY_PATH)])
         == 0
@@ -94,6 +95,28 @@ def test_run_writes_a_manifest_and_check_accepts_it(
                 str(out),
                 "--registry",
                 str(REGISTRY_PATH),
+                "--require-active",
+            ]
+        )
+        == 0
+    )
+
+    # With the row put back to planned, --require-active refuses it.
+    registry = json.loads(REGISTRY_PATH.read_text())
+    for row in registry["consumers"]:
+        if row["package"] == "python/ct-compare":
+            row["status"] = "planned"
+    planned = tmp_path / "planned.json"
+    planned.write_text(json.dumps(registry))
+    assert main(["validate-manifest", *common, str(out), "--registry", str(planned)]) == 0
+    assert (
+        main(
+            [
+                "validate-manifest",
+                *common,
+                str(out),
+                "--registry",
+                str(planned),
                 "--require-active",
             ]
         )

@@ -1,0 +1,9 @@
+# Windows mirror of BUILD: cmd.exe has no `VAR=... cmd`, `2>/dev/null` or `grep`,
+# so the sabotage lines use `set VAR=...&&`, `2>NUL` and `findstr` (the same shape
+# as the other Warrant adopters' BUILD_windows).  KEEP IN SYNC WITH BUILD.
+cargo test -p coding_adventures_zeroize -- --nocapture
+cargo run -q -p coding_adventures_warrant_grammar --example gen_evidence -- --check zeroize
+cargo test -q -p coding_adventures_zeroize --test warrant_evidence
+set WARRANT_EVIDENCE_FAULT=stale-post&& cargo test -q -p coding_adventures_zeroize --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=skip-last-write&& cargo test -q -p coding_adventures_zeroize --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=cursor-off-by-one&& cargo test -q -p coding_adventures_zeroize --test warrant_evidence 2>NUL | findstr /B /C:"not ok "

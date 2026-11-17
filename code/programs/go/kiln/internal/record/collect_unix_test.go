@@ -152,7 +152,7 @@ func TestCollectLockIsExclusive(t *testing.T) {
 	var inner, stepLock error
 	o := f.opts()
 	o.Fsck = func(g *source.Git) error {
-		_, inner = Collect(CollectOptions{Root: o.Root, Dir: o.Dir, Results: o.Results, Out: o.Out + "2", KilnExe: o.KilnExe})
+		_, inner = Collect(CollectOptions{Root: o.Root, Dir: o.Dir, Results: o.Results, Out: o.Out + "2", KilnExe: o.KilnExe, Survivors: o.Survivors, SurvivorWait: o.SurvivorWait})
 		_, stepLock = LockDir(o.Dir, false)
 		return nil
 	}
@@ -359,5 +359,21 @@ func TestCollectTakesTheLockBeforeReadingAnything(t *testing.T) {
 	}
 	if len(order) != 2 || order[0] != "lock" {
 		t.Fatalf("%v", order)
+	}
+}
+
+func TestCollectCopiesTheGate(t *testing.T) {
+	// `prepare` sealed x/z's gate (the never list); collect carries it into the
+	// record, where the merge turns it into `precondition:never:x/z`.
+	f := newCfixWith(t, map[string]string{"code/kiln/legacy/never.json": `{"packages": ["x/z"]}`}, nil)
+	f.good()
+	_, sh := f.collect()
+	if r := recOf(t, sh, cz); r.Gate != "never:x/z" || r.Weak == "" || r.Status != "built" {
+		t.Fatalf("%+v", r)
+	}
+	for _, a := range []string{ca, cb} {
+		if r := recOf(t, sh, a); r.Gate != "" {
+			t.Errorf("%s: gate %q", a, r.Gate)
+		}
 	}
 }

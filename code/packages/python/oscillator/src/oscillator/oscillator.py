@@ -21,8 +21,13 @@ from typing import Protocol
 
 from trig import PI, sin
 
-TWO_PI = 2.0 * PI
-INTEGER_TOLERANCE = 1e-9
+TWO_PI: float = 2.0 * PI
+INTEGER_TOLERANCE: float = 1e-9
+
+# CWE-400 resource exhaustion defense bounds
+MAX_SAMPLE_RATE_HZ: float = 192_000.0
+MAX_DURATION_SECONDS: float = 60.0
+MAX_SAMPLES: int = 16_777_216
 
 
 class ContinuousSignal(Protocol):
@@ -41,7 +46,6 @@ def _finite_float(name: str, value: Real) -> float:
     into numeric-looking APIs. Centralizing the check keeps every public
     constructor consistent.
     """
-
     if isinstance(value, bool) or not isinstance(value, Real):
         raise ValueError(f"{name} must be a finite real number, got {value!r}")
 
@@ -66,6 +70,24 @@ def _positive_float(name: str, value: Real) -> float:
     return converted
 
 
+def _sample_rate(name: str, value: Real) -> float:
+    converted = _positive_float(name, value)
+    if converted > MAX_SAMPLE_RATE_HZ:
+        raise ValueError(
+            f"{name} {converted} exceeds MAX_SAMPLE_RATE_HZ={MAX_SAMPLE_RATE_HZ}"
+        )
+    return converted
+
+
+def _duration(name: str, value: Real) -> float:
+    converted = _non_negative_float(name, value)
+    if converted > MAX_DURATION_SECONDS:
+        raise ValueError(
+            f"{name} {converted} exceeds MAX_DURATION_SECONDS={MAX_DURATION_SECONDS}"
+        )
+    return converted
+
+
 def _fractional_part(value: float) -> float:
     """
     Return the fractional part in the half-open interval [0.0, 1.0).
@@ -73,14 +95,12 @@ def _fractional_part(value: float) -> float:
     Python's `%` would also work for positive divisors, but `x - floor(x)`
     mirrors the spec directly and makes the negative-time behavior obvious.
     """
-
     return value - floor(value)
 
 
 def nyquist_frequency(sample_rate_hz: Real) -> float:
     """Return half the sample rate, the highest cleanly representable frequency."""
-
-    return _positive_float("sample_rate_hz", sample_rate_hz) / 2.0
+    return _sample_rate("sample_rate_hz", sample_rate_hz) / 2.0
 
 
 def sample_count_for_duration(duration_seconds: Real, sample_rate_hz: Real) -> int:
@@ -92,16 +112,19 @@ def sample_count_for_duration(duration_seconds: Real, sample_rate_hz: Real) -> i
     `479.99999999999994` becoming 479 when the intended mathematical product is
     480.
     """
-
-    duration = _non_negative_float("duration_seconds", duration_seconds)
-    sample_rate = _positive_float("sample_rate_hz", sample_rate_hz)
+    duration = _duration("duration_seconds", duration_seconds)
+    sample_rate = _sample_rate("sample_rate_hz", sample_rate_hz)
     raw_count = duration * sample_rate
     nearest_integer = round(raw_count)
 
     if abs(raw_count - nearest_integer) <= INTEGER_TOLERANCE:
-        return int(nearest_integer)
+        count = int(nearest_integer)
+    else:
+        count = int(floor(raw_count))
 
-    return int(floor(raw_count))
+    if count > MAX_SAMPLES:
+        raise ValueError(f"sample count {count} exceeds MAX_SAMPLES={MAX_SAMPLES}")
+    return count
 
 
 def time_at_sample(
@@ -110,15 +133,17 @@ def time_at_sample(
     start_time_seconds: Real = 0.0,
 ) -> float:
     """Return the time for sample index `index` on a uniform sample grid."""
-
     if isinstance(index, bool) or not isinstance(index, Integral):
         raise ValueError(f"index must be an integer >= 0, got {index!r}")
-    if index < 0:
-        raise ValueError(f"index must be >= 0, got {index}")
+    idx = int(index)
+    if idx < 0:
+        raise ValueError(f"index must be >= 0, got {idx}")
+    if idx >= MAX_SAMPLES:
+        raise ValueError(f"index {idx} exceeds MAX_SAMPLES={MAX_SAMPLES}")
 
-    sample_rate = _positive_float("sample_rate_hz", sample_rate_hz)
+    sample_rate = _sample_rate("sample_rate_hz", sample_rate_hz)
     start_time = _finite_float("start_time_seconds", start_time_seconds)
-    return start_time + int(index) / sample_rate
+    return start_time + idx / sample_rate
 
 
 @dataclass(frozen=True)
@@ -156,10 +181,17 @@ class SineOscillator:
 
     def value_at(self, time_seconds: float) -> float:
         """Evaluate `offset + amplitude * sin(2*pi*(f*t + phase))`."""
-
         time = _finite_float("time_seconds", time_seconds)
         phase = self.frequency_hz * time + self.phase_cycles
-        return self.offset + self.amplitude * sin(TWO_PI * phase)
+        # trig.sin is defined for |x| <= 2**29 radians and returns NaN beyond it
+        # (PHY00a 3.4.1).  A phase kept in cycles grows without bound (a 440 Hz
+        # tone passes 2**29 radians after about 54 hours), so reduce it to
+        # [0, 1) cycles first.  `phase - floor(phase)` is exact in binary64, and
+        # it is also more accurate than multiplying a huge phase by 2*pi.
+        # A non-finite phase (frequency * time overflowed) gives NaN, as in the Rust
+        # and TypeScript lanes; math.floor would raise OverflowError instead.
+        cycles = phase - floor(phase) if isfinite(phase) else float("nan")
+        return self.offset + self.amplitude * sin(TWO_PI * cycles)
 
 
 @dataclass(frozen=True)
@@ -199,13 +231,11 @@ class SquareOscillator:
 
         if not 0.0 < self.duty_cycle < 1.0:
             raise ValueError(
-                f"duty_cycle must satisfy 0.0 < duty_cycle < 1.0, "
-                f"got {self.duty_cycle}"
+                f"duty_cycle must satisfy 0.0 < duty_cycle < 1.0, got {self.duty_cycle}"
             )
 
     def value_at(self, time_seconds: float) -> float:
         """Return `high` during the duty-cycle window, otherwise `low`."""
-
         time = _finite_float("time_seconds", time_seconds)
         position = _fractional_part(self.frequency_hz * time + self.phase_cycles)
         if position < self.duty_cycle:
@@ -228,6 +258,10 @@ class SampleBuffer:
     start_time_seconds: float = 0.0
 
     def __post_init__(self) -> None:
+        if len(self.samples) > MAX_SAMPLES:
+            raise ValueError(
+                f"sample count {len(self.samples)} exceeds MAX_SAMPLES={MAX_SAMPLES}"
+            )
         converted_samples = tuple(
             _finite_float(f"samples[{index}]", sample)
             for index, sample in enumerate(self.samples)
@@ -236,7 +270,7 @@ class SampleBuffer:
         object.__setattr__(
             self,
             "sample_rate_hz",
-            _positive_float("sample_rate_hz", self.sample_rate_hz),
+            _sample_rate("sample_rate_hz", self.sample_rate_hz),
         )
         object.__setattr__(
             self,
@@ -246,31 +280,26 @@ class SampleBuffer:
 
     def sample_count(self) -> int:
         """Return the number of stored samples."""
-
         return len(self.samples)
 
     def sample_period_seconds(self) -> float:
         """Return the spacing between adjacent samples."""
-
         return 1.0 / self.sample_rate_hz
 
     def duration_seconds(self) -> float:
         """Return the covered duration of this half-open sample buffer."""
-
         return self.sample_count() / self.sample_rate_hz
 
     def time_at(self, index: int) -> float:
         """Return the time associated with a stored sample index."""
-
         if isinstance(index, bool) or not isinstance(index, Integral):
             raise ValueError(f"index must be an integer, got {index!r}")
-        if not 0 <= index < self.sample_count():
-            raise ValueError(
-                f"index must be in [0, {self.sample_count()}), got {index}"
-            )
+        idx = int(index)
+        if not 0 <= idx < self.sample_count():
+            raise ValueError(f"index must be in [0, {self.sample_count()}), got {idx}")
 
         return time_at_sample(
-            int(index),
+            idx,
             self.sample_rate_hz,
             self.start_time_seconds,
         )
@@ -286,7 +315,7 @@ class UniformSampler:
         object.__setattr__(
             self,
             "sample_rate_hz",
-            _positive_float("sample_rate_hz", self.sample_rate_hz),
+            _sample_rate("sample_rate_hz", self.sample_rate_hz),
         )
 
     def sample(
@@ -296,7 +325,6 @@ class UniformSampler:
         start_time_seconds: Real = 0.0,
     ) -> SampleBuffer:
         """Sample `signal` over `[start_time_seconds, end_time_seconds)`."""
-
         count = sample_count_for_duration(duration_seconds, self.sample_rate_hz)
         return self.sample_count(signal, count, start_time_seconds)
 
@@ -307,8 +335,17 @@ class UniformSampler:
         start_time_seconds: Real = 0.0,
     ) -> SampleBuffer:
         """Sample exactly `sample_count` values from `signal`."""
+        if isinstance(sample_count, bool) or not isinstance(sample_count, Integral):
+            raise ValueError(
+                f"sample_count must be an integer >= 0, got {sample_count!r}"
+            )
+        count = int(sample_count)
+        if count < 0:
+            raise ValueError(f"sample_count must be >= 0, got {count}")
+        if count > MAX_SAMPLES:
+            raise ValueError(f"sample_count {count} exceeds MAX_SAMPLES={MAX_SAMPLES}")
 
-        samples = tuple(self.samples(signal, sample_count, start_time_seconds))
+        samples = tuple(self.samples(signal, count, start_time_seconds))
         start_time = _finite_float("start_time_seconds", start_time_seconds)
         return SampleBuffer(
             samples=samples,
@@ -323,21 +360,39 @@ class UniformSampler:
         start_time_seconds: Real = 0.0,
     ) -> Iterator[float]:
         """Yield the same values that `sample_count(...)` would store."""
-
         if isinstance(sample_count, bool) or not isinstance(sample_count, Integral):
             raise ValueError(
                 f"sample_count must be an integer >= 0, got {sample_count!r}"
             )
-        if sample_count < 0:
-            raise ValueError(f"sample_count must be >= 0, got {sample_count}")
+        count = int(sample_count)
+        if count < 0:
+            raise ValueError(f"sample_count must be >= 0, got {count}")
+        if count > MAX_SAMPLES:
+            raise ValueError(f"sample_count {count} exceeds MAX_SAMPLES={MAX_SAMPLES}")
 
         start_time = _finite_float("start_time_seconds", start_time_seconds)
-        for index in range(int(sample_count)):
+        for index in range(count):
             yield signal.value_at(
                 time_at_sample(index, self.sample_rate_hz, start_time)
             )
 
     def nyquist_frequency(self) -> float:
         """Return this sampler's Nyquist frequency."""
+        return self.sample_rate_hz / 2.0
 
-        return nyquist_frequency(self.sample_rate_hz)
+
+__all__ = [
+    "INTEGER_TOLERANCE",
+    "MAX_DURATION_SECONDS",
+    "MAX_SAMPLES",
+    "MAX_SAMPLE_RATE_HZ",
+    "TWO_PI",
+    "ContinuousSignal",
+    "SampleBuffer",
+    "SineOscillator",
+    "SquareOscillator",
+    "UniformSampler",
+    "nyquist_frequency",
+    "sample_count_for_duration",
+    "time_at_sample",
+]

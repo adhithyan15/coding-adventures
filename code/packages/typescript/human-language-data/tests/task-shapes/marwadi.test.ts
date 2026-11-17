@@ -107,6 +107,9 @@ describe("Marwadi task-shape inventories", () => {
   it("defines a gentle project-owned A2 envelope without inventing external authority", () => {
     const inventory = loadTaskShapeInventory("marwadi", "A2");
 
+    expect(inventory.sources.some((source) => source.id === "ca-marwadi-assessment" &&
+      source.url.endsWith("/marwadi/assessment-spec.md") &&
+      source.published === "2026-08-20" && source.accessed === "2026-10-02")).toBe(true);
     expect(inventory.target).toEqual({
       name: "Coding Adventures Marwadi A2 Assessment — project-defined equivalent",
       basis: "project-defined",
@@ -152,5 +155,43 @@ describe("Marwadi task-shape inventories", () => {
     expect(paperPoints).toEqual([100, 100, 100, 100]);
     expect(Object.values(inventory.passRule.independentSkillThresholds)).toEqual([0.6, 0.6, 0.6, 0.6]);
     expect(inventory.passRule).toMatchObject({ maximumPoints: 400, passPoints: 240 });
+  });
+
+  it("pins the project-owned B1 four-skill paper to the Marwadi specification", () => {
+    const inventory = loadTaskShapeInventory("marwadi", "B1");
+    expect(inventory.target).toEqual({
+      name: "Coding Adventures Marwadi B1 Assessment — project-defined equivalent",
+      basis: "project-defined",
+    });
+    expect(inventory.sources.some((source) => source.id === "ca-marwadi-assessment" &&
+      source.url.endsWith("/marwadi/assessment-spec.md") &&
+      source.published === "2026-08-20" && source.accessed === "2026-11-14")).toBe(true);
+    expect(inventory.administration).toMatchObject({
+      writtenMinutes: 125, speakingMinutes: 15, speakingPreparationMinutes: 10,
+    });
+    expect(inventory.sections.map((section) => section.minutes)).toEqual([45, 35, 45, 15]);
+    expect(inventory.sections.map((section) => section.parts.length)).toEqual([4, 4, 2, 4]);
+
+    const [reading, listening, writing, speaking] = inventory.sections;
+    expect(reading?.parts.reduce((sum, part) => sum + part.items, 0)).toBe(28);
+    expect(reading?.parts.reduce((sum, part) => sum + (part.stimulusLength?.minimum ?? 0), 0)).toBe(1100);
+    expect(reading?.parts.reduce((sum, part) => sum + (part.stimulusLength?.maximum ?? 0), 0)).toBe(1400);
+    expect(reading?.parts.every((part) => part.aids.forbidden.includes("Hindi replacement"))).toBe(true);
+    expect(listening?.parts.map((part) => part.replayCount)).toEqual([2, 2, 1, 1]);
+    expect(listening?.parts.every((part) =>
+      part.promptModes.includes("recorded Marwari at 130-150 words per minute"))).toBe(true);
+    expect(listening?.parts.every((part) => part.aids.forbidden.includes("romanization"))).toBe(true);
+    expect(writing?.parts.map((part) => part.responseLength)).toEqual([
+      { unit: "words", minimum: 50, maximum: 70, approximate: false },
+      { unit: "words", minimum: 130, maximum: 170, approximate: false },
+    ]);
+    expect(speaking?.parts[1]?.responseLength?.maximum).toBe(180);
+    expect(writing?.parts.every((part) => part.responseModes.some((mode) => mode.includes("Devanagari")))).toBe(true);
+    expect(writing?.parts.every((part) =>
+      ["copyable answer model", "romanization", "Hindi replacement", "dictionary", "translator", "spell-checker"]
+        .every((aid) => part.aids.forbidden.includes(aid)))).toBe(true);
+    expect(inventory.sections.map((section) =>
+      section.parts.reduce((sum, part) => sum + (part.scoring.maxRawPoints ?? 0), 0))).toEqual([100, 100, 100, 100]);
+    expect(Object.values(inventory.passRule.independentSkillThresholds)).toEqual([0.6, 0.6, 0.6, 0.6]);
   });
 });

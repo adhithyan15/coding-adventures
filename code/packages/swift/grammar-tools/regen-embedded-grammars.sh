@@ -30,6 +30,7 @@ manifest=(
   "tokens|code/grammars/ecmascript/es5.tokens|es5|code/packages/swift/ecmascript-es5-lexer/Sources/EcmascriptES5Lexer/_Grammar.swift"
   "tokens|code/grammars/toml/toml.tokens|toml|code/packages/swift/toml-lexer/Sources/TOMLLexer/_Grammar.swift"
   "tokens|code/grammars/xml/xml.tokens|xml|code/packages/swift/xml-lexer/Sources/XMLLexer/_Grammar.swift"
+  "tokens|java1_0=code/grammars/java/java1.0.tokens java1_1=code/grammars/java/java1.1.tokens java1_4=code/grammars/java/java1.4.tokens java5=code/grammars/java/java5.tokens java7=code/grammars/java/java7.tokens java8=code/grammars/java/java8.tokens java10=code/grammars/java/java10.tokens java14=code/grammars/java/java14.tokens java17=code/grammars/java/java17.tokens java21=code/grammars/java/java21.tokens||code/packages/swift/java-lexer/Sources/JavaLexer/_Grammar.swift"
 )
 
 check=0
@@ -38,9 +39,16 @@ status=0
 
 for entry in "${manifest[@]}"; do
   IFS='|' read -r kind grammar label out <<<"$entry"
+  if [ -n "$label" ] && [[ "$grammar" != *"="* ]]; then
+    pairs=("$label=$grammar")
+  elif [[ "$grammar" == *"="* ]]; then
+    read -ra pairs <<< "$grammar"
+  else
+    read -ra pairs <<< "$label"
+  fi
   if [ "$check" -eq 1 ]; then
     tmp="$(mktemp)"
-    swift run --package-path "$gt" grammar-tools-embed "$kind" "$tmp" EmbeddedGrammar "$label=$grammar" >/dev/null
+    swift run --package-path "$gt" grammar-tools-embed "$kind" "$tmp" EmbeddedGrammar "${pairs[@]}" >/dev/null
     # Compare CR-insensitively so a CRLF checkout does not read as drift.
     if ! diff -q <(tr -d '\r' <"$out") <(tr -d '\r' <"$tmp") >/dev/null 2>&1; then
       echo "STALE: $out (regenerate with regen-embedded-grammars.sh)"
@@ -48,7 +56,7 @@ for entry in "${manifest[@]}"; do
     fi
     rm -f "$tmp"
   else
-    swift run --package-path "$gt" grammar-tools-embed "$kind" "$out" EmbeddedGrammar "$label=$grammar" >/dev/null
+    swift run --package-path "$gt" grammar-tools-embed "$kind" "$out" EmbeddedGrammar "${pairs[@]}" >/dev/null
     echo "wrote $out"
   fi
 done

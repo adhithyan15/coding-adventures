@@ -1,0 +1,4 @@
+  -- The fixed-priority policy: the highest-priority ready thread, Idle only for the empty set.
+  claim dispatch_policy:
+    forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool. (
+      policy_dispatch(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), dispatch_out(build(ready_of(b0, b1, b2, b3, b4, b5, b6, b7))), dec(alpha_w(dispatch_img(build(ready_of(b0, b1, b2, b3, b4, b5, b6, b7)))))))
