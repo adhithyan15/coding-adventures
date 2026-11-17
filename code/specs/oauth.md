@@ -4999,13 +4999,13 @@ ordinary ServerHello version-selection proof. The binder requires the first
 message to be classified as HelloRetryRequest and the second as ServerHello,
 then compares the exact retained ClientHello random, legacy session ID,
 cipher-suite offer count and order, and supported-version offer count and
-order across the two proofs. It also requires the complete policy-authorized
-cipher-suite descriptor and selected TLS version to remain equal. Success
-moves both non-copyable proofs into one evidence value, so later handshake
-composition cannot replace either message, either ClientHello, or either
-data-driven offer after continuity has been checked. Stable failures and
-diagnostics retain no random, session ID, offer, selection, extension,
-handshake, or policy payloads.
+order across the two proofs. It also requires the complete extension-context
+policy, policy-authorized cipher-suite descriptor, and selected TLS version to
+remain equal. Success moves both non-copyable proofs into one evidence value,
+so later handshake composition cannot replace either message, either
+ClientHello, either data-driven offer, or the extension rule table after
+continuity has been checked. Stable failures and diagnostics retain no random,
+session ID, offer, selection, extension, handshake, or policy payloads.
 
 This retry continuity binding does not compare the complete ClientHello pair
 or validate extension-specific permitted changes; require the retry to change
