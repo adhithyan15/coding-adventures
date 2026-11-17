@@ -6,19 +6,17 @@ All notable changes to this package are documented here.
 
 ### Added (VOS-012b0, VOS-D061)
 
-- Representation mode: `vos.toml` `mode = "representation"` (`Loaded.mode`; `GD05` on kind any, on a
-  contract package, on an unknown value, on `canonical` under it), CD07-R in `check-doc` and
-  `gen-doc` (VOS02 R6 rule 2), `mode representation` in the report header, the CD07-R lint note
-  in place of the R6 cone note, and `impl-own rep` lines carrying each representation claim's
-  `claim_sha256` (`Outcome.rep_claims`).
-- `tests/representation.rs` (31 tests; negative controls for each CD07-R finding and each `GD05`),
-  the fixture `vos-fixture-rep` and its golden document.
-- CD07-R hardened after the security review (17 more tests): constant or repeated `rep` arguments,
-  binder refinements (walked, and refused), `_det` as a conjunction of `==` equations with op-free
-  right sides, required claims checked for content (call their op on `rep(..)`; `rep_init`,
-  `rep_alpha`), real-image state chains (no nullary or model-named `_img`), every `Impl`-typed
-  argument checked, and the `rep` parameter-set coverage approximation.
-- Existing behaviour is unchanged: canonical crates print no mode and the same note.
+- The `representation` tier (VOS02 2.7), the contract's fifth: a production crate carries **exactly
+  one** of `canonical` and `representation` (by `claim_sha256`; both, or neither, is a CD07 finding)
+  and no `any`; an `any` crate carries neither.  The cone rule is skipped for a crate that carries
+  only the representation tier (its history register is outside the cone by design).  The report
+  header prints `mode representation`, **derived from `carries`** (there is no `mode` key), and such
+  a crate gets the representation note in place of the R6 cone note.
+- `tests/representation.rs` (16 tests): the positive fixture `vos-fixture-rep` and its golden
+  document, both/neither/representation-plus-`any`/`-any`-carrying-representation controls, a missing
+  or mistyped `rep` or `hist` (CD04), a tampered or weakened representation claim (CD02, CD03, CD05,
+  CD06, CD08), and `mode` as an unknown key.  `a_contract_without_the_needed_tier...` also drops the
+  representation tier.
 
 ### Changed (VOS-D081)
 

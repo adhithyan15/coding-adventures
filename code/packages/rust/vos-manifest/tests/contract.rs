@@ -4,7 +4,7 @@ use vos_manifest::contract::{
     is_ident, is_key, is_opname, parse_contract, ContractErrorKind as K, Metric, Tier,
 };
 
-const GOOD: &str = "vos-contract 1\nname vos-sched-contract\niface sched\ntier any\ntier canonical\ntier policy\ntier safety\nconfig N 8\nceiling dispatch depth 2\nceiling dispatch heap 0\nceiling dispatch steps 160\nceiling make_ready steps 9\nend\n";
+const GOOD: &str = "vos-contract 1\nname vos-sched-contract\niface sched\ntier any\ntier canonical\ntier policy\ntier representation\ntier safety\nconfig N 8\nceiling dispatch depth 2\nceiling dispatch heap 0\nceiling dispatch steps 160\nceiling make_ready steps 9\nend\n";
 
 fn kind(text: &str) -> K {
     parse_contract(text.as_bytes()).expect_err(text).kind
@@ -27,6 +27,11 @@ fn the_good_contract_parses_and_re_emits_byte_equal() {
     assert_eq!(c.emit(), GOOD);
     assert!(c.has_tier(Tier::Canonical));
     assert_eq!(Tier::parse("canonical"), Some(Tier::Canonical));
+    // VOS02 2.7: the fifth tier sorts between `policy` and `safety` (by name, as the file does).
+    assert_eq!(Tier::parse("representation"), Some(Tier::Representation));
+    assert!(Tier::Policy < Tier::Representation && Tier::Representation < Tier::Safety);
+    assert_eq!(Tier::ALL.len(), 5);
+    assert!(Tier::ALL.windows(2).all(|w| w[0].name() < w[1].name()));
     assert_eq!(Tier::parse("Canonical"), None);
     assert_eq!(
         c.digest(),
@@ -40,7 +45,8 @@ fn the_real_scheduler_contract_parses() {
     let c = parse_contract(bytes).expect("the real contract.vos is canonical");
     assert_eq!(c.package, "vos-sched-contract");
     assert_eq!(c.config_value("N"), Some(8));
-    assert_eq!(c.tiers.len(), 4);
+    assert_eq!(c.tiers.len(), 5);
+    assert!(c.has_tier(Tier::Representation));
 }
 
 #[test]
@@ -236,9 +242,9 @@ fn row_count_caps() {
     ok.push_str("end\n");
     assert!(ok.len() <= 64 * 1024);
     parse_contract(ok.as_bytes()).expect("at the caps");
-    // Five tiers cannot be written sorted and unique, but the cap still guards.
+    // A sixth row (the five tiers are sorted and unique) hits the cap before anything else.
     assert_eq!(
-        kind("vos-contract 1\nname a\niface b\ntier any\ntier canonical\ntier policy\ntier safety\ntier safety\nend\n"),
+        kind("vos-contract 1\nname a\niface b\ntier any\ntier canonical\ntier policy\ntier representation\ntier safety\ntier safety\nend\n"),
         K::TooManyRows
     );
 }

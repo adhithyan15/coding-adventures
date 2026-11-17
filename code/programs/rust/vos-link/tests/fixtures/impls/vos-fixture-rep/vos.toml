@@ -1,5 +1,4 @@
 class = "K"
 kind = "production"
-mode = "representation"
 contract = "vos-sched-contract"
-obligations = ["safety"]
+obligations = ["representation", "safety"]

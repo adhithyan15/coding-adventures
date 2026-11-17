@@ -4,10 +4,10 @@ All notable changes to this package are documented here.
 
 ## [Unreleased]
 
-### Added (VOS-012b0, VOS-D061)
+### Changed (VOS-012b0, VOS-D061)
 
-- `vos.toml` accepts `mode = "<string>"` (1 to 16 bytes, duplicates refused); `VosToml.mode`.  The
-  closed set of values and where the key may appear are `vos-link`'s (VOS02 D-GD2).
+- `obligations` may list up to five tiers (the new `representation` tier, VOS02 2.7).  No `mode`
+  key: a production crate's mode is derived from the tier its document carries.
 
 ### Added (VOS-033)
 

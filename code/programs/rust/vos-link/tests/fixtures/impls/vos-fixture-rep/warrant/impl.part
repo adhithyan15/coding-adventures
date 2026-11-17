@@ -1,4 +1,4 @@
-  -- A representation-mode fixture (VOS-D061, VOS02 section 2.7): a one-byte ready mask plus a
+  -- A representation fixture (VOS-D061, VOS02 section 2.7): a one-byte ready mask plus a
   -- round-robin pointer `ptr` that `alpha` forgets.  The operations are bound (no bodies, R3);
   -- the models `rep`, `rr_pick` and `rr_next` are op-free, so a claim can say what the state
   -- and the history do without calling the implementation.
@@ -26,11 +26,11 @@
            b2m(m.p4, 4)), b2m(m.p5, 5)), b2m(m.p6, 6)), b2m(m.p7, 7)), 0u8))
   model inv_impl(s: Impl) -> Bool = s.ptr < 8u8
 
-  -- rep: every inv_impl state, from a mask and one history byte h (the pointer is h mod 8).
-  -- Every field is a function of rep's parameters: no constant, no oracle.
-  model rep(mask: U8, h: U8) -> Impl = Impl(mask, bit_and(h, 7u8))
-  -- The thread argument of the steps, drawn from the same byte (the high bits of h).
-  model arg_t(h: U8) -> U8 = shr(h, 3)
+  -- The two models the representation tier names (VOS02 2.7): the state an abstract state and a
+  -- history code name (the pointer is the code), and the code of a state.  The contract owns the
+  -- packing of the code; this crate only says what the code is.
+  model rep(m: Ready, h: U8) -> Impl = Impl(build(m).mask, h)
+  model hist(s: Impl) -> U8 = s.ptr
 
   -- The op-free round-robin model: scan from the pointer, wrapping at 8.
   model has_bit(mask: U8, i: U8) -> Bool = not (bit_and(mask, shl(1u8, to_nat(bit_and(i, 7u8)))) == 0u8)
@@ -48,29 +48,13 @@
       Idle -> Impl(mask, p)
     | Run(t) -> Impl(bit_and(mask, bit_not(shl(1u8, to_nat(t)))), bit_and(t + 1u8, 7u8)))
 
-  -- The representation-mode claims (VOS02 section 2.7): impl-own, never obligations.
-  claim rep_init:
-    forall b: Bool. init() == rep(0u8, 0u8)
-  claim rep_alpha:
-    forall mask: U8, h: U8. alpha_w(rep(mask, h)) == AbsW(mask)
-  claim insert_rep:
-    forall mask: U8, h: U8. (
-      insert_out(rep(mask, h), arg_t(h)) == abs_insert(dec(alpha_w(rep(mask, h))), arg_t(h)).0 and
-      dec(alpha_w(insert_img(rep(mask, h), arg_t(h)))) == abs_insert(dec(alpha_w(rep(mask, h))), arg_t(h)).1 and
-      insert_img(rep(mask, h), arg_t(h)).ptr == rep(mask, h).ptr)
-  claim remove_rep:
-    forall mask: U8, h: U8. (
-      remove_out(rep(mask, h), arg_t(h)) == abs_remove(dec(alpha_w(rep(mask, h))), arg_t(h)).0 and
-      dec(alpha_w(remove_img(rep(mask, h), arg_t(h)))) == abs_remove(dec(alpha_w(rep(mask, h))), arg_t(h)).1 and
-      remove_img(rep(mask, h), arg_t(h)).ptr == rep(mask, h).ptr)
-  claim dispatch_rep:
-    forall mask: U8, h: U8. (
-      safe_dispatch(dec(alpha_w(rep(mask, h))), dispatch_out(rep(mask, h)), dec(alpha_w(dispatch_img(rep(mask, h))))) and
-      inv_impl(dispatch_img(rep(mask, h))))
+  -- An OPTIONAL, ungated impl-own claim (VOS02 2.7): the full post-state of dispatch against the
+  -- op-free model.  The representation tier does not require it; a round-robin keeps it so that a
+  -- dispatch that stops rotating (and stays inside the image) is still caught by evidence.
   claim dispatch_det:
-    forall mask: U8, h: U8. (
-      dispatch_out(rep(mask, h)) == rr_pick(mask, bit_and(h, 7u8)) and
-      dispatch_img(rep(mask, h)) == rr_next(mask, bit_and(h, 7u8)))
+    forall mask: U8, p: U8 | p < 8u8. (
+      dispatch_out(Impl(mask, p)) == rr_pick(mask, p) and
+      dispatch_img(Impl(mask, p)) == rr_next(mask, p))
 
   -- The secrecy labels, hostile inputs and step bounds the Warrant checker requires of every
   -- operation (copied in shape from vos-sched-fp-bitmap; check-doc only type-checks them).

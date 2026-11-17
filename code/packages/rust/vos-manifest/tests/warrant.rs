@@ -204,7 +204,7 @@ fn a_block_of_claims_is_read_and_anything_else_is_refused() {
 /// produced by `tests/claim_sha256_reference.py` (an independent Python implementation of
 /// D-GD7), not by this crate: if one changes, the definition or the obligation changed, and
 /// every generated document and lock must be regenerated.
-const PINS: [(&str, &str); 16] = [
+const PINS: [(&str, &str); 24] = [
     (
         "insert_safe",
         "ef3d7c1760812044ae6d87dfa9c58d03c123d61cdae97efe9e613ad1c3a39608",
@@ -269,6 +269,38 @@ const PINS: [(&str, &str); 16] = [
         "dispatch_covers_idle",
         "8ddfda72b86548a2c72eab4e22ab1d7b7021c5c2b32717ccbb0b1c2ce610ba5c",
     ),
+    (
+        "rep_init",
+        "5a34bfc3544c12d40b65ffc6e8895bf99656166dd4ad69fa80e8eaf8ae42e672",
+    ),
+    (
+        "rep_alpha",
+        "bfeb535c6b8db440a32e55eee2fb675d8f5f50ef41c5d03d4fc984a276ee3d27",
+    ),
+    (
+        "insert_rep",
+        "074a987f2a58bc5a3811ddcad992509d3f2985d96156be7323f2b9c04b60d605",
+    ),
+    (
+        "insert_rep_post",
+        "d47ca3692e85a2d64882402a0ee5322805a7ff127afb3f230db1f5106acfb1a5",
+    ),
+    (
+        "remove_rep",
+        "48dbacbfad0d0e264b9dbf922b640bb0f4f33eb22323133b39ab508c21946228",
+    ),
+    (
+        "remove_rep_post",
+        "c51d645c5dc5616de86689a69ba878d01d18d55eff5c7cd4a861d710ece06961",
+    ),
+    (
+        "dispatch_rep",
+        "2b3d7382d309cac6e96c74947b92ecb1bb09b7d1cfc95adbb95a7d8ff7a6399e",
+    ),
+    (
+        "dispatch_rep_post",
+        "e545ab30f35c853334f3113bba9995687b2b4ee3188aa7b920469b05589cbe43",
+    ),
 ];
 
 #[test]
@@ -293,6 +325,11 @@ fn the_real_obligation_blocks_have_the_expected_claims_and_pinned_digests() {
             "any",
             include_str!("../../vos-sched-contract/warrant/obligations-any.part"),
             3,
+        ),
+        (
+            "representation",
+            include_str!("../../vos-sched-contract/warrant/obligations-representation.part"),
+            8,
         ),
     ];
     let mut seen = std::collections::BTreeMap::new();
@@ -607,268 +644,4 @@ fn a_model_with_more_than_63_parameters_is_refused_not_approximated() {
         analyze_document(&ok).unwrap().build,
         BuildShape::Constructor { .. }
     ));
-}
-
-// ---------------------------------------------------------------------------
-// Representation mode (VOS-D061): the shape of `rep`, the declared ops and what claims call
-// ---------------------------------------------------------------------------
-
-const REP: &str = "warrant t v1
-  record Impl(x: U8, y: U8)
-  op step(s: Impl) -> Impl
-  op peek(s: Impl) -> U8
-  model build(m: U8) -> Impl = Impl(m, 0u8)
-  model rep(a: U8, h: U8) -> Impl = Impl(a, bit_and(h, 7u8))
-  model twice(s: Impl) -> Impl = s
-  labels step:
-    s public
-  labels peek:
-    s public
-  input step.s:
-    hostile
-    ensures no_panic, terminates
-  input peek.s:
-    hostile
-    ensures no_panic, terminates
-  bound step:
-    steps <= 10
-  bound peek:
-    steps <= 10
-  claim c1:
-    forall a: U8, h: U8. (
-      peek(step(rep(a, h))) == peek(rep(a, h)) and
-      twice(build(a)).x == (peek(step(rep(a, h))) + 1u8))
-  assume platform:
-    none
-  assume environment:
-    none
-";
-
-#[test]
-fn rep_shape_reports_every_field_in_the_cone_of_the_parameters() {
-    let a = analyze_document(REP).expect("type checks");
-    assert_eq!(
-        a.rep,
-        BuildShape::Constructor {
-            in_cone: vec![true, true]
-        }
-    );
-    // The history field of `build` is constant: off the cone, as a representation needs.
-    assert_eq!(
-        a.build,
-        BuildShape::Constructor {
-            in_cone: vec![true, false]
-        }
-    );
-    // A `rep` field that depends on no parameter is a constant, not a covered state.
-    let constant = REP.replace("bit_and(h, 7u8)", "0u8");
-    assert_eq!(
-        analyze_document(&constant).unwrap().rep,
-        BuildShape::Constructor {
-            in_cone: vec![true, false]
-        }
-    );
-    // Dependence is on ANY parameter: a field of `a` alone is still "in the cone" here; the
-    // per-field parameter sets (`rep_masks`) are what tell vos-link that the pointer is
-    // coupled to the mask (CD07-R rejects it: no parameter of its own).
-    let only_a = REP.replace("bit_and(h, 7u8)", "bit_and(a, 7u8)");
-    let a = analyze_document(&only_a).unwrap();
-    assert_eq!(
-        a.rep,
-        BuildShape::Constructor {
-            in_cone: vec![true, true]
-        }
-    );
-    assert_eq!(a.rep_masks, [0b01, 0b01]);
-    assert_eq!(analyze_document(REP).unwrap().rep_masks, [0b01, 0b10]);
-    assert_eq!(analyze_document(REP).unwrap().rep_params, 2);
-    // The same evasions the build walk refuses count here: `h - h` is constant.
-    let cancelled = REP.replace("bit_and(h, 7u8)", "h - h");
-    assert_eq!(
-        analyze_document(&cancelled).unwrap().rep,
-        BuildShape::Constructor {
-            in_cone: vec![true, false]
-        }
-    );
-}
-
-#[test]
-fn rep_shape_missing_or_not_a_constructor() {
-    let none = REP
-        .replace(
-            "  model rep(a: U8, h: U8) -> Impl = Impl(a, bit_and(h, 7u8))\n",
-            "",
-        )
-        .replace("rep(a, h)", "Impl(a, h)");
-    assert_eq!(analyze_document(&none).unwrap().rep, BuildShape::Missing);
-    let helper = REP.replace("Impl(a, bit_and(h, 7u8))", "twice(Impl(a, h))");
-    assert_eq!(
-        analyze_document(&helper).unwrap().rep,
-        BuildShape::NotConstructor
-    );
-    // A rep with no parameters is a constant: nothing to cover, so no shape.
-    let nullary = REP
-        .replace(
-            "model rep(a: U8, h: U8) -> Impl = Impl(a, bit_and(h, 7u8))",
-            "model rep() -> Impl = Impl(1u8, 2u8)",
-        )
-        .replace("rep(a, h)", "rep()");
-    assert_eq!(analyze_document(&nullary).unwrap().rep, BuildShape::Missing);
-    // The walk gives up the same way for rep as for build.
-    let tiny = vos_manifest::warrant::analyze_document_with_budget(REP, 3).unwrap();
-    assert_eq!(tiny.rep, BuildShape::BudgetExhausted);
-}
-
-#[test]
-fn op_decls_lists_the_bound_operations_only() {
-    let a = analyze_document(REP).unwrap();
-    assert_eq!(a.op_decls, ["step", "peek"]);
-}
-
-#[test]
-fn claim_shapes_record_mentions_calls_and_state_arguments() {
-    let a = analyze_document(REP).unwrap();
-    assert_eq!(a.claim_shapes.len(), 1);
-    let c = &a.claim_shapes[0];
-    assert_eq!(c.name, "c1");
-    for n in ["peek", "step", "rep", "twice", "build", "a", "h"] {
-        assert!(c.mentions.contains(n), "{n}: {:?}", c.mentions);
-    }
-    let call = |callee: &str, nth: usize| {
-        c.calls
-            .iter()
-            .filter(|k| k.callee == callee)
-            .nth(nth)
-            .unwrap_or_else(|| panic!("no call {callee} #{nth}"))
-    };
-    // peek(step(rep(a, h))): the state argument of peek is a call to step.
-    assert_eq!(call("peek", 0).state_arg.as_deref(), Some("step"));
-    assert_eq!(call("step", 0).state_arg.as_deref(), Some("rep"));
-    assert_eq!(call("rep", 0).state_arg, None);
-    assert_eq!(call("rep", 0).arity, 2);
-    assert_eq!(call("peek", 0).arity, 1);
-    assert_eq!(call("twice", 0).state_arg.as_deref(), Some("build"));
-    // The left of the first `==` is not a right-hand side; everything under the second
-    // `==`'s right operand is, however deep (the parenthesised sum).
-    assert!(!call("peek", 0).in_eq_rhs);
-    assert!(!call("twice", 0).in_eq_rhs);
-    assert!(call("peek", 1).in_eq_rhs);
-    assert!(call("step", 1).in_eq_rhs);
-}
-
-#[test]
-fn claim_shapes_see_through_every_expression_form() {
-    // if, match, tuple, list, unary, grouped, projection and a nested quantifier all carry
-    // calls, and the right-hand-side flag reaches into them.
-    let doc = "warrant t v1
-  record Impl(x: U8)
-  variant Pick = Idle | Run(t: U8)
-  op f(s: Impl) -> Impl
-  op g(s: Impl) -> U8
-  labels f:
-    s public
-  labels g:
-    s public
-  input f.s:
-    hostile
-    ensures no_panic, terminates
-  input g.s:
-    hostile
-    ensures no_panic, terminates
-  bound f:
-    steps <= 10
-  bound g:
-    steps <= 10
-  claim c:
-    forall a: U8. (
-      (if g(f(Impl(a))) == 0u8 then true else false) and
-      (match Idle with Idle -> true | Run(t) -> t == g(f(Impl(t)))) and
-      (not (g(Impl(a)) == 1u8)) and
-      (g(Impl(a)), 1u8) == (g(f(Impl(a))), 1u8) and
-      (g(Impl(a)) == 1u8 or 2u8 > 1u8))
-  assume platform:
-    none
-  assume environment:
-    none
-";
-    let a = analyze_document(doc).expect("type checks");
-    let c = &a.claim_shapes[0];
-    let rhs: Vec<&str> = c
-        .calls
-        .iter()
-        .filter(|k| k.in_eq_rhs && k.callee != "Impl")
-        .map(|k| k.callee.as_str())
-        .collect();
-    // The match arm's `t == g(f(Impl(t)))` and the tuple on the right of `==`: g and f each.
-    assert!(rhs.iter().filter(|n| **n == "g").count() >= 2, "{rhs:?}");
-    assert!(rhs.contains(&"f"), "{rhs:?}");
-    let first = c.calls.iter().find(|k| k.callee == "g").unwrap();
-    assert!(!first.in_eq_rhs);
-}
-
-#[test]
-fn claim_shapes_record_binders_refinements_rep_arguments_and_equations() {
-    let doc = REP.replace(
-        "  claim c1:",
-        "  claim r1:
-    forall a: U8, h: U8 | h < 8u8. peek(step(rep(a, 0u8))) == peek(rep(h, h)) and step(rep(a, h)).y == 1u8
-  claim r2:
-    forall a: U8. not (peek(rep(a, a)) != 0u8)
-  claim c1:",
-    );
-    let a = analyze_document(&doc).expect("type checks");
-    let r1 = &a.claim_shapes[0];
-    assert_eq!(r1.binders, ["a", "h"]);
-    assert_eq!(r1.refined, ["h"]);
-    // rep(a, 0u8): a variable and a constant; rep(h, h): the same variable twice.
-    assert_eq!(
-        r1.rep_calls,
-        vec![
-            vec![Some("a".to_string()), None],
-            vec![Some("h".to_string()), Some("h".to_string())],
-            vec![Some("a".to_string()), Some("h".to_string())],
-        ]
-    );
-    let eqs = r1.equations.as_ref().expect("a conjunction of ==");
-    assert_eq!(eqs.len(), 2);
-    assert_eq!(eqs[0].left_root.as_ref().unwrap().callee, "peek");
-    assert_eq!(eqs[0].left.len(), 3); // peek, step, rep
-                                      // The second equation's left side roots in `step` through a field projection.
-    assert_eq!(eqs[1].left_root.as_ref().unwrap().callee, "step");
-    // A negation is not a conjunction of equations.
-    assert_eq!(a.claim_shapes[1].equations, None);
-    // The refinement is walked: a call inside it shows up among the claim's calls.
-    let with_call = doc.replace("| h < 8u8.", "| peek(rep(a, h)) < 8u8.");
-    let b = analyze_document(&with_call).unwrap();
-    assert!(b.claim_shapes[0].calls.len() > r1.calls.len());
-}
-
-#[test]
-fn op_sigs_record_which_parameters_are_impl() {
-    let doc = REP.replace(
-        "  op peek(s: Impl) -> U8\n",
-        "  op peek(s: Impl) -> U8\n  op pair(n: U8, a: Impl, b: Impl) -> U8\n  labels pair:\n    n public\n    a public\n    b public\n  input pair.n:\n    hostile\n    ensures no_panic, terminates\n  input pair.a:\n    hostile\n    ensures no_panic, terminates\n  input pair.b:\n    hostile\n    ensures no_panic, terminates\n  bound pair:\n    steps <= 10\n",
-    );
-    let a = analyze_document(&doc).expect("type checks");
-    let sig = |n: &str| {
-        a.op_sigs
-            .iter()
-            .find(|s| s.name == n)
-            .unwrap()
-            .impl_params
-            .clone()
-    };
-    assert_eq!(sig("pair"), [1, 2]);
-    assert_eq!(sig("step"), [0]);
-}
-
-#[test]
-fn a_refinement_counts_in_the_cone_walk() {
-    // `h` appears only in the refinement of a binder of a quantified helper model's body.
-    let doc = REP.replace(
-        "model rep(a: U8, h: U8) -> Impl = Impl(a, bit_and(h, 7u8))",
-        "model rep(a: U8, h: U8) -> Impl = Impl(a, if (forall z: U8 | z == h. true) then 1u8 else 0u8)",
-    );
-    let a = analyze_document(&doc).expect("the checker admits a quantifier in a model body");
-    assert_eq!(a.rep_masks, [0b01, 0b10]);
 }

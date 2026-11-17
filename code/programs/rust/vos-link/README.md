@@ -28,8 +28,7 @@ vos-link check-doc code/packages/rust/<impl> [--root <repo>]   # exit 1 on any d
 ## Inputs
 
 ```text
-<impl>/vos.toml                     kind = production | reference | any, contract = "<pkg>", obligations = [tiers],
-                                    mode = "representation" (optional; absent = canonical; never on kind any)
+<impl>/vos.toml                     kind = production | reference | any, contract = "<pkg>", obligations = [tiers] (any, canonical, policy, representation, safety)
 <impl>/warrant/impl.part            the hand-written implementation block
 <contract>/vos.toml                 kind = "contract"
 <contract>/contract.vos             the tiers and the instance (parsed with the vos_contract grammar)
@@ -49,24 +48,15 @@ parse and type check, a weakened claim with an obligation's name (`claim_sha256`
 `gen-doc` runs all but regeneration on what it is about to write and writes nothing on a
 finding.
 
-### Representation mode (VOS02 2.7, VOS-D061)
+### The representation tier (VOS02 2.7, VOS-D061)
 
-`mode = "representation"` (production or reference; a `GD05` on kind any, on a contract package,
-on an unknown value, and on `canonical` in `obligations`) replaces the canonical and cone rules of
-CD07 by **CD07-R**: no `canonical` and no `any` claim and no `-any` name; `build` is an `Impl(..)`
-with at least one field outside its cone (else "declare canonical"); a model `rep` that is an
-`Impl(..)` whose every field depends on its parameters; the claims `rep_init`, `rep_alpha`, one
-`<op>_rep` per operation of `contract.vos` and at least one `<op>_det`; none mentions `build`;
-every operation in them is applied to `rep(..)`; no right-hand side of `==` in a `_det` claim
-calls an operation anywhere (a `_det` is a conjunction of `==` equations).  Each required claim must be
-about its operation (`<op>_rep`/`<op>_det` call it on a `rep(..)` state; `rep_init` mentions `init` and
-`rep`; `rep_alpha` applies alpha); no binder has a refinement; every `Impl`-typed argument of an
-operation is `rep(..)` or a real image chain; every `rep(..)` takes distinct quantifier variables
-(`rep_init` excepted); `rep` has a parameter per field and the history depends on a parameter the cone
-fields do not.  All of it is syntactic: a lint, with human review, SH13/SH16, D030 and D060 as the
-authority.  The report header prints `mode representation`, and each representation
-claim is printed as `impl-own rep <name> claim_sha256=<hex>` for the future lock.  The fixture
-`tests/fixtures/impls/vos-fixture-rep` is the reference shape.
+An implementation whose state has history that `alpha` forgets (a rotation pointer) carries the
+contract's `representation` tier **instead of** `canonical`: eight claims in the contract package,
+over `rep(m, h)` and `hist(s)`, models the implementation supplies.  `vos-link` checks no claim of
+the implementation's (a syntactic lint over authored claims does not converge): a production crate
+carries exactly one of the two tiers and no `any`, an `any` crate carries neither, a missing or
+mistyped `rep`/`hist` is a CD04 type error, and a tampered claim is a digest mismatch.  The mode
+is derived from `carries` (`mode representation` in the header); there is no `mode` key.
 
 ## What a pass means
 
@@ -77,8 +67,7 @@ enforced at document level, not proof that the state has no oracle.  `kind`, `co
 (VOS-034) exist, so a production crate that lists only `["canonical"]` or an oracle crate
 that declares `reference` is not caught here.  What closes the residual risk, an oracle write
 path, is the bindings check (VOS-D060, required before any image profile), SH13/SH16 and the
-registry.  Every pass prints this as a `note:` line (a representation crate gets the CD07-R note instead:
-the same limits, and the claim that a mislabelled oracle nothing moves passes the lint).
+registry.  Every pass prints this as a `note:` line (a representation carrier gets the representation note instead: the cone is not applied there, and the tier does not separate kinds).
 
 ## Safety
 

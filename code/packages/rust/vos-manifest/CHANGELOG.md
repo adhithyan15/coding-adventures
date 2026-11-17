@@ -6,16 +6,11 @@ All notable changes to this package are documented here.
 
 ### Added (VOS-012b0, VOS-D061)
 
-- `Analysis` gains `op_decls` (names declared with `op`), `rep` (the cone of `model rep` over ALL its
-  parameters, as a `BuildShape`) and `claim_shapes` (per claim: the names it mentions and its calls,
-  each with arity, the head of its first argument and whether it sits right of an `==`), the facts
-  of `vos-link`'s CD07-R lint.  The build-cone walk is generalised to `constructor_shape`; `build`'s
-  behaviour is unchanged.  Five tests.
-- Review hardening: `Analysis` also gains `rep_masks`/`rep_params` (the parameters each `rep` field
-  depends on), `op_sigs` (`Impl`-typed parameters of each `op`); `ClaimShape` gains `binders`,
-  `refined`, `rep_calls` (the argument shape of every `rep(..)`) and `equations` (a conjunction of
-  `==`); `CallFact` gains `arg_heads`.  The taint walk and the claim walk now read binder
-  refinements.
+- `Tier` gains a fifth member, `Representation`, sorted between `policy` and `safety` (VOS02 2.7):
+  `Tier::ALL` has five entries, a `tier representation` row parses, `MAX_TIER_ROWS` is 5, and the
+  document marker order message names it.  The eight claims of the real
+  `obligations-representation.part` are pinned in `tests/warrant.rs` with digests produced by
+  `tests/claim_sha256_reference.py` (24 pins now).
 
 ### Changed (VOS-D081)
 

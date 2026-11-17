@@ -290,42 +290,10 @@ fn vos_toml_contract_and_obligations_keys() {
         ("obligations = [1]", "holds strings"),
         ("obligations = [\"\"]", "1 to 16 bytes"),
         (
-            "obligations = [\"a\", \"b\", \"c\", \"d\", \"e\"]",
-            "more than 4",
+            "obligations = [\"a\", \"b\", \"c\", \"d\", \"e\", \"f\"]",
+            "more than 5",
         ),
         ("obligation = [\"a\"]", "unknown key"),
-    ] {
-        let e = parse_vos_toml(text).unwrap_err();
-        assert!(e.1.contains(why), "{text:?}: {e:?}");
-    }
-}
-
-#[test]
-fn vos_toml_mode_key() {
-    // VOS02 section 2.7 and D-GD2 (VOS-D061): an optional `mode`.  This reader only bounds
-    // it; the closed set of values and the kinds that may carry it are vos-link's.
-    let v = parse_vos_toml("kind = \"production\"\nmode = \"representation\"\n").unwrap();
-    assert_eq!(v.mode.as_deref(), Some("representation"));
-    assert_eq!(
-        parse_vos_toml("kind = \"production\"\n").unwrap().mode,
-        None
-    );
-    // An unknown value is not this reader's to refuse: it is bounded, not judged.
-    assert_eq!(
-        parse_vos_toml("mode = \"sideways\"")
-            .unwrap()
-            .mode
-            .as_deref(),
-        Some("sideways")
-    );
-    for (text, why) in [
-        ("mode = \"a\"\nmode = \"b\"", "duplicate key"),
-        ("mode = \"\"", "1 to 16 bytes"),
-        ("mode = \"aaaaaaaaaaaaaaaaa\"", "1 to 16 bytes"),
-        ("mode = 3", "wrong type"),
-        ("mode = [\"representation\"]", "wrong type"),
-        ("mode.x = \"representation\"", "unknown key or table"),
-        ("Mode = \"representation\"", "unknown key"),
     ] {
         let e = parse_vos_toml(text).unwrap_err();
         assert!(e.1.contains(why), "{text:?}: {e:?}");

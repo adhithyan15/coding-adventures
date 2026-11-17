@@ -32,7 +32,7 @@
 //! | `CD04` | `warrant-grammar` parses and type-checks it; the trailer is `assume ... none` |
 //! | `CD05` | no claim shares an obligation's name with a different `claim_sha256` |
 //! | `CD06` | `carries` is **computed from the parsed claims** and must equal `vos.toml`'s `obligations` |
-//! | `CD07` | the R6 rules a document alone decides, by kind; for `mode = representation`, CD07-R |
+//! | `CD07` | the R6 rules a document alone decides, by kind (production carries exactly one of `canonical` and `representation`) |
 //! | `CD08` | regeneration: the file equals what `gen-doc` would write now |
 //!
 //! ## Exit codes (as `vos-shape-check`)
