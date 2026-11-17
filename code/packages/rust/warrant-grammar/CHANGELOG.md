@@ -1,5 +1,22 @@
 # Changelog
 
+## Unreleased — WD-HARN1b harness follow-ups (LOW findings of the WD-HARN1 review)
+
+- Prelude, `obs` region only: `obs_bail_out` writes its stderr line with
+  `let _ = writeln!(std::io::stderr(), ..)` (`eprintln!` panics on a closed stderr
+  pipe, which would have unwound into the test instead of exiting 70); the
+  `OBS_CALL_TIMEOUT_MS` doc comment now says a timeout bails out the whole process
+  (it said "fails the instance"); the dead `latched = true` before `obs_bail_out`
+  in the timeout arm is gone (the process exits at once; the `Tripped` and `Refused`
+  arms keep theirs, which later instances read).
+- Regenerated: the four obs adopters' harnesses (hash-functions, lzw, wasm-leb128,
+  vos-sched-fp-bitmap, whose checked-in harness was already stale on main) and the
+  `wxh` fixture. No other adopter's harness changes.
+- Sabotage lines of the obs adopters (BUILD, BUILD_linux, BUILD_windows) now pass
+  only if the run printed a `not ok ` line and no `Bail out!` line, so a hang after
+  an intended failure is no longer hidden by the pipe's last-command status.
+  Documented in VER04j section 14.2 item 53.
+
 ## Unreleased — WD-HARN1 harness supervisor hardening (from the 2026-11-14 Windows `rust/lzw` hang)
 
 - Prelude, observer supervisor: every wait on the worker is a `Condvar::wait_timeout`

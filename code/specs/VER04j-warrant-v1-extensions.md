@@ -1625,10 +1625,17 @@ The numbering continues from 14.1.
     would be wrong: a negative control counts any registered failure as a caught
     fault, so a stall inside one would pass silently, and a BUILD sabotage line
     (`... | grep -q '^not ok '`, filtered to one claim) would pass on the
-    stall.  Bailing out prints no `not ok`, so that line fails; `is_detected`
-    also refuses any verdict mentioning `observer-timeout`.  The bail-out also
+    stall.  Bailing out prints no `not ok`, so that line fails when the filter
+    matches one test; `is_detected` also refuses any verdict mentioning
+    `observer-timeout`.  A filter that matches several tests is not safe on its
+    own: one may print `not ok` before a later one bails out, and a pipe reports
+    only its last command's status.  The adopters' sabotage lines therefore
+    require a `^not ok ` line and no `^Bail out!` line (WD-HARN1b; `cargo test`
+    reports a failing `harness = false` binary as 101, not 70, so the check
+    reads the TAP on stdout, not the exit status).  The bail-out also
     ends the run before an abandoned, possibly spinning, worker can burn a
-    core.  `WARRANT_OBS_TIMEOUT_SECS` may raise the 120 s bound; a lower value is
+    core.  The stderr line is written with `writeln!` and its result ignored
+    (`eprintln!` panics on a closed stderr pipe).  `WARRANT_OBS_TIMEOUT_SECS` may raise the 120 s bound; a lower value is
     ignored.
     (b) *Exit never waits*: an abandoned worker is never joined (its `JoinHandle` is
     dropped at spawn, its job channel when it is abandoned), nothing in `Drop` or the
