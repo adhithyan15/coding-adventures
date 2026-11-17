@@ -814,10 +814,14 @@ const OBS_MAX_ABANDONED: usize = 64;
 /// (It counts what each worker held when it tripped, so it under-counts what a
 /// worker had allocated before the window opened.)
 const OBS_MAX_HELD: u64 = 1 << 30;
-/// How long the supervisor waits for one observed call before it fails the
-/// instance (WD-HARN1).  Far above the slowest honest call (a 16 MiB
-/// decompression bomb under a debug build takes seconds) and far below any CI
-/// job limit: a hung call costs minutes, not hours.
+/// How long the supervisor waits for one observed call before it gives up on
+/// it (WD-HARN1).  A call that outlives this bound is not failed as one
+/// instance: the whole test process bails out (`obs_bail_out`, exit status
+/// `OBS_TIMEOUT_EXIT`), because a hung call has no sound way to be abandoned
+/// and the run must not go on as if it had a result.  Far above the slowest
+/// honest call (a 16 MiB decompression bomb under a debug build takes
+/// seconds) and far below any CI job limit: a hung call costs minutes, not
+/// hours.
 const OBS_CALL_TIMEOUT_MS: u64 = 120_000;
 /// The wait bound in force (a static so the supervisor's own tests can shorten it).
 static OBS_TIMEOUT_MS: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(OBS_CALL_TIMEOUT_MS);
@@ -849,13 +853,15 @@ thread_local! {
 fn obs_bail_out(why: &str) -> ! {
     let id = OBS_TEST_ID.with(|t| t.borrow().clone());
     let line = format!("Bail out! observer-timeout: {why} (test {id})");
+    use std::io::Write;
     {
-        use std::io::Write;
         let mut out = std::io::stdout();
         let _ = writeln!(out, "{line}");
         let _ = out.flush();
     }
-    eprintln!("{line}");
+    // Not `eprintln!`: that panics when stderr is a closed pipe, and a panic
+    // here would unwind into the test instead of leaving.
+    let _ = writeln!(std::io::stderr(), "{line}");
     std::process::exit(OBS_TIMEOUT_EXIT)
 }
 
@@ -1193,7 +1199,6 @@ fn obs_observe(op: &str, heap: Option<i128>, job: impl FnOnce() -> V + Send + 's
             ))
         }
         Exec::TimedOut(limit) => {
-            OBS_AGG.with(|a| a.borrow_mut().latched = true);
             obs_bail_out(&format!(
                 "`{op}` did not return within {} seconds",
                 limit.as_secs_f64()

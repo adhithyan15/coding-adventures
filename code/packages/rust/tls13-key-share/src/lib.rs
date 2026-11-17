@@ -98,7 +98,7 @@ pub enum KeyShareErrorKind {
     TruncatedClientVectorLength,
     /// The declared ClientHello vector length does not consume the exact input.
     ClientVectorLengthMismatch,
-    /// The reviewed client profile requires at least one key share.
+    /// Legacy category retained for source compatibility; it is no longer emitted.
     EmptyClientShareList,
     /// The caller or wire input exceeds the retained-entry ceiling.
     TooManyClientShares,
@@ -219,7 +219,10 @@ impl fmt::Debug for EncodedClientKeyShares<'_> {
     }
 }
 
-/// Encode a nonempty, duplicate-free ClientHello key-share list.
+/// Encode a duplicate-free ClientHello key-share list.
+///
+/// An empty list emits the exact `00 00` vector used to request a
+/// HelloRetryRequest group selection round trip.
 ///
 /// Complete list, wire-length, and output-capacity checks finish before output
 /// changes. Extra output capacity remains untouched.
@@ -324,10 +327,6 @@ pub fn decode_client_key_shares<'input>(
             KeyShareErrorKind::ClientVectorLengthMismatch,
         ));
     }
-    if declared_length == 0 {
-        return Err(KeyShareError::new(KeyShareErrorKind::EmptyClientShareList));
-    }
-
     let mut decoded = DecodedClientKeyShares {
         entries: core::array::from_fn(|_| None),
         entry_count: 0,
@@ -422,9 +421,6 @@ pub fn decode_server_key_share<'input, 'offer, 'client_input>(
 }
 
 fn validate_entry_collection(entries: &[ClientKeyShareEntry<'_>]) -> Result<(), KeyShareError> {
-    if entries.is_empty() {
-        return Err(KeyShareError::new(KeyShareErrorKind::EmptyClientShareList));
-    }
     if entries.len() > MAX_KEY_SHARE_ENTRIES {
         return Err(KeyShareError::new(KeyShareErrorKind::TooManyClientShares));
     }

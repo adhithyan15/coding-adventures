@@ -15,22 +15,25 @@ let encoded = encode_client_key_shares(&[share], &mut output).unwrap();
 assert_eq!(encoded.as_bytes().len(), 38);
 ```
 
-Client share construction and decoding require an exact policy-authorized
-group and exact standard public key-exchange length. Client encoding rejects
-empty and duplicate lists and writes only after complete validation. Server
-decoding accepts one exact entry and binds it to the exact retained client
-offer.
+Every nonempty client share requires an exact policy-authorized group and exact
+standard public key-exchange length. Client construction and decoding also
+admit the exact empty `00 00` vector that requests a HelloRetryRequest group
+selection round trip. Encoding rejects duplicate groups and writes only after
+complete validation. Server decoding accepts one exact entry and binds it to
+the exact retained client offer, so an empty offer cannot authorize a direct
+ServerHello share.
 
 ## Boundary
 
-Key-exchange bytes are public handshake data. This package does not implement
-HelloRetryRequest or bind `supported_groups`; generate entropy or an ephemeral
-private key; invoke X25519 or P-256; validate a peer point beyond exact length;
-reject low-order keys; derive or retain a shared secret; update a transcript;
-process a handshake; derive traffic secrets; protect records; validate
-certificates; establish trust; enforce revocation; perform I/O; authorize HTTP
-or OAuth transport; or open a network connection. It does not establish TLS,
-HTTPS, or live-provider readiness.
+Key-exchange bytes are public handshake data. Admitting the empty vector is
+syntax evidence only. This package does not implement or authorize
+HelloRetryRequest, bind `supported_groups`, require a retry to make progress,
+generate entropy or an ephemeral private key, invoke X25519 or P-256, validate
+a peer point beyond exact length, reject low-order keys, derive or retain a
+shared secret, update a transcript, process a handshake, derive traffic
+secrets, protect records, validate certificates, establish trust, enforce
+revocation, perform I/O, authorize HTTP or OAuth transport, or open a network
+connection. It does not establish TLS, HTTPS, or live-provider readiness.
 
 ## Development
 
