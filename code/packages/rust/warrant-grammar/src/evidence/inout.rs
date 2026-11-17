@@ -94,7 +94,7 @@ fn carrier_of(
             HostTy::Int(ht.clone())
         }
         (InoutForm::Bool, Ty::Bool) => HostTy::Bool,
-        (InoutForm::Struct(n), Ty::Data { name: tn, ctors }) if n == tn && ctors.len() == 1 => {
+        (InoutForm::Struct(n), Ty::Data { name: tn, ctors, .. }) if n == tn && ctors.len() == 1 => {
             HostTy::Named(n.clone())
         }
         (
@@ -239,7 +239,7 @@ pub(super) fn inout_adapter<'a>(
         bad("the result type has no post-state slot for its inout parameters (S1 to S4)".into())
     })?;
     let (payload, cases, is_result) = match &full {
-        Ty::Res(t, cases) => ((**t).clone(), cases.clone(), true),
+        Ty::Res(t, cases, _) => ((**t).clone(), cases.clone(), true),
         other => (other.clone(), Vec::new(), false),
     };
     // The components the host returns itself (the first `h` of a tuple).

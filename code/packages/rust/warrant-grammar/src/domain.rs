@@ -46,16 +46,24 @@
 //!   claim         product of the binders, row-major, LAST binder fastest
 //! ```
 //!
-//! ### Three things to know
+//! ### Things to know
 //!
 //! * **Byte-string order.** `Bytes` and `Bytes<N>` list the length-2 and
 //!   length-3 strings over `A = [00, 01, 80, ff]` *lexicographically* (first
 //!   byte slowest), as VER04i section 2.6 and the v1 corpus compiler do.  The
 //!   generated Rust harness's runtime prelude happens to count with the
-//!   *first* byte fastest.  The two orders enumerate the same set; the harness
-//!   order only decides which case a failure is reported at, and is frozen by
-//!   the checked-in generated files, so it is deliberately not changed here.
-//!   This module follows the spec.
+//!   *first* byte fastest, and that order is frozen by the checked-in generated
+//!   files, so it is deliberately not changed here.  For a bare `Bytes` or
+//!   `Bytes<N>` binder the two orders enumerate the same *set* (they differ in
+//!   which case a failure is reported at).  This module follows the spec.
+//! * **Lists take a prefix, so the order change becomes a set change.**
+//!   `List<T>` ranges over the first 16 (lengths 1 and 2) and first 4 (length
+//!   3) values of `T`.  For `T = Bytes<2>` this module's first four values are
+//!   `0000 0001 0080 00ff`, the harness prelude's are `0000 0100 8000 ff00`:
+//!   `List<Bytes<2>>`, `Option<List<..>>` and so on are *different case sets* in
+//!   the corpus and in the generated Rust harness, not merely reordered ones.
+//!   The corpus follows the spec; the harness is frozen.  S3/S10 must settle
+//!   which is normative for such types (VER04r 16).
 //! * **`NatCount`.** A `Nat` that flows into a shift count or bit index has the
 //!   73-value domain `0..=64` plus `65 127 128 129 255 256 65535 65536`
 //!   (VER04j 3.6).  VER04r 5.1 describes `nat_count` as `0..=K`; the two are not
@@ -68,6 +76,11 @@
 //!   is the unsigned order and has no negatives.  The unsigned counts agree
 //!   (`u64` 377, `u32` 313).  Again this module reports the generator's set, which
 //!   the checked-in adopters' evidence pins; S3 and a VER04r erratum settle it.
+//! * **`FxEdge` is for widths of 16 bits and up.** The unsigned edge formula
+//!   repeats values at 8 bits (`0..=255` already contains `MAX` and the
+//!   `MAX ^ (1<<i)` patterns), so an 8-bit edge set has duplicates.  The
+//!   resolver never produces `FxEdge(U8|I8)` (an 8-bit binder is always full and
+//!   never demoted); a hand-built one enumerates that duplicated set.
 //!
 //! ## Refinements are not part of a domain
 //!
@@ -85,11 +98,23 @@
 //! encoder.  Leaves map as: `Bool` to `Bool`; `U8`/`U64` (v0) and `Fx(U8|U64)`
 //! (v1) to `EvalValue::U8`/`U64`; the other fixed widths to `Fixed(width,
 //! value)`; `Nat`/`NatCount` to `Nat`; byte strings to `Bytes`.  A `Result`
-//! error case is `Result(Err((String::new(), case)))`: a descriptor records the
-//! error *cases*, not the error type's name (VER04r 5.1 `errs`), so the type
-//! string is empty and every encoder in this crate keys on the case name only.
-//! A record is a `Con` with `record: true`, recognised as "one constructor,
-//! named like its type".
+//! error case is `Result(Err((error type name, case)))`, the form the
+//! evaluator's `x == E.CASE` and `match ... E.CASE` need (the name comes from the
+//! declaration through [`DomainEnv`], and is invisible to `Domain` equality).  A
+//! record or variant value is a `Con` whose `record` flag is the declaration's.
+//! A `Domain` built by hand must give `Res` its real error type name and `Data`
+//! its real flag for the same reason.
+//!
+//! ## Cost and limits (for the emitter)
+//!
+//! * `nth` is `O(descriptor + value)` but rebuilds leaf tables per call (a wide
+//!   fixed-width leaf rebuilds its edge set, at most 623 entries); an emitter
+//!   that calls it per case should cache the leaves' value lists.
+//! * `resolve_binders` allows a descriptor of up to [`MAX_TYPE_NODES`] nodes and
+//!   64 levels (the generator's own limits).  VER04r 5.1's 16-level descriptor
+//!   limit is the *emitter's* to enforce.  `nth`/`domain_size` recurse over the
+//!   tree, so a hand-built domain nested far deeper than the resolver can
+//!   produce is the caller's responsibility.
 
 pub use crate::checker::{resolve_post_slot, slot_shape, PostSlot, SlotShape};
 pub use crate::corpus::{inout_descriptor, InoutDescriptor};
@@ -122,9 +147,7 @@ use crate::parser::{Declaration, Expression, Parameter, TypeExpr, Version, Warra
 /// assert_eq!(d.nth(130), None);
 /// ```
 pub use crate::evidence::Ty as Domain;
-
-/// The error cases a descriptor `Result` carries are plain names.
-const NO_ERROR_TYPE: &str = "";
+pub use crate::evidence::ErrName;
 
 /// The four-letter alphabet of the short byte-string domains (VER04i 2.6).
 const ALPHABET: [u8; 4] = [0x00, 0x01, 0x80, 0xff];
@@ -199,7 +222,7 @@ impl Domain {
             Domain::Bytes => EvalValue::Bytes(bytes_d1_nth(i)),
             Domain::BytesN(n) => EvalValue::Bytes(bytes_n_nth(*n, i)),
             Domain::Tuple(cs) => EvalValue::Tuple(unrank_components(cs, i)),
-            Domain::Data { name, ctors } => {
+            Domain::Data { name, ctors, record } => {
                 let mut rest = i;
                 for (index, (ctor, fields)) in ctors.iter().enumerate() {
                     let n = product_size(fields).expect("size checked by the caller");
@@ -208,7 +231,7 @@ impl Domain {
                             ty: name.clone(),
                             index,
                             ctor: ctor.clone(),
-                            record: ctors.len() == 1 && ctor == name,
+                            record: *record,
                             fields: unrank_components(fields, rest),
                         };
                     }
@@ -223,12 +246,12 @@ impl Domain {
                     EvalValue::Option(Some(Box::new(t.nth_in_range(i - 1))))
                 }
             }
-            Domain::Res(t, cases) => {
+            Domain::Res(t, cases, err) => {
                 let n = t.domain_size().expect("size checked by the caller");
                 if i < n {
                     EvalValue::Result(Ok(Box::new(t.nth_in_range(i))))
                 } else {
-                    EvalValue::Result(Err((NO_ERROR_TYPE.to_string(), cases[(i - n) as usize].clone())))
+                    EvalValue::Result(Err((err.0.clone(), cases[(i - n) as usize].clone())))
                 }
             }
             Domain::List(t) => {
@@ -549,11 +572,11 @@ pub struct ResolvedBinders {
 
 impl ResolvedBinders {
     /// The per-binder domain sizes, ready for [`unrank_product`].
-    pub fn sizes(&self) -> Vec<u64> {
-        self.domains
-            .iter()
-            .map(|d| d.domain_size().expect("a resolved binder fits a u64"))
-            .collect()
+    ///
+    /// `None` only if a domain was replaced by hand with one whose size does not
+    /// fit a `u64`; the resolver's own output always has sizes.
+    pub fn sizes(&self) -> Option<Vec<u64>> {
+        self.domains.iter().map(Domain::domain_size).collect()
     }
 
     /// Row-major iteration over the product from ordinal `start`.
@@ -647,7 +670,7 @@ pub fn resolve_binders<'a>(
 /// ```
 pub fn resolve_post_slot_of(posts: &[Domain], ret: &Domain) -> Option<PostSlot> {
     let shape = match ret {
-        Domain::Res(t, _) => match &**t {
+        Domain::Res(t, _, _) => match &**t {
             Domain::Tuple(cs) => SlotShape::ResultTuple(cs.clone()),
             other => SlotShape::ResultPlain(other.clone()),
         },
