@@ -291,6 +291,25 @@ func TestLiteralSegmentBoundsAreSoundForRootGlobstarAndExactPaths(t *testing.T) 
 	}
 }
 
+// selectiveDiffSize returns floor(0.8 * MaxMatchWork / perFileUnits) for the
+// registry's distinct patterns, using the matcher's own literal-segment cost.
+func selectiveDiffSize(reg *Registry) int {
+	seen := map[string]bool{}
+	var perFile uint64
+	for _, gate := range reg.Gates {
+		for _, pattern := range gate.Paths {
+			if !seen[pattern] {
+				seen[pattern] = true
+				perFile += makeLiteralSegmentBounds(pattern).workUnits
+			}
+		}
+	}
+	if perFile == 0 {
+		return 1 << 20
+	}
+	return int(MaxMatchWork / 5 * 4 / perFile)
+}
+
 func TestPathShardedLanguageDiffsStaySelective(t *testing.T) {
 	reg, err := Load(realRegistryPath)
 	if err != nil {
@@ -300,13 +319,23 @@ func TestPathShardedLanguageDiffsStaySelective(t *testing.T) {
 		"bengali", "gujarati", "hindi", "kannada", "malayalam", "marathi",
 		"marwadi", "punjabi", "sanskrit", "tamil", "telugu", "urdu",
 	}
-	// 8,192 is the largest "big diff" kept strictly selective: the match-work
-	// ceiling (50,000,000 units, a normative cross-language constant in
-	// ci-gate-registry.md) is charged per distinct pattern x changed file pair,
-	// so it scales with the registry. At 10,751 paths the real registry (138
-	// distinct patterns, ~4.9k literal-prefix units) costs ~52M units and
-	// legitimately exceeds the ceiling; that size is covered separately below.
-	for _, count := range []int{256, 8_192} {
+	// The large case is derived, not hard-coded. The match-work ceiling
+	// (MaxMatchWork, a normative cross-language constant in ci-gate-registry.md)
+	// charges every distinct pattern x changed-file pair the pattern's literal
+	// prefix+suffix units, so n unrelated files cost n * perFileUnits, where
+	// perFileUnits sums those units over the registry's distinct patterns (the
+	// same cost model preflightPathSelection uses). We take
+	// n = floor(80% of the ceiling / perFileUnits): as large as possible while
+	// keeping 20% headroom for the few package files below. Past that size the
+	// ceiling legitimately trips; the 10,751-path test below covers that
+	// bounded-failure outcome. If the registry ever grows so much that n < 256,
+	// the ceiling itself needs a spec decision.
+	large := selectiveDiffSize(reg)
+	if large < 256 {
+		t.Fatalf("registry too large: only %d unrelated paths fit under MaxMatchWork; the ceiling needs a spec decision", large)
+	}
+	t.Logf("selective large case: %d paths", large)
+	for _, count := range []int{256, large} {
 		t.Run(fmt.Sprintf("%d-paths", count), func(t *testing.T) {
 			changed := make([]string, 0, count)
 			packageFiles := 8
