@@ -423,6 +423,12 @@ pub fn stand_in(suite: &LoweredSuite, fault: &Fault, op: &LoweredOp) -> Option<S
     // A pre fault rewrites by parameter, but the stand-in rewrites by binder: a binder
     // passed twice must be rewritten the same way at both positions, or there is no
     // single rewritten binder to re-evaluate `expected` at.
+    // ASSUMPTION (revisit in S10): this check only compares *whether* each position is
+    // rewritten, not *how*.  It is sound for today's registry, where a binder passed at two
+    // positions gets the same rewrite at both (`ignore-last-byte` and `ignore-high-bit`
+    // rewrite every parameter of the type uniformly; `swap-choice` has one parameter).
+    // `search` debug_asserts that the rewrites landing on one binder agree.  A fault with
+    // distinct per-parameter rewrites must tighten this to "same expression" or give up.
     if let Kind::Pre(rewrites) = &fault.kind {
         for (i, b) in binders.iter().enumerate() {
             let rewritten = |k: usize| rewrites.iter().any(|(p, _)| *p == op.params[k].0);
@@ -492,6 +498,7 @@ pub fn search(
             let faulted = match &probe.fault.kind {
                 Kind::Pre(rewrites) => {
                     let mut moved: Vec<(&str, Value)> = vars.to_vec();
+                    let mut rewritten_to: Vec<(String, Value)> = Vec::new();
                     for (param, expr) in rewrites {
                         let Expr::Core(ir) = expr else {
                             return Err(at(GenError::internal("a data fault was searched")));
@@ -505,8 +512,15 @@ pub fn search(
                             .ok_or_else(|| at(GenError::internal("a rewrite names no parameter")))?;
                         let binder = &probe.stand_in.binders[pos];
                         for slot in moved.iter_mut().filter(|(n, _)| n == binder) {
+                            // uniform rewrites per binder (see `stand_in`): a second rewrite
+                            // landing on the same binder must agree with the first
+                            debug_assert!(
+                                !rewritten_to.iter().any(|(b, v)| b == binder && *v != nv),
+                                "two rewrites of one binder disagree"
+                            );
                             slot.1 = nv.clone();
                         }
+                        rewritten_to.push((binder.clone(), nv.clone()));
                     }
                     program.eval(expected, &moved, &mut st).map_err(at)?
                 }

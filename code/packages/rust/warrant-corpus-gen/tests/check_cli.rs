@@ -246,10 +246,9 @@ fn write_and_check_refuse_symbolic_links() {
     assert_eq!(fs::read_to_string(&secret).unwrap(), "do not touch");
     assert!(drift(&out).contains("cases.tfv: is a symbolic link"));
     fs::remove_file(out.join("cases.tfv")).unwrap();
-    // a link planted at the temporary name is refused too, and nothing is written through it
+    // a link planted at the temporary name is unlinked, never written through
     symlink(&secret, out.join("chunks/.eq_agrees.txt.tmp")).unwrap();
-    let e = write_corpus(&out, ct()).unwrap_err();
-    assert!(e.message.contains("temporary file is a symbolic link"), "{e}");
+    write_corpus(&out, ct()).unwrap();
     assert_eq!(fs::read_to_string(&secret).unwrap(), "do not touch");
     let _ = fs::remove_dir_all(root);
 }
@@ -380,7 +379,8 @@ fn cli_write_check_and_refusals_on_a_small_document() {
         (r.status.code().unwrap(), String::from_utf8_lossy(&r.stdout).into_owned(), String::from_utf8_lossy(&r.stderr).into_owned())
     };
     let (c, o, e) = go(&[]);
-    assert_eq!((c, e.as_str()), (0, ""), "{e}");
+    assert_eq!(c, 0, "{e}");
+    assert!(e.contains("--bindings not given"), "{e}");
     assert!(o.starts_with("wrote "));
     assert_eq!(go(&["--check"]).0, 0);
     // another profile: the digest in corpus.json is stale
@@ -437,4 +437,148 @@ fn binding_faults_are_read_from_evidence_bindings() {
     );
     let real = fs::read_to_string(root().join("code/packages/rust/ct-compare/evidence.bindings")).unwrap();
     assert_eq!(parse_binding_faults(&real).len(), 4);
+}
+
+// ---- review fixes: hard links, FIFOs, oversize files, hostile names -------------------------
+
+/// Run `f` on a thread and fail the test if it does not finish (a FIFO must never hang us).
+fn within<T: Send + 'static>(secs: u64, f: impl FnOnce() -> T + Send + 'static) -> T {
+    let (tx, rx) = std::sync::mpsc::channel();
+    std::thread::spawn(move || {
+        let _ = tx.send(f());
+    });
+    rx.recv_timeout(std::time::Duration::from_secs(secs))
+        .expect("the operation hung (a FIFO was opened?)")
+}
+
+#[cfg(unix)]
+fn mkfifo(p: &Path) -> bool {
+    Command::new("mkfifo").arg(p).status().is_ok_and(|s| s.success())
+}
+
+#[cfg(unix)]
+#[test]
+fn a_hard_link_planted_at_the_temporary_name_never_clobbers_its_victim() {
+    let root = tmp("hardlink");
+    let out = root.join("out");
+    fs::create_dir_all(out.join("chunks")).unwrap();
+    let victim = root.join("victim");
+    fs::write(&victim, "precious").unwrap();
+    // the temp names of corpus.json and of a chunk file
+    fs::hard_link(&victim, out.join(".corpus.json.tmp")).unwrap();
+    fs::hard_link(&victim, out.join("chunks/.eq_agrees.txt.tmp")).unwrap();
+    write_corpus(&out, ct()).unwrap();
+    assert_eq!(fs::read_to_string(&victim).unwrap(), "precious");
+    check_corpus(&out, ct()).unwrap();
+    // O_EXCL on a fresh inode: the written file is not the victim's inode
+    assert_eq!(fs::read_to_string(out.join("corpus.json")).unwrap(), ct().corpus_json);
+    let _ = fs::remove_dir_all(root);
+}
+
+#[cfg(unix)]
+#[test]
+fn a_fifo_at_the_temporary_name_or_at_a_corpus_file_never_hangs() {
+    let root = tmp("fifo");
+    let out = root.join("out");
+    fs::create_dir_all(out.join("chunks")).unwrap();
+    if !mkfifo(&out.join(".cases.tfv.tmp")) {
+        let _ = fs::remove_dir_all(root);
+        return; // no mkfifo on this machine
+    }
+    let (o2, c2) = (out.clone(), ct().clone());
+    within(60, move || write_corpus(&o2, &c2)).unwrap();
+    check_corpus(&out, ct()).unwrap();
+    // a FIFO where corpus.json should be: --check reports it and does not open it
+    fs::remove_file(out.join("corpus.json")).unwrap();
+    assert!(mkfifo(&out.join("corpus.json")));
+    let (o3, c3) = (out.clone(), ct().clone());
+    let e = within(60, move || check_corpus(&o3, &c3)).unwrap_err();
+    assert!(e.message.contains("corpus.json: is not a regular file"), "{e}");
+    let _ = fs::remove_dir_all(root);
+}
+
+#[test]
+fn an_oversize_file_is_a_finding_and_is_not_read_whole() {
+    let d = written("oversize");
+    let big = vec![b'x'; 6 * 1024 * 1024];
+    fs::write(d.join("chunks/eq_agrees.txt"), &big).unwrap();
+    let m = drift(&d);
+    assert!(m.contains("chunks/eq_agrees.txt: differs at line 1, column 1"), "{m}");
+    assert!(m.contains(&format!("found {}", big.len())), "{m}");
+    let _ = fs::remove_dir_all(d);
+}
+
+#[test]
+fn cli_inputs_are_capped_and_irregular_files_are_refused() {
+    let bin = env!("CARGO_BIN_EXE_warrant-corpus-gen");
+    let d = tmp("inputs");
+    fs::write(d.join("big.warrant"), vec![b'x'; 5 * 1024 * 1024]).unwrap();
+    fs::write(d.join("p"), "").unwrap();
+    let run = |w: &str| {
+        let r = Command::new(bin)
+            .current_dir(&d)
+            .args(["--warrant", w, "--profile", "p", "--out", "o"])
+            .output()
+            .unwrap();
+        String::from_utf8_lossy(&r.stderr).into_owned()
+    };
+    assert!(run("big.warrant").contains("size cap"));
+    #[cfg(unix)]
+    if mkfifo(&d.join("pipe.warrant")) {
+        let dd = d.clone();
+        let e = within(60, move || {
+            let r = Command::new(bin)
+                .current_dir(&dd)
+                .args(["--warrant", "pipe.warrant", "--profile", "p", "--out", "o"])
+                .output()
+                .unwrap();
+            String::from_utf8_lossy(&r.stderr).into_owned()
+        });
+        assert!(e.contains("not a regular file"), "{e}");
+    }
+    // without --bindings the tool says so
+    let e = run("big.warrant");
+    assert!(e.contains("--bindings not given"), "{e}");
+    let _ = fs::remove_dir_all(d);
+}
+
+#[cfg(unix)]
+#[test]
+fn check_reports_a_symlinked_chunks_directory_and_escapes_hostile_names() {
+    use std::os::unix::fs::symlink;
+    let d = written("l1");
+    // L1: chunks replaced by a link to a copy: write refuses, --check reports it
+    let copy = d.join("copy");
+    fs::rename(d.join("chunks"), &copy).unwrap();
+    symlink(&copy, d.join("chunks")).unwrap();
+    assert!(drift(&d).contains("chunks: is a symbolic link"));
+    assert_eq!(write_corpus(&d, ct()).unwrap_err().code, code::IO);
+    fs::remove_file(d.join("chunks")).unwrap();
+    fs::rename(&copy, d.join("chunks")).unwrap();
+    // L2: a hostile file name is escaped in both reports
+    let evil = "x\n::error::pwned\u{1b}[31m.txt";
+    fs::write(d.join("chunks").join(evil), "x").unwrap();
+    let m = drift(&d);
+    assert!(!m.contains('\n') && !m.contains('\u{1b}'), "{m:?}");
+    assert!(m.contains("x\\n::error::pwned\\u{1b}[31m.txt"), "{m}");
+    let e = write_corpus(&d, ct()).unwrap_err();
+    assert!(!e.message.contains('\n') && !e.message.contains('\u{1b}'), "{:?}", e.message);
+    // a symlinked --out itself is the caller's choice: accepted in both modes
+    let alias = d.parent().unwrap().join(format!("{}-alias", d.file_name().unwrap().to_string_lossy()));
+    fs::remove_file(d.join("chunks").join(evil)).unwrap();
+    symlink(&d, &alias).unwrap();
+    write_corpus(&alias, ct()).unwrap();
+    check_corpus(&alias, ct()).unwrap();
+    let _ = fs::remove_file(alias);
+    let _ = fs::remove_dir_all(d);
+}
+
+#[test]
+fn the_name_limit_is_the_spec_maximum() {
+    // two 64-character claim names joined by `/` become `<64>.<64>.txt`
+    let ok = format!("chunks/{}.{}.txt", "a".repeat(64), "b".repeat(64));
+    assert_eq!(ok.len() - "chunks/".len(), 133);
+    assert!(guard(&ok).is_ok());
+    let too_long = format!("chunks/{}.{}x.txt", "a".repeat(64), "b".repeat(64));
+    assert!(guard(&too_long).is_err());
 }

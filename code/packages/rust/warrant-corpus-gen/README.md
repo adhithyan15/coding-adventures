@@ -331,7 +331,7 @@ written separately in `tests/emission.rs`.
 
 ## Capabilities
 
-`required_capabilities.json` declares the crate's file access: **read** the specification, the
+`required_capabilities.json` declares the crate's file access (targets are the caller-named input files and output directory; the guards are in `fsio.rs`: a name whitelist, a symbolic link present at `chunks/` or a target refused, an O_EXCL temporary, regular-file-only capped reads; concurrent modification of the output directory is unsupported): **read** the specification, the
 profile, the bindings and (for `--check`) the output directory; **list** `chunks/` (to refuse and
 to report files the corpus does not own); **create** and **write** only below the output
 directory (temporary file then rename, within `fsio.rs`), **delete** only that temporary file

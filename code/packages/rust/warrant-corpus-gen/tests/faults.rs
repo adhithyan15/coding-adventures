@@ -343,3 +343,48 @@ fn claim_states_are_comparable() {
     assert_eq!(Level::Core.name(), "ir.core");
     assert!(Level::Core < Level::Fixed);
 }
+
+// ---- reserved device names (L5) ---------------------------------------------------------
+
+#[test]
+fn windows_reserved_chunk_names_are_refused_at_generation() {
+    for name in ["nul", "con", "aux", "prn", "com1", "lpt9", "NUL"] {
+        let doc = doc_ops(
+            " v1",
+            &["op f(a: Bytes, b: Bytes) -> Bool"],
+            &format!("  model m(a: Bytes, b: Bytes) -> Bool = a == b\n  claim {name}:\n    forall a: Bytes<1>, b: Bytes<1>. f(a, b) == m(a, b)\n"),
+        );
+        let e = gen(&doc, "").unwrap_err();
+        assert_eq!(e.code, code::W0701, "{name}: {e}");
+        assert!(e.message.contains("reserved device name"), "{e}");
+    }
+    // a name that merely contains one is fine
+    let ok = doc_ops(
+        " v1",
+        &["op f(a: Bytes, b: Bytes) -> Bool"],
+        "  model m(a: Bytes, b: Bytes) -> Bool = a == b\n  claim console:\n    forall a: Bytes<1>, b: Bytes<1>. f(a, b) == m(a, b)\n",
+    );
+    assert!(gen(&ok, "").is_ok());
+}
+
+#[test]
+fn tfv_refuses_an_example_that_is_not_a_subject_call() {
+    use coding_adventures_warrant_corpus_gen::eval::Program;
+    use coding_adventures_warrant_corpus_gen::tfv::examples;
+    let doc = doc_ops(
+        " v1",
+        &["op f(a: Bytes, b: Bytes) -> Bool"],
+        "  example e:\n    f(b\"\", b\"\") == true\n",
+    );
+    with_file(&doc, |f| {
+        let mut a = analyse(f, &Profile::default()).unwrap();
+        let p = Program::new(&a.lowered.models);
+        assert_eq!(examples(&a.lowered, &p).unwrap().lines.len(), 1);
+        a.lowered.examples[0].reference.subject = Ir::Bool(true);
+        let e = examples(&a.lowered, &Program::new(&a.lowered.models)).unwrap_err();
+        assert_eq!((e.code, e.at.as_str()), (code::W0701, "e"));
+        a.lowered.examples[0].reference.subject = Ir::Subject { op: "nope".into(), args: vec![], widths: vec![] };
+        let e = examples(&a.lowered, &Program::new(&a.lowered.models)).unwrap_err();
+        assert!(e.message.contains("undeclared op"), "{e}");
+    });
+}

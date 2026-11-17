@@ -47,6 +47,13 @@ pub const GENERATOR_NAME: &str = "warrant-corpus-gen";
 /// The generator's version in `corpus.json` (the crate version).
 pub const GENERATOR_VERSION: &str = env!("CARGO_PKG_VERSION");
 
+/// Device names Windows reserves with or without an extension: a chunk file of one of them
+/// cannot be created there, so the corpus could not be checked out (VER04r 16.6).
+const WINDOWS_RESERVED: [&str; 22] = [
+    "con", "prn", "aux", "nul", "com1", "com2", "com3", "com4", "com5", "com6", "com7", "com8",
+    "com9", "lpt1", "lpt2", "lpt3", "lpt4", "lpt5", "lpt6", "lpt7", "lpt8", "lpt9",
+];
+
 /// The Rust bindings' `faults=` lists, as `(op, names)`.
 pub type BindingFaults = [(String, Vec<String>)];
 
@@ -135,6 +142,16 @@ pub fn generate(input: &GenInput<'_>) -> Result<CorpusV2, GenError> {
                 code::W0701,
                 &s.claim,
                 "two chunk files have names equal ignoring case (VER04r 5.5)",
+            ));
+        }
+        if file
+            .split('.')
+            .any(|seg| WINDOWS_RESERVED.contains(&seg.to_ascii_lowercase().as_str()))
+        {
+            return Err(GenError::new(
+                code::W0701,
+                &s.claim,
+                "a chunk file name is a Windows reserved device name (con, nul, aux, prn, com1-9, lpt1-9)",
             ));
         }
         names.push(file);

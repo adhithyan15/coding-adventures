@@ -18,17 +18,39 @@
 //!
 //! A relative path is accepted only if it is `corpus.json`, `cases.tfv`, or `chunks/<name>`
 //! where `<name>` is made of ASCII letters, digits, `_` and `.`, does not start with `.`,
-//! has no `..`, is not empty and is at most 128 bytes and ends in `.txt`.  No separator,
-//! no drive letter, no NUL: nothing derived from a document can leave the output directory.
-//! Existing symbolic links at `chunks/` or at a target are refused, so a planted link cannot
-//! redirect a write.  The output directory itself is whatever the caller names.
+//! has no `..`, is not empty, ends in `.txt` and is at most 133 bytes (two 64-character claim
+//! names, the `/` that becomes `.`, and `.txt`).  No separator, no drive letter, no NUL:
+//! nothing derived from a document can leave the output directory.
+//!
+//! ## Links, FIFOs and what is *not* promised
+//!
+//! * A symbolic link **present at the start** at `chunks/` or at a target is refused in both
+//!   modes.  The output directory itself may be a link: it is the caller's own choice.
+//! * The temporary file is created with `create_new` (O_EXCL) after removing any file of the
+//!   same reserved name (`.<name>.tmp`): O_EXCL never follows a link, never reuses an inode
+//!   (a planted hard link is unlinked, not written through) and never opens a FIFO.
+//! * `--check` reads only regular files, through a handle, and never more than one byte past
+//!   the expected length, so a FIFO or an oversized file is a finding, not a hang or an
+//!   allocation.
+//! * **Concurrent modification of the output directory is unsupported**: between a check and
+//!   the use of a path another process could still swap an entry.  This is a developer tool
+//!   writing a directory the developer owns, not a service over a hostile directory.
+//! * File names found on disk are never echoed raw: they are escaped (`escape_default`) so a
+//!   hostile name cannot inject terminal escapes or CI workflow commands into the report.
 
 use std::fs;
-use std::io::Write;
+use std::io::{Read, Write};
 use std::path::{Path, PathBuf};
 
 use crate::error::{code, GenError};
 use crate::CorpusV2;
+
+/// The longest chunk file name: `<64>.<64>.txt`.
+pub const MAX_NAME: usize = 133;
+
+fn esc(name: &str) -> String {
+    name.escape_default().to_string()
+}
 
 fn io(at: &str, what: &str) -> GenError {
     GenError::new(code::IO, at, what)
@@ -42,7 +64,7 @@ fn io(at: &str, what: &str) -> GenError {
 pub fn guard(rel: &str) -> Result<(), GenError> {
     let ok_name = |n: &str, ext: bool| {
         !n.is_empty()
-            && n.len() <= 128
+            && n.len() <= MAX_NAME
             && !n.starts_with('.')
             && !n.contains("..")
             && n.bytes()
@@ -69,6 +91,35 @@ fn is_symlink(p: &Path) -> bool {
     fs::symlink_metadata(p).is_ok_and(|m| m.file_type().is_symlink())
 }
 
+/// Read the regular file at `path`, at most `cap + 1` bytes, through a handle.  Returns the
+/// bytes read and the file's length.  A symbolic link, a FIFO, a directory or anything else
+/// that is not a regular file is an error (`io`) and is never opened for reading.
+///
+/// # Errors
+///
+/// `io` for a missing or irregular file.
+pub fn read_regular(path: &Path, cap: u64, follow: bool) -> Result<(Vec<u8>, u64), GenError> {
+    let meta = if follow {
+        fs::metadata(path)
+    } else {
+        fs::symlink_metadata(path)
+    }
+    .map_err(|_| io("file", "missing or unreadable"))?;
+    if !meta.is_file() {
+        return Err(io("file", "is not a regular file"));
+    }
+    let f = fs::File::open(path).map_err(|_| io("file", "missing or unreadable"))?;
+    let len = f
+        .metadata()
+        .map_err(|_| io("file", "missing or unreadable"))?
+        .len();
+    let mut buf = Vec::new();
+    f.take(cap.saturating_add(1))
+        .read_to_end(&mut buf)
+        .map_err(|_| io("file", "missing or unreadable"))?;
+    Ok((buf, len))
+}
+
 fn chunk_dir_extras(dir: &Path, owned: &[String]) -> Result<Vec<String>, GenError> {
     let mut extras = Vec::new();
     let chunks = dir.join("chunks");
@@ -80,7 +131,7 @@ fn chunk_dir_extras(dir: &Path, owned: &[String]) -> Result<Vec<String>, GenErro
         let entry = entry.map_err(|_| io("chunks", "a chunks entry cannot be read"))?;
         let name = entry.file_name().to_string_lossy().into_owned();
         if !owned.contains(&name) {
-            extras.push(name);
+            extras.push(esc(&name));
         }
     }
     extras.sort();
@@ -129,6 +180,9 @@ pub fn write_corpus(out: &Path, c: &CorpusV2) -> Result<(), GenError> {
         ));
     }
     fs::create_dir_all(&chunks).map_err(|_| io("chunks", "the output directory cannot be created"))?;
+    if is_symlink(&chunks) {
+        return Err(io("chunks", "chunks is a symbolic link: refused"));
+    }
     // chunk files, then cases.tfv, then corpus.json (the commit point)
     let mut order: Vec<&(String, &str)> = files.iter().skip(2).collect();
     order.push(&files[1]);
@@ -148,18 +202,16 @@ fn write_atomic(target: &Path, rel: &str, bytes: &[u8]) -> Result<(), GenError> 
         .file_name()
         .and_then(|n| n.to_str())
         .ok_or_else(|| io(rel, "no file name"))?;
-    // One fixed temporary name per target; a stale one from a crashed run is overwritten, and a
-    // symbolic link planted at that name is refused like any other.  Two generators writing
-    // the same directory at once is not supported.
+    // One fixed reserved temporary name per target.  Whatever sits there (a stale file of ours,
+    // a planted link, a hard link to someone else's file) is unlinked first, then the file is
+    // created with O_EXCL: it never follows a link, never reuses an inode and never opens a
+    // FIFO.  Two generators writing the same directory at once is not supported.
     let tmp: PathBuf = dir.join(format!(".{name}.tmp"));
-    if is_symlink(&tmp) {
-        return Err(io(rel, "the temporary file is a symbolic link: refused"));
-    }
+    let _ = fs::remove_file(&tmp);
     let result = (|| {
         let mut f = fs::OpenOptions::new()
             .write(true)
-            .create(true)
-            .truncate(true)
+            .create_new(true)
             .open(&tmp)
             .map_err(|_| io(rel, "the temporary file cannot be created"))?;
         f.write_all(bytes)
@@ -195,28 +247,36 @@ pub fn first_difference(a: &[u8], b: &[u8]) -> Option<(usize, usize, usize)> {
 /// differing bytes with location), at most 20 of them.
 pub fn check_corpus(out: &Path, c: &CorpusV2) -> Result<(), GenError> {
     let mut findings: Vec<String> = Vec::new();
+    let linked_chunks = is_symlink(&out.join("chunks"));
+    if linked_chunks {
+        findings.push("chunks: is a symbolic link".to_string());
+    }
     for (rel, text) in c.files() {
         guard(&rel)?;
+        if linked_chunks && rel.starts_with("chunks/") {
+            continue;
+        }
         let path = out.join(&rel);
         if is_symlink(&path) {
             findings.push(format!("{rel}: is a symbolic link"));
             continue;
         }
-        match fs::read(&path) {
-            Err(_) => findings.push(format!("{rel}: missing or unreadable")),
-            Ok(have) => {
+        match read_regular(&path, text.len() as u64, false) {
+            Err(e) => findings.push(format!("{rel}: {}", e.message)),
+            Ok((have, len)) => {
                 if let Some((off, line, col)) = first_difference(text.as_bytes(), &have) {
                     findings.push(format!(
-                        "{rel}: differs at line {line}, column {col} (byte {off}); expected {} bytes, found {}",
+                        "{rel}: differs at line {line}, column {col} (byte {off}); expected {} bytes, found {len}",
                         text.len(),
-                        have.len()
                     ));
                 }
             }
         }
     }
-    for extra in chunk_dir_extras(out, &owned_names(c))? {
-        findings.push(format!("chunks/{extra}: extra file the corpus does not own"));
+    if !linked_chunks {
+        for extra in chunk_dir_extras(out, &owned_names(c))? {
+            findings.push(format!("chunks/{extra}: extra file the corpus does not own"));
+        }
     }
     if findings.is_empty() {
         return Ok(());

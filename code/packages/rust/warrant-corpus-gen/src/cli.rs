@@ -26,7 +26,7 @@ use coding_adventures_warrant_grammar::parser::{parse_document, ParserLimits};
 use coding_adventures_warrant_grammar::source::{SourceDocument, SourceLimits};
 
 use crate::error::{code, GenError};
-use crate::fsio::{check_corpus, write_corpus};
+use crate::fsio::{check_corpus, read_regular, write_corpus};
 use crate::{generate, GenInput};
 
 /// The most bytes read from any input file.
@@ -53,11 +53,20 @@ pub fn parse_binding_faults(text: &str) -> Vec<(String, Vec<String>)> {
 }
 
 fn read_capped(path: &str) -> Result<Vec<u8>, GenError> {
-    let meta = std::fs::metadata(path).map_err(|_| GenError::new(code::IO, path, "cannot be read"))?;
-    if !meta.is_file() || meta.len() > MAX_INPUT_BYTES {
-        return Err(GenError::new(code::IO, path, "is not a regular file within the size cap"));
+    let at = |m: &str| GenError::new(code::IO, path, m);
+    // the caller's own input: a link is followed, but only a regular file is read, through a
+    // handle, and never more than the cap
+    let (bytes, len) = read_regular(Path::new(path), MAX_INPUT_BYTES, true).map_err(|e| {
+        at(if e.message.contains("regular") {
+            "is not a regular file"
+        } else {
+            "cannot be read"
+        })
+    })?;
+    if len > MAX_INPUT_BYTES || bytes.len() as u64 > MAX_INPUT_BYTES {
+        return Err(at("is over the size cap"));
     }
-    std::fs::read(path).map_err(|_| GenError::new(code::IO, path, "cannot be read"))
+    Ok(bytes)
 }
 
 fn spec_path_ok(p: &str) -> bool {
@@ -104,13 +113,16 @@ fn parse_args(args: &[String]) -> Result<Args, String> {
     })
 }
 
-fn go(a: &Args) -> Result<String, GenError> {
+fn go(a: &Args, err: &mut dyn Write) -> Result<String, GenError> {
     if !spec_path_ok(&a.warrant) {
         return Err(GenError::new(
             code::IO,
             "--warrant",
             "must be a repo-relative path without `..`, `.`, `\\`, `:` or a leading `/` (it is recorded in the corpus)",
         ));
+    }
+    if a.bindings.is_none() {
+        let _ = writeln!(err, "warrant-corpus-gen: note: --bindings not given, the profile's faults are not checked against an evidence.bindings");
     }
     let spec = read_capped(&a.warrant)?;
     let profile = read_capped(&a.profile)?;
@@ -150,7 +162,7 @@ pub fn run(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> i32 {
             return 2;
         }
     };
-    match go(&parsed) {
+    match go(&parsed, err) {
         Ok(msg) => {
             let _ = writeln!(out, "{msg}");
             0
