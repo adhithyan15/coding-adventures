@@ -144,7 +144,7 @@ func TestPrepareWritesEachActionsTools(t *testing.T) {
 	}
 	for _, name := range pre.Actions() {
 		a, _ := pre.Action(name)
-		if a.Schema != "kiln-record-action/2" || a.Tools == nil || !sort.StringsAreSorted(a.Tools) {
+		if a.Schema != "kiln-record-action/3" || a.Tools == nil || !sort.StringsAreSorted(a.Tools) {
 			t.Errorf("%s: %+v", name, a)
 		}
 		// The always-on tools (cc and sh, in the fixture) are in every action.

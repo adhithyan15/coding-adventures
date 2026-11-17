@@ -58,6 +58,10 @@ type prep struct {
 	// step and collect never start a sandbox, a strace or a sleeper.
 	probeIn []ProbeInput                          // what it was given, one per call
 	probeFn func(ProbeInput) (ProbeReport, error) // replaces the default report
+	// The toolchain probes are a fake too (Options.ProbeRun): nothing here
+	// starts a sandbox. The default says every tool prints its pin.
+	probeRuns  []legacy.ProbeRun                     // what it was asked, one per call
+	probeRunFn func(legacy.ProbeRun) ([]byte, error) // replaces the default answer
 }
 
 const fixtureToolchains = `{
@@ -118,11 +122,20 @@ func newPrepAt(t *testing.T, base string) *prep {
 	writeBytes(t, p.bt, []byte("build tool binary"), 0o755)
 	writeBytes(t, p.strace, []byte("strace"), 0o755)
 	p.gitBin, p.gitSum = realGit(t)
+	// Every probed tool has a binary on its root, outside the checkout: an
+	// absent probe binary is a gate (`probe-absent:`), and a fixture that wants no
+	// gate gives each probe one. The fake Options.ProbeRun answers for it.
+	probeBin := filepath.Join(p.base, "probebin")
+	for _, n := range []string{"cc", "xtool"} {
+		writeBytes(t, filepath.Join(probeBin, n), []byte("#!/bin/sh\n"), 0o755)
+	}
 	p.files = map[string]string{
-		"code/kiln/legacy/pinned.json":        `{"languages": []}`,
-		"code/kiln/legacy/never.json":         `{"packages": []}`,
-		"code/kiln/legacy/toolchains.json":    fixtureToolchains,
-		"code/kiln/legacy/env.json":           `{"names": ["FIXTURE_*", "LANG"]}`,
+		"code/kiln/legacy/pinned.json":     `{"languages": []}`,
+		"code/kiln/legacy/never.json":      `{"packages": []}`,
+		"code/kiln/legacy/toolchains.json": strings.NewReplacer("/opt/x/bin", probeBin, "/nonexistent/kiln-test-bin", probeBin).Replace(fixtureToolchains),
+		"code/kiln/legacy/env.json":        `{"names": ["FIXTURE_*", "LANG"]}`,
+		// The gate (Traced.Gate) reads the boundary file, as the plan does.
+		legacy.BoundaryPath:                   `{"schema_version": 1, "language_source_input_registry_sha256": "00", "boundaries": []}`,
 		"code/programs/go/build-tool/go.mod":  "module example.com/bt\n\ngo 1.26\n",
 		"code/programs/go/build-tool/main.go": "package main\n",
 		"code/packages/x/a/BUILD":             "echo a\n",
@@ -272,8 +285,22 @@ func (p *prep) options() Options {
 		},
 		Kernel:    func() (string, error) { return "6.8.0-test", nil },
 		Structure: p.structure,
+		ProbeRun:  p.probeRun,
 	}
 }
+
+// probeRun is the fake Options.ProbeRun.
+func (p *prep) probeRun(r legacy.ProbeRun) ([]byte, error) {
+	p.probeRuns = append(p.probeRuns, r)
+	if p.probeRunFn != nil {
+		return p.probeRunFn(r)
+	}
+	return []byte(r.Argv0 + " version 1.2.3\n"), nil
+}
+
+// withProbeBin is the directory whose cc and xtool the fixture's toolchains
+// probe (newPrepAt makes it), where a test may add more.
+func (p *prep) withProbeBin(string) string { return filepath.Join(p.base, "probebin") }
 
 // structure is the fake Options.Structure: it records its input and reports
 // exactly the runs ProbeSpecs says a real probe would make, each "passing", so

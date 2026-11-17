@@ -148,6 +148,7 @@ type planner struct {
 	mismatch  map[string]bool
 	timedOut  map[string]bool
 	refused   map[string]bool
+	absent    map[string]bool
 }
 
 // workers returns the pool size: at most the caller's choice, else the CPU

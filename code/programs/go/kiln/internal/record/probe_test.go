@@ -1,7 +1,6 @@
 package record
 
 import (
-	"encoding/json"
 	"os"
 	"path/filepath"
 	"strings"
@@ -230,25 +229,38 @@ func TestCheckProbeReportRefuses(t *testing.T) {
 	acts := []string{"p"}
 	sh := []string{"/usr/a"}
 	cases := map[string]func(r *ProbeReport){
-		"schema":            func(r *ProbeReport) { r.Schema = "x" },
-		"toolchains":        func(r *ProbeReport) { r.Toolchains = []json.RawMessage{json.RawMessage(`1`)} },
-		"unknown action":    func(r *ProbeReport) { r.Action = "q" },
-		"bad action":        func(r *ProbeReport) { r.Action = "/abs" },
-		"empty action":      func(r *ProbeReport) { r.Action = "" },
-		"dropped probe":     func(r *ProbeReport) { r.Runs = append(r.Runs[:1], r.Runs[2:]...) },
-		"extra probe":       func(r *ProbeReport) { r.Runs = append(r.Runs, r.Runs[0]) },
-		"renamed":           func(r *ProbeReport) { r.Runs[0].Name = "walk" },
-		"other argv":        func(r *ProbeReport) { r.Runs[1].Argv = []string{"true"} },
-		"exit":              func(r *ProbeReport) { r.Runs[0].Exit = 1 },
-		"empty trace":       func(r *ProbeReport) { r.Runs[0].TraceBytes = 0 },
-		"huge trace":        func(r *ProbeReport) { r.Runs[0].TraceBytes = ProbeTraceCap + 1 },
-		"digest":            func(r *ProbeReport) { r.Runs[0].TraceSHA256 = "zz" },
-		"shadow not sorted": func(r *ProbeReport) { r.Shadowed = []string{"/usr/b", "/usr/a"} },
-		"shadow relative":   func(r *ProbeReport) { r.Shadowed = []string{"usr/a"} },
-		"shadow dash":       func(r *ProbeReport) { r.Shadowed = []string{"-x"} },
-		"shadow root":       func(r *ProbeReport) { r.Shadowed = []string{"/"} },
-		"shadow nested":     func(r *ProbeReport) { r.Shadowed = []string{"/usr/a", "/usr/a/b"} },
-		"shadow vs runs":    func(r *ProbeReport) { r.Shadowed = []string{"/usr/a", "/usr/b"} },
+		"schema":           func(r *ProbeReport) { r.Schema = "x" },
+		"toolchain status": func(r *ProbeReport) { r.Toolchains = []ToolchainProbe{{Tool: "sed", Status: "fine"}} },
+		"toolchain detail": func(r *ProbeReport) { r.Toolchains = []ToolchainProbe{{Tool: "sed", Status: "ok", Detail: "x"}} },
+		"toolchain order": func(r *ProbeReport) {
+			r.Toolchains = []ToolchainProbe{{Tool: "sh", Status: "ok"}, {Tool: "sed", Status: "ok"}}
+		},
+		"toolchain twice": func(r *ProbeReport) {
+			r.Toolchains = []ToolchainProbe{{Tool: "sed", Status: "ok"}, {Tool: "sed", Status: "ok"}}
+		},
+		"toolchain no name": func(r *ProbeReport) { r.Toolchains = []ToolchainProbe{{Tool: "", Status: "ok"}} },
+		"toolchain newline": func(r *ProbeReport) { r.Toolchains = []ToolchainProbe{{Tool: "a\nb", Status: "ok"}} },
+		"toolchain long detail": func(r *ProbeReport) {
+			r.Toolchains = []ToolchainProbe{{Tool: "sed", Status: "mismatch", Detail: strings.Repeat("d", MaxGateBytes+1)}}
+		},
+		"too many toolchains": func(r *ProbeReport) { r.Toolchains = make([]ToolchainProbe, MaxToolchainProbes+1) },
+		"unknown action":      func(r *ProbeReport) { r.Action = "q" },
+		"bad action":          func(r *ProbeReport) { r.Action = "/abs" },
+		"empty action":        func(r *ProbeReport) { r.Action = "" },
+		"dropped probe":       func(r *ProbeReport) { r.Runs = append(r.Runs[:1], r.Runs[2:]...) },
+		"extra probe":         func(r *ProbeReport) { r.Runs = append(r.Runs, r.Runs[0]) },
+		"renamed":             func(r *ProbeReport) { r.Runs[0].Name = "walk" },
+		"other argv":          func(r *ProbeReport) { r.Runs[1].Argv = []string{"true"} },
+		"exit":                func(r *ProbeReport) { r.Runs[0].Exit = 1 },
+		"empty trace":         func(r *ProbeReport) { r.Runs[0].TraceBytes = 0 },
+		"huge trace":          func(r *ProbeReport) { r.Runs[0].TraceBytes = ProbeTraceCap + 1 },
+		"digest":              func(r *ProbeReport) { r.Runs[0].TraceSHA256 = "zz" },
+		"shadow not sorted":   func(r *ProbeReport) { r.Shadowed = []string{"/usr/b", "/usr/a"} },
+		"shadow relative":     func(r *ProbeReport) { r.Shadowed = []string{"usr/a"} },
+		"shadow dash":         func(r *ProbeReport) { r.Shadowed = []string{"-x"} },
+		"shadow root":         func(r *ProbeReport) { r.Shadowed = []string{"/"} },
+		"shadow nested":       func(r *ProbeReport) { r.Shadowed = []string{"/usr/a", "/usr/a/b"} },
+		"shadow vs runs":      func(r *ProbeReport) { r.Shadowed = []string{"/usr/a", "/usr/b"} },
 		"too many": func(r *ProbeReport) {
 			r.Shadowed = nil
 			for i := 0; i <= MaxShadowed; i++ {

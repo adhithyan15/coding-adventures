@@ -497,7 +497,7 @@ func (c *collector) assembleAction(name string, planned Action) actionOut {
 		// The sealed plan's lines, whose every sidecar line was just compared with
 		// them: what the merge's B6 compares with its own build tool's lines.
 		StepsSHA: recfmt.StepsDigest(planned.Steps),
-		Weak:     planned.Weak, Refusal: planned.Refusal,
+		Weak:     planned.Weak, Refusal: planned.Refusal, Gate: planned.Gate,
 		Record: recfmt.Normalize(traced.RawRecord{Package: name}),
 	}
 	var bad []string
