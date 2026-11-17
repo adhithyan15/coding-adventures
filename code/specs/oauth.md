@@ -4993,6 +4993,32 @@ state, transcript composition, key schedule, certificate validation, TLS
 transport, and HTTP composition remain blockers. Concrete HTTPS and
 live-provider readiness remain unavailable.
 
+An allocation-free `tls13-server-hello-retry-selection` prerequisite now
+binds one retained HelloRetryRequest version-selection proof to one retained
+ordinary ServerHello version-selection proof. The binder requires the first
+message to be classified as HelloRetryRequest and the second as ServerHello,
+then compares the exact retained ClientHello random, legacy session ID,
+cipher-suite offer count and order, and supported-version offer count and
+order across the two proofs. It also requires the complete policy-authorized
+cipher-suite descriptor and selected TLS version to remain equal. Success
+moves both non-copyable proofs into one evidence value, so later handshake
+composition cannot replace either message, either ClientHello, or either
+data-driven offer after continuity has been checked. Stable failures and
+diagnostics retain no random, session ID, offer, selection, extension,
+handshake, or policy payloads.
+
+This retry continuity binding does not compare the complete ClientHello pair
+or validate extension-specific permitted changes; require the retry to change
+the ClientHello; reject a second retry in connection state; interpret
+`cookie`, `key_share`, or `pre_shared_key`; apply the transcript
+`message_hash` rewrite; sequence a handshake; send alerts; derive keys;
+protect records; parse or validate certificates; establish trust; enforce
+revocation; perform I/O; authorize HTTP or OAuth transport; or open a network
+connection. ClientHello retry-transition policy, connection state, transcript
+composition, key schedule, certificate validation, TLS transport, and HTTP
+composition remain blockers. Concrete HTTPS and live-provider readiness
+remain unavailable.
+
 An allocation-free `tls13-alpn` prerequisite now owns the RFC 7301
 `application_layer_protocol_negotiation` extension data needed to bind a
 future repository-owned TLS client to one application protocol. A client
