@@ -571,6 +571,15 @@ pub fn runner_root(lane: &str) -> Option<&'static str> {
     }
 }
 
+/// The package that holds a lane's runner root: the whole package, whose
+/// `tests/` the runner-root digest never reads (WD-004b3).
+fn runner_package_root(lane: &str) -> Option<&'static str> {
+    match lane {
+        "python" => Some("code/packages/python/warrant-corpus"),
+        _ => None,
+    }
+}
+
 /// How one lane selects its files.
 struct SourceRule {
     select: fn(&str) -> bool,
@@ -1067,7 +1076,10 @@ fn check_go_workspace(
 // `sys.path`) in preference to the standard library module of the same name.
 // So no `*.pyc` or `*.pyo` may exist under the package root unless it sits in
 // a `__pycache__` directory, which the private `sys.pycache_prefix` makes
-// irrelevant.  The package-root `.venv` is the build's own environment, wiped
+// irrelevant.  The same scan runs over the runner's package
+// (`python/warrant-corpus`): its `tests/` is outside the digested runner root,
+// and a `tests/shutil.pyc` there would shadow the standard library for the
+// runner's own test run (WD-004b3).  The package-root `.venv` is the build's own environment, wiped
 // and recreated by `uv venv --clear` on every build, and is not scanned.
 
 fn check_python_bytecode(repo_root: &Path, package_root: &str) -> Result<(), LaneLoadError> {
@@ -1670,6 +1682,12 @@ pub fn load_lane(repo_root: &Path, package: &str) -> Result<LoadedLane, LaneLoad
     }
     if consumer.lane == "python" {
         check_python_bytecode(repo_root, &consumer.package_root)?;
+        // The runner is a package too, and the build installs and runs its tests
+        // from the package root, so its `tests/` (outside the digested runner
+        // root) gets the same scan (WD-004b3).
+        if let Some(runner_package) = runner_package_root(&consumer.lane) {
+            check_python_bytecode(repo_root, runner_package)?;
+        }
     }
     let runner_digest = source_tree_digest(
         repo_root,
