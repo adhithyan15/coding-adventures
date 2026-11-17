@@ -69,11 +69,14 @@ const SAFETY: &str = include_str!("../../vos-sched-contract/warrant/obligations-
 const POLICY: &str = include_str!("../../vos-sched-contract/warrant/obligations-policy.part");
 const CANONICAL: &str = include_str!("../../vos-sched-contract/warrant/obligations-canonical.part");
 const ANY: &str = include_str!("../../vos-sched-contract/warrant/obligations-any.part");
+const REPRESENTATION: &str =
+    include_str!("../../vos-sched-contract/warrant/obligations-representation.part");
 
 const BITMAP_OPS: &str = include_str!("fixtures/impl-bitmap-ops.part");
 const BITMAP: &str = include_str!("fixtures/impl-bitmap-models.part");
 const SCAN: &str = include_str!("fixtures/impl-scan-models.part");
 const ANY_IMPL: &str = include_str!("fixtures/impl-any-models.part");
+const RR: &str = include_str!("fixtures/impl-rr-models.part");
 
 /// The X1 case budget per claim (VOS30 section 8.5, VER04h section 3).
 const BUDGET: u64 = 400_000;
@@ -253,6 +256,18 @@ const PRODUCTION: [&str; 13] = [
     "canon_remove_img",
     "canon_dispatch_post",
     "canon_dispatch_img",
+];
+
+/// The eight `representation` obligations (VOS02 2.7), in document order.
+const REP_CLAIMS: [&str; 8] = [
+    "rep_init",
+    "rep_alpha",
+    "insert_rep_lo",
+    "insert_rep_hi",
+    "remove_rep_lo",
+    "remove_rep_hi",
+    "dispatch_rep",
+    "dispatch_rep_post",
 ];
 
 /// The `any` obligations.
@@ -492,6 +507,48 @@ fn any_satisfies_safety_and_the_any_block() {
 }
 
 #[test]
+fn round_robin_satisfies_safety_and_the_representation_tier() {
+    // VOS02 2.7: a scheduler whose state has history (the pointer) carries the representation
+    // block instead of the canonical one.  Eight claims, 458,754 cases, and the safety tier.
+    let mut names: Vec<&str> = vec![
+        "insert_safe",
+        "remove_safe",
+        "dispatch_safe",
+        "safety_alpha_build",
+        "safety_init",
+    ];
+    names.extend(REP_CLAIMS);
+    let outcomes = evaluate(&[CONTRACT, RR, SAFETY, REPRESENTATION], &names);
+    assert_all_pass(&outcomes);
+    assert_eq!(
+        counts(&outcomes),
+        vec![
+            ("insert_safe", 65_536, 65_536),
+            ("remove_safe", 65_536, 65_536),
+            ("dispatch_safe", 256, 256),
+            ("safety_alpha_build", 256, 256),
+            ("safety_init", 2, 2),
+            ("rep_init", 2, 2),
+            ("rep_alpha", 65_536, 65_536),
+            ("insert_rep_lo", 262_144, 262_144),
+            ("insert_rep_hi", 262_144, 262_144),
+            ("remove_rep_lo", 262_144, 262_144),
+            ("remove_rep_hi", 262_144, 262_144),
+            ("dispatch_rep", 65_536, 65_536),
+            ("dispatch_rep_post", 65_536, 65_536),
+        ]
+    );
+}
+
+#[test]
+fn a_round_robin_is_not_canonical() {
+    // The reason the tier exists: after one dispatch the pointer has left its `build` value, so
+    // the canonical commuting claim fails for the same implementation.
+    let outcomes = evaluate(&[CONTRACT, RR, SAFETY, CANONICAL], &["canon_dispatch_post"]);
+    assert!(!outcomes[0].passed(), "{:?}", outcomes[0]);
+}
+
+#[test]
 fn any_is_not_fixed_priority() {
     let outcomes = evaluate(&[CONTRACT, ANY_IMPL, SAFETY, POLICY], &["dispatch_policy"]);
     assert!(!get(&outcomes, "dispatch_policy").passed());
@@ -534,7 +591,7 @@ struct Mutant {
     fails: &'static [&'static str],
 }
 
-const OBLIGATIONS: [&str; 16] = [
+const OBLIGATIONS: [&str; 24] = [
     "insert_safe",
     "remove_safe",
     "dispatch_safe",
@@ -551,6 +608,14 @@ const OBLIGATIONS: [&str; 16] = [
     "dispatch_sound",
     "dispatch_covers_run",
     "dispatch_covers_idle",
+    "rep_init",
+    "rep_alpha",
+    "insert_rep_lo",
+    "insert_rep_hi",
+    "remove_rep_lo",
+    "remove_rep_hi",
+    "dispatch_rep",
+    "dispatch_rep_post",
 ];
 
 const INSERT_IMG: &str =
@@ -569,6 +634,9 @@ const ANY_PROPOSAL: &str =
     "model proposal_ok(s: Impl) -> Bool = s.choice < 8u8 and has(s, s.choice)";
 const ANY_DISPATCH_OUT: &str =
     "model dispatch_out(s: Impl) -> Pick = if proposal_ok(s) then Run(s.choice) else Idle";
+
+/// The blocks of a representation mutant's document.
+const REP_BLOCKS: &[&str] = &["safety", "representation"];
 
 fn mutants() -> Vec<Mutant> {
     let all = &["safety", "policy", "canonical"];
@@ -764,6 +832,108 @@ fn mutants() -> Vec<Mutant> {
             touches: &["dispatch_img"],
             fails: &["dispatch_sound"],
         },
+        // ---- the representation tier (VOS02 2.7), on the round-robin model ----------------------
+        // Each mutant changes one model of the RR fixture; `fails` is the EXACT set of the
+        // evaluated claims (safety and representation) that must break.
+        Mutant {
+            name: "rr rep ignores the history code (a degenerate rep): the image is only ptr = 0, which a real round-robin leaves after a dispatch (a _post claim)",
+            base: RR,
+            edits: &[("model rep(m: Ready, h: U8) -> Impl = Impl(mask_of(m), h)", "model rep(m: Ready, h: U8) -> Impl = Impl(mask_of(m), 0u8)")],
+            blocks: REP_BLOCKS,
+            touches: &["rep("],
+            fails: &["dispatch_rep_post"],
+        },
+        Mutant {
+            name: "rr alpha cheats at ptr != 0 (forgets the mask): rep_alpha, every claim that reads alpha of an image state, and dispatch_safe (the post-state of a dispatch has ptr != 0)",
+            base: RR,
+            edits: &[("model alpha_w(s: Impl) -> AbsW = AbsW(s.mask)", "model alpha_w(s: Impl) -> AbsW = if s.ptr == 0u8 then AbsW(s.mask) else AbsW(0u8)")],
+            blocks: REP_BLOCKS,
+            touches: &["alpha_w"],
+            fails: &["dispatch_safe", "rep_alpha", "insert_rep_lo", "insert_rep_hi", "remove_rep_lo", "remove_rep_hi", "dispatch_rep", "dispatch_rep_post"],
+        },
+        Mutant {
+            name: "rr init is outside the image (pointer 9: rep reads it as 1)",
+            base: RR,
+            edits: &[("model init() -> Impl = Impl(0u8, 0u8)", "model init() -> Impl = Impl(0u8, 9u8)")],
+            blocks: REP_BLOCKS,
+            touches: &["init"],
+            fails: &["rep_init"],
+        },
+        Mutant {
+            name: "rr insert_img leaves the image (pointer 9)",
+            base: RR,
+            edits: &[("if t >= 8u8 then s else Impl(bit_or(s.mask, shl(1u8, to_nat(t))), s.ptr))", "if t >= 8u8 then s else Impl(bit_or(s.mask, shl(1u8, to_nat(t))), 9u8))")],
+            blocks: REP_BLOCKS,
+            touches: &["insert_img"],
+            fails: &["insert_rep_lo", "insert_rep_hi"],
+        },
+        Mutant {
+            name: "rr remove_img leaves the image (pointer 9)",
+            base: RR,
+            edits: &[("if t >= 8u8 then s else Impl(bit_and(s.mask, bit_not(shl(1u8, to_nat(t)))), s.ptr))", "if t >= 8u8 then s else Impl(bit_and(s.mask, bit_not(shl(1u8, to_nat(t)))), 9u8))")],
+            blocks: REP_BLOCKS,
+            touches: &["remove_img"],
+            fails: &["remove_rep_lo", "remove_rep_hi"],
+        },
+        Mutant {
+            name: "rr dispatch_img leaves the image (pointer 9)",
+            base: RR,
+            edits: &[("model dispatch_img(s: Impl) -> Impl = rr_next(s.mask, s.ptr)", "model dispatch_img(s: Impl) -> Impl = Impl(rr_next(s.mask, s.ptr).mask, 9u8)")],
+            blocks: REP_BLOCKS,
+            touches: &["dispatch_img"],
+            fails: &["dispatch_rep_post"],
+        },
+        Mutant {
+            name: "rr insert_out always answers Changed (insert_rep, _out conjunct)",
+            base: RR,
+            edits: &[("model insert_out(s: Impl, t: U8) -> Upd = (\n    if t >= 8u8 then OutOfRange else (if has(s, t) then Unchanged else Changed))", "model insert_out(s: Impl, t: U8) -> Upd = Changed")],
+            blocks: REP_BLOCKS,
+            touches: &["insert_out"],
+            fails: &["insert_safe", "insert_rep_lo", "insert_rep_hi"],
+        },
+        Mutant {
+            name: "rr remove_out always answers Unchanged (remove_rep, _out conjunct)",
+            base: RR,
+            edits: &[("model remove_out(s: Impl, t: U8) -> Upd = (\n    if t >= 8u8 then OutOfRange else (if has(s, t) then Changed else Unchanged))", "model remove_out(s: Impl, t: U8) -> Upd = Unchanged")],
+            blocks: REP_BLOCKS,
+            touches: &["remove_out"],
+            fails: &["remove_safe", "remove_rep_lo", "remove_rep_hi"],
+        },
+        Mutant {
+            name: "rr dispatch always answers Run(0) (a thread that need not be ready)",
+            base: RR,
+            edits: &[("model dispatch_out(s: Impl) -> Pick = rr_pick(s.mask, s.ptr)", "model dispatch_out(s: Impl) -> Pick = Run(0u8)")],
+            blocks: REP_BLOCKS,
+            touches: &["dispatch_out"],
+            fails: &["dispatch_safe", "dispatch_rep"],
+        },
+        Mutant {
+            name: "rr insert_img jumps out of the image for t >= 32 (right abstraction, pointer 200): a packed t = shr(k, 3) could not see it; only the every-t claims do",
+            base: RR,
+            edits: &[("if t >= 8u8 then s else Impl(bit_or(s.mask, shl(1u8, to_nat(t))), s.ptr))", "if t >= 32u8 then Impl(s.mask, 200u8) else (if t >= 8u8 then s else Impl(bit_or(s.mask, shl(1u8, to_nat(t))), s.ptr)))")],
+            blocks: REP_BLOCKS,
+            touches: &["insert_img"],
+            fails: &["insert_rep_lo", "insert_rep_hi"],
+        },
+        Mutant {
+            name: "rr remove_img jumps out of the image for t >= 32 (right abstraction, pointer 200)",
+            base: RR,
+            edits: &[("if t >= 8u8 then s else Impl(bit_and(s.mask, bit_not(shl(1u8, to_nat(t)))), s.ptr))", "if t >= 32u8 then Impl(s.mask, 200u8) else (if t >= 8u8 then s else Impl(bit_and(s.mask, bit_not(shl(1u8, to_nat(t)))), s.ptr)))")],
+            blocks: REP_BLOCKS,
+            touches: &["remove_img"],
+            fails: &["remove_rep_lo", "remove_rep_hi"],
+        },
+        Mutant {
+            name: "rr dispatch picks the highest thread and does not rotate (the pointer stays, inside the image): the tier still passes, because `_det` is not gated (VOS02 2.7)",
+            base: RR,
+            edits: &[
+                ("model dispatch_out(s: Impl) -> Pick = rr_pick(s.mask, s.ptr)", "model dispatch_out(s: Impl) -> Pick = rr_pick(s.mask, 0u8)"),
+                ("model dispatch_img(s: Impl) -> Impl = rr_next(s.mask, s.ptr)", "model dispatch_img(s: Impl) -> Impl = (\n    match rr_pick(s.mask, 0u8) with\n      Idle -> s\n    | Run(t) -> Impl(bit_and(s.mask, bit_not(shl(1u8, to_nat(t)))), s.ptr))"),
+            ],
+            blocks: REP_BLOCKS,
+            touches: &["dispatch_out", "dispatch_img"],
+            fails: &[],
+        },
     ]
 }
 
@@ -773,6 +943,7 @@ fn block_text(name: &str) -> &'static str {
         "policy" => POLICY,
         "canonical" => CANONICAL,
         "any" => ANY,
+        "representation" => REPRESENTATION,
         other => panic!("no block {other}"),
     }
 }
@@ -829,7 +1000,11 @@ fn every_obligation_has_a_control() {
         .collect();
     covered.sort_unstable();
     covered.dedup();
-    for name in PRODUCTION.iter().chain(ANY_CLAIMS.iter()) {
+    for name in PRODUCTION
+        .iter()
+        .chain(ANY_CLAIMS.iter())
+        .chain(REP_CLAIMS.iter())
+    {
         assert!(covered.contains(name), "obligation {name} has no control");
     }
 }
@@ -924,6 +1099,7 @@ fn parts_follow_the_marker_discipline() {
         ("policy", POLICY),
         ("canonical", CANONICAL),
         ("any", ANY),
+        ("representation", REPRESENTATION),
     ] {
         vos_manifest::part::admit_part(text.as_bytes())
             .unwrap_or_else(|e| panic!("{name}.part is not admitted: {e}"));
@@ -937,6 +1113,7 @@ fn parts_follow_the_marker_discipline() {
         ("policy", POLICY),
         ("canonical", CANONICAL),
         ("any", ANY),
+        ("representation", REPRESENTATION),
     ] {
         let claims = vos_manifest::warrant::claims_of_block(text)
             .unwrap_or_else(|e| panic!("{name}.part: {e}"));

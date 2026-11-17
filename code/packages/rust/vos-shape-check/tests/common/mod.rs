@@ -287,3 +287,74 @@ impl Drop for Batch {
 pub fn run_all(inputs: &[CrateInput]) -> Vec<Report> {
     check_crates(inputs, &Policy::default())
 }
+
+/// [`run`], also returning the deterministic work count of the check.
+pub fn run_counted(input: &CrateInput) -> (Report, u64) {
+    vos_shape_check::check_crate_counted(input, &Policy::default())
+}
+
+/// Asserts that `work` scales (at worst) linearly in its size argument,
+/// by COUNTING the checker's work steps rather than timing them.
+///
+/// `work(size)` builds an input of that size, runs the checker (through
+/// [`run_counted`]) and returns the step count.
+///
+/// ## Why not a clock
+///
+/// An earlier version of this helper compared wall-clock growth ratios.  That
+/// flaked on shared CI runners: every `check_crate` call pays a fixed cost to
+/// build the grammar-driven lexer (about 1 s locally, about 4 s on the runner,
+/// with a second of jitter) while a size increment adds a few hundred
+/// milliseconds, so the smaller run could come out *slower* than the larger
+/// one and the ratio exploded (1276 against a limit of 10 on linear code).
+/// A step count has no fixed cost and no jitter: the same input counts the
+/// same number every time (see `vos_shape_check::steps`).
+///
+/// ## What is asserted
+///
+/// The counter is evaluated at `n`, `k*n` and `k*k*n`.  Linear work multiplies
+/// by about `k` at each step (a little less, because of a constant header);
+/// quadratic work multiplies by about `k*k`.  Each successive ratio must stay
+/// under `1.25 * k`, so a linear scanner passes with room to spare and a
+/// quadratic one (ratio near `k*k`: 16 for k = 4, 9 for k = 3) fails by a wide
+/// margin.  The counts must also strictly grow, so a counter that was never
+/// reached cannot pass by counting nothing.
+///
+/// ## The hang guard
+///
+/// A real hang is still a failure: each run is timed and must finish inside a
+/// generous backstop.  The time is never *compared*, so a slow runner cannot
+/// fail a linear scan.
+pub fn scales_linearly(what: &str, n: usize, k: usize, work: impl Fn(usize) -> u64) {
+    use std::time::{Duration, Instant};
+    const BACKSTOP: Duration = Duration::from_secs(120);
+    let sizes = [n, k * n, k * k * n];
+    let mut counts = [0u64; 3];
+    for (slot, size) in counts.iter_mut().zip(sizes) {
+        let started = Instant::now();
+        *slot = work(size);
+        let took = started.elapsed();
+        assert!(
+            took < BACKSTOP,
+            "{what}: size {size} took {took:?} (hang guard {BACKSTOP:?})"
+        );
+    }
+    let limit = 1.25 * k as f64;
+    for pair in 0..2 {
+        let (lo, hi) = (counts[pair], counts[pair + 1]);
+        assert!(
+            lo > 0 && hi > lo,
+            "{what}: the step counter did not grow: {counts:?}"
+        );
+        let ratio = hi as f64 / lo as f64;
+        eprintln!(
+            "steps {what}: sizes {sizes:?} counts {counts:?}, ratio {ratio:.2} (limit {limit:.2})"
+        );
+        assert!(
+            ratio < limit,
+            "{what}: steps grew by {ratio:.2} for a {k}x larger input (counts {counts:?}); \
+             linear is about {k}, quadratic about {}",
+            k * k
+        );
+    }
+}

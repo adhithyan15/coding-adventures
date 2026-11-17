@@ -335,7 +335,7 @@ pub fn parse_layout(bytes: &[u8]) -> Result<Layout, DocError> {
             return err(
                 DocErrorKind::TierOrder,
                 pair[1].1.begin_line,
-                "obligations blocks are in tier order (any, canonical, policy, safety), each tier once",
+                "obligations blocks are in tier order (any, canonical, policy, representation, safety), each tier once",
             );
         }
     }

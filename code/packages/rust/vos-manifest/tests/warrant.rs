@@ -204,7 +204,7 @@ fn a_block_of_claims_is_read_and_anything_else_is_refused() {
 /// produced by `tests/claim_sha256_reference.py` (an independent Python implementation of
 /// D-GD7), not by this crate: if one changes, the definition or the obligation changed, and
 /// every generated document and lock must be regenerated.
-const PINS: [(&str, &str); 16] = [
+const PINS: [(&str, &str); 24] = [
     (
         "insert_safe",
         "ef3d7c1760812044ae6d87dfa9c58d03c123d61cdae97efe9e613ad1c3a39608",
@@ -269,6 +269,38 @@ const PINS: [(&str, &str); 16] = [
         "dispatch_covers_idle",
         "8ddfda72b86548a2c72eab4e22ab1d7b7021c5c2b32717ccbb0b1c2ce610ba5c",
     ),
+    (
+        "rep_init",
+        "5a34bfc3544c12d40b65ffc6e8895bf99656166dd4ad69fa80e8eaf8ae42e672",
+    ),
+    (
+        "rep_alpha",
+        "bfeb535c6b8db440a32e55eee2fb675d8f5f50ef41c5d03d4fc984a276ee3d27",
+    ),
+    (
+        "insert_rep_lo",
+        "9e44b1d1eec14c115c6a5c2cb486ae492ba99adfa6702ff2a345c6dadbfc321e",
+    ),
+    (
+        "insert_rep_hi",
+        "86e0bd8dade4afd4125a95821ba62a4d99ef61d6379ff5192a7502d63b77cfc7",
+    ),
+    (
+        "remove_rep_lo",
+        "a67ac1ed645638879769104a688dfc16966f022bab4103b7c7dae8622a4ea731",
+    ),
+    (
+        "remove_rep_hi",
+        "d6a7b75ce631571f05f275369c02760e5f906a330bf687528a4bbcc9e9d16603",
+    ),
+    (
+        "dispatch_rep",
+        "2b3d7382d309cac6e96c74947b92ecb1bb09b7d1cfc95adbb95a7d8ff7a6399e",
+    ),
+    (
+        "dispatch_rep_post",
+        "e545ab30f35c853334f3113bba9995687b2b4ee3188aa7b920469b05589cbe43",
+    ),
 ];
 
 #[test]
@@ -293,6 +325,11 @@ fn the_real_obligation_blocks_have_the_expected_claims_and_pinned_digests() {
             "any",
             include_str!("../../vos-sched-contract/warrant/obligations-any.part"),
             3,
+        ),
+        (
+            "representation",
+            include_str!("../../vos-sched-contract/warrant/obligations-representation.part"),
+            8,
         ),
     ];
     let mut seen = std::collections::BTreeMap::new();

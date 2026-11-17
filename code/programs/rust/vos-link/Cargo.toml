@@ -45,3 +45,7 @@ path = "tests/paths_and_io.rs"
 [[test]]
 name = "cli"
 path = "tests/cli.rs"
+
+[[test]]
+name = "representation"
+path = "tests/representation.rs"

@@ -15,7 +15,7 @@ warrant vos_ready_bitmap v1
   -- vos02:impl-begin
   ...
   -- vos02:impl-end
-  -- vos02:obligations-begin tier=<safety|policy|canonical|any> sha256=<64 hex>
+  -- vos02:obligations-begin tier=<safety|representation|policy|canonical|any> sha256=<64 hex>
   ...
   -- vos02:obligations-end
   assume platform:

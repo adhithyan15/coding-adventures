@@ -10,6 +10,7 @@
 //!   tier any
 //!   tier canonical
 //!   tier policy
+//!   tier representation
 //!   tier safety
 //!   config N 8
 //!   ceiling dispatch depth 2
@@ -50,7 +51,7 @@ use crate::caps::{
 use crate::digest::sha256_hex;
 use crate::grammar::{contract_grammar, contract_tokens, token_kind};
 
-/// The four tiers of obligations a contract can define, in the order the file (and the
+/// The five tiers of obligations a contract can define, in the order the file (and the
 /// generated document) lists them: sorted by name.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum Tier {
@@ -60,13 +61,22 @@ pub enum Tier {
     Canonical,
     /// The fixed policy (for a scheduler, fixed priority).
     Policy,
+    /// The reachable states are the image of an implementation-supplied `rep` (VOS02 section 2.7):
+    /// the closure argument of an implementation whose state has history.
+    Representation,
     /// Behaviour any implementation of the interface must have.
     Safety,
 }
 
 impl Tier {
     /// Every tier, in sorted order.
-    pub const ALL: [Tier; 4] = [Tier::Any, Tier::Canonical, Tier::Policy, Tier::Safety];
+    pub const ALL: [Tier; 5] = [
+        Tier::Any,
+        Tier::Canonical,
+        Tier::Policy,
+        Tier::Representation,
+        Tier::Safety,
+    ];
 
     /// The spelling in `contract.vos`, in `vos.toml` and in a marker.
     pub fn name(self) -> &'static str {
@@ -74,6 +84,7 @@ impl Tier {
             Tier::Any => "any",
             Tier::Canonical => "canonical",
             Tier::Policy => "policy",
+            Tier::Representation => "representation",
             Tier::Safety => "safety",
         }
     }
@@ -166,7 +177,7 @@ pub enum ContractErrorKind {
     BadName,
     /// A number does not fit `u64`.
     BadNumber,
-    /// A `tier` row is not one of `any`, `canonical`, `policy`, `safety`.
+    /// A `tier` row is not one of `any`, `canonical`, `policy`, `representation`, `safety`.
     BadTier,
     /// A `ceiling` metric is not `depth`, `heap` or `steps`.
     BadMetric,
@@ -376,11 +387,11 @@ pub fn parse_contract(bytes: &[u8]) -> Result<Contract, ContractError> {
                     return err(
                         ContractErrorKind::BadTier,
                         w[1].1,
-                        "a tier is any, canonical, policy or safety",
+                        "a tier is any, canonical, policy, representation or safety",
                     );
                 };
                 if tiers.len() >= MAX_TIER_ROWS {
-                    return err(ContractErrorKind::TooManyRows, w[1].1, "more than 4 tiers");
+                    return err(ContractErrorKind::TooManyRows, w[1].1, "more than 5 tiers");
                 }
                 if let Some(&last) = tiers.last() {
                     if t == last {
@@ -390,7 +401,7 @@ pub fn parse_contract(bytes: &[u8]) -> Result<Contract, ContractError> {
                         return err(
                             ContractErrorKind::Unsorted,
                             w[1].1,
-                            "tiers are sorted: any, canonical, policy, safety",
+                            "tiers are sorted: any, canonical, policy, representation, safety",
                         );
                     }
                 }

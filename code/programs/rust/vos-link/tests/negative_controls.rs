@@ -412,9 +412,12 @@ fn a_reference_model_has_no_bound_rows_and_no_any_name() {
 fn a_contract_without_the_needed_tier_cannot_satisfy_the_kind() {
     let r = Repo::with("no-tier", SCAN);
     let c = "code/packages/rust/vos-sched-contract";
-    // Remove the canonical tier from contract.vos and its part.
+    // Remove the canonical tier (and the representation tier, the other way to be production,
+    // VOS02 2.7) from contract.vos and its parts.
     r.edit(&format!("{c}/contract.vos"), "tier canonical\n", "");
     std::fs::remove_file(r.path(&format!("{c}/warrant/obligations-canonical.part"))).unwrap();
+    r.edit(&format!("{c}/contract.vos"), "tier representation\n", "");
+    std::fs::remove_file(r.path(&format!("{c}/warrant/obligations-representation.part"))).unwrap();
     r.write(
         "code/packages/rust/vos-fixture-scan/vos.toml",
         format!("kind = \"production\"\n{TOML_HEAD}obligations = [\"safety\"]\n"),

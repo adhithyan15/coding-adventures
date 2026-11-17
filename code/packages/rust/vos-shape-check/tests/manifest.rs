@@ -290,8 +290,8 @@ fn vos_toml_contract_and_obligations_keys() {
         ("obligations = [1]", "holds strings"),
         ("obligations = [\"\"]", "1 to 16 bytes"),
         (
-            "obligations = [\"a\", \"b\", \"c\", \"d\", \"e\"]",
-            "more than 4",
+            "obligations = [\"a\", \"b\", \"c\", \"d\", \"e\", \"f\"]",
+            "more than 5",
         ),
         ("obligation = [\"a\"]", "unknown key"),
     ] {
