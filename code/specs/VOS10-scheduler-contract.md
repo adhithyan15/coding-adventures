@@ -242,7 +242,7 @@ a function, so a policy implementation is a *deterministic* function of M
   (VOS02 section 2.7, VOS-012b0) together with `safety`. The tier is the contract's (section 9.3):
   the scheduler supplies `Impl(mask, ptr)`, `rep(m, h) = Impl(<mask of m>, h)` and
   `hist(s) = s.ptr`, and the contract's eight claims say `init` is in the image of `rep`, every
-  step from the image lands back in it, and safety holds over all of it. The history is a `U8`
+  step from the image (for every thread id) lands back in it, and safety holds over all of it. The history is a `U8`
   code of which the tier uses three bits, so an implementation with more than eight history values
   needs a contract revision. A scheduler may add `<op>_det` claims (the output and the full
   post-state against an op-free model, e.g. `rr_pick`/`rr_next`): they are `impl-own`, not gated
@@ -521,7 +521,7 @@ only, and every claim is *exhaustive* where the instance fits.
 | `safety` | `insert_safe`, `remove_safe`, `dispatch_safe`, `safety_alpha_build`, `safety_init` | A for `insert`/`remove`, B for `dispatch`, C for `alpha`, closure for `init` | every implementation |
 | `policy` | `dispatch_policy` | A (deterministic) | fixed-priority implementations |
 | `canonical` | `canon_init`, `canon_insert_post`, `canon_insert_img`, `canon_remove_post`, `canon_remove_img`, `canon_dispatch_post`, `canon_dispatch_img` | shape C and closure | every `production` implementation that carries `canonical` |
-| `representation` | `rep_init`, `rep_alpha`, `insert_rep`, `insert_rep_post`, `remove_rep`, `remove_rep_post`, `dispatch_rep`, `dispatch_rep_post` | closure over the image of `rep` | every `production` implementation that carries `representation` instead of `canonical` |
+| `representation` | `rep_init`, `rep_alpha`, `insert_rep_lo`, `insert_rep_hi`, `remove_rep_lo`, `remove_rep_hi`, `dispatch_rep`, `dispatch_rep_post` | closure over the image of `rep` | every `production` implementation that carries `representation` instead of `canonical` |
 | `any` | `dispatch_sound`, `dispatch_covers_run`, `dispatch_covers_idle` | soundness and coverage | `kind = any` only |
 
 **Safety** (`warrant/obligations-safety.part`):
@@ -613,86 +613,69 @@ depends on it:
 state has history carries this block **instead of** `canonical` (VOS02 R6, exactly one). It
 names two models the implementation supplies, `rep(m: Ready, h: U8) -> Impl` and
 `hist(s: Impl) -> U8`, and no field of `Impl`, no `inv_impl` and no packing model: the
-packing is here. `M` is `ready_of(b0, .., b7)` and `k: U8` is one binder that packs the history
-(`bit_and(k, 7u8)`, three bits of a `U8` code) and the thread argument (`shr(k, 3)`, 0 to 31);
-the part holds the abbreviations expanded, and is claims only. A third `U8` binder would be a
-hard W0706, hence the packing:
+packing is here. `M` is `ready_of(b0, .., b7)`. The `insert` and `remove` claims quantify **every**
+`t: U8` and state, from `S = rep(M, h)`, the output, the abstraction of the post-state **and**
+closure (`R(P) == P`) together, so an out-of-range id (8 to 255) that sent the state outside the image
+(a first draft packed `t` as `shr(k, 3)`, 0 to 31, and missed 32 to 255 from image states) is caught.
+The budget forces a split: `h` is 0 to 3 for `_lo` and 4 to 7 for `_hi`, from two `Bool` binders
+(`8 + 2 Bool` and `t: U8` = 262,144 cases per claim). Shape chosen over a separate "out of range
+leaves the state equal" claim because it generalises the in-range claims into one uniform text with
+no implication or refinement (VOS-D079) and it is stronger on exactly what the induction needs (the
+post-state is in the image for every `t`); a state-equality claim would also have over-constrained an
+implementation that legitimately moves its history on `insert`. `dispatch` takes no argument and is
+packed into one binder `k` (low three bits are the history). A third `U8` binder would be a hard
+W0706. The part holds the abbreviations expanded, and is claims only:
 
 ```text
   -- The reachable states are exactly the image of rep (VOS02 2.7): init is in it, every step from it
-  -- lands back in it (the _post claims, the canon_*_post pattern with rep for build), and safety holds
-  -- from every state of it.  The implementation supplies two models: rep(m: Ready, h: U8) -> Impl, the
-  -- state an abstract state and a history code name, and hist(s: Impl) -> U8, the code of a state.  The
-  -- contract owns the packing: the history is a U8 code of which these claims use three bits
-  -- (bit_and(k, 7u8)); the high bits of the same binder k are the thread argument (shr(k, 3), 0 to 31),
-  -- so a claim has nine binders, not ten.  An implementation with more than eight history values needs
-  -- a contract revision.  Nothing here names a field of Impl.
+  -- lands back in it, and safety holds from every state of it.  The implementation supplies two models:
+  -- rep(m: Ready, h: U8) -> Impl, the state an abstract state and a history code name, and
+  -- hist(s: Impl) -> U8, the code of a state.  Nothing here names a field of Impl.  The history is a U8
+  -- code of which these claims use three bits (an implementation with more than eight history values
+  -- needs a contract revision).  The claims for insert and remove range over EVERY thread id t (a full
+  -- U8 binder, so the out-of-range ids 8..255 answer OutOfRange, leave the abstraction alone and stay
+  -- in the image, exactly as from build states); to fit the 400,000-case budget they are split by half
+  -- of the history, h in 0..3 (_lo) and 4..7 (_hi), built from two Bool binders.  dispatch has no
+  -- argument and is packed into one binder k (the low three bits are the history).
   claim rep_init:
     forall b: Bool. init() == rep(dec(alpha_w(init())), bit_and(hist(init()), 7u8))
   claim rep_alpha:
     forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool, k: U8. dec(alpha_w(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), bit_and(k, 7u8)))) == ready_of(b0, b1, b2, b3, b4, b5, b6, b7)
-  claim insert_rep:
-    forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool, k: U8. (
-      insert_out(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), bit_and(k, 7u8)), shr(k, 3)) == abs_insert(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), shr(k, 3)).0 and
-      dec(alpha_w(insert_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), bit_and(k, 7u8)), shr(k, 3)))) == abs_insert(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), shr(k, 3)).1)
-  claim insert_rep_post:
-    forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool, k: U8. rep(dec(alpha_w(insert_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), bit_and(k, 7u8)), shr(k, 3)))), bit_and(hist(insert_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), bit_and(k, 7u8)), shr(k, 3))), 7u8)) == insert_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), bit_and(k, 7u8)), shr(k, 3))
-  claim remove_rep:
-    forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool, k: U8. (
-      remove_out(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), bit_and(k, 7u8)), shr(k, 3)) == abs_remove(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), shr(k, 3)).0 and
-      dec(alpha_w(remove_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), bit_and(k, 7u8)), shr(k, 3)))) == abs_remove(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), shr(k, 3)).1)
-  claim remove_rep_post:
-    forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool, k: U8. rep(dec(alpha_w(remove_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), bit_and(k, 7u8)), shr(k, 3)))), bit_and(hist(remove_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), bit_and(k, 7u8)), shr(k, 3))), 7u8)) == remove_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), bit_and(k, 7u8)), shr(k, 3))
+  claim insert_rep_lo:
+    forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool, c0: Bool, c1: Bool, t: U8. (
+      insert_out(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), ((if c0 then 1u8 else 0u8) + (if c1 then 2u8 else 0u8))), t) == abs_insert(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), t).0 and
+      dec(alpha_w(insert_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), ((if c0 then 1u8 else 0u8) + (if c1 then 2u8 else 0u8))), t))) == abs_insert(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), t).1 and
+      rep(dec(alpha_w(insert_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), ((if c0 then 1u8 else 0u8) + (if c1 then 2u8 else 0u8))), t))), bit_and(hist(insert_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), ((if c0 then 1u8 else 0u8) + (if c1 then 2u8 else 0u8))), t)), 7u8)) == insert_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), ((if c0 then 1u8 else 0u8) + (if c1 then 2u8 else 0u8))), t))
+  claim insert_rep_hi:
+    forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool, c0: Bool, c1: Bool, t: U8. (
+      insert_out(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), (((if c0 then 1u8 else 0u8) + (if c1 then 2u8 else 0u8)) + 4u8)), t) == abs_insert(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), t).0 and
+      dec(alpha_w(insert_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), (((if c0 then 1u8 else 0u8) + (if c1 then 2u8 else 0u8)) + 4u8)), t))) == abs_insert(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), t).1 and
+      rep(dec(alpha_w(insert_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), (((if c0 then 1u8 else 0u8) + (if c1 then 2u8 else 0u8)) + 4u8)), t))), bit_and(hist(insert_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), (((if c0 then 1u8 else 0u8) + (if c1 then 2u8 else 0u8)) + 4u8)), t)), 7u8)) == insert_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), (((if c0 then 1u8 else 0u8) + (if c1 then 2u8 else 0u8)) + 4u8)), t))
+  claim remove_rep_lo:
+    forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool, c0: Bool, c1: Bool, t: U8. (
+      remove_out(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), ((if c0 then 1u8 else 0u8) + (if c1 then 2u8 else 0u8))), t) == abs_remove(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), t).0 and
+      dec(alpha_w(remove_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), ((if c0 then 1u8 else 0u8) + (if c1 then 2u8 else 0u8))), t))) == abs_remove(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), t).1 and
+      rep(dec(alpha_w(remove_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), ((if c0 then 1u8 else 0u8) + (if c1 then 2u8 else 0u8))), t))), bit_and(hist(remove_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), ((if c0 then 1u8 else 0u8) + (if c1 then 2u8 else 0u8))), t)), 7u8)) == remove_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), ((if c0 then 1u8 else 0u8) + (if c1 then 2u8 else 0u8))), t))
+  claim remove_rep_hi:
+    forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool, c0: Bool, c1: Bool, t: U8. (
+      remove_out(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), (((if c0 then 1u8 else 0u8) + (if c1 then 2u8 else 0u8)) + 4u8)), t) == abs_remove(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), t).0 and
+      dec(alpha_w(remove_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), (((if c0 then 1u8 else 0u8) + (if c1 then 2u8 else 0u8)) + 4u8)), t))) == abs_remove(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), t).1 and
+      rep(dec(alpha_w(remove_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), (((if c0 then 1u8 else 0u8) + (if c1 then 2u8 else 0u8)) + 4u8)), t))), bit_and(hist(remove_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), (((if c0 then 1u8 else 0u8) + (if c1 then 2u8 else 0u8)) + 4u8)), t)), 7u8)) == remove_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), (((if c0 then 1u8 else 0u8) + (if c1 then 2u8 else 0u8)) + 4u8)), t))
   claim dispatch_rep:
     forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool, k: U8. safe_dispatch(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), dispatch_out(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), bit_and(k, 7u8))), dec(alpha_w(dispatch_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), bit_and(k, 7u8))))))
   claim dispatch_rep_post:
     forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool, k: U8. rep(dec(alpha_w(dispatch_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), bit_and(k, 7u8))))), bit_and(hist(dispatch_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), bit_and(k, 7u8)))), 7u8)) == dispatch_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), bit_and(k, 7u8)))
 ```
 
-The induction is that of `canonical` with `rep` for `build`: `rep_init` puts `init` in the image,
-the three `_post` claims put every step from an image state back in it, and `rep_alpha`, `insert_rep`,
-`remove_rep` and `dispatch_rep` give safety over the whole image (the safety tier alone covers
-`build(M)`, where a pointer has its `build` value, and says nothing of a state after a `dispatch`). A
-degenerate `rep` (one that ignores `h`, or couples it to the mask) is not closed under a real
-round-robin's steps and fails a `_post` claim. **Packing residual:** `T = shr(k, 3)` takes the
-values 0 to 31: `pre_insert` (`t < 8`, eight values) and 24 out-of-range values are exhaustive here,
-and `t` in 32 to 255 from a non-`build` state is covered only by the hostile-input fuzz rows
-(`input insert_img.t: hostile`) and by `insert_safe` from `build` states. Adaptations of the
-first draft while writing the part: none of the names changed (`ready_of`, `abs_insert`, `safe_dispatch`
-are the safety part's own, and `shr(k, 3)` and a model that takes an `Impl` both type-check).
-
-**Any** (`warrant/obligations-any.part`). The oracle register is a field of
-`Impl`, so these claims can only be carried by an implementation whose state has
-`mask` and `choice` (VOS02 section 3.3). They are not quantified over `build(m)`:
-the oracle is a binder.
-
-```text
-  -- The most-general scheduler (VOS01 section 3). Impl is Impl(mask: U8, choice: U8): a bitmap
-  -- plus the oracle register that alpha drops. The oracle is a binder here, so these claims
-  -- quantify over Impl directly and not over build(M) (VOS02 section 3.3).
-  claim dispatch_sound:
-    forall mask: U8, c: U8. (
-      safe_dispatch(dec(alpha_w(Impl(mask, c))), dispatch_out(Impl(mask, c)), dec(alpha_w(dispatch_img(Impl(mask, c))))) and
-      dispatch_img(Impl(mask, c)).choice == c)
-  -- Coverage with a witness: thread t is produced by the oracle value t, Idle by 255. `mem` is false
-  -- outside 0..7, so no `t < 8` refinement is needed; a refinement would also make the property
-  -- suite unrunnable (the generator's rejection sampler gives up at 3 percent acceptance, VOS-D079).
-  claim dispatch_covers_run:
-    forall mask: U8, t: U8. (
-      mem(dec(alpha_w(Impl(mask, t))), t) => dispatch_out(Impl(mask, t)) == Run(t))
-  claim dispatch_covers_idle:
-    forall mask: U8. dispatch_out(Impl(mask, 255u8)) == Idle
-```
-
-`dispatch_covers_run` uses a **witness** (thread `t` by oracle value `t`, `Idle` by
-255) so that coverage needs no nested `exists` (VOS01 section 3.3). It has no `t < 8`
-refinement: `mem` is false outside `0..7`, so the guard added nothing, and with it the
-generator's property suite could not run (its rejection sampler gives up at 3 percent
-acceptance, VOS-D079). **As run (VOS-012a, VOS-D054):** the generator attaches the negative
-controls of the `any` claims to the operation each is about: `dispatch_sound` to
-`dispatch_img`, `dispatch_covers_run` and `dispatch_covers_idle` to `dispatch_out`; the
-predicted attachment to `alpha_w` did not happen (the subject search takes the operation the
-claim's last call names, not the leading `safe_dispatch`), so no claim was rewritten for it.
+The induction is that of `canonical` with `rep` for `build`: `rep_init` puts `init` in the image, the
+closure conjuncts of the four `insert`/`remove` claims (for every `t`) and `dispatch_rep_post` put every
+step from an image state back in it, and `rep_alpha`, the abstraction conjuncts and `dispatch_rep` give
+safety over the whole image (the safety tier alone covers `build(M)`, where a pointer has its `build`
+value, and says nothing of a state after a `dispatch`). A degenerate `rep` (one that ignores `h`, or
+couples it to the mask) is not closed under a real round-robin's steps and fails a closure claim.
+**Residual:** none for `t`; the history code is three bits, so a scheduler with more than eight
+history values needs a contract revision. The history of the state *after* a step is checked only for
+membership in the image, not for rotation order: that is what an optional `<op>_det` claim is for.
 
 ### 9.4 Claims that are not obligations
 
@@ -738,7 +721,8 @@ counts the evaluation of section 12 measured, not typed by hand.
 | `canon_dispatch_post`, `canon_dispatch_img` (each) | 8 Bool | 256 | 256 | 0.06 |
 | **Representation** | | | | |
 | `rep_init` | `b: Bool` | 2 | 2 | 0.00 |
-| `rep_alpha`, `insert_rep`, `insert_rep_post`, `remove_rep`, `remove_rep_post`, `dispatch_rep`, `dispatch_rep_post` (each) | 8 Bool, `k: U8` | 65,536 | 65,536 | 16.38 |
+| `rep_alpha`, `dispatch_rep`, `dispatch_rep_post` (each) | 8 Bool, `k: U8` | 65,536 | 65,536 | 16.38 |
+| `insert_rep_lo`, `insert_rep_hi`, `remove_rep_lo`, `remove_rep_hi` (each) | 10 Bool, `t: U8` | 262,144 | 262,144 | 65.54 |
 | **Any** | | | | |
 | `dispatch_sound` | `mask: U8`, `c: U8` | 65,536 | 65,536 | 16.38 |
 | `dispatch_covers_run` | `mask: U8`, `t: U8` | 65,536 | 65,536 | 16.38 |
@@ -751,7 +735,7 @@ as in the toy. The obligation totals per implementation (enumerated cases):
 |---|---|---|
 | fixed-priority bitmap (`production`) | safety, policy, canonical | **394,500** (394,498 before `safety_init`, VOS-D081) |
 | lowest-first scan (safety, canonical) | safety, canonical | 131,586 + 262,658 = 394,244 |
-| round-robin (`representation`) | safety, representation | 131,586 + 458,754 = **590,340** (the representation block: `rep_init` 2, seven claims of 65,536) |
+| round-robin (`representation`) | safety, representation | 131,586 + 1,245,186 = **1,376,772** (the representation block: `rep_init` 2, three claims of 65,536 and four of 262,144) |
 | `-any` | safety, any | **262,914** (262,912 before `safety_init`, VOS-D081; = the binder cases: no refinement; 199,424 before VOS-012a dropped the `t < 8` refinement of `dispatch_covers_run`, VOS-D079) |
 
 Where the budget ends for this contract:
@@ -806,8 +790,7 @@ is out of this contract's reach: plan on `T <= 8..16` per obligation there.
 * **`vos-sched-rr`** (kind `production`, carries `representation` and `safety`): a rotating
   pointer, `obligations = ["representation", "safety"]`, the models `rep` and `hist` and, optionally,
   an ungated `dispatch_det` against op-free `rr_pick`/`rr_next` in its own `impl.part`. The packing
-  residual of section 9.3 applies: `t` in 32 to 255 from a non-`build` state is covered only by the
-  hostile-input fuzz rows and by `insert_safe` at the `build` pointer.
+  history code is three bits (section 9.3); there is no `t` residual (every thread id is a binder).
 * **As built (VOS-012a):** `vos-sched-any` exists (`code/packages/rust/vos-sched-any`): its state
   is `State { mask, choice }`, `dispatch` proposes, validates and defaults to `Idle`, the oracle
   is written only through the `ghost` module, and its generated document passes `check-doc`

@@ -551,30 +551,31 @@ model hist(s: Impl) -> U8           -- the history code of a state
 ```
 
 The block names no field of `Impl`, no `inv_impl` and no packing model; the **contract owns the
-packing**: the history is a `U8` *code* of which the text uses three bits (`bit_and(k, 7u8)`), and
-the one extra `U8` binder `k` also carries the thread argument (`shr(k, 3)`, 0 to 31), so a claim
-has nine binders (eight `Bool`s and `k`: 65,536 cases) and not ten (a third `U8` binder is a hard
-W0706). An implementation with more than eight history values needs a contract revision, a new
+packing**: the history is a `U8` *code* of which the text uses three bits (`bit_and(.., 7u8)`). The
+claims for `insert` and `remove` quantify **every thread id** `t: U8` (so the 248 out-of-range ids answer
+`OutOfRange`, leave the abstraction alone and stay in the image, as they do from `build` states), and,
+to fit the 400,000-case budget, are split by half of the history, `h` in 0 to 3 (`_lo`) and 4 to 7
+(`_hi`), built from two `Bool` binders (`10 Bool x U8` = 262,144 cases; a third `U8` binder is a hard
+W0706). `dispatch` has no argument, so its claims use one packed binder `k` (8 `Bool`s and `k`:
+65,536 cases). An implementation with more than eight history values needs a contract revision, a new
 tier text with a new digest, not a local workaround. With `M` = `ready_of(b0, .., b7)`,
-`S` = `rep(M, bit_and(k, 7u8))`, `T` = `shr(k, 3)` and
-`R(P)` = `rep(dec(alpha_w(P)), bit_and(hist(P), 7u8))` (the abbreviations are **expanded
-verbatim** in the part, which holds claims only), the claims are:
+`S` = `rep(M, h)` and `R(P)` = `rep(dec(alpha_w(P)), bit_and(hist(P), 7u8))` (the abbreviations are
+**expanded verbatim** in the part, which holds claims only), the claims are:
 
 | Claim | Says |
 |---|---|
 | `rep_init` | `init() == R(init())`: the start state is in the image of `rep` |
-| `rep_alpha` | `dec(alpha_w(S)) == M`: `alpha` forgets the history and nothing else |
-| `insert_rep`, `remove_rep` | the output and the abstraction of the post-state of `insert` (`remove`) from `S` are the abstract step's: `abs_insert(M, T)` |
-| `insert_rep_post`, `remove_rep_post` | `R(insert_img(S, T)) == insert_img(S, T)`: the post-state is again in the image |
+| `rep_alpha` | `dec(alpha_w(rep(M, bit_and(k, 7u8)))) == M`: `alpha` forgets the history and nothing else |
+| `insert_rep_lo`, `insert_rep_hi`, `remove_rep_lo`, `remove_rep_hi` | for every `t`: the output and the abstraction of the post-state of `insert` (`remove`) from `S` are the abstract step's (`abs_insert(M, t)`), **and** `R(insert_img(S, t)) == insert_img(S, t)`: the post-state is again in the image |
 | `dispatch_rep` | `safe_dispatch(M, dispatch_out(S), dec(alpha_w(dispatch_img(S))))`: safety from `S` |
 | `dispatch_rep_post` | `R(dispatch_img(S)) == dispatch_img(S)` |
 
 *Why it closes.* This is the `canonical` argument with `rep` for `build`: `init` is in the image,
-every step from an image state lands back in it (the `_post` claims, the `canon_*_post` pattern),
+every step from an image state lands back in it (the closure conjuncts and `dispatch_rep_post`, the `canon_*_post` pattern, for every `t`),
 and the safety relation holds from every image state. So safety holds over every reachable state,
 not only over `build(M)` (after one `dispatch` a pointer has left its `build` value). A degenerate
 `rep` (one that ignores `h`, or derives it from the mask) is not an image of the reachable states
-for a real round-robin and fails a `_post` claim: coverage is closed by **evidence**, not by a
+for a real round-robin and fails a closure claim: coverage is closed by **evidence**, not by a
 lint over the shape of `rep`.
 
 **`<op>_det` is optional and not gated.** An implementation may add claims `<op>_det` (the output
