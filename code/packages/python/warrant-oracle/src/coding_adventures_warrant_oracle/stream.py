@@ -155,17 +155,23 @@ def fnv1a64(text: str) -> int:
     return h
 
 
-def slim_base_set(suite_id: str, m: int) -> list[int]:
+def slim_base_set(suite_id: str, m: int, stride: int | str = "auto") -> list[int]:
     """The corpus-chosen chunk subset of a ``slim`` run, before witness chunks.
 
-    ``m <= 16``: every chunk.  Otherwise ``k = ceil(m / 14)``,
-    ``o = FNV-1a-64(suite id) mod k`` and the set is the first and last chunk plus
-    every ``k``-th chunk starting at ``o`` (a 2^24-case suite has ``m = 256``,
-    ``k = 19``).
+    ``m <= 16``: every chunk (a profile ``slim_stride`` is ignored).  Otherwise the
+    automatic stride is ``k = ceil(m / 14)``; a numeric profile ``slim_stride`` is
+    **clamped** to it, ``k = min(stride, ceil(m / 14))``, per suite and never an
+    error (section 5.6: a profile can make the slim set denser, never sparser).  With
+    ``o = FNV-1a-64(suite id) mod k`` the set is the first and last chunk plus every
+    ``k``-th chunk starting at ``o`` (a 2^24-case suite has ``m = 256``, ``k = 19``).
     """
     if m <= 16:
         return list(range(m))
     k = -(-m // 14)
+    if stride != "auto":
+        if type(stride) is not int or stride < 1:
+            raise OracleError("generation", "slim_stride is a positive integer or auto")
+        k = min(stride, k)
     o = fnv1a64(suite_id) % k
     chosen = {0, m - 1}
     chosen.update(range(o, m, k))

@@ -136,7 +136,7 @@ def test_subject_calls_in_model_arguments_are_counted():
 # -- 5: wraps are independent of memoisation and order, and see subject arguments -------
 
 
-WRAPS = b"""warrant w
+WRAPS = b"""warrant w v1
   op f(a: U8) -> U8
   model plus(a: U8) -> U8 = a + 200u8
   claim one:

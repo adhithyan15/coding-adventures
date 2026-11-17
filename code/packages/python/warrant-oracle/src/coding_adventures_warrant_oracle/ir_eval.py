@@ -23,7 +23,8 @@ saturated value.  (A Python ``int`` cannot overflow, so the check is explicit.)
 
 Resource bounds (VER04r section 14)
 -----------------------------------
-* ``MAX_IR_DEPTH = 64``: IR nesting.
+* ``MAX_IR_DEPTH = 64``: IR nesting, counted in *levels* (the root is level 1, so a node
+  at depth index 64 is the refused 65th level; S4 part 1 admitted 65).
 * ``MAX_IR_COST = 2000`` (default; a corpus may declare up to 65,536 in
   ``corpus.profile``): a *static* bound on node evaluations on the **worst path**
   (VER04r 4.2 rule 6, as amended): one branch of an ``if`` (the larger), each
@@ -314,7 +315,7 @@ class Program:
     # -- expressions ---------------------------------------------------------------
 
     def _compile(self, node: object, tenv: dict, allow_subject: bool, depth: int) -> Compiled:
-        if depth > MAX_IR_DEPTH:
+        if depth >= MAX_IR_DEPTH:
             raise OracleError("limit", "IR nesting exceeds 64 levels")
         if not (isinstance(node, list) and node and isinstance(node[0], str)):
             raise OracleError("ir", "a malformed IR node")
@@ -658,7 +659,7 @@ def compile_calls(prog: Program, ir: object, tenv: dict) -> int | Callable:
     """
 
     def count(node: object, depth: int = 0) -> int | Callable:
-        if depth > MAX_IR_DEPTH:
+        if depth >= MAX_IR_DEPTH:
             raise OracleError("limit", "IR nesting exceeds 64 levels")
         if not has_subject(node):
             return 0
@@ -700,11 +701,15 @@ def compile_calls(prog: Program, ir: object, tenv: dict) -> int | Callable:
     return count(ir)
 
 
-_ARITH_TAGS = frozenset({"add", "sub", "mul", "neg"})
+#: Nodes that can wrap or fail when evaluated on the pure trace (section 3.3 rule 1):
+#: arithmetic (wrap; exact ``Nat``/``Int`` can leave the 2^127 window) and ``concat``
+#: (a result past ``MAX_IR_VALUE`` is ``ir-overflow``).  ``take``/``drop`` are total.
+_ARITH_TAGS = frozenset({"add", "sub", "mul", "neg", "concat"})
+_FIXED_ARITH_TAGS = frozenset({"add", "sub", "mul", "neg"})
 
 
 def may_wrap(prog: Program, ir: object, _seen: set | None = None) -> bool:
-    """Could evaluating ``ir`` (or a model it calls) perform ``+ - *`` or unary minus?"""
+    """Could evaluating ``ir`` (or a model it calls) wrap or fail (``+ - *``, ``neg``, ``concat``)?"""
     seen = _seen if _seen is not None else set()
     stack = [ir]
     while stack:
@@ -742,7 +747,7 @@ def compile_trace(prog: Program, ir: object, tenv: dict) -> Callable | None:
     """
 
     def tr(node: object, depth: int = 0) -> list[Callable]:
-        if depth > MAX_IR_DEPTH:
+        if depth >= MAX_IR_DEPTH:
             raise OracleError("limit", "IR nesting exceeds 64 levels")
         if not has_subject(node):
             if may_wrap(prog, node):
@@ -796,3 +801,52 @@ def _sum(base: int, parts: list) -> int | Callable:
     if not dynamic:
         return static
     return lambda env: static + sum(p(env) for p in dynamic)
+
+
+def fixed_arith_over_subject(prog: Program, ir: object, tenv: dict) -> bool:
+    """VER04r section 3.3 rule 3: a fixed-width ``+ - *``/unary ``-`` above a subject call?
+
+    A **v0 document's** Rust harness evaluates ``U8`` as ``Nat``, so whether such a node
+    wraps depends on what the subject returns and no generation-time count can prove
+    the two evaluators agree: the claim is refused statically.  The rule covers
+    ``model_call`` too: ``inc(subject(..))`` where ``model inc(x: U8) -> U8 = x + 1u8``
+    has a subject beneath the call and a fixed-width node in the callee's *call
+    closure* (the model's body and, transitively, every model it calls).
+    """
+    closure: dict[str, bool] = {}
+
+    def model_has_fixed(name: str) -> bool:
+        if name in closure:
+            return closure[name]
+        closure[name] = False  # models are acyclic (rule 4.2.1); this only guards hostile input
+        m = prog.models[name]
+        mtenv = dict(m.params)
+        result = False
+        stack = [m.ir]
+        while stack and not result:
+            node = stack.pop()
+            if not (isinstance(node, list) and node and isinstance(node[0], str)):
+                continue
+            tag = node[0]
+            if tag in _FIXED_ARITH_TAGS and prog.compile(node[1], mtenv, False).ty.head in FIXED or tag == "model_call" and model_has_fixed(node[1]):
+                result = True
+            elif tag not in ("lit", "var", "err"):
+                stack.extend(node[2] if tag in ("model_call", "subject_op") else node[1:])
+        closure[name] = result
+        return result
+
+    stack = [ir]
+    while stack:
+        node = stack.pop()
+        if not (isinstance(node, list) and node and isinstance(node[0], str)):
+            continue
+        tag = node[0]
+        if tag in ("lit", "var", "err"):
+            continue
+        if tag in _FIXED_ARITH_TAGS and has_subject(node):
+            if prog.compile(node[1], tenv, True).ty.head in FIXED:
+                return True
+        elif tag == "model_call" and has_subject(node) and model_has_fixed(node[1]):
+            return True
+        stack.extend(node[2] if tag in ("model_call", "subject_op") else node[1:])
+    return False

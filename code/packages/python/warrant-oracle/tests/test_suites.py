@@ -45,7 +45,7 @@ def plan_for(source: bytes | str, claim: str, **kw):
 
 # -- a naive U8 x U8 reference --------------------------------------------------------
 
-TWO = b"""warrant two
+TWO = b"""warrant two v1
   op f(a: U8, b: U8) -> U8
   model keep(a: U8, b: U8) -> U8 = a + b
   claim all_pairs:
@@ -280,7 +280,7 @@ def test_budget_demotion_and_refusal_flow_through_the_plan():
 
 # -- evaluation inside enumeration ---------------------------------------------------------
 
-WRAP = b"""warrant wr
+WRAP = b"""warrant wr v1
   op f(a: U8) -> U8
   model plus(a: U8) -> U8 = a + 200u8
   claim c:
