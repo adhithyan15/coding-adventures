@@ -517,9 +517,13 @@ func (c *Compiled) Parse(tokens []lexer.Token, opts Options) (ast *ASTNode, err 
 	// No machine can hold 2 billion 64-byte tokens, but a refusal costs one
 	// comparison and means an index can never wrap.
 	if len(tokens) >= flatIndexLimit {
+		var last lexer.Token
+		if len(tokens) > 0 {
+			last = tokens[len(tokens)-1]
+		}
 		return nil, &GrammarParseError{
 			Message: fmt.Sprintf("%s (%d)", ErrMaxTokens.Error(), flatIndexLimit),
-			Tok:     tokens[flatIndexLimit-1],
+			Tok:     last,
 			Err:     ErrMaxTokens,
 		}
 	}
