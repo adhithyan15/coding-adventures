@@ -249,9 +249,7 @@ impl<'a> Program<'a> {
             .map(|(n, _)| n.as_str())
             .zip(args.iter().cloned())
             .collect();
-        Ok(self
-            .eval(admit, &pvars, &mut Stats::default())?
-            .as_bool()?)
+        self.eval(admit, &pvars, &mut Stats::default())?.as_bool()
     }
 
     /// The same program with a seeded-wrong evaluator.
