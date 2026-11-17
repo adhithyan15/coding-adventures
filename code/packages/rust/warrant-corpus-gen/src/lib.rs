@@ -97,14 +97,21 @@
 pub mod analysis;
 pub mod arith;
 pub mod cost;
+pub mod domains;
+pub mod enumerate;
 pub mod error;
+pub mod eval;
 pub mod ir;
 pub mod json;
 pub mod lower;
 pub mod profile;
+pub mod stream;
+pub mod suite;
 pub mod types;
+pub mod value;
 pub mod view;
 
+pub use enumerate::{enumerate_document, Enumeration};
 pub use error::{code, Beyond, GenError};
 pub use lower::{census, lower_document, CensusRow, ItemKind, Lowered};
 

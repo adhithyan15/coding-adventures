@@ -12,6 +12,9 @@
 //!   "type"    the document does not type check              lowering
 //!   "check"   the S2 checker refused the document           lowering
 //!   "limit"   a resource bound of VER04r section 14         lowering, cost, profile
+//!   "W0706"   a suite admits nothing / is over budget      enumeration
+//!   "W0707"   a `Bytes<N>` wider than 4096                 domain resolution
+//!   "domain"  a descriptor VER04r 16.2 leaves undecided    domain resolution
 //!   "profile" `corpus.profile` is malformed                 profile reader
 //!   "json"    a value cannot be rendered canonically        json writer
 //!   "unimplemented"  a later slice's stage (fails closed)   `generate`
@@ -36,6 +39,13 @@ pub mod code {
     pub const CHECK: &str = "check";
     /// A resource bound was exceeded (IR depth, cost, work, profile size).
     pub const LIMIT: &str = "limit";
+    /// A suite admits no case, or its product is over the budget (the v1 generator's code).
+    pub const W0706: &str = "W0706";
+    /// A `Bytes<N>` wider than `MAX_FIXED_WIDTH` (the v1 generator's code).
+    pub const W0707: &str = "W0707";
+    /// A binder descriptor that VER04r 16.2 leaves undecided (`nat_count`, a signed
+    /// `fx_edge`, `FxEdge` at 16 bits, a list of byte strings): refused until S10 decides.
+    pub const DOMAIN: &str = "domain";
     /// `corpus.profile` is malformed.
     pub const PROFILE: &str = "profile";
     /// A JSON value cannot be rendered by the canonical writer.

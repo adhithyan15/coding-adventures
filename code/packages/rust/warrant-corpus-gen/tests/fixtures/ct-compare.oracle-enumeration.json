@@ -1,0 +1,435 @@
+{
+  "budget": 16777216,
+  "chunk_size": 65536,
+  "document": "v0",
+  "max_ir_cost": 2000,
+  "module": "ct_compare",
+  "schema": "warrant-enumeration-parity-v0",
+  "suites": {
+    "eq_agrees": {
+      "binders": [
+        "Bytes",
+        "Bytes"
+      ],
+      "cases": 120409,
+      "chunk_lines": [
+        "0 65536 0 65536 bb7c38a637037085d189f38d1118d7afe2c2f379c30a519249a5b55f9d96bcb3 d5a90c784bbe8736f79e820e2d8a0c4d721c4d345ffce6eba97c02af9b54f1c6",
+        "1 54873 65536 54873 313bbf71e27c7489df89c7b4a49034d06db737eb4636f44b78faacb1b4f49134 e11d673335da63b2da6877397df5e1ee9061481f6efc21316e7e918df17261da"
+      ],
+      "chunk_size": 65536,
+      "chunks_total": 2,
+      "claim": "eq_agrees",
+      "demoted": [],
+      "descriptors": [
+        {
+          "d": "bytes_d1",
+          "size": 347
+        },
+        {
+          "d": "bytes_d1",
+          "size": 347
+        }
+      ],
+      "discarded": 0,
+      "domain_label": "bounded-set",
+      "expected_calls": 120409,
+      "expected_sha256": "8d23f7f288e79c885a151b6cb9cc2152159eb9f4f8871ca8f6e6f4aad36e482f",
+      "id": "warrant/ct_compare/exhaustive/eq_agrees",
+      "inputs_sha256": "a0f08bd05f38bfb6ee0ee026bbd14848960621c289cddaacf515fb045f564841",
+      "ir_cost": 17,
+      "kind": "reference",
+      "product": 120409,
+      "result_type": "Bool",
+      "slim_chunks": [
+        0,
+        1
+      ],
+      "slim_expected_sha256": "8d23f7f288e79c885a151b6cb9cc2152159eb9f4f8871ca8f6e6f4aad36e482f",
+      "slim_inputs_sha256": "a0f08bd05f38bfb6ee0ee026bbd14848960621c289cddaacf515fb045f564841",
+      "stream_header": "warrant-stream-v1",
+      "v1_expected_sha256": "a243a089a7ad008af8f29fca5504a92c042db32cca3e70953d91e749baf9d856",
+      "v1_inputs_sha256": "73b983e125ba39dc8c311f407423a8f40cfcf2738e65151cdf177e36c384bc5b",
+      "wraps": 0
+    },
+    "eq_fixed_agrees_w0": {
+      "binders": [
+        "Bytes<0>",
+        "Bytes<0>"
+      ],
+      "cases": 1,
+      "chunk_lines": [
+        "0 1 0 1 ab9f4dc4c25469421830727310961ef2136b126a5ddd999704a3b876a4ac64f8 43729e9279ec0f468c2d106a18106a7e0e85554267734153c926913ee7a9f2ba"
+      ],
+      "chunk_size": 65536,
+      "chunks_total": 1,
+      "claim": "eq_fixed_agrees_w0",
+      "demoted": [],
+      "descriptors": [
+        {
+          "d": "bytes_n",
+          "n": 0,
+          "size": 1
+        },
+        {
+          "d": "bytes_n",
+          "n": 0,
+          "size": 1
+        }
+      ],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 1,
+      "expected_sha256": "e8848bdefd13640f25a8083b0c5ca40288de79618692bfb9e84523b87168f86b",
+      "id": "warrant/ct_compare/exhaustive/eq_fixed_agrees_w0",
+      "inputs_sha256": "752358d88ac416468a6965ba296f3133a7a8b57c418b89fdae9a992812557085",
+      "ir_cost": 17,
+      "kind": "reference",
+      "product": 1,
+      "result_type": "Bool",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "e8848bdefd13640f25a8083b0c5ca40288de79618692bfb9e84523b87168f86b",
+      "slim_inputs_sha256": "752358d88ac416468a6965ba296f3133a7a8b57c418b89fdae9a992812557085",
+      "stream_header": "warrant-stream-v1",
+      "v1_expected_sha256": "df473b27b8177a3a6fd686387c8bf2df8a4b38a73cec144545d797b154b6a86b",
+      "v1_inputs_sha256": "a7fcfe4d1e50746bac8d869473984a2d9a8e225cae85d3d7ef6444cb106353e7",
+      "wraps": 0
+    },
+    "eq_fixed_agrees_w1": {
+      "binders": [
+        "Bytes<1>",
+        "Bytes<1>"
+      ],
+      "cases": 65536,
+      "chunk_lines": [
+        "0 65536 0 65536 968e657cbd8f407087fc46fed3e3b3eb6bd3f8bfc74d49a1eb66456a4d66d28b 6bc69faec066c4c59f33bcabfbc04533bec3dd063f4a50f6a2fe79c8bb43aee4"
+      ],
+      "chunk_size": 65536,
+      "chunks_total": 1,
+      "claim": "eq_fixed_agrees_w1",
+      "demoted": [],
+      "descriptors": [
+        {
+          "d": "bytes_n",
+          "n": 1,
+          "size": 256
+        },
+        {
+          "d": "bytes_n",
+          "n": 1,
+          "size": 256
+        }
+      ],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 65536,
+      "expected_sha256": "027089cd097043da83f213945de2abe099d98d8e00baa96cdfda5d2bb78683b9",
+      "id": "warrant/ct_compare/exhaustive/eq_fixed_agrees_w1",
+      "inputs_sha256": "4f834ea67b0280c65f94f4ae9dae8eba3ecd6a36b8f6f1d80bd616bfc9e6221e",
+      "ir_cost": 17,
+      "kind": "reference",
+      "product": 65536,
+      "result_type": "Bool",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "027089cd097043da83f213945de2abe099d98d8e00baa96cdfda5d2bb78683b9",
+      "slim_inputs_sha256": "4f834ea67b0280c65f94f4ae9dae8eba3ecd6a36b8f6f1d80bd616bfc9e6221e",
+      "stream_header": "warrant-stream-v1",
+      "v1_expected_sha256": "cea8d7a523ba9d4aca3db279c043b91c80bb63a9b8d27d5dc5c6c1fecc2c3e7c",
+      "v1_inputs_sha256": "84321254b2aa5362fb62c7706be1a3226ea2320c87cdb39d9b09731d89da22fc",
+      "wraps": 0
+    },
+    "eq_fixed_agrees_w16": {
+      "binders": [
+        "Bytes<16>",
+        "Bytes<16>"
+      ],
+      "cases": 2704,
+      "chunk_lines": [
+        "0 2704 0 2704 bdc137550851c521364a721e85dc3843f3506d8715edc18d59ab7a395f58fcfb 7644f9dc1cae1a0e2934b543381007516d268115ff297223fcb093c248e8dea4"
+      ],
+      "chunk_size": 65536,
+      "chunks_total": 1,
+      "claim": "eq_fixed_agrees_w16",
+      "demoted": [],
+      "descriptors": [
+        {
+          "d": "bytes_n",
+          "n": 16,
+          "size": 52
+        },
+        {
+          "d": "bytes_n",
+          "n": 16,
+          "size": 52
+        }
+      ],
+      "discarded": 0,
+      "domain_label": "sample",
+      "expected_calls": 2704,
+      "expected_sha256": "0936ed12355faa62e656162e7a267af352ab2f18fe7b0a14eb4eda872e647b6c",
+      "id": "warrant/ct_compare/exhaustive/eq_fixed_agrees_w16",
+      "inputs_sha256": "fe7862a29adfa18745f0c4e7d21e10bbba5438458f33d50d38231da7b87cebea",
+      "ir_cost": 17,
+      "kind": "reference",
+      "product": 2704,
+      "result_type": "Bool",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "0936ed12355faa62e656162e7a267af352ab2f18fe7b0a14eb4eda872e647b6c",
+      "slim_inputs_sha256": "fe7862a29adfa18745f0c4e7d21e10bbba5438458f33d50d38231da7b87cebea",
+      "stream_header": "warrant-stream-v1",
+      "v1_expected_sha256": "0d491f50b120ef82d24b640151ede4dc7c7815e2803cc3a76ffcbde2abe548e9",
+      "v1_inputs_sha256": "ca7fa7a0045143bb88e88dc7b55748497a8562256d82733a1b2100cd3f21d3da",
+      "wraps": 0
+    },
+    "eq_fixed_agrees_w2": {
+      "binders": [
+        "Bytes<2>",
+        "Bytes<2>"
+      ],
+      "cases": 256,
+      "chunk_lines": [
+        "0 256 0 256 5979f283ffcc339e1b422132de4723e0a2c9c2ccb226e627abfc41080d5635ec 164fa21f63114af28a78403875322aed7533cfc2b79878541a992ab849db9a6c"
+      ],
+      "chunk_size": 65536,
+      "chunks_total": 1,
+      "claim": "eq_fixed_agrees_w2",
+      "demoted": [],
+      "descriptors": [
+        {
+          "d": "bytes_n",
+          "n": 2,
+          "size": 16
+        },
+        {
+          "d": "bytes_n",
+          "n": 2,
+          "size": 16
+        }
+      ],
+      "discarded": 0,
+      "domain_label": "sample",
+      "expected_calls": 256,
+      "expected_sha256": "494c1c9149d5d54212070ab7b8814337b242c3e33beec731514cf8bc6db53637",
+      "id": "warrant/ct_compare/exhaustive/eq_fixed_agrees_w2",
+      "inputs_sha256": "2e5df5f581978ef249c583ac4892d9f7c11a5fafabfc23b357d73b9fc288bc8c",
+      "ir_cost": 17,
+      "kind": "reference",
+      "product": 256,
+      "result_type": "Bool",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "494c1c9149d5d54212070ab7b8814337b242c3e33beec731514cf8bc6db53637",
+      "slim_inputs_sha256": "2e5df5f581978ef249c583ac4892d9f7c11a5fafabfc23b357d73b9fc288bc8c",
+      "stream_header": "warrant-stream-v1",
+      "v1_expected_sha256": "df90a479a9ccf237e6f63e442563504b1cbbf81188bf6817832be5cbbf1dfb9f",
+      "v1_inputs_sha256": "ac971579e63dfed711937587c204454a2a67155ecd299c77144881d9c54e2ffc",
+      "wraps": 0
+    },
+    "eq_fixed_agrees_w4": {
+      "binders": [
+        "Bytes<4>",
+        "Bytes<4>"
+      ],
+      "cases": 256,
+      "chunk_lines": [
+        "0 256 0 256 d6c1e1024d1b99648721e23975a0ff5729f59844aef3d10bc2271bff8ee27d14 36241bae6e3c187cad1e6c077e70be8e521e9165f7b61675f21ab11aee75508b"
+      ],
+      "chunk_size": 65536,
+      "chunks_total": 1,
+      "claim": "eq_fixed_agrees_w4",
+      "demoted": [],
+      "descriptors": [
+        {
+          "d": "bytes_n",
+          "n": 4,
+          "size": 16
+        },
+        {
+          "d": "bytes_n",
+          "n": 4,
+          "size": 16
+        }
+      ],
+      "discarded": 0,
+      "domain_label": "sample",
+      "expected_calls": 256,
+      "expected_sha256": "c8849f37d4db89177145a50c89217dbba2daf5b4c8c03ab73e98811af27f1358",
+      "id": "warrant/ct_compare/exhaustive/eq_fixed_agrees_w4",
+      "inputs_sha256": "d0ac39f86acee1390d342c10d8b76503a64b44b1144beabbd2be53b08833c47b",
+      "ir_cost": 17,
+      "kind": "reference",
+      "product": 256,
+      "result_type": "Bool",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "c8849f37d4db89177145a50c89217dbba2daf5b4c8c03ab73e98811af27f1358",
+      "slim_inputs_sha256": "d0ac39f86acee1390d342c10d8b76503a64b44b1144beabbd2be53b08833c47b",
+      "stream_header": "warrant-stream-v1",
+      "v1_expected_sha256": "19322d780e674a3d7d93170f7392631fd71d101bcd9be9084eb0c518a0643c6a",
+      "v1_inputs_sha256": "32ae5516698a95773ef0a77c580421c75f843b37f0588ad0b4a2e69fbbce955d",
+      "wraps": 0
+    },
+    "eq_u64_agrees": {
+      "binders": [
+        "U64",
+        "U64"
+      ],
+      "cases": 142129,
+      "chunk_lines": [
+        "0 65536 0 65536 949f2cf21a21ad77873770856f04a0344ca44111074392090353e61d31f87559 2af68186b1e052f4a61d0881314215d22238e9ef9e2c0ccb4041a88df95e1b43",
+        "1 65536 65536 65536 c06d359d40a2798723ed56d98edd7e41ec3140175c6c42b875b847e752e8bad0 62af67e3d5b4a1ae2d26891a3deee60dad080348803e73d9eaa39503f1abdc1b",
+        "2 11057 131072 11057 83a9295e3bbf1e033cb92732fa51d001966f22f6dd6a2dbd4211d3efa6c8e767 11da7ba5ad40bea3b6cf491de10d24de3e27692766618b1738b20479d9b455f6"
+      ],
+      "chunk_size": 65536,
+      "chunks_total": 3,
+      "claim": "eq_u64_agrees",
+      "demoted": [],
+      "descriptors": [
+        {
+          "d": "u64_edge",
+          "size": 377
+        },
+        {
+          "d": "u64_edge",
+          "size": 377
+        }
+      ],
+      "discarded": 0,
+      "domain_label": "bounded-set",
+      "expected_calls": 142129,
+      "expected_sha256": "ccf99d1031745754ca2dc33b426eb310ec94af58fda07b3f8c4c6af250a3f20b",
+      "id": "warrant/ct_compare/exhaustive/eq_u64_agrees",
+      "inputs_sha256": "06b07255a78f206b6213cdb9cea45c3106de4af52cdf1c0c0f1d06f206060b2f",
+      "ir_cost": 17,
+      "kind": "reference",
+      "product": 142129,
+      "result_type": "Bool",
+      "slim_chunks": [
+        0,
+        1,
+        2
+      ],
+      "slim_expected_sha256": "ccf99d1031745754ca2dc33b426eb310ec94af58fda07b3f8c4c6af250a3f20b",
+      "slim_inputs_sha256": "06b07255a78f206b6213cdb9cea45c3106de4af52cdf1c0c0f1d06f206060b2f",
+      "stream_header": "warrant-stream-v1",
+      "v1_expected_sha256": "f209973592654c02a8cafae36388ac7a03d34dce9d9c644b045e9ea248399f56",
+      "v1_inputs_sha256": "4570ec1645c72514cb7af9123dc709f0beba9bd35e70108207eb72bd042f7aab",
+      "wraps": 0
+    },
+    "select_picks": {
+      "binders": [
+        "Bytes",
+        "Bytes",
+        "Bool"
+      ],
+      "cases": 139818,
+      "chunk_lines": [
+        "0 47916 0 47916 4a5bae8589fa35650d9d2a0ae920998443b0b10ef842baf21652a80f62fb4349 46e1dca2ad4fd851a9c06ceddb02f6631be83805af8157f07dc8d2c667f214dd",
+        "1 48342 47916 48342 39a0a61e0029c8114678f719d53893a3a810057a3c250b7bb36a303647bb4da5 2572e751ff0c98d65c4aee553388368a25203d50bfe4cced56b5c32805f72b58",
+        "2 36608 96258 36608 d2ec2eba880ac80cb2c520cbce425a87ab2840021b4de974b652d965919d23c6 798dffc3989702962509424a0b85fb4ab71b7eb78fb0682448d03a9622a99db2",
+        "3 6952 132866 6952 b71dc757d708d0ee405506137874afa4b7c7ccad4f919174d6dcad066be49b4f 40b95107965a5951505f2351af9cdbbd7647f5dd7303fb287014a6c9940355be"
+      ],
+      "chunk_size": 65536,
+      "chunks_total": 4,
+      "claim": "select_picks",
+      "demoted": [],
+      "descriptors": [
+        {
+          "d": "bytes_d1",
+          "size": 347
+        },
+        {
+          "d": "bytes_d1",
+          "size": 347
+        },
+        {
+          "d": "bool",
+          "size": 2
+        }
+      ],
+      "discarded": 101000,
+      "domain_label": "bounded-set",
+      "expected_calls": 139818,
+      "expected_sha256": "2ee4dbc4a430c46b3b413c63436f4a86f5626f38e16f7aa8829f61919d3db233",
+      "id": "warrant/ct_compare/exhaustive/select_picks",
+      "inputs_sha256": "56e695507891aad53ad347f9cae567aae6c7e3053dcc4cd7b627b2c085ddb0c6",
+      "ir_cost": 18,
+      "kind": "reference",
+      "product": 240818,
+      "result_type": "Result<Bytes,SelectError>",
+      "slim_chunks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "slim_expected_sha256": "2ee4dbc4a430c46b3b413c63436f4a86f5626f38e16f7aa8829f61919d3db233",
+      "slim_inputs_sha256": "56e695507891aad53ad347f9cae567aae6c7e3053dcc4cd7b627b2c085ddb0c6",
+      "stream_header": "warrant-stream-v1",
+      "v1_expected_sha256": "5ad94e796d12126f89ec944f80b39969eb0f647c554a5d054fb26c03de4663c5",
+      "v1_inputs_sha256": "34cd91027287399c80d4f32829e4db758e32fb6d1136b8e4e4a0ff91e6ec37f5",
+      "wraps": 0
+    },
+    "select_rejects_mismatch": {
+      "binders": [
+        "Bytes",
+        "Bytes",
+        "Bool"
+      ],
+      "cases": 101000,
+      "chunk_lines": [
+        "0 17620 0 17620 a750e040db2b482605aa431736937715fa25011c08cf5ab1ab07c4f955fbd986 ed21b0afdc9b6ea1e4cbb6ea0d65504bdbeee31b5367fc80ab0641e07d2cb32c",
+        "1 17194 17620 17194 a15d4985b0fd18263ad30038b2ea3f3eea874b4fe584c8a1e85b073dea43fc44 3d37ef4855c68f641a45f3f6b543fb72ec63b5fbf357e8b94da7ccf54162c585",
+        "2 28928 34814 28928 545f6608d79d7ee874211fe7dd99a258cdedc9c75a50073cb3271d7d8797b926 0953bca6b481ef12f64c377a007e145fc082b9d859fac0a60a67c8e397cbe04b",
+        "3 37258 63742 37258 10976f3a89f25151ac90c32e63d5cd48157df9e281f65dd3119bd011ac7e379c 5b179da586f9db55d0c20157c609607d691c325d89ea1b0b6074cc237e39ec93"
+      ],
+      "chunk_size": 65536,
+      "chunks_total": 4,
+      "claim": "select_rejects_mismatch",
+      "demoted": [],
+      "descriptors": [
+        {
+          "d": "bytes_d1",
+          "size": 347
+        },
+        {
+          "d": "bytes_d1",
+          "size": 347
+        },
+        {
+          "d": "bool",
+          "size": 2
+        }
+      ],
+      "discarded": 139818,
+      "domain_label": "bounded-set",
+      "expected_calls": 101000,
+      "expected_sha256": "38381b13f687906c6789f83122e29d5811be42b10ae65a473377be5cae58a24e",
+      "id": "warrant/ct_compare/exhaustive/select_rejects_mismatch",
+      "inputs_sha256": "e6b2aef5b1561bfecce0d5a72449a3264aae2be5a04e8dbdfdd98cf46f88525d",
+      "ir_cost": 12,
+      "kind": "reference",
+      "product": 240818,
+      "result_type": "Result<Bytes,SelectError>",
+      "slim_chunks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "slim_expected_sha256": "38381b13f687906c6789f83122e29d5811be42b10ae65a473377be5cae58a24e",
+      "slim_inputs_sha256": "e6b2aef5b1561bfecce0d5a72449a3264aae2be5a04e8dbdfdd98cf46f88525d",
+      "stream_header": "warrant-stream-v1",
+      "v1_expected_sha256": "1944a5875c5c2f61768abb0a60e7320d91e100145ff845c12be1c6d1683c46c6",
+      "v1_inputs_sha256": "556b55cc8ee97ecbead08e69a1cfd1e447e81f60fc46985f777bd41bff838bff",
+      "wraps": 0
+    }
+  }
+}

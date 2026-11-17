@@ -267,7 +267,10 @@ mod tests {
 
     #[test]
     fn repeatable_keys_may_repeat_with_different_values_but_never_exactly() {
-        assert!(parse("fault a b\nfault a c\nfault d b\nslim_chunk c 0\nslim_chunk c 1\nslim_chunk d 0\n").is_ok());
+        assert!(parse(
+            "fault a b\nfault a c\nfault d b\nslim_chunk c 0\nslim_chunk c 1\nslim_chunk d 0\n"
+        )
+        .is_ok());
         for text in [
             "fault a b\nfault a b\n",
             "slim_chunk c 0\nslim_chunk c 0\n",

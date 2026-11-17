@@ -11,3 +11,4 @@ uv pip install -e ".[dev]" --quiet
 .venv/bin/python -m coding_adventures_warrant_oracle check --spec ../../../specs/arithmetic.warrant
 .venv/bin/python -m coding_adventures_warrant_oracle check --spec ../../../specs/x25519.warrant
 .venv/bin/python ../../rust/warrant-corpus-gen/tests/fixtures/dump_oracle_lowering.py --check
+.venv/bin/python ../../rust/warrant-corpus-gen/tests/fixtures/dump_oracle_enumeration.py --check
