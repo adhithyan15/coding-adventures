@@ -52,8 +52,14 @@ file is never followed through a symlink; no negation, no basename shortcut, no 
 is ignored if it or any directory above it matches, so `build` ignores the
 whole tree and `**/*.log` ignores logs at any depth. `.git` is always skipped.
 
-It uses only the Go standard library and depends on no other package in this
-repository.
+It uses the Go standard library plus in-repo modules (wired with `replace`);
+it never depends on third-party modules. The in-repo modules are the shared
+grammar lexer and parser, which Kiln uses instead of hand-written scanners
+(KILN04 section 4.9). Those modules may themselves depend only on the standard
+library or other in-repo modules. A CI check (landing with the wiring PR, PR 5)
+enforces it: `go list -deps` filtered to non-standard, non-repo paths must be
+empty, every `require` names a repo module, and every `replace` target is a
+relative path inside the repo.
 
 ## Usage
 
