@@ -14788,6 +14788,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "tls13-x25519-key-agreement"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_x25519",
+ "coding_adventures_zeroize",
+ "tls13-named-group-policy",
+]
+
+[[package]]
 name = "tokio"
 version = "1.54.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
