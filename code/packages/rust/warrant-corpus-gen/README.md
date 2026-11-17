@@ -281,6 +281,8 @@ and ignored, not refused.
   the first typing pass) and L8 (the profile reader refuses repeated `fault`/`slim_chunk` lines,
   an empty token, `budget 0` and `slim_stride 0`) are closed. The oracle's own reader still
   accepts them until S4 part 2.
+- The evaluator is iterative; per-node `has_subject`/`may_fail_or_wrap` are recomputed per case
+  on traced suites (a cache is a possible later optimisation, not needed for the bounds).
 - Faults, controls, witness chunks, blind claims and every file of a fixture are S3c.
 - The oracle admits IR nesting of 65 (off by one against the limit of 64); a note for S4 part 2.
 - A v1 `U8`/`U64` binder resolves to `Fx(U8)`/`Fx(U64)` in the S2 API; this crate names the
@@ -296,9 +298,9 @@ doctest and the integration tests:
 | file | what it pins |
 |---|---|
 | `enumeration` | the 18 digests and counts, the hand-written reproduction, the grammar-`Evaluator` differential, chunk structure and independence, **seeded-wrong negative controls** (a wrong evaluator op, a reordered enumeration, an off-by-one discard, a wrong wrap: each changes a digest), hand-computed `wraps` and call counts, slim stride, every refusal |
-| `enumeration_parity` | enumeration, `wraps`, descriptors, digests and every chunk line equal the oracle's, on ct-compare and two synthetic documents |
+| `enumeration_parity` | enumeration, `wraps`, descriptors, digests and every chunk line equal the oracle's, on ct-compare and three synthetic documents (including `enum_probe`) |
 | `census` | the census over the eleven adopters and one synthetic hit per 16.2 item |
-| `limits` | the resolver, planner and total-work refusals |
+| `limits` | the resolver, planner and total-work refusals; the evaluator at the real bounds (64 model frames) on a default test thread; pure subject-argument failures refused at generation |
 | `oracle_parity`, `lowering`, `fail_closed` | S3a: lowering parity, ct-compare against the v1 corpus, one test per refused construct, the `generate` stub |
 
 The full ct-compare enumeration is checked several times per run but computed once
