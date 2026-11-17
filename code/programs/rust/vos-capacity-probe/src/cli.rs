@@ -184,11 +184,12 @@ pub fn cmd_run(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> Res
             r.result
         );
     };
+    // The metadata is gathered BEFORE the rows run: `dirty_tree` says whether the tree was clean
+    // when the run started (the binary under test was built from it), not whether somebody
+    // edited a file while the run was going.
+    let meta = meta::gather(&exe);
     let rows = runner::run_rows(&exe, &specs, jobs(args), &progress);
-    let results = Results {
-        meta: meta::gather(&exe),
-        rows,
-    };
+    let results = Results { meta, rows };
     if let Some(path) = flag(args, "--out") {
         std::fs::write(&path, results.to_text())
             .map_err(|e| Failure::Usage(format!("cannot write {path}: {e}")))?;

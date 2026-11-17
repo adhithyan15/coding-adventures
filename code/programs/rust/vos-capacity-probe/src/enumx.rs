@@ -26,9 +26,10 @@
 //!
 //! ## E2: where the domain bounds bite
 //!
-//! A claim with `k` binders of `Bytes<W>` has `(4 + 3W)^k` cases and `k (4 + 3W)(W + 32)`
-//! domain bytes.  The generator refuses a claim over 400,000 cases or 64 MiB of domain
-//! (`W0706`) and a width over 4096 (`W0707`).  A row resolves the binders with the generator's
+//! A claim with `k` binders of `Bytes<W>` has (one binder's domain size)^k cases (a binder holds
+//! `4 + 3W` values, except `Bytes<1>`, which holds all 256) and the sum of the binders' domain
+//! bytes.  The generator refuses a claim over 400,000 cases or 64 MiB of domain (`W0706`) and a
+//! width over 4096 (`W0707`).  A row resolves the binders with the generator's
 //! own function, and for an accepted claim materialises every binder's domain and counts the
 //! product, so the child's peak resident memory is the measured cost of holding it.
 
@@ -348,11 +349,13 @@ pub fn e2_row(spec: &RowSpec) -> Row {
     let ms = t0.elapsed().as_secs_f64() * 1000.0;
     row.solve_ms = ms;
     row.worst_step_solve_ms = ms;
-    let per = (4 + 3 * w as u64) as f64;
-    let expect_cases = per.powi(k as i32);
-    let expect_bytes = k as f64 * per * (w as f64 + 32.0);
-    let over_cases = expect_cases > 400_000.0;
-    let over_bytes = expect_bytes > 64.0 * 1024.0 * 1024.0;
+    // The expectation is the generator's OWN per-binder accounting against its two budgets:
+    // the case count over 400,000 or the domain bytes over 64 MiB.  (An earlier draft used the
+    // closed form `(4 + 3W)^k`, which is wrong at W = 1: a one-byte binder enumerates all 256
+    // values.)  What this row checks is that the generator's refuse-or-accept decision is the
+    // decision those two numbers give.
+    let over_cases = acc.product > 400_000;
+    let over_bytes = acc.bytes > 64 * 1024 * 1024;
     row.metrics = vec![
         ("binder_product".into(), acc.product as f64),
         ("domain_bytes".into(), acc.bytes as f64),
@@ -366,8 +369,8 @@ pub fn e2_row(spec: &RowSpec) -> Row {
     if !agrees {
         row.result = "crashed".into();
         row.note = format!(
-            "the generator's accounting disagrees with the closed form (accepted {})",
-            acc.accepted
+            "the generator's decision (accepted {}) disagrees with its own numbers ({} cases, {} bytes)",
+            acc.accepted, acc.product, acc.bytes
         );
     } else if acc.accepted {
         row.result = "pass".into();
@@ -493,6 +496,27 @@ mod tests {
             ("binders", Kv::I(1)),
         ]);
         assert_eq!(e1_row(&spec("E1", knob)).result, "crashed");
+    }
+
+    #[test]
+    fn e2_one_byte_binders_enumerate_all_256_values() {
+        // The closed form 4 + 3W would say 7 values; the generator's domain for Bytes<1> is 256.
+        let two = e2_row(&spec(
+            "E2",
+            Knob::of(&[("width", Kv::I(1)), ("binders", Kv::I(2))]),
+        ));
+        assert_eq!(
+            (two.result.as_str(), two.metric("binder_product")),
+            ("pass", Some(65_536.0)),
+            "{}",
+            two.note
+        );
+        let three = e2_row(&spec(
+            "E2",
+            Knob::of(&[("width", Kv::I(1)), ("binders", Kv::I(3))]),
+        ));
+        assert_eq!(three.result, "refused", "{}", three.note);
+        assert_eq!(three.metric("binder_product"), Some(16_777_216.0));
     }
 
     #[test]

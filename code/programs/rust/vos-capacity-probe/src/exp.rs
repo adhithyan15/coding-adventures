@@ -601,6 +601,7 @@ struct Chain {
     worst_ms: f64,
     max_drat: u64,
     max_work: u64,
+    have_work: bool,
     check_ms: f64,
     all_pass: bool,
     ands: u64,
@@ -707,6 +708,7 @@ fn chain_row(
                     c.check_ms += chk.ms;
                     if let Some(w) = chk.work {
                         c.max_work = c.max_work.max(w);
+                        c.have_work = true;
                     }
                     if !chk.accepted {
                         c.all_pass = false;
@@ -755,7 +757,7 @@ fn chain_row(
     if !incremental && verdict_word == "unsat" {
         row.drat_bytes = Some(c.max_drat);
         row.check_ms = Some(c.check_ms);
-        row.check_work = Some(c.max_work);
+        row.check_work = c.have_work.then_some(c.max_work);
         row.pass_default_limits = Some(c.all_pass);
     }
     row.cap = cap.name().into();

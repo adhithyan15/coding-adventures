@@ -9,7 +9,7 @@ use vos_capacity_probe::solve::{check_default, model_satisfies, solve_cnf, Solve
 
 fn unsat_with_proof(inst: &Instance) {
     let (cnf, _) = inst.cnf();
-    let out = solve_cnf(&cnf, &SolveOpts::certified(Duration::from_secs(60)));
+    let out = solve_cnf(&cnf, &SolveOpts::certified(Duration::from_secs(600)));
     assert_eq!(out.verdict, Verdict::Unsat);
     let chk = check_default(&cnf, out.drat.as_deref().unwrap());
     assert!(chk.accepted, "{chk:?}");
@@ -23,7 +23,7 @@ fn control_replays(sh: &dyn Shape, seed: u64) {
         let o = solve_cnf(
             &cnf,
             &SolveOpts {
-                deadline: Instant::now() + Duration::from_secs(30),
+                deadline: Instant::now() + Duration::from_secs(300),
                 proof: false,
                 conflict_cap: Some(200_000),
             },

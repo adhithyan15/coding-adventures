@@ -3,13 +3,13 @@
 //! `table` reads the committed results file and writes, for each `(experiment, knob, mode)`
 //! group, one line that uses the **maximum over seeds** (section 8.3: a median would let one hard
 //! instance hide).  Collapsed seeds are excluded from every statistic and said so in the `Seeds`
-//! column.  The block begins with a fixed banner and the six validity limits of section 8.4, so
+//! column.  The block begins with a fixed banner and the nine validity limits of section 8.4, so
 //! a table can never be read without them, and it ends with the section 8.3 decision computed
 //! from the same rows.
 //!
 //! ```text
 //!   <!-- vos30-table:begin -->
-//!   PROXY: ...banner...        the six validity limits        | the table |     decision
+//!   PROXY: ...banner...        the nine validity limits        | the table |     decision
 //!   <!-- vos30-table:end -->
 //! ```
 //!
@@ -26,14 +26,17 @@ pub const BEGIN: &str = "<!-- vos30-table:begin -->";
 /// The closing marker.
 pub const END: &str = "<!-- vos30-table:end -->";
 
-/// The six validity limits of section 8.4, in one line each (they travel with every table).
-pub const LIMITS: [&str; 6] = [
+/// The validity limits of section 8.4, in one line each (they travel with every table).
+pub const LIMITS: [&str; 9] = [
     "Hand-written code is not compiler output: no register allocation, spills, fusion or inlining; real code may be easier or harder.",
     "The divergence is synthetic: the reference differs from the code in controlled proportions (5%, 25%, 100% of the live instructions that have an alternative encoding), not as a real compiler's would.",
     "Trap entry, CSRs and `mret` are not modelled: only the ALU, `lw`/`lbu`/`sw`/`sb` and forward branches with a concrete PC.",
     "The probe bounds solver capacity per obligation shape; it does not prove any entry verifiable.",
     "One machine, one solver build: seconds are host-specific, conflicts and work are the portable part.",
     "The probe never raises the `drat-check` limits: a proof the default limits reject is a red row (the advisor's numbers raised them, so every proof there was checkable).",
+    "The D instances share one symbolic base index; `k` independent symbolic indices are not measured, and the index has `log2 T` bits so no out-of-range case arises.",
+    "Liveness is decided exactly only for cones of at most 4,000 ANDs; a larger cone's entropy rests on 256 random assignments (a row says so in its note).",
+    "Both sides run on one stepper: a stepper bug that affects both alike is invisible to the miter (the checks are the differential against the simulator, the independent evaluator and the replay of every control).",
 ];
 
 fn fmt_ms(ms: f64) -> String {
@@ -233,6 +236,82 @@ fn line(g: &Group<'_>) -> String {
     )
 }
 
+/// Experiment F: constants derived from the solver rows (never typed).
+pub fn derived_constants(rows: &[Row]) -> Vec<String> {
+    let solved: Vec<&Row> = rows
+        .iter()
+        .filter(|r| {
+            r.result == "unsat" && r.mode == "monolithic" && r.conflicts >= 1000 && r.solve_ms > 0.0
+        })
+        .collect();
+    if solved.is_empty() {
+        return vec!["no solved row of at least 1,000 conflicts".to_string()];
+    }
+    let range = |f: &dyn Fn(&Row) -> Option<f64>| -> Option<(f64, f64)> {
+        let v: Vec<f64> = solved.iter().filter_map(|r| f(r)).collect();
+        if v.is_empty() {
+            None
+        } else {
+            Some((
+                v.iter().cloned().fold(f64::INFINITY, f64::min),
+                v.iter().cloned().fold(0.0, f64::max),
+            ))
+        }
+    };
+    let mut out = Vec::new();
+    if let Some((lo, hi)) = range(&|r| Some(r.conflicts as f64 / (r.solve_ms / 1000.0))) {
+        out.push(format!(
+            "Solver throughput: {} to {} conflicts per second.",
+            fmt_count(lo as u64),
+            fmt_count(hi as u64)
+        ));
+    }
+    if let Some((lo, hi)) = range(&|r| r.drat_bytes.map(|b| b as f64 / r.conflicts as f64)) {
+        out.push(format!("DRAT size: {lo:.0} to {hi:.0} bytes per conflict."));
+    }
+    if let Some((lo, hi)) = range(&|r| r.check_ms.map(|c| c / r.solve_ms)) {
+        out.push(format!(
+            "`drat-check` time: {lo:.1}x to {hi:.1}x the solve time."
+        ));
+    }
+    if let Some((lo, hi)) = range(&|r| r.check_work.map(|w| w as f64 / r.conflicts as f64)) {
+        out.push(format!(
+            "Checker work: {} to {} literal visits per conflict.",
+            fmt_count(lo as u64),
+            fmt_count(hi as u64)
+        ));
+    }
+    let accepted = solved
+        .iter()
+        .filter(|r| r.pass_default_limits == Some(true))
+        .map(|r| r.conflicts)
+        .max();
+    let rejected = solved
+        .iter()
+        .filter(|r| r.pass_default_limits == Some(false) && r.note.contains("default work limit"))
+        .map(|r| r.conflicts)
+        .min();
+    match (accepted, rejected) {
+        (Some(a), Some(b)) => out.push(format!("Default `drat-check` work limit (2^32): the largest proof accepted has {} conflicts, the smallest rejected for work has {}.", fmt_count(a), fmt_count(b))),
+        (Some(a), None) => out.push(format!("Default `drat-check` work limit (2^32): the largest proof accepted has {} conflicts; none was rejected for work.", fmt_count(a))),
+        (None, _) => out.push("Default `drat-check` limits: no proof of at least 1,000 conflicts was accepted.".to_string()),
+    }
+    let big: Vec<&&Row> = solved
+        .iter()
+        .filter(|r| r.conflicts >= 100_000 && r.peak_rss_kb > 0)
+        .collect();
+    if !big.is_empty() {
+        let per: Vec<f64> = big
+            .iter()
+            .map(|r| r.peak_rss_kb as f64 / 1048576.0 / (r.conflicts as f64 / 1e6))
+            .collect();
+        let lo = per.iter().cloned().fold(f64::INFINITY, f64::min);
+        let hi = per.iter().cloned().fold(0.0, f64::max);
+        out.push(format!("Resident memory: {lo:.1} to {hi:.1} GB per million conflicts (rows of at least 100,000 conflicts)."));
+    }
+    out
+}
+
 /// The generated block, markers included, ending with a newline.
 pub fn render_block(res: &Results) -> String {
     let mut s = String::new();
@@ -258,6 +337,10 @@ pub fn render_block(res: &Results) -> String {
     for g in groups(&res.rows) {
         s.push_str(&line(&g));
         s.push('\n');
+    }
+    s.push_str("\nDerived constants (experiment F), from the counted monolithic UNSAT rows of at least 1,000 conflicts:\n\n");
+    for l in derived_constants(&res.rows) {
+        s.push_str(&format!("* {l}\n"));
     }
     let d = decide(&res.rows);
     s.push_str(&format!(
@@ -422,12 +505,12 @@ mod tests {
     }
 
     #[test]
-    fn the_block_starts_with_the_banner_and_the_six_limits_and_uses_the_maximum() {
+    fn the_block_starts_with_the_banner_and_the_limits_and_uses_the_maximum() {
         let b = render_block(&sample());
         assert!(b.starts_with(BEGIN));
         assert!(b.contains("PROXY: synthetic hand-written code with synthetic divergence"));
         assert!(b.contains("Full tier not independently regenerated."));
-        for i in 1..=6 {
+        for i in 1..=9 {
             assert!(b.contains(&format!("\n{i}. ")), "limit {i}");
         }
         // The A1 line takes the largest conflict count over seeds (10 + 5).
@@ -441,6 +524,51 @@ mod tests {
         assert!(b2.contains("unknown (timeout)"), "{b2}");
         assert!(b2.contains("div=25%"), "{b2}");
         assert!(b.ends_with(&format!("{END}\n")));
+    }
+
+    #[test]
+    fn derived_constants_come_from_the_rows() {
+        let mut r = sample();
+        // Two solved monolithic rows: one accepted by the default limits, one rejected for work.
+        for (i, row) in r
+            .rows
+            .iter_mut()
+            .filter(|x| x.experiment == "A1")
+            .take(2)
+            .enumerate()
+        {
+            row.conflicts = if i == 0 { 50_000 } else { 400_000 };
+            row.solve_ms = 1000.0;
+            row.drat_bytes = Some(row.conflicts * 200);
+            row.check_ms = Some(2000.0);
+            row.check_work = Some(row.conflicts * 10_000);
+            row.pass_default_limits = Some(i == 0);
+            row.note = if i == 0 {
+                String::new()
+            } else {
+                "default work limit 2^32 exceeded at step 9".into()
+            };
+            row.peak_rss_kb = 1_048_576;
+        }
+        let lines = derived_constants(&r.rows).join("\n");
+        assert!(
+            lines.contains("50,000 to 400,000 conflicts per second"),
+            "{lines}"
+        );
+        assert!(lines.contains("200 to 200 bytes per conflict"), "{lines}");
+        assert!(lines.contains("2.0x to 2.0x the solve time"), "{lines}");
+        assert!(lines.contains("the largest proof accepted has 50,000 conflicts, the smallest rejected for work has 400,000"), "{lines}");
+        assert!(lines.contains("GB per million conflicts"), "{lines}");
+        assert!(render_block(&r).contains("Derived constants (experiment F)"));
+        // No solved row: said so, not omitted.
+        assert!(derived_constants(&[]).join(" ").contains("no solved row"));
+        // Accepted only: no rejection to name.
+        let mut only = sample();
+        only.rows[0].conflicts = 5000;
+        only.rows[0].solve_ms = 10.0;
+        assert!(derived_constants(&only.rows)
+            .join(" ")
+            .contains("none was rejected for work"));
     }
 
     #[test]
