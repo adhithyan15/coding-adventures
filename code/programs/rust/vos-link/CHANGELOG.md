@@ -4,6 +4,11 @@ All notable changes to this package are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Changed (VOS-D081)
+
+- The golden `tests/fixtures/expected/vos-fixture-bitmap.warrant` was re-blessed: the only difference is
+  the safety block (the new `safety_init` claim) and its digest.
+
 ### Changed (VOS-011 PR, VOS-D064)
 
 - `warrant/lemmas.part` of a contract package is admitted when present (a forged marker is a

@@ -4,6 +4,13 @@ All notable changes to this package are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Changed (VOS-D081)
+
+- Regenerated for the contract's new `safety_init` claim: `code/specs/vos-sched-any.warrant`, the
+  generated harness and the manifest. 8 exhaustive claims, 262,914 cases, 45 tests, all pass. An
+  `init` with mask 8 now fails `safety_init` in the exhaustive, property and fuzz suites (checked in a
+  scratch copy). No BUILD sabotage line: the claim's only fault, `field-zero` on `alpha_w`, is inert.
+
 ### Added
 
 - VOS-012a: the most-general scheduler (`code/specs/VOS10-scheduler-contract.md` section 11.2).

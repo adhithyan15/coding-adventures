@@ -4,6 +4,14 @@ All notable changes to this package are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Changed (VOS-D081)
+
+- Regenerated for the contract's new `safety_init` claim: `code/specs/vos-sched-fp-bitmap.warrant`, the
+  generated harness and the manifest. 13 exhaustive claims, 394,500 cases; `warrant/check_evidence.sh`
+  now pins 64 ok (was 61) next to the same three known-inert `init` controls. A mask-8 `init` fails
+  `canon_init` and `safety_init` (checked in a scratch copy). No sabotage line for `safety_init`: its
+  only fault, `field-zero` on `alpha_w`, is inert on the empty state.
+
 ### Added
 
 - VOS-011: the fixed-priority bitmap scheduler (`code/specs/VOS10-scheduler-contract.md`

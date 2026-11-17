@@ -4,7 +4,7 @@
   "schema": "warrant-test-evidence-v1",
   "source_sha256": "b7e7ec17225e980ed66a9921ebc7eb04df400f5b73a5a00a9cd8e6c621d6264f",
   "spec": "code/specs/vos-sched-fp-bitmap.warrant",
-  "spec_sha256": "47f125a6be3ee993a24f5dad61ef2da6558eba08c19a3a05b3709c1b641ece0f",
+  "spec_sha256": "9ad4370ef38293cf9f58492194b2a537b9d0d846fa99cbb8d957561de2885cdf",
   "tests": [
     {
       "cases": 1,
@@ -457,6 +457,41 @@
       "kind": "fuzz",
       "op": "alpha_w",
       "seed": "13110993927999963368",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 2,
+      "claim": "safety_init",
+      "demoted": [],
+      "discarded": 0,
+      "domain": "b: Bool set(2)",
+      "id": "warrant/vos_sched_fp_bitmap/exhaustive/safety_init",
+      "kind": "exhaustive",
+      "op": "alpha_w",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "safety_init",
+      "discarded": 0,
+      "equal_cases": 0,
+      "id": "warrant/vos_sched_fp_bitmap/property/safety_init",
+      "kind": "property",
+      "op": "alpha_w",
+      "seed": "14261489311709406047",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "safety_init",
+      "id": "warrant/vos_sched_fp_bitmap/fuzz/safety_init",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "alpha_w",
+      "seed": "12967983542998523895",
       "unreachable_by_type": 0,
       "verdict": "pass"
     },
