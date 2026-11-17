@@ -7,3 +7,9 @@ cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .
 # runs each BUILD_windows line as `cmd /C <line>`, where none of that exists, so the same gate
 # runs here as a cargo test: tests/check_cli.rs `the_binary_writes_checks_and_fails_on_drift`
 # drives the real binary through write, --check, a flipped chunk line, and the located failure.
+# CV2-S3d: the committed ct-compare v2 fixture is exactly what this generator writes (the same
+# line as BUILD, and valid under `cmd /C`: one `cd` and one cargo invocation, no sh utility). The
+# generator's --check also compares `generator` {name, version} recorded in corpus.json, so a
+# version bump fails here until the fixture is regenerated and reviewed (VER04r 16.8 [D13]); the
+# profile named is the fixture's own, so an edit to it fails through profile_sha256 ([D14]).
+cd ..\..\..\.. && cargo run -q --manifest-path code/packages/rust/Cargo.toml -p coding_adventures_warrant_corpus_gen --bin warrant-corpus-gen -- --check --warrant code/specs/ct-compare.warrant --profile code/specs/fixtures/ct-compare-warrant-v2/corpus.profile --bindings code/packages/rust/ct-compare/evidence.bindings --out code/specs/fixtures/ct-compare-warrant-v2

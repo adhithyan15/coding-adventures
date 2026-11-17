@@ -1,0 +1,13 @@
+tfv 1
+warrant/ct_compare/example/eq_empty R4 Kop S6571 Ka X Kb X Kexpect T
+warrant/ct_compare/example/eq_one_equal R4 Kop S6571 Ka X00 Kb X00 Kexpect T
+warrant/ct_compare/example/eq_one_diff R4 Kop S6571 Ka X00 Kb X01 Kexpect F
+warrant/ct_compare/example/eq_diff_len R4 Kop S6571 Ka X Kb X00 Kexpect F
+warrant/ct_compare/example/fixed_zero R5 Kop S65715f6669786564 Ka X Kb X Kwidth I0 Kexpect T
+warrant/ct_compare/example/fixed_16_equal R5 Kop S65715f6669786564 Ka X000102030405060708090a0b0c0d0e0f Kb X000102030405060708090a0b0c0d0e0f Kwidth I16 Kexpect T
+warrant/ct_compare/example/fixed_16_diff R5 Kop S65715f6669786564 Ka X000102030405060708090a0b0c0d0e0f Kb X000102030405060708090a0b0c0d0e00 Kwidth I16 Kexpect F
+warrant/ct_compare/example/select_left_fresh R5 Kop S73656c6563745f6279746573 Ka X00 Kb Xff Kchoice T Kexpect M1 S6f6b X00
+warrant/ct_compare/example/select_right_fresh R5 Kop S73656c6563745f6279746573 Ka X00 Kb Xff Kchoice F Kexpect M1 S6f6b Xff
+warrant/ct_compare/example/select_length_mismatch R5 Kop S73656c6563745f6279746573 Ka X Kb X00 Kchoice F Kexpect M1 S657272 S43545f53454c4543545f4c454e4754485f4d49534d41544348
+warrant/ct_compare/example/u64_equal R4 Kop S65715f753634 Ka I0 Kb I0 Kexpect T
+warrant/ct_compare/example/u64_diff R4 Kop S65715f753634 Ka I9223372036854775808 Kb I0 Kexpect F

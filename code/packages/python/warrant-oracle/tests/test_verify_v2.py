@@ -296,7 +296,7 @@ def test_a_changed_opaque_ir_fixed_expression_fails(tmp_path):
     assert codes(root) == {"faults"}
 
 
-def test_accepted_blind_faults_must_stay_empty(tmp_path):
+def test_accepted_blind_faults_not_declared_by_the_profile_fail(tmp_path):
     root = fresh(tmp_path)
     corpus = load(root)
     corpus["accepted_blind_faults"] = ["warrant/synth/negctl/exhaustive/pick/swap-choice"]
@@ -568,7 +568,28 @@ def test_a_corpus_copy_is_not_mutated_by_verification(tmp_path):
     assert load(root) == before
 
 
-# -- the real adopter, when one is available -------------------------------------------------------
+# -- the real adopter ------------------------------------------------------------------------------
+
+
+def test_the_committed_ct_compare_v2_fixture_verifies():
+    """CV2-S3d: ``specs/fixtures/ct-compare-warrant-v2`` (the generator's bytes) passes all checks."""
+    from conftest import CODE
+
+    fixture = CODE / "specs" / "fixtures" / "ct-compare-warrant-v2"
+    report, derived = check(
+        fixture,
+        CODE / "specs" / "ct-compare.warrant",
+        fixture / "corpus.profile",
+        CODE / "packages/rust/ct-compare/evidence.bindings",
+    )
+    assert report.ok, report.mismatches
+    assert len(report.suites) == 9 and sum(s["cases"] for s in report.suites.values()) == 572_109
+    assert (fixture / "corpus.json").read_bytes() == canonical(derived.corpus)
+    assert derived.corpus["accepted_blind_faults"] == []
+    # the generator pin of [D13]: the recorded generator is exactly the one the build expects
+    gen = derived.corpus["generator"]
+    assert (gen["name"], gen["version"]) == ("warrant-corpus-gen", "0.4.0")
+
 
 
 @pytest.mark.skipif(
@@ -579,7 +600,7 @@ def test_ct_compare_v2_generated_by_the_rust_cli_verifies():  # pragma: no cover
     from conftest import CODE
 
     corpus = pathlib.Path(os.environ["WARRANT_CT_COMPARE_V2"])
-    profile = CODE / "packages/rust/warrant-corpus-gen/tests/fixtures/ct-compare.corpus.profile"
+    profile = CODE / "specs/fixtures/ct-compare-warrant-v2/corpus.profile"
     report, _ = check(
         corpus,
         CODE / "specs" / "ct-compare.warrant",
