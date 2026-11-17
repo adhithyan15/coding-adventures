@@ -46,6 +46,9 @@ var diffGrammars = []struct{ name, src string }{
 	{"literals", `p = { "x" | "y" "z" | n } ; n = NUM "+" n | NUM ;`},
 	{"oneplus", `p = { a }+ ; a = { X }+ Y | { NUM }+ [ Z ] | LP p RP ;`},
 	{"undefined", `p = { a } ; a = X missing | X Y | NUM ;`},
+	{"left-through-lookahead", `a = !X a Y | Z | W ;`},
+	{"left-through-optional", `a = [ X ] a Y | Z | NUM ;`},
+	{"left-through-seprep", `a = { Y // a } X | Z | NUM ;`},
 	{"deepchain", `p = e ; e = a { PLUS a } ; a = m { STAR m } ; m = u ; u = MINUS u | q ; q = NUM | LP e RP | q2 ; q2 = X [ e ] Y ;`},
 }
 
