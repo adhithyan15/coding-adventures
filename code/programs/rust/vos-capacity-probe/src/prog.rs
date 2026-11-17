@@ -870,8 +870,8 @@ mod tests {
             let p = gen_b(seed, 60, 0.0);
             let mut st = Concrete::default();
             let mut s = Rng::new(seed, 1);
-            for r in 1..9 {
-                st.regs[r] = s.next_u64() as u32;
+            for reg in st.regs.iter_mut().take(9).skip(1) {
+                *reg = s.next_u64() as u32;
             }
             for k in 0..12u32 {
                 st.mem.insert(DATA_BASE + 4 * k, s.next_u64() as u32);
@@ -885,8 +885,8 @@ mod tests {
             let prog: Vec<u8> = words.iter().flat_map(|w| w.to_le_bytes()).collect();
             sim.mem.load_bytes(0x4000, &prog);
             sim.pc = 0x4000;
-            for r in 1..9 {
-                sim.regs.write(r, init.regs[r]);
+            for (r, v) in init.regs.iter().enumerate().take(9).skip(1) {
+                sim.regs.write(r, *v);
             }
             for (a, v) in &init.mem {
                 sim.mem.write_word(*a as usize, *v);
@@ -894,8 +894,8 @@ mod tests {
             for _ in 0..p.ops.len() {
                 sim.step();
             }
-            for r in 1..32 {
-                assert_eq!(sim.regs.read(r), st2.regs[r], "seed {seed} x{r}");
+            for (r, v) in st2.regs.iter().enumerate().take(32).skip(1) {
+                assert_eq!(sim.regs.read(r), *v, "seed {seed} x{r}");
             }
         }
     }
