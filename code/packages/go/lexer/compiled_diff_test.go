@@ -37,11 +37,15 @@ import (
 // grammarCase names a real grammar and gives sample sources for it.
 type grammarCase struct {
 	name    string
-	file    string // relative to code/grammars
+	file    string // relative to code/grammars, or "" when tokens is set
 	samples []string
 }
 
+// inlineTokens holds grammars given as source text instead of a file (file == "").
+var inlineTokens = map[string]string{"strace-like": straceLikeTokens}
+
 var diffCases = []grammarCase{
+	{"strace-like", "", append([]string{straceLikeInput(1)}, straceLikeLines...)},
 	{"json", "json/json.tokens", []string{
 		`{"a": [1, 2.5, -3e+10, true, false, null], "b": {"c": "d\"e\\f\u00e9"}}`,
 		"[\n  \"x\",\n  \"y\"\n]\n",
@@ -118,13 +122,17 @@ var (
 func loadAllGrammars() ([]*loadedGrammar, []string) {
 	loadOnce.Do(func() {
 		for _, gc := range diffCases {
-			path := filepath.Join("..", "..", "..", "grammars", filepath.FromSlash(gc.file))
-			data, err := os.ReadFile(path)
-			if err != nil {
-				loadedErrs = append(loadedErrs, fmt.Sprintf("%s: %v", gc.name, err))
-				continue
+			src := inlineTokens[gc.name]
+			if gc.file != "" {
+				path := filepath.Join("..", "..", "..", "grammars", filepath.FromSlash(gc.file))
+				data, err := os.ReadFile(path)
+				if err != nil {
+					loadedErrs = append(loadedErrs, fmt.Sprintf("%s: %v", gc.name, err))
+					continue
+				}
+				src = string(data)
 			}
-			g, err := grammartools.ParseTokenGrammar(string(data))
+			g, err := grammartools.ParseTokenGrammar(src)
 			if err != nil {
 				loadedErrs = append(loadedErrs, fmt.Sprintf("%s: parse: %v", gc.name, err))
 				continue

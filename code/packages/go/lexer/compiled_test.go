@@ -529,3 +529,135 @@ func TestHooksAndCallbackLookbehind(t *testing.T) {
 		t.Errorf("bracket depths should balance: %v", depths)
 	}
 }
+
+// ---------------------------------------------------------------------------
+// SlowRules
+// ---------------------------------------------------------------------------
+
+func TestSlowRules(t *testing.T) {
+	c, err := Compile(mustGrammar(t, straceLikeTokens))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if slow := c.SlowRules(); len(slow) != 0 {
+		t.Errorf("strace-like grammar should have no regexp-backed rules, got %v", slow)
+	}
+
+	g := &grammartools.TokenGrammar{CaseSensitive: true,
+		Definitions: []grammartools.TokenDefinition{
+			def("FAST", `[a-z]+`, true),
+			def("SLOW", `[a-z]*a`, true), // needs backtracking: stays on regexp
+			def("LIT", "=", false),
+		},
+		SkipDefinitions: []grammartools.TokenDefinition{def("WS", `\s+`, true)},
+		Groups: map[string]*grammartools.PatternGroup{
+			"g": {Name: "g", Definitions: []grammartools.TokenDefinition{def("GSLOW", `\bx`, true)}},
+		}}
+	c, err = Compile(g)
+	if err != nil {
+		t.Fatal(err)
+	}
+	got := strings.Join(c.SlowRules(), ",")
+	if got != "SLOW,skip:WS,group g:GSLOW" && got != "SLOW,skip:WS,group g:GSLOW," {
+		// \s is a class of ASCII whitespace, so WS may legitimately be fast;
+		// accept either as long as SLOW and GSLOW are reported.
+		if !strings.Contains(got, "SLOW") || !strings.Contains(got, "group g:GSLOW") || strings.Contains(got, "FAST") || strings.Contains(got, "LIT") {
+			t.Errorf("SlowRules = %q", got)
+		}
+	}
+	// The returned slice is a copy.
+	s := c.SlowRules()
+	s[0] = "changed"
+	if c.SlowRules()[0] == "changed" {
+		t.Error("SlowRules must return a copy")
+	}
+}
+
+// ---------------------------------------------------------------------------
+// Compile cache used by the legacy constructor
+// ---------------------------------------------------------------------------
+
+func TestConstructorCacheReusesAndNeverServesStale(t *testing.T) {
+	g := &grammartools.TokenGrammar{CaseSensitive: true,
+		Definitions: []grammartools.TokenDefinition{def("A", `a+`, true)}}
+	defer ForgetGrammar(g)
+
+	l1 := NewGrammarLexer("aa", g)
+	l2 := NewGrammarLexer("a", g)
+	if l1.c != l2.c {
+		t.Error("an unchanged grammar should reuse its compilation")
+	}
+	if toks := l1.Tokenize(); len(toks) != 2 {
+		t.Fatalf("tokens: %v", toks)
+	}
+
+	// Mutate the grammar: the cache must notice.
+	g.Definitions = append(g.Definitions, def("B", `b+`, true))
+	l3 := NewGrammarLexer("ab", g)
+	if l3.c == l1.c {
+		t.Fatal("a mutated grammar must be recompiled")
+	}
+	if toks := l3.Tokenize(); len(toks) != 3 {
+		t.Errorf("mutated grammar tokens: %v", toks)
+	}
+	// Changing only a pattern (same rule count) is also noticed.
+	g.Definitions[1].Pattern = `c+`
+	if toks := NewGrammarLexer("c", g).Tokenize(); toks[0].TypeName != "B" {
+		t.Errorf("pattern edit not picked up: %v", toks)
+	}
+	// Changing only keywords / transitions / flags is noticed too.
+	before := fingerprint(g)
+	g.Keywords = []string{"a"}
+	if fingerprint(g) == before {
+		t.Error("keyword change did not alter the fingerprint")
+	}
+	g.Transitions = []grammartools.ModeTransition{{OnTokens: []string{"A"}, Actions: []grammartools.TransitionAction{{Kind: "pop"}}}}
+	g.Mode, g.EscapeMode, g.StartMode, g.CaseInsensitive = "layout", "none", "x", true
+	if fingerprint(g) == before {
+		t.Error("flag change did not alter the fingerprint")
+	}
+
+	ForgetGrammar(g)
+	ForgetGrammar(g) // forgetting twice is harmless
+	if _, ok := compileCache.Load(g); ok {
+		t.Error("ForgetGrammar left an entry")
+	}
+}
+
+func TestConstructorCacheIsBounded(t *testing.T) {
+	for i := 0; i < cacheLimit*2+5; i++ {
+		g := &grammartools.TokenGrammar{CaseSensitive: true,
+			Definitions: []grammartools.TokenDefinition{def("A", `a+`, true)}}
+		NewGrammarLexer("a", g)
+	}
+	if n := compileCacheSize.Load(); n > cacheLimit {
+		t.Errorf("cache grew to %d entries (limit %d)", n, cacheLimit)
+	}
+	if _, err := compiledFor(nil); err == nil {
+		t.Error("nil grammar must error")
+	}
+	bad := &grammartools.TokenGrammar{CaseSensitive: true,
+		Definitions: []grammartools.TokenDefinition{def("BAD", `(`, true)}}
+	if _, err := compiledFor(bad); err == nil {
+		t.Error("bad grammar must error")
+	}
+	if _, ok := compileCache.Load(bad); ok {
+		t.Error("errors must not be cached")
+	}
+}
+
+func TestCompileCopiesTransitions(t *testing.T) {
+	g := fixtureTransitionGrammar()
+	c, err := Compile(g)
+	if err != nil {
+		t.Fatal(err)
+	}
+	g.Transitions[0].Actions[0].Target = "str"
+	g.Transitions[0].OnTokens[0] = "ZZZ"
+	if c.transitions[0].Actions[0].Target != "div" || c.transitions[0].OnTokens[0] != "SLASH" {
+		t.Error("Compile must copy the transition table")
+	}
+	if copyTransitions(nil) != nil {
+		t.Error("nil in, nil out")
+	}
+}

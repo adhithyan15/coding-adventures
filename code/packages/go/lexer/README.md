@@ -47,7 +47,16 @@ Measured on an Apple M2 Max (`go test -bench Tokenize`), strace-like lines
 went from 0.23 MB/s (per line) and 1.26 MB/s (whole document) to about 46 and
 39 MB/s, and a JSON document from 2.09 to about 32 MB/s.
 
+`compiled.SlowRules()` lists the rules that still run on the regexp engine; a
+caller that depends on the throughput can assert it is empty for its grammar.
+`NewGrammarLexer` reuses a cached `*Compiled` per grammar pointer (fingerprint
+checked, so an edited grammar is recompiled; `ForgetGrammar(tg)` releases it).
+
 Things to know:
+
+- A grammar with `CaseSensitive == false` (the zero value of a hand-built
+  `TokenGrammar`) lowercases the source. `ParseTokenGrammar` defaults to true.
+  Use a case-sensitive grammar for untrusted input.
 
 - Tokens whose rule name (or alias) contains `STRING` and whose text starts with
   a quote have the quotes stripped (and escapes processed unless `escapes: none`).

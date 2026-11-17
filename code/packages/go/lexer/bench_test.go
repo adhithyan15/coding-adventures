@@ -78,6 +78,30 @@ func BenchmarkTokenizeCompiledJSON(b *testing.B) {
 	benchCompiled(b, jsonLikeTokens, []string{jsonDocument(200)})
 }
 
+// The tiny-input pair measures constructor plus Tokenize on a very short
+// source, where fixed per-call cost dominates. NewGrammarLexer reuses a
+// cached compilation; Compiled.Tokenize is the reference.
+func BenchmarkConstructTinyInputLegacy(b *testing.B) {
+	g := mustGrammar(b, jsonLikeTokens)
+	b.ReportAllocs()
+	for i := 0; i < b.N; i++ {
+		NewGrammarLexer(`{"a": 1}`, g).Tokenize()
+	}
+}
+
+func BenchmarkConstructTinyInputCompiled(b *testing.B) {
+	c, err := Compile(mustGrammar(b, jsonLikeTokens))
+	if err != nil {
+		b.Fatal(err)
+	}
+	b.ReportAllocs()
+	for i := 0; i < b.N; i++ {
+		if _, err := c.Tokenize(`{"a": 1}`); err != nil {
+			b.Fatal(err)
+		}
+	}
+}
+
 // BenchmarkCompile measures the one-time cost the legacy path paid on every
 // construction.
 func BenchmarkCompile(b *testing.B) {

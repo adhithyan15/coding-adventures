@@ -118,14 +118,38 @@ type rule struct {
 // rule matched the empty string, which the engine reports as an error.
 func (r *rule) matchLen(s string) int {
 	if r.literal != "" {
+		n := -1
 		if strings.HasPrefix(s, r.literal) {
-			return len(r.literal)
+			n = len(r.literal)
 		}
-		return -1
+		if dualRunMatchers && r.re != nil {
+			if want := r.regexpLen(s); want != n {
+				panic(fmt.Sprintf("literal/regexp mismatch for rule %s on %q: literal %d regexp %d", r.name, s, n, want))
+			}
+		}
+		return n
 	}
 	if r.m != nil {
-		return r.m.match(s)
+		n := r.m.match(s)
+		if dualRunMatchers {
+			// Test-only cross-check: the matcher must agree with the regexp.
+			if want := r.regexpLen(s); want != n {
+				panic(fmt.Sprintf("matcher/regexp mismatch for rule %s on %q: matcher %d regexp %d", r.name, s, n, want))
+			}
+		}
+		return n
 	}
+	return r.regexpLen(s)
+}
+
+// dualRunMatchers, when true, makes matchLen run both the deterministic matcher
+// and the regexp engine and panic on any disagreement. It is set from tests so
+// that every lexer test doubles as a differential test; it is false in
+// production, where it costs nothing but one predictable branch.
+var dualRunMatchers = false
+
+// regexpLen is the reference semantics: the regexp engine's answer.
+func (r *rule) regexpLen(s string) int {
 	loc := r.re.FindStringIndex(s)
 	if loc == nil {
 		return -1
@@ -180,6 +204,45 @@ type Compiled struct {
 	startMode   string
 	transitions []grammartools.ModeTransition
 	inheriting  map[string]bool
+
+	// slow lists the rules that run on the regexp engine (see SlowRules).
+	slow []string
+}
+
+// SlowRules lists the rules that fall back to the regexp engine, that is, the
+// rules that are neither literals nor a proven-equivalent deterministic
+// matcher. Entries are the token name for the default group, "group G:NAME"
+// for a named group and "skip:NAME" for skip patterns, in grammar order.
+//
+// An empty result means every rule runs on the fast paths. Callers who rely on
+// the throughput (a trace parser, say) can assert that the list is empty for
+// their grammar so a later edit that makes a rule slow is caught by a test.
+func (c *Compiled) SlowRules() []string {
+	return append([]string(nil), c.slow...)
+}
+
+// appendSlow records the regexp-fallback rules of one rule list.
+func appendSlow(dst []string, prefix string, rules []*rule) []string {
+	for _, r := range rules {
+		if r.literal == "" && r.m == nil {
+			dst = append(dst, prefix+r.name)
+		}
+	}
+	return dst
+}
+
+// copyTransitions deep-copies a transition table.
+func copyTransitions(in []grammartools.ModeTransition) []grammartools.ModeTransition {
+	if in == nil {
+		return nil
+	}
+	out := make([]grammartools.ModeTransition, len(in))
+	for i, t := range in {
+		t.OnTokens = append([]string(nil), t.OnTokens...)
+		t.Actions = append([]grammartools.TransitionAction(nil), t.Actions...)
+		out[i] = t
+	}
+	return out
 }
 
 // Compile compiles every pattern in tg exactly once.
@@ -187,6 +250,18 @@ type Compiled struct {
 // It returns an error (never panics) if any pattern is not a valid regular
 // expression. The error text names the offending token, e.g.
 // "Failed to compile pattern for token NAME: error parsing regexp: ...".
+//
+// The grammar is read during Compile and its F10 transitions are copied, so
+// later changes to tg do not affect the returned *Compiled. (Treat a grammar as
+// immutable after Compile anyway: other fields are only inspected here.)
+//
+// CASE SENSITIVITY WARNING. A TokenGrammar whose CaseSensitive field is false
+// makes the lexer LOWERCASE the whole source before matching (token values then
+// come out lowercased, except STRING bodies which are re-read from the original
+// text). ParseTokenGrammar sets CaseSensitive to true unless the .tokens file
+// says otherwise, but a TokenGrammar built by hand, including the zero value,
+// has CaseSensitive == false. Security-sensitive callers (parsers of untrusted
+// logs, for example) must use a grammar with CaseSensitive == true.
 func Compile(tg *grammartools.TokenGrammar) (*Compiled, error) {
 	if tg == nil {
 		return nil, fmt.Errorf("lexer.Compile: nil grammar")
@@ -204,7 +279,7 @@ func Compile(tg *grammartools.TokenGrammar) (*Compiled, error) {
 		hasSkip:           len(tg.SkipDefinitions) > 0,
 		indentMode:        tg.Mode == "indentation",
 		layoutMode:        tg.Mode == "layout",
-		transitions:       tg.Transitions,
+		transitions:       copyTransitions(tg.Transitions),
 		inheriting:        computeInheritingModes(tg.Transitions),
 	}
 
@@ -250,6 +325,8 @@ func Compile(tg *grammartools.TokenGrammar) (*Compiled, error) {
 	// Named groups. Sorted so that, if several are broken, the reported error
 	// does not depend on map iteration order.
 	groupRules := map[string][]*rule{"default": defaultRules}
+	c.slow = appendSlow(c.slow, "", defaultRules)
+	c.slow = appendSlow(c.slow, "skip:", skipRules)
 	names := make([]string, 0, len(tg.Groups))
 	for name := range tg.Groups {
 		names = append(names, name)
@@ -266,6 +343,7 @@ func Compile(tg *grammartools.TokenGrammar) (*Compiled, error) {
 			rules = append(rules, r)
 		}
 		groupRules[name] = rules
+		c.slow = appendSlow(c.slow, "group "+name+":", rules)
 	}
 
 	// Build dispatch tables. An inheriting group (F10 flat mode) tries its own

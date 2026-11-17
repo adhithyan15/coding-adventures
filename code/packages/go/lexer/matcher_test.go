@@ -9,9 +9,13 @@ package lexer
 
 import (
 	"math/rand"
+	"os"
+	"path/filepath"
 	"regexp"
 	"strings"
 	"testing"
+
+	grammartools "github.com/adhithyan15/coding-adventures/code/packages/go/grammar-tools"
 )
 
 // regexpLen is the reference: what the legacy engine computed for a pattern at
@@ -131,6 +135,10 @@ var matcherPatterns = []string{
 	`.`,
 	`(?s).+`,
 	`x?y?z?`,
+	`\x{D800}[a-z]*`,
+	`[a-z]+\x{DFFF}`,
+	`\x{D800}`,
+	`(?:\x{D800}|a)+`,
 }
 
 var matcherInputs = []string{
@@ -139,6 +147,7 @@ var matcherInputs = []string{
 	"\"\\u00e\"", "\"é日本\"x", "\"\xff\xfe\"", "-12.50e+3,", "1.", "1e", "  \t\r\n x", "//c\nx",
 	"# c é\n", "SELECT", "SeLeCt x", "1234567", "12", "1", "ababcd", "abcd", "é", "éé", "a\nb",
 	"\n", "\xff", "\xc3", "aaaa", "xyz", "xz", "zz", "ab", "ba",
+	"\uFFFDabc", "abc\uFFFD", "\uFFFD", "\xed\xa0\x80abc", "abc\xed\xbf\xbf",
 }
 
 func TestMatcherMatchesRegexpTable(t *testing.T) {
@@ -321,36 +330,206 @@ func FuzzMatcherMatchesRegexp(f *testing.F) {
 			f.Add(p, s)
 		}
 	}
+	// Seed with every matcher-eligible pattern from the real grammars.
+	for _, p := range grammarPatterns() {
+		if buildMatcher(p) != nil {
+			for _, in := range []string{"", "abc", "\"a\\\"b\"x", "é\xff", "-12.5e+3 ", "name<x>"} {
+				f.Add(p, in)
+			}
+		}
+	}
 	f.Fuzz(func(t *testing.T, pattern, input string) {
-		// The reference is the legacy shape: `^pattern`, match must start at 0.
-		legacy, err := regexp.Compile("^" + pattern)
-		if err != nil {
-			return
-		}
-		loc := legacy.FindStringIndex(input)
-		if loc != nil && loc[0] != 0 {
-			loc = nil
-		}
-		if m := buildMatcher(pattern); m != nil {
-			want := -1
-			if loc != nil {
-				want = loc[1]
-			}
-			if got := m.match(input); got != want {
-				t.Fatalf("pattern %q on %q: matcher %d regexp %d", pattern, input, got, want)
-			}
-		}
-		wrapped := "^(?:" + pattern + ")"
-		if _, werr := regexp.Compile(wrapped); werr != nil {
-			return // the engine falls back to the legacy form for these
-		}
-		if set := firstByteSet(wrapped); loc != nil && set != nil {
-			if loc[1] == 0 {
-				t.Fatalf("pattern %q matches empty on %q but first-set is not 'any'", pattern, input)
-			}
-			if !set[input[0]] {
-				t.Fatalf("pattern %q matched %q; first byte %#x not in first-set", pattern, input[:loc[1]], input[0])
-			}
-		}
+		checkMatcherAgainstRegexp(t, pattern, input)
 	})
+}
+
+// Surrogate code points parse as literal runes in a pattern but can never equal
+// any input rune, and encoding one as a string yields U+FFFD. A matcher that
+// took the string form would accept text the regexp engine refuses.
+func TestMatcherRefusesSurrogateLiterals(t *testing.T) {
+	for _, p := range []string{`\x{D800}`, `\x{D800}[a-z]*`, `[a-z]+\x{DFFF}`, `(?:\x{DBFF}|a)+`, `[\x{D800}-\x{DFFF}]+`} {
+		if m := buildMatcher(p); m != nil {
+			t.Errorf("matcher built for surrogate pattern %q", p)
+		}
+	}
+}
+
+// Regression: both of these were accepted by Compiled although the legacy
+// engine rejected the input.
+func TestSurrogateLiteralRegressions(t *testing.T) {
+	cases := []struct{ tokens, input string }{
+		{"X = /\\x{D800}[a-z]*/\n", "\uFFFDabc"},
+		{"X = /[a-z]+\\x{DFFF}/\n", "abc\uFFFD"},
+		{"X = /\\x{D800}/\n", "\uFFFD"},
+		{"X = /\\x{D800}/\n", "\xff"},
+	}
+	for _, c := range cases {
+		g := mustGrammar(t, c.tokens)
+		assertEquivalent(t, g, c.input, "abc", "")
+	}
+}
+
+// ---------------------------------------------------------------------------
+// Structured fuzzing
+// ---------------------------------------------------------------------------
+
+// patternFromBytes decodes a byte string into a pattern built from atoms,
+// quantifiers, flags and groups, so a mutating fuzzer explores pattern
+// *structure* (mutating raw pattern text mostly produces syntax errors).
+func patternFromBytes(b []byte) string {
+	atoms := []string{
+		`a`, `b`, `ab`, `x`, `\.`, `é`, `日`, `[a-c]`, `[^a]`, `[ab]`, `.`, `[0-9]`, `\n`, `[^\n]`, `-`,
+		`\x{D800}`, `\x{DFFF}`, `\x{FFFD}`, `[\x{80}-\x{10FFFF}]`, `[^"\\]`, `\\`, `"`, `[a-zA-Z_]`,
+		`\w`, `\s`, `\d`, `\b`, `^`, `$`, `(?i:k)`, `[é]`, `\Q.\E`,
+	}
+	quants := []string{``, ``, `*`, `+`, `?`, `{2}`, `{1,3}`, `{0,2}`, `*?`, `+?`}
+	flags := []string{``, ``, ``, `(?i)`, `(?s)`, `(?m)`, `(?U)`}
+	pos := 0
+	next := func(n int) int {
+		if pos >= len(b) {
+			return 0
+		}
+		v := int(b[pos]) % n
+		pos++
+		return v
+	}
+	var build func(depth int) string
+	build = func(depth int) string {
+		var sb strings.Builder
+		n := 1 + next(4)
+		for i := 0; i < n; i++ {
+			if depth > 0 && next(4) == 0 {
+				k := 1 + next(3)
+				alts := make([]string, k)
+				for j := range alts {
+					alts[j] = build(depth - 1)
+				}
+				sb.WriteString(`(?:` + strings.Join(alts, `|`) + `)`)
+			} else {
+				sb.WriteString(atoms[next(len(atoms))])
+			}
+			sb.WriteString(quants[next(len(quants))])
+		}
+		return sb.String()
+	}
+	return flags[next(len(flags))] + build(2)
+}
+
+// FuzzMatcherStructured fuzzes the matcher and first-byte analysis with
+// patterns decoded from a byte string (see patternFromBytes).
+func FuzzMatcherStructured(f *testing.F) {
+	for i := 0; i < 40; i++ {
+		seed := make([]byte, 12)
+		for j := range seed {
+			seed[j] = byte(i*31 + j*7)
+		}
+		for _, in := range []string{"", "abc", "\uFFFDa", "é日x", "\xff", "-a\n.\""} {
+			f.Add(seed, in)
+		}
+	}
+	f.Fuzz(func(t *testing.T, choices []byte, input string) {
+		checkMatcherAgainstRegexp(t, patternFromBytes(choices), input)
+	})
+}
+
+// checkMatcherAgainstRegexp is the property shared by the fuzz targets.
+func checkMatcherAgainstRegexp(t *testing.T, pattern, input string) {
+	t.Helper()
+	// The reference is the legacy shape: `^pattern`, match must start at 0.
+	legacy, err := regexp.Compile("^" + pattern)
+	if err != nil {
+		return
+	}
+	loc := legacy.FindStringIndex(input)
+	if loc != nil && loc[0] != 0 {
+		loc = nil
+	}
+	if m := buildMatcher(pattern); m != nil {
+		want := -1
+		if loc != nil {
+			want = loc[1]
+		}
+		if got := m.match(input); got != want {
+			t.Fatalf("pattern %q on %q: matcher %d regexp %d", pattern, input, got, want)
+		}
+	}
+	wrapped := "^(?:" + pattern + ")"
+	if _, werr := regexp.Compile(wrapped); werr != nil {
+		return // the engine falls back to the legacy form for these
+	}
+	if set := firstByteSet(wrapped); loc != nil && set != nil {
+		if loc[1] == 0 {
+			t.Fatalf("pattern %q matches empty on %q but first-set is not 'any'", pattern, input)
+		}
+		if !set[input[0]] {
+			t.Fatalf("pattern %q matched %q; first byte %#x not in first-set", pattern, input[:loc[1]], input[0])
+		}
+	}
+}
+
+func TestMatcherStructuredRandom(t *testing.T) {
+	r := rand.New(rand.NewSource(99))
+	n := 2500
+	if testing.Short() {
+		n = 500
+	}
+	built := 0
+	inputs := []string{"", "a", "ab", "abc", "-a", "é", "日x", "\uFFFDa", "\xff", "a\nb", "aaaa", "A", "k", "K"}
+	for i := 0; i < n; i++ {
+		b := make([]byte, 6+r.Intn(20))
+		r.Read(b)
+		p := patternFromBytes(b)
+		if buildMatcher(p) != nil {
+			built++
+		}
+		for _, in := range inputs {
+			checkMatcherAgainstRegexp(t, p, in)
+		}
+	}
+	if built == 0 {
+		t.Error("structured generator never produced a matcher-eligible pattern")
+	}
+}
+
+// grammarPatterns returns every regex pattern of every grammar under
+// code/grammars (for fuzz seeding).
+func grammarPatterns() []string {
+	files, _ := filepath.Glob("../../../grammars/*/*.tokens")
+	seen := map[string]bool{}
+	var out []string
+	for _, f := range files {
+		data, err := os.ReadFile(f)
+		if err != nil {
+			continue
+		}
+		g, err := grammartools.ParseTokenGrammar(string(data))
+		if err != nil {
+			continue
+		}
+		for _, d := range allDefinitions(g) {
+			if d.IsRegex && !seen[d.Pattern] {
+				seen[d.Pattern] = true
+				out = append(out, d.Pattern)
+			}
+		}
+	}
+	return out
+}
+
+// TestMatcherOnEveryGrammarPattern checks each matcher-eligible pattern from
+// the real grammars against regexp on a spread of inputs, and logs how many
+// patterns the matcher covers.
+func TestMatcherOnEveryGrammarPattern(t *testing.T) {
+	built, total := 0, 0
+	for _, p := range grammarPatterns() {
+		total++
+		if buildMatcher(p) == nil {
+			continue
+		}
+		built++
+		for _, in := range matcherInputs {
+			checkMatcherAgainstRegexp(t, p, in)
+		}
+	}
+	t.Logf("grammar patterns: %d, matcher-eligible: %d", total, built)
 }

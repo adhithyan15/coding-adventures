@@ -428,7 +428,7 @@ func NewGrammarLexer(source string, grammar *grammartools.TokenGrammar) *Grammar
 }
 
 func newGrammarLexerImpl(source string, grammar *grammartools.TokenGrammar) *GrammarLexer {
-	c, err := Compile(grammar)
+	c, err := compiledFor(grammar)
 	if err != nil {
 		panic(err.Error())
 	}

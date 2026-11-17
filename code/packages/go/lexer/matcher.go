@@ -318,7 +318,7 @@ func unitsOf(re *syntax.Regexp) (units []unit, lit string, ok bool) {
 	switch re.Op {
 	case syntax.OpLiteral:
 		for _, r := range re.Rune {
-			if r == utf8.RuneError || r > unicode.MaxRune {
+			if r == utf8.RuneError || !utf8.ValidRune(r) {
 				return nil, "", false
 			}
 		}
@@ -390,7 +390,9 @@ func repeatStep(body *syntax.Regexp, min, max int) ([]step, bool) {
 		if lit != "" {
 			var u unit
 			if lit[0] >= utf8.RuneSelf {
-				return nil, false // multi-byte rune: use the loop form below
+				// A repeated multi-byte rune is not a one-byte class; leave
+				// such a pattern to the regexp engine.
+				return nil, false
 			}
 			u.set[lit[0]] = true
 			units = []unit{u}
@@ -421,9 +423,6 @@ func repeatStep(body *syntax.Regexp, min, max int) ([]step, bool) {
 				st.dispatch[b] = append(st.dispatch[b], uint8(bi))
 			}
 		}
-	}
-	if len(branches) > 255 {
-		return nil, false
 	}
 	return []step{st}, true
 }
