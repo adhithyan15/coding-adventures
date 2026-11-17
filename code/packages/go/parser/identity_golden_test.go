@@ -183,10 +183,46 @@ func idDump(n *ASTNode, sb *strings.Builder, ids *idNumbering) {
 }
 
 func TestIdentityGolden(t *testing.T) {
-	grammars, batch := 20000, 2500
 	if testing.Short() {
 		t.Skip("identity golden covers 200,000 parses")
 	}
+	runIdentityGolden(t, func(c *Compiled, toks []lexer.Token, opts Options) (*ASTNode, error) {
+		return c.Parse(toks, opts)
+	})
+}
+
+// TestIdentityGoldenParseInto runs the very same 200,000 parses, but through
+// ParseInto into ONE reused Tree followed by ToAST, and requires the same
+// committed hashes: the compact API reproduces Parse's trees, positions,
+// nil-ness, node/slice sharing and errors, byte for byte. It also checks, per
+// parse, that the Tree is empty after an error and that a walk using only the
+// public accessors agrees with the ASTNode tree.
+func TestIdentityGoldenParseInto(t *testing.T) {
+	if testing.Short() {
+		t.Skip("identity golden covers 200,000 parses")
+	}
+	var tree Tree
+	runIdentityGolden(t, func(c *Compiled, toks []lexer.Token, opts Options) (*ASTNode, error) {
+		err := c.ParseInto(&tree, toks, opts)
+		if err != nil {
+			if tree.Root() != NoNode || tree.ToAST() != nil {
+				t.Fatal("tree not empty after an error")
+			}
+			return nil, err
+		}
+		var a, b strings.Builder
+		dumpTree(&tree, tree.Root(), &a)
+		ast := tree.ToAST()
+		dumpNew(ast, &b)
+		if a.String() != b.String() {
+			t.Fatalf("accessor walk differs from ToAST:\n%s\n%s", a.String(), b.String())
+		}
+		return ast, nil
+	})
+}
+
+func runIdentityGolden(t *testing.T, parse func(*Compiled, []lexer.Token, Options) (*ASTNode, error)) {
+	grammars, batch := 20000, 2500
 	rng := rand.New(rand.NewSource(4242))
 	var lines []string
 	h := sha256.New()
@@ -213,7 +249,7 @@ func TestIdentityGolden(t *testing.T) {
 			if rng.Intn(2) == 0 {
 				opts.StartRule = fmt.Sprintf("r%d", rng.Intn(nr))
 			}
-			ast, err := c.Parse(toks, opts)
+			ast, err := parse(c, toks, opts)
 			var sb strings.Builder
 			if err != nil {
 				sb.WriteString("ERR " + err.Error())
