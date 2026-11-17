@@ -2558,7 +2558,7 @@ write-open counts, and so does a rewrite between two execs); otherwise
 
 **`/proc`.** The `ephemeral` list of `host-roots.json` (§5.3) is the one
 authoritative list. Its seed allows the ubiquitous entries: `/proc/self/{exe,maps,cgroup,mountinfo}`,
-`/proc/{meminfo,stat,cpuinfo}`, `/sys/devices/system/cpu/**`,
+`/proc/{meminfo,stat,cpuinfo,filesystems}`, `/sys/devices/system/cpu/**`,
 `/sys/fs/cgroup/**` and `/dev/fd/N`.
 
 `/proc/self/status` and `/proc/self/stat` reveal `TracerPid`, so a
@@ -2684,8 +2684,9 @@ Manifests never store out-of-repository paths. Instead,
   "ephemeral": ["/dev/null", "/dev/urandom", "/dev/fd/*",
                 "/proc/self/exe", "/proc/self/maps", "/proc/self/cgroup",
                 "/proc/self/mountinfo", "/proc/meminfo", "/proc/stat",
-                "/proc/cpuinfo", "/sys/devices/system/cpu/**", "/sys/fs/cgroup/**"],
-  "absent-ok": ["$HOME/.config", "$HOME/.npmrc"]
+                "/proc/cpuinfo", "/proc/filesystems",
+                "/sys/devices/system/cpu/**", "/sys/fs/cgroup/**"],
+  "absent-ok": ["$HOME/.config", "$HOME/.npmrc", "/selinux", "/sys/fs/selinux"]
 }
 ```
 
@@ -2723,6 +2724,35 @@ Four more rules apply:
 - **Image absence.** An absent probe under an `image` root is checked against
   the ctime of the deepest directory that exists: one after the job-start
   stamp is `host-read:setup-modified`.
+
+**Decision D27: libselinux start-up probes (ubuntu-26.04).** `ubuntu-latest`
+moved to ubuntu-26.04 (libselinux 3.9). Every libselinux-linked tool
+(coreutils, grep, sed) calls `statfs` on `/sys/fs/selinux` and `/selinux` and
+opens `/proc/filesystems` at start-up. Unlisted, those gave `host-read:` and
+`trace-incomplete:proc-path` and voided every recording. The policy now has:
+
+- `/proc/filesystems` in `ephemeral`. It is constant for a kernel build, and
+  the image id is already in the weak key (`Host.ImageID()`). It stays in the
+  one authoritative `/proc` list: there is no classifier allowance and no
+  hard-coded `/proc` exception (§4.5, §5.5).
+- `/selinux` and `/sys/fs/selinux` in `absent-ok`, so they are allowed **only
+  while absent**. There is deliberately no `/sys/fs/selinux/**` entry anywhere
+  (not `ephemeral`, not a root): a present SELinux filesystem is a `host-read`.
+
+The invariant: **an SELinux-enabled host records nothing.** SELinux state
+changes outputs (`ls -Z`, `cp --preserve=context`), so it must never be
+silently pinned. On such a host the probe finds the directory (`host-read`), and
+libselinux goes on to read `/proc/mounts` and `/proc/self/attr/current`, which
+stay `trace-incomplete:proc-path`. `kiln:recorder` needs no version bump: the
+change is in `policy:host-roots.json`, which is in `consumed` and so in the
+digest. The `kiln-sandbox` CI job runs on both ubuntu-24.04 and ubuntu-26.04,
+so image drift is caught by a required job.
+
+**One explicit image label.** The record workflow and every job that consumes
+its records use one explicit `ubuntu-NN.04` label, never `ubuntu-latest`: the
+host's image id is part of the weak key, so a floating label would change the
+key under the recorder without a commit. Which label is chosen is decided in
+stage-4 PR 3.
 
 Any other out-of-repository read or probe gives `host-read:<path>` and no
 record. `$HOME` and `TMPDIR` are expanded from the scrubbed environment.
@@ -3855,6 +3885,12 @@ scheduled and dispatched full build.
 ## 14. Residual risks
 
 These are known and named. They are measured rather than closed.
+
+- **`/proc/filesystems` varies with the kernel modules loaded during the job.**
+  It is `ephemeral` (D27), so a read of it is not part of any key. A module
+  loaded mid-job (say a filesystem driver) can change what a tool sees. This is
+  accepted, like `/proc/self/mountinfo` and `/proc/cpuinfo`: the image id pins
+  the kernel build, not the modules a job loads.
 
 - **Recorded binary digests are audit-only.** The binding carries the SHA-256 of
   the Kiln, build-tool, `strace` and `git` binaries and of the sandbox
