@@ -49,6 +49,8 @@ fn validates_encodes_and_decodes_client_shares_in_order() {
         KeyShareLimits::new(MAX_KEY_SHARE_ENTRIES).unwrap(),
     )
     .unwrap();
+    assert_eq!(decoded.extension_data(), &output[..107]);
+    assert!(core::ptr::eq(decoded.extension_data(), &output[..107]));
     assert_eq!(decoded.len(), 2);
     assert!(!decoded.is_empty());
     let entries: Vec<_> = decoded.entries().collect();
@@ -93,6 +95,8 @@ fn empty_client_vector_round_trips_for_retry_group_selection() {
         KeyShareLimits::new(MAX_KEY_SHARE_ENTRIES).unwrap(),
     )
     .unwrap();
+    assert_eq!(decoded.extension_data(), &[0x00, 0x00]);
+    assert!(core::ptr::eq(decoded.extension_data(), &output[..2]));
     assert_eq!(decoded.len(), 0);
     assert!(decoded.is_empty());
     assert_eq!(decoded.entries().count(), 0);
@@ -128,6 +132,10 @@ fn server_selection_is_bound_to_the_exact_client_offer() {
     );
     assert_eq!(selected.key_exchange(), &[0x7e; 32]);
     assert!(core::ptr::eq(selected.offered_client_shares(), &offered));
+    assert!(core::ptr::eq(
+        selected.offered_client_shares().extension_data(),
+        &offered_bytes[..]
+    ));
     assert_eq!(format!("{selected:?}"), "DecodedServerKeyShare");
 }
 

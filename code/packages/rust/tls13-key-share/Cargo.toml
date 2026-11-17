@@ -1,6 +1,6 @@
 [package]
 name = "tls13-key-share"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "Bounded TLS 1.3 key-share extension framing and selection"
 license = "MIT"
