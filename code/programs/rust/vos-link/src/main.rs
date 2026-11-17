@@ -79,6 +79,9 @@ fn print(command: &str, o: &Outcome) {
                 .join(",")
         );
     }
+    for c in &o.rep_claims {
+        println!("impl-own rep {} claim_sha256={}", c.name, c.sha256);
+    }
     if o.findings.is_empty() {
         for n in &o.notes {
             println!("note: {n}");

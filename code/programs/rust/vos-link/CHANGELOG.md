@@ -4,6 +4,17 @@ All notable changes to this package are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added (VOS-012b0, VOS-D061)
+
+- Representation mode: `vos.toml` `mode = "representation"` (`Loaded.mode`; `GD05` on kind any, on a
+  contract package, on an unknown value, on `canonical` under it), CD07-R in `check-doc` and
+  `gen-doc` (VOS02 R6 rule 2), `mode representation` in the report header, the CD07-R lint note
+  in place of the R6 cone note, and `impl-own rep` lines carrying each representation claim's
+  `claim_sha256` (`Outcome.rep_claims`).
+- `tests/representation.rs` (31 tests; negative controls for each CD07-R finding and each `GD05`),
+  the fixture `vos-fixture-rep` and its golden document.
+- Existing behaviour is unchanged: canonical crates print no mode and the same note.
+
 ### Changed (VOS-D081)
 
 - The golden `tests/fixtures/expected/vos-fixture-bitmap.warrant` was re-blessed: the only difference is

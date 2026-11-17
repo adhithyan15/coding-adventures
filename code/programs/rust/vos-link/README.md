@@ -28,7 +28,8 @@ vos-link check-doc code/packages/rust/<impl> [--root <repo>]   # exit 1 on any d
 ## Inputs
 
 ```text
-<impl>/vos.toml                     kind = production | reference | any, contract = "<pkg>", obligations = [tiers]
+<impl>/vos.toml                     kind = production | reference | any, contract = "<pkg>", obligations = [tiers],
+                                    mode = "representation" (optional; absent = canonical; never on kind any)
 <impl>/warrant/impl.part            the hand-written implementation block
 <contract>/vos.toml                 kind = "contract"
 <contract>/contract.vos             the tiers and the instance (parsed with the vos_contract grammar)
@@ -48,6 +49,19 @@ parse and type check, a weakened claim with an obligation's name (`claim_sha256`
 `gen-doc` runs all but regeneration on what it is about to write and writes nothing on a
 finding.
 
+### Representation mode (VOS02 2.7, VOS-D061)
+
+`mode = "representation"` (production or reference; a `GD05` on kind any, on a contract package,
+on an unknown value, and on `canonical` in `obligations`) replaces the canonical and cone rules of
+CD07 by **CD07-R**: no `canonical` and no `any` claim and no `-any` name; `build` is an `Impl(..)`
+with at least one field outside its cone (else "declare canonical"); a model `rep` that is an
+`Impl(..)` whose every field depends on its parameters; the claims `rep_init`, `rep_alpha`, one
+`<op>_rep` per operation of `contract.vos` and at least one `<op>_det`; none mentions `build`;
+every operation in them is applied to `rep(..)`; no right-hand side of `==` in a `_det` claim
+calls an operation.  The report header prints `mode representation`, and each representation
+claim is printed as `impl-own rep <name> claim_sha256=<hex>` for the future lock.  The fixture
+`tests/fixtures/impls/vos-fixture-rep` is the reference shape.
+
 ## What a pass means
 
 The R6 cone rule is a **structural lint** (a taint walk over `build`: a field set from a
@@ -57,7 +71,8 @@ enforced at document level, not proof that the state has no oracle.  `kind`, `co
 (VOS-034) exist, so a production crate that lists only `["canonical"]` or an oracle crate
 that declares `reference` is not caught here.  What closes the residual risk, an oracle write
 path, is the bindings check (VOS-D060, required before any image profile), SH13/SH16 and the
-registry.  Every pass prints this as a `note:` line.
+registry.  Every pass prints this as a `note:` line (a representation crate gets the CD07-R note instead:
+the same limits, and the claim that a mislabelled oracle nothing moves passes the lint).
 
 ## Safety
 

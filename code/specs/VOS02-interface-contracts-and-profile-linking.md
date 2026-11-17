@@ -1528,7 +1528,7 @@ state space (an `Impl` field `rep` covers is in the cone of its parameters; one 
 implementation can reach and `rep` cannot is not found). A mislabelled representation crate
 whose oracle nothing moves passes the lint, which is acceptable by the argument above: the
 authority stays SH13, SH16, VOS-D030 (the registry) and VOS-D060 (the bindings check).
-`vos-link` prints that statement beside the R6 note with every representation pass.
+`vos-link` prints that statement with every representation pass, in place of the R6 cone note (which says no field of `build` is a constant, false of a representation crate by design).
 
 Not decided here, and so not claimed: that `alpha` reads every field
 (the ghost wrapper, SH17), that `evidence.bindings` binds no oracle write, the registry

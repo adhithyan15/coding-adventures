@@ -59,6 +59,27 @@ impl ImplKind {
     }
 }
 
+/// The mode of an implementation (VOS02 section 2.7).
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Mode {
+    /// Every reachable state is in the image of `build` (R5).  The default: an absent
+    /// `mode` key means this.
+    Canonical,
+    /// The state carries history that `alpha` forgets (a rotation pointer); the claim set of
+    /// section 2.7 stands in for `canonical`, and `check-doc` runs CD07-R.
+    Representation,
+}
+
+impl Mode {
+    /// The `vos.toml` spelling.
+    pub fn name(self) -> &'static str {
+        match self {
+            Mode::Canonical => "canonical",
+            Mode::Representation => "representation",
+        }
+    }
+}
+
 /// Where everything is.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Layout {
@@ -156,6 +177,8 @@ pub struct Loaded {
     pub layout: Layout,
     /// The declared kind: production, reference or any.
     pub kind: ImplKind,
+    /// The declared mode; `Canonical` when `vos.toml` has no `mode` key.
+    pub mode: Mode,
     /// The contract package.
     pub contract_pkg: String,
     /// The tiers `gen-doc` embeds, sorted.
@@ -286,6 +309,33 @@ pub fn load(crate_arg: &Path, root_arg: Option<&Path>) -> Result<Load, NoVerdict
     if vt.obligations.is_empty() {
         f.push(Finding::new("GD05", "vos.toml: no `obligations`"));
     }
+    // --- mode (VOS02 section 2.7, D-GD2): absent means canonical -----------------------
+    let mode = match vt.mode.as_deref() {
+        None | Some("canonical") => Mode::Canonical,
+        Some("representation") => Mode::Representation,
+        Some(other) => {
+            f.push(Finding::new(
+                "GD05",
+                format!(
+                    "vos.toml: mode {} is not a mode (canonical or representation)",
+                    esc(other)
+                ),
+            ));
+            Mode::Canonical
+        }
+    };
+    if vt.mode.is_some() && kind == Some(ImplKind::Any) {
+        f.push(Finding::new(
+            "GD05",
+            "vos.toml: `mode` on kind = \"any\": an `-any` implementation has no mode (it is not canonical, VOS02 3.2)",
+        ));
+    }
+    if mode == Mode::Representation && vt.obligations.iter().any(|o| o == "canonical") {
+        f.push(Finding::new(
+            "GD05",
+            "vos.toml: obligations contains `canonical` under mode = \"representation\": a representation implementation does not carry the canonical block (VOS02 2.7)",
+        ));
+    }
     let (Some(kind), Some(contract_pkg)) = (kind, contract_pkg) else {
         return Ok(Load::Findings(f));
     };
@@ -300,6 +350,12 @@ pub fn load(crate_arg: &Path, root_arg: Option<&Path>) -> Result<Load, NoVerdict
         return Ok(Load::Findings(f));
     }
     if let Some(cvt) = read_vos_toml(&contract_dir, "contract package: ", &mut f)? {
+        if cvt.mode.is_some() {
+            f.push(Finding::new(
+                "GD05",
+                format!("contract package `{contract_pkg}`: vos.toml has a `mode`; a contract has none (VOS02 D-GD2)"),
+            ));
+        }
         if cvt.kind != Some(Kind::Contract) {
             f.push(Finding::new(
                 "GD05",
@@ -461,6 +517,7 @@ pub fn load(crate_arg: &Path, root_arg: Option<&Path>) -> Result<Load, NoVerdict
         (true, Some(contract_part), Some(impl_part)) => Ok(Load::Ready(Box::new(Loaded {
             layout,
             kind,
+            mode,
             contract_pkg,
             obligations,
             contract,

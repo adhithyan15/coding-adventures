@@ -12,7 +12,7 @@
 //!        ▼
 //!   CD04 warrant-grammar parse + type check + trailer ──► CD05 same name, different claim
 //!        │ (stops here when Warrant refuses)                CD06 carries, from parsed claims
-//!        ▼                                                  CD07 R6 by kind
+//!        ▼                                                  CD07 R6 by kind (CD07-R by mode)
 //! ```
 //!
 //! ## `carries` is computed, never read
@@ -22,18 +22,18 @@
 //! a claim moved between blocks, or a block relabelled, changes nothing about what is
 //! carried (VOS02 section 2.3).
 
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 
 use vos_manifest::document::{document_name, parse_layout, TRAILER};
 use vos_manifest::warrant::{
-    analyze_document_with_budget, Analysis, AssumeKind, BuildShape, ClaimFact, WarrantFailure,
-    TAINT_BUDGET,
+    analyze_document_with_budget, Analysis, AssumeKind, BuildShape, CallFact, ClaimFact,
+    ClaimShape, WarrantFailure, TAINT_BUDGET,
 };
 use vos_manifest::Tier;
 
 use crate::error::{Finding, NoVerdict};
 use crate::fsio::esc;
-use crate::inputs::{ImplKind, Loaded};
+use crate::inputs::{ImplKind, Loaded, Mode};
 
 /// The stack the Warrant tools run on.
 ///
@@ -50,6 +50,10 @@ pub struct Verified {
     pub findings: Vec<Finding>,
     /// The tiers the document carries, computed from its parsed claims.
     pub carries: Vec<Tier>,
+    /// For `mode = representation`: each representation claim (`rep_init`, `rep_alpha`,
+    /// `<op>_rep`, `<op>_det`) with its `claim_sha256`, in document order, so a report can
+    /// print it as `impl-own rep` and the lock (VOS-034) can pin it.  Empty otherwise.
+    pub rep_claims: Vec<ClaimFact>,
 }
 
 /// Run the Warrant tools on a big stack.
@@ -269,6 +273,14 @@ pub fn verify_with_budget(loaded: &Loaded, doc: &[u8], budget: u64) -> Result<Ve
 
     // --- CD07: R6, as far as the document goes ------------------------------------------
     r6(loaded, &analysis, &counts, &mut v.findings);
+    if loaded.mode == Mode::Representation && loaded.kind != ImplKind::Any {
+        v.rep_claims = analysis
+            .claims
+            .iter()
+            .filter(|c| is_rep_claim_name(&c.name))
+            .cloned()
+            .collect();
+    }
     Ok(v)
 }
 
@@ -284,7 +296,11 @@ fn r6(
     let full = |t: Tier| counts.get(&t).is_some_and(|(h, n)| *h == *n && *n > 0);
     let mut cd07 = |m: String| out.push(Finding::new("CD07", m));
     let cone_failure = |what: &str| format!("the `build` model {what}");
+    // `mode = representation` replaces the canonical and cone rules of production by CD07-R
+    // (VOS02 R6, rule 2).  A reference crate keeps its own rule (no `bound` rows) below.
+    let representation = loaded.mode == Mode::Representation;
     match loaded.kind {
+        ImplKind::Production if representation => r6_representation(loaded, a, counts, &mut cd07),
         ImplKind::Production => {
             if named_any {
                 cd07("a crate named `-any` declares kind = \"production\" (an `-any` crate is kind any, R6)".into());
@@ -368,6 +384,172 @@ fn r6(
                 cd07(format!(
                     "kind reference: the document has {} `bound` declaration(s); a reference model has none (R6)",
                     a.bound_declarations
+                ));
+            }
+            if representation {
+                r6_representation(loaded, a, counts, &mut cd07);
+            }
+        }
+    }
+}
+
+/// Is `name` one of the representation-mode claims of VOS02 2.7?  `rep_init`, `rep_alpha`,
+/// and the `<op>_rep` and `<op>_det` of every operation.
+fn is_rep_claim_name(name: &str) -> bool {
+    name == "rep_init" || name == "rep_alpha" || name.ends_with("_rep") || name.ends_with("_det")
+}
+
+/// The operations of the contract, in `contract.vos` order, each once (the ceilings name
+/// them: every operation has one).
+fn contract_ops(loaded: &Loaded) -> Vec<&str> {
+    let mut ops: Vec<&str> = Vec::new();
+    for c in &loaded.contract.ceilings {
+        if !ops.contains(&c.op.as_str()) {
+            ops.push(&c.op);
+        }
+    }
+    ops
+}
+
+/// The functions the lint treats as *operations*: everything declared with `op` in the
+/// document (bound behaviour, R3) and the interface functions the contract implies,
+/// `init` and the `<op>_out` and `<op>_img` of each contract operation (an author who
+/// wrote one as a `model` with a body does not thereby make a claim about it op-free).
+fn operation_names(loaded: &Loaded, a: &Analysis) -> BTreeSet<String> {
+    let mut names: BTreeSet<String> = a.op_decls.iter().cloned().collect();
+    names.insert("init".to_string());
+    for op in contract_ops(loaded) {
+        if op != "init" {
+            names.insert(format!("{op}_out"));
+            names.insert(format!("{op}_img"));
+        }
+    }
+    names
+}
+
+/// The step state of a call is right when it is `rep(..)` itself or the `<op>_img` of
+/// something (an image is a state; that inner call is a call of its own, checked in turn).
+fn state_is_rep(call: &CallFact, ops: &BTreeSet<String>) -> bool {
+    match call.state_arg.as_deref() {
+        Some("rep") => true,
+        Some(head) => head.ends_with("_img") && ops.contains(head),
+        None => false,
+    }
+}
+
+/// CD07-R: the structural lint of a representation-mode implementation (VOS02 R6, rule 2).
+/// Every finding names what to change.
+fn r6_representation(
+    loaded: &Loaded,
+    a: &Analysis,
+    counts: &BTreeMap<Tier, (usize, usize)>,
+    cd07: &mut impl FnMut(String),
+) {
+    let has = |t: Tier| counts.get(&t).is_some_and(|(h, _)| *h > 0);
+    // (1) no canonical, no any, not named -any.
+    if loaded.layout.impl_pkg.ends_with("-any") {
+        cd07(
+            "mode representation: a crate named `-any` is kind any, which has no mode (R6)".into(),
+        );
+    }
+    if has(Tier::Canonical) {
+        cd07("mode representation: the document carries a `canonical` obligation; a state that carries history is not canonical, so a representation crate carries none (VOS02 2.7)".into());
+    }
+    if has(Tier::Any) {
+        cd07("mode representation: the document carries an `any` obligation; a representation crate carries no `any` block (R6, NC5)".into());
+    }
+    // (2) the off-cone set of build is non-empty.
+    match &a.build {
+        BuildShape::Missing => cd07("mode representation: the `build` model is missing, so the history register outside its cone cannot be found".into()),
+        BuildShape::NotConstructor => cd07("mode representation: the `build` model is not an `Impl(..)` constructor application, so the cone cannot be decided structurally (fails closed)".into()),
+        BuildShape::BudgetExhausted => cd07("mode representation: the `build` cone walk exhausted its step budget, so the cone cannot be decided (fails closed)".into()),
+        BuildShape::WideModel => cd07("mode representation: the `build` cone walk met a model with more than 63 parameters, so the cone cannot be decided (fails closed)".into()),
+        BuildShape::Constructor { in_cone } => {
+            if !in_cone.iter().any(|c| !*c) {
+                cd07("mode representation: every field of `Impl` is set from the abstract state by `build`, so there is no history register outside the cone; declare canonical (representation mode is for history only, VOS02 2.7)".into());
+            }
+        }
+    }
+    // (3) rep exists, is an Impl(..) application, and covers: every field in its cone.
+    match &a.rep {
+        BuildShape::Missing => cd07("mode representation: the model `rep` is missing (or has no parameters): the `_rep` claims have nothing to range over (VOS02 2.7)".into()),
+        BuildShape::NotConstructor => cd07("mode representation: the model `rep` is not an `Impl(..)` constructor application, so the states it covers cannot be decided structurally (fails closed)".into()),
+        BuildShape::BudgetExhausted => cd07("mode representation: the `rep` cone walk exhausted its step budget, so the cone cannot be decided (fails closed)".into()),
+        BuildShape::WideModel => cd07("mode representation: the `rep` cone walk met a model with more than 63 parameters, so the cone cannot be decided (fails closed)".into()),
+        BuildShape::Constructor { in_cone } => {
+            let outside: Vec<String> = in_cone
+                .iter()
+                .enumerate()
+                .filter(|(_, c)| !**c)
+                .map(|(i, _)| i.to_string())
+                .collect();
+            if !outside.is_empty() {
+                cd07(format!(
+                    "mode representation: field(s) {} of `Impl` do not depend on any parameter of `rep`: a constant or an ignored argument, so the `_rep` claims do not range over every `inv_impl` state (CD07-R)",
+                    outside.join(", ")
+                ));
+            }
+        }
+    }
+    // (4) the claims.
+    let shapes: BTreeMap<&str, &ClaimShape> = a
+        .claim_shapes
+        .iter()
+        .map(|c| (c.name.as_str(), c))
+        .collect();
+    let mut required: Vec<String> = vec!["rep_init".into(), "rep_alpha".into()];
+    required.extend(
+        contract_ops(loaded)
+            .into_iter()
+            .filter(|op| *op != "init")
+            .map(|op| format!("{op}_rep")),
+    );
+    for name in &required {
+        if !shapes.contains_key(name.as_str()) {
+            cd07(format!(
+                "mode representation: no claim `{name}` (rep_init, rep_alpha and one `<op>_rep` per operation of `{}` are required, VOS02 2.7)",
+                loaded.contract_pkg
+            ));
+        }
+    }
+    let dets: Vec<&&ClaimShape> = shapes
+        .values()
+        .filter(|c| c.name.ends_with("_det") && c.name.len() > 4)
+        .collect();
+    if dets.is_empty() {
+        cd07("mode representation: no `<op>_det` claim: the determinism claim pins how the history evolves (the output and the full post-state of a step against an op-free model), and a representation crate without one has said nothing about its history register (VOS02 2.7)".into());
+    }
+    let ops = operation_names(loaded, a);
+    for c in a.claim_shapes.iter().filter(|c| is_rep_claim_name(&c.name)) {
+        if c.mentions.contains("build") {
+            cd07(format!(
+                "mode representation: claim `{}` mentions `build`: a representation claim ranges over `rep(..)` states, not over the image of `build` (VOS02 2.7)",
+                c.name
+            ));
+        }
+        let mut bad: BTreeSet<&str> = BTreeSet::new();
+        for call in &c.calls {
+            if call.arity > 0 && ops.contains(&call.callee) && !state_is_rep(call, &ops) {
+                bad.insert(&call.callee);
+            }
+        }
+        for callee in bad {
+            cd07(format!(
+                "mode representation: claim `{}` applies the operation `{callee}` to a state that is not `rep(..)`: every operation in a representation claim is applied to a `rep(..)` state (VOS02 2.7)",
+                c.name
+            ));
+        }
+        if c.name.ends_with("_det") {
+            let mut rhs: BTreeSet<&str> = BTreeSet::new();
+            for call in &c.calls {
+                if call.in_eq_rhs && ops.contains(&call.callee) {
+                    rhs.insert(&call.callee);
+                }
+            }
+            for callee in rhs {
+                cd07(format!(
+                    "mode representation: determinism claim `{}` calls the operation `{callee}` on the right of `==`: the model it is compared with must be op-free, or it pins nothing (VOS02 2.7)",
+                    c.name
                 ));
             }
         }
