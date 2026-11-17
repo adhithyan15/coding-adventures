@@ -17,7 +17,9 @@ import (
 //
 //  1. byte pre-checks (empty line, control characters, a personality line):
 //     validation, not lexing, so they stay plain code;
-//  2. lex and parse the line; a failure is a refusal whose reason grammarReason
+//  2. lex and parse the line into the trace's reused straceparser.LineParser
+//     (the compact path, P2 PR 5: no *ASTNode tree, the arguments are read into
+//     a reused slice); a failure is a refusal whose reason grammarReason
 //     gives;
 //  3. switch on the body rule, and run the old state machine for that shape.
 func handleLineG(text string, lineNo int, st *lineState) (rec *record, e *Error) {
@@ -48,10 +50,11 @@ func handleLineG(text string, lineNo int, st *lineState) (rec *record, e *Error)
 	if maxLine <= 0 {
 		maxLine = DefaultLimits().MaxLineBytes
 	}
-	ast, toks, err := straceparser.ParseLineTokens(text, grammarOptions(maxLine))
-	if err != nil {
+	lp := &st.lp
+	if err := lp.ParseLineInto(text, grammarOptions(maxLine)); err != nil {
 		return nil, incomplete(lineNo, grammarReason(err))
 	}
+	toks := lp.Tokens()
 	if len(toks) == 0 {
 		return nil, incomplete(lineNo, reasonUnparsable)
 	}
@@ -59,12 +62,14 @@ func handleLineG(text string, lineNo int, st *lineState) (rec *record, e *Error)
 	if !ok {
 		return nil, incomplete(lineNo, reasonUnparsable)
 	}
-	bt, ok := bodyToken(ast)
+	bt, ok := bodyToken(lp)
 	if !ok {
 		return nil, incomplete(lineNo, reasonUnparsable)
 	}
+	// bt is a COPY of the token (its Value is a substring of text), so it stays
+	// valid when the resumed case parses the glued line into the same lp.
 
-	switch straceparser.BodyKind(ast) {
+	switch lp.BodyKind() {
 	case "exit_line":
 		// The token is the whole "+++ ... +++"; the old exit parser reads what is
 		// inside, so the number is still read by the same strict code.
@@ -126,7 +131,7 @@ func handleLineG(text string, lineNo int, st *lineState) (rec *record, e *Error)
 		// read on its own (the parse above), so no construct can span the seam:
 		// strace never splits a token (KILN04 section 4.9, table).
 		glued := p.prefix + text[bt.Column-1+len(bt.Value):]
-		call, unfinished, _, r := parseCallG(glued, maxLine)
+		call, unfinished, _, r := parseCallG(glued, maxLine, st)
 		if r != "" {
 			return nil, incomplete(lineNo, r)
 		}
@@ -141,7 +146,7 @@ func handleLineG(text string, lineNo int, st *lineState) (rec *record, e *Error)
 		return finishCall(pid, lineNo, call, true, st.helper)
 
 	case "call_line":
-		call, unfinished, prefix, r := callFromTree(text, ast, bt)
+		call, unfinished, prefix, r := callFromLP(text, st, bt)
 		if r != "" {
 			return nil, incomplete(lineNo, r)
 		}
@@ -171,25 +176,44 @@ func handleLineG(text string, lineNo int, st *lineState) (rec *record, e *Error)
 }
 
 // parseCallG reads a glued call ("name(args) = result") as a line of its own,
-// under a dummy pid, and returns what parseCall returns.
-func parseCallG(glued string, maxLine int) (call rawCall, unfinished bool, prefix string, reason string) {
+// under a dummy pid, and returns what parseCall returns.  It reuses st.lp, which
+// is safe: the caller has taken everything it needs from the first parse.
+func parseCallG(glued string, maxLine int, st *lineState) (call rawCall, unfinished bool, prefix string, reason string) {
 	line := "1  " + glued
-	ast, _, err := straceparser.ParseLineTokens(line, grammarOptions(maxLine))
-	if err != nil {
+	if err := st.lp.ParseLineInto(line, grammarOptions(maxLine)); err != nil {
 		return call, false, "", grammarReason(err)
 	}
-	bt, ok := bodyToken(ast)
-	if !ok || straceparser.BodyKind(ast) != "call_line" {
+	bt, ok := bodyToken(&st.lp)
+	if !ok || st.lp.BodyKind() != "call_line" {
 		return call, false, "", reasonUnparsable
 	}
-	return callFromTree(line, ast, bt)
+	return callFromLP(line, st, bt)
 }
 
-// callFromTree builds a rawCall from a parsed call_line: the name from the
-// SYSCALL token, the arguments from the raw spans, and the result from the
+// bodyToken returns a copy of the first token of the body node: the SYSCALL of
+// a call, the RESUMED marker, the exit token, SIG_OPEN, or a killed-at-entry
+// token.  (The compact twin of the old ASTNode walk.)
+func bodyToken(lp *straceparser.LineParser) (lexer.Token, bool) {
+	b := lp.Body()
+	if b == parser.NoNode {
+		return lexer.Token{}, false
+	}
+	t := lp.Tree()
+	for i, n := 0, t.NumChildren(b); i < n; i++ {
+		if c := t.Child(b, i); c.IsToken() {
+			return *t.Token(c.Token()), true
+		}
+	}
+	return lexer.Token{}, false
+}
+
+// callFromLP builds a rawCall from a parsed call_line in st.lp: the name from
+// the SYSCALL token, the arguments from the raw spans (read into st.argbuf,
+// reused between lines; trimArgs copies what it keeps), and the result from the
 // strict result parser run on the text after the closing parenthesis.  For an
 // interrupted call it returns the pending prefix instead.
-func callFromTree(line string, ast *parser.ASTNode, name lexer.Token) (call rawCall, unfinished bool, prefix string, reason string) {
+func callFromLP(line string, st *lineState, name lexer.Token) (call rawCall, unfinished bool, prefix string, reason string) {
+	lp := &st.lp
 	n := name.Value[:len(name.Value)-1] // drop the "("
 	if !validName(n) {
 		return call, false, "", reasonUnparsable
@@ -201,9 +225,12 @@ func callFromTree(line string, ast *parser.ASTNode, name lexer.Token) (call rawC
 	if ent := lookup(n); ent.class == classHandled {
 		maxItems = ent.max
 	}
-	pre, open := straceparser.PrefixBeforeUnfinished(line, ast)
+	pre, open := lp.PrefixBeforeUnfinished()
 	commaAfter := open && strings.HasSuffix(strings.TrimRight(pre, " "), ",")
-	args, r := trimArgs(straceparser.RawArgs(line, ast), open, commaAfter)
+	st.argbuf = lp.AppendRawArgs(st.argbuf[:0])
+	args, r := trimArgs(st.argbuf, open, commaAfter)
+	// Do not keep the substrings of a huge line alive through the buffer.
+	clear(st.argbuf)
 	if r != "" {
 		return call, false, "", r
 	}
@@ -216,7 +243,7 @@ func callFromTree(line string, ast *parser.ASTNode, name lexer.Token) (call rawC
 	call.args = args
 	// The grammar's tail is free-form on purpose: the strict result parser
 	// decides what may follow the ")", for EVERY closed call.
-	ret, r := parseResult(straceparser.TextAfterClose(line, ast))
+	ret, r := parseResult(lp.TextAfterClose())
 	if r != "" {
 		return call, false, "", r
 	}
