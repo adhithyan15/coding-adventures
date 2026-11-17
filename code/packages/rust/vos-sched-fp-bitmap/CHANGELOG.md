@@ -27,3 +27,11 @@ All notable changes to this package are documented here.
   at or below 65,536; the `init` / `field-zero` controls are known-inert (VOS-D065) and named
   in `warrant/check_evidence.sh`.
 - `heap <= 0` rows only on `insert_out` and `remove_out` (VOS-D063).
+
+### Fixed
+
+- `tests/generated/warrant_evidence.rs` regenerated with `gen_evidence` for the WD-HARN1
+  evidence prelude (bounded observer wait, `lock_or_recover`, `Bail out!` exit 70). It was
+  generated while that prelude change was in CI, so `gen_evidence --check` failed on main.
+  No hand edit; `evidence/` is unchanged and `warrant/check_evidence.sh` reports the same
+  result (cargo status 1, 61 ok, the three known `init`/`field-zero` controls).
