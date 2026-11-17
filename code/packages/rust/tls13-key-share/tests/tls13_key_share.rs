@@ -69,6 +69,49 @@ fn validates_encodes_and_decodes_client_shares_in_order() {
 }
 
 #[test]
+fn empty_client_vector_round_trips_for_retry_group_selection() {
+    let policy = policy();
+    let mut too_small = [0xa5];
+    assert_eq!(
+        encode_client_key_shares(&[], &mut too_small)
+            .unwrap_err()
+            .kind(),
+        KeyShareErrorKind::OutputTooSmall
+    );
+    assert_eq!(too_small, [0xa5]);
+
+    let mut output = [0xa5; 4];
+    {
+        let encoded = encode_client_key_shares(&[], &mut output).unwrap();
+        assert_eq!(encoded.as_bytes(), &[0x00, 0x00]);
+    }
+    assert_eq!(&output[2..], &[0xa5, 0xa5]);
+
+    let decoded = decode_client_key_shares(
+        &output[..2],
+        &policy,
+        KeyShareLimits::new(MAX_KEY_SHARE_ENTRIES).unwrap(),
+    )
+    .unwrap();
+    assert_eq!(decoded.len(), 0);
+    assert!(decoded.is_empty());
+    assert_eq!(decoded.entries().count(), 0);
+    assert_eq!(
+        format!("{decoded:?}"),
+        "DecodedClientKeyShares { entry_count: 0 }"
+    );
+
+    let mut unsolicited_server = [0u8; 36];
+    unsolicited_server[..4].copy_from_slice(&[0x00, 0x1d, 0x00, 0x20]);
+    assert_eq!(
+        decode_server_key_share(&unsolicited_server, &policy, &decoded)
+            .unwrap_err()
+            .kind(),
+        KeyShareErrorKind::ServerGroupNotOffered
+    );
+}
+
+#[test]
 fn server_selection_is_bound_to_the_exact_client_offer() {
     let policy = policy();
     let offered_bytes = encoded_client_shares();
@@ -109,15 +152,9 @@ fn policy_rejects_unknown_disallowed_and_wrong_length_shares() {
 }
 
 #[test]
-fn client_encoder_rejects_empty_duplicate_and_small_output_atomically() {
+fn client_encoder_rejects_duplicate_and_small_output_atomically() {
     let policy = policy();
     let mut output = [0xa5; 106];
-    assert_eq!(
-        encode_client_key_shares(&[], &mut output)
-            .unwrap_err()
-            .kind(),
-        KeyShareErrorKind::EmptyClientShareList
-    );
     let first = validate_client_key_share(&policy, 0x001d, &X25519_KEY).unwrap();
     let second = validate_client_key_share(&policy, 0x001d, &X25519_KEY).unwrap();
     assert_eq!(
@@ -145,7 +182,6 @@ fn client_decoder_rejects_vector_and_entry_framing_failures() {
         (&[], KeyShareErrorKind::TruncatedClientVectorLength),
         (&[0x00], KeyShareErrorKind::TruncatedClientVectorLength),
         (&[0x00, 0x01], KeyShareErrorKind::ClientVectorLengthMismatch),
-        (&[0x00, 0x00], KeyShareErrorKind::EmptyClientShareList),
         (&[0x00, 0x01, 0x00], KeyShareErrorKind::TruncatedEntryHeader),
         (
             &[0x00, 0x04, 0x00, 0x1d, 0x00, 0x20],
