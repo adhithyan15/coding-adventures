@@ -1631,7 +1631,16 @@ The numbering continues from 14.1.
     own: one may print `not ok` before a later one bails out, and a pipe reports
     only its last command's status.  The adopters' sabotage lines therefore
     require a `^not ok ` line and no `Bail out!` (WD-HARN1b; the pipe hides
-    the binary's exit status, so the check reads the TAP on stdout).  The bail-out also
+    the binary's exit status, so the check reads the TAP on stdout).  WD-HARN1c replaces
+    that grep/awk/findstr text with one tested checker, `code/scripts/warrant_negctl.py`
+    (TF01 section 6), which is now the normative form: it runs the sabotage command
+    without a shell and passes only if the command exits non-zero, the TAP has exactly
+    one plan line `1..N`, there is at least one `not ok`, there is no `Bail out!`, and
+    the number of test points equals N (a filtered run prints the filtered plan, so the
+    count rule holds); on failure it prints the captured output.  It closes the crash
+    after an earlier `not ok` with no plan, the silent Windows failure, and the stale
+    `%TEMP%` capture.  Existing lines migrate in staged PRs, and the VOS packages
+    migrate their own `vos-sched-*` lines with the script's recipe.  The bail-out also
     ends the run before an abandoned, possibly spinning, worker can burn a
     core.  The stderr line is written with `writeln!` and its result ignored
     (`eprintln!` panics on a closed stderr pipe).  `WARRANT_OBS_TIMEOUT_SECS` may raise the 120 s bound; a lower value is
