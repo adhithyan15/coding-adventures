@@ -1,0 +1,1088 @@
+{
+  "document": "v1",
+  "errors": {},
+  "examples": [
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_u16",
+          [
+            [
+              "lit",
+              {
+                "type": "U16",
+                "value": "2"
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "U16",
+                "value": "3"
+              }
+            ]
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "U16",
+            "value": "7"
+          }
+        ]
+      ],
+      "expected": [
+        "lit",
+        {
+          "type": "U16",
+          "value": "7"
+        }
+      ],
+      "name": "x_u16",
+      "result_type": "U16",
+      "subject": [
+        "subject_op",
+        "op_u16",
+        [
+          [
+            "lit",
+            {
+              "type": "U16",
+              "value": "2"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "U16",
+              "value": "3"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_i8",
+          [
+            [
+              "neg",
+              [
+                "lit",
+                {
+                  "type": "I8",
+                  "value": "-128"
+                }
+              ]
+            ]
+          ]
+        ],
+        [
+          "neg",
+          [
+            "lit",
+            {
+              "type": "I8",
+              "value": "-128"
+            }
+          ]
+        ]
+      ],
+      "expected": [
+        "neg",
+        [
+          "lit",
+          {
+            "type": "I8",
+            "value": "-128"
+          }
+        ]
+      ],
+      "name": "x_i8",
+      "result_type": "I8",
+      "subject": [
+        "subject_op",
+        "op_i8",
+        [
+          [
+            "neg",
+            [
+              "lit",
+              {
+                "type": "I8",
+                "value": "-128"
+              }
+            ]
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_cut",
+          [
+            [
+              "lit",
+              {
+                "type": "Bytes",
+                "value": "010203"
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "1"
+              }
+            ]
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "Bytes",
+            "value": "0103"
+          }
+        ]
+      ],
+      "expected": [
+        "lit",
+        {
+          "type": "Bytes",
+          "value": "0103"
+        }
+      ],
+      "name": "x_cut",
+      "result_type": "Bytes",
+      "subject": [
+        "subject_op",
+        "op_cut",
+        [
+          [
+            "lit",
+            {
+              "type": "Bytes",
+              "value": "010203"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "Nat",
+              "value": "1"
+            }
+          ]
+        ]
+      ]
+    }
+  ],
+  "model_order": [
+    "w_u16",
+    "w_neg",
+    "w_min",
+    "w_sub",
+    "w_hex",
+    "w_take",
+    "w_chain"
+  ],
+  "models": {
+    "w_chain": {
+      "body": [
+        "drop",
+        [
+          "take",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "lit",
+            {
+              "type": "Nat",
+              "value": "4"
+            }
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "1"
+          }
+        ]
+      ],
+      "ir_cost": 5,
+      "params": [
+        [
+          "a",
+          "Bytes"
+        ]
+      ],
+      "ret": "Bytes"
+    },
+    "w_hex": {
+      "body": [
+        "sub",
+        [
+          "add",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "lit",
+            {
+              "type": "U32",
+              "value": "255"
+            }
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "U32",
+            "value": "1"
+          }
+        ]
+      ],
+      "ir_cost": 5,
+      "params": [
+        [
+          "a",
+          "U32"
+        ]
+      ],
+      "ret": "U32"
+    },
+    "w_min": {
+      "body": [
+        "if",
+        [
+          "eq",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "neg",
+            [
+              "lit",
+              {
+                "type": "I8",
+                "value": "-128"
+              }
+            ]
+          ]
+        ],
+        [
+          "neg",
+          [
+            "lit",
+            {
+              "type": "I8",
+              "value": "-128"
+            }
+          ]
+        ],
+        [
+          "neg",
+          [
+            "var",
+            "a"
+          ]
+        ]
+      ],
+      "ir_cost": 7,
+      "params": [
+        [
+          "a",
+          "I8"
+        ]
+      ],
+      "ret": "I8"
+    },
+    "w_neg": {
+      "body": [
+        "neg",
+        [
+          "var",
+          "a"
+        ]
+      ],
+      "ir_cost": 2,
+      "params": [
+        [
+          "a",
+          "I8"
+        ]
+      ],
+      "ret": "I8"
+    },
+    "w_sub": {
+      "body": [
+        "sub",
+        [
+          "sub",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "I64",
+            "value": "9223372036854775807"
+          }
+        ]
+      ],
+      "ir_cost": 5,
+      "params": [
+        [
+          "a",
+          "I64"
+        ],
+        [
+          "b",
+          "I64"
+        ]
+      ],
+      "ret": "I64"
+    },
+    "w_take": {
+      "body": [
+        "concat",
+        [
+          "take",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "n"
+          ]
+        ],
+        [
+          "drop",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "add",
+            [
+              "var",
+              "n"
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "1"
+              }
+            ]
+          ]
+        ]
+      ],
+      "ir_cost": 9,
+      "params": [
+        [
+          "a",
+          "Bytes"
+        ],
+        [
+          "n",
+          "Nat"
+        ]
+      ],
+      "ret": "Bytes"
+    },
+    "w_u16": {
+      "body": [
+        "add",
+        [
+          "mul",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "U16",
+            "value": "1"
+          }
+        ]
+      ],
+      "ir_cost": 5,
+      "params": [
+        [
+          "a",
+          "U16"
+        ],
+        [
+          "b",
+          "U16"
+        ]
+      ],
+      "ret": "U16"
+    }
+  },
+  "module": "core_forms_v1",
+  "ops": {
+    "op_chain": {
+      "params": [
+        [
+          "a",
+          "Bytes"
+        ]
+      ],
+      "ret": "Bytes"
+    },
+    "op_cut": {
+      "params": [
+        [
+          "a",
+          "Bytes"
+        ],
+        [
+          "n",
+          "Nat"
+        ]
+      ],
+      "ret": "Bytes"
+    },
+    "op_i64": {
+      "params": [
+        [
+          "a",
+          "I64"
+        ],
+        [
+          "b",
+          "I64"
+        ]
+      ],
+      "ret": "I64"
+    },
+    "op_i8": {
+      "params": [
+        [
+          "a",
+          "I8"
+        ]
+      ],
+      "ret": "I8"
+    },
+    "op_u16": {
+      "params": [
+        [
+          "a",
+          "U16"
+        ],
+        [
+          "b",
+          "U16"
+        ]
+      ],
+      "ret": "U16"
+    },
+    "op_u32": {
+      "params": [
+        [
+          "a",
+          "U32"
+        ]
+      ],
+      "ret": "U32"
+    }
+  },
+  "schema": "warrant-lowering-parity-v0",
+  "suites": [
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "U16"
+        ],
+        [
+          "b",
+          "U16"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_u16",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "w_u16",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_u16",
+      "expected": [
+        "model_call",
+        "w_u16",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ],
+      "id": "warrant/core_forms_v1/exhaustive/c_u16",
+      "ir_cost": 21,
+      "kind": "reference",
+      "ops": [
+        "op_u16"
+      ],
+      "result_type": "U16",
+      "subject": [
+        "subject_op",
+        "op_u16",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "I8"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_i8",
+          [
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "w_min",
+          [
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_i8",
+      "expected": [
+        "model_call",
+        "w_min",
+        [
+          [
+            "var",
+            "a"
+          ]
+        ]
+      ],
+      "id": "warrant/core_forms_v1/exhaustive/c_i8",
+      "ir_cost": 22,
+      "kind": "reference",
+      "ops": [
+        "op_i8"
+      ],
+      "result_type": "I8",
+      "subject": [
+        "subject_op",
+        "op_i8",
+        [
+          [
+            "var",
+            "a"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "I8"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_i8",
+          [
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "w_neg",
+          [
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_i8_neg",
+      "expected": [
+        "model_call",
+        "w_neg",
+        [
+          [
+            "var",
+            "a"
+          ]
+        ]
+      ],
+      "id": "warrant/core_forms_v1/exhaustive/c_i8_neg",
+      "ir_cost": 12,
+      "kind": "reference",
+      "ops": [
+        "op_i8"
+      ],
+      "result_type": "I8",
+      "subject": [
+        "subject_op",
+        "op_i8",
+        [
+          [
+            "var",
+            "a"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "I64"
+        ],
+        [
+          "b",
+          "I64"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_i64",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "w_sub",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_i64",
+      "expected": [
+        "model_call",
+        "w_sub",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ],
+      "id": "warrant/core_forms_v1/exhaustive/c_i64",
+      "ir_cost": 21,
+      "kind": "reference",
+      "ops": [
+        "op_i64"
+      ],
+      "result_type": "I64",
+      "subject": [
+        "subject_op",
+        "op_i64",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "U32"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_u32",
+          [
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "w_hex",
+          [
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_u32",
+      "expected": [
+        "model_call",
+        "w_hex",
+        [
+          [
+            "var",
+            "a"
+          ]
+        ]
+      ],
+      "id": "warrant/core_forms_v1/exhaustive/c_u32",
+      "ir_cost": 18,
+      "kind": "reference",
+      "ops": [
+        "op_u32"
+      ],
+      "result_type": "U32",
+      "subject": [
+        "subject_op",
+        "op_u32",
+        [
+          [
+            "var",
+            "a"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "Bytes"
+        ],
+        [
+          "n",
+          "Nat"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_cut",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "n"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "w_take",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "n"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_cut",
+      "expected": [
+        "model_call",
+        "w_take",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "n"
+          ]
+        ]
+      ],
+      "id": "warrant/core_forms_v1/exhaustive/c_cut",
+      "ir_cost": 29,
+      "kind": "reference",
+      "ops": [
+        "op_cut"
+      ],
+      "result_type": "Bytes",
+      "subject": [
+        "subject_op",
+        "op_cut",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "n"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "Bytes"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_chain",
+          [
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "w_chain",
+          [
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_chain",
+      "expected": [
+        "model_call",
+        "w_chain",
+        [
+          [
+            "var",
+            "a"
+          ]
+        ]
+      ],
+      "id": "warrant/core_forms_v1/exhaustive/c_chain",
+      "ir_cost": 18,
+      "kind": "reference",
+      "ops": [
+        "op_chain"
+      ],
+      "result_type": "Bytes",
+      "subject": [
+        "subject_op",
+        "op_chain",
+        [
+          [
+            "var",
+            "a"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "U16"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "add",
+          [
+            "subject_op",
+            "op_u16",
+            [
+              [
+                "var",
+                "a"
+              ],
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          [
+            "lit",
+            {
+              "type": "U16",
+              "value": "1"
+            }
+          ]
+        ],
+        [
+          "subject_op",
+          "op_u16",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "lit",
+              {
+                "type": "U16",
+                "value": "1"
+              }
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_wrap_over_subject",
+      "expected": [],
+      "id": "warrant/core_forms_v1/exhaustive/c_wrap_over_subject",
+      "ir_cost": 10,
+      "kind": "predicate",
+      "ops": [
+        "op_u16"
+      ],
+      "result_type": "Bool",
+      "subject": []
+    }
+  ]
+}

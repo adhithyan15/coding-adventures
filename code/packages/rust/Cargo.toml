@@ -826,6 +826,7 @@ members = [
     "csprng",
     "ct-compare",
     "test-bootstrap",
+    "warrant-corpus-gen",
     "warrant-grammar",
     "warrant-ir",
     "zeroize",
