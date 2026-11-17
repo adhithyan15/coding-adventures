@@ -63,15 +63,8 @@ fn w0501(op: &str, span: (usize, usize), msg: impl Into<String>) -> CodegenError
 
 /// The post-state slot of an operation, over the generator's own types.
 fn slot_of(posts: &[Ty], full: &Ty) -> Option<PostSlot> {
-    let shape = match full {
-        Ty::Res(t, _) => match &**t {
-            Ty::Tuple(cs) => SlotShape::ResultTuple(cs.clone()),
-            other => SlotShape::ResultPlain(other.clone()),
-        },
-        Ty::Tuple(cs) => SlotShape::Tuple(cs.clone()),
-        other => SlotShape::Plain(other.clone()),
-    };
-    resolve_post_slot(posts, &shape)
+    // One definition, public as `domain::resolve_post_slot_of` (VER04r CV2-S2).
+    crate::domain::resolve_post_slot_of(posts, full)
 }
 
 /// Resolve one parameter's host form, or refuse it (W0704).

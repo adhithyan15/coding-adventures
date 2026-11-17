@@ -35,7 +35,7 @@ use crate::binding::{
     is_rust_identifier, is_rust_path, validate_bindings, BindingManifest, HostShape, HostSpec, HostTy,
     InoutForm, MAX_EXPORT_SEGMENTS,
 };
-use crate::checker::{resolve_post_slot, CheckedWarrantModule, PostSlot, SlotShape};
+use crate::checker::{CheckedWarrantModule, PostSlot};
 use crate::codegen::{
     find_operation_in_expr, hex_decode, CodegenError, CodegenErrorKind, DiagnosticCode,
 };
@@ -145,7 +145,7 @@ fn span_of(e: &Expression<'_>) -> (usize, usize) {
 /// The first nine variants are the scalar types of WX-B; the rest are the WX-A
 /// composites, built from component types (VER04j section 4.7).
 #[derive(Clone, Debug, PartialEq, Eq)]
-enum Ty {
+pub enum Ty {
     Bool,
     U8,
     U64,
@@ -227,7 +227,7 @@ impl Ty {
     /// Result<T, E>          |T| + #cases
     /// List<T>               1 + d + d^2 + e^3     d = min(16,|T|), e = min(4,|T|)
     /// ```
-    fn domain_size(&self) -> Option<u64> {
+    pub fn domain_size(&self) -> Option<u64> {
         match self {
             Ty::Bool => Some(2),
             Ty::U8 => Some(256),
@@ -294,13 +294,13 @@ impl Ty {
     }
 
     /// Upper bound on the bytes the enumerated domain occupies.
-    fn domain_bytes(&self) -> Option<u64> {
+    pub fn domain_bytes(&self) -> Option<u64> {
         self.domain_size()?.checked_mul(self.elem_cost()?)
     }
 }
 
 /// Size of the Cartesian product of component domains (`None` on overflow).
-fn product_size(cs: &[Ty]) -> Option<u64> {
+pub fn product_size(cs: &[Ty]) -> Option<u64> {
     let mut n = 1u64;
     for c in cs {
         n = n.checked_mul(c.domain_size()?)?;
@@ -310,7 +310,7 @@ fn product_size(cs: &[Ty]) -> Option<u64> {
 
 /// Cartesian-product size and total domain bytes of a binder list, or `None`
 /// when either overflows a `u64` or a width is over the cap.
-fn claim_domain(tys: &[Ty]) -> Option<(u64, u64)> {
+pub fn claim_domain(tys: &[Ty]) -> Option<(u64, u64)> {
     let mut product = 1u64;
     let mut bytes = 0u64;
     for t in tys {
@@ -327,7 +327,7 @@ type FieldTys<'a> = Vec<(&'a str, TypeExpr<'a>)>;
 /// turn a `TypeExpr` into a [`Ty`]: aliases, records, variants, error types
 /// and the constructor table.
 #[derive(Default)]
-struct TyEnv<'a> {
+pub(crate) struct TyEnv<'a> {
     aliases: HashMap<&'a str, TypeExpr<'a>>,
     records: HashMap<&'a str, FieldTys<'a>>,
     variants: HashMap<&'a str, Vec<(&'a str, FieldTys<'a>)>>,
@@ -339,7 +339,7 @@ struct TyEnv<'a> {
 }
 
 impl<'a> TyEnv<'a> {
-    fn new(file: &WarrantFile<'a>) -> TyEnv<'a> {
+    pub(crate) fn new(file: &WarrantFile<'a>) -> TyEnv<'a> {
         let mut env = TyEnv {
             aliases: HashMap::new(),
             records: HashMap::new(),
@@ -413,7 +413,7 @@ impl<'a> TyEnv<'a> {
 /// Resolve a declared type to the generator's [`Ty`] (aliases, records,
 /// variants and error types looked up in `env`).  Fixed-width names are `Fx`
 /// only in a v1 document.
-fn ty_of_type<'a>(
+pub(crate) fn ty_of_type<'a>(
     t: &TypeExpr<'a>,
     env: &TyEnv<'a>,
     v1: bool,
@@ -1029,6 +1029,64 @@ fn demote_for_budget(tys: &mut [Ty], budget: u64) -> Vec<(usize, Vec<String>)> {
         }
     }
     demoted
+}
+
+/// The resolved binder domains of one claim: the declared types, the
+/// `NatCount` refinement of a `Nat` that flows into a shift count, and the
+/// budget demotion of VER04j section 2.6, then the budget check (`W0706`).
+///
+/// This is the single definition both the harness generator (in
+/// `generate_evidence_harness_with_tables`) and the public
+/// [`crate::domain::resolve_binders`] call, so the descriptor a corpus emitter
+/// sees is by construction the one the generated harness enumerates.  It does
+/// no emission and has no side effect.  The returned list names the demotions
+/// in the order they were applied (binder index, component path).
+pub(crate) fn resolve_claim_tys<'a>(
+    binders: &[Parameter<'a>],
+    cbody: Option<&Expression<'a>>,
+    env: &TyEnv<'a>,
+    v1: bool,
+    budget: u64,
+    label: &str,
+    span: (usize, usize),
+) -> Result<(Vec<Ty>, Vec<(usize, Vec<String>)>), CodegenError> {
+    let mut tys: Vec<Ty> = binders
+        .iter()
+        .map(|b| ty_of(b, v1, env))
+        .collect::<Result<_, _>>()?;
+    let mut demoted: Vec<(usize, Vec<String>)> = Vec::new();
+    if v1 {
+        // A Nat that flows directly into a shift count gets the
+        // count-aware domain (VER04j section 3.6).
+        let mut counts = HashSet::new();
+        if let Some(cbody) = cbody {
+            count_binders(cbody, &mut counts);
+        }
+        for (t, b) in tys.iter_mut().zip(binders.iter()) {
+            if *t == Ty::Nat && counts.contains(b.name) {
+                *t = Ty::NatCount;
+            }
+        }
+        // The budget rule of section 2.6.
+        demoted = demote_for_budget(&mut tys, budget);
+    }
+    let (shown, over) = match claim_domain(&tys) {
+        Some((p, b)) => (
+            format!("{p} ({b} bytes)"),
+            p > budget || b > DOMAIN_BYTES_BUDGET,
+        ),
+        None => ("overflowing u64".to_string(), true),
+    };
+    if over {
+        return Err(CodegenError {
+            code: DiagnosticCode::W0706,
+            kind: CodegenErrorKind::UnsupportedTarget(format!(
+                "claim {label} exhaustive domain {shown} exceeds budget {budget} cases / {DOMAIN_BYTES_BUDGET} bytes"
+            )),
+            span,
+        });
+    }
+    Ok((tys, demoted))
 }
 
 // ---------------------------------------------------------------------------
@@ -3208,43 +3266,15 @@ pub fn generate_evidence_harness_with_tables(
                 span,
             ));
         }
-        let mut tys: Vec<Ty> = binders
-            .iter()
-            .map(|b| ty_of(b, v1, &env))
-            .collect::<Result<_, _>>()?;
-        let mut demoted: Vec<(usize, Vec<String>)> = Vec::new();
-        if v1 {
-            // A Nat that flows directly into a shift count gets the
-            // count-aware domain (VER04j section 3.6).
-            let mut counts = HashSet::new();
-            if let Some(cbody) = cbody {
-                count_binders(cbody, &mut counts);
-            }
-            for (t, b) in tys.iter_mut().zip(binders.iter()) {
-                if *t == Ty::Nat && counts.contains(b.name) {
-                    *t = Ty::NatCount;
-                }
-            }
-            // The budget rule of section 2.6.
-            demoted = demote_for_budget(&mut tys, options.exhaustive_budget);
-        }
-        let (shown, over) = match claim_domain(&tys) {
-            Some((p, b)) => (
-                format!("{p} ({b} bytes)"),
-                p > options.exhaustive_budget || b > DOMAIN_BYTES_BUDGET,
-            ),
-            None => ("overflowing u64".to_string(), true),
-        };
-        if over {
-            return Err(CodegenError {
-                code: DiagnosticCode::W0706,
-                kind: CodegenErrorKind::UnsupportedTarget(format!(
-                    "claim {label} exhaustive domain {shown} exceeds budget {} cases / {DOMAIN_BYTES_BUDGET} bytes",
-                    options.exhaustive_budget
-                )),
-                span,
-            });
-        }
+        let (tys, demoted) = resolve_claim_tys(
+            binders,
+            cbody,
+            &env,
+            v1,
+            options.exhaustive_budget,
+            &label,
+            span,
+        )?;
         if tys.contains(&Ty::U8) {
             features.insert("u8");
         }
