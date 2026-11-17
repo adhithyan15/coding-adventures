@@ -1,0 +1,142 @@
+warrant synth v1
+  error E = BAD | WORSE
+  model inc(a: U8) -> U8 = a + 1u8
+  model addm(a: U8, b: U8) -> U8 = a + b
+  model same(a: Bytes, b: Bytes) -> Bool = a == b
+  op bump(a: U8) -> U8
+  op add2(a: U8, b: U8) -> U8
+  op cmp(a: Bytes, b: Bytes) -> Bool
+  op cmp_fixed<N: Nat>(a: Bytes<N>, b: Bytes<N>) -> Bool
+  op pick(a: Bytes, b: Bytes, choice: Bool) -> Result<Bytes, E> fresh
+  op wide(a: U16 | a < 60000u16) -> U16
+
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels bump:
+    a secret
+  labels add2:
+    a secret
+    b secret
+  labels cmp:
+    a.contents secret
+    a.length public
+    b.contents secret
+    b.length public
+  labels cmp_fixed:
+    a.contents secret
+    a.length public
+    b.contents secret
+    b.length public
+  labels pick:
+    a.contents secret
+    a.length public
+    b.contents secret
+    b.length public
+    choice secret
+  labels wide:
+    a secret
+
+  input bump.a:
+    hostile
+    ensures no_panic, terminates
+
+  input add2.a:
+    hostile
+    ensures no_panic, terminates
+  input add2.b:
+    hostile
+    ensures no_panic, terminates
+
+  input cmp.a:
+    hostile
+    ensures no_panic, terminates
+  input cmp.b:
+    hostile
+    ensures no_panic, terminates
+
+  input cmp_fixed.a:
+    hostile
+    ensures no_panic, terminates
+  input cmp_fixed.b:
+    hostile
+    ensures no_panic, terminates
+
+  input pick.a:
+    hostile
+    rejects len(a) != len(b) with E.BAD
+    ensures no_panic, terminates
+  input pick.b:
+    hostile
+    rejects len(a) != len(b) with E.BAD
+    ensures no_panic, terminates
+  input pick.choice:
+    hostile
+    ensures no_panic, terminates
+
+  input wide.a:
+    hostile
+    ensures no_panic, terminates
+
+  bound bump:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+
+  bound add2:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+
+  bound cmp:
+    steps <= 64 * len(a) + 512
+    heap <= 2 * len(a)
+    depth <= 32
+
+  bound cmp_fixed:
+    steps <= 64 * len(a) + 512
+    heap <= 2 * len(a)
+    depth <= 32
+
+  bound pick:
+    steps <= 64 * len(a) + 512
+    heap <= 2 * len(a)
+    depth <= 32
+
+  bound wide:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+
+  claim bump_is_inc:
+    forall a: U8. bump(a) == inc(a)
+  claim add2_model:
+    forall a: U8 | a >= 110u8, b: U8. add2(a, b) == addm(a, b)
+  claim add2_commutes:
+    forall a: U8, b: U8. add2(a, b) == add2(b, a)
+  claim cmp_agrees:
+    forall a: Bytes, b: Bytes. cmp(a, b) == same(a, b)
+  claim cmp_fixed_agrees_w2:
+    forall a: Bytes<2>, b: Bytes<2>. cmp_fixed<2>(a, b) == same(a, b)
+  claim pick_equal_length:
+    forall a: Bytes, b: Bytes | len(a) == len(b), choice: Bool. pick(a, b, choice) == Ok(if choice then a else b)
+  claim pick_mismatch:
+    forall a: Bytes, b: Bytes | len(a) != len(b), choice: Bool. pick(a, b, choice) == Err(E.BAD)
+  claim wide_is_identity:
+    forall a: U16 | a < 60000u16. wide(a) == a
+
+  example bump_wraps:
+    bump(255u8) == 0u8
+  example cmp_diff:
+    cmp(b"00", b"01") == false
+  example pick_ok:
+    pick(b"00", b"ff", true) == Ok(b"00")
+  example pick_err:
+    pick(b"00", b"", false) == Err(E.BAD)
+  example fixed_two:
+    cmp_fixed<2>(b"0001", b"0001") == true
+  example wide_zero:
+    wide(0u16) == 0u16

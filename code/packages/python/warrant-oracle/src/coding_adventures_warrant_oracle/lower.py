@@ -128,6 +128,17 @@ class OpSig:
     ret: A.Ty
     fresh: bool
     refinements: list = field(default_factory=list)  # [(param name, ast expr)]
+    #: The refinements lowered into one Bool IR (``and`` chain, source order), or ``None``.
+    admit: object | None = None
+    unsupported: OracleError | None = None
+
+    def corpus_row_v2(self) -> dict:
+        """The ``ops.<name>`` row of a v2 corpus (VER04r section 6; ``ir.core`` ops)."""
+        row = self.corpus_row()
+        row["requires"] = ["ir.core"]
+        if self.admit is not None:
+            row["admit"] = self.admit
+        return row
 
     def corpus_row(self) -> dict:
         row: dict = {"params": [[n, str(t)] for n, t in self.params], "ret": str(self.ret)}
@@ -196,6 +207,8 @@ def lower_document(doc: A.Document) -> Spec:
     for decl in doc.decls:
         if isinstance(decl, A.ModelDecl):
             low.lower_model(decl)
+    for op in spec.ops.values():
+        low.lower_op_admit(op)
     for decl in doc.decls:
         if isinstance(decl, A.ClaimDecl):
             spec.suites.append(low.lower_claim(decl))
@@ -395,6 +408,33 @@ class _Lowerer:
             model.unsupported = exc
         spec.models[decl.name] = model
         self.order.append(decl.name)
+
+    def lower_op_admit(self, op: OpSig) -> None:
+        """Lower an operation's parameter refinements into ``op.admit`` (VER04r section 6).
+
+        One Bool IR over the parameters, ``and``-chained in source order exactly as a
+        claim's binder refinements are (section 4.5).  A refinement above ``ir.core``
+        is recorded in ``op.unsupported``, never skipped.
+        """
+        if not op.refinements:
+            return
+        self.scope = dict(op.params)
+        parts: list = []
+        try:
+            for _, refinement in op.refinements:
+                ir, ty = self.expr(refinement, BOOL)
+                if ty != BOOL:
+                    raise self.err("a refinement must be Bool")
+                parts.append(ir)
+        except OracleError as exc:
+            if exc.code != "level":
+                raise
+            op.unsupported = exc
+            return
+        admit = parts[0]
+        for extra in parts[1:]:
+            admit = ["and", admit, extra]
+        op.admit = admit
 
     # -- claims and examples -----------------------------------------------------
 
