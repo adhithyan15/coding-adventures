@@ -6,7 +6,6 @@
 
 mod common;
 use common::*;
-use std::time::{Duration, Instant};
 use vos_shape_check::CrateInput;
 
 fn has(src: &str, id: &str) {
@@ -234,71 +233,6 @@ fn l2_only_array_positions_may_precede_a_bracket() {
 
 // L3 -----------------------------------------------------------------------
 
-/// Asserts that `work` scales (at worst) linearly in its size argument.
-///
-/// An absolute wall-clock limit depends on the host: a shared CI runner can be
-/// several times slower than a laptop and fail a perfectly linear scan.  What a
-/// quadratic regression changes is the *shape* of the curve, so measure that.
-///
-/// Every `check_crate` call pays a fixed cost (building the grammar-driven
-/// lexers) that is large next to the size-dependent part and that jitters from
-/// run to run.  So do not compare raw times: time `work` at `n`, `k * n` and
-/// `k * k * n` and compare the two *increments*, which cancel the fixed cost:
-///
-/// ```text
-///   linear:     (t3 - t2) / (t2 - t1) = k      (cost c * size)
-///   quadratic:  (t3 - t2) / (t2 - t1) = k * k  (cost c * size * size)
-/// ```
-///
-/// and require the ratio to stay under 10 for k = 4 (linear 4, quadratic 16) or
-/// 3.2 for k = 2 (linear 2, quadratic 4).  Each size keeps the best (minimum) of
-/// up to three runs, which discards scheduler noise: one run per size is taken
-/// first and more only while the ratio still looks too high, so a quiet host
-/// pays for one pass while a noisy one gets three; a real quadratic fails all
-/// three.  `n` is chosen so the increments are tens to hundreds of
-/// milliseconds; the denominator is floored at 5 ms so a timer-resolution-sized
-/// difference cannot inflate the ratio.  The absolute backstop is only a hang
-/// guard, far above any real runner's speed.
-fn scales_linearly(what: &str, n: usize, k: usize, work: impl Fn(usize)) {
-    const BACKSTOP: Duration = Duration::from_secs(120);
-    // linear is k, quadratic k * k: k = 4 leaves 2.5x of noise headroom
-    // below the bound, k = 2 (only used where the 4096-fn cap forbids more)
-    // is tighter
-    let limit = if k == 2 { 3.2 } else { 10.0 };
-    let sizes = [n, k * n, k * k * n];
-    let mut best = [Duration::MAX; 3];
-    let mut ratio = f64::MAX;
-    for _ in 0..3 {
-        for (slot, size) in best.iter_mut().zip(sizes) {
-            let t = Instant::now();
-            work(size);
-            *slot = (*slot).min(t.elapsed());
-        }
-        let [t1, t2, t3] = best;
-        assert!(
-            t3 < BACKSTOP,
-            "{what}: the largest run took {t3:?} (hang guard {BACKSTOP:?})"
-        );
-        let step = |hi: Duration, lo: Duration| {
-            hi.saturating_sub(lo)
-                .max(Duration::from_millis(5))
-                .as_secs_f64()
-        };
-        ratio = step(t3, t2) / step(t2, t1);
-        eprintln!(
-            "perf {what}: n={n} k={k}: {t1:?} {t2:?} {t3:?}, ratio {ratio:.2} (limit {limit:.2})"
-        );
-        if ratio < limit {
-            break;
-        }
-    }
-    assert!(
-        ratio < limit,
-        "{what}: growth ratio {ratio:.1} >= {limit:.1}; linear is about {k}, quadratic about {}",
-        k * k
-    );
-}
-
 #[test]
 fn l3_many_call_sites_of_one_callee_are_one_edge() {
     let _b = Batch::begin();
@@ -313,9 +247,10 @@ fn l3_many_call_sites_of_one_callee_are_one_edge() {
                 "pub struct T{n}; impl T{n} {{ pub fn f(self) {{ {sites} }} }}\n"
             ));
         }
-        let r = run(&lib(&s));
+        let (r, steps) = run_counted(&lib(&s));
         let n = rules(&r).iter().filter(|x| **x == "SH5").count() + r.dropped;
         assert_eq!(n, types, "{}", &r.render()[..200.min(r.render().len())]);
+        steps
     });
 }
 

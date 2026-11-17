@@ -192,7 +192,7 @@ A **v0 document's Rust harness** still evaluates `U8` as `Nat` (WD-013 keeps tha
 
 1. The generator counts, per suite, the **subject-independent** fixed-width node evaluations whose wrapped result differs from the exact result (`wraps`, recorded in the suite row; the oracle reproduces it). The count is defined on the **unmemoised** evaluation: every evaluation of a node counts, a memo hit (section 10.4) counts what the recomputation would have counted, and the nodes counted are those of `admit`, of `expected`, of pure call-count guards and of every subject-independent argument of a `subject_op` (`power(a, e + 1u64)` contains one), each once per admitted case (`admit` once per product ordinal). A count that depends on cache state or on which suite ran first is not reproducible and is a defect (section 16.1).
 2. For a **v0 document**, `wraps > 0` is a generation error: `W0701: U8 arithmetic wraps; v0 harness evaluates U8 as Nat`.
-3. For a **v0 document**, a fixed-width `+ - *` or unary `-` node with a `subject_op` beneath it is refused **statically** with the same code. Counting cannot cover it: whether it wraps depends on what the subject returns, so no generation-time count can prove the two evaluators agree. (`mul(a,b) == mul(b,a)` is unaffected: it has no IR arithmetic node.)
+3. For a **v0 document**, a fixed-width `+ - *` or unary `-` node with a `subject_op` beneath it is refused **statically** with the same code. Counting cannot cover it: whether it wraps depends on what the subject returns, so no generation-time count can prove the two evaluators agree. (`mul(a,b) == mul(b,a)` is unaffected: it has no IR arithmetic node.) The rule also covers a `model_call` with a `subject_op` beneath it whose callee's call closure contains such a node (`model inc(x: U8) -> U8 = x + 1u8` called as `inc(subject(..))`). The Python oracle implements no rule 3 yet (S4 part 2).
 4. The adopter that hits rule 2 or 3 migrates the document to v1 (where the Rust harness wraps as well) or reformulates the model. This is the erratum to VER04i section 2.7 stated in section 16.
 5. For a v1 document, wrapping is legal everywhere and `wraps` is informational.
 
@@ -246,12 +246,12 @@ A suite that needs a level the lane does not declare is recorded **`not-live`** 
 
    **The bound: a default, a declared budget and a hard ceiling.**
 
-   * `MAX_IR_COST = 2,000` is the **default** bound per expression (each `admit`, `body`, `expected` and fault expression separately).
+   * `MAX_IR_COST = 2,000` is the **default** bound per expression (each `admit`, `body`, `expected` and fault expression, and each model body, separately).
    * A corpus whose models need more declares `max_ir_cost N` in `corpus.profile` (section 8.4) with `2,000 <= N <= MAX_IR_COST_CEILING = 65,536`. The compiler copies `N` into `corpus.json` as `max_ir_cost`; every consumer uses the recorded value, and a recorded value above the ceiling, or an expression above the recorded value, is a corpus error. The profile line is the **only** way to raise the bound: no compiler, oracle or lane has a command-line or environment override, because an override is a second place for the limit to live and the report could not show it.
    * Each suite row records `ir_cost`, the sum of the worst-path costs of its `admit`, its `body` and (for a `reference` suite) its `expected`. The compiler computes it, the oracle reproduces it (section 10.3 check 2), and a lane recomputes it before the first case and treats a difference as a corpus error. Three independent implementations therefore agree on the cost model, not only on the limit.
    * **Total IR work is bounded as well**, which is what keeps the resource guarantee when the per-expression bound rises. The IR work of a suite in a run is `ir_cost` times the number of product ordinals in the chunks that run executes; the sum over all suites, counted as `MAX_TOTAL_WORK_*` counts cases (section 14, control re-runs included), is at most `MAX_IR_WORK_SLIM = 64,000,000,000` for a `slim` run and `MAX_IR_WORK_FULL = 8,589,934,592,000` for a `full` run. These are exactly `32,000,000 x 2,000` and `2^32 x 2,000`, the products the case limits and the old cost bound already implied; the amendment states them instead of leaving them implicit, so a corpus may spend a larger cost on few cases or a small cost on many, never both. Checked before the first case, in checked arithmetic.
 
-   Measured on gf256 with the S4 oracle (section 16.1): charging both branches, `xor8` costs 294,900 and `ginv` 92,014,191; on the worst path `gmul` costs 2,011 and `ginv` 26,204, the largest expression is 26,210, four of the 38 suites exceed 2,000, and the whole document needs under `2 x 10^9` node evaluations at `full`. gf256 therefore declares `max_ir_cost 32768`. ct-compare's largest expression costs 9 and declares nothing.
+   Measured on gf256 with the S4 oracle (section 16.1): charging both branches, `xor8` costs 294,900 and `ginv` 92,014,191; on the worst path `gmul` costs 2,011 and `ginv` 26,204, the largest expression is 26,210, four of the 38 suites exceed 2,000, and the whole document needs under `2 x 10^9` node evaluations at `full`. gf256 therefore declares `max_ir_cost 32768`. ct-compare's largest expression costs 10 (the body of `eq_agrees`, of each `eq_fixed_agrees_wN` and of `eq_u64_agrees`: 1 + 3 + (1 + 2 + 3)) and declares nothing.
    A node count does not bound **value size**: `m1(x) = concat(x, x)` composed with itself through nine model levels (`m2(x) = m1(m1(x))`, and so on) costs about 1,500 nodes and multiplies a length by `2^256`. Therefore every `Bytes` or list value an evaluator produces is at most `MAX_IR_VALUE = 65,536` bytes or elements, checked **before** the allocation; the generator enforces it on subject-independent nodes (`W0701`), and a lane reports a violation as `ir-overflow` under the split of section 3.2 (corpus error when subject-independent, case failure otherwise). Exact integers are bounded by section 3.2 and shift counts by the operand width.
 7. Unknown tags, unknown built-ins and any construct of an undeclared level are errors in every consumer. An unknown tag is never skipped.
 
@@ -684,7 +684,7 @@ The VER29 section 5.1 dependency reader is Rust-only. Non-Rust lanes report **`l
 
 *Fixture timing [D10].* Section 10.1 is unchanged: a v2 corpus cannot merge until the oracle's three checks pass on it, and `verify-v2` is S4 part 2, which itself needs generator output. So S3 lands the **generator** with the 18 digests pinned in its own tests, and the committed `code/specs/fixtures/ct-compare-warrant-v2/` directory lands **with or after** the oracle's `verify-v2` (S4 part 2). Until then the evidence that the generator agrees with the oracle is the diff of the generator's chunk files against `emit-v2 --depth full` output, run by hand.
 
-*Fail-closed rule.* The generator computes a digest for every suite it emits, so it cannot emit a suite it cannot evaluate: a document with any op, model, claim or example beyond `ir.core` is refused as a whole (`GenError` naming the level, exit 2, nothing written), and a `match` over the grammar always ends in an explicit refusal, never a skip. **Fault rows are different:** a fault whose level is above the generator's is emitted as data with its `requires`, its control row carries `deferred` witnesses, and nothing is refused, because only a lane control, not a digest, depends on it (section 8.2).
+*Fail-closed rule.* The generator computes a digest for every suite it emits, so it cannot emit a suite it cannot evaluate: a document with any op, model, claim or example beyond `ir.core` is refused as a whole (`GenError` naming the level of section 4.1, or one of the feature names `inout`, `ensures`, `vectors`, `assume`, exit 2, nothing written), and a `match` over the grammar always ends in an explicit refusal, never a skip. **Fault rows are different:** a fault whose level is above the generator's is emitted as data with its `requires`, its control row carries `deferred` witnesses, and nothing is refused, because only a lane control, not a digest, depends on it (section 8.2).
 
 *No shared-crate change.* `coding_adventures_warrant_grammar::codegen::Evaluator` is public, so S3 needs nothing from a shared crate. S3 evaluates **its own lowered `ir.core`** with its own evaluator, because the digests must depend on the IR that is written to `corpus.json` (a lowering bug has to reach `expected_sha256`), because the grammar evaluator evaluates `U8` as `Nat` in a v0 document (contradicting [D4]) and has no `wraps` or call-count accounting. The grammar `Evaluator` is used only as a **test-time differential**: on ct-compare and on wrap-free synthetic documents the two must agree on every case.
 
@@ -844,6 +844,21 @@ Planning slice S3 (the generator) found one place where this document could not 
 
 **Follow-ups outside this slice.** The oracle README (`warrant-oracle/README.md`) still says "`slim_sha256` is emitted as separate inputs and expected digests"; it is accurate for the oracle and needs no change, but S4 part 2 must read `blind_claims` and the `rewrites` shape when it implements check 3. VER04i has no field named `slim_sha256` or `blind_claims`; VER04i sections 4 and 15 (`accepted_blind_faults`, `required_claims`) describe the v1 profile, which keeps `required_claims` as written until S13, and need no edit. VER04n and VER04p mention `accepted_blind_faults` only for v1-style controls and are unaffected. VER29 does not mention these fields.
 
+### 16.4 Divergences and clarifications found by S3a
+
+Slice S3a (lowering and cost, `rust/warrant-corpus-gen` 0.1.0) agreed byte for byte with the independent oracle on ct-compare, gf256 and two synthetic documents, and found the following. Items marked **OPEN** are questions for the owner and are not decided here.
+
+1. **Section 4.2 rule 6.** ct-compare's largest expression costs **10**, not 9: the body of `eq_agrees`, of each `eq_fixed_agrees_wN` and of `eq_u64_agrees` is `1 + 3 + (1 + 2 + 3)`; `select_picks`' body is 9. The oracle computes the same. Corrected in place.
+2. **Section 4.2 rule 6.** The bound applies per expression **including each model body** (the oracle already did). Corrected in place.
+3. **Section 13, fail-closed rule.** A refusal names a level of section 4.1 or one of the feature names `inout`, `ensures`, `vectors`, `assume`. Corrected in place.
+4. **Interim, `assume`.** S3 refuses any non-`none` `assume platform` / `assume environment` row. **OPEN:** the shape of `assumes` (section 12 item 3) must be settled before the first adopter with such a row.
+5. **Sections 6 and 1.4, op rows.** `requires` is always present (at least `["ir.core"]`); `admit`, `width_params` and `fresh` are conditional. **OPEN:** a claim that calls an op outside that op's `admit`: refused at generation, or the author's problem?
+6. **Section 4.2 rule 4 / Appendix A `neg`.** The signed minimum literal lowers to `neg` of a `lit` holding `-2^(w-1)`; `neg` wraps it to itself (section 3.2) and counts in `wraps`. Applied in place.
+7. **Section 8.4.** Repeated `fault` or `slim_chunk` lines, an empty token, `budget 0` and `slim_stride 0` are profile errors (the Rust reader in S3b, the oracle's in S4 part 2). S3a's reader mirrors the oracle's and still accepts them.
+8. **Section 14.** Model-call nesting is limited to 64 frames (VER04 section 2).
+9. **Section 3.3 rule 3** also covers a `model_call` over a subject result whose callee's closure wraps. Applied in place; the oracle implements no rule 3 (S4 part 2).
+10. Type aliases (`model Word = Bytes<4>`) are resolved away and never appear in a corpus; `is_err` has no source form (Appendix A). An example must be one subject call compared with a pure value (the section 1.4 `examples` row); S3a refuses any other example with `W0701`.
+
 ## Appendix A. `ir.core` tags
 
 | Tag | Form | Notes |
@@ -860,7 +875,7 @@ Planning slice S3 (the generator) found one place where this document could not 
 | `not` | one Bool operand | |
 | `if` | `["if", c, t, e]` | |
 | `concat take drop` | on `Bytes` | total: `take`/`drop` clamp, a negative count is `0` |
-| `is_err` | one `Result` operand | Bool |
-| `neg` | one operand | wraps (section 3); the v0 generator refuses it, the v2 generator does not |
+| `is_err` | one `Result` operand | Bool (no source form: only fault templates write it) |
+| `neg` | one operand | wraps (section 3); the v0 generator refuses it, the v2 generator does not. The signed minimum literal (`-128i8`) lowers to `neg` of a `lit` holding `-2^(w-1)`; `neg` wraps it to itself and counts in `wraps` |
 
 `neg`, `concat`, `take`, `drop` and `is_err` are the five v2 additions to the 21 tags v1 emits today: `lit var subject_op model_call len ok err eq ne lt gt le ge add sub mul and or not implies if`. The list was reconciled with the generator source in review (section 15.2, item 8).

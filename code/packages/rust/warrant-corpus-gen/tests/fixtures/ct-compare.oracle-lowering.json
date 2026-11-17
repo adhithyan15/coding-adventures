@@ -1,0 +1,1673 @@
+{
+  "document": "v0",
+  "errors": {
+    "SelectError": [
+      "CT_SELECT_LENGTH_MISMATCH"
+    ]
+  },
+  "examples": [
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "eq",
+          [
+            [
+              "lit",
+              {
+                "type": "Bytes",
+                "value": ""
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "Bytes",
+                "value": ""
+              }
+            ]
+          ]
+        ],
+        [
+          "lit",
+          true
+        ]
+      ],
+      "expected": [
+        "lit",
+        true
+      ],
+      "name": "eq_empty",
+      "result_type": "Bool",
+      "subject": [
+        "subject_op",
+        "eq",
+        [
+          [
+            "lit",
+            {
+              "type": "Bytes",
+              "value": ""
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "Bytes",
+              "value": ""
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "eq",
+          [
+            [
+              "lit",
+              {
+                "type": "Bytes",
+                "value": "00"
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "Bytes",
+                "value": "00"
+              }
+            ]
+          ]
+        ],
+        [
+          "lit",
+          true
+        ]
+      ],
+      "expected": [
+        "lit",
+        true
+      ],
+      "name": "eq_one_equal",
+      "result_type": "Bool",
+      "subject": [
+        "subject_op",
+        "eq",
+        [
+          [
+            "lit",
+            {
+              "type": "Bytes",
+              "value": "00"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "Bytes",
+              "value": "00"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "eq",
+          [
+            [
+              "lit",
+              {
+                "type": "Bytes",
+                "value": "00"
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "Bytes",
+                "value": "01"
+              }
+            ]
+          ]
+        ],
+        [
+          "lit",
+          false
+        ]
+      ],
+      "expected": [
+        "lit",
+        false
+      ],
+      "name": "eq_one_diff",
+      "result_type": "Bool",
+      "subject": [
+        "subject_op",
+        "eq",
+        [
+          [
+            "lit",
+            {
+              "type": "Bytes",
+              "value": "00"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "Bytes",
+              "value": "01"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "eq",
+          [
+            [
+              "lit",
+              {
+                "type": "Bytes",
+                "value": ""
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "Bytes",
+                "value": "00"
+              }
+            ]
+          ]
+        ],
+        [
+          "lit",
+          false
+        ]
+      ],
+      "expected": [
+        "lit",
+        false
+      ],
+      "name": "eq_diff_len",
+      "result_type": "Bool",
+      "subject": [
+        "subject_op",
+        "eq",
+        [
+          [
+            "lit",
+            {
+              "type": "Bytes",
+              "value": ""
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "Bytes",
+              "value": "00"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "eq_fixed",
+          [
+            [
+              "lit",
+              {
+                "type": "Bytes",
+                "value": ""
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "Bytes",
+                "value": ""
+              }
+            ]
+          ],
+          [
+            0
+          ]
+        ],
+        [
+          "lit",
+          true
+        ]
+      ],
+      "expected": [
+        "lit",
+        true
+      ],
+      "name": "fixed_zero",
+      "result_type": "Bool",
+      "subject": [
+        "subject_op",
+        "eq_fixed",
+        [
+          [
+            "lit",
+            {
+              "type": "Bytes",
+              "value": ""
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "Bytes",
+              "value": ""
+            }
+          ]
+        ],
+        [
+          0
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "eq_fixed",
+          [
+            [
+              "lit",
+              {
+                "type": "Bytes",
+                "value": "000102030405060708090a0b0c0d0e0f"
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "Bytes",
+                "value": "000102030405060708090a0b0c0d0e0f"
+              }
+            ]
+          ],
+          [
+            16
+          ]
+        ],
+        [
+          "lit",
+          true
+        ]
+      ],
+      "expected": [
+        "lit",
+        true
+      ],
+      "name": "fixed_16_equal",
+      "result_type": "Bool",
+      "subject": [
+        "subject_op",
+        "eq_fixed",
+        [
+          [
+            "lit",
+            {
+              "type": "Bytes",
+              "value": "000102030405060708090a0b0c0d0e0f"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "Bytes",
+              "value": "000102030405060708090a0b0c0d0e0f"
+            }
+          ]
+        ],
+        [
+          16
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "eq_fixed",
+          [
+            [
+              "lit",
+              {
+                "type": "Bytes",
+                "value": "000102030405060708090a0b0c0d0e0f"
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "Bytes",
+                "value": "000102030405060708090a0b0c0d0e00"
+              }
+            ]
+          ],
+          [
+            16
+          ]
+        ],
+        [
+          "lit",
+          false
+        ]
+      ],
+      "expected": [
+        "lit",
+        false
+      ],
+      "name": "fixed_16_diff",
+      "result_type": "Bool",
+      "subject": [
+        "subject_op",
+        "eq_fixed",
+        [
+          [
+            "lit",
+            {
+              "type": "Bytes",
+              "value": "000102030405060708090a0b0c0d0e0f"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "Bytes",
+              "value": "000102030405060708090a0b0c0d0e00"
+            }
+          ]
+        ],
+        [
+          16
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "select_bytes",
+          [
+            [
+              "lit",
+              {
+                "type": "Bytes",
+                "value": "00"
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "Bytes",
+                "value": "ff"
+              }
+            ],
+            [
+              "lit",
+              true
+            ]
+          ]
+        ],
+        [
+          "ok",
+          [
+            "lit",
+            {
+              "type": "Bytes",
+              "value": "00"
+            }
+          ]
+        ]
+      ],
+      "expected": [
+        "ok",
+        [
+          "lit",
+          {
+            "type": "Bytes",
+            "value": "00"
+          }
+        ]
+      ],
+      "name": "select_left_fresh",
+      "result_type": "Result<Bytes,SelectError>",
+      "subject": [
+        "subject_op",
+        "select_bytes",
+        [
+          [
+            "lit",
+            {
+              "type": "Bytes",
+              "value": "00"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "Bytes",
+              "value": "ff"
+            }
+          ],
+          [
+            "lit",
+            true
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "select_bytes",
+          [
+            [
+              "lit",
+              {
+                "type": "Bytes",
+                "value": "00"
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "Bytes",
+                "value": "ff"
+              }
+            ],
+            [
+              "lit",
+              false
+            ]
+          ]
+        ],
+        [
+          "ok",
+          [
+            "lit",
+            {
+              "type": "Bytes",
+              "value": "ff"
+            }
+          ]
+        ]
+      ],
+      "expected": [
+        "ok",
+        [
+          "lit",
+          {
+            "type": "Bytes",
+            "value": "ff"
+          }
+        ]
+      ],
+      "name": "select_right_fresh",
+      "result_type": "Result<Bytes,SelectError>",
+      "subject": [
+        "subject_op",
+        "select_bytes",
+        [
+          [
+            "lit",
+            {
+              "type": "Bytes",
+              "value": "00"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "Bytes",
+              "value": "ff"
+            }
+          ],
+          [
+            "lit",
+            false
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "select_bytes",
+          [
+            [
+              "lit",
+              {
+                "type": "Bytes",
+                "value": ""
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "Bytes",
+                "value": "00"
+              }
+            ],
+            [
+              "lit",
+              false
+            ]
+          ]
+        ],
+        [
+          "err",
+          "CT_SELECT_LENGTH_MISMATCH"
+        ]
+      ],
+      "expected": [
+        "err",
+        "CT_SELECT_LENGTH_MISMATCH"
+      ],
+      "name": "select_length_mismatch",
+      "result_type": "Result<Bytes,SelectError>",
+      "subject": [
+        "subject_op",
+        "select_bytes",
+        [
+          [
+            "lit",
+            {
+              "type": "Bytes",
+              "value": ""
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "Bytes",
+              "value": "00"
+            }
+          ],
+          [
+            "lit",
+            false
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "eq_u64",
+          [
+            [
+              "lit",
+              {
+                "type": "U64",
+                "value": "0"
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "U64",
+                "value": "0"
+              }
+            ]
+          ]
+        ],
+        [
+          "lit",
+          true
+        ]
+      ],
+      "expected": [
+        "lit",
+        true
+      ],
+      "name": "u64_equal",
+      "result_type": "Bool",
+      "subject": [
+        "subject_op",
+        "eq_u64",
+        [
+          [
+            "lit",
+            {
+              "type": "U64",
+              "value": "0"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "U64",
+              "value": "0"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "eq_u64",
+          [
+            [
+              "lit",
+              {
+                "type": "U64",
+                "value": "9223372036854775808"
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "U64",
+                "value": "0"
+              }
+            ]
+          ]
+        ],
+        [
+          "lit",
+          false
+        ]
+      ],
+      "expected": [
+        "lit",
+        false
+      ],
+      "name": "u64_diff",
+      "result_type": "Bool",
+      "subject": [
+        "subject_op",
+        "eq_u64",
+        [
+          [
+            "lit",
+            {
+              "type": "U64",
+              "value": "9223372036854775808"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "U64",
+              "value": "0"
+            }
+          ]
+        ]
+      ]
+    }
+  ],
+  "model_order": [
+    "same",
+    "same_u64"
+  ],
+  "models": {
+    "same": {
+      "body": [
+        "eq",
+        [
+          "var",
+          "a"
+        ],
+        [
+          "var",
+          "b"
+        ]
+      ],
+      "ir_cost": 3,
+      "params": [
+        [
+          "a",
+          "Bytes"
+        ],
+        [
+          "b",
+          "Bytes"
+        ]
+      ],
+      "ret": "Bool"
+    },
+    "same_u64": {
+      "body": [
+        "eq",
+        [
+          "var",
+          "a"
+        ],
+        [
+          "var",
+          "b"
+        ]
+      ],
+      "ir_cost": 3,
+      "params": [
+        [
+          "a",
+          "U64"
+        ],
+        [
+          "b",
+          "U64"
+        ]
+      ],
+      "ret": "Bool"
+    }
+  },
+  "module": "ct_compare",
+  "ops": {
+    "eq": {
+      "params": [
+        [
+          "a",
+          "Bytes"
+        ],
+        [
+          "b",
+          "Bytes"
+        ]
+      ],
+      "ret": "Bool"
+    },
+    "eq_fixed": {
+      "params": [
+        [
+          "a",
+          "Bytes<N>"
+        ],
+        [
+          "b",
+          "Bytes<N>"
+        ]
+      ],
+      "ret": "Bool",
+      "width_params": [
+        "N"
+      ]
+    },
+    "eq_u64": {
+      "params": [
+        [
+          "a",
+          "U64"
+        ],
+        [
+          "b",
+          "U64"
+        ]
+      ],
+      "ret": "Bool"
+    },
+    "select_bytes": {
+      "fresh": true,
+      "params": [
+        [
+          "a",
+          "Bytes"
+        ],
+        [
+          "b",
+          "Bytes"
+        ],
+        [
+          "choice",
+          "Bool"
+        ]
+      ],
+      "ret": "Result<Bytes,SelectError>"
+    }
+  },
+  "schema": "warrant-lowering-parity-v0",
+  "suites": [
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "Bytes"
+        ],
+        [
+          "b",
+          "Bytes"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "eq",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "same",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ]
+      ],
+      "claim": "eq_agrees",
+      "expected": [
+        "model_call",
+        "same",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ],
+      "id": "warrant/ct_compare/exhaustive/eq_agrees",
+      "ir_cost": 17,
+      "kind": "reference",
+      "ops": [
+        "eq"
+      ],
+      "result_type": "Bool",
+      "subject": [
+        "subject_op",
+        "eq",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "Bytes<0>"
+        ],
+        [
+          "b",
+          "Bytes<0>"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "eq_fixed",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ],
+          [
+            0
+          ]
+        ],
+        [
+          "model_call",
+          "same",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ]
+      ],
+      "claim": "eq_fixed_agrees_w0",
+      "expected": [
+        "model_call",
+        "same",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ],
+      "id": "warrant/ct_compare/exhaustive/eq_fixed_agrees_w0",
+      "ir_cost": 17,
+      "kind": "reference",
+      "ops": [
+        "eq_fixed"
+      ],
+      "result_type": "Bool",
+      "subject": [
+        "subject_op",
+        "eq_fixed",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ],
+        [
+          0
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "Bytes<1>"
+        ],
+        [
+          "b",
+          "Bytes<1>"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "eq_fixed",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ],
+          [
+            1
+          ]
+        ],
+        [
+          "model_call",
+          "same",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ]
+      ],
+      "claim": "eq_fixed_agrees_w1",
+      "expected": [
+        "model_call",
+        "same",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ],
+      "id": "warrant/ct_compare/exhaustive/eq_fixed_agrees_w1",
+      "ir_cost": 17,
+      "kind": "reference",
+      "ops": [
+        "eq_fixed"
+      ],
+      "result_type": "Bool",
+      "subject": [
+        "subject_op",
+        "eq_fixed",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ],
+        [
+          1
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "Bytes<2>"
+        ],
+        [
+          "b",
+          "Bytes<2>"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "eq_fixed",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ],
+          [
+            2
+          ]
+        ],
+        [
+          "model_call",
+          "same",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ]
+      ],
+      "claim": "eq_fixed_agrees_w2",
+      "expected": [
+        "model_call",
+        "same",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ],
+      "id": "warrant/ct_compare/exhaustive/eq_fixed_agrees_w2",
+      "ir_cost": 17,
+      "kind": "reference",
+      "ops": [
+        "eq_fixed"
+      ],
+      "result_type": "Bool",
+      "subject": [
+        "subject_op",
+        "eq_fixed",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ],
+        [
+          2
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "Bytes<4>"
+        ],
+        [
+          "b",
+          "Bytes<4>"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "eq_fixed",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ],
+          [
+            4
+          ]
+        ],
+        [
+          "model_call",
+          "same",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ]
+      ],
+      "claim": "eq_fixed_agrees_w4",
+      "expected": [
+        "model_call",
+        "same",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ],
+      "id": "warrant/ct_compare/exhaustive/eq_fixed_agrees_w4",
+      "ir_cost": 17,
+      "kind": "reference",
+      "ops": [
+        "eq_fixed"
+      ],
+      "result_type": "Bool",
+      "subject": [
+        "subject_op",
+        "eq_fixed",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ],
+        [
+          4
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "Bytes<16>"
+        ],
+        [
+          "b",
+          "Bytes<16>"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "eq_fixed",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ],
+          [
+            16
+          ]
+        ],
+        [
+          "model_call",
+          "same",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ]
+      ],
+      "claim": "eq_fixed_agrees_w16",
+      "expected": [
+        "model_call",
+        "same",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ],
+      "id": "warrant/ct_compare/exhaustive/eq_fixed_agrees_w16",
+      "ir_cost": 17,
+      "kind": "reference",
+      "ops": [
+        "eq_fixed"
+      ],
+      "result_type": "Bool",
+      "subject": [
+        "subject_op",
+        "eq_fixed",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ],
+        [
+          16
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "eq",
+        [
+          "len",
+          [
+            "var",
+            "a"
+          ]
+        ],
+        [
+          "len",
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ],
+      "binders": [
+        [
+          "a",
+          "Bytes"
+        ],
+        [
+          "b",
+          "Bytes"
+        ],
+        [
+          "choice",
+          "Bool"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "select_bytes",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ],
+            [
+              "var",
+              "choice"
+            ]
+          ]
+        ],
+        [
+          "ok",
+          [
+            "if",
+            [
+              "var",
+              "choice"
+            ],
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ]
+      ],
+      "claim": "select_picks",
+      "expected": [
+        "ok",
+        [
+          "if",
+          [
+            "var",
+            "choice"
+          ],
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ],
+      "id": "warrant/ct_compare/exhaustive/select_picks",
+      "ir_cost": 18,
+      "kind": "reference",
+      "ops": [
+        "select_bytes"
+      ],
+      "result_type": "Result<Bytes,SelectError>",
+      "subject": [
+        "subject_op",
+        "select_bytes",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ],
+          [
+            "var",
+            "choice"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "ne",
+        [
+          "len",
+          [
+            "var",
+            "a"
+          ]
+        ],
+        [
+          "len",
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ],
+      "binders": [
+        [
+          "a",
+          "Bytes"
+        ],
+        [
+          "b",
+          "Bytes"
+        ],
+        [
+          "choice",
+          "Bool"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "select_bytes",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ],
+            [
+              "var",
+              "choice"
+            ]
+          ]
+        ],
+        [
+          "err",
+          "CT_SELECT_LENGTH_MISMATCH"
+        ]
+      ],
+      "claim": "select_rejects_mismatch",
+      "expected": [
+        "err",
+        "CT_SELECT_LENGTH_MISMATCH"
+      ],
+      "id": "warrant/ct_compare/exhaustive/select_rejects_mismatch",
+      "ir_cost": 12,
+      "kind": "reference",
+      "ops": [
+        "select_bytes"
+      ],
+      "result_type": "Result<Bytes,SelectError>",
+      "subject": [
+        "subject_op",
+        "select_bytes",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ],
+          [
+            "var",
+            "choice"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "U64"
+        ],
+        [
+          "b",
+          "U64"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "eq_u64",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "same_u64",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ]
+      ],
+      "claim": "eq_u64_agrees",
+      "expected": [
+        "model_call",
+        "same_u64",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ],
+      "id": "warrant/ct_compare/exhaustive/eq_u64_agrees",
+      "ir_cost": 17,
+      "kind": "reference",
+      "ops": [
+        "eq_u64"
+      ],
+      "result_type": "Bool",
+      "subject": [
+        "subject_op",
+        "eq_u64",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ]
+    }
+  ]
+}

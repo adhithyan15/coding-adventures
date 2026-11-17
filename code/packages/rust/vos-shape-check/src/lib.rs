@@ -34,6 +34,7 @@
 //!   graph        SH5 recursion over a by-name call graph
 //!   ghost        SH13, SH14, SH17, SH18 (the ghost face)
 //!   cargo_rules  SH12, SH15 (Cargo.toml), crate-root SH1/SH2, VT02
+//!   steps        a deterministic work counter (linearity tests count, not time)
 //!   report       findings, deterministic rendering, exit codes
 //! ```
 //!
@@ -67,6 +68,7 @@ pub mod lexer;
 pub mod manifest;
 pub mod report;
 pub mod rules;
+pub mod steps;
 pub mod syntax;
 pub mod toml;
 
@@ -266,6 +268,17 @@ fn prepare(input: &CrateInput, policy: &Policy) -> Prepared {
 /// Check one crate.  Pure: the same input always yields the same report.
 pub fn check_crate(input: &CrateInput, policy: &Policy) -> Report {
     check_crates(std::slice::from_ref(input), policy).remove(0)
+}
+
+/// [`check_crate`] plus the number of work steps it took (see [`steps`]).
+///
+/// The count is deterministic (the same input always counts the same), so a
+/// test can assert that the work grows linearly with the input without
+/// reading a clock.  It includes lexing, which is linear by construction.
+pub fn check_crate_counted(input: &CrateInput, policy: &Policy) -> (Report, u64) {
+    let before = steps::steps();
+    let report = check_crate(input, policy);
+    (report, steps::steps().wrapping_sub(before))
 }
 
 /// Check several crates, lexing ALL their sources with one grammar lexer per

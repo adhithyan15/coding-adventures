@@ -4,6 +4,7 @@ iface sched
 tier any
 tier canonical
 tier policy
+tier representation
 tier safety
 config N 8
 ceiling dispatch depth 2

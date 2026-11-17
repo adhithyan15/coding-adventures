@@ -26,7 +26,7 @@ CONTRACT_BEGIN    = /  -- vos02:contract-begin sha256=[0-9a-f]{64}/
 CONTRACT_END      = /  -- vos02:contract-end/
 IMPL_BEGIN        = /  -- vos02:impl-begin/
 IMPL_END          = /  -- vos02:impl-end/
-OBLIGATIONS_BEGIN = /  -- vos02:obligations-begin tier=(?:safety|policy|canonical|any) sha256=[0-9a-f]{64}/
+OBLIGATIONS_BEGIN = /  -- vos02:obligations-begin tier=(?:safety|representation|policy|canonical|any) sha256=[0-9a-f]{64}/
 OBLIGATIONS_END   = /  -- vos02:obligations-end/
 
 # Anything else that mentions a marker.  Never valid.

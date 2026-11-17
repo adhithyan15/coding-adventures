@@ -9,7 +9,7 @@ import (
 
 // probeTrace logs, with the "PROBE:" marker the CI script surfaces, the size of
 // a trace real strace produced and how fast pass 1 reads it with the old scanner
-// and with the grammar path (D24, KILN04 section 4.9).  The default-flip gate is
+// and with the grammar path (compact LineParser since P2 PR 5; D24, KILN04 section 4.9).  The default-flip gate is
 // restated from these numbers, so every sandbox test that has a real trace
 // reports it.  The measurement runs on a private copy of the bytes; it cannot
 // change what the test goes on to assert.
@@ -42,6 +42,6 @@ func probeTrace(t *testing.T, label, path string) {
 		}
 		return float64(m.Bytes) / secs / 1e6
 	}
-	t.Logf("PROBE: trace %s bytes=%d lines=%d old_mb_s=%.1f grammar_mb_s=%.1f old_refusal=%q grammar_refusal=%q",
-		label, m.Bytes, m.Lines, mbs(m.OldTime.Seconds()), mbs(m.NewTime.Seconds()), m.OldError, m.NewError)
+	t.Logf("PROBE: trace %s bytes=%d lines=%d old_mb_s=%.1f grammar_mb_s=%.1f old_allocs=%d grammar_allocs=%d old_refusal=%q grammar_refusal=%q",
+		label, m.Bytes, m.Lines, mbs(m.OldTime.Seconds()), mbs(m.NewTime.Seconds()), m.OldAllocs, m.NewAllocs, m.OldError, m.NewError)
 }

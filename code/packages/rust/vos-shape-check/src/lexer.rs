@@ -136,11 +136,13 @@ pub struct Token {
 impl Token {
     /// True if this is the identifier `s` (a raw keyword never matches).
     pub fn is_ident(&self, s: &str) -> bool {
+        crate::steps::tick();
         self.kind == Kind::Ident && self.text == s
     }
 
     /// True if this is the punctuation `s`.
     pub fn is_punct(&self, s: &str) -> bool {
+        crate::steps::tick();
         self.kind == Kind::Punct && self.text == s
     }
 }

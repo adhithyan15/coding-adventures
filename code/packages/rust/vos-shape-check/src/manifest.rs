@@ -131,8 +131,8 @@ pub const VOS_TOML_MAX_KEYS: usize = 16;
 pub const VOS_TOML_MAX_LINE: usize = 1_024;
 /// At most this many names in `evidence-features`.
 pub const MAX_EVIDENCE_NAMES: usize = 64;
-/// At most this many tiers in `obligations` (the four tiers of VOS02 R1).
-pub const MAX_OBLIGATION_NAMES: usize = 4;
+/// At most this many tiers in `obligations` (the five tiers of VOS02 R1 and 2.7).
+pub const MAX_OBLIGATION_NAMES: usize = 5;
 
 /// The parsed `vos.toml`.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -266,7 +266,7 @@ pub fn parse_vos_toml(text: &str) -> Result<VosToml, VosTomlError> {
                         return bad(line, "a tier name is 1 to 16 bytes");
                     }
                     if out.obligations.len() >= MAX_OBLIGATION_NAMES {
-                        return bad(line, "more than 4 obligation tiers");
+                        return bad(line, "more than 5 obligation tiers");
                     }
                     out.obligations.push(name);
                 }

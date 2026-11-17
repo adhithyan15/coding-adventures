@@ -23,7 +23,7 @@ Two tiers of promise:
   new set is the old set minus exactly that thread;
 * **policy** (fixed priority): it returns the highest-priority ready thread.
 
-Round-robin and EDF schedulers carry the safety tier only. `vos-sched-any` (the
+Round-robin and EDF schedulers carry the safety tier (and a round-robin, whose pointer `alpha` forgets, the **representation** tier of VOS02 2.7 in place of `canonical`). `vos-sched-any` (the
 most-general scheduler) is the safety tier's witness.
 
 ## Where it fits
@@ -41,7 +41,7 @@ most-general scheduler) is the safety tier's witness.
 | `src/lib.rs` | `trait Sched`, `Upd`, `Pick`: declarations only, `no_std`, no dependency |
 | `warrant/contract.part` | the contract block (models only): M, abstract operations, `inv`, tier relations, `pre_` models |
 | `warrant/lemmas.part` | the nine model-level lemmas: **not embedded** in any document, evaluated by `vos-sched-contract-check` (VOS02 R1.4) |
-| `warrant/obligations-{safety,policy,canonical,any}.part` | the claims an implementation of that tier must carry, character for character |
+| `warrant/obligations-{safety,policy,canonical,representation,any}.part` | the claims an implementation of that tier must carry, character for character |
 | `contract.vos` | ceilings (steps, heap, depth per operation) and the instance, `N 8` |
 | `vos.toml` | class K, kind `contract` (read by `vos-shape-check`) |
 

@@ -38,21 +38,37 @@ pub struct Outcome {
     pub notes: Vec<String>,
 }
 
+/// What a PASS means for a crate that carries the `representation` tier (VOS02 2.7, 10.1): the
+/// cone rule is not applied, and what is checked is the document's digests and its type check.
+pub const REP_NOTE: &str = "representation tier: the document carries the contract's representation claims (init in the image of `rep`, every step for every thread id closed over it, safety over all of it) by claim_sha256 and type-checks against the implementation's `rep` and `hist` (CD04); the R6 cone rule is not applied (the state has history by design) and no claim of the implementation's is linted. Whether the claims HOLD is the evidence's; kind separation is not this tier's (a `-any` crate could truthfully carry it): it stays with the declared kind, the `any` block, SH13, SH16, the central kind registry (VOS-D030) and the bindings check (VOS-D060). kind, contract and obligations are author-declared until the lock (VOS-034).";
+
 /// What a PASS of the document-level R6 rules does and does not mean (VOS02 10.1).
 pub const R6_LINT_NOTE: &str = "R6 cone rule: a STRUCTURAL LINT at document level (no Impl field of `build` is a constant or an ignored argument); not proof that the state has no oracle. Not checked here: that `alpha` reads every field, that evidence.bindings binds no oracle write (VOS-D060, a prerequisite of any image profile), the central kind registry (VOS-D030) and the profile manifest (VOS-034). kind, contract and obligations are author-declared until then.";
 
-fn notes_for(l: &Loaded) -> Vec<String> {
+fn notes_for(l: &Loaded, carries: &[Tier]) -> Vec<String> {
+    use crate::inputs::ImplKind;
     match l.kind {
-        crate::inputs::ImplKind::Production | crate::inputs::ImplKind::Any => {
-            vec![R6_LINT_NOTE.to_string()]
+        // The cone note says no field of `build` is a constant: not applied to a
+        // representation carrier, which gets its own note instead.
+        ImplKind::Production if carries.contains(&Tier::Representation) => {
+            vec![REP_NOTE.to_string()]
         }
-        crate::inputs::ImplKind::Reference => Vec::new(),
+        ImplKind::Production | ImplKind::Any => vec![R6_LINT_NOTE.to_string()],
+        ImplKind::Reference => Vec::new(),
     }
 }
 
-fn header(l: &Loaded) -> String {
+/// The report header.  A crate whose document carries the `representation` tier prints
+/// `mode representation` after its kind; the mode is DERIVED from `carries`, never declared, and a
+/// canonical crate prints no mode (as before VOS-D061).
+fn header(l: &Loaded, carries: &[Tier]) -> String {
+    let mode = if carries.contains(&Tier::Representation) {
+        ", mode representation"
+    } else {
+        ""
+    };
     format!(
-        "crate {}, kind {}, contract {}, obligations [{}]",
+        "crate {}, kind {}{mode}, contract {}, obligations [{}]",
         l.layout.impl_pkg,
         l.kind.name(),
         l.contract_pkg,
@@ -98,14 +114,16 @@ pub fn gen_doc(crate_arg: &Path, root_arg: Option<&Path>) -> Result<Outcome, NoV
         }
     };
     let mut out = Outcome {
-        header: header(&loaded),
-        notes: notes_for(&loaded),
+        header: header(&loaded, &[]),
+        notes: notes_for(&loaded, &[]),
         ..Outcome::default()
     };
     let doc = expected(&loaded)?;
     let verified = verify(&loaded, doc.as_bytes())?;
     out.carries = verified.carries;
     out.findings = verified.findings;
+    out.header = header(&loaded, &out.carries);
+    out.notes = notes_for(&loaded, &out.carries);
     if !out.findings.is_empty() {
         return Ok(out);
     }
@@ -141,8 +159,8 @@ pub fn check_doc(crate_arg: &Path, root_arg: Option<&Path>) -> Result<Outcome, N
         }
     };
     let mut out = Outcome {
-        header: header(&loaded),
-        notes: notes_for(&loaded),
+        header: header(&loaded, &[]),
+        notes: notes_for(&loaded, &[]),
         ..Outcome::default()
     };
     let fresh = expected(&loaded)?;
@@ -161,6 +179,8 @@ pub fn check_doc(crate_arg: &Path, root_arg: Option<&Path>) -> Result<Outcome, N
     let verified = verify(&loaded, &disk)?;
     out.carries = verified.carries;
     out.findings = verified.findings;
+    out.header = header(&loaded, &out.carries);
+    out.notes = notes_for(&loaded, &out.carries);
     if disk != fresh.as_bytes() {
         let at = first_difference_line(&String::from_utf8_lossy(&disk), &fresh);
         out.findings.push(Finding::new(
