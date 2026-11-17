@@ -7,7 +7,7 @@ import json
 import os
 
 import pytest
-from conftest import SPECS, V1_CORPUS, adopter_bytes
+from conftest import SPECS, V1_CORPUS, adopter_bytes, write_lf
 
 from coding_adventures_warrant_oracle import ast as A
 from coding_adventures_warrant_oracle.cli import run
@@ -198,7 +198,7 @@ def test_two_thousand_term_sum_is_a_limit_error():
 def test_cli_converts_recursion_to_exit_2(tmp_path, capsys):
     body = " + ".join(["1"] * 2000)
     p = tmp_path / "s.warrant"
-    p.write_text(f"warrant s\n  model m() -> Int = {body}\n")
+    write_lf(p, f"warrant s\n  model m() -> Int = {body}\n")
     assert run(["check", "--spec", str(p)]) == 2
 
 

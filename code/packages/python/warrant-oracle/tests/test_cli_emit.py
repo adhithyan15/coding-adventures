@@ -6,7 +6,7 @@ import json
 import os
 
 import pytest
-from conftest import SPECS, V1_CORPUS, adopter_bytes
+from conftest import SPECS, V1_CORPUS, adopter_bytes, write_lf
 
 from coding_adventures_warrant_oracle.cli import build_parser, run
 from coding_adventures_warrant_oracle.emit import census, dumps, emit
@@ -44,10 +44,10 @@ def test_verify_v1_passes_and_emits_v2_digests(tmp_path, capsys):
 
 
 def test_verify_v1_reports_a_mismatch_with_exit_1(tmp_path, capsys):
-    corpus = json.loads(V1_CORPUS.read_text())
+    corpus = json.loads(V1_CORPUS.read_text(encoding="utf-8"))
     corpus["suites"][0]["expected_sha256"] = "0" * 64
     bad = tmp_path / "corpus.json"
-    bad.write_text(json.dumps(corpus))
+    write_lf(bad, json.dumps(corpus))
     code = cli("verify-v1", "--spec", SPECS / "ct-compare.warrant", "--corpus", bad)
     captured = capsys.readouterr()
     assert code == 1 and "MISMATCH enumeration suites.eq_agrees.expected_sha256" in captured.err
@@ -70,7 +70,7 @@ def test_unreadable_oversized_and_symlinked_inputs_exit_2(tmp_path, capsys):
     assert cli("check", "--spec", link) == 2
     assert cli("check", "--spec", tmp_path) == 2  # a directory is not a regular file
     bad = tmp_path / "bad.warrant"
-    bad.write_text("not a warrant file\n")
+    write_lf(bad, "not a warrant file\n")
     assert cli("check", "--spec", bad) == 2
     assert cli("verify-v1", "--spec", SPECS / "ct-compare.warrant", "--corpus", bad) == 2
 
