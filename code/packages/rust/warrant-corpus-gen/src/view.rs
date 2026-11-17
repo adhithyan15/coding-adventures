@@ -137,14 +137,12 @@ pub fn oracle_view(lowered: &Lowered, limit: u64) -> Result<Json, GenError> {
     let mut examples = Vec::new();
     for x in &lowered.examples {
         let at = |e: GenError| e.at(&x.name);
-        let (subject, expected, result) = match &x.reference {
-            Some(r) => (
-                ir_json(&r.subject).map_err(at)?,
-                ir_json(&r.expected).map_err(at)?,
-                r.result.name(),
-            ),
-            None => (Json::Arr(vec![]), Json::Arr(vec![]), String::new()),
-        };
+        let r = &x.reference;
+        let (subject, expected, result) = (
+            ir_json(&r.subject).map_err(at)?,
+            ir_json(&r.expected).map_err(at)?,
+            r.result.name(),
+        );
         examples.push(Json::obj([
             ("name", Json::str(x.name.as_str())),
             ("body", ir_json(&x.body).map_err(at)?),

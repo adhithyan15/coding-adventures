@@ -11,9 +11,9 @@
 //!   code/specs/<pkg>.warrant
 //!          │  parse + check          (warrant-grammar, S2 public API)
 //!          ▼
-//!   WarrantFile ── lower ──▶ ir.core IR ── cost ──▶ ir_cost, wraps rules      <- S3a (this PR)
+//!   WarrantFile ── lower ──▶ ir.core IR ── cost ──▶ ir_cost, wraps rules      <- S3a
 //!          │                      │
-//!          │                      ├─ evaluate, enumerate, digest  ──────────── S3b
+//!          │                      ├─ evaluate, enumerate, digest  ──────────── S3b (this PR)
 //!          │                      ├─ faults, controls, emit, --check ───────── S3c
 //!          │                      └─ commit the ct-compare fixture ─────────── S3d
 //!          ▼
@@ -24,24 +24,31 @@
 //!          └──▶ lanes       (18 languages run the corpus against their own library)
 //! ```
 //!
-//! ## What this PR (S3a) contains
+//! ## What the crate contains
 //!
-//! | module | what it is |
-//! |---|---|
-//! | [`json`] | the VER04i 9.1 canonical writer (no `serde`) |
-//! | [`profile`] | the strict `corpus.profile` reader (VER04r 8.4) |
-//! | [`types`] | the small type language of `ir.core` and its unification rules |
-//! | [`ir`] | the 26 `ir.core` tags (Appendix A) and their JSON form |
-//! | [`lower`] | syntax-directed lowering with the annotating typer; level refusals; [`census`] |
-//! | [`analysis`] | the pure-guard rule (4.4) and the v0 static arithmetic guard (3.3 rule 3) |
-//! | [`arith`] | the single wrapping rule (3.2): `wraps`, the 2^127 window, `MAX_IR_VALUE` |
-//! | [`cost`] | worst-path `ir_cost`, `max_ir_cost`, total IR work (4.2 rule 6) |
-//! | [`view`] | the parity view compared byte for byte with the independent oracle |
+//! | module | slice | what it is |
+//! |---|---|---|
+//! | [`json`] | S3a | the VER04i 9.1 canonical writer (no `serde`) |
+//! | [`profile`] | S3a | the strict `corpus.profile` reader (VER04r 8.4) |
+//! | [`types`] | S3a | the small type language of `ir.core` and its unification rules |
+//! | [`ir`] | S3a | the 26 `ir.core` tags (Appendix A) and their JSON form |
+//! | [`lower`] | S3a | syntax-directed lowering with the annotating typer; level refusals |
+//! | [`analysis`] | S3a | the pure-guard rule (4.4) and the v0 static arithmetic guard (3.3 rule 3) |
+//! | [`arith`] | S3a | the single wrapping rule (3.2): `wraps`, the 2^127 window, `MAX_IR_VALUE` |
+//! | [`cost`] | S3a | worst-path `ir_cost`, `max_ir_cost`, total IR work (4.2 rule 6) |
+//! | [`view`] | S3a | the lowering parity view compared byte for byte with the oracle |
+//! | [`value`], [`eval`] | S3b | the `ir.core` evaluator: values, wraps, the pure trace for `expected_calls` |
+//! | [`domains`] | S3b | binder descriptors and labels over the S2 `domain` API; the 16.2 refusals |
+//! | [`stream`] | S3b | the 2.4 stream encoders, framing, FNV-1a-64, the slim base set |
+//! | [`suite`] | S3b | product enumeration, admission, chunks, counts and digests of one suite |
+//! | [`enumerate`] | S3b | a whole document at `full` depth; the enumeration parity view |
+//! | [`census`] | S3b | the per-claim census of what the generator can emit (VER04r 16.2) |
 //!
-//! [`analyse`] runs the whole S3a pipeline on a parsed document; [`generate`] is the entry
-//! point S3b to S3d fill in, and until they do it **fails closed**: it validates what S3a can
-//! validate and then refuses with `code == "unimplemented"` rather than emit a corpus it
-//! cannot digest.
+//! [`analyse`] runs the S3a pipeline on a parsed document and [`enumerate_document`] the S3b
+//! one (it runs [`analyse`] first).  [`generate`] is the entry point S3c to S3d fill in, and
+//! until they do it **fails closed**: it validates what it can and then refuses with
+//! `code == "unimplemented"` rather than emit a corpus whose faults, controls, witness
+//! chunks and files do not exist yet.
 //!
 //! ## Fail closed
 //!
@@ -96,15 +103,23 @@
 
 pub mod analysis;
 pub mod arith;
+pub mod census;
 pub mod cost;
+pub mod domains;
+pub mod enumerate;
 pub mod error;
+pub mod eval;
 pub mod ir;
 pub mod json;
 pub mod lower;
 pub mod profile;
+pub mod stream;
+pub mod suite;
 pub mod types;
+pub mod value;
 pub mod view;
 
+pub use enumerate::{enumerate_document, Enumeration};
 pub use error::{code, Beyond, GenError};
 pub use lower::{census, lower_document, CensusRow, ItemKind, Lowered};
 
@@ -175,11 +190,12 @@ pub struct GenInput<'a> {
     pub profile_bytes: &'a [u8],
 }
 
-/// Emit a v2 corpus.  **Slice S3a: a fail-closed stub.**  It reads the profile, lowers and
-/// costs the document (so every S3a refusal already fires), and then refuses with
-/// `code == "unimplemented"`: the evaluator, enumeration and digests (S3b) and the
-/// emission (S3c) do not exist yet, and a generator that cannot digest a suite must not
-/// emit one.
+/// Emit a v2 corpus.  **Still a fail-closed stub after S3b.**  It reads the profile, lowers
+/// and costs the document (so every S3a refusal already fires), and then refuses with
+/// `code == "unimplemented"`: the evaluator, enumeration and digests exist
+/// ([`enumerate_document`]) but the fault IR, controls, witness chunks and the emission of
+/// `corpus.json`, `chunks/*.txt` and `cases.tfv` are slice S3c, and a generator that cannot
+/// emit a whole corpus must not emit part of one.
 ///
 /// # Errors
 ///
@@ -190,6 +206,6 @@ pub fn generate(input: &GenInput<'_>) -> Result<CorpusV2, GenError> {
     Err(GenError::new(
         code::UNIMPLEMENTED,
         "",
-        "digests and emission arrive in slices S3b and S3c; nothing is written",
+        "faults, controls and emission arrive in slice S3c; nothing is written",
     ))
 }
