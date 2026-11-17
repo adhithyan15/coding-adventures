@@ -477,7 +477,7 @@ the standard set is a list of two-component facts, each of which is small:
 | I8 | mapped frames are a subset of allocated frames | `pt`, `pool` |
 | I9 | every id an instance hands out belongs to that instance's owner partition, and no instance is shared across partition tags (rule 13) | every instance, the spine |
 | I10 | no loaded domain grants kernel memory or another partition's memory | `prot`, `thread` |
-| I11 | after reset, in a sealed profile (H, S, F, V), `cspace` is sealed before the first user instruction | `cspace`, the spine |
+| I11 | after reset, in a sealed profile (H, S, F, V), every `cspace` instance (one per partition in the xP columns) is sealed before the first user instruction | `cspace`, the spine |
 
 This is the standard set; a profile uses the rows whose components it
 contains. The spine specification (VOS20, VOS-022a) proves each row closed
