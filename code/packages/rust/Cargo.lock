@@ -14691,6 +14691,15 @@ name = "tls13-key-share-entry"
 version = "0.1.0"
 
 [[package]]
+name = "tls13-key-share-retry"
+version = "0.1.0"
+dependencies = [
+ "tls13-key-share",
+ "tls13-named-group-policy",
+ "tls13-supported-groups",
+]
+
+[[package]]
 name = "tls13-key-update-message"
 version = "0.1.0"
 
