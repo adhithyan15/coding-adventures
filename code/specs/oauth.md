@@ -4596,16 +4596,18 @@ composition remain separate prerequisites, and concrete HTTPS remains
 unavailable.
 
 An allocation-free `tls13-client-hello-message` prerequisite now decodes one
-exact RFC 8446 section 4.1.2 TLS 1.3 `ClientHello` handshake body. It enforces
+exact RFC 9846 section 4.2.2 TLS 1.3 `ClientHello` handshake body. It enforces
 the `0x0303` legacy version, retains the exact 32-byte random and bounded
 zero-through-32-byte legacy session ID, requires a non-empty even-length
 cipher-suite vector under a caller-selected suite-count ceiling, requires the
 single null legacy compression method, and delegates the complete mandatory
 extension vector to `tls13-extension-block` under caller byte and entry
-limits. Success retains the exact borrowed body and all structural fields in a
-non-copyable value; unknown cipher-suite and extension identifiers remain data
-for later policy, and diagnostics omit random, session, suite, and extension
-bytes.
+limits. The extension-vector payload accepts RFC 9846's corrected seven-byte
+minimum, including an otherwise valid one-version `supported_versions` offer
+without an unrelated padding extension. Success retains the exact borrowed
+body and all structural fields in a non-copyable value; unknown cipher-suite
+and extension identifiers remain data for later policy, and diagnostics omit
+random, session, suite, and extension bytes.
 
 This message-body layer does not classify a first or retry ClientHello,
 generate entropy, authorize a session ID or cipher suite, require or interpret
@@ -4992,6 +4994,32 @@ I/O, authorize HTTP or OAuth transport, or open a network connection. Retry
 state, transcript composition, key schedule, certificate validation, TLS
 transport, and HTTP composition remain blockers. Concrete HTTPS and
 live-provider readiness remain unavailable.
+
+An allocation-free `tls13-server-hello-retry-selection` prerequisite now
+binds one retained HelloRetryRequest version-selection proof to one retained
+ordinary ServerHello version-selection proof. The binder requires the first
+message to be classified as HelloRetryRequest and the second as ServerHello,
+then compares the exact retained ClientHello random, legacy session ID,
+cipher-suite offer count and order, and supported-version offer count and
+order across the two proofs. It also requires the complete extension-context
+policy, policy-authorized cipher-suite descriptor, and selected TLS version to
+remain equal. Success moves both non-copyable proofs into one evidence value,
+so later handshake composition cannot replace either message, either
+ClientHello, either data-driven offer, or the extension rule table after
+continuity has been checked. Stable failures and diagnostics retain no random,
+session ID, offer, selection, extension, handshake, or policy payloads.
+
+This retry continuity binding does not compare the complete ClientHello pair
+or validate extension-specific permitted changes; require the retry to change
+the ClientHello; reject a second retry in connection state; interpret
+`cookie`, `key_share`, or `pre_shared_key`; apply the transcript
+`message_hash` rewrite; sequence a handshake; send alerts; derive keys;
+protect records; parse or validate certificates; establish trust; enforce
+revocation; perform I/O; authorize HTTP or OAuth transport; or open a network
+connection. ClientHello retry-transition policy, connection state, transcript
+composition, key schedule, certificate validation, TLS transport, and HTTP
+composition remain blockers. Concrete HTTPS and live-provider readiness
+remain unavailable.
 
 An allocation-free `tls13-alpn` prerequisite now owns the RFC 7301
 `application_layer_protocol_negotiation` extension data needed to bind a
