@@ -44,10 +44,10 @@ cargo test -p coding_adventures_aes_modes
 
 Uses NIST SP 800-38A and GCM specification test vectors.
 
-## Fixed-memory GHASH prerequisite
+## Fixed-memory AES-128-GCM prerequisite
 
 `ghash_multiply_fixed` and `ghash_fixed` provide the repository-owned GHASH
-piece needed by a future reviewed AES-GCM boundary. They use caller-owned
+piece used by the reviewed fixed-memory AES-128-GCM boundary. They use caller-owned
 fixed output storage, allocate no memory, run the field multiplication with a
 fixed 128-round schedule and mask secret-derived decisions, and wipe the
 working multiplier, product, accumulator, and padded block on return. GHASH
@@ -59,13 +59,25 @@ the XOR work based on a secret bit. Rust's `black_box` offers no cryptographic
 guarantee: the strict optimized-IR gate remains required for each compiler and
 target, and passing it is evidence only for the generated code inspected.
 
-This is deliberately not a production AES-GCM or TLS implementation. The
-legacy GCM API remains an educational compatibility surface, and the current
-AES implementation has not been hardened or composed with this primitive into
-a reviewed fixed-memory AEAD. Key ownership, nonce construction and reuse
-prevention, per-key record limits, record protection, handshake processing,
-certificate validation, revocation, networking, HTTP, and OAuth transport all
-remain outside this crate.
+`aes128_gcm_encrypt_fixed` and `aes128_gcm_decrypt_fixed` compose GHASH with
+the repository-owned fixed-memory AES-128 block boundary for the RFC 5116
+96-bit nonce profile. They validate exact caller-output length, encoded length
+domains, and the complete 32-bit payload counter range before mutation.
+Decryption authenticates the complete 128-bit tag with a release-codegen-gated
+fixed schedule before writing plaintext, so rejection leaves caller output
+unchanged. Hash subkeys, counters, keystream, GHASH results, encrypted `J0`,
+and recomputed tags live in wipe-on-drop fixed storage. The original key,
+nonce, inputs, and successful outputs remain caller-owned.
+
+The allocation-returning legacy GCM API remains an educational compatibility
+surface. The fixed boundary performs pure in-process cryptography with no
+credential access, edit, signing operation, provider action, audit or trace
+emission, I/O, or external effect. It does not select a TLS suite, own a
+traffic key, reserve nonces, enforce per-key record limits, frame or protect
+records, process a handshake, validate certificates, enforce revocation,
+authorize HTTP, or provide OAuth transport. A later TLS record
+composition must bind this primitive to `TLS_AES_128_GCM_SHA256` and the
+existing selected-suite record state. Concrete HTTPS remains unavailable.
 
 ## Part of coding-adventures
 
