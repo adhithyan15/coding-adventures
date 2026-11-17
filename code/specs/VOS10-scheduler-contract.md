@@ -1,7 +1,7 @@
 # VOS10 -- The Scheduler Contract
 
 **Status:** Draft. The contract package `code/packages/rust/vos-sched-contract`
-(the Rust trait, the Warrant contract block, four obligation blocks and
+(the Rust trait, the Warrant contract block, five obligation blocks and
 `contract.vos`) and its test companion `vos-sched-contract-check` are committed
 with this document, in the commit that follows it. No
 scheduler implements it yet: `vos-sched-fp-bitmap` is VOS-011 and
@@ -49,7 +49,7 @@ Two terms are used strictly. A **thread id** `t` is a number below `N`; thread
 | S4 | Excluded on purpose: `pick` without removal, `yield`, `set_priority`, `current`, time, thread creation | 3.3 |
 | S5 | `inv(M)` is total (`true`); init is the empty set; closure is claimed anyway | 4 |
 | S6 | Safety tier: `dispatch` returns `Idle` or a ready thread and removes exactly that one. Policy tier: it returns the maximum ready thread | 5 |
-| S7 | Round-robin and EDF implementations carry the safety tier only; round-robin is `mode=representation` | 5.3 |
+| S7 | Round-robin and EDF implementations carry the safety tier only; round-robin carries the `representation` tier (VOS02 2.7) | 5.3 |
 | S8 | `insert` and `remove` of an id `>= N` answer `OutOfRange` and change nothing; `dispatch` has no precondition | 6 |
 | S9 | One ceiling formula, `16 N + 32` steps, heap 0, depth 2; `init` gets `8 N + 16` | 7 |
 | S10 | Instance `N = 8` for X1; the largest claim is 65,536 binder cases (16.4% of the 400,000 budget) | 10 |
@@ -238,24 +238,17 @@ a function, so a policy implementation is a *deterministic* function of M
 * **Round-robin** (VOS-012's second implementation) satisfies the **safety tier
   only**: it returns some ready thread, rotates its pointer, and is not
   highest-priority-first. Its state has history (the rotation pointer) that `alpha`
-  forgets, so it is **not canonical**: it declares `mode = "representation"`
-  (VOS02 section 2.7, VOS-012b0), carries the safety tier only, and writes its own
-  claim set in `impl.part` instead of the `canonical` block: with the authored
-  `Impl(mask, ptr)`, `inv_impl(s) = s.ptr < 8u8`, `rep(mask, h) = Impl(mask, bit_and(h, 7u8))`,
-  `arg_t(h) = shr(h, 3)` (the thread argument, from the high bits of the same byte) and the
-  op-free `rr_pick(mask, p) -> Pick` and `rr_next(mask, p) -> Impl`, the claims
-  `rep_init` (`init() == rep(0u8, 0u8)`), `rep_alpha` (`alpha_w(rep(mask, h)) == AbsW(mask)`),
-  `insert_rep`, `remove_rep` and `dispatch_rep` (the safety relation of the abstract step
-  from `rep(mask, h)`, plus `inv_impl` of the post-state and, for `insert` and `remove`,
-  `.ptr` unchanged) and `dispatch_det` (`dispatch_out(rep(mask, h)) == rr_pick(mask, p)` and
-  `dispatch_img(rep(mask, h)) == rr_next(mask, p)`, `p = bit_and(h, 7u8)`). The `_det` claim
-  is the determinism claim of VOS02 2.7: it pins the pointer's evolution, which the
-  canonical block pinned for a canonical scheduler. The negative control the "history
-  register" mutants (section 12) shows the canonical block catching exactly this.
-  A fixture with this claim set type-checks against this contract
-  (`vos-link/tests/fixtures/impls/vos-fixture-rep`). Adaptations of the first draft: the
-  operations are bound `op`s, as in the bitmap, so the document needs the `labels`, `input` and
-  `bound` blocks too; `shr(h, 3)` and `+` on `U8` type-check unchanged.
+  forgets, so it is **not canonical**: it carries the **`representation` tier** instead
+  (VOS02 section 2.7, VOS-012b0) together with `safety`. The tier is the contract's (section 9.3):
+  the scheduler supplies `Impl(mask, ptr)`, `rep(m, h) = Impl(<mask of m>, h)` and
+  `hist(s) = s.ptr`, and the contract's eight claims say `init` is in the image of `rep`, every
+  step from the image lands back in it, and safety holds over all of it. The history is a `U8`
+  code of which the tier uses three bits, so an implementation with more than eight history values
+  needs a contract revision. A scheduler may add `<op>_det` claims (the output and the full
+  post-state against an op-free model, e.g. `rr_pick`/`rr_next`): they are `impl-own`, not gated
+  (VOS02 2.7), and `vos-sched-rr` keeps one for mutation sanity. The "history register" mutants
+  (section 12) show the canonical block rejecting exactly this state, and the
+  representation block accepting it.
 * **Earliest-deadline-first** satisfies the safety tier only. Under this contract it
   can implement `Sched` only if its deadline arrives some other way than through
   these four operations, so a real EDF scheduler needs a deadline channel
@@ -519,15 +512,16 @@ Byte for byte:
 
 ### 9.3 The obligation blocks
 
-Four blocks, one per tier of `contract.vos` (VOS02 R1.2). A claim is quantified
-over `build(m)` for the abstract `m` (R5), so its binders are `Bool` and `U8`
+Five blocks, one per tier of `contract.vos` (VOS02 R1.2). A claim is quantified
+over `build(m)` for the abstract `m` (R5) (the `representation` claims over `rep(m, h)`), so its binders are `Bool` and `U8`
 only, and every claim is *exhaustive* where the instance fits.
 
 | Block | Claims | Shape | Carried by |
 |---|---|---|---|
 | `safety` | `insert_safe`, `remove_safe`, `dispatch_safe`, `safety_alpha_build`, `safety_init` | A for `insert`/`remove`, B for `dispatch`, C for `alpha`, closure for `init` | every implementation |
 | `policy` | `dispatch_policy` | A (deterministic) | fixed-priority implementations |
-| `canonical` | `canon_init`, `canon_insert_post`, `canon_insert_img`, `canon_remove_post`, `canon_remove_img`, `canon_dispatch_post`, `canon_dispatch_img` | shape C and closure | every `production` implementation with `mode=canonical` |
+| `canonical` | `canon_init`, `canon_insert_post`, `canon_insert_img`, `canon_remove_post`, `canon_remove_img`, `canon_dispatch_post`, `canon_dispatch_img` | shape C and closure | every `production` implementation that carries `canonical` |
+| `representation` | `rep_init`, `rep_alpha`, `insert_rep`, `insert_rep_post`, `remove_rep`, `remove_rep_post`, `dispatch_rep`, `dispatch_rep_post` | closure over the image of `rep` | every `production` implementation that carries `representation` instead of `canonical` |
 | `any` | `dispatch_sound`, `dispatch_covers_run`, `dispatch_covers_idle` | soundness and coverage | `kind = any` only |
 
 **Safety** (`warrant/obligations-safety.part`):
@@ -615,6 +609,58 @@ depends on it:
     forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool. dispatch_img(build(ready_of(b0, b1, b2, b3, b4, b5, b6, b7))) == build(after(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), dispatch_out(build(ready_of(b0, b1, b2, b3, b4, b5, b6, b7)))))
 ```
 
+**Representation** (`warrant/obligations-representation.part`). A `production` implementation whose
+state has history carries this block **instead of** `canonical` (VOS02 R6, exactly one). It
+names two models the implementation supplies, `rep(m: Ready, h: U8) -> Impl` and
+`hist(s: Impl) -> U8`, and no field of `Impl`, no `inv_impl` and no packing model: the
+packing is here. `M` is `ready_of(b0, .., b7)` and `k: U8` is one binder that packs the history
+(`bit_and(k, 7u8)`, three bits of a `U8` code) and the thread argument (`shr(k, 3)`, 0 to 31);
+the part holds the abbreviations expanded, and is claims only. A third `U8` binder would be a
+hard W0706, hence the packing:
+
+```text
+  -- The reachable states are exactly the image of rep (VOS02 2.7): init is in it, every step from it
+  -- lands back in it (the _post claims, the canon_*_post pattern with rep for build), and safety holds
+  -- from every state of it.  The implementation supplies two models: rep(m: Ready, h: U8) -> Impl, the
+  -- state an abstract state and a history code name, and hist(s: Impl) -> U8, the code of a state.  The
+  -- contract owns the packing: the history is a U8 code of which these claims use three bits
+  -- (bit_and(k, 7u8)); the high bits of the same binder k are the thread argument (shr(k, 3), 0 to 31),
+  -- so a claim has nine binders, not ten.  An implementation with more than eight history values needs
+  -- a contract revision.  Nothing here names a field of Impl.
+  claim rep_init:
+    forall b: Bool. init() == rep(dec(alpha_w(init())), bit_and(hist(init()), 7u8))
+  claim rep_alpha:
+    forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool, k: U8. dec(alpha_w(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), bit_and(k, 7u8)))) == ready_of(b0, b1, b2, b3, b4, b5, b6, b7)
+  claim insert_rep:
+    forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool, k: U8. (
+      insert_out(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), bit_and(k, 7u8)), shr(k, 3)) == abs_insert(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), shr(k, 3)).0 and
+      dec(alpha_w(insert_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), bit_and(k, 7u8)), shr(k, 3)))) == abs_insert(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), shr(k, 3)).1)
+  claim insert_rep_post:
+    forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool, k: U8. rep(dec(alpha_w(insert_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), bit_and(k, 7u8)), shr(k, 3)))), bit_and(hist(insert_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), bit_and(k, 7u8)), shr(k, 3))), 7u8)) == insert_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), bit_and(k, 7u8)), shr(k, 3))
+  claim remove_rep:
+    forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool, k: U8. (
+      remove_out(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), bit_and(k, 7u8)), shr(k, 3)) == abs_remove(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), shr(k, 3)).0 and
+      dec(alpha_w(remove_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), bit_and(k, 7u8)), shr(k, 3)))) == abs_remove(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), shr(k, 3)).1)
+  claim remove_rep_post:
+    forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool, k: U8. rep(dec(alpha_w(remove_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), bit_and(k, 7u8)), shr(k, 3)))), bit_and(hist(remove_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), bit_and(k, 7u8)), shr(k, 3))), 7u8)) == remove_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), bit_and(k, 7u8)), shr(k, 3))
+  claim dispatch_rep:
+    forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool, k: U8. safe_dispatch(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), dispatch_out(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), bit_and(k, 7u8))), dec(alpha_w(dispatch_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), bit_and(k, 7u8))))))
+  claim dispatch_rep_post:
+    forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool, k: U8. rep(dec(alpha_w(dispatch_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), bit_and(k, 7u8))))), bit_and(hist(dispatch_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), bit_and(k, 7u8)))), 7u8)) == dispatch_img(rep(ready_of(b0, b1, b2, b3, b4, b5, b6, b7), bit_and(k, 7u8)))
+```
+
+The induction is that of `canonical` with `rep` for `build`: `rep_init` puts `init` in the image,
+the three `_post` claims put every step from an image state back in it, and `rep_alpha`, `insert_rep`,
+`remove_rep` and `dispatch_rep` give safety over the whole image (the safety tier alone covers
+`build(M)`, where a pointer has its `build` value, and says nothing of a state after a `dispatch`). A
+degenerate `rep` (one that ignores `h`, or couples it to the mask) is not closed under a real
+round-robin's steps and fails a `_post` claim. **Packing residual:** `T = shr(k, 3)` takes the
+values 0 to 31: `pre_insert` (`t < 8`, eight values) and 24 out-of-range values are exhaustive here,
+and `t` in 32 to 255 from a non-`build` state is covered only by the hostile-input fuzz rows
+(`input insert_img.t: hostile`) and by `insert_safe` from `build` states. Adaptations of the
+first draft while writing the part: none of the names changed (`ready_of`, `abs_insert`, `safe_dispatch`
+are the safety part's own, and `shr(k, 3)` and a model that takes an `Impl` both type-check).
+
 **Any** (`warrant/obligations-any.part`). The oracle register is a field of
 `Impl`, so these claims can only be carried by an implementation whose state has
 `mask` and `choice` (VOS02 section 3.3). They are not quantified over `build(m)`:
@@ -653,9 +699,8 @@ claim's last call names, not the leading `safe_dispatch`), so no claim was rewri
 An implementation may add claims of its own (printed `impl-own`, VOS02 section
 2.6): the any implementation adds `alpha_build_with_oracle` and
 `insert_keeps_the_oracle`, which are not obligations because they name its own state. A
-round-robin scheduler adds the representation claims of section 5.3 (`rep_init`, `rep_alpha`,
-`insert_rep`, `remove_rep`, `dispatch_rep`, `dispatch_det`); `vos-link check-doc` (CD07-R,
-VOS02 R6) checks their shape and prints each one's `claim_sha256` as `impl-own rep`.
+round-robin scheduler may add `<op>_det` claims (section 5.3); they are `impl-own` and ungated, and `vos-link
+check-doc` prints no special line for them (the representation claims are the tier's, section 9.3).
 
 ---
 
@@ -691,6 +736,9 @@ counts the evaluation of section 12 measured, not typed by hand.
 | `canon_init` | `b: Bool` | 2 | 2 | 0.00 |
 | `canon_insert_post`, `canon_insert_img`, `canon_remove_post`, `canon_remove_img` (each) | 8 Bool, `t: U8` | 65,536 | 65,536 | 16.38 |
 | `canon_dispatch_post`, `canon_dispatch_img` (each) | 8 Bool | 256 | 256 | 0.06 |
+| **Representation** | | | | |
+| `rep_init` | `b: Bool` | 2 | 2 | 0.00 |
+| `rep_alpha`, `insert_rep`, `insert_rep_post`, `remove_rep`, `remove_rep_post`, `dispatch_rep`, `dispatch_rep_post` (each) | 8 Bool, `k: U8` | 65,536 | 65,536 | 16.38 |
 | **Any** | | | | |
 | `dispatch_sound` | `mask: U8`, `c: U8` | 65,536 | 65,536 | 16.38 |
 | `dispatch_covers_run` | `mask: U8`, `t: U8` | 65,536 | 65,536 | 16.38 |
@@ -703,7 +751,7 @@ as in the toy. The obligation totals per implementation (enumerated cases):
 |---|---|---|
 | fixed-priority bitmap (`production`) | safety, policy, canonical | **394,500** (394,498 before `safety_init`, VOS-D081) |
 | lowest-first scan (safety, canonical) | safety, canonical | 131,586 + 262,658 = 394,244 |
-| round-robin (safety only, `representation`) | safety, plus its own `_rep` claims | 131,586 + its own |
+| round-robin (`representation`) | safety, representation | 131,586 + 458,754 = **590,340** (the representation block: `rep_init` 2, seven claims of 65,536) |
 | `-any` | safety, any | **262,914** (262,912 before `safety_init`, VOS-D081; = the binder cases: no refinement; 199,424 before VOS-012a dropped the `t < 8` refinement of `dispatch_covers_run`, VOS-D079) |
 
 Where the budget ends for this contract:
@@ -755,14 +803,11 @@ is out of this contract's reach: plan on `T <= 8..16` per obligation there.
   and `remove` never read the oracle (a lexical rule). Carries **safety and
   any**, never policy or canonical. Its `-any` block is the `obligations-any.part`
   above.
-* **`vos-sched-rr`** (kind `production`, `mode = "representation"`): a rotating pointer,
-  safety tier only (`obligations = ["safety"]`), and the six claims of section 5.3 in its own
-  `impl.part`. The evidence for the `_rep` and `_det` claims quantifies over a packed binder
-  `h` (the mask and one history byte: about 327,682 cases). **Residue, stated:** `insert`
-  with `t >= 32` at `ptr != 0` is not covered by a claim (`arg_t(h)` is `h >> 3`, at most
-  31): it is covered by the hostile-input fuzz rows (`input insert_img.t: hostile`) and by
-  `insert_safe` at `ptr = 0` (`build`'s pointer), the two places a `t` of 32 or more is
-  tried.
+* **`vos-sched-rr`** (kind `production`, carries `representation` and `safety`): a rotating
+  pointer, `obligations = ["representation", "safety"]`, the models `rep` and `hist` and, optionally,
+  an ungated `dispatch_det` against op-free `rr_pick`/`rr_next` in its own `impl.part`. The packing
+  residual of section 9.3 applies: `t` in 32 to 255 from a non-`build` state is covered only by the
+  hostile-input fuzz rows and by `insert_safe` at the `build` pointer.
 * **As built (VOS-012a):** `vos-sched-any` exists (`code/packages/rust/vos-sched-any`): its state
   is `State { mask, choice }`, `dispatch` proposes, validates and defaults to `Idle`, the oracle
   is written only through the `ghost` module, and its generated document passes `check-doc`

@@ -118,8 +118,7 @@ evidence-features = ["ghost"]    # names that must be in the central list
 Grammar: the file is TOML (read by the TOML crates, section 0) restricted to
 three top-level keys, `class` and `kind` (double-quoted strings from the closed
 sets above) and `evidence-features` (an array of 1 to 32 byte strings, at most
-64) and `mode` (a string of at most 16 bytes; read here, given its closed set of values by
-`vos-link`, VOS02 D-GD2). A table, a dotted or unknown key, a duplicate key, a value of the wrong
+64). A table, a dotted or unknown key, a duplicate key, a value of the wrong
 type or outside its closed set, a backslash anywhere, non-ASCII, more than 16
 key lines, a file over 4 KiB or a line over 1,024 bytes, and anything the TOML
 grammar refuses, is rule **VT01**. The
