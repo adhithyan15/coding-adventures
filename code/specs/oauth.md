@@ -4532,16 +4532,17 @@ completed encoding through `tls13-handshake`. Incomplete pushes retain their
 bounded prefix; completed-message and failure diagnostics retain no copied
 wire bytes, declared lengths, or body contents.
 
-The caller must supply only plaintext content from a record whose authenticity
-and inner handshake content type were already accepted. This slice does not
-decode or authenticate records, accept unauthenticated bytes, retain a
-coalesced tail, sequence handshake phases, update a transcript, parse a
-handshake body, derive keys, invoke an AEAD, validate certificates, establish
-trust, check revocation, perform I/O, authorize HTTP or OAuth transport, or open
-a network connection. Full handshake state, record authentication and
-composition, certificate-path and identity validation, revocation policy, TLS
-transport, and HTTP composition remain blockers. Concrete HTTPS remains
-unavailable.
+Supplying only plaintext content from a record whose authenticity and inner
+handshake content type were already accepted is solely a caller precondition.
+The raw-byte API cannot distinguish authenticated from unauthenticated input.
+This slice does not decode or authenticate records, classify an inner content
+type, retain a coalesced tail, sequence handshake phases, update a transcript,
+parse a handshake body, derive keys, invoke an AEAD, validate certificates,
+establish trust, check revocation, perform I/O, authorize HTTP or OAuth
+transport, or open a network connection. Full handshake state, record
+authentication and composition, certificate-path and identity validation,
+revocation policy, TLS transport, and HTTP composition remain blockers.
+Concrete HTTPS remains unavailable.
 
 An allocation-free `tls13-encrypted-extensions-message` prerequisite now owns
 the exact RFC 8446 section 4.3.1 `EncryptedExtensions` handshake body. It
