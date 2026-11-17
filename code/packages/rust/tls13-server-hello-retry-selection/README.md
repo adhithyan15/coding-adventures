@@ -11,6 +11,7 @@ The binder:
   equal,
 - compares the complete cipher-suite and supported-version offers, preserving
   count, order, every identifier, and the data-driven suite policy,
+- requires the exact extension-context rule table to remain equal,
 - requires the complete policy-authorized cipher-suite descriptor and selected
   TLS version to remain equal, and
 - retains both non-copyable proofs for later exact-evidence composition.

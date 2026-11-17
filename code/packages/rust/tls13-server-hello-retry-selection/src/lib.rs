@@ -32,6 +32,8 @@ pub enum ServerHelloRetrySelectionError {
     CipherSuiteOfferChanged,
     /// The exact supported-version offer differed.
     VersionOfferChanged,
+    /// The retained extension-context rule table differed.
+    ExtensionPolicyChanged,
     /// The policy-authorized cipher-suite descriptor differed.
     CipherSuiteSelectionChanged,
     /// The selected protocol-version descriptor differed.
@@ -51,6 +53,9 @@ impl fmt::Display for ServerHelloRetrySelectionError {
             }
             Self::CipherSuiteOfferChanged => "the retained cipher-suite offer changed after retry",
             Self::VersionOfferChanged => "the retained version offer changed after retry",
+            Self::ExtensionPolicyChanged => {
+                "the retained extension-context policy changed after retry"
+            }
             Self::CipherSuiteSelectionChanged => {
                 "the policy-authorized cipher suite changed after retry"
             }
@@ -224,6 +229,9 @@ pub fn bind_server_hello_retry_selection<
     }
     if retry.version_offer() != server_hello.version_offer() {
         return Err(ServerHelloRetrySelectionError::VersionOfferChanged);
+    }
+    if retry.extension_policy() != server_hello.extension_policy() {
+        return Err(ServerHelloRetrySelectionError::ExtensionPolicyChanged);
     }
     if retry_selection.cipher_suite() != final_selection.cipher_suite() {
         return Err(ServerHelloRetrySelectionError::CipherSuiteSelectionChanged);

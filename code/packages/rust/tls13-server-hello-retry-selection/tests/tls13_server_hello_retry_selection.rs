@@ -84,13 +84,14 @@ fn server_limits() -> Tls13ServerHelloLimits {
     Tls13ServerHelloLimits::new(256, 128, 8).unwrap()
 }
 
-fn version_selection<'client, 'cipher_offer, 'server, 'version_offer>(
+fn version_selection_with_policy<'client, 'cipher_offer, 'server, 'version_offer, 'rules>(
     client_bytes: &'client [u8],
     suites: &'cipher_offer [u16],
     server_bytes: &'server [u8],
     versions: &'version_offer [u16],
     record_limit: u64,
-) -> BoundServerHelloVersionSelection<'client, 'cipher_offer, 'server, 'version_offer, 'static> {
+    extension_policy: ExtensionContextPolicy<'rules>,
+) -> BoundServerHelloVersionSelection<'client, 'cipher_offer, 'server, 'version_offer, 'rules> {
     let client = decode_client_hello(client_bytes, client_limits()).unwrap();
     let server = decode_tls13_server_hello(server_bytes, server_limits()).unwrap();
     let cipher_offer = ClientCipherSuiteOffer::new(suites, cipher_policy(record_limit)).unwrap();
@@ -98,9 +99,26 @@ fn version_selection<'client, 'cipher_offer, 'server, 'version_offer>(
     bind_server_hello_version_selection(
         selection,
         ClientVersionOffer::new(versions).unwrap(),
-        ExtensionContextPolicy::new(&STANDARD_TLS13_EXTENSION_RULES).unwrap(),
+        extension_policy,
     )
     .unwrap()
+}
+
+fn version_selection<'client, 'cipher_offer, 'server, 'version_offer>(
+    client_bytes: &'client [u8],
+    suites: &'cipher_offer [u16],
+    server_bytes: &'server [u8],
+    versions: &'version_offer [u16],
+    record_limit: u64,
+) -> BoundServerHelloVersionSelection<'client, 'cipher_offer, 'server, 'version_offer, 'static> {
+    version_selection_with_policy(
+        client_bytes,
+        suites,
+        server_bytes,
+        versions,
+        record_limit,
+        ExtensionContextPolicy::new(&STANDARD_TLS13_EXTENSION_RULES).unwrap(),
+    )
 }
 
 #[test]
@@ -280,6 +298,34 @@ fn rejects_supported_version_offer_changes() {
 }
 
 #[test]
+fn rejects_extension_context_policy_substitution() {
+    let suites = [0x1301];
+    let versions = [TLS13];
+    let client = client_body(CLIENT_RANDOM, SESSION_ID, &suites, &versions);
+    let retry_server = server_body(TLS13_HELLO_RETRY_REQUEST_RANDOM, SESSION_ID, 0x1301);
+    let final_server = server_body(ORDINARY_SERVER_RANDOM, SESSION_ID, 0x1301);
+    let mut reordered_rules = STANDARD_TLS13_EXTENSION_RULES;
+    reordered_rules.swap(0, 1);
+    let reordered_policy = ExtensionContextPolicy::new(&reordered_rules).unwrap();
+
+    assert_eq!(
+        bind_server_hello_retry_selection(
+            version_selection(&client, &suites, &retry_server, &versions, 1_000),
+            version_selection_with_policy(
+                &client,
+                &suites,
+                &final_server,
+                &versions,
+                1_000,
+                reordered_policy,
+            ),
+        )
+        .unwrap_err(),
+        ServerHelloRetrySelectionError::ExtensionPolicyChanged
+    );
+}
+
+#[test]
 fn rejects_a_changed_policy_authorized_cipher_suite_selection() {
     let suites = [0x1301, 0x1302];
     let versions = [TLS13];
@@ -323,6 +369,10 @@ fn diagnostics_are_stable_and_redact_all_compared_evidence() {
         (
             ServerHelloRetrySelectionError::VersionOfferChanged,
             "the retained version offer changed after retry",
+        ),
+        (
+            ServerHelloRetrySelectionError::ExtensionPolicyChanged,
+            "the retained extension-context policy changed after retry",
         ),
         (
             ServerHelloRetrySelectionError::CipherSuiteSelectionChanged,
