@@ -152,7 +152,7 @@ func TestCollectLockIsExclusive(t *testing.T) {
 	var inner, stepLock error
 	o := f.opts()
 	o.Fsck = func(g *source.Git) error {
-		_, inner = Collect(CollectOptions{Root: o.Root, Dir: o.Dir, Results: o.Results, Out: o.Out + "2", KilnExe: o.KilnExe})
+		_, inner = Collect(CollectOptions{Root: o.Root, Dir: o.Dir, Results: o.Results, Out: o.Out + "2", KilnExe: o.KilnExe, Survivors: o.Survivors, SurvivorWait: o.SurvivorWait})
 		_, stepLock = LockDir(o.Dir, false)
 		return nil
 	}

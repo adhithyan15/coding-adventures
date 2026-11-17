@@ -82,7 +82,16 @@ func newStepFixCustom(t *testing.T, plan string, files map[string]string, playba
 // newStepFixLinks is newStepFixCustom with tracked symlinks (path -> text).
 func newStepFixLinks(t *testing.T, plan string, files, links map[string]string, playback bool, extraEnv ...string) *stepFix {
 	t.Helper()
+	return newStepFixRoots(t, nil, plan, files, links, playback, extraEnv...)
+}
+
+// newStepFixRoots is newStepFixLinks with host roots (the JSON of host-roots.json
+// entries, as prep.roots takes them) written before prepare: a state root, for
+// the seq-0 check of RunStep.
+func newStepFixRoots(t *testing.T, roots []string, plan string, files, links map[string]string, playback bool, extraEnv ...string) *stepFix {
+	t.Helper()
 	p := newPrep(t)
+	p.roots = roots
 	p.links = links
 	p.env = append(p.env, extraEnv...)
 	for k, v := range files {
