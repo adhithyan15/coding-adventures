@@ -320,15 +320,18 @@ func Parse(r io.Reader, initialCwd string, limits Limits) (*Trace, error) {
 
 // ParseOptions is Parse with options.
 //
-// The hand-written scanner reads the lines (D24: it stays the default).  When
-// the unexported crossCheck hook is set (by this package's tests, or by
-// KILN_TRACE_DIFF=1) the grammar path reads them too and the two answers are
-// compared; see crosscheck.go.
+// The grammar path reads the lines (D24 PR 6: it is the production default).
+// The hand-written scanner is kept only as an ORACLE on probation: when the
+// unexported crossCheck hook is set (by this package's tests, or by
+// KILN_TRACE_DIFF=1) it reads them too and the two answers are compared, but the
+// grammar path's answer is the one returned.  There is deliberately no switch
+// that makes the old scanner the answer: it is the lenient reader, so that
+// would be a soundness downgrade.  See crosscheck.go.
 func ParseOptions(r io.Reader, initialCwd string, opts Options) (*Trace, error) {
 	if crossCheck != nil {
 		return crossCheck(r, initialCwd, opts)
 	}
-	return parseWith(r, initialCwd, opts, false)
+	return parseWith(r, initialCwd, opts, true)
 }
 
 // parseWith is ParseOptions with the reader of lines chosen: the old scanner
