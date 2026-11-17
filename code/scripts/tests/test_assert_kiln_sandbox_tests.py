@@ -143,13 +143,27 @@ class CiWiring(unittest.TestCase):
             return json.dumps({"Action": "output", "Test": test, "Output": text + "\n"})
 
         lines = [out("TestA/sub", "    x_test.go:1: F2: init order " + "y" * 400), out("TestA/sub", "plain line")]
-        lines += [out("TestA/sub", f"PROBE: fact {i}") for i in range(30)]
+        lines += [out("TestA/sub", f"PROBE: fact {i}") for i in range(80)]
         lines += [json.dumps({"Action": "pass", "Test": "TestA/sub"})]
         lines += [out("TestB", "F2: from a failing test"), json.dumps({"Action": "fail", "Test": "TestB"})]
         facts = mod.passing_facts(lines)
         self.assertEqual(list(facts), ["TestA/sub"])
-        self.assertEqual(len(facts["TestA/sub"]), 20)
-        self.assertTrue(all(len(f) <= 302 and ("F2:" in f or "PROBE:" in f) for f in facts["TestA/sub"]))
+        self.assertEqual(len(facts["TestA/sub"]), 60)
+        self.assertTrue(all(len(f) <= 452 and ("F2:" in f or "PROBE:" in f) for f in facts["TestA/sub"]))
+
+    def test_full_probe_line_with_step_wall_survives(self) -> None:
+        # The D24 G2 census fields come last on the line; they must not be cut.
+        probe = (
+            "    sandbox_tracesize_linux_amd64_test.go:55: PROBE: trace probe-some-long-run-name bytes=51650 lines=327 "
+            "old_mb_s=144.7 grammar_mb_s=22.8 old_allocs=12345 grammar_allocs=67890 old_refusal=\"\" "
+            "grammar_refusal=\"\" step_wall_ms=123456 parse_ms=2.26 parse_share=0.0002"
+        )
+        lines = [
+            json.dumps({"Action": "output", "Test": "TestA", "Output": probe + "\n"}),
+            json.dumps({"Action": "pass", "Test": "TestA"}),
+        ]
+        (fact,) = mod.passing_facts(lines)["TestA"]
+        self.assertTrue(fact.endswith("parse_share=0.0002"), fact)
 
     def test_output_cannot_inject_workflow_commands(self) -> None:
         def out(test: str, text: str) -> str:

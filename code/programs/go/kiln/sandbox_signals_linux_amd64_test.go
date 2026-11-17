@@ -165,7 +165,7 @@ func runStraced(t *testing.T, script string) *stracedRun {
 		t.Fatal(err)
 	}
 	defer fh.Close()
-	probeTrace(t, "signals", r.trf)
+	probeTraceWall(t, "signals", r.trf, r.elapsed)
 	r.tr, err = trace.ParseOptions(fh, f.pkg, trace.Options{HelperRoot: true, HelperExe: f.exe})
 	if err != nil {
 		raw, _ := os.ReadFile(r.trf)

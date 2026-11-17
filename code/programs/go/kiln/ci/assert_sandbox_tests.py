@@ -53,8 +53,8 @@ FINAL = {"pass", "fail", "skip"}
 # Facts a PASSING test wants in the CI log (a t.Log line that holds one of these
 # markers).  Only these are printed, bounded, so the log stays readable.
 FACT_MARKERS = ("F2:", "PROBE:")
-MAX_FACT_LINES = 20
-MAX_FACT_CHARS = 300
+MAX_FACT_LINES = 60
+MAX_FACT_CHARS = 450
 # Every printed line of test output starts with this, so no line of a test's
 # output can begin with "::" and be taken for a GitHub workflow command.
 LOG_PREFIX = "  "
