@@ -147,6 +147,31 @@ func runDiff(t testing.TB, idx int, toks []lexer.Token, compiled map[string]*Com
 		dumpNew(na, &sb)
 		return sb.String(), true
 	}
+	// Third way: ParseInto then ToAST, and a walk through the accessors,
+	// into a fresh Tree and into one that was just used (reuse).
+	for pass := 0; pass < 2; pass++ {
+		var tr Tree
+		if pass == 1 {
+			_ = compiled[g.name].ParseInto(&tr, toks, Options{})
+		}
+		ie := compiled[g.name].ParseInto(&tr, toks, Options{})
+		if (ie == nil) != (ne == nil) || (ie != nil && ie.Error() != ne.Error()) {
+			t.Fatalf("ParseInto err %v vs Parse err %v", ie, ne)
+		}
+		if ie != nil {
+			if tr.Root() != NoNode || tr.ToAST() != nil {
+				t.Fatalf("tree not empty after %v", ie)
+			}
+			continue
+		}
+		var a, w strings.Builder
+		dumpNew(tr.ToAST(), &a)
+		dumpTree(&tr, tr.Root(), &w)
+		nd, _ := ndump()
+		if a.String() != nd || w.String() != nd {
+			t.Fatalf("%s: ParseInto/ToAST/accessor dumps differ from Parse:\n parse %s\n toast %s\n walk  %s", g.name, nd, a.String(), w.String())
+		}
+	}
 	if msg := compareOne(g.name, odump, ndump); msg != "" {
 		var names []string
 		for _, tk := range toks {

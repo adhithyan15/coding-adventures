@@ -296,6 +296,7 @@ type Compiled struct {
 	byName              map[string]int32
 	newlinesSignificant bool
 	pool                sync.Pool // of *parseState
+	scratch             sync.Pool // of *astScratch, for Tree.ToAST
 
 	// expNames[id] is the text of expected-id id; expIDs is the inverse,
 	// used only while compiling (nil afterwards). Ids are interned BY STRING VALUE, so two
