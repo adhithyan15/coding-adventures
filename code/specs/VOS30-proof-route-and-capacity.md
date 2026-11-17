@@ -1,9 +1,10 @@
 # VOS30 -- The Machine-Proof Route (X3) and Solver Capacity
 
-**Status:** Draft, specified before the code (backlog VOS-028a, spec only). No
-probe, no executor and no certificate exists. Section 8 holds numbers from an
-advisor's throwaway experiment; they are calibration, not evidence, and the
-committed probe of VOS-028b replaces them.
+**Status:** The probe of section 9 is built (backlog VOS-028b): its committed
+results, the generated table of section 9.8 and the decision of section 8.5 are
+the evidence. No executor and no certificate exists (VOS-029). The numbers of
+section 8.2 are the advisor's throwaway experiment; they are calibration, not
+evidence, and the generated table supersedes them on every disagreement.
 
 **Layer:** Child of the umbrella. It makes concrete the third stage of
 [VOS00](VOS00-verified-os-program.md) section 10.1 (proof on the compiled
@@ -873,12 +874,22 @@ certificate it produces is used as evidence of anything about the OS.
 
 ### 8.1 What this section is
 
-A decision aid. It states the advisor's calibration (8.2), the validity limits
-that qualify it (8.4, repeated in the probe's output), the thresholds that turn numbers into a decision (8.3), and the
-**current decision state** (8.5). When VOS-028b lands, the generated table
-(section 9.8) replaces the tables of 8.2 and 8.5 states the decision from it.
+A decision aid. It states the advisor's calibration (8.2, superseded), the
+validity limits that qualify every number (8.4, repeated in the probe's output),
+the thresholds that turn numbers into a decision (8.3), and the **current
+decision state** (8.5). VOS-028b has landed: the generated table (section 9.8)
+is the evidence, 8.2 is kept as the record of what the advisor saw, and 8.5
+states the decision from the table.
 
 ### 8.2 Advisor calibration (scratch, not reproducible from the repository); superseded by the generated table from VOS-028b
+
+> **Superseded by VOS-028b.** Everything in this subsection is the advisor's
+> scratch measurement, kept as history and as a cross-check, and **no number in
+> it may be quoted as evidence of capacity**: the generated table of section 9.8
+> (maximum over at least five seeds, hash-pinned, checked for drift, under the
+> *default* checker limits) wins on every disagreement. The probe's instances are
+> not the advisor's (section 9.10 says how they differ), so the tables below
+> compare by order of magnitude only.
 
 Measured by the advisor in a throwaway scratch crate on an arm64 Mac, release
 build, with the in-repository `bit-blaster`, `cdcl-sat` and `drat-check`
@@ -1044,7 +1055,23 @@ Print these with every number, because each one limits what it supports:
 5. **One machine, one solver build.** Seconds are host-specific; the
    conflicts and work are the portable part.
 6. **The advisor numbers raised the `drat-check` limits**, so every proof there
-   was checkable; under the shipped limits many are not (the REJECT rows).
+   was checkable; under the shipped limits many are not (the REJECT rows). The
+   probe never raises a limit: a proof the default limits reject is a red row.
+7. **The D instances share one symbolic base index** (the fields of one table
+   entry, the shape of a thread-table operation): `k` accesses at word offsets
+   `i + j` of a T-word table. `k` *independent* symbolic indices (a product of
+   `T^k` cases when split) are not measured, and `i` has `log2 T` bits, so the
+   out-of-range case of section 4.3 does not arise.
+8. **Liveness is exact only for small cones.** Guard G2 decides a declared bit
+   that random flips did not find sensitive by a SAT query when the cone has at
+   most 4,000 AND nodes; for a larger cone the count rests on 256 random
+   assignments and the row says so in its `note`.
+9. **Both sides run on one stepper.** The code side and the reference side are
+   executed by the same symbolic stepper; only the *circuits* of the diverged
+   instructions differ. A stepper bug that affects both sides alike is invisible
+   to the miter; the checks against it are the probe's differential of the
+   stepper against the concrete simulator, the independent concrete evaluator of
+   the replay, and the replay of every control on the real `riscv-simulator`.
 
 ### 8.5 Current decision state
 
@@ -1119,8 +1146,8 @@ guards, the measurements, the budget, the result file, the table and its check.
 * Results: `code/specs/data/vos30-capacity-results.json`, written only by the
   tool, and the generated table of section 9.8.
 
-**Instance generation: a probe-private minimal symbolic RV32I stepper** of about
-300 lines, over hand-assembled instruction sequences:
+**Instance generation: a probe-private minimal symbolic RV32I stepper** (a few
+hundred lines, `cpu.rs`), over hand-assembled instruction sequences:
 
 * built on the `bit-blaster` (`Aig`, `bv`, `Tseitin`);
 * sequences assembled with `riscv-encoder` and **decoded with
@@ -1142,33 +1169,50 @@ rejected, with the reason, so they are not reopened:
 
 ```
 vos-capacity-probe list
-vos-capacity-probe run --tier quick|full [--only A1,B3] --out results.json
-vos-capacity-probe check results.json
-vos-capacity-probe table
+vos-capacity-probe run --tier quick|full [--only A1,B3] [--jobs N] [--seeds N] --out results.json
+vos-capacity-probe check results.json [--jobs N]
+vos-capacity-probe table [--check | --write] [--results FILE] [--spec FILE]
+vos-capacity-probe decide [--results FILE]
+vos-capacity-probe row --spec JSON --wall SECONDS          (the child process of run)
 ```
 
-* `list` prints each experiment, its knob values per tier and its guards.
+Exit status 0 is success, 1 means the command ran and found violations, 2 means a
+malformed command line or an unreadable input (a gate never confuses the two).
+
+* `list` prints each experiment, its knob counts per tier and its guards.
 * `run` executes the selected experiments, **one child process per row** so peak
-  resident memory is attributable (the run script wraps each child with
-  `/usr/bin/time -l` on macOS or `-v` on Linux; the tool parses it), and
-  appends one row per `(experiment, knob)`.
+  resident memory is attributable (each child is wrapped with `/usr/bin/time -l`
+  on macOS or `-v` on Linux; the tool parses it), and records one row per
+  `(experiment, knob, seed)`. At least five seeds per knob (`--seeds` may raise
+  it, never lower it). `--tier quick` also applies the BUILD gate of section 9.3.
 * `check` validates a results file against the schema and the guards, **re-runs
   every quick-tier row** and compares digests, verdicts, controls and conflict
-  counts, and exits non-zero on any violation; full-tier rows are validated for
-  schema and guards only and are regenerated by a reviewer (section 9.6).
-* `table` renders the markdown table of section 9.8 from the committed results
-  file; with `--check` it fails if the VOS30 spec's generated block differs.
+  counts, requires that the file contain every quick row of the current plan, and
+  exits 1 on any violation; full-tier rows are validated for schema and guards
+  only and are regenerated by a reviewer (section 9.6).
+* `table` renders the markdown block of section 9.8 from the committed results
+  file; `--check` fails if the VOS30 spec's generated block differs, and
+  `--write` splices the block between the markers.
+* `decide` prints the section 8.3 outcome and the conditions that placed it.
 
 ### 9.3 BUILD
 
-The BUILD file runs the unit tests and `run --tier quick` only. The quick tier
-takes the smallest knob of each experiment, finishes in **under 30 seconds**, and
-asserts **verdicts and SAT controls, never timings** (timings differ per host;
-asserting them would be a flaky gate). **The quick tier fails BUILD on any row
-that is `unknown`, `killed`, `oom`, `crashed` or `refused`**, with one exception:
-the E1 `N = 11` row, which *must* be `refused` with W0706 (a missing refusal
-fails). A guard violation (section 9.4) fails BUILD. The full tier is run by hand
-or nightly; its output is committed by a person who reviews it (section 9.6, "what
+The BUILD file runs, in release mode (SAT is slow in a debug build): the unit and
+integration tests; `run --tier quick`; `check` of the committed results file;
+`table --check`; and `gen_evidence --check` of the fixture. **Which part runs in
+CI** (the spec was silent, so the choice is stated here): the quick tier and the
+`check` re-run of the *same* quick-tier rows, in a few seconds of solver time;
+the full tier is a recorded offline run that BUILD never executes. The quick tier
+takes the smallest knob of each experiment at every recorded seed (the plan's
+`quick` flag), and asserts **verdicts and SAT controls, never timings** (timings
+differ per host; asserting them would be a flaky gate). **The quick tier fails
+BUILD on any row that is `unknown`, `killed`, `oom`, `crashed`, `sat` (an UNSAT
+shape that is not) or `refused`**, with one exception: the E1 `N = 11` row, which
+*must* be `refused` with W0706 (a missing refusal fails). A B1 row must be
+`collapsed` (an identical sequence that does not collapse is a guard failure),
+and every UNSAT, collapsed or enumeration row must carry a passing G3 control. A
+guard violation (section 9.4) fails BUILD. The full tier is run by hand or
+nightly; its output is committed by a person who reviews it (section 9.6, "what
 `check` can and cannot verify").
 
 ### 9.4 Validity guards, on every row
@@ -1202,7 +1246,19 @@ cone can mention an input bit and still ignore it):
   that bit and see whether any output bit changes; a bit is *sensitive* if it ever
   does. (Where an instance is small, a SAT query "two inputs differing only in
   this bit give different outputs" replaces the sampling.) `entropy_bits` is the
-  number of sensitive bits.
+  number of sensitive bits. **As built:** the sampling is the first stage and
+  the SAT query decides every bit it did not find sensitive, for a cone of at
+  most 4,000 ANDs (and `undecided bits x ANDs` at most 400,000); a larger cone is
+  measured by sampling alone, and a very large one by a sample of the bits with
+  the count scaled, and the row says so in its `note`. (Sampling alone calls a
+  64-bit `pick` dead: a bit matters only when no higher bit is set, which random
+  assignments reach for about nine bits of any width.) In the cut form (inputs
+  `...@c` and `...@r`, one per side) each side is measured against *its own*
+  declared inputs. For a **self-composition** (C1, C2) the output is
+  secret-independent by design, so the two cones measured are the two sides of
+  the equivalence that cancels the secret (`code(s) XOR ref(s)` taken apart), not
+  the output. For a **chain** the counts are summed over the segments that have
+  any AND at all; a chain with none is `collapsed`.
 * A row is `collapsed` if, on **either** side's output cone (the rule must hold for
   both sides, so it fails closed), fewer than **50% of the declared bits are sensitive**, or
   if the AND count of the miter cone is below **25% of the AND count of the same
@@ -1260,13 +1316,20 @@ silent drop):
    million conflicts); past it the row is `unknown`.
 2. **Wall timeout, 120 s per row**, as a loop over `set_conflict_budget(Some(20_000))`
    with a clock check between slices (`cdcl-sat/src/solver.rs:422`; the budget
-   counts down per slice, so it is reset each iteration). A timeout is
-   `result = "unknown"` with the conflicts used so far.
+   counts down per slice, so it is reset each iteration; as built a slice also
+   ends at 4 x 10^8 watch-list visits, `Solver::set_work_budget`, so the clock is
+   read about every second even on a million-clause formula where 20,000
+   conflicts would take minutes). A timeout is `result = "unknown"`, cap `wall`,
+   with the conflicts used so far. A chain also stops between two obligations.
 3. **Whole-process-group kill.** The row runs as a child in its **own process
    group**; the parent kills the *group* on the wall timeout, covering **every
    stage**: instance generation and CNF writing, the solve, and `drat-check`, not
    only the solver loop. A stage that never returns (a pathological generator, a
    checker running to its work limit) is thereby bounded too. Result `killed`.
+   As built the kill is at **300 s**: 120 s of solving, 30 s for the control
+   stage and 150 s of slack, because the checker's own work limit (2^32 visits)
+   bounds one check to about two minutes; a row that merely needs its check is
+   red for the right reason, not `killed`.
 4. **Enforced memory cap per child**: the parent polls the child's resident set
    **every 50 ms** (`/usr/bin/time` output is only a final figure) and kills the
    group above **2 GB** (result `oom`). The row records **which cap tripped**
@@ -1307,6 +1370,7 @@ both are run and recorded:
   "limits": { "timeout_s": 120, "conflict_slice": 20000, "proof_conflict_cap": 1000000,
               "rss_cap_kb": 2097152, "seeds": 5,
               "drat_check": { "max_vars": 1048576, "max_work": 4294967296 } },
+  "regeneration": null | { "reviewer": "<name>", "host": "<host>" },
   "rows": [ Row, ... ]
 }
 ```
@@ -1323,7 +1387,7 @@ both are run and recorded:
 | `control_instance_sha256` | string | SHA-256 of the control's DIMACS |
 | `ands`, `vars`, `clauses` | integer | size of the miter cone (measured from the AIG) and CNF |
 | `entropy_bits`, `declared_bits` | integer | symbolic input bits the output cone depends on, and the declared inputs (G2) |
-| `result` | string | `unsat`, `sat`, `unknown`, `collapsed`, `refused`, `killed`, `oom`, `crashed` |
+| `result` | string | `unsat`, `sat`, `unknown`, `collapsed`, `refused`, `killed`, `oom`, `crashed`; and `pass`, `fail` for the enumeration rows E1 and E2 |
 | `collapsed_reason` | string or null | the enum of section 4.5 |
 | `control` | object | `{ "result": "sat", "model_checks_cnf": true, "replayed": true }` (G3) |
 | `conflicts`, `propagations` | integer | solver counters (summed over steps for chains) |
@@ -1373,16 +1437,16 @@ the quick tier uses the smallest value only.
 | **B1** | A straight-line sequence against itself (divergence 0%) | lengths 200, 500, 1000; **must report `collapsed`**; measures build time and memory only |
 | **B2** | *Monolithic*, a share of instructions encoded differently in the reference | length 25, 50, 100, 200, 500, 1000, times divergence 5%, 25%, 100% |
 | **B3** | B2 with cut points: per instruction, then per block every 8 and every 32. **Total and worst-step conflicts, certified mode: the number that funds VOS-029.** | same grid; both modes of section 9.5, at least 5 seeds |
-| **B4** | *Arithmetic with no cut point*: n-term re-association; `x*5` against `(x<<2)+x`; `base + i*12` against shift-add | n = 2 to 7 at W = 32; W = 8, 16, 32 |
+| **B4** | *Arithmetic with no cut point*: n-term re-association; `x*5` against `(x<<2)+x`; `base + i*12` against shift-add | n = 3 to 7 at W = 32 (n = 2 is one adder against itself); W = 8, 16, 32 |
 | **C1** | *Self-composition* of A and B: two copies, public inputs shared, secrets fresh, observable = pc/address/count trace plus public outputs (as `prove_with_custom_inputs`, `warrant-ir/src/ct_proof.rs:222`, and VER20 section 2.3) | the same sweeps as A and B |
 | **C2** | A secret-dependent load index (**must be SAT**) and a padded constant-time variant (UNSAT) | T = 8, 16, 64 |
-| **D1** | *Memory mux*: T words, k chained symbolic load-modify-store, the `sym.rs` eq/ite chain against a mux tree | T = 4 to 256, k = 1 to 16 |
+| **D1** | *Memory mux*: T words, k chained symbolic load-modify-store at offsets `i + j` of one symbolic base index, the `sym.rs` eq/ite chain against a mux tree | T = 4, 8, 16, 64, 256, k = 1, 2, 4, 8, 16 |
 | **D2** | D1 with concrete offsets | same grid |
 | **D3** | D1 case-split on the index: T obligations, reported as **sum and max** | same grid |
 | **D4** | Both sides share the mux structure, with cut points after each access | same grid |
-| **E1** | *Enumeration throughput* of the generated by-value harness on the committed fixture `vos-probe-ready`. Run-only cases per second, compile time separate. Binder product 256, 65,536, 262,144 (insert at N = 10) and 393,216; **N = 11 must be refused (W0706)**. The `Impl(mask: U8)` form against the 8-`Bool` form. G3 control: a mutated generated claim that the harness must report failing | as stated |
-| **E2** | *Enumeration memory*: record widths 1, 8, 64, 256 bytes times case counts; where the 64 MiB domain bound (VER04m E10) bites before 400,000 cases. G3 control: a record whose width violates the bound must be refused | as stated |
-| **F** | DRAT size and check time on every UNSAT row: pass under default limits, bytes per conflict, check/solve ratio | derived from all UNSAT rows |
+| **E1** | *Enumeration throughput* of the generated by-value harness: the real `vos-sched-fp-bitmap` at N = 8 (binder products 256 and 65,536) and the fixture `vos-probe-ready` (65,536 in the 8-`Bool` form and in the `Impl(mask: U8)` form, 262,144 for insert at N = 10, 393,216); **N = 11 must be refused (W0706)**. Run-only cases per second (the harness is compiled into the probe: compile time is the probe's build). G3 control: the same claim against a broken adapter, which the harness must report failing; the refusal row's control is the same document at N = 10, which must be accepted | as stated |
+| **E2** | *Enumeration memory*: `k` binders of `Bytes<W>` (W = 1, 8, 64, 256, 4096; k = 1 to 4): the generator's own accounting of cases and domain bytes (`domain::resolve_binders`), and for an accepted claim the materialised domains and the counted product; where the 64 MiB domain bound (VER04m E10) bites before 400,000 cases. G3 control: a binder wider than the 4096 cap must be refused (W0707) | as stated |
+| **F** | DRAT size and check time on every UNSAT row: pass under default limits, bytes per conflict, check/solve ratio | derived constants printed under the generated table (section 9.8), not a row of its own |
 
 Notes on a few of them, because the shape explains the choice:
 
@@ -1424,28 +1488,30 @@ prove any entry verifiable. Seeds >= 5, maximum shown. <full-tier regeneration
 banner if applicable>
 ```
 
-The table is placed in this document between the markers
-
-```
-<!-- vos30-table:begin -->
-<!-- vos30-table:end -->
-```
-
-by VOS-028b (the markers are not present in the spec until a generated table
-exists, because an empty block would look like a result). `table --check`
+The table is placed in this document between a pair of HTML-comment markers
+named `vos30-table:begin` and `vos30-table:end` (they are written out only once,
+around the block itself, because the checker finds the first pair; the markers
+were not present in the spec until a generated table existed, because an empty
+block would look like a result). `table --check`
 regenerates the block and compares it byte for byte with the spec, failing on
 **drift**. It **also fails if section 8.5 states a decision** (one of the three
-rows of section 8.3) **while the generated block is absent or empty**, and if the
-results file is absent while the block is present. **No number in the table is
-hand-typed.** VOS-028b also replaces the tables of section 8.2 with a pointer to
-the generated one and states the decision of section 8.5 from it.
+rows of section 8.3, after the words `Decision (VOS-028b)` in bold) **while the
+generated block is absent or empty**, if the stated row is not the row the results
+give, if the results file is absent while the block is present, and if the results
+file exists but the block does not. **No number in the table is hand-typed.**
+VOS-028b keeps the tables of section 8.2 as history under a *superseded* banner
+(so that the comparison with the advisor stays readable) and states the decision of
+section 8.5 from the generated table.
 
 ### 9.9 Timeline
 
-The probe is cheap to write (about 300 lines of stepper, plus the experiment
-harness) and the full tier may take hours; BUILD runs only the quick tier.
-Interpretation is part of the PR: it ends with the decision sentence of
-section 8.5, filled in.
+The probe was cheap to write (the stepper, the shapes and the experiment harness
+are a few thousand lines with their tests) and the full tier takes hours; BUILD
+runs only the quick tier. Interpretation is part of the PR: it ends with the
+decision sentence of section 8.5, filled in. **Status: done in the VOS-028b PR**
+(stacked on #19571); the full tier was run by the implementer and still needs
+regeneration by a named reviewer on a stated host before the numbers count as
+evidence (section 9.6).
 
 ### 9.10 Implementation decisions of VOS-028b
 
@@ -1491,14 +1557,70 @@ are totals, `drat_bytes`, `check_work` and `pass_default_limits` describe the
 solve-time clause of green uses `worst_step_solve_ms`.
 
 **Timeouts.** The solver loop stops itself at 120 s (cap `wall`, result `unknown`);
-the parent kills the process group 30 s later if the child is still running in any
-stage (result `killed`, cap `wall`).
+the control stage has its own 30 s; the parent kills the process group at 300 s
+if the child is still running in any stage (result `killed`, cap `wall`).
 
-**Deviations from the text above, with the reason.** E1 and E2 rows have no solver
-fields (`null`); their "seeds" are repetitions (the counts are deterministic, the
-rates are samples, and the table shows the slowest). The `Row` of a refused E1 row
-carries `result = "refused"` and `green = false`; BUILD expects exactly that row
-(section 9.3).
+**Deviations from the text above, with the reason.**
+
+* E1 and E2 rows have no solver fields (`null`); their "seeds" are repetitions
+  (the counts are deterministic, the rates are samples, and the table shows the
+  slowest). Their `result` is `pass`, `fail` or `refused` (the closed set of
+  section 9.6 gains `pass` and `fail` for them) and their control is `caught`:
+  a broken adapter that the harness reports failing, or a binder width over the
+  cap that the generator refuses. A refused E1 row carries `result = "refused"`
+  and `green = false`; BUILD expects exactly that row (section 9.3).
+* **B4 starts at three terms.** `n = 2` is `a + b` against `a + b`: one adder,
+  hash-consed into itself, a collapse by construction and not a re-association.
+* **D sweep.** `T` in 4, 8, 16, 64, 256 and `k` in 1, 2, 4, 8, 16 (a grid of 25
+  knobs per experiment); D4 and B3 run both modes.
+* **The incremental mode is informational** and logs no proof: its `green` is the
+  same predicate without the DRAT and default-limit clauses, and the decision
+  never reads it.
+* **A chain's `green`** is the section 8.3 predicate per obligation: the worst
+  obligation's conflicts and solve time, the largest DRAT, the checker accepting
+  every obligation. The total is in `conflicts` and `solve_ms`.
+* **E1 digests the document.** An E1 row's `instance_sha256` is the SHA-256 of the
+  Warrant document the harness was generated from, not of the generated text: a
+  regeneration of a harness by a newer generator must not break a probe whose
+  claim set is unchanged, while a changed claim changes the document and the
+  case counts.
+* **The real scheduler's harness installs its allocation observer as the
+  probe's global allocator** (a generated `unsafe impl GlobalAlloc`, inert
+  outside an observed call: one thread-local check per allocation). It changes no
+  conflict or work count; the probe cannot avoid it without editing a generated
+  file (backlog VOS-D091).
+
+### 9.11 The decision procedure, as built
+
+`decide` (and the line printed under the generated table) applies section 8.3 to
+the rows. The definitions it fixes, where 8.3 left them to the implementation:
+
+* A **group** is every seed of one `(experiment, mode, knob)`. A **counted** row
+  is one that is not `collapsed`. A group is **green** iff at least one row is
+  counted and every counted row is green. A group that is missing from the file,
+  or whose every seed is collapsed, is **not green** (unclassified is red).
+* **Row 1** (infeasible) holds iff any of these required shapes is not green, at
+  the finest decomposition tested: A1 at N = 32; D3 at T = 8 with k = 16 (one
+  obligation per index); B3 in certified mode with a cut after every instruction
+  at 200 instructions and 25% divergence; C1 on a B body of 200 instructions at
+  25% divergence.
+* **Row 2** (feasible, reduced and mitigated) holds, if row 1 does not, iff any
+  of: B3 (certified, 25% divergence) is green at 1,000 instructions with a cut
+  after every instruction but not with a cut every 32 (green only with cuts at 8
+  instructions or fewer), or is green at 200 instructions but not at 1,000 (only
+  up to about 200); D3 at k = 16 is not green at T = 64 or at T = 256 (green only
+  for T at most 16); B4 re-association is not green at some n of 5, 6, 7 (only n at
+  most 4).
+* **Row 3** (feasible as planned) holds, if neither row 1 nor row 2 does, iff all
+  of: A1 and A2 are green at N = 32 and 64; B3 (certified, 25% divergence) is
+  green at 1,000 instructions for some cut granularity, with a worst step of at
+  most 10,000 conflicts and a total (solve plus check) of at most 60 s; D2 and D3
+  are green at T = 64, k = 16; C1 on a 1,000-instruction body at 25% divergence is
+  green.
+* If none of the three holds, the outcome is row 1 and the printed reasons say
+  which row-3 condition failed.
+
+The unit tests of `results.rs` carry a negative control for every clause.
 
 ---
 
