@@ -40,6 +40,10 @@ CASES = [
     (SPECS / "ct-compare.warrant", HERE / "ct-compare.oracle-enumeration.json", 1 << 16),
     (HERE / "enum_forms_v1.warrant", HERE / "enum_forms_v1.oracle-enumeration.json", 1 << 10),
     (HERE / "enum_forms_v0.warrant", HERE / "enum_forms_v0.oracle-enumeration.json", 1 << 16),
+    # 13 suites over concat/take/drop, and/or/implies/not, ordering comparisons in `expected`,
+    # exact Nat/Int arithmetic, wraps at U16/U32/U64, Bytes literals, a model call in `admit`
+    # and wrapping pure guards under or / =>  (from the S3b review)
+    (HERE / "enum_probe.warrant", HERE / "enum_probe.oracle-enumeration.json", 1 << 10),
 ]
 
 #: row key in the oracle's ``emit`` -> key in the parity view (the others are dropped).
