@@ -259,7 +259,7 @@ const PINS: [(&str, &str); 15] = [
     ),
     (
         "dispatch_covers_run",
-        "6bbbe200532d6fef470c4bea0e925b242d804bfd622bd62ff654d4f5da5f25cb",
+        "fc7eb1b7a105aacc06fab5582206bca407535bd24fd7ec622a31b813670d9015",
     ),
     (
         "dispatch_covers_idle",
