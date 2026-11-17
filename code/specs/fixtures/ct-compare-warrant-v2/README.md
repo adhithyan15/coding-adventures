@@ -51,6 +51,21 @@ A change to `code/specs/ct-compare.warrant`, to anything under this directory or
 (`code/programs/go/build-tool/repository_inputs.go`, the rows named `rust/warrant-corpus-gen` and
 `python/warrant-oracle`).
 
+## Bumping the generator version
+
+A new `warrant-corpus-gen` version changes `generator.version` in every corpus it writes, so
+all of these change together (D13); the builds fail until each is done and the diffs reviewed:
+
+1. `code/packages/rust/warrant-corpus-gen/Cargo.toml` and `code/packages/rust/Cargo.lock`.
+2. Regenerate this directory (the command above) and review the diff: only `generator.version`
+   should change unless the generator changed behaviour.
+3. Regenerate `code/packages/python/warrant-oracle/tests/fixtures/accept-blind-v2/corpus/`
+   (the generator's test `the_committed_accept_blind_fixture_is_what_the_generator_writes`
+   compares its bytes).
+4. `--expect-generator warrant-corpus-gen@<version>` in `code/packages/python/warrant-oracle/BUILD`
+   and `BUILD_windows`, and the version pinned in `tests/test_verify_v2.py`.
+5. The `corpus.json` hash in the Hashes table below.
+
 ## Owner decisions of 2026-11-17 recorded here (VER04r 16.8)
 
 * **[D12] Claims are named by suite id** (`warrant/ct_compare/exhaustive/<claim>`) in

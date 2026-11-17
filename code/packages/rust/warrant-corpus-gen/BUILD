@@ -12,7 +12,9 @@ d=$(mktemp -d) && cd ../../../.. && g="cargo run -q --manifest-path code/package
 # CV2-S3d: the committed ct-compare v2 fixture is exactly what this generator writes. --check
 # compares corpus.json, cases.tfv and every chunk file byte for byte, and corpus.json records
 # `generator` {name, version}, so a version bump of this crate fails the line until the fixture
-# is regenerated and the diff reviewed (VER04r 16.8 [D13]). --profile names the fixture's own
+# is regenerated and the diff reviewed (VER04r 16.8 [D13]); the same bump also changes the oracle's
+# accept-blind-v2 fixture (the_committed_accept_blind_fixture_is_what_the_generator_writes compares
+# its bytes, generator.version included) and the oracle's --expect-generator pin. --profile names the fixture's own
 # hand-written corpus.profile, so an edit to it moves profile_sha256 and fails here ([D14]);
 # --bindings cross-checks the profile's faults against evidence.bindings (VER04r 8.4). Edits to
 # the spec, the fixture or the bindings select this package through a build-tool consumer row
