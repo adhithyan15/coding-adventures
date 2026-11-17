@@ -3,4 +3,6 @@
 //! Work in progress across the S3a commits; the full crate documentation arrives with the last one.
 
 pub mod error;
+pub mod ir;
 pub mod json;
+pub mod types;
