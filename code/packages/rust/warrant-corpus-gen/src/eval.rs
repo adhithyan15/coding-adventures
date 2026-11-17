@@ -69,7 +69,7 @@ use crate::arith::{
 };
 use crate::error::{code, GenError};
 use crate::ir::{Arith, Cmp, Ir, Logic};
-use crate::lower::LoweredModel;
+use crate::lower::{LoweredModel, LoweredOp};
 use crate::value::{ill_typed, Value};
 
 /// The most model frames that may be active at once (VER04 section 2, VER04r 14).
@@ -124,6 +124,11 @@ pub type Vars<'v> = [(&'v str, Value)];
 #[derive(Debug, Clone)]
 pub struct Program<'a> {
     models: &'a [LoweredModel],
+    /// The document's operations: the trace checks every subject call against its
+    /// op's `admit` (VER04r 6, [D19]).  Empty unless [`Program::with_ops`] set it.
+    ops: &'a [LoweredOp],
+    /// A v0 document: a wrap while evaluating a callee's `admit` is refused ([D18], 3.3 rule 2).
+    v0: bool,
     index: HashMap<&'a str, usize>,
     /// `wraps[i]`: model `i`'s call closure contains a fixed-width `add sub mul neg`.
     wraps: Vec<bool>,
@@ -166,12 +171,128 @@ impl<'a> Program<'a> {
         }
         Program {
             models,
+            ops: &[],
+            v0: false,
             index,
             wraps,
             fails,
             sabotage: Sabotage::None,
             max_tasks: MAX_EVAL_TASKS,
         }
+    }
+
+    /// The same program that also knows the document's operations, so that [`Program::trace`]
+    /// refuses a subject call whose arguments are outside its op's `admit` (VER04r 6, [D19]).
+    /// `v0` says the document is v0: then a wrap while evaluating an `admit` is refused
+    /// (3.3 rule 2 applies to every evaluation the generator performs), though it is never
+    /// added to the recorded `wraps`.
+    pub fn with_ops(mut self, ops: &'a [LoweredOp], v0: bool) -> Program<'a> {
+        self.ops = ops;
+        self.v0 = v0;
+        self
+    }
+
+    /// The `admit` of operation `op`, with the op, if it has one.
+    fn op_admit(&self, op: &str) -> Option<(&'a LoweredOp, &'a Ir)> {
+        let lop = self.ops.iter().find(|o| o.name == op)?;
+        lop.admit.as_ref().map(|a| (lop, a))
+    }
+
+    /// Does `ir` contain a subject call of an operation that has an `admit`?  Only such a
+    /// body needs the per-case admit check (and so the trace).
+    pub fn calls_admitted_op(&self, ir: &Ir) -> bool {
+        let mut found = false;
+        ir.walk(&mut |n| {
+            if let Ir::Subject { op, .. } = n {
+                found |= self.op_admit(op).is_some();
+            }
+        });
+        found
+    }
+
+    /// The static half of [D19]: a call of an operation with an `admit` whose `admit` reads a
+    /// parameter whose argument contains a subject call cannot be checked at generation (the
+    /// generator never learns what the inner call returns), so it is refused, never skipped.
+    /// A subject-dependent argument for a parameter the `admit` does not read is fine
+    /// (`power(add(a, b), 2u64)` with `admit` `exp <= 4294967295`): it is simply not an input
+    /// of the check.
+    ///
+    /// # Errors
+    ///
+    /// `W0701`.
+    pub fn check_admit_calls(&self, ir: &Ir) -> Result<(), GenError> {
+        let mut bad: Option<String> = None;
+        ir.walk(&mut |n| {
+            if let Ir::Subject { op, args, .. } = n {
+                if bad.is_some() {
+                    return;
+                }
+                if let Some((lop, admit)) = self.op_admit(op) {
+                    let mut reads: Vec<String> = Vec::new();
+                    admit.walk(&mut |m| {
+                        if let Ir::Var(v) = m {
+                            reads.push(v.clone());
+                        }
+                    });
+                    let dependent = lop
+                        .params
+                        .iter()
+                        .zip(args)
+                        .any(|((p, _), a)| a.has_subject() && reads.contains(p));
+                    if dependent {
+                        bad = Some(op.clone());
+                    }
+                }
+            }
+        });
+        match bad {
+            None => Ok(()),
+            Some(op) => Err(GenError::new(
+                code::W0701,
+                "",
+                format!(
+                    "the admit of op `{op}` reads a parameter whose argument depends on a \
+                     subject result, so it cannot be checked at generation (VER04r 6)"
+                ),
+            )),
+        }
+    }
+
+    /// Are the argument values `args` inside the `admit` of operation `op`?  `None` is an
+    /// argument the generator cannot know (it depends on a subject result): the plan has
+    /// refused every call whose `admit` reads one, so the `admit` never looks at it.  An
+    /// operation without an `admit` admits everything.  Wraps counted here are not the
+    /// document's (VER04r 3.3 rule 1 counts the nodes of the claim, not this check).
+    ///
+    /// # Errors
+    ///
+    /// Every [`Program::eval`] error.
+    pub fn admits_call(&self, op: &str, args: &[Option<Value>]) -> Result<bool, GenError> {
+        let Some((lop, admit)) = self.op_admit(op) else {
+            return Ok(true);
+        };
+        let pvars: Vec<(&str, Value)> = lop
+            .params
+            .iter()
+            .zip(args)
+            .filter_map(|((n, _), v)| v.clone().map(|v| (n.as_str(), v)))
+            .collect();
+        let mut st = Stats::default();
+        let admitted = self.eval(admit, &pvars, &mut st)?.as_bool()?;
+        if self.v0 && st.wraps > 0 {
+            // [D18]: not recorded in `wraps`, but refused: the v0 harness would evaluate the
+            // same `admit` as `Nat`.
+            return Err(GenError::new(
+                code::W0701,
+                "",
+                format!(
+                    "U8 arithmetic wraps while evaluating the admit of op `{op}`; v0 harness \
+                     evaluates U8 as Nat (VER04r 3.3 rule 2)"
+                ),
+            )
+            .in_case());
+        }
+        Ok(admitted)
     }
 
     /// The same program with a seeded-wrong evaluator.
@@ -499,9 +620,26 @@ impl<'a> Program<'a> {
                 continue;
             }
             match node {
-                Ir::Subject { args, .. } => {
+                Ir::Subject { op, args, .. } => {
                     calls += 1;
-                    stack.extend(args.iter());
+                    if self.op_admit(op).is_some() {
+                        // [D19]: this call is on the trace, so its arguments (pure: the
+                        // plan refuses the rest) must be inside the callee's `admit`.
+                        let mut vals = Vec::with_capacity(args.len());
+                        for a in args {
+                            vals.push(if a.has_subject() {
+                                None
+                            } else {
+                                Some(self.eval(a, vars, &mut Stats::default())?)
+                            });
+                        }
+                        if !self.admits_call(op, &vals)? {
+                            return Err(outside_admit(op));
+                        }
+                    }
+                    // Left to right, as the oracle walks: the first offending call of a case
+                    // is the same one in both (a stack pops the last pushed first).
+                    stack.extend(args.iter().rev());
                 }
                 Ir::If(c, t, e) => {
                     if t.has_subject() || e.has_subject() {
@@ -531,7 +669,7 @@ impl<'a> Program<'a> {
                         stack.push(a);
                     }
                 }
-                other => stack.extend(other.children()),
+                other => stack.extend(other.children().into_iter().rev()),
             }
         }
         Ok(calls)
@@ -560,6 +698,17 @@ impl<'a> Program<'a> {
         }
         Some(calls)
     }
+}
+
+/// The refusal of [D19] for a subject call outside its op's `admit` (the caller adds the
+/// claim and the admitted-case ordinal).
+pub fn outside_admit(op: &str) -> GenError {
+    GenError::new(
+        code::W0701,
+        "",
+        format!("a call of op `{op}` has arguments outside the op's admit (VER04r 6)"),
+    )
+    .in_case()
 }
 
 /// The work items of the iterative evaluator.

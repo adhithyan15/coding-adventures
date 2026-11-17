@@ -36,7 +36,17 @@ from dataclasses import dataclass, field
 from . import ast as A
 from .domains import Desc, _Listed, check_budget, demote, descriptor_for
 from .errors import OracleError
-from .ir_eval import Program, compile_calls, compile_trace, fixed_arith_over_subject, may_wrap
+from .ir_eval import (
+    OutsideAdmit,
+    Program,
+    WrapsInAdmit,
+    admit_check_cost,
+    compile_admit_check,
+    compile_calls,
+    compile_trace,
+    fixed_arith_over_subject,
+    may_wrap,
+)
 from .lower import BOOL, LoweredSuite, Spec, walk
 from .stream import (
     chunk_digest_framing,
@@ -83,6 +93,12 @@ class Work:
         self.walked += ordinals
         if self.walked > MAX_TOTAL_WORK_FULL:
             raise OracleError("limit", "total analysis work bound exceeded")
+
+    def charge_ir(self, ir_work: int) -> None:
+        """Charge IR work that is not a recorded ``ir_cost`` (the check of [D19])."""
+        self.ir += ir_work
+        if self.ir > self.max_ir:
+            raise OracleError("limit", "total IR work bound exceeded")
 
     def charge(self, ordinals: int, ir_cost: int) -> None:
         self.cases += ordinals
@@ -237,6 +253,12 @@ class SuitePlan:
         self._wraps_needed = may_wrap(prog, suite.admit) or self._trace is not None
         self._wraps: int | None = None
         self.calls = compile_calls(prog, suite.body, tenv)
+        # [D19]: a call of an op with an ``admit`` is checked on every admitted case.
+        self._admit_check = compile_admit_check(prog, suite.body, tenv, spec.version == "v0")
+        # The check is IR work too, charged per product ordinal (conservatively), before any
+        # case runs; the recorded ``ir_cost`` below does not include it.
+        self.work.charge_ir(self.product * admit_check_cost(prog, suite.body, tenv))
+        self._admits_checked = False
         self.expected = None
         self.enc_result = None
         if suite.kind == "reference":
@@ -491,13 +513,46 @@ class SuitePlan:
         self._wraps = stats.wraps - before
         return self._wraps
 
-    def iter_admitted(self):
+    def check_admits(self) -> None:
+        """[D19] (VER04r section 6): every admitted case's subject calls are inside the
+        callee's ``admit``.
+
+        One dedicated pass over the admitted cases in order, so the first offender is the
+        lowest admitted-case ordinal (the address ``<suite id>@<i>``).  It always covers the
+        whole product, whatever depth a caller runs: a hole at case 2^20 is a defect of the
+        document, not of the slim set.  Not metered (it is part of enumeration, which the
+        generator does not charge twice) and skipped when no call is of an op with an
+        ``admit``.
+        """
+        check = self._admit_check
+        if check is None or self._admits_checked:
+            return
+        for i, (_ordinal, env) in enumerate(self.iter_admitted(meter=False)):
+            try:
+                check(env)
+            except WrapsInAdmit as exc:
+                raise OracleError(
+                    "generation",
+                    f"W0701: claim `{self.suite.claim}`: U8 arithmetic wraps while evaluating "
+                    f"the admit of op `{exc.op}`; v0 harness evaluates U8 as Nat "
+                    f"(VER04r 3.3 rule 2), at admitted case {i}",
+                ) from None
+            except OutsideAdmit as exc:
+                raise OracleError(
+                    "generation",
+                    f"W0701: claim `{self.suite.claim}` calls op `{exc.op}` with arguments "
+                    f"outside the op's admit, at admitted case {i}",
+                ) from None
+        self._admits_checked = True
+
+    def iter_admitted(self, meter: bool = True):
         """Yield ``(product ordinal, env)`` for every admitted tuple, in product order.
 
         ``env`` is one dict mutated in place: a consumer evaluates immediately and keeps
         nothing.  This is the walk the witness search of section 5.6 uses.
         """
-        self.work.walk(self.product)
+        if meter:
+            self.work.walk(self.product)
         bs = self.binders
         names = [b.name for b in bs]
         cols = [b.values(0, b.size) for b in bs]
@@ -578,6 +633,7 @@ class SuitePlan:
         )
         if cases == 0:
             raise OracleError("generation", "a suite admits zero cases")
+        self.check_admits()
         if self.spec.version == "v0" and out.wraps > 0:
             # Section 3.3 rule 2: the v0 harness evaluates U8 as Nat.
             raise OracleError(

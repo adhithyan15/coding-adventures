@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-warrant-oracle"
-version = "0.3.0"
+version = "0.4.0"
 description = "Independent .warrant source reader and corpus oracle for Warrant corpus v2 (VER04r)"
 requires-python = ">=3.12"
 license = "MIT"

@@ -385,7 +385,12 @@ impl<'a> SuitePlan<'a> {
             )));
         }
         let static_calls = program.static_calls(&suite.body);
-        let trace = static_calls.is_none() || program.may_fail_or_wrap(&suite.body);
+        // [D19]: a call of an op that has an `admit` is checked on every admitted case, which
+        // is a trace of the body; an argument that depends on a subject result is refused.
+        program.check_admit_calls(&suite.body).map_err(at)?;
+        let trace = static_calls.is_none()
+            || program.may_fail_or_wrap(&suite.body)
+            || program.calls_admitted_op(&suite.body);
         Ok(SuitePlan {
             suite,
             program,
@@ -603,7 +608,14 @@ impl<'a> SuitePlan<'a> {
                     _ => self
                         .program
                         .trace(&self.suite.body, &vars, &mut stats)
-                        .map_err(at)?,
+                        .map_err(|mut e| {
+                            if e.during_case {
+                                // The address of VER04i 2.4: the suite's admitted-case ordinal.
+                                e.message
+                                    .push_str(&format!(", at admitted case {}", first + cases - 1));
+                            }
+                            at(e)
+                        })?,
                 };
                 if in_buf.len() >= 1 << 16 {
                     flush(&mut in_buf, &mut ex_buf);

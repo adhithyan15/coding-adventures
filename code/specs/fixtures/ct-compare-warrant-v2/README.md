@@ -63,7 +63,11 @@ all of these change together (D13); the builds fail until each is done and the d
    (the generator's test `the_committed_accept_blind_fixture_is_what_the_generator_writes`
    compares its bytes).
 4. `--expect-generator warrant-corpus-gen@<version>` in `code/packages/python/warrant-oracle/BUILD`
-   and `BUILD_windows`, and the version pinned in `tests/test_verify_v2.py`.
+   and `BUILD_windows` (the lines for ct-compare **and** for `tests/fixtures/synth-v2`), and the
+   version pinned in `tests/test_verify_v2.py`. Regenerate
+   `code/packages/python/warrant-oracle/tests/fixtures/synth-v2/corpus/` too (command in its
+   README): its `generator.version` is pinned by that BUILD line, so a stale one fails the build.
+   Unlike the accept-blind fixture, the generator's own tests do not compare it.
 5. The `corpus.json` hash in the Hashes table below.
 
 ## Owner decisions of 2026-11-17 recorded here (VER04r 16.8)
@@ -71,10 +75,10 @@ all of these change together (D13); the builds fail until each is done and the d
 * **[D12] Claims are named by suite id** (`warrant/ct_compare/exhaustive/<claim>`) in
   `required_claims`, `blind_claims` and every `slim_witness` entry.
 * **[D13] The generator is pinned.** `corpus.json` records `generator`
-  (`{"name": "warrant-corpus-gen", "version": "0.4.0"}`). The generator's `--check` compares those
+  (`{"name": "warrant-corpus-gen", "version": "0.5.0"}`). The generator's `--check` compares those
   bytes, so **a version bump of the generator fails `--check` until this directory is regenerated
   and the diff reviewed**. The oracle's `BUILD` also passes `--expect-generator
-  warrant-corpus-gen@0.4.0` to `verify-v2`, so the pin is checked twice and a regenerated
+  warrant-corpus-gen@0.5.0` to `verify-v2`, so the pin is checked twice and a regenerated
   fixture that is committed without updating the pin fails the oracle's build.
 * **[D14] Edits to `corpus.profile` are caught.** `profile_sha256` in `corpus.json` is the SHA-256
   of this directory's `corpus.profile`; both `BUILD` lines pass `--profile
@@ -88,7 +92,7 @@ all of these change together (D13); the builds fail until each is done and the d
 
 ## Hashes
 
-`corpus.json` SHA-256 `4a61bfb6561b902a7f91db67638bb4cf449635c321794ff7d5d6179d14654c45`,
+`corpus.json` SHA-256 `da9482cdbb8ec29d4c1c63a4a8bcc916c0490f037a6cd443255f2c06636942cf`,
 `profile_sha256` `848056c69a04716c92117d75e7eb034ecf47710787ec81afd425336302338cee`. They are
 informational: the two checks above, not this table, are the gate. If they ever disagree with the
 files, regenerate and fix this table in the same commit.

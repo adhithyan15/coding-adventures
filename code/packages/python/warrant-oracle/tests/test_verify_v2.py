@@ -589,7 +589,7 @@ def test_the_committed_ct_compare_v2_fixture_verifies():
     assert derived.corpus["accepted_blind_faults"] == []
     # the generator pin of [D13]: the recorded generator is exactly the one the build expects
     gen = derived.corpus["generator"]
-    assert (gen["name"], gen["version"]) == ("warrant-corpus-gen", "0.4.0")
+    assert (gen["name"], gen["version"]) == ("warrant-corpus-gen", "0.5.0")
 
 
 

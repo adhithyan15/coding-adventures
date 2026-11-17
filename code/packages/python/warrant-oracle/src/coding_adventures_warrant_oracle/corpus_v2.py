@@ -39,6 +39,7 @@ from . import tfv
 from .corpus_v1 import build_program
 from .errors import OracleError
 from .faults import derive_controls
+from .ir_eval import WrapsInAdmit, admit_fn, run_admit
 from .lower import FIXED, Spec, _substitute, lower_document
 from .parser import parse_source
 from .profile import Profile, parse_profile
@@ -142,8 +143,41 @@ def _examples(spec: Spec, prog) -> tuple[list[dict], bytes]:
         statics = dict(zip(op.statics, node[3])) if len(node) == 4 else {}
         if len(statics) > 1:
             raise OracleError("generation", "an example with several static widths has no shape")
-        args = [prog.compile(a, {}, False).fn({}) for a in node[2]]
-        expected = prog.compile(ex.expected, {}, False).fn({})
+        stats = prog.stats
+        before, stats.counting = stats.wraps, True
+        try:
+            args = [prog.compile(a, {}, False).fn({}) for a in node[2]]
+        finally:
+            stats.counting = False
+        # [D19]: an example is a call, so its arguments must be inside the op's ``admit``.
+        admit = admit_fn(prog, op, node[3] if len(node) == 4 else None)
+        try:
+            inside = admit is None or run_admit(
+                prog, admit, {n: v for (n, _), v in zip(op.params, args)}, spec.version == "v0", op.name
+            )
+        except WrapsInAdmit:
+            raise OracleError(
+                "generation",
+                f"W0701: example `{ex.name}`: U8 arithmetic wraps while evaluating the admit of "
+                f"op `{op.name}`; v0 harness evaluates U8 as Nat (VER04r 3.3 rule 2)",
+            ) from None
+        if not inside:
+            raise OracleError(
+                "generation",
+                f"W0701: example `{ex.name}` calls op `{op.name}` with arguments outside "
+                "the op's admit",
+            )
+        stats.counting = True
+        try:
+            expected = prog.compile(ex.expected, {}, False).fn({})
+        finally:
+            stats.counting = False
+        if spec.version == "v0" and stats.wraps > before:
+            # [D18], section 3.3 rule 2: an example's evaluation wraps in a v0 document.
+            raise OracleError(
+                "generation",
+                f"W0701: example `{ex.name}`: U8 arithmetic wraps; v0 harness evaluates U8 as Nat",
+            )
         ptypes = [(n, _static(t, statics)) for n, t in op.params]
         ret = _static(op.ret, statics)
         width = next(iter(statics.values())) if statics else None

@@ -795,6 +795,206 @@ def compile_trace(prog: Program, ir: object, tenv: dict) -> Callable | None:
     return run_all
 
 
+class OutsideAdmit(Exception):
+    """A subject call's arguments are outside the callee's ``admit`` (VER04r section 6, [D19]).
+
+    Internal to the oracle: :class:`~coding_adventures_warrant_oracle.suites.SuitePlan` turns
+    it into the generation error, naming the claim, the op and the admitted-case ordinal.
+    """
+
+    def __init__(self, op: str) -> None:
+        super().__init__(op)
+        self.op = op
+
+
+def _reads(ir: object) -> set[str]:
+    """The variable names an IR tree reads (``["var", name]`` anywhere in it)."""
+    seen: set[str] = set()
+    stack = [ir]
+    while stack:
+        node = stack.pop()
+        if not (isinstance(node, list) and node and isinstance(node[0], str)):
+            continue
+        tag = node[0]
+        if tag == "var":
+            seen.add(node[1])
+        elif tag in ("lit", "err"):
+            continue
+        elif tag in ("model_call", "subject_op"):
+            stack.extend(node[2])
+        else:
+            stack.extend(node[1:])
+    return seen
+
+
+class WrapsInAdmit(Exception):
+    """A fixed-width node wrapped while evaluating a callee's ``admit`` in a v0 document.
+
+    VER04r 3.3 rule 2 applies to every evaluation the generator performs (owner decision
+    [D18]); the wrap is refused but never added to the recorded ``wraps``.
+    """
+
+    def __init__(self, op: str) -> None:
+        super().__init__(op)
+        self.op = op
+
+
+def run_admit(prog: Program, admit: Callable, penv: dict, v0: bool, op: str) -> object:
+    """Evaluate a callee's compiled ``admit`` on ``penv``; in a v0 document refuse a wrap.
+
+    The wraps are counted (so the evaluation takes the counting path) and then discarded:
+    ``wraps`` of a suite row is unchanged by this check.
+    """
+    if not v0:
+        return admit(penv)
+    stats = prog.stats
+    before, was = stats.wraps, stats.counting
+    stats.counting = True
+    try:
+        verdict = admit(penv)
+    finally:
+        stats.counting = was
+    wrapped = stats.wraps > before
+    stats.wraps = before
+    if wrapped:
+        raise WrapsInAdmit(op)
+    return verdict
+
+
+def admit_check_cost(prog: Program, ir: object, tenv: dict) -> int:
+    """The IR work of [D19]'s per-case check for ``ir``: for every ``subject_op`` whose op has
+    an ``admit``, the worst-path cost of that ``admit`` plus the cost of each argument that
+    does not call the subject.  A static sum over the whole tree, charged per product ordinal
+    to the IR-work meter and **not** part of the recorded ``ir_cost``.
+    """
+    total = 0
+    stack = [ir]
+    while stack:
+        node = stack.pop()
+        if not (isinstance(node, list) and node and isinstance(node[0], str)):
+            continue
+        tag = node[0]
+        if tag in ("lit", "var", "err"):
+            continue
+        if tag == "subject_op":
+            op = prog.ops[node[1]]
+            if op.admit is not None:
+                statics = dict(zip(op.statics, node[3] if len(node) == 4 else []))
+                ptenv = {n: _substitute(t, statics) for n, t in op.params}
+                total += prog.compile(op.admit, ptenv, False).cost
+                total += sum(prog.compile(a, tenv, False).cost for a in node[2] if not has_subject(a))
+            stack.extend(node[2])
+        elif tag == "model_call":
+            stack.extend(node[2])
+        else:
+            stack.extend(node[1:])
+    return total
+
+
+def admit_fn(prog: Program, op: object, widths: list | None) -> Callable | None:
+    """The compiled ``admit`` of subject op ``op`` over its parameter names, or ``None``.
+
+    ``widths`` are the static widths of the call (``Bytes<N>`` parameters take their type
+    from them); the closure takes a dict of parameter values.
+    """
+    if op.admit is None:
+        return None
+    statics = dict(zip(op.statics, widths or []))
+    ptenv = {n: _substitute(t, statics) for n, t in op.params}
+    return prog.compile(op.admit, ptenv, False).fn
+
+
+def compile_admit_check(
+    prog: Program, ir: object, tenv: dict, v0: bool = False
+) -> Callable | None:
+    """A closure ``fn(env)`` raising :class:`OutsideAdmit` when a subject call on the pure
+    trace of ``ir`` has arguments outside its op's ``admit`` (VER04r section 6, [D19]).
+
+    The walk mirrors :func:`compile_trace`: a pure guard is evaluated and the taken branch
+    followed, so a call in an untaken branch is not checked.  A call of an op whose ``admit``
+    reads a parameter whose argument contains a subject call cannot be checked at generation
+    (the oracle never learns what the inner call returns): that is the generation error
+    ``W0701``, raised here, statically, for every such call anywhere in ``ir``.  An argument
+    that depends on a subject result for a parameter the ``admit`` does not read is simply not
+    an input of the check (``power(add(a, b), 2u64)``).  Returns
+    ``None`` when no call on the body is of an op with an ``admit``.
+    """
+
+    def tr(node: object, depth: int = 0) -> list[Callable]:
+        if depth >= MAX_IR_DEPTH:
+            raise OracleError("limit", "IR nesting exceeds 64 levels")
+        if not has_subject(node):
+            return []
+        tag = node[0]
+        if tag == "subject_op":
+            kids = [f for a in node[2] for f in tr(a, depth + 1)]
+            op = prog.ops[node[1]]
+            if op.admit is None:
+                return kids
+            names = [n for n, _ in op.params]
+            dynamic = {n for n, a in zip(names, node[2]) if has_subject(a)}
+            if dynamic & _reads(op.admit):
+                raise OracleError(
+                    "generation",
+                    f"W0701: the admit of op `{op.name}` reads a parameter whose argument "
+                    "depends on a subject result, so it cannot be checked at generation "
+                    "(VER04r 6)",
+                )
+            admit = admit_fn(prog, op, node[3] if len(node) == 4 else None)
+            # An argument that depends on a subject result is not an input of the check:
+            # the admit does not read its parameter (just refused otherwise).
+            args = [
+                (n, prog.compile(a, tenv, False).fn)
+                for n, a in zip(names, node[2])
+                if n not in dynamic
+            ]
+
+            def check(env: dict, admit=admit, args=args, name=op.name) -> None:
+                if not run_admit(prog, admit, {n: f(env) for n, f in args}, v0, name):
+                    raise OutsideAdmit(name)
+
+            return [check] + kids
+        if tag == "model_call":
+            return [f for a in node[2] for f in tr(a, depth + 1)]
+        if tag == "if":
+            cond, then, other = node[1], node[2], node[3]
+            if has_subject(then) or has_subject(other):
+                cf = prog.compile(cond, tenv, False).fn
+                tt, et = tr(then, depth + 1), tr(other, depth + 1)
+
+                def run_if(env: dict) -> None:
+                    for f in tt if cf(env) else et:
+                        f(env)
+
+                return [run_if] if tt or et else []
+            return tr(cond, depth + 1)
+        if tag in ("and", "or", "implies"):
+            left, right = node[1], node[2]
+            if has_subject(right):
+                lf = prog.compile(left, tenv, False).fn
+                rt = tr(right, depth + 1)
+                runs = (lambda v: not v) if tag == "or" else bool
+
+                def run_sc(env: dict) -> None:
+                    if runs(lf(env)):
+                        for f in rt:
+                            f(env)
+
+                return [run_sc] if rt else []
+            return tr(left, depth + 1)
+        return [f for c in node[1:] if isinstance(c, list) for f in tr(c, depth + 1)]
+
+    fns = tr(ir)
+    if not fns:
+        return None
+
+    def run_all(env: dict) -> None:
+        for f in fns:
+            f(env)
+
+    return run_all
+
+
 def _sum(base: int, parts: list) -> int | Callable:
     static = base + sum(p for p in parts if not callable(p))
     dynamic = [p for p in parts if callable(p)]
