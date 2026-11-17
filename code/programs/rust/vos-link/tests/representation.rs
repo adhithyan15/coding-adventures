@@ -584,3 +584,378 @@ fn check_doc_catches_a_claim_edited_in_the_generated_document() {
     );
     assert!(codes(&c).contains(&"CD08"), "{}", show(&c));
 }
+
+// ---------------------------------------------------------------------------
+// Review findings: the lint must not fail open (each exploit, with its finding)
+// ---------------------------------------------------------------------------
+
+/// Replace the whole of claim `name` by `claim name:` + `body` (a quantified one-liner).
+fn with_claim(label: &str, name: &str, body: &str) -> (Repo, vos_link::Outcome) {
+    let r = Repo::with(label, REP);
+    let text = r.read(IMPL);
+    let head = format!("  claim {name}:\n");
+    let start = text
+        .find(&head)
+        .unwrap_or_else(|| panic!("no claim {name}"));
+    let from = start + head.len();
+    let end = text[from..]
+        .split_inclusive('\n')
+        .take_while(|l| l.starts_with("    "))
+        .map(str::len)
+        .sum::<usize>()
+        + from;
+    r.write(
+        IMPL,
+        format!("{}{head}    {body}\n{}", &text[..start], &text[end..]),
+    );
+    let g = r.gen(REP);
+    (r, g)
+}
+
+const DISTINCT: &str =
+    "applies `rep` to arguments that are not distinct variables bound by its quantifier";
+
+#[test]
+fn f1_a_constant_rep_argument_covers_one_slice_and_is_rejected() {
+    // History fixed at zero: every other pointer value goes unchecked.
+    let (_r, g) = with_claim(
+        "f1a",
+        "insert_rep",
+        "forall mask: U8. insert_out(rep(mask, 0u8), 0u8) == abs_insert(dec(alpha_w(rep(mask, 0u8))), 0u8).0",
+    );
+    assert!(has(&g, "CD07", DISTINCT), "{}", show(&g));
+}
+
+#[test]
+fn f1_a_repeated_variable_is_rejected_and_rep_init_may_use_constants() {
+    let (_r, g) = with_claim(
+        "f1b",
+        "rep_alpha",
+        "forall mask: U8, h: U8. alpha_w(rep(mask, mask)) == AbsW(mask)",
+    );
+    assert!(has(&g, "CD07", DISTINCT), "{}", show(&g));
+    // The positive fixture's `rep_init` is `rep(0u8, 0u8)`: constants are its intended shape.
+    let ok = Repo::with("f1c", REP);
+    assert!(ok.gen(REP).findings.is_empty());
+}
+
+#[test]
+fn f1_a_rep_argument_bound_outside_the_claim_is_rejected() {
+    let (_r, g) = with_claim(
+        "f1d",
+        "rep_alpha",
+        "forall mask: U8, h: U8. alpha_w(rep(mask, arg_t(h))) == AbsW(mask)",
+    );
+    assert!(has(&g, "CD07", DISTINCT), "{}", show(&g));
+}
+
+#[test]
+fn f2_a_refinement_on_a_binder_is_rejected() {
+    let (_r, g) = with_claim(
+        "f2a",
+        "rep_alpha",
+        "forall mask: U8 | mask == 0u8, h: U8. alpha_w(rep(mask, h)) == AbsW(mask)",
+    );
+    assert!(
+        has(
+            &g,
+            "CD07",
+            "claim `rep_alpha` has a refinement on binder(s) mask"
+        ),
+        "{}",
+        show(&g)
+    );
+}
+
+#[test]
+fn f2_a_refinement_is_walked_for_build_and_for_op_calls() {
+    let (_r, g) = with_claim(
+        "f2b",
+        "rep_alpha",
+        "forall mask: U8, h: U8 | alpha_w(build(dec(alpha_w(rep(mask, h))))) == AbsW(0u8). alpha_w(rep(mask, h)) == AbsW(mask)",
+    );
+    assert!(
+        has(&g, "CD07", "claim `rep_alpha` mentions `build`"),
+        "{}",
+        show(&g)
+    );
+    assert!(
+        has(&g, "CD07", "has a refinement on binder(s) h"),
+        "{}",
+        show(&g)
+    );
+    assert!(
+        has(
+            &g,
+            "CD07",
+            "applies the operation `alpha_w` to a state that is not `rep(..)`"
+        ),
+        "{}",
+        show(&g)
+    );
+}
+
+#[test]
+fn f3_a_det_that_is_not_a_conjunction_of_equations_is_rejected() {
+    let not_conj = "is not a conjunction (`and`) of `==` equations";
+    for (label, body) in [
+        ("neg", "forall mask: U8, h: U8. not (dispatch_out(rep(mask, h)) != rr_pick(mask, bit_and(h, 7u8)))"),
+        ("wrap", "forall mask: U8, h: U8. eq_pick(dispatch_out(rep(mask, h)), rr_pick(mask, bit_and(h, 7u8)))"),
+        ("le", "forall mask: U8, h: U8. bit_and(h, 7u8) <= 7u8 and dispatch_out(rep(mask, h)) == rr_pick(mask, bit_and(h, 7u8)) and 7u8 >= bit_and(h, 7u8)"),
+        ("or", "forall mask: U8, h: U8. dispatch_out(rep(mask, h)) == rr_pick(mask, bit_and(h, 7u8)) or true"),
+    ] {
+        let r = Repo::with(&format!("f3-{label}"), REP);
+        r.edit(IMPL, "  model arg_t(h: U8)", "  model eq_pick(a: Pick, b: Pick) -> Bool = a == b\n  model arg_t(h: U8)");
+        let text = r.read(IMPL);
+        let start = text.find("  claim dispatch_det:\n").unwrap();
+        let end = text[start..].find("\n  -- The secrecy").map_or(text.len(), |e| e + start);
+        // The det claim is the last claim before the labels block.
+        let tail = text[start..end].lines().skip(1).take_while(|l| l.starts_with("    ")).map(|l| l.len() + 1).sum::<usize>();
+        let head_len = "  claim dispatch_det:\n".len();
+        r.write(IMPL, format!("{}  claim dispatch_det:\n    {body}\n{}", &text[..start], &text[start + head_len + tail..]));
+        let g = r.gen(REP);
+        // `le` and `or` are not pure conjunctions of equations even though `==` appears.
+        assert!(has(&g, "CD07", not_conj), "{label}: {}", show(&g));
+    }
+}
+
+#[test]
+fn f3_an_op_nested_in_the_right_hand_side_arguments_is_rejected() {
+    let (_r, g) = with_claim(
+        "f3-arg",
+        "dispatch_det",
+        "forall mask: U8, h: U8. dispatch_out(rep(mask, h)) == rr_pick(alpha_w(rep(mask, h)).w, 0u8) and dispatch_img(rep(mask, h)) == rr_next(mask, bit_and(h, 7u8))",
+    );
+    assert!(
+        has(
+            &g,
+            "CD07",
+            "determinism claim `dispatch_det` calls the operation `alpha_w` on the right of `==`"
+        ),
+        "{}",
+        show(&g)
+    );
+}
+
+#[test]
+fn f3_a_det_equation_whose_left_side_is_not_an_op_on_rep_is_rejected() {
+    let (_r, g) = with_claim(
+        "f3-left",
+        "dispatch_det",
+        "forall mask: U8, h: U8. dispatch_out(rep(mask, h)) == rr_pick(mask, bit_and(h, 7u8)) and rr_next(mask, bit_and(h, 7u8)) == rr_next(mask, bit_and(h, 7u8))",
+    );
+    assert!(
+        has(
+            &g,
+            "CD07",
+            "has an equation whose left side is not an operation applied to a `rep(..)` state"
+        ),
+        "{}",
+        show(&g)
+    );
+}
+
+#[test]
+fn f3_a_projection_of_an_op_on_rep_is_an_accepted_left_side() {
+    let (_r, g) = with_claim(
+        "f3-proj",
+        "dispatch_det",
+        "forall mask: U8, h: U8. dispatch_out(rep(mask, h)) == rr_pick(mask, bit_and(h, 7u8)) and dispatch_img(rep(mask, h)).ptr == rr_next(mask, bit_and(h, 7u8)).ptr",
+    );
+    assert!(g.findings.is_empty(), "{}", show(&g));
+}
+
+#[test]
+fn f4_a_vacuous_required_claim_is_rejected() {
+    for (name, body, finding) in [
+        (
+            "insert_rep",
+            "forall mask: U8, h: U8. true",
+            "does not call the operation `insert`",
+        ),
+        (
+            "insert_rep",
+            "forall mask: U8, h: U8. true",
+            "never applies `rep`",
+        ),
+        (
+            "remove_rep",
+            "forall mask: U8, h: U8. true",
+            "does not call the operation `remove`",
+        ),
+        (
+            "dispatch_rep",
+            "forall mask: U8, h: U8. true",
+            "does not call the operation `dispatch`",
+        ),
+        (
+            "dispatch_det",
+            "forall mask: U8, h: U8. rr_pick(mask, h) == rr_pick(mask, h)",
+            "does not call the operation `dispatch`",
+        ),
+        (
+            "rep_init",
+            "forall b: Bool. true",
+            "must mention both `init` and `rep`",
+        ),
+        (
+            "rep_alpha",
+            "forall mask: U8, h: U8. rep(mask, h) == rep(mask, h)",
+            "does not apply the alpha operation (alpha_w)",
+        ),
+    ] {
+        let (_r, g) = with_claim(&format!("f4-{name}"), name, body);
+        assert!(
+            has(&g, "CD07", &format!("claim `{name}` {finding}")),
+            "{name}: {}",
+            show(&g)
+        );
+    }
+}
+
+#[test]
+fn f4_a_claim_about_another_operation_does_not_satisfy_a_required_one() {
+    // `insert_rep` that only talks about `remove`.
+    let (_r, g) = with_claim(
+        "f4-other-op",
+        "insert_rep",
+        "forall mask: U8, h: U8. remove_out(rep(mask, h), arg_t(h)) == remove_out(rep(mask, h), arg_t(h))",
+    );
+    assert!(
+        has(
+            &g,
+            "CD07",
+            "claim `insert_rep` does not call the operation `insert`"
+        ),
+        "{}",
+        show(&g)
+    );
+}
+
+#[test]
+fn f4_a_det_claim_must_name_an_operation_of_the_contract() {
+    let r = Repo::with("f4-name", REP);
+    r.edit(IMPL, "claim dispatch_det:", "claim bogus_det:");
+    let g = r.gen(REP);
+    assert!(
+        has(&g, "CD07", "claim `bogus_det` names `bogus`"),
+        "{}",
+        show(&g)
+    );
+}
+
+#[test]
+fn f5_a_nullary_model_named_like_an_image_is_not_a_state() {
+    let r = Repo::with("f5a", REP);
+    r.edit(
+        IMPL,
+        "  model arg_t(h: U8)",
+        "  model cfg_n_img() -> Impl = Impl(0u8, 0u8)\n  model arg_t(h: U8)",
+    );
+    r.edit(
+        IMPL,
+        "insert_out(rep(mask, h), arg_t(h)) ==",
+        "insert_out(cfg_n_img(), 1u8) ==",
+    );
+    let g = r.gen(REP);
+    assert!(
+        has(&g, "CD07", "claim `insert_rep` applies the operation `insert_out` to a state that is not `rep(..)`"),
+        "{}",
+        show(&g)
+    );
+}
+
+#[test]
+fn f5_a_state_chain_must_end_in_rep_through_real_images() {
+    // remove_img(insert_img(rep(..))) is a chain of real images: accepted (see
+    // `an_image_of_rep_is_an_accepted_state_argument`); a chain through an author model
+    // that happens to end in `_img` is not.
+    let r = Repo::with("f5b", REP);
+    r.edit(
+        IMPL,
+        "  model arg_t(h: U8)",
+        "  model fake_img(s: Impl) -> Impl = s\n  model arg_t(h: U8)",
+    );
+    r.edit(
+        IMPL,
+        "dec(alpha_w(insert_img(rep(mask, h), arg_t(h)))) ==",
+        "dec(alpha_w(insert_img(fake_img(rep(mask, h)), arg_t(h)))) ==",
+    );
+    let g = r.gen(REP);
+    assert!(
+        has(&g, "CD07", "claim `insert_rep` applies the operation `insert_img` to a state that is not `rep(..)`"),
+        "{}",
+        show(&g)
+    );
+}
+
+#[test]
+fn f6_a_rep_that_couples_the_history_to_the_mask_is_rejected() {
+    // `h` is ignored: the pointer is a function of the mask, so `rep` covers one pointer
+    // per mask.
+    let (_r, g) = mutated(
+        "f6a",
+        "Impl(mask, bit_and(h, 7u8))",
+        "Impl(mask, bit_and(mask, 7u8))",
+    );
+    assert!(
+        has(&g, "CD07", "field 1 of `Impl` (outside the cone of `build`) depends on no parameter of `rep` that the cone fields do not"),
+        "{}",
+        show(&g)
+    );
+}
+
+#[test]
+fn f6_a_rep_with_fewer_parameters_than_fields_is_rejected() {
+    let r = Repo::with("f6b", REP);
+    let text = r
+        .read(IMPL)
+        .replace(
+            "model rep(mask: U8, h: U8) -> Impl = Impl(mask, bit_and(h, 7u8))",
+            "model rep(mask: U8) -> Impl = Impl(mask, bit_and(mask, 7u8))",
+        )
+        .replace("rep(mask, h)", "rep(mask)")
+        .replace("rep(0u8, 0u8)", "rep(0u8)");
+    r.write(IMPL, text);
+    let g = r.gen(REP);
+    assert!(
+        has(
+            &g,
+            "CD07",
+            "`rep` has 1 parameter(s) for 2 field(s) of `Impl`"
+        ),
+        "{}",
+        show(&g)
+    );
+}
+
+#[test]
+fn f7_every_impl_typed_argument_of_an_op_is_a_state() {
+    // An op with two `Impl` parameters: the second is checked too, not only the first.
+    let r = Repo::with("f7", REP);
+    r.edit(
+        IMPL,
+        "  op cfg_n() -> CfgN\n",
+        "  op cfg_n() -> CfgN\n  op pair(a: Impl, b: Impl) -> U8\n",
+    );
+    r.edit(
+        IMPL,
+        "  labels insert_out:",
+        "  labels pair:\n    a public\n    b public\n  input pair.a:\n    hostile\n    ensures no_panic, terminates\n  input pair.b:\n    hostile\n    ensures no_panic, terminates\n  bound pair:\n    steps <= 10\n  labels insert_out:",
+    );
+    r.edit(
+        IMPL,
+        "insert_out(rep(mask, h), arg_t(h)) ==",
+        "pair(rep(mask, h), Impl(mask, h)) == 0u8 and insert_out(rep(mask, h), arg_t(h)) ==",
+    );
+    let g = r.gen(REP);
+    assert!(
+        has(
+            &g,
+            "CD07",
+            "claim `insert_rep` applies the operation `pair` to a state that is not `rep(..)`"
+        ),
+        "{}",
+        show(&g)
+    );
+}

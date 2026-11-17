@@ -283,13 +283,32 @@ evidence alone):
    not end in `-any`; (2) `build` is an `Impl(..)` application and the set of `Impl` fields
    outside its cone is **non-empty** (if it is empty the finding says "declare canonical":
    representation mode is for history only); (3) a model `rep` exists, is an `Impl(..)`
-   application, and **every field of it is in the cone of `rep`'s parameters** (the same
-   taint walk, failing closed the same way); (4) the claims `rep_init`, `rep_alpha`, one
-   `<op>_rep` per operation of `contract.vos` other than `init`, and at least one `<op>_det`
-   exist; none mentions `build`; every call of an operation inside them has, as its state
-   argument, a `rep(..)` application (or the `<op>_img` of one, which is itself a call that
-   is checked); and no right-hand side of an `==` in a `_det` claim calls an operation (the
-   model is op-free: a `_det` that compares the implementation with itself pins nothing).
+   application, **every field of it depends on a parameter of `rep`**, `rep` has at least as
+   many parameters as `Impl` has fields, and each field outside the cone of `build` depends on
+   a parameter that no field inside the cone depends on (so `Impl(a, bit_and(a, 7u8))`, which
+   derives the history from the mask, is refused); (4) the claims `rep_init`, `rep_alpha`, one
+   `<op>_rep` per operation of `contract.vos` other than `init` and at least one `<op>_det`
+   exist, and each is **about what its name says**: `<op>_rep` and `<op>_det` call `<op>_out`
+   or `<op>_img` on a `rep(..)` state; `rep_init` mentions `init` and `rep`; `rep_alpha` applies
+   the alpha operation (the `op` the contract's own claims apply to `build(..)`, e.g. `alpha_w`)
+   to a `rep(..)` state. In every one of them: no binder carries a refinement
+   (`h: U8 | h == 0u8` narrows what the claim covers); none mentions `build` (refinements
+   included); every argument of an operation whose declared type is `Impl` is `rep(..)` or the
+   call of a **real image** (a contract `<op>_img` declared with `op`, whose own call is checked
+   in turn, down to a `rep(..)`; an author model named `*_img`, or an image called with no
+   arguments, is not one); and every `rep(..)` application (except in `rep_init`, whose
+   `rep(0u8, 0u8)` is the one start state) takes **distinct variables bound by that claim's
+   quantifier**, never a constant, so a claim cannot quietly cover one slice. A `_det` claim,
+   under its quantifier, is a conjunction (`and`) of `==` equations whose left sides are
+   operations applied to a `rep(..)` state (directly or through a field projection) and whose
+   right sides contain **no operation call anywhere**, arguments included (`not (a != b)`,
+   `<=`/`>=` pairs, `or` and wrapper models are not equations: the model it is compared with
+   must be op-free, or it pins nothing).
+   **The cone and shape rules are syntactic**: dead branches (`if false then m.p0 else 0u8`),
+   shadowed names and a constant produced by arithmetic can make a field look in-cone or
+   dependent, and the parameter-set rule of (3) is an approximation of "`rep` covers every
+   `inv_impl` state", not a proof of it. CD07-R is a lint; the authority is human review of the
+   representation claims plus SH13, SH16, VOS-D030 and VOS-D060 (see D-GD8).
 3. `kind = reference`: no `bound` rows, never in an `image` profile.
 
 **What this rule is not.** It separates `any` from `production` in the *documents*; it is
@@ -1487,17 +1506,15 @@ the `any` block names). `kind = reference`: the document has no `bound` row. A `
 not an `Impl(..)` application cannot be decided structurally and fails closed for
 `production` and `any`.
 
-`mode = representation` (kind `production` or `reference`; CD06 and CD08 are unchanged): CD07-R of R6. The
-document carries no `canonical` and no `any` claim and the crate name does not end in `-any`;
-`build` is an `Impl(..)` application with at least one field outside its cone (else: "declare
-canonical"); a model `rep` is an `Impl(..)` application with every field in the cone of its
-parameters; the claims `rep_init`, `rep_alpha`, `<op>_rep` for each operation of `contract.vos`
-other than `init`, and at least one `<op>_det` exist, none mentions `build`, every operation
-call in them takes a `rep(..)` (or the `<op>_img` of one) as its state argument, and the right
-of an `==` in a `_det` claim calls no operation. An *operation* here is any function declared
-with `op` in the document, plus `init` and the `<op>_out` and `<op>_img` of each operation of
-`contract.vos`. The cone of `rep` reuses the taint walk below, including its budget and its
-failing closed. Each representation claim is printed with its `claim_sha256` as `impl-own rep`.
+`mode = representation` (kind `production` or `reference`; CD06 and CD08 are unchanged): CD07-R of R6,
+exactly as the rule text there states it (the claim-shape rules, the refinement and `rep`-argument
+rules, the real-image chain, the `_det` equation form and the `rep` parameter-set rule). An
+*operation* here is any function declared with `op` in the document, plus `init` and the `<op>_out`
+and `<op>_img` of each operation of `contract.vos`; a state argument is checked for every parameter
+an `op` declaration types `Impl` (the first, for an operation without a declaration). The cone of
+`rep` reuses the taint walk below, including its budget and its failing closed, and the walk now
+reads binder refinements. Each representation claim is printed with its `claim_sha256` as
+`impl-own rep`.
 
 **What a pass of the cone rule is, stated plainly.** It is a **structural lint** at document
 level, not a proof that the state has no oracle. A syntactic walk is still evaded by a

@@ -13,6 +13,11 @@ All notable changes to this package are documented here.
   `claim_sha256` (`Outcome.rep_claims`).
 - `tests/representation.rs` (31 tests; negative controls for each CD07-R finding and each `GD05`),
   the fixture `vos-fixture-rep` and its golden document.
+- CD07-R hardened after the security review (17 more tests): constant or repeated `rep` arguments,
+  binder refinements (walked, and refused), `_det` as a conjunction of `==` equations with op-free
+  right sides, required claims checked for content (call their op on `rep(..)`; `rep_init`,
+  `rep_alpha`), real-image state chains (no nullary or model-named `_img`), every `Impl`-typed
+  argument checked, and the `rep` parameter-set coverage approximation.
 - Existing behaviour is unchanged: canonical crates print no mode and the same note.
 
 ### Changed (VOS-D081)

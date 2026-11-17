@@ -668,14 +668,20 @@ fn rep_shape_reports_every_field_in_the_cone_of_the_parameters() {
             in_cone: vec![true, false]
         }
     );
-    // Dependence is on ANY parameter: a field of `h` alone, or of `a` alone, is covered.
+    // Dependence is on ANY parameter: a field of `a` alone is still "in the cone" here; the
+    // per-field parameter sets (`rep_masks`) are what tell vos-link that the pointer is
+    // coupled to the mask (CD07-R rejects it: no parameter of its own).
     let only_a = REP.replace("bit_and(h, 7u8)", "bit_and(a, 7u8)");
+    let a = analyze_document(&only_a).unwrap();
     assert_eq!(
-        analyze_document(&only_a).unwrap().rep,
+        a.rep,
         BuildShape::Constructor {
             in_cone: vec![true, true]
         }
     );
+    assert_eq!(a.rep_masks, [0b01, 0b01]);
+    assert_eq!(analyze_document(REP).unwrap().rep_masks, [0b01, 0b10]);
+    assert_eq!(analyze_document(REP).unwrap().rep_params, 2);
     // The same evasions the build walk refuses count here: `h - h` is constant.
     let cancelled = REP.replace("bit_and(h, 7u8)", "h - h");
     assert_eq!(
@@ -798,4 +804,71 @@ fn claim_shapes_see_through_every_expression_form() {
     assert!(rhs.contains(&"f"), "{rhs:?}");
     let first = c.calls.iter().find(|k| k.callee == "g").unwrap();
     assert!(!first.in_eq_rhs);
+}
+
+#[test]
+fn claim_shapes_record_binders_refinements_rep_arguments_and_equations() {
+    let doc = REP.replace(
+        "  claim c1:",
+        "  claim r1:
+    forall a: U8, h: U8 | h < 8u8. peek(step(rep(a, 0u8))) == peek(rep(h, h)) and step(rep(a, h)).y == 1u8
+  claim r2:
+    forall a: U8. not (peek(rep(a, a)) != 0u8)
+  claim c1:",
+    );
+    let a = analyze_document(&doc).expect("type checks");
+    let r1 = &a.claim_shapes[0];
+    assert_eq!(r1.binders, ["a", "h"]);
+    assert_eq!(r1.refined, ["h"]);
+    // rep(a, 0u8): a variable and a constant; rep(h, h): the same variable twice.
+    assert_eq!(
+        r1.rep_calls,
+        vec![
+            vec![Some("a".to_string()), None],
+            vec![Some("h".to_string()), Some("h".to_string())],
+            vec![Some("a".to_string()), Some("h".to_string())],
+        ]
+    );
+    let eqs = r1.equations.as_ref().expect("a conjunction of ==");
+    assert_eq!(eqs.len(), 2);
+    assert_eq!(eqs[0].left_root.as_ref().unwrap().callee, "peek");
+    assert_eq!(eqs[0].left.len(), 3); // peek, step, rep
+                                      // The second equation's left side roots in `step` through a field projection.
+    assert_eq!(eqs[1].left_root.as_ref().unwrap().callee, "step");
+    // A negation is not a conjunction of equations.
+    assert_eq!(a.claim_shapes[1].equations, None);
+    // The refinement is walked: a call inside it shows up among the claim's calls.
+    let with_call = doc.replace("| h < 8u8.", "| peek(rep(a, h)) < 8u8.");
+    let b = analyze_document(&with_call).unwrap();
+    assert!(b.claim_shapes[0].calls.len() > r1.calls.len());
+}
+
+#[test]
+fn op_sigs_record_which_parameters_are_impl() {
+    let doc = REP.replace(
+        "  op peek(s: Impl) -> U8\n",
+        "  op peek(s: Impl) -> U8\n  op pair(n: U8, a: Impl, b: Impl) -> U8\n  labels pair:\n    n public\n    a public\n    b public\n  input pair.n:\n    hostile\n    ensures no_panic, terminates\n  input pair.a:\n    hostile\n    ensures no_panic, terminates\n  input pair.b:\n    hostile\n    ensures no_panic, terminates\n  bound pair:\n    steps <= 10\n",
+    );
+    let a = analyze_document(&doc).expect("type checks");
+    let sig = |n: &str| {
+        a.op_sigs
+            .iter()
+            .find(|s| s.name == n)
+            .unwrap()
+            .impl_params
+            .clone()
+    };
+    assert_eq!(sig("pair"), [1, 2]);
+    assert_eq!(sig("step"), [0]);
+}
+
+#[test]
+fn a_refinement_counts_in_the_cone_walk() {
+    // `h` appears only in the refinement of a binder of a quantified helper model's body.
+    let doc = REP.replace(
+        "model rep(a: U8, h: U8) -> Impl = Impl(a, bit_and(h, 7u8))",
+        "model rep(a: U8, h: U8) -> Impl = Impl(a, if (forall z: U8 | z == h. true) then 1u8 else 0u8)",
+    );
+    let a = analyze_document(&doc).expect("the checker admits a quantifier in a model body");
+    assert_eq!(a.rep_masks, [0b01, 0b10]);
 }

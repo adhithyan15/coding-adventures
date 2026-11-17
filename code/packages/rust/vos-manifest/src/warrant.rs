@@ -44,7 +44,7 @@ use coding_adventures_warrant_grammar::layout::{
 };
 use coding_adventures_warrant_grammar::parser::{
     parse_document, AssumptionsDecl, BinaryOp, Declaration, Expression, Literal, ModelDecl,
-    ParserLimits,
+    ParserLimits, TypeExpr,
 };
 use coding_adventures_warrant_grammar::source::{SourceDocument, SourceLimits};
 
@@ -112,8 +112,24 @@ pub struct CallFact {
     /// call (`rep` in `insert_img(rep(mask, h), t)`), looking through parentheses; `None`
     /// when the first argument is a variable, a literal, a projection or there is none.
     pub state_arg: Option<String>,
+    /// For EVERY argument, the call head as for `state_arg` (`state_arg` is the first).
+    pub arg_heads: Vec<Option<String>>,
     /// True when the call sits (at any depth) in the right operand of an `==`.
     pub in_eq_rhs: bool,
+}
+
+/// One `left == right` of a claim that is a conjunction of equations, with what each side
+/// calls (the shape of a determinism claim, VOS02 2.7: `op(rep(..)) == model(..)`).
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Equation {
+    /// The call at the root of the left side, looking through parentheses and field
+    /// projections (`insert_img(rep(m, h), t).ptr` has root `insert_img`); `None` when the
+    /// left side is anything else.
+    pub left_root: Option<CallFact>,
+    /// Every call anywhere in the left side.
+    pub left: Vec<CallFact>,
+    /// Every call anywhere in the right side, arguments included.
+    pub right: Vec<CallFact>,
 }
 
 /// What a claim mentions and calls: the facts the CD07-R lint reads, collected by one
@@ -126,6 +142,26 @@ pub struct ClaimShape {
     pub mentions: BTreeSet<String>,
     /// Every call, in source order.
     pub calls: Vec<CallFact>,
+    /// Every quantifier binder name of the claim, outermost first.
+    pub binders: Vec<String>,
+    /// The binders that carry a refinement (`forall m: U8 where m == 0u8`): a refinement
+    /// narrows what the claim ranges over, and its expression is walked like any other.
+    pub refined: Vec<String>,
+    /// One entry per call of the model `rep`: for each argument, `Some(name)` when it is a
+    /// bare variable and `None` for anything else (a literal, an expression).
+    pub rep_calls: Vec<Vec<Option<String>>>,
+    /// `Some` when the claim, under its quantifiers and parentheses, is a conjunction
+    /// (`and`) of `==` equations and nothing else; `None` otherwise.
+    pub equations: Option<Vec<Equation>>,
+}
+
+/// The shape of an `op` declaration the lint needs: which parameters have type `Impl`.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct OpSig {
+    /// The operation's name.
+    pub name: String,
+    /// Indices of the parameters declared with the named type `Impl`.
+    pub impl_params: Vec<usize>,
 }
 
 /// What the Warrant tools found in a document that type-checked.
@@ -148,6 +184,14 @@ pub struct Analysis {
     /// PARAMETER of `rep` (not on the first one only, as for `build`).  `Missing` when
     /// there is no `model rep`.
     pub rep: BuildShape,
+    /// For each field of the `Impl(..)` that `model rep` builds, the set of `rep`'s
+    /// parameters it depends on (bit `j` = parameter `j`); empty unless `rep` is a
+    /// `Constructor`.
+    pub rep_masks: Vec<u64>,
+    /// The number of parameters of `model rep` (0 when there is none).
+    pub rep_params: usize,
+    /// The `Impl`-typed parameters of every `op`.
+    pub op_sigs: Vec<OpSig>,
     /// What every claim mentions and calls, in document order.
     pub claim_shapes: Vec<ClaimShape>,
 }
@@ -368,6 +412,9 @@ pub fn analyze_document_with_budget(text: &str, budget: u64) -> Result<Analysis,
             build: BuildShape::Missing,
             op_decls: Vec::new(),
             rep: BuildShape::Missing,
+            rep_masks: Vec::new(),
+            rep_params: 0,
+            op_sigs: Vec::new(),
             claim_shapes: Vec::new(),
         };
         for d in &file.declarations {
@@ -380,7 +427,21 @@ pub fn analyze_document_with_budget(text: &str, budget: u64) -> Result<Analysis,
                     });
                     a.claim_shapes.push(claim_shape(c.name, &c.body));
                 }
-                Declaration::Op(o) => a.op_decls.push(o.name.to_string()),
+                Declaration::Op(o) => {
+                    a.op_decls.push(o.name.to_string());
+                    a.op_sigs.push(OpSig {
+                        name: o.name.to_string(),
+                        impl_params: o
+                            .params
+                            .iter()
+                            .enumerate()
+                            .filter(|(_, p)| {
+                                matches!(&p.param_type, TypeExpr::Named { name: "Impl", .. })
+                            })
+                            .map(|(i, _)| i)
+                            .collect(),
+                    });
+                }
                 Declaration::Assumptions(AssumptionsDecl::Platform { rows, span }) => {
                     a.assumptions.push(AssumeFact {
                         kind: AssumeKind::Platform,
@@ -403,7 +464,10 @@ pub fn analyze_document_with_budget(text: &str, budget: u64) -> Result<Analysis,
                 }
                 Declaration::Model(m) if m.name == "rep" => {
                     let params: Vec<&str> = m.params.iter().map(|p| p.name).collect();
-                    a.rep = constructor_shape(&taint, &params, m.body.as_ref());
+                    let (shape, masks) = constructor_masks(&taint, &params, m.body.as_ref());
+                    a.rep = shape;
+                    a.rep_masks = masks;
+                    a.rep_params = params.len();
                 }
                 _ => {}
             }
@@ -565,7 +629,12 @@ impl<'a, 'b> Taint<'a, 'b> {
             Expression::Tuple { elements, .. } | Expression::List { elements, .. } => {
                 elements.iter().fold(0, |m, x| m | self.deps(x, params))
             }
-            Expression::Quantified { body, .. } => self.deps(body, params),
+            Expression::Quantified { binders, body, .. } => {
+                // A refinement is part of what the quantified expression says.
+                binders.iter().fold(self.deps(body, params), |m, b| {
+                    m | b.refinement.as_ref().map_or(0, |r| self.deps(r, params))
+                })
+            }
             Expression::Reference { name, args, .. } => {
                 if let Some(j) = params.iter().position(|p| name.segments.first() == Some(p)) {
                     return Self::bit(j);
@@ -640,11 +709,24 @@ fn constructor_shape(
     params: &[&str],
     body: Option<&Expression<'_>>,
 ) -> BuildShape {
+    constructor_masks(t, params, body).0
+}
+
+/// [`constructor_shape`], and for each constructor argument the set of `params` it
+/// depends on (bit `j` for parameter `j`; the vector is empty unless the shape is a
+/// `Constructor`).  CD07-R uses the sets to ask whether the history field depends on a
+/// parameter the cone fields do not (a `rep` that derives the pointer from the mask covers
+/// only a slice of the states).
+fn constructor_masks(
+    t: &Taint<'_, '_>,
+    params: &[&str],
+    body: Option<&Expression<'_>>,
+) -> (BuildShape, Vec<u64>) {
     let Some(mut body) = body else {
-        return BuildShape::Missing;
+        return (BuildShape::Missing, Vec::new());
     };
     if params.is_empty() {
-        return BuildShape::Missing;
+        return (BuildShape::Missing, Vec::new());
     }
     // `build(m) = ( Impl(...) )`: the parentheses are a Grouped node.
     while let Expression::Grouped { inner, .. } = body {
@@ -656,19 +738,20 @@ fn constructor_shape(
         ..
     } = body
     else {
-        return BuildShape::NotConstructor;
+        return (BuildShape::NotConstructor, Vec::new());
     };
     if name.segments.as_slice() != ["Impl"] {
-        return BuildShape::NotConstructor;
+        return (BuildShape::NotConstructor, Vec::new());
     }
-    let in_cone: Vec<bool> = args.iter().map(|arg| t.deps(arg, params) != 0).collect();
+    let masks: Vec<u64> = args.iter().map(|arg| t.deps(arg, params)).collect();
     if t.too_wide.get() {
-        return BuildShape::WideModel;
+        return (BuildShape::WideModel, Vec::new());
     }
     if t.exhausted.get() {
-        return BuildShape::BudgetExhausted;
+        return (BuildShape::BudgetExhausted, Vec::new());
     }
-    BuildShape::Constructor { in_cone }
+    let in_cone = masks.iter().map(|m| *m != 0).collect();
+    (BuildShape::Constructor { in_cone }, masks)
 }
 
 /// What a claim mentions and calls (the facts of CD07-R).
@@ -686,8 +769,16 @@ fn claim_shape(name: &str, body: &Expression<'_>) -> ClaimShape {
         name: name.to_string(),
         mentions: BTreeSet::new(),
         calls: Vec::new(),
+        binders: Vec::new(),
+        refined: Vec::new(),
+        rep_calls: Vec::new(),
+        equations: None,
     };
     walk_claim(body, false, &mut shape);
+    let mut eqs = Vec::new();
+    if collect_equations(body, &mut eqs) {
+        shape.equations = Some(eqs);
+    }
     shape
 }
 
@@ -700,6 +791,75 @@ fn call_head(e: &Expression<'_>) -> Option<String> {
             args: Some(_),
             ..
         } => Some(name.segments.join(".")),
+        _ => None,
+    }
+}
+
+/// The calls (and nothing else) of one sub-expression.
+fn calls_of(e: &Expression<'_>) -> Vec<CallFact> {
+    let mut scratch = claim_scratch();
+    walk_claim(e, false, &mut scratch);
+    scratch.calls
+}
+
+fn claim_scratch() -> ClaimShape {
+    ClaimShape {
+        name: String::new(),
+        mentions: BTreeSet::new(),
+        calls: Vec::new(),
+        binders: Vec::new(),
+        refined: Vec::new(),
+        rep_calls: Vec::new(),
+        equations: None,
+    }
+}
+
+/// The call at the root of `e`, through parentheses and field projections.
+fn root_call(e: &Expression<'_>) -> Option<CallFact> {
+    match e {
+        Expression::Grouped { inner, .. } => root_call(inner),
+        Expression::Project { base, .. } => root_call(base),
+        Expression::Reference { args: Some(_), .. } => calls_of(e).into_iter().next(),
+        _ => None,
+    }
+}
+
+/// Is `e`, under quantifiers and parentheses, an `and` of `==` equations?  Fills `out`.
+/// Any other form (`not (a != b)`, `<=`, a model wrapper, `or`, `if`) is `false`.
+fn collect_equations(e: &Expression<'_>, out: &mut Vec<Equation>) -> bool {
+    match e {
+        Expression::Quantified { body, .. } => collect_equations(body, out),
+        Expression::Grouped { inner, .. } => collect_equations(inner, out),
+        Expression::Binary {
+            op: BinaryOp::And,
+            left,
+            right,
+            ..
+        } => collect_equations(left, out) && collect_equations(right, out),
+        Expression::Binary {
+            op: BinaryOp::Eq,
+            left,
+            right,
+            ..
+        } => {
+            out.push(Equation {
+                left_root: root_call(left),
+                left: calls_of(left),
+                right: calls_of(right),
+            });
+            true
+        }
+        _ => false,
+    }
+}
+
+/// `Some(name)` for a bare variable (through parentheses), else `None`.
+fn bare_variable(e: &Expression<'_>) -> Option<String> {
+    match e {
+        Expression::Grouped { inner, .. } => bare_variable(inner),
+        Expression::Reference {
+            name, args: None, ..
+        } if name.segments.len() == 1 => Some(name.segments[0].to_string()),
         _ => None,
     }
 }
@@ -737,7 +897,16 @@ fn walk_claim(e: &Expression<'_>, rhs: bool, out: &mut ClaimShape) {
                 walk_claim(x, rhs, out);
             }
         }
-        Expression::Quantified { body, .. } => walk_claim(body, rhs, out),
+        Expression::Quantified { binders, body, .. } => {
+            for b in binders {
+                out.binders.push(b.name.to_string());
+                if let Some(r) = &b.refinement {
+                    out.refined.push(b.name.to_string());
+                    walk_claim(r, rhs, out);
+                }
+            }
+            walk_claim(body, rhs, out);
+        }
         Expression::Reference { name, args, .. } => {
             let callee = name.segments.join(".");
             if let Some(first) = name.segments.first() {
@@ -745,10 +914,14 @@ fn walk_claim(e: &Expression<'_>, rhs: bool, out: &mut ClaimShape) {
             }
             if let Some(args) = args {
                 out.mentions.insert(callee.clone());
+                if callee == "rep" {
+                    out.rep_calls.push(args.iter().map(bare_variable).collect());
+                }
                 out.calls.push(CallFact {
                     callee,
                     arity: args.len(),
                     state_arg: args.first().and_then(call_head),
+                    arg_heads: args.iter().map(call_head).collect(),
                     in_eq_rhs: rhs,
                 });
                 for a in args {

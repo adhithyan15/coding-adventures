@@ -11,6 +11,11 @@ All notable changes to this package are documented here.
   each with arity, the head of its first argument and whether it sits right of an `==`), the facts
   of `vos-link`'s CD07-R lint.  The build-cone walk is generalised to `constructor_shape`; `build`'s
   behaviour is unchanged.  Five tests.
+- Review hardening: `Analysis` also gains `rep_masks`/`rep_params` (the parameters each `rep` field
+  depends on), `op_sigs` (`Impl`-typed parameters of each `op`); `ClaimShape` gains `binders`,
+  `refined`, `rep_calls` (the argument shape of every `rep(..)`) and `equations` (a conjunction of
+  `==`); `CallFact` gains `arg_heads`.  The taint walk and the claim walk now read binder
+  refinements.
 
 ### Changed (VOS-D081)
 

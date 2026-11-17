@@ -58,7 +58,13 @@ with at least one field outside its cone (else "declare canonical"); a model `re
 `Impl(..)` whose every field depends on its parameters; the claims `rep_init`, `rep_alpha`, one
 `<op>_rep` per operation of `contract.vos` and at least one `<op>_det`; none mentions `build`;
 every operation in them is applied to `rep(..)`; no right-hand side of `==` in a `_det` claim
-calls an operation.  The report header prints `mode representation`, and each representation
+calls an operation anywhere (a `_det` is a conjunction of `==` equations).  Each required claim must be
+about its operation (`<op>_rep`/`<op>_det` call it on a `rep(..)` state; `rep_init` mentions `init` and
+`rep`; `rep_alpha` applies alpha); no binder has a refinement; every `Impl`-typed argument of an
+operation is `rep(..)` or a real image chain; every `rep(..)` takes distinct quantifier variables
+(`rep_init` excepted); `rep` has a parameter per field and the history depends on a parameter the cone
+fields do not.  All of it is syntactic: a lint, with human review, SH13/SH16, D030 and D060 as the
+authority.  The report header prints `mode representation`, and each representation
 claim is printed as `impl-own rep <name> claim_sha256=<hex>` for the future lock.  The fixture
 `tests/fixtures/impls/vos-fixture-rep` is the reference shape.
 

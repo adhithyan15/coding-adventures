@@ -427,13 +427,100 @@ fn operation_names(loaded: &Loaded, a: &Analysis) -> BTreeSet<String> {
     names
 }
 
-/// The step state of a call is right when it is `rep(..)` itself or the `<op>_img` of
-/// something (an image is a state; that inner call is a call of its own, checked in turn).
-fn state_is_rep(call: &CallFact, ops: &BTreeSet<String>) -> bool {
-    match call.state_arg.as_deref() {
-        Some("rep") => true,
-        Some(head) => head.ends_with("_img") && ops.contains(head),
-        None => false,
+/// The contract-implied images: `<op>_img` for every operation but `init`.
+fn contract_images(loaded: &Loaded) -> BTreeSet<String> {
+    contract_ops(loaded)
+        .into_iter()
+        .filter(|op| *op != "init")
+        .map(|op| format!("{op}_img"))
+        .collect()
+}
+
+/// What the lint knows about the operations of one document, gathered once.
+struct OpFacts<'a> {
+    /// Functions treated as operations (see [`operation_names`]).
+    names: BTreeSet<String>,
+    /// The contract-implied `<op>_out` and `<op>_img` names.
+    interface: BTreeSet<String>,
+    /// The REAL images: contract-implied `<op>_img` names that the document declares with
+    /// `op`.  An author's `model foo_img() -> Impl = ..` is not an image of anything, and
+    /// neither is a model that reuses a contract name: only a bound operation is the
+    /// implementation's behaviour (R3).
+    images: BTreeSet<String>,
+    /// Which parameters of each declared op have type `Impl`.
+    sigs: BTreeMap<&'a str, &'a [usize]>,
+}
+
+impl<'a> OpFacts<'a> {
+    fn new(loaded: &Loaded, a: &'a Analysis) -> Self {
+        let mut interface = BTreeSet::new();
+        for op in contract_ops(loaded) {
+            if op != "init" {
+                interface.insert(format!("{op}_out"));
+                interface.insert(format!("{op}_img"));
+            }
+        }
+        let declared: BTreeSet<&str> = a.op_decls.iter().map(String::as_str).collect();
+        let images = contract_images(loaded)
+            .into_iter()
+            .filter(|n| declared.contains(n.as_str()))
+            .collect();
+        OpFacts {
+            names: operation_names(loaded, a),
+            interface,
+            images,
+            sigs: a
+                .op_sigs
+                .iter()
+                .map(|s| (s.name.as_str(), s.impl_params.as_slice()))
+                .collect(),
+        }
+    }
+
+    /// Is `head` something a state may be: `rep(..)` or the real image of an operation?
+    fn is_state_head(&self, head: &str) -> bool {
+        head == "rep" || self.images.contains(head)
+    }
+
+    /// Why a call of an operation is wrong, or `None` when it is fine.  Every argument whose
+    /// declared type is `Impl` is a state (an operation with no declaration: the first),
+    /// and each must be `rep(..)` or a real image (whose own call is checked in turn, so the
+    /// chain is validated down to a `rep(..)`).  An operation that takes a state and is
+    /// called with none (`cfg_n_img()`) has nothing to be an image of.
+    fn call_problem(&self, call: &CallFact) -> Option<String> {
+        if !self.names.contains(&call.callee) {
+            return None;
+        }
+        if call.arity == 0 {
+            return self.interface.contains(&call.callee).then(|| {
+                format!(
+                    "calls `{}` with no arguments: an operation of the contract takes a state",
+                    call.callee
+                )
+            });
+        }
+        let states: Vec<usize> = match self.sigs.get(call.callee.as_str()) {
+            Some(idx) => idx.to_vec(),
+            None => vec![0],
+        };
+        for i in states.into_iter().filter(|i| *i < call.arity) {
+            let ok = call.arg_heads[i]
+                .as_deref()
+                .is_some_and(|h| self.is_state_head(h));
+            if !ok {
+                return Some(format!(
+                    "applies the operation `{}` to a state that is not `rep(..)`: every operation in a representation claim is applied to a `rep(..)` state",
+                    call.callee
+                ));
+            }
+        }
+        None
+    }
+
+    /// Is the call a fine application of an operation (it has a state, and each is a `rep(..)`
+    /// chain)?
+    fn is_good_call(&self, call: &CallFact) -> bool {
+        call.arity > 0 && self.call_problem(call).is_none()
     }
 }
 
@@ -491,6 +578,35 @@ fn r6_representation(
             }
         }
     }
+    // (3b) Coverage is approximated structurally: `rep` needs at least as many parameters as
+    // `Impl` has fields, and every field outside the cone of `build` (a history register)
+    // must depend on a parameter that no field inside the cone depends on, so the history
+    // is free of the abstract state.  `Impl(a, bit_and(a, 7u8))` fails both.
+    if let (BuildShape::Constructor { in_cone: rep_cone }, BuildShape::Constructor { in_cone }) =
+        (&a.rep, &a.build)
+    {
+        if a.rep_params < rep_cone.len() {
+            cd07(format!(
+                "mode representation: `rep` has {} parameter(s) for {} field(s) of `Impl`: a `rep` with fewer parameters than fields couples a field to another and covers only a slice of the `inv_impl` states (CD07-R)",
+                a.rep_params,
+                rep_cone.len()
+            ));
+        }
+        if in_cone.len() == a.rep_masks.len() {
+            let cone_params = in_cone
+                .iter()
+                .zip(&a.rep_masks)
+                .filter(|(c, _)| **c)
+                .fold(0u64, |m, (_, p)| m | p);
+            for (i, (c, p)) in in_cone.iter().zip(&a.rep_masks).enumerate() {
+                if !*c && p & !cone_params == 0 {
+                    cd07(format!(
+                        "mode representation: field {i} of `Impl` (outside the cone of `build`) depends on no parameter of `rep` that the cone fields do not: the history is not independent of the abstract state, so the `_rep` claims cover only a slice of the `inv_impl` states (CD07-R)"
+                    ));
+                }
+            }
+        }
+    }
     // (4) the claims.
     let shapes: BTreeMap<&str, &ClaimShape> = a
         .claim_shapes
@@ -519,39 +635,166 @@ fn r6_representation(
     if dets.is_empty() {
         cd07("mode representation: no `<op>_det` claim: the determinism claim pins how the history evolves (the output and the full post-state of a step against an op-free model), and a representation crate without one has said nothing about its history register (VOS02 2.7)".into());
     }
-    let ops = operation_names(loaded, a);
+    let facts = OpFacts::new(loaded, a);
+    let ops_of_contract = contract_ops(loaded);
+    let alphas = alpha_names(a, &facts);
+    if alphas.is_empty() {
+        cd07("mode representation: the alpha operation cannot be found (no `op` applied to `build(..)` in the contract's claims besides the contract's own, and none named `alpha*`), so `rep_alpha` cannot be checked (fails closed)".into());
+    }
     for c in a.claim_shapes.iter().filter(|c| is_rep_claim_name(&c.name)) {
-        if c.mentions.contains("build") {
+        let mut say = |m: String| {
             cd07(format!(
-                "mode representation: claim `{}` mentions `build`: a representation claim ranges over `rep(..)` states, not over the image of `build` (VOS02 2.7)",
+                "mode representation: claim `{}` {m} (VOS02 2.7)",
                 c.name
+            ))
+        };
+        let is_init = c.name == "rep_init";
+        // A refinement on a binder narrows what the claim ranges over (`mask == 0u8`), and
+        // would let a claim cover a slice and still look quantified.
+        if !c.refined.is_empty() {
+            say(format!(
+                "has a refinement on binder(s) {}: a representation claim ranges over every `rep(..)` state",
+                c.refined.join(", ")
             ));
         }
-        let mut bad: BTreeSet<&str> = BTreeSet::new();
+        if c.mentions.contains("build") {
+            say("mentions `build`: a representation claim ranges over `rep(..)` states, not over the image of `build`".into());
+        }
+        // Every operation call: a state argument that is `rep(..)` or a real image.
+        let mut problems: BTreeSet<String> = BTreeSet::new();
         for call in &c.calls {
-            if call.arity > 0 && ops.contains(&call.callee) && !state_is_rep(call, &ops) {
-                bad.insert(&call.callee);
+            if let Some(why) = facts.call_problem(call) {
+                // (the long-standing wording for a wrong state keeps its prefix)
+                problems.insert(if why.starts_with("applies") {
+                    format!("applies the operation `{}` to a state that is not `rep(..)`: every operation in a representation claim is applied to a `rep(..)` state", call.callee)
+                } else {
+                    why
+                });
             }
         }
-        for callee in bad {
-            cd07(format!(
-                "mode representation: claim `{}` applies the operation `{callee}` to a state that is not `rep(..)`: every operation in a representation claim is applied to a `rep(..)` state (VOS02 2.7)",
-                c.name
-            ));
+        for why in problems {
+            say(why);
         }
-        if c.name.ends_with("_det") {
-            let mut rhs: BTreeSet<&str> = BTreeSet::new();
-            for call in &c.calls {
-                if call.in_eq_rhs && ops.contains(&call.callee) {
-                    rhs.insert(&call.callee);
+        // The arguments of `rep(..)`: distinct variables of this claim's quantifier.  A
+        // constant (`rep(mask, 0u8)`) covers the history-zero slice only.  `rep_init` is the
+        // exception: the start state is ONE state, `rep(0u8, 0u8)`.
+        if !is_init {
+            if c.rep_calls.is_empty() {
+                say("never applies `rep`: it says nothing about the representation".into());
+            }
+            for args in &c.rep_calls {
+                let mut seen: BTreeSet<&str> = BTreeSet::new();
+                let all_vars = args.iter().all(|x| {
+                    x.as_deref()
+                        .is_some_and(|v| c.binders.iter().any(|b| b == v) && seen.insert(v))
+                });
+                if !all_vars {
+                    say("applies `rep` to arguments that are not distinct variables bound by its quantifier: a constant or a repeated variable covers only a slice of the `inv_impl` states".into());
                 }
             }
-            for callee in rhs {
-                cd07(format!(
-                    "mode representation: determinism claim `{}` calls the operation `{callee}` on the right of `==`: the model it is compared with must be op-free, or it pins nothing (VOS02 2.7)",
-                    c.name
+        }
+        // What each required claim must be about.
+        if is_init {
+            if !c.calls.iter().any(|k| k.callee == "init") || !c.mentions.contains("rep") {
+                say("must mention both `init` and `rep`".into());
+            }
+        } else if c.name == "rep_alpha" {
+            let calls_alpha = c
+                .calls
+                .iter()
+                .any(|k| alphas.contains(&k.callee) && facts.is_good_call(k));
+            if !alphas.is_empty() && !calls_alpha {
+                say(format!(
+                    "does not apply the alpha operation ({}) to a `rep(..)` state",
+                    alphas.iter().cloned().collect::<Vec<_>>().join(", ")
                 ));
+            }
+        } else {
+            let op = c
+                .name
+                .strip_suffix("_rep")
+                .or_else(|| c.name.strip_suffix("_det"))
+                .unwrap_or("");
+            if op == "init" || !ops_of_contract.contains(&op) {
+                say(format!(
+                    "names `{op}`, which is not an operation of `{}` other than `init`",
+                    loaded.contract_pkg
+                ));
+            } else {
+                let mine = [format!("{op}_out"), format!("{op}_img"), op.to_string()];
+                let calls_it = c
+                    .calls
+                    .iter()
+                    .any(|k| mine.contains(&k.callee) && facts.is_good_call(k));
+                if !calls_it {
+                    say(format!("does not call the operation `{op}` (`{op}_out` or `{op}_img`) on a `rep(..)` state"));
+                }
+            }
+        }
+        // A determinism claim is a conjunction of equations `op(rep(..))... == model(..)`:
+        // the left side roots in an operation on a `rep(..)` state, and the right side calls
+        // NO operation anywhere (arguments included).  `not (a != b)`, `<=`/`>=` pairs and a
+        // model wrapper `eq_pick(..)` are not equations and pin nothing the lint can see.
+        if c.name.ends_with("_det") {
+            match &c.equations {
+                None => say("is not a conjunction (`and`) of `==` equations (`not (a != b)`, `<=`, a wrapper model, `or` and `if` are not accepted)".into()),
+                Some(eqs) => {
+                    let mut rhs: BTreeSet<&str> = BTreeSet::new();
+                    for e in eqs {
+                        let rooted = e
+                            .left_root
+                            .as_ref()
+                            .is_some_and(|r| facts.names.contains(&r.callee) && facts.is_good_call(r));
+                        if !rooted {
+                            say("has an equation whose left side is not an operation applied to a `rep(..)` state (directly or through a field projection)".into());
+                        }
+                        for k in &e.right {
+                            if facts.names.contains(&k.callee) {
+                                rhs.insert(&k.callee);
+                            }
+                        }
+                    }
+                    for callee in rhs {
+                        cd07(format!(
+                            "mode representation: determinism claim `{}` calls the operation `{callee}` on the right of `==`: the model it is compared with must be op-free, or it pins nothing (VOS02 2.7)",
+                            c.name
+                        ));
+                    }
+                }
             }
         }
     }
+}
+
+/// The alpha operation(s): the `op`s the contract's own claims apply to `build(..)` that
+/// are not `<op>_out`, `<op>_img` or `init` (the contract does not name alpha in
+/// `contract.vos`, but `safety_alpha_build` applies it to `build(m)`); failing that, an `op`
+/// whose name starts `alpha`.
+fn alpha_names(a: &Analysis, f: &OpFacts<'_>) -> BTreeSet<String> {
+    let declared: BTreeSet<&str> = a.op_decls.iter().map(String::as_str).collect();
+    let mut found: BTreeSet<String> = BTreeSet::new();
+    for c in a
+        .claim_shapes
+        .iter()
+        .filter(|c| !is_rep_claim_name(&c.name))
+    {
+        for k in &c.calls {
+            if k.state_arg.as_deref() == Some("build")
+                && declared.contains(k.callee.as_str())
+                && !f.interface.contains(&k.callee)
+                && k.callee != "init"
+            {
+                found.insert(k.callee.clone());
+            }
+        }
+    }
+    if found.is_empty() {
+        found = a
+            .op_decls
+            .iter()
+            .filter(|n| n.starts_with("alpha"))
+            .cloned()
+            .collect();
+    }
+    found
 }
