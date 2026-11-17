@@ -68,6 +68,19 @@ func (m *CrossCheckMismatch) Error() string {
 	return s
 }
 
+// AllowedDivergences is how many stricter-only divergences the cross-check has
+// allowed in this process.  On real strace output it must stay 0: a stricter-only
+// hit there means the default flip would void that recording.
+func AllowedDivergences() int {
+	allowedMu.Lock()
+	defer allowedMu.Unlock()
+	n := 0
+	for _, c := range allowedStats {
+		n += c
+	}
+	return n
+}
+
 // allowedStats counts, per row of the spec's table, the divergences that were
 // allowed.  Tests read it to report what a differential run found.
 var (
@@ -87,8 +100,10 @@ func noteAllowed(row string) {
 func parseCrossChecked(r io.Reader, initialCwd string, opts Options) (*Trace, error) {
 	src := &replaySource{src: r}
 	trOld, errOld := parseWith(src.cursor(), initialCwd, opts, false)
+	before := grammarPanics.Load()
 	trNew, errNew := parseWith(src.cursor(), initialCwd, opts, true)
-	if detail, line := compareParses(src.buf, opts.Limits.withDefaults().MaxLineBytes, trOld, errOld, trNew, errNew); detail != "" {
+	panicked := grammarPanics.Load() != before
+	if detail, line := compareParses(src.buf, opts, panicked, trOld, errOld, trNew, errNew); detail != "" {
 		m := &CrossCheckMismatch{Detail: detail, Window: sanitisedWindow(src.buf, line)}
 		if os.Getenv("KILN_TRACE_DIFF") == "1" {
 			fmt.Fprintln(os.Stderr, m.Error())
@@ -150,8 +165,20 @@ func errorOf(err error) *Error {
 
 // compareParses applies the rule above.  It returns "" when the results agree
 // or differ only as the spec allows, else what differs and the line to show.
-func compareParses(data []byte, maxLine int, trOld *Trace, errOld error, trNew *Trace, errNew error) (string, int) {
+//
+// Where a refusal happened is not taken from the reason's name.  The line reader
+// (pass 1) is run on its own with each implementation, and readRecordsAt says
+// exactly how far each got.  If the old pass 1 refused at line L and the grammar
+// path read past L, that is FAIL-OPEN whatever the reasons say.
+func compareParses(data []byte, opts Options, panicked bool, trOld *Trace, errOld error, trNew *Trace, errNew error) (string, int) {
 	eo, en := errorOf(errOld), errorOf(errNew)
+	lim := opts.Limits.withDefaults()
+	maxLine := lim.MaxLineBytes
+	if panicked {
+		// A recovered panic in the grammar path is a bug, never a divergence the
+		// spec lists, whatever line shape it happened on.
+		return "the grammar path panicked (recovered)", 0
+	}
 	switch {
 	case eo == nil && en == nil:
 		if !reflect.DeepEqual(trOld, trNew) {
@@ -160,39 +187,38 @@ func compareParses(data []byte, maxLine int, trOld *Trace, errOld error, trNew *
 		return "", 0
 	case eo != nil && en == nil:
 		return "FAIL-OPEN: the old scanner refused (" + eo.Reason + ", line " + strconv.Itoa(eo.Line) + ") and the grammar path accepted", eo.Line
-	case eo == nil && en != nil:
-		if row := stricterRow(lineAt(data, en.Line), "", en.Reason, data, en.Line, maxLine); row != "" {
+	}
+	// At least the grammar path refused.  Find how far each pass 1 got.
+	_, _, e1, a1 := readRecordsAt(bytes.NewReader(data), lim, opts.HelperRoot, false)
+	_, _, e2, a2 := readRecordsAt(bytes.NewReader(data), lim, opts.HelperRoot, true)
+	if eo != nil && eo.Reason == en.Reason && eo.Line == en.Line {
+		return "", 0
+	}
+	switch {
+	case e1 != nil && (e2 == nil || a2 > a1):
+		return "FAIL-OPEN: the old scanner refused at line " + strconv.Itoa(a1) + " (" + e1.Reason + "); the grammar path read past it (" + en.Reason + " at line " + strconv.Itoa(en.Line) + ")", a1
+	case e1 != nil && e2 != nil:
+		old := e1.Reason
+		if a2 < a1 {
+			old = "" // the old scanner accepted the line the grammar path refused
+		}
+		if row := stricterRow(lineAt(data, a2), old, e2.Reason, data, a2, maxLine); row != "" {
 			noteAllowed(row)
 			return "", 0
 		}
-		return "the old scanner accepted and the grammar path refused (" + en.Reason + ", line " + strconv.Itoa(en.Line) + ") outside the spec's stricter-only list", en.Line
+	case e1 == nil && e2 != nil:
+		// The old scanner read every line; the grammar path refused one (and the
+		// old scanner refused later, in the model, or not at all).
+		if row := stricterRow(lineAt(data, a2), "", e2.Reason, data, a2, maxLine); row != "" {
+			noteAllowed(row)
+			return "", 0
+		}
 	}
-	// Both refused.
-	if eo.Reason == en.Reason && eo.Line == en.Line {
-		return "", 0
+	old := "accepted"
+	if eo != nil {
+		old = eo.Reason + " at line " + strconv.Itoa(eo.Line)
 	}
-	// New refused LATER than old: it read past the line the old scanner refused.
-	// The only legitimate way is a refusal that is not about that line (a pending
-	// call reported at its own earlier line at the end of the input).
-	if pass1Reason(eo.Reason) && en.Line > eo.Line && eo.Line != 0 && eo.Reason != reasonUnresumed {
-		return "FAIL-OPEN: the old scanner refused at line " + strconv.Itoa(eo.Line) + " (" + eo.Reason + "); the grammar path got past it and refused at line " + strconv.Itoa(en.Line) + " (" + en.Reason + ")", eo.Line
-	}
-	// When the new path refused an EARLIER line than the old one (or the old
-	// refusal is not tied to a line, like missing-exit), the old scanner
-	// accepted the new path's line.
-	oldOnThatLine := eo.Reason
-	if en.Line < eo.Line || eo.Line == 0 || !pass1Reason(eo.Reason) {
-		oldOnThatLine = ""
-	}
-	row := stricterRow(lineAt(data, en.Line), oldOnThatLine, en.Reason, data, en.Line, maxLine)
-	if row == "" && oldOnThatLine != eo.Reason {
-		row = stricterRow(lineAt(data, en.Line), eo.Reason, en.Reason, data, en.Line, maxLine)
-	}
-	if row != "" && (en.Line <= eo.Line || eo.Line == 0 || eo.Reason == reasonUnresumed || !pass1Reason(eo.Reason)) {
-		noteAllowed(row)
-		return "", 0
-	}
-	return "both refused, but differently: old " + eo.Reason + " at line " + strconv.Itoa(eo.Line) + ", new " + en.Reason + " at line " + strconv.Itoa(en.Line), en.Line
+	return "the grammar path refused (" + en.Reason + " at line " + strconv.Itoa(en.Line) + ") where the old scanner " + old + ", outside the spec's stricter-only list", en.Line
 }
 
 // traceDiff names the top-level fields of two Traces that differ.
@@ -291,6 +317,7 @@ type lineFacts struct {
 	signedEx         bool   // "+++ exited with +N +++"
 	unicodeSpaceExit bool   // an exit line holding a non-ASCII space (strings.TrimSpace removed it)
 	trailSp          bool   // ends with a space
+	overArity        bool   // a call with more top-level items than its arity cap, counted before the first error token
 }
 
 func factsOf(line string) lineFacts {
@@ -315,7 +342,18 @@ func factsOf(line string) lineFacts {
 	}
 	f.tokens = len(toks)
 	depth := 0
-	for _, t := range toks {
+	items, countItems, callName := 0, true, ""
+	for ti, t := range toks {
+		if ti == 1 && t.TypeName == "SYSCALL" {
+			callName = strings.TrimSuffix(t.Value, "(")
+			items = 1
+		}
+		if stracelexer.IsErrToken(t) {
+			countItems = false
+		}
+		if countItems && callName != "" && t.TypeName == "COMMA" && depth == 1 {
+			items++
+		}
 		switch t.TypeName {
 		case "LPAREN", "LBRACKET", "LBRACE", "SYSCALL", "FUNC":
 			depth++
@@ -341,6 +379,13 @@ func factsOf(line string) lineFacts {
 			f.errTok, f.errAmbig = t.TypeName, stracelexer.Ambiguous(t)
 		}
 	}
+	if callName != "" {
+		limit := maxUnknownItems
+		if ent := lookup(callName); ent.class == classHandled {
+			limit = ent.max
+		}
+		f.overArity = items > limit
+	}
 	return f
 }
 
@@ -353,7 +398,11 @@ func stricterRow(line, oldReason, newReason string, data []byte, lineNo, maxLine
 	f := factsOf(line)
 	// A refusal by name (unknown-syscall, refused) comes AFTER the old scanner
 	// accepted the line's syntax, so for the syntax rules it counts as accepted.
-	oldOK := oldReason == "" || strings.HasPrefix(oldReason, "unknown-syscall:") || strings.HasPrefix(oldReason, "refused:")
+	oldOK := oldReason == "" || strings.HasPrefix(oldReason, "unknown-syscall:") || strings.HasPrefix(oldReason, "refused:") ||
+		// State refusals: the old scanner checks a line's syntax BEFORE it looks
+		// at the pending calls (interleaved-call, and the unresumed-call an exit
+		// line raises), so such a refusal means it accepted the syntax.
+		oldReason == reasonInterleaved || oldReason == reasonUnresumed
 	switch {
 	case newReason == reasonSize && (f.tokens > maxLineTokens || f.depth > straceparser.MaxBracketNesting || gluedTooBig(data, lineNo, maxLine, f)):
 		return "caps: depth 64, 65,536 tokens, or a glued call over the byte limit"
@@ -387,7 +436,7 @@ func stricterRow(line, oldReason, newReason string, data []byte, lineNo, maxLine
 		return "malformed resumed half with no matching pending call"
 	case newReason == reasonAmbiguous && oldReason == reasonUnparsable && (f.badAnnot || f.badQuoted || (f.errTok != "" && f.errAmbig)):
 		return "structural error and a later bad annotation or string"
-	case (newReason == reasonUnparsable || newReason == reasonAmbiguous) && oldReason == reasonArity:
+	case (newReason == reasonUnparsable || newReason == reasonAmbiguous) && oldReason == reasonArity && f.overArity:
 		return "too many arguments and a later error"
 	}
 	return ""
@@ -437,20 +486,4 @@ func gluedTooBig(data []byte, lineNo, maxLine int, f lineFacts) bool {
 	}
 	g := factsOf("1  " + cur)
 	return g.tokens > maxLineTokens || g.depth > straceparser.MaxBracketNesting
-}
-
-// pass1Reason says whether a refusal is one pass 1 (the line reader) can give.
-// Every other reason may come from the model, which only runs after pass 1 has read
-// the whole input, so such an old refusal means the old scanner accepted every
-// line of the trace.
-func pass1Reason(r string) bool {
-	switch r {
-	case reasonUnparsable, reasonPersonality, reasonInterleaved, reasonUnmatched, reasonUnresumed,
-		reasonSize, reasonRead:
-		return true
-	}
-	// arity, result, ambiguous-path, unknown-syscall: and refused: can come from
-	// pass 1 or from the model (a path argument that does not decode, a wrong
-	// argument count), so they are not trusted to place the refusal.
-	return false
 }

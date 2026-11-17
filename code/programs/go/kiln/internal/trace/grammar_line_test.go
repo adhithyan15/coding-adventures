@@ -163,20 +163,30 @@ func TestPR5Divergences(t *testing.T) {
 
 // New accepting where the old refused must fail the cross-check, loudly.
 func TestCrossCheckCatchesFailOpen(t *testing.T) {
-	d, _ := compareParses(nil, 1<<20, nil, &Error{Reason: reasonUnparsable, Line: 3}, nil, nil)
+	o := Options{}
+	d, _ := compareParses(nil, o, false, nil, &Error{Reason: reasonUnparsable, Line: 3}, nil, nil)
 	if !strings.Contains(d, "FAIL-OPEN") {
 		t.Errorf("fail-open not flagged: %q", d)
 	}
 	// Both accepted but different: flagged.
-	d, _ = compareParses(nil, 1<<20, &Trace{RootPid: 1}, nil, &Trace{RootPid: 2}, nil)
+	d, _ = compareParses(nil, o, false, &Trace{RootPid: 1}, nil, &Trace{RootPid: 2}, nil)
 	if d == "" {
 		t.Error("differing traces not flagged")
 	}
-	// The same refusal is fine; a different reason outside the table is not.
-	if d, _ := compareParses(nil, 1<<20, nil, &Error{Reason: "arity", Line: 2}, nil, &Error{Reason: "arity", Line: 2}); d != "" {
+	// A recovered panic is never an allowed divergence, even on a line shape
+	// that is on the stricter-only list (a trailing space).
+	data := []byte("1  stat(a) = 0 \n")
+	if d, _ := compareParses(data, o, true, nil, nil, nil, &Error{Reason: reasonUnparsable, Line: 1}); !strings.Contains(d, "panicked") {
+		t.Errorf("panic not flagged: %q", d)
+	}
+	if d, _ := compareParses(data, o, false, nil, nil, nil, &Error{Reason: reasonUnparsable, Line: 1}); d != "" {
+		t.Errorf("the trailing-space row should allow it: %q", d)
+	}
+	// The same refusal is fine; a different one outside the table is not.
+	if d, _ := compareParses(data, o, false, nil, &Error{Reason: "arity", Line: 1}, nil, &Error{Reason: "arity", Line: 1}); d != "" {
 		t.Error(d)
 	}
-	if d, _ := compareParses([]byte("1  f(a) = 0\n"), 1<<20, nil, &Error{Reason: "arity", Line: 1}, nil, &Error{Reason: "path-arg", Line: 1}); d == "" {
+	if d, _ := compareParses([]byte("1  f(a) = 0\n"), o, false, nil, &Error{Reason: "arity", Line: 1}, nil, &Error{Reason: "path-arg", Line: 1}); d == "" {
 		t.Error("an unlisted reason change was allowed")
 	}
 }

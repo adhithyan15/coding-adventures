@@ -26,6 +26,7 @@ func TestNoThirdPartyDependencies(t *testing.T) {
 		t.Fatal(err)
 	}
 	inBlock := ""
+	requires, replaces := map[string]bool{}, map[string]bool{}
 	for n, raw := range strings.Split(string(mod), "\n") {
 		line := strings.TrimSpace(raw)
 		if i := strings.Index(line, "//"); i >= 0 {
@@ -50,6 +51,7 @@ func TestNoThirdPartyDependencies(t *testing.T) {
 			if !strings.HasPrefix(rest, repoModulePrefix) {
 				t.Errorf("go.mod line %d: require of a third-party module: %q", n+1, rest)
 			}
+			requires[strings.Fields(rest)[0]] = true
 		case "replace":
 			from, to, ok := strings.Cut(rest, "=>")
 			from, to = strings.TrimSpace(from), strings.TrimSpace(to)
@@ -59,11 +61,23 @@ func TestNoThirdPartyDependencies(t *testing.T) {
 			if !strings.HasPrefix(to, "../") || strings.Contains(to, " ") {
 				t.Errorf("go.mod line %d: replace target is not a relative in-repo path: %q", n+1, to)
 			}
-			if !strings.Contains(to, "/packages/go/") {
+			i := strings.Index(to, "/packages/go/")
+			if i < 0 {
 				t.Errorf("go.mod line %d: replace target is not under code/packages/go: %q", n+1, to)
+			} else if strings.Contains(to[i+len("/packages/go/"):], "..") {
+				t.Errorf("go.mod line %d: replace target climbs out of its package after packages/go: %q", n+1, to)
 			}
+			replaces[from] = true
 		default:
 			t.Errorf("go.mod line %d: unexpected directive %q (exclude, retract, tool and the like are not allowed)", n+1, directive)
+		}
+	}
+
+	// Every required repo module must be wired to a local directory: a require
+	// with no replace would be fetched from the network.
+	for m := range requires {
+		if !replaces[m] {
+			t.Errorf("go.mod requires %s but has no replace to a local path", m)
 		}
 	}
 

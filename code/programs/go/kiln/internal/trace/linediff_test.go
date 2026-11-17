@@ -20,7 +20,11 @@ func lineVerdict(line string) (problem, row string) {
 	so := &lineState{pend: map[int]*pending{}}
 	sn := &lineState{pend: map[int]*pending{}}
 	ro, eo := handleLine(line, 1, so)
+	before := grammarPanics.Load()
 	rn, en := handleLineG(line, 1, sn)
+	if grammarPanics.Load() != before {
+		return "recovered panic (never an allowed divergence)", ""
+	}
 	max := DefaultLimits().MaxLineBytes
 	switch {
 	case eo != nil && en == nil:

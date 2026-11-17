@@ -468,6 +468,16 @@ func atoiPid(s string) (int, bool) {
 // the root of the process tree.  Every record (calls, start markers and exit
 // lines alike) counts against MaxEvents.
 func readRecords(r io.Reader, lim Limits, helper, grammar bool) ([]record, int, *Error) {
+	recs, root, e, _ := readRecordsAt(r, lim, helper, grammar)
+	return recs, root, e
+}
+
+// readRecordsAt is readRecords that also says where pass 1 stopped: the 1-based
+// number of the line being processed when it refused (the line AFTER the last
+// one for a refusal at the end of the input).  An Error's own Line can be an
+// earlier line (an unresumed call is reported at its start), so the
+// cross-check uses this to tell how far each reader got.
+func readRecordsAt(r io.Reader, lim Limits, helper, grammar bool) ([]record, int, *Error, int) {
 	br := bufio.NewReaderSize(r, 64<<10)
 	var recs []record
 	st := &lineState{pend: map[int]*pending{}, helper: helper, maxLine: lim.MaxLineBytes}
@@ -483,9 +493,9 @@ func readRecords(r io.Reader, lim Limits, helper, grammar bool) ([]record, int, 
 			var e *Error
 			if errors.As(err, &e) {
 				e.Line = lineNo + 1
-				return nil, 0, e
+				return nil, 0, e, lineNo + 1
 			}
-			return nil, 0, &Error{Reason: reasonRead, Line: lineNo + 1, Err: err}
+			return nil, 0, &Error{Reason: reasonRead, Line: lineNo + 1, Err: err}, lineNo + 1
 		}
 		if errors.Is(err, io.EOF) {
 			if line == "" {
@@ -493,12 +503,12 @@ func readRecords(r io.Reader, lim Limits, helper, grammar bool) ([]record, int, 
 			}
 			// The last line has no newline: strace was cut off (or the file
 			// was truncated) and the line may be a prefix of a different one.
-			return nil, 0, incomplete(lineNo+1, reasonUnparsable)
+			return nil, 0, incomplete(lineNo+1, reasonUnparsable), lineNo + 1
 		}
 		lineNo++
 		total += int64(len(line))
 		if total > lim.MaxTotalBytes {
-			return nil, 0, incomplete(lineNo, reasonSize)
+			return nil, 0, incomplete(lineNo, reasonSize), lineNo
 		}
 		text := strings.TrimSuffix(line, "\n")
 		if st.root == 0 {
@@ -508,12 +518,12 @@ func readRecords(r io.Reader, lim Limits, helper, grammar bool) ([]record, int, 
 		}
 		rec, e := handle(text, lineNo, st)
 		if e != nil {
-			return nil, 0, e
+			return nil, 0, e, lineNo
 		}
 		if rec != nil {
 			recs = append(recs, *rec)
 			if len(recs) > lim.MaxEvents {
-				return nil, 0, incomplete(lineNo, reasonSize)
+				return nil, 0, incomplete(lineNo, reasonSize), lineNo
 			}
 		}
 	}
@@ -524,9 +534,9 @@ func readRecords(r io.Reader, lim Limits, helper, grammar bool) ([]record, int, 
 		}
 	}
 	if first != nil {
-		return nil, 0, incomplete(first.line, reasonUnresumed)
+		return nil, 0, incomplete(first.line, reasonUnresumed), lineNo + 1
 	}
-	return recs, st.root, nil
+	return recs, st.root, nil, lineNo + 1
 }
 
 // isWaitName: the ignored-class calls whose result is a pid.

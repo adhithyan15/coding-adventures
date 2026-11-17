@@ -612,7 +612,9 @@
         "go/strace-parser",
         "go/lexer",
         "go/parser",
-        "go/grammar-tools"
+        "go/grammar-tools",
+        "go/state-machine",
+        "go/directed-graph"
       ],
       "paths": [
         "code/programs/go/kiln/**",
@@ -621,6 +623,8 @@
         "code/packages/go/lexer/**",
         "code/packages/go/parser/**",
         "code/packages/go/grammar-tools/**",
+        "code/packages/go/state-machine/**",
+        "code/packages/go/directed-graph/**",
         "code/grammars/strace/**"
       ]
     }

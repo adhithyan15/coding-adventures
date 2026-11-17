@@ -14,6 +14,9 @@ type Measurement struct {
 	NewTime  time.Duration // pass 1 with the grammar path
 	OldError string        // "" or the refusal reason
 	NewError string
+	// NewWindow is, when only the grammar path refused, a bounded, sanitised
+	// window of the lines around the line it refused.
+	NewWindow string
 }
 
 // Measure reads a trace (at most MaxTotalBytes of it) and times pass 1, the line
@@ -36,10 +39,11 @@ func Measure(r io.Reader, helperRoot bool) (Measurement, error) {
 		m.OldError = e.Reason
 	}
 	t0 = time.Now()
-	_, _, e = readRecords(bytes.NewReader(data), lim, helperRoot, true)
+	_, _, e, at := readRecordsAt(bytes.NewReader(data), lim, helperRoot, true)
 	m.NewTime = time.Since(t0)
 	if e != nil {
 		m.NewError = e.Reason
+		m.NewWindow = sanitisedWindow(data, at)
 	}
 	return m, nil
 }

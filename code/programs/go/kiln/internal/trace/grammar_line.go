@@ -114,8 +114,8 @@ func bodyToken(ast *parser.ASTNode) (lexer.Token, bool) {
 // ordinary punctuation; trimming here keeps the spans byte-identical.  An item
 // that is empty after trimming is an error, except where scanItems let it go: a
 // call whose only item is empty has no arguments, and the item right before
-// "<unfinished ...>" is dropped.
-func trimArgs(raw []string, open bool) ([]string, string) {
+// "<unfinished ...>" is dropped when no comma follows it.
+func trimArgs(raw []string, open, commaAfter bool) ([]string, string) {
 	var out []string
 	for i, a := range raw {
 		t := strings.TrimSpace(a)
@@ -125,8 +125,10 @@ func trimArgs(raw []string, open bool) ([]string, string) {
 		}
 		last := i == len(raw)-1
 		switch {
-		case last && open:
-			// the item before the marker: dropped
+		case last && open && !commaAfter:
+			// the item right before the marker, with no comma after it: dropped
+			// (scanItems never flushes it).  With a comma after it scanItems
+			// flushes it at the comma, and an empty item there is an error.
 		case last && !open && len(raw) == 1:
 			// f(<spaces>): no arguments
 		default:

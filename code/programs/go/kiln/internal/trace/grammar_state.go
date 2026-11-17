@@ -202,7 +202,8 @@ func callFromTree(line string, ast *parser.ASTNode, name lexer.Token) (call rawC
 		maxItems = ent.max
 	}
 	pre, open := straceparser.PrefixBeforeUnfinished(line, ast)
-	args, r := trimArgs(straceparser.RawArgs(line, ast), open)
+	commaAfter := open && strings.HasSuffix(strings.TrimRight(pre, " "), ",")
+	args, r := trimArgs(straceparser.RawArgs(line, ast), open, commaAfter)
 	if r != "" {
 		return call, false, "", r
 	}

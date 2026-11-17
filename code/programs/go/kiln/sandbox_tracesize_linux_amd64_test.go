@@ -26,6 +26,16 @@ func probeTrace(t *testing.T, label, path string) {
 		t.Logf("PROBE: trace %s: cannot measure: %v", label, err)
 		return
 	}
+	// On a REAL trace the grammar path must accept everything the old scanner
+	// does: a stricter-only refusal here would void the recording at the flip.
+	if m.OldError == "" && m.NewError != "" {
+		t.Errorf("trace %s: the grammar path refused (%s) a trace the old scanner accepted:\n%s", label, m.NewError, m.NewWindow)
+	}
+	t.Cleanup(func() {
+		if n := trace.AllowedDivergences(); n != 0 {
+			t.Errorf("the cross-check allowed %d stricter-only divergences on real traces; there must be none", n)
+		}
+	})
 	mbs := func(secs float64) float64 {
 		if secs <= 0 {
 			return 0
