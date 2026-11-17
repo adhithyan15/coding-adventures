@@ -745,7 +745,7 @@ is out of this contract's reach: plan on `T <= 8..16` per obligation there.
 * **As built (VOS-012a):** `vos-sched-any` exists (`code/packages/rust/vos-sched-any`): its state
   is `State { mask, choice }`, `dispatch` proposes, validates and defaults to `Idle`, the oracle
   is written only through the `ghost` module, and its generated document passes `check-doc`
-  with the R6 `any` rules. Evidence: 7 exhaustive claims, 262,912 cases, 42 tests, all pass, no
+  with the R6 `any` rules. Evidence: 7 exhaustive claims, 262,912 cases, 42 tests, all pass (8 claims, 262,914 cases, 45 tests since `safety_init`, VOS-D081), no
   known-inert control. `dispatch_covers_run` lost its `t < 8` refinement (section 9.3). The own
   claims of section 9.4 are not written: see VOS-D080.
 * The two together are the replaceability exercise (VOS00 section 8): the policy
