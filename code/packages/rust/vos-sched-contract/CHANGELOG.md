@@ -4,6 +4,14 @@ All notable changes to this package are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Changed (VOS-011 PR, VOS-D064)
+
+- The nine model-level lemmas moved from `warrant/contract.part` to the new
+  `warrant/lemmas.part`, which no implementation document embeds: the evidence generator
+  refuses a claim that calls no operation (W0701). The contract-block digest changed
+  (`1cafa96a...` to `fd4b88aa...`); every obligation's `claim_sha256` and every obligations
+  block digest is unchanged. `vos-sched-contract-check` evaluates the lemmas from the new part.
+
 ### Added
 
 - VOS-010: the scheduler interface contract (`code/specs/VOS10-scheduler-contract.md`).

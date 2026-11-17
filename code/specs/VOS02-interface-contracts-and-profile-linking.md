@@ -161,11 +161,20 @@ apply them.
 **R1. Three kinds of text belong to the contract package.**
 
 1. The **contract block**: abstract state M, abstract operations, `inv`, the tier
-   relations, the `pre_` models and the lemmas (VOS01 section 2).
+   relations and the `pre_` models (VOS01 section 2). It holds **models only**.
 2. One **obligations block** per tier: `safety`, `policy`, `canonical` and `any`.
    Each is a list of whole `claim` declarations, as the contract author wrote
    them.
 3. The **ceilings and configuration names** (section 2.5).
+4. Optionally, a **lemmas part** (`warrant/lemmas.part`): the model-level lemmas of
+   the contract (closure, totality, tier ordering). It is a contract-package part
+   and is admitted by the same rules as the others, but it is **never embedded** in
+   an implementation's document and `check-doc` never requires it (VOS-D064): a
+   lemma calls no bound operation, so it is a fact about the abstract model and
+   never subject evidence (VER04m V9), and today's generator refuses a claim that
+   calls no operation (W0701) until a `lemma` kind exists (WX-SV item 3, VOS-D005).
+   The contract's own model-level evaluation (VOS10 section 12) runs it over the
+   contract block. Re-embedding it can be reconsidered when the lemma kind lands.
 
 *Why:* the text an implementation must satisfy has one author. An implementation
 author who may restate it may weaken it (section 1.3, option (b)).
@@ -310,7 +319,8 @@ it by path prefix, which includes every implementation.
 ```text
 code/packages/rust/vos-ready-contract/        contract package (class K, trait only)
     src/lib.rs                                the Rust trait, Upd, Pick, Profile
-    warrant/contract.part                     R1.1, the contract block source
+    warrant/contract.part                     R1.1, the contract block source (models only)
+    warrant/lemmas.part                       R1.4, model-level lemmas, NOT embedded
     warrant/obligations-safety.part           R1.2, one file per tier
     warrant/obligations-policy.part
     warrant/obligations-canonical.part
@@ -1321,7 +1331,8 @@ the contract of `vos-manifest` (the pure part) and `vos-link` (the file part), a
 one has a test.
 
 **D-GD1. What is copied, and what is not.** The document holds blocks 1 and 2 of R1 and
-the implementation block, nothing else (R2 as amended). `contract.vos` is parsed (it names
+the implementation block, nothing else (R2 as amended). `warrant/lemmas.part` (R1.4) is
+admitted when present (a forged marker in it is a `GD01`) and never copied. `contract.vos` is parsed (it names
 the tiers and the instance), never copied.  Its digest will be pinned by the lock (VOS-034);
 until then `check-doc` binds only its tier list (each `tier` row against the
 `obligations-*.part` files, both ways), and the ceilings and `config N` are compared with

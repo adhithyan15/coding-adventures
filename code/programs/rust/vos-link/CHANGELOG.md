@@ -4,6 +4,13 @@ All notable changes to this package are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Changed (VOS-011 PR, VOS-D064)
+
+- `warrant/lemmas.part` of a contract package is admitted when present (a forged marker is a
+  `GD01`) and **never embedded**; `check-doc` does not require it (VOS02 R1.4).  The golden
+  document was re-blessed: its contract-block digest changed, no obligation digest did.  New
+  test `lemmas_part_is_never_embedded_and_never_required`.
+
 ### Fixed (security review round 1)
 
 - Untrusted strings (file names, `vos.toml` values, document headers, argv) are quoted and escaped in every report.

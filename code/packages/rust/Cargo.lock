@@ -15563,6 +15563,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "vos-sched-fp-bitmap"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "vos-sched-contract",
+]
+
+[[package]]
 name = "vos-shape-check"
 version = "0.1.0"
 dependencies = [
