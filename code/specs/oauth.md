@@ -5811,7 +5811,9 @@ before peer bytes are interpreted, and before a shared-secret owner exists.
 The X25519 route passes the exact peer key-exchange bytes to the repository-
 owned primitive, preserves its low-order all-zero rejection, validates the
 derived length through the same selected-group policy, and returns one non-
-cloneable shared-secret value backed by repository-owned wipe-on-drop storage.
+cloneable shared-secret value borrowing caller-owned fixed storage. Dropping
+that value wipes the borrowed storage through the repository-owned zeroization
+primitive.
 Stable failures and Debug output retain no private-scalar, peer-key, shared-
 secret, group, algorithm, or length payloads.
 
