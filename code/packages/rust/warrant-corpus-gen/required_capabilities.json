@@ -3,5 +3,5 @@
   "version": 1,
   "package": "rust/warrant-corpus-gen",
   "capabilities": [],
-  "justification": "S3a is pure in-memory computation: it lowers an already parsed Warrant document to the model IR, computes worst-path costs and renders canonical JSON into a String. It reads no file, opens no socket, spawns no process and reads no environment variable. The CLI that reads the specification and writes the fixture directory arrives in slice S3c, which will declare its fs capabilities."
+  "justification": "S3a and S3b are pure in-memory computation: they lower an already parsed Warrant document to the model IR, evaluate it, enumerate the claims' binder domains, hash the streams with the in-crate sha256 and render canonical JSON into Strings. They read no file at run time (the tests embed the specifications and fixtures with include_str!), open no socket, spawn no process and read no environment variable. The CLI that reads the specification and writes the fixture directory arrives in slice S3c, which will declare its fs capabilities."
 }

@@ -111,6 +111,8 @@ pub struct Program<'a> {
     /// `wraps[i]`: model `i`'s call closure contains a fixed-width `add sub mul neg`.
     wraps: Vec<bool>,
     sabotage: Sabotage,
+    /// The recursion bound ([`MAX_EVAL_DEPTH`] unless a test lowers it).
+    max_depth: usize,
 }
 
 impl<'a> Program<'a> {
@@ -138,6 +140,7 @@ impl<'a> Program<'a> {
             index,
             wraps,
             sabotage: Sabotage::None,
+            max_depth: MAX_EVAL_DEPTH,
         }
     }
 
@@ -145,6 +148,13 @@ impl<'a> Program<'a> {
     #[doc(hidden)]
     pub fn with_sabotage(mut self, s: Sabotage) -> Program<'a> {
         self.sabotage = s;
+        self
+    }
+
+    /// The same program with a lower recursion bound, to test the guard without a deep stack.
+    #[doc(hidden)]
+    pub fn with_max_depth(mut self, depth: usize) -> Program<'a> {
+        self.max_depth = depth.min(MAX_EVAL_DEPTH);
         self
     }
 
@@ -191,7 +201,7 @@ impl<'a> Program<'a> {
         st: &mut Stats,
         depth: usize,
     ) -> Result<Value, GenError> {
-        if depth > MAX_EVAL_DEPTH {
+        if depth > self.max_depth {
             return Err(GenError::new(
                 code::LIMIT,
                 "",
@@ -461,7 +471,7 @@ impl<'a> Program<'a> {
         st: &mut Stats,
         depth: usize,
     ) -> Result<u64, GenError> {
-        if depth > MAX_EVAL_DEPTH {
+        if depth > self.max_depth {
             return Err(GenError::new(code::LIMIT, "", "the trace nests too deeply"));
         }
         let impure = || {
@@ -1016,17 +1026,32 @@ mod tests {
 
     #[test]
     fn evaluation_recursion_is_bounded() {
+        // a tree far deeper than lowering allows (the lowering caps it at 64) is refused
+        // rather than recursed into; the bound is lowered here so the test needs no deep stack
         let mut ir = Ir::Bool(true);
-        for _ in 0..(MAX_EVAL_DEPTH + 10) {
+        for _ in 0..40 {
             ir = Ir::Not(Box::new(ir));
         }
-        // the tree is far deeper than lowering allows; the evaluator refuses it rather than
-        // recursing without bound (run on a thread with room to unwind to the limit)
-        let h = std::thread::Builder::new()
-            .stack_size(64 << 20)
-            .spawn(move || run(&ir).unwrap_err().code)
-            .unwrap();
-        assert_eq!(h.join().unwrap(), code::LIMIT);
+        let p = Program::new(&[]).with_max_depth(32);
+        assert_eq!(
+            p.eval(&ir, &[], &mut Stats::default()).unwrap_err().code,
+            code::LIMIT
+        );
+        // the same tree is fine under the real bound
+        assert!(Program::new(&[])
+            .eval(&ir, &[], &mut Stats::default())
+            .is_ok());
+        // the trace has the same guard (a subject at the bottom keeps it off the pure path)
+        let mut deep = subject("f", vec![]);
+        for _ in 0..40 {
+            deep = Ir::Not(Box::new(deep));
+        }
+        let e = p.trace(&deep, &[], &mut Stats::default()).unwrap_err();
+        assert_eq!(e.code, code::LIMIT);
+        // the bound can only be lowered, never raised past the documented limit
+        let q = Program::new(&[]).with_max_depth(usize::MAX);
+        assert!(q.eval(&ir, &[], &mut Stats::default()).is_ok());
+        assert_eq!(MAX_EVAL_DEPTH, 65 * 65);
     }
 
     // -- trace, static_calls ------------------------------------------------------------
