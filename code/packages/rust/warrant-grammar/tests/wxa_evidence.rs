@@ -176,6 +176,9 @@ mod harness {
     pub fn field_zero(v: V) -> V {
         fault_field_zero(v)
     }
+    pub fn field_flip(v: V) -> V {
+        fault_field_flip(v)
+    }
     pub fn drop_consumed(v: V) -> V {
         fault_drop_consumed(v)
     }
@@ -274,6 +277,7 @@ fn the_full_generated_suite_passes_and_every_fault_is_caught() {
         "drop-consumed",
         "swap-components",
         "field-zero",
+        "field-flip",
         "wrong-ctor",
         "ok-as-err",
         "off-by-one-consumed",
@@ -786,6 +790,23 @@ fn each_fault_rewrites_exactly_what_the_specification_says() {
         harness::field_zero(rec),
         V::Con("Span", 0, "Span", vec![V::Bool(true), fx(0), fx(7)])
     );
+    // field-flip: the lowest bit of the first numeric field flips, so a zero
+    // field is NOT inert (WX-SV2), and flipping twice restores the record.
+    let zero = V::Con("Span", 0, "Span", vec![V::Bool(true), fx(0), fx(7)]);
+    assert_eq!(
+        harness::field_flip(zero.clone()),
+        V::Con("Span", 0, "Span", vec![V::Bool(true), fx(1), fx(7)])
+    );
+    let four = V::Con("Span", 0, "Span", vec![V::Bool(true), fx(5), fx(7)]);
+    assert_eq!(
+        harness::field_flip(four.clone()),
+        V::Con("Span", 0, "Span", vec![V::Bool(true), fx(4), fx(7)])
+    );
+    assert_eq!(harness::field_flip(harness::field_flip(four.clone())), four);
+    assert_ne!(harness::field_flip(zero.clone()), harness::field_zero(zero));
+    // A plain Int (the numeric tower) flips too, a negative one by two's complement.
+    let neg = V::Con("R", 0, "R", vec![V::Int(-1)]);
+    assert_eq!(harness::field_flip(neg), V::Con("R", 0, "R", vec![V::Int(-2)]));
     // wrong-ctor: the previous constructor (the last for the first), with the
     // first element of each field's domain as fields.
     let rect = V::Con("Shape", 1, "Rect", vec![fx(8), fx(9)]);
@@ -1023,6 +1044,7 @@ fn the_generated_suite_notices_every_fault_it_names() {
         "drop-consumed",
         "swap-components",
         "field-zero",
+        "field-flip",
         "wrong-ctor",
         "ok-as-err",
         "off-by-one-consumed",

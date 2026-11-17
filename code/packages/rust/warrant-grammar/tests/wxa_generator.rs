@@ -258,6 +258,8 @@ fn a_fault_must_apply_to_the_declared_result() {
         ("(U8, U8)", "swap-components", ""),
         ("(U8, U8, U8)", "swap-components", ""),
         ("Rec", "field-zero", ""),
+        ("Rec", "field-flip", ""),
+        ("Result<Rec, E>", "field-flip", "error=X"),
         ("Vr", "wrong-ctor", ""),
         ("Result<(U8, U8), E>", "ok-as-err", "error=X"),
         ("Result<Rec, E>", "ok-as-err", "error=Y"),
@@ -276,6 +278,8 @@ fn a_fault_must_apply_to_the_declared_result() {
         ("Rec", "swap-components", ""),
         ("NoNum", "field-zero", ""),                   // no numeric field
         ("Vr", "field-zero", ""),                      // a variant is not a record
+        ("NoNum", "field-flip", ""),                   // field-flip applies exactly where field-zero does
+        ("Vr", "field-flip", ""),
         ("Rec", "wrong-ctor", ""),                     // one constructor
         ("(U8, U8)", "ok-as-err", ""),                 // not a Result
         ("Result<U8, E>", "ok-as-err", "error=X"),     // the payload is not composite
@@ -299,6 +303,23 @@ fn faults_appear_in_the_generated_adapter_and_the_fault_enum() {
     assert!(!text.contains("WrongCtor"));
     // The adapter obeys a fault only while it is the attacked operation.
     assert!(text.contains("let fault = fault_for(\"h\", fault);"));
+}
+
+#[test]
+fn field_flip_is_emitted_only_for_a_binding_that_names_it() {
+    // WX-SV2: the prelude region and the enum variant exist only on request, so
+    // a harness that names `field-zero` alone is what it was before the fault existed.
+    let zero = attack("Rec", "field-zero", "").unwrap();
+    assert!(!zero.contains("fault_field_flip") && !zero.contains("FieldFlip"));
+    assert!(zero.contains("fn fault_field_zero"));
+    let flip = attack("Rec", "field-flip", "").unwrap();
+    assert!(flip.contains("fn fault_field_flip(v: V) -> V {"));
+    assert!(flip.contains("Fault::FieldFlip => fault_field_flip(v),"));
+    assert!(flip.contains("FieldFlip,") && flip.contains("\"field-flip\""));
+    // Naming both emits both, and the zero fault's arm is untouched.
+    let both = attack("Rec", "field-zero,field-flip", "").unwrap();
+    assert!(both.contains("Fault::FieldZero => fault_field_zero(v),"));
+    assert!(both.contains("Fault::FieldFlip => fault_field_flip(v),"));
 }
 
 // ---------------------------------------------------------------------------

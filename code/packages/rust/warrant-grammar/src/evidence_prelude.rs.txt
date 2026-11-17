@@ -715,6 +715,29 @@ fn fault_field_zero(v: V) -> V {
     })
 }
 
+//@if fieldflip
+/// Fault `field-flip` (WX-SV2): the lowest bit of the first numeric field of a
+/// record result is flipped.  Where `field-zero` is inert on a field that is
+/// already `0`, `x ^ 1` differs from `x` for every `x`: it exchanges the pair
+/// `2k, 2k+1` (two's complement for a negative `x`), and both members of a pair
+/// lie in one fixed width's range, so a fixed-width field keeps its width.
+fn fault_field_flip(v: V) -> V {
+    map_payload(v, |x| match x {
+        V::Con(t, i, c, mut vs) => {
+            if let Some(slot) = vs.iter_mut().find(|f| matches!(f, V::Int(_) | V::Fixed(..))) {
+                *slot = match &*slot {
+                    V::Int(n) => V::Int(n ^ 1),
+                    V::Fixed(f, n) => V::Fixed(*f, n ^ 1),
+                    other => other.clone(),
+                };
+            }
+            V::Con(t, i, c, vs)
+        }
+        other => other,
+    })
+}
+
+//@endif
 /// Fault `off-by-one-consumed`: the second component of a `(value, consumed)`
 /// pair is off by one, `+ 1` when even and `- 1` when odd, so both directions
 /// occur and a claim that pins `consumed` on every input catches the fault.

@@ -601,6 +601,27 @@ fn fault_field_zero(v: V) -> V {
     })
 }
 
+/// Fault `field-flip` (WX-SV2): the lowest bit of the first numeric field of a
+/// record result is flipped.  Where `field-zero` is inert on a field that is
+/// already `0`, `x ^ 1` differs from `x` for every `x`: it exchanges the pair
+/// `2k, 2k+1` (two's complement for a negative `x`), and both members of a pair
+/// lie in one fixed width's range, so a fixed-width field keeps its width.
+fn fault_field_flip(v: V) -> V {
+    map_payload(v, |x| match x {
+        V::Con(t, i, c, mut vs) => {
+            if let Some(slot) = vs.iter_mut().find(|f| matches!(f, V::Int(_) | V::Fixed(..))) {
+                *slot = match &*slot {
+                    V::Int(n) => V::Int(n ^ 1),
+                    V::Fixed(f, n) => V::Fixed(*f, n ^ 1),
+                    other => other.clone(),
+                };
+            }
+            V::Con(t, i, c, vs)
+        }
+        other => other,
+    })
+}
+
 /// Fault `off-by-one-consumed`: the second component of a `(value, consumed)`
 /// pair is off by one, `+ 1` when even and `- 1` when odd, so both directions
 /// occur and a claim that pins `consumed` on every input catches the fault.
@@ -664,6 +685,7 @@ pub enum Fault {
     WrongCtor,
     OkAsErr,
     OffByOneConsumed,
+    FieldFlip,
 }
 
 impl Fault {
@@ -677,6 +699,7 @@ impl Fault {
             Fault::WrongCtor => "wrong-ctor",
             Fault::OkAsErr => "ok-as-err",
             Fault::OffByOneConsumed => "off-by-one-consumed",
+            Fault::FieldFlip => "field-flip",
         }
     }
     pub fn parse(text: &str) -> Option<Fault> {
@@ -689,6 +712,7 @@ impl Fault {
             Fault::WrongCtor,
             Fault::OkAsErr,
             Fault::OffByOneConsumed,
+            Fault::FieldFlip,
         ]
         .into_iter()
         .find(|f| f.name() == text)
@@ -3051,6 +3075,7 @@ fn op_normalize(_w: &[u64], args: &[V], fault: Fault) -> V {
     let v: V = { let s1 = normalize(p0, p1); V::Con("Span", 0, "Span", vec![V::Fixed(F::U8, (s1.start) as i128), V::Fixed(F::U8, (s1.len) as i128)]) };
     match fault {
         Fault::FieldZero => fault_field_zero(v),
+        Fault::FieldFlip => fault_field_flip(v),
         _ => v,
     }
 }
@@ -3920,20 +3945,40 @@ pub fn build_suite(fault: Fault) -> Suite {
         let caught: Vec<&str> = attacking("normalize", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldZero))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-zero")
     });
+    reg(&mut suite, Meta { fault: "field-flip".into(), target: "example".into(), ..Meta::new("warrant/wxa/negctl/example/normalize/field-flip", "negctl", "normalize", "") }, || {
+        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("normalize_orders_the_pair", neg_ex_normalize_orders_the_pair), ("normalize_projects_a_field", neg_ex_normalize_projects_a_field)];
+        let caught: Vec<&str> = attacking("normalize", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldFlip))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "field-flip")
+    });
     reg(&mut suite, Meta { fault: "field-zero".into(), target: "exhaustive".into(), ..Meta::new("warrant/wxa/negctl/exhaustive/normalize/field-zero", "negctl", "normalize", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 2] = [("normalize_matches_the_model", neg_exh_normalize_matches_the_model), ("normalize_len_is_the_gap", neg_exh_normalize_len_is_the_gap)];
         let caught: Vec<&str> = attacking("normalize", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldZero))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-zero")
+    });
+    reg(&mut suite, Meta { fault: "field-flip".into(), target: "exhaustive".into(), ..Meta::new("warrant/wxa/negctl/exhaustive/normalize/field-flip", "negctl", "normalize", "") }, || {
+        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("normalize_matches_the_model", neg_exh_normalize_matches_the_model), ("normalize_len_is_the_gap", neg_exh_normalize_len_is_the_gap)];
+        let caught: Vec<&str> = attacking("normalize", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldFlip))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "field-flip")
     });
     reg(&mut suite, Meta { fault: "field-zero".into(), target: "property".into(), ..Meta::new("warrant/wxa/negctl/property/normalize/field-zero", "negctl", "normalize", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 2] = [("normalize_matches_the_model", neg_prop_normalize_matches_the_model), ("normalize_len_is_the_gap", neg_prop_normalize_len_is_the_gap)];
         let caught: Vec<&str> = attacking("normalize", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldZero))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-zero")
     });
+    reg(&mut suite, Meta { fault: "field-flip".into(), target: "property".into(), ..Meta::new("warrant/wxa/negctl/property/normalize/field-flip", "negctl", "normalize", "") }, || {
+        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("normalize_matches_the_model", neg_prop_normalize_matches_the_model), ("normalize_len_is_the_gap", neg_prop_normalize_len_is_the_gap)];
+        let caught: Vec<&str> = attacking("normalize", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldFlip))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "field-flip")
+    });
     reg(&mut suite, Meta { fault: "field-zero".into(), target: "fuzz".into(), ..Meta::new("warrant/wxa/negctl/fuzz/normalize/field-zero", "negctl", "normalize", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 2] = [("normalize_matches_the_model", neg_fuz_normalize_matches_the_model), ("normalize_len_is_the_gap", neg_fuz_normalize_len_is_the_gap)];
         let caught: Vec<&str> = attacking("normalize", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldZero))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-zero")
+    });
+    reg(&mut suite, Meta { fault: "field-flip".into(), target: "fuzz".into(), ..Meta::new("warrant/wxa/negctl/fuzz/normalize/field-flip", "negctl", "normalize", "") }, || {
+        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("normalize_matches_the_model", neg_fuz_normalize_matches_the_model), ("normalize_len_is_the_gap", neg_fuz_normalize_len_is_the_gap)];
+        let caught: Vec<&str> = attacking("normalize", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldFlip))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "field-flip")
     });
     reg(&mut suite, Meta { fault: "swap-components".into(), target: "example".into(), ..Meta::new("warrant/wxa/negctl/example/order/swap-components", "negctl", "order", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 1] = [("order_swaps", neg_ex_order_swaps)];
