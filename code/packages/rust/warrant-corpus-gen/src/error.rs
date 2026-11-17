@@ -17,7 +17,7 @@
 //!   "domain"  a descriptor VER04r 16.2 leaves undecided    domain resolution
 //!   "profile" `corpus.profile` is malformed                 profile reader
 //!   "json"    a value cannot be rendered canonically        json writer
-//!   "unimplemented"  a later slice's stage (fails closed)   `generate`
+//!   "fault" "drift" "io"   faults and controls, --check, files (S3c)
 //! ```
 //!
 //! A message **never echoes input bytes** (VER04r section 14, "no reproducing material
@@ -50,8 +50,13 @@ pub mod code {
     pub const PROFILE: &str = "profile";
     /// A JSON value cannot be rendered by the canonical writer.
     pub const JSON: &str = "json";
-    /// The stage belongs to a later slice (S3b to S3d); refusing is the fail-closed stub.
-    pub const UNIMPLEMENTED: &str = "unimplemented";
+    /// A fault cannot be instantiated, no claim can catch it, or every claim is blind to it.
+    pub const FAULT: &str = "fault";
+    /// An on-disk corpus differs from the regenerated one (`--check`), or the profile's
+    /// fault names differ from the bindings'.
+    pub const DRIFT: &str = "drift";
+    /// A file could not be read or written, or a path was refused.
+    pub const IO: &str = "io";
 }
 
 /// Where in the language a refused construct lives: the feature level it needs.

@@ -354,23 +354,19 @@ fn a_document_the_checker_refuses_is_a_check_error_not_a_level_error() {
 }
 
 #[test]
-fn generate_fails_closed_after_the_s3a_checks() {
-    // ct-compare lowers and costs fine, and generate still refuses: no digest, no corpus.
+fn generate_still_refuses_what_is_beyond_ir_core_and_bad_profiles() {
+    // ct-compare is `ir.core` all through: generate no longer fails closed for it (S3c), but a
+    // bad profile is refused first and a document beyond `ir.core` is refused whole.
     with_file(CT_COMPARE, |f| {
         let e = generate(&GenInput {
             file: f,
-            profile_bytes: b"",
-        })
-        .unwrap_err();
-        assert_eq!(e.code, code::UNIMPLEMENTED);
-        // a bad profile is refused first
-        let e = generate(&GenInput {
-            file: f,
+            spec_path: "code/specs/ct-compare.warrant",
+            spec_bytes: CT_COMPARE.as_bytes(),
             profile_bytes: b"chunk_size 3000\n",
+            binding_faults: None,
         })
         .unwrap_err();
         assert_eq!(e.code, code::PROFILE);
-        // an S3a refusal is not masked by the stub
         assert!(analyse(f, &Profile::default()).is_ok());
     });
     let beyond = doc_ops(
@@ -381,7 +377,10 @@ fn generate_fails_closed_after_the_s3a_checks() {
     with_file(&beyond, |f| {
         let e = generate(&GenInput {
             file: f,
+            spec_path: "x.warrant",
+            spec_bytes: beyond.as_bytes(),
             profile_bytes: b"",
+            binding_faults: None,
         })
         .unwrap_err();
         assert_eq!(e.code, code::LEVEL);

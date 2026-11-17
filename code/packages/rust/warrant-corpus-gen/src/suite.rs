@@ -477,6 +477,51 @@ impl<'a> SuitePlan<'a> {
         Whole { inputs, expected }
     }
 
+    /// Walk every **admitted** case in product order, calling `f(ordinal, vars)` with the
+    /// binder values; `f` returns `Ok(false)` to stop early.  This is the seam of the
+    /// witness search (VER04r 5.6): it digests nothing and counts nothing.
+    ///
+    /// # Errors
+    ///
+    /// Whatever `f` returns, and `W0701` if a binder value cannot be produced.
+    pub fn scan_admitted(
+        &self,
+        f: &mut dyn FnMut(u64, &crate::eval::Vars<'_>) -> Result<bool, GenError>,
+    ) -> Result<(), GenError> {
+        let at = |e: GenError| e.at(&self.suite.claim);
+        let n = self.binders.len();
+        let sizes: Vec<u64> = self.binders.iter().map(|b| b.size).collect();
+        let mut idx = vec![0u64; n];
+        let mut vars: Vec<(&str, crate::value::Value)> = self
+            .binders
+            .iter()
+            .map(|b| (b.name.as_str(), crate::value::Value::Bool(false)))
+            .collect();
+        let mut dirty = 0usize;
+        for ordinal in 0..self.product {
+            if self.admits(ordinal) {
+                for j in dirty..n {
+                    vars[j].1 = self.binders[j].value(idx[j]).map_err(at)?;
+                }
+                dirty = n;
+                if !f(ordinal, &vars)? {
+                    return Ok(());
+                }
+            }
+            let mut j = n;
+            while j > 0 {
+                j -= 1;
+                dirty = dirty.min(j);
+                idx[j] += 1;
+                if idx[j] < sizes[j] {
+                    break;
+                }
+                idx[j] = 0;
+            }
+        }
+        Ok(())
+    }
+
     /// Enumerate chunk `c` alone, by unranking its first ordinal, and digest its streams.
     /// `whole` receives the same bytes (the v1 whole-suite digest is fed in one pass).
     ///

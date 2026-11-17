@@ -1,8 +1,8 @@
 [package]
 name = "coding_adventures_warrant_corpus_gen"
-version = "0.2.1"
+version = "0.3.0"
 edition = "2021"
-description = "Warrant corpus v2 emitter (VER04r slice S3): ir.core lowering, cost accounting, the evaluator, enumeration, digests and the adopter census; faults and emission follow in S3c"
+description = "Warrant corpus v2 emitter (VER04r slice S3): ir.core lowering, evaluator, enumeration, digests, fault IR and controls, corpus.json/chunk/cases.tfv emission and --check"
 license = "MIT"
 
 [dependencies]
@@ -12,6 +12,10 @@ coding_adventures_warrant_grammar = { path = "../warrant-grammar" }
 # SHA-256: `profile_sha256` (the digest of corpus.profile, VER04r 1.4) and, from S3b, the
 # chunk, suite and v1 whole-suite digests (streaming `Sha256Hasher`).
 coding_adventures_sha256 = { path = "../sha256" }
+
+[[bin]]
+name = "warrant-corpus-gen"
+path = "src/bin/warrant-corpus-gen.rs"
 
 [features]
 # Seeded-wrong controls (a wrong evaluator, a reordered domain, a lowered work-stack bound).
