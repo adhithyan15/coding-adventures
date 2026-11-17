@@ -57,10 +57,10 @@ fn with_features(src: &str) -> CrateInput {
 /// 1.5x to spare).  k = 2 (linear 2, quadratic 4) leaves too little room: a
 /// loaded macOS runner measured 3.4 against a limit of 3.2 on linear code, so
 /// no check uses it.  Each size keeps the best (minimum) of
-/// up to three runs, which discards scheduler noise: one run per size is taken
+/// up to five runs, which discards scheduler noise: one run per size is taken
 /// first and more only while the ratio still looks too high, so a quiet host
-/// pays for one pass while a noisy one gets three; a real quadratic fails all
-/// three.  `n` is chosen so the increments are tens to hundreds of
+/// pays for one pass while a noisy one gets five; a real quadratic fails all
+/// five.  `n` is chosen so the increments are tens to hundreds of
 /// milliseconds; the denominator is floored at 5 ms so a timer-resolution-sized
 /// difference cannot inflate the ratio.  The absolute backstop is only a hang
 /// guard, far above any real runner's speed.
@@ -75,7 +75,7 @@ fn scales_linearly(what: &str, n: usize, k: usize, work: impl Fn(usize)) {
     let sizes = [n, k * n, k * k * n];
     let mut best = [Duration::MAX; 3];
     let mut ratio = f64::MAX;
-    for _ in 0..3 {
+    for _ in 0..5 {
         for (slot, size) in best.iter_mut().zip(sizes) {
             let t = Instant::now();
             work(size);
@@ -480,7 +480,9 @@ fn item11_item_scanning_is_linear() {
         let src = format!("{HEADER}{}", "#[cfg(test)] a ".repeat(n));
         let _ = run(&lib(&src));
     });
-    scales_linearly("nested `#[`", 1_700, 4, |n| {
+    // 16 * 3_000 nested `#[` + `]` is 192_000 tokens, under the 262_144-token lex cap, so
+    // the largest size is still scanned in full (a cap hit would flatten the curve)
+    scales_linearly("nested `#[`", 3_000, 4, |n| {
         let src = format!("{HEADER}{}{}", "#[".repeat(n), "]".repeat(n));
         let _ = run(&lib(&src));
     });
