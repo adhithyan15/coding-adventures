@@ -1,0 +1,89 @@
+json_01_scalars/default	7df461952ed367b20422170baa03b02f39c25c7f6e5185804faf13fbd145147f	ok nodes=8 tokens=13
+json_01_scalars/depth6	7df461952ed367b20422170baa03b02f39c25c7f6e5185804faf13fbd145147f	ok nodes=8 tokens=13
+json_01_scalars/depth14	7df461952ed367b20422170baa03b02f39c25c7f6e5185804faf13fbd145147f	ok nodes=8 tokens=13
+json_01_scalars/depth40	7df461952ed367b20422170baa03b02f39c25c7f6e5185804faf13fbd145147f	ok nodes=8 tokens=13
+json_01_scalars/memo50	7df461952ed367b20422170baa03b02f39c25c7f6e5185804faf13fbd145147f	ok nodes=8 tokens=13
+json_01_scalars/memo700	7df461952ed367b20422170baa03b02f39c25c7f6e5185804faf13fbd145147f	ok nodes=8 tokens=13
+json_01_scalars/tokens9	4cf7bc07c16620a1e1571b4e3d95c2fd21fe7d1942deac4858ec8b5f8eb08d68	err kind=tokens nil=true "Parse error at 1:33: input has more tokens than the supported limit (9)"
+json_01_scalars/noeof	7df461952ed367b20422170baa03b02f39c25c7f6e5185804faf13fbd145147f	ok nodes=8 tokens=13
+json_01_scalars/trunc	e6dc4dbd90d2189596e2d02688299c9dc59d5741e9e0c79665a61954493d8069	err kind=syntax nil=true "Parse error at 1:1: Expected LBRACE or object or LBRACKET or array or STRING or NUMBER or TRUE or FALSE or NULL or value, got \"[\""
+json_02_nested/default	ef57e1928084a41656b24ede983514a4ee19b01b456f37576bcec627e5169509	ok nodes=34 tokens=46
+json_02_nested/depth6	58f755fcdf36d11e4678cfa563adb4fafa646a73ef66f09a8fca0f5f9d877a0b	err kind=depth nil=true "Parse error at 1:8: input nests deeper than the supported limit (6)"
+json_02_nested/depth14	f281da3682d8c63ed2d3c21e186863a4c19e71d61dc467cbdc7d3bcc25e036a7	err kind=depth nil=true "Parse error at 1:28: input nests deeper than the supported limit (14)"
+json_02_nested/depth40	ef57e1928084a41656b24ede983514a4ee19b01b456f37576bcec627e5169509	ok nodes=34 tokens=46
+json_02_nested/memo50	020a556e66409cfdfbd8763783a7f98a8c29389d03444c04e5b148a531505098	err kind=memo nil=true "Parse error at 1:67: parse needs more memo entries than the supported limit (50)"
+json_02_nested/memo700	ef57e1928084a41656b24ede983514a4ee19b01b456f37576bcec627e5169509	ok nodes=34 tokens=46
+json_02_nested/tokens9	4f469fb090daf68cf9183bf9a04caa6b7d5a2f892355e45746d9326166863c55	err kind=tokens nil=true "Parse error at 1:17: input has more tokens than the supported limit (9)"
+json_02_nested/noeof	ef57e1928084a41656b24ede983514a4ee19b01b456f37576bcec627e5169509	ok nodes=34 tokens=46
+json_02_nested/trunc	5333e7d36f8f0b9514e9d4b25d84b06e38e2b5c85a4f91033c48f4407557834e	err kind=syntax nil=true "Parse error at 1:1: Expected COMMA or RBRACE, got \"{\""
+json_03_records/default	9b24e7cc6995eff30b0ca4a780408767ebe0a04455f4e3f34385f73da81b6405	ok nodes=170 tokens=289
+json_03_records/depth6	5facc6ea6531a36b453348d8b5362bf54c024f4ab467effd7e41aae2deea8d2a	err kind=depth nil=true "Parse error at 1:9: input nests deeper than the supported limit (6)"
+json_03_records/depth14	9b24e7cc6995eff30b0ca4a780408767ebe0a04455f4e3f34385f73da81b6405	ok nodes=170 tokens=289
+json_03_records/depth40	9b24e7cc6995eff30b0ca4a780408767ebe0a04455f4e3f34385f73da81b6405	ok nodes=170 tokens=289
+json_03_records/memo50	15923b37b9b1c77eccc71c1272b8863dd1e7280af707cb472f3fa71577e94ec6	err kind=memo nil=true "Parse error at 1:99: parse needs more memo entries than the supported limit (50)"
+json_03_records/memo700	9b24e7cc6995eff30b0ca4a780408767ebe0a04455f4e3f34385f73da81b6405	ok nodes=170 tokens=289
+json_03_records/tokens9	a0619a4d89db564440a8a44235a254a50a42a6b4cd245cd364c973ad5f986f56	err kind=tokens nil=true "Parse error at 1:21: input has more tokens than the supported limit (9)"
+json_03_records/noeof	9b24e7cc6995eff30b0ca4a780408767ebe0a04455f4e3f34385f73da81b6405	ok nodes=170 tokens=289
+json_03_records/trunc	e6dc4dbd90d2189596e2d02688299c9dc59d5741e9e0c79665a61954493d8069	err kind=syntax nil=true "Parse error at 1:1: Expected LBRACE or object or LBRACKET or array or STRING or NUMBER or TRUE or FALSE or NULL or value, got \"[\""
+json_04_empty/default	943caecefd0bb2fe3b69848209185bf39da8b573a1a75c70b2fdaa6965773647	ok nodes=2 tokens=2
+json_04_empty/depth6	943caecefd0bb2fe3b69848209185bf39da8b573a1a75c70b2fdaa6965773647	ok nodes=2 tokens=2
+json_04_empty/depth14	943caecefd0bb2fe3b69848209185bf39da8b573a1a75c70b2fdaa6965773647	ok nodes=2 tokens=2
+json_04_empty/depth40	943caecefd0bb2fe3b69848209185bf39da8b573a1a75c70b2fdaa6965773647	ok nodes=2 tokens=2
+json_04_empty/memo50	943caecefd0bb2fe3b69848209185bf39da8b573a1a75c70b2fdaa6965773647	ok nodes=2 tokens=2
+json_04_empty/memo700	943caecefd0bb2fe3b69848209185bf39da8b573a1a75c70b2fdaa6965773647	ok nodes=2 tokens=2
+json_04_empty/tokens9	943caecefd0bb2fe3b69848209185bf39da8b573a1a75c70b2fdaa6965773647	ok nodes=2 tokens=2
+json_04_empty/noeof	943caecefd0bb2fe3b69848209185bf39da8b573a1a75c70b2fdaa6965773647	ok nodes=2 tokens=2
+json_05_trailing_comma/default	e6dc4dbd90d2189596e2d02688299c9dc59d5741e9e0c79665a61954493d8069	err kind=syntax nil=true "Parse error at 1:1: Expected LBRACE or object or LBRACKET or array or STRING or NUMBER or TRUE or FALSE or NULL or value, got \"[\""
+json_05_trailing_comma/depth6	e6dc4dbd90d2189596e2d02688299c9dc59d5741e9e0c79665a61954493d8069	err kind=syntax nil=true "Parse error at 1:1: Expected LBRACE or object or LBRACKET or array or STRING or NUMBER or TRUE or FALSE or NULL or value, got \"[\""
+json_05_trailing_comma/depth14	e6dc4dbd90d2189596e2d02688299c9dc59d5741e9e0c79665a61954493d8069	err kind=syntax nil=true "Parse error at 1:1: Expected LBRACE or object or LBRACKET or array or STRING or NUMBER or TRUE or FALSE or NULL or value, got \"[\""
+json_05_trailing_comma/depth40	e6dc4dbd90d2189596e2d02688299c9dc59d5741e9e0c79665a61954493d8069	err kind=syntax nil=true "Parse error at 1:1: Expected LBRACE or object or LBRACKET or array or STRING or NUMBER or TRUE or FALSE or NULL or value, got \"[\""
+json_05_trailing_comma/memo50	e6dc4dbd90d2189596e2d02688299c9dc59d5741e9e0c79665a61954493d8069	err kind=syntax nil=true "Parse error at 1:1: Expected LBRACE or object or LBRACKET or array or STRING or NUMBER or TRUE or FALSE or NULL or value, got \"[\""
+json_05_trailing_comma/memo700	e6dc4dbd90d2189596e2d02688299c9dc59d5741e9e0c79665a61954493d8069	err kind=syntax nil=true "Parse error at 1:1: Expected LBRACE or object or LBRACKET or array or STRING or NUMBER or TRUE or FALSE or NULL or value, got \"[\""
+json_05_trailing_comma/tokens9	e6dc4dbd90d2189596e2d02688299c9dc59d5741e9e0c79665a61954493d8069	err kind=syntax nil=true "Parse error at 1:1: Expected LBRACE or object or LBRACKET or array or STRING or NUMBER or TRUE or FALSE or NULL or value, got \"[\""
+json_05_trailing_comma/noeof	e6dc4dbd90d2189596e2d02688299c9dc59d5741e9e0c79665a61954493d8069	err kind=syntax nil=true "Parse error at 1:1: Expected LBRACE or object or LBRACKET or array or STRING or NUMBER or TRUE or FALSE or NULL or value, got \"[\""
+json_05_trailing_comma/trunc	e6dc4dbd90d2189596e2d02688299c9dc59d5741e9e0c79665a61954493d8069	err kind=syntax nil=true "Parse error at 1:1: Expected LBRACE or object or LBRACKET or array or STRING or NUMBER or TRUE or FALSE or NULL or value, got \"[\""
+json_06_unterminated/default	ed3b6a3ada83d6f6c6a5d02fae7a78f16d11a5b03c50838330f1e938f9f997e3	err kind=syntax nil=true "Parse error at 1:1: Expected LBRACE or object or LBRACKET or array or STRING or NUMBER or TRUE or FALSE or NULL or value, got \"{\""
+json_06_unterminated/depth6	58f755fcdf36d11e4678cfa563adb4fafa646a73ef66f09a8fca0f5f9d877a0b	err kind=depth nil=true "Parse error at 1:8: input nests deeper than the supported limit (6)"
+json_06_unterminated/depth14	ed3b6a3ada83d6f6c6a5d02fae7a78f16d11a5b03c50838330f1e938f9f997e3	err kind=syntax nil=true "Parse error at 1:1: Expected LBRACE or object or LBRACKET or array or STRING or NUMBER or TRUE or FALSE or NULL or value, got \"{\""
+json_06_unterminated/depth40	ed3b6a3ada83d6f6c6a5d02fae7a78f16d11a5b03c50838330f1e938f9f997e3	err kind=syntax nil=true "Parse error at 1:1: Expected LBRACE or object or LBRACKET or array or STRING or NUMBER or TRUE or FALSE or NULL or value, got \"{\""
+json_06_unterminated/memo50	ed3b6a3ada83d6f6c6a5d02fae7a78f16d11a5b03c50838330f1e938f9f997e3	err kind=syntax nil=true "Parse error at 1:1: Expected LBRACE or object or LBRACKET or array or STRING or NUMBER or TRUE or FALSE or NULL or value, got \"{\""
+json_06_unterminated/memo700	ed3b6a3ada83d6f6c6a5d02fae7a78f16d11a5b03c50838330f1e938f9f997e3	err kind=syntax nil=true "Parse error at 1:1: Expected LBRACE or object or LBRACKET or array or STRING or NUMBER or TRUE or FALSE or NULL or value, got \"{\""
+json_06_unterminated/tokens9	fe28a8ad08df79439542bd02a2ae098d23e6ccc9614420d8542629f1e89a2cdf	err kind=tokens nil=true "Parse error at 1:15: input has more tokens than the supported limit (9)"
+json_06_unterminated/noeof	ed3b6a3ada83d6f6c6a5d02fae7a78f16d11a5b03c50838330f1e938f9f997e3	err kind=syntax nil=true "Parse error at 1:1: Expected LBRACE or object or LBRACKET or array or STRING or NUMBER or TRUE or FALSE or NULL or value, got \"{\""
+json_06_unterminated/trunc	ed3b6a3ada83d6f6c6a5d02fae7a78f16d11a5b03c50838330f1e938f9f997e3	err kind=syntax nil=true "Parse error at 1:1: Expected LBRACE or object or LBRACKET or array or STRING or NUMBER or TRUE or FALSE or NULL or value, got \"{\""
+json_07_two_values/default	c84feea2294aa387383b3173cdbcc3da08ef258253383a932b683d07bf8280f5	err kind=syntax nil=true "Parse error at 1:5: Unexpected token: \"[\""
+json_07_two_values/depth6	c84feea2294aa387383b3173cdbcc3da08ef258253383a932b683d07bf8280f5	err kind=syntax nil=true "Parse error at 1:5: Unexpected token: \"[\""
+json_07_two_values/depth14	c84feea2294aa387383b3173cdbcc3da08ef258253383a932b683d07bf8280f5	err kind=syntax nil=true "Parse error at 1:5: Unexpected token: \"[\""
+json_07_two_values/depth40	c84feea2294aa387383b3173cdbcc3da08ef258253383a932b683d07bf8280f5	err kind=syntax nil=true "Parse error at 1:5: Unexpected token: \"[\""
+json_07_two_values/memo50	c84feea2294aa387383b3173cdbcc3da08ef258253383a932b683d07bf8280f5	err kind=syntax nil=true "Parse error at 1:5: Unexpected token: \"[\""
+json_07_two_values/memo700	c84feea2294aa387383b3173cdbcc3da08ef258253383a932b683d07bf8280f5	err kind=syntax nil=true "Parse error at 1:5: Unexpected token: \"[\""
+json_07_two_values/tokens9	c84feea2294aa387383b3173cdbcc3da08ef258253383a932b683d07bf8280f5	err kind=syntax nil=true "Parse error at 1:5: Unexpected token: \"[\""
+json_07_two_values/noeof	c84feea2294aa387383b3173cdbcc3da08ef258253383a932b683d07bf8280f5	err kind=syntax nil=true "Parse error at 1:5: Unexpected token: \"[\""
+json_07_two_values/trunc	5d9b499dba9485e4664651ba0da2d3b4d96e9b0372cc83383f9bed631d643b2a	ok nodes=3 tokens=3
+json_08_deep/default	493a4ca1103fdb6ef4218351fa25f53df11f1f802a49f9751a0a87565bc836fe	ok nodes=61 tokens=61
+json_08_deep/depth6	8305456602c9dd2445ac006e3c8611ca47cf3c3df66615d1cb3bf1305933ce00	err kind=depth nil=true "Parse error at 1:4: input nests deeper than the supported limit (6)"
+json_08_deep/depth14	66cfde13686681e0ee71db6c199457292046f5b5549756967b47928417e2496e	err kind=depth nil=true "Parse error at 1:8: input nests deeper than the supported limit (14)"
+json_08_deep/depth40	7f7f9b3582fe2251adee5934dd67c7a95406ba591fa5fba1c21de2514b2574f0	err kind=depth nil=true "Parse error at 1:21: input nests deeper than the supported limit (40)"
+json_08_deep/memo50	e217937c4067f9c927e359e24fa4e6158e0ea7f6437fbf7ec128843c1b96c594	err kind=memo nil=true "Parse error at 1:17: parse needs more memo entries than the supported limit (50)"
+json_08_deep/memo700	493a4ca1103fdb6ef4218351fa25f53df11f1f802a49f9751a0a87565bc836fe	ok nodes=61 tokens=61
+json_08_deep/tokens9	1d18f0dffdd80bbc3a08c5c2dae8c1944510a4b6e5f3324ac02f00746a0033ca	err kind=tokens nil=true "Parse error at 1:10: input has more tokens than the supported limit (9)"
+json_08_deep/noeof	493a4ca1103fdb6ef4218351fa25f53df11f1f802a49f9751a0a87565bc836fe	ok nodes=61 tokens=61
+json_08_deep/trunc	0fe801e71337dfaad52b76179533d58d2b20bdc1290e0636b618391f428630f5	err kind=syntax nil=true "Parse error at 1:1: Expected COMMA or RBRACKET, got \"[\""
+json_09_bad_key/default	8dfbc0f94583304602f4e3bdf755f21f7ef71c21dfc1b3350d88717f85f443e7	err kind=syntax nil=true "Parse error at 1:1: Expected STRING or pair or RBRACE, got \"{\""
+json_09_bad_key/depth6	8dfbc0f94583304602f4e3bdf755f21f7ef71c21dfc1b3350d88717f85f443e7	err kind=syntax nil=true "Parse error at 1:1: Expected STRING or pair or RBRACE, got \"{\""
+json_09_bad_key/depth14	8dfbc0f94583304602f4e3bdf755f21f7ef71c21dfc1b3350d88717f85f443e7	err kind=syntax nil=true "Parse error at 1:1: Expected STRING or pair or RBRACE, got \"{\""
+json_09_bad_key/depth40	8dfbc0f94583304602f4e3bdf755f21f7ef71c21dfc1b3350d88717f85f443e7	err kind=syntax nil=true "Parse error at 1:1: Expected STRING or pair or RBRACE, got \"{\""
+json_09_bad_key/memo50	8dfbc0f94583304602f4e3bdf755f21f7ef71c21dfc1b3350d88717f85f443e7	err kind=syntax nil=true "Parse error at 1:1: Expected STRING or pair or RBRACE, got \"{\""
+json_09_bad_key/memo700	8dfbc0f94583304602f4e3bdf755f21f7ef71c21dfc1b3350d88717f85f443e7	err kind=syntax nil=true "Parse error at 1:1: Expected STRING or pair or RBRACE, got \"{\""
+json_09_bad_key/tokens9	8dfbc0f94583304602f4e3bdf755f21f7ef71c21dfc1b3350d88717f85f443e7	err kind=syntax nil=true "Parse error at 1:1: Expected STRING or pair or RBRACE, got \"{\""
+json_09_bad_key/noeof	8dfbc0f94583304602f4e3bdf755f21f7ef71c21dfc1b3350d88717f85f443e7	err kind=syntax nil=true "Parse error at 1:1: Expected STRING or pair or RBRACE, got \"{\""
+json_10_deep_unclosed/default	dcdd74ec6e55e540fafa4c6b37cf4f5e1c82436cf063a5e687bacc0cc808d3db	err kind=syntax nil=true "Parse error at 1:1: Expected LBRACE or object or LBRACKET or array or STRING or NUMBER or TRUE or FALSE or NULL or value or RBRACKET, got \"[\""
+json_10_deep_unclosed/depth6	8305456602c9dd2445ac006e3c8611ca47cf3c3df66615d1cb3bf1305933ce00	err kind=depth nil=true "Parse error at 1:4: input nests deeper than the supported limit (6)"
+json_10_deep_unclosed/depth14	66cfde13686681e0ee71db6c199457292046f5b5549756967b47928417e2496e	err kind=depth nil=true "Parse error at 1:8: input nests deeper than the supported limit (14)"
+json_10_deep_unclosed/depth40	7f7f9b3582fe2251adee5934dd67c7a95406ba591fa5fba1c21de2514b2574f0	err kind=depth nil=true "Parse error at 1:21: input nests deeper than the supported limit (40)"
+json_10_deep_unclosed/memo50	e217937c4067f9c927e359e24fa4e6158e0ea7f6437fbf7ec128843c1b96c594	err kind=memo nil=true "Parse error at 1:17: parse needs more memo entries than the supported limit (50)"
+json_10_deep_unclosed/memo700	dcdd74ec6e55e540fafa4c6b37cf4f5e1c82436cf063a5e687bacc0cc808d3db	err kind=syntax nil=true "Parse error at 1:1: Expected LBRACE or object or LBRACKET or array or STRING or NUMBER or TRUE or FALSE or NULL or value or RBRACKET, got \"[\""
+json_10_deep_unclosed/tokens9	1d18f0dffdd80bbc3a08c5c2dae8c1944510a4b6e5f3324ac02f00746a0033ca	err kind=tokens nil=true "Parse error at 1:10: input has more tokens than the supported limit (9)"
+json_10_deep_unclosed/noeof	dcdd74ec6e55e540fafa4c6b37cf4f5e1c82436cf063a5e687bacc0cc808d3db	err kind=syntax nil=true "Parse error at 1:1: Expected LBRACE or object or LBRACKET or array or STRING or NUMBER or TRUE or FALSE or NULL or value or RBRACKET, got \"[\""
+json_10_deep_unclosed/trunc	dcdd74ec6e55e540fafa4c6b37cf4f5e1c82436cf063a5e687bacc0cc808d3db	err kind=syntax nil=true "Parse error at 1:1: Expected LBRACE or object or LBRACKET or array or STRING or NUMBER or TRUE or FALSE or NULL or value or RBRACKET, got \"[\""
+empty/default	fbfd80e325a8633d95430f5afb37b14a8132e5d941a26ebdfcc1c7ed010ade9c	err kind=syntax nil=true "Parse error at 0:0: Expected LBRACE or object or LBRACKET or array or STRING or NUMBER or TRUE or FALSE or NULL or value, got \"\""
