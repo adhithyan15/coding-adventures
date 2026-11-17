@@ -1167,11 +1167,13 @@ impl D {
     /// Binary mux tree over the table: `tbl[idx]`.
     fn mux_tree(aig: &mut Aig, tbl: &[BitVec], idx: &BitVec) -> BitVec {
         let mut level: Vec<BitVec> = tbl.to_vec();
-        for b in 0..idx.width() {
+        // One tree level per index bit, least significant first; iterating the bits directly
+        // (rather than `0..width` and indexing) is the same walk without the index variable.
+        for &bit in idx.bits.iter().take(idx.width()) {
             let mut next = Vec::new();
             for pair in level.chunks(2) {
                 next.push(if pair.len() == 2 {
-                    bv::ite(aig, idx.bits[b], &pair[1], &pair[0])
+                    bv::ite(aig, bit, &pair[1], &pair[0])
                 } else {
                     pair[0].clone()
                 });

@@ -1,1 +1,3 @@
-echo "SKIP: vos-capacity-probe runs each row as a child under /usr/bin/time and polls it with ps, which Windows does not have"
+cargo test --release -- --nocapture
+cargo run --release -q -- check ../../../specs/data/vos30-capacity-results.json
+cargo run --release -q -- table --check

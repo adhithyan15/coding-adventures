@@ -104,6 +104,10 @@ fn the_row_child_prints_a_progress_line_then_its_answer() {
     );
 }
 
+// Unix-only: this test runs rows as child processes, and the runner starts each child under
+// `/usr/bin/time` and polls it with `ps`, neither of which exists on Windows.  The in-process
+// `check` (which re-runs every quick row without children) is what BUILD_windows runs instead.
+#[cfg(unix)]
 #[test]
 fn rows_run_as_children_and_come_back_green_with_a_parsed_peak_rss() {
     let specs: Vec<RowSpec> = (1..=3)
@@ -123,6 +127,10 @@ fn rows_run_as_children_and_come_back_green_with_a_parsed_peak_rss() {
     );
 }
 
+// Unix-only: this test runs rows as child processes, and the runner starts each child under
+// `/usr/bin/time` and polls it with `ps`, neither of which exists on Windows.  The in-process
+// `check` (which re-runs every quick row without children) is what BUILD_windows runs instead.
+#[cfg(unix)]
 #[test]
 fn a_child_over_the_memory_cap_is_killed_as_oom_and_a_slow_one_as_killed() {
     // D1 at T = 8, k = 2 runs for a few hundred milliseconds: long enough to be polled.
@@ -152,6 +160,10 @@ fn a_child_over_the_memory_cap_is_killed_as_oom_and_a_slow_one_as_killed() {
 }
 
 /// The whole quick tier once, then everything that reads a results file.
+// Unix-only: this test runs rows as child processes, and the runner starts each child under
+// `/usr/bin/time` and polls it with `ps`, neither of which exists on Windows.  The in-process
+// `check` (which re-runs every quick row without children) is what BUILD_windows runs instead.
+#[cfg(unix)]
 #[test]
 fn quick_tier_check_table_and_decide() {
     let d = scratch("quick");
@@ -259,6 +271,10 @@ fn quick_tier_check_table_and_decide() {
     assert!(out.starts_with("row 1: Infeasible: re-plan X3"), "{out}");
 }
 
+// Unix-only: this test runs rows as child processes, and the runner starts each child under
+// `/usr/bin/time` and polls it with `ps`, neither of which exists on Windows.  The in-process
+// `check` (which re-runs every quick row without children) is what BUILD_windows runs instead.
+#[cfg(unix)]
 #[test]
 fn a_partial_run_is_reported_and_the_quick_gate_passes_on_what_ran() {
     let d = scratch("partial");
