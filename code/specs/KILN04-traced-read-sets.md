@@ -2371,17 +2371,23 @@ byte as an `ERR_*` token), so it can never panic on hostile input.
 
 | Input class | Old | New | Reason | Pinning test |
 |---|---|---|---|---|
-| a line nested deeper than 64 | accepted | refused, `size` | bounds stack and memory against hostile lines | added in PR 5 |
-| a line of more than 65,536 tokens (a signal line counts too: every run of spaces in its text is a token) | accepted | refused, `size` | bounds memory and time against hostile lines | added in PR 5 |
+| a line nested deeper than 64 | accepted | refused, `size` | bounds stack and memory against hostile lines | `TestDepthCap` |
+| a line of more than 65,536 tokens (a signal line counts too: every run of spaces in its text is a token) | accepted | refused, `size` | bounds memory and time against hostile lines | `TestTokenCap` |
 | `[pid +5] ...` (a signed pid: `Atoi` accepts a sign) | accepted | refused, `unparsable-line` (`ERR_PID`) | the pid is 1 to 9 digits, no sign, no leading zero | `TestReviewDivergences` (strace-parser) |
 | a resumed half that is only valid glued to its prefix, such as `<... f resumed></x>) = 0` after a prefix ending in `3` (the old parser read `3</x>`), or a lone `"` or `<` at the seam | accepted | refused, `unparsable-line` (`ERR_LT`, `ERR_QUOTE`) | the resumed half is lexed on its own, a line at a time, so a construct may not span the seam; strace never splits a token | `TestReviewDivergences` |
 | a quoted string with a bad escape (`\q`, `\400`, `\x4`) in a call the old parser does not interpret | accepted (scanned leniently, decoded only in path arguments) | refused, `ambiguous-path` | every quoted string is decoded strictly (`Options.LenientQuoted` turns it off) | `TestStrictQuoted` |
 | a line of more than 1 MiB | refused, `size` | refused, `size` (checked before lexing) | none: the same limit, recorded because the grammar path enforces it itself | `TestMaxLineBytes` |
-| a bare `<unfinished ...>` after a call's closing `)`, such as `stat(a) = 0 <unfinished ...>`, `stat(a) <unfinished ...>`, `stat(a)<unfinished ...>`, `stat(a) = ? <unfinished ...>` | refused, `result` | refused, `unparsable-line` | no result can contain a bare marker, so the grammar refuses it; reason-only (`= 0<unfinished ...>`, one annotated token, is still accepted by both) | `TestMarkerAfterCloseRefused` (strace-parser) |
-| a call line with trailing spaces | accepted | refused, `unparsable-line` | the lexer skips spaces, so the grammar cannot see a trailing one; refusing is the safe side | `TestStricterOnlyDivergences` (strace-parser) |
+| a bare `<unfinished ...>` after a call's closing `)`, such as `stat(a) = 0 <unfinished ...>`, `stat(a) <unfinished ...>`, `stat(a)<unfinished ...>`, `stat(a) = ? <unfinished ...>` | refused, `result` (or `ambiguous-path` when the marker follows an annotation) | refused, `unparsable-line` | no result can contain a bare marker, so the grammar refuses it; reason-only (`= 0<unfinished ...>`, one annotated token, is still accepted by both) | `TestMarkerAfterCloseRefused` (strace-parser) |
+| a call line with trailing spaces (reported ahead of any other fault the line has) | accepted, or refused for another reason | refused, `unparsable-line` | the lexer skips spaces, so the grammar cannot see a trailing one; refusing is the safe side | `TestStricterOnlyDivergences` (strace-parser) |
 | `+++ exited with +5 +++`, `-0` (a signed exit code) | accepted (`Atoi` takes a sign) | refused, `unparsable-line` | the exit code is digits only; no real strace prints a sign | `TestStricterOnlyDivergences` |
-| an `ERR_*` token in the text after a call's `)` (an unterminated quote, a bad `<`, a resume marker) | refused, `result` | refused, `unparsable-line` (or `ambiguous-path` for a bad annotation) | the lexer cannot know a quote is "in the result"; both refuse the whole trace | `TestStricterOnlyDivergences` |
+| an `ERR_*` token in the text after a call's `)` (an unterminated quote, a bad `<`, a resume marker) | refused, `result` or `ambiguous-path` | refused, `unparsable-line` (or `ambiguous-path` for a bad annotation) | the lexer cannot know a quote is "in the result"; both refuse the whole trace | `TestStricterOnlyDivergences` |
 | a `<... NAME resumed>` whose NAME has a character outside `[A-Za-z0-9_?]` | refused, `unmatched-resume` | refused, `unparsable-line` | NAME is lexed as a name; anything else is a bad marker | `TestRefusals` (`ERR_RESUME`) |
+| a split call whose glued text (prefix plus resumed half) is over the line byte limit, though each half is under it | accepted | refused, `size` | the grammar path reads the glued call as one line, so the limit applies to the call | `TestGluedCallOverTheByteLimit` |
+| `= 5 /* 9 in strace's PID NS */<x>` (an annotation, or a marker, after the pid-namespace note with no word before the `<`) | accepted | refused, `unparsable-line` (`ERR_LT`) | strace prints the annotation first; a bare `<` is an `ERR_LT` | `TestPR5Divergences` |
+| an exit line holding a non-ASCII Unicode space (`exited with 0` followed by U+00A0) | accepted (`strings.TrimSpace` removes it) | refused, `unparsable-line` | the exit token is ASCII only | `TestPR5Divergences` |
+| a `<... NAME resumed>` line that is itself malformed AND has no matching pending call | refused, `unmatched-resume` | refused, `unparsable-line` (or `ambiguous-path`) | the grammar path reads a line before it looks at the pending call | `TestPR5Divergences` |
+| a line whose syntax is bad AND whose effect the old scanner refused first: `interleaved-call` (a call while another is pending), or the `unresumed-call` an exit line raises | refused, `interleaved-call` / `unresumed-call` | refused, `unparsable-line` or `ambiguous-path` (same line) | the old scanner checks a line's syntax before it looks at the pending calls, so these reasons mean it accepted the syntax; the grammar path refuses the syntax first | `TestSeqDiffSeeded` (reason-only; the old scanner always refused too) |
+| a call with more top-level items than its arity cap AND a later syntax defect | refused, `arity` (stopped while scanning) | refused, `unparsable-line` or `ambiguous-path` | the grammar parses the whole line before counting | `TestLineDiffSeeded` (row "too many arguments and a later error") |
 | a line with a structural error AND a later bad annotation | refused, `unparsable-line` (first problem wins) | refused, `ambiguous-path` | the parser reports a failure position only as the start of the failing rule, so a syntax error cannot be ordered against a later bad token; the bad token is reported | `TestBadTokenWinsOverEarlierSyntaxError` |
 
 **Grammar details recorded by PR 4.** Nesting depth 64 means 64 levels of
@@ -2425,6 +2431,20 @@ lowered freely, but raised only by a spec revision that includes a DoS review
 and a benchmark of the worst-case input, with the new values committed in the
 spec.
 
+**PR 5 as built.** `internal/trace` has `handleLineG` (grammar_state.go), the
+`crossCheck` hook and its allow-list of the table above (crosscheck.go; the
+list is `stricterRow`, one row per line shape), a seeded line differential,
+`FuzzLineDiff` and `FuzzParseDiff` (linediff_test.go), and `Measure`
+(measure.go). `TestNoThirdPartyDependencies` (kiln root) enforces the KILN00
+section 17 rule on `go.mod` and on `go list -deps`. The kiln-sandbox job sets
+`KILN_TRACE_DIFF=1`, which makes `ParseOptions` cross-check every real trace and
+panic, after printing a bounded, sanitised window of the lines around the
+mismatch to the job log (no artifact is uploaded: the window is all that is
+kept, and it stays in that log); and it logs `PROBE: trace ...` lines with the
+size, line count and the throughput of both readers for every trace the sandbox
+tests produce. **Trace sizes and grammar-path throughput on real traces: to come
+from the first CI run.** The default stays the old scanner; the flip is PR 6.
+
 **The PR split.**
 
 1. This spec, plus the KILN00 §17 and README amendment.
@@ -2437,7 +2457,7 @@ spec.
    memo, and a reusable compiled grammar. G3 (honour `errors:` in Go) is
    optional; G4 is a Go grammar drift check as a per-package test.
 4. The grammar files, `strace-lexer`, `strace-parser`, and a drift test.
-5. Kiln wiring with the old parser still the default: `go.mod`
+5. **Done (PR 5).** Kiln wiring with the old parser still the default: `go.mod`
    `require`/`replace` for the in-repo modules, the CI sandbox-job path
    filter, `handleLineG`, `crossCheck`, the fuzzers, and a measurement of
    real trace sizes.

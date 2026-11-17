@@ -607,10 +607,25 @@
       "scope": "job",
       "description": "Kiln sandbox-exec end to end on linux/amd64: user, mount, PID, network, IPC and UTS namespaces, seccomp, and the real-strace trace parse. Required, never skipped, because the sandbox tests skip silently where namespaces are unavailable.",
       "packages": [
-        "go/programs/kiln"
+        "go/programs/kiln",
+        "go/strace-lexer",
+        "go/strace-parser",
+        "go/lexer",
+        "go/parser",
+        "go/grammar-tools",
+        "go/state-machine",
+        "go/directed-graph"
       ],
       "paths": [
-        "code/programs/go/kiln/**"
+        "code/programs/go/kiln/**",
+        "code/packages/go/strace-lexer/**",
+        "code/packages/go/strace-parser/**",
+        "code/packages/go/lexer/**",
+        "code/packages/go/parser/**",
+        "code/packages/go/grammar-tools/**",
+        "code/packages/go/state-machine/**",
+        "code/packages/go/directed-graph/**",
+        "code/grammars/strace/**"
       ]
     }
   }

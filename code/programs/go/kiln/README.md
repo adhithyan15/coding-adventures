@@ -56,10 +56,17 @@ It uses the Go standard library plus in-repo modules (wired with `replace`);
 it never depends on third-party modules. The in-repo modules are the shared
 grammar lexer and parser, which Kiln uses instead of hand-written scanners
 (KILN04 section 4.9). Those modules may themselves depend only on the standard
-library or other in-repo modules. A CI check (landing with the wiring PR, PR 5)
+library or other in-repo modules. A CI check (`TestNoThirdPartyDependencies`, in `deps_test.go`)
 enforces it: `go list -deps` filtered to non-standard, non-repo paths must be
 empty, every `require` names a repo module, and every `replace` target is a
 relative path inside the repo.
+
+The trace parser has two readers of a strace line: the hand-written scanner (the
+default) and the grammar path (`code/grammars/strace`, through `strace-lexer` and
+`strace-parser`). While the grammar path is on probation, the package's tests
+run both on every `Parse` and fail on any disagreement the spec's table does not
+allow, and `KILN_TRACE_DIFF=1` does the same for real traces (the kiln-sandbox CI
+job sets it; a mismatch panics with a bounded, sanitised window of lines).
 
 ## Usage
 
