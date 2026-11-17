@@ -190,6 +190,31 @@ iteration that matched nothing, so the engine terminates on any grammar,
 validated or not. Full semantics:
 [F11](F11-grammar-token-adjacency-predicates.md).
 
+## Bounded recursion, start rules and compiled grammars (Go engine)
+
+The packrat engine recurses once per rule level, so deeply nested input could
+exhaust the stack. In Go that is a fatal, unrecoverable process crash, which
+makes unbounded recursion a denial of service for every consumer. The Go
+`GrammarParser` therefore counts rule-recursion depth and refuses to exceed
+`Options.MaxDepth` (default `DefaultMaxDepth` = 10,000 rule levels, ceiling
+`HardMaxDepth` = 50,000), returning an error that satisfies
+`errors.Is(err, ErrMaxDepth)`. The refusal is sticky: it is reported even if
+an enclosing optional or repetition would have backtracked past the failed rule
+and "succeeded" on a prefix. Other implementations should do the same and keep
+a hostile-nesting test that asserts the error category.
+
+Also in the Go engine: `Options.StartRule` parses from any named rule (an
+unknown name is an error); `CompileGrammar` builds an immutable, goroutine-safe
+`Compiled` once so many inputs can be parsed without redoing per-grammar work;
+reading past the end of the token list yields a synthetic EOF rather than
+repeating the last token.
+
+**No error recovery.** The grammar-driven parser has none and must not gain
+any silently: a parse returns a complete tree for the whole input or an error,
+never a partial tree, so consumers can fail closed. (The "Error recovery"
+future extension below is a separate, opt-in feature for the hand-written
+parser and would not change this guarantee.)
+
 ## Future Extensions
 
 - **Grammar-driven parser generator**: Define grammar in BNF/PEG, generate the parser
