@@ -12,7 +12,8 @@
   a sibling name, a nested directory).
 - `TestWarrantGrammarDeclaresPythonOnBothBuildFronts` pins `# needs-toolchain: python` on both of
   warrant-grammar's BUILD fronts, the same directive and test shape as `java-to-semantic-ir`.
-- The `repository-source-input-boundary.json` fixture and its digest are unchanged: that registry is
-  not derived from `repository_inputs.go` (the sibling `warrant_syntax_corpus.py` is an input here and
-  is absent from it), no package root is added or removed, and no BUILD file gains or loses a
-  mention that a boundary keys on.
+- The `repository-source-input-boundary.json` fixture and its digest are unchanged. The fixture is a
+  curated registry, not derived from `repository_inputs.go`: the sibling `warrant_corpus_oracle.py`
+  is in it (boundary `warrant-ct-compare-corpus-inputs`), while `warrant_syntax_corpus.py` is an
+  input here and is left out of it. The new script follows that `warrant_syntax_corpus.py`
+  precedent and is left out too; the digest is unchanged because the fixture file is not edited.

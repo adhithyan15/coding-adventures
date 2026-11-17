@@ -61,11 +61,6 @@ class JudgeRule(unittest.TestCase):
         self.assertEqual(len(problems), 1)
         self.assertIn("non-zero", problems[0])
 
-    def test_timeout_is_not_an_exit(self):
-        self.assertTrue(
-            any("timed out" in p for p in negctl.judge(None, GOOD.decode()))
-        )
-
     def test_negative_signal_status_counts_as_nonzero(self):
         self.assertEqual(negctl.judge(-9, GOOD.decode()), [])
 
@@ -107,6 +102,39 @@ class JudgeRule(unittest.TestCase):
         text = "1..1\nnot ok - a\nok so\n"
         self.assertTrue(any("plan says 1" in p for p in negctl.judge(1, text)))
 
+    def test_gap_in_numbers_fails(self):
+        text = "1..3\nnot ok 1 - a\nok 2 - b\nok 4 - c\n"
+        self.assertTrue(any("numbered 1..3" in p for p in negctl.judge(1, text)))
+
+    def test_duplicate_number_fails(self):
+        text = "1..3\nnot ok 1 - a\nok 2 - b\nok 2 - c\n"
+        self.assertTrue(any("numbered 1..3" in p for p in negctl.judge(1, text)))
+
+    def test_out_of_order_numbers_fail(self):
+        text = "1..3\nnot ok 1 - a\nok 3 - b\nok 2 - c\n"
+        self.assertTrue(any("numbered 1..3" in p for p in negctl.judge(1, text)))
+
+    def test_stray_point_balancing_a_short_run_fails(self):
+        # Three points for a plan of three, but 2 is missing and 9 is stray.
+        text = "1..3\nnot ok 1 - a\nok 3 - b\nok 9 - c\n"
+        self.assertTrue(any("numbered 1..3" in p for p in negctl.judge(1, text)))
+
+    def test_todo_not_ok_is_not_a_catch(self):
+        text = "1..2\nok 1 - a\nnot ok 2 - b # TODO known\n"
+        problems = negctl.judge(1, text)
+        self.assertEqual(len(problems), 1)
+        self.assertIn("other than TODO", problems[0])
+        # lowercase directive too
+        self.assertTrue(negctl.judge(1, "1..1\nnot ok 1 - b # todo\n"))
+
+    def test_todo_point_still_counts_toward_the_plan(self):
+        text = "1..2\nnot ok 1 - a\nnot ok 2 - b # TODO\n"
+        self.assertEqual(negctl.judge(1, text), [])
+
+    def test_bail_out_on_stderr_fails(self):
+        problems = negctl.judge(1, GOOD.decode(), "Bail out! observer-timeout\n")
+        self.assertTrue(any("Bail out!" in p for p in problems))
+
     def test_crlf_output(self):
         text = GOOD.decode().replace("\n", "\r\n")
         self.assertEqual(negctl.judge(1, text), [])
@@ -115,7 +143,7 @@ class JudgeRule(unittest.TestCase):
         self.assertEqual(negctl.judge(1, "1..1 \nnot ok 1 - a\n"), [])
 
     def test_skip_directive_still_counts(self):
-        text = "1..2\nnot ok 1 - a # TODO later\nok 2 - b # SKIP no\n"
+        text = "1..3\nnot ok 1 - a\nnot ok 2 - b # TODO later\nok 3 - c # SKIP no\n"
         self.assertEqual(negctl.judge(1, text), [])
 
 
@@ -132,6 +160,11 @@ class EndToEnd(unittest.TestCase):
         self.assertEqual(status, 1)
         self.assertIn("NEGATIVE CONTROL FAILED", out)
         self.assertIn("ok 1 - a", out)  # the captured output is shown
+
+    def test_bail_out_on_stderr(self):
+        status, out = run(emit(GOOD, 70, stderr=b"Bail out! hung\n"))
+        self.assertEqual(status, 1)
+        self.assertIn("Bail out!", out)
 
     def test_bail_out(self):
         status, out = run(
@@ -240,11 +273,6 @@ class EndToEnd(unittest.TestCase):
         )
         status, _out = run(child(code, 'a b "c" &|'))
         self.assertEqual(status, 0)
-
-    def test_timeout_kills_a_hung_command(self):
-        status, out = run(child("import time\ntime.sleep(60)\n"), "--timeout", "1")
-        self.assertEqual(status, 1)
-        self.assertIn("timed out", out)
 
     def test_command_after_double_dash_is_required(self):
         with (

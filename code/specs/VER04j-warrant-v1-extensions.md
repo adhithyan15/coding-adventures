@@ -1636,9 +1636,9 @@ The numbering continues from 14.1.
     (TF01 section 6), which is now the normative form: it runs the sabotage command
     without a shell and passes only if the command exits non-zero, the TAP has exactly
     one plan line `1..N`, there is at least one `not ok`, there is no `Bail out!`, and
-    the number of test points equals N (a filtered run prints the filtered plan, so the
-    count rule holds); on failure it prints the captured output.  It closes the crash
-    after an earlier `not ok` with no plan, the silent Windows failure, and the stale
+    the test points are numbered exactly 1..N in order, `not ok # TODO` is not a catch, and `Bail out!` is searched in stderr too (a filtered run prints the filtered plan, so the
+    count rule holds); on failure it prints the captured output.  It closes the case of a plan with too few points (a crash
+    after an earlier `not ok`), the silent Windows failure, and the stale
     `%TEMP%` capture.  Existing lines migrate in staged PRs, and the VOS packages
     migrate their own `vos-sched-*` lines with the script's recipe.  The bail-out also
     ends the run before an abandoned, possibly spinning, worker can burn a

@@ -279,17 +279,20 @@ if all of these hold:
    101 for any failing binary, `go run` reports 1, and the runner itself uses
    1, 2 and 70);
 2. the output has exactly one TAP plan line `1..N`;
-3. at least one line starts with `not ok `;
-4. no `Bail out!` appears anywhere (unanchored); and
-5. the number of test points (`ok <n>` / `not ok <n>` at column 0) equals N.
+3. at least one line starts with `not ok <number>` and is not a `# TODO` directive (a TODO failure is expected in TAP);
+4. no `Bail out!` appears anywhere in stdout or stderr (unanchored); and
+5. the test points (`ok <n>` / `not ok <n>` at column 0) are numbered exactly 1..N in order.
 
 The runner writes the plan before running any test, so a crash part-way
 through leaves a plan with too few points, and a harness that never started
 leaves none. A filtered run prints the plan of the filtered suite, which is
 what makes rule 5 usable. On failure the checker prints the captured output.
 The command is run without a shell and its output is held in memory, so the
-text of a BUILD line is the same on `sh` and `cmd` and no temporary file can
-go stale. Adopters call it as
+part of a BUILD line after the script name is the same on `sh` and `cmd`, and no
+temporary file can go stale. The environment prefix (`VAR=x` versus
+`set VAR=x&&`) and the interpreter (`python3` versus `python`) still differ.
+The checker sets no timeout of its own; the build tool's per-command timeout is
+the backstop. Adopters call it as
 
 ```
 WARRANT_EVIDENCE_FAULT=F WARRANT_EVIDENCE_FILTER=T python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p P --test warrant_evidence
