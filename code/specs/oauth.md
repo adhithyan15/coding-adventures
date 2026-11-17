@@ -4596,16 +4596,18 @@ composition remain separate prerequisites, and concrete HTTPS remains
 unavailable.
 
 An allocation-free `tls13-client-hello-message` prerequisite now decodes one
-exact RFC 8446 section 4.1.2 TLS 1.3 `ClientHello` handshake body. It enforces
+exact RFC 9846 section 4.2.2 TLS 1.3 `ClientHello` handshake body. It enforces
 the `0x0303` legacy version, retains the exact 32-byte random and bounded
 zero-through-32-byte legacy session ID, requires a non-empty even-length
 cipher-suite vector under a caller-selected suite-count ceiling, requires the
 single null legacy compression method, and delegates the complete mandatory
 extension vector to `tls13-extension-block` under caller byte and entry
-limits. Success retains the exact borrowed body and all structural fields in a
-non-copyable value; unknown cipher-suite and extension identifiers remain data
-for later policy, and diagnostics omit random, session, suite, and extension
-bytes.
+limits. The extension-vector payload accepts RFC 9846's corrected seven-byte
+minimum, including an otherwise valid one-version `supported_versions` offer
+without an unrelated padding extension. Success retains the exact borrowed
+body and all structural fields in a non-copyable value; unknown cipher-suite
+and extension identifiers remain data for later policy, and diagnostics omit
+random, session, suite, and extension bytes.
 
 This message-body layer does not classify a first or retry ClientHello,
 generate entropy, authorize a session ID or cipher suite, require or interpret
