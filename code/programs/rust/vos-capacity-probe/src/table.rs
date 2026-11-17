@@ -1,15 +1,22 @@
 //! # `table`: the generated table of VOS30 section 9.8 and its drift check
 //!
 //! `table` reads the committed results file and writes, for each `(experiment, knob, mode)`
-//! group, one line that uses the **maximum over seeds** (section 8.3: a median would let one hard
-//! instance hide).  Collapsed seeds are excluded from every statistic and said so in the `Seeds`
-//! column.  The block begins with a fixed banner and the nine validity limits of section 8.4, so
+//! group, one line that is the group's **worst seed's own row** (section 8.3: a median would let
+//! one hard instance hide).  The worst row is chosen by a deterministic rule: a non-green row
+//! before a green one, then the most conflicts of one obligation, then the longest solve, then
+//! the LOWEST seed.  Every cell comes from that one row, except the two group-level cells that
+//! say so: `Seeds` (counted of total, and the number of distinct instances among the counted
+//! seeds) and `Max over seeds` (the largest solve time and resident set of any counted seed, so
+//! a harder seed's time or memory is never hidden by the single-row rule).  Collapsed seeds are
+//! excluded from every statistic and said so in the `Seeds` column.  Values from the results file
+//! are escaped before they go into a cell.  The block begins with a fixed banner and the validity
+//! limits of section 8.4, so
 //! a table can never be read without them, and it ends with the section 8.3 decision computed
 //! from the same rows.
 //!
 //! ```text
 //!   <!-- vos30-table:begin -->
-//!   PROXY: ...banner...        the nine validity limits        | the table |     decision
+//!   PROXY: ...banner...        the validity limits        | the table |     decision
 //!   <!-- vos30-table:end -->
 //! ```
 //!
@@ -37,7 +44,7 @@ pub const LIMITS: [&str; 10] = [
     "The D instances share one symbolic base index; `k` independent symbolic indices are not measured, and the index has `log2 T` bits so no out-of-range case arises.",
     "Liveness is decided exactly only for cones of at most 4,000 ANDs; a larger cone's entropy rests on 256 random assignments (a row says so in its note).",
     "Both sides run on one stepper: a stepper bug that affects both alike is invisible to the miter (the checks are the differential against the simulator, the independent evaluator and the replay of every control).",
-    "\"Five seeds\" means five distinct instances only where the Seeds column says so: a deterministic shape (A, C on an A1 base, D with a concrete index) may build the same circuit for several seeds. A group's line is its worst seed's own row, every cell from that one row (a proof or check that was never produced shows `-`, unmeasured).",
+    "\"Five seeds\" means five distinct instances only where the Seeds column says so: a deterministic shape (A, C on an A1 base, D with a concrete index) may build the same circuit for several seeds. A group's line is its worst seed's own row, chosen by non-green, then most conflicts, then longest solve, then lowest seed, with every cell from that one row except the two group-level cells (the distinct-instance count and the maximum solve and resident memory over the seeds); a proof or check that was never produced shows `-`, unmeasured.",
 ];
 
 fn fmt_ms(ms: f64) -> String {
@@ -95,18 +102,31 @@ pub fn knob_text(r: &Row) -> String {
 /// that took each column's maximum separately printed a conflict count of one seed beside the
 /// proof size and verdict of another).
 pub fn worst_row<'a>(basis: &[&'a Row]) -> &'a Row {
-    let key = |r: &&&Row| {
+    // Highest (non-green, conflicts, solve time); a tie goes to the LOWEST seed, so the choice
+    // never depends on the order of the file.
+    let key = |r: &Row| {
         (
             !r.green,
             r.worst_step_conflicts.unwrap_or(r.conflicts),
             (r.worst_step_solve_ms * 1000.0) as u64,
         )
     };
-    basis
-        .iter()
-        .max_by_key(key)
-        .copied()
-        .expect("a group has rows")
+    let mut best = basis[0];
+    for r in &basis[1..] {
+        let (kr, kb) = (key(r), key(best));
+        if kr > kb || (kr == kb && r.seed < best.seed) {
+            best = r;
+        }
+    }
+    best
+}
+
+/// Make a value from the results file safe for one table cell: a pipe would end the cell, a
+/// newline would end the row, and a generated-region marker would end the block.
+pub fn cell(text: &str) -> String {
+    text.replace('|', "\\|")
+        .replace(['\n', '\r'], " ")
+        .replace("<!--", "&lt;!--")
 }
 
 fn verdict(g: &Group<'_>) -> String {
@@ -165,14 +185,10 @@ fn line(g: &Group<'_>) -> String {
     let distinct = g
         .rows
         .iter()
+        .filter(|r| basis.iter().any(|b| std::ptr::eq(*b, **r)))
         .map(|r| r.instance_sha256.as_str())
         .collect::<std::collections::BTreeSet<_>>()
         .len();
-    let ent = basis.iter().min_by(|a, b| {
-        let fa = a.entropy_bits as f64 / a.declared_bits.max(1) as f64;
-        let fb = b.entropy_bits as f64 / b.declared_bits.max(1) as f64;
-        fa.partial_cmp(&fb).unwrap_or(std::cmp::Ordering::Equal)
-    });
     let chain = first.steps > 1;
     let conflicts = if enum_row {
         dash()
@@ -202,15 +218,18 @@ fn line(g: &Group<'_>) -> String {
         Some(true) => "pass".to_string(),
         None => dash(),
     };
-    let control = match basis.iter().find(|r| !r.control.ok()) {
-        None => "replayed".to_string(),
-        Some(r) => r.control.result.clone(),
+    let control = if w.control.ok() {
+        "replayed".to_string()
+    } else {
+        w.control.result.clone()
     };
+    let max_solve = basis.iter().map(|r| r.solve_ms).fold(0.0, f64::max);
+    let max_rss = basis.iter().map(|r| r.peak_rss_kb).max().unwrap_or(0);
     format!(
-        "| {} | {} | {} | {} | {} | {} | {} | {}/{} ({} distinct) | {} | {} | {} | {} | {} | {} MB | {} | {} |",
-        first.experiment,
-        knob_text(first),
-        first.mode,
+        "| {} | {} | {} | {} | {} | {} | {} | {}/{} ({} distinct) | {} | {} | {} | {} | {} | {} MB | {} | {} / {} MB | {} |",
+        cell(&first.experiment),
+        cell(&knob_text(first)),
+        cell(&first.mode),
         if enum_row {
             dash()
         } else {
@@ -229,14 +248,11 @@ fn line(g: &Group<'_>) -> String {
         if enum_row {
             dash()
         } else {
-            ent.map(|r| {
-                format!(
-                    "{}/{}",
-                    fmt_count(r.entropy_bits),
-                    fmt_count(r.declared_bits)
-                )
-            })
-            .unwrap_or_else(dash)
+            format!(
+                "{}/{}",
+                fmt_count(w.entropy_bits),
+                fmt_count(w.declared_bits)
+            )
         },
         counted.len(),
         g.rows.len(),
@@ -247,8 +263,10 @@ fn line(g: &Group<'_>) -> String {
         work.map(fmt_count).unwrap_or_else(dash),
         limits,
         (w.peak_rss_kb as f64 / 1024.0).round() as u64,
-        control,
-        verdict(g),
+        cell(&control),
+        fmt_ms(max_solve),
+        (max_rss as f64 / 1024.0).round() as u64,
+        cell(&verdict(g)),
     )
 }
 
@@ -338,7 +356,7 @@ pub fn render_block(res: &Results) -> String {
         Some((who, host)) => format!("Full tier regenerated by {who} on {host}."),
     };
     s.push_str(&format!(
-        "PROXY: synthetic hand-written code with synthetic divergence, not compiler\noutput. These numbers bound solver capacity per obligation shape; they do not\nprove any entry verifiable. Seeds >= 5, maximum shown. {banner}\n\n"
+        "PROXY: synthetic hand-written code with synthetic divergence, not compiler\noutput. These numbers bound solver capacity per obligation shape; they do not\nprove any entry verifiable. Seeds >= 5; each line is its worst seed's own row (ties: lowest seed), with the maximum solve time and resident memory over the seeds in the last column but one. {banner}\n\n"
     ));
     s.push_str("Validity limits (VOS30 section 8.4), printed with every number:\n\n");
     for (i, l) in LIMITS.iter().enumerate() {
@@ -348,8 +366,8 @@ pub fn render_block(res: &Results) -> String {
         "\nRun: `{}` {}, `{}`, {}; the `check` re-run reproduces the quick-tier rows.\n\n",
         res.meta.name, res.meta.version, res.meta.rustc, res.meta.os
     ));
-    s.push_str("| Experiment | Knob | Mode | ANDs | Vars | Clauses | Entropy bits | Seeds (distinct instances) | Conflicts (total / worst) | Solve | DRAT | Check work | Default limits | RSS | Control | Verdict |\n");
-    s.push_str("|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|\n");
+    s.push_str("| Experiment | Knob | Mode | ANDs | Vars | Clauses | Entropy bits | Seeds (distinct instances) | Conflicts (total / worst) | Solve | DRAT | Check work | Default limits | RSS | Control | Max over seeds (solve / RSS) | Verdict |\n");
+    s.push_str("|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|\n");
     for g in groups(&res.rows) {
         s.push_str(&line(&g));
         s.push('\n');
@@ -587,36 +605,95 @@ mod tests {
             .contains("none was rejected for work"));
     }
 
+    fn d3(seed: u64, result: &str, green: bool, conflicts: u64, worst: u64) -> Row {
+        let mut r = row(
+            "D3",
+            Knob::of(&[("t", Kv::I(8)), ("k", Kv::I(16))]),
+            "split",
+            seed,
+            result,
+            green,
+        );
+        r.steps = 8;
+        r.conflicts = conflicts;
+        r.worst_step_conflicts = Some(worst);
+        r.instance_sha256 = format!("{}", seed % 2);
+        r
+    }
+
     #[test]
-    fn a_groups_line_takes_every_cell_from_one_row() {
-        // Seed 1 finished with a small proof that the checker accepted; seed 2 has MORE conflicts
-        // and never produced a proof.  The line must show seed 2's conflicts with seed 2's
-        // unmeasured proof, not seed 2's conflicts beside seed 1's proof and a "pass".
-        let k = || Knob::of(&[("t", Kv::I(8)), ("k", Kv::I(16))]);
-        let mut a = row("D3", k(), "split", 1, "unsat", false);
-        a.steps = 8;
-        a.conflicts = 1_000;
-        a.worst_step_conflicts = Some(500);
+    fn a_groups_line_takes_every_cell_from_the_worst_row_and_not_the_last_one() {
+        // The worst row (seed 2: most conflicts, no proof) is neither first nor last; a green
+        // row and a smaller red row with a proof surround it.
+        let mut a = d3(1, "unsat", false, 1_000, 500);
         a.drat_bytes = Some(111_111);
         a.pass_default_limits = Some(true);
-        a.green = false;
-        let mut b = row("D3", k(), "split", 2, "unknown", false);
-        b.steps = 8;
+        a.entropy_bits = 7;
+        let mut b = d3(2, "unknown", false, 2_000, 900);
         b.cap = "wall".into();
-        b.conflicts = 2_000;
-        b.worst_step_conflicts = Some(900);
         b.drat_bytes = None;
         b.check_work = None;
         b.pass_default_limits = None;
-        a.instance_sha256 = "aa".into();
-        b.instance_sha256 = "aa".into();
-        let rows = vec![a, b];
-        let g = &groups(&rows)[0];
-        let l = line(g);
+        b.entropy_bits = 99;
+        b.declared_bits = 100;
+        b.control = Control::none("no SAT control");
+        b.solve_ms = 5_000.0;
+        let mut c = d3(3, "unsat", true, 10, 10);
+        c.solve_ms = 90_000.0;
+        c.peak_rss_kb = 9 * 1024;
+        let rows = vec![a, b, c];
+        let l = line(&groups(&rows)[0]);
         assert!(l.contains("2,000 / 900"), "{l}");
         assert!(!l.contains("108.5 kB") && !l.contains("pass"), "{l}");
-        assert!(l.contains("(1 distinct)"), "{l}");
+        assert!(l.contains("99/100"), "entropy from the same row: {l}");
+        assert!(
+            l.contains("no SAT control"),
+            "control from the same row: {l}"
+        );
+        assert!(l.contains("(2 distinct)") && l.contains("3/3"), "{l}");
         assert!(l.contains("unknown (timeout)"), "{l}");
+        // The hidden harder time and memory of another seed are in the group-level cell.
+        assert!(l.contains("1.5 min / 9 MB"), "{l}");
+    }
+
+    #[test]
+    fn ties_go_to_the_lowest_seed_whatever_the_file_order() {
+        let mk = |seed: u64| {
+            let mut r = d3(seed, "unsat", false, 100, 100);
+            r.entropy_bits = seed;
+            r.declared_bits = 10;
+            r
+        };
+        for order in [vec![3, 1, 2], vec![2, 3, 1], vec![1, 2, 3]] {
+            let rows: Vec<Row> = order.into_iter().map(mk).collect();
+            let basis: Vec<&Row> = rows.iter().collect();
+            assert_eq!(worst_row(&basis).seed, 1);
+        }
+    }
+
+    #[test]
+    fn collapsed_rows_do_not_count_as_distinct_instances() {
+        let mut a = d3(1, "unsat", true, 5, 5);
+        a.instance_sha256 = "x".into();
+        let mut b = d3(2, "collapsed", false, 0, 0);
+        b.instance_sha256 = "y".into();
+        let rows = vec![a, b];
+        assert!(line(&groups(&rows)[0]).contains("1/2 (1 distinct)"));
+    }
+
+    #[test]
+    fn values_from_the_file_cannot_break_a_row_or_the_block() {
+        assert_eq!(cell("a|b\nc"), "a\\|b c");
+        assert!(!cell("<!-- vos30-table:end -->").contains("<!--"));
+        let mut r = sample();
+        r.rows[0].knob = Knob::of(&[("n", Kv::S("x|y\n<!-- vos30-table:end -->".into()))]);
+        let block = render_block(&r);
+        assert_eq!(block.matches(END).count(), 1);
+        let line = block
+            .lines()
+            .find(|l| l.contains("x\\|y"))
+            .expect("escaped line");
+        assert!(!line.contains('\n'));
     }
 
     #[test]
