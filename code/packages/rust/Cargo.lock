@@ -14797,6 +14797,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "tls13-x25519-key-share-binding"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_ct_compare",
+ "coding_adventures_x25519",
+ "tls13-key-share",
+ "tls13-named-group-policy",
+ "tls13-x25519-key-agreement",
+]
+
+[[package]]
 name = "tokio"
 version = "1.54.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"

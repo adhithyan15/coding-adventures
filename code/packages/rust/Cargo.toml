@@ -1498,6 +1498,7 @@ members = [
   "x509-ocsp-response-nonce-policy",
   "tls13-key-share",
   "tls13-x25519-key-agreement",
+  "tls13-x25519-key-share-binding",
   "tls13-key-update-message",
   "tls13-no-psk-server-flight",
   "tls13-compatibility-change-cipher-spec",
