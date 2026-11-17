@@ -27,7 +27,7 @@ pub const BEGIN: &str = "<!-- vos30-table:begin -->";
 pub const END: &str = "<!-- vos30-table:end -->";
 
 /// The validity limits of section 8.4, in one line each (they travel with every table).
-pub const LIMITS: [&str; 9] = [
+pub const LIMITS: [&str; 10] = [
     "Hand-written code is not compiler output: no register allocation, spills, fusion or inlining; real code may be easier or harder.",
     "The divergence is synthetic: the reference differs from the code in controlled proportions (5%, 25%, 100% of the live instructions that have an alternative encoding), not as a real compiler's would.",
     "Trap entry, CSRs and `mret` are not modelled: only the ALU, `lw`/`lbu`/`sw`/`sb` and forward branches with a concrete PC.",
@@ -37,6 +37,7 @@ pub const LIMITS: [&str; 9] = [
     "The D instances share one symbolic base index; `k` independent symbolic indices are not measured, and the index has `log2 T` bits so no out-of-range case arises.",
     "Liveness is decided exactly only for cones of at most 4,000 ANDs; a larger cone's entropy rests on 256 random assignments (a row says so in its note).",
     "Both sides run on one stepper: a stepper bug that affects both alike is invisible to the miter (the checks are the differential against the simulator, the independent evaluator and the replay of every control).",
+    "\"Five seeds\" means five distinct instances only where the Seeds column says so: a deterministic shape (A, C on an A1 base, D with a concrete index) may build the same circuit for several seeds. A group's line is its worst seed's own row, every cell from that one row (a proof or check that was never produced shows `-`, unmeasured).",
 ];
 
 fn fmt_ms(ms: f64) -> String {
@@ -88,6 +89,26 @@ pub fn knob_text(r: &Row) -> String {
         .join(" ")
 }
 
+/// The row that stands for a group: a non-green row before a green one, then the most conflicts
+/// of one obligation, then the longest solve.  Every cell of the group's line comes from THIS
+/// row, so conflicts, DRAT size and the checker's verdict are always from one seed (a table
+/// that took each column's maximum separately printed a conflict count of one seed beside the
+/// proof size and verdict of another).
+pub fn worst_row<'a>(basis: &[&'a Row]) -> &'a Row {
+    let key = |r: &&&Row| {
+        (
+            !r.green,
+            r.worst_step_conflicts.unwrap_or(r.conflicts),
+            (r.worst_step_solve_ms * 1000.0) as u64,
+        )
+    };
+    basis
+        .iter()
+        .max_by_key(key)
+        .copied()
+        .expect("a group has rows")
+}
+
 fn verdict(g: &Group<'_>) -> String {
     let first = g.first();
     if g.green() {
@@ -111,11 +132,7 @@ fn verdict(g: &Group<'_>) -> String {
         return "collapsed".into();
     }
     // The worst counted row names the verdict.
-    let worst = counted
-        .iter()
-        .find(|r| !r.green)
-        .copied()
-        .unwrap_or(counted[0]);
+    let worst = worst_row(&counted);
     match worst.result.as_str() {
         "unknown" => format!(
             "unknown ({})",
@@ -144,7 +161,13 @@ fn line(g: &Group<'_>) -> String {
     };
     let enum_row = first.mode == "enum";
     let dash = || "-".to_string();
-    let maxu = |f: fn(&Row) -> u64| basis.iter().map(|r| f(r)).max().unwrap_or(0);
+    let w = worst_row(&basis);
+    let distinct = g
+        .rows
+        .iter()
+        .map(|r| r.instance_sha256.as_str())
+        .collect::<std::collections::BTreeSet<_>>()
+        .len();
     let ent = basis.iter().min_by(|a, b| {
         let fa = a.entropy_bits as f64 / a.declared_bits.max(1) as f64;
         let fb = b.entropy_bits as f64 / b.declared_bits.max(1) as f64;
@@ -156,60 +179,52 @@ fn line(g: &Group<'_>) -> String {
     } else if chain {
         format!(
             "{} / {}",
-            fmt_count(maxu(|r| r.conflicts)),
-            fmt_count(
-                basis
-                    .iter()
-                    .filter_map(|r| r.worst_step_conflicts)
-                    .max()
-                    .unwrap_or(0)
-            )
+            fmt_count(w.conflicts),
+            fmt_count(w.worst_step_conflicts.unwrap_or(0))
         )
     } else {
-        fmt_count(maxu(|r| r.conflicts))
+        fmt_count(w.conflicts)
     };
-    let solve_max = basis.iter().map(|r| r.solve_ms).fold(0.0, f64::max);
-    let worst_max = basis
-        .iter()
-        .map(|r| r.worst_step_solve_ms)
-        .fold(0.0, f64::max);
     let solve = if chain {
-        format!("{} ({} worst)", fmt_ms(solve_max), fmt_ms(worst_max))
+        format!(
+            "{} ({} worst)",
+            fmt_ms(w.solve_ms),
+            fmt_ms(w.worst_step_solve_ms)
+        )
     } else {
-        fmt_ms(solve_max)
+        fmt_ms(w.solve_ms)
     };
-    let drat = basis.iter().filter_map(|r| r.drat_bytes).max();
-    let work = basis.iter().filter_map(|r| r.check_work).max();
-    let limits = if basis.iter().any(|r| r.pass_default_limits == Some(false)) {
-        "REJECT".to_string()
-    } else if basis.iter().any(|r| r.pass_default_limits == Some(true)) {
-        "pass".to_string()
-    } else {
-        dash()
+    // A proof that was never produced or checked is "unmeasured", not a zero or a pass.
+    let drat = w.drat_bytes;
+    let work = w.check_work;
+    let limits = match w.pass_default_limits {
+        Some(false) => "REJECT".to_string(),
+        Some(true) => "pass".to_string(),
+        None => dash(),
     };
     let control = match basis.iter().find(|r| !r.control.ok()) {
         None => "replayed".to_string(),
         Some(r) => r.control.result.clone(),
     };
     format!(
-        "| {} | {} | {} | {} | {} | {} | {} | {}/{} | {} | {} | {} | {} | {} | {} MB | {} | {} |",
+        "| {} | {} | {} | {} | {} | {} | {} | {}/{} ({} distinct) | {} | {} | {} | {} | {} | {} MB | {} | {} |",
         first.experiment,
         knob_text(first),
         first.mode,
         if enum_row {
             dash()
         } else {
-            fmt_count(maxu(|r| r.ands))
+            fmt_count(w.ands)
         },
         if enum_row {
             dash()
         } else {
-            fmt_count(maxu(|r| r.vars))
+            fmt_count(w.vars)
         },
         if enum_row {
             dash()
         } else {
-            fmt_count(maxu(|r| r.clauses))
+            fmt_count(w.clauses)
         },
         if enum_row {
             dash()
@@ -225,12 +240,13 @@ fn line(g: &Group<'_>) -> String {
         },
         counted.len(),
         g.rows.len(),
+        distinct,
         conflicts,
         solve,
         drat.map(fmt_bytes).unwrap_or_else(dash),
         work.map(fmt_count).unwrap_or_else(dash),
         limits,
-        (maxu(|r| r.peak_rss_kb) as f64 / 1024.0).round() as u64,
+        (w.peak_rss_kb as f64 / 1024.0).round() as u64,
         control,
         verdict(g),
     )
@@ -332,7 +348,7 @@ pub fn render_block(res: &Results) -> String {
         "\nRun: `{}` {}, `{}`, {}; the `check` re-run reproduces the quick-tier rows.\n\n",
         res.meta.name, res.meta.version, res.meta.rustc, res.meta.os
     ));
-    s.push_str("| Experiment | Knob | Mode | ANDs | Vars | Clauses | Entropy bits | Seeds | Conflicts (total / worst) | Solve | DRAT | Check work | Default limits | RSS | Control | Verdict |\n");
+    s.push_str("| Experiment | Knob | Mode | ANDs | Vars | Clauses | Entropy bits | Seeds (distinct instances) | Conflicts (total / worst) | Solve | DRAT | Check work | Default limits | RSS | Control | Verdict |\n");
     s.push_str("|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|\n");
     for g in groups(&res.rows) {
         s.push_str(&line(&g));
@@ -510,7 +526,7 @@ mod tests {
         assert!(b.starts_with(BEGIN));
         assert!(b.contains("PROXY: synthetic hand-written code with synthetic divergence"));
         assert!(b.contains("Full tier not independently regenerated."));
-        for i in 1..=9 {
+        for i in 1..=10 {
             assert!(b.contains(&format!("\n{i}. ")), "limit {i}");
         }
         // The A1 line takes the largest conflict count over seeds (10 + 5).
@@ -569,6 +585,38 @@ mod tests {
         assert!(derived_constants(&only.rows)
             .join(" ")
             .contains("none was rejected for work"));
+    }
+
+    #[test]
+    fn a_groups_line_takes_every_cell_from_one_row() {
+        // Seed 1 finished with a small proof that the checker accepted; seed 2 has MORE conflicts
+        // and never produced a proof.  The line must show seed 2's conflicts with seed 2's
+        // unmeasured proof, not seed 2's conflicts beside seed 1's proof and a "pass".
+        let k = || Knob::of(&[("t", Kv::I(8)), ("k", Kv::I(16))]);
+        let mut a = row("D3", k(), "split", 1, "unsat", false);
+        a.steps = 8;
+        a.conflicts = 1_000;
+        a.worst_step_conflicts = Some(500);
+        a.drat_bytes = Some(111_111);
+        a.pass_default_limits = Some(true);
+        a.green = false;
+        let mut b = row("D3", k(), "split", 2, "unknown", false);
+        b.steps = 8;
+        b.cap = "wall".into();
+        b.conflicts = 2_000;
+        b.worst_step_conflicts = Some(900);
+        b.drat_bytes = None;
+        b.check_work = None;
+        b.pass_default_limits = None;
+        a.instance_sha256 = "aa".into();
+        b.instance_sha256 = "aa".into();
+        let rows = vec![a, b];
+        let g = &groups(&rows)[0];
+        let l = line(g);
+        assert!(l.contains("2,000 / 900"), "{l}");
+        assert!(!l.contains("108.5 kB") && !l.contains("pass"), "{l}");
+        assert!(l.contains("(1 distinct)"), "{l}");
+        assert!(l.contains("unknown (timeout)"), "{l}");
     }
 
     #[test]

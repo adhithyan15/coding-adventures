@@ -1072,6 +1072,13 @@ Print these with every number, because each one limits what it supports:
    to the miter; the checks against it are the probe's differential of the
    stepper against the concrete simulator, the independent concrete evaluator of
    the replay, and the replay of every control on the real `riscv-simulator`.
+10. **"Five seeds" means five distinct instances only where the table's Seeds
+    column says so.** A deterministic shape may build one circuit for several
+    seeds (the seed then varies only the variable numbering; for C1 on an A1 base
+    all five seeds have the same conflicts), and 18 groups of the committed file
+    (15 solver groups and the three B1 groups, which are identical by design) have
+    fewer than five distinct `instance_sha256`. Each group's line is its worst
+    seed's own row, every cell from that one row.
 
 ### 8.5 Current decision state
 
@@ -1097,21 +1104,34 @@ function of machine speed, as it must be) or are the ten E2 rows whose
 expectation the second run corrected.
 
 **What decided it.** Row 1 holds when a *required* shape is not green in its worst
-seed at the finest decomposition tested (section 9.11). Two are not:
+seed at the finest decomposition tested (section 9.11). Two are not, **but neither
+measures what its name says**; the narrower, supported reading follows them:
 
-* **C1 at 200 instructions, 25% divergence** (two-safety): two copies of a
-  200-instruction body with no cut (relational cut points are deferred, section
-  3.6). It reaches the 1,000,000-conflict proof cap, is already red at 25
-  instructions (354,220 conflicts at 5% divergence) and reaches the cap or the
-  wall from 50 instructions.
-* **D3 at T = 8, k = 16**: the case split on the index leaves 16 chained updates
-  of an 8-word table, so every word is updated twice in one obligation; the worst
-  obligation that finished needs 242,607 conflicts and 42.8 MB of DRAT (over the
-  100,000 conflicts and 32 MB of section 8.3) and two of five seeds do not finish
-  all eight obligations inside the 120 s wall. The same split with k = 8 (every
-  word updated once) is green with a worst obligation of 33,278 conflicts. k = 16
-  is the grid's largest and was fixed as the required shape before the run
-  (section 9.11).
+* **C1 at 200 instructions, 25% divergence.** C1 on a B base is built as
+  `pub XOR (f_code(s) XOR f_ref(s))` for two secret copies: it contains **two B2
+  equivalences by construction** and can never be greener than B2 (section 9.7). It
+  is not code-against-code two-safety. It reaches the 1,000,000-conflict cap at 200
+  instructions and is red from 25 (354,220 conflicts at 5%). C1 on the A1 base is
+  **green at every N** (115 to 942 conflicts). And section 3.6 already says VOS-029
+  delivers no two-safety on a real entry, so **C1 does not gate VOS-029a**.
+* **D3 at T = 8, k = 16.** In the two seeds that did not finish, the worst
+  obligation reached 503,554 and 454,472 conflicts and no proof was produced
+  (unmeasured); in the three that finished it is 242,607, 240,488 and 217,654
+  conflicts with 37 to 43 MB of DRAT. The generated table shows the worst seed's own
+  row (503,554 conflicts, no proof). "Two of five seeds `unknown`" is the **120 s
+  row-sum wall** (VOS-D095: one row holds all eight obligations), not a
+  per-obligation timeout. The identical obligation unsplit (D2, T = 8, k = 16) is
+  184,385 to 503,554 conflicts and 31 to 116 MB of DRAT, two seeds rejected by the
+  checker. With k = 8 it is green (at most 33,278 conflicts): the cliff is **chain
+  depth** (D2: k = 8 is 10k to 28k conflicts, k = 16 is 184k to 504k).
+
+**The supported finding is narrower than "X3 is infeasible":** an obligation that
+chains more than about two to four non-structurally-matched 32-bit arithmetic
+operations exceeds the checker's budget, and every obligation cut finer is green by
+a factor of 60 or more (B3 with a cut after every instruction: worst step 1,654
+conflicts against a budget of 100,000). It is a constraint on **cut density**, not
+on X3 as a route. Row 1 is still the computed outcome of the procedure fixed before
+the run, and it stays.
 
 **What the table shows besides, and what it does not.**
 
@@ -1137,17 +1157,21 @@ seed at the finest decomposition tested (section 9.11). Two are not:
   with a cut every 32 at 1,000 instructions end `unknown (timeout)` before every
   obligation has run. Section 8.3's feasibility total is 10 minutes; a larger
   budget for chains would resolve these (backlog VOS-D095).
-* **What it means.** The compositional route is feasible *only where the cut
-  relation is state equality after every instruction*, which presupposes a model
-  aligned with the instructions: the owned-compile lane of VER13 section 4.3 item
-  1, where a source map gives cut points by construction (the first escape hatch
-  of row 1). For compiled code with no such alignment the cuts must be coarser
-  than one instruction, and the table says that is red at 8 or more instructions on
-  the long entries. Self-composition has no cut and is red from 25 instructions.
-  A table compared whole after every access is red from T = 64. The limit is the
-  checker, not memory: a million-conflict proof is about 0.7 to 1.2 GB resident
-  here, but a proof of about 83,000 conflicts is already the smallest rejected by
-  the default `drat-check` limits for work.
+* **What it means.** The compositional route is cheap *where an obligation holds
+  at most a few chained, non-structurally-matched arithmetic operations*: with a
+  cut after every instruction (state equality as the cut relation, which
+  presupposes a model aligned with the instructions: the owned-compile lane of VER13
+  section 4.3 item 1, where a source map gives cut points by construction) the worst
+  obligation is 1,654 conflicts at every length. Cuts every 8 instructions are red
+  on the long entries and every 32 from 25 instructions; the grid jumps from 1 to 8,
+  so **cuts every 2 and 4 instructions were not measured**. **Not measured at all:**
+  a split by index *plus* a cut per access *plus* a comparison of only the touched
+  word (section 4.4): D4 compares whole tables, so its red at T of 64 or more (one
+  access, 94,699 to 104,487 conflicts, every seed rejected by the default checker
+  limits) says nothing about that combination. The limit is the checker, not memory:
+  a million-conflict proof is 0.7 to 1.2 GB resident here, a proof of about 83,000
+  conflicts is the smallest rejected for work, and a 457,844-conflict proof was
+  accepted, so conflicts are not monotone in checker work.
 * **One solver over many segments is the wrong form.** The incremental mode (one
   solver, assumptions per segment) took about two minutes for the 1,000
   per-instruction segments that certified mode (a fresh CNF each) did in about
@@ -1157,14 +1181,16 @@ seed at the finest decomposition tested (section 9.11). Two are not:
   8.4); VOS-029a's re-run of tiers B and D on the real compiled `pick`, `insert`
   and `remove` is what would turn proxy numbers into evidence.
 
-**Consequence (section 8.3, row 1).** Do not fund VOS-029 as planned. Options: the
-owned-compile lane; waiting for arrays plus equivalence sweeping (VOS00 section 12
-row 9); keeping X2 plus the monitor as the ceiling; and, specific to what the table
-found, specifying relational cut points for two-safety (section 3.6) and a
-cone-of-influence comparison of only the touched words (section 4.4) before the
-tiers are measured again (backlog VOS-D096). The owner decides. Until the owner
-re-plans, VOS-029a to VOS-029c and the X3 rows that depend on them are **not
-funded** (the backlog says "depends on VOS-028b's decision").
+**Consequence (section 8.3, row 1) and the expected path.** Do not fund VOS-029 as
+planned *until the re-plan row VOS-028c has run*: cut density as a route invariant
+(about 50,000 conflicts per obligation, below the checker's rejection at about
+83,000, with a checker-work bound beside it), where cuts come from on compiled code
+(SAT sweeping on B2, else the owned-compile lane becomes mandatory), memory as a
+split plus per-access cuts plus touched-word comparison (a new D5), and two-safety
+replaced by code-against-code trace shapes (backlog VOS-D096). VOS-029a's first
+target (`fp-bitmap` `pick`, `insert`, `remove`: the A1 and A2 shapes) is green, so
+**VOS-028c is expected to re-fund VOS-029a unchanged**. The drat-check limits are
+not raised. The owner decides.
 
 What this means for components being built meanwhile (VOS-010 and the `emu-core`
 toys, VOS00 section 14.3 D4):
@@ -1516,7 +1542,7 @@ the quick tier uses the smallest value only.
 | **B2** | *Monolithic*, a share of instructions encoded differently in the reference | length 25, 50, 100, 200, 500, 1000, times divergence 5%, 25%, 100% |
 | **B3** | B2 with cut points: per instruction, then per block every 8 and every 32. **Total and worst-step conflicts, certified mode: the number that funds VOS-029.** | same grid; both modes of section 9.5, at least 5 seeds |
 | **B4** | *Arithmetic with no cut point*: n-term re-association; `x*5` against `(x<<2)+x`; `base + i*12` against shift-add | n = 3 to 7 at W = 32 (n = 2 is one adder against itself); W = 8, 16, 32 |
-| **C1** | *Self-composition* of A and B: two copies, public inputs shared, secrets fresh, observable = pc/address/count trace plus public outputs (as `prove_with_custom_inputs`, `warrant-ir/src/ct_proof.rs:222`, and VER20 section 2.3) | the same sweeps as A and B |
+| **C1** | *Self-composition shape* of an A1 or B body, **as built**: two copies, public inputs shared, secrets fresh; the observable is the public output `pub_chain XOR (f_code(s) XOR f_ref(s))`, secret-independent only because `f_code` and `f_ref` are *equivalent* (section 9.10). So **C1 on a B base contains two B2 equivalences by construction and can never be greener than B2**; it is not code-against-code two-safety and builds no pc, address or count trace (the original description, after `prove_with_custom_inputs` and VER20 section 2.3, is not what was measured; code-against-code trace shapes are backlog VOS-D096). C2 is the only experiment whose observable is an address trace | the same sweeps as A and B |
 | **C2** | A secret-dependent load index (**must be SAT**) and a padded constant-time variant (UNSAT) | T = 8, 16, 64 |
 | **D1** | *Memory mux*: T words, k chained symbolic load-modify-store at offsets `i + j` of one symbolic base index, the `sym.rs` eq/ite chain against a mux tree | T = 4, 8, 16, 64, 256, k = 1, 2, 4, 8, 16 |
 | **D2** | D1 with concrete offsets | same grid |
@@ -1557,7 +1583,7 @@ experiment-knob group, one line using the **maximum over seeds** (section 8.3):
 `Control` is `replayed` or the failure; `Verdict` is `GREEN`, `red (reason)`,
 `collapsed`, `unknown (timeout)`, `killed`, `oom` or `crashed`, computed from
 section 8.3. The generated block **begins with a fixed banner and the validity
-limits** (section 8.4, all six), so a table can never be read without them:
+limits** (section 8.4, all of them), so a table can never be read without them:
 
 ```
 PROXY: synthetic hand-written code with synthetic divergence, not compiler
@@ -1600,336 +1626,337 @@ Validity limits (VOS30 section 8.4), printed with every number:
 7. The D instances share one symbolic base index; `k` independent symbolic indices are not measured, and the index has `log2 T` bits so no out-of-range case arises.
 8. Liveness is decided exactly only for cones of at most 4,000 ANDs; a larger cone's entropy rests on 256 random assignments (a row says so in its note).
 9. Both sides run on one stepper: a stepper bug that affects both alike is invisible to the miter (the checks are the differential against the simulator, the independent evaluator and the replay of every control).
+10. "Five seeds" means five distinct instances only where the Seeds column says so: a deterministic shape (A, C on an A1 base, D with a concrete index) may build the same circuit for several seeds. A group's line is its worst seed's own row, every cell from that one row (a proof or check that was never produced shows `-`, unmeasured).
 
 Run: `vos-capacity-probe` 0.1.0, `rustc 1.98.0 (88d9e12ae 2026-08-18)`, Darwin 25.5.0; the `check` re-run reproduces the quick-tier rows.
 
-| Experiment | Knob | Mode | ANDs | Vars | Clauses | Entropy bits | Seeds | Conflicts (total / worst) | Solve | DRAT | Check work | Default limits | RSS | Control | Verdict |
+| Experiment | Knob | Mode | ANDs | Vars | Clauses | Entropy bits | Seeds (distinct instances) | Conflicts (total / worst) | Solve | DRAT | Check work | Default limits | RSS | Control | Verdict |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| A1 | n=8 | monolithic | 122 | 130 | 367 | 8/8 | 5/5 | 31 | <1 ms | 455 B | 25,003 | pass | 3 MB | replayed | GREEN |
-| A1 | n=16 | monolithic | 217 | 233 | 652 | 16/16 | 5/5 | 49 | 2 ms | 1.1 kB | 66,593 | pass | 4 MB | replayed | GREEN |
-| A1 | n=32 | monolithic | 428 | 460 | 1,285 | 32/32 | 5/5 | 146 | 2 ms | 5.4 kB | 378,972 | pass | 5 MB | replayed | GREEN |
-| A1 | n=64 | monolithic | 1,089 | 1,153 | 3,268 | 64/64 | 5/5 | 269 | 19 ms | 15.7 kB | 1,233,772 | pass | 6 MB | replayed | GREEN |
-| A2 | n=8 | monolithic | 243 | 259 | 730 | 16/16 | 5/5 | 83 | <1 ms | 2.9 kB | 40,286 | pass | 3 MB | replayed | GREEN |
-| A2 | n=16 | monolithic | 353 | 377 | 1,060 | 24/24 | 5/5 | 138 | 2 ms | 3.5 kB | 59,133 | pass | 4 MB | replayed | GREEN |
-| A2 | n=32 | monolithic | 575 | 615 | 1,726 | 40/40 | 5/5 | 274 | 5 ms | 6.7 kB | 169,848 | pass | 5 MB | replayed | GREEN |
-| A2 | n=64 | monolithic | 1,153 | 1,225 | 3,460 | 72/72 | 5/5 | 547 | 16 ms | 28.1 kB | 1,057,321 | pass | 6 MB | replayed | GREEN |
-| B1 | length=200 div=0% | monolithic | 0 | 1 | 2 | 1,312/1,312 | 0/5 | 0 | <1 ms | 2 B | 2 | pass | 24 MB | replayed | collapsed |
-| B1 | length=500 div=0% | monolithic | 0 | 1 | 2 | 2,912/2,912 | 0/5 | 0 | <1 ms | 2 B | 2 | pass | 44 MB | replayed | collapsed |
-| B1 | length=1000 div=0% | monolithic | 0 | 1 | 2 | 5,560/5,568 | 0/5 | 0 | <1 ms | 2 B | 2 | pass | 88 MB | replayed | collapsed |
-| B2 | length=25 div=5% | monolithic | 3,785 | 4,066 | 11,356 | 384/384 | 2/5 | 75,647 | 1.9 s | 12.7 MB | 355,842,522 | pass | 76 MB | replayed | GREEN |
-| B2 | length=25 div=25% | monolithic | 6,305 | 6,657 | 18,916 | 352/352 | 5/5 | 86,612 | 1.3 s | 12.0 MB | 400,094,331 | pass | 81 MB | replayed | GREEN |
-| B2 | length=25 div=100% | monolithic | 10,723 | 11,107 | 32,170 | 352/352 | 5/5 | 325,114 | 6.3 s | 57.7 MB | 3,105,321,974 | pass | 308 MB | replayed | red (conflicts > 100k) |
-| B2 | length=50 div=5% | monolithic | 12,256 | 12,768 | 36,769 | 512/512 | 5/5 | 992,101 | 29.1 s | 228.7 MB | 1,884,385,483 | REJECT | 963 MB | replayed | red (conflicts > 100k, solve > 10 s, DRAT > 32 MB, default limits reject) |
-| B2 | length=50 div=25% | monolithic | 14,193 | 14,705 | 42,580 | 512/512 | 5/5 | 973,766 | 30.3 s | 213.1 MB | 2,131,640,373 | REJECT | 946 MB | replayed | red (conflicts > 100k) |
-| B2 | length=50 div=100% | monolithic | 19,971 | 20,483 | 59,914 | 512/512 | 5/5 | 1,000,039 | 37.1 s | 168.2 MB | - | REJECT | 803 MB | not run | red (conflicts > 100k, solve > 10 s, DRAT > 32 MB, default limits reject) |
-| B2 | length=100 div=5% | monolithic | 21,219 | 21,987 | 63,658 | 768/768 | 5/5 | 1,000,038 | 30.8 s | 206.4 MB | 2,754,782,744 | REJECT | 836 MB | not run | unknown (conflict cap) |
-| B2 | length=100 div=25% | monolithic | 27,625 | 28,393 | 82,876 | 768/768 | 5/5 | 1,000,038 | 37.6 s | - | - | - | 352 MB | not run | unknown (conflict cap) |
-| B2 | length=100 div=100% | monolithic | 38,313 | 39,081 | 114,940 | 768/768 | 5/5 | 1,000,052 | 47.9 s | - | - | - | 344 MB | not run | unknown (conflict cap) |
-| B2 | length=200 div=5% | monolithic | 47,052 | 48,364 | 141,157 | 1,312/1,312 | 5/5 | 1,000,038 | 41.9 s | - | - | - | 353 MB | not run | unknown (conflict cap) |
-| B2 | length=200 div=25% | monolithic | 54,099 | 55,411 | 162,298 | 1,312/1,312 | 5/5 | 1,000,031 | 48.8 s | - | - | - | 360 MB | not run | unknown (conflict cap) |
-| B2 | length=200 div=100% | monolithic | 74,378 | 75,690 | 223,135 | 1,312/1,312 | 5/5 | 1,000,039 | 1.2 min | - | - | - | 380 MB | not run | unknown (conflict cap) |
-| B2 | length=500 div=5% | monolithic | 123,191 | 126,103 | 369,574 | 2,912/2,912 | 5/5 | 1,000,035 | 1.5 min | - | - | - | 462 MB | not run | unknown (conflict cap) |
-| B2 | length=500 div=25% | monolithic | 137,205 | 140,117 | 411,616 | 2,912/2,912 | 5/5 | 1,000,030 | 1.8 min | - | - | - | 480 MB | not run | unknown (conflict cap) |
-| B2 | length=500 div=100% | monolithic | 182,039 | 184,951 | 546,118 | 2,912/2,912 | 5/5 | 880,026 | 2.0 min | - | - | - | 486 MB | not run | unknown (timeout) |
-| B2 | length=1000 div=5% | monolithic | 248,920 | 254,488 | 746,761 | 5,560/5,568 | 5/5 | 920,012 | 2.0 min | - | - | - | 540 MB | not run | unknown (timeout) |
-| B2 | length=1000 div=25% | monolithic | 272,180 | 277,748 | 816,541 | 5,559/5,568 | 5/5 | 860,025 | 2.0 min | - | - | - | 500 MB | not run | unknown (timeout) |
-| B2 | length=1000 div=100% | monolithic | 360,679 | 366,247 | 1,082,038 | 5,557/5,568 | 5/5 | 720,016 | 2.0 min | - | - | - | 499 MB | not run | unknown (timeout) |
-| B3 | length=25 div=5% cut=every1 | certified | 10,551 | 18,574 | 47,197 | 1,315/1,344 | 5/5 | 13,762 / 1,654 | 67 ms (8 ms worst) | 49.7 kB | 2,631,161 | pass | 7 MB | replayed | GREEN |
-| B3 | length=25 div=5% cut=every1 | incremental | 10,551 | 18,574 | 47,197 | 1,315/1,344 | 5/5 | 13,724 / 1,653 | 155 ms (23 ms worst) | - | - | - | 13 MB | replayed | GREEN |
-| B3 | length=25 div=5% cut=every8 | certified | 9,552 | 14,030 | 37,344 | 697/704 | 5/5 | 55,323 / 44,132 | 571 ms (478 ms worst) | 6.2 MB | 217,359,873 | pass | 53 MB | replayed | GREEN |
-| B3 | length=25 div=5% cut=every8 | incremental | 9,552 | 14,030 | 37,344 | 697/704 | 5/5 | 48,029 / 31,450 | 465 ms (313 ms worst) | - | - | - | 14 MB | replayed | GREEN |
-| B3 | length=25 div=5% cut=every32 | certified | 8,403 | 10,599 | 29,518 | 352/352 | 5/5 | 231,357 | 4.1 s | 41.8 MB | 2,860,040,290 | pass | 232 MB | replayed | red (conflicts > 100k, DRAT > 32 MB) |
-| B3 | length=25 div=5% cut=every32 | incremental | 8,403 | 10,599 | 29,518 | 352/352 | 5/5 | 191,917 | 2.9 s | - | - | - | 22 MB | replayed | red (conflicts > 100k) |
-| B3 | length=25 div=25% cut=every1 | certified | 11,344 | 19,424 | 49,747 | 1,315/1,344 | 5/5 | 16,288 / 1,654 | 83 ms (9 ms worst) | 49.7 kB | 2,631,161 | pass | 7 MB | replayed | GREEN |
-| B3 | length=25 div=25% cut=every1 | incremental | 11,344 | 19,424 | 49,747 | 1,315/1,344 | 5/5 | 16,251 / 1,724 | 141 ms (19 ms worst) | - | - | - | 13 MB | replayed | GREEN |
-| B3 | length=25 div=25% cut=every8 | certified | 10,134 | 14,621 | 39,117 | 697/704 | 5/5 | 79,624 / 67,598 | 866 ms (773 ms worst) | 9.1 MB | 346,831,211 | pass | 63 MB | replayed | GREEN |
-| B3 | length=25 div=25% cut=every8 | incremental | 10,134 | 14,621 | 39,117 | 697/704 | 5/5 | 71,311 / 53,721 | 752 ms (583 ms worst) | - | - | - | 14 MB | replayed | GREEN |
-| B3 | length=25 div=25% cut=every32 | certified | 9,113 | 11,309 | 31,648 | 352/352 | 5/5 | 226,422 | 3.9 s | 39.6 MB | 2,797,104,165 | pass | 252 MB | replayed | red (conflicts > 100k) |
-| B3 | length=25 div=25% cut=every32 | incremental | 9,113 | 11,309 | 31,648 | 352/352 | 5/5 | 222,706 | 3.6 s | - | - | - | 26 MB | replayed | red (conflicts > 100k) |
-| B3 | length=25 div=100% cut=every1 | certified | 13,614 | 21,694 | 56,557 | 1,315/1,344 | 5/5 | 26,221 / 1,654 | 137 ms (13 ms worst) | 49.7 kB | 2,631,161 | pass | 9 MB | replayed | GREEN |
-| B3 | length=25 div=100% cut=every1 | incremental | 13,614 | 21,694 | 56,557 | 1,315/1,344 | 5/5 | 26,574 / 2,170 | 217 ms (24 ms worst) | - | - | - | 15 MB | replayed | GREEN |
-| B3 | length=25 div=100% cut=every8 | certified | 12,404 | 16,891 | 45,927 | 697/704 | 5/5 | 128,546 / 82,866 | 1.3 s (1.0 s worst) | 12.6 MB | 543,329,342 | pass | 81 MB | replayed | GREEN |
-| B3 | length=25 div=100% cut=every8 | incremental | 12,404 | 16,891 | 45,927 | 697/704 | 5/5 | 120,540 / 88,660 | 1.2 s (1.0 s worst) | - | - | - | 19 MB | replayed | GREEN |
-| B3 | length=25 div=100% cut=every32 | certified | 11,383 | 13,579 | 38,458 | 352/352 | 5/5 | 328,465 | 7.0 s | 62.6 MB | 3,564,422,561 | pass | 317 MB | replayed | red (conflicts > 100k) |
-| B3 | length=25 div=100% cut=every32 | incremental | 11,383 | 13,579 | 38,458 | 352/352 | 5/5 | 312,561 | 6.0 s | - | - | - | 34 MB | replayed | red (conflicts > 100k) |
-| B3 | length=50 div=5% cut=every1 | certified | 20,336 | 35,698 | 90,614 | 2,570/2,624 | 5/5 | 26,009 / 1,654 | 131 ms (8 ms worst) | 49.7 kB | 2,631,161 | pass | 7 MB | replayed | GREEN |
-| B3 | length=50 div=5% cut=every1 | incremental | 20,336 | 35,698 | 90,614 | 2,570/2,624 | 5/5 | 25,478 / 1,658 | 429 ms (43 ms worst) | - | - | - | 21 MB | replayed | GREEN |
-| B3 | length=50 div=5% cut=every8 | certified | 18,144 | 26,344 | 70,109 | 1,511/1,536 | 5/5 | 102,744 / 38,073 | 979 ms (370 ms worst) | 5.2 MB | 162,164,937 | pass | 48 MB | replayed | GREEN |
-| B3 | length=50 div=5% cut=every8 | incremental | 18,144 | 26,344 | 70,109 | 1,511/1,536 | 5/5 | 105,462 / 45,660 | 1.1 s (533 ms worst) | - | - | - | 22 MB | replayed | GREEN |
-| B3 | length=50 div=5% cut=every32 | certified | 15,743 | 19,943 | 55,271 | 712/736 | 5/5 | 492,443 / 458,541 | 10.5 s (10.1 s worst) | 125.1 MB | 1,602,788,646 | REJECT | 533 MB | replayed | red (conflicts > 100k) |
-| B3 | length=50 div=5% cut=every32 | incremental | 15,743 | 19,943 | 55,271 | 712/736 | 5/5 | 543,722 / 516,871 | 10.7 s (10.3 s worst) | - | - | - | 45 MB | replayed | red (conflicts > 100k) |
-| B3 | length=50 div=25% cut=every1 | certified | 21,311 | 36,673 | 93,539 | 2,570/2,624 | 5/5 | 30,820 / 1,654 | 155 ms (10 ms worst) | 49.7 kB | 2,631,161 | pass | 8 MB | replayed | GREEN |
-| B3 | length=50 div=25% cut=every1 | incremental | 21,311 | 36,673 | 93,539 | 2,570/2,624 | 5/5 | 30,688 / 2,175 | 435 ms (35 ms worst) | - | - | - | 20 MB | replayed | GREEN |
-| B3 | length=50 div=25% cut=every8 | certified | 19,121 | 27,321 | 73,040 | 1,511/1,536 | 5/5 | 151,740 / 79,743 | 1.6 s (884 ms worst) | 11.9 MB | 458,230,858 | pass | 76 MB | replayed | GREEN |
-| B3 | length=50 div=25% cut=every8 | incremental | 19,121 | 27,321 | 73,040 | 1,511/1,536 | 5/5 | 149,401 / 68,253 | 1.7 s (689 ms worst) | - | - | - | 24 MB | replayed | GREEN |
-| B3 | length=50 div=25% cut=every32 | certified | 16,615 | 20,920 | 58,202 | 712/736 | 5/5 | 516,034 / 453,189 | 10.3 s (9.5 s worst) | 109.9 MB | 1,430,612,385 | REJECT | 481 MB | replayed | red (conflicts > 100k) |
-| B3 | length=50 div=25% cut=every32 | incremental | 16,615 | 20,920 | 58,202 | 712/736 | 5/5 | 456,719 / 398,345 | 8.1 s (7.3 s worst) | - | - | - | 42 MB | replayed | red (conflicts > 100k) |
-| B3 | length=50 div=100% cut=every1 | certified | 26,051 | 41,537 | 108,131 | 2,570/2,624 | 5/5 | 49,103 / 1,654 | 251 ms (9 ms worst) | 49.7 kB | 2,631,161 | pass | 9 MB | replayed | GREEN |
-| B3 | length=50 div=100% cut=every1 | incremental | 26,051 | 41,537 | 108,131 | 2,570/2,624 | 5/5 | 47,740 / 1,978 | 473 ms (27 ms worst) | - | - | - | 24 MB | replayed | GREEN |
-| B3 | length=50 div=100% cut=every8 | certified | 23,589 | 32,276 | 87,525 | 1,511/1,536 | 5/5 | 260,031 / 111,031 | 2.9 s (1.5 s worst) | 18.5 MB | 864,498,572 | pass | 125 MB | replayed | red (conflicts > 100k) |
-| B3 | length=50 div=100% cut=every8 | incremental | 23,589 | 32,276 | 87,525 | 1,511/1,536 | 5/5 | 251,779 / 108,157 | 3.1 s (1.4 s worst) | - | - | - | 30 MB | replayed | red (conflicts > 100k) |
-| B3 | length=50 div=100% cut=every32 | certified | 21,270 | 25,468 | 72,036 | 712/736 | 5/5 | 851,636 / 755,567 | 25.4 s (24.1 s worst) | 261.7 MB | 2,944,340,505 | REJECT | 984 MB | replayed | red (conflicts > 100k) |
-| B3 | length=50 div=100% cut=every32 | incremental | 21,270 | 25,468 | 72,036 | 712/736 | 5/5 | 756,669 / 714,288 | 19.6 s (19.1 s worst) | - | - | - | 55 MB | replayed | red (conflicts > 100k) |
-| B3 | length=100 div=5% cut=every1 | certified | 38,781 | 68,273 | 172,999 | 5,138/5,248 | 5/5 | 47,890 / 1,654 | 231 ms (8 ms worst) | 49.7 kB | 2,631,161 | pass | 8 MB | replayed | GREEN |
-| B3 | length=100 div=5% cut=every1 | incremental | 38,781 | 68,273 | 172,999 | 5,138/5,248 | 5/5 | 47,137 / 2,225 | 1.3 s (60 ms worst) | - | - | - | 39 MB | replayed | GREEN |
-| B3 | length=100 div=5% cut=every8 | certified | 34,185 | 50,979 | 134,220 | 3,016/3,104 | 5/5 | 165,176 / 38,073 | 1.5 s (361 ms worst) | 5.2 MB | 162,164,937 | pass | 51 MB | replayed | GREEN |
-| B3 | length=100 div=5% cut=every8 | incremental | 34,185 | 50,979 | 134,220 | 3,016/3,104 | 5/5 | 159,975 / 49,511 | 1.9 s (536 ms worst) | - | - | - | 38 MB | replayed | GREEN |
-| B3 | length=100 div=5% cut=every32 | certified | 29,204 | 37,577 | 103,953 | 1,416/1,440 | 5/5 | 546,474 / 330,237 | 9.0 s (6.0 s worst) | 78.4 MB | 1,636,063,439 | REJECT | 412 MB | replayed | red (conflicts > 100k, DRAT > 32 MB) |
-| B3 | length=100 div=5% cut=every32 | incremental | 29,204 | 37,577 | 103,953 | 1,416/1,440 | 5/5 | 603,407 / 385,480 | 10.7 s (6.8 s worst) | - | - | - | 53 MB | replayed | red (conflicts > 100k) |
-| B3 | length=100 div=25% cut=every1 | certified | 41,862 | 71,382 | 182,326 | 5,138/5,248 | 5/5 | 59,002 / 1,654 | 287 ms (8 ms worst) | 49.7 kB | 2,631,161 | pass | 8 MB | replayed | GREEN |
-| B3 | length=100 div=25% cut=every1 | incremental | 41,862 | 71,382 | 182,326 | 5,138/5,248 | 5/5 | 58,589 / 1,967 | 1.1 s (58 ms worst) | - | - | - | 42 MB | replayed | GREEN |
-| B3 | length=100 div=25% cut=every8 | certified | 37,066 | 54,358 | 144,087 | 3,016/3,104 | 5/5 | 179,560 / 60,275 | 1.6 s (610 ms worst) | 8.0 MB | 317,107,715 | pass | 74 MB | replayed | GREEN |
-| B3 | length=100 div=25% cut=every8 | incremental | 37,066 | 54,358 | 144,087 | 3,016/3,104 | 5/5 | 167,826 / 64,999 | 2.0 s (713 ms worst) | - | - | - | 38 MB | replayed | GREEN |
-| B3 | length=100 div=25% cut=every32 | certified | 32,263 | 40,622 | 113,130 | 1,416/1,440 | 5/5 | 666,456 / 371,820 | 11.5 s (7.3 s worst) | 74.9 MB | 4,174,675,611 | REJECT | 389 MB | replayed | red (conflicts > 100k, DRAT > 32 MB) |
-| B3 | length=100 div=25% cut=every32 | incremental | 32,263 | 40,622 | 113,130 | 1,416/1,440 | 5/5 | 706,107 / 406,086 | 13.0 s (8.2 s worst) | - | - | - | 59 MB | replayed | red (conflicts > 100k) |
-| B3 | length=100 div=100% cut=every1 | certified | 50,914 | 81,046 | 210,748 | 5,138/5,248 | 5/5 | 94,826 / 1,654 | 481 ms (9 ms worst) | 49.7 kB | 2,631,161 | pass | 8 MB | replayed | GREEN |
-| B3 | length=100 div=100% cut=every1 | incremental | 50,914 | 81,046 | 210,748 | 5,138/5,248 | 5/5 | 91,737 / 2,114 | 1.4 s (61 ms worst) | - | - | - | 44 MB | replayed | GREEN |
-| B3 | length=100 div=100% cut=every8 | certified | 47,174 | 64,817 | 175,464 | 3,016/3,104 | 5/5 | 482,991 / 136,837 | 5.7 s (2.1 s worst) | 23.7 MB | 1,430,704,938 | pass | 172 MB | replayed | red (conflicts > 100k) |
-| B3 | length=100 div=100% cut=every8 | incremental | 47,174 | 64,817 | 175,464 | 3,016/3,104 | 5/5 | 378,366 / 84,289 | 5.0 s (1.3 s worst) | - | - | - | 54 MB | replayed | GREEN |
-| B3 | length=100 div=100% cut=every32 | certified | 41,498 | 50,187 | 141,635 | 1,416/1,440 | 5/5 | 1,497,979 / 751,102 | 38.2 s (22.5 s worst) | 235.7 MB | 2,755,626,448 | REJECT | 1017 MB | replayed | red (conflicts > 100k, DRAT > 32 MB, default limits reject) |
-| B3 | length=100 div=100% cut=every32 | incremental | 41,498 | 50,187 | 141,635 | 1,416/1,440 | 5/5 | 1,417,229 / 914,295 | 40.0 s (30.4 s worst) | - | - | - | 114 MB | replayed | red (conflicts > 100k, solve > 10 s) |
-| B3 | length=200 div=5% cut=every1 | certified | 76,892 | 135,492 | 342,642 | 10,358/10,560 | 5/5 | 95,258 / 1,654 | 467 ms (8 ms worst) | 49.7 kB | 2,631,161 | pass | 8 MB | replayed | GREEN |
-| B3 | length=200 div=5% cut=every1 | incremental | 76,892 | 135,492 | 342,642 | 10,358/10,560 | 5/5 | 92,550 / 1,894 | 4.4 s (130 ms worst) | - | - | - | 78 MB | replayed | GREEN |
-| B3 | length=200 div=5% cut=every8 | certified | 67,732 | 100,854 | 266,107 | 6,084/6,208 | 5/5 | 273,115 / 62,069 | 2.5 s (620 ms worst) | 8.6 MB | 338,160,953 | pass | 78 MB | replayed | GREEN |
-| B3 | length=200 div=5% cut=every8 | incremental | 67,732 | 100,854 | 266,107 | 6,084/6,208 | 5/5 | 274,297 / 64,434 | 5.0 s (869 ms worst) | - | - | - | 74 MB | replayed | GREEN |
-| B3 | length=200 div=5% cut=every32 | certified | 57,577 | 73,666 | 204,095 | 2,872/2,880 | 5/5 | 876,820 / 311,668 | 14.6 s (5.7 s worst) | 68.5 MB | 2,924,022,002 | REJECT | 462 MB | replayed | red (conflicts > 100k) |
-| B3 | length=200 div=5% cut=every32 | incremental | 57,577 | 73,666 | 204,095 | 2,872/2,880 | 5/5 | 972,080 / 393,035 | 21.2 s (8.0 s worst) | - | - | - | 101 MB | replayed | red (conflicts > 100k) |
-| B3 | length=200 div=25% cut=every1 | certified | 81,678 | 140,487 | 357,381 | 10,358/10,560 | 5/5 | 114,378 / 1,654 | 579 ms (11 ms worst) | 49.7 kB | 2,631,161 | pass | 8 MB | replayed | GREEN |
-| B3 | length=200 div=25% cut=every1 | incremental | 81,678 | 140,487 | 357,381 | 10,358/10,560 | 5/5 | 111,958 / 2,066 | 4.4 s (144 ms worst) | - | - | - | 83 MB | replayed | GREEN |
-| B3 | length=200 div=25% cut=every8 | certified | 73,731 | 106,946 | 284,383 | 6,084/6,208 | 5/5 | 369,182 / 81,015 | 3.5 s (910 ms worst) | 12.4 MB | 603,211,983 | pass | 103 MB | replayed | GREEN |
-| B3 | length=200 div=25% cut=every8 | incremental | 73,731 | 106,946 | 284,383 | 6,084/6,208 | 5/5 | 355,962 / 80,960 | 5.5 s (1.0 s worst) | - | - | - | 77 MB | replayed | GREEN |
-| B3 | length=200 div=25% cut=every32 | certified | 62,756 | 78,685 | 219,342 | 2,872/2,880 | 5/5 | 1,352,222 / 557,516 | 24.8 s (11.3 s worst) | 127.7 MB | 3,172,372,578 | REJECT | 679 MB | replayed | red (conflicts > 100k, solve > 10 s, DRAT > 32 MB, default limits reject) |
-| B3 | length=200 div=25% cut=every32 | incremental | 62,756 | 78,685 | 219,342 | 2,872/2,880 | 5/5 | 1,400,892 / 571,328 | 30.6 s (12.7 s worst) | - | - | - | 125 MB | replayed | red (conflicts > 100k, solve > 10 s) |
-| B3 | length=200 div=100% cut=every1 | certified | 100,930 | 160,431 | 416,893 | 10,358/10,560 | 5/5 | 188,051 / 1,654 | 953 ms (8 ms worst) | 49.7 kB | 2,631,161 | pass | 8 MB | replayed | GREEN |
-| B3 | length=200 div=100% cut=every1 | incremental | 100,930 | 160,431 | 416,893 | 10,358/10,560 | 5/5 | 177,986 / 1,950 | 4.8 s (228 ms worst) | - | - | - | 91 MB | replayed | GREEN |
-| B3 | length=200 div=100% cut=every8 | certified | 92,725 | 126,381 | 342,688 | 6,084/6,208 | 5/5 | 756,535 / 145,720 | 8.1 s (1.9 s worst) | 24.0 MB | 1,352,118,184 | pass | 169 MB | replayed | red (conflicts > 100k) |
-| B3 | length=200 div=100% cut=every8 | incremental | 92,725 | 126,381 | 342,688 | 6,084/6,208 | 5/5 | 680,099 / 130,831 | 10.8 s (2.4 s worst) | - | - | - | 106 MB | replayed | red (conflicts > 100k) |
-| B3 | length=200 div=100% cut=every32 | certified | 81,322 | 97,365 | 275,382 | 2,872/2,880 | 5/5 | 2,609,810 / 721,901 | 1.1 min (21.5 s worst) | 242.6 MB | 4,280,386,027 | REJECT | 977 MB | replayed | red (conflicts > 100k, solve > 10 s, DRAT > 32 MB, default limits reject) |
-| B3 | length=200 div=100% cut=every32 | incremental | 81,322 | 97,365 | 275,382 | 2,872/2,880 | 5/5 | 2,826,947 / 865,868 | 1.7 min (38.3 s worst) | - | - | - | 248 MB | replayed | red (conflicts > 100k, solve > 10 s) |
-| B3 | length=500 div=5% cut=every1 | certified | 190,811 | 334,668 | 844,144 | 26,612/27,008 | 5/5 | 242,044 / 1,654 | 1.2 s (8 ms worst) | 49.7 kB | 2,631,161 | pass | 9 MB | replayed | GREEN |
-| B3 | length=500 div=5% cut=every1 | incremental | 190,811 | 334,668 | 844,144 | 26,612/27,008 | 5/5 | 236,978 / 2,047 | 27.3 s (421 ms worst) | - | - | - | 161 MB | replayed | GREEN |
-| B3 | length=500 div=5% cut=every8 | certified | 170,165 | 254,436 | 669,511 | 15,209/15,392 | 5/5 | 694,777 / 55,281 | 6.3 s (592 ms worst) | 8.3 MB | 329,262,579 | pass | 80 MB | replayed | GREEN |
-| B3 | length=500 div=5% cut=every8 | incremental | 170,165 | 254,436 | 669,511 | 15,209/15,392 | 5/5 | 645,944 / 51,364 | 26.4 s (1.8 s worst) | - | - | - | 165 MB | replayed | GREEN |
-| B3 | length=500 div=5% cut=every32 | certified | 142,428 | 181,828 | 504,650 | 7,000/7,008 | 5/5 | 3,046,603 / 508,021 | 53.9 s (10.4 s worst) | 102.0 MB | 4,186,477,803 | REJECT | 574 MB | replayed | red (conflicts > 100k, DRAT > 32 MB, default limits reject) |
-| B3 | length=500 div=5% cut=every32 | incremental | 142,428 | 181,828 | 504,650 | 7,000/7,008 | 5/5 | 3,176,342 / 467,016 | 1.3 min (13.1 s worst) | - | - | - | 255 MB | replayed | red (conflicts > 100k, solve > 10 s) |
-| B3 | length=500 div=25% cut=every1 | certified | 203,263 | 349,144 | 888,330 | 26,612/27,008 | 5/5 | 287,327 / 1,654 | 1.4 s (18 ms worst) | 49.7 kB | 2,631,161 | pass | 9 MB | replayed | GREEN |
-| B3 | length=500 div=25% cut=every1 | incremental | 203,263 | 349,144 | 888,330 | 26,612/27,008 | 5/5 | 276,908 / 2,316 | 29.2 s (457 ms worst) | - | - | - | 168 MB | replayed | GREEN |
-| B3 | length=500 div=25% cut=every8 | certified | 183,049 | 268,578 | 711,937 | 15,209/15,392 | 5/5 | 913,720 / 80,846 | 8.8 s (908 ms worst) | 12.7 MB | 619,739,698 | pass | 103 MB | replayed | GREEN |
-| B3 | length=500 div=25% cut=every8 | incremental | 183,049 | 268,578 | 711,937 | 15,209/15,392 | 5/5 | 909,046 / 92,611 | 29.0 s (2.0 s worst) | - | - | - | 200 MB | replayed | GREEN |
-| B3 | length=500 div=25% cut=every32 | certified | 151,435 | 191,687 | 533,277 | 4,755/4,768 | 5/5 | 3,252,763 / 896,954 | 1.1 min (27.2 s worst) | 55.5 MB | 4,142,666,606 | pass | 1022 MB | not run | unknown (timeout) |
-| B3 | length=500 div=25% cut=every32 | incremental | 155,193 | 195,378 | 544,540 | 5,203/5,216 | 5/5 | 3,897,890 / 762,872 | 2.0 min (44.8 s worst) | - | - | - | 305 MB | not run | red (conflicts > 100k, solve > 10 s) |
-| B3 | length=500 div=100% cut=every1 | certified | 250,531 | 398,431 | 1,035,433 | 26,612/27,008 | 5/5 | 462,572 / 1,654 | 2.4 s (9 ms worst) | 49.7 kB | 2,631,161 | pass | 9 MB | replayed | GREEN |
-| B3 | length=500 div=100% cut=every1 | incremental | 250,531 | 398,431 | 1,035,433 | 26,612/27,008 | 5/5 | 429,149 / 2,119 | 30.8 s (532 ms worst) | - | - | - | 225 MB | replayed | GREEN |
-| B3 | length=500 div=100% cut=every8 | certified | 228,103 | 314,365 | 849,298 | 15,209/15,392 | 5/5 | 1,896,112 / 177,660 | 19.7 s (2.7 s worst) | 30.5 MB | 1,507,274,934 | pass | 250 MB | replayed | red (conflicts > 100k) |
-| B3 | length=500 div=100% cut=every8 | incremental | 228,103 | 314,365 | 849,298 | 15,209/15,392 | 5/5 | 1,752,076 / 161,463 | 37.1 s (3.9 s worst) | - | - | - | 298 MB | replayed | red (conflicts > 100k) |
-| B3 | length=500 div=100% cut=every32 | certified | 103,608 | 122,990 | 348,838 | 2,616/2,624 | 5/5 | 2,926,235 / 871,997 | 1.4 min (29.8 s worst) | - | - | - | 934 MB | not run | unknown (timeout) |
-| B3 | length=500 div=100% cut=every32 | incremental | 103,608 | 122,990 | 348,838 | 2,616/2,624 | 5/5 | 3,294,917 / 812,043 | 2.0 min (49.0 s worst) | - | - | - | 264 MB | not run | unknown (timeout) |
-| B3 | length=1000 div=5% cut=every1 | certified | 381,817 | 674,139 | 1,702,501 | 52,020/52,768 | 5/5 | 466,471 / 1,654 | 2.3 s (12 ms worst) | 49.7 kB | 2,631,161 | pass | 9 MB | replayed | GREEN |
-| B3 | length=1000 div=5% cut=every1 | incremental | 381,817 | 674,139 | 1,702,501 | 52,020/52,768 | 5/5 | 453,972 / 2,037 | 2.0 min (1.7 s worst) | - | - | - | 244 MB | replayed | GREEN |
-| B3 | length=1000 div=5% cut=every8 | certified | 340,846 | 512,312 | 1,348,771 | 30,969/31,328 | 5/5 | 1,297,757 / 73,299 | 12.6 s (810 ms worst) | 10.1 MB | 479,184,175 | pass | 90 MB | replayed | GREEN |
-| B3 | length=1000 div=5% cut=every8 | incremental | 340,846 | 512,312 | 1,348,771 | 30,969/31,328 | 5/5 | 1,193,956 / 89,515 | 1.7 min (2.2 s worst) | - | - | - | 238 MB | replayed | GREEN |
-| B3 | length=1000 div=5% cut=every32 | certified | 268,082 | 346,114 | 957,054 | 8,736/8,768 | 5/5 | 3,592,811 / 497,648 | 1.0 min (11.4 s worst) | 87.3 MB | 1,855,404,073 | REJECT | 699 MB | not run | red (conflicts > 100k, DRAT > 32 MB, default limits reject) |
-| B3 | length=1000 div=5% cut=every32 | incremental | 283,058 | 361,652 | 1,003,477 | 13,672/13,728 | 5/5 | 4,504,840 / 473,408 | 2.0 min (13.1 s worst) | - | - | - | 448 MB | not run | red (conflicts > 100k) |
-| B3 | length=1000 div=25% cut=every1 | certified | 405,982 | 698,956 | 1,776,952 | 52,020/52,768 | 5/5 | 565,362 / 1,654 | 3.3 s (37 ms worst) | 49.7 kB | 2,631,161 | pass | 9 MB | replayed | GREEN |
-| B3 | length=1000 div=25% cut=every1 | incremental | 405,982 | 698,956 | 1,776,952 | 52,020/52,768 | 5/5 | 543,677 / 2,289 | 2.0 min (1.1 s worst) | - | - | - | 253 MB | replayed | GREEN |
-| B3 | length=1000 div=25% cut=every8 | certified | 364,310 | 536,339 | 1,420,852 | 30,969/31,328 | 5/5 | 1,719,239 / 108,397 | 16.8 s (1.8 s worst) | 20.9 MB | 940,758,272 | pass | 162 MB | replayed | red (conflicts > 100k) |
-| B3 | length=1000 div=25% cut=every8 | incremental | 364,310 | 536,339 | 1,420,852 | 30,969/31,328 | 5/5 | 1,651,261 / 123,921 | 1.7 min (3.4 s worst) | - | - | - | 303 MB | replayed | red (conflicts > 100k) |
-| B3 | length=1000 div=25% cut=every32 | certified | 171,957 | 216,863 | 603,867 | 6,963/6,976 | 5/5 | 3,423,090 / 593,005 | 1.0 min (18.2 s worst) | - | - | - | 806 MB | not run | unknown (timeout) |
-| B3 | length=1000 div=25% cut=every32 | incremental | 211,420 | 266,360 | 741,912 | 7,827/7,872 | 5/5 | 4,238,049 / 721,465 | 2.0 min (28.7 s worst) | - | - | - | 403 MB | not run | unknown (timeout) |
-| B3 | length=1000 div=100% cut=every1 | certified | 499,970 | 796,728 | 2,070,268 | 52,020/52,768 | 5/5 | 925,077 / 1,654 | 4.7 s (20 ms worst) | 49.7 kB | 2,631,161 | pass | 9 MB | replayed | GREEN |
-| B3 | length=1000 div=100% cut=every1 | incremental | 499,970 | 796,728 | 2,070,268 | 52,020/52,768 | 5/5 | 858,300 / 2,196 | 2.0 min (1.1 s worst) | - | - | - | 298 MB | not run | unknown (timeout) |
-| B3 | length=1000 div=100% cut=every8 | certified | 455,249 | 629,710 | 1,700,965 | 30,969/31,328 | 5/5 | 3,564,429 / 136,837 | 36.6 s (2.1 s worst) | 23.7 MB | 1,430,704,938 | pass | 207 MB | replayed | red (conflicts > 100k) |
-| B3 | length=1000 div=100% cut=every8 | incremental | 448,552 | 618,890 | 1,670,785 | 30,969/31,328 | 5/5 | 3,229,883 / 130,319 | 1.7 min (3.8 s worst) | - | - | - | 503 MB | not run | red (conflicts > 100k) |
-| B3 | length=1000 div=100% cut=every32 | certified | 99,419 | 119,273 | 337,307 | 3,064/3,072 | 5/5 | 2,860,860 / 1,000,041 | 1.2 min (32.7 s worst) | - | - | - | 840 MB | not run | unknown (timeout) |
-| B3 | length=1000 div=100% cut=every32 | incremental | 110,396 | 132,795 | 375,214 | 3,064/3,072 | 5/5 | 3,458,386 / 937,220 | 2.0 min (47.9 s worst) | - | - | - | 263 MB | not run | unknown (timeout) |
-| B4 | shape=assoc n=3 w=32 | monolithic | 1,003 | 1,099 | 3,010 | 96/96 | 5/5 | 14,916 | 84 ms | 1.2 MB | 26,853,314 | pass | 15 MB | replayed | GREEN |
-| B4 | shape=assoc n=4 w=32 | monolithic | 1,441 | 1,569 | 4,324 | 128/128 | 5/5 | 87,315 | 753 ms | 9.6 MB | 384,690,405 | pass | 69 MB | replayed | GREEN |
-| B4 | shape=assoc n=5 w=32 | monolithic | 1,879 | 2,039 | 5,638 | 160/160 | 5/5 | 470,248 | 8.3 s | 69.0 MB | 4,272,981,623 | REJECT | 387 MB | replayed | red (conflicts > 100k, DRAT > 32 MB, default limits reject) |
-| B4 | shape=assoc n=6 w=32 | monolithic | 2,317 | 2,509 | 6,952 | 192/192 | 5/5 | 1,000,034 | 26.4 s | - | - | - | 252 MB | not run | unknown (conflict cap) |
-| B4 | shape=assoc n=7 w=32 | monolithic | 2,755 | 2,979 | 8,266 | 224/224 | 5/5 | 1,000,044 | 23.0 s | - | - | - | 266 MB | not run | unknown (conflict cap) |
-| B4 | shape=mul5 w=8 | monolithic | 107 | 115 | 322 | 8/8 | 5/5 | 141 | <1 ms | 2.9 kB | 129,663 | pass | 3 MB | replayed | GREEN |
-| B4 | shape=mul5 w=16 | monolithic | 299 | 315 | 898 | 16/16 | 5/5 | 799 | 7 ms | 25.5 kB | 1,765,836 | pass | 4 MB | replayed | GREEN |
-| B4 | shape=mul5 w=32 | monolithic | 683 | 715 | 2,050 | 32/32 | 5/5 | 2,743 | 20 ms | 179.1 kB | 7,512,250 | pass | 7 MB | replayed | GREEN |
-| B4 | shape=mul12 w=8 | monolithic | 140 | 152 | 421 | 14/16 | 5/5 | 334 | 2 ms | 8.7 kB | 418,103 | pass | 3 MB | replayed | GREEN |
-| B4 | shape=mul12 w=16 | monolithic | 420 | 448 | 1,261 | 30/32 | 5/5 | 2,408 | 19 ms | 155.2 kB | 6,794,241 | pass | 6 MB | replayed | GREEN |
-| B4 | shape=mul12 w=32 | monolithic | 980 | 1,040 | 2,941 | 62/64 | 5/5 | 10,200 | 77 ms | 923.8 kB | 27,708,369 | pass | 12 MB | replayed | GREEN |
-| C1 | base=a1 n=8 | monolithic | 329 | 353 | 988 | 24/24 | 5/5 | 115 | <1 ms | 3.0 kB | 109,394 | pass | 4 MB | replayed | GREEN |
-| C1 | base=a1 n=16 | monolithic | 560 | 608 | 1,681 | 48/48 | 5/5 | 174 | 1 ms | 5.5 kB | 235,932 | pass | 5 MB | replayed | GREEN |
-| C1 | base=a1 n=32 | monolithic | 1,063 | 1,159 | 3,190 | 96/96 | 5/5 | 508 | 5 ms | 23.3 kB | 1,479,672 | pass | 6 MB | replayed | GREEN |
-| C1 | base=a1 n=64 | monolithic | 2,965 | 3,157 | 8,896 | 192/192 | 5/5 | 942 | 13 ms | 67.7 kB | 5,837,284 | pass | 11 MB | replayed | GREEN |
-| C1 | base=b length=25 div=5% | monolithic | 16,103 | 17,255 | 48,310 | 927/1,056 | 4/5 | 354,220 | 6.0 s | 55.0 MB | 2,423,385,995 | pass | 291 MB | replayed | red (conflicts > 100k, DRAT > 32 MB) |
-| C1 | base=b length=25 div=25% | monolithic | 19,882 | 21,034 | 59,647 | 927/1,056 | 5/5 | 397,794 | 8.3 s | 69.6 MB | 2,756,316,349 | pass | 332 MB | replayed | red (conflicts > 100k) |
-| C1 | base=b length=25 div=100% | monolithic | 27,348 | 28,500 | 82,045 | 927/1,056 | 5/5 | 1,000,031 | 31.8 s | 194.9 MB | 1,669,938,057 | REJECT | 820 MB | not run | red (conflicts > 100k, DRAT > 32 MB) |
-| C1 | base=b length=50 div=5% | monolithic | 34,256 | 35,792 | 102,769 | 1,270/1,536 | 5/5 | 1,000,040 | 33.1 s | 199.6 MB | 1,030,142,650 | REJECT | 781 MB | not run | red (conflicts > 100k, DRAT > 32 MB) |
-| C1 | base=b length=50 div=25% | monolithic | 38,492 | 40,028 | 115,477 | 1,270/1,536 | 5/5 | 1,000,043 | 41.4 s | 121.3 MB | 2,261,036,354 | REJECT | 635 MB | not run | red (conflicts > 100k, solve > 10 s, DRAT > 32 MB) |
-| C1 | base=b length=50 div=100% | monolithic | 49,428 | 50,964 | 148,285 | 1,270/1,536 | 5/5 | 1,000,042 | 1.2 min | - | - | - | 352 MB | not run | unknown (conflict cap) |
-| C1 | base=b length=100 div=5% | monolithic | 56,469 | 58,773 | 169,408 | 2,208/2,304 | 5/5 | 1,000,038 | 49.5 s | - | - | - | 342 MB | not run | unknown (conflict cap) |
-| C1 | base=b length=100 div=25% | monolithic | 69,762 | 72,066 | 209,287 | 2,208/2,304 | 5/5 | 1,000,036 | 50.4 s | - | - | - | 342 MB | not run | unknown (conflict cap) |
-| C1 | base=b length=100 div=100% | monolithic | 90,888 | 93,192 | 272,665 | 2,208/2,304 | 5/5 | 1,000,034 | 1.2 min | - | - | - | 364 MB | not run | unknown (conflict cap) |
-| C1 | base=b length=200 div=5% | monolithic | 119,949 | 123,885 | 359,848 | 3,834/3,936 | 5/5 | 1,000,038 | 53.8 s | - | - | - | 423 MB | not run | unknown (conflict cap) |
-| C1 | base=b length=200 div=25% | monolithic | 134,273 | 138,209 | 402,820 | 3,834/3,936 | 5/5 | 1,000,046 | 1.1 min | - | - | - | 414 MB | not run | unknown (conflict cap) |
-| C1 | base=b length=200 div=100% | monolithic | 174,831 | 178,767 | 524,494 | 3,834/3,936 | 5/5 | 1,000,036 | 1.6 min | - | - | - | 510 MB | not run | unknown (conflict cap) |
-| C1 | base=b length=500 div=5% | monolithic | 310,024 | 318,760 | 930,073 | 8,709/8,736 | 5/5 | 1,000,033 | 1.9 min | - | - | - | 611 MB | not run | unknown (conflict cap) |
-| C1 | base=b length=500 div=25% | monolithic | 337,042 | 345,778 | 1,011,127 | 8,709/8,736 | 5/5 | 1,000,032 | 2.1 min | - | - | - | 548 MB | not run | unknown (timeout) |
-| C1 | base=b length=500 div=100% | monolithic | 425,841 | 434,577 | 1,277,524 | 8,709/8,736 | 5/5 | 560,013 | 2.1 min | - | - | - | 488 MB | not run | unknown (timeout) |
-| C1 | base=b length=1000 div=5% | monolithic | 621,633 | 638,337 | 1,864,900 | 16,680/16,704 | 5/5 | 1,000,033 | 2.0 min | - | - | - | 795 MB | not run | unknown (timeout) |
-| C1 | base=b length=1000 div=25% | monolithic | 668,153 | 684,857 | 2,004,460 | 16,677/16,704 | 5/5 | 1,000,039 | 2.0 min | - | - | - | 784 MB | not run | unknown (conflict cap) |
-| C1 | base=b length=1000 div=100% | monolithic | 845,205 | 861,909 | 2,535,616 | 16,669/16,704 | 5/5 | 280,007 | 2.1 min | - | - | - | 573 MB | not run | unknown (timeout) |
-| C2 | t=8 | monolithic | 11,352 | 11,864 | 34,057 | 440/576 | 5/5 | 94,081 | 1.7 s | 10.4 MB | 444,053,739 | pass | 94 MB | replayed | GREEN |
-| C2 | t=16 | monolithic | 13,573 | 14,085 | 40,720 | 440/576 | 5/5 | 110,229 | 2.1 s | 14.7 MB | 990,611,662 | pass | 119 MB | replayed | red (conflicts > 100k) |
-| C2 | t=64 | monolithic | 26,223 | 26,735 | 78,670 | 440/576 | 5/5 | 112,084 | 3.9 s | 18.9 MB | 2,310,294,171 | pass | 137 MB | replayed | red (conflicts > 100k) |
-| D1 | t=4 k=1 | monolithic | 2,388 | 2,550 | 7,165 | 162/162 | 5/5 | 5,478 | 52 ms | 348.9 kB | 23,949,082 | pass | 10 MB | replayed | GREEN |
-| D1 | t=4 k=2 | monolithic | 4,391 | 4,553 | 13,174 | 162/162 | 5/5 | 20,158 | 231 ms | 1.8 MB | 161,132,472 | pass | 26 MB | replayed | GREEN |
-| D1 | t=4 k=4 | monolithic | 8,486 | 8,648 | 25,459 | 162/162 | 5/5 | 52,971 | 939 ms | 5.9 MB | 763,974,231 | pass | 61 MB | replayed | GREEN |
-| D1 | t=4 k=8 | monolithic | 15,375 | 15,537 | 46,126 | 161/162 | 5/5 | 664,091 | 25.9 s | 140.7 MB | - | REJECT | 633 MB | replayed | red (conflicts > 100k, solve > 10 s, DRAT > 32 MB, default limits reject) |
-| D1 | t=4 k=16 | monolithic | 29,112 | 29,274 | 87,337 | 160/162 | 5/5 | 1,000,047 | 1.4 min | - | - | - | 473 MB | not run | unknown (conflict cap) |
-| D1 | t=8 k=1 | monolithic | 4,316 | 4,607 | 12,949 | 291/291 | 5/5 | 12,702 | 137 ms | 857.1 kB | 117,343,743 | pass | 18 MB | replayed | GREEN |
-| D1 | t=8 k=2 | monolithic | 7,865 | 8,156 | 23,596 | 291/291 | 5/5 | 34,395 | 546 ms | 3.3 MB | 586,978,445 | pass | 43 MB | replayed | GREEN |
-| D1 | t=8 k=4 | monolithic | 15,059 | 15,350 | 45,178 | 291/291 | 5/5 | 101,243 | 2.1 s | 12.7 MB | 3,305,878,753 | pass | 107 MB | replayed | red (conflicts > 100k) |
-| D1 | t=8 k=8 | monolithic | 29,809 | 30,100 | 89,428 | 291/291 | 5/5 | 281,503 | 11.0 s | 44.5 MB | - | REJECT | 217 MB | replayed | red (conflicts > 100k, DRAT > 32 MB, default limits reject) |
-| D1 | t=8 k=16 | monolithic | 53,722 | 54,013 | 161,167 | 290/291 | 5/5 | 1,000,047 | 1.6 min | - | - | - | 448 MB | not run | unknown (conflict cap) |
-| D1 | t=16 k=1 | monolithic | 8,172 | 8,720 | 24,517 | 548/548 | 5/5 | 23,587 | 789 ms | 1.6 MB | 414,932,420 | pass | 33 MB | replayed | GREEN |
-| D1 | t=16 k=2 | monolithic | 14,811 | 15,359 | 44,434 | 548/548 | 5/5 | 71,794 | 1.6 s | 8.3 MB | 2,514,237,761 | pass | 82 MB | replayed | GREEN |
-| D1 | t=16 k=4 | monolithic | 28,191 | 28,739 | 84,574 | 548/548 | 5/5 | 225,148 | 6.7 s | 32.5 MB | - | REJECT | 193 MB | replayed | red (conflicts > 100k, default limits reject) |
-| D1 | t=16 k=8 | monolithic | 55,332 | 55,880 | 165,997 | 548/548 | 5/5 | 580,474 | 37.2 s | 100.2 MB | - | REJECT | 466 MB | replayed | red (conflicts > 100k, solve > 10 s, DRAT > 32 MB, default limits reject) |
-| D1 | t=16 k=16 | monolithic | 111,034 | 111,582 | 333,103 | 548/548 | 5/5 | 1,000,043 | 2.1 min | - | - | - | 403 MB | not run | unknown (conflict cap) |
-| D1 | t=64 k=1 | monolithic | 31,308 | 33,394 | 93,925 | 2,086/2,086 | 5/5 | 87,365 | 8.0 s | 8.6 MB | - | REJECT | 111 MB | replayed | red (default limits reject) |
-| D1 | t=64 k=2 | monolithic | 56,479 | 58,565 | 169,438 | 2,086/2,086 | 5/5 | 314,927 | 24.2 s | 48.7 MB | - | REJECT | 295 MB | replayed | red (conflicts > 100k, solve > 10 s, DRAT > 32 MB, default limits reject) |
-| D1 | t=64 k=4 | monolithic | 106,935 | 109,021 | 320,806 | 2,086/2,086 | 5/5 | 916,339 | 1.4 min | 178.4 MB | - | REJECT | 831 MB | replayed | red (conflicts > 100k, solve > 10 s, DRAT > 32 MB, default limits reject) |
-| D1 | t=64 k=8 | monolithic | 208,260 | 210,346 | 624,781 | 2,086/2,086 | 5/5 | 641,142 | 2.0 min | - | - | - | 395 MB | not run | unknown (timeout) |
-| D1 | t=64 k=16 | monolithic | 412,465 | 414,551 | 1,237,396 | 2,086/2,086 | 5/5 | 178,406 | 2.0 min | - | - | - | 341 MB | not run | unknown (timeout) |
-| D1 | t=256 k=1 | monolithic | 123,852 | 132,084 | 371,557 | 8,232/8,232 | 5/5 | 36,513 | 2.4 min | - | - | - | 88 MB | not run | unknown (timeout) |
-| D1 | t=256 k=2 | monolithic | 223,139 | 231,371 | 669,418 | 8,232/8,232 | 5/5 | 12,829 | 2.5 min | - | - | - | 136 MB | not run | unknown (timeout) |
-| D1 | t=256 k=4 | monolithic | 421,839 | 430,071 | 1,265,518 | 8,232/8,232 | 5/5 | 8,843 | 2.2 min | - | - | - | 286 MB | not run | unknown (timeout) |
-| D1 | t=256 k=8 | monolithic | 819,684 | 827,916 | 2,459,053 | 8,232/8,232 | 5/5 | 7,989 | 2.1 min | - | - | - | 470 MB | not run | unknown (timeout) |
-| D1 | t=256 k=16 | monolithic | 1,617,057 | 1,625,289 | 4,851,172 | 8,232/8,232 | 5/5 | 19,653 | 2.0 min | - | - | - | 914 MB | not run | unknown (timeout) |
-| D2 | t=4 k=1 | monolithic | 752 | 816 | 2,257 | 160/160 | 5/5 | 1,421 | 7 ms | 41.4 kB | 1,481,004 | pass | 5 MB | replayed | GREEN |
-| D2 | t=4 k=2 | monolithic | 1,502 | 1,598 | 4,507 | 160/160 | 5/5 | 4,482 | 31 ms | 308.3 kB | 7,103,819 | pass | 8 MB | replayed | GREEN |
-| D2 | t=4 k=4 | monolithic | 2,997 | 3,157 | 8,992 | 160/160 | 5/5 | 12,733 | 121 ms | 1.0 MB | 20,831,706 | pass | 15 MB | replayed | GREEN |
-| D2 | t=4 k=8 | monolithic | 5,470 | 5,630 | 16,411 | 159/160 | 5/5 | 180,204 | 3.9 s | 33.2 MB | 2,104,033,334 | pass | 178 MB | replayed | red (conflicts > 100k, DRAT > 32 MB) |
-| D2 | t=4 k=16 | monolithic | 10,375 | 10,535 | 31,126 | 158/160 | 5/5 | 1,000,041 | 48.8 s | 197.6 MB | - | REJECT | 794 MB | not run | red (conflicts > 100k, solve > 10 s, DRAT > 32 MB, default limits reject) |
-| D2 | t=8 k=1 | monolithic | 752 | 816 | 2,257 | 288/288 | 5/5 | 1,421 | 8 ms | 41.4 kB | 1,481,004 | pass | 5 MB | replayed | GREEN |
-| D2 | t=8 k=2 | monolithic | 1,502 | 1,598 | 4,507 | 288/288 | 5/5 | 4,413 | 33 ms | 304.6 kB | 6,902,112 | pass | 8 MB | replayed | GREEN |
-| D2 | t=8 k=4 | monolithic | 2,997 | 3,157 | 8,992 | 288/288 | 5/5 | 13,580 | 132 ms | 1.2 MB | 22,697,590 | pass | 16 MB | replayed | GREEN |
-| D2 | t=8 k=8 | monolithic | 5,982 | 6,270 | 17,947 | 288/288 | 5/5 | 28,100 | 431 ms | 2.9 MB | 84,988,020 | pass | 32 MB | replayed | GREEN |
-| D2 | t=8 k=16 | monolithic | 10,887 | 11,175 | 32,662 | 287/288 | 5/5 | 503,554 | 17.0 s | 110.8 MB | 1,672,344,016 | REJECT | 498 MB | replayed | red (conflicts > 100k, DRAT > 32 MB) |
-| D2 | t=16 k=1 | monolithic | 752 | 816 | 2,257 | 544/544 | 5/5 | 1,421 | 7 ms | 41.4 kB | 1,455,058 | pass | 5 MB | replayed | GREEN |
-| D2 | t=16 k=2 | monolithic | 1,502 | 1,598 | 4,507 | 544/544 | 5/5 | 4,413 | 33 ms | 304.6 kB | 6,902,112 | pass | 8 MB | replayed | GREEN |
-| D2 | t=16 k=4 | monolithic | 2,997 | 3,157 | 8,992 | 544/544 | 5/5 | 13,620 | 131 ms | 1.1 MB | 24,923,244 | pass | 15 MB | replayed | GREEN |
-| D2 | t=16 k=8 | monolithic | 5,982 | 6,270 | 17,947 | 544/544 | 5/5 | 31,030 | 435 ms | 3.0 MB | 85,398,376 | pass | 33 MB | replayed | GREEN |
-| D2 | t=16 k=16 | monolithic | 11,911 | 12,455 | 35,734 | 544/544 | 5/5 | 82,566 | 2.0 s | 9.4 MB | 462,178,479 | pass | 84 MB | replayed | GREEN |
-| D2 | t=64 k=1 | monolithic | 752 | 816 | 2,257 | 2,080/2,080 | 5/5 | 1,421 | 7 ms | 41.4 kB | 1,481,004 | pass | 6 MB | replayed | GREEN |
-| D2 | t=64 k=2 | monolithic | 1,502 | 1,598 | 4,507 | 2,080/2,080 | 5/5 | 4,302 | 33 ms | 293.1 kB | 6,296,288 | pass | 9 MB | replayed | GREEN |
-| D2 | t=64 k=4 | monolithic | 2,997 | 3,157 | 8,992 | 2,080/2,080 | 5/5 | 14,369 | 147 ms | 1.3 MB | 29,121,280 | pass | 18 MB | replayed | GREEN |
-| D2 | t=64 k=8 | monolithic | 5,982 | 6,270 | 17,947 | 2,080/2,080 | 5/5 | 31,435 | 463 ms | 3.1 MB | 90,749,880 | pass | 37 MB | replayed | GREEN |
-| D2 | t=64 k=16 | monolithic | 11,911 | 12,455 | 35,734 | 2,080/2,080 | 5/5 | 71,516 | 1.6 s | 8.0 MB | 374,350,546 | pass | 64 MB | replayed | GREEN |
-| D2 | t=256 k=1 | monolithic | 752 | 816 | 2,257 | 8,224/8,224 | 5/5 | 1,421 | 8 ms | 41.4 kB | 1,498,588 | pass | 7 MB | replayed | GREEN |
-| D2 | t=256 k=2 | monolithic | 1,502 | 1,598 | 4,507 | 8,224/8,224 | 5/5 | 4,158 | 30 ms | 255.1 kB | 5,677,997 | pass | 9 MB | replayed | GREEN |
-| D2 | t=256 k=4 | monolithic | 2,997 | 3,157 | 8,992 | 8,224/8,224 | 5/5 | 13,370 | 137 ms | 1.1 MB | 23,853,954 | pass | 17 MB | replayed | GREEN |
-| D2 | t=256 k=8 | monolithic | 5,982 | 6,270 | 17,947 | 8,224/8,224 | 5/5 | 28,304 | 391 ms | 2.7 MB | 81,189,894 | pass | 34 MB | replayed | GREEN |
-| D2 | t=256 k=16 | monolithic | 11,911 | 12,455 | 35,734 | 8,224/8,224 | 5/5 | 75,207 | 1.8 s | 7.8 MB | 360,165,175 | pass | 68 MB | replayed | GREEN |
-| D3 | t=4 k=1 | split | 3,008 | 3,264 | 9,028 | 640/640 | 5/5 | 5,684 / 1,421 | 29 ms (8 ms worst) | 41.4 kB | 1,498,588 | pass | 6 MB | replayed | GREEN |
-| D3 | t=4 k=2 | split | 6,008 | 6,392 | 18,028 | 640/640 | 5/5 | 18,264 / 4,818 | 136 ms (36 ms worst) | 354.7 kB | 7,302,634 | pass | 11 MB | replayed | GREEN |
-| D3 | t=4 k=4 | split | 11,988 | 12,628 | 35,968 | 640/640 | 5/5 | 41,212 / 12,733 | 371 ms (125 ms worst) | 1.1 MB | 23,191,202 | pass | 23 MB | replayed | GREEN |
-| D3 | t=4 k=8 | split | 21,880 | 22,520 | 65,644 | 636/640 | 5/5 | 725,611 / 193,930 | 14.2 s (3.8 s worst) | 37.3 MB | 2,314,347,216 | pass | 273 MB | replayed | red (conflicts > 100k, DRAT > 32 MB) |
-| D3 | t=4 k=16 | split | 39,236 | 39,876 | 117,712 | 632/640 | 5/5 | 2,508,464 / 1,000,044 | 1.5 min (45.5 s worst) | 197.6 MB | - | REJECT | 972 MB | not run | red (conflicts > 100k, solve > 10 s, DRAT > 32 MB, default limits reject) |
-| D3 | t=8 k=1 | split | 6,016 | 6,528 | 18,056 | 2,304/2,304 | 5/5 | 11,368 / 1,421 | 58 ms (7 ms worst) | 41.4 kB | 1,481,004 | pass | 6 MB | replayed | GREEN |
-| D3 | t=8 k=2 | split | 12,016 | 12,784 | 36,056 | 2,304/2,304 | 5/5 | 34,401 / 4,482 | 248 ms (33 ms worst) | 308.3 kB | 7,103,819 | pass | 11 MB | replayed | GREEN |
-| D3 | t=8 k=4 | split | 23,976 | 25,256 | 71,936 | 2,304/2,304 | 5/5 | 93,708 / 13,682 | 866 ms (140 ms worst) | 1.2 MB | 26,435,760 | pass | 24 MB | replayed | GREEN |
-| D3 | t=8 k=8 | split | 47,856 | 50,160 | 143,576 | 2,304/2,304 | 5/5 | 247,475 / 33,278 | 3.4 s (482 ms worst) | 3.2 MB | 102,975,646 | pass | 41 MB | replayed | GREEN |
-| D3 | t=8 k=16 | split | 79,304 | 81,608 | 237,920 | 2,296/2,304 | 5/5 | 2,600,900 / 503,554 | 1.2 min (14.3 s worst) | 40.8 MB | 1,813,079,701 | pass | 535 MB | not run | red (conflicts > 100k, DRAT > 32 MB) |
-| D3 | t=16 k=1 | split | 12,032 | 13,056 | 36,112 | 8,704/8,704 | 5/5 | 22,736 / 1,421 | 113 ms (7 ms worst) | 41.4 kB | 1,455,058 | pass | 8 MB | replayed | GREEN |
-| D3 | t=16 k=2 | split | 24,032 | 25,568 | 72,112 | 8,704/8,704 | 5/5 | 69,159 / 4,818 | 492 ms (35 ms worst) | 354.7 kB | 7,302,728 | pass | 12 MB | replayed | GREEN |
-| D3 | t=16 k=4 | split | 47,952 | 50,512 | 143,872 | 8,704/8,704 | 5/5 | 189,561 / 14,230 | 1.7 s (134 ms worst) | 1.3 MB | 24,923,244 | pass | 27 MB | replayed | GREEN |
-| D3 | t=16 k=8 | split | 95,712 | 100,320 | 287,152 | 8,704/8,704 | 5/5 | 473,018 / 34,725 | 6.3 s (494 ms worst) | 3.7 MB | 116,622,646 | pass | 46 MB | replayed | GREEN |
-| D3 | t=16 k=16 | split | 190,576 | 199,280 | 571,744 | 8,704/8,704 | 5/5 | 1,152,880 / 82,566 | 24.6 s (2.2 s worst) | 9.4 MB | 462,178,479 | pass | 148 MB | replayed | GREEN |
-| D3 | t=64 k=1 | split | 48,128 | 52,224 | 144,448 | 133,120/133,120 | 5/5 | 90,944 / 1,421 | 456 ms (29 ms worst) | 41.4 kB | 1,498,588 | pass | 8 MB | replayed | GREEN |
-| D3 | t=64 k=2 | split | 96,128 | 102,272 | 288,448 | 133,120/133,120 | 5/5 | 271,830 / 4,382 | 2.0 s (37 ms worst) | 298.5 kB | 6,630,915 | pass | 14 MB | replayed | GREEN |
-| D3 | t=64 k=4 | split | 191,808 | 202,048 | 575,488 | 133,120/133,120 | 5/5 | 840,344 / 15,201 | 8.4 s (455 ms worst) | 1.4 MB | 31,580,639 | pass | 30 MB | replayed | GREEN |
-| D3 | t=64 k=8 | split | 382,848 | 401,280 | 1,148,608 | 133,120/133,120 | 5/5 | 1,865,035 / 36,124 | 28.6 s (1.6 s worst) | 3.8 MB | 113,361,920 | pass | 49 MB | replayed | GREEN |
-| D3 | t=64 k=16 | split | 647,744 | 682,560 | 1,943,296 | 133,120/133,120 | 5/5 | 3,135,090 / 82,469 | 1.2 min (3.5 s worst) | 2.7 MB | 77,388,380 | pass | 134 MB | not run | unknown (timeout) |
-| D3 | t=256 k=1 | split | 192,512 | 208,896 | 577,792 | 2,105,344/2,105,344 | 5/5 | 363,776 / 1,421 | 2.0 s (48 ms worst) | 41.4 kB | 1,498,588 | pass | 9 MB | replayed | GREEN |
-| D3 | t=256 k=2 | split | 384,512 | 409,088 | 1,153,792 | 2,105,344/2,105,344 | 5/5 | 1,125,754 / 4,482 | 9.1 s (138 ms worst) | 308.3 kB | 7,103,949 | pass | 15 MB | replayed | GREEN |
-| D3 | t=256 k=4 | split | 731,268 | 770,308 | 2,194,048 | 2,105,344/2,105,344 | 5/5 | 2,957,571 / 15,227 | 33.9 s (573 ms worst) | 341.4 kB | 5,907,546 | pass | 36 MB | not run | unknown (timeout) |
-| D3 | t=256 k=8 | split | 1,293,360 | 1,366,800 | 3,880,335 | 1,809,280/1,809,280 | 5/5 | 3,089,737 / 38,366 | 53.4 s (1.9 s worst) | - | - | - | 59 MB | not run | unknown (timeout) |
-| D3 | t=256 k=16 | split | 1,325,851 | 1,397,115 | 3,977,684 | 1,077,344/1,077,344 | 5/5 | 3,799,882 / 86,112 | 1.1 min (4.6 s worst) | - | - | - | 150 MB | not run | unknown (timeout) |
-| D4 | t=4 k=1 | certified | 2,581 | 3,547 | 9,676 | 162/162 | 5/5 | 8,894 | 93 ms | 760.5 kB | 61,488,465 | pass | 15 MB | replayed | GREEN |
-| D4 | t=4 k=1 | incremental | 2,581 | 3,547 | 9,676 | 162/162 | 5/5 | 8,730 | 92 ms | - | - | - | 8 MB | replayed | GREEN |
-| D4 | t=4 k=2 | certified | 5,162 | 7,094 | 19,352 | 324/324 | 5/5 | 21,148 / 12,254 | 225 ms (127 ms worst) | 1.2 MB | 99,267,535 | pass | 18 MB | replayed | GREEN |
-| D4 | t=4 k=2 | incremental | 5,162 | 7,094 | 19,352 | 324/324 | 5/5 | 20,124 / 12,988 | 237 ms (157 ms worst) | - | - | - | 10 MB | replayed | GREEN |
-| D4 | t=4 k=4 | certified | 10,320 | 14,184 | 38,692 | 648/648 | 5/5 | 42,993 / 12,254 | 611 ms (226 ms worst) | 1.2 MB | 101,123,093 | pass | 27 MB | replayed | GREEN |
-| D4 | t=4 k=4 | incremental | 10,320 | 14,184 | 38,692 | 648/648 | 5/5 | 43,792 / 13,907 | 914 ms (366 ms worst) | - | - | - | 15 MB | replayed | GREEN |
-| D4 | t=4 k=8 | certified | 20,640 | 28,368 | 77,384 | 1,296/1,296 | 5/5 | 87,914 / 12,254 | 973 ms (159 ms worst) | 1.2 MB | 101,123,093 | pass | 26 MB | replayed | GREEN |
-| D4 | t=4 k=8 | incremental | 20,640 | 28,368 | 77,384 | 1,296/1,296 | 5/5 | 88,099 / 13,907 | 1.3 s (228 ms worst) | - | - | - | 23 MB | replayed | GREEN |
-| D4 | t=4 k=16 | certified | 41,288 | 56,744 | 154,792 | 2,592/2,592 | 5/5 | 172,576 / 12,254 | 1.8 s (136 ms worst) | 1.2 MB | 101,123,093 | pass | 27 MB | replayed | GREEN |
-| D4 | t=4 k=16 | incremental | 41,288 | 56,744 | 154,792 | 2,592/2,592 | 5/5 | 175,234 / 13,907 | 3.4 s (409 ms worst) | - | - | - | 41 MB | replayed | GREEN |
-| D4 | t=8 k=1 | certified | 4,645 | 6,381 | 17,408 | 291/291 | 5/5 | 15,912 | 216 ms | 1.3 MB | 197,144,967 | pass | 25 MB | replayed | GREEN |
-| D4 | t=8 k=1 | incremental | 4,645 | 6,381 | 17,408 | 291/291 | 5/5 | 16,269 | 230 ms | - | - | - | 12 MB | replayed | GREEN |
-| D4 | t=8 k=2 | certified | 9,296 | 12,768 | 34,834 | 582/582 | 5/5 | 35,852 / 19,940 | 482 ms (277 ms worst) | 2.1 MB | 303,453,739 | pass | 33 MB | replayed | GREEN |
-| D4 | t=8 k=2 | incremental | 9,296 | 12,768 | 34,834 | 582/582 | 5/5 | 38,664 / 23,165 | 583 ms (366 ms worst) | - | - | - | 17 MB | replayed | GREEN |
-| D4 | t=8 k=4 | certified | 18,596 | 25,540 | 69,680 | 1,164/1,164 | 5/5 | 76,681 / 22,234 | 1.0 s (289 ms worst) | 2.5 MB | 339,040,134 | pass | 42 MB | replayed | GREEN |
-| D4 | t=8 k=4 | incremental | 18,596 | 25,540 | 69,680 | 1,164/1,164 | 5/5 | 84,135 / 23,165 | 1.5 s (502 ms worst) | - | - | - | 23 MB | replayed | GREEN |
-| D4 | t=8 k=8 | certified | 37,192 | 51,080 | 139,360 | 2,328/2,328 | 5/5 | 156,141 / 23,591 | 2.7 s (623 ms worst) | 2.5 MB | 344,212,042 | pass | 45 MB | replayed | GREEN |
-| D4 | t=8 k=8 | incremental | 37,192 | 51,080 | 139,360 | 2,328/2,328 | 5/5 | 174,424 / 25,279 | 9.5 s (2.1 s worst) | - | - | - | 43 MB | replayed | GREEN |
-| D4 | t=8 k=16 | certified | 74,392 | 102,168 | 278,744 | 4,656/4,656 | 5/5 | 314,301 / 23,726 | 5.9 s (1.2 s worst) | 2.5 MB | 362,473,573 | pass | 49 MB | replayed | GREEN |
-| D4 | t=8 k=16 | incremental | 74,392 | 102,168 | 278,744 | 4,656/4,656 | 5/5 | 338,664 / 25,279 | 12.6 s (2.1 s worst) | - | - | - | 81 MB | replayed | GREEN |
-| D4 | t=16 k=1 | certified | 8,773 | 12,043 | 32,860 | 548/548 | 5/5 | 32,611 | 624 ms | 2.8 MB | 856,014,320 | pass | 46 MB | replayed | GREEN |
-| D4 | t=16 k=1 | incremental | 8,773 | 12,043 | 32,860 | 548/548 | 5/5 | 32,283 | 806 ms | - | - | - | 22 MB | replayed | GREEN |
-| D4 | t=16 k=2 | certified | 17,558 | 24,098 | 65,756 | 1,096/1,096 | 5/5 | 68,624 / 41,045 | 1.3 s (708 ms worst) | 4.3 MB | 1,195,450,951 | pass | 59 MB | replayed | GREEN |
-| D4 | t=16 k=2 | incremental | 17,558 | 24,098 | 65,756 | 1,096/1,096 | 5/5 | 79,914 / 51,008 | 3.8 s (2.7 s worst) | - | - | - | 27 MB | replayed | GREEN |
-| D4 | t=16 k=4 | certified | 35,126 | 48,206 | 131,542 | 2,192/2,192 | 5/5 | 142,443 / 41,045 | 4.5 s (2.0 s worst) | 4.3 MB | 1,195,450,951 | pass | 64 MB | replayed | GREEN |
-| D4 | t=16 k=4 | incremental | 35,126 | 48,206 | 131,542 | 2,192/2,192 | 5/5 | 156,402 / 51,008 | 7.9 s (3.6 s worst) | - | - | - | 46 MB | replayed | GREEN |
-| D4 | t=16 k=8 | certified | 70,264 | 96,424 | 263,120 | 4,384/4,384 | 5/5 | 293,865 / 41,045 | 6.4 s (1.9 s worst) | 4.3 MB | 1,203,321,046 | pass | 70 MB | replayed | GREEN |
-| D4 | t=16 k=8 | incremental | 70,264 | 96,424 | 263,120 | 4,384/4,384 | 5/5 | 308,342 / 51,008 | 22.7 s (7.3 s worst) | - | - | - | 82 MB | replayed | GREEN |
-| D4 | t=16 k=16 | certified | 140,536 | 192,856 | 526,264 | 8,768/8,768 | 5/5 | 589,444 / 43,695 | 14.9 s (2.3 s worst) | 4.7 MB | 1,253,093,947 | pass | 73 MB | replayed | GREEN |
-| D4 | t=16 k=16 | incremental | 140,536 | 192,856 | 526,264 | 8,768/8,768 | 5/5 | 607,680 / 51,008 | 1.0 min (10.8 s worst) | - | - | - | 134 MB | replayed | red (solve > 10 s) |
-| D4 | t=64 k=1 | certified | 33,541 | 45,991 | 125,524 | 2,086/2,086 | 5/5 | 104,487 | 15.4 s | 12.1 MB | - | REJECT | 123 MB | replayed | red (conflicts > 100k, solve > 10 s, default limits reject) |
-| D4 | t=64 k=1 | incremental | 33,541 | 45,991 | 125,524 | 2,086/2,086 | 5/5 | 110,564 | 16.6 s | - | - | - | 64 MB | replayed | red (conflicts > 100k, solve > 10 s) |
-| D4 | t=64 k=2 | certified | 67,106 | 92,006 | 251,120 | 4,172/4,172 | 5/5 | 247,860 / 148,383 | 23.3 s (12.3 s worst) | 20.6 MB | - | REJECT | 161 MB | replayed | red (conflicts > 100k, solve > 10 s, default limits reject) |
-| D4 | t=64 k=2 | incremental | 67,106 | 92,006 | 251,120 | 4,172/4,172 | 5/5 | 238,006 / 134,660 | 39.3 s (25.1 s worst) | - | - | - | 94 MB | replayed | red (conflicts > 100k, solve > 10 s) |
-| D4 | t=64 k=4 | certified | 134,234 | 184,034 | 502,306 | 8,344/8,344 | 5/5 | 520,424 / 148,774 | 44.0 s (11.9 s worst) | 20.6 MB | - | REJECT | 194 MB | replayed | red (conflicts > 100k, solve > 10 s, default limits reject) |
-| D4 | t=64 k=4 | incremental | 134,234 | 184,034 | 502,306 | 8,344/8,344 | 5/5 | 489,566 / 134,660 | 1.7 min (36.2 s worst) | - | - | - | 159 MB | replayed | red (conflicts > 100k, solve > 10 s) |
-| D4 | t=64 k=8 | certified | 234,935 | 322,085 | 879,112 | 12,516/12,516 | 5/5 | 796,516 / 148,774 | 1.3 min (13.4 s worst) | - | - | - | 202 MB | not run | unknown (timeout) |
-| D4 | t=64 k=8 | incremental | 167,795 | 230,045 | 627,890 | 10,430/10,430 | 5/5 | 492,340 / 134,660 | 2.2 min (37.7 s worst) | - | - | - | 167 MB | not run | unknown (timeout) |
-| D4 | t=64 k=16 | certified | 201,364 | 276,064 | 753,498 | 12,516/12,516 | 5/5 | 776,513 / 148,774 | 1.2 min (13.5 s worst) | - | - | - | 196 MB | not run | unknown (timeout) |
-| D4 | t=64 k=16 | incremental | 167,795 | 230,045 | 627,890 | 10,430/10,430 | 5/5 | 492,340 / 134,660 | 2.3 min (38.6 s worst) | - | - | - | 163 MB | not run | unknown (timeout) |
-| D4 | t=256 k=1 | certified | 132,613 | 181,747 | 496,108 | 8,232/8,232 | 5/5 | 14,113 | 2.4 min | - | - | - | 107 MB | not run | unknown (timeout) |
-| D4 | t=256 k=1 | incremental | 132,613 | 181,747 | 496,108 | 8,232/8,232 | 5/5 | 14,162 | 2.4 min | - | - | - | 119 MB | not run | unknown (timeout) |
-| D4 | t=256 k=2 | certified | 132,613 | 181,747 | 496,108 | 8,232/8,232 | 5/5 | 12,014 | 2.1 min | - | - | - | 107 MB | not run | unknown (timeout) |
-| D4 | t=256 k=2 | incremental | 132,613 | 181,747 | 496,108 | 8,232/8,232 | 5/5 | 13,703 | 2.4 min | - | - | - | 120 MB | not run | unknown (timeout) |
-| D4 | t=256 k=4 | certified | 132,613 | 181,747 | 496,108 | 8,232/8,232 | 5/5 | 13,806 | 2.4 min | - | - | - | 109 MB | not run | unknown (timeout) |
-| D4 | t=256 k=4 | incremental | 132,613 | 181,747 | 496,108 | 8,232/8,232 | 5/5 | 14,784 | 2.4 min | - | - | - | 119 MB | not run | unknown (timeout) |
-| D4 | t=256 k=8 | certified | 132,613 | 181,747 | 496,108 | 8,232/8,232 | 5/5 | 14,758 | 2.4 min | - | - | - | 110 MB | not run | unknown (timeout) |
-| D4 | t=256 k=8 | incremental | 132,613 | 181,747 | 496,108 | 8,232/8,232 | 5/5 | 14,784 | 2.4 min | - | - | - | 119 MB | not run | unknown (timeout) |
-| D4 | t=256 k=16 | certified | 132,613 | 181,747 | 496,108 | 8,232/8,232 | 5/5 | 14,357 | 2.4 min | - | - | - | 109 MB | not run | unknown (timeout) |
-| D4 | t=256 k=16 | incremental | 132,613 | 181,747 | 496,108 | 8,232/8,232 | 5/5 | 17,358 | 2.3 min | - | - | - | 120 MB | not run | unknown (timeout) |
-| E1 | claim=dispatch_policy fixture=vos-sched-fp-bitmap binders=256 | enum | - | - | - | - | 5/5 | - | <1 ms | - | - | - | 2 MB | replayed | pass (318,606 cases/s, slowest) |
-| E1 | claim=insert_safe fixture=vos-sched-fp-bitmap binders=65536 | enum | - | - | - | - | 5/5 | - | 779 ms | - | - | - | 2 MB | replayed | pass (84,177 cases/s, slowest) |
-| E1 | claim=insert_n8_bool fixture=vos-probe-ready binders=65536 | enum | - | - | - | - | 5/5 | - | 43 ms | - | - | - | 2 MB | replayed | pass (1,534,811 cases/s, slowest) |
-| E1 | claim=insert_n8_mask fixture=vos-probe-ready binders=65536 | enum | - | - | - | - | 5/5 | - | 22 ms | - | - | - | 2 MB | replayed | pass (2,930,544 cases/s, slowest) |
-| E1 | claim=insert_n10 fixture=vos-probe-ready binders=262144 | enum | - | - | - | - | 5/5 | - | 155 ms | - | - | - | 2 MB | replayed | pass (1,691,679 cases/s, slowest) |
-| E1 | claim=insert_n8_mask_tagged fixture=vos-probe-ready binders=393216 | enum | - | - | - | - | 5/5 | - | 192 ms | - | - | - | 2 MB | replayed | pass (2,043,759 cases/s, slowest) |
-| E1 | claim=insert_n11 fixture=refusal binders=524288 | enum | - | - | - | - | 5/5 | - | <1 ms | - | - | - | 2 MB | replayed | refused (W0706) |
-| E2 | width=1 binders=1 | enum | - | - | - | - | 5/5 | - | <1 ms | - | - | - | 2 MB | replayed | pass |
-| E2 | width=1 binders=2 | enum | - | - | - | - | 5/5 | - | 6 ms | - | - | - | 2 MB | replayed | pass |
-| E2 | width=1 binders=3 | enum | - | - | - | - | 5/5 | - | <1 ms | - | - | - | 2 MB | replayed | refused (W0706) |
-| E2 | width=1 binders=4 | enum | - | - | - | - | 5/5 | - | <1 ms | - | - | - | 2 MB | replayed | refused (W0706) |
-| E2 | width=8 binders=1 | enum | - | - | - | - | 5/5 | - | <1 ms | - | - | - | 2 MB | replayed | pass |
-| E2 | width=8 binders=2 | enum | - | - | - | - | 5/5 | - | <1 ms | - | - | - | 2 MB | replayed | pass |
-| E2 | width=8 binders=3 | enum | - | - | - | - | 5/5 | - | 5 ms | - | - | - | 2 MB | replayed | pass |
-| E2 | width=8 binders=4 | enum | - | - | - | - | 5/5 | - | <1 ms | - | - | - | 2 MB | replayed | refused (W0706) |
-| E2 | width=64 binders=1 | enum | - | - | - | - | 5/5 | - | <1 ms | - | - | - | 2 MB | replayed | pass |
-| E2 | width=64 binders=2 | enum | - | - | - | - | 5/5 | - | 4 ms | - | - | - | 2 MB | replayed | pass |
-| E2 | width=64 binders=3 | enum | - | - | - | - | 5/5 | - | <1 ms | - | - | - | 2 MB | replayed | refused (W0706) |
-| E2 | width=64 binders=4 | enum | - | - | - | - | 5/5 | - | <1 ms | - | - | - | 2 MB | replayed | refused (W0706) |
-| E2 | width=256 binders=1 | enum | - | - | - | - | 5/5 | - | <1 ms | - | - | - | 3 MB | replayed | pass |
-| E2 | width=256 binders=2 | enum | - | - | - | - | 5/5 | - | <1 ms | - | - | - | 2 MB | replayed | refused (W0706) |
-| E2 | width=256 binders=3 | enum | - | - | - | - | 5/5 | - | <1 ms | - | - | - | 2 MB | replayed | refused (W0706) |
-| E2 | width=256 binders=4 | enum | - | - | - | - | 5/5 | - | <1 ms | - | - | - | 2 MB | replayed | refused (W0706) |
-| E2 | width=4096 binders=1 | enum | - | - | - | - | 5/5 | - | 11 ms | - | - | - | 52 MB | replayed | pass |
-| E2 | width=4096 binders=2 | enum | - | - | - | - | 5/5 | - | <1 ms | - | - | - | 2 MB | replayed | refused (W0706) |
-| E2 | width=4096 binders=3 | enum | - | - | - | - | 5/5 | - | <1 ms | - | - | - | 2 MB | replayed | refused (W0706) |
-| E2 | width=4096 binders=4 | enum | - | - | - | - | 5/5 | - | <1 ms | - | - | - | 2 MB | replayed | refused (W0706) |
+| A1 | n=8 | monolithic | 122 | 130 | 367 | 8/8 | 5/5 (5 distinct) | 31 | <1 ms | 455 B | 25,003 | pass | 3 MB | replayed | GREEN |
+| A1 | n=16 | monolithic | 217 | 233 | 652 | 16/16 | 5/5 (5 distinct) | 49 | <1 ms | 1.1 kB | 66,593 | pass | 3 MB | replayed | GREEN |
+| A1 | n=32 | monolithic | 428 | 460 | 1,285 | 32/32 | 5/5 (4 distinct) | 146 | 2 ms | 5.4 kB | 378,972 | pass | 4 MB | replayed | GREEN |
+| A1 | n=64 | monolithic | 1,089 | 1,153 | 3,268 | 64/64 | 5/5 (5 distinct) | 269 | 19 ms | 15.7 kB | 1,233,772 | pass | 6 MB | replayed | GREEN |
+| A2 | n=8 | monolithic | 243 | 259 | 730 | 16/16 | 5/5 (4 distinct) | 83 | <1 ms | 2.9 kB | 40,286 | pass | 3 MB | replayed | GREEN |
+| A2 | n=16 | monolithic | 353 | 377 | 1,060 | 24/24 | 5/5 (3 distinct) | 138 | 2 ms | 3.5 kB | 59,133 | pass | 4 MB | replayed | GREEN |
+| A2 | n=32 | monolithic | 575 | 615 | 1,726 | 40/40 | 5/5 (4 distinct) | 274 | 4 ms | 6.7 kB | 169,848 | pass | 4 MB | replayed | GREEN |
+| A2 | n=64 | monolithic | 1,153 | 1,225 | 3,460 | 72/72 | 5/5 (4 distinct) | 547 | 16 ms | 28.1 kB | 1,057,321 | pass | 6 MB | replayed | GREEN |
+| B1 | length=200 div=0% | monolithic | 0 | 1 | 2 | 1,312/1,312 | 0/5 (1 distinct) | 0 | <1 ms | 2 B | 2 | pass | 22 MB | replayed | collapsed |
+| B1 | length=500 div=0% | monolithic | 0 | 1 | 2 | 2,912/2,912 | 0/5 (1 distinct) | 0 | <1 ms | 2 B | 2 | pass | 43 MB | replayed | collapsed |
+| B1 | length=1000 div=0% | monolithic | 0 | 1 | 2 | 5,560/5,568 | 0/5 (1 distinct) | 0 | <1 ms | 2 B | 2 | pass | 82 MB | replayed | collapsed |
+| B2 | length=25 div=5% | monolithic | 3,785 | 4,066 | 11,356 | 384/384 | 2/5 (5 distinct) | 75,647 | 1.9 s | 12.7 MB | 355,842,522 | pass | 76 MB | replayed | GREEN |
+| B2 | length=25 div=25% | monolithic | 5,068 | 5,381 | 15,205 | 352/352 | 5/5 (5 distinct) | 86,612 | 1.3 s | 12.0 MB | 400,094,331 | pass | 81 MB | replayed | GREEN |
+| B2 | length=25 div=100% | monolithic | 10,443 | 10,827 | 31,330 | 352/352 | 5/5 (5 distinct) | 325,114 | 6.3 s | 57.7 MB | 2,902,296,656 | pass | 308 MB | replayed | red (conflicts > 100k, DRAT > 32 MB) |
+| B2 | length=50 div=5% | monolithic | 12,256 | 12,768 | 36,769 | 512/512 | 5/5 (5 distinct) | 992,101 | 29.1 s | 228.7 MB | - | REJECT | 963 MB | replayed | red (conflicts > 100k, solve > 10 s, DRAT > 32 MB, default limits reject) |
+| B2 | length=50 div=25% | monolithic | 14,193 | 14,705 | 42,580 | 512/512 | 5/5 (5 distinct) | 973,766 | 30.3 s | 213.1 MB | - | REJECT | 946 MB | replayed | red (conflicts > 100k, solve > 10 s, DRAT > 32 MB, default limits reject) |
+| B2 | length=50 div=100% | monolithic | 19,407 | 19,919 | 58,222 | 512/512 | 5/5 (5 distinct) | 1,000,039 | 37.1 s | - | - | - | 280 MB | not run | unknown (conflict cap) |
+| B2 | length=100 div=5% | monolithic | 21,219 | 21,987 | 63,658 | 768/768 | 5/5 (5 distinct) | 1,000,038 | 30.8 s | - | - | - | 290 MB | not run | unknown (conflict cap) |
+| B2 | length=100 div=25% | monolithic | 26,241 | 27,009 | 78,724 | 768/768 | 5/5 (5 distinct) | 1,000,038 | 34.9 s | - | - | - | 317 MB | not run | unknown (conflict cap) |
+| B2 | length=100 div=100% | monolithic | 36,180 | 36,948 | 108,541 | 768/768 | 5/5 (5 distinct) | 1,000,052 | 46.2 s | - | - | - | 344 MB | not run | unknown (conflict cap) |
+| B2 | length=200 div=5% | monolithic | 41,307 | 42,619 | 123,922 | 1,312/1,312 | 5/5 (5 distinct) | 1,000,038 | 36.3 s | - | - | - | 333 MB | not run | unknown (conflict cap) |
+| B2 | length=200 div=25% | monolithic | 52,742 | 54,054 | 158,227 | 1,312/1,312 | 5/5 (5 distinct) | 1,000,031 | 48.8 s | - | - | - | 341 MB | not run | unknown (conflict cap) |
+| B2 | length=200 div=100% | monolithic | 71,269 | 72,581 | 213,808 | 1,312/1,312 | 5/5 (5 distinct) | 1,000,039 | 1.2 min | - | - | - | 371 MB | not run | unknown (conflict cap) |
+| B2 | length=500 div=5% | monolithic | 119,970 | 122,882 | 359,911 | 2,912/2,912 | 5/5 (5 distinct) | 1,000,035 | 1.4 min | - | - | - | 426 MB | not run | unknown (conflict cap) |
+| B2 | length=500 div=25% | monolithic | 135,200 | 138,112 | 405,601 | 2,912/2,912 | 5/5 (5 distinct) | 1,000,030 | 1.3 min | - | - | - | 408 MB | not run | unknown (conflict cap) |
+| B2 | length=500 div=100% | monolithic | 175,904 | 178,816 | 527,713 | 2,912/2,912 | 5/5 (5 distinct) | 880,026 | 2.0 min | - | - | - | 472 MB | not run | unknown (timeout) |
+| B2 | length=1000 div=5% | monolithic | 238,145 | 243,713 | 714,436 | 5,560/5,568 | 5/5 (5 distinct) | 920,012 | 2.0 min | - | - | - | 540 MB | not run | unknown (timeout) |
+| B2 | length=1000 div=25% | monolithic | 264,631 | 270,199 | 793,894 | 5,559/5,568 | 5/5 (5 distinct) | 860,025 | 2.0 min | - | - | - | 476 MB | not run | unknown (timeout) |
+| B2 | length=1000 div=100% | monolithic | 360,679 | 366,247 | 1,082,038 | 5,557/5,568 | 5/5 (5 distinct) | 720,016 | 2.0 min | - | - | - | 499 MB | not run | unknown (timeout) |
+| B3 | length=25 div=5% cut=every1 | certified | 9,187 | 16,545 | 41,490 | 1,315/1,344 | 5/5 (5 distinct) | 10,836 / 1,654 | 55 ms (8 ms worst) | 49.7 kB | 2,631,161 | pass | 7 MB | replayed | GREEN |
+| B3 | length=25 div=5% cut=every1 | incremental | 9,187 | 16,545 | 41,490 | 1,315/1,344 | 5/5 (5 distinct) | 10,929 / 1,653 | 135 ms (14 ms worst) | - | - | - | 12 MB | replayed | GREEN |
+| B3 | length=25 div=5% cut=every8 | certified | 8,456 | 12,274 | 32,646 | 697/704 | 5/5 (5 distinct) | 55,323 / 44,132 | 571 ms (478 ms worst) | 6.2 MB | 217,359,873 | pass | 53 MB | replayed | GREEN |
+| B3 | length=25 div=5% cut=every8 | incremental | 8,456 | 12,274 | 32,646 | 697/704 | 5/5 (5 distinct) | 48,029 / 31,450 | 465 ms (313 ms worst) | - | - | - | 14 MB | replayed | GREEN |
+| B3 | length=25 div=5% cut=every32 | certified | 7,484 | 9,680 | 26,761 | 352/352 | 5/5 (5 distinct) | 231,357 | 4.1 s | 41.8 MB | 2,860,040,290 | pass | 232 MB | replayed | red (conflicts > 100k, DRAT > 32 MB) |
+| B3 | length=25 div=5% cut=every32 | incremental | 7,484 | 9,680 | 26,761 | 352/352 | 5/5 (5 distinct) | 191,917 | 2.9 s | - | - | - | 22 MB | replayed | red (conflicts > 100k) |
+| B3 | length=25 div=25% cut=every1 | certified | 10,913 | 18,493 | 47,334 | 1,315/1,344 | 5/5 (5 distinct) | 16,138 / 1,654 | 83 ms (9 ms worst) | 49.7 kB | 2,631,161 | pass | 6 MB | replayed | GREEN |
+| B3 | length=25 div=25% cut=every1 | incremental | 10,913 | 18,493 | 47,334 | 1,315/1,344 | 5/5 (5 distinct) | 15,354 / 1,724 | 135 ms (14 ms worst) | - | - | - | 13 MB | replayed | GREEN |
+| B3 | length=25 div=25% cut=every8 | certified | 8,981 | 12,799 | 34,221 | 697/704 | 5/5 (5 distinct) | 79,624 / 67,598 | 866 ms (773 ms worst) | 9.1 MB | 346,831,211 | pass | 63 MB | replayed | GREEN |
+| B3 | length=25 div=25% cut=every8 | incremental | 8,981 | 12,799 | 34,221 | 697/704 | 5/5 (5 distinct) | 71,311 / 53,721 | 752 ms (583 ms worst) | - | - | - | 14 MB | replayed | GREEN |
+| B3 | length=25 div=25% cut=every32 | certified | 8,009 | 10,205 | 28,336 | 352/352 | 5/5 (5 distinct) | 226,422 | 3.9 s | 39.6 MB | 2,797,104,165 | pass | 252 MB | replayed | red (conflicts > 100k, DRAT > 32 MB) |
+| B3 | length=25 div=25% cut=every32 | incremental | 8,009 | 10,205 | 28,336 | 352/352 | 5/5 (5 distinct) | 222,706 | 3.6 s | - | - | - | 26 MB | replayed | red (conflicts > 100k) |
+| B3 | length=25 div=100% cut=every1 | certified | 13,100 | 20,680 | 53,895 | 1,315/1,344 | 5/5 (5 distinct) | 25,370 / 1,654 | 136 ms (13 ms worst) | 49.7 kB | 2,631,161 | pass | 7 MB | replayed | GREEN |
+| B3 | length=25 div=100% cut=every1 | incremental | 13,614 | 21,694 | 56,557 | 1,315/1,344 | 5/5 (5 distinct) | 26,574 / 2,170 | 217 ms (17 ms worst) | - | - | - | 14 MB | replayed | GREEN |
+| B3 | length=25 div=100% cut=every8 | certified | 10,787 | 14,605 | 39,639 | 697/704 | 5/5 (5 distinct) | 111,063 / 82,866 | 1.3 s (1.0 s worst) | 12.6 MB | 543,329,342 | pass | 81 MB | replayed | GREEN |
+| B3 | length=25 div=100% cut=every8 | incremental | 10,787 | 14,605 | 39,639 | 697/704 | 5/5 (5 distinct) | 112,753 / 88,660 | 1.2 s (1.0 s worst) | - | - | - | 17 MB | replayed | GREEN |
+| B3 | length=25 div=100% cut=every32 | certified | 10,766 | 12,962 | 36,607 | 352/352 | 5/5 (5 distinct) | 328,465 | 7.0 s | 62.6 MB | 3,371,365,906 | pass | 317 MB | replayed | red (conflicts > 100k, DRAT > 32 MB) |
+| B3 | length=25 div=100% cut=every32 | incremental | 9,722 | 11,918 | 33,475 | 352/352 | 5/5 (5 distinct) | 312,561 | 6.0 s | - | - | - | 34 MB | replayed | red (conflicts > 100k) |
+| B3 | length=50 div=5% cut=every1 | certified | 20,336 | 35,698 | 90,614 | 2,570/2,624 | 5/5 (5 distinct) | 26,009 / 1,654 | 131 ms (8 ms worst) | 49.7 kB | 2,631,161 | pass | 7 MB | replayed | GREEN |
+| B3 | length=50 div=5% cut=every1 | incremental | 18,200 | 33,348 | 83,564 | 2,570/2,624 | 5/5 (5 distinct) | 21,233 / 1,658 | 407 ms (29 ms worst) | - | - | - | 19 MB | replayed | GREEN |
+| B3 | length=50 div=5% cut=every8 | certified | 18,144 | 26,344 | 70,109 | 1,511/1,536 | 5/5 (5 distinct) | 80,916 / 38,073 | 753 ms (370 ms worst) | 4.8 MB | 161,611,641 | pass | 48 MB | replayed | GREEN |
+| B3 | length=50 div=5% cut=every8 | incremental | 17,877 | 26,064 | 69,269 | 1,511/1,536 | 5/5 (5 distinct) | 105,462 / 45,660 | 1.1 s (533 ms worst) | - | - | - | 22 MB | replayed | GREEN |
+| B3 | length=50 div=5% cut=every32 | certified | 15,638 | 19,943 | 55,271 | 712/736 | 5/5 (5 distinct) | 492,443 / 458,541 | 10.5 s (10.1 s worst) | 125.1 MB | 123,848,555 | REJECT | 533 MB | replayed | red (conflicts > 100k, solve > 10 s, DRAT > 32 MB, default limits reject) |
+| B3 | length=50 div=5% cut=every32 | incremental | 15,638 | 19,943 | 55,271 | 712/736 | 5/5 (5 distinct) | 543,722 / 516,871 | 10.7 s (10.3 s worst) | - | - | - | 45 MB | replayed | red (conflicts > 100k, solve > 10 s) |
+| B3 | length=50 div=25% cut=every1 | certified | 18,873 | 32,889 | 83,137 | 2,570/2,624 | 5/5 (5 distinct) | 25,175 / 1,654 | 133 ms (10 ms worst) | 49.7 kB | 2,631,161 | pass | 8 MB | replayed | GREEN |
+| B3 | length=50 div=25% cut=every1 | incremental | 18,873 | 32,889 | 83,137 | 2,570/2,624 | 5/5 (5 distinct) | 25,864 / 2,175 | 356 ms (27 ms worst) | - | - | - | 20 MB | replayed | GREEN |
+| B3 | length=50 div=25% cut=every8 | certified | 18,732 | 26,919 | 71,834 | 1,511/1,536 | 5/5 (5 distinct) | 151,740 / 79,743 | 1.6 s (884 ms worst) | 11.9 MB | 458,230,858 | pass | 76 MB | replayed | GREEN |
+| B3 | length=50 div=25% cut=every8 | incremental | 18,732 | 26,919 | 71,834 | 1,511/1,536 | 5/5 (5 distinct) | 149,401 / 68,253 | 1.7 s (689 ms worst) | - | - | - | 24 MB | replayed | GREEN |
+| B3 | length=50 div=25% cut=every32 | certified | 16,615 | 20,920 | 58,202 | 712/736 | 5/5 (5 distinct) | 516,034 / 453,189 | 10.3 s (9.5 s worst) | 109.9 MB | 288,991,068 | REJECT | 481 MB | replayed | red (conflicts > 100k, DRAT > 32 MB, default limits reject) |
+| B3 | length=50 div=25% cut=every32 | incremental | 16,615 | 20,920 | 58,202 | 712/736 | 5/5 (5 distinct) | 456,719 / 398,345 | 8.1 s (7.3 s worst) | - | - | - | 42 MB | replayed | red (conflicts > 100k) |
+| B3 | length=50 div=100% cut=every1 | certified | 25,581 | 41,001 | 106,523 | 2,570/2,624 | 5/5 (5 distinct) | 46,412 / 1,654 | 237 ms (9 ms worst) | 49.7 kB | 2,631,161 | pass | 8 MB | replayed | GREEN |
+| B3 | length=50 div=100% cut=every1 | incremental | 26,051 | 41,537 | 108,131 | 2,570/2,624 | 5/5 (5 distinct) | 47,740 / 1,978 | 441 ms (23 ms worst) | - | - | - | 24 MB | replayed | GREEN |
+| B3 | length=50 div=100% cut=every8 | certified | 23,338 | 31,538 | 85,691 | 1,511/1,536 | 5/5 (5 distinct) | 229,589 / 111,031 | 2.6 s (1.5 s worst) | 18.5 MB | 864,498,572 | pass | 125 MB | replayed | red (conflicts > 100k) |
+| B3 | length=50 div=100% cut=every8 | incremental | 23,338 | 31,538 | 85,691 | 1,511/1,536 | 5/5 (5 distinct) | 217,870 / 108,157 | 2.5 s (1.3 s worst) | - | - | - | 28 MB | replayed | red (conflicts > 100k) |
+| B3 | length=50 div=100% cut=every32 | certified | 20,739 | 25,044 | 70,574 | 712/736 | 5/5 (5 distinct) | 851,636 / 755,567 | 25.4 s (24.1 s worst) | 261.7 MB | 541,936,572 | REJECT | 984 MB | replayed | red (conflicts > 100k, solve > 10 s, DRAT > 32 MB, default limits reject) |
+| B3 | length=50 div=100% cut=every32 | incremental | 18,807 | 22,912 | 64,368 | 712/736 | 5/5 (5 distinct) | 756,669 / 714,288 | 19.6 s (19.1 s worst) | - | - | - | 55 MB | replayed | red (conflicts > 100k, solve > 10 s) |
+| B3 | length=100 div=5% cut=every1 | certified | 38,781 | 68,273 | 172,999 | 5,138/5,248 | 5/5 (5 distinct) | 46,884 / 1,654 | 230 ms (8 ms worst) | 49.7 kB | 2,631,161 | pass | 7 MB | replayed | GREEN |
+| B3 | length=100 div=5% cut=every1 | incremental | 37,197 | 65,833 | 165,869 | 5,138/5,248 | 5/5 (5 distinct) | 45,617 / 2,225 | 1.1 s (50 ms worst) | - | - | - | 37 MB | replayed | GREEN |
+| B3 | length=100 div=5% cut=every8 | certified | 34,185 | 50,411 | 133,386 | 3,016/3,104 | 5/5 (5 distinct) | 117,298 / 38,073 | 1.1 s (361 ms worst) | 4.8 MB | 161,611,641 | pass | 44 MB | replayed | GREEN |
+| B3 | length=100 div=5% cut=every8 | incremental | 33,573 | 49,792 | 131,529 | 3,016/3,104 | 5/5 (5 distinct) | 159,975 / 49,511 | 1.9 s (536 ms worst) | - | - | - | 38 MB | replayed | GREEN |
+| B3 | length=100 div=5% cut=every32 | certified | 28,394 | 36,892 | 101,940 | 1,416/1,440 | 5/5 (5 distinct) | 546,474 / 330,237 | 9.0 s (6.0 s worst) | 78.4 MB | 797,077,021 | REJECT | 412 MB | replayed | red (conflicts > 100k, DRAT > 32 MB, default limits reject) |
+| B3 | length=100 div=5% cut=every32 | incremental | 28,394 | 36,892 | 101,940 | 1,416/1,440 | 5/5 (5 distinct) | 603,407 / 385,480 | 10.7 s (6.8 s worst) | - | - | - | 53 MB | replayed | red (conflicts > 100k) |
+| B3 | length=100 div=25% cut=every1 | certified | 40,511 | 70,351 | 178,663 | 5,138/5,248 | 5/5 (5 distinct) | 55,630 / 1,654 | 275 ms (8 ms worst) | 49.7 kB | 2,631,161 | pass | 8 MB | replayed | GREEN |
+| B3 | length=100 div=25% cut=every1 | incremental | 41,862 | 71,382 | 182,326 | 5,138/5,248 | 5/5 (5 distinct) | 57,910 / 1,967 | 1.1 s (58 ms worst) | - | - | - | 42 MB | replayed | GREEN |
+| B3 | length=100 div=25% cut=every8 | certified | 36,715 | 54,358 | 144,087 | 3,016/3,104 | 5/5 (5 distinct) | 149,937 / 60,275 | 1.4 s (610 ms worst) | 8.0 MB | 317,107,715 | pass | 74 MB | replayed | GREEN |
+| B3 | length=100 div=25% cut=every8 | incremental | 36,715 | 54,358 | 144,087 | 3,016/3,104 | 5/5 (5 distinct) | 154,676 / 64,999 | 2.0 s (713 ms worst) | - | - | - | 38 MB | replayed | GREEN |
+| B3 | length=100 div=25% cut=every32 | certified | 31,177 | 39,866 | 110,672 | 1,416/1,440 | 5/5 (5 distinct) | 524,903 / 371,820 | 9.7 s (7.3 s worst) | 74.9 MB | 373,798,705 | REJECT | 389 MB | replayed | red (conflicts > 100k, DRAT > 32 MB, default limits reject) |
+| B3 | length=100 div=25% cut=every32 | incremental | 30,617 | 39,115 | 108,609 | 1,416/1,440 | 5/5 (5 distinct) | 659,681 / 406,086 | 12.3 s (7.2 s worst) | - | - | - | 58 MB | replayed | red (conflicts > 100k) |
+| B3 | length=100 div=100% cut=every1 | certified | 49,895 | 79,110 | 205,886 | 5,138/5,248 | 5/5 (5 distinct) | 94,362 / 1,654 | 481 ms (9 ms worst) | 49.7 kB | 2,631,161 | pass | 8 MB | replayed | GREEN |
+| B3 | length=100 div=100% cut=every1 | incremental | 50,914 | 81,046 | 210,748 | 5,138/5,248 | 5/5 (5 distinct) | 91,737 / 2,114 | 1.3 s (51 ms worst) | - | - | - | 44 MB | replayed | GREEN |
+| B3 | length=100 div=100% cut=every8 | certified | 44,084 | 60,665 | 164,148 | 3,016/3,104 | 5/5 (5 distinct) | 482,991 / 136,837 | 5.7 s (2.1 s worst) | 23.7 MB | 1,430,704,938 | pass | 172 MB | replayed | red (conflicts > 100k) |
+| B3 | length=100 div=100% cut=every8 | incremental | 44,084 | 60,665 | 164,148 | 3,016/3,104 | 5/5 (5 distinct) | 378,366 / 84,289 | 5.0 s (1.3 s worst) | - | - | - | 51 MB | replayed | GREEN |
+| B3 | length=100 div=100% cut=every32 | certified | 39,563 | 48,061 | 135,447 | 1,416/1,440 | 5/5 (5 distinct) | 1,242,516 / 751,102 | 32.8 s (22.5 s worst) | 235.7 MB | 2,238,150,132 | REJECT | 1017 MB | replayed | red (conflicts > 100k, solve > 10 s, DRAT > 32 MB, default limits reject) |
+| B3 | length=100 div=100% cut=every32 | incremental | 41,498 | 50,187 | 141,635 | 1,416/1,440 | 5/5 (5 distinct) | 1,353,109 / 914,295 | 39.6 s (30.4 s worst) | - | - | - | 108 MB | replayed | red (conflicts > 100k, solve > 10 s) |
+| B3 | length=200 div=5% cut=every1 | certified | 74,691 | 130,767 | 329,991 | 10,358/10,560 | 5/5 (5 distinct) | 90,469 / 1,654 | 446 ms (8 ms worst) | 49.7 kB | 2,631,161 | pass | 8 MB | replayed | GREEN |
+| B3 | length=200 div=5% cut=every1 | incremental | 75,598 | 134,255 | 338,365 | 10,358/10,560 | 5/5 (5 distinct) | 91,110 / 1,894 | 4.4 s (130 ms worst) | - | - | - | 78 MB | replayed | GREEN |
+| B3 | length=200 div=5% cut=every8 | certified | 66,865 | 100,527 | 264,366 | 6,084/6,208 | 5/5 (5 distinct) | 273,115 / 62,069 | 2.5 s (620 ms worst) | 8.6 MB | 338,160,953 | pass | 78 MB | replayed | GREEN |
+| B3 | length=200 div=5% cut=every8 | incremental | 66,865 | 100,527 | 264,366 | 6,084/6,208 | 5/5 (5 distinct) | 274,297 / 64,434 | 5.0 s (869 ms worst) | - | - | - | 74 MB | replayed | GREEN |
+| B3 | length=200 div=5% cut=every32 | certified | 56,416 | 73,139 | 201,944 | 2,872/2,880 | 5/5 (5 distinct) | 876,820 / 311,668 | 14.6 s (5.7 s worst) | 68.5 MB | 1,254,324,538 | REJECT | 462 MB | replayed | red (conflicts > 100k, DRAT > 32 MB, default limits reject) |
+| B3 | length=200 div=5% cut=every32 | incremental | 56,416 | 73,139 | 201,944 | 2,872/2,880 | 5/5 (5 distinct) | 972,080 / 393,035 | 21.2 s (8.0 s worst) | - | - | - | 101 MB | replayed | red (conflicts > 100k) |
+| B3 | length=200 div=25% cut=every1 | certified | 81,678 | 140,487 | 357,061 | 10,358/10,560 | 5/5 (5 distinct) | 114,378 / 1,654 | 579 ms (11 ms worst) | 49.7 kB | 2,631,161 | pass | 8 MB | replayed | GREEN |
+| B3 | length=200 div=25% cut=every1 | incremental | 79,859 | 136,973 | 348,035 | 10,358/10,560 | 5/5 (5 distinct) | 110,048 / 2,066 | 4.1 s (143 ms worst) | - | - | - | 79 MB | replayed | GREEN |
+| B3 | length=200 div=25% cut=every8 | certified | 72,433 | 104,244 | 277,607 | 6,084/6,208 | 5/5 (5 distinct) | 349,408 / 81,015 | 3.3 s (910 ms worst) | 11.9 MB | 467,684,237 | pass | 91 MB | replayed | GREEN |
+| B3 | length=200 div=25% cut=every8 | incremental | 71,830 | 104,461 | 277,688 | 6,084/6,208 | 5/5 (5 distinct) | 355,962 / 80,960 | 5.5 s (1.0 s worst) | - | - | - | 76 MB | replayed | GREEN |
+| B3 | length=200 div=25% cut=every32 | certified | 62,756 | 78,685 | 219,342 | 2,872/2,880 | 5/5 (5 distinct) | 1,352,222 / 557,516 | 24.2 s (11.3 s worst) | 106.6 MB | 1,742,389,789 | REJECT | 544 MB | replayed | red (conflicts > 100k, solve > 10 s, DRAT > 32 MB, default limits reject) |
+| B3 | length=200 div=25% cut=every32 | incremental | 62,756 | 78,685 | 219,342 | 2,872/2,880 | 5/5 (5 distinct) | 1,400,892 / 571,328 | 28.7 s (12.7 s worst) | - | - | - | 117 MB | replayed | red (conflicts > 100k, solve > 10 s) |
+| B3 | length=200 div=100% cut=every1 | certified | 99,305 | 158,070 | 410,570 | 10,358/10,560 | 5/5 (5 distinct) | 184,040 / 1,654 | 932 ms (8 ms worst) | 49.7 kB | 2,631,161 | pass | 8 MB | replayed | GREEN |
+| B3 | length=200 div=100% cut=every1 | incremental | 98,926 | 158,370 | 411,276 | 10,358/10,560 | 5/5 (5 distinct) | 175,518 / 1,950 | 4.4 s (108 ms worst) | - | - | - | 87 MB | replayed | GREEN |
+| B3 | length=200 div=100% cut=every8 | certified | 91,195 | 125,360 | 338,865 | 6,084/6,208 | 5/5 (5 distinct) | 756,535 / 145,720 | 8.1 s (1.9 s worst) | 24.0 MB | 1,352,118,184 | pass | 169 MB | replayed | red (conflicts > 100k) |
+| B3 | length=200 div=100% cut=every8 | incremental | 91,195 | 125,360 | 338,865 | 6,084/6,208 | 5/5 (5 distinct) | 680,099 / 130,831 | 10.8 s (2.4 s worst) | - | - | - | 106 MB | replayed | red (conflicts > 100k) |
+| B3 | length=200 div=100% cut=every32 | certified | 78,303 | 95,116 | 267,875 | 2,872/2,880 | 5/5 (5 distinct) | 2,288,439 / 721,901 | 1.0 min (21.5 s worst) | 242.6 MB | 3,351,048,633 | REJECT | 977 MB | replayed | red (conflicts > 100k, solve > 10 s, DRAT > 32 MB, default limits reject) |
+| B3 | length=200 div=100% cut=every32 | incremental | 81,322 | 97,365 | 275,382 | 2,872/2,880 | 5/5 (5 distinct) | 2,509,986 / 865,868 | 1.3 min (30.2 s worst) | - | - | - | 205 MB | replayed | red (conflicts > 100k, solve > 10 s) |
+| B3 | length=500 div=5% cut=every1 | certified | 186,628 | 327,204 | 825,360 | 26,612/27,008 | 5/5 (5 distinct) | 227,004 / 1,654 | 1.1 s (8 ms worst) | 49.7 kB | 2,631,161 | pass | 8 MB | replayed | GREEN |
+| B3 | length=500 div=5% cut=every1 | incremental | 190,811 | 333,452 | 842,772 | 26,612/27,008 | 5/5 (5 distinct) | 236,978 / 2,047 | 24.3 s (347 ms worst) | - | - | - | 161 MB | replayed | GREEN |
+| B3 | length=500 div=5% cut=every8 | certified | 169,307 | 254,436 | 669,511 | 15,209/15,392 | 5/5 (5 distinct) | 693,685 / 55,281 | 6.3 s (592 ms worst) | 8.3 MB | 318,392,059 | pass | 80 MB | replayed | GREEN |
+| B3 | length=500 div=5% cut=every8 | incremental | 169,307 | 254,436 | 669,511 | 15,209/15,392 | 5/5 (5 distinct) | 641,415 / 51,364 | 25.1 s (1.1 s worst) | - | - | - | 164 MB | replayed | GREEN |
+| B3 | length=500 div=5% cut=every32 | certified | 142,428 | 181,828 | 504,650 | 7,000/7,008 | 5/5 (5 distinct) | 3,046,603 / 508,021 | 53.9 s (10.4 s worst) | 102.0 MB | 3,691,402,987 | REJECT | 553 MB | replayed | red (conflicts > 100k, solve > 10 s, DRAT > 32 MB, default limits reject) |
+| B3 | length=500 div=5% cut=every32 | incremental | 142,428 | 181,828 | 504,650 | 7,000/7,008 | 5/5 (5 distinct) | 3,176,342 / 467,016 | 1.3 min (13.1 s worst) | - | - | - | 255 MB | replayed | red (conflicts > 100k, solve > 10 s) |
+| B3 | length=500 div=25% cut=every1 | certified | 199,429 | 340,569 | 865,455 | 26,612/27,008 | 5/5 (5 distinct) | 274,446 / 1,654 | 1.4 s (18 ms worst) | 49.7 kB | 2,631,161 | pass | 9 MB | replayed | GREEN |
+| B3 | length=500 div=25% cut=every1 | incremental | 203,263 | 349,144 | 888,330 | 26,612/27,008 | 5/5 (5 distinct) | 273,917 / 2,316 | 29.2 s (385 ms worst) | - | - | - | 160 MB | replayed | GREEN |
+| B3 | length=500 div=25% cut=every8 | certified | 180,090 | 262,039 | 695,550 | 15,209/15,392 | 5/5 (5 distinct) | 841,643 / 80,846 | 8.1 s (908 ms worst) | 12.7 MB | 619,739,698 | pass | 101 MB | replayed | GREEN |
+| B3 | length=500 div=25% cut=every8 | incremental | 183,049 | 268,578 | 711,937 | 15,209/15,392 | 5/5 (5 distinct) | 909,046 / 92,611 | 29.0 s (2.0 s worst) | - | - | - | 200 MB | replayed | GREEN |
+| B3 | length=500 div=25% cut=every32 | certified | 147,306 | 184,025 | 513,710 | 4,755/4,768 | 5/5 (5 distinct) | 3,252,763 / 896,954 | 1.1 min (27.2 s worst) | - | - | - | 1022 MB | not run | unknown (timeout) |
+| B3 | length=500 div=25% cut=every32 | incremental | 117,848 | 147,985 | 412,617 | 5,203/5,216 | 5/5 (5 distinct) | 3,392,772 / 762,872 | 2.0 min (44.8 s worst) | - | - | - | 274 MB | not run | unknown (timeout) |
+| B3 | length=500 div=100% cut=every1 | certified | 250,531 | 398,431 | 1,035,433 | 26,612/27,008 | 5/5 (5 distinct) | 462,572 / 1,654 | 2.4 s (9 ms worst) | 49.7 kB | 2,631,161 | pass | 8 MB | replayed | GREEN |
+| B3 | length=500 div=100% cut=every1 | incremental | 244,614 | 390,213 | 1,013,431 | 26,612/27,008 | 5/5 (5 distinct) | 420,972 / 2,119 | 28.8 s (437 ms worst) | - | - | - | 215 MB | replayed | GREEN |
+| B3 | length=500 div=100% cut=every8 | certified | 223,489 | 306,717 | 829,584 | 15,209/15,392 | 5/5 (5 distinct) | 1,749,845 / 177,660 | 18.7 s (2.7 s worst) | 30.5 MB | 1,507,274,934 | pass | 250 MB | replayed | red (conflicts > 100k) |
+| B3 | length=500 div=100% cut=every8 | incremental | 223,489 | 306,717 | 829,584 | 15,209/15,392 | 5/5 (5 distinct) | 1,625,581 / 161,463 | 34.3 s (3.9 s worst) | - | - | - | 293 MB | replayed | red (conflicts > 100k) |
+| B3 | length=500 div=100% cut=every32 | certified | 75,406 | 90,486 | 255,884 | 2,616/2,624 | 5/5 (5 distinct) | 2,926,235 / 871,997 | 1.4 min (29.8 s worst) | - | - | - | 934 MB | not run | unknown (timeout) |
+| B3 | length=500 div=100% cut=every32 | incremental | 100,267 | 120,496 | 340,596 | 2,616/2,624 | 5/5 (5 distinct) | 3,258,671 / 812,043 | 2.0 min (31.4 s worst) | - | - | - | 264 MB | not run | unknown (timeout) |
+| B3 | length=1000 div=5% cut=every1 | certified | 381,817 | 674,139 | 1,702,501 | 52,020/52,768 | 5/5 (5 distinct) | 466,471 / 1,654 | 2.3 s (12 ms worst) | 49.7 kB | 2,631,161 | pass | 9 MB | replayed | GREEN |
+| B3 | length=1000 div=5% cut=every1 | incremental | 376,890 | 661,229 | 1,669,467 | 52,020/52,768 | 5/5 (5 distinct) | 450,786 / 2,037 | 1.8 min (1.7 s worst) | - | - | - | 235 MB | replayed | GREEN |
+| B3 | length=1000 div=5% cut=every8 | certified | 329,085 | 492,961 | 1,297,558 | 30,969/31,328 | 5/5 (5 distinct) | 1,088,361 / 73,299 | 10.4 s (810 ms worst) | 10.1 MB | 479,184,175 | pass | 90 MB | replayed | GREEN |
+| B3 | length=1000 div=5% cut=every8 | incremental | 329,085 | 492,961 | 1,297,558 | 30,969/31,328 | 5/5 (5 distinct) | 1,085,650 / 89,515 | 1.5 min (2.0 s worst) | - | - | - | 234 MB | replayed | GREEN |
+| B3 | length=1000 div=5% cut=every32 | certified | 230,106 | 295,053 | 817,545 | 8,736/8,768 | 5/5 (5 distinct) | 3,555,918 / 497,648 | 59.1 s (9.8 s worst) | - | - | - | 533 MB | not run | unknown (timeout) |
+| B3 | length=1000 div=5% cut=every32 | incremental | 274,839 | 354,647 | 980,753 | 13,672/13,728 | 5/5 (5 distinct) | 4,244,394 / 473,408 | 1.9 min (9.2 s worst) | - | - | - | 426 MB | not run | red (conflicts > 100k) |
+| B3 | length=1000 div=25% cut=every1 | certified | 393,697 | 678,222 | 1,721,396 | 52,020/52,768 | 5/5 (5 distinct) | 536,730 / 1,654 | 3.3 s (37 ms worst) | 49.7 kB | 2,631,161 | pass | 9 MB | replayed | GREEN |
+| B3 | length=1000 div=25% cut=every1 | incremental | 395,848 | 679,959 | 1,726,611 | 52,020/52,768 | 5/5 (5 distinct) | 514,150 / 2,289 | 1.8 min (1.0 s worst) | - | - | - | 248 MB | replayed | GREEN |
+| B3 | length=1000 div=25% cut=every8 | certified | 356,118 | 521,358 | 1,381,609 | 30,969/31,328 | 5/5 (5 distinct) | 1,581,650 / 108,397 | 16.0 s (1.6 s worst) | 20.9 MB | 940,758,272 | pass | 162 MB | replayed | red (conflicts > 100k) |
+| B3 | length=1000 div=25% cut=every8 | incremental | 356,118 | 521,358 | 1,381,609 | 30,969/31,328 | 5/5 (5 distinct) | 1,554,428 / 123,921 | 1.5 min (2.6 s worst) | - | - | - | 264 MB | replayed | red (conflicts > 100k) |
+| B3 | length=1000 div=25% cut=every32 | certified | 145,692 | 183,847 | 512,036 | 6,963/6,976 | 5/5 (5 distinct) | 3,089,513 / 593,005 | 1.0 min (18.2 s worst) | - | - | - | 806 MB | not run | unknown (timeout) |
+| B3 | length=1000 div=25% cut=every32 | incremental | 208,323 | 262,697 | 731,493 | 7,827/7,872 | 5/5 (5 distinct) | 4,238,049 / 721,465 | 2.0 min (24.6 s worst) | - | - | - | 391 MB | not run | unknown (timeout) |
+| B3 | length=1000 div=100% cut=every1 | certified | 486,400 | 774,959 | 2,011,611 | 52,020/52,768 | 5/5 (5 distinct) | 879,895 / 1,654 | 4.5 s (20 ms worst) | 49.7 kB | 2,631,161 | pass | 9 MB | replayed | GREEN |
+| B3 | length=1000 div=100% cut=every1 | incremental | 491,633 | 783,595 | 2,034,850 | 52,020/52,768 | 5/5 (5 distinct) | 838,915 / 2,036 | 2.0 min (888 ms worst) | - | - | - | 295 MB | not run | unknown (timeout) |
+| B3 | length=1000 div=100% cut=every8 | certified | 442,662 | 609,523 | 1,647,244 | 30,969/31,328 | 5/5 (5 distinct) | 3,026,339 / 136,837 | 31.7 s (2.1 s worst) | 23.7 MB | 1,430,704,938 | pass | 207 MB | replayed | red (conflicts > 100k) |
+| B3 | length=1000 div=100% cut=every8 | incremental | 447,057 | 618,466 | 1,670,461 | 30,969/31,328 | 5/5 (5 distinct) | 3,229,883 / 130,319 | 1.7 min (3.8 s worst) | - | - | - | 440 MB | not run | unknown (timeout) |
+| B3 | length=1000 div=100% cut=every32 | certified | 13,002 | 15,389 | 43,698 | 3,064/3,072 | 5/5 (5 distinct) | 1,000,041 / 1,000,041 | 32.7 s (32.7 s worst) | - | - | - | 385 MB | not run | unknown (conflict cap) |
+| B3 | length=1000 div=100% cut=every32 | incremental | 100,573 | 120,802 | 341,514 | 3,064/3,072 | 5/5 (5 distinct) | 3,181,695 / 937,220 | 2.0 min (47.9 s worst) | - | - | - | 246 MB | not run | unknown (timeout) |
+| B4 | shape=assoc n=3 w=32 | monolithic | 1,003 | 1,099 | 3,010 | 96/96 | 5/5 (5 distinct) | 14,916 | 84 ms | 1.2 MB | 26,853,314 | pass | 14 MB | replayed | GREEN |
+| B4 | shape=assoc n=4 w=32 | monolithic | 1,441 | 1,569 | 4,324 | 128/128 | 5/5 (5 distinct) | 87,315 | 753 ms | 9.6 MB | 384,690,405 | pass | 69 MB | replayed | GREEN |
+| B4 | shape=assoc n=5 w=32 | monolithic | 1,879 | 2,039 | 5,638 | 160/160 | 5/5 (5 distinct) | 470,248 | 8.3 s | 69.0 MB | - | REJECT | 387 MB | replayed | red (conflicts > 100k, DRAT > 32 MB, default limits reject) |
+| B4 | shape=assoc n=6 w=32 | monolithic | 2,317 | 2,509 | 6,952 | 192/192 | 5/5 (5 distinct) | 1,000,034 | 26.4 s | - | - | - | 252 MB | not run | unknown (conflict cap) |
+| B4 | shape=assoc n=7 w=32 | monolithic | 2,755 | 2,979 | 8,266 | 224/224 | 5/5 (5 distinct) | 1,000,044 | 21.9 s | - | - | - | 264 MB | not run | unknown (conflict cap) |
+| B4 | shape=mul5 w=8 | monolithic | 107 | 115 | 322 | 8/8 | 5/5 (5 distinct) | 141 | <1 ms | 2.9 kB | 129,656 | pass | 3 MB | replayed | GREEN |
+| B4 | shape=mul5 w=16 | monolithic | 299 | 315 | 898 | 16/16 | 5/5 (5 distinct) | 799 | 5 ms | 25.5 kB | 1,765,836 | pass | 4 MB | replayed | GREEN |
+| B4 | shape=mul5 w=32 | monolithic | 683 | 715 | 2,050 | 32/32 | 5/5 (5 distinct) | 2,743 | 20 ms | 179.1 kB | 7,512,250 | pass | 7 MB | replayed | GREEN |
+| B4 | shape=mul12 w=8 | monolithic | 140 | 152 | 421 | 14/16 | 5/5 (5 distinct) | 334 | 2 ms | 8.6 kB | 417,919 | pass | 3 MB | replayed | GREEN |
+| B4 | shape=mul12 w=16 | monolithic | 420 | 448 | 1,261 | 30/32 | 5/5 (5 distinct) | 2,408 | 18 ms | 148.6 kB | 6,591,898 | pass | 6 MB | replayed | GREEN |
+| B4 | shape=mul12 w=32 | monolithic | 980 | 1,040 | 2,941 | 62/64 | 5/5 (5 distinct) | 10,200 | 77 ms | 923.8 kB | 27,708,369 | pass | 12 MB | replayed | GREEN |
+| C1 | base=a1 n=8 | monolithic | 329 | 353 | 988 | 24/24 | 5/5 (1 distinct) | 115 | <1 ms | 3.0 kB | 109,394 | pass | 4 MB | replayed | GREEN |
+| C1 | base=a1 n=16 | monolithic | 560 | 608 | 1,681 | 48/48 | 5/5 (1 distinct) | 174 | 1 ms | 5.5 kB | 235,932 | pass | 4 MB | replayed | GREEN |
+| C1 | base=a1 n=32 | monolithic | 1,063 | 1,159 | 3,190 | 96/96 | 5/5 (1 distinct) | 508 | 5 ms | 23.3 kB | 1,479,672 | pass | 6 MB | replayed | GREEN |
+| C1 | base=a1 n=64 | monolithic | 2,965 | 3,157 | 8,896 | 192/192 | 5/5 (1 distinct) | 942 | 13 ms | 67.7 kB | 5,837,284 | pass | 11 MB | replayed | GREEN |
+| C1 | base=b length=25 div=5% | monolithic | 16,103 | 17,255 | 48,310 | 927/1,056 | 4/5 (5 distinct) | 354,220 | 6.0 s | 55.0 MB | 2,423,385,995 | pass | 291 MB | replayed | red (conflicts > 100k, DRAT > 32 MB) |
+| C1 | base=b length=25 div=25% | monolithic | 17,975 | 19,127 | 53,926 | 927/1,056 | 5/5 (5 distinct) | 397,794 | 8.3 s | 69.6 MB | 2,756,316,349 | pass | 332 MB | replayed | red (conflicts > 100k, DRAT > 32 MB) |
+| C1 | base=b length=25 div=100% | monolithic | 24,195 | 25,347 | 72,586 | 927/1,056 | 5/5 (5 distinct) | 1,000,031 | 31.8 s | - | - | - | 294 MB | not run | unknown (conflict cap) |
+| C1 | base=b length=50 div=5% | monolithic | 32,154 | 33,690 | 96,463 | 1,270/1,536 | 5/5 (5 distinct) | 1,000,040 | 28.2 s | - | - | - | 319 MB | not run | unknown (conflict cap) |
+| C1 | base=b length=50 div=25% | monolithic | 38,492 | 40,028 | 115,477 | 1,270/1,536 | 5/5 (5 distinct) | 1,000,043 | 41.4 s | - | - | - | 333 MB | not run | unknown (conflict cap) |
+| C1 | base=b length=50 div=100% | monolithic | 49,428 | 50,964 | 148,285 | 1,270/1,536 | 5/5 (5 distinct) | 1,000,042 | 58.5 s | - | - | - | 352 MB | not run | unknown (conflict cap) |
+| C1 | base=b length=100 div=5% | monolithic | 51,270 | 53,574 | 153,811 | 2,208/2,304 | 5/5 (5 distinct) | 1,000,038 | 46.7 s | - | - | - | 342 MB | not run | unknown (conflict cap) |
+| C1 | base=b length=100 div=25% | monolithic | 64,479 | 66,783 | 193,438 | 2,208/2,304 | 5/5 (5 distinct) | 1,000,036 | 50.4 s | - | - | - | 342 MB | not run | unknown (conflict cap) |
+| C1 | base=b length=100 div=100% | monolithic | 87,619 | 89,923 | 262,858 | 2,208/2,304 | 5/5 (5 distinct) | 1,000,034 | 59.3 s | - | - | - | 344 MB | not run | unknown (conflict cap) |
+| C1 | base=b length=200 div=5% | monolithic | 108,689 | 112,625 | 326,068 | 3,834/3,936 | 5/5 (5 distinct) | 1,000,038 | 48.9 s | - | - | - | 391 MB | not run | unknown (conflict cap) |
+| C1 | base=b length=200 div=25% | monolithic | 132,668 | 136,604 | 398,005 | 3,834/3,936 | 5/5 (5 distinct) | 1,000,046 | 59.9 s | - | - | - | 392 MB | not run | unknown (conflict cap) |
+| C1 | base=b length=200 div=100% | monolithic | 168,873 | 172,809 | 506,620 | 3,834/3,936 | 5/5 (5 distinct) | 1,000,036 | 1.2 min | - | - | - | 458 MB | not run | unknown (conflict cap) |
+| C1 | base=b length=500 div=5% | monolithic | 301,552 | 310,288 | 904,657 | 8,709/8,736 | 5/5 (5 distinct) | 1,000,033 | 1.9 min | - | - | - | 611 MB | not run | unknown (conflict cap) |
+| C1 | base=b length=500 div=25% | monolithic | 337,042 | 345,778 | 1,011,127 | 8,709/8,736 | 5/5 (5 distinct) | 1,000,032 | 1.7 min | - | - | - | 548 MB | not run | unknown (conflict cap) |
+| C1 | base=b length=500 div=100% | monolithic | 423,450 | 432,186 | 1,270,351 | 8,709/8,736 | 5/5 (5 distinct) | 560,013 | 2.0 min | - | - | - | 488 MB | not run | unknown (timeout) |
+| C1 | base=b length=1000 div=5% | monolithic | 588,787 | 605,491 | 1,766,362 | 16,680/16,704 | 5/5 (5 distinct) | 1,000,033 | 1.8 min | - | - | - | 795 MB | not run | unknown (conflict cap) |
+| C1 | base=b length=1000 div=25% | monolithic | 626,952 | 643,648 | 1,880,857 | 16,677/16,704 | 5/5 (5 distinct) | 1,000,039 | 2.0 min | - | - | - | 766 MB | not run | unknown (conflict cap) |
+| C1 | base=b length=1000 div=100% | monolithic | 845,205 | 861,909 | 2,535,616 | 16,669/16,704 | 5/5 (5 distinct) | 280,007 | 2.1 min | - | - | - | 573 MB | not run | unknown (timeout) |
+| C2 | t=8 | monolithic | 10,464 | 10,912 | 31,393 | 440/576 | 5/5 (5 distinct) | 94,081 | 1.7 s | 10.4 MB | 444,053,739 | pass | 94 MB | replayed | GREEN |
+| C2 | t=16 | monolithic | 12,685 | 13,133 | 38,056 | 440/576 | 5/5 (5 distinct) | 110,229 | 2.1 s | 14.7 MB | 990,611,662 | pass | 119 MB | replayed | red (conflicts > 100k) |
+| C2 | t=64 | monolithic | 25,335 | 25,783 | 76,006 | 440/576 | 5/5 (5 distinct) | 112,084 | 3.9 s | 18.9 MB | 2,310,294,171 | pass | 137 MB | replayed | red (conflicts > 100k) |
+| D1 | t=4 k=1 | monolithic | 2,383 | 2,545 | 7,150 | 162/162 | 5/5 (5 distinct) | 5,478 | 51 ms | 348.9 kB | 23,143,160 | pass | 10 MB | replayed | GREEN |
+| D1 | t=4 k=2 | monolithic | 4,381 | 4,543 | 13,144 | 162/162 | 5/5 (5 distinct) | 20,158 | 214 ms | 1.7 MB | 161,132,472 | pass | 26 MB | replayed | GREEN |
+| D1 | t=4 k=4 | monolithic | 8,472 | 8,634 | 25,417 | 162/162 | 5/5 (5 distinct) | 52,971 | 939 ms | 5.9 MB | 763,974,231 | pass | 61 MB | replayed | GREEN |
+| D1 | t=4 k=8 | monolithic | 15,353 | 15,515 | 46,060 | 161/162 | 5/5 (5 distinct) | 664,091 | 25.9 s | 140.7 MB | - | REJECT | 633 MB | replayed | red (conflicts > 100k, solve > 10 s, DRAT > 32 MB, default limits reject) |
+| D1 | t=4 k=16 | monolithic | 29,098 | 29,260 | 87,295 | 160/162 | 5/5 (5 distinct) | 1,000,047 | 1.4 min | - | - | - | 470 MB | not run | unknown (conflict cap) |
+| D1 | t=8 k=1 | monolithic | 4,311 | 4,602 | 12,934 | 291/291 | 5/5 (5 distinct) | 12,702 | 137 ms | 857.1 kB | 117,343,743 | pass | 17 MB | replayed | GREEN |
+| D1 | t=8 k=2 | monolithic | 7,855 | 8,146 | 23,566 | 291/291 | 5/5 (5 distinct) | 34,395 | 462 ms | 3.3 MB | 581,196,540 | pass | 40 MB | replayed | GREEN |
+| D1 | t=8 k=4 | monolithic | 15,045 | 15,336 | 45,136 | 291/291 | 5/5 (5 distinct) | 101,243 | 2.0 s | 12.7 MB | 3,305,878,753 | pass | 107 MB | replayed | red (conflicts > 100k) |
+| D1 | t=8 k=8 | monolithic | 29,787 | 30,078 | 89,362 | 291/291 | 5/5 (5 distinct) | 281,503 | 9.6 s | 44.5 MB | - | REJECT | 209 MB | replayed | red (conflicts > 100k, DRAT > 32 MB, default limits reject) |
+| D1 | t=8 k=16 | monolithic | 53,722 | 54,013 | 161,167 | 290/291 | 5/5 (5 distinct) | 1,000,047 | 1.6 min | - | - | - | 437 MB | not run | unknown (conflict cap) |
+| D1 | t=16 k=1 | monolithic | 8,167 | 8,715 | 24,502 | 548/548 | 5/5 (5 distinct) | 23,587 | 789 ms | 1.6 MB | 414,932,420 | pass | 30 MB | replayed | GREEN |
+| D1 | t=16 k=2 | monolithic | 14,801 | 15,349 | 44,404 | 548/548 | 5/5 (5 distinct) | 71,794 | 1.4 s | 8.3 MB | 2,514,237,761 | pass | 82 MB | replayed | GREEN |
+| D1 | t=16 k=4 | monolithic | 28,177 | 28,725 | 84,532 | 548/548 | 5/5 (5 distinct) | 225,148 | 6.6 s | 32.5 MB | - | REJECT | 193 MB | replayed | red (conflicts > 100k, DRAT > 32 MB, default limits reject) |
+| D1 | t=16 k=8 | monolithic | 55,310 | 55,858 | 165,931 | 548/548 | 5/5 (5 distinct) | 580,474 | 33.5 s | 98.7 MB | - | REJECT | 454 MB | replayed | red (conflicts > 100k, solve > 10 s, DRAT > 32 MB, default limits reject) |
+| D1 | t=16 k=16 | monolithic | 111,020 | 111,568 | 333,061 | 548/548 | 5/5 (5 distinct) | 1,000,043 | 1.9 min | - | - | - | 387 MB | not run | unknown (conflict cap) |
+| D1 | t=64 k=1 | monolithic | 31,308 | 33,394 | 93,925 | 2,086/2,086 | 5/5 (5 distinct) | 87,365 | 7.6 s | 8.6 MB | - | REJECT | 107 MB | replayed | red (default limits reject) |
+| D1 | t=64 k=2 | monolithic | 56,469 | 58,555 | 169,408 | 2,086/2,086 | 5/5 (5 distinct) | 314,927 | 23.4 s | 48.7 MB | - | REJECT | 295 MB | replayed | red (conflicts > 100k, solve > 10 s, DRAT > 32 MB, default limits reject) |
+| D1 | t=64 k=4 | monolithic | 106,921 | 109,007 | 320,764 | 2,086/2,086 | 5/5 (5 distinct) | 916,339 | 1.3 min | 176.5 MB | - | REJECT | 831 MB | replayed | red (conflicts > 100k, solve > 10 s, DRAT > 32 MB, default limits reject) |
+| D1 | t=64 k=8 | monolithic | 208,238 | 210,324 | 624,715 | 2,086/2,086 | 5/5 (5 distinct) | 641,142 | 2.0 min | - | - | - | 395 MB | not run | unknown (timeout) |
+| D1 | t=64 k=16 | monolithic | 412,451 | 414,537 | 1,237,354 | 2,086/2,086 | 5/5 (5 distinct) | 178,406 | 2.0 min | - | - | - | 341 MB | not run | unknown (timeout) |
+| D1 | t=256 k=1 | monolithic | 123,847 | 132,079 | 371,542 | 8,232/8,232 | 5/5 (5 distinct) | 36,513 | 2.4 min | - | - | - | 86 MB | not run | unknown (timeout) |
+| D1 | t=256 k=2 | monolithic | 223,139 | 231,371 | 669,418 | 8,232/8,232 | 5/5 (5 distinct) | 12,829 | 2.4 min | - | - | - | 135 MB | not run | unknown (timeout) |
+| D1 | t=256 k=4 | monolithic | 421,839 | 430,071 | 1,265,518 | 8,232/8,232 | 5/5 (5 distinct) | 8,843 | 2.2 min | - | - | - | 286 MB | not run | unknown (timeout) |
+| D1 | t=256 k=8 | monolithic | 819,684 | 827,916 | 2,459,053 | 8,232/8,232 | 5/5 (5 distinct) | 7,989 | 2.1 min | - | - | - | 469 MB | not run | unknown (timeout) |
+| D1 | t=256 k=16 | monolithic | 1,617,057 | 1,625,289 | 4,851,172 | 8,232/8,232 | 5/5 (5 distinct) | 19,653 | 2.0 min | - | - | - | 914 MB | not run | unknown (timeout) |
+| D2 | t=4 k=1 | monolithic | 752 | 816 | 2,257 | 160/160 | 5/5 (4 distinct) | 1,421 | 7 ms | 41.4 kB | 1,455,054 | pass | 5 MB | replayed | GREEN |
+| D2 | t=4 k=2 | monolithic | 1,502 | 1,598 | 4,507 | 160/160 | 5/5 (5 distinct) | 4,482 | 31 ms | 308.3 kB | 7,103,819 | pass | 8 MB | replayed | GREEN |
+| D2 | t=4 k=4 | monolithic | 2,997 | 3,157 | 8,992 | 160/160 | 5/5 (5 distinct) | 12,733 | 121 ms | 1.0 MB | 20,831,706 | pass | 15 MB | replayed | GREEN |
+| D2 | t=4 k=8 | monolithic | 5,470 | 5,630 | 16,411 | 159/160 | 5/5 (5 distinct) | 180,204 | 3.7 s | 32.5 MB | 1,939,451,699 | pass | 178 MB | replayed | red (conflicts > 100k, DRAT > 32 MB) |
+| D2 | t=4 k=16 | monolithic | 10,375 | 10,535 | 31,126 | 158/160 | 5/5 (5 distinct) | 1,000,041 | 47.7 s | - | - | - | 407 MB | not run | unknown (conflict cap) |
+| D2 | t=8 k=1 | monolithic | 752 | 816 | 2,257 | 288/288 | 5/5 (3 distinct) | 1,421 | 8 ms | 41.4 kB | 1,455,054 | pass | 5 MB | replayed | GREEN |
+| D2 | t=8 k=2 | monolithic | 1,502 | 1,598 | 4,507 | 288/288 | 5/5 (4 distinct) | 4,413 | 33 ms | 304.6 kB | 6,902,112 | pass | 8 MB | replayed | GREEN |
+| D2 | t=8 k=4 | monolithic | 2,997 | 3,157 | 8,992 | 288/288 | 5/5 (5 distinct) | 13,580 | 132 ms | 1.2 MB | 22,697,590 | pass | 16 MB | replayed | GREEN |
+| D2 | t=8 k=8 | monolithic | 5,982 | 6,270 | 17,947 | 288/288 | 5/5 (5 distinct) | 28,100 | 431 ms | 2.9 MB | 84,988,020 | pass | 32 MB | replayed | GREEN |
+| D2 | t=8 k=16 | monolithic | 10,887 | 11,175 | 32,662 | 287/288 | 5/5 (5 distinct) | 503,554 | 17.0 s | 110.8 MB | - | REJECT | 498 MB | replayed | red (conflicts > 100k, solve > 10 s, DRAT > 32 MB, default limits reject) |
+| D2 | t=16 k=1 | monolithic | 752 | 816 | 2,257 | 544/544 | 5/5 (4 distinct) | 1,421 | 7 ms | 41.4 kB | 1,455,054 | pass | 5 MB | replayed | GREEN |
+| D2 | t=16 k=2 | monolithic | 1,502 | 1,598 | 4,507 | 544/544 | 5/5 (5 distinct) | 4,413 | 33 ms | 304.6 kB | 6,902,112 | pass | 8 MB | replayed | GREEN |
+| D2 | t=16 k=4 | monolithic | 2,997 | 3,157 | 8,992 | 544/544 | 5/5 (5 distinct) | 13,620 | 131 ms | 1.1 MB | 24,923,244 | pass | 14 MB | replayed | GREEN |
+| D2 | t=16 k=8 | monolithic | 5,982 | 6,270 | 17,947 | 544/544 | 5/5 (5 distinct) | 31,030 | 435 ms | 2.8 MB | 83,217,714 | pass | 32 MB | replayed | GREEN |
+| D2 | t=16 k=16 | monolithic | 11,911 | 12,455 | 35,734 | 544/544 | 5/5 (5 distinct) | 82,566 | 2.0 s | 9.4 MB | 462,178,479 | pass | 84 MB | replayed | GREEN |
+| D2 | t=64 k=1 | monolithic | 752 | 816 | 2,257 | 2,080/2,080 | 5/5 (5 distinct) | 1,421 | 7 ms | 41.4 kB | 1,455,054 | pass | 6 MB | replayed | GREEN |
+| D2 | t=64 k=2 | monolithic | 1,502 | 1,598 | 4,507 | 2,080/2,080 | 5/5 (5 distinct) | 4,302 | 30 ms | 259.2 kB | 6,061,567 | pass | 9 MB | replayed | GREEN |
+| D2 | t=64 k=4 | monolithic | 2,997 | 3,157 | 8,992 | 2,080/2,080 | 5/5 (5 distinct) | 14,369 | 147 ms | 1.3 MB | 29,121,280 | pass | 18 MB | replayed | GREEN |
+| D2 | t=64 k=8 | monolithic | 5,982 | 6,270 | 17,947 | 2,080/2,080 | 5/5 (5 distinct) | 31,435 | 463 ms | 3.1 MB | 87,189,408 | pass | 37 MB | replayed | GREEN |
+| D2 | t=64 k=16 | monolithic | 11,911 | 12,455 | 35,734 | 2,080/2,080 | 5/5 (5 distinct) | 71,516 | 1.6 s | 8.0 MB | 374,350,546 | pass | 64 MB | replayed | GREEN |
+| D2 | t=256 k=1 | monolithic | 752 | 816 | 2,257 | 8,224/8,224 | 5/5 (4 distinct) | 1,421 | 8 ms | 41.4 kB | 1,455,058 | pass | 7 MB | replayed | GREEN |
+| D2 | t=256 k=2 | monolithic | 1,502 | 1,598 | 4,507 | 8,224/8,224 | 5/5 (4 distinct) | 4,158 | 30 ms | 255.1 kB | 5,677,997 | pass | 9 MB | replayed | GREEN |
+| D2 | t=256 k=4 | monolithic | 2,997 | 3,157 | 8,992 | 8,224/8,224 | 5/5 (5 distinct) | 13,370 | 137 ms | 1.1 MB | 23,853,954 | pass | 17 MB | replayed | GREEN |
+| D2 | t=256 k=8 | monolithic | 5,982 | 6,270 | 17,947 | 8,224/8,224 | 5/5 (5 distinct) | 28,304 | 391 ms | 2.7 MB | 70,719,027 | pass | 34 MB | replayed | GREEN |
+| D2 | t=256 k=16 | monolithic | 11,911 | 12,455 | 35,734 | 8,224/8,224 | 5/5 (5 distinct) | 75,207 | 1.8 s | 7.7 MB | 360,165,175 | pass | 63 MB | replayed | GREEN |
+| D3 | t=4 k=1 | split | 3,008 | 3,264 | 9,028 | 640/640 | 5/5 (5 distinct) | 5,684 / 1,421 | 29 ms (8 ms worst) | 41.4 kB | 1,455,058 | pass | 6 MB | replayed | GREEN |
+| D3 | t=4 k=2 | split | 6,008 | 6,392 | 18,028 | 640/640 | 5/5 (5 distinct) | 18,264 / 4,818 | 136 ms (36 ms worst) | 354.7 kB | 7,302,634 | pass | 11 MB | replayed | GREEN |
+| D3 | t=4 k=4 | split | 11,988 | 12,628 | 35,968 | 640/640 | 5/5 (5 distinct) | 41,212 / 12,733 | 371 ms (125 ms worst) | 1.0 MB | 20,831,706 | pass | 22 MB | replayed | GREEN |
+| D3 | t=4 k=8 | split | 21,880 | 22,520 | 65,644 | 636/640 | 5/5 (5 distinct) | 698,465 / 193,930 | 13.6 s (3.8 s worst) | 37.3 MB | 2,314,347,216 | pass | 273 MB | replayed | red (conflicts > 100k, DRAT > 32 MB) |
+| D3 | t=4 k=16 | split | 10,375 | 10,535 | 31,126 | 632/640 | 5/5 (5 distinct) | 1,000,044 / 1,000,044 | 44.7 s (44.7 s worst) | - | - | - | 397 MB | not run | unknown (conflict cap) |
+| D3 | t=8 k=1 | split | 6,016 | 6,528 | 18,056 | 2,304/2,304 | 5/5 (5 distinct) | 11,368 / 1,421 | 58 ms (7 ms worst) | 41.4 kB | 1,455,054 | pass | 6 MB | replayed | GREEN |
+| D3 | t=8 k=2 | split | 12,016 | 12,784 | 36,056 | 2,304/2,304 | 5/5 (5 distinct) | 34,021 / 4,482 | 248 ms (33 ms worst) | 308.3 kB | 7,103,819 | pass | 9 MB | replayed | GREEN |
+| D3 | t=8 k=4 | split | 23,976 | 25,256 | 71,936 | 2,304/2,304 | 5/5 (5 distinct) | 85,777 / 13,682 | 816 ms (140 ms worst) | 1.2 MB | 26,435,760 | pass | 23 MB | replayed | GREEN |
+| D3 | t=8 k=8 | split | 47,856 | 50,160 | 143,576 | 2,304/2,304 | 5/5 (5 distinct) | 247,475 / 33,278 | 3.4 s (482 ms worst) | 3.2 MB | 102,975,646 | pass | 40 MB | replayed | GREEN |
+| D3 | t=8 k=16 | split | 65,322 | 67,050 | 195,972 | 2,296/2,304 | 5/5 (5 distinct) | 2,600,900 / 503,554 | 1.2 min (14.3 s worst) | - | - | - | 535 MB | not run | unknown (timeout) |
+| D3 | t=16 k=1 | split | 12,032 | 13,056 | 36,112 | 8,704/8,704 | 5/5 (5 distinct) | 22,736 / 1,421 | 113 ms (7 ms worst) | 41.4 kB | 1,455,058 | pass | 8 MB | replayed | GREEN |
+| D3 | t=16 k=2 | split | 24,032 | 25,568 | 72,112 | 8,704/8,704 | 5/5 (5 distinct) | 65,917 / 4,818 | 465 ms (35 ms worst) | 354.7 kB | 7,302,634 | pass | 12 MB | replayed | GREEN |
+| D3 | t=16 k=4 | split | 47,952 | 50,512 | 143,872 | 8,704/8,704 | 5/5 (5 distinct) | 186,567 / 14,230 | 1.7 s (134 ms worst) | 1.3 MB | 24,923,175 | pass | 27 MB | replayed | GREEN |
+| D3 | t=16 k=8 | split | 95,712 | 100,320 | 287,152 | 8,704/8,704 | 5/5 (5 distinct) | 473,018 / 34,725 | 6.3 s (494 ms worst) | 3.6 MB | 116,622,646 | pass | 46 MB | replayed | GREEN |
+| D3 | t=16 k=16 | split | 190,576 | 199,280 | 571,744 | 8,704/8,704 | 5/5 (5 distinct) | 1,152,880 / 82,566 | 24.6 s (2.2 s worst) | 9.4 MB | 462,178,479 | pass | 140 MB | replayed | GREEN |
+| D3 | t=64 k=1 | split | 48,128 | 52,224 | 144,448 | 133,120/133,120 | 5/5 (5 distinct) | 90,944 / 1,421 | 456 ms (8 ms worst) | 41.4 kB | 1,455,058 | pass | 8 MB | replayed | GREEN |
+| D3 | t=64 k=2 | split | 96,128 | 102,272 | 288,448 | 133,120/133,120 | 5/5 (5 distinct) | 267,991 / 4,382 | 2.0 s (37 ms worst) | 298.5 kB | 6,630,915 | pass | 14 MB | replayed | GREEN |
+| D3 | t=64 k=4 | split | 191,808 | 202,048 | 575,488 | 133,120/133,120 | 5/5 (5 distinct) | 762,558 / 15,201 | 7.5 s (384 ms worst) | 1.4 MB | 31,580,639 | pass | 30 MB | replayed | GREEN |
+| D3 | t=64 k=8 | split | 382,848 | 401,280 | 1,148,608 | 133,120/133,120 | 5/5 (5 distinct) | 1,865,035 / 36,124 | 27.1 s (1.6 s worst) | 3.7 MB | 103,364,146 | pass | 49 MB | replayed | GREEN |
+| D3 | t=64 k=16 | split | 512,173 | 535,565 | 1,536,562 | 133,120/133,120 | 5/5 (5 distinct) | 3,125,750 / 82,469 | 1.2 min (3.0 s worst) | - | - | - | 134 MB | not run | unknown (timeout) |
+| D3 | t=256 k=1 | split | 192,512 | 208,896 | 577,792 | 2,105,344/2,105,344 | 5/5 (5 distinct) | 363,776 / 1,421 | 2.0 s (36 ms worst) | 41.4 kB | 1,455,058 | pass | 9 MB | replayed | GREEN |
+| D3 | t=256 k=2 | split | 384,512 | 409,088 | 1,153,792 | 2,105,344/2,105,344 | 5/5 (5 distinct) | 1,125,754 / 4,482 | 9.1 s (138 ms worst) | 308.3 kB | 7,103,949 | pass | 15 MB | replayed | GREEN |
+| D3 | t=256 k=4 | split | 731,268 | 770,308 | 2,194,048 | 2,105,344/2,105,344 | 5/5 (5 distinct) | 2,839,352 / 15,227 | 33.5 s (573 ms worst) | - | - | - | 36 MB | not run | unknown (timeout) |
+| D3 | t=256 k=8 | split | 610,164 | 639,540 | 1,830,594 | 1,809,280/1,809,280 | 5/5 (5 distinct) | 2,914,034 / 38,366 | 52.4 s (1.9 s worst) | - | - | - | 59 MB | not run | unknown (timeout) |
+| D3 | t=256 k=16 | split | 440,707 | 460,835 | 1,322,158 | 1,077,344/1,077,344 | 5/5 (5 distinct) | 2,655,191 / 86,112 | 1.1 min (4.3 s worst) | - | - | - | 150 MB | not run | unknown (timeout) |
+| D4 | t=4 k=1 | certified | 2,576 | 3,542 | 9,661 | 162/162 | 5/5 (5 distinct) | 8,894 | 93 ms | 760.5 kB | 61,488,465 | pass | 15 MB | replayed | GREEN |
+| D4 | t=4 k=1 | incremental | 2,576 | 3,542 | 9,661 | 162/162 | 5/5 (5 distinct) | 8,730 | 92 ms | - | - | - | 8 MB | replayed | GREEN |
+| D4 | t=4 k=2 | certified | 5,152 | 7,084 | 19,322 | 324/324 | 5/5 (5 distinct) | 21,148 / 12,254 | 225 ms (127 ms worst) | 1.2 MB | 99,267,535 | pass | 17 MB | replayed | GREEN |
+| D4 | t=4 k=2 | incremental | 5,162 | 7,094 | 19,352 | 324/324 | 5/5 (5 distinct) | 20,124 / 12,988 | 237 ms (157 ms worst) | - | - | - | 9 MB | replayed | GREEN |
+| D4 | t=4 k=4 | certified | 10,300 | 14,164 | 38,632 | 648/648 | 5/5 (5 distinct) | 42,993 / 12,254 | 581 ms (185 ms worst) | 1.2 MB | 99,267,535 | pass | 27 MB | replayed | GREEN |
+| D4 | t=4 k=4 | incremental | 10,300 | 14,164 | 38,632 | 648/648 | 5/5 (5 distinct) | 43,792 / 13,907 | 568 ms (180 ms worst) | - | - | - | 15 MB | replayed | GREEN |
+| D4 | t=4 k=8 | certified | 20,600 | 28,328 | 77,264 | 1,296/1,296 | 5/5 (5 distinct) | 87,914 / 12,254 | 916 ms (126 ms worst) | 1.2 MB | 99,267,535 | pass | 24 MB | replayed | GREEN |
+| D4 | t=4 k=8 | incremental | 20,600 | 28,328 | 77,264 | 1,296/1,296 | 5/5 (5 distinct) | 88,099 / 13,907 | 1.3 s (214 ms worst) | - | - | - | 23 MB | replayed | GREEN |
+| D4 | t=4 k=16 | certified | 41,208 | 56,664 | 154,552 | 2,592/2,592 | 5/5 (5 distinct) | 172,576 / 12,254 | 1.8 s (136 ms worst) | 1.2 MB | 99,267,535 | pass | 26 MB | replayed | GREEN |
+| D4 | t=4 k=16 | incremental | 41,208 | 56,664 | 154,552 | 2,592/2,592 | 5/5 (5 distinct) | 175,234 / 13,907 | 3.2 s (287 ms worst) | - | - | - | 41 MB | replayed | GREEN |
+| D4 | t=8 k=1 | certified | 4,640 | 6,376 | 17,393 | 291/291 | 5/5 (5 distinct) | 15,912 | 216 ms | 1.3 MB | 197,144,967 | pass | 23 MB | replayed | GREEN |
+| D4 | t=8 k=1 | incremental | 4,640 | 6,376 | 17,393 | 291/291 | 5/5 (5 distinct) | 16,269 | 230 ms | - | - | - | 11 MB | replayed | GREEN |
+| D4 | t=8 k=2 | certified | 9,286 | 12,758 | 34,804 | 582/582 | 5/5 (5 distinct) | 35,852 / 19,940 | 482 ms (263 ms worst) | 2.0 MB | 303,453,739 | pass | 33 MB | replayed | GREEN |
+| D4 | t=8 k=2 | incremental | 9,286 | 12,758 | 34,804 | 582/582 | 5/5 (5 distinct) | 38,664 / 23,165 | 583 ms (366 ms worst) | - | - | - | 17 MB | replayed | GREEN |
+| D4 | t=8 k=4 | certified | 18,576 | 25,520 | 69,620 | 1,164/1,164 | 5/5 (5 distinct) | 76,681 / 22,234 | 977 ms (269 ms worst) | 2.5 MB | 339,040,134 | pass | 41 MB | replayed | GREEN |
+| D4 | t=8 k=4 | incremental | 18,576 | 25,520 | 69,620 | 1,164/1,164 | 5/5 (5 distinct) | 84,135 / 23,165 | 1.5 s (441 ms worst) | - | - | - | 21 MB | replayed | GREEN |
+| D4 | t=8 k=8 | certified | 37,152 | 51,040 | 139,240 | 2,328/2,328 | 5/5 (5 distinct) | 154,804 / 23,591 | 2.0 s (297 ms worst) | 2.4 MB | 344,212,042 | pass | 40 MB | replayed | GREEN |
+| D4 | t=8 k=8 | incremental | 37,152 | 51,040 | 139,240 | 2,328/2,328 | 5/5 (5 distinct) | 174,424 / 25,279 | 4.9 s (1.4 s worst) | - | - | - | 43 MB | replayed | GREEN |
+| D4 | t=8 k=16 | certified | 74,392 | 102,168 | 278,744 | 4,656/4,656 | 5/5 (5 distinct) | 302,849 / 23,726 | 5.9 s (1.2 s worst) | 2.5 MB | 362,473,573 | pass | 45 MB | replayed | GREEN |
+| D4 | t=8 k=16 | incremental | 74,312 | 102,088 | 278,504 | 4,656/4,656 | 5/5 (5 distinct) | 338,664 / 25,279 | 11.0 s (1.4 s worst) | - | - | - | 79 MB | replayed | GREEN |
+| D4 | t=16 k=1 | certified | 8,768 | 12,038 | 32,845 | 548/548 | 5/5 (5 distinct) | 32,611 | 589 ms | 2.8 MB | 856,014,320 | pass | 46 MB | replayed | GREEN |
+| D4 | t=16 k=1 | incremental | 8,768 | 12,038 | 32,845 | 548/548 | 5/5 (5 distinct) | 32,283 | 806 ms | - | - | - | 22 MB | replayed | GREEN |
+| D4 | t=16 k=2 | certified | 17,548 | 24,088 | 65,726 | 1,096/1,096 | 5/5 (5 distinct) | 68,469 / 41,045 | 1.3 s (682 ms worst) | 4.1 MB | 1,195,450,951 | pass | 54 MB | replayed | GREEN |
+| D4 | t=16 k=2 | incremental | 17,548 | 24,088 | 65,726 | 1,096/1,096 | 5/5 (5 distinct) | 79,914 / 51,008 | 3.1 s (2.6 s worst) | - | - | - | 26 MB | replayed | GREEN |
+| D4 | t=16 k=4 | certified | 35,106 | 48,186 | 131,482 | 2,192/2,192 | 5/5 (5 distinct) | 142,443 / 41,045 | 3.4 s (1.2 s worst) | 4.1 MB | 1,195,450,951 | pass | 64 MB | replayed | GREEN |
+| D4 | t=16 k=4 | incremental | 35,106 | 48,186 | 131,482 | 2,192/2,192 | 5/5 (5 distinct) | 156,402 / 51,008 | 7.3 s (2.7 s worst) | - | - | - | 43 MB | replayed | GREEN |
+| D4 | t=16 k=8 | certified | 70,224 | 96,384 | 263,000 | 4,384/4,384 | 5/5 (5 distinct) | 286,910 / 41,045 | 6.1 s (1.8 s worst) | 4.3 MB | 1,203,321,046 | pass | 70 MB | replayed | GREEN |
+| D4 | t=16 k=8 | incremental | 70,224 | 96,384 | 263,000 | 4,384/4,384 | 5/5 (5 distinct) | 308,342 / 51,008 | 18.9 s (4.6 s worst) | - | - | - | 82 MB | replayed | GREEN |
+| D4 | t=16 k=16 | certified | 140,456 | 192,776 | 526,024 | 8,768/8,768 | 5/5 (5 distinct) | 583,279 / 43,695 | 13.8 s (2.2 s worst) | 4.7 MB | 1,230,144,028 | pass | 71 MB | replayed | GREEN |
+| D4 | t=16 k=16 | incremental | 140,456 | 192,776 | 526,024 | 8,768/8,768 | 5/5 (5 distinct) | 594,674 / 42,745 | 56.6 s (10.8 s worst) | - | - | - | 113 MB | replayed | red (solve > 10 s) |
+| D4 | t=64 k=1 | certified | 33,536 | 45,986 | 125,509 | 2,086/2,086 | 5/5 (5 distinct) | 104,487 | 14.3 s | 11.9 MB | - | REJECT | 109 MB | replayed | red (conflicts > 100k, solve > 10 s, default limits reject) |
+| D4 | t=64 k=1 | incremental | 33,536 | 45,986 | 125,509 | 2,086/2,086 | 5/5 (5 distinct) | 110,564 | 12.1 s | - | - | - | 61 MB | replayed | red (conflicts > 100k, solve > 10 s) |
+| D4 | t=64 k=2 | certified | 67,096 | 91,996 | 251,090 | 4,172/4,172 | 5/5 (5 distinct) | 247,860 / 148,383 | 21.1 s (11.3 s worst) | 20.6 MB | - | REJECT | 161 MB | replayed | red (conflicts > 100k, solve > 10 s, default limits reject) |
+| D4 | t=64 k=2 | incremental | 67,106 | 92,006 | 251,120 | 4,172/4,172 | 5/5 (5 distinct) | 223,346 / 134,660 | 39.3 s (25.1 s worst) | - | - | - | 94 MB | replayed | red (conflicts > 100k, solve > 10 s) |
+| D4 | t=64 k=4 | certified | 134,214 | 184,014 | 502,246 | 8,344/8,344 | 5/5 (5 distinct) | 520,424 / 148,774 | 41.5 s (11.9 s worst) | 20.6 MB | - | REJECT | 192 MB | replayed | red (conflicts > 100k, solve > 10 s, default limits reject) |
+| D4 | t=64 k=4 | incremental | 134,234 | 184,034 | 502,306 | 8,344/8,344 | 5/5 (5 distinct) | 485,995 / 134,660 | 1.6 min (30.3 s worst) | - | - | - | 159 MB | replayed | red (conflicts > 100k, solve > 10 s) |
+| D4 | t=64 k=8 | certified | 234,900 | 322,050 | 879,007 | 12,516/12,516 | 5/5 (5 distinct) | 796,516 / 148,774 | 1.2 min (11.7 s worst) | - | - | - | 180 MB | not run | unknown (timeout) |
+| D4 | t=64 k=8 | incremental | 167,795 | 230,045 | 627,890 | 10,430/10,430 | 5/5 (5 distinct) | 489,328 / 134,660 | 2.1 min (33.1 s worst) | - | - | - | 146 MB | not run | unknown (timeout) |
+| D4 | t=64 k=16 | certified | 201,334 | 276,034 | 753,408 | 12,516/12,516 | 5/5 (5 distinct) | 776,513 / 148,774 | 1.2 min (13.5 s worst) | - | - | - | 190 MB | not run | unknown (timeout) |
+| D4 | t=64 k=16 | incremental | 167,795 | 230,045 | 627,890 | 10,430/10,430 | 5/5 (5 distinct) | 489,328 / 134,660 | 2.2 min (33.9 s worst) | - | - | - | 162 MB | not run | unknown (timeout) |
+| D4 | t=256 k=1 | certified | 132,608 | 181,742 | 496,093 | 8,232/8,232 | 5/5 (5 distinct) | 14,113 | 2.4 min | - | - | - | 103 MB | not run | unknown (timeout) |
+| D4 | t=256 k=1 | incremental | 132,613 | 181,747 | 496,108 | 8,232/8,232 | 5/5 (5 distinct) | 14,162 | 2.3 min | - | - | - | 114 MB | not run | unknown (timeout) |
+| D4 | t=256 k=2 | certified | 132,608 | 181,742 | 496,093 | 8,232/8,232 | 5/5 (5 distinct) | 12,014 | 2.0 min | - | - | - | 102 MB | not run | unknown (timeout) |
+| D4 | t=256 k=2 | incremental | 132,613 | 181,747 | 496,108 | 8,232/8,232 | 5/5 (5 distinct) | 13,703 | 2.4 min | - | - | - | 120 MB | not run | unknown (timeout) |
+| D4 | t=256 k=4 | certified | 132,613 | 181,747 | 496,108 | 8,232/8,232 | 5/5 (5 distinct) | 13,806 | 2.4 min | - | - | - | 106 MB | not run | unknown (timeout) |
+| D4 | t=256 k=4 | incremental | 132,608 | 181,742 | 496,093 | 8,232/8,232 | 5/5 (5 distinct) | 14,784 | 2.4 min | - | - | - | 116 MB | not run | unknown (timeout) |
+| D4 | t=256 k=8 | certified | 132,608 | 181,742 | 496,093 | 8,232/8,232 | 5/5 (5 distinct) | 14,758 | 2.4 min | - | - | - | 110 MB | not run | unknown (timeout) |
+| D4 | t=256 k=8 | incremental | 132,608 | 181,742 | 496,093 | 8,232/8,232 | 5/5 (5 distinct) | 14,784 | 2.4 min | - | - | - | 114 MB | not run | unknown (timeout) |
+| D4 | t=256 k=16 | certified | 132,613 | 181,747 | 496,108 | 8,232/8,232 | 5/5 (5 distinct) | 14,357 | 2.3 min | - | - | - | 102 MB | not run | unknown (timeout) |
+| D4 | t=256 k=16 | incremental | 132,608 | 181,742 | 496,093 | 8,232/8,232 | 5/5 (5 distinct) | 17,358 | 2.3 min | - | - | - | 120 MB | not run | unknown (timeout) |
+| E1 | claim=dispatch_policy fixture=vos-sched-fp-bitmap binders=256 | enum | - | - | - | - | 5/5 (1 distinct) | - | <1 ms | - | - | - | 2 MB | replayed | pass (318,606 cases/s, slowest) |
+| E1 | claim=insert_safe fixture=vos-sched-fp-bitmap binders=65536 | enum | - | - | - | - | 5/5 (1 distinct) | - | 779 ms | - | - | - | 2 MB | replayed | pass (84,177 cases/s, slowest) |
+| E1 | claim=insert_n8_bool fixture=vos-probe-ready binders=65536 | enum | - | - | - | - | 5/5 (1 distinct) | - | 43 ms | - | - | - | 2 MB | replayed | pass (1,534,811 cases/s, slowest) |
+| E1 | claim=insert_n8_mask fixture=vos-probe-ready binders=65536 | enum | - | - | - | - | 5/5 (1 distinct) | - | 22 ms | - | - | - | 2 MB | replayed | pass (2,930,544 cases/s, slowest) |
+| E1 | claim=insert_n10 fixture=vos-probe-ready binders=262144 | enum | - | - | - | - | 5/5 (1 distinct) | - | 155 ms | - | - | - | 2 MB | replayed | pass (1,691,679 cases/s, slowest) |
+| E1 | claim=insert_n8_mask_tagged fixture=vos-probe-ready binders=393216 | enum | - | - | - | - | 5/5 (1 distinct) | - | 192 ms | - | - | - | 2 MB | replayed | pass (2,043,759 cases/s, slowest) |
+| E1 | claim=insert_n11 fixture=refusal binders=524288 | enum | - | - | - | - | 5/5 (1 distinct) | - | <1 ms | - | - | - | 2 MB | replayed | refused (W0706) |
+| E2 | width=1 binders=1 | enum | - | - | - | - | 5/5 (1 distinct) | - | <1 ms | - | - | - | 2 MB | replayed | pass |
+| E2 | width=1 binders=2 | enum | - | - | - | - | 5/5 (1 distinct) | - | 6 ms | - | - | - | 2 MB | replayed | pass |
+| E2 | width=1 binders=3 | enum | - | - | - | - | 5/5 (1 distinct) | - | <1 ms | - | - | - | 2 MB | replayed | refused (W0706) |
+| E2 | width=1 binders=4 | enum | - | - | - | - | 5/5 (1 distinct) | - | <1 ms | - | - | - | 2 MB | replayed | refused (W0706) |
+| E2 | width=8 binders=1 | enum | - | - | - | - | 5/5 (1 distinct) | - | <1 ms | - | - | - | 2 MB | replayed | pass |
+| E2 | width=8 binders=2 | enum | - | - | - | - | 5/5 (1 distinct) | - | <1 ms | - | - | - | 2 MB | replayed | pass |
+| E2 | width=8 binders=3 | enum | - | - | - | - | 5/5 (1 distinct) | - | 5 ms | - | - | - | 2 MB | replayed | pass |
+| E2 | width=8 binders=4 | enum | - | - | - | - | 5/5 (1 distinct) | - | <1 ms | - | - | - | 2 MB | replayed | refused (W0706) |
+| E2 | width=64 binders=1 | enum | - | - | - | - | 5/5 (1 distinct) | - | <1 ms | - | - | - | 2 MB | replayed | pass |
+| E2 | width=64 binders=2 | enum | - | - | - | - | 5/5 (1 distinct) | - | 4 ms | - | - | - | 2 MB | replayed | pass |
+| E2 | width=64 binders=3 | enum | - | - | - | - | 5/5 (1 distinct) | - | <1 ms | - | - | - | 2 MB | replayed | refused (W0706) |
+| E2 | width=64 binders=4 | enum | - | - | - | - | 5/5 (1 distinct) | - | <1 ms | - | - | - | 2 MB | replayed | refused (W0706) |
+| E2 | width=256 binders=1 | enum | - | - | - | - | 5/5 (1 distinct) | - | <1 ms | - | - | - | 3 MB | replayed | pass |
+| E2 | width=256 binders=2 | enum | - | - | - | - | 5/5 (1 distinct) | - | <1 ms | - | - | - | 2 MB | replayed | refused (W0706) |
+| E2 | width=256 binders=3 | enum | - | - | - | - | 5/5 (1 distinct) | - | <1 ms | - | - | - | 2 MB | replayed | refused (W0706) |
+| E2 | width=256 binders=4 | enum | - | - | - | - | 5/5 (1 distinct) | - | <1 ms | - | - | - | 2 MB | replayed | refused (W0706) |
+| E2 | width=4096 binders=1 | enum | - | - | - | - | 5/5 (1 distinct) | - | 11 ms | - | - | - | 52 MB | replayed | pass |
+| E2 | width=4096 binders=2 | enum | - | - | - | - | 5/5 (1 distinct) | - | <1 ms | - | - | - | 2 MB | replayed | refused (W0706) |
+| E2 | width=4096 binders=3 | enum | - | - | - | - | 5/5 (1 distinct) | - | <1 ms | - | - | - | 2 MB | replayed | refused (W0706) |
+| E2 | width=4096 binders=4 | enum | - | - | - | - | 5/5 (1 distinct) | - | <1 ms | - | - | - | 2 MB | replayed | refused (W0706) |
 
 Derived constants (experiment F), from the counted monolithic UNSAT rows of at least 1,000 conflicts:
 
