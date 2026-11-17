@@ -152,12 +152,28 @@ fn same_file(_a: &fs::Metadata, _b: &fs::Metadata) -> bool {
     true
 }
 
+/// Does the path text have a `..` component?  Pure string work, so it is tested on every
+/// platform.
+///
+/// `Path::components` is not enough on Windows: for a *verbatim* path (`\\?\C:\x\..\y`,
+/// which is what `canonicalize` returns and so what any test or caller that starts from a
+/// canonical directory holds) std deliberately does NOT interpret `.` or `..`, so they
+/// come back as `Normal` components and a `ParentDir` check never fires.  So split the
+/// text ourselves: on Windows both `/` and `\` separate components (the verbatim form
+/// excepted by std, but refusing is the safe side), on Unix only `/` does.
+pub fn has_parent_component(s: &str, windows: bool) -> bool {
+    s.split(|c| c == '/' || (windows && c == '\\'))
+        .any(|part| part == "..")
+}
+
 /// Make a command-line path absolute, with no `..` and no symlink in it.
 pub fn absolute_plain(arg: &Path) -> Result<PathBuf, NoVerdict> {
     if arg.as_os_str().is_empty() {
         return Err(NoVerdict::new("an empty path"));
     }
-    if arg.components().any(|c| matches!(c, Component::ParentDir)) {
+    if arg.components().any(|c| matches!(c, Component::ParentDir))
+        || has_parent_component(&arg.to_string_lossy(), cfg!(windows))
+    {
         return Err(NoVerdict::new(format!(
             "{}: `..` is not allowed in a path",
             q(arg)

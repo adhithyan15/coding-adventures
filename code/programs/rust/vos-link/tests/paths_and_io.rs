@@ -417,3 +417,23 @@ fn a_disagreeing_root_is_no_verdict_for_check_doc_too() {
     assert!(nv(vos_link::check_doc(&r.pkg(SCAN), Some(&other.root)))
         .contains("is not the repository root"));
 }
+
+/// Windows regression: `canonicalize` returns a verbatim path (`\\?\C:\..`), and std does
+/// not parse `..` in a verbatim path as `ParentDir`, so the component check alone let a
+/// `..` through on Windows CI.  The text check must catch it for both separators, and it
+/// is pure string work so this runs on every platform.
+#[test]
+fn dot_dot_text_is_found_for_both_separators_and_verbatim_paths() {
+    let w = fsio::has_parent_component;
+    assert!(w(r"\\?\C:\r\code\..\x", true));
+    assert!(w(r"\\?\C:\r\code\packages/../x", true));
+    assert!(w(r"C:\r/code/..", true));
+    assert!(w("a/../b", true) && w("a/../b", false));
+    assert!(w("..", false) && w("..", true));
+    // `..` inside a name, a single dot, a `...` name: not a parent component
+    assert!(!w(r"\\?\C:\r\..a\b..\...\.x", true));
+    assert!(!w("a/./b/..c", false));
+    // a backslash is an ordinary name character on Unix
+    assert!(!w(r"a\..\b", false));
+    assert!(w(r"a\..\b", true));
+}
