@@ -4,6 +4,17 @@ All notable changes to this package are documented here.
 
 ## [Unreleased]
 
+### Added (VOS-012b0, VOS-D061)
+
+- The `representation` block is evaluated on a round-robin model (`impl-rr-models.part`): the eight
+  claims plus the safety tier pass (458,754 + 131,586 cases), and the same rr fails
+  `canon_dispatch_post` (why the tier exists).  Ten mutants (31 in all): `rep` ignoring `h`
+  (fails `dispatch_rep_post`), an `alpha` that cheats at `ptr != 0` (fails `rep_alpha` and the
+  claims that read alpha of an image state), an `init` outside the image (`rep_init`), each step
+  leaving the image (the matching `_post` claim), wrong `insert_out`/`remove_out`/`dispatch_out`
+  (the matching `_rep`), and a dispatch that does not rotate but stays in the image, which passes
+  (`<op>_det` is not gated).  `REP_CLAIMS` joins the every-obligation-has-a-control check.
+
 ### Added (VOS-D081)
 
 - `safety_init` joins `PRODUCTION` (13) and `OBLIGATIONS` (16) and the count tables (2 cases).

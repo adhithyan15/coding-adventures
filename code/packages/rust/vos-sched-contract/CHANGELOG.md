@@ -4,6 +4,15 @@ All notable changes to this package are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added (VOS-012b0, VOS-D061)
+
+- `tier representation` in `contract.vos` and `warrant/obligations-representation.part`: eight
+  claims (`rep_init`, `rep_alpha`, `insert_rep`, `insert_rep_post`, `remove_rep`, `remove_rep_post`,
+  `dispatch_rep`, `dispatch_rep_post`) over an implementation-supplied `rep(m: Ready, h: U8) -> Impl`
+  and `hist(s: Impl) -> U8`, with one packed `k: U8` binder (history in its low three bits, the
+  thread argument `shr(k, 3)` above them; 65,536 cases each).  The contract text names no field of
+  `Impl`.  `contract.part`, and so every existing document and digest, is unchanged.
+
 ### Added (VOS-D081)
 
 - `warrant/obligations-safety.part`: `safety_init` (`forall b: Bool. dec(alpha_w(init())) == empty()`), the
