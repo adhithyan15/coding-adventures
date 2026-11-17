@@ -14608,6 +14608,13 @@ name = "tls13-handshake"
 version = "0.1.0"
 
 [[package]]
+name = "tls13-handshake-reassembly"
+version = "0.1.0"
+dependencies = [
+ "tls13-handshake",
+]
+
+[[package]]
 name = "tls13-hkdf-label"
 version = "0.1.0"
 dependencies = [
