@@ -2445,6 +2445,31 @@ size, line count and the throughput of both readers for every trace the sandbox
 tests produce. **Trace sizes and grammar-path throughput on real traces: to come
 from the first CI run.** The default stays the old scanner; the flip is PR 6.
 
+**On the compact `LineParser` (P2 PR 5).** `handleLineG` no longer builds an
+`*ASTNode` tree per line. Each trace parse owns one `straceparser.LineParser`
+(inside `lineState`, never shared between goroutines) and one reused argument
+slice; the line shape, the arguments (`AppendRawArgs`), the text after the
+closing parenthesis and the pending prefix come from the compact helpers. The
+Options (line limit, 64 bracket levels, 65,536 tokens, memo cap, strict quoted
+strings), the byte pre-checks, the pending map, the D18 and dead-resumed state
+machine, the strict `parseResult` and the refuse-the-whole-trace panic guard
+are unchanged, and so is every record and refusal: `grammar_legacy_test.go`
+keeps the ASTNode version as a test-only reference and
+`compact_equiv_test.go` (fixtures, 300k seeded lines, 600k seeded sequences,
+`FuzzCompactEqualsLegacy`) demands identical output. The all-space-argument
+guard stays in kiln's `trimArgs` (the parser accepts `1  f( , <unfinished ...>`
+with the raw argument `" "` on every path). The old scanner is still the
+default, and `crossCheck` is unchanged. Measured on the four committed fixture
+traces (Apple M2 Max, `go test ./internal/trace -bench 'LineHandler|Pass1'
+-benchmem`): the old scanner 201 MB/s, 359 allocs per corpus pass; the grammar
+path on the ASTNode tree 13.6 MB/s, 1693 allocs; on the compact path 17.9 MB/s,
+421 allocs (1.3x faster, 4x fewer allocations); production pass 1 (bufio plus
+handler) 141 MB/s old against 16.9 MB/s grammar. The fixtures are short
+and dense, so the ratio to the old scanner (about 12x here) is a worst case
+rather than the "within 3x" gate figure; the gate is still to be restated from
+the real-trace `PROBE:` lines (which now also log allocations). Cutting the
+remaining per-line token-slice allocation is P2 PR 6.
+
 **The PR split.**
 
 1. This spec, plus the KILN00 §17 and README amendment.
