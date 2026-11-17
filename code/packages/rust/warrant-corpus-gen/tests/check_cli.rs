@@ -245,6 +245,12 @@ fn write_and_check_refuse_symbolic_links() {
     assert!(e.message.contains("symbolic link"), "{e}");
     assert_eq!(fs::read_to_string(&secret).unwrap(), "do not touch");
     assert!(drift(&out).contains("cases.tfv: is a symbolic link"));
+    fs::remove_file(out.join("cases.tfv")).unwrap();
+    // a link planted at the temporary name is refused too, and nothing is written through it
+    symlink(&secret, out.join("chunks/.eq_agrees.txt.tmp")).unwrap();
+    let e = write_corpus(&out, ct()).unwrap_err();
+    assert!(e.message.contains("temporary file is a symbolic link"), "{e}");
+    assert_eq!(fs::read_to_string(&secret).unwrap(), "do not touch");
     let _ = fs::remove_dir_all(root);
 }
 
@@ -321,6 +327,13 @@ fn the_binary_writes_checks_and_fails_on_drift() {
     assert_eq!(bad.status.code(), Some(1));
     let msg = String::from_utf8_lossy(&bad.stderr);
     assert!(msg.contains("drift") && msg.contains("chunks/eq_agrees.txt: differs at line 1, column 1"), "{msg}");
+    // a directory is not a regular file
+    let dir = Command::new(bin)
+        .current_dir(root())
+        .args(["--warrant", "code/specs", "--profile", "x", "--out", "y"])
+        .output()
+        .unwrap();
+    assert!(String::from_utf8_lossy(&dir.stderr).contains("regular file"), "{}", String::from_utf8_lossy(&dir.stderr));
     let usage = Command::new(bin).output().unwrap();
     assert_eq!(usage.status.code(), Some(1));
     let _ = fs::remove_dir_all(d);

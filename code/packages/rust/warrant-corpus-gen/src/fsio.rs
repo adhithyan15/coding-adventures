@@ -113,7 +113,11 @@ pub fn write_corpus(out: &Path, c: &CorpusV2) -> Result<(), GenError> {
     if is_symlink(&chunks) {
         return Err(io("chunks", "chunks is a symbolic link: refused"));
     }
-    let extras = chunk_dir_extras(out, &owned_names(c))?;
+    // a leftover temporary of ours from an interrupted run is not "someone else's file": it is
+    // overwritten (or refused if it is a symbolic link) when its own file is written
+    let mut known = owned_names(c);
+    known.extend(owned_names(c).iter().map(|n| format!(".{n}.tmp")));
+    let extras = chunk_dir_extras(out, &known)?;
     if !extras.is_empty() {
         return Err(io(
             "chunks",
