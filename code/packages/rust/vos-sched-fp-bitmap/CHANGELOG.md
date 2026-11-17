@@ -4,6 +4,14 @@ All notable changes to this package are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Changed (VOS-D081)
+
+- Regenerated for the contract's new `safety_init` claim: `code/specs/vos-sched-fp-bitmap.warrant`, the
+  generated harness and the manifest. 13 exhaustive claims, 394,500 cases; `warrant/check_evidence.sh`
+  now pins 64 ok (was 61) next to the same three known-inert `init` controls. A mask-8 `init` fails
+  `canon_init` and `safety_init` (checked in a scratch copy). No sabotage line for `safety_init`: its
+  only fault, `field-zero` on `alpha_w`, is inert on the empty state.
+
 ### Added
 
 - VOS-011: the fixed-priority bitmap scheduler (`code/specs/VOS10-scheduler-contract.md`
@@ -30,8 +38,10 @@ All notable changes to this package are documented here.
 
 ### Fixed
 
-- `tests/generated/warrant_evidence.rs` regenerated with `gen_evidence` for the WD-HARN1
-  evidence prelude (bounded observer wait, `lock_or_recover`, `Bail out!` exit 70). It was
-  generated while that prelude change was in CI, so `gen_evidence --check` failed on main.
-  No hand edit; `evidence/` is unchanged and `warrant/check_evidence.sh` reports the same
-  result (cargo status 1, 61 ok, the three known `init`/`field-zero` controls).
+- WD-HARN1b: `tests/generated/warrant_evidence.rs` regenerated with `gen_evidence` for the WD-HARN1b
+  changes to the obs region of the Warrant prelude (`Bail out!` is written with `writeln!` to
+  stderr, the dead latch is gone). No hand edit; `evidence/` is unchanged and
+  `warrant/check_evidence.sh` reports the same result as on main.
+- The sabotage lines in `BUILD` and `BUILD_windows` now fail when the sabotaged run prints
+  `Bail out!`, not only when it lacks a `not ok ` line (a hang after an intended failure no longer
+  passes silently).
