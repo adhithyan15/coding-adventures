@@ -7,7 +7,7 @@
 # tell the faulted `init` from the real one (VOS02 13.4 F4, VOS-D065, VER-BACKLOG WX-SV2).
 #
 # The script demands: cargo exits with status exactly 1 (the suite ran and reported failures; 0
-# would mean the exception is stale, 101 or anything else a crash), exactly 61 passing tests,
+# would mean the exception is stale, 101 or anything else a crash), exactly 64 passing tests,
 # exactly the three failures below and no other.  So the day the generator gets a non-inert fault
 # the known count is 0 and this script fails: delete the exception and make the BUILD line a
 # plain `cargo test`.
@@ -25,8 +25,8 @@ failed=$(printf '%s\n' "$out" | sed -n 's/^not ok [0-9][0-9]* - //p' | sort)
 expected=$(printf '%s\n' "$known_ids" | sort)
 
 echo "evidence: cargo status $status, $ok ok"
-if [ "$status" -ne 1 ] || [ "$ok" -ne 61 ] || [ "$failed" != "$expected" ]; then
-    echo "evidence: expected status 1, 61 ok and exactly these failures:" >&2
+if [ "$status" -ne 1 ] || [ "$ok" -ne 64 ] || [ "$failed" != "$expected" ]; then
+    echo "evidence: expected status 1, 64 ok and exactly these failures:" >&2
     printf '%s\n' "$expected" >&2
     echo "evidence: got these failures:" >&2
     printf '%s\n' "$failed" >&2

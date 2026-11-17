@@ -79,10 +79,10 @@ cargo run -p coding_adventures_warrant_grammar --example gen_evidence -- --check
 sh warrant/check_evidence.sh                                                                    # run it
 ```
 
-12 exhaustive claims, 394,498 cases, the largest 65,536 (16.4% of the budget), plus the same 12
+13 exhaustive claims, 394,500 cases, the largest 65,536 (16.4% of the budget), plus the same 13
 as property and fuzz suites, 2 examples and 26 negative controls. Three controls cannot pass:
 `init` / `field-zero` (the initial field is already 0, so the fault changes nothing; VOS-D065).
-`warrant/check_evidence.sh` names them and requires cargo status 1, exactly 61 ok and exactly those
+`warrant/check_evidence.sh` names them and requires cargo status 1, exactly 64 ok and exactly those
 three failures. A bare `cargo test --features ghost` therefore exits non-zero: use the BUILD lines.
 `evidence/test-manifest.json` records those three entries with `verdict: fail`. Nothing reads it today:
 `ca-assurance-report` loads a package's manifest only for a package that has an `assurance_report.json`

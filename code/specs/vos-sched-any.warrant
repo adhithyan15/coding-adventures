@@ -195,7 +195,7 @@ warrant vos_sched_any v1
   claim dispatch_covers_idle:
     forall mask: U8. dispatch_out(Impl(mask, 255u8)) == Idle
   -- vos02:obligations-end
-  -- vos02:obligations-begin tier=safety sha256=d4347625a29cccdcab45fa020c02862ac6e912beed5fe643e45ec9d154b9e7ab
+  -- vos02:obligations-begin tier=safety sha256=238c31381646b16001784c8533f8b2ed97e83256b48869d716816f01d435b16f
   -- insert and remove are deterministic in both tiers (shape A of VOS01 section 2.3).
   claim insert_safe:
     forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool, t: U8. (
@@ -214,6 +214,10 @@ warrant vos_sched_any v1
   -- carry the safety tier but not canonical, and would otherwise have an alpha nothing constrains.
   claim safety_alpha_build:
     forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool. dec(alpha_w(build(ready_of(b0, b1, b2, b3, b4, b5, b6, b7)))) == ready_of(b0, b1, b2, b3, b4, b5, b6, b7)
+  -- init starts from the empty ready set, for EVERY implementation (VOS-D081).  The binder is unused
+  -- (the same convention as canon_init, F5): the generator needs one.
+  claim safety_init:
+    forall b: Bool. dec(alpha_w(init())) == empty()
   -- vos02:obligations-end
   assume platform:
     none
