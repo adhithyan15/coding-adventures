@@ -126,13 +126,34 @@ python3 code/packages/rust/warrant-corpus-gen/tests/fixtures/dump_oracle_lowerin
 python3 code/packages/rust/warrant-corpus-gen/tests/fixtures/dump_oracle_lowering.py --check  # verify
 ```
 
-**Limits.** The committed JSON is a snapshot: the Rust test does not run Python, so if the
-oracle's lowering changes, this test stays green until someone re-runs the script (it is
-not in `BUILD`, because that would need a declared build edge from this Rust crate to the
-Python package; S4 part 2 closes the gap by making the oracle verify the generator's
-`corpus.json` directly). The comparison covers lowering and cost, not enumeration or
-digests (S3b). The oracle and this crate agree on four documents, not on every possible
-one; the synthetic documents were written to hit every rule of `lower.rs`.
+**Limits.** What parity does and does not prove:
+
+- The committed JSON is a snapshot: the Rust test does not run Python. The oracle package's
+  `BUILD` therefore runs `dump_oracle_lowering.py --check`, so an oracle change re-verifies
+  the snapshots; S4 part 2 closes the gap by making the oracle verify the generator's
+  `corpus.json` directly.
+- The comparison covers lowering, op-row `admit` and costs, not enumeration or digests (S3b).
+  The `Ty` annotation on `Arith`/`Neg` nodes is not in the view and is first exercised by the
+  S3b digests.
+- Parity catches transcription slips, not a **shared misreading** of VER04/VER04j: `lower.rs`
+  mirrors the oracle's `lower.py`, so both can be wrong the same way. The grammar checker
+  (`warrant-grammar`, run first on every document) is the third opinion.
+- Four documents agree; that is not proof for every document.
+
+## What never reaches a corpus
+
+Labels, `bound` rows, `assume ... none`, and `input` declarations including their
+`rejects` conditions are not part of a v2 corpus (as in v1 and the oracle); they are read
+and ignored, not refused.
+
+## Known gaps (deferred to S3b and S4 part 2)
+
+- A claim with no subject call lowers to an always-passing suite; S3b should refuse it
+  (`W0701`).
+- `reference`/`predicate` classification re-types the subject side without context.
+- The oracle admits IR nesting of 65 (off by one against the limit of 64); a note for S4 part 2.
+- Profile edge cases (surrounding whitespace, empty tokens, repeated `fault`/`slim_chunk`
+  lines, `budget 0`, `slim_stride 0`) differ from what VER04r 16.4 says they should be.
 
 ## Tests
 
