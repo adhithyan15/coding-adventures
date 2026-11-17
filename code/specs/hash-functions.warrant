@@ -215,11 +215,15 @@ warrant hash_functions v1
   -- allowing a buffer that scales with the input.
   --
   -- polynomial_rolling_with_params has NO heap row either, for a different reason
-  -- than the three below: its only allocation is the std panic payload of the
-  -- zero-modulus rejection path (the adapter catches the panic).  That payload's
-  -- size differs by platform (80 bytes observed on Linux, 16 on Windows), and the
-  -- manifest is committed and diffed on Linux, macOS and Windows, so recording an
-  -- exact peak would make it platform-specific.  Its steps and depth rows remain.
+  -- than the three below: the zero-modulus rejection path panics (the adapter
+  -- catches it), and what that path allocates is the std panic payload plus, on
+  -- Linux and macOS, the unwinder's exception object.  Observed: 80 bytes on
+  -- Linux, 16 on Windows (SEH has no such object; the unwinder is the likely
+  -- explanation, not something measured).  The manifest is committed and diffed
+  -- on Linux, macOS and Windows, so recording an exact peak would make it
+  -- platform-specific.  Its steps and depth rows remain.  (The crate itself
+  -- allocates nothing on its success paths: the 64 bytes a trial recorded there
+  -- were the evidence adapter's own V::Ok(Box::new(..)) result.)
   --
   -- fnv1a_32, fnv1a_64 and djb2 have NO heap row: their exhaustive suites have 2^24-case
   -- claims (a three-byte domain), and the observer runs each call on a worker
