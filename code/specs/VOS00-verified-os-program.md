@@ -699,6 +699,18 @@ summarised here, with sources in section 15:
 Each rung feeds the pool a contract; each profile (section 11) draws from the
 pool. The pool is the intersection.
 
+**The table below is the summary; [VOS04](VOS04-component-catalogue.md) is the
+catalogue and governs where they differ.** VOS04 lists every interface with its
+state, operations, tiers, implementations, profiles, instance size and proof
+risk, states the thirteen decomposition rules that decide what a component is
+(one contract per mechanism, sibling contracts for a different state, degenerate
+implementations instead of optional slots, and the "basic" test), fixes the
+per-component evidence template, and gives the serial order of work. Notably it
+splits the thread table from the register store, treats EDF, budgets and mutexes
+as sibling contracts of the scheduler (VOS-D048), and adds the interfaces this
+table omits (pool, timer, interrupt routing, bounded channel, sampling port,
+health monitor, syscall and trap decoders).
+
 | Contract | Fed by rung(s) | Realised by (planned) | Used by profiles |
 |---|---|---|---|
 | Boot / loader | L0, L7 | Loader contract, HAL boot hook | All |
@@ -916,6 +928,11 @@ A profile is an assembly of components selected by a manifest. Static
 configuration is used for the RTOS, flight and separation profiles; untyped
 memory and retype exist for the GPOS only.
 
+[VOS04](VOS04-component-catalogue.md) section 7 gives the same five profiles as
+a matrix of pool interfaces against implementations (which implementation fills
+each slot, and which slots take a degenerate one); the component lists in the
+table below are the summary, and VOS04 governs where they differ.
+
 *Why static configuration first.* A static configuration has no allocation, so
 rule 7 holds, the capability table has a fixed size, and every theorem can be
 stated at one instance. Dynamic capability derivation, revocation and untyped
@@ -931,7 +948,7 @@ GPOS and does not precede it.
 | Profile | Components | Theorems | Reachable bar | Gap |
 |---|---|---|---|---|
 | Hard RTOS (RV32 M/U with PMP, static) | HAL, PMP plan, thread table, fixed-priority bitmap scheduler, notification and endpoint IPC, timer, static capability table | Spatial isolation, kernel integrity, capability confinement, bounded kernel entries, interrupt-latency bound, fixed-priority policy | X2 near, X3 later | Cycle-level WCET needs a hardware timing model. Schedulability is an application-level question. There is no real board |
-| Soft real-time | The above, with an EDF or budget scheduler; same safety tier | Isolation reused unchanged; budget enforcement | X2 | No deadline guarantee. This is the cheap replaceability demonstration: swap the scheduler, keep every system theorem |
+| Soft real-time | The above, with a round-robin scheduler and a budget leaf, or an EDF scheduler (a sibling interface `edf`, not a tier of `sched`: VOS04 section 2.2); the safety tier has the same shape | Isolation reused unchanged; budget enforcement | X2 | No deadline guarantee. This is the cheap replaceability demonstration: swap the scheduler, keep every system theorem |
 | Flight-control (ARINC-653 style) | RTOS plus a static major-frame partition scheduler, sampling and queuing ports, health monitor, padded partition exits | Time and space partitioning; intransitive noninterference by unwinding (a 2-safety property, VER20's shape) | X2 on the model, X3 later | DO-178C needs MC/DC on object code, traceability, DO-330 tool qualification and target WCET. The program calls the result a "DAL-A-style evidence map" and never compliance |
 | GPOS (RV64 S/U, Sv39) | SBI shim, page-table component, untyped and retype, dynamic capabilities with bounded revocation, user-space drivers | Address-space isolation, page-table well-formedness, derivation-tree invariants | X1 and X2 on small configurations | An arrays theory is needed at real sizes. The simulator has no S-mode or Sv39 |
 | Hypervisor (H extension) | Stage-2 translation, vCPU, virtual interrupts, static partition schedule | Guest isolation, noninterference | Model at X1 | The H extension is absent everywhere in the repository |
@@ -973,7 +990,8 @@ row from 4 on.
 
 ## 13. Naming and numbering
 
-* **Spec numbers.** `VOS0x` umbrella and model; `VOS1x` component contracts;
+* **Spec numbers.** `VOS0x` umbrella and model (VOS04 is the component
+  catalogue); `VOS1x` component contracts;
   `VOS2x` kernel and HAL; `VOS3x` proofs; `VOS4x` profiles; `VOS5x` GPOS and
   hypervisor. `EMU0x` for the emulator framework. The EMU prefix is unused
   elsewhere in `code/specs`.

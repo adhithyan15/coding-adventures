@@ -29,6 +29,7 @@ mod harness {
             Exec::Finished(Err(_), p) => Seen::Panicked(p),
             Exec::Tripped(p) => Seen::Tripped(p),
             Exec::Refused => Seen::Refused,
+            Exec::TimedOut(_) | Exec::Lost => panic!("the supervisor timed out (see tests/wxh_supervisor.rs)"),
         }
     }
 

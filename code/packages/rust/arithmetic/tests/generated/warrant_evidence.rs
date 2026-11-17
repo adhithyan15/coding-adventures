@@ -41,7 +41,20 @@ use coding_adventures_test_bootstrap::Verdict;
 use std::cell::Cell;
 use std::collections::BTreeMap;
 use std::panic::{catch_unwind, AssertUnwindSafe};
-use std::sync::Mutex;
+use std::sync::{Mutex, MutexGuard};
+
+/// Lock `m`, recovering the data if a panicking thread poisoned it (WD-HARN1).
+///
+/// Every lock in this harness guards plain bookkeeping (registered tests,
+/// per-test statistics, a reply slot) that is consistent after any single
+/// operation, and a panic is an expected event here: the subject under test is
+/// not trusted to be total, and a panicking instance is reported as a failed
+/// verdict.  `lock().unwrap()` would turn one such panic into a cascade of
+/// panics (or, in the observer's reply slot, a supervisor that never wakes), so
+/// the harness never unwraps a lock: it takes the guard out of the poison error.
+fn lock_or_recover<T>(m: &Mutex<T>) -> MutexGuard<'_, T> {
+    m.lock().unwrap_or_else(|e| e.into_inner())
+}
 
 /// Dynamic value of the Warrant pure profile (VER04e section 2.1 subset).
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -1721,16 +1734,19 @@ fn reg(
         }
     }
     let id = meta.id.clone();
-    META.lock().unwrap().push(meta);
+    lock_or_recover(&META).push(meta);
     suite.add(id.clone(), move |_ctx| {
         let (verdict, stats, note) = body();
-        STATS.lock().unwrap().insert(id.clone(), (stats, note));
+        lock_or_recover(&STATS).insert(id.clone(), (stats, note));
         verdict
     });
 }
 
 fn is_detected(v: &Verdict) -> bool {
     match v {
+        // An observer timeout is never a detection (it bails out before it can
+        // be reported; this is the second line of defence).
+        Verdict::Fail { message, .. } if message.contains("observer-timeout") => false,
         Verdict::Fail { failure_id, .. } => {
             coding_adventures_test_bootstrap::verdict::is_registered_failure_id(failure_id)
         }
@@ -1752,8 +1768,8 @@ fn write_manifest(outcomes: &[Outcome]) {
         eprintln!("refusing to write an evidence manifest from a sabotaged or filtered run");
         return;
     }
-    let metas = META.lock().unwrap().clone();
-    let stats = STATS.lock().unwrap().clone();
+    let metas = lock_or_recover(&META).clone();
+    let stats = lock_or_recover(&STATS).clone();
     let mut tests: Vec<Json> = Vec::new();
     for m in metas {
         let verdict = outcomes
@@ -1809,7 +1825,7 @@ fn write_manifest(outcomes: &[Outcome]) {
         ("module", Json::str(MODULE)),
         ("spec", Json::str(SPEC_PATH)),
         ("spec_sha256", Json::str(SPEC_SHA256)),
-        ("source_sha256", Json::Str(SOURCE_SHA256.lock().unwrap().clone())),
+        ("source_sha256", Json::Str(lock_or_recover(&SOURCE_SHA256).clone())),
         ("evidence_seed", Json::Str(EVIDENCE_SEED.to_string())),
         ("tests", Json::Arr(tests)),
     ]);
@@ -1863,7 +1879,7 @@ pub fn require_tests(count: usize, filter: Option<&str>) -> Result<(), String> {
 /// same definition the proof and bench manifests and the checker use.
 pub fn run_main(src_dir: &std::path::Path) -> i32 {
     match manifest::source_tree_framing(src_dir) {
-        Ok(framed) => *SOURCE_SHA256.lock().unwrap() = sha256_hex(&framed),
+        Ok(framed) => *lock_or_recover(&SOURCE_SHA256) = sha256_hex(&framed),
         Err(e) => {
             eprintln!("cannot bind evidence to {}: {e}", src_dir.display());
             return 2;
@@ -1880,7 +1896,7 @@ pub fn run_main(src_dir: &std::path::Path) -> i32 {
         }
     };
     let suite = build_suite(fault);
-    let registered = META.lock().unwrap().len();
+    let registered = lock_or_recover(&META).len();
     if let Err(msg) = require_tests(registered, filter_var.as_deref()) {
         eprintln!("{msg}");
         return 2;
