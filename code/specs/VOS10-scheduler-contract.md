@@ -596,18 +596,25 @@ the oracle is a binder.
     forall mask: U8, c: U8. (
       safe_dispatch(dec(alpha_w(Impl(mask, c))), dispatch_out(Impl(mask, c)), dec(alpha_w(dispatch_img(Impl(mask, c))))) and
       dispatch_img(Impl(mask, c)).choice == c)
-  -- Coverage with a witness: thread t is produced by the oracle value t, Idle by 255.
+  -- Coverage with a witness: thread t is produced by the oracle value t, Idle by 255. `mem` is false
+  -- outside 0..7, so no `t < 8` refinement is needed; a refinement would also make the property
+  -- suite unrunnable (the generator's rejection sampler gives up at 3 percent acceptance, VOS-D079).
   claim dispatch_covers_run:
-    forall mask: U8, t: U8 | t < 8u8. (
+    forall mask: U8, t: U8. (
       mem(dec(alpha_w(Impl(mask, t))), t) => dispatch_out(Impl(mask, t)) == Run(t))
   claim dispatch_covers_idle:
     forall mask: U8. dispatch_out(Impl(mask, 255u8)) == Idle
 ```
 
 `dispatch_covers_run` uses a **witness** (thread `t` by oracle value `t`, `Idle` by
-255) so that coverage needs no nested `exists` (VOS01 section 3.3). Its negative
-controls (a sabotaged `-any` that must be rejected) need WX-SV item 2 in the real
-generator; at the Warrant-model level they are the controls of section 12.
+255) so that coverage needs no nested `exists` (VOS01 section 3.3). It has no `t < 8`
+refinement: `mem` is false outside `0..7`, so the guard added nothing, and with it the
+generator's property suite could not run (its rejection sampler gives up at 3 percent
+acceptance, VOS-D079). **As run (VOS-012a, VOS-D054):** the generator attaches the negative
+controls of the `any` claims to the operation each is about: `dispatch_sound` to
+`dispatch_img`, `dispatch_covers_run` and `dispatch_covers_idle` to `dispatch_out`; the
+predicted attachment to `alpha_w` did not happen (the subject search takes the operation the
+claim's last call names, not the leading `safe_dispatch`), so no claim was rewritten for it.
 
 ### 9.4 Claims that are not obligations
 
@@ -650,7 +657,7 @@ counts the evaluation of section 12 measured, not typed by hand.
 | `canon_dispatch_post`, `canon_dispatch_img` (each) | 8 Bool | 256 | 256 | 0.06 |
 | **Any** | | | | |
 | `dispatch_sound` | `mask: U8`, `c: U8` | 65,536 | 65,536 | 16.38 |
-| `dispatch_covers_run` | `mask: U8`, `t: U8 | t < 8` | 65,536 | 2,048 | 16.38 |
+| `dispatch_covers_run` | `mask: U8`, `t: U8` | 65,536 | 65,536 | 16.38 |
 | `dispatch_covers_idle` | `mask: U8` | 256 | 256 | 0.06 |
 
 **The largest single claim is 65,536 binder cases, 16.4 percent of the budget**,
@@ -661,7 +668,7 @@ as in the toy. The obligation totals per implementation (enumerated cases):
 | fixed-priority bitmap (`production`) | safety, policy, canonical | **394,498** |
 | lowest-first scan (safety, canonical) | safety, canonical | 131,584 + 262,658 = 394,242 |
 | round-robin (safety only, `representation`) | safety, plus its own `_rep` claims | 131,584 + its own |
-| `-any` | safety, any | **199,424** admitted (262,912 binder cases) |
+| `-any` | safety, any | **262,912** (= the binder cases: no refinement; 199,424 before VOS-012a dropped the `t < 8` refinement of `dispatch_covers_run`, VOS-D079) |
 
 Where the budget ends for this contract:
 
@@ -715,6 +722,12 @@ is out of this contract's reach: plan on `T <= 8..16` per obligation there.
 * **`vos-sched-rr`** (kind `production` or `reference`, mode `representation`): a
   rotating pointer, safety tier only, `dispatch_rep` claims and a determinism
   claim in its own `impl.part`.
+* **As built (VOS-012a):** `vos-sched-any` exists (`code/packages/rust/vos-sched-any`): its state
+  is `State { mask, choice }`, `dispatch` proposes, validates and defaults to `Idle`, the oracle
+  is written only through the `ghost` module, and its generated document passes `check-doc`
+  with the R6 `any` rules. Evidence: 7 exhaustive claims, 262,912 cases, 42 tests, all pass, no
+  known-inert control. `dispatch_covers_run` lost its `t < 8` refinement (section 9.3). The own
+  claims of section 9.4 are not written: see VOS-D080.
 * The two together are the replaceability exercise (VOS00 section 8): the policy
   claims, `vos-sched-fp-bitmap`'s evidence and the contract block are **not**
   regenerated.
