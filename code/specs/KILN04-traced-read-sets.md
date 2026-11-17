@@ -649,8 +649,8 @@ pass, and each record keeps its source line. The defaults are 1 MiB per
 line, 64 MiB in total and 1,000,000 records, and every record counts
 (calls, start markers and exit lines). Argument counts are bounded while
 scanning: a handled call's arity, or 16 for any other name. Exceeding a cap
-is `size` or `arity`. Limits may be lowered freely, but raised only by a spec revision with a DoS
-review and a worst-case benchmark (§4.9).
+is `size` or `arity`. Limits may be lowered freely, but raised only by a
+spec revision with a DoS review and a worst-case benchmark (§4.9).
 
 **D19: signals in the trace.** `print_signalled` in strace 6.8
 (`strace.c`) prints `+++ killed by %s %s+++` only when
