@@ -4,9 +4,12 @@
 # Syntax only (D24, KILN04 section 4.9).  The first rule, `line`, is the start
 # rule.  Tokens come from strace.tokens.
 #
-# This grammar uses NO string literals.  A literal in a grammar matches a token
-# by its text whatever its type, so a QUOTED string whose text happened to equal
-# a literal would match it.  Every terminal here is a token reference.
+# Every terminal is a token reference, with ONE exception: the string literal
+# "---" in signal_close.  A literal in a grammar matches a token by its text
+# whatever its type, so a QUOTED string whose text happened to equal a literal
+# would match it; the one literal is safe because inside a signal line the lexer
+# only produces SIG_SP and SIG_TEXT (see signal_close).  A test pins exactly
+# this: one literal, "---", and no other.
 #
 # What the grammar does NOT do, on purpose:
 #   * it has no error recovery: the first line that does not parse is refused;
@@ -19,13 +22,14 @@
 #
 # Every rule below consumes at least one token, so no repetition can loop.
 
-# A line is the pid prefix and one of six bodies.  The alternatives start with
+# A line is the pid prefix and one of seven bodies.  The alternatives start with
 # different tokens, so the order only matters for speed.
 line         = pid body ;
 
 pid          = PID_TAG | PID ;
 
-body         = call_line | resumed_line | exit_line | signal_line | dead_line ;
+body         = call_line | resumed_line | exit_line | signal_line | dead_line
+             | dead_resumed_line ;
 
 # ---------------------------------------------------------------------------
 # A call: `name(args) = result`, or interrupted: `name(args <unfinished ...>`.
@@ -97,9 +101,13 @@ signal_close = SIG_SP "---" !( SIG_SP | SIG_TEXT ) ;
 
 # ---------------------------------------------------------------------------
 # A thread killed at syscall entry: `???( <unfinished ...>` or `???()  = ?`.
-# The consumer checks the exact spellings; the grammar only has the shape.
+# The lexer accepts only the exact spellings (whole-line tokens), so a "???"
+# call that returned (`???() = 0`) is refused, never silently a dead line.
 # ---------------------------------------------------------------------------
-dead_line    = DEAD ( UNFINISHED | RPAREN tail ) ;
+dead_line    = DEAD_OPEN | DEAD_WHOLE ;
+
+# The resume of a killed-at-entry thread: `<... ??? resumed>)  = ?`, exactly.
+dead_resumed_line = DEAD_RESUMED ;
 
 # ---------------------------------------------------------------------------
 # Everything after the closing ")" of a call: ` = 3</x>`, ` = -1 ENOENT (No such

@@ -166,8 +166,9 @@ func TestTokenShapes(t *testing.T) {
 		{`7  <... wait4 resumed>) = 1`, []tv{
 			{"PID", "7  "}, {"RESUMED", "<... wait4 resumed>"}, {"RPAREN", ")"}, {"PUNCT", "="}, {"WORD", "1"}}},
 		{`7  <... ??? resumed>) = ?`, []tv{
-			{"PID", "7  "}, {"RESUMED", "<... ??? resumed>"}, {"RPAREN", ")"}, {"PUNCT", "="}, {"PUNCT", "?"}}},
-		{`7  ???( <unfinished ...>`, []tv{{"PID", "7  "}, {"DEAD", "???("}, {"UNFINISHED", "<unfinished ...>"}}},
+			{"PID", "7  "}, {"DEAD_RESUMED", "<... ??? resumed>) = ?"}}},
+		{`7  ???( <unfinished ...>`, []tv{{"PID", "7  "}, {"DEAD_OPEN", "???( <unfinished ...>"}}},
+		{`7  ???()   = ?`, []tv{{"PID", "7  "}, {"DEAD_WHOLE", "???()   = ?"}}},
 		{`7  +++ exited with 0 +++`, []tv{{"PID", "7  "}, {"EXITED_LINE", "+++ exited with 0 +++"}}},
 		{`7  +++ killed by SIGKILL +++`, []tv{{"PID", "7  "}, {"KILLED_LINE", "+++ killed by SIGKILL +++"}}},
 		{`7  +++ killed by SIGSEGV (core dumped) +++`, []tv{{"PID", "7  "}, {"KILLED_CORE_LINE", "+++ killed by SIGSEGV (core dumped) +++"}}},
@@ -297,7 +298,7 @@ func TestSignalMode(t *testing.T) {
 	for _, line := range []string{"1  f(???(, +++ exited with 0 +++)", "1  f(x) = <... g resumed>"} {
 		for _, tk := range lex(t, line) {
 			switch tk.typ {
-			case "DEAD", "EXITED_LINE", "RESUMED", "SIG_OPEN":
+			case "DEAD_OPEN", "DEAD_WHOLE", "DEAD_RESUMED", "EXITED_LINE", "RESUMED", "SIG_OPEN":
 				t.Errorf("%q: body-start token %s in the middle of a line", line, tk.typ)
 			}
 		}

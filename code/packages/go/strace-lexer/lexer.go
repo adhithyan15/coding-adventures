@@ -66,17 +66,39 @@ func SlowRules() []string {
 // skipped silently by the parser.
 var ErrNewline = errors.New("strace-lexer: line contains a newline")
 
-// TokenizeLine tokenizes one line (no trailing newline).  The result ends with
-// an EOF token.  Token.Column is the 1-based BYTE column in line, so the raw
-// text of any run of tokens is line[first.Column-1 : last.Column-1+len(last.Value)]
-// (true for every token except an EOF, whose Value is empty).
-//
-// It returns ErrNewline for a line containing '\n', and the grammar's compile
-// error if the committed grammar were broken.  For anything else it succeeds,
-// with ERR_* tokens marking what the grammar does not allow.
+// DefaultMaxLineBytes is the longest line TokenizeLine accepts: 1 MiB, the
+// same as kiln's line limit.  The length is checked BEFORE lexing, so a huge
+// line costs nothing.
+const DefaultMaxLineBytes = 1 << 20
+
+// ErrLineTooLong is returned for a line longer than the byte limit.
+var ErrLineTooLong = errors.New("strace-lexer: line is longer than the byte limit")
+
+// TokenizeLine is TokenizeLineMax with DefaultMaxLineBytes.
 func TokenizeLine(line string) ([]lexer.Token, error) {
+	return TokenizeLineMax(line, DefaultMaxLineBytes)
+}
+
+// TokenizeLineMax tokenizes one line (no trailing newline).  The result ends
+// with an EOF token.  Token.Column is the 1-based BYTE column in line, so the
+// raw text of any run of tokens is
+// line[first.Column-1 : last.Column-1+len(last.Value)] (true for every token
+// except an EOF, whose Value is empty).
+//
+// maxBytes <= 0 means DefaultMaxLineBytes.  It returns ErrLineTooLong for a
+// longer line (checked before any lexing), ErrNewline for a line containing
+// '\n', and the grammar's compile error if the committed grammar were broken.
+// For anything else it succeeds, with ERR_* tokens marking what the grammar
+// does not allow.
+func TokenizeLineMax(line string, maxBytes int) ([]lexer.Token, error) {
 	if errLine != nil {
 		return nil, errLine
+	}
+	if maxBytes <= 0 {
+		maxBytes = DefaultMaxLineBytes
+	}
+	if len(line) > maxBytes {
+		return nil, ErrLineTooLong
 	}
 	if strings.IndexByte(line, '\n') >= 0 {
 		return nil, ErrNewline
@@ -149,7 +171,9 @@ func (e *DecodeError) Error() string {
 }
 
 // DecodeString strictly decodes the body of a quoted string (the text between
-// the quotes).  It accepts exactly what the old scanner did: the simple
+// the quotes).  The result is ARBITRARY BYTES: it can contain NUL and invalid
+// UTF-8 (a string is data, "\\0" is a legal escape).  A consumer that uses it as
+// a path must reject an embedded NUL and invalid UTF-8 itself.  It accepts exactly what the old scanner did: the simple
 // escapes, \xHH, \O..\OOO with a value of at most 255, and any byte other than a
 // control character, backslash or quote.  "<" and ">" are ordinary there.
 func DecodeString(body string) ([]byte, error) { return decode(body, false) }

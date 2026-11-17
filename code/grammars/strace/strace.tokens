@@ -55,7 +55,7 @@
 #
 # The lexer starts in `line_start`, where only the pid prefix is legal.  After
 # the pid it is in `body_start`, where the tokens that may only BEGIN the body
-# of a line live (the exit line, the resume marker, "???(", the signal opener),
+# of a line live (the exit line, the resume marker, the "???" lines, the signal opener),
 # then in the default mode for the rest of the line.  Keeping those tokens out of
 # the default mode means the same characters inside an argument list are plain
 # text, as the old hand-written scanner treated them.  After the signal opener
@@ -155,12 +155,18 @@ group line_start:
 # an ordinary call "name(" is lexed here too.
 # ---------------------------------------------------------------------------
 
-# The resume marker "<... NAME resumed>".  NAME is a syscall name, or "???" for
-# a thread killed at syscall entry (the ? is in the class for that).  Upper case
-# is allowed so a mismatched name is a pending-name mismatch in the consumer,
-# not a lexical error.
+# The exact resume of a thread killed at syscall entry: "<... ??? resumed>)" and
+# a result of exactly "= ?" (the old parser's deadResumed + isUnknownResult).
+# It is its own token so a "???" resume that returned anything else is NOT an
+# ordinary resumed call: it falls to ERR_RESUME below.
 group body_start:
-  RESUMED = /<\.\.\. [A-Za-z0-9_?]+ resumed>/
+  DEAD_RESUMED = /<\.\.\. \?\?\? resumed>\) +\= \?/
+
+  # The resume marker "<... NAME resumed>".  NAME is a syscall name (the "???"
+  # name of a killed-at-entry thread is DEAD_RESUMED above and nowhere else).
+  # Upper case is allowed so a mismatched name is a pending-name mismatch in the
+  # consumer, not a lexical error.
+  RESUMED = /<\.\.\. [A-Za-z0-9_]+ resumed>/
 
   # Any other "<..." here is a bad resume marker.  It swallows the rest of the
   # line.
@@ -180,9 +186,12 @@ group body_start:
   # `signal` mode here (see transitions) where spaces are tokens.
   SIG_OPEN = "--- "
 
-  # A thread killed at syscall entry: "???( <unfinished ...>" or "???()".  Not
-  # a valid syscall name, so it has its own literal.
-  DEAD = "???("
+  # A thread killed at syscall entry, in exactly the three spellings the old
+  # parser accepted: "???( <unfinished ...>" (one space), and "???()" followed by
+  # spaces and exactly "= ?".  "???" is not a valid syscall name, so these are
+  # whole-line tokens; anything else beginning "???(" is refused.
+  DEAD_OPEN = "???( <unfinished ...>"
+  DEAD_WHOLE = /\?\?\?\(\) +\= \?/
 
 # ---------------------------------------------------------------------------
 # signal mode: the text of a `--- ... ---` line, to the end of the line.
@@ -202,7 +211,7 @@ group signal:
 transitions:
   on (PID_TAG | PID | ERR_PID) in line_start -> set-mode body_start
   on SIG_OPEN in body_start -> set-mode signal, disable-skip
-  on (SYSCALL | RESUMED | ERR_RESUME | EXITED_LINE | KILLED_LINE | KILLED_CORE_LINE | DEAD) in body_start -> set-mode default
+  on (SYSCALL | RESUMED | ERR_RESUME | EXITED_LINE | KILLED_LINE | KILLED_CORE_LINE | DEAD_OPEN | DEAD_WHOLE | DEAD_RESUMED) in body_start -> set-mode default
 
 # ---------------------------------------------------------------------------
 # Skip: spaces only.

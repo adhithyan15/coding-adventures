@@ -2372,7 +2372,11 @@ byte as an `ERR_*` token), so it can never panic on hostile input.
 | Input class | Old | New | Reason | Pinning test |
 |---|---|---|---|---|
 | a line nested deeper than 64 | accepted | refused, `size` | bounds stack and memory against hostile lines | added in PR 5 |
-| a line of more than 65,536 tokens | accepted | refused, `size` | bounds memory and time against hostile lines | added in PR 5 |
+| a line of more than 65,536 tokens (a signal line counts too: every run of spaces in its text is a token) | accepted | refused, `size` | bounds memory and time against hostile lines | added in PR 5 |
+| `[pid +5] ...` (a signed pid: `Atoi` accepts a sign) | accepted | refused, `unparsable-line` (`ERR_PID`) | the pid is 1 to 9 digits, no sign, no leading zero | `TestReviewDivergences` (strace-parser) |
+| a resumed half that is only valid glued to its prefix, such as `<... f resumed></x>) = 0` after a prefix ending in `3` (the old parser read `3</x>`), or a lone `"` or `<` at the seam | accepted | refused, `unparsable-line` (`ERR_LT`, `ERR_QUOTE`) | the resumed half is lexed on its own, a line at a time, so a construct may not span the seam; strace never splits a token | `TestReviewDivergences` |
+| a quoted string with a bad escape (`\q`, `\400`, `\x4`) in a call the old parser does not interpret | accepted (scanned leniently, decoded only in path arguments) | refused, `ambiguous-path` | every quoted string is decoded strictly (`Options.LenientQuoted` turns it off) | `TestStrictQuoted` |
+| a line of more than 1 MiB | refused, `size` | refused, `size` (checked before lexing) | none: the same limit, recorded because the grammar path enforces it itself | `TestMaxLineBytes` |
 | a call line with trailing spaces | accepted | refused, `unparsable-line` | the lexer skips spaces, so the grammar cannot see a trailing one; refusing is the safe side | `TestStricterOnlyDivergences` (strace-parser) |
 | `+++ exited with +5 +++`, `-0` (a signed exit code) | accepted (`Atoi` takes a sign) | refused, `unparsable-line` | the exit code is digits only; no real strace prints a sign | `TestStricterOnlyDivergences` |
 | an `ERR_*` token in the text after a call's `)` (an unterminated quote, a bad `<`, a resume marker) | refused, `result` | refused, `unparsable-line` (or `ambiguous-path` for a bad annotation) | the lexer cannot know a quote is "in the result"; both refuse the whole trace | `TestStricterOnlyDivergences` |
@@ -2383,7 +2387,7 @@ byte as an `ERR_*` token), so it can never panic on hostile input.
 brackets or nested calls (`parser.Options.MaxDepth` is in rule levels, 2 per
 bracket level plus 8, and a test pins that exactly 64 levels parse and 65 do
 not). Tokens that only begin a line's body (`+++ ... +++`, `<... NAME resumed>`,
-`???(`, `--- `) are lexed only right after the pid, so the same characters inside
+`???( <unfinished ...>`, `???()  = ?`, `<... ??? resumed>)  = ?`, `--- `) are lexed only right after the pid, and the three `???` lines are whole-line tokens in exactly the spellings the old parser accepted (`???() = 0` and every other spelling is refused), so the same characters inside
 an argument list stay plain text, as they were for the scanner. The text of a
 `--- ... ---` signal line is lexed as space runs and non-space runs and is never
 tokenized, so a lone quote or bracket in it is still accepted. Spaces between

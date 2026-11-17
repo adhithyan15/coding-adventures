@@ -48,7 +48,9 @@ body, _ := stracelexer.DecodeAnnotation(`a\<b\>`) // "a<b>"
 - **Total.** Whatever no real token matches becomes an `ERR_*` token
   (`ERR_PID`, `ERR_QUOTE`, `ERR_ANNOT_BAD`, `ERR_ANNOT_OPEN`, `ERR_LT`,
   `ERR_RESUME`, `ERR_CTRL`, `ERR_ANY`), so `TokenizeLine` never fails on a line
-  without a newline. It never panics. A newline in the line is `ErrNewline`.
+  without a newline. It never panics. A newline in the line is `ErrNewline`, and a line over
+  `DefaultMaxLineBytes` (1 MiB; `TokenizeLineMax` takes another) is `ErrLineTooLong`,
+  checked before lexing.
 - **Case-sensitive.** A case-insensitive grammar lexes a lower-cased copy of the
   source and re-reads some values from the original at the same offsets, which is
   unsafe on untrusted text.
@@ -84,7 +86,7 @@ and run `gofmt -w` on both. (Build the tool with
 | `UNFINISHED`, `RESUMED` | `<unfinished ...>`, `<... wait4 resumed>` |
 | `EXITED_LINE`, `KILLED_LINE`, `KILLED_CORE_LINE` | the whole `+++ ... +++` line |
 | `SIG_OPEN`, `SIG_SP`, `SIG_TEXT` | a `--- ... ---` signal line (spaces are tokens) |
-| `DEAD` | `???(` (a thread killed at syscall entry) |
+| `DEAD_OPEN`, `DEAD_WHOLE`, `DEAD_RESUMED` | the three exact spellings of a thread killed at syscall entry |
 | `WORD`, `ASSIGN`, `PUNCT`, brackets, `COMMA` | everything else in an argument list |
 
 See the comments in `code/grammars/strace/strace.tokens` for why each is ordered

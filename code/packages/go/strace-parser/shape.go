@@ -1,6 +1,8 @@
 package straceparser
 
 import (
+	"strings"
+
 	"github.com/adhithyan15/coding-adventures/code/packages/go/lexer"
 	"github.com/adhithyan15/coding-adventures/code/packages/go/parser"
 )
@@ -11,7 +13,8 @@ import (
 // interpret nothing.
 
 // BodyKind returns the name of the rule that matched the body of the line:
-// "call_line", "resumed_line", "exit_line", "signal_line" or "dead_line".
+// "call_line", "resumed_line", "exit_line", "signal_line", "dead_line" or
+// "dead_resumed_line".
 func BodyKind(ast *parser.ASTNode) string {
 	if b := Body(ast); b != nil {
 		return b.RuleName
@@ -102,4 +105,40 @@ func closeParen(n *parser.ASTNode) (lexer.Token, bool) {
 		}
 	}
 	return lexer.Token{}, false
+}
+
+// PrefixBeforeUnfinished returns, for an interrupted call (a call_line that ends
+// in "<unfinished ...>"), the text from the call name to the marker with ONE
+// trailing space removed, exactly what the old parser kept as the pending
+// prefix: `wait4(-1, ` (one space left) for `wait4(-1,  <unfinished ...>` (strace pads with two
+// spaces, one is dropped, and the glue with the resumed half re-adds the rest).
+// ok is false for any other line.
+func PrefixBeforeUnfinished(line string, ast *parser.ASTNode) (prefix string, ok bool) {
+	call := Body(ast)
+	if call == nil || call.RuleName != "call_line" {
+		return "", false
+	}
+	var name, marker *lexer.Token
+	for _, c := range call.Children {
+		switch v := c.(type) {
+		case lexer.Token:
+			if v.TypeName == "SYSCALL" {
+				t := v
+				name = &t
+			}
+		case *parser.ASTNode:
+			if v.RuleName == "call_open" {
+				for _, cc := range v.Children {
+					if t, isTok := cc.(lexer.Token); isTok && t.TypeName == "UNFINISHED" {
+						m := t
+						marker = &m
+					}
+				}
+			}
+		}
+	}
+	if name == nil || marker == nil {
+		return "", false
+	}
+	return strings.TrimSuffix(line[name.Column-1:marker.Column-1], " "), true
 }

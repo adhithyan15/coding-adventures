@@ -62,21 +62,60 @@ var compiled, compileErr = parser.CompileGrammar(ParserGrammarData)
 // consumer can inspect it or call Parse itself.
 func Compiled() (*parser.Compiled, error) { return compiled, compileErr }
 
-// DefaultOptions returns the limits the consumer should run with.  The zero
-// Options means NO token or memo limit, so a consumer must pass explicit
-// limits; this is the recommended set.  MaxMemoSlots is bounded by the grammar
-// size times the token cap, which is the most the packrat memo can ever need.
-func DefaultOptions() parser.Options {
-	rules := 0
-	if compiled != nil {
-		rules = len(ParserGrammarData.Rules)
+// Options configures ParseLine.  It embeds the shared parser's Options (depth,
+// token and memo limits, start rule) and adds the line-level ones.  EVERY zero
+// limit is filled from DefaultOptions individually, so setting one field never
+// leaves another unlimited.
+type Options struct {
+	parser.Options
+
+	// MaxLineBytes is the longest line accepted, checked before lexing.
+	// Zero means DefaultMaxLineBytes (1 MiB).
+	MaxLineBytes int
+
+	// LenientQuoted turns OFF the strict decoding of every quoted string.
+	// By default a quoted string with a bad escape (\q, \400, \x4, a trailing
+	// backslash) refuses the line, as an annotation with one does.
+	LenientQuoted bool
+}
+
+// DefaultOptions returns the limits the consumer should run with: bracket
+// nesting 64, 65,536 tokens, a memo bound of rules times tokens (the most the
+// packrat memo can ever need) and 1 MiB per line.
+func DefaultOptions() Options {
+	return Options{
+		Options: parser.Options{
+			MaxDepth:     DefaultMaxDepth,
+			MaxTokens:    DefaultMaxTokens,
+			MaxMemoSlots: memoFor(DefaultMaxTokens),
+			StartRule:    StartRule,
+		},
+		MaxLineBytes: stracelexer.DefaultMaxLineBytes,
 	}
-	return parser.Options{
-		MaxDepth:     DefaultMaxDepth,
-		MaxTokens:    DefaultMaxTokens,
-		MaxMemoSlots: rules * (DefaultMaxTokens + 1),
-		StartRule:    StartRule,
+}
+
+func memoFor(tokens int) int { return len(ParserGrammarData.Rules) * (tokens + 1) }
+
+// withDefaults fills each zero limit from DefaultOptions.  A memo bound that was
+// left zero follows the token cap actually in force, so it is never looser than
+// needed.
+func (o Options) withDefaults() Options {
+	if o.MaxDepth <= 0 {
+		o.MaxDepth = DefaultMaxDepth
 	}
+	if o.MaxTokens <= 0 {
+		o.MaxTokens = DefaultMaxTokens
+	}
+	if o.MaxMemoSlots <= 0 {
+		o.MaxMemoSlots = memoFor(o.MaxTokens)
+	}
+	if o.MaxLineBytes <= 0 {
+		o.MaxLineBytes = stracelexer.DefaultMaxLineBytes
+	}
+	if o.StartRule == "" {
+		o.StartRule = StartRule
+	}
+	return o
 }
 
 // Kind classifies a parse failure.
@@ -96,8 +135,11 @@ const (
 	KindSpace
 	// KindNewline: the line contains a newline.
 	KindNewline
-	// KindLimit: a resource limit (depth, tokens, memo) was exceeded.
+	// KindLimit: a resource limit (line bytes, depth, tokens, memo) was exceeded.
 	KindLimit
+	// KindBadQuoted: a quoted string whose escapes do not decode strictly.
+	// LineError.Token is the QUOTED token.
+	KindBadQuoted
 )
 
 // LineError is the error of ParseLine and ParseLineTokens.
@@ -123,7 +165,7 @@ func (e *LineError) Unwrap() error { return e.Err }
 // ERR_ANNOT_* token that stracelexer.Ambiguous says is one.
 func (e *LineError) Ambiguous() bool {
 	switch e.Kind {
-	case KindBadAnnotation:
+	case KindBadAnnotation, KindBadQuoted:
 		return true
 	case KindErrToken:
 		return stracelexer.Ambiguous(e.Token)
@@ -131,9 +173,9 @@ func (e *LineError) Ambiguous() bool {
 	return false
 }
 
-// ParseLine tokenizes and parses one line.  A zero opts takes DefaultOptions;
-// a non-zero opts is used as given (StartRule defaults to StartRule).
-func ParseLine(line string, opts parser.Options) (*parser.ASTNode, error) {
+// ParseLine tokenizes and parses one line.  Every zero limit in opts is filled
+// from DefaultOptions.
+func ParseLine(line string, opts Options) (*parser.ASTNode, error) {
 	ast, _, err := ParseLineTokens(line, opts)
 	return ast, err
 }
@@ -141,28 +183,30 @@ func ParseLine(line string, opts parser.Options) (*parser.ASTNode, error) {
 // ParseLineTokens is ParseLine that also returns the tokens, which carry the
 // Columns a consumer needs to cut raw text out of the line.
 //
-// Besides the grammar it enforces three things the grammar cannot see:
+// Besides the grammar it enforces what the grammar cannot see:
 //
+//   - the byte limit, before any lexing;
 //   - no newline in the line (the parser would silently skip a NEWLINE token);
 //   - no leading space and no trailing space (the lexer skips spaces, so the
 //     grammar cannot see them).  A leading space is refused by the old scanner
 //     too; a trailing space was accepted after a call's result, so refusing it
 //     is a documented stricter-only divergence (D24 table);
-//   - every annotation decodes strictly (the lexer delimits annotations
-//     leniently; see ANNOTATED in strace.tokens).
+//   - every annotation, and (unless Options.LenientQuoted) every quoted string,
+//     decodes strictly (the lexer delimits them leniently; see ANNOTATED and
+//     QUOTED in strace.tokens).
 //
-// An ERR_* token or a bad annotation anywhere in the line is reported ahead of
-// a syntax error (see the loop below).
-func ParseLineTokens(line string, opts parser.Options) (*parser.ASTNode, []lexer.Token, error) {
+// An ERR_* token or a bad annotation or string anywhere in the line is reported
+// ahead of a syntax error (see the loop below).
+//
+// A decoded string is arbitrary bytes (it can hold NUL and invalid UTF-8): a
+// consumer that uses one as a path must reject NUL and invalid UTF-8 itself.
+func ParseLineTokens(line string, opts Options) (*parser.ASTNode, []lexer.Token, error) {
 	if compileErr != nil {
 		return nil, nil, &LineError{Kind: KindSyntax, Err: compileErr, Msg: "grammar did not compile"}
 	}
-	if opts.MaxDepth == 0 && opts.MaxTokens == 0 && opts.MaxMemoSlots == 0 && opts.StartRule == "" &&
-		len(opts.PreParse) == 0 && len(opts.PostParse) == 0 {
-		opts = DefaultOptions()
-	}
-	if opts.StartRule == "" {
-		opts.StartRule = StartRule
+	opts = opts.withDefaults()
+	if len(line) > opts.MaxLineBytes {
+		return nil, nil, &LineError{Kind: KindLimit, Err: stracelexer.ErrLineTooLong, Msg: "line too long"}
 	}
 	if strings.IndexByte(line, '\n') >= 0 {
 		return nil, nil, &LineError{Kind: KindNewline, Err: stracelexer.ErrNewline, Msg: "newline in line"}
@@ -170,20 +214,20 @@ func ParseLineTokens(line string, opts parser.Options) (*parser.ASTNode, []lexer
 	if line != "" && (line[0] == ' ' || line[len(line)-1] == ' ') {
 		return nil, nil, &LineError{Kind: KindSpace, Msg: "line starts or ends with a space"}
 	}
-	toks, err := stracelexer.TokenizeLine(line)
+	toks, err := stracelexer.TokenizeLineMax(line, opts.MaxLineBytes)
 	if err != nil {
 		return nil, nil, &LineError{Kind: KindSyntax, Err: err, Msg: "lexing"}
 	}
-
-	if opts.MaxTokens > 0 && len(toks) > opts.MaxTokens {
+	if len(toks) > opts.MaxTokens {
 		return nil, toks, &LineError{Kind: KindLimit, Err: parser.ErrMaxTokens, Msg: "too many tokens"}
 	}
 
 	// The first thing in the line that the grammar can never accept: an ERR_*
-	// token, or an annotation that does not decode strictly (only a body with a
-	// backslash can fail; the lexer already excluded raw "<", ">" and controls,
-	// so a common annotation costs one IndexByte).  Either one refuses the line,
-	// so the parse is skipped: hostile input is refused at the cost of one pass.
+	// token, or an annotation or string that does not decode strictly (only a
+	// body with a backslash can fail; the lexer already excluded raw "<", ">"
+	// and controls, so a common one costs one IndexByte).  Any of them refuses
+	// the line, so the parse is skipped: hostile input is refused at the cost of
+	// one pass.
 	//
 	// The parser reports WHERE a structural failure happened only as the start
 	// of the rule that failed, so a syntax error cannot be ordered against a
@@ -199,10 +243,15 @@ func ParseLineTokens(line string, opts parser.Options) (*parser.ASTNode, []lexer
 			if _, derr := stracelexer.DecodeAnnotation(body); derr != nil {
 				return nil, toks, &LineError{Kind: KindBadAnnotation, Token: t, Err: derr, Msg: "annotation does not decode"}
 			}
+		case t.TypeName == "QUOTED" && !opts.LenientQuoted && strings.IndexByte(t.Value, '\\') >= 0:
+			body, _ := stracelexer.QuotedBody(t)
+			if _, derr := stracelexer.DecodeString(body); derr != nil {
+				return nil, toks, &LineError{Kind: KindBadQuoted, Token: t, Err: derr, Msg: "string does not decode"}
+			}
 		}
 	}
 
-	ast, perr := compiled.Parse(toks, opts)
+	ast, perr := compiled.Parse(toks, opts.Options)
 	if perr == nil {
 		return ast, toks, nil
 	}
@@ -219,7 +268,7 @@ func ParseLineTokens(line string, opts parser.Options) (*parser.ASTNode, []lexer
 
 // Body returns the body node of a parsed line: the child of the `line` rule
 // after the pid, one of call_line, resumed_line, exit_line, signal_line,
-// dead_line.
+// dead_line, dead_resumed_line.
 func Body(ast *parser.ASTNode) *parser.ASTNode {
 	if ast == nil || ast.RuleName != StartRule {
 		return nil

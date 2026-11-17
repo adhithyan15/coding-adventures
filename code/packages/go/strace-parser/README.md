@@ -26,7 +26,7 @@ if err != nil {
     var le *straceparser.LineError
     errors.As(err, &le)
     // le.Kind: KindSyntax, KindErrToken, KindBadAnnotation, KindSpace,
-    //          KindNewline, KindLimit.  le.Ambiguous() says "ambiguous path".
+    //          KindNewline, KindLimit, KindBadQuoted.  le.Ambiguous() says "ambiguous path".
 }
 switch straceparser.BodyKind(ast) {
 case "call_line":     // name(args) = result, or name(args <unfinished ...>
@@ -35,7 +35,8 @@ case "call_line":     // name(args) = result, or name(args <unfinished ...>
 case "resumed_line":  // <... name resumed>rest-of-args) = result
 case "exit_line":     // +++ exited with N +++, +++ killed by SIG... +++
 case "signal_line":   // --- SIGCHLD {...} ---
-case "dead_line":     // ???( <unfinished ...>, ???()  = ?
+case "dead_line":     // ???( <unfinished ...>, ???()  = ?   (exact spellings only)
+case "dead_resumed_line": // <... ??? resumed>)  = ?   (exact)
 }
 ```
 
@@ -44,15 +45,18 @@ interprets its raw text. Arguments, results and strings are not decoded here.
 
 ## Fail closed, with limits
 
-There is no error recovery: a line parses completely or is an error. Pass
-explicit limits. `DefaultOptions()` is the recommended set: bracket nesting 64
+There is no error recovery: a line parses completely or is an error. Every zero limit is filled from `DefaultOptions()` field by field (`Options` embeds
+`parser.Options` and adds `MaxLineBytes`, 1 MiB, checked before lexing, and
+`LenientQuoted`). Pass
+explicit limits when you want tighter ones. `DefaultOptions()` is the recommended set: bracket nesting 64
 (`MaxDepth` counts rule levels, 2 per bracket level plus 8), 65,536 tokens per
 line, and a memo bound of rules times tokens. The zero `parser.Options` means no
 token or memo limit. `ParseLine` with a zero `Options` takes `DefaultOptions()`.
 
 Besides the grammar the package enforces what a grammar cannot see: no newline in
 the line, no leading or trailing space (the lexer skips spaces), every `-y`
-annotation decodes strictly, and any `ERR_*` token or bad annotation refuses the
+annotation and every quoted string decodes strictly (a decoded string is arbitrary
+bytes: a path consumer must still reject NUL and invalid UTF-8), and any `ERR_*` token or bad annotation refuses the
 line before the parse (so hostile input costs one pass).
 
 ## What is pinned by tests

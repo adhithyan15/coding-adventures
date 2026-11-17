@@ -71,10 +71,12 @@ func sameData(a, b reflect.Value) bool {
 	return reflect.DeepEqual(a.Interface(), b.Interface())
 }
 
-// A literal in a grammar matches a token by its text whatever its type, so
-// this grammar uses none: every terminal is a token reference, and every token
-// it references exists in strace.tokens.
-func TestGrammarUsesOnlyTokenReferences(t *testing.T) {
+// What this enforces: every terminal in strace.grammar is a token reference to
+// a token that exists in strace.tokens, EXCEPT exactly one string literal,
+// "---" (in signal_close; a literal matches a token by its text whatever its
+// type, which is safe there because a signal line only has SIG_SP and SIG_TEXT
+// tokens).  No ERR_* token is referenced, so the grammar can never accept one.
+func TestGrammarTerminals(t *testing.T) {
 	known := map[string]bool{}
 	add := func(defs []grammartools.TokenDefinition) {
 		for _, d := range defs {
@@ -211,8 +213,8 @@ func TestAcceptedShapes(t *testing.T) {
 		{`1  --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=101, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---`, "signal_line", nil, ``, true},
 		// D18 killed-at-entry
 		{`3486  ???( <unfinished ...>`, "dead_line", nil, ``, true},
-		{`3486  <... ??? resumed>)          = ?`, "resumed_line", nil, `          = ?`, true},
-		{`3486  ???()                       = ?`, "dead_line", nil, `                       = ?`, true},
+		{`3486  <... ??? resumed>)          = ?`, "dead_resumed_line", nil, ``, false},
+		{`3486  ???()                       = ?`, "dead_line", nil, ``, false},
 	}
 	for _, c := range cases {
 		ast, toks, err := ParseLineTokens(c.line, DefaultOptions())
@@ -237,7 +239,7 @@ func TestAcceptedShapes(t *testing.T) {
 			}
 		}
 		// The two-argument form is what ParseLine returns.
-		if a2, err := ParseLine(c.line, parser.Options{}); err != nil || a2 == nil {
+		if a2, err := ParseLine(c.line, Options{}); err != nil || a2 == nil {
 			t.Errorf("ParseLine(%q): %v", c.line, err)
 		}
 	}
@@ -251,7 +253,7 @@ func TestBodyHelpersOnOtherInputs(t *testing.T) {
 	if Body(other) != nil {
 		t.Error("Body of a non-line node")
 	}
-	ast, _ := ParseLine(`1  +++ exited with 0 +++`, parser.Options{})
+	ast, _ := ParseLine(`1  +++ exited with 0 +++`, Options{})
 	if RawArgs(`1  +++ exited with 0 +++`, ast) != nil || TextAfterClose(`1  +++ exited with 0 +++`, ast) != "" {
 		t.Error("args or tail of an exit line")
 	}
@@ -259,7 +261,7 @@ func TestBodyHelpersOnOtherInputs(t *testing.T) {
 	if Body(empty) != nil {
 		t.Error("Body of a line with no children")
 	}
-	ast, _ = ParseLine(`1  wait4(-1, <unfinished ...>`, parser.Options{})
+	ast, _ = ParseLine(`1  wait4(-1, <unfinished ...>`, Options{})
 	if TextAfterClose(`1  wait4(-1, <unfinished ...>`, ast) != "" {
 		t.Error("an interrupted call has no text after a close")
 	}
@@ -334,6 +336,16 @@ func TestRefusals(t *testing.T) {
 		{`1  --- --- x`, KindSyntax, false},
 		{`1  --- SIGCHLD {} --- x`, KindSyntax, false},
 		{`1  ???(0x1) = ?`, KindSyntax, false},
+		{`1  ???() = 0`, KindSyntax, false},
+		{`1  ???()`, KindSyntax, false},
+		{`1  ???()= ?`, KindSyntax, false},
+		{`1  ???() = ? x`, KindSyntax, false},
+		{`1  ???(<unfinished ...>`, KindSyntax, false},
+		{`1  ???(  <unfinished ...>`, KindSyntax, false},
+		{`2  <... ??? resumed>) = 0`, KindErrToken, false},
+		{`2  <... ??? resumed>)`, KindErrToken, false},
+		{`2  <... ??? resumed>) = ? x`, KindSyntax, false},
+		{`[pid +5] f() = 0`, KindErrToken, false},
 		{`1  ???`, KindSyntax, false},
 		{`1  ?(`, KindSyntax, false},
 		{`1  (a)`, KindSyntax, false},
@@ -444,7 +456,7 @@ func TestDepthLimitNeverCrashes(t *testing.T) {
 	}
 	// Even with no explicit limit the parser's own default depth applies.
 	line := `1  f(` + strings.Repeat("[", 300000) + `)`
-	if _, err := ParseLine(line, parser.Options{StartRule: StartRule}); err == nil {
+	if _, err := ParseLine(line, Options{Options: parser.Options{StartRule: StartRule, MaxDepth: 50000}}); err == nil {
 		t.Error("deeply nested line was accepted")
 	}
 }
@@ -497,7 +509,7 @@ func TestTokenLimit(t *testing.T) {
 }
 
 func TestUnknownStartRule(t *testing.T) {
-	_, _, err := ParseLineTokens(`1  f()`, parser.Options{StartRule: "nope", MaxDepth: 8})
+	_, _, err := ParseLineTokens(`1  f()`, Options{Options: parser.Options{StartRule: "nope", MaxDepth: 8}})
 	if err == nil {
 		t.Fatal("unknown start rule accepted")
 	}
@@ -521,7 +533,7 @@ func TestErrTokenNeverParses(t *testing.T) {
 		if _, _, ok := firstErr(toks); !ok {
 			t.Fatalf("%q: no error token", line)
 		}
-		if _, err := c.Parse(toks, DefaultOptions()); err == nil {
+		if _, err := c.Parse(toks, DefaultOptions().Options); err == nil {
 			t.Errorf("%q: the raw grammar accepted a line with an ERR token", line)
 		}
 	}
