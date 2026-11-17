@@ -4917,14 +4917,18 @@ complete body, extension-vector payload, and retained extension count. The
 decoder enforces the fixed TLS 1.3 legacy version `0x0303`, the zero legacy
 compression method, the zero-to-32-byte session-id echo, exact body
 consumption, and the structure's minimum extension-vector payload. It retains
-the exact random and unclassified cipher-suite identifier, then composes the
-repository-owned generic extension-block decoder so malformed lengths,
-trailing bytes, duplicate extension types, and resource exhaustion fail
-closed. Stable failures contain only a category and body-local offset, and
-diagnostics omit random, session-id, and extension bytes.
+the exact random and unclassified cipher-suite identifier, classifies the
+random as an ordinary `ServerHello` or the exact RFC 8446
+`HelloRetryRequest` sentinel, then composes the repository-owned generic
+extension-block decoder so malformed lengths, trailing bytes, duplicate
+extension types, and resource exhaustion fail closed. One-bit and every other
+non-exact random remain ordinary `ServerHello` values. Stable failures contain
+only a category and body-local offset, and diagnostics omit random,
+session-id, and extension bytes.
 
-This structural boundary does not classify the `HelloRetryRequest` random,
-interpret or authorize extension contents, require or validate
+This exact public-data classification does not itself apply the transcript's
+`message_hash` rewrite, sequence an ordinary or retry handshake, interpret or
+authorize extension contents, require or validate
 `supported_versions`, bind the session-id echo or cipher-suite selection to an
 original `ClientHello`, enforce the downgrade sentinel, send alerts, advance a
 handshake, derive keys, protect records, parse or validate certificates,

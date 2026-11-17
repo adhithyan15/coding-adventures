@@ -2,12 +2,13 @@
 //!
 //! [`decode_tls13_server_hello`] validates the fixed RFC 8446 legacy fields,
 //! retains the random, session-id echo, and cipher-suite identifier as exact
-//! borrowed or scalar wire values, and delegates the final extension vector to
+//! borrowed or scalar wire values, classifies the exact RFC 8446
+//! `HelloRetryRequest` random, and delegates the final extension vector to
 //! `tls13-extension-block` under caller-owned byte and entry-count ceilings.
 //!
-//! This crate does not classify `HelloRetryRequest`, interpret extensions,
-//! validate a server selection against a `ClientHello`, advance a handshake,
-//! invoke cryptography, perform I/O, or provide TLS or HTTPS.
+//! This crate does not apply the retry transcript rewrite, interpret
+//! extensions, validate a server selection against a `ClientHello`, advance a
+//! handshake, invoke cryptography, perform I/O, or provide TLS or HTTPS.
 
 #![forbid(unsafe_code)]
 
@@ -24,6 +25,12 @@ pub const TLS13_SERVER_HELLO_LEGACY_COMPRESSION_METHOD: u8 = 0;
 
 /// Exact random-field length in bytes.
 pub const TLS13_SERVER_HELLO_RANDOM_LENGTH: usize = 32;
+
+/// RFC 8446's exact random value identifying a `HelloRetryRequest`.
+pub const TLS13_HELLO_RETRY_REQUEST_RANDOM: [u8; TLS13_SERVER_HELLO_RANDOM_LENGTH] = [
+    0xcf, 0x21, 0xad, 0x74, 0xe5, 0x9a, 0x61, 0x11, 0xbe, 0x1d, 0x8c, 0x02, 0x1e, 0x65, 0xb8, 0x91,
+    0xc2, 0xa2, 0x11, 0x16, 0x7a, 0xbb, 0x8c, 0x5e, 0x07, 0x9e, 0x09, 0xe2, 0xc8, 0xa8, 0x33, 0x9c,
+];
 
 /// Largest session-id echo representable by the TLS 1.3 structure.
 pub const TLS13_SERVER_HELLO_MAX_SESSION_ID_ECHO_LENGTH: usize = 32;
@@ -180,6 +187,15 @@ impl CipherSuiteId {
     }
 }
 
+/// Exact RFC 8446 classification of the ServerHello wire shape.
+#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
+pub enum Tls13ServerHelloKind {
+    /// An ordinary ServerHello random value.
+    ServerHello,
+    /// The exact RFC 8446 HelloRetryRequest random sentinel.
+    HelloRetryRequest,
+}
+
 impl fmt::Debug for CipherSuiteId {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter
@@ -193,6 +209,7 @@ impl fmt::Debug for CipherSuiteId {
 pub struct Tls13ServerHello<'input> {
     encoded: &'input [u8],
     random: &'input [u8; TLS13_SERVER_HELLO_RANDOM_LENGTH],
+    kind: Tls13ServerHelloKind,
     session_id_echo: &'input [u8],
     cipher_suite: CipherSuiteId,
     extensions: ExtensionBlock<'input>,
@@ -205,10 +222,16 @@ impl<'input> Tls13ServerHello<'input> {
         self.encoded
     }
 
-    /// Borrow the exact 32-byte random field without classifying HRR.
+    /// Borrow the exact 32-byte random field.
     #[must_use]
     pub const fn random(&self) -> &'input [u8; TLS13_SERVER_HELLO_RANDOM_LENGTH] {
         self.random
+    }
+
+    /// Return whether the exact random denotes ServerHello or HelloRetryRequest.
+    #[must_use]
+    pub const fn kind(&self) -> Tls13ServerHelloKind {
+        self.kind
     }
 
     /// Borrow the exact legacy session-id echo.
@@ -236,6 +259,7 @@ impl fmt::Debug for Tls13ServerHello<'_> {
             .debug_struct("Tls13ServerHello")
             .field("encoded_length", &self.encoded.len())
             .field("random", &"[OPAQUE]")
+            .field("kind", &self.kind)
             .field("session_id_echo_length", &self.session_id_echo.len())
             .field("session_id_echo", &"[OPAQUE]")
             .field("cipher_suite", &self.cipher_suite)
@@ -284,6 +308,11 @@ pub fn decode_tls13_server_hello(
             random_offset,
         )
     })?;
+    let kind = if random == &TLS13_HELLO_RETRY_REQUEST_RANDOM {
+        Tls13ServerHelloKind::HelloRetryRequest
+    } else {
+        Tls13ServerHelloKind::ServerHello
+    };
 
     let session_length_offset = offset;
     let session_id_echo_length = take(
@@ -341,6 +370,7 @@ pub fn decode_tls13_server_hello(
     Ok(Tls13ServerHello {
         encoded: input,
         random,
+        kind,
         session_id_echo,
         cipher_suite,
         extensions,

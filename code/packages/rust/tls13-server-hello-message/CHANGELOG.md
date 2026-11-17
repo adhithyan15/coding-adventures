@@ -2,6 +2,14 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- Exact RFC 8446 `ServerHello` versus `HelloRetryRequest` classification from
+  the complete 32-byte random sentinel without advancing transcript or
+  handshake state.
+
 ## [0.1.0] - 2026-10-29
 
 ### Added
