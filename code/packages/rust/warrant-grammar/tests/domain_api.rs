@@ -12,7 +12,7 @@ use coding_adventures_warrant_grammar::checker::check_warrant;
 use coding_adventures_warrant_grammar::codegen::{CodegenErrorKind, DiagnosticCode, EvalValue};
 use coding_adventures_warrant_grammar::domain::{
     inout_descriptor, op_post_slot, rank_product, resolve_binders, resolve_post_slot,
-    resolve_post_slot_of, slot_shape, unrank_product, Demotion, Domain, DomainEnv, PostSlot,
+    resolve_post_slot_of, slot_shape, unrank_product, Demotion, Domain, DomainEnv, ErrName, PostSlot,
     ProductIter, SlotShape, DOMAIN_BYTES_BUDGET, EXHAUSTIVE_BUDGET, MAX_FIXED_WIDTH,
 };
 use coding_adventures_warrant_grammar::fixed::FixedTy;
@@ -145,7 +145,7 @@ fn materialize(d: &Domain) -> Vec<EvalValue> {
         Domain::Bytes => bytes_d1().into_iter().map(EvalValue::Bytes).collect(),
         Domain::BytesN(n) => bytes_n(*n as usize).into_iter().map(EvalValue::Bytes).collect(),
         Domain::Tuple(cs) => product(cs).into_iter().map(EvalValue::Tuple).collect(),
-        Domain::Data { name, ctors } => {
+        Domain::Data { name, ctors, record } => {
             let mut out = Vec::new();
             for (index, (ctor, fields)) in ctors.iter().enumerate() {
                 for fs in product(fields) {
@@ -153,7 +153,7 @@ fn materialize(d: &Domain) -> Vec<EvalValue> {
                         ty: name.clone(),
                         index,
                         ctor: ctor.clone(),
-                        record: ctors.len() == 1 && ctor == name,
+                        record: *record,
                         fields: fs,
                     });
                 }
@@ -165,9 +165,9 @@ fn materialize(d: &Domain) -> Vec<EvalValue> {
             out.extend(materialize(t).into_iter().map(|x| EvalValue::Option(Some(Box::new(x)))));
             out
         }
-        Domain::Res(t, cases) => {
+        Domain::Res(t, cases, err) => {
             let mut out: Vec<EvalValue> = materialize(t).into_iter().map(|x| EvalValue::Result(Ok(Box::new(x)))).collect();
-            out.extend(cases.iter().map(|c| EvalValue::Result(Err((String::new(), c.clone())))));
+            out.extend(cases.iter().map(|c| EvalValue::Result(Err((err.0.clone(), c.clone())))));
             out
         }
         Domain::List(t) => {
@@ -192,6 +192,8 @@ fn materialize(d: &Domain) -> Vec<EvalValue> {
             }
             out
         }
+        // `Domain` is #[non_exhaustive]: a variant added later needs an oracle arm.
+        other => panic!("no oracle for {other:?}"),
     }
 }
 
@@ -200,7 +202,11 @@ fn leaf_domains() -> Vec<Domain> {
     v.extend([0, 1, 2, 3, 4, 5, 16].map(Domain::BytesN));
     for f in FixedTy::ALL {
         v.push(Domain::Fx(f));
-        v.push(Domain::FxEdge(f));
+        // FxEdge is for widths >= 16 (the 8-bit edge set has duplicates; the
+        // resolver never produces it).
+        if f.bits() >= 16 {
+            v.push(Domain::FxEdge(f));
+        }
     }
     v
 }
@@ -209,6 +215,7 @@ fn rec(name: &str, fields: Vec<Domain>) -> Domain {
     Domain::Data {
         name: name.into(),
         ctors: vec![(name.into(), fields)],
+        record: true,
     }
 }
 
@@ -220,6 +227,7 @@ fn composite_domains() -> Vec<Domain> {
             ("Rect".into(), vec![Domain::Bool, Domain::BytesN(1)]),
             ("Empty".into(), vec![]),
         ],
+        record: false,
     };
     vec![
         Domain::Tuple(vec![]),
@@ -228,8 +236,8 @@ fn composite_domains() -> Vec<Domain> {
         rec("Span", vec![Domain::Fx(FixedTy::U8), Domain::Bool]),
         shape.clone(),
         Domain::Opt(Box::new(shape.clone())),
-        Domain::Res(Box::new(Domain::Bool), vec!["TRUNCATED".into(), "OVERLONG".into()]),
-        Domain::Res(Box::new(Domain::Tuple(vec![Domain::Bool, Domain::Bool])), vec!["E".into()]),
+        Domain::Res(Box::new(Domain::Bool), vec!["TRUNCATED".into(), "OVERLONG".into()], ErrName("LebError".into())),
+        Domain::Res(Box::new(Domain::Tuple(vec![Domain::Bool, Domain::Bool])), vec!["E".into()], ErrName("E".into())),
         // Lists: the length-1/2 rule uses the first 16 values, length 3 the first 4.
         Domain::List(Box::new(Domain::Bool)),
         Domain::List(Box::new(Domain::Nat)),
@@ -279,10 +287,11 @@ fn composite_sizes_follow_the_closed_forms() {
     let variant = Domain::Data {
         name: "V".into(),
         ctors: vec![("A".into(), vec![Domain::Bool]), ("B".into(), vec![])],
+        record: false,
     };
     assert_eq!(variant.domain_size(), Some(2 + 1));
     assert_eq!(Domain::Opt(Box::new(Domain::U8)).domain_size(), Some(257));
-    assert_eq!(Domain::Res(Box::new(Domain::Bool), vec!["X".into(), "Y".into()]).domain_size(), Some(4));
+    assert_eq!(Domain::Res(Box::new(Domain::Bool), vec!["X".into(), "Y".into()], ErrName("E".into())).domain_size(), Some(4));
     // d = min(16, 65) = 16, e = min(4, 65) = 4.
     assert_eq!(Domain::List(Box::new(Domain::Nat)).domain_size(), Some(1 + 16 + 256 + 64));
     // d = e = 2.
@@ -353,7 +362,7 @@ fn nth_on_every_index_of_a_mid_sized_composite_equals_sequential_enumeration() {
     let d = Domain::Tuple(vec![
         Domain::Opt(Box::new(Domain::BytesN(2))),
         Domain::List(Box::new(Domain::Bool)),
-        Domain::Res(Box::new(Domain::Bool), vec!["E".into()]),
+        Domain::Res(Box::new(Domain::Bool), vec!["E".into()], ErrName("E".into())),
     ]);
     let seq: Vec<EvalValue> = d.iter().collect();
     for (i, v) in seq.iter().enumerate() {
@@ -414,6 +423,7 @@ fn composite_value_shapes_carry_the_constructor_and_record_flag() {
     let v = Domain::Data {
         name: "Shape".into(),
         ctors: vec![("Circle".into(), vec![Domain::Bool]), ("Empty".into(), vec![])],
+        record: false,
     };
     match v.nth(2) {
         Some(EvalValue::Con { index, ctor, record, fields, .. }) => {
@@ -421,9 +431,9 @@ fn composite_value_shapes_carry_the_constructor_and_record_flag() {
         }
         other => panic!("{other:?}"),
     }
-    // An error case names the case; the descriptor does not know the error type.
-    let r = Domain::Res(Box::new(Domain::Bool), vec!["OVERLONG".into()]);
-    assert_eq!(r.nth(2), Some(EvalValue::Result(Err((String::new(), "OVERLONG".into())))));
+    // An error case carries the declared error type name and the case.
+    let r = Domain::Res(Box::new(Domain::Bool), vec!["OVERLONG".into()], ErrName("LebError".into()));
+    assert_eq!(r.nth(2), Some(EvalValue::Result(Err(("LebError".into(), "OVERLONG".into())))));
     assert_eq!(r.nth(1), Some(EvalValue::Result(Ok(Box::new(EvalValue::Bool(true))))));
 }
 
@@ -511,7 +521,7 @@ fn a_claim_whose_product_fits_is_returned_undemoted() {
         assert_eq!(r.domains, [Domain::Fx(FixedTy::U32), Domain::Fx(FixedTy::U32)]);
         assert!(r.demotions.is_empty());
         assert_eq!(r.product, 313 * 313);
-        assert_eq!(r.sizes(), [313, 313]);
+        assert_eq!(r.sizes(), Some(vec![313, 313]));
         // elem_cost of a scalar is 32 bytes (VALUE_OVERHEAD) per value.
         assert_eq!(r.bytes, 2 * 313 * 32);
         assert!(r.bytes <= DOMAIN_BYTES_BUDGET);
@@ -572,7 +582,7 @@ fn composite_binders_resolve_through_aliases_records_and_variants() {
         // forall o: Option<(U8, Bool)>, l: List<Bool>
         let opt = Domain::Opt(Box::new(Domain::Tuple(vec![Domain::Fx(FixedTy::U8), Domain::Bool])));
         assert_eq!(r.domains, [opt, Domain::List(Box::new(Domain::Bool))]);
-        assert_eq!(r.sizes(), [1 + 512, 15]);
+        assert_eq!(r.sizes(), Some(vec![1 + 512, 15]));
         // The resolved descriptors enumerate; the product is their row-major product.
         let all: Vec<_> = r.iter_from(0).unwrap().collect();
         assert_eq!(all.len() as u64, r.product);
@@ -719,7 +729,7 @@ fn resolve_post_slot_of_is_the_generic_rule_over_domains() {
     let bytes = Domain::Bytes;
     let nat = Domain::Nat;
     let tup = |cs: Vec<Domain>| Domain::Tuple(cs);
-    let res = |t: Domain| Domain::Res(Box::new(t), vec!["E".into()]);
+    let res = |t: Domain| Domain::Res(Box::new(t), vec!["E".into()], ErrName("E".into()));
     let posts = [bytes.clone()];
     assert_eq!(resolve_post_slot_of(&posts, &bytes), Some(PostSlot::S1));
     assert_eq!(resolve_post_slot_of(&posts, &res(bytes.clone())), Some(PostSlot::S2));
@@ -733,4 +743,186 @@ fn resolve_post_slot_of_is_the_generic_rule_over_domains() {
     assert_eq!(resolve_post_slot_of(&posts, &tup(vec![nat, bytes.clone()])), resolve_post_slot(&posts, &shape));
     // slot_shape is re-exported alongside (checker types).
     let _ = slot_shape;
+}
+
+// ---------------------------------------------------------------------------
+// Evaluator compatibility, lists of byte strings, the real record flag
+// ---------------------------------------------------------------------------
+
+#[test]
+fn an_nth_error_value_round_trips_through_the_model_evaluator() {
+    use coding_adventures_warrant_grammar::codegen::{CodegenLimits, Evaluator};
+    use std::collections::HashMap;
+    let src = "warrant t v1\n  error E = TRUNCATED | OVERLONG\n  model is_over(x: Result<Bool, E>) -> Bool = x == E.OVERLONG\n  model rank(x: Result<Bool, E>) -> Nat = match x with Ok(_) -> 0 | E.TRUNCATED -> 1 | E.OVERLONG -> 2\n";
+    with_file(src, |file| {
+        let env = DomainEnv::new(file);
+        let model = |name: &str| {
+            file.declarations
+                .iter()
+                .find_map(|d| match d {
+                    Declaration::Model(m) if m.name == name => Some(m),
+                    _ => None,
+                })
+                .unwrap()
+        };
+        let m = model("is_over");
+        let dom = env.domain_of_type(&m.params[0].param_type, m.span).unwrap();
+        assert_eq!(dom.domain_size(), Some(4)); // Ok(false), Ok(true), TRUNCATED, OVERLONG
+        let mut ev = Evaluator::new(file, CodegenLimits::default());
+        let mut over = Vec::new();
+        let mut rank = Vec::new();
+        for v in dom.iter() {
+            let mut vars = HashMap::new();
+            vars.insert("x", v);
+            over.push(ev.eval(m.body.as_ref().unwrap(), &vars).unwrap());
+            rank.push(ev.eval(model("rank").body.as_ref().unwrap(), &vars).unwrap());
+        }
+        let t = EvalValue::Bool(true);
+        let f = EvalValue::Bool(false);
+        // `x == E.OVERLONG` is true for exactly the OVERLONG value ...
+        assert_eq!(over, [f.clone(), f.clone(), f.clone(), t]);
+        // ... and a `match` arm on `E.CASE` selects the right arm.
+        assert_eq!(rank, [EvalValue::Int(0), EvalValue::Int(0), EvalValue::Int(1), EvalValue::Int(2)]);
+    });
+}
+
+#[test]
+fn the_record_flag_comes_from_the_declaration_not_from_a_name_heuristic() {
+    // The flag is the declaration's: a variant whose first constructor shares the
+    // type's name is still a variant.
+    let src = "warrant t v1\n  record R(a: Bool)\n  variant V = V(a: Bool) | W\n  op f(r: R, v: V) -> Bool\n";
+    with_file(src, |file| {
+        let env = DomainEnv::new(file);
+        let Declaration::Op(op) = &file.declarations[2] else { unreachable!() };
+        let flag = |i: usize| match env.domain_of_type(&op.params[i].param_type, op.span).unwrap().nth(0) {
+            Some(EvalValue::Con { record, .. }) => record,
+            other => panic!("{other:?}"),
+        };
+        assert!(flag(0), "R is a record");
+        assert!(!flag(1), "V is a variant");
+    });
+}
+
+#[test]
+fn a_list_of_byte_strings_takes_the_spec_prefix_not_the_harness_prelude_prefix() {
+    use EvalValue::{Bytes, List};
+    // List<Bytes<2>>: length-1 lists over the FIRST 16 values of Bytes<2>, which
+    // in the spec's lexicographic order begin 0000 0001 0080 00ff (the harness
+    // prelude's first-byte-fastest order begins 0000 0100 8000 ff00).
+    let d = Domain::List(Box::new(Domain::BytesN(2)));
+    assert_eq!(d.domain_size(), Some(1 + 16 + 256 + 64));
+    let one = |i: u64| d.nth(1 + i).unwrap();
+    assert_eq!(one(0), List(vec![Bytes(vec![0x00, 0x00])]));
+    assert_eq!(one(1), List(vec![Bytes(vec![0x00, 0x01])]));
+    assert_eq!(one(2), List(vec![Bytes(vec![0x00, 0x80])]));
+    assert_eq!(one(3), List(vec![Bytes(vec![0x00, 0xff])]));
+    assert_eq!(one(4), List(vec![Bytes(vec![0x01, 0x00])]));
+    // Length 3 is over the first FOUR only: all of them start with byte 00.
+    let first3 = d.nth(1 + 16 + 256).unwrap();
+    assert_eq!(first3, List(vec![Bytes(vec![0, 0]), Bytes(vec![0, 0]), Bytes(vec![0, 0])]));
+    let last = d.nth(1 + 16 + 256 + 63).unwrap();
+    assert_eq!(last, List(vec![Bytes(vec![0, 0xff]), Bytes(vec![0, 0xff]), Bytes(vec![0, 0xff])]));
+}
+
+// ---------------------------------------------------------------------------
+// The tie to the real v1 corpus (S3's acceptance property)
+// ---------------------------------------------------------------------------
+
+const V1_CORPUS: &str = include_str!("../../../../specs/fixtures/ct-compare-warrant-v1/corpus.json");
+
+fn put_str(out: &mut Vec<u8>, s: &str) {
+    out.extend_from_slice(&(s.len() as u32).to_le_bytes());
+    out.extend_from_slice(s.as_bytes());
+}
+
+/// The v1 stream encoding of the values this test needs (corpus.rs
+/// `encode_stream_value`), written out independently.
+fn put_value(out: &mut Vec<u8>, v: &EvalValue) {
+    match v {
+        EvalValue::Bool(b) => out.push(u8::from(*b)),
+        EvalValue::U64(n) | EvalValue::Nat(n) => {
+            out.push(0x10);
+            out.extend_from_slice(&n.to_le_bytes());
+        }
+        EvalValue::Bytes(b) => {
+            out.push(0x20);
+            out.extend_from_slice(&(b.len() as u32).to_le_bytes());
+            out.extend_from_slice(b);
+        }
+        other => panic!("{other:?}"),
+    }
+}
+
+/// The checked-in `inputs_sha256` of a suite, found by its id.
+fn v1_inputs_digest(id: &str) -> String {
+    let key = format!("\"id\":\"{id}\",\"inputs_sha256\":\"");
+    let at = V1_CORPUS.find(&key).unwrap_or_else(|| panic!("suite {id}")) + key.len();
+    V1_CORPUS[at..at + 64].to_string()
+}
+
+fn len_of(v: &EvalValue) -> usize {
+    match v {
+        EvalValue::Bytes(b) => b.len(),
+        other => panic!("{other:?}"),
+    }
+}
+
+/// Recompute a v1 suite's inputs digest from `Domain` enumeration alone.
+fn digest_from_domains(
+    claim: &str,
+    types: &[&str],
+    result: &str,
+    domains: &[Domain],
+    admit: impl Fn(&[EvalValue]) -> bool,
+) -> String {
+    let mut stream = b"warrant-stream-v1\0".to_vec();
+    put_str(&mut stream, &format!("warrant/ct_compare/exhaustive/{claim}"));
+    stream.extend_from_slice(&(types.len() as u32).to_le_bytes());
+    for t in types {
+        put_str(&mut stream, t);
+    }
+    put_str(&mut stream, result);
+    for case in ProductIter::new(domains, 0).unwrap() {
+        if admit(&case.values) {
+            for v in &case.values {
+                put_value(&mut stream, v);
+            }
+        }
+    }
+    coding_adventures_sha256::sha256_hex(&stream)
+}
+
+#[test]
+fn domain_enumeration_reproduces_the_checked_in_v1_corpus_input_digests() {
+    let id = |c: &str| format!("warrant/ct_compare/exhaustive/{c}");
+    let yes = |_: &[EvalValue]| true;
+    let check = |claim: &str, types: &[&str], result: &str, ds: &[Domain], admit: &dyn Fn(&[EvalValue]) -> bool| {
+        assert_eq!(
+            digest_from_domains(claim, types, result, ds, admit),
+            v1_inputs_digest(&id(claim)),
+            "suite {claim}"
+        );
+    };
+    // bytes_d1 x bytes_d1 (120_409 cases).
+    check("eq_agrees", &["Bytes", "Bytes"], "Bool", &[Domain::Bytes, Domain::Bytes], &yes);
+    // u64_edge x u64_edge (142_129 cases).
+    check("eq_u64_agrees", &["U64", "U64"], "Bool", &[Domain::U64, Domain::U64], &yes);
+    // bytes_n(N) for N = 0, 1, 2, 4, 16.
+    for n in [0u64, 1, 2, 4, 16] {
+        let ty = format!("Bytes<{n}>");
+        check(
+            &format!("eq_fixed_agrees_w{n}"),
+            &[&ty, &ty],
+            "Bool",
+            &[Domain::BytesN(n), Domain::BytesN(n)],
+            &yes,
+        );
+    }
+    // bool, with a refinement the emitter evaluates: select_picks admits equal
+    // lengths, select_rejects_mismatch the others.
+    let result = "Result<Bytes,SelectError>";
+    let bd1 = [Domain::Bytes, Domain::Bytes, Domain::Bool];
+    let types = ["Bytes", "Bytes", "Bool"];
+    check("select_picks", &types, result, &bd1, &|v| len_of(&v[0]) == len_of(&v[1]));
+    check("select_rejects_mismatch", &types, result, &bd1, &|v| len_of(&v[0]) != len_of(&v[1]));
 }
