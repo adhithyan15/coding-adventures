@@ -14,22 +14,22 @@ import (
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/legacy"
 )
 
+// recStepEphemeral is the fixture's ephemeral list: exactly the committed
+// code/kiln/legacy/host-roots.json policy (sorted, as the decoder requires), so
+// the fixture is no more permissive about /proc and /sys than the real policy.
+// Ubuntu 26.04's binaries (libselinux 3.9, newer coreutils) read some of these
+// at start-up; 24.04's, in the kiln-sandbox job, do not.
+const recStepEphemeral = `["/dev/fd/*", "/dev/null", "/dev/urandom", "/proc/cpuinfo", "/proc/meminfo",
+  "/proc/self/cgroup", "/proc/self/exe", "/proc/self/maps", "/proc/self/mountinfo", "/proc/stat",
+  "/sys/devices/system/cpu/**", "/sys/fs/cgroup/**"]`
+
+// recStepAbsentOK: libselinux's start-up probes of the SELinux mount points.
+// They are absent on a runner without SELinux; a present one still voids the run.
+const recStepAbsentOK = `["/selinux", "/sys/fs/selinux"]`
+
 // recStepPolicyFiles returns the fixture's code/kiln/legacy files. imagePaths
 // are the `image` roots, in any order and with duplicates: they are sorted and
 // de-duplicated the way the decoder requires (strictly ascending by path).
-// recStepEphemeral is the fixture's ephemeral list (sorted, as host-roots.json
-// requires).  Besides /dev/null it names what libselinux's start-up probes in
-// every binary that links it (GNU coreutils, grep, sed): Ubuntu 26.04's
-// libselinux checks /sys/fs/selinux and /selinux and reads /proc/filesystems,
-// while 24.04's (the kiln-sandbox job's runner) does not.  The probes depend on
-// the image, not on the step, so the fixture treats them as ephemeral.  The
-// classifier itself stays strict: every other host read still voids the run.
-const recStepEphemeral = `["/dev/null", "/proc/filesystems", "/sys/fs/selinux"]`
-
-// recStepAbsentOK: the old /selinux mount point, probed the same way; it is
-// absent on every current distribution (a present one would still void the run).
-const recStepAbsentOK = `["/selinux"]`
-
 func recStepPolicyFiles(imagePaths []string) map[string]string {
 	seen := map[string]bool{}
 	var paths []string
