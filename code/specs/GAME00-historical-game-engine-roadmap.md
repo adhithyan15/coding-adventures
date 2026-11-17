@@ -147,7 +147,7 @@ Era 4 (Mid 1990s–2000s+): Hardware 3D & 6-DOF Flight Simulator
   - Discrete Logic & CRT Timing: Netlists of 7400-series counters, gates, and flip-flops driving 15.75 kHz
     horizontal and 60 Hz vertical CRT beam deflection without CPU or framebuffers.
 - **Substrate Primitives:**
-  - `game-clock` (`GAME10`): Deterministic fixed-step clock with frame-skip protection.
+  - `game-clock` (`GAME10`): Deterministic fixed-step clock with frame-skip protection, specified in [`GAME10`](GAME10-fixed-step-clock-contract.md).
   - `collision2d` (`GAME11`): High-precision 2D intersection queries and reflection physics built on `point2d` (`G2D00`) and `affine2d` (`G2D01`).
   - `arcade-sfx` (`GAME12`): Parametric sound generator emitting raw PCM buffers into `MUS04`/`MUS07`.
   - `game-pong` & `game-breakout` (`GAME13`, `GAME14`): Reference arcade titles emitting `PaintScene` (`P2D00`) with stable IDs for efficient `PaintVM.patch()` diffing.
