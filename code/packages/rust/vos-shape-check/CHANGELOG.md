@@ -4,6 +4,11 @@ All notable changes to this package are documented here.
 
 ## [Unreleased]
 
+### Added (VOS-012b0, VOS-D061)
+
+- `vos.toml` accepts `mode = "<string>"` (1 to 16 bytes, duplicates refused); `VosToml.mode`.  The
+  closed set of values and where the key may appear are `vos-link`'s (VOS02 D-GD2).
+
 ### Added (VOS-033)
 
 - `vos.toml` accepts two more keys for an implementation crate, `contract = "<package>"`

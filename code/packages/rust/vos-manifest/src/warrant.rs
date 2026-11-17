@@ -36,7 +36,7 @@
 //! state `m` (its cone).
 
 use std::cell::{Cell, RefCell};
-use std::collections::HashMap;
+use std::collections::{BTreeSet, HashMap};
 
 use coding_adventures_warrant_grammar::checker::check_warrant;
 use coding_adventures_warrant_grammar::layout::{
@@ -100,6 +100,34 @@ pub enum BuildShape {
     },
 }
 
+/// One call inside a claim, for the representation-mode lint (VOS02 R6, CD07-R).
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct CallFact {
+    /// The called name (`insert_img`, `rep`, `abs_insert`, ...); a qualified name is
+    /// joined with dots.
+    pub callee: String,
+    /// The number of arguments.
+    pub arity: usize,
+    /// The name applied at the head of the FIRST argument when that argument is itself a
+    /// call (`rep` in `insert_img(rep(mask, h), t)`), looking through parentheses; `None`
+    /// when the first argument is a variable, a literal, a projection or there is none.
+    pub state_arg: Option<String>,
+    /// True when the call sits (at any depth) in the right operand of an `==`.
+    pub in_eq_rhs: bool,
+}
+
+/// What a claim mentions and calls: the facts the CD07-R lint reads, collected by one
+/// walk over the claim's expression (see [`claim_shape`]).
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct ClaimShape {
+    /// The claim's name.
+    pub name: String,
+    /// Every name used as a reference or a call head anywhere in the claim.
+    pub mentions: BTreeSet<String>,
+    /// Every call, in source order.
+    pub calls: Vec<CallFact>,
+}
+
 /// What the Warrant tools found in a document that type-checked.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Analysis {
@@ -113,6 +141,15 @@ pub struct Analysis {
     pub impl_fields: Option<usize>,
     /// The shape of `model build`.
     pub build: BuildShape,
+    /// The names declared with `op` (bound operations: behaviour that is the source's, R3).
+    pub op_decls: Vec<String>,
+    /// The shape of `model rep` (representation mode, VOS02 2.7): `Constructor { in_cone }`
+    /// says, per field of the `Impl(..)` it builds, whether the field depends on any
+    /// PARAMETER of `rep` (not on the first one only, as for `build`).  `Missing` when
+    /// there is no `model rep`.
+    pub rep: BuildShape,
+    /// What every claim mentions and calls, in document order.
+    pub claim_shapes: Vec<ClaimShape>,
 }
 
 /// Where the Warrant tools refused.
@@ -329,14 +366,21 @@ pub fn analyze_document_with_budget(text: &str, budget: u64) -> Result<Analysis,
             bound_declarations: 0,
             impl_fields: None,
             build: BuildShape::Missing,
+            op_decls: Vec::new(),
+            rep: BuildShape::Missing,
+            claim_shapes: Vec::new(),
         };
         for d in &file.declarations {
             match d {
-                Declaration::Claim(c) => a.claims.push(ClaimFact {
-                    name: c.name.to_string(),
-                    sha256: claim_digest(tokens, norm, c.span)
-                        .ok_or_else(|| digest_failure(norm, c.span))?,
-                }),
+                Declaration::Claim(c) => {
+                    a.claims.push(ClaimFact {
+                        name: c.name.to_string(),
+                        sha256: claim_digest(tokens, norm, c.span)
+                            .ok_or_else(|| digest_failure(norm, c.span))?,
+                    });
+                    a.claim_shapes.push(claim_shape(c.name, &c.body));
+                }
+                Declaration::Op(o) => a.op_decls.push(o.name.to_string()),
                 Declaration::Assumptions(AssumptionsDecl::Platform { rows, span }) => {
                     a.assumptions.push(AssumeFact {
                         kind: AssumeKind::Platform,
@@ -356,6 +400,10 @@ pub fn analyze_document_with_budget(text: &str, budget: u64) -> Result<Analysis,
                 Declaration::Model(m) if m.name == "build" => {
                     a.build =
                         build_shape(&taint, m.params.first().map(|p| p.name), m.body.as_ref());
+                }
+                Declaration::Model(m) if m.name == "rep" => {
+                    let params: Vec<&str> = m.params.iter().map(|p| p.name).collect();
+                    a.rep = constructor_shape(&taint, &params, m.body.as_ref());
                 }
                 _ => {}
             }
@@ -577,9 +625,27 @@ fn build_shape(
     param: Option<&str>,
     body: Option<&Expression<'_>>,
 ) -> BuildShape {
-    let (Some(param), Some(mut body)) = (param, body) else {
+    match param {
+        Some(p) => constructor_shape(t, &[p], body),
+        None => BuildShape::Missing,
+    }
+}
+
+/// The cone of an `Impl(..)`-building model: for each constructor argument, does its value
+/// depend on ANY of `params`?  (`build` has one parameter, the abstract state; `rep` has
+/// several, and a field that depends on none of them is a constant: a register `rep`
+/// does not range over.)
+fn constructor_shape(
+    t: &Taint<'_, '_>,
+    params: &[&str],
+    body: Option<&Expression<'_>>,
+) -> BuildShape {
+    let Some(mut body) = body else {
         return BuildShape::Missing;
     };
+    if params.is_empty() {
+        return BuildShape::Missing;
+    }
     // `build(m) = ( Impl(...) )`: the parentheses are a Grouped node.
     while let Expression::Grouped { inner, .. } = body {
         body = inner;
@@ -595,7 +661,7 @@ fn build_shape(
     if name.segments.as_slice() != ["Impl"] {
         return BuildShape::NotConstructor;
     }
-    let in_cone: Vec<bool> = args.iter().map(|arg| t.deps(arg, &[param]) != 0).collect();
+    let in_cone: Vec<bool> = args.iter().map(|arg| t.deps(arg, params) != 0).collect();
     if t.too_wide.get() {
         return BuildShape::WideModel;
     }
@@ -603,4 +669,92 @@ fn build_shape(
         return BuildShape::BudgetExhausted;
     }
     BuildShape::Constructor { in_cone }
+}
+
+/// What a claim mentions and calls (the facts of CD07-R).
+///
+/// ```text
+///   forall mask: U8, h: U8. dispatch_out(rep(mask, h)) == rr_pick(mask, p) and ...
+///                           ^^^^^^^^^^^^ call, state_arg = Some("rep"), in_eq_rhs = false
+///                                                          ^^^^^^^ call, in_eq_rhs = true
+/// ```
+///
+/// One recursive walk; the Warrant token budget bounds the depth (the caller runs on the
+/// big stack).  The walk reads the parsed tree, never the text.
+fn claim_shape(name: &str, body: &Expression<'_>) -> ClaimShape {
+    let mut shape = ClaimShape {
+        name: name.to_string(),
+        mentions: BTreeSet::new(),
+        calls: Vec::new(),
+    };
+    walk_claim(body, false, &mut shape);
+    shape
+}
+
+/// The head name of an argument that is itself a call, through parentheses.
+fn call_head(e: &Expression<'_>) -> Option<String> {
+    match e {
+        Expression::Grouped { inner, .. } => call_head(inner),
+        Expression::Reference {
+            name,
+            args: Some(_),
+            ..
+        } => Some(name.segments.join(".")),
+        _ => None,
+    }
+}
+
+fn walk_claim(e: &Expression<'_>, rhs: bool, out: &mut ClaimShape) {
+    match e {
+        Expression::Literal { .. } => {}
+        Expression::Grouped { inner, .. } => walk_claim(inner, rhs, out),
+        Expression::Unary { operand, .. } => walk_claim(operand, rhs, out),
+        Expression::Project { base, .. } => walk_claim(base, rhs, out),
+        Expression::Binary {
+            op, left, right, ..
+        } => {
+            walk_claim(left, rhs, out);
+            walk_claim(right, rhs || *op == BinaryOp::Eq, out);
+        }
+        Expression::Conditional {
+            condition,
+            then_branch,
+            else_branch,
+            ..
+        } => {
+            walk_claim(condition, rhs, out);
+            walk_claim(then_branch, rhs, out);
+            walk_claim(else_branch, rhs, out);
+        }
+        Expression::Match { target, arms, .. } => {
+            walk_claim(target, rhs, out);
+            for a in arms {
+                walk_claim(&a.body, rhs, out);
+            }
+        }
+        Expression::Tuple { elements, .. } | Expression::List { elements, .. } => {
+            for x in elements {
+                walk_claim(x, rhs, out);
+            }
+        }
+        Expression::Quantified { body, .. } => walk_claim(body, rhs, out),
+        Expression::Reference { name, args, .. } => {
+            let callee = name.segments.join(".");
+            if let Some(first) = name.segments.first() {
+                out.mentions.insert((*first).to_string());
+            }
+            if let Some(args) = args {
+                out.mentions.insert(callee.clone());
+                out.calls.push(CallFact {
+                    callee,
+                    arity: args.len(),
+                    state_arg: args.first().and_then(call_head),
+                    in_eq_rhs: rhs,
+                });
+                for a in args {
+                    walk_claim(a, rhs, out);
+                }
+            }
+        }
+    }
 }

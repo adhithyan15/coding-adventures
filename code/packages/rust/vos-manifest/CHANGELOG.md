@@ -4,6 +4,14 @@ All notable changes to this package are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added (VOS-012b0, VOS-D061)
+
+- `Analysis` gains `op_decls` (names declared with `op`), `rep` (the cone of `model rep` over ALL its
+  parameters, as a `BuildShape`) and `claim_shapes` (per claim: the names it mentions and its calls,
+  each with arity, the head of its first argument and whether it sits right of an `==`), the facts
+  of `vos-link`'s CD07-R lint.  The build-cone walk is generalised to `constructor_shape`; `build`'s
+  behaviour is unchanged.  Five tests.
+
 ### Changed (VOS-D081)
 
 - `tests/warrant.rs`: the real-block test expects five safety claims and pins `safety_init`

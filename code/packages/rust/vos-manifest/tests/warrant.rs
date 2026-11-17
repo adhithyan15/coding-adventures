@@ -608,3 +608,194 @@ fn a_model_with_more_than_63_parameters_is_refused_not_approximated() {
         BuildShape::Constructor { .. }
     ));
 }
+
+// ---------------------------------------------------------------------------
+// Representation mode (VOS-D061): the shape of `rep`, the declared ops and what claims call
+// ---------------------------------------------------------------------------
+
+const REP: &str = "warrant t v1
+  record Impl(x: U8, y: U8)
+  op step(s: Impl) -> Impl
+  op peek(s: Impl) -> U8
+  model build(m: U8) -> Impl = Impl(m, 0u8)
+  model rep(a: U8, h: U8) -> Impl = Impl(a, bit_and(h, 7u8))
+  model twice(s: Impl) -> Impl = s
+  labels step:
+    s public
+  labels peek:
+    s public
+  input step.s:
+    hostile
+    ensures no_panic, terminates
+  input peek.s:
+    hostile
+    ensures no_panic, terminates
+  bound step:
+    steps <= 10
+  bound peek:
+    steps <= 10
+  claim c1:
+    forall a: U8, h: U8. (
+      peek(step(rep(a, h))) == peek(rep(a, h)) and
+      twice(build(a)).x == (peek(step(rep(a, h))) + 1u8))
+  assume platform:
+    none
+  assume environment:
+    none
+";
+
+#[test]
+fn rep_shape_reports_every_field_in_the_cone_of_the_parameters() {
+    let a = analyze_document(REP).expect("type checks");
+    assert_eq!(
+        a.rep,
+        BuildShape::Constructor {
+            in_cone: vec![true, true]
+        }
+    );
+    // The history field of `build` is constant: off the cone, as a representation needs.
+    assert_eq!(
+        a.build,
+        BuildShape::Constructor {
+            in_cone: vec![true, false]
+        }
+    );
+    // A `rep` field that depends on no parameter is a constant, not a covered state.
+    let constant = REP.replace("bit_and(h, 7u8)", "0u8");
+    assert_eq!(
+        analyze_document(&constant).unwrap().rep,
+        BuildShape::Constructor {
+            in_cone: vec![true, false]
+        }
+    );
+    // Dependence is on ANY parameter: a field of `h` alone, or of `a` alone, is covered.
+    let only_a = REP.replace("bit_and(h, 7u8)", "bit_and(a, 7u8)");
+    assert_eq!(
+        analyze_document(&only_a).unwrap().rep,
+        BuildShape::Constructor {
+            in_cone: vec![true, true]
+        }
+    );
+    // The same evasions the build walk refuses count here: `h - h` is constant.
+    let cancelled = REP.replace("bit_and(h, 7u8)", "h - h");
+    assert_eq!(
+        analyze_document(&cancelled).unwrap().rep,
+        BuildShape::Constructor {
+            in_cone: vec![true, false]
+        }
+    );
+}
+
+#[test]
+fn rep_shape_missing_or_not_a_constructor() {
+    let none = REP
+        .replace(
+            "  model rep(a: U8, h: U8) -> Impl = Impl(a, bit_and(h, 7u8))\n",
+            "",
+        )
+        .replace("rep(a, h)", "Impl(a, h)");
+    assert_eq!(analyze_document(&none).unwrap().rep, BuildShape::Missing);
+    let helper = REP.replace("Impl(a, bit_and(h, 7u8))", "twice(Impl(a, h))");
+    assert_eq!(
+        analyze_document(&helper).unwrap().rep,
+        BuildShape::NotConstructor
+    );
+    // A rep with no parameters is a constant: nothing to cover, so no shape.
+    let nullary = REP
+        .replace(
+            "model rep(a: U8, h: U8) -> Impl = Impl(a, bit_and(h, 7u8))",
+            "model rep() -> Impl = Impl(1u8, 2u8)",
+        )
+        .replace("rep(a, h)", "rep()");
+    assert_eq!(analyze_document(&nullary).unwrap().rep, BuildShape::Missing);
+    // The walk gives up the same way for rep as for build.
+    let tiny = vos_manifest::warrant::analyze_document_with_budget(REP, 3).unwrap();
+    assert_eq!(tiny.rep, BuildShape::BudgetExhausted);
+}
+
+#[test]
+fn op_decls_lists_the_bound_operations_only() {
+    let a = analyze_document(REP).unwrap();
+    assert_eq!(a.op_decls, ["step", "peek"]);
+}
+
+#[test]
+fn claim_shapes_record_mentions_calls_and_state_arguments() {
+    let a = analyze_document(REP).unwrap();
+    assert_eq!(a.claim_shapes.len(), 1);
+    let c = &a.claim_shapes[0];
+    assert_eq!(c.name, "c1");
+    for n in ["peek", "step", "rep", "twice", "build", "a", "h"] {
+        assert!(c.mentions.contains(n), "{n}: {:?}", c.mentions);
+    }
+    let call = |callee: &str, nth: usize| {
+        c.calls
+            .iter()
+            .filter(|k| k.callee == callee)
+            .nth(nth)
+            .unwrap_or_else(|| panic!("no call {callee} #{nth}"))
+    };
+    // peek(step(rep(a, h))): the state argument of peek is a call to step.
+    assert_eq!(call("peek", 0).state_arg.as_deref(), Some("step"));
+    assert_eq!(call("step", 0).state_arg.as_deref(), Some("rep"));
+    assert_eq!(call("rep", 0).state_arg, None);
+    assert_eq!(call("rep", 0).arity, 2);
+    assert_eq!(call("peek", 0).arity, 1);
+    assert_eq!(call("twice", 0).state_arg.as_deref(), Some("build"));
+    // The left of the first `==` is not a right-hand side; everything under the second
+    // `==`'s right operand is, however deep (the parenthesised sum).
+    assert!(!call("peek", 0).in_eq_rhs);
+    assert!(!call("twice", 0).in_eq_rhs);
+    assert!(call("peek", 1).in_eq_rhs);
+    assert!(call("step", 1).in_eq_rhs);
+}
+
+#[test]
+fn claim_shapes_see_through_every_expression_form() {
+    // if, match, tuple, list, unary, grouped, projection and a nested quantifier all carry
+    // calls, and the right-hand-side flag reaches into them.
+    let doc = "warrant t v1
+  record Impl(x: U8)
+  variant Pick = Idle | Run(t: U8)
+  op f(s: Impl) -> Impl
+  op g(s: Impl) -> U8
+  labels f:
+    s public
+  labels g:
+    s public
+  input f.s:
+    hostile
+    ensures no_panic, terminates
+  input g.s:
+    hostile
+    ensures no_panic, terminates
+  bound f:
+    steps <= 10
+  bound g:
+    steps <= 10
+  claim c:
+    forall a: U8. (
+      (if g(f(Impl(a))) == 0u8 then true else false) and
+      (match Idle with Idle -> true | Run(t) -> t == g(f(Impl(t)))) and
+      (not (g(Impl(a)) == 1u8)) and
+      (g(Impl(a)), 1u8) == (g(f(Impl(a))), 1u8) and
+      (g(Impl(a)) == 1u8 or 2u8 > 1u8))
+  assume platform:
+    none
+  assume environment:
+    none
+";
+    let a = analyze_document(doc).expect("type checks");
+    let c = &a.claim_shapes[0];
+    let rhs: Vec<&str> = c
+        .calls
+        .iter()
+        .filter(|k| k.in_eq_rhs && k.callee != "Impl")
+        .map(|k| k.callee.as_str())
+        .collect();
+    // The match arm's `t == g(f(Impl(t)))` and the tuple on the right of `==`: g and f each.
+    assert!(rhs.iter().filter(|n| **n == "g").count() >= 2, "{rhs:?}");
+    assert!(rhs.contains(&"f"), "{rhs:?}");
+    let first = c.calls.iter().find(|k| k.callee == "g").unwrap();
+    assert!(!first.in_eq_rhs);
+}

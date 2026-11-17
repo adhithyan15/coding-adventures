@@ -10,6 +10,7 @@
 //! evidence-features = ["ghost"]    # must be in the central list
 //! contract = "vos-ready-contract"  # an implementation: the contract package it realises (VOS02 10.1, D-GD2)
 //! obligations = ["safety"]         # an implementation: the tiers `vos-link gen-doc` embeds
+//! mode = "representation"         # an implementation, optional: absent means canonical (VOS02 2.7, VOS-D061)
 //! ```
 //!
 //! The grammar is deliberately tiny so that it can be bounded and so that it
@@ -148,6 +149,10 @@ pub struct VosToml {
     pub contract: Option<String>,
     /// The tiers `vos-link gen-doc` embeds, in file order, as written.
     pub obligations: Vec<String>,
+    /// The mode of an implementation (VOS02 section 2.7), as written.  Like `contract`,
+    /// this reader only bounds it (a string of 1 to 16 bytes); `vos-link` owns the closed
+    /// set of values and where the key may appear.
+    pub mode: Option<String>,
 }
 
 /// A `vos.toml` error: 1-based line and reason.
@@ -195,13 +200,14 @@ pub fn parse_vos_toml(text: &str) -> Result<VosToml, VosTomlError> {
         evidence_features: Vec::new(),
         contract: None,
         obligations: Vec::new(),
+        mode: None,
     };
     for Entry { path, value, line } in entries {
         let line = line as usize;
         let [key] = path.as_slice() else {
             return bad(
                 line,
-                "unknown key or table (allowed: class, kind, evidence-features, contract, obligations)",
+                "unknown key or table (allowed: class, kind, evidence-features, contract, obligations, mode)",
             );
         };
         match (key.as_str(), value) {
@@ -271,13 +277,22 @@ pub fn parse_vos_toml(text: &str) -> Result<VosToml, VosTomlError> {
                     out.obligations.push(name);
                 }
             }
-            ("class" | "kind" | "evidence-features" | "contract" | "obligations", _) => {
+            ("mode", Value::Str(v)) => {
+                if out.mode.is_some() {
+                    return bad(line, "duplicate key");
+                }
+                if v.is_empty() || v.len() > 16 {
+                    return bad(line, "a mode is 1 to 16 bytes");
+                }
+                out.mode = Some(v);
+            }
+            ("class" | "kind" | "evidence-features" | "contract" | "obligations" | "mode", _) => {
                 return bad(line, "wrong type of value for this key")
             }
             _ => {
                 return bad(
                     line,
-                    "unknown key (allowed: class, kind, evidence-features, contract, obligations)",
+                    "unknown key (allowed: class, kind, evidence-features, contract, obligations, mode)",
                 )
             }
         }
