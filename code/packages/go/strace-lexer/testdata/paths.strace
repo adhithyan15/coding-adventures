@@ -1,0 +1,10 @@
+300  openat(AT_FDCWD, "/tmp/a\"b", O_RDONLY) = 3</tmp/a\"b>
+300  openat(AT_FDCWD, "/tmp/lt<gt>", O_RDONLY) = 4</tmp/lt\<gt\>>
+300  stat("/tmp/p) = 5", 0x1) = -1 ENOENT (No such file or directory)
+300  stat("/tmp/sp ace", 0x1) = 0
+300  stat("/tmp/nl\nx\ttab\\back", 0x1) = 0
+300  stat("/tmp/\303\251\x41\101", 0x1) = 0
+300  stat("/tmp/+++ exited with 0 +++", 0x1) = 0
+300  stat("/tmp/<unfinished ...>", 0x1) = 0
+300  openat(3</tmp/dir with space>, "f", O_RDONLY) = 6</tmp/dir with space/f>
+300  +++ exited with 0 +++
