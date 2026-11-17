@@ -204,7 +204,7 @@ fn a_block_of_claims_is_read_and_anything_else_is_refused() {
 /// produced by `tests/claim_sha256_reference.py` (an independent Python implementation of
 /// D-GD7), not by this crate: if one changes, the definition or the obligation changed, and
 /// every generated document and lock must be regenerated.
-const PINS: [(&str, &str); 15] = [
+const PINS: [(&str, &str); 16] = [
     (
         "insert_safe",
         "ef3d7c1760812044ae6d87dfa9c58d03c123d61cdae97efe9e613ad1c3a39608",
@@ -220,6 +220,10 @@ const PINS: [(&str, &str); 15] = [
     (
         "safety_alpha_build",
         "a0df76dc929173876840307bf07e899349668e89f31e66fdc85c9987fe90d039",
+    ),
+    (
+        "safety_init",
+        "df7b6df1665d941d6c6b742162fdc69f8ca84c30ca0ddc968c04237e6638b931",
     ),
     (
         "dispatch_policy",
@@ -273,7 +277,7 @@ fn the_real_obligation_blocks_have_the_expected_claims_and_pinned_digests() {
         (
             "safety",
             include_str!("../../vos-sched-contract/warrant/obligations-safety.part"),
-            4usize,
+            5usize,
         ),
         (
             "policy",

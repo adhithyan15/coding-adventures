@@ -4,6 +4,15 @@ All notable changes to this package are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added (VOS-D081)
+
+- `warrant/obligations-safety.part`: `safety_init` (`forall b: Bool. dec(alpha_w(init())) == empty()`), the
+  fifth safety claim. Before it nothing constrained `init` in the safety tier (`canon_init` is
+  canonical-only), so an `-any` or round-robin scheduler could start from a non-empty ready set
+  and pass every generated test. The safety block's digest and every implementation's embedded
+  safety block change; the contract block, the policy, canonical and `any` blocks and every other
+  claim's `claim_sha256` are unchanged.
+
 ### Changed (VOS-012a PR, VOS-D054, VOS-D079)
 
 - `warrant/obligations-any.part`: `dispatch_covers_run` lost its `| t < 8u8` refinement. `mem` is
@@ -28,7 +37,7 @@ All notable changes to this package are documented here.
   - `warrant/contract.part`: the abstract state (ready set over 8 thread ids,
     priority = id), total abstract operations, `inv`, the safety and policy
     relations, `pre_` models and nine model-level lemmas.
-  - `warrant/obligations-{safety,policy,canonical,any}.part`: 4 + 1 + 7 + 3 claims (`safety_alpha_build` is a safety claim) in
+  - `warrant/obligations-{safety,policy,canonical,any}.part`: 4 + 1 + 7 + 3 claims at VOS-010 (`safety_alpha_build` is a safety claim; `safety_init` made it 5 + 1 + 7 + 3, VOS-D081) in
     the fixed vocabulary of VOS02 R3, interim projection form (VOS02 section 4.4).
   - `contract.vos`: ceilings (`16 N + 32` steps, heap 0, depth 2; `init` `8 N + 16`)
     and the instance `N 8`.
