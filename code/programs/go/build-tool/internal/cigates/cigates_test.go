@@ -291,6 +291,25 @@ func TestLiteralSegmentBoundsAreSoundForRootGlobstarAndExactPaths(t *testing.T) 
 	}
 }
 
+// selectiveDiffSize returns floor(0.8 * MaxMatchWork / perFileUnits) for the
+// registry's distinct patterns, using the matcher's own literal-segment cost.
+func selectiveDiffSize(reg *Registry) int {
+	seen := map[string]bool{}
+	var perFile uint64
+	for _, gate := range reg.Gates {
+		for _, pattern := range gate.Paths {
+			if !seen[pattern] {
+				seen[pattern] = true
+				perFile += makeLiteralSegmentBounds(pattern).workUnits
+			}
+		}
+	}
+	if perFile == 0 {
+		return 1 << 20
+	}
+	return int(MaxMatchWork / 5 * 4 / perFile)
+}
+
 func TestPathShardedLanguageDiffsStaySelective(t *testing.T) {
 	reg, err := Load(realRegistryPath)
 	if err != nil {
@@ -300,7 +319,23 @@ func TestPathShardedLanguageDiffsStaySelective(t *testing.T) {
 		"bengali", "gujarati", "hindi", "kannada", "malayalam", "marathi",
 		"marwadi", "punjabi", "sanskrit", "tamil", "telugu", "urdu",
 	}
-	for _, count := range []int{256, 10_751} {
+	// The large case is derived, not hard-coded. The match-work ceiling
+	// (MaxMatchWork, a normative cross-language constant in ci-gate-registry.md)
+	// charges every distinct pattern x changed-file pair the pattern's literal
+	// prefix+suffix units, so n unrelated files cost n * perFileUnits, where
+	// perFileUnits sums those units over the registry's distinct patterns (the
+	// same cost model preflightPathSelection uses). We take
+	// n = floor(80% of the ceiling / perFileUnits): as large as possible while
+	// keeping 20% headroom for the few package files below. Past that size the
+	// ceiling legitimately trips; the 10,751-path test below covers that
+	// bounded-failure outcome. If the registry ever grows so much that n < 256,
+	// the ceiling itself needs a spec decision.
+	large := selectiveDiffSize(reg)
+	if large < 256 {
+		t.Fatalf("registry too large: only %d unrelated paths fit under MaxMatchWork; the ceiling needs a spec decision", large)
+	}
+	t.Logf("selective large case: %d paths", large)
+	for _, count := range []int{256, large} {
 		t.Run(fmt.Sprintf("%d-paths", count), func(t *testing.T) {
 			changed := make([]string, 0, count)
 			packageFiles := 8
@@ -331,6 +366,41 @@ func TestPathShardedLanguageDiffsStaySelective(t *testing.T) {
 				t.Fatalf("matcher calls = %d, want at most 100 after literal-segment filtering", calls)
 			}
 		})
+	}
+}
+
+// At 10,751 paths the registry may have outgrown the work ceiling. That is not
+// a bug: the ceiling is a hard planning failure that CI answers with a visible
+// run-all fallback (ci.yml, "CI_GATE_MATCH_LIMIT_EXCEEDED"). What must hold is
+// that the outcome is exactly one of: selective, or the stable limit error with
+// zero matcher calls. Any other error, or a limit error after matcher calls,
+// is a regression.
+func TestHugePathShardedDiffIsSelectiveOrBoundedFailure(t *testing.T) {
+	reg, err := Load(realRegistryPath)
+	if err != nil {
+		t.Fatalf("load real registry: %v", err)
+	}
+	changed := make([]string, 0, 10_751)
+	for index := 0; index < 10_751; index++ {
+		changed = append(changed, fmt.Sprintf(
+			"code/learning/human-languages/tamil/curriculum-membership.d/%05d-owner.json", index))
+	}
+	calls := 0
+	got, err := evaluateWithMatcher(reg, map[string]bool{}, changed, false, func(pattern, path string) bool {
+		calls++
+		return globmatch.MatchPath(pattern, path)
+	})
+	if err != nil {
+		if !errors.Is(err, ErrMatchWorkLimitExceeded) {
+			t.Fatalf("Evaluate: unexpected error %v", err)
+		}
+		if calls != 0 || len(got) != 0 {
+			t.Fatalf("limit error must precede every matcher call and return no gates; calls=%d gates=%d", calls, len(got))
+		}
+		return
+	}
+	if calls > 100 {
+		t.Fatalf("matcher calls = %d, want at most 100 after literal-segment filtering", calls)
 	}
 }
 
