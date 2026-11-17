@@ -4391,6 +4391,34 @@ and educational surfaces rather than production TLS composition. Reviewed
 AES-GCM composition remains a prerequisite, and concrete HTTPS remains
 unavailable.
 
+A bounded fixed-memory AES-128-GCM composition is the next independently
+reviewable record-protection prerequisite. It accepts only an exact 128-bit
+key, the RFC 5116 96-bit nonce profile, caller-borrowed associated data and
+plaintext or ciphertext, an exact 128-bit tag, and caller-owned output whose
+length must equal the input length. It must build `J0 = nonce || 0x00000001`,
+start payload counter mode at `inc32(J0)`, reject a request that could exhaust
+the 32-bit counter or GCM's encoded length domains before changing caller
+output, and compose only the repository-owned fixed-memory AES-128 block and
+GHASH boundaries. Encryption must authenticate the exact produced ciphertext.
+Decryption must recompute and compare the complete tag with a compiler-checked
+fixed schedule before releasing any plaintext, so authentication failure
+leaves caller output unchanged. The hash subkey, counters, keystream block,
+GHASH result, encrypted `J0`, and recomputed tag must remain in fixed
+wipe-on-drop storage; no secret-derived byte may cross the ABI return slot by
+value. Release-codegen checks must reject allocator reachability, early-exit tag
+comparison, missing scrubs, or plaintext writes before authentication.
+
+This AEAD boundary will not select a TLS cipher suite, derive or own a traffic
+key, reserve a record nonce, enforce a negotiated per-key record ceiling,
+frame or protect a TLS record, reset record state after a key update, process a
+handshake, validate certificates, establish trust, enforce revocation, perform
+I/O, authorize HTTP or OAuth transport, or open a network connection. A later
+TLS record composition must bind it to the selected
+`TLS_AES_128_GCM_SHA256` route and the existing record-protection state.
+Complete handshake state, the AES record route, stream I/O, certificate
+validation, revocation, and HTTP composition remain blockers; concrete HTTPS
+remains unavailable.
+
 A bounded `tls13-finished` prerequisite now composes the repository-owned
 fixed-memory HKDF and HMAC paths for RFC 8446 Finished verify-data. It derives
 the fixed "finished" label with empty context from one already-derived
