@@ -65,16 +65,36 @@ func TestSignalBetweenSplitCallHalves(t *testing.T) {
 	}
 }
 
-// An exit line of the SAME pid ends its pending call, so the resumed half has
-// nothing to glue to.  Whatever happens, the cross-check must not fail open.
+// An exit line of the SAME pid while a path call (chdir) is pending: both
+// readers refuse unresumed-call at the call's start line (1), with identical
+// reason and line, so there is no divergence at all.
 func TestExitBetweenSplitCallHalves(t *testing.T) {
 	text := "2  chdir(a,  <unfinished ...>\n2  +++ exited with 0 +++\n2  <... chdir resumed> -1,  , b) = 0\n"
 	err, m := crossCheckOf(text)
-	if err == nil {
-		t.Fatal("must be refused")
+	if m != nil {
+		t.Fatalf("cross-check failed: %v", m)
 	}
-	if m != nil && strings.Contains(m.Detail, "FAIL-OPEN") {
-		t.Fatalf("fail-open: %v", m)
+	var e *Error
+	if !errors.As(err, &e) || e.Reason != reasonUnresumed || e.Line != 1 {
+		t.Fatalf("want unresumed-call at line 1, got %v", err)
+	}
+}
+
+// The caps row ("a glued call over the byte limit") also applies across a
+// same-pid signal line, since it rebuilds the glue the same way.
+func TestGluedCallOverTheByteLimitAcrossSignal(t *testing.T) {
+	text := "2  stat(\"/" + strings.Repeat("a", 40) + "\",  <unfinished ...>\n" +
+		"2  --- SIGCHLD {si_signo=SIGCHLD} ---\n" +
+		"2  <... stat resumed>{st_mode=" + strings.Repeat("7", 40) + "}) = 0\n"
+	before := AllowedDivergences()
+	opts := Options{Limits: Limits{MaxLineBytes: 90}}
+	_, err := parseCrossChecked(strings.NewReader(text), "/work/repo", opts)
+	var e *Error
+	if !errors.As(err, &e) {
+		t.Fatalf("want a refusal, got %v", err)
+	}
+	if AllowedDivergences() != before+1 {
+		t.Errorf("the caps row was not recorded (reason %s)", e.Reason)
 	}
 }
 

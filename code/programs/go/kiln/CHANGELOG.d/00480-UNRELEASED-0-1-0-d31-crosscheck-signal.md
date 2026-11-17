@@ -11,3 +11,6 @@
   exactly as the old scanner does; exit lines still end the pid's pending call.
   The change only widens recognition of an already-listed shape; fail-open
   detection is untouched. Regression tests in `signal_glue_test.go`.
+- The same glue feeds the "glued call over the byte limit" caps row, which now
+  also matches across a same-pid signal line (stricter-only, now documented in
+  KILN04 4.9; `TestGluedCallOverTheByteLimitAcrossSignal`).
