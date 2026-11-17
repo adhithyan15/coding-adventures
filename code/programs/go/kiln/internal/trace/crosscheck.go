@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"unicode"
 
 	stracelexer "github.com/adhithyan15/coding-adventures/code/packages/go/strace-lexer"
 	straceparser "github.com/adhithyan15/coding-adventures/code/packages/go/strace-parser"
@@ -173,10 +174,21 @@ func compareParses(data []byte, maxLine int, trOld *Trace, errOld error, trNew *
 	// New refused LATER than old: it read past the line the old scanner refused.
 	// The only legitimate way is a refusal that is not about that line (a pending
 	// call reported at its own earlier line at the end of the input).
-	if en.Line > eo.Line && eo.Reason != reasonUnresumed {
+	if pass1Reason(eo.Reason) && en.Line > eo.Line && eo.Line != 0 && eo.Reason != reasonUnresumed {
 		return "FAIL-OPEN: the old scanner refused at line " + strconv.Itoa(eo.Line) + " (" + eo.Reason + "); the grammar path got past it and refused at line " + strconv.Itoa(en.Line) + " (" + en.Reason + ")", eo.Line
 	}
-	if row := stricterRow(lineAt(data, en.Line), eo.Reason, en.Reason, data, en.Line, maxLine); row != "" && (en.Line < eo.Line || en.Line == eo.Line || eo.Reason == reasonUnresumed) {
+	// When the new path refused an EARLIER line than the old one (or the old
+	// refusal is not tied to a line, like missing-exit), the old scanner
+	// accepted the new path's line.
+	oldOnThatLine := eo.Reason
+	if en.Line < eo.Line || eo.Line == 0 || !pass1Reason(eo.Reason) {
+		oldOnThatLine = ""
+	}
+	row := stricterRow(lineAt(data, en.Line), oldOnThatLine, en.Reason, data, en.Line, maxLine)
+	if row == "" && oldOnThatLine != eo.Reason {
+		row = stricterRow(lineAt(data, en.Line), eo.Reason, en.Reason, data, en.Line, maxLine)
+	}
+	if row != "" && (en.Line <= eo.Line || eo.Line == 0 || eo.Reason == reasonUnresumed || !pass1Reason(eo.Reason)) {
 		noteAllowed(row)
 		return "", 0
 	}
@@ -267,17 +279,18 @@ func sanitisedWindow(data []byte, n int) string {
 // of.  They are computed with the grammar's own lexer (so they are exact about
 // strings and annotations) plus a few byte tests.
 type lineFacts struct {
-	tokens    int    // tokens including the EOF
-	depth     int    // deepest bracket nesting (a nested call counts)
-	errTok    string // the first ERR_* token's type, or ""
-	errAmbig  bool   // ... and it is an ambiguous-path kind
-	badAnnot  bool   // an annotation whose escapes do not decode
-	badQuoted bool   // a quoted string whose escapes do not decode
-	marker    bool   // the text "<unfinished ...>" occurs
-	resumed   bool   // the body is a "<... " line
-	signedPid bool   // "[pid +N]"
-	signedEx  bool   // "+++ exited with +N +++"
-	trailSp   bool   // ends with a space
+	tokens           int    // tokens including the EOF
+	depth            int    // deepest bracket nesting (a nested call counts)
+	errTok           string // the first ERR_* token's type, or ""
+	errAmbig         bool   // ... and it is an ambiguous-path kind
+	badAnnot         bool   // an annotation whose escapes do not decode
+	badQuoted        bool   // a quoted string whose escapes do not decode
+	marker           bool   // the text "<unfinished ...>" occurs
+	resumed          bool   // the body is a "<... " line
+	signedPid        bool   // "[pid +N]"
+	signedEx         bool   // "+++ exited with +N +++"
+	unicodeSpaceExit bool   // an exit line holding a non-ASCII space (strings.TrimSpace removed it)
+	trailSp          bool   // ends with a space
 }
 
 func factsOf(line string) lineFacts {
@@ -287,7 +300,14 @@ func factsOf(line string) lineFacts {
 	f.signedPid = strings.HasPrefix(line, "[pid +")
 	if _, body, ok := parsePid(line); ok {
 		f.resumed = strings.HasPrefix(body, "<... ")
-		f.signedEx = strings.HasPrefix(body, "+++ ") && (strings.Contains(body, "exited with +"))
+		if strings.HasPrefix(body, "+++ ") {
+			for _, r := range body {
+				if r > 0x7f && unicode.IsSpace(r) {
+					f.unicodeSpaceExit = true
+				}
+			}
+		}
+		f.signedEx = strings.HasPrefix(body, "+++ ") && (strings.Contains(body, "exited with +") || strings.Contains(body, "exited with -"))
 	}
 	toks, err := stracelexer.TokenizeLineMax(line, 1<<30)
 	if err != nil {
@@ -331,26 +351,40 @@ func factsOf(line string) lineFacts {
 // never reaches here.
 func stricterRow(line, oldReason, newReason string, data []byte, lineNo, maxLine int) string {
 	f := factsOf(line)
-	oldOK := oldReason == ""
+	// A refusal by name (unknown-syscall, refused) comes AFTER the old scanner
+	// accepted the line's syntax, so for the syntax rules it counts as accepted.
+	oldOK := oldReason == "" || strings.HasPrefix(oldReason, "unknown-syscall:") || strings.HasPrefix(oldReason, "refused:")
 	switch {
 	case newReason == reasonSize && (f.tokens > maxLineTokens || f.depth > straceparser.MaxBracketNesting || gluedTooBig(data, lineNo, maxLine, f)):
 		return "caps: depth 64, 65,536 tokens, or a glued call over the byte limit"
 	case newReason == reasonUnparsable && oldOK && f.signedPid:
 		return "signed pid"
+	case newReason == reasonUnparsable && oldOK && f.unicodeSpaceExit:
+		return "Unicode space inside an exit line"
 	case newReason == reasonUnparsable && oldOK && f.signedEx:
 		return "signed exit code"
-	case newReason == reasonUnparsable && oldOK && f.trailSp:
+	case newReason == reasonUnparsable && f.trailSp:
 		return "trailing space"
 	case newReason == reasonUnparsable && f.resumed && (f.errTok == "ERR_LT" || f.errTok == "ERR_QUOTE") && (oldOK || oldReason == reasonUnparsable):
 		return "resumed half spans the seam"
+	case newReason == reasonUnparsable && oldOK && (f.errTok == "ERR_LT" || f.marker) && strings.Contains(line, "PID NS */"):
+		// The old result parser took an annotation after the pid-namespace note
+		// (`= 5 /* 9 in strace's PID NS */<x>`), a bare "<" no word precedes.
+		// strace prints the annotation first; the grammar sees an ERR_LT.
+		return "annotation after the pid-namespace note"
 	case newReason == reasonAmbiguous && oldOK && f.badQuoted:
 		return "strict quoted string"
-	case newReason == reasonUnparsable && oldReason == reasonResult && f.marker:
+	case newReason == reasonUnparsable && (oldReason == reasonResult || oldReason == reasonAmbiguous) && f.marker:
 		return "bare <unfinished ...> after the close"
-	case (newReason == reasonUnparsable || newReason == reasonAmbiguous) && oldReason == reasonResult && (f.errTok != "" || f.badAnnot || f.badQuoted):
+	case (newReason == reasonUnparsable || newReason == reasonAmbiguous) && (oldReason == reasonResult || oldReason == reasonAmbiguous) && (f.errTok != "" || f.badAnnot || f.badQuoted):
 		return "ERR token in the text after the close"
 	case newReason == reasonUnparsable && oldReason == reasonUnmatched && f.resumed && f.errTok == "ERR_RESUME":
 		return "malformed resume marker"
+	case oldReason == reasonUnmatched && f.resumed && (newReason == reasonUnparsable || newReason == reasonAmbiguous):
+		// The grammar path reads the line before it looks at the pending call,
+		// so a resumed line that is itself malformed AND has no matching pending
+		// call is a syntax refusal where the old scanner said unmatched-resume.
+		return "malformed resumed half with no matching pending call"
 	case newReason == reasonAmbiguous && oldReason == reasonUnparsable && (f.badAnnot || f.badQuoted || (f.errTok != "" && f.errAmbig)):
 		return "structural error and a later bad annotation or string"
 	case (newReason == reasonUnparsable || newReason == reasonAmbiguous) && oldReason == reasonArity:
@@ -403,4 +437,20 @@ func gluedTooBig(data []byte, lineNo, maxLine int, f lineFacts) bool {
 	}
 	g := factsOf("1  " + cur)
 	return g.tokens > maxLineTokens || g.depth > straceparser.MaxBracketNesting
+}
+
+// pass1Reason says whether a refusal is one pass 1 (the line reader) can give.
+// Every other reason may come from the model, which only runs after pass 1 has read
+// the whole input, so such an old refusal means the old scanner accepted every
+// line of the trace.
+func pass1Reason(r string) bool {
+	switch r {
+	case reasonUnparsable, reasonPersonality, reasonInterleaved, reasonUnmatched, reasonUnresumed,
+		reasonSize, reasonRead:
+		return true
+	}
+	// arity, result, ambiguous-path, unknown-syscall: and refused: can come from
+	// pass 1 or from the model (a path argument that does not decode, a wrong
+	// argument count), so they are not trusted to place the refusal.
+	return false
 }

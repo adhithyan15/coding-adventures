@@ -1,0 +1,2 @@
+go test fuzz v1
+string("1  stat(\"a\\q\", 0x1) = 0\n[pid +1] stat(\"a\", 0x1) = 0\n")
