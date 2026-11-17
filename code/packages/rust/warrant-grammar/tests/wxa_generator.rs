@@ -306,6 +306,24 @@ fn faults_appear_in_the_generated_adapter_and_the_fault_enum() {
 }
 
 #[test]
+fn a_nat_first_record_is_flipped_as_a_model_integer() {
+    // In a composite a `Nat` field is a model `V::Int` (from_host), the kind the
+    // flip rewrites, so a `Nat`-first record is attacked, not silently inert.
+    let src = "warrant t v1\n  record RecN(n: Nat, flag: Bool)\n  op h(a: U8) -> RecN\n  claim c:\n    forall a: U8. h(a) == h(a)\n";
+    let text = generate(
+        src,
+        REFERENCE,
+        &[
+            "struct RecN path=subject::RecN fields=n:u32,flag:bool",
+            "op h export=h faults=field-flip",
+        ],
+    )
+    .unwrap();
+    assert!(text.contains("V::Int((") && text.contains("as i128)"));
+    assert!(text.contains("V::Int(n) => V::Int(n ^ 1)"));
+}
+
+#[test]
 fn field_flip_is_emitted_only_for_a_binding_that_names_it() {
     // WX-SV2: the prelude region and the enum variant exist only on request, so
     // a harness that names `field-zero` alone is what it was before the fault existed.

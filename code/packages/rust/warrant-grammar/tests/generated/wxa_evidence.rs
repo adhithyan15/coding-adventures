@@ -1893,6 +1893,25 @@ pub fn resolve_sabotage(fault: Option<&str>, filter: Option<&str>) -> Result<Fau
     }
 }
 
+/// WX-SV2: `WARRANT_EVIDENCE_ATTACK` must name a registered operation and needs a
+/// real fault to aim.  A misspelt operation would otherwise fault nothing, every
+/// test would pass and the sabotage run would look like a harness that cannot be
+/// attacked; a switch without a fault would silently run the honest suite.
+pub fn check_attack(attack: Option<&str>, fault: Option<&str>, ops: &[&str]) -> Result<(), String> {
+    let Some(op) = attack else {
+        return Ok(());
+    };
+    if !matches!(fault, Some(f) if f != "none") {
+        return Err(format!(
+            "WARRANT_EVIDENCE_ATTACK={op:?} requires WARRANT_EVIDENCE_FAULT to name a real fault"
+        ));
+    }
+    if !ops.contains(&op) {
+        return Err(format!("WARRANT_EVIDENCE_ATTACK={op:?} names no operation of this harness"));
+    }
+    Ok(())
+}
+
 /// A filtered suite that selects nothing proves nothing and must not pass.
 pub fn require_tests(count: usize, filter: Option<&str>) -> Result<(), String> {
     match filter {
@@ -1928,6 +1947,14 @@ pub fn run_main(src_dir: &std::path::Path) -> i32 {
     let suite = build_suite(fault);
     let registered = lock_or_recover(&META).len();
     if let Err(msg) = require_tests(registered, filter_var.as_deref()) {
+        eprintln!("{msg}");
+        return 2;
+    }
+    if let Err(msg) = check_attack(
+        std::env::var("WARRANT_EVIDENCE_ATTACK").ok().as_deref(),
+        fault_var.as_deref(),
+        HARNESS_OPS,
+    ) {
         eprintln!("{msg}");
         return 2;
     }
@@ -3223,6 +3250,8 @@ fn op_bits(_w: &[u64], args: &[V], fault: Fault) -> V {
         _ => v,
     }
 }
+
+const HARNESS_OPS: &[&str] = &["area", "bits", "blob", "bsum", "classify", "decode2", "normalize", "order", "pick", "sh", "split", "tok", "try_pair"];
 
 fn neg_ex_decode2_one_byte(fault: Fault) -> Verdict {
     example_verdict(example_decode2_one_byte(fault))

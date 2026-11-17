@@ -176,6 +176,12 @@ mod harness {
     pub fn field_zero(v: V) -> V {
         fault_field_zero(v)
     }
+    pub fn harness_ops() -> &'static [&'static str] {
+        HARNESS_OPS
+    }
+    pub fn attack_check(a: Option<&str>, f: Option<&str>, ops: &[&str]) -> Result<(), String> {
+        check_attack(a, f, ops)
+    }
     pub fn field_flip(v: V) -> V {
         fault_field_flip(v)
     }
@@ -738,6 +744,22 @@ fn shrinkers_work_componentwise_and_prefer_earlier_constructors() {
 // ---------------------------------------------------------------------------
 // The faults of section 4.8, as rewrites of a result
 // ---------------------------------------------------------------------------
+
+#[test]
+fn the_attack_switch_is_validated() {
+    let ops: Vec<&str> = vec!["normalize", "blob"];
+    // The generated list names every operation the bindings declare.
+    assert!(harness::harness_ops().contains(&"normalize") && harness::harness_ops().contains(&"blob"));
+    assert!(harness::attack_check(None, None, &ops).is_ok());
+    assert!(harness::attack_check(Some("normalize"), Some("field-flip"), &ops).is_ok());
+    // Set without a fault: refused, not silently the honest suite.
+    let e = harness::attack_check(Some("normalize"), None, &ops).unwrap_err();
+    assert!(e.contains("requires WARRANT_EVIDENCE_FAULT"), "{e}");
+    assert!(harness::attack_check(Some("normalize"), Some("none"), &ops).is_err());
+    // A name no operation has: refused, not a run that faults nothing.
+    let e = harness::attack_check(Some("normalise"), Some("field-flip"), &ops).unwrap_err();
+    assert!(e.contains("names no operation"), "{e}");
+}
 
 #[test]
 fn each_fault_rewrites_exactly_what_the_specification_says() {

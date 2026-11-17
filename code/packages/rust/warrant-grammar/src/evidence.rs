@@ -3895,6 +3895,9 @@ pub fn generate_evidence_harness_with_tables(
     // so no harness written before the fault existed changes by a byte.
     if used_faults.contains("field-flip") {
         features.insert("fieldflip");
+        // The operations `WARRANT_EVIDENCE_ATTACK` may name (validated by `check_attack`).
+        let names: Vec<String> = shapes.keys().map(|k| format!("{k:?}")).collect();
+        let _ = write!(adapters, "const HARNESS_OPS: &[&str] = &[{}];\n\n", names.join(", "));
     }
     // WX-N: a v1 document with a fixed-width `Bytes<N>` anywhere labels that
     // domain `full` or `sample` instead of `set`.  Gated like the helpers above,

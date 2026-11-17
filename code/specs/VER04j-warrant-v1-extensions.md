@@ -653,7 +653,13 @@ negative `x`; a fixed-width field keeps its width, because both members of a pai
 share a range). It changes the value for every `x`, so it is never inert on a
 record. It is applicable to exactly the result types `field-zero` is (a
 single-constructor record with a numeric field, inside an `Ok` or a `Some` as
-for every composite fault, checked at generation as W0701).
+for every composite fault, checked at generation as W0701). The kinds it
+flips are exactly the numeric kinds a composite carries: a fixed-width integer, and
+`Nat` / a shift-count `Nat` (a composite holds these as a model integer, `V::Int`,
+never `V::Nat`); `x ^ 1` is non-negative for a non-negative `x`, and a fault result is not
+range-checked against the declared `Nat` domain (`64 ^ 1 = 65` lies outside `0..=64` but
+is only compared, never converted back to the host). Bool, enum and bytes fields are not
+numeric: a record with none is W0701.
 
 *Gating (no existing harness changes).* The generated function `fault_field_flip`
 and the `Fault::FieldFlip` variant are emitted only when some `evidence.bindings`
@@ -669,6 +675,11 @@ reads `WARRANT_EVIDENCE_ATTACK=<op>` once and lets only that operation obey the 
 (the same effect as the negative controls' one-operation scope). Unset, behaviour is
 unchanged. The switch is emitted by the same prelude region as `fault_field_flip`, so
 a harness that never names the fault does not contain it.
+
+*Validation.* The harness exits with status 2 and a message when
+`WARRANT_EVIDENCE_ATTACK` names no operation of the bindings (a misspelt name would
+fault nothing and every test would pass), or when it is set while `WARRANT_EVIDENCE_FAULT`
+is unset or `none` (the honest suite would run under a sabotage name).
 
 *What it cannot catch.* A single-field flip can stay inside the set a claim
 accepts: a claim that asserts only "the result is in the image of a
