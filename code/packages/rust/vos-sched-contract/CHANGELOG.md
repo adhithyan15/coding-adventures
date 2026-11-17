@@ -4,6 +4,14 @@ All notable changes to this package are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Changed (VOS-012a PR, VOS-D054, VOS-D079)
+
+- `warrant/obligations-any.part`: `dispatch_covers_run` lost its `| t < 8u8` refinement. `mem` is
+  false outside `0..7`, so the claim means the same, and the generated property suite can now run
+  (the generator's rejection sampler gave up at 3 percent acceptance). Its enumerated cases are
+  65,536 (were 2,048). Only the `any` tier's digests change; the safety, policy and canonical
+  claims, the contract block and `vos-sched-fp-bitmap`'s document are unchanged.
+
 ### Changed (VOS-011 PR, VOS-D064)
 
 - The nine model-level lemmas moved from `warrant/contract.part` to the new

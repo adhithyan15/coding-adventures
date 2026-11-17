@@ -478,9 +478,10 @@ fn any_satisfies_safety_and_the_any_block() {
             ("remove_safe", 65_536, 65_536),
             ("dispatch_safe", 256, 256),
             ("safety_alpha_build", 256, 256),
-            // oracle and state both U8: 65,536; coverage's guard t < 8 admits 256 * 8.
+            // oracle and state both U8: 65,536 each; `mem` is false for t >= 8, so coverage needs no
+            // `t < 8` refinement and admits every case (VOS-D079).
             ("dispatch_sound", 65_536, 65_536),
-            ("dispatch_covers_run", 65_536, 2_048),
+            ("dispatch_covers_run", 65_536, 65_536),
             ("dispatch_covers_idle", 256, 256),
         ]
     );
