@@ -590,3 +590,23 @@ fn lowering_is_deterministic_and_the_view_is_stable() {
     let b = lowered(CT_COMPARE);
     assert_eq!(a, b);
 }
+
+#[test]
+fn rendering_a_hand_built_tree_deeper_than_64_is_refused() {
+    use coding_adventures_warrant_corpus_gen::view::oracle_view;
+    let mut l = lowered(CT_COMPARE);
+    let mut deep = Ir::Bool(true);
+    for _ in 0..100 {
+        deep = Ir::Not(Box::new(deep));
+    }
+    l.suites[0].admit = deep;
+    // the cost walk and the renderer both refuse before recursing
+    let e = oracle_view(&l, 65_536).unwrap_err();
+    assert_eq!(e.code, code::LIMIT);
+}
+
+#[test]
+fn the_example_that_was_a_predicate_is_gone_from_the_fixture() {
+    let l = lowered(CORE_V0);
+    assert!(l.examples.iter().all(|x| x.reference.is_some()));
+}

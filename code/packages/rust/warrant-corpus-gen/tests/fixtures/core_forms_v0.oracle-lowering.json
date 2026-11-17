@@ -374,55 +374,6 @@
           ]
         ]
       ]
-    },
-    {
-      "body": [
-        "eq",
-        [
-          "subject_op",
-          "f",
-          [
-            [
-              "lit",
-              {
-                "type": "Bytes",
-                "value": "00"
-              }
-            ],
-            [
-              "lit",
-              {
-                "type": "Bytes",
-                "value": "00"
-              }
-            ]
-          ]
-        ],
-        [
-          "subject_op",
-          "f",
-          [
-            [
-              "lit",
-              {
-                "type": "Bytes",
-                "value": "00"
-              }
-            ],
-            [
-              "lit",
-              {
-                "type": "Bytes",
-                "value": "00"
-              }
-            ]
-          ]
-        ]
-      ],
-      "expected": [],
-      "name": "ex_predicate",
-      "result_type": "",
-      "subject": []
     }
   ],
   "model_order": [
@@ -439,6 +390,8 @@
     "m_lit",
     "m_sign",
     "m_wide",
+    "m_inc",
+    "m_twice",
     "m_width",
     "m_alias"
   ],
@@ -660,6 +613,30 @@
       ],
       "ret": "Bool"
     },
+    "m_inc": {
+      "body": [
+        "add",
+        [
+          "var",
+          "x"
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "1"
+          }
+        ]
+      ],
+      "ir_cost": 3,
+      "params": [
+        [
+          "x",
+          "U8"
+        ]
+      ],
+      "ret": "U8"
+    },
     "m_len": {
       "body": [
         "add",
@@ -873,6 +850,32 @@
       ],
       "ret": "Int"
     },
+    "m_twice": {
+      "body": [
+        "model_call",
+        "m_inc",
+        [
+          [
+            "model_call",
+            "m_inc",
+            [
+              [
+                "var",
+                "x"
+              ]
+            ]
+          ]
+        ]
+      ],
+      "ir_cost": 9,
+      "params": [
+        [
+          "x",
+          "U8"
+        ]
+      ],
+      "ret": "U8"
+    },
     "m_u8": {
       "body": [
         "if",
@@ -1020,6 +1023,20 @@
       "ret": "Bool"
     },
     "g": {
+      "admit": [
+        "ge",
+        [
+          "var",
+          "k"
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "1"
+          }
+        ]
+      ],
       "params": [
         [
           "a",
@@ -1036,6 +1053,34 @@
       ]
     },
     "h": {
+      "admit": [
+        "and",
+        [
+          "le",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "lit",
+            {
+              "type": "U64",
+              "value": "100"
+            }
+          ]
+        ],
+        [
+          "le",
+          [
+            "var",
+            "b"
+          ],
+          [
+            "var",
+            "a"
+          ]
+        ]
+      ],
       "params": [
         [
           "a",
@@ -2492,6 +2537,77 @@
       "ops": [],
       "result_type": "Bool",
       "subject": []
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "U8"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "u8op",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "m_twice",
+          [
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ]
+      ],
+      "claim": "inc_pure",
+      "expected": [
+        "model_call",
+        "m_twice",
+        [
+          [
+            "var",
+            "a"
+          ]
+        ]
+      ],
+      "id": "warrant/core_forms_v0/exhaustive/inc_pure",
+      "ir_cost": 27,
+      "kind": "reference",
+      "ops": [
+        "u8op"
+      ],
+      "result_type": "U8",
+      "subject": [
+        "subject_op",
+        "u8op",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "a"
+          ]
+        ]
+      ]
     },
     {
       "admit": [

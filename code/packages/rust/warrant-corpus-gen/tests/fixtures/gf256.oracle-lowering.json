@@ -4493,6 +4493,20 @@
       "ret": "U8"
     },
     "power": {
+      "admit": [
+        "le",
+        [
+          "var",
+          "exp"
+        ],
+        [
+          "lit",
+          {
+            "type": "U64",
+            "value": "4294967295"
+          }
+        ]
+      ],
       "params": [
         [
           "base",

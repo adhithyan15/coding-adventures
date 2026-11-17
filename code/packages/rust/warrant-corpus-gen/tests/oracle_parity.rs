@@ -299,3 +299,40 @@ fn control_a_single_flipped_byte_in_the_fixture_is_detected_by_the_comparison() 
     let one_digit = CT_FIXTURE.replacen("\"ir_cost\": 17", "\"ir_cost\": 16", 1);
     assert_ne!(text, one_digit);
 }
+
+#[test]
+fn control_a_mis_lowered_op_refinement_breaks_parity() {
+    // `h`'s refinements are and(a <= 100, b <= a); lower the second as `b < a` instead.
+    assert_parity_breaks(
+        lowered(CORE_V0),
+        V0_FIXTURE,
+        2_000,
+        &mut |l| {
+            let h = l.ops.iter_mut().find(|o| o.name == "h").unwrap();
+            let admit = h.admit.as_mut().unwrap();
+            mutate_first(admit, &mut |n| match n {
+                Ir::Cmp(c @ Cmp::Le, a, _) if matches!(&**a, Ir::Var(v) if v == "b") => {
+                    *c = Cmp::Lt;
+                    true
+                }
+                _ => false,
+            })
+        },
+        "op h: b <= a lowered as b < a",
+    );
+}
+
+#[test]
+fn control_a_dropped_op_refinement_breaks_parity() {
+    assert_parity_breaks(
+        lowered(GF256),
+        GF_FIXTURE,
+        32_768,
+        &mut |l| {
+            let p = l.ops.iter_mut().find(|o| o.name == "power").unwrap();
+            p.admit = None;
+            true
+        },
+        "gf256 power lost its refinement",
+    );
+}

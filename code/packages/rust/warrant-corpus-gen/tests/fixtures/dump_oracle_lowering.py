@@ -34,7 +34,7 @@ sys.path.insert(0, str(PACKAGES / "python" / "warrant-oracle" / "src"))
 
 from coding_adventures_warrant_oracle.corpus_v1 import build_program  # noqa: E402
 from coding_adventures_warrant_oracle.ir_eval import MAX_IR_COST  # noqa: E402
-from coding_adventures_warrant_oracle.lower import lower_document  # noqa: E402
+from coding_adventures_warrant_oracle.lower import BOOL, _Lowerer, lower_document  # noqa: E402
 from coding_adventures_warrant_oracle.parser import parse_source  # noqa: E402
 
 #: (spec file, output file, max_ir_cost).  gf256 declares ``max_ir_cost 32768`` in its
@@ -49,6 +49,25 @@ CASES = [
 
 def _params(pairs) -> list:
     return [[name, str(ty)] for name, ty in pairs]
+
+
+def op_rows(spec) -> dict:
+    """The oracle's op rows plus ``admit``: the parameters' refinements, lowered by the
+    oracle's own typer over the parameter scope and folded left into binary ``and``."""
+    low = _Lowerer(spec)
+    low.order = list(spec.models)
+    rows = {}
+    for name, op in spec.ops.items():
+        row = op.corpus_row()
+        low.scope = dict(op.params)
+        irs = [low.expr(ref, BOOL)[0] for _, ref in op.refinements]
+        if irs:
+            admit = irs[0]
+            for extra in irs[1:]:
+                admit = ["and", admit, extra]
+            row["admit"] = admit
+        rows[name] = row
+    return rows
 
 
 def view(spec_bytes: bytes, max_cost: int) -> dict:
@@ -110,7 +129,7 @@ def view(spec_bytes: bytes, max_cost: int) -> dict:
         "module": spec.name,
         "document": spec.version,
         "errors": {name: list(cases) for name, cases in spec.errors.items()},
-        "ops": {name: op.corpus_row() for name, op in spec.ops.items()},
+        "ops": op_rows(spec),
         "model_order": list(spec.models),
         "models": models,
         "suites": suites,
