@@ -149,7 +149,15 @@ func startedAt(stat []byte, btime time.Time, tck int) (time.Time, error) {
 	if err != nil {
 		return time.Time{}, err
 	}
-	return btime.Add(time.Duration(ticks) * time.Second / time.Duration(tck)), nil
+	// Divide before multiplying: ticks*1e9 wraps int64 above ~9.2e9 ticks (about
+	// 2.9 years at 100 Hz), and a wrapped value would make a new process look old.
+	// A count of more than 100 years of ticks is not a real one: unknown, which
+	// the caller counts as "started after prepare" (fail closed).
+	if ticks > uint64(tck)*100*365*24*3600 {
+		return time.Time{}, errors.New("stat starttime is absurd")
+	}
+	t := uint64(tck)
+	return btime.Add(time.Duration(ticks/t)*time.Second + time.Duration(ticks%t)*time.Second/time.Duration(t)), nil
 }
 
 // scanSurvivors returns what it found, one line per survivor (at most

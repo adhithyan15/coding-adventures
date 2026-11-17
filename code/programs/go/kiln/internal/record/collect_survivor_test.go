@@ -451,6 +451,25 @@ func TestSurvivorTruncatedMountinfoFailsClosedWhateverTheOwner(t *testing.T) {
 	}
 }
 
+func TestSurvivorStartTimeDoesNotOverflow(t *testing.T) {
+	for _, ticks := range []int{10_000_000_000, 100_000_000_000} {
+		got, err := startedAt([]byte(statLine("x", ticks)), fakeBoot, 100)
+		if err != nil || !got.Equal(fakeBoot.Add(time.Duration(ticks/100)*time.Second)) {
+			t.Fatalf("%d: %v %v", ticks, got, err)
+		}
+	}
+	// An absurd count is unknown, and unknown counts as new.
+	if _, err := startedAt([]byte(statLine("x", 1_000_000_000_000)), fakeBoot, 100); err == nil {
+		t.Fatal("an absurd starttime was believed")
+	}
+	denied := &os.PathError{Op: "readlink", Path: "x", Err: syscall.EACCES}
+	f := host()
+	f.procs[30] = &fakeEntry{owner: 1000, cmdline: "x\x00", nsErr: denied, stat: statLine("x", 1<<62)}
+	if got, _ := scanSurvivors(f, sinceQuery()); len(got) != 1 {
+		t.Fatalf("%v", got)
+	}
+}
+
 func TestSurvivorScanThatBlocksCountsAsASurvivor(t *testing.T) {
 	f := host()
 	f.block = make(chan struct{})

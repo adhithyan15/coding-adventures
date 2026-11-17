@@ -1448,7 +1448,13 @@ tokens that the merge already knew (M3, M4) and nothing wrote until now.
   stranger's, or an OLD process of ours (a `systemd --user` manager, an
   ssh-agent) that no build started, and counting those would void every run.
   Each scan is bounded to 5 s (a `/proc` read can block on an uninterruptible
-  task); one that is not done counts as a survivor. There is **no cwd test**: a shell left in the
+  task); one that is not done counts as a survivor. The start-time gate compares
+  the wall-clock `prepared_at` with `btime`-derived start times, so a backward
+  wall-clock step of more than 2 s between `prepare` and `collect` can exclude a
+  new process from S3 only; S1 and S2 are unaffected, and a step cannot move
+  the clock. A monotonic, boot-relative comparison is a planned follow-up. (The
+  tick count is converted without overflow, and an absurd one, over 100 years,
+  counts as new.) There is **no cwd test**: a shell left in the
   checkout writes nothing, and a cwd test would void every run launched from a
   terminal in the repository. A process that vanishes while being read is not
   one. The scan repeats every 200 ms for up to 10 s (`CollectOptions.SurvivorWait`;
