@@ -17,6 +17,19 @@ import (
 // recStepPolicyFiles returns the fixture's code/kiln/legacy files. imagePaths
 // are the `image` roots, in any order and with duplicates: they are sorted and
 // de-duplicated the way the decoder requires (strictly ascending by path).
+// recStepEphemeral is the fixture's ephemeral list (sorted, as host-roots.json
+// requires).  Besides /dev/null it names what libselinux's start-up probes in
+// every binary that links it (GNU coreutils, grep, sed): Ubuntu 26.04's
+// libselinux checks /sys/fs/selinux and /selinux and reads /proc/filesystems,
+// while 24.04's (the kiln-sandbox job's runner) does not.  The probes depend on
+// the image, not on the step, so the fixture treats them as ephemeral.  The
+// classifier itself stays strict: every other host read still voids the run.
+const recStepEphemeral = `["/dev/null", "/proc/filesystems", "/sys/fs/selinux"]`
+
+// recStepAbsentOK: the old /selinux mount point, probed the same way; it is
+// absent on every current distribution (a present one would still void the run).
+const recStepAbsentOK = `["/selinux"]`
+
 func recStepPolicyFiles(imagePaths []string) map[string]string {
 	seen := map[string]bool{}
 	var paths []string
@@ -40,7 +53,7 @@ func recStepPolicyFiles(imagePaths []string) map[string]string {
 `,
 		"code/kiln/legacy/env.json":        `{"names": ["FIXTURE_*", "LANG"]}`,
 		legacy.BoundaryPath:                `{"schema_version": 1, "language_source_input_registry_sha256": "00", "boundaries": []}`,
-		"code/kiln/legacy/host-roots.json": `{"roots": [` + strings.Join(roots, ",") + `], "ephemeral": ["/dev/null"], "absent-ok": []}`,
+		"code/kiln/legacy/host-roots.json": `{"roots": [` + strings.Join(roots, ",") + `], "ephemeral": ` + recStepEphemeral + `, "absent-ok": ` + recStepAbsentOK + `}`,
 	}
 }
 
