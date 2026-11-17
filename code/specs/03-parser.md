@@ -190,6 +190,43 @@ iteration that matched nothing, so the engine terminates on any grammar,
 validated or not. Full semantics:
 [F11](F11-grammar-token-adjacency-predicates.md).
 
+## Bounded recursion, start rules and compiled grammars (Go engine)
+
+The packrat engine recurses once per rule level, so deeply nested input could
+exhaust the stack. In Go that is a fatal, unrecoverable process crash, which
+makes unbounded recursion a denial of service for every consumer. The Go
+`GrammarParser` therefore counts rule-recursion depth and refuses to exceed
+`Options.MaxDepth` (default `DefaultMaxDepth` = 10,000 rule levels, ceiling
+`HardMaxDepth` = 50,000), returning an error that satisfies
+`errors.Is(err, ErrMaxDepth)`. The refusal is sticky: it is reported even if
+an enclosing optional or repetition would have backtracked past the failed rule
+and "succeeded" on a prefix. Other implementations should do the same and keep
+a hostile-nesting test that asserts the error category.
+
+Each memoised result records the height of its subtree; reusing or growing it
+(left recursion) is refused if depth plus height would pass `MaxDepth`, so a
+successful parse returns a tree of at most `MaxDepth` levels; matcher
+recursion through nested groups, optionals and lookaheads is charged to a
+global frame budget (`HardMaxFrames`) so `HardMaxDepth` really bounds the
+stack. Tree walkers (`WalkAST`, `FindNodes`, `CollectTokens`) are iterative.
+`Options.MaxTokens` and `Options.MaxMemoSlots` optionally cap memory. At the
+default limit the Go wrappers refuse JSON arrays at about 5,000 nested levels,
+Python parentheses at about 3,300 and TypeScript call arguments at about 500.
+
+Also in the Go engine: `Options.StartRule` parses from any named rule (an
+unknown name is an error); `CompileGrammar` builds an immutable, goroutine-safe
+`Compiled` once so many inputs can be parsed without redoing per-grammar work;
+reading past the end of the token list yields a synthetic EOF rather than
+repeating the last token (so `p = A B EOF` accepts `[A, B]`); an EOF token in
+the middle of the list ends the parse and consumers that cannot allow that
+must reject it themselves.
+
+**No error recovery.** The grammar-driven parser has none and must not gain
+any silently: a parse returns a complete tree for the whole input or an error,
+never a partial tree, so consumers can fail closed. (The "Error recovery"
+future extension below is a separate, opt-in feature for the hand-written
+parser and would not change this guarantee.)
+
 ## Future Extensions
 
 - **Grammar-driven parser generator**: Define grammar in BNF/PEG, generate the parser
