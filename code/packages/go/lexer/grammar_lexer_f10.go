@@ -34,7 +34,7 @@ package lexer
 //     group is "exclusive": only its own patterns apply, no default fallthrough.
 //
 // computeInheritingModes computes which groups are inheriting from the
-// transitions table so tryMatchTokenInGroup can handle the pattern merging.
+// transitions table so matchToken can handle the pattern merging.
 //
 // ## Integration points
 //
@@ -100,14 +100,14 @@ func computeInheritingModes(transitions []grammartools.ModeTransition) map[strin
 // This method is a no-op when the grammar has no transitions table (pre-F10
 // grammars are unaffected).
 func (l *GrammarLexer) applyTransitions(tok Token) {
-	if len(l.transitions) == 0 {
+	if len(l.c.transitions) == 0 {
 		return
 	}
 
 	// The active group is the top of the group stack.
 	active := l.groupStack[len(l.groupStack)-1]
 
-	for _, rule := range l.transitions {
+	for _, rule := range l.c.transitions {
 		// 1. Token-type guard: does the rule trigger on this token's type?
 		typeMatched := false
 		for _, onType := range rule.OnTokens {

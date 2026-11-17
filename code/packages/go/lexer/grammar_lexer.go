@@ -31,21 +31,10 @@ package lexer
 
 import (
 	"fmt"
-	"regexp"
 	"strings"
 
 	grammartools "github.com/adhithyan15/coding-adventures/code/packages/go/grammar-tools"
 )
-
-// ---------------------------------------------------------------------------
-// Compiled Pattern — A regex paired with its token name and optional alias
-// ---------------------------------------------------------------------------
-
-type compiledPattern struct {
-	Name    string
-	Pattern *regexp.Regexp
-	Alias   string // Optional type alias
-}
 
 // ---------------------------------------------------------------------------
 // On-Token Callback Type
@@ -147,9 +136,9 @@ func (ctx *LexerContext) PushGroup(groupName string) {
 	_, _ = StartNew[struct{}]("lexer.PushGroup", struct{}{},
 		func(op *Operation[struct{}], rf *ResultFactory[struct{}]) *OperationResult[struct{}] {
 			op.AddProperty("groupName", groupName)
-			if _, ok := ctx.lexer.groupPatterns[groupName]; !ok {
-				available := make([]string, 0, len(ctx.lexer.groupPatterns))
-				for name := range ctx.lexer.groupPatterns {
+			if !ctx.lexer.c.hasGroup(groupName) {
+				available := make([]string, 0, len(ctx.lexer.c.tables))
+				for name := range ctx.lexer.c.tables {
 					available = append(available, name)
 				}
 				panic(fmt.Sprintf(
@@ -337,31 +326,27 @@ func (ctx *LexerContext) PrecededByNewline() bool {
 //
 // Instead of hardcoded character-matching logic, this lexer:
 //
-//  1. Compiles each token definition's pattern into a regex
-//  2. At each position, tries each regex in definition order (first match wins)
+//  1. Compiles each token definition's pattern once (see Compile)
+//  2. At each position, tries the rules that can start with the next byte, in
+//     definition order (first match wins)
 //  3. Emits a Token with the matched type and value
 //
 // Supports skip patterns, type aliases, reserved keywords, indentation mode,
 // pattern groups with stackable transitions, and on-token callbacks.
+//
+// A GrammarLexer is the per-run state (position, group stack, hooks) wrapped
+// around an immutable *Compiled. Use Compile / Compiled.Tokenize when the same
+// grammar is used repeatedly or when a panic is unacceptable.
 type GrammarLexer struct {
-	source       string
-	grammar      *grammartools.TokenGrammar
-	pos          int
-	line         int
-	column       int
-	keywordSet   map[string]struct{}
-	reservedSet  map[string]struct{}
-	patterns     []compiledPattern
-	skipPatterns []*regexp.Regexp
+	// c is the shared, immutable compiled grammar.
+	c *Compiled
 
-	// hasSkipPatterns tracks whether the grammar defines skip patterns.
-	// When true, skip patterns take over whitespace handling entirely.
-	// When false, the lexer falls back to hardcoded space/tab/CR skipping.
-	hasSkipPatterns bool
+	source string
+	pos    int
+	line   int
+	column int
 
 	// Indentation mode state
-	indentMode   bool
-	layoutMode   bool
 	indentStack  []int
 	bracketDepth int // Legacy: single bracket depth for indentation mode
 
@@ -382,27 +367,17 @@ type GrammarLexer struct {
 		brace   int
 	}
 
-	// lastEmittedToken is the most recently emitted token, for lookbehind
-	// in callbacks. Updated after each token push (including callback-emitted
-	// tokens). Reset to nil on each Tokenize() call.
-	lastEmittedToken *Token
-
-	// contextKeywordSet is the pre-computed set of context-sensitive keywords
-	// for O(1) lookup. Words in this set are emitted as NAME tokens with
-	// the TokenContextKeyword flag.
-	contextKeywordSet map[string]struct{}
-	layoutKeywordSet  map[string]struct{}
-
-	// --- Pattern groups ---
-	// groupPatterns maps group names to their compiled patterns. The
-	// "default" group uses the top-level definitions. Named groups use
-	// their own definitions from the grammar's "group:" sections.
-	groupPatterns map[string][]compiledPattern
+	// lastEmitted is the most recently emitted token, for lookbehind in
+	// callbacks; hasLast says whether there is one. Reset on each Tokenize().
+	lastEmitted Token
+	hasLast     bool
 
 	// groupStack is the stack of active pattern groups. The bottom is
-	// always "default". The top determines which patterns are tried
-	// during token matching.
+	// always the start mode. The top determines which patterns are tried
+	// during token matching. It starts out backed by stackBuf so ordinary
+	// nesting depths need no allocation.
 	groupStack []string
+	stackBuf   [8]string
 
 	// onToken is the optional callback that fires on every token match.
 	// nil means no callback (zero overhead in the hot loop).
@@ -413,10 +388,6 @@ type GrammarLexer struct {
 	// significant (e.g., CDATA sections).
 	skipEnabled bool
 
-	// aliasMap maps token definition names to their aliases. Used during
-	// group pattern compilation to register aliases from group definitions.
-	aliasMap map[string]string
-
 	// preTokenizeHooks holds functions that transform the source text before
 	// tokenization. Multiple hooks compose left-to-right (A → B → C).
 	preTokenizeHooks []PreTokenizeHook
@@ -425,44 +396,29 @@ type GrammarLexer struct {
 	// tokenization. Multiple hooks compose left-to-right.
 	postTokenizeHooks []PostTokenizeHook
 
-	// F10: declarative mode transitions (from the transitions: section).
-	// Empty when the grammar has no transitions table (pre-F10 behaviour).
-	transitions []grammartools.ModeTransition
-
-	// F10: set of group names that inherit the default group's patterns.
-	// A group inherits when it is a set_mode target but not a push target.
-	// Pre-computed from transitions at construction time.
-	inheritingModes map[string]bool
-
-	// F10: the group the lexer starts in. Set from the grammar's start_mode:
-	// directive; defaults to "default" when unset.
-	startMode string
-
-	// caseInsensitive is true when the grammar was loaded with
-	// # @case_insensitive true. In this mode:
-	//   - The keyword set stores uppercase keyword values.
-	//   - Keyword lookup uses strings.ToUpper(value) before checking.
-	//   - Emitted KEYWORD tokens have their value normalized to uppercase.
-	// This allows SQL grammars to accept SELECT/select/Select etc. and
-	// still match grammar literals like "SELECT".
-	caseInsensitive bool
-
 	// originalSource stores the raw, unmodified input string.
 	//
-	// In case-insensitive mode the working source (l.source) is lowercased
-	// to make keyword pattern matching case-insensitive.  Without this field
-	// STRING token values would also be lowercased — 'Alice' would become
-	// 'alice'.  By keeping originalSource we can extract the body of every
-	// STRING token from the original text at the same byte offset, preserving
-	// whatever case the user wrote.
+	// When the grammar's CaseSensitive field is false the working source
+	// (l.source) is lowercased to make keyword pattern matching
+	// case-insensitive.  Without this field STRING token values would also be
+	// lowercased — 'Alice' would become 'alice'.  By keeping originalSource we
+	// can extract the body of every STRING token from the original text at the
+	// same byte offset, preserving whatever case the user wrote.
 	originalSource string
+
+	// indentBuf backs indentStack for the common shallow case.
+	indentBuf [16]int
 }
 
 // NewGrammarLexer creates a new grammar-driven lexer.
 //
-// It compiles all token definitions, skip patterns, and group patterns into
-// regexes. The compiled patterns are anchored to the start of the remaining
-// source (using ^) so that only matches at the current position are found.
+// It compiles all token definitions, skip patterns, and group patterns (via
+// Compile). The compiled patterns are anchored to the start of the remaining
+// source so that only matches at the current position are found.
+//
+// Compatibility: a pattern that does not compile still causes this legacy
+// constructor to fail (it yields a nil lexer, as it always did). New code
+// should call Compile, which reports the error.
 func NewGrammarLexer(source string, grammar *grammartools.TokenGrammar) *GrammarLexer {
 	result, _ := StartNew[*GrammarLexer]("lexer.NewGrammarLexer", nil,
 		func(op *Operation[*GrammarLexer], rf *ResultFactory[*GrammarLexer]) *OperationResult[*GrammarLexer] {
@@ -472,154 +428,34 @@ func NewGrammarLexer(source string, grammar *grammartools.TokenGrammar) *Grammar
 }
 
 func newGrammarLexerImpl(source string, grammar *grammartools.TokenGrammar) *GrammarLexer {
-	// Case-insensitive mode: lowercase the entire source before tokenization.
-	// This ensures keyword matching works because keywords in the .tokens file
-	// are already lowercase, and now the source text will be too.
+	c, err := compiledFor(grammar)
+	if err != nil {
+		panic(err.Error())
+	}
+	return c.newLexer(source)
+}
+
+// newLexer creates the per-run state for one source text.
+func (c *Compiled) newLexer(source string) *GrammarLexer {
+	// When CaseSensitive is false, lowercase the entire source before
+	// tokenization. Keywords in the .tokens file are already lowercase, so
+	// this makes keyword matching work.
 	src := source
-	if !grammar.CaseSensitive {
+	if c.lowerSource {
 		src = strings.ToLower(source)
 	}
-
-	// Build keyword set. When case-insensitive mode is active, keywords
-	// are stored as uppercase so lookup can use strings.ToUpper(value).
-	keywordSet := make(map[string]struct{})
-	for _, kw := range grammar.Keywords {
-		if grammar.CaseInsensitive {
-			keywordSet[strings.ToUpper(kw)] = struct{}{}
-		} else {
-			keywordSet[kw] = struct{}{}
-		}
+	l := &GrammarLexer{
+		c:              c,
+		source:         src,
+		originalSource: source,
+		line:           1,
+		column:         1,
+		skipEnabled:    true,
 	}
-
-	// Build reserved keyword set (same case treatment as keyword set).
-	reservedSet := make(map[string]struct{})
-	for _, rk := range grammar.ReservedKeywords {
-		if grammar.CaseInsensitive {
-			reservedSet[strings.ToUpper(rk)] = struct{}{}
-		} else {
-			reservedSet[rk] = struct{}{}
-		}
-	}
-
-	// Build alias map: definition name -> alias name.
-	// For example, STRING_DQ -> STRING. When we match STRING_DQ, we emit
-	// the token type as STRING (the alias).
-	aliasMap := make(map[string]string)
-	for _, defn := range grammar.Definitions {
-		if defn.Alias != "" {
-			aliasMap[defn.Name] = defn.Alias
-		}
-	}
-
-	// Compile top-level token patterns.
-	var patterns []compiledPattern
-	for _, defn := range grammar.Definitions {
-		var patStr string
-		if defn.IsRegex {
-			patStr = "^" + defn.Pattern
-		} else {
-			patStr = "^" + regexp.QuoteMeta(defn.Pattern)
-		}
-
-		pat, err := regexp.Compile(patStr)
-		if err != nil {
-			panic(fmt.Sprintf("Failed to compile pattern for token %s: %v", defn.Name, err))
-		}
-		patterns = append(patterns, compiledPattern{Name: defn.Name, Pattern: pat, Alias: defn.Alias})
-	}
-
-	// Compile skip patterns (comments, whitespace, etc.).
-	var skipPatterns []*regexp.Regexp
-	for _, defn := range grammar.SkipDefinitions {
-		var patStr string
-		if defn.IsRegex {
-			patStr = "^" + defn.Pattern
-		} else {
-			patStr = "^" + regexp.QuoteMeta(defn.Pattern)
-		}
-		pat, err := regexp.Compile(patStr)
-		if err != nil {
-			panic(fmt.Sprintf("Failed to compile skip pattern %s: %v", defn.Name, err))
-		}
-		skipPatterns = append(skipPatterns, pat)
-	}
-
-	// --- Compile pattern groups ---
-	// The "default" group uses the top-level definitions. Named groups
-	// use their own definitions from the grammar's "group:" sections.
-	groupPatterns := map[string][]compiledPattern{
-		"default": append([]compiledPattern{}, patterns...),
-	}
-	for groupName, group := range grammar.Groups {
-		var compiled []compiledPattern
-		for _, defn := range group.Definitions {
-			var patStr string
-			if defn.IsRegex {
-				patStr = "^" + defn.Pattern
-			} else {
-				patStr = "^" + regexp.QuoteMeta(defn.Pattern)
-			}
-			pat, err := regexp.Compile(patStr)
-			if err != nil {
-				panic(fmt.Sprintf("Failed to compile group pattern %s/%s: %v", groupName, defn.Name, err))
-			}
-			compiled = append(compiled, compiledPattern{Name: defn.Name, Pattern: pat, Alias: defn.Alias})
-			// Register aliases from group definitions.
-			if defn.Alias != "" {
-				aliasMap[defn.Name] = defn.Alias
-			}
-		}
-		groupPatterns[groupName] = compiled
-	}
-
-	// Build context keyword set for O(1) lookup.
-	contextKeywordSet := make(map[string]struct{})
-	for _, ck := range grammar.ContextKeywords {
-		contextKeywordSet[ck] = struct{}{}
-	}
-	layoutKeywordSet := make(map[string]struct{})
-	for _, kw := range grammar.LayoutKeywords {
-		layoutKeywordSet[kw] = struct{}{}
-	}
-
-	// F10: Compute flat-mode inheritance and resolve the start mode.
-	// When start_mode: is unset in the grammar, startMode defaults to "default".
-	startMode := grammar.StartMode
-	if startMode == "" {
-		startMode = "default"
-	}
-	inheritingModes := computeInheritingModes(grammar.Transitions)
-
-	return &GrammarLexer{
-		source:            src,
-		originalSource:    source,
-		grammar:           grammar,
-		pos:               0,
-		line:              1,
-		column:            1,
-		keywordSet:        keywordSet,
-		reservedSet:       reservedSet,
-		patterns:          patterns,
-		skipPatterns:      skipPatterns,
-		hasSkipPatterns:   len(grammar.SkipDefinitions) > 0,
-		indentMode:        grammar.Mode == "indentation",
-		layoutMode:        grammar.Mode == "layout",
-		indentStack:       []int{0},
-		bracketDepth:      0,
-		groupPatterns:     groupPatterns,
-		groupStack:        []string{startMode},
-		onToken:           nil,
-		skipEnabled:       true,
-		aliasMap:          aliasMap,
-		caseInsensitive:   grammar.CaseInsensitive,
-		preTokenizeHooks:  nil,
-		postTokenizeHooks: nil,
-		contextKeywordSet: contextKeywordSet,
-		layoutKeywordSet:  layoutKeywordSet,
-		transitions:       grammar.Transitions,
-		inheritingModes:   inheritingModes,
-		startMode:         startMode,
-	}
+	l.indentStack = l.indentBuf[:1]
+	l.stackBuf[0] = c.startMode
+	l.groupStack = l.stackBuf[:1]
+	return l
 }
 
 // AddPreTokenize registers a text transform to run before tokenization.
@@ -727,97 +563,55 @@ func (l *GrammarLexer) advance() {
 	}
 }
 
+// advanceN consumes n bytes (n never exceeds what is left), keeping line and
+// column exact without stepping one byte at a time through the interpreter.
+//
+// If the consumed text contains no newline the column simply moves by n. If it
+// does, the line moves by the number of newlines and the column restarts at 1
+// after the last one:
+//
+//	consumed "ab\ncd" (n=5, last '\n' at index 2)  ->  column = n - 2 = 3
+func (l *GrammarLexer) advanceN(n int) {
+	seg := l.source[l.pos : l.pos+n]
+	if i := strings.LastIndexByte(seg, '\n'); i >= 0 {
+		l.line += strings.Count(seg, "\n")
+		l.column = n - i
+	} else {
+		l.column += n
+	}
+	l.pos += n
+}
+
 // ---------------------------------------------------------------------------
 // Token Type Resolution
 // ---------------------------------------------------------------------------
 
-// resolveTokenType maps a grammar token name to a TokenType and TypeName.
-// Returns (tokenType, typeName) where typeName is the effective name for
-// the parser (alias if present, otherwise the definition name).
-func (l *GrammarLexer) resolveTokenType(tokenName string, value string, alias string) (TokenType, string) {
-	// Reserved keyword check. In case-insensitive mode, compare using the
-	// uppercase form of the value (the reserved set stores uppercase keys).
-	if tokenName == "NAME" {
-		lookupValue := value
-		if l.caseInsensitive {
-			lookupValue = strings.ToUpper(value)
-		}
-		if _, ok := l.reservedSet[lookupValue]; ok {
-			panic(fmt.Sprintf("LexerError at %d:%d: Reserved keyword %q cannot be used as an identifier", l.line, l.column, value))
-		}
-	}
-
-	// Regular keyword check. In case-insensitive mode, the keyword set
-	// stores uppercase values. We compare strings.ToUpper(value) against
-	// the set and emit the keyword with its value normalized to uppercase.
-	// This means grammar rules can use "SELECT" and it matches select/SELECT/Select.
-	if tokenName == "NAME" {
-		lookupValue := value
-		if l.caseInsensitive {
-			lookupValue = strings.ToUpper(value)
-		}
-		if _, ok := l.keywordSet[lookupValue]; ok {
-			if l.caseInsensitive {
-				// Normalize the emitted keyword value to uppercase so grammar
-				// literals like "SELECT" match regardless of input case.
-				return TokenKeyword, "KEYWORD"
+// classify decides the final (TokenType, TypeName) for a match of rule r.
+//
+// For most rules the answer was settled when the grammar was compiled. Only a
+// rule literally named NAME needs a run-time look at the matched text: it may
+// be a reserved word (an error) or a keyword (type KEYWORD).
+//
+// In case-insensitive mode the sets hold upper-case words, so the matched text
+// is upper-cased before the lookup.
+func (l *GrammarLexer) classify(r *rule, value string) (TokenType, string, error) {
+	if r.isName {
+		c := l.c
+		if len(c.reservedSet) > 0 || len(c.keywordSet) > 0 {
+			lookup := value
+			if c.caseInsensitive {
+				lookup = strings.ToUpper(value)
 			}
-			return TokenKeyword, "KEYWORD"
+			if _, ok := c.reservedSet[lookup]; ok {
+				return 0, "", &LexError{l.line, l.column,
+					fmt.Sprintf("Reserved keyword %q cannot be used as an identifier", value)}
+			}
+			if _, ok := c.keywordSet[lookup]; ok {
+				return TokenKeyword, "KEYWORD", nil
+			}
 		}
 	}
-
-	// Determine effective name (alias takes precedence)
-	effectiveName := tokenName
-	if alias != "" {
-		effectiveName = alias
-	}
-
-	// Try known token types
-	switch effectiveName {
-	case "NAME":
-		return TokenName, "NAME"
-	case "NUMBER":
-		return TokenNumber, "NUMBER"
-	case "STRING":
-		return TokenString, "STRING"
-	case "PLUS":
-		return TokenPlus, "PLUS"
-	case "MINUS":
-		return TokenMinus, "MINUS"
-	case "STAR":
-		return TokenStar, "STAR"
-	case "SLASH":
-		return TokenSlash, "SLASH"
-	case "EQUALS":
-		return TokenEquals, "EQUALS"
-	case "EQUALS_EQUALS":
-		return TokenEqualsEquals, "EQUALS_EQUALS"
-	case "LPAREN":
-		return TokenLParen, "LPAREN"
-	case "RPAREN":
-		return TokenRParen, "RPAREN"
-	case "COMMA":
-		return TokenComma, "COMMA"
-	case "COLON":
-		return TokenColon, "COLON"
-	case "SEMICOLON":
-		return TokenSemicolon, "SEMICOLON"
-	case "LBRACE":
-		return TokenLBrace, "LBRACE"
-	case "RBRACE":
-		return TokenRBrace, "RBRACE"
-	case "LBRACKET":
-		return TokenLBracket, "LBRACKET"
-	case "RBRACKET":
-		return TokenRBracket, "RBRACKET"
-	case "DOT":
-		return TokenDot, "DOT"
-	case "BANG":
-		return TokenBang, "BANG"
-	default:
-		// Unknown type -- use TokenName as base but store the string type
-		return TokenName, effectiveName
-	}
+	return r.tokenType, r.typeName, nil
 }
 
 // ---------------------------------------------------------------------------
@@ -825,134 +619,127 @@ func (l *GrammarLexer) resolveTokenType(tokenName string, value string, alias st
 // ---------------------------------------------------------------------------
 
 // trySkip attempts to match and consume a skip pattern at the current position.
-func (l *GrammarLexer) trySkip() bool {
+func (l *GrammarLexer) trySkip() (bool, error) {
 	remaining := l.source[l.pos:]
-	for _, pat := range l.skipPatterns {
-		loc := pat.FindStringIndex(remaining)
-		if loc != nil && loc[0] == 0 {
-			for i := 0; i < loc[1]; i++ {
-				l.advance()
-			}
-			return true
+	for _, r := range l.c.skip.byByte[remaining[0]] {
+		n := r.matchLen(remaining)
+		if n < 0 {
+			continue
 		}
+		if n == 0 {
+			// The legacy loop would spin forever here; refuse instead.
+			return false, &LexError{l.line, l.column,
+				fmt.Sprintf("Skip pattern %s matched the empty string", r.name)}
+		}
+		l.advanceN(n)
+		return true, nil
 	}
-	return false
+	return false, nil
 }
 
 // ---------------------------------------------------------------------------
 // Token Matching — Per-Group
 // ---------------------------------------------------------------------------
 
-// tryMatchToken attempts to match a token using the default group's patterns.
-// This is used by the indentation tokenizer which does not support groups.
-func (l *GrammarLexer) tryMatchToken() *Token {
-	return l.tryMatchTokenInGroup("default")
+// tableFor returns the dispatch table of the active (top-of-stack) group.
+func (l *GrammarLexer) tableFor() *ruleTable {
+	return l.c.table(l.groupStack[len(l.groupStack)-1])
 }
 
-// tryMatchTokenInGroup attempts to match a token at the current position
-// using the patterns from a specific group.
+// matchToken attempts to match a token at the current position using one
+// group's rules.
 //
-// It tries each compiled pattern in the named group in priority order (first
-// match wins). Handles keyword detection, reserved word checking, aliases,
-// and string escape processing.
-func (l *GrammarLexer) tryMatchTokenInGroup(groupName string) *Token {
+// Only the rules that can start with the next byte are tried, in grammar order
+// (first match wins). Handles keyword detection, reserved word checking,
+// aliases, and string quote stripping. On a match the position is advanced.
+//
+// Returns (token, true, nil) on a match, (_, false, nil) when nothing matches
+// and (_, false, err) for a reserved word or a rule that matched nothing at all.
+func (l *GrammarLexer) matchToken(t *ruleTable) (Token, bool, error) {
 	remaining := l.source[l.pos:]
 
-	// Look up the group's patterns. Fall back to default if unknown.
-	patterns, ok := l.groupPatterns[groupName]
-	if !ok {
-		patterns = l.patterns
-	}
-
-	// F10: flat-mode inheritance. Groups targeted by set_mode (but not push)
-	// inherit the default group's patterns as a fallthrough. This means
-	// group-specific patterns take priority, then the default patterns are
-	// tried for tokens that the group does not override.
-	if groupName != "default" && l.inheritingModes[groupName] {
-		defaultPatterns := l.groupPatterns["default"]
-		merged := make([]compiledPattern, 0, len(patterns)+len(defaultPatterns))
-		merged = append(merged, patterns...)
-		merged = append(merged, defaultPatterns...)
-		patterns = merged
-	}
-
-	for _, p := range patterns {
-		loc := p.Pattern.FindStringIndex(remaining)
-		if loc != nil && loc[0] == 0 {
-			value := remaining[:loc[1]]
-			startLine := l.line
-			startCol := l.column
-
-			tType, typeName := l.resolveTokenType(p.Name, value, p.Alias)
-
-			// In case-insensitive mode, normalize KEYWORD token values to
-			// uppercase. This ensures grammar literals like "SELECT" match
-			// regardless of how the user typed the keyword (select/SELECT/Select).
-			if l.caseInsensitive && tType == TokenKeyword {
-				value = strings.ToUpper(value)
-			}
-
-			// Handle STRING tokens: strip quotes and optionally process escapes.
-			// When EscapeMode is "none", we strip the quotes but leave escape
-			// sequences as raw text. This is used by grammars like TOML and CSS
-			// where different string types have different escape semantics — the
-			// semantic layer handles escape processing instead of the lexer.
-			//
-			// Case-preservation: in case-insensitive mode, l.source is the
-			// lowercased working copy, so `value` is already lowercase.  For
-			// STRING tokens we want to preserve the original case the user typed
-			// (e.g. 'Alice' must not become 'alice').  We re-read the same byte
-			// range from l.originalSource (which is never lowercased) and use
-			// that for the string body instead of `value`.
-			if strings.Contains(p.Name, "STRING") || (p.Alias != "" && strings.Contains(p.Alias, "STRING")) {
-				tokenLen := loc[1]
-				originalValue := value
-				if l.caseInsensitive && tokenLen > 0 && l.pos+tokenLen <= len(l.originalSource) {
-					originalValue = l.originalSource[l.pos : l.pos+tokenLen]
-				}
-				if len(originalValue) >= 2 {
-					quote := originalValue[0]
-					if quote == '"' || quote == '\'' {
-						// Check for triple-quoted strings (""" or ''')
-						if len(originalValue) >= 6 && originalValue[0] == originalValue[1] && originalValue[1] == originalValue[2] {
-							inner := originalValue[3 : len(originalValue)-3]
-							if l.grammar.EscapeMode != "none" {
-								inner = processEscapes(inner)
-							}
-							value = inner
-						} else {
-							inner := originalValue[1 : len(originalValue)-1]
-							if l.grammar.EscapeMode != "none" {
-								inner = processEscapes(inner)
-							}
-							value = inner
-						}
-					}
-				}
-			}
-
-			// Check if this NAME token is a context keyword — a word that
-			// is sometimes a keyword and sometimes an identifier depending
-			// on syntactic position. Context keywords are emitted as NAME
-			// with the TokenContextKeyword flag, leaving the final decision
-			// to the language-specific parser or callback.
-			var flags int
-			if typeName == "NAME" && len(l.contextKeywordSet) > 0 {
-				if _, isCtx := l.contextKeywordSet[value]; isCtx {
-					flags = TokenContextKeyword
-				}
-			}
-
-			tok := Token{Type: tType, Value: value, Line: startLine, Column: startCol, TypeName: typeName, Flags: flags}
-
-			for i := 0; i < loc[1]; i++ {
-				l.advance()
-			}
-
-			return &tok
+	for _, r := range t.byByte[remaining[0]] {
+		n := r.matchLen(remaining)
+		if n < 0 {
+			continue
 		}
+		if n == 0 {
+			// The legacy loop would emit tokens forever here; refuse instead.
+			return Token{}, false, &LexError{l.line, l.column,
+				fmt.Sprintf("Token rule %s matched the empty string", r.name)}
+		}
+
+		value := remaining[:n]
+		tType, typeName, err := l.classify(r, value)
+		if err != nil {
+			return Token{}, false, err
+		}
+
+		// In case-insensitive mode, normalize KEYWORD token values to
+		// uppercase. This ensures grammar literals like "SELECT" match
+		// regardless of how the user typed the keyword (select/SELECT/Select).
+		if l.c.caseInsensitive && tType == TokenKeyword {
+			value = strings.ToUpper(value)
+		}
+
+		if r.stringLike {
+			value = l.stripQuotes(value, n)
+		}
+
+		// Context keywords are emitted as NAME with the TokenContextKeyword
+		// flag, leaving the final decision to the parser or a callback.
+		var flags int
+		if typeName == "NAME" && len(l.c.contextKeywordSet) > 0 {
+			if _, isCtx := l.c.contextKeywordSet[value]; isCtx {
+				flags = TokenContextKeyword
+			}
+		}
+
+		tok := Token{Type: tType, Value: value, Line: l.line, Column: l.column, TypeName: typeName, Flags: flags}
+		l.advanceN(n)
+		return tok, true, nil
 	}
-	return nil
+	return Token{}, false, nil
+}
+
+// stripQuotes implements the legacy rule for tokens whose rule name (or alias)
+// contains "STRING": if the matched text begins with a quote character (" or
+// ') and is at least two bytes long, the surrounding quotes are removed and,
+// unless the grammar says `escapes: none`, backslash escapes are processed.
+// Triple-quoted text (three double or three single quotes, six bytes or more) has three bytes stripped
+// from each end.
+//
+// This is a naming convention rather than a declared feature, and it surprises
+// people: a token called QUOTED_STRING or STRING_LITERAL has its quotes
+// removed, one called QUOTED does not. It is kept exactly as-is for
+// compatibility with every existing grammar; the cure for a grammar that does
+// not want it is to avoid "STRING" in the token name.
+//
+// Case-preservation: when the grammar is case-insensitive the working source
+// is a lowercased copy, so the body is re-read from the original text at the
+// same byte offset ('Alice' must not become 'alice').
+func (l *GrammarLexer) stripQuotes(value string, tokenLen int) string {
+	originalValue := value
+	if l.c.caseInsensitive && tokenLen > 0 && l.pos+tokenLen <= len(l.originalSource) {
+		originalValue = l.originalSource[l.pos : l.pos+tokenLen]
+	}
+	if len(originalValue) < 2 {
+		return value
+	}
+	quote := originalValue[0]
+	if quote != '"' && quote != '\'' {
+		return value
+	}
+	var inner string
+	if len(originalValue) >= 6 && originalValue[0] == originalValue[1] && originalValue[1] == originalValue[2] {
+		inner = originalValue[3 : len(originalValue)-3]
+	} else {
+		inner = originalValue[1 : len(originalValue)-1]
+	}
+	if !l.c.escapeNone {
+		inner = processEscapes(inner)
+	}
+	return inner
 }
 
 // ---------------------------------------------------------------------------
@@ -961,6 +748,10 @@ func (l *GrammarLexer) tryMatchTokenInGroup(groupName string) *Token {
 
 // processEscapes handles escape sequences in string literals.
 func processEscapes(s string) string {
+	// Fast path: no backslash means nothing to process (and no allocation).
+	if strings.IndexByte(s, '\\') < 0 {
+		return s
+	}
 	var sb strings.Builder
 	i := 0
 	for i < len(s) {
@@ -995,52 +786,81 @@ func processEscapes(s string) string {
 //
 // Dispatches to the appropriate tokenization method based on whether
 // indentation mode is active.
+//
+// Legacy behaviour: unexpected input panics (with the text of the LexError).
+// Callers that need an error instead should use Compiled.Tokenize.
 func (l *GrammarLexer) Tokenize() []Token {
 	result, _ := StartNew[[]Token]("lexer.GrammarLexer.Tokenize", nil,
 		func(op *Operation[[]Token], rf *ResultFactory[[]Token]) *OperationResult[[]Token] {
-			// Stage 1: Pre-tokenize hooks transform the source text.
-			// Each hook receives the output of the previous hook, composing
-			// left-to-right. This enables source-level transforms like macro
-			// expansion or encoding normalization before any pattern matching.
-			if len(l.preTokenizeHooks) > 0 {
-				source := l.source
-				for _, hook := range l.preTokenizeHooks {
-					source = hook(source)
-				}
-				l.source = source
+			tokens, err := l.tokenizeAll()
+			if err != nil {
+				panic(err.Error())
 			}
-
-			// Reset extension state for reuse between Tokenize() calls.
-			l.lastEmittedToken = nil
-			l.bracketDepths.paren = 0
-			l.bracketDepths.bracket = 0
-			l.bracketDepths.brace = 0
-
-			// Stage 2: Core tokenization.
-			var tokens []Token
-			if l.indentMode {
-				tokens = l.tokenizeIndentation()
-			} else if l.layoutMode {
-				tokens = l.tokenizeLayout()
-			} else {
-				tokens = l.tokenizeStandard()
-			}
-
-			// Stage 3: Post-tokenize hooks transform the token list.
-			// Each hook receives the full token list (including EOF) and returns
-			// a (possibly modified) token list. Hooks compose left-to-right.
-			for _, hook := range l.postTokenizeHooks {
-				tokens = hook(tokens)
-			}
-
 			return rf.Generate(true, false, tokens)
 		}).PanicOnUnexpected().GetResult()
 	return result
 }
 
+// tokenizeAll runs the whole pipeline (pre-hooks, core, post-hooks) and
+// returns an error instead of panicking. It is the single engine behind both
+// GrammarLexer.Tokenize and Compiled.Tokenize.
+func (l *GrammarLexer) tokenizeAll() ([]Token, error) {
+	// Stage 1: Pre-tokenize hooks transform the source text.
+	// Each hook receives the output of the previous hook, composing
+	// left-to-right. This enables source-level transforms like macro
+	// expansion or encoding normalization before any pattern matching.
+	if len(l.preTokenizeHooks) > 0 {
+		source := l.source
+		for _, hook := range l.preTokenizeHooks {
+			source = hook(source)
+		}
+		l.source = source
+	}
+
+	// Reset extension state for reuse between Tokenize() calls.
+	l.hasLast = false
+	l.bracketDepths.paren = 0
+	l.bracketDepths.bracket = 0
+	l.bracketDepths.brace = 0
+
+	// Stage 2: Core tokenization.
+	var tokens []Token
+	var err error
+	if l.c.indentMode {
+		tokens, err = l.tokenizeIndentation()
+	} else if l.c.layoutMode {
+		tokens, err = l.tokenizeLayout()
+	} else {
+		tokens, err = l.tokenizeStandard()
+	}
+	if err != nil {
+		return nil, err
+	}
+
+	// Stage 3: Post-tokenize hooks transform the token list.
+	// Each hook receives the full token list (including EOF) and returns
+	// a (possibly modified) token list. Hooks compose left-to-right.
+	for _, hook := range l.postTokenizeHooks {
+		tokens = hook(tokens)
+	}
+	return tokens, nil
+}
+
 // ---------------------------------------------------------------------------
 // Standard (Non-Indentation) Tokenization
 // ---------------------------------------------------------------------------
+
+// tokenCapacityHint guesses how many tokens a source will produce so the
+// output slice is allocated once instead of regrown. Real source averages
+// roughly one token per four to six bytes; the cap bounds the up-front cost
+// for very large inputs (append still grows beyond it if needed).
+func tokenCapacityHint(sourceLen int) int {
+	n := sourceLen/3 + 2
+	if n > 1<<16 {
+		n = 1 << 16
+	}
+	return n
+}
 
 // tokenizeStandard tokenizes without indentation tracking.
 //
@@ -1052,11 +872,11 @@ func (l *GrammarLexer) Tokenize() []Token {
 //     c. If the current character is a newline, emit NEWLINE.
 //     d. Try the active group's token patterns (first match wins).
 //     e. If a callback is registered, invoke it and process actions.
-//     f. If nothing matches, raise a LexerError (panic).
+//     f. If nothing matches, return a LexError.
 //  2. Append EOF.
 //  3. Reset group stack and skip state for reuse.
-func (l *GrammarLexer) tokenizeStandard() []Token {
-	var tokens []Token
+func (l *GrammarLexer) tokenizeStandard() ([]Token, error) {
+	tokens := make([]Token, 0, tokenCapacityHint(len(l.source)))
 
 	for l.pos < len(l.source) {
 		char := l.source[l.pos]
@@ -1065,9 +885,15 @@ func (l *GrammarLexer) tokenizeStandard() []Token {
 		// When the grammar has skip patterns AND skip is enabled, they take
 		// over whitespace handling. The callback can disable skip processing
 		// for groups where whitespace is significant (e.g., CDATA).
-		if l.hasSkipPatterns {
-			if l.skipEnabled && l.trySkip() {
-				continue
+		if l.c.hasSkip {
+			if l.skipEnabled {
+				skipped, err := l.trySkip()
+				if err != nil {
+					return nil, err
+				}
+				if skipped {
+					continue
+				}
 			}
 		} else {
 			// --- Default whitespace skip ---
@@ -1084,7 +910,7 @@ func (l *GrammarLexer) tokenizeStandard() []Token {
 		if char == '\n' {
 			newlineTok := Token{Type: TokenNewline, Value: "\\n", Line: l.line, Column: l.column, TypeName: "NEWLINE"}
 			tokens = append(tokens, newlineTok)
-			l.lastEmittedToken = &newlineTok
+			l.lastEmitted, l.hasLast = newlineTok, true
 			l.advance()
 			continue
 		}
@@ -1093,68 +919,72 @@ func (l *GrammarLexer) tokenizeStandard() []Token {
 		// The active group is the top of the group stack. When no groups
 		// are defined, this is always "default" (the top-level definitions),
 		// preserving backward compatibility.
-		activeGroup := l.groupStack[len(l.groupStack)-1]
-		tok := l.tryMatchTokenInGroup(activeGroup)
-		if tok != nil {
-			// Update per-type bracket depth tracking.
-			l.updateBracketDepth(tok.Value)
+		tok, matched, err := l.matchToken(l.tableFor())
+		if err != nil {
+			return nil, err
+		}
+		if !matched {
+			return nil, &LexError{l.line, l.column, fmt.Sprintf("Unexpected character %q", char)}
+		}
 
-			// --- Invoke on-token callback ---
-			// The callback can push/pop groups, emit extra tokens, suppress
-			// the current token, or toggle skip processing. Emitted tokens
-			// do NOT re-trigger the callback.
-			if l.onToken != nil {
-				ctx := &LexerContext{
-					lexer:            l,
-					source:           l.source,
-					posAfter:         l.pos,
-					previousToken:    l.lastEmittedToken,
-					currentTokenLine: tok.Line,
-				}
-				l.onToken(*tok, ctx)
+		// Update per-type bracket depth tracking.
+		l.updateBracketDepth(tok.Value)
 
-				// Apply suppression: if the callback suppressed this token,
-				// don't add it to the output.
-				if !ctx.suppressed {
-					tokens = append(tokens, *tok)
-					l.lastEmittedToken = tok
-				}
-
-				// Append any tokens emitted by the callback.
-				for _, emitted := range ctx.emitted {
-					tokens = append(tokens, emitted)
-					emittedCopy := emitted
-					l.lastEmittedToken = &emittedCopy
-				}
-
-				// Apply group stack actions in order.
-				for _, action := range ctx.groupActions {
-					if action.action == "push" {
-						l.groupStack = append(l.groupStack, action.groupName)
-					} else if action.action == "pop" && len(l.groupStack) > 1 {
-						l.groupStack = l.groupStack[:len(l.groupStack)-1]
-					}
-				}
-
-				// Apply skip toggle if the callback changed it.
-				if ctx.skipEnabled != nil {
-					l.skipEnabled = *ctx.skipEnabled
-				}
-
-				// F10: Apply declarative transitions after callback processing.
-				// Transitions see the group stack state after the callback has
-				// already applied its push/pop actions.
-				l.applyTransitions(*tok)
-			} else {
-				tokens = append(tokens, *tok)
-				l.lastEmittedToken = tok
-				// F10: Apply declarative transitions.
-				l.applyTransitions(*tok)
-			}
+		if l.onToken == nil {
+			tokens = append(tokens, tok)
+			l.lastEmitted, l.hasLast = tok, true
+			// F10: Apply declarative transitions.
+			l.applyTransitions(tok)
 			continue
 		}
 
-		panic(fmt.Sprintf("LexerError at %d:%d: Unexpected character %q", l.line, l.column, char))
+		// --- Invoke on-token callback ---
+		// The callback can push/pop groups, emit extra tokens, suppress
+		// the current token, or toggle skip processing. Emitted tokens
+		// do NOT re-trigger the callback.
+		ctx := &LexerContext{
+			lexer:            l,
+			source:           l.source,
+			posAfter:         l.pos,
+			currentTokenLine: tok.Line,
+		}
+		if l.hasLast {
+			prev := l.lastEmitted
+			ctx.previousToken = &prev
+		}
+		l.onToken(tok, ctx)
+
+		// Apply suppression: if the callback suppressed this token,
+		// don't add it to the output.
+		if !ctx.suppressed {
+			tokens = append(tokens, tok)
+			l.lastEmitted, l.hasLast = tok, true
+		}
+
+		// Append any tokens emitted by the callback.
+		for _, emitted := range ctx.emitted {
+			tokens = append(tokens, emitted)
+			l.lastEmitted, l.hasLast = emitted, true
+		}
+
+		// Apply group stack actions in order.
+		for _, action := range ctx.groupActions {
+			if action.action == "push" {
+				l.groupStack = append(l.groupStack, action.groupName)
+			} else if action.action == "pop" && len(l.groupStack) > 1 {
+				l.groupStack = l.groupStack[:len(l.groupStack)-1]
+			}
+		}
+
+		// Apply skip toggle if the callback changed it.
+		if ctx.skipEnabled != nil {
+			l.skipEnabled = *ctx.skipEnabled
+		}
+
+		// F10: Apply declarative transitions after callback processing.
+		// Transitions see the group stack state after the callback has
+		// already applied its push/pop actions.
+		l.applyTransitions(tok)
 	}
 
 	tokens = append(tokens, Token{Type: TokenEOF, Value: "", Line: l.line, Column: l.column, TypeName: "EOF"})
@@ -1162,24 +992,28 @@ func (l *GrammarLexer) tokenizeStandard() []Token {
 	// Reset group stack and skip state for reuse. This ensures the lexer
 	// can be called multiple times without group state leaking between
 	// tokenize() calls.
-	l.groupStack = []string{l.startMode}
+	l.stackBuf[0] = l.c.startMode
+	l.groupStack = l.stackBuf[:1]
 	l.skipEnabled = true
 
-	return tokens
+	return tokens, nil
 }
 
 // ---------------------------------------------------------------------------
 // Indentation Mode Tokenization
 // ---------------------------------------------------------------------------
 
-func (l *GrammarLexer) tokenizeIndentation() []Token {
-	var tokens []Token
+func (l *GrammarLexer) tokenizeIndentation() ([]Token, error) {
+	tokens := make([]Token, 0, tokenCapacityHint(len(l.source)))
 	atLineStart := true
 
 	for l.pos < len(l.source) {
 		// Process line start
 		if atLineStart && l.bracketDepth == 0 {
-			indentTokens, skipLine := l.processLineStart()
+			indentTokens, skipLine, err := l.processLineStart()
+			if err != nil {
+				return nil, err
+			}
 			if skipLine {
 				continue
 			}
@@ -1209,13 +1043,21 @@ func (l *GrammarLexer) tokenizeIndentation() []Token {
 		}
 
 		// Try skip patterns
-		if l.trySkip() {
+		skipped, err := l.trySkip()
+		if err != nil {
+			return nil, err
+		}
+		if skipped {
 			continue
 		}
 
-		// Try token patterns
-		tok := l.tryMatchToken()
-		if tok != nil {
+		// Try token patterns (indentation mode does not use groups, so this
+		// is always the default group).
+		tok, matched, err := l.matchToken(l.c.table("default"))
+		if err != nil {
+			return nil, err
+		}
+		if matched {
 			// Track bracket depth (legacy single counter for indentation logic)
 			switch tok.Value {
 			case "(", "[", "{":
@@ -1225,14 +1067,14 @@ func (l *GrammarLexer) tokenizeIndentation() []Token {
 			}
 			// Track per-type bracket depth (shared for callback access)
 			l.updateBracketDepth(tok.Value)
-			tokens = append(tokens, *tok)
-			l.lastEmittedToken = tok
+			tokens = append(tokens, tok)
+			l.lastEmitted, l.hasLast = tok, true
 			// F10: Apply declarative transitions after each regular token.
-			l.applyTransitions(*tok)
+			l.applyTransitions(tok)
 			continue
 		}
 
-		panic(fmt.Sprintf("LexerError at %d:%d: Unexpected character %q", l.line, l.column, char))
+		return nil, &LexError{l.line, l.column, fmt.Sprintf("Unexpected character %q", char)}
 	}
 
 	// EOF: emit NEWLINE to end the last statement, then DEDENTs to close
@@ -1249,11 +1091,15 @@ func (l *GrammarLexer) tokenizeIndentation() []Token {
 	}
 
 	tokens = append(tokens, Token{Type: TokenEOF, Value: "", Line: l.line, Column: l.column, TypeName: "EOF"})
-	return tokens
+	return tokens, nil
 }
 
-func (l *GrammarLexer) tokenizeLayout() []Token {
-	return l.applyLayout(l.tokenizeStandard())
+func (l *GrammarLexer) tokenizeLayout() ([]Token, error) {
+	tokens, err := l.tokenizeStandard()
+	if err != nil {
+		return nil, err
+	}
+	return l.applyLayout(tokens), nil
 }
 
 func (l *GrammarLexer) applyLayout(tokens []Token) []Token {
@@ -1346,19 +1192,19 @@ func (l *GrammarLexer) virtualLayoutToken(typeName, value string, anchor Token) 
 }
 
 func (l *GrammarLexer) isLayoutKeyword(token Token) bool {
-	if len(l.layoutKeywordSet) == 0 {
+	if len(l.c.layoutKeywordSet) == 0 {
 		return false
 	}
-	if _, ok := l.layoutKeywordSet[token.Value]; ok {
+	if _, ok := l.c.layoutKeywordSet[token.Value]; ok {
 		return true
 	}
-	_, ok := l.layoutKeywordSet[strings.ToLower(token.Value)]
+	_, ok := l.c.layoutKeywordSet[strings.ToLower(token.Value)]
 	return ok
 }
 
 // processLineStart handles indentation at the start of a logical line.
-// Returns (indentTokens, skipLine).
-func (l *GrammarLexer) processLineStart() ([]Token, bool) {
+// Returns (indentTokens, skipLine, err).
+func (l *GrammarLexer) processLineStart() ([]Token, bool, error) {
 	indent := 0
 	for l.pos < len(l.source) {
 		char := l.source[l.pos]
@@ -1366,7 +1212,7 @@ func (l *GrammarLexer) processLineStart() ([]Token, bool) {
 			indent++
 			l.advance()
 		} else if char == '\t' {
-			panic(fmt.Sprintf("LexerError at %d:%d: Tab character in indentation (use spaces only)", l.line, l.column))
+			return nil, false, &LexError{l.line, l.column, "Tab character in indentation (use spaces only)"}
 		} else {
 			break
 		}
@@ -1374,28 +1220,27 @@ func (l *GrammarLexer) processLineStart() ([]Token, bool) {
 
 	// Blank line or EOF
 	if l.pos >= len(l.source) {
-		return nil, true
+		return nil, true, nil
 	}
 	if l.source[l.pos] == '\n' {
 		l.advance()
-		return nil, true
+		return nil, true, nil
 	}
 
 	// Comment-only line
 	remaining := l.source[l.pos:]
-	for _, pat := range l.skipPatterns {
-		loc := pat.FindStringIndex(remaining)
-		if loc != nil && loc[0] == 0 {
-			peekPos := l.pos + loc[1]
-			if peekPos >= len(l.source) || l.source[peekPos] == '\n' {
-				for i := 0; i < loc[1]; i++ {
-					l.advance()
-				}
-				if l.pos < len(l.source) && l.source[l.pos] == '\n' {
-					l.advance()
-				}
-				return nil, true
+	for _, r := range l.c.skip.byByte[remaining[0]] {
+		n := r.matchLen(remaining)
+		if n < 0 {
+			continue
+		}
+		peekPos := l.pos + n
+		if peekPos >= len(l.source) || l.source[peekPos] == '\n' {
+			l.advanceN(n)
+			if l.pos < len(l.source) && l.source[l.pos] == '\n' {
+				l.advance()
 			}
+			return nil, true, nil
 		}
 	}
 
@@ -1412,9 +1257,9 @@ func (l *GrammarLexer) processLineStart() ([]Token, bool) {
 			tokens = append(tokens, Token{Type: TokenName, Value: "", Line: l.line, Column: 1, TypeName: "DEDENT"})
 		}
 		if l.indentStack[len(l.indentStack)-1] != indent {
-			panic(fmt.Sprintf("LexerError at %d:%d: Inconsistent dedent", l.line, l.column))
+			return nil, false, &LexError{l.line, l.column, "Inconsistent dedent"}
 		}
 	}
 
-	return tokens, false
+	return tokens, false, nil
 }
