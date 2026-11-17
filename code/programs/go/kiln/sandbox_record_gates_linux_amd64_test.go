@@ -136,7 +136,8 @@ func TestSandboxRecordGates(t *testing.T) {
 	files["code/programs/go/build-tool/go.mod"] = "module example.com/bt\n\ngo 1.26\n"
 	files["code/programs/go/build-tool/main.go"] = "package main\n"
 	for _, a := range actions {
-		files[a.rel+"/BUILD"] = "echo hi\n"
+		files[a.rel+"/BUILD"] = "echo hi; cat data.txt\n"
+		files[a.rel+"/data.txt"] = "content of " + a.rel + "\n"
 	}
 	for p, c := range files {
 		recStepWrite(t, filepath.Join(repo, filepath.FromSlash(p)), c, 0o644)
@@ -162,7 +163,7 @@ func TestSandboxRecordGates(t *testing.T) {
 			Deps:       map[string][]string{"linux": {}, "darwin": {}, "windows": {}},
 			DevDeps:    []string{}, RepoInputs: []string{}, RepoInputGlobs: []string{}, ExtraToolchains: []string{},
 		})
-		stepRows = append(stepRows, map[string]any{"package": a.rel, "steps": []string{"echo hi"}})
+		stepRows = append(stepRows, map[string]any{"package": a.rel, "steps": []string{"echo hi; cat data.txt"}})
 		planPkgs = append(planPkgs, fmt.Sprintf(`{"name": %q, "rel_path": %q, "language": %q}`, a.name, a.rel, a.lang))
 		names = append(names, fmt.Sprintf("%q", a.name))
 	}
@@ -281,7 +282,7 @@ exit 0
 	// The build: every action still runs, gated or not.
 	for _, a := range actions {
 		env := append(append([]string{}, pre.Tools.BuildToolEnv...), "KILN_ACTION="+a.rel, "KILN_STEP=0", "KILN_STEP_COUNT=1")
-		cmd := exec.Command(kiln, "record", "step", "--dir", recDir, "--", "sh", "-c", "echo hi")
+		cmd := exec.Command(kiln, "record", "step", "--dir", recDir, "--", "sh", "-c", "echo hi; cat data.txt")
 		cmd.Dir, cmd.Env = pre.Config.PackageDir(a.rel), env
 		if _, eb, code := recStepRun(t, cmd); code != 0 {
 			t.Fatalf("step of %s: exit %d: %s", a.name, code, eb)
