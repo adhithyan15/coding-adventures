@@ -372,6 +372,39 @@ cargo run -p coding_adventures_warrant_grammar --example gen_corpus -- --check
 python3 ../../../scripts/warrant_corpus_oracle.py
 python3 -m unittest discover -s ../../../scripts/tests -p test_warrant_corpus_oracle.py
 ```
+## Resolved domains and the post-slot resolver (VER04r CV2-S2)
+
+`coding_adventures_warrant_grammar::domain` publishes what the evidence generator uses to turn a
+claim's binders into finite, ordered value sets, so a corpus emitter (the v2
+`warrant-corpus-gen`, slice S3) calls the same code instead of re-deriving it.
+Nothing about the generator's behaviour changed; the module is a public face.
+
+| Item | What it is |
+|---|---|
+| `Domain` | the resolved descriptor tree of one binder (VER04r 5.1), after budget demotion; `domain_size()` (checked: `None` = does not fit a `u64`, i.e. over budget), `domain_bytes()`, `nth(i)`, `iter()` |
+| `DomainEnv::new(&file)`, `domain_of_type` | the document's aliases, records, variants and error types |
+| `resolve_binders(env, binders, claim_body, budget, label, span)` | declared types, the shift-count `NatCount` refinement, the VER04j 2.6 demotion and the `W0706`/`W0707` checks; returns `ResolvedBinders { domains, demotions, product, bytes }` |
+| `unrank_product`, `rank_product`, `ProductIter::new(&domains, start)` | row-major products, **last binder fastest**, started at any product ordinal (the chunk jump of VER04r 5.4) |
+| `resolve_post_slot_of`, `op_post_slot` | the VER04k 4.2 post-state slot (S1 to S4) over domains; `resolve_post_slot`, `slot_shape`, `PostSlot`, `SlotShape`, `inout_descriptor` are re-exported |
+
+```rust
+use coding_adventures_warrant_grammar::domain::{Domain, ProductIter};
+
+let binders = [Domain::Bool, Domain::Opt(Box::new(Domain::Bool))];
+// Row-major: the last binder varies fastest, and a chunk can start anywhere.
+let from_ordinal_4: Vec<u64> = ProductIter::new(&binders, 4).unwrap().map(|c| c.ordinal).collect();
+assert_eq!(from_ordinal_4, [4, 5]);
+assert_eq!(binders[1].nth(0), Some(coding_adventures_warrant_grammar::codegen::EvalValue::Option(None)));
+```
+
+A binder's refinement filters the product and is not part of its domain; the
+emitter evaluates it. The module documentation records two places where the
+generator and VER04r 5.1 differ (the `NatCount` set and the signed edge sets) and
+the byte-string order the harness prelude and VER04i 2.6 disagree on (which
+also changes the case *set* of a `List` of byte strings).
+`corpus.rs` and `gen_corpus` (the v1 compiler) are unchanged and stay frozen
+until S13.
+
 ## Tests and regeneration
 
 From the Rust workspace:
