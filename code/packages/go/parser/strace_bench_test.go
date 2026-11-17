@@ -95,3 +95,33 @@ func BenchmarkParseStraceLike(b *testing.B) {
 		}
 	}
 }
+
+// BenchmarkParseIntoStraceLike is BenchmarkParseStraceLike through the compact
+// API with one reused Tree.
+func BenchmarkParseIntoStraceLike(b *testing.B) {
+	src, err := os.ReadFile("testdata/strace.grammar")
+	if err != nil {
+		b.Fatal(err)
+	}
+	c, err := CompileGrammar(mustGrammar(b, string(src)))
+	if err != nil {
+		b.Fatal(err)
+	}
+	lines, total := straceLikeLines()
+	var tr Tree
+	for _, l := range lines {
+		if err := c.ParseInto(&tr, l, Options{}); err != nil {
+			b.Fatalf("%v: %v", l, err)
+		}
+	}
+	b.SetBytes(total)
+	b.ReportAllocs()
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		for _, l := range lines {
+			if err := c.ParseInto(&tr, l, Options{}); err != nil {
+				b.Fatal(err)
+			}
+		}
+	}
+}

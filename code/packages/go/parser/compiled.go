@@ -296,6 +296,7 @@ type Compiled struct {
 	byName              map[string]int32
 	newlinesSignificant bool
 	pool                sync.Pool // of *parseState
+	scratch             sync.Pool // of *astScratch, for Tree.ToAST
 
 	// expNames[id] is the text of expected-id id; expIDs is the inverse,
 	// used only while compiling (nil afterwards). Ids are interned BY STRING VALUE, so two
@@ -487,45 +488,9 @@ func (c *Compiled) Parse(tokens []lexer.Token, opts Options) (ast *ASTNode, err 
 		}
 	}()
 
-	// Stage 1: pre-parse hooks transform the token list, left to right.
-	for _, hook := range opts.PreParse {
-		tokens = hook(tokens)
-	}
-
-	if len(c.rules) == 0 {
-		return nil, fmt.Errorf("Grammar has no rules")
-	}
-
-	start := int32(0)
-	if opts.StartRule != "" {
-		id, ok := c.byName[opts.StartRule]
-		if !ok {
-			return nil, fmt.Errorf("%w: %q", ErrUnknownStartRule, opts.StartRule)
-		}
-		start = id
-	}
-
-	if opts.MaxTokens > 0 && len(tokens) > opts.MaxTokens {
-		return nil, &GrammarParseError{
-			Message: fmt.Sprintf("%s (%d)", ErrMaxTokens.Error(), opts.MaxTokens),
-			Tok:     tokens[opts.MaxTokens],
-			Err:     ErrMaxTokens,
-		}
-	}
-
-	// Token positions, memo slots and the flat tree are all int32-indexed.
-	// No machine can hold 2 billion 64-byte tokens, but a refusal costs one
-	// comparison and means an index can never wrap.
-	if len(tokens) >= flatIndexLimit {
-		var last lexer.Token
-		if len(tokens) > 0 {
-			last = tokens[len(tokens)-1]
-		}
-		return nil, &GrammarParseError{
-			Message: fmt.Sprintf("%s (%d)", ErrMaxTokens.Error(), flatIndexLimit),
-			Tok:     last,
-			Err:     ErrMaxTokens,
-		}
+	tokens, start, err := c.prepare(tokens, opts)
+	if err != nil {
+		return nil, err
 	}
 
 	s := c.pool.Get().(*parseState)
@@ -541,6 +506,54 @@ func (c *Compiled) Parse(tokens []lexer.Token, opts Options) (ast *ASTNode, err 
 		ast = hook(ast)
 	}
 	return ast, nil
+}
+
+// prepare is the part of Parse and ParseInto that happens before the engine
+// runs: the pre-parse hooks, and every refusal that needs no parse state. It
+// returns the (possibly hook-transformed) token list and the start rule id.
+// The caller owns the recover(): hooks run here and may panic.
+func (c *Compiled) prepare(tokens []lexer.Token, opts Options) ([]lexer.Token, int32, error) {
+	// Stage 1: pre-parse hooks transform the token list, left to right.
+	for _, hook := range opts.PreParse {
+		tokens = hook(tokens)
+	}
+
+	if len(c.rules) == 0 {
+		return nil, 0, fmt.Errorf("Grammar has no rules")
+	}
+
+	start := int32(0)
+	if opts.StartRule != "" {
+		id, ok := c.byName[opts.StartRule]
+		if !ok {
+			return nil, 0, fmt.Errorf("%w: %q", ErrUnknownStartRule, opts.StartRule)
+		}
+		start = id
+	}
+
+	if opts.MaxTokens > 0 && len(tokens) > opts.MaxTokens {
+		return nil, 0, &GrammarParseError{
+			Message: fmt.Sprintf("%s (%d)", ErrMaxTokens.Error(), opts.MaxTokens),
+			Tok:     tokens[opts.MaxTokens],
+			Err:     ErrMaxTokens,
+		}
+	}
+
+	// Token positions, memo slots and the flat tree are all int32-indexed.
+	// No machine can hold 2 billion 64-byte tokens, but a refusal costs one
+	// comparison and means an index can never wrap.
+	if len(tokens) >= flatIndexLimit {
+		var last lexer.Token
+		if len(tokens) > 0 {
+			last = tokens[len(tokens)-1]
+		}
+		return nil, 0, &GrammarParseError{
+			Message: fmt.Sprintf("%s (%d)", ErrMaxTokens.Error(), flatIndexLimit),
+			Tok:     last,
+			Err:     ErrMaxTokens,
+		}
+	}
+	return tokens, start, nil
 }
 
 // ---------------------------------------------------------------------------
@@ -652,13 +665,9 @@ type parseState struct {
 	nodes []cnode
 	limit int // see flatIndexLimit
 
-	// Scratch for toAST. All three are zero (nil entries) while the state is
-	// idle in the pool, so a reused state can never leak a previous parse's
-	// tokens or nodes into a new tree.
-	boxed []interface{} // token index -> its boxed lexer.Token, built on demand
-	ptrs  []*ASTNode    // node index -> its materialised *ASTNode
-	mark  []uint8       // node index -> needNode | kidsDone
-	coff  []int32       // node index -> offset of its children in the slab
+	// Scratch for toAST (see astScratch). Embedded so a reused state can
+	// never leak a previous parse's tokens or nodes into a new tree.
+	astScratch
 
 	depth    int // rule levels on the call path, plus left-recursion growth steps
 	maxDepth int
@@ -735,12 +744,7 @@ func (s *parseState) reset(tokens []lexer.Token, opts Options) {
 // simply dropped, never reused.
 func (s *parseState) release() {
 	s.tokens = nil
-	// Only the toAST scratch holds pointers; clear it so an idle pooled
-	// state keeps no reference to a finished tree or the caller's tokens.
-	// Everything else is integers, overwritten by the next reset.
-	clear(s.boxed)
-	clear(s.ptrs)
-	s.boxed, s.ptrs = s.boxed[:0], s.ptrs[:0]
+	s.astScratch.release()
 
 	s.slots = s.slots[:0]
 	if cap(s.slots) > maxPooledSlots {
@@ -758,18 +762,6 @@ func (s *parseState) release() {
 	}
 	if cap(s.nodes) > maxPooledFlat {
 		s.nodes = nil
-	}
-	if cap(s.boxed) > maxPooledFlat {
-		s.boxed = nil
-	}
-	if cap(s.ptrs) > maxPooledFlat {
-		s.ptrs = nil
-	}
-	if cap(s.mark) > maxPooledFlat {
-		s.mark = nil
-	}
-	if cap(s.coff) > maxPooledFlat {
-		s.coff = nil
 	}
 	s.c.pool.Put(s)
 }
@@ -863,6 +855,17 @@ func (c *Compiled) expID(name string) int32 {
 // flat tree; the *ASTNode tree is built (toAST) only once the parse has
 // succeeded, so an error never pays for one.
 func (s *parseState) run(start int32) (*ASTNode, error) {
+	root, err := s.runFlat(start)
+	if err != nil {
+		return nil, err
+	}
+	return s.toAST(root), nil
+}
+
+// runFlat is run without the final toAST: it parses and returns a reference to
+// the root node in the flat arrays (always a plain node, see toAST), or the
+// error. ParseInto stops here; Parse goes on to build the *ASTNode tree.
+func (s *parseState) runFlat(start int32) (int32, error) {
 	result := s.parseRule(start)
 
 	// A depth refusal always wins, even if the top rule "succeeded" by
@@ -875,7 +878,7 @@ func (s *parseState) run(start int32) (*ASTNode, error) {
 		if s.limitDetail != "" {
 			limit = s.limitDetail
 		}
-		return nil, &GrammarParseError{
+		return -1, &GrammarParseError{
 			Message: fmt.Sprintf("%s (%s)", s.limitErr.Error(), limit),
 			Tok:     s.tokenAt(s.exceededPos),
 			Err:     s.limitErr,
@@ -886,12 +889,12 @@ func (s *parseState) run(start int32) (*ASTNode, error) {
 		tok := *s.tok()
 		if len(s.furthestExpected) > 0 {
 			expected := s.expectedText()
-			return nil, &GrammarParseError{
+			return -1, &GrammarParseError{
 				Message: fmt.Sprintf("Expected %s, got %q", expected, tok.Value),
 				Tok:     tok,
 			}
 		}
-		return nil, &GrammarParseError{Message: "Failed to parse", Tok: tok}
+		return -1, &GrammarParseError{Message: "Failed to parse", Tok: tok}
 	}
 
 	// Skip trailing newlines.
@@ -905,17 +908,17 @@ func (s *parseState) run(start int32) (*ASTNode, error) {
 			if s.furthestPos < len(s.tokens) {
 				furthestTok = s.tokens[s.furthestPos]
 			}
-			return nil, &GrammarParseError{
+			return -1, &GrammarParseError{
 				Message: fmt.Sprintf("Expected %s, got %q", expected, furthestTok.Value),
 				Tok:     furthestTok,
 			}
 		}
-		return nil, &GrammarParseError{
+		return -1, &GrammarParseError{
 			Message: fmt.Sprintf("Unexpected token: %q", tok.Value),
 			Tok:     tok,
 		}
 	}
-	return s.toAST(result), nil
+	return result, nil
 }
 
 // ---------------------------------------------------------------------------
@@ -1032,6 +1035,42 @@ const (
 const astChunk = 256
 
 func (s *parseState) toAST(root int32) *ASTNode {
+	return buildAST(s.c, s.tokens, s.eof, s.nodes, s.kids, &s.astScratch, root)
+}
+
+// astScratch is the working storage of buildAST. It is all pointers or
+// marks, zero (nil entries) while idle, and bounded by maxPooledFlat when
+// kept. A parseState embeds one; Tree.ToAST borrows one from the Compiled.
+type astScratch struct {
+	boxed []interface{} // token index -> its boxed lexer.Token, built on demand
+	ptrs  []*ASTNode    // node index -> its materialised *ASTNode
+	mark  []uint8       // node index -> needNode | needRun
+	coff  []int32       // node index -> offset of its children in the slab
+}
+
+// release clears every pointer (so an idle holder keeps no reference to a
+// finished tree or the caller's tokens) and drops buffers over maxPooledFlat.
+func (sc *astScratch) release() {
+	clear(sc.boxed)
+	clear(sc.ptrs)
+	sc.boxed, sc.ptrs = sc.boxed[:0], sc.ptrs[:0]
+	if cap(sc.boxed) > maxPooledFlat {
+		sc.boxed = nil
+	}
+	if cap(sc.ptrs) > maxPooledFlat {
+		sc.ptrs = nil
+	}
+	if cap(sc.mark) > maxPooledFlat {
+		sc.mark = nil
+	}
+	if cap(sc.coff) > maxPooledFlat {
+		sc.coff = nil
+	}
+}
+
+// buildAST is toAST over an explicit flat tree, so both a parseState and a
+// Tree can use it. tokens and eof are the token list the tree indexes.
+func buildAST(c *Compiled, tokens []lexer.Token, eof lexer.Token, nodes []cnode, kids []int32, sc *astScratch, root int32) *ASTNode {
 	// The root reference must be a plain node, never a memo hit: the
 	// top-level parseRule call happens when the memo is empty, so it always
 	// parses. If that ever changed, the root would have no node of its own
@@ -1041,26 +1080,25 @@ func (s *parseState) toAST(root int32) *ASTNode {
 	if root < 0 || root&1 != 0 {
 		panic("parser: root reference is not a parsed node")
 	}
-	nodes := s.nodes
 	n := len(nodes)
-	if cap(s.mark) < n {
-		s.mark = make([]uint8, n)
+	if cap(sc.mark) < n {
+		sc.mark = make([]uint8, n)
 	}
-	mark := s.mark[:n]
+	mark := sc.mark[:n]
 	clear(mark)
-	if cap(s.coff) < n {
-		s.coff = make([]int32, n)
+	if cap(sc.coff) < n {
+		sc.coff = make([]int32, n)
 	}
-	coff := s.coff[:n]
-	if cap(s.ptrs) < n {
-		s.ptrs = make([]*ASTNode, n)
+	coff := sc.coff[:n]
+	if cap(sc.ptrs) < n {
+		sc.ptrs = make([]*ASTNode, n)
 	}
-	s.ptrs = s.ptrs[:n]
-	ptrs := s.ptrs
-	if t := len(s.tokens) + 1; cap(s.boxed) < t {
-		s.boxed = make([]interface{}, t)
+	sc.ptrs = sc.ptrs[:n]
+	ptrs := sc.ptrs
+	if t := len(tokens) + 1; cap(sc.boxed) < t {
+		sc.boxed = make([]interface{}, t)
 	} else {
-		s.boxed = s.boxed[:t]
+		sc.boxed = sc.boxed[:t]
 	}
 
 	// Pass 1: mark and count.
@@ -1081,7 +1119,7 @@ func (s *parseState) toAST(root int32) *ASTNode {
 			continue
 		}
 		nKids += int(sn.end - sn.start)
-		for _, k := range s.kids[sn.start:sn.end] {
+		for _, k := range kids[sn.start:sn.end] {
 			if k >= 0 {
 				continue
 			}
@@ -1125,16 +1163,16 @@ func (s *parseState) toAST(root int32) *ASTNode {
 		cn := &nodes[i]
 		if m&needRun != 0 {
 			coff[i] = int32(w)
-			for _, k := range s.kids[cn.start:cn.end] {
+			for _, k := range kids[cn.start:cn.end] {
 				switch {
 				case k >= 0:
-					slab[w] = s.box(k)
+					slab[w] = sc.box(tokens, eof, k)
 				case ^k&1 == 0:
 					slab[w] = ptrs[^k>>1]
 				default:
 					src := ^k >> 1
 					h := newNode()
-					h.RuleName = s.c.rules[nodes[src].rule].name
+					h.RuleName = c.rules[nodes[src].rule].name
 					h.Children = run(src)
 					slab[w] = h
 				}
@@ -1143,7 +1181,7 @@ func (s *parseState) toAST(root int32) *ASTNode {
 		}
 		if m&needNode != 0 {
 			a := newNode()
-			a.RuleName = s.c.rules[cn.rule].name
+			a.RuleName = c.rules[cn.rule].name
 			a.Children = run(int32(i))
 			computeNodePosition(a)
 			ptrs[i] = a
@@ -1154,17 +1192,17 @@ func (s *parseState) toAST(root int32) *ASTNode {
 
 // box returns token index k as an interface value (a lexer.Token), boxing it
 // the first time it is asked for. Index len(tokens) is the synthetic EOF.
-func (s *parseState) box(k int32) interface{} {
-	if b := s.boxed[k]; b != nil {
+func (sc *astScratch) box(tokens []lexer.Token, eof lexer.Token, k int32) interface{} {
+	if b := sc.boxed[k]; b != nil {
 		return b
 	}
 	var b interface{}
-	if int(k) < len(s.tokens) {
-		b = s.tokens[k]
+	if int(k) < len(tokens) {
+		b = tokens[k]
 	} else {
-		b = s.eof
+		b = eof
 	}
-	s.boxed[k] = b
+	sc.boxed[k] = b
 	return b
 }
 
