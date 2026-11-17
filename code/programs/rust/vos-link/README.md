@@ -34,6 +34,7 @@ vos-link check-doc code/packages/rust/<impl> [--root <repo>]   # exit 1 on any d
 <contract>/contract.vos             the tiers and the instance (parsed with the vos_contract grammar)
 <contract>/warrant/contract.part    the contract block
 <contract>/warrant/obligations-<tier>.part
+<contract>/warrant/lemmas.part              optional: admitted, never embedded, never required (VOS02 R1.4)
 ```
 
 ## Checks (VOS02 10.1, D-GD8)

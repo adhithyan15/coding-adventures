@@ -62,6 +62,9 @@ use coding_adventures_warrant_grammar::source::{SourceDocument, SourceLimits};
 // ---------------------------------------------------------------------------
 
 const CONTRACT: &str = include_str!("../../vos-sched-contract/warrant/contract.part");
+/// The nine lemmas.  NOT embedded in any implementation's document (VOS02 section 2.1, VOS-D064):
+/// they are evaluated here, over the contract block, and nowhere else.
+const LEMMAS_PART: &str = include_str!("../../vos-sched-contract/warrant/lemmas.part");
 const SAFETY: &str = include_str!("../../vos-sched-contract/warrant/obligations-safety.part");
 const POLICY: &str = include_str!("../../vos-sched-contract/warrant/obligations-policy.part");
 const CANONICAL: &str = include_str!("../../vos-sched-contract/warrant/obligations-canonical.part");
@@ -336,14 +339,21 @@ fn mutate(text: &str, from: &str, to: &str) -> String {
 
 #[test]
 fn contract_block_type_checks_alone() {
+    // The contract block alone holds models only: the lemmas moved to lemmas.part.
     let (claims, examples) = check(&assemble(&[CONTRACT]));
+    assert!(examples.is_empty());
+    assert!(
+        claims.is_empty(),
+        "the contract block holds no claim: {claims:?}"
+    );
+    let (claims, examples) = check(&assemble(&[CONTRACT, LEMMAS_PART]));
     assert!(examples.is_empty());
     assert_eq!(claims.len(), 9, "the nine model-level lemmas: {claims:?}");
 }
 
 #[test]
 fn lemmas_hold_over_their_whole_domains() {
-    let outcomes = evaluate(&[CONTRACT], &LEMMAS);
+    let outcomes = evaluate(&[CONTRACT, LEMMAS_PART], &LEMMAS);
     assert_all_pass(&outcomes);
     // 8 Bool binders = 256 states; with one U8 binder, 65,536 cases (16.4% of the budget).
     // closure_at_m is a trivial lemma (inv is `true`): it is evaluated, not counted as evidence.
@@ -859,7 +869,7 @@ fn every_lemma_has_a_mutant_that_breaks_it() {
             .map(|(lemma, from, to)| {
                 scope.spawn(move || {
                     let mutated = mutate(CONTRACT, from, to);
-                    let outcomes = evaluate(&[&mutated], &[lemma]);
+                    let outcomes = evaluate(&[&mutated, LEMMAS_PART], &[lemma]);
                     assert!(
                         !outcomes[0].passed(),
                         "lemma {lemma} survived its mutant ({from})"
@@ -885,6 +895,7 @@ fn parts_follow_the_marker_discipline() {
     // an obligations part holds claims and comments, nothing else.
     for (name, text) in [
         ("contract", CONTRACT),
+        ("lemmas", LEMMAS_PART),
         ("safety", SAFETY),
         ("policy", POLICY),
         ("canonical", CANONICAL),
@@ -893,6 +904,10 @@ fn parts_follow_the_marker_discipline() {
         vos_manifest::part::admit_part(text.as_bytes())
             .unwrap_or_else(|e| panic!("{name}.part is not admitted: {e}"));
     }
+    // The lemmas part holds exactly the nine lemmas, and none of them is an obligation.
+    let lemma_claims = vos_manifest::warrant::claims_of_block(LEMMAS_PART).expect("lemmas.part");
+    let lemma_names: Vec<&str> = lemma_claims.iter().map(|c| c.name.as_str()).collect();
+    assert_eq!(lemma_names, LEMMAS.to_vec());
     for (name, text) in [
         ("safety", SAFETY),
         ("policy", POLICY),

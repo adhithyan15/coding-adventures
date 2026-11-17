@@ -477,6 +477,7 @@ fn nc17_a_forged_marker_in_impl_part_is_refused_by_gen_doc() {
 fn nc17_a_forged_marker_in_a_contract_package_part_is_refused() {
     for part in [
         "contract.part",
+        "lemmas.part",
         "obligations-safety.part",
         "obligations-any.part",
     ] {
@@ -1347,4 +1348,30 @@ fn a_model_with_more_than_63_parameters_fails_closed_end_to_end() {
     );
     let (_r, g) = pretender("wide", &format!("w({args})"), &extra);
     assert!(has(&g, "CD07", "more than 63 parameters"), "{}", show(&g));
+}
+
+#[test]
+fn lemmas_part_is_never_embedded_and_never_required() {
+    // The real contract package has a lemmas.part: the document must not hold a lemma.
+    let r = Repo::with("lemmas-embed", BITMAP);
+    let g = r.gen(BITMAP);
+    assert!(g.findings.is_empty(), "{}", show(&g));
+    let doc = r.doc(BITMAP);
+    for lemma in [
+        "closure_at_m",
+        "policy_admits_only_top",
+        "top_is_the_maximum",
+    ] {
+        assert!(
+            !doc.contains(lemma),
+            "the document embeds the lemma {lemma}"
+        );
+    }
+    // Without the file (a contract with no lemmas) gen-doc and check-doc are unaffected.
+    let r = Repo::with("lemmas-absent", BITMAP);
+    let p = r.path("code/packages/rust/vos-sched-contract/warrant/lemmas.part");
+    std::fs::remove_file(p).unwrap();
+    let g = r.gen(BITMAP);
+    assert!(g.findings.is_empty(), "{}", show(&g));
+    assert!(r.check(BITMAP).findings.is_empty());
 }

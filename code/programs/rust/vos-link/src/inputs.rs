@@ -9,6 +9,7 @@
 //!   <contract>/contract.vos            the tiers and the instance            (parsed, not copied)
 //!   <contract>/warrant/contract.part   the contract block
 //!   <contract>/warrant/obligations-<tier>.part   one per tier `contract.vos` declares
+//!   <contract>/warrant/lemmas.part     optional: admitted, never embedded (VOS-D064)
 //! ```
 //!
 //! [`load`] finds them (paths contained as in VOS02 6.8), reads them within their caps,
@@ -363,6 +364,12 @@ pub fn load(crate_arg: &Path, root_arg: Option<&Path>) -> Result<Load, NoVerdict
         }
         Some(b) => admit(&b, "warrant/contract.part", &mut f)?,
     };
+    // `warrant/lemmas.part` (VOS02 2.1, VOS-D064) is the contract's model-level lemmas.  It is
+    // OPTIONAL and NEVER embedded: it is admitted with the same marker and character rules as
+    // every other part (so a forged marker in it is refused), and nothing else reads it here.
+    if let Some(b) = read_regular_opt(&warrant_dir.join("lemmas.part"), PART_MAX_BYTES)? {
+        admit(&b, "warrant/lemmas.part", &mut f)?;
+    }
     for tier in &contract.tiers {
         let file = obligations_file(*tier);
         let Some(b) = read_regular_opt(&warrant_dir.join(&file), PART_MAX_BYTES)? else {

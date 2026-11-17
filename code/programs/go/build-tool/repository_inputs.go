@@ -137,6 +137,35 @@ var (
 		"code/grammars/vos_contract",
 		"code/grammars/vos_document",
 	}
+	// vosToolPaths are the sources a VOS implementation's BUILD reads or runs outside its own
+	// Cargo edges (VOS-D066): `vos-link check-doc` (a standalone cargo root, run by manifest
+	// path) with the crates it and `vos-shape-check` are built from, the evidence generator
+	// (`cargo run -p coding_adventures_warrant_grammar --example gen_evidence`) with its
+	// crates, the capability analyzer, and the two vos_* grammars vos-manifest embeds.  The
+	// list is the `cargo tree -e normal` closure of those tools on the day it was written;
+	// it covers no tool a BUILD does not run and does not follow a later new dependency
+	// (TestVosToolPathsAreWorkspaceCrates only checks that each directory exists).
+	// The implementation's own generated document is added per row (vosImplementationRow).
+	vosToolPaths = []string{
+		"code/programs/rust/vos-link",
+		"code/packages/rust/vos-manifest",
+		"code/packages/rust/vos-shape-check",
+		"code/packages/rust/warrant-grammar",
+		"code/packages/rust/ca-capability-analyzer",
+		"code/packages/rust/sha256",
+		"code/packages/rust/test-bootstrap",
+		"code/packages/rust/zeroize",
+		"code/packages/rust/grammar-tools",
+		"code/packages/rust/directed-graph",
+		"code/packages/rust/graph",
+		"code/packages/rust/lexer",
+		"code/packages/rust/parser",
+		"code/packages/rust/state-machine",
+		"code/packages/rust/toml-lexer",
+		"code/packages/rust/toml-parser",
+		"code/grammars/vos_contract",
+		"code/grammars/vos_document",
+	}
 	vosShapeGrammarPaths = []string{
 		"code/grammars/rust/rust1.97.0-e2021.tokens",
 		"code/grammars/rust/rust1.97.0-e2024.tokens",
@@ -278,6 +307,7 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		matches:  isVosGrammarInput,
 		paths:    vosGrammarPaths,
 	},
+	vosImplementationRow("vos-sched-fp-bitmap"),
 	{
 		name:     "rust/vos-shape-check",
 		language: "rust",
@@ -1103,6 +1133,39 @@ func isCtCompareInput(changed string) bool {
 func isVosGrammarInput(changed string) bool {
 	return strings.HasPrefix(changed, "code/grammars/vos_contract/") ||
 		strings.HasPrefix(changed, "code/grammars/vos_document/")
+}
+
+// isVosToolInput reports whether a changed path is a source of a tool that a VOS
+// implementation's BUILD runs outside Cargo (VOS-D066): a directory of vosToolPaths
+// (the repository-relative path with a trailing slash, never a lookalike) or one of the
+// two vos_* grammars.
+//
+//	code/programs/rust/vos-link/src/check.rs   → true
+//	code/packages/rust/vos-manifest-x/src/a.rs → false
+func isVosToolInput(changed string) bool {
+	for _, d := range vosToolPaths {
+		if strings.HasPrefix(changed, d+"/") {
+			return true
+		}
+	}
+	return false
+}
+
+// vosImplementationRow is the row of one VOS implementation crate (`code/packages/rust/<crate>`,
+// kind production, reference or any).  It selects the crate when a VOS tool changes
+// (isVosToolInput) and when ITS generated document `code/specs/<crate>.warrant` changes: that
+// file lives outside the package, so without the row a PR that edits only the document (say,
+// weakens a claim) selects nothing and `check-doc` and `gen_evidence --check` never run
+// (VOS02 D-GD3: the document name is exactly the crate name).
+func vosImplementationRow(crate string) repositoryInputConsumer {
+	doc := "code/specs/" + crate + ".warrant"
+	return repositoryInputConsumer{
+		name:     "rust/" + crate,
+		language: "rust",
+		inputs:   "its generated document " + doc + " and the VOS tools its BUILD runs outside Cargo (vos-link check-doc, vos-shape-check, the evidence generator, the capability analyzer)",
+		matches:  func(changed string) bool { return changed == doc || isVosToolInput(changed) },
+		paths:    append([]string{doc}, vosToolPaths...),
+	}
 }
 
 // isVosShapeGrammarInput reports whether a changed path is one of the two Rust
