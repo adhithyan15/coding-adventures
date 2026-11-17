@@ -103,19 +103,30 @@ func (c *classifier) observeVirtual(p string) {
 	}
 }
 
+// procParts splits a /proc or /dev/fd name into the components after
+// /proc/<pid|self|thread-self>.  /dev/fd is a link to /proc/self/fd, so
+// /dev/fd/N/x is /proc/self/fd/N/x.  ok is false for any other name.
+func procParts(p string) (rest []string, ok bool) {
+	parts := splitPath(p)
+	if len(parts) >= 2 && parts[0] == "dev" && parts[1] == "fd" {
+		return append([]string{"fd"}, parts[2:]...), true
+	}
+	if len(parts) < 3 || parts[0] != "proc" {
+		return nil, false
+	}
+	return parts[2:], true
+}
+
 // procMagicBeyond says p passes THROUGH a /proc magic link: cwd, root, exe,
 // fd/N, map_files/X or ns/X is followed by a further component.  Such a path
 // names whatever the link points at, which the lexical text does not show
 // (D28).  A magic link as the FINAL component (/proc/self/exe) is a plain
-// name here and is judged by the ephemeral list.
+// name here and is judged by the ephemeral list.  The scan covers every
+// depth, so /proc/self/task/5/cwd/x and /proc/self/task/root/x both count.
 func procMagicBeyond(p string) bool {
-	parts := splitPath(p)
-	if len(parts) < 3 || parts[0] != "proc" {
+	rest, ok := procParts(p)
+	if !ok {
 		return false
-	}
-	rest := parts[2:] // after /proc/<pid|self|thread-self>
-	for len(rest) > 2 && rest[0] == "task" {
-		rest = rest[2:] // /proc/<pid>/task/<tid>/...
 	}
 	for i, n := range rest {
 		switch n {
@@ -127,6 +138,27 @@ func procMagicBeyond(p string) bool {
 			if i < len(rest)-2 {
 				return true
 			}
+		}
+	}
+	return false
+}
+
+// procMagicFinal says p's last component IS a magic link: cwd, root, exe,
+// fd/N, map_files/X or ns/X.  Opening one gives a descriptor on the link's
+// target, so the open needs strace's -y path to say what that is (D28).
+func procMagicFinal(p string) bool {
+	rest, ok := procParts(p)
+	if !ok || len(rest) == 0 {
+		return false
+	}
+	switch rest[len(rest)-1] {
+	case "cwd", "root", "exe":
+		return true
+	}
+	if len(rest) >= 2 {
+		switch rest[len(rest)-2] {
+		case "fd", "map_files", "ns":
+			return true
 		}
 	}
 	return false

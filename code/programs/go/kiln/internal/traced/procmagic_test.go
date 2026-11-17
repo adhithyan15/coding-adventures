@@ -97,7 +97,10 @@ func TestProcNegativeControls(t *testing.T) {
 	wantNoReasons(t, h.run(openAbs("/proc/cpuinfo"), stat("/proc/cpuinfo"), openAbs("/proc/self/exe")))
 	// self vs the pid form strace prints: the same file, not refused.
 	h = newHarness(t)
-	h.run(open("/proc/self/exe", "O_RDONLY", "/proc/self/exe"))
+	wantNoReasons(t, h.run(open("/proc/self/exe", "O_RDONLY", "/proc/self/exe")))
+	h = newHarness(t)
+	h.cfg.HostRoots.Ephemeral = append(h.cfg.HostRoots.Ephemeral, "/proc/self/maps")
+	wantNoReasons(t, h.run(open("/proc/self/maps", "O_RDONLY", "/proc/77/maps")))
 	// ".." that is provably exact keeps working.
 	h = newHarness(t)
 	h.fs.link("/etc/l", "/etc/target")
@@ -125,7 +128,10 @@ func TestProcSameFile(t *testing.T) {
 		{"/proc/self/maps", "/proc/self/maps", true},
 		{"/proc/thread-self/maps", "/proc/77/task/78/maps", true},
 		{"/proc/thread-self/maps", "/proc/77/maps", false},
-		{"/proc/self/cwd/x", "/proc/77/cwd/x", true},
+		{"/proc/mounts", "/proc/77/mounts", true},
+		{"/proc/net/dev", "/proc/77/net/dev", true},
+		{"/proc/net/dev", "/proc/77/net/arp", false},
+		{"/proc/mounts", "/proc/77/maps", false},
 		{"/proc/cpuinfo", "/proc/1/environ", false},
 		{"/proc/self/maps", "/etc/passwd", false},
 		{"/proc/self/maps", "/proc/x/maps", false},
@@ -167,5 +173,31 @@ func TestEphemeralPatternCannotCoverThroughAMagicLink(t *testing.T) {
 	rec := h.run(stat("/proc/self/cwd/anything"))
 	if !hasReason(rec, "trace-incomplete:proc-path") {
 		t.Fatalf("reasons %v", rec.Reasons)
+	}
+}
+
+func TestDevFdEphemeralGlobCannotCoverThroughAMagicLink(t *testing.T) {
+	// /dev/fd/N/x is /proc/self/fd/N/x: fd N may be a directory anywhere.
+	for _, ev := range []trace.Event{
+		stat("/dev/fd/3/b.txt"),
+		open("/dev/fd/3/b.txt", "O_RDONLY", ""),
+	} {
+		h := newHarness(t)
+		h.cfg.HostRoots.Ephemeral = append(h.cfg.HostRoots.Ephemeral, "/dev/fd/**")
+		wantReason(t, h.run(ev), "trace-incomplete:proc-path")
+	}
+}
+
+func TestProcOpenOfMagicLinkWithoutDashYPath(t *testing.T) {
+	for _, p := range []string{
+		"/proc/self/cwd/", "/proc/self/cwd", "/proc/self/root", "/proc/self/exe",
+		"/proc/self/fd/3", "/proc/self/map_files/1-2", "/proc/thread-self/cwd",
+		"/proc/self/task/5/root", "/dev/fd/3",
+	} {
+		for _, ret := range []string{"", "weird"} {
+			h := newHarness(t)
+			h.cfg.HostRoots.Ephemeral = append(h.cfg.HostRoots.Ephemeral, "/proc/**", "/dev/fd/**")
+			wantReason(t, h.run(open(p, "O_RDONLY", ret)), "trace-incomplete:proc-path")
+		}
 	}
 }

@@ -227,10 +227,17 @@ func (c *classifier) openVirtual(ev *trace.Event, tg target, f openFlags) {
 	if isFDLink(tg.abs) {
 		if strings.HasPrefix(ev.ReturnFDPath, "/") {
 			c.openResolved(ev.ReturnFDPath, f, false, false)
+		} else if !anonymousFD(ev.ReturnFDPath) {
+			c.reason(rProc) // D28: no -y path says what the descriptor is
 		}
 		return
 	}
 	c.observe(tg.abs, true, false)
+	// D28: opening a magic link itself (cwd, root, exe, fd/N, ...) with no
+	// usable -y path leaves the object unknown, whatever the ephemeral list says.
+	if ret := ev.ReturnFDPath; !strings.HasPrefix(ret, "/") && !anonymousFD(ret) && procMagicFinal(tg.abs) {
+		c.reason(rProc)
+	}
 	// D28: strace -y printed what the descriptor really is.  When that is not
 	// the /proc name the action wrote, the name led somewhere else (a magic
 	// link): classify the real file, and refuse a /proc answer that differs.
@@ -246,35 +253,44 @@ func (c *classifier) openVirtual(ev *trace.Event, tg target, f openFlags) {
 // procSameFile says the -y path ret is the same /proc file as the name abs:
 // either they are equal, or abs spelled the caller's pid as "self" (or its
 // thread as "thread-self") and ret spells it with numbers, which is how the
-// kernel reports a /proc file's own path.
+// kernel reports a /proc file's own path.  /proc/mounts and /proc/net/... are
+// the kernel's other links into self (with self and thread-self these are all
+// the symlinks at the top of /proc), so they are read the same way.
 func procSameFile(abs, ret string) bool {
 	if abs == ret {
 		return true
 	}
-	for _, p := range []string{"/proc/self/", "/proc/thread-self/"} {
-		rest, ok := strings.CutPrefix(abs, p)
-		if !ok {
-			continue
-		}
-		r, ok := strings.CutPrefix(ret, "/proc/")
-		if !ok {
-			return false
-		}
-		pid, r, ok := strings.Cut(r, "/")
-		if !ok || !isDigits(pid) {
-			return false
-		}
-		if p == "/proc/thread-self/" {
-			// /proc/<pid>/task/<tid>/rest
-			if r2, ok := strings.CutPrefix(r, "task/"); ok {
-				tid, r3, ok := strings.Cut(r2, "/")
-				return ok && isDigits(tid) && r3 == rest
-			}
-			return false
-		}
-		return r == rest
+	rest, thread := "", false
+	switch {
+	case strings.HasPrefix(abs, "/proc/self/"):
+		rest = abs[len("/proc/self/"):]
+	case strings.HasPrefix(abs, "/proc/thread-self/"):
+		rest, thread = abs[len("/proc/thread-self/"):], true
+	case abs == "/proc/mounts":
+		rest = "mounts"
+	case strings.HasPrefix(abs, "/proc/net/"):
+		rest = abs[len("/proc/"):]
+	default:
+		return false
 	}
-	return false
+	r, ok := strings.CutPrefix(ret, "/proc/")
+	if !ok {
+		return false
+	}
+	pid, r, ok := strings.Cut(r, "/")
+	if !ok || !isDigits(pid) {
+		return false
+	}
+	if thread {
+		// /proc/<pid>/task/<tid>/rest
+		r2, ok := strings.CutPrefix(r, "task/")
+		if !ok {
+			return false
+		}
+		tid, r3, ok := strings.Cut(r2, "/")
+		return ok && isDigits(tid) && r3 == rest
+	}
+	return r == rest
 }
 
 // anonymousFD says a descriptor's -y text names a pipe, socket or anonymous
