@@ -269,9 +269,10 @@ exit 0
 		t.Fatal(err)
 	}
 	if pc.RepoRoot != filepath.Join(recDir, record.ProbeDir, record.ProbeRootDir) || len(pc.StateRoots) != 0 || len(pc.Masks) != 0 ||
-		pc.Home != pre.Config.Home || pc.Tmpdir != pre.Config.Tmpdir || strings.Join(pc.RoRoots, ",") != strings.Join(pre.Config.RoRoots, ",") {
+		pc.Home != pre.Config.Home || pc.Tmpdir != filepath.Join(recDir, record.ProbeDir, record.ProbeTmpDir) || pc.Tmpdir == pre.Config.Tmpdir || strings.Join(pc.RoRoots, ",") != strings.Join(pre.Config.RoRoots, ",") {
 		t.Errorf("probe configuration %+v", pc)
 	}
+	t.Logf("PROBE: probe tmpdir %s (steps tmpdir %s)", pc.Tmpdir, pre.Config.Tmpdir)
 	if env := pc.EnvByAction["p"]; len(pc.EnvByAction) != 1 || !containsString(env, "HOME="+pc.Home) || !containsString(env, "LC_ALL=C") {
 		t.Errorf("probe environment %v", pc.EnvByAction)
 	}
