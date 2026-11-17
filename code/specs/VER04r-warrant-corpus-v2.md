@@ -227,7 +227,7 @@ A suite that needs a level the lane does not declare is recorded **`not-live`** 
 1. Expressions are trees; there is no recursion, no loop and no mutable state. Models are pure and acyclic: model `m` may call only models declared *before* it, where "before" is the order of the `model_order` array of `corpus.json` (section 1.4), not the key order of `models`.
 2. Arguments are evaluated left to right. `and`, `or`, `implies` and `if` **short-circuit**; an untaken branch is not evaluated and, for call counting, contributes no subject calls (section 4.4). A `match` evaluates exactly one arm.
 3. `subject_op(name, args[, widths])` dispatches through the lane's binding to the real export. It is forbidden inside every model body and inside every fault expression. `model_call(name, args)` invokes a pure model. Built-in pure operators (`eq`, `lt`, `add`) are IR tags and never resolve through the binding table (VER04i section 2.5, unchanged).
-4. Literals keep the v1 typed form `["lit", {"type": T, "value": V}]` with `V` per section 2.3; a Bool literal is `["lit", true]`. `T` is also allowed to be `Int` (section 2.1): a bare decimal literal is typed `Nat` in a `Nat` context and `Int` otherwise, and a suffixed literal (`1u8`) has the type of its suffix.
+4. Literals keep the v1 typed form `["lit", {"type": T, "value": V}]` with `V` per section 2.3; a Bool literal is `["lit", true]`. `T` is also allowed to be `Int` (section 2.1): a bare decimal literal is typed `Nat` in a `Nat` context and `Int` otherwise, and a suffixed literal (`1u8`) has the type of its suffix. The signed minimum (`-128i8`) is `neg` of a `lit` holding `-2^(w-1)` (Appendix A).
 5. Equality is structural and type-directed (VER04 section 3): sequence order matters, errors are nominal, `Bool` is not `U8`, allocation identity is never compared.
 6. A static **cost bound** per expression, computed before the first case; exceeding it is a corpus error. Because the IR has no loop and no recursion, this static bound is the whole fuel: no run-time step meter is needed at `ir.core`, `ir.fixed` or `ir.data`. (Amended 2026-11-16, section 16.1; the v1 profile keeps the wording of VER04i section 6.2.)
 
@@ -369,13 +369,14 @@ Each `ops.<name>` row in `corpus.json` is **language-neutral**: ops are bound by
 
 ```json
 "ops": {
-  "multiply": {"params": [["a","U8"],["b","U8"]], "ret": "U8"},
+  "multiply": {"params": [["a","U8"],["b","U8"]], "ret": "U8", "requires": ["ir.core"]},
   "zeroize":  {"params": [["buf","Bytes"]], "ret": "Bytes",
                "inout": ["buf"], "post_slot": "S1",
                "ensures": [["eq", ["len", ["var","result"]], ["len", ["var","buf"]]]],
                "requires": ["ir.core"]},
   "select_bytes": {"params": [["a","Bytes"],["b","Bytes"],["choice","Bool"]],
-                   "ret": "Result<Bytes,SelectError>", "fresh": true}
+                   "ret": "Result<Bytes,SelectError>", "fresh": true,
+                   "requires": ["ir.core"]}
 }
 ```
 
@@ -389,7 +390,7 @@ Each `ops.<name>` row in `corpus.json` is **language-neutral**: ops are bound by
 | `post_slot` | `"S1"`..`"S4"`, the VER04k section 4.2 rule that locates the post-state in the result; required iff `inout` is non-empty |
 | `admit` | the parameters' refinements as Bool IR (no `subject_op`) |
 | `ensures` | rows: Bool IR over the parameters (for `inout` the **pre-state**) and the contextual name `result` (the declared return, post-state included). No `subject_op`, no quantifier; at most 32 rows |
-| `requires` | the feature levels the op's `admit` and `ensures` need |
+| `requires` | the feature levels the op's `admit` and `ensures` need; always present, `["ir.core"]` at least (the rows of the example above all carry it) |
 
 A corpus is **self-describing for lanes**: a lane needs no Warrant parser to know which parameter is `inout` and where the post-state sits in the result.
 
@@ -721,6 +722,7 @@ A corpus, a chunk file, a binding and a `.warrant` spec are all inputs a PR auth
 | total cases per `full` run (`MAX_TOTAL_WORK_FULL`) | `2^32`; the nightly job also has a wall-clock limit |
 | binders per claim; tuple arity; record fields; variant constructors | 8; 8; 32; 64 |
 | descriptor tree depth; type depth; IR depth | 16; 16; 64 |
+| model-call nesting (active `model_call` frames) | 64 (VER04 section 2); a deeper chain is a corpus error |
 | `MAX_IR_COST` per expression | 2,000 node evaluations by default on the **worst path** (one branch of an `if`, models at their body's worst-path cost); a corpus may declare `max_ir_cost` up to `MAX_IR_COST_CEILING = 65,536`; static, so it is the fuel (section 4.2) |
 | total IR work per run (`MAX_IR_WORK_SLIM`, `MAX_IR_WORK_FULL`) | 64,000,000,000 and 8,589,934,592,000 node evaluations: the sum over suites of `ir_cost` times the product ordinals run (section 4.2) |
 | `MAX_IR_VALUE`, any `Bytes` or list an evaluator produces | 65,536 bytes or elements, checked before allocation |
@@ -852,10 +854,10 @@ Slice S3a (lowering and cost, `rust/warrant-corpus-gen` 0.1.0) agreed byte for b
 2. **Section 4.2 rule 6.** The bound applies per expression **including each model body** (the oracle already did). Corrected in place.
 3. **Section 13, fail-closed rule.** A refusal names a level of section 4.1 or one of the feature names `inout`, `ensures`, `vectors`, `assume`. Corrected in place.
 4. **Interim, `assume`.** S3 refuses any non-`none` `assume platform` / `assume environment` row. **OPEN:** the shape of `assumes` (section 12 item 3) must be settled before the first adopter with such a row.
-5. **Sections 6 and 1.4, op rows.** `requires` is always present (at least `["ir.core"]`); `admit`, `width_params` and `fresh` are conditional. **OPEN:** a claim that calls an op outside that op's `admit`: refused at generation, or the author's problem?
-6. **Section 4.2 rule 4 / Appendix A `neg`.** The signed minimum literal lowers to `neg` of a `lit` holding `-2^(w-1)`; `neg` wraps it to itself (section 3.2) and counts in `wraps`. Applied in place.
+5. **Sections 6 and 1.4, op rows.** `requires` is always present (at least `["ir.core"]`); `admit`, `width_params` and `fresh` are conditional. Applied in place in section 6 (the example rows and the `requires` row of the table). **OPEN:** a claim that calls an op outside that op's `admit`: refused at generation, or the author's problem?
+6. **Section 4.2 rule 4 / Appendix A `neg`.** The signed minimum literal lowers to `neg` of a `lit` holding `-2^(w-1)`; `neg` wraps it to itself (section 3.2) and counts in `wraps`. Applied in place in section 4.2 rule 4 (Appendix A already said it).
 7. **Section 8.4.** Repeated `fault` or `slim_chunk` lines, an empty token, `budget 0` and `slim_stride 0` are profile errors (the Rust reader in S3b, the oracle's in S4 part 2). S3a's reader mirrors the oracle's and still accepts them.
-8. **Section 14.** Model-call nesting is limited to 64 frames (VER04 section 2).
+8. **Section 14.** Model-call nesting is limited to 64 frames (VER04 section 2). Applied in place (a row of the section 14 table).
 9. **Section 3.3 rule 3** also covers a `model_call` over a subject result whose callee's closure wraps. Applied in place; the oracle implements no rule 3 (S4 part 2).
 10. Type aliases (`model Word = Bytes<4>`) are resolved away and never appear in a corpus; `is_err` has no source form (Appendix A). An example must be one subject call compared with a pure value (the section 1.4 `examples` row); S3a refuses any other example with `W0701`.
 
