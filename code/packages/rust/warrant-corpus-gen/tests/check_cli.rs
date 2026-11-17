@@ -442,6 +442,7 @@ fn binding_faults_are_read_from_evidence_bindings() {
 // ---- review fixes: hard links, FIFOs, oversize files, hostile names -------------------------
 
 /// Run `f` on a thread and fail the test if it does not finish (a FIFO must never hang us).
+#[cfg(unix)]
 fn within<T: Send + 'static>(secs: u64, f: impl FnOnce() -> T + Send + 'static) -> T {
     let (tx, rx) = std::sync::mpsc::channel();
     std::thread::spawn(move || {
