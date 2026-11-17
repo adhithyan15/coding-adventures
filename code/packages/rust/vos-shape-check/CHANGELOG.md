@@ -4,6 +4,14 @@ All notable changes to this package are documented here.
 
 ## [Unreleased]
 
+### Added (VOS-033)
+
+- `vos.toml` accepts two more keys for an implementation crate, `contract = "<package>"`
+  (the contract package it realises) and `obligations = [..]` (the tiers `vos-link gen-doc`
+  embeds), bounded here (a name of at most 32 bytes, at most 4 tiers, duplicates refused)
+  and judged by `vos-link` (VOS02 section 10.1, D-GD2).  `VosToml` gains `contract` and
+  `obligations`.
+
 ### Fixed (CI)
 
 - The performance tests (`item11`, `item12`, `l3`) no longer assert absolute

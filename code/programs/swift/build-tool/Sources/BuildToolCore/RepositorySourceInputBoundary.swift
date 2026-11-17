@@ -351,6 +351,7 @@ enum RepositorySourceInputBoundaryProjection {
                   "code/programs/java/conduit-hello",
                   "code/programs/mosaic/task-app/host/web",
                   "code/programs/rust/ircd",
+                  "code/programs/rust/vos-link",
                   "code/programs/swift/conduit-hello"
                 ],
                 "descendant_roots": [],

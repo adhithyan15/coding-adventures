@@ -1,0 +1,4 @@
+class = "K"
+kind = "any"
+contract = "vos-sched-contract"
+obligations = ["any", "safety"]

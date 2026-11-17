@@ -13,10 +13,12 @@
 //! Warrant parser and evaluator are none of those, so the checks that need them
 //! live here, in a crate with the host class (`vos.toml`, class H).
 //!
-//! ## When it goes away
+//! ## What moved to `vos-link` (VOS-033, backlog VOS-D049)
 //!
-//! `vos-link gen-doc` and `check-doc` (VOS-033) assemble the real
-//! per-implementation documents from the same `.part` files, and the evidence
-//! generator (VOS-011, VOS-012) runs their claims against compiled Rust. The
-//! model-level lemmas and the obligation-text checks here are then folded into
-//! that tool's own tests (backlog VOS-D049).
+//! `vos-link gen-doc` and `check-doc` assemble and verify the real per-implementation
+//! documents from the same `.part` files, and `vos-manifest` owns the part admission rules,
+//! so the string-joining stand-in and the marker-discipline stand-in are gone from here.
+//! What stays is the **semantic** suite: the ground evaluation of the lemmas and obligations
+//! over Warrant models and the mutation tables (about a minute), which is neither a document
+//! check nor something the tool's own fast tests should carry.  It retires when the
+//! evidence generator (VOS-011, VOS-012) runs the same claims against compiled Rust.

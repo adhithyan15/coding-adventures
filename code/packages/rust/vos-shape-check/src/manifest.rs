@@ -8,6 +8,8 @@
 //! class = "K"                      # K, C, S, M, P or H; default K
 //! kind  = "production"             # contract, production, reference, any, spine, hal, profile
 //! evidence-features = ["ghost"]    # must be in the central list
+//! contract = "vos-ready-contract"  # an implementation: the contract package it realises (VOS02 10.1, D-GD2)
+//! obligations = ["safety"]         # an implementation: the tiers `vos-link gen-doc` embeds
 //! ```
 //!
 //! The grammar is deliberately tiny so that it can be bounded and so that it
@@ -129,6 +131,8 @@ pub const VOS_TOML_MAX_KEYS: usize = 16;
 pub const VOS_TOML_MAX_LINE: usize = 1_024;
 /// At most this many names in `evidence-features`.
 pub const MAX_EVIDENCE_NAMES: usize = 64;
+/// At most this many tiers in `obligations` (the four tiers of VOS02 R1).
+pub const MAX_OBLIGATION_NAMES: usize = 4;
 
 /// The parsed `vos.toml`.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -139,6 +143,11 @@ pub struct VosToml {
     pub kind: Option<Kind>,
     /// Declared evidence features, in file order.
     pub evidence_features: Vec<String>,
+    /// The contract package an implementation realises (VOS02 section 10.1, D-GD2),
+    /// as written.  `vos-link` validates the name; this reader only bounds it.
+    pub contract: Option<String>,
+    /// The tiers `vos-link gen-doc` embeds, in file order, as written.
+    pub obligations: Vec<String>,
 }
 
 /// A `vos.toml` error: 1-based line and reason.
@@ -184,13 +193,15 @@ pub fn parse_vos_toml(text: &str) -> Result<VosToml, VosTomlError> {
         class: None,
         kind: None,
         evidence_features: Vec::new(),
+        contract: None,
+        obligations: Vec::new(),
     };
     for Entry { path, value, line } in entries {
         let line = line as usize;
         let [key] = path.as_slice() else {
             return bad(
                 line,
-                "unknown key or table (allowed: class, kind, evidence-features)",
+                "unknown key or table (allowed: class, kind, evidence-features, contract, obligations)",
             );
         };
         match (key.as_str(), value) {
@@ -234,13 +245,39 @@ pub fn parse_vos_toml(text: &str) -> Result<VosToml, VosTomlError> {
                     out.evidence_features.push(name);
                 }
             }
-            ("class" | "kind" | "evidence-features", _) => {
+            ("contract", Value::Str(v)) => {
+                if out.contract.is_some() {
+                    return bad(line, "duplicate key");
+                }
+                if v.is_empty() || v.len() > 32 {
+                    return bad(line, "a contract package name is 1 to 32 bytes");
+                }
+                out.contract = Some(v);
+            }
+            ("obligations", Value::Array(items)) => {
+                if !out.obligations.is_empty() {
+                    return bad(line, "duplicate key");
+                }
+                for item in items {
+                    let Value::Str(name) = item else {
+                        return bad(line, "obligations holds strings");
+                    };
+                    if name.is_empty() || name.len() > 16 {
+                        return bad(line, "a tier name is 1 to 16 bytes");
+                    }
+                    if out.obligations.len() >= MAX_OBLIGATION_NAMES {
+                        return bad(line, "more than 4 obligation tiers");
+                    }
+                    out.obligations.push(name);
+                }
+            }
+            ("class" | "kind" | "evidence-features" | "contract" | "obligations", _) => {
                 return bad(line, "wrong type of value for this key")
             }
             _ => {
                 return bad(
                     line,
-                    "unknown key (allowed: class, kind, evidence-features)",
+                    "unknown key (allowed: class, kind, evidence-features, contract, obligations)",
                 )
             }
         }

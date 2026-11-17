@@ -15538,6 +15538,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "vos-manifest"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_sha256",
+ "coding_adventures_warrant_grammar",
+ "grammar-tools",
+ "lexer",
+ "parser",
+ "vos-sched-contract",
+]
+
+[[package]]
 name = "vos-sched-contract"
 version = "0.1.0"
 
@@ -15546,6 +15558,7 @@ name = "vos-sched-contract-check"
 version = "0.1.0"
 dependencies = [
  "coding_adventures_warrant_grammar",
+ "vos-manifest",
  "vos-sched-contract",
 ]
 

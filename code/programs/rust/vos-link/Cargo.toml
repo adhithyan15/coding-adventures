@@ -1,0 +1,47 @@
+[package]
+name = "vos-link"
+version = "0.1.0"
+edition = "2021"
+description = "Host tool of the verified-OS program (VOS-033, VOS02): gen-doc assembles and check-doc verifies code/specs/<impl>.warrant"
+
+[lib]
+name = "vos_link"
+path = "src/lib.rs"
+
+[[bin]]
+name = "vos-link"
+path = "src/main.rs"
+
+# A standalone cargo root (like the other programs under code/programs/rust): the
+# packages it uses are path dependencies.
+[workspace]
+
+[dependencies]
+# The pure parsers and document assembly.
+vos-manifest = { path = "../../../packages/rust/vos-manifest" }
+# `vos.toml` has one reader, the shape checker's (its authority list of keys grew by
+# `contract` and `obligations` for this tool).  Backlog VOS-D059 moves it into
+# vos-manifest when check-profile lands.
+vos-shape-check = { path = "../../../packages/rust/vos-shape-check" }
+
+# A test-only edge (VOS-D058): the tests read the real contract package's files
+# (`include_bytes!` / copies), and the build tool selects a package's tests by its Cargo
+# dependency edges, so an edit to a `.part` or `contract.vos` must select them.
+[dev-dependencies]
+vos-sched-contract = { path = "../../../packages/rust/vos-sched-contract" }
+
+[[test]]
+name = "gen_and_check"
+path = "tests/gen_and_check.rs"
+
+[[test]]
+name = "negative_controls"
+path = "tests/negative_controls.rs"
+
+[[test]]
+name = "paths_and_io"
+path = "tests/paths_and_io.rs"
+
+[[test]]
+name = "cli"
+path = "tests/cli.rs"

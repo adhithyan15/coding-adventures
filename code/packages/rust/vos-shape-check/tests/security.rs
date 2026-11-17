@@ -51,25 +51,31 @@ fn with_features(src: &str) -> CrateInput {
 ///   quadratic:  (t3 - t2) / (t2 - t1) = k * k  (cost c * size * size)
 /// ```
 ///
-/// and require the ratio to stay under 10 for k = 4 (linear 4, quadratic 16) or
-/// 3.2 for k = 2 (linear 2, quadratic 4).  Each size keeps the best (minimum) of
-/// up to three runs, which discards scheduler noise: one run per size is taken
+/// and require the ratio to stay under 10 for k = 4 (linear 4, quadratic 16),
+/// or under 6 for k = 3 (linear 3, quadratic 9: twice the linear value, so a
+/// busy runner has 2x of noise headroom while a quadratic still fails with
+/// 1.5x to spare).  k = 2 (linear 2, quadratic 4) leaves too little room: a
+/// loaded macOS runner measured 3.4 against a limit of 3.2 on linear code, so
+/// no check uses it.  Each size keeps the best (minimum) of
+/// up to five runs, which discards scheduler noise: one run per size is taken
 /// first and more only while the ratio still looks too high, so a quiet host
-/// pays for one pass while a noisy one gets three; a real quadratic fails all
-/// three.  `n` is chosen so the increments are tens to hundreds of
+/// pays for one pass while a noisy one gets five; a real quadratic fails all
+/// five.  `n` is chosen so the increments are tens to hundreds of
 /// milliseconds; the denominator is floored at 5 ms so a timer-resolution-sized
 /// difference cannot inflate the ratio.  The absolute backstop is only a hang
 /// guard, far above any real runner's speed.
 fn scales_linearly(what: &str, n: usize, k: usize, work: impl Fn(usize)) {
     const BACKSTOP: Duration = Duration::from_secs(120);
     // linear is k, quadratic k * k: k = 4 leaves 2.5x of noise headroom
-    // below the bound, k = 2 (only used where the 4096-fn cap forbids more)
-    // is tighter
-    let limit = if k == 2 { 3.2 } else { 10.0 };
+    // below the bound and k = 3 leaves 2x; k = 2 is too tight to use
+    let limit = match k {
+        3 => 6.0,
+        _ => 10.0,
+    };
     let sizes = [n, k * n, k * k * n];
     let mut best = [Duration::MAX; 3];
     let mut ratio = f64::MAX;
-    for _ in 0..3 {
+    for _ in 0..5 {
         for (slot, size) in best.iter_mut().zip(sizes) {
             let t = Instant::now();
             work(size);
@@ -474,7 +480,9 @@ fn item11_item_scanning_is_linear() {
         let src = format!("{HEADER}{}", "#[cfg(test)] a ".repeat(n));
         let _ = run(&lib(&src));
     });
-    scales_linearly("nested `#[`", 1_700, 4, |n| {
+    // 16 * 3_000 nested `#[` + `]` is 192_000 tokens, under the 262_144-token lex cap, so
+    // the largest size is still scanned in full (a cap hit would flatten the curve)
+    scales_linearly("nested `#[`", 3_000, 4, |n| {
         let src = format!("{HEADER}{}{}", "#[".repeat(n), "]".repeat(n));
         let _ = run(&lib(&src));
     });
@@ -519,9 +527,11 @@ fn item11_item_scanning_is_linear() {
 #[test]
 fn item12_call_graph_is_linear_and_fails_closed_on_edge_explosions() {
     let _batch = Batch::begin();
-    // every size is past the edge cap (about 450 colliding methods), so this
-    // also checks that the cap itself is reached in linear time
-    scales_linearly("colliding method names", 500, 2, |n| {
+    // every size is past the edge cap (about 450 colliding methods, n * n
+    // edges against 200,000), so this also checks that the cap itself is
+    // reached in linear time.  The sizes 455, 1365 and 4095 (k = 3) are the
+    // largest triple under the 4096-function cap that starts past the edge cap
+    scales_linearly("colliding method names", 455, 3, |n| {
         let mut s = String::from(HEADER);
         for k in 0..n {
             s.push_str(&format!(

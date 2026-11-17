@@ -2,6 +2,17 @@
 
 All notable changes to this package are documented here.
 
+## [Unreleased]
+
+### Changed (VOS-033, backlog VOS-D049)
+
+- `parts_follow_the_marker_discipline` now applies `vos_manifest::part::admit_part` (the rules
+  `vos-link gen-doc` enforces) and `claims_of_block` to the five real parts, instead of
+  re-implementing the rules.  New dependency: `vos-manifest`.
+- The string-joining `assemble` is documented as evaluation-only; real document assembly and
+  checking are `vos-link`'s.  The crate stays: its ground evaluation and mutation tables are a
+  semantic suite, not a document check.
+
 ## [0.1.0] - Unreleased
 
 ### Added
