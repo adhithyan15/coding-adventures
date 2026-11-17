@@ -1,10 +1,9 @@
 # DT17a: Warrant contract for `hash-functions` (WX-P1a)
 
-Status: **evidence wired on `claude/warrant-hash-functions`, PR pending
-(section 7 lists what is not wired).** The generator gap of section 5 is closed
-by WX-FAULT1, the evidence manifest, harness, sabotage lines, jail and proof
-manifest exist, and the analyzer and the package report remain blocked on an
-owner call (section 7).
+Status: **complete (WX-P1a and WX-P1a2).** The evidence manifest, harness, sabotage
+lines, jail, proof manifest, capability analyzer certificate and package
+assurance report are all wired. The randomness that blocked the last two was
+split out of the crate into `hash-analysis` (section 7).
 
 This is the contract document that VER30 section 4.2 (Track B, step 1) asks for
 before any `.warrant` file. It says what `rust/hash-functions` promises, which
@@ -42,7 +41,7 @@ Every one takes a `Bytes` (or `Bytes<16>` key) and returns a fixed-width integer
 | Item | Reason |
 |---|---|
 | `hash_str_fnv1a_32`, `hash_str_siphash` | take `&str`; Warrant text is VER04l (WX-T) and is not available to the evidence generator. They are one-line forwards to the covered byte functions. |
-| `avalanche_score`, `distribution_test` | return `f64` (floats are VER04p, WX-FL) and take a generic closure `F: Fn(&[u8]) -> H`; `avalanche_score` also draws OS randomness. |
+| `avalanche_score`, `distribution_test` | no longer in this crate: moved to `hash-analysis` (WX-P1a2, section 7) because `avalanche_score` draws OS randomness. They return `f64` (floats are VER04p, WX-FL) and take a generic closure `F: Fn(&[u8]) -> H`, so they would not be covered there either. |
 | trait `HashFunction` and the structs `Fnv1a32`, `Fnv1a64`, `Djb2`, `PolynomialRolling`, `Murmur3_32`, `SipHash24` | trait objects and stateful values are VER04m / VER04o territory (WX-O, WX-P). They only forward to the covered free functions; `output_bits` is the constant 32 or 64. |
 | the constants (offset bases, primes, defaults) | not operations. The examples and models pin their values by use. |
 
@@ -78,8 +77,8 @@ this document was written.
 **Labels.** `data`, `base`, `modulus` and `seed` are `public`. The SipHash
 `key` is `secret`: its secrecy is the whole point of the algorithm, and
 labelling it public would hide CWE-208 from the report. The package does not
-claim a constant-time proof, so a report would record that row as applicable and
-unaddressed, as it does for gf256 (no report exists yet, section 7). Domain labels (`full`, `bounded-set`, `sample`) and
+claim a constant-time proof, so the report records that row as an unapproved
+exemption (applicable and unaddressed), as it does for gf256 (section 7). Domain labels (`full`, `bounded-set`, `sample`) and
 case counts come from the generated manifest once it exists; this document
 states none, and the owner's standard is to say `sample` for a `Bytes` or
 `Bytes<N>` binder.
@@ -151,42 +150,73 @@ is caught (section 6).
   operation, two for `polynomial_rolling_with_params`, each aimed at a cheap
   exhaustive claim), the proof manifest, and `git diff --exit-code -- evidence/`.
   Both manifests are deterministic (fixed seed, content hashes, no timestamps or
-  toolchain data; the repo forces LF), so this check stands in for the report's
-  `--check`, which is not wired. It needs the manifests committed first.
+  toolchain data; the repo forces LF), so the manifests must be committed
+  regenerated; the report's `--check` (section 7) cross-checks them as well.
 * `tests/runtime_capability.rs` (VER08b): the eight covered hashes on known
   answers inside the no-capability jail, strict on Linux.
 * `warrant-ir/tests/hash_functions_proofs.rs`: the proof test (owner call of
   the earlier draft: it follows the existing pattern and lives in `warrant-ir`).
   The `siphash_2_4` constant-time obligation is `not-live`: the front end
-  refuses `algorithms.rs` at its first `pub const`.
+  refuses `algorithms.rs` at its first `pub const`. Since WX-P1a2 it also records
+  one `steps-bound` obligation per operation `not-live` (same blocker) and the
+  `depth-bound` rows `unchecked`.
 
 **Zero modulus.** The real `polynomial_rolling_with_params` panics on
 `modulus == 0` (`assert!(modulus > 0)`). The document's `ensures no_panic` on that
 operand holds of the harness adapter, which catches any panic and reports it as
 `MODULUS_ZERO`, not of the crate; the adapter cannot tell this panic from another.
 
-## 7. Divergence from the lzw / wasm-leb128 pattern: analyzer and report not wired
+## 7. Analyzer and report: the randomness split (WX-P1a2, done)
 
-Every earlier adopter runs the capability analyzer and `ca-assurance-report
---check` in BUILD and commits `effect_certificate.json`,
-`assurance-profile.json` and `assurance_report.json`. This adoption does not,
-because the crate does not fit the pattern as it stands:
+The first adoption (WX-P1a) could not run the capability analyzer or
+`ca-assurance-report --check`, because the crate did not fit the lzw /
+wasm-leb128 pattern:
 
-1. `src/analysis.rs` calls `getrandom` (`avalanche_score`), so the analyzer fails
-   (`CAP001 rand:read:*`) against the existing `"capabilities": []`, which was
-   never checked before (the old BUILD did not run the analyzer).
-2. Declaring `rand:read:*` makes the analyzer pass and the certificate emit, but
-   (a) the VER08b jail then allows the `rand` syscall, so its `rand-syscall`
-   negative control is not detected (`RCG009`), and (b) the report matrix leaves
-   CWE-330 open (`rand capability present without CSPRNG entropy audit`).
-3. Independently of the capability, the report stops at CWE-400
-   (`resource exhaustion evidence missing`) because `hash-functions.warrant`
-   declares no `bound` rows; adding `steps` rows would turn that row into the
-   usual unapproved exemption.
+1. `src/analysis.rs` called `getrandom` (`avalanche_score`), so the analyzer
+   failed (`CAP001 rand:read:*`) against `"capabilities": []`.
+2. Declaring `rand:read:*` instead would have let the analyzer pass but allowed
+   the `rand` syscall in the VER08b jail (its `rand-syscall` negative control
+   undetectable, `RCG009`), and left the report's CWE-330 row open.
+3. Independently, the report stopped at CWE-400 because the document declared no
+   `bound` rows.
 
-The sound fix is structural and not made here: separate the randomness from the
-pure hashes (move `analysis.rs` to its own crate, or its own capability
-declaration), then declare `bound` rows and add the profile. The `analysis`
-module is public API, so that is an owner call. The jail line is kept because
-it is true as written: the eight covered functions run with no capability.
+The owner decided on 2026-11-16 to separate the randomness from the pure hashes.
+What was done:
 
+* **New crate `rust/hash-analysis`** (`coding_adventures_hash_analysis`) holds
+  `avalanche_score` and `distribution_test`, unchanged. Its
+  `required_capabilities.json` declares `rand:read:*` with a justification
+  (statistical sampling, never key material); its `BUILD` runs the capability
+  analyzer against that declaration. It has no Warrant document (floats and a
+  generic closure). The hash functions it measures are a dev-dependency.
+* **`hash-functions` 0.2.0** dropped the `analysis` module, its two exports and
+  the `getrandom` dependency (breaking: minor bump; its CHANGELOG has a
+  "Removed" section). No other Rust package used the helpers.
+  `"capabilities": []` is now true of the whole source, so the analyzer passes
+  and `effect_certificate.json` is committed (label `proved`), and the jail's
+  `rand-syscall` control stays detected (strict gate passes).
+* **Bound rows.** Every operation declares `steps <= 64 * len(data) + 4096` and
+  `depth <= 8`. There is no `output` row: that metric bounds a `Bytes` or `List`
+  result, and these return a 4- or 8-byte integer. There is deliberately **no `heap`
+  row**: a `heap` row runs every instance under the allocation observer on a
+  worker thread, and the exhaustive suites of a hash cannot afford it (a trial
+  with `heap <= 4 * len(data) + 65536` on all eight operations had not finished
+  in over 30 minutes; the harness without it runs in under two minutes, build
+  included). The steps rows are declarations, which the proof manifest records
+  `not-live` (the Rust-subset front end refuses `algorithms.rs`).
+* **Profile and report.** `assurance-profile.json` (`non-cryptographic-hash`,
+  kind `transform`) words the static rows 326, 327 and 407; `assurance_report.json`
+  is generated from the manifests and `BUILD`/`BUILD_linux`/`BUILD_windows` run
+  `ca-assurance-report --check ... --profile non-cryptographic-hash
+  --profile-kind transform`. Result: CWE-330 **excluded** (no `rand` capability
+  and no randomness in the package), CWE-326 and CWE-327 excluded, CWE-400
+  recorded as the usual **unapproved exemption** `EXEMPT-CWE-400-NO-STEP-PROOF`
+  (the steps bounds are declarations no tool checks, exactly as for lzw and
+  wasm-leb128), CWE-208 an unapproved exemption (the SipHash `key` is `secret`
+  and no constant-time proof is live). Verdict `report-only`.
+
+What remains open is not about the split: a live step-bound proof (blocked by the
+front end), a constant-time proof for the SipHash key, and `hash_str_*` (WX-T).
+`effect_certificate.json` is not verified with `--verify-cert`: that needs a
+generated `src/capabilities.rs` witness, which no adopter has yet (backlog
+LP-001b).
