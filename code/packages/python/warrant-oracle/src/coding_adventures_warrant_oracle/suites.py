@@ -516,8 +516,7 @@ class SuitePlan:
         check = self._admit_check
         if check is None or self._admits_checked:
             return
-        i = 0
-        for _ordinal, env in self.iter_admitted(meter=False):
+        for i, (_ordinal, env) in enumerate(self.iter_admitted(meter=False)):
             try:
                 check(env)
             except OutsideAdmit as exc:
@@ -526,7 +525,6 @@ class SuitePlan:
                     f"W0701: claim `{self.suite.claim}` calls op `{exc.op}` with arguments "
                     f"outside the op's admit, at admitted case {i}",
                 ) from None
-            i += 1
         self._admits_checked = True
 
     def iter_admitted(self, meter: bool = True):
