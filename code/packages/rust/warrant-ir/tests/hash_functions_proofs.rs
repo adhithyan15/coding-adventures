@@ -2,8 +2,9 @@
 //!
 //! `code/specs/hash-functions.warrant` labels every operand `public` except the
 //! SipHash `key`, which is `secret`, so VER04h wants a constant-time (2-safety)
-//! obligation for `siphash_2_4`.  The document declares no `bound` rows (DT17a
-//! section 4), so there is no steps-bound, heap-bound or depth-bound obligation.
+//! obligation for `siphash_2_4`.  Since WX-P1a2 the document also declares `steps` and
+//! `depth` bound rows on every operation (no `heap` row: see the document), so each
+//! operation has a steps-bound obligation, attempted on the same source.
 //! The obligation is to be discharged on the *real lowered*
 //! `code/packages/rust/hash-functions/src/algorithms.rs`; this target tries
 //! exactly that: it feeds the real source to the Rust-subset front end and the
@@ -16,12 +17,11 @@
 //! The front end does not accept the file.  What it refuses is recorded
 //! verbatim (the front end's own message, position and the offending source
 //! line), together with a per-function probe that says which exports lower on
-//! their own and which construct stops each of the others.  The one obligation
-//! (the `siphash_2_4` constant-time obligation) is then written to
-//! `proof-manifest.json` with label `not-live` and verdict `not-live`, never
-//! `proved`, never omitted.  The generic `bound` handling below (steps, heap and
-//! depth rows) is inherited from the template and records nothing here: the
-//! document declares no `bound` rows.
+//! their own and which construct stops each of the others.  The obligations
+//! (the `siphash_2_4` constant-time obligation and one steps-bound obligation per
+//! operation) are then written to `proof-manifest.json` with label `not-live` and
+//! verdict `not-live`, never `proved`, never omitted; the depth rows are recorded
+//! `unchecked` (the pilot prover does not track depth).
 //!
 //! The `lowering-blocker` test passes only while the real source is refused:
 //! the day the front end accepts it, it fails and says the obligations can now

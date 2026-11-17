@@ -4742,13 +4742,20 @@ dependencies = [
 ]
 
 [[package]]
-name = "coding_adventures_hash_functions"
+name = "coding_adventures_hash_analysis"
 version = "0.1.0"
+dependencies = [
+ "coding_adventures_hash_functions",
+ "getrandom 0.2.17",
+]
+
+[[package]]
+name = "coding_adventures_hash_functions"
+version = "0.2.0"
 dependencies = [
  "capability-runtime-conformance",
  "coding_adventures_sha256",
  "coding_adventures_test_bootstrap",
- "getrandom 0.2.17",
 ]
 
 [[package]]

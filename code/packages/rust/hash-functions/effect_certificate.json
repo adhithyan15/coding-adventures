@@ -1,0 +1,11 @@
+{
+  "schema_version": "ver24-effect-cert-v1",
+  "package": "rust/hash-functions",
+  "source_digest": "c7de43ee49e5211bd03ef652b79aa65675ae372656cb773517cbf3482ea7f186",
+  "manifest_digest": "a030fc971d69f96fbdda28b671f39b44102743cb5dbc6e517858c5edec86eb00",
+  "declared_effects": [],
+  "entry_points": [],
+  "unconditional_roots": [],
+  "banned_construct_exceptions": [],
+  "label": "proved"
+}

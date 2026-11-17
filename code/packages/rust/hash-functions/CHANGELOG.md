@@ -4,6 +4,43 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Removed
+
+- BREAKING: `avalanche_score` and `distribution_test` (module `analysis`) are no
+  longer exported from this crate, and the `getrandom` dependency is gone. They
+  moved, unchanged, to the new crate `coding_adventures_hash_analysis`
+  (`code/packages/rust/hash-analysis`), because `avalanche_score` draws OS
+  randomness and this crate is pure computation (WX-P1a2, DT17a section 7). No
+  other package in the repository used them. Migration: depend on
+  `coding_adventures_hash_analysis` and import them from there. The crate version
+  is 0.2.0 (minor bump, public API removed).
+
+### Added
+
+- `steps` and `depth` `bound` rows on every operation of
+  `code/specs/hash-functions.warrant` (WX-P1a2), so the report can address CWE-400.
+  `heap <= 4096` on `polynomial_rolling`, `murmur3_32`, `murmur3_32_with_seed` and
+  `siphash_2_4` (checked live under the allocation observer; observed peak 0 bytes).
+  `polynomial_rolling_with_params` has no `heap` row: its only allocation is the std
+  panic payload of the zero-modulus path, whose size is platform-dependent (80 bytes
+  Linux, 16 Windows), so an exact committed peak would diff across platforms.
+  `fnv1a_32`, `fnv1a_64` and `djb2` have no `heap` row: their 2^24-case suites would
+  cost about half an hour under the observer (see DT17a section 7). Evidence
+  regenerated (`tests/generated/warrant_evidence.rs`, both manifests).
+- `effect_certificate.json` (capability analyzer, label `proved`, no capabilities),
+  `assurance-profile.json` (`non-cryptographic-hash`, kind `transform`) and
+  `assurance_report.json`, with the analyzer and `ca-assurance-report --check`
+  lines in `BUILD`, `BUILD_linux` and `BUILD_windows`. The report shows CWE-330
+  excluded and CWE-400 and CWE-208 as unapproved exemptions (no live step-bound or
+  constant-time proof); verdict `report-only`.
+
+### Changed
+
+- `required_capabilities.json` justification no longer mentions OS randomness (it moved
+  to `hash-analysis`); `evidence.bindings` revision is 0.2.0; README gains a "Not
+  cryptographic" note.
+- The README usage example no longer imports the analysis helpers.
+
 ### Fixed
 
 - README usage example: the SipHash-2-4 assertion `0x726f_db47_dd0e_0e31` is the
