@@ -780,51 +780,57 @@ as the "Priority order" section ([VOS-BACKLOG](VOS-BACKLOG.md)).
 and VOS-011 (`vos-sched-fp-bitmap`, in review). Everything below starts after
 them.
 
-### 6.1 The first 25 items
+### 6.1 The first 26 items
 
 | # | Item | What | Why here |
 |---|---|---|---|
 | 1 | VOS-037 | This spec, plus the backlog surgery | Every later row needs its interface, slot, size and risk fixed |
-| 2 | VOS-012a | `vos-sched-any` | The first `-any`; D054's first run |
-| 3 | VOS-012b | `vos-sched-rr` (representation mode) | The first representation-mode implementation (VOS-D061) and the first swap |
-| 4 | VOS-038 | Generator debts: D065 non-inert record fault, D063 heap observer, D025 array builder | Before mass production |
-| 5 | VOS-039 | Component kit: generic contract check (D049), `vos-link check-component`, coverage gate | After three real implementations exist |
-| 6 | VOS-028b | Capacity probe (fixture: `vos-sched-fp-bitmap`) | Fixes the X1 sizes (VOS00 D4) and decides 029's funding |
-| 7 | VOS-040 | Host model-SAT lane on the `sched` contract, plus the Rust-lowering spike | Reuses the probe harness |
-| 8 | VOS-005 | `emu-core` | The emulator has been idle and everything bootable waits on it |
-| 9 | VOS-036 | VOS22 hermetic build spec, including a recorded single-crate RV32 object build | 029's first proof needs a compiled RV32 object (D046) |
-| 10 | VOS-029a | Symbolic executor core plus simulator differential; first X3: `fp-bitmap` dispatch, insert, remove, on the object from the VOS22 spike build | No cut points needed for the first certificate; binding the object to a gated image is VOS-D078 |
-| 11 | VOS-020 | RV32 privileged slice 1 | The machine the spine boots on |
-| 12 | VOS-022a | VOS20 K0 spec, static family (the K record, entries, ownership, the boot ladder) | The spine's specification |
-| 13 | VOS-C02c | `thread` contract | The first table interface |
-| 14 | VOS-C02i | `thread-table` | |
-| 15 | VOS-C02a | `thread-any` | |
-| 16 | VOS-029b | Cut points, composition checker, index case-split; X3 for `thread-table` | The first table X3 |
-| 17 | VOS-006a | `emu-dev-console` (UART) plus the emu-host console | The device the first boot prints on |
-| 18 | VOS-025a | VOS21 HAL contract spec (effects as data, the command allowlist of rule 6; ISA and board split) | Before the HAL and the UART driver. Needs no board: the board-specific allowlist is 025b's (item 24) |
-| 19 | VOS-C20c | `uart` contract | |
-| 20 | VOS-C20i | `vos-uart-poll` | |
-| 21 | VOS-034 | `check-profile` plus static SH16, with the requirements of section 7.2 (instance ownership, needed claims, `prot-none`) | The profile gate, before an image is built |
-| 22 | VOS-035 | Recorder plus image-build gate | The gate on what was compiled |
-| 23 | VOS-021a | `emu-board-rv32-min` (RAM plus UART, no PMP) | The first bootable board |
-| 24 | VOS-025b | `vos-hal-rv32` | The first and only `unsafe` |
-| 25 | VOS-026a | `vos-spine-static` skeleton with the reset entry; `boot-hello` boots on the emulator (Boot-0) | The first image |
+| 2 | VOS-012a | `vos-sched-any` | The first `-any`; D054 settled by running it (controls attach to `dispatch_img` and `dispatch_out`; no claim rewritten for it) |
+| 3 | VOS-D081 | Safety-tier `init` claim | The VOS-012a run showed nothing constrains `init` outside `canonical`; it changes every implementation's safety digests, so it lands before the second implementation of the contract (`rr`) |
+| 4 | VOS-012b | `vos-sched-rr` (representation mode) | The first representation-mode implementation (VOS-D061) and the first swap |
+| 5 | VOS-038 | Generator debts: D065 non-inert record fault, D063 heap observer, D025 array builder | Before mass production |
+| 6 | VOS-039 | Component kit: generic contract check (D049), `vos-link check-component`, coverage gate | After three real implementations exist |
+| 7 | VOS-028b | Capacity probe (fixture: `vos-sched-fp-bitmap`) | Fixes the X1 sizes (VOS00 D4) and decides 029's funding |
+| 8 | VOS-040 | Host model-SAT lane on the `sched` contract, plus the Rust-lowering spike | Reuses the probe harness |
+| 9 | VOS-005 | `emu-core` | The emulator has been idle and everything bootable waits on it |
+| 10 | VOS-036 | VOS22 hermetic build spec, including a recorded single-crate RV32 object build | 029's first proof needs a compiled RV32 object (D046) |
+| 11 | VOS-029a | Symbolic executor core plus simulator differential; first X3: `fp-bitmap` dispatch, insert, remove, on the object from the VOS22 spike build | No cut points needed for the first certificate; binding the object to a gated image is VOS-D078 |
+| 12 | VOS-020 | RV32 privileged slice 1 | The machine the spine boots on |
+| 13 | VOS-022a | VOS20 K0 spec, static family (the K record, entries, ownership, the boot ladder) | The spine's specification |
+| 14 | VOS-C02c | `thread` contract | The first table interface |
+| 15 | VOS-C02i | `thread-table` | |
+| 16 | VOS-C02a | `thread-any` | |
+| 17 | VOS-029b | Cut points, composition checker, index case-split; X3 for `thread-table` | The first table X3 |
+| 18 | VOS-006a | `emu-dev-console` (UART) plus the emu-host console | The device the first boot prints on |
+| 19 | VOS-025a | VOS21 HAL contract spec (effects as data, the command allowlist of rule 6; ISA and board split) | Before the HAL and the UART driver. Needs no board: the board-specific allowlist is 025b's (item 25) |
+| 20 | VOS-C20c | `uart` contract | |
+| 21 | VOS-C20i | `vos-uart-poll` | |
+| 22 | VOS-034 | `check-profile` plus static SH16, with the requirements of section 7.2 (instance ownership, needed claims, `prot-none`) | The profile gate, before an image is built |
+| 23 | VOS-035 | Recorder plus image-build gate | The gate on what was compiled |
+| 24 | VOS-021a | `emu-board-rv32-min` (RAM plus UART, no PMP) | The first bootable board |
+| 25 | VOS-025b | `vos-hal-rv32` | The first and only `unsafe` |
+| 26 | VOS-026a | `vos-spine-static` skeleton with the reset entry; `boot-hello` boots on the emulator (Boot-0) | The first image |
 
-**What the first 25 items do not include.** Item 21 is the *static* part of the
+**What the first 26 items do not include.** Item 22 is the *static* part of the
 profile gate. Three things must exist before any image is **released** (not
 before Boot-0 is built and run on the emulator): CODEOWNERS and branch
 protection (VOS-D026, VOS-D067) and the `alpha`-read and oracle-write bindings
 checks (VOS-D060, a hard prerequisite of any `image` profile). The backlog
-lists them as gates after item 25 and before the Boot-3 release, so the
+lists them as gates after item 26 and before the Boot-3 release, so the
 exclusion is explicit and not an oversight.
 
-### 6.2 Rationale for the first ten
+### 6.2 Rationale for the first eleven
 
 * **Spec first (1).** The spec is the only item with no dependency and the
   only one that can be wrong in a way that wastes every later item.
 * **`-any` next (2).** Without it there is no spine model and no `any` kind has
   ever been exercised; VOS-D054 (the generator's view of `-any` claim
-  subjects) can only be settled by a real run.
+  subjects) could only be settled by a real run. It was (VOS-012a): the
+  controls attach to `dispatch_img` and `dispatch_out`, not `alpha_w`, and no
+  claim needed a rewrite for it.
+* **`init` claim (3).** The same run showed that no safety-tier claim
+  constrains `init` (VOS-D081); adding one changes every implementation's
+  safety digests, so it lands before `rr` is generated.
 * **`rr` (3).** It is the first representation-mode implementation (VOS-D061)
   and the first swap that tests replaceability, and its state is not an
   array, so it avoids VOS-D025.
@@ -844,7 +850,7 @@ exclusion is explicit and not an oversight.
 * **VOS22 (9).** 029's first proof needs a compiled RV32 object, and today
   there is no hermetic way to produce one (VOS-D046).
 * **029a (10).** It is split so the **first certificate needs no cut points**: a
-  proved-on-compiled-code certificate at item 10, on the bitmap scheduler. It
+  proved-on-compiled-code certificate at item 11, on the bitmap scheduler. It
   is proved on **the object from the VOS22 spike build, not on a gated
   image**, and the N = 64 green result of VOS30 table A is on hand-written
   proxy code, so whether real compiler output needs cut points is open
@@ -852,7 +858,7 @@ exclusion is explicit and not an oversight.
 
 ### 6.3 The boot ladder
 
-After item 25 the program climbs a ladder of images. Each stage is a profile
+After item 26 the program climbs a ladder of images. Each stage is a profile
 that boots, adds components, and adds one claim about the spine. Boot-0 to Boot-2
 run before `prot` exists, so their reports and manifests **label them "no
 isolation claim"**; `vos-prot-none` is not used by any of them as an image
@@ -860,7 +866,7 @@ isolation claim"**; `vos-prot-none` is not used by any of them as an image
 
 | Stage | Adds | Why this rung |
 |---|---|---|
-| Boot-0 (item 25) | `boot-hello`: reset entry (fold `init`, install the configuration, **`seal` `cspace` and lock `prot` before the first user instruction**, I11), console | Proves the initial state satisfies the spine invariant before any user instruction. **No isolation claim** |
+| Boot-0 (item 26) | `boot-hello`: reset entry (fold `init`, install the configuration, **`seal` `cspace` and lock `prot` before the first user instruction**, I11), console | Proves the initial state satisfies the spine invariant before any user instruction. **No isolation claim** |
 | Boot-1 cooperative | `ctx`, `sysdec`, `trapdec` | Two tasks that yield: the first context switch. **No isolation claim** |
 | Boot-2 preemptive | `timer`, `irq`, VOS-013 | The first interrupt and the first preemption. **No isolation claim** (no `prot` yet) |
 | Boot-3 `rtos-min` | `prot-pmp`, VOS-021b, `cspace` (sealed), `ep`, `ntfn` | Two user tasks under PMP, with preemption: the hard RTOS of VOS00 section 11. The first stage that may carry an `isolation` claim |
@@ -1012,14 +1018,14 @@ the row, not the rule.
    The A1 and A2 results are hand-written proxies (VOS30 section 8.4). If real
    `rustc` output for `dispatch` has structural divergence from the model, the
    first certificate needs cut points, and the split of VOS-029 into a and b
-   moves. Settled by item 10.
+   moves. Settled by item 11.
 6. **Open-PR state.** The backlog was reconciled against the branch, not
    against a fetched `origin/main` and every open PR. Before each item in
    section 6 starts, the working rule of the backlog applies: reconcile first.
 7. **Whether the pool's interface boundaries survive their first consumer.**
    The decisions in section 2 are made on paper. The first interface that is
    used twice (`pool`, VOS-C01 in the backlog) and the first table interface
-   (`thread`, item 13) are where a boundary is most likely to move, and the
+   (`thread`, item 14) are where a boundary is most likely to move, and the
    cost of moving it is a contract change and a digest change in every
    implementation. This is accepted: it is why the order puts `sched`-shaped
    interfaces before table-shaped ones.
