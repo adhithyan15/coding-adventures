@@ -4796,6 +4796,35 @@ correct traffic epoch. Complete handshake state, the remaining record routes,
 stream I/O, certificate validation, revocation, and HTTP composition remain
 blockers; concrete HTTPS remains unavailable.
 
+A bounded `tls13-aes128-gcm-record` composition protects records only for the
+reviewed `TLS_AES_128_GCM_SHA256` route. It consumes selected-suite-bound
+`tls13-record-protection-state`, rejects AES-256-GCM and ChaCha20-Poly1305
+before reserving a sequence number, and binds the reserved 128-bit key and
+96-bit nonce directly to the repository-owned fixed-memory AES-128-GCM
+boundary. Sealing encodes one policy-authorized `TLSInnerPlaintext`,
+authenticates the exact five-byte `TLSCiphertext` header as associated data,
+appends the exact 16-byte tag, and wipes the exact caller-owned scratch prefix
+written after successful inner encoding on every subsequent return. Route and
+inner-encoding failures leave caller scratch unchanged. Opening validates one
+exact outer record before consuming a sequence, authenticates its exact
+retained header before releasing any cleartext, decodes only a
+policy-authorized inner content type, and returns a non-cloneable borrowed view
+whose drop path wipes the successfully opened caller-owned storage. Public
+framing, policy, and capacity failures occur before sequence consumption; an
+authentication failure consumes its reserved sequence and leaves caller output
+unchanged.
+
+This narrow composition does not enable AES-256-GCM or ChaCha20-Poly1305,
+derive traffic secrets, establish handshake epochs, process a transcript,
+authenticate `CertificateVerify` or `Finished`, validate certificates,
+construct or validate a path, check a hostname or revocation, perform key
+updates, read or write a stream, open a socket, authorize an HTTP or OAuth
+request, or provide a TLS connector. The caller must retain distinct
+read/write state and select the correct traffic epoch. Complete handshake
+state, the remaining record route, stream I/O, certificate validation,
+revocation, and HTTP composition remain blockers; concrete HTTPS remains
+unavailable.
+
 An allocation-free `tls13-supported-versions` prerequisite now owns the exact
 RFC 8446 `supported_versions` extension data emitted and consumed by a future
 repository-owned TLS 1.3 client. A caller supplies a preference-ordered slice
