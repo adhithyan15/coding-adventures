@@ -339,9 +339,17 @@ func TestTreeAccessorPanics(t *testing.T) {
 		t.Fatal(err)
 	}
 	for name, f := range map[string]func(){
-		"child high": func() { tr.Child(tr.Root(), 1) },
-		"child low":  func() { tr.Child(tr.Root(), -1) },
-		"token high": func() { tr.Token(tr.NumTokens() + 1) },
+		"child high":          func() { tr.Child(tr.Root(), 1) },
+		"child low":           func() { tr.Child(tr.Root(), -1) },
+		"token high":          func() { tr.Token(tr.NumTokens() + 1) },
+		"token low":           func() { tr.Token(-1) },
+		"replay of NoNode":    func() { tr.IsReplay(NoNode) },
+		"position NoNode":     func() { tr.Position(NoNode) },
+		"position far":        func() { tr.Position(NodeID(1000 << 1)) },
+		"position replay far": func() { tr.Position(NodeID(1000<<1 | 1)) },
+		"span NoNode":         func() { tr.Span(NoNode) },
+		"rule NoNode":         func() { tr.Rule(NoNode) },
+		"children NoNode":     func() { tr.NumChildren(NoNode) },
 	} {
 		func() {
 			defer func() {
@@ -352,6 +360,41 @@ func TestTreeAccessorPanics(t *testing.T) {
 			f()
 		}()
 	}
+}
+
+// Token and the node accessors panic on an empty Tree (zero, after an error,
+// after Reset) instead of returning a zero token.
+func TestEmptyTreeAccessorsPanic(t *testing.T) {
+	c := mustCompile(t, `p = A ;`)
+	var tr Tree
+	check := func(name string) {
+		t.Helper()
+		for _, f := range map[string]func(){
+			"Token(0)": func() { tr.Token(0) },
+			"Root":     func() { tr.Rule(tr.Root()) },
+		} {
+			func() {
+				defer func() {
+					if recover() == nil {
+						t.Fatalf("%s: no panic on an empty Tree", name)
+					}
+				}()
+				f()
+			}()
+		}
+	}
+	check("zero")
+	if err := c.ParseInto(&tr, []lexer.Token{tokAt("A", "a", 1, 1)}, Options{}); err != nil {
+		t.Fatal(err)
+	}
+	if tr.Token(0).Value != "a" {
+		t.Fatal("Token(0)")
+	}
+	tr.Reset()
+	check("reset")
+	_ = c.ParseInto(&tr, []lexer.Token{tokAt("A", "a", 1, 1)}, Options{})
+	_ = c.ParseInto(&tr, []lexer.Token{tokAt("B", "b", 1, 1)}, Options{})
+	check("after error")
 }
 
 // Empty trees, the zero Tree, nil Tree, PostParse refusal, hooks.

@@ -51,6 +51,15 @@ package parser
 // its own position-less *ASTNode sharing the replayed run, one per slot, so
 // ToAST() is indistinguishable from Parse's tree.
 //
+// A REPLAY'S IDENTITY IS ITS SLOT. Two child slots that replay the same node
+// carry equal NodeIDs (source<<1|1), but that does NOT mean one *ASTNode:
+// Parse and ToAST make a distinct position-less node per slot (parent node,
+// child index). Compare replays by slot, not by NodeID.
+//
+// NODEIDS ARE INVALIDATED by ParseInto and Reset. Accessors only bounds-check
+// a NodeID, so a stale one that is still in range silently answers about the
+// new tree (there is no generation counter). Do not keep ids across parses.
+//
 // OWNERSHIP AND SAFETY
 //
 //   - A Tree owns its nodes and kids arrays outright. ParseInto swaps buffers
@@ -110,10 +119,18 @@ func (ch Child) Node() NodeID {
 	return NodeID(^ch.v)
 }
 
+// noCopy makes go vet report a by-value copy of a Tree (copylocks).
+type noCopy struct{}
+
+func (*noCopy) Lock()   {}
+func (*noCopy) Unlock() {}
+
 // Tree is a parse result in compact form. The zero Tree is empty and ready
 // for ParseInto. See the comment at the top of this file for ownership and
-// concurrency.
+// concurrency. Do not copy a Tree: a copy aliases the original's buffers
+// (go vet's copylocks check flags it via noCopy).
 type Tree struct {
+	_      noCopy
 	c      *Compiled
 	ok     bool
 	root   int32 // reference (node<<1), valid when ok
@@ -246,12 +263,24 @@ func (t *Tree) NumNodes() int { return len(t.nodes) }
 // from; Token also accepts the index NumTokens, the synthetic EOF.
 func (t *Tree) NumTokens() int { return len(t.tokens) }
 
-func (t *Tree) node(n NodeID) *cnode { return &t.nodes[n>>1] }
+// node validates n and returns its node. It panics, with the package's own
+// message, on NoNode, any negative value, or an id beyond the tree. (It cannot
+// tell a stale id from a valid one; see "NodeIDs are invalidated" above.)
+func (t *Tree) node(n NodeID) *cnode {
+	if n < 0 || int(n>>1) >= len(t.nodes) {
+		panic("parser: Tree: invalid NodeID")
+	}
+	return &t.nodes[n>>1]
+}
 
 // IsReplay reports whether n is a memo hit: a distinct node sharing the
 // children of the node it replays and having no Position. See the file
-// comment.
-func (t *Tree) IsReplay(n NodeID) bool { return n&1 != 0 }
+// comment. It panics on an invalid NodeID (including NoNode), like every
+// other accessor.
+func (t *Tree) IsReplay(n NodeID) bool {
+	t.node(n)
+	return n&1 != 0
+}
 
 // RuleID is n's rule, an index for Compiled.RuleName.
 func (t *Tree) RuleID(n NodeID) int32 { return t.node(n).rule }
@@ -278,14 +307,16 @@ func (t *Tree) Child(n NodeID, i int) Child {
 // synthetic EOF the parser sees past the end of the list, which a rule can
 // match and which then appears as a child. The pointer is into the caller's
 // token slice (or the Tree's own EOF), and must be treated as read-only.
+// It panics on an empty Tree (zero, after an error, or after Reset) and on an
+// index outside 0..NumTokens.
 func (t *Tree) Token(i int) *lexer.Token {
+	if !t.ok || i < 0 || i > len(t.tokens) {
+		panic("parser: Tree.Token index out of range")
+	}
 	if i < len(t.tokens) {
 		return &t.tokens[i]
 	}
-	if i == len(t.tokens) {
-		return &t.eof
-	}
-	panic("parser: Tree.Token index out of range")
+	return &t.eof
 }
 
 // buildSpans computes first and last for every node in one pass. Nodes are
@@ -331,6 +362,7 @@ func (t *Tree) buildSpans() {
 // (inclusive), or (-1, -1) if n contains no token. For a replay it is the
 // span of the node replayed.
 func (t *Tree) Span(n NodeID) (first, last int) {
+	t.node(n)
 	if !t.spans {
 		t.buildSpans()
 	}
@@ -342,6 +374,7 @@ func (t *Tree) Span(n NodeID) (first, last int) {
 // last leaf tokens, and all zero if it has none. A replay (IsReplay) is
 // always all zero, as in Parse; use Span for its real range.
 func (t *Tree) Position(n NodeID) (startLine, startColumn, endLine, endColumn int) {
+	t.node(n) // validate first, so NoNode and stale ids panic like every accessor
 	if n&1 != 0 {
 		return 0, 0, 0, 0
 	}
@@ -359,6 +392,11 @@ func (t *Tree) Position(n NodeID) (startLine, startColumn, endLine, endColumn in
 // returns nil for an empty tree. The result does not alias the Tree's
 // buffers (it copies the tokens it boxes), though it is built from the
 // token slice the Tree references, so call it before changing those tokens.
+//
+// ToAST has no error result. It panics only on internal corruption (a Tree
+// whose arrays were damaged, which no API call can do); the scratch it
+// borrowed is then simply dropped, never returned to the pool, so a
+// half-used scratch cannot reach another caller.
 func (t *Tree) ToAST() *ASTNode {
 	if !t.ok {
 		return nil

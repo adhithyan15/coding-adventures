@@ -69,6 +69,7 @@ Things to know:
 - **Errors leave the Tree empty.** Every refusal and error is `Parse`'s, with the same text and cause; a partial result is never visible.
 - **Ownership.** A Tree owns its arrays (nothing aliases the pooled parse state). It keeps a reference to the token slice you passed (after any `PreParse` hooks) without copying it, so do not modify the tokens while you use the Tree. A Tree is not safe for concurrent use; distinct Trees on one `Compiled` are.
 - **Bounded reuse.** Between parses a Tree keeps at most 131,072 entries per buffer; a larger one is dropped at the next `ParseInto` or `Reset`.
+- **Cost of positions.** The first `Span` or `Position` call after a parse does one O(`NumNodes`) pass and allocates 8 bytes per node (zero allocation applies to the parse plus structural walks: `Root`, `Rule`, `Child`, `Token`). Keep `NodeID`s only until the next `ParseInto` or `Reset`; a replay's identity is its slot (parent, child index), not its `NodeID`. Do not copy a `Tree`.
 - **No `PostParse`.** Those hooks transform `*ASTNode`s, so `ParseInto` refuses them; call `ToAST` and apply them yourself.
 
 Run `go test -bench . -benchmem` to see the `BenchmarkParse*` numbers (`BenchmarkParseStraceLike` uses the real strace grammar from `testdata/`).
