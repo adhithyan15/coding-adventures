@@ -1440,8 +1440,8 @@ The numbering continues from 14.1.
     (a shrinker would otherwise abandon one worker per candidate), and at most 64
     workers holding at most 1 GiB between them are ever abandoned in one process
     (`OBS_MAX_ABANDONED`, `OBS_MAX_HELD`); after that an observed call is refused with
-    the same failure instead of being started.  The
-    window is the whole adapter call (argument conversion, the export, result
+    the same failure instead of being started.  **The supervisor is bounded (WD-HARN1,
+    item 53).**  The window is the whole adapter call (argument conversion, the export, result
     conversion), so the adapter's copy of the result counts: a `heap` bound must
     leave room for one extra copy of the output, as the spec's own example
     (`2 * to_int(max_output)`) does.  The measured peak is compared with the `heap`
@@ -1610,6 +1610,36 @@ The numbering continues from 14.1.
     write a table copy or harness through a symlink at any level; the capability
     manifest narrows `fs:read` to `code/specs/fixtures/**` and
     `code/packages/rust/*/tests/generated/**`.
+53. **Supervisor hardening (WD-HARN1).** The observer's supervisor (item 33) used to
+    wait for its worker with an unbounded `Condvar::wait`, so a worker that never
+    answered (a subject that spins without allocating, one that deadlocks, a worker
+    that died) held the whole test target for ever; on 2026-11-14 a Windows CI run of
+    the `rust/lzw` evidence target idled for 4h47m until the job limit killed it.
+    Three rules now hold in every generated harness.  (a) *Bounded wait*: the
+    supervisor waits at most `OBS_CALL_TIMEOUT_MS` (120 s) per observed call, with one
+    deadline across spurious wakeups.  An overrun (or a lost worker) is **fatal for
+    the process, not a failed instance**: the harness prints the TAP line
+    `Bail out! observer-timeout: `op` did not return within N seconds (test ID)`,
+    writes it to stderr and exits with status 70 (`OBS_TIMEOUT_EXIT`; the runner
+    uses 0, 1 and 2), before any later TAP line or manifest.  A failed instance
+    would be wrong: a negative control counts any registered failure as a caught
+    fault, so a stall inside one would pass silently, and a BUILD sabotage line
+    (`... | grep -q '^not ok '`, filtered to one claim) would pass on the
+    stall.  Bailing out prints no `not ok`, so that line fails; `is_detected`
+    also refuses any verdict mentioning `observer-timeout`.  The bail-out also
+    ends the run before an abandoned, possibly spinning, worker can burn a
+    core.  `WARRANT_OBS_TIMEOUT_SECS` may raise the 120 s bound; a lower value is
+    ignored.
+    (b) *Exit never waits*: an abandoned worker is never joined (its `JoinHandle` is
+    dropped at spawn, its job channel when it is abandoned), nothing in `Drop` or the
+    exit path waits on it, a worker takes only its own reply slot and never a lock of
+    the supervisor, the TAP printer or the manifest writer, and the generated `main`
+    leaves through `process::exit`, which does not wait for threads.  (c) *Poison
+    recovery*: every `Mutex` of the prelude is taken through `lock_or_recover`
+    (`lock().unwrap_or_else(|e| e.into_inner())`), including the reply slot the
+    allocator writes when it trips, so a panic in an instance is a failed verdict and
+    never a cascade.  The first rule is the only one that changes a verdict text (it
+    adds one); every adopter's generated harness changes, and is regenerated.
 
 ### 14.4 WX-N (fixed-length byte arrays across the host boundary)
 
