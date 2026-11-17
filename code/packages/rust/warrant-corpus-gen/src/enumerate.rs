@@ -83,6 +83,37 @@ pub fn enumerate_document(
     profile: &Profile,
 ) -> Result<Enumeration, GenError> {
     let analysis = analyse(file, profile)?;
+    enumerate_analysed(file, profile, analysis, &mut |_| Ok(()))
+}
+
+/// What the observer of [`enumerate_analysed`] sees for each suite, while its plan is alive.
+pub struct SuiteView<'a> {
+    /// The document's models.
+    pub program: &'a Program<'a>,
+    /// The whole lowered document.
+    pub lowered: &'a crate::lower::Lowered,
+    /// The suite's position in declaration order.
+    pub index: usize,
+    /// The lowered suite.
+    pub suite: &'a crate::lower::LoweredSuite,
+    /// The plan (admission, enumeration).
+    pub plan: &'a SuitePlan<'a>,
+    /// The suite's result (without witness chunks).
+    pub result: &'a SuiteResult,
+}
+
+/// [`enumerate_document`] over an [`Analysis`] the caller already holds, calling `observer`
+/// once per suite after it ran and before its plan is dropped (S3c's witness search).
+///
+/// # Errors
+///
+/// As [`enumerate_document`], and whatever `observer` returns.
+pub fn enumerate_analysed(
+    file: &WarrantFile<'_>,
+    profile: &Profile,
+    analysis: Analysis,
+    observer: &mut dyn FnMut(&SuiteView<'_>) -> Result<(), GenError>,
+) -> Result<Enumeration, GenError> {
     let suites = {
         let lowered = &analysis.lowered;
         for (claim, _) in &profile.slim_chunks {
@@ -123,11 +154,12 @@ pub fn enumerate_document(
         };
         // Pass 2: plan, run and drop one suite at a time.
         let mut results = Vec::with_capacity(resolved.len());
-        for ((suite, cost), domains) in lowered
+        for (index, ((suite, cost), domains)) in lowered
             .suites
             .iter()
             .zip(&analysis.suite_costs)
             .zip(resolved)
+            .enumerate()
         {
             let plan = SuitePlan::new(&program, suite, domains, cost.total, profile.chunk_size)?;
             let opts = SuiteOptions {
@@ -141,6 +173,14 @@ pub fn enumerate_document(
             };
             let result = plan.run(&opts)?;
             check_v0_wraps(lowered.version, result.wraps).map_err(|e| e.at(&suite.claim))?;
+            observer(&SuiteView {
+                program: &program,
+                lowered,
+                index,
+                suite,
+                plan: &plan,
+                result: &result,
+            })?;
             results.push(result);
         }
         results

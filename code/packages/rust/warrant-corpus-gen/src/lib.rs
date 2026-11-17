@@ -104,17 +104,22 @@
 pub mod analysis;
 pub mod arith;
 pub mod census;
+pub mod cli;
 pub mod cost;
 pub mod domains;
+pub mod emit;
 pub mod enumerate;
 pub mod error;
 pub mod eval;
+pub mod faults;
+pub mod fsio;
 pub mod ir;
 pub mod json;
 pub mod lower;
 pub mod profile;
 pub mod stream;
 pub mod suite;
+pub mod tfv;
 pub mod types;
 pub mod value;
 pub mod view;
@@ -170,7 +175,7 @@ pub fn analyse(file: &WarrantFile<'_>, profile: &Profile) -> Result<Analysis, Ge
     })
 }
 
-/// What [`generate`] will return once S3c lands: the three files of a fixture.
+/// The three kinds of file of a fixture that the generator owns.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct CorpusV2 {
     /// `corpus.json`, canonical.
@@ -181,31 +186,36 @@ pub struct CorpusV2 {
     pub cases_tfv: String,
 }
 
+impl CorpusV2 {
+    /// Every file as `(path relative to the fixture directory, contents)`: `corpus.json`,
+    /// `cases.tfv`, then `chunks/<file>` in suite order.
+    pub fn files(&self) -> Vec<(String, &str)> {
+        let mut v = vec![
+            ("corpus.json".to_string(), self.corpus_json.as_str()),
+            ("cases.tfv".to_string(), self.cases_tfv.as_str()),
+        ];
+        v.extend(
+            self.chunk_files
+                .iter()
+                .map(|(n, c)| (format!("chunks/{n}"), c.as_str())),
+        );
+        v
+    }
+}
+
 /// The inputs of [`generate`].
 #[derive(Debug, Clone, Copy)]
 pub struct GenInput<'a> {
     /// The parsed document.
     pub file: &'a WarrantFile<'a>,
+    /// The specification's path as written into `corpus.json` (`spec`), repo-relative.
+    pub spec_path: &'a str,
+    /// The specification's raw bytes (`spec_sha256`).
+    pub spec_bytes: &'a [u8],
     /// The raw `corpus.profile` bytes (read strictly by [`profile::parse_profile`]).
     pub profile_bytes: &'a [u8],
+    /// The Rust bindings' `faults=` lists, to cross-check the profile against (VER04r 8.4).
+    pub binding_faults: Option<&'a [(String, Vec<String>)]>,
 }
 
-/// Emit a v2 corpus.  **Still a fail-closed stub after S3b.**  It reads the profile, lowers
-/// and costs the document (so every S3a refusal already fires), and then refuses with
-/// `code == "unimplemented"`: the evaluator, enumeration and digests exist
-/// ([`enumerate_document`]) but the fault IR, controls, witness chunks and the emission of
-/// `corpus.json`, `chunks/*.txt` and `cases.tfv` are slice S3c, and a generator that cannot
-/// emit a whole corpus must not emit part of one.
-///
-/// # Errors
-///
-/// Any [`analyse`] refusal; otherwise always `unimplemented`.
-pub fn generate(input: &GenInput<'_>) -> Result<CorpusV2, GenError> {
-    let profile = profile::parse_profile(input.profile_bytes)?;
-    analyse(input.file, &profile)?;
-    Err(GenError::new(
-        code::UNIMPLEMENTED,
-        "",
-        "faults, controls and emission arrive in slice S3c; nothing is written",
-    ))
-}
+pub use emit::generate;

@@ -2,6 +2,49 @@
   "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
   "version": 1,
   "package": "rust/warrant-corpus-gen",
-  "capabilities": [],
-  "justification": "S3a and S3b are pure in-memory computation: they lower an already parsed Warrant document to the model IR, evaluate it, enumerate the claims' binder domains, hash the streams with the in-crate sha256 and render canonical JSON into Strings. They read no file at run time (the tests embed the specifications and fixtures with include_str!), open no socket, spawn no process and read no environment variable. The CLI that reads the specification and writes the fixture directory arrives in slice S3c, which will declare its fs capabilities."
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "caller-named-input-files",
+      "justification": "The command line reads the files the caller names with --warrant (a .warrant specification), --profile (corpus.profile) and optionally --bindings (an evidence.bindings file), and --check reads back the generated files of the caller-named --out directory. Every read goes through fsio::read_regular: only a regular file is opened (a FIFO or directory is refused, never opened), through a handle, and never more than the cap (4 MiB for an input, the expected length plus one byte for a generated file), so a hostile path cannot hang or exhaust the tool. generate() itself performs no I/O."
+    },
+    {
+      "category": "fs",
+      "action": "list",
+      "target": "caller-named-output-directory",
+      "justification": "fsio.rs lists the chunks/ directory of the caller-named --out directory so write mode can refuse (never delete) a file the corpus does not own and --check can report one (names are escaped before they are printed), and it stats paths with symlink_metadata to refuse a symbolic link present at chunks/ or at a target, and to refuse an input that is not a regular file."
+    },
+    {
+      "category": "fs",
+      "action": "create",
+      "target": "caller-named-output-directory",
+      "justification": "Write mode creates the caller-named --out directory and its chunks/ subdirectory if missing (create_dir_all), after every file path has been validated against fsio::guard (corpus.json, cases.tfv or chunks/<plain name>.txt) and before anything is written."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "caller-named-output-directory",
+      "justification": "Write mode writes only the files of the generated corpus (corpus.json, cases.tfv, chunks/<claim>.txt) below the caller-named --out directory. Each goes to a reserved temporary name (.<name>.tmp) created with create_new (O_EXCL: it never follows a link, reuses an inode or opens a FIFO) and is renamed into place, corpus.json last. fsio::guard refuses every other path (no separator beyond chunks/, no .., no leading dot, no absolute path); a symbolic link present at chunks/ or at a target is refused. Concurrent modification of the output directory by another process is not defended against."
+    },
+    {
+      "category": "fs",
+      "action": "delete",
+      "target": "caller-named-output-directory",
+      "justification": "The only deletions are of the generator's own reserved temporary file (.<name>.tmp in the directory of the file being written): a leftover or planted entry at that name is unlinked (a hard link is unlinked, never written through) before the exclusive create, and the temporary is removed after a failed write. The generator never deletes any other file; a foreign file in chunks/ makes write mode refuse."
+    },
+    {
+      "category": "env",
+      "action": "read",
+      "target": "args",
+      "justification": "src/bin/warrant-corpus-gen.rs reads its command-line arguments (--warrant, --profile, --out, --check, --bindings). No environment variable is read."
+    },
+    {
+      "category": "stdout",
+      "action": "write",
+      "target": "stdout/stderr",
+      "justification": "The CLI reports success on standard output and a refusal, a note or a drift (file, line, column, byte offset; never file content, and foreign file names escaped) on standard error."
+    }
+  ],
+  "justification": "The generator proper (lowering, evaluation, enumeration, faults, emission into Strings) is pure in-memory computation. File access exists only to read the inputs the command line names, to write the generated fixture directory below the output directory the caller names (guarded by a name whitelist, symlink refusal at start and O_EXCL temporaries; concurrent modification unsupported), and to compare an existing directory with the regenerated one (--check). It opens no socket, spawns no process and reads no environment variable. The tests do their file work in temporary directories and embed the specifications with include_str!."
 }
