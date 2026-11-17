@@ -201,25 +201,43 @@ func ParseLine(line string, opts Options) (*parser.ASTNode, error) {
 // A decoded string is arbitrary bytes (it can hold NUL and invalid UTF-8): a
 // consumer that uses one as a path must reject NUL and invalid UTF-8 itself.
 func ParseLineTokens(line string, opts Options) (*parser.ASTNode, []lexer.Token, error) {
-	if compileErr != nil {
-		return nil, nil, &LineError{Kind: KindSyntax, Err: compileErr, Msg: "grammar did not compile"}
-	}
 	opts = opts.withDefaults()
+	toks, err := checkLine(line, opts)
+	if err != nil {
+		return nil, toks, err
+	}
+	ast, perr := compiled.Parse(toks, opts.Options)
+	if perr == nil {
+		return ast, toks, nil
+	}
+	return nil, toks, classifyParseError(perr)
+}
+
+// checkLine is everything ParseLineTokens does before the parse: the
+// line-level checks, the lexing and the scan for the first token the grammar can
+// never accept.  opts must already have withDefaults applied.  It returns the
+// tokens (also alongside an error, where there are any) and a *LineError, or nil.
+// The compact path (ParseLineInto) calls it too, so both paths refuse the same
+// lines with the same error values by construction.
+func checkLine(line string, opts Options) ([]lexer.Token, error) {
+	if compileErr != nil {
+		return nil, &LineError{Kind: KindSyntax, Err: compileErr, Msg: "grammar did not compile"}
+	}
 	if len(line) > opts.MaxLineBytes {
-		return nil, nil, &LineError{Kind: KindLimit, Err: stracelexer.ErrLineTooLong, Msg: "line too long"}
+		return nil, &LineError{Kind: KindLimit, Err: stracelexer.ErrLineTooLong, Msg: "line too long"}
 	}
 	if strings.IndexByte(line, '\n') >= 0 {
-		return nil, nil, &LineError{Kind: KindNewline, Err: stracelexer.ErrNewline, Msg: "newline in line"}
+		return nil, &LineError{Kind: KindNewline, Err: stracelexer.ErrNewline, Msg: "newline in line"}
 	}
 	if line != "" && (line[0] == ' ' || line[len(line)-1] == ' ') {
-		return nil, nil, &LineError{Kind: KindSpace, Msg: "line starts or ends with a space"}
+		return nil, &LineError{Kind: KindSpace, Msg: "line starts or ends with a space"}
 	}
 	toks, err := stracelexer.TokenizeLineMax(line, opts.MaxLineBytes)
 	if err != nil {
-		return nil, nil, &LineError{Kind: KindSyntax, Err: err, Msg: "lexing"}
+		return nil, &LineError{Kind: KindSyntax, Err: err, Msg: "lexing"}
 	}
 	if len(toks) > opts.MaxTokens {
-		return nil, toks, &LineError{Kind: KindLimit, Err: parser.ErrMaxTokens, Msg: "too many tokens"}
+		return toks, &LineError{Kind: KindLimit, Err: parser.ErrMaxTokens, Msg: "too many tokens"}
 	}
 
 	// The first thing in the line that the grammar can never accept: an ERR_*
@@ -237,33 +255,33 @@ func ParseLineTokens(line string, opts Options) (*parser.ASTNode, []lexer.Token,
 		t := toks[i]
 		switch {
 		case stracelexer.IsErrToken(t):
-			return nil, toks, &LineError{Kind: KindErrToken, Token: t, Msg: "bad " + t.TypeName}
+			return toks, &LineError{Kind: KindErrToken, Token: t, Msg: "bad " + t.TypeName}
 		case t.TypeName == "ANNOTATED" && strings.IndexByte(t.Value, '\\') >= 0:
 			_, body := stracelexer.AnnotationBody(t)
 			if _, derr := stracelexer.DecodeAnnotation(body); derr != nil {
-				return nil, toks, &LineError{Kind: KindBadAnnotation, Token: t, Err: derr, Msg: "annotation does not decode"}
+				return toks, &LineError{Kind: KindBadAnnotation, Token: t, Err: derr, Msg: "annotation does not decode"}
 			}
 		case t.TypeName == "QUOTED" && !opts.LenientQuoted && strings.IndexByte(t.Value, '\\') >= 0:
 			body, _ := stracelexer.QuotedBody(t)
 			if _, derr := stracelexer.DecodeString(body); derr != nil {
-				return nil, toks, &LineError{Kind: KindBadQuoted, Token: t, Err: derr, Msg: "string does not decode"}
+				return toks, &LineError{Kind: KindBadQuoted, Token: t, Err: derr, Msg: "string does not decode"}
 			}
 		}
 	}
+	return toks, nil
+}
 
-	ast, perr := compiled.Parse(toks, opts.Options)
-	if perr == nil {
-		return ast, toks, nil
-	}
+// classifyParseError maps an error of the shared parser to a *LineError.
+func classifyParseError(perr error) error {
 	var gerr *parser.GrammarParseError
 	tok := lexer.Token{}
 	if errors.As(perr, &gerr) {
 		tok = gerr.Tok
 	}
 	if errors.Is(perr, parser.ErrMaxDepth) || errors.Is(perr, parser.ErrMaxTokens) || errors.Is(perr, parser.ErrMaxMemoSlots) {
-		return nil, toks, &LineError{Kind: KindLimit, Err: perr, Msg: "limit exceeded"}
+		return &LineError{Kind: KindLimit, Err: perr, Msg: "limit exceeded"}
 	}
-	return nil, toks, &LineError{Kind: KindSyntax, Token: tok, Err: perr, Msg: "syntax"}
+	return &LineError{Kind: KindSyntax, Token: tok, Err: perr, Msg: "syntax"}
 }
 
 // Body returns the body node of a parsed line: the child of the `line` rule

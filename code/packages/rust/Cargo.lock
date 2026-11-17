@@ -5370,7 +5370,7 @@ dependencies = [
 
 [[package]]
 name = "coding_adventures_warrant_grammar"
-version = "0.7.0"
+version = "0.8.0"
 dependencies = [
  "coding_adventures_ct_compare",
  "coding_adventures_sha256",
@@ -14553,6 +14553,20 @@ name = "tls13-certificate-verify-message"
 version = "0.1.0"
 
 [[package]]
+name = "tls13-chacha20-poly1305-record"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_chacha20_poly1305",
+ "coding_adventures_hkdf",
+ "coding_adventures_zeroize",
+ "tls13-cipher-suite-policy",
+ "tls13-inner-plaintext",
+ "tls13-record",
+ "tls13-record-protection-state",
+ "tls13-traffic-key-material",
+]
+
+[[package]]
 name = "tls13-cipher-suite-offer"
 version = "0.1.0"
 dependencies = [
@@ -14606,6 +14620,13 @@ dependencies = [
 [[package]]
 name = "tls13-handshake"
 version = "0.1.0"
+
+[[package]]
+name = "tls13-handshake-reassembly"
+version = "0.1.0"
+dependencies = [
+ "tls13-handshake",
+]
 
 [[package]]
 name = "tls13-hkdf-label"
@@ -15546,6 +15567,15 @@ dependencies = [
  "grammar-tools",
  "lexer",
  "parser",
+ "vos-sched-contract",
+]
+
+[[package]]
+name = "vos-sched-any"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
  "vos-sched-contract",
 ]
 

@@ -33,4 +33,43 @@ if errors.Is(err, parser.ErrMaxDepth) { /* hostile or absurdly nested input */ }
 - **No error recovery, by design.** A parse returns a complete AST for the whole input or an error and a nil tree. It never skips tokens, never inserts synthetic ones and never returns a partial tree, so callers can fail closed.
 - **Cheap memoization.** The packrat cache is two flat slices (no hashing, no per-entry allocation) pooled across parses of one `Compiled`.
 
-Run `go test -bench . -benchmem` to see the `BenchmarkParse*` numbers.
+- **No wasted left-recursion work.** A compile-time analysis (`leftrec.go`) marks the rules that can reach themselves without consuming a token; only those run the seed-growing loop after a successful match. Everything else skips it, which roughly halves allocations and doubles throughput (about 1.9x on the JSON, expression and strace benchmarks on an M2 Max). The analysis over-approximates (EOF and empty literals count as zero-width, which a tight `MaxDepth` can observe), so a wrong answer can only cost speed, never change a result. Expected-token sets are integer ids; the "Expected A or B" text is built only on error.
+
+- **Flat tree, `ASTNode`s only for the survivors.** While parsing, the engine builds the tree in pooled `int32` arrays (a scratch stack of token indexes and `^node` references, a per-parse `kids` array, a `[]cnode`, and memo slots that store node indexes). `Parse` then materialises `*ASTNode`s for the nodes reachable from the root, into exact-size slabs (ASTNode chunks of at most 256, one cap-clipped children slab, each token boxed once). Failed alternatives, superseded left-recursion seeds and discarded lookaheads cost a few integer writes instead of heap allocations: allocations per parse fell 2.8x to 7x (strace batch 205 to 73, 400-record JSON file 44,816 to 16,039, the TypeScript sample 15,473 to 2,224) and throughput rose 1.18x to 1.52x (JSON 1.4 to 1.5x, strace 1.2x, TypeScript 1.2x; M-series laptop, see the CHANGELOG for the table). No API change: trees are byte-identical, including the legacy quirk that a memo hit is a distinct node sharing the first parse's `Children` with zero positions. `Children` slices are capacity-clipped, so appending to one never overwrites a sibling.
+
+### Compact API: `Tree` and `ParseInto`
+
+If you only need to look at the tree (walk it once, pull out a few fields), skip the `*ASTNode`s entirely. `ParseInto` runs the same engine and leaves the flat result in a `Tree` you can reuse for every parse; in steady state it allocates nothing.
+
+```go
+var t parser.Tree // reuse across parses
+if err := c.ParseInto(&t, tokens, parser.Options{}); err != nil {
+    return err // t is empty (t.Root() == parser.NoNode)
+}
+var walk func(n parser.NodeID)
+walk = func(n parser.NodeID) {
+    fmt.Println(t.Rule(n))
+    for i := 0; i < t.NumChildren(n); i++ {
+        if ch := t.Child(n, i); ch.IsToken() {
+            fmt.Println("  token", t.Token(ch.Token()).Value)
+        } else {
+            walk(ch.Node())
+        }
+    }
+}
+walk(t.Root())
+ast := t.ToAST() // byte-identical to what c.Parse would have returned
+```
+
+Accessors: `Root`, `Rule`, `RuleID`, `NumChildren`, `Child` (a `Child` is a token index or a `NodeID`), `Token`, `Span` (first and last leaf token index), `Position` (the `StartLine`, `StartColumn`, `EndLine`, `EndColumn` an `ASTNode` would have), `IsReplay`; `Compiled.RuleID` and `RuleName` map names and ids.
+
+Things to know:
+
+- **Memo hits are kept visible.** As in `Parse`'s tree, a packrat replay is a distinct node (`IsReplay`) that shares the replayed node's children, with a zero `Position`; `Span` still reports its real token range.
+- **Errors leave the Tree empty.** Every refusal and error is `Parse`'s, with the same text and cause; a partial result is never visible.
+- **Ownership.** A Tree owns its arrays (nothing aliases the pooled parse state). It keeps a reference to the token slice you passed (after any `PreParse` hooks) without copying it, so do not modify the tokens while you use the Tree. A Tree is not safe for concurrent use; distinct Trees on one `Compiled` are.
+- **Bounded reuse.** Between parses a Tree keeps at most 131,072 entries per buffer; a larger one is dropped at the next `ParseInto` or `Reset`.
+- **Cost of positions.** The first `Span` or `Position` call after a parse does one O(`NumNodes`) pass and allocates 8 bytes per node (zero allocation applies to the parse plus structural walks: `Root`, `Rule`, `Child`, `Token`). Keep `NodeID`s only until the next `ParseInto` or `Reset`; a replay's identity is its slot (parent, child index), not its `NodeID`. Do not copy a `Tree`.
+- **No `PostParse`.** Those hooks transform `*ASTNode`s, so `ParseInto` refuses them; call `ToAST` and apply them yourself.
+
+Run `go test -bench . -benchmem` to see the `BenchmarkParse*` numbers (`BenchmarkParseStraceLike` uses the real strace grammar from `testdata/`).

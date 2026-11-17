@@ -63,15 +63,8 @@ fn w0501(op: &str, span: (usize, usize), msg: impl Into<String>) -> CodegenError
 
 /// The post-state slot of an operation, over the generator's own types.
 fn slot_of(posts: &[Ty], full: &Ty) -> Option<PostSlot> {
-    let shape = match full {
-        Ty::Res(t, _) => match &**t {
-            Ty::Tuple(cs) => SlotShape::ResultTuple(cs.clone()),
-            other => SlotShape::ResultPlain(other.clone()),
-        },
-        Ty::Tuple(cs) => SlotShape::Tuple(cs.clone()),
-        other => SlotShape::Plain(other.clone()),
-    };
-    resolve_post_slot(posts, &shape)
+    // One definition, public as `domain::resolve_post_slot_of` (VER04r CV2-S2).
+    crate::domain::resolve_post_slot_of(posts, full)
 }
 
 /// Resolve one parameter's host form, or refuse it (W0704).
@@ -101,7 +94,7 @@ fn carrier_of(
             HostTy::Int(ht.clone())
         }
         (InoutForm::Bool, Ty::Bool) => HostTy::Bool,
-        (InoutForm::Struct(n), Ty::Data { name: tn, ctors }) if n == tn && ctors.len() == 1 => {
+        (InoutForm::Struct(n), Ty::Data { name: tn, ctors, .. }) if n == tn && ctors.len() == 1 => {
             HostTy::Named(n.clone())
         }
         (
@@ -246,7 +239,7 @@ pub(super) fn inout_adapter<'a>(
         bad("the result type has no post-state slot for its inout parameters (S1 to S4)".into())
     })?;
     let (payload, cases, is_result) = match &full {
-        Ty::Res(t, cases) => ((**t).clone(), cases.clone(), true),
+        Ty::Res(t, cases, _) => ((**t).clone(), cases.clone(), true),
         other => (other.clone(), Vec::new(), false),
     };
     // The components the host returns itself (the first `h` of a tuple).

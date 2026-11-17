@@ -26,7 +26,7 @@ func FuzzClassify(f *testing.F) {
 	pool := []string{
 		"code/p/a/README", "code/p/a/lnk", "code/p/a/lnk/../x", "code/p/b/b.txt", "code/p/a/nested/new",
 		"go.work", ".git/config", "../outside", "/usr/bin/cc", "/proc/self/status", "/proc/42/fd/3",
-		"/dev/fd/3", "/tmp/kiln-1/t", "L1", "L2", "L1/x", "a/b/c/d", "", ".", "..", "/", "x\ny",
+		"/dev/fd/3", "/proc/self/cwd/../../cpuinfo", "/proc/self/../cpuinfo", "/tmp/kiln-1/t", "L1", "L2", "L1/x", "a/b/c/d", "", ".", "..", "/", "x\ny",
 	}
 	f.Fuzz(func(t *testing.T, data []byte) {
 		h := newHarness(t)

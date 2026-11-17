@@ -213,6 +213,31 @@ stack. Tree walkers (`WalkAST`, `FindNodes`, `CollectTokens`) are iterative.
 default limit the Go wrappers refuse JSON arrays at about 5,000 nested levels,
 Python parentheses at about 3,300 and TypeScript call arguments at about 500.
 
+The Go engine builds the tree during a parse in pooled flat `int32` arrays
+(token indexes and node indexes) and materialises `*ASTNode`s only for what is
+reachable from the root, once the parse has succeeded. This is invisible
+except for properties that are kept on purpose: a packrat memo hit yields a
+distinct node that shares the first parse's `Children` slice and has zero
+`StartLine`/`EndLine` (positions are computed only for rules that actually
+parsed); `Children` is never nil; and each node's `Children` is
+capacity-clipped, so appending to one does not overwrite a sibling.
+
+**Compact API (Go).** `(*Compiled).ParseInto(*Tree, tokens, Options) error`
+runs the same engine as `Parse` but leaves the flat result in a reusable
+`Tree` instead of building `*ASTNode`s; with one `Tree` reused, a parse
+allocates nothing in steady state. `Tree` exposes `Root`, `Rule`/`RuleID`,
+`NumChildren`, `Child(n, i)` (a `Child` that is a token index or a `NodeID`),
+`Token(i)`, `Span` (first and last leaf token index) and `Position` (the
+`ASTNode` position fields), and `ToAST()` rebuilds exactly the tree `Parse`
+returns. The memo-hit rule is the same: a replayed result is a distinct
+`NodeID` (`IsReplay`) sharing the replayed node's children, its `Position` is
+zero, and its `Span` is the real token range. Errors, limits and refusals are
+`Parse`'s, and on any error the `Tree` is empty (never partial). A `Tree`
+owns its arrays, keeps a reference to (does not copy) the caller's tokens,
+retains at most `maxPooledFlat` entries per buffer between parses, and is not
+safe for concurrent use (distinct Trees are independent). `PostParse` hooks
+transform `*ASTNode`s and are refused by `ParseInto`.
+
 Also in the Go engine: `Options.StartRule` parses from any named rule (an
 unknown name is an error); `CompileGrammar` builds an immutable, goroutine-safe
 `Compiled` once so many inputs can be parsed without redoing per-grammar work;

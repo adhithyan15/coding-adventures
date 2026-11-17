@@ -319,7 +319,21 @@ func Parse(r io.Reader, initialCwd string, limits Limits) (*Trace, error) {
 }
 
 // ParseOptions is Parse with options.
+//
+// The hand-written scanner reads the lines (D24: it stays the default).  When
+// the unexported crossCheck hook is set (by this package's tests, or by
+// KILN_TRACE_DIFF=1) the grammar path reads them too and the two answers are
+// compared; see crosscheck.go.
 func ParseOptions(r io.Reader, initialCwd string, opts Options) (*Trace, error) {
+	if crossCheck != nil {
+		return crossCheck(r, initialCwd, opts)
+	}
+	return parseWith(r, initialCwd, opts, false)
+}
+
+// parseWith is ParseOptions with the reader of lines chosen: the old scanner
+// (grammar false) or the grammar path (true).
+func parseWith(r io.Reader, initialCwd string, opts Options, grammar bool) (*Trace, error) {
 	lim := opts.Limits.withDefaults()
 	if opts.HelperRoot && (!strings.HasPrefix(opts.HelperExe, "/") || strings.IndexByte(opts.HelperExe, 0) >= 0) {
 		return nil, incomplete(0, reasonHelperConfig)
@@ -327,7 +341,7 @@ func ParseOptions(r io.Reader, initialCwd string, opts Options) (*Trace, error) 
 	if !strings.HasPrefix(initialCwd, "/") || strings.IndexByte(initialCwd, 0) >= 0 || len(initialCwd) > 4096 {
 		return nil, incomplete(0, reasonInitialCwd)
 	}
-	recs, root, e := readRecords(r, lim, opts.HelperRoot)
+	recs, root, e := readRecords(r, lim, opts.HelperRoot, grammar)
 	if e != nil {
 		return nil, e
 	}

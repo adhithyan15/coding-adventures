@@ -4,6 +4,12 @@ All notable changes to this package are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Changed (VOS-D081)
+
+- `tests/warrant.rs`: the real-block test expects five safety claims and pins `safety_init`
+  (`df7b6df1...`). It also repairs the pin of `dispatch_covers_run` (`fc7eb1b7...`), stale since
+  the VOS-D079 change of the `any` block (the test had not been run in that PR).
+
 ### Changed (VOS-011 PR)
 
 - Doc comments only: the contract package's non-embedded `warrant/lemmas.part` (VOS02 R1.4) is

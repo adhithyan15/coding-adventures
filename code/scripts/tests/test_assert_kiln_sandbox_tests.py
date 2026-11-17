@@ -106,6 +106,8 @@ class CiWiring(unittest.TestCase):
         self.assertNotRegex(body, r"if:.*apparmor")
         self.assertIn("bash code/scripts/ci/apt-install.sh strace", body)
         self.assertIn("KILN_REQUIRE_SANDBOX: '1'", body)
+        # D24: real traces are cross-checked between the old scanner and the grammar path.
+        self.assertIn("KILN_TRACE_DIFF: '1'", body)
         self.assertIn("go test -count=1 -run Sandbox -v -json .", body)
         self.assertIn("assert_sandbox_tests.py", body)
         # The assertion is its own step and runs even when the tests failed, so

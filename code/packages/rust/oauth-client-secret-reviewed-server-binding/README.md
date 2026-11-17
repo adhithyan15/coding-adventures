@@ -50,6 +50,25 @@ double-nested proof as additive evidence; a byte-equal independent leaf decode,
 alternate issuer or root, destination substitution, or zero- or multi-
 intermediate path fails closed.
 
+The recursive-responder no-check complete fixed-path branch is admitted under
+another sealed marker implemented only for the exact repository-owned
+destination-bound completion. Composition traverses its recursive no-check and
+authenticated responder-revocation layers back to the original signed
+reviewed-server proof. It repeats the exact leaf, target-nearest issuer,
+reviewed anchor, SNI, Host, optional-port, and one-processed-intermediate
+checks. Recursive responder paths do not extend the retained server chain.
+Success preserves the complete recursive proof as additive evidence; identity,
+path, destination, and unsupported-depth substitutions fail closed.
+
+The alternative intermediate-status-responder-revocation responder-no-check
+complete fixed-path branch is admitted under its own sealed marker. Composition
+traverses the alternative responder and no-check layers back to the original
+signed reviewed-server proof, repeats the exact leaf, target-nearest issuer,
+reviewed anchor, SNI, Host, optional-port, and one-processed-intermediate
+checks, and retains the complete alternative proof as additive evidence. Its
+responder paths do not extend the retained server chain. Identity, path,
+destination, and unsupported-depth substitutions fail closed.
+
 The composition never asks the request for its credential-bearing wire bytes,
 so it introduces no credential access or audit event. Every later byte borrow
 still passes through the request release's provider-and-trace audit gate.
@@ -57,11 +76,12 @@ still passes through the request release's provider-and-trace audit gate.
 This is not a TLS or HTTP client. It performs no certificate parsing, new
 validation, cryptography, revocation check or acquisition, credential edit,
 signing, I/O, or external effect. It covers only the direct no-check complete
-fixed-path, nested no-check complete fixed-path, and double-nested no-check
+fixed-path, nested no-check complete fixed-path, double-nested no-check
+complete fixed-path, recursive-responder no-check complete fixed-path, and
+alternative intermediate-status-responder-revocation responder-no-check
 complete fixed-path revocation branches, does not complete RFC 5280 Name or
 path validation, and does not grant HTTPS, OAuth, network, or live-provider
-readiness. Recursive and alternative revocation branches remain outside this
-boundary.
+readiness.
 
 ## Validation
 

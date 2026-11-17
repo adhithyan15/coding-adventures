@@ -20,7 +20,7 @@
 #     (the strace-parser package reports which one, so the consumer can pick the
 #     right refusal reason).
 #
-# Every rule below consumes at least one token, so no repetition can loop.
+# Rules `inner` and `tail` can match nothing; the engine's zero-width guard stops any loop.
 
 # A line is the pid prefix and one of seven bodies.  The alternatives start with
 # different tokens, so the order only matters for speed.

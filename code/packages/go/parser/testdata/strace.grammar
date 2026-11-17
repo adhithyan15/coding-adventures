@@ -1,0 +1,124 @@
+# Parser grammar for one line of `strace -f --quiet=attach -y -s 4096` output
+# @version 1
+#
+# Syntax only (D24, KILN04 section 4.9).  The first rule, `line`, is the start
+# rule.  Tokens come from strace.tokens.
+#
+# Every terminal is a token reference, with ONE exception: the string literal
+# "---" in signal_close.  A literal in a grammar matches a token by its text
+# whatever its type, so a QUOTED string whose text happened to equal a literal
+# would match it; the one literal is safe because inside a signal line the lexer
+# only produces SIG_SP and SIG_TEXT (see signal_close).  A test pins exactly
+# this: one literal, "---", and no other.
+#
+# What the grammar does NOT do, on purpose:
+#   * it has no error recovery: the first line that does not parse is refused;
+#   * it does not look inside an argument.  An argument is a run of tokens, and
+#     the consumer takes the raw text between its first and last token.  The
+#     consumer's interpreters (path, fd, argv, result) read that text;
+#   * ERR_* tokens appear nowhere in it, so any line containing one is refused
+#     (the strace-parser package reports which one, so the consumer can pick the
+#     right refusal reason).
+#
+# Rules `inner` and `tail` can match nothing; the engine's zero-width guard stops any loop.
+
+# A line is the pid prefix and one of seven bodies.  The alternatives start with
+# different tokens, so the order only matters for speed.
+line         = pid body ;
+
+pid          = PID_TAG | PID ;
+
+body         = call_line | resumed_line | exit_line | signal_line | dead_line
+             | dead_resumed_line ;
+
+# ---------------------------------------------------------------------------
+# A call: `name(args) = result`, or interrupted: `name(args <unfinished ...>`.
+# ---------------------------------------------------------------------------
+# The closed form is tried first.  For an interrupted line it fails at the
+# missing ")" and the parser backtracks into the open form.
+call_line    = SYSCALL ( call_closed | call_open ) ;
+
+call_closed  = [ args ] RPAREN tail ;
+
+# strace may print a comma right before the marker ("wait4(-1,  <unfinished ...>").
+# The marker is the end of the line.
+call_open    = [ args [ COMMA ] ] UNFINISHED ;
+
+# The top-level arguments.  An argument has at least one piece, so "f(a,,b)"
+# and "f(a, )" are refused, while "f()" and "f( )" (no arguments) are fine.
+#
+# A piece is one scalar token or one bracketed group.  The scalar alternatives
+# are written out in `arg` and `inner` instead of a shared `piece` rule: a rule
+# builds a tree node for every use, and these are the commonest places in a
+# trace (the parser spends its time allocating nodes).
+args         = arg { COMMA arg } ;
+arg          = ( WORD | ASSIGN | ANNOTATED | QUOTED | PUNCT | group )
+               { WORD | ASSIGN | ANNOTATED | QUOTED | PUNCT | group } ;
+
+# A bracketed group.  Brackets nest and must match; strings and annotations
+# are single tokens, so a comma or bracket inside them never counts.
+group        = LBRACKET inner RBRACKET
+             | LBRACE inner RBRACE
+             | LPAREN inner RPAREN
+             | call_open_paren inner RPAREN ;
+
+# A nested call such as htons(80) or WIFEXITED(s).
+call_open_paren = SYSCALL | FUNC ;
+
+# The inside of a bracket pair.  Commas are free there (a struct, an array).
+inner        = { WORD | ASSIGN | ANNOTATED | QUOTED | PUNCT | COMMA | group } ;
+
+# ---------------------------------------------------------------------------
+# The resumed half of an interrupted call:
+#   `<... wait4 resumed>[{...}], 0, NULL) = 1235`
+# The text before the ")" is the rest of the argument list; the consumer glues
+# it to the text before "<unfinished ...>" and parses the whole call again, so
+# here it only has to be well-bracketed.  It may start with a comma, be empty,
+# or continue an argument.
+# ---------------------------------------------------------------------------
+resumed_line = RESUMED inner RPAREN tail ;
+
+# ---------------------------------------------------------------------------
+# `+++ exited with N +++`, `+++ killed by SIGNAME [(core dumped)] +++`.  Each is
+# one token; the consumer reads the number or the signal name from its text.
+# ---------------------------------------------------------------------------
+exit_line    = EXITED_LINE | KILLED_LINE | KILLED_CORE_LINE ;
+
+# ---------------------------------------------------------------------------
+# `--- SIGCHLD {si_signo=SIGCHLD, ...} ---`.  The text is not interpreted.  In
+# the lexer's signal mode every token is SIG_SP (a run of spaces) or SIG_TEXT
+# (a run of anything else), so the line ends with the LAST space-then-"---":
+# a " ---" that is followed by more text is just text.
+#
+# This is the one place the grammar uses a literal: "---" must be the TEXT of
+# the last token.  It is safe because in signal mode the only tokens are SIG_SP
+# (spaces only) and SIG_TEXT, and SIG_OPEN ("--- ", with a space) never occurs
+# after the opener.
+# ---------------------------------------------------------------------------
+signal_line  = SIG_OPEN { !signal_close ( SIG_SP | SIG_TEXT ) } signal_close ;
+
+signal_close = SIG_SP "---" !( SIG_SP | SIG_TEXT ) ;
+
+# ---------------------------------------------------------------------------
+# A thread killed at syscall entry: `???( <unfinished ...>` or `???()  = ?`.
+# The lexer accepts only the exact spellings (whole-line tokens), so a "???"
+# call that returned (`???() = 0`) is refused, never silently a dead line.
+# ---------------------------------------------------------------------------
+dead_line    = DEAD_OPEN | DEAD_WHOLE ;
+
+# The resume of a killed-at-entry thread: `<... ??? resumed>)  = ?`, exactly.
+dead_resumed_line = DEAD_RESUMED ;
+
+# ---------------------------------------------------------------------------
+# Everything after the closing ")" of a call: ` = 3</x>`, ` = -1 ENOENT (No such
+# file or directory)`, ` = 0x7f00 /* 3 entries */`, ` = ?`.  It is free-form
+# here: the consumer's result parser is strict about it (and names its own
+# refusal).  It still contains no ERR_* token, so it is well-lexed.  It has no
+# UNFINISHED either: a bare "<unfinished ...>" after the ")" can never be part
+# of a result (the old result parser refused it), so it is refused here.  A
+# marker glued to a word (`= 0<unfinished ...>`) is one ANNOTATED token and is
+# still accepted, as it was.
+# ---------------------------------------------------------------------------
+tail         = { WORD | ASSIGN | ANNOTATED | QUOTED | PUNCT | COMMA
+               | LPAREN | RPAREN | LBRACKET | RBRACKET | LBRACE | RBRACE
+               | SYSCALL | FUNC } ;

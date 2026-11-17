@@ -70,6 +70,12 @@ func recStepGit(t *testing.T, gitBin, home, dir string, args ...string) string {
 	cmd.Env = []string{
 		"HOME=" + home, "PATH=/usr/bin:/bin", "GIT_CONFIG_NOSYSTEM=1",
 		"GIT_AUTHOR_NAME=t", "GIT_AUTHOR_EMAIL=t@example.com", "GIT_COMMITTER_NAME=t", "GIT_COMMITTER_EMAIL=t@example.com",
+		// No background maintenance or gc in a fixture repository (D29: it races
+		// with whatever later walks the tree; see quietGitEnv in internal/record).
+		"GIT_CONFIG_COUNT=3",
+		"GIT_CONFIG_KEY_0=maintenance.auto", "GIT_CONFIG_VALUE_0=false",
+		"GIT_CONFIG_KEY_1=gc.auto", "GIT_CONFIG_VALUE_1=0",
+		"GIT_CONFIG_KEY_2=gc.autoDetach", "GIT_CONFIG_VALUE_2=false",
 	}
 	out, err := cmd.CombinedOutput()
 	if err != nil {
@@ -304,6 +310,7 @@ exit 0
 		t.Fatal(err)
 	}
 	defer fh.Close()
+	probeTrace(t, "record-step", tracePath)
 	tr, err := trace.ParseOptions(fh, pkgDir, trace.Options{HelperRoot: true, HelperExe: kiln})
 	if err != nil {
 		raw, _ := os.ReadFile(tracePath)

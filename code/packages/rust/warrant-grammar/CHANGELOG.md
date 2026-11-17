@@ -1,6 +1,85 @@
 # Changelog
 
-## Unreleased — WX-FAULT1 `flip-result-bit` for a fixed-width integer result
+## 0.8.0 — CV2-S2 public domain API, WD-HARN1 harness hardening, WX-FAULT1
+
+Three changes ship together in this release; the first is new public API, the other two
+were previously listed as Unreleased and are folded in unchanged.
+
+### VER04r CV2-S2 public resolved-domain enumerator and post-slot resolver
+
+Published API for the v2 corpus emitter (slice S3).  **No behaviour change**: every
+adopter's generated `warrant_evidence.rs` (arithmetic, ct-compare, gf256,
+hash-functions, logic-gates, lzw, vos-sched-any, vos-sched-fp-bitmap, wasm-leb128,
+x25519, zeroize) is byte-identical to the one the previous generator emits, and
+`regenerate --check` and `gen_corpus --check` are unchanged.
+
+- New `pub mod domain`: `Domain` (the generator's binder type `evidence::Ty`, now
+  `pub` and `#[non_exhaustive]`, with `domain_size`, `domain_bytes` and the new `nth(i)` / `iter()` that
+  unrank any VER04r 5.1 descriptor without materialising it); `unrank_product`,
+  `rank_product` and `ProductIter` (row-major, last binder fastest, start at any
+  product ordinal); `DomainEnv` and `resolve_binders` (aliases, records, variants,
+  `NatCount`, the VER04j 2.6 demotion, `W0706`/`W0707`); `resolve_post_slot_of` and
+  `op_post_slot` (the VER04k 4.2 slot over domains); re-exports of the checker's
+  `resolve_post_slot`/`slot_shape`/`PostSlot`/`SlotShape`, `corpus::inout_descriptor`
+  and the budget constants.
+- Internal, same code: the inline per-claim resolution in
+  `generate_evidence_harness_with_tables` is now `resolve_claim_tys` (shared with
+  `resolve_binders`), and `inout::slot_of` delegates to `resolve_post_slot_of`.
+  `evidence::Ty`, `TyEnv`, `product_size`, `claim_domain` and the `Ty` size methods
+  are `pub` or `pub(crate)`; `corpus.rs` and `gen_corpus` are untouched (frozen until
+  S13).
+- Documented divergences, not changed: the harness prelude enumerates byte strings
+  first-byte-fastest while VER04i 2.6 and the v1 corpus are lexicographic (the API
+  follows the spec); the generator's `NatCount` is 73 values where VER04r 5.1 says
+  `0..=K`; the generator's signed edge sets are sorted and include `-1..=-255` where
+  VER04r 5.1 says "same order".  S3 decides how the corpus names them.
+- `Ty::Res` now carries the error type name (`ErrName`, ignored by equality) and
+  `Ty::Data` the declaration's `record` flag, so `nth` produces evaluator-compatible
+  values (`x == E.CASE` and `match ... E.CASE` work on them). Neither changes the
+  generated output or any type comparison. `ResolvedBinders::sizes()` returns an
+  `Option`. `FxEdge` is documented for widths of 16 and up.
+- One deliberate exception to "no behaviour change": generator diagnostics that print a
+  composite `Ty` with `{:?}` now also show the new `record: ..` field and `ErrName(..)`.
+  No generated output and no test pins that text.
+- Correction to the first draft of these notes: the byte-string order difference is a
+  set difference for `List` of byte strings (the 16/4-value prefix differs); see the
+  module docs and VER04r 16.2.
+- Tests: `tests/domain_api.rs` (27, from outside the crate, against an independent
+  eager oracle, an evaluator round trip, and a recomputation of the checked-in v1
+  ct-compare `inputs_sha256` digests from `Domain` enumeration) and 8 doc examples.
+- Docs: README section, VER-BACKLOG CV2 row, VER04r section 16.2.
+
+### WD-HARN1 harness supervisor hardening (from the 2026-11-14 Windows `rust/lzw` hang)
+
+- Prelude, observer supervisor: every wait on the worker is a `Condvar::wait_timeout`
+  against one deadline of `OBS_CALL_TIMEOUT_MS` (120 s; `WARRANT_OBS_TIMEOUT_SECS` can
+  only raise it). An overrun or a lost worker is fatal for the process: TAP
+  `Bail out! observer-timeout: ...` on stdout, the same on stderr, exit status 70
+  (`OBS_TIMEOUT_EXIT`), no later TAP line, no manifest. It is deliberately not a failed
+  instance: a negative control counts any failure as a caught fault and a sabotage line
+  greps `^not ok `, so either would pass on a stall (review finding H1). `is_detected`
+  also refuses `observer-timeout` verdicts. A job that cannot be sent (worker gone) is
+  reported as lost, not as a heap trip.
+- Prelude, exit: abandoned workers (tripped or timed out) are never joined; the
+  invariant (a worker takes only its own reply slot, no lock the supervisor, TAP printer
+  or manifest writer needs) is written into the prelude comment and tested.
+- Prelude, poison: new `lock_or_recover`; no `lock().unwrap()` remains (META, STATS,
+  OBS_STATS, TABLE_STATS, SOURCE_SHA256, the reply slot). The allocator-side trip no
+  longer skips its write on a poisoned slot (which would have left the supervisor
+  waiting).
+- Regenerated: every adopter's `tests/generated/warrant_evidence.rs` (arithmetic,
+  ct-compare, gf256, hash-functions, logic-gates, lzw, wasm-leb128, x25519, zeroize) and
+  the six `warrant-grammar` fixtures. Only lzw, wasm-leb128 and the `wxh` fixture carry
+  the observer; the rest change only by `lock_or_recover`.
+- Tests: `tests/wxh_supervisor.rs` (new; runs the generated WX-H harness against a
+  subject that stalls and panics, with a 300 ms bound: in child processes it checks a
+  stall inside a negative control and inside the whole suite each bail out with status
+  70 and no `not ok`; in-process it checks the call times out, the shared locks stay
+  usable, and a poisoned lock and reply slot recover), two generator tests in `wxh_generator`, hook updates in `wxh_evidence`
+  and `wxh_caps`. New support subject `tests/support/wxh_subject_stalling.rs`.
+- Specification: VER04j 14.2 item 53 (and a pointer from item 33), VER-BACKLOG row.
+
+### WX-FAULT1 `flip-result-bit` for a fixed-width integer result
 
 - Generator: the composite adapter accepts `flip-result-bit` for a `Bytes -> U32/U64`
   (any `Fx`/`FxEdge`, inside an `Ok` or `Some`) result, so a checksum or hash operation

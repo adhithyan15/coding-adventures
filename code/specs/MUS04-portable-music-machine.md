@@ -459,3 +459,16 @@ Recommended sequence:
 8. Go/Swift/.NET/JVM/Haskell/Dart packages in small groups.
 
 Each PR should build only the packages it owns plus direct prerequisites.
+
+## 15. Duplicate Keys in Portable Score JSON
+
+When decoding canonical portable score JSON, every object must have unique
+member names after JSON escape decoding. For example, `"title"` and
+`"\u0074itle"` are duplicate names. Apply this rule to objects at every
+nesting level. Equal names in different objects remain valid. Reject
+duplicates through each decoder's existing typed error path with a generic
+diagnostic that does not echo member names or values.
+
+This rule preserves all existing valid canonical score models, including
+`code/specs/fixtures/music-machine/canonical_score.json`. It applies to the
+portable score JSON decoder and does not change V1 or V2 text parsing.

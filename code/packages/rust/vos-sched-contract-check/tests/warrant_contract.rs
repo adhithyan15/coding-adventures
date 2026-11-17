@@ -237,13 +237,14 @@ const LEMMAS: [&str; 9] = [
     "policy_admits_only_top",
 ];
 
-/// The twelve obligations a production fixed-priority scheduler carries, in
+/// The thirteen obligations a production fixed-priority scheduler carries, in
 /// document order (safety, policy, canonical).
-const PRODUCTION: [&str; 12] = [
+const PRODUCTION: [&str; 13] = [
     "insert_safe",
     "remove_safe",
     "dispatch_safe",
     "safety_alpha_build",
+    "safety_init",
     "dispatch_policy",
     "canon_init",
     "canon_insert_post",
@@ -420,7 +421,7 @@ fn the_any_block_type_checks_against_a_two_field_impl() {
 fn bitmap_satisfies_safety_policy_and_canonical() {
     let obligations = evaluate(&[CONTRACT, BITMAP, SAFETY, POLICY, CANONICAL], &PRODUCTION);
     assert_all_pass(&obligations);
-    // document order: safety (4), policy (1), canonical (7)
+    // document order: safety (5), policy (1), canonical (7)
     assert_eq!(
         counts(&obligations),
         vec![
@@ -428,6 +429,7 @@ fn bitmap_satisfies_safety_policy_and_canonical() {
             ("remove_safe", 65_536, 65_536),
             ("dispatch_safe", 256, 256),
             ("safety_alpha_build", 256, 256),
+            ("safety_init", 2, 2),
             ("dispatch_policy", 256, 256),
             ("canon_init", 2, 2),
             ("canon_insert_post", 65_536, 65_536),
@@ -465,6 +467,7 @@ fn any_satisfies_safety_and_the_any_block() {
             "remove_safe",
             "dispatch_safe",
             "safety_alpha_build",
+            "safety_init",
             "dispatch_sound",
             "dispatch_covers_run",
             "dispatch_covers_idle",
@@ -478,9 +481,11 @@ fn any_satisfies_safety_and_the_any_block() {
             ("remove_safe", 65_536, 65_536),
             ("dispatch_safe", 256, 256),
             ("safety_alpha_build", 256, 256),
-            // oracle and state both U8: 65,536; coverage's guard t < 8 admits 256 * 8.
+            ("safety_init", 2, 2),
+            // oracle and state both U8: 65,536 each; `mem` is false for t >= 8, so coverage needs no
+            // `t < 8` refinement and admits every case (VOS-D079).
             ("dispatch_sound", 65_536, 65_536),
-            ("dispatch_covers_run", 65_536, 2_048),
+            ("dispatch_covers_run", 65_536, 65_536),
             ("dispatch_covers_idle", 256, 256),
         ]
     );
@@ -504,6 +509,7 @@ fn the_oracle_at_zero_is_canonical_so_kind_is_enforced_by_rule() {
             "canon_dispatch_img",
             "canon_dispatch_post",
             "safety_alpha_build",
+            "safety_init",
         ],
     );
     assert_all_pass(&outcomes);
@@ -528,11 +534,12 @@ struct Mutant {
     fails: &'static [&'static str],
 }
 
-const OBLIGATIONS: [&str; 15] = [
+const OBLIGATIONS: [&str; 16] = [
     "insert_safe",
     "remove_safe",
     "dispatch_safe",
     "safety_alpha_build",
+    "safety_init",
     "dispatch_policy",
     "canon_init",
     "canon_insert_post",
@@ -680,7 +687,24 @@ fn mutants() -> Vec<Mutant> {
             edits: &[("model init() -> Impl = Impl(0u8)", "model init() -> Impl = Impl(1u8)")],
             blocks: all,
             touches: &["init("],
-            fails: &["canon_init"],
+            fails: &["canon_init", "safety_init"],
+        },
+        // ---- VOS-D081: the safety tier constrains init for every implementation ----
+        Mutant {
+            name: "a bitmap whose initial mask is 8, safety block only (safety_init does not need canonical)",
+            base: BITMAP,
+            edits: &[("model init() -> Impl = Impl(0u8)", "model init() -> Impl = Impl(8u8)")],
+            blocks: &["safety"],
+            touches: &["init("],
+            fails: &["safety_init"],
+        },
+        Mutant {
+            name: "any starts with mask 8 and oracle 0 (dispatch still answers Idle: only the init claim sees it)",
+            base: ANY_IMPL,
+            edits: &[("model init() -> Impl = Impl(0u8, 0u8)", "model init() -> Impl = Impl(8u8, 0u8)")],
+            blocks: &["safety", "any"],
+            touches: &["init("],
+            fails: &["safety_init"],
         },
         // ---- the history-bearing scheduler: the canonical claims, and only they, see it ----
         Mutant {

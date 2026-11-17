@@ -16,3 +16,7 @@
   -- carry the safety tier but not canonical, and would otherwise have an alpha nothing constrains.
   claim safety_alpha_build:
     forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool. dec(alpha_w(build(ready_of(b0, b1, b2, b3, b4, b5, b6, b7)))) == ready_of(b0, b1, b2, b3, b4, b5, b6, b7)
+  -- init starts from the empty ready set, for EVERY implementation (VOS-D081).  The binder is unused
+  -- (the same convention as canon_init, F5): the generator needs one.
+  claim safety_init:
+    forall b: Bool. dec(alpha_w(init())) == empty()
