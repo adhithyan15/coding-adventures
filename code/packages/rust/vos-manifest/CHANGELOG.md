@@ -9,7 +9,7 @@ All notable changes to this package are documented here.
 - `Tier` gains a fifth member, `Representation`, sorted between `policy` and `safety` (VOS02 2.7):
   `Tier::ALL` has five entries, a `tier representation` row parses, `MAX_TIER_ROWS` is 5, and the
   document marker order message names it.  The eight claims of the real
-  `obligations-representation.part` are pinned in `tests/warrant.rs` with digests produced by
+  `obligations-representation.part` (`insert_rep_lo/hi`, `remove_rep_lo/hi` range over every thread id) are pinned in `tests/warrant.rs` with digests produced by
   `tests/claim_sha256_reference.py` (24 pins now).
 
 ### Changed (VOS-D081)

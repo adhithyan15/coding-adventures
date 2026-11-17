@@ -278,20 +278,20 @@ const PINS: [(&str, &str); 24] = [
         "bfeb535c6b8db440a32e55eee2fb675d8f5f50ef41c5d03d4fc984a276ee3d27",
     ),
     (
-        "insert_rep",
-        "074a987f2a58bc5a3811ddcad992509d3f2985d96156be7323f2b9c04b60d605",
+        "insert_rep_lo",
+        "9e44b1d1eec14c115c6a5c2cb486ae492ba99adfa6702ff2a345c6dadbfc321e",
     ),
     (
-        "insert_rep_post",
-        "d47ca3692e85a2d64882402a0ee5322805a7ff127afb3f230db1f5106acfb1a5",
+        "insert_rep_hi",
+        "86e0bd8dade4afd4125a95821ba62a4d99ef61d6379ff5192a7502d63b77cfc7",
     ),
     (
-        "remove_rep",
-        "48dbacbfad0d0e264b9dbf922b640bb0f4f33eb22323133b39ab508c21946228",
+        "remove_rep_lo",
+        "a67ac1ed645638879769104a688dfc16966f022bab4103b7c7dae8622a4ea731",
     ),
     (
-        "remove_rep_post",
-        "c51d645c5dc5616de86689a69ba878d01d18d55eff5c7cd4a861d710ece06961",
+        "remove_rep_hi",
+        "d6a7b75ce631571f05f275369c02760e5f906a330bf687528a4bbcc9e9d16603",
     ),
     (
         "dispatch_rep",

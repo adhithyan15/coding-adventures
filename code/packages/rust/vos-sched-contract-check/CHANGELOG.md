@@ -7,8 +7,8 @@ All notable changes to this package are documented here.
 ### Added (VOS-012b0, VOS-D061)
 
 - The `representation` block is evaluated on a round-robin model (`impl-rr-models.part`): the eight
-  claims plus the safety tier pass (458,754 + 131,586 cases), and the same rr fails
-  `canon_dispatch_post` (why the tier exists).  Ten mutants (31 in all): `rep` ignoring `h`
+  claims plus the safety tier pass (1,245,186 + 131,586 cases), and the same rr fails
+  `canon_dispatch_post` (why the tier exists).  Twelve mutants (33 in all; two new: `insert_img`/`remove_img` jumping out of the image for `t >= 32`, which only the every-`t` claims catch): `rep` ignoring `h`
   (fails `dispatch_rep_post`), an `alpha` that cheats at `ptr != 0` (fails `rep_alpha` and the
   claims that read alpha of an image state), an `init` outside the image (`rep_init`), each step
   leaving the image (the matching `_post` claim), wrong `insert_out`/`remove_out`/`dispatch_out`
