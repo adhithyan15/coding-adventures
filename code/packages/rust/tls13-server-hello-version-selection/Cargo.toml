@@ -1,0 +1,18 @@
+[package]
+name = "tls13-server-hello-version-selection"
+version = "0.1.0"
+edition = "2021"
+description = "Exact TLS 1.3 ServerHello supported-version binding"
+license = "MIT"
+
+[dependencies]
+tls13-extension-block = { path = "../tls13-extension-block" }
+tls13-extension-context-policy = { path = "../tls13-extension-context-policy" }
+tls13-server-hello-message = { path = "../tls13-server-hello-message" }
+tls13-server-hello-selection = { path = "../tls13-server-hello-selection" }
+tls13-supported-versions = { path = "../tls13-supported-versions" }
+
+[dev-dependencies]
+tls13-cipher-suite-offer = { path = "../tls13-cipher-suite-offer" }
+tls13-cipher-suite-policy = { path = "../tls13-cipher-suite-policy" }
+tls13-client-hello-message = { path = "../tls13-client-hello-message" }

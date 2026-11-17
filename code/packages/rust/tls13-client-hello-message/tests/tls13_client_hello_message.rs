@@ -1,5 +1,6 @@
 use tls13_client_hello_message::{
     decode_client_hello, ClientHelloError, ClientHelloLimits, MAX_CIPHER_SUITE_COUNT,
+    MIN_CLIENT_HELLO_EXTENSION_PAYLOAD_LENGTH,
 };
 use tls13_extension_block::{ExtensionBlockError, ExtensionBlockLimits, ExtensionType};
 
@@ -47,6 +48,30 @@ fn decodes_and_retains_the_exact_structural_client_hello() {
             .expect("supported_versions-shaped entry")
             .data(),
         &[0x03, 0x04, 0x03, 0x03]
+    );
+}
+
+#[test]
+fn accepts_the_corrected_seven_byte_extension_payload_minimum() {
+    let mut body = valid_body();
+    body[43..45].copy_from_slice(&[0, 7]);
+    body[47..49].copy_from_slice(&[0, 3]);
+    body[49..52].copy_from_slice(&[2, 0x03, 0x04]);
+    body.truncate(52);
+
+    let message = decode_client_hello(&body, limits(8, 64, 8)).expect("valid body");
+    assert_eq!(
+        message.extensions().payload_length(),
+        MIN_CLIENT_HELLO_EXTENSION_PAYLOAD_LENGTH
+    );
+    assert_eq!(message.extensions().len(), 1);
+    assert_eq!(
+        message
+            .extensions()
+            .find(ExtensionType::from_wire_value(43))
+            .expect("one-version supported_versions entry")
+            .data(),
+        &[2, 0x03, 0x04]
     );
 }
 

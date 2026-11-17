@@ -1,5 +1,9 @@
 cargo test -q -p coding_adventures_warrant_corpus_gen
 cargo clippy -p coding_adventures_warrant_corpus_gen --all-targets -- -D warnings
-# S3a is pure in-memory computation (required_capabilities.json declares nothing); the
-# analyzer checks the source, tests included, against that manifest.
+# The crate's only OS access is in fsio.rs, cli.rs and the bin (required_capabilities.json
+# declares it); the analyzer checks the source against that manifest.
 cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .
+# The Unix BUILD also runs a shell gate (mktemp, sed, grep, a sabotaged --check). The build tool
+# runs each BUILD_windows line as `cmd /C <line>`, where none of that exists, so the same gate
+# runs here as a cargo test: tests/check_cli.rs `the_binary_writes_checks_and_fails_on_drift`
+# drives the real binary through write, --check, a flipped chunk line, and the located failure.

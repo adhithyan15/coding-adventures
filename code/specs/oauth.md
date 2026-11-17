@@ -4596,16 +4596,18 @@ composition remain separate prerequisites, and concrete HTTPS remains
 unavailable.
 
 An allocation-free `tls13-client-hello-message` prerequisite now decodes one
-exact RFC 8446 section 4.1.2 TLS 1.3 `ClientHello` handshake body. It enforces
+exact RFC 9846 section 4.2.2 TLS 1.3 `ClientHello` handshake body. It enforces
 the `0x0303` legacy version, retains the exact 32-byte random and bounded
 zero-through-32-byte legacy session ID, requires a non-empty even-length
 cipher-suite vector under a caller-selected suite-count ceiling, requires the
 single null legacy compression method, and delegates the complete mandatory
 extension vector to `tls13-extension-block` under caller byte and entry
-limits. Success retains the exact borrowed body and all structural fields in a
-non-copyable value; unknown cipher-suite and extension identifiers remain data
-for later policy, and diagnostics omit random, session, suite, and extension
-bytes.
+limits. The extension-vector payload accepts RFC 9846's corrected seven-byte
+minimum, including an otherwise valid one-version `supported_versions` offer
+without an unrelated padding extension. Success retains the exact borrowed
+body and all structural fields in a non-copyable value; unknown cipher-suite
+and extension identifiers remain data for later policy, and diagnostics omit
+random, session, suite, and extension bytes.
 
 This message-body layer does not classify a first or retry ClientHello,
 generate entropy, authorize a session ID or cipher suite, require or interpret
@@ -4917,14 +4919,18 @@ complete body, extension-vector payload, and retained extension count. The
 decoder enforces the fixed TLS 1.3 legacy version `0x0303`, the zero legacy
 compression method, the zero-to-32-byte session-id echo, exact body
 consumption, and the structure's minimum extension-vector payload. It retains
-the exact random and unclassified cipher-suite identifier, then composes the
-repository-owned generic extension-block decoder so malformed lengths,
-trailing bytes, duplicate extension types, and resource exhaustion fail
-closed. Stable failures contain only a category and body-local offset, and
-diagnostics omit random, session-id, and extension bytes.
+the exact random and unclassified cipher-suite identifier, classifies the
+random as an ordinary `ServerHello` or the exact RFC 8446
+`HelloRetryRequest` sentinel, then composes the repository-owned generic
+extension-block decoder so malformed lengths, trailing bytes, duplicate
+extension types, and resource exhaustion fail closed. One-bit and every other
+non-exact random remain ordinary `ServerHello` values. Stable failures contain
+only a category and body-local offset, and diagnostics omit random,
+session-id, and extension bytes.
 
-This structural boundary does not classify the `HelloRetryRequest` random,
-interpret or authorize extension contents, require or validate
+This exact public-data classification does not itself apply the transcript's
+`message_hash` rewrite, sequence an ordinary or retry handshake, interpret or
+authorize extension contents, require or validate
 `supported_versions`, bind the session-id echo or cipher-suite selection to an
 original `ClientHello`, enforce the downgrade sentinel, send alerts, advance a
 handshake, derive keys, protect records, parse or validate certificates,
@@ -4934,6 +4940,86 @@ context-specific extension and selection policy, handshake state,
 repository-owned signature verification, certificate name/path validation,
 trust-root and revocation integration, TLS transport, and HTTP composition
 remain blockers. Concrete HTTPS remains unavailable.
+
+An allocation-free `tls13-server-hello-selection` prerequisite binds one
+structurally decoded ordinary `ServerHello` or `HelloRetryRequest` to the
+exact decoded `ClientHello` and one supplied policy-bearing cipher-suite
+offer. Before accepting any server selection, the binder requires the offer's
+entry count, wire identifiers, and preference order to equal the cipher-suite
+vector retained by that exact `ClientHello`; detached, truncated, reordered,
+or otherwise substituted offer wire evidence fails closed. It then requires
+the server's legacy session-id echo to equal the exact client session ID and
+asks the retained offer and its data-driven cipher-suite policy to validate
+the server's selected wire identifier. Success moves both non-copyable decoded
+messages and the offer into one evidence value, retains the public ServerHello
+kind, and returns the repository-owned selected-suite descriptor that binds
+the record algorithm, HKDF hash, key lengths, and per-key record ceiling.
+Stable failures and diagnostics retain no session ID, offer, selection,
+random, handshake, or policy payloads.
+
+This selection binding does not parse either handshake body, interpret or
+authorize extensions, require or validate `supported_versions`, compare a
+post-retry `ServerHello` with the earlier `HelloRetryRequest`, apply the
+transcript `message_hash` rewrite, sequence a handshake, send alerts, derive
+keys, protect records, parse or validate certificates, establish trust,
+enforce revocation, perform I/O, authorize HTTP or OAuth transport, or open a
+network connection. Extension policy, retry-state and transcript composition,
+key schedule, certificate validation, TLS transport, and HTTP composition
+remain blockers. Concrete HTTPS and live-provider readiness remain
+unavailable.
+
+An allocation-free `tls13-server-hello-version-selection` prerequisite now
+extends that retained selection evidence through extension-context and
+`supported_versions` policy. The binder first validates the exact decoded
+ClientHello extension block and the exact decoded ordinary ServerHello or
+HelloRetryRequest extension block against one caller-supplied, data-driven
+context policy. It then requires exactly one `supported_versions` extension in
+both retained messages. Before trusting a supplied `ClientVersionOffer`, it
+requires the offer's complete encoded ClientHello extension data, including
+the vector length, identifier order, and every identifier, to equal the
+extension data retained by that exact decoded ClientHello. Finally, it asks
+the retained offer to validate the server's exact extension data as a version
+the client offered and as exactly TLS 1.3. Success moves the non-copyable prior
+selection binding into a new evidence value and retains the policy, exact
+version offer, and selected TLS 1.3 descriptor. Stable failures and diagnostics
+retain no extension data, version identifiers, message bytes, or policy
+payloads.
+
+This version binding does not compare a HelloRetryRequest selection with a
+later ServerHello, require the retry to change the ClientHello, compare retry
+cipher suites, apply the transcript `message_hash` rewrite, interpret
+`key_share`, sequence a handshake, send alerts, derive keys, protect records,
+parse or validate certificates, establish trust, enforce revocation, perform
+I/O, authorize HTTP or OAuth transport, or open a network connection. Retry
+state, transcript composition, key schedule, certificate validation, TLS
+transport, and HTTP composition remain blockers. Concrete HTTPS and
+live-provider readiness remain unavailable.
+
+An allocation-free `tls13-server-hello-retry-selection` prerequisite now
+binds one retained HelloRetryRequest version-selection proof to one retained
+ordinary ServerHello version-selection proof. The binder requires the first
+message to be classified as HelloRetryRequest and the second as ServerHello,
+then compares the exact retained ClientHello random, legacy session ID,
+cipher-suite offer count and order, and supported-version offer count and
+order across the two proofs. It also requires the complete extension-context
+policy, policy-authorized cipher-suite descriptor, and selected TLS version to
+remain equal. Success moves both non-copyable proofs into one evidence value,
+so later handshake composition cannot replace either message, either
+ClientHello, either data-driven offer, or the extension rule table after
+continuity has been checked. Stable failures and diagnostics retain no random,
+session ID, offer, selection, extension, handshake, or policy payloads.
+
+This retry continuity binding does not compare the complete ClientHello pair
+or validate extension-specific permitted changes; require the retry to change
+the ClientHello; reject a second retry in connection state; interpret
+`cookie`, `key_share`, or `pre_shared_key`; apply the transcript
+`message_hash` rewrite; sequence a handshake; send alerts; derive keys;
+protect records; parse or validate certificates; establish trust; enforce
+revocation; perform I/O; authorize HTTP or OAuth transport; or open a network
+connection. ClientHello retry-transition policy, connection state, transcript
+composition, key schedule, certificate validation, TLS transport, and HTTP
+composition remain blockers. Concrete HTTPS and live-provider readiness
+remain unavailable.
 
 An allocation-free `tls13-alpn` prerequisite now owns the RFC 7301
 `application_layer_protocol_negotiation` extension data needed to bind a
@@ -5800,6 +5886,62 @@ protect records, validate certificates, establish trust, enforce revocation,
 perform I/O, authorize HTTP or OAuth transport, or open a network connection.
 Reviewed key-agreement execution and handshake-state composition remain
 prerequisites, and concrete HTTPS remains unavailable.
+
+A bounded `tls13-x25519-key-agreement` prerequisite now routes one key-
+agreement operation only from an exact `tls13-named-group-policy` selection.
+The selected group must bind the X25519 algorithm, standard 32-byte peer key-
+exchange length, and standard 32-byte shared-secret length before the caller-
+borrowed private scalar is read or the repository-owned X25519 primitive is
+invoked. Every other recognized group fails before the private scalar is read,
+before peer bytes are interpreted, and before a shared-secret owner exists.
+The X25519 route passes the exact peer key-exchange bytes to the repository-
+owned primitive, preserves its low-order all-zero rejection, validates the
+derived length through the same selected-group policy, and returns one non-
+cloneable shared-secret value borrowing caller-owned fixed storage. Dropping
+that value wipes the borrowed storage through the repository-owned zeroization
+primitive.
+Stable failures and Debug output retain no private-scalar, peer-key, shared-
+secret, group, algorithm, or length payloads.
+
+This pure execution boundary does not generate entropy or an ephemeral private
+key, own or wipe the caller's private scalar, construct or decode a key-share
+extension, prove that a private scalar corresponds to an offered ClientHello
+share, bind a ServerHello share to that offer, advance a transcript or
+handshake, derive traffic secrets, protect records, validate certificates,
+establish trust, enforce revocation, perform I/O, authorize HTTP or OAuth
+transport, or open a network connection. The existing X25519 primitive's
+optimized-code behavior and internal temporary handling remain properties of
+that package rather than new claims of this composition. Exact key-share and
+handshake-state binding, the remaining TLS transport, and HTTP composition
+remain prerequisites; concrete HTTPS and live-provider readiness remain
+unavailable.
+
+An allocation-free `tls13-x25519-key-share-binding` prerequisite now composes
+the exact retained ClientHello offer and decoded ServerHello key share with the
+selected-group-bound X25519 execution boundary. The decoded server share must
+select X25519 before the caller-borrowed private scalar is read. The package
+derives that scalar's public key through the repository-owned X25519 primitive
+and compares it with the exact retained X25519 ClientHello public share through
+the repository-owned compiler-preserved full-scan fixed-length comparison. A
+mismatch fails before shared-secret derivation and leaves caller-owned output
+unchanged. A match passes the exact decoded ServerHello public share and exact
+selected-group evidence to the existing X25519 key-agreement boundary, which
+continues to reject low-order peer keys and wipe the borrowed shared-secret
+storage on drop. Stable failures and Debug output retain no private scalar,
+public key, shared secret, group, algorithm, length, or output payloads.
+
+This pure binding boundary does not generate entropy or an ephemeral private
+key, own or wipe the caller's private scalar, prove that the retained offer was
+transmitted in a ClientHello, bind the offer or ServerHello to a transcript,
+process a handshake, derive traffic secrets, protect records, validate
+certificates, establish trust, enforce revocation, perform I/O, authorize HTTP
+or OAuth transport, or open a network connection. The fixed-length comparison
+inherits its repository package's compiler-observability guarantee and does
+not add hardware side-channel claims. The X25519 primitive's optimized-code
+behavior and internal temporary handling remain properties of that package.
+Handshake-state and transcript binding, the remaining TLS transport, and HTTP
+composition remain prerequisites; concrete HTTPS and live-provider readiness
+remain unavailable.
 
 An allocation-free `http1-fixed-request-body` prerequisite now binds one
 caller-borrowed, potentially sensitive request body to its exact byte length

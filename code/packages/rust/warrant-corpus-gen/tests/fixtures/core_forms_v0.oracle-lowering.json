@@ -2479,12 +2479,21 @@
       "body": [
         "and",
         [
-          "eq",
+          "and",
           [
-            "if",
+            "eq",
             [
-              "lit",
-              true
+              "subject_op",
+              "e",
+              [
+                [
+                  "lit",
+                  {
+                    "type": "Bytes",
+                    "value": "00"
+                  }
+                ]
+              ]
             ],
             [
               "lit",
@@ -2492,15 +2501,32 @@
                 "type": "Nat",
                 "value": "1"
               }
+            ]
+          ],
+          [
+            "eq",
+            [
+              "if",
+              [
+                "lit",
+                true
+              ],
+              [
+                "lit",
+                {
+                  "type": "Nat",
+                  "value": "1"
+                }
+              ],
+              [
+                "var",
+                "a"
+              ]
             ],
             [
               "var",
               "a"
             ]
-          ],
-          [
-            "var",
-            "a"
           ]
         ],
         [
@@ -2532,9 +2558,11 @@
       "claim": "if_context",
       "expected": [],
       "id": "warrant/core_forms_v0/exhaustive/if_context",
-      "ir_cost": 12,
+      "ir_cost": 17,
       "kind": "predicate",
-      "ops": [],
+      "ops": [
+        "e"
+      ],
       "result_type": "Bool",
       "subject": []
     },

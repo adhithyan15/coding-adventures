@@ -12,9 +12,12 @@
 //!   "type"    the document does not type check              lowering
 //!   "check"   the S2 checker refused the document           lowering
 //!   "limit"   a resource bound of VER04r section 14         lowering, cost, profile
+//!   "W0706"   a suite admits nothing / is over budget      enumeration
+//!   "W0707"   a `Bytes<N>` wider than 4096                 domain resolution
+//!   "domain"  a descriptor VER04r 16.2 leaves undecided    domain resolution
 //!   "profile" `corpus.profile` is malformed                 profile reader
 //!   "json"    a value cannot be rendered canonically        json writer
-//!   "unimplemented"  a later slice's stage (fails closed)   `generate`
+//!   "fault" "drift" "io"   faults and controls, --check, files (S3c)
 //! ```
 //!
 //! A message **never echoes input bytes** (VER04r section 14, "no reproducing material
@@ -36,12 +39,24 @@ pub mod code {
     pub const CHECK: &str = "check";
     /// A resource bound was exceeded (IR depth, cost, work, profile size).
     pub const LIMIT: &str = "limit";
+    /// A suite admits no case, or its product is over the budget (the v1 generator's code).
+    pub const W0706: &str = "W0706";
+    /// A `Bytes<N>` wider than `MAX_FIXED_WIDTH` (the v1 generator's code).
+    pub const W0707: &str = "W0707";
+    /// A binder descriptor that VER04r 16.2 leaves undecided (`nat_count`, a signed
+    /// `fx_edge`, `FxEdge` at 16 bits, a list of byte strings): refused until S10 decides.
+    pub const DOMAIN: &str = "domain";
     /// `corpus.profile` is malformed.
     pub const PROFILE: &str = "profile";
     /// A JSON value cannot be rendered by the canonical writer.
     pub const JSON: &str = "json";
-    /// The stage belongs to a later slice (S3b to S3d); refusing is the fail-closed stub.
-    pub const UNIMPLEMENTED: &str = "unimplemented";
+    /// A fault cannot be instantiated, no claim can catch it, or every claim is blind to it.
+    pub const FAULT: &str = "fault";
+    /// An on-disk corpus differs from the regenerated one (`--check`), or the profile's
+    /// fault names differ from the bindings'.
+    pub const DRIFT: &str = "drift";
+    /// A file could not be read or written, or a path was refused.
+    pub const IO: &str = "io";
 }
 
 /// Where in the language a refused construct lives: the feature level it needs.
@@ -123,6 +138,13 @@ impl GenError {
         }
     }
 
+    /// A refusal for a state the code's own invariants rule out (a bug here, never the
+    /// document's fault): `W0701` with an `internal:` message, so it can never be mistaken for
+    /// a user-facing rule.
+    pub fn internal(message: &str) -> GenError {
+        GenError::new(code::W0701, "", format!("internal: {message}"))
+    }
+
     /// Fill in `at` if the refusal was raised deep inside an expression and has not
     /// been attributed yet.  An existing attribution is kept.
     pub fn at(mut self, at: &str) -> GenError {
@@ -197,6 +219,14 @@ mod tests {
         assert!(!e.is_level());
         let e = GenError::new(code::LIMIT, "c", "too big");
         assert_eq!(e.to_string(), "limit at `c`: too big");
+    }
+
+    #[test]
+    fn an_internal_refusal_says_so() {
+        let e = GenError::internal("an invariant broke");
+        assert_eq!(e.code, code::W0701);
+        assert_eq!(e.message, "internal: an invariant broke");
+        assert_eq!(e.at("claim").at, "claim");
     }
 
     #[test]

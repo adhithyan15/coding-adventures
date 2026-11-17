@@ -9,27 +9,36 @@ import (
 	"fmt"
 	"sort"
 	"strings"
+	"sync"
 	"testing"
 
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/legacy"
+	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/policyfix"
 )
 
-// recStepEphemeral is the fixture's ephemeral list: exactly the committed
-// code/kiln/legacy/host-roots.json policy (sorted, as the decoder requires), so
-// the fixture is no more permissive about /proc and /sys than the real policy.
-// Ubuntu 26.04's binaries (libselinux 3.9, newer coreutils) read some of these
-// at start-up; 24.04's, in the kiln-sandbox job, do not.
+// The fixture's ephemeral and absent-ok lists ARE the committed
+// code/kiln/legacy/host-roots.json lists (KILN04 D27), through the one shared
+// helper: the fixture is neither more nor less permissive than the real policy,
+// so the kiln-sandbox job on ubuntu-26.04 (libselinux 3.9 reads
+// /proc/filesystems and probes /sys/fs/selinux at start-up) exercises the real
+// allowances, and a policy change cannot leave the fixture behind.
 //
-// The one extra entry, /proc/filesystems, mirrors D27 (claude/kiln-d27-selinux),
-// which adds it to the real policy: libselinux on 26.04 reads it at start-up.
-// D27 will switch this fixture to derive its lists from the real file.
-const recStepEphemeral = `["/dev/fd/*", "/dev/null", "/dev/urandom", "/proc/cpuinfo", "/proc/filesystems", "/proc/meminfo",
-  "/proc/self/cgroup", "/proc/self/exe", "/proc/self/maps", "/proc/self/mountinfo", "/proc/stat",
-  "/sys/devices/system/cpu/**", "/sys/fs/cgroup/**"]`
+// The lists are loaded LAZILY, never at package initialisation: the sandbox
+// tests re-exec this test binary as a helper inside the sandbox, where the
+// source tree is not visible, and a package-level load would panic in every
+// helper process.  Only the code that builds a fixture repository (always in
+// the outer test process) calls recStepLists.
+var recStepListsOnce struct {
+	sync.Once
+	ephemeral, absentOK string
+}
 
-// recStepAbsentOK: libselinux's start-up probes of the SELinux mount points.
-// They are absent on a runner without SELinux; a present one still voids the run.
-const recStepAbsentOK = `["/selinux", "/sys/fs/selinux"]`
+func recStepLists() (ephemeral, absentOK string) {
+	recStepListsOnce.Do(func() {
+		recStepListsOnce.ephemeral, recStepListsOnce.absentOK = policyfix.Lists()
+	})
+	return recStepListsOnce.ephemeral, recStepListsOnce.absentOK
+}
 
 // recStepPolicyFiles returns the fixture's code/kiln/legacy files. imagePaths
 // are the `image` roots, in any order and with duplicates: they are sorted and
@@ -48,6 +57,7 @@ func recStepPolicyFiles(imagePaths []string) map[string]string {
 	for _, p := range paths {
 		roots = append(roots, fmt.Sprintf(`{"path": %q, "kind": "image"}`, p))
 	}
+	eph, absent := recStepLists()
 	return map[string]string{
 		"code/kiln/legacy/pinned.json": `{"languages": []}`,
 		"code/kiln/legacy/never.json":  `{"packages": []}`,
@@ -57,7 +67,7 @@ func recStepPolicyFiles(imagePaths []string) map[string]string {
 `,
 		"code/kiln/legacy/env.json":        `{"names": ["FIXTURE_*", "LANG"]}`,
 		legacy.BoundaryPath:                `{"schema_version": 1, "language_source_input_registry_sha256": "00", "boundaries": []}`,
-		"code/kiln/legacy/host-roots.json": `{"roots": [` + strings.Join(roots, ",") + `], "ephemeral": ` + recStepEphemeral + `, "absent-ok": ` + recStepAbsentOK + `}`,
+		"code/kiln/legacy/host-roots.json": `{"roots": [` + strings.Join(roots, ",") + `], "ephemeral": ` + eph + `, "absent-ok": ` + absent + `}`,
 	}
 }
 

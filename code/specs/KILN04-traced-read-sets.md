@@ -2287,7 +2287,7 @@ version of this section led to these. Each is a decision, not a sketch.
 - **No late runtime threads.** Both helpers call `debug.SetGCPercent(-1)`, so
   no garbage-collector worker thread starts after the spawn.
 - **CI.** `ci.yml` has a required `kiln-sandbox` job (linux/amd64,
-  `ubuntu-24.04`, in `ci-gate`) that lifts the AppArmor restriction on
+  a matrix over `ubuntu-24.04` and `ubuntu-26.04` (D27), in `ci-gate`) that lifts the AppArmor restriction on
   unprivileged user namespaces unconditionally, installs `strace` through
   `apt-install.sh`, and runs the sandbox tests with `KILN_REQUIRE_SANDBOX=1`,
   which turns every skip into a failure. A script then asserts from the
@@ -2382,12 +2382,12 @@ byte as an `ERR_*` token), so it can never panic on hostile input.
 | `+++ exited with +5 +++`, `-0` (a signed exit code) | accepted (`Atoi` takes a sign) | refused, `unparsable-line` | the exit code is digits only; no real strace prints a sign | `TestStricterOnlyDivergences` |
 | an `ERR_*` token in the text after a call's `)` (an unterminated quote, a bad `<`, a resume marker) | refused, `result` or `ambiguous-path` | refused, `unparsable-line` (or `ambiguous-path` for a bad annotation) | the lexer cannot know a quote is "in the result"; both refuse the whole trace | `TestStricterOnlyDivergences` |
 | a `<... NAME resumed>` whose NAME has a character outside `[A-Za-z0-9_?]` | refused, `unmatched-resume` | refused, `unparsable-line` | NAME is lexed as a name; anything else is a bad marker | `TestRefusals` (`ERR_RESUME`) |
-| a split call whose glued text (prefix plus resumed half) is over the line byte limit, though each half is under it | accepted | refused, `size` | the grammar path reads the glued call as one line, so the limit applies to the call | `TestGluedCallOverTheByteLimit` |
+| a split call whose glued text (prefix plus resumed half) is over the line byte limit, though each half is under it | accepted | refused, `size` | the grammar path reads the glued call as one line, so the limit applies to the call; a same-pid signal line between the halves does not break the glue, so the row applies across it too | `TestGluedCallOverTheByteLimit`, `TestGluedCallOverTheByteLimitAcrossSignal` |
 | `= 5 /* 9 in strace's PID NS */<x>` (an annotation, or a marker, after the pid-namespace note with no word before the `<`) | accepted | refused, `unparsable-line` (`ERR_LT`) | strace prints the annotation first; a bare `<` is an `ERR_LT` | `TestPR5Divergences` |
 | an exit line holding a non-ASCII Unicode space (`exited with 0` followed by U+00A0) | accepted (`strings.TrimSpace` removes it) | refused, `unparsable-line` | the exit token is ASCII only | `TestPR5Divergences` |
 | a `<... NAME resumed>` line that is itself malformed AND has no matching pending call | refused, `unmatched-resume` | refused, `unparsable-line` (or `ambiguous-path`) | the grammar path reads a line before it looks at the pending call | `TestPR5Divergences` |
 | a line whose syntax is bad AND whose effect the old scanner refused first: `interleaved-call` (a call while another is pending), or the `unresumed-call` an exit line raises | refused, `interleaved-call` / `unresumed-call` | refused, `unparsable-line` or `ambiguous-path` (same line) | the old scanner checks a line's syntax before it looks at the pending calls, so these reasons mean it accepted the syntax; the grammar path refuses the syntax first | `TestSeqDiffSeeded` (reason-only; the old scanner always refused too) |
-| a call with more top-level items than its arity cap AND a later syntax defect | refused, `arity` (stopped while scanning) | refused, `unparsable-line` or `ambiguous-path` | the grammar parses the whole line before counting | `TestLineDiffSeeded` (row "too many arguments and a later error") |
+| a call with more top-level items than its arity cap AND a later syntax defect (for a split call, the cap is applied to the glued text; a same-pid signal line `--- SIG ... ---` between the halves does not break the glue, an exit line does) | refused, `arity` (stopped while scanning) | refused, `unparsable-line` or `ambiguous-path` | the grammar parses the whole line before counting | `TestLineDiffSeeded` (row "too many arguments and a later error"), `TestSignalBetweenSplitCallHalves` |
 | a line with a structural error AND a later bad annotation | refused, `unparsable-line` (first problem wins) | refused, `ambiguous-path` | the parser reports a failure position only as the start of the failing rule, so a syntax error cannot be ordered against a later bad token; the bad token is reported | `TestBadTokenWinsOverEarlierSyntaxError` |
 
 **Grammar details recorded by PR 4.** Nesting depth 64 means 64 levels of
@@ -2607,7 +2607,7 @@ write-open counts, and so does a rewrite between two execs); otherwise
 
 **`/proc`.** The `ephemeral` list of `host-roots.json` (§5.3) is the one
 authoritative list. Its seed allows the ubiquitous entries: `/proc/self/{exe,maps,cgroup,mountinfo}`,
-`/proc/{meminfo,stat,cpuinfo}`, `/sys/devices/system/cpu/**`,
+`/proc/{meminfo,stat,cpuinfo,filesystems}`, `/sys/devices/system/cpu/**`,
 `/sys/fs/cgroup/**` and `/dev/fd/N`.
 
 `/proc/self/status` and `/proc/self/stat` reveal `TracerPid`, so a
@@ -2750,8 +2750,9 @@ Manifests never store out-of-repository paths. Instead,
   "ephemeral": ["/dev/null", "/dev/urandom", "/dev/fd/*",
                 "/proc/self/exe", "/proc/self/maps", "/proc/self/cgroup",
                 "/proc/self/mountinfo", "/proc/meminfo", "/proc/stat",
-                "/proc/cpuinfo", "/sys/devices/system/cpu/**", "/sys/fs/cgroup/**"],
-  "absent-ok": ["$HOME/.config", "$HOME/.npmrc"]
+                "/proc/cpuinfo", "/proc/filesystems",
+                "/sys/devices/system/cpu/**", "/sys/fs/cgroup/**"],
+  "absent-ok": ["$HOME/.config", "$HOME/.npmrc", "/selinux", "/sys/fs/selinux"]
 }
 ```
 
@@ -2776,7 +2777,14 @@ Four more rules apply:
   trust, and §14 names it.
 - **Absent probes.** An absent probe outside the repository is allowed only
   under an `image`, `tool` or `state` root, or in `absent-ok`. `$HOME`
-  dotfiles need explicit entries.
+  dotfiles need explicit entries. An `absent-ok` entry covers an exact probe
+  of itself on the traced result alone. A probe of a CHILD of an entry
+  (`X/y`) is allowed only if the entry itself is absent: an `lstat` of `X` on
+  the classifier's disk gives `ENOENT` or `ENOTDIR`. Any other answer (present,
+  even as an empty directory, or `EACCES`) is `host-read`, because a present
+  directory's contents are undeclared input. An entry inside the fresh `$HOME`
+  or `TMPDIR` is absent by construction, and the disk is never asked beneath
+  them.
 - **Temporary files.** A read of the action's own temporary files (paths
   it created, §5.2) is allowed. `$HOME` and `TMPDIR` are **fresh tmpfs**, so
   a stat or listing of those two directories is allowed, and the post-run
@@ -2789,6 +2797,44 @@ Four more rules apply:
 - **Image absence.** An absent probe under an `image` root is checked against
   the ctime of the deepest directory that exists: one after the job-start
   stamp is `host-read:setup-modified`.
+
+**Decision D27: libselinux start-up probes (ubuntu-26.04).** `ubuntu-latest`
+moved to ubuntu-26.04 (libselinux 3.9). Every libselinux-linked tool
+(coreutils, grep, sed) calls `statfs` on `/sys/fs/selinux` and `/selinux` and
+opens `/proc/filesystems` at start-up. Unlisted, those gave `host-read:` and
+`trace-incomplete:proc-path` and voided every recording. The policy now has:
+
+- `/proc/filesystems` in `ephemeral`. It is constant for a kernel build, and
+  the image id is already in the weak key (`Host.ImageID()`). It stays in the
+  one authoritative `/proc` list: there is no classifier allowance and no
+  hard-coded `/proc` exception (§4.5, §5.5).
+- `/selinux` and `/sys/fs/selinux` in `absent-ok`, so they are allowed **only
+  while absent**: a failed probe of a child such as `/sys/fs/selinux/enforce`
+  counts only if the entry itself is absent (the §5.3 absent-probe rule). There is deliberately no `/sys/fs/selinux/**` entry anywhere
+  (not `ephemeral`, not a root): a present SELinux filesystem is a `host-read`.
+
+The invariant, for libselinux users: **an SELinux-enabled host records
+nothing.** It holds because libselinux's start-up probe finds the present
+`/sys/fs/selinux` (a `host-read`), and any child probe under a present entry is
+also a `host-read`. A program that never touches those paths is unaffected, and
+needs no such guarantee, since it cannot see the filesystem. SELinux state
+changes outputs (`ls -Z`, `cp --preserve=context`), so it must never be
+silently pinned. On such a host the probe finds the directory (`host-read`), and
+libselinux goes on to read `/proc/mounts` and `/proc/self/attr/current`, which
+stay `trace-incomplete:proc-path`. `kiln:recorder` needs no version bump: the
+change is in `policy:host-roots.json`, which is in `consumed` and so in the
+digest. The `kiln-sandbox` CI job runs on both ubuntu-24.04 and ubuntu-26.04,
+so image drift is caught by a required job. That holds only because the
+sandbox tests' policy fixtures derive their `ephemeral` and `absent-ok` lists
+from the real `code/kiln/legacy/host-roots.json` (they once carried their own
+short lists); and a change to `code/kiln/legacy/**` selects the job in
+`ci-gates.json`.
+
+**One explicit image label.** The record workflow and every job that consumes
+its records use one explicit `ubuntu-NN.04` label, never `ubuntu-latest`: the
+host's image id is part of the weak key, so a floating label would change the
+key under the recorder without a commit. Which label is chosen is decided in
+stage-4 PR 3.
 
 Any other out-of-repository read or probe gives `host-read:<path>` and no
 record. `$HOME` and `TMPDIR` are expanded from the scrubbed environment.
@@ -2892,7 +2938,8 @@ classified by its `-y` path.
 **Out of the repository.** The order is: made by this action, ephemeral list,
 `$HOME` or `TMPDIR` themselves, longest covering root, `absent-ok`, else
 `host-read`. `X/**` in the ephemeral list also covers `X`; `absent-ok` covers
-a path and what is under it, for absent probes only. An `image` file with a
+a path, and what is under it only while the entry itself is absent (§5.3), for
+absent probes only. An `image` file with a
 zero ctime or a failed lstat is `host-read`. A `state` root reads as
 `host-read` and an absent probe under it is allowed (the fetcher check is
 stage 5; `fetchersEnabled` is the switch); a write under it is `state-write`.
@@ -3939,6 +3986,20 @@ scheduled and dispatched full build.
 ## 14. Residual risks
 
 These are known and named. They are measured rather than closed.
+
+- **The absent-ok child rule looks at the entry at classification time.** It
+  checks the entry with `lstat` when the action ends, so an entry that existed
+  during the action but was removed by something outside the action before
+  classification would let an `ENOENT` child probe pass. That is not reachable
+  from inside the read-only sandbox: the action cannot remove `/sys/fs/selinux`
+  or `/selinux`, anything it creates is handled by `isCreated`, and libselinux
+  probes the entry itself first, which is judged by the traced result.
+
+- **`/proc/filesystems` varies with the kernel modules loaded during the job.**
+  It is `ephemeral` (D27), so a read of it is not part of any key. A module
+  loaded mid-job (say a filesystem driver) can change what a tool sees. This is
+  accepted, like `/proc/self/mountinfo` and `/proc/cpuinfo`: the image id pins
+  the kernel build, not the modules a job loads.
 
 - **Recorded binary digests are audit-only.** The binding carries the SHA-256 of
   the Kiln, build-tool, `strace` and `git` binaries and of the sandbox
