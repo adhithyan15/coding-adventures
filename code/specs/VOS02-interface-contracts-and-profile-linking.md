@@ -240,8 +240,9 @@ including the representation-mode and `any` implementations that do not carry
 *Why:* without the canonical block, "every state `build(m)` behaves" says nothing
 about a state the step reaches that is not in the image. An implementation whose
 representation has history (a ring buffer's head position) is not canonical; it
-declares `mode=representation` (section 6.2), writes `<op>_rep` claims over
-`inv_impl` states instead, and is flagged in the manifest and reviewed. This is
+declares `mode=representation` (sections 2.7 and 6.2), writes `rep_init`, `rep_alpha`, `<op>_rep`
+and `<op>_det` claims over `inv_impl` states instead, and is flagged in the manifest and
+reviewed. This is
 VER04m E15's `codec-roundtrip` and `rebuild-equivalence` idea for by-value
 state.
 
@@ -249,7 +250,7 @@ state.
 
 | Kind | Must discharge | May not be used for |
 |---|---|---|
-| `production` | the `canonical` block (or, for `mode=representation`, the determinism claim), and every tier the profile needs | nothing |
+| `production` | the `canonical` block (or, for `mode=representation`, the claim set of section 2.7: `rep_init`, `rep_alpha`, `<op>_rep` and the `<op>_det` determinism claims), and every tier the profile needs | nothing |
 | `any` | the `any` block (soundness and coverage); it may **not** carry `canonical` (a rule of `vos-link`, below) | an `image` profile (SH16) |
 | `reference` | a deterministic executable model with no `bound` rows | an `image` profile |
 
@@ -275,6 +276,20 @@ evidence alone):
    at least one `Impl` field is outside the cone (the oracle the `any` block names). This
    is a check on the state's structure, not on any name; the crate name is only the lint
    below.
+   **CD07-R, for `mode = representation`.** The `canonical` half of rule 2 and the
+   every-field-in-the-cone half do not apply (a history register is outside the cone by
+   design); `vos-link` instead checks, structurally and from the document alone:
+   (1) no `canonical` claim and no `any` claim (by `claim_sha256`), and the crate name does
+   not end in `-any`; (2) `build` is an `Impl(..)` application and the set of `Impl` fields
+   outside its cone is **non-empty** (if it is empty the finding says "declare canonical":
+   representation mode is for history only); (3) a model `rep` exists, is an `Impl(..)`
+   application, and **every field of it is in the cone of `rep`'s parameters** (the same
+   taint walk, failing closed the same way); (4) the claims `rep_init`, `rep_alpha`, one
+   `<op>_rep` per operation of `contract.vos` other than `init`, and at least one `<op>_det`
+   exist; none mentions `build`; every call of an operation inside them has, as its state
+   argument, a `rep(..)` application (or the `<op>_img` of one, which is itself a call that
+   is checked); and no right-hand side of an `==` in a `_det` claim calls an operation (the
+   model is op-free: a `_det` that compares the implementation with itself pins nothing).
 3. `kind = reference`: no `bound` rows, never in an `image` profile.
 
 **What this rule is not.** It separates `any` from `production` in the *documents*; it is
@@ -523,10 +538,41 @@ conformance (R4 reads obligations only).
 | Mode | Meaning | Extra obligation |
 |---|---|---|
 | `canonical` (default) | Every reachable state is in the image of `build` (R5) | the `canonical` block |
-| `representation` | The implementation's state carries history; `alpha` forgets it | authored `<op>_rep` claims over `inv_impl` states, a determinism claim, flagged `mode=representation` in the lock and in every report line, and human review |
+| `representation` | The implementation's state carries history; `alpha` forgets it | authored `rep_init`, `rep_alpha`, `<op>_rep` and `<op>_det` claims over `inv_impl` states (below), flagged `mode=representation` in the lock and in every report line, and human review |
 
 A `representation` implementation is never silently equal to a canonical one: the
 profile report prints the mode next to the kind.
+
+**The `vos.toml` spelling (VOS-D061, VOS-012b0).** `mode = "representation"`; an absent key
+means `canonical`. There is no `none` spelling in `vos.toml`: `kind = "any"` has no mode,
+and `mode` on an `any` crate is an error (D-GD2).
+
+**The claim set.** A representation implementation authors, in its own `impl.part` (never in
+the contract: a contract-owned block would have to name `Impl`'s fields, the R3 problem),
+
+* an op-free model `rep(p1, .., pk) -> Impl` that builds a state from parameters (an
+  `Impl(..)` application) and **covers every `inv_impl` state**: every field of `Impl` is a
+  function of `rep`'s parameters, so a claim quantified over those parameters ranges over all
+  the states the implementation can be in (the history register included);
+* `rep_init`: `init() == rep(..)` (the start state is one of them, named);
+* `rep_alpha`: `alpha(rep(..))` equals the abstraction the parameters name (`alpha` forgets
+  the history and nothing else);
+* `<op>_rep`, for every operation `<op>` of `contract.vos` other than `init`: the output of
+  `<op>` and the abstraction of its post-state satisfy the safety relation of the abstract
+  step, from `rep(..)`, and the history register obeys `inv_impl` after it. The safety tier
+  quantifies over `build(M)` only, and after one `dispatch` the pointer has left its `build`
+  value, so a representation implementation restates safety over every `inv_impl` state;
+* `<op>_det`, for every operation whose `<op>_img` can change a field outside the cone of
+  `alpha` and `build` (at least one, or the mode is empty, see CD07-R): the op's output
+  **and its full post-state, history included, equal an authored op-free model** over all
+  `inv_impl` states, e.g. `dispatch_out(rep(..)) == rr_pick(..) and dispatch_img(rep(..)) ==
+  rr_next(..)`. This is the *determinism claim*: it pins how the history evolves, which is
+  what `canonical` pinned for a canonical implementation (a state in the image of `build`
+  forgot nothing), and it is what makes `<op>_rep` more than a hope that the register is
+  inert.
+
+`check-doc` prints each representation claim's `claim_sha256` as `impl-own rep` so the lock
+(VOS-034) can pin them; they are impl-own claims and never count towards R4.
 
 ---
 ## 3. Implementation kinds and the `-any` discipline
@@ -549,6 +595,7 @@ A crate declares its kind in its `Cargo.toml`:
 ```toml
 # vos.toml in the crate directory (Cargo.toml carries no VOS keys)
 kind = "production"             # or "reference", "any"
+mode = "representation"         # optional; absent means canonical.  Production and reference only (section 2.7)
 evidence-features = ["ghost"]   # features that exist for evidence only; must be in the central list of section 7.3
 contract = "vos-ready-contract" # the contract package this implementation realises (an implementation only)
 obligations = ["canonical", "policy", "safety"]   # the tiers gen-doc embeds; sorted, unique, each a `tier` of contract.vos
@@ -1347,6 +1394,19 @@ authority over what a document *carries* stays R6 and section 2.3: `carries` is 
 from the claims, so a wrong `obligations` list produces a finding, never a silent pass.
 `vos-shape-check` accepts both keys (its closed list grows by two).
 
+A third key, optional, is `mode = "representation"` (VOS-D061, section 2.7); an absent key
+means `canonical`. It is a `GD05` finding when `mode` is written on `kind = "any"` or on a
+contract package (neither has a mode: the contract package is never loaded as an
+implementation, so the check runs on its `vos.toml` too), when the value is not
+`"canonical"` or `"representation"`, or when `obligations` contains `canonical` under
+`mode = "representation"` (the two are contradictory: CD06 would otherwise demand a
+canonical block the mode says does not hold). `vos-shape-check`'s closed list grows by one
+more key, bounded (a string of at most 16 bytes); the closed set of values is `vos-link`'s,
+because it is the tool that gives the key meaning. `gen-doc` embeds nothing new: the
+marker grammar keeps its seven markers, the representation claims arrive through
+`impl.part`, and a representation crate lists the tiers it carries (`["safety"]` for the
+round-robin scheduler).
+
 **D-GD3. Where files live.** The implementation directory must be exactly
 `<root>/code/packages/rust/<impl>` and the contract directory exactly
 `<root>/code/packages/rust/<contract>`; the document is exactly
@@ -1410,7 +1470,7 @@ check needs an earlier result.
 | CD04 | the document parses and type-checks with `warrant-grammar`; its trailer is D-GD4's |
 | CD05 | no claim in the document carries the name of a contract obligation with a different `claim_sha256` (NC2) |
 | CD06 | `carries` is computed from the parsed claims; a tier is carried when every obligation of the tier appears with the contract's `claim_sha256`, and a **partly** carried tier is a finding; the carried set must equal the `obligations` of `vos.toml` |
-| CD07 | the R6 rules that the document alone decides (below) |
+| CD07 | the R6 rules that the document alone decides (below); for `mode = representation` the rules of CD07-R (R6, rule 2) in place of the canonical and cone rules |
 | CD08 | regeneration: the document equals, byte for byte, what `gen-doc` would write now |
 
 R6, as far as the document goes. `kind = production`: the document carries every
@@ -1426,6 +1486,18 @@ ends in `-any`, and **at least one** `Impl` field is outside the cone of `build`
 the `any` block names). `kind = reference`: the document has no `bound` row. A `build` that is
 not an `Impl(..)` application cannot be decided structurally and fails closed for
 `production` and `any`.
+
+`mode = representation` (kind `production` or `reference`; CD06 and CD08 are unchanged): CD07-R of R6. The
+document carries no `canonical` and no `any` claim and the crate name does not end in `-any`;
+`build` is an `Impl(..)` application with at least one field outside its cone (else: "declare
+canonical"); a model `rep` is an `Impl(..)` application with every field in the cone of its
+parameters; the claims `rep_init`, `rep_alpha`, `<op>_rep` for each operation of `contract.vos`
+other than `init`, and at least one `<op>_det` exist, none mentions `build`, every operation
+call in them takes a `rep(..)` (or the `<op>_img` of one) as its state argument, and the right
+of an `==` in a `_det` claim calls no operation. An *operation* here is any function declared
+with `op` in the document, plus `init` and the `<op>_out` and `<op>_img` of each operation of
+`contract.vos`. The cone of `rep` reuses the taint walk below, including its budget and its
+failing closed. Each representation claim is printed with its `claim_sha256` as `impl-own rep`.
 
 **What a pass of the cone rule is, stated plainly.** It is a **structural lint** at document
 level, not a proof that the state has no oracle. A syntactic walk is still evaded by a
@@ -1449,6 +1521,14 @@ VOS-034 compare them with a registry and a manifest row: `check-doc` does not ca
 production crate that lists only `["canonical"]` or an oracle crate that declares
 `reference`. The gate is therefore described as *enforced at document level*, never as
 unbypassable.
+
+**What a pass of CD07-R is.** The same, and no more: a lint over the shape of the claims, not a
+proof that the claims are true (the evidence runs them) nor that the oracle-free `rep` is the
+state space (an `Impl` field `rep` covers is in the cone of its parameters; one that the
+implementation can reach and `rep` cannot is not found). A mislabelled representation crate
+whose oracle nothing moves passes the lint, which is acceptable by the argument above: the
+authority stays SH13, SH16, VOS-D030 (the registry) and VOS-D060 (the bindings check).
+`vos-link` prints that statement beside the R6 note with every representation pass.
 
 Not decided here, and so not claimed: that `alpha` reads every field
 (the ghost wrapper, SH17), that `evidence.bindings` binds no oracle write, the registry
@@ -1508,7 +1588,9 @@ capability  empty effect set  effect_certificate current  (VOS-owned check, not 
 timing      none claimed
 ```
 
-**Mode.** `mode=representation` is printed beside the kind on every line.
+**Mode.** `mode=representation` is printed beside the kind on every line. `vos-link`'s own
+report header prints `mode representation` after the kind of such a crate (a canonical crate
+prints no mode, as before).
 
 **Digests.** The report prints the **implementation-block digest** (the SHA-256 of
 the bytes between `impl-begin` and `impl-end`) beside the contract digest: the
@@ -1536,8 +1618,8 @@ marked `n/a` with a reason.
    interim vocabulary of section 4.4) and declares no claim named like an
    obligation.
 5. The kind is declared in the crate's `vos.toml` and passes the `vos-link` rules of R6:
-   `production` carries `canonical` or the representation-mode determinism claim and no
-   `any` block; `any` carries the `any` block, no `canonical`, and has the oracle field.
+   `production` carries `canonical` or the representation-mode claim set (`rep_init`,
+   `rep_alpha`, `<op>_rep`, `<op>_det`; CD07-R) and no `any` block; `any` carries the `any` block, no `canonical`, and has the oracle field.
 6. The ghost face passes SH17 and SH18, is behind a feature listed in
    `evidence-features`, and the test target has `required-features`.
 7. The profile is canonical text (parse then re-emit is byte-equal), the lock is
@@ -1577,6 +1659,8 @@ the gate (VER04h section 6).
 | NC18 | an oversized file, a duplicate key or row, a `DEC` over 20 digits or above `u64::MAX`, a `..` or symlink in a bindings path | `vos-manifest` and `vos-link` (section 6.8) |
 | NC19 | an authority file (the list of section 7.4, including `vos.toml`, `.cargo/**`, workflows and the VOS tool sources) without an effective CODEOWNERS owner | `check-owners` (section 7.6) |
 | NC20 | a self-declared `evidence-features` name outside the central list; a feature that gates code but is declared nowhere | section 7.3 |
+| NC21 | a representation crate whose document carries `canonical`; whose `rep` has a constant field; with no `<op>_rep` for one operation; with an operation applied to `build(..)` inside a representation claim; with a `_det` whose right-hand side calls an operation; with no `_det`; whose `build` has no field outside its cone | `check-doc` (CD07-R; each a distinct finding) |
+| NC22 | `mode` on a `kind = "any"` crate or a contract package; an unknown `mode` value; `canonical` in `obligations` under `mode = "representation"` | `gen-doc` / `check-doc` (`GD05`) |
 
 ### 12.3 What equal tokens do not establish (the residue of R3)
 

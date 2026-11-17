@@ -238,11 +238,24 @@ a function, so a policy implementation is a *deterministic* function of M
 * **Round-robin** (VOS-012's second implementation) satisfies the **safety tier
   only**: it returns some ready thread, rotates its pointer, and is not
   highest-priority-first. Its state has history (the rotation pointer) that `alpha`
-  forgets, so it is **not canonical**: it declares `mode=representation`
-  (VOS02 section 2.7), writes its own `dispatch_rep` claims over `inv_impl`
-  states and a determinism claim, and does not carry the `canonical` block. The
-  negative control the "history register" mutants (section 12)
-  shows the canonical block catching exactly this.
+  forgets, so it is **not canonical**: it declares `mode = "representation"`
+  (VOS02 section 2.7, VOS-012b0), carries the safety tier only, and writes its own
+  claim set in `impl.part` instead of the `canonical` block: with the authored
+  `Impl(mask, ptr)`, `inv_impl(s) = s.ptr < 8u8`, `rep(mask, h) = Impl(mask, bit_and(h, 7u8))`,
+  `arg_t(h) = shr(h, 3)` (the thread argument, from the high bits of the same byte) and the
+  op-free `rr_pick(mask, p) -> Pick` and `rr_next(mask, p) -> Impl`, the claims
+  `rep_init` (`init() == rep(0u8, 0u8)`), `rep_alpha` (`alpha_w(rep(mask, h)) == AbsW(mask)`),
+  `insert_rep`, `remove_rep` and `dispatch_rep` (the safety relation of the abstract step
+  from `rep(mask, h)`, plus `inv_impl` of the post-state and, for `insert` and `remove`,
+  `.ptr` unchanged) and `dispatch_det` (`dispatch_out(rep(mask, h)) == rr_pick(mask, p)` and
+  `dispatch_img(rep(mask, h)) == rr_next(mask, p)`, `p = bit_and(h, 7u8)`). The `_det` claim
+  is the determinism claim of VOS02 2.7: it pins the pointer's evolution, which the
+  canonical block pinned for a canonical scheduler. The negative control the "history
+  register" mutants (section 12) shows the canonical block catching exactly this.
+  A fixture with this claim set type-checks against this contract
+  (`vos-link/tests/fixtures/impls/vos-fixture-rep`). Adaptations of the first draft: the
+  operations are bound `op`s, as in the bitmap, so the document needs the `labels`, `input` and
+  `bound` blocks too; `shr(h, 3)` and `+` on `U8` type-check unchanged.
 * **Earliest-deadline-first** satisfies the safety tier only. Under this contract it
   can implement `Sched` only if its deadline arrives some other way than through
   these four operations, so a real EDF scheduler needs a deadline channel
@@ -639,7 +652,10 @@ claim's last call names, not the leading `safe_dispatch`), so no claim was rewri
 
 An implementation may add claims of its own (printed `impl-own`, VOS02 section
 2.6): the any implementation adds `alpha_build_with_oracle` and
-`insert_keeps_the_oracle`, which are not obligations because they name its own state.
+`insert_keeps_the_oracle`, which are not obligations because they name its own state. A
+round-robin scheduler adds the representation claims of section 5.3 (`rep_init`, `rep_alpha`,
+`insert_rep`, `remove_rep`, `dispatch_rep`, `dispatch_det`); `vos-link check-doc` (CD07-R,
+VOS02 R6) checks their shape and prints each one's `claim_sha256` as `impl-own rep`.
 
 ---
 
@@ -739,9 +755,14 @@ is out of this contract's reach: plan on `T <= 8..16` per obligation there.
   and `remove` never read the oracle (a lexical rule). Carries **safety and
   any**, never policy or canonical. Its `-any` block is the `obligations-any.part`
   above.
-* **`vos-sched-rr`** (kind `production` or `reference`, mode `representation`): a
-  rotating pointer, safety tier only, `dispatch_rep` claims and a determinism
-  claim in its own `impl.part`.
+* **`vos-sched-rr`** (kind `production`, `mode = "representation"`): a rotating pointer,
+  safety tier only (`obligations = ["safety"]`), and the six claims of section 5.3 in its own
+  `impl.part`. The evidence for the `_rep` and `_det` claims quantifies over a packed binder
+  `h` (the mask and one history byte: about 327,682 cases). **Residue, stated:** `insert`
+  with `t >= 32` at `ptr != 0` is not covered by a claim (`arg_t(h)` is `h >> 3`, at most
+  31): it is covered by the hostile-input fuzz rows (`input insert_img.t: hostile`) and by
+  `insert_safe` at `ptr = 0` (`build`'s pointer), the two places a `t` of 32 or more is
+  tried.
 * **As built (VOS-012a):** `vos-sched-any` exists (`code/packages/rust/vos-sched-any`): its state
   is `State { mask, choice }`, `dispatch` proposes, validates and defaults to `Idle`, the oracle
   is written only through the `ghost` module, and its generated document passes `check-doc`
