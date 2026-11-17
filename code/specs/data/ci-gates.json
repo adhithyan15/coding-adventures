@@ -617,6 +617,7 @@
         "go/directed-graph"
       ],
       "paths": [
+        "code/kiln/legacy/**",
         "code/programs/go/kiln/**",
         "code/packages/go/strace-lexer/**",
         "code/packages/go/strace-parser/**",
