@@ -36,7 +36,15 @@ from dataclasses import dataclass, field
 from . import ast as A
 from .domains import Desc, _Listed, check_budget, demote, descriptor_for
 from .errors import OracleError
-from .ir_eval import Program, compile_calls, compile_trace, fixed_arith_over_subject, may_wrap
+from .ir_eval import (
+    OutsideAdmit,
+    Program,
+    compile_admit_check,
+    compile_calls,
+    compile_trace,
+    fixed_arith_over_subject,
+    may_wrap,
+)
 from .lower import BOOL, LoweredSuite, Spec, walk
 from .stream import (
     chunk_digest_framing,
@@ -237,6 +245,9 @@ class SuitePlan:
         self._wraps_needed = may_wrap(prog, suite.admit) or self._trace is not None
         self._wraps: int | None = None
         self.calls = compile_calls(prog, suite.body, tenv)
+        # [D19]: a call of an op with an ``admit`` is checked on every admitted case.
+        self._admit_check = compile_admit_check(prog, suite.body, tenv)
+        self._admits_checked = False
         self.expected = None
         self.enc_result = None
         if suite.kind == "reference":
@@ -491,13 +502,41 @@ class SuitePlan:
         self._wraps = stats.wraps - before
         return self._wraps
 
-    def iter_admitted(self):
+    def check_admits(self) -> None:
+        """[D19] (VER04r section 6): every admitted case's subject calls are inside the
+        callee's ``admit``.
+
+        One dedicated pass over the admitted cases in order, so the first offender is the
+        lowest admitted-case ordinal (the address ``<suite id>@<i>``).  It always covers the
+        whole product, whatever depth a caller runs: a hole at case 2^20 is a defect of the
+        document, not of the slim set.  Not metered (it is part of enumeration, which the
+        generator does not charge twice) and skipped when no call is of an op with an
+        ``admit``.
+        """
+        check = self._admit_check
+        if check is None or self._admits_checked:
+            return
+        i = 0
+        for _ordinal, env in self.iter_admitted(meter=False):
+            try:
+                check(env)
+            except OutsideAdmit as exc:
+                raise OracleError(
+                    "generation",
+                    f"W0701: claim `{self.suite.claim}` calls op `{exc.op}` with arguments "
+                    f"outside the op's admit, at admitted case {i}",
+                ) from None
+            i += 1
+        self._admits_checked = True
+
+    def iter_admitted(self, meter: bool = True):
         """Yield ``(product ordinal, env)`` for every admitted tuple, in product order.
 
         ``env`` is one dict mutated in place: a consumer evaluates immediately and keeps
         nothing.  This is the walk the witness search of section 5.6 uses.
         """
-        self.work.walk(self.product)
+        if meter:
+            self.work.walk(self.product)
         bs = self.binders
         names = [b.name for b in bs]
         cols = [b.values(0, b.size) for b in bs]
@@ -578,6 +617,7 @@ class SuitePlan:
         )
         if cases == 0:
             raise OracleError("generation", "a suite admits zero cases")
+        self.check_admits()
         if self.spec.version == "v0" and out.wraps > 0:
             # Section 3.3 rule 2: the v0 harness evaluates U8 as Nat.
             raise OracleError(
