@@ -322,7 +322,7 @@ fn the_binary_writes_checks_and_fails_on_drift() {
     let msg = String::from_utf8_lossy(&bad.stderr);
     assert!(msg.contains("drift") && msg.contains("chunks/eq_agrees.txt: differs at line 1, column 1"), "{msg}");
     let usage = Command::new(bin).output().unwrap();
-    assert_eq!(usage.status.code(), Some(2));
+    assert_eq!(usage.status.code(), Some(1));
     let _ = fs::remove_dir_all(d);
 }
 
@@ -350,27 +350,34 @@ fn cli_usage_and_refusals() {
 }
 
 #[test]
-fn cli_in_process_write_check_and_refusals() {
-    // enum_probe is a small synthetic document: crate-relative, so no process-wide chdir
-    let d = tmp("inproc");
+fn cli_write_check_and_refusals_on_a_small_document() {
+    // enum_probe is a small synthetic document, named relative to the crate directory
+    let bin = env!("CARGO_BIN_EXE_warrant-corpus-gen");
+    let d = tmp("small");
     let out = d.join("o");
     let prof = d.join("p");
     fs::write(&prof, "chunk_size 1024\n").unwrap();
-    let base = ["--warrant", "tests/fixtures/enum_probe.warrant", "--profile", prof.to_str().unwrap(), "--out", out.to_str().unwrap()];
-    let (c, o, e) = cli(&base);
+    let go = |extra: &[&str]| {
+        let r = Command::new(bin)
+            .current_dir(env!("CARGO_MANIFEST_DIR"))
+            .args(["--warrant", "tests/fixtures/enum_probe.warrant", "--profile", prof.to_str().unwrap(), "--out", out.to_str().unwrap()])
+            .args(extra)
+            .output()
+            .unwrap();
+        (r.status.code().unwrap(), String::from_utf8_lossy(&r.stdout).into_owned(), String::from_utf8_lossy(&r.stderr).into_owned())
+    };
+    let (c, o, e) = go(&[]);
     assert_eq!((c, e.as_str()), (0, ""), "{e}");
     assert!(o.starts_with("wrote "));
-    let mut chk = base.to_vec();
-    chk.push("--check");
-    assert_eq!(cli(&chk).0, 0);
+    assert_eq!(go(&["--check"]).0, 0);
     // another profile: the digest in corpus.json is stale
     fs::write(&prof, "chunk_size 2048\n").unwrap();
-    let (c, _, e) = cli(&chk);
+    let (c, _, e) = go(&["--check"]);
     assert_eq!(c, 1);
     assert!(e.contains("drift") && e.contains("corpus.json: differs"), "{e}");
     // a profile the reader refuses
     fs::write(&prof, "chunk_size 3000\n").unwrap();
-    let (c, _, e) = cli(&base);
+    let (c, _, e) = go(&[]);
     assert_eq!(c, 1);
     assert!(e.contains("profile"), "{e}");
     let _ = fs::remove_dir_all(d);

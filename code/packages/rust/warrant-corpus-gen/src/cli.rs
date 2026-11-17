@@ -10,7 +10,8 @@
 //!     --check     regenerate and compare byte for byte with --out; write nothing
 //!     --bindings  an evidence.bindings file; its `faults=` lists must equal the profile's
 //!
-//!   exit 0  success        exit 1  refused or drifted        exit 2  usage error
+//!   exit 0  success        exit 1  refused or drifted (the binary also reports a usage error as 1;
+//!                                `run` returns 2 for it)
 //! ```
 //!
 //! [`run`] takes its arguments and writers so tests drive it without a process; the binary

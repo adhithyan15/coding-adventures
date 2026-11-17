@@ -2,6 +2,49 @@
   "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
   "version": 1,
   "package": "rust/warrant-corpus-gen",
-  "capabilities": [],
-  "justification": "S3a and S3b are pure in-memory computation: they lower an already parsed Warrant document to the model IR, evaluate it, enumerate the claims' binder domains, hash the streams with the in-crate sha256 and render canonical JSON into Strings. They read no file at run time (the tests embed the specifications and fixtures with include_str!), open no socket, spawn no process and read no environment variable. The CLI that reads the specification and writes the fixture directory arrives in slice S3c, which will declare its fs capabilities."
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "code/specs/**",
+      "justification": "The CLI (src/cli.rs) reads the three inputs the caller names: the .warrant specification (code/specs/*.warrant), the corpus.profile, and optionally an evidence.bindings file (code/packages/rust/*/evidence.bindings), each capped at 4 MiB and only if a regular file. fsio::check_corpus reads back the generated files of the output directory (corpus.json, cases.tfv, chunks/*.txt below code/specs/fixtures/*-warrant-v2/) to compare them byte for byte. generate() itself performs no I/O."
+    },
+    {
+      "category": "fs",
+      "action": "list",
+      "target": "code/specs/fixtures/*-warrant-v2/chunks",
+      "justification": "fsio.rs lists the chunks/ directory of the output directory so that write mode can refuse (never delete) a file the corpus does not own and --check can report one; it also stats paths with symlink_metadata to refuse symbolic links at chunks/ and at each target, and src/cli.rs stats an input file to refuse a non-regular file or one over the size cap."
+    },
+    {
+      "category": "fs",
+      "action": "create",
+      "target": "code/specs/fixtures/*-warrant-v2/chunks",
+      "justification": "Write mode creates the output directory and its chunks/ subdirectory if missing (create_dir_all), after every file path has been validated against the path guard (corpus.json, cases.tfv or chunks/<plain name>.txt) and before anything is written."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "code/specs/fixtures/*-warrant-v2/**",
+      "justification": "Write mode writes only the files of the generated corpus (corpus.json, cases.tfv, chunks/<claim>.txt), each to a temporary file in its own directory that is renamed into place (corpus.json last), so a reader never sees a half-written file. The path guard in fsio::guard refuses any other path (no separator beyond chunks/, no .., no leading dot, no absolute path) and a symbolic link at chunks/ or at a target, so nothing outside the output directory is written."
+    },
+    {
+      "category": "fs",
+      "action": "delete",
+      "target": "code/specs/fixtures/*-warrant-v2/**",
+      "justification": "The only deletion is of the generator's own temporary file (.<name>.tmp, in the directory of the file being written) after a failed write, so an aborted run leaves no litter. The generator never deletes a file it did not create in the same call; a stale file in chunks/ makes write mode refuse."
+    },
+    {
+      "category": "env",
+      "action": "read",
+      "target": "args",
+      "justification": "src/bin/warrant-corpus-gen.rs reads its command-line arguments (--warrant, --profile, --out, --check, --bindings). No environment variable is read."
+    },
+    {
+      "category": "stdout",
+      "action": "write",
+      "target": "stdout/stderr",
+      "justification": "The CLI reports success on standard output and a refusal or drift (file, line, column, byte offset; never file content) on standard error."
+    }
+  ],
+  "justification": "The generator proper (lowering, evaluation, enumeration, faults, emission into Strings) is pure in-memory computation. File access exists only to read the three inputs of the command line, to write the generated fixture directory atomically below the output directory the caller names (guarded against traversal and symbolic links), and to compare an existing directory with the regenerated one (--check). It opens no socket, spawns no process and reads no environment variable. The tests do their file work in temporary directories and embed the specifications with include_str!."
 }

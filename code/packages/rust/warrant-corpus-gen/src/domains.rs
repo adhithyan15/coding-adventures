@@ -379,7 +379,7 @@ pub fn s162_items(d: &Domain) -> Vec<&'static str> {
             Domain::Tuple(cs) => cs.iter().for_each(|c| walk(c, out, depth + 1)),
             Domain::Data { ctors, .. } => ctors
                 .iter()
-                .flat_map(|(_, fs)| fs.iter())
+                .flat_map(|(_, fields)| fields.iter())
                 .for_each(|c| walk(c, out, depth + 1)),
             Domain::Opt(t) | Domain::Res(t, _, _) => walk(t, out, depth + 1),
             _ => {}

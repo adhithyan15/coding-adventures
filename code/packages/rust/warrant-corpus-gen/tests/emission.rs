@@ -568,3 +568,23 @@ fn a_fault_on_an_op_no_claim_calls_fails_generation() {
     assert_eq!(e.code, code::FAULT);
     assert!(e.message.contains("no claim calls"), "{e}");
 }
+
+// ---- examples: signed values, and a value that does not fit ------------------------------
+
+#[test]
+fn examples_write_signed_values_and_refuse_values_outside_their_type() {
+    let ops = ["op s8(a: Bytes, b: Bytes) -> I8", "op n(a: Bytes, b: Bytes) -> Nat"];
+    let ok = doc_ops(" v1", &ops, "  example neg:\n    s8(b\"\", b\"00\") == -5i8\n  example big:\n    n(b\"\", b\"\") == 18446744073709551615\n");
+    let c = gen(&ok, "s.warrant", "").expect("generates");
+    assert_eq!(
+        c.cases_tfv,
+        "tfv 1\nwarrant/synth/example/neg R4 Kop S7338 Ka X Kb X00 Kexpect I-5\nwarrant/synth/example/big R4 Kop S6e Ka X Kb X Kexpect I18446744073709551615\n"
+    );
+    let j = parse(&c.corpus_json).unwrap();
+    assert_eq!(j.get("examples").a()[0].get("expected").s(), "-5");
+    assert!(c.chunk_files.is_empty());
+    let bad = doc_ops(" v1", &ops, "  example big:\n    n(b\"\", b\"\") == 18446744073709551615 + 1\n");
+    let e = gen(&bad, "s.warrant", "").unwrap_err();
+    assert_eq!(e.code, code::W0701, "{e}");
+    assert_eq!(e.at, "big");
+}

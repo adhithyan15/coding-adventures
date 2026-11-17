@@ -75,9 +75,12 @@ use crate::value::{ill_typed, Value};
 /// The most model frames that may be active at once (VER04 section 2, VER04r 14).
 pub const MAX_MODEL_FRAMES: usize = 64;
 
-/// The most pending tasks the evaluator's explicit work stack may hold.  64 model frames of
-/// 64 IR levels with up to three tasks per level is under 13,000; the bound is generous and
-/// protects the heap, not the call stack (the evaluator does not recurse).
+/// The most pending tasks the evaluator's explicit work stack may hold.  This is **not a new
+/// limit**: the number of pending tasks is bounded by the cost of the worst path through the
+/// expression, which is at most `max_ir_cost` (VER04r 4.2 rule 6), which is at most 65,536.
+/// The constant is that ceiling, kept as a guard on the heap (the evaluator does not recurse,
+/// so the call stack is not at risk) and checked on every pop so a hand-built tree cannot
+/// outrun it.
 pub const MAX_EVAL_TASKS: usize = 1 << 16;
 
 /// The counters the evaluator maintains.

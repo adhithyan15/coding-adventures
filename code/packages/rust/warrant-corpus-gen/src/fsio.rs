@@ -144,11 +144,18 @@ fn write_atomic(target: &Path, rel: &str, bytes: &[u8]) -> Result<(), GenError> 
         .file_name()
         .and_then(|n| n.to_str())
         .ok_or_else(|| io(rel, "no file name"))?;
-    let tmp: PathBuf = dir.join(format!(".{name}.{}.tmp", std::process::id()));
+    // One fixed temporary name per target; a stale one from a crashed run is overwritten, and a
+    // symbolic link planted at that name is refused like any other.  Two generators writing
+    // the same directory at once is not supported.
+    let tmp: PathBuf = dir.join(format!(".{name}.tmp"));
+    if is_symlink(&tmp) {
+        return Err(io(rel, "the temporary file is a symbolic link: refused"));
+    }
     let result = (|| {
         let mut f = fs::OpenOptions::new()
             .write(true)
-            .create_new(true)
+            .create(true)
+            .truncate(true)
             .open(&tmp)
             .map_err(|_| io(rel, "the temporary file cannot be created"))?;
         f.write_all(bytes)
