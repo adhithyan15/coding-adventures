@@ -15,6 +15,7 @@ import pathlib
 import shutil
 
 import pytest
+from conftest import write_lf
 
 from coding_adventures_warrant_oracle.cli import run
 from coding_adventures_warrant_oracle.corpus_v2 import canonical
@@ -41,7 +42,7 @@ def fresh(tmp_path: pathlib.Path) -> pathlib.Path:
 
 
 def load(root: pathlib.Path) -> dict:
-    return json.loads((root / "corpus.json").read_text())
+    return json.loads((root / "corpus.json").read_text(encoding="utf-8"))
 
 
 def save(root: pathlib.Path, corpus: dict) -> None:
@@ -308,7 +309,7 @@ def test_a_reordered_key_fails_the_canonical_form(tmp_path):
     root = fresh(tmp_path)
     corpus = load(root)
     reordered = {k: corpus[k] for k in sorted(corpus, reverse=True)}
-    (root / "corpus.json").write_text(json.dumps(reordered, indent=2) + "\n")
+    write_lf(root / "corpus.json", json.dumps(reordered, indent=2) + "\n")
     assert codes(root) == {"bytes"}
 
 
@@ -547,13 +548,13 @@ def test_bindings_must_agree_with_the_profile(tmp_path):
     lines += ["op cmp_fixed export=f static=N faults=invert", "op pick export=p fresh faults=missing-error,swap-choice"]
     lines += ["op echo export=e faults=truncate-last", "op size_of export=s faults=off-by-one"]
     lines += ["op wide export=w faults=xor-lsb,off-by-one"]
-    good_bindings.write_text("\n".join(lines) + "\n")
+    write_lf(good_bindings, "\n".join(lines) + "\n")
     assert codes(CORPUS, bindings=good_bindings) == set()
-    good_bindings.write_text("\n".join(lines[:-1] + ["op wide export=w faults=xor-lsb"]) + "\n")
+    write_lf(good_bindings, "\n".join(lines[:-1] + ["op wide export=w faults=xor-lsb"]) + "\n")
     assert codes(CORPUS, bindings=good_bindings) == {"drift"}
-    good_bindings.write_text("\n".join(lines + ["op extra export=e faults=invert"]) + "\n")
+    write_lf(good_bindings, "\n".join(lines + ["op extra export=e faults=invert"]) + "\n")
     assert codes(CORPUS, bindings=good_bindings) == {"drift"}
-    good_bindings.write_text("\n".join(lines + [lines[2]]) + "\n")
+    write_lf(good_bindings, "\n".join(lines + [lines[2]]) + "\n")
     with pytest.raises(OracleError):
         check(CORPUS, WARRANT, PROFILE, good_bindings)
     good_bindings.write_bytes(b"\xff\xfe")

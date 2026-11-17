@@ -13,6 +13,7 @@ import pathlib
 import shutil
 
 import pytest
+from conftest import write_lf
 
 from coding_adventures_warrant_oracle.cli import run
 from coding_adventures_warrant_oracle.corpus_v2 import canonical, derive
@@ -114,7 +115,7 @@ def test_profile_tokens_are_printable_ascii_only(text):
 
 
 def test_an_all_blind_fault_named_by_accept_blind_is_recorded_sorted():
-    out = gen(PROFILE.read_text())
+    out = gen(PROFILE.read_text(encoding="utf-8"))
     assert out.corpus["accepted_blind_faults"] == [EQ_BLIND, FLAG_BLIND]
     rows = {c["id"]: c for c in out.corpus["controls"]}
     for ident, claim in ((EQ_BLIND, "w0"), (FLAG_BLIND, "flag_ignores_choice")):
@@ -153,10 +154,10 @@ def test_accepting_a_fault_a_claim_can_see_is_a_profile_error():
 
 
 def test_accept_blind_does_not_excuse_a_fault_no_claim_calls():
-    cut = WARRANT.read_text().replace(
+    cut = WARRANT.read_text(encoding="utf-8").replace(
         "  claim flag_ignores_choice:\n    forall a: Bytes, c: Bool. flag(a, c) == keep(a, c)\n", ""
     )
-    assert cut != WARRANT.read_text()
+    assert cut != WARRANT.read_text(encoding="utf-8")
     with pytest.raises(OracleError) as err:
         gen("fault flag invert\naccept_blind flag invert\n", cut.encode())
     assert err.value.code == "generation" and "no claim calls" in err.value.message
@@ -178,7 +179,7 @@ def _fresh(tmp_path: pathlib.Path) -> pathlib.Path:
 
 
 def _edit(root: pathlib.Path, mutate) -> None:
-    corpus = json.loads((root / "corpus.json").read_text())
+    corpus = json.loads((root / "corpus.json").read_text(encoding="utf-8"))
     mutate(corpus)
     (root / "corpus.json").write_bytes(canonical(corpus))
 
@@ -202,21 +203,34 @@ def test_a_wrong_accepted_blind_faults_list_fails(tmp_path, mutate):
 def test_a_stale_accept_blind_line_fails_the_profile_check(tmp_path):
     # a profile that no longer excuses a fault the committed corpus accepts
     profile = tmp_path / "corpus.profile"
-    profile.write_text(PROFILE.read_text().replace("accept_blind flag swap-choice\n", ""))
+    stale = PROFILE.read_text(encoding="utf-8").replace("accept_blind flag swap-choice\n", "")
+    write_lf(profile, stale)
     with pytest.raises(OracleError) as err:
         check(profile=profile)
     assert err.value.code == "generation"
-    profile.write_text(PROFILE.read_text() + "accept_blind flag invert\n")
+    write_lf(profile, PROFILE.read_text(encoding="utf-8") + "accept_blind flag invert\n")
     with pytest.raises(OracleError) as err:
         check(profile=profile)
     assert err.value.code == "corpus"
+
+
+def test_a_profile_written_with_crlf_is_refused_as_corpus(tmp_path):
+    # Why every parsed fixture is written with LF (write_lf): Path.write_text on Windows
+    # turns each newline into CRLF, and the profile reader refuses a CR before any
+    # generation check runs. This pins that refusal so the fixtures above cannot pass for it.
+    profile = tmp_path / "corpus.profile"
+    profile.write_text(PROFILE.read_text(encoding="utf-8"), encoding="utf-8", newline="\r\n")
+    assert b"\r\n" in profile.read_bytes()
+    with pytest.raises(OracleError) as err:
+        check(profile=profile)
+    assert err.value.code == "corpus" and "LF line endings" in err.value.message
 
 
 # -- the generator pin ([D13]) ------------------------------------------------------------------
 
 
 def _generator() -> tuple[str, str]:
-    g = json.loads((CORPUS / "corpus.json").read_text())["generator"]
+    g = json.loads((CORPUS / "corpus.json").read_text(encoding="utf-8"))["generator"]
     return g["name"], g["version"]
 
 
