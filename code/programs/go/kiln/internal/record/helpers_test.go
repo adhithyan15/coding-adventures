@@ -3,7 +3,9 @@ package record
 import (
 	"crypto/sha256"
 	"encoding/hex"
+	"errors"
 	"fmt"
+	"io/fs"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -26,6 +28,29 @@ func requireGit(t *testing.T) {
 	t.Setenv("USERPROFILE", home)
 	t.Setenv("XDG_CONFIG_HOME", filepath.Join(home, "xdg"))
 	t.Setenv("GIT_CONFIG_NOSYSTEM", "1")
+}
+
+// quietGitEnv turns off git's background housekeeping for one git process.
+//
+// Newer git (the ubuntu-26.04 runner's) runs `git maintenance run --auto`
+// after commit, fetch and friends. That creates and deletes
+// .git/objects/maintenance.lock (and may auto-gc, rewriting loose objects and
+// packs) in a process that can outlive the command that started it. The tests
+// build a template repository once and then walk and copy it; a lock file that
+// readdir lists and that is gone by the time of the lstat made
+// TestStepRefusesAResealedPreWhoseContentIsWrong fail with
+// "lstat .../.git/objects/maintenance.lock: no such file or directory" (D29).
+// A fixture repository has nothing to maintain, so no git the helpers start
+// may do it: the race is removed rather than tolerated. (GIT_CONFIG_COUNT
+// config has the highest precedence short of -c, so no user or repo config
+// can turn maintenance back on.)
+func quietGitEnv() []string {
+	return []string{
+		"GIT_CONFIG_COUNT=3",
+		"GIT_CONFIG_KEY_0=maintenance.auto", "GIT_CONFIG_VALUE_0=false",
+		"GIT_CONFIG_KEY_1=gc.auto", "GIT_CONFIG_VALUE_1=0",
+		"GIT_CONFIG_KEY_2=gc.autoDetach", "GIT_CONFIG_VALUE_2=false",
+	}
 }
 
 // runGit runs git in dir and returns its trimmed output; failure is fatal.
@@ -51,6 +76,7 @@ func tryGitStdin(dir, stdin string, args ...string) (string, error) {
 	cmd := exec.Command("git", args...)
 	cmd.Dir = dir
 	cmd.Stdin = strings.NewReader(stdin)
+	cmd.Env = append(os.Environ(), quietGitEnv()...)
 	out, err := cmd.CombinedOutput()
 	return strings.TrimSpace(string(out)), err
 }
@@ -61,6 +87,7 @@ func tryGit(dir string, args ...string) (string, error) {
 	cmd.Env = append(os.Environ(),
 		"GIT_AUTHOR_NAME=t", "GIT_AUTHOR_EMAIL=t@example.com",
 		"GIT_COMMITTER_NAME=t", "GIT_COMMITTER_EMAIL=t@example.com")
+	cmd.Env = append(cmd.Env, quietGitEnv()...)
 	out, err := cmd.CombinedOutput()
 	return strings.TrimSpace(string(out)), err
 }
@@ -169,6 +196,11 @@ func templateRepo(t *testing.T, files map[string]string, initArgs []string) stri
 	runGit(t, dir, append([]string{"init", "-q"}, initArgs...)...)
 	runGit(t, dir, "config", "commit.gpgsign", "false")
 	runGit(t, dir, "config", "core.autocrlf", "false")
+	// Persist the same switch in the template, so a git a test later runs in a
+	// COPY of it (which does not go through runGit) is quiet too.
+	runGit(t, dir, "config", "maintenance.auto", "false")
+	runGit(t, dir, "config", "gc.auto", "0")
+	runGit(t, dir, "config", "gc.autoDetach", "false")
 	for _, p := range names {
 		writeFile(t, dir, p, files[p])
 	}
@@ -190,6 +222,13 @@ func copyTree(t *testing.T, src, dst string) {
 		to := filepath.Join(dst, rel)
 		info, err := d.Info()
 		if err != nil {
+			// Belt and braces beside quietGitEnv: a transient file under .git
+			// (a *.lock) that vanished between readdir and lstat is not part
+			// of the repository. Anything else vanishing is a real error.
+			if errors.Is(err, fs.ErrNotExist) && strings.HasSuffix(p, ".lock") &&
+				(rel == ".git" || strings.HasPrefix(rel, ".git"+string(filepath.Separator))) {
+				return nil
+			}
 			return err
 		}
 		switch {
