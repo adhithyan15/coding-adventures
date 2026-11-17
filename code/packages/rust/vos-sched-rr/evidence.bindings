@@ -28,12 +28,12 @@ struct CfgN path=vos_sched_rr::ghost::CfgN fields=v:u8
 enum Upd path=vos_sched_contract::Upd ctors=Changed,Unchanged,OutOfRange
 enum Pick path=vos_sched_contract::Pick ctors=Idle,Run(0:u8)
 
-op init export=vos_ghost_init ret=Impl faults=field-zero
+op init export=vos_ghost_init ret=Impl faults=field-flip
 op insert_out export=vos_ghost_insert_out args=Impl,u8 ret=Upd faults=wrong-ctor
 op insert_img export=vos_ghost_insert_img args=Impl,u8 ret=Impl faults=field-zero
 op remove_out export=vos_ghost_remove_out args=Impl,u8 ret=Upd faults=wrong-ctor
 op remove_img export=vos_ghost_remove_img args=Impl,u8 ret=Impl faults=field-zero
 op dispatch_out export=vos_ghost_dispatch_out args=Impl ret=Pick faults=wrong-ctor
 op dispatch_img export=vos_ghost_dispatch_img args=Impl ret=Impl faults=field-zero
-op alpha_w export=vos_ghost_alpha_w args=Impl ret=AbsW faults=field-zero
+op alpha_w export=vos_ghost_alpha_w args=Impl ret=AbsW faults=field-zero,field-flip
 op cfg_n export=vos_ghost_cfg_n ret=CfgN faults=field-zero

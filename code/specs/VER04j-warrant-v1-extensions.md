@@ -660,6 +660,16 @@ and the `Fault::FieldFlip` variant are emitted only when some `evidence.bindings
 line lists `field-flip` in `faults=`. A harness that never names it is byte for
 byte what it was before the fault existed.
 
+*Aiming a sabotage run (`WARRANT_EVIDENCE_ATTACK`).* A sabotage run
+(`WARRANT_EVIDENCE_FAULT=<fault>`) faults every operation that lists the fault. Two
+operations that both list `field-flip` can then cancel: an `init` flipped and the
+`alpha` that reads it flipped again give back the honest answer, so a claim such as
+`alpha(init()) == empty` sees nothing. A harness that names `field-flip` therefore also
+reads `WARRANT_EVIDENCE_ATTACK=<op>` once and lets only that operation obey the fault
+(the same effect as the negative controls' one-operation scope). Unset, behaviour is
+unchanged. The switch is emitted by the same prelude region as `fault_field_flip`, so
+a harness that never names the fault does not contain it.
+
 *What it cannot catch.* A single-field flip can stay inside the set a claim
 accepts: a claim that asserts only "the result is in the image of a
 representation function" (a closure claim such as `init() == R(init())`) is not

@@ -311,10 +311,13 @@ fn field_flip_is_emitted_only_for_a_binding_that_names_it() {
     // a harness that names `field-zero` alone is what it was before the fault existed.
     let zero = attack("Rec", "field-zero", "").unwrap();
     assert!(!zero.contains("fault_field_flip") && !zero.contains("FieldFlip"));
+    assert!(!zero.contains("WARRANT_EVIDENCE_ATTACK") && !zero.contains("sabotage_op"));
     assert!(zero.contains("fn fault_field_zero"));
     let flip = attack("Rec", "field-flip", "").unwrap();
     assert!(flip.contains("fn fault_field_flip(v: V) -> V {"));
     assert!(flip.contains("Fault::FieldFlip => fault_field_flip(v),"));
+    // ... and with it the per-operation sabotage switch read by `fault_for`.
+    assert!(flip.contains("WARRANT_EVIDENCE_ATTACK") && flip.contains("None if sabotage_op()"));
     assert!(flip.contains("FieldFlip,") && flip.contains("\"field-flip\""));
     // Naming both emits both, and the zero fault's arm is untouched.
     let both = attack("Rec", "field-zero,field-flip", "").unwrap();

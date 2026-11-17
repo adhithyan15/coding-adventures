@@ -737,11 +737,23 @@ thread_local! {
     static ATTACK_OP: std::cell::RefCell<Option<&'static str>> = const { std::cell::RefCell::new(None) };
 }
 
+/// WX-SV2: `WARRANT_EVIDENCE_ATTACK=<op>` aims a sabotage run at one operation.
+/// Two operations that both list `field-flip` would otherwise both be flipped,
+/// and flipping an `init` and the `alpha` that reads it cancels (`(x ^ 1) ^ 1`),
+/// so a claim that relates the two (`alpha(init()) == empty`) would see nothing.
+/// Read once; unset means every operation that lists the fault obeys it.
+fn sabotage_op() -> Option<&'static str> {
+    static OP: std::sync::OnceLock<Option<String>> = std::sync::OnceLock::new();
+    OP.get_or_init(|| std::env::var("WARRANT_EVIDENCE_ATTACK").ok())
+        .as_deref()
+}
+
 /// The fault `op`'s adapter should obey: the requested one unless a negative
 /// control is attacking a different operation.
 fn fault_for(op: &str, fault: Fault) -> Fault {
     ATTACK_OP.with(|a| match *a.borrow() {
         Some(target) if target != op => Fault::None,
+        None if sabotage_op().is_some_and(|t| t != op) => Fault::None,
         _ => fault,
     })
 }
