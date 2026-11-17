@@ -4737,6 +4737,32 @@ revocation, perform HTTP, authorize OAuth transport, or open a network
 connection. Repository-owned TLS record-protection composition and state
 remain prerequisites, and concrete HTTPS remains unavailable.
 
+The next bounded record-protection slice composes only the reviewed
+`TLS_CHACHA20_POLY1305_SHA256` route. It must consume the selected-suite-bound
+`tls13-record-protection-state`, reject every other AEAD before reserving a
+sequence number, and bind the reserved 256-bit key and 96-bit nonce directly to
+the repository-owned fixed-memory ChaCha20-Poly1305 boundary. Sealing must
+encode one policy-authorized `TLSInnerPlaintext`, authenticate the exact
+five-byte `TLSCiphertext` header as associated data, append the exact 16-byte
+tag, and wipe its caller-owned cleartext scratch before returning. Opening must
+validate one exact outer record before consuming a sequence, authenticate its
+exact retained header before releasing any cleartext, decode only a
+policy-authorized inner content type, and return a non-cloneable borrowed view
+whose drop path wipes the successfully opened caller-owned storage. Public
+framing, policy, and capacity failures must occur before sequence consumption;
+an authentication failure must consume its reserved sequence and leave caller
+output unchanged.
+
+This narrow composition does not enable either AES-GCM suite, derive traffic
+secrets, establish handshake epochs, process a transcript, authenticate
+`CertificateVerify` or `Finished`, validate certificates, construct or validate
+a path, check a hostname or revocation, perform key updates, read or write a
+stream, open a socket, authorize an HTTP or OAuth request, or provide a TLS
+connector. The caller must retain distinct read/write state and select the
+correct traffic epoch. Complete handshake state, the remaining record routes,
+stream I/O, certificate validation, revocation, and HTTP composition remain
+blockers; concrete HTTPS remains unavailable.
+
 An allocation-free `tls13-supported-versions` prerequisite now owns the exact
 RFC 8446 `supported_versions` extension data emitted and consumed by a future
 repository-owned TLS 1.3 client. A caller supplies a preference-ordered slice
