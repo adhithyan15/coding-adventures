@@ -9,7 +9,7 @@ uv pip install -e ".[dev]" --quiet
 # version that corpus.json records ([D13], VER04r 16.8): a generator bump fails here until the
 # fixture is regenerated and this pin is reviewed with it. --profile is the fixture's own
 # hand-written corpus.profile, so an edit to it moves profile_sha256 and fails ([D14]).
-.venv/bin/python -m coding_adventures_warrant_oracle verify-v2 ../../../specs/fixtures/ct-compare-warrant-v2 --warrant ../../../specs/ct-compare.warrant --profile ../../../specs/fixtures/ct-compare-warrant-v2/corpus.profile --bindings ../../rust/ct-compare/evidence.bindings --expect-generator warrant-corpus-gen@0.4.0
+.venv/bin/python -m coding_adventures_warrant_oracle verify-v2 ../../../specs/fixtures/ct-compare-warrant-v2 --warrant ../../../specs/ct-compare.warrant --profile ../../../specs/fixtures/ct-compare-warrant-v2/corpus.profile --bindings ../../rust/ct-compare/evidence.bindings --expect-generator warrant-corpus-gen@0.5.0
 .venv/bin/python -m coding_adventures_warrant_oracle check --spec ../../../specs/ct-compare.warrant
 .venv/bin/python -m coding_adventures_warrant_oracle check --spec ../../../specs/gf256.warrant
 .venv/bin/python -m coding_adventures_warrant_oracle check --spec ../../../specs/wasm-leb128.warrant

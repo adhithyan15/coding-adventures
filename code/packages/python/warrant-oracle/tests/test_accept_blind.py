@@ -231,7 +231,7 @@ def test_expect_generator_accepts_the_recorded_pair_and_refuses_any_other():
 
 
 def test_expect_generator_syntax():
-    assert parse_expected_generator("warrant-corpus-gen@0.4.0") == ("warrant-corpus-gen", "0.4.0")
+    assert parse_expected_generator("warrant-corpus-gen@0.5.0") == ("warrant-corpus-gen", "0.4.0")
     for bad in ("", "x", "@1", "x@", "x@y@z", "x y@1", "x@1 ", "x@é1", "a" * 65 + "@1"):
         with pytest.raises(OracleError) as err:
             parse_expected_generator(bad)
