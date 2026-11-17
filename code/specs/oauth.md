@@ -5930,9 +5930,10 @@ decoded ClientHello key-share vectors, the exact retry extension data, and the
 policy-authorized group descriptor as non-copyable transition evidence.
 An additional final-share binding step borrows that completed transition and
 decodes the exact ServerHello key-share extension data directly against the
-transition's retained second-ClientHello offer under the same caller-supplied
-named-group policy. Success returns non-copyable continuity evidence retaining
-both the borrowed retry transition and the decoded ServerHello share, so a
+transition's retained second-ClientHello offer under the caller-supplied
+named-group policy boundary. Success returns non-copyable continuity evidence
+retaining both the borrowed retry transition and the decoded ServerHello
+share, so a
 caller cannot substitute an unrelated offer between retry validation and
 final server selection. The ServerHello decoder's exact single-entry framing,
 key-exchange-length policy, and offered-group requirement remain authoritative.

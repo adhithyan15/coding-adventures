@@ -14692,7 +14692,7 @@ version = "0.1.0"
 
 [[package]]
 name = "tls13-key-share-retry"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "tls13-key-share",
  "tls13-named-group-policy",
