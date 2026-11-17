@@ -17,31 +17,35 @@ cargo run -q -p coding_adventures_warrant_grammar --example gen_evidence -- --ch
 # Run it and rewrite the evidence manifest.  Three controls are known to fail (VOS-D065);
 # warrant/check_evidence.sh names them and demands exactly those.
 sh warrant/check_evidence.sh
-# Sabotage: each fault makes the suite of its claim report `not ok`.  The claims rep_init,
+# Sabotage: each fault makes the suite of its claim report `not ok`.  A negative control passes only if the sabotaged run
+# printed a `not ok ` line AND no `Bail out!` anywhere (not anchored: a subject's unterminated stdout write could put it
+# mid-line).  A pipeline's status is its last command's, so the old `grep -q '^not ok '` passed a run where one test
+# failed as intended and a later one hung (observer timeout: `Bail out!`, exit 70) and the hang went unreported.  The
+# pipe also hides the binary's exit status, so this reads the TAP on stdout.  The claims rep_init,
 # dispatch_rep_post and safety_init have no line: no fault the generator offers changes what they see
 # (field-zero is inert on the zero initial state and self-consistent for rep_post; VOS-D065, VOS-D087).
-WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/exhaustive/rep_alpha cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | grep -q '^not ok '
-WARRANT_EVIDENCE_FAULT=wrong-ctor WARRANT_EVIDENCE_FILTER=/exhaustive/insert_rep_lo cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | grep -q '^not ok '
-WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/exhaustive/insert_rep_lo cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | grep -q '^not ok '
-WARRANT_EVIDENCE_FAULT=wrong-ctor WARRANT_EVIDENCE_FILTER=/exhaustive/insert_rep_hi cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | grep -q '^not ok '
-WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/exhaustive/insert_rep_hi cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | grep -q '^not ok '
-WARRANT_EVIDENCE_FAULT=wrong-ctor WARRANT_EVIDENCE_FILTER=/exhaustive/remove_rep_lo cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | grep -q '^not ok '
-WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/exhaustive/remove_rep_lo cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | grep -q '^not ok '
-WARRANT_EVIDENCE_FAULT=wrong-ctor WARRANT_EVIDENCE_FILTER=/exhaustive/remove_rep_hi cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | grep -q '^not ok '
-WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/exhaustive/remove_rep_hi cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | grep -q '^not ok '
-WARRANT_EVIDENCE_FAULT=wrong-ctor WARRANT_EVIDENCE_FILTER=/exhaustive/dispatch_rep cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | grep -q '^not ok '
-WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/exhaustive/dispatch_rep cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | grep -q '^not ok '
-WARRANT_EVIDENCE_FAULT=wrong-ctor WARRANT_EVIDENCE_FILTER=/exhaustive/insert_safe cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | grep -q '^not ok '
-WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/exhaustive/insert_safe cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | grep -q '^not ok '
-WARRANT_EVIDENCE_FAULT=wrong-ctor WARRANT_EVIDENCE_FILTER=/exhaustive/remove_safe cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | grep -q '^not ok '
-WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/exhaustive/remove_safe cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | grep -q '^not ok '
-WARRANT_EVIDENCE_FAULT=wrong-ctor WARRANT_EVIDENCE_FILTER=/exhaustive/dispatch_safe cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | grep -q '^not ok '
-WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/exhaustive/dispatch_safe cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | grep -q '^not ok '
-WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/exhaustive/safety_alpha_build cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | grep -q '^not ok '
-WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/exhaustive/pointer_kept cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | grep -q '^not ok '
-WARRANT_EVIDENCE_FAULT=wrong-ctor WARRANT_EVIDENCE_FILTER=/exhaustive/dispatch_det_out cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | grep -q '^not ok '
-WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/exhaustive/dispatch_det_img cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | grep -q '^not ok '
-WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/example/n_is_eight cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | grep -q '^not ok '
-WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/example/insert_three_sets_bit_three cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | grep -q '^not ok '
-WARRANT_EVIDENCE_FAULT=wrong-ctor WARRANT_EVIDENCE_FILTER=/example/dispatch_from_two_picks_three cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | grep -q '^not ok '
-WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/example/dispatch_from_two_moves_pointer_to_four cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/exhaustive/rep_alpha cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
+WARRANT_EVIDENCE_FAULT=wrong-ctor WARRANT_EVIDENCE_FILTER=/exhaustive/insert_rep_lo cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
+WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/exhaustive/insert_rep_lo cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
+WARRANT_EVIDENCE_FAULT=wrong-ctor WARRANT_EVIDENCE_FILTER=/exhaustive/insert_rep_hi cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
+WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/exhaustive/insert_rep_hi cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
+WARRANT_EVIDENCE_FAULT=wrong-ctor WARRANT_EVIDENCE_FILTER=/exhaustive/remove_rep_lo cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
+WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/exhaustive/remove_rep_lo cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
+WARRANT_EVIDENCE_FAULT=wrong-ctor WARRANT_EVIDENCE_FILTER=/exhaustive/remove_rep_hi cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
+WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/exhaustive/remove_rep_hi cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
+WARRANT_EVIDENCE_FAULT=wrong-ctor WARRANT_EVIDENCE_FILTER=/exhaustive/dispatch_rep cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
+WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/exhaustive/dispatch_rep cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
+WARRANT_EVIDENCE_FAULT=wrong-ctor WARRANT_EVIDENCE_FILTER=/exhaustive/insert_safe cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
+WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/exhaustive/insert_safe cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
+WARRANT_EVIDENCE_FAULT=wrong-ctor WARRANT_EVIDENCE_FILTER=/exhaustive/remove_safe cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
+WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/exhaustive/remove_safe cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
+WARRANT_EVIDENCE_FAULT=wrong-ctor WARRANT_EVIDENCE_FILTER=/exhaustive/dispatch_safe cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
+WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/exhaustive/dispatch_safe cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
+WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/exhaustive/safety_alpha_build cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
+WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/exhaustive/pointer_kept cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
+WARRANT_EVIDENCE_FAULT=wrong-ctor WARRANT_EVIDENCE_FILTER=/exhaustive/dispatch_det_out cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
+WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/exhaustive/dispatch_det_img cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
+WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/example/n_is_eight cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
+WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/example/insert_three_sets_bit_three cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
+WARRANT_EVIDENCE_FAULT=wrong-ctor WARRANT_EVIDENCE_FILTER=/example/dispatch_from_two_picks_three cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
+WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/example/dispatch_from_two_moves_pointer_to_four cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'

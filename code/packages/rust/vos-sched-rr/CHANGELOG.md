@@ -26,3 +26,10 @@ All notable changes to this package are documented here.
   including fairness, wraparound, out-of-range ids, idle and a mutation sanity check.
 - BUILD and BUILD_windows: tests with and without `ghost`, shape check, capability analyzer,
   `check-doc`, the generated-harness drift check, the evidence run and 25 sabotage lines.
+
+### Fixed
+
+- VOS-D090: regenerated `tests/generated/warrant_evidence.rs` for the WD-HARN1b observer prelude (the
+  `gen_evidence --check` drift introduced when #19550 and this crate merged in parallel) and moved all
+  25 BUILD and BUILD_windows sabotage lines to the bail-out-aware tail (`not ok ` seen AND no
+  `Bail out!`), the one `vos-sched-fp-bitmap` uses.
