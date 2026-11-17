@@ -7,7 +7,7 @@
     warrant-oracle emit-v2   --spec gf256.warrant --out scratch.json \
                              [--depth slim|full] [--suite NAME ...]
     warrant-oracle verify-v2 <corpus-dir> --warrant x.warrant --profile corpus.profile \
-                             [--bindings evidence.bindings]
+                             [--bindings evidence.bindings] [--expect-generator name@version]
     warrant-oracle check     --spec x.warrant
 
 Exit status: ``0`` the gate passed; ``1`` a mismatch (the corpus and the oracle
@@ -30,7 +30,7 @@ from .lower import lower_document
 from .parser import parse_source
 from .profile import parse_profile
 from .suites import DEFAULT_BUDGET, DEFAULT_CHUNK_SIZE
-from .verify_v2 import verify_v2
+from .verify_v2 import parse_expected_generator, verify_v2
 
 MAX_SPEC_READ = (1 << 20) + 1
 
@@ -80,6 +80,11 @@ def build_parser() -> argparse.ArgumentParser:
     w.add_argument("--warrant", required=True, help="the .warrant source the corpus was made from")
     w.add_argument("--profile", required=True, help="the corpus.profile (budget, faults, ...)")
     w.add_argument("--bindings", help="an evidence.bindings whose faults= lists must match")
+    w.add_argument(
+        "--expect-generator",
+        metavar="NAME@VERSION",
+        help="the generator name and version corpus.json must record (a bump then fails the build)",
+    )
     w.add_argument("--repo-root", help="the repository root the corpus's spec path is relative to")
     return ap
 
@@ -120,6 +125,9 @@ def _verify_v2(args: argparse.Namespace) -> int:
         pathlib.Path(args.profile),
         pathlib.Path(args.bindings) if args.bindings else None,
         repo_root=pathlib.Path(args.repo_root) if args.repo_root else None,
+        expect_generator=(
+            parse_expected_generator(args.expect_generator) if args.expect_generator is not None else None
+        ),
     )
     for miss in report.mismatches:
         print(

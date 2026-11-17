@@ -8,18 +8,25 @@ oracle's independent reader and by nothing else::
     slim_stride auto
     max_ir_cost 32768
     fault multiply generator-shift
+    accept_blind multiply generator-shift
 
 ``max_ir_cost`` is the **only** way to raise the per-expression IR cost bound above
 its default of 2,000 (ceiling 65,536); no command-line flag or environment
 variable can (section 4.2 rule 6: an override is a second place for the limit to
 live, and the report could not show it).  The reader is strict: LF only, one
 value per key, no duplicates, no unknown keys, ranges checked, and (section 16.4
-item 7, closed by slice S4 part 2) no empty token, no repeated ``fault`` or
+item 7, closed by slice S4 part 2) no token that is empty or not printable ASCII, no repeated ``fault`` or
 ``slim_chunk`` line, no ``budget 0`` and no ``slim_stride 0``.
+
+``accept_blind <op> <fault>`` (owner decision [D15], section 16.8) excuses a fault that
+every candidate claim is blind to.  The reader checks that the line repeats a ``fault``
+line of the same file and does not repeat itself; that the fault really is all-blind is
+checked against the document (:func:`.faults.derive_controls`).
 """
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, field
 
 from .errors import OracleError
@@ -27,6 +34,9 @@ from .errors import OracleError
 DEFAULT_MAX_IR_COST = 2_000
 MAX_IR_COST_CEILING = 65_536
 MAX_PROFILE_BYTES = 64 * 1024
+# A token is printable ASCII only: no space, tab, NBSP, NEL, control character or BOM can hide
+# in a name, and the generator's reader applies the same byte rule.
+_TOKEN = re.compile(r"[!-~]+")
 
 
 @dataclass
@@ -37,6 +47,7 @@ class Profile:
     max_ir_cost: int = DEFAULT_MAX_IR_COST
     slim_chunks: list = field(default_factory=list)  # [(claim, index)]
     faults: list = field(default_factory=list)  # [(op, fault)]
+    accept_blind: list = field(default_factory=list)  # [(op, fault)]
 
 
 def _int(text: str) -> int:
@@ -69,8 +80,8 @@ def parse_profile(raw: bytes) -> Profile:
         if not line:
             continue
         parts = line.split(" ")
-        if any(not token or token != token.strip() for token in parts):
-            raise OracleError("corpus", "a profile line has an empty or padded token")
+        if not all(_TOKEN.fullmatch(token) for token in parts):
+            raise OracleError("corpus", "a profile token is empty or not printable ASCII")
         key = parts[0]
         if key in ("budget", "chunk_size", "slim_stride", "max_ir_cost"):
             if key in seen or len(parts) != 2:
@@ -94,8 +105,15 @@ def parse_profile(raw: bytes) -> Profile:
             if row in prof.faults:
                 raise OracleError("corpus", "a fault line is repeated")
             prof.faults.append(row)
+        elif key == "accept_blind" and len(parts) == 3:
+            row = (parts[1], parts[2])
+            if row in prof.accept_blind:
+                raise OracleError("corpus", "an accept_blind line is repeated")
+            prof.accept_blind.append(row)
         else:
             raise OracleError("corpus", "an unknown or malformed profile line")
+    if any(row not in prof.faults for row in prof.accept_blind):
+        raise OracleError("corpus", "an accept_blind line must repeat a fault line of this profile")
     if not DEFAULT_MAX_IR_COST <= prof.max_ir_cost <= MAX_IR_COST_CEILING:
         raise OracleError("corpus", "max_ir_cost is 2,000..65,536")
     cs = prof.chunk_size

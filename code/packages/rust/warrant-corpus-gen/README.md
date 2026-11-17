@@ -43,7 +43,7 @@ on it, so changing it rebuilds no shared crate (VER04r section 13, "Rule").
 | module | what it is |
 |---|---|
 | `json` | the VER04i 9.1 canonical writer: sorted keys, two-space indent, LF, `\uXXXX` escapes. No `serde`: a canonical form must not inherit a library's defaults |
-| `profile` | the strict reader of `corpus.profile` (VER04r 8.4): LF only, canonical decimals, `max_ir_cost` the only way to raise the cost bound |
+| `profile` | the strict reader of `corpus.profile` (VER04r 8.4): LF only, only an empty line is skipped, canonical decimals, `max_ir_cost` the only way to raise the cost bound, `accept_blind <op> <fault>` lines |
 | `types` | the small type language of `ir.core` (`Bool Int Nat U8..I64 Bytes Bytes<N> Result<T,E>`) |
 | `ir` | the 26 `ir.core` tags of VER04r Appendix A and their JSON form |
 | `lower` | syntax-directed, unoptimised lowering with a small annotating typer; the level refusals; `census` |
@@ -86,6 +86,14 @@ file the corpus does not own (it never deletes anything), writes each file to a 
 renames it, and renames `corpus.json` last. **`--check`** regenerates in memory and compares
 `corpus.json`, `cases.tfv`, every chunk file and the exact file set of `chunks/` byte for byte,
 reporting each difference as `file: differs at line L, column C (byte B)`; it writes nothing.
+
+**The committed ct-compare fixture.** `code/specs/fixtures/ct-compare-warrant-v2/` is this
+command's output for ct-compare (its README has the exact command), and this package's `BUILD`
+runs it with `--check`. `corpus.json` records `generator` `{"name", "version"}`, so bumping this
+crate's version fails that line until the fixture is regenerated and the diff reviewed (VER04r
+16.8 [D13]). `--check` does not compare the authored files of the directory, but
+`profile_sha256` in `corpus.json` is the digest of the `--profile` file, so the build passes the
+fixture's own `corpus.profile` and an edit to it fails the line ([D14]).
 
 ### As a library
 
@@ -320,6 +328,12 @@ control the generator takes the *candidate claims* (claims that call the op) and
 ```
 
 Generation fails (`fault`) only if every candidate of a fault is blind, or no claim calls its op.
+A profile line `accept_blind <op> <fault>` ([D15], VER04r 16.8) excuses the first: the control row is
+emitted with an empty `required_claims` and its control id (`warrant/<module>/negctl/exhaustive/<op>/<fault>`)
+is listed, sorted, in `accepted_blind_faults`. The line must repeat a `fault` line, may not repeat, and
+naming a fault a claim *can* see is a `profile` error (a stale acceptance excuses nothing); it never
+excuses an op no claim calls. ct-compare has none; `python/warrant-oracle/tests/fixtures/accept-blind-v2/`
+is the small synthetic corpus both implementations agree on.
 `ignore-high-bit` (`ir.fixed`, VER04r 8.2 [D9]) is emitted as data with `requires: ["ir.fixed"]`
 and `deferred` witnesses: ct-compare's `eq_u64` control is **not-live** until S10.
 
@@ -338,18 +352,15 @@ directory (temporary file then rename, within `fsio.rs`), **delete** only that t
 after a failed write; **env read** of the arguments and **stdout write** in the CLI. The library's
 generator (`generate`) does no I/O; everything is in `fsio.rs`, `cli.rs` and the bin.
 
-## Known gaps (deferred to S4 part 2, S3d and S10)
+## Known gaps (deferred to S10 and later)
 
 - The S3a review gaps L5 (a claim with no subject call is now `W0701`), L6 (`classify` keeps
   the first typing pass) and L8 (the profile reader refuses repeated `fault`/`slim_chunk` lines,
-  an empty token, `budget 0` and `slim_stride 0`) are closed. The oracle's own reader still
-  accepts them until S4 part 2.
+  an empty token, `budget 0` and `slim_stride 0`) are closed, and so is the whitespace-only line
+  the reader used to skip (S3d).
 - The evaluator is iterative; per-node `has_subject`/`may_fail_or_wrap` are recomputed per case
   on traced suites (a cache is a possible later optimisation, not needed for the bounds).
-- `accepted_blind_faults` is always `[]` (VER04r 16.6 OPEN 1: the spec names no source for it);
-  `ir.fixed` data nodes (`bit_and`, `bit_xor`) have no Appendix A shape yet (16.6 OPEN 2).
-- The committed `ct-compare-warrant-v2/` directory, and the build-tool row that runs `--check`
-  when the spec, the fixture or the binding changes, are S3d.
+- `ir.fixed` data nodes (`bit_and`, `bit_xor`) have no Appendix A shape yet (16.6 OPEN 2).
 - `has_subject`/`may_fail_or_wrap` are still recomputed per case on traced suites (review LOW 4,
   not needed for the bounds).
 - The oracle admits IR nesting of 65 (off by one against the limit of 64); a note for S4 part 2.

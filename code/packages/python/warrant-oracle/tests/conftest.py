@@ -22,6 +22,17 @@ def adopter_bytes(name: str) -> bytes:
     return (SPECS / f"{name}.warrant").read_bytes()
 
 
+def write_lf(path: pathlib.Path, text: str) -> None:
+    """Write ``text`` to ``path`` byte-for-byte, with LF line endings on every operating system.
+
+    ``Path.write_text`` uses the platform newline, so on Windows it turns each ``\\n`` into
+    ``\\r\\n``. The profile, bindings and corpus readers parse bytes strictly and refuse a CR
+    as a ``corpus`` error, so a test that meant to break one defect would fail for CRLF
+    instead. Encoding the text here keeps the fixture identical on Linux, macOS and Windows.
+    """
+    path.write_bytes(text.encode("utf-8"))
+
+
 #: A tiny v0 document used all over the tests: three binders of different sizes,
 #: a refinement, a relational claim and a reference claim.
 TINY = b"""warrant tiny v1

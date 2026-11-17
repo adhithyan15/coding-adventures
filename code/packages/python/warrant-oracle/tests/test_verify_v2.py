@@ -15,6 +15,7 @@ import pathlib
 import shutil
 
 import pytest
+from conftest import write_lf
 
 from coding_adventures_warrant_oracle.cli import run
 from coding_adventures_warrant_oracle.corpus_v2 import canonical
@@ -41,7 +42,7 @@ def fresh(tmp_path: pathlib.Path) -> pathlib.Path:
 
 
 def load(root: pathlib.Path) -> dict:
-    return json.loads((root / "corpus.json").read_text())
+    return json.loads((root / "corpus.json").read_text(encoding="utf-8"))
 
 
 def save(root: pathlib.Path, corpus: dict) -> None:
@@ -296,7 +297,7 @@ def test_a_changed_opaque_ir_fixed_expression_fails(tmp_path):
     assert codes(root) == {"faults"}
 
 
-def test_accepted_blind_faults_must_stay_empty(tmp_path):
+def test_accepted_blind_faults_not_declared_by_the_profile_fail(tmp_path):
     root = fresh(tmp_path)
     corpus = load(root)
     corpus["accepted_blind_faults"] = ["warrant/synth/negctl/exhaustive/pick/swap-choice"]
@@ -308,7 +309,7 @@ def test_a_reordered_key_fails_the_canonical_form(tmp_path):
     root = fresh(tmp_path)
     corpus = load(root)
     reordered = {k: corpus[k] for k in sorted(corpus, reverse=True)}
-    (root / "corpus.json").write_text(json.dumps(reordered, indent=2) + "\n")
+    write_lf(root / "corpus.json", json.dumps(reordered, indent=2) + "\n")
     assert codes(root) == {"bytes"}
 
 
@@ -547,13 +548,13 @@ def test_bindings_must_agree_with_the_profile(tmp_path):
     lines += ["op cmp_fixed export=f static=N faults=invert", "op pick export=p fresh faults=missing-error,swap-choice"]
     lines += ["op echo export=e faults=truncate-last", "op size_of export=s faults=off-by-one"]
     lines += ["op wide export=w faults=xor-lsb,off-by-one"]
-    good_bindings.write_text("\n".join(lines) + "\n")
+    write_lf(good_bindings, "\n".join(lines) + "\n")
     assert codes(CORPUS, bindings=good_bindings) == set()
-    good_bindings.write_text("\n".join(lines[:-1] + ["op wide export=w faults=xor-lsb"]) + "\n")
+    write_lf(good_bindings, "\n".join(lines[:-1] + ["op wide export=w faults=xor-lsb"]) + "\n")
     assert codes(CORPUS, bindings=good_bindings) == {"drift"}
-    good_bindings.write_text("\n".join(lines + ["op extra export=e faults=invert"]) + "\n")
+    write_lf(good_bindings, "\n".join(lines + ["op extra export=e faults=invert"]) + "\n")
     assert codes(CORPUS, bindings=good_bindings) == {"drift"}
-    good_bindings.write_text("\n".join(lines + [lines[2]]) + "\n")
+    write_lf(good_bindings, "\n".join(lines + [lines[2]]) + "\n")
     with pytest.raises(OracleError):
         check(CORPUS, WARRANT, PROFILE, good_bindings)
     good_bindings.write_bytes(b"\xff\xfe")
@@ -568,7 +569,28 @@ def test_a_corpus_copy_is_not_mutated_by_verification(tmp_path):
     assert load(root) == before
 
 
-# -- the real adopter, when one is available -------------------------------------------------------
+# -- the real adopter ------------------------------------------------------------------------------
+
+
+def test_the_committed_ct_compare_v2_fixture_verifies():
+    """CV2-S3d: ``specs/fixtures/ct-compare-warrant-v2`` (the generator's bytes) passes all checks."""
+    from conftest import CODE
+
+    fixture = CODE / "specs" / "fixtures" / "ct-compare-warrant-v2"
+    report, derived = check(
+        fixture,
+        CODE / "specs" / "ct-compare.warrant",
+        fixture / "corpus.profile",
+        CODE / "packages/rust/ct-compare/evidence.bindings",
+    )
+    assert report.ok, report.mismatches
+    assert len(report.suites) == 9 and sum(s["cases"] for s in report.suites.values()) == 572_109
+    assert (fixture / "corpus.json").read_bytes() == canonical(derived.corpus)
+    assert derived.corpus["accepted_blind_faults"] == []
+    # the generator pin of [D13]: the recorded generator is exactly the one the build expects
+    gen = derived.corpus["generator"]
+    assert (gen["name"], gen["version"]) == ("warrant-corpus-gen", "0.4.0")
+
 
 
 @pytest.mark.skipif(
@@ -579,7 +601,7 @@ def test_ct_compare_v2_generated_by_the_rust_cli_verifies():  # pragma: no cover
     from conftest import CODE
 
     corpus = pathlib.Path(os.environ["WARRANT_CT_COMPARE_V2"])
-    profile = CODE / "packages/rust/warrant-corpus-gen/tests/fixtures/ct-compare.corpus.profile"
+    profile = CODE / "specs/fixtures/ct-compare-warrant-v2/corpus.profile"
     report, _ = check(
         corpus,
         CODE / "specs" / "ct-compare.warrant",

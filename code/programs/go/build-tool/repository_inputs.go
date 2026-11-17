@@ -276,7 +276,33 @@ var (
 		"code/specs/arithmetic.warrant",
 		"code/specs/x25519.warrant",
 		"code/specs/fixtures/ct-compare-warrant-v1/corpus.json",
+		// CV2-S3d: the BUILD also runs verify-v2 on the committed v2 fixture, with
+		// the Rust bindings its profile's faults are cross-checked against.
+		warrantCorpusV2Bindings,
 	}
+	// warrantCorpusV2Fixture is the committed ct-compare warrant-corpus-v2
+	// fixture (VER04r, CV2-S3d). warrantCorpusV2Bindings is the Rust
+	// evidence.bindings whose faults= lists must equal its corpus.profile.
+	// Both lie outside the packages that check them: rust/warrant-corpus-gen's
+	// BUILD runs the generator's --check against the directory, and
+	// python/warrant-oracle's BUILD runs verify-v2 on it, so an edit to the
+	// spec, the fixture or the bindings must select both, or a stale fixture
+	// merges green (the gap D11h of VER04r 13 names).
+	warrantCorpusV2Fixture  = "code/specs/fixtures/ct-compare-warrant-v2"
+	warrantCorpusV2Bindings = "code/packages/rust/ct-compare/evidence.bindings"
+	// warrantAcceptBlindFixture is the oracle's small synthetic corpus that the
+	// generator's tests regenerate byte for byte (accept_blind, D15); it lives in
+	// the oracle's directory, so only the generator needs a row for it.
+	warrantAcceptBlindFixture = "code/packages/python/warrant-oracle/tests/fixtures/accept-blind-v2"
+	// warrantCorpusGenPaths are the inputs of the generator's --check line.
+	warrantCorpusGenPaths = []string{
+		"code/specs/ct-compare.warrant",
+		warrantCorpusV2Fixture,
+		warrantCorpusV2Bindings,
+		warrantAcceptBlindFixture,
+	}
+	// warrantOracleRowPaths adds the fixture directory to the oracle's exact files.
+	warrantOracleRowPaths = append(append([]string{}, warrantOraclePaths...), warrantCorpusV2Fixture)
 	// warrantAssurancePaths are the shared Warrant lane artifacts the
 	// assurance report validates directly (see isWarrantAssuranceInput).
 	// The Kiln graph export reads them, so they must list every path the
@@ -913,9 +939,16 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	{
 		name:     "python/warrant-oracle",
 		language: "python",
-		inputs:   "the adopter Warrant specs and the v1 ct-compare corpus the oracle gates",
+		inputs:   "the adopter Warrant specs, the v1 ct-compare corpus and the committed v2 fixture the oracle gates",
 		matches:  isWarrantOracleInput,
-		paths:    warrantOraclePaths,
+		paths:    warrantOracleRowPaths,
+	},
+	{
+		name:     "rust/warrant-corpus-gen",
+		language: "rust",
+		inputs:   "the ct-compare spec, bindings and committed v2 fixture its BUILD --check regenerates (VER04r 16.8)",
+		matches:  isWarrantCorpusGenInput,
+		paths:    warrantCorpusGenPaths,
 	},
 	{
 		name:     "python/ct-compare",
@@ -981,14 +1014,38 @@ func isWarrantAssuranceInput(changed string) bool {
 }
 
 // isWarrantOracleInput selects python/warrant-oracle when an adopter spec it
-// parses, or the v1 corpus it gates, changes. Exact paths only.
+// parses, the v1 corpus it gates, the Rust bindings its verify-v2 line reads, or
+// a file of the committed v2 fixture changes. Exact files, plus the fixture
+// directory by slash-delimited prefix (so ct-compare-warrant-v20 is not it).
 func isWarrantOracleInput(changed string) bool {
 	for _, path := range warrantOraclePaths {
 		if changed == path {
 			return true
 		}
 	}
-	return false
+	return isWarrantCorpusV2Fixture(changed)
+}
+
+// isWarrantCorpusV2Fixture reports whether a changed path is a file of the
+// committed ct-compare v2 fixture directory.
+//
+//	code/specs/fixtures/ct-compare-warrant-v2/corpus.json         -> true
+//	code/specs/fixtures/ct-compare-warrant-v2/chunks/eq_agrees.txt -> true
+//	code/specs/fixtures/ct-compare-warrant-v20/corpus.json        -> false
+//	code/specs/fixtures/ct-compare-warrant-v2                     -> false (a directory, not a file)
+func isWarrantCorpusV2Fixture(changed string) bool {
+	return strings.HasPrefix(changed, warrantCorpusV2Fixture+"/")
+}
+
+// isWarrantCorpusGenInput selects rust/warrant-corpus-gen, whose BUILD runs the
+// generator's --check against the committed v2 fixture with the ct-compare spec
+// and bindings, and whose tests regenerate the oracle's accept-blind fixture.
+func isWarrantCorpusGenInput(changed string) bool {
+	switch changed {
+	case "code/specs/ct-compare.warrant", warrantCorpusV2Bindings:
+		return true
+	}
+	return isWarrantCorpusV2Fixture(changed) || strings.HasPrefix(changed, warrantAcceptBlindFixture+"/")
 }
 
 // isWarrantPythonLaneCorpusInput selects the Python runner package when the

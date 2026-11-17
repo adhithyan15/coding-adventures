@@ -274,8 +274,15 @@ def derive_controls(
     plans: dict[str, SuitePlan],
     faults: list[tuple[str, str]],
     chunk_size: int,
-) -> tuple[list[dict], list[dict], dict[str, set[int]]]:
-    """``(fault rows, control rows, witness chunks per claim)`` for the profile's ``fault`` lines.
+    accept_blind: list[tuple[str, str]] | None = None,
+) -> tuple[list[dict], list[dict], dict[str, set[int]], list[str]]:
+    """``(fault rows, control rows, witness chunks per claim, accepted blind faults)``.
+
+    The input is the profile's ``fault`` lines and its ``accept_blind`` lines.  A fault every
+    candidate of which is blind fails generation unless an ``accept_blind`` line names it; its
+    control row is then emitted with no ``required_claims`` and its control id is listed (sorted
+    by bytes) in the fourth result, which ``accepted_blind_faults`` records ([D15], 16.8).  An
+    ``accept_blind`` line for a fault that is *not* all-blind is a profile error (``corpus``).
 
     Rows are sorted by ``(op, fault)`` by bytes, independent of the order of the
     profile lines (section 16.6 item 2); the three claim lists keep suite order.
@@ -286,6 +293,8 @@ def derive_controls(
     wanted = sorted(
         {(op, fault) for op, fault in faults}, key=lambda r: (r[0].encode(), r[1].encode())
     )
+    accept = set(accept_blind or ())
+    accepted_ids: list[str] = []
     rows: list[dict] = []
     for op_name, fault in wanted:
         if op_name not in spec.ops:
@@ -339,13 +348,21 @@ def derive_controls(
                 witness.append({"claim": suite.id, "deferred": level})
             else:
                 witness.append({"claim": suite.id, "unproven": True})
+        control_id = f"warrant/{spec.name}/negctl/exhaustive/{row['op']}/{row['fault']}"
+        accepted = (row["op"], row["fault"]) in accept
         if not required:
-            # Every candidate is proven blind: the corpus cannot see this fault, and
-            # accepted_blind_faults is always [] for now (section 16.6 OPEN 1).
-            raise _fail("every candidate claim is blind to a fault")
+            # Every candidate is proven blind: the corpus cannot see this fault, so it is an
+            # error unless the profile's accept_blind line names it (section 16.8 [D15]).
+            if not accepted:
+                raise _fail("every candidate claim is blind to a fault; accept_blind excuses it")
+            accepted_ids.append(control_id)
+        elif accepted:
+            raise OracleError(
+                "corpus", "an accept_blind line names a fault that is not all-blind"
+            )
         controls.append(
             {
-                "id": f"warrant/{spec.name}/negctl/exhaustive/{row['op']}/{row['fault']}",
+                "id": control_id,
                 "op": row["op"],
                 "fault": row["fault"],
                 "target_kind": "exhaustive",
@@ -355,5 +372,5 @@ def derive_controls(
                 "slim_witness": witness,
             }
         )
-    return rows, controls, witness_chunks
+    return rows, controls, witness_chunks, sorted(accepted_ids, key=str.encode)
 
