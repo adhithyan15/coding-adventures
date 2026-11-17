@@ -1363,8 +1363,22 @@ class PortableScore:
         def _reject_constant(val: str) -> None:
             raise ValueError(f"non-finite JSON constants are not allowed: {val!r}")
 
+        def _reject_duplicate_keys(
+            pairs: list[tuple[str, object]],
+        ) -> dict[str, object]:
+            result: dict[str, object] = {}
+            for key, value in pairs:
+                if key in result:
+                    raise ValueError("duplicate JSON object member")
+                result[key] = value
+            return result
+
         try:
-            data = json.loads(json_text, parse_constant=_reject_constant)
+            data = json.loads(
+                json_text,
+                parse_constant=_reject_constant,
+                object_pairs_hook=_reject_duplicate_keys,
+            )
         except (json.JSONDecodeError, RecursionError) as exc:
             raise ValueError(f"malformed JSON: {exc}") from exc
 
