@@ -36,8 +36,12 @@
 //!   not evaluated; that is what keeps the suite to about a minute. What a
 //!   control does and does not show is stated in VOS10 section 12.
 //!
-//! `parts_follow_the_marker_discipline` is a stand-in for the checks `vos-link
-//! gen-doc` (VOS-033) will make on the `.part` files; it is not the authority.
+//! `parts_follow_the_marker_discipline` applies the tool's own part admission
+//! (`vos_manifest::part::admit_part`, VOS-033) to the real parts.  The real
+//! per-implementation documents are generated and checked by `vos-link` (its tests run
+//! this contract package through four fixture implementations); `assemble` below is
+//! only the plain joiner that the mutation tables need, since a mutant is a textual
+//! change to one block and the document it lives in is never written anywhere.
 //!
 //! It does **not** establish anything about Rust code: the models are written
 //! in Warrant. Binding the claims to compiled code (the evidence harness) is
@@ -71,7 +75,8 @@ const ANY_IMPL: &str = include_str!("fixtures/impl-any-models.part");
 /// The X1 case budget per claim (VOS30 section 8.5, VER04h section 3).
 const BUDGET: u64 = 400_000;
 
-/// Join blocks into one document. Nothing is parsed here.
+/// Join blocks into one document for evaluation. Nothing is parsed here; this is not
+/// document assembly (that is `vos_manifest::document::assemble`, used by `vos-link`).
 fn assemble(blocks: &[&str]) -> String {
     let mut doc = String::from("warrant vos_sched_contract_test v1\n");
     for block in blocks {
@@ -874,9 +879,10 @@ fn every_lemma_has_a_mutant_that_breaks_it() {
 
 #[test]
 fn parts_follow_the_marker_discipline() {
-    // A stand-in for the checks `vos-link gen-doc` will make (VOS02 section 2.3); not the
-    // authority. A part may not contain a line beginning `-- vos02:`, a CR or any control
-    // character but LF, and every part is ASCII.
+    // Folded into the tool (VOS-D049): the admission rules of VOS02 section 2.3 are
+    // `vos_manifest::part::admit_part` (the code `vos-link gen-doc` runs), not a copy of
+    // them written here.  This test only applies it to the five real parts, and checks that
+    // an obligations part holds claims and comments, nothing else.
     for (name, text) in [
         ("contract", CONTRACT),
         ("safety", SAFETY),
@@ -884,43 +890,18 @@ fn parts_follow_the_marker_discipline() {
         ("canonical", CANONICAL),
         ("any", ANY),
     ] {
-        assert!(text.is_ascii(), "{name}.part is not ASCII");
-        assert!(
-            text.bytes()
-                .all(|b| b == b'\n' || (0x20..0x7f).contains(&b)),
-            "{name}.part has a control character"
-        );
-        assert!(text.ends_with('\n'), "{name}.part has no final LF");
-        for line in text.lines() {
-            assert!(
-                !line.trim_start().starts_with("-- vos02:"),
-                "{name}.part forges a marker"
-            );
-            assert!(
-                line.is_empty() || line.starts_with("  "),
-                "{name}.part line not indented: {line}"
-            );
-            assert!(!line.ends_with(' '), "{name}.part trailing space: {line}");
-        }
+        vos_manifest::part::admit_part(text.as_bytes())
+            .unwrap_or_else(|e| panic!("{name}.part is not admitted: {e}"));
     }
-    // An obligations part holds claim declarations and comments, nothing else: no model,
-    // record, op, example or assume row (those are the implementation's).
     for (name, text) in [
         ("safety", SAFETY),
         ("policy", POLICY),
         ("canonical", CANONICAL),
         ("any", ANY),
     ] {
-        let src = assemble(&[text]);
-        with_file(&src, |file| {
-            assert!(!file.declarations.is_empty(), "{name}: no claims");
-            for d in &file.declarations {
-                assert!(
-                    matches!(d, Declaration::Claim(_)),
-                    "{name}.part declares something that is not a claim"
-                );
-            }
-        });
+        let claims = vos_manifest::warrant::claims_of_block(text)
+            .unwrap_or_else(|e| panic!("{name}.part: {e}"));
+        assert!(!claims.is_empty(), "{name}: no claims");
     }
 }
 

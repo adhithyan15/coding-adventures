@@ -260,3 +260,42 @@ fn vos_toml_grammar() {
     let e = parse_vos_toml("class = \"K\"\nkind = \"nope\"").unwrap_err();
     assert_eq!(e.0, 2);
 }
+
+#[test]
+fn vos_toml_contract_and_obligations_keys() {
+    // VOS02 section 10.1 (D-GD2): an implementation names its contract package and the
+    // tiers gen-doc embeds.  This reader only bounds them; vos-link judges the values.
+    let v = parse_vos_toml(
+        "kind = \"production\"\ncontract = \"vos-ready-contract\"\nobligations = [\"canonical\", \"safety\"]\n",
+    )
+    .unwrap();
+    assert_eq!(v.contract.as_deref(), Some("vos-ready-contract"));
+    assert_eq!(v.obligations, ["canonical", "safety"]);
+    let none = parse_vos_toml("kind = \"contract\"\n").unwrap();
+    assert_eq!(none.contract, None);
+    assert!(none.obligations.is_empty());
+    for (text, why) in [
+        ("contract = \"a\"\ncontract = \"b\"", "duplicate key"),
+        ("contract = \"\"", "1 to 32 bytes"),
+        (
+            "contract = \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"",
+            "1 to 32 bytes",
+        ),
+        ("contract = 3", "wrong type"),
+        ("obligations = \"safety\"", "wrong type"),
+        (
+            "obligations = [\"a\"]\nobligations = [\"b\"]",
+            "duplicate key",
+        ),
+        ("obligations = [1]", "holds strings"),
+        ("obligations = [\"\"]", "1 to 16 bytes"),
+        (
+            "obligations = [\"a\", \"b\", \"c\", \"d\", \"e\"]",
+            "more than 4",
+        ),
+        ("obligation = [\"a\"]", "unknown key"),
+    ] {
+        let e = parse_vos_toml(text).unwrap_err();
+        assert!(e.1.contains(why), "{text:?}: {e:?}");
+    }
+}

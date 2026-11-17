@@ -1,0 +1,28 @@
+# Parser grammar for `contract.vos` (VOS02 section 2.5).
+#
+#   contract = "vos-contract 1" LF "name " PKG LF "iface " IDENT LF
+#              { "tier " TIER LF }                         ; sorted
+#              { "config " KEY SP DEC LF }                 ; sorted by key
+#              { "ceiling " OPNAME SP METRIC SP DEC LF }   ; sorted by (op, metric)
+#              "end" LF
+#
+# This grammar fixes the ORDER of the rows and the SHAPE of each row.  What it
+# cannot say is checked by vos-manifest after the parse, and each such check is
+# a named error there:
+#
+#   * the class and length of each NAME (PKG, IDENT, KEY, OPNAME, TIER, METRIC),
+#   * the version word is exactly 1, a DEC fits u64,
+#   * rows sorted and unique, row-count caps,
+#   * the re-emitted text equals the input (one spelling).
+#
+# The words are matched by value ("name" is a NAME token whose text is `name`),
+# so a package called `name` is still a NAME in the right position.
+
+contract     = header name_row iface_row { tier_row } { config_row } { ceiling_row } end_row ;
+header       = "vos-contract" DEC NEWLINE ;
+name_row     = "name" NAME NEWLINE ;
+iface_row    = "iface" NAME NEWLINE ;
+tier_row     = "tier" NAME NEWLINE ;
+config_row   = "config" NAME DEC NEWLINE ;
+ceiling_row  = "ceiling" NAME NAME DEC NEWLINE ;
+end_row      = "end" NEWLINE ;

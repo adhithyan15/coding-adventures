@@ -1,0 +1,18 @@
+# Parser grammar for the marker skeleton of a generated VOS implementation
+# document (VOS02 section 2.3).
+#
+#   header line (`warrant <name> v1`, checked by the Warrant parser)
+#   generated marker
+#   contract-begin ... contract-end
+#   impl-begin     ... impl-end
+#   { obligations-begin ... obligations-end }      ; tiers sorted, unique: checked after the parse
+#   trailer lines (the `assume` rows)
+#
+# Each marker appears exactly once in its place because the rule says so: there
+# is no rule that allows a second contract block, a reordering, or a marker in a
+# trailer.  The body of a block is any run of plain lines and blank lines.
+
+document          = LINE NEWLINE GENERATED NEWLINE contract_block impl_block { obligations_block } { LINE | NEWLINE } ;
+contract_block    = CONTRACT_BEGIN NEWLINE { LINE | NEWLINE } CONTRACT_END NEWLINE ;
+impl_block        = IMPL_BEGIN NEWLINE { LINE | NEWLINE } IMPL_END NEWLINE ;
+obligations_block = OBLIGATIONS_BEGIN NEWLINE { LINE | NEWLINE } OBLIGATIONS_END NEWLINE ;
