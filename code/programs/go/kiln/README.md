@@ -746,7 +746,13 @@ decoded with `recfmt` before it is written, atomically, to `--out`. Before it re
 anything of `traces/`, `collect` creates `traces/.collected`; `kiln record step`
 refuses once that exists, so a directory is collected once and cannot grow after.
 A package whose recipe is empty (a comment-only BUILD, built 0 of 0) is vacuously
-complete, not unknown. Why a post-build check failed is printed as
+complete, not unknown. Two more header void tokens: `survivor` (a `/proc` scan right
+after the lock finds a process of the sandbox still alive after 10 s: it is in
+another mount namespace that mounts the checkout, or names the sealed
+`sandbox.json` in its command line, or is ours and cannot be read; every record
+is then an unknown write set) and `state-preloaded` (the first step of the shard,
+sequence number 0, found a state root non-empty and left `traces/.state-preloaded`;
+this voids the shard only). Why a post-build check failed is printed as
 `post-build problem:` lines (never written to the shard). Exit 1 and
 nothing written when `collect` cannot say what the build did (the directory is locked,
 `pre/` changed, the results are unreadable); a void shard is still written and the
@@ -757,7 +763,9 @@ write what a supervisor would have, then break one thing at a time (every refusa
 and void path; the shard is also fed to the merge); `TestSandboxRecordCollect`
 (the required `kiln-sandbox` job) runs `prepare`, every step, `collect` and the merge
 over five real actions (a clean hit, a failed step, a write the classifier cannot
-place, a step run twice, a tracked file changed after the build).
+place, a step run twice, a tracked file changed after the build);
+`TestSandboxRecordSurvivor` starts a sandbox of its own, outside `record step`,
+and requires `collect` to void the run.
 
 ## Lookup in the plan (`kiln legacy-plan --ledger`, KILN04 stage 5a)
 

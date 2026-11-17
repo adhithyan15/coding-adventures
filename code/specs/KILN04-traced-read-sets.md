@@ -1284,6 +1284,7 @@ would be run by `prepare` itself. So:
 tool runs it once per BUILD step through `-exec-wrapper` (P1). It runs
 outside the sandbox and is not traced itself; it traces the step and keeps
 the facts about the tracer that the trace cannot contain. It classifies the action after its final executed step (P13).
+(Amended by P15: the step that takes sequence number 0 first re-checks the state roots and, if one is not empty, leaves `traces/.state-preloaded` and still runs.)
 
 *Before the step* (any failure here runs nothing, writes nothing but a
 diagnostic on standard error, and exits 125):
@@ -1421,6 +1422,64 @@ parses, the root's exit line exists, and `strace_exit` equals it) is
 helper unshares the network namespace; it is false when the process could not
 be started. `collect` copies it into `traced.Input.StepNetNS` only when the
 step's own `execve` is in the trace (a refused sandbox has none).
+
+**P15. `survivor` and `state-preloaded` (stage 4 PR 2b-2c-4).** Two header `void`
+tokens that the merge already knew (M3, M4) and nothing wrote until now.
+
+- **`survivor` (run-void).** Right after the exclusive lock and `VerifyPre`,
+  `collect` scans `/proc` (`collect_survivor.go`; a stub that fails closed off
+  Linux). A pid other than its own is a survivor when **S1** its `ns/mnt`
+  differs from `collect`'s and its mountinfo lists `repo_root` as a mount
+  point; **S2** a `cmdline` element is exactly `<dir>/pre/sandbox.json` or
+  `<dir>/probe/toolchains-sandbox.json` (any owner); or **S3** it is ours, it
+  started at or after `prepare`, and reading it fails with anything but
+  ENOENT/ESRCH (or a read hit the 4 MiB bound, whoever owns it). "Ours" is the
+  `Uid:` line of `/proc/<pid>/status` (real or effective equals our euid; an
+  unreadable or unparsable status is ours; the owner of `/proc/<pid>` is only a
+  further reason to say ours, never a reason to skip, because for a
+  non-dumpable task the kernel makes it the root of the task's user namespace,
+  which a hostile step could arrange to look like root). "Started after
+  `prepare`" compares field 22 of `/proc/<pid>/stat` (parsed after the last
+  `)`, plus `btime` from `/proc/stat`, 100 ticks per second) with the sealed
+  `binding.prepared_at` less 2 s; an unreadable or unparsable `stat` counts as
+  after. The rule exists because a real survivor is always inspectable from
+  `collect`: it lives in a user namespace our user owns, so we hold ptrace
+  access to it even if it made itself non-dumpable; what we cannot inspect is a
+  stranger's, or an OLD process of ours (a `systemd --user` manager, an
+  ssh-agent) that no build started, and counting those would void every run.
+  Each scan is bounded to 5 s (a `/proc` read can block on an uninterruptible
+  task); one that is not done counts as a survivor. The start-time gate compares
+  the wall-clock `prepared_at` with `btime`-derived start times, so a backward
+  wall-clock step of more than 2 s between `prepare` and `collect` can exclude a
+  new process from S3 only; S1 and S2 are unaffected, and a step cannot move
+  the clock. A monotonic, boot-relative comparison is a planned follow-up. (The
+  tick count is converted without overflow, and an absurd one, over 100 years,
+  counts as new.) There is **no cwd test**: a shell left in the
+  checkout writes nothing, and a cwd test would void every run launched from a
+  terminal in the repository. A process that vanishes while being read is not
+  one. The scan repeats every 200 ms for up to 10 s (`CollectOptions.SurvivorWait`;
+  negative means one look, for tests); a scan that cannot be made counts as a
+  survivor. If one is left, the header `void` gains `survivor` and every record
+  is an unknown write set (`markUnknown(rec, "survivor")`). `collect`'s report
+  prints `post-build problem: survivor: pid N: S1|S2|S3 ...`.
+- **`state-preloaded` (shard-void).** `prepare` and the probes require the
+  state roots empty, but the roots can be filled between `prepare` and the
+  build. `RunStep` therefore re-runs the `stateRootEmpty` check at sequence
+  number 0 (the first step of the shard, under the serial lock); a root that is
+  not absent or an empty real directory (any failure to say so counts) writes
+  `traces/.state-preloaded` (O_EXCL, containing that root's path), and the step
+  still runs. `collect` lstat's the marker, adds `state-preloaded` to the header
+  `void` when there is any entry of that name or `traces/` cannot be asked, and
+  `globalSeqCheck` knows the name, so the serial order still holds and records
+  stay believed (the merge voids the shard's records, M4). A marker that cannot
+  be written refuses the step, and that is a RUN-void rather than a shard-void:
+  its sequence number and trace file exist but no sidecar, so `collect` sees a
+  counter mismatch (`serial-violated`) and every record is unknown.
+
+*Divergences from the design:* the marker lives in `traces/`, not in an action's
+directory, so `scanAction`'s closed list needs no entry (only `globalSeqCheck`'s
+known set); `SurvivorWait` 0 means the 10 s default, and a negative value is the
+no-wait setting tests use.
 
 *Obligations of `collect` (**2b-2b-ii**, except the parse half of the third, which `step` applies, P13), from the review of P12.*
 
@@ -3246,8 +3305,8 @@ pre-BUILD inventory.
 | M1 | run | Any unknown write set (G1), including truncated executions (M-1) and an unclean step. |
 | M2 | run | An untracked observation explained by neither `Inv(s)` nor another record's write **in the same shard**. |
 | M2b | run | `tracked_changed_unexplained > 0` (M-2). |
-| M3 | run | `post_inventory_unexplained > 0`, or a header `void` of `survivor`, `records-too-large` or an unknown token. |
-| M4 | shard | A header `void` of `tracked-changed` or `state-preloaded`. |
+| M3 | run | `post_inventory_unexplained > 0`, or a header `void` of `survivor`, `records-too-large` or an unknown token. Written by: `collect` (`survivor`: its /proc scan, P15; `records-too-large`: the size cap), and the post-build inventory count. |
+| M4 | shard | A header `void` of `tracked-changed` or `state-preloaded`. Written by: `collect` (`tracked-changed`: the post-build checks; `state-preloaded`: the `traces/.state-preloaded` marker `step` leaves at sequence number 0, P12/P15). |
 | M5 | action | An untracked observation overlaps `W(b)`, `b != a`: `reads-product`. |
 | M6 | action | An absent observation overlaps `W(b)`: `reads-product`. |
 | M7 | action | `list:d` with `w` in `W(b)`, `overlap(d, w)`: `reads-product`. |
