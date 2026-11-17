@@ -1111,10 +1111,15 @@ sandbox's). The process gets `KILN_ACTION=p`, the safe `PATH`, `/dev/null` as st
 and one capped stream for stdout and stderr; 60 s per probe and 10 minutes in
 all (D8), the root killed with its process group at a deadline. A probe that
 mismatches, times out, is refused or whose sandbox exits 125 is a gate; so is a probe
-whose binary is **absent** from the fixed PATH (`probe-absent:<tool>`, probe
-priority): otherwise a PR could point a pinned tool's probe at a binary that does not
-exist and skip the version check. `kiln legacy-plan` gates the same way, since both
-use `gateFacts`. Any other runner error (the sandbox cannot start, the
+whose binary is **absent** from the fixed PATH and whose pin is a VERSION
+(`probe-absent:<tool>`, probe priority). For a versioned pin, absence means the
+version in the weak key was never checked, and otherwise a PR could point the
+tool's probe at a binary that does not exist and skip the check; the gate is
+fail-closed and the remedy is to declare the tool's root. An image pin is exempt: it
+makes no version claim (its identity is the image id, and absence is identical on every
+run of that image), a step cannot use a tool that is not there, so a gate would add
+nothing and only cost yield. `kiln legacy-plan` gates the same way, since both use
+`gateFacts`. Any other runner error (the sandbox cannot start, the
 configuration is refused, an unarmed or changed environment) fails `prepare`, and
 so does a probe sandbox that is systematically broken: when probes ran and EVERY
 one of them ended in exit 125 (a single 125 stays a mismatch). After the probes

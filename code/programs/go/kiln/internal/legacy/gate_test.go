@@ -151,6 +151,39 @@ func TestGateMatchesPlan(t *testing.T) {
 			t.Errorf("an absent probe is reported by the probe list, not as a reason: %v", plan.Packages[0].Reasons)
 		}
 	})
+	t.Run("an absent image-pinned tool is not gated", func(t *testing.T) {
+		// cc is pinned to the image: no version claim, so its absence proves
+		// nothing is missing from the key and gates nothing (xtool, versioned,
+		// is present and agrees).
+		e := newLk(t)
+		e.probeEnv(false, "xtool 1.2.3")
+		cur, err := os.ReadFile(filepath.Join(e.f.dir, filepath.FromSlash(ToolchainsPath)))
+		if err != nil {
+			t.Fatal(err)
+		}
+		i := strings.Index(string(cur), `"cc": {"always"`)
+		j := strings.Index(string(cur)[i:], "\n")
+		ccLine := string(cur)[i : i+j]
+		k := strings.Index(ccLine, `"roots": {"cc": ["`) + len(`"roots": {"cc": ["`)
+		l := strings.Index(ccLine[k:], `"`)
+		e.f.write(ToolchainsPath, strings.Replace(string(cur), ccLine, ccLine[:k]+"/nonexistent/kiln-no-cc"+ccLine[k+l:], 1))
+		for n, g := range e.agree() {
+			if g != "" {
+				t.Errorf("%s: gate %q", n, g)
+			}
+		}
+		probes, err := e.traced().Probes()
+		if err != nil {
+			t.Fatal(err)
+		}
+		absent := false
+		for _, p := range probes {
+			absent = absent || p.Tool == "cc" && p.Status == ProbeAbsent
+		}
+		if !absent {
+			t.Fatalf("the test did not make cc absent: %+v", probes)
+		}
+	})
 	t.Run("probe agreement", func(t *testing.T) {
 		e := newLk(t)
 		e.probeEnv(false, "xtool 1.2.3")

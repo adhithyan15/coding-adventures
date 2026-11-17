@@ -414,11 +414,16 @@ func (pl *planner) gateFacts(p int, members []int, items []readItem) (gateFacts,
 		if pl.refused[tl.Name] {
 			f.probe = append(f.probe, "probe-refused:"+tl.Name)
 		}
-		// A probe whose binary is not on the fixed PATH proved nothing.  If it
-		// were ungated, a PR could point a pinned tool's probe at a binary that
-		// does not exist and so skip the version check: fail closed.  Like a
-		// refusal it is reported by the probe list, not as a plan reason.
-		if pl.absent[tl.Name] {
+		// A probe whose binary is not on the fixed PATH proved nothing.  For a
+		// VERSIONED pin that means the version in the key was never checked, and
+		// a PR could point a pinned tool's probe at a binary that does not exist
+		// to skip the check: so it is gated (fail closed; the remedy is to
+		// declare the tool's root).  An ImagePin makes no version claim: its
+		// identity is the image id, absence is identical on every run of that
+		// image, and a step cannot use a tool that is not there, so a gate would
+		// add nothing and only cost yield.  Like a refusal it is reported by the
+		// probe list, not as a plan reason.
+		if pl.absent[tl.Name] && tl.Version != ImagePin {
 			f.probe = append(f.probe, "probe-absent:"+tl.Name)
 		}
 	}

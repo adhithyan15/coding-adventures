@@ -7,7 +7,7 @@
   `prepare` re-runs `probesLeftNothing` on the REAL configuration after the
   toolchain probes: tmpdir and every state root must still be empty, else
   `unscrubbed:*`.
-- An absent probe binary gates: `probe-absent:<tool>` at probe priority, in
+- An absent probe binary of a VERSIONED pin gates (image pins do not): `probe-absent:<tool>` at probe priority, in
   `gateFacts`, so `kiln legacy-plan` and the recorder agree. (It is not added to
   a plan's reasons, like `probe-refused:`.) The test fixtures that probed an
   always-included `cc` on a nonexistent root now give it a binary.
