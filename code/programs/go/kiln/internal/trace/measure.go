@@ -14,8 +14,8 @@ type Measurement struct {
 	OldTime time.Duration // pass 1 with the hand-written scanner
 	NewTime time.Duration // pass 1 with the grammar path
 	// OldAllocs and NewAllocs are the heap allocations of each pass (a
-	// runtime.MemStats Mallocs delta: process-wide, so approximate if other
-	// goroutines run, exact enough for the per-line cost of P2 PR 5).
+	// process-wide MemStats.Mallocs delta: indicative only when other goroutines
+	// or parallel tests allocate at the same time).
 	OldAllocs uint64
 	NewAllocs uint64
 	OldError  string // "" or the refusal reason

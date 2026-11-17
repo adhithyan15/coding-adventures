@@ -2443,7 +2443,7 @@ mismatch to the job log (no artifact is uploaded: the window is all that is
 kept, and it stays in that log); and it logs `PROBE: trace ...` lines with the
 size, line count and the throughput of both readers for every trace the sandbox
 tests produce. **Trace sizes and grammar-path throughput on real traces: to come
-from the first CI run.** The default stays the old scanner; the flip is PR 6.
+from the first CI run.** The default stays the old scanner; the flip is D24 PR 6.
 
 **On the compact `LineParser` (P2 PR 5).** `handleLineG` no longer builds an
 `*ASTNode` tree per line. Each trace parse owns one `straceparser.LineParser`
@@ -2463,12 +2463,16 @@ default, and `crossCheck` is unchanged. Measured on the four committed fixture
 traces (Apple M2 Max, `go test ./internal/trace -bench 'LineHandler|Pass1'
 -benchmem`): the old scanner 201 MB/s, 359 allocs per corpus pass; the grammar
 path on the ASTNode tree 13.6 MB/s, 1693 allocs; on the compact path 17.9 MB/s,
-421 allocs (1.3x faster, 4x fewer allocations); production pass 1 (bufio plus
+421 allocs (1.3x faster, 4x fewer allocations; the reduction is in allocation
+COUNT: bytes per pass only drop from about 360 KB to about 203 KB, against about
+18 KB for the old scanner, the remainder being the lexer's per-line token
+slice); production pass 1 (bufio plus
 handler) 141 MB/s old against 16.9 MB/s grammar. The fixtures are short
-and dense, so the ratio to the old scanner (about 12x here) is a worst case
+and dense, so the ratio to the old scanner (8x to 11x here: 141/16.9 for pass 1, 201/17.9 for the handler) is a worst case
 rather than the "within 3x" gate figure; the gate is still to be restated from
 the real-trace `PROBE:` lines (which now also log allocations). Cutting the
-remaining per-line token-slice allocation is P2 PR 6.
+remaining per-line token-slice allocation (a lexer `TokenizeInto`) is P2 PR 6, not to be confused
+with D24 PR 6, the default flip.
 
 **The PR split.**
 

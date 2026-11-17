@@ -39,23 +39,104 @@ func errString(e *Error) string {
 	return e.Reason + "@" + strconv.Itoa(e.Line)
 }
 
+// snapshotPend deep-copies a pending map, so a later mutation of a *pending (or
+// of anything it points to) cannot hide in a comparison made earlier.
+func snapshotPend(m map[int]*pending) map[int]pending {
+	out := make(map[int]pending, len(m))
+	for k, v := range m {
+		out[k] = *v
+	}
+	return out
+}
+
 // compactVsLegacy runs the lines through both implementations with one state
-// each (so sequences with shared pending state are covered) and returns the
-// first difference.
+// each (so sequences with shared pending state are covered).  It compares each
+// line's outcome as it happens AND keeps every record, error and pending
+// snapshot, and compares the WHOLE collected slices after the last line: a
+// record that the compact path later corrupts (a reused buffer aliased into an
+// earlier record's args) is only visible then, never on its own line.
 func compactVsLegacy(lines []string, helper bool, maxLine int) string {
 	sc := &lineState{pend: map[int]*pending{}, helper: helper, maxLine: maxLine}
 	sl := &lineState{pend: map[int]*pending{}, helper: helper, maxLine: maxLine}
+	var rcs, rls []*record
+	var ecs, els []*Error
+	var pcs, pls []map[int]pending
 	for i, l := range lines {
 		rc, ec := handleLineG(l, i+1, sc)
 		rl, el := handleLineGLegacy(l, i+1, sl)
 		if d := sameOutcome(rc, ec, rl, el, sc.pend, sl.pend); d != "" {
 			return "line " + strconv.Itoa(i+1) + ": " + d
 		}
+		rcs, rls = append(rcs, rc), append(rls, rl)
+		ecs, els = append(ecs, ec), append(els, el)
+		pcs, pls = append(pcs, snapshotPend(sc.pend)), append(pls, snapshotPend(sl.pend))
 		if ec != nil { // a refusal ends a trace: the states are not used further
-			return ""
+			break
 		}
 	}
+	if !reflect.DeepEqual(rcs, rls) {
+		return "collected records differ at the end of the sequence (aliasing?)"
+	}
+	if !reflect.DeepEqual(ecs, els) || !reflect.DeepEqual(pcs, pls) {
+		return "collected refusals or pending snapshots differ at the end of the sequence"
+	}
 	return ""
+}
+
+// genLongSeq makes a longer, MOSTLY VALID multi-pid sequence (5 to 30 lines, 2
+// to 4 pids): matched unfinished/resumed pairs, closed calls with arguments of
+// varying count, interleaved signals and exits, and an occasional all-space or
+// U+00A0 item.  The short generators die at their first refusal; this one keeps
+// many records alive so a later line can corrupt an earlier record.
+func genLongSeq(r *rand.Rand) []string {
+	npid := 2 + r.Intn(3)
+	open := make([]string, npid) // name of the call left open per pid ("" = none)
+	exited := make([]bool, npid)
+	names := []string{"stat", "openat", "wait4", "execve", "clone"}
+	argv := []string{"\"/a\"", "AT_FDCWD</w>", "\"/b/c\"", "O_RDONLY|O_CLOEXEC", "0x1", "[\"x\", \"y\"]", "NULL", "-1", "3</x>", "{st_mode=S_IFREG|0644}"}
+	odd := []string{" ", "\u00a0", " \u00a0 "}
+	var out []string
+	for n := 5 + r.Intn(26); n > 0; n-- {
+		p := r.Intn(npid)
+		pid := []string{"1  ", "2  ", "3  ", "4  "}[p]
+		if r.Intn(2) == 0 {
+			pid = "[pid " + string(rune('1'+p)) + "] "
+		}
+		if exited[p] {
+			continue
+		}
+		switch k := r.Intn(10); {
+		case open[p] != "":
+			name := open[p]
+			open[p] = ""
+			out = append(out, pid+"<... "+name+" resumed>"+argv[r.Intn(len(argv))]+") = 0")
+		case k < 4: // a call with 0 to 4 arguments, closed
+			var a []string
+			for m := r.Intn(5); m > 0; m-- {
+				a = append(a, argv[r.Intn(len(argv))])
+			}
+			if r.Intn(12) == 0 {
+				a = append(a, odd[r.Intn(len(odd))])
+			}
+			out = append(out, pid+names[r.Intn(len(names))]+"("+strings.Join(a, ", ")+") = 0")
+		case k < 7: // an unfinished call, to be resumed later
+			name := names[r.Intn(len(names))]
+			open[p] = name
+			a := argv[r.Intn(len(argv))] + ", " + argv[r.Intn(len(argv))]
+			if r.Intn(10) == 0 {
+				a += "," + odd[r.Intn(len(odd))]
+			}
+			out = append(out, pid+name+"("+a+" <unfinished ...>")
+		case k == 7:
+			out = append(out, pid+"--- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED} ---")
+		case k == 8:
+			out = append(out, pid+"+++ exited with 0 +++")
+			exited[p] = true
+		default:
+			out = append(out, pid+"getpid() = 5")
+		}
+	}
+	return out
 }
 
 func TestCompactEqualsLegacyFixtures(t *testing.T) {
@@ -123,6 +204,23 @@ func TestCompactEqualsLegacySeqSeeded(t *testing.T) {
 	}
 	if g := grammarPanics.Load(); g != 0 {
 		t.Fatalf("%d recovered panics", g)
+	}
+}
+
+func TestCompactEqualsLegacyLongSeqSeeded(t *testing.T) {
+	n := 100000
+	if testing.Short() {
+		n = 10000
+	}
+	r := rand.New(rand.NewSource(2026))
+	bad := 0
+	for i := 0; i < n; i++ {
+		seq := genLongSeq(r)
+		if d := compactVsLegacy(seq, i%2 == 0, 0); d != "" {
+			if bad++; bad <= 10 {
+				t.Errorf("%s: %q", d, seq)
+			}
+		}
 	}
 }
 
