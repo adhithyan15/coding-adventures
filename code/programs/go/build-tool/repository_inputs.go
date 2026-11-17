@@ -166,6 +166,16 @@ var (
 		"code/grammars/vos_contract",
 		"code/grammars/vos_document",
 	}
+	// vosCapacityProbePaths are the files the capacity probe's BUILD reads outside its Cargo
+	// edges (VOS-028b): `check` re-runs and validates the committed results file, `table --check`
+	// compares the generated block of the VOS30 spec with it, and the two Warrant documents
+	// (the fixture's and the real scheduler's) are what its E1 rows digest.
+	vosCapacityProbePaths = []string{
+		"code/specs/data/vos30-capacity-results.json",
+		"code/specs/VOS30-proof-route-and-capacity.md",
+		"code/specs/vos-probe-ready.warrant",
+		"code/specs/vos-sched-fp-bitmap.warrant",
+	}
 	vosShapeGrammarPaths = []string{
 		"code/grammars/rust/rust1.97.0-e2021.tokens",
 		"code/grammars/rust/rust1.97.0-e2024.tokens",
@@ -310,6 +320,14 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	vosImplementationRow("vos-sched-fp-bitmap"),
 	vosImplementationRow("vos-sched-any"),
 	vosImplementationRow("vos-sched-rr"),
+	vosImplementationRow("vos-probe-ready"),
+	{
+		name:     "rust/programs/vos-capacity-probe",
+		language: "rust",
+		inputs:   "the committed results file code/specs/data/vos30-capacity-results.json, the VOS30 spec and the two Warrant documents its E1 rows digest, which its BUILD checks outside Cargo (check, table --check)",
+		matches:  isVosCapacityProbeInput,
+		paths:    vosCapacityProbePaths,
+	},
 	{
 		name:     "rust/vos-shape-check",
 		language: "rust",
@@ -1168,6 +1186,21 @@ func vosImplementationRow(crate string) repositoryInputConsumer {
 		matches:  func(changed string) bool { return changed == doc || isVosToolInput(changed) },
 		paths:    append([]string{doc}, vosToolPaths...),
 	}
+}
+
+// isVosCapacityProbeInput reports whether a changed path is one of the exact files the
+// capacity probe checks outside its Cargo edges (VOS-028b): no prefix, no lookalike.
+//
+//	code/specs/data/vos30-capacity-results.json   → true
+//	code/specs/data/vos30-capacity-results.json.x → false
+//	code/specs/VOS30-proof-route-and-capacity.md  → true
+func isVosCapacityProbeInput(changed string) bool {
+	for _, p := range vosCapacityProbePaths {
+		if changed == p {
+			return true
+		}
+	}
+	return false
 }
 
 // isVosShapeGrammarInput reports whether a changed path is one of the two Rust
