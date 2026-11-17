@@ -14,6 +14,7 @@ Why this document (each feature is one thing `verify-v2` must re-derive):
 | blind claims (`pick_equal_length` for `missing-error`, `pick_mismatch` for `swap-choice`) | controls |
 | an unproven claim (predicate `add2_commutes`) | control `add2 off-by-one` |
 | deferred `ir.fixed` controls with opaque fault rows | `xor-lsb` on `bump` and `wide` |
+| `truncate-last` (a `Bytes` result) and `off-by-one` on a `Nat` result | `echo`, `size_of` |
 | a predicate suite, a v2-header suite (`U16`), a static width, an operation `admit`, a `U8` wrap (v1 document) | `add2_commutes`, `wide_is_identity`, `cmp_fixed_agrees_w2`, `wide`, `bump_is_inc` |
 
 Regenerate (from the repository root; do not hand-edit anything under `corpus/`):

@@ -72,7 +72,10 @@ def emit(
     """Parse, lower and enumerate every suite of a document; return the JSON tree.
 
     ``profile`` (a parsed ``corpus.profile``) is the only way to change the IR cost
-    bound: ``max_ir_cost`` defaults to 2,000 and is at most 65,536 (VER04r 4.2).
+    bound: ``max_ir_cost`` defaults to 2,000 and is at most 65,536 (VER04r 4.2).  Its
+    ``slim_stride`` is applied (clamped per suite); witness chunks and ``slim_chunk``
+    lines are *not*: ``emit-v2`` is the diagnostic of the base set, and ``verify-v2``
+    computes the full slim set (section 16.7).
     """
     if profile is not None:
         chunk_size, budget = profile.chunk_size, profile.budget
@@ -86,7 +89,8 @@ def emit(
             continue
         try:
             plan = SuitePlan(spec, prog, suite, chunk_size=chunk_size, budget=budget, work=work)
-            rows[suite.claim] = suite_row(plan.run(depth))
+            stride = profile.slim_stride if profile is not None else "auto"
+            rows[suite.claim] = suite_row(plan.run(depth, stride=stride))
         except OracleError as exc:
             if exc.code == "level":
                 rows[suite.claim] = {

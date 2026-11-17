@@ -73,7 +73,7 @@ def good():
 def test_the_generator_corpus_passes(good):
     report, derived = good
     assert report.ok, report.mismatches
-    assert sum(s["cases"] for s in report.suites.values()) == 524_651
+    assert sum(s["cases"] for s in report.suites.values()) == 525_345
     # the derived corpus is exactly the committed bytes (key order and all)
     assert (CORPUS / "corpus.json").read_bytes() == canonical(derived.corpus)
     for name, text in derived.chunk_files.items():
@@ -106,7 +106,7 @@ def test_the_derived_corpus_has_every_feature_the_fixture_exists_for(good):
 def test_cli_verify_v2_exit_codes(tmp_path, capsys):
     argv = ["verify-v2", str(CORPUS), "--warrant", str(WARRANT), "--profile", str(PROFILE)]
     assert run(argv) == 0
-    assert "verify-v2: ok: 524651 cases across 8 suites" in capsys.readouterr().out
+    assert "verify-v2: ok: 525345 cases across 10 suites" in capsys.readouterr().out
     bad = fresh(tmp_path)
     (bad / "cases.tfv").write_bytes(b"tfv 1\n")
     assert run(["verify-v2", str(bad), *argv[2:]]) == 1
@@ -503,7 +503,7 @@ def test_a_diff_report_is_bounded(tmp_path):
             s[key] = -1
     save(root, corpus)
     report, _ = check(root, WARRANT, PROFILE)
-    assert 0 < len(report.mismatches) <= 8 * 5
+    assert 0 < len(report.mismatches) <= 10 * 5
 
 
 # -- the profile and the bindings ---------------------------------------------------------------
@@ -541,6 +541,7 @@ def test_bindings_must_agree_with_the_profile(tmp_path):
     lines = ["# a comment", "package p", "op bump export=b faults=off-by-one,xor-lsb"]
     lines += ["op add2 export=a faults=off-by-one", "op cmp export=c faults=invert,ignore-last-byte"]
     lines += ["op cmp_fixed export=f static=N faults=invert", "op pick export=p fresh faults=missing-error,swap-choice"]
+    lines += ["op echo export=e faults=truncate-last", "op size_of export=s faults=off-by-one"]
     lines += ["op wide export=w faults=xor-lsb,off-by-one"]
     good_bindings.write_text("\n".join(lines) + "\n")
     assert codes(CORPUS, bindings=good_bindings) == set()

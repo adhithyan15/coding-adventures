@@ -9,6 +9,8 @@ fault cmp_fixed invert
 fault pick missing-error
 fault pick swap-choice
 fault wide xor-lsb
+fault echo truncate-last
+fault size_of off-by-one
 fault wide off-by-one
 slim_chunk bump_is_inc 0
 slim_chunk add2_commutes 40

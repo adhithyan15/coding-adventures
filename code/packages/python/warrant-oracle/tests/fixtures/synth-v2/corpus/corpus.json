@@ -124,6 +124,25 @@
       "target_kind": "exhaustive"
     },
     {
+      "blind_claims": [],
+      "fault": "truncate-last",
+      "id": "warrant/synth/negctl/exhaustive/echo/truncate-last",
+      "op": "echo",
+      "required_claims": [
+        "warrant/synth/exhaustive/echo_is_identity"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/synth/exhaustive/echo_is_identity"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
       "blind_claims": [
         "warrant/synth/exhaustive/pick_equal_length"
       ],
@@ -161,6 +180,25 @@
         {
           "chunk": 0,
           "claim": "warrant/synth/exhaustive/pick_equal_length"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "off-by-one",
+      "id": "warrant/synth/negctl/exhaustive/size_of/off-by-one",
+      "op": "size_of",
+      "required_claims": [
+        "warrant/synth/exhaustive/size_of_is_len"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/synth/exhaustive/size_of_is_len"
         }
       ],
       "target_kind": "exhaustive"
@@ -506,6 +544,62 @@
       "expr": [
         "if",
         [
+          "gt",
+          [
+            "len",
+            [
+              "var",
+              "result"
+            ]
+          ],
+          [
+            "lit",
+            {
+              "type": "Nat",
+              "value": "0"
+            }
+          ]
+        ],
+        [
+          "take",
+          [
+            "var",
+            "result"
+          ],
+          [
+            "sub",
+            [
+              "len",
+              [
+                "var",
+                "result"
+              ]
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "1"
+              }
+            ]
+          ]
+        ],
+        [
+          "var",
+          "result"
+        ]
+      ],
+      "fault": "truncate-last",
+      "kind": "post",
+      "op": "echo",
+      "requires": [
+        "ir.core"
+      ]
+    },
+    {
+      "expr": [
+        "if",
+        [
           "is_err",
           [
             "var",
@@ -549,6 +643,28 @@
           ],
           "param": "choice"
         }
+      ]
+    },
+    {
+      "expr": [
+        "add",
+        [
+          "var",
+          "result"
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "1"
+          }
+        ]
+      ],
+      "fault": "off-by-one",
+      "kind": "post",
+      "op": "size_of",
+      "requires": [
+        "ir.core"
       ]
     },
     {
@@ -745,6 +861,18 @@
         "N"
       ]
     },
+    "echo": {
+      "params": [
+        [
+          "a",
+          "Bytes"
+        ]
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "ret": "Bytes"
+    },
     "pick": {
       "fresh": true,
       "params": [
@@ -765,6 +893,18 @@
         "ir.core"
       ],
       "ret": "Result<Bytes,E>"
+    },
+    "size_of": {
+      "params": [
+        [
+          "a",
+          "Bytes"
+        ]
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "ret": "Nat"
     },
     "wide": {
       "admit": [
@@ -794,10 +934,10 @@
     }
   },
   "profile": "warrant-corpus-v2",
-  "profile_sha256": "ba0f48737b5b9131ab871bca210c0b8d191bea9506f85eebadd2d8a39340bee7",
+  "profile_sha256": "8d2507dd4d7740b04b0b222b95153595920098d340469454cbfedbd5021ec4fa",
   "schema_version": 2,
   "spec": "code/packages/python/warrant-oracle/tests/fixtures/synth-v2/synth.warrant",
-  "spec_sha256": "c452b3a073b19e135f8865a3df4853455dc5550dceb35de77c3cfd7f503498bc",
+  "spec_sha256": "d6caacfe25ca15d8e558712d36a18a7e47f98d78768d22d967853cbea272e2dc",
   "suites": [
     {
       "admit": [
@@ -1836,6 +1976,176 @@
       "slim_expected_sha256": "2409310b28337a302e15f4efee0d65a9c3fa6d51342f043475f9252f188818b0",
       "slim_inputs_sha256": "2409310b28337a302e15f4efee0d65a9c3fa6d51342f043475f9252f188818b0",
       "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "bytes_d1",
+              "size": 347
+            },
+            "type": "Bytes"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "echo",
+          [
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ],
+        [
+          "var",
+          "a"
+        ]
+      ],
+      "cases": 347,
+      "chunks": 1,
+      "chunks_sha256": "ee4a3c9178c3b5ad51604813c7a56ed7ee90729498cae63acfd6a18679ea440b",
+      "claim": "echo_is_identity",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "bounded-set",
+      "expected_calls": 347,
+      "expected_sha256": "ebcd05faa6d730ab9d4f490d741747bba75cba08e9af202888bb2b0bb9c798e0",
+      "id": "warrant/synth/exhaustive/echo_is_identity",
+      "inputs_sha256": "ebcd05faa6d730ab9d4f490d741747bba75cba08e9af202888bb2b0bb9c798e0",
+      "ir_cost": 6,
+      "kind": "exhaustive",
+      "ops": [
+        "echo"
+      ],
+      "oracle": {
+        "expected": [
+          "var",
+          "a"
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "echo",
+          [
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ]
+      },
+      "product": 347,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "Bytes",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "ebcd05faa6d730ab9d4f490d741747bba75cba08e9af202888bb2b0bb9c798e0",
+      "slim_inputs_sha256": "ebcd05faa6d730ab9d4f490d741747bba75cba08e9af202888bb2b0bb9c798e0",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "2fc1d5b1f3fe4559cb0aeb24358eafc37647130495f8e7a4d9b64809b7154b98",
+      "v1_inputs_sha256": "2fc1d5b1f3fe4559cb0aeb24358eafc37647130495f8e7a4d9b64809b7154b98",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "bytes_d1",
+              "size": 347
+            },
+            "type": "Bytes"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "size_of",
+          [
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ],
+        [
+          "len",
+          [
+            "var",
+            "a"
+          ]
+        ]
+      ],
+      "cases": 347,
+      "chunks": 1,
+      "chunks_sha256": "47193d6d7fa4c0a5fed32286896e89a06a7c0222c90648318d3d02907d6e9532",
+      "claim": "size_of_is_len",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "bounded-set",
+      "expected_calls": 347,
+      "expected_sha256": "fb0b23d0ee7b8808bfae1a16229a2a828ef1dcb4ae0208f416a07d97622d76f4",
+      "id": "warrant/synth/exhaustive/size_of_is_len",
+      "inputs_sha256": "733b0326927893ef850198183acd310b41b03c583a9d850a1606eec0358cbc4a",
+      "ir_cost": 8,
+      "kind": "exhaustive",
+      "ops": [
+        "size_of"
+      ],
+      "oracle": {
+        "expected": [
+          "len",
+          [
+            "var",
+            "a"
+          ]
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "size_of",
+          [
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ]
+      },
+      "product": 347,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "Nat",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "fb0b23d0ee7b8808bfae1a16229a2a828ef1dcb4ae0208f416a07d97622d76f4",
+      "slim_inputs_sha256": "733b0326927893ef850198183acd310b41b03c583a9d850a1606eec0358cbc4a",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "d5e13ac6c95b2407ac0e9fa46332e70ae7a9a325f797a7eeadcc3ac158322f9e",
+      "v1_inputs_sha256": "3ca19bf6eae9241b5652bb9112a7740a901f15be0a59b8fcd13d1842effac25b",
       "wraps": 0
     }
   ],
