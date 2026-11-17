@@ -19,7 +19,7 @@ All notable changes to this package are documented here.
 - `code/specs/vos-sched-fp-bitmap.warrant`: the first document produced by `vos-link gen-doc`
   on a real implementation; `vos-link check-doc` is in BUILD.
 - `tests/behaviour.rs`: every state and every id against a plain reference model, with and
-  without the ghost face; 100% line coverage.
+  without the ghost face; 100% line coverage measured once by hand (not part of BUILD).
 
 - The VER04h evidence: `evidence.bindings` (every operation bound to a `vos_ghost_` wrapper),
   `tests/generated/warrant_evidence.rs` and its shim, `evidence/test-manifest.json`, the
