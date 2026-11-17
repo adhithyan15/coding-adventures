@@ -1073,6 +1073,7 @@ func (s *parseState) match(n *node, out []interface{}) ([]interface{}, bool) {
 			if !ok {
 				s.pos = saveSep
 				out = out[:mark]
+				s.curMax = cm // a partly matched separator leaves nothing behind
 				break
 			}
 			out, ok = s.match(n.sub, out)
