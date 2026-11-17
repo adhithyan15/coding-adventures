@@ -1,0 +1,5 @@
+class = "K"
+kind = "production"
+contract = "vos-sched-contract"
+obligations = ["representation", "safety"]
+evidence-features = ["ghost"]

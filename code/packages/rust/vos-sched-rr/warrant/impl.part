@@ -1,0 +1,171 @@
+  -- The implementation block of vos-sched-rr (VOS-012b): a one-byte ready mask plus a round-robin
+  -- pointer `ptr` that `alpha` forgets.  Bound operations, no bodies (R3); the behaviour is what
+  -- the source does.  The representation tier (VOS02 2.7) names two models of this block: `rep`,
+  -- the state an abstract state and a history code name (the code is the pointer), and `hist`, the
+  -- code of a state.  `rr_pick` and `rr_next` are op-free, so a claim can say what a rotation does
+  -- without calling the implementation.  The `assume` rows are not here: gen-doc appends them.
+  record Impl(mask: U8, ptr: U8)
+  record AbsW(w: U8)
+  record CfgN(v: U8)
+  model dec(x: AbsW) -> Ready = (
+    Ready(not (bit_and(x.w, 1u8) == 0u8), not (bit_and(x.w, 2u8) == 0u8), not (bit_and(x.w, 4u8) == 0u8),
+          not (bit_and(x.w, 8u8) == 0u8), not (bit_and(x.w, 16u8) == 0u8), not (bit_and(x.w, 32u8) == 0u8),
+          not (bit_and(x.w, 64u8) == 0u8), not (bit_and(x.w, 128u8) == 0u8)))
+  op init() -> Impl
+  op insert_out(s: Impl, t: U8) -> Upd
+  op insert_img(s: Impl, t: U8) -> Impl
+  op remove_out(s: Impl, t: U8) -> Upd
+  op remove_img(s: Impl, t: U8) -> Impl
+  op dispatch_out(s: Impl) -> Pick
+  op dispatch_img(s: Impl) -> Impl
+  op alpha_w(s: Impl) -> AbsW
+  op cfg_n() -> CfgN
+
+  model b2m(b: Bool, k: Nat) -> U8 = if b then shl(1u8, k) else 0u8
+  -- build sets the pointer to a constant: the pointer is OUTSIDE the cone of build and alpha.
+  model build(m: Ready) -> Impl = (
+    Impl(bit_or(bit_or(bit_or(bit_or(bit_or(bit_or(bit_or(b2m(m.p0, 0), b2m(m.p1, 1)), b2m(m.p2, 2)), b2m(m.p3, 3)),
+           b2m(m.p4, 4)), b2m(m.p5, 5)), b2m(m.p6, 6)), b2m(m.p7, 7)), 0u8))
+  model inv_impl(s: Impl) -> Bool = s.ptr < 8u8
+
+  -- The two models the representation tier names (VOS02 2.7).  The contract owns the packing of the
+  -- code; this crate only says what the code is.
+  model rep(m: Ready, h: U8) -> Impl = Impl(build(m).mask, h)
+  model hist(s: Impl) -> U8 = s.ptr
+
+  -- The op-free round-robin model: scan from the pointer, wrapping at 8.
+  model has_bit(mask: U8, i: U8) -> Bool = not (bit_and(mask, shl(1u8, to_nat(bit_and(i, 7u8)))) == 0u8)
+  model rr_pick(mask: U8, p: U8) -> Pick = (
+    if has_bit(mask, p) then Run(bit_and(p, 7u8)) else
+    (if has_bit(mask, p + 1u8) then Run(bit_and(p + 1u8, 7u8)) else
+    (if has_bit(mask, p + 2u8) then Run(bit_and(p + 2u8, 7u8)) else
+    (if has_bit(mask, p + 3u8) then Run(bit_and(p + 3u8, 7u8)) else
+    (if has_bit(mask, p + 4u8) then Run(bit_and(p + 4u8, 7u8)) else
+    (if has_bit(mask, p + 5u8) then Run(bit_and(p + 5u8, 7u8)) else
+    (if has_bit(mask, p + 6u8) then Run(bit_and(p + 6u8, 7u8)) else
+    (if has_bit(mask, p + 7u8) then Run(bit_and(p + 7u8, 7u8)) else Idle))))))))
+  model rr_next(mask: U8, p: U8) -> Impl = (
+    match rr_pick(mask, p) with
+      Idle -> Impl(mask, p)
+    | Run(t) -> Impl(bit_and(mask, bit_not(shl(1u8, to_nat(t)))), bit_and(t + 1u8, 7u8)))
+
+  -- OPTIONAL, ungated impl-own claims (VOS02 2.7): what dispatch answers and the full post-state
+  -- it leaves, against the op-free model.  The representation tier does not require them; a
+  -- round-robin keeps them so that a dispatch that stops rotating (and stays inside the image) is
+  -- still caught by evidence.  They are two claims, one per projection, because the generator
+  -- attaches a claim to one operation: a single claim over both projections would leave
+  -- `dispatch_img` with only `dispatch_rep_post`, which the `field-zero` fault slips past (that
+  -- claim says the post-state is `rep` of its own abstraction, which a zeroed mask still satisfies).
+  -- The pointer is masked with `& 7` instead of refined with `p < 8`: the property generator's
+  -- rejection sampler cannot find the 3 percent of a U8 that a refinement admits (VOS-D054).
+  claim dispatch_det_out:
+    forall mask: U8, p: U8. dispatch_out(Impl(mask, bit_and(p, 7u8))) == rr_pick(mask, bit_and(p, 7u8))
+  claim dispatch_det_img:
+    forall mask: U8, p: U8. dispatch_img(Impl(mask, bit_and(p, 7u8))) == rr_next(mask, bit_and(p, 7u8))
+
+  -- insert and remove never move the pointer (it is the history; only dispatch writes it).  The
+  -- representation claims cannot see this: a pointer reset to 0 is still inside the image of
+  -- `rep`.  The claim compares the whole post-state with an op-free model (a claim over the
+  -- pointer alone would let `field-zero`, which zeroes the mask, slip past it).  The mask is
+  -- fixed to the two extremes so that every insert/remove path is taken (0: insert Changed,
+  -- remove Unchanged; 255: insert Unchanged, remove Changed) within the budget: the binders are
+  -- only the pointer and the thread id (`& 7` for the pointer: VOS-D054).
+  model ins_model(mask: U8, p: U8, t: U8) -> Impl = (
+    if t >= 8u8 then Impl(mask, p) else Impl(bit_or(mask, shl(1u8, to_nat(t))), p))
+  model rem_model(mask: U8, p: U8, t: U8) -> Impl = (
+    if t >= 8u8 then Impl(mask, p) else Impl(bit_and(mask, bit_not(shl(1u8, to_nat(t)))), p))
+  claim pointer_kept:
+    forall p: U8, t: U8. (
+      insert_img(Impl(0u8, bit_and(p, 7u8)), t) == ins_model(0u8, bit_and(p, 7u8), t) and
+      insert_img(Impl(255u8, bit_and(p, 7u8)), t) == ins_model(255u8, bit_and(p, 7u8), t) and
+      remove_img(Impl(0u8, bit_and(p, 7u8)), t) == rem_model(0u8, bit_and(p, 7u8), t) and
+      remove_img(Impl(255u8, bit_and(p, 7u8)), t) == rem_model(255u8, bit_and(p, 7u8), t))
+
+  -- Worked examples over NON-zero states: `field-zero` is inert on a field that is already zero
+  -- (VOS02 13.4 F4), so an example over `init()` alone could not carry a negative control.
+  example n_is_eight:
+    cfg_n() == CfgN(8u8)
+  example insert_three_sets_bit_three:
+    alpha_w(insert_img(init(), 3u8)) == AbsW(8u8)
+  -- Threads 1 and 3 are ready (mask 0b1010) and the scan starts at 2: thread 3 runs, its bit is
+  -- cleared and the pointer moves one past it.
+  example dispatch_from_two_picks_three:
+    dispatch_out(Impl(10u8, 2u8)) == Run(3u8)
+  example dispatch_from_two_moves_pointer_to_four:
+    dispatch_img(Impl(10u8, 2u8)) == Impl(2u8, 4u8)
+
+  -- The secrecy labels, hostile inputs and step bounds the Warrant checker requires of every
+  -- operation (the same rows as vos-sched-fp-bitmap).
+  labels insert_out:
+    s public
+    t public
+  labels insert_img:
+    s public
+    t public
+  labels remove_out:
+    s public
+    t public
+  labels remove_img:
+    s public
+    t public
+  labels dispatch_out:
+    s public
+  labels dispatch_img:
+    s public
+  labels alpha_w:
+    s public
+
+  input insert_out.s:
+    hostile
+    ensures no_panic, terminates
+  input insert_out.t:
+    hostile
+    ensures no_panic, terminates
+  input insert_img.s:
+    hostile
+    ensures no_panic, terminates
+  input insert_img.t:
+    hostile
+    ensures no_panic, terminates
+  input remove_out.s:
+    hostile
+    ensures no_panic, terminates
+  input remove_out.t:
+    hostile
+    ensures no_panic, terminates
+  input remove_img.s:
+    hostile
+    ensures no_panic, terminates
+  input remove_img.t:
+    hostile
+    ensures no_panic, terminates
+  input dispatch_out.s:
+    hostile
+    ensures no_panic, terminates
+  input dispatch_img.s:
+    hostile
+    ensures no_panic, terminates
+  input alpha_w.s:
+    hostile
+    ensures no_panic, terminates
+
+  -- Bounds: the contract ceilings.  `heap <= 0` only where the answer is a payload-free variant
+  -- (the harness's own marshalling allocates otherwise, VOS-D063).
+  bound init:
+    steps <= 80
+  bound insert_out:
+    steps <= 160
+    heap <= 0
+  bound insert_img:
+    steps <= 160
+  bound remove_out:
+    steps <= 160
+    heap <= 0
+  bound remove_img:
+    steps <= 160
+  bound dispatch_out:
+    steps <= 160
+  bound dispatch_img:
+    steps <= 160
+  bound alpha_w:
+    steps <= 160

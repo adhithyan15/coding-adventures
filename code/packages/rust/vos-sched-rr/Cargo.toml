@@ -1,0 +1,35 @@
+[package]
+name = "vos-sched-rr"
+version = "0.1.0"
+edition = "2021"
+description = "Round-robin scheduler of the verified-OS program (VOS-012b): a one-byte ready set plus a rotation pointer, implementing vos-sched-contract at N = 8 in representation mode"
+
+[lib]
+name = "vos_sched_rr"
+path = "src/lib.rs"
+
+# SH13/SH18: the ghost face (the public-field state image and its wrappers) is compiled
+# only for the evidence build.  A plain `cargo build` or `cargo test` never sees it.
+[features]
+ghost = []
+
+[dependencies]
+# SH12: the interface's own contract crate and `core`, nothing else.
+vos-sched-contract = { path = "../vos-sched-contract" }
+
+[dev-dependencies]
+# SH12: the generated evidence harness hashes the spec and the source tree.
+coding_adventures_sha256 = { path = "../sha256" }
+coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
+
+# Generated from code/specs/vos-sched-rr.warrant (VER04h).  It needs the ghost face, so a plain
+# `cargo test` skips it (VOS02 section 4.5).
+[[test]]
+name = "warrant_evidence"
+path = "tests/warrant_evidence.rs"
+harness = false
+required-features = ["ghost"]
+
+[[test]]
+name = "behaviour"
+path = "tests/behaviour.rs"

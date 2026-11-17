@@ -309,6 +309,7 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	},
 	vosImplementationRow("vos-sched-fp-bitmap"),
 	vosImplementationRow("vos-sched-any"),
+	vosImplementationRow("vos-sched-rr"),
 	{
 		name:     "rust/vos-shape-check",
 		language: "rust",
