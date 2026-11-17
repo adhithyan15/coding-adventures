@@ -25,6 +25,9 @@ use crate::results::{green, RSS_CAP_KB, TIMEOUT_S};
 use crate::row::{Control, Knob, Row};
 use coding_adventures_bounded_json::{parse, serialize, JsonNumber, JsonValue};
 use std::io::Read;
+// Unix only: puts the child in its own process group.  Elsewhere the group calls below are
+// compiled out and `/usr/bin/time` fails to start, which `run_child` reports as an error.
+#[cfg(unix)]
 use std::os::unix::process::CommandExt;
 use std::path::Path;
 use std::process::{Command, Stdio};
@@ -230,8 +233,10 @@ pub fn run_child(
         ])
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
-        .stdin(Stdio::null())
-        .process_group(0);
+        .stdin(Stdio::null());
+    // Its own process group, so one signal to the group reaches `/usr/bin/time` and the probe.
+    #[cfg(unix)]
+    cmd.process_group(0);
     let mut child = cmd
         .spawn()
         .map_err(|e| format!("cannot start /usr/bin/time: {e}"))?;
