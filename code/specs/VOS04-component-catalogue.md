@@ -111,6 +111,18 @@ degenerate implementation is itself evidenced against the same contract, so
 "does nothing" is a checked statement and not an omission. A GPOS needs a
 second spine, because it has dynamic objects and revocation (section 3).
 
+*What "does nothing" costs.* A degenerate implementation proves **less**, and
+the evidence must say so. It carries a distinct, **weaker claim set**: for
+example `vos-budget-none` carries no `budget` (enforcement) claim,
+`vos-psched-single` carries no `partition-time` claim, `vos-hm-halt` carries no
+`partition-health` (containment and recovery) claim and `vos-prot-none` carries
+no `isolation` claim. (The claim names are provisional; each contract's PR-C
+fixes the spelling.) Each profile theorem names the claims it **needs**
+(VOS02's `needs` is a subset of `carries` check, section 7.2 here), so a
+profile whose theorem needs `partition-time` cannot be assembled with
+`vos-psched-single`. Without this, "the spine is the same" would let a flight
+profile claim time partitioning with a slot that does nothing.
+
 ### 1.3 The control and data split
 
 Payload stores (a thread's saved register frame, the bytes of a message) are
@@ -140,16 +152,25 @@ line is to make it a design rule, not a hope. This is also why a tree walk is
 ### 1.5 Effects as data
 
 No leaf touches hardware. A driver is a step function that **returns
-commands** (a byte to write, a register to set); the protection component
-returns a configuration image; the HAL executes both. Every leaf's capability
+commands** (a byte to transmit, a line to acknowledge); the protection
+component returns a configuration image; the HAL executes both. A command is a
+value of a **closed, per-interface enum** whose payloads are opaque ids,
+bounded indices and data bytes: **no raw address and no CSR number appears in
+any leaf command** (rule 6). The HAL turns an index into an address from a
+table it owns, and **validates every command against a static allowlist**
+derived from the board map and the owning domain before it executes it, so a
+leaf that is wrong, or compromised, can ask for nothing the allowlist does not
+name. Every leaf's capability
 footprint therefore stays **empty**, which `ca-capability-analyzer` can check
 mechanically (BUILD line 3, section 5.2), and the only code that touches
 hardware is the HAL, which is the one place with `unsafe` and inline assembly
 and has its own inventory evidence (VOS00 section 4.6; VOS21, VOS-025a).
 
 *Why.* A claim that a component is pure is only as strong as the check that it
-has no effects. Moving every effect into one inventoried place turns a
-program-wide property into a property of one small crate.
+has no effects, and a command channel that can name any address is an effect
+in disguise. Moving every effect into one inventoried place, behind a closed
+vocabulary and an allowlist, turns a program-wide property into a property of
+one small crate.
 
 ---
 
@@ -181,10 +202,21 @@ bound), 2S (3.6, two-safety, for constant-time and timing).
 
 | Class | Shape | What it costs |
 |---|---|---|
-| R0 | Bit-packed scalar state; width-insensitive | One obligation; green at the shipped width (VOS30 table A: N = 64) |
+| R0 | Bit-packed scalar state; width-insensitive | One obligation; green at the shipped width on the hand-written proxy code of VOS30 table A (N = 64); not yet compiler output |
 | R1 | One symbolic index per operation | Case-split into T obligations, T up to 8 to 16 |
 | R2 | Two indices, or a bounded scan | Product split, or a cut point per iteration |
 | R3 | A linked structure | **Not provable today.** Redesign to R1 or R2, or wait for arrays (VOS00 section 12 row 9) |
+
+**Implementations with no backlog row yet.** An implementation named in a
+table or in the section 7 matrix but absent from every track C row of the
+backlog is **not scheduled**; the matrix marks each with "[no row]". They are:
+`pool-freelist`, `budget-sporadic`, `timer-wheel`, `irq-prio`, `irq-hvip`,
+`sysdec-sbi`, `ctx-rv32h`, `load-elf32`, `prot-stage2-static`, `prot-none`
+(never eligible for an image profile, section 7.2), `thread-packed`, a two-level
+bitmap `sched`, `pt-*`, `aspace-table`, `mutex-pcp`, `emul-rv32h`, `blk-simple`
+and the file-system server. Their interfaces are the C21+ placeholder or have a
+row for a sibling implementation only. A cell without "[no row]" is a row that
+exists.
 
 The **Tiers** column names the contract tiers (VOS01 section 2.4): *safety*
 (what every correct implementation must do), *policy* (a deterministic choice
@@ -196,7 +228,7 @@ representation, so equal abstract states have one concrete form), and *any*
 
 | Interface | M; ops | Tiers | Implementations | Profiles | Rung | X1 | X3 / risk |
 |---|---|---|---|---|---|---|---|
-| `sched` (exists, VOS10) | ready set of N bools; `init insert remove dispatch` | safety, policy (highest), canonical, any | `fp-bitmap` (in review), `rr` (representation mode), `any`; later a two-level bitmap for N = 64 | all | L3, L4 | N = 8, 65,536 (run) | REF INV FRAME STEP; R0 (A1 and A2 green at N = 64) |
+| `sched` (exists, VOS10) | ready set of N bools; `init insert remove dispatch` | safety, policy (highest), canonical, any | `fp-bitmap` (in review), `rr` (representation mode), `any`; later a two-level bitmap for N = 64 | all | L3, L4 | N = 8, 65,536 (run) | REF INV FRAME STEP; R0 (A1 and A2 green at N = 64 on proxy code, VOS30 section 8.4) |
 | `edf` (sibling; resolves VOS-D048) | ready set plus a per-thread key; `init insert(t,key) remove dispatch` | safety (same shape), policy (minimum key) | `edf-scan`, `edf-any` | S | L3 | T = 3, 2-bit keys, about 8k | PATH per scan step; R2 |
 | `budget` (VOS10 section 13) | per-thread remaining, cap, refill; `init charge(t,ticks) refill_next(now) set` | safety (remaining at most cap; exhausted iff 0), policy (sporadic rule) | `budget-periodic`, `budget-sporadic`, `budget-none`, `any` | S, F, G | L3 | T = 2, 2-bit, about 8k | R1 |
 | `psched` (major frame) | cursor and ticks over a W-window table; `init(cfg) tick(elapsed) current` | safety (a configured partition), policy (exact cyclic order and durations) | `psched-table`, `psched-single`, `any` | F, V (H and S take `-single`) | L4, L12 | W = 3, about 32k, config quantified | REF INV 2S (padded exit); R1 |
@@ -217,12 +249,26 @@ below it is a sibling and not a tier. That argument is now the general rule.
 |---|---|---|---|---|---|---|---|
 | `pool` (ids: frames, blocks, ASIDs, slots) | free set of B ids; `init alloc free(id)` | safety (alloc returns a free id; no double alloc), policy (lowest first, deterministic for noninterference), canonical | `pool-bitmap`, `pool-freelist` (representation mode), `any` | G, V; F for buffers | L2, L8 | B = 8, 65,536 | R0 bitmap (the cheapest second interface); freelist R2 |
 | `untyped` (watermark retype) | (watermark, size); `retype(n,size) reset` | safety (disjoint, in bounds) | `untyped-bump`, `any` | G | L12 | 3-bit | R0 |
-| `region` (variable-size) | disjoint intervals; `alloc(size,align) free(base)` | safety, policy (first-fit or buddy) | `region-buddy`, `region-firstfit`, `any` | G only | L8 | 8 granules, at most 2 live | R2 or R3; **defer**, prefer fixed pools |
-| `prot` (PMP, MPU or static stage-2 plan) | static per-domain regions plus the loaded domain; `init(cfg) load(d)` returns a config image; `check(d,addr,len,access)` | safety (grants are a subset of d's regions, never the kernel or another domain), policy (exact) | `prot-pmp-napot`, `prot-pmp-tor`, later `prot-stage2-static`, `prot-none`, `any` | H S F; V via stage-2 | L12 | R = 2, 8 granules, config quantified, 262,144 (65 percent of budget) | REF over a **shared** PMP-match model, 2S; R1. The match model must be the same Warrant text the emulator's PMP claims use (VOS-021) |
+| `region` (variable-size) | disjoint intervals; `alloc(size,align) free(base)` | safety, policy (first-fit or buddy) | `region-buddy`, `region-firstfit`, `any` | G only | L8 | 8 granules, at most 2 live | R2 or R3; **not in the pool until redesigned** (rule 12); prefer fixed pools |
+| `prot` (PMP, MPU or static stage-2 plan) | static per-domain regions plus the loaded domain; `init(cfg) load(d)` returns a config image; `check(d,addr,len,access)` | safety (grants are a subset of d's regions, never the kernel or another domain; **image agreement**: the config image `load(d)` returns grants exactly what `check(d,..)` allows), policy (exact) | `prot-pmp-napot`, `prot-pmp-tor`, later `prot-stage2-static`, `prot-none`, `any` | H S F; V via stage-2 | L12 | R = 2, 8 granules, config quantified, 262,144 (65 percent of budget) | REF over a **shared** PMP-match model, 2S; R1. The match model must be the same Warrant text the emulator's PMP claims use (VOS-021), and it is **differentially tested against `riscv-simulator`'s independent PMP** (VOS-D074) |
 | `pt` (page table) | partial map vpn -> (pfn, perms); `map unmap lookup` | safety (a map changes only that vpn; only given frames), canonical | `pt-flat` (reference), `pt-sv32`, later `pt-sv39`, `any` | G; V in a stage-2 slot | L2, L8 | flat 4 entries about 131k; 2-level 2x2 about 8k | R2. The walk is the chained-access cliff; cut between levels or split by product |
 | `aspace` | A spaces (root, ASID, state); `create destroy activate` | safety | `aspace-table`, `any` | G, V | L8 | A = 2 | R1 |
-| `cspace` (capability lookup) | slots (kind, object, rights); `init lookup(d,slot,need) install remove` | safety (grant only if the rights cover the need: confinement), canonical | `cspace-table`, `any` | H S F (install at boot only); G | L12 | 3 slots, 65,536 | R1 |
-| `cdt` (derive and revoke) | a derivation forest; `derive delete revoke_step` (one node per call) | safety (rights fall along a derivation; no descendant remains after a revoke completes) | `cdt-array`, `any` | G only | L12 | 3 nodes, 65,536 | R3 made R2 by `revoke_step`; also waits on WX-S3 |
+| `cspace` (capability lookup) | slots (kind, object, rights) plus a **sealed** bit; `init lookup(d,slot,need) install remove seal` | safety (grant only if the rights cover the need: confinement; **`install` or `remove` after `seal` answers `Sealed` and changes nothing**), canonical | `cspace-table`, `any` | H S F V (install at boot, then `seal`); G (never sealed) | L12 | 3 slots, sealed bit, about 131k | R1 |
+| `cdt` (derive and revoke) | a derivation forest; `derive delete revoke_step` (one node per call) | safety (rights fall along a derivation; no descendant remains after a revoke completes) | `cdt-array`, `any` | G only | L12 | 3 nodes, 65,536 | R3 made R2 only if `revoke_step` holds; **not in the pool until redesigned and WX-S3 is closed** (rule 12) |
+
+Why `cspace` has a `seal`: H, S and F install capabilities at boot only, and
+"at boot only" must be an obligation, not a convention. The choice was between
+one `cspace` whose M carries a sealed bit (and whose safety tier says an
+`install` or `remove` after `seal` answers `Sealed` and changes nothing), and a
+distinct `cspace-static` contract with no `install`. The sealed bit is chosen:
+the lookup and the confinement lemmas are the same text for the static and the
+dynamic case, so a second contract would duplicate them and could drift; one
+extra bit and one operation is a small cost; and a profile that is not sealed
+(the GPOS) is simply one that never calls `seal`. The spine then owns the
+sealed-after-boot invariant (I11) and boot calls `seal` before the first user
+instruction (section 6.3). The sabotage control removes the seal two ways: a
+`cspace-table` whose `install` ignores the bit must fail the safety claim, and a
+spine whose reset entry omits `seal` must fail I11.
 
 Why `pool` ranks as the cheapest second interface: a free set is a bit-packed
 scalar (R0), so its X3 route is the same width-insensitive route as the
@@ -230,7 +276,9 @@ bitmap scheduler. It is a good first test that the component kit of section 5
 is mechanical and not particular to `sched`. `region` is the cautionary row: a
 variable-size allocator is a linked structure (R3), so it fails the "basic"
 test of rule 12 and is deferred; fixed pools plus `pool` cover the RTOS, flight
-and separation profiles with no kernel heap.
+and separation profiles with no kernel heap. `cdt` is in the same position and
+the tables say so: both are listed to record the design, and neither is a pool
+member until a redesign brings it to R2 with a proof-feasibility note.
 
 ### 2.4 Communication, interrupts and partition services
 
@@ -256,8 +304,8 @@ interface.
 |---|---|---|---|---|---|---|---|
 | `sysdec` (syscall decoder) | stateless; `decode(regs)` -> Syscall or Invalid | safety (total; never an out-of-range argument), canonical (a round trip with the user-side encoder) | `sysdec-rtos`, `sysdec-sbi` (V and GPOS shim), `any` | all | L2 (extracode) | reduced width W = 4 | R0; the best early X3 after `sched` |
 | `trapdec` (per ISA) | stateless; `decode(mcause, mtval)` | safety (total), canonical | `trapdec-rv32`, `any` | all | L2 | reduced | R0 |
-| `emul` (trapped-instruction decoder) | stateless | safety | `emul-rv32h` | V | L9 | reduced | R0 |
-| `load` (streaming image decoder) | parser state; `step(state, byte)` -> Segment, Data, Entry, Reject or More | safety (never stores outside a declared segment; malformed input rejected; bounded steps per byte) | `load-flat`, `load-elf32`, rung-local EDSAC orders | G V; rungs L0 L1 L7 | L0 | all strings of length at most 5 over a 3-bit alphabet, about 32k | R0 or R1; **fuzz is primary** (the VOS-D001 pattern) |
+| `emul` (trapped-instruction decoder) | stateless | safety | `emul-rv32h`, `any` | V | L9 | reduced | R0 |
+| `load` (streaming image decoder) | parser state; `step(state, byte)` -> Segment, Data, Entry, Reject or More | safety (never stores outside a declared segment; malformed input rejected; bounded steps per byte) | `load-flat`, `load-elf32`, `any`, rung-local EDSAC orders | G V; rungs L0 L1 L7 | L0 | all strings of length at most 5 over a 3-bit alphabet, about 32k | R0 or R1; **fuzz is primary** (the VOS-D001 pattern), with the corpus and length bounds of section 5.2 line 8 |
 | `uart` (console driver as a step) | tx and rx buffers plus flags; `put on_tx_ready on_rx get`, returning commands | safety (no byte invented or dropped silently) | `uart-poll`, `uart-ring`, `any` | all | L7 | depth 2, about 2k | R0 poll |
 | `blk` | a request state machine; `submit(lba,dir) complete(status)` | safety (one in flight; range checked) | `blk-simple`, `any` | G | L7 | tiny | R0 |
 | FS leaves `dir`, `extent`, `bcache`, `fdtable` | name -> inode, offset -> block, block -> frame, handle -> object | safety each | flat (CP/M) then tree (Unix) | G | L7, L8 | each below 65k | R1 or R2; specified with the rungs |
@@ -322,7 +370,7 @@ small and keeps the proof obligations where they belong.
 ---
 ## 4. Decomposition rules (normative)
 
-These twelve rules decide what a component is, where its boundary falls and
+These thirteen rules decide what a component is, where its boundary falls and
 what a reviewer rejects. A new row in section 2 is justified against them, not
 against taste. Rules 3 to 6 restate shaping decisions of section 1 as
 checkable text.
@@ -359,7 +407,25 @@ VOS30 section 8 cliff stated as a rule.
 
 **Rule 6: effects as data** (decision 1.5). A leaf has an empty capability
 footprint (`required_capabilities.json` is empty), and the HAL is the only
-crate that executes commands.
+crate that executes commands. Three requirements make "commands" safe:
+
+1. **Closed vocabulary.** Every interface that returns commands declares them
+   as a closed enum in its contract package. No variant carries a raw address,
+   a CSR number or an MMIO offset; payloads are opaque ids, bounded indices and
+   data bytes. A leaf therefore cannot even **construct** a request for an
+   arbitrary location. This is checked per implementation (PR-I line 2 in
+   section 5.2: the command-type check) and has a negative control: a mutant
+   leaf that emits a raw address must be rejected (VOS-D077).
+2. **Allowlist in the HAL.** The HAL (VOS21, VOS-025a) validates every command
+   against a **static allowlist** built from the board map and the owning
+   domain, before executing it. A command outside the allowlist is rejected,
+   never executed, and recorded. The HAL's evidence includes a negative
+   control: an out-of-range command is rejected.
+3. **Images agree with checks.** `prot` returns a configuration image, which is
+   an effect too. Its safety tier carries an **image-agreement obligation**:
+   `load(d)`'s image grants exactly what `check(d, ..)` allows, no more and no
+   less (section 2.3). Without it the model could be proved safe while the
+   registers the HAL writes grant something else.
 
 **Rule 7: time is an input, never read.** A time-carrying contract takes the
 current time as an argument and states an **overflow rule**: either saturating
@@ -380,7 +446,13 @@ open: VOS-D068.
 
 **Rule 9: degenerate implementations** (kind `production`) instead of optional
 slots (decision 1.2). `vos-budget-none`, `vos-psched-single` and `vos-hm-halt`
-are ordinary implementations with their own evidence.
+are ordinary implementations with their own evidence, **and a distinct, weaker
+claim set**: they do not carry the `budget`, `partition-time`,
+`partition-health` or `isolation` claims. Profile theorems name the claims they
+need, and `check-profile` rejects a profile whose needed claim is not carried by
+the implementation in its slot (section 7.2). `vos-prot-none` exists only for
+evidence profiles and the early boot stages; it is **barred from every
+`class image` profile** (H, S, F, G and V).
 
 **Rule 10: ids are opaque.** A component never invents or interprets an id of
 another component; the **spine hands ids across**. A thread id is a number the
@@ -398,11 +470,14 @@ the standard set is a list of two-component facts, each of which is small:
 | I1 | ready is a subset of Runnable | `sched`, `thread` |
 | I2 | running is not in ready | `sched`, `thread` |
 | I3 | a Blocked thread is in exactly one wait structure | `thread`, `ep`, `sem`, `timer` |
-| I4 | the loaded protection domain equals the owner of the running thread | `prot`, `thread` |
+| I4 | the loaded protection domain equals the domain of the owner of the running thread, and each domain belongs to exactly one partition tag | `prot`, `thread` |
 | I5 | armed timers name live threads | `timer`, `thread` |
 | I6 | capability objects are live | `cspace`, the object owner |
 | I7 | the partition of the running thread equals `psched`'s current partition | `thread`, `psched` |
 | I8 | mapped frames are a subset of allocated frames | `pt`, `pool` |
+| I9 | every id an instance hands out belongs to that instance's owner partition, and no instance is shared across partition tags (rule 13) | every instance, the spine |
+| I10 | no loaded domain grants kernel memory or another partition's memory | `prot`, `thread` |
+| I11 | after reset, in a sealed profile (H, S, F, V), `cspace` is sealed before the first user instruction | `cspace`, the spine |
 
 This is the standard set; a profile uses the rows whose components it
 contains. The spine specification (VOS20, VOS-022a) proves each row closed
@@ -413,21 +488,48 @@ every interface.
 hold:
 
 1. its contract mentions no profile (rule 3);
-2. it has **at least two consumers**, profiles or rungs;
+2. it has **at least two consumers**, **at least one of them a profile**
+   (rungs alone do not count: a rung is a teaching vehicle and a second rung
+   does not make a second customer);
 3. its reduced M fits in **about 20 bits**, with every claim at most 262,144
    cases (65 percent of the 400,000-case budget);
-4. its risk class is **R0 to R2** (section 2.1).
+4. its risk class is **R0 to R2** (section 2.1), and an **R2 entry carries a
+   proof-feasibility note** in its PR-C: which split it uses (product or cut
+   point per iteration), the predicted number of obligations, and the probe
+   result (VOS-028b) that supports the prediction.
 
 Otherwise it stays rung-local or is redesigned. *Why this rule is the one that
 keeps the pool honest.* It is the only rule that can **refuse** a piece.
-`region` fails clause 4 (a variable-size allocator is a linked structure) and
-`cdt` passes only because `revoke_step` turns a tree walk into R2; both are in
-the pool with their risk on the table. A file-system `dir` that serves only the
+`region` fails clause 4 (a variable-size allocator is a linked structure), and
+`cdt` fails it until `revoke_step` is shown to make it R2 and WX-S3 is closed.
+**Both are listed in section 2.3 to record the design, and neither is in the
+pool until it is redesigned.** A file-system `dir` that serves only the
 CP/M rung fails clause 2 and stays rung-local until a second consumer exists.
+
+**Rule 13: one slot, one owner.** Each component **instance** fills **exactly
+one slot** and has **exactly one owner partition**. An instance is never shared
+by two slots, and never by two partition tags. Cross-partition communication
+goes only through a **checked spine channel** (`chan` for queued messages,
+`sample` for sampled ones), with a partition-tag check on every send and
+receive and **padded exits** (the sender's time on the channel does not depend
+on the receiver). *Why.* A shared `pool`, `timer` or `irq` instance is a
+covert channel and a denial-of-service lever between partitions: one
+partition's allocation pattern or interrupt rate changes another's behaviour,
+and the contract of the shared instance cannot say whose it is. One owner per
+instance makes isolation a property of ownership, closed by I9, and lets
+`check-profile` reject a violation from the manifest alone (section 7.2). The
+flight profile therefore **instantiates** `pool`, `timer`, `irq`, `thread` and
+the other state machines **per partition** (section 7); a G or V profile with
+one trust domain has one owner. **The kernel is an owner too**: an instance that is by nature cross-partition
+(`psched`, `prot`, `hm`) is owned by the kernel, takes the partition tag as an
+input, and is closed by I9 and I10 instead of being shared. **Stateless
+decoders** (`sysdec`, `trapdec`, `emul`) have no state to own and may be shared.
+A *different* configuration of one interface in two slots (VOS-D071) is
+allowed, as separate instances, each with its own owner and pin.
 
 ### 4.1 The rules applied once: is `pool` a component?
 
-A worked pass through rules 1 to 12, for the interface that section 2.3 ranks
+A worked pass through rules 1 to 13, for the interface that section 2.3 ranks
 as the cheapest second one. The point is that every answer is a lookup, not a
 judgement.
 
@@ -460,8 +562,15 @@ judgement.
     only standard row that names `pool`, and it is closed in the spine document
     over `pool-any`.
 12. *Basic test.* Mentions no profile; consumers: G (frames, ASIDs), V (stage-2
-    frames), F (buffers), the L2 and L8 rungs; B = 8 gives 8 bits of state,
-    65,536 cases; risk R0. It passes all four clauses.
+    frames), F (buffers; one instance per partition, rule 13), plus the L2 and
+    L8 rungs, so at least one profile consumer; B = 8 gives 8 bits of state,
+    65,536 cases; risk R0 (so no proof-feasibility note is needed). It passes all
+    four clauses.
+13. *One slot, one owner.* Each use of `pool` in a profile is its own instance:
+    the frame allocator is one instance owned by the kernel (G) or by one
+    partition (F), the ASID allocator is another. The manifest names the owner
+    of each, and `check-profile` rejects an instance in two slots of different
+    partitions.
 
 If any answer had been "it depends on the profile", the interface would have
 been split or the clause 1 of rule 12 would have refused it. That is the
@@ -524,22 +633,25 @@ explanation:
 | # | Evidence | BUILD line | Gate |
 |---|---|---|---|
 | 1 | Unit | `cargo test --lib --test behaviour` with and without `ghost`, plus `--doc` | Against a plain reference model written in the test, not copied from the implementation |
-| 2 | Shape | `vos-shape-check .` | SH1-SH18; `clippy::arithmetic_side_effects` denied |
+| 2 | Shape | `vos-shape-check .` | SH1-SH18; `clippy::arithmetic_side_effects` denied; **command-type check** (rule 6: every command enum is closed and no variant payload can carry a raw address or CSR number), with a negative control that a mutant leaf emitting one is rejected (VOS-D077) |
 | 3 | Capability | `ca-capability-analyzer --dir .` | An empty `required_capabilities.json` |
 | 4 | Document | `vos-link check-doc .` | The committed `.warrant` equals the regenerated one |
 | 5 | Harness drift | `gen_evidence --check <crate>` | The generated test harness equals the regenerated one |
-| 6 | X1 exhaustive | the generated suite | Kind `full`; case counts read from the manifest |
-| 7 | Property | 4096 random cases per claim | Catches the width the reduced X1 cannot reach |
-| 8 | Fuzz | 5000 iterations; parsers add a VER06 target | Crashes and invariant violations on arbitrary bytes |
-| 9 | Sabotage | `WARRANT_EVIDENCE_FAULT=...` per operation and tier, expecting **not ok** | Proves the claims can fail |
-| 10 | SAT | per section 5.3 | Today: lemma certificates. After VOS-029: `vos-x3 check <crate>` |
+| 6 | X1 exhaustive | the generated suite | Kind `full`; case counts read from the manifest. **None ran = fail**: an empty manifest, or a claim with zero cases, fails |
+| 7 | Property | 4096 random cases per claim | Catches the width the reduced X1 cannot reach. **None ran = fail**: the case count is read from the output and zero, or fewer than 4096 for any claim, fails |
+| 8 | Fuzz | 5000 iterations; parsers add a VER06 target with a stated **seed corpus** (one valid input per format, one input per `Reject` class, and every one of them truncated at each byte boundary) and **length bounds** (exhaustive up to the X1 string length, fuzz up to the EMU00 section 8.2 image limit) | Crashes and invariant violations on arbitrary bytes. **None ran = fail**: zero iterations, or a parser without its target, fails |
+| 9 | Sabotage | `WARRANT_EVIDENCE_FAULT=...` for **every operation times every tier**, expecting **not ok** | Proves the claims can fail. **None ran = fail**: the number of controls run must equal operations times tiers (less the exceptions the manifest names, VOS-D065), so a skipped pair fails |
+| 10 | SAT | **n/a for implementations until VOS-029**; contract lemma certificates live in PR-C and are labelled as lemmas (section 5.3). After VOS-029: `vos-x3 check <crate>` | Until then the evidence report prints **"no SAT evidence"** for the implementation, and the line fails if it prints any SAT claim for one. After: a manifest with zero obligations fails |
 | 11 | Selection | the build-tool row | A tool or document edit selects this crate |
 
 Why this order: a unit failure is a bug; a shape failure is a forbidden
 construct; a capability failure is an effect; a document failure is drift; and
 only then do the expensive generated suites run. Sabotage runs after the
 suites because it re-runs them with a deliberately broken implementation and
-**expects a failure**; a claim that survives sabotage is vacuous.
+**expects a failure**; a claim that survives sabotage is vacuous. Lines 6 to 10
+each have a **"none ran = fail"** condition because a suite that is silently
+skipped reports green, and `check-component` (VOS-039) **fails on a missing
+line** as well as on a failing one.
 
 **PR-A, the `-any`** (`VOS-Cnna`): the same file set with kind `any`: the `any`
 block (soundness, and coverage with witnesses, VOS01 section 3.3), **no
@@ -557,14 +669,17 @@ bit-blaster (`BitVec`, `Aig`, Tseitin), a CDCL solver (`cdcl-sat`) and a DRAT
 checker (`drat-check`). Together they can certify **contract lemmas, tier
 ordering and pairwise spine-invariant closure at the shipped width** (for
 example N = 64), where exhaustive enumeration stops at N = 8 to 10. Two
-limits are part of the statement:
+limits are part of the statement, and the N = 64 figure is **evidence, not
+proof, about the transcription**:
 
 * **There is no Warrant-to-bit-vector translator**, so each encoding is a hand
   transcription. The mitigation is a **parametric-in-N encoder** that is
   checked against the Warrant evaluator on the **whole X1 domain at N = 8**
   with `Aig::eval`, and then solved at the shipped N. A transcription that
-  agrees with the evaluator on all 65,536 cases at N = 8 is a strong, though
-  not complete, argument that it is right at N = 64 (VOS-D072).
+  agrees with the evaluator on all 65,536 cases at N = 8 is **evidence, not
+  proof**, that it is right at N = 64: nothing relates the two widths (VOS-D072).
+  The N = 64 solver results quoted elsewhere (VOS30 table A) are on
+  hand-written proxy code, not compiler output.
 * **It proves facts about the contract, not the implementation.** A lemma has
   no published strength (VER04m V9; VOS-D005), so it must be printed as
   "lemma, SAT-certified at N = ..." and **never counted** as evidence about
@@ -577,7 +692,10 @@ branch-free helper such as `clz8` might lower. This is a **spike with a
 is not read from the README: section 8 item 2 records that only the README was
 read.
 
-**What is nothing until VOS-029: proof on the image.** After VOS-029 each
+**What is nothing until VOS-029: proof on compiled code.** The first proof is
+on **the object from the VOS22 spike build**, not on a gated image; binding that
+object's digest to the gated image's is a later step (VOS-D078, VOS30 section
+5.2). After VOS-029 each
 implementation gains:
 
 * `sat/obligations.json`: per obligation, the kind, instance, path, CNF
@@ -636,11 +754,16 @@ reading evidence and not opinion:
 | The "basic" test is answered | The PR description, in the form of section 4.1 | All four clauses of rule 12 |
 | Case counts are derived | The generated table in the contract PR | Produced by a run; every claim at most 262,144 cases |
 | Controls can fail | BUILD line 9 and `negctl` entries in the manifest | Every control reports `not ok` on its sabotaged build |
+| Every BUILD line 6 to 10 ran | The BUILD log and the manifest | Each line's "none ran = fail" condition holds; a missing line fails (section 5.2) |
+| Property tests are present | The BUILD log | 4096 cases for every claim, read from the output |
+| Fuzz is present | The BUILD log | 5000 iterations; for a parser the corpus and length bounds of line 8 are committed |
+| Sabotage covers every operation and tier | The `negctl` entries | Controls run equal operations times tiers; every one is `not ok` |
+| Commands are a closed enum | The contract package | No variant can carry a raw address or CSR (rule 6); the negative control rejects a mutant |
 | An `-any` exists | `vos-<iface>-any` and its `vos.toml` kind | `any` block, no canonical block, SH16 |
 | The footprint is empty | `required_capabilities.json` | Empty, and BUILD line 3 passes |
 | Reduced and real width are both reported | The evidence report | Both widths printed (rule 4); the real width by property or fuzz |
 | Time-carrying contracts state an overflow rule | The contract text | Saturating or a horizon precondition (rule 7) |
-| Nothing claims more than it has | The README and the report | No "proved" before VOS-029; lemmas printed as "SAT-certified at N = ..." only |
+| Nothing claims more than it has | The README and the report | No "proved" before VOS-029; the implementation's report prints "no SAT evidence"; lemmas printed as "SAT-certified at N = ..." only, in the contract PR |
 | The selection row exists | `repository_inputs.go` | A tool edit selects the crate in a dry run |
 
 ---
@@ -670,7 +793,7 @@ them.
 | 7 | VOS-040 | Host model-SAT lane on the `sched` contract, plus the Rust-lowering spike | Reuses the probe harness |
 | 8 | VOS-005 | `emu-core` | The emulator has been idle and everything bootable waits on it |
 | 9 | VOS-036 | VOS22 hermetic build spec, including a recorded single-crate RV32 object build | 029's first proof needs a compiled RV32 object (D046) |
-| 10 | VOS-029a | Symbolic executor core plus simulator differential; first X3: `fp-bitmap` dispatch, insert, remove | No cut points needed for the first certificate |
+| 10 | VOS-029a | Symbolic executor core plus simulator differential; first X3: `fp-bitmap` dispatch, insert, remove, on the object from the VOS22 spike build | No cut points needed for the first certificate; binding the object to a gated image is VOS-D078 |
 | 11 | VOS-020 | RV32 privileged slice 1 | The machine the spine boots on |
 | 12 | VOS-022a | VOS20 K0 spec, static family (the K record, entries, ownership, the boot ladder) | The spine's specification |
 | 13 | VOS-C02c | `thread` contract | The first table interface |
@@ -678,14 +801,22 @@ them.
 | 15 | VOS-C02a | `thread-any` | |
 | 16 | VOS-029b | Cut points, composition checker, index case-split; X3 for `thread-table` | The first table X3 |
 | 17 | VOS-006a | `emu-dev-console` (UART) plus the emu-host console | The device the first boot prints on |
-| 18 | VOS-025a | VOS21 HAL contract spec (effects as data; ISA and board split) | Before the HAL and the UART driver |
+| 18 | VOS-025a | VOS21 HAL contract spec (effects as data, the command allowlist of rule 6; ISA and board split) | Before the HAL and the UART driver. Needs no board: the board-specific allowlist is 025b's (item 24) |
 | 19 | VOS-C20c | `uart` contract | |
 | 20 | VOS-C20i | `vos-uart-poll` | |
-| 21 | VOS-034 | `check-profile` plus static SH16 | The profile gate, before an image is built |
+| 21 | VOS-034 | `check-profile` plus static SH16, with the requirements of section 7.2 (instance ownership, needed claims, `prot-none`) | The profile gate, before an image is built |
 | 22 | VOS-035 | Recorder plus image-build gate | The gate on what was compiled |
 | 23 | VOS-021a | `emu-board-rv32-min` (RAM plus UART, no PMP) | The first bootable board |
 | 24 | VOS-025b | `vos-hal-rv32` | The first and only `unsafe` |
 | 25 | VOS-026a | `vos-spine-static` skeleton with the reset entry; `boot-hello` boots on the emulator (Boot-0) | The first image |
+
+**What the first 25 items do not include.** Item 21 is the *static* part of the
+profile gate. Three things must exist before any image is **released** (not
+before Boot-0 is built and run on the emulator): CODEOWNERS and branch
+protection (VOS-D026, VOS-D067) and the `alpha`-read and oracle-write bindings
+checks (VOS-D060, a hard prerequisite of any `image` profile). The backlog
+lists them as gates after item 25 and before the Boot-3 release, so the
+exclusion is explicit and not an oversight.
 
 ### 6.2 Rationale for the first ten
 
@@ -713,20 +844,26 @@ them.
 * **VOS22 (9).** 029's first proof needs a compiled RV32 object, and today
   there is no hermetic way to produce one (VOS-D046).
 * **029a (10).** It is split so the **first certificate needs no cut points**: a
-  real proved-on-compiled-code certificate at item 10, on the bitmap
-  scheduler, where VOS30 table A says one obligation is green at N = 64.
+  proved-on-compiled-code certificate at item 10, on the bitmap scheduler. It
+  is proved on **the object from the VOS22 spike build, not on a gated
+  image**, and the N = 64 green result of VOS30 table A is on hand-written
+  proxy code, so whether real compiler output needs cut points is open
+  (section 8 item 5).
 
 ### 6.3 The boot ladder
 
 After item 25 the program climbs a ladder of images. Each stage is a profile
-that boots, adds components, and adds one claim about the spine:
+that boots, adds components, and adds one claim about the spine. Boot-0 to Boot-2
+run before `prot` exists, so their reports and manifests **label them "no
+isolation claim"**; `vos-prot-none` is not used by any of them as an image
+(section 7.2):
 
 | Stage | Adds | Why this rung |
 |---|---|---|
-| Boot-0 (item 25) | `boot-hello`: reset entry, console | Proves the initial state satisfies the spine invariant before any user instruction |
-| Boot-1 cooperative | `ctx`, `sysdec`, `trapdec` | Two tasks that yield: the first context switch |
-| Boot-2 preemptive | `timer`, `irq`, VOS-013 | The first interrupt and the first preemption |
-| Boot-3 `rtos-min` | `prot-pmp`, VOS-021b, `cspace`, `ep`, `ntfn` | Two user tasks under PMP, with preemption: the hard RTOS of VOS00 section 11 |
+| Boot-0 (item 25) | `boot-hello`: reset entry (fold `init`, install the configuration, **`seal` `cspace` and lock `prot` before the first user instruction**, I11), console | Proves the initial state satisfies the spine invariant before any user instruction. **No isolation claim** |
+| Boot-1 cooperative | `ctx`, `sysdec`, `trapdec` | Two tasks that yield: the first context switch. **No isolation claim** |
+| Boot-2 preemptive | `timer`, `irq`, VOS-013 | The first interrupt and the first preemption. **No isolation claim** (no `prot` yet) |
+| Boot-3 `rtos-min` | `prot-pmp`, VOS-021b, `cspace` (sealed), `ep`, `ntfn` | Two user tasks under PMP, with preemption: the hard RTOS of VOS00 section 11. The first stage that may carry an `isolation` claim |
 | Soft RT | `budget`, `edf` | The cheap replaceability demonstration (swap the scheduler, keep every system theorem) |
 | Flight | `psched`, `chan`, `sample`, `hm`, VOS-031 | Partitioning and noninterference |
 | GPOS, then V | the memory components, then the hypervisor reuses | The hardest toolchain gaps last (VOS00 section 11) |
@@ -738,39 +875,60 @@ that boots, adds components, and adds one claim about the spine:
 A profile is a manifest (VOS02 section 6) that fills slots. This matrix is the
 answer to "can I assemble any OS from the pieces": each cell is the
 implementation that fills the slot, `-` means the profile has no such slot, and
-a name with a trailing "(deg.)" is a degenerate implementation (decision 1.2).
+a name with a trailing "(deg.)" is a degenerate implementation (decision 1.2),
+and the marks (xP), (kernel) and [no row] are explained after the table.
 It is a **plan**: no cell is evidenced until its row in section 2 is done, and
 the cells for G and V are the least settled.
 
 | Interface | H hard RTOS | S soft RT | F flight and separation | G GPOS | V hypervisor |
 |---|---|---|---|---|---|
-| spine | `spine-static` | `spine-static` | `spine-static` | `spine-gpos` | `spine-static` |
-| `sched` | `fp-bitmap` | `rr` | `fp-bitmap` | `rr`, later two-level bitmap | `rr` (vcpus) |
+| spine | `spine-static` | `spine-static` | `spine-static` | `spine-gpos` [no row] | `spine-static` |
+| `sched` | `fp-bitmap` | `rr` | `fp-bitmap` (xP) | `rr`, later two-level bitmap [no row] | `rr` (vcpus) |
 | `edf` | - | `edf-scan` | - | - | - |
-| `budget` | `budget-none` (deg.) | `budget-sporadic` | `budget-periodic` | `budget-periodic` | `budget-none` (deg.) |
-| `psched` | `psched-single` (deg.) | `psched-single` (deg.) | `psched-table` | `psched-single` (deg.) | `psched-table` |
-| `thread` | `thread-table` | `thread-table` | `thread-table` | `thread-table` | `thread-table` (vcpu slot) |
-| `ctx` | `ctx-rv32` | `ctx-rv32` | `ctx-rv32` | `ctx-rv32` | `ctx-rv32h` |
-| `timer` | `timer-scan` | `timer-scan` | `timer-delta` | `timer-wheel` | `timer-scan` |
-| `mutex` | `mutex-pcp` | - | `mutex-pcp` | - | - |
-| `pool` | - (static) | - (static) | `pool-bitmap` (buffers) | `pool-bitmap` (frames, ASIDs) | `pool-bitmap` |
-| `untyped`, `region`, `cdt` | - | - | - | later | - |
-| `prot` | `prot-pmp-napot` | `prot-pmp-napot` | `prot-pmp-tor` | - (MMU via `pt`) | `prot-stage2-static` |
-| `pt`, `aspace` | - | - | - | `pt-sv32` or `pt-sv39`, `aspace-table` | `pt` in a stage-2 slot, `aspace-table` |
-| `cspace` | `cspace-table` (boot install) | `cspace-table` (boot install) | `cspace-table` (boot install) | `cspace-table` | - |
-| `ep` | `ep-single` | `ep-fifo` | `ep-single` | `ep-fifo` | - |
-| `ntfn` | `ntfn-word` | `ntfn-word` | `ntfn-word` | `ntfn-word` | `ntfn-word` |
+| `budget` | `budget-none` (deg.) | `budget-sporadic` [no row] | `budget-periodic` (xP) | `budget-periodic` | `budget-none` (deg.) |
+| `psched` | `psched-single` (deg.) | `psched-single` (deg.) | `psched-table` (kernel) | `psched-single` (deg.) | `psched-table` (kernel) |
+| `thread` | `thread-table` | `thread-table` | `thread-table` (xP) | `thread-table` | `thread-table` (vcpu slot) |
+| `ctx` | `ctx-rv32` | `ctx-rv32` | `ctx-rv32` (xP) | `ctx-rv32` | `ctx-rv32h` [no row] |
+| `timer` | `timer-scan` | `timer-scan` | `timer-delta` (xP) | `timer-wheel` [no row] | `timer-scan` |
+| `mutex` | `mutex-pcp` [no row] | - | `mutex-pcp` [no row] (xP) | - | - |
+| `pool` | - (static) | - (static) | `pool-bitmap` (xP, buffers) | `pool-bitmap` (frames, ASIDs: two instances) | `pool-bitmap` |
+| `untyped`, `region`, `cdt` | - | - | - | later [no row] | - |
+| `prot` | `prot-pmp-napot` | `prot-pmp-napot` | `prot-pmp-tor` (kernel) | - (MMU via `pt`) | `prot-stage2-static` [no row] |
+| `pt`, `aspace` | - | - | - | `pt-sv32` or `pt-sv39`, `aspace-table` [no row] | `pt` in a stage-2 slot, `aspace-table` [no row] |
+| `cspace` | `cspace-table` (sealed) | `cspace-table` (sealed) | `cspace-table` (sealed, xP) | `cspace-table` (never sealed) | `cspace-table` (sealed) |
+| `ep` | `ep-single` | `ep-fifo` | `ep-single` (xP, partition-local) | `ep-fifo` | - |
+| `ntfn` | `ntfn-word` | `ntfn-word` | `ntfn-word` (xP) | `ntfn-word` | `ntfn-word` |
 | `sem` | - | optional | - | optional | - |
-| `chan` | - | - | `chan-ring` (queuing ports) | `chan-ring` (pipes) | - |
-| `sample` | - | - | `sample-latch` | - | - |
-| `hm` | `hm-halt` (deg.) | `hm-halt` (deg.) | `hm-table` | `hm-halt` (deg.) | `hm-halt` (deg.) |
-| `irq` | `irq-flat` | `irq-prio` | `irq-prio` | `irq-prio` | `irq-hvip` |
-| `sysdec` | `sysdec-rtos` | `sysdec-rtos` | `sysdec-rtos` | `sysdec-sbi` | `sysdec-sbi` |
+| `chan` | - | - | `chan-ring` (spine channel, tag-checked) | `chan-ring` (pipes) | - |
+| `sample` | - | - | `sample-latch` (spine channel, tag-checked) | - | - |
+| `hm` | `hm-halt` (deg.) | `hm-halt` (deg.) | `hm-table` (kernel) | `hm-halt` (deg.) | `hm-halt` (deg.) |
+| `irq` | `irq-flat` | `irq-prio` [no row] | `irq-prio` [no row] (xP, disjoint lines) | `irq-prio` [no row] | `irq-hvip` [no row] |
+| `sysdec` | `sysdec-rtos` | `sysdec-rtos` | `sysdec-rtos` | `sysdec-sbi` [no row] | `sysdec-sbi` [no row] |
 | `trapdec` | `trapdec-rv32` | `trapdec-rv32` | `trapdec-rv32` | `trapdec-rv32` | `trapdec-rv32` |
-| `emul` | - | - | - | - | `emul-rv32h` |
-| `load` | `load-flat` | `load-flat` | `load-flat` | `load-elf32` | `load-elf32` |
+| `emul` | - | - | - | - | `emul-rv32h` [no row] |
+| `load` | `load-flat` | `load-flat` | `load-flat` | `load-elf32` [no row] | `load-elf32` [no row] |
 | `uart` | `uart-poll` | `uart-ring` | `uart-poll` | `uart-ring` | `uart-ring` |
-| `blk`, FS leaves | - | - | - | `blk-simple`, FS server | - |
+| `blk`, FS leaves | - | - | - | `blk-simple`, FS server [no row] | - |
+
+Reading the matrix: **(xP)** means one instance **per partition** (rule 13),
+each with its own owner and its own configuration pin; **(kernel)** means one
+instance owned by the kernel, taking the partition tag as an input (rule 13);
+**(deg.)** is a degenerate implementation with a weaker claim set (decision
+1.2, section 7.2); **[no row]** means no track C row schedules that
+implementation yet (section 2.1). No `prot-none` appears: it is barred from
+every image profile.
+
+The flight column is the strictest: every state machine that a partition can
+influence (`pool`, `timer`, `irq`, `thread`, `sched`, `budget`, `ctx`, `cspace`,
+`ep`, `ntfn`) is instantiated per partition, and the only paths between
+partitions are the spine's checked channels `chan` and `sample`, each guarded
+by a partition-tag check and padded exits. `psched`, `prot` and `hm` are
+kernel-owned because the major frame, the memory plan and the health table are
+by nature global; their operations take the partition tag, and I9 and I10 are
+closed over them. In the V column a guest-to-guest `ntfn` signal is
+**authority-checked by the spine through a sealed `cspace` lookup in the
+signalling guest's domain** before it reaches the target's `ntfn`; without that
+slot a guest could signal any other.
 
 Three things the matrix is for:
 
@@ -784,14 +942,43 @@ Three things the matrix is for:
   in all or nearly all columns, so their evidence is the best investment in the
   program. That is also why they come first in section 6.
 * **See what is single-use.** Rows with one or two non-dash cells (`edf`,
-  `sample`, `emul`, `mutex`) are the rule-12 clause 2 cases: each stays in the
-  pool only because a second consumer exists on the ladder (a rung), and the
-  table is where a reviewer challenges that.
+  `sample`, `emul`, `mutex`) are the rule-12 clause 2 cases: each has one profile consumer and one rung,
+  which satisfies the clause (at least one profile) and no more, and the table
+  is where a reviewer challenges that.
 
 The hypervisor column is the clearest demonstration of rule 12 and decision
 1.2: it reuses most of the G column's mechanisms in different slots (a `thread`
 in a vcpu slot, `irq-hvip`, `prot-stage2-static`) and adds one component
 (`emul`).
+
+### 7.1 Instances and owners
+
+A profile manifest lists **instances**, not interfaces. Each instance names its
+interface, its implementation, its configuration pin, its slot and its owner
+(a partition, or the kernel). Two uses of `pool` in G (frames and ASIDs) are
+two instances with two slots and two configurations; the flight profile's
+per-partition `thread-table` is one instance per partition. Nothing in this
+section changes the contracts: ownership is a property of the profile and the
+spine (I9), and the contract text still names no profile (rule 3).
+
+### 7.2 What this spec requires of `check-profile`
+
+VOS02 section 6 defines the manifest and VOS-034 builds `check-profile`. The
+requirements below are written here because they follow from the pool rules,
+and VOS-034's row carries them. Each has a **negative control**: a profile that
+must be rejected, with the reason.
+
+| # | Requirement | Negative control (must be rejected) |
+|---|---|---|
+| P1 | An instance fills exactly one slot and has exactly one owner (rule 13); no instance appears in two slots of different partitions | A flight manifest in which one `pool` instance fills a buffer slot of partition A and a buffer slot of partition B |
+| P2 | Every theorem a profile states lists the claims it **needs**, and each must be in the `carries` of the implementation in the slot that supplies it (VOS02 section 6; decision 1.2) | A flight profile with `psched-single` (no `partition-time`), with `hm-halt` (no `partition-health`), with `budget-none` (no `budget`), or with `prot-none` (no `isolation`), each stating the theorem that needs that claim |
+| P3 | `prot-none` is barred from every `class image` profile (H, S, F, G, V) | Any image profile with a `prot-none` slot |
+| P4 | A profile of a sealed family (H, S, F, V) declares its `cspace` slot sealed, and its spine entry list contains the `seal` call before the first user entry | A hard-RTOS profile with a `cspace` slot that is not declared sealed |
+| P5 | The per-instance configuration pin of each slot (VOS-D071) agrees with the lock | A profile pinning B = 8 for an instance the lock pins at B = 4 |
+| P6 | The profile's evidence profile for Boot-0 to Boot-2 states **no isolation claim** and needs none | A Boot-1 manifest whose theorem list includes `isolation` |
+
+The theorem and claim names are provisional (section 1.2); the requirement is
+that the names exist and are checked.
 
 ---
 
@@ -831,7 +1018,7 @@ the row, not the rule.
    section 6 starts, the working rule of the backlog applies: reconcile first.
 7. **Whether the pool's interface boundaries survive their first consumer.**
    The decisions in section 2 are made on paper. The first interface that is
-   used twice (`pool`, item C01 in the backlog) and the first table interface
+   used twice (`pool`, VOS-C01 in the backlog) and the first table interface
    (`thread`, item 13) are where a boundary is most likely to move, and the
    cost of moving it is a contract change and a digest change in every
    implementation. This is accepted: it is why the order puts `sched`-shaped
@@ -840,6 +1027,12 @@ the row, not the rule.
    (`pt-sv32`), which keeps one emulator core. VOS00 section 11
    says RV64 with Sv39. Logged as VOS-D073; settled before the first `pt`
    contract.
+9. **The HAL's allowlist format and the claim names.** Rule 6 requires a
+   static allowlist built from the board map and the owning domain, and
+   decision 1.2 names provisional claims (`budget`, `partition-time`,
+   `partition-health`, `isolation`). Their exact form is settled in VOS21
+   (VOS-025a) and in each contract's PR-C; until then the requirements of
+   section 7.2 are written against the names.
 
 ---
 
@@ -881,8 +1074,10 @@ the backlog's decision log (2026-11-16): a new track C (one row per package,
 retirement of VOS-024 (its leaf components are now the C rows); the re-pointing
 of the rung rows 007, 015, 016, 017, 019, 023 and 027 so each rung depends on
 its C row; VOS-D048 resolved by section 2.2 (sibling contracts `edf`, `budget`,
-`mutex`); VOS-D049 closed by VOS-039; four new rows (VOS-037 to VOS-040); and
-the discovered-work rows VOS-D068 to VOS-D074 plus two coordinator items.
+`mutex`) in this spec, with the implementation in the C rows; VOS-D049 planned
+to close by VOS-039; four new rows (VOS-037 to VOS-040); and the discovered-work
+rows VOS-D068 to VOS-D078 (D068 to D074 from the catalogue, D075 and D076 from
+the #19529 CI fixes, D077 and D078 from its security review).
 
 ## 11. Sources
 

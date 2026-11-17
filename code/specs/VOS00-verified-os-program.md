@@ -702,7 +702,7 @@ pool. The pool is the intersection.
 **The table below is the summary; [VOS04](VOS04-component-catalogue.md) is the
 catalogue and governs where they differ.** VOS04 lists every interface with its
 state, operations, tiers, implementations, profiles, instance size and proof
-risk, states the twelve decomposition rules that decide what a component is
+risk, states the thirteen decomposition rules that decide what a component is
 (one contract per mechanism, sibling contracts for a different state, degenerate
 implementations instead of optional slots, and the "basic" test), fixes the
 per-component evidence template, and gives the serial order of work. Notably it
