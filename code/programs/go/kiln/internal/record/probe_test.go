@@ -3,6 +3,7 @@ package record
 import (
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 	"time"
@@ -357,10 +358,16 @@ func TestShadowedMounts(t *testing.T) {
 		t.Fatal("more than the maximum")
 	}
 	mountPoints = func() map[string]bool { return map[string]bool{"/": true} }
-	os.WriteFile(filepath.Join(ro, "nope"), nil, 0o644)
-	cfg.RoRoots = []string{filepath.Join(ro, "nope", "x")} // lstat of a path beneath a file: ENOTDIR
-	if _, err := ShadowedMounts(cfg); err == nil {
-		t.Fatal("an unreadable ro root was ignored")
+	// A path beneath a regular file: Linux lstat says ENOTDIR (not "not exist"),
+	// so ShadowedMounts must refuse.  Windows reports ERROR_PATH_NOT_FOUND, which
+	// Go maps to ErrNotExist (an absent root, skipped by design); ShadowedMounts
+	// reads /proc/self/mountinfo, so it is Linux-only in production anyway.
+	if runtime.GOOS != "windows" {
+		os.WriteFile(filepath.Join(ro, "nope"), nil, 0o644)
+		cfg.RoRoots = []string{filepath.Join(ro, "nope", "x")}
+		if _, err := ShadowedMounts(cfg); err == nil {
+			t.Fatal("an unreadable ro root was ignored")
+		}
 	}
 }
 

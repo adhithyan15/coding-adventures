@@ -5370,7 +5370,7 @@ dependencies = [
 
 [[package]]
 name = "coding_adventures_warrant_grammar"
-version = "0.7.0"
+version = "0.8.0"
 dependencies = [
  "coding_adventures_ct_compare",
  "coding_adventures_sha256",

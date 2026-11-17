@@ -427,7 +427,7 @@ func TestRootGroupWalkIsLinear(t *testing.T) {
 		fmt.Fprintf(&b, "%d  fork() = %d /* %d in strace's PID NS */\n", deepest, 100000+i, 100000+i)
 	}
 	lim := Limits{}.withDefaults()
-	recs, root, e := readRecords(strings.NewReader(b.String()), lim, true)
+	recs, root, e := readRecords(strings.NewReader(b.String()), lim, true, false)
 	if e != nil {
 		t.Fatal(e)
 	}

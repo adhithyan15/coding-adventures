@@ -1249,6 +1249,12 @@ jobs:
         working-directory: code/programs/go/kiln
         env:
           KILN_REQUIRE_SANDBOX: '1'
+          # D24 (KILN04 section 4.9): every trace real strace produces here is
+          # parsed by BOTH the old scanner and the grammar path, and a
+          # disagreement fails the test with a bounded, sanitised window of the
+          # lines around it in the job log.  (No artifact is uploaded: the
+          # window is the only thing kept, and it stays in this job's log.)
+          KILN_TRACE_DIFF: '1'
         shell: bash
         run: |
           set -euo pipefail
