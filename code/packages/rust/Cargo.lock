@@ -15672,6 +15672,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "vos-probe-ready"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+]
+
+[[package]]
 name = "vos-sched-any"
 version = "0.1.0"
 dependencies = [

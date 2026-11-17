@@ -1526,6 +1526,7 @@ members = [
   "vos-sched-contract",
   "vos-sched-any",
   "vos-sched-contract-check",
+  "vos-probe-ready",
   "vos-sched-fp-bitmap",
   "vos-sched-rr",
 ]
