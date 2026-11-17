@@ -592,6 +592,17 @@ def test_ct_compare_v2_generated_by_the_rust_cli_verifies():  # pragma: no cover
 # -- review fixes (M1, L1, L2, L3, L7) ---------------------------------------------------------------
 
 
+def _fifo_attempt(root, queue):
+    # Module-level so the "spawn" start method can pickle it by name.  macOS and Windows
+    # default to spawn, where a nested function raises "Can't get local object".  The
+    # child re-imports this module, so keep module import free of side effects.
+    try:
+        report, _ = verify_v2(root, WARRANT, PROFILE)
+        queue.put(("ok", sorted({m["code"] for m in report.mismatches})))
+    except OracleError as exc:
+        queue.put(("refused", exc.code))
+
+
 @pytest.mark.skipif(not hasattr(os, "mkfifo"), reason="needs POSIX FIFOs")
 @pytest.mark.parametrize("name", ["corpus.json", "cases.tfv", "chunks/cmp_agrees.txt"])
 def test_a_fifo_is_reported_without_hanging(tmp_path, name):
@@ -601,15 +612,10 @@ def test_a_fifo_is_reported_without_hanging(tmp_path, name):
     (root / name).unlink()
     os.mkfifo(root / name)
 
-    def attempt(queue):
-        try:
-            report, _ = verify_v2(root, WARRANT, PROFILE)
-            queue.put(("ok", sorted({m["code"] for m in report.mismatches})))
-        except OracleError as exc:
-            queue.put(("refused", exc.code))
-
-    queue = multiprocessing.Queue()
-    proc = multiprocessing.Process(target=attempt, args=(queue,))
+    # An explicit spawn context, so Linux exercises the same start method as macOS.
+    ctx = multiprocessing.get_context("spawn")
+    queue = ctx.Queue()
+    proc = ctx.Process(target=_fifo_attempt, args=(root, queue))
     proc.start()
     proc.join(20)
     hung = proc.is_alive()
