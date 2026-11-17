@@ -19,6 +19,7 @@ import (
 	"time"
 
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/legacy"
+	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/policyfix"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/recfmt"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/sandbox"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/source"
@@ -152,7 +153,8 @@ func (p *prep) commit() {
 	p.t.Helper()
 	roots := append([]string{`{"path": "/bin", "kind": "image"}`, `{"path": "/sbin", "kind": "image"}`}, p.roots...)
 	sort.Slice(roots, func(a, b int) bool { return rootPath(roots[a]) < rootPath(roots[b]) })
-	p.files["code/kiln/legacy/host-roots.json"] = `{"roots": [` + strings.Join(roots, ",") + `], "ephemeral": ["/dev/null"], "absent-ok": []}`
+	eph, absent := policyfix.Lists() // the real policy's lists (D27)
+	p.files["code/kiln/legacy/host-roots.json"] = `{"roots": [` + strings.Join(roots, ",") + `], "ephemeral": ` + eph + `, "absent-ok": ` + absent + `}`
 	var repo string
 	if p.repoDest != "" {
 		repo = newRepoAt(p.t, p.repoDest, p.files)

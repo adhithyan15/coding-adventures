@@ -1207,11 +1207,22 @@ jobs:
   # too (detect passes -force on them, which makes every registry flag true), so
   # a runner image, kernel or strace change is caught within hours, not at the
   # next Kiln change.
+  #
+  # It runs on BOTH ubuntu-24.04 and ubuntu-26.04 (D27). GitHub's
+  # ubuntu-latest moved to 26.04 (libselinux 3.9, whose tools probe
+  # /sys/fs/selinux at start-up), so a recorder that only passes on one image
+  # would break the day a workflow's label moves. The job id stays
+  # `kiln-sandbox`: ci-gate's `needs['kiln-sandbox'].result` is the aggregate
+  # of the legs, so one failing image fails the gate.
   kiln-sandbox:
-    name: Kiln sandbox (linux/amd64)
+    name: Kiln sandbox (linux/amd64, ${{ matrix.os }})
     needs: detect
     if: needs.detect.outputs.run_kiln_sandbox == 'true'
-    runs-on: ubuntu-24.04
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, ubuntu-26.04]
     timeout-minutes: 30
     permissions:
       contents: read

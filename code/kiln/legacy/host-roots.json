@@ -70,6 +70,7 @@
     "/dev/null",
     "/dev/urandom",
     "/proc/cpuinfo",
+    "/proc/filesystems",
     "/proc/meminfo",
     "/proc/self/cgroup",
     "/proc/self/exe",
@@ -81,6 +82,8 @@
   ],
   "absent-ok": [
     "$HOME/.config",
-    "$HOME/.npmrc"
+    "$HOME/.npmrc",
+    "/selinux",
+    "/sys/fs/selinux"
   ]
 }
