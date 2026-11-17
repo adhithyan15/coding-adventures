@@ -9,24 +9,38 @@ mod support;
 use coding_adventures_warrant_corpus_gen::{code, GenInput};
 use support::*;
 
-/// A document with `op_add(a: U8, b: U8)` (no admit) and `op_lo(a: U8 | a < 10u8, b: U8)`,
-/// one model, and the given version suffix and extra declarations.
+/// The operations every document here declares: `(name, declaration line)`.
+const OPS: [(&str, &str); 4] = [
+    ("op_add", "op op_add(a: U8, b: U8) -> U8"),
+    ("op_lo", "op op_lo(a: U8 | a < 10u8, b: U8) -> U8"),
+    ("op_two", "op op_two(a: U8 | a < 10u8, b: U8 | b > a) -> U8"),
+    ("op_m", "op op_m(a: U8 | add8(a, 1u8) < 5u8, b: U8) -> U8"),
+];
+
+/// A document with `OPS`, two models, and the given version suffix and extra declarations.
 fn doc(version: &str, extra: &str) -> String {
+    doc_with(version, extra, &[])
+}
+
+/// As [`doc`], with more operations.
+fn doc_with(version: &str, extra: &str, more: &[(&str, &str)]) -> String {
+    let ops: Vec<(&str, &str)> = OPS.iter().chain(more.iter()).copied().collect();
     let mut s = format!("warrant synth{version}\n");
     s += "  model add8(a: U8, b: U8) -> U8 = a + b\n";
     s += "  model first(a: U8, b: U8) -> U8 = a\n";
-    s += "  op op_add(a: U8, b: U8) -> U8\n";
-    s += "  op op_lo(a: U8 | a < 10u8, b: U8) -> U8\n";
+    for (_, line) in &ops {
+        s += &format!("  {line}\n");
+    }
     s += "  assume platform:\n    none\n  assume environment:\n    none\n";
-    for op in ["op_add", "op_lo"] {
+    for (op, _) in &ops {
         s += &format!("  labels {op}:\n    a secret\n    b secret\n");
     }
-    for op in ["op_add", "op_lo"] {
+    for (op, _) in &ops {
         for p in ["a", "b"] {
             s += &format!("  input {op}.{p}:\n    hostile\n    ensures no_panic, terminates\n");
         }
     }
-    for op in ["op_add", "op_lo"] {
+    for (op, _) in &ops {
         s += &format!("  bound {op}:\n    steps <= 64\n    heap <= 0\n    depth <= 8\n");
     }
     s += extra;
@@ -34,12 +48,16 @@ fn doc(version: &str, extra: &str) -> String {
 }
 
 fn gen(src: &str) -> Result<coding_adventures_warrant_corpus_gen::CorpusV2, coding_adventures_warrant_corpus_gen::GenError> {
+    gen_profile(src, "")
+}
+
+fn gen_profile(src: &str, profile: &str) -> Result<coding_adventures_warrant_corpus_gen::CorpusV2, coding_adventures_warrant_corpus_gen::GenError> {
     with_file(src, |f| {
         coding_adventures_warrant_corpus_gen::generate(&GenInput {
             file: f,
             spec_path: "s.warrant",
             spec_bytes: src.as_bytes(),
-            profile_bytes: b"",
+            profile_bytes: profile.as_bytes(),
             binding_faults: None,
         })
     })
@@ -132,4 +150,60 @@ fn d19_a_subject_dependent_argument_the_admit_does_not_read_is_accepted_and_the_
     let weak = ok.replace("a < 10u8", "a < 12u8");
     let e = gen(&doc(" v1", &weak)).unwrap_err();
     assert!(e.message.contains("admitted case 20"), "{e}");
+}
+
+#[test]
+fn d18_a_wrap_while_evaluating_a_callee_admit_is_refused_in_v0_and_not_recorded() {
+    // op_m's admit is `add8(a, 1u8) < 5u8`: at a = 255 it wraps to 0 and admits.
+    let claim = "  claim m:\n    forall a: U8 | a == 255u8, b: U8 | b < 2u8. op_m(a, b) == first(a, b)\n";
+    let e = gen(&doc("", claim)).unwrap_err();
+    assert_eq!((e.code, e.at.as_str()), (code::W0701, "m"), "{e}");
+    assert!(e.message.contains("wraps while evaluating the admit of op `op_m`"), "{e}");
+    assert!(e.message.contains("admitted case 0"), "{e}");
+    let c = gen(&doc(" v1", claim)).unwrap();
+    // the wraps of the admit are not the document's: the suite row records none
+    assert!(c.corpus_json.contains("\"wraps\": 0"), "{}", c.corpus_json);
+    let ex = "  example e:\n    op_m(255u8, 4u8) == 255u8\n";
+    let e = gen(&doc("", ex)).unwrap_err();
+    assert_eq!((e.code, e.at.as_str()), (code::W0701, "e"), "{e}");
+    assert!(e.message.contains("wraps while evaluating the admit of op `op_m`"), "{e}");
+    assert!(gen(&doc(" v1", ex)).is_ok());
+    // no wrap, no refusal
+    let calm = "  claim m:\n    forall a: U8 | a < 3u8, b: U8 | b < 2u8. op_m(a, b) == first(a, b)\n";
+    assert!(gen(&doc("", calm)).is_ok());
+}
+
+#[test]
+fn d19_two_offending_calls_in_one_case_name_the_leftmost() {
+    // both calls are outside their admit in the first admitted case (a = 10, b = 0); the
+    // oracle walks left to right and so does the generator
+    let both = "  claim both:\n    forall a: U8 | a >= 10u8, b: U8 | b < 2u8. op_lo(a, b) == op_two(a, b)\n";
+    let e = gen(&doc(" v1", both)).unwrap_err();
+    assert!(e.message.contains("`op_lo`") && e.message.contains("admitted case 0"), "{e}");
+    let swapped = both.replace("op_lo(a, b) == op_two(a, b)", "op_two(a, b) == op_lo(a, b)");
+    let e = gen(&doc(" v1", &swapped)).unwrap_err();
+    assert!(e.message.contains("`op_two`"), "{e}");
+}
+
+/// A balanced `op` tree of `n` copies of `leaf`.
+fn bal(leaf: &str, n: usize, op: &str) -> String {
+    if n == 1 {
+        return leaf.to_string();
+    }
+    format!("({} {op} {})", bal(leaf, n / 2, op), bal(leaf, n - n / 2, op))
+}
+
+#[test]
+fn d19_the_check_is_charged_to_the_ir_work_meter() {
+    // 128 calls of an op whose admit costs ~500, over 2^28 product ordinals: ~1.8e13, past the
+    // full-run bound of 8.6e12, while the recorded ir_cost (about 700) alone is far below it.
+    let admit = bal("a < 10u8", 256, "and");
+    let big = format!("op op_big(a: U8 | {admit}, b: U8) -> U8");
+    let body = bal("op_big(a, b)", 128, "+");
+    let claim = format!(
+        "  claim dos:\n    forall a: U8 | a < 10u8, b: U8, c: U8, d: Bool, e: Bool, f: Bool, g: Bool. {body} == 0u8\n"
+    );
+    let e = gen_profile(&doc_with(" v1", &claim, &[("op_big", &big)]), "budget 268435456\n").unwrap_err();
+    assert_eq!((e.code, e.at.as_str()), (code::LIMIT, "dos"), "{e}");
+    assert!(e.message.contains("total IR work"), "{e}");
 }

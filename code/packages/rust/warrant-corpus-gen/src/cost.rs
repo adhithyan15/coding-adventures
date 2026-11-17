@@ -58,7 +58,7 @@ use std::collections::HashMap;
 
 use crate::error::{code, GenError};
 use crate::ir::{Ir, MAX_IR_DEPTH};
-use crate::lower::{LoweredModel, LoweredSuite, SuiteKind};
+use crate::lower::{LoweredModel, LoweredOp, LoweredSuite, SuiteKind};
 
 /// The default per-expression bound.
 pub const DEFAULT_MAX_IR_COST: u64 = 2_000;
@@ -247,6 +247,45 @@ pub fn suite_cost(
         expected,
         total,
     })
+}
+
+/// The IR work of [D19]'s per-case check for one suite: for every `subject_op` of the body whose
+/// op has an `admit`, the worst-path cost of that `admit` plus the cost of each argument that does
+/// not call the subject (the arguments the check evaluates).  A static sum over the whole body
+/// (a call in an untaken branch is counted), so it is an upper bound the oracle can reproduce.
+/// It is charged to [`IrWork`] per product ordinal and is **not** part of the recorded `ir_cost`.
+///
+/// # Errors
+///
+/// As [`ir_cost`].
+pub fn admit_check_cost(
+    suite: &LoweredSuite,
+    ops: &[LoweredOp],
+    models: &ModelCosts,
+    limit: u64,
+) -> Result<u64, GenError> {
+    let mut total = 0u64;
+    let mut failure: Option<GenError> = None;
+    suite.body.walk(&mut |n| {
+        if failure.is_some() {
+            return;
+        }
+        let Ir::Subject { op, args, .. } = n else {
+            return;
+        };
+        let Some(admit) = ops.iter().find(|o| &o.name == op).and_then(|o| o.admit.as_ref()) else {
+            return;
+        };
+        let mut one = |ir: &Ir| match ir_cost(ir, models, limit) {
+            Ok(c) => total = total.saturating_add(c),
+            Err(e) => failure = Some(e),
+        };
+        one(admit);
+        for a in args.iter().filter(|a| !a.has_subject()) {
+            one(a);
+        }
+    });
+    failure.map_or(Ok(total), Err)
 }
 
 /// Which run the total IR work is bounded for.

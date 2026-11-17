@@ -17,6 +17,15 @@
   two implementations agree on all thirteen (refusals with the same ordinal, accepted documents
   byte for byte).
 
+### Review fixes (Fable, CV2-S3e)
+
+- A wrap while evaluating a callee's `admit` is `W0701` in a v0 document (claim and example),
+  discarded from `wraps` (`ir_eval.run_admit`, `WrapsInAdmit`).
+- The D19 check is charged to the IR-work meter when a suite is planned (`Work.charge_ir`,
+  `ir_eval.admit_check_cost`); the recorded `ir_cost` is unchanged.
+- The `synth-v2` fixture is regenerated with generator 0.5.0 (only `generator.version` changed)
+  and its BUILD line passes `--expect-generator warrant-corpus-gen@0.5.0`, so it cannot go stale.
+
 ### Changed
 
 - Version 0.4.0; `--expect-generator warrant-corpus-gen@0.5.0` in BUILD and BUILD_windows and in

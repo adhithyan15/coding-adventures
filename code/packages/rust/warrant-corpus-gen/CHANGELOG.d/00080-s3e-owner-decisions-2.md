@@ -17,6 +17,17 @@
   (accepted), an unrefined binder (case 2560), an example outside the admit, a call under an
   untaken branch, a nested subject argument the admit reads (refused) and one it does not (accepted).
 
+### Review fixes (Fable, CV2-S3e)
+
+- A wrap while evaluating a callee's `admit` is `W0701` in a v0 document (claim and example), not
+  added to the recorded `wraps` (`Program::with_ops(ops, v0)`).
+- The D19 check is charged to the IR-work meter in pass 1 (`cost::admit_check_cost`, per product
+  ordinal); the recorded `ir_cost` is unchanged.
+- `Program::trace` walks left to right, so the leftmost of two offending calls is named, as in the
+  oracle.
+- `GenError::during_case` replaces the message match that decided whether to append the ordinal.
+- Tests: wrap in an admit (v0 refused, v1 accepted, `wraps` 0), leftmost offender, the work meter.
+
 ### Changed
 
 - Version 0.5.0. **No emitted byte of any accepted document changes**: both rules are refusals.

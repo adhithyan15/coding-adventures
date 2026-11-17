@@ -127,6 +127,8 @@ pub struct Program<'a> {
     /// The document's operations: the trace checks every subject call against its
     /// op's `admit` (VER04r 6, [D19]).  Empty unless [`Program::with_ops`] set it.
     ops: &'a [LoweredOp],
+    /// A v0 document: a wrap while evaluating a callee's `admit` is refused ([D18], 3.3 rule 2).
+    v0: bool,
     index: HashMap<&'a str, usize>,
     /// `wraps[i]`: model `i`'s call closure contains a fixed-width `add sub mul neg`.
     wraps: Vec<bool>,
@@ -170,6 +172,7 @@ impl<'a> Program<'a> {
         Program {
             models,
             ops: &[],
+            v0: false,
             index,
             wraps,
             fails,
@@ -180,8 +183,12 @@ impl<'a> Program<'a> {
 
     /// The same program that also knows the document's operations, so that [`Program::trace`]
     /// refuses a subject call whose arguments are outside its op's `admit` (VER04r 6, [D19]).
-    pub fn with_ops(mut self, ops: &'a [LoweredOp]) -> Program<'a> {
+    /// `v0` says the document is v0: then a wrap while evaluating an `admit` is refused
+    /// (3.3 rule 2 applies to every evaluation the generator performs), though it is never
+    /// added to the recorded `wraps`.
+    pub fn with_ops(mut self, ops: &'a [LoweredOp], v0: bool) -> Program<'a> {
         self.ops = ops;
+        self.v0 = v0;
         self
     }
 
@@ -270,7 +277,22 @@ impl<'a> Program<'a> {
             .zip(args)
             .filter_map(|((n, _), v)| v.clone().map(|v| (n.as_str(), v)))
             .collect();
-        self.eval(admit, &pvars, &mut Stats::default())?.as_bool()
+        let mut st = Stats::default();
+        let admitted = self.eval(admit, &pvars, &mut st)?.as_bool()?;
+        if self.v0 && st.wraps > 0 {
+            // [D18]: not recorded in `wraps`, but refused: the v0 harness would evaluate the
+            // same `admit` as `Nat`.
+            return Err(GenError::new(
+                code::W0701,
+                "",
+                format!(
+                    "U8 arithmetic wraps while evaluating the admit of op `{op}`; v0 harness \
+                     evaluates U8 as Nat (VER04r 3.3 rule 2)"
+                ),
+            )
+            .in_case());
+        }
+        Ok(admitted)
     }
 
     /// The same program with a seeded-wrong evaluator.
@@ -615,7 +637,9 @@ impl<'a> Program<'a> {
                             return Err(outside_admit(op));
                         }
                     }
-                    stack.extend(args.iter());
+                    // Left to right, as the oracle walks: the first offending call of a case
+                    // is the same one in both (a stack pops the last pushed first).
+                    stack.extend(args.iter().rev());
                 }
                 Ir::If(c, t, e) => {
                     if t.has_subject() || e.has_subject() {
@@ -645,7 +669,7 @@ impl<'a> Program<'a> {
                         stack.push(a);
                     }
                 }
-                other => stack.extend(other.children()),
+                other => stack.extend(other.children().into_iter().rev()),
             }
         }
         Ok(calls)
@@ -684,11 +708,7 @@ pub fn outside_admit(op: &str) -> GenError {
         "",
         format!("a call of op `{op}` has arguments outside the op's admit (VER04r 6)"),
     )
-}
-
-/// Is `e` the refusal [`outside_admit`] makes?
-pub fn is_outside_admit(e: &GenError) -> bool {
-    e.code == code::W0701 && e.message.contains("outside the op's admit")
+    .in_case()
 }
 
 /// The work items of the iterative evaluator.

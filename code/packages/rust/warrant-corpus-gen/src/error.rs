@@ -114,6 +114,10 @@ pub struct GenError {
     pub at: String,
     /// One of this crate's own sentences; never input bytes.
     pub message: String,
+    /// Raised while checking a subject call's arguments against its op's `admit` for one
+    /// admitted case ([D19]): the enumerator appends that case's ordinal.  A flag, not a
+    /// message match, so rewording a sentence can never silently drop the ordinal.
+    pub during_case: bool,
 }
 
 impl GenError {
@@ -124,6 +128,7 @@ impl GenError {
             level: None,
             at: at.into(),
             message: message.into(),
+            during_case: false,
         }
     }
 
@@ -135,7 +140,14 @@ impl GenError {
             level: Some(beyond.name()),
             at: at.into(),
             message: message.into(),
+            during_case: false,
         }
+    }
+
+    /// This refusal belongs to one admitted case (see [`GenError::during_case`]).
+    pub fn in_case(mut self) -> GenError {
+        self.during_case = true;
+        self
     }
 
     /// A refusal for a state the code's own invariants rule out (a bug here, never the

@@ -51,7 +51,7 @@ use coding_adventures_warrant_grammar::domain::unrank_product;
 
 use crate::domains::{suite_label, BinderDomain, Label, SuiteDomains, MAX_BINDERS};
 use crate::error::{code, GenError};
-use crate::eval::{is_outside_admit, Program, Stats};
+use crate::eval::{Program, Stats};
 use crate::ir::Ir;
 use crate::json::Json;
 use crate::lower::{LoweredSuite, SuiteKind};
@@ -609,7 +609,7 @@ impl<'a> SuitePlan<'a> {
                         .program
                         .trace(&self.suite.body, &vars, &mut stats)
                         .map_err(|mut e| {
-                            if is_outside_admit(&e) {
+                            if e.during_case {
                                 // The address of VER04i 2.4: the suite's admitted-case ordinal.
                                 e.message
                                     .push_str(&format!(", at admitted case {}", first + cases - 1));

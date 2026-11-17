@@ -27,4 +27,9 @@ cargo run -p coding_adventures_warrant_corpus_gen --bin warrant-corpus-gen -- \
 ```
 
 `corpus/` is `* -text` (a CRLF would be a different corpus). The ct-compare v2 fixture is
-**not** here: it lands in S3d (VER04r [D10]).
+**not** here: it is `code/specs/fixtures/ct-compare-warrant-v2/` (S3d).
+
+`corpus.json` records `generator` (`warrant-corpus-gen` 0.5.0); the oracle's `BUILD` and
+`BUILD_windows` pass `--expect-generator warrant-corpus-gen@0.5.0` for this fixture too, so a
+generator version bump fails the build until this directory is regenerated (only
+`generator.version` should change) and the pin is updated (VER04r 16.8 [D13]).

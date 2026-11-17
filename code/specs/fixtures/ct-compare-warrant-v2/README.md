@@ -63,7 +63,11 @@ all of these change together (D13); the builds fail until each is done and the d
    (the generator's test `the_committed_accept_blind_fixture_is_what_the_generator_writes`
    compares its bytes).
 4. `--expect-generator warrant-corpus-gen@<version>` in `code/packages/python/warrant-oracle/BUILD`
-   and `BUILD_windows`, and the version pinned in `tests/test_verify_v2.py`.
+   and `BUILD_windows` (the lines for ct-compare **and** for `tests/fixtures/synth-v2`), and the
+   version pinned in `tests/test_verify_v2.py`. Regenerate
+   `code/packages/python/warrant-oracle/tests/fixtures/synth-v2/corpus/` too (command in its
+   README): its `generator.version` is pinned by that BUILD line, so a stale one fails the build.
+   Unlike the accept-blind fixture, the generator's own tests do not compare it.
 5. The `corpus.json` hash in the Hashes table below.
 
 ## Owner decisions of 2026-11-17 recorded here (VER04r 16.8)

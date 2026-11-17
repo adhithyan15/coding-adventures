@@ -39,7 +39,7 @@ from . import tfv
 from .corpus_v1 import build_program
 from .errors import OracleError
 from .faults import derive_controls
-from .ir_eval import admit_fn
+from .ir_eval import WrapsInAdmit, admit_fn, run_admit
 from .lower import FIXED, Spec, _substitute, lower_document
 from .parser import parse_source
 from .profile import Profile, parse_profile
@@ -151,7 +151,17 @@ def _examples(spec: Spec, prog) -> tuple[list[dict], bytes]:
             stats.counting = False
         # [D19]: an example is a call, so its arguments must be inside the op's ``admit``.
         admit = admit_fn(prog, op, node[3] if len(node) == 4 else None)
-        if admit is not None and not admit({n: v for (n, _), v in zip(op.params, args)}):
+        try:
+            inside = admit is None or run_admit(
+                prog, admit, {n: v for (n, _), v in zip(op.params, args)}, spec.version == "v0", op.name
+            )
+        except WrapsInAdmit:
+            raise OracleError(
+                "generation",
+                f"W0701: example `{ex.name}`: U8 arithmetic wraps while evaluating the admit of "
+                f"op `{op.name}`; v0 harness evaluates U8 as Nat (VER04r 3.3 rule 2)",
+            ) from None
+        if not inside:
             raise OracleError(
                 "generation",
                 f"W0701: example `{ex.name}` calls op `{op.name}` with arguments outside "

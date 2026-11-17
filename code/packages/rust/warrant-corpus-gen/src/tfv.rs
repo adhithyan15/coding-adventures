@@ -24,6 +24,7 @@ use crate::eval::{outside_admit, Program, Stats};
 use crate::ir::Ir;
 use crate::json::Json;
 use crate::lower::Lowered;
+use coding_adventures_warrant_grammar::parser::Version;
 use crate::stream::encode;
 use crate::types::Ty;
 use crate::value::Value;
@@ -90,7 +91,9 @@ pub fn examples(lowered: &Lowered, program: &Program<'_>) -> Result<Examples, Ge
         lines: Vec::new(),
     };
     // The caller's program may not know the operations; this one does ([D19]).
-    let checker = program.clone().with_ops(&lowered.ops);
+    let checker = program
+        .clone()
+        .with_ops(&lowered.ops, lowered.version == Version::V0);
     for x in &lowered.examples {
         let at = |e: GenError| e.at(&x.name);
         let Ir::Subject { op, args, widths } = &x.reference.subject else {

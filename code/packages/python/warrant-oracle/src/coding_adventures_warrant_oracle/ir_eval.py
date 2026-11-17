@@ -827,6 +827,70 @@ def _reads(ir: object) -> set[str]:
     return seen
 
 
+class WrapsInAdmit(Exception):
+    """A fixed-width node wrapped while evaluating a callee's ``admit`` in a v0 document.
+
+    VER04r 3.3 rule 2 applies to every evaluation the generator performs (owner decision
+    [D18]); the wrap is refused but never added to the recorded ``wraps``.
+    """
+
+    def __init__(self, op: str) -> None:
+        super().__init__(op)
+        self.op = op
+
+
+def run_admit(prog: Program, admit: Callable, penv: dict, v0: bool, op: str) -> object:
+    """Evaluate a callee's compiled ``admit`` on ``penv``; in a v0 document refuse a wrap.
+
+    The wraps are counted (so the evaluation takes the counting path) and then discarded:
+    ``wraps`` of a suite row is unchanged by this check.
+    """
+    if not v0:
+        return admit(penv)
+    stats = prog.stats
+    before, was = stats.wraps, stats.counting
+    stats.counting = True
+    try:
+        verdict = admit(penv)
+    finally:
+        stats.counting = was
+    wrapped = stats.wraps > before
+    stats.wraps = before
+    if wrapped:
+        raise WrapsInAdmit(op)
+    return verdict
+
+
+def admit_check_cost(prog: Program, ir: object, tenv: dict) -> int:
+    """The IR work of [D19]'s per-case check for ``ir``: for every ``subject_op`` whose op has
+    an ``admit``, the worst-path cost of that ``admit`` plus the cost of each argument that
+    does not call the subject.  A static sum over the whole tree, charged per product ordinal
+    to the IR-work meter and **not** part of the recorded ``ir_cost``.
+    """
+    total = 0
+    stack = [ir]
+    while stack:
+        node = stack.pop()
+        if not (isinstance(node, list) and node and isinstance(node[0], str)):
+            continue
+        tag = node[0]
+        if tag in ("lit", "var", "err"):
+            continue
+        if tag == "subject_op":
+            op = prog.ops[node[1]]
+            if op.admit is not None:
+                statics = dict(zip(op.statics, node[3] if len(node) == 4 else []))
+                ptenv = {n: _substitute(t, statics) for n, t in op.params}
+                total += prog.compile(op.admit, ptenv, False).cost
+                total += sum(prog.compile(a, tenv, False).cost for a in node[2] if not has_subject(a))
+            stack.extend(node[2])
+        elif tag == "model_call":
+            stack.extend(node[2])
+        else:
+            stack.extend(node[1:])
+    return total
+
+
 def admit_fn(prog: Program, op: object, widths: list | None) -> Callable | None:
     """The compiled ``admit`` of subject op ``op`` over its parameter names, or ``None``.
 
@@ -840,7 +904,9 @@ def admit_fn(prog: Program, op: object, widths: list | None) -> Callable | None:
     return prog.compile(op.admit, ptenv, False).fn
 
 
-def compile_admit_check(prog: Program, ir: object, tenv: dict) -> Callable | None:
+def compile_admit_check(
+    prog: Program, ir: object, tenv: dict, v0: bool = False
+) -> Callable | None:
     """A closure ``fn(env)`` raising :class:`OutsideAdmit` when a subject call on the pure
     trace of ``ir`` has arguments outside its op's ``admit`` (VER04r section 6, [D19]).
 
@@ -884,7 +950,7 @@ def compile_admit_check(prog: Program, ir: object, tenv: dict) -> Callable | Non
             ]
 
             def check(env: dict, admit=admit, args=args, name=op.name) -> None:
-                if not admit({n: f(env) for n, f in args}):
+                if not run_admit(prog, admit, {n: f(env) for n, f in args}, v0, name):
                     raise OutsideAdmit(name)
 
             return [check] + kids

@@ -28,7 +28,7 @@ use coding_adventures_warrant_grammar::domain::DomainEnv;
 use coding_adventures_warrant_grammar::parser::WarrantFile;
 
 use crate::arith::check_v0_wraps;
-use crate::cost::{Depth, IrWork};
+use crate::cost::{admit_check_cost, Depth, IrWork};
 use crate::domains::resolve_claim;
 use crate::error::{code, GenError};
 use crate::eval::Program;
@@ -125,7 +125,8 @@ pub fn enumerate_analysed(
                 ));
             }
         }
-        let program = Program::new(&lowered.models).with_ops(&lowered.ops);
+        let program = Program::new(&lowered.models)
+            .with_ops(&lowered.ops, lowered.version == coding_adventures_warrant_grammar::parser::Version::V0);
         let env = DomainEnv::new(file);
         let mut work = IrWork::new(Depth::Full);
         let mut ordinals = 0u64;
@@ -137,6 +138,13 @@ pub fn enumerate_analysed(
         for (suite, cost) in lowered.suites.iter().zip(&analysis.suite_costs) {
             let domains = resolve_claim(file, &env, suite, profile.budget)?;
             work.charge(cost.total, domains.product)
+                .map_err(|e| e.at(&suite.claim))?;
+            // [D19]: the per-case check of every call's arguments against the callee's
+            // `admit` is IR work too, charged on every product ordinal (conservatively: the
+            // check runs only on admitted cases).  The recorded `ir_cost` is unchanged.
+            let check = admit_check_cost(suite, &lowered.ops, &analysis.model_costs, profile.max_ir_cost)
+                .map_err(|e| e.at(&suite.claim))?;
+            work.charge(check, domains.product)
                 .map_err(|e| e.at(&suite.claim))?;
             ordinals = ordinals.saturating_add(domains.product);
             if ordinals > MAX_TOTAL_WORK_FULL {

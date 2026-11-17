@@ -17,25 +17,34 @@ from coding_adventures_warrant_oracle.errors import OracleError
 GEN = {"name": "test", "version": "0"}
 
 
-def doc(version: str, extra: str) -> bytes:
+OPS = {
+    "op_add": "op op_add(a: U8, b: U8) -> U8",
+    "op_lo": "op op_lo(a: U8 | a < 10u8, b: U8) -> U8",
+    "op_two": "op op_two(a: U8 | a < 10u8, b: U8 | b > a) -> U8",
+    "op_m": "op op_m(a: U8 | add8(a, 1u8) < 5u8, b: U8) -> U8",
+}
+
+
+def doc(version: str, extra: str, more: dict | None = None) -> bytes:
+    ops = {**OPS, **(more or {})}
     s = f"warrant synth{version}\n"
     s += "  model add8(a: U8, b: U8) -> U8 = a + b\n"
     s += "  model first(a: U8, b: U8) -> U8 = a\n"
-    s += "  op op_add(a: U8, b: U8) -> U8\n"
-    s += "  op op_lo(a: U8 | a < 10u8, b: U8) -> U8\n"
+    for line in ops.values():
+        s += f"  {line}\n"
     s += "  assume platform:\n    none\n  assume environment:\n    none\n"
-    for op in ("op_add", "op_lo"):
+    for op in ops:
         s += f"  labels {op}:\n    a secret\n    b secret\n"
-    for op in ("op_add", "op_lo"):
+    for op in ops:
         for p in "ab":
             s += f"  input {op}.{p}:\n    hostile\n    ensures no_panic, terminates\n"
-    for op in ("op_add", "op_lo"):
+    for op in ops:
         s += f"  bound {op}:\n    steps <= 64\n    heap <= 0\n    depth <= 8\n"
     return (s + extra).encode()
 
 
-def gen(version: str, extra: str):
-    return derive(doc(version, extra), b"", spec_ref="s.warrant", generator=GEN)
+def gen(version: str, extra: str, more: dict | None = None, profile: bytes = b""):
+    return derive(doc(version, extra, more), profile, spec_ref="s.warrant", generator=GEN)
 
 
 WRAPPING_EXAMPLE = "  example wrap:\n    op_add(255u8 + 2u8, 0u8) == 1u8\n"
@@ -50,6 +59,12 @@ def refused(version: str, extra: str) -> str:
     assert err.value.code == "generation"
     assert err.value.message.startswith("W0701"), err.value.message
     return err.value.message
+
+
+def bal(leaf: str, n: int, op: str) -> str:
+    if n == 1:
+        return leaf
+    return f"({bal(leaf, n // 2, op)} {op} {bal(leaf, n - n // 2, op)})"
 
 
 def test_d18_an_example_that_wraps_fails_in_a_v0_document():
@@ -116,3 +131,41 @@ def test_d19_a_subject_dependent_argument_the_admit_does_not_read_is_accepted():
     )
     gen(" v1", ok)
     assert "admitted case 20" in refused(" v1", ok.replace("a < 10u8", "a < 12u8"))
+
+
+def test_d18_a_wrap_while_evaluating_a_callee_admit_is_refused_in_v0_and_not_recorded():
+    claim = "  claim m:\n    forall a: U8 | a == 255u8, b: U8 | b < 2u8. op_m(a, b) == first(a, b)\n"
+    msg = refused("", claim)
+    assert "`m`" in msg and "wraps while evaluating the admit of op `op_m`" in msg
+    assert "admitted case 0" in msg
+    out = gen(" v1", claim)
+    assert out.corpus["suites"][0]["wraps"] == 0
+    ex = "  example e:\n    op_m(255u8, 4u8) == 255u8\n"
+    msg = refused("", ex)
+    assert "`e`" in msg and "wraps while evaluating the admit of op `op_m`" in msg
+    gen(" v1", ex)
+    gen("", "  claim m:\n    forall a: U8 | a < 3u8, b: U8 | b < 2u8. op_m(a, b) == first(a, b)\n")
+
+
+def test_d19_two_offending_calls_in_one_case_name_the_leftmost():
+    both = (
+        "  claim both:\n    forall a: U8 | a >= 10u8, b: U8 | b < 2u8."
+        " op_lo(a, b) == op_two(a, b)\n"
+    )
+    msg = refused(" v1", both)
+    assert "`op_lo`" in msg and "admitted case 0" in msg
+    swapped = both.replace("op_lo(a, b) == op_two(a, b)", "op_two(a, b) == op_lo(a, b)")
+    assert "`op_two`" in refused(" v1", swapped)
+
+
+def test_d19_the_check_is_charged_to_the_ir_work_meter():
+    big = {"op_big": f"op op_big(a: U8 | {bal('a < 10u8', 256, 'and')}, b: U8) -> U8"}
+    body = bal("op_big(a, b)", 128, "+")
+    claim = (
+        "  claim dos:\n    forall a: U8 | a < 10u8, b: U8, c: U8, d: Bool, e: Bool, f: Bool,"
+        f" g: Bool. {body} == 0u8\n"
+    )
+    with pytest.raises(OracleError) as err:
+        gen(" v1", claim, big, b"budget 268435456\n")
+    assert err.value.code == "limit"
+    assert "total IR work" in err.value.message

@@ -39,6 +39,8 @@ from .errors import OracleError
 from .ir_eval import (
     OutsideAdmit,
     Program,
+    WrapsInAdmit,
+    admit_check_cost,
     compile_admit_check,
     compile_calls,
     compile_trace,
@@ -91,6 +93,12 @@ class Work:
         self.walked += ordinals
         if self.walked > MAX_TOTAL_WORK_FULL:
             raise OracleError("limit", "total analysis work bound exceeded")
+
+    def charge_ir(self, ir_work: int) -> None:
+        """Charge IR work that is not a recorded ``ir_cost`` (the check of [D19])."""
+        self.ir += ir_work
+        if self.ir > self.max_ir:
+            raise OracleError("limit", "total IR work bound exceeded")
 
     def charge(self, ordinals: int, ir_cost: int) -> None:
         self.cases += ordinals
@@ -246,7 +254,10 @@ class SuitePlan:
         self._wraps: int | None = None
         self.calls = compile_calls(prog, suite.body, tenv)
         # [D19]: a call of an op with an ``admit`` is checked on every admitted case.
-        self._admit_check = compile_admit_check(prog, suite.body, tenv)
+        self._admit_check = compile_admit_check(prog, suite.body, tenv, spec.version == "v0")
+        # The check is IR work too, charged per product ordinal (conservatively), before any
+        # case runs; the recorded ``ir_cost`` below does not include it.
+        self.work.charge_ir(self.product * admit_check_cost(prog, suite.body, tenv))
         self._admits_checked = False
         self.expected = None
         self.enc_result = None
@@ -519,6 +530,13 @@ class SuitePlan:
         for i, (_ordinal, env) in enumerate(self.iter_admitted(meter=False)):
             try:
                 check(env)
+            except WrapsInAdmit as exc:
+                raise OracleError(
+                    "generation",
+                    f"W0701: claim `{self.suite.claim}`: U8 arithmetic wraps while evaluating "
+                    f"the admit of op `{exc.op}`; v0 harness evaluates U8 as Nat "
+                    f"(VER04r 3.3 rule 2), at admitted case {i}",
+                ) from None
             except OutsideAdmit as exc:
                 raise OracleError(
                     "generation",
