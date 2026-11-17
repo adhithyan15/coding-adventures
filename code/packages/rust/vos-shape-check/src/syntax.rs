@@ -128,6 +128,7 @@ pub fn find_attrs(toks: &[Token], pair: &[usize]) -> Vec<Attr> {
     let mut out: Vec<Attr> = Vec::new();
     let mut next_free = 0usize;
     for i in 0..toks.len() {
+        crate::steps::tick();
         if i < next_free || !toks[i].is_punct("#") {
             continue;
         }
@@ -155,6 +156,7 @@ pub fn find_attrs(toks: &[Token], pair: &[usize]) -> Vec<Attr> {
 pub fn item_end(toks: &[Token], pair: &[usize], start: usize) -> usize {
     let mut k = start;
     while k < toks.len() {
+        crate::steps::tick();
         let t = &toks[k];
         if t.kind == Kind::Punct {
             match t.text.as_str() {
@@ -215,6 +217,7 @@ fn mask_cfg_test(toks: Vec<Token>, pair: &[usize]) -> Vec<Token> {
         };
         let stop = end.max(a.close);
         for d in &mut drop[a.start..=stop] {
+            crate::steps::tick();
             *d = true;
         }
         masked_to = stop + 1;
@@ -242,11 +245,13 @@ impl FileCtx {
         let mut in_attr = vec![false; toks.len()];
         for a in &attrs {
             for x in &mut in_attr[a.start..=a.close] {
+                crate::steps::tick();
                 *x = true;
             }
         }
         let mut ghost_mods = Vec::new();
         for i in 0..toks.len() {
+            crate::steps::tick();
             if in_attr[i] || !toks[i].is_ident("mod") {
                 continue;
             }
@@ -267,6 +272,7 @@ impl FileCtx {
                 let from = a.max(hi);
                 if b > from {
                     for m in &mut ghost_mask[from..b] {
+                        crate::steps::tick();
                         *m = true;
                     }
                     hi = b;
@@ -306,6 +312,7 @@ impl FileCtx {
             j -= 1;
         }
         while j >= 1 && self.toks[j - 1].is_punct("]") {
+            crate::steps::tick();
             let open = self.pair[j - 1];
             if open >= 1 && self.toks[open - 1].is_punct("#") {
                 if let Ok(n) = self.attrs.binary_search_by_key(&open, |a| a.open) {
@@ -337,6 +344,7 @@ pub fn angle_close(toks: &[Token], pair: &[usize], open: usize) -> Option<usize>
     let mut k = open;
     let limit = (open + MAX_HEADER_TOKENS).min(toks.len());
     while k < limit {
+        crate::steps::tick();
         let t = &toks[k];
         if t.kind == Kind::Punct {
             match t.text.as_str() {
@@ -374,6 +382,7 @@ pub fn matching_lt(t: &[Token], gt: usize) -> Option<usize> {
     let mut k = gt;
     let floor = gt.saturating_sub(256);
     loop {
+        crate::steps::tick();
         if t[k].is_punct(">") {
             depth += 1;
         } else if t[k].is_punct("<") {
@@ -438,6 +447,7 @@ pub fn scan_header(t: &[Token], pair: &[usize], from: usize) -> Header {
     let mut k = from;
     let mut angle = 0usize;
     while k < limit {
+        crate::steps::tick();
         let x = &t[k];
         if x.kind == Kind::Punct {
             match x.text.as_str() {

@@ -104,6 +104,7 @@ fn impl_type(
     let mut stop = b;
     let mut j = start;
     while j < b {
+        crate::steps::tick();
         let x = &t[j];
         if x.kind == Kind::Punct && matches!(x.text.as_str(), "(" | "[") {
             j = pair[j];
@@ -118,6 +119,7 @@ fn impl_type(
     let from = for_at.map_or(start, |f| f + 1);
     let mut j = from;
     while j < stop {
+        crate::steps::tick();
         let x = &t[j];
         let skippable =
             x.kind == Kind::Lifetime || x.is_punct("&") || x.is_ident("mut") || x.is_ident("dyn");
@@ -170,10 +172,13 @@ fn collect_file(
     let mut ty_stack: Vec<(usize, Option<String>)> = Vec::new();
     let mut fn_stack: Vec<(usize, usize)> = Vec::new();
     for i in 0..t.len() {
+        crate::steps::tick();
         while ty_stack.last().is_some_and(|&(c, _)| c < i) {
+            crate::steps::tick();
             ty_stack.pop();
         }
         while fn_stack.last().is_some_and(|&(c, _)| c < i) {
+            crate::steps::tick();
             fn_stack.pop();
         }
         if f.in_attr[i] || t[i].kind != Kind::Ident {
@@ -301,6 +306,7 @@ pub fn recursion(cx: &mut Ctx<'_>) {
     let mut by_key: BTreeMap<(Option<String>, String), Vec<usize>> = BTreeMap::new();
     let mut by_name: BTreeMap<String, Vec<usize>> = BTreeMap::new();
     for (n, node) in nodes.iter().enumerate() {
+        crate::steps::tick();
         by_key
             .entry((node.ty.clone(), node.name.clone()))
             .or_default()
@@ -312,11 +318,13 @@ pub fn recursion(cx: &mut Ctx<'_>) {
     let mut adj: Vec<Vec<usize>> = vec![Vec::new(); nodes.len()];
     let mut edges = 0usize;
     for (n, node) in nodes.iter().enumerate() {
+        crate::steps::tick();
         let mut to: BTreeSet<usize> = BTreeSet::new();
         // Many call sites of one callee are one edge: dedupe BEFORE resolving
         // (4,000 methods x 344,000 call sites took 15 s without this).
         let unique: BTreeSet<&Call> = node.calls.iter().collect();
         for c in unique {
+            crate::steps::tick();
             let found: &[usize] = match c {
                 Call::Free(name) => by_key
                     .get(&(None, name.clone()))
@@ -353,12 +361,14 @@ pub fn recursion(cx: &mut Ctx<'_>) {
     // Strongly connected components in O(V + E) (iterative Tarjan): every
     // component of two or more functions, and every self-loop, is a cycle.
     for comp in tarjan(&adj) {
+        crate::steps::tick();
         let cyclic = comp.len() > 1 || adj[comp[0]].contains(&comp[0]);
         if !cyclic {
             continue;
         }
         let members: BTreeSet<usize> = comp.iter().copied().collect();
         for &v in &comp {
+            crate::steps::tick();
             let shown = if comp.len() <= 16 {
                 cycle_through(&adj, &members, v)
                     .iter()
@@ -388,16 +398,19 @@ fn cycle_through(adj: &[Vec<usize>], members: &BTreeSet<usize>, v: usize) -> Vec
     let mut parent: BTreeMap<usize, usize> = BTreeMap::new();
     let mut queue: VecDeque<usize> = VecDeque::new();
     for &s in &adj[v] {
+        crate::steps::tick();
         if members.contains(&s) {
             parent.entry(s).or_insert(v);
             queue.push_back(s);
         }
     }
     while let Some(u) = queue.pop_front() {
+        crate::steps::tick();
         if u == v {
             break;
         }
         for &w in &adj[u] {
+            crate::steps::tick();
             if members.contains(&w) {
                 if let std::collections::btree_map::Entry::Vacant(e) = parent.entry(w) {
                     e.insert(u);
@@ -409,6 +422,7 @@ fn cycle_through(adj: &[Vec<usize>], members: &BTreeSet<usize>, v: usize) -> Vec
     let mut chain = vec![v];
     let mut cur = parent[&v];
     while cur != v {
+        crate::steps::tick();
         chain.push(cur);
         cur = parent[&cur];
     }
@@ -427,6 +441,7 @@ fn tarjan(adj: &[Vec<usize>]) -> Vec<Vec<usize>> {
     let mut comps: Vec<Vec<usize>> = Vec::new();
     let mut counter = 0usize;
     for root in 0..n {
+        crate::steps::tick();
         if index[root] != usize::MAX {
             continue;
         }
@@ -438,6 +453,7 @@ fn tarjan(adj: &[Vec<usize>]) -> Vec<Vec<usize>> {
         stack.push(root);
         on_stack[root] = true;
         while let Some(&(v, i)) = call.last() {
+            crate::steps::tick();
             if i < adj[v].len() {
                 call.last_mut().expect("non-empty").1 += 1;
                 let w = adj[v][i];
@@ -459,6 +475,7 @@ fn tarjan(adj: &[Vec<usize>]) -> Vec<Vec<usize>> {
                 if low[v] == index[v] {
                     let mut comp = Vec::new();
                     while let Some(w) = stack.pop() {
+                        crate::steps::tick();
                         on_stack[w] = false;
                         comp.push(w);
                         if w == v {
