@@ -30,3 +30,7 @@ are identical.
   separated repetition, empty literal, and non-recursive controls.
 - `BenchmarkParseStraceLike` on a committed copy of the strace grammar
   (`testdata/strace.grammar`).
+
+### Review follow-ups
+- The knob differential now also uses adversarial token streams (no trailing EOF, mid-stream EOF, empty, enum-only tokens), varies `StartRule`, uses 600 grammars x 60 inputs, and includes grammars with NEWLINE, EOF tokens and empty literals (seed 4242). Note: EOF/empty-literal nullability is conservative only (a zero-width match happens solely at the synthetic EOF, where nothing can grow), so those two mutants are behaviourally equivalent and are pinned by unit tests.
+- `testdata/strace.grammar` is pinned byte-for-byte to the canonical file by a test; `expIDs` is dropped after compile; the strace grammar header comment no longer claims every rule consumes a token.

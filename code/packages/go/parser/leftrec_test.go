@@ -142,8 +142,17 @@ func statParse(c *Compiled, toks []lexer.Token, opts Options) string {
 		return "no rules"
 	}
 	s := c.pool.Get().(*parseState)
+	start := int32(0)
+	if opts.StartRule != "" {
+		id, ok := c.byName[opts.StartRule]
+		if !ok {
+			c.pool.Put(s)
+			return "unknown start rule"
+		}
+		start = id
+	}
 	s.reset(toks, opts)
-	ast, err := s.run(0)
+	ast, err := s.run(start)
 	var sb strings.Builder
 	if err != nil {
 		sb.WriteString("ERR " + err.Error())
@@ -175,8 +184,18 @@ func checkAnalysisEquivalent(t testing.TB, label string, pg *grammartools.Parser
 		t.Fatal(err)
 	}
 	for it := 0; it < inputs; it++ {
-		toks := diffTokens(rng, rng.Intn(14))
+		// Alternate the plain streams (always end in EOF) with adversarial
+		// ones: no trailing EOF, EOF mid-stream, empty, enum-only tokens.
+		var toks []lexer.Token
+		if it%2 == 0 {
+			toks = diffTokens(rng, rng.Intn(14))
+		} else {
+			toks = advTokens(rng)
+		}
 		for _, opts := range leftRecOptionSets {
+			if rng.Intn(3) == 0 && len(on.rules) > 0 {
+				opts.StartRule = on.rules[rng.Intn(len(on.rules))].name
+			}
 			a, b := statParse(on, toks, opts), statParse(off, toks, opts)
 			if a != b {
 				var names []string
@@ -284,14 +303,19 @@ func randomGrammar(rng *rand.Rand, nrules int) *grammartools.ParserGrammar {
 }
 
 func TestLeftRecAnalysisDifferentialRandomGrammars(t *testing.T) {
-	grammars, inputs := 500, 12
+	grammars, inputs := 600, 60
 	if testing.Short() {
-		grammars, inputs = 80, 6
+		grammars, inputs = 150, 20
 	}
-	rng := rand.New(rand.NewSource(2024))
+	rng := rand.New(rand.NewSource(4242))
 	marked, total := 0, 0
 	for gi := 0; gi < grammars; gi++ {
-		pg := randomGrammar(rng, 2+rng.Intn(4))
+		var pg *grammartools.ParserGrammar
+		if gi%2 == 0 {
+			pg = randomGrammar(rng, 2+rng.Intn(4))
+		} else {
+			pg = advGrammar(rng, 1+rng.Intn(6), rng.Intn(3) == 0)
+		}
 		checkAnalysisEquivalent(t, fmt.Sprintf("random grammar %d", gi), pg, rng, inputs)
 		c, _ := compileGrammar(pg, false)
 		for _, r := range c.rules {
@@ -311,13 +335,15 @@ func TestLeftRecAnalysisDifferentialRandomGrammars(t *testing.T) {
 // Skipping the loop must still produce the left-associative growth for the
 // rules that do need it, and the expected-set text must still dedupe by value.
 func TestExpectedSetDedupesByText(t *testing.T) {
-	// Two different elements print the same text: a token reference named
-	// X and a rule named X-shaped text cannot collide in the grammar syntax,
-	// but a rule and a token can share a name. Both must report once.
+	// A rule and a token share the name NUM, and a literal repeats: each
+	// text must be reported once however many elements print it. (The rule
+	// is recorded when it fails, after its alternatives, hence the order.)
 	c, err := CompileGrammar(&grammartools.ParserGrammar{Rules: []grammartools.GrammarRule{
+		{Name: "NUM", Body: grammartools.RuleReference{Name: "NUM", IsToken: true}},
 		{Name: "s", Body: grammartools.Alternation{Choices: []grammartools.GrammarElement{
 			grammartools.RuleReference{Name: "NUM", IsToken: true},
 			grammartools.RuleReference{Name: "NUM", IsToken: true},
+			grammartools.RuleReference{Name: "NUM"},
 			grammartools.Literal{Value: "z"},
 			grammartools.Literal{Value: "z"},
 		}}},
@@ -325,7 +351,7 @@ func TestExpectedSetDedupesByText(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	_, err = c.Parse([]lexer.Token{{TypeName: "Y", Value: "y", Line: 1, Column: 1}, {TypeName: "EOF", Line: 1, Column: 2}}, Options{})
+	_, err = c.Parse([]lexer.Token{{TypeName: "Y", Value: "y", Line: 1, Column: 1}, {TypeName: "EOF", Line: 1, Column: 2}}, Options{StartRule: "s"})
 	if err == nil || err.Error() == "" {
 		t.Fatal("expected a parse error")
 	}

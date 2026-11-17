@@ -54,6 +54,21 @@ func straceLikeLines() ([][]lexer.Token, int64) {
 	return lines, total
 }
 
+// The benchmark's grammar is a copy; this pins it to the canonical file.
+func TestStraceGrammarCopyMatchesCanonical(t *testing.T) {
+	canon, err := os.ReadFile("../../../grammars/strace/strace.grammar")
+	if err != nil {
+		t.Fatal(err)
+	}
+	cp, err := os.ReadFile("testdata/strace.grammar")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if string(canon) != string(cp) {
+		t.Fatal("testdata/strace.grammar differs from code/grammars/strace/strace.grammar; copy it over")
+	}
+}
+
 func BenchmarkParseStraceLike(b *testing.B) {
 	src, err := os.ReadFile("testdata/strace.grammar")
 	if err != nil {

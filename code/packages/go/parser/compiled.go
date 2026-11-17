@@ -298,7 +298,7 @@ type Compiled struct {
 	pool                sync.Pool // of *parseState
 
 	// expNames[id] is the text of expected-id id; expIDs is the inverse,
-	// used only while compiling. Ids are interned BY STRING VALUE, so two
+	// used only while compiling (nil afterwards). Ids are interned BY STRING VALUE, so two
 	// different elements that print the same text share one id and the
 	// "Expected A or B" de-duplication behaves exactly as it did with strings.
 	expNames []string
@@ -353,6 +353,7 @@ func compileGrammar(grammar *grammartools.ParserGrammar, forceLeftRec bool) (*Co
 		c.rules[i] = compiledRule{name: names[i], body: body, weight: nodeHeight(body) + 2, exp: c.expID(names[i])}
 	}
 	c.markLeftRecursive(forceLeftRec)
+	c.expIDs = nil // only needed while compiling; Compiled is immutable from here
 
 	// The start rule is the first rule *as named*, resolved after dedup.
 	c.pool.New = func() any { return &parseState{c: c} }
