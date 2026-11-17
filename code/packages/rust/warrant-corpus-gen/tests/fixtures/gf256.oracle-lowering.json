@@ -1,0 +1,7581 @@
+{
+  "document": "v0",
+  "errors": {
+    "Gf256Error": [
+      "DIVIDE_BY_ZERO",
+      "ZERO_HAS_NO_INVERSE"
+    ]
+  },
+  "examples": [
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "add",
+          [
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "83"
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "202"
+              }
+            ]
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "153"
+          }
+        ]
+      ],
+      "expected": [
+        "lit",
+        {
+          "type": "U8",
+          "value": "153"
+        }
+      ],
+      "name": "add_known_vector",
+      "result_type": "U8",
+      "subject": [
+        "subject_op",
+        "add",
+        [
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "83"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "202"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "add",
+          [
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "0"
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "200"
+              }
+            ]
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "200"
+          }
+        ]
+      ],
+      "expected": [
+        "lit",
+        {
+          "type": "U8",
+          "value": "200"
+        }
+      ],
+      "name": "add_zero_left",
+      "result_type": "U8",
+      "subject": [
+        "subject_op",
+        "add",
+        [
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "0"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "200"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "add",
+          [
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "255"
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "255"
+              }
+            ]
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "0"
+          }
+        ]
+      ],
+      "expected": [
+        "lit",
+        {
+          "type": "U8",
+          "value": "0"
+        }
+      ],
+      "name": "add_cancels",
+      "result_type": "U8",
+      "subject": [
+        "subject_op",
+        "add",
+        [
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "255"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "255"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "subtract",
+          [
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "83"
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "202"
+              }
+            ]
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "153"
+          }
+        ]
+      ],
+      "expected": [
+        "lit",
+        {
+          "type": "U8",
+          "value": "153"
+        }
+      ],
+      "name": "subtract_known_vector",
+      "result_type": "U8",
+      "subject": [
+        "subject_op",
+        "subtract",
+        [
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "83"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "202"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "subtract",
+          [
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "255"
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "1"
+              }
+            ]
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "254"
+          }
+        ]
+      ],
+      "expected": [
+        "lit",
+        {
+          "type": "U8",
+          "value": "254"
+        }
+      ],
+      "name": "subtract_equals_add_at_top",
+      "result_type": "U8",
+      "subject": [
+        "subject_op",
+        "subtract",
+        [
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "255"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "1"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "multiply",
+          [
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "0"
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "7"
+              }
+            ]
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "0"
+          }
+        ]
+      ],
+      "expected": [
+        "lit",
+        {
+          "type": "U8",
+          "value": "0"
+        }
+      ],
+      "name": "multiply_zero",
+      "result_type": "U8",
+      "subject": [
+        "subject_op",
+        "multiply",
+        [
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "0"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "7"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "multiply",
+          [
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "7"
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "0"
+              }
+            ]
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "0"
+          }
+        ]
+      ],
+      "expected": [
+        "lit",
+        {
+          "type": "U8",
+          "value": "0"
+        }
+      ],
+      "name": "multiply_zero_right",
+      "result_type": "U8",
+      "subject": [
+        "subject_op",
+        "multiply",
+        [
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "7"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "0"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "multiply",
+          [
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "200"
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "1"
+              }
+            ]
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "200"
+          }
+        ]
+      ],
+      "expected": [
+        "lit",
+        {
+          "type": "U8",
+          "value": "200"
+        }
+      ],
+      "name": "multiply_one",
+      "result_type": "U8",
+      "subject": [
+        "subject_op",
+        "multiply",
+        [
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "200"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "1"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "multiply",
+          [
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "3"
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "7"
+              }
+            ]
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "9"
+          }
+        ]
+      ],
+      "expected": [
+        "lit",
+        {
+          "type": "U8",
+          "value": "9"
+        }
+      ],
+      "name": "multiply_small",
+      "result_type": "U8",
+      "subject": [
+        "subject_op",
+        "multiply",
+        [
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "3"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "7"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "multiply",
+          [
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "128"
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "2"
+              }
+            ]
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "29"
+          }
+        ]
+      ],
+      "expected": [
+        "lit",
+        {
+          "type": "U8",
+          "value": "29"
+        }
+      ],
+      "name": "multiply_first_reduction",
+      "result_type": "U8",
+      "subject": [
+        "subject_op",
+        "multiply",
+        [
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "128"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "2"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "multiply",
+          [
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "83"
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "140"
+              }
+            ]
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "1"
+          }
+        ]
+      ],
+      "expected": [
+        "lit",
+        {
+          "type": "U8",
+          "value": "1"
+        }
+      ],
+      "name": "multiply_inverse_pair",
+      "result_type": "U8",
+      "subject": [
+        "subject_op",
+        "multiply",
+        [
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "83"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "140"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "multiply",
+          [
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "83"
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "202"
+              }
+            ]
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "143"
+          }
+        ]
+      ],
+      "expected": [
+        "lit",
+        {
+          "type": "U8",
+          "value": "143"
+        }
+      ],
+      "name": "multiply_not_the_aes_pair",
+      "result_type": "U8",
+      "subject": [
+        "subject_op",
+        "multiply",
+        [
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "83"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "202"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "multiply",
+          [
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "87"
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "131"
+              }
+            ]
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "49"
+          }
+        ]
+      ],
+      "expected": [
+        "lit",
+        {
+          "type": "U8",
+          "value": "49"
+        }
+      ],
+      "name": "multiply_not_the_aes_vector",
+      "result_type": "U8",
+      "subject": [
+        "subject_op",
+        "multiply",
+        [
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "87"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "131"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "multiply",
+          [
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "255"
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "255"
+              }
+            ]
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "226"
+          }
+        ]
+      ],
+      "expected": [
+        "lit",
+        {
+          "type": "U8",
+          "value": "226"
+        }
+      ],
+      "name": "multiply_top",
+      "result_type": "U8",
+      "subject": [
+        "subject_op",
+        "multiply",
+        [
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "255"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "255"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "multiply",
+          [
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "128"
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "128"
+              }
+            ]
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "19"
+          }
+        ]
+      ],
+      "expected": [
+        "lit",
+        {
+          "type": "U8",
+          "value": "19"
+        }
+      ],
+      "name": "multiply_squares",
+      "result_type": "U8",
+      "subject": [
+        "subject_op",
+        "multiply",
+        [
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "128"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "128"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "divide",
+          [
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "1"
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "83"
+              }
+            ]
+          ]
+        ],
+        [
+          "ok",
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "140"
+            }
+          ]
+        ]
+      ],
+      "expected": [
+        "ok",
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "140"
+          }
+        ]
+      ],
+      "name": "divide_one_by_pair",
+      "result_type": "Result<U8,Gf256Error>",
+      "subject": [
+        "subject_op",
+        "divide",
+        [
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "1"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "83"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "divide",
+          [
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "0"
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "5"
+              }
+            ]
+          ]
+        ],
+        [
+          "ok",
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "0"
+            }
+          ]
+        ]
+      ],
+      "expected": [
+        "ok",
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "0"
+          }
+        ]
+      ],
+      "name": "divide_zero_over_five",
+      "result_type": "Result<U8,Gf256Error>",
+      "subject": [
+        "subject_op",
+        "divide",
+        [
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "0"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "5"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "divide",
+          [
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "79"
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "100"
+              }
+            ]
+          ]
+        ],
+        [
+          "ok",
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "200"
+            }
+          ]
+        ]
+      ],
+      "expected": [
+        "ok",
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "200"
+          }
+        ]
+      ],
+      "name": "divide_known",
+      "result_type": "Result<U8,Gf256Error>",
+      "subject": [
+        "subject_op",
+        "divide",
+        [
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "79"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "100"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "divide",
+          [
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "5"
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "0"
+              }
+            ]
+          ]
+        ],
+        [
+          "err",
+          "DIVIDE_BY_ZERO"
+        ]
+      ],
+      "expected": [
+        "err",
+        "DIVIDE_BY_ZERO"
+      ],
+      "name": "divide_by_zero",
+      "result_type": "Result<U8,Gf256Error>",
+      "subject": [
+        "subject_op",
+        "divide",
+        [
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "5"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "0"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "divide",
+          [
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "0"
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "0"
+              }
+            ]
+          ]
+        ],
+        [
+          "err",
+          "DIVIDE_BY_ZERO"
+        ]
+      ],
+      "expected": [
+        "err",
+        "DIVIDE_BY_ZERO"
+      ],
+      "name": "divide_zero_by_zero",
+      "result_type": "Result<U8,Gf256Error>",
+      "subject": [
+        "subject_op",
+        "divide",
+        [
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "0"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "0"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "inverse",
+          [
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "83"
+              }
+            ]
+          ]
+        ],
+        [
+          "ok",
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "140"
+            }
+          ]
+        ]
+      ],
+      "expected": [
+        "ok",
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "140"
+          }
+        ]
+      ],
+      "name": "inverse_pair",
+      "result_type": "Result<U8,Gf256Error>",
+      "subject": [
+        "subject_op",
+        "inverse",
+        [
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "83"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "inverse",
+          [
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "1"
+              }
+            ]
+          ]
+        ],
+        [
+          "ok",
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "1"
+            }
+          ]
+        ]
+      ],
+      "expected": [
+        "ok",
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "1"
+          }
+        ]
+      ],
+      "name": "inverse_of_one",
+      "result_type": "Result<U8,Gf256Error>",
+      "subject": [
+        "subject_op",
+        "inverse",
+        [
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "1"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "inverse",
+          [
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "2"
+              }
+            ]
+          ]
+        ],
+        [
+          "ok",
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "142"
+            }
+          ]
+        ]
+      ],
+      "expected": [
+        "ok",
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "142"
+          }
+        ]
+      ],
+      "name": "inverse_of_generator",
+      "result_type": "Result<U8,Gf256Error>",
+      "subject": [
+        "subject_op",
+        "inverse",
+        [
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "2"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "inverse",
+          [
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "255"
+              }
+            ]
+          ]
+        ],
+        [
+          "ok",
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "253"
+            }
+          ]
+        ]
+      ],
+      "expected": [
+        "ok",
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "253"
+          }
+        ]
+      ],
+      "name": "inverse_of_top",
+      "result_type": "Result<U8,Gf256Error>",
+      "subject": [
+        "subject_op",
+        "inverse",
+        [
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "255"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "inverse",
+          [
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "0"
+              }
+            ]
+          ]
+        ],
+        [
+          "err",
+          "ZERO_HAS_NO_INVERSE"
+        ]
+      ],
+      "expected": [
+        "err",
+        "ZERO_HAS_NO_INVERSE"
+      ],
+      "name": "inverse_of_zero",
+      "result_type": "Result<U8,Gf256Error>",
+      "subject": [
+        "subject_op",
+        "inverse",
+        [
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "0"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "power",
+          [
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "2"
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "U64",
+                "value": "8"
+              }
+            ]
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "29"
+          }
+        ]
+      ],
+      "expected": [
+        "lit",
+        {
+          "type": "U8",
+          "value": "29"
+        }
+      ],
+      "name": "power_first_reduction",
+      "result_type": "U8",
+      "subject": [
+        "subject_op",
+        "power",
+        [
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "2"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "U64",
+              "value": "8"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "power",
+          [
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "2"
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "U64",
+                "value": "9"
+              }
+            ]
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "58"
+          }
+        ]
+      ],
+      "expected": [
+        "lit",
+        {
+          "type": "U8",
+          "value": "58"
+        }
+      ],
+      "name": "power_after_reduction",
+      "result_type": "U8",
+      "subject": [
+        "subject_op",
+        "power",
+        [
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "2"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "U64",
+              "value": "9"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "power",
+          [
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "2"
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "U64",
+                "value": "255"
+              }
+            ]
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "1"
+          }
+        ]
+      ],
+      "expected": [
+        "lit",
+        {
+          "type": "U8",
+          "value": "1"
+        }
+      ],
+      "name": "power_generator_order",
+      "result_type": "U8",
+      "subject": [
+        "subject_op",
+        "power",
+        [
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "2"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "U64",
+              "value": "255"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "power",
+          [
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "2"
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "U64",
+                "value": "254"
+              }
+            ]
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "142"
+          }
+        ]
+      ],
+      "expected": [
+        "lit",
+        {
+          "type": "U8",
+          "value": "142"
+        }
+      ],
+      "name": "power_generator_inverse",
+      "result_type": "U8",
+      "subject": [
+        "subject_op",
+        "power",
+        [
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "2"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "U64",
+              "value": "254"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "power",
+          [
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "0"
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "U64",
+                "value": "0"
+              }
+            ]
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "1"
+          }
+        ]
+      ],
+      "expected": [
+        "lit",
+        {
+          "type": "U8",
+          "value": "1"
+        }
+      ],
+      "name": "power_zero_zero",
+      "result_type": "U8",
+      "subject": [
+        "subject_op",
+        "power",
+        [
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "0"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "U64",
+              "value": "0"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "power",
+          [
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "0"
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "U64",
+                "value": "5"
+              }
+            ]
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "0"
+          }
+        ]
+      ],
+      "expected": [
+        "lit",
+        {
+          "type": "U8",
+          "value": "0"
+        }
+      ],
+      "name": "power_zero_positive",
+      "result_type": "U8",
+      "subject": [
+        "subject_op",
+        "power",
+        [
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "0"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "U64",
+              "value": "5"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "power",
+          [
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "77"
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "U64",
+                "value": "0"
+              }
+            ]
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "1"
+          }
+        ]
+      ],
+      "expected": [
+        "lit",
+        {
+          "type": "U8",
+          "value": "1"
+        }
+      ],
+      "name": "power_exponent_zero",
+      "result_type": "U8",
+      "subject": [
+        "subject_op",
+        "power",
+        [
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "77"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "U64",
+              "value": "0"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "power",
+          [
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "2"
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "U64",
+                "value": "4294967295"
+              }
+            ]
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "1"
+          }
+        ]
+      ],
+      "expected": [
+        "lit",
+        {
+          "type": "U8",
+          "value": "1"
+        }
+      ],
+      "name": "power_u32_max_exponent",
+      "result_type": "U8",
+      "subject": [
+        "subject_op",
+        "power",
+        [
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "2"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "U64",
+              "value": "4294967295"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "power",
+          [
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "2"
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "U64",
+                "value": "4294967294"
+              }
+            ]
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "142"
+          }
+        ]
+      ],
+      "expected": [
+        "lit",
+        {
+          "type": "U8",
+          "value": "142"
+        }
+      ],
+      "name": "power_u32_max_minus_one",
+      "result_type": "U8",
+      "subject": [
+        "subject_op",
+        "power",
+        [
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "2"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "U64",
+              "value": "4294967294"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "power",
+          [
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "3"
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "U64",
+                "value": "1000"
+              }
+            ]
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "116"
+          }
+        ]
+      ],
+      "expected": [
+        "lit",
+        {
+          "type": "U8",
+          "value": "116"
+        }
+      ],
+      "name": "power_cube_of_three",
+      "result_type": "U8",
+      "subject": [
+        "subject_op",
+        "power",
+        [
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "3"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "U64",
+              "value": "1000"
+            }
+          ]
+        ]
+      ]
+    }
+  ],
+  "model_order": [
+    "xor1",
+    "xor2",
+    "xor3",
+    "xor4",
+    "xor5",
+    "xor6",
+    "xor7",
+    "xor8",
+    "xtime",
+    "gstep",
+    "gm0",
+    "gm1",
+    "gm2",
+    "gm3",
+    "gm4",
+    "gm5",
+    "gm6",
+    "gm7",
+    "gmul",
+    "gsq",
+    "gchain",
+    "gpow127",
+    "ginv"
+  ],
+  "models": {
+    "gchain": {
+      "body": [
+        "model_call",
+        "gmul",
+        [
+          [
+            "model_call",
+            "gsq",
+            [
+              [
+                "var",
+                "x"
+              ]
+            ]
+          ],
+          [
+            "var",
+            "a"
+          ]
+        ]
+      ],
+      "ir_cost": 4029,
+      "params": [
+        [
+          "x",
+          "U8"
+        ],
+        [
+          "a",
+          "U8"
+        ]
+      ],
+      "ret": "U8"
+    },
+    "ginv": {
+      "body": [
+        "model_call",
+        "gsq",
+        [
+          [
+            "model_call",
+            "gpow127",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ]
+        ]
+      ],
+      "ir_cost": 26204,
+      "params": [
+        [
+          "a",
+          "U8"
+        ]
+      ],
+      "ret": "U8"
+    },
+    "gm0": {
+      "body": [
+        "model_call",
+        "gstep",
+        [
+          [
+            "var",
+            "acc"
+          ],
+          [
+            "var",
+            "a"
+          ],
+          [
+            "ge",
+            [
+              "var",
+              "b"
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "1"
+              }
+            ]
+          ]
+        ]
+      ],
+      "ir_cost": 243,
+      "params": [
+        [
+          "acc",
+          "U8"
+        ],
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "b",
+          "U8"
+        ]
+      ],
+      "ret": "U8"
+    },
+    "gm1": {
+      "body": [
+        "model_call",
+        "gm0",
+        [
+          [
+            "model_call",
+            "gstep",
+            [
+              [
+                "var",
+                "acc"
+              ],
+              [
+                "var",
+                "a"
+              ],
+              [
+                "ge",
+                [
+                  "var",
+                  "b"
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "U8",
+                    "value": "2"
+                  }
+                ]
+              ]
+            ]
+          ],
+          [
+            "var",
+            "a"
+          ],
+          [
+            "if",
+            [
+              "ge",
+              [
+                "var",
+                "b"
+              ],
+              [
+                "lit",
+                {
+                  "type": "U8",
+                  "value": "2"
+                }
+              ]
+            ],
+            [
+              "sub",
+              [
+                "var",
+                "b"
+              ],
+              [
+                "lit",
+                {
+                  "type": "U8",
+                  "value": "2"
+                }
+              ]
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ]
+      ],
+      "ir_cost": 495,
+      "params": [
+        [
+          "acc",
+          "U8"
+        ],
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "b",
+          "U8"
+        ]
+      ],
+      "ret": "U8"
+    },
+    "gm2": {
+      "body": [
+        "model_call",
+        "gm1",
+        [
+          [
+            "model_call",
+            "gstep",
+            [
+              [
+                "var",
+                "acc"
+              ],
+              [
+                "var",
+                "a"
+              ],
+              [
+                "ge",
+                [
+                  "var",
+                  "b"
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "U8",
+                    "value": "4"
+                  }
+                ]
+              ]
+            ]
+          ],
+          [
+            "var",
+            "a"
+          ],
+          [
+            "if",
+            [
+              "ge",
+              [
+                "var",
+                "b"
+              ],
+              [
+                "lit",
+                {
+                  "type": "U8",
+                  "value": "4"
+                }
+              ]
+            ],
+            [
+              "sub",
+              [
+                "var",
+                "b"
+              ],
+              [
+                "lit",
+                {
+                  "type": "U8",
+                  "value": "4"
+                }
+              ]
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ]
+      ],
+      "ir_cost": 747,
+      "params": [
+        [
+          "acc",
+          "U8"
+        ],
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "b",
+          "U8"
+        ]
+      ],
+      "ret": "U8"
+    },
+    "gm3": {
+      "body": [
+        "model_call",
+        "gm2",
+        [
+          [
+            "model_call",
+            "gstep",
+            [
+              [
+                "var",
+                "acc"
+              ],
+              [
+                "var",
+                "a"
+              ],
+              [
+                "ge",
+                [
+                  "var",
+                  "b"
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "U8",
+                    "value": "8"
+                  }
+                ]
+              ]
+            ]
+          ],
+          [
+            "var",
+            "a"
+          ],
+          [
+            "if",
+            [
+              "ge",
+              [
+                "var",
+                "b"
+              ],
+              [
+                "lit",
+                {
+                  "type": "U8",
+                  "value": "8"
+                }
+              ]
+            ],
+            [
+              "sub",
+              [
+                "var",
+                "b"
+              ],
+              [
+                "lit",
+                {
+                  "type": "U8",
+                  "value": "8"
+                }
+              ]
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ]
+      ],
+      "ir_cost": 999,
+      "params": [
+        [
+          "acc",
+          "U8"
+        ],
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "b",
+          "U8"
+        ]
+      ],
+      "ret": "U8"
+    },
+    "gm4": {
+      "body": [
+        "model_call",
+        "gm3",
+        [
+          [
+            "model_call",
+            "gstep",
+            [
+              [
+                "var",
+                "acc"
+              ],
+              [
+                "var",
+                "a"
+              ],
+              [
+                "ge",
+                [
+                  "var",
+                  "b"
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "U8",
+                    "value": "16"
+                  }
+                ]
+              ]
+            ]
+          ],
+          [
+            "var",
+            "a"
+          ],
+          [
+            "if",
+            [
+              "ge",
+              [
+                "var",
+                "b"
+              ],
+              [
+                "lit",
+                {
+                  "type": "U8",
+                  "value": "16"
+                }
+              ]
+            ],
+            [
+              "sub",
+              [
+                "var",
+                "b"
+              ],
+              [
+                "lit",
+                {
+                  "type": "U8",
+                  "value": "16"
+                }
+              ]
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ]
+      ],
+      "ir_cost": 1251,
+      "params": [
+        [
+          "acc",
+          "U8"
+        ],
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "b",
+          "U8"
+        ]
+      ],
+      "ret": "U8"
+    },
+    "gm5": {
+      "body": [
+        "model_call",
+        "gm4",
+        [
+          [
+            "model_call",
+            "gstep",
+            [
+              [
+                "var",
+                "acc"
+              ],
+              [
+                "var",
+                "a"
+              ],
+              [
+                "ge",
+                [
+                  "var",
+                  "b"
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "U8",
+                    "value": "32"
+                  }
+                ]
+              ]
+            ]
+          ],
+          [
+            "var",
+            "a"
+          ],
+          [
+            "if",
+            [
+              "ge",
+              [
+                "var",
+                "b"
+              ],
+              [
+                "lit",
+                {
+                  "type": "U8",
+                  "value": "32"
+                }
+              ]
+            ],
+            [
+              "sub",
+              [
+                "var",
+                "b"
+              ],
+              [
+                "lit",
+                {
+                  "type": "U8",
+                  "value": "32"
+                }
+              ]
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ]
+      ],
+      "ir_cost": 1503,
+      "params": [
+        [
+          "acc",
+          "U8"
+        ],
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "b",
+          "U8"
+        ]
+      ],
+      "ret": "U8"
+    },
+    "gm6": {
+      "body": [
+        "model_call",
+        "gm5",
+        [
+          [
+            "model_call",
+            "gstep",
+            [
+              [
+                "var",
+                "acc"
+              ],
+              [
+                "var",
+                "a"
+              ],
+              [
+                "ge",
+                [
+                  "var",
+                  "b"
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "U8",
+                    "value": "64"
+                  }
+                ]
+              ]
+            ]
+          ],
+          [
+            "var",
+            "a"
+          ],
+          [
+            "if",
+            [
+              "ge",
+              [
+                "var",
+                "b"
+              ],
+              [
+                "lit",
+                {
+                  "type": "U8",
+                  "value": "64"
+                }
+              ]
+            ],
+            [
+              "sub",
+              [
+                "var",
+                "b"
+              ],
+              [
+                "lit",
+                {
+                  "type": "U8",
+                  "value": "64"
+                }
+              ]
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ]
+      ],
+      "ir_cost": 1755,
+      "params": [
+        [
+          "acc",
+          "U8"
+        ],
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "b",
+          "U8"
+        ]
+      ],
+      "ret": "U8"
+    },
+    "gm7": {
+      "body": [
+        "model_call",
+        "gm6",
+        [
+          [
+            "model_call",
+            "gstep",
+            [
+              [
+                "var",
+                "acc"
+              ],
+              [
+                "var",
+                "a"
+              ],
+              [
+                "ge",
+                [
+                  "var",
+                  "b"
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "U8",
+                    "value": "128"
+                  }
+                ]
+              ]
+            ]
+          ],
+          [
+            "var",
+            "a"
+          ],
+          [
+            "if",
+            [
+              "ge",
+              [
+                "var",
+                "b"
+              ],
+              [
+                "lit",
+                {
+                  "type": "U8",
+                  "value": "128"
+                }
+              ]
+            ],
+            [
+              "sub",
+              [
+                "var",
+                "b"
+              ],
+              [
+                "lit",
+                {
+                  "type": "U8",
+                  "value": "128"
+                }
+              ]
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ]
+      ],
+      "ir_cost": 2007,
+      "params": [
+        [
+          "acc",
+          "U8"
+        ],
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "b",
+          "U8"
+        ]
+      ],
+      "ret": "U8"
+    },
+    "gmul": {
+      "body": [
+        "model_call",
+        "gm7",
+        [
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "0"
+            }
+          ],
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ],
+      "ir_cost": 2011,
+      "params": [
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "b",
+          "U8"
+        ]
+      ],
+      "ret": "U8"
+    },
+    "gpow127": {
+      "body": [
+        "model_call",
+        "gchain",
+        [
+          [
+            "model_call",
+            "gchain",
+            [
+              [
+                "model_call",
+                "gchain",
+                [
+                  [
+                    "model_call",
+                    "gchain",
+                    [
+                      [
+                        "model_call",
+                        "gchain",
+                        [
+                          [
+                            "model_call",
+                            "gchain",
+                            [
+                              [
+                                "var",
+                                "a"
+                              ],
+                              [
+                                "var",
+                                "a"
+                              ]
+                            ]
+                          ],
+                          [
+                            "var",
+                            "a"
+                          ]
+                        ]
+                      ],
+                      [
+                        "var",
+                        "a"
+                      ]
+                    ]
+                  ],
+                  [
+                    "var",
+                    "a"
+                  ]
+                ]
+              ],
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ],
+          [
+            "var",
+            "a"
+          ]
+        ]
+      ],
+      "ir_cost": 24187,
+      "params": [
+        [
+          "a",
+          "U8"
+        ]
+      ],
+      "ret": "U8"
+    },
+    "gsq": {
+      "body": [
+        "model_call",
+        "gmul",
+        [
+          [
+            "var",
+            "x"
+          ],
+          [
+            "var",
+            "x"
+          ]
+        ]
+      ],
+      "ir_cost": 2014,
+      "params": [
+        [
+          "x",
+          "U8"
+        ]
+      ],
+      "ret": "U8"
+    },
+    "gstep": {
+      "body": [
+        "if",
+        [
+          "var",
+          "bit"
+        ],
+        [
+          "model_call",
+          "xor8",
+          [
+            [
+              "model_call",
+              "xtime",
+              [
+                [
+                  "var",
+                  "acc"
+                ]
+              ]
+            ],
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "xtime",
+          [
+            [
+              "var",
+              "acc"
+            ]
+          ]
+        ]
+      ],
+      "ir_cost": 237,
+      "params": [
+        [
+          "acc",
+          "U8"
+        ],
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "bit",
+          "Bool"
+        ]
+      ],
+      "ret": "U8"
+    },
+    "xor1": {
+      "body": [
+        "if",
+        [
+          "eq",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "0"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "1"
+          }
+        ]
+      ],
+      "ir_cost": 5,
+      "params": [
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "b",
+          "U8"
+        ]
+      ],
+      "ret": "U8"
+    },
+    "xor2": {
+      "body": [
+        "if",
+        [
+          "ge",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "2"
+            }
+          ]
+        ],
+        [
+          "if",
+          [
+            "ge",
+            [
+              "var",
+              "b"
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "2"
+              }
+            ]
+          ],
+          [
+            "model_call",
+            "xor1",
+            [
+              [
+                "sub",
+                [
+                  "var",
+                  "a"
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "U8",
+                    "value": "2"
+                  }
+                ]
+              ],
+              [
+                "sub",
+                [
+                  "var",
+                  "b"
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "U8",
+                    "value": "2"
+                  }
+                ]
+              ]
+            ]
+          ],
+          [
+            "add",
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "2"
+              }
+            ],
+            [
+              "model_call",
+              "xor1",
+              [
+                [
+                  "sub",
+                  [
+                    "var",
+                    "a"
+                  ],
+                  [
+                    "lit",
+                    {
+                      "type": "U8",
+                      "value": "2"
+                    }
+                  ]
+                ],
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "if",
+          [
+            "ge",
+            [
+              "var",
+              "b"
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "2"
+              }
+            ]
+          ],
+          [
+            "add",
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "2"
+              }
+            ],
+            [
+              "model_call",
+              "xor1",
+              [
+                [
+                  "var",
+                  "a"
+                ],
+                [
+                  "sub",
+                  [
+                    "var",
+                    "b"
+                  ],
+                  [
+                    "lit",
+                    {
+                      "type": "U8",
+                      "value": "2"
+                    }
+                  ]
+                ]
+              ]
+            ]
+          ],
+          [
+            "model_call",
+            "xor1",
+            [
+              [
+                "var",
+                "a"
+              ],
+              [
+                "var",
+                "b"
+              ]
+            ]
+          ]
+        ]
+      ],
+      "ir_cost": 20,
+      "params": [
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "b",
+          "U8"
+        ]
+      ],
+      "ret": "U8"
+    },
+    "xor3": {
+      "body": [
+        "if",
+        [
+          "ge",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "4"
+            }
+          ]
+        ],
+        [
+          "if",
+          [
+            "ge",
+            [
+              "var",
+              "b"
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "4"
+              }
+            ]
+          ],
+          [
+            "model_call",
+            "xor2",
+            [
+              [
+                "sub",
+                [
+                  "var",
+                  "a"
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "U8",
+                    "value": "4"
+                  }
+                ]
+              ],
+              [
+                "sub",
+                [
+                  "var",
+                  "b"
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "U8",
+                    "value": "4"
+                  }
+                ]
+              ]
+            ]
+          ],
+          [
+            "add",
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "4"
+              }
+            ],
+            [
+              "model_call",
+              "xor2",
+              [
+                [
+                  "sub",
+                  [
+                    "var",
+                    "a"
+                  ],
+                  [
+                    "lit",
+                    {
+                      "type": "U8",
+                      "value": "4"
+                    }
+                  ]
+                ],
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "if",
+          [
+            "ge",
+            [
+              "var",
+              "b"
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "4"
+              }
+            ]
+          ],
+          [
+            "add",
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "4"
+              }
+            ],
+            [
+              "model_call",
+              "xor2",
+              [
+                [
+                  "var",
+                  "a"
+                ],
+                [
+                  "sub",
+                  [
+                    "var",
+                    "b"
+                  ],
+                  [
+                    "lit",
+                    {
+                      "type": "U8",
+                      "value": "4"
+                    }
+                  ]
+                ]
+              ]
+            ]
+          ],
+          [
+            "model_call",
+            "xor2",
+            [
+              [
+                "var",
+                "a"
+              ],
+              [
+                "var",
+                "b"
+              ]
+            ]
+          ]
+        ]
+      ],
+      "ir_cost": 35,
+      "params": [
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "b",
+          "U8"
+        ]
+      ],
+      "ret": "U8"
+    },
+    "xor4": {
+      "body": [
+        "if",
+        [
+          "ge",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "8"
+            }
+          ]
+        ],
+        [
+          "if",
+          [
+            "ge",
+            [
+              "var",
+              "b"
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "8"
+              }
+            ]
+          ],
+          [
+            "model_call",
+            "xor3",
+            [
+              [
+                "sub",
+                [
+                  "var",
+                  "a"
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "U8",
+                    "value": "8"
+                  }
+                ]
+              ],
+              [
+                "sub",
+                [
+                  "var",
+                  "b"
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "U8",
+                    "value": "8"
+                  }
+                ]
+              ]
+            ]
+          ],
+          [
+            "add",
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "8"
+              }
+            ],
+            [
+              "model_call",
+              "xor3",
+              [
+                [
+                  "sub",
+                  [
+                    "var",
+                    "a"
+                  ],
+                  [
+                    "lit",
+                    {
+                      "type": "U8",
+                      "value": "8"
+                    }
+                  ]
+                ],
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "if",
+          [
+            "ge",
+            [
+              "var",
+              "b"
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "8"
+              }
+            ]
+          ],
+          [
+            "add",
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "8"
+              }
+            ],
+            [
+              "model_call",
+              "xor3",
+              [
+                [
+                  "var",
+                  "a"
+                ],
+                [
+                  "sub",
+                  [
+                    "var",
+                    "b"
+                  ],
+                  [
+                    "lit",
+                    {
+                      "type": "U8",
+                      "value": "8"
+                    }
+                  ]
+                ]
+              ]
+            ]
+          ],
+          [
+            "model_call",
+            "xor3",
+            [
+              [
+                "var",
+                "a"
+              ],
+              [
+                "var",
+                "b"
+              ]
+            ]
+          ]
+        ]
+      ],
+      "ir_cost": 50,
+      "params": [
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "b",
+          "U8"
+        ]
+      ],
+      "ret": "U8"
+    },
+    "xor5": {
+      "body": [
+        "if",
+        [
+          "ge",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "16"
+            }
+          ]
+        ],
+        [
+          "if",
+          [
+            "ge",
+            [
+              "var",
+              "b"
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "16"
+              }
+            ]
+          ],
+          [
+            "model_call",
+            "xor4",
+            [
+              [
+                "sub",
+                [
+                  "var",
+                  "a"
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "U8",
+                    "value": "16"
+                  }
+                ]
+              ],
+              [
+                "sub",
+                [
+                  "var",
+                  "b"
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "U8",
+                    "value": "16"
+                  }
+                ]
+              ]
+            ]
+          ],
+          [
+            "add",
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "16"
+              }
+            ],
+            [
+              "model_call",
+              "xor4",
+              [
+                [
+                  "sub",
+                  [
+                    "var",
+                    "a"
+                  ],
+                  [
+                    "lit",
+                    {
+                      "type": "U8",
+                      "value": "16"
+                    }
+                  ]
+                ],
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "if",
+          [
+            "ge",
+            [
+              "var",
+              "b"
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "16"
+              }
+            ]
+          ],
+          [
+            "add",
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "16"
+              }
+            ],
+            [
+              "model_call",
+              "xor4",
+              [
+                [
+                  "var",
+                  "a"
+                ],
+                [
+                  "sub",
+                  [
+                    "var",
+                    "b"
+                  ],
+                  [
+                    "lit",
+                    {
+                      "type": "U8",
+                      "value": "16"
+                    }
+                  ]
+                ]
+              ]
+            ]
+          ],
+          [
+            "model_call",
+            "xor4",
+            [
+              [
+                "var",
+                "a"
+              ],
+              [
+                "var",
+                "b"
+              ]
+            ]
+          ]
+        ]
+      ],
+      "ir_cost": 65,
+      "params": [
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "b",
+          "U8"
+        ]
+      ],
+      "ret": "U8"
+    },
+    "xor6": {
+      "body": [
+        "if",
+        [
+          "ge",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "32"
+            }
+          ]
+        ],
+        [
+          "if",
+          [
+            "ge",
+            [
+              "var",
+              "b"
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "32"
+              }
+            ]
+          ],
+          [
+            "model_call",
+            "xor5",
+            [
+              [
+                "sub",
+                [
+                  "var",
+                  "a"
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "U8",
+                    "value": "32"
+                  }
+                ]
+              ],
+              [
+                "sub",
+                [
+                  "var",
+                  "b"
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "U8",
+                    "value": "32"
+                  }
+                ]
+              ]
+            ]
+          ],
+          [
+            "add",
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "32"
+              }
+            ],
+            [
+              "model_call",
+              "xor5",
+              [
+                [
+                  "sub",
+                  [
+                    "var",
+                    "a"
+                  ],
+                  [
+                    "lit",
+                    {
+                      "type": "U8",
+                      "value": "32"
+                    }
+                  ]
+                ],
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "if",
+          [
+            "ge",
+            [
+              "var",
+              "b"
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "32"
+              }
+            ]
+          ],
+          [
+            "add",
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "32"
+              }
+            ],
+            [
+              "model_call",
+              "xor5",
+              [
+                [
+                  "var",
+                  "a"
+                ],
+                [
+                  "sub",
+                  [
+                    "var",
+                    "b"
+                  ],
+                  [
+                    "lit",
+                    {
+                      "type": "U8",
+                      "value": "32"
+                    }
+                  ]
+                ]
+              ]
+            ]
+          ],
+          [
+            "model_call",
+            "xor5",
+            [
+              [
+                "var",
+                "a"
+              ],
+              [
+                "var",
+                "b"
+              ]
+            ]
+          ]
+        ]
+      ],
+      "ir_cost": 80,
+      "params": [
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "b",
+          "U8"
+        ]
+      ],
+      "ret": "U8"
+    },
+    "xor7": {
+      "body": [
+        "if",
+        [
+          "ge",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "64"
+            }
+          ]
+        ],
+        [
+          "if",
+          [
+            "ge",
+            [
+              "var",
+              "b"
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "64"
+              }
+            ]
+          ],
+          [
+            "model_call",
+            "xor6",
+            [
+              [
+                "sub",
+                [
+                  "var",
+                  "a"
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "U8",
+                    "value": "64"
+                  }
+                ]
+              ],
+              [
+                "sub",
+                [
+                  "var",
+                  "b"
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "U8",
+                    "value": "64"
+                  }
+                ]
+              ]
+            ]
+          ],
+          [
+            "add",
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "64"
+              }
+            ],
+            [
+              "model_call",
+              "xor6",
+              [
+                [
+                  "sub",
+                  [
+                    "var",
+                    "a"
+                  ],
+                  [
+                    "lit",
+                    {
+                      "type": "U8",
+                      "value": "64"
+                    }
+                  ]
+                ],
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "if",
+          [
+            "ge",
+            [
+              "var",
+              "b"
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "64"
+              }
+            ]
+          ],
+          [
+            "add",
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "64"
+              }
+            ],
+            [
+              "model_call",
+              "xor6",
+              [
+                [
+                  "var",
+                  "a"
+                ],
+                [
+                  "sub",
+                  [
+                    "var",
+                    "b"
+                  ],
+                  [
+                    "lit",
+                    {
+                      "type": "U8",
+                      "value": "64"
+                    }
+                  ]
+                ]
+              ]
+            ]
+          ],
+          [
+            "model_call",
+            "xor6",
+            [
+              [
+                "var",
+                "a"
+              ],
+              [
+                "var",
+                "b"
+              ]
+            ]
+          ]
+        ]
+      ],
+      "ir_cost": 95,
+      "params": [
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "b",
+          "U8"
+        ]
+      ],
+      "ret": "U8"
+    },
+    "xor8": {
+      "body": [
+        "if",
+        [
+          "ge",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "128"
+            }
+          ]
+        ],
+        [
+          "if",
+          [
+            "ge",
+            [
+              "var",
+              "b"
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "128"
+              }
+            ]
+          ],
+          [
+            "model_call",
+            "xor7",
+            [
+              [
+                "sub",
+                [
+                  "var",
+                  "a"
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "U8",
+                    "value": "128"
+                  }
+                ]
+              ],
+              [
+                "sub",
+                [
+                  "var",
+                  "b"
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "U8",
+                    "value": "128"
+                  }
+                ]
+              ]
+            ]
+          ],
+          [
+            "add",
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "128"
+              }
+            ],
+            [
+              "model_call",
+              "xor7",
+              [
+                [
+                  "sub",
+                  [
+                    "var",
+                    "a"
+                  ],
+                  [
+                    "lit",
+                    {
+                      "type": "U8",
+                      "value": "128"
+                    }
+                  ]
+                ],
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "if",
+          [
+            "ge",
+            [
+              "var",
+              "b"
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "128"
+              }
+            ]
+          ],
+          [
+            "add",
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "128"
+              }
+            ],
+            [
+              "model_call",
+              "xor7",
+              [
+                [
+                  "var",
+                  "a"
+                ],
+                [
+                  "sub",
+                  [
+                    "var",
+                    "b"
+                  ],
+                  [
+                    "lit",
+                    {
+                      "type": "U8",
+                      "value": "128"
+                    }
+                  ]
+                ]
+              ]
+            ]
+          ],
+          [
+            "model_call",
+            "xor7",
+            [
+              [
+                "var",
+                "a"
+              ],
+              [
+                "var",
+                "b"
+              ]
+            ]
+          ]
+        ]
+      ],
+      "ir_cost": 110,
+      "params": [
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "b",
+          "U8"
+        ]
+      ],
+      "ret": "U8"
+    },
+    "xtime": {
+      "body": [
+        "if",
+        [
+          "ge",
+          [
+            "var",
+            "x"
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "128"
+            }
+          ]
+        ],
+        [
+          "model_call",
+          "xor8",
+          [
+            [
+              "mul",
+              [
+                "sub",
+                [
+                  "var",
+                  "x"
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "U8",
+                    "value": "128"
+                  }
+                ]
+              ],
+              [
+                "lit",
+                {
+                  "type": "U8",
+                  "value": "2"
+                }
+              ]
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "29"
+              }
+            ]
+          ]
+        ],
+        [
+          "mul",
+          [
+            "var",
+            "x"
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "2"
+            }
+          ]
+        ]
+      ],
+      "ir_cost": 121,
+      "params": [
+        [
+          "x",
+          "U8"
+        ]
+      ],
+      "ret": "U8"
+    }
+  },
+  "module": "gf256",
+  "ops": {
+    "add": {
+      "params": [
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "b",
+          "U8"
+        ]
+      ],
+      "ret": "U8"
+    },
+    "divide": {
+      "params": [
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "b",
+          "U8"
+        ]
+      ],
+      "ret": "Result<U8,Gf256Error>"
+    },
+    "inverse": {
+      "params": [
+        [
+          "a",
+          "U8"
+        ]
+      ],
+      "ret": "Result<U8,Gf256Error>"
+    },
+    "multiply": {
+      "params": [
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "b",
+          "U8"
+        ]
+      ],
+      "ret": "U8"
+    },
+    "power": {
+      "params": [
+        [
+          "base",
+          "U8"
+        ],
+        [
+          "exp",
+          "U64"
+        ]
+      ],
+      "ret": "U8"
+    },
+    "subtract": {
+      "params": [
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "b",
+          "U8"
+        ]
+      ],
+      "ret": "U8"
+    }
+  },
+  "schema": "warrant-lowering-parity-v0",
+  "suites": [
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "b",
+          "U8"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "add",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "xor8",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ]
+      ],
+      "claim": "add_matches_xor_model",
+      "expected": [
+        "model_call",
+        "xor8",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ],
+      "id": "warrant/gf256/exhaustive/add_matches_xor_model",
+      "ir_cost": 231,
+      "kind": "reference",
+      "ops": [
+        "add"
+      ],
+      "result_type": "U8",
+      "subject": [
+        "subject_op",
+        "add",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "U8"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "add",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "0"
+          }
+        ]
+      ],
+      "claim": "add_self_inverse",
+      "expected": [
+        "lit",
+        {
+          "type": "U8",
+          "value": "0"
+        }
+      ],
+      "id": "warrant/gf256/exhaustive/add_self_inverse",
+      "ir_cost": 7,
+      "kind": "reference",
+      "ops": [
+        "add"
+      ],
+      "result_type": "U8",
+      "subject": [
+        "subject_op",
+        "add",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "a"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "U8"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "add",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "0"
+              }
+            ]
+          ]
+        ],
+        [
+          "var",
+          "a"
+        ]
+      ],
+      "claim": "add_zero_identity",
+      "expected": [
+        "var",
+        "a"
+      ],
+      "id": "warrant/gf256/exhaustive/add_zero_identity",
+      "ir_cost": 7,
+      "kind": "reference",
+      "ops": [
+        "add"
+      ],
+      "result_type": "U8",
+      "subject": [
+        "subject_op",
+        "add",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "0"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "b",
+          "U8"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "add",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ],
+        [
+          "subject_op",
+          "add",
+          [
+            [
+              "var",
+              "b"
+            ],
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ]
+      ],
+      "claim": "add_commutative",
+      "expected": [],
+      "id": "warrant/gf256/exhaustive/add_commutative",
+      "ir_cost": 8,
+      "kind": "predicate",
+      "ops": [
+        "add"
+      ],
+      "result_type": "Bool",
+      "subject": []
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "b",
+          "U8"
+        ],
+        [
+          "c",
+          "U8"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "add",
+          [
+            [
+              "subject_op",
+              "add",
+              [
+                [
+                  "var",
+                  "a"
+                ],
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ],
+            [
+              "var",
+              "c"
+            ]
+          ]
+        ],
+        [
+          "subject_op",
+          "add",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "subject_op",
+              "add",
+              [
+                [
+                  "var",
+                  "b"
+                ],
+                [
+                  "var",
+                  "c"
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "claim": "add_associative",
+      "expected": [],
+      "id": "warrant/gf256/exhaustive/add_associative",
+      "ir_cost": 12,
+      "kind": "predicate",
+      "ops": [
+        "add"
+      ],
+      "result_type": "Bool",
+      "subject": []
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "b",
+          "U8"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "subtract",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "xor8",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ]
+      ],
+      "claim": "subtract_matches_xor_model",
+      "expected": [
+        "model_call",
+        "xor8",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ],
+      "id": "warrant/gf256/exhaustive/subtract_matches_xor_model",
+      "ir_cost": 231,
+      "kind": "reference",
+      "ops": [
+        "subtract"
+      ],
+      "result_type": "U8",
+      "subject": [
+        "subject_op",
+        "subtract",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "b",
+          "U8"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "subtract",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ],
+        [
+          "subject_op",
+          "add",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ]
+      ],
+      "claim": "subtract_equals_add",
+      "expected": [],
+      "id": "warrant/gf256/exhaustive/subtract_equals_add",
+      "ir_cost": 8,
+      "kind": "predicate",
+      "ops": [
+        "subtract",
+        "add"
+      ],
+      "result_type": "Bool",
+      "subject": []
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "b",
+          "U8"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "subtract",
+          [
+            [
+              "subject_op",
+              "add",
+              [
+                [
+                  "var",
+                  "a"
+                ],
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ],
+        [
+          "var",
+          "a"
+        ]
+      ],
+      "claim": "subtract_undoes_add",
+      "expected": [
+        "var",
+        "a"
+      ],
+      "id": "warrant/gf256/exhaustive/subtract_undoes_add",
+      "ir_cost": 9,
+      "kind": "reference",
+      "ops": [
+        "subtract",
+        "add"
+      ],
+      "result_type": "U8",
+      "subject": [
+        "subject_op",
+        "subtract",
+        [
+          [
+            "subject_op",
+            "add",
+            [
+              [
+                "var",
+                "a"
+              ],
+              [
+                "var",
+                "b"
+              ]
+            ]
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "b",
+          "U8"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "multiply",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "gmul",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ]
+      ],
+      "claim": "multiply_matches_peasant_model",
+      "expected": [
+        "model_call",
+        "gmul",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ],
+      "id": "warrant/gf256/exhaustive/multiply_matches_peasant_model",
+      "ir_cost": 4033,
+      "kind": "reference",
+      "ops": [
+        "multiply"
+      ],
+      "result_type": "U8",
+      "subject": [
+        "subject_op",
+        "multiply",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "U8"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "multiply",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "2"
+              }
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "xtime",
+          [
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ]
+      ],
+      "claim": "multiply_by_generator_is_xtime",
+      "expected": [
+        "model_call",
+        "xtime",
+        [
+          [
+            "var",
+            "a"
+          ]
+        ]
+      ],
+      "id": "warrant/gf256/exhaustive/multiply_by_generator_is_xtime",
+      "ir_cost": 251,
+      "kind": "reference",
+      "ops": [
+        "multiply"
+      ],
+      "result_type": "U8",
+      "subject": [
+        "subject_op",
+        "multiply",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "2"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "U8"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "multiply",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "1"
+              }
+            ]
+          ]
+        ],
+        [
+          "var",
+          "a"
+        ]
+      ],
+      "claim": "multiply_one_identity",
+      "expected": [
+        "var",
+        "a"
+      ],
+      "id": "warrant/gf256/exhaustive/multiply_one_identity",
+      "ir_cost": 7,
+      "kind": "reference",
+      "ops": [
+        "multiply"
+      ],
+      "result_type": "U8",
+      "subject": [
+        "subject_op",
+        "multiply",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "1"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "U8"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "multiply",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "0"
+              }
+            ]
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "0"
+          }
+        ]
+      ],
+      "claim": "multiply_zero_absorbs",
+      "expected": [
+        "lit",
+        {
+          "type": "U8",
+          "value": "0"
+        }
+      ],
+      "id": "warrant/gf256/exhaustive/multiply_zero_absorbs",
+      "ir_cost": 7,
+      "kind": "reference",
+      "ops": [
+        "multiply"
+      ],
+      "result_type": "U8",
+      "subject": [
+        "subject_op",
+        "multiply",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "0"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "ne",
+        [
+          "var",
+          "a"
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "0"
+          }
+        ]
+      ],
+      "binders": [
+        [
+          "a",
+          "U8"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "multiply",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "model_call",
+              "ginv",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "1"
+          }
+        ]
+      ],
+      "claim": "multiply_by_model_inverse_is_one",
+      "expected": [
+        "lit",
+        {
+          "type": "U8",
+          "value": "1"
+        }
+      ],
+      "id": "warrant/gf256/exhaustive/multiply_by_model_inverse_is_one",
+      "ir_cost": 26214,
+      "kind": "reference",
+      "ops": [
+        "multiply"
+      ],
+      "result_type": "U8",
+      "subject": [
+        "subject_op",
+        "multiply",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "model_call",
+            "ginv",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "and",
+        [
+          "ne",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "0"
+            }
+          ]
+        ],
+        [
+          "ne",
+          [
+            "var",
+            "b"
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "0"
+            }
+          ]
+        ]
+      ],
+      "binders": [
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "b",
+          "U8"
+        ]
+      ],
+      "body": [
+        "ne",
+        [
+          "subject_op",
+          "multiply",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "0"
+          }
+        ]
+      ],
+      "claim": "multiply_has_no_zero_divisors",
+      "expected": [],
+      "id": "warrant/gf256/exhaustive/multiply_has_no_zero_divisors",
+      "ir_cost": 12,
+      "kind": "predicate",
+      "ops": [
+        "multiply"
+      ],
+      "result_type": "Bool",
+      "subject": []
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "b",
+          "U8"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "multiply",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ],
+        [
+          "subject_op",
+          "multiply",
+          [
+            [
+              "var",
+              "b"
+            ],
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ]
+      ],
+      "claim": "multiply_commutative",
+      "expected": [],
+      "id": "warrant/gf256/exhaustive/multiply_commutative",
+      "ir_cost": 8,
+      "kind": "predicate",
+      "ops": [
+        "multiply"
+      ],
+      "result_type": "Bool",
+      "subject": []
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "b",
+          "U8"
+        ],
+        [
+          "c",
+          "U8"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "multiply",
+          [
+            [
+              "subject_op",
+              "multiply",
+              [
+                [
+                  "var",
+                  "a"
+                ],
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ],
+            [
+              "var",
+              "c"
+            ]
+          ]
+        ],
+        [
+          "subject_op",
+          "multiply",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "subject_op",
+              "multiply",
+              [
+                [
+                  "var",
+                  "b"
+                ],
+                [
+                  "var",
+                  "c"
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "claim": "multiply_associative",
+      "expected": [],
+      "id": "warrant/gf256/exhaustive/multiply_associative",
+      "ir_cost": 12,
+      "kind": "predicate",
+      "ops": [
+        "multiply"
+      ],
+      "result_type": "Bool",
+      "subject": []
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "b",
+          "U8"
+        ],
+        [
+          "c",
+          "U8"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "multiply",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "subject_op",
+              "add",
+              [
+                [
+                  "var",
+                  "b"
+                ],
+                [
+                  "var",
+                  "c"
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "subject_op",
+          "add",
+          [
+            [
+              "subject_op",
+              "multiply",
+              [
+                [
+                  "var",
+                  "a"
+                ],
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ],
+            [
+              "subject_op",
+              "multiply",
+              [
+                [
+                  "var",
+                  "a"
+                ],
+                [
+                  "var",
+                  "c"
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "claim": "multiply_distributes_over_add",
+      "expected": [],
+      "id": "warrant/gf256/exhaustive/multiply_distributes_over_add",
+      "ir_cost": 14,
+      "kind": "predicate",
+      "ops": [
+        "multiply",
+        "add"
+      ],
+      "result_type": "Bool",
+      "subject": []
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "U8"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "divide",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "0"
+              }
+            ]
+          ]
+        ],
+        [
+          "err",
+          "DIVIDE_BY_ZERO"
+        ]
+      ],
+      "claim": "divide_by_zero_rejected",
+      "expected": [
+        "err",
+        "DIVIDE_BY_ZERO"
+      ],
+      "id": "warrant/gf256/exhaustive/divide_by_zero_rejected",
+      "ir_cost": 7,
+      "kind": "reference",
+      "ops": [
+        "divide"
+      ],
+      "result_type": "Result<U8,Gf256Error>",
+      "subject": [
+        "subject_op",
+        "divide",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "0"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "ne",
+        [
+          "var",
+          "b"
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "0"
+          }
+        ]
+      ],
+      "binders": [
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "b",
+          "U8"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "divide",
+          [
+            [
+              "subject_op",
+              "multiply",
+              [
+                [
+                  "var",
+                  "a"
+                ],
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ],
+        [
+          "ok",
+          [
+            "var",
+            "a"
+          ]
+        ]
+      ],
+      "claim": "divide_undoes_multiply",
+      "expected": [
+        "ok",
+        [
+          "var",
+          "a"
+        ]
+      ],
+      "id": "warrant/gf256/exhaustive/divide_undoes_multiply",
+      "ir_cost": 13,
+      "kind": "reference",
+      "ops": [
+        "divide",
+        "multiply"
+      ],
+      "result_type": "Result<U8,Gf256Error>",
+      "subject": [
+        "subject_op",
+        "divide",
+        [
+          [
+            "subject_op",
+            "multiply",
+            [
+              [
+                "var",
+                "a"
+              ],
+              [
+                "var",
+                "b"
+              ]
+            ]
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "ne",
+        [
+          "var",
+          "b"
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "0"
+          }
+        ]
+      ],
+      "binders": [
+        [
+          "b",
+          "U8"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "divide",
+          [
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "0"
+              }
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ],
+        [
+          "ok",
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "0"
+            }
+          ]
+        ]
+      ],
+      "claim": "divide_zero_numerator",
+      "expected": [
+        "ok",
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "0"
+          }
+        ]
+      ],
+      "id": "warrant/gf256/exhaustive/divide_zero_numerator",
+      "ir_cost": 11,
+      "kind": "reference",
+      "ops": [
+        "divide"
+      ],
+      "result_type": "Result<U8,Gf256Error>",
+      "subject": [
+        "subject_op",
+        "divide",
+        [
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "0"
+            }
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "ne",
+        [
+          "var",
+          "a"
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "0"
+          }
+        ]
+      ],
+      "binders": [
+        [
+          "a",
+          "U8"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "divide",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ],
+        [
+          "ok",
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "1"
+            }
+          ]
+        ]
+      ],
+      "claim": "divide_self_is_one",
+      "expected": [
+        "ok",
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "1"
+          }
+        ]
+      ],
+      "id": "warrant/gf256/exhaustive/divide_self_is_one",
+      "ir_cost": 11,
+      "kind": "reference",
+      "ops": [
+        "divide"
+      ],
+      "result_type": "Result<U8,Gf256Error>",
+      "subject": [
+        "subject_op",
+        "divide",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "a"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "ne",
+        [
+          "var",
+          "b"
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "0"
+          }
+        ]
+      ],
+      "binders": [
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "b",
+          "U8"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "divide",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ],
+        [
+          "ok",
+          [
+            "subject_op",
+            "multiply",
+            [
+              [
+                "var",
+                "a"
+              ],
+              [
+                "subject_op",
+                "power",
+                [
+                  [
+                    "var",
+                    "b"
+                  ],
+                  [
+                    "lit",
+                    {
+                      "type": "U64",
+                      "value": "254"
+                    }
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "claim": "divide_is_multiply_by_fermat_inverse",
+      "expected": [],
+      "id": "warrant/gf256/exhaustive/divide_is_multiply_by_fermat_inverse",
+      "ir_cost": 13,
+      "kind": "predicate",
+      "ops": [
+        "divide",
+        "multiply",
+        "power"
+      ],
+      "result_type": "Bool",
+      "subject": []
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "U8"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "inverse",
+          [
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ],
+        [
+          "if",
+          [
+            "eq",
+            [
+              "var",
+              "a"
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "0"
+              }
+            ]
+          ],
+          [
+            "err",
+            "ZERO_HAS_NO_INVERSE"
+          ],
+          [
+            "subject_op",
+            "divide",
+            [
+              [
+                "lit",
+                {
+                  "type": "U8",
+                  "value": "1"
+                }
+              ],
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ]
+        ]
+      ],
+      "claim": "inverse_total_and_rejects_zero",
+      "expected": [],
+      "id": "warrant/gf256/exhaustive/inverse_total_and_rejects_zero",
+      "ir_cost": 11,
+      "kind": "predicate",
+      "ops": [
+        "inverse",
+        "divide"
+      ],
+      "result_type": "Bool",
+      "subject": []
+    },
+    {
+      "admit": [
+        "ne",
+        [
+          "var",
+          "a"
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "0"
+          }
+        ]
+      ],
+      "binders": [
+        [
+          "a",
+          "U8"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "inverse",
+          [
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ],
+        [
+          "ok",
+          [
+            "model_call",
+            "ginv",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ]
+        ]
+      ],
+      "claim": "inverse_matches_peasant_model",
+      "expected": [
+        "ok",
+        [
+          "model_call",
+          "ginv",
+          [
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ]
+      ],
+      "id": "warrant/gf256/exhaustive/inverse_matches_peasant_model",
+      "ir_cost": 52420,
+      "kind": "reference",
+      "ops": [
+        "inverse"
+      ],
+      "result_type": "Result<U8,Gf256Error>",
+      "subject": [
+        "subject_op",
+        "inverse",
+        [
+          [
+            "var",
+            "a"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "ne",
+        [
+          "var",
+          "a"
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "0"
+          }
+        ]
+      ],
+      "binders": [
+        [
+          "a",
+          "U8"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "inverse",
+          [
+            [
+              "model_call",
+              "ginv",
+              [
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "ok",
+          [
+            "var",
+            "a"
+          ]
+        ]
+      ],
+      "claim": "inverse_is_an_involution",
+      "expected": [
+        "ok",
+        [
+          "var",
+          "a"
+        ]
+      ],
+      "id": "warrant/gf256/exhaustive/inverse_is_an_involution",
+      "ir_cost": 26215,
+      "kind": "reference",
+      "ops": [
+        "inverse"
+      ],
+      "result_type": "Result<U8,Gf256Error>",
+      "subject": [
+        "subject_op",
+        "inverse",
+        [
+          [
+            "model_call",
+            "ginv",
+            [
+              [
+                "var",
+                "a"
+              ]
+            ]
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "ne",
+        [
+          "var",
+          "a"
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "0"
+          }
+        ]
+      ],
+      "binders": [
+        [
+          "a",
+          "U8"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "inverse",
+          [
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ],
+        [
+          "ok",
+          [
+            "subject_op",
+            "power",
+            [
+              [
+                "var",
+                "a"
+              ],
+              [
+                "lit",
+                {
+                  "type": "U64",
+                  "value": "254"
+                }
+              ]
+            ]
+          ]
+        ]
+      ],
+      "claim": "inverse_matches_fermat",
+      "expected": [],
+      "id": "warrant/gf256/exhaustive/inverse_matches_fermat",
+      "ir_cost": 10,
+      "kind": "predicate",
+      "ops": [
+        "inverse",
+        "power"
+      ],
+      "result_type": "Bool",
+      "subject": []
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "U8"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "power",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "lit",
+              {
+                "type": "U64",
+                "value": "0"
+              }
+            ]
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "1"
+          }
+        ]
+      ],
+      "claim": "power_zero_exponent",
+      "expected": [
+        "lit",
+        {
+          "type": "U8",
+          "value": "1"
+        }
+      ],
+      "id": "warrant/gf256/exhaustive/power_zero_exponent",
+      "ir_cost": 7,
+      "kind": "reference",
+      "ops": [
+        "power"
+      ],
+      "result_type": "U8",
+      "subject": [
+        "subject_op",
+        "power",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "lit",
+            {
+              "type": "U64",
+              "value": "0"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "U8"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "power",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "lit",
+              {
+                "type": "U64",
+                "value": "1"
+              }
+            ]
+          ]
+        ],
+        [
+          "var",
+          "a"
+        ]
+      ],
+      "claim": "power_first_exponent",
+      "expected": [
+        "var",
+        "a"
+      ],
+      "id": "warrant/gf256/exhaustive/power_first_exponent",
+      "ir_cost": 7,
+      "kind": "reference",
+      "ops": [
+        "power"
+      ],
+      "result_type": "U8",
+      "subject": [
+        "subject_op",
+        "power",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "lit",
+            {
+              "type": "U64",
+              "value": "1"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "le",
+        [
+          "var",
+          "e"
+        ],
+        [
+          "lit",
+          {
+            "type": "U64",
+            "value": "4294967295"
+          }
+        ]
+      ],
+      "binders": [
+        [
+          "e",
+          "U64"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "power",
+          [
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "0"
+              }
+            ],
+            [
+              "var",
+              "e"
+            ]
+          ]
+        ],
+        [
+          "if",
+          [
+            "eq",
+            [
+              "var",
+              "e"
+            ],
+            [
+              "lit",
+              {
+                "type": "U64",
+                "value": "0"
+              }
+            ]
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "1"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "0"
+            }
+          ]
+        ]
+      ],
+      "claim": "power_of_zero",
+      "expected": [
+        "if",
+        [
+          "eq",
+          [
+            "var",
+            "e"
+          ],
+          [
+            "lit",
+            {
+              "type": "U64",
+              "value": "0"
+            }
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "1"
+          }
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "0"
+          }
+        ]
+      ],
+      "id": "warrant/gf256/exhaustive/power_of_zero",
+      "ir_cost": 17,
+      "kind": "reference",
+      "ops": [
+        "power"
+      ],
+      "result_type": "U8",
+      "subject": [
+        "subject_op",
+        "power",
+        [
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "0"
+            }
+          ],
+          [
+            "var",
+            "e"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "le",
+        [
+          "var",
+          "e"
+        ],
+        [
+          "lit",
+          {
+            "type": "U64",
+            "value": "4294967294"
+          }
+        ]
+      ],
+      "binders": [
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "e",
+          "U64"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "power",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "add",
+              [
+                "var",
+                "e"
+              ],
+              [
+                "lit",
+                {
+                  "type": "U64",
+                  "value": "1"
+                }
+              ]
+            ]
+          ]
+        ],
+        [
+          "subject_op",
+          "multiply",
+          [
+            [
+              "subject_op",
+              "power",
+              [
+                [
+                  "var",
+                  "a"
+                ],
+                [
+                  "var",
+                  "e"
+                ]
+              ]
+            ],
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ]
+      ],
+      "claim": "power_successor",
+      "expected": [],
+      "id": "warrant/gf256/exhaustive/power_successor",
+      "ir_cost": 14,
+      "kind": "predicate",
+      "ops": [
+        "power",
+        "multiply"
+      ],
+      "result_type": "Bool",
+      "subject": []
+    },
+    {
+      "admit": [
+        "ne",
+        [
+          "var",
+          "a"
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "0"
+          }
+        ]
+      ],
+      "binders": [
+        [
+          "a",
+          "U8"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "power",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "lit",
+              {
+                "type": "U64",
+                "value": "255"
+              }
+            ]
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "1"
+          }
+        ]
+      ],
+      "claim": "power_group_order",
+      "expected": [
+        "lit",
+        {
+          "type": "U8",
+          "value": "1"
+        }
+      ],
+      "id": "warrant/gf256/exhaustive/power_group_order",
+      "ir_cost": 9,
+      "kind": "reference",
+      "ops": [
+        "power"
+      ],
+      "result_type": "U8",
+      "subject": [
+        "subject_op",
+        "power",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "lit",
+            {
+              "type": "U64",
+              "value": "255"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "and",
+        [
+          "ne",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "0"
+            }
+          ]
+        ],
+        [
+          "le",
+          [
+            "var",
+            "e"
+          ],
+          [
+            "lit",
+            {
+              "type": "U64",
+              "value": "4294967040"
+            }
+          ]
+        ]
+      ],
+      "binders": [
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "e",
+          "U64"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "power",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "add",
+              [
+                "var",
+                "e"
+              ],
+              [
+                "lit",
+                {
+                  "type": "U64",
+                  "value": "255"
+                }
+              ]
+            ]
+          ]
+        ],
+        [
+          "subject_op",
+          "power",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "e"
+            ]
+          ]
+        ]
+      ],
+      "claim": "power_reduces_mod_group_order",
+      "expected": [],
+      "id": "warrant/gf256/exhaustive/power_reduces_mod_group_order",
+      "ir_cost": 16,
+      "kind": "predicate",
+      "ops": [
+        "power"
+      ],
+      "result_type": "Bool",
+      "subject": []
+    },
+    {
+      "admit": [
+        "le",
+        [
+          "var",
+          "e"
+        ],
+        [
+          "lit",
+          {
+            "type": "U64",
+            "value": "2147483647"
+          }
+        ]
+      ],
+      "binders": [
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "e",
+          "U64"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "power",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "add",
+              [
+                "var",
+                "e"
+              ],
+              [
+                "var",
+                "e"
+              ]
+            ]
+          ]
+        ],
+        [
+          "subject_op",
+          "multiply",
+          [
+            [
+              "subject_op",
+              "power",
+              [
+                [
+                  "var",
+                  "a"
+                ],
+                [
+                  "var",
+                  "e"
+                ]
+              ]
+            ],
+            [
+              "subject_op",
+              "power",
+              [
+                [
+                  "var",
+                  "a"
+                ],
+                [
+                  "var",
+                  "e"
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "claim": "power_doubles_exponent",
+      "expected": [],
+      "id": "warrant/gf256/exhaustive/power_doubles_exponent",
+      "ir_cost": 16,
+      "kind": "predicate",
+      "ops": [
+        "power",
+        "multiply"
+      ],
+      "result_type": "Bool",
+      "subject": []
+    },
+    {
+      "admit": [
+        "and",
+        [
+          "ne",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "0"
+            }
+          ]
+        ],
+        [
+          "le",
+          [
+            "var",
+            "e"
+          ],
+          [
+            "lit",
+            {
+              "type": "U64",
+              "value": "4294967295"
+            }
+          ]
+        ]
+      ],
+      "binders": [
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "e",
+          "U64"
+        ]
+      ],
+      "body": [
+        "ne",
+        [
+          "subject_op",
+          "power",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "e"
+            ]
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "0"
+          }
+        ]
+      ],
+      "claim": "power_nonzero_for_nonzero_base",
+      "expected": [],
+      "id": "warrant/gf256/exhaustive/power_nonzero_for_nonzero_base",
+      "ir_cost": 12,
+      "kind": "predicate",
+      "ops": [
+        "power"
+      ],
+      "result_type": "Bool",
+      "subject": []
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "b",
+          "U8"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "power",
+          [
+            [
+              "subject_op",
+              "add",
+              [
+                [
+                  "var",
+                  "a"
+                ],
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ],
+            [
+              "lit",
+              {
+                "type": "U64",
+                "value": "2"
+              }
+            ]
+          ]
+        ],
+        [
+          "subject_op",
+          "add",
+          [
+            [
+              "subject_op",
+              "power",
+              [
+                [
+                  "var",
+                  "a"
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "U64",
+                    "value": "2"
+                  }
+                ]
+              ]
+            ],
+            [
+              "subject_op",
+              "power",
+              [
+                [
+                  "var",
+                  "b"
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "U64",
+                    "value": "2"
+                  }
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "claim": "power_frobenius_is_additive",
+      "expected": [],
+      "id": "warrant/gf256/exhaustive/power_frobenius_is_additive",
+      "ir_cost": 14,
+      "kind": "predicate",
+      "ops": [
+        "power",
+        "add"
+      ],
+      "result_type": "Bool",
+      "subject": []
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "b",
+          "U8"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "power",
+          [
+            [
+              "subject_op",
+              "multiply",
+              [
+                [
+                  "var",
+                  "a"
+                ],
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ],
+            [
+              "lit",
+              {
+                "type": "U64",
+                "value": "3"
+              }
+            ]
+          ]
+        ],
+        [
+          "subject_op",
+          "multiply",
+          [
+            [
+              "subject_op",
+              "power",
+              [
+                [
+                  "var",
+                  "a"
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "U64",
+                    "value": "3"
+                  }
+                ]
+              ]
+            ],
+            [
+              "subject_op",
+              "power",
+              [
+                [
+                  "var",
+                  "b"
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "U64",
+                    "value": "3"
+                  }
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "claim": "power_cube_is_multiplicative",
+      "expected": [],
+      "id": "warrant/gf256/exhaustive/power_cube_is_multiplicative",
+      "ir_cost": 14,
+      "kind": "predicate",
+      "ops": [
+        "power",
+        "multiply"
+      ],
+      "result_type": "Bool",
+      "subject": []
+    },
+    {
+      "admit": [
+        "and",
+        [
+          "ge",
+          [
+            "var",
+            "e"
+          ],
+          [
+            "lit",
+            {
+              "type": "U64",
+              "value": "1"
+            }
+          ]
+        ],
+        [
+          "lt",
+          [
+            "var",
+            "e"
+          ],
+          [
+            "lit",
+            {
+              "type": "U64",
+              "value": "255"
+            }
+          ]
+        ]
+      ],
+      "binders": [
+        [
+          "e",
+          "U64"
+        ]
+      ],
+      "body": [
+        "ne",
+        [
+          "subject_op",
+          "power",
+          [
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "2"
+              }
+            ],
+            [
+              "var",
+              "e"
+            ]
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "1"
+          }
+        ]
+      ],
+      "claim": "generator_has_order_255",
+      "expected": [],
+      "id": "warrant/gf256/exhaustive/generator_has_order_255",
+      "ir_cost": 12,
+      "kind": "predicate",
+      "ops": [
+        "power"
+      ],
+      "result_type": "Bool",
+      "subject": []
+    },
+    {
+      "admit": [
+        "and",
+        [
+          "and",
+          [
+            "lt",
+            [
+              "var",
+              "e"
+            ],
+            [
+              "lit",
+              {
+                "type": "U64",
+                "value": "255"
+              }
+            ]
+          ],
+          [
+            "lt",
+            [
+              "var",
+              "f"
+            ],
+            [
+              "lit",
+              {
+                "type": "U64",
+                "value": "255"
+              }
+            ]
+          ]
+        ],
+        [
+          "ne",
+          [
+            "var",
+            "e"
+          ],
+          [
+            "var",
+            "f"
+          ]
+        ]
+      ],
+      "binders": [
+        [
+          "e",
+          "U64"
+        ],
+        [
+          "f",
+          "U64"
+        ]
+      ],
+      "body": [
+        "ne",
+        [
+          "subject_op",
+          "power",
+          [
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "2"
+              }
+            ],
+            [
+              "var",
+              "e"
+            ]
+          ]
+        ],
+        [
+          "subject_op",
+          "power",
+          [
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "2"
+              }
+            ],
+            [
+              "var",
+              "f"
+            ]
+          ]
+        ]
+      ],
+      "claim": "generator_powers_are_distinct",
+      "expected": [],
+      "id": "warrant/gf256/exhaustive/generator_powers_are_distinct",
+      "ir_cost": 18,
+      "kind": "predicate",
+      "ops": [
+        "power"
+      ],
+      "result_type": "Bool",
+      "subject": []
+    }
+  ]
+}
