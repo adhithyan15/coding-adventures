@@ -213,6 +213,15 @@ stack. Tree walkers (`WalkAST`, `FindNodes`, `CollectTokens`) are iterative.
 default limit the Go wrappers refuse JSON arrays at about 5,000 nested levels,
 Python parentheses at about 3,300 and TypeScript call arguments at about 500.
 
+The Go engine builds the tree during a parse in pooled flat `int32` arrays
+(token indexes and node indexes) and materialises `*ASTNode`s only for what is
+reachable from the root, once the parse has succeeded. This is invisible
+except for properties that are kept on purpose: a packrat memo hit yields a
+distinct node that shares the first parse's `Children` slice and has zero
+`StartLine`/`EndLine` (positions are computed only for rules that actually
+parsed); `Children` is never nil; and each node's `Children` is
+capacity-clipped, so appending to one does not overwrite a sibling.
+
 Also in the Go engine: `Options.StartRule` parses from any named rule (an
 unknown name is an error); `CompileGrammar` builds an immutable, goroutine-safe
 `Compiled` once so many inputs can be parsed without redoing per-grammar work;
