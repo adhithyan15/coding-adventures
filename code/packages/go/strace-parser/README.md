@@ -59,6 +59,45 @@ annotation and every quoted string decodes strictly (a decoded string is arbitra
 bytes: a path consumer must still reject NUL and invalid UTF-8), and any `ERR_*` token or bad annotation refuses the
 line before the parse (so hostile input costs one pass).
 
+## Compact path: `LineParser`
+
+`ParseLineTokens` builds a `*parser.ASTNode` per rule match. A consumer that only
+asks "which shape is this line and where are its arguments" can use a reusable
+`LineParser` instead, which keeps the parse in the shared parser's flat
+`parser.Tree` and walks it by `NodeID`. It accepts and refuses exactly what
+`ParseLineTokens` does (same `*LineError`, same text), except that
+`Options.PostParse` hooks (which transform `*ASTNode`s) are refused; the ASTNode
+API is unchanged. `Tree()` is read-only (never call `Reset` or `ParseInto` on
+it), `Tokens()` must not be mutated, and the last line, tokens and tree stay
+pinned (up to `MaxLineBytes`) until the next `ParseLineInto` or `Reset`.
+
+```go
+var lp straceparser.LineParser // zero value is ready; one per goroutine
+buf := make([]string, 0, 16)
+for _, line := range lines {
+    if err := lp.ParseLineInto(line, straceparser.DefaultOptions()); err != nil {
+        continue // a *LineError, as ParseLineTokens returns
+    }
+    switch lp.BodyKind() {
+    case "call_line":
+        buf = lp.AppendRawArgs(buf[:0])   // substrings of line
+        rest := lp.TextAfterClose()
+        if prefix, ok := lp.PrefixBeforeUnfinished(); ok { _ = prefix }
+    }
+}
+```
+
+A `LineParser` is **not safe for concurrent use** and must not be copied.
+`Tree()`, `Tokens()` and `Body()` are valid until the next `ParseLineInto` or
+`Reset`; the strings from `RawArgs`, `AppendRawArgs`, `TextAfterClose` and
+`PrefixBeforeUnfinished` are substrings of the line you passed, so they outlive
+the next parse. The tree's arrays are reused but the parser package drops an
+oversized one at the next parse, so one huge line does not pin memory. The lexer
+has no caller-buffer entry point yet, so the token slice is still allocated per
+line (P2 PR 6). On the fixture corpus the compact path runs at about 22.7 MB/s
+with 155 allocs per pass, against 1355 allocs and 16.9 MB/s for the ASTNode path
+with its helpers; the lexer alone is 41.6 MB/s.
+
 ## What is pinned by tests
 
 - the embedded grammar equals `strace.grammar` (drift test);
