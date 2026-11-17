@@ -206,14 +206,20 @@ warrant hash_functions v1
   -- there is no `output` row: that metric bounds the size of a Bytes or List
   -- result) and keeps its state in a few machine words.
   --
-  -- `heap` rows: polynomial_rolling, polynomial_rolling_with_params, murmur3_32,
-  -- murmur3_32_with_seed and siphash_2_4 carry `heap <= 4096`, a constant.  A
-  -- `heap` row puts every instance of the operation under the generated harness's
-  -- allocation observer, so it is checked live: nothing that grows with the input
-  -- is allocated.  The manifest records the peak the observer saw: 0 bytes for the
-  -- four pure hashes and at most 80 bytes for polynomial_rolling_with_params (the
-  -- panic payload of its zero-modulus rejection path, which the adapter catches);
-  -- 4096 leaves room without allowing a buffer that scales with the input.
+  -- `heap` rows: polynomial_rolling, murmur3_32, murmur3_32_with_seed and
+  -- siphash_2_4 carry `heap <= 4096`, a constant.  A `heap` row puts every
+  -- instance of the operation under the generated harness's allocation observer,
+  -- so it is checked live: nothing that grows with the input is allocated.  The
+  -- manifest records the peak the observer saw, and for these four pure hashes
+  -- that peak is exactly 0 bytes on every platform; 4096 leaves room without
+  -- allowing a buffer that scales with the input.
+  --
+  -- polynomial_rolling_with_params has NO heap row either, for a different reason
+  -- than the three below: its only allocation is the std panic payload of the
+  -- zero-modulus rejection path (the adapter catches the panic).  That payload's
+  -- size differs by platform (80 bytes observed on Linux, 16 on Windows), and the
+  -- manifest is committed and diffed on Linux, macOS and Windows, so recording an
+  -- exact peak would make it platform-specific.  Its steps and depth rows remain.
   --
   -- fnv1a_32, fnv1a_64 and djb2 have NO heap row: their exhaustive suites have 2^24-case
   -- claims (a three-byte domain), and the observer runs each call on a worker
@@ -244,7 +250,6 @@ warrant hash_functions v1
     depth <= 8
   bound polynomial_rolling_with_params:
     steps <= 64 * len(data) + 4096
-    heap <= 4096
     depth <= 8
   bound murmur3_32:
     steps <= 64 * len(data) + 4096

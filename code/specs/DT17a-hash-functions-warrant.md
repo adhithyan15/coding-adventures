@@ -197,12 +197,15 @@ What was done:
   `rand-syscall` control stays detected (strict gate passes).
 * **Bound rows.** Every operation declares `steps <= 64 * len(data) + 4096` and
   `depth <= 8`. There is no `output` row: that metric bounds a `Bytes` or `List`
-  result, and these return a 4- or 8-byte integer. Five operations
-  (`polynomial_rolling`, `polynomial_rolling_with_params`, `murmur3_32`,
-  `murmur3_32_with_seed`, `siphash_2_4`) also declare `heap <= 4096`,
-  checked live under the allocation observer (the manifest records a peak of 0
-  bytes for the four pure hashes and at most 80 for `polynomial_rolling_with_params`,
-  the panic payload of its zero-modulus path). `fnv1a_32`, `fnv1a_64` and `djb2`
+  result, and these return a 4- or 8-byte integer. Four operations
+  (`polynomial_rolling`, `murmur3_32`, `murmur3_32_with_seed`, `siphash_2_4`)
+  also declare `heap <= 4096`, checked live under the allocation observer (the
+  manifest records a peak of 0 bytes for each, on every platform).
+  `polynomial_rolling_with_params` has **no `heap` row** because its only
+  allocation is the std panic payload of the zero-modulus rejection path, whose
+  size differs by platform (80 bytes observed on Linux, 16 on Windows), so a
+  committed exact peak would make the manifest, which CI diffs on Linux, macOS and
+  Windows, platform-specific. Its `steps` and `depth` rows remain. `fnv1a_32`, `fnv1a_64` and `djb2`
   have **no `heap` row**: their exhaustive suites have 2^24-case claims, and the
   observer costs about 35 to 50 microseconds a call on a worker thread, so about
   50 million observed calls would add about half an hour (a trial with a heap row

@@ -19,9 +19,11 @@ All notable changes to this package will be documented in this file.
 
 - `steps` and `depth` `bound` rows on every operation of
   `code/specs/hash-functions.warrant` (WX-P1a2), so the report can address CWE-400.
-  `heap <= 4096` on `polynomial_rolling`, `polynomial_rolling_with_params`,
-  `murmur3_32`, `murmur3_32_with_seed` and `siphash_2_4` (checked live under the
-  allocation observer; observed peak 0 bytes, 80 for the zero-modulus panic payload).
+  `heap <= 4096` on `polynomial_rolling`, `murmur3_32`, `murmur3_32_with_seed` and
+  `siphash_2_4` (checked live under the allocation observer; observed peak 0 bytes).
+  `polynomial_rolling_with_params` has no `heap` row: its only allocation is the std
+  panic payload of the zero-modulus path, whose size is platform-dependent (80 bytes
+  Linux, 16 Windows), so an exact committed peak would diff across platforms.
   `fnv1a_32`, `fnv1a_64` and `djb2` have no `heap` row: their 2^24-case suites would
   cost about half an hour under the observer (see DT17a section 7). Evidence
   regenerated (`tests/generated/warrant_evidence.rs`, both manifests).
