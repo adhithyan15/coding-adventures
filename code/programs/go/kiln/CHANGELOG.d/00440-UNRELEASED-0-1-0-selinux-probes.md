@@ -18,3 +18,4 @@
   `ubuntu-NN.04` label, never `ubuntu-latest`; `/proc/filesystems` is a named
   residual risk (section 14).
 - Absent-ok child probes (D27 review): a failed probe of a child of an `absent-ok` entry (for example `/sys/fs/selinux/enforce`) is allowed only while the entry itself is absent (`lstat` gives ENOENT or ENOTDIR); otherwise `host-read`. Entries under the fresh `$HOME` are unaffected. `kiln-sandbox` is also selected by changes under `code/kiln/legacy/**`.
+- Test fixtures (`record_step_policy_test.go`, `internal/record/prepare_unix_test.go`, and through them the sandbox record probe) take their `ephemeral` and `absent-ok` lists from the real `host-roots.json` via the test-support package `internal/policyfix`, so the `kiln-sandbox` ubuntu-26.04 leg exercises the real allowances.
