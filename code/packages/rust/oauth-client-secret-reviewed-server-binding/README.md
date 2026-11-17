@@ -38,6 +38,18 @@ additive evidence; a byte-equal independent leaf decode, alternate issuer or
 root, destination substitution, or zero- or multi-intermediate path fails
 closed.
 
+The crate also admits the destination-bound double-nested no-check complete
+fixed-path revocation branch under a separate sealed marker. The proof retains
+the same exact signed reviewed path-and-anchor-self-signature evidence beneath
+both responder-revocation layers. Composition traverses those layers back to
+the original server proof, repeats the exact leaf, target-nearest issuer,
+reviewed anchor, SNI, Host, and port checks, and requires exactly one processed
+intermediate on both retained server paths. The additional responder paths do
+not extend the target-plus-intermediate server chain. Success retains the
+double-nested proof as additive evidence; a byte-equal independent leaf decode,
+alternate issuer or root, destination substitution, or zero- or multi-
+intermediate path fails closed.
+
 The composition never asks the request for its credential-bearing wire bytes,
 so it introduces no credential access or audit event. Every later byte borrow
 still passes through the request release's provider-and-trace audit gate.
@@ -45,10 +57,11 @@ still passes through the request release's provider-and-trace audit gate.
 This is not a TLS or HTTP client. It performs no certificate parsing, new
 validation, cryptography, revocation check or acquisition, credential edit,
 signing, I/O, or external effect. It covers only the direct no-check complete
-fixed-path and nested no-check complete fixed-path revocation branches, does
-not complete RFC 5280 Name or path validation, and does not grant HTTPS,
-OAuth, network, or live-provider readiness. Double-nested, recursive, and
-alternative revocation branches remain outside this boundary.
+fixed-path, nested no-check complete fixed-path, and double-nested no-check
+complete fixed-path revocation branches, does not complete RFC 5280 Name or
+path validation, and does not grant HTTPS, OAuth, network, or live-provider
+readiness. Recursive and alternative revocation branches remain outside this
+boundary.
 
 ## Validation
 
