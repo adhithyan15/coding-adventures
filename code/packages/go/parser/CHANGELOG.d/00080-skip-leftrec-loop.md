@@ -1,0 +1,32 @@
+## [0.4.3] - 2026-11-17
+
+Performance only: about 2x on every benchmark grammar. No API change; trees,
+positions, error messages, refusals, depth/frame accounting and memo-slot use
+are identical.
+
+### Changed
+- **The left-recursion growth loop is skipped for rules that provably cannot
+  left-recurse.** `parseRuleBody` used to re-run the body of every successful
+  rule to try to grow the match, which for an ordinary rule re-boxed every
+  token, built a second children slice and a memo-hit node per sub-rule, and
+  threw it all away. `CompileGrammar` now computes `compiledRule.leftRec`
+  (new `leftrec.go`): a nullable fixpoint, then a closure over left calls. The
+  analysis over-approximates (optional, repetition and lookaheads are
+  nullable; lookahead bodies and both halves of a separated repetition count
+  as left calls; a token named `EOF` and an empty literal are nullable), so a
+  rule is only skipped when it is provably safe.
+- **Expected-sets use interned integer ids** (by string value, so
+  de-duplication is unchanged); the "Expected A or B" text is built only when
+  an error is reported. `matchToken` compares `TypeName` directly and calls
+  `tokenTypeName` only for enum-only tokens.
+
+### Tests
+- `compileGrammar(g, forceLeftRec)` test knob; a differential over every
+  `diffGrammars` entry, the benchmark grammars, extra EOF/separator grammars
+  and 500 random grammars compares the analysis against forced-on for trees,
+  positions, error text, slot count, depth, frames and furthest-failure set,
+  under several `MaxDepth`/`MaxMemoSlots` settings.
+- Analysis unit tests: direct, indirect, nullable prefix, lookahead, EOF,
+  separated repetition, empty literal, and non-recursive controls.
+- `BenchmarkParseStraceLike` on a committed copy of the strace grammar
+  (`testdata/strace.grammar`).
