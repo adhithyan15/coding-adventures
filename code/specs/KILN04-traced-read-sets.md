@@ -2568,6 +2568,23 @@ trace incomplete. That includes any numeric `/proc/<pid>/` path: the PIDs
 in the trace are the tracer's, not the action's. `/proc/self/root/…` and
 `/proc/<pid>/fd/…` could reach any file by another name.
 
+**`/proc` magic links (D28).** `cwd`, `root`, `exe`, `fd/N`, `map_files/X` and
+`ns/X` are links the kernel follows to wherever the process points them, and
+`/dev/fd` is a link to `/proc/self/fd`. The path is never walked through them;
+three rules keep it fail-closed. (1) A `..` after any `/proc` component is
+`trace-incomplete:proc-path` unless it is exact (`/proc/..`, `/proc/self/..`,
+`/proc/<pid>/..`); every `..` under `/dev/fd` is refused. (2) A path that goes
+THROUGH a magic link (a further component after `cwd`, `root`, `exe`, or after
+`fd/N`, `map_files/X`, `ns/X`, at any depth, `/dev/fd/N/x` included) is
+`proc-path` even when an ephemeral pattern matches it: **an ephemeral glob can
+never cover a path through a magic link**. (3) A successful open of a `/proc`
+name is compared with the descriptor's `-y` path: equal, or the same file with
+`self`/`thread-self` (and the links `/proc/mounts`, `/proc/net/…`) spelled with
+pids, is fine; another non-`/proc` path is classified as the file really read
+(so an open of `/proc/self/exe` is a read of the real binary), another `/proc`
+path is `proc-path`; and an open of a magic link itself with an empty or
+non-absolute, non-anonymous `-y` path is `proc-path`. See D28 in §5.5.
+
 ### 5.2 Mapping observations to entries
 
 Every resolved path inside the repository is classified. Package
@@ -2950,6 +2967,24 @@ write could exist that the lists do not show.
   Otherwise the name says nothing about the object written. This covers Write-kind calls, writing opens,
   `rename`/`link` endpoints, a `bind` path and an `O_TMPFILE` file linked back
   by `linkat`.
+- **D28. `/proc` magic links and `..`.** `/proc/self/cwd`, `/proc/self/root`,
+  `/proc/<pid>/{cwd,root,exe}`, `fd/N`, `map_files/X`, `ns/X`, `thread-self`
+  (a link to `/proc/<pid>/task/<tid>`) and `/proc/net` (a link to `self/net`)
+  are links the kernel follows to wherever the process points them, and the
+  kernel takes a `..` after one from the TARGET's parent. Read lexically,
+  `open("/proc/self/cwd/../../filesystems")` is `/proc/filesystems` (an
+  allowed read) while really reading a file two levels above the working
+  directory, so the record would stay clean over an arbitrary host read. The
+  classifier fails closed: (1) a `..` after any `/proc` component is
+  `trace-incomplete:proc-path` unless exact (`/proc/..`, `/proc/self/..`,
+  `/proc/<pid>/..` keep resolving lexically; every deeper `..`, and every `..`
+  under `/dev/fd`, is refused); (2) a path through a magic link is `proc-path`
+  even when an ephemeral pattern matches it, `/dev/fd/N/x` counted as
+  `/proc/self/fd/N/x`; (3) a successful `/proc` open is checked against its
+  `-y` path (equal, or `self`/`thread-self`/`mounts`/`net` spelled with pids,
+  passes; another path is classified as the file really read, or `proc-path`
+  if it is another `/proc` file), and an open of a magic link itself with no
+  usable `-y` path is `proc-path`. Nothing relies on `/proc/thread-self/..`.
 - **W6. A path the record cannot hold.** `bad-path` (a path `key.ValidatePath`
   refuses) or `vcs-write` (a write under `.git`).
 - **W7. A write to the repository root itself** (`chmod .`, `utimes .`). The
