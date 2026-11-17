@@ -140,10 +140,6 @@ fn span_of(e: &Expression<'_>) -> (usize, usize) {
 // Binder types and domain sizes
 // ---------------------------------------------------------------------------
 
-/// Generator-side binder type (mirrors `Ty` in the prelude).
-///
-/// The first nine variants are the scalar types of WX-B; the rest are the WX-A
-/// composites, built from component types (VER04j section 4.7).
 /// The name of the error type of a [`Ty::Res`] (`E` in `Result<T, E>`).
 ///
 /// The generator never needs it (the harness prelude names only the cases), but
@@ -152,6 +148,10 @@ fn span_of(e: &Expression<'_>) -> (usize, usize) {
 /// equality* so that carrying it changes no slot match or type comparison the
 /// generator makes: two result types that differ only here still compare equal,
 /// exactly as before the field existed.
+///
+/// **Consequence:** `Domain::Res` values that differ only in error type name
+/// compare equal, so `Domain ==` must not be used as a cache key for *values*
+/// (two such domains enumerate different error values).
 #[derive(Clone, Debug, Eq)]
 pub struct ErrName(pub String);
 
@@ -161,6 +161,13 @@ impl PartialEq for ErrName {
     }
 }
 
+/// Generator-side binder type (mirrors `Ty` in the prelude).
+///
+/// The first nine variants are the scalar types of WX-B; the rest are the WX-A
+/// composites, built from component types (VER04j section 4.7).
+///
+/// Equality ignores the error type name inside `Res` (see [`ErrName`]), so `==`
+/// is a *type-shape* comparison, not a value-identity one.
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[non_exhaustive]
 pub enum Ty {

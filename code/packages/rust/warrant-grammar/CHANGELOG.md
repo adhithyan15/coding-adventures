@@ -38,6 +38,9 @@ x25519, zeroize) is byte-identical to the one the previous generator emits, and
   values (`x == E.CASE` and `match ... E.CASE` work on them). Neither changes the
   generated output or any type comparison. `ResolvedBinders::sizes()` returns an
   `Option`. `FxEdge` is documented for widths of 16 and up.
+- One deliberate exception to "no behaviour change": generator diagnostics that print a
+  composite `Ty` with `{:?}` now also show the new `record: ..` field and `ErrName(..)`.
+  No generated output and no test pins that text.
 - Correction to the first draft of these notes: the byte-string order difference is a
   set difference for `List` of byte strings (the 16/4-value prefix differs); see the
   module docs and VER04r 16.2.
