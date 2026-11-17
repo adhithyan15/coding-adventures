@@ -4,7 +4,8 @@
 //! group in `HelloRetryRequest`. The selected group must have appeared in the
 //! first `supported_groups` list, must not have appeared in the first
 //! `key_share` list, and must become the only share in the second
-//! `ClientHello`.
+//! `ClientHello`. The final ServerHello share must then select from that exact
+//! retained replacement offer.
 //!
 //! This crate binds those public values without allocation. It deliberately
 //! does not claim that the replacement key bytes were freshly generated,
@@ -13,7 +14,9 @@
 #![forbid(unsafe_code)]
 
 use core::fmt;
-use tls13_key_share::DecodedClientKeyShares;
+use tls13_key_share::{
+    decode_server_key_share, DecodedClientKeyShares, DecodedServerKeyShare, KeyShareErrorKind,
+};
 use tls13_named_group_policy::{NamedGroupPolicy, PolicyError, SelectedNamedGroup};
 use tls13_supported_groups::NamedGroupList;
 
@@ -32,6 +35,8 @@ pub enum RetryKeyShareError {
     RetriedShareCount,
     /// The sole second-ClientHello share used a different group.
     RetriedGroupMismatch,
+    /// Final ServerHello key-share decoding or offer binding failed.
+    FinalServerShare(KeyShareErrorKind),
 }
 
 impl fmt::Display for RetryKeyShareError {
@@ -49,6 +54,7 @@ impl fmt::Display for RetryKeyShareError {
             Self::RetriedGroupMismatch => {
                 "retried ClientHello key-share group does not match the retry"
             }
+            Self::FinalServerShare(_) => "final ServerHello key share failed retry-offer binding",
         };
         formatter.write_str(message)
     }
@@ -197,5 +203,63 @@ pub fn bind_retried_client_key_share<'retry, 'supported, 'initial, 'retried>(
     Ok(BoundRetryKeyShare {
         selection,
         retried_client_shares,
+    })
+}
+
+/// Final ServerHello key-share evidence bound to one completed retry transition.
+///
+/// This value is deliberately neither [`Copy`] nor [`Clone`]. It borrows the
+/// completed retry transition and retains the decoded final server share whose
+/// offered-client-shares reference points at that transition's exact retained
+/// second-ClientHello vector.
+pub struct BoundRetryServerKeyShare<'server, 'transition, 'retry, 'supported, 'initial, 'retried> {
+    transition: &'transition BoundRetryKeyShare<'retry, 'supported, 'initial, 'retried>,
+    server_share: DecodedServerKeyShare<'server, 'transition, 'retried>,
+}
+
+impl fmt::Debug for BoundRetryServerKeyShare<'_, '_, '_, '_, '_, '_> {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("BoundRetryServerKeyShare")
+    }
+}
+
+impl<'server, 'transition, 'retry, 'supported, 'initial, 'retried>
+    BoundRetryServerKeyShare<'server, 'transition, 'retry, 'supported, 'initial, 'retried>
+{
+    /// Borrow the exact completed retry transition used for final decoding.
+    #[must_use]
+    pub const fn transition(&self) -> &BoundRetryKeyShare<'retry, 'supported, 'initial, 'retried> {
+        self.transition
+    }
+
+    /// Borrow the exact decoded final ServerHello key share.
+    #[must_use]
+    pub const fn server_share(&self) -> &DecodedServerKeyShare<'server, 'transition, 'retried> {
+        &self.server_share
+    }
+}
+
+/// Decode a final ServerHello share against the transition's exact retry offer.
+///
+/// Decoding occurs inside this boundary so callers cannot substitute a
+/// different client offer between retry validation and final server selection.
+pub fn bind_retry_server_key_share<'server, 'transition, 'retry, 'supported, 'initial, 'retried>(
+    transition: &'transition BoundRetryKeyShare<'retry, 'supported, 'initial, 'retried>,
+    server_extension_data: &'server [u8],
+    policy: &NamedGroupPolicy,
+) -> Result<
+    BoundRetryServerKeyShare<'server, 'transition, 'retry, 'supported, 'initial, 'retried>,
+    RetryKeyShareError,
+> {
+    let server_share = decode_server_key_share(
+        server_extension_data,
+        policy,
+        transition.retried_client_shares(),
+    )
+    .map_err(|error| RetryKeyShareError::FinalServerShare(error.kind()))?;
+
+    Ok(BoundRetryServerKeyShare {
+        transition,
+        server_share,
     })
 }

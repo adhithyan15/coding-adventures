@@ -1,8 +1,10 @@
 use tls13_key_share::{
-    decode_client_key_shares, encode_client_key_shares, validate_client_key_share, KeyShareLimits,
+    decode_client_key_shares, encode_client_key_shares, validate_client_key_share,
+    KeyShareErrorKind, KeyShareLimits,
 };
 use tls13_key_share_retry::{
-    bind_retried_client_key_share, bind_retry_selected_group, RetryKeyShareError,
+    bind_retried_client_key_share, bind_retry_selected_group, bind_retry_server_key_share,
+    RetryKeyShareError,
 };
 use tls13_named_group_policy::{NamedGroup, NamedGroupPolicy, PolicyError};
 use tls13_supported_groups::{decode_supported_groups, NamedGroupListLimits};
@@ -29,6 +31,14 @@ fn one_share(group: u16, key: &[u8], policy: &NamedGroupPolicy) -> Vec<u8> {
     let entry = validate_client_key_share(policy, group, key).unwrap();
     let mut output = vec![0_u8; key.len() + 6];
     encode_client_key_shares(&[entry], &mut output).unwrap();
+    output
+}
+
+fn server_share(group: u16, key: &[u8]) -> Vec<u8> {
+    let mut output = Vec::with_capacity(key.len() + 4);
+    output.extend_from_slice(&group.to_be_bytes());
+    output.extend_from_slice(&(key.len() as u16).to_be_bytes());
+    output.extend_from_slice(key);
     output
 }
 
@@ -91,6 +101,56 @@ fn permits_retrying_a_supported_group_absent_from_a_nonempty_offer() {
     assert_eq!(
         bound.selected_group().parameters().group(),
         NamedGroup::Secp256r1
+    );
+}
+
+#[test]
+fn binds_final_server_share_to_the_exact_retried_offer() {
+    let policy = policy();
+    let retried_bytes = one_share(0x001d, &X25519_KEY, &policy);
+    let selected = bind_retry_selected_group(
+        &[0x00, 0x1d],
+        &policy,
+        supported(&[0x00, 0x02, 0x00, 0x1d]),
+        shares(&[0x00, 0x00], &policy),
+    )
+    .unwrap();
+    let transition =
+        bind_retried_client_key_share(selected, shares(&retried_bytes, &policy)).unwrap();
+    let final_bytes = server_share(0x001d, &[0x53; 32]);
+
+    let bound = bind_retry_server_key_share(&transition, &final_bytes, &policy).unwrap();
+    assert!(core::ptr::eq(bound.transition(), &transition));
+    assert!(core::ptr::eq(
+        bound.server_share().offered_client_shares(),
+        transition.retried_client_shares()
+    ));
+    assert_eq!(bound.server_share().key_exchange(), &[0x53; 32]);
+    assert_eq!(format!("{bound:?}"), "BoundRetryServerKeyShare");
+}
+
+#[test]
+fn rejects_a_final_server_share_outside_the_exact_retried_offer() {
+    let policy = policy();
+    let retried_bytes = one_share(0x001d, &X25519_KEY, &policy);
+    let selected = bind_retry_selected_group(
+        &[0x00, 0x1d],
+        &policy,
+        supported(&[0x00, 0x04, 0x00, 0x1d, 0x00, 0x17]),
+        shares(&[0x00, 0x00], &policy),
+    )
+    .unwrap();
+    let transition =
+        bind_retried_client_key_share(selected, shares(&retried_bytes, &policy)).unwrap();
+    let unoffered = server_share(0x0017, &P256_KEY);
+
+    assert_eq!(
+        bind_retry_server_key_share(&transition, &unoffered, &policy).unwrap_err(),
+        RetryKeyShareError::FinalServerShare(KeyShareErrorKind::ServerGroupNotOffered)
+    );
+    assert_eq!(
+        bind_retry_server_key_share(&transition, &[0x00, 0x1d, 0x00], &policy).unwrap_err(),
+        RetryKeyShareError::FinalServerShare(KeyShareErrorKind::TruncatedEntryHeader)
     );
 }
 
@@ -220,6 +280,7 @@ fn diagnostics_retain_no_group_or_key_payloads() {
         RetryKeyShareError::SelectedGroupAlreadyOffered,
         RetryKeyShareError::RetriedShareCount,
         RetryKeyShareError::RetriedGroupMismatch,
+        RetryKeyShareError::FinalServerShare(KeyShareErrorKind::ServerGroupNotOffered),
     ] {
         for diagnostic in [format!("{error:?}"), error.to_string()] {
             for forbidden in ["001d", "0x1d", "66", "36", "32"] {

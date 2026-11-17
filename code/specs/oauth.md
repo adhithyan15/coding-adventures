@@ -5928,22 +5928,31 @@ vector to contain exactly one entry and requires that entry to use the retry-
 selected group. Success consumes and retains the supported-group list, both
 decoded ClientHello key-share vectors, the exact retry extension data, and the
 policy-authorized group descriptor as non-copyable transition evidence.
+An additional final-share binding step borrows that completed transition and
+decodes the exact ServerHello key-share extension data directly against the
+transition's retained second-ClientHello offer under the caller-supplied
+named-group policy boundary. Success returns non-copyable continuity evidence
+retaining both the borrowed retry transition and the decoded ServerHello
+share, so a
+caller cannot substitute an unrelated offer between retry validation and
+final server selection. The ServerHello decoder's exact single-entry framing,
+key-exchange-length policy, and offered-group requirement remain authoritative.
 Stable failures and diagnostics retain no group identifiers, extension data,
 public-key bytes, list positions, counts, or lengths.
 
 This group-transition evidence does not prove key material was freshly
 generated or prevent reuse across connections; generate or own entropy or an
 ephemeral private key; invoke X25519 or P-256; validate a peer point beyond
-the selected group's exact wire length; bind the final ServerHello share;
-locate or authorize extension type 51 in a handshake message; compare any
-other ClientHello field; apply a retry cookie, PSK binder update, early-data
-removal, or transcript `message_hash` rewrite; reject a second retry; sequence
-a handshake; send alerts; derive traffic secrets; protect records; validate
-certificates; establish trust; enforce revocation; perform I/O; authorize HTTP
-or OAuth transport; or open a network connection. Complete ClientHello retry-
-transition policy, connection state, transcript composition, key agreement,
-and the remaining TLS/HTTP stack remain separate prerequisites. Concrete
-HTTPS and live-provider readiness remain unavailable.
+the selected group's exact wire length; locate or authorize extension type 51
+in a handshake message; compare any other ClientHello field; apply a retry
+cookie, PSK binder update, early-data removal, or transcript `message_hash`
+rewrite; reject a second retry; sequence a handshake; send alerts; derive
+traffic secrets; protect records; validate certificates; establish trust;
+enforce revocation; perform I/O; authorize HTTP or OAuth transport; or open a
+network connection. Complete ClientHello retry-transition policy, connection
+state, transcript composition, key agreement, and the remaining TLS/HTTP stack
+remain separate prerequisites. Concrete HTTPS and live-provider readiness
+remain unavailable.
 
 A bounded `tls13-x25519-key-agreement` prerequisite now routes one key-
 agreement operation only from an exact `tls13-named-group-policy` selection.

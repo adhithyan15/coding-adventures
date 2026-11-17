@@ -3,5 +3,5 @@
   "version": 1,
   "package": "rust/tls13-key-share-retry",
   "capabilities": [],
-  "justification": "Pure allocation-free binding over already-decoded public TLS named-group and key-share evidence. It performs no entropy access, cryptography, credential access or editing, signing, storage, clock acquisition, provider action, audit event, trace emission, certificate parsing or validation, trust-root or revocation policy, filesystem access, network access, DNS, process execution, environment access, TLS transport, HTTP, OAuth, or other external effect."
+  "justification": "Pure allocation-free binding and decoding over caller-borrowed public TLS named-group and key-share evidence. It performs no entropy access, cryptography, credential access or editing, signing, storage, clock acquisition, provider action, audit event, trace emission, certificate parsing or validation, trust-root or revocation policy, filesystem access, network access, DNS, process execution, environment access, TLS transport, HTTP, OAuth, or other external effect."
 }
