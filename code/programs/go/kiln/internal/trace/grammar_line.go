@@ -6,7 +6,6 @@ import (
 	"sync/atomic"
 
 	"github.com/adhithyan15/coding-adventures/code/packages/go/lexer"
-	"github.com/adhithyan15/coding-adventures/code/packages/go/parser"
 	straceparser "github.com/adhithyan15/coding-adventures/code/packages/go/strace-parser"
 )
 
@@ -91,21 +90,6 @@ func pidOfToken(t lexer.Token) (int, bool) {
 	s = strings.TrimPrefix(s, "[pid ")
 	s = strings.TrimRight(s, "] ")
 	return atoiPid(s)
-}
-
-// bodyToken returns the first token of the body node: the SYSCALL of a call,
-// the RESUMED marker, the exit token, SIG_OPEN, or a killed-at-entry token.
-func bodyToken(ast *parser.ASTNode) (lexer.Token, bool) {
-	b := straceparser.Body(ast)
-	if b == nil {
-		return lexer.Token{}, false
-	}
-	for _, c := range b.Children {
-		if t, ok := c.(lexer.Token); ok {
-			return t, true
-		}
-	}
-	return lexer.Token{}, false
 }
 
 // trimArgs turns the raw argument spans of RawArgs into the items scanItems

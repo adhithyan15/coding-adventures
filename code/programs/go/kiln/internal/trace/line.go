@@ -6,6 +6,8 @@ import (
 	"io"
 	"strconv"
 	"strings"
+
+	straceparser "github.com/adhithyan15/coding-adventures/code/packages/go/strace-parser"
 )
 
 // This file is pass 1: turn the byte stream into an ordered list of COMPLETED
@@ -207,6 +209,12 @@ type lineState struct {
 	// maxLine is the byte limit of one line, for the grammar path (zero means
 	// the default).  The old path enforces it in readLine.
 	maxLine int
+	// lp and argbuf are the grammar path's reusable parse state (P2 PR 5): one
+	// LineParser per trace parse, owned by this lineState, never shared between
+	// goroutines (a lineState is per-trace, so neither is).  The zero values are
+	// ready.  A lineState is used by pointer and must not be copied.
+	lp     straceparser.LineParser
+	argbuf []string
 }
 
 type pending struct {
