@@ -5830,6 +5830,33 @@ handshake-state binding, the remaining TLS transport, and HTTP composition
 remain prerequisites; concrete HTTPS and live-provider readiness remain
 unavailable.
 
+An allocation-free `tls13-x25519-key-share-binding` prerequisite now composes
+the exact retained ClientHello offer and decoded ServerHello key share with the
+selected-group-bound X25519 execution boundary. The decoded server share must
+select X25519 before the caller-borrowed private scalar is read. The package
+derives that scalar's public key through the repository-owned X25519 primitive
+and compares it with the exact retained X25519 ClientHello public share through
+the repository-owned compiler-preserved full-scan fixed-length comparison. A
+mismatch fails before shared-secret derivation and leaves caller-owned output
+unchanged. A match passes the exact decoded ServerHello public share and exact
+selected-group evidence to the existing X25519 key-agreement boundary, which
+continues to reject low-order peer keys and wipe the borrowed shared-secret
+storage on drop. Stable failures and Debug output retain no private scalar,
+public key, shared secret, group, algorithm, length, or output payloads.
+
+This pure binding boundary does not generate entropy or an ephemeral private
+key, own or wipe the caller's private scalar, prove that the retained offer was
+transmitted in a ClientHello, bind the offer or ServerHello to a transcript,
+process a handshake, derive traffic secrets, protect records, validate
+certificates, establish trust, enforce revocation, perform I/O, authorize HTTP
+or OAuth transport, or open a network connection. The fixed-length comparison
+inherits its repository package's compiler-observability guarantee and does
+not add hardware side-channel claims. The X25519 primitive's optimized-code
+behavior and internal temporary handling remain properties of that package.
+Handshake-state and transcript binding, the remaining TLS transport, and HTTP
+composition remain prerequisites; concrete HTTPS and live-provider readiness
+remain unavailable.
+
 An allocation-free `http1-fixed-request-body` prerequisite now binds one
 caller-borrowed, potentially sensitive request body to its exact byte length
 under an explicit caller ceiling. It encodes that length in canonical shortest
