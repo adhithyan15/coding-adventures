@@ -196,7 +196,8 @@ func TestDifferentialAgainstFrozenOldEngine(t *testing.T) {
 }
 
 // FuzzDifferential lets `go test -fuzz=FuzzDifferential` hunt for streams
-// where the engines disagree. Bytes pick tokens from the vocabulary.
+// where the engines disagree. Bytes pick tokens from the vocabulary. runDiff
+// is three-way: it also checks ParseInto, ToAST and an accessor walk.
 func FuzzDifferential(f *testing.F) {
 	f.Add(byte(0), []byte{0, 1, 0, 2, 0})
 	f.Add(byte(3), []byte{4, 0, 1, 0, 5})
