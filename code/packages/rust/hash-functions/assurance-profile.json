@@ -9,7 +9,7 @@
     },
     "327": {
       "applicability": "excluded",
-      "reason": "no cipher or cryptographic hash: FNV-1a, DJB2, a polynomial rolling hash and MurmurHash3 are non-cryptographic hashes for hash tables and sketches, and SipHash-2-4 is a keyed pseudorandom function against hash flooding; the package implements no encryption, no MAC for authentication and no collision-resistant digest, and documents that none of them is one"
+      "reason": "no cipher or cryptographic hash: FNV-1a, DJB2, a polynomial rolling hash and MurmurHash3 are non-cryptographic hashes for hash tables and sketches, and SipHash-2-4 is a keyed pseudorandom function against hash flooding; the package implements no encryption, no MAC for authentication and no collision-resistant digest, and its README (section Not cryptographic) says that none of them is one"
     },
     "407": {
       "applicability": "excluded",

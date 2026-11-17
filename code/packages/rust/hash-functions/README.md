@@ -42,6 +42,14 @@ let hasher = SipHash24::new(key);
 assert_eq!(hasher.output_bits(), 64);
 ```
 
+## Not cryptographic
+
+FNV-1a, DJB2, the polynomial rolling hash and MurmurHash3 are non-cryptographic hashes
+for hash tables and sketches: they are not collision resistant and must not be used for
+integrity, signatures or passwords. SipHash-2-4 is a keyed pseudorandom function whose
+secret key gives hash-flooding resistance for hash tables; it is not a MAC for
+authentication and this crate makes no such claim.
+
 ## Building and Testing
 
 ```bash

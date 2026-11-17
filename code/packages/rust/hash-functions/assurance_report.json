@@ -468,7 +468,7 @@
   "closure": [
     "rust/hash-functions"
   ],
-  "commit": "fd1aa996a2e",
+  "commit": "3f8b4fdbf34",
   "exemptions": [
     {
       "approved": false,
@@ -523,7 +523,7 @@
   ],
   "package": "rust/hash-functions",
   "profile": "non-cryptographic-hash",
-  "profile_sha256": "1bb9eaf11368b005ebfba0db07657456f76f708314c4301757601fd7ed2ebc70",
+  "profile_sha256": "ae8f16ab751a2006e0636737ea86b28467a3569ee100d253ebcfb355ccc87351",
   "public_symbols_without_claims": [],
   "rungs": {
     "E0": "pass",
@@ -724,7 +724,7 @@
         "unverified::ast-audit::no-legacy-ciphers"
       ],
       "name": "Use of Broken or Risky Cryptographic Algorithm",
-      "reason": "no cipher or cryptographic hash: FNV-1a, DJB2, a polynomial rolling hash and MurmurHash3 are non-cryptographic hashes for hash tables and sketches, and SipHash-2-4 is a keyed pseudorandom function against hash flooding; the package implements no encryption, no MAC for authentication and no collision-resistant digest, and documents that none of them is one [attestation not machine-checked by any tool]",
+      "reason": "no cipher or cryptographic hash: FNV-1a, DJB2, a polynomial rolling hash and MurmurHash3 are non-cryptographic hashes for hash tables and sketches, and SipHash-2-4 is a keyed pseudorandom function against hash flooding; the package implements no encryption, no MAC for authentication and no collision-resistant digest, and its README (section Not cryptographic) says that none of them is one [attestation not machine-checked by any tool]",
       "status": "excluded"
     },
     {

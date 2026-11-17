@@ -19,8 +19,11 @@ All notable changes to this package will be documented in this file.
 
 - `steps` and `depth` `bound` rows on every operation of
   `code/specs/hash-functions.warrant` (WX-P1a2), so the report can address CWE-400.
-  No `heap` row: it would put every harness instance under the allocation observer,
-  which the exhaustive suites cannot afford (see DT17a section 7). Evidence
+  `heap <= 4096` on `polynomial_rolling`, `polynomial_rolling_with_params`,
+  `murmur3_32`, `murmur3_32_with_seed` and `siphash_2_4` (checked live under the
+  allocation observer; observed peak 0 bytes, 80 for the zero-modulus panic payload).
+  `fnv1a_32`, `fnv1a_64` and `djb2` have no `heap` row: their 2^24-case suites would
+  cost about half an hour under the observer (see DT17a section 7). Evidence
   regenerated (`tests/generated/warrant_evidence.rs`, both manifests).
 - `effect_certificate.json` (capability analyzer, label `proved`, no capabilities),
   `assurance-profile.json` (`non-cryptographic-hash`, kind `transform`) and
@@ -31,6 +34,9 @@ All notable changes to this package will be documented in this file.
 
 ### Changed
 
+- `required_capabilities.json` justification no longer mentions OS randomness (it moved
+  to `hash-analysis`); `evidence.bindings` revision is 0.2.0; README gains a "Not
+  cryptographic" note.
 - The README usage example no longer imports the analysis helpers.
 
 ### Fixed

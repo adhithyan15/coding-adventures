@@ -197,13 +197,19 @@ What was done:
   `rand-syscall` control stays detected (strict gate passes).
 * **Bound rows.** Every operation declares `steps <= 64 * len(data) + 4096` and
   `depth <= 8`. There is no `output` row: that metric bounds a `Bytes` or `List`
-  result, and these return a 4- or 8-byte integer. There is deliberately **no `heap`
-  row**: a `heap` row runs every instance under the allocation observer on a
-  worker thread, and the exhaustive suites of a hash cannot afford it (a trial
-  with `heap <= 4 * len(data) + 65536` on all eight operations had not finished
-  in over 30 minutes; the harness without it runs in under two minutes, build
-  included). The steps rows are declarations, which the proof manifest records
-  `not-live` (the Rust-subset front end refuses `algorithms.rs`).
+  result, and these return a 4- or 8-byte integer. Five operations
+  (`polynomial_rolling`, `polynomial_rolling_with_params`, `murmur3_32`,
+  `murmur3_32_with_seed`, `siphash_2_4`) also declare `heap <= 4096`,
+  checked live under the allocation observer (the manifest records a peak of 0
+  bytes for the four pure hashes and at most 80 for `polynomial_rolling_with_params`,
+  the panic payload of its zero-modulus path). `fnv1a_32`, `fnv1a_64` and `djb2`
+  have **no `heap` row**: their exhaustive suites have 2^24-case claims, and the
+  observer costs about 35 to 50 microseconds a call on a worker thread, so about
+  50 million observed calls would add about half an hour (a trial with a heap row
+  on all eight operations had not finished in over 30 minutes). For those three,
+  "nothing allocates" is read off the source, not evidenced by the harness. The
+  steps rows are declarations, which the proof manifest records `not-live` (the
+  Rust-subset front end refuses `algorithms.rs`).
 * **Profile and report.** `assurance-profile.json` (`non-cryptographic-hash`,
   kind `transform`) words the static rows 326, 327 and 407; `assurance_report.json`
   is generated from the manifests and `BUILD`/`BUILD_linux`/`BUILD_windows` run

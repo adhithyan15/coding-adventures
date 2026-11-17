@@ -4,7 +4,7 @@
 # KEEP THE REST OF THIS FILE IN SYNC WITH BUILD.
 cargo test -q -p coding_adventures_hash_functions --lib -- --nocapture
 cargo test -q -p coding_adventures_hash_functions --doc
-# The library is pure: no capability, test code included (the analyzer reads it).  The OS
+# The library is pure: no capability (the analyzer scans the crate source, src/).  The OS
 # randomness of the old analysis helpers lives in hash-analysis (WX-P1a2).
 cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .
 # VER08b: the eight covered byte-string hashes run inside a seccomp/Landlock jail derived from

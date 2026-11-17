@@ -204,20 +204,31 @@ warrant hash_functions v1
   -- Declared bounds (WX-P1a2).  Every operation is one pass over `data`: a hash
   -- returns a fixed-width integer (4 or 8 bytes, fixed by the result type, so
   -- there is no `output` row: that metric bounds the size of a Bytes or List
-  -- result) and keeps its state in a few machine words; nothing it does allocates.
-  -- There is no `heap` row, deliberately.  A `heap` row puts every instance of the
-  -- operation under the generated harness's allocation observer, which runs each
-  -- call on a worker thread; the 2^16..2^24-case exhaustive suites of a hash
-  -- cannot afford that (a trial run of this document with `heap <= 4 * len(data)
-  -- + 65536` on all eight operations had not finished in over 30 minutes, against
-  -- under two minutes without it, build included; wasm-leb128 leaves its decoders without a heap row
-  -- for the same reason).  The rows are `steps` and `depth`, which are
-  -- declarations: no step-bound prover run backs them (the proof manifest records
-  -- the steps obligations not-live), so the report records CWE-400 as the usual
-  -- unapproved exemption.  Work is at most one round per input byte (SipHash and
-  -- Murmur3 do less: one round per 8 or 4 bytes plus a constant finalisation), so
-  -- 64 * len + 4096 steps is a generous linear envelope; the call is not
-  -- recursive, so depth is a small constant.
+  -- result) and keeps its state in a few machine words.
+  --
+  -- `heap` rows: polynomial_rolling, polynomial_rolling_with_params, murmur3_32,
+  -- murmur3_32_with_seed and siphash_2_4 carry `heap <= 4096`, a constant.  A
+  -- `heap` row puts every instance of the operation under the generated harness's
+  -- allocation observer, so it is checked live: nothing that grows with the input
+  -- is allocated.  The manifest records the peak the observer saw: 0 bytes for the
+  -- four pure hashes and at most 80 bytes for polynomial_rolling_with_params (the
+  -- panic payload of its zero-modulus rejection path, which the adapter catches);
+  -- 4096 leaves room without allowing a buffer that scales with the input.
+  --
+  -- fnv1a_32, fnv1a_64 and djb2 have NO heap row: their exhaustive suites have 2^24-case
+  -- claims (a three-byte domain), and the observer runs each call on a worker
+  -- thread at about 35 to 50 microseconds a call, so about 50 million observed
+  -- calls would add roughly half an hour to the harness (a trial with a heap row on
+  -- all eight operations had not finished in over 30 minutes).  Their "nothing
+  -- allocates" is therefore not evidenced by the harness; it is read off the
+  -- source (one loop over a slice with wrapping integer arithmetic).
+  --
+  -- The `steps` and `depth` rows are declarations: no step-bound prover run backs
+  -- them (the proof manifest records the steps obligations not-live), so the
+  -- report records CWE-400 as the usual unapproved exemption.  Work is at most one
+  -- round per input byte (SipHash and Murmur3 do less: one round per 8 or 4 bytes
+  -- plus a constant finalisation), so 64 * len + 4096 steps is a generous linear
+  -- envelope; the call is not recursive, so depth is a small constant.
   bound fnv1a_32:
     steps <= 64 * len(data) + 4096
     depth <= 8
@@ -229,18 +240,23 @@ warrant hash_functions v1
     depth <= 8
   bound polynomial_rolling:
     steps <= 64 * len(data) + 4096
+    heap <= 4096
     depth <= 8
   bound polynomial_rolling_with_params:
     steps <= 64 * len(data) + 4096
+    heap <= 4096
     depth <= 8
   bound murmur3_32:
     steps <= 64 * len(data) + 4096
+    heap <= 4096
     depth <= 8
   bound murmur3_32_with_seed:
     steps <= 64 * len(data) + 4096
+    heap <= 4096
     depth <= 8
   bound siphash_2_4:
     steps <= 64 * len(data) + 4096
+    heap <= 4096
     depth <= 8
 
   -- ---- known answers: FNV-1a 32 (draft-eastlake-fnv test vectors and the DT17 vectors)

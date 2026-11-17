@@ -89,6 +89,18 @@
     {
       "certificates": [],
       "function": "murmur3_32",
+      "id": "warrant/hash_functions/proof/murmur3_32/heap-bound",
+      "kind": "heap-bound",
+      "label": "unchecked",
+      "max_len": 0,
+      "note": "no prover tracks this resource; the generated harness runs every instance of this operation under its allocation observer (VER04j section 6.3) and records max_observed_heap in evidence/test-manifest.json",
+      "op": "murmur3_32",
+      "runs": 0,
+      "verdict": "unchecked"
+    },
+    {
+      "certificates": [],
+      "function": "murmur3_32",
       "id": "warrant/hash_functions/proof/murmur3_32/steps-bound",
       "kind": "steps-bound",
       "label": "not-live",
@@ -106,6 +118,18 @@
       "label": "unchecked",
       "max_len": 0,
       "note": "the pilot prover does not track this resource",
+      "op": "murmur3_32_with_seed",
+      "runs": 0,
+      "verdict": "unchecked"
+    },
+    {
+      "certificates": [],
+      "function": "murmur3_32_with_seed",
+      "id": "warrant/hash_functions/proof/murmur3_32_with_seed/heap-bound",
+      "kind": "heap-bound",
+      "label": "unchecked",
+      "max_len": 0,
+      "note": "no prover tracks this resource; the generated harness runs every instance of this operation under its allocation observer (VER04j section 6.3) and records max_observed_heap in evidence/test-manifest.json",
       "op": "murmur3_32_with_seed",
       "runs": 0,
       "verdict": "unchecked"
@@ -137,6 +161,18 @@
     {
       "certificates": [],
       "function": "polynomial_rolling",
+      "id": "warrant/hash_functions/proof/polynomial_rolling/heap-bound",
+      "kind": "heap-bound",
+      "label": "unchecked",
+      "max_len": 0,
+      "note": "no prover tracks this resource; the generated harness runs every instance of this operation under its allocation observer (VER04j section 6.3) and records max_observed_heap in evidence/test-manifest.json",
+      "op": "polynomial_rolling",
+      "runs": 0,
+      "verdict": "unchecked"
+    },
+    {
+      "certificates": [],
+      "function": "polynomial_rolling",
       "id": "warrant/hash_functions/proof/polynomial_rolling/steps-bound",
       "kind": "steps-bound",
       "label": "not-live",
@@ -154,6 +190,18 @@
       "label": "unchecked",
       "max_len": 0,
       "note": "the pilot prover does not track this resource",
+      "op": "polynomial_rolling_with_params",
+      "runs": 0,
+      "verdict": "unchecked"
+    },
+    {
+      "certificates": [],
+      "function": "polynomial_rolling_with_params",
+      "id": "warrant/hash_functions/proof/polynomial_rolling_with_params/heap-bound",
+      "kind": "heap-bound",
+      "label": "unchecked",
+      "max_len": 0,
+      "note": "no prover tracks this resource; the generated harness runs every instance of this operation under its allocation observer (VER04j section 6.3) and records max_observed_heap in evidence/test-manifest.json",
       "op": "polynomial_rolling_with_params",
       "runs": 0,
       "verdict": "unchecked"
@@ -197,6 +245,18 @@
     {
       "certificates": [],
       "function": "siphash_2_4",
+      "id": "warrant/hash_functions/proof/siphash_2_4/heap-bound",
+      "kind": "heap-bound",
+      "label": "unchecked",
+      "max_len": 0,
+      "note": "no prover tracks this resource; the generated harness runs every instance of this operation under its allocation observer (VER04j section 6.3) and records max_observed_heap in evidence/test-manifest.json",
+      "op": "siphash_2_4",
+      "runs": 0,
+      "verdict": "unchecked"
+    },
+    {
+      "certificates": [],
+      "function": "siphash_2_4",
       "id": "warrant/hash_functions/proof/siphash_2_4/steps-bound",
       "kind": "steps-bound",
       "label": "not-live",
@@ -211,5 +271,5 @@
   "source": "code/packages/rust/hash-functions/src/algorithms.rs",
   "source_sha256": "02406d50756bf149f3b93c9d5fa6e0a09b71e0f1220e4b89edd4a8a30fe063f7",
   "spec": "code/specs/hash-functions.warrant",
-  "spec_sha256": "5abef036b4eb2e46c70cc095b93724bd76aaf1fb03dd6f0eb86396f551912692"
+  "spec_sha256": "84fd8ffe51ec350927d949cb3681b15d177fd56b4e8297c70479cc0b88551907"
 }
