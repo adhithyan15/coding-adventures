@@ -9,7 +9,9 @@ one selected-suite-owned key/nonce reservation to the exact five-byte
 Sealing validates public policy and capacity before consuming a sequence,
 encodes content plus its protected type and padding in caller scratch,
 authenticates the exact outer header, appends the 16-byte tag, and clears the
-scratch on every return. Opening validates one exact outer record and output
+exact scratch prefix written after successful inner encoding on every
+subsequent return. Route and inner-encoding failures occur before this crate
+changes caller scratch. Opening validates one exact outer record and output
 capacity before consuming a sequence. Authentication failure consumes that
 sequence but releases no plaintext and leaves output unchanged. Successful
 opening returns a non-cloneable borrowed view; dropping it clears the opened

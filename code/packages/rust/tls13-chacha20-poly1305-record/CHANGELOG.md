@@ -11,5 +11,6 @@ All notable changes to this package will be documented in this file.
 - Exact five-byte ciphertext-header authentication, selected-suite-bound key
   and nonce reservations, explicit inner-content policy, and fixed 16-byte tag
   handling.
-- Fail-closed sequence consumption, caller-scratch clearing, and a
-  non-cloneable opened-record view that wipes authenticated plaintext on drop.
+- Fail-closed sequence consumption, exact written-prefix scratch clearing after
+  inner encoding, and a non-cloneable opened-record view that wipes
+  authenticated plaintext on drop.

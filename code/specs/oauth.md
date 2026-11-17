@@ -4745,14 +4745,15 @@ before reserving a sequence number, and binds the reserved 256-bit key and
 boundary. Sealing encodes
 one policy-authorized `TLSInnerPlaintext`, authenticates the exact
 five-byte `TLSCiphertext` header as associated data, appends the exact 16-byte
-tag, and wipes its caller-owned cleartext scratch before returning. Opening
-validates one exact outer record before consuming a sequence, authenticates its
-exact retained header before releasing any cleartext, decodes only a
-policy-authorized inner content type, and returns a non-cloneable borrowed view
-whose drop path wipes the successfully opened caller-owned storage. Public
-framing, policy, and capacity failures occur before sequence consumption; an
-authentication failure consumes its reserved sequence and leaves caller output
-unchanged.
+tag, and wipes the exact caller-owned scratch prefix written after successful
+inner encoding on every subsequent return. Route and inner-encoding failures
+leave caller scratch unchanged. Opening validates one exact outer record before
+consuming a sequence, authenticates its exact retained header before releasing
+any cleartext, decodes only a policy-authorized inner content type, and returns
+a non-cloneable borrowed view whose drop path wipes the successfully opened
+caller-owned storage. Public framing, policy, and capacity failures occur
+before sequence consumption; an authentication failure consumes its reserved
+sequence and leaves caller output unchanged.
 
 This narrow composition does not enable either AES-GCM suite, derive traffic
 secrets, establish handshake epochs, process a transcript, authenticate
