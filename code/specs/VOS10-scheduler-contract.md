@@ -512,7 +512,7 @@ only, and every claim is *exhaustive* where the instance fits.
 
 | Block | Claims | Shape | Carried by |
 |---|---|---|---|
-| `safety` | `insert_safe`, `remove_safe`, `dispatch_safe`, `safety_alpha_build` | A for `insert`/`remove`, B for `dispatch`, C for `alpha` | every implementation |
+| `safety` | `insert_safe`, `remove_safe`, `dispatch_safe`, `safety_alpha_build`, `safety_init` | A for `insert`/`remove`, B for `dispatch`, C for `alpha`, closure for `init` | every implementation |
 | `policy` | `dispatch_policy` | A (deterministic) | fixed-priority implementations |
 | `canonical` | `canon_init`, `canon_insert_post`, `canon_insert_img`, `canon_remove_post`, `canon_remove_img`, `canon_dispatch_post`, `canon_dispatch_img` | shape C and closure | every `production` implementation with `mode=canonical` |
 | `any` | `dispatch_sound`, `dispatch_covers_run`, `dispatch_covers_idle` | soundness and coverage | `kind = any` only |
@@ -538,6 +538,10 @@ only, and every claim is *exhaustive* where the instance fits.
   -- carry the safety tier but not canonical, and would otherwise have an alpha nothing constrains.
   claim safety_alpha_build:
     forall b0: Bool, b1: Bool, b2: Bool, b3: Bool, b4: Bool, b5: Bool, b6: Bool, b7: Bool. dec(alpha_w(build(ready_of(b0, b1, b2, b3, b4, b5, b6, b7)))) == ready_of(b0, b1, b2, b3, b4, b5, b6, b7)
+  -- init starts from the empty ready set, for EVERY implementation (VOS-D081).  The binder is unused
+  -- (the same convention as canon_init, F5): the generator needs one.
+  claim safety_init:
+    forall b: Bool. dec(alpha_w(init())) == empty()
 ```
 
 **Policy** (`warrant/obligations-policy.part`):
@@ -552,6 +556,21 @@ only, and every claim is *exhaustive* where the instance fits.
 **Safety also holds `safety_alpha_build`** (`alpha(build(m)) == m`, shape C): it is
 field-agnostic, and every implementation needs `build`, `alpha` and `dec` pinned,
 including a representation-mode scheduler and `-any`, which do not carry `canonical`.
+
+**Safety also holds `safety_init`** (`alpha(init()) == empty()`, VOS-D081). Every other
+safety claim quantifies over `build(m)`, so it says what the operations do to a state
+the *abstraction* can reach, and none of them constrains where the scheduler *starts*.
+`canon_init` does (`init() == build(empty())`), but it is canonical-only, and the two
+implementations that do not carry `canonical` (`-any` and a representation-mode
+round-robin) would otherwise be free to start from any ready set: an `-any` whose `init`
+has mask 8 passed every generated test of VOS-012a, and the first `dispatch` of such a
+system could name a thread nobody inserted. That is a safety defect (a thread runs that
+was never made ready), not a canonicity one, so the claim belongs in the tier every
+implementation carries. It states only the abstract projection (`alpha(init())` is the
+empty set), not the representation, so it holds for `-any` (whatever its oracle),
+round-robin (whatever its pointer) and the bitmap alike, and `canon_init` remains the
+stronger statement for the implementations that carry it. The claim changes the safety
+block and therefore every implementation's safety digest; each regenerates.
 
 **Canonical** (`warrant/obligations-canonical.part`). `canon_init` states that
 `init()` is `build(empty())` (an `example` would do, but an obligation cannot be
@@ -649,6 +668,7 @@ counts the evaluation of section 12 measured, not typed by hand.
 | `insert_safe`, `remove_safe` (each) | 8 Bool, `t: U8` | 65,536 | 65,536 | 16.38 |
 | `dispatch_safe` | 8 Bool | 256 | 256 | 0.06 |
 | `safety_alpha_build` | 8 Bool | 256 | 256 | 0.06 |
+| `safety_init` | `b: Bool` (unused) | 2 | 2 | 0.00 |
 | **Policy** | | | | |
 | `dispatch_policy` | 8 Bool | 256 | 256 | 0.06 |
 | **Canonical** | | | | |
@@ -665,10 +685,10 @@ as in the toy. The obligation totals per implementation (enumerated cases):
 
 | Implementation | Carries | Enumerated cases |
 |---|---|---|
-| fixed-priority bitmap (`production`) | safety, policy, canonical | **394,498** |
-| lowest-first scan (safety, canonical) | safety, canonical | 131,584 + 262,658 = 394,242 |
-| round-robin (safety only, `representation`) | safety, plus its own `_rep` claims | 131,584 + its own |
-| `-any` | safety, any | **262,912** (= the binder cases: no refinement; 199,424 before VOS-012a dropped the `t < 8` refinement of `dispatch_covers_run`, VOS-D079) |
+| fixed-priority bitmap (`production`) | safety, policy, canonical | **394,500** (394,498 before `safety_init`, VOS-D081) |
+| lowest-first scan (safety, canonical) | safety, canonical | 131,586 + 262,658 = 394,244 |
+| round-robin (safety only, `representation`) | safety, plus its own `_rep` claims | 131,586 + its own |
+| `-any` | safety, any | **262,914** (262,912 before `safety_init`, VOS-D081; = the binder cases: no refinement; 199,424 before VOS-012a dropped the `t < 8` refinement of `dispatch_covers_run`, VOS-D079) |
 
 Where the budget ends for this contract:
 
@@ -695,7 +715,7 @@ is out of this contract's reach: plan on `T <= 8..16` per obligation there.
 * `Sched` for a private `Bitmap { mask: u8 }` with `N = 8`; `dispatch` returns the
   highest set bit and clears it, with a branch-free leading-zero routine (the
   toy's `clz8`; `u8::leading_zeros` may become a runtime call, VOS01 section 5.3).
-* Carries **safety, policy and canonical**: all twelve obligations, character for
+* Carries **safety, policy and canonical**: all thirteen obligations, character for
   character (R4). `vos.toml`: `kind = "production"`, `evidence-features = ["ghost"]`.
 * The ghost face of VOS02 section 4.2: a `ghost` module with a public-field
   `Image`, wrappers `vos_ghost_insert_out`, `_insert_img`, `_remove_out`,
@@ -759,10 +779,10 @@ the repository's Warrant tooling (`coding_adventures_warrant_grammar`: parser,
 3. **Three implementations written as Warrant models**, independently of the
    abstract record (bit operations, a one-cell-per-thread scan, a bitmap with an
    oracle), are run against the obligations over every binder value: the
-   fixed-priority bitmap passes all twelve; the lowest-first scan passes every claim
+   fixed-priority bitmap passes all thirteen; the lowest-first scan passes every claim
    but `dispatch_policy`, which it fails on exactly **247** of 256 states; the oracle
    model passes safety and `any`.
-4. **Negative controls: a table of 19 mutants plus 9 lemma mutants**
+4. **Negative controls: a table of 21 mutants plus 9 lemma mutants**
    (`every_mutant_breaks_exactly_the_claims_it_should`,
    `every_lemma_has_a_mutant_that_breaks_it`, `every_obligation_has_a_control`). Each
    mutant is a textual change to one model, asserted to have changed it. A claim is
@@ -780,7 +800,8 @@ the repository's Warrant tooling (`coding_adventures_warrant_grammar`: parser,
    | `dispatch_safe`, `_img` | `dispatch_img` forgets to remove the chosen thread | `dispatch_safe`, `dispatch_policy`, `canon_dispatch_img` |
    | `safety_alpha_build` | `alpha` forgets the state; `build` ignores thread 7 | `alpha`: the four safety claims, `dispatch_policy` and the three `_post` claims; `build`: the four safety claims, `dispatch_policy` and `canon_insert_post`, `canon_insert_img` |
    | `dispatch_policy` | `dispatch` always `Idle`, state kept | `dispatch_policy` only |
-   | `canon_init` | `init()` is not `build(empty())` | `canon_init` only |
+   | `canon_init` | `init()` is not `build(empty())` | `canon_init` and `safety_init` (a bitmap whose initial mask is 1, both blocks included) |
+   | `safety_init` | `init()` starts with mask 8: in the bitmap with only the safety block, and in `-any` (mask 8, oracle 0, so `dispatch` still answers `Idle`) | `safety_init` only |
    | `canon_insert_post`, `canon_remove_post`, `canon_dispatch_post` | a history register that `alpha` drops, moved by `insert_img`, `remove_img`, `dispatch_img` respectively (the oracle model) | the `_post` claim and its `_img` twin, never safety |
    | `canon_insert_img`, `canon_remove_img`, `canon_dispatch_img` | see the `_img` rows above | |
    | `dispatch_sound`, safe part | `any` skips the validation step | `dispatch_safe`, `dispatch_sound` |
@@ -888,8 +909,9 @@ Found while writing a real contract. F1 to F4 and the SH12 wording were **amende
 | F5 | A claim with no use of its binders (`canon_init: forall b: Bool. init() == build(empty())`) is a convention not exercised by the generator; if VER04h rejects an unused binder, `canon_init` becomes an `example` in the implementation block and the obligation list loses an entry (a contract-text change) | settled at VOS-011: the generator accepts the unused binder (`canon_init` ran, 2 cases); the claim stays | VOS-D054 |
 | F6 | VER04h finds a claim's negative-control subject by a shallow left-to-right search (VOS02 section 13.3). The `any` claims (`dispatch_sound`) lead with `safe_dispatch(...)`, a non-operation call; the subject found may be `dispatch_out` or `alpha_w` depending on how arguments are searched. Whether each obligation has a control that can catch a fault in the operation it is *about* is not checked until a generator runs | settled in part at VOS-011: the carried claims' subjects are the operations they are about; settled at VOS-012a by running it: `dispatch_sound` has subject `dispatch_img`, `dispatch_covers_run` and `dispatch_covers_idle` have `dispatch_out`; none has `alpha_w`, and no claim was rewritten for it | VOS-D054 |
 | F7 | VOS02 section 2.5 gives `contract.vos` a `tier` line for each of `any`, `canonical`, `policy`, `safety`; nothing says that a tier line and the files `warrant/obligations-<tier>.part` must correspond. A tier with no file, or a file with no tier, is a silent mismatch until `vos-manifest` exists. `contract.vos` has its own grammar and its parser is `vos-manifest`, so this PR does not read it (no ad-hoc parser) | `vos-manifest` / `gen-doc` (VOS-033) must cross-check tiers, files and `config` against `Sched::N` and the `8`s in the text | VOS-D049 |
-| F8 | The nine lemmas call no operation and the generator refuses them (`W0701 claim ... calls no operation`) until the `lemma` entry kind exists (VER04m V9, WX-SV item 3, VOS-D005). They were only ever evaluated by `vos-sched-contract-check`, yet sat in the embedded contract block | **Resolved in the VOS-011 PR:** the lemmas moved to `warrant/lemmas.part`, not embedded (VOS02 R1.4). The contract-block digest changed; every obligation's `claim_sha256` and every obligations-block digest is unchanged. The 394,498 total of this section is what the 12 carried claims of a production scheduler enumerate | VOS-D064 |
+| F8 | The nine lemmas call no operation and the generator refuses them (`W0701 claim ... calls no operation`) until the `lemma` entry kind exists (VER04m V9, WX-SV item 3, VOS-D005). They were only ever evaluated by `vos-sched-contract-check`, yet sat in the embedded contract block | **Resolved in the VOS-011 PR:** the lemmas moved to `warrant/lemmas.part`, not embedded (VOS02 R1.4). The contract-block digest changed; every obligation's `claim_sha256` and every obligations-block digest is unchanged. The 394,498 total (394,500 since VOS-D081 added `safety_init`) is what the carried claims of a production scheduler enumerate | VOS-D064 |
 | F9 | The evidence harness's `heap` observer wraps the whole adapter call, including the allocation that builds a record or a payload-carrying variant as a Warrant value (64 bytes). `heap <= 0` can only hold for scalar or payload-free results | The ceiling `heap 0` is declared (and evidenced) only on `insert_out` and `remove_out`; the other six bound operations omit the `heap` row, with a comment in `impl.part` | VOS-D063 |
+| F11 | The safety tier did not constrain `init` (VOS-D081): `canon_init` is canonical-only, so `-any` and a representation-mode scheduler could start from a non-empty ready set and every generated test passed (a mask-8 `-any` mutant). The generator has no non-inert fault for the new claim: its subject is `alpha_w`, whose only fault is `field-zero`, and the state it is applied to is the empty one (`AbsW(0)`), so the claim has no negative control of its own (VOS-D065, WX-SV2) | `safety_init` (section 9.3); the claim is evidenced by the contract-check mutants (section 12, table) and the mutation sanity of the two implementations, not by a generated control | VOS-D081 |
 | F10 | VOS02 13.4 F4 on the real crate: the three `init` / `field-zero` controls cannot pass (zero initial field), so a bare run of the generated suite exits non-zero. An example over the zero state also fails the example control of its subject | `impl.part` uses a non-zero worked example; the `init` controls are a known failure | VOS-D065 |
 
 ---
