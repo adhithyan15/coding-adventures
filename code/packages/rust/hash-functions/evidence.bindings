@@ -25,7 +25,7 @@
 # proof manifest records the siphash_2_4 constant-time obligation `not-live` with
 # the front end's own message.
 package coding_adventures_hash_functions
-revision 0.1.0
+revision 0.2.0
 spec code/specs/hash-functions.warrant
 output code/packages/rust/hash-functions/tests/generated/warrant_evidence.rs
 seed 0x4841_5348_5f46_4e53

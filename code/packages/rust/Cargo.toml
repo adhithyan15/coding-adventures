@@ -608,6 +608,7 @@ members = [
     "required-capabilities-compiler",
     "event-loop",
     "hyperloglog",
+    "hash-analysis",
     "hash-functions",
     "hash-map",
     "hash-set",

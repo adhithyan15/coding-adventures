@@ -1,9 +1,10 @@
 -- DT17 -- Hash functions: FNV-1a, DJB2, polynomial rolling, MurmurHash3, SipHash.
 --
--- Wired (WX-P1a, DT17a): evidence.bindings binds all eight operations and the
--- generated harness runs every claim below against the real crate.  The
--- analyzer and the ca-assurance-report package report are NOT wired (DT17a
--- section 7).  Negative controls: `flip-result-bit` on each U32/U64 result
+-- Wired (WX-P1a, WX-P1a2, DT17a): evidence.bindings binds all eight operations
+-- and the generated harness runs every claim below against the real crate.  The
+-- capability analyzer and the ca-assurance-report package report are wired
+-- (DT17a section 7), which the `bound` rows below and the move of the
+-- randomness-using analysis helpers to `hash-analysis` made possible.  Negative controls: `flip-result-bit` on each U32/U64 result
 -- (WX-FAULT1, including the hash inside the `Ok` of polynomial_rolling_with_params)
 -- and `missing-error` on the zero-modulus rejection.
 --
@@ -48,9 +49,10 @@
 -- Not covered, listed and not faked (also in DT17a):
 --   * hash_str_fnv1a_32 and hash_str_siphash take a `&str`: Warrant text is
 --     VER04l (WX-T) and is not available to the evidence generator;
---   * avalanche_score and distribution_test return `f64` and take a generic
---     closure `F: Fn(&[u8]) -> H` (and avalanche_score draws OS randomness):
---     floats are VER04p (WX-FL) and generics over closures are not Warrant;
+--   * avalanche_score and distribution_test are no longer in this crate: they
+--     moved to `hash-analysis` (WX-P1a2) because avalanche_score draws OS
+--     randomness.  They return `f64` and take a generic closure, so they would not
+--     be covered there either (floats are VER04p, WX-FL);
 --   * the `HashFunction` trait and the structs Fnv1a32, Fnv1a64, Djb2,
 --     PolynomialRolling, Murmur3_32 and SipHash24: trait objects and stateful
 --     values are not Warrant (WX-O); they only forward to the free functions
@@ -198,6 +200,69 @@ warrant hash_functions v1
     -- Caveat: `no_panic` here holds of the harness adapter, not of the crate.  The
     -- real `polynomial_rolling_with_params` PANICS on `assert!(modulus > 0)`; the
     -- generated adapter catches any panic and reports it as MODULUS_ZERO.
+
+  -- Declared bounds (WX-P1a2).  Every operation is one pass over `data`: a hash
+  -- returns a fixed-width integer (4 or 8 bytes, fixed by the result type, so
+  -- there is no `output` row: that metric bounds the size of a Bytes or List
+  -- result) and keeps its state in a few machine words.
+  --
+  -- `heap` rows: polynomial_rolling, murmur3_32, murmur3_32_with_seed and
+  -- siphash_2_4 carry `heap <= 4096`, a constant.  A `heap` row puts every
+  -- instance of the operation under the generated harness's allocation observer,
+  -- so it is checked live: nothing that grows with the input is allocated.  The
+  -- manifest records the peak the observer saw, and for these four pure hashes
+  -- that peak is exactly 0 bytes on every platform; 4096 leaves room without
+  -- allowing a buffer that scales with the input.
+  --
+  -- polynomial_rolling_with_params has NO heap row either, for a different reason
+  -- than the three below: its only allocation is the std panic payload of the
+  -- zero-modulus rejection path (the adapter catches the panic).  That payload's
+  -- size differs by platform (80 bytes observed on Linux, 16 on Windows), and the
+  -- manifest is committed and diffed on Linux, macOS and Windows, so recording an
+  -- exact peak would make it platform-specific.  Its steps and depth rows remain.
+  --
+  -- fnv1a_32, fnv1a_64 and djb2 have NO heap row: their exhaustive suites have 2^24-case
+  -- claims (a three-byte domain), and the observer runs each call on a worker
+  -- thread at about 35 to 50 microseconds a call, so about 50 million observed
+  -- calls would add roughly half an hour to the harness (a trial with a heap row on
+  -- all eight operations had not finished in over 30 minutes).  Their "nothing
+  -- allocates" is therefore not evidenced by the harness; it is read off the
+  -- source (one loop over a slice with wrapping integer arithmetic).
+  --
+  -- The `steps` and `depth` rows are declarations: no step-bound prover run backs
+  -- them (the proof manifest records the steps obligations not-live), so the
+  -- report records CWE-400 as the usual unapproved exemption.  Work is at most one
+  -- round per input byte (SipHash and Murmur3 do less: one round per 8 or 4 bytes
+  -- plus a constant finalisation), so 64 * len + 4096 steps is a generous linear
+  -- envelope; the call is not recursive, so depth is a small constant.
+  bound fnv1a_32:
+    steps <= 64 * len(data) + 4096
+    depth <= 8
+  bound fnv1a_64:
+    steps <= 64 * len(data) + 4096
+    depth <= 8
+  bound djb2:
+    steps <= 64 * len(data) + 4096
+    depth <= 8
+  bound polynomial_rolling:
+    steps <= 64 * len(data) + 4096
+    heap <= 4096
+    depth <= 8
+  bound polynomial_rolling_with_params:
+    steps <= 64 * len(data) + 4096
+    depth <= 8
+  bound murmur3_32:
+    steps <= 64 * len(data) + 4096
+    heap <= 4096
+    depth <= 8
+  bound murmur3_32_with_seed:
+    steps <= 64 * len(data) + 4096
+    heap <= 4096
+    depth <= 8
+  bound siphash_2_4:
+    steps <= 64 * len(data) + 4096
+    heap <= 4096
+    depth <= 8
 
   -- ---- known answers: FNV-1a 32 (draft-eastlake-fnv test vectors and the DT17 vectors)
   example fnv1a_32_empty:

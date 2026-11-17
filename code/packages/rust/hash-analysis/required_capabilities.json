@@ -1,0 +1,14 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/hash-analysis",
+  "capabilities": [
+    {
+      "category": "rand",
+      "action": "read",
+      "target": "*",
+      "justification": "avalanche_score draws random 8-byte inputs from the operating system (getrandom) to estimate how many output bits flip per input bit. The randomness is statistical sampling for a quality measure, never key material or a secret; distribution_test uses none."
+    }
+  ],
+  "justification": "Statistical analysis helpers for hash functions. The only capability is OS randomness for input sampling; no file, network, process, or environment access."
+}

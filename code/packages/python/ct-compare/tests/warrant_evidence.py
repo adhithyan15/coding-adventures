@@ -18,9 +18,21 @@ runner, ``coding_adventures_warrant_corpus``::
 
 from __future__ import annotations
 
-import os
 import sys
-from pathlib import Path
+
+# VER04i 8.1 (WD-004b3): run as a script, CPython puts THIS file's directory first
+# on ``sys.path``, so a planted ``tests/shutil.py`` (or ``shutil.cpython-*.so``,
+# ``.abi3.so``, ``.pyd``) would be imported by the ``import shutil`` below, before any
+# isolation exists.  Drop that entry before the first import that is not already
+# loaded: ``sys`` is built in and ``os`` is loaded by interpreter start-up.  The
+# re-run below also passes ``-P`` (Python 3.11+, this lane requires 3.12), which
+# never adds the script directory at all.  Only when run as a script: a test that
+# imports this module must keep the path it was given.
+if __name__ == "__main__" and not sys.flags.safe_path:
+    del sys.path[0]
+
+import os  # noqa: E402
+from pathlib import Path  # noqa: E402
 
 PACKAGE = Path(__file__).resolve().parents[1]
 REPO_ROOT = PACKAGE.parents[3]
@@ -43,8 +55,10 @@ def isolate_bytecode_cache() -> None:
 
     The first call (no prefix yet) creates a private, empty directory, runs the
     same command line in a child with ``PYTHONPYCACHEPREFIX`` pointing at it,
-    removes it afterwards and exits with the child's status.  In the child the
-    prefix is set and this returns.  The runner then checks, by name, that the
+    removes it afterwards and exits with the child's status.  The child runs
+    with ``-P`` so the script's own directory is not on ``sys.path`` either, and
+    the imports below happen with nothing beside this file importable.  In the
+    child the prefix is set and this returns.  The runner then checks, by name, that the
     directory is the one this function created.
     """
     if sys.pycache_prefix is not None:
@@ -59,7 +73,7 @@ def isolate_bytecode_cache() -> None:
             raise SystemExit("error: the private bytecode cache is not empty")
         env = dict(os.environ, PYTHONPYCACHEPREFIX=private, **{ENV_PRIVATE: private})
         code = subprocess.run(  # noqa: S603 - same interpreter, same script
-            [sys.executable, *sys.argv], env=env, check=False
+            [sys.executable, "-P", *sys.argv], env=env, check=False
         ).returncode
     finally:
         shutil.rmtree(private, ignore_errors=True)

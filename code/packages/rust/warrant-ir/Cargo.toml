@@ -56,8 +56,9 @@ harness = false
 name = "lzw_proofs"
 path = "tests/lzw_proofs.rs"
 
-# hash-functions: the SipHash key is `secret`, so one constant-time obligation, and no
-# `bound` rows, attempted on the real hash-functions algorithms.rs.  The front end
+# hash-functions: the SipHash key is `secret`, so one constant-time obligation, plus a
+# steps-bound obligation per operation (`steps` and `depth` bound rows), attempted on the
+# real hash-functions algorithms.rs.  The front end
 # refuses the file, so this target records the obligation `not-live` with the
 # precise blocker.
 [[test]]
