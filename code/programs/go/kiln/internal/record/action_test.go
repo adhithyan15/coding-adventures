@@ -13,7 +13,7 @@ func TestActionRoundTrip(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	want := `{"schema":"kiln-record-action/2","action":"code/packages/go/parser","language":"go","weak":"` + weakHex + `","refusal":"","steps":["go build ./...","go test ./..."],"tools":["git","go"]}`
+	want := `{"schema":"kiln-record-action/3","action":"code/packages/go/parser","language":"go","weak":"` + weakHex + `","refusal":"","gate":"","steps":["go build ./...","go test ./..."],"tools":["git","go"]}`
 	if string(data) != want {
 		t.Fatalf("%s", data)
 	}
@@ -50,6 +50,9 @@ func TestActionRefusals(t *testing.T) {
 		"duplicate tool":  mut(func(a *Action) { a.Tools = []string{"go", "go"} }),
 		"empty tool name": mut(func(a *Action) { a.Tools = []string{""} }),
 		"control in tool": mut(func(a *Action) { a.Tools = []string{"g\no"} }),
+		"long gate":       mut(func(a *Action) { a.Gate = strings.Repeat("g", MaxGateBytes+1) }),
+		"control in gate": mut(func(a *Action) { a.Gate = "never:a\nb" }),
+		"bad utf8 gate":   mut(func(a *Action) { a.Gate = "never:\xff" }),
 	} {
 		if _, err := EncodeAction(a); err == nil {
 			t.Errorf("%s: encoded", name)
@@ -58,18 +61,20 @@ func TestActionRefusals(t *testing.T) {
 }
 
 func TestDecodeActionIsStrict(t *testing.T) {
-	good := `{"schema":"kiln-record-action/2","action":"code/p","language":"x","weak":"` + weakHex + `","refusal":"","steps":[],"tools":[]}`
+	good := `{"schema":"kiln-record-action/3","action":"code/p","language":"x","weak":"` + weakHex + `","refusal":"","gate":"","steps":[],"tools":[]}`
 	if _, err := DecodeAction([]byte(good)); err != nil {
 		t.Fatal(err)
 	}
 	for name, in := range map[string]string{
-		"unknown key":   strings.Replace(good, `"steps":[]`, `"steps":[],"extra":1`, 1),
-		"trailing data": good + "{}",
-		"null steps":    strings.Replace(good, `"steps":[]`, `"steps":null`, 1),
-		"null tools":    strings.Replace(good, `"tools":[]`, `"tools":null`, 1),
-		"no tools":      strings.Replace(good, `,"tools":[]`, ``, 1),
-		"not json":      `{`,
-		"wrong schema":  strings.Replace(good, "action/2", "action/1", 1),
+		"unknown key":       strings.Replace(good, `"steps":[]`, `"steps":[],"extra":1`, 1),
+		"trailing data":     good + "{}",
+		"null steps":        strings.Replace(good, `"steps":[]`, `"steps":null`, 1),
+		"null tools":        strings.Replace(good, `"tools":[]`, `"tools":null`, 1),
+		"no tools":          strings.Replace(good, `,"tools":[]`, ``, 1),
+		"no gate":           strings.Replace(good, `"gate":"",`, ``, 1),
+		"gate with newline": strings.Replace(good, `"gate":""`, `"gate":"a\nb"`, 1),
+		"not json":          `{`,
+		"wrong schema":      strings.Replace(good, "action/3", "action/2", 1),
 	} {
 		if _, err := DecodeAction([]byte(in)); err == nil {
 			t.Errorf("%s: decoded", name)
@@ -84,5 +89,27 @@ func TestActionFileIsAHashNotAPath(t *testing.T) {
 	}
 	if ActionFile("a") == ActionFile("b") || ActionFile("a") != ActionFile("a") {
 		t.Fatal("not a function of the name")
+	}
+}
+
+func TestActionGateRoundTrip(t *testing.T) {
+	// A gate and a refusal can both be set (the unknown-toolchain case); a gate
+	// clipped to the limit survives the round trip byte for byte.
+	g := reasonText("never:x/" + strings.Repeat("n", 400))
+	if len(g) > MaxGateBytes || len(g) == 0 {
+		t.Fatalf("reasonText gave %d bytes", len(g))
+	}
+	a := Action{Schema: ActionSchema, Action: "code/p", Language: "x", Refusal: "unknown-toolchain:y", Gate: g}
+	data, err := EncodeAction(a)
+	if err != nil || !strings.Contains(string(data), `"gate":"never:x/nnn`) {
+		t.Fatalf("%s %v", data, err)
+	}
+	back, err := DecodeAction(data)
+	if err != nil || back.Gate != g {
+		t.Fatalf("%+v %v", back, err)
+	}
+	edge := Action{Schema: ActionSchema, Action: "code/p", Language: "x", Weak: weakHex, Gate: strings.Repeat("g", MaxGateBytes)}
+	if _, err := EncodeAction(edge); err != nil {
+		t.Fatalf("a gate of exactly %d bytes: %v", MaxGateBytes, err)
 	}
 }
