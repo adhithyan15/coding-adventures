@@ -14681,7 +14681,7 @@ dependencies = [
 
 [[package]]
 name = "tls13-key-share"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "tls13-named-group-policy",
 ]

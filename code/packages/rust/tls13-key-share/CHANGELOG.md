@@ -2,7 +2,7 @@
 
 All notable changes to this package will be documented in this file.
 
-## [Unreleased]
+## [0.2.0] - 2026-11-17
 
 ### Changed
 
@@ -11,6 +11,8 @@ All notable changes to this package will be documented in this file.
   selection bound to a nonempty retained offer. The prior public empty-list
   error category remains available for source compatibility but is no longer
   emitted.
+- Retain the exact complete caller-borrowed ClientHello extension data on
+  decoded evidence and expose it without re-encoding or allocation.
 
 ## [0.1.0] - 2026-10-30
 

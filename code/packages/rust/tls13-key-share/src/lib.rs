@@ -1,9 +1,9 @@
 //! # Bounded TLS 1.3 key-share framing
 //!
 //! This crate validates and frames public TLS 1.3 `KeyShareEntry` values under
-//! the repository-owned named-group policy. Client shares are retained without
-//! allocation, and one ServerHello share must select a group from the exact
-//! retained client offer.
+//! the repository-owned named-group policy. Client shares and their exact
+//! complete extension data are retained without allocation, and one
+//! ServerHello share must select a group from the exact retained client offer.
 //!
 //! It performs no key agreement, entropy access, secret handling, transcript
 //! update, handshake processing, certificate validation, I/O, or networking.
@@ -269,13 +269,20 @@ pub fn encode_client_key_shares<'output>(
 /// Decoded ClientHello key shares bound to policy-selected groups.
 ///
 /// The value is deliberately neither `Copy` nor `Clone` and retains the exact
-/// public bytes supplied by the peer.
+/// complete extension data and public key-exchange bytes supplied by the peer.
 pub struct DecodedClientKeyShares<'input> {
+    extension_data: &'input [u8],
     entries: [Option<ClientKeyShareEntry<'input>>; MAX_KEY_SHARE_ENTRIES],
     entry_count: usize,
 }
 
-impl DecodedClientKeyShares<'_> {
+impl<'input> DecodedClientKeyShares<'input> {
+    /// Borrow the exact two-byte-length-prefixed ClientHello extension data.
+    #[must_use]
+    pub const fn extension_data(&self) -> &'input [u8] {
+        self.extension_data
+    }
+
     /// Return the number of retained entries.
     #[must_use]
     pub const fn len(&self) -> usize {
@@ -289,7 +296,7 @@ impl DecodedClientKeyShares<'_> {
     }
 
     /// Iterate over retained entries in wire order.
-    pub fn entries(&self) -> impl Iterator<Item = &ClientKeyShareEntry<'_>> {
+    pub fn entries(&self) -> impl Iterator<Item = &ClientKeyShareEntry<'input>> {
         self.entries[..self.entry_count]
             .iter()
             .map(|entry| entry.as_ref().expect("retained prefix is initialized"))
@@ -328,6 +335,7 @@ pub fn decode_client_key_shares<'input>(
         ));
     }
     let mut decoded = DecodedClientKeyShares {
+        extension_data: input,
         entries: core::array::from_fn(|_| None),
         entry_count: 0,
     };

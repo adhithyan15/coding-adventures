@@ -3,5 +3,5 @@
   "version": 1,
   "package": "rust/tls13-key-share",
   "capabilities": [],
-  "justification": "Pure bounded framing and policy validation over caller-supplied public TLS key-share bytes and caller-owned output. It performs no entropy, private-key, shared-secret, credential, filesystem, network, DNS, process, environment, clock, signing, certificate, trust-root, path, revocation, audit, trace, or external effect."
+  "justification": "Pure bounded framing, borrowed input retention, and policy validation over caller-supplied public TLS key-share bytes and caller-owned output. It performs no entropy, private-key, shared-secret, credential, filesystem, network, DNS, process, environment, clock, signing, certificate, trust-root, path, revocation, audit, trace, or external effect."
 }
