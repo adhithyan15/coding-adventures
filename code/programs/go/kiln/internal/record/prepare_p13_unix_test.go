@@ -7,6 +7,7 @@ package record
 // the new files to the same standard as the old ones.
 
 import (
+	"encoding/json"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -15,6 +16,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/policyfix"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/traced"
 )
 
@@ -121,7 +123,16 @@ func TestPrepareSealsTheClassifierPolicy(t *testing.T) {
 	for _, r := range c.HostRoots.Roots {
 		paths = append(paths, r.Path+":"+r.Kind)
 	}
-	if !reflect.DeepEqual(paths, []string{"/bin:image", "/sbin:image"}) || !reflect.DeepEqual(c.HostRoots.Ephemeral, []string{"/dev/null"}) || len(c.HostRoots.AbsentOK) != 0 {
+	// The fixture's lists are the real policy's (policyfix, D27).
+	var wantEph, wantAbsent []string
+	e, a := policyfix.Lists()
+	if err := json.Unmarshal([]byte(e), &wantEph); err != nil {
+		t.Fatal(err)
+	}
+	if err := json.Unmarshal([]byte(a), &wantAbsent); err != nil {
+		t.Fatal(err)
+	}
+	if !reflect.DeepEqual(paths, []string{"/bin:image", "/sbin:image"}) || !reflect.DeepEqual(c.HostRoots.Ephemeral, wantEph) || !reflect.DeepEqual(c.HostRoots.AbsentOK, wantAbsent) {
 		t.Fatalf("%+v", c.HostRoots)
 	}
 	// A package whose key is refused still gets its tools.

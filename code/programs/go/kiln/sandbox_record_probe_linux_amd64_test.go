@@ -195,7 +195,8 @@ func newProbeWorld(t *testing.T, kiln string, opts probeOpts) *probeWorld {
 		}
 		raw = append(raw, extra...)
 		sortByPath(t, raw)
-		files["code/kiln/legacy/host-roots.json"] = `{"roots": [` + strings.Join(raw, ",") + `], "ephemeral": ` + recStepEphemeral + `, "absent-ok": ` + recStepAbsentOK + `}`
+		eph, absent := recStepLists()
+		files["code/kiln/legacy/host-roots.json"] = `{"roots": [` + strings.Join(raw, ",") + `], "ephemeral": ` + eph + `, "absent-ok": ` + absent + `}`
 	}
 	const action = "code/packages/x/a"
 	for p, c := range map[string]string{

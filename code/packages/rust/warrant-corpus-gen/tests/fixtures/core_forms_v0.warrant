@@ -201,7 +201,7 @@ warrant core_forms_v0
   claim width_model:
     forall a: Bytes<2>, b: Bytes<3>. cat(a, b) == m_width(a, b)
   claim if_context:
-    forall a: Nat. (if true then 1 else a) == a and (if true then a else 1) == a
+    forall a: Nat. e(b"00") == 1 and (if true then 1 else a) == a and (if true then a else 1) == a
   claim inc_pure:
     forall a: U8. u8op(a, a) == m_twice(a)
   claim ground:

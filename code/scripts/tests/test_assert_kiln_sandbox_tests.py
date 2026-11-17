@@ -96,7 +96,12 @@ class CiWiring(unittest.TestCase):
 
     def test_job_requires_the_sandbox_and_asserts_the_stream(self) -> None:
         body = self.job()
-        self.assertIn("runs-on: ubuntu-24.04", body)
+        # D27: both images, never ubuntu-latest, one job id so ci-gate's
+        # needs['kiln-sandbox'].result aggregates the legs.
+        self.assertIn("runs-on: ${{ matrix.os }}", body)
+        self.assertIn("os: [ubuntu-24.04, ubuntu-26.04]", body)
+        self.assertIn("fail-fast: false", body)
+        self.assertNotIn("ubuntu-latest", body)
         self.assertIn("sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0", body)
         self.assertNotRegex(body, r"if:.*apparmor")
         self.assertIn("bash code/scripts/ci/apt-install.sh strace", body)
