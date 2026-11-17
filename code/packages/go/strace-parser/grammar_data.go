@@ -159,7 +159,6 @@ var ParserGrammarData = &gt.ParserGrammar{
 			gt.RuleReference{Name: `RBRACE`, IsToken: true},
 			gt.RuleReference{Name: `SYSCALL`, IsToken: true},
 			gt.RuleReference{Name: `FUNC`, IsToken: true},
-			gt.RuleReference{Name: `UNFINISHED`, IsToken: true},
-		}}}, LineNumber: 118},
+		}}}, LineNumber: 122},
 	},
 }

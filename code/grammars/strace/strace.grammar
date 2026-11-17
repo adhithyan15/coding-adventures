@@ -113,8 +113,12 @@ dead_resumed_line = DEAD_RESUMED ;
 # Everything after the closing ")" of a call: ` = 3</x>`, ` = -1 ENOENT (No such
 # file or directory)`, ` = 0x7f00 /* 3 entries */`, ` = ?`.  It is free-form
 # here: the consumer's result parser is strict about it (and names its own
-# refusal).  It still contains no ERR_* token, so it is well-lexed.
+# refusal).  It still contains no ERR_* token, so it is well-lexed.  It has no
+# UNFINISHED either: a bare "<unfinished ...>" after the ")" can never be part
+# of a result (the old result parser refused it), so it is refused here.  A
+# marker glued to a word (`= 0<unfinished ...>`) is one ANNOTATED token and is
+# still accepted, as it was.
 # ---------------------------------------------------------------------------
 tail         = { WORD | ASSIGN | ANNOTATED | QUOTED | PUNCT | COMMA
                | LPAREN | RPAREN | LBRACKET | RBRACKET | LBRACE | RBRACE
-               | SYSCALL | FUNC | UNFINISHED } ;
+               | SYSCALL | FUNC } ;

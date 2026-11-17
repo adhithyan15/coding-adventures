@@ -316,12 +316,12 @@ func TestRefusals(t *testing.T) {
 		{`1  f([a)]`, KindSyntax, false},
 		{`1  f({a])`, KindSyntax, false},
 		{`1  f((a])`, KindSyntax, false},
-		{`1  f(a)) = 0`, KindSyntax, false}, // the call closed at the first ")", then a stray token is fine here...
+		{`1  f(a)) = 0`, KindSyntax, false}, // the call closed at the first ")", then kept by the free-text tail
 		{`1  f (a)`, KindSyntax, false},
 		{`1  Foo(a)`, KindSyntax, false},
 		{`1  ` + strings.Repeat("a", 65) + `()`, KindSyntax, false},
 		{`1  f(a <unfinished ...> x`, KindSyntax, false},
-		{`1  f(a) <unfinished ...>`, KindSyntax, false}, // see the accepted list: the tail is free text
+		{`1  f(a) <unfinished ...>`, KindSyntax, false}, // the tail has no marker (TestMarkerAfterCloseRefused)
 		{`1  f([a <unfinished ...>`, KindSyntax, false},
 		{`1  f(a, [b, <unfinished ...>`, KindSyntax, false},
 		{`1  <... stat resumed>, <unfinished ...>`, KindSyntax, false},
@@ -353,7 +353,7 @@ func TestRefusals(t *testing.T) {
 	}
 	for _, c := range cases {
 		_, _, err := ParseLineTokens(c.line, DefaultOptions())
-		if c.line == `1  f(a)) = 0` || c.line == `1  f(a) <unfinished ...>` {
+		if c.line == `1  f(a)) = 0` {
 			// The tail is free text, so a stray ")" or a marker after the
 			// close is NOT a syntax error: the consumer's result parser
 			// refuses it with its own reason.

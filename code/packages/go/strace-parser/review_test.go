@@ -160,6 +160,26 @@ func TestStrictQuoted(t *testing.T) {
 	}
 }
 
+// A bare "<unfinished ...>" after the closing ")" is not part of a result: these
+// are refused (the old result parser refused them too, with reason "result").
+// Glued to a word it is one ANNOTATED token and is accepted, as before.
+func TestMarkerAfterCloseRefused(t *testing.T) {
+	for _, l := range []string{
+		`1  stat(a) = 0 <unfinished ...>`,
+		`1  stat(a) <unfinished ...>`,
+		`1  stat(a)<unfinished ...>`,
+		`1  stat(a) = ? <unfinished ...>`,
+	} {
+		if k := kindOf(t, l, Options{}); k != KindSyntax {
+			t.Errorf("%q: kind %d", l, k)
+		}
+	}
+	ast, err := ParseLine(`1  stat(a) = 0<unfinished ...>`, Options{})
+	if err != nil || BodyKind(ast) != "call_line" {
+		t.Errorf("annotated marker: %v", err)
+	}
+}
+
 func TestPrefixBeforeUnfinished(t *testing.T) {
 	cases := map[string]string{
 		`1  wait4(-1,  <unfinished ...>`:                                            `wait4(-1, `,
