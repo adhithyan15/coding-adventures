@@ -1,0 +1,36 @@
+[package]
+name = "vos-sched-any"
+version = "0.1.0"
+edition = "2021"
+description = "The most-general (-any) scheduler of the verified-OS program (VOS-012a): a one-byte ready set plus an oracle register, implementing vos-sched-contract at N = 8. Evidence only: never shipped in an image (SH16)"
+
+[lib]
+name = "vos_sched_any"
+path = "src/lib.rs"
+
+# SH13/SH18: the ghost face (the public-field state image, the oracle write path and the
+# wrappers) is compiled only for the evidence build.  A plain `cargo build` or `cargo test`
+# never sees it.
+[features]
+ghost = []
+
+[dependencies]
+# SH12: the interface's own contract crate and `core`, nothing else.
+vos-sched-contract = { path = "../vos-sched-contract" }
+
+[dev-dependencies]
+# SH12: the generated evidence harness hashes the spec and the source tree.
+coding_adventures_sha256 = { path = "../sha256" }
+coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
+
+# Generated from code/specs/vos-sched-any.warrant (VER04h).  It needs the ghost face, so a plain
+# `cargo test` skips it (VOS02 section 4.5).
+[[test]]
+name = "warrant_evidence"
+path = "tests/warrant_evidence.rs"
+harness = false
+required-features = ["ghost"]
+
+[[test]]
+name = "behaviour"
+path = "tests/behaviour.rs"
