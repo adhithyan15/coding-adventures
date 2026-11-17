@@ -5898,11 +5898,15 @@ the complete two-byte-length-prefixed ClientHello extension data only after
 proving caller-owned output capacity. Construction and decoding also admit the
 exact empty ClientHello vector required for an explicit HelloRetryRequest group
 selection round trip; every nonempty vector remains subject to the same policy
-and fixed registry-sized entry ceiling before retaining borrowed public
-key-exchange bytes. ServerHello decoding accepts exactly one entry and fails
-closed unless its selected group appeared in the exact retained client offer.
-Stable failures retain no group identifiers, public-key bytes, lengths, or
-output contents.
+and fixed registry-sized entry ceiling. Successful decoding retains the exact
+complete caller-borrowed ClientHello extension data, including its vector-
+length prefix, together with the borrowed public key-exchange entries. The
+complete input remains available through a read-only accessor so later
+message-context composition can compare it directly without re-encoding or
+allocation. ServerHello decoding accepts exactly one entry and fails closed
+unless its selected group appeared in the exact retained client offer. Stable
+failures retain no group identifiers, public-key bytes, lengths, or output
+contents.
 
 The empty vector is syntax evidence only: this public framing and selection
 evidence does not implement or authorize HelloRetryRequest, bind
