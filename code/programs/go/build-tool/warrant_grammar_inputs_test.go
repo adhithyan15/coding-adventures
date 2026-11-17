@@ -1,7 +1,10 @@
 package main
 
 import (
+	"os"
+	"path/filepath"
 	"reflect"
+	"slices"
 	"testing"
 
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/discovery"
@@ -24,6 +27,9 @@ func TestWarrantGrammarInputsSelectOnlyTheirConsumer(t *testing.T) {
 		"code/specs/fixtures/warrant-vectors-synthetic-v1/generate.py",
 		"code/scripts/warrant_syntax_corpus.py",
 		"code/scripts/tests/test_warrant_syntax_corpus.py",
+		// WD-HARN1c: the shared negative-control checker and its tests.
+		"code/scripts/warrant_negctl.py",
+		"code/scripts/tests/test_warrant_negctl.py",
 		"code/specs/VER04-warrant-language.md",
 		"code/specs/VER04a-warrant-source-admission.md",
 	} {
@@ -49,6 +55,9 @@ func TestWarrantGrammarInputsSelectOnlyTheirConsumer(t *testing.T) {
 		"code/specs/fixtures/warrant-vectors-synthetic-v1",
 		`code\grammars\warrant\warrant.tokens`, "code/scripts/warrant_syntax_corpus.pyc",
 		"code/scripts/tests/test_warrant_syntax_corpus.pyc", "code/specs/VER04-warrant-language.md.bak",
+		"code/scripts/warrant_negctl.pyc", "code/scripts/tests/test_warrant_negctl.pyc",
+		"code/scripts/warrant_negctl_extra.py", "code/scripts/tests/test_warrant_negctl.py.bak",
+		"code/scripts/sub/warrant_negctl.py",
 	} {
 		if isWarrantGrammarInput(input) {
 			t.Errorf("Warrant lookalike selected: %s", input)
@@ -455,6 +464,50 @@ func TestWarrantDocumentGlobAgreesWithPredicate(t *testing.T) {
 		hit := globmatch.MatchPath(warrantDocumentGlob, c)
 		if want := isWarrantDocument(c); hit != want {
 			t.Errorf("%q: glob=%v predicate=%v", c, hit, want)
+		}
+	}
+}
+
+// WD-HARN1c: warrant_negctl.py is called by adopter BUILD lines but is not an
+// adopter's own input: editing it must run its tests (warrant-grammar) and no
+// adopter, or the first rule tweak would rebuild lzw, hash-functions, ...
+func TestNegativeControlCheckerSelectsOnlyItsTestHome(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "rust/warrant-grammar", Language: "rust"},
+		{Name: "rust/lzw", Language: "rust"},
+		{Name: "rust/wasm-leb128", Language: "rust"},
+		{Name: "rust/hash-functions", Language: "rust"},
+		{Name: "typescript/test-bootstrap", Language: "typescript"},
+	}
+	for _, input := range []string{
+		"code/scripts/warrant_negctl.py",
+		"code/scripts/tests/test_warrant_negctl.py",
+	} {
+		got, err := repositoryInputConsumersForChange([]string{input}, packages, "all")
+		if err != nil || !reflect.DeepEqual(got, map[string]bool{"rust/warrant-grammar": true}) {
+			t.Fatalf("%s: got %v, err %v", input, got, err)
+		}
+	}
+}
+
+// WD-HARN1c: warrant-grammar's BUILD runs the checker's Python tests, so it
+// declares the Python toolchain explicitly on both fronts (the same directive
+// java-to-semantic-ir uses) rather than relying on a system python3.
+func TestWarrantGrammarDeclaresPythonOnBothBuildFronts(t *testing.T) {
+	packageRoot := filepath.Join(
+		toolchainFixtureRepoRoot(t), "code", "packages", "rust", "warrant-grammar",
+	)
+	buildFiles := make(map[string]string)
+	for _, filename := range []string{"BUILD", "BUILD_windows"} {
+		content, err := os.ReadFile(filepath.Join(packageRoot, filename))
+		if err != nil {
+			t.Fatal(err)
+		}
+		buildFiles[filename] = string(content)
+	}
+	for _, platform := range []string{"linux", "windows"} {
+		if got := discovery.ExtraToolchainsForSnapshot(buildFiles, platform); !slices.Contains(got, "python") {
+			t.Fatalf("%s selected front declared %v, want python", platform, got)
 		}
 	}
 }
