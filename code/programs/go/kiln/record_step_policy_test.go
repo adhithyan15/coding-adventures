@@ -19,7 +19,11 @@ import (
 // the fixture is no more permissive about /proc and /sys than the real policy.
 // Ubuntu 26.04's binaries (libselinux 3.9, newer coreutils) read some of these
 // at start-up; 24.04's, in the kiln-sandbox job, do not.
-const recStepEphemeral = `["/dev/fd/*", "/dev/null", "/dev/urandom", "/proc/cpuinfo", "/proc/meminfo",
+//
+// The one extra entry, /proc/filesystems, mirrors D27 (claude/kiln-d27-selinux),
+// which adds it to the real policy: libselinux on 26.04 reads it at start-up.
+// D27 will switch this fixture to derive its lists from the real file.
+const recStepEphemeral = `["/dev/fd/*", "/dev/null", "/dev/urandom", "/proc/cpuinfo", "/proc/filesystems", "/proc/meminfo",
   "/proc/self/cgroup", "/proc/self/exe", "/proc/self/maps", "/proc/self/mountinfo", "/proc/stat",
   "/sys/devices/system/cpu/**", "/sys/fs/cgroup/**"]`
 
