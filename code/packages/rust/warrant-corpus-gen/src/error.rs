@@ -133,6 +133,13 @@ impl GenError {
         }
     }
 
+    /// A refusal for a state the code's own invariants rule out (a bug here, never the
+    /// document's fault): `W0701` with an `internal:` message, so it can never be mistaken for
+    /// a user-facing rule.
+    pub fn internal(message: &str) -> GenError {
+        GenError::new(code::W0701, "", format!("internal: {message}"))
+    }
+
     /// Fill in `at` if the refusal was raised deep inside an expression and has not
     /// been attributed yet.  An existing attribution is kept.
     pub fn at(mut self, at: &str) -> GenError {
@@ -207,6 +214,14 @@ mod tests {
         assert!(!e.is_level());
         let e = GenError::new(code::LIMIT, "c", "too big");
         assert_eq!(e.to_string(), "limit at `c`: too big");
+    }
+
+    #[test]
+    fn an_internal_refusal_says_so() {
+        let e = GenError::internal("an invariant broke");
+        assert_eq!(e.code, code::W0701);
+        assert_eq!(e.message, "internal: an invariant broke");
+        assert_eq!(e.at("claim").at, "claim");
     }
 
     #[test]

@@ -608,5 +608,5 @@ fn rendering_a_hand_built_tree_deeper_than_64_is_refused() {
 #[test]
 fn the_example_that_was_a_predicate_is_gone_from_the_fixture() {
     let l = lowered(CORE_V0);
-    assert!(l.examples.len() > 0);
+    assert!(!l.examples.is_empty());
 }

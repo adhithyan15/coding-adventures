@@ -364,6 +364,19 @@ pub struct CensusRow {
 }
 
 impl Partial {
+    /// The module name.
+    pub fn module(&self) -> &str {
+        &self.module
+    }
+
+    /// `v0` or `v1`.
+    pub fn document(&self) -> &'static str {
+        match self.version {
+            Version::V0 => "v0",
+            Version::V1 => "v1",
+        }
+    }
+
     /// The first refusal, in the order: declarations, operations, models, claims,
     /// examples.
     pub fn first_block(&self) -> Option<GenError> {
@@ -423,6 +436,22 @@ impl Partial {
             push(ItemKind::Example, n, s.as_ref().err().cloned());
         }
         rows
+    }
+
+    /// The models that lowered, in declaration order (for the census's cost check).
+    pub fn lowered_models(&self) -> Vec<LoweredModel> {
+        self.models
+            .iter()
+            .filter_map(|(_, s)| s.as_ref().ok().cloned())
+            .collect()
+    }
+
+    /// The claims that lowered, in declaration order.
+    pub fn lowered_suites(&self) -> Vec<&LoweredSuite> {
+        self.suites
+            .iter()
+            .filter_map(|(_, s)| s.as_ref().ok())
+            .collect()
     }
 
     /// The fully lowered document, or the first refusal.

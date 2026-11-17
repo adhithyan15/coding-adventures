@@ -315,6 +315,36 @@ pub fn describe(d: &Domain, depth: usize) -> Result<(Json, Label, u64), GenError
     })
 }
 
+/// A short name for a domain tree, for reports: the descriptor name of a leaf
+/// (`bytes_d1`, `u64_edge`, `fx_edge(I64)`), `nat_count` for the shift-count domain,
+/// `fx_edge16(U16)` for a demoted 16-bit leaf, and the composite kinds spelled out.
+pub fn kind_name(d: &Domain) -> String {
+    use coding_adventures_warrant_grammar::fixed::FixedTy;
+    match d {
+        Domain::Bool => "bool".into(),
+        Domain::U8 | Domain::Fx(FixedTy::U8) => "u8_all".into(),
+        Domain::U64 | Domain::Fx(FixedTy::U64) => "u64_edge".into(),
+        Domain::Nat => "nat_0_64".into(),
+        Domain::NatCount => "nat_count".into(),
+        Domain::Bytes => "bytes_d1".into(),
+        Domain::BytesN(n) => format!("bytes_n({n})"),
+        Domain::Fx(f) if f.bits() <= 16 => format!("fx_full({})", f.name()),
+        Domain::Fx(f) => format!("fx_edge({})", f.name()),
+        Domain::FxEdge(f) => format!("fx_edge16({})", f.name()),
+        Domain::Tuple(cs) => format!(
+            "tuple({})",
+            cs.iter().map(kind_name).collect::<Vec<_>>().join(", ")
+        ),
+        Domain::Data { name, record, .. } => {
+            format!("{}({name})", if *record { "record" } else { "variant" })
+        }
+        Domain::Opt(t) => format!("option({})", kind_name(t)),
+        Domain::Res(t, _, _) => format!("result({})", kind_name(t)),
+        Domain::List(t) => format!("list({})", kind_name(t)),
+        _ => "unknown".into(),
+    }
+}
+
 fn is_byte_string(d: &Domain) -> bool {
     matches!(d, Domain::Bytes | Domain::BytesN(_))
 }
@@ -378,15 +408,15 @@ pub fn map_codegen(e: &CodegenError, at: &str) -> GenError {
     )
 }
 
-/// The binder parameters and body of the claim named `claim`, if the document declares it.
-fn claim_parts<'f, 'a>(
-    file: &'f WarrantFile<'a>,
-    claim: &str,
-) -> Option<(
+/// A claim's binders, its body past the quantifier, and its span.
+type ClaimParts<'f, 'a> = (
     Vec<&'f coding_adventures_warrant_grammar::parser::Parameter<'a>>,
     Option<&'f Expression<'a>>,
     (usize, usize),
-)> {
+);
+
+/// The binder parameters and body of the claim named `claim`, if the document declares it.
+fn claim_parts<'f, 'a>(file: &'f WarrantFile<'a>, claim: &str) -> Option<ClaimParts<'f, 'a>> {
     let decl = file.declarations.iter().find_map(|d| match d {
         Declaration::Claim(c) if c.name == claim => Some(c),
         _ => None,
@@ -398,6 +428,26 @@ fn claim_parts<'f, 'a>(
         }
         other => (Vec::new(), Some(other), decl.span),
     })
+}
+
+/// The S2-resolved domains of the claim named `claim` and the product, **without** checking
+/// them against this generator (no descriptors, no 16.2 refusals): what the census reads.
+///
+/// # Errors
+///
+/// The S2 resolver's `W0706`/`W0707`/`W0701`; `W0701` if the claim is not declared.
+pub fn claim_domains(
+    file: &WarrantFile<'_>,
+    env: &DomainEnv<'_>,
+    claim: &str,
+    budget: u64,
+) -> Result<(Vec<Domain>, u64), GenError> {
+    let (params, body, span) = claim_parts(file, claim)
+        .ok_or_else(|| GenError::new(code::W0701, claim, "the claim is not in the document"))?;
+    let owned: Vec<_> = params.into_iter().cloned().collect();
+    let r = resolve_binders(env, &owned, body, budget, claim, span)
+        .map_err(|e| map_codegen(&e, claim))?;
+    Ok((r.domains, r.product))
 }
 
 /// Resolve the binder domains of every claim named `claim` in `file` against `budget` (the
@@ -666,7 +716,7 @@ mod tests {
         assert_eq!(Label::Full.name(), "full");
         let a = BinderDomain::new("a", &Ty::Bool, Domain::Bool).unwrap();
         let b = BinderDomain::new("b", &Ty::bytes_n(4), Domain::BytesN(4)).unwrap();
-        assert_eq!(suite_label(&[a.clone()]), Label::Full);
+        assert_eq!(suite_label(std::slice::from_ref(&a)), Label::Full);
         assert_eq!(suite_label(&[a, b]), Label::Sample);
         assert_eq!(suite_label(&[]), Label::Full);
     }

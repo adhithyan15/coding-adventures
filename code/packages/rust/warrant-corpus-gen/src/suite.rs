@@ -205,33 +205,23 @@ impl SuiteResult {
                 "a slim set has more than 32 chunks (VER04r 5.6)",
             ));
         }
-        if chunks.last().is_some_and(|c| *c >= self.chunks_total) {
-            return Err(GenError::new(
-                code::W0701,
-                &self.claim,
-                "a slim chunk index is past the last chunk",
-            ));
+        let (mut inputs, mut expected) = (Vec::new(), Vec::new());
+        for c in &chunks {
+            let chunk = self.chunks.get(*c as usize).ok_or_else(|| {
+                GenError::new(
+                    code::W0701,
+                    &self.claim,
+                    "a slim chunk index is past the last chunk",
+                )
+            })?;
+            inputs.push(chunk.inputs);
+            expected.extend(chunk.expected);
         }
-        let pick = |f: &dyn Fn(&ChunkResult) -> Option<[u8; 32]>| -> Option<Vec<[u8; 32]>> {
-            chunks
-                .iter()
-                .map(|c| self.chunks.get(*c as usize).and_then(f))
-                .collect()
-        };
-        let inputs = pick(&|c| Some(c.inputs)).ok_or_else(|| {
-            GenError::new(
-                code::W0701,
-                &self.claim,
-                "a slim chunk index is past the last chunk",
-            )
-        })?;
-        let expected = if self.kind == "reference" {
-            Some(chunk_digest_framing(&pick(&|c| c.expected).ok_or_else(
-                || GenError::new(code::W0701, &self.claim, "a chunk has no expected digest"),
-            )?)?)
-        } else {
-            None
-        };
+        // every chunk of a reference suite has an expected digest, so `expected` is as long
+        // as `inputs` exactly when the suite is a reference suite
+        let expected = (self.kind == "reference")
+            .then(|| chunk_digest_framing(&expected))
+            .transpose()?;
         Ok(SlimSet {
             inputs_sha256: chunk_digest_framing(&inputs)?,
             expected_sha256: expected,
@@ -252,8 +242,8 @@ pub struct SuiteOptions {
 /// How admission is decided for a tuple.
 #[derive(Debug, Clone)]
 enum Admission {
-    /// `admit` reads no binder: one answer for the whole suite.
-    Const(bool),
+    /// `admit` reads no binder and is true: every tuple is admitted.
+    All,
     /// `admit` reads the first `k` binders: a bit per prefix tuple.
     Table {
         bits: Vec<u64>,
@@ -425,8 +415,7 @@ impl<'a> SuitePlan<'a> {
     /// Admitted cases among product ordinals `< ordinal` (O(1); see the module docs).
     pub fn admitted_before(&self, ordinal: u64) -> u64 {
         match &self.admission {
-            Admission::Const(true) => ordinal,
-            Admission::Const(false) => 0,
+            Admission::All => ordinal,
             Admission::Table { bits, cum, pre, r } => {
                 let (q, rem) = (ordinal / r, ordinal % r);
                 if q >= *pre {
@@ -440,7 +429,7 @@ impl<'a> SuitePlan<'a> {
 
     fn admits(&self, ordinal: u64) -> bool {
         match &self.admission {
-            Admission::Const(b) => *b,
+            Admission::All => true,
             Admission::Table { bits, r, .. } => Admission::bit(bits, ordinal / r),
         }
     }
@@ -586,10 +575,8 @@ impl<'a> SuitePlan<'a> {
         }
         flush(&mut in_buf, &mut ex_buf);
         if cases != want {
-            return Err(at(GenError::new(
-                code::W0701,
-                "",
-                "internal: the admission arithmetic disagrees with the enumeration",
+            return Err(at(GenError::internal(
+                "the admission arithmetic disagrees with the enumeration",
             )));
         }
         Ok(ChunkResult {
@@ -655,10 +642,8 @@ impl<'a> SuitePlan<'a> {
         };
         let cases: u64 = chunks.iter().map(|c| c.cases).sum();
         if cases != self.total_cases {
-            return Err(at(GenError::new(
-                code::W0701,
-                "",
-                "internal: the chunk cases do not sum to the suite cases",
+            return Err(at(GenError::internal(
+                "the chunk cases do not sum to the suite cases",
             )));
         }
         let wraps = chunks
@@ -725,7 +710,8 @@ fn build_admission(
         let mut st = Stats::default();
         let ok = program.eval(&suite.admit, &[], &mut st)?.as_bool()?;
         let wraps = st.wraps.checked_mul(product).ok_or_else(overflow)?;
-        return Ok((Admission::Const(ok), wraps, if ok { product } else { 0 }));
+        // A constant-false admit admits nothing: the caller refuses the suite (VER04r 4.5).
+        return Ok((Admission::All, wraps, if ok { product } else { 0 }));
     }
     let pre: u64 = sizes[..k].iter().product();
     let r: u64 = sizes[k..].iter().product();

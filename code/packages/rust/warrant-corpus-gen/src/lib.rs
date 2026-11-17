@@ -96,6 +96,7 @@
 
 pub mod analysis;
 pub mod arith;
+pub mod census;
 pub mod cost;
 pub mod domains;
 pub mod enumerate;
