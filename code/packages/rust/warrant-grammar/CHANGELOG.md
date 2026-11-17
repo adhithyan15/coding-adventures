@@ -9,9 +9,9 @@
   (it said "fails the instance"); the dead `latched = true` before `obs_bail_out`
   in the timeout arm is gone (the process exits at once; the `Tripped` and `Refused`
   arms keep theirs, which later instances read).
-- Regenerated: the four obs adopters' harnesses (hash-functions, lzw, wasm-leb128,
-  vos-sched-fp-bitmap, whose checked-in harness was already stale on main) and the
-  `wxh` fixture. No other adopter's harness changes.
+- Regenerated: the five obs adopters' harnesses (hash-functions, lzw, wasm-leb128,
+  vos-sched-any, vos-sched-fp-bitmap) and the `wxh` fixture. No other adopter's
+  harness changes.
 - Sabotage lines of the obs adopters (BUILD, BUILD_linux, BUILD_windows) now pass
   only if the run printed a `not ok ` line and no `Bail out!` line, so a hang after
   an intended failure is no longer hidden by the pipe's last-command status.

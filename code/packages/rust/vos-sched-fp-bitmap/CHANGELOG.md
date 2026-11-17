@@ -36,7 +36,7 @@ All notable changes to this package are documented here.
   in `warrant/check_evidence.sh`.
 - `heap <= 0` rows only on `insert_out` and `remove_out` (VOS-D063).
 
-### Fixed
+### Changed
 
 - WD-HARN1b: `tests/generated/warrant_evidence.rs` regenerated with `gen_evidence` for the WD-HARN1b
   changes to the obs region of the Warrant prelude (`Bail out!` is written with `writeln!` to
