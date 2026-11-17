@@ -1,0 +1,5 @@
+interface A<T> { a: T; b?: string; c: number[]; m(x: number): void; }
+type U = A<number> | null;
+type Fn = (a: number) => void;
+enum Color { Red, Green = 2 }
+const g = async x => { return x; };

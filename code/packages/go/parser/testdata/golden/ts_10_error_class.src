@@ -1,0 +1,1 @@
+class P { x: number; constructor(x: number) { this.x = x; } }

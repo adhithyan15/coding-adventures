@@ -1513,6 +1513,7 @@ members = [
   "vos-shape-check",
   "vos-manifest",
   "vos-sched-contract",
+  "vos-sched-any",
   "vos-sched-contract-check",
   "vos-sched-fp-bitmap",
 ]
