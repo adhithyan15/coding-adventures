@@ -1483,6 +1483,7 @@ members = [
   "tls13-traffic-key-material",
   "tls13-alert-message",
   "tls13-client-hello-message",
+  "tls13-cookie",
   "tls13-supported-groups",
   "tls13-signature-scheme-list",
   "tls13-encrypted-extensions-message",
