@@ -7,7 +7,8 @@ entertainment, interactive simulation, and game engines across six eras (1950s m
 simulations through hardware-accelerated 6-DOF flight simulation, including a dedicated
 ActionScript/SWF Flash runtime on LangVM). It establishes a rigorous, layered reconstruction
 strategy that reuses and continuously expands this repository's existing mathematical, geometric,
-vector rendering (`PaintVM` `P2D00`–`P2D10`), windowing (`UI11`), audio synthesis (`MUS` `MUS00`–`MUS08`),
+vector rendering (`PaintVM` `P2D00`–`P2D10`), windowing (`UI11`), audio synthesis (`MUS00`–`MUS07`),
+and analysis/transcription (`MUS08`),
 CPU simulation, and virtual machine substrates; pairs high-level pure simulation cores with
 cycle-faithful functional and gate-level device simulators (PPU, APU, timer/DMA, cartridge mappers,
 teletype, CRT/oscilloscope I/O) across Eras 0–2; and enforces repository-wide `VER-*` verification,
@@ -63,10 +64,9 @@ drive formal upstream expansion of these foundational substrates:
 - **`UI11` Window Core (`UI11`, `UI11b`)**: Expand to support high-frequency frame and input cadence
   (60 Hz, 120 Hz, 144 Hz, 240 Hz vsync synchronizers), sub-millisecond polling for gamepads and analogue
   sticks, and deterministic `InputFrame` stream recording and replay.
-- **`MUS` Audio Stack (`MUS00`–`MUS08`)**: Expand to incorporate real-time multi-channel software mixing
-  hooks (`MUS08`), dynamic voice allocation, polyphonic chiptune synthesizers (programmable pulse duty cycles,
-  triangle linear counters, LFSR noise, wavetable synthesis, ADPCM), and zero-allocation low-latency
-  ring-buffer dispatch to native sinks (`MUS02`/`MUS06`).
+- **Audio Stack**: Keep synthesis (`MUS00`–`MUS07`) and analysis/transcription (`MUS08`) aligned with their
+  owning specifications. Use `audio-mixer-realtime` for real-time mixing and ring-buffer sink integration. Its Warrant covers
+  mixer arithmetic and sample-rate operations.
 
 ### Principle 4: Dual Realization (Pure Software Core & Faithful Hardware Simulation Bridge)
 Every historical game system across Eras 0–2 is realized along two complementary, mutually-verifying paths:
@@ -91,7 +91,8 @@ and runtime execution:
 
 ```text
 Era 0 (1950s–1960s): Mainframe & Teletype Turn-Based Simulations (Hamurabi, Lunar Lander)
-  └── Pure state step + fixed-point math + rng + ASR-33 / PDP-8 / GE-225 device sim bridge
+  └── Hamurabi (`GAME01`), integer-scaled Lunar Lander (`GAME02`), and rng, with
+      ASR-33 and PDP-8 / GE-225 telemetry I/O
 Era 1 (1970s): Early Arcade 2D Vector & Raster (Pong, Breakout, Asteroids)
   └── Fixed-timestep loop + G2D00-G2D03 collision + Discrete-Logic TTL / CRT / Oscilloscope bridge
 Era 2 (1980s–Early 2000s): 8-Bit/16-Bit/GBA Tile, Sprite & RPG Engine (Pokemon-style)
@@ -104,7 +105,7 @@ Era 4 (Mid 1990s–2000s+): Hardware 3D & 6-DOF Flight Simulator
   └── 6-DOF rigid-body/aerodynamics (PHY + matrix-ir) + terrain LOD + cockpit HUD + G00-G09/wgpu
 ```
 
-### Era 0 (1950s–1960s): Mainframe & Teletype Turn-Based Simulations (`GAME01`–`GAME03b`)
+### Era 0 (1950s–1960s): Mainframe & Teletype Turn-Based Simulations (`GAME01a`–`GAME03b`)
 - **Historical Context:** In the era of electromechanical teletypes (ASR-33) and time-sharing
   mainframes (PDP-8, PDP-10, GE-225), computer games were discrete, turn-based simulations of
   complex systems: agricultural economics (*The Sumerian Game* / *Hamurabi*), rocket descent
@@ -118,18 +119,16 @@ Era 4 (Mid 1990s–2000s+): Hardware 3D & 6-DOF Flight Simulator
   - Serial Terminal Emulation: Real-time pacing of 110-baud serial lines, 10 char/sec mechanical typing,
     paper tape punch/reader protocols, and mechanical carriage return delays.
 - **Substrate Primitives:**
-  - `fixed-point` (`GAME01a`): Deterministic `Q16.16` and `Q32.32` fixed-point arithmetic with
-    overflow detection, eliminating floating-point non-determinism across polyglot targets.
-  - `sim-turn-core` (`GAME01b`): Generic turn-based execution harness providing command validation,
-    history log rollbacks, and deterministic replay transcripts.
-  - `game-hamurabi` (`GAME01c`): Complete 10-year Sumerian economic simulation running on pure integers.
-  - `game-lunar-lander` (`GAME01d`): Discrete Euler-Verlet rocket descent with fuel consumption,
-    gravitational acceleration, and trajectory printouts via `paint-vm-ascii` (`P2D02`).
+  - `fixed-point` (`GAME01a`, future proposal): Deterministic `Q16.16` and `Q32.32` arithmetic, sqrt, Cordic trig, and overflow flags.
+  - `sim-turn-core` (`GAME01b`, future proposal): Generic turn-based execution harness for command validation, replay history, and deterministic transcripts.
+  - `hamurabi` (`GAME01`): Deterministic Sumerian economic simulation, with `rng` as its specified direct dependency.
+  - `lunar-lander` (`GAME02`): Discrete fixed-point rocket descent simulation, with `paint-vm-ascii` (`P2D02`)
+    in the presentation bridge.
   - `sim-teletype-asr33` (`GAME03a`): Teletype ASR-33 terminal simulator modeling 110-baud serial I/O,
     10 char/sec mechanical print cycle, 8-level paper tape punch/reader, and carriage return delays.
   - `sim-pdp8-ge225-io-bridge` (`GAME03b`): I/O bus and teletype register interface connecting
-    `pdp8-simulator` (`07aa`) and `ge225-simulator` (`07g`) to terminal I/O, executing original FOCAL
-    and Dartmouth BASIC binaries.
+    `pdp8-simulator` (`07aa`) and `ge225-simulator` (`07g`) to terminal I/O. Polling loops print telemetry from
+    the modern game packages. `GAME03` plans original-program execution on the same simulated systems.
 
 ### Era 1 (1970s): Early Arcade, Fixed-Timestep Loop & 2D Collision (`GAME10`–`GAME15c`)
 - **Historical Context:** Discrete transistor-transistor logic (TTL) and early microprocessors (Intel 8080,
@@ -190,7 +189,8 @@ Era 4 (Mid 1990s–2000s+): Hardware 3D & 6-DOF Flight Simulator
   - `sim-gba-audio-timer` (`GAME29b`): GBA DirectSound FIFO A/B with 8-bit PCM DMA mixing, legacy DMG sound channels, and cascading hardware timers 0–3.
   - Substrate Expansion Hooks: Lowers retained-mode tile/sprite batches directly into `P2D09` (`paint-batch-tiles`),
     indexed scanline blits into `P2D10` (`paint-palette-blend`), high-cadence inputs into `UI11b` (`window-cadence-input`),
-    and multi-channel chiptune/PCM audio into `MUS08` (`audio-mixer-realtime`).
+    and multi-channel chiptune/PCM audio through `audio-mixer-realtime`. Its Warrant covers formal arithmetic
+    and sample-rate operations.
 
 ### Track 2.5 (Late 1990s–2000s): Unmodified Flash (.swf) & ActionScript on LangVM (`SWF00`–`SWF08`)
 - **Historical Context:** Macromedia/Adobe Flash revolutionized web animation and indie gaming. Millions of
@@ -310,7 +310,8 @@ The high-level pure simulation core and the hardware device simulator form an **
     `KCC`, `KRS`, `KRB`) and Teleprinter Printer/Punch (Device 04: `TSF`, `TCF`, `TPC`, `TLS`), including
     hardware interrupt request flags (`ION`/`IOF`).
   - Bridges `ge225-simulator` (`07g`) Datanet terminal controller and console typewriter channels.
-  - Allows running original 1969 FOCAL *Lunar Landing Game* and 1973 Dartmouth BASIC *Hamurabi* binaries directly.
+  - Polling loops read and print telemetry from modern game packages through modeled terminal I/O.
+    `GAME03` plans execution of original FOCAL and Dartmouth BASIC programs on these simulated systems.
 
 ### §3.3 Era 1 Discrete-Logic & Display Simulators (`GAME15a`, `GAME15b`, `GAME15c`)
 - **Discrete TTL Gate-Level Logic Simulator (`sim-discrete-arcade-logic`, `GAME15a`):**
@@ -389,7 +390,8 @@ Every device simulator package must satisfy repository-wide verification gates:
 Under no circumstances may a historical game engine or runtime track introduce private rendering
 backends, ad-hoc OS window hooks, or standalone audio drivers to bypass repository substrates.
 Instead, advancing through historical eras drives continuous **upstream expansion** of `PaintInstructions`
-(`P2D00`), `PaintVM` (`P2D01`–`P2D10`), `UI11` Window Core (`UI11`, `UI11b`), and `MUS` (`MUS00`–`MUS08`).
+(`P2D00`), `PaintVM` (`P2D01`–`P2D10`), `UI11` Window Core (`UI11`, `UI11b`), and audio synthesis
+(`MUS00`–`MUS07`) plus analysis/transcription (`MUS08`).
 
 ```text
 ┌──────────────────────────────────────────────────────────────────────────────┐
@@ -405,7 +407,7 @@ Instead, advancing through historical eras drives continuous **upstream expansio
 │            ┌──────────────────┼──────────────────┐                           │
 │            ▼                  ▼                  ▼                           │
 │     PaintVM Expansion    UI11 Expansion     MUS Expansion                    │
-│     • P2D09 Batch Tiles  • UI11b Cadence    • MUS08 Real-Time Mixer          │
+│     • P2D09 Batch Tiles  • UI11b Cadence    • audio-mixer-realtime                 │
 │     • P2D10 Blend/Blit   • Gamepad / Poll   • Multi-Channel Voices           │
 │     • Retained Diffing   • Replay Streams   • Zero-Alloc Ring Sinks          │
 │            │                  │                  │                           │
@@ -458,18 +460,18 @@ To deliver arcade responsiveness and zero-latency player interaction:
   - Standardized integer-ratio scaling (1x, 2x, 3x, 4x CRT integer scaling) and phosphor/scanline shader
     presentation modes across `window-canvas`, `window-win32`, and `window-appkit`.
 
-### §4.3 Audio Subsystem Expansion (`MUS00`–`MUS07` & `MUS08` `audio-mixer-realtime`)
+### §4.3 Audio Substrates (`MUS00`–`MUS08` and `audio-mixer-realtime`)
 To power parametric arcade chiptunes, multi-voice console APUs, and streaming Flash audio:
-- **Real-Time Multi-Channel Software Audio Mixer (`audio-mixer-realtime`, `MUS08`):**
+- **Real-Time Multi-Channel Software Audio Mixer (`audio-mixer-realtime`):**
   - Zero-allocation audio mixer combining arbitrary simultaneous audio streams (background chiptune music,
     sound effects, streaming PCM, software synthesizers) into interleaved stereo 48 kHz / 44.1 kHz 32-bit float
     or 16-bit integer PCM buffers.
   - Per-channel volume attenuation, stereo panning, pitch shifting, and master limiting.
-- **Polyphonic Chiptune & Synthesizer Extensions (`MUS04`, `MUS07`, `MUS08`):**
+- **Polyphonic Chiptune & Synthesizer Extensions (`MUS04`, `MUS07`):**
   - First-class generative voices added to `MUS04`/`MUS07`: pulse waves with selectable duty cycles (12.5%,
     25%, 50%, 75%), triangle waves with linear envelopes, LFSR pseudo-random noise with short/long period
     modes, 4-bit/8-bit custom wavetable synthesis, and ADPCM decoders.
-- **Zero-Latency Device Sink Hooks (`MUS08`):**
+- **Zero-Latency Device Sink Hooks (`audio-mixer-realtime`):**
   - Lock-free, double-buffered ring buffers connecting the real-time mixer directly to platform sinks
     (`MUS02` `audio-device-sink`, `MUS06` `web-audio-sink`).
   - Strict zero dynamic heap allocation in the audio rendering callback (`VER07`), preventing audio buffer
@@ -480,19 +482,20 @@ To power parametric arcade chiptunes, multi-voice console APUs, and streaming Fl
 ## §5 Substrate Reuse Matrix
 
 The following table demonstrates how each era maps onto and reuses existing packages across this repository,
-incorporating the continuous expansions of `PaintVM`, `UI11`, `MUS`, and the hardware device simulators:
+incorporating the continuous expansions of `PaintVM`, `UI11`, the audio substrates, and hardware device simulators:
 
 | Substrate Domain | Packages / Milestones | Reused In Eras / Packages | How Reused |
 |---|---|---|---|
 | **Deterministic Randomness** | `rng` (`PCG32`, `LCG`, `Xorshift64`) | All Eras (`GAME01`–`GAME45`, `SWF05`) | Explicit PRNG state carried in `GameState`; rejection-sampled range distributions. |
-| **Fixed-Point & Scalars** | `numeric-tower`, `fixed-point` (`GAME01a`) | Eras 0, 1, 2, 3 (`GAME01`, `GAME11`, `GAME31`) | `Q16.16`/`Q32.32` math ensuring zero cross-language float divergence. |
+| **Fixed-Point & Scalars** | Integer-scaled physics (`GAME02`), `numeric-tower` | Eras 0, 1, 2, 3 (`GAME02`, `GAME11`, `GAME31`) | Scaled integer math for deterministic simulation. |
 | **2D Geometry & Transforms** | `point2d` (`G2D00`), `affine2d` (`G2D01`), `bezier2d` (`G2D02`), `arc2d` (`G2D03`), `trig` (`PHY00`) | Eras 1, 2, 2.5 (`GAME11`, `GAME22`, `SWF02`) | AABB collision, sprite transform matrices, Flash vector curves, trigonometric trajectory calculation. |
 | **Vector IR, Batching & Blits** | `P2D00` (`PaintInstructions`), `P2D01` (`PaintVM`), `P2D08` (`path-raster`), `P2D09` (`paint-batch-tiles`), `P2D10` (`paint-palette-blend`) | Eras 1, 2, 2.5, 4 (`GAME13`, `GAME21`, `SWF02`, `GAME43`) | Declarative scene graphs; retained-mode tile/sprite batching; indexed-color scanline blits; hardware blend modes; retained-mode scene diffing via `PaintVM.patch()`. |
 | **ASCII / Doc Output** | `P2D02` (`paint-vm-ascii`), `P2D03`/`P2D04` (`format-doc`) | Era 0, 1 (`GAME01`, `GAME02`, `GAME13`) | Terminal game rendering, telemetry plots, dialogue boxes, retro teletype simulation. |
 | **Pixel Containers & Codecs** | `IMG00` (`pixel-container`), `IMG03`–`IMG05` (compositing), `IC01`–`IC18` (codecs) | Eras 2, 3, 4 (`GAME20`, `GAME33`, `SWF01`) | Paletted framebuffers, software 3D Z-buffers, textures, embedded Flash bitmap decoding (PNG, JPEG, GIF). |
 | **Windowing, Cadence & Events** | `event-loop`, `UI11` (`window-core`), `UI11b` (`window-cadence-input`), `window-appkit`, `window-win32`, `window-canvas` | All Eras (Host Shell) | OS window creation, 60/120/240 Hz vsync scheduling, sub-ms input polling (keyboard, gamepad, mouse), deterministic input stream recording. |
-| **Audio, Chiptune & Real-Time Mixer** | `MUS00`–`MUS07`, `MUS08` (`audio-mixer-realtime`) | Eras 1, 2, 2.5, 4 (`GAME12`, `GAME25`, `SWF06`, `GAME45`) | Parametric arcade audio, NES/GB/GBA chip voices, real-time multi-channel software mixer, low-latency zero-alloc ring buffer device sinks. |
-| **CPU & Hardware Simulators** | `07aa` (PDP-8), `07g` (GE-225), `07am` (6502), `07an` (Z80), `07ax` (ARM7TDMI), `sim-teletype-asr33`, `sim-discrete-arcade-logic`, `sim-crt-vector-beam`, `sim-nes-ppu`, `sim-nes-apu-mappers`, `sim-gameboy-ppu`, `sim-gameboy-apu-mbc`, `sim-gba-ppu-dma` | Eras 0, 1, 2 (`GAME03a`–`GAME03b`, `GAME15a`–`GAME15c`, `GAME26`–`GAME29b`) | Cycle-accurate device emulation, MMIO register decoding, PPU/APU synthesis, CRT raster/vector beam deflection, ASR-33 teletype serial communication. |
+| **Audio Synthesis & Analysis** | `MUS00`–`MUS08` | Eras 1, 2, 2.5, 4 (`GAME12`, `GAME25`, `SWF06`, `GAME45`) | Synthesis and chiptune packages (`MUS00`–`MUS07`) plus analysis/transcription (`MUS08`). |
+| **Real-Time Audio Mixer** | `audio-mixer-realtime` (`audio-mixer-realtime.warrant`) | Eras 1, 2, 2.5, 4 (`GAME12`, `GAME25`, `SWF06`, `GAME45`) | Multi-channel software mixing and ring-buffer device-sink integration. |
+| **CPU & Hardware Simulators** | `07aa` (PDP-8), `07g` (GE-225), `07j` (MOS 6502), `07k` (Z80), `07ax` (ARM7TDMI), `sim-teletype-asr33`, `sim-discrete-arcade-logic`, `sim-crt-vector-beam`, `sim-nes-ppu`, `sim-nes-apu-mappers`, `sim-gameboy-ppu`, `sim-gameboy-apu-mbc`, `sim-gba-ppu-dma` | Eras 0, 1, 2 (`GAME03a`–`GAME03b`, `GAME15a`–`GAME15c`, `GAME26`–`GAME29b`) | Cycle-accurate device emulation, MMIO register decoding, PPU/APU synthesis, CRT raster/vector beam deflection, ASR-33 teletype serial communication. |
 | **Matrix & GPU Compute** | `matrix-ir`, `matrix-runtime` (`MX00`), `gpu-core`, `gpu-runtime` (`G00`–`G09`) | Eras 3, 4 (`GAME30`, `GAME40`, `GAME44`) | Transform pipelines, flight inertia tensor solving, hardware-accelerated 3D polygon rasterization. |
 | **Grammar & LangVM Pipeline** | `LANG00`–`LANG84`, `InterpreterIR` (`LANG01`), `vm-core` (`LANG02`), `code/grammars/ecmascript/` | Track 2.5 (`SWF03`, `SWF04`, `SWF05`) | ActionScript 1/2/3 grammar parsing, CST lowering, AVM1/AVM2 bytecode lifting, execution on `vm-core`. |
 
@@ -587,12 +590,11 @@ The following backlog defines the item-by-item decomposition across all eras, de
 | Spec ID | Package / Milestone Name | Era / Track | Scope & Deliverables | Prerequisites | Parity Class | Target Tier |
 |---|---|---|---|---|---|---|
 | **`GAME00`** | `game-engine-roadmap` | All | Master roadmap, architectural split, substrate matrix, verification rules. | None | `spec-only` | N/A |
-| **`GAME01a`** | `fixed-point` | Era 0 | `Q16.16` and `Q32.32` deterministic arithmetic, sqrt, Cordic trig, overflow flags. | None | `portable` | Tier 0 |
-| **`GAME01b`** | `sim-turn-core` | Era 0 | Turn-based state machine traits, command parser, replay history log. | None | `portable` | Tier 0 |
-| **`GAME01c`** | `game-hamurabi` | Era 0 | 10-year Sumerian economic simulation, integer state, plague/rats/harvest formulas. | `rng`, `fixed-point` | `portable` | Tier 0 |
-| **`GAME01d`** | `game-lunar-lander` | Era 0 | Discrete Euler-Verlet rocket descent physics, fuel consumption, terminal telemetry. | `fixed-point`, `P2D02` | `portable` | Tier 0 |
-| **`GAME02`** | `lunar-lander-sim` | Era 0 | Full Lunar Lander milestone spec: 1D/2D vectors, gravity, burn rates, telemetry strip. | `GAME01d` | `spec-only` | N/A |
-| **`GAME03`** | `sim-mainframe-bridge` | Era 0 | Host bridges executing original FOCAL/BASIC code on PDP-8/GE-225 CPU simulators. | `07aa`, `07g`, `PL05` | `native-source` | Tier 1 |
+| **`GAME01a`** | `fixed-point` | Era 0 | Future proposal: `Q16.16`/`Q32.32` arithmetic, sqrt, Cordic trig, and overflow flags. | None | `portable` | Tier 0 |
+| **`GAME01b`** | `sim-turn-core` | Era 0 | Future proposal: reusable turn-based command validation, history, and replay harness. | None | `portable` | Tier 0 |
+| **`GAME01`** | `hamurabi` | Era 0 | Mainframe turn-based resource-allocation simulation. | `rng` | `portable` | Tier 0 |
+| **`GAME02`** | `lunar-lander` | Era 0 | Discrete fixed-point descent simulation, with `paint-vm-ascii` used by the presentation bridge. | None (core), `P2D02` (presentation bridge) | `portable` | Tier 0 |
+| **`GAME03`** | `sim-mainframe-bridge` | Era 0 | Future goal: execute original FOCAL and Dartmouth BASIC game programs on PDP-8/GE-225 simulators. Current `GAME03b` scope polls and prints telemetry from modern game packages. | `07aa`, `07g`, `GAME03a`, `GAME03b` | `native-source` | Tier 1 |
 | **`GAME03a`** | `sim-teletype-asr33` | Era 0 | Teletype ASR-33 terminal simulator: serial I/O, paper tape, mechanical timing, baud rate limiter. | `format-doc`, `P2D02` | `portable` | Tier 0 |
 | **`GAME03b`** | `sim-pdp8-ge225-io-bridge` | Era 0 | I/O bus & teletype register interface connecting `pdp8-simulator` and `ge225-simulator` to terminal I/O. | `07aa`, `07g`, `GAME03a` | `native-source` | Tier 1 |
 | **`GAME10`** | `game-clock` | Era 1 | Fixed-timestep accumulator loop, frame-skip cap (spiral-of-death guard), alpha lerp. | None | `portable` | Tier 0 |
@@ -610,9 +612,9 @@ The following backlog defines the item-by-item decomposition across all eras, de
 | **`GAME24`** | `rpg-battle-engine` | Era 2 | Turn-based creature battle state machine, type effectiveness chart, stat stages. | `rng`, `GAME20` | `portable` | Tier 0 |
 | **`GAME25`** | `game-monster-rpg` | Era 2 | Complete playable GBA/Pokémon-style RPG vertical slice with chiptune music. | `GAME22`–`GAME24`, `MUS04` | `portable` | Tier 1 |
 | **`GAME26`** | `gba-hardware-bridge` | Era 2 | Memory-mapped I/O register bridge linking `arm7tdmi-simulator` to tile/sprite engine. | `07ax`, `GAME21`, `GAME22` | `native-source` | Tier 2 |
-| **`GAME27a`** | `sim-nes-ppu` | Era 2 | Ricoh 2C02 PPU: scanline/cycle timing, nametable mirroring, 64-sprite OAM, sprite 0 hit, palette RAM. | `07am`, `GAME20` | `portable` | Tier 0 |
+| **`GAME27a`** | `sim-nes-ppu` | Era 2 | Ricoh 2C02 PPU: scanline/cycle timing, nametable mirroring, 64-sprite OAM, sprite 0 hit, palette RAM. | `07j`, `GAME20` | `portable` | Tier 0 |
 | **`GAME27b`** | `sim-nes-apu-mappers` | Era 2 | Ricoh 2A03 APU: pulse, triangle, noise, DMC + MMC1/MMC3 cartridge mappers & IRQ timers. | `GAME27a`, `MUS04` | `portable` | Tier 0 |
-| **`GAME28a`** | `sim-gameboy-ppu` | Era 2 | LR35902 LCD controller PPU: Mode 0–3 scanline timing, 160x144 LCD, window/BG, OAM sprite priority. | `07an`, `GAME20` | `portable` | Tier 0 |
+| **`GAME28a`** | `sim-gameboy-ppu` | Era 2 | LR35902 LCD controller PPU: Mode 0–3 scanline timing, 160x144 LCD, window/BG, OAM sprite priority. | LR35902-compatible execution (`07k` is a related substrate), `GAME20` | `portable` | Tier 0 |
 | **`GAME28b`** | `sim-gameboy-apu-mbc` | Era 2 | Game Boy 4-channel APU + MBC1/MBC2/MBC3/MBC5 memory banking controllers & timers. | `GAME28a`, `MUS04` | `portable` | Tier 0 |
 | **`GAME29a`** | `sim-gba-ppu-dma` | Era 2 | ARM7TDMI GBA Video Controller: Modes 0–5, affine background/sprite transforms, 4-channel DMA controller, MMIO registers. | `07ax`, `GAME20`, `GAME22` | `portable` | Tier 0 |
 | **`GAME29b`** | `sim-gba-audio-timer` | Era 2 | GBA DirectSound FIFO A/B, legacy sound channels, cascading timers, sound DMA mixing. | `GAME29a`, `MUS04` | `portable` | Tier 1 |
@@ -640,7 +642,8 @@ The following backlog defines the item-by-item decomposition across all eras, de
 | **`P2D09`** | `paint-batch-tiles` | Substrate | Retained-mode sprite/tile batching, metasprite layout, atlas indexing, `PaintVM.patch()` delta compression. | `P2D00`, `P2D01` | `portable` | Tier 0 |
 | **`P2D10`** | `paint-palette-blend` | Substrate | Indexed-color scanline blits, hardware blend modes (Add/Multiply/Screen/AlphaMask), Porter-Duff compositing. | `P2D08`, `P2D09` | `portable` | Tier 0 |
 | **`UI11b`** | `window-cadence-input` | Substrate | High-frequency 60/120/240 Hz vsync frame scheduling, sub-millisecond gamepad/input polling, deterministic input streams. | `UI11` | `native-source` | Tier 0 |
-| **`MUS08`** | `audio-mixer-realtime` | Substrate | Real-time multi-channel PCM/chip audio mixer, dynamic voice manager, zero-allocation ring buffer device sinks. | `MUS00`–`MUS07` | `portable` | Tier 0 |
+| **`MUS08`** | `music-analysis-and-transcription` | Substrate | See [`MUS08`](MUS08-music-analysis-and-transcription.md) for the analysis and transcription specification. | As specified in `MUS08` | `portable` | Tier 0 |
+| **Warrant** | `audio-mixer-realtime` | Substrate | Real-time multi-channel PCM/chip audio mixer and ring-buffer device sinks. Its [`audio-mixer-realtime.warrant`](audio-mixer-realtime.warrant) covers formal arithmetic and sample-rate operations. | `pcm-audio`, `audio-device-sink` | `portable` | Tier 0 |
 
 ---
 
@@ -669,10 +672,10 @@ proceeds in strictly staged milestones:
 - **Wave 3:** C, C++, Java, Kotlin, C#, F#, Dart, Swift, Haskell, OCaml.
 - Register all consumers in `code/programs/go/build-tool/repository_inputs.go`.
 
-### Milestone 4: Substrate Upstream Expansion (`P2D09`, `P2D10`, `UI11b`, `MUS08`)
+### Milestone 4: Substrate Upstream Expansion (`P2D09`, `P2D10`, `UI11b`, `audio-mixer-realtime`)
 - Land retained-mode tile/sprite batching (`P2D09`) and palette-indexed scanline blits with hardware blend modes (`P2D10`).
 - Land high-frequency frame cadence and deterministic gamepad input streams (`UI11b`).
-- Land real-time multi-channel software audio mixer and zero-allocation ring-buffer sink hooks (`MUS08`).
+- Integrate the `audio-mixer-realtime` package with game audio paths. Its Warrant covers arithmetic and sample-rate operations.
 
 ### Milestone 5: Functional & Gate-Level Device Simulators (Eras 0–2)
 - Land ASR-33 teletype and PDP-8/GE-225 CPU I/O bridges (`GAME03a`, `GAME03b`).
@@ -693,11 +696,11 @@ proceeds in strictly staged milestones:
 ### Internal Specifications & Substrates
 - **Warrant & Verification:** [`VER00`](VER00-verified-shipping-program.md), [`VER04`](VER04-warrant-language.md), [`VER04i`](VER04i-polyglot-warrant-evidence.md), [`VER04j`](VER04j-warrant-v1-extensions.md), [`VER04m`](VER04m-warrant-stateful-objects.md), [`VER07`](VER07-microbenchmarks.md), [`VER08a`](VER08a-rust-capability-analyzer.md), [`VER08b`](VER08b-runtime-capability-conformance.md), [`VER15`](VER15-weakness-registry.md), [`VER20`](VER20-resource-timing-proofs.md), [`VER29`](VER29-layer-contract-linking.md).
 - **2D Vector & Rasterization:** [`P2D00`](P2D00-paint-instructions.md), [`P2D01`](P2D01-paint-vm.md), [`P2D02`](P2D02-paint-vm-ascii.md), [`P2D08`](P2D08-path-raster.md), [`G2D00`](G2D00-point2d.md), [`G2D01`](G2D01-affine2d.md), [`G2D02`](G2D02-bezier2d.md).
-- **Substrate Expansions:** `P2D09` (`paint-batch-tiles`), `P2D10` (`paint-palette-blend`), `UI11b` (`window-cadence-input`), `MUS08` (`audio-mixer-realtime`).
+- **Substrate Expansions:** `P2D09` (`paint-batch-tiles`), `P2D10` (`paint-palette-blend`), `UI11b` (`window-cadence-input`), and `audio-mixer-realtime` (Warrant: `audio-mixer-realtime.warrant`).
 - **Windowing & Events:** [`UI11`](UI11-window-core.md), [`UI12`](UI12-window-backends.md).
 - **Virtual Machines & Grammars:** [`LANG01`](LANG01-interpreter-ir.md), [`LANG02`](LANG02-vm-core.md), [`LANG84`](LANG84-grammar-driven-versioned-frontends.md), [`versioned-ecmascript-typescript-grammars.md`](versioned-ecmascript-typescript-grammars.md).
-- **Audio & Sinks:** [`MUS00`](MUS00-note-frequency.md), [`MUS01`](MUS01-note-to-sound-signal-chain.md), [`MUS04`](MUS04-portable-music-machine.md), [`MUS07`](MUS07-unpitched-percussion.md), [`MUS02`](MUS02-audio-device-sink.md), [`MUS06`](MUS06-web-audio-sink.md).
-- **Hardware Simulators:** [`CPU-SIMULATOR-ROADMAP.md`](CPU-SIMULATOR-ROADMAP.md) (`07aa` PDP-8, `07g` GE-225, `07am` MOS 6502, `07an` Z80, `07ax` ARM7TDMI).
+- **Audio & Sinks:** [`MUS00`](MUS00-note-frequency.md), [`MUS01`](MUS01-note-to-sound-signal-chain.md), [`MUS04`](MUS04-portable-music-machine.md), [`MUS07`](MUS07-unpitched-percussion.md), [`MUS08`](MUS08-music-analysis-and-transcription.md), [`MUS02`](MUS02-audio-device-sink.md), [`MUS06`](MUS06-web-audio-sink.md), and the separate [`audio-mixer-realtime.warrant`](audio-mixer-realtime.warrant).
+- **Hardware Simulators:** [`CPU-SIMULATOR-ROADMAP.md`](CPU-SIMULATOR-ROADMAP.md) (`07aa` PDP-8, `07g` GE-225, [`07j` MOS 6502](07j-mos6502-simulator.md), [`07k` Z80](07k-z80-simulator.md), `07ax` ARM7TDMI).
 
 ### Historical Literature & Primary Sources
 1. Ahl, David H. (1973). *101 BASIC Computer Games*. Digital Equipment Corporation.
