@@ -57,7 +57,8 @@ this table. They differ on purpose (VOS00 section 6.2).
 | VOS-033 CP | M | Document generation and drift check | `vos-manifest` (contract file parser) and `vos-link gen-doc` / `check-doc`: assemble `code/specs/<impl>.warrant` from the contract package's `.part` files and the implementation block, marker digests, strict single-pass marker parser (no `-- vos02:` or CR in parts, each marker once, `carries` computed from parsed claims), path containment and size caps in `vos-manifest`, regeneration check, VOS02 negative controls NC1, NC2, NC17, NC18 | VOS-004, VOS-010 | done (#19529) |
 | VOS-011 CP | M | Bitmap fixed-priority scheduler | `vos-sched-fp-bitmap`, exhaustive at N=8 unique priorities | VOS-010, VOS-D002, VOS-033 | done (#19539): the crate, ghost face, generated document and `check-doc`, and the VER04h evidence (12 exhaustive claims, 394,498 cases, controls, regeneration check in BUILD) are done. Known: three `init` / `field-zero` controls cannot pass (D065, named in `warrant/check_evidence.sh`), `heap <= 0` only on two operations (D063) |
 | VOS-012a CP | M | Most-general scheduler | `vos-sched-any` (kind `any`: the `any` block, no canonical, the oracle field); settles VOS-D054 by running; record that nothing else regenerates | VOS-010, VOS-033 | **done (#19547)**: `vos-sched-any`, its generated document, 7 exhaustive claims / 262,912 cases / 42 tests, all pass; D054 settled by running (below); `dispatch_covers_run` lost its redundant `t < 8` refinement (D079); nothing else regenerates: the safety, policy and canonical claim digests and `vos-sched-fp-bitmap`'s document are unchanged (its 17 BUILD lines pass); item 2 of the Priority order |
-| VOS-012b CP | M | Round-robin scheduler | `vos-sched-rr` in representation mode (safety tier; VOS-D061 specifies the `vos.toml` key and the determinism claim); the first swap | VOS-012a, VOS-D081 | queued; item 4 of the Priority order |
+| VOS-012b0 CP | M | Representation mode (VOS-D061) | Spec first (VOS02 2.7, R5, R6 rule 2 → CD07-R for `mode = representation`, 3.1, 10.1, 11, 12.2; VOS10 5.3, 9.4, 11.2), then tooling: the `vos.toml` key `mode = "representation"` (absent = canonical; GD05 on kind any/contract and on `canonical` in `obligations`), `vos-link check-doc` CD07 branching on mode (no canonical, no any, off-cone set non-empty, an authored `rep` model whose every field is in the cone of its parameters, `rep_init`, `rep_alpha`, one `<op>_rep` per op and at least one `<op>_det`, op calls only on `rep(..)`, `_det` right-hand sides op-free), the report/header `mode representation` line; fixture documents and negative controls (a rep crate carrying canonical, a constant `rep` field, a missing `_rep`, an op on `build(..)`, `mode` on kind any) | VOS-D081 | in progress: item 4 of the Priority order |
+| VOS-012b CP | M | Round-robin scheduler | `vos-sched-rr` (kind production, `mode = representation`, safety tier only): `Impl(mask, ptr)`, the authored `rep`/`inv_impl`/`rr_pick`/`rr_next` models and the six claims `rep_init`, `rep_alpha`, `insert_rep`, `remove_rep`, `dispatch_rep`, `dispatch_det` (packed `h` binder, about 327,682 cases); sabotage lines for each `_rep`/`_det`; the first swap (nothing else regenerates); the `t >= 32` at `ptr != 0` residual stated | VOS-012b0 | queued; item 5 of the Priority order |
 | VOS-034 CP | M | Profile manifest check and static SH16 | `vos-manifest` (profile and lock parsers) and `vos-link check-profile` (eligibility, `needs` subset of `carries`, ceilings, config pins, board ISA, read-only in CI, rejects `class image` until VOS22 exists), the static SH16 rules of VOS02 section 7.2 (closed world by manifests, `build.rs`/proc-macro file bans, kinds, central evidence-feature list) and `vos-link check-owners` (effective owner, last-match-wins, branch-protection check, fail closed for release); VOS02 controls NC3-NC11, NC15-NC20 and S1-S9; and the requirements P1-P6 of VOS04 section 7.2, each with a negative control: **an instance in two slots of different partitions is rejected** (one slot, one owner), a theorem's `needs` must be in the slot implementation's `carries` (a flight profile with `psched-single`, `hm-halt`, `budget-none` or `prot-none` is rejected), `prot-none` is barred from every image profile (H, S, F, G, V), a sealed family declares its `cspace` sealed, and per-instance configuration pins match the lock. The **image part** (the hermetic build, the gate on what was compiled) is VOS22's and waits for VOS-036 | VOS-012b, VOS-033 | queued |
 | VOS-035 CP | M | Rustc recorder and image-build gate | The `vos-link` recorder wrapper, `vos-link build` and the image checks of VOS22 (pristine tree, environment and flag allowlists, unit check, image scan with an ELF-reader fuzz target); implements whatever VOS22 specifies | VOS-036, VOS-034 | queued |
 | VOS-036 CP | M | VOS22 hermetic image build spec | VOS22 (`VOS22-hermetic-image-build.md`), designed with the advisor; input: the VOS02 appendix of image-build findings. Required before VOS-035, before any `class image` profile and before VOS-026 | VOS-004 | queued |
@@ -69,31 +70,31 @@ this table. They differ on purpose (VOS00 section 6.2).
 | VOS-018 | E | AGC simulator spec and crate | New CPU row; functional first | VOS-003 | queued |
 | VOS-019 | L4 | Executive and Waitlist rung | Priority jobs (same policy contract as 011), timed tasks (the `timer` interface, row C04), restart (the `hm` interface, row C17) | VOS-011, VOS-018, VOS-C04c, VOS-C17c | queued |
 | VOS-020 CP | E | RV32 privileged slice 1 | Bus-generic RISC-V step; M and U modes; full trap CSRs | VOS-005 | queued |
-| VOS-021a CP | E | RV32 minimal board | `emu-board-rv32-min`: RAM plus UART, a QEMU-virt-like map, no PMP | VOS-020, VOS-006a | queued; item 24 of the Priority order |
+| VOS-021a CP | E | RV32 minimal board | `emu-board-rv32-min`: RAM plus UART, a QEMU-virt-like map, no PMP | VOS-020, VOS-006a | queued; item 25 of the Priority order |
 | VOS-021b CP | E | RV32 PMP and timer | PMP with exhaustive check claims over the match model that `prot` (C06) shares; the timer device and map | VOS-013, VOS-020, VOS-021a | queued |
-| VOS-022a CP | M | Kernel K0 spec, static family | VOS20: the K record, the entries, ownership, the boot ladder, the spine invariants of VOS04 rule 11 | VOS-012a, VOS-037 | queued; item 13 of the Priority order |
+| VOS-022a CP | M | Kernel K0 spec, static family | VOS20: the K record, the entries, ownership, the boot ladder, the spine invariants of VOS04 rule 11 | VOS-012a, VOS-037 | queued; item 14 of the Priority order |
 | VOS-022b CP | M | `vos-kmodel` | The executable model over the `-any` components, grown per boot stage | VOS-022a | queued |
 | VOS-023 | L6 | Message-passing rung | PDP-11 nucleus; the IPC contract is the `ep` interface (row C08) and bounded buffers are `chan` (C15) | VOS-013, VOS-022a, VOS-C08c | queued |
 | ~~VOS-024 CP~~ | M | ~~Leaf components~~ | ~~Thread table, static capability table, IPC endpoint, PMP plan, partition table (one PR each)~~ | ~~022~~ | **retired (2026-11-16, VOS-037)**: replaced by the track C rows (VOS-C01 to C20 and the C21+ placeholder), one per package with a contract, implementations and an `-any` (VOS04). History kept here |
-| VOS-025a CP | M | HAL contract spec | VOS21: effects as data, the ISA crate and board crate split; the **command allowlist** (the HAL validates every leaf command against a static allowlist built from the board map and the owning domain, VOS04 rule 6, and rejects any other; negative control: an out-of-range command is rejected); the CP/M rung consumes this contract, not the reverse | VOS-004 | queued; item 19 of the Priority order |
-| VOS-025b CP | M | RV32 HAL | `vos-hal-rv32`: the only `unsafe` and assembly, with inventory evidence | VOS-025a, VOS-021a | queued; item 25 of the Priority order |
-| VOS-026a CP | M | Spine skeleton, Boot-0 | `vos-spine-static` skeleton with the reset entry; `boot-hello` boots on the emulator; the VOS22 image gate, the link-map origin check and the image-level shape companions | VOS-022a, VOS-025b, VOS-021a, VOS-C20i, VOS-034, VOS-035, VOS-036 | queued; item 26 of the Priority order |
+| VOS-025a CP | M | HAL contract spec | VOS21: effects as data, the ISA crate and board crate split; the **command allowlist** (the HAL validates every leaf command against a static allowlist built from the board map and the owning domain, VOS04 rule 6, and rejects any other; negative control: an out-of-range command is rejected); the CP/M rung consumes this contract, not the reverse | VOS-004 | queued; item 20 of the Priority order |
+| VOS-025b CP | M | RV32 HAL | `vos-hal-rv32`: the only `unsafe` and assembly, with inventory evidence | VOS-025a, VOS-021a | queued; item 26 of the Priority order |
+| VOS-026a CP | M | Spine skeleton, Boot-0 | `vos-spine-static` skeleton with the reset entry; `boot-hello` boots on the emulator; the VOS22 image gate, the link-map origin check and the image-level shape companions | VOS-022a, VOS-025b, VOS-021a, VOS-C20i, VOS-034, VOS-035, VOS-036 | queued; item 27 of the Priority order |
 | VOS-026b CP | M | Boot-1: cooperative | Two tasks that yield: first context switch (`ctx`, `sysdec`, `trapdec`) | VOS-026a, VOS-C03i, VOS-C10i, VOS-C11i | queued |
 | VOS-026c CP | M | Boot-2: preemptive | First interrupt and preemption (`timer`, `irq`, VOS-013) | VOS-026b, VOS-C04i, VOS-C05i, VOS-013 | queued |
 | VOS-026d CP | M | Boot-3: `rtos-min` profile (L11) | Two user tasks under PMP, with preemption (`prot-pmp`, VOS-021b, `cspace`, `ep`, `ntfn`) | VOS-026c, VOS-C06i, VOS-021b, VOS-C07i, VOS-C08i, VOS-C09i | queued |
 | VOS-027 CP | M | Refinement monitor | Checks every trap against `vos-kmodel`; 027a after 026a, then extended per boot stage; reused by rungs | VOS-026a (then VOS-026b to VOS-026d) | queued |
 | VOS-028a CP | M | Proof-route spec | [VOS30](VOS30-proof-route-and-capacity.md): the compositional X3 route, obligation kinds, decomposition rules, certificates and trusted base, the advisor calibration (labelled as such), thresholds and the full probe specification; corrects VOS00 sections 10.1 and 10.2 | VOS-002 | done (#19516) |
 | VOS-028b CP | M | Solver and enumeration capacity probe | `vos-capacity-probe` (a program, class P), the committed fixture package `vos-probe-ready` (the VOS01 section 5 toy with its `.warrant` and `evidence.bindings`, replaced when VOS-011 lands), the results file `code/specs/data/vos30-capacity-results.json` and the generated table with its drift check; implements the resource limits, guards, results-integrity fields and `check` re-run of VOS30 section 9, at least 5 seeds per knob; ends by stating the VOS30 section 8.3 decision | VOS-028a | queued |
-| VOS-029a CP | M | Symbolic executor core and first proof | VOS30 section 10 first half: an RV32I symbolic executor over `riscv-simulator::decode` with concrete-PC path enumeration and a differential against the simulator; per-path obligations plus a coverage obligation; the first X3: `fp-bitmap` `dispatch`, `insert`, `remove` on the **object from the VOS22 spike build** (not a gated image; binding the object digest to the gated image is VOS-D078) at the shipped N with a non-collapsed certificate, a SAT sabotage control and manifest-derived labels (no cut points); a re-run of probe tiers B and D on the real compiled code; vacuity witnesses replayed on the simulator | VOS-011, VOS-028b (its decision funds or re-plans this row), VOS-036, WX-SP1 spec | queued, not funded until 028b decides; item 11 of the Priority order |
-| VOS-029b CP | M | Cut points, composition, index case-split | Cut points with certified composition (needs lemma logging in `cdcl-sat` or per-cut certificates with hypotheses in the manifest, VOS-D045), the composition checker that regenerates CNFs and the hypothesis pairing, the model-decomposition obligation, FRAME-in-every-cut, index case-splitting; X3 for `thread-table` | VOS-029a, VOS-C02i | queued; item 17 of the Priority order |
+| VOS-029a CP | M | Symbolic executor core and first proof | VOS30 section 10 first half: an RV32I symbolic executor over `riscv-simulator::decode` with concrete-PC path enumeration and a differential against the simulator; per-path obligations plus a coverage obligation; the first X3: `fp-bitmap` `dispatch`, `insert`, `remove` on the **object from the VOS22 spike build** (not a gated image; binding the object digest to the gated image is VOS-D078) at the shipped N with a non-collapsed certificate, a SAT sabotage control and manifest-derived labels (no cut points); a re-run of probe tiers B and D on the real compiled code; vacuity witnesses replayed on the simulator | VOS-011, VOS-028b (its decision funds or re-plans this row), VOS-036, WX-SP1 spec | queued, not funded until 028b decides; item 12 of the Priority order |
+| VOS-029b CP | M | Cut points, composition, index case-split | Cut points with certified composition (needs lemma logging in `cdcl-sat` or per-cut certificates with hypotheses in the manifest, VOS-D045), the composition checker that regenerates CNFs and the hypothesis pairing, the model-decomposition obligation, FRAME-in-every-cut, index case-splitting; X3 for `thread-table` | VOS-029a, VOS-C02i | queued; item 18 of the Priority order |
 | VOS-029c CP | M | Trap entry and CSRs | The access (store-outside-code, alignment, fault) obligations of VOS30 sections 3.2a, 3.4, 4.2, 4.6 and 6.2 and the trap entry and CSR handling, with 020 and 021 | VOS-029b, VOS-020, VOS-021b | queued |
 | VOS-030 | L8 | Unix-style rung | PDP-11 MMU and devices (several PRs), then processes, files and pipes | VOS-023 | queued |
 | VOS-031 | M | Noninterference on the model; partitioned profile spec | Unwinding conditions; VOS41 | VOS-022a, VOS-034, VOS-C14c, VOS-C15c, VOS-C16c, VOS-D071 | queued |
 | VOS-032 | L9, L2, L10 | Deferred rungs | S/370 privileged and VMM; Atlas simulator and supervisor; 8086 microkernel; RV64 GPOS; H extension | later | queued |
 | VOS-037 CP | all | Component catalogue | [VOS04](VOS04-component-catalogue.md) plus the backlog surgery of this change (track C, the splits, the retirement of 024, the re-pointing, D048 and D049, D068 to D076) | VOS-010, VOS-028a | **done (#19544)** |
-| VOS-038 CP | M | Evidence-generator debts | Non-inert record fault (VOS-D065, VOS-D083, WX-SV2), heap observer (VOS-D063), array builder (VOS-D025) in `warrant-grammar`; delete fp-bitmap's `check_evidence.sh` | VOS-011 | queued; item 5 of the Priority order |
-| VOS-039 CP | M | Component kit | Generic contract check (retires `vos-sched-contract-check`, planned to close VOS-D049), `vos-link check-component` (file set, BUILD lines 1 to 11 and each line's "none ran = fail" condition, **failing on a missing line**, build-tool row), the coverage gate (VOS-D070), and the mechanical oracle-preservation check for every `-any` (VOS-D080: `insert` and `remove` keep the oracle, as a generated or kit-supplied claim within budget) | VOS-012b, VOS-038 | queued; item 6 of the Priority order |
-| VOS-040 CP | M | Host model-SAT lane | `vos-model-sat`: parametric bit-vector encodings of contract lemmas, cross-checked against the evaluator at N = 8, DRAT at the shipped N; `sched` first; the Rust-lowering spike with a `lowering-blocker` test (VOS04 section 5.3) | VOS-028b | queued; item 8 of the Priority order |
+| VOS-038 CP | M | Evidence-generator debts | Non-inert record fault (VOS-D065, VOS-D083, WX-SV2), heap observer (VOS-D063), array builder (VOS-D025) in `warrant-grammar`; delete fp-bitmap's `check_evidence.sh` | VOS-011 | queued; item 6 of the Priority order |
+| VOS-039 CP | M | Component kit | Generic contract check (retires `vos-sched-contract-check`, planned to close VOS-D049), `vos-link check-component` (file set, BUILD lines 1 to 11 and each line's "none ran = fail" condition, **failing on a missing line**, build-tool row), the coverage gate (VOS-D070), and the mechanical oracle-preservation check for every `-any` (VOS-D080: `insert` and `remove` keep the oracle, as a generated or kit-supplied claim within budget) | VOS-012b, VOS-038 | queued; item 7 of the Priority order |
+| VOS-040 CP | M | Host model-SAT lane | `vos-model-sat`: parametric bit-vector encodings of contract lemmas, cross-checked against the evaluator at N = 8, DRAT at the shipped N; `sched` first; the Rust-lowering spike with a `lowering-blocker` test (VOS04 section 5.3) | VOS-028b | queued; item 9 of the Priority order |
 | VOS-C01c/i/a | C | pool (VOS04 section 2) | `pool`: contract, `pool-bitmap`, `pool-any`. Each suffix is one PR (c contract, i and i2 implementations, a `-any`, x X3); evidence per VOS04 section 5 | VOS-039 | queued |
 | VOS-C02c/i/a CP | C | thread (VOS04 section 2) | `thread`: contract, `thread-table`, `thread-any`. Each suffix is one PR (c contract, i and i2 implementations, a `-any`, x X3); evidence per VOS04 section 5 | VOS-022a, VOS-038, VOS-028b | queued |
 | VOS-C02x CP | C | thread X3 (VOS04 section 2) | X3 for `thread-table` by case-split: the per-obligation certificates of VOS04 section 5.3 (the same work as VOS-029b's first table proof) | VOS-029b, VOS-C02i | queued |
@@ -132,29 +133,30 @@ in the decision log; the table is the queue.
 | 1 | VOS-037 | VOS04 catalogue plus the backlog surgery |
 | 2 | VOS-012a | `vos-sched-any` |
 | 3 | VOS-D081 | Safety-tier `init` claim (`obligations-safety.part`): regenerates the safety digests of `vos-sched-fp-bitmap` and `vos-sched-any` (done, this PR) |
-| 4 | VOS-012b | `vos-sched-rr` (representation mode) |
-| 5 | VOS-038 | Generator debts: D065 (with D083), D063, D025 |
-| 6 | VOS-039 | Component kit: generic contract check (D049), `check-component`, coverage gate |
-| 7 | VOS-028b | Capacity probe (fixture: `vos-sched-fp-bitmap`) |
-| 8 | VOS-040 | Host model-SAT lane on the `sched` contract, plus the Rust-lowering spike |
-| 9 | VOS-005 | `emu-core` |
-| 10 | VOS-036 | VOS22 hermetic build spec, including a recorded single-crate RV32 object build |
-| 11 | VOS-029a | Symbolic executor core and simulator differential; first X3: `fp-bitmap` |
-| 12 | VOS-020 | RV32 privileged slice 1 |
-| 13 | VOS-022a | VOS20 K0 spec, static family |
-| 14 | VOS-C02c | `thread` contract |
-| 15 | VOS-C02i | `thread-table` |
-| 16 | VOS-C02a | `thread-any` |
-| 17 | VOS-029b | Cut points, composition checker, index case-split; X3 for `thread-table` |
-| 18 | VOS-006a | `emu-dev-console` plus the `emu-host` console |
-| 19 | VOS-025a | VOS21 HAL contract spec, including the command allowlist (no board dependency) |
-| 20 | VOS-C20c | `uart` contract |
-| 21 | VOS-C20i | `vos-uart-poll` |
-| 22 | VOS-034 | `check-profile` plus static SH16, with the VOS04 section 7.2 requirements (instance ownership, needed claims, `prot-none`) |
-| 23 | VOS-035 | Recorder plus image-build gate |
-| 24 | VOS-021a | `emu-board-rv32-min` |
-| 25 | VOS-025b | `vos-hal-rv32` |
-| 26 | VOS-026a | `vos-spine-static` skeleton, reset entry; `boot-hello` boots (Boot-0) |
+| 4 | VOS-012b0 | Representation mode: spec and `vos-link` support (VOS-D061) |
+| 5 | VOS-012b | `vos-sched-rr` (representation mode) |
+| 6 | VOS-038 | Generator debts: D065 (with D083), D063, D025 |
+| 7 | VOS-039 | Component kit: generic contract check (D049), `check-component`, coverage gate |
+| 8 | VOS-028b | Capacity probe (fixture: `vos-sched-fp-bitmap`) |
+| 9 | VOS-040 | Host model-SAT lane on the `sched` contract, plus the Rust-lowering spike |
+| 10 | VOS-005 | `emu-core` |
+| 11 | VOS-036 | VOS22 hermetic build spec, including a recorded single-crate RV32 object build |
+| 12 | VOS-029a | Symbolic executor core and simulator differential; first X3: `fp-bitmap` |
+| 13 | VOS-020 | RV32 privileged slice 1 |
+| 14 | VOS-022a | VOS20 K0 spec, static family |
+| 15 | VOS-C02c | `thread` contract |
+| 16 | VOS-C02i | `thread-table` |
+| 17 | VOS-C02a | `thread-any` |
+| 18 | VOS-029b | Cut points, composition checker, index case-split; X3 for `thread-table` |
+| 19 | VOS-006a | `emu-dev-console` plus the `emu-host` console |
+| 20 | VOS-025a | VOS21 HAL contract spec, including the command allowlist (no board dependency) |
+| 21 | VOS-C20c | `uart` contract |
+| 22 | VOS-C20i | `vos-uart-poll` |
+| 23 | VOS-034 | `check-profile` plus static SH16, with the VOS04 section 7.2 requirements (instance ownership, needed claims, `prot-none`) |
+| 24 | VOS-035 | Recorder plus image-build gate |
+| 25 | VOS-021a | `emu-board-rv32-min` |
+| 26 | VOS-025b | `vos-hal-rv32` |
+| 27 | VOS-026a | `vos-spine-static` skeleton, reset entry; `boot-hello` boots (Boot-0) |
 
 **Release gates (after item 26, before any image is released or Boot-3 is
 called a profile).** Not part of the first 26, which end at Boot-0 on the
@@ -432,3 +434,14 @@ the safety-tier digests of every implementation; VOS-012b now depends on it, and
 it moved down one (the queue is 26 items; the forward-dependency check over it is 0). VOS-D079 and
 VOS-D080 stay P2; D080 joins VOS-039's scope as a kit item. VOS04 sections 6 and 8 and VOS10 F5/F6
 record the D054 outcome (controls attach to `dispatch_img` and `dispatch_out`; no rewrite needed).
+
+2026-11-17, VOS-012b split after a Fable design consult on VOS-D061: representation mode is a spec
+and tooling change of its own (VOS-012b0, item 4), and the round-robin crate follows (VOS-012b, item 5).
+The determinism claim is redefined as `<op>_det`, a full pin (answer and post-state, history included)
+of every history-moving step against an authored op-free model over all `inv_impl` states; the
+representation claims live in `impl.part` (a contract block would have to name `Impl`'s fields, the R3
+problem) and are pinned by `claim_sha256` in the lock. R6 rule 2 becomes CD07-R for
+`mode = representation`: a structural lint; the authority stays SH13, SH16, VOS-D030 and VOS-D060.
+The safety tier over `build(M)` is not enough for a representation implementation (after one
+`dispatch` the pointer leaves its `build` value), so its `_rep` claims restate safety over every
+`inv_impl` state. Queue items after 5 moved down one.
