@@ -791,6 +791,15 @@ is out of this contract's reach: plan on `T <= 8..16` per obligation there.
   pointer, `obligations = ["representation", "safety"]`, the models `rep` and `hist` and, optionally,
   an ungated `dispatch_det` against op-free `rr_pick`/`rr_next` in its own `impl.part`. The packing
   history code is three bits (section 9.3); there is no `t` residual (every thread id is a binder).
+* **As built (VOS-012b, in progress):** `code/packages/rust/vos-sched-rr`, class K, kind `production`,
+  `obligations = ["representation", "safety"]`, no `canonical` and no `policy` (round-robin is not
+  highest-priority-first, so a profile that needs the `policy` tier cannot take it). State
+  `Impl { mask: u8, ptr: u8 }`, N = 8, `init` = `(0, 0)`. `insert` and `remove` never read or write `ptr`;
+  `dispatch` scans the eight slots from `ptr` (an unrolled, loop-free scan), clears the bit of the first
+  ready thread `t` and sets `ptr = (t + 1) & 7`, and is `Idle` with the state unchanged on an empty
+  mask. Its `warrant/impl.part` defines `rep(m, h) = Impl(<mask of m>, h)`, `hist(s) = s.ptr`, the op-free
+  `rr_pick`/`rr_next` and the ungated claim `dispatch_det`. The swap exercise: the documents,
+  evidence and contract of `vos-sched-fp-bitmap` and `vos-sched-any` are untouched.
 * **As built (VOS-012a):** `vos-sched-any` exists (`code/packages/rust/vos-sched-any`): its state
   is `State { mask, choice }`, `dispatch` proposes, validates and defaults to `Idle`, the oracle
   is written only through the `ghost` module, and its generated document passes `check-doc`
