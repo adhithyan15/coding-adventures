@@ -93,10 +93,43 @@ func (c *classifier) observeVirtual(p string) {
 	switch {
 	case p == "/proc/self/status" || p == "/proc/self/stat":
 		c.reason("trace-visible:" + sanitize(p))
+	case procMagicBeyond(p):
+		// A magic link with more path after it: the name says nothing of the
+		// object (D28), whatever the ephemeral list matches.
+		c.reason(rProc)
 	case c.ephemeralMatch(p):
 	default:
 		c.reason(rProc)
 	}
+}
+
+// procMagicBeyond says p passes THROUGH a /proc magic link: cwd, root, exe,
+// fd/N, map_files/X or ns/X is followed by a further component.  Such a path
+// names whatever the link points at, which the lexical text does not show
+// (D28).  A magic link as the FINAL component (/proc/self/exe) is a plain
+// name here and is judged by the ephemeral list.
+func procMagicBeyond(p string) bool {
+	parts := splitPath(p)
+	if len(parts) < 3 || parts[0] != "proc" {
+		return false
+	}
+	rest := parts[2:] // after /proc/<pid|self|thread-self>
+	for len(rest) > 2 && rest[0] == "task" {
+		rest = rest[2:] // /proc/<pid>/task/<tid>/...
+	}
+	for i, n := range rest {
+		switch n {
+		case "cwd", "root", "exe":
+			if i < len(rest)-1 {
+				return true
+			}
+		case "fd", "map_files", "ns":
+			if i < len(rest)-2 {
+				return true
+			}
+		}
+	}
+	return false
 }
 
 // observeHost applies the host-root rules to an out-of-repository path the

@@ -231,6 +231,50 @@ func (c *classifier) openVirtual(ev *trace.Event, tg target, f openFlags) {
 		return
 	}
 	c.observe(tg.abs, true, false)
+	// D28: strace -y printed what the descriptor really is.  When that is not
+	// the /proc name the action wrote, the name led somewhere else (a magic
+	// link): classify the real file, and refuse a /proc answer that differs.
+	if ret := ev.ReturnFDPath; strings.HasPrefix(ret, "/") && !procSameFile(tg.abs, ret) {
+		if isVirtual(ret) {
+			c.reason(rProc)
+		} else {
+			c.openResolved(ret, f, false, false)
+		}
+	}
+}
+
+// procSameFile says the -y path ret is the same /proc file as the name abs:
+// either they are equal, or abs spelled the caller's pid as "self" (or its
+// thread as "thread-self") and ret spells it with numbers, which is how the
+// kernel reports a /proc file's own path.
+func procSameFile(abs, ret string) bool {
+	if abs == ret {
+		return true
+	}
+	for _, p := range []string{"/proc/self/", "/proc/thread-self/"} {
+		rest, ok := strings.CutPrefix(abs, p)
+		if !ok {
+			continue
+		}
+		r, ok := strings.CutPrefix(ret, "/proc/")
+		if !ok {
+			return false
+		}
+		pid, r, ok := strings.Cut(r, "/")
+		if !ok || !isDigits(pid) {
+			return false
+		}
+		if p == "/proc/thread-self/" {
+			// /proc/<pid>/task/<tid>/rest
+			if r2, ok := strings.CutPrefix(r, "task/"); ok {
+				tid, r3, ok := strings.Cut(r2, "/")
+				return ok && isDigits(tid) && r3 == rest
+			}
+			return false
+		}
+		return r == rest
+	}
+	return false
 }
 
 // anonymousFD says a descriptor's -y text names a pipe, socket or anonymous
