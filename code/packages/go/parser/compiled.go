@@ -244,7 +244,11 @@ type node struct {
 	tokType lexer.TokenType // kTok: legacy enum fallback
 	skipNL  bool            // kTok, kLit: skip insignificant newlines first
 	value   string          // kLit: the literal text
-	quoted  string          // kLit: %q form, for failure messages
+
+	// exp is the interned id of what a failure of this element reports as
+	// "expected": the token name (kTok) or the %q-quoted literal (kLit). See
+	// Compiled.expID.
+	exp int32
 }
 
 type compiledRule struct {
@@ -254,6 +258,16 @@ type compiledRule struct {
 	// can keep live: parseRule and parseRuleBody, plus one match frame per
 	// level of element nesting in the body. See HardMaxFrames.
 	weight int
+
+	// exp is the interned id of the rule name, recorded as the expected
+	// thing when the rule fails.
+	exp int32
+
+	// leftRec says whether the rule might, at the same token position, reach
+	// itself again. Only such rules need the left-recursion growth loop in
+	// parseRuleBody. It is computed by markLeftRecursive and is deliberately
+	// an over-approximation: true is always safe, false must be proven.
+	leftRec bool
 }
 
 // nodeHeight is the longest chain of nested match frames below n (a leaf is
@@ -282,6 +296,13 @@ type Compiled struct {
 	byName              map[string]int32
 	newlinesSignificant bool
 	pool                sync.Pool // of *parseState
+
+	// expNames[id] is the text of expected-id id; expIDs is the inverse,
+	// used only while compiling (nil afterwards). Ids are interned BY STRING VALUE, so two
+	// different elements that print the same text share one id and the
+	// "Expected A or B" de-duplication behaves exactly as it did with strings.
+	expNames []string
+	expIDs   map[string]int32
 }
 
 // CompileGrammar resolves rule names to ids and pre-computes everything the
@@ -291,6 +312,14 @@ type Compiled struct {
 // Duplicate rule names behave as before: the last definition wins, for the
 // start rule and for references alike.
 func CompileGrammar(grammar *grammartools.ParserGrammar) (*Compiled, error) {
+	return compileGrammar(grammar, false)
+}
+
+// compileGrammar is CompileGrammar with a test knob: forceLeftRec marks every
+// rule as possibly left-recursive, which restores the pre-analysis behaviour
+// (the growth loop after every successful rule). Tests compare the two
+// settings to prove the analysis changes nothing observable.
+func compileGrammar(grammar *grammartools.ParserGrammar, forceLeftRec bool) (*Compiled, error) {
 	if grammar == nil {
 		return nil, errors.New("parser: nil grammar")
 	}
@@ -321,8 +350,10 @@ func CompileGrammar(grammar *grammartools.ParserGrammar) (*Compiled, error) {
 	c.rules = make([]compiledRule, len(names))
 	for i := range names {
 		body := c.compileElement(bodies[i])
-		c.rules[i] = compiledRule{name: names[i], body: body, weight: nodeHeight(body) + 2}
+		c.rules[i] = compiledRule{name: names[i], body: body, weight: nodeHeight(body) + 2, exp: c.expID(names[i])}
 	}
+	c.markLeftRecursive(forceLeftRec)
+	c.expIDs = nil // only needed while compiling; Compiled is immutable from here
 
 	// The start rule is the first rule *as named*, resolved after dedup.
 	c.pool.New = func() any { return &parseState{c: c} }
@@ -361,7 +392,7 @@ func (c *Compiled) compileElement(el grammartools.GrammarElement) *node {
 	case grammartools.RuleReference:
 		if e.IsToken {
 			return &node{kind: kTok, name: e.Name, tokType: stringToTokenType(e.Name),
-				skipNL: !c.newlinesSignificant && e.Name != "NEWLINE"}
+				skipNL: !c.newlinesSignificant && e.Name != "NEWLINE", exp: c.expID(e.Name)}
 		}
 		id, ok := c.byName[e.Name]
 		if !ok {
@@ -369,8 +400,8 @@ func (c *Compiled) compileElement(el grammartools.GrammarElement) *node {
 		}
 		return &node{kind: kRule, rule: id, name: e.Name}
 	case grammartools.Literal:
-		return &node{kind: kLit, value: e.Value, quoted: fmt.Sprintf("%q", e.Value),
-			skipNL: !c.newlinesSignificant}
+		return &node{kind: kLit, value: e.Value,
+			skipNL: !c.newlinesSignificant, exp: c.expID(fmt.Sprintf("%q", e.Value))}
 	}
 	return &node{kind: kFail}
 }
@@ -537,7 +568,7 @@ type parseState struct {
 	exceededPos int
 
 	furthestPos      int
-	furthestExpected []string
+	furthestExpected []int32 // expected-ids (see Compiled.expID), no duplicates
 	trace            bool
 
 	eof lexer.Token // returned by tok() for an empty token list
@@ -627,7 +658,11 @@ func (s *parseState) skipNewlines() {
 	}
 }
 
-func (s *parseState) recordFailure(expected string) {
+// recordFailure notes that something expected at the current position did not
+// match. Only the furthest position's set is kept, without duplicates. It
+// takes an interned id, so the hot path compares integers and never builds a
+// string; run turns the ids back into text, only when there is an error.
+func (s *parseState) recordFailure(expected int32) {
 	if s.pos > s.furthestPos {
 		s.furthestPos = s.pos
 		s.furthestExpected = append(s.furthestExpected[:0], expected)
@@ -646,6 +681,29 @@ func (s *parseState) tokenAt(i int) lexer.Token {
 		return s.tokens[i]
 	}
 	return s.eof
+}
+
+// expectedText renders the furthest-failure set as "A or B or C".
+func (s *parseState) expectedText() string {
+	names := make([]string, len(s.furthestExpected))
+	for i, id := range s.furthestExpected {
+		names[i] = s.c.expNames[id]
+	}
+	return strings.Join(names, " or ")
+}
+
+// expID interns an expected-thing's text (compile time only).
+func (c *Compiled) expID(name string) int32 {
+	if id, ok := c.expIDs[name]; ok {
+		return id
+	}
+	if c.expIDs == nil {
+		c.expIDs = map[string]int32{}
+	}
+	id := int32(len(c.expNames))
+	c.expNames = append(c.expNames, name)
+	c.expIDs[name] = id
+	return id
 }
 
 // run parses from the given rule and produces the final result or error,
@@ -673,7 +731,7 @@ func (s *parseState) run(start int32) (*ASTNode, error) {
 	if result == nil {
 		tok := *s.tok()
 		if len(s.furthestExpected) > 0 {
-			expected := strings.Join(s.furthestExpected, " or ")
+			expected := s.expectedText()
 			return nil, &GrammarParseError{
 				Message: fmt.Sprintf("Expected %s, got %q", expected, tok.Value),
 				Tok:     tok,
@@ -688,7 +746,7 @@ func (s *parseState) run(start int32) (*ASTNode, error) {
 	if s.pos < len(s.tokens) && tokenTypeName(*s.tok()) != "EOF" {
 		tok := *s.tok()
 		if len(s.furthestExpected) > 0 && s.furthestPos > s.pos {
-			expected := strings.Join(s.furthestExpected, " or ")
+			expected := s.expectedText()
 			furthestTok := tok
 			if s.furthestPos < len(s.tokens) {
 				furthestTok = s.tokens[s.furthestPos]
@@ -850,7 +908,7 @@ func (s *parseState) parseRuleBody(id int32, rule *compiledRule) *ASTNode {
 		// explicitly, so the finished tree is never taller than MaxDepth
 		// (counting this rule's own depth), which is what keeps recursive
 		// consumers of the tree safe.
-		for {
+		for rule.leftRec {
 			prevEnd := s.pos
 			s.pos = startPos
 			s.slots[si].children, s.slots[si].endPos, s.slots[si].ok = children, prevEnd, true
@@ -879,7 +937,7 @@ func (s *parseState) parseRuleBody(id int32, rule *compiledRule) *ASTNode {
 			fmt.Fprintln(os.Stderr, " → fail")
 		}
 		s.pos = startPos
-		s.recordFailure(rule.name)
+		s.recordFailure(rule.exp)
 		return nil
 	}
 	s.curMax = max(outerMax, height)
@@ -1007,7 +1065,7 @@ func (s *parseState) match(n *node, out []interface{}) ([]interface{}, bool) {
 			s.advance()
 			return append(out, *t), true
 		}
-		s.recordFailure(n.quoted)
+		s.recordFailure(n.exp)
 		return out, false
 
 	// Syntactic predicates: look without consuming.
@@ -1101,7 +1159,11 @@ func (s *parseState) matchToken(n *node, out []interface{}) ([]interface{}, bool
 	t := s.tok()
 
 	// Direct string comparison (works for both enum and string types).
-	if tokenTypeName(*t) == n.name {
+	tn := t.TypeName
+	if tn == "" {
+		tn = tokenTypeName(*t) // legacy enum-only token
+	}
+	if tn == n.name {
 		s.advance()
 		return append(out, *t), true
 	}
@@ -1112,6 +1174,6 @@ func (s *parseState) matchToken(n *node, out []interface{}) ([]interface{}, bool
 		return append(out, *t), true
 	}
 
-	s.recordFailure(n.name)
+	s.recordFailure(n.exp)
 	return out, false
 }
