@@ -1,0 +1,8 @@
+[package]
+name = "tls13-handshake-reassembly"
+version = "0.1.0"
+edition = "2021"
+description = "Bounded TLS 1.3 handshake fragment reassembly"
+
+[dependencies]
+tls13-handshake = { path = "../tls13-handshake" }
