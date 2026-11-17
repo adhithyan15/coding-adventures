@@ -3958,6 +3958,14 @@ scheduled and dispatched full build.
 
 These are known and named. They are measured rather than closed.
 
+- **The absent-ok child rule looks at the entry at classification time.** It
+  checks the entry with `lstat` when the action ends, so an entry that existed
+  during the action but was removed by something outside the action before
+  classification would let an `ENOENT` child probe pass. That is not reachable
+  from inside the read-only sandbox: the action cannot remove `/sys/fs/selinux`
+  or `/selinux`, anything it creates is handled by `isCreated`, and libselinux
+  probes the entry itself first, which is judged by the traced result.
+
 - **`/proc/filesystems` varies with the kernel modules loaded during the job.**
   It is `ephemeral` (D27), so a read of it is not part of any key. A module
   loaded mid-job (say a filesystem driver) can change what a tool sees. This is

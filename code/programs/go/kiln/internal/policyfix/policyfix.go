@@ -10,7 +10,8 @@
 // it; a fixture that was MORE permissive than the real policy would hide a
 // regression.  Deriving the lists removes both errors.
 //
-// Only tests import this package.
+// Only tests import this package (TestNoProductionPackageImportsPolicyfix
+// enforces it), and Lists panics when it cannot find the source tree.
 package policyfix
 
 import (

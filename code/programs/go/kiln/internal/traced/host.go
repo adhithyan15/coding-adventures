@@ -92,6 +92,11 @@ func (c *classifier) absentOK(p string) bool {
 		if !covers(a, p) {
 			continue
 		}
+		// This shortcut relies on the fresh-tmpfs model: $HOME and TMPDIR start
+		// empty in the sandbox, so an entry beneath them is absent unless the
+		// action itself created it (isCreated handles that) or the host
+		// pre-populated it (the state-preloaded void catches a real
+		// pre-existing entry before any step runs).
 		if c.underTmp(a) {
 			return true
 		}
