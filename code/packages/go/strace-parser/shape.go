@@ -73,9 +73,10 @@ func RawArgs(line string, ast *parser.ASTNode) []string {
 }
 
 // TextAfterClose returns the raw text after the closing ")" of a call_line,
-// resumed_line or dead_line (what the consumer's result parser reads), with its
+// or resumed_line (what the consumer's result parser reads), with its
 // leading spaces: " = 3</etc/passwd>".  It is "" when the line has no closing
-// parenthesis (an interrupted call, an exit or signal line).
+// parenthesis (an interrupted call, an exit, signal or dead line: a dead line
+// is a single token).
 func TextAfterClose(line string, ast *parser.ASTNode) string {
 	b := Body(ast)
 	if b == nil {

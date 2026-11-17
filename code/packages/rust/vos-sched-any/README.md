@@ -77,10 +77,10 @@ cargo run -p coding_adventures_warrant_grammar --example gen_evidence -- vos-sch
 cargo run -p coding_adventures_warrant_grammar --example gen_evidence -- --check vos-sched-any
 ```
 
-7 exhaustive claims, **262,912 cases** (the largest 65,536, 16.4% of the 400,000 budget): the
-safety tier (`insert_safe`, `remove_safe`, `dispatch_safe`, `safety_alpha_build`) and the any tier
-(`dispatch_sound`, `dispatch_covers_run`, `dispatch_covers_idle`), plus the same 7 as property and
-fuzz suites, 3 examples and 18 negative controls: 42 tests, all pass. A plain
+8 exhaustive claims, **262,914 cases** (the largest 65,536, 16.4% of the 400,000 budget): the
+safety tier (`insert_safe`, `remove_safe`, `dispatch_safe`, `safety_alpha_build`, `safety_init`) and the any tier
+(`dispatch_sound`, `dispatch_covers_run`, `dispatch_covers_idle`), plus the same 8 as property and
+fuzz suites, 3 examples and 18 negative controls: 45 tests, all pass. `safety_init` (VOS-D081) has no negative control of its own: its subject is `alpha_w`, whose only fault, `field-zero`, is inert on the empty state (VOS-D065, WX-SV2); a mask-8 `init` is caught by it, by the behaviour tests, and by the contract-check mutants. A plain
 `cargo test --features ghost --test warrant_evidence` exits 0: no claim has `init` as its subject,
 so the known-inert `init` / `field-zero` controls of `vos-sched-fp-bitmap` (VOS-D065) do not arise
 and no tolerance script is needed.

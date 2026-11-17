@@ -4520,6 +4520,30 @@ Complete transcript and handshake state, repository-owned AEAD composition,
 certificate-path validation, revocation policy, TLS transport, and HTTP
 composition remain blockers. Concrete HTTPS remains unavailable.
 
+An allocation-free `tls13-handshake-reassembly` prerequisite now retains one
+TLS 1.3 handshake message across already authenticated record-content
+fragments in caller-owned storage. Each push consumes only the input prefix
+needed by that message and reports the exact consumed count, so coalesced
+messages and a partial next message remain with the caller for ordered replay.
+The reassembler validates the four-byte header as soon as it is complete,
+applies the caller's existing handshake-type and body-length policy, rejects a
+declared message that cannot fit the supplied storage, and borrows the exact
+completed encoding through `tls13-handshake`. Incomplete pushes retain their
+bounded prefix; completed-message and failure diagnostics retain no copied
+wire bytes, declared lengths, or body contents.
+
+Supplying only plaintext content from a record whose authenticity and inner
+handshake content type were already accepted is solely a caller precondition.
+The raw-byte API cannot distinguish authenticated from unauthenticated input.
+This slice does not decode or authenticate records, classify an inner content
+type, retain a coalesced tail, sequence handshake phases, update a transcript,
+parse a handshake body, derive keys, invoke an AEAD, validate certificates,
+establish trust, check revocation, perform I/O, authorize HTTP or OAuth
+transport, or open a network connection. Full handshake state, record
+authentication and composition, certificate-path and identity validation,
+revocation policy, TLS transport, and HTTP composition remain blockers.
+Concrete HTTPS remains unavailable.
+
 An allocation-free `tls13-encrypted-extensions-message` prerequisite now owns
 the exact RFC 8446 section 4.3.1 `EncryptedExtensions` handshake body. It
 delegates the complete two-byte-length-prefixed extension vector to the
@@ -4712,6 +4736,34 @@ change, process a handshake, validate certificates, establish trust, enforce
 revocation, perform HTTP, authorize OAuth transport, or open a network
 connection. Repository-owned TLS record-protection composition and state
 remain prerequisites, and concrete HTTPS remains unavailable.
+
+A bounded `tls13-chacha20-poly1305-record` composition now protects records
+only for the reviewed `TLS_CHACHA20_POLY1305_SHA256` route. It consumes the
+selected-suite-bound `tls13-record-protection-state`, rejects every other AEAD
+before reserving a sequence number, and binds the reserved 256-bit key and
+96-bit nonce directly to the repository-owned fixed-memory ChaCha20-Poly1305
+boundary. Sealing encodes
+one policy-authorized `TLSInnerPlaintext`, authenticates the exact
+five-byte `TLSCiphertext` header as associated data, appends the exact 16-byte
+tag, and wipes the exact caller-owned scratch prefix written after successful
+inner encoding on every subsequent return. Route and inner-encoding failures
+leave caller scratch unchanged. Opening validates one exact outer record before
+consuming a sequence, authenticates its exact retained header before releasing
+any cleartext, decodes only a policy-authorized inner content type, and returns
+a non-cloneable borrowed view whose drop path wipes the successfully opened
+caller-owned storage. Public framing, policy, and capacity failures occur
+before sequence consumption; an authentication failure consumes its reserved
+sequence and leaves caller output unchanged.
+
+This narrow composition does not enable either AES-GCM suite, derive traffic
+secrets, establish handshake epochs, process a transcript, authenticate
+`CertificateVerify` or `Finished`, validate certificates, construct or validate
+a path, check a hostname or revocation, perform key updates, read or write a
+stream, open a socket, authorize an HTTP or OAuth request, or provide a TLS
+connector. The caller must retain distinct read/write state and select the
+correct traffic epoch. Complete handshake state, the remaining record routes,
+stream I/O, certificate validation, revocation, and HTTP composition remain
+blockers; concrete HTTPS remains unavailable.
 
 An allocation-free `tls13-supported-versions` prerequisite now owns the exact
 RFC 8446 `supported_versions` extension data emitted and consumed by a future
