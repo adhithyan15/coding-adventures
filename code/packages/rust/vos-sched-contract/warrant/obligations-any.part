@@ -5,9 +5,11 @@
     forall mask: U8, c: U8. (
       safe_dispatch(dec(alpha_w(Impl(mask, c))), dispatch_out(Impl(mask, c)), dec(alpha_w(dispatch_img(Impl(mask, c))))) and
       dispatch_img(Impl(mask, c)).choice == c)
-  -- Coverage with a witness: thread t is produced by the oracle value t, Idle by 255.
+  -- Coverage with a witness: thread t is produced by the oracle value t, Idle by 255. `mem` is false
+  -- outside 0..7, so no `t < 8` refinement is needed; a refinement would also make the property
+  -- suite unrunnable (the generator's rejection sampler gives up at 3 percent acceptance, VOS-D079).
   claim dispatch_covers_run:
-    forall mask: U8, t: U8 | t < 8u8. (
+    forall mask: U8, t: U8. (
       mem(dec(alpha_w(Impl(mask, t))), t) => dispatch_out(Impl(mask, t)) == Run(t))
   claim dispatch_covers_idle:
     forall mask: U8. dispatch_out(Impl(mask, 255u8)) == Idle

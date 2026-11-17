@@ -15550,6 +15550,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "vos-sched-any"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+ "vos-sched-contract",
+]
+
+[[package]]
 name = "vos-sched-contract"
 version = "0.1.0"
 

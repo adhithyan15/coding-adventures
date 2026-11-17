@@ -596,18 +596,25 @@ the oracle is a binder.
     forall mask: U8, c: U8. (
       safe_dispatch(dec(alpha_w(Impl(mask, c))), dispatch_out(Impl(mask, c)), dec(alpha_w(dispatch_img(Impl(mask, c))))) and
       dispatch_img(Impl(mask, c)).choice == c)
-  -- Coverage with a witness: thread t is produced by the oracle value t, Idle by 255.
+  -- Coverage with a witness: thread t is produced by the oracle value t, Idle by 255. `mem` is false
+  -- outside 0..7, so no `t < 8` refinement is needed; a refinement would also make the property
+  -- suite unrunnable (the generator's rejection sampler gives up at 3 percent acceptance, VOS-D079).
   claim dispatch_covers_run:
-    forall mask: U8, t: U8 | t < 8u8. (
+    forall mask: U8, t: U8. (
       mem(dec(alpha_w(Impl(mask, t))), t) => dispatch_out(Impl(mask, t)) == Run(t))
   claim dispatch_covers_idle:
     forall mask: U8. dispatch_out(Impl(mask, 255u8)) == Idle
 ```
 
 `dispatch_covers_run` uses a **witness** (thread `t` by oracle value `t`, `Idle` by
-255) so that coverage needs no nested `exists` (VOS01 section 3.3). Its negative
-controls (a sabotaged `-any` that must be rejected) need WX-SV item 2 in the real
-generator; at the Warrant-model level they are the controls of section 12.
+255) so that coverage needs no nested `exists` (VOS01 section 3.3). It has no `t < 8`
+refinement: `mem` is false outside `0..7`, so the guard added nothing, and with it the
+generator's property suite could not run (its rejection sampler gives up at 3 percent
+acceptance, VOS-D079). **As run (VOS-012a, VOS-D054):** the generator attaches the negative
+controls of the `any` claims to the operation each is about: `dispatch_sound` to
+`dispatch_img`, `dispatch_covers_run` and `dispatch_covers_idle` to `dispatch_out`; the
+predicted attachment to `alpha_w` did not happen (the subject search takes the operation the
+claim's last call names, not the leading `safe_dispatch`), so no claim was rewritten for it.
 
 ### 9.4 Claims that are not obligations
 
@@ -650,7 +657,7 @@ counts the evaluation of section 12 measured, not typed by hand.
 | `canon_dispatch_post`, `canon_dispatch_img` (each) | 8 Bool | 256 | 256 | 0.06 |
 | **Any** | | | | |
 | `dispatch_sound` | `mask: U8`, `c: U8` | 65,536 | 65,536 | 16.38 |
-| `dispatch_covers_run` | `mask: U8`, `t: U8 | t < 8` | 65,536 | 2,048 | 16.38 |
+| `dispatch_covers_run` | `mask: U8`, `t: U8` | 65,536 | 65,536 | 16.38 |
 | `dispatch_covers_idle` | `mask: U8` | 256 | 256 | 0.06 |
 
 **The largest single claim is 65,536 binder cases, 16.4 percent of the budget**,
@@ -661,7 +668,7 @@ as in the toy. The obligation totals per implementation (enumerated cases):
 | fixed-priority bitmap (`production`) | safety, policy, canonical | **394,498** |
 | lowest-first scan (safety, canonical) | safety, canonical | 131,584 + 262,658 = 394,242 |
 | round-robin (safety only, `representation`) | safety, plus its own `_rep` claims | 131,584 + its own |
-| `-any` | safety, any | **199,424** admitted (262,912 binder cases) |
+| `-any` | safety, any | **262,912** (= the binder cases: no refinement; 199,424 before VOS-012a dropped the `t < 8` refinement of `dispatch_covers_run`, VOS-D079) |
 
 Where the budget ends for this contract:
 
@@ -715,6 +722,12 @@ is out of this contract's reach: plan on `T <= 8..16` per obligation there.
 * **`vos-sched-rr`** (kind `production` or `reference`, mode `representation`): a
   rotating pointer, safety tier only, `dispatch_rep` claims and a determinism
   claim in its own `impl.part`.
+* **As built (VOS-012a):** `vos-sched-any` exists (`code/packages/rust/vos-sched-any`): its state
+  is `State { mask, choice }`, `dispatch` proposes, validates and defaults to `Idle`, the oracle
+  is written only through the `ghost` module, and its generated document passes `check-doc`
+  with the R6 `any` rules. Evidence: 7 exhaustive claims, 262,912 cases, 42 tests, all pass, no
+  known-inert control. `dispatch_covers_run` lost its `t < 8` refinement (section 9.3). The own
+  claims of section 9.4 are not written: see VOS-D080.
 * The two together are the replaceability exercise (VOS00 section 8): the policy
   claims, `vos-sched-fp-bitmap`'s evidence and the contract block are **not**
   regenerated.
@@ -873,7 +886,7 @@ Found while writing a real contract. F1 to F4 and the SH12 wording were **amende
 | F3 | VOS01 section 1.2 puts `Profile` and `Kernel<P>` in the contract crate (`vos-ready-contract`). A profile has **one associated type per interface**, so it cannot live in any one contract crate without that crate depending on all the others | `vos-sched-contract` exports the trait and its two enums only; `Profile` and `Kernel<P>` are the spine's (VOS-026). VOS01 section 1.2 should say so | VOS-D052 |
 | F4 | `dispatch` is **destructive**, so its safety tier has no abstract successor function of M alone; the toy's `pick` was a read. VOS01 section 2.3's shape B needs `m2` to be related to the *output* (`after(m, o)`), and canonical claims need the successor taken from the implementation's own output (`canon_dispatch_img`). VOS01 section 5 does not show a shape-B operation with an output-dependent successor | Written here (section 9); VOS01 section 2.3 could cite it | VOS-D053 |
 | F5 | A claim with no use of its binders (`canon_init: forall b: Bool. init() == build(empty())`) is a convention not exercised by the generator; if VER04h rejects an unused binder, `canon_init` becomes an `example` in the implementation block and the obligation list loses an entry (a contract-text change) | settled at VOS-011: the generator accepts the unused binder (`canon_init` ran, 2 cases); the claim stays | VOS-D054 |
-| F6 | VER04h finds a claim's negative-control subject by a shallow left-to-right search (VOS02 section 13.3). The `any` claims (`dispatch_sound`) lead with `safe_dispatch(...)`, a non-operation call; the subject found may be `dispatch_out` or `alpha_w` depending on how arguments are searched. Whether each obligation has a control that can catch a fault in the operation it is *about* is not checked until a generator runs | settled in part at VOS-011: the carried claims' subjects are the operations they are about; `dispatch_sound` (`-any`) has subject `alpha_w` by reading the search, to be confirmed at VOS-012 | VOS-D054 |
+| F6 | VER04h finds a claim's negative-control subject by a shallow left-to-right search (VOS02 section 13.3). The `any` claims (`dispatch_sound`) lead with `safe_dispatch(...)`, a non-operation call; the subject found may be `dispatch_out` or `alpha_w` depending on how arguments are searched. Whether each obligation has a control that can catch a fault in the operation it is *about* is not checked until a generator runs | settled in part at VOS-011: the carried claims' subjects are the operations they are about; settled at VOS-012a by running it: `dispatch_sound` has subject `dispatch_img`, `dispatch_covers_run` and `dispatch_covers_idle` have `dispatch_out`; none has `alpha_w`, and no claim was rewritten for it | VOS-D054 |
 | F7 | VOS02 section 2.5 gives `contract.vos` a `tier` line for each of `any`, `canonical`, `policy`, `safety`; nothing says that a tier line and the files `warrant/obligations-<tier>.part` must correspond. A tier with no file, or a file with no tier, is a silent mismatch until `vos-manifest` exists. `contract.vos` has its own grammar and its parser is `vos-manifest`, so this PR does not read it (no ad-hoc parser) | `vos-manifest` / `gen-doc` (VOS-033) must cross-check tiers, files and `config` against `Sched::N` and the `8`s in the text | VOS-D049 |
 | F8 | The nine lemmas call no operation and the generator refuses them (`W0701 claim ... calls no operation`) until the `lemma` entry kind exists (VER04m V9, WX-SV item 3, VOS-D005). They were only ever evaluated by `vos-sched-contract-check`, yet sat in the embedded contract block | **Resolved in the VOS-011 PR:** the lemmas moved to `warrant/lemmas.part`, not embedded (VOS02 R1.4). The contract-block digest changed; every obligation's `claim_sha256` and every obligations-block digest is unchanged. The 394,498 total of this section is what the 12 carried claims of a production scheduler enumerate | VOS-D064 |
 | F9 | The evidence harness's `heap` observer wraps the whole adapter call, including the allocation that builds a record or a payload-carrying variant as a Warrant value (64 bytes). `heap <= 0` can only hold for scalar or payload-free results | The ceiling `heap 0` is declared (and evidenced) only on `insert_out` and `remove_out`; the other six bound operations omit the `heap` row, with a comment in `impl.part` | VOS-D063 |

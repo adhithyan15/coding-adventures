@@ -89,6 +89,29 @@ func TestVosToolInputsSelectImplementations(t *testing.T) {
 	if !other.matches("code/specs/vos-sched-any.warrant") || other.matches("code/specs/vos-sched-fp-bitmap.warrant") {
 		t.Error("a row selects its own document only")
 	}
+	// The registered row of the -any crate (VOS-012a): present, selects its own document and the
+	// VOS tools, and nothing of its sibling.
+	var anyRow *repositoryInputConsumer
+	for i := range repositoryInputConsumers {
+		if repositoryInputConsumers[i].name == "rust/vos-sched-any" {
+			anyRow = &repositoryInputConsumers[i]
+		}
+	}
+	if anyRow == nil || anyRow.language != "rust" || len(anyRow.paths) == 0 {
+		t.Fatalf("no usable repository input row for rust/vos-sched-any: %+v", anyRow)
+	}
+	for path, want := range map[string]bool{
+		"code/specs/vos-sched-any.warrant":          true,
+		"code/specs/vos-sched-fp-bitmap.warrant":    false,
+		"code/specs/vos-sched-any.warrant.x":        false,
+		"code/programs/rust/vos-link/src/check.rs":  true,
+		"code/packages/rust/vos-manifest/src/a.rs":  true,
+		"code/packages/rust/vos-sched-any/src/a.rs": false,
+	} {
+		if got := anyRow.matches(path); got != want {
+			t.Errorf("rust/vos-sched-any matches(%q) = %v, want %v", path, got, want)
+		}
+	}
 }
 
 // Every directory a VOS tool path names exists, so a rename cannot silently orphan the row.

@@ -4,6 +4,11 @@ All notable changes to this package are documented here.
 
 ## [Unreleased]
 
+### Changed (VOS-012a PR, VOS-D079)
+
+- The any-tier count test expects `dispatch_covers_run` at 65,536 admitted cases (the `t < 8`
+  refinement is gone); the four `any` mutants still fail exactly the claims they should.
+
 ### Changed (VOS-011 PR, VOS-D064)
 
 - The lemmas are evaluated from the contract's new `warrant/lemmas.part` (joined after the

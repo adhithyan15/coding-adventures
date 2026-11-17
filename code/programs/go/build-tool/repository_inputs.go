@@ -308,6 +308,7 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		paths:    vosGrammarPaths,
 	},
 	vosImplementationRow("vos-sched-fp-bitmap"),
+	vosImplementationRow("vos-sched-any"),
 	{
 		name:     "rust/vos-shape-check",
 		language: "rust",

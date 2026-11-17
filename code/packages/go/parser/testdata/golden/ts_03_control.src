@@ -1,0 +1,4 @@
+try { f(); } catch (e) { throw e; } finally { d(); }
+for (let i = 0; i < 10; i++) { foo(); }
+for (const i of xs) { if (i > 1) continue; else break; }
+switch (i) { case 1: foo(); break; default: bar(); }

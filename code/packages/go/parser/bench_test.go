@@ -126,3 +126,32 @@ func BenchmarkParseJSONLike(b *testing.B) { benchmarkParse(b, jsonLikeGrammar, j
 func BenchmarkParseExpression(b *testing.B) { benchmarkParse(b, exprGrammar, exprTokens(200)) }
 
 func BenchmarkParseSmallLine(b *testing.B) { benchmarkParse(b, exprGrammar, exprTokens(2)) }
+
+// ParseInto benchmarks: the same workloads through the compact API with ONE
+// reused Tree (the steady-state, near-zero-allocation shape), so the numbers
+// sit next to the Parse benchmarks above. No walk of the tree is included;
+// that is the point: it is the cost of parsing without materialising ASTNodes.
+func benchmarkParseInto(b *testing.B, src string, toks []lexer.Token) {
+	c := mustCompile(b, src)
+	var tr Tree
+	b.SetBytes(benchBytes(toks))
+	b.ReportAllocs()
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		if err := c.ParseInto(&tr, toks, Options{}); err != nil {
+			b.Fatal(err)
+		}
+	}
+}
+
+func BenchmarkParseIntoJSONLike(b *testing.B) {
+	benchmarkParseInto(b, jsonLikeGrammar, jsonLikeTokens(200))
+}
+
+func BenchmarkParseIntoExpression(b *testing.B) {
+	benchmarkParseInto(b, exprGrammar, exprTokens(200))
+}
+
+func BenchmarkParseIntoSmallLine(b *testing.B) {
+	benchmarkParseInto(b, exprGrammar, exprTokens(2))
+}
