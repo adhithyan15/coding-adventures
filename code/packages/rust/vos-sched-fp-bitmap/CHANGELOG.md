@@ -35,3 +35,13 @@ All notable changes to this package are documented here.
   at or below 65,536; the `init` / `field-zero` controls are known-inert (VOS-D065) and named
   in `warrant/check_evidence.sh`.
 - `heap <= 0` rows only on `insert_out` and `remove_out` (VOS-D063).
+
+### Changed
+
+- WD-HARN1b: `tests/generated/warrant_evidence.rs` regenerated with `gen_evidence` for the WD-HARN1b
+  changes to the obs region of the Warrant prelude (`Bail out!` is written with `writeln!` to
+  stderr, the dead latch is gone). No hand edit; `evidence/` is unchanged and
+  `warrant/check_evidence.sh` reports the same result as on main.
+- The sabotage lines in `BUILD` and `BUILD_windows` now fail when the sabotaged run prints
+  `Bail out!`, not only when it lacks a `not ok ` line (a hang after an intended failure no longer
+  passes silently).

@@ -259,5 +259,5 @@
   "source": "code/packages/rust/hash-functions/src/algorithms.rs",
   "source_sha256": "02406d50756bf149f3b93c9d5fa6e0a09b71e0f1220e4b89edd4a8a30fe063f7",
   "spec": "code/specs/hash-functions.warrant",
-  "spec_sha256": "de54c0a5aed5dfe8d00c0038b242cab5fe5f9d5ea5242b153176f61261225989"
+  "spec_sha256": "756a8717260bb2fa69f23874c27149f1dd26cfbde693f57320349b6afce416d0"
 }
