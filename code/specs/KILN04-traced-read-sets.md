@@ -2236,13 +2236,14 @@ gave:
 | an unterminated annotation, quote or `<`, a bad resume marker, or any structural failure | `unparsable-line` |
 | a failed `result` parse (stage 2) | `result` |
 | a wrong argument count after a successful parse | `arity` |
-| a recovered panic | `unparsable-line` |
+| a recovered panic: the **whole trace** is refused; no partial tree or partial trace is ever returned | `unparsable-line` |
 
 Everything after the first pass runs the code it ran before.
 
 Two caps are new, because the grammar tools let them be stated: nesting depth
 **64** and **65,536 tokens per line**. Exceeding either is a refusal with
-reason `size`. The lexer is total (the last token rules catch every remaining
+reason `size`, which is already in the reason list of §4.5 (the caps reuse it).
+A recovered panic anywhere in the grammar path likewise refuses the whole trace. The lexer is total (the last token rules catch every remaining
 byte as an `ERR_*` token), so it can never panic on hostile input.
 
 **The divergence policy.** The old scanner and the grammar path must agree.
@@ -2257,7 +2258,8 @@ byte as an `ERR_*` token), so it can never panic on hostile input.
 
 | Input class | Old | New | Reason | Pinning test |
 |---|---|---|---|---|
-| *(none yet)* | | | | |
+| a line nested deeper than 64 | accepted | refused, `size` | bounds stack and memory against hostile lines | added in PR 5 |
+| a line of more than 65,536 tokens | accepted | refused, `size` | bounds memory and time against hostile lines | added in PR 5 |
 
 **Migration and gates.** The change lands in two phases.
 
@@ -2273,15 +2275,20 @@ existing test runs both parsers and compares the `Trace`, `Reason` and `Line`.
 Beyond that: a pass-1 record diff, `FuzzParseDiff` and `FuzzLineDiff` with a
 committed corpus (at least 30 minutes locally per PR, nightly in CI), and
 `KILN_TRACE_DIFF=1` in the kiln-sandbox job, which cross-checks real traces and
-uploads an artifact on any mismatch. The default flips to the grammar path only
+uploads an artifact on any mismatch. Those artifacts contain real trace
+data, so they are produced only on trusted CI runs (never for fork PRs), are
+kept for 7 days, hold only the mismatching trace, and are never published
+elsewhere. The default flips to the grammar path only
 when it lexes and parses at **at least 8 MB/s and within 3x of the old
 parser** on the committed benchmark (the old parser runs at about 23.7 MB/s;
 the unmodified toolchain at about 0.95 MB/s, hence the toolchain PRs below).
 If it cannot, the fallback is a worker pool for the stateless per-line
 lex/parse with the semantic pass kept sequential. The old scanner is deleted
 only after the flip has soaked with zero diffs; until then it is kept as a
-test-only oracle. The 1 GiB and 8M-event limits are revisited once real trace
-sizes are measured.
+test-only oracle. The resource limits (1 GiB and 8M events, and the caps above) may be
+lowered freely, but raised only by a spec revision that includes a DoS review
+and a benchmark of the worst-case input, with the new values committed in the
+spec.
 
 **The PR split.**
 

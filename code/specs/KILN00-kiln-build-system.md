@@ -1169,6 +1169,16 @@ The in-repo exception exists because of the grammar-toolchain directive
 so it reads them through the repo's shared grammar lexer and parser
 (KILN04 §4.9).
 
+The in-repo modules Kiln uses must themselves depend only on the standard
+library or other in-repo modules, so that no third-party module enters through
+a `replace`. A CI check enforces this and lands with the Kiln wiring PR
+(KILN04 §4.9, PR 5):
+
+- `go list -deps` on Kiln, filtered to non-standard, non-repo import paths,
+  must be empty;
+- every `require` in Kiln's `go.mod` names a repo module;
+- every `replace` target is a relative path inside the repo.
+
 - **Everything else Kiln needs is in the standard library:** SHA-256, process
   execution, Linux namespaces (`syscall.SysProcAttr`), HTTP, tar/gzip/zip for
   tool archives, JSON. Rust would need in-house crates for several of these
