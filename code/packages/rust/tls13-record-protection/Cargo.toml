@@ -1,0 +1,18 @@
+[package]
+name = "tls13-record-protection"
+version = "0.1.0"
+edition = "2021"
+description = "Data-driven routing for reviewed TLS 1.3 record protection"
+license = "MIT"
+
+[dependencies]
+tls13-aes128-gcm-record = { path = "../tls13-aes128-gcm-record" }
+tls13-chacha20-poly1305-record = { path = "../tls13-chacha20-poly1305-record" }
+tls13-cipher-suite-policy = { path = "../tls13-cipher-suite-policy" }
+tls13-inner-plaintext = { path = "../tls13-inner-plaintext" }
+tls13-record = { path = "../tls13-record" }
+tls13-record-protection-state = { path = "../tls13-record-protection-state" }
+
+[dev-dependencies]
+coding_adventures_hkdf = { path = "../hkdf" }
+tls13-traffic-key-material = { path = "../tls13-traffic-key-material" }
