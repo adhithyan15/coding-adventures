@@ -28,7 +28,7 @@ vos-link check-doc code/packages/rust/<impl> [--root <repo>]   # exit 1 on any d
 ## Inputs
 
 ```text
-<impl>/vos.toml                     kind = production | reference | any, contract = "<pkg>", obligations = [tiers]
+<impl>/vos.toml                     kind = production | reference | any, contract = "<pkg>", obligations = [tiers] (any, canonical, policy, representation, safety)
 <impl>/warrant/impl.part            the hand-written implementation block
 <contract>/vos.toml                 kind = "contract"
 <contract>/contract.vos             the tiers and the instance (parsed with the vos_contract grammar)
@@ -48,6 +48,16 @@ parse and type check, a weakened claim with an obligation's name (`claim_sha256`
 `gen-doc` runs all but regeneration on what it is about to write and writes nothing on a
 finding.
 
+### The representation tier (VOS02 2.7, VOS-D061)
+
+An implementation whose state has history that `alpha` forgets (a rotation pointer) carries the
+contract's `representation` tier **instead of** `canonical`: eight claims in the contract package,
+over `rep(m, h)` and `hist(s)`, models the implementation supplies.  `vos-link` checks no claim of
+the implementation's (a syntactic lint over authored claims does not converge): a production crate
+carries exactly one of the two tiers and no `any`, an `any` crate carries neither, a missing or
+mistyped `rep`/`hist` is a CD04 type error, and a tampered claim is a digest mismatch.  The mode
+is derived from `carries` (`mode representation` in the header); there is no `mode` key.
+
 ## What a pass means
 
 The R6 cone rule is a **structural lint** (a taint walk over `build`: a field set from a
@@ -57,7 +67,7 @@ enforced at document level, not proof that the state has no oracle.  `kind`, `co
 (VOS-034) exist, so a production crate that lists only `["canonical"]` or an oracle crate
 that declares `reference` is not caught here.  What closes the residual risk, an oracle write
 path, is the bindings check (VOS-D060, required before any image profile), SH13/SH16 and the
-registry.  Every pass prints this as a `note:` line.
+registry.  Every pass prints this as a `note:` line (a representation carrier gets the representation note instead: the cone is not applied there, and the tier does not separate kinds).
 
 ## Safety
 

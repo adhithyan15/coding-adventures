@@ -272,6 +272,14 @@ pub fn verify_with_budget(loaded: &Loaded, doc: &[u8], budget: u64) -> Result<Ve
     Ok(v)
 }
 
+/// Does the document carry the `representation` tier and not `canonical`?  Then the cone half of
+/// R6 rule 2 is skipped (VOS02 2.7).  Both, or neither, is already a finding; the cone check
+/// still runs there, as it did before the tier existed.
+fn representation_only(counts: &BTreeMap<Tier, (usize, usize)>) -> bool {
+    let full = |t: Tier| counts.get(&t).is_some_and(|(h, n)| *h == *n && *n > 0);
+    full(Tier::Representation) && !full(Tier::Canonical)
+}
+
 /// VOS02 R6 and section 10.1, D-GD8: the rules a document alone decides.
 fn r6(
     loaded: &Loaded,
@@ -289,21 +297,37 @@ fn r6(
             if named_any {
                 cd07("a crate named `-any` declares kind = \"production\" (an `-any` crate is kind any, R6)".into());
             }
-            if !loaded.contract.has_tier(Tier::Canonical) {
-                cd07(
-                    "kind production needs a `canonical` tier, which the contract does not define"
-                        .into(),
-                );
-            } else if !full(Tier::Canonical) {
-                cd07(
-                    "kind production: the document does not carry the `canonical` obligations (R6)"
-                        .into(),
-                );
+            // A production crate carries EXACTLY ONE of the `canonical` block and the
+            // `representation` block (VOS02 2.7, R6 rule 2): by `claim_sha256`, so a claim
+            // that merely has the right name carries nothing.  The mode is derived from this,
+            // never declared (two author-written values that agree prove nothing).
+            let (canonical, representation) = (full(Tier::Canonical), full(Tier::Representation));
+            if canonical && representation {
+                cd07("kind production: the document carries both the `canonical` and the `representation` obligations; a production crate carries exactly one of them (VOS02 2.7, R6)".into());
+            } else if !canonical && !representation {
+                if !loaded.contract.has_tier(Tier::Canonical)
+                    && !loaded.contract.has_tier(Tier::Representation)
+                {
+                    cd07(
+                        "kind production needs a `canonical` tier (or a `representation` tier), which the contract does not define"
+                            .into(),
+                    );
+                } else {
+                    cd07(
+                        "kind production: the document does not carry the `canonical` obligations (R6), nor the `representation` obligations; a production crate carries exactly one of them (VOS02 2.7)"
+                            .into(),
+                    );
+                }
             }
             if has(Tier::Any) {
                 cd07("kind production: the document carries an `any` obligation; a production crate carries no `any` block (R6, NC5)".into());
             }
+            // The cone half of rule 2 is for canonical carriers: a representation carrier has a
+            // history register outside the cone by design, and its closure claims (the
+            // `representation` block, over `rep`) constrain it instead.
+            let cone_applies = !(representation_only(counts));
             match &a.build {
+                _ if !cone_applies => {}
                 BuildShape::Missing => cd07(cone_failure("is missing, so the cone of `Impl` cannot be checked")),
                 BuildShape::NotConstructor => cd07(cone_failure(
                     "is not an `Impl(..)` constructor application, so the cone cannot be decided structurally (fails closed)",
@@ -341,6 +365,9 @@ fn r6(
             }
             if has(Tier::Canonical) {
                 cd07("kind any: the document carries a `canonical` claim; an `any` crate may not (R6, NC4b)".into());
+            }
+            if has(Tier::Representation) {
+                cd07("kind any: the document carries a `representation` claim; an `any` crate carries neither `canonical` nor `representation` (VOS02 2.7, R6)".into());
             }
             match &a.build {
                 BuildShape::Missing => cd07(cone_failure("is missing, so the oracle field cannot be found")),

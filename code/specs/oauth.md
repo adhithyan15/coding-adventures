@@ -4825,6 +4825,30 @@ state, the remaining record route, stream I/O, certificate validation,
 revocation, and HTTP composition remain blockers; concrete HTTPS remains
 unavailable.
 
+A bounded `tls13-record-protection` dispatcher now routes one record operation
+only from the exact cipher suite retained by `tls13-record-protection-state`.
+It admits the repository-owned `TLS_AES_128_GCM_SHA256` and
+`TLS_CHACHA20_POLY1305_SHA256` record compositions and accepts no detached
+algorithm choice, key, nonce, tag length, or suite identifier. The recognized
+but unimplemented `TLS_AES_256_GCM_SHA384` route fails before inner-plaintext
+encoding, outer-record decoding, caller-output mutation, or record-sequence
+consumption. Route-specific stable errors remain distinguishable without
+retaining peer, content, key, nonce, tag, or output bytes. Successful opening
+returns one non-cloneable algorithm-erased view whose methods expose only the
+authenticated content type, content, and padding length; dropping the view
+still wipes the exact successfully opened caller-owned prefix through the
+selected reviewed route.
+
+This dispatcher adds no AES-256-GCM primitive, detached or caller-selected
+algorithm fallback, traffic-secret derivation, epoch transition, handshake
+processing, certificate or path validation, hostname or revocation policy,
+stream I/O, TLS connector, HTTP authorization, OAuth transport, credential
+access or editing, signing, storage, provider action, audit event, trace
+emission, network access, or other external effect. Complete handshake state,
+certificate validation, revocation, repository-owned TLS transport, HTTP
+composition, and audited networking remain blockers; concrete HTTPS and
+live-provider readiness remain unavailable.
+
 An allocation-free `tls13-supported-versions` prerequisite now owns the exact
 RFC 8446 `supported_versions` extension data emitted and consumed by a future
 repository-owned TLS 1.3 client. A caller supplies a preference-ordered slice

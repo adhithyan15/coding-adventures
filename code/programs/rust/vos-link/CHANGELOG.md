@@ -4,6 +4,20 @@ All notable changes to this package are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added (VOS-012b0, VOS-D061)
+
+- The `representation` tier (VOS02 2.7), the contract's fifth: a production crate carries **exactly
+  one** of `canonical` and `representation` (by `claim_sha256`; both, or neither, is a CD07 finding)
+  and no `any`; an `any` crate carries neither.  The cone rule is skipped for a crate that carries
+  only the representation tier (its history register is outside the cone by design).  The report
+  header prints `mode representation`, **derived from `carries`** (there is no `mode` key), and such
+  a crate gets the representation note in place of the R6 cone note.
+- `tests/representation.rs` (16 tests): the positive fixture `vos-fixture-rep` and its golden
+  document, both/neither/representation-plus-`any`/`-any`-carrying-representation controls, a missing
+  or mistyped `rep` or `hist` (CD04), a tampered or weakened representation claim (CD02, CD03, CD05,
+  CD06, CD08), and `mode` as an unknown key.  `a_contract_without_the_needed_tier...` also drops the
+  representation tier.
+
 ### Changed (VOS-D081)
 
 - The golden `tests/fixtures/expected/vos-fixture-bitmap.warrant` was re-blessed: the only difference is

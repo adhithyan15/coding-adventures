@@ -26,3 +26,21 @@ difference must be larger than the noise:
 
 If the fixed cost cannot be removed, say in the test what slope it can and
 cannot detect. Logged for `vos-shape-check` as VOS-D075.
+
+**Second sighting (PR #19560): sizing n is not enough, count operations.** The
+same `scales_linearly` checks still flaked on CI: the runner paid about 3.8 s of
+fixed lexer construction per run, with about 1 s of jitter, while the size
+increments added only about 0.4 s. Taking the minimum of each size
+independently across rounds let the middle size come out *faster* than the
+smallest, the denominator floored at 5 ms, and the ratio read 1276 against a
+limit of 10 on linear code. When the fixed per-run cost and its jitter exceed
+the increments, no choice of n, repeat count or floor makes a timing ratio
+reliable on a shared runner. The fix was to count work: a thread-local step
+counter ticked by every token predicate and every scanner-loop iteration,
+returned by `check_crate_counted`; the test asserts steps(k*n) / steps(n) stays
+under 1.25 * k, and keeps only a loose wall-clock hang guard. Prove such a
+counter by temporarily adding a quadratic loop and watching the test fail. Two
+things the counter exposed that timing hid: an unbalanced `mod ghost {` input
+was refused at bracket pairing and never reached any scanner (zero steps), and
+a scan capped to a 4096-token window only shows its linear slope once n is
+well past the cap.

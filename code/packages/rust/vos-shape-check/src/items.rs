@@ -66,8 +66,10 @@ fn parse_fields(f: &FileCtx, open: usize, close: usize) -> Vec<Field> {
     let mut out = Vec::new();
     let mut j = open + 1;
     while j < close {
+        crate::steps::tick();
         // attributes
         while j < close && t[j].is_punct("#") && t.get(j + 1).is_some_and(|x| x.is_punct("[")) {
+            crate::steps::tick();
             j = f.pair[j + 1] + 1;
         }
         if j >= close {
@@ -89,6 +91,7 @@ fn parse_fields(f: &FileCtx, open: usize, close: usize) -> Vec<Field> {
             let mut k = ty_start;
             let mut depth = 0usize;
             while k < close {
+                crate::steps::tick();
                 let x = &t[k];
                 if x.kind == Kind::Punct {
                     match x.text.as_str() {
@@ -114,6 +117,7 @@ fn parse_fields(f: &FileCtx, open: usize, close: usize) -> Vec<Field> {
             // Not a named field (a tuple-like or malformed list): skip to the
             // next top-level comma so one oddity does not hide the rest.
             while j < close && !t[j].is_punct(",") {
+                crate::steps::tick();
                 if matches!(t[j].text.as_str(), "(" | "[" | "{") && t[j].kind == Kind::Punct {
                     j = f.pair[j];
                 }
@@ -147,7 +151,9 @@ fn parse_tuple_fields(f: &FileCtx, open: usize, close: usize) -> Vec<Field> {
     let mut j = open + 1;
     let mut index = 0usize;
     while j < close {
+        crate::steps::tick();
         while j < close && t[j].is_punct("#") && t.get(j + 1).is_some_and(|x| x.is_punct("[")) {
+            crate::steps::tick();
             j = f.pair[j + 1] + 1;
         }
         if j >= close {
@@ -166,6 +172,7 @@ fn parse_tuple_fields(f: &FileCtx, open: usize, close: usize) -> Vec<Field> {
         let ty_start = j;
         let mut depth = 0usize;
         while j < close {
+            crate::steps::tick();
             if t[j].kind == Kind::Punct {
                 match t[j].text.as_str() {
                     "(" | "[" | "{" => j = f.pair[j],
@@ -202,6 +209,7 @@ pub fn collect_types(files: &[FileCtx]) -> (Vec<TypeDef>, Vec<Gap>) {
     for (fi, f) in files.iter().enumerate() {
         let t = &f.toks;
         for i in 0..t.len() {
+            crate::steps::tick();
             if f.in_attr[i] || t[i].kind != Kind::Ident {
                 continue;
             }

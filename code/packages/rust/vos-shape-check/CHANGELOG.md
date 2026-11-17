@@ -4,6 +4,34 @@ All notable changes to this package are documented here.
 
 ## [Unreleased]
 
+### Fixed (VOS-D075, CI flake `item11_item_scanning_is_linear`)
+
+- The linearity tests (`item11`, `item12`, `l3`) no longer compare wall-clock growth
+  ratios.  A shared runner pays about 4 s of fixed lexer construction per run with
+  about 1 s of jitter, more than the increments the ratio relies on, so a run at a
+  smaller size could be slower than one at a larger size (CI measured a ratio of 1276
+  against a limit of 10).  They now assert on a deterministic work count; a 120 s
+  hang guard remains and nothing else about time is checked.
+
+### Added (VOS-D075)
+
+- `steps` module and `check_crate_counted`: a thread-local work counter ticked by
+  every token predicate (`Token::is_ident`, `Token::is_punct`) and by each iteration of
+  the scanning loops of `syntax`, `items` and `graph` (including the mask-fill loops
+  and the call-graph traversal).  `check_crate_counted` returns the report and the
+  steps taken.  Tests assert that steps grow by about k (not k*k) when the input grows
+  k times.  Proven sensitive by temporarily adding a quadratic loop to the graph
+  builder: the count test failed (6.0 against a limit of 3.75), then it was reverted.
+- Tests: the `mod ghost` case is now balanced (an unbalanced file fails at bracket
+  pairing and exercised no scanner); `struct S<` runs at k = 3 and a larger n, because
+  its per-item scan is a window capped at 4096 tokens and only a size well past the
+  cap shows the linear slope.
+
+### Changed (VOS-012b0, VOS-D061)
+
+- `obligations` may list up to five tiers (the new `representation` tier, VOS02 2.7).  No `mode`
+  key: a production crate's mode is derived from the tier its document carries.
+
 ### Added (VOS-033)
 
 - `vos.toml` accepts two more keys for an implementation crate, `contract = "<package>"`

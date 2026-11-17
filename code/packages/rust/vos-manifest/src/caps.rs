@@ -18,7 +18,7 @@ pub const DOCUMENT_MAX_BYTES: usize = 1024 * 1024;
 /// A generated document: bytes in a line.
 pub const DOCUMENT_MAX_LINE: usize = 4_096;
 /// `tier` rows.
-pub const MAX_TIER_ROWS: usize = 4;
+pub const MAX_TIER_ROWS: usize = 5;
 /// `config` rows.
 pub const MAX_CONFIG_ROWS: usize = 64;
 /// `ceiling` rows.
