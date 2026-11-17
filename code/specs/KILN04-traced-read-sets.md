@@ -2287,7 +2287,7 @@ version of this section led to these. Each is a decision, not a sketch.
 - **No late runtime threads.** Both helpers call `debug.SetGCPercent(-1)`, so
   no garbage-collector worker thread starts after the spawn.
 - **CI.** `ci.yml` has a required `kiln-sandbox` job (linux/amd64,
-  `ubuntu-24.04`, in `ci-gate`) that lifts the AppArmor restriction on
+  a matrix over `ubuntu-24.04` and `ubuntu-26.04` (D27), in `ci-gate`) that lifts the AppArmor restriction on
   unprivileged user namespaces unconditionally, installs `strace` through
   `apt-install.sh`, and runs the sandbox tests with `KILN_REQUIRE_SANDBOX=1`,
   which turns every skip into a failure. A script then asserts from the
