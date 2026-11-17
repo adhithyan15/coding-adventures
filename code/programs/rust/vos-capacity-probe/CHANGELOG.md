@@ -22,3 +22,18 @@ All notable changes to this package are documented here.
 - The results file (`code/specs/data/vos30-capacity-results.json`, schema 2), `check` (schema and
   guard rules, quick-tier re-run), the generated table with its drift check, and the section 8.3
   decision procedure.
+
+### Results (VOS-028b)
+
+- The committed full-tier run: 1,625 rows (14 experiments, five seeds per knob), the generated
+  table in VOS30 section 9.8 and the decision of section 8.5: **row 1, Infeasible: re-plan X3**.
+  `check` re-runs its 85 quick-tier rows on every BUILD (about 14 s of the probe's own runs).
+- Tests: 53 unit tests and 33 integration tests (shapes, results logic, the command line on the real
+  binary and real child processes); 94% line coverage of the program.
+
+### Fixed during VOS-028b
+
+- `dirty_tree` is gathered before the rows run (a first full run recorded it after, while the tree
+  was being edited, and was discarded); E2 compares the generator with its own numbers instead of
+  a closed form that is wrong for one-byte binders; a chain whose checker accepted nothing no
+  longer reports a check work of 0.
