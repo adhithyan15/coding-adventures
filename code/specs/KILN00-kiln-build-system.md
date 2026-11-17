@@ -1162,10 +1162,14 @@ algorithm.
 
 ## 17. Implementation language: Go
 
-Kiln is written in Go, under `code/programs/go/kiln/`, using only the standard
-library.
+Kiln is written in Go, under `code/programs/go/kiln/`. It may depend on
+in-repo Go modules (wired with `replace`), but never on third-party modules.
+The in-repo exception exists because of the grammar-toolchain directive
+(2026-11-16): Kiln has no hand-written lexers or parsers for its own inputs,
+so it reads them through the repo's shared grammar lexer and parser
+(KILN04 §4.9).
 
-- **Everything Kiln needs is in the standard library:** SHA-256, process
+- **Everything else Kiln needs is in the standard library:** SHA-256, process
   execution, Linux namespaces (`syscall.SysProcAttr`), HTTP, tar/gzip/zip for
   tool archives, JSON. Rust would need in-house crates for several of these
   (the repo has `deflate`, `http1-client` and `bounded-json`), which would

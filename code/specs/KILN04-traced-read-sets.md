@@ -2195,6 +2195,114 @@ Such a trace has no step exec, which the parser refuses.
 platform gets a stub that prints why and exits 125. The integration tests need
 unprivileged user namespaces and skip where the kernel refuses them.
 
+### 4.9 Syntax layer: grammar-driven (D24)
+
+Stage 1a settled what the parser accepts and refuses. This section settles
+*how the text is read*. It changes the machinery under `internal/trace`, not
+its behaviour.
+
+**The rule.** The syntax of a strace line is defined by grammar files, not by
+hand-written scanning code:
+
+- `code/grammars/strace/strace.tokens` and `strace.grammar` define tokens and
+  structure;
+- `code/grammars/strace/strace-string.tokens` defines the escapes inside a
+  quoted string;
+- the shared Go grammar lexer and parser (`code/packages/go/lexer`,
+  `code/packages/go/parser`) read them, through two shared packages,
+  `code/packages/go/strace-lexer` and `code/packages/go/strace-parser`
+  (a line in, a syntax tree out, syntax only; the pattern is
+  `json-lexer`/`json-parser`).
+
+Kiln keeps all *policy*: the pending/resume state machine, the D18 rules,
+exit markers, refusal reasons, limits, and the byte pre-checks (the
+control-character alphabet scan and the `[ Process PID=` prefix check, which
+are validation, not lexing). Kiln has **no hand-crafted lexers or parsers for
+its own inputs**. This is a user directive (2026-11-16). It applies to KILN01
+as well, and to anything Kiln reads later.
+
+One consequence is recorded in KILN00 §17: Kiln may depend on in-repo Go
+modules (wired with `replace`), and still never on third-party modules.
+
+**Fail-closed parsing.** The shared parser does no error recovery: the first
+line that does not parse is a refusal of the whole trace, never a partial
+tree. It has a nesting depth limit and returns an error instead of
+overflowing the stack. The failing token maps to the reason the old scanner
+gave:
+
+| Failure | Reason |
+|---|---|
+| a bad `<...>` annotation (`ERR_ANNOT_BAD`), or an annotation that fails strict decoding | `ambiguous-path` |
+| an unterminated annotation, quote or `<`, a bad resume marker, or any structural failure | `unparsable-line` |
+| a failed `result` parse (stage 2) | `result` |
+| a wrong argument count after a successful parse | `arity` |
+| a recovered panic | `unparsable-line` |
+
+Everything after the first pass runs the code it ran before.
+
+Two caps are new, because the grammar tools let them be stated: nesting depth
+**64** and **65,536 tokens per line**. Exceeding either is a refusal with
+reason `size`. The lexer is total (the last token rules catch every remaining
+byte as an `ERR_*` token), so it can never panic on hostile input.
+
+**The divergence policy.** The old scanner and the grammar path must agree.
+
+1. Where the old parser refused, the new one accepting is **always a
+   failure**.
+2. When both accept, the `Trace` must be identical.
+3. `Reason` and `Line` must be exact on every existing test and fixture.
+4. A divergence found by fuzzing is allowed only if it is *stricter-only*
+   (accept to refuse, or refuse to refuse with a different reason), is listed
+   in the table below, has been reviewed, and is pinned by a test.
+
+| Input class | Old | New | Reason | Pinning test |
+|---|---|---|---|---|
+| *(none yet)* | | | | |
+
+**Migration and gates.** The change lands in two phases.
+
+- **Phase A** parses structure only. The pending/resume machine, D18 and the
+  interpreters (`pathArg`, `parseFD`, `parseArgv`, `parseResult`, sockaddr,
+  `clone3`) are unchanged and read raw argument spans that are byte-identical
+  to the old scanner's.
+- **Phase B** moves the interpreters, one per PR, to consume the tree, and
+  moves escape decoding to `strace-string.tokens`.
+
+Old and new run side by side under a differential `crossCheck` hook, so every
+existing test runs both parsers and compares the `Trace`, `Reason` and `Line`.
+Beyond that: a pass-1 record diff, `FuzzParseDiff` and `FuzzLineDiff` with a
+committed corpus (at least 30 minutes locally per PR, nightly in CI), and
+`KILN_TRACE_DIFF=1` in the kiln-sandbox job, which cross-checks real traces and
+uploads an artifact on any mismatch. The default flips to the grammar path only
+when it lexes and parses at **at least 8 MB/s and within 3x of the old
+parser** on the committed benchmark (the old parser runs at about 23.7 MB/s;
+the unmodified toolchain at about 0.95 MB/s, hence the toolchain PRs below).
+If it cannot, the fallback is a worker pool for the stateless per-line
+lex/parse with the semantic pass kept sequential. The old scanner is deleted
+only after the flip has soaked with zero diffs; until then it is kept as a
+test-only oracle. The 1 GiB and 8M-event limits are revisited once real trace
+sizes are measured.
+
+**The PR split.**
+
+1. This spec, plus the KILN00 §17 and README amendment.
+2. G1, shared lexer: a compiled, panic-free `Tokenize` with first-byte
+   dispatch and a literal fast path (target 20 MB/s or better, committed
+   benchmark).
+3. G2, shared parser: `MaxDepth` (a deep input such as 200k `[` currently
+   overflows the stack and kills the process, for every grammar consumer, so
+   this is a denial-of-service fix for all of them), `StartRule`, a cheaper
+   memo, and a reusable compiled grammar. G3 (honour `errors:` in Go) is
+   optional; G4 is a Go grammar drift check as a per-package test.
+4. The grammar files, `strace-lexer`, `strace-parser`, and a drift test.
+5. Kiln wiring with the old parser still the default: `go.mod`
+   `require`/`replace` for the in-repo modules, the CI sandbox-job path
+   filter, `handleLineG`, `crossCheck`, the fuzzers, and a measurement of
+   real trace sizes.
+6. Flip the default (the gate above).
+7. Phase B conversions, one PR each.
+8. Delete the old scanner.
+
 ## 5. From trace to manifest
 
 ### 5.1 Resolving each observation
