@@ -33,7 +33,7 @@ use coding_adventures_warrant_corpus_gen::enumerate_document;
 use coding_adventures_warrant_corpus_gen::error::{code, GenError};
 use coding_adventures_warrant_corpus_gen::eval::{Program, Sabotage, Stats};
 use coding_adventures_warrant_corpus_gen::ir::{Cmp, Ir};
-use coding_adventures_warrant_corpus_gen::lower::{LoweredSuite, SuiteKind};
+use coding_adventures_warrant_corpus_gen::lower::{LoweredModel, LoweredSuite, SuiteKind};
 use coding_adventures_warrant_corpus_gen::profile::{parse_profile, Profile};
 use coding_adventures_warrant_corpus_gen::stream::{fnv1a64, Header};
 use coding_adventures_warrant_corpus_gen::suite::{SuiteOptions, SuitePlan, SuiteResult};
@@ -897,13 +897,13 @@ fn tampered(
     claim: &str,
     sabotage: Sabotage,
     mutate: impl FnOnce(
+        &mut Vec<LoweredModel>,
         &mut LoweredSuite,
         &mut Vec<coding_adventures_warrant_corpus_gen::domains::BinderDomain>,
     ),
 ) -> SuiteResult {
     with_file(src, |file| {
         let an = analyse(file, profile).unwrap();
-        let program = Program::new(&an.lowered.models).with_sabotage(sabotage);
         let env = DomainEnv::new(file);
         let i = an
             .lowered
@@ -911,9 +911,11 @@ fn tampered(
             .iter()
             .position(|s| s.claim == claim)
             .unwrap();
+        let mut models = an.lowered.models.clone();
         let mut suite = an.lowered.suites[i].clone();
         let mut doms = resolve_claim(file, &env, &suite, profile.budget).unwrap();
-        mutate(&mut suite, &mut doms.binders);
+        mutate(&mut models, &mut suite, &mut doms.binders);
+        let program = Program::new(&models).with_sabotage(sabotage);
         let plan = SuitePlan::new(
             &program,
             &suite,
@@ -938,7 +940,7 @@ fn control_with_no_tampering_still_reproduces_the_pinned_digests() {
         &Profile::default(),
         "eq_fixed_agrees_w2",
         Sabotage::None,
-        |_, _| {},
+        |_, _, _| {},
     );
     let p = pinned("eq_fixed_agrees_w2");
     assert_eq!(r.v1_inputs_sha256.as_deref(), Some(p.4));
@@ -953,7 +955,7 @@ fn control_a_wrong_evaluator_op_changes_the_expected_digest_only() {
         &Profile::default(),
         "eq_fixed_agrees_w2",
         Sabotage::EqIsNe,
-        |_, _| {},
+        |_, _, _| {},
     );
     let p = pinned("eq_fixed_agrees_w2");
     assert_eq!(
@@ -972,7 +974,7 @@ fn control_a_wrong_evaluator_op_changes_the_expected_digest_only() {
         &Profile::default(),
         "eq_u64_agrees",
         Sabotage::EqIsNe,
-        |_, _| {},
+        |_, _, _| {},
     );
     assert_ne!(
         r.v1_expected_sha256.as_deref(),
@@ -987,7 +989,7 @@ fn control_a_reordered_enumeration_changes_the_inputs_digest() {
         &Profile::default(),
         "eq_fixed_agrees_w2",
         Sabotage::None,
-        |_, b| {
+        |_, _, b| {
             b[0].sabotage_swap(0, 1);
         },
     );
@@ -1005,7 +1007,7 @@ fn control_a_reordered_enumeration_changes_the_inputs_digest() {
         &Profile::default(),
         "eq_fixed_agrees_w2",
         Sabotage::None,
-        |_, b| {
+        |_, _, b| {
             b[1].sabotage_swap(2, 3);
         },
     );
@@ -1020,7 +1022,7 @@ fn control_an_off_by_one_discard_changes_counts_and_digests() {
         &Profile::default(),
         "select_picks",
         Sabotage::None,
-        |s, _| {
+        |_, s, _| {
             let Ir::Cmp(op, ..) = &mut s.admit else {
                 panic!("the admit of select_picks is a comparison")
             };
@@ -1040,7 +1042,7 @@ fn control_an_off_by_one_discard_changes_counts_and_digests() {
         &Profile::default(),
         "select_rejects_mismatch",
         Sabotage::None,
-        |s, _| {
+        |_, s, _| {
             s.admit = Ir::Bool(true);
         },
     );
@@ -1055,7 +1057,7 @@ fn control_an_off_by_one_discard_changes_counts_and_digests() {
 fn control_a_wrong_wrap_changes_the_digest_and_the_wraps_count() {
     let p = small_profile();
     let good = ct_v1("add_wraps");
-    let bad = tampered(ENUM_V1, &p, "add_wraps", Sabotage::NoWrap, |_, _| {});
+    let bad = tampered(ENUM_V1, &p, "add_wraps", Sabotage::NoWrap, |_, _, _| {});
     assert_eq!(
         bad.wraps, 0,
         "an evaluator that never wraps counts no wraps"
@@ -1066,9 +1068,62 @@ fn control_a_wrong_wrap_changes_the_digest_and_the_wraps_count() {
     assert_eq!(bad.inputs_sha256, good.inputs_sha256);
     // wrapping the wrong way: sub behaving as add
     let good = ct_v1("sub_wraps");
-    let bad = tampered(ENUM_V1, &p, "sub_wraps", Sabotage::SubIsAdd, |_, _| {});
+    let bad = tampered(ENUM_V1, &p, "sub_wraps", Sabotage::SubIsAdd, |_, _, _| {});
     assert_ne!(bad.expected_sha256, good.expected_sha256);
     assert_ne!(bad.v1_expected_sha256, good.v1_expected_sha256);
+}
+
+#[test]
+fn control_a_model_body_changed_to_not_equal_changes_expected_but_not_inputs() {
+    // `same(a, b) = a == b` becomes `a != b`: every expected Bool flips, the inputs do not
+    let r = tampered(
+        CT_COMPARE,
+        &Profile::default(),
+        "eq_fixed_agrees_w2",
+        Sabotage::None,
+        |models, _, _| {
+            let same = models.iter_mut().find(|m| m.name == "same").unwrap();
+            let Ir::Cmp(op, ..) = &mut same.body else {
+                panic!("same is a comparison")
+            };
+            assert_eq!(*op, Cmp::Eq);
+            *op = Cmp::Ne;
+        },
+    );
+    let p = pinned("eq_fixed_agrees_w2");
+    assert_eq!(r.v1_inputs_sha256.as_deref(), Some(p.4));
+    assert_ne!(r.v1_expected_sha256.as_deref(), Some(p.5));
+    assert_eq!(r.cases, p.1);
+}
+
+#[test]
+fn control_swapped_or_dropped_binders_and_refinements_change_the_inputs_digest() {
+    // `choice` moved to the front: the context prefix lists the types in binder order and the
+    // product order changes, so the stream is a different stream
+    let r = tampered(
+        CT_COMPARE,
+        &Profile::default(),
+        "select_picks",
+        Sabotage::None,
+        |_, s, b| {
+            s.binders.rotate_right(1);
+            b.rotate_right(1);
+        },
+    );
+    let p = pinned("select_picks");
+    assert_eq!(r.cases, p.1, "the same tuples are admitted");
+    assert_ne!(r.v1_inputs_sha256.as_deref(), Some(p.4));
+    assert_ne!(r.v1_expected_sha256.as_deref(), Some(p.5));
+    // a refinement dropped from select_picks admits everything
+    let r = tampered(
+        CT_COMPARE,
+        &Profile::default(),
+        "select_picks",
+        Sabotage::None,
+        |_, s, _| s.admit = Ir::Bool(true),
+    );
+    assert!(r.cases > p.1);
+    assert_ne!(r.v1_inputs_sha256.as_deref(), Some(p.4));
 }
 
 // ---------------------------------------------------------------------------

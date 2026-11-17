@@ -235,6 +235,15 @@ fn each_blocker_is_reported_under_its_own_key() {
     assert_eq!(d.claims[1].blocked.as_ref().unwrap().code, code::W0701);
     assert_eq!(d.claims[1].reason_key(), "W0701");
     assert!(!d.emittable());
+    // the report names both, and an unresolvable domain prints no product
+    let r = render(&[("blockers".to_string(), Ok(d))], true);
+    assert!(r.contains("over_budget: blocked W0706"), "{r}");
+    assert!(r.contains("P=?"), "{r}");
+    assert!(r.contains("no_call: blocked W0701"), "{r}");
+    assert!(
+        r.contains("claims by first blocker: W0701 1, W0706 1"),
+        "{r}"
+    );
 }
 
 #[test]
@@ -250,6 +259,8 @@ fn a_model_chain_over_the_cost_bound_blocks_every_claim_and_is_reported_once() {
         .iter()
         .all(|c| c.blocked.as_ref().is_some_and(|b| b.code == code::LIMIT)));
     assert!(!d.emittable());
+    let r = render(&[("chain".to_string(), Ok(d.clone()))], false);
+    assert!(r.contains("models: limit:"), "{r}");
     // the ceiling bound still stops the doubling chain (2^13 nodes < 65,536: it fits)
     let ok = census_of(
         &v1_doc(

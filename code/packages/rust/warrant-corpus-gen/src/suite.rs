@@ -498,13 +498,8 @@ impl<'a> SuitePlan<'a> {
 
         let n = self.binders.len();
         let sizes: Vec<u64> = self.binders.iter().map(|b| b.size).collect();
-        let mut idx = unrank_product(&sizes, lo).ok_or_else(|| {
-            at(GenError::new(
-                code::W0701,
-                "",
-                "a chunk start cannot be unranked",
-            ))
-        })?;
+        let mut idx = unrank_product(&sizes, lo)
+            .ok_or_else(|| at(GenError::internal("a chunk start cannot be unranked")))?;
         let mut vars: Vec<(&str, crate::value::Value)> = self
             .binders
             .iter()
@@ -626,17 +621,9 @@ impl<'a> SuitePlan<'a> {
         let inputs: Vec<[u8; 32]> = chunks.iter().map(|c| c.inputs).collect();
         let inputs_sha256 = chunk_digest_framing(&inputs).map_err(at)?;
         let expected_sha256 = if self.is_reference() {
-            let ex: Option<Vec<[u8; 32]>> = chunks.iter().map(|c| c.expected).collect();
-            Some(
-                chunk_digest_framing(&ex.ok_or_else(|| {
-                    at(GenError::new(
-                        code::W0701,
-                        "",
-                        "a chunk has no expected digest",
-                    ))
-                })?)
-                .map_err(at)?,
-            )
+            // every chunk of a reference suite carries an expected digest
+            let ex: Vec<[u8; 32]> = chunks.iter().filter_map(|c| c.expected).collect();
+            Some(chunk_digest_framing(&ex).map_err(at)?)
         } else {
             None
         };
@@ -646,10 +633,9 @@ impl<'a> SuitePlan<'a> {
                 "the chunk cases do not sum to the suite cases",
             )));
         }
-        let wraps = chunks
-            .iter()
-            .try_fold(self.admit_wraps, |a, c| a.checked_add(c.wraps))
-            .ok_or_else(|| at(GenError::new(code::LIMIT, "", "the wraps count overflows")))?;
+        // At most 2^28 ordinals times 65,536 node evaluations per case (VER04r 14): far below
+        // 2^64, so plain addition cannot overflow.
+        let wraps = self.admit_wraps + chunks.iter().map(|c| c.wraps).sum::<u64>();
         let mut slim_base = slim_base_set(&self.suite.id, m, opts.stride.filter(|_| m > 16));
         slim_base.extend_from_slice(&opts.slim_chunks);
         slim_base.sort_unstable();
@@ -705,11 +691,12 @@ fn build_admission(
     k: usize,
     product: u64,
 ) -> Result<(Admission, u64, u64), GenError> {
-    let overflow = || GenError::new(code::LIMIT, "", "the wraps count overflows");
+    // `wraps` is at most 2^28 ordinals * 65,536 node evaluations (VER04r 14): plain u64
+    // arithmetic cannot overflow.
     if k == 0 {
         let mut st = Stats::default();
         let ok = program.eval(&suite.admit, &[], &mut st)?.as_bool()?;
-        let wraps = st.wraps.checked_mul(product).ok_or_else(overflow)?;
+        let wraps = st.wraps * product;
         // A constant-false admit admits nothing: the caller refuses the suite (VER04r 4.5).
         return Ok((Admission::All, wraps, if ok { product } else { 0 }));
     }
@@ -726,9 +713,7 @@ fn build_admission(
     for q in 0..pre {
         let mut st = Stats::default();
         let ok = program.eval(&suite.admit, &vars, &mut st)?.as_bool()?;
-        wraps = wraps
-            .checked_add(st.wraps.checked_mul(r).ok_or_else(overflow)?)
-            .ok_or_else(overflow)?;
+        wraps += st.wraps * r;
         if ok {
             bits[(q / 64) as usize] |= 1 << (q % 64);
         }
