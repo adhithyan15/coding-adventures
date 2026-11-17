@@ -4520,6 +4520,29 @@ Complete transcript and handshake state, repository-owned AEAD composition,
 certificate-path validation, revocation policy, TLS transport, and HTTP
 composition remain blockers. Concrete HTTPS remains unavailable.
 
+An allocation-free `tls13-handshake-reassembly` prerequisite now retains one
+TLS 1.3 handshake message across already authenticated record-content
+fragments in caller-owned storage. Each push consumes only the input prefix
+needed by that message and reports the exact consumed count, so coalesced
+messages and a partial next message remain with the caller for ordered replay.
+The reassembler validates the four-byte header as soon as it is complete,
+applies the caller's existing handshake-type and body-length policy, rejects a
+declared message that cannot fit the supplied storage, and borrows the exact
+completed encoding through `tls13-handshake`. Incomplete pushes retain their
+bounded prefix; completed-message and failure diagnostics retain no copied
+wire bytes, declared lengths, or body contents.
+
+The caller must supply only plaintext content from a record whose authenticity
+and inner handshake content type were already accepted. This slice does not
+decode or authenticate records, accept unauthenticated bytes, retain a
+coalesced tail, sequence handshake phases, update a transcript, parse a
+handshake body, derive keys, invoke an AEAD, validate certificates, establish
+trust, check revocation, perform I/O, authorize HTTP or OAuth transport, or open
+a network connection. Full handshake state, record authentication and
+composition, certificate-path and identity validation, revocation policy, TLS
+transport, and HTTP composition remain blockers. Concrete HTTPS remains
+unavailable.
+
 An allocation-free `tls13-encrypted-extensions-message` prerequisite now owns
 the exact RFC 8446 section 4.3.1 `EncryptedExtensions` handshake body. It
 delegates the complete two-byte-length-prefixed extension vector to the
