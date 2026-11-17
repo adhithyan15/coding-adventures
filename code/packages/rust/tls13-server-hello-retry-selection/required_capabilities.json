@@ -3,5 +3,5 @@
   "version": 1,
   "package": "rust/tls13-server-hello-retry-selection",
   "capabilities": [],
-  "justification": "Pure allocation-free equality and message-kind binding over already-decoded, caller-borrowed TLS 1.3 ClientHello, HelloRetryRequest, and ServerHello public handshake evidence. It performs no filesystem, network, DNS, process, environment, clock, entropy, cryptography, credential access, signing, certificate parsing, trust-root access, path validation, revocation, audit, or external effect."
+  "justification": "Pure allocation-free equality, bounded public-extension decoding, data-driven named-group policy, and retry key-share transition binding over already-decoded, caller-borrowed TLS 1.3 ClientHello, HelloRetryRequest, and ServerHello handshake evidence. It performs no filesystem, network, DNS, process, environment, clock, entropy, key generation, private-key access, key agreement, credential access, signing, certificate parsing, trust-root access, path validation, revocation, audit, or external effect."
 }
