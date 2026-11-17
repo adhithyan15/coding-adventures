@@ -37,5 +37,13 @@
 - Repeated the exact leaf, issuer, anchor, SNI, Host, port, and one-intermediate
   checks because the additional responder paths do not extend the double-
   nested branch's target-plus-intermediate server-chain coverage.
-- Left recursive and alternative revocation branches outside this boundary
-  and made no TLS, HTTP, network, or live-provider readiness claim.
+- Added a distinct sealed composition for the destination-bound recursive-
+  responder no-check complete fixed-path revocation branch.
+- Restricted that marker to the exact signed reviewed path-and-anchor-self-
+  signature proof retained beneath the recursive no-check and authenticated
+  responder-revocation layers.
+- Repeated the exact leaf, issuer, anchor, SNI, Host, port, and one-intermediate
+  checks because recursive responder paths do not extend the retained server-
+  chain coverage.
+- Left the alternative revocation branch outside this boundary and made no
+  TLS, HTTP, network, or live-provider readiness claim.
