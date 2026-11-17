@@ -45,6 +45,7 @@ REQUIRED = (
     "TestSandboxStraceSignals",
     "TestSandboxRecordProbe",
     "TestSandboxRecordGates",
+    "TestSandboxRecordSurvivor",
 )
 
 FINAL = {"pass", "fail", "skip"}
