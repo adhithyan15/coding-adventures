@@ -1,0 +1,26 @@
+100  execve("/usr/bin/sh", ["sh", "-c", "make"], 0x7ffd1c2e3a40 /* 41 vars */) = 0
+100  openat(AT_FDCWD</work/repo>, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3</etc/ld.so.cache>
+100  newfstatat(AT_FDCWD</work/repo>, "go.mod", {st_mode=S_IFREG|0644, st_size=40, ...}, 0) = 0
+100  stat("missing.h", 0x7ffd1c2e3500) = -1 ENOENT (No such file or directory)
+100  chdir("pkg") = 0
+100  openat(AT_FDCWD</work/repo/pkg>, "src/main.c", O_RDONLY) = 4</work/repo/pkg/src/main.c>
+100  clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7f0000000010) = 101
+101  execve("/usr/bin/cc", ["cc", "-c", "src/main.c"], 0x7ffd1c2e3a40 /* 41 vars */) = 0
+100  wait4(-1,  <unfinished ...>
+101  openat(AT_FDCWD</work/repo/pkg>, "src/main.c", O_RDONLY) = 3</work/repo/pkg/src/main.c>
+101  getdents64(5</work/repo/pkg/src>, 0x55d0c8a0b2a0 /* 3 entries */, 32768) = 80
+101  openat(AT_FDCWD</work/repo/pkg>, "main.o", O_WRONLY|O_CREAT|O_TRUNC, 0666 <unfinished ...>
+101  --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=102} ---
+101  <... openat resumed>)            = 6</work/repo/pkg/main.o>
+101  rename("main.o", "build.o") = 0
+101  mkdir("out", 0777)                      = -1 EEXIST (File exists)
+101  unlinkat(AT_FDCWD</work/repo/pkg>, "tmp", AT_REMOVEDIR) = 0
+101  symlink("main.o", "link.o") = 0
+101  readlink("link.o", "main.o", 4096) = 6
+101  utimensat(6</work/repo/pkg/main.o>, NULL, [{tv_sec=1, tv_nsec=0}, {tv_sec=1, tv_nsec=0}], 0) = 0
+101  linkat(AT_FDCWD</work/repo/pkg>, "a", 7</work/repo>, "b", 0) = 0
+101  +++ exited with 0 +++
+100  <... wait4 resumed>[{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 101
+100  --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=101, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+100  exit_group(0)                           = ?
+100  +++ exited with 0 +++
