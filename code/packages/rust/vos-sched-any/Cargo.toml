@@ -2,6 +2,7 @@
 name = "vos-sched-any"
 version = "0.1.0"
 edition = "2021"
+publish = false  # evidence-only: never published or shipped (SH16)
 description = "The most-general (-any) scheduler of the verified-OS program (VOS-012a): a one-byte ready set plus an oracle register, implementing vos-sched-contract at N = 8. Evidence only: never shipped in an image (SH16)"
 
 [lib]
