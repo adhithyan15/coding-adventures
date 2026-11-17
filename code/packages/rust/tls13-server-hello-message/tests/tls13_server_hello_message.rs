@@ -1,8 +1,9 @@
 use tls13_extension_block::ExtensionBlockError;
 use tls13_server_hello_message::{
     decode_tls13_server_hello, Tls13ServerHelloErrorKind, Tls13ServerHelloField,
-    Tls13ServerHelloLimits, TLS13_SERVER_HELLO_MAX_MESSAGE_LENGTH,
-    TLS13_SERVER_HELLO_MAX_SESSION_ID_ECHO_LENGTH, TLS13_SERVER_HELLO_MIN_MESSAGE_LENGTH,
+    Tls13ServerHelloKind, Tls13ServerHelloLimits, TLS13_HELLO_RETRY_REQUEST_RANDOM,
+    TLS13_SERVER_HELLO_MAX_MESSAGE_LENGTH, TLS13_SERVER_HELLO_MAX_SESSION_ID_ECHO_LENGTH,
+    TLS13_SERVER_HELLO_MIN_MESSAGE_LENGTH,
 };
 
 fn limits(
@@ -33,6 +34,7 @@ fn decodes_exact_borrowed_fields_and_extensions() {
 
     assert_eq!(decoded.encoded().as_ptr(), encoded.as_ptr());
     assert_eq!(decoded.random(), &random);
+    assert_eq!(decoded.kind(), Tls13ServerHelloKind::ServerHello);
     assert_eq!(decoded.session_id_echo(), &[0xaa, 0xbb]);
     assert_eq!(decoded.cipher_suite().wire_value(), 0x1301);
     assert_eq!(decoded.extensions().len(), 1);
@@ -43,6 +45,22 @@ fn decodes_exact_borrowed_fields_and_extensions() {
         43
     );
     assert_eq!(decoded.extensions().entries()[0].data(), &[0x03, 0x04]);
+}
+
+#[test]
+fn classifies_only_the_exact_hello_retry_request_random() {
+    let retry = encoded_server_hello(&[], TLS13_HELLO_RETRY_REQUEST_RANDOM);
+    let decoded_retry = decode_tls13_server_hello(&retry, limits(128, 64, 4)).unwrap();
+    assert_eq!(
+        decoded_retry.kind(),
+        Tls13ServerHelloKind::HelloRetryRequest
+    );
+
+    let mut one_bit_different = TLS13_HELLO_RETRY_REQUEST_RANDOM;
+    one_bit_different[31] ^= 1;
+    let ordinary = encoded_server_hello(&[], one_bit_different);
+    let decoded_ordinary = decode_tls13_server_hello(&ordinary, limits(128, 64, 4)).unwrap();
+    assert_eq!(decoded_ordinary.kind(), Tls13ServerHelloKind::ServerHello);
 }
 
 #[test]
