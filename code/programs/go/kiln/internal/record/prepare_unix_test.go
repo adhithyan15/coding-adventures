@@ -122,10 +122,17 @@ func newPrepAt(t *testing.T, base string) *prep {
 	writeBytes(t, p.bt, []byte("build tool binary"), 0o755)
 	writeBytes(t, p.strace, []byte("strace"), 0o755)
 	p.gitBin, p.gitSum = realGit(t)
+	// Every probed tool has a binary on its root, outside the checkout: an
+	// absent probe binary is a gate (`probe-absent:`), and a fixture that wants no
+	// gate gives each probe one. The fake Options.ProbeRun answers for it.
+	probeBin := filepath.Join(p.base, "probebin")
+	for _, n := range []string{"cc", "xtool"} {
+		writeBytes(t, filepath.Join(probeBin, n), []byte("#!/bin/sh\n"), 0o755)
+	}
 	p.files = map[string]string{
 		"code/kiln/legacy/pinned.json":     `{"languages": []}`,
 		"code/kiln/legacy/never.json":      `{"packages": []}`,
-		"code/kiln/legacy/toolchains.json": fixtureToolchains,
+		"code/kiln/legacy/toolchains.json": strings.NewReplacer("/opt/x/bin", probeBin, "/nonexistent/kiln-test-bin", probeBin).Replace(fixtureToolchains),
 		"code/kiln/legacy/env.json":        `{"names": ["FIXTURE_*", "LANG"]}`,
 		// The gate (Traced.Gate) reads the boundary file, as the plan does.
 		legacy.BoundaryPath:                   `{"schema_version": 1, "language_source_input_registry_sha256": "00", "boundaries": []}`,
@@ -291,16 +298,9 @@ func (p *prep) probeRun(r legacy.ProbeRun) ([]byte, error) {
 	return []byte(r.Argv0 + " version 1.2.3\n"), nil
 }
 
-// withProbeBin puts an executable called name in a directory outside the
-// checkout and makes the fixture's language x look for xtool there, so a probe
-// resolves and the fake runner is asked. It must run before commit.
-func (p *prep) withProbeBin(name string) string {
-	p.t.Helper()
-	bin := filepath.Join(p.base, "probebin")
-	writeBytes(p.t, filepath.Join(bin, name), []byte("#!/bin/sh\n"), 0o755)
-	p.files["code/kiln/legacy/toolchains.json"] = strings.Replace(fixtureToolchains, "/opt/x/bin", bin, 1)
-	return bin
-}
+// withProbeBin is the directory whose cc and xtool the fixture's toolchains
+// probe (newPrepAt makes it), where a test may add more.
+func (p *prep) withProbeBin(string) string { return filepath.Join(p.base, "probebin") }
 
 // structure is the fake Options.Structure: it records its input and reports
 // exactly the runs ProbeSpecs says a real probe would make, each "passing", so

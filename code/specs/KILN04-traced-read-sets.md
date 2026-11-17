@@ -1092,7 +1092,7 @@ not be recorded as a measurement, computed by `Traced.Gate`: the very
 `gateFacts`/`gateFrom` that `legacy-plan`'s `record()` uses, so the plan and the
 recorder cannot drift. Priority: the never list, then the other hard reasons
 (`symlink:`, `unknown-repo-inputs:`, `unknown-toolchain:`, `no-build-file:`), then
-probes (`probe-mismatch:`, `probe-timeout:`, `probe-refused:`); the smallest
+probes (`probe-mismatch:`, `probe-timeout:`, `probe-refused:`, `probe-absent:`); the smallest
 string wins within a priority. It is printable and clipped to 200 bytes. A gated
 package still RUNS (and may also be a refusal, as for an unknown toolchain); its
 record carries the gate and the merge turns it into `precondition:<gate>`, so it
@@ -1101,15 +1101,28 @@ the graph, D9) run on the first `Gate` call, in a sandbox, never on the host
 (`Probe` with no runner would exec on the host, so `prepare` ALWAYS passes
 `toolchainProber.Run`): plain `kiln sandbox-exec`, no strace, on
 `<dir>/probe/toolchains-sandbox.json`, whose `repo_root` is the empty
-`<dir>/probe/root` (cwd `.../root/p`), with `home`, `tmpdir`, `ro_roots` and
-`kiln_exe` as in `pre/sandbox.json`, no state roots, no masks, and the probe's
+`<dir>/probe/root` (cwd `.../root/p`), with `home`, `ro_roots` and `kiln_exe` as
+in `pre/sandbox.json`, **its own `tmpdir` `<dir>/probe/tmp`** (a probe's argv tail
+comes from the PR-editable `toolchains.json`, so it must not share the steps'
+writable TMPDIR: that would plant files later steps read unmeasured), no state
+roots, no masks, and the probe's
 environment (`PATH`, `LANG=C`, `LC_ALL=C`, `TZ=UTC`, `HOME` replaced by the
 sandbox's). The process gets `KILN_ACTION=p`, the safe `PATH`, `/dev/null` as stdin
 and one capped stream for stdout and stderr; 60 s per probe and 10 minutes in
 all (D8), the root killed with its process group at a deadline. A probe that
-mismatches, times out, is refused or whose sandbox exits 125 is a gate; any other
-runner error (the sandbox cannot start, the configuration is refused, an
-unarmed or changed environment) fails `prepare`. The results are sealed in
+mismatches, times out, is refused or whose sandbox exits 125 is a gate; so is a probe
+whose binary is **absent** from the fixed PATH (`probe-absent:<tool>`, probe
+priority): otherwise a PR could point a pinned tool's probe at a binary that does not
+exist and skip the version check. `kiln legacy-plan` gates the same way, since both
+use `gateFacts`. Any other runner error (the sandbox cannot start, the
+configuration is refused, an unarmed or changed environment) fails `prepare`, and
+so does a probe sandbox that is systematically broken: when probes ran and EVERY
+one of them ended in exit 125 (a single 125 stays a mismatch). After the probes
+`prepare` re-runs the check of the structure probes on the REAL configuration:
+tmpdir and every state root must still be empty (`unscrubbed:*`).
+(`kiln legacy-plan --probe`, used by lookup, still probes on the HOST
+(`legacycmd.go`), unlike the recorder; both are version queries, so they are
+expected to agree.) The results are sealed in
 `pre/probes.json` `toolchains`.
 
 **P8. The host scan (D15).** Every `ro_roots` entry is walked on the host, one

@@ -575,6 +575,12 @@ func Prepare(o Options) (*PrepareResult, error) {
 		if err := prober.Err(); err != nil {
 			return nil, err
 		}
+		// The toolchain probes' argv comes from a file a PR can edit. They run in
+		// a tmpdir of their own, but nothing is taken on trust: what the steps
+		// will find (tmpdir, every state root) must still be as the scan left it.
+		if err := probesLeftNothing(cfg); err != nil {
+			return nil, fmt.Errorf("toolchain probes: %w", err)
+		}
 		probes.Toolchains = make([]ToolchainProbe, 0, len(results))
 		for _, r := range results {
 			probes.Toolchains = append(probes.Toolchains, ToolchainProbe{Tool: r.Tool, Status: r.Status, Detail: reasonText(r.Detail)})

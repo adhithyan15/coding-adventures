@@ -111,7 +111,7 @@ func TestProberRunsAProbeInThePlainSandbox(t *testing.T) {
 	if cfg.RepoRoot != filepath.Join(f.dir, "probe", "root") || len(cfg.StateRoots) != 0 || len(cfg.Masks) != 0 {
 		t.Errorf("%+v", cfg)
 	}
-	if cfg.Home != f.base.Home || cfg.Tmpdir != f.base.Tmpdir || cfg.KilnExe != f.kiln || len(cfg.RoRoots) != 1 || cfg.RoRoots[0] != "/usr" {
+	if cfg.Home != f.base.Home || cfg.Tmpdir != filepath.Join(f.dir, "probe", "tmp") || cfg.Tmpdir == f.base.Tmpdir || cfg.KilnExe != f.kiln || len(cfg.RoRoots) != 1 || cfg.RoRoots[0] != "/usr" {
 		t.Errorf("%+v", cfg)
 	}
 	env := cfg.EnvByAction["p"]
@@ -138,7 +138,6 @@ func TestProberStatusesAreMismatchesNotFatal(t *testing.T) {
 		res  func(probeCmd) ([]byte, int, bool, error)
 		want string
 	}{
-		"the sandbox refuses":    {func(probeCmd) ([]byte, int, bool, error) { return []byte("no root"), 125, false, nil }, "refused the probe (exit 125)"},
 		"the tool fails":         {func(probeCmd) ([]byte, int, bool, error) { return []byte("x"), 3, false, nil }, "exited 3"},
 		"killed by a signal":     {func(probeCmd) ([]byte, int, bool, error) { return nil, -1, false, nil }, "exited -1"},
 		"the deadline kills it":  {func(probeCmd) ([]byte, int, bool, error) { return []byte("partial"), -1, true, nil }, "did not finish"},
@@ -312,5 +311,82 @@ func TestLimitedBuffer(t *testing.T) {
 	b.Write([]byte("zz"))
 	if b.b.String() != "abcd" {
 		t.Fatalf("%q", b.b.String())
+	}
+}
+
+func TestProberOneRefusalIsAMismatchButAllRefusedIsBroken(t *testing.T) {
+	f := newProberFix(t)
+	if err := f.p.Arm(f.base); err != nil {
+		t.Fatal(err)
+	}
+	f.result = func(c probeCmd) ([]byte, int, bool, error) {
+		if c.Args[len(c.Args)-2] == "refused-tool" { // argv0 is second to last
+			return []byte("no root"), 125, false, nil
+		}
+		return []byte("ok"), 0, false, nil
+	}
+	if _, err := f.run(probeEnv0, "good"); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := f.run(probeEnv0, "refused-tool", "x"); err == nil || !strings.Contains(err.Error(), "refused the probe (exit 125)") {
+		t.Fatalf("%v", err)
+	}
+	if f.p.Err() != nil {
+		t.Fatalf("one refusal among working probes must stay a mismatch: %v", f.p.Err())
+	}
+
+	// Every probe that ran was refused: the recorder is malfunctioning.
+	g := newProberFix(t)
+	if err := g.p.Arm(g.base); err != nil {
+		t.Fatal(err)
+	}
+	g.result = func(probeCmd) ([]byte, int, bool, error) { return []byte("no root"), 125, false, nil }
+	if g.p.Err() != nil {
+		t.Fatal("nothing ran yet")
+	}
+	g.run(probeEnv0, "sed", "--version")
+	g.run(probeEnv0, "bash", "--version")
+	if err := g.p.Err(); err == nil || !strings.Contains(err.Error(), "refused all 2 probes") {
+		t.Fatalf("%v", err)
+	}
+	// A timeout is not a refusal.
+	h := newProberFix(t)
+	if err := h.p.Arm(h.base); err != nil {
+		t.Fatal(err)
+	}
+	h.result = func(probeCmd) ([]byte, int, bool, error) { return nil, -1, true, nil }
+	h.run(probeEnv0, "sed")
+	if h.p.Err() != nil {
+		t.Fatalf("%v", h.p.Err())
+	}
+}
+
+func TestProbeSandboxHasItsOwnTmpdir(t *testing.T) {
+	f := newProberFix(t)
+	if err := f.p.Arm(f.base); err != nil {
+		t.Fatal(err)
+	}
+	st, err := os.Lstat(filepath.Join(f.dir, "probe", ProbeTmpDir))
+	if err != nil || !st.IsDir() || st.Mode().Perm() != 0o700 {
+		t.Fatalf("%v %v", st, err)
+	}
+	if _, err := f.run(probeEnv0, "sed"); err != nil {
+		t.Fatal(err)
+	}
+	data, _ := os.ReadFile(filepath.Join(f.dir, "probe", ProbeConfigFile))
+	cfg, err := sandbox.ParseConfig(data)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if cfg.Tmpdir == f.base.Tmpdir || cfg.Tmpdir != filepath.Join(f.dir, "probe", ProbeTmpDir) {
+		t.Fatalf("the probes share the steps' tmpdir: %q", cfg.Tmpdir)
+	}
+	// An existing tmpdir is refused (it must be fresh).
+	g := newProberFix(t)
+	if err := os.MkdirAll(filepath.Join(g.dir, "probe", ProbeTmpDir), 0o700); err != nil {
+		t.Fatal(err)
+	}
+	if err := g.p.Arm(g.base); err == nil {
+		t.Error("a pre-existing probe tmpdir")
 	}
 }

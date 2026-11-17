@@ -18,11 +18,14 @@ package main
 //	x/g     fake      probe-mismatch:sed             the real sed is not 999.0.0
 //	x/n     sh        never:x/n
 //	x/u     nolang    unknown-toolchain:nolang       (also a refusal: no weak key)
+//	x/v     greplang  ""                             grep pinned to the host's own
+//	                  version: ok only if the sandboxed probe printed it
 //
-// Asserted: the action files and pre/probes.json (sed mismatches, bash is ok),
+// Asserted: the action files and pre/probes.json (sed mismatches and its detail
+// is REAL tool output, not a refusal or a timeout; bash and grep are ok),
 // the probes' own sandbox configuration (an empty checkout, no state, no masks,
 // HOME replaced), that every step still runs, the gates after `step` and
-// `collect`, and that after the merge only x/a is recordable.
+// `collect`, and that after the merge only x/a and x/v are recordable.
 //
 // The gates and the probe statuses are logged with the marker "PROBE:" for the
 // CI log. It is a Linux-only test in the `kiln-sandbox` CI job.
@@ -34,6 +37,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"testing"
 	"time"
@@ -45,9 +49,33 @@ import (
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/sandbox"
 )
 
-const gatesToolchains = `{"fake":{"pins":{"sed":"999.0.0"},"probes":[["sed","--version"]],"roots":{"sed":["/usr/bin","/bin"]}},
+// gatesToolchains is the fixture's toolchains.json. `greplang` pins grep to the
+// EXACT version this host's grep prints, so its probe is a positive versioned
+// case: it can only be `ok` if the sandboxed probe really ran grep and printed
+// that version (an image pin says `ok` whatever the run returned, and any
+// failure of a versioned probe is a mismatch).
+func gatesToolchains(grepVersion string) string {
+	return `{"fake":{"pins":{"sed":"999.0.0"},"probes":[["sed","--version"]],"roots":{"sed":["/usr/bin","/bin"]}},
+ "greplang":{"pins":{"grep":"` + grepVersion + `"},"probes":[["grep","--version"]],"roots":{"grep":["/usr/bin","/bin"]}},
  "sh":{"always":true,"pins":{"bash":"image","sh":"image"},"probes":[["bash","--version"]],"roots":{"bash":["/usr/bin","/bin"],"sh":["/usr/bin","/bin"]}}}
 `
+}
+
+// hostGrepVersion runs `grep --version` on the host and parses the version out
+// of its first line (`grep (GNU grep) 3.11`).
+func hostGrepVersion(t *testing.T) string {
+	t.Helper()
+	out, err := exec.Command("grep", "--version").Output()
+	if err != nil {
+		skipOrFail(t, "grep --version: %v", err)
+	}
+	first, _, _ := strings.Cut(string(out), "\n")
+	m := regexp.MustCompile(`\d+(\.\d+)+`).FindString(first)
+	if m == "" {
+		skipOrFail(t, "cannot read a version from %q", first)
+	}
+	return m
+}
 
 func TestSandboxRecordGates(t *testing.T) {
 	newSandboxFixture(t)
@@ -100,9 +128,10 @@ func TestSandboxRecordGates(t *testing.T) {
 		{"code/packages/x/g", "x/g", "fake", "probe-mismatch:sed"},
 		{"code/packages/x/n", "x/n", "sh", "never:x/n"},
 		{"code/packages/x/u", "x/u", "nolang", "unknown-toolchain:nolang"},
+		{"code/packages/x/v", "x/v", "greplang", ""},
 	}
 	files := recStepPolicyFiles(imageRoots())
-	files["code/kiln/legacy/toolchains.json"] = gatesToolchains
+	files["code/kiln/legacy/toolchains.json"] = gatesToolchains(hostGrepVersion(t))
 	files["code/kiln/legacy/never.json"] = `{"packages": ["x/n"]}`
 	files["code/programs/go/build-tool/go.mod"] = "module example.com/bt\n\ngo 1.26\n"
 	files["code/programs/go/build-tool/main.go"] = "package main\n"
@@ -213,8 +242,19 @@ exit 0
 		status[tp.Tool] = tp.Status
 		t.Logf("PROBE: toolchain %s %s %q", tp.Tool, tp.Status, tp.Detail)
 	}
-	if status["sed"] != legacy.ProbeMismatch || status["bash"] != legacy.ProbeOK || len(status) != 2 {
+	if status["sed"] != legacy.ProbeMismatch || status["bash"] != legacy.ProbeOK || status["grep"] != legacy.ProbeOK || len(status) != 3 {
 		t.Errorf("toolchain probes %+v", pre.Probes.Toolchains)
+	}
+	// A mismatch is also what a BROKEN probe sandbox looks like, so its detail
+	// must be the tool's own output: this separates "the sandbox ran sed and it
+	// is not 999.0.0" from "the sandbox never ran it".
+	for _, tp := range pre.Probes.Toolchains {
+		if tp.Tool != "sed" {
+			continue
+		}
+		if !strings.Contains(tp.Detail, "GNU sed") || strings.Contains(tp.Detail, "refused") || strings.Contains(tp.Detail, "did not finish") {
+			t.Errorf("sed's detail is not real tool output: %q", tp.Detail)
+		}
 	}
 
 	// The probes' own configuration: an empty checkout, nothing writable.
@@ -317,9 +357,9 @@ exit 0
 		t.Logf("PROBE: outcome %s recordable=%v reasons=%v", o.Action, o.Recordable, o.Reasons)
 		reasons := strings.Join(o.Reasons, "\n")
 		switch o.Action {
-		case "code/packages/x/a":
+		case "code/packages/x/a", "code/packages/x/v":
 			if !o.Recordable || len(o.Reasons) != 0 {
-				t.Errorf("x/a: %+v", o)
+				t.Errorf("%s: %+v", o.Action, o)
 			}
 		case "code/packages/x/g":
 			if o.Recordable || !strings.Contains(reasons, "precondition:probe-mismatch:sed") {

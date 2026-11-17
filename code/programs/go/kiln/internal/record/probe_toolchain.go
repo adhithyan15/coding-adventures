@@ -29,7 +29,8 @@ package record
 //
 //	repo_root    <dir>/probe/root, an EMPTY directory (with the working directory
 //	             <dir>/probe/root/p): the checkout is not visible at all
-//	home, tmpdir, ro_roots, kiln_exe    as in pre/sandbox.json
+//	tmpdir       <dir>/probe/tmp, the probes' OWN (never the steps' tmpdir)
+//	home, ro_roots, kiln_exe    as in pre/sandbox.json
 //	state_roots  none          masks  none
 //	env_by_action  {"p": [PATH=<the probe PATH>, LANG=C, LC_ALL=C, TZ=UTC, HOME=<home>]}
 //
@@ -96,6 +97,8 @@ const (
 	// ProbeActionDir the package directory beneath it (the cwd of every probe).
 	ProbeRootDir   = "root"
 	ProbeActionDir = "p"
+	// ProbeTmpDir is the probes' own TMPDIR, in <dir>/probe.
+	ProbeTmpDir = "tmp"
 	// ProbeConfigFile is the probes' own sandbox configuration, in <dir>/probe.
 	ProbeConfigFile = "toolchains-sandbox.json"
 	// probeAction is the KILN_ACTION of every toolchain probe.
@@ -130,6 +133,9 @@ type toolchainProber struct {
 	sha   string
 	env   []string
 	fatal error
+	// ran counts the probes that reached the sandbox, refused those whose
+	// sandbox exited 125.
+	ran, refused int
 }
 
 // newToolchainProber makes a prober that is NOT yet armed: Run refuses until
@@ -138,6 +144,16 @@ type toolchainProber struct {
 func newToolchainProber(dir, kilnExe, safePath string) *toolchainProber {
 	return &toolchainProber{dir: dir, kilnExe: kilnExe, path: safePath, exec: realProbeExec}
 }
+
+// probeTmpdir is the probes' OWN TMPDIR, never the steps': a probe's argv tail
+// comes from `toolchains.json`, which a PR can edit, so a probe may write to its
+// TMPDIR, and what it wrote must not be where a later recorded step reads it
+// unmeasured (cache poisoning). It lives in <dir>/probe, which the record
+// directory keeps private: Validate only asks that it is not inside the probes'
+// checkout (<dir>/probe/root, a sibling) and that it differs from home, and
+// CheckHost that the configuration file (a sibling too) is neither inside nor
+// over it. It is created fresh (mkdirNew) and never sealed or uploaded.
+func (p *toolchainProber) probeTmpdir() string { return filepath.Join(p.probeDir(), ProbeTmpDir) }
 
 func (p *toolchainProber) probeDir() string   { return filepath.Join(p.dir, ProbeDir) }
 func (p *toolchainProber) configPath() string { return filepath.Join(p.probeDir(), ProbeConfigFile) }
@@ -161,6 +177,9 @@ func (p *toolchainProber) Arm(base *sandbox.Config) error {
 		return err
 	}
 	if err := mkdirNew(filepath.Join(root, ProbeActionDir)); err != nil {
+		return err
+	}
+	if err := mkdirNew(p.probeTmpdir()); err != nil {
 		return err
 	}
 	p.base = base
@@ -192,9 +211,18 @@ func mkdirNew(dir string) error {
 
 // Err is the first fatal error a run hit, or nil. `prepare` checks it after the
 // probes, because legacy.Probe judges any runner error a mismatch.
+//
+// It is also the recorder's malfunction check: one sandbox refusal is a
+// mismatch (a tool the sandbox could not start says something about the tool),
+// but when probes ran and EVERY one of them ended in exit 125, the probe
+// sandbox is broken, and gating every package silently on `probe-mismatch`
+// would hide that. That fails `prepare`.
 func (p *toolchainProber) Err() error {
 	p.mu.Lock()
 	defer p.mu.Unlock()
+	if p.fatal == nil && p.ran > 0 && p.refused == p.ran {
+		return fmt.Errorf("toolchain probes: the sandbox refused all %d probes that ran (exit %d): the probe sandbox is broken", p.ran, sandbox.ExitFailure)
+	}
 	return p.fatal
 }
 
@@ -234,6 +262,12 @@ func (p *toolchainProber) Run(r legacy.ProbeRun) ([]byte, error) {
 		Dir: p.cfg.PackageDir(probeAction), Timeout: r.Timeout, Limit: r.Limit,
 	}
 	out, exit, timedOut, err := p.exec(cmd)
+	if err == nil {
+		p.ran++
+		if !timedOut && exit == sandbox.ExitFailure {
+			p.refused++
+		}
+	}
 	switch {
 	case err != nil:
 		return p.fail(fmt.Errorf("toolchain probes: could not run %s: %w", r.Argv0, err))
@@ -270,7 +304,7 @@ func (p *toolchainProber) probeEnv(in []string) ([]string, error) {
 func (p *toolchainProber) writeConfig(env []string) error {
 	cfg := &sandbox.Config{
 		RepoRoot: filepath.Join(p.probeDir(), ProbeRootDir),
-		Home:     p.base.Home, Tmpdir: p.base.Tmpdir, KilnExe: p.base.KilnExe,
+		Home:     p.base.Home, Tmpdir: p.probeTmpdir(), KilnExe: p.base.KilnExe,
 		RoRoots:     append([]string{}, p.base.RoRoots...),
 		StateRoots:  []string{},
 		Masks:       []string{},

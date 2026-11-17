@@ -71,6 +71,7 @@ func (pl *planner) prepareToolsEnv() error {
 	pl.mismatch = map[string]bool{}
 	pl.timedOut = map[string]bool{}
 	pl.refused = map[string]bool{}
+	pl.absent = map[string]bool{}
 	if pl.opt.Probe == nil {
 		return nil
 	}
@@ -98,6 +99,9 @@ func (pl *planner) prepareToolsEnv() error {
 		}
 		if r.Status == ProbeRefused {
 			pl.refused[r.Tool] = true
+		}
+		if r.Status == ProbeAbsent {
+			pl.absent[r.Tool] = true
 		}
 	}
 	return nil

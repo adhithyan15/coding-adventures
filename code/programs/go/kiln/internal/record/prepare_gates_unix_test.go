@@ -42,17 +42,17 @@ func TestPrepareNothingGatesByDefault(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	// cc has no binary on its (absent) root; xtool printed its pin.
-	want := []ToolchainProbe{{Tool: "cc", Status: legacy.ProbeAbsent}, {Tool: "xtool", Status: legacy.ProbeOK}}
+	// cc is pinned to the image (nothing to compare); xtool printed its pin.
+	want := []ToolchainProbe{{Tool: "cc", Status: legacy.ProbeOK}, {Tool: "xtool", Status: legacy.ProbeOK}}
 	if len(rep.Toolchains) != 2 || rep.Toolchains[0] != want[0] || rep.Toolchains[1] != want[1] {
 		t.Fatalf("%+v", rep.Toolchains)
 	}
 	// The fake was asked once, under the name the PATH gave, with the verified
 	// path of the binary and a timeout and a total as decision D8 says.
-	if len(p.probeRuns) != 1 {
+	if len(p.probeRuns) != 2 {
 		t.Fatalf("%d probe runs", len(p.probeRuns))
 	}
-	r := p.probeRuns[0]
+	r := p.probeRuns[1]
 	if r.Argv0 != "xtool" || r.Timeout != ProbeTimeout || len(r.Args) != 1 || r.Args[0] != "--version" || filepath.Base(r.Path) != "xtool" {
 		t.Fatalf("%+v", r)
 	}
@@ -174,4 +174,64 @@ func TestPrepareFailsWhenTheProbesCannotRun(t *testing.T) {
 			t.Errorf("the probes' configuration was not written: %v", statErr)
 		}
 	})
+}
+
+func TestPrepareFailsWhenAProbeLeavesSomethingInTheRealTmpdir(t *testing.T) {
+	// The fake probe runs in-process, so it can reach the steps' real tmpdir,
+	// as a probe that escaped its own TMPDIR would. prepare re-checks tmpdir
+	// and every state root after the toolchain probes.
+	p := newPrep(t)
+	p.commit()
+	p.probeRunFn = func(r legacy.ProbeRun) ([]byte, error) {
+		if err := os.WriteFile(filepath.Join(p.tmpdir, "planted"), []byte("x"), 0o600); err != nil {
+			t.Fatal(err)
+		}
+		return []byte(r.Argv0 + " version 1.2.3\n"), nil
+	}
+	_, err := p.prepare()
+	if err == nil || !strings.Contains(err.Error(), "unscrubbed:tmpdir-written") {
+		t.Fatalf("%v", err)
+	}
+	if _, statErr := os.Lstat(filepath.Join(p.dir, "pre", "SEALED")); statErr == nil {
+		t.Fatal("a failed prepare left a sealed record")
+	}
+}
+
+func TestPrepareFailsWhenAProbeLeavesSomethingInAStateRoot(t *testing.T) {
+	p := newPrep(t)
+	state := filepath.Join(p.base, "state")
+	if err := os.Mkdir(state, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	p.roots = []string{`{"path": "` + state + `", "kind": "state", "ecosystem": "fixture"}`}
+	p.commit()
+	p.probeRunFn = func(r legacy.ProbeRun) ([]byte, error) {
+		if err := os.WriteFile(filepath.Join(state, "planted"), []byte("x"), 0o600); err != nil {
+			t.Fatal(err)
+		}
+		return []byte(r.Argv0 + " version 1.2.3\n"), nil
+	}
+	_, err := p.prepare()
+	if err == nil || !strings.Contains(err.Error(), "unscrubbed:state-preloaded") {
+		t.Fatalf("%v", err)
+	}
+}
+
+func TestPrepareTreatsAHookErrorAsAMismatch(t *testing.T) {
+	// The injected runner cannot report an exit status, so this goes through the
+	// prober's own bookkeeping: see TestProberOneRefusalIsAMismatchButAllRefusedIsBroken.
+	// Here: a recorder error from the runner reaches prepare through Err() only
+	// for the sandboxed prober, so the hook (which has no Err) is a mismatch.
+	p := newPrep(t)
+	p.commit()
+	p.probeRunFn = func(legacy.ProbeRun) ([]byte, error) {
+		return nil, errors.New("the sandbox refused the probe (exit 125)")
+	}
+	res, err := p.prepare()
+	if err != nil {
+		t.Fatalf("a hook error is a mismatch: %v", err)
+	}
+	if a := gateOf(t, res, "code/packages/x/a"); a.Gate != "probe-mismatch:xtool" {
+		t.Fatalf("%q", a.Gate)
+	}
 }

@@ -4,6 +4,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"strings"
 	"testing"
 	"time"
 )
@@ -122,6 +123,32 @@ func TestGateMatchesPlan(t *testing.T) {
 		e.probeEnv(false, "xtool 9.9.9")
 		if g := e.agree()["x/z"]; g != "probe-mismatch:xtool" {
 			t.Fatalf("%q", g)
+		}
+	})
+	t.Run("probe absent gates (fail closed)", func(t *testing.T) {
+		// A PR that points a pinned tool's probe at a binary that does not
+		// exist must not skip the version check.
+		e := newLk(t)
+		e.probeEnv(false, "xtool 1.2.3")
+		tc := strings.Replace(baseToolchains, `"/opt/x/bin"`, `"/nonexistent/kiln-no-xtool"`, 1)
+		ccdir := filepath.Join(t.TempDir(), "ccbin")
+		if err := os.MkdirAll(ccdir, 0o755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(filepath.Join(ccdir, "cc"), []byte("#!/bin/sh\n"), 0o755); err != nil {
+			t.Fatal(err)
+		}
+		e.f.write(ToolchainsPath, strings.Replace(tc, `"/nonexistent/kiln-test-bin"`, `"`+filepath.ToSlash(ccdir)+`"`, 1))
+		gates := e.agree()
+		if gates["x/z"] != "probe-absent:xtool" {
+			t.Fatalf("%q", gates["x/z"])
+		}
+		plan, err := BuildPlan(e.g, e.opts("linux"))
+		if err != nil {
+			t.Fatal(err)
+		}
+		if hasPrefixReason(plan.Packages[0].Reasons, "probe-absent:") {
+			t.Errorf("an absent probe is reported by the probe list, not as a reason: %v", plan.Packages[0].Reasons)
 		}
 	})
 	t.Run("probe agreement", func(t *testing.T) {

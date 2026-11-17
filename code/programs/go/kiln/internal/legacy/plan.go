@@ -271,7 +271,7 @@ func (pl *planner) record(p int) (Record, error) {
 	for _, g := range f.probe {
 		// A refused probe is reported by the probe list, not as a reason (the
 		// plan's reasons are unchanged without --ledger), but it still gates.
-		if !strings.HasPrefix(g, "probe-refused:") {
+		if !strings.HasPrefix(g, "probe-refused:") && !strings.HasPrefix(g, "probe-absent:") {
 			reasons[g] = true // soft: reported, never a class
 		}
 	}
@@ -358,7 +358,8 @@ func (pl *planner) unionItems(members []int) []readItem {
 //	never          the package is on the never list
 //	recipeWhy      why the package has no recipe (`no-build-file:<os>`,
 //	               `symlink:<file>`); empty when it has one (hard)
-//	probe          `probe-mismatch:`, `probe-timeout:` and `probe-refused:`
+//	probe          `probe-mismatch:`, `probe-timeout:`, `probe-refused:` and
+//	               `probe-absent:`
 //	               gates of the closure's tools (soft)
 //
 // and hints (the advisory scans), ts (the tools section, whose tools are the
@@ -412,6 +413,13 @@ func (pl *planner) gateFacts(p int, members []int, items []readItem) (gateFacts,
 		}
 		if pl.refused[tl.Name] {
 			f.probe = append(f.probe, "probe-refused:"+tl.Name)
+		}
+		// A probe whose binary is not on the fixed PATH proved nothing.  If it
+		// were ungated, a PR could point a pinned tool's probe at a binary that
+		// does not exist and so skip the version check: fail closed.  Like a
+		// refusal it is reported by the probe list, not as a plan reason.
+		if pl.absent[tl.Name] {
+			f.probe = append(f.probe, "probe-absent:"+tl.Name)
 		}
 	}
 	if f.recipe, f.recipeWhy, err = pl.buildRecipe(pkg); err != nil {
@@ -490,7 +498,7 @@ func classify(hard, unpinned bool) string {
 // reasonGroup collapses a reason to the kind the histogram counts: reasons
 // that embed a package or file name are grouped by their prefix.
 func reasonGroup(r string) string {
-	for _, p := range []string{"unknown-repo-inputs:", "never:", "symlink:", "escape:", "indirect:", "unscanned:", "unknown-toolchain:", "probe-mismatch:", "probe-timeout:", "probe-refused:"} {
+	for _, p := range []string{"unknown-repo-inputs:", "never:", "symlink:", "escape:", "indirect:", "unscanned:", "unknown-toolchain:", "probe-mismatch:", "probe-timeout:", "probe-refused:", "probe-absent:"} {
 		if strings.HasPrefix(r, p) {
 			return p[:len(p)-1]
 		}
