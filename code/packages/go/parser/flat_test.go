@@ -378,13 +378,13 @@ func TestReleaseClearsScratchAndBoundsBuffers(t *testing.T) {
 	// Oversized buffers are dropped, not pooled.
 	s = c.pool.Get().(*parseState)
 	s.reset(toks, Options{})
-	s.stack = make([]int32, 0, maxPooledSlots+1)
-	s.kids = make([]int32, 0, maxPooledSlots+1)
-	s.nodes = make([]cnode, 0, maxPooledSlots+1)
-	s.boxed = make([]interface{}, 0, maxPooledSlots+1)
-	s.ptrs = make([]*ASTNode, 0, maxPooledSlots+1)
-	s.mark = make([]uint8, 0, maxPooledSlots+1)
-	s.coff = make([]int32, 0, maxPooledSlots+1)
+	s.stack = make([]int32, 0, maxPooledFlat+1)
+	s.kids = make([]int32, 0, maxPooledFlat+1)
+	s.nodes = make([]cnode, 0, maxPooledFlat+1)
+	s.boxed = make([]interface{}, 0, maxPooledFlat+1)
+	s.ptrs = make([]*ASTNode, 0, maxPooledFlat+1)
+	s.mark = make([]uint8, 0, maxPooledFlat+1)
+	s.coff = make([]int32, 0, maxPooledFlat+1)
 	s.release()
 	if s.stack != nil || s.kids != nil || s.nodes != nil || s.boxed != nil || s.ptrs != nil || s.mark != nil || s.coff != nil {
 		t.Fatal("an oversized buffer was kept for reuse")
@@ -443,9 +443,9 @@ func TestFlatIndexOverflowFailsClosed(t *testing.T) {
 		t.Fatalf("state poisoned by overflow: %v", err)
 	}
 
-	// Memo-hit nodes are not kids of anything (a lookahead discards them), so
-	// a parse with many of them runs out of NODE index space while the kids
-	// array is nearly empty: the third growth site.
+	// Many sealed results with few kids: the NODE index space (half of
+	// the limit, because a node index shares an int32 with the memo bit) runs
+	// out while the kids array is nearly empty.
 	c2 := mustCompile(t, `p = &x &x &x &x &x &x &x &x x ; x = A ;`)
 	toks2 := []lexer.Token{tokAt("A", "a", 1, 1), tokAt("EOF", "", 1, 2)}
 	flatIndexLimit = 1 << 30
@@ -526,5 +526,42 @@ func TestLeftRecursiveGrowthNodes(t *testing.T) {
 	innermost := inner.Children[0].(*ASTNode)
 	if len(innermost.Children) != 1 || innermost.StartLine != 0 {
 		t.Fatalf("innermost: %+v", innermost)
+	}
+}
+
+// Memory must follow the grammar's own work, not replay counts. In
+// `r = { &( { a } ) a } ; a = X ;` the lookahead re-scans the rest of the
+// input at every position, replaying `a` from the memo O(n^2) times in n
+// tokens, while only O(n) results are ever memoised. Replays must be free of
+// retained storage: nodes and kids stay linear in the memo slots, and the
+// parse neither explodes nor needs a limit to fire. (An engine that appended
+// a node per replay used 135 MB at n=2,000 and 9 GB at n=16,000 here.)
+func TestMemoReplaysDoNotGrowStorage(t *testing.T) {
+	c := mustCompile(t, `r = { &( { a } ) a } ; a = X ;`)
+	sizes := []int{2000, 4000, 8000}
+	if testing.Short() {
+		sizes = []int{500, 1000, 2000}
+	}
+	for _, n := range sizes {
+		toks := make([]lexer.Token, 0, n+1)
+		for i := 0; i < n; i++ {
+			toks = append(toks, tokAt("X", "x", 1, i+1))
+		}
+		toks = append(toks, tokAt("EOF", "", 1, n+1))
+		opts := Options{MaxTokens: 65536, MaxMemoSlots: 2 * (n + 2)}
+		s := c.pool.Get().(*parseState)
+		s.reset(toks, opts)
+		ast, err := s.run(0)
+		if err != nil {
+			t.Fatalf("n=%d: %v", n, err)
+		}
+		if len(ast.Children) != n {
+			t.Fatalf("n=%d: %d children", n, len(ast.Children))
+		}
+		slots, nodes, kids := len(s.slots), len(s.nodes), len(s.kids)
+		s.release()
+		if nodes > 2*slots || kids > 4*slots {
+			t.Fatalf("n=%d: slots=%d nodes=%d kids=%d: storage grew with replays", n, slots, nodes, kids)
+		}
 	}
 }

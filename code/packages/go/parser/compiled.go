@@ -563,12 +563,14 @@ func (c *Compiled) Parse(tokens []lexer.Token, opts Options) (ast *ASTNode, err 
 //	         past the end of the list (see tok).
 //
 //	kids     one []int32 for the whole parse. A rule's children are a
-//	         contiguous run of it. A value >= 0 is a token index; a value < 0
-//	         is ^n, a reference to nodes[n] (^n is -n-1, so node 0 is -1 and
-//	         the sign test is unambiguous).
+//	         contiguous run of it. A value >= 0 is a token index. A value < 0
+//	         is a RULE REFERENCE, ^ref, where ref = node<<1 | memo: node is an
+//	         index into nodes, and the low bit says whether the reference is
+//	         the node itself (0) or a memo hit replaying it (1).
 //
-//	nodes    []cnode. One entry per rule result: {rule, kids[start:end],
-//	         src, flags}. A node is appended when its rule body finishes.
+//	nodes    []cnode. One entry per rule result that parsed: {rule,
+//	         kids[start:end]}. A node is appended when its rule body
+//	         finishes. A memo hit appends NOTHING (see below).
 //
 //	stack    the scratch stack match() pushes onto while a rule body runs. On
 //	         success the body's slice of it is copied into kids and popped; on
@@ -583,8 +585,8 @@ func (c *Compiled) Parse(tokens []lexer.Token, opts Options) (ast *ASTNode, err 
 //     recursion at all. (The tree can be 50,000 levels deep; a recursive
 //     toAST would put the Go stack back in play, which is exactly what
 //     MaxDepth exists to avoid.)
-//  2. Memoised results are node indexes, so replaying one costs a few
-//     integer writes and no copying.
+//  2. Memoised results are node indexes, so replaying one costs one stack
+//     push and no copying.
 //
 // MEMO HITS ARE DISTINCT NODES THAT SHARE CHILDREN. This is observable
 // behaviour of the original engine that the flat form preserves on purpose.
@@ -594,34 +596,35 @@ func (c *Compiled) Parse(tokens []lexer.Token, opts Options) (ast *ASTNode, err 
 // because computeNodePosition ran only when the rule actually parsed. Code
 // downstream can depend on all three (parent positions are computed from
 // first and last tokens, and a zero child position makes it look deeper), so
-// the flat engine keeps them: a memo hit appends a cnode with flagFromMemo
-// whose src points at the result it replays; toAST gives it its own
-// *ASTNode, points its Children at the same backing array as src's, and
-// skips computeNodePosition for it.
+// the flat engine keeps them: a memo hit pushes the tagged reference
+// ^(node<<1|1) onto the stack and nothing else; toAST allocates one fresh,
+// position-less *ASTNode for that slot of the run and points its Children at
+// the source node's run.
+//
+// Why the hit is a tag in the kid and not a node of its own: a packrat parse
+// can replay results enormously more often than it parses (a lookahead
+// that re-scans a repetition at every position replays O(n^2) times in n
+// tokens while parsing O(n) things). An appended node per hit would make
+// memory grow with parse TIME and defeat MaxTokens and MaxMemoSlots as
+// memory bounds; a tagged push is truncated away if the surrounding attempt
+// fails, and costs 4 bytes in kids only when its run is kept (and a kept run
+// is as long as the grammar's own element count says). Node indexes
+// therefore need one spare bit, so nodes are limited to 2^30.
 //
 // Every rule result that is memoised is a node, even a seed that
 // left-recursion growth later supersedes, because a memo hit during growth
 // replays exactly that intermediate result.
-
-const (
-	// flagFromMemo marks a node that replays a memoised result rather than
-	// parsing: its kids range is a copy of src's, and its positions stay zero.
-	flagFromMemo = 1
-)
 
 // cnode is one rule result in the flat tree.
 type cnode struct {
 	rule  int32
 	start int32 // children are kids[start:end]
 	end   int32
-	// src is the node whose children slice this node shares: itself for a
-	// freshly parsed result, the replayed result for a memo hit.
-	src   int32
-	flags uint8
 }
 
-// flatIndexLimit is the largest number of kids or nodes the flat arrays may
-// hold; both are indexed by int32. It is a variable only so a test can lower
+// flatIndexLimit is the largest number of kids the flat arrays may hold, and
+// twice the largest number of nodes (a node index shares an int32 with the
+// memo bit); both are indexed by int32. It is a variable only so a test can lower
 // it: no machine has memory for 2 billion entries of a tree, but the check
 // must fail closed (ErrMaxMemoSlots), never wrap.
 var flatIndexLimit = math.MaxInt32 - 1
@@ -681,12 +684,20 @@ type parseState struct {
 	eof lexer.Token // returned by tok() for an empty token list
 }
 
-// maxPooledSlots bounds how much storage of each kind (memo slots, head,
-// stack, kids, nodes, and the toAST scratch) is kept for reuse, so one
-// enormous parse does not pin its memory for the life of the process. A
-// buffer that grew past it is dropped on release and regrown by the next
-// big parse.
+// maxPooledSlots bounds how much memo storage (slots and head, about 24 bytes
+// per entry) is kept for reuse, so one enormous parse does not pin its memory
+// for the life of the process. A buffer that grew past it is dropped on
+// release and regrown by the next big parse.
 const maxPooledSlots = 1 << 20
+
+// maxPooledFlat bounds the same way each flat-tree buffer (stack, kids, nodes
+// and the toAST scratch: about 50 bytes per entry across all of them, so a
+// pooled state holds at most about 6 MB of them, on top of at most about 25 MB
+// of memo storage). It is lower than maxPooledSlots because these are
+// per-node, and one hostile input should not leave tens of megabytes pinned
+// per pooled state; an ordinary parse (a source file of a few thousand
+// tokens) is well below it and reuses its buffers.
+const maxPooledFlat = 1 << 17
 
 func (s *parseState) reset(tokens []lexer.Token, opts Options) {
 	s.tokens = tokens
@@ -739,25 +750,25 @@ func (s *parseState) release() {
 		s.head = nil
 	}
 	s.stack, s.kids, s.nodes = s.stack[:0], s.kids[:0], s.nodes[:0]
-	if cap(s.stack) > maxPooledSlots {
+	if cap(s.stack) > maxPooledFlat {
 		s.stack = nil
 	}
-	if cap(s.kids) > maxPooledSlots {
+	if cap(s.kids) > maxPooledFlat {
 		s.kids = nil
 	}
-	if cap(s.nodes) > maxPooledSlots {
+	if cap(s.nodes) > maxPooledFlat {
 		s.nodes = nil
 	}
-	if cap(s.boxed) > maxPooledSlots {
+	if cap(s.boxed) > maxPooledFlat {
 		s.boxed = nil
 	}
-	if cap(s.ptrs) > maxPooledSlots {
+	if cap(s.ptrs) > maxPooledFlat {
 		s.ptrs = nil
 	}
-	if cap(s.mark) > maxPooledSlots {
+	if cap(s.mark) > maxPooledFlat {
 		s.mark = nil
 	}
-	if cap(s.coff) > maxPooledSlots {
+	if cap(s.coff) > maxPooledFlat {
 		s.coff = nil
 	}
 	s.c.pool.Put(s)
@@ -946,7 +957,8 @@ func (s *parseState) memoInsert(pos int, rule int32, m memoSlot) int32 {
 
 // seal turns the kids pushed on the stack since base into a finished rule
 // result: it copies them into the permanent kids array, pops them, and
-// appends the node. It returns the node's index, or -1 (with the sticky flag
+// appends the node. It returns the node's index (not a reference: the caller
+// shifts it into one), or -1 (with the sticky flag
 // raised) if the flat arrays are out of int32 index space.
 //
 // The copy is what lets backtracking be a plain truncation of the stack: a
@@ -954,7 +966,7 @@ func (s *parseState) memoInsert(pos int, rule int32, m memoSlot) int32 {
 // popped.
 func (s *parseState) seal(rule int32, base int) int32 {
 	n := len(s.stack) - base
-	if len(s.kids)+n > s.limit || len(s.nodes) >= s.limit {
+	if len(s.kids)+n > s.limit || len(s.nodes) >= s.limit>>1 {
 		s.flatOverflow()
 		s.stack = s.stack[:base]
 		return -1
@@ -963,21 +975,7 @@ func (s *parseState) seal(rule int32, base int) int32 {
 	s.kids = append(s.kids, s.stack[base:]...)
 	s.stack = s.stack[:base]
 	idx := int32(len(s.nodes))
-	s.nodes = append(s.nodes, cnode{rule: rule, start: start, end: int32(len(s.kids)), src: idx})
-	return idx
-}
-
-// memoNode appends the node for a memo hit on result res: a distinct node
-// that shares res's children and is flagged so toAST leaves its positions
-// zero. -1 and the sticky flag on overflow.
-func (s *parseState) memoNode(rule, res int32) int32 {
-	if len(s.nodes) >= s.limit {
-		s.flatOverflow()
-		return -1
-	}
-	r := &s.nodes[res]
-	idx := int32(len(s.nodes))
-	s.nodes = append(s.nodes, cnode{rule: rule, start: r.start, end: r.end, src: res, flags: flagFromMemo})
+	s.nodes = append(s.nodes, cnode{rule: rule, start: start, end: int32(len(s.kids))})
 	return idx
 }
 
@@ -991,36 +989,46 @@ func (s *parseState) flatOverflow() {
 // is safe because it has no capacity: an append on it copies.
 var emptyChildren = []interface{}{}
 
-// Bits of parseState.mark.
+// Bits of parseState.mark; see toAST.
 const (
-	needNode = 1 // this node is reachable: it needs an *ASTNode
-	kidsDone = 2 // this node's children slice is needed (and was counted)
+	needNode = 1 // a plain reference to this node is reachable
+	needRun  = 2 // this node's children run is needed
 )
 
-// toAST materialises the *ASTNode tree for the result root. It is the only
+// toAST materialises the *ASTNode tree for the reference root. It is the only
 // place ASTNodes, children slices and boxed tokens are allocated, and it
 // allocates only for what is reachable from root: all the nodes of failed or
 // superseded attempts stay in the flat arrays and are dropped with them.
 //
+// Each index i of nodes can be wanted in two ways, and mark records which:
+//
+//	needNode  a plain reference to i is in a reachable run (or i is the
+//	          root): i needs an *ASTNode of its own;
+//	needRun   i's children run must be built: because i needs a node, or
+//	          because a memo reference in a reachable run replays i.
+//
 // Pass 1 sweeps node indexes from root DOWN (children always have smaller
-// indexes than their parents, see the comment above), marking every
-// reachable node and totalling how many nodes and children slots are needed,
-// so pass 2 can allocate exactly that much.
+// indexes than their parents, see the comment above), expanding each wanted
+// run once, so it totals how many nodes and children slots are needed and
+// pass 2 can allocate exactly that much. A memo reference costs one node of
+// its own (the position-less duplicate) but marks nothing new to build.
 //
 // Pass 2 sweeps UP, so a node's children exist before it does:
 //
-//   - children go into ONE []interface{} slab for the whole parse, each
-//     node's run cap-clipped (children[a:b:b]). The clip is what makes this
-//     safe: with plain subslices a consumer's append(n.Children, x) would
-//     overwrite the next sibling's first child. It also means memo-hit nodes
-//     can share their source's run, as the original engine's shared slice;
+//   - children go into ONE []interface{} slab for the whole parse, each run
+//     cap-clipped (children[a:b:b]). The clip is what makes this safe: with
+//     plain subslices a consumer's append(n.Children, x) would overwrite the
+//     next run's first slot. It also lets a node and its memo hits share one
+//     run, as the original engine's shared slice;
 //   - ASTNodes come from slabs of at most astChunk, so retaining one node
 //     keeps at most a chunk alive rather than the whole parse's;
 //   - each token position is boxed into an interface (an allocation: a
 //     lexer.Token is 64 bytes) at most once, however many runs mention it;
-//   - computeNodePosition runs on every node that was parsed, in index order
+//   - computeNodePosition runs on every parsed node, in index order
 //     (children first), exactly as the original ran it when a rule matched,
-//     and NOT on memo-hit nodes, which keep zero positions.
+//     and NOT on memo-hit nodes, which keep zero positions. A run that is
+//     reachable is built once, so a hit node lives in exactly one run, and
+//     every parent sharing that run shares the same hit node, as before.
 const astChunk = 256
 
 func (s *parseState) toAST(root int32) *ASTNode {
@@ -1046,24 +1054,35 @@ func (s *parseState) toAST(root int32) *ASTNode {
 		s.boxed = s.boxed[:t]
 	}
 
-	// Pass 1: mark and count.
-	mark[root] = needNode
+	// Pass 1: mark and count. The root is never a memo reference: the memo
+	// is empty when the start rule is first called.
+	rootNode := int(root >> 1)
+	mark[rootNode] = needNode
 	nAST, nKids := 0, 0
-	for i := int(root); i >= 0; i-- {
-		if mark[i]&needNode == 0 {
+	for i := rootNode; i >= 0; i-- {
+		m := mark[i]
+		if m == 0 {
 			continue
 		}
-		nAST++
-		src := int(nodes[i].src)
-		if mark[src]&kidsDone != 0 {
+		if m&needNode != 0 {
+			nAST++
+			mark[i] |= needRun
+		}
+		sn := &nodes[i]
+		if mark[i]&needRun == 0 {
 			continue
 		}
-		mark[src] |= kidsDone
-		sn := &nodes[src]
 		nKids += int(sn.end - sn.start)
 		for _, k := range s.kids[sn.start:sn.end] {
-			if k < 0 {
-				mark[^k] |= needNode
+			if k >= 0 {
+				continue
+			}
+			ref := ^k
+			if ref&1 != 0 {
+				nAST++ // the position-less node of this memo hit
+				mark[ref>>1] |= needRun
+			} else {
+				mark[ref>>1] |= needNode
 			}
 		}
 	}
@@ -1071,47 +1090,58 @@ func (s *parseState) toAST(root int32) *ASTNode {
 	// Pass 2: build.
 	slab := make([]interface{}, nKids)
 	var chunk []ASTNode
+	newNode := func() *ASTNode {
+		if len(chunk) == cap(chunk) {
+			chunk = make([]ASTNode, 0, min(astChunk, nAST))
+		}
+		chunk = chunk[:len(chunk)+1]
+		nAST--
+		return &chunk[len(chunk)-1]
+	}
+	// run returns node r's children as the shared, cap-clipped slice.
+	run := func(r int32) []interface{} {
+		rn := &nodes[r]
+		if rn.end == rn.start {
+			return emptyChildren
+		}
+		lo := int(coff[r])
+		hi := lo + int(rn.end-rn.start)
+		return slab[lo:hi:hi]
+	}
 	w := 0
-	for i := 0; i <= int(root); i++ {
+	for i := 0; i <= rootNode; i++ {
 		m := mark[i]
 		if m == 0 {
 			continue
 		}
 		cn := &nodes[i]
-		if m&kidsDone != 0 {
+		if m&needRun != 0 {
 			coff[i] = int32(w)
 			for _, k := range s.kids[cn.start:cn.end] {
-				if k < 0 {
-					slab[w] = ptrs[^k]
-				} else {
+				switch {
+				case k >= 0:
 					slab[w] = s.box(k)
+				case ^k&1 == 0:
+					slab[w] = ptrs[^k>>1]
+				default:
+					src := ^k >> 1
+					h := newNode()
+					h.RuleName = s.c.rules[nodes[src].rule].name
+					h.Children = run(src)
+					slab[w] = h
 				}
 				w++
 			}
 		}
-		if m&needNode == 0 {
-			continue
-		}
-		if len(chunk) == cap(chunk) {
-			chunk = make([]ASTNode, 0, min(astChunk, nAST))
-		}
-		chunk = chunk[:len(chunk)+1]
-		a := &chunk[len(chunk)-1]
-		nAST--
-		a.RuleName = s.c.rules[cn.rule].name
-		if cn.end == cn.start {
-			a.Children = emptyChildren
-		} else {
-			lo := int(coff[cn.src])
-			hi := lo + int(cn.end-cn.start)
-			a.Children = slab[lo:hi:hi]
-		}
-		if cn.flags&flagFromMemo == 0 {
+		if m&needNode != 0 {
+			a := newNode()
+			a.RuleName = s.c.rules[cn.rule].name
+			a.Children = run(int32(i))
 			computeNodePosition(a)
+			ptrs[i] = a
 		}
-		ptrs[i] = a
 	}
-	return ptrs[root]
+	return ptrs[rootNode]
 }
 
 // box returns token index k as an interface value (a lexer.Token), boxing it
@@ -1134,8 +1164,9 @@ func (s *parseState) box(k int32) interface{} {
 // Rule and element matching
 // ---------------------------------------------------------------------------
 
-// parseRule parses (or replays) rule id at the current position and returns
-// the index of its node, or -1 if it did not match.
+// parseRule parses (or replays) rule id at the current position and returns a
+// reference to the result, node<<1 | memo (see the flat tree comment), or -1
+// if it did not match.
 func (s *parseState) parseRule(id int32) int32 {
 	if id < 0 || s.exceeded {
 		return -1
@@ -1160,7 +1191,7 @@ func (s *parseState) parseRule(id int32) int32 {
 		if m.height > s.curMax {
 			s.curMax = m.height
 		}
-		return s.memoNode(id, m.res)
+		return m.res<<1 | 1
 	}
 
 	// The depth guards. Everything below this line recurses. Two budgets:
@@ -1263,6 +1294,12 @@ func (s *parseState) parseRuleBody(id int32, rule *compiledRule) int32 {
 				s.slots[si].height = height
 				break
 			}
+			// Retention: a growth step is sealed (kept in kids and nodes)
+			// only when it consumed MORE tokens than the previous result
+			// (s.pos > prevEnd, checked above), so a rule at one position
+			// seals at most len(tokens)+1 results, each as long as that
+			// rule's body. The original engine allocated the same slices and
+			// kept the superseded ones alive only while referenced.
 			if res = s.seal(id, base); res < 0 {
 				return -1
 			}
@@ -1289,10 +1326,10 @@ func (s *parseState) parseRuleBody(id int32, rule *compiledRule) int32 {
 		fmt.Fprintln(os.Stderr, " → match")
 	}
 
-	// The node a rule returns is its final result record. Positions are
-	// computed for it by toAST, as the original did here with
-	// computeNodePosition.
-	return res
+	// The node a rule returns is its final result record (a plain, non-memo
+	// reference). Positions are computed for it by toAST, as the original
+	// did here with computeNodePosition.
+	return res << 1
 }
 
 // match tries element n at the current position, PUSHING what it matched onto
