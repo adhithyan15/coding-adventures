@@ -510,6 +510,9 @@ struct ModelEntry {
     params: Option<Vec<(String, Ty)>>,
     ret: Option<Ty>,
     outcome: Result<(), GenError>,
+    /// Does the model's call closure (its body and every model it calls) contain a
+    /// fixed-width `add`/`sub`/`mul`/`neg`?  Needed by the v0 guard (VER04r 3.3 rule 3).
+    wraps: bool,
 }
 
 struct Lowerer<'f, 'a> {
@@ -902,6 +905,7 @@ impl<'f, 'a> Lowerer<'f, 'a> {
                         params: Some(model.params.clone()),
                         ret: Some(model.ret.clone()),
                         outcome: Ok(()),
+                        wraps: self.closure_wraps(&model.body),
                     },
                 );
                 Ok(Ok(model))
@@ -914,12 +918,35 @@ impl<'f, 'a> Lowerer<'f, 'a> {
                         params: None,
                         ret: None,
                         outcome: Err(e.clone()),
+                        wraps: false,
                     },
                 );
                 Ok(Err(e))
             }
             Err(e) => Err(e.at(decl.name)),
         }
+    }
+
+    /// Does `body` contain a fixed-width arithmetic node, directly or through a model
+    /// it calls (callees are earlier models, already flagged)?
+    fn closure_wraps(&self, body: &Ir) -> bool {
+        let mut found = false;
+        body.walk(&mut |n| match n {
+            Ir::Arith(_, ty, ..) | Ir::Neg(ty, _) if ty.is_fixed() => found = true,
+            Ir::Model { name, .. } if self.models.get(name).is_some_and(|e| e.wraps) => {
+                found = true
+            }
+            _ => {}
+        });
+        found
+    }
+
+    /// The v0 guard, rule 3, for a lowered claim or example body.
+    fn v0_guard(&self, body: &Ir) -> Result<(), GenError> {
+        if self.file.version == Version::V0 {
+            check_v0_static_arith(body, &|n| self.models.get(n).is_some_and(|e| e.wraps))?;
+        }
+        Ok(())
     }
 
     fn lower_model_inner(&mut self, decl: &ModelDecl<'a>) -> Result<LoweredModel, GenError> {
@@ -1001,9 +1028,7 @@ impl<'f, 'a> Lowerer<'f, 'a> {
         check_pure_guards(&body)?;
         // VER04r 3.3 rule 3: a v0 document refuses fixed-width arithmetic over a subject
         // result, statically.
-        if self.file.version == Version::V0 {
-            check_v0_static_arith(&body)?;
-        }
+        self.v0_guard(&body)?;
         let ops = body.subject_ops();
         let kind = self.classify(&body, body_ast)?;
         Ok(LoweredSuite {
@@ -1049,21 +1074,28 @@ impl<'f, 'a> Lowerer<'f, 'a> {
         if ty != Ty::Bool {
             return Err(self.type_err("an example body must be Bool"));
         }
-        if self.file.version == Version::V0 {
-            check_v0_static_arith(&body)?;
-        }
-        let reference = match self.classify(&body, body_ast)? {
-            SuiteKind::Reference {
-                subject,
-                expected,
-                result,
-            } => Some(ExampleRef {
-                subject,
-                expected,
-                result,
-            }),
-            SuiteKind::Predicate => None,
-        };
+        self.v0_guard(&body)?;
+        check_pure_guards(&body)?;
+        // The `examples` row of VER04r 1.4 can only say `op(literals) == pure`: exactly one
+        // subject call, its arguments free of subject calls, on one side of an equality.
+        let reference =
+            match self.classify(&body, body_ast)? {
+                SuiteKind::Reference {
+                    subject: subject @ Ir::Subject { .. },
+                    expected,
+                    result,
+                } if subject.children().iter().all(|a| !a.has_subject()) => ExampleRef {
+                    subject,
+                    expected,
+                    result,
+                },
+                _ => return Err(GenError::new(
+                    code::W0701,
+                    "",
+                    "an example must be one subject call compared with a pure value (VER04r 1.4)",
+                )),
+            };
+        let reference = Some(reference);
         Ok(LoweredExample {
             name: decl.name.to_string(),
             body,
@@ -1237,6 +1269,11 @@ impl<'f, 'a> Lowerer<'f, 'a> {
             value: v,
         };
         if v < 0 {
+            // Only the signed minimum is folded by the parser (VER04j 2.2); any other
+            // negative literal is not a literal.
+            if v != t.min() {
+                return Err(self.type_err("a negative suffixed literal is only the signed minimum"));
+            }
             Ok((Ir::Neg(ty.clone(), Box::new(lit)), ty))
         } else {
             Ok((lit, ty))

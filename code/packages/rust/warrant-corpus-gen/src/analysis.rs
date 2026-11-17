@@ -33,6 +33,17 @@ use crate::ir::Ir;
 ///
 /// `W0701` on the first violation, left to right.
 pub fn check_pure_guards(ir: &Ir) -> Result<(), GenError> {
+    if ir.depth() > crate::ir::MAX_IR_DEPTH {
+        return Err(GenError::new(
+            code::LIMIT,
+            "",
+            "IR nesting exceeds 64 levels",
+        ));
+    }
+    guards(ir)
+}
+
+fn guards(ir: &Ir) -> Result<(), GenError> {
     if !ir.has_subject() {
         return Ok(());
     }
@@ -49,10 +60,10 @@ pub fn check_pure_guards(ir: &Ir) -> Result<(), GenError> {
                 if c.has_subject() {
                     return Err(impure());
                 }
-                check_pure_guards(t)?;
-                check_pure_guards(e)
+                guards(t)?;
+                guards(e)
             } else {
-                check_pure_guards(c)
+                guards(c)
             }
         }
         Ir::Logic(_, l, r) => {
@@ -60,40 +71,48 @@ pub fn check_pure_guards(ir: &Ir) -> Result<(), GenError> {
                 if l.has_subject() {
                     return Err(impure());
                 }
-                check_pure_guards(r)
+                guards(r)
             } else {
-                check_pure_guards(l)
+                guards(l)
             }
         }
-        other => other.children().into_iter().try_for_each(check_pure_guards),
+        other => other.children().into_iter().try_for_each(guards),
     }
 }
 
 /// Refuse, in a **v0** document, a fixed-width `+ - *` or unary `-` with a `subject_op`
-/// beneath it (VER04r 3.3 rule 3).  The caller applies this only to v0 documents; a v1
-/// document wraps everywhere and the rule is moot (rule 5).
+/// beneath it (VER04r 3.3 rule 3), or a `model_call` with a `subject_op` beneath it whose
+/// callee's call closure contains such a node (`model_wraps(name)` says so).  The caller
+/// applies this only to v0 documents; a v1 document wraps everywhere (rule 5).
 ///
 /// # Errors
 ///
-/// `W0701` naming the type.
-pub fn check_v0_static_arith(ir: &Ir) -> Result<(), GenError> {
+/// `W0701` naming the type or the model.
+pub fn check_v0_static_arith(ir: &Ir, model_wraps: &dyn Fn(&str) -> bool) -> Result<(), GenError> {
     let mut bad: Option<String> = None;
     ir.walk(&mut |n| {
-        let ty = match n {
-            Ir::Arith(_, ty, ..) | Ir::Neg(ty, _) => ty,
-            _ => return,
-        };
-        if bad.is_none() && ty.is_fixed() && n.has_subject() {
-            bad = Some(ty.name());
+        if bad.is_some() {
+            return;
+        }
+        match n {
+            Ir::Arith(_, ty, ..) | Ir::Neg(ty, _) if ty.is_fixed() && n.has_subject() => {
+                bad = Some(format!("{} arithmetic", ty.name()));
+            }
+            Ir::Model { name, args } if args.iter().any(Ir::has_subject) && model_wraps(name) => {
+                bad = Some(format!(
+                    "model `{name}` (fixed-width arithmetic in its call closure)"
+                ));
+            }
+            _ => {}
         }
     });
     match bad {
         None => Ok(()),
-        Some(ty) => Err(GenError::new(
+        Some(what) => Err(GenError::new(
             code::W0701,
             "",
             format!(
-                "{ty} arithmetic over a subject result in a v0 document: the v0 harness \
+                "{what} over a subject result in a v0 document: the v0 harness \
                  evaluates U8 as Nat, so the wrapping cannot be proven to agree (VER04r 3.3 rule 3)"
             ),
         )),
@@ -171,6 +190,33 @@ mod tests {
     }
 
     #[test]
+    fn model_calls_over_a_subject_result_follow_the_callee_flag() {
+        let call = Ir::Model {
+            name: "inc".into(),
+            args: vec![*subj("f")],
+        };
+        let e = check_v0_static_arith(&call, &|n| n == "inc").unwrap_err();
+        assert_eq!(e.code, code::W0701);
+        assert!(e.message.contains("inc"));
+        assert!(check_v0_static_arith(&call, &|_| false).is_ok());
+        // pure arguments are the evaluator's `wraps` business, not rule 3
+        let pure = Ir::Model {
+            name: "inc".into(),
+            args: vec![*var("a")],
+        };
+        assert!(check_v0_static_arith(&pure, &|_| true).is_ok());
+    }
+
+    #[test]
+    fn a_hand_built_tree_deeper_than_64_is_refused_not_recursed() {
+        let mut ir = Ir::Bool(true);
+        for _ in 0..200 {
+            ir = Ir::Not(Box::new(ir));
+        }
+        assert_eq!(check_pure_guards(&ir).unwrap_err().code, code::LIMIT);
+    }
+
+    #[test]
     fn the_rule_applies_inside_arguments_and_nested_nodes() {
         let inner = Ir::If(subj("g"), subj("f"), Box::new(Ir::Bool(true)));
         let outer = Ir::Subject {
@@ -189,18 +235,18 @@ mod tests {
     fn v0_rule_3_refuses_fixed_arithmetic_over_a_subject_result_only() {
         let u8t = Ty::Fixed(FixedTy::U8);
         let over_subject = Ir::Arith(Arith::Add, u8t.clone(), subj("f"), var("b"));
-        let e = check_v0_static_arith(&over_subject).unwrap_err();
+        let e = check_v0_static_arith(&over_subject, &|_| false).unwrap_err();
         assert_eq!(e.code, code::W0701);
         assert!(e.message.contains("U8"));
         // nested above the arithmetic node: the node still has the subject beneath it
         let wrapped = Ir::Cmp(Cmp::Eq, Box::new(over_subject), var("c"));
-        assert!(check_v0_static_arith(&wrapped).is_err());
+        assert!(check_v0_static_arith(&wrapped, &|_| false).is_err());
         // negation counts too
         let neg = Ir::Neg(Ty::Fixed(FixedTy::I8), subj("f"));
-        assert!(check_v0_static_arith(&neg).is_err());
+        assert!(check_v0_static_arith(&neg, &|_| false).is_err());
         // exact arithmetic is not wrapping arithmetic
         let exact = Ir::Arith(Arith::Add, Ty::Int, subj("f"), var("b"));
-        assert!(check_v0_static_arith(&exact).is_ok());
+        assert!(check_v0_static_arith(&exact, &|_| false).is_ok());
         // pure fixed-width arithmetic (a subject-independent node) is counted by `wraps`
         // at S3b, not refused here, even when the subject is elsewhere in the claim
         let pure = Ir::Cmp(
@@ -208,6 +254,6 @@ mod tests {
             subj("f"),
             Box::new(Ir::Arith(Arith::Add, u8t, var("a"), var("b"))),
         );
-        assert!(check_v0_static_arith(&pure).is_ok());
+        assert!(check_v0_static_arith(&pure, &|_| false).is_ok());
     }
 }

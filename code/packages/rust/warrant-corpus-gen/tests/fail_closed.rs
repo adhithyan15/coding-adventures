@@ -502,3 +502,51 @@ fn an_alias_of_a_core_type_is_resolved_away_and_an_alias_of_a_tuple_is_refused()
     );
     assert_level(&tuple, "ir.data", "uses");
 }
+
+// ---- M1: the v0 guard through a model call; L4: examples; L3 ----------------------------
+
+#[test]
+fn v0_refuses_a_model_that_wraps_called_on_a_subject_result_but_v1_and_pure_calls_pass() {
+    let op = "op u(a: Bytes, b: Bytes) -> U8";
+    let model = "  model inc(x: U8) -> U8 = x + 1u8\n  model twice(x: U8) -> U8 = inc(inc(x))\n";
+    let on_subject =
+        format!("{model}  claim c:\n    forall a: Bytes, b: Bytes. inc(u(a, b)) == inc(1u8)\n");
+    let e = refusal(&doc_ops("", &[op], &on_subject));
+    assert_eq!(e.code, code::W0701, "{e}");
+    assert_eq!(e.at, "c");
+    assert!(
+        e.message.contains("inc") && e.message.contains("rule 3"),
+        "{e}"
+    );
+    // the flag follows the call closure: `twice` calls `inc`
+    let via = format!("{model}  claim c2:\n    forall a: Bytes, b: Bytes. twice(u(a, b)) == 1u8\n");
+    assert_eq!(refusal(&doc_ops("", &[op], &via)).code, code::W0701);
+    // a v1 document wraps everywhere: the same claim lowers
+    with_file(&doc_ops(" v1", &[op], &on_subject), |f| {
+        assert!(lower_document(f).is_ok())
+    });
+    // pure arguments are fine in v0 (that is `wraps` territory), and so is a model with no
+    // arithmetic on a subject result
+    let pure = format!("{model}  model same(x: U8) -> U8 = x\n  claim c3:\n    forall a: U8. u(b\"\", b\"\") == inc(a)\n  claim c4:\n    forall a: Bytes, b: Bytes. same(u(a, b)) == 1u8\n");
+    with_file(&doc_ops("", &[op], &pure), |f| {
+        assert!(lower_document(f).is_ok())
+    });
+}
+
+#[test]
+fn an_example_must_be_one_subject_call_compared_with_a_pure_value() {
+    let op = "op f(a: Bytes, b: Bytes) -> Bool";
+    let two = "  example ex:\n    f(b\"00\", b\"00\") == f(b\"00\", b\"00\")\n";
+    let e = refusal(&doc_ops("", &[op], two));
+    assert_eq!(e.code, code::W0701);
+    assert_eq!(e.at, "ex");
+    let none = "  example ex2:\n    true == true\n";
+    assert_eq!(refusal(&doc_ops("", &[op], none)).code, code::W0701);
+    let ok = "  example ex3:\n    f(b\"00\", b\"00\") == true\n";
+    with_file(&doc_ops("", &[op], ok), |f| {
+        assert!(lower_document(f).is_ok())
+    });
+    // an impure guard in an example is refused by the pure-guard rule
+    let guard = "  example ex4:\n    (if f(b\"\", b\"\") then f(b\"\", b\"\") else true) == true\n";
+    assert_eq!(refusal(&doc_ops("", &[op], guard)).code, code::W0701);
+}
