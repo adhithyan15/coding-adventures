@@ -9,11 +9,12 @@
   order (whatever the run depth) evaluates each subject call on the pure trace
   (`ir_eval.compile_admit_check`, which mirrors `compile_trace`) against the callee's op `admit`;
   the first case outside it is `W0701` naming the claim, the op and the admitted-case ordinal.
-  Examples are checked the same way. A call of an op with an `admit` that has an argument
-  depending on a subject result is refused statically. The pass is skipped when no call is of an
+  Examples are checked the same way. A call whose op `admit` reads a parameter whose
+  argument depends on a subject result is refused statically; an argument the `admit` does not
+  read (gf256's `power(add(a, b), 2u64)`) is accepted. The pass is skipped when no call is of an
   op with an `admit`.
 - `tests/test_admit_calls.py`, the same documents as the generator's `tests/admit_calls.rs`; the
-  two implementations agree on all eleven (refusals with the same ordinal, accepted documents
+  two implementations agree on all thirteen (refusals with the same ordinal, accepted documents
   byte for byte).
 
 ### Changed

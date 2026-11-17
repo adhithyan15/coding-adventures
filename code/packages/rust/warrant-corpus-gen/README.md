@@ -358,8 +358,8 @@ generator (`generate`) does no I/O; everything is in `fsio.rs`, `cli.rs` and the
   (`f(255u8 + 2u8) == 1u8`) is `W0701`, like a claim that wraps; in v1 it is accepted.
 - **A call outside the op's `admit`.** A claim whose admitted cases call an op outside that op's
   `admit` (its binder refinement is weaker than the op's) fails with `W0701` naming the claim, the
-  op and the first admitted-case ordinal; an example outside it is refused too, and a call of an op
-  with an `admit` whose argument depends on a subject result is refused statically. Nothing is
+  op and the first admitted-case ordinal; an example outside it is refused too, and a call whose op
+  `admit` reads a parameter whose argument depends on a subject result is refused statically. Nothing is
   discarded silently, and no emitted byte of an accepted document changes. See VER04r 4.5 and 16.9.
 
 ## Known gaps (deferred to S10 and later)

@@ -203,9 +203,12 @@ impl<'a> Program<'a> {
         found
     }
 
-    /// The static half of [D19]: a call of an operation with an `admit` whose arguments
-    /// contain a subject call cannot be checked at generation (the generator never learns
-    /// what the inner call returns), so it is refused, never skipped.
+    /// The static half of [D19]: a call of an operation with an `admit` whose `admit` reads a
+    /// parameter whose argument contains a subject call cannot be checked at generation (the
+    /// generator never learns what the inner call returns), so it is refused, never skipped.
+    /// A subject-dependent argument for a parameter the `admit` does not read is fine
+    /// (`power(add(a, b), 2u64)` with `admit` `exp <= 4294967295`): it is simply not an input
+    /// of the check.
     ///
     /// # Errors
     ///
@@ -214,8 +217,24 @@ impl<'a> Program<'a> {
         let mut bad: Option<String> = None;
         ir.walk(&mut |n| {
             if let Ir::Subject { op, args, .. } = n {
-                if bad.is_none() && self.op_admit(op).is_some() && args.iter().any(Ir::has_subject) {
-                    bad = Some(op.clone());
+                if bad.is_some() {
+                    return;
+                }
+                if let Some((lop, admit)) = self.op_admit(op) {
+                    let mut reads: Vec<String> = Vec::new();
+                    admit.walk(&mut |m| {
+                        if let Ir::Var(v) = m {
+                            reads.push(v.clone());
+                        }
+                    });
+                    let dependent = lop
+                        .params
+                        .iter()
+                        .zip(args)
+                        .any(|((p, _), a)| a.has_subject() && reads.contains(p));
+                    if dependent {
+                        bad = Some(op.clone());
+                    }
                 }
             }
         });
@@ -225,29 +244,31 @@ impl<'a> Program<'a> {
                 code::W0701,
                 "",
                 format!(
-                    "a call of op `{op}` has an argument that depends on a subject result, \
-                     so the op's admit cannot be checked at generation (VER04r 6)"
+                    "the admit of op `{op}` reads a parameter whose argument depends on a \
+                     subject result, so it cannot be checked at generation (VER04r 6)"
                 ),
             )),
         }
     }
 
-    /// Are the argument values `args` inside the `admit` of operation `op`?  An operation
-    /// without an `admit` admits everything.  Wraps counted here are not the document's
-    /// (VER04r 3.3 rule 1 counts the nodes of the claim, not this check).
+    /// Are the argument values `args` inside the `admit` of operation `op`?  `None` is an
+    /// argument the generator cannot know (it depends on a subject result): the plan has
+    /// refused every call whose `admit` reads one, so the `admit` never looks at it.  An
+    /// operation without an `admit` admits everything.  Wraps counted here are not the
+    /// document's (VER04r 3.3 rule 1 counts the nodes of the claim, not this check).
     ///
     /// # Errors
     ///
     /// Every [`Program::eval`] error.
-    pub fn admits_call(&self, op: &str, args: &[Value]) -> Result<bool, GenError> {
+    pub fn admits_call(&self, op: &str, args: &[Option<Value>]) -> Result<bool, GenError> {
         let Some((lop, admit)) = self.op_admit(op) else {
             return Ok(true);
         };
         let pvars: Vec<(&str, Value)> = lop
             .params
             .iter()
-            .map(|(n, _)| n.as_str())
-            .zip(args.iter().cloned())
+            .zip(args)
+            .filter_map(|((n, _), v)| v.clone().map(|v| (n.as_str(), v)))
             .collect();
         self.eval(admit, &pvars, &mut Stats::default())?.as_bool()
     }
@@ -584,7 +605,11 @@ impl<'a> Program<'a> {
                         // plan refuses the rest) must be inside the callee's `admit`.
                         let mut vals = Vec::with_capacity(args.len());
                         for a in args {
-                            vals.push(self.eval(a, vars, &mut Stats::default())?);
+                            vals.push(if a.has_subject() {
+                                None
+                            } else {
+                                Some(self.eval(a, vars, &mut Stats::default())?)
+                            });
                         }
                         if !self.admits_call(op, &vals)? {
                             return Err(outside_admit(op));

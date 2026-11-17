@@ -199,7 +199,7 @@ The same two rules as the generator, derived independently: an example whose eva
 `W0701` in a v0 document (`f(255u8 + 2u8) == 1u8`) and accepted in v1; and a claim or example that
 calls an op outside that op's `admit` is `W0701` naming the claim, the op and the first
 admitted-case ordinal (`SuitePlan.check_admits`, `ir_eval.compile_admit_check`), with a
-subject-dependent argument of an admit-bearing op refused statically (VER04r 4.5 and 16.9).
+subject-dependent argument the op's `admit` reads refused statically (VER04r 4.5 and 16.9).
 `tests/test_admit_calls.py` holds the same documents as the generator's `tests/admit_calls.rs`.
 
 ## Not yet done

@@ -807,6 +807,26 @@ class OutsideAdmit(Exception):
         self.op = op
 
 
+def _reads(ir: object) -> set[str]:
+    """The variable names an IR tree reads (``["var", name]`` anywhere in it)."""
+    seen: set[str] = set()
+    stack = [ir]
+    while stack:
+        node = stack.pop()
+        if not (isinstance(node, list) and node and isinstance(node[0], str)):
+            continue
+        tag = node[0]
+        if tag == "var":
+            seen.add(node[1])
+        elif tag in ("lit", "err"):
+            continue
+        elif tag in ("model_call", "subject_op"):
+            stack.extend(node[2])
+        else:
+            stack.extend(node[1:])
+    return seen
+
+
 def admit_fn(prog: Program, op: object, widths: list | None) -> Callable | None:
     """The compiled ``admit`` of subject op ``op`` over its parameter names, or ``None``.
 
@@ -825,10 +845,12 @@ def compile_admit_check(prog: Program, ir: object, tenv: dict) -> Callable | Non
     trace of ``ir`` has arguments outside its op's ``admit`` (VER04r section 6, [D19]).
 
     The walk mirrors :func:`compile_trace`: a pure guard is evaluated and the taken branch
-    followed, so a call in an untaken branch is not checked.  A call of an op that has an
-    ``admit`` whose arguments contain a subject call cannot be checked at generation (the
-    oracle never learns what the inner call returns): that is the generation error
-    ``W0701``, raised here, statically, for every such call anywhere in ``ir``.  Returns
+    followed, so a call in an untaken branch is not checked.  A call of an op whose ``admit``
+    reads a parameter whose argument contains a subject call cannot be checked at generation
+    (the oracle never learns what the inner call returns): that is the generation error
+    ``W0701``, raised here, statically, for every such call anywhere in ``ir``.  An argument
+    that depends on a subject result for a parameter the ``admit`` does not read is simply not
+    an input of the check (``power(add(a, b), 2u64)``).  Returns
     ``None`` when no call on the body is of an op with an ``admit``.
     """
 
@@ -843,18 +865,26 @@ def compile_admit_check(prog: Program, ir: object, tenv: dict) -> Callable | Non
             op = prog.ops[node[1]]
             if op.admit is None:
                 return kids
-            if any(has_subject(a) for a in node[2]):
+            names = [n for n, _ in op.params]
+            dynamic = {n for n, a in zip(names, node[2]) if has_subject(a)}
+            if dynamic & _reads(op.admit):
                 raise OracleError(
                     "generation",
-                    f"W0701: a call of op `{op.name}` has an argument that depends on a subject "
-                    "result, so the op's admit cannot be checked at generation (VER04r 6)",
+                    f"W0701: the admit of op `{op.name}` reads a parameter whose argument "
+                    "depends on a subject result, so it cannot be checked at generation "
+                    "(VER04r 6)",
                 )
             admit = admit_fn(prog, op, node[3] if len(node) == 4 else None)
-            args = [prog.compile(a, tenv, False).fn for a in node[2]]
-            names = [n for n, _ in op.params]
+            # An argument that depends on a subject result is not an input of the check:
+            # the admit does not read its parameter (just refused otherwise).
+            args = [
+                (n, prog.compile(a, tenv, False).fn)
+                for n, a in zip(names, node[2])
+                if n not in dynamic
+            ]
 
-            def check(env: dict, admit=admit, args=args, names=names, name=op.name) -> None:
-                if not admit({n: f(env) for n, f in zip(names, args)}):
+            def check(env: dict, admit=admit, args=args, name=op.name) -> None:
+                if not admit({n: f(env) for n, f in args}):
                     raise OutsideAdmit(name)
 
             return [check] + kids

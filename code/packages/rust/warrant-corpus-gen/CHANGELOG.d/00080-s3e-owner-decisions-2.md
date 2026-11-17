@@ -8,13 +8,14 @@
 - **[D19]** During enumeration every subject call on the pure trace of every admitted case is
   checked against the callee's op `admit` (`Program::with_ops`, `Program::trace`). The first case
   outside it fails generation with `W0701` naming the claim, the op and the admitted-case ordinal
-  (the `<suite>@<i>` address). An example is checked the same way. A call of an op that has an
-  `admit` with an argument that depends on a subject result cannot be decided and is refused
-  statically (`Program::check_admit_calls`), never skipped.
+  (the `<suite>@<i>` address). An example is checked the same way. A call whose op `admit`
+  reads a parameter whose argument depends on a subject result cannot be decided and is refused
+  statically (`Program::check_admit_calls`), never skipped; a subject-dependent argument for a
+  parameter the `admit` does not read (gf256's `power(add(a, b), 2u64)`) is accepted.
 - `tests/admit_calls.rs`: the exact `255u8 + 2u8` example in v0 (refused) and v1 (accepted), a
   claim weaker than the op's admit (refused, case 20), the same claim with a matching refinement
   (accepted), an unrefined binder (case 2560), an example outside the admit, a call under an
-  untaken branch, a nested subject argument.
+  untaken branch, a nested subject argument the admit reads (refused) and one it does not (accepted).
 
 ### Changed
 

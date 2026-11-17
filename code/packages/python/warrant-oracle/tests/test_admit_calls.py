@@ -99,9 +99,20 @@ def test_d19_only_the_taken_branch_of_a_pure_guard_is_checked():
     assert "outside the op's admit" in msg
 
 
-def test_d19_an_argument_that_depends_on_a_subject_result_is_refused_statically():
+def test_d19_an_admit_that_reads_a_subject_dependent_argument_is_refused_statically():
     nested = (
         "  claim n:\n    forall a: U8 | a < 10u8, b: U8 | b < 2u8."
         " op_lo(op_add(a, b), b) == first(add8(a, b), b)\n"
     )
     assert "depends on a subject result" in refused(" v1", nested)
+
+
+def test_d19_a_subject_dependent_argument_the_admit_does_not_read_is_accepted():
+    # op_lo's admit reads `a` only: `b` may be a subject result (the gf256 shape
+    # ``power(add(a, b), 2u64)``), and `a` is still checked on every admitted case.
+    ok = (
+        "  claim n:\n    forall a: U8 | a < 10u8, b: U8 | b < 2u8."
+        " op_lo(a, op_add(a, b)) == first(a, add8(a, b))\n"
+    )
+    gen(" v1", ok)
+    assert "admitted case 20" in refused(" v1", ok.replace("a < 10u8", "a < 12u8"))

@@ -118,7 +118,7 @@ pub fn examples(lowered: &Lowered, program: &Program<'_>) -> Result<Examples, Ge
         if lop.admit.is_some() {
             let mut vals = Vec::new();
             for a in args {
-                vals.push(program.eval(a, &[], &mut Stats::default()).map_err(at)?);
+                vals.push(Some(program.eval(a, &[], &mut Stats::default()).map_err(at)?));
             }
             if !checker.admits_call(op, &vals).map_err(at)? {
                 return Err(at(outside_admit(op)));

@@ -116,9 +116,20 @@ fn d19_a_call_under_an_untaken_branch_is_not_checked_a_taken_one_is() {
 }
 
 #[test]
-fn d19_an_argument_that_depends_on_a_subject_result_is_refused_statically() {
+fn d19_an_admit_that_reads_a_subject_dependent_argument_is_refused_statically() {
     let nested = "  claim n:\n    forall a: U8 | a < 10u8, b: U8 | b < 2u8. op_lo(op_add(a, b), b) == first(add8(a, b), b)\n";
     let e = gen(&doc(" v1", nested)).unwrap_err();
     assert_eq!((e.code, e.at.as_str()), (code::W0701, "n"), "{e}");
     assert!(e.message.contains("depends on a subject result"), "{e}");
+}
+
+#[test]
+fn d19_a_subject_dependent_argument_the_admit_does_not_read_is_accepted_and_the_rest_checked() {
+    // op_lo's admit reads `a` only: `b` may be a subject result (the gf256 shape
+    // `power(add(a, b), 2u64)`), and `a` is still checked on every admitted case.
+    let ok = "  claim n:\n    forall a: U8 | a < 10u8, b: U8 | b < 2u8. op_lo(a, op_add(a, b)) == first(a, add8(a, b))\n";
+    assert!(gen(&doc(" v1", ok)).is_ok());
+    let weak = ok.replace("a < 10u8", "a < 12u8");
+    let e = gen(&doc(" v1", &weak)).unwrap_err();
+    assert!(e.message.contains("admitted case 20"), "{e}");
 }
