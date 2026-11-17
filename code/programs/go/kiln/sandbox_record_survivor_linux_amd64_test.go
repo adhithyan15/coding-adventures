@@ -102,7 +102,7 @@ func TestSandboxRecordSurvivor(t *testing.T) {
 	files := recStepPolicyFiles(imageRoots())
 	files["code/programs/go/build-tool/go.mod"] = "module example.com/bt\n\ngo 1.26\n"
 	files["code/programs/go/build-tool/main.go"] = "package main\n"
-	files[rel+"/BUILD"] = "echo hi\n"
+	files[rel+"/BUILD"] = "cat data.txt\n"
 	files[rel+"/data.txt"] = "content\n"
 	for p, c := range files {
 		recStepWrite(t, filepath.Join(repo, filepath.FromSlash(p)), c, 0o644)
@@ -128,7 +128,7 @@ func TestSandboxRecordSurvivor(t *testing.T) {
 		t.Fatal(err)
 	}
 	recStepWrite(t, filepath.Join(aux, "graph.json"), graph, 0o644)
-	recStepWrite(t, filepath.Join(aux, "steps.json"), `{"schema":"kiln-legacy-steps/1","os":"linux","packages":[{"package":"`+rel+`","steps":["echo hi"]}]}`, 0o644)
+	recStepWrite(t, filepath.Join(aux, "steps.json"), `{"schema":"kiln-legacy-steps/1","os":"linux","packages":[{"package":"`+rel+`","steps":["cat data.txt"]}]}`, 0o644)
 	recStepWrite(t, filepath.Join(aux, "plan.json"), `{"schema_version": 1, "force": true, "packages": [{"name": "`+name+`", "rel_path": "`+rel+`", "language": "sh"}],
   "shards": [{"index": 0, "name": "s0", "assigned_packages": ["`+name+`"], "package_names": ["`+name+`"]}]}`, 0o644)
 	recStepWrite(t, filepath.Join(aux, "event.json"), `{"repository":{"default_branch":"main"}}`, 0o644)
@@ -175,7 +175,7 @@ exit 0
 
 	// The action's one step, as the build tool runs it.
 	env := append(append([]string{}, pre.Tools.BuildToolEnv...), "KILN_ACTION="+rel, "KILN_STEP=0", "KILN_STEP_COUNT=1")
-	step := exec.Command(kiln, "record", "step", "--dir", recDir, "--", "sh", "-c", "echo hi")
+	step := exec.Command(kiln, "record", "step", "--dir", recDir, "--", "sh", "-c", "cat data.txt")
 	step.Dir, step.Env = pre.Config.PackageDir(rel), env
 	if _, eb, code := recStepRun(t, step); code != 0 {
 		t.Fatalf("record step: exit %d\n%s", code, eb)

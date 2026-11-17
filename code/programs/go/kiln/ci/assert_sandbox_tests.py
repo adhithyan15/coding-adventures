@@ -45,10 +45,7 @@ REQUIRED = (
     "TestSandboxStraceSignals",
     "TestSandboxRecordProbe",
     "TestSandboxRecordGates",
-<<<<<<< HEAD
     "TestSandboxRecordSurvivor",
-=======
->>>>>>> origin/main
 )
 
 FINAL = {"pass", "fail", "skip"}
