@@ -12,8 +12,8 @@ This crate covers the full DT17 surface:
 - SipHash-2-4
 
 The `avalanche_score` and `distribution_test` analysis helpers moved to
-[`coding_adventures_hash_analysis`](../hash-analysis) (0.2.0): they draw OS randomness,
-and this crate is pure computation.
+[`coding_adventures_hash_analysis`](../hash-analysis) in version 0.2.0: they draw OS
+randomness, and this crate is pure computation.
 
 ## Usage
 
@@ -61,21 +61,29 @@ caught (`flip-result-bit` on each `u32`/`u64` result and on the hash inside
 `polynomial_rolling_with_params`' `Ok`, `missing-error` on the zero-modulus
 rejection). `BUILD` also fails if the committed `evidence/*.json` manifests differ
 from the freshly written ones (`git diff --exit-code -- evidence/`; they are
-deterministic, and this stands in for the unwired report `--check`). The usage
+deterministic; the report `--check` cross-checks them too). The usage
 example above is run as a doctest (`cargo test --doc`). `tests/runtime_capability.rs` runs the covered hashes
 inside a no-capability sandbox on Linux.
+
+Every operation also declares `steps` and `depth` bound rows (declarations: the proof
+manifest records the steps obligations `not-live`). The capability analyzer passes
+against `"capabilities": []` and `effect_certificate.json` records it; with
+`assurance-profile.json` (`non-cryptographic-hash`) the package report
+`assurance_report.json` is generated from the manifests and checked in `BUILD`. It shows
+CWE-330 excluded (no randomness in this crate), CWE-400 and CWE-208 as unapproved
+exemptions (no live step-bound or constant-time proof; the SipHash key is `secret`),
+verdict `report-only`.
 
 Note on the zero modulus: the real `polynomial_rolling_with_params` panics on
 `modulus == 0` (`assert!(modulus > 0)`). The Warrant row `ensures no_panic` on that
 parameter holds only of the generated harness adapter, which catches any panic and
 reports it as `MODULUS_ZERO`; it is not a statement about the crate.
 
-Not wired yet, and why: the capability analyzer and the `ca-assurance-report`
-package report. `avalanche_score` draws OS randomness, which the pure-computation
-manifest does not allow the analyzer to accept. Not covered, with reasons:
-`hash_str_*` (text), `avalanche_score` and `distribution_test` (floats and a
-generic closure), the `HashFunction` trait and its structs (stateful objects),
-and the constants. See [DT17a](../../../specs/DT17a-hash-functions-warrant.md).
+Not covered, with reasons: `hash_str_*` (text), the `HashFunction` trait and its
+structs (stateful objects), and the constants. The `avalanche_score` and
+`distribution_test` helpers are no longer here: they moved to
+[`coding_adventures_hash_analysis`](../hash-analysis), because `avalanche_score` draws
+OS randomness. See [DT17a](../../../specs/DT17a-hash-functions-warrant.md).
 
 ```bash
 # Regenerate the harness after editing the .warrant document

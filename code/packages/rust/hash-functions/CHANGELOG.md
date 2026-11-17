@@ -15,6 +15,20 @@ All notable changes to this package will be documented in this file.
   `coding_adventures_hash_analysis` and import them from there. The crate version
   is 0.2.0 (minor bump, public API removed).
 
+### Added
+
+- `steps` and `depth` `bound` rows on every operation of
+  `code/specs/hash-functions.warrant` (WX-P1a2), so the report can address CWE-400.
+  No `heap` row: it would put every harness instance under the allocation observer,
+  which the exhaustive suites cannot afford (see DT17a section 7). Evidence
+  regenerated (`tests/generated/warrant_evidence.rs`, both manifests).
+- `effect_certificate.json` (capability analyzer, label `proved`, no capabilities),
+  `assurance-profile.json` (`non-cryptographic-hash`, kind `transform`) and
+  `assurance_report.json`, with the analyzer and `ca-assurance-report --check`
+  lines in `BUILD`, `BUILD_linux` and `BUILD_windows`. The report shows CWE-330
+  excluded and CWE-400 and CWE-208 as unapproved exemptions (no live step-bound or
+  constant-time proof); verdict `report-only`.
+
 ### Changed
 
 - The README usage example no longer imports the analysis helpers.

@@ -10,10 +10,10 @@
 //! Docker works) the same policy is run in a container with no network, a
 //! read-only root and no capabilities.
 //!
-//! The crate's `avalanche_score` draws OS randomness (getrandom) and is NOT
-//! called here: it is outside the covered surface (DT17a section 3) and would,
-//! correctly, be stopped by this jail.  The covered functions touch no file,
-//! socket, clock, environment or process, and none is allowed to appear.
+//! The randomness-using analysis helpers (`avalanche_score`) are not in this crate any
+//! more: they moved to `hash-analysis` (WX-P1a2), so the whole crate, not only the covered
+//! surface, is free of file, socket, clock, environment, process and randomness access,
+//! and this jail's `rand-syscall` negative control stays detected.
 //!
 //! Phase A (`prepare`, unconstrained) builds every input vector.  Phase B (the
 //! returned closure, armed) only calls the library and returns named checks.
