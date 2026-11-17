@@ -22,5 +22,13 @@ the default uses roughly 16 MB). Two traps in doing it:
   token list with no EOF (a lone `(`) recursed forever with no hostile nesting
   at all. Past-the-end must be a synthetic EOF.
 
+- A depth counter on the call stack does not bound the TREE. Left-recursion
+  seed growing is a loop (call depth stays 1) that builds one tree level per
+  iteration, and any recursive consumer of the finished tree (position
+  computation, walkers) then overflowed at about 7M terms. Charge growth steps
+  to the same budget and make tree walkers iterative.
+- Counting rule calls alone also misses recursion inside a rule body (nested
+  groups/optionals); charge each rule for its element nesting too.
+
 Keep a hostile-nesting test (a million brackets) that asserts the error
 category, not just `err != nil`.

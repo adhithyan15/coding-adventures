@@ -5,7 +5,7 @@ package parser
 
 import (
 	"errors"
-	"fmt"
+	"reflect"
 	"runtime/debug"
 	"strings"
 	"sync"
@@ -233,7 +233,7 @@ func TestCompiledReuseMatchesOneShot(t *testing.T) {
 						t.Error(err)
 						return
 					}
-					if fmt.Sprint(got) != fmt.Sprint(want[i]) && !sameShape(got, want[i]) {
+					if !reflect.DeepEqual(got, want[i]) {
 						t.Error("reused parse differs from one-shot parse")
 						return
 					}
@@ -242,27 +242,6 @@ func TestCompiledReuseMatchesOneShot(t *testing.T) {
 		}()
 	}
 	wg.Wait()
-}
-
-func sameShape(a, b *ASTNode) bool {
-	if a.RuleName != b.RuleName || len(a.Children) != len(b.Children) {
-		return false
-	}
-	for i := range a.Children {
-		x, xok := a.Children[i].(*ASTNode)
-		y, yok := b.Children[i].(*ASTNode)
-		if xok != yok {
-			return false
-		}
-		if xok {
-			if !sameShape(x, y) {
-				return false
-			}
-		} else if a.Children[i].(lexer.Token) != b.Children[i].(lexer.Token) {
-			return false
-		}
-	}
-	return true
 }
 
 func TestCompileGrammarErrorsAndEdges(t *testing.T) {
@@ -367,10 +346,32 @@ c = { [ NAME ] }+ ;
 	if err != nil {
 		t.Fatal(err)
 	}
-	eof := []lexer.Token{benchTok("EOF", "")}
-	for _, rule := range []string{"a", "b", "c"} {
-		toks := append([]lexer.Token{benchTok("NAME", "x"), benchTok("NUMBER", "1")}, eof...)
-		_, _ = c.Parse(toks, Options{StartRule: rule}) // must return, either way
+	eof := benchTok("EOF", "")
+	name, num := benchTok("NAME", "x"), benchTok("NUMBER", "1")
+	cases := []struct {
+		rule    string
+		toks    []lexer.Token
+		wantErr bool
+		leaves  int
+	}{
+		// a: one NAME, then a zero-width iteration ends the loop.
+		{"a", []lexer.Token{name, eof}, false, 1},
+		{"a", []lexer.Token{eof}, false, 0},
+		// a stops at NUMBER (zero-width), leaving it unconsumed: an error.
+		{"a", []lexer.Token{name, num, eof}, true, 0},
+		// b: NUMBER, optional separator (zero-width), NUMBER.
+		{"b", []lexer.Token{num, num, eof}, false, 2},
+		{"c", []lexer.Token{eof}, false, 0},
+		{"c", []lexer.Token{name, eof}, false, 1},
+	}
+	for _, tc := range cases {
+		ast, err := c.Parse(tc.toks, Options{StartRule: tc.rule})
+		if (err != nil) != tc.wantErr {
+			t.Fatalf("%s %v: err = %v, wantErr %v", tc.rule, tc.toks, err, tc.wantErr)
+		}
+		if err == nil && len(CollectTokens(ast, "")) != tc.leaves {
+			t.Fatalf("%s: %d tokens, want %d", tc.rule, len(CollectTokens(ast, "")), tc.leaves)
+		}
 	}
 }
 
@@ -484,7 +485,7 @@ func TestMemoPoolDropsHugeState(t *testing.T) {
 	// Force release()'s "too big to keep" branches without needing millions
 	// of slots: shrink the notion via direct state manipulation.
 	s := c.pool.Get().(*parseState)
-	s.reset(nestedTokens(2), 10, false)
+	s.reset(nestedTokens(2), Options{MaxDepth: 10})
 	s.slots = make([]memoSlot, 0, maxPooledSlots+1)
 	s.head = make([]int32, maxPooledSlots+1)
 	s.release()

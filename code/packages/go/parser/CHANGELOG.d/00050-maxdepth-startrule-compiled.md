@@ -50,7 +50,9 @@
 - A trailing NEWLINE token with no EOF no longer spins the newline skipper
   forever, and a repetition body that matches nothing no longer loops forever.
 - `Parse` recovers panics from hooks and returns them as errors.
-- An empty token list is a syntax error, not a panic.
+- An empty token list no longer panics: it is a syntax error for a grammar
+  that cannot match nothing (a start rule that can match nothing still
+  succeeds on it, as it does on a list holding only EOF).
 
 ### Changelog layout
 - Converted the monolithic `CHANGELOG.md` into `CHANGELOG.d/` (one file per

@@ -203,11 +203,22 @@ an enclosing optional or repetition would have backtracked past the failed rule
 and "succeeded" on a prefix. Other implementations should do the same and keep
 a hostile-nesting test that asserts the error category.
 
+Depth is charged for every successful growth step of a left-recursive rule as
+well as for rule calls, so tree height is bounded by about `MaxDepth`; matcher
+recursion through nested groups, optionals and lookaheads is charged to a
+global frame budget (`HardMaxFrames`) so `HardMaxDepth` really bounds the
+stack. Tree walkers (`WalkAST`, `FindNodes`, `CollectTokens`) are iterative.
+`Options.MaxTokens` and `Options.MaxMemoSlots` optionally cap memory. At the
+default limit the Go wrappers refuse JSON arrays at about 5,000 nested levels,
+Python parentheses at about 3,300 and TypeScript call arguments at about 500.
+
 Also in the Go engine: `Options.StartRule` parses from any named rule (an
 unknown name is an error); `CompileGrammar` builds an immutable, goroutine-safe
 `Compiled` once so many inputs can be parsed without redoing per-grammar work;
 reading past the end of the token list yields a synthetic EOF rather than
-repeating the last token.
+repeating the last token (so `p = A B EOF` accepts `[A, B]`); an EOF token in
+the middle of the list ends the parse and consumers that cannot allow that
+must reject it themselves.
 
 **No error recovery.** The grammar-driven parser has none and must not gain
 any silently: a parse returns a complete tree for the whole input or an error,

@@ -2,6 +2,8 @@ package parser
 
 import (
 	"fmt"
+	"sync"
+	"sync/atomic"
 
 	grammartools "github.com/adhithyan15/coding-adventures/code/packages/go/grammar-tools"
 	"github.com/adhithyan15/coding-adventures/code/packages/go/lexer"
@@ -133,9 +135,55 @@ func NewGrammarParserWithTrace(tokens []lexer.Token, grammar *grammartools.Parse
 // A grammar that cannot be compiled (nil) is reported by Parse, not by the
 // constructor, so the constructor signature stays error-free like its
 // predecessors.
+//
+// The compiled form of a grammar is cached per *ParserGrammar pointer (see
+// ForgetGrammar), so building thousands of parsers against one grammar value
+// compiles it once. That makes one rule binding: a grammar must not be
+// mutated after it has first been handed to a constructor here. (Generated
+// grammar data is package-level and immutable, which is the intended use.)
 func NewGrammarParserWithOptions(tokens []lexer.Token, grammar *grammartools.ParserGrammar, opts Options) *GrammarParser {
-	c, err := CompileGrammar(grammar)
+	c, err := compileCached(grammar)
 	return &GrammarParser{tokens: tokens, compiled: c, compileErr: err, opts: opts}
+}
+
+// compiledCache maps *ParserGrammar to its *Compiled. Entries pin their
+// grammar for the life of the process, so the cache is bounded: past
+// maxCachedGrammars distinct grammars, further ones compile on every call
+// (the pre-cache behaviour) instead of growing without limit.
+var (
+	compiledCache     sync.Map
+	compiledCacheSize atomic.Int64
+)
+
+const maxCachedGrammars = 512
+
+func compileCached(grammar *grammartools.ParserGrammar) (*Compiled, error) {
+	if grammar == nil {
+		return CompileGrammar(nil)
+	}
+	if v, ok := compiledCache.Load(grammar); ok {
+		return v.(*Compiled), nil
+	}
+	c, err := CompileGrammar(grammar)
+	if err != nil {
+		return nil, err
+	}
+	if compiledCacheSize.Load() >= maxCachedGrammars {
+		return c, nil
+	}
+	if actual, loaded := compiledCache.LoadOrStore(grammar, c); loaded {
+		return actual.(*Compiled), nil
+	}
+	compiledCacheSize.Add(1)
+	return c, nil
+}
+
+// ForgetGrammar drops a grammar's cached compiled form. Call it before
+// reusing the same *ParserGrammar value after mutating its rules.
+func ForgetGrammar(grammar *grammartools.ParserGrammar) {
+	if _, loaded := compiledCache.LoadAndDelete(grammar); loaded {
+		compiledCacheSize.Add(-1)
+	}
 }
 
 // AddPreParse registers a token transform to run before parsing.
@@ -163,10 +211,17 @@ func (p *GrammarParser) NewlinesSignificant() bool {
 // Parse parses the token stream, starting from Options.StartRule (default:
 // the first grammar rule). It returns a complete AST or an error; there is no
 // error recovery.
-func (p *GrammarParser) Parse() (*ASTNode, error) {
+func (p *GrammarParser) Parse() (ast *ASTNode, err error) {
 	if p.compileErr != nil {
 		return nil, p.compileErr
 	}
+	// A panicking pre-parse hook is reported as an error, like panics in
+	// post-parse hooks (those are recovered inside Compiled.Parse).
+	defer func() {
+		if r := recover(); r != nil {
+			ast, err = nil, fmt.Errorf("parser: internal error: %v", r)
+		}
+	}()
 	// Historical behaviour: a pre-parse hook replaces the parser's own token
 	// list, and a second call to Parse sees the transformed list.
 	tokens := p.tokens
@@ -243,30 +298,93 @@ func tokenTypeName(tok lexer.Token) string {
 // ===========================================================================
 
 // computeNodePosition fills in the StartLine/StartColumn/EndLine/EndColumn
-// fields on an ASTNode by walking its children to find the first and last
-// leaf tokens. If the children contain no tokens (e.g., empty repetition),
-// the position fields remain zero (unset).
+// fields on an ASTNode from its first and last leaf tokens. If the children
+// contain no tokens (e.g., empty repetition), the position fields remain zero
+// (unset).
+//
+// A child that already has a position (every node built by a first parse
+// does) answers for its whole subtree in O(1), so building a left-recursive
+// chain is linear, not quadratic. Nodes without one (memo-hit copies) are
+// searched. Everything here is ITERATIVE: tree height is bounded by MaxDepth
+// during a parse, but these helpers also run on trees of any shape a caller
+// builds, and a Go stack overflow is fatal.
 func computeNodePosition(node *ASTNode) {
-	first := findFirstToken(node.Children)
-	last := findLastToken(node.Children)
-	if first != nil && last != nil {
-		node.StartLine = first.Line
-		node.StartColumn = first.Column
-		node.EndLine = last.Line
-		node.EndColumn = last.Column
+	var firstLine, firstCol, lastLine, lastCol int
+	found := false
+	for _, child := range node.Children {
+		if tok, ok := firstOf(child); ok {
+			firstLine, firstCol, found = tok.line, tok.col, true
+			break
+		}
 	}
+	if !found {
+		return
+	}
+	for i := len(node.Children) - 1; i >= 0; i-- {
+		if tok, ok := lastOf(node.Children[i]); ok {
+			lastLine, lastCol = tok.line, tok.col
+			break
+		}
+	}
+	node.StartLine, node.StartColumn = firstLine, firstCol
+	node.EndLine, node.EndColumn = lastLine, lastCol
+}
+
+type linecol struct{ line, col int }
+
+// firstOf returns the position of the first leaf token under one child.
+func firstOf(child interface{}) (linecol, bool) {
+	switch c := child.(type) {
+	case lexer.Token:
+		return linecol{c.Line, c.Column}, true
+	case *ASTNode:
+		if c.StartLine != 0 {
+			return linecol{c.StartLine, c.StartColumn}, true
+		}
+		if t := findFirstToken(c.Children); t != nil {
+			return linecol{t.Line, t.Column}, true
+		}
+	}
+	return linecol{}, false
+}
+
+// lastOf returns the position of the last leaf token under one child.
+func lastOf(child interface{}) (linecol, bool) {
+	switch c := child.(type) {
+	case lexer.Token:
+		return linecol{c.Line, c.Column}, true
+	case *ASTNode:
+		if c.EndLine != 0 {
+			return linecol{c.EndLine, c.EndColumn}, true
+		}
+		if t := findLastToken(c.Children); t != nil {
+			return linecol{t.Line, t.Column}, true
+		}
+	}
+	return linecol{}, false
+}
+
+// childCursor is one level of an explicit traversal stack.
+type childCursor struct {
+	children []interface{}
+	i        int
 }
 
 // findFirstToken returns the first leaf token in a children slice by
-// depth-first traversal. Returns nil if no tokens are found.
+// depth-first traversal, or nil if there are none. Iterative.
 func findFirstToken(children []interface{}) *lexer.Token {
-	for _, child := range children {
+	stack := []childCursor{{children: children}}
+	for len(stack) > 0 {
+		top := &stack[len(stack)-1]
+		if top.i >= len(top.children) {
+			stack = stack[:len(stack)-1]
+			continue
+		}
+		child := top.children[top.i]
+		top.i++
 		switch c := child.(type) {
 		case *ASTNode:
-			tok := findFirstToken(c.Children)
-			if tok != nil {
-				return tok
-			}
+			stack = append(stack, childCursor{children: c.Children})
 		case lexer.Token:
 			return &c
 		}
@@ -274,16 +392,21 @@ func findFirstToken(children []interface{}) *lexer.Token {
 	return nil
 }
 
-// findLastToken returns the last leaf token in a children slice by
-// reverse depth-first traversal. Returns nil if no tokens are found.
+// findLastToken returns the last leaf token in a children slice by reverse
+// depth-first traversal, or nil if there are none. Iterative.
 func findLastToken(children []interface{}) *lexer.Token {
-	for i := len(children) - 1; i >= 0; i-- {
-		switch c := children[i].(type) {
+	stack := []childCursor{{children: children, i: len(children) - 1}}
+	for len(stack) > 0 {
+		top := &stack[len(stack)-1]
+		if top.i < 0 {
+			stack = stack[:len(stack)-1]
+			continue
+		}
+		child := top.children[top.i]
+		top.i--
+		switch c := child.(type) {
 		case *ASTNode:
-			tok := findLastToken(c.Children)
-			if tok != nil {
-				return tok
-			}
+			stack = append(stack, childCursor{children: c.Children, i: len(c.Children) - 1})
 		case lexer.Token:
 			return &c
 		}
@@ -314,56 +437,96 @@ type ASTVisitor struct {
 // original). Token children are not visited — only ASTNode children are
 // walked.
 //
+// The walk is iterative, so it is safe on trees of any depth (a left-recursive
+// chain of a million nodes does not overflow the stack). Visitor callbacks
+// run in the same order as a recursive walk would run them.
+//
 // This is the generic traversal primitive. Language packages use it for
 // cover grammar rewriting, desugaring, and semantic analysis.
 func WalkAST(node *ASTNode, visitor ASTVisitor) *ASTNode {
 	return walkNode(node, nil, visitor)
 }
 
+// walkFrame is the state of one node mid-walk: the recursive version's local
+// variables, made explicit.
+type walkFrame struct {
+	orig        *ASTNode // the node as the parent saw it
+	current     *ASTNode // after Enter's optional replacement
+	parent      *ASTNode
+	idx         int // next child to visit
+	newChildren []interface{}
+	changed     bool
+}
+
 func walkNode(node *ASTNode, parent *ASTNode, visitor ASTVisitor) *ASTNode {
-	// Enter phase — visitor may replace the node.
-	current := node
-	if visitor.Enter != nil {
-		if replacement := visitor.Enter(current, parent); replacement != nil {
-			current = replacement
-		}
-	}
+	var stack []walkFrame
 
-	// Walk children recursively.
-	childrenChanged := false
-	newChildren := make([]interface{}, len(current.Children))
-	for i, child := range current.Children {
-		if astChild, ok := child.(*ASTNode); ok {
-			walked := walkNode(astChild, current, visitor)
-			if walked != astChild {
-				childrenChanged = true
+	// enter runs the Enter phase and pushes the node's frame.
+	enter := func(n, parent *ASTNode) {
+		current := n
+		if visitor.Enter != nil {
+			if replacement := visitor.Enter(current, parent); replacement != nil {
+				current = replacement
 			}
-			newChildren[i] = walked
-		} else {
-			newChildren[i] = child
 		}
+		stack = append(stack, walkFrame{
+			orig:        n,
+			current:     current,
+			parent:      parent,
+			newChildren: make([]interface{}, len(current.Children)),
+		})
 	}
 
-	// If children changed, create a new node with updated children.
-	if childrenChanged {
-		current = &ASTNode{
-			RuleName:    current.RuleName,
-			Children:    newChildren,
-			StartLine:   current.StartLine,
-			StartColumn: current.StartColumn,
-			EndLine:     current.EndLine,
-			EndColumn:   current.EndColumn,
-		}
-	}
+	enter(node, parent)
+	for {
+		f := &stack[len(stack)-1]
 
-	// Leave phase — visitor may replace the node.
-	if visitor.Leave != nil {
-		if replacement := visitor.Leave(current, parent); replacement != nil {
-			current = replacement
+		// Visit children until one is a node (descend into it) or we run out.
+		descended := false
+		for f.idx < len(f.current.Children) {
+			child := f.current.Children[f.idx]
+			if astChild, ok := child.(*ASTNode); ok {
+				enter(astChild, f.current) // may reallocate stack: f is stale now
+				descended = true
+				break
+			}
+			f.newChildren[f.idx] = child
+			f.idx++
 		}
-	}
+		if descended {
+			continue
+		}
 
-	return current
+		// All children done: rebuild if any changed, then the Leave phase.
+		current := f.current
+		if f.changed {
+			current = &ASTNode{
+				RuleName:    current.RuleName,
+				Children:    f.newChildren,
+				StartLine:   current.StartLine,
+				StartColumn: current.StartColumn,
+				EndLine:     current.EndLine,
+				EndColumn:   current.EndColumn,
+			}
+		}
+		if visitor.Leave != nil {
+			if replacement := visitor.Leave(current, f.parent); replacement != nil {
+				current = replacement
+			}
+		}
+
+		orig := f.orig
+		stack = stack[:len(stack)-1]
+		if len(stack) == 0 {
+			return current
+		}
+		pf := &stack[len(stack)-1]
+		pf.newChildren[pf.idx] = current
+		if current != orig {
+			pf.changed = true
+		}
+		pf.idx++
+	}
 }
 
 // FindNodes returns all nodes matching a rule name in depth-first order.
@@ -382,23 +545,27 @@ func FindNodes(node *ASTNode, ruleName string) []*ASTNode {
 
 // CollectTokens collects all tokens in depth-first order. If tokenType is
 // non-empty, only tokens whose effective type name matches are included.
-// Pass "" to collect all tokens.
+// Pass "" to collect all tokens. Iterative.
 func CollectTokens(node *ASTNode, tokenType string) []lexer.Token {
 	var results []lexer.Token
-	var walk func(n *ASTNode)
-	walk = func(n *ASTNode) {
-		for _, child := range n.Children {
-			switch c := child.(type) {
-			case *ASTNode:
-				walk(c)
-			case lexer.Token:
-				if tokenType == "" || tokenTypeName(c) == tokenType {
-					results = append(results, c)
-				}
+	stack := []childCursor{{children: node.Children}}
+	for len(stack) > 0 {
+		top := &stack[len(stack)-1]
+		if top.i >= len(top.children) {
+			stack = stack[:len(stack)-1]
+			continue
+		}
+		child := top.children[top.i]
+		top.i++
+		switch c := child.(type) {
+		case *ASTNode:
+			stack = append(stack, childCursor{children: c.Children})
+		case lexer.Token:
+			if tokenType == "" || tokenTypeName(c) == tokenType {
+				results = append(results, c)
 			}
 		}
 	}
-	walk(node)
 	return results
 }
 

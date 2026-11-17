@@ -74,6 +74,7 @@ package parser
 import (
 	"errors"
 	"fmt"
+	"math"
 	"os"
 	"strings"
 	"sync"
@@ -92,9 +93,11 @@ import (
 //     Measured on arm64 with go1.26: a 10,000-deep parse of a bracket grammar
 //     and of a six-rule expression grammar left a 16 MB stack in use (Go
 //     doubles stacks, so the true use is between 8 and 16 MB, about 0.8 to
-//     1.6 KB per level). Go's cap is 1 GB on 64-bit and 250 MB on 32-bit, so
-//     the default sits 60x or more below the 64-bit crash point. (Go's
-//     initial stack is tiny; growing to 16 MB costs a few copies and is fine.)
+//     1.6 KB per level). Go's nominal cap is 1e9 bytes, but stacks grow by
+//     doubling and a 1,024 MB stack would exceed 1e9, so the largest stack a
+//     goroutine can actually have is 512 MB: the default sits about 30x below
+//     the real crash point. (Go's initial stack is tiny; growing to 16 MB
+//     costs a few copies and is fine.)
 //
 //   - Far above any real input. Depth counts RULES, not tokens. A grammar
 //     with a 20-rule precedence chain spends about 20 levels per nested
@@ -103,23 +106,48 @@ import (
 //     arrays (two rules per level). Hand-written code and data essentially
 //     never exceed a few dozen levels of nesting.
 //
+// Depth is also consumed by LEFT RECURSION: every successful growth step of a
+// left-recursive rule (`e = e PLUS NUMBER | NUMBER`) adds one level of tree
+// height, so a chain of more than about DefaultMaxDepth left-associative
+// terms is refused too. The tree height is therefore a bounded invariant,
+// which keeps every recursive consumer of the finished tree safe.
+//
 // Callers who legitimately need more can raise Options.MaxDepth, up to
 // HardMaxDepth.
 const DefaultMaxDepth = 10000
 
 // HardMaxDepth is the ceiling Options.MaxDepth is clamped to. It exists so
 // that "never overflow the stack" holds even when a caller passes a huge
-// limit (say math.MaxInt) believing it means "unlimited". 50,000 levels is
-// about 64 MB of stack at the measured frame sizes (a 100,000-deep parse
-// pushed the stack to 128 to 256 MB, which is why the ceiling is half that):
-// well under the 1 GB 64-bit cap. There is deliberately no way to disable
-// the limit. 32-bit platforms have a 250 MB cap and smaller frames, so they
-// fit too, but were not measured.
+// limit (say math.MaxInt) believing it means "unlimited". There is
+// deliberately no way to disable the limit.
+//
+// Rule levels alone do not bound the stack: between two rule calls the
+// matcher recurses through nested groups, optionals, repetitions and
+// lookaheads, so a rule whose body is 50 elements deep costs 50 frames per
+// level. The engine therefore also charges every rule its element nesting
+// (see maxFrames) and refuses when the total would exceed HardMaxFrames,
+// whatever MaxDepth says.
 const HardMaxDepth = 50000
+
+// HardMaxFrames bounds the total of (element nesting + 2) over the rules on
+// the current call path: an upper bound on the number of Go stack frames the
+// matcher can have live. Measured on arm64/go1.26 with a 50-deep nested-group
+// rule: the worst case at this budget fits a 64 MB stack (about 250 bytes per
+// frame, and it overflowed a 32 MB cap), an eighth of the 512 MB usable stack
+// (see DefaultMaxDepth).
+const HardMaxFrames = 200000
 
 // ErrMaxDepth is the cause (see errors.Is) of the *GrammarParseError returned
 // when input nests deeper than the configured limit.
 var ErrMaxDepth = errors.New("input nests deeper than the supported limit")
+
+// ErrMaxTokens is the cause of the error returned when the token list is
+// longer than Options.MaxTokens.
+var ErrMaxTokens = errors.New("input has more tokens than the supported limit")
+
+// ErrMaxMemoSlots is the cause of the error returned when the packrat memo
+// table would exceed Options.MaxMemoSlots (or the int32 index space).
+var ErrMaxMemoSlots = errors.New("parse needs more memo entries than the supported limit")
 
 // ErrUnknownStartRule is the cause of the error returned when
 // Options.StartRule names a rule the grammar does not define.
@@ -135,6 +163,19 @@ type Options struct {
 	// StartRule names the rule to parse from. Empty means the first rule of
 	// the grammar. An unknown name is an error (ErrUnknownStartRule).
 	StartRule string
+
+	// MaxTokens, when positive, rejects token lists longer than this with
+	// ErrMaxTokens before any parsing happens. Zero means no limit. Use it
+	// (with MaxMemoSlots) to cap the memory an untrusted input can make the
+	// parser spend: memo storage grows with tokens times the rules tried per
+	// position, and the AST with the input.
+	MaxTokens int
+
+	// MaxMemoSlots, when positive, bounds the number of memoised (rule,
+	// position) results; exceeding it fails the parse with ErrMaxMemoSlots.
+	// Zero means no explicit limit beyond the hard int32 index space
+	// (about 2.1 billion slots).
+	MaxMemoSlots int
 
 	// Trace prints each rule attempt to stderr (see NewGrammarParserWithTrace).
 	Trace bool
@@ -200,6 +241,29 @@ type node struct {
 type compiledRule struct {
 	name string
 	body *node
+	// weight is an upper bound on the Go stack frames one level of this rule
+	// can keep live: parseRule and parseRuleBody, plus one match frame per
+	// level of element nesting in the body. See HardMaxFrames.
+	weight int
+}
+
+// nodeHeight is the longest chain of nested match frames below n (a leaf is
+// 1). Rule references do not descend: the callee is charged separately.
+func nodeHeight(n *node) int {
+	h := 0
+	for _, s := range n.subs {
+		if sh := nodeHeight(s); sh > h {
+			h = sh
+		}
+	}
+	for _, s := range []*node{n.sub, n.sep} {
+		if s != nil {
+			if sh := nodeHeight(s); sh > h {
+				h = sh
+			}
+		}
+	}
+	return h + 1
 }
 
 // Compiled is an immutable, goroutine-safe form of a parser grammar. Build it
@@ -247,7 +311,8 @@ func CompileGrammar(grammar *grammartools.ParserGrammar) (*Compiled, error) {
 	}
 	c.rules = make([]compiledRule, len(names))
 	for i := range names {
-		c.rules[i] = compiledRule{name: names[i], body: c.compileElement(bodies[i])}
+		body := c.compileElement(bodies[i])
+		c.rules[i] = compiledRule{name: names[i], body: body, weight: nodeHeight(body) + 2}
 	}
 
 	// The start rule is the first rule *as named*, resolved after dedup.
@@ -350,7 +415,26 @@ func elementReferencesNewline(element grammartools.GrammarElement) bool {
 //   - a syntax error, positioned at the furthest token the parser reached;
 //   - input nested deeper than Options.MaxDepth (errors.Is(err, ErrMaxDepth));
 //   - an unknown Options.StartRule (plain error, errors.Is ErrUnknownStartRule);
-//   - an empty grammar ("Grammar has no rules").
+//   - an empty grammar ("Grammar has no rules");
+//   - a token list longer than Options.MaxTokens (ErrMaxTokens), or a parse
+//     that needs more than Options.MaxMemoSlots memo entries (ErrMaxMemoSlots).
+//
+// Things worth knowing about the input and the result:
+//
+//   - Past the end of the token list the parser sees a synthetic EOF token (it
+//     carries the last token's line and column). So `p = A B EOF` accepts the
+//     list [A, B] with no explicit EOF, and an empty list is an error only for
+//     grammars whose start rule cannot match nothing.
+//   - After the start rule matches, trailing NEWLINEs are skipped and the
+//     parse is complete if the next token is EOF or the list is exhausted. An
+//     EOF token in the MIDDLE of the list therefore ends the parse and
+//     everything after it is ignored. Consumers that cannot allow that must
+//     reject any EOF token before the last position themselves.
+//   - A repetition stops after an iteration that consumed nothing, but that
+//     iteration's children are kept (a zero-width match can still contribute
+//     nodes, for example an empty nullable rule).
+//   - Every rule's Children slice is non-nil, empty if the rule matched
+//     nothing, including on packrat memo hits.
 //
 // Parse is safe to call concurrently on one Compiled. The token slice is read
 // but never modified.
@@ -381,8 +465,16 @@ func (c *Compiled) Parse(tokens []lexer.Token, opts Options) (ast *ASTNode, err 
 		start = id
 	}
 
+	if opts.MaxTokens > 0 && len(tokens) > opts.MaxTokens {
+		return nil, &GrammarParseError{
+			Message: fmt.Sprintf("%s (%d)", ErrMaxTokens.Error(), opts.MaxTokens),
+			Tok:     tokens[opts.MaxTokens],
+			Err:     ErrMaxTokens,
+		}
+	}
+
 	s := c.pool.Get().(*parseState)
-	s.reset(tokens, opts.maxDepth(), opts.Trace)
+	s.reset(tokens, opts)
 	ast, err = s.run(start)
 	s.release()
 	if err != nil {
@@ -417,10 +509,16 @@ type parseState struct {
 	head  []int32
 	slots []memoSlot
 
-	depth    int
+	depth    int // rule levels on the call path, plus left-recursion growth steps
 	maxDepth int
-	// exceeded is the sticky "depth limit hit" flag; see the file comment.
+	frames   int // sum of rule weights on the call path (see HardMaxFrames)
+
+	maxSlots int
+
+	// exceeded is the sticky "a resource limit was hit" flag; see the file
+	// comment. limitErr says which limit (ErrMaxDepth or ErrMaxMemoSlots).
 	exceeded    bool
+	limitErr    error
 	exceededPos int
 
 	furthestPos      int
@@ -434,12 +532,14 @@ type parseState struct {
 // enormous parse does not pin its memory for the life of the process.
 const maxPooledSlots = 1 << 20
 
-func (s *parseState) reset(tokens []lexer.Token, maxDepth int, trace bool) {
+func (s *parseState) reset(tokens []lexer.Token, opts Options) {
 	s.tokens = tokens
 	s.pos = 0
-	s.depth, s.maxDepth, s.exceeded, s.exceededPos = 0, maxDepth, false, 0
+	s.depth, s.frames, s.maxDepth = 0, 0, opts.maxDepth()
+	s.maxSlots = opts.MaxMemoSlots
+	s.exceeded, s.limitErr, s.exceededPos = false, nil, 0
 	s.furthestPos, s.furthestExpected = 0, s.furthestExpected[:0]
-	s.trace = trace
+	s.trace = opts.Trace
 	s.eof = lexer.Token{Type: lexer.TokenEOF, TypeName: "EOF"}
 	if n := len(tokens); n > 0 {
 		s.eof.Line, s.eof.Column = tokens[n-1].Line, tokens[n-1].Column
@@ -540,10 +640,14 @@ func (s *parseState) run(start int32) (*ASTNode, error) {
 	// A depth refusal always wins, even if the top rule "succeeded" by
 	// backtracking past it. Fail closed.
 	if s.exceeded {
+		limit := s.maxDepth
+		if s.limitErr == ErrMaxMemoSlots {
+			limit = s.maxSlots
+		}
 		return nil, &GrammarParseError{
-			Message: fmt.Sprintf("%s (%d)", ErrMaxDepth.Error(), s.maxDepth),
+			Message: fmt.Sprintf("%s (%d)", s.limitErr.Error(), limit),
 			Tok:     s.tokenAt(s.exceededPos),
-			Err:     ErrMaxDepth,
+			Err:     s.limitErr,
 		}
 	}
 
@@ -599,7 +703,15 @@ func (s *parseState) memoFind(pos int, rule int32) int32 {
 
 // memoInsert adds a slot at pos and returns its index. Indices stay valid for
 // the whole parse (slots only ever grow), unlike pointers into the slice.
+//
+// It returns -1, and raises the sticky limit flag, when the table is full:
+// at Options.MaxMemoSlots if set, and always before an index would overflow
+// int32.
 func (s *parseState) memoInsert(pos int, rule int32, m memoSlot) int32 {
+	if len(s.slots) >= math.MaxInt32-1 || (s.maxSlots > 0 && len(s.slots) >= s.maxSlots) {
+		s.fail(ErrMaxMemoSlots)
+		return -1
+	}
 	m.rule = rule
 	m.next = s.head[pos]
 	s.slots = append(s.slots, m)
@@ -628,16 +740,29 @@ func (s *parseState) parseRule(id int32) *ASTNode {
 		return &ASTNode{RuleName: rule.name, Children: m.children}
 	}
 
-	// The depth guard. Everything below this line recurses.
-	if s.depth >= s.maxDepth {
-		s.exceeded = true
-		s.exceededPos = s.pos
+	// The depth guards. Everything below this line recurses. Two budgets:
+	// rule levels (Options.MaxDepth) and stack frames (HardMaxFrames, which
+	// charges a rule for its internal element nesting).
+	if s.depth >= s.maxDepth || s.frames+rule.weight > HardMaxFrames {
+		s.fail(ErrMaxDepth)
 		return nil
 	}
 	s.depth++
+	s.frames += rule.weight
 	node := s.parseRuleBody(id, rule)
+	s.frames -= rule.weight
 	s.depth--
 	return node
+}
+
+// fail raises the sticky resource-limit flag (first cause wins). Once it is
+// up, parseRule and match fail immediately and run reports the error.
+func (s *parseState) fail(cause error) {
+	if !s.exceeded {
+		s.exceeded = true
+		s.limitErr = cause
+		s.exceededPos = s.pos
+	}
 }
 
 func (s *parseState) parseRuleBody(id int32, rule *compiledRule) *ASTNode {
@@ -659,12 +784,28 @@ func (s *parseState) parseRuleBody(id int32, rule *compiledRule) *ASTNode {
 	// 2008). Slot indices, not pointers, are held across the nested calls
 	// because the slots slice may be reallocated underneath us.
 	si := s.memoInsert(startPos, id, memoSlot{endPos: startPos})
+	if si < 0 {
+		return nil // memo table full; the sticky flag is up
+	}
 
 	children, ok := s.match(rule.body, nil)
-
-	s.slots[si].children, s.slots[si].endPos, s.slots[si].ok = children, s.pos, ok
+	if ok {
+		// Memoised and returned children are never nil (a rule that matched
+		// nothing has an empty slice), so a memo hit and a first parse build
+		// identical nodes (JSON `[]`, not `null`).
+		children = nonNil(children)
+		s.slots[si].children, s.slots[si].endPos, s.slots[si].ok = children, s.pos, true
+	} else {
+		s.slots[si].children, s.slots[si].endPos, s.slots[si].ok = nil, s.pos, false
+	}
 
 	if ok {
+		// Each successful growth step wraps the previous tree in one more
+		// level, without any recursion in the parser. Charge every step to
+		// the depth budget (and let nested rules in later steps see the
+		// larger depth) so the TREE height stays bounded by about
+		// MaxDepth, which is what keeps tree walkers safe. Restored on exit.
+		entryDepth := s.depth
 		for {
 			prevEnd := s.pos
 			s.pos = startPos
@@ -676,8 +817,14 @@ func (s *parseState) parseRuleBody(id int32, rule *compiledRule) *ASTNode {
 				s.slots[si].children, s.slots[si].endPos, s.slots[si].ok = children, prevEnd, true
 				break
 			}
-			children = newChildren
+			children = nonNil(newChildren)
+			s.depth++
+			if s.depth > s.maxDepth {
+				s.fail(ErrMaxDepth)
+				break
+			}
 		}
+		s.depth = entryDepth
 	}
 
 	if !ok {
@@ -693,16 +840,19 @@ func (s *parseState) parseRuleBody(id int32, rule *compiledRule) *ASTNode {
 		fmt.Fprintln(os.Stderr, " → match")
 	}
 
-	// A rule body made only of repetitions and optionals (like TOML's
-	// array_values) may match nothing; normalise nil to an empty slice so the
-	// ASTNode is well formed.
-	if children == nil {
-		children = []interface{}{}
-	}
-
 	n := &ASTNode{RuleName: rule.name, Children: children}
 	computeNodePosition(n)
 	return n
+}
+
+// nonNil turns a nil children slice into an empty one. A rule body made only
+// of repetitions and optionals (like TOML's array_values) may match nothing,
+// and the ASTNode should still be well formed.
+func nonNil(children []interface{}) []interface{} {
+	if children == nil {
+		return []interface{}{}
+	}
+	return children
 }
 
 // match tries element n at the current position, APPENDING what it matched to
