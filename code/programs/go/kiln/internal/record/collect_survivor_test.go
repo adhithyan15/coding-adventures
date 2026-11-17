@@ -17,7 +17,14 @@ type fakeProc struct {
 	procs map[int]*fakeEntry
 	// listErr and selfNSErr make the two scan-wide reads fail.
 	listErr, selfNSErr error
+	// block, when set, makes Pids wait for it (a /proc read stuck for good).
+	block chan struct{}
 }
+
+// fakeBoot is the boot time of the fake host; ticks count from it at 100 Hz.
+var fakeBoot = time.Unix(1_000_000, 0)
+
+func (f *fakeProc) Boot() (time.Time, int, error) { return fakeBoot, 100, nil }
 
 type fakeEntry struct {
 	owner   uint32
@@ -28,9 +35,22 @@ type fakeEntry struct {
 	nsErr   error
 	mounts  string // mountinfo text
 	miErr   error
+	// status and stat are the raw files; empty means "make one": a status whose
+	// Uid is owner, and a stat of a process started at boot (old).
+	status, stat       string
+	statusErr, statErr error
+}
+
+// statLine is a /proc/<pid>/stat with the given comm and starttime (in ticks).
+func statLine(comm string, ticks int) string {
+	// fields 3..21 are 19 values; field 22 is the start time.
+	return "123 (" + comm + ") S 1 1 1 0 -1 4194560 0 0 0 0 0 0 0 0 20 0 1 0 " + strconv.Itoa(ticks) + " 1000 100 18446744073709551615 0 0 0\n"
 }
 
 func (f *fakeProc) Pids() ([]int, error) {
+	if f.block != nil {
+		<-f.block
+	}
 	if f.listErr != nil {
 		return nil, f.listErr
 	}
@@ -63,16 +83,31 @@ func (f *fakeProc) ReadFile(pid int, name string) ([]byte, error) {
 		return []byte(e.cmdline), e.cmdErr
 	case "mountinfo":
 		return []byte(e.mounts), e.miErr
+	case "status":
+		if e.statusErr != nil || e.status != "" {
+			return []byte(e.status), e.statusErr
+		}
+		u := strconv.Itoa(int(e.owner))
+		return []byte("Name:\tx\nUid:\t" + u + "\t" + u + "\t" + u + "\t" + u + "\n"), nil
+	case "stat":
+		if e.statErr != nil || e.stat != "" {
+			return []byte(e.stat), e.statErr
+		}
+		return []byte(statLine("x", 0)), nil
 	}
 	return nil, errors.New("unexpected file " + name)
 }
 
 const (
-	surRoot = "/work/repo"
-	surCfg  = "/work/record/pre/sandbox.json"
-	hostNS  = "mnt:[4026531841]"
-	boxNS   = "mnt:[4026532999]"
+	surRoot  = "/work/repo"
+	surCfg   = "/work/record/pre/sandbox.json"
+	surProbe = "/work/record/probe/toolchains-sandbox.json"
+	hostNS   = "mnt:[4026531841]"
+	boxNS    = "mnt:[4026532999]"
 )
+
+// surQuery has no start time: every process counts for S3.
+var surQuery = SurvivorQuery{RepoRoot: surRoot, Configs: []string{surCfg, surProbe}}
 
 // mountinfoWith is a mountinfo with the given mount points (field 5).
 func mountinfoWith(points ...string) string {
@@ -94,7 +129,7 @@ func host() *fakeProc {
 
 func scanOne(t *testing.T, f *fakeProc) []string {
 	t.Helper()
-	got, err := scanSurvivors(f, surRoot, surCfg)
+	got, err := scanSurvivors(f, surQuery)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -206,12 +241,12 @@ func TestSurvivorExcludesThisProcessEvenWhenItLooksLikeOne(t *testing.T) {
 func TestSurvivorScanFailsClosedWhenItCannotBeMade(t *testing.T) {
 	f := host()
 	f.listErr = errors.New("no /proc")
-	if _, err := scanSurvivors(f, surRoot, surCfg); err == nil {
+	if _, err := scanSurvivors(f, surQuery); err == nil {
 		t.Fatal("an unlistable /proc was a clean scan")
 	}
 	f = host()
 	f.selfNSErr = errors.New("denied")
-	if _, err := scanSurvivors(f, surRoot, surCfg); err == nil {
+	if _, err := scanSurvivors(f, surQuery); err == nil {
 		t.Fatal("an unreadable own namespace was a clean scan")
 	}
 }
@@ -242,7 +277,7 @@ func (c *clock) sleep(d time.Duration) { c.t = c.t.Add(d); c.sleeps++ }
 func TestWaitSurvivorsNegativeWaitLooksOnce(t *testing.T) {
 	c := &clock{t: time.Unix(0, 0)}
 	calls := 0
-	got := waitSurvivors(func() ([]string, error) { calls++; return []string{"pid 1: x"}, nil }, -1, c.now, c.sleep)
+	got := waitSurvivors(func() ([]string, error) { calls++; return []string{"pid 1: x"}, nil }, -1, c.now, c.sleep, 0)
 	if len(got) != 1 || calls != 1 || c.sleeps != 0 {
 		t.Fatalf("%v %d %d", got, calls, c.sleeps)
 	}
@@ -257,7 +292,7 @@ func TestWaitSurvivorsGoneWithinTheWait(t *testing.T) {
 			return []string{"pid 1: x"}, nil
 		}
 		return nil, nil
-	}, 5*time.Second, c.now, c.sleep)
+	}, 5*time.Second, c.now, c.sleep, 0)
 	if len(got) != 0 || calls != 4 || c.sleeps != 3 {
 		t.Fatalf("%v calls %d sleeps %d", got, calls, c.sleeps)
 	}
@@ -266,7 +301,7 @@ func TestWaitSurvivorsGoneWithinTheWait(t *testing.T) {
 func TestWaitSurvivorsStillThereAfterTheWait(t *testing.T) {
 	c := &clock{t: time.Unix(0, 0)}
 	calls := 0
-	got := waitSurvivors(func() ([]string, error) { calls++; return []string{"pid 1: x"}, nil }, time.Second, c.now, c.sleep)
+	got := waitSurvivors(func() ([]string, error) { calls++; return []string{"pid 1: x"}, nil }, time.Second, c.now, c.sleep, 0)
 	// 200 ms apart over one second: the scans at 0, 200, ... 1000 ms.
 	if len(got) != 1 || calls != 6 || c.sleeps != 5 {
 		t.Fatalf("%v calls %d sleeps %d", got, calls, c.sleeps)
@@ -275,11 +310,155 @@ func TestWaitSurvivorsStillThereAfterTheWait(t *testing.T) {
 
 func TestWaitSurvivorsDefaultIsTenSecondsAndAFailedScanIsASurvivor(t *testing.T) {
 	c := &clock{t: time.Unix(0, 0)}
-	got := waitSurvivors(func() ([]string, error) { return nil, errors.New("boom") }, 0, c.now, c.sleep)
+	got := waitSurvivors(func() ([]string, error) { return nil, errors.New("boom") }, 0, c.now, c.sleep, 0)
 	if len(got) != 1 || !strings.Contains(got[0], "boom") {
 		t.Fatalf("%v", got)
 	}
 	if c.t.Sub(time.Unix(0, 0)) != DefaultSurvivorWait {
 		t.Fatalf("waited %v", c.t.Sub(time.Unix(0, 0)))
+	}
+}
+
+// ---------------------------------------------------------------------------
+// S3 after the review: ownership from status, start time, S2 for the probe
+// configuration, truncated reads, a scan that blocks.
+
+// prepared is the moment prepare ran in these tests: 1000 s after boot.
+var prepared = fakeBoot.Add(1000 * time.Second)
+
+func sinceQuery() SurvivorQuery {
+	q := surQuery
+	q.Since = prepared.Add(-2 * time.Second)
+	return q
+}
+
+func TestSurvivorS3OldUninspectableProcessIsIgnored(t *testing.T) {
+	denied := &os.PathError{Op: "readlink", Path: "x", Err: syscall.EACCES}
+	f := host()
+	// A systemd --user manager, started at boot: ours, non-dumpable, old.
+	f.procs[30] = &fakeEntry{owner: 1000, cmdline: "(sd-pam)\x00", nsErr: denied, stat: statLine("(sd-pam)", 500)}
+	got, err := scanSurvivors(f, sinceQuery())
+	if err != nil || len(got) != 0 {
+		t.Fatalf("%v %v", got, err)
+	}
+}
+
+func TestSurvivorS3NewUninspectableProcessIsFlagged(t *testing.T) {
+	denied := &os.PathError{Op: "readlink", Path: "x", Err: syscall.EACCES}
+	f := host()
+	f.procs[30] = &fakeEntry{owner: 1000, cmdline: "x\x00", nsErr: denied, stat: statLine("x", 100*1000+50)}
+	got, _ := scanSurvivors(f, sinceQuery())
+	if len(got) != 1 || !strings.Contains(got[0], "S3") {
+		t.Fatalf("%v", got)
+	}
+	// One that started within the slack before prepare counts too.
+	f.procs[30].stat = statLine("x", 100*(1000-1))
+	if got, _ = scanSurvivors(f, sinceQuery()); len(got) != 1 {
+		t.Fatalf("%v", got)
+	}
+}
+
+func TestSurvivorS3UnparsableStatCountsAsNew(t *testing.T) {
+	denied := &os.PathError{Op: "readlink", Path: "x", Err: syscall.EACCES}
+	for name, e := range map[string]*fakeEntry{
+		"garbage": {owner: 1000, cmdline: "x\x00", nsErr: denied, stat: "nonsense"},
+		"short":   {owner: 1000, cmdline: "x\x00", nsErr: denied, stat: "1 (x) S 1 2 3\n"},
+		"nan":     {owner: 1000, cmdline: "x\x00", nsErr: denied, stat: strings.Replace(statLine("x", 1), " 1 1000", " zz 1000", 1)},
+		"unread":  {owner: 1000, cmdline: "x\x00", nsErr: denied, statErr: denied},
+		"no-comm": {owner: 1000, cmdline: "x\x00", nsErr: denied, stat: "1 x S 1\n"},
+	} {
+		f := host()
+		f.procs[30] = e
+		got, _ := scanSurvivors(f, sinceQuery())
+		if len(got) != 1 || !strings.Contains(got[0], "S3") {
+			t.Fatalf("%s: %v", name, got)
+		}
+	}
+}
+
+func TestSurvivorS3HostileOwnerRootButStatusUidOurs(t *testing.T) {
+	// The bypass: a non-dumpable task's /proc/<pid> is owned by root, so the
+	// owner says "not ours"; its status says it is, and ns/mnt is unreadable.
+	denied := &os.PathError{Op: "readlink", Path: "x", Err: syscall.EACCES}
+	f := host()
+	f.procs[30] = &fakeEntry{owner: 0, status: "Name:\tx\nUid:\t1000\t1000\t1000\t1000\n", cmdline: "x\x00", nsErr: denied, stat: statLine("x", 100*2000)}
+	got, _ := scanSurvivors(f, sinceQuery())
+	if len(got) != 1 || !strings.Contains(got[0], "S3") {
+		t.Fatalf("%v", got)
+	}
+	// Effective uid ours, real not: ours as well.
+	f.procs[30].status = "Uid:\t0\t1000\t0\t0\n"
+	if got, _ = scanSurvivors(f, sinceQuery()); len(got) != 1 {
+		t.Fatalf("%v", got)
+	}
+	// Truly somebody else's, with an owner that is not ours either: skipped.
+	f.procs[30].status = "Uid:\t0\t0\t0\t0\n"
+	if got, _ = scanSurvivors(f, sinceQuery()); len(got) != 0 {
+		t.Fatalf("%v", got)
+	}
+	// An unreadable or unparsable status is ours.
+	for _, st := range []*fakeEntry{
+		{owner: 0, statusErr: denied, cmdline: "x\x00", nsErr: denied, stat: statLine("x", 100*2000)},
+		{owner: 0, status: "Name:\tx\n", cmdline: "x\x00", nsErr: denied, stat: statLine("x", 100*2000)},
+		{owner: 0, status: "Uid:\tfoo\n", cmdline: "x\x00", nsErr: denied, stat: statLine("x", 100*2000)},
+	} {
+		f.procs[30] = st
+		if got, _ = scanSurvivors(f, sinceQuery()); len(got) != 1 {
+			t.Fatalf("%+v: %v", st, got)
+		}
+	}
+}
+
+func TestSurvivorStatParsesACommWithParentheses(t *testing.T) {
+	st := []byte(statLine("a ) (b c", 12345))
+	got, err := startedAt(st, fakeBoot, 100)
+	if err != nil || !got.Equal(fakeBoot.Add(123450*time.Millisecond)) {
+		t.Fatalf("%v %v", got, err)
+	}
+	// ... end to end: a comm like that, old, is ignored.
+	denied := &os.PathError{Op: "readlink", Path: "x", Err: syscall.EACCES}
+	f := host()
+	f.procs[30] = &fakeEntry{owner: 1000, cmdline: "x\x00", nsErr: denied, stat: statLine(") (", 10)}
+	if got, _ := scanSurvivors(f, sinceQuery()); len(got) != 0 {
+		t.Fatalf("%v", got)
+	}
+}
+
+func TestSurvivorS2AlsoNamesTheProbeConfiguration(t *testing.T) {
+	f := host()
+	f.procs[30] = &fakeEntry{owner: 1000, ns: hostNS, cmdline: "kiln\x00sandbox-exec\x00--config\x00" + surProbe + "\x00"}
+	// Old, too: S2 applies whatever the start time.
+	f.procs[30].stat = statLine("kiln", 5)
+	got, _ := scanSurvivors(f, sinceQuery())
+	if len(got) != 1 || !strings.Contains(got[0], "S2") || !strings.Contains(got[0], "toolchains-sandbox") {
+		t.Fatalf("%v", got)
+	}
+}
+
+func TestSurvivorTruncatedMountinfoFailsClosedWhateverTheOwner(t *testing.T) {
+	// Another user's process in another namespace whose mountinfo is too long to
+	// read: not parsed, counted (when new).
+	f := host()
+	f.procs[30] = &fakeEntry{owner: 0, status: "Uid:\t0\t0\t0\t0\n", ns: boxNS, cmdline: "x\x00", miErr: errTruncated, stat: statLine("x", 100*2000)}
+	got, _ := scanSurvivors(f, sinceQuery())
+	if len(got) != 1 || !strings.Contains(got[0], "S3") || !strings.Contains(got[0], "mountinfo") {
+		t.Fatalf("%v", got)
+	}
+	// Started before prepare: the start-time rule still applies.
+	f.procs[30].stat = statLine("x", 10)
+	if got, _ = scanSurvivors(f, sinceQuery()); len(got) != 0 {
+		t.Fatalf("%v", got)
+	}
+}
+
+func TestSurvivorScanThatBlocksCountsAsASurvivor(t *testing.T) {
+	f := host()
+	f.block = make(chan struct{})
+	defer close(f.block)
+	scan := func() ([]string, error) { return scanSurvivors(f, surQuery) }
+	c := &clock{t: time.Unix(0, 0)}
+	got := waitSurvivors(scan, -1, c.now, c.sleep, 20*time.Millisecond)
+	if len(got) != 1 || !strings.Contains(got[0], "took longer") {
+		t.Fatalf("%v", got)
 	}
 }

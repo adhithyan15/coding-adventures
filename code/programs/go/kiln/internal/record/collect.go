@@ -87,10 +87,12 @@ type CollectOptions struct {
 	// error counts as a survivor. SurvivorWait is how long a dying tree is given
 	// (zero: DefaultSurvivorWait; negative: one look, no waiting) and Sleep and
 	// Now are the clock it uses, so a test never waits.
-	Survivors    func(repoRoot, cfgPath string) ([]string, error)
+	Survivors    func(SurvivorQuery) ([]string, error)
 	SurvivorWait time.Duration
-	Now          func() time.Time
-	Sleep        func(time.Duration)
+	// SurvivorScanTimeout bounds one scan (zero: DefaultSurvivorScanTimeout).
+	SurvivorScanTimeout time.Duration
+	Now                 func() time.Time
+	Sleep               func(time.Duration)
 }
 
 // CollectResult says what a successful Collect wrote.
@@ -183,7 +185,14 @@ func Collect(o CollectOptions) (*CollectResult, error) {
 		return nil, fmt.Errorf("--root %q is not the checkout the shard was prepared for (%q)", printable(o.Root), printable(pre.Config.RepoRoot))
 	}
 	// 2a. Nothing of the sandbox may still be running (D6, token `survivor`).
-	survivors := waitSurvivors(func() ([]string, error) { return o.Survivors(pre.Config.RepoRoot, pre.ConfigPath) }, o.SurvivorWait, o.Now, o.Sleep)
+	// "Started after prepare" is the sealed prepared_at less two seconds of slack
+	// (it has a one-second resolution, and so does the boot time); a value that
+	// does not parse leaves the time zero, which makes every process count.
+	q := SurvivorQuery{RepoRoot: pre.Config.RepoRoot, Configs: []string{pre.ConfigPath, filepath.Join(o.Dir, "probe", "toolchains-sandbox.json")}}
+	if t, err := time.Parse(time.RFC3339, pre.Binding.PreparedAt); err == nil {
+		q.Since = t.Add(-2 * time.Second)
+	}
+	survivors := waitSurvivors(func() ([]string, error) { return o.Survivors(q) }, o.SurvivorWait, o.Now, o.Sleep, o.SurvivorScanTimeout)
 	kiln, err := ResolveBinary("the kiln binary", o.KilnExe)
 	if err != nil {
 		return nil, err

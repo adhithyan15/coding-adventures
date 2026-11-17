@@ -386,8 +386,10 @@ func RunStep(o StepOptions) (*StepResult, error) {
 	// somebody could have restored a cache into them. Anything but "absent or an
 	// empty directory" leaves traces/.state-preloaded, which `collect` turns into
 	// the shard-void token `state-preloaded` (M4). The step still runs: the shard
-	// is void, not the build. A marker that cannot be left refuses the step; its
-	// number is taken, so `collect` sees the gap and voids the order.
+	// is void, not the build. A marker that cannot be left refuses the step, and
+	// that is a RUN-void, not the shard-void above: the step's number and its trace
+	// file exist but no sidecar does, so `collect` sees a counter that does not
+	// match the sidecars (serial-violated) and marks every record unknown.
 	if seq == 0 {
 		if err := markStatePreloaded(o.Dir, pre.Config.StateRoots); err != nil {
 			return nil, err

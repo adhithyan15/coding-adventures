@@ -41,9 +41,10 @@ func TestCollectSurvivorVoidsTheRunAndEveryRecord(t *testing.T) {
 	f := newCfix(t)
 	f.good()
 	var gotRoot, gotCfg string
+	var gotQ SurvivorQuery
 	o := f.opts()
-	o.Survivors = func(root, cfg string) ([]string, error) {
-		gotRoot, gotCfg = root, cfg
+	o.Survivors = func(q SurvivorQuery) ([]string, error) {
+		gotRoot, gotCfg, gotQ = q.RepoRoot, q.Configs[0], q
 		return []string{"pid 4242: S1: it is in another mount namespace that has the checkout mounted"}, nil
 	}
 	res, err := Collect(o)
@@ -52,6 +53,14 @@ func TestCollectSurvivorVoidsTheRunAndEveryRecord(t *testing.T) {
 	}
 	if gotRoot != f.p.root || gotCfg != filepath.Join(f.p.dir, "pre", "sandbox.json") {
 		t.Fatalf("the scan was given %q and %q", gotRoot, gotCfg)
+	}
+	// The probe sandbox's configuration is named too, and the start-time bound is
+	// the sealed prepared_at less two seconds.
+	if len(gotQ.Configs) != 2 || gotQ.Configs[1] != filepath.Join(f.p.dir, "probe", "toolchains-sandbox.json") {
+		t.Fatalf("configs %v", gotQ.Configs)
+	}
+	if want, _ := time.Parse(time.RFC3339, f.pre.Binding.PreparedAt); !gotQ.Since.Equal(want.Add(-2 * time.Second)) {
+		t.Fatalf("since %v, prepared_at %q", gotQ.Since, f.pre.Binding.PreparedAt)
 	}
 	sh := f.decode()
 	if !hasVoid(sh, "survivor") || hasVoid(sh, "state-preloaded") || hasVoid(sh, "tracked-changed") {
@@ -69,7 +78,7 @@ func TestCollectSurvivorScanErrorIsASurvivor(t *testing.T) {
 	f := newCfix(t)
 	f.good()
 	o := f.opts()
-	o.Survivors = func(string, string) ([]string, error) { return nil, errors.New("no /proc") }
+	o.Survivors = func(SurvivorQuery) ([]string, error) { return nil, errors.New("no /proc") }
 	if _, err := Collect(o); err != nil {
 		t.Fatal(err)
 	}
@@ -85,7 +94,7 @@ func TestCollectSurvivorThatGoesAwayWithinTheWaitIsNotOne(t *testing.T) {
 	f.good()
 	o := f.opts()
 	calls, slept := 0, time.Duration(0)
-	o.Survivors = func(string, string) ([]string, error) {
+	o.Survivors = func(SurvivorQuery) ([]string, error) {
 		calls++
 		if calls < 3 {
 			return []string{"pid 7: S2: x"}, nil
@@ -117,7 +126,7 @@ func TestCollectSurvivorStillThereAfterTheWaitVoids(t *testing.T) {
 	now := time.Unix(0, 0)
 	o.Now = func() time.Time { return now }
 	o.Sleep = func(d time.Duration) { now = now.Add(d) }
-	o.Survivors = func(string, string) ([]string, error) { return []string{"pid 7: S2: x"}, nil }
+	o.Survivors = func(SurvivorQuery) ([]string, error) { return []string{"pid 7: S2: x"}, nil }
 	if _, err := Collect(o); err != nil {
 		t.Fatal(err)
 	}
@@ -134,7 +143,7 @@ func TestCollectScansBeforeItMarksTheDirectoryCollected(t *testing.T) {
 	f.good()
 	o := f.opts()
 	scanned := false
-	o.Survivors = func(string, string) ([]string, error) { scanned = true; return nil, nil }
+	o.Survivors = func(SurvivorQuery) ([]string, error) { scanned = true; return nil, nil }
 	o.Root = filepath.Join(filepath.Dir(f.p.root), "elsewhere")
 	if _, err := Collect(o); err == nil {
 		t.Fatal("a wrong --root was accepted")
@@ -191,7 +200,7 @@ func TestCollectBothTokensTogether(t *testing.T) {
 		t.Fatal(err)
 	}
 	o := f.opts()
-	o.Survivors = func(string, string) ([]string, error) { return []string{"pid 1: S2: x"}, nil }
+	o.Survivors = func(SurvivorQuery) ([]string, error) { return []string{"pid 1: S2: x"}, nil }
 	if _, err := Collect(o); err != nil {
 		t.Fatal(err)
 	}

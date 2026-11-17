@@ -1430,9 +1430,25 @@ tokens that the merge already knew (M3, M4) and nothing wrote until now.
   `collect` scans `/proc` (`collect_survivor.go`; a stub that fails closed off
   Linux). A pid other than its own is a survivor when **S1** its `ns/mnt`
   differs from `collect`'s and its mountinfo lists `repo_root` as a mount
-  point; **S2** a `cmdline` element is exactly `<dir>/pre/sandbox.json` (any
-  owner); or **S3** it is owned by the same user and reading it fails with
-  anything but ENOENT/ESRCH. There is **no cwd test**: a shell left in the
+  point; **S2** a `cmdline` element is exactly `<dir>/pre/sandbox.json` or
+  `<dir>/probe/toolchains-sandbox.json` (any owner); or **S3** it is ours, it
+  started at or after `prepare`, and reading it fails with anything but
+  ENOENT/ESRCH (or a read hit the 4 MiB bound, whoever owns it). "Ours" is the
+  `Uid:` line of `/proc/<pid>/status` (real or effective equals our euid; an
+  unreadable or unparsable status is ours; the owner of `/proc/<pid>` is only a
+  further reason to say ours, never a reason to skip, because for a
+  non-dumpable task the kernel makes it the root of the task's user namespace,
+  which a hostile step could arrange to look like root). "Started after
+  `prepare`" compares field 22 of `/proc/<pid>/stat` (parsed after the last
+  `)`, plus `btime` from `/proc/stat`, 100 ticks per second) with the sealed
+  `binding.prepared_at` less 2 s; an unreadable or unparsable `stat` counts as
+  after. The rule exists because a real survivor is always inspectable from
+  `collect`: it lives in a user namespace our user owns, so we hold ptrace
+  access to it even if it made itself non-dumpable; what we cannot inspect is a
+  stranger's, or an OLD process of ours (a `systemd --user` manager, an
+  ssh-agent) that no build started, and counting those would void every run.
+  Each scan is bounded to 5 s (a `/proc` read can block on an uninterruptible
+  task); one that is not done counts as a survivor. There is **no cwd test**: a shell left in the
   checkout writes nothing, and a cwd test would void every run launched from a
   terminal in the repository. A process that vanishes while being read is not
   one. The scan repeats every 200 ms for up to 10 s (`CollectOptions.SurvivorWait`;
@@ -1450,8 +1466,9 @@ tokens that the merge already knew (M3, M4) and nothing wrote until now.
   `void` when there is any entry of that name or `traces/` cannot be asked, and
   `globalSeqCheck` knows the name, so the serial order still holds and records
   stay believed (the merge voids the shard's records, M4). A marker that cannot
-  be written refuses the step (its sequence number is taken, so `collect` sees
-  the gap).
+  be written refuses the step, and that is a RUN-void rather than a shard-void:
+  its sequence number and trace file exist but no sidecar, so `collect` sees a
+  counter mismatch (`serial-violated`) and every record is unknown.
 
 *Divergences from the design:* the marker lives in `traces/`, not in an action's
 directory, so `scanAction`'s closed list needs no entry (only `globalSeqCheck`'s
