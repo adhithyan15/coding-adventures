@@ -35,21 +35,24 @@ func Lists() (ephemeral, absentOK string) {
 	}
 	// here = <repo>/code/programs/go/kiln/internal/policyfix/policyfix.go
 	dir := filepath.Join(filepath.Dir(here), "..", "..", "..", "..", "..", "kiln", "legacy")
+	fail := func(err error) {
+		panic(fmt.Sprintf("policyfix: cannot load the real policy (it must run from a source tree, not inside a sandbox or from a copied test binary): %v", err))
+	}
 	tcData, err := os.ReadFile(filepath.Join(dir, "toolchains.json"))
 	if err != nil {
-		panic(fmt.Sprintf("policyfix: %v", err))
+		fail(err)
 	}
 	tc, err := legacy.ParseToolchains(tcData)
 	if err != nil {
-		panic(fmt.Sprintf("policyfix: %v", err))
+		fail(err)
 	}
 	data, err := os.ReadFile(filepath.Join(dir, "host-roots.json"))
 	if err != nil {
-		panic(fmt.Sprintf("policyfix: %v", err))
+		fail(err)
 	}
 	hr, err := legacy.ParseHostRoots(data, tc)
 	if err != nil {
-		panic(fmt.Sprintf("policyfix: %v", err))
+		fail(err)
 	}
 	e, _ := json.Marshal(hr.Ephemeral)
 	a, _ := json.Marshal(hr.AbsentOK)

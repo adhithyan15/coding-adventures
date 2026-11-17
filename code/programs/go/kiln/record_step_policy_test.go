@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"sort"
 	"strings"
+	"sync"
 	"testing"
 
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/legacy"
@@ -21,7 +22,23 @@ import (
 // so the kiln-sandbox job on ubuntu-26.04 (libselinux 3.9 reads
 // /proc/filesystems and probes /sys/fs/selinux at start-up) exercises the real
 // allowances, and a policy change cannot leave the fixture behind.
-var recStepEphemeral, recStepAbsentOK = policyfix.Lists()
+//
+// The lists are loaded LAZILY, never at package initialisation: the sandbox
+// tests re-exec this test binary as a helper inside the sandbox, where the
+// source tree is not visible, and a package-level load would panic in every
+// helper process.  Only the code that builds a fixture repository (always in
+// the outer test process) calls recStepLists.
+var recStepListsOnce struct {
+	sync.Once
+	ephemeral, absentOK string
+}
+
+func recStepLists() (ephemeral, absentOK string) {
+	recStepListsOnce.Do(func() {
+		recStepListsOnce.ephemeral, recStepListsOnce.absentOK = policyfix.Lists()
+	})
+	return recStepListsOnce.ephemeral, recStepListsOnce.absentOK
+}
 
 // recStepPolicyFiles returns the fixture's code/kiln/legacy files. imagePaths
 // are the `image` roots, in any order and with duplicates: they are sorted and
@@ -40,6 +57,7 @@ func recStepPolicyFiles(imagePaths []string) map[string]string {
 	for _, p := range paths {
 		roots = append(roots, fmt.Sprintf(`{"path": %q, "kind": "image"}`, p))
 	}
+	eph, absent := recStepLists()
 	return map[string]string{
 		"code/kiln/legacy/pinned.json": `{"languages": []}`,
 		"code/kiln/legacy/never.json":  `{"packages": []}`,
@@ -49,7 +67,7 @@ func recStepPolicyFiles(imagePaths []string) map[string]string {
 `,
 		"code/kiln/legacy/env.json":        `{"names": ["FIXTURE_*", "LANG"]}`,
 		legacy.BoundaryPath:                `{"schema_version": 1, "language_source_input_registry_sha256": "00", "boundaries": []}`,
-		"code/kiln/legacy/host-roots.json": `{"roots": [` + strings.Join(roots, ",") + `], "ephemeral": ` + recStepEphemeral + `, "absent-ok": ` + recStepAbsentOK + `}`,
+		"code/kiln/legacy/host-roots.json": `{"roots": [` + strings.Join(roots, ",") + `], "ephemeral": ` + eph + `, "absent-ok": ` + absent + `}`,
 	}
 }
 
