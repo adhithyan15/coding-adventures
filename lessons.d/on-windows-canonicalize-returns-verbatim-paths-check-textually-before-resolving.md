@@ -4,9 +4,11 @@ category: Cross-platform & Windows BUILD_windows
 
 # On Windows, canonicalize() returns verbatim paths: check .. textually before resolving and build adversarial test paths as text
 
-**What went wrong.** The path-containment checks added for `vos-link` and
-`vos-manifest` (PR #19529) passed on macOS and Linux and failed on the Windows
-CI job, twice, after a reviewer had judged the first case safe.
+**What went wrong.** The path-containment check added in `vos-link`
+(`src/fsio.rs`, `absolute_plain`; PR #19529) passed on macOS and Linux and
+failed on the Windows CI job, twice, after a reviewer had judged the first case
+safe. The first failure was a real gap in the code (point 1 below); the second
+was the test itself losing its `..` (point 2).
 
 **Why.** On Windows `std::fs::canonicalize` returns a *verbatim* path
 (`\\?\C:\...`). Two behaviours follow, and neither shows up on Unix:
