@@ -79,7 +79,7 @@ fn chunk_dir_extras(dir: &Path, owned: &[String]) -> Result<Vec<String>, GenErro
     for entry in rd {
         let entry = entry.map_err(|_| io("chunks", "a chunks entry cannot be read"))?;
         let name = entry.file_name().to_string_lossy().into_owned();
-        if !owned.iter().any(|o| *o == name) {
+        if !owned.contains(&name) {
             extras.push(name);
         }
     }

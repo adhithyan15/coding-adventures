@@ -466,13 +466,13 @@ pub fn search(
     plan: &SuitePlan<'_>,
     probes: &[Probe<'_>],
 ) -> Result<Vec<Option<u64>>, GenError> {
-    let SuiteKind::Reference { expected, .. } = &suite.kind else {
-        return Err(GenError::internal("a witness search needs a reference suite"));
-    };
     let mut found: Vec<Option<u64>> = vec![None; probes.len()];
     if probes.is_empty() {
         return Ok(found);
     }
+    let SuiteKind::Reference { expected, .. } = &suite.kind else {
+        return Err(GenError::internal("a witness search needs a reference suite"));
+    };
     let mut left = probes.len();
     let mut st = Stats::default();
     plan.scan_admitted(&mut |ordinal, vars| {

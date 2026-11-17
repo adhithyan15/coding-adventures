@@ -68,3 +68,4 @@ pub fn doc_ops(version_suffix: &str, op_lines: &[&str], extra: &str) -> String {
     s += extra;
     s
 }
+pub mod minijson;
