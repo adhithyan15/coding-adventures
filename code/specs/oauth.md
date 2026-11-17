@@ -5801,6 +5801,35 @@ perform I/O, authorize HTTP or OAuth transport, or open a network connection.
 Reviewed key-agreement execution and handshake-state composition remain
 prerequisites, and concrete HTTPS remains unavailable.
 
+A bounded `tls13-x25519-key-agreement` prerequisite now routes one key-
+agreement operation only from an exact `tls13-named-group-policy` selection.
+The selected group must bind the X25519 algorithm, standard 32-byte peer key-
+exchange length, and standard 32-byte shared-secret length before the caller-
+borrowed private scalar is read or the repository-owned X25519 primitive is
+invoked. Every other recognized group fails before the private scalar is read,
+before peer bytes are interpreted, and before a shared-secret owner exists.
+The X25519 route passes the exact peer key-exchange bytes to the repository-
+owned primitive, preserves its low-order all-zero rejection, validates the
+derived length through the same selected-group policy, and returns one non-
+cloneable shared-secret value borrowing caller-owned fixed storage. Dropping
+that value wipes the borrowed storage through the repository-owned zeroization
+primitive.
+Stable failures and Debug output retain no private-scalar, peer-key, shared-
+secret, group, algorithm, or length payloads.
+
+This pure execution boundary does not generate entropy or an ephemeral private
+key, own or wipe the caller's private scalar, construct or decode a key-share
+extension, prove that a private scalar corresponds to an offered ClientHello
+share, bind a ServerHello share to that offer, advance a transcript or
+handshake, derive traffic secrets, protect records, validate certificates,
+establish trust, enforce revocation, perform I/O, authorize HTTP or OAuth
+transport, or open a network connection. The existing X25519 primitive's
+optimized-code behavior and internal temporary handling remain properties of
+that package rather than new claims of this composition. Exact key-share and
+handshake-state binding, the remaining TLS transport, and HTTP composition
+remain prerequisites; concrete HTTPS and live-provider readiness remain
+unavailable.
+
 An allocation-free `http1-fixed-request-body` prerequisite now binds one
 caller-borrowed, potentially sensitive request body to its exact byte length
 under an explicit caller ceiling. It encodes that length in canonical shortest
