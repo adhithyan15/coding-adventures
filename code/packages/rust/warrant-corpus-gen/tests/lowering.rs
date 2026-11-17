@@ -242,7 +242,7 @@ fn ct_compare_examples_split_into_subject_and_expected() {
         .iter()
         .find(|x| x.name == "select_left_fresh")
         .unwrap();
-    let r = ok.reference.as_ref().unwrap();
+    let r = &ok.reference;
     assert_eq!(
         compact(&r.subject),
         r#"["subject_op","select_bytes",[["lit",{"type":"Bytes","value":"00"}],["lit",{"type":"Bytes","value":"ff"}],["lit",true]]]"#
@@ -253,7 +253,7 @@ fn ct_compare_examples_split_into_subject_and_expected() {
     );
     assert_eq!(r.result.name(), "Result<Bytes,SelectError>");
     let u = l.examples.iter().find(|x| x.name == "u64_diff").unwrap();
-    let r = u.reference.as_ref().unwrap();
+    let r = &u.reference;
     assert_eq!(compact(&r.expected), r#"["lit",false]"#);
     assert!(compact(&u.body).starts_with(
         r#"["eq",["subject_op","eq_u64",[["lit",{"type":"U64","value":"9223372036854775808"}]"#
@@ -263,7 +263,7 @@ fn ct_compare_examples_split_into_subject_and_expected() {
         .iter()
         .find(|x| x.name == "fixed_16_diff")
         .unwrap();
-    assert!(compact(&w.reference.as_ref().unwrap().subject).ends_with("],[16]]"));
+    assert!(compact(&w.reference.subject).ends_with("],[16]]"));
 }
 
 // ---- cost ------------------------------------------------------------------------
@@ -608,5 +608,5 @@ fn rendering_a_hand_built_tree_deeper_than_64_is_refused() {
 #[test]
 fn the_example_that_was_a_predicate_is_gone_from_the_fixture() {
     let l = lowered(CORE_V0);
-    assert!(l.examples.iter().all(|x| x.reference.is_some()));
+    assert!(l.examples.len() > 0);
 }

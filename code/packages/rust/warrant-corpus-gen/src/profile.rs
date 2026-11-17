@@ -23,8 +23,11 @@
 //! * UTF-8, LF only (a CR anywhere is an error), at most 64 KiB;
 //! * a line is single-space-separated tokens; a blank or whitespace-only line is skipped;
 //! * `budget`, `chunk_size`, `slim_stride` and `max_ir_cost` take one value and occur once;
-//!   `slim_chunk <claim> <index>` and `fault <op> <name>` may repeat; nothing else is
-//!   accepted;
+//!   `slim_chunk <claim> <index>` and `fault <op> <name>` may occur several times but never
+//!   as an exact repeat of an earlier line; nothing else is accepted;
+//! * an empty token (two spaces in a row, a leading or trailing space) is an error, and so
+//!   are `budget 0` and `slim_stride 0` (VER04r 16.4 item 7; the oracle's reader accepts
+//!   these until S4 part 2);
 //! * a number is canonical decimal: ASCII digits only, no leading zero except `"0"`, at
 //!   most 20 digits;
 //! * `chunk_size` is a power of two in `2^10..=2^16`; `max_ir_cost` is `2,000..=65,536`.
@@ -102,6 +105,15 @@ fn parse_int(text: &str) -> Result<u64, GenError> {
         .map_err(|_| bad("a profile value does not fit 64 bits"))
 }
 
+/// `budget 0` and `slim_stride 0` mean nothing (an empty corpus, a stride that never
+/// advances): profile errors (VER04r 16.4 item 7).
+fn nonzero(v: u64, key: &str) -> Result<u64, GenError> {
+    if v == 0 {
+        return Err(bad(&format!("{key} must be at least 1")));
+    }
+    Ok(v)
+}
+
 /// Parse a `corpus.profile`.
 ///
 /// # Errors
@@ -129,6 +141,11 @@ pub fn parse_profile(raw: &[u8]) -> Result<Profile, GenError> {
             continue;
         }
         let parts: Vec<&str> = line.split(' ').collect();
+        // An empty token (`fault  eq`, a leading or trailing space) is a malformed line, not
+        // a name (VER04r 16.4 item 7).
+        if parts.iter().any(|p| p.is_empty()) {
+            return Err(bad("a profile line has an empty token"));
+        }
         match (parts[0], parts.len()) {
             (key @ ("budget" | "chunk_size" | "slim_stride" | "max_ir_cost"), 2) => {
                 if seen.contains(&key) {
@@ -140,10 +157,10 @@ pub fn parse_profile(raw: &[u8]) -> Result<Profile, GenError> {
                         prof.slim_stride = if parts[1] == "auto" {
                             SlimStride::Auto
                         } else {
-                            SlimStride::Every(parse_int(parts[1])?)
+                            SlimStride::Every(nonzero(parse_int(parts[1])?, "slim_stride")?)
                         }
                     }
-                    "budget" => prof.budget = parse_int(parts[1])?,
+                    "budget" => prof.budget = nonzero(parse_int(parts[1])?, "budget")?,
                     "chunk_size" => prof.chunk_size = parse_int(parts[1])?,
                     _ => prof.max_ir_cost = parse_int(parts[1])?,
                 }
@@ -151,12 +168,20 @@ pub fn parse_profile(raw: &[u8]) -> Result<Profile, GenError> {
             ("budget" | "chunk_size" | "slim_stride" | "max_ir_cost", _) => {
                 return Err(bad("a profile key takes one value and occurs once"))
             }
-            ("slim_chunk", 3) => prof
-                .slim_chunks
-                .push((parts[1].to_string(), parse_int(parts[2])?)),
-            ("fault", 3) => prof
-                .faults
-                .push((parts[1].to_string(), parts[2].to_string())),
+            ("slim_chunk", 3) => {
+                let entry = (parts[1].to_string(), parse_int(parts[2])?);
+                if prof.slim_chunks.contains(&entry) {
+                    return Err(bad("a slim_chunk line may not repeat"));
+                }
+                prof.slim_chunks.push(entry);
+            }
+            ("fault", 3) => {
+                let entry = (parts[1].to_string(), parts[2].to_string());
+                if prof.faults.contains(&entry) {
+                    return Err(bad("a fault line may not repeat"));
+                }
+                prof.faults.push(entry);
+            }
             _ => return Err(bad("an unknown or malformed profile line")),
         }
     }
@@ -241,8 +266,32 @@ mod tests {
     }
 
     #[test]
-    fn repeatable_keys_may_repeat() {
-        assert!(parse("fault a b\nfault a b\nslim_chunk c 0\nslim_chunk c 0\n").is_ok());
+    fn repeatable_keys_may_repeat_with_different_values_but_never_exactly() {
+        assert!(parse("fault a b\nfault a c\nfault d b\nslim_chunk c 0\nslim_chunk c 1\nslim_chunk d 0\n").is_ok());
+        for text in [
+            "fault a b\nfault a b\n",
+            "slim_chunk c 0\nslim_chunk c 0\n",
+            "fault a b\nfault c d\nfault a b\n",
+        ] {
+            assert_eq!(parse(text).unwrap_err().code, code::PROFILE, "{text:?}");
+        }
+    }
+
+    #[test]
+    fn empty_tokens_and_zero_budget_or_stride_are_refused() {
+        for text in [
+            "fault  eq\n",
+            "fault eq \n",
+            "slim_chunk  c 1\n",
+            "slim_chunk c  \n",
+            "budget  5\n",
+            "slim_stride \n",
+            "budget 0\n",
+            "slim_stride 0\n",
+        ] {
+            assert_eq!(parse(text).unwrap_err().code, code::PROFILE, "{text:?}");
+        }
+        assert_eq!(parse("budget 1\nslim_stride 1\n").unwrap().budget, 1);
     }
 
     #[test]
@@ -278,7 +327,6 @@ mod tests {
             let line = format!("budget {bad}\n");
             assert!(parse(&line).is_err(), "{bad:?}");
         }
-        assert_eq!(parse("budget 0\n").unwrap().budget, 0);
         // 20 digits but past u64
         assert!(parse("budget 99999999999999999999\n").is_err());
         assert_eq!(

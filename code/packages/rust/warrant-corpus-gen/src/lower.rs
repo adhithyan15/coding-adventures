@@ -269,8 +269,9 @@ pub struct LoweredExample {
     pub name: String,
     /// The whole Bool body.
     pub body: Ir,
-    /// Its decomposition, when exactly one side calls the subject.
-    pub reference: Option<ExampleRef>,
+    /// Its decomposition: exactly one subject call compared with a pure value (anything
+    /// else is refused at lowering, so this is always present).
+    pub reference: ExampleRef,
 }
 
 /// A whole document lowered to `ir.core`.  Every item is within `ir.core`.
@@ -528,6 +529,10 @@ struct Lowerer<'f, 'a> {
     scope: HashMap<String, Ty>,
     nest: usize,
     current_model: Option<String>,
+    /// The operand types the first typing pass gave the top-level `==`/`!=` of the claim or
+    /// example body being lowered, so `classify` never re-types a side without its context
+    /// (S3a review, known gap L6).
+    top_eq_types: Option<(Ty, Ty)>,
 }
 
 /// Strip any number of parentheses: a group vanishes in the IR.
@@ -584,6 +589,7 @@ impl<'f, 'a> Lowerer<'f, 'a> {
             scope: HashMap::new(),
             nest: 0,
             current_model: None,
+            top_eq_types: None,
         }
     }
 
@@ -1020,6 +1026,7 @@ impl<'f, 'a> Lowerer<'f, 'a> {
                 "a refinement (`admit`) may not call the subject (VER04r 4.5)",
             ));
         }
+        self.top_eq_types = None;
         let (body, ty) = self.expr(body_ast, Some(&Ty::Bool))?;
         if ty != Ty::Bool {
             return Err(self.type_err("a claim body must be Bool"));
@@ -1030,7 +1037,16 @@ impl<'f, 'a> Lowerer<'f, 'a> {
         // result, statically.
         self.v0_guard(&body)?;
         let ops = body.subject_ops();
-        let kind = self.classify(&body, body_ast)?;
+        // A claim that calls no operation has nothing to test: its suite would pass for any
+        // implementation, and `expected_calls` would be zero (S3a review, known gap L5).
+        if ops.is_empty() {
+            return Err(GenError::new(
+                code::W0701,
+                "",
+                "a claim must call at least one operation of the subject (VER04r 4.3)",
+            ));
+        }
+        let kind = self.classify(&body)?;
         Ok(LoweredSuite {
             id,
             claim: decl.name.to_string(),
@@ -1070,6 +1086,7 @@ impl<'f, 'a> Lowerer<'f, 'a> {
     fn lower_example(&mut self, decl: &ExampleDecl<'a>) -> Result<LoweredExample, GenError> {
         self.scope = HashMap::new();
         let body_ast = strip(&decl.body);
+        self.top_eq_types = None;
         let (body, ty) = self.expr(body_ast, Some(&Ty::Bool))?;
         if ty != Ty::Bool {
             return Err(self.type_err("an example body must be Bool"));
@@ -1079,7 +1096,7 @@ impl<'f, 'a> Lowerer<'f, 'a> {
         // The `examples` row of VER04r 1.4 can only say `op(literals) == pure`: exactly one
         // subject call, its arguments free of subject calls, on one side of an equality.
         let reference =
-            match self.classify(&body, body_ast)? {
+            match self.classify(&body)? {
                 SuiteKind::Reference {
                     subject: subject @ Ir::Subject { .. },
                     expected,
@@ -1095,7 +1112,6 @@ impl<'f, 'a> Lowerer<'f, 'a> {
                     "an example must be one subject call compared with a pure value (VER04r 1.4)",
                 )),
             };
-        let reference = Some(reference);
         Ok(LoweredExample {
             name: decl.name.to_string(),
             body,
@@ -1104,9 +1120,10 @@ impl<'f, 'a> Lowerer<'f, 'a> {
     }
 
     /// Decide `reference` or `predicate` (VER04r 4.3): `body` is `subject == pure`, in
-    /// either order, with the subject on exactly one side.  The result type is re-derived
-    /// by typing the subject side on its own.
-    fn classify(&mut self, body: &Ir, ast: &Expression<'a>) -> Result<SuiteKind, GenError> {
+    /// either order, with the subject on exactly one side.  The result type is the type
+    /// the first typing pass gave the subject side (kept in `top_eq_types`, never re-derived
+    /// without its context).
+    fn classify(&mut self, body: &Ir) -> Result<SuiteKind, GenError> {
         let Ir::Cmp(Cmp::Eq, lhs, rhs) = body else {
             return Ok(SuiteKind::Predicate);
         };
@@ -1115,23 +1132,14 @@ impl<'f, 'a> Lowerer<'f, 'a> {
             return Ok(SuiteKind::Predicate);
         }
         let (subject, expected) = if lh { (lhs, rhs) } else { (rhs, lhs) };
-        let Expression::Binary {
-            op: BinaryOp::Eq,
-            left,
-            right,
-            ..
-        } = ast
-        else {
+        // The body is a top-level `==`, so the first typing pass recorded its operand types.
+        let Some((l_ty, r_ty)) = self.top_eq_types.take() else {
             return Err(self.type_err("a reference body is a comparison"));
         };
-        let side = if lh { left } else { right };
-        let saved = self.scope.clone();
-        let result = self.expr(side, None).map(|(_, t)| t);
-        self.scope = saved;
         Ok(SuiteKind::Reference {
             subject: (**subject).clone(),
             expected: (**expected).clone(),
-            result: result?,
+            result: if lh { l_ty } else { r_ty },
         })
     }
 
@@ -1368,6 +1376,9 @@ impl<'f, 'a> Lowerer<'f, 'a> {
             Ty::unify(&l_ty, &r_ty).ok_or_else(|| self.type_err("operands have no common type"))?;
         let (l, r) = (Box::new(l_ir), Box::new(r_ir));
         if let BinaryOp::Eq | BinaryOp::NotEq = op {
+            if self.nest == 1 {
+                self.top_eq_types = Some((l_ty.clone(), r_ty.clone()));
+            }
             let c = if op == BinaryOp::Eq { Cmp::Eq } else { Cmp::Ne };
             return Ok((Ir::Cmp(c, l, r), Ty::Bool));
         }
@@ -1768,13 +1779,41 @@ mod tests {
     #[test]
     fn an_if_without_a_context_types_its_literal_branch_from_the_other_branch() {
         let src = format!(
-            "{OP}  claim c:\n    forall a: Nat. (if true then 1 else a) == a and (if true then a else 1) == a\n"
+            "{OP}  claim c:\n    forall a: Nat. f(b\"00\", b\"00\") and (if true then 1 else a) == a and (if true then a else 1) == a\n"
         );
         let l = unchecked(&src).unwrap();
         // both literals became Nat from the typed sibling branch
         let text = format!("{:?}", l.suites[0].body);
         assert!(!text.contains("ty: Int, value: 1"), "{text}");
         assert!(text.contains("ty: Nat, value: 1"), "{text}");
+    }
+
+    #[test]
+    fn a_claim_that_calls_no_operation_is_w0701() {
+        // L5: nothing to test, and `expected_calls` would be zero.
+        let src = format!("{OP}  claim c:\n    forall a: Nat. a == a\n");
+        let e = unchecked(&src).unwrap_err();
+        assert_eq!(e.code, code::W0701);
+        assert_eq!(e.at, "c");
+        assert!(e.message.contains("at least one operation"));
+        // a ground claim with a call is fine, and so is one that calls through a model's
+        // argument position only
+        let ok = format!("{OP}  claim c:\n    f(b\"00\", b\"00\") == true\n");
+        assert!(unchecked(&ok).is_ok());
+    }
+
+    #[test]
+    fn the_result_type_comes_from_the_first_typing_pass_not_a_retype_without_context() {
+        // L6: the subject side `pick(..)` is `Result<Bytes, E>` and the pure side is a bare
+        // `Ok(..)`; both orders must give the declared type of the subject side.
+        let src = "warrant u\n  op pick(a: Bytes, b: Bytes, c: Bool) -> Result<Bytes, E> fresh\n  error E = BAD\n  claim left:\n    forall a: Bytes, b: Bytes, c: Bool. pick(a, b, c) == Ok(a)\n  claim right:\n    forall a: Bytes, b: Bytes, c: Bool. Ok(a) == pick(a, b, c)\n";
+        let l = unchecked(src).unwrap();
+        for s in &l.suites {
+            let SuiteKind::Reference { result, .. } = &s.kind else {
+                panic!("{} is a reference suite", s.claim)
+            };
+            assert_eq!(result.name(), "Result<Bytes,E>", "{}", s.claim);
+        }
     }
 
     #[test]
