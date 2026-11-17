@@ -74,6 +74,7 @@ func TestWarrantLaneArtifactsSelectGrammarAndAssuranceConsumers(t *testing.T) {
 		{Name: "go/warrant-corpus", Language: "go"},
 		{Name: "go/ct-compare", Language: "go"},
 		{Name: "python/warrant-oracle", Language: "python"},
+		{Name: "rust/warrant-corpus-gen", Language: "rust"},
 		{Name: "rust/arithmetic", Language: "rust"},
 		{Name: "rust/gf256", Language: "rust"},
 		{Name: "rust/logic-gates", Language: "rust"},
@@ -116,6 +117,10 @@ func TestWarrantLaneArtifactsSelectGrammarAndAssuranceConsumers(t *testing.T) {
 		if isWarrantOracleInput(input) {
 			// VER04r S4: the independent oracle parses the spec and gates the corpus.
 			want["python/warrant-oracle"] = true
+		}
+		if isWarrantCorpusGenInput(input) {
+			// CV2-S3d: the generator's BUILD runs --check against the committed v2 fixture.
+			want["rust/warrant-corpus-gen"] = true
 		}
 		if err != nil || !reflect.DeepEqual(got, want) {
 			t.Fatalf("%s: got %v, err %v", input, got, err)
