@@ -1222,6 +1222,7 @@ fn ver06_structured_raw_bit_fuzz_replays_and_exercises_minimization() {
         first.ooms
     );
     assert!(first.is_clean());
+    assert!(replay.is_clean());
     assert_eq!(first.iterations, 1024);
     assert!(first.admitted_seeds > initial.len());
     assert!(first.total_edges > 0);
@@ -1253,6 +1254,10 @@ fn ver06_structured_raw_bit_fuzz_replays_and_exercises_minimization() {
     ));
     assert!(matches!(
         run_structured_fuzz_case(&reset_fault, &mut CoverageBitmap::new()),
+        FuzzOutcome::Pass
+    ));
+    assert!(matches!(
+        run_structured_fuzz_case(&minimized, &mut CoverageBitmap::new()),
         FuzzOutcome::Pass
     ));
     assert!(minimized.len() < reset_fault.len());
