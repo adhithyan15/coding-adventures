@@ -321,6 +321,61 @@ pub fn declared_names(text: &str) -> Result<(Vec<String>, Vec<String>), WarrantF
     })
 }
 
+/// For each claim of a parsed document, which of `ops` its text calls, in document order.
+///
+/// A **lexical over-approximation** on a document that already parsed: a name of `ops` that
+/// is an identifier immediately followed by `(`, in the claim's span, with `--` comments
+/// removed.  `vos-link` uses it to require that every claim that calls a bound operation is
+/// attacked by a sabotage control (VOS-039a review M3); over-approximating can only ask
+/// for more controls, never fewer.  The exact claim-to-operation map is VOS-D107.
+pub fn claim_calls(
+    text: &str,
+    ops: &[String],
+) -> Result<Vec<(String, Vec<String>)>, WarrantFailure> {
+    with_parsed(text, |file, _tokens, norm| {
+        let mut out = Vec::new();
+        for d in &file.declarations {
+            if let Declaration::Claim(c) = d {
+                let span = norm.get(c.span.0..c.span.1).unwrap_or("");
+                out.push((c.name.to_string(), called_names(span, ops)));
+            }
+        }
+        Ok(out)
+    })
+}
+
+/// The members of `ops` that appear in `src` as `name(` outside `--` comments.
+pub fn called_names(src: &str, ops: &[String]) -> Vec<String> {
+    let mut found: Vec<String> = Vec::new();
+    for line in src.lines() {
+        let code = line.split("--").next().unwrap_or("");
+        let b = code.as_bytes();
+        let mut i = 0;
+        while i < b.len() {
+            if b[i].is_ascii_alphabetic() || b[i] == b'_' {
+                let start = i;
+                while i < b.len() && (b[i].is_ascii_alphanumeric() || b[i] == b'_') {
+                    i += 1;
+                }
+                let name = &code[start..i];
+                let mut j = i;
+                while j < b.len() && b[j] == b' ' {
+                    j += 1;
+                }
+                if b.get(j) == Some(&b'(')
+                    && ops.iter().any(|o| o == name)
+                    && !found.iter().any(|f| f == name)
+                {
+                    found.push(name.to_string());
+                }
+            } else {
+                i += 1;
+            }
+        }
+    }
+    found
+}
+
 /// Parse and type-check a whole document with `warrant-grammar` and report what the
 /// R6 checks need.
 pub fn analyze_document(text: &str) -> Result<Analysis, WarrantFailure> {

@@ -7,6 +7,7 @@ All notable changes to this package are documented here.
 ### Added (VOS-039a)
 
 - `warrant::declared_names(text)`: the claim and example names of a document, parsed only.  `vos-link check-component` binds the evidence manifest and the sabotage plan to them.
+- `warrant::claim_calls(text, ops)` and `called_names`: which bound operations each claim's text calls (lexical over-approximation, comments removed).  `vos-link` requires every such claim to be attacked by a sabotage entry.
 
 ### Added (VOS-012b0, VOS-D061)
 

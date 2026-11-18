@@ -34,6 +34,7 @@ use std::fs;
 use std::path::Path;
 
 use coding_adventures_bounded_json::{parse as parse_json, JsonNumber, JsonValue};
+use coding_adventures_test_bootstrap::manifest::source_tree_framing;
 use vos_shape_check::manifest::{
     parse_vos_toml, Kind, VosToml, CARGO_TOML_MAX_BYTES, VOS_TOML_MAX_BYTES,
 };
@@ -441,6 +442,47 @@ fn set_of(v: &[String]) -> BTreeSet<String> {
     v.iter().cloned().collect()
 }
 
+/// CC08 (review M2): the manifest says which document and which source it ran against.
+/// `spec_sha256` is the SHA-256 of `code/specs/<crate>.warrant` (the generated harness embeds
+/// it) and `source_sha256` the digest of the crate's `src/` tree under the framing the
+/// harness uses (`test-bootstrap`'s `source_tree_framing`).  A manifest of an older document
+/// or older source, or copied from another crate, is stale evidence and fails here.
+fn bind_digests(cx: &mut Ctx, top: &Obj) -> Result<(), NoVerdict> {
+    let doc = cx.layout.specs_dir().join(cx.layout.doc_name());
+    if let Some(bytes) = read_regular_opt(&doc, vos_manifest::caps::DOCUMENT_MAX_BYTES)? {
+        let want = coding_adventures_sha256::sha256_hex(&bytes);
+        if string(top, "spec_sha256") != Some(want.as_str()) {
+            cx.find(
+                "CC08",
+                format!(
+                    "manifest: spec_sha256 is {}, but {} has digest {want}: the evidence was not run against this document",
+                    esc(string(top, "spec_sha256").unwrap_or("(absent)")),
+                    cx.layout.doc_display()
+                ),
+            );
+        }
+    }
+    match source_tree_framing(&cx.layout.impl_dir.join("src")) {
+        Ok(framed) => {
+            let want = coding_adventures_sha256::sha256_hex(&framed);
+            if string(top, "source_sha256") != Some(want.as_str()) {
+                cx.find(
+                    "CC08",
+                    format!(
+                        "manifest: source_sha256 is {}, but the digest of src/ is {want}: the evidence was not run against this source",
+                        esc(string(top, "source_sha256").unwrap_or("(absent)"))
+                    ),
+                );
+            }
+        }
+        Err(e) => cx.find(
+            "CC08",
+            format!("manifest: cannot digest src/: {}", esc(&e.to_string())),
+        ),
+    }
+    Ok(())
+}
+
 /// CC08: the manifest the generated suite wrote, bound to the document.
 fn manifest(cx: &mut Ctx, g: &GenInputs) -> Result<(), NoVerdict> {
     let path = cx
@@ -471,6 +513,7 @@ fn manifest(cx: &mut Ctx, g: &GenInputs) -> Result<(), NoVerdict> {
             format!("manifest: `schema` is not `{MANIFEST_SCHEMA}`"),
         );
     }
+    bind_digests(cx, top)?;
     let Some(JsonValue::Array(tests)) = get(top, "tests") else {
         cx.find("CC08", "manifest: no `tests` array");
         return Ok(());
@@ -634,7 +677,12 @@ fn manifest(cx: &mut Ctx, g: &GenInputs) -> Result<(), NoVerdict> {
         }
     }
     // The controls that may fail are exactly the declared ones, as whole ids.
-    let excused = set_of(&cx.vt.excused_controls);
+    let excused: BTreeSet<String> = cx
+        .vt
+        .excused_controls
+        .iter()
+        .map(|e| e.id.clone())
+        .collect();
     for id in failing_controls.difference(&excused) {
         cx.find(
             "CC08",

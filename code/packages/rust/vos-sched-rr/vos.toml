@@ -4,4 +4,4 @@ contract = "vos-sched-contract"
 obligations = ["representation", "safety"]
 evidence-features = ["ghost"]
 coverage-floor = 95
-excused-controls = ["warrant/vos_sched_rr/negctl/exhaustive/init/field-flip", "warrant/vos_sched_rr/negctl/property/init/field-flip", "warrant/vos_sched_rr/negctl/fuzz/init/field-flip"]
+excused-controls = [{ id = "warrant/vos_sched_rr/negctl/exhaustive/init/field-flip", reason = "VOS-D098" }, { id = "warrant/vos_sched_rr/negctl/property/init/field-flip", reason = "VOS-D098" }, { id = "warrant/vos_sched_rr/negctl/fuzz/init/field-flip", reason = "VOS-D098" }]

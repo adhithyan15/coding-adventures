@@ -36,7 +36,9 @@ use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
 
 use coding_adventures_warrant_grammar::binding::parse_evidence_bindings;
-use vos_manifest::warrant::declared_names;
+use vos_manifest::warrant::{claim_calls, declared_names};
+use vos_shape_check::manifest::{is_backlog_ref, Excuse};
+use vos_shape_check::DEFAULT_EVIDENCE_FEATURES;
 
 use crate::check::WARRANT_STACK_BYTES;
 use crate::component::{read_component_vos_toml, read_text};
@@ -58,6 +60,7 @@ const PLAN_MAX_BYTES: usize = 64 * 1024;
 const BINDINGS_MAX_BYTES: usize = 256 * 1024;
 const DOC_MAX_BYTES: usize = vos_manifest::caps::DOCUMENT_MAX_BYTES;
 const PLAN_MAX_ENTRIES: usize = 512;
+const BACKLOG_MAX_BYTES: usize = 4 * 1024 * 1024;
 
 /// One line of the sabotage plan.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -84,13 +87,17 @@ pub struct GenInputs {
     /// `vos.toml` `coverage-floor`.
     pub floor: u8,
     /// `vos.toml` `excused-controls`.
-    pub excused: Vec<String>,
+    pub excused: Vec<Excuse>,
     /// The sabotage plan, in file order.
     pub plan: Vec<PlanEntry>,
     /// The claims of the document.
     pub claims: Vec<String>,
     /// The examples of the document.
     pub examples: Vec<String>,
+    /// The faults of each bound operation, from `evidence.bindings`.
+    pub faults: BTreeMap<String, Vec<String>>,
+    /// For each claim, the bound operations its text calls (lexical, VOS-D107).
+    pub calls: Vec<(String, Vec<String>)>,
     /// `evidence.bindings` `property_cases`.
     pub property_cases: u64,
     /// `evidence.bindings` `fuzz_iterations`.
@@ -192,6 +199,8 @@ pub fn validate_plan(
     faults: &BTreeMap<String, Vec<String>>,
     claims: &[String],
     examples: &[String],
+    calls: &[(String, Vec<String>)],
+    excused: &[Excuse],
 ) -> Vec<String> {
     let mut p = Vec::new();
     let bound: BTreeSet<&str> = faults.values().flatten().map(String::as_str).collect();
@@ -244,6 +253,93 @@ pub fn validate_plan(
             ));
         }
     }
+    // Every claim that calls a bound operation is attacked at least once (review M3): an
+    // author cannot attack one easy claim per fault and leave the others untried.  A claim is
+    // exempt only when every fault of every operation it calls is excused by a declared
+    // control (rr's `init`/`field-flip`).  Counting controls per operation and tier is VOS-D104.
+    for (claim, called) in calls {
+        let all_excused = called.iter().all(|op| {
+            faults.get(op).is_some_and(|fs| {
+                fs.iter().all(|f| {
+                    excused
+                        .iter()
+                        .any(|e| e.id.ends_with(&format!("/{op}/{f}")))
+                })
+            })
+        });
+        if !called.is_empty()
+            && !all_excused
+            && !plan
+                .iter()
+                .any(|e| e.tier == "exhaustive" && e.name == *claim)
+        {
+            p.push(format!(
+                "{PLAN_FILE}: claim `{claim}` calls the bound operation(s) {} and no entry attacks it (every claim that calls a bound operation needs an entry)",
+                called.join(", ")
+            ));
+        }
+    }
+    p
+}
+
+/// Every value `gen-build` pastes into a BUILD line or the tolerance script, checked in ONE
+/// place (review M1).  An unquoted value is shell text: `ghost #` truncates a line, `ghost&&x`
+/// runs `x` on cmd, `$(..)` runs in line 2.  So each is held to a plain alphabet here, and a
+/// feature must also be on the central evidence-feature list `vos-shape-check` enforces.
+pub fn interpolation_problems(g: &GenInputs) -> Vec<String> {
+    let mut p = Vec::new();
+    let plain = |s: &str, first_lower: bool, extra: &[u8]| {
+        !s.is_empty()
+            && s.len() <= 128
+            && (!first_lower || s.as_bytes()[0].is_ascii_lowercase())
+            && s.bytes()
+                .all(|b| b.is_ascii_lowercase() || b.is_ascii_digit() || extra.contains(&b))
+    };
+    if !plain(&g.krate, true, b"-") {
+        p.push(format!(
+            "crate name {} is not [a-z][a-z0-9-]*",
+            esc(&g.krate)
+        ));
+    }
+    for f in &g.features {
+        if !plain(f, true, b"_-") {
+            p.push(format!(
+                "vos.toml: evidence feature {} is not [a-z][a-z0-9_-]*",
+                esc(f)
+            ));
+        } else if !DEFAULT_EVIDENCE_FEATURES.contains(&f.as_str()) {
+            p.push(format!(
+                "vos.toml: evidence feature {} is not in the central list ({})",
+                esc(f),
+                DEFAULT_EVIDENCE_FEATURES.join(", ")
+            ));
+        }
+    }
+    for e in &g.plan {
+        if !plain_name(&e.name) || !(e.tier == "exhaustive" || e.tier == "example") {
+            p.push(format!("{PLAN_FILE}:{}: tier or name is not plain", e.line));
+        }
+        if !plain_fault(&e.fault) || e.attack.as_deref().is_some_and(|a| !plain_name(a)) {
+            p.push(format!(
+                "{PLAN_FILE}:{}: fault or attack is not plain",
+                e.line
+            ));
+        }
+    }
+    for x in &g.excused {
+        let ok = !x.id.is_empty()
+            && x.id.len() <= 128
+            && x.id
+                .bytes()
+                .all(|b| b.is_ascii_alphanumeric() || b"_/.-".contains(&b));
+        if !ok || !is_backlog_ref(&x.reason) {
+            p.push(format!(
+                "vos.toml: excused control {} / {} is not plain",
+                esc(&x.id),
+                esc(&x.reason)
+            ));
+        }
+    }
     p
 }
 
@@ -291,7 +387,16 @@ pub fn canonical_build(g: &GenInputs, windows: bool) -> String {
     l(format!(
         "cargo run -q -p coding_adventures_warrant_grammar --example gen_evidence -- --check {c}"
     ));
-    l("# Lines 6 to 8: the generated suite (exhaustive, property, fuzz) rewrites the evidence manifest.".to_string());
+    l("# Lines 6 to 8: the generated suite (exhaustive, property, fuzz) rewrites the evidence manifest.  The old one is removed first, so a".to_string());
+    l("# run that exits 0 without rewriting it leaves no file and fails check-component (CC02), instead of passing on a stale one.".to_string());
+    if windows {
+        l(
+            "if exist evidence\\test-manifest.json del /f /q evidence\\test-manifest.json"
+                .to_string(),
+        );
+    } else {
+        l("rm -f evidence/test-manifest.json".to_string());
+    }
     if !g.excused.is_empty() {
         let sh = if windows { "bash" } else { "sh" };
         l(format!("{sh} {TOLERANCE_SCRIPT}"));
@@ -347,7 +452,17 @@ pub fn tolerance_script(g: &GenInputs) -> Option<String> {
     }
     let c = &g.krate;
     let feat = features_arg(g);
-    let ids = g.excused.join("\n");
+    let ids = g
+        .excused
+        .iter()
+        .map(|e| e.id.as_str())
+        .collect::<Vec<_>>()
+        .join("\n");
+    let why = g
+        .excused
+        .iter()
+        .map(|e| format!("#   {} ({})\n", e.id, e.reason))
+        .collect::<String>();
     Some(format!(
         "#!/bin/sh\n\
 # GENERATED by `vos-link gen-build` (VOS04 5.6) from `excused-controls` in vos.toml.  Do not edit:\n\
@@ -355,7 +470,9 @@ pub fn tolerance_script(g: &GenInputs) -> Option<String> {
 #\n\
 # Runs the generated suite and rewrites the manifest.  Exactly the controls listed below may fail\n\
 # (VOS-D065, VOS-D098: a claim that cannot see the fault); anything else failing, or one of them\n\
-# passing, or no test passing at all, is an error.\n\
+# passing, or no test passing at all, is an error.  Each excuse names its backlog row, and\n\
+# `vos-link` refuses it once that row is done:\n\
+{why}\
 set -eu\n\
 \n\
 known_ids='{ids}'\n\
@@ -430,9 +547,9 @@ pub fn load_inputs(
         },
     }
 
-    // The document's claims and examples.
+    // The document's claims and examples, and which bound operations each claim calls.
     let doc_path = layout.specs_dir().join(layout.doc_name());
-    let (mut claims, mut examples) = (Vec::new(), Vec::new());
+    let (mut claims, mut examples, mut calls) = (Vec::new(), Vec::new(), Vec::new());
     match read_text(&doc_path, DOC_MAX_BYTES)? {
         None => f.push(Finding::new(
             "CC04",
@@ -442,22 +559,51 @@ pub fn load_inputs(
             ),
         )),
         Some(t) => {
+            let ops: Vec<String> = faults.keys().cloned().collect();
             let h = std::thread::Builder::new()
                 .stack_size(WARRANT_STACK_BYTES)
-                .spawn(move || declared_names(&t))
+                .spawn(move || (declared_names(&t), claim_calls(&t, &ops)))
                 .map_err(|e| NoVerdict::new(format!("cannot start the Warrant thread: {e}")))?;
             match h
                 .join()
                 .map_err(|_| NoVerdict::new("the Warrant thread panicked"))?
             {
-                Ok((c, e)) => {
+                (Ok((c, e)), Ok(k)) => {
                     claims = c;
                     examples = e;
+                    calls = k;
                 }
-                Err(e) => f.push(Finding::new(
+                (Err(e), _) | (_, Err(e)) => f.push(Finding::new(
                     "CC04",
                     format!("{}: {}", layout.doc_display(), esc(&e.to_string())),
                 )),
+            }
+        }
+    }
+
+    // Each excuse names a backlog row that exists and is not done (review M4).
+    if !vt.excused_controls.is_empty() {
+        let backlog = layout.specs_dir().join("VOS-BACKLOG.md");
+        let text = read_text(&backlog, BACKLOG_MAX_BYTES)?;
+        for x in &vt.excused_controls {
+            match backlog_row_status(text.as_deref().unwrap_or(""), &x.reason) {
+                None => f.push(Finding::new(
+                    "CC04",
+                    format!(
+                        "vos.toml: excuse {} names {}, which is not a row of code/specs/VOS-BACKLOG.md",
+                        esc(&x.id),
+                        x.reason
+                    ),
+                )),
+                Some(true) => f.push(Finding::new(
+                    "CC04",
+                    format!(
+                        "vos.toml: excuse {} names {}, which is done: remove the excuse (the control must now pass)",
+                        esc(&x.id),
+                        x.reason
+                    ),
+                )),
+                Some(false) => {}
             }
         }
     }
@@ -470,7 +616,14 @@ pub fn load_inputs(
             let (entries, problems) = parse_plan(&t);
             f.extend(problems.into_iter().map(|m| Finding::new("CC04", m)));
             if f.is_empty() {
-                for m in validate_plan(&entries, &faults, &claims, &examples) {
+                for m in validate_plan(
+                    &entries,
+                    &faults,
+                    &claims,
+                    &examples,
+                    &calls,
+                    &vt.excused_controls,
+                ) {
                     f.push(Finding::new("CC04", m));
                 }
             }
@@ -480,7 +633,7 @@ pub fn load_inputs(
     if !f.is_empty() {
         return Ok(Err(f));
     }
-    Ok(Ok(GenInputs {
+    let g = GenInputs {
         krate,
         features: vt.evidence_features.clone(),
         floor,
@@ -488,9 +641,39 @@ pub fn load_inputs(
         plan,
         claims,
         examples,
+        faults,
+        calls,
         property_cases,
         fuzz_iterations,
-    }))
+    };
+    let bad = interpolation_problems(&g);
+    if !bad.is_empty() {
+        return Ok(Err(bad
+            .into_iter()
+            .map(|m| Finding::new("CC04", m))
+            .collect()));
+    }
+    Ok(Ok(g))
+}
+
+/// Is the backlog row `id` (`VOS-Dnnn`) present, and is it done?  `None`: no such row.  A row
+/// is a line starting `| <id> |`; it is done when its last cell, stripped of `*`, begins `done`.
+pub fn backlog_row_status(backlog: &str, id: &str) -> Option<bool> {
+    let head = format!("| {id} |");
+    let row = backlog.lines().find(|l| l.starts_with(&head))?;
+    let cell = row
+        .trim_end()
+        .trim_end_matches('|')
+        .rsplit('|')
+        .next()
+        .unwrap_or("");
+    Some(
+        cell.trim()
+            .trim_matches('*')
+            .trim()
+            .to_ascii_lowercase()
+            .starts_with("done"),
+    )
 }
 
 /// What follows the marker line of an existing BUILD file: the author's own lines.

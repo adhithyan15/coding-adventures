@@ -663,3 +663,19 @@ fn declared_names_lists_claims_and_examples_in_document_order() {
     assert_eq!(examples, ["e1"]);
     assert!(vos_manifest::warrant::declared_names("not a document").is_err());
 }
+
+#[test]
+fn claim_calls_lists_the_bound_operations_a_claim_names_outside_comments() {
+    // VOS-039a review M3: a lexical over-approximation, comments removed, `name(` only.
+    let doc = "warrant t v1
+  record Impl(x: U8)
+  claim c1:
+    forall v: Bool. v == v -- insert(1) in a comment
+  claim c2:
+    forall v: Bool. insert (v) == dispatch(v) and insert(v) == v and insertx(v) == v
+";
+    let ops = ["insert".to_string(), "dispatch".to_string(), "unused".to_string()];
+    let got = vos_manifest::warrant::claim_calls(doc, &ops).unwrap();
+    assert_eq!(got[0], ("c1".to_string(), vec![]));
+    assert_eq!(got[1], ("c2".to_string(), vec!["insert".to_string(), "dispatch".to_string()]));
+}

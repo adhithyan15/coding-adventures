@@ -25,9 +25,9 @@ const ANY: &str = "vos-fix-comp-any";
 const DOC: &str = "warrant vos_fix_comp v1
   record Impl(x: U8)
   claim c1:
-    forall v: Bool. v == v
+    forall v: Bool. f(v) == f(v)
   claim c2:
-    forall v: Bool. v == v
+    forall v: Bool. h(v) == h(v)
   example e1:
     1u8 == 1u8
 ";
@@ -67,7 +67,7 @@ fn manifest(claims: &[&str], property: i64, fuzz: i64, cases: i64, failing: &[&s
         }
     }
     format!(
-        r#"{{"schema":"warrant-test-evidence-v1","tests":[{}]}}"#,
+        r#"{{"schema":"warrant-test-evidence-v1","source_sha256":"@SRC@","spec_sha256":"@SPEC@","tests":[{}]}}"#,
         t.join(",")
     )
 }
@@ -76,7 +76,7 @@ fn vos_toml(kind: &str, extra: &str) -> String {
     format!("class = \"K\"\nkind = \"{kind}\"\nevidence-features = [\"ghost\"]\ncoverage-floor = 95\n{extra}")
 }
 
-const EXCUSED: &str = "excused-controls = [\"m/negctl/exhaustive/g/field-flip\", \"m/negctl/property/g/field-flip\", \"m/negctl/fuzz/g/field-flip\"]\n";
+const EXCUSED: &str = "excused-controls = [{ id = \"m/negctl/exhaustive/g/field-flip\", reason = \"VOS-D098\" }, { id = \"m/negctl/property/g/field-flip\", reason = \"VOS-D098\" }, { id = \"m/negctl/fuzz/g/field-flip\", reason = \"VOS-D098\" }]\n";
 const EXCUSED_IDS: [&str; 3] = [
     "m/negctl/exhaustive/g/field-flip",
     "m/negctl/property/g/field-flip",
@@ -89,6 +89,27 @@ fn cargo_toml(c: &str, publish: &str) -> String {
 
 fn p(name: &str, rel: &str) -> String {
     format!("code/packages/rust/{name}/{rel}")
+}
+
+/// The fixture's backlog: D098 is open, D065 is done.
+const BACKLOG: &str =
+    "| VOS-D065 | x | y | P2 | **done** (somewhere) |\n| VOS-D098 | x | y | P2: later | queued |\n";
+
+const SRC: &str = "pub fn x() {}\n";
+
+/// Write a manifest, filling in the digests of the fixture's document and source.
+fn put_manifest(r: &Repo, name: &str, text: String) {
+    let spec = coding_adventures_sha256::sha256_hex(
+        r.read(&format!("code/specs/{name}.warrant")).as_bytes(),
+    );
+    let framed =
+        coding_adventures_test_bootstrap::manifest::source_tree_framing(&r.path(&p(name, "src")))
+            .unwrap();
+    let src = coding_adventures_sha256::sha256_hex(&framed);
+    r.write(
+        &p(name, "evidence/test-manifest.json"),
+        text.replace("@SPEC@", &spec).replace("@SRC@", &src),
+    );
 }
 
 const ROWS_GO: &str = "package main\n\nvar repositoryInputConsumers = []repositoryInputConsumer{\n\tvosImplementationRow(\"vos-other\"),\n\tvosImplementationRow(\"@\"),\n}\n";
@@ -110,12 +131,11 @@ fn good(label: &str, name: &str, kind: &str, excused: bool) -> Repo {
     r.write(&p(name, "warrant/impl.part"), "-- x\n");
     r.write(&p(name, "warrant/sabotage.plan"), PLAN);
     r.write(&p(name, "evidence.bindings"), bindings(name, 4096, 5000));
-    r.write(
-        &p(name, "evidence/test-manifest.json"),
-        manifest(&["c1", "c2"], 4096, 5000, 10, failing),
-    );
     r.write(&p(name, "tests/generated/warrant_evidence.rs"), "// x\n");
     r.write(&format!("code/specs/{name}.warrant"), DOC);
+    r.write(&p(name, "src/lib.rs"), SRC);
+    r.write("code/specs/VOS-BACKLOG.md", BACKLOG);
+    put_manifest(&r, name, manifest(&["c1", "c2"], 4096, 5000, 10, failing));
     r.write(
         "code/programs/go/build-tool/repository_inputs.go",
         ROWS_GO.replace('@', name),
@@ -192,6 +212,7 @@ fn gen_build_writes_the_lines_of_section_5_2_in_order() {
         "cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .\n",
         "Cargo.toml -- check-doc .\n",
         "--example gen_evidence -- --check vos-fix-comp\n",
+        "\nrm -f evidence/test-manifest.json\n",
         "WARRANT_EVIDENCE_OUT=evidence/test-manifest.json cargo test -q -p vos-fix-comp --features ghost --test warrant_evidence\n",
         "WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/exhaustive/c1 python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p vos-fix-comp --features ghost --test warrant_evidence\n",
         "WARRANT_EVIDENCE_FILTER=/example/e1 python3 ",
@@ -216,6 +237,8 @@ fn the_windows_build_has_set_lines_python_and_no_coverage_gate() {
     let r = good("gb-win", PROD, "production", false);
     let w = r.read(&p(PROD, "BUILD_windows"));
     assert!(!w.contains("tarpaulin"));
+    // The stale manifest is removed first; `if exist` makes it safe and idempotent under cmd.
+    assert!(w.contains("\nif exist evidence\\test-manifest.json del /f /q evidence\\test-manifest.json\nset WARRANT_EVIDENCE_OUT"));
     assert!(w.contains("\nset WARRANT_EVIDENCE_OUT=evidence/test-manifest.json&& cargo test -q -p vos-fix-comp --features ghost --test warrant_evidence\n"));
     assert!(w.contains("\nset WARRANT_EVIDENCE_FAULT=field-flip&& set WARRANT_EVIDENCE_ATTACK=g&& set WARRANT_EVIDENCE_FILTER=/exhaustive/c1&& python ../../../scripts/warrant_negctl.py -- cargo test"));
     assert!(!w.contains("python3"));
@@ -318,10 +341,13 @@ fn a_crate_with_no_kind_a_bad_vos_toml_or_none_is_cc01() {
 #[test]
 fn bypass_an_empty_excused_list_or_an_empty_or_short_id_is_refused_at_vos_toml() {
     // The first draft excused a control by `script.contains(id)`: an empty id excused every one.
-    for extra in ["excused-controls = []\n", "excused-controls = [\"\"]\n"] {
+    for extra in [
+        "excused-controls = []\n",
+        "excused-controls = [{ id = \"\", reason = \"VOS-D098\" }]\n",
+    ] {
         let r = good("cc01-excuse", PROD, "production", false);
         r.write(&p(PROD, "vos.toml"), vos_toml("production", extra));
-        only(&run(&r, PROD), "CC01", "vos.toml:5");
+        only(&run(&r, PROD), "CC01", "vos.toml:");
     }
 }
 
@@ -721,9 +747,9 @@ fn parse_plan_and_validate_plan_are_pure() {
     let faults = [("f".to_string(), vec!["field-zero".to_string()])]
         .into_iter()
         .collect();
-    let v = validate_plan(&e[..1], &faults, &["c1".to_string()], &[]);
+    let v = validate_plan(&e[..1], &faults, &["c1".to_string()], &[], &[], &[]);
     assert!(v.is_empty(), "{v:?}");
-    assert!(!validate_plan(&[], &faults, &[], &[]).is_empty());
+    assert!(!validate_plan(&[], &faults, &[], &[], &[], &[]).is_empty());
 }
 
 #[test]
@@ -902,7 +928,7 @@ fn a_floor_below_the_repository_minimum_fails() {
 
 fn with_manifest(label: &str, text: String) -> Outcome {
     let r = good(label, PROD, "production", false);
-    r.write(&p(PROD, "evidence/test-manifest.json"), text);
+    put_manifest(&r, PROD, text);
     run(&r, PROD)
 }
 
@@ -910,7 +936,7 @@ fn with_manifest(label: &str, text: String) -> Outcome {
 fn an_empty_manifest_fails_line_six() {
     let o = with_manifest(
         "cc08-empty",
-        r#"{"schema":"warrant-test-evidence-v1","tests":[]}"#.into(),
+        r#"{"schema":"warrant-test-evidence-v1","source_sha256":"@SRC@","spec_sha256":"@SPEC@","tests":[]}"#.into(),
     );
     only(
         &o,
@@ -955,10 +981,7 @@ fn the_bindings_may_raise_the_threshold_never_lower_it() {
     has(&o, "CC08", "ran 5000 fuzz iterations, fewer than 9000");
     // A bindings file that asks for LESS than the spec does not lower the spec's number.
     r.write(&p(PROD, "evidence.bindings"), bindings(PROD, 10, 10));
-    r.write(
-        &p(PROD, "evidence/test-manifest.json"),
-        manifest(&["c1", "c2"], 100, 100, 10, &[]),
-    );
+    put_manifest(&r, PROD, manifest(&["c1", "c2"], 100, 100, 10, &[]));
     has(
         &run(&r, PROD),
         "CC08",
@@ -1093,10 +1116,10 @@ fn a_failing_control_needs_its_whole_id_excused() {
             &p(PROD, "vos.toml"),
             vos_toml(
                 "production",
-                &format!("excused-controls = [\"{excuse}\"]\n"),
+                &format!("excused-controls = [{{ id = \"{excuse}\", reason = \"VOS-D098\" }}]\n"),
             ),
         );
-        r.write(&p(PROD, "evidence/test-manifest.json"), m.clone());
+        put_manifest(&r, PROD, m.clone());
         gen_build(&r.pkg(PROD), None).unwrap();
         let o = run(&r, PROD);
         has(&o, "CC08", "did not pass and vos.toml does not excuse it");
@@ -1111,10 +1134,7 @@ fn a_failing_control_needs_its_whole_id_excused() {
 #[test]
 fn a_stale_excuse_fails() {
     let r = good("cc08-stale", PROD, "production", true);
-    r.write(
-        &p(PROD, "evidence/test-manifest.json"),
-        manifest(&["c1", "c2"], 4096, 5000, 10, &[]),
-    );
+    put_manifest(&r, PROD, manifest(&["c1", "c2"], 4096, 5000, 10, &[]));
     let o = run(&r, PROD);
     has(&o, "CC08", "vos.toml excuses \"m/negctl/exhaustive/g/field-flip\" but that control passes or does not exist");
     assert_eq!(o.findings.len(), 3, "{}", show(&o));
@@ -1127,7 +1147,7 @@ fn a_failing_test_that_is_not_a_control_is_never_excused() {
         r#""id":"m/exhaustive/c1","kind":"exhaustive","verdict":"pass""#,
         r#""id":"m/exhaustive/c1","kind":"exhaustive","verdict":"fail""#,
     );
-    r.write(&p(PROD, "evidence/test-manifest.json"), m);
+    put_manifest(&r, PROD, m);
     only(
         &run(&r, PROD),
         "CC08",
@@ -1150,7 +1170,7 @@ fn a_manifest_that_is_not_the_generators_fails() {
     only(
         &with_manifest(
             "cc08-notests",
-            r#"{"schema":"warrant-test-evidence-v1"}"#.into(),
+            r#"{"schema":"warrant-test-evidence-v1","source_sha256":"@SRC@","spec_sha256":"@SPEC@"}"#.into(),
         ),
         "CC08",
         "no `tests` array",
@@ -1239,4 +1259,314 @@ fn an_oversized_build_file_is_no_verdict() {
     r.write(&p(PROD, "BUILD"), "x".repeat(300 * 1024));
     let e = check_component(&r.pkg(PROD), None).unwrap_err();
     assert!(e.to_string().contains("over the"), "{e}");
+}
+
+// --- review round 2 ------------------------------------------------------------------------
+
+use vos_link::build_gen::{backlog_row_status, interpolation_problems, GenInputs, PlanEntry};
+use vos_shape_check::manifest::Excuse;
+
+/// M1: a feature pasted into BUILD is shell text.  Each hostile value is refused at generation.
+#[test]
+fn m1_a_hostile_or_unlisted_evidence_feature_is_refused_by_gen_build_and_check() {
+    for feature in [
+        "ghost #",
+        "ghost&&calc",
+        "$(id)",
+        "ghost;x",
+        "Ghost",
+        "gh ost",
+        "ghost`x`",
+        "other",
+        "9ghost",
+    ] {
+        let r = good("m1", PROD, "production", false);
+        r.write(
+            &p(PROD, "vos.toml"),
+            format!(
+                "kind = \"production\"\nevidence-features = [\"{feature}\"]\ncoverage-floor = 95\n"
+            ),
+        );
+        let before = r.read(&p(PROD, "BUILD"));
+        let g = gen_build(&r.pkg(PROD), None).unwrap();
+        assert_eq!(g.findings.len(), 1, "{feature}: {}", show(&g));
+        assert_eq!(g.findings[0].code, "CC04");
+        assert!(
+            g.findings[0].message.contains("evidence feature"),
+            "{feature}: {}",
+            show(&g)
+        );
+        assert_eq!(
+            r.read(&p(PROD, "BUILD")),
+            before,
+            "{feature}: gen-build must write nothing"
+        );
+        let c = run(&r, PROD);
+        has(&c, "CC04", "evidence feature");
+    }
+    // The listed ones are fine.
+    for feature in ["ghost", "cov"] {
+        let r = good("m1-ok", PROD, "production", false);
+        r.write(
+            &p(PROD, "vos.toml"),
+            format!(
+                "kind = \"production\"\nevidence-features = [\"{feature}\"]\ncoverage-floor = 95\n"
+            ),
+        );
+        assert!(gen_build(&r.pkg(PROD), None).unwrap().findings.is_empty());
+    }
+}
+
+/// M1: the one place every interpolated value is checked.  Each field of `GenInputs` that
+/// reaches a BUILD line or the script, with a hostile value; and the clean base passes.
+#[test]
+fn m1_every_interpolated_value_is_checked_in_one_place() {
+    let entry = |tier: &str, name: &str, fault: &str, attack: Option<&str>| PlanEntry {
+        tier: tier.into(),
+        name: name.into(),
+        fault: fault.into(),
+        attack: attack.map(String::from),
+        line: 1,
+    };
+    let base = GenInputs {
+        krate: "vos-x".into(),
+        features: vec!["ghost".into()],
+        floor: 95,
+        excused: vec![Excuse {
+            id: "m/negctl/exhaustive/g/field-flip".into(),
+            reason: "VOS-D098".into(),
+        }],
+        plan: vec![
+            entry("exhaustive", "c1", "field-zero", None),
+            entry("exhaustive", "c1", "field-flip", Some("g")),
+        ],
+        claims: vec![],
+        examples: vec![],
+        faults: Default::default(),
+        calls: vec![],
+        property_cases: 4096,
+        fuzz_iterations: 5000,
+    };
+    assert!(interpolation_problems(&base).is_empty());
+    let mut cases: Vec<(&str, GenInputs)> = Vec::new();
+    let mut with = |what: &'static str, f: &dyn Fn(&mut GenInputs)| {
+        let mut g = base.clone();
+        f(&mut g);
+        cases.push((what, g));
+    };
+    with("crate name", &|g| g.krate = "x; rm".into());
+    with("crate name case", &|g| g.krate = "Vos".into());
+    with("feature text", &|g| g.features = vec!["ghost #".into()]);
+    with("feature list", &|g| g.features = vec!["nolisted".into()]);
+    with("plan tier", &|g| g.plan[0].tier = "x y".into());
+    with("plan name", &|g| g.plan[0].name = "c1 && x".into());
+    with("plan fault", &|g| g.plan[0].fault = "f; x".into());
+    with("plan attack", &|g| g.plan[1].attack = Some("g`x`".into()));
+    with("excused id", &|g| {
+        g.excused[0].id = "a'; rm -rf x; '".into()
+    });
+    with("excused reason", &|g| {
+        g.excused[0].reason = "VOS-D98".into()
+    });
+    for (what, g) in cases {
+        assert!(
+            !interpolation_problems(&g).is_empty(),
+            "{what} was not refused"
+        );
+    }
+}
+
+/// M2: a manifest of another document, or of other source, is stale evidence.
+#[test]
+fn m2_a_manifest_with_the_wrong_spec_digest_is_refused() {
+    let r = good("m2-spec", PROD, "production", false);
+    let path = p(PROD, "evidence/test-manifest.json");
+    let m = r.read(&path);
+    let digest = m
+        .split("\"spec_sha256\":\"")
+        .nth(1)
+        .unwrap()
+        .split('"')
+        .next()
+        .unwrap()
+        .to_string();
+    r.write(&path, m.replace(&digest, &"0".repeat(64)));
+    only(&run(&r, PROD), "CC08", "manifest: spec_sha256 is \"0000");
+    // Editing the document after the run makes the committed manifest stale in the same way.
+    let r = good("m2-doc", PROD, "production", false);
+    r.write(
+        &format!("code/specs/{PROD}.warrant"),
+        format!("{DOC}  -- edited\n"),
+    );
+    only(
+        &run(&r, PROD),
+        "CC08",
+        "the evidence was not run against this document",
+    );
+}
+
+#[test]
+fn m2_a_manifest_of_other_source_is_refused() {
+    let r = good("m2-src", PROD, "production", false);
+    r.write(&p(PROD, "src/lib.rs"), "pub fn changed() {}\n");
+    only(
+        &run(&r, PROD),
+        "CC08",
+        "the evidence was not run against this source",
+    );
+    let r = good("m2-nosrc", PROD, "production", false);
+    std::fs::remove_dir_all(r.path(&p(PROD, "src"))).unwrap();
+    only(&run(&r, PROD), "CC08", "manifest: cannot digest src/");
+    let r = good("m2-absent", PROD, "production", false);
+    let path = p(PROD, "evidence/test-manifest.json");
+    let m = r
+        .read(&path)
+        .replace("\"source_sha256\"", "\"x\"")
+        .replace("\"spec_sha256\"", "\"y\"");
+    r.write(&path, m);
+    let o = run(&r, PROD);
+    has(&o, "CC08", "spec_sha256 is \"(absent)\"");
+    has(&o, "CC08", "source_sha256 is \"(absent)\"");
+}
+
+/// M2: the generated region removes the manifest before the run, so a suite that exits 0
+/// without rewriting it leaves NO file and fails the file set, instead of passing on a stale one.
+#[test]
+fn m2_a_manifest_that_was_not_rewritten_is_a_missing_file() {
+    let r = good("m2-gone", PROD, "production", false);
+    let b = r.read(&p(PROD, "BUILD"));
+    let rm = b
+        .find("\nrm -f evidence/test-manifest.json\n")
+        .expect("rm line");
+    let run_at = b.find("\nWARRANT_EVIDENCE_OUT=").expect("run line");
+    assert!(rm < run_at, "the delete must come first");
+    // What the BUILD leaves behind when the run writes nothing:
+    std::fs::remove_file(r.path(&p(PROD, "evidence/test-manifest.json"))).unwrap();
+    only(
+        &run(&r, PROD),
+        "CC02",
+        "file set: evidence/test-manifest.json is missing",
+    );
+    // And the delete cannot be dropped from BUILD: that is a different region.
+    let r = good("m2-norm", PROD, "production", false);
+    r.edit(&p(PROD, "BUILD"), "rm -f evidence/test-manifest.json\n", "");
+    only(&run(&r, PROD), "CC03", CC03);
+    let r = good("m2-norm-w", PROD, "production", false);
+    r.edit(
+        &p(PROD, "BUILD_windows"),
+        "if exist evidence\\test-manifest.json del /f /q evidence\\test-manifest.json\n",
+        "",
+    );
+    only(&run(&r, PROD), "CC03", CC03);
+}
+
+/// M3: every claim that calls a bound operation needs an entry.
+#[test]
+fn m3_a_claim_that_calls_a_bound_operation_and_is_never_attacked_fails() {
+    let r = good("m3", PROD, "production", false);
+    r.write(
+        &format!("code/specs/{PROD}.warrant"),
+        format!("{DOC}  claim c3:\n    forall v: Bool. g(v) == g(v)\n"),
+    );
+    only(
+        &run(&r, PROD),
+        "CC04",
+        "claim `c3` calls the bound operation(s) g and no entry attacks it",
+    );
+    // An entry makes it pass the plan check (the manifest is the next check's).
+    r.write(
+        &p(PROD, "warrant/sabotage.plan"),
+        format!("{PLAN}exhaustive/c3 field-zero\n"),
+    );
+    assert!(!run(&r, PROD)
+        .findings
+        .iter()
+        .any(|f| f.message.contains("no entry attacks it")));
+    // A claim that calls no bound operation needs none; a comment is not a call.
+    let r = good("m3-none", PROD, "production", false);
+    r.write(
+        &format!("code/specs/{PROD}.warrant"),
+        format!("{DOC}  claim c3:\n    forall v: Bool. v == v -- f(v)\n"),
+    );
+    assert!(!run(&r, PROD).findings.iter().any(|f| f.code == "CC04"));
+}
+
+#[test]
+fn m3_a_claim_whose_faults_are_all_excused_is_exempt() {
+    use vos_link::build_gen::validate_plan;
+    let faults = [("g".to_string(), vec!["field-flip".to_string()])]
+        .into_iter()
+        .collect();
+    let claims = vec!["k".to_string()];
+    let calls = vec![("k".to_string(), vec!["g".to_string()])];
+    let plan: Vec<PlanEntry> = vec![];
+    let excused = [Excuse {
+        id: "m/negctl/exhaustive/g/field-flip".into(),
+        reason: "VOS-D098".into(),
+    }];
+    let none = validate_plan(&plan, &faults, &claims, &[], &calls, &[]);
+    assert!(
+        none.iter().any(|m| m.contains("claim `k` calls")),
+        "{none:?}"
+    );
+    let some = validate_plan(&plan, &faults, &claims, &[], &calls, &excused);
+    assert!(
+        !some.iter().any(|m| m.contains("claim `k` calls")),
+        "{some:?}"
+    );
+}
+
+/// M4: an excuse names a backlog row that exists and is not done.
+#[test]
+fn m4_an_excuse_needs_an_open_backlog_row() {
+    let ex = |reason: &str| EXCUSED.replace("VOS-D098", reason);
+    let set = |label: &str, reason: &str, backlog: Option<&str>| {
+        let r = good(label, PROD, "production", false);
+        r.write(&p(PROD, "vos.toml"), vos_toml("production", &ex(reason)));
+        if let Some(b) = backlog {
+            r.write("code/specs/VOS-BACKLOG.md", b);
+        } else {
+            std::fs::remove_file(r.path("code/specs/VOS-BACKLOG.md")).unwrap();
+        }
+        let o = gen_build(&r.pkg(PROD), None).unwrap();
+        (r, o)
+    };
+    // A row that is done: the excuse has expired.
+    let (_r, o) = set("m4-done", "VOS-D065", Some(BACKLOG));
+    assert!(o.findings.iter().all(|f| f.code == "CC04"), "{}", show(&o));
+    has(
+        &o,
+        "CC04",
+        "names VOS-D065, which is done: remove the excuse",
+    );
+    // A row that does not exist.
+    let (_r, o) = set("m4-absent", "VOS-D999", Some(BACKLOG));
+    has(
+        &o,
+        "CC04",
+        "names VOS-D999, which is not a row of code/specs/VOS-BACKLOG.md",
+    );
+    // No backlog at all.
+    let (_r, o) = set("m4-nofile", "VOS-D098", None);
+    has(&o, "CC04", "which is not a row");
+    // An open row is accepted, and check-component agrees.
+    let (r, o) = set("m4-open", "VOS-D098", Some(BACKLOG));
+    assert!(o.findings.is_empty(), "{}", show(&o));
+    assert!(r
+        .read(&p(PROD, "warrant/check_evidence.sh"))
+        .contains("#   m/negctl/exhaustive/g/field-flip (VOS-D098)"));
+    // The reason must be a backlog reference at all (vos.toml refuses it).
+    let r = good("m4-bad", PROD, "production", false);
+    r.write(&p(PROD, "vos.toml"), vos_toml("production", &ex("because")));
+    only(&run(&r, PROD), "CC01", "backlog row");
+}
+
+#[test]
+fn backlog_row_status_reads_the_last_cell() {
+    let b = "| VOS-D001 | a | b | P1 | queued |\n| VOS-D002 | a | b | P1 | **done** (#1) |\n| VOS-D003 | a | b | P3 | Done |\n| VOS-D0041 | x | y | z | queued |\nVOS-D005 | no leading bar |\n";
+    assert_eq!(backlog_row_status(b, "VOS-D001"), Some(false));
+    assert_eq!(backlog_row_status(b, "VOS-D002"), Some(true));
+    assert_eq!(backlog_row_status(b, "VOS-D003"), Some(true));
+    assert_eq!(backlog_row_status(b, "VOS-D004"), None);
+    assert_eq!(backlog_row_status(b, "VOS-D005"), None);
 }

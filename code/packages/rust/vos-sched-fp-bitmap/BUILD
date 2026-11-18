@@ -10,7 +10,9 @@ cargo run -q -p vos-shape-check -- .
 cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .
 cargo run -q --manifest-path ../../../programs/rust/vos-link/Cargo.toml -- check-doc .
 cargo run -q -p coding_adventures_warrant_grammar --example gen_evidence -- --check vos-sched-fp-bitmap
-# Lines 6 to 8: the generated suite (exhaustive, property, fuzz) rewrites the evidence manifest.
+# Lines 6 to 8: the generated suite (exhaustive, property, fuzz) rewrites the evidence manifest.  The old one is removed first, so a
+# run that exits 0 without rewriting it leaves no file and fails check-component (CC02), instead of passing on a stale one.
+rm -f evidence/test-manifest.json
 WARRANT_EVIDENCE_OUT=evidence/test-manifest.json cargo test -q -p vos-sched-fp-bitmap --features ghost --test warrant_evidence
 # Line 9: sabotage.  Each fault must make the suite of the claim it names report `not ok` (the shared checker, VOS-D099).
 WARRANT_EVIDENCE_FAULT=wrong-ctor WARRANT_EVIDENCE_FILTER=/exhaustive/insert_safe python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p vos-sched-fp-bitmap --features ghost --test warrant_evidence
@@ -28,6 +30,8 @@ WARRANT_EVIDENCE_FAULT=field-flip WARRANT_EVIDENCE_ATTACK=alpha_w WARRANT_EVIDEN
 WARRANT_EVIDENCE_FAULT=field-flip WARRANT_EVIDENCE_ATTACK=alpha_w WARRANT_EVIDENCE_FILTER=/exhaustive/canon_insert_post python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p vos-sched-fp-bitmap --features ghost --test warrant_evidence
 WARRANT_EVIDENCE_FAULT=field-flip WARRANT_EVIDENCE_ATTACK=alpha_w WARRANT_EVIDENCE_FILTER=/exhaustive/canon_remove_post python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p vos-sched-fp-bitmap --features ghost --test warrant_evidence
 WARRANT_EVIDENCE_FAULT=field-flip WARRANT_EVIDENCE_ATTACK=alpha_w WARRANT_EVIDENCE_FILTER=/exhaustive/canon_dispatch_post python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p vos-sched-fp-bitmap --features ghost --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=wrong-ctor WARRANT_EVIDENCE_FILTER=/exhaustive/dispatch_safe python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p vos-sched-fp-bitmap --features ghost --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/exhaustive/dispatch_safe python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p vos-sched-fp-bitmap --features ghost --test warrant_evidence
 # VOS-D070: line coverage of src/ must stay at or above `coverage-floor` (95) of vos.toml; Linux only (tarpaulin).
 if [ "$(uname)" = "Linux" ]; then cargo tarpaulin -p vos-sched-fp-bitmap --features ghost --lib --test behaviour --ignore-tests --engine llvm --include-files 'vos-sched-fp-bitmap/src/*' --fail-under 95 --skip-clean; fi
 # The component kit's check, last: it reads the manifest the run above rewrote.

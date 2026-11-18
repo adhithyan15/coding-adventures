@@ -17,3 +17,5 @@ exhaustive/safety_init field-flip attack=alpha_w
 exhaustive/canon_insert_post field-flip attack=alpha_w
 exhaustive/canon_remove_post field-flip attack=alpha_w
 exhaustive/canon_dispatch_post field-flip attack=alpha_w
+exhaustive/dispatch_safe wrong-ctor
+exhaustive/dispatch_safe field-zero
