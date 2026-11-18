@@ -40,6 +40,12 @@
       "justification": "src/bin/warrant-corpus-gen.rs reads its command-line arguments (--warrant, --profile, --out, --check, --bindings). No environment variable is read."
     },
     {
+      "category": "proc",
+      "action": "signal",
+      "target": "own-exit-status",
+      "justification": "src/bin/warrant-corpus-gen.rs calls std::process::exit(status) after cli::run has returned, only to give the process the status 2 (refused) or 1 (--check drift): a status other than 0 or 1 cannot be returned from main without std::process. It signals no other process, spawns nothing and passes no argument to a program."
+    },
+    {
       "category": "stdout",
       "action": "write",
       "target": "stdout/stderr",

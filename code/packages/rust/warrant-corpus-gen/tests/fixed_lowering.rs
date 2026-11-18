@@ -373,7 +373,7 @@ fn root() -> PathBuf {
 }
 
 /// The real binary, on the oracle's `fixed_forms_v1.warrant`: refused naming the level
-/// `ir.fixed`, nothing is written.  (The binary exits 1 for every refusal; 2 is a usage error.)
+/// `ir.fixed`, nothing is written.  (A refusal exits 2, the oracle's convention; 1 is reserved for a `--check` drift.)
 #[test]
 fn the_binary_refuses_the_fixed_forms_document_and_writes_nothing() {
     let bin = env!("CARGO_BIN_EXE_warrant-corpus-gen");
@@ -399,7 +399,7 @@ fn the_binary_refuses_the_fixed_forms_document_and_writes_nothing() {
         let r = cmd.output().unwrap();
         assert_eq!(
             r.status.code(),
-            Some(1),
+            Some(2),
             "{}",
             String::from_utf8_lossy(&r.stderr)
         );
