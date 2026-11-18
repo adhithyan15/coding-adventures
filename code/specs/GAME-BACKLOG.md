@@ -15,7 +15,7 @@ that must be produced, not a promise that the evidence exists already.
 
 | Workstream | Capability status | Language status | Verification status / limit |
 | --- | --- | --- | --- |
-| `GAME10` fixed-step clock | Rust core and v1 integer contract present; host pacing/render integration is separate and incomplete | Rust implementation; Python is an independent fixture validator, not a port; TS, Go, and other supported lanes remain | 23 vectors (9 success, 14 exact errors); durable Rust consumer is P0. Existing Warrant claims accept any `Err`; assurance report has property counts but empty evidence and null exhaustive/fuzz/proof entries. No formal proof claim. |
+| `GAME10` fixed-step clock | Rust core and v1 integer contract present; host pacing/render integration is separate and incomplete | Rust implementation; Python is an independent fixture validator, not a port; TS, Go, and other supported lanes remain | Durable Rust consumer merged in [PR #19602](https://github.com/adhithyan15/coding-adventures/pull/19602), squash `72778f4f553cf35fd361e2688acaeb6201414ea1`; 23 vectors (9 success, 14 exact errors) pass package conformance. Existing Warrant claims accept any `Err`; assurance report has empty evidence and null exhaustive/fuzz/proof entries. No formal proof claim. |
 | `GAME11`–`GAME15c` early arcade | Rust packages exist for collision, arcade SFX, Pong, Breakout, discrete logic, CRT beam, and timer | Rust source present; other supported language lanes need inventory | No unified portable-evidence audit yet; collision, Pong, Breakout, and CRT Warrant drafts are parked. |
 | `GAME20`–`GAME25` tile/sprite/RPG | Rust packages exist for indexed palette, tilemap, sprite OAM, RPG grid/battle, and Monster RPG | Rust source present; verify required lanes rather than inferring from GAME00's portable label | Shared independent corpus and cross-language execution audit remain open. |
 | `GAME26`–`GAME29b` console devices | GAME26 GBA bridge, GAME27 NES, GAME28 Game Boy, and GAME29 GBA devices are missing from the Rust package tree | No verified portable console-device lane | Start with a narrow independently specified NES register/timing slice. Do not claim a complete console. |
@@ -23,7 +23,7 @@ that must be produced, not a promise that the evidence exists already.
 | `GAME30`–`GAME35` 2.5D/3D | No Rust packages found for math3d, raycast, BSP, rasterizer, dungeon, or Quake bridge | No verified lane matrix | Capability is missing; fixed-point/F64 contracts and independent rendering/geometry oracles must precede claims. |
 | `GAME40`–`GAME45` flight | No Rust packages found for rigidbody, aero, terrain, HUD, GPU bridge, or flight sim | No verified lane matrix | Capability is missing; host/device integration and deterministic physics evidence remain unbuilt. |
 | Networking and tooling | Not decomposed into owned game contracts | No verified lane matrix | Define explicit protocol and tool inputs/outputs only after deterministic simulation foundations. |
-| `GAME01` Hamurabi | Multi-language package set present; Rust and other lanes need consumer-by-consumer audit | Rust, Python, TypeScript, Go, C, C++, C#, Dart, Elixir, F#, Haskell, Java, Kotlin, Lua, OCaml, Perl, Ruby, Swift packages exist | Rust `conformance.rs` hardcodes a transcript instead of consuming the shared 31-vector corpus. Go live-corpus execution and sampled Python / TypeScript routes exist, but their exact routes differ and do not establish full normal package CI parity. OCaml README says it consumes `cases.txt`, while its test embeds a literal and BUILD/dune do not refresh that fixture. Package count is not parity evidence. |
+| `GAME01` Hamurabi | Deterministic simulation core present; console and host integration are separate concerns | Canonical report snapshot at base `72778f4f553cf35fd361e2688acaeb6201414ea1`: present in all 15 established lanes and all 3 emerging lanes; package presence is not parity | Active `GBL-002` branch adds Rust's canonical 31-case public-API consumer; local debug/release, strict Clippy, capability/certificate checks and Go fixture selection pass. MacOS reports the Linux-only runtime gate NOT-LIVE; PR CI is pending. The 2026-11-17 static 26-row audit remains historical, not a live parity receipt: Go runs the corpus, Python/TypeScript routes were sampled, OCaml embeds literals despite its README, and five lanes read a text projection without a freshness guard. Rust assurance remains report-only with empty evidence and null proof/fuzz entries; `GBL-009` tracks substantiation. |
 | `GAME02` Lunar Lander | Fixed-point contract and several cores present; host/presentation integration is incomplete | Rust, Python, TypeScript, Go, Ruby, Perl, Lua, Elixir packages exist; audit them against supported lanes | Verify each language against shared vectors; do not infer parity from directory presence. Expand generated/property coverage after corpus consumers. |
 | Parked F64 specifications | Five game Warrant drafts depend on float support | Warrant does not yet implement F64 | WX-FL1 in `VER-BACKLOG.md` gates restoration; no proof/evidence claim until then. |
 
@@ -122,7 +122,7 @@ coordination state, not an implementation authorization for unrelated primitives
 
 ### P1 — Close existing evidence gaps and Warrant limits
 
-- [ ] `GBL-002` (active) Make Rust Hamurabi consume the shared 31-vector corpus; audit every registered language
+- [x] `GBL-002` (local acceptance complete; PR pending) Make Rust Hamurabi consume the shared 31-vector corpus; audit every registered language
   consumer before describing parity. Scope: consume canonical `code/specs/fixtures/hamurabi-v1/cases.json`
   and compare all 31 cases, 53 trajectory turns and byte-exact reports (including final newlines),
   and 14 refusal cases across all 8 error variants. Preserve full-width `u64` fixture numbers from
@@ -134,13 +134,24 @@ coordination state, not an implementation authorization for unrelated primitives
   negative controls must reject a one-bit change to a >2^53 RNG word, a removed report newline, a
   different valid error variant, and an always-error adapter. This proves finite Rust package-corpus
   conformance only; do not label it cross-language parity or formal proof. Warrant evidence and the
-  report-only assurance limitations remain open under `GBL-003`/`GBL-005`.
+  report-only assurance limitations remain open under `GBL-005`/`GBL-009`.
 
   **Selection rationale (2026-11-18):** the GAME10 consumer is merged, Rust Hamurabi already has a
   registered conformance test but hardcodes its transcript, and the shared 31-vector fixture is an
   existing canonical input. A 2026-11-17 static 26-row audit found 11 JSON consumers, five `cases.txt`
   consumers, one OCaml test embedding literals despite its README, and this Rust hardcoded transcript;
   that inventory is not live parity evidence. The JSON-to-text freshness gap is tracked separately.
+
+  **Implementation validation (2026-11-18, macOS):** the Rust integration test consumes all 31 cases
+  and passes same-harness controls for always-error, a +1 mutation to the >2^53 initial RNG word,
+  removal of a report's final newline, a substituted valid error, duplicate/missing case IDs,
+  duplicate keys including an escaped alias, and unknown/missing operation fields. `BUILD` and
+  `BUILD_windows` command sets both pass the Rust debug and release package suites, capability check,
+  and effect-certificate verification; strict package Clippy passes. The runtime capability test
+  correctly reports Linux-only NOT-LIVE on macOS. A focused Go build-tool test confirms the exact
+  fixture path selects all 18 registered Hamurabi lanes and rejects version lookalikes. This is Rust
+  package conformance plus build selection only; the static audit remains distinct from live
+  cross-language parity, and Hamurabi assurance evidence remains open under `GBL-009`.
 - [ ] `GBL-003a` Separately execute and assess the GAME10 constructor Warrant model: exercise the
   648-case boundary (105 `Ok`, 72 `ZeroFixedTimestep`, 162 `InvalidMaxFrameSteps`,
   309 `InvalidMaxFrameDelta`), stratified full-width property
