@@ -550,3 +550,76 @@ fn lowering_defers_the_shape_refusal_only_for_a_named_example() {
         assert_eq!(e.code, code::W0701);
     });
 }
+
+// ---- the binary and its exit status (CV2-F2: refusal 2, drift 1) -------------------------------
+
+/// `--check` of the oracle's committed fixture passes through the real binary; a stale line and an
+/// unknown id are refusals (exit 2, nothing written); a drifted `cases.tfv` is drift (exit 1).
+#[test]
+fn the_binary_checks_the_committed_fixture_and_refuses_a_stale_or_unknown_line() {
+    use std::path::Path;
+    use std::process::Command;
+    let bin = env!("CARGO_BIN_EXE_warrant-corpus-gen");
+    let root = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../..");
+    let fixture = "code/packages/python/warrant-oracle/tests/fixtures/omit-example-v2";
+    let tmp = std::env::temp_dir().join(format!("wcg-omit-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&tmp);
+    std::fs::create_dir_all(&tmp).unwrap();
+    let run = |profile: &str, out: &str, check: bool| -> (i32, String) {
+        let mut c = Command::new(bin);
+        c.current_dir(&root).args([
+            "--warrant",
+            &format!("{fixture}/omit.warrant"),
+            "--profile",
+            profile,
+            "--out",
+            out,
+        ]);
+        if check {
+            c.arg("--check");
+        }
+        let r = c.output().unwrap();
+        (r.status.code().unwrap(), String::from_utf8_lossy(&r.stderr).into_owned())
+    };
+    let own = format!("{fixture}/corpus.profile");
+    let committed = format!("{fixture}/corpus");
+    let (c, e) = run(&own, &committed, true);
+    assert_eq!(c, 0, "the committed fixture checks clean: {e}");
+    // writing it elsewhere writes the same bytes
+    let out = tmp.join("out");
+    let (c, e) = run(&own, out.to_str().unwrap(), false);
+    assert_eq!(c, 0, "{e}");
+    for f in ["corpus.json", "cases.tfv", "chunks/echo_is_identity.txt"] {
+        assert_eq!(
+            std::fs::read(out.join(f)).unwrap(),
+            std::fs::read(root.join(&committed).join(f)).unwrap(),
+            "{f}"
+        );
+    }
+    // a stale line (the kept example is emittable) and an unknown id: refusals, nothing written
+    for (name, extra) in [
+        ("stale", "omit_example warrant/omitx/example/echo_small\n"),
+        ("unknown", "omit_example warrant/omitx/example/nope\n"),
+    ] {
+        let p = tmp.join(format!("{name}.profile"));
+        std::fs::write(&p, format!("{FIXTURE_PROFILE}{extra}")).unwrap();
+        let o = tmp.join(format!("o-{name}"));
+        for check in [false, true] {
+            let (c, e) = run(p.to_str().unwrap(), o.to_str().unwrap(), check);
+            assert_eq!(c, 2, "{name} check={check}: {e}");
+            assert!(e.contains("profile"), "{e}");
+            assert!(!e.contains("nope"), "an unknown id is never echoed: {e}");
+        }
+        assert!(!o.exists(), "nothing is written for a refusal");
+    }
+    // the corpus on disk no longer matches the profile that was edited to drop a line: drift
+    let p = tmp.join("less.profile");
+    std::fs::write(
+        &p,
+        FIXTURE_PROFILE.replace("omit_example warrant/omitx/example/echo_big_value\n", ""),
+    )
+    .unwrap();
+    let (c, _) = run(p.to_str().unwrap(), &committed, true);
+    assert_eq!(c, 1, "the example is emitted now, so the committed corpus differs");
+    let _ = std::fs::remove_dir_all(tmp);
+}
