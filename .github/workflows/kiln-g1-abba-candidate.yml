@@ -9,6 +9,8 @@ on:
       - code/programs/go/kiln/ci/testdata/g1_abba_precision_linux_amd64_test.go.tmpl
       - code/programs/go/kiln/ci/classify_g1_gate_result.py
       - code/programs/go/kiln/ci/test_classify_g1_gate_result.py
+      - code/programs/go/kiln/ci/check_g1_production_delta.py
+      - code/programs/go/kiln/ci/test_check_g1_production_delta.py
 
 permissions:
   contents: read
@@ -67,6 +69,8 @@ jobs:
             code/programs/go/kiln/ci/testdata/g1_abba_precision_linux_amd64_test.go.tmpl
             code/programs/go/kiln/ci/classify_g1_gate_result.py
             code/programs/go/kiln/ci/test_classify_g1_gate_result.py
+            code/programs/go/kiln/ci/check_g1_production_delta.py
+            code/programs/go/kiln/ci/test_check_g1_production_delta.py
           sparse-checkout-cone-mode: false
           filter: blob:none
 
@@ -144,8 +148,13 @@ jobs:
           slice_sha=6cd61f63fdec55ce37294ad061705394b1babda80e5368b17ecb5bd38e2207af
           helper="$GITHUB_WORKSPACE/diagnostic/code/programs/go/kiln/ci/testdata/g1_abba_precision_linux_amd64_test.go.tmpl"
           classifier="$GITHUB_WORKSPACE/diagnostic/code/programs/go/kiln/ci/classify_g1_gate_result.py"
+          delta_checker="$GITHUB_WORKSPACE/diagnostic/code/programs/go/kiln/ci/check_g1_production_delta.py"
           if ! python3 "$GITHUB_WORKSPACE/diagnostic/code/programs/go/kiln/ci/test_classify_g1_gate_result.py"; then
             echo "G1 result classifier unit tests failed" >&2
+            exit 2
+          fi
+          if ! python3 "$GITHUB_WORKSPACE/diagnostic/code/programs/go/kiln/ci/test_check_g1_production_delta.py"; then
+            echo "compiled production delta checker unit tests failed" >&2
             exit 2
           fi
           summary="$output/results.txt"
@@ -212,26 +221,15 @@ jobs:
             exit 2
           fi
 
-          # The baseline and candidate source trees differ only in this compiled
-          # production Go file. Test-only Go and diagnostics are separately
-          # recorded; neither enters the Kiln package's admission test binary.
-          for checkout in baseline candidate; do
-            root="$GITHUB_WORKSPACE/$checkout"
-            git -C "$root" ls-tree -r HEAD -- code/grammars code/packages/go code/programs/go/kiln |
-              awk '$2 == "blob" && $4 ~ /\.go$/ && $4 !~ /_test\.go$/ && $4 !~ /\/ci\// {print $3, $4}' |
-              sort > "$output/$checkout-production-go.txt"
-          done
-          if diff -U0 "$output/baseline-production-go.txt" "$output/candidate-production-go.txt" > "$output/production-go-delta.txt"; then
-            production_delta=none
-          else
-            production_delta=$(cat "$output/production-go-delta.txt")
-          fi
-          printf 'compiled_production_go_delta=%s\n' "$production_delta" | tee -a "$output/identity.txt"
-          if ! rg -q '^[-+].*code/packages/go/lexer/grammar_lexer_f10\.go$' "$output/production-go-delta.txt" || \
-             rg -v '^[+-].*code/packages/go/lexer/grammar_lexer_f10\.go$|^---|^\+\+\+|^@@|^$' "$output/production-go-delta.txt" >/dev/null; then
-            echo "unexpected compiled production Go delta" >&2
+          # Check exact compiled input blobs with explicit tool/error handling;
+          # test-only files and diagnostics do not enter the admission binary.
+          if ! python3 "$delta_checker" "$GITHUB_WORKSPACE/baseline" "$GITHUB_WORKSPACE/candidate" \
+              > "$output/production-go-delta.txt" 2> "$output/production-go-delta-error.txt"; then
+            cat "$output/production-go-delta-error.txt" >&2
+            cat "$output/production-go-delta.txt"
             exit 2
           fi
+          cat "$output/production-go-delta.txt" | tee -a "$output/identity.txt"
 
           # Build and hash the exact clean official admission binaries before
           # copying any *_test.go helper into either runtime checkout.
