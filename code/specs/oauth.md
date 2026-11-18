@@ -6127,14 +6127,31 @@ stable failures retain no secret or transcript bytes.
 
 This primitive accepts an already-computed transcript snapshot and does not
 prove which messages produced it, own transcript sequencing, or attach its
-outputs to the exact retry proof. That exact-message composition remains a
-separate prerequisite. It also does not derive traffic keys or IVs,
+outputs to the exact retry proof. It also does not derive traffic keys or IVs,
 authenticate CertificateVerify or Finished, protect records, validate
 certificates, establish trust, enforce revocation, perform I/O, authorize HTTP
-or OAuth transport, or open a network connection. Exact-message traffic-
-secret binding, authenticated handshake progression, record protection,
-certificate/revocation policy, and HTTP composition remain prerequisites;
-concrete HTTPS and live-provider readiness remain unavailable.
+or OAuth transport, or open a network connection.
+
+An allocation-free `tls13-retry-handshake-traffic-secrets-binding`
+prerequisite now accepts only the exact-message `BoundRetryBaseSecrets` proof
+and caller-owned handshake-traffic-secret storage. Before touching that
+storage, it requires the storage's data-driven selected cipher suite to equal
+the suite retained by the bound retry transcript. It then snapshots that exact
+CH1, HelloRetryRequest, CH2, and final ServerHello transcript and delegates the
+bound base secrets plus snapshot to the fixed-memory handshake traffic-secret
+primitive. Success returns a non-copyable wrapper that retains the complete
+message-bound base schedule beside the borrowed client and server secret view;
+no detached message, suite, transcript hash, or base secret is accepted.
+Suite substitution fails before output mutation, and downstream derivation
+failures retain the existing stable redacted categories and clearing behavior.
+
+This exact-message binding does not advance the transcript beyond ServerHello,
+derive traffic keys or IVs, authenticate CertificateVerify or Finished,
+protect records, validate certificates, establish trust, enforce revocation,
+perform I/O, authorize HTTP or OAuth transport, or open a network connection.
+Authenticated handshake progression, record protection, certificate and
+revocation policy, and HTTP composition remain prerequisites; concrete HTTPS
+and live-provider readiness remain unavailable.
 
 An allocation-free `http1-fixed-request-body` prerequisite now binds one
 caller-borrowed, potentially sensitive request body to its exact byte length

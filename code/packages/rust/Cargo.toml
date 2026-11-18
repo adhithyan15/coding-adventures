@@ -1497,6 +1497,7 @@ members = [
   "tls13-retry-transcript-binding",
   "tls13-retry-key-schedule-binding",
   "tls13-handshake-traffic-secrets",
+  "tls13-retry-handshake-traffic-secrets-binding",
   "tls13-server-hello-version-selection",
   "tls13-key-share-entry",
   "tls13-server-name",
