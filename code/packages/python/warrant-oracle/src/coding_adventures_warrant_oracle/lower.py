@@ -398,6 +398,11 @@ class _Lowerer:
         #: ``concat`` of such, an ``if`` of equal widths): ``id(ir) -> (ir, width)``.  The IR
         #: node is kept so its id is never reused.  Filled in the single lowering pass.
         self._widths: dict = {}
+        #: Fixed-width ``add``/``sub``/``mul``/``neg`` nodes lowered so far, ``id(ir) -> ir`` (the
+        #: node is kept so its id is never reused), and the models whose call closure holds one.
+        #: Both feed the v0 guard, VER04r 3.3 rule 3 (:meth:`_v0_rule_3`).
+        self._fixed_arith: dict = {}
+        self._wrapping_models: set = set()
 
     # -- helpers ---------------------------------------------------------------
 
@@ -472,6 +477,11 @@ class _Lowerer:
                     f"W0701: a subject call inside the body of model `{decl.name}` (VER04r 4.2 rule 3)",
                 )
             model.ir = ir
+            if any(
+                id(n) in self._fixed_arith or (n[0] == "model_call" and n[1] in self._wrapping_models)
+                for n in walk(ir)
+            ):
+                self._wrapping_models.add(decl.name)
             model.requires, model.unsupported = self.seal(ir)
         except OracleError as exc:
             if exc.code != "level":
@@ -581,6 +591,7 @@ class _Lowerer:
         if lowered:
             try:
                 check_pure_guards(ir)
+                self._v0_rule_3(ir)
                 if not _has_subject(ir):
                     raise OracleError(
                         "generation",
@@ -616,6 +627,34 @@ class _Lowerer:
             requires,
             refusal,
         )
+
+    def _v0_rule_3(self, ir: object) -> None:
+        """VER04r 3.3 rule 3, the generator's v0 guard: refuse, in a **v0** document, a fixed-width
+        ``+ - *`` or unary ``-`` with a subject call beneath it, or a ``model_call`` with a subject
+        call in an argument whose callee's call closure holds such a node.  The v0 harness
+        evaluates ``U8`` as ``Nat``, so a generation-time count cannot prove the two agree.
+        :func:`.ir_eval.fixed_arith_over_subject` makes the same test at evaluation; this one is
+        made on the types the lowerer already knows, so the refusal is a property of lowering.
+        """
+        if self.spec.version != "v0":
+            return
+        for node in walk(ir):
+            if id(node) in self._fixed_arith and _has_subject(node):
+                raise OracleError(
+                    "generation",
+                    "W0701: fixed-width arithmetic over a subject result in a v0 document "
+                    "(VER04r 3.3 rule 3)",
+                )
+            if (
+                node[0] == "model_call"
+                and node[1] in self._wrapping_models
+                and any(_has_subject(a) for a in node[2])
+            ):
+                raise OracleError(
+                    "generation",
+                    f"W0701: model `{node[1]}` (fixed-width arithmetic in its call closure) over a "
+                    "subject result in a v0 document (VER04r 3.3 rule 3)",
+                )
 
     def _type_of_side(self, body, subject_left: bool) -> A.Ty:
         """Type of the subject side of a reference claim (re-derived by checking)."""
@@ -933,7 +972,9 @@ class _Lowerer:
             # nodes; the literal carries the in-range value -2^(w-1), and
             # ``neg`` of the minimum wraps to itself (VER04r section 3.2).
             ty = A.Ty(operand.suffix.upper())
-            return ["neg", _lit_value(-operand.value, ty.head)], ty
+            node = ["neg", _lit_value(-operand.value, ty.head)]
+            self._fixed_arith[id(node)] = node
+            return node, ty
         ir, ty = self.expr(
             operand, expected if expected is not None and is_numeric(expected) else None
         )
@@ -941,7 +982,10 @@ class _Lowerer:
             raise self.err("unary minus needs a number")
         if ty.head in FIXED and not FIXED[ty.head][1]:
             raise self.err("unary minus on an unsigned type; write 0uN - a")
-        return ["neg", ir], (ty if is_fixed(ty) else INT)
+        node = ["neg", ir]
+        if is_fixed(ty):
+            self._fixed_arith[id(node)] = node
+        return node, (ty if is_fixed(ty) else INT)
 
     def binary(self, e: A.Binary, expected: A.Ty | None) -> tuple[object, A.Ty]:
         op = e.op
@@ -973,7 +1017,10 @@ class _Lowerer:
         if op in ("<", "<=", ">", ">="):
             return [tag, l_ir, r_ir], BOOL
         # Arithmetic: fixed-width stays fixed (and wraps); Nat/Int become Int.
-        return [tag, l_ir, r_ir], (common if is_fixed(common) else INT)
+        node = [tag, l_ir, r_ir]
+        if is_fixed(common):
+            self._fixed_arith[id(node)] = node
+        return node, (common if is_fixed(common) else INT)
 
     # -- calls --------------------------------------------------------------------
 

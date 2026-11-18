@@ -15,6 +15,11 @@ mirror PR follows: it removes the dump-only `skip_pure_guards` path and enforces
   `unsupported` wins in evaluation, as the generator types before it guards), so `lower_document`
   of an adopter with such claims (`wasm-leb128`) still lowers for a census; `derive`, `SuitePlan`
   (`emit-v2`) and `dump-lowering` raise it. The evaluation-time refusals stay as a backstop.
+- **A subject call in a model body is `W0701` at lowering** (VER04r 4.2 rule 3), whether or not
+  anything calls the model; it used to be derived into the corpus. `lower_model` raises it.
+- **v0 rule 3** (fixed-width `+ - *`/unary `-` over a subject result, or a model whose call closure
+  holds one, in a v0 document) is also recorded in `LoweredSuite.refusal` at lowering, so
+  `dump-lowering` refuses it as the generator does. The evaluation-time check stays as a backstop.
 - **A claim whose body calls no op** (`forall a: U8. a == a`) is `W0701` at lowering (VER04r 4.3).
   The oracle used to derive it, with `expected_calls` 0.
 - **The 4,096-byte `Bytes` limit is enforced at emission** (VER04r 2.3, 14). A non-omitted example

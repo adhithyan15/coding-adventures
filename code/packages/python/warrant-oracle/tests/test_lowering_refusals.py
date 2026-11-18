@@ -218,3 +218,50 @@ def test_a_model_body_with_a_subject_call_is_refused_at_lowering(case):
         lower_document(parse_source((head + MODEL_CASES[case]).encode()))
     assert err.value.code == "generation"
     assert err.value.message.startswith("W0701") and "model `bad`" in err.value.message
+
+
+# -- VER04r 3.3 rule 3, the v0 guard, at lowering -----------------------------------------------
+
+V0 = "warrant v0doc\n  op f(a: U8) -> U8\n  model inc(a: U8) -> U8 = a + 1u8\n  model wrap2(a: U8) -> U8 = inc(a)\n"
+
+
+def v0_suite(claim: str, version: str = "v0"):
+    head = V0 if version == "v0" else V0.replace("v0doc", "v0doc v1")
+    return lower_document(parse_source((head + f"  claim c:\n    forall a: U8. {claim}\n").encode())).suites[0]
+
+
+@pytest.mark.parametrize(
+    "claim",
+    [
+        "f(a) + 1u8 == a",
+        "a == f(a) * 2u8",
+        "(0u8 - f(a)) == a",
+        "inc(f(a)) == a",  # a model whose body wraps
+        "wrap2(f(a)) == a",  # ... through another model's call closure
+    ],
+)
+def test_v0_rule_3_is_refused_at_lowering_in_a_v0_document_only(claim):
+    suite = v0_suite(claim)
+    assert suite.refusal is not None and suite.refusal.code == "generation"
+    assert suite.refusal.message.startswith("W0701") and "v0 document" in suite.refusal.message
+    assert v0_suite(claim, "v1").refusal is None  # a v1 document wraps everywhere (rule 5)
+
+
+@pytest.mark.parametrize(
+    "claim",
+    [
+        "f(a) == a + 1u8",  # the arithmetic is on the pure side
+        "f(a + 1u8) == a",  # ... or in an argument, beneath no subject result
+        "inc(a) == f(a)",  # a wrapping model over a pure argument
+        "f(a) <= a",
+    ],
+)
+def test_v0_rule_3_does_not_touch_pure_arithmetic(claim):
+    assert v0_suite(claim).refusal is None
+
+
+def test_the_dump_refuses_a_v0_rule_3_claim():
+    data = (V0 + "  claim c:\n    forall a: U8. f(a) + 1u8 == a\n").encode()
+    with pytest.raises(OracleError) as err:
+        view(data)
+    assert err.value.code == "generation" and "v0 document" in err.value.message
