@@ -246,7 +246,7 @@ python -m coding_adventures_warrant_oracle verify-v2 code/specs/fixtures/ct-comp
     --warrant code/specs/ct-compare.warrant \
     --profile code/specs/fixtures/ct-compare-warrant-v2/corpus.profile \
     [--bindings code/packages/rust/ct-compare/evidence.bindings] [--repo-root .] \
-    [--expect-generator warrant-corpus-gen@0.5.0]
+    [--expect-generator warrant-corpus-gen@0.6.0]
 ```
 
 `spec` in the corpus must equal the repo-relative path of `--warrant` (root: nearest ancestor with a
