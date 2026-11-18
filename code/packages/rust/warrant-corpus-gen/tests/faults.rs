@@ -380,10 +380,10 @@ fn tfv_refuses_an_example_that_is_not_a_subject_call() {
         let mut a = analyse(f, &Profile::default()).unwrap();
         let p = Program::new(&a.lowered.models);
         assert_eq!(examples(&a.lowered, &p).unwrap().lines.len(), 1);
-        a.lowered.examples[0].reference.subject = Ir::Bool(true);
+        a.lowered.examples[0].reference.as_mut().unwrap().subject = Ir::Bool(true);
         let e = examples(&a.lowered, &Program::new(&a.lowered.models)).unwrap_err();
         assert_eq!((e.code, e.at.as_str()), (code::W0701, "e"));
-        a.lowered.examples[0].reference.subject = Ir::Subject { op: "nope".into(), args: vec![], widths: vec![] };
+        a.lowered.examples[0].reference.as_mut().unwrap().subject = Ir::Subject { op: "nope".into(), args: vec![], widths: vec![] };
         let e = examples(&a.lowered, &Program::new(&a.lowered.models)).unwrap_err();
         assert!(e.message.contains("undeclared op"), "{e}");
     });

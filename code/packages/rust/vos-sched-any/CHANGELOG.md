@@ -4,6 +4,13 @@ All notable changes to this package are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Changed (VOS-038a, WX-SV2)
+
+- `init` is bound with `field-flip` and `alpha_w` with `field-zero,field-flip`; the harness is
+  regenerated (49 ok, still no tolerance script; `-any` has no `init` control, no claim has `init`
+  as subject). New sabotage lines: `safety_init` (flip of `init`, flip of `alpha_w`) and
+  `dispatch_covers_run` (flip of `alpha_w`), neither attackable with `field-zero`.
+
 ### Changed (VOS-D081)
 
 - Regenerated for the contract's new `safety_init` claim: `code/specs/vos-sched-any.warrant`, the

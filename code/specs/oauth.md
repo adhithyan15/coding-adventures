@@ -6090,6 +6090,95 @@ remaining TLS state, key-schedule, record, certificate, revocation, and HTTP
 composition remain prerequisites; concrete HTTPS and live-provider readiness
 remain unavailable.
 
+An allocation-free `tls13-retry-key-schedule-binding` prerequisite now joins
+the message-bound retry transcript and message-bound X25519 shared secret only
+when both borrow the same exact retained CH1, HelloRetryRequest, CH2, and final
+ServerHello selection proof. Before touching caller-owned base-secret storage,
+the composer also requires that storage's data-driven selected cipher suite
+equal the suite retained by the exact transcript. Only then does it pass the
+repository-owned 32-byte X25519 secret to the existing no-PSK base schedule.
+Success returns a non-copyable wrapper retaining both exact message-bound
+inputs and the Early, Handshake, and Master Secret view into caller-owned
+wipe-on-drop storage. Proof or
+suite substitution fails with stable payload-free categories before schedule
+derivation or storage mutation; downstream schedule failures retain the
+existing redacted categories and clearing behavior.
+
+This pure binding does not derive client or server handshake traffic secrets,
+consume the retained transcript hash in Derive-Secret, sequence any later
+handshake message, authenticate CertificateVerify or Finished, protect
+records, validate certificates, establish trust, enforce revocation, perform
+I/O, authorize HTTP or OAuth transport, or open a network connection. Traffic-
+secret derivation, authenticated handshake progression, record protection,
+certificate/revocation policy, and HTTP composition remain prerequisites;
+concrete HTTPS and live-provider readiness remain unavailable.
+
+An allocation-free `tls13-handshake-traffic-secrets` prerequisite now derives
+the client and server handshake traffic secrets from the existing
+suite-selected `BaseSecrets` view and one repository-owned `TranscriptHash`.
+Caller-owned fixed storage must retain the exact same data-driven selected
+cipher suite as the base schedule, and the transcript snapshot's algorithm
+must equal that suite's HKDF hash. Only then does the primitive import the
+existing Handshake Secret into a fixed wipe-on-drop PRK, apply the fixed
+`"c hs traffic"` and `"s hs traffic"` labels, stage both Hash-length results in
+wipe-on-drop owners, and copy them into caller-owned wipe-on-drop storage only
+after both derivations succeed. Success returns a non-copyable borrowed view;
+stable failures retain no secret or transcript bytes.
+
+This primitive accepts an already-computed transcript snapshot and does not
+prove which messages produced it, own transcript sequencing, or attach its
+outputs to the exact retry proof. It also does not derive traffic keys or IVs,
+authenticate CertificateVerify or Finished, protect records, validate
+certificates, establish trust, enforce revocation, perform I/O, authorize HTTP
+or OAuth transport, or open a network connection.
+
+An allocation-free `tls13-retry-handshake-traffic-secrets-binding`
+prerequisite now accepts only the exact-message `BoundRetryBaseSecrets` proof
+and caller-owned handshake-traffic-secret storage. Before touching that
+storage, it requires the storage's data-driven selected cipher suite to equal
+the suite retained by the bound retry transcript. It then snapshots that exact
+CH1, HelloRetryRequest, CH2, and final ServerHello transcript and delegates the
+bound base secrets plus snapshot to the fixed-memory handshake traffic-secret
+primitive. Success returns a non-copyable wrapper that retains the complete
+message-bound base schedule beside the borrowed client and server secret view;
+no detached message, suite, transcript hash, or base secret is accepted.
+Suite substitution fails before output mutation, and downstream derivation
+failures retain the existing stable redacted categories and clearing behavior.
+
+This exact-message binding does not advance the transcript beyond ServerHello,
+derive traffic keys or IVs, authenticate CertificateVerify or Finished,
+protect records, validate certificates, establish trust, enforce revocation,
+perform I/O, authorize HTTP or OAuth transport, or open a network connection.
+Authenticated handshake progression, record protection, certificate and
+revocation policy, and HTTP composition remain prerequisites; concrete HTTPS
+and live-provider readiness remain unavailable.
+
+An allocation-free `tls13-retry-handshake-traffic-key-material-binding`
+prerequisite now accepts only the exact-message retry handshake-traffic-secret
+proof above, one explicit client-or-server sender role, and caller-owned
+traffic-key-material storage. Before touching that storage, it requires the
+storage's data-driven selected cipher suite to equal the suite retained by the
+bound traffic secrets. It selects only the retained sender secret, imports
+that exact hash-length value into a fixed wipe-on-drop PRK using the retained
+suite's hash, and delegates to the existing fixed-memory traffic-key and
+static-IV derivation. Success returns a non-copyable wrapper retaining the
+complete CH1, HelloRetryRequest, CH2, final ServerHello, base-schedule, and
+handshake-traffic-secret proof beside the sender role and borrowed key-material
+view. No detached traffic secret, suite, hash, key or IV length, label, or
+context is accepted. Suite substitution fails before output mutation;
+downstream failures retain stable redacted categories and the existing
+clearing and staging behavior.
+
+This exact-message binding derives one direction's handshake key and static IV
+per call. It does not advance the transcript, authenticate CertificateVerify
+or Finished, construct or reserve a record nonce, create record-protection
+state, invoke an AEAD, frame or protect records, process alerts, validate
+certificates, establish trust, verify a hostname, enforce revocation, perform
+I/O, authorize HTTP or OAuth transport, or open a network connection.
+Authenticated handshake progression, record-state composition, certificate and
+revocation policy, and HTTP composition remain prerequisites; concrete HTTPS
+and live-provider readiness remain unavailable.
+
 An allocation-free `http1-fixed-request-body` prerequisite now binds one
 caller-borrowed, potentially sensitive request body to its exact byte length
 under an explicit caller ceiling. It encodes that length in canonical shortest

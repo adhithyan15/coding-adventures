@@ -179,10 +179,13 @@ def test_gf256_evaluator_agrees_with_the_documented_examples():
         # lower; ``ir.fixed`` built-ins are lowered, so a suite that uses them *and* tuples or
         # constructors counts under the latter (it used to count under the first construct met,
         # fixed or not).
-        ("wasm-leb128", {"ir.fixed": 8, "ir.tuple": 24}),
-        ("logic-gates", {"ir.fixed": 55, "ir.data": 3, "ir.tuple": 2}),
+        # S10t-1: ``ir.tuple`` is evaluated, so those suites are live (or ``ir.fixed`` when they
+        # also use a fixed-width built-in).  Was: wasm-leb128 fixed 8 + tuple 24, logic-gates
+        # fixed 55 + data 3 + tuple 2, arithmetic fixed 9 + data 45 + tuple 4.
+        ("wasm-leb128", {"ir.fixed": 24}),
+        ("logic-gates", {"ir.fixed": 57, "ir.data": 3}),
         ("lzw", {"ir.fixed": 17}),
-        ("arithmetic", {"ir.fixed": 9, "ir.data": 45, "ir.tuple": 4}),
+        ("arithmetic", {"ir.fixed": 11, "ir.data": 45}),
         ("x25519", {"ir.fixed": 2}),
     ],
 )
@@ -231,7 +234,7 @@ def test_census_counts_levels():
     c = census(lower_document(parse_source(adopter_bytes("arithmetic"))))
     assert (
         c["suites"] == 63
-        and c["suites_by_level"]["ir.fixed"] == 9
+        and c["suites_by_level"]["ir.fixed"] == 11
         and c["models_not_ir_core"] == 60
     )
 

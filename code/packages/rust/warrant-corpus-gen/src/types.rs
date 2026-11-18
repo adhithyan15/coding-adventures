@@ -49,6 +49,11 @@ pub enum Ty {
     Bytes(Option<Width>),
     /// `Result<T, E>`: the payload type and the *name* of the declared error type.
     Result(Box<Ty>, String),
+    /// `Option<T>`: an **IR-only intermediate** (VER04r 16.10 [D23], [R8]).  Nine `ir.fixed`
+    /// built-ins produce one and `unwrap_or` is its only consumer, as its first operand and
+    /// directly; the lowering refuses it everywhere else (level `ir.data`), so it never reaches
+    /// a signature, a binder or a stream.
+    Option(Box<Ty>),
 }
 
 impl Ty {
@@ -71,6 +76,7 @@ impl Ty {
             Ty::Bytes(Some(Width::Lit(n))) => format!("Bytes<{n}>"),
             Ty::Bytes(Some(Width::Param(p))) => format!("Bytes<{p}>"),
             Ty::Result(ok, err) => format!("Result<{},{err}>", ok.name()),
+            Ty::Option(inner) => format!("Option<{}>", inner.name()),
         }
     }
 

@@ -3,6 +3,11 @@ import { describe, it } from "node:test";
 import { fir, firFft, fir_fft } from "../src/index.js";
 
 describe("FIR filtering (direct and FFT convolution)", () => {
+  it("convolves one-sample operands and recognizes the one-tap identity", () => {
+    assert.deepEqual(Array.from(fir([2.0], [2.0])), [4.0]);
+    assert.deepEqual(Array.from(fir([1.0, -2.0, 3.0], [1.0])), [1.0, -2.0, 3.0]);
+  });
+
   it("convolves impulse with kernel: delta * h == h", () => {
     const delta = [1.0, 0.0, 0.0, 0.0];
     const kernel = [0.25, 0.5, 0.25];

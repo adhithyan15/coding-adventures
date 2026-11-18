@@ -5,6 +5,10 @@ uv pip install -e ".[dev]" --quiet
 .venv/bin/python -m coding_adventures_warrant_oracle verify-v1 --spec ../../../specs/ct-compare.warrant --corpus ../../../specs/fixtures/ct-compare-warrant-v1/corpus.json
 .venv/bin/python -m coding_adventures_warrant_oracle verify-v2 tests/fixtures/synth-v2/corpus --warrant tests/fixtures/synth-v2/synth.warrant --profile tests/fixtures/synth-v2/corpus.profile --expect-generator warrant-corpus-gen@0.5.0
 .venv/bin/python -m coding_adventures_warrant_oracle verify-v2 tests/fixtures/accept-blind-v2/corpus --warrant tests/fixtures/accept-blind-v2/blind.warrant --profile tests/fixtures/accept-blind-v2/corpus.profile
+# CV2-S10-1: the omit_example fixture (three omitted examples, both reasons); make_fixture.py
+# regenerates corpus/ from the oracle, verify-v2 gates it, and the generator's parity PR must match it.
+.venv/bin/python tests/fixtures/omit-example-v2/make_fixture.py --check
+.venv/bin/python -m coding_adventures_warrant_oracle verify-v2 tests/fixtures/omit-example-v2/corpus --warrant tests/fixtures/omit-example-v2/omit.warrant --profile tests/fixtures/omit-example-v2/corpus.profile --expect-generator warrant-corpus-gen@0.5.0
 # CV2-S3d: the committed ct-compare v2 fixture. --expect-generator pins the generator name and
 # version that corpus.json records ([D13], VER04r 16.8): a generator bump fails here until the
 # fixture is regenerated and this pin is reviewed with it. --profile is the fixture's own
@@ -21,5 +25,10 @@ uv pip install -e ".[dev]" --quiet
 # lowering dump, the file the generator's slice S10b must reproduce byte for byte.
 .venv/bin/python tests/fixtures/fixed-forms-v1/make_fixed_forms.py --check
 .venv/bin/python -m coding_adventures_warrant_oracle dump-lowering --spec tests/fixtures/fixed-forms-v1/fixed_forms_v1.warrant --check tests/fixtures/fixed-forms-v1/fixed_forms_v1.oracle-lowering.json
+# CV2-S10t-1: the synthetic ir.tuple document and its committed dumps (lowering, evaluation, faults,
+# refusals), the files the generator's slice S10t-2 must reproduce byte for byte.  make_tuple_forms.py
+# --check regenerates all six files; dump-lowering checks the lowering dump through the CLI too.
+.venv/bin/python tests/fixtures/tuple-forms-v1/make_tuple_forms.py --check
+.venv/bin/python -m coding_adventures_warrant_oracle dump-lowering --spec tests/fixtures/tuple-forms-v1/tuple_forms_v1.warrant --check tests/fixtures/tuple-forms-v1/tuple_forms_v1.oracle-lowering.json
 .venv/bin/python ../../rust/warrant-corpus-gen/tests/fixtures/dump_oracle_lowering.py --check
 .venv/bin/python ../../rust/warrant-corpus-gen/tests/fixtures/dump_oracle_enumeration.py --check

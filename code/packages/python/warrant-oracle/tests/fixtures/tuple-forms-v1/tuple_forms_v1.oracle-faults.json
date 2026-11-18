@@ -1,0 +1,1313 @@
+{
+  "accepted_blind_faults": [],
+  "controls_gate_on": [
+    {
+      "blind_claims": [],
+      "fault": "drop-last-result-byte",
+      "id": "warrant/tuple_forms/negctl/exhaustive/op_bits/drop-last-result-byte",
+      "op": "op_bits",
+      "required_claims": [
+        "warrant/tuple_forms/exhaustive/c_bits"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/tuple_forms/exhaustive/c_bits"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "flip-result-bit",
+      "id": "warrant/tuple_forms/negctl/exhaustive/op_bits/flip-result-bit",
+      "op": "op_bits",
+      "required_claims": [
+        "warrant/tuple_forms/exhaustive/c_bits"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/tuple_forms/exhaustive/c_bits",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "drop-last-result-byte",
+      "id": "warrant/tuple_forms/negctl/exhaustive/op_bytes/drop-last-result-byte",
+      "op": "op_bytes",
+      "required_claims": [
+        "warrant/tuple_forms/exhaustive/c_bytes"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/tuple_forms/exhaustive/c_bytes"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "flip-result-bit",
+      "id": "warrant/tuple_forms/negctl/exhaustive/op_bytes/flip-result-bit",
+      "op": "op_bytes",
+      "required_claims": [
+        "warrant/tuple_forms/exhaustive/c_bytes"
+      ],
+      "requires": [
+        "ir.fixed",
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/tuple_forms/exhaustive/c_bytes",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "drop-consumed",
+      "id": "warrant/tuple_forms/negctl/exhaustive/op_dec/drop-consumed",
+      "op": "op_dec",
+      "required_claims": [
+        "warrant/tuple_forms/exhaustive/c_dec"
+      ],
+      "requires": [
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/tuple_forms/exhaustive/c_dec"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "missing-error",
+      "id": "warrant/tuple_forms/negctl/exhaustive/op_dec/missing-error",
+      "op": "op_dec",
+      "required_claims": [
+        "warrant/tuple_forms/exhaustive/c_dec"
+      ],
+      "requires": [
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/tuple_forms/exhaustive/c_dec"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "ok-as-err",
+      "id": "warrant/tuple_forms/negctl/exhaustive/op_k/ok-as-err",
+      "op": "op_k",
+      "required_claims": [
+        "warrant/tuple_forms/exhaustive/c_k",
+        "warrant/tuple_forms/exhaustive/c_k_match"
+      ],
+      "requires": [
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/tuple_forms/exhaustive/c_k"
+        },
+        {
+          "claim": "warrant/tuple_forms/exhaustive/c_k_match",
+          "unproven": true
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "swap-components",
+      "id": "warrant/tuple_forms/negctl/exhaustive/op_k/swap-components",
+      "op": "op_k",
+      "required_claims": [
+        "warrant/tuple_forms/exhaustive/c_k",
+        "warrant/tuple_forms/exhaustive/c_k_match"
+      ],
+      "requires": [
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/tuple_forms/exhaustive/c_k"
+        },
+        {
+          "claim": "warrant/tuple_forms/exhaustive/c_k_match",
+          "unproven": true
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "swap-components",
+      "id": "warrant/tuple_forms/negctl/exhaustive/op_lit2/swap-components",
+      "op": "op_lit2",
+      "required_claims": [
+        "warrant/tuple_forms/exhaustive/c_lit2"
+      ],
+      "requires": [
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/tuple_forms/exhaustive/c_lit2"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "swap-components",
+      "id": "warrant/tuple_forms/negctl/exhaustive/op_lit3/swap-components",
+      "op": "op_lit3",
+      "required_claims": [
+        "warrant/tuple_forms/exhaustive/c_lit3"
+      ],
+      "requires": [
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/tuple_forms/exhaustive/c_lit3"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "drop-consumed",
+      "id": "warrant/tuple_forms/negctl/exhaustive/op_pair/drop-consumed",
+      "op": "op_pair",
+      "required_claims": [
+        "warrant/tuple_forms/exhaustive/c_pair",
+        "warrant/tuple_forms/exhaustive/c_pair_literal"
+      ],
+      "requires": [
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/tuple_forms/exhaustive/c_pair"
+        },
+        {
+          "claim": "warrant/tuple_forms/exhaustive/c_pair_literal",
+          "unproven": true
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "invert",
+      "id": "warrant/tuple_forms/negctl/exhaustive/op_proj_last8/invert",
+      "op": "op_proj_last8",
+      "required_claims": [
+        "warrant/tuple_forms/exhaustive/c_proj_last8"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/tuple_forms/exhaustive/c_proj_last8"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "flip-result-bit",
+      "id": "warrant/tuple_forms/negctl/exhaustive/op_u8/flip-result-bit",
+      "op": "op_u8",
+      "required_claims": [
+        "warrant/tuple_forms/exhaustive/c_u8"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/tuple_forms/exhaustive/c_u8",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "missing-error",
+      "id": "warrant/tuple_forms/negctl/exhaustive/op_zero/missing-error",
+      "op": "op_zero",
+      "required_claims": [
+        "warrant/tuple_forms/exhaustive/c_zero"
+      ],
+      "requires": [
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/tuple_forms/exhaustive/c_zero"
+        }
+      ],
+      "target_kind": "exhaustive"
+    }
+  ],
+  "controls_shipped": [
+    {
+      "blind_claims": [],
+      "fault": "drop-last-result-byte",
+      "id": "warrant/tuple_forms/negctl/exhaustive/op_bits/drop-last-result-byte",
+      "op": "op_bits",
+      "required_claims": [
+        "warrant/tuple_forms/exhaustive/c_bits"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/tuple_forms/exhaustive/c_bits"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "flip-result-bit",
+      "id": "warrant/tuple_forms/negctl/exhaustive/op_bits/flip-result-bit",
+      "op": "op_bits",
+      "required_claims": [
+        "warrant/tuple_forms/exhaustive/c_bits"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/tuple_forms/exhaustive/c_bits",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "drop-last-result-byte",
+      "id": "warrant/tuple_forms/negctl/exhaustive/op_bytes/drop-last-result-byte",
+      "op": "op_bytes",
+      "required_claims": [
+        "warrant/tuple_forms/exhaustive/c_bytes"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/tuple_forms/exhaustive/c_bytes",
+          "deferred": "ir.tuple"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "flip-result-bit",
+      "id": "warrant/tuple_forms/negctl/exhaustive/op_bytes/flip-result-bit",
+      "op": "op_bytes",
+      "required_claims": [
+        "warrant/tuple_forms/exhaustive/c_bytes"
+      ],
+      "requires": [
+        "ir.fixed",
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/tuple_forms/exhaustive/c_bytes",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "drop-consumed",
+      "id": "warrant/tuple_forms/negctl/exhaustive/op_dec/drop-consumed",
+      "op": "op_dec",
+      "required_claims": [
+        "warrant/tuple_forms/exhaustive/c_dec"
+      ],
+      "requires": [
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/tuple_forms/exhaustive/c_dec",
+          "deferred": "ir.tuple"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "missing-error",
+      "id": "warrant/tuple_forms/negctl/exhaustive/op_dec/missing-error",
+      "op": "op_dec",
+      "required_claims": [
+        "warrant/tuple_forms/exhaustive/c_dec"
+      ],
+      "requires": [
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/tuple_forms/exhaustive/c_dec",
+          "deferred": "ir.tuple"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "ok-as-err",
+      "id": "warrant/tuple_forms/negctl/exhaustive/op_k/ok-as-err",
+      "op": "op_k",
+      "required_claims": [
+        "warrant/tuple_forms/exhaustive/c_k",
+        "warrant/tuple_forms/exhaustive/c_k_match"
+      ],
+      "requires": [
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/tuple_forms/exhaustive/c_k",
+          "deferred": "ir.tuple"
+        },
+        {
+          "claim": "warrant/tuple_forms/exhaustive/c_k_match",
+          "unproven": true
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "swap-components",
+      "id": "warrant/tuple_forms/negctl/exhaustive/op_k/swap-components",
+      "op": "op_k",
+      "required_claims": [
+        "warrant/tuple_forms/exhaustive/c_k",
+        "warrant/tuple_forms/exhaustive/c_k_match"
+      ],
+      "requires": [
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/tuple_forms/exhaustive/c_k",
+          "deferred": "ir.tuple"
+        },
+        {
+          "claim": "warrant/tuple_forms/exhaustive/c_k_match",
+          "unproven": true
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "swap-components",
+      "id": "warrant/tuple_forms/negctl/exhaustive/op_lit2/swap-components",
+      "op": "op_lit2",
+      "required_claims": [
+        "warrant/tuple_forms/exhaustive/c_lit2"
+      ],
+      "requires": [
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/tuple_forms/exhaustive/c_lit2",
+          "deferred": "ir.tuple"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "swap-components",
+      "id": "warrant/tuple_forms/negctl/exhaustive/op_lit3/swap-components",
+      "op": "op_lit3",
+      "required_claims": [
+        "warrant/tuple_forms/exhaustive/c_lit3"
+      ],
+      "requires": [
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/tuple_forms/exhaustive/c_lit3",
+          "deferred": "ir.tuple"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "drop-consumed",
+      "id": "warrant/tuple_forms/negctl/exhaustive/op_pair/drop-consumed",
+      "op": "op_pair",
+      "required_claims": [
+        "warrant/tuple_forms/exhaustive/c_pair",
+        "warrant/tuple_forms/exhaustive/c_pair_literal"
+      ],
+      "requires": [
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/tuple_forms/exhaustive/c_pair",
+          "deferred": "ir.tuple"
+        },
+        {
+          "claim": "warrant/tuple_forms/exhaustive/c_pair_literal",
+          "unproven": true
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "invert",
+      "id": "warrant/tuple_forms/negctl/exhaustive/op_proj_last8/invert",
+      "op": "op_proj_last8",
+      "required_claims": [
+        "warrant/tuple_forms/exhaustive/c_proj_last8"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/tuple_forms/exhaustive/c_proj_last8",
+          "deferred": "ir.tuple"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "flip-result-bit",
+      "id": "warrant/tuple_forms/negctl/exhaustive/op_u8/flip-result-bit",
+      "op": "op_u8",
+      "required_claims": [
+        "warrant/tuple_forms/exhaustive/c_u8"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/tuple_forms/exhaustive/c_u8",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "missing-error",
+      "id": "warrant/tuple_forms/negctl/exhaustive/op_zero/missing-error",
+      "op": "op_zero",
+      "required_claims": [
+        "warrant/tuple_forms/exhaustive/c_zero"
+      ],
+      "requires": [
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/tuple_forms/exhaustive/c_zero",
+          "deferred": "ir.tuple"
+        }
+      ],
+      "target_kind": "exhaustive"
+    }
+  ],
+  "faults": [
+    {
+      "expr": [
+        "if",
+        [
+          "gt",
+          [
+            "len",
+            [
+              "var",
+              "result"
+            ]
+          ],
+          [
+            "lit",
+            {
+              "type": "Nat",
+              "value": "0"
+            }
+          ]
+        ],
+        [
+          "take",
+          [
+            "var",
+            "result"
+          ],
+          [
+            "sub",
+            [
+              "len",
+              [
+                "var",
+                "result"
+              ]
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "1"
+              }
+            ]
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "Bytes",
+            "value": "00"
+          }
+        ]
+      ],
+      "fault": "drop-last-result-byte",
+      "kind": "post",
+      "op": "op_bits",
+      "requires": [
+        "ir.core"
+      ]
+    },
+    {
+      "expr": [
+        "if",
+        [
+          "gt",
+          [
+            "len",
+            [
+              "var",
+              "result"
+            ]
+          ],
+          [
+            "lit",
+            {
+              "type": "Nat",
+              "value": "0"
+            }
+          ]
+        ],
+        [
+          "concat",
+          [
+            "be_bytes",
+            [
+              "bit_xor",
+              [
+                "unwrap_or",
+                [
+                  "at",
+                  [
+                    "var",
+                    "result"
+                  ],
+                  [
+                    "lit",
+                    {
+                      "type": "Nat",
+                      "value": "0"
+                    }
+                  ]
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "U8",
+                    "value": "0"
+                  }
+                ]
+              ],
+              [
+                "lit",
+                {
+                  "type": "U8",
+                  "value": "1"
+                }
+              ]
+            ]
+          ],
+          [
+            "drop",
+            [
+              "var",
+              "result"
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "1"
+              }
+            ]
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "Bytes",
+            "value": "01"
+          }
+        ]
+      ],
+      "fault": "flip-result-bit",
+      "kind": "post",
+      "op": "op_bits",
+      "requires": [
+        "ir.fixed"
+      ]
+    },
+    {
+      "expr": [
+        "match",
+        [
+          "var",
+          "result"
+        ],
+        [
+          [
+            [
+              "ok",
+              [
+                "bind",
+                "ok_payload"
+              ]
+            ],
+            [
+              "ok",
+              [
+                "if",
+                [
+                  "gt",
+                  [
+                    "len",
+                    [
+                      "var",
+                      "ok_payload"
+                    ]
+                  ],
+                  [
+                    "lit",
+                    {
+                      "type": "Nat",
+                      "value": "0"
+                    }
+                  ]
+                ],
+                [
+                  "take",
+                  [
+                    "var",
+                    "ok_payload"
+                  ],
+                  [
+                    "sub",
+                    [
+                      "len",
+                      [
+                        "var",
+                        "ok_payload"
+                      ]
+                    ],
+                    [
+                      "lit",
+                      {
+                        "type": "Nat",
+                        "value": "1"
+                      }
+                    ]
+                  ]
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "Bytes",
+                    "value": "00"
+                  }
+                ]
+              ]
+            ]
+          ],
+          [
+            [
+              "err_any"
+            ],
+            [
+              "var",
+              "result"
+            ]
+          ]
+        ]
+      ],
+      "fault": "drop-last-result-byte",
+      "kind": "post",
+      "op": "op_bytes",
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ]
+    },
+    {
+      "expr": [
+        "match",
+        [
+          "var",
+          "result"
+        ],
+        [
+          [
+            [
+              "ok",
+              [
+                "bind",
+                "ok_payload"
+              ]
+            ],
+            [
+              "ok",
+              [
+                "if",
+                [
+                  "gt",
+                  [
+                    "len",
+                    [
+                      "var",
+                      "ok_payload"
+                    ]
+                  ],
+                  [
+                    "lit",
+                    {
+                      "type": "Nat",
+                      "value": "0"
+                    }
+                  ]
+                ],
+                [
+                  "concat",
+                  [
+                    "be_bytes",
+                    [
+                      "bit_xor",
+                      [
+                        "unwrap_or",
+                        [
+                          "at",
+                          [
+                            "var",
+                            "ok_payload"
+                          ],
+                          [
+                            "lit",
+                            {
+                              "type": "Nat",
+                              "value": "0"
+                            }
+                          ]
+                        ],
+                        [
+                          "lit",
+                          {
+                            "type": "U8",
+                            "value": "0"
+                          }
+                        ]
+                      ],
+                      [
+                        "lit",
+                        {
+                          "type": "U8",
+                          "value": "1"
+                        }
+                      ]
+                    ]
+                  ],
+                  [
+                    "drop",
+                    [
+                      "var",
+                      "ok_payload"
+                    ],
+                    [
+                      "lit",
+                      {
+                        "type": "Nat",
+                        "value": "1"
+                      }
+                    ]
+                  ]
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "Bytes",
+                    "value": "01"
+                  }
+                ]
+              ]
+            ]
+          ],
+          [
+            [
+              "err_any"
+            ],
+            [
+              "var",
+              "result"
+            ]
+          ]
+        ]
+      ],
+      "fault": "flip-result-bit",
+      "kind": "post",
+      "op": "op_bytes",
+      "requires": [
+        "ir.fixed",
+        "ir.tuple"
+      ]
+    },
+    {
+      "expr": [
+        "match",
+        [
+          "var",
+          "result"
+        ],
+        [
+          [
+            [
+              "ok",
+              [
+                "bind",
+                "ok_payload"
+              ]
+            ],
+            [
+              "ok",
+              [
+                "tuple",
+                [
+                  [
+                    "project",
+                    [
+                      "var",
+                      "ok_payload"
+                    ],
+                    0
+                  ],
+                  [
+                    "lit",
+                    {
+                      "type": "Nat",
+                      "value": "0"
+                    }
+                  ]
+                ]
+              ]
+            ]
+          ],
+          [
+            [
+              "err_any"
+            ],
+            [
+              "var",
+              "result"
+            ]
+          ]
+        ]
+      ],
+      "fault": "drop-consumed",
+      "kind": "post",
+      "op": "op_dec",
+      "requires": [
+        "ir.tuple"
+      ]
+    },
+    {
+      "expr": [
+        "if",
+        [
+          "is_err",
+          [
+            "var",
+            "result"
+          ]
+        ],
+        [
+          "ok",
+          [
+            "tuple",
+            [
+              [
+                "var",
+                "a"
+              ],
+              [
+                "var",
+                "n"
+              ]
+            ]
+          ]
+        ],
+        [
+          "var",
+          "result"
+        ]
+      ],
+      "fault": "missing-error",
+      "kind": "replace",
+      "op": "op_dec",
+      "requires": [
+        "ir.tuple"
+      ]
+    },
+    {
+      "expr": [
+        "match",
+        [
+          "var",
+          "result"
+        ],
+        [
+          [
+            [
+              "ok",
+              [
+                "wild"
+              ]
+            ],
+            [
+              "err",
+              "Bad"
+            ]
+          ],
+          [
+            [
+              "err_any"
+            ],
+            [
+              "var",
+              "result"
+            ]
+          ]
+        ]
+      ],
+      "fault": "ok-as-err",
+      "kind": "post",
+      "op": "op_k",
+      "requires": [
+        "ir.tuple"
+      ]
+    },
+    {
+      "expr": [
+        "match",
+        [
+          "var",
+          "result"
+        ],
+        [
+          [
+            [
+              "ok",
+              [
+                "bind",
+                "ok_payload"
+              ]
+            ],
+            [
+              "ok",
+              [
+                "tuple",
+                [
+                  [
+                    "project",
+                    [
+                      "var",
+                      "ok_payload"
+                    ],
+                    1
+                  ],
+                  [
+                    "project",
+                    [
+                      "var",
+                      "ok_payload"
+                    ],
+                    0
+                  ]
+                ]
+              ]
+            ]
+          ],
+          [
+            [
+              "err_any"
+            ],
+            [
+              "var",
+              "result"
+            ]
+          ]
+        ]
+      ],
+      "fault": "swap-components",
+      "kind": "post",
+      "op": "op_k",
+      "requires": [
+        "ir.tuple"
+      ]
+    },
+    {
+      "expr": [
+        "tuple",
+        [
+          [
+            "project",
+            [
+              "var",
+              "result"
+            ],
+            1
+          ],
+          [
+            "project",
+            [
+              "var",
+              "result"
+            ],
+            0
+          ]
+        ]
+      ],
+      "fault": "swap-components",
+      "kind": "post",
+      "op": "op_lit2",
+      "requires": [
+        "ir.tuple"
+      ]
+    },
+    {
+      "expr": [
+        "tuple",
+        [
+          [
+            "project",
+            [
+              "var",
+              "result"
+            ],
+            2
+          ],
+          [
+            "project",
+            [
+              "var",
+              "result"
+            ],
+            1
+          ],
+          [
+            "project",
+            [
+              "var",
+              "result"
+            ],
+            0
+          ]
+        ]
+      ],
+      "fault": "swap-components",
+      "kind": "post",
+      "op": "op_lit3",
+      "requires": [
+        "ir.tuple"
+      ]
+    },
+    {
+      "expr": [
+        "tuple",
+        [
+          [
+            "project",
+            [
+              "var",
+              "result"
+            ],
+            0
+          ],
+          [
+            "lit",
+            {
+              "type": "Nat",
+              "value": "0"
+            }
+          ]
+        ]
+      ],
+      "fault": "drop-consumed",
+      "kind": "post",
+      "op": "op_pair",
+      "requires": [
+        "ir.tuple"
+      ]
+    },
+    {
+      "expr": [
+        "not",
+        [
+          "var",
+          "result"
+        ]
+      ],
+      "fault": "invert",
+      "kind": "post",
+      "op": "op_proj_last8",
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ]
+    },
+    {
+      "expr": [
+        "bit_xor",
+        [
+          "var",
+          "result"
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "1"
+          }
+        ]
+      ],
+      "fault": "flip-result-bit",
+      "kind": "post",
+      "op": "op_u8",
+      "requires": [
+        "ir.fixed"
+      ]
+    },
+    {
+      "expr": [
+        "if",
+        [
+          "is_err",
+          [
+            "var",
+            "result"
+          ]
+        ],
+        [
+          "ok",
+          [
+            "tuple",
+            [
+              [
+                "lit",
+                false
+              ],
+              [
+                "lit",
+                {
+                  "type": "Nat",
+                  "value": "0"
+                }
+              ]
+            ]
+          ]
+        ],
+        [
+          "var",
+          "result"
+        ]
+      ],
+      "fault": "missing-error",
+      "kind": "replace",
+      "op": "op_zero",
+      "requires": [
+        "ir.tuple"
+      ]
+    }
+  ],
+  "levels_gate_on": [
+    "ir.core",
+    "ir.fixed",
+    "ir.tuple"
+  ],
+  "levels_shipped": [
+    "ir.core",
+    "ir.fixed",
+    "ir.tuple"
+  ],
+  "module": "tuple_forms",
+  "schema": "warrant-fault-parity-v1"
+}

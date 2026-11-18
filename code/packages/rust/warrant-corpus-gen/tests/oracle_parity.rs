@@ -86,7 +86,9 @@ fn the_fixtures_are_canonical_json_with_one_final_newline_and_no_cr() {
 fn kids_mut(ir: &mut Ir) -> Vec<&mut Ir> {
     match ir {
         Ir::Bool(_) | Ir::Int { .. } | Ir::Bytes(_) | Ir::Var(_) | Ir::Err(_) => vec![],
-        Ir::Subject { args, .. } | Ir::Model { args, .. } => args.iter_mut().collect(),
+        Ir::Subject { args, .. } | Ir::Model { args, .. } | Ir::Fixed { args, .. } => {
+            args.iter_mut().collect()
+        }
         Ir::Len(a) | Ir::Ok(a) | Ir::Not(a) | Ir::IsErr(a) | Ir::Neg(_, a) => vec![a],
         Ir::Cmp(_, a, b)
         | Ir::Arith(_, _, a, b)

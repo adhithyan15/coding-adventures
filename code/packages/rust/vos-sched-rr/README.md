@@ -62,7 +62,7 @@ this implementation: `vos-link check-profile` rejects the swap, which is the poi
 | `evidence.bindings` | the VER04h bindings: every operation is bound to a `vos_ghost_` wrapper with its faults |
 | `tests/generated/warrant_evidence.rs` | the generated suites and negative controls (never edited; BUILD checks it for drift) |
 | `evidence/test-manifest.json` | the evidence manifest written by the last real run |
-| `warrant/check_evidence.sh` | runs the suite and names the three known-inert controls |
+| `warrant/check_evidence.sh` | runs the suite and names the three controls that still cannot pass (VOS-D098) |
 | `tests/behaviour.rs` | hand-written tests against a plain scan reference, with and without `ghost` |
 | `code/specs/vos-sched-rr.warrant` | the **generated** document (`vos-link gen-doc`); never edited by hand |
 
@@ -77,10 +77,12 @@ sh warrant/check_evidence.sh                                                    
 16 exhaustive claims, 1,573,380 cases, the largest 262,144 (65.5% of the 400,000 budget), plus the same 16 as
 property and fuzz suites. The 13 contract claims are the representation tier's eight and the safety
 tier's five; the own ones are `dispatch_det_out`, `dispatch_det_img` and `pointer_kept`.
-Three controls cannot pass: `init` / `field-zero` (the initial mask is already 0; VOS-D065);
-`warrant/check_evidence.sh` requires cargo status 1, exactly 74 ok and exactly those three
-failures. The claims `rep_init`, `dispatch_rep_post` and `safety_init` have no sabotage line in BUILD:
-no fault the generator offers changes what they see (VOS-D087).
+Three controls cannot pass: `init` / `field-flip` (VOS-038a, WX-SV2). The only claim whose subject is
+`init` is `rep_init`, which says the state is in the image of `rep`, and a flip of `mask` stays in it
+(VOS-D087); `warrant/check_evidence.sh` requires cargo status 1, exactly 78 ok and exactly those three
+failures, until VOS-D098 lets `safety_init` (which does catch it) count for `init`. The claims
+`rep_init`, `dispatch_rep_post` and `safety_init` do have sabotage lines now: `field-flip` aimed at
+`alpha_w` (and, for `safety_init`, at `init`) with `WARRANT_EVIDENCE_ATTACK`.
 
 Mutation sanity (scratch edits of the source, restored): an `insert` that resets `ptr` fails
 `pointer_kept` (and four behaviour tests); a `dispatch` that sets `ptr = t` or scans from 0 fails

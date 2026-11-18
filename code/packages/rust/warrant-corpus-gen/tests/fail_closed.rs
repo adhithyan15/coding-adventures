@@ -48,13 +48,24 @@ fn match_needs_ir_data() {
 }
 
 #[test]
-fn a_tuple_projection_needs_ir_data() {
+fn a_tuple_projection_needs_ir_tuple() {
+    // S10b: a tuple literal and `project` are `ir.tuple` (VER04r 4.1, D20), not `ir.data`.
     let m = "  model tp(a: U8) -> U8 = (a, a).0\n";
     assert_level(
         &doc_ops(" v1", &["op f(a: Bytes, b: Bytes) -> Bool"], m),
-        "ir.data",
+        "ir.tuple",
         "tp",
     );
+}
+
+#[test]
+fn match_on_a_result_is_ir_tuple_and_on_anything_else_ir_data() {
+    // D35: `match` is `ir.tuple` exactly when the scrutinee's static type is a `Result`.
+    let ops = ["op f(a: Bytes, b: Bytes) -> Bool"];
+    let r2 = "  error E = BAD\n  model mk(a: U8) -> Result<U8, E> = Ok(a)\n  model rr(a: U8) -> U8 = match mk(a) with Ok(x) -> x | Err(e) -> 0u8\n";
+    assert_level(&doc_ops(" v1", &ops, r2), "ir.tuple", "rr");
+    let o = "  model oo(o: Bool) -> U8 = match o with true -> 1u8 | false -> 0u8\n";
+    assert_level(&doc_ops(" v1", &ops, o), "ir.data", "oo");
 }
 
 #[test]
@@ -78,11 +89,11 @@ fn constructors_and_option_built_ins_need_ir_data() {
 }
 
 #[test]
-fn a_tuple_type_in_a_model_signature_needs_ir_data() {
+fn a_tuple_type_in_a_model_signature_needs_ir_tuple() {
     let m = "  model tt(a: U8) -> (U8, U8) = (a, a)\n";
     assert_level(
         &doc_ops(" v1", &["op f(a: Bytes, b: Bytes) -> Bool"], m),
-        "ir.data",
+        "ir.tuple",
         "tt",
     );
 }
@@ -275,7 +286,7 @@ fn census_reports_each_blocked_item_without_failing_the_document() {
     );
     assert_eq!(
         get(ItemKind::Model, "dat").blocked.as_ref().unwrap().level,
-        Some("ir.data")
+        Some("ir.tuple")
     );
     // a model that calls a blocked model inherits the blocker
     assert_eq!(
@@ -301,7 +312,7 @@ fn census_reports_each_blocked_item_without_failing_the_document() {
             .as_ref()
             .unwrap()
             .level,
-        Some("ir.data")
+        Some("ir.tuple")
     );
     assert!(get(ItemKind::Example, "e_clean").blocked.is_none());
     // and the whole document is refused with the first blocker in declaration order
@@ -474,11 +485,16 @@ fn an_op_refinement_beyond_ir_core_blocks_the_op_and_its_callers() {
         .find(|r| r.kind == ItemKind::Op && r.name == "g")
         .unwrap();
     assert_eq!(op.blocked.as_ref().unwrap().level, Some("ir.fixed"));
+    // S10b: a claim that lowers within `ir.core` is not blocked by its callee's `admit`; the
+    // oracle's `requires` does not read it either (R9 is on the unit's own tags and models).
+    // The document is still refused, at the op, so `generate` stays closed.
     let claim = rows
         .iter()
         .find(|r| r.kind == ItemKind::Claim && r.name == "cg")
         .unwrap();
-    assert_eq!(claim.blocked.as_ref().unwrap().level, Some("ir.fixed"));
+    assert!(claim.blocked.is_none());
+    let e = with_file(&src, |f| lower_document(f).unwrap_err());
+    assert_eq!((e.level, e.at.as_str()), (Some("ir.fixed"), "g"));
 }
 
 #[test]
@@ -499,7 +515,7 @@ fn an_alias_of_a_core_type_is_resolved_away_and_an_alias_of_a_tuple_is_refused()
         &["op f(a: Bytes, b: Bytes) -> Bool"],
         "  model Pair = (U8, U8)\n  model uses(a: Pair) -> Bool = true\n",
     );
-    assert_level(&tuple, "ir.data", "uses");
+    assert_level(&tuple, "ir.tuple", "uses");
 }
 
 // ---- M1: the v0 guard through a model call; L4: examples; L3 ----------------------------

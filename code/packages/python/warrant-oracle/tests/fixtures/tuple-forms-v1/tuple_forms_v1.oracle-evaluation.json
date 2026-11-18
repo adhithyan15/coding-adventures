@@ -1,0 +1,3642 @@
+{
+  "budget": 16777216,
+  "cases_tfv": "tfv 1\nwarrant/tuple_forms/example/e_pair R4 Kop S6f705f70616972 Ka T Kn I3 Kexpect L2 T I3\nwarrant/tuple_forms/example/e_lit2 R4 Kop S6f705f6c697432 Ka T Kb F Kexpect L2 T F\nwarrant/tuple_forms/example/e_nested R5 Kop S6f705f6e6573746564 Ka T Kb F Kc T Kexpect L2 L2 T F T\nwarrant/tuple_forms/example/e_tuple_arg R3 Kop S6f705f73776170 Kt L2 T F Kexpect L2 F T\nwarrant/tuple_forms/example/e_k_ok R4 Kop S6f705f6b Ka T Kb F Kexpect M1 S6f6b L2 T F\nwarrant/tuple_forms/example/e_k_err R4 Kop S6f705f6b Ka T Kb T Kexpect M1 S657272 S576f727365\nwarrant/tuple_forms/example/e_dec R4 Kop S6f705f646563 Ka T Kn I7 Kexpect M1 S6f6b L2 T I7\nwarrant/tuple_forms/example/e_result_arg R3 Kop S6f705f666c6970 Kr M1 S6f6b L2 T F Kexpect M1 S6f6b L2 F T\n",
+  "chunk_size": 1024,
+  "document": "v1",
+  "examples": [
+    {
+      "args": [
+        true,
+        "3"
+      ],
+      "expected": [
+        true,
+        "3"
+      ],
+      "id": "warrant/tuple_forms/example/e_pair",
+      "op": "op_pair",
+      "result_type": "(Bool,Nat)"
+    },
+    {
+      "args": [
+        true,
+        false
+      ],
+      "expected": [
+        true,
+        false
+      ],
+      "id": "warrant/tuple_forms/example/e_lit2",
+      "op": "op_lit2",
+      "result_type": "(Bool,Bool)"
+    },
+    {
+      "args": [
+        true,
+        false,
+        true
+      ],
+      "expected": [
+        [
+          true,
+          false
+        ],
+        true
+      ],
+      "id": "warrant/tuple_forms/example/e_nested",
+      "op": "op_nested",
+      "result_type": "((Bool,Bool),Bool)"
+    },
+    {
+      "args": [
+        [
+          true,
+          false
+        ]
+      ],
+      "expected": [
+        false,
+        true
+      ],
+      "id": "warrant/tuple_forms/example/e_tuple_arg",
+      "op": "op_swap",
+      "result_type": "(Bool,Bool)"
+    },
+    {
+      "args": [
+        true,
+        false
+      ],
+      "expected": {
+        "ok": [
+          true,
+          false
+        ]
+      },
+      "id": "warrant/tuple_forms/example/e_k_ok",
+      "op": "op_k",
+      "result_type": "Result<(Bool,Bool),TupleError>"
+    },
+    {
+      "args": [
+        true,
+        true
+      ],
+      "expected": {
+        "err": "Worse"
+      },
+      "id": "warrant/tuple_forms/example/e_k_err",
+      "op": "op_k",
+      "result_type": "Result<(Bool,Bool),TupleError>"
+    },
+    {
+      "args": [
+        true,
+        "7"
+      ],
+      "expected": {
+        "ok": [
+          true,
+          "7"
+        ]
+      },
+      "id": "warrant/tuple_forms/example/e_dec",
+      "op": "op_dec",
+      "result_type": "Result<(Bool,Nat),TupleError>"
+    },
+    {
+      "args": [
+        {
+          "ok": [
+            true,
+            false
+          ]
+        }
+      ],
+      "expected": {
+        "ok": [
+          false,
+          true
+        ]
+      },
+      "id": "warrant/tuple_forms/example/e_result_arg",
+      "op": "op_flip",
+      "result_type": "Result<(Bool,Bool),TupleError>"
+    }
+  ],
+  "levels": [
+    "ir.core",
+    "ir.fixed",
+    "ir.tuple"
+  ],
+  "max_ir_cost": 2000,
+  "module": "tuple_forms",
+  "omitted_examples": [
+    {
+      "id": "warrant/tuple_forms/example/e_match_err",
+      "reason": "not-op-eq-pure"
+    },
+    {
+      "id": "warrant/tuple_forms/example/e_match_ok",
+      "reason": "not-op-eq-pure"
+    }
+  ],
+  "ops": {
+    "op_bits": [
+      "ir.core"
+    ],
+    "op_bytes": [
+      "ir.core"
+    ],
+    "op_dec": [
+      "ir.core",
+      "ir.tuple"
+    ],
+    "op_deep": [
+      "ir.core",
+      "ir.tuple"
+    ],
+    "op_flip": [
+      "ir.core",
+      "ir.tuple"
+    ],
+    "op_inc": [
+      "ir.core"
+    ],
+    "op_k": [
+      "ir.core",
+      "ir.tuple"
+    ],
+    "op_lit2": [
+      "ir.core",
+      "ir.tuple"
+    ],
+    "op_lit3": [
+      "ir.core",
+      "ir.tuple"
+    ],
+    "op_lit4": [
+      "ir.core",
+      "ir.tuple"
+    ],
+    "op_lit5": [
+      "ir.core",
+      "ir.tuple"
+    ],
+    "op_lit6": [
+      "ir.core",
+      "ir.tuple"
+    ],
+    "op_lit7": [
+      "ir.core",
+      "ir.tuple"
+    ],
+    "op_lit8": [
+      "ir.core",
+      "ir.tuple"
+    ],
+    "op_lit_arith": [
+      "ir.core",
+      "ir.tuple"
+    ],
+    "op_lit_ctx": [
+      "ir.core",
+      "ir.tuple"
+    ],
+    "op_m_arith_arm": [
+      "ir.core"
+    ],
+    "op_m_bind_whole": [
+      "ir.core"
+    ],
+    "op_m_err_any_last": [
+      "ir.core"
+    ],
+    "op_m_err_cases": [
+      "ir.core"
+    ],
+    "op_m_inner_match": [
+      "ir.core"
+    ],
+    "op_m_nested_match": [
+      "ir.core"
+    ],
+    "op_m_ok_bind": [
+      "ir.core"
+    ],
+    "op_m_ok_nested": [
+      "ir.core",
+      "ir.tuple"
+    ],
+    "op_m_ok_tuple": [
+      "ir.core",
+      "ir.tuple"
+    ],
+    "op_m_ok_tuple_wild": [
+      "ir.core",
+      "ir.tuple"
+    ],
+    "op_m_ok_wild": [
+      "ir.core",
+      "ir.tuple"
+    ],
+    "op_m_on_call": [
+      "ir.core"
+    ],
+    "op_m_returns_result": [
+      "ir.core",
+      "ir.tuple"
+    ],
+    "op_m_returns_tuple": [
+      "ir.core",
+      "ir.tuple"
+    ],
+    "op_m_wild_arm": [
+      "ir.core"
+    ],
+    "op_mixed": [
+      "ir.core",
+      "ir.tuple"
+    ],
+    "op_nested": [
+      "ir.core",
+      "ir.tuple"
+    ],
+    "op_pair": [
+      "ir.core",
+      "ir.tuple"
+    ],
+    "op_proj0": [
+      "ir.core",
+      "ir.tuple"
+    ],
+    "op_proj1": [
+      "ir.core",
+      "ir.tuple"
+    ],
+    "op_proj_chain": [
+      "ir.core",
+      "ir.tuple"
+    ],
+    "op_proj_last8": [
+      "ir.core",
+      "ir.tuple"
+    ],
+    "op_proj_literal": [
+      "ir.core"
+    ],
+    "op_proj_postfix": [
+      "ir.core"
+    ],
+    "op_small": [
+      "ir.core"
+    ],
+    "op_swap": [
+      "ir.core",
+      "ir.tuple"
+    ],
+    "op_tup_eq": [
+      "ir.core",
+      "ir.tuple"
+    ],
+    "op_tup_eq_lit": [
+      "ir.core",
+      "ir.tuple"
+    ],
+    "op_tup_ne": [
+      "ir.core",
+      "ir.tuple"
+    ],
+    "op_u8": [
+      "ir.core"
+    ],
+    "op_zero": [
+      "ir.core",
+      "ir.tuple"
+    ]
+  },
+  "schema": "warrant-evaluation-parity-v1",
+  "suites": {
+    "c_admit_match": {
+      "binders": [
+        [
+          "r",
+          {
+            "domain": {
+              "d": "result",
+              "errs": [
+                "Bad",
+                "Worse",
+                "Worst"
+              ],
+              "ok": {
+                "d": "tuple",
+                "of": [
+                  {
+                    "d": "bool",
+                    "size": 2
+                  },
+                  {
+                    "d": "bool",
+                    "size": 2
+                  }
+                ],
+                "size": 4
+              },
+              "size": 7
+            },
+            "type": "Result<(Bool,Bool),TupleError>"
+          }
+        ]
+      ],
+      "cases": 6,
+      "chunk_lines": [
+        "0 6 0 6 56bee5d7ec703df5e442ee86fa924da75368684034dd01834b18ac55dc041874 66c25a0af1fbd5ef7d0c084d07fd31e4743ddc06b26cfa1ffc3327fcb3d00a59"
+      ],
+      "chunks": 1,
+      "claim": "c_admit_match",
+      "demoted": [],
+      "discarded": 1,
+      "domain_label": "full",
+      "expected_calls": 6,
+      "expected_sha256": "bf6c88ca7c02fa215e180d7aa4d2e29e873ee9af5fab46d74822b8eaead99e3d",
+      "id": "warrant/tuple_forms/exhaustive/c_admit_match",
+      "inputs_sha256": "edafa1217d62d3774e043c5ef16537c6d94759ab754d35b1fa1abd463752aa69",
+      "ir_cost": 22,
+      "kind": "exhaustive",
+      "product": 7,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Bool",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "bf6c88ca7c02fa215e180d7aa4d2e29e873ee9af5fab46d74822b8eaead99e3d",
+      "slim_inputs_sha256": "edafa1217d62d3774e043c5ef16537c6d94759ab754d35b1fa1abd463752aa69",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_arm_admit_call": {
+      "binders": [
+        [
+          "r",
+          {
+            "domain": {
+              "d": "result",
+              "errs": [
+                "Bad",
+                "Worse",
+                "Worst"
+              ],
+              "ok": {
+                "d": "u8_all",
+                "size": 256
+              },
+              "size": 259
+            },
+            "type": "Result<U8,TupleError>"
+          }
+        ]
+      ],
+      "cases": 103,
+      "chunk_lines": [
+        "0 103 0 100 ce87f21994ed1c0fec0583f97aa7f60c8092f52beeb242d0d368052f6050357d"
+      ],
+      "chunks": 1,
+      "claim": "c_arm_admit_call",
+      "demoted": [],
+      "discarded": 156,
+      "domain_label": "full",
+      "expected_calls": 100,
+      "id": "warrant/tuple_forms/exhaustive/c_arm_admit_call",
+      "inputs_sha256": "dd98df146275b95faee2d8c15d3a1a07911f73396fa54f8c646b2d2d78a3ac83",
+      "ir_cost": 11,
+      "kind": "exhaustive",
+      "product": 259,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Bool",
+      "slim_chunks": [
+        0
+      ],
+      "slim_inputs_sha256": "dd98df146275b95faee2d8c15d3a1a07911f73396fa54f8c646b2d2d78a3ac83",
+      "stream": "warrant-stream-v1",
+      "v1_inputs_sha256": "d0a443b9068d34744cf6a839eb540b47105e34d4853b30c7a4575166214f4290",
+      "wraps": 0
+    },
+    "c_arm_calls": {
+      "binders": [
+        [
+          "r",
+          {
+            "domain": {
+              "d": "result",
+              "errs": [
+                "Bad",
+                "Worse",
+                "Worst"
+              ],
+              "ok": {
+                "d": "u8_all",
+                "size": 256
+              },
+              "size": 259
+            },
+            "type": "Result<U8,TupleError>"
+          }
+        ]
+      ],
+      "cases": 259,
+      "chunk_lines": [
+        "0 259 0 256 b063347e7348427787b64314af22b1d7d32e687ae5fff59320b53129518cc179"
+      ],
+      "chunks": 1,
+      "claim": "c_arm_calls",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 256,
+      "id": "warrant/tuple_forms/exhaustive/c_arm_calls",
+      "inputs_sha256": "22b9ffabd6eb876a4ded1a155f93245af3f85190b5af8465ee5e1fdab95b245a",
+      "ir_cost": 9,
+      "kind": "exhaustive",
+      "product": 259,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Bool",
+      "slim_chunks": [
+        0
+      ],
+      "slim_inputs_sha256": "22b9ffabd6eb876a4ded1a155f93245af3f85190b5af8465ee5e1fdab95b245a",
+      "stream": "warrant-stream-v1",
+      "v1_inputs_sha256": "7b466f2dfdf3ab7a7301f4279eea9c33cea7862dc00cc4a7555098d59658587c",
+      "wraps": 1
+    },
+    "c_bits": {
+      "binders": [
+        [
+          "d",
+          {
+            "domain": {
+              "d": "bytes_n",
+              "n": 2,
+              "size": 16
+            },
+            "type": "Bytes<2>"
+          }
+        ]
+      ],
+      "cases": 16,
+      "chunk_lines": [
+        "0 16 0 16 12ef083135800446e5551d31d78ff7bef306d18d66cde771e39ea87992f0fb86 12ef083135800446e5551d31d78ff7bef306d18d66cde771e39ea87992f0fb86"
+      ],
+      "chunks": 1,
+      "claim": "c_bits",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "sample",
+      "expected_calls": 16,
+      "expected_sha256": "0a149e38f4ba9e6e527f010166acc8ff508deccdff83d35b9e97ffb3c649802e",
+      "id": "warrant/tuple_forms/exhaustive/c_bits",
+      "inputs_sha256": "0a149e38f4ba9e6e527f010166acc8ff508deccdff83d35b9e97ffb3c649802e",
+      "ir_cost": 6,
+      "kind": "exhaustive",
+      "product": 16,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "Bytes<2>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "0a149e38f4ba9e6e527f010166acc8ff508deccdff83d35b9e97ffb3c649802e",
+      "slim_inputs_sha256": "0a149e38f4ba9e6e527f010166acc8ff508deccdff83d35b9e97ffb3c649802e",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "01a17ca7b405fb01151986961da54d9b87192ff425b2f9aa6d021aa3ebe6b7a7",
+      "v1_inputs_sha256": "01a17ca7b405fb01151986961da54d9b87192ff425b2f9aa6d021aa3ebe6b7a7",
+      "wraps": 0
+    },
+    "c_bytes": {
+      "binders": [
+        [
+          "d",
+          {
+            "domain": {
+              "d": "bytes_n",
+              "n": 2,
+              "size": 16
+            },
+            "type": "Bytes<2>"
+          }
+        ]
+      ],
+      "cases": 16,
+      "chunk_lines": [
+        "0 16 0 16 5ffb31fb0140de7bb53b5b575d92cd3033229abf819afc16e87935724159efaa f6b9eed6eb481098c0f66a51332d38b6d777ca3f66537ae400cf3a50ef103315"
+      ],
+      "chunks": 1,
+      "claim": "c_bytes",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "sample",
+      "expected_calls": 16,
+      "expected_sha256": "90792eb57617729891c0250613aa289dc8939b62d2366bb4c9c142d88d47c8a6",
+      "id": "warrant/tuple_forms/exhaustive/c_bytes",
+      "inputs_sha256": "2dbef878e9597b7830afb22c44cb5311e4e45f82b2f22e6db4677e14eb9df3b2",
+      "ir_cost": 18,
+      "kind": "exhaustive",
+      "product": 16,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "Result<Bytes<2>,TupleError>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "90792eb57617729891c0250613aa289dc8939b62d2366bb4c9c142d88d47c8a6",
+      "slim_inputs_sha256": "2dbef878e9597b7830afb22c44cb5311e4e45f82b2f22e6db4677e14eb9df3b2",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "0ad2f02a640404c2bfbcd16361b3723f6d771f90e9fd56ab3ce0897dd6b9574a",
+      "v1_inputs_sha256": "211d5f2d81eb2ecb224f4c527ec1e1ec2761064d3c1da0ef8ff990da9b13ec64",
+      "wraps": 0
+    },
+    "c_dec": {
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ],
+        [
+          "n",
+          {
+            "domain": {
+              "d": "nat_0_64",
+              "size": 65
+            },
+            "type": "Nat"
+          }
+        ]
+      ],
+      "cases": 130,
+      "chunk_lines": [
+        "0 130 0 130 7bb9d78d815759c36ee453986bed6e6962442137c181d5edf9196460712b643c bc11efa637d7050c65e66f5e9e481ed1dcf3c16019b97e6bdc96c8a8f39973c0"
+      ],
+      "chunks": 1,
+      "claim": "c_dec",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "bounded-set",
+      "expected_calls": 130,
+      "expected_sha256": "3e70325047000fba2b422056606fc76a960ce6365c8f4461760fa40144288ef0",
+      "id": "warrant/tuple_forms/exhaustive/c_dec",
+      "inputs_sha256": "ac9258dbe3e8b0572bfc02a3e55293ec126183c24cc312756297f500e8135763",
+      "ir_cost": 27,
+      "kind": "exhaustive",
+      "product": 130,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Result<(Bool,Nat),TupleError>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "3e70325047000fba2b422056606fc76a960ce6365c8f4461760fa40144288ef0",
+      "slim_inputs_sha256": "ac9258dbe3e8b0572bfc02a3e55293ec126183c24cc312756297f500e8135763",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_deep": {
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ]
+      ],
+      "cases": 2,
+      "chunk_lines": [
+        "0 2 0 2 acef6a4a617476806f303b4ef2db41845baf21d423b27ff9675daa6b414a3da7 ae1b8f5afb6331171f208db95c0ada937739c840d66547c38acdeab20594be8a"
+      ],
+      "chunks": 1,
+      "claim": "c_deep",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 2,
+      "expected_sha256": "50f292e3e851edce5dc690d8392fef49e3fd8d368a940a73fa53bf1d4da8bf1d",
+      "id": "warrant/tuple_forms/exhaustive/c_deep",
+      "inputs_sha256": "e548a537db5eaa13f7b4a296518d2c6bb756fa16385c149de1a51a17eb653a3d",
+      "ir_cost": 24,
+      "kind": "exhaustive",
+      "product": 2,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "(((Bool,Nat),Bool),Bytes<0>)",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "50f292e3e851edce5dc690d8392fef49e3fd8d368a940a73fa53bf1d4da8bf1d",
+      "slim_inputs_sha256": "e548a537db5eaa13f7b4a296518d2c6bb756fa16385c149de1a51a17eb653a3d",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_flip": {
+      "binders": [
+        [
+          "r",
+          {
+            "domain": {
+              "d": "result",
+              "errs": [
+                "Bad",
+                "Worse",
+                "Worst"
+              ],
+              "ok": {
+                "d": "tuple",
+                "of": [
+                  {
+                    "d": "bool",
+                    "size": 2
+                  },
+                  {
+                    "d": "bool",
+                    "size": 2
+                  }
+                ],
+                "size": 4
+              },
+              "size": 7
+            },
+            "type": "Result<(Bool,Bool),TupleError>"
+          }
+        ]
+      ],
+      "cases": 7,
+      "chunk_lines": [
+        "0 7 0 7 b87cb1e77881631755be993fc812658b314f073c98bc2c257f2fa9803e5d03a8 60e9a8c3f58ccaea4d88d817afd0787cb939492672490997c5f0b967cac91671"
+      ],
+      "chunks": 1,
+      "claim": "c_flip",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 7,
+      "expected_sha256": "6fe5f8f82a5d28aade09168632a1cd6f4c720fa63f3e68592b41388d25ea410e",
+      "id": "warrant/tuple_forms/exhaustive/c_flip",
+      "inputs_sha256": "ac7bb5a061124e57eab9765221477ad67915645a59a54a8f0d897b9ed93aa9dc",
+      "ir_cost": 20,
+      "kind": "exhaustive",
+      "product": 7,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Result<(Bool,Bool),TupleError>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "6fe5f8f82a5d28aade09168632a1cd6f4c720fa63f3e68592b41388d25ea410e",
+      "slim_inputs_sha256": "ac7bb5a061124e57eab9765221477ad67915645a59a54a8f0d897b9ed93aa9dc",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_flip_inline": {
+      "binders": [
+        [
+          "r",
+          {
+            "domain": {
+              "d": "result",
+              "errs": [
+                "Bad",
+                "Worse",
+                "Worst"
+              ],
+              "ok": {
+                "d": "tuple",
+                "of": [
+                  {
+                    "d": "bool",
+                    "size": 2
+                  },
+                  {
+                    "d": "bool",
+                    "size": 2
+                  }
+                ],
+                "size": 4
+              },
+              "size": 7
+            },
+            "type": "Result<(Bool,Bool),TupleError>"
+          }
+        ]
+      ],
+      "cases": 7,
+      "chunk_lines": [
+        "0 7 0 7 8611c25eddb8e28c15b7afd8527ab9a355b9634724866d0d3ddafc02fb7c1359 162a8be2b71f7de4beb853161bd6e42abbc081158fd3f820fef692d7f4b0035c"
+      ],
+      "chunks": 1,
+      "claim": "c_flip_inline",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 7,
+      "expected_sha256": "2574d2c941ccd7501dad208cd8e6c7e7b6dc4fd9426ca3d7846bcd5965982563",
+      "id": "warrant/tuple_forms/exhaustive/c_flip_inline",
+      "inputs_sha256": "09b924065a946dae97292aa981431b2b29a6cc4e45549da95d33192a4a0cc753",
+      "ir_cost": 16,
+      "kind": "exhaustive",
+      "product": 7,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Result<(Bool,Bool),TupleError>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "2574d2c941ccd7501dad208cd8e6c7e7b6dc4fd9426ca3d7846bcd5965982563",
+      "slim_inputs_sha256": "09b924065a946dae97292aa981431b2b29a6cc4e45549da95d33192a4a0cc753",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_inc_in_arm": {
+      "binders": [
+        [
+          "r",
+          {
+            "domain": {
+              "d": "result",
+              "errs": [
+                "Bad",
+                "Worse",
+                "Worst"
+              ],
+              "ok": {
+                "d": "u8_all",
+                "size": 256
+              },
+              "size": 259
+            },
+            "type": "Result<U8,TupleError>"
+          }
+        ]
+      ],
+      "cases": 259,
+      "chunk_lines": [
+        "0 259 0 259 b2d3998389fe8fc6758025fa565d8be2fe804e16ce508136773d0a4d1672dae4 8933e01fbf242459016f8ec027a3b46396dbfc4a62d26effa8f334d47f78ccf2"
+      ],
+      "chunks": 1,
+      "claim": "c_inc_in_arm",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 259,
+      "expected_sha256": "964c304a914670b0e8e1558b31e896fbc79316e49116ecf6154ec1876e14d8b5",
+      "id": "warrant/tuple_forms/exhaustive/c_inc_in_arm",
+      "inputs_sha256": "be5638b1cd74188fc56c2ac365ef55c11c1a06b38bedf417511926a532000612",
+      "ir_cost": 20,
+      "kind": "exhaustive",
+      "product": 259,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "U8",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "964c304a914670b0e8e1558b31e896fbc79316e49116ecf6154ec1876e14d8b5",
+      "slim_inputs_sha256": "be5638b1cd74188fc56c2ac365ef55c11c1a06b38bedf417511926a532000612",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "78973c94675c648b8e5a463af4663f2aca5bf6f9280ebde1ef4ce1819e0b0178",
+      "v1_inputs_sha256": "411082cd5b338e5eae330a730e966b5f3a7d5859667d767e3bc4f164f2f98ecb",
+      "wraps": 1
+    },
+    "c_k": {
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ]
+      ],
+      "cases": 4,
+      "chunk_lines": [
+        "0 4 0 4 53660b9118fa20c27ce9d78caa16f267d6ecbb6e43a6af9c395ca59785889da3 6692b274dadf018fe90c4c470bfabd1b3982f0e39e64950df912e83cdf4c4c98"
+      ],
+      "chunks": 1,
+      "claim": "c_k",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 4,
+      "expected_sha256": "451d42242cc153977e1ba09927fa0c4fcaaed750dcc9541ca98a9539a63da1cc",
+      "id": "warrant/tuple_forms/exhaustive/c_k",
+      "inputs_sha256": "534733b9dc19584c65643cf65cea38bab3e4d69904eea26bafb0f249cc9885b4",
+      "ir_cost": 27,
+      "kind": "exhaustive",
+      "product": 4,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Result<(Bool,Bool),TupleError>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "451d42242cc153977e1ba09927fa0c4fcaaed750dcc9541ca98a9539a63da1cc",
+      "slim_inputs_sha256": "534733b9dc19584c65643cf65cea38bab3e4d69904eea26bafb0f249cc9885b4",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_k_match": {
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ]
+      ],
+      "cases": 4,
+      "chunk_lines": [
+        "0 4 0 4 5d3a4793cd7f79ad094dfed35d8f1227a977954a63f0269f39a4c60d0856ed9d"
+      ],
+      "chunks": 1,
+      "claim": "c_k_match",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 4,
+      "id": "warrant/tuple_forms/exhaustive/c_k_match",
+      "inputs_sha256": "6dfcf9087d47ace1da1229648a27903710b852d8c5810dfbfebbc472c2ceea78",
+      "ir_cost": 12,
+      "kind": "exhaustive",
+      "product": 4,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Bool",
+      "slim_chunks": [
+        0
+      ],
+      "slim_inputs_sha256": "6dfcf9087d47ace1da1229648a27903710b852d8c5810dfbfebbc472c2ceea78",
+      "stream": "warrant-stream-v1",
+      "v1_inputs_sha256": "2e797314ee8000d734ca7476d3074bb46f8b98e2585bb520cc60c858ffd9417e",
+      "wraps": 0
+    },
+    "c_lit2": {
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ]
+      ],
+      "cases": 4,
+      "chunk_lines": [
+        "0 4 0 4 dff4bc72e3791759c0e52ea7baa4866e01b3e9687977aaaacb07a68e83d25377 69aecfd66a2ea0cd0fb11c65c65ba33ceddff7deca945eed0fb31efe0935353f"
+      ],
+      "chunks": 1,
+      "claim": "c_lit2",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 4,
+      "expected_sha256": "87f120d049441cb3a58bddffa59f6796eca5c1e830bfb718476fa182da9de555",
+      "id": "warrant/tuple_forms/exhaustive/c_lit2",
+      "inputs_sha256": "6b46adbe64c3b0bc38d04a2a2a8790293a2bcbc33e402847fff776025a950827",
+      "ir_cost": 17,
+      "kind": "exhaustive",
+      "product": 4,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "(Bool,Bool)",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "87f120d049441cb3a58bddffa59f6796eca5c1e830bfb718476fa182da9de555",
+      "slim_inputs_sha256": "6b46adbe64c3b0bc38d04a2a2a8790293a2bcbc33e402847fff776025a950827",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_lit3": {
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ],
+        [
+          "c",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ]
+      ],
+      "cases": 8,
+      "chunk_lines": [
+        "0 8 0 8 a08562b47d334b2a1d9a242b921e8e85d72f673be289f8cebbf0cd2e7e5b0267 2a917bee53742e42c5f5557682444c430d9b5c3e189e6952b7c561250dae435d"
+      ],
+      "chunks": 1,
+      "claim": "c_lit3",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 8,
+      "expected_sha256": "a99e9366f27c48ca4a8ef9ef2363695ace635096c46da8b46d1dc848c74d2bc9",
+      "id": "warrant/tuple_forms/exhaustive/c_lit3",
+      "inputs_sha256": "38e9e8aaa51e73d43441503df005b26ce7bcecf8492e4a6ba9944b6fa575f11b",
+      "ir_cost": 22,
+      "kind": "exhaustive",
+      "product": 8,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "(Bool,Bool,Bool)",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "a99e9366f27c48ca4a8ef9ef2363695ace635096c46da8b46d1dc848c74d2bc9",
+      "slim_inputs_sha256": "38e9e8aaa51e73d43441503df005b26ce7bcecf8492e4a6ba9944b6fa575f11b",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_lit4": {
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ],
+        [
+          "c",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ],
+        [
+          "d",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ]
+      ],
+      "cases": 16,
+      "chunk_lines": [
+        "0 16 0 16 a470b75319df3a7cdc61f1f63a45ed0778651a0fcaca017258365a6c74a63dfa 085ef83883aa579e130801cba69cf09645334c179d460fde638482e3c2275fd9"
+      ],
+      "chunks": 1,
+      "claim": "c_lit4",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 16,
+      "expected_sha256": "2a39fd0a1e3f02eaec079c5a2b0fab8c89f1126794899f2bfd7ac9dcdda38b7b",
+      "id": "warrant/tuple_forms/exhaustive/c_lit4",
+      "inputs_sha256": "d81b5b80053d8666f5a7ca408e905b2dd338f9f7a202d5e9bca4f2a067124dc0",
+      "ir_cost": 27,
+      "kind": "exhaustive",
+      "product": 16,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "(Bool,Bool,Bool,Bool)",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "2a39fd0a1e3f02eaec079c5a2b0fab8c89f1126794899f2bfd7ac9dcdda38b7b",
+      "slim_inputs_sha256": "d81b5b80053d8666f5a7ca408e905b2dd338f9f7a202d5e9bca4f2a067124dc0",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_lit5": {
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ],
+        [
+          "c",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ],
+        [
+          "d",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ],
+        [
+          "e",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ]
+      ],
+      "cases": 32,
+      "chunk_lines": [
+        "0 32 0 32 258001a57f32c94c933cd5320e2dc8c06a02a1dc254d551208c09f0f22707924 d343cdecc5e12ff5006ec80260ea2a46da1b76f7d793932cd0092e3383739e29"
+      ],
+      "chunks": 1,
+      "claim": "c_lit5",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 32,
+      "expected_sha256": "6b9b8c593ea7e017e2f0900539655ba5748b61eb5104f58ae6ef73682159c5e7",
+      "id": "warrant/tuple_forms/exhaustive/c_lit5",
+      "inputs_sha256": "fecff3746d2d04106d635b2aa785da57208a21dc49f63d090f5ee5260f6ab6ec",
+      "ir_cost": 32,
+      "kind": "exhaustive",
+      "product": 32,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "(Bool,Bool,Bool,Bool,Bool)",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "6b9b8c593ea7e017e2f0900539655ba5748b61eb5104f58ae6ef73682159c5e7",
+      "slim_inputs_sha256": "fecff3746d2d04106d635b2aa785da57208a21dc49f63d090f5ee5260f6ab6ec",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_lit6": {
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ],
+        [
+          "c",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ],
+        [
+          "d",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ],
+        [
+          "e",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ],
+        [
+          "f",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ]
+      ],
+      "cases": 64,
+      "chunk_lines": [
+        "0 64 0 64 29e2e98561f2d4089a1cc024bd334d30e153b16d506b2c4f43eee14fd2397be9 ddca800c1b12c5095de56d2898b390146c3cf566e38fbf748d13bb695face130"
+      ],
+      "chunks": 1,
+      "claim": "c_lit6",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 64,
+      "expected_sha256": "31a9955d97031f0264f29890f5a06cb74c7e19abe1d0ef06a79e0ea6402b65fc",
+      "id": "warrant/tuple_forms/exhaustive/c_lit6",
+      "inputs_sha256": "31869e1897aba26c05b6ce52ea12aae27642cbcbc916ba0efe2306fdf34a06f2",
+      "ir_cost": 37,
+      "kind": "exhaustive",
+      "product": 64,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "(Bool,Bool,Bool,Bool,Bool,Bool)",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "31a9955d97031f0264f29890f5a06cb74c7e19abe1d0ef06a79e0ea6402b65fc",
+      "slim_inputs_sha256": "31869e1897aba26c05b6ce52ea12aae27642cbcbc916ba0efe2306fdf34a06f2",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_lit7": {
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ],
+        [
+          "c",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ],
+        [
+          "d",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ],
+        [
+          "e",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ],
+        [
+          "f",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ],
+        [
+          "g",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ]
+      ],
+      "cases": 128,
+      "chunk_lines": [
+        "0 128 0 128 9c7e123b49be513e50663cba394bb87862ca40b664f7347c3587bdab3aca2fdf 7c884105e4e0367efa6ff6f32c3915aff7f470fb3f8a6368fb7ad2db7ce0eb15"
+      ],
+      "chunks": 1,
+      "claim": "c_lit7",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 128,
+      "expected_sha256": "f23d85f711d115467267d462e4eecce8e87b4538d288c5600c80d6175cf02317",
+      "id": "warrant/tuple_forms/exhaustive/c_lit7",
+      "inputs_sha256": "eb84ef5c023d2d32c7822152b398e1110d2e69b8623cec3e82fc7b77ae6ceab9",
+      "ir_cost": 42,
+      "kind": "exhaustive",
+      "product": 128,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "(Bool,Bool,Bool,Bool,Bool,Bool,Bool)",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "f23d85f711d115467267d462e4eecce8e87b4538d288c5600c80d6175cf02317",
+      "slim_inputs_sha256": "eb84ef5c023d2d32c7822152b398e1110d2e69b8623cec3e82fc7b77ae6ceab9",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_lit8": {
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ],
+        [
+          "c",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ],
+        [
+          "d",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ],
+        [
+          "e",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ],
+        [
+          "f",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ],
+        [
+          "g",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ],
+        [
+          "h",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ]
+      ],
+      "cases": 256,
+      "chunk_lines": [
+        "0 256 0 256 3e1f34eafd8f1e1bd6bbbfefe379f6b3f0611ee3bc039f616618258c4099cf43 a2a40d55c388b7023a39bcdb464bb506e9c10074a1ad73f9c0a2d78dedd7c17e"
+      ],
+      "chunks": 1,
+      "claim": "c_lit8",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 256,
+      "expected_sha256": "ac05fbcc4f052a093dbdc8cb46ebf9b8769d1d567f7c5fa0b7d0247379661308",
+      "id": "warrant/tuple_forms/exhaustive/c_lit8",
+      "inputs_sha256": "3fa7416aa6f4c0d404ee2845c1a1da8126e18039779a1e283f7d685e84c92752",
+      "ir_cost": 47,
+      "kind": "exhaustive",
+      "product": 256,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "(Bool,Bool,Bool,Bool,Bool,Bool,Bool,Bool)",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "ac05fbcc4f052a093dbdc8cb46ebf9b8769d1d567f7c5fa0b7d0247379661308",
+      "slim_inputs_sha256": "3fa7416aa6f4c0d404ee2845c1a1da8126e18039779a1e283f7d685e84c92752",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_lit_arith": {
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ]
+      ],
+      "cases": 256,
+      "chunk_lines": [
+        "0 256 0 256 3cc2f9853a74cb1cd59c0bb032a66a1968c20f98b027dc052804ebae749b8760 145f61711fc6c57d4a8c1993f42d32a82fa5dbce074508c07bfc3dc752575494"
+      ],
+      "chunks": 1,
+      "claim": "c_lit_arith",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 256,
+      "expected_sha256": "84f1c847c80f89e4a7c747bdfc50a06659c5b275fae88b4a60e2ff231cae9df0",
+      "id": "warrant/tuple_forms/exhaustive/c_lit_arith",
+      "inputs_sha256": "594050f886dea8807fb2d73d6230cc4f9b0f3b55bb9cc677d077d1b3a72699f2",
+      "ir_cost": 18,
+      "kind": "exhaustive",
+      "product": 256,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "(U8,Nat)",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "84f1c847c80f89e4a7c747bdfc50a06659c5b275fae88b4a60e2ff231cae9df0",
+      "slim_inputs_sha256": "594050f886dea8807fb2d73d6230cc4f9b0f3b55bb9cc677d077d1b3a72699f2",
+      "stream": "warrant-stream-v2",
+      "wraps": 1
+    },
+    "c_lit_ctx": {
+      "binders": [],
+      "cases": 1,
+      "chunk_lines": [
+        "0 1 0 1 331e01ab079767010ee71784d28ded18143ff04e22d5254ae3d488a67b1fcfd0 b68861812fc59c382a3e37389f6b7c0c572b8da941b1d2b77b10b2fc11a0f0b3"
+      ],
+      "chunks": 1,
+      "claim": "c_lit_ctx",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 1,
+      "expected_sha256": "da094052a9831a5ceb77ebf18bfb6c8a459089abd7ca1059935bb9e91709af01",
+      "id": "warrant/tuple_forms/exhaustive/c_lit_ctx",
+      "inputs_sha256": "053f04254d97e2e1ee6c4cdcfa080505d646ea1795fa7d7b7264bbcd3a6baade",
+      "ir_cost": 11,
+      "kind": "exhaustive",
+      "product": 1,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "(Nat,Nat)",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "da094052a9831a5ceb77ebf18bfb6c8a459089abd7ca1059935bb9e91709af01",
+      "slim_inputs_sha256": "053f04254d97e2e1ee6c4cdcfa080505d646ea1795fa7d7b7264bbcd3a6baade",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_m_arith_arm": {
+      "binders": [
+        [
+          "r",
+          {
+            "domain": {
+              "d": "result",
+              "errs": [
+                "Bad",
+                "Worse",
+                "Worst"
+              ],
+              "ok": {
+                "d": "u8_all",
+                "size": 256
+              },
+              "size": 259
+            },
+            "type": "Result<U8,TupleError>"
+          }
+        ]
+      ],
+      "cases": 259,
+      "chunk_lines": [
+        "0 259 0 259 584991150c8251c190426008fae4082d8c694767675194c0e49b8dd83ef0033b 104a8029dbbdeb51eb6429b7114ef15cafb492090cfa59633f69e6c69fe60fa1"
+      ],
+      "chunks": 1,
+      "claim": "c_m_arith_arm",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 259,
+      "expected_sha256": "9604885eae607d5712b8ae9677432378894acf7106e22b2c61ca02ba76f2dab4",
+      "id": "warrant/tuple_forms/exhaustive/c_m_arith_arm",
+      "inputs_sha256": "d984613c9c1137353bc1a74fd9039987c05899fe06cefbebf30cb90d8cd06884",
+      "ir_cost": 18,
+      "kind": "exhaustive",
+      "product": 259,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "U8",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "9604885eae607d5712b8ae9677432378894acf7106e22b2c61ca02ba76f2dab4",
+      "slim_inputs_sha256": "d984613c9c1137353bc1a74fd9039987c05899fe06cefbebf30cb90d8cd06884",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "5c1dae829fdbf00fabce21cf0cc4cc704256a80249ce955db09d80d248e07565",
+      "v1_inputs_sha256": "49013b16ccddb6c8313d6f5bad314fb817b3dd72bc908fc1b827208c7def3d57",
+      "wraps": 1
+    },
+    "c_m_bind_whole": {
+      "binders": [
+        [
+          "r",
+          {
+            "domain": {
+              "d": "result",
+              "errs": [
+                "Bad",
+                "Worse",
+                "Worst"
+              ],
+              "ok": {
+                "d": "bool",
+                "size": 2
+              },
+              "size": 5
+            },
+            "type": "Result<Bool,TupleError>"
+          }
+        ]
+      ],
+      "cases": 5,
+      "chunk_lines": [
+        "0 5 0 5 c4a8f43e15563278247cdba0be13f78975c360844eb644a8652912c6d628b055 3d3fff7ea4a8347929e490fdd1719cc28e6743ea21cc2e255d8847b91a38d08c"
+      ],
+      "chunks": 1,
+      "claim": "c_m_bind_whole",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 5,
+      "expected_sha256": "78737dcf4c234372654bc13dda76ef0fc7524199cf98d8295f0f7c3f1d92279b",
+      "id": "warrant/tuple_forms/exhaustive/c_m_bind_whole",
+      "inputs_sha256": "4d64099532346083057ddf7309056527d285d5a7e972a5ddaa718e5052ec8fd6",
+      "ir_cost": 18,
+      "kind": "exhaustive",
+      "product": 5,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Bool",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "78737dcf4c234372654bc13dda76ef0fc7524199cf98d8295f0f7c3f1d92279b",
+      "slim_inputs_sha256": "4d64099532346083057ddf7309056527d285d5a7e972a5ddaa718e5052ec8fd6",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "374d725b6b0c45d8340f59a381cda900d7d93a3a9fbb22a60c34db0e3e072fdc",
+      "v1_inputs_sha256": "0cccf046b7a17586d9c93e7bcbb3c6ffb27b89f1ac823f314b5f2381023d868e",
+      "wraps": 0
+    },
+    "c_m_err_any_last": {
+      "binders": [
+        [
+          "r",
+          {
+            "domain": {
+              "d": "result",
+              "errs": [
+                "Bad",
+                "Worse",
+                "Worst"
+              ],
+              "ok": {
+                "d": "bool",
+                "size": 2
+              },
+              "size": 5
+            },
+            "type": "Result<Bool,TupleError>"
+          }
+        ]
+      ],
+      "cases": 5,
+      "chunk_lines": [
+        "0 5 0 5 2e7fb7d676f72c8140c3d7f7b669434c6ce523e2244ee64f115e50c6370012dc 42d3df4bcdd2da4a80ab7f024e38b08238ab38078fb122b22872f84024ede99d"
+      ],
+      "chunks": 1,
+      "claim": "c_m_err_any_last",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 5,
+      "expected_sha256": "e65fd31e1e49d22d4eb1713132ea1f8a1440331c5f30985e3debb6c576476128",
+      "id": "warrant/tuple_forms/exhaustive/c_m_err_any_last",
+      "inputs_sha256": "64242b2eaa7adecd3dc9b5c60c3ad4112c074e5e2fc2343d2fc2e7daf086c27b",
+      "ir_cost": 14,
+      "kind": "exhaustive",
+      "product": 5,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Nat",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "e65fd31e1e49d22d4eb1713132ea1f8a1440331c5f30985e3debb6c576476128",
+      "slim_inputs_sha256": "64242b2eaa7adecd3dc9b5c60c3ad4112c074e5e2fc2343d2fc2e7daf086c27b",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "ebd63ebfae64e1222ead46daad70d177a4292602d355effd7f34fb453176b039",
+      "v1_inputs_sha256": "5b56b45d951cf7c68518d537c8f43cfc56ff9c5772b6606ac3f83dc3eff9bdc7",
+      "wraps": 0
+    },
+    "c_m_err_cases": {
+      "binders": [
+        [
+          "r",
+          {
+            "domain": {
+              "d": "result",
+              "errs": [
+                "Bad",
+                "Worse",
+                "Worst"
+              ],
+              "ok": {
+                "d": "bool",
+                "size": 2
+              },
+              "size": 5
+            },
+            "type": "Result<Bool,TupleError>"
+          }
+        ]
+      ],
+      "cases": 5,
+      "chunk_lines": [
+        "0 5 0 5 9524a8bb65701c16717f99002e413fbacb8759e7bf80b8cf28828958725882e6 c7997ad85f0050345f26bd2f213af17aa2936c0424484f03ad07f157b7f72449"
+      ],
+      "chunks": 1,
+      "claim": "c_m_err_cases",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 5,
+      "expected_sha256": "1a5a4a90bc12f29daab28a532928c93865fcf722d02628066f7301aabf284bfc",
+      "id": "warrant/tuple_forms/exhaustive/c_m_err_cases",
+      "inputs_sha256": "a510d3cf6d94a3d7b6bb432e5bb6eb25776ed4103045c8bc724266ae7cd6b94e",
+      "ir_cost": 14,
+      "kind": "exhaustive",
+      "product": 5,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Nat",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "1a5a4a90bc12f29daab28a532928c93865fcf722d02628066f7301aabf284bfc",
+      "slim_inputs_sha256": "a510d3cf6d94a3d7b6bb432e5bb6eb25776ed4103045c8bc724266ae7cd6b94e",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "c49a85a165d338b7d022d4d4a9790a48a17cf5d4e90c493455aaedafee139f22",
+      "v1_inputs_sha256": "08b25c458f5538e5eeea7564334cb751bcc4768f80e83e6d0f7bdc163857c4c8",
+      "wraps": 0
+    },
+    "c_m_inner_match": {
+      "binders": [
+        [
+          "r",
+          {
+            "domain": {
+              "d": "result",
+              "errs": [
+                "Bad",
+                "Worse",
+                "Worst"
+              ],
+              "ok": {
+                "d": "bool",
+                "size": 2
+              },
+              "size": 5
+            },
+            "type": "Result<Bool,TupleError>"
+          }
+        ],
+        [
+          "s",
+          {
+            "domain": {
+              "d": "result",
+              "errs": [
+                "Bad",
+                "Worse",
+                "Worst"
+              ],
+              "ok": {
+                "d": "bool",
+                "size": 2
+              },
+              "size": 5
+            },
+            "type": "Result<Bool,TupleError>"
+          }
+        ]
+      ],
+      "cases": 25,
+      "chunk_lines": [
+        "0 25 0 25 98ad4433cc94a98d56b031f8e05fd34df01fb4e83aba925251e802d785cff422 f62eebd530bb9242896d1e5181846f5f445a3723a1b23299880135fb7a7d6056"
+      ],
+      "chunks": 1,
+      "claim": "c_m_inner_match",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 25,
+      "expected_sha256": "40c9d85fc3d5d7f2701b9172ad60b0880b756a955cc14a90ae113407e57249bb",
+      "id": "warrant/tuple_forms/exhaustive/c_m_inner_match",
+      "inputs_sha256": "da964b7e08ceb8a277bbe32ecef63c9c31c52cc0629fda1217b949315543dacd",
+      "ir_cost": 25,
+      "kind": "exhaustive",
+      "product": 25,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Bool",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "40c9d85fc3d5d7f2701b9172ad60b0880b756a955cc14a90ae113407e57249bb",
+      "slim_inputs_sha256": "da964b7e08ceb8a277bbe32ecef63c9c31c52cc0629fda1217b949315543dacd",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "3ed411644573f054560ed0253af8398be210b2d1bd1b1de7ddaf89d4e9fc256f",
+      "v1_inputs_sha256": "a1aef9e3b1d1d8848e79d4d302b81617da2e7511b6cef937227d0b902f3f1f3d",
+      "wraps": 0
+    },
+    "c_m_nested_match": {
+      "binders": [
+        [
+          "r",
+          {
+            "domain": {
+              "d": "result",
+              "errs": [
+                "Bad",
+                "Worse",
+                "Worst"
+              ],
+              "ok": {
+                "d": "result",
+                "errs": [
+                  "Bad",
+                  "Worse",
+                  "Worst"
+                ],
+                "ok": {
+                  "d": "bool",
+                  "size": 2
+                },
+                "size": 5
+              },
+              "size": 8
+            },
+            "type": "Result<Result<Bool,TupleError>,TupleError>"
+          }
+        ]
+      ],
+      "cases": 8,
+      "chunk_lines": [
+        "0 8 0 8 228b873daf364aa566f41456e037b27c0be79fa62c5b66dce5b9540b0db8d061 f9620d4d341b07459a555cea032086c54a3144b35d1e7090eae87ef3c7a8369a"
+      ],
+      "chunks": 1,
+      "claim": "c_m_nested_match",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 8,
+      "expected_sha256": "6a0fa09f19a61a06e08b943cf333904a8ef5cbe318262188fd74118da118f132",
+      "id": "warrant/tuple_forms/exhaustive/c_m_nested_match",
+      "inputs_sha256": "fd266de9a46edc261ca85dd3e279989512ac502a285f6f12e82a3e5fa08f100d",
+      "ir_cost": 14,
+      "kind": "exhaustive",
+      "product": 8,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Nat",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "6a0fa09f19a61a06e08b943cf333904a8ef5cbe318262188fd74118da118f132",
+      "slim_inputs_sha256": "fd266de9a46edc261ca85dd3e279989512ac502a285f6f12e82a3e5fa08f100d",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "f1573a55e273c14e464b825f750c903c1a5bf89620f060a0f68edd236707da60",
+      "v1_inputs_sha256": "3f83ed5a8b38528a13f5cdff25f30e12343df50dbd0bcef776390dfe63e8c53e",
+      "wraps": 0
+    },
+    "c_m_ok_bind": {
+      "binders": [
+        [
+          "r",
+          {
+            "domain": {
+              "d": "result",
+              "errs": [
+                "Bad",
+                "Worse",
+                "Worst"
+              ],
+              "ok": {
+                "d": "bool",
+                "size": 2
+              },
+              "size": 5
+            },
+            "type": "Result<Bool,TupleError>"
+          }
+        ]
+      ],
+      "cases": 5,
+      "chunk_lines": [
+        "0 5 0 5 75ddf9b1d1cbc6eb3b4c1648a6f100c04c6935aac6bea63e3a2cb18e200cac97 98d37735fbf9b81904389dff1939ced5959b3aea54e2d438d7cae4c9e9f09af3"
+      ],
+      "chunks": 1,
+      "claim": "c_m_ok_bind",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 5,
+      "expected_sha256": "5284f6fae6a525da75397e7e65ee00b07f5c3e365ebe635728c2fc34ca467638",
+      "id": "warrant/tuple_forms/exhaustive/c_m_ok_bind",
+      "inputs_sha256": "620b33df6cdedb5826893bbb2a6267297d2c04cb31eb48889bfae029a29fddd5",
+      "ir_cost": 14,
+      "kind": "exhaustive",
+      "product": 5,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Bool",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "5284f6fae6a525da75397e7e65ee00b07f5c3e365ebe635728c2fc34ca467638",
+      "slim_inputs_sha256": "620b33df6cdedb5826893bbb2a6267297d2c04cb31eb48889bfae029a29fddd5",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "6a7a97a5c5e6f06dd7f9cafdf6bef9f11e93463c3258a9705dd0366dd3ac8485",
+      "v1_inputs_sha256": "c2a0fce858c2a6c4157f3377db71cb2affdfd941a9f4ed470b1dea74e54518a9",
+      "wraps": 0
+    },
+    "c_m_ok_nested": {
+      "binders": [
+        [
+          "r",
+          {
+            "domain": {
+              "d": "result",
+              "errs": [
+                "Bad",
+                "Worse",
+                "Worst"
+              ],
+              "ok": {
+                "d": "tuple",
+                "of": [
+                  {
+                    "d": "tuple",
+                    "of": [
+                      {
+                        "d": "bool",
+                        "size": 2
+                      },
+                      {
+                        "d": "bool",
+                        "size": 2
+                      }
+                    ],
+                    "size": 4
+                  },
+                  {
+                    "d": "bool",
+                    "size": 2
+                  }
+                ],
+                "size": 8
+              },
+              "size": 11
+            },
+            "type": "Result<((Bool,Bool),Bool),TupleError>"
+          }
+        ]
+      ],
+      "cases": 11,
+      "chunk_lines": [
+        "0 11 0 11 739b6e3015aa66d0ccc3e193ad0adb65a2ab4c8f53b4ca4be5c97fc2c3a1998c 556a353c9117963fb6fcb0108c4bcfc741a2d293514bdb3988c302987ba15a10"
+      ],
+      "chunks": 1,
+      "claim": "c_m_ok_nested",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 11,
+      "expected_sha256": "4745f2a2887fdeb5826c80534f5235bd70c13bf930ad077beffa848ac8462d30",
+      "id": "warrant/tuple_forms/exhaustive/c_m_ok_nested",
+      "inputs_sha256": "63f90bfd8faab24cbd9757797c55effcc746fd7248b8f625b650a85c927d0f2a",
+      "ir_cost": 18,
+      "kind": "exhaustive",
+      "product": 11,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Bool",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "4745f2a2887fdeb5826c80534f5235bd70c13bf930ad077beffa848ac8462d30",
+      "slim_inputs_sha256": "63f90bfd8faab24cbd9757797c55effcc746fd7248b8f625b650a85c927d0f2a",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_m_ok_tuple": {
+      "binders": [
+        [
+          "r",
+          {
+            "domain": {
+              "d": "result",
+              "errs": [
+                "Bad",
+                "Worse",
+                "Worst"
+              ],
+              "ok": {
+                "d": "tuple",
+                "of": [
+                  {
+                    "d": "bool",
+                    "size": 2
+                  },
+                  {
+                    "d": "bool",
+                    "size": 2
+                  }
+                ],
+                "size": 4
+              },
+              "size": 7
+            },
+            "type": "Result<(Bool,Bool),TupleError>"
+          }
+        ]
+      ],
+      "cases": 7,
+      "chunk_lines": [
+        "0 7 0 7 2792dc79478d19e9d7d801860a22e239d121597525ca34c0ef7f204369593d23 b91e9421e50a53d0fc7b16459000c01a5d52d730e0c49593c68ac8655f837bfd"
+      ],
+      "chunks": 1,
+      "claim": "c_m_ok_tuple",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 7,
+      "expected_sha256": "abe41e3df218034fac4f0d68c10f382754fc37e9ea2bd109f35e34f8aba302c1",
+      "id": "warrant/tuple_forms/exhaustive/c_m_ok_tuple",
+      "inputs_sha256": "a199fe1f095929f7e2ab55c3b353b6029796a38f4fbe1bbda5d2f8b02b3f0024",
+      "ir_cost": 18,
+      "kind": "exhaustive",
+      "product": 7,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Bool",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "abe41e3df218034fac4f0d68c10f382754fc37e9ea2bd109f35e34f8aba302c1",
+      "slim_inputs_sha256": "a199fe1f095929f7e2ab55c3b353b6029796a38f4fbe1bbda5d2f8b02b3f0024",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_m_ok_tuple_wild": {
+      "binders": [
+        [
+          "r",
+          {
+            "domain": {
+              "d": "result",
+              "errs": [
+                "Bad",
+                "Worse",
+                "Worst"
+              ],
+              "ok": {
+                "d": "tuple",
+                "of": [
+                  {
+                    "d": "bool",
+                    "size": 2
+                  },
+                  {
+                    "d": "bool",
+                    "size": 2
+                  }
+                ],
+                "size": 4
+              },
+              "size": 7
+            },
+            "type": "Result<(Bool,Bool),TupleError>"
+          }
+        ]
+      ],
+      "cases": 7,
+      "chunk_lines": [
+        "0 7 0 7 d831c509cf1f203b22b7bc57865eccf1140258a020539244c719188c47c37852 19152c1743fc4b6b4c25c8dbdcb3ef60ed8bd24ef85509163f666b67561f61e1"
+      ],
+      "chunks": 1,
+      "claim": "c_m_ok_tuple_wild",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 7,
+      "expected_sha256": "1d180b2ad30529107c3d4da5c0d831720516dcd89c0e0ce40867fd8db277cbc4",
+      "id": "warrant/tuple_forms/exhaustive/c_m_ok_tuple_wild",
+      "inputs_sha256": "6a5631f891fb3161154cd6fcb9cf7669a56f768711f0c89068081638cd792d96",
+      "ir_cost": 14,
+      "kind": "exhaustive",
+      "product": 7,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Bool",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "1d180b2ad30529107c3d4da5c0d831720516dcd89c0e0ce40867fd8db277cbc4",
+      "slim_inputs_sha256": "6a5631f891fb3161154cd6fcb9cf7669a56f768711f0c89068081638cd792d96",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_m_ok_wild": {
+      "binders": [
+        [
+          "r",
+          {
+            "domain": {
+              "d": "result",
+              "errs": [
+                "Bad",
+                "Worse",
+                "Worst"
+              ],
+              "ok": {
+                "d": "tuple",
+                "of": [
+                  {
+                    "d": "bool",
+                    "size": 2
+                  },
+                  {
+                    "d": "bool",
+                    "size": 2
+                  }
+                ],
+                "size": 4
+              },
+              "size": 7
+            },
+            "type": "Result<(Bool,Bool),TupleError>"
+          }
+        ]
+      ],
+      "cases": 7,
+      "chunk_lines": [
+        "0 7 0 7 da0ae1d3585e47cc1797b643bd1347951acd2c6a978e9aebd5e9b9a5debf2ba6 a9838ce66554ddce1c9a4c276de99b8340ab141f82c256f8bba36cd73b29b697"
+      ],
+      "chunks": 1,
+      "claim": "c_m_ok_wild",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 7,
+      "expected_sha256": "d9cb84c3cbdf474ff6934a0c975ebdcc40b63d9f70896aefa860e22d0cf741c9",
+      "id": "warrant/tuple_forms/exhaustive/c_m_ok_wild",
+      "inputs_sha256": "087d4573f3324c519cf02bc903d0eadbba4b99ac082bf8ee8eccdf71ce8c8ea6",
+      "ir_cost": 14,
+      "kind": "exhaustive",
+      "product": 7,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Bool",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "d9cb84c3cbdf474ff6934a0c975ebdcc40b63d9f70896aefa860e22d0cf741c9",
+      "slim_inputs_sha256": "087d4573f3324c519cf02bc903d0eadbba4b99ac082bf8ee8eccdf71ce8c8ea6",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_m_on_call": {
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ]
+      ],
+      "cases": 4,
+      "chunk_lines": [
+        "0 4 0 4 db5334a3b3424fd8e44167e7e3ce55178146bfa56f49dcaa7f72843009d281bd 6088f5f4cd1af55cc5ef64f21b4267963fa7732f9d8e49c36bd5d8c87d5356bb"
+      ],
+      "chunks": 1,
+      "claim": "c_m_on_call",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 4,
+      "expected_sha256": "6ed45affde634182dcf591c166d0c15c5c4a3580d5931d838a6f07be8f7cf524",
+      "id": "warrant/tuple_forms/exhaustive/c_m_on_call",
+      "inputs_sha256": "5e2c4cf9b4e87d09b1faa2181ee0d105664e284ed55ffe0968d82cafa020413e",
+      "ir_cost": 37,
+      "kind": "exhaustive",
+      "product": 4,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Bool",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "6ed45affde634182dcf591c166d0c15c5c4a3580d5931d838a6f07be8f7cf524",
+      "slim_inputs_sha256": "5e2c4cf9b4e87d09b1faa2181ee0d105664e284ed55ffe0968d82cafa020413e",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "18b4487fec60a47e473efad3a4187a85949ddb8ad98c2fc358ef2287794873d6",
+      "v1_inputs_sha256": "c48e19339a967620bd62f7ef30042e9934539a26f80a7f23df9d39cdcc244efe",
+      "wraps": 0
+    },
+    "c_m_returns_result": {
+      "binders": [
+        [
+          "r",
+          {
+            "domain": {
+              "d": "result",
+              "errs": [
+                "Bad",
+                "Worse",
+                "Worst"
+              ],
+              "ok": {
+                "d": "tuple",
+                "of": [
+                  {
+                    "d": "bool",
+                    "size": 2
+                  },
+                  {
+                    "d": "bool",
+                    "size": 2
+                  }
+                ],
+                "size": 4
+              },
+              "size": 7
+            },
+            "type": "Result<(Bool,Bool),TupleError>"
+          }
+        ]
+      ],
+      "cases": 7,
+      "chunk_lines": [
+        "0 7 0 7 cc58fa6b1b9091ef4c3ff9c4628aef2832792120aaf5ef09d9b66c66970efce1 60f5eab44ca7b2c9ddfc8883b0a08471f50fae79a6cbe9d3c841fc878b6ccee2"
+      ],
+      "chunks": 1,
+      "claim": "c_m_returns_result",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 7,
+      "expected_sha256": "96a88bab7d7b91dd9502ef7343686ec4865f9741f73f448339676e882698aeec",
+      "id": "warrant/tuple_forms/exhaustive/c_m_returns_result",
+      "inputs_sha256": "fc3ae2e46669f4f53fb42eb418f5c1bd03c24362752a657eaa2b0914ce8ed5b7",
+      "ir_cost": 20,
+      "kind": "exhaustive",
+      "product": 7,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Result<(Bool,Bool),TupleError>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "96a88bab7d7b91dd9502ef7343686ec4865f9741f73f448339676e882698aeec",
+      "slim_inputs_sha256": "fc3ae2e46669f4f53fb42eb418f5c1bd03c24362752a657eaa2b0914ce8ed5b7",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_m_returns_tuple": {
+      "binders": [
+        [
+          "r",
+          {
+            "domain": {
+              "d": "result",
+              "errs": [
+                "Bad",
+                "Worse",
+                "Worst"
+              ],
+              "ok": {
+                "d": "tuple",
+                "of": [
+                  {
+                    "d": "bool",
+                    "size": 2
+                  },
+                  {
+                    "d": "bool",
+                    "size": 2
+                  }
+                ],
+                "size": 4
+              },
+              "size": 7
+            },
+            "type": "Result<(Bool,Bool),TupleError>"
+          }
+        ]
+      ],
+      "cases": 7,
+      "chunk_lines": [
+        "0 7 0 7 a7d844b5ca19825a8b215858ea3259294fee0b1090e99fed50b5d09539ebb0f6 f00b93edc30a1d5f50e0ae4ef49c91eb2b6069b3fa8265fcf50d26247a379c07"
+      ],
+      "chunks": 1,
+      "claim": "c_m_returns_tuple",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 7,
+      "expected_sha256": "ed0e3dfd0d6fece9e8138b648aa6f43f246c7ae947aa90871f461cc9c7d7e67d",
+      "id": "warrant/tuple_forms/exhaustive/c_m_returns_tuple",
+      "inputs_sha256": "d2a65fc74ed1e1834144190ada720e6912e00c0497d142afbbf9e60e96957f15",
+      "ir_cost": 18,
+      "kind": "exhaustive",
+      "product": 7,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "(Bool,Bool)",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "ed0e3dfd0d6fece9e8138b648aa6f43f246c7ae947aa90871f461cc9c7d7e67d",
+      "slim_inputs_sha256": "d2a65fc74ed1e1834144190ada720e6912e00c0497d142afbbf9e60e96957f15",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_m_wild_arm": {
+      "binders": [
+        [
+          "r",
+          {
+            "domain": {
+              "d": "result",
+              "errs": [
+                "Bad",
+                "Worse",
+                "Worst"
+              ],
+              "ok": {
+                "d": "bool",
+                "size": 2
+              },
+              "size": 5
+            },
+            "type": "Result<Bool,TupleError>"
+          }
+        ]
+      ],
+      "cases": 5,
+      "chunk_lines": [
+        "0 5 0 5 98b48ccd09b6bcf4c567ea8a863a7a2bde67c34949a82048b68e549c44843445 cbfe39728947ccc149b6b44fcc542e933a7af2ac92dfc4ac0d5e6050eef0c505"
+      ],
+      "chunks": 1,
+      "claim": "c_m_wild_arm",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 5,
+      "expected_sha256": "8b4b611e96ae07169cc4afa0d954b016a53cfac07f9fc2e189559e5a13b7f594",
+      "id": "warrant/tuple_forms/exhaustive/c_m_wild_arm",
+      "inputs_sha256": "2ba896ba9585a1a16feae4b7721f50424eef58842920ea739fbd0bd2ee634bdc",
+      "ir_cost": 14,
+      "kind": "exhaustive",
+      "product": 5,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Nat",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "8b4b611e96ae07169cc4afa0d954b016a53cfac07f9fc2e189559e5a13b7f594",
+      "slim_inputs_sha256": "2ba896ba9585a1a16feae4b7721f50424eef58842920ea739fbd0bd2ee634bdc",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "55a33afb92828c35d891be26731d1a9143e744b03dff78da3e0a8d1ca1952a13",
+      "v1_inputs_sha256": "48d20bfb4f946718adb61f2e84dfde24112c7a48c59266c9d9a62b3565c15296",
+      "wraps": 0
+    },
+    "c_mixed": {
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ],
+        [
+          "n",
+          {
+            "domain": {
+              "d": "nat_0_64",
+              "size": 65
+            },
+            "type": "Nat"
+          }
+        ],
+        [
+          "d",
+          {
+            "domain": {
+              "d": "bytes_n",
+              "n": 0,
+              "size": 1
+            },
+            "type": "Bytes<0>"
+          }
+        ],
+        [
+          "f",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ]
+      ],
+      "cases": 1024,
+      "chunk_lines": [
+        "0 32 0 32 ec445d49c700d336ce2b624109c70e034c8521d7dfac27f5a4e79149f475457e fed81075dc87217ab0fa11aa8aeb217fb30ecfc4d34506479cbbc3f5b40eda36",
+        "1 32 32 32 04348194614b60da9db5c56599f1e256e130f9fa7ce551d23a32c630e2492e67 6fe445fecc0a4da8c72e4ce554294ec3a2cbee226721281aa2e21da69cfb5f03",
+        "2 32 64 32 96b18d4263eae81713541876197946bb19948852894fabdec4fe4807d4209e2b 05bb208f66616f23f9e2ff087556470b4519ed57312a1e3a075017a0220c10b6",
+        "3 32 96 32 caea58196dab6c622ddb99bd7411b7fa469dc08b9b652ee42693d00af8f8e706 3d2050fee2ca50cbdcaa2aaf8db31333b267c5107812f07dd125d69988fd5740",
+        "4 32 128 32 56643214999f684e8dd517ca13ad820e738190b1051902694276567ca3f2e108 4f1d01962562a24cf39f7063fc047fda118010dc36f51e628007c728a8986297",
+        "5 32 160 32 9a4a0afb9883fa67731a9f25c05ff4d1f48037c3b214fb378eabc869302356ef ad22d37d262e7dfffd025aa1bc86c4269f1aef38cee2057ffb4b603f754a8e9a",
+        "6 32 192 32 e8201e27186f9599dac37a0f5ead8b99513c0ac4dfd5b066cbcfd0cc532c19ff 23f339328d8eb3915c89aad38e53c3830f09bb57a02d0f433d94ee007a11d849",
+        "7 30 224 30 f3c7e78cdee9005c23a042f10e116bcb1d5eea3a5a10c757d0e83e5df21820da 65f4efe54bcc0a379b88046934700d8d4acabbe5c9f8b7d6e0e19658e5967910",
+        "8 30 254 30 1894f6daf618bed1e3e5a143b4331ababfb85178859488e3a05fde68ccde1c19 99e998d77dd7533d98e305ef66e76e25d98fbc25814538efc330204e03232753",
+        "9 32 284 32 42e0fa02ecfbb57f96d79c07916e87198f27de67d68e01b9df94ed3fca8e6a36 cf2ff3371977d9ca6f8af0bcbeeaaf2c98c5822038271f6d3d9870dbae50b24c",
+        "10 32 316 32 e8553a00b57529e0efed9eba7a72ba508dea051511934fe03c9dc4de1ffe90ac 53199e71e1d7b95ff0f2ec6816a1b48def3ecc13f26647d5a1712915c695c757",
+        "11 32 348 32 aad6ce14518b39e8e03ac5d523e968649d4fdbc17faa4bfd49feb444cb044a9f 9b6f41cb678e14585461be93dfcfdb0713a2559c99be2f53f14f71eaac411795",
+        "12 32 380 32 ee1ef463953cf585debf7eb55a7122e7499419c93ab4c407aba19bd76ef279e6 b572071618128ad3eee2cdc18f6e17894ff0e5065ee9d91384f2a87644ccd90f",
+        "13 32 412 32 8d50976d89ffa08523ca478f7177e596b89391f97f8349aaa437c95e7a87c05f ad9d29d1072ab42b3aa26c16eb93b2ae9738c6e05b9a81928ae91e03cf6471a0",
+        "14 32 444 32 b3c3dcaf7d9caa71d29288ac251e20cf4cb52e0dc2af2c1c0622e07d48924cee 8dfb7fe39af5857fcaf10776e9ef41b60f3734bfd241ac46d47dd8af1fa2cf42",
+        "15 32 476 32 bd6fa244ef0910dc948f56cf5439b2bbeb306cbb13a588425c9e4efd0d8c1f2c cba1e2390b74bd56bd24c3978f35c8139ac44acc6079a17dd1d3f7b8c50b4788",
+        "16 28 508 28 e07172700e278e6dd9cdc9192dc6427401c0fb92f5c0232478acb6db6dd4b47a 5ecea77465bdc42b11ef6bd5d42cfae7a5fa75485c56c824d09a7f309355e3c6",
+        "17 32 536 32 8f0fd8c8592b16dde4c585571ef38309e7b66b50835cd2588d9be94a95994ca3 e945228de989a468d37782310540f0fd4cc7e5a2be7972bfc847cd4ae8872278",
+        "18 32 568 32 4c7e7a167521d7da383da91cf393254f5ff2fb88674fc974308c067fadbfda5e 33e8eec8d17c297c45acdfdaf03f4a2fc846a0fc15d67e7007535799db4b3484",
+        "19 32 600 32 00c1e9fe84bd628a87415b3e30120b08576af74dded4eda98a7c2f72cd952a11 11b6cdfafffc244474df3153d5f6f0bcd13c9b5aeb2f4b3135fea463b0b5ab23",
+        "20 32 632 32 5fea0f23e72920d96cf72df30c2f54b7e7f903c464191121596eda455ffa966e 20a32c7cc6be403cdba46013461131377a41589c5b98f1b07864fffb5164e956",
+        "21 32 664 32 679c368a3914b42abb540cf0b2d3df8bdd1ad80406674a44fa6b13c880264f4e b1386982eab1c2d9eb14deb2edc725944c95fcdd04b06713c25dc6efc376749f",
+        "22 32 696 32 57f19f383939c06820d22aadf1ea64319db466b7c88fc5b889a45a7096d7eed9 4f05b9766e8a6f0194c3ac6f34f52c381e01658e2b50e625c88d3d1ca5403dc1",
+        "23 32 728 32 9c4c207a75842823b47bd7417db144d217f20827e3c9f7ab0543057bc6bb4591 f319fadf339ca665b43adf38b8e4fe7609e67bb6c4e33597f9f6f4d9156c84d3",
+        "24 28 760 28 a4a2498c6979ceed08e4fb5cee79a6eea1e9b093f46abd099ef75886f68c78ba e46281313146938365534fbeae07f817ac1381a413d6e2993550cb3ea2160b4b",
+        "25 32 788 32 c70a43e45535d10a9c466f4456ec2fcc3f5715712198d30c8fa01677d99d04ff 729f44c5a02b19210b13da6c633801e9870e7b80510551013bd15afd03e98a62",
+        "26 32 820 32 e991395cd70f2faec79a5c2917b52bfdce6494323ce3a23df2e79298c3deed46 83ea4693070997c1d59c580f22525d5d8181b460ba1c85a677c3dacb86000713",
+        "27 32 852 32 6a3e040d22615534b9ba4ed90d7b433f63206a10779dcd6fdfb5526d38b6508d 7ab611887f16559761ffa87aba795f35065bb331d16e26ba3268085a8eb1388a",
+        "28 32 884 32 1945e146f67c92e95f88dbd4795e4fd25cc126e8011a4ccce7e76ea6e99bde84 b77548ef7f4f044a8655a68919770be908007a293f5d4ea40729cb0d05a926c3",
+        "29 32 916 32 ad30e4062ef65f2ff0a926f7c4a0f1c0e039db52fd54e1c2fadfd6d0244f47e6 921b97067d3fbeefbf3efa2f709c88aff67a20318fc5b2c37414579a41e30802",
+        "30 32 948 32 d40a7a7325585de305b3319fd46680e735269723ccd4beaa61676b3089cba7f2 fefe6a2a5cfdc0e5584489ee43d1d714a375890b2712e0071c2710c349ed6eb4",
+        "31 32 980 32 ca588ca1a9d47756c49892a9f0bdc3011d12679f0a6473011896838703f9f0f9 89ab2817ab146b382ff8cce091251f6c7f5bf2025ce3633622057fc4044485b3",
+        "32 12 1012 12 2dd7ee1538e4032ac882c7fa5d8fa211fa8ce8a8d1f43859db420d1d0623c1ed fc0150460d42766eec9b13fea7726e28e299fb7380726570d2c43b9ee6139410"
+      ],
+      "chunks": 33,
+      "claim": "c_mixed",
+      "demoted": [],
+      "discarded": 32256,
+      "domain_label": "bounded-set",
+      "expected_calls": 1024,
+      "expected_sha256": "851f0e5ed5f45c731fe98b18acb3b0215dd8fbb4d18ee69c121c11bd0b97f150",
+      "id": "warrant/tuple_forms/exhaustive/c_mixed",
+      "inputs_sha256": "05abbf2d856949b727de230f5289b541169f56a075ec93ee39ff4e7824d62b9e",
+      "ir_cost": 19,
+      "kind": "exhaustive",
+      "product": 33280,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "(U8,Nat,Bytes<0>,Bool)",
+      "slim_chunks": [
+        0,
+        1,
+        4,
+        7,
+        10,
+        13,
+        16,
+        19,
+        22,
+        25,
+        28,
+        31,
+        32
+      ],
+      "slim_expected_sha256": "bbccfc716c4a3dfb4b4df3ed596e85cc0864549ecac8e9eb3c207cb3e25544b0",
+      "slim_inputs_sha256": "635063341bf39ac00130727b2b911933f4d63ce9a5ed57a6e7d97c02844c0478",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_nested": {
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ],
+        [
+          "c",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ]
+      ],
+      "cases": 8,
+      "chunk_lines": [
+        "0 8 0 8 8c825c87b111e7dddd2f11a89a43a7b873fe17165703e164456e908bfe01da90 ca9d8965e63d707332c48db72a860b4bbca30cdd720e6399f4270222e26fb399"
+      ],
+      "chunks": 1,
+      "claim": "c_nested",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 8,
+      "expected_sha256": "54849e4dc8f40e46be5e903a979f37841456d7ce78888815ee70138999f779a1",
+      "id": "warrant/tuple_forms/exhaustive/c_nested",
+      "inputs_sha256": "86dfd6f117f9a738ebc7416362453c86cca46b87d74ca95ef08f335d1a5c2394",
+      "ir_cost": 24,
+      "kind": "exhaustive",
+      "product": 8,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "((Bool,Bool),Bool)",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "54849e4dc8f40e46be5e903a979f37841456d7ce78888815ee70138999f779a1",
+      "slim_inputs_sha256": "86dfd6f117f9a738ebc7416362453c86cca46b87d74ca95ef08f335d1a5c2394",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_ok_and_inline": {
+      "binders": [
+        [
+          "r",
+          {
+            "domain": {
+              "d": "result",
+              "errs": [
+                "Bad",
+                "Worse",
+                "Worst"
+              ],
+              "ok": {
+                "d": "tuple",
+                "of": [
+                  {
+                    "d": "bool",
+                    "size": 2
+                  },
+                  {
+                    "d": "bool",
+                    "size": 2
+                  }
+                ],
+                "size": 4
+              },
+              "size": 7
+            },
+            "type": "Result<(Bool,Bool),TupleError>"
+          }
+        ]
+      ],
+      "cases": 7,
+      "chunk_lines": [
+        "0 7 0 7 03ab0d8e8ade6dc5806a4e5f814c8804d5f1fc4bfd1f9992b59afd30698fcfc1 1fdc50adc5b06dacf0403d0a74d1ec2633c98a6c06e5f160ee1910792fba0eef"
+      ],
+      "chunks": 1,
+      "claim": "c_ok_and_inline",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 7,
+      "expected_sha256": "b1eee78f9dd99cdf889d77b50c5c400a1fb56bef9f1ded48de76bf652a22ef50",
+      "id": "warrant/tuple_forms/exhaustive/c_ok_and_inline",
+      "inputs_sha256": "76c2796f85df2add4efd7dee9e3e632b94a5e7c110efb582fb3c0ef1968bfd3d",
+      "ir_cost": 14,
+      "kind": "exhaustive",
+      "product": 7,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Bool",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "b1eee78f9dd99cdf889d77b50c5c400a1fb56bef9f1ded48de76bf652a22ef50",
+      "slim_inputs_sha256": "76c2796f85df2add4efd7dee9e3e632b94a5e7c110efb582fb3c0ef1968bfd3d",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_pair": {
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ],
+        [
+          "n",
+          {
+            "domain": {
+              "d": "nat_0_64",
+              "size": 65
+            },
+            "type": "Nat"
+          }
+        ]
+      ],
+      "cases": 130,
+      "chunk_lines": [
+        "0 130 0 130 1bce1a27654ea0762415583b997f2ac34459388f77fdcf7804cabde83adb1c05 b145ec1d48d0afbadf1a8d8ac725d2fc37f9811c99cc0e0cd1a48fa561193b13"
+      ],
+      "chunks": 1,
+      "claim": "c_pair",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "bounded-set",
+      "expected_calls": 130,
+      "expected_sha256": "8aad33fa7d4a384a9f6f676b6bff50b6f5dcb2fce4c6fd2e53dd04cee3f6624b",
+      "id": "warrant/tuple_forms/exhaustive/c_pair",
+      "inputs_sha256": "d6f617b5423837fda08c7f9518097c9f7209f31f5c4a9c6bdea5ccb2062e3101",
+      "ir_cost": 17,
+      "kind": "exhaustive",
+      "product": 130,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "(Bool,Nat)",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "8aad33fa7d4a384a9f6f676b6bff50b6f5dcb2fce4c6fd2e53dd04cee3f6624b",
+      "slim_inputs_sha256": "d6f617b5423837fda08c7f9518097c9f7209f31f5c4a9c6bdea5ccb2062e3101",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_pair_literal": {
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ]
+      ],
+      "cases": 2,
+      "chunk_lines": [
+        "0 2 0 2 1189688cf19a2aac4b622714e2221cac445634481eadfe4e84cbedf32cfc697e effeeba7aa3cc475ada824fff63617be1076f55651ddcc84e3242539b6065d21"
+      ],
+      "chunks": 1,
+      "claim": "c_pair_literal",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 2,
+      "expected_sha256": "6ab2ca166b87af698b29c4a5913aada165ce086c78e3c2151e372f166bf047cc",
+      "id": "warrant/tuple_forms/exhaustive/c_pair_literal",
+      "inputs_sha256": "9008f7f36ba3f563ab58a904b3bddffcb273430ba7061f274207240892de9c1f",
+      "ir_cost": 11,
+      "kind": "exhaustive",
+      "product": 2,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "(Bool,Nat)",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "6ab2ca166b87af698b29c4a5913aada165ce086c78e3c2151e372f166bf047cc",
+      "slim_inputs_sha256": "9008f7f36ba3f563ab58a904b3bddffcb273430ba7061f274207240892de9c1f",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_proj0": {
+      "binders": [
+        [
+          "t",
+          {
+            "domain": {
+              "d": "tuple",
+              "of": [
+                {
+                  "d": "bool",
+                  "size": 2
+                },
+                {
+                  "d": "nat_0_64",
+                  "size": 65
+                }
+              ],
+              "size": 130
+            },
+            "type": "(Bool,Nat)"
+          }
+        ]
+      ],
+      "cases": 130,
+      "chunk_lines": [
+        "0 130 0 130 cfffdd2ae1a5ab0567a51617a86706ca19ae2875fcaf2e49b7675e0d531e6d9a c1a7c8ba3d49dd70e45931f4a1d724d629bbfe39dc4fa3ddad6dbf04bb3968ae"
+      ],
+      "chunks": 1,
+      "claim": "c_proj0",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "bounded-set",
+      "expected_calls": 130,
+      "expected_sha256": "4d53a8973e99dcf66673fa09ff4242022c974c0415fd2ce1072fd5657bc88c7b",
+      "id": "warrant/tuple_forms/exhaustive/c_proj0",
+      "inputs_sha256": "831895108e8654f5f0c8345051cc9abd7faa10cf31fe77eafef2d529cbc75865",
+      "ir_cost": 12,
+      "kind": "exhaustive",
+      "product": 130,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Bool",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "4d53a8973e99dcf66673fa09ff4242022c974c0415fd2ce1072fd5657bc88c7b",
+      "slim_inputs_sha256": "831895108e8654f5f0c8345051cc9abd7faa10cf31fe77eafef2d529cbc75865",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_proj1": {
+      "binders": [
+        [
+          "t",
+          {
+            "domain": {
+              "d": "tuple",
+              "of": [
+                {
+                  "d": "bool",
+                  "size": 2
+                },
+                {
+                  "d": "nat_0_64",
+                  "size": 65
+                }
+              ],
+              "size": 130
+            },
+            "type": "(Bool,Nat)"
+          }
+        ]
+      ],
+      "cases": 130,
+      "chunk_lines": [
+        "0 130 0 130 60bb805d2a2df86ae06882b2de70c2f8f80331c893801326f112cbd000883c3f 84884249a02cf5c4aa0ec5e9a2955d9d553a17a3304b60b553c18a5e516f99a7"
+      ],
+      "chunks": 1,
+      "claim": "c_proj1",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "bounded-set",
+      "expected_calls": 130,
+      "expected_sha256": "2af731d45ff8b1602f617fb2f021216671ffb14c9ed0bdad5f924c8a38fb65dd",
+      "id": "warrant/tuple_forms/exhaustive/c_proj1",
+      "inputs_sha256": "50fa42eb14cd09b738872f1a90c22e6a87233f02391de776b2f343d5e10e7289",
+      "ir_cost": 12,
+      "kind": "exhaustive",
+      "product": 130,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Nat",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "2af731d45ff8b1602f617fb2f021216671ffb14c9ed0bdad5f924c8a38fb65dd",
+      "slim_inputs_sha256": "50fa42eb14cd09b738872f1a90c22e6a87233f02391de776b2f343d5e10e7289",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_proj_chain": {
+      "binders": [
+        [
+          "t",
+          {
+            "domain": {
+              "d": "tuple",
+              "of": [
+                {
+                  "d": "tuple",
+                  "of": [
+                    {
+                      "d": "bool",
+                      "size": 2
+                    },
+                    {
+                      "d": "nat_0_64",
+                      "size": 65
+                    }
+                  ],
+                  "size": 130
+                },
+                {
+                  "d": "bool",
+                  "size": 2
+                }
+              ],
+              "size": 260
+            },
+            "type": "((Bool,Nat),Bool)"
+          }
+        ]
+      ],
+      "cases": 260,
+      "chunk_lines": [
+        "0 260 0 260 d2eb1bca9bff888471ceaf0f9458099be8a18ab998de1e36e400cebbb35f4171 fd584df14fab588da38cc2992dbbcf4879a7102927b37800b6ba1c1fd1cd3220"
+      ],
+      "chunks": 1,
+      "claim": "c_proj_chain",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "bounded-set",
+      "expected_calls": 260,
+      "expected_sha256": "12bd69f5ce0ecd733a8a65ab403605397944569fc276dd9e8bd82d51f6ceffc3",
+      "id": "warrant/tuple_forms/exhaustive/c_proj_chain",
+      "inputs_sha256": "eeeea76434637ac9383366a16115b6911ac800de8d978ef57963e9bc48e79c1c",
+      "ir_cost": 14,
+      "kind": "exhaustive",
+      "product": 260,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Nat",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "12bd69f5ce0ecd733a8a65ab403605397944569fc276dd9e8bd82d51f6ceffc3",
+      "slim_inputs_sha256": "eeeea76434637ac9383366a16115b6911ac800de8d978ef57963e9bc48e79c1c",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_proj_last8": {
+      "binders": [
+        [
+          "t",
+          {
+            "domain": {
+              "d": "tuple",
+              "of": [
+                {
+                  "d": "bool",
+                  "size": 2
+                },
+                {
+                  "d": "bool",
+                  "size": 2
+                },
+                {
+                  "d": "bool",
+                  "size": 2
+                },
+                {
+                  "d": "bool",
+                  "size": 2
+                },
+                {
+                  "d": "bool",
+                  "size": 2
+                },
+                {
+                  "d": "bool",
+                  "size": 2
+                },
+                {
+                  "d": "bool",
+                  "size": 2
+                },
+                {
+                  "d": "bool",
+                  "size": 2
+                }
+              ],
+              "size": 256
+            },
+            "type": "(Bool,Bool,Bool,Bool,Bool,Bool,Bool,Bool)"
+          }
+        ]
+      ],
+      "cases": 256,
+      "chunk_lines": [
+        "0 256 0 256 176b22bcba8a25d7673c74aa26fc32b6c6053a66f467e282bb99035f4a74c162 15b48d5a6410270e00b2231b0689dd788b84dab8ac7138a8731971b0c72dc55c"
+      ],
+      "chunks": 1,
+      "claim": "c_proj_last8",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 256,
+      "expected_sha256": "a3f72f2f6bf217721f1fa8c00c1ef7c6d3891a4c01d03ef90bab07bdd5b227e0",
+      "id": "warrant/tuple_forms/exhaustive/c_proj_last8",
+      "inputs_sha256": "5b207d18a0cbad17c1f2a9a733c219eaefb5eace55f4cd550b5f0618a8685bbd",
+      "ir_cost": 12,
+      "kind": "exhaustive",
+      "product": 256,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Bool",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "a3f72f2f6bf217721f1fa8c00c1ef7c6d3891a4c01d03ef90bab07bdd5b227e0",
+      "slim_inputs_sha256": "5b207d18a0cbad17c1f2a9a733c219eaefb5eace55f4cd550b5f0618a8685bbd",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_proj_literal": {
+      "binders": [],
+      "cases": 1,
+      "chunk_lines": [
+        "0 1 0 1 acf591a814d439c2ff1851e5ab6a0ee2beca20f764f1b6ca44561985abb4788e cbd3c6ef821e4326f5d9c6345499762891c79bccec34f4451953f95a03a7a8bc"
+      ],
+      "chunks": 1,
+      "claim": "c_proj_literal",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 1,
+      "expected_sha256": "e3d22af94baf7fe248da3953abf353ddc2c127787eb466e0a40b92455f384ac9",
+      "id": "warrant/tuple_forms/exhaustive/c_proj_literal",
+      "inputs_sha256": "963b54b33ebd245a80e5b088e15c72b97638e90988509df20b0dfdb56600f16e",
+      "ir_cost": 13,
+      "kind": "exhaustive",
+      "product": 1,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "U8",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "e3d22af94baf7fe248da3953abf353ddc2c127787eb466e0a40b92455f384ac9",
+      "slim_inputs_sha256": "963b54b33ebd245a80e5b088e15c72b97638e90988509df20b0dfdb56600f16e",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "da51fc927475732419fe48aa499fc69d0e342f4b0e77e199ebbc939ae0ea4ed4",
+      "v1_inputs_sha256": "22874047efd64ae7296b9b83b22c0f7dc6104d007a3909bf4ef6cf31ce508273",
+      "wraps": 0
+    },
+    "c_proj_postfix": {
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "bool",
+              "size": 2
+            },
+            "type": "Bool"
+          }
+        ],
+        [
+          "n",
+          {
+            "domain": {
+              "d": "nat_0_64",
+              "size": 65
+            },
+            "type": "Nat"
+          }
+        ]
+      ],
+      "cases": 130,
+      "chunk_lines": [
+        "0 130 0 130 526189605d4c26ebadb5dea3f61f30b4c8b5a340f9e872b2034184d859056d9f cdcac5e00f69aa019b2ad9c2956874924e967d73944dc9aac5ee5edee4518531"
+      ],
+      "chunks": 1,
+      "claim": "c_proj_postfix",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "bounded-set",
+      "expected_calls": 130,
+      "expected_sha256": "02f11b76cf84841616fe7fffeec148bbabcb7aebf23b4d47e4355a33c27bcd32",
+      "id": "warrant/tuple_forms/exhaustive/c_proj_postfix",
+      "inputs_sha256": "e4886e567524731a483bda8907d534eee36be3b73679f40a800a215519de4857",
+      "ir_cost": 25,
+      "kind": "exhaustive",
+      "product": 130,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Nat",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "02f11b76cf84841616fe7fffeec148bbabcb7aebf23b4d47e4355a33c27bcd32",
+      "slim_inputs_sha256": "e4886e567524731a483bda8907d534eee36be3b73679f40a800a215519de4857",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "8c4e9ce347996581213e3c13a01eba73c0aea3717a243e0a1306a6755603bc94",
+      "v1_inputs_sha256": "64531ccf773fbb726199abc40980c77e421bf2bb23cb0eb0ead95edc94d02675",
+      "wraps": 0
+    },
+    "c_swap": {
+      "binders": [
+        [
+          "t",
+          {
+            "domain": {
+              "d": "tuple",
+              "of": [
+                {
+                  "d": "bool",
+                  "size": 2
+                },
+                {
+                  "d": "bool",
+                  "size": 2
+                }
+              ],
+              "size": 4
+            },
+            "type": "(Bool,Bool)"
+          }
+        ]
+      ],
+      "cases": 4,
+      "chunk_lines": [
+        "0 4 0 4 7df872ff6a3b905fe2363c4d0897661ee83b163f8e92a8fec62794be0b48cc35 c29530f05fb13479145841d22e725d63ed8364e1da1fff20ec20f707accf9b8a"
+      ],
+      "chunks": 1,
+      "claim": "c_swap",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 4,
+      "expected_sha256": "e393dee604f1e0c2ace2d3e601e3d8ac8b319227e0e7fa2ee1b30ce13fd6180f",
+      "id": "warrant/tuple_forms/exhaustive/c_swap",
+      "inputs_sha256": "6c1e0684e49610ba3e6f6445594aab65a15acef0a7960cb2f2a102c5f9f50491",
+      "ir_cost": 18,
+      "kind": "exhaustive",
+      "product": 4,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "(Bool,Bool)",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "e393dee604f1e0c2ace2d3e601e3d8ac8b319227e0e7fa2ee1b30ce13fd6180f",
+      "slim_inputs_sha256": "6c1e0684e49610ba3e6f6445594aab65a15acef0a7960cb2f2a102c5f9f50491",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_swap_involutive": {
+      "binders": [
+        [
+          "t",
+          {
+            "domain": {
+              "d": "tuple",
+              "of": [
+                {
+                  "d": "bool",
+                  "size": 2
+                },
+                {
+                  "d": "bool",
+                  "size": 2
+                }
+              ],
+              "size": 4
+            },
+            "type": "(Bool,Bool)"
+          }
+        ]
+      ],
+      "cases": 4,
+      "chunk_lines": [
+        "0 4 0 8 0e82afcb44cae58ff238b32be250c05681aaf7ae7ffae03fbe870050570d6a05 0e82afcb44cae58ff238b32be250c05681aaf7ae7ffae03fbe870050570d6a05"
+      ],
+      "chunks": 1,
+      "claim": "c_swap_involutive",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 8,
+      "expected_sha256": "d66c7b096c1b932dbb78e33f98487391d5e8e4f590034b587f2b58369e5edb60",
+      "id": "warrant/tuple_forms/exhaustive/c_swap_involutive",
+      "inputs_sha256": "d66c7b096c1b932dbb78e33f98487391d5e8e4f590034b587f2b58369e5edb60",
+      "ir_cost": 7,
+      "kind": "exhaustive",
+      "product": 4,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "(Bool,Bool)",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "d66c7b096c1b932dbb78e33f98487391d5e8e4f590034b587f2b58369e5edb60",
+      "slim_inputs_sha256": "d66c7b096c1b932dbb78e33f98487391d5e8e4f590034b587f2b58369e5edb60",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_tup_eq": {
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "tuple",
+              "of": [
+                {
+                  "d": "bool",
+                  "size": 2
+                },
+                {
+                  "d": "bool",
+                  "size": 2
+                }
+              ],
+              "size": 4
+            },
+            "type": "(Bool,Bool)"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "tuple",
+              "of": [
+                {
+                  "d": "bool",
+                  "size": 2
+                },
+                {
+                  "d": "bool",
+                  "size": 2
+                }
+              ],
+              "size": 4
+            },
+            "type": "(Bool,Bool)"
+          }
+        ]
+      ],
+      "cases": 16,
+      "chunk_lines": [
+        "0 16 0 16 99b37750db7e8e5a1e4b3289f0d32064d0f596182a2debbd8ac97cf369215b7a 657a4923baa02abe2c13da53f6f5a964b854507d12cb1834904f26fbcdad40c3"
+      ],
+      "chunks": 1,
+      "claim": "c_tup_eq",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 16,
+      "expected_sha256": "35000e32576316786e42c6378502ba491735a821c25c9b09802df2ad01cd9f5b",
+      "id": "warrant/tuple_forms/exhaustive/c_tup_eq",
+      "inputs_sha256": "58cfcb79f92bb8942199299c1d7384653191b708729021353f5f189cb0f8983a",
+      "ir_cost": 17,
+      "kind": "exhaustive",
+      "product": 16,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Bool",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "35000e32576316786e42c6378502ba491735a821c25c9b09802df2ad01cd9f5b",
+      "slim_inputs_sha256": "58cfcb79f92bb8942199299c1d7384653191b708729021353f5f189cb0f8983a",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_tup_eq_lit": {
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "tuple",
+              "of": [
+                {
+                  "d": "bool",
+                  "size": 2
+                },
+                {
+                  "d": "nat_0_64",
+                  "size": 65
+                }
+              ],
+              "size": 130
+            },
+            "type": "(Bool,Nat)"
+          }
+        ]
+      ],
+      "cases": 130,
+      "chunk_lines": [
+        "0 130 0 130 63d1e2da52177258dcd00a67204c4b5e4ac02f38b52c7c67df9d09585faf1d8c 538b18205ccfed527729d545f6a9b516023926e8997927bb3133e48bff25f757"
+      ],
+      "chunks": 1,
+      "claim": "c_tup_eq_lit",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "bounded-set",
+      "expected_calls": 130,
+      "expected_sha256": "daf6a9b4ad754966497d7f460db30c4a15ffedcd70871e69a4562aa1c040c6d1",
+      "id": "warrant/tuple_forms/exhaustive/c_tup_eq_lit",
+      "inputs_sha256": "268fc15177da983f8e169bdc1615f438328451e887875407230500eab4072735",
+      "ir_cost": 18,
+      "kind": "exhaustive",
+      "product": 130,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Bool",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "daf6a9b4ad754966497d7f460db30c4a15ffedcd70871e69a4562aa1c040c6d1",
+      "slim_inputs_sha256": "268fc15177da983f8e169bdc1615f438328451e887875407230500eab4072735",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_tup_ne": {
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "tuple",
+              "of": [
+                {
+                  "d": "bool",
+                  "size": 2
+                },
+                {
+                  "d": "bool",
+                  "size": 2
+                }
+              ],
+              "size": 4
+            },
+            "type": "(Bool,Bool)"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "tuple",
+              "of": [
+                {
+                  "d": "bool",
+                  "size": 2
+                },
+                {
+                  "d": "bool",
+                  "size": 2
+                }
+              ],
+              "size": 4
+            },
+            "type": "(Bool,Bool)"
+          }
+        ]
+      ],
+      "cases": 16,
+      "chunk_lines": [
+        "0 16 0 16 343b44d7475fe0d427b8ea018e13ab6e43ec6be9611fa91952814a1498721d93 872991eacfadaacb1117c45e9e238deb46ac2f783c0a2903b28b90f70ec5971c"
+      ],
+      "chunks": 1,
+      "claim": "c_tup_ne",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 16,
+      "expected_sha256": "2ac4597c6e5c325eb697287491f4e2fd684a94151adde25c344f272356e48771",
+      "id": "warrant/tuple_forms/exhaustive/c_tup_ne",
+      "inputs_sha256": "334483aa4d616a91eda8fe766ad899954f3267f24d4bf89bc6dc64fc4a9bee47",
+      "ir_cost": 17,
+      "kind": "exhaustive",
+      "product": 16,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Bool",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "2ac4597c6e5c325eb697287491f4e2fd684a94151adde25c344f272356e48771",
+      "slim_inputs_sha256": "334483aa4d616a91eda8fe766ad899954f3267f24d4bf89bc6dc64fc4a9bee47",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_u8": {
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ]
+      ],
+      "cases": 256,
+      "chunk_lines": [
+        "0 256 0 256 921ac39e09855a357fd2d5f396b75d5bb3d95ee7ab3687abbc9fd5e46c5b4d4d 921ac39e09855a357fd2d5f396b75d5bb3d95ee7ab3687abbc9fd5e46c5b4d4d"
+      ],
+      "chunks": 1,
+      "claim": "c_u8",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 256,
+      "expected_sha256": "76324783afd9009a8aea8cd8a0b457d04486ebe8a56d210e8943d5f6ad4f6eb0",
+      "id": "warrant/tuple_forms/exhaustive/c_u8",
+      "inputs_sha256": "76324783afd9009a8aea8cd8a0b457d04486ebe8a56d210e8943d5f6ad4f6eb0",
+      "ir_cost": 6,
+      "kind": "exhaustive",
+      "product": 256,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "U8",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "76324783afd9009a8aea8cd8a0b457d04486ebe8a56d210e8943d5f6ad4f6eb0",
+      "slim_inputs_sha256": "76324783afd9009a8aea8cd8a0b457d04486ebe8a56d210e8943d5f6ad4f6eb0",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "e614be2d864f4cff5c0f21b10a42da1c2467767785da3a8817f5b090d058fbd0",
+      "v1_inputs_sha256": "e614be2d864f4cff5c0f21b10a42da1c2467767785da3a8817f5b090d058fbd0",
+      "wraps": 0
+    },
+    "c_u8_bool": {
+      "binders": [
+        [
+          "t",
+          {
+            "domain": {
+              "d": "tuple",
+              "of": [
+                {
+                  "d": "u8_all",
+                  "size": 256
+                },
+                {
+                  "d": "bool",
+                  "size": 2
+                }
+              ],
+              "size": 512
+            },
+            "type": "(U8,Bool)"
+          }
+        ]
+      ],
+      "cases": 512,
+      "chunk_lines": [
+        "0 512 0 512 b4a7541465f159825741827245457214cef43034c00332b816630f0d39aee671 ba7bd283fbcb4b8ecc6b2162a0681b50be87566607ad96f0761294fb95160f38"
+      ],
+      "chunks": 1,
+      "claim": "c_u8_bool",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 512,
+      "expected_sha256": "d95085bf48cc63001239024c52a6f64c6df891a6011db7f5b94fa97dca06024f",
+      "id": "warrant/tuple_forms/exhaustive/c_u8_bool",
+      "inputs_sha256": "e7afa0cb2f0ed8d352cb76922feb2ad34122c4a19407a68d81541531dfe4aba7",
+      "ir_cost": 13,
+      "kind": "exhaustive",
+      "product": 512,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "U8",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "d95085bf48cc63001239024c52a6f64c6df891a6011db7f5b94fa97dca06024f",
+      "slim_inputs_sha256": "e7afa0cb2f0ed8d352cb76922feb2ad34122c4a19407a68d81541531dfe4aba7",
+      "stream": "warrant-stream-v2",
+      "wraps": 2
+    },
+    "c_u8_bool_ne": {
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "tuple",
+              "of": [
+                {
+                  "d": "bool",
+                  "size": 2
+                },
+                {
+                  "d": "bool",
+                  "size": 2
+                }
+              ],
+              "size": 4
+            },
+            "type": "(Bool,Bool)"
+          }
+        ],
+        [
+          "b",
+          {
+            "domain": {
+              "d": "tuple",
+              "of": [
+                {
+                  "d": "bool",
+                  "size": 2
+                },
+                {
+                  "d": "bool",
+                  "size": 2
+                }
+              ],
+              "size": 4
+            },
+            "type": "(Bool,Bool)"
+          }
+        ]
+      ],
+      "cases": 16,
+      "chunk_lines": [
+        "0 16 0 16 13f7feb2451fac1c33f7ee3104cd5b1c1b30dc90dcf4df318cab6a947c1d29b2"
+      ],
+      "chunks": 1,
+      "claim": "c_u8_bool_ne",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 16,
+      "id": "warrant/tuple_forms/exhaustive/c_u8_bool_ne",
+      "inputs_sha256": "5a920f142c98830c7a6df681eefadb042234e7f7d10e4d9f3131cd3ebc7689d7",
+      "ir_cost": 11,
+      "kind": "exhaustive",
+      "product": 16,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Bool",
+      "slim_chunks": [
+        0
+      ],
+      "slim_inputs_sha256": "5a920f142c98830c7a6df681eefadb042234e7f7d10e4d9f3131cd3ebc7689d7",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    "c_zero": {
+      "binders": [
+        [
+          "d",
+          {
+            "domain": {
+              "d": "bytes_n",
+              "n": 0,
+              "size": 1
+            },
+            "type": "Bytes<0>"
+          }
+        ]
+      ],
+      "cases": 1,
+      "chunk_lines": [
+        "0 1 0 1 d294218a0f2e07965d1d8e8a8cd7f03688dde1ce4f09bedb97645e0ca0d714d0 db302d322acd1be15e2923e208686658182673b9ee288ec1baf9c983774fc8a4"
+      ],
+      "chunks": 1,
+      "claim": "c_zero",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 1,
+      "expected_sha256": "9c136b4aaa14d08fcde7b3970632552986b0270da8ae26db29750d2af01fec39",
+      "id": "warrant/tuple_forms/exhaustive/c_zero",
+      "inputs_sha256": "28e4727f47f1a54344294dfa4f25b919fe43af9e8f1f20ce1a55acf9a6d3720c",
+      "ir_cost": 6,
+      "kind": "exhaustive",
+      "product": 1,
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Result<(Bool,Nat),TupleError>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "9c136b4aaa14d08fcde7b3970632552986b0270da8ae26db29750d2af01fec39",
+      "slim_inputs_sha256": "28e4727f47f1a54344294dfa4f25b919fe43af9e8f1f20ce1a55acf9a6d3720c",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    }
+  }
+}

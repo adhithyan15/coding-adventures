@@ -4,6 +4,14 @@ All notable changes to this package are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Changed (VOS-038a, WX-SV2)
+
+- `init` is bound with `field-flip`, `alpha_w` with `field-zero,field-flip`; harness regenerated.
+  `warrant/check_evidence.sh` is **kept, narrowed**: exactly the three `init`/`field-flip` controls
+  still cannot pass (their only member `rep_init` cannot see a flip that stays in the image of
+  `rep`), 78 ok (VOS-D087, VOS-D098). New sabotage lines: `safety_init` (flip of `init`, of
+  `alpha_w`), `rep_init` and `dispatch_rep_post` (flip of `alpha_w`), which had no line before.
+
 ### Added
 
 - VOS-012b: the round-robin scheduler (`code/specs/VOS10-scheduler-contract.md` section 11.2), the
