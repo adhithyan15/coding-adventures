@@ -1,7 +1,10 @@
 """Tests for property-based testing and shrinking."""
 
+from itertools import islice
+
 import pytest
 
+import coding_adventures_test_bootstrap.pbt as pbt
 from coding_adventures_test_bootstrap.pbt import (
     MAX_CASES,
     MAX_INPUT_BYTES,
@@ -129,6 +132,33 @@ def test_shrinking_primitives() -> None:
     with pytest.raises(TypeError):
         list(shrink_int(0, False))  # type: ignore[arg-type]
 
+    # Bound the negative regression so the old floor-division loop fails
+    # promptly instead of hanging the test process.
+    assert list(islice(shrink_int(-8), 5)) == [0, -4, -6, -7]
+    assert list(shrink_int(8, 3)) == [3, 6, 7]
+    assert list(shrink_int(-8, -3)) == [-3, -6, -7]
+    assert list(shrink_int(8, 8)) == []
+
+    # Binary bisection emits the target and each halved distance once, even
+    # for translated targets and integers far beyond machine word sizes.
+    for val in range(-16, 17):
+        for target in range(-16, 17):
+            proposals = list(shrink_int(val, target))
+            assert len(proposals) == len(set(proposals))
+            assert all(abs(item - target) < abs(val - target) for item in proposals)
+            if val != target:
+                assert proposals[0] == target
+                assert len(proposals) == abs(val - target).bit_length()
+    huge_val = (1 << 4096) + 123
+    huge_target = -(1 << 2048) + 17
+    huge_proposals = list(shrink_int(huge_val, huge_target))
+    assert len(huge_proposals) == abs(huge_val - huge_target).bit_length()
+    assert len(huge_proposals) == len(set(huge_proposals))
+    assert all(
+        abs(item - huge_target) < abs(huge_val - huge_target)
+        for item in huge_proposals
+    )
+
     # bytes
     shrunk_b = list(shrink_bytes(b"hello world"))
     assert b"" in shrunk_b
@@ -171,6 +201,32 @@ def test_for_all_success() -> None:
     assert res.error is None
 
 
+def test_seeded_integer_shrink_properties() -> None:
+    limit = (1 << 63) - 1
+
+    def shrink_invariants(value: int, target: int) -> bool:
+        proposals = list(shrink_int(value, target))
+        return (
+            (not proposals if value == target else proposals[0] == target)
+            and len(proposals) == len(set(proposals))
+            and all(
+                abs(candidate - target) < abs(value - target)
+                for candidate in proposals
+            )
+            and len(proposals) == abs(value - target).bit_length()
+        )
+
+    result = for_all(
+        shrink_invariants,
+        gen_int(-limit, limit),
+        gen_int(-limit, limit),
+        count=256,
+        seed=0x5A17,
+    )
+    assert result.passed
+    assert result.cases_run == 256
+
+
 def test_for_all_failure_counterexample_and_shrinking() -> None:
     # Property: all integers < 10 (will fail for >= 10)
     res = for_all(
@@ -185,6 +241,88 @@ def test_for_all_failure_counterexample_and_shrinking() -> None:
     assert res.shrunken is not None
     assert res.shrunken[0] >= 10
     assert res.error == "Property returned False"
+
+
+def test_for_all_shrinks_negative_only_witness() -> None:
+    fixed_negative = pbt.Gen(lambda rng: -8)
+    res = for_all(
+        lambda x: x >= 0,
+        fixed_negative,
+        count=1,
+        max_shrink_steps=100,
+    )
+    assert not res.passed
+    assert res.counterexample == (-8,)
+    assert res.shrunken == (-1,)
+    assert res.shrink_steps <= 100
+
+
+@pytest.mark.parametrize("witness", [64, -8])
+def test_for_all_consumes_only_the_shrink_step_budget(witness: int) -> None:
+    calls = 0
+
+    def fails_only_at_witness(value: int) -> bool:
+        nonlocal calls
+        calls += 1
+        return value != witness
+
+    fixed = pbt.Gen(lambda rng: witness)
+    result = for_all(
+        fails_only_at_witness,
+        fixed,
+        count=1,
+        max_shrink_steps=1,
+    )
+    assert not result.passed
+    assert result.counterexample == (witness,)
+    assert result.shrink_steps == 1
+    assert calls == 2  # one generated value and one consumed proposal
+
+
+def test_for_all_zero_shrink_budget_does_not_consume_proposals() -> None:
+    calls = 0
+
+    def always_fails(value: int) -> bool:
+        nonlocal calls
+        calls += 1
+        return False
+
+    fixed = pbt.Gen(lambda rng: 9)
+    result = for_all(always_fails, fixed, count=1, max_shrink_steps=0)
+    assert result.counterexample == (9,)
+    assert result.shrunken == (9,)
+    assert result.shrink_steps == 0
+    assert calls == 1
+
+
+def test_for_all_duplicate_shrinker_proposals_still_use_budget(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    calls = 0
+    yielded = 0
+
+    def always_fails(value: int) -> bool:
+        nonlocal calls
+        calls += 1
+        return False
+
+    def repeating_shrinker(value: int):
+        nonlocal yielded
+        while True:
+            yielded += 1
+            yield value
+
+    monkeypatch.setattr(pbt, "shrink_value", repeating_shrinker)
+    result = for_all(
+        always_fails,
+        pbt.Gen(lambda rng: 9),
+        count=1,
+        max_shrink_steps=3,
+    )
+    assert result.shrunken == (9,)
+    assert result.shrink_steps == 3
+    assert yielded == 3
+    assert calls == 1  # duplicate proposals are counted, not rechecked
 
 
 def test_for_all_exception_handling() -> None:
