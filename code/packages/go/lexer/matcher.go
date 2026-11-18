@@ -164,6 +164,25 @@ func (m *matcher) match(s string) int {
 			}
 			pos += w
 		case stepRun:
+			if !st.u.high {
+				// ASCII-only classes can inspect their byte set directly. Compute
+				// the bounded scan length from the remaining input so adding max
+				// to pos cannot overflow for a large repetition bound.
+				start := pos
+				limit := len(s) - pos
+				if st.max >= 0 && st.max < limit {
+					limit = st.max
+				}
+				end := pos + limit // limit <= len(s)-pos, so end <= len(s)
+				for pos < end && st.u.set[s[pos]] {
+					pos++
+				}
+				if pos-start < st.min {
+					return -1
+				}
+				continue
+			}
+
 			count := 0
 			for st.max < 0 || count < st.max {
 				w := st.u.at(s, pos)
