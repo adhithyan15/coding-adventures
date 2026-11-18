@@ -560,8 +560,10 @@ when ALL of these hold; otherwise it stays `unresumed-call` at T's line:
 2. Another pid L has a pending `execve` with an EARLIER line and a
    byte-identical text before `<unfinished ...>` (the earliest, if several).
 3. The path is absolute: the line starts `execve("/`.
-4. L's `execve` later resumes with `= 0`. If it fails, or L never resumes or
-   exits first, the refusal is at the ghost's line.
+4. L's `execve` later resumes with `= 0`. If the owner's `execve` resumes with
+   a failure, the refusal is at the ghost's line; if the owner never resumes,
+   or exits first, the refusal is the owner's own `unresumed-call` (at the
+   owner's line).
 5. In pass 2, T and L are in the same thread group (the spawns with
    `CLONE_THREAD` lead from one to the other's leader, within the depth
    bound). Otherwise the refusal is at the ghost's line.
@@ -570,7 +572,17 @@ Soundness: even if the line were real, L's byte-identical `execve` succeeded,
 so T was torn down before its image changed; its only possible effect is
 reading the same absolute path L's recorded exec reads, and it writes nothing.
 T's exit record stands; the phantom yields no event. Both readers share one
-helper (`exitInsideCall`), so they cannot drift.
+helper (`exitInsideCall`), so they cannot drift. The thread-group walk of
+rule 5 is memoised and bounded like the other group walks; past the depth bound
+it can only refuse a real same-group pair, never accept two groups as one.
+
+Known residual: a step that races two `execve`s of the same absolute path
+against a swap of a symlink on that path could, in principle, have a killed
+REAL sibling's open of the old target dropped as a phantom, so that open is not
+recorded. That binary never runs (the sibling was torn down before its image
+changed), and the owner's open of the path is recorded. We judge this
+acceptable: it needs a deliberate race inside one step, and the reviewers
+judged it theoretical.
 
 
 **Process model.**

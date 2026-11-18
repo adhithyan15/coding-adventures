@@ -82,7 +82,7 @@ func handleLineG(text string, lineNo int, st *lineState) (rec *record, e *Error)
 			return nil, incomplete(lineNo, reasonUnparsable)
 		}
 		// See handleLine: a call cut off by the exit (shared rule, D18 and D33).
-		if e := exitInsideCall(pend, pid, ex); e != nil {
+		if e := exitInsideCall(st, pid, ex); e != nil {
 			return nil, e
 		}
 		return &record{line: lineNo, pid: pid, exit: ex}, nil
@@ -113,7 +113,7 @@ func handleLineG(text string, lineNo int, st *lineState) (rec *record, e *Error)
 		if pend[pid] != nil {
 			return nil, incomplete(lineNo, reasonInterleaved)
 		}
-		pend[pid] = &pending{name: "???", line: lineNo, dead: true, resumed: bt.TypeName == "DEAD_WHOLE"}
+		st.setPending(pid, &pending{name: "???", line: lineNo, dead: true, resumed: bt.TypeName == "DEAD_WHOLE"})
 		return nil, nil
 
 	case "resumed_line":
@@ -123,7 +123,7 @@ func handleLineG(text string, lineNo int, st *lineState) (rec *record, e *Error)
 		if p == nil || p.name != name || p.dead {
 			return nil, incomplete(lineNo, reasonUnmatched)
 		}
-		delete(pend, pid)
+		st.clearPending(pid)
 		// Glue the half before "<unfinished ...>" to the text after the marker
 		// and read the whole call again, as one line.  Each half was already
 		// read on its own (the parse above), so no construct can span the seam:
@@ -158,7 +158,7 @@ func handleLineG(text string, lineNo int, st *lineState) (rec *record, e *Error)
 					return nil, e
 				}
 			}
-			pend[pid] = &pending{name: call.name, prefix: prefix, line: lineNo}
+			st.setPending(pid, &pending{name: call.name, prefix: prefix, line: lineNo})
 			if isExitName(call.name) {
 				return &record{line: lineNo, pid: pid, exitCall: true, rawExit: call.name == "exit"}, nil
 			}

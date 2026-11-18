@@ -231,6 +231,76 @@ func TestPhantomExecRefusedInHelperMode(t *testing.T) {
 	}
 }
 
+// The owner resuming "= ?" is not a success: refused at the ghost's line.
+func TestPhantomExecOwnerResumesUnknown(t *testing.T) {
+	text := clones(1, 2) + unf(1) + unf(2) + exited(2) + "1  <... execve resumed>) = ?\n" + exited(1)
+	e := refusal(t, text, false)
+	if e.Reason != reasonUnresumed || e.Line != 3 {
+		t.Fatalf("%s at %d", e.Reason, e.Line)
+	}
+}
+
+// After the first identical owner resumed, a later ghost attaches to the next
+// pending one (threads 2 and 4 of leader 1 are both in its group).
+func TestPhantomExecSecondOwnerAfterTheFirstResumed(t *testing.T) {
+	text := clones(1, 2, 3, 4) + unf(1) + resumed(1) + unf(4) + unf(2) + exited(2) + resumed(4) +
+		exited(3) + exited(4) + exited(1)
+	tr := mustParse(t, text)
+	for _, e := range tr.Events {
+		if e.Pid == 2 {
+			t.Fatalf("event for the ghost: %+v", e)
+		}
+	}
+}
+
+// chain makes a thread chain: first spawns first+1, which spawns first+2, ...
+// up to last, each by CLONE_THREAD.
+func chain(first, last int) string {
+	var b strings.Builder
+	for k := first; k < last; k++ {
+		b.WriteString(clones(k, k+1))
+	}
+	return b.String()
+}
+
+func exitsOf(first, last int) string {
+	var b strings.Builder
+	for k := last; k >= first; k-- {
+		b.WriteString(exited(k))
+	}
+	return b.String()
+}
+
+// Deeper than maxProcessDepth the walk gives up (threadGroupOf): two threads
+// whose walks stop at the same ancestor compare equal, which is sound because
+// every link is CLONE_THREAD; threads of different groups never do.
+func TestPhantomExecBeyondTheDepthBound(t *testing.T) {
+	const depth = maxProcessDepth + 100
+	// Siblings A and B hang off the end of one deep chain 1..depth.
+	a, b := depth+1, depth+2
+	same := chain(1, depth) + clones(depth, a, b) + unf(a) + unf(b) + exited(b) + resumed(a) +
+		exitsOf(1, depth) + exited(a)
+	tr := mustParse(t, same)
+	for _, e := range tr.Events {
+		if e.Pid == b {
+			t.Fatalf("event for the ghost: %+v", e)
+		}
+	}
+	// A deep chain in ANOTHER process (forked from 1): refused at the ghost's
+	// line, wherever the walk stops.
+	const p = 100000
+	diff := chain(1, depth) + "1  clone(child_stack=NULL, flags=SIGCHLD) = " + strconv.Itoa(p) + "\n" +
+		chain(p, p+depth) + unf(depth) + unf(p+depth) + exited(p+depth) + resumed(depth) +
+		exitsOf(1, depth) + exitsOf(p, p+depth-1)
+	e := refusal(t, diff, false)
+	if e.Reason != reasonUnresumed {
+		t.Fatalf("%s at %d", e.Reason, e.Line)
+	}
+	if got := strings.Split(diff, "\n")[e.Line-1]; !strings.HasPrefix(got, strconv.Itoa(p+depth)+"  execve(") {
+		t.Fatalf("refused line %d is %q, want the ghost's", e.Line, got)
+	}
+}
+
 // phantomExecSeeds feeds the fuzzers (FuzzParseDiff).
 var phantomExecSeeds = []string{
 	capturedPlain,

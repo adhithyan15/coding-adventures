@@ -92,7 +92,7 @@ import (
 // its own exit with code 0 (no signal line, not killed); another pid has an
 // EARLIER pending execve with the same text before "<unfinished ...>" (the
 // earliest wins); and that owner later resumes with "= 0" (withGhosts; a failed
-// or never-resumed owner refuses at the ghost's line).  Pass 2 (model.apply)
+// owner refuses at the ghost's line, a never-resumed one at its own).  Pass 2 (model.apply)
 // also requires T and L in one thread group.  It is sound because L's
 // identical execve succeeded: T died before its image changed, and its only
 // possible effect is reading the path L's exec reads.
@@ -231,7 +231,9 @@ func isExitName(n string) bool { return n == "exit_group" || n == "exit" }
 // lineState is what the line handler carries between lines.
 type lineState struct {
 	pend map[int]*pending
-	root int // pid of the first line
+	// execs indexes the pending execve calls (see setPending).
+	execs map[string][]int
+	root  int // pid of the first line
 	// helper is HelperRoot: name classification (unknown, refused) is DEFERRED
 	// to pass 2, because whether a name is refused depends on which process
 	// made the call and whether it has exec'd, and that is only known once the
@@ -264,23 +266,60 @@ type pending struct {
 	ghosts []ghost
 }
 
+// setPending and clearPending are the only places a pending call is added or
+// removed, in all three readers.  Besides the pend map they keep st.execs, the
+// pids of the pending execve calls per text-before-"<unfinished ...>", in line
+// order, so ghostOwner finds its owner without scanning the whole map (D33).
+// st.execs is derived state: it is not part of the reader-agreement comparison.
+func (st *lineState) setPending(pid int, p *pending) {
+	st.pend[pid] = p
+	if p.name == "execve" {
+		if st.execs == nil {
+			st.execs = map[string][]int{}
+		}
+		st.execs[p.prefix] = append(st.execs[p.prefix], pid)
+	}
+}
+
+func (st *lineState) clearPending(pid int) {
+	p := st.pend[pid]
+	if p == nil {
+		return
+	}
+	delete(st.pend, pid)
+	if p.name == "execve" {
+		l := st.execs[p.prefix]
+		for i, q := range l {
+			if q == pid {
+				l = append(l[:i:i], l[i+1:]...)
+				break
+			}
+		}
+		if len(l) == 0 {
+			delete(st.execs, p.prefix)
+		} else {
+			st.execs[p.prefix] = l
+		}
+	}
+}
+
 // exitInsideCall is what an exit line does to the exiting pid's pending call,
-// shared by both readers so they cannot drift.  An ignored-class call or a
+// shared by all readers so they cannot drift.  An ignored-class call or a
 // killed-at-entry entry just ends (D18); a phantom execve (D33) is recorded on
 // its owner and ends; anything else is an unresumed call, refused at the call's
 // own line.
-func exitInsideCall(pend map[int]*pending, pid int, ex *Exit) *Error {
-	p := pend[pid]
+func exitInsideCall(st *lineState, pid int, ex *Exit) *Error {
+	p := st.pend[pid]
 	if p == nil {
 		return nil
 	}
 	if lookup(p.name).class == classIgnored || p.dead {
-		delete(pend, pid)
+		st.clearPending(pid)
 		return nil
 	}
-	if l := ghostOwner(pend, pid, p, ex); l != nil {
+	if l := ghostOwner(st, pid, p, ex); l != nil {
 		l.ghosts = append(l.ghosts, ghost{pid, p.line})
-		delete(pend, pid)
+		st.clearPending(pid)
 		return nil
 	}
 	return incomplete(p.line, reasonUnresumed)
@@ -288,21 +327,23 @@ func exitInsideCall(pend map[int]*pending, pid int, ex *Exit) *Error {
 
 // ghostOwner finds the pending execve a phantom "execve(" line copies (D33), or
 // nil when the line is not a phantom.  Every condition is in the file head
-// ("A phantom execve").  The earliest matching line wins, so the answer does not
-// depend on map iteration order.
-func ghostOwner(pend map[int]*pending, pid int, p *pending, ex *Exit) *pending {
+// ("A phantom execve").  st.execs lists the candidates (same text) in line
+// order, so the first other pid is the earliest: the answer is deterministic,
+// and it must also be EARLIER than the ghost's own line.
+func ghostOwner(st *lineState, pid int, p *pending, ex *Exit) *pending {
 	if p.name != "execve" || p.sawSignal || len(p.ghosts) != 0 || ex.Killed || ex.Code != 0 ||
 		!strings.HasPrefix(p.prefix, `execve("/`) {
 		return nil
 	}
-	var owner *pending
-	for q, l := range pend {
-		if q != pid && l.name == "execve" && l.line < p.line && l.prefix == p.prefix &&
-			(owner == nil || l.line < owner.line) {
-			owner = l
+	for _, q := range st.execs[p.prefix] {
+		if q != pid {
+			if l := st.pend[q]; l.line < p.line {
+				return l
+			}
+			return nil
 		}
 	}
-	return owner
+	return nil
 }
 
 // withGhosts finishes the owner's resumed execve (D33): a failed exec with
@@ -698,7 +739,7 @@ func handleLine(text string, lineNo int, st *lineState) (*record, *Error) {
 		// A process killed or exiting inside a call that has no effect on paths
 		// is normal (wait4 interrupted by SIGKILL).  A path call that never
 		// returned is not: its result is unknown (but see D33).
-		if e := exitInsideCall(pend, pid, ex); e != nil {
+		if e := exitInsideCall(st, pid, ex); e != nil {
 			return nil, e
 		}
 		return &record{line: lineNo, pid: pid, exit: ex}, nil
@@ -737,7 +778,7 @@ func handleLine(text string, lineNo int, st *lineState) (*record, *Error) {
 			p.resumed = true
 			return nil, nil
 		}
-		delete(pend, pid)
+		st.clearPending(pid)
 		call, unfinished, _, r := parseCall(p.prefix + rest[k+len(" resumed>"):])
 		if r != "" {
 			return nil, incomplete(lineNo, r)
@@ -759,7 +800,7 @@ func handleLine(text string, lineNo int, st *lineState) (*record, *Error) {
 		if pend[pid] != nil {
 			return nil, incomplete(lineNo, reasonInterleaved)
 		}
-		pend[pid] = &pending{name: "???", line: lineNo, dead: true, resumed: body != deadOpen}
+		st.setPending(pid, &pending{name: "???", line: lineNo, dead: true, resumed: body != deadOpen})
 		return nil, nil
 	}
 	call, unfinished, prefix, r := parseCall(body)
@@ -775,7 +816,7 @@ func handleLine(text string, lineNo int, st *lineState) (*record, *Error) {
 				return nil, e
 			}
 		}
-		pend[pid] = &pending{name: call.name, prefix: prefix, line: lineNo}
+		st.setPending(pid, &pending{name: call.name, prefix: prefix, line: lineNo})
 		if isExitName(call.name) {
 			return &record{line: lineNo, pid: pid, exitCall: true, rawExit: call.name == "exit"}, nil
 		}
