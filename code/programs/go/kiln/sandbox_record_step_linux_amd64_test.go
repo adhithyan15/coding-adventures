@@ -461,6 +461,7 @@ exit 0
 		t.Fatal(err)
 	}
 	if !cr.ParseOK || cr.Record == nil {
+		logStepTraces(t, recDir, recStepAction) // D32: which line of which trace
 		t.Fatalf("the epilogue's parse half of G7 failed on real traces: %q", cr.ParseReasons)
 	}
 	if cr.StepsRun != len(lines) || !cr.StepNetNS || cr.BindingID != pre.BindingID {

@@ -18,7 +18,15 @@
   reports reasons, error and stop lines, the `grammarPanics` delta, the line
   count and trailing newline; under `KILN_TRACE_DIFF=1` also a sanitised window
   of 3 lines either side of the earlier stop line plus the stop pid's last
-  earlier line. Capped at 4 KB.
+  earlier line and a reader's Error line when it differs from its stop line.
+  Key lines show their first and last 160 bytes and come before the window;
+  the report notes it covers pass 1 only. Capped at 8 KB.
+- Step and classify-child refusals (sidecar `parse_reasons`, not stderr) are
+  covered too: `logStepTraces` diagnoses an action's step traces
+  (`record.StepFile`), called by the step, collect and gates sandbox tests when
+  a parse reason or an unexpected unknown write appears. The file is opened once
+  with `O_NOFOLLOW|O_NONBLOCK`, only the quoted base name is logged, and a read
+  cut at 8 MiB says so.
 - The linux sandbox tests' `recStepRun` logs `Diagnose` for a child that exits
   non-zero with `the trace does not parse ... (trace: <path>)` (absolute path
   under the temp dir, regular file, at most 8 MiB). No artifact is uploaded: the

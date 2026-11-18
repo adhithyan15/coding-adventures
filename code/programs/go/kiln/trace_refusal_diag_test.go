@@ -8,6 +8,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/record"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/trace"
 )
 
@@ -80,24 +81,59 @@ func logTraceRefusal(t testing.TB, stderr string) {
 	if p == "" {
 		return
 	}
-	// Lstat first: a trace is a regular file, never a link or a FIFO to open.
-	if st, err := os.Lstat(p); err != nil || !st.Mode().IsRegular() {
-		t.Logf("trace diagnostic: %s is not a readable regular file", filepath.Base(p))
-		return
-	}
-	f, err := os.Open(p)
+	logTraceFile(t, p)
+}
+
+// logTraceFile reads the trace at p back and logs trace.Diagnose's report of it.
+// It opens the file ONCE, with O_NOFOLLOW and O_NONBLOCK where the platform has
+// them (openTraceNoFollow), and checks the handle with Stat: a trace is a regular
+// file, never a link or a FIFO.  At most maxDiagnoseRead bytes are read.  Only
+// the file's base name is printed (quoted: a name is text a pull request chose),
+// and no error text, since an *os.PathError carries the whole path.
+func logTraceFile(t testing.TB, p string) {
+	t.Helper()
+	name := filepath.Base(p)
+	f, err := openTraceNoFollow(p)
 	if err != nil {
-		t.Logf("trace diagnostic: cannot open the trace: %v", err)
+		t.Logf("trace diagnostic: cannot open the trace %q", name)
 		return
 	}
 	defer f.Close()
-	data, err := io.ReadAll(io.LimitReader(f, maxDiagnoseRead))
-	if err != nil {
-		t.Logf("trace diagnostic: cannot read the trace: %v", err)
+	if st, err := f.Stat(); err != nil || !st.Mode().IsRegular() {
+		t.Logf("trace diagnostic: %q is not a regular file", name)
 		return
 	}
+	data, err := io.ReadAll(io.LimitReader(f, maxDiagnoseRead+1))
+	if err != nil {
+		t.Logf("trace diagnostic: cannot read the trace %q", name)
+		return
+	}
+	note := ""
+	if len(data) > maxDiagnoseRead {
+		data = data[:maxDiagnoseRead]
+		note = " (read truncated at 8 MiB)"
+	}
 	// The traces of `prepare`'s probes and of `step` are both helper traces.
-	t.Logf("trace diagnostic for %s (KILN_TRACE_DIFF=%q):\n%s", filepath.Base(p), os.Getenv("KILN_TRACE_DIFF"), trace.Diagnose(data, true))
+	t.Logf("trace diagnostic for %q%s (KILN_TRACE_DIFF=%q):\n%s", name, note, os.Getenv("KILN_TRACE_DIFF"), trace.Diagnose(data, true))
+}
+
+// logStepTraces diagnoses every trace file of one action's steps
+// (record.StepFile).  Step and classify-child refusals do not reach stderr: they
+// land in the sidecar's parse_reasons (or surface as an unexpected unknown_writes
+// or a void in `collect`), so a sandbox test that sees one calls this before it
+// fails.  Nothing is uploaded; it only logs.
+func logStepTraces(t testing.TB, recDir, action string) {
+	t.Helper()
+	for i := 0; i < 64; i++ { // a recipe has few steps; the bound keeps a bad dir cheap
+		p := record.StepFile(recDir, action, i, "trace")
+		if _, err := os.Lstat(p); err != nil {
+			if i == 0 {
+				t.Logf("trace diagnostic: action %q has no step trace", action)
+			}
+			return
+		}
+		logTraceFile(t, p)
+	}
 }
 
 func TestTraceRefusalPath(t *testing.T) {
