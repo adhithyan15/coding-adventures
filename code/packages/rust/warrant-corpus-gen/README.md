@@ -328,7 +328,7 @@ are refused with the generator code `ir` (unreachable first, R12). The S2 checke
 rules (`W0301`, `W0203`); `lower` maps exactly those kinds to `ir`. `concat`, bytes literals and `if`
 over sized operands flow to `Bytes<N>` everywhere (A.1).
 
-Faults: `ok-as-err`, `drop-consumed`, `swap-components`, the tuple-payload `missing-error`, and the bare
+Faults: `ok-as-err`, `drop-consumed`, `swap-components`, `off-by-one-consumed` [D36] (`requires` `ir.fixed` and `ir.tuple`), the tuple-payload `missing-error`, and the bare
 and `Ok` forms of `flip-result-bit` / `drop-last-result-byte`, in the exact 8.2 JSON; a fault's
 `requires` is the sorted union of its template's levels and its op's types (R9). Fault evaluation is
 gated by `SHIPPED_GATE`, open to `ir.core`, `ir.fixed` and `ir.tuple` since the flip (S10c, 0.6.0); under a

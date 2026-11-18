@@ -20,6 +20,9 @@ use super::with_file;
 /// fixtures that record it move, and these closed-gate views stay byte for byte what they were.
 pub const GATE_CLOSED: [Level; 1] = [Level::Core];
 
+/// The test-only **open** gate: every level evaluated (the oracle's `parity_dumps.GATE_OPEN`).
+pub const GATE_OPEN: [Level; 3] = [Level::Core, Level::Fixed, Level::Tuple];
+
 /// The first line where two texts differ, with a little context, for a readable failure.
 pub fn first_difference(a: &str, b: &str) -> String {
     for (i, (x, y)) in a.lines().zip(b.lines()).enumerate() {
