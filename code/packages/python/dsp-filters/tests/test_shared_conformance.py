@@ -9,7 +9,13 @@ from typing import Any
 
 import pytest
 
-from dsp_filters import Biquad, EmptySignalError, sosfilt
+from dsp_filters import (
+    Biquad,
+    CheckedBiquad,
+    EmptySignalError,
+    checked_sosfilt,
+    sosfilt,
+)
 
 FIXTURE = (
     Path(__file__).resolve().parents[4]
@@ -223,6 +229,33 @@ def test_shared_fixture_all_biquad_partitions_and_state_semantics() -> None:
     _assert_exact_finite(replay.process(signal), expected)
 
 
+def test_shared_fixture_checked_biquad_all_partitions_and_state_semantics() -> None:
+    signal, records = _decode_fixture(FIXTURE.read_text(encoding="utf-8"))
+    record = records[0]
+    expected = record["expected"]
+    coefficients = record["sections"][0]
+
+    assert CheckedBiquad(*coefficients).process(signal) == expected
+    fixed = CheckedBiquad(*coefficients)
+    _assert_exact_finite(
+        _process_chunks(fixed, _fixed_chunks(signal, record["chunk_lengths"])),
+        expected,
+    )
+    samplewise = CheckedBiquad(*coefficients)
+    _assert_exact_finite([samplewise.process_sample(x) for x in signal], expected)
+
+    for mask in range(1 << 15):
+        filter_ = CheckedBiquad(*coefficients)
+        _assert_exact_finite(
+            _process_chunks(filter_, _partition_chunks(signal, mask)), expected
+        )
+
+    replay = CheckedBiquad(*coefficients)
+    replay.process(signal[:7])
+    replay.reset()
+    _assert_exact_finite(replay.process(signal), expected)
+
+
 def test_shared_fixture_sosfilt_is_one_shot_and_empty_behavior() -> None:
     signal, records = _decode_fixture(FIXTURE.read_text(encoding="utf-8"))
     record = records[1]
@@ -232,6 +265,13 @@ def test_shared_fixture_sosfilt_is_one_shot_and_empty_behavior() -> None:
     _assert_exact_finite(sosfilt([], signal), signal)
     with pytest.raises(EmptySignalError):
         sosfilt([], [])
+
+    _assert_exact_finite(
+        checked_sosfilt(records[1]["sections"], signal), records[1]["expected"]
+    )
+    _assert_exact_finite(checked_sosfilt([], signal), signal)
+    with pytest.raises(EmptySignalError):
+        checked_sosfilt([], [])
 
 
 def test_fixture_comparison_treats_signed_zero_as_equal() -> None:
