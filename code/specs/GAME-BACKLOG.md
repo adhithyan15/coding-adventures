@@ -15,7 +15,7 @@ that must be produced, not a promise that the evidence exists already.
 
 | Workstream | Capability status | Language status | Verification status / limit |
 | --- | --- | --- | --- |
-| `GAME10` fixed-step clock | Rust core and v1 integer contract present; host pacing/render integration is separate and incomplete | Rust implementation; Python is an independent fixture validator, not a port; TS, Go, and other supported lanes remain | Durable consumer merged in [PR #19602](https://github.com/adhithyan15/coding-adventures/pull/19602), squash `72778f4f553cf35fd361e2688acaeb6201414ea1`; 23 vectors (9 success, 14 exact errors) pass package conformance. Constructor model execution is pending in open [PR #19618](https://github.com/adhithyan15/coding-adventures/pull/19618), currently blocked by the separate Kiln throughput gate (`GBL-061`). Existing Warrant claims accept any `Err`; assurance report has empty evidence and null exhaustive/fuzz/proof entries. No formal proof claim. |
+| `GAME10` fixed-step clock | Rust core and v1 integer contract present; host pacing/render integration is separate and incomplete | Rust implementation; Python is an independent fixture validator, not a port; TS, Go, and other supported lanes remain | Durable consumer merged in [PR #19602](https://github.com/adhithyan15/coding-adventures/pull/19602), squash `72778f4f553cf35fd361e2688acaeb6201414ea1`; 23 vectors (9 success, 14 exact errors) pass package conformance. The constructor-only Warrant model/execution is implemented in open [PR #19618](https://github.com/adhithyan15/coding-adventures/pull/19618); exact-head CI is pending on this refresh branch. `validate_state`/`advance_frame`, universal proof, and native source proof remain unproved; no assurance proof slot is upgraded. |
 | `GAME11`–`GAME15c` early arcade | Rust packages exist for collision, arcade SFX, Pong, Breakout, discrete logic, CRT beam, and timer | Rust source present; other supported language lanes need inventory | No unified portable-evidence audit yet; collision, Pong, Breakout, and CRT Warrant drafts are parked. |
 | `GAME20`–`GAME25` tile/sprite/RPG | Rust packages exist for indexed palette, tilemap, sprite OAM, RPG grid/battle, and Monster RPG | Rust source present; verify required lanes rather than inferring from GAME00's portable label | Shared independent corpus and cross-language execution audit remain open. |
 | `GAME26`–`GAME29b` console devices | GAME26 GBA bridge, GAME27 NES, GAME28 Game Boy, and GAME29 GBA devices are missing from the Rust package tree | No verified portable console-device lane | Start with a narrow independently specified NES register/timing slice. Do not claim a complete console. |
@@ -90,20 +90,18 @@ completion satisfies the other.
 
 ## Prioritized delivery
 
-Priority reflects dependencies visible on 2026-11-18: GAME10's exact v1 corpus consumer and the
-GAME01 Rust corpus consumer have merged. Reusable deterministic contracts precede new device,
-graphics, and host stacks.
+Priority reflects dependencies visible on 2026-11-18: GAME10's exact v1 corpus consumer, the
+GAME01 Rust corpus consumer, and the separate Kiln allocation-reuse repair have merged. Reusable
+deterministic contracts precede new device, graphics, and host stacks.
 This order avoids duplicating repository-wide `VER-*` and `MUS00`–`MUS08` work.
 
-As of 2026-11-18, `GBL-001` and `GBL-002` are merged. The active dependency is `GBL-061`, a
-bounded investigation of the unrelated Kiln synthetic-throughput gate currently blocking the
-open `GBL-003a` constructor-model PR. The fixed 14 MB/s threshold remains in force. After resolving
-that gate and `GBL-003a`, proceed to `GBL-010` TypeScript GAME10 with exact `BigInt` handling,
-`GBL-050` Rust input action frames, then `GBL-050a` TypeScript input action frames. Continue with
-`GBL-013` Go and `GBL-014` Python clock ports and concrete GAME01/GAME02 missing-language ports
-according to dependencies and updated package evidence. Refresh from fresh `main` and rerun the
-canonical package report before picking the next implementation; this sequence is coordination
-state, not implementation authorization for unrelated primitives.
+As of 2026-11-18, `GBL-001`, `GBL-002`, and `GBL-061` are merged. The immediate active item is
+`GBL-003a` in open PR #19618; its exact-head checks must pass before moving on. Then proceed to
+`GBL-010` TypeScript GAME10 with exact `BigInt` handling, `GBL-050` Rust input action frames, and
+`GBL-050a` TypeScript input action frames. Reprioritize remaining clock ports after those reusable
+boundaries. A fresh full-checkout canonical package-presence report must be recorded before the
+next new language-port selection; a sparse-worktree report is not valid inventory evidence. This
+sequence is coordination state, not implementation authorization for unrelated primitives.
 
 For each serial delivery, use a fresh worktree from the latest fetched `origin/main`. After a PR
 merges, verify the published head and merged tree, confirm the worktree is clean, published, and
@@ -163,33 +161,18 @@ worktree; report and preserve it if those checks do not pass.
   CI build-table recipes selected Ubuntu and macOS affected-package jobs and produced BUILT package
   receipts, but aggregate outputs suppress individual command counts and runtime verdicts. The
   Windows affected-package test step was SKIPPED; no native Windows Hamurabi execution is claimed.
-- [ ] `GBL-003a` (open [PR #19618](https://github.com/adhithyan15/coding-adventures/pull/19618), pending Kiln gate) Separately execute and assess the GAME10 constructor Warrant model: exercise the
+- [ ] `GBL-003a` (implementation in open [PR #19618](https://github.com/adhithyan15/coding-adventures/pull/19618); exact-head CI pending) Separately execute and assess the GAME10 constructor Warrant model: exercise the
   648-case boundary (105 `Ok`, 72 `ZeroFixedTimestep`, 162 `InvalidMaxFrameSteps`,
   309 `InvalidMaxFrameDelta`), stratified full-width property
   cases, and always-`Err`, error-precedence, and wrong-state mutants. Constructor-only execution does
   not prove `validate`, `advance`, or the shared `WX-SP1` proof; the native proof remains unproved.
-  Keep those items open under `GBL-003`.
-- [ ] `GBL-061` (active dependency of `GBL-003a`) Diagnose and, if supported by paired measurements,
-  implement the isolated KILN04 P2 PR 6 caller-owned token-vector reuse experiment. The unchanged
-  Ubuntu 26.04 Kiln synthetic gate has a 14 MB/s floor and measured 13.2 MB/s, then 12.3 MB/s on
-  its one same-head retry for PR #19618. A separate AWS-backed Ubuntu control measured 18.9 MB/s;
-  Azure-backed PR #19605 and #19619 observations were 15.9 and 15.6 MB/s. These are different
-  runner instances, not a same-host A/B comparison; they establish neither a deterministic parser
-  regression nor a proven environment-only cause. A temporary local Apple M4 Pro experiment on the
-  exact 26-line `build.strace` corpus repeated 36 times measured the owning token path at 67.6–67.7
-  MB/s, 2,184,198 B/op and 1,872 allocations; the caller-buffer path measured 77.5 MB/s, 539,144
-  B/op and 936 allocations. The candidate pass-1 path measured 26.66–26.82 MB/s versus 24.74–25.34
-  MB/s baseline and 172,138–172,141 B/op / 501 allocations versus 285,651–285,654 B/op / 571
-  allocations; the compact full-fixture path measured 34.40–34.46 MB/s versus 31.91–32.40 MB/s
-  and 45,671–45,674 B/op / 85 allocations versus 166,839–166,841 B/op / 156 allocations.
-  Bounded 100-iteration `GOGC=off` runs measured the token path at 63.72/63.92 MB/s baseline and
-  65.95/73.05 MB/s candidate, and pass 1 at 23.99/24.14 MB/s baseline and 25.43/25.07 MB/s
-  candidate. These short bounded runs support allocation accounting but have visible timing spread.
-  These are local relative measurements only. The exact-fixture harness is temporary, not CI
-  evidence; it uses cached interface dispatch for the new method plus the same length/newline
-  guards. Preserve the 14 MB/s gate and the PR #19619 probe changes. Make no native Linux speedup
-  claim without a native same-host comparison; report candidate gate results and Mac
-  relative/allocation evidence separately. The merged #19619 probe/log-hygiene PR remains separate.
+  Keep those items open under `GBL-003`. The portable corpus/WX-SP1 route also depends on Warrant
+  `ir.data` records and variants (CV2-S11; tracked gap CV2-F10); current fixed built-ins and tuple
+  `Result` support do not encode `GameClockConfig`/`GameClockState` records. Do not call this model
+  execution a Rust-to-Warrant source proof or a full-domain universal proof.
+- [x] `GBL-061` (merged in [PR #19630](https://github.com/adhithyan15/coding-adventures/pull/19630), squash `1de3c7f6e9b74765f48cce277187f1920a487a81`) Add caller-owned token-vector reuse to the Go lexer and strace parser after measuring the per-line allocation hotspot. The 14 MB/s Kiln Ubuntu 26.04 floor was unchanged. On exact-head CI run `44247169191`, the 66,600-byte / 936-line synthetic reported 19.9 MB/s on Ubuntu 24.04 and 22.1 MB/s on Ubuntu 26.04 (`gated=1`, seven repeats); the separate 4,195,800-byte census reported 18.8 and 20.3 MB/s (`gated=0`). These are candidate gate receipts, not a native same-host Linux A/B or proof of a Linux speedup. Full affected-package CI built Go lexer, strace lexer/parser, and Kiln; no native Windows execution was selected. Local macOS allocation and timing evidence, sparse full-suite limits, and review scope are recorded in the PR.
+- [ ] `GBL-059` Preserve useful per-package CI receipts: commands/recipe selection, stdout summary, seed, source revision, platform, and runtime verdict. Audit existing `VER`/build-tool receipt and KILN facilities before extending them; do not create a competing evidence framework. `GBL-061` exact-head artifacts exposed only build-plan in the downloaded artifact set and aggregate logs suppressed command/test details, so package-level CI claims remain limited to explicit `BUILT` and gate receipts.
+- [ ] `GBL-060` Execute portable game-core functional tests natively on Windows. Current affected-package Windows steps can skip Rust packages; compile-only cross checks and Windows job presence are not native game-core execution evidence. Keep `NOT-LIVE` platform containment separate from test coverage.
 - [ ] `GBL-003` Repair GAME10's three Warrant claims and assurance report. Add meaningful positive and negative
   evidence for `validate` and `advance`, shared proof through `WXSP1`, generated/property and fuzz
   coverage, and Warrant evidence only through a separately reviewed design. A passing finite corpus
