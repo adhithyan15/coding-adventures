@@ -621,7 +621,8 @@ Sizes multiply into `B` and the 64 MiB domain-byte budget (a record with a
 **Generators.** Components are drawn independently, constructors uniformly (so
 rare constructors are reached), with VER04h §4 relation bias acting on one *leaf*
 component ("one component changed", "one bit flipped") when two binders share a
-type. Refinements are joint filters with `max_retries = 100`.
+type. Refinements are joint filters with `max_retries = 100`, rescued by enumeration or refused
+below an acceptance floor as in VER04h section 4.1.
 
 **Shrinkers.** Component-wise with each component's own shrinker; variants shrink
 to an earlier constructor with minimal fields, then field-wise; `Option` toward
@@ -1691,7 +1692,11 @@ The numbering continues from 14.1.
     ends the run before an abandoned, possibly spinning, worker can burn a
     core.  The stderr line is written with `writeln!` and its result ignored
     (`eprintln!` panics on a closed stderr pipe).  `WARRANT_OBS_TIMEOUT_SECS` may raise the 120 s bound; a lower value is
-    ignored.
+    ignored, and a higher one is clamped to `OBS_MAX_RAISE_SECS` (24 h = 86,400 s), so a
+    huge value neither overflows `Instant + Duration` nor effectively disables the bound
+    (VOS-D085). The deadline is `Instant::now().checked_add(timeout)`; if that is ever
+    unrepresentable the deadline is already past, so the call times out and the process
+    bails out (fail closed: never a wait without a bound, never a panic).
     (b) *Exit never waits*: an abandoned worker is never joined (its `JoinHandle` is
     dropped at spawn, its job channel when it is abandoned), nothing in `Drop` or the
     exit path waits on it, a worker takes only its own reply slot and never a lock of

@@ -125,6 +125,10 @@ mod harness {
     }
     include!("generated/wxa_evidence.rs");
 
+    pub fn exact(t: Ty) -> bool {
+        exact_support(t)
+    }
+
     // ----- test hooks: the generated module's private machinery ----------------
 
     /// The generated model function `name` applied to `args`.
@@ -1095,4 +1099,35 @@ fn the_generated_suite_notices_every_fault_it_names() {
     std::panic::set_hook(previous);
     assert!(Fault::parse("not-a-fault").is_none());
     assert!(is_fail(&Verdict::fail("x", "y"), "x"));
+}
+
+// ---------------------------------------------------------------------------
+// VOS-D079: the composite branch of the refinement rescue (VER04h section 4.1)
+// ---------------------------------------------------------------------------
+
+#[test]
+fn composites_are_rescued_exactly_when_every_component_is_enumerable() {
+    assert!(harness::exact(Ty::Tuple(&[Ty::Bool, Ty::Fx(F::U8)])));
+    assert!(!harness::exact(Ty::Tuple(&[Ty::Bool, Ty::Bytes])));
+    assert!(harness::exact(Ty::Opt(&Ty::Fx(F::U8))));
+    assert!(!harness::exact(Ty::Opt(&Ty::Fx(F::U64))));
+    assert!(harness::exact(Ty::Res(&Ty::Bool, &["E"])));
+    assert!(harness::exact(Ty::Data("D", &[("A", &[Ty::Bool]), ("B", &[])])));
+    assert!(!harness::exact(Ty::Data("D", &[("A", &[Ty::Bytes])])));
+    assert!(!harness::exact(Ty::List(&Ty::Bool)));
+}
+
+#[test]
+fn a_low_acceptance_refinement_over_a_tuple_is_rescued_by_enumeration() {
+    // `(U8, Bool)` has 512 values; `t.0 < 8` admits 16 of them (3 percent).
+    static TUP: Ty = Ty::Tuple(&[Ty::Fx(F::U8), Ty::Bool]);
+    let (verdict, stats) = harness::property(
+        "warrant/test/tuple-low-acceptance",
+        std::slice::from_ref(&TUP),
+        |env| matches!(&env[0], V::Tup(c) if matches!(&c[0], V::Fixed(_, v) if *v < 8)),
+        |_, _| true,
+        Fault::None,
+    );
+    assert!(matches!(verdict, Verdict::Pass), "{verdict:?}");
+    assert_eq!(stats.cases, harness::PROPERTY_CASES);
 }
