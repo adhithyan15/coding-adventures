@@ -373,7 +373,7 @@ worktree; report and preserve it if those checks do not pass.
   correctness/allocation work, but do not publish it as the performance repair. Await a new scope
   based on the measured parser/matcher CPU path. The missing ownership/GC source bridge remains
   under existing VER/Warrant debt; do not add an unrelated SAT model.
-  The next bounded hypothesis is parser-only: optimize a leading contiguous run of direct basic
+  The selected parser-only repair optimizes a leading contiguous run of direct basic
   `kTok` alternatives in `parseState.match(kAlt)`. Native pprof attributed 330 ms flat to the
   `switch n.kind`, 70 ms to failed-choice stack restoration, and 1.68 s cumulative to recursive
   `kAlt` calls (overlapping costs); the strace grammar repeats token alternatives in `arg`, `inner`,
@@ -383,11 +383,33 @@ worktree; report and preserve it if those checks do not pass.
   pre-skip position if the entire run misses. Continue with ordinary sequential matching after the
   run. Generic matching stops when `s.exceeded` is set, so retain depth/memo/resource refusals and
   never record later expected IDs after exhaustion. Keep later mixed alternatives sequential; do
-  not change whole rules, memoization/depth/curMax, or cursor ownership in this candidate. Compare
-  old and new behavior on exact tokens, name/enum ambiguity, enum-only tokens, EOF, newline-skip
-  rollback, expected-prefix order, compact output, and resource-bound refusals; then run existing
-  differential/sequence fuzzers and same-host admission plus precision ABBA with useful margin on
-  the slower native host. This remains a testable hypothesis, not a performance claim. No open PR
+  not change whole rules, memoization/depth/curMax, or cursor ownership in this candidate. Old/new
+  behavior was compared across exact tokens, name/enum ambiguity, enum-only tokens, EOF,
+  newline-skip rollback, expected-prefix order, compact output, and resource-bound refusals; existing
+  differential/sequence fuzzers and focused race checks passed. The reviewed candidate
+  `242c6943acd9b168740796f11e603f1316b81e61` was compared with pinned baseline
+  `10eeb7add42d2e7af504eef2f5e3707a61971cc9` in narrow workflow run
+  [44343414219](https://github.com/adhithyan15/coding-adventures/actions/runs/44343414219).
+  All four official admission cells passed on both hosts without changing the 14 MB/s floor or
+  4 MiB census. Both used Go 1.26.1 linux/amd64, fixture SHA-256
+  `dc8acd0de1d9b235c3924d0d71e2fcd565274e09ded9975570f429b548525aae`, and repeated-slice SHA-256
+  `6cd61f63fdec55ce37294ad061705394b1babda80e5368b17ecb5bd38e2207af`. Only the parser tree
+  differed (`17c0d769dd57a57d6677d1702e77173c85edff4c` baseline,
+  `c84ff3d25b4cd8a56a1db012ca3c45ec360e9479` candidate); Kiln, trace, traced, lexer, strace-lexer,
+  strace-parser, gate, and measurement trees matched.
+  Ubuntu 24.04 used Azure image `20261111.370.1`, kernel `7.0.0-1017-azure`, Xeon Platinum 8573C:
+  official A1/B1/B2/A2 rates 14.7/15.2/15.3/14.5 MB/s, precise BestPass1 medians 4,715,529 ns
+  baseline versus 4,509,879.5 ns candidate (4.36% lower elapsed time), and ungated census rates
+  13.5/13.5/13.9/13.3 MB/s. Ubuntu 26.04 used Azure image `20261111.196.1`, kernel
+  `7.0.0-1019-azure`, AMD EPYC 9V74: official rates 16.7/17.4/17.3/16.7 MB/s, precise medians
+  4,006,460.5 ns baseline versus 3,864,630 ns candidate (3.54% lower elapsed time), and census
+  rates 15.7/16.0/16.2/15.4 MB/s. These show useful within-host gains and modest U24 admission
+  margin. They do not prove the historically slower CPU class is fixed: its CPU model was not
+  recorded, and no host-cause inference is claimed. Preserve all cells and artifacts under
+  `/tmp/kiln-g1-parser-abba-44343414219/`. The SAT/VER bridge covers a bounded 32-row observation
+  domain; it does not prove Go source behavior or lifetime semantics. GBL-063 remains pending until
+  ordinary protected PR checks pass and the repair is merged. Keep the cursor experiment separate
+  as a rejected floor repair, preserve the 14 MB/s gate and prior failure receipts. No open PR
   in the current list owns parser fast-path work; draft PR #19633 concerns gate calibration and
   cannot change or weaken this unchanged acceptance criterion.
 - [ ] `GBL-058` Repair the conflict between the actual `P2D09`/`P2D10` specification filenames/scopes
