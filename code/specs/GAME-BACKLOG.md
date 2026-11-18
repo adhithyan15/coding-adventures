@@ -305,14 +305,22 @@ worktree; report and preserve it if those checks do not pass.
   `20261111.127.1` / kernel `7.0.0-1014-aws`; both misses were on Azure image `20261111.370.1` /
   kernel `7.0.0-1017-azure` (westcentralus and eastus). CPU model is not recorded, so provider/image
   correlation is not proof of cause. Preserve all receipts and gate semantics; make no blind retry
-  of unchanged code. First profile the exact synthetic slice on a native Linux amd64 host using the
-  dedicated G1 job path in `.github/workflows/ci.yml` (not the four-fixture `BenchmarkPass1`): run
-  `go test -count=1 -run Sandbox -v -json .` with `-cpuprofile` and, in a separate profile run,
-  `-memprofile`, recording image, kernel, provider/region, CPU model when available, toolchain,
-  source revision, and workload identity. Inspect the actual hot path before choosing a repair;
+  of unchanged code. First run a native Linux amd64 diagnostic dispatch from `.github/workflows/ci.yml`
+  with `full_build=false`, `cross_os_full=false`, and `kiln_g1_profile=true`; it records runner/source
+  identity and runs profiles only on Ubuntu 24.04. Keep the existing uninstrumented G1 test as the
+  admission result. A separate `TestG1DiagnosticSyntheticSlice` constructs the same repeated
+  `build.strace` slice and calls `trace.BestPass1` with `HelperRoot=true`, excluding the 4 MiB census
+  and other sandbox tests from both profiles. Assert 66,600 bytes / 936 lines and record the fixture
+  SHA-256. Run 20 `BestPass1` calls with `-cpuprofile` (at least 5 seconds, up to 4,000 timed passes)
+  and two calls in a separate `-memprofile -memprofilerate=1` run (at least 500 ms, up to 400 timed
+  passes), each with a 30-second timeout; instrumented timing is diagnostic only. Record image,
+  kernel, provider/region, CPU model when available, toolchain, actual checkout SHA/runtime tree
+  IDs, and workload identity. Inspect the actual hot path before choosing a repair;
   compare pre/post revisions on the same host and toolchain in A-B-B-A order on that identical
-  slice. Keep the 14 MB/s floor, input, seven-repeat best-of rule, failure receipts, and the separate
-  ungated census unchanged. Add focused correctness controls for public/owning and alias paths,
+  slice. Keep the 14 MB/s floor, input, and failure receipts unchanged. G1 uses at least seven timed
+  passes spanning at least 250 ms (up to 200); the logged `repeats=7` is the minimum requested count,
+  not the actual adaptive pass count. Keep the separate ungated census. Add focused correctness
+  controls for public/owning and alias paths,
   atomic errors, and relevant Unicode/property/fuzz behavior without mirroring the implementation.
   No broad benchmark or verification framework, workload reduction, threshold weakening, or
   production optimization before the profile-backed diagnosis is accepted.
