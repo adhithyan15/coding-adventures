@@ -412,6 +412,40 @@ worktree; report and preserve it if those checks do not pass.
   as a rejected floor repair, preserve the 14 MB/s gate and prior failure receipts. No open PR
   in the current list owns parser fast-path work; draft PR #19633 concerns gate calibration and
   cannot change or weaken this unchanged acceptance criterion.
+  A later focused lexer candidate `eedb854e2a5e6436be8ce6dc55295c902710d9e5`
+  avoids copying each immutable `ModeTransition` value in the per-token loop
+  and checks nonempty mode guards before scanning token triggers. The bounded
+  frozen-oracle controls and 2,048 seeded cases passed locally; the Go fuzz
+  campaign ran 5,998,782 executions, and the negative guard mutation was
+  detected. These are finite tests, not source/Warrant/SAT proof. In paired
+  workflow run [44370322596](https://github.com/adhithyan15/coding-adventures/actions/runs/44370322596),
+  pinned baseline `adadc8fc0b9783b3a829fbb4309182f558d4561b` and candidate
+  `eedb854e2a5e6436be8ce6dc55295c902710d9e5` used Go 1.26.1, the same unchanged
+  G1 gate (`f834ff07849b8c1dd8b412d99e4e95e119176614`), BestPass1 measurement
+  source (`c04b3a093c81262201ecb2f43d48f9a162312eff`), fixture SHA-256
+  `dc8acd0de1d9b235c3924d0d71e2fcd565274e09ded9975570f429b548525aae`, and
+  66,600-byte / 936-line slice SHA-256
+  `6cd61f63fdec55ce37294ad061705394b1babda80e5368b17ecb5bd38e2207af`. All
+  eight official cells and eight separate precision cells completed in
+  A1/B1/B2/A2 order, and every official cell passed with the original floor
+  and separate census intact. Ubuntu 24.04 Azure image `20261111.370.1`, Intel
+  Xeon Platinum 8573C: official slice rates 18.4/19.3/19.5/18.6 MB/s; helper
+  times 3,871,256/3,484,245/3,569,618/3,627,890 ns, paired mean 5.94% lower
+  elapsed time for B. Ubuntu 26.04 image `20261116.202.1`, AMD EPYC 9V45:
+  official rates 22.1/22.9/22.7/22.2 MB/s; helper times
+  3,043,198/3,163,751/2,998,331/3,142,800 ns, paired mean 0.39% lower for B,
+  within the observed spread. Both A hosts passed, so the experiment does not
+  show rescue of the historical Ubuntu 26.04 EPYC 7763 miss at 13.2 MB/s
+  (run `44362035252`, job `135005747661`); that host has no paired B result.
+  It does not establish pooled or stable 6% gain. Exact per-cell source trees,
+  official and helper binary SHA-256 values, host details, and artifacts
+  `14458713072` / `14457444089` are recorded in
+  `code/programs/go/kiln/ci/G1_PROFILE_RECEIPT.md`. A narrowly titled lexer
+  optimization PR is being opened with unchanged protected CI and gate
+  semantics. Keep this broader G1 host-robustness item open until the PR passes
+  ordinary protected checks and any slow-host rescue claim has a predeclared
+  matched-host cohort independent of candidate results; retain every run and
+  make no result-selected retries.
 - [ ] `GBL-058` Repair the conflict between the actual `P2D09`/`P2D10` specification filenames/scopes
   and GAME00 labels. Keep this as a separate documentation repair; do not mint or reuse colliding game
   identifiers to paper over it.
