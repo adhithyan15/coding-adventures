@@ -1,7 +1,11 @@
 package main
 
-// Package-local metadata
-// ======================
+// Package-local metadata (and BUILD fronts)
+// =========================================
+//
+// An in-place edit of a Rust package's own root BUILD front is package-local
+// too, under narrow conditions; see build_front_local.go. The rest of this
+// header describes metadata; a local BUILD front is selected the same way.
 //
 // A pull request that only adds rust/bounded-json/required_capabilities.json
 // and a CHANGELOG entry used to select 556 packages: prefix matching mapped
