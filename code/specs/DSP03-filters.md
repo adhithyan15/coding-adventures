@@ -330,12 +330,24 @@ Golden values are never rounded to make them fit `f32`.
 
 AF-03 acceptance separates the fixed 32,768-partition fixture run from
 deterministic properties, general state/error properties, and fuzz trials.
-The exact-oracle property families use integer-derived dyadic sections and
-inputs with bounded lengths; the oracle computes integer recurrence values
-first and only then converts the exact dyadic result to `f32`. A separate
-feedback family checks nontrivial recurrence and shrinks underlying integer
-parameters rather than arbitrary floats. VER05/VER06 harness results and
-fault mutations are evidence for their stated bounded domains only. Native
+The direct-form oracle family uses raw section
+`[c0/4,c1/4,c2/4,2,0,0]`, integer coefficients `c0,c1,c2 ∈ [-4,4]`, samples
+`x=k/16` with `k ∈ [-8,8]`, and lengths 1 through 32. For zero-padded integer
+samples `k_n`, the independent oracle computes
+`D_n=c0*k_n+c1*k_(n-1)+c2*k_(n-2)` and expects `D_n/128`; missing negative
+indices are zero. The optional nontrivial-feedback family uses the same
+coefficient and input domains with raw section
+`[c0/4,c1/4,c2/4,2,s1,s2/2]`, `s1,s2 ∈ {-1,+1}`, and lengths 1 through 12.
+With `Y[-1]=Y[-2]=0`, it computes integer recurrence
+`Y_n=2^n*D_n-s1*Y_(n-1)-s2*Y_(n-2)` and expects `Y_n/2^(7+n)`. Both oracles
+use integer arithmetic for intermediates and convert only the exact dyadic
+result to `f32`. Shrinking reduces the integer coefficients, samples, length,
+and feedback signs, then recomputes derived floats and expected values; it
+does not shrink floats independently. These finite families are exactly
+representable binary32 arithmetic, as checked by bounded independent rational
+enumeration; that arithmetic derivation does not prove implementation source
+or native floating-point behavior. VER05/VER06 harness results and fault
+mutations are evidence for their stated bounded domains only. Native
 floating-point/source bindings, exhaustive `f32` arithmetic, SAT/SMT proofs,
 and package-wide verification remain release-blocking.
 
