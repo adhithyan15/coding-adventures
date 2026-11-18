@@ -2,6 +2,16 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- Exact HTTPS DNS destination, reviewed path, and TLS 1.3 server
+  `CertificateVerify` composition that retains the complete SAN, SNI, Host,
+  path, transcript, message, key, and signature evidence graph.
+- End-to-end destination-bound success and role-first buffer-non-mutation
+  coverage over the retained public handshake fixtures.
+
 ## [0.1.0] - 2026-11-18
 
 ### Added

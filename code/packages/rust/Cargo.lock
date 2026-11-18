@@ -14904,6 +14904,8 @@ name = "tls13-reviewed-server-path-certificate-verify"
 version = "0.1.0"
 dependencies = [
  "der-asn1",
+ "http1-request-host-authority",
+ "https-destination-name-binding",
  "https-reviewed-server-path-binding",
  "rsa-pss-sha256-signature",
  "rsa-public-operation",
@@ -14914,6 +14916,7 @@ dependencies = [
  "tls13-cipher-suite-policy",
  "tls13-rsa-pss-certificate-verify",
  "tls13-rsa-pss-signature-routing",
+ "tls13-server-name",
  "tls13-signature-scheme-policy",
  "tls13-transcript",
  "x509-certificate",
