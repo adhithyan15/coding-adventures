@@ -393,6 +393,8 @@ warrant fixed_forms v1
   model m_rem_int_int(a: Int, b: Int) -> Int = unwrap_or(rem(a, b), 0)
   model m_div_literals() -> Int = unwrap_or(div(7, 2), 0)
   model m_rem_nat_literal(a: Nat) -> Int = unwrap_or(rem(a, 3), 0)
+  model m_div_literal_left(n: Nat) -> Int = unwrap_or(div(7, n), 0)
+  model m_rem_literal_left(n: Int) -> Int = unwrap_or(rem(7, n), 0)
 
   -- div_trunc / rem_trunc (signed pairs only, toward zero) -----------------------------
   model m_div_trunc_i8(a: I8, b: I8) -> I8 = unwrap_or(div_trunc(a, b), 0i8)
@@ -413,6 +415,8 @@ warrant fixed_forms v1
   model m_imax_nat_int(a: Nat, b: Int) -> Int = imax(a, b)
   model m_imax_int_nat(a: Int, b: Nat) -> Int = imax(a, b)
   model m_imax_int_int(a: Int, b: Int) -> Int = imax(a, b)
+  model m_imin_literal(n: Nat) -> Int = imin(n, 3)
+  model m_imax_literal_left(n: Int) -> Int = imax(3, n)
 
   -- endian conversions: be_bytes / le_bytes and from_be / from_le -------------------
   model m_be_bytes_u8(a: U8) -> Bytes<1> = be_bytes(a)
@@ -449,6 +453,7 @@ warrant fixed_forms v1
   model m_from_le_i64(b: Bytes<8>) -> I64 = from_le<I64>(b)
   model m_from_be_literal() -> U16 = from_be<U16>(b"0102")
   model m_from_le_concat(t: Bytes<1>) -> U32 = from_le<U32>(concat(t, b"000000"))
+  model m_from_be_if(c: Bool, t: Bytes<2>) -> U16 = from_be<U16>(if c then t else b"0102")
   model m_round_trip_u32(a: U32) -> U32 = from_be<U32>(be_bytes(a))
 
   -- at: Bytes and Bytes<N>, a Nat or an Int index -------------------------------------
@@ -504,6 +509,393 @@ warrant fixed_forms v1
   op op_low_u8(a: U8 | bit_and(a, 128u8) == 0u8) -> U8
   op op_be32(a: U32) -> Bytes<4>
   op op_div_u8(a: U8, b: U8) -> U8
+  assume platform:
+    none
+  assume environment:
+    none
+  labels op_and_u8:
+    a secret
+    b secret
+  labels op_not_u8:
+    a secret
+  labels op_shl_u8:
+    a secret
+    n secret
+  labels op_pop_u8:
+    a secret
+  labels op_and_u16:
+    a secret
+    b secret
+  labels op_not_u16:
+    a secret
+  labels op_shl_u16:
+    a secret
+    n secret
+  labels op_pop_u16:
+    a secret
+  labels op_and_u32:
+    a secret
+    b secret
+  labels op_not_u32:
+    a secret
+  labels op_shl_u32:
+    a secret
+    n secret
+  labels op_pop_u32:
+    a secret
+  labels op_and_u64:
+    a secret
+    b secret
+  labels op_not_u64:
+    a secret
+  labels op_shl_u64:
+    a secret
+    n secret
+  labels op_pop_u64:
+    a secret
+  labels op_and_i8:
+    a secret
+    b secret
+  labels op_not_i8:
+    a secret
+  labels op_shl_i8:
+    a secret
+    n secret
+  labels op_pop_i8:
+    a secret
+  labels op_and_i16:
+    a secret
+    b secret
+  labels op_not_i16:
+    a secret
+  labels op_shl_i16:
+    a secret
+    n secret
+  labels op_pop_i16:
+    a secret
+  labels op_and_i32:
+    a secret
+    b secret
+  labels op_not_i32:
+    a secret
+  labels op_shl_i32:
+    a secret
+    n secret
+  labels op_pop_i32:
+    a secret
+  labels op_and_i64:
+    a secret
+    b secret
+  labels op_not_i64:
+    a secret
+  labels op_shl_i64:
+    a secret
+    n secret
+  labels op_pop_i64:
+    a secret
+  labels op_low_u8:
+    a secret
+  labels op_be32:
+    a secret
+  labels op_div_u8:
+    a secret
+    b secret
+  input op_and_u8.a:
+    hostile
+    ensures no_panic, terminates
+  input op_and_u8.b:
+    hostile
+    ensures no_panic, terminates
+  input op_not_u8.a:
+    hostile
+    ensures no_panic, terminates
+  input op_shl_u8.a:
+    hostile
+    ensures no_panic, terminates
+  input op_shl_u8.n:
+    hostile
+    ensures no_panic, terminates
+  input op_pop_u8.a:
+    hostile
+    ensures no_panic, terminates
+  input op_and_u16.a:
+    hostile
+    ensures no_panic, terminates
+  input op_and_u16.b:
+    hostile
+    ensures no_panic, terminates
+  input op_not_u16.a:
+    hostile
+    ensures no_panic, terminates
+  input op_shl_u16.a:
+    hostile
+    ensures no_panic, terminates
+  input op_shl_u16.n:
+    hostile
+    ensures no_panic, terminates
+  input op_pop_u16.a:
+    hostile
+    ensures no_panic, terminates
+  input op_and_u32.a:
+    hostile
+    ensures no_panic, terminates
+  input op_and_u32.b:
+    hostile
+    ensures no_panic, terminates
+  input op_not_u32.a:
+    hostile
+    ensures no_panic, terminates
+  input op_shl_u32.a:
+    hostile
+    ensures no_panic, terminates
+  input op_shl_u32.n:
+    hostile
+    ensures no_panic, terminates
+  input op_pop_u32.a:
+    hostile
+    ensures no_panic, terminates
+  input op_and_u64.a:
+    hostile
+    ensures no_panic, terminates
+  input op_and_u64.b:
+    hostile
+    ensures no_panic, terminates
+  input op_not_u64.a:
+    hostile
+    ensures no_panic, terminates
+  input op_shl_u64.a:
+    hostile
+    ensures no_panic, terminates
+  input op_shl_u64.n:
+    hostile
+    ensures no_panic, terminates
+  input op_pop_u64.a:
+    hostile
+    ensures no_panic, terminates
+  input op_and_i8.a:
+    hostile
+    ensures no_panic, terminates
+  input op_and_i8.b:
+    hostile
+    ensures no_panic, terminates
+  input op_not_i8.a:
+    hostile
+    ensures no_panic, terminates
+  input op_shl_i8.a:
+    hostile
+    ensures no_panic, terminates
+  input op_shl_i8.n:
+    hostile
+    ensures no_panic, terminates
+  input op_pop_i8.a:
+    hostile
+    ensures no_panic, terminates
+  input op_and_i16.a:
+    hostile
+    ensures no_panic, terminates
+  input op_and_i16.b:
+    hostile
+    ensures no_panic, terminates
+  input op_not_i16.a:
+    hostile
+    ensures no_panic, terminates
+  input op_shl_i16.a:
+    hostile
+    ensures no_panic, terminates
+  input op_shl_i16.n:
+    hostile
+    ensures no_panic, terminates
+  input op_pop_i16.a:
+    hostile
+    ensures no_panic, terminates
+  input op_and_i32.a:
+    hostile
+    ensures no_panic, terminates
+  input op_and_i32.b:
+    hostile
+    ensures no_panic, terminates
+  input op_not_i32.a:
+    hostile
+    ensures no_panic, terminates
+  input op_shl_i32.a:
+    hostile
+    ensures no_panic, terminates
+  input op_shl_i32.n:
+    hostile
+    ensures no_panic, terminates
+  input op_pop_i32.a:
+    hostile
+    ensures no_panic, terminates
+  input op_and_i64.a:
+    hostile
+    ensures no_panic, terminates
+  input op_and_i64.b:
+    hostile
+    ensures no_panic, terminates
+  input op_not_i64.a:
+    hostile
+    ensures no_panic, terminates
+  input op_shl_i64.a:
+    hostile
+    ensures no_panic, terminates
+  input op_shl_i64.n:
+    hostile
+    ensures no_panic, terminates
+  input op_pop_i64.a:
+    hostile
+    ensures no_panic, terminates
+  input op_low_u8.a:
+    hostile
+    ensures no_panic, terminates
+  input op_be32.a:
+    hostile
+    ensures no_panic, terminates
+  input op_div_u8.a:
+    hostile
+    ensures no_panic, terminates
+  input op_div_u8.b:
+    hostile
+    ensures no_panic, terminates
+  bound op_and_u8:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_not_u8:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_shl_u8:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_pop_u8:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_and_u16:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_not_u16:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_shl_u16:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_pop_u16:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_and_u32:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_not_u32:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_shl_u32:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_pop_u32:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_and_u64:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_not_u64:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_shl_u64:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_pop_u64:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_and_i8:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_not_i8:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_shl_i8:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_pop_i8:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_and_i16:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_not_i16:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_shl_i16:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_pop_i16:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_and_i32:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_not_i32:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_shl_i32:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_pop_i32:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_and_i64:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_not_i64:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_shl_i64:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_pop_i64:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_low_u8:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_be32:
+    steps <= 64
+    heap <= 0
+    depth <= 8
+  bound op_div_u8:
+    steps <= 64
+    heap <= 0
+    depth <= 8
 
   claim c_and_u8:
     forall a: U8, b: U8. op_and_u8(a, b) == bit_and(a, b)
@@ -598,9 +990,14 @@ warrant fixed_forms v1
   claim c_core_only:
     forall a: U8. op_not_u8(a) == m_pure_core(a)
 
-  example e_rotl: op_not_u8(1u8) == rotl(128u8, 9)
-  example e_widen: op_pop_u16(3u16) == to_nat(widen<U16>(2u8))
-  example e_max: op_not_i8(0i8) == max_value<I8>()
-  example e_core: op_not_u8(1u8) == 254u8
-  example e_unwrap: op_div_u8(7u8, 2u8) == unwrap_or(div(7u8, 2u8), 0u8)
+  example e_rotl:
+    op_not_u8(1u8) == rotl(128u8, 9)
+  example e_widen:
+    op_pop_u16(3u16) == to_nat(widen<U16>(2u8))
+  example e_max:
+    op_not_i8(0i8) == max_value<I8>()
+  example e_core:
+    op_not_u8(1u8) == 254u8
+  example e_unwrap:
+    op_div_u8(7u8, 2u8) == unwrap_or(div(7u8, 2u8), 0u8)
 

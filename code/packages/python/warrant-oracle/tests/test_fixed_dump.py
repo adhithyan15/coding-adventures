@@ -116,6 +116,8 @@ def test_every_width_bearing_built_in_is_covered_at_every_allowed_width():
             for b in ("nat", "int"):
                 assert f"m_{tag}_{a}_{b}" in models
     assert {"m_at_nat", "m_at_int", "m_at_fixed", "m_at_literal_index"} <= set(models)
+    # a bare literal on the left of a Nat operand, imin with a literal, from_be over an if
+    assert {"m_div_literal_left", "m_rem_literal_left", "m_imin_literal", "m_from_be_if"} <= set(models)
 
 
 def test_the_dump_records_computed_requires_and_costs():

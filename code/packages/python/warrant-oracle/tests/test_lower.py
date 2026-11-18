@@ -167,7 +167,7 @@ def test_claim_without_a_quantifier_has_no_binders():
     assert spec.suites[0].binders == []
 
 
-# -- level census (S10a: a unit is named by the highest level it cannot lower) -------------------------------
+# -- level census (S10a: a unit is named by the first unlowerable construct in source order) -------------------------------
 
 CENSUS = {
     "ct-compare": {"ir.core": 9},

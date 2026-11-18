@@ -175,9 +175,10 @@ def test_gf256_evaluator_agrees_with_the_documented_examples():
 @pytest.mark.parametrize(
     "name,levels",
     [
-        # S10a: a suite is named by the highest level it cannot lower, so a suite that uses
-        # ``ir.fixed`` built-ins *and* tuples or constructors counts under the latter (it used to
-        # count under whichever construct the lowerer met first).
+        # S10a: a suite is named by the first construct, in source order, that the lowerer cannot
+        # lower; ``ir.fixed`` built-ins are lowered, so a suite that uses them *and* tuples or
+        # constructors counts under the latter (it used to count under the first construct met,
+        # fixed or not).
         ("wasm-leb128", {"ir.fixed": 8, "ir.tuple": 24}),
         ("logic-gates", {"ir.fixed": 55, "ir.data": 3, "ir.tuple": 2}),
         ("lzw", {"ir.fixed": 17}),

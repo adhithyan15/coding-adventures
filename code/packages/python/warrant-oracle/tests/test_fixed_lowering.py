@@ -419,9 +419,79 @@ def test_type_levels_look_inside_type_arguments():
     tup = A.Ty("()", (A.Ty("U8"), A.Ty("Nat")))
     assert L.type_levels(A.Ty("U8")) == set()
     assert L.type_levels(tup) == {"ir.tuple"}
-    assert L.type_levels(A.Ty("List", (tup,))) == {"ir.tuple"}
+    assert L.type_levels(A.Ty("List", (tup,))) == {"ir.data", "ir.tuple"}
+    assert L.type_levels(A.Ty("List", (A.Ty("U8"),))) == {"ir.data"}
     assert L.type_levels(A.Ty("Result", (tup, A.Ty("E")))) == {"ir.tuple"}
-    assert L.type_levels(A.Ty("Option", (A.Ty("U8"),))) == {"ir.data"}
-    assert L.type_levels(A.Ty("Option", (tup,))) == {"ir.data", "ir.tuple"}
+    assert L.type_levels(A.Ty("P"), {"P"}) == {"ir.data"}  # a record or variant name
+    assert L.type_levels(A.Ty("P")) == set()
+    assert L.type_levels(A.Ty("Option", (A.Ty("U8"),))) == set()  # refused, not counted
     assert L.type_refusal(tup) is None  # counted in requires, not refused
     assert L.type_refusal(A.Ty("Option", (A.Ty("U8"),))) == "ir.data"
+    assert L.type_refusal(A.Ty("List", (A.Ty("Option", (tup,)),))) == "ir.data"
+
+
+def test_static_width_follows_the_checker_literals_concat_and_if():
+    # warrant-grammar checker: a literal is Bytes<len>, a concat of two sized operands the sum,
+    # an if with branches of the same static width keeps it (common_type), else plain Bytes.
+    cases = [
+        ('from_be<U16>(if c then b"0102" else b"0304")', "c: Bool"),
+        ('from_be<U32>(if c then concat(t, b"000000") else b"01020304")', "c: Bool, t: Bytes<1>"),
+        ('from_be<U16>(if c then t else b"0102")', "c: Bool, t: Bytes<2>"),
+        ('from_le<U32>(concat(concat(t, b"00"), b"0000"))', "t: Bytes<1>"),
+    ]
+    for body, params in cases:
+        ret = "U32" if "U32" in body else "U16"
+        assert lowered_ir(body, params, ret)[0] in ("from_be", "from_le")
+    refused_type('from_be<U16>(if c then b"01" else b"0102")', "c: Bool", "U16")  # widths differ
+    refused_type('from_be<U16>(if c then t else b"0102")', "c: Bool, t: Bytes", "U16")
+    refused_type('from_be<U8>(take(t, 1))', "t: Bytes<2>", "U8")
+
+
+def test_deeply_nested_from_be_lowers_in_one_pass():
+    import time
+
+    expr = "a"
+    for _ in range(21):
+        expr = f'from_be<U8>(concat(be_bytes({expr}), b""))'
+    start = time.perf_counter()
+    lowered_ir(expr, "a: U8", "U8")
+    assert time.perf_counter() - start < 10  # it was exponential (17 s at 21 nestings)
+
+
+def test_requires_always_includes_ir_core_for_ops_and_units():
+    spec = lower(
+        "warrant r v1\n"
+        "  op f(a: U8 | bit(max_value<U8>(), to_nat(max_value<U8>()))) -> U8\n"
+        "  model m() -> U8 = max_value<U8>()\n"
+        "  claim c:\n    forall a: U8. f(a) == a\n"
+    )
+    assert spec.ops["f"].requires == ("ir.core", "ir.fixed")
+    assert spec.models["m"].requires == ("ir.core", "ir.fixed")
+
+
+def test_list_record_and_variant_types_add_ir_data():
+    spec = lower(
+        "warrant r v1\n  record P(x: Bool, y: Bool)\n  variant V = A | B\n"
+        "  op g(t: List<Bool>) -> Bool\n  op h(p: P) -> Bool\n  op k(v: V) -> Bool\n"
+        "  op plain(a: U8) -> Bool\n"
+        "  claim cl:\n    forall t: List<Bool>. g(t) == true\n"
+        "  claim cr:\n    forall p: P. h(p) == true\n"
+        "  claim cp:\n    forall a: U8. plain(a) == true\n"
+    )
+    assert {s.claim: s.requires for s in spec.suites} == {
+        "cl": ("ir.core", "ir.data"),
+        "cr": ("ir.core", "ir.data"),
+        "cp": ("ir.core",),
+    }
+    assert spec.ops["g"].requires == spec.ops["h"].requires == ("ir.core", "ir.data")
+    assert spec.ops["k"].requires == ("ir.core", "ir.data")
+    assert spec.ops["plain"].requires == ("ir.core",)
+
+
+def test_seal_reads_callee_requires_without_rewalking_the_closure():
+    # a deep chain: each unit's closure is read from its callee's own requires
+    lines = ["warrant r v1", "  model m0(a: U32) -> U32 = rotl(a, 1)"]
+    for i in range(1, 40):
+        lines.append(f"  model m{i}(a: U32) -> U32 = m{i - 1}(a)")
+    spec = lower("\n".join(lines) + "\n")
+    assert spec.models["m39"].requires == ("ir.core", "ir.fixed")
