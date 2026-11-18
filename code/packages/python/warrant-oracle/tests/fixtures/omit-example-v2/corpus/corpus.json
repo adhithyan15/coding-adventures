@@ -1,0 +1,403 @@
+{
+  "accepted_blind_faults": [],
+  "assumes": [],
+  "budget": 16777216,
+  "chunk_size": 65536,
+  "controls": [],
+  "document": "v1",
+  "examples": [
+    {
+      "args": [
+        "aa"
+      ],
+      "expected": "aa",
+      "id": "warrant/omitx/example/echo_small",
+      "op": "echo",
+      "result_type": "Bytes"
+    }
+  ],
+  "fault_models": {},
+  "faults": [],
+  "generator": {
+    "name": "warrant-corpus-gen",
+    "version": "0.5.0"
+  },
+  "levels": [
+    "ir.core"
+  ],
+  "max_ir_cost": 2000,
+  "model_order": [
+    "x2",
+    "grow13",
+    "grow17",
+    "same"
+  ],
+  "models": {
+    "grow13": {
+      "body": [
+        "model_call",
+        "x2",
+        [
+          [
+            "model_call",
+            "x2",
+            [
+              [
+                "model_call",
+                "x2",
+                [
+                  [
+                    "model_call",
+                    "x2",
+                    [
+                      [
+                        "model_call",
+                        "x2",
+                        [
+                          [
+                            "model_call",
+                            "x2",
+                            [
+                              [
+                                "model_call",
+                                "x2",
+                                [
+                                  [
+                                    "model_call",
+                                    "x2",
+                                    [
+                                      [
+                                        "model_call",
+                                        "x2",
+                                        [
+                                          [
+                                            "model_call",
+                                            "x2",
+                                            [
+                                              [
+                                                "model_call",
+                                                "x2",
+                                                [
+                                                  [
+                                                    "model_call",
+                                                    "x2",
+                                                    [
+                                                      [
+                                                        "model_call",
+                                                        "x2",
+                                                        [
+                                                          [
+                                                            "var",
+                                                            "a"
+                                                          ]
+                                                        ]
+                                                      ]
+                                                    ]
+                                                  ]
+                                                ]
+                                              ]
+                                            ]
+                                          ]
+                                        ]
+                                      ]
+                                    ]
+                                  ]
+                                ]
+                              ]
+                            ]
+                          ]
+                        ]
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "params": [
+        [
+          "a",
+          "Bytes"
+        ]
+      ]
+    },
+    "grow17": {
+      "body": [
+        "model_call",
+        "x2",
+        [
+          [
+            "model_call",
+            "x2",
+            [
+              [
+                "model_call",
+                "x2",
+                [
+                  [
+                    "model_call",
+                    "x2",
+                    [
+                      [
+                        "model_call",
+                        "x2",
+                        [
+                          [
+                            "model_call",
+                            "x2",
+                            [
+                              [
+                                "model_call",
+                                "x2",
+                                [
+                                  [
+                                    "model_call",
+                                    "x2",
+                                    [
+                                      [
+                                        "model_call",
+                                        "x2",
+                                        [
+                                          [
+                                            "model_call",
+                                            "x2",
+                                            [
+                                              [
+                                                "model_call",
+                                                "x2",
+                                                [
+                                                  [
+                                                    "model_call",
+                                                    "x2",
+                                                    [
+                                                      [
+                                                        "model_call",
+                                                        "x2",
+                                                        [
+                                                          [
+                                                            "model_call",
+                                                            "x2",
+                                                            [
+                                                              [
+                                                                "model_call",
+                                                                "x2",
+                                                                [
+                                                                  [
+                                                                    "model_call",
+                                                                    "x2",
+                                                                    [
+                                                                      [
+                                                                        "model_call",
+                                                                        "x2",
+                                                                        [
+                                                                          [
+                                                                            "var",
+                                                                            "a"
+                                                                          ]
+                                                                        ]
+                                                                      ]
+                                                                    ]
+                                                                  ]
+                                                                ]
+                                                              ]
+                                                            ]
+                                                          ]
+                                                        ]
+                                                      ]
+                                                    ]
+                                                  ]
+                                                ]
+                                              ]
+                                            ]
+                                          ]
+                                        ]
+                                      ]
+                                    ]
+                                  ]
+                                ]
+                              ]
+                            ]
+                          ]
+                        ]
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "params": [
+        [
+          "a",
+          "Bytes"
+        ]
+      ]
+    },
+    "same": {
+      "body": [
+        "eq",
+        [
+          "var",
+          "a"
+        ],
+        [
+          "var",
+          "b"
+        ]
+      ],
+      "params": [
+        [
+          "a",
+          "Bytes"
+        ],
+        [
+          "b",
+          "Bytes"
+        ]
+      ]
+    },
+    "x2": {
+      "body": [
+        "concat",
+        [
+          "var",
+          "a"
+        ],
+        [
+          "var",
+          "a"
+        ]
+      ],
+      "params": [
+        [
+          "a",
+          "Bytes"
+        ]
+      ]
+    }
+  },
+  "module": "omitx",
+  "omitted_examples": [
+    {
+      "id": "warrant/omitx/example/echo_big_value",
+      "reason": "value-over-limit"
+    },
+    {
+      "id": "warrant/omitx/example/echo_size_error",
+      "reason": "value-over-limit"
+    },
+    {
+      "id": "warrant/omitx/example/echo_two_sided",
+      "reason": "not-op-eq-pure"
+    }
+  ],
+  "ops": {
+    "echo": {
+      "params": [
+        [
+          "a",
+          "Bytes"
+        ]
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "ret": "Bytes"
+    }
+  },
+  "profile": "warrant-corpus-v2",
+  "profile_sha256": "f94840c164fff2b9382cc14a98cb0031d3c0cc1da35312d5ea8c23db27c3e9d8",
+  "schema_version": 2,
+  "spec": "code/packages/python/warrant-oracle/tests/fixtures/omit-example-v2/omit.warrant",
+  "spec_sha256": "0d59094af1dc62682a7b93d80ff2c31ad86a34e3eae613c38841d933a1adf988",
+  "suites": [
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "bytes_n",
+              "n": 1,
+              "size": 256
+            },
+            "type": "Bytes<1>"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "echo",
+          [
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ],
+        [
+          "var",
+          "a"
+        ]
+      ],
+      "cases": 256,
+      "chunks": 1,
+      "chunks_sha256": "8b8ecabfaf9d4bb6450e1560ea77e98894bcbb5066c7d5921e951ade89357cb9",
+      "claim": "echo_is_identity",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 256,
+      "expected_sha256": "b292fd9a3b9ec0c6cf9ad49fb9865160b6bc9ff8e085b969b7612e50ca93715f",
+      "id": "warrant/omitx/exhaustive/echo_is_identity",
+      "inputs_sha256": "b292fd9a3b9ec0c6cf9ad49fb9865160b6bc9ff8e085b969b7612e50ca93715f",
+      "ir_cost": 6,
+      "kind": "exhaustive",
+      "ops": [
+        "echo"
+      ],
+      "oracle": {
+        "expected": [
+          "var",
+          "a"
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "echo",
+          [
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ]
+      },
+      "product": 256,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "Bytes",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "b292fd9a3b9ec0c6cf9ad49fb9865160b6bc9ff8e085b969b7612e50ca93715f",
+      "slim_inputs_sha256": "b292fd9a3b9ec0c6cf9ad49fb9865160b6bc9ff8e085b969b7612e50ca93715f",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "f58bd08ef96c86aab0a215b44967a222db475ef99fa436e2601b71b9f7999e97",
+      "v1_inputs_sha256": "f58bd08ef96c86aab0a215b44967a222db475ef99fa436e2601b71b9f7999e97",
+      "wraps": 0
+    }
+  ],
+  "types": {}
+}

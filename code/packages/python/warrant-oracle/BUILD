@@ -5,6 +5,10 @@ uv pip install -e ".[dev]" --quiet
 .venv/bin/python -m coding_adventures_warrant_oracle verify-v1 --spec ../../../specs/ct-compare.warrant --corpus ../../../specs/fixtures/ct-compare-warrant-v1/corpus.json
 .venv/bin/python -m coding_adventures_warrant_oracle verify-v2 tests/fixtures/synth-v2/corpus --warrant tests/fixtures/synth-v2/synth.warrant --profile tests/fixtures/synth-v2/corpus.profile --expect-generator warrant-corpus-gen@0.5.0
 .venv/bin/python -m coding_adventures_warrant_oracle verify-v2 tests/fixtures/accept-blind-v2/corpus --warrant tests/fixtures/accept-blind-v2/blind.warrant --profile tests/fixtures/accept-blind-v2/corpus.profile
+# CV2-S10-1: the omit_example fixture (three omitted examples, both reasons); make_fixture.py
+# regenerates corpus/ from the oracle, verify-v2 gates it, and the generator's parity PR must match it.
+.venv/bin/python tests/fixtures/omit-example-v2/make_fixture.py --check
+.venv/bin/python -m coding_adventures_warrant_oracle verify-v2 tests/fixtures/omit-example-v2/corpus --warrant tests/fixtures/omit-example-v2/omit.warrant --profile tests/fixtures/omit-example-v2/corpus.profile --expect-generator warrant-corpus-gen@0.5.0
 # CV2-S3d: the committed ct-compare v2 fixture. --expect-generator pins the generator name and
 # version that corpus.json records ([D13], VER04r 16.8): a generator bump fails here until the
 # fixture is regenerated and this pin is reviewed with it. --profile is the fixture's own

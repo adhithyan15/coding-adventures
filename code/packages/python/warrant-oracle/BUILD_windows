@@ -5,6 +5,8 @@ uv pip install --python .venv -e .[dev] --quiet
 .venv\Scripts\python -m coding_adventures_warrant_oracle verify-v1 --spec ..\..\..\specs\ct-compare.warrant --corpus ..\..\..\specs\fixtures\ct-compare-warrant-v1\corpus.json
 .venv\Scripts\python -m coding_adventures_warrant_oracle verify-v2 tests\fixtures\synth-v2\corpus --warrant tests\fixtures\synth-v2\synth.warrant --profile tests\fixtures\synth-v2\corpus.profile --expect-generator warrant-corpus-gen@0.5.0
 .venv\Scripts\python -m coding_adventures_warrant_oracle verify-v2 tests\fixtures\accept-blind-v2\corpus --warrant tests\fixtures\accept-blind-v2\blind.warrant --profile tests\fixtures\accept-blind-v2\corpus.profile
+.venv\Scripts\python tests\fixtures\omit-example-v2\make_fixture.py --check
+.venv\Scripts\python -m coding_adventures_warrant_oracle verify-v2 tests\fixtures\omit-example-v2\corpus --warrant tests\fixtures\omit-example-v2\omit.warrant --profile tests\fixtures\omit-example-v2\corpus.profile --expect-generator warrant-corpus-gen@0.5.0
 # CV2-S3d: the committed ct-compare v2 fixture; --expect-generator pins the recorded generator
 # name and version ([D13]), --profile is the fixture's own corpus.profile ([D14]).
 .venv\Scripts\python -m coding_adventures_warrant_oracle verify-v2 ..\..\..\specs\fixtures\ct-compare-warrant-v2 --warrant ..\..\..\specs\ct-compare.warrant --profile ..\..\..\specs\fixtures\ct-compare-warrant-v2\corpus.profile --bindings ..\..\rust\ct-compare\evidence.bindings --expect-generator warrant-corpus-gen@0.5.0

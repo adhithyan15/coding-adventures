@@ -1,0 +1,39 @@
+warrant omitx v1
+  model x2(a: Bytes) -> Bytes = concat(a, a)
+  model grow13(a: Bytes) -> Bytes = x2(x2(x2(x2(x2(x2(x2(x2(x2(x2(x2(x2(x2(a)))))))))))))
+  model grow17(a: Bytes) -> Bytes = x2(x2(x2(x2(x2(x2(x2(x2(x2(x2(x2(x2(x2(x2(x2(x2(x2(a)))))))))))))))))
+  model same(a: Bytes, b: Bytes) -> Bool = a == b
+  op echo(a: Bytes) -> Bytes
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  labels echo:
+    a.contents secret
+    a.length public
+
+  input echo.a:
+    hostile
+    ensures no_panic, terminates
+
+  bound echo:
+    steps <= 64 * len(a) + 512
+    heap <= 2 * len(a)
+    depth <= 32
+
+  claim echo_is_identity:
+    forall a: Bytes<1>. echo(a) == a
+
+  example echo_small:
+    echo(b"aa") == b"aa"
+
+  example echo_big_value:
+    echo(grow13(b"aa")) == grow13(b"aa")
+
+  example echo_size_error:
+    echo(grow17(b"aa")) == b"aa"
+
+  example echo_two_sided:
+    echo(b"aa") != echo(b"bb")
