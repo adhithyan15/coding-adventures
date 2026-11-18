@@ -1,4 +1,4 @@
-name: Kiln G1 candidate A-B-B-A experiment
+name: Kiln G1 matched-host candidate cohort
 
 on:
   push:
@@ -7,6 +7,7 @@ on:
     paths:
       - .github/workflows/kiln-g1-abba-candidate.yml
       - code/programs/go/kiln/ci/testdata/g1_abba_precision_linux_amd64_test.go.tmpl
+      - code/programs/go/kiln/ci/testdata/g1_profile_diagnostic_linux_amd64_test.go.tmpl
       - code/programs/go/kiln/ci/classify_g1_gate_result.py
       - code/programs/go/kiln/ci/test_classify_g1_gate_result.py
       - code/programs/go/kiln/ci/check_g1_production_delta.py
@@ -17,16 +18,17 @@ permissions:
 
 jobs:
   paired-gate:
-    name: G1 A1-B1-B2-A2 (${{ matrix.os }})
+    name: G1 A1-B1-B2-A2 and profiles (${{ matrix.os }}, slot ${{ matrix.slot }})
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-24.04, ubuntu-26.04]
+        slot: [1, 2]
     env:
-      BASELINE_SHA: adadc8fc0b9783b3a829fbb4309182f558d4561b
-      CANDIDATE_SHA: eedb854e2a5e6436be8ce6dc55295c902710d9e5
+      BASELINE_SHA: efe517a24fef9ddad591e468f72f8e1251e177ac
+      CANDIDATE_SHA: 1a3f378412a5eeb899bcc8e10c8c0c3b9a066bb1
     steps:
       - name: Checkout candidate and immutable baseline
         uses: actions/checkout@v7
@@ -67,6 +69,7 @@ jobs:
           persist-credentials: false
           sparse-checkout: |
             code/programs/go/kiln/ci/testdata/g1_abba_precision_linux_amd64_test.go.tmpl
+            code/programs/go/kiln/ci/testdata/g1_profile_diagnostic_linux_amd64_test.go.tmpl
             code/programs/go/kiln/ci/classify_g1_gate_result.py
             code/programs/go/kiln/ci/test_classify_g1_gate_result.py
             code/programs/go/kiln/ci/check_g1_production_delta.py
@@ -80,7 +83,7 @@ jobs:
           go-version: '1.26.1'
           cache-dependency-path: 'candidate/code/**/go.sum'
 
-      - name: Freeze clean binaries, then run native A1-B1-B2-A2 cells
+      - name: Freeze clean binaries, run A1-B1-B2-A2, then profile both arms
         working-directory: candidate/code/programs/go/kiln
         shell: bash
         run: |
@@ -147,6 +150,7 @@ jobs:
           fixture_sha=dc8acd0de1d9b235c3924d0d71e2fcd565274e09ded9975570f429b548525aae
           slice_sha=6cd61f63fdec55ce37294ad061705394b1babda80e5368b17ecb5bd38e2207af
           helper="$GITHUB_WORKSPACE/diagnostic/code/programs/go/kiln/ci/testdata/g1_abba_precision_linux_amd64_test.go.tmpl"
+          profile_helper="$GITHUB_WORKSPACE/diagnostic/code/programs/go/kiln/ci/testdata/g1_profile_diagnostic_linux_amd64_test.go.tmpl"
           classifier="$GITHUB_WORKSPACE/diagnostic/code/programs/go/kiln/ci/classify_g1_gate_result.py"
           delta_checker="$GITHUB_WORKSPACE/diagnostic/code/programs/go/kiln/ci/check_g1_production_delta.py"
           if ! python3 "$GITHUB_WORKSPACE/diagnostic/code/programs/go/kiln/ci/test_classify_g1_gate_result.py"; then
@@ -164,12 +168,14 @@ jobs:
             echo "diagnostic_checkout_sha=$(git -C "$GITHUB_WORKSPACE/diagnostic" rev-parse HEAD)"
             echo "baseline_sha=$BASELINE_SHA"
             echo "candidate_sha=$CANDIDATE_SHA"
+            echo "cohort_slot=${{ matrix.slot }}"
             echo "runner_os=$RUNNER_OS runner_arch=$RUNNER_ARCH image_os=${ImageOS:-unknown} image_version=${ImageVersion:-unknown}"
             echo "go=$(go version) gomaxprocs=${GOMAXPROCS:-default}"
             uname -a
             cat /etc/os-release
             lscpu
             echo "precision_helper_template_sha256=$(sha256sum "$helper" | cut -d' ' -f1)"
+            echo "profile_helper_template_sha256=$(sha256sum "$profile_helper" | cut -d' ' -f1)"
             for checkout in baseline candidate; do
               root="$GITHUB_WORKSPACE/$checkout"
               echo "checkout=$checkout head=$(git -C "$root" rev-parse HEAD)"
@@ -332,6 +338,61 @@ jobs:
           precision_summary_status=$?
           if [[ "$precision_summary_status" -ne 0 ]]; then integrity_failure=1; fi
           echo "candidate_gate_failure=$candidate_gate_failure integrity_failure=$integrity_failure" | tee -a "$summary"
+
+          # Profile both pinned arms after all official admission cells, even
+          # when a candidate cell misses G1. Three separate processes per arm
+          # each perform a fixed 20 BestPass1 calls on the exact slice.
+          for checkout in baseline candidate; do
+            root="$GITHUB_WORKSPACE/$checkout"
+            cp "$profile_helper" "$root/code/programs/go/kiln/g1_profile_diagnostic_linux_amd64_test.go"
+            if (cd "$root/code/programs/go/kiln" && go test -c -o "$output/profile-$checkout.test" .) \
+                > "$output/profile-compile-$checkout.log" 2>&1; then
+              cat "$output/profile-compile-$checkout.log"
+            else
+              compile_status=$?
+              cat "$output/profile-compile-$checkout.log"
+              echo "profile helper compile failed for $checkout: $compile_status" >&2
+              integrity_failure=1
+              continue
+            fi
+            echo "profile_binary_sha256 $checkout $(sha256sum "$output/profile-$checkout.test" | cut -d' ' -f1)" | tee -a "$output/identity.txt"
+            for capture_index in 1 2 3; do
+              label="profile-$checkout-$capture_index"
+              profile_log="$output/$label.log"
+              profile_file="$output/$label.pprof"
+              capture "$root" "$label" "$profile_log" env KILN_G1_PROFILE_KIND=cpu \
+                "$output/profile-$checkout.test" -test.timeout=30s -test.count=1 \
+                -test.run '^TestG1DiagnosticSyntheticSlice$' -test.v \
+                -test.cpuprofile "$profile_file"
+              profile_status=$(sed -n 's/^exit_code=//p' "$output/$label.resources.txt" | head -1)
+              echo "profile_status arm=$checkout capture=$capture_index exit=${profile_status:-missing}" | tee -a "$summary"
+              if [[ "$profile_status" != 0 ]] || \
+                 ! grep -Eq '^=== RUN[[:space:]]+TestG1DiagnosticSyntheticSlice$' "$profile_log" || \
+                 ! grep -Eq '^--- PASS: TestG1DiagnosticSyntheticSlice([[:space:]]|$)' "$profile_log" || \
+                 ! grep -Eq 'G1PROFILE: kind=cpu fixture_sha256=dc8acd0de1d9b235c3924d0d71e2fcd565274e09ded9975570f429b548525aae slice_sha256=6cd61f63fdec55ce37294ad061705394b1babda80e5368b17ecb5bd38e2207af bytes=66600 lines=936 helper_root=true gc=off_during_timing calls=20 ' "$profile_log" || \
+                 [[ ! -s "$profile_file" ]]; then
+                echo "invalid profile receipt for $label; retaining cell and continuing" | tee -a "$summary"
+                integrity_failure=1
+              fi
+              for view in top top-cum raw; do
+                case "$view" in
+                  top) pprof_args=(-top) ;;
+                  top-cum) pprof_args=(-top -cum) ;;
+                  raw) pprof_args=(-raw) ;;
+                esac
+                if go tool pprof "${pprof_args[@]}" "$output/profile-$checkout.test" "$profile_file" \
+                    > "$output/$label.$view.txt" 2>&1; then
+                  echo "pprof_status arm=$checkout capture=$capture_index view=$view exit=0" | tee -a "$summary"
+                else
+                  pprof_status=$?
+                  echo "pprof_status arm=$checkout capture=$capture_index view=$view exit=$pprof_status" | tee -a "$summary"
+                  integrity_failure=1
+                fi
+              done
+            done
+          done
+
+          echo "final_candidate_gate_failure=$candidate_gate_failure final_integrity_failure=$integrity_failure" | tee -a "$summary"
           if [[ "$candidate_gate_failure" -ne 0 || "$integrity_failure" -ne 0 ]]; then
             exit 1
           fi
@@ -340,7 +401,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: kiln-g1-abba-candidate-${{ matrix.os }}
+          name: kiln-g1-matched-candidate-${{ matrix.os }}-slot${{ matrix.slot }}
           path: ${{ runner.temp }}/kiln-g1-abba-candidate/
           if-no-files-found: error
           retention-days: 3
