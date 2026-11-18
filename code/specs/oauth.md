@@ -859,6 +859,31 @@ or OAuth transport, or open a network connection. Those transcript,
 certificate, trust, revocation, handshake, and transport boundaries remain
 separate; concrete HTTPS and live-provider readiness remain unavailable.
 
+A bounded `tls13-rsa-pss-certificate-verify` composition now closes the
+caller-digest substitution gap for one RSA-PSS `CertificateVerify` operation.
+Its first stage consumes an already policy-authorized signature scheme and one
+exact framed RFC 8446 `CertificateVerify` signed input, hashes those exact
+bytes with the scheme-bound repository-owned SHA-256, SHA-384, or SHA-512
+primitive, and retains the authorization, input, and owned digest together in
+non-copyable evidence. Its second stage accepts only that evidence, the exact
+structurally decoded `CertificateVerify` message, a validated `rsaEncryption`
+public key, matching typed verifier limits, and caller-owned scratch, then
+delegates to the existing data-driven RSA-PSS routing verifier. Success retains
+both the exact hashed-input evidence and fixed-verifier routing evidence, so a
+different input, scheme, message, key, or digest cannot be substituted after
+verification. Diagnostics retain no signed-input, transcript-hash, signature,
+digest, key, limit, or scratch bytes.
+
+This composition does not prove which handshake transcript produced the hash
+embedded in the framed signed input, bind that transcript to a selected cipher
+suite or ordered handshake state, parse a certificate, bind the key to a
+validated server path, construct or validate a path, verify a hostname, select
+trust roots, check time or revocation, authenticate Finished, sequence a
+handshake, process or protect records, perform I/O, authorize HTTP or OAuth
+transport, or open a network connection. Those transcript, certificate,
+trust, revocation, handshake, and transport boundaries remain separate;
+concrete HTTPS and live-provider readiness remain unavailable.
+
 A bounded `rsa-pss-sha512` prerequisite now validates one complete recovered
 RFC 8017 EMSA-PSS encoded message for the fixed SHA-512, 64-byte-salt profile.
 It composes the public layout gate and bounded SHA-512 MGF1 primitive, unmasks
