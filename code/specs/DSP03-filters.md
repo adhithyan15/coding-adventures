@@ -297,8 +297,19 @@ both delays to positive zero. This failure-atomic statement applies to
 returned errors; it does not promise recovery from allocation failure, panic,
 or process termination and is not a no-panic or heap-bound proof.
 
-Empty signal is rejected. Enforce `MAX_SAMPLES` per block and `MAX_ORDER` as
-the maximum number of SOS sections (1024); do not introduce a product cap.
+Each multiply, add, and subtract is a separately rounded binary32 operation
+in the written parenthesization; do not use fused multiply-add or reassociate
+the recurrence. Pin this source-level policy with the control section
+`[f32::MAX,0,0,1,1,0]`: processing `1` yields finite `f32::MAX` and delay
+`-f32::MAX`; processing `2` next returns an error because the separately
+rounded `f32::MAX * 2` overflows before adding the delay. A fused expression
+could remain finite, so this case distinguishes the declared evaluation.
+
+Empty signal returns `FilterError::EmptySignal`. Enforce the existing
+`MAX_SAMPLES=2^24` samples per block and `MAX_ORDER=1024` as the maximum
+number of SOS sections; do not introduce a product cap. Bounds errors use
+`FilterError::InvalidCoefficient` with descriptive text; tests pin the error
+variant and precedence, not fragile text.
 For `sosfilt`, check empty signal, sample cap, and section cap in that order;
 then validate all sections in order before evaluating samples. Construction
 checks raw coefficients in slot order, rejects zero `a0`, then checks
@@ -306,7 +317,7 @@ normalized coefficients in `[b0,b1,b2,a1,a2]` order. Processing checks each
 input sample and its output/delay candidates in input order. Check bounds
 before coefficient- or sample-proportional work. SOS is one-shot, starts each
 section with zero delays, processes sections in order, and returns a complete
-finite vector or an error. Empty sections with nonempty finite input return an
+finite vector or an error. `reset()` returns unit. Empty sections with nonempty finite input return an
 identity copy; empty input is rejected even when sections are empty.
 
 Rust `f32` checked behavior and errors are intentionally not claimed to match
