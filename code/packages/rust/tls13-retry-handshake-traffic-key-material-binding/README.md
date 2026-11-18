@@ -13,12 +13,21 @@ proof beside the sender role and a borrowed key-material view into caller-owned
 fixed wipe-on-drop storage. Callers cannot supply a detached secret, suite,
 hash, output length, label, or context.
 
-This package derives one direction's handshake key and IV per call. It does
-not advance the transcript, authenticate CertificateVerify or Finished,
-construct a record nonce or state, invoke an AEAD, protect records, validate
+The complete traffic-secret wrapper can instead be consumed into a single-use
+record-state issuer. That issuer permits one successful client issuance and
+one successful server issuance. Repeating a sender is rejected before output
+storage is touched. Each success derives the retained sender's key material,
+moves it into fresh sequence-zero nonce state, marks that sender issued, and
+returns a non-cloneable wrapper that borrows the issuer. Callers can borrow or
+mutably borrow the state through that wrapper, but cannot detach it from the
+complete retry proof or create a second sequence-zero state for the same
+sender through this boundary.
+
+This package derives one direction's handshake key and IV and can create the
+matching record state. It does not advance the transcript, authenticate
+CertificateVerify or Finished, invoke an AEAD, protect records, validate
 certificates, establish trust, verify hostnames, enforce revocation, perform
-I/O, authorize HTTP or OAuth, or provide TLS, HTTPS, or live-provider
-readiness.
+I/O, authorize HTTP or OAuth, or provide TLS, HTTPS, or live-provider readiness.
 
 ## Verification
 

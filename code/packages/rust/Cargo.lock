@@ -14777,6 +14777,7 @@ dependencies = [
  "tls13-key-schedule",
  "tls13-key-share",
  "tls13-named-group-policy",
+ "tls13-record-protection-state",
  "tls13-retry-handshake-traffic-secrets-binding",
  "tls13-retry-key-schedule-binding",
  "tls13-retry-transcript-binding",
