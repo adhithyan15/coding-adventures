@@ -948,6 +948,22 @@ authorize TLS, HTTP, OAuth transport, or live-provider access. Those remaining
 anchor, revocation, state, Finished, record, and transport boundaries remain
 separate; concrete HTTPS remains unavailable.
 
+The same package now exposes a stronger exact-destination entry point. It
+accepts the reviewed server path only through the existing non-copyable HTTPS
+DNS destination binding, then delegates the same role-first exact-leaf
+`CertificateVerify` verification. Success retains the complete certificate
+SAN, TLS SNI, HTTP Host authority, reviewed path, selected transcript, decoded
+message, derived key, and signature verdict in one lifetime-bound graph. This
+closes substitution between a destination-proven leaf and the leaf used for
+handshake authentication.
+
+The stronger entry point still does not add anchor self-signature evidence,
+select or enforce revocation, prove ordered transcript state, authenticate
+Finished, protect records, perform TLS or HTTP I/O, authorize OAuth transport,
+or grant network authority. Those trust, revocation, state, record, and
+transport boundaries remain separate; concrete HTTPS and live-provider
+readiness remain unavailable.
+
 A bounded `rsa-pss-sha512` prerequisite now validates one complete recovered
 RFC 8017 EMSA-PSS encoded message for the fixed SHA-512, 64-byte-salt profile.
 It composes the public layout gate and bounded SHA-512 MGF1 primitive, unmasks

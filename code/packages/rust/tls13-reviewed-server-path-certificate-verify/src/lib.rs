@@ -1,18 +1,22 @@
 //! TLS 1.3 server `CertificateVerify` bound to a reviewed RSA path leaf.
 //!
-//! This composition accepts only selected-transcript hash evidence and the
-//! strongest accumulated reviewed RSA server-path proof. It authorizes the
-//! server role, derives and validates the exact reviewed target certificate's
-//! RSA key, and delegates signature verification to repository-owned code.
-//! It does not establish ordered handshake state, anchor self-signature,
-//! revocation, Finished, records, TLS, HTTP, OAuth, or network readiness.
+//! The path-only composition accepts selected-transcript hash evidence and the
+//! strongest accumulated reviewed RSA server-path proof. Its stronger HTTPS
+//! entry point accepts that path only through the existing exact DNS
+//! destination binding. Both authorize the server role, derive and validate
+//! the exact reviewed target certificate's RSA key, and delegate signature
+//! verification to repository-owned code. They do not establish ordered
+//! handshake state, anchor self-signature, revocation, Finished, records, TLS,
+//! HTTP, OAuth, or network readiness.
 
 #![forbid(unsafe_code)]
 
 use core::fmt;
 
 use der_asn1::Asn1Limits;
-use https_reviewed_server_path_binding::ReviewedHttpsServerPath;
+use https_reviewed_server_path_binding::{
+    BoundHttpsDnsDestinationToReviewedServerPath, ReviewedHttpsServerPath,
+};
 use tls13_certificate_verify_input::CertificateVerifyRole;
 use tls13_certificate_verify_message::CertificateVerifyMessage;
 use tls13_certificate_verify_transcript_binding::{
@@ -229,6 +233,200 @@ impl fmt::Debug
     }
 }
 
+/// Non-copyable evidence retaining the complete exact HTTPS DNS destination,
+/// reviewed path, and selected-transcript server signature verdict.
+pub struct VerifiedHttpsDnsDestinationReviewedServerPathCertificateVerify<
+    'destination,
+    'server_name,
+    'host,
+    'evidence,
+    'initialized,
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'policy,
+    'anchor_certificate,
+    'anchor_encoded,
+    'role_certificate,
+    'role_encoded,
+    'hashed,
+    'bound,
+    'transcript,
+    'output,
+    'message,
+    'body,
+> {
+    https_destination_reviewed_server_path:
+        &'destination BoundHttpsDnsDestinationToReviewedServerPath<
+            'server_name,
+            'host,
+            'evidence,
+            'initialized,
+            'path,
+            'target,
+            'target_encoded,
+            'candidates,
+            'candidate_encoded,
+            'policy,
+            'anchor_certificate,
+            'anchor_encoded,
+            'role_certificate,
+            'role_encoded,
+        >,
+    verification: VerifiedReviewedServerPathCertificateVerify<
+        'destination,
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+        'hashed,
+        'bound,
+        'transcript,
+        'output,
+        'message,
+        'body,
+    >,
+}
+
+impl<
+        'destination,
+        'server_name,
+        'host,
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+        'hashed,
+        'bound,
+        'transcript,
+        'output,
+        'message,
+        'body,
+    >
+    VerifiedHttpsDnsDestinationReviewedServerPathCertificateVerify<
+        'destination,
+        'server_name,
+        'host,
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+        'hashed,
+        'bound,
+        'transcript,
+        'output,
+        'message,
+        'body,
+    >
+{
+    /// Return the exact HTTPS DNS destination and reviewed path proof.
+    #[must_use]
+    pub const fn https_destination_reviewed_server_path(
+        &self,
+    ) -> &'destination BoundHttpsDnsDestinationToReviewedServerPath<
+        'server_name,
+        'host,
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    > {
+        self.https_destination_reviewed_server_path
+    }
+
+    /// Return the exact reviewed-path `CertificateVerify` verdict.
+    #[must_use]
+    pub const fn verification(
+        &self,
+    ) -> &VerifiedReviewedServerPathCertificateVerify<
+        'destination,
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+        'hashed,
+        'bound,
+        'transcript,
+        'output,
+        'message,
+        'body,
+    > {
+        &self.verification
+    }
+}
+
+impl fmt::Debug
+    for VerifiedHttpsDnsDestinationReviewedServerPathCertificateVerify<
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+    >
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("VerifiedHttpsDnsDestinationReviewedServerPathCertificateVerify")
+    }
+}
+
 /// Verify one server `CertificateVerify` with the exact reviewed path target.
 #[allow(clippy::too_many_arguments)]
 pub fn verify_reviewed_server_path_certificate_verify<
@@ -327,6 +525,103 @@ pub fn verify_reviewed_server_path_certificate_verify<
         reviewed_server_path,
         verification,
     })
+}
+
+/// Verify one server `CertificateVerify` through the exact reviewed path
+/// already bound to the HTTPS DNS destination.
+#[allow(clippy::too_many_arguments)]
+pub fn verify_https_dns_destination_reviewed_server_path_certificate_verify<
+    'destination,
+    'server_name,
+    'host,
+    'evidence,
+    'initialized,
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'policy,
+    'anchor_certificate,
+    'anchor_encoded,
+    'role_certificate,
+    'role_encoded,
+    'hashed,
+    'bound,
+    'transcript,
+    'output,
+    'message,
+    'body,
+    'key_policy,
+>(
+    https_destination_reviewed_server_path: &'destination BoundHttpsDnsDestinationToReviewedServerPath<
+        'server_name,
+        'host,
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >,
+    hashed_input: &'hashed HashedTranscriptBoundCertificateVerifyInput<
+        'bound,
+        'transcript,
+        'output,
+    >,
+    message: &'message CertificateVerifyMessage<'body>,
+    rsa_key_policy: RsaPublicKeyPolicy<'key_policy>,
+    rsa_key_limits: Asn1Limits,
+    data_block_scratch: &mut [u8],
+    signature_limits: Tls13RsaPssSignatureLimits,
+) -> Result<
+    VerifiedHttpsDnsDestinationReviewedServerPathCertificateVerify<
+        'destination,
+        'server_name,
+        'host,
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+        'hashed,
+        'bound,
+        'transcript,
+        'output,
+        'message,
+        'body,
+    >,
+    ReviewedServerPathCertificateVerifyError,
+> {
+    let verification = verify_reviewed_server_path_certificate_verify(
+        https_destination_reviewed_server_path.reviewed_server_path(),
+        hashed_input,
+        message,
+        rsa_key_policy,
+        rsa_key_limits,
+        data_block_scratch,
+        signature_limits,
+    )?;
+
+    Ok(
+        VerifiedHttpsDnsDestinationReviewedServerPathCertificateVerify {
+            https_destination_reviewed_server_path,
+            verification,
+        },
+    )
 }
 
 fn validate_leaf_public_key<'encoded, 'key_policy>(

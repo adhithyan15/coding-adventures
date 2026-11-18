@@ -16,12 +16,15 @@ x509-certificate = { path = "../x509-certificate" }
 x509-rsa-public-key = { path = "../x509-rsa-public-key" }
 
 [dev-dependencies]
+http1-request-host-authority = { path = "../http1-request-host-authority" }
+https-destination-name-binding = { path = "../https-destination-name-binding" }
 rsa-pss-sha256-signature = { path = "../rsa-pss-sha256-signature" }
 rsa-public-operation = { path = "../rsa-public-operation" }
 tls13-cipher-suite-policy = { path = "../tls13-cipher-suite-policy" }
 tls13-signature-scheme-policy = { path = "../tls13-signature-scheme-policy" }
 tls13-transcript = { path = "../tls13-transcript" }
 tls-server-identity = { path = "../tls-server-identity" }
+tls13-server-name = { path = "../tls13-server-name" }
 x509-certificate-path-construction = { path = "../x509-certificate-path-construction" }
 x509-certificate-path-reviewed-anchor-binding = { path = "../x509-certificate-path-reviewed-anchor-binding" }
 x509-certificate-policy = { path = "../x509-certificate-policy" }
