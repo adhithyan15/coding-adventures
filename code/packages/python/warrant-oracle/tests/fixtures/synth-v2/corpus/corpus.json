@@ -60,8 +60,8 @@
       ],
       "slim_witness": [
         {
-          "claim": "warrant/synth/exhaustive/bump_is_inc",
-          "deferred": "ir.fixed"
+          "chunk": 0,
+          "claim": "warrant/synth/exhaustive/bump_is_inc"
         }
       ],
       "target_kind": "exhaustive"
@@ -235,8 +235,8 @@
       ],
       "slim_witness": [
         {
-          "claim": "warrant/synth/exhaustive/wide_is_identity",
-          "deferred": "ir.fixed"
+          "chunk": 0,
+          "claim": "warrant/synth/exhaustive/wide_is_identity"
         }
       ],
       "target_kind": "exhaustive"
@@ -714,7 +714,7 @@
   ],
   "generator": {
     "name": "warrant-corpus-gen",
-    "version": "0.5.0"
+    "version": "0.6.0"
   },
   "levels": [
     "ir.core",

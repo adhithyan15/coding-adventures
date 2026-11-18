@@ -12,7 +12,7 @@ fixtures), and `BUILD` runs `make_fixture.py --check` and `verify-v2` on it.
 | `echo_two_sided` | `echo(..) != echo(..)` is not `op(args) == pure` | `not-op-eq-pure` |
 
 `echo_small` is kept, so `cases.tfv` has one record. The recorded generator is
-`warrant-corpus-gen@0.5.0`; the generator's S10-1 PR is checked against this directory and
+`warrant-corpus-gen@0.6.0`; the generator's S10-1 PR is checked against this directory and
 regenerates it from its own output (the bytes must not move).
 
 **[D13] note.** The recorded generator is pinned by `BUILD`. A generator version bump must

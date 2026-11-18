@@ -6,7 +6,7 @@ mod support;
 
 use coding_adventures_warrant_corpus_gen::cost::{ir_cost, ModelCosts};
 use coding_adventures_warrant_corpus_gen::faults::{
-    first_unimplemented, instantiate, instantiate_in, Level, SHIPPED_GATE,
+    first_unimplemented, instantiate, instantiate_in, Level,
 };
 use coding_adventures_warrant_corpus_gen::lower::{lower_document, Lowered};
 use coding_adventures_warrant_corpus_gen::stream::{encode, in_v1_set};
@@ -222,10 +222,10 @@ fn a_template_the_signature_cannot_take_is_a_fault_error_and_nothing_is_skipped(
 #[test]
 fn the_gate_defers_to_the_first_unimplemented_level_in_sorted_order() {
     use Level::{Core, Fixed, Tuple};
-    assert_eq!(first_unimplemented(&[Fixed, Tuple], &SHIPPED_GATE), Some(Fixed));
-    assert_eq!(first_unimplemented(&[Core, Tuple], &SHIPPED_GATE), Some(Tuple));
+    assert_eq!(first_unimplemented(&[Fixed, Tuple], &[Core]), Some(Fixed));
+    assert_eq!(first_unimplemented(&[Core, Tuple], &[Core]), Some(Tuple));
     assert_eq!(first_unimplemented(&[Fixed, Tuple], &[Core, Tuple]), Some(Fixed));
     assert_eq!(first_unimplemented(&[Core, Tuple], &[Core, Tuple]), None);
-    assert_eq!(first_unimplemented(&[Core], &SHIPPED_GATE), None);
+    assert_eq!(first_unimplemented(&[Core], &[Core]), None);
     assert!(Core < Fixed && Fixed < Tuple, "the derived order is the sorted order of the names");
 }

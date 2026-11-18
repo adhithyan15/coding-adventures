@@ -130,8 +130,8 @@
       ],
       "slim_witness": [
         {
-          "claim": "warrant/ct_compare/exhaustive/eq_u64_agrees",
-          "deferred": "ir.fixed"
+          "chunk": 0,
+          "claim": "warrant/ct_compare/exhaustive/eq_u64_agrees"
         }
       ],
       "target_kind": "exhaustive"
@@ -740,7 +740,7 @@
   ],
   "generator": {
     "name": "warrant-corpus-gen",
-    "version": "0.5.0"
+    "version": "0.6.0"
   },
   "levels": [
     "ir.core",

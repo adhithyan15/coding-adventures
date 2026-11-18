@@ -7,10 +7,18 @@
 use coding_adventures_warrant_corpus_gen::error::GenError;
 use coding_adventures_warrant_corpus_gen::faults::Level;
 use coding_adventures_warrant_corpus_gen::json::Json;
-use coding_adventures_warrant_corpus_gen::{generate, generate_gated, CorpusV2, GenInput};
+use coding_adventures_warrant_corpus_gen::{generate_gated, CorpusV2, GenInput};
 
 use super::minijson::{parse, J};
 use super::with_file;
+
+/// The **closed** fault gate: only `ir.core` is evaluated (the oracle's `parity_dumps.GATE_CLOSED`).
+///
+/// The parity dumps pin their gate explicitly instead of taking the default of `generate`
+/// (`SHIPPED_GATE`).  The dumps record what the oracle computes under a *named* gate; when the
+/// atomic flip opens the shipped gate to `ir.fixed` and `ir.tuple`, only `SHIPPED_GATE` and the
+/// fixtures that record it move, and these closed-gate views stay byte for byte what they were.
+pub const GATE_CLOSED: [Level; 1] = [Level::Core];
 
 /// The first line where two texts differ, with a little context, for a readable failure.
 pub fn first_difference(a: &str, b: &str) -> String {
@@ -30,7 +38,7 @@ pub fn generated(
     src: &str,
     spec_path: &str,
     profile: &str,
-    gate: Option<&[Level]>,
+    gate: &[Level],
 ) -> Result<CorpusV2, GenError> {
     with_file(src, |f| {
         let input = GenInput {
@@ -40,10 +48,7 @@ pub fn generated(
             profile_bytes: profile.as_bytes(),
             binding_faults: None,
         };
-        match gate {
-            None => generate(&input),
-            Some(g) => generate_gated(&input, g),
-        }
+        generate_gated(&input, gate)
     })
 }
 

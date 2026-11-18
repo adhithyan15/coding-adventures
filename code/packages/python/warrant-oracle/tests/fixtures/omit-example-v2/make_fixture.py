@@ -26,7 +26,7 @@ from coding_adventures_warrant_oracle.corpus_v2 import canonical, derive
 
 HERE = pathlib.Path(__file__).resolve().parent
 SPEC_REF = "code/packages/python/warrant-oracle/tests/fixtures/omit-example-v2/omit.warrant"
-GENERATOR = {"name": "warrant-corpus-gen", "version": "0.5.0"}
+GENERATOR = {"name": "warrant-corpus-gen", "version": "0.6.0"}
 
 
 def build() -> dict[pathlib.Path, bytes]:
