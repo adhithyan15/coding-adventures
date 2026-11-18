@@ -34,6 +34,11 @@
 //!   tuple project               the components in order / the i-th component (`ir.tuple`)
 //!   match s [[pat, arm]..]      evaluates the scrutinee, then **exactly one** arm: the first whose
 //!                               pattern matches, with its binders in scope (`ir.tuple`, [D35])
+//!   ir.fixed built-ins (35)     every operand left to right, then `fixed_builtin` (the bit work is
+//!                               `warrant-grammar`'s `fixed`, agreed with the oracle on every row of
+//!                               `fixed-eval-v1`); an Option is `Value::Opt`, consumed by `unwrap_or`
+//!                               alone (both operands evaluated); `wraps` counts only add sub mul neg
+//!                               [D31], never `wrap shl bit_not ...`
 //!   model_call                  evaluates the arguments left to right, then the body in a
 //!                               fresh frame
 //!   subject_op                  cannot be evaluated: the generator has no subject
@@ -73,10 +78,12 @@
 use std::collections::HashMap;
 use std::rc::Rc;
 
+use coding_adventures_warrant_grammar::fixed::{self, FixedTy};
+
 use crate::arith::{
     check_value_len, exact_neg, exact_op, fixed_neg, fixed_op, EXACT_BOUND, MAX_IR_VALUE,
 };
-use crate::error::{code, Beyond, GenError};
+use crate::error::{code, GenError};
 use crate::ir::{Arith, Cmp, Ir, Logic, Pat};
 use crate::lower::{LoweredModel, LoweredOp};
 use crate::patterns::match_pattern;
@@ -562,14 +569,11 @@ impl<'a> Program<'a> {
                 tasks.push(Task::Arms(arms));
                 tasks.push(Task::Eval(scrutinee));
             }
-            // Typed and costed since S10b, never evaluated before S10c-1 (VER04r 13, S10):
-            // fail closed, naming the level.
-            Ir::Fixed { .. } => {
-                return Err(GenError::level(
-                    Beyond::IrFixed,
-                    "",
-                    "ir.fixed is lowered and costed but not evaluated yet (slice S10c-1)",
-                ))
+            // The 35 built-ins of Appendix A.1 (S10c-2): every operand left to right, then the
+            // node.  `unwrap_or` evaluates both of its operands (no short circuit).
+            Ir::Fixed { args, .. } => {
+                tasks.push(Task::Apply(node));
+                tasks.extend(args.iter().rev().map(Task::Eval));
             }
         }
         Ok(())
@@ -642,6 +646,19 @@ impl<'a> Program<'a> {
                 } else {
                     &x[at..]
                 })
+            }
+            Ir::Fixed {
+                tag,
+                ty,
+                at: width,
+                args,
+            } => {
+                let from = vals
+                    .len()
+                    .checked_sub(args.len())
+                    .ok_or_else(|| GenError::internal("a built-in lost its operands"))?;
+                let operands: Vec<Value> = vals.drain(from..).collect();
+                fixed_builtin(tag, ty.or(*width), &operands)?
             }
             _ => return Err(GenError::internal("a node was applied without operands")),
         };
@@ -871,6 +888,103 @@ fn pop(vals: &mut Vec<Value>) -> Result<Value, GenError> {
         .ok_or_else(|| GenError::internal("the value stack ran dry"))
 }
 
+/// One `ir.fixed` built-in of VER04r Appendix A.1 on its evaluated operands.  `t` is the width it
+/// works at (the static type argument if it has one, else the first operand's type: [`Ir::Fixed`]).
+///
+/// The bit-level work is `warrant-grammar`'s `fixed` module, which the oracle's independent
+/// evaluator (`ir_eval._fixed_fn`) agrees with on every operand of `tests/fixed_eval_parity.rs`.  What
+/// this function adds is the *dispatch* and the three conventions the module does not own:
+///
+/// ```text
+///   Option       try checked_* div rem div_trunc rem_trunc at   give `Value::Opt`; `unwrap_or` is
+///                                                               the one consumer, and evaluates
+///                                                               both operands (no short circuit)
+///   shift count  an exact Nat (never reduced by the host); n >= w is decided by `fixed::*`
+///   wraps        none of these counts a wrap [D31]: only add sub mul neg do (the `Arith` and
+///                `Neg` nodes), so `wrap`, `shl`, `bit_not` ... never touch `Stats`
+/// ```
+fn fixed_builtin(tag: &str, t: Option<FixedTy>, ops: &[Value]) -> Result<Value, GenError> {
+    let ty = || t.ok_or_else(|| ill_typed("a width for the built-in"));
+    let int = |i: usize| -> Result<i128, GenError> {
+        ops.get(i)
+            .ok_or_else(|| GenError::internal("a built-in lost an operand"))?
+            .as_int()
+    };
+    // A shift count or bit index is a Nat: never negative.
+    let count = |i: usize| -> Result<u128, GenError> {
+        u128::try_from(int(i)?).map_err(|_| ill_typed("a Nat count"))
+    };
+    let some = |v: Option<i128>| Value::Opt(v.map(|x| Box::new(Value::Int(x))));
+    Ok(match tag {
+        "max_value" => Value::Int(ty()?.max()),
+        "min_value" => Value::Int(ty()?.min()),
+        "bit_and" => Value::Int(fixed::bit_and(ty()?, int(0)?, int(1)?)),
+        "bit_or" => Value::Int(fixed::bit_or(ty()?, int(0)?, int(1)?)),
+        "bit_xor" => Value::Int(fixed::bit_xor(ty()?, int(0)?, int(1)?)),
+        "bit_not" => Value::Int(fixed::bit_not(ty()?, int(0)?)),
+        "shl" => Value::Int(fixed::shl(ty()?, int(0)?, count(1)?)),
+        "shr" => Value::Int(fixed::shr(ty()?, int(0)?, count(1)?)),
+        "sar" => Value::Int(fixed::sar(ty()?, int(0)?, count(1)?)),
+        "rotl" => Value::Int(fixed::rotl(ty()?, int(0)?, count(1)?)),
+        "rotr" => Value::Int(fixed::rotr(ty()?, int(0)?, count(1)?)),
+        "bit" => Value::Bool(fixed::bit(ty()?, int(0)?, count(1)?)),
+        "popcount" => Value::Int(i128::try_from(fixed::popcount(ty()?, int(0)?)).unwrap_or(0)),
+        "clz" => Value::Int(i128::try_from(fixed::clz(ty()?, int(0)?)).unwrap_or(0)),
+        "ctz" => Value::Int(i128::try_from(fixed::ctz(ty()?, int(0)?)).unwrap_or(0)),
+        // `widen` and the two views of the mathematical value change the type, not the integer.
+        "widen" | "to_int" | "to_nat" => Value::Int(int(0)?),
+        "wrap" => Value::Int(ty()?.wrap(int(0)?)),
+        "try" => some(ty()?.try_from_int(int(0)?)),
+        "checked_add" => some(fixed::checked('+', ty()?, int(0)?, int(1)?)),
+        "checked_sub" => some(fixed::checked('-', ty()?, int(0)?, int(1)?)),
+        "checked_mul" => some(fixed::checked('*', ty()?, int(0)?, int(1)?)),
+        // Floor division and the divisor-signed remainder: on `Int`/`Nat` operands, and, for two
+        // unsigned fixed operands (the only fixed pair the typer admits), plain division.
+        "div" => some(fixed::floor_div(int(0)?, int(1)?)),
+        "rem" => some(fixed::floor_mod(int(0)?, int(1)?)),
+        "div_trunc" => some(fixed::div_trunc(ty()?, int(0)?, int(1)?)),
+        "rem_trunc" => some(fixed::rem_trunc(ty()?, int(0)?, int(1)?)),
+        "imin" => Value::Int(int(0)?.min(int(1)?)),
+        "imax" => Value::Int(int(0)?.max(int(1)?)),
+        "be_bytes" => Value::bytes(&fixed::be_bytes(ty()?, int(0)?)),
+        "le_bytes" => Value::bytes(&fixed::le_bytes(ty()?, int(0)?)),
+        "from_be" | "from_le" => {
+            let data = ops
+                .first()
+                .ok_or_else(|| GenError::internal("a built-in lost an operand"))?
+                .as_bytes()?;
+            let read = if tag == "from_be" {
+                fixed::from_be(ty()?, data)
+            } else {
+                fixed::from_le(ty()?, data)
+            };
+            // A runtime width other than the target's is a corpus error, never a truncation or a
+            // zero extension (Appendix A.1).
+            Value::Int(read.ok_or_else(|| {
+                GenError::new(
+                    code::IR,
+                    "",
+                    "from_be/from_le need exactly the target's width in bytes",
+                )
+            })?)
+        }
+        "at" => {
+            let data = ops
+                .first()
+                .ok_or_else(|| GenError::internal("a built-in lost an operand"))?
+                .as_bytes()?;
+            let i = int(1)?;
+            some(usize::try_from(i).ok().and_then(|i| data.get(i)).map(|b| i128::from(*b)))
+        }
+        "unwrap_or" => match ops {
+            [Value::Opt(Some(v)), _] => (**v).clone(),
+            [Value::Opt(None), default] => default.clone(),
+            _ => return Err(ill_typed("an Option and a default")),
+        },
+        _ => return Err(GenError::internal("an unknown ir.fixed tag")),
+    })
+}
+
 /// The largest exact intermediate of VER04r 3.2, re-exported for the tests.
 pub const EXACT_LIMIT: i128 = EXACT_BOUND;
 /// `MAX_IR_VALUE` re-exported next to the evaluator that enforces it.
@@ -1021,6 +1135,111 @@ mod tests {
             let e = run(&Ir::Bytes(bad)).unwrap_err();
             assert!(!e.size, "{e}");
         }
+    }
+
+    /// An `ir.fixed` node as the lowering builds it.
+    fn fixed(tag: &'static str, ty: Option<FixedTy>, at: Option<FixedTy>, args: Vec<Ir>) -> Ir {
+        Ir::Fixed { tag, ty, at, args }
+    }
+
+    fn lit(t: FixedTy, v: i128) -> Ir {
+        *fx(t, v)
+    }
+
+    #[test]
+    fn the_ir_fixed_built_ins_evaluate_the_cases_a_host_gets_wrong() {
+        let (u8t, i8t) = (FixedTy::U8, FixedTy::I8);
+        let nat = |n: i128| Ir::Int {
+            ty: Ty::Nat,
+            value: n,
+        };
+        // a shift count of the width or more is decided before any host shift
+        let shl = fixed("shl", None, Some(u8t), vec![lit(u8t, 1), nat(8)]);
+        assert_eq!(run(&shl).unwrap(), Value::Int(0));
+        let shl7 = fixed("shl", None, Some(u8t), vec![lit(u8t, 1), nat(7)]);
+        assert_eq!(run(&shl7).unwrap(), Value::Int(128));
+        let sar = fixed("sar", None, Some(i8t), vec![lit(i8t, -128), nat(300)]);
+        assert_eq!(run(&sar).unwrap(), Value::Int(-1));
+        let bit = fixed("bit", None, Some(u8t), vec![lit(u8t, 255), nat(8)]);
+        assert_eq!(run(&bit).unwrap(), Value::Bool(false));
+        // rotations reduce the count modulo the width
+        let rotl = fixed("rotl", None, Some(u8t), vec![lit(u8t, 0x81), nat(9)]);
+        assert_eq!(run(&rotl).unwrap(), Value::Int(3));
+        // a division that cannot happen is `none`; `unwrap_or` evaluates both operands
+        let q = fixed("div_trunc", None, Some(i8t), vec![lit(i8t, -128), lit(i8t, -1)]);
+        assert_eq!(run(&q).unwrap(), Value::Opt(None));
+        let q = fixed("div_trunc", None, Some(i8t), vec![lit(i8t, -7), lit(i8t, 2)]);
+        assert_eq!(run(&q).unwrap(), Value::Opt(Some(Box::new(Value::Int(-3)))));
+        let un = fixed("unwrap_or", None, None, vec![q, lit(i8t, 99)]);
+        assert_eq!(run(&un).unwrap(), Value::Int(-3));
+        // the explicit truncations never count a wrap [D31]; the arithmetic nodes do
+        let wrap = fixed("wrap", Some(u8t), None, vec![lit(i8t, -1)]);
+        assert_eq!(run(&wrap).unwrap(), Value::Int(255));
+        assert_eq!(wraps_of(&wrap), 0);
+        let not = fixed("bit_not", None, Some(u8t), vec![lit(u8t, 0)]);
+        assert_eq!(wraps_of(&not), 0);
+        let add_inside = fixed(
+            "bit_not",
+            None,
+            Some(u8t),
+            vec![Ir::Arith(Arith::Add, Ty::Fixed(u8t), fx(u8t, 255), fx(u8t, 1))],
+        );
+        assert_eq!(run(&add_inside).unwrap(), Value::Int(255));
+        assert_eq!(wraps_of(&add_inside), 1);
+        // the endian bytes and their inverse; a width that is not the target's is a corpus error
+        let be = fixed("be_bytes", None, Some(FixedTy::U32), vec![lit(FixedTy::U32, 0x0102_0304)]);
+        assert_eq!(run(&be).unwrap(), Value::bytes(&[1, 2, 3, 4]));
+        let back = fixed("from_le", Some(FixedTy::U32), None, vec![Ir::Bytes("01020304".into())]);
+        assert_eq!(run(&back).unwrap(), Value::Int(0x0403_0201));
+        let short = fixed("from_be", Some(FixedTy::U32), None, vec![Ir::Bytes("0102".into())]);
+        assert_eq!(run(&short).unwrap_err().code, code::IR);
+        // `at` is `none` out of range, for a negative index too
+        let at = |i: i128| {
+            fixed(
+                "at",
+                None,
+                None,
+                vec![
+                    Ir::Bytes("0a14".into()),
+                    Ir::Int {
+                        ty: Ty::Int,
+                        value: i,
+                    },
+                ],
+            )
+        };
+        assert_eq!(run(&at(1)).unwrap(), Value::Opt(Some(Box::new(Value::Int(20)))));
+        assert_eq!(run(&at(2)).unwrap(), Value::Opt(None));
+        assert_eq!(run(&at(-1)).unwrap(), Value::Opt(None));
+    }
+
+    #[test]
+    fn a_hand_built_ir_fixed_node_that_is_not_well_typed_is_refused_never_guessed() {
+        // no width for a built-in that needs one
+        let no_width = fixed("bit_not", None, None, vec![lit(FixedTy::U8, 1)]);
+        assert_eq!(run(&no_width).unwrap_err().code, code::W0701);
+        // a negative shift count is not a Nat
+        let negative = fixed(
+            "shl",
+            None,
+            Some(FixedTy::U8),
+            vec![
+                lit(FixedTy::U8, 1),
+                Ir::Int {
+                    ty: Ty::Int,
+                    value: -1,
+                },
+            ],
+        );
+        assert_eq!(run(&negative).unwrap_err().code, code::W0701);
+        // `unwrap_or` of something that is not an Option; an unknown tag
+        let bad = fixed("unwrap_or", None, None, vec![lit(FixedTy::U8, 1), lit(FixedTy::U8, 2)]);
+        assert_eq!(run(&bad).unwrap_err().code, code::W0701);
+        let unknown = fixed("nonsense", None, None, vec![]);
+        assert!(run(&unknown).is_err());
+        // a byte operand where an integer is needed
+        let wrong = fixed("popcount", None, Some(FixedTy::U8), vec![Ir::Bytes("00".into())]);
+        assert!(run(&wrong).is_err());
     }
 
     #[test]

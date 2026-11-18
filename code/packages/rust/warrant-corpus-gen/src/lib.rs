@@ -38,8 +38,8 @@
 //! | [`arith`] | S3a | the single wrapping rule (3.2): `wraps`, the 2^127 window, `MAX_IR_VALUE` |
 //! | [`cost`] | S3a | worst-path `ir_cost`, `max_ir_cost`, total IR work (4.2 rule 6) |
 //! | [`view`] | S3a | the lowering parity view compared byte for byte with the oracle |
-//! | [`value`], [`eval`] | S3b | the `ir.core` evaluator: values, wraps, the pure trace for `expected_calls` |
-//! | [`domains`] | S3b | binder descriptors and labels over the S2 `domain` API; the 16.2 refusals |
+//! | [`value`], [`eval`] | S3b | the evaluator (`ir.core`, S10t-2 `ir.tuple`, S10c-2 `ir.fixed`): values, wraps, the pure trace for `expected_calls` |
+//! | [`domains`] | S3b | binder descriptors and labels over the S2 `domain` API (`nat_shift`, `fx_edge` since S10c-2); the one 16.2 refusal left; the consumer-side `descriptor_size` |
 //! | [`stream`] | S3b | the 2.4 stream encoders, framing, FNV-1a-64, the slim base set |
 //! | [`suite`] | S3b | product enumeration, admission, chunks, counts and digests of one suite |
 //! | [`enumerate`] | S3b | a whole document at `full` depth; the enumeration parity view |
@@ -54,9 +54,9 @@
 //! ## Fail closed
 //!
 //! The generator computes a digest for every suite it emits, so it cannot emit a suite it
-//! cannot evaluate.  A construct beyond `ir.core` refuses the **whole document**, naming
-//! the level (`ir.fixed`, `ir.data`, `ir.seq`, or a feature such as `inout`), and nothing is
-//! written.  Every `match` over the grammar ends in an explicit refusal, never a skip.
+//! cannot evaluate.  A construct beyond what it evaluates (`ir.core`, `ir.tuple` and, since S10c-2,
+//! `ir.fixed`) refuses the **whole document**, naming the level (`ir.data`, `ir.seq`, or a feature
+//! such as `inout`), and nothing is written.  Every `match` over the grammar ends in an explicit refusal, never a skip.
 //!
 //! ## An example
 //!

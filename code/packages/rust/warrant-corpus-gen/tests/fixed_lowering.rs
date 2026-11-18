@@ -20,7 +20,7 @@ use coding_adventures_warrant_grammar::source::{SourceDocument, SourceLimits};
 
 use coding_adventures_warrant_corpus_gen::cost::{suite_cost, ModelCosts};
 use coding_adventures_warrant_corpus_gen::lower::{
-    census, lower_document, lower_document_with_fixed, ItemKind, Lowered,
+    census, lower_document, ItemKind, Lowered,
 };
 use coding_adventures_warrant_corpus_gen::{code, GenError};
 use support::*;
@@ -29,7 +29,7 @@ const OPS: [&str; 1] = ["op f(a: Bytes, b: Bytes) -> Bool"];
 
 /// Lower `extra` (models, claims, examples) in a v1 document, `ir.fixed` included.
 fn lowered(extra: &str) -> Result<Lowered, GenError> {
-    with_file(&doc_ops(" v1", &OPS, extra), lower_document_with_fixed)
+    with_file(&doc_ops(" v1", &OPS, extra), lower_document)
 }
 
 /// As [`lowered`] with a parser deep enough for a 40-level operand (the default stops earlier;
@@ -42,7 +42,7 @@ fn lowered_deep(src: &str) -> Result<Lowered, GenError> {
         ..ParserLimits::default()
     };
     let file = parse_document(&layout, &doc, limits).unwrap();
-    lower_document_with_fixed(&file)
+    lower_document(&file)
 }
 
 fn model_json(l: &Lowered, name: &str) -> String {
@@ -129,7 +129,7 @@ fn an_option_is_refused_with_ir_data_everywhere_but_under_unwrap_or() {
     ];
     for (ops, extra) in cases {
         let src = doc_ops(" v1", ops, extra);
-        let e = with_file(&src, |f| lower_document_with_fixed(f).unwrap_err());
+        let e = with_file(&src, |f| lower_document(f).unwrap_err());
         assert_eq!(level_of(&e), Some("ir.data"), "{extra}: {e}");
     }
     // an Option operand of anything but unwrap_or's first operand, and an Option in a branch
@@ -141,7 +141,7 @@ fn an_option_is_refused_with_ir_data_everywhere_but_under_unwrap_or() {
     for extra in operands {
         let src = doc_ops(" v1", &OPS, extra);
         // the checker may refuse these first; whichever refuses, it is never lowered
-        let e = with_file(&src, |f| lower_document_with_fixed(f).unwrap_err());
+        let e = with_file(&src, |f| lower_document(f).unwrap_err());
         assert!(
             e.code == code::CHECK || (e.code == code::LEVEL && e.level == Some("ir.data")),
             "{extra}: {e}"
@@ -177,7 +177,7 @@ fn from_be_of_the_wrong_width_is_refused_as_a_malformed_document() {
             &OPS,
             &format!("  model m(c: Bool) -> U16 = {body}\n"),
         );
-        let e = with_file(&src, |f| lower_document_with_fixed(f).unwrap_err());
+        let e = with_file(&src, |f| lower_document(f).unwrap_err());
         assert!(e.code == code::CHECK || e.code == code::TYPE, "{body}: {e}");
     }
     // a dynamic Bytes parameter has no static width
@@ -186,7 +186,7 @@ fn from_be_of_the_wrong_width_is_refused_as_a_malformed_document() {
         &OPS,
         "  model m(a: Bytes) -> U16 = from_be<U16>(a)\n",
     );
-    let e = with_file(&src, |f| lower_document_with_fixed(f).unwrap_err());
+    let e = with_file(&src, |f| lower_document(f).unwrap_err());
     assert!(e.code == code::CHECK || e.code == code::TYPE, "{e}");
 }
 
@@ -249,7 +249,7 @@ fn requires_is_the_sorted_union_of_tag_levels_and_callee_requires() {
         "op f(a: Bytes, b: Bytes) -> Bool",
         "op g(a: Bytes, b: Bytes | bit(1u8, 0)) -> Bool",
     ];
-    let l = with_file(&doc_ops(" v1", &ops, extra), lower_document_with_fixed).unwrap();
+    let l = with_file(&doc_ops(" v1", &ops, extra), lower_document).unwrap();
     let core: Vec<&str> = vec!["ir.core"];
     let both: Vec<&str> = vec!["ir.core", "ir.fixed"];
     let req = |n: &str| l.model(n).unwrap().requires.clone();
@@ -335,7 +335,7 @@ fn each_built_in_costs_one_plus_its_operands() {
 // ---- the level a refused unit is named by -------------------------------------------------------------
 
 #[test]
-fn a_unit_is_named_by_its_first_unlowerable_construct_and_ir_fixed_only_when_nothing_blocks() {
+fn a_unit_is_named_by_its_first_unlowerable_construct_and_never_by_ir_fixed() {
     let extra = concat!(
         "  model only_fixed(a: U8) -> U8 = bit_not(a)\n",
         "  model fixed_then_tuple(a: U8) -> U8 = if bit_not(a) == 0u8 then (a, a).0 else a\n",
@@ -350,34 +350,39 @@ fn a_unit_is_named_by_its_first_unlowerable_construct_and_ir_fixed_only_when_not
             .and_then(|r| r.blocked.as_ref())
             .and_then(|b| b.level)
     };
-    assert_eq!(level("only_fixed"), Some("ir.fixed"));
-    // S10t-2: a tuple lowers, so a unit that uses one next to a built-in is `ir.fixed` again
-    // (what is left is the built-in); a constructor still blocks first
-    assert_eq!(level("fixed_then_tuple"), Some("ir.fixed"));
-    assert_eq!(level("tuple_then_fixed"), Some("ir.fixed"));
+    // S10c-2 evaluates `ir.fixed` (and S10t-2 `ir.tuple`): a unit that uses only those is not
+    // blocked at all, and a constructor (`Some`, `ir.data`) still blocks, whatever precedes it
+    assert_eq!(level("only_fixed"), None);
+    assert_eq!(level("fixed_then_tuple"), None);
+    assert_eq!(level("tuple_then_fixed"), None);
     assert_eq!(level("fixed_then_ctor"), Some("ir.data"));
+    let blocked = |n: &str| {
+        rows.iter()
+            .find(|r| r.kind == ItemKind::Model && r.name == n)
+            .map(|r| r.blocked.is_some())
+    };
+    assert_eq!(blocked("only_fixed"), Some(false));
 }
 
-// ---- generation stays a fail-closed stub ---------------------------------------------------------------
+// ---- generation takes an ir.fixed document -------------------------------------------------------------
 
 #[test]
-fn the_ordinary_path_still_refuses_an_ir_fixed_document_as_a_whole() {
+fn the_ordinary_path_lowers_an_ir_fixed_document_as_a_whole_since_s10c_2() {
     let extra = "  model fx(a: U8) -> U8 = bit_not(a)\n  claim c:\n    forall a: U8. f(b\"\", b\"\") == (fx(a) == 0u8)\n";
     let src = doc_ops(" v1", &OPS, extra);
-    let e = with_file(&src, |f| lower_document(f).unwrap_err());
-    assert_eq!((level_of(&e), e.at.as_str()), (Some("ir.fixed"), "fx"));
-    // ... while the dump path lowers it
-    assert!(with_file(&src, lower_document_with_fixed).is_ok());
+    let l = with_file(&src, |f| lower_document(f).unwrap());
+    assert_eq!(l.model("fx").unwrap().requires, ["ir.core", "ir.fixed"]);
+    assert!(l.suites[0].requires.contains(&"ir.fixed"));
 }
 
 fn root() -> PathBuf {
     Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../..")
 }
 
-/// The real binary, on the oracle's `fixed_forms_v1.warrant`: refused naming the level
-/// `ir.fixed`, nothing is written.  (A refusal exits 2, the oracle's convention; 1 is reserved for a `--check` drift.)
+/// The real binary, on a document beyond what is evaluated (`vos-sched-any.warrant`, `ir.data`):
+/// refused naming the level, nothing is written.  (A refusal exits 2, the oracle's convention; 1 is reserved for a `--check` drift.)
 #[test]
-fn the_binary_refuses_the_fixed_forms_document_and_writes_nothing() {
+fn the_binary_refuses_a_document_beyond_the_evaluated_levels_and_writes_nothing() {
     let bin = env!("CARGO_BIN_EXE_warrant-corpus-gen");
     let dir = std::env::temp_dir().join(format!("wcg-fixed-{}", std::process::id()));
     let _ = fs::remove_dir_all(&dir);
@@ -389,7 +394,7 @@ fn the_binary_refuses_the_fixed_forms_document_and_writes_nothing() {
         let mut cmd = Command::new(bin);
         cmd.current_dir(root()).args([
             "--warrant",
-            "code/packages/python/warrant-oracle/tests/fixtures/fixed-forms-v1/fixed_forms_v1.warrant",
+            "code/specs/vos-sched-any.warrant",
             "--profile",
             profile.to_str().unwrap(),
             "--out",
@@ -406,7 +411,7 @@ fn the_binary_refuses_the_fixed_forms_document_and_writes_nothing() {
             String::from_utf8_lossy(&r.stderr)
         );
         let e = String::from_utf8_lossy(&r.stderr);
-        assert!(e.contains("level [ir.fixed]"), "{e}");
+        assert!(e.contains("level [ir.data]"), "{e}");
         assert!(!out.exists(), "nothing is written for a refused document");
     }
     let _ = fs::remove_dir_all(dir);
