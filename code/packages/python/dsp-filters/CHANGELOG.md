@@ -5,6 +5,7 @@ All notable changes to `coding-adventures-dsp-filters` will be documented in thi
 ## Unreleased
 
 ### Added
+- Added public Biquad/SOS characterization tests for reciprocal normalization overflow, output and hidden-delay overflow, partial state commit after invalid input, and SOS section-order behavior.
 - Added public FIR designer contract regressions for cutoff endpoints, tap-cap boundaries, and validation error precedence.
 - Added strict shared AF-02 Biquad/SOS fixture checks, including all 32,768 impulse chunk partitions, reset replay, 64 seeded partition-property samples, and 128 seeded malformed-fixture fuzz samples through public exports.
 
