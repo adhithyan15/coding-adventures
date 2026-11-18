@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased — bounded VER04p domain witness checks
+
+- `BUILD` and `BUILD_windows` run `code/scripts/tests/test_ver04p_domain_witnesses.py`.
+  The exact-rational diagnostic checks the documented integer ties, adjacent F32/F64
+  encodings, F64-to-F32 midpoint, post-rounding de-duplication, largest-finite ranges,
+  and subnormal one-tap ratio. It uses no host float and is not a Warrant native-float
+  or source/compiler proof. The build tool selects `rust/warrant-grammar` when the
+  VER04p document or diagnostic changes.
+
 ## Unreleased — WX-SV2: the `field-flip` fault (VOS-038a)
 
 - New composite-operation fault `field-flip` (VER04j 4.8): the lowest bit of the first
