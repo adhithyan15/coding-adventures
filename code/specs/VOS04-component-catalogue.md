@@ -808,7 +808,7 @@ components. For them VOS-D082 (`publish = false`) is a manual rule, applied to
 
 | Input | Gives |
 |---|---|
-| `vos.toml` | `kind`, `evidence-features`, `coverage-floor` (an integer, at least 95), `excused-controls` (optional) |
+| `vos.toml` | `kind`, `evidence-features` (each `[a-z][a-z0-9_-]*` and on the central list `vos-shape-check` uses, `DEFAULT_EVIDENCE_FEATURES`: the value is pasted into BUILD, so it is validated), `coverage-floor` (an integer, at least 95), `excused-controls` (optional, below) |
 | `evidence.bindings` (read by the evidence generator's own reader) | the bound operations and their faults |
 | `code/specs/<crate>.warrant` (parsed, by `vos-manifest`) | the claim and example names |
 | `warrant/sabotage.plan` | which claim or example attacks which fault (below) |
@@ -826,7 +826,8 @@ exactly one command; the crate name, features and floor are substituted.
  3  cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .
  4  cargo run -q --manifest-path ../../../programs/rust/vos-link/Cargo.toml -- check-doc .
  5  cargo run -q -p coding_adventures_warrant_grammar --example gen_evidence -- --check C
-6-8  WARRANT_EVIDENCE_OUT=evidence/test-manifest.json cargo test -q -p C --features F --test warrant_evidence
+6-8  rm -f evidence/test-manifest.json         (BUILD_windows: if exist evidence\test-manifest.json del /f /q evidence\test-manifest.json)
+     WARRANT_EVIDENCE_OUT=evidence/test-manifest.json cargo test -q -p C --features F --test warrant_evidence
        (when `excused-controls` is declared: `sh warrant/check_evidence.sh`; BUILD_windows: `bash ...`)
  9  one line per plan entry:
        WARRANT_EVIDENCE_FAULT=<fault> [WARRANT_EVIDENCE_ATTACK=<op>] WARRANT_EVIDENCE_FILTER=/<tier>/<name> \
@@ -852,16 +853,23 @@ name must be a claim of the document) or `example` (an example of the document);
 `attack=<op>` (the record fault that cancels itself if two operations list it,
 VER04j 4.8) and nothing else does; no entry repeats. **Completeness:** every fault of
 every bound operation has an entry, and every operation that lists `field-flip` has
-an `attack=` entry. Whether the named claim really catches the fault is the run's
+an `attack=` entry; and **every claim whose text calls a bound operation appears in at
+least one entry** (a lexical over-approximation, `vos_manifest::warrant::claim_calls`; the
+one exemption is a claim whose operations' faults are all excused, below). An author
+cannot attack one easy claim per fault and leave the rest untried. Counting controls per
+operation and tier is VOS-D104. Whether the named claim really catches the fault is the run's
 (the shared checker fails a control that does not). The plan cannot be derived from
 the document and bindings alone, because the claim-to-operation map is inside the
 Warrant expressions; deriving it is VOS-D107. The plan holds names, never command
 text, so it cannot carry a shell fragment.
 
 **The tolerance script.** A crate whose only claim over an operation cannot see a fault
-(rr's `init`, VOS-D098) declares `excused-controls = ["<manifest id>", ...]` in
-`vos.toml`: whole ids of the form `warrant/<module>/negctl/<tier>/<op>/<fault>`, never
-empty, never an empty id. `gen-build` writes `warrant/check_evidence.sh` from the list
+(rr's `init`, VOS-D098) declares `excused-controls = [{ id = "<manifest id>", reason = "VOS-Dnnn" }, ...]` in
+`vos.toml`: whole ids of the form `warrant/<module>/negctl/<tier>/<op>/<fault>`, never an
+empty list, never an empty id, and every excuse carries a `reason` that is a backlog row
+(`VOS-D` and three digits) which **must exist in `code/specs/VOS-BACKLOG.md` and not be
+done**: an excuse is traceable and expires when its row is closed (the control must then
+pass). `gen-build` writes `warrant/check_evidence.sh` from the list
 (it requires exit status 1, at least one `ok`, and exactly those ids failing).
 `check-component` requires the script byte-equal to the generated one, and refuses a
 script when nothing is declared.
@@ -880,8 +888,15 @@ over its cap) is *no verdict*, exit 2.
 | `CC07` | The coverage declaration (VOS-D070) | `vos.toml` has no `coverage-floor`, or it is below 95. The BUILD line that enforces it is part of the canonical region (`CC03`) |
 | `CC08` | The evidence manifest | see below |
 
-**CC08, the manifest, bound to the document.** `evidence/test-manifest.json` is read
-by the repository's `bounded-json`. It must have schema `warrant-test-evidence-v1`;
+**CC08, the manifest, bound to the document and the source.** `evidence/test-manifest.json`
+is read by the repository's `bounded-json`. It must have schema `warrant-test-evidence-v1`;
+its `spec_sha256` must equal the SHA-256 of `code/specs/<crate>.warrant` (the digest the
+generated harness embeds) and its `source_sha256` the digest of the crate's `src/` tree
+under the harness's own framing (`test-bootstrap`'s `source_tree_framing`), so a manifest
+of another document, older source or another crate is refused. The generated region also
+removes the manifest before the run (`rm -f`, or `if exist .. del` on cmd: both safe when
+the file is absent, so idempotent), so a suite that exits 0 without rewriting it leaves no
+file and fails `CC02` instead of passing on a stale one;
 the claim names of its `exhaustive`, `property` and `fuzz` entries must each **equal
 the document's claim set** (the manifest cannot drop a claim or invent one), and its
 `example` entries the document's examples; every `exhaustive` entry has `cases` > 0;
