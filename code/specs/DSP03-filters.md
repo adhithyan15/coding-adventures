@@ -175,6 +175,44 @@ non-finite normalization behavior. A shared cancellation/output policy
 is tracked separately in AF-01c. This contract does not promise finite
 outputs for every otherwise accepted input.
 
+### Minimal Python/TypeScript conformance fixture (AF-02)
+
+`code/specs/fixtures/biquad-sos-v1/cases.json` is a versioned shared fixture
+for exactly two existing public operations: stateful `Biquad.process` and
+one-shot `sosfilt`. It uses JSON numbers decoded as finite binary64 values,
+exact numeric equality for finite outputs (positive and negative zero compare
+equal), and exact output length. No epsilon or platform-dependent
+transcendental golden is involved. Fixture validation is test-harness behavior
+and does not change either package API.
+
+The input is a 16-sample unit impulse. The `biquad.process` record uses the
+single section `[0.5, 0.25, 0.5, 2, -2, 0.5]`; its impulse response is
+`h[0]=1/4` and `h[n]=(6n-3)/2^(n+2)` for `1 <= n < 16`. The `sosfilt`
+record uses that section followed by `[1, -1, 0, 1, 0, 0]`; its response is
+`g[0]=1/4`, `g[1]=1/8`, and `g[n]=(15-6n)/2^(n+2)` for `2 <= n < 16`.
+These values are exact dyadic rationals representable in binary64. The fixture
+README records the independent derivation and limits.
+
+The Biquad operation is checked on one whole input, chunk lengths `[3, 1,
+12]`, and 16 single-sample calls. One instance retains state within each run;
+equivalent fresh instances are used for comparisons. A separate reset check
+processes a nonempty prefix, resets, and compares replay with a fresh instance.
+The test domain includes every nonempty contiguous partition of the 16
+samples: `2^15 = 32,768` partitions and 524,288 output samples per lane. SOS
+is invoked as a one-shot operation with fresh state each time; it is not a
+streaming contract. Empty sections with nonempty input are identity, and empty
+input is rejected even when sections are empty.
+
+The fixture has exactly two required unique operation records. Python and
+TypeScript test loaders reject missing or duplicate operation IDs, extra or
+missing fields, malformed section/sample shapes, booleans or non-numeric and
+non-finite values, and wrong expected lengths. Negative controls alter one
+expected dyadic sample and must fail as an output-value mismatch. Shared
+fixture or loader changes select both package suites in CI. This narrow
+fixture does not establish Rust parity, general audio/math/units schemas,
+native floating-point proofs, or package-wide exhaustive assurance; those
+remain separate backlog work.
+
 The Butterworth and Chebyshev signatures above are existing separate
 IIR helpers; their cutoff parameter is also normalized in the current
 implementation. AF-01b does not change their behavior or specify their
