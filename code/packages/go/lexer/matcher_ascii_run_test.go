@@ -211,16 +211,18 @@ func TestAsciiRunMatchesLegacyAndRegexpDeterministically(t *testing.T) {
 }
 
 func TestAsciiRunHugeBoundDoesNotOverflow(t *testing.T) {
-	m := buildMatcher(`[a]+!`)
-	if m == nil || len(m.steps) != 2 || m.steps[0].kind != stepRun {
-		t.Fatal("expected a run followed by a literal")
+	m := buildMatcher(`Q[a]+!`)
+	if m == nil || len(m.steps) != 3 || m.steps[1].kind != stepRun {
+		t.Fatal("expected a literal prefix, run, and trailing literal")
 	}
-	m.steps[0].max = int(^uint(0) >> 1)
-	oracle, err := regexp.Compile(`^[a]+!`)
+	// The prefix makes pos nonzero at the run, so pos+max would overflow for
+	// an implementation that adds first and clamps afterward.
+	m.steps[1].max = int(^uint(0) >> 1)
+	oracle, err := regexp.Compile(`^Q[a]+!`)
 	if err != nil {
 		t.Fatal(err)
 	}
-	for _, input := range []string{"", "!", "a!", "aaaa!", "b!", "aaaa"} {
+	for _, input := range []string{"", "Q!", "Qa!", "Qaaaa!", "Qb!", "Qaaaa"} {
 		want := -1
 		if loc := oracle.FindStringIndex(input); loc != nil {
 			want = loc[1]
