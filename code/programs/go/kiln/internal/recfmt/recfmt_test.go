@@ -22,7 +22,7 @@ func goodBinding() Binding {
 		GraphSHA256: d1, StepsSHA256: d1, PartitionSHA256: d1, HostFactsSHA256: d1, InventorySHA256: d1,
 		SandboxConfigSHA256: d1, KilnSHA256: d1, BuildToolSHA256: d1, StraceSHA256: d1, GitSHA256: d1, Recorder: 1,
 		StraceVersion: "strace -- version 6.8", Kernel: "6.8.0-1", JobStart: 1794000000,
-		PreparedAt: "2026-11-13T02:03:04Z",
+		PreparedAt: "2026-11-13T02:03:04Z", PreparedTicks: 123456,
 	}
 }
 
@@ -204,7 +204,7 @@ func TestStrictDecoding(t *testing.T) {
 	}
 	// The same checks hold for the other files.
 	for name, in := range map[string]string{
-		"binding unknown": `{"schema":"kiln-record-binding/1","zzz":1}`,
+		"binding unknown": `{"schema":"kiln-record-binding/2","zzz":1}`,
 		"binding empty":   `{}`,
 		"facts dup":       `{"schema":"x","schema":"x"}`,
 		"inventory case":  `{"Schema":"kiln-record-inventory/1","paths":[]}`,
@@ -367,6 +367,9 @@ func TestBindingValidation(t *testing.T) {
 		"neg index":  func(b *Binding) { b.ShardIndex = -1 },
 		"recorder":   func(b *Binding) { b.Recorder = 0 },
 		"job start":  func(b *Binding) { b.JobStart = -1 },
+		"ticks zero": func(b *Binding) { b.PreparedTicks = 0 },
+		"ticks neg":  func(b *Binding) { b.PreparedTicks = -5 },
+		"ticks huge": func(b *Binding) { b.PreparedTicks = MaxClockTicks + 1 },
 		"digest":     func(b *Binding) { b.GraphSHA256 = "x" },
 		"text":       func(b *Binding) { b.Kernel = "a\nb" },
 	}
