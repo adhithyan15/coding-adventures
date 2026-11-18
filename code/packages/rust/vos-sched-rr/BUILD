@@ -14,7 +14,8 @@ cargo run -q --manifest-path ../../../programs/rust/vos-link/Cargo.toml -- check
 # VER04h: the evidence harness is generated from code/specs/vos-sched-rr.warrant and
 # evidence.bindings.  Fail if the checked-in file drifted.
 cargo run -q -p coding_adventures_warrant_grammar --example gen_evidence -- --check vos-sched-rr
-# Run it and rewrite the evidence manifest.  Three controls are known to fail (VOS-D065);
+# Run it and rewrite the evidence manifest.  Three controls are known to fail: `init` / `field-flip`, whose only
+# member claim (`rep_init`) cannot see a flip that stays in the image of rep (VOS-D087, VOS-D098);
 # warrant/check_evidence.sh names them and demands exactly those.
 sh warrant/check_evidence.sh
 # Sabotage: each fault makes the suite of its claim report `not ok`.  A negative control passes only if the sabotaged run
@@ -22,8 +23,8 @@ sh warrant/check_evidence.sh
 # mid-line).  A pipeline's status is its last command's, so the old `grep -q '^not ok '` passed a run where one test
 # failed as intended and a later one hung (observer timeout: `Bail out!`, exit 70) and the hang went unreported.  The
 # pipe also hides the binary's exit status, so this reads the TAP on stdout.  The claims rep_init,
-# dispatch_rep_post and safety_init have no line: no fault the generator offers changes what they see
-# (field-zero is inert on the zero initial state and self-consistent for rep_post; VOS-D065, VOS-D087).
+# dispatch_rep_post and safety_init have no field-zero line (inert on the zero initial state, self-consistent
+# for rep_post; VOS-D065, VOS-D087): their lines are the field-flip ones at the end (WX-SV2).
 WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/exhaustive/rep_alpha cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
 WARRANT_EVIDENCE_FAULT=wrong-ctor WARRANT_EVIDENCE_FILTER=/exhaustive/insert_rep_lo cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
 WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/exhaustive/insert_rep_lo cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
@@ -49,3 +50,9 @@ WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/example/n_is_eight ca
 WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/example/insert_three_sets_bit_three cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
 WARRANT_EVIDENCE_FAULT=wrong-ctor WARRANT_EVIDENCE_FILTER=/example/dispatch_from_two_picks_three cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
 WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/example/dispatch_from_two_moves_pointer_to_four cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
+# WX-SV2 (VER04j 4.8): `field-flip` flips the lowest bit of the first numeric field, so it is never inert.  Two operations that
+# list it would cancel (an `init` flipped and the `alpha_w` that reads it flipped again), so WARRANT_EVIDENCE_ATTACK aims the run at one.
+WARRANT_EVIDENCE_FAULT=field-flip WARRANT_EVIDENCE_ATTACK=init WARRANT_EVIDENCE_FILTER=/exhaustive/safety_init cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
+WARRANT_EVIDENCE_FAULT=field-flip WARRANT_EVIDENCE_ATTACK=alpha_w WARRANT_EVIDENCE_FILTER=/exhaustive/safety_init cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
+WARRANT_EVIDENCE_FAULT=field-flip WARRANT_EVIDENCE_ATTACK=alpha_w WARRANT_EVIDENCE_FILTER=/exhaustive/rep_init cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
+WARRANT_EVIDENCE_FAULT=field-flip WARRANT_EVIDENCE_ATTACK=alpha_w WARRANT_EVIDENCE_FILTER=/exhaustive/dispatch_rep_post cargo test -q -p vos-sched-rr --features ghost --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'

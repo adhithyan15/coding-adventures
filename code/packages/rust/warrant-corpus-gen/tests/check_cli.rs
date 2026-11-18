@@ -323,7 +323,7 @@ fn the_binary_writes_checks_and_fails_on_drift() {
     b[0] = b'9';
     fs::write(out.join("chunks/eq_agrees.txt"), b).unwrap();
     let bad = go(&["--check"]);
-    assert_eq!(bad.status.code(), Some(1));
+    assert_eq!(bad.status.code(), Some(1), "drift is exit 1");
     let msg = String::from_utf8_lossy(&bad.stderr);
     assert!(msg.contains("drift") && msg.contains("chunks/eq_agrees.txt: differs at line 1, column 1"), "{msg}");
     // a directory is not a regular file
@@ -333,8 +333,9 @@ fn the_binary_writes_checks_and_fails_on_drift() {
         .output()
         .unwrap();
     assert!(String::from_utf8_lossy(&dir.stderr).contains("regular file"), "{}", String::from_utf8_lossy(&dir.stderr));
+    assert_eq!(dir.status.code(), Some(2), "an unreadable input is a refusal");
     let usage = Command::new(bin).output().unwrap();
-    assert_eq!(usage.status.code(), Some(1));
+    assert_eq!(usage.status.code(), Some(2), "a usage error is exit 2, through the real binary");
     let _ = fs::remove_dir_all(d);
 }
 
@@ -350,14 +351,14 @@ fn cli_usage_and_refusals() {
     // the spec path is recorded verbatim, so it must be repo-relative
     for bad in ["/abs/x.warrant", "../x.warrant", "a/../x", "a\\b", "C:x", "./x", "a//b", ""] {
         let (c, _, e) = cli(&["--warrant", bad, "--profile", "p", "--out", "o"]);
-        assert_eq!(c, 1, "{bad:?}");
+        assert_eq!(c, 2, "{bad:?}");
         assert!(e.contains("repo-relative"), "{e}");
     }
     let (c, _, e) = cli(&["--warrant", "no/such.warrant", "--profile", "p", "--out", "o"]);
-    assert_eq!((c, e.contains("cannot be read")), (1, true));
+    assert_eq!((c, e.contains("cannot be read")), (2, true));
     // a directory is not a regular file
     let (c, _, e) = cli(&["--warrant", "code/specs", "--profile", "p", "--out", "o"]);
-    assert_eq!(c, 1);
+    assert_eq!(c, 2);
     assert!(e.contains("cannot be read") || e.contains("regular file"), "{e}");
 }
 
@@ -386,12 +387,12 @@ fn cli_write_check_and_refusals_on_a_small_document() {
     // another profile: the digest in corpus.json is stale
     fs::write(&prof, "chunk_size 2048\n").unwrap();
     let (c, _, e) = go(&["--check"]);
-    assert_eq!(c, 1);
+    assert_eq!(c, 1, "drift");
     assert!(e.contains("drift") && e.contains("corpus.json: differs"), "{e}");
     // a profile the reader refuses
     fs::write(&prof, "chunk_size 3000\n").unwrap();
     let (c, _, e) = go(&[]);
-    assert_eq!(c, 1);
+    assert_eq!(c, 2, "a profile error is a refusal");
     assert!(e.contains("profile"), "{e}");
     let _ = fs::remove_dir_all(d);
 }
@@ -406,7 +407,8 @@ fn the_binary_refuses_drifted_bindings_and_documents_the_checker_refuses() {
     let i = a.iter().position(|x| x == "--bindings").unwrap();
     a[i + 1] = bad.to_str().unwrap().to_string();
     let r = Command::new(bin).current_dir(root()).args(&a).output().unwrap();
-    assert_eq!(r.status.code(), Some(1));
+    // the `drift` *code* of the bindings cross-check is still a refusal: nothing is compared
+    assert_eq!(r.status.code(), Some(2));
     let e = String::from_utf8_lossy(&r.stderr);
     assert!(e.contains("drift") && e.contains("faults= lists"), "{e}");
     assert!(!d.join("o2").exists(), "nothing is written when the lists drift");
@@ -418,7 +420,7 @@ fn the_binary_refuses_drifted_bindings_and_documents_the_checker_refuses() {
         .args(["--warrant", "bad.warrant", "--profile", "p", "--out", "o3"])
         .output()
         .unwrap();
-    assert_eq!(r.status.code(), Some(1));
+    assert_eq!(r.status.code(), Some(2));
     assert!(String::from_utf8_lossy(&r.stderr).contains("check"), "{}", String::from_utf8_lossy(&r.stderr));
     assert!(!d.join("o3").exists());
     let _ = fs::remove_dir_all(d);
@@ -595,5 +597,64 @@ fn a_temporary_name_that_cannot_be_replaced_fails_the_write_without_damage() {
     assert!(e.message.contains("temporary file cannot be created"), "{e}");
     assert!(d.join(".cases.tfv.tmp/inner").exists());
     assert!(!d.join("corpus.json").exists(), "corpus.json, the commit point, is written last");
+    let _ = fs::remove_dir_all(d);
+}
+
+/// The exit-status table of the binary (the oracle's convention: 1 = differs, 2 = refused or
+/// error), one assertion per category.  The real binary is run with an explicit working
+/// directory, so no test changes the process-wide one.
+#[test]
+fn exit_status_table_success_drift_refusal_usage() {
+    let bin = env!("CARGO_BIN_EXE_warrant-corpus-gen");
+    let d = tmp("table");
+    let out = d.join("o");
+    let prof = d.join("p");
+    fs::write(&prof, "chunk_size 1024\n").unwrap();
+    let run_in = |cwd: &Path, warrant: &str, out: &Path, extra: &[&str]| -> (i32, String) {
+        let r = Command::new(bin)
+            .current_dir(cwd)
+            .args(["--warrant", warrant, "--profile", prof.to_str().unwrap(), "--out", out.to_str().unwrap()])
+            .args(extra)
+            .output()
+            .unwrap();
+        (r.status.code().unwrap(), String::from_utf8_lossy(&r.stderr).into_owned())
+    };
+    let here = Path::new(env!("CARGO_MANIFEST_DIR"));
+    let ok = "tests/fixtures/enum_probe.warrant";
+    // success: write, then a clean --check
+    assert_eq!(run_in(here, ok, &out, &[]).0, 0);
+    assert_eq!(run_in(here, ok, &out, &["--check"]).0, 0);
+    // drift: a differing byte, then a missing file
+    let corpus = out.join("corpus.json");
+    let good = fs::read(&corpus).unwrap();
+    let mut bad = good.clone();
+    bad[0] = b'X';
+    fs::write(&corpus, &bad).unwrap();
+    assert_eq!(run_in(here, ok, &out, &["--check"]).0, 1, "a differing byte");
+    fs::write(&corpus, &good).unwrap();
+    fs::remove_file(out.join("cases.tfv")).unwrap();
+    assert_eq!(run_in(here, ok, &out, &["--check"]).0, 1, "a missing file is listed as drift");
+    // refusal: a level beyond ir.core (the oracle's fixed-forms document), write and --check
+    let fixed = "code/packages/python/warrant-oracle/tests/fixtures/fixed-forms-v1/fixed_forms_v1.warrant";
+    let o9 = d.join("o9");
+    for extra in [&[][..], &["--check"][..]] {
+        let (c, e) = run_in(&root(), fixed, &o9, extra);
+        assert_eq!(c, 2, "a level refusal {extra:?}: {e}");
+        assert!(e.contains("level"), "{e}");
+    }
+    assert!(!o9.exists(), "nothing is written for a refusal");
+    // refusal: a profile error, in write and in --check mode (a refusal, never a drift)
+    fs::write(&prof, "chunk_size 3000\n").unwrap();
+    assert_eq!(run_in(here, ok, &out, &[]).0, 2);
+    assert_eq!(run_in(here, ok, &out, &["--check"]).0, 2);
+    // refusal: an I/O error writing the output (--out is a regular file, not a directory)
+    fs::write(&prof, "chunk_size 1024\n").unwrap();
+    let blocked = d.join("blocked");
+    fs::write(&blocked, "x").unwrap();
+    let (c, e) = run_in(here, ok, &blocked, &[]);
+    assert_eq!(c, 2, "{e}");
+    // usage
+    let r = Command::new(bin).arg("--bogus").output().unwrap();
+    assert_eq!(r.status.code(), Some(2));
     let _ = fs::remove_dir_all(d);
 }
