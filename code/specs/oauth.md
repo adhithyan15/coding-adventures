@@ -6179,16 +6179,26 @@ Authenticated handshake progression, record-state composition, certificate and
 revocation policy, and HTTP composition remain prerequisites; concrete HTTPS
 and live-provider readiness remain unavailable.
 
-The same allocation-free boundary now also consumes that exact-message retry
-handshake traffic-key proof into one direction's record-protection state. The
-conversion accepts no detached key, static IV, nonce length, record ceiling,
-AEAD identifier, sequence number, or cipher suite. It moves the retained
-traffic-key view into the existing repository-owned record-state primitive,
-starts the monotonic record sequence at zero, and returns a non-copyable
-wrapper that still retains the complete retry traffic-secret proof and the
-explicit sender role. Callers may borrow or mutably borrow the state through
-that wrapper, but cannot detach it from the exact CH1, HelloRetryRequest, CH2,
-final ServerHello, base-schedule, traffic-secret, and sender evidence.
+The same allocation-free boundary now also consumes the complete exact-message
+retry handshake traffic-secret proof into a non-cloneable per-sender
+record-state issuer. One successful client issuance and one successful server
+issuance are permitted. A repeated issuance for the same sender fails before
+the caller-owned output storage is touched, so the same retained key and static
+IV cannot acquire a second sequence-zero state through this boundary. Failed
+derivation or state construction does not consume the sender's issuance, so a
+caller may retry with valid storage.
+
+Each successful issuance accepts only an explicit sender role and
+caller-owned traffic-key-material storage for the retained selected suite. It
+derives that retained sender's key and static IV, moves the resulting view into
+the existing repository-owned record-state primitive, starts the monotonic
+record sequence at zero, and marks the sender issued before returning. The
+non-copyable result borrows the single-use issuer, retains the explicit sender,
+and permits only borrowed access to the state. It accepts no detached key,
+static IV, nonce length, record ceiling, AEAD identifier, sequence number, or
+cipher suite, and it cannot detach the state from the exact CH1,
+HelloRetryRequest, CH2, final ServerHello, base-schedule, traffic-secret, and
+sender evidence.
 
 This exact-message state composition does not advance the handshake
 transcript, authenticate CertificateVerify or Finished, invoke an AEAD, frame
