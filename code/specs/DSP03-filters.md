@@ -192,7 +192,9 @@ The reference implementation in Phase 2 (`fir`) and Phase 4
 
 For the Python and TypeScript FIR design helpers, let `d` be the
 normalization denominator: the coefficient sum for low-pass, and the
-absolute coefficient sum for band-pass. Preserve the existing result
+absolute center-frequency response gain for band-pass,
+`abs(sum_k h[k] * cos(2*pi*f0*(k-centre)))`, where `f0` is the midpoint
+of the two band edges. Preserve the existing result
 `h * (1 / d)` bit-for-bit whenever `1 / d` is finite. When `1 / d` is
 non-finite and `d` itself is finite and nonzero, use `h / d` so a finite
 normalized coefficient is not lost to reciprocal overflow. Keep the
