@@ -464,6 +464,13 @@ class _Lowerer:
             ir, ty = self.expr(decl.body, ret)
             if not self._flows(ir, ty, ret):
                 raise self.err("a model body does not have its declared type")
+            if _has_subject(ir):
+                # VER04r 4.2 rule 3, the generator's lowering refusal: a model is pure, so it
+                # may not call the subject, whether or not anything calls the model.
+                raise OracleError(
+                    "generation",
+                    f"W0701: a subject call inside the body of model `{decl.name}` (VER04r 4.2 rule 3)",
+                )
             model.ir = ir
             model.requires, model.unsupported = self.seal(ir)
         except OracleError as exc:

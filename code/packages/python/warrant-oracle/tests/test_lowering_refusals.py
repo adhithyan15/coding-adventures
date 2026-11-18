@@ -197,3 +197,24 @@ def test_the_adopters_are_unchanged_by_the_two_rules():
     assert "encode_unsigned_at_most_ten_bytes" in refused
     for name in ("ct-compare", "gf256"):
         assert all(s.refusal is None for s in lower_document(parse_source(adopter_bytes(name))).suites)
+
+
+# -- VER04r 4.2 rule 3: a model body calls no subject --------------------------------------------
+
+MODEL_CASES = {
+    "uncalled": "  model bad(a: U8) -> U8 = g(a)\n  claim c:\n    forall a: U8. f(a) == a\n",
+    "called from a model": (
+        "  model bad(a: U8) -> U8 = g(a)\n  model outer(a: U8) -> U8 = bad(a)\n"
+        "  claim c:\n    forall a: U8. f(a) == a\n"
+    ),
+    "called from a claim": "  model bad(a: U8) -> U8 = g(a)\n  claim c:\n    forall a: U8. f(a) == bad(a)\n",
+}
+
+
+@pytest.mark.parametrize("case", MODEL_CASES)
+def test_a_model_body_with_a_subject_call_is_refused_at_lowering(case):
+    head = "warrant m v1\n  op f(a: U8) -> U8\n  op g(a: U8) -> U8\n"
+    with pytest.raises(OracleError) as err:
+        lower_document(parse_source((head + MODEL_CASES[case]).encode()))
+    assert err.value.code == "generation"
+    assert err.value.message.startswith("W0701") and "model `bad`" in err.value.message
