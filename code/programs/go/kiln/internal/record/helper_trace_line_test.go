@@ -3,6 +3,7 @@ package record
 import (
 	"os"
 	"path/filepath"
+	"runtime"
 	"testing"
 )
 
@@ -10,6 +11,9 @@ import (
 // the refused line as a separate, display-only result, and the reason string
 // (which feeds the sidecar's parse_reasons) carries no line number.
 func TestParseHelperTraceReportsTheRefusedLine(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("strace traces and POSIX paths are Linux-only: the fixture is refused at initial-cwd before reaching its intended line")
+	}
 	p := filepath.Join(t.TempDir(), "walk.trace")
 	// Line 3 is a thread-death line both readers refuse.
 	body := "100  execve(\"/bin/true\", [\"true\"], []) = 0\n" +
