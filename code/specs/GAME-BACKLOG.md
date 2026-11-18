@@ -155,6 +155,12 @@ coordination state, not an implementation authorization for unrelated primitives
   conservation, and atomic failure. Record generators and bounds.
 - [ ] `GBL-007` Add bounded fuzzing where package tooling supports it, and record corpus, runtime,
   and configuration limits.
+- [ ] `GBL-009` Substantiate Rust Hamurabi assurance claims: map each checked-in property-count claim
+  to a live, reproducible property, fuzz, or Warrant evidence artifact, or correct the report's
+  status. The current report has 1,000 property counts per claim but empty evidence and null
+  exhaustive/fuzz/proof entries, plus two unapproved exemptions. A finite corpus pass under
+  `GBL-002` does not close this item; required per-lane CWE dispositions and Warrant proof targets
+  remain open until separately discharged.
 - [ ] `GBL-005` Complete live evidence for the 26 package/language rows in the dated audit: reuse and
   record existing fresh receipts, run missing normal `BUILD` checks, and identify any host boundary
   separately. Mark each lane pass, fail, or unverified; do not claim parity until every required lane
