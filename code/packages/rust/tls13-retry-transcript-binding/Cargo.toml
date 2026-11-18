@@ -1,0 +1,21 @@
+[package]
+name = "tls13-retry-transcript-binding"
+version = "0.1.0"
+edition = "2021"
+description = "Exact-message TLS 1.3 HelloRetryRequest transcript composition"
+license = "MIT"
+
+[dependencies]
+tls13-server-hello-retry-selection = { path = "../tls13-server-hello-retry-selection" }
+tls13-transcript = { path = "../tls13-transcript" }
+
+[dev-dependencies]
+tls13-cipher-suite-offer = { path = "../tls13-cipher-suite-offer" }
+tls13-cipher-suite-policy = { path = "../tls13-cipher-suite-policy" }
+tls13-client-hello-message = { path = "../tls13-client-hello-message" }
+tls13-extension-block = { path = "../tls13-extension-block" }
+tls13-extension-context-policy = { path = "../tls13-extension-context-policy" }
+tls13-server-hello-message = { path = "../tls13-server-hello-message" }
+tls13-server-hello-selection = { path = "../tls13-server-hello-selection" }
+tls13-server-hello-version-selection = { path = "../tls13-server-hello-version-selection" }
+tls13-supported-versions = { path = "../tls13-supported-versions" }

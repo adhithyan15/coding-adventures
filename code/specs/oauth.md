@@ -6066,6 +6066,30 @@ open a network connection. Handshake-state and transcript composition, the
 remaining TLS transport, and HTTP composition remain prerequisites; concrete
 HTTPS and live-provider readiness remain unavailable.
 
+An allocation-free `tls13-retry-transcript-binding` prerequisite now constructs
+one selected TLS 1.3 retry transcript only from the exact CH1,
+HelloRetryRequest, CH2, and final-ServerHello proof retained by
+`tls13-server-hello-retry-selection`. The composer frames each retained body
+with its canonical handshake type and three-byte length, hashes CH1 through
+both supported transcript algorithms, selects the policy-authorized cipher
+suite carried by the retained HelloRetryRequest proof, applies the existing
+one-shot synthetic `message_hash` rewrite, and then hashes the exact retained
+HelloRetryRequest, CH2, and final ServerHello encodings in order. Success
+returns a non-copyable wrapper borrowing that complete message proof and owning
+the selected transcript state, so later composition cannot substitute another
+message sequence or detached cipher-suite policy. Transcript-limit or hashing
+failures retain no message bytes, digest, length, suite, or policy payloads.
+
+This pure composition does not validate every permitted ClientHello2 change,
+apply a retry cookie or PSK binder update, reject a second retry in connection
+state, own handshake sequencing, combine the transcript with a key-agreement
+secret, derive handshake or traffic secrets, authenticate Finished, protect
+records, validate certificates, establish trust, enforce revocation, perform
+I/O, authorize HTTP or OAuth transport, or open a network connection. The
+remaining TLS state, key-schedule, record, certificate, revocation, and HTTP
+composition remain prerequisites; concrete HTTPS and live-provider readiness
+remain unavailable.
+
 An allocation-free `http1-fixed-request-body` prerequisite now binds one
 caller-borrowed, potentially sensitive request body to its exact byte length
 under an explicit caller ceiling. It encodes that length in canonical shortest
