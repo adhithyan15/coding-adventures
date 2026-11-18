@@ -414,6 +414,81 @@ Python/TypeScript APIs. AF-03 implements this checked policy in Rust and must
 not claim general waveform, pole-stability, or floating-point parity beyond
 the explicitly tested cases.
 
+### Additive checked Python and TypeScript APIs (AF-02b)
+
+AF-02b adds opt-in checked APIs without changing the existing `Biquad` or
+`sosfilt` entry points, their coercion rules, rounding, partial-progress
+behavior on errors, or legacy error classes. Python exports `CheckedBiquad`
+with the six positional coefficients `[b0,b1,b2,a0,a1,a2]`,
+`process_sample(x) -> float`, `process(signal) -> list[float]`, and
+`reset() -> None`, plus `checked_sosfilt(sections, signal) -> list[float]`.
+TypeScript exports `CheckedBiquad` with the same coefficient order,
+`processSample(x) -> number`, `process(signal) -> Float64Array`, and
+`reset() -> void`, plus `checkedSosfilt(sections, signal) -> Float64Array`.
+Constructors and methods are synchronous; state atomicity is scoped to
+non-reentrant calls. It does not cover side effects performed by caller
+accessors, allocation failure, process termination, heap bounds, or real-time
+behavior.
+
+The checked kernel is separate from legacy code. It rejects a zero or
+non-finite `a0`, directly divides the other five coefficients by `a0`, and
+rejects any non-finite raw or normalized coefficient. For each sample it
+computes the DFII-T output and both candidate delays using separately rounded
+binary64 operations in the written order. A non-finite input, output, or
+candidate delay fails with the lane's existing filter error. The filter commits
+both delays only after a sample succeeds; block processing evaluates using
+private candidate state and commits only when the whole block and output are
+complete. Any returned error or propagated input-accessor exception leaves
+filter-owned entry state unchanged. `reset()` sets both delays to positive
+zero. SOS constructs and validates all sections before processing, starts each
+section with zero state, and returns a complete finite output or an error.
+There is no pole-stability screen: finite unstable filters are accepted until
+an operation violates a finite-value check.
+
+The checked APIs accept finite primitive binary64 values, including signed
+zeros and subnormals, except that either signed zero is invalid as `a0`.
+Python accepts only exact built-in `int` and `float` values, excluding booleans,
+subclasses, and conversion hooks. Each integer is converted once to binary64;
+conversion overflow is reported as the existing coefficient error, while
+ordinary binary64 rounding is part of the API (`2^53+1` becomes `2^53`).
+TypeScript accepts only primitive finite `number` values; it does not coerce
+strings, boxed numbers, booleans, `bigint`, or objects through `Number` or
+`valueOf`. Coefficient and signal arrays are read by a single captured length
+and bounded indexed access, not by an unbounded user iterator. Lengths must be
+safe nonnegative integers and within the existing per-call limit before
+allocation or traversal. Holes, invalid elements, and accessor exceptions fail
+without committing state; caller-defined accessor side effects are outside the
+guarantee.
+
+The checked APIs retain the existing `2^24` sample-per-call and `1024` SOS
+section limits; there is no product cap. Capture each relevant input length
+once, reject invalid or unsafe lengths, then check empty signal, sample cap,
+and SOS section cap in that order. For a Biquad constructor, inspect raw
+coefficients in slot order, reject zero `a0`, then inspect normalized values
+in `[b0,b1,b2,a1,a2]` order. For SOS, construct every section in section order
+before reading samples. For a block, inspect samples in index order and stop at
+the first error; entry state remains unchanged. Empty signal is rejected
+before section processing, including for empty SOS. Empty SOS with a nonempty
+finite signal returns a validated copy, preserving negative zero. Bounds and
+coefficient checks precede sample traversal and output allocation where
+applicable. Tests pin error class and precedence without relying on incidental
+message text.
+
+The shared AF-02 fixture and all 32,768 partitions remain selected conformance
+cases; legacy AF-02a counterexamples remain unchanged. Checked tests separately
+cover minimum-subnormal identity, normalized coefficient/output/delay
+overflow, rollback after late invalid samples and accessor errors, SOS order,
+caps with poison accessors, and the separately rounded `f64::MAX` feedback
+boundary. Independent integer/FIR and feedback properties use domain-preserving
+shrinkers; generated binary64 state/error cases are counted separately. Python
+seeded mutation fuzz must raise on semantic violations because that runner
+ignores returned values. TypeScript semantic-guided fuzz must report semantic
+violations as crashes. These are bounded tests; they do not establish general
+cross-language bit/error parity, native float/source bindings, Warrant/SAT
+proof, a coverage-guided Python campaign, or package-wide verification. Future
+producer accounting/feedback work is tracked by AF-04c, and generic Python
+optional-development-dependency selection by AF-04d.
+
 The Butterworth and Chebyshev signatures above are existing separate
 IIR helpers; their cutoff parameter is also normalized in the current
 implementation. AF-01b does not change their behavior or specify their
