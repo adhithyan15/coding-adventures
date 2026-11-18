@@ -137,9 +137,12 @@ accepted wherever the comparisons admit it.
 Rust and Python allow at most `2^20` taps (largest accepted odd count
 `1,048,575`); TypeScript allows at most `2^16` taps (largest accepted
 odd count `65,535`). All three require a positive odd tap count. The
-Rust `u32` parameter cannot represent a negative count. Python and
-TypeScript validate integer tap counts at runtime; Python's annotations
-do not establish behavior for arbitrary non-integer objects.
+Rust `u32` parameter cannot represent a negative count. TypeScript
+validates integer tap counts at runtime. Python's contract is for callers
+supplying an integer as annotated: its implementation checks positivity,
+parity, and the cap but does not enforce the runtime type, so wrong-object
+behavior (including `bool` or floating-point values) is outside this
+contract.
 
 Rust window selection is the typed `WindowType` enum with Rectangular,
 Hamming, Hann, and Blackman. Python accepts that lane's enum or a
