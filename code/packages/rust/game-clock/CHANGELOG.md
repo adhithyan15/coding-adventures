@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - A durable public-API consumer for all 23 `game-clock-v1` shared-corpus cases, including exact output/error comparison, failed mutable-advance state preservation, and conformance negative controls.
+- A Rust integration harness that checks the unguarded constructor Warrant model against `new_clock` over the full 648-case boundary matrix and seeded, stratified full-width property cases, with same-path fault controls.
 
 ### Fixed
 - `code/specs/game-clock.warrant` was invalid Warrant (`->` implication in a claim); rewritten as `if .. then .. else true`. Document only.

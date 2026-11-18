@@ -1,9 +1,10 @@
 //! The VER04r 16.2 census (slice S3b): which claims of which adopters can the S3 generator
 //! emit at `ir.core`, and why not.
 //!
-//! VER04r 16.3 item 11e settles for S3 that a binder descriptor of kind `nat_count`, a signed
-//! `fx_edge`, a 16-bit `fx_edge` or a list of byte strings is *refused*, and asks S3b for the
-//! census S10 needs to decide them.  [`census_document`] reads every claim of a document
+//! VER04r 16.3 item 11e settled for S3 that a binder descriptor of kind `nat_count`, a signed
+//! `fx_edge`, a 16-bit `fx_edge` or a list of byte strings is *refused*, and asked S3b for the
+//! census S10 needs to decide them.  S10c-2 describes the first three (`nat_shift`, `fx_edge`:
+//! D26, D21, D25), so only a list of byte strings (`ir.data`) is still a 16.2 hit.  [`census_document`] reads every claim of a document
 //! (the lowering's first refusal, the cost bounds, the S2 domain resolution and the 16.2 scan
 //! of the resolved descriptors) and [`render`] prints it.
 //!
@@ -13,7 +14,7 @@
 //! only what must stay true, not the adopters' evolving claim counts: ct-compare and gf256
 //! are the two documents the generator emits whole, and every adopter's census must at
 //! least be computable and internally consistent.  The remaining tests pin the census logic
-//! on small synthetic documents, including one hit for each of the five 16.2 items.
+//! on small synthetic documents: the settled 16.2 items are described, the open one is reported.
 
 mod support;
 
@@ -125,13 +126,16 @@ fn ct_compare_and_gf256_are_emittable_whole_and_touch_none_of_16_2() {
 }
 
 #[test]
-fn the_unlowerable_adopters_are_refused_whole_with_the_level_named() {
+fn the_adopters_beyond_what_is_evaluated_are_refused_whole() {
     for (name, doc) in adopters() {
         let d = doc.unwrap();
-        if name == "ct-compare" || name == "gf256" {
+        // S10c-2 evaluates `ir.fixed`, so x25519 is emittable whole too (the census does not run
+        // the evaluator: a document is "emittable" when every item lowers and fits its bounds)
+        if ["ct-compare", "gf256", "x25519"].contains(&name.as_str()) {
+            assert!(d.emittable(), "{name}");
             continue;
         }
-        // an adopter beyond ir.core is not emittable whole: fail closed (VER04r 13)
+        // an adopter beyond ir.core, ir.tuple and ir.fixed is not emittable whole: fail closed
         assert!(!d.emittable(), "{name}");
     }
 }
@@ -145,55 +149,45 @@ fn the_unlowerable_adopters_are_refused_whole_with_the_level_named() {
 ///
 /// History.  Before S10b every claim that met a built-in first was `ir.fixed`: the README's old
 /// totals were `ir.data` 154, `ir.fixed` 101, `inout` 9, `W0701` 2.  S10b: `ir.data` 79,
-/// `ir.fixed` 99, `ir.tuple` 71, `W0701` 8, `inout` 9 and 89 emittable.  **S10t-2** lowers
-/// `ir.tuple`, so no claim is *blocked* on it any more: the 71 `ir.tuple` claims are emittable
-/// (`ok`), `ir.fixed` (they also use a built-in), `ir.data` (they also use a list or a record)
-/// or, for wasm-leb128, a 16.2 descriptor refusal of the domain stage.  Now: `ir.data` 100,
-/// `ir.fixed` 130, `W0701` 8, `inout` 9, `16.2` 3 and 105 emittable.
+/// `ir.fixed` 99, `ir.tuple` 71, `W0701` 8, `inout` 9 and 89 emittable.  S10t-2 lowers `ir.tuple`:
+/// `ir.data` 100, `ir.fixed` 130, `W0701` 8, `inout` 9, `16.2` 3 and 105 emittable.  **S10c-2
+/// evaluates `ir.fixed` and describes the signed and 16-bit `fx_edge` and `nat_shift`**, so no claim
+/// is blocked on `ir.fixed` or `16.2` any more.  Now: `ir.data` 100, `inout` 9, `W0701` 8 and 238
+/// emittable (of 355).
 const PINS: [(&str, &[(&str, usize)]); 11] = [
-    ("arithmetic", &[("ir.data", 55), ("ir.fixed", 5), ("ok", 3)]),
+    ("arithmetic", &[("ir.data", 55), ("ok", 8)]),
     ("ct-compare", &[("ok", 9)]),
     ("gf256", &[("ok", 38)]),
     (
         "hash-functions",
-        &[("W0701", 6), ("ir.data", 21), ("ir.fixed", 25), ("ok", 4)],
+        &[("W0701", 6), ("ir.data", 21), ("ok", 29)],
     ),
-    (
-        "logic-gates",
-        &[("ir.data", 3), ("ir.fixed", 57), ("ok", 28)],
-    ),
-    ("lzw", &[("ir.fixed", 17), ("ok", 4)]),
+    ("logic-gates", &[("ir.data", 3), ("ok", 85)]),
+    ("lzw", &[("ok", 21)]),
     ("vos-sched-any", &[("ir.data", 8)]),
     ("vos-sched-fp-bitmap", &[("ir.data", 13)]),
-    (
-        "wasm-leb128",
-        &[("16.2", 3), ("W0701", 2), ("ir.fixed", 24), ("ok", 13)],
-    ),
-    ("x25519", &[("ir.fixed", 2), ("ok", 6)]),
+    ("wasm-leb128", &[("W0701", 2), ("ok", 40)]),
+    ("x25519", &[("ok", 8)]),
     ("zeroize", &[("inout", 9)]),
 ];
 
-/// The oracle's census of the same documents as of CV2-F1: its suites by `unsupported.level`, and
+/// The oracle's census of the same documents as of S10c-1: its suites by `unsupported.level`, and
 /// a suite with no level but a lowering refusal (`LoweredSuite.refusal`, the impure guard and the
-/// claim-calls-no-op rule, VER04r 4.3, 4.4) by `W0701`; `ok` for none.  A level refusal wins over
-/// the lowering refusal, as in the oracle's evaluation, so the six hash-functions claims that have
-/// both are `ir.fixed`.  (`warrant-oracle/tests/test_lower.py` `CENSUS` keys by level only, so it
-/// still reads `ir.core 18` for wasm-leb128: those 18 hold the 2 refused claims.)
-const ORACLE_PINS: [(&str, &[(&str, usize)]); 8] = [
+/// claim-calls-no-op rule, VER04r 4.3, 4.4) by `W0701`; `ok` for none.  `ir.fixed` is evaluated, so
+/// no suite names it any more, and the six hash-functions claims that have an impure guard *and* a
+/// built-in now name the guard in both tools.  The numbers come from running the oracle's lowering
+/// (`warrant-oracle/tests/test_lower.py` `CENSUS` keys by level only, so it reads `ir.core 42` for
+/// wasm-leb128: those hold the 2 refused claims, and `ir.core 35` for hash-functions: 29 + 6).
+const ORACLE_PINS: [(&str, &[(&str, usize)]); 9] = [
     ("ct-compare", &[("ok", 9)]),
     ("gf256", &[("ok", 38)]),
-    ("wasm-leb128", &[("ok", 16), ("W0701", 2), ("ir.fixed", 24)]),
-    (
-        "hash-functions",
-        &[("ok", 4), ("ir.data", 21), ("ir.fixed", 31)],
-    ),
-    (
-        "logic-gates",
-        &[("ok", 28), ("ir.data", 3), ("ir.fixed", 57)],
-    ),
-    ("lzw", &[("ok", 4), ("ir.fixed", 17)]),
-    ("arithmetic", &[("ok", 7), ("ir.data", 45), ("ir.fixed", 11)]),
-    ("x25519", &[("ok", 6), ("ir.fixed", 2)]),
+    ("wasm-leb128", &[("ok", 40), ("W0701", 2)]),
+    ("hash-functions", &[("ok", 29), ("W0701", 6), ("ir.data", 21)]),
+    ("logic-gates", &[("ok", 85), ("ir.data", 3)]),
+    ("lzw", &[("ok", 21)]),
+    ("arithmetic", &[("ok", 18), ("ir.data", 45)]),
+    ("x25519", &[("ok", 8)]),
+    ("zeroize", &[("ok", 9)]),
 ];
 
 fn histogram(name: &str) -> std::collections::BTreeMap<String, usize> {
@@ -225,39 +219,37 @@ fn the_first_blocker_histogram_of_every_adopter_is_pinned() {
 
 #[test]
 fn the_generator_census_agrees_with_the_oracle_and_every_difference_has_a_named_cause() {
-    // Exactly equal for the five documents whose every claim both tools lower or refuse for the
-    // same reason.  S10t-2 closed the gap of S10b (follow-up CV2-F5) for tuples: logic-gates is
-    // now in this list, and wasm-leb128's and arithmetic's tuple-blocked claims lower.
-    for name in ["ct-compare", "gf256", "logic-gates", "lzw", "x25519"] {
+    // Exactly equal for the seven documents whose every claim both tools lower or refuse for the
+    // same reason.  S10t-2 closed the tuple gap, CV2-F1 the guard-timing gap, S10c-2 the `ir.fixed`
+    // and descriptor gaps (wasm-leb128, hash-functions, lzw and x25519 joined the list).
+    for name in [
+        "ct-compare",
+        "gf256",
+        "hash-functions",
+        "logic-gates",
+        "lzw",
+        "wasm-leb128",
+        "x25519",
+    ] {
         let oracle = ORACLE_PINS.iter().find(|p| p.0 == name).unwrap().1;
         assert_eq!(histogram(name), pin(oracle), "{name}");
     }
     // The two that still differ, differ in one direction only: the generator never *lowers* a
-    // claim the oracle refuses, and what separates them is no longer `ir.tuple`.
+    // claim the oracle refuses.
     let ok = |h: &std::collections::BTreeMap<String, usize>| h.get("ok").copied().unwrap_or(0);
     for (name, oracle) in &ORACLE_PINS {
         let g = histogram(name);
         assert!(ok(&g) <= ok(&pin(oracle)), "{name}");
     }
-    // wasm-leb128: the oracle's 16 `ok` and 2 `W0701` (the impure guard, which both tools now apply
-    // at lowering: CV2-F1 closed the guard-timing gap) are 13 `ok` and 2 `W0701` here plus 3 whose
-    // binder descriptor the generator refuses until VER04r 16.2 is decided (`16.2` item 4, a signed
-    // `fx_edge` leaf: the domain stage, which the oracle's lowering does not reach).
-    let w = histogram("wasm-leb128");
-    assert_eq!((w["16.2"], w["W0701"], w["ok"], w["ir.fixed"]), (3, 2, 13, 24));
-    assert_eq!(w["16.2"] + w["ok"], 16);
-    // hash-functions: six claims have a subject call under an impure guard *and* use a fixed-width
-    // built-in.  Both tools refuse them; the oracle names the level (`ir.fixed`, a level refusal
-    // wins over the lowering refusal), the generator the guard (`W0701`, its lowering meets the
-    // guard first).  Same set of refused claims, a different first reason.
-    let h = histogram("hash-functions");
-    assert_eq!((h["W0701"], h["ir.fixed"], h["ir.data"], h["ok"]), (6, 25, 21, 4));
-    assert_eq!(h["W0701"] + h["ir.fixed"], 31);
     // arithmetic: 10 claims call an op whose signature holds a record or variant type.  The oracle
     // counts the type in `requires` (R9) and lowers; the generator refuses it at `ir.data` until
-    // S10d.  So the oracle's 4 `ir.core` and 6 `ir.fixed` of those are `ir.data` here.
+    // S11.  So the oracle's 18 `ok` are 8 here and its 45 `ir.data` are 55.
     let a = histogram("arithmetic");
-    assert_eq!((a["ir.data"], a["ir.fixed"], a["ok"]), (45 + 10, 11 - 6, 7 - 4));
+    assert_eq!((a["ir.data"], a["ok"]), (45 + 10, 18 - 10));
+    // zeroize: `inout` parameters and `ensures` clauses are generator refusals (the oracle lowers
+    // all 9 claims): a documented feature gap, not a level.
+    let z = histogram("zeroize");
+    assert_eq!((z["inout"], z.get("ok").copied().unwrap_or(0)), (9, 0));
 }
 
 // -- the census logic on synthetic documents ------------------------------------------------
@@ -293,37 +285,45 @@ fn a_claim_within_ir_core_is_ok_with_its_product_and_descriptors() {
 }
 
 #[test]
-fn the_five_16_2_items_are_each_reported_by_name() {
-    // item 5: two U16 binders are 2^32 ordinals; the budget demotes one to an edge set
+fn the_settled_16_2_items_are_described_and_only_the_list_of_byte_strings_is_reported() {
+    // item 5 (S10c-2, D25): two U16 binders are 2^32 ordinals; the budget demotes one to an edge
+    // set, which is now a described `fx_edge`, so the claim is emittable
     let d = one(&v1_doc(
         "",
         "  claim i5:\n    forall a: U16, b: U16. op_u16(a) == id16(b)\n",
     ));
-    assert_eq!(d.claims[0].s162, ["5"]);
-    assert!(!d.claims[0].emittable());
-    assert_eq!(d.claims[0].reason_key(), "16.2");
-    assert!(
-        d.claims[0].blocked.is_none(),
-        "it lowers fine: only the descriptor is undecided"
-    );
-    // item 4: a signed 64-bit leaf (the unsigned 64-bit leaf is fine)
+    assert!(d.claims[0].s162.is_empty());
+    assert!(d.claims[0].emittable());
+    assert_eq!(d.claims[0].reason_key(), "ok");
+    // item 4 (D21): a signed 64-bit leaf is an `fx_edge` of 623 values
     let d = one(&v1_doc(
         "  model idi(a: I64) -> I64 = a\n",
         "  claim i4:\n    forall a: I64. op_u64(1u64) == id64(1u64) and idi(a) == a\n",
     ));
-    assert_eq!(d.claims[0].s162, ["4"]);
-    // item 3: a Nat that flows into a shift count has the 73-value domain (and shl is ir.fixed)
+    assert!(d.claims[0].s162.is_empty());
+    assert!(d.claims[0].emittable());
+    assert_eq!(
+        d.claims[0].domain.as_ref().unwrap(),
+        &(623, vec!["fx_edge(I64)".to_string()])
+    );
+    // item 3 (D26): a Nat that flows into a shift count is `nat_shift`, 73 values
     let d = one(&v1_doc(
         "",
         "  claim i3:\n    forall n: Nat, a: U8. op_inc(a) == inc(shl(a, n))\n",
     ));
-    assert_eq!(d.claims[0].s162, ["3"]);
+    assert!(d.claims[0].s162.is_empty());
     assert_eq!(
-        d.claims[0].reason_key(),
-        "ir.fixed",
-        "the level is the first blocker"
+        d.claims[0].domain.as_ref().unwrap(),
+        &(73 * 256, vec!["nat_shift".to_string(), "u8_all".to_string()])
     );
-    // items 1/2: a list of byte strings (ir.data as well)
+    assert!(d.claims[0].emittable(), "shl lowers and evaluates since S10c-2");
+    // ... and a parenthesised count selects it too (R10: parentheses do not matter)
+    let d = one(&v1_doc(
+        "",
+        "  claim i3p:\n    forall n: Nat, a: U8. op_inc(a) == inc(shl(a, (n)))\n",
+    ));
+    assert_eq!(d.claims[0].domain.as_ref().unwrap().1[0], "nat_shift");
+    // items 1/2: a list of byte strings (ir.data as well) is the one item still undecided
     let d = one(&v1_doc(
         "",
         "  claim i12:\n    forall l: List<Bytes<2>>. op_inc(1u8) == inc(1u8)\n",
@@ -415,7 +415,7 @@ fn a_malformed_document_is_an_error_not_a_census() {
 fn the_report_groups_refused_items_and_lists_16_2_hits_by_claim() {
     let src = v1_doc(
         "",
-        "  claim i5:\n    forall a: U16, b: U16. op_u16(a) == id16(b)\n  claim ok_one:\n    forall a: U8. op_inc(a) == inc(a)\n",
+        "  claim i12:\n    forall l: List<Bytes<2>>. op_inc(1u8) == inc(1u8)\n  claim ok_one:\n    forall a: U8. op_inc(a) == inc(a)\n",
     );
     let docs = vec![("synth".to_string(), census_of(&src, &Profile::default()))];
     let r = render(&docs, true);
@@ -423,17 +423,17 @@ fn the_report_groups_refused_items_and_lists_16_2_hits_by_claim() {
         r.contains("synth (enum_forms_v1, v1): 2 claims, 1 emittable at ir.core"),
         "{r}"
     );
-    assert!(r.contains("VER04r 16.2 item 5: 1 claims: synth/i5"), "{r}");
-    assert!(r.contains("i5: blocked 16.2; P="), "{r}");
+    assert!(r.contains("VER04r 16.2 item 1/2: 1 claims: synth/i12"), "{r}");
+    assert!(r.contains("i12: blocked level [ir.data]"), "{r}");
     assert!(r.contains("ok_one: ok; P=256 [u8_all]"), "{r}");
-    assert!(r.contains("claims by first blocker: 16.2: 1"), "{r}");
+    assert!(r.contains("claims by first blocker: ir.data 1, ok 1"), "{r}");
     // no hit: the report says so
     let clean = render(
         &[("ct".to_string(), census_of(CT_COMPARE, &Profile::default()))],
         false,
     );
     assert!(
-        clean.contains("no claim touches any of the five items"),
+        clean.contains("no claim touches an undecided item"),
         "{clean}"
     );
     assert!(clean.contains("document emittable"));

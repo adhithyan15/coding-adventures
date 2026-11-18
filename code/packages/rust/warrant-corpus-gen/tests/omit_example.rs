@@ -489,10 +489,22 @@ fn any_other_check_failure_still_refuses() {
 
 #[test]
 fn an_omitted_example_is_still_lowered_so_a_level_refusal_refuses_the_document() {
-    // `bit_not` is `ir.fixed`, which this generator does not emit: the line does not excuse it
-    let e = refused(&ex("f", "bit_not(0u8) == 255u8 and echo(b\"aa\") != echo(b\"bb\")"), &["f"], "v1");
+    // a list literal is `ir.data`, which this generator does not emit: the line does not excuse it
+    let e = refused(&ex("f", "len([1u8, 2u8]) == 2 and echo(b\"aa\") != echo(b\"bb\")"), &["f"], "v1");
     assert_eq!(e.code, code::LEVEL, "{e}");
-    assert_eq!(e.level, Some("ir.fixed"), "{e}");
+    assert_eq!(e.level, Some("ir.data"), "{e}");
+}
+
+#[test]
+fn an_ir_fixed_built_in_in_an_omitted_example_is_evaluated_since_s10c_2() {
+    // `be_bytes` is `ir.fixed`, evaluated now: `echo(b"aa") == be_bytes(24929u16)` is an expressible
+    // `op(args) == pure` example, so it is emitted, and a line that names it is a stale line (a
+    // profile error), exactly as for any other expressible example
+    let examples = ex("f", "echo(b\"aa\") == be_bytes(24929u16)");
+    let ok = try_gen(&examples, "", "v1").expect("an ir.fixed example is emitted");
+    assert!(!ok.cases_tfv.is_empty(), "the example is in cases.tfv");
+    let e = refused(&examples, &["f"], "v1");
+    assert_eq!(e.code, code::PROFILE, "{e}");
 }
 
 // ---- the evaluation order (arguments, pure side, D19, D18), for every example -------------------

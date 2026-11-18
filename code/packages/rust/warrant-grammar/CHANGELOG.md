@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased — CV2-S10c-2: a parenthesised shift count selects `NatCount`
+
+- `count_binders` (the `NatCount` refinement of VER04j 3.6) looks through `Expression::Grouped`:
+  `shl(x, (n))` selects `n` exactly as `shl(x, n)` does, as VER04r 5.1 and 16.10 R10 say
+  (parentheses do not matter: the corpus IR has no groups, and the oracle decides R10 on it). An
+  expression of the binder (`shl(x, (n + 1))`) still does not select. No adopter writes a
+  parenthesised count, so no checked-in evidence file changes.
+
 ## Unreleased — bounded VER04p domain witness checks
 
 - `BUILD` and `BUILD_windows` run `code/scripts/tests/test_ver04p_domain_witnesses.py`.

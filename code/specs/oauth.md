@@ -840,6 +840,50 @@ path, select trust roots, check time, names, or revocation, process TLS or HTTP,
 authorize OAuth transport, or perform any external effect. It is not evidence
 of certificate, HTTPS, or live-provider readiness.
 
+A bounded, data-driven `tls13-rsa-pss-signature-routing` prerequisite now
+routes one structurally decoded TLS 1.3 `CertificateVerify` signature to the
+fixed SHA-256, SHA-384, or SHA-512 RSASSA-PSS verifier. It requires a signature
+scheme already authorized by caller policy, the message body's exact matching
+wire identifier, a previously validated `rsaEncryption` public key, and an
+already-computed digest whose typed length matches the authorized scheme.
+Mismatched wire identifiers and digest profiles fail before RSA work or DB
+scratch mutation. Non-copyable success evidence retains the exact authorized
+scheme, message, public key, digest, and fixed-verifier evidence used.
+
+This routing evidence does not construct or hash the RFC 8446
+`CertificateVerify` signed input, prove which transcript produced the supplied
+digest, parse a certificate, bind a key to a validated server path, build or
+validate a path, verify a hostname, select trust roots, check time or
+revocation, sequence a handshake, process records, perform I/O, authorize HTTP
+or OAuth transport, or open a network connection. Those transcript,
+certificate, trust, revocation, handshake, and transport boundaries remain
+separate; concrete HTTPS and live-provider readiness remain unavailable.
+
+A bounded `tls13-rsa-pss-certificate-verify` composition now closes the
+caller-digest substitution gap for one RSA-PSS `CertificateVerify` operation.
+Its first stage consumes an already policy-authorized signature scheme and one
+exact framed RFC 8446 `CertificateVerify` signed input, hashes those exact
+bytes with the scheme-bound repository-owned SHA-256, SHA-384, or SHA-512
+primitive, and retains the authorization, input, and owned digest together in
+non-copyable evidence. Its second stage accepts only that evidence, the exact
+structurally decoded `CertificateVerify` message, a validated `rsaEncryption`
+public key, matching typed verifier limits, and caller-owned scratch, then
+delegates to the existing data-driven RSA-PSS routing verifier. Success retains
+both the exact hashed-input evidence and fixed-verifier routing evidence, so a
+different input, scheme, message, key, or digest cannot be substituted after
+verification. Diagnostics retain no signed-input, transcript-hash, signature,
+digest, key, limit, or scratch bytes.
+
+This composition does not prove which handshake transcript produced the hash
+embedded in the framed signed input, bind that transcript to a selected cipher
+suite or ordered handshake state, parse a certificate, bind the key to a
+validated server path, construct or validate a path, verify a hostname, select
+trust roots, check time or revocation, authenticate Finished, sequence a
+handshake, process or protect records, perform I/O, authorize HTTP or OAuth
+transport, or open a network connection. Those transcript, certificate,
+trust, revocation, handshake, and transport boundaries remain separate;
+concrete HTTPS and live-provider readiness remain unavailable.
+
 A bounded `rsa-pss-sha512` prerequisite now validates one complete recovered
 RFC 8017 EMSA-PSS encoded message for the fixed SHA-512, 64-byte-salt profile.
 It composes the public layout gate and bounded SHA-512 MGF1 primitive, unmasks
@@ -848,6 +892,22 @@ high bits, requires the complete zero padding and `0x01` delimiter, and
 recomputes `H = SHA-512(0x00^8 || mHash || salt)` before a full 64-byte
 comparison. Public size and scratch failures occur before scratch mutation;
 stable failures retain no message, digest, salt, padding, or offset bytes.
+
+A bounded `rsa-pss-sha512-signature` composition now verifies one exact public
+RSASSA-PSS signature for the fixed SHA-512, MGF1-SHA-512, 64-byte-salt
+profile. It accepts only a previously validated RSA public key, an exact
+modulus-width signature, an already-computed 64-byte message digest, exact
+caller-owned DB scratch, and caller-owned RSA and encoded-message ceilings. It
+derives `emBits = modBits - 1`, applies the repository-owned RSA public
+operation, and requires the complete fixed-profile EMSA-PSS verdict. Its
+borrowed non-copyable evidence binds the exact key, signature bytes, and
+message digest used.
+
+This signature evidence does not hash a message, parse RSA-PSS parameters or a
+certificate, choose an algorithm or issuer, establish certificate roles or a
+path, select trust roots, check time, names, or revocation, process TLS or HTTP,
+authorize OAuth transport, or perform any external effect. It is not evidence
+of certificate, HTTPS, or live-provider readiness.
 
 This encoded-message verdict does not parse RSA-PSS AlgorithmIdentifier
 parameters or a key, perform RSAVP1, bind the recovered bytes to a signature or

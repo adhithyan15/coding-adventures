@@ -95,9 +95,13 @@ func TestRngCorpusSelectsEveryFixedLane(t *testing.T) {
 	}
 }
 
-func TestGameClockCorpusSelectsRustConsumerOnly(t *testing.T) {
+func TestGameClockInputsSelectRustConsumerAndGlobalWarrantChecker(t *testing.T) {
 	packages := []discovery.Package{
 		{Name: "rust/game-clock", Language: "rust"},
+		{Name: "rust/warrant-grammar", Language: "rust"},
+		{Name: "rust/wasm-leb128", Language: "rust"},
+		{Name: "python/warrant-oracle", Language: "python"},
+		{Name: "go/warrant-corpus", Language: "go"},
 		{Name: "go/build-tool", Language: "go"},
 	}
 	corpus := []string{"code/specs/fixtures/game-clock-v1/cases.json"}
@@ -114,15 +118,77 @@ func TestGameClockCorpusSelectsRustConsumerOnly(t *testing.T) {
 	if got, err := repositoryInputConsumersForChange(corpus, packages, "go"); err != nil || len(got) != 0 {
 		t.Fatalf("go-only selection got %v, err %v", got, err)
 	}
+	warrantPath := []string{"code/specs/game-clock.warrant"}
+	if got, err := repositoryInputConsumersForChange(warrantPath, packages, "all"); err != nil || !reflect.DeepEqual(got, map[string]bool{"rust/game-clock": true, "rust/warrant-grammar": true}) {
+		t.Fatalf("GAME10 Warrant selection got %v, err %v", got, err)
+	}
+	if got, err := repositoryInputConsumersForChange(warrantPath, packages, "rust"); err != nil || !reflect.DeepEqual(got, map[string]bool{"rust/game-clock": true, "rust/warrant-grammar": true}) {
+		t.Fatalf("rust-only GAME10 Warrant selection got %v, err %v", got, err)
+	}
+	if got, err := repositoryInputConsumersForChange([]string{"code/specs/wasm-leb128.warrant"}, packages, "all"); err != nil || !reflect.DeepEqual(got, map[string]bool{"rust/warrant-grammar": true, "python/warrant-oracle": true}) {
+		t.Fatalf("other Warrant consumers selection got %v, err %v", got, err)
+	}
 	for path, want := range map[string]bool{
 		"code/specs/fixtures/game-clock-v1/cases.json":     true,
 		"code/specs/fixtures/game-clock-v10/cases.json":    false,
 		"code/specs/fixtures/game-clock-v1":                false,
 		"code/specs/fixtures/game-clock-v1-old/cases.json": false,
+		"code/specs/game-clock-v10.warrant":                false,
+		"code/specs/game-clock.warrant.bak":                false,
+		"code/specs/other-game-clock.warrant":              false,
 	} {
-		if got := isGameClockCorpus(path); got != want {
-			t.Errorf("isGameClockCorpus(%q) = %v, want %v", path, got, want)
+		if got := isGameClockInput(path); got != want {
+			t.Errorf("isGameClockInput(%q) = %v, want %v", path, got, want)
 		}
+	}
+}
+
+func TestBiquadSosFixtureSelectsPythonAndTypeScriptConsumers(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "python/dsp-filters", Language: "python"},
+		{Name: "typescript/dsp-filters", Language: "typescript"},
+	}
+	for _, changed := range []string{
+		"code/specs/fixtures/biquad-sos-v1/cases.json",
+		"code/specs/fixtures/biquad-sos-v1/README.md",
+	} {
+		got, err := repositoryInputConsumersForChange([]string{changed}, packages, "all")
+		want := map[string]bool{"python/dsp-filters": true, "typescript/dsp-filters": true}
+		if err != nil || !reflect.DeepEqual(got, want) {
+			t.Fatalf("%s selected %v, err %v; want both consumers", changed, got, err)
+		}
+		if got, err := repositoryInputConsumersForChange([]string{changed}, packages, "python"); err != nil || !reflect.DeepEqual(got, map[string]bool{"python/dsp-filters": true}) {
+			t.Fatalf("python-only selection got %v, err %v", got, err)
+		}
+		if got, err := repositoryInputConsumersForChange([]string{changed}, packages, "typescript"); err != nil || !reflect.DeepEqual(got, map[string]bool{"typescript/dsp-filters": true}) {
+			t.Fatalf("typescript-only selection got %v, err %v", got, err)
+		}
+	}
+	for changed, shouldMatch := range map[string]bool{
+		"code/specs/fixtures/biquad-sos-v1/cases.json":     true,
+		"code/specs/fixtures/biquad-sos-v10/cases.json":    false,
+		"code/specs/fixtures/biquad-sos-v1-old/cases.json": false,
+		"code/specs/fixtures/biquad-sos-v1":                false,
+		`code\specs\fixtures\biquad-sos-v1\cases.json`:     false,
+	} {
+		if got := isBiquadSosFixture(changed); got != shouldMatch {
+			t.Errorf("isBiquadSosFixture(%q) = %v, want %v", changed, got, shouldMatch)
+		}
+		selected, err := repositoryInputConsumersForChange([]string{changed}, packages, "all")
+		if err != nil {
+			t.Fatal(err)
+		}
+		if shouldMatch && len(selected) != 2 {
+			t.Errorf("expected both consumers for %q, got %v", changed, selected)
+		}
+		if !shouldMatch && len(selected) != 0 {
+			t.Errorf("lookalike %q selected consumers %v", changed, selected)
+		}
+	}
+	if _, err := repositoryInputConsumersForChange(
+		[]string{"code/specs/fixtures/biquad-sos-v1/cases.json"}, nil, "all",
+	); err == nil {
+		t.Fatal("missing fixture consumers must fail closed")
 	}
 }
 

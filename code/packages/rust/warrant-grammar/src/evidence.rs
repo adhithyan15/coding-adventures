@@ -935,9 +935,15 @@ fn count_binders(e: &Expression<'_>, out: &mut HashSet<String>) {
                 if name.segments.len() == 1
                     && matches!(name.segments[0], "shl" | "shr" | "sar" | "rotl" | "rotr" | "bit")
                 {
+                    // Parentheses do not matter (VER04r 5.1, 16.10 R10): `shl(x, (n))` selects `n`
+                    // exactly as `shl(x, n)` does, because the corpus IR has no groups.
+                    let mut count = list.get(1);
+                    while let Some(Expression::Grouped { inner, .. }) = count {
+                        count = Some(&**inner);
+                    }
                     if let Some(Expression::Reference {
                         name: n, args: None, ..
-                    }) = list.get(1)
+                    }) = count
                     {
                         if n.segments.len() == 1 {
                             out.insert(n.segments[0].to_string());

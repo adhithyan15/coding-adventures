@@ -16,10 +16,15 @@ coding_adventures_bounded_json = { path = "../bounded-json" }
 coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
 coding_adventures_sha256 = { path = "../sha256" }
 capability-runtime-conformance = { path = "../capability-runtime-conformance" }
+coding_adventures_warrant_grammar = { path = "../warrant-grammar" }
 
 [[test]]
 name = "conformance"
 path = "tests/conformance.rs"
+
+[[test]]
+name = "warrant_constructor"
+path = "tests/warrant_constructor.rs"
 
 [[test]]
 name = "microbenchmarks"

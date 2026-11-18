@@ -19,8 +19,9 @@
 //!
 //! The 35 built-ins of Appendix A.1 are one variant, [`Ir::Fixed`], carrying the tag, the
 //! optional static type argument (`widen<U32>(x)` is `["widen","U32",x]`) and the operands.  The
-//! lowering produces them and the cost walk counts them (`1 +` the operands); **nothing
-//! evaluates them yet** (slice S10c-1), and [`crate::eval`] refuses the variant, naming the level.
+//! lowering produces them and the cost walk counts them (`1 +` the operands); [`crate::eval`] evaluates
+//! them (slice S10c-2), on the width the lowering records in
+//! [`Ir::Fixed::at`] (the JSON does not carry it).
 //!
 //! ## `ir.tuple` (slice S10t-2)
 //!
@@ -209,6 +210,13 @@ pub enum Ir {
         tag: &'static str,
         /// The static type argument of `widen wrap try max_value min_value from_be from_le`.
         ty: Option<FixedTy>,
+        /// The fixed-width type the evaluator works at when the built-in has no static type
+        /// argument: the type of its first operand (`bit_and`, `shl`, `popcount`, `be_bytes`,
+        /// `checked_add`, `div_trunc`, ...).  It is **not** part of the JSON form (the oracle's IR
+        /// is untyped); the lowering records it so the evaluator needs no type inference.
+        /// `None` for a built-in with a static type, for `div`/`rem` (floor, no width), `imin`,
+        /// `imax`, `to_int`, `to_nat`, `at` and `unwrap_or`.
+        at: Option<FixedTy>,
         /// The operands, left to right (the static type argument is not an operand).
         args: Vec<Ir>,
     },
@@ -690,18 +698,21 @@ mod tests {
         let widen = Ir::Fixed {
             tag: "widen",
             ty: Some(FixedTy::U32),
+            at: None,
             args: vec![Ir::Var("a".into())],
         };
         assert_eq!(j(&widen), r#"["widen","U32",["var","a"]]"#);
         let max = Ir::Fixed {
             tag: "max_value",
             ty: Some(FixedTy::I8),
+            at: None,
             args: vec![],
         };
         assert_eq!(j(&max), r#"["max_value","I8"]"#);
         let rot = Ir::Fixed {
             tag: "rotl",
             ty: None,
+            at: Some(FixedTy::U8),
             args: vec![Ir::Var("a".into()), Ir::Var("n".into())],
         };
         assert_eq!(j(&rot), r#"["rotl",["var","a"],["var","n"]]"#);
@@ -731,6 +742,7 @@ mod tests {
         let direct = Ir::Fixed {
             tag: "bit_not",
             ty: None,
+            at: Some(FixedTy::U8),
             args: vec![Ir::Var("a".into())],
         };
         assert_eq!(levels([&direct, &a], &none), ["ir.core", "ir.fixed"]);

@@ -1535,4 +1535,7 @@ members = [
   "vos-probe-ready",
   "vos-sched-fp-bitmap",
   "vos-sched-rr",
+  "rsa-pss-sha512-signature",
+  "tls13-rsa-pss-signature-routing",
+  "tls13-rsa-pss-certificate-verify",
 ]
