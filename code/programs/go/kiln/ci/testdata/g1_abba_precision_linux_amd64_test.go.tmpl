@@ -1,0 +1,44 @@
+package main
+
+import (
+	"bytes"
+	"crypto/sha256"
+	"fmt"
+	"math"
+	"os"
+	"testing"
+
+	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/trace"
+)
+
+func TestG1ABBAExactSliceTime(t *testing.T) {
+	one, err := os.ReadFile("internal/trace/testdata/build.strace")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(one) == 0 || one[len(one)-1] != '\n' {
+		t.Fatal("the fixture must be nonempty and end with a newline")
+	}
+	slice := bytes.Repeat(one, (64<<10)/len(one)+1)
+	lines := bytes.Count(slice, []byte{'\n'})
+	if len(one) != 1850 || len(slice) != 66600 || lines != 936 {
+		t.Fatalf("ABBA fixture drifted: fixture=%d slice=%d/%d", len(one), len(slice), lines)
+	}
+	fixtureSHA := sha256.Sum256(one)
+	sliceSHA := sha256.Sum256(slice)
+	if got := fmt.Sprintf("%x", fixtureSHA); got != "dc8acd0de1d9b235c3924d0d71e2fcd565274e09ded9975570f429b548525aae" {
+		t.Fatalf("fixture SHA-256 drifted: %s", got)
+	}
+	if got := fmt.Sprintf("%x", sliceSHA); got != "6cd61f63fdec55ce37294ad061705394b1babda80e5368b17ecb5bd38e2207af" {
+		t.Fatalf("slice SHA-256 drifted: %s", got)
+	}
+	best, refusal := trace.BestPass1(slice, true, gateRepeats)
+	if refusal != "" || best <= 0 {
+		t.Fatalf("BestPass1 result: duration=%v refusal=%q", best, refusal)
+	}
+	rate := float64(len(slice)) * 1e9 / float64(best.Nanoseconds())
+	if rate <= 0 || math.IsNaN(rate) || math.IsInf(rate, 0) {
+		t.Fatalf("BestPass1 rate is not finite and positive: %g", rate)
+	}
+	t.Logf("G1DETAIL: fixture_sha256=%x slice_sha256=%x bytes=%d lines=%d best_ns=%d rate_bytes_per_second=%.9f refusal=none helper_root=true gc=off_during_timing repeats_min=%d", fixtureSHA, sliceSHA, len(slice), lines, best.Nanoseconds(), rate, gateRepeats)
+}

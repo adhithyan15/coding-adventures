@@ -1,0 +1,329 @@
+name: Kiln G1 candidate A-B-B-A experiment
+
+on:
+  push:
+    branches:
+      - codex/kiln-g1-profile-diagnostic
+    paths:
+      - .github/workflows/kiln-g1-abba-candidate.yml
+      - code/programs/go/kiln/ci/testdata/g1_abba_precision_linux_amd64_test.go.tmpl
+
+permissions:
+  contents: read
+
+jobs:
+  paired-gate:
+    name: G1 A1-B1-B2-A2 (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, ubuntu-26.04]
+    env:
+      BASELINE_SHA: adadc8fc0b9783b3a829fbb4309182f558d4561b
+      CANDIDATE_SHA: ${{ github.sha }}
+    steps:
+      - name: Checkout candidate and immutable baseline
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ env.CANDIDATE_SHA }}
+          path: candidate
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout: |
+            code/grammars
+            code/packages/go
+            code/programs/go/kiln
+            code/specs
+          sparse-checkout-cone-mode: false
+          filter: blob:none
+
+      - name: Checkout pinned G1 baseline A
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ env.BASELINE_SHA }}
+          path: baseline
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout: |
+            code/grammars
+            code/packages/go
+            code/programs/go/kiln
+            code/specs
+          sparse-checkout-cone-mode: false
+          filter: blob:none
+
+      - name: Checkout diagnostic test template
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ env.CANDIDATE_SHA }}
+          path: diagnostic
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout: |
+            code/programs/go/kiln/ci/testdata/g1_abba_precision_linux_amd64_test.go.tmpl
+          sparse-checkout-cone-mode: false
+          filter: blob:none
+
+      - name: Set up Go
+        uses: actions/setup-go@v7
+        with:
+          go-version: '1.26.1'
+          cache-dependency-path: 'candidate/code/**/go.sum'
+
+      - name: Freeze clean binaries, then run native A1-B1-B2-A2 cells
+        working-directory: candidate/code/programs/go/kiln
+        shell: bash
+        run: |
+          set -uo pipefail
+          output="$RUNNER_TEMP/kiln-g1-abba-candidate"
+          mkdir -p "$output"
+          integrity_failure=0
+          candidate_gate_failure=0
+
+          snapshot() {
+            local label="$1" cgroup_path
+            {
+              echo "snapshot=$label"
+              date -u +%Y-%m-%dT%H:%M:%SZ
+              cat /proc/self/cgroup
+              cgroup_path=$(awk -F: '$1 == "0" { print $3 }' /proc/self/cgroup)
+              echo "resolved_cgroup=/sys/fs/cgroup$cgroup_path"
+              echo "process_cgroup_cpu.max:"
+              cat "/sys/fs/cgroup$cgroup_path/cpu.max" 2>&1 || true
+              echo "process_cgroup_cpu.stat:"
+              cat "/sys/fs/cgroup$cgroup_path/cpu.stat" 2>&1 || true
+              echo "process_cgroup_cpu.pressure:"
+              cat "/sys/fs/cgroup$cgroup_path/cpu.pressure" 2>&1 || true
+              echo "root_cpu.max:"
+              cat /sys/fs/cgroup/cpu.max 2>&1 || true
+              echo "root_cpu.stat:"
+              cat /sys/fs/cgroup/cpu.stat 2>&1 || true
+              echo "root_cpu.pressure:"
+              cat /sys/fs/cgroup/cpu.pressure 2>&1 || true
+              echo "proc.pressure.cpu:"
+              cat /proc/pressure/cpu 2>&1 || true
+              awk '$1 == "cpu" { print "proc.stat.cpu_steal_ticks=" $9 }' /proc/stat
+            }
+          }
+
+          capture() {
+            local root="$1" label="$2" log="$3"
+            shift 3
+            snapshot "before-$label" > "$output/$label.resources.txt"
+            if (cd "$root/code/programs/go/kiln" && "$@") > "$log" 2>&1; then
+              printf 'exit_code=0\n' >> "$output/$label.resources.txt"
+            else
+              local status=$?
+              printf 'exit_code=%s\n' "$status" >> "$output/$label.resources.txt"
+            fi
+            snapshot "after-$label" >> "$output/$label.resources.txt"
+            cat "$log"
+            cat "$output/$label.resources.txt"
+          }
+
+          runtime_tree_paths=(
+            code/programs/go/kiln
+            code/programs/go/kiln/internal/trace
+            code/programs/go/kiln/internal/traced
+            code/grammars/strace
+            code/packages/go/lexer
+            code/packages/go/parser
+            code/packages/go/strace-lexer
+            code/packages/go/strace-parser
+          )
+          gate_test=code/programs/go/kiln/sandbox_tracesize_linux_amd64_test.go
+          measure_source=code/programs/go/kiln/internal/trace/measure.go
+          fixture_rel=code/programs/go/kiln/internal/trace/testdata/build.strace
+          fixture_sha=dc8acd0de1d9b235c3924d0d71e2fcd565274e09ded9975570f429b548525aae
+          slice_sha=6cd61f63fdec55ce37294ad061705394b1babda80e5368b17ecb5bd38e2207af
+          helper="$GITHUB_WORKSPACE/diagnostic/code/programs/go/kiln/ci/testdata/g1_abba_precision_linux_amd64_test.go.tmpl"
+          summary="$output/results.txt"
+
+          {
+            echo "workflow_sha=$GITHUB_SHA"
+            echo "baseline_sha=$BASELINE_SHA"
+            echo "candidate_sha=$CANDIDATE_SHA"
+            echo "runner_os=$RUNNER_OS runner_arch=$RUNNER_ARCH image_os=${ImageOS:-unknown} image_version=${ImageVersion:-unknown}"
+            echo "go=$(go version) gomaxprocs=${GOMAXPROCS:-default}"
+            uname -a
+            cat /etc/os-release
+            lscpu
+            echo "precision_helper_template_sha256=$(sha256sum "$helper" | cut -d' ' -f1)"
+            for checkout in baseline candidate; do
+              root="$GITHUB_WORKSPACE/$checkout"
+              echo "checkout=$checkout head=$(git -C "$root" rev-parse HEAD)"
+              for path in "${runtime_tree_paths[@]}"; do
+                echo "runtime_tree $checkout $path $(git -C "$root" rev-parse "HEAD:$path")"
+              done
+              echo "gate_test_blob $checkout $(git -C "$root" rev-parse "HEAD:$gate_test")"
+              echo "measure_source_blob $checkout $(git -C "$root" rev-parse "HEAD:$measure_source")"
+              echo "fixture_blob $checkout $(git -C "$root" rev-parse "HEAD:$fixture_rel")"
+              actual_fixture_sha=$(sha256sum "$root/$fixture_rel" | cut -d' ' -f1)
+              echo "fixture_sha256 $checkout $actual_fixture_sha"
+              if [[ "$actual_fixture_sha" != "$fixture_sha" ]]; then
+                echo "fixture changed in $checkout" >&2
+                exit 2
+              fi
+            done
+          } | tee "$output/identity.txt"
+
+          if [[ "$(git -C "$GITHUB_WORKSPACE/baseline" rev-parse HEAD)" != "$BASELINE_SHA" || \
+                "$(git -C "$GITHUB_WORKSPACE/candidate" rev-parse HEAD)" != "$CANDIDATE_SHA" ]]; then
+            echo "checkout identity mismatch" >&2
+            exit 2
+          fi
+          for tree in baseline candidate; do
+            root="$GITHUB_WORKSPACE/$tree"
+            gate_blob=$(git -C "$root" rev-parse "HEAD:$gate_test")
+            measure_blob=$(git -C "$root" rev-parse "HEAD:$measure_source")
+            if [[ "$gate_blob" != f834ff07849b8c1dd8b412d99e4e95e119176614 || \
+                  "$measure_blob" != c04b3a093c81262201ecb2f43d48f9a162312eff ]]; then
+              echo "gate or BestPass1 source drift in $tree" >&2
+              exit 2
+            fi
+          done
+          baseline_grammar_tree=$(git -C "$GITHUB_WORKSPACE/baseline" rev-parse HEAD:code/grammars/strace)
+          candidate_grammar_tree=$(git -C "$GITHUB_WORKSPACE/candidate" rev-parse HEAD:code/grammars/strace)
+          echo "strace_grammar_tree baseline=$baseline_grammar_tree candidate=$candidate_grammar_tree" | tee -a "$output/identity.txt"
+          if [[ "$baseline_grammar_tree" != "$candidate_grammar_tree" ]]; then
+            echo "strace grammar changed between A and B" >&2
+            exit 2
+          fi
+
+          # The baseline and candidate source trees differ only in this compiled
+          # production Go file. Test-only Go and diagnostics are separately
+          # recorded; neither enters the Kiln package's admission test binary.
+          for checkout in baseline candidate; do
+            root="$GITHUB_WORKSPACE/$checkout"
+            git -C "$root" ls-tree -r HEAD -- code/grammars code/packages/go code/programs/go/kiln |
+              awk '$2 == "blob" && $4 ~ /\.go$/ && $4 !~ /_test\.go$/ && $4 !~ /\/ci\// {print $3, $4}' |
+              sort > "$output/$checkout-production-go.txt"
+          done
+          if diff -U0 "$output/baseline-production-go.txt" "$output/candidate-production-go.txt" > "$output/production-go-delta.txt"; then
+            production_delta=none
+          else
+            production_delta=$(cat "$output/production-go-delta.txt")
+          fi
+          printf 'compiled_production_go_delta=%s\n' "$production_delta" | tee -a "$output/identity.txt"
+          if ! rg -q '^[-+].*code/packages/go/lexer/grammar_lexer_f10\.go$' "$output/production-go-delta.txt" || \
+             rg -v '^[+-].*code/packages/go/lexer/grammar_lexer_f10\.go$|^---|^\+\+\+|^@@|^$' "$output/production-go-delta.txt" >/dev/null; then
+            echo "unexpected compiled production Go delta" >&2
+            exit 2
+          fi
+
+          # Build and hash the exact clean official admission binaries before
+          # copying any *_test.go helper into either runtime checkout.
+          for checkout in baseline candidate; do
+            root="$GITHUB_WORKSPACE/$checkout"
+            if ! clean_status=$(git -C "$root" status --porcelain); then
+              echo "could not inspect $checkout tree before admission compile" >&2
+              exit 2
+            elif [[ -n "$clean_status" ]]; then
+              echo "$checkout tree is dirty before admission compile" >&2
+              exit 2
+            fi
+            if (cd "$root/code/programs/go/kiln" && go test -c -o "$output/admission-$checkout.test" .) \
+                > "$output/compile-$checkout.log" 2>&1; then
+              cat "$output/compile-$checkout.log"
+            else
+              compile_status=$?
+              cat "$output/compile-$checkout.log"
+              echo "admission compile failed for $checkout: $compile_status" >&2
+              exit "$compile_status"
+            fi
+            echo "admission_binary_sha256 $checkout $(sha256sum "$output/admission-$checkout.test" | cut -d' ' -f1)" | tee -a "$output/identity.txt"
+          done
+
+          # Add the same exact-slice measurement helper only after clean binaries
+          # are frozen. Its output is a separate precision probe, not G1's gate.
+          for checkout in baseline candidate; do
+            root="$GITHUB_WORKSPACE/$checkout"
+            cp "$helper" "$root/code/programs/go/kiln/g1_abba_precision_linux_amd64_test.go"
+            if (cd "$root/code/programs/go/kiln" && go test -c -o "$output/precision-$checkout.test" .) \
+                > "$output/precision-compile-$checkout.log" 2>&1; then
+              cat "$output/precision-compile-$checkout.log"
+            else
+              compile_status=$?
+              cat "$output/precision-compile-$checkout.log"
+              echo "precision helper compile failed for $checkout: $compile_status" >&2
+              exit "$compile_status"
+            fi
+            echo "precision_binary_sha256 $checkout $(sha256sum "$output/precision-$checkout.test" | cut -d' ' -f1)" | tee -a "$output/identity.txt"
+          done
+
+          for cell in A1 B1 B2 A2; do
+            if [[ "$cell" == A* ]]; then checkout=baseline; else checkout=candidate; fi
+            root="$GITHUB_WORKSPACE/$checkout"
+            admission_log="$output/$cell-admission.log"
+            detail_log="$output/$cell-precision.log"
+            echo "cell_start cell=$cell tree=$checkout sha=$(git -C "$root" rev-parse HEAD)" | tee -a "$summary"
+
+            capture "$root" "$cell-admission" "$admission_log" env KILN_G1_GATE=1 \
+              "$output/admission-$checkout.test" -test.timeout=60s -test.count=1 \
+              -test.run '^TestSandboxTraceGateSynthetic$' -test.v
+            gate_status=$(sed -n 's/^exit_code=//p' "$output/$cell-admission.resources.txt" | head -1)
+            echo "cell_status cell=$cell official_exit=$gate_status" | tee -a "$summary"
+            if ! grep -Eq '^=== RUN[[:space:]]+TestSandboxTraceGateSynthetic$' "$admission_log" || \
+               ! grep -Eq '^--- (PASS|FAIL): TestSandboxTraceGateSynthetic([[:space:]]|$)' "$admission_log" || \
+               ! grep -Eq 'PROBE: trace synthetic-4mib-census bytes=4195800 lines=58968 .*gated=0 repeats=7' "$admission_log" || \
+               ! grep -Eq 'PROBE: trace synthetic-slice bytes=66600 lines=936 best_mb_s=[0-9]+\.[0-9]+ gated=1 repeats=7' "$admission_log"; then
+              echo "official cell $cell lacks the required run/probe markers" | tee -a "$summary"
+              integrity_failure=1
+            fi
+            if [[ "$checkout" == candidate && "$gate_status" != 0 ]]; then
+              candidate_gate_failure=1
+            fi
+
+            capture "$root" "$cell-precision" "$detail_log" env KILN_G1_PROFILE_KIND=exact \
+              "$output/precision-$checkout.test" -test.timeout=30s -test.count=1 \
+              -test.run '^TestG1ABBAExactSliceTime$' -test.v
+            detail_status=$(sed -n 's/^exit_code=//p' "$output/$cell-precision.resources.txt" | head -1)
+            echo "precision_status cell=$cell exit=$detail_status" | tee -a "$summary"
+            if [[ "$detail_status" != 0 ]] || \
+               ! grep -Eq '^=== RUN[[:space:]]+TestG1ABBAExactSliceTime$' "$detail_log" || \
+               ! grep -Eq '^--- PASS: TestG1ABBAExactSliceTime([[:space:]]|$)' "$detail_log" || \
+               ! grep -Eq 'G1DETAIL: fixture_sha256=dc8acd0de1d9b235c3924d0d71e2fcd565274e09ded9975570f429b548525aae slice_sha256=6cd61f63fdec55ce37294ad061705394b1babda80e5368b17ecb5bd38e2207af bytes=66600 lines=936 best_ns=[1-9][0-9]* rate_bytes_per_second=[0-9]+\.[0-9]+ refusal=none helper_root=true gc=off_during_timing repeats_min=7' "$detail_log"; then
+              echo "precision cell $cell is missing valid exact-slice markers" | tee -a "$summary"
+              integrity_failure=1
+            fi
+            best_ns=$(sed -n 's/.*G1DETAIL: .* best_ns=\([0-9][0-9]*\) .*/\1/p' "$detail_log" | head -1)
+            echo "cell_precision_ns cell=$cell best_ns=${best_ns:-missing}" | tee -a "$summary"
+            if [[ -z "$best_ns" ]]; then integrity_failure=1; fi
+          done
+
+          python3 - "$output" <<'PY' | tee -a "$summary"
+          import re, sys
+          from pathlib import Path
+          root = Path(sys.argv[1])
+          values = {}
+          for cell in ("A1", "B1", "B2", "A2"):
+              text = (root / f"{cell}-precision.log").read_text()
+              found = re.search(r"G1DETAIL: .*? best_ns=(\d+)", text)
+              if found:
+                  values[cell] = int(found.group(1))
+          if len(values) == 4:
+              a = (values["A1"] + values["A2"]) / 2
+              b = (values["B1"] + values["B2"]) / 2
+              print(f"paired_mean_ns A={a:.1f} B={b:.1f} B_elapsed_change_pct={(b-a)/a*100:.4f}")
+          else:
+              missing = sorted({"A1", "B1", "B2", "A2"} - set(values))
+              print(f"paired_mean_ns unavailable missing={missing}")
+              sys.exit(1)
+          PY
+          precision_summary_status=$?
+          if [[ "$precision_summary_status" -ne 0 ]]; then integrity_failure=1; fi
+          echo "candidate_gate_failure=$candidate_gate_failure integrity_failure=$integrity_failure" | tee -a "$summary"
+          if [[ "$candidate_gate_failure" -ne 0 || "$integrity_failure" -ne 0 ]]; then
+            exit 1
+          fi
+
+      - name: Upload paired G1 cells and provenance
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: kiln-g1-abba-candidate-${{ matrix.os }}
+          path: ${{ runner.temp }}/kiln-g1-abba-candidate/
+          if-no-files-found: error
+          retention-days: 3

@@ -47,6 +47,38 @@ prove a microarchitectural cause. No timing result for the candidate is part
 of this receipt. A same-host A1/B1/B2/A2 comparison and the unchanged official
 admission gate are required before any performance claim or integration.
 
+## Candidate correctness checks
+
+The candidate's frozen-oracle differential test has a reproducible finite
+generator: `math/rand.NewSource(0x4731)`, 2,048 cases, 1–7 ordered rules,
+0–3 trigger names per rule, 0–4 actions per rule, token types
+`WORD/MARK/OPEN/CLOSE`, active modes empty/default/quote/comment, and values
+empty/`x`/quote/`other`. The stack starts at default and has at most three
+additional entries; all generated action targets and groups stay in the
+bounded `default/quote/comment` set. Each case checks mode stack and skip state
+against the frozen `oracleLexer.applyTransitions`.
+
+The native Go fuzz target accepts arbitrary `[]byte`, clamps input to 128
+bytes, and derives at most six rules, three token triggers and four actions
+per rule, from the same four token types, four modes, four values, and five
+actions (`push`, `set_mode`, `pop`, `enable_skip`, `disable_skip`). The stack
+has one or two entries. A bounded 10-second run passed 5,998,782 executions
+with 33 newly interesting inputs (37 corpus inputs total). This is native Go
+coverage-guided fuzzing; it is not a proof of all states. The package's
+established `go test ./... -v -cover` check passed at 96.8% statement coverage,
+and `go vet ./...` passed. The targeted negative mutation that inverted the
+mode guard failed both the named guard test and generated differential test.
+The Go package's 96.8% statement-coverage result is specific to this lexer
+module; it does not establish Python/TypeScript producer coverage or limits.
+
+The Go lexer manifest declares no external capabilities and describes the
+package as pure computation; its generated capability cage remains unchanged.
+The shared lexer spec documents behavior, but no Go-lexer-specific VER/Warrant
+contract or binding was found in the package or spec. No native-code proof,
+source proof, or SAT/SMT target is declared. Those obligations remain open for
+this touched package; they are not established implicitly by the filter
+package's AF-04b work, and test coverage/fuzzing make no substitute claim.
+
 The diagnostic workflow retained binaries, profile files, per-cell logs, and
 resource snapshots as workflow artifacts. They are evidence for this receipt,
 not permanent repository blobs.
