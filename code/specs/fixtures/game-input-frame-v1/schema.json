@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/fixtures/game-input-frame-v1/schema.json",
+  "title": "GAME input action frame v1 vectors",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "suite", "cases"],
+  "properties": {
+    "version": {"const": 1},
+    "suite": {"const": "game-input-frame-v1"},
+    "cases": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/case"}
+    }
+  },
+  "$defs": {
+    "u64": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)$",
+      "maxLength": 20
+    },
+    "axisValue": {"type": "integer", "minimum": -32768, "maximum": 32767},
+    "axes": {
+      "type": "array",
+      "minItems": 16,
+      "maxItems": 16,
+      "items": {"$ref": "#/$defs/axisValue"}
+    },
+    "state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["held_buttons", "axes"],
+      "properties": {
+        "held_buttons": {"$ref": "#/$defs/u64"},
+        "axes": {"$ref": "#/$defs/axes"}
+      }
+    },
+    "buttonChange": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "slot", "down"],
+      "properties": {
+        "kind": {"const": "button"},
+        "slot": {"type": "integer", "minimum": 0, "maximum": 255},
+        "down": {"type": "boolean"}
+      }
+    },
+    "axisChange": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "slot", "value"],
+      "properties": {
+        "kind": {"const": "axis"},
+        "slot": {"type": "integer", "minimum": 0, "maximum": 255},
+        "value": {"$ref": "#/$defs/axisValue"}
+      }
+    },
+    "change": {"oneOf": [{"$ref": "#/$defs/buttonChange"}, {"$ref": "#/$defs/axisChange"}]},
+    "frame": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["player_id", "tick", "held_buttons", "pressed_buttons", "released_buttons", "axes"],
+      "properties": {
+        "player_id": {"type": "integer", "minimum": 0, "maximum": 4294967295},
+        "tick": {"$ref": "#/$defs/u64"},
+        "held_buttons": {"$ref": "#/$defs/u64"},
+        "pressed_buttons": {"$ref": "#/$defs/u64"},
+        "released_buttons": {"$ref": "#/$defs/u64"},
+        "axes": {"$ref": "#/$defs/axes"}
+      }
+    },
+    "error": {
+      "oneOf": [
+        {"type": "object", "additionalProperties": false, "required": ["code"], "properties": {"code": {"const": "TooManyChanges"}}},
+        {"type": "object", "additionalProperties": false, "required": ["code", "axis_slot", "value"], "properties": {"code": {"const": "InvalidPreviousAxisValue"}, "axis_slot": {"type": "integer", "minimum": 0, "maximum": 15}, "value": {"$ref": "#/$defs/axisValue"}}},
+        {"type": "object", "additionalProperties": false, "required": ["code", "change_index", "action_id"], "properties": {"code": {"const": "InvalidButtonActionId"}, "change_index": {"type": "integer", "minimum": 0, "maximum": 255}, "action_id": {"type": "integer", "minimum": 64, "maximum": 255}}},
+        {"type": "object", "additionalProperties": false, "required": ["code", "change_index", "action_id"], "properties": {"code": {"const": "InvalidAxisActionId"}, "change_index": {"type": "integer", "minimum": 0, "maximum": 255}, "action_id": {"type": "integer", "minimum": 16, "maximum": 255}}},
+        {"type": "object", "additionalProperties": false, "required": ["code", "change_index", "axis_slot", "value"], "properties": {"code": {"const": "InvalidAxisValue"}, "change_index": {"type": "integer", "minimum": 0, "maximum": 255}, "axis_slot": {"type": "integer", "minimum": 0, "maximum": 15}, "value": {"$ref": "#/$defs/axisValue"}}}
+      ]
+    },
+    "case": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "input", "expected"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "input": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["player_id", "tick", "state", "changes"],
+          "properties": {
+            "player_id": {"type": "integer", "minimum": 0, "maximum": 4294967295},
+            "tick": {"$ref": "#/$defs/u64"},
+            "state": {"$ref": "#/$defs/state"},
+            "changes": {"type": "array", "items": {"$ref": "#/$defs/change"}}
+          }
+        },
+        "expected": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {"frame": {"$ref": "#/$defs/frame"}, "error": {"$ref": "#/$defs/error"}},
+          "oneOf": [{"required": ["frame"]}, {"required": ["error"]}]
+        }
+      }
+    }
+  }
+}
