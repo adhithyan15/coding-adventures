@@ -1,3 +1,4 @@
+# needs-toolchain: python
 # BUILD_linux is BUILD plus ONE change: the VER08b runtime-capability line runs with
 # RCG_STRICT=1.  The build tool picks BUILD_linux first on Linux, BUILD on macOS
 # (BUILD_mac / BUILD_mac_and_linux do not exist here) and BUILD_windows on Windows.
@@ -24,33 +25,33 @@ RCG_STRICT=1 cargo test -q -p lzw --test runtime_capability
 # operation that lists it, and the filter selects which operation's claim is attacked).
 cargo run -q -p coding_adventures_warrant_grammar --example gen_evidence -- --check lzw
 WARRANT_EVIDENCE_OUT=evidence/test-manifest.json cargo test -q -p lzw --test warrant_evidence
-# A negative control passes only if the sabotaged run printed a `not ok ` line AND no `Bail out!` anywhere (not anchored: a subject's
-# unterminated stdout write could put it mid-line).
-# A pipeline's status is its last command's, so the old `grep -q '^not ok '` passed a run where one
-# test failed as intended and a later one hung (observer timeout: `Bail out!`, exit 70) and the hang
-# went unreported.  The pipe also hides the binary's exit status, so this reads the TAP on stdout.
-WARRANT_EVIDENCE_FAULT=flip-result-bit WARRANT_EVIDENCE_FILTER=/exhaustive/compress_one_byte_matches_the_model cargo test -q -p lzw --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
-WARRANT_EVIDENCE_FAULT=drop-last-result-byte WARRANT_EVIDENCE_FILTER=/exhaustive/compress_one_byte_matches_the_model cargo test -q -p lzw --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
-WARRANT_EVIDENCE_FAULT=flip-result-bit WARRANT_EVIDENCE_FILTER=/exhaustive/compress_two_bytes_match_the_model cargo test -q -p lzw --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
-WARRANT_EVIDENCE_FAULT=drop-last-result-byte WARRANT_EVIDENCE_FILTER=/exhaustive/compress_two_bytes_match_the_model cargo test -q -p lzw --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
-WARRANT_EVIDENCE_FAULT=drop-last-result-byte WARRANT_EVIDENCE_FILTER=/exhaustive/compress_is_at_least_seven_bytes cargo test -q -p lzw --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
-WARRANT_EVIDENCE_FAULT=flip-result-bit WARRANT_EVIDENCE_FILTER=/exhaustive/round_trip cargo test -q -p lzw --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
-WARRANT_EVIDENCE_FAULT=drop-last-result-byte WARRANT_EVIDENCE_FILTER=/exhaustive/round_trip cargo test -q -p lzw --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
-WARRANT_EVIDENCE_FAULT=flip-result-bit WARRANT_EVIDENCE_FILTER=/exhaustive/round_trip_of_long_runs cargo test -q -p lzw --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
-WARRANT_EVIDENCE_FAULT=drop-last-result-byte WARRANT_EVIDENCE_FILTER=/exhaustive/round_trip_of_repeated_byte_pairs cargo test -q -p lzw --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
-WARRANT_EVIDENCE_FAULT=flip-result-bit WARRANT_EVIDENCE_FILTER=/exhaustive/declared_length_cuts_the_output cargo test -q -p lzw --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
-WARRANT_EVIDENCE_FAULT=drop-last-result-byte WARRANT_EVIDENCE_FILTER=/exhaustive/a_huge_declared_length_is_harmless cargo test -q -p lzw --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
-WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/decompress_empty_input_rejected cargo test -q -p lzw --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
-WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/decompress_one_byte_rejected cargo test -q -p lzw --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
-WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/decompress_header_only_rejected cargo test -q -p lzw --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
-WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/decompress_one_payload_byte_rejected cargo test -q -p lzw --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
-WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/decompress_two_byte_payload_model cargo test -q -p lzw --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
-WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/decompress_missing_clear_rejected cargo test -q -p lzw --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
-WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/decompress_invalid_first_code_rejected cargo test -q -p lzw --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
-WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/decompress_invalid_first_code_every_value cargo test -q -p lzw --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
-WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/decompress_two_bytes_rejected cargo test -q -p lzw --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
-WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/decompress_three_bytes_rejected cargo test -q -p lzw --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
-WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/decompress_zero_header_two_byte_payload_model cargo test -q -p lzw --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
+# Negative controls (WD-HARN1c): each line plants a fault (WARRANT_EVIDENCE_FAULT), aims the
+# generated test target at one cheap claim (WARRANT_EVIDENCE_FILTER) and hands the run to the
+# shared checker code/scripts/warrant_negctl.py, which passes only if the sabotaged suite exited
+# non-zero, printed exactly one TAP plan, reported a real `not ok`, did not `Bail out!` and numbered
+# its test points 1..N.  The rule lives in the script (and its tests), not in this file.
+WARRANT_EVIDENCE_FAULT=flip-result-bit WARRANT_EVIDENCE_FILTER=/exhaustive/compress_one_byte_matches_the_model python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p lzw --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=drop-last-result-byte WARRANT_EVIDENCE_FILTER=/exhaustive/compress_one_byte_matches_the_model python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p lzw --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=flip-result-bit WARRANT_EVIDENCE_FILTER=/exhaustive/compress_two_bytes_match_the_model python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p lzw --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=drop-last-result-byte WARRANT_EVIDENCE_FILTER=/exhaustive/compress_two_bytes_match_the_model python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p lzw --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=drop-last-result-byte WARRANT_EVIDENCE_FILTER=/exhaustive/compress_is_at_least_seven_bytes python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p lzw --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=flip-result-bit WARRANT_EVIDENCE_FILTER=/exhaustive/round_trip python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p lzw --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=drop-last-result-byte WARRANT_EVIDENCE_FILTER=/exhaustive/round_trip python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p lzw --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=flip-result-bit WARRANT_EVIDENCE_FILTER=/exhaustive/round_trip_of_long_runs python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p lzw --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=drop-last-result-byte WARRANT_EVIDENCE_FILTER=/exhaustive/round_trip_of_repeated_byte_pairs python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p lzw --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=flip-result-bit WARRANT_EVIDENCE_FILTER=/exhaustive/declared_length_cuts_the_output python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p lzw --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=drop-last-result-byte WARRANT_EVIDENCE_FILTER=/exhaustive/a_huge_declared_length_is_harmless python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p lzw --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/decompress_empty_input_rejected python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p lzw --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/decompress_one_byte_rejected python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p lzw --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/decompress_header_only_rejected python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p lzw --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/decompress_one_payload_byte_rejected python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p lzw --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/decompress_two_byte_payload_model python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p lzw --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/decompress_missing_clear_rejected python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p lzw --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/decompress_invalid_first_code_rejected python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p lzw --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/decompress_invalid_first_code_every_value python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p lzw --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/decompress_two_bytes_rejected python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p lzw --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/decompress_three_bytes_rejected python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p lzw --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/decompress_zero_header_two_byte_payload_model python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p lzw --test warrant_evidence
 # No operand is secret, so there is no constant-time obligation; the steps rows are
 # attempted on the real source, the front end refuses it (the `'a` of BitReader), and the
 # proof manifest records every steps-bound obligation `not-live` with the blocker.
