@@ -25,5 +25,10 @@ uv pip install -e ".[dev]" --quiet
 # lowering dump, the file the generator's slice S10b must reproduce byte for byte.
 .venv/bin/python tests/fixtures/fixed-forms-v1/make_fixed_forms.py --check
 .venv/bin/python -m coding_adventures_warrant_oracle dump-lowering --spec tests/fixtures/fixed-forms-v1/fixed_forms_v1.warrant --check tests/fixtures/fixed-forms-v1/fixed_forms_v1.oracle-lowering.json
+# CV2-S10t-1: the synthetic ir.tuple document and its committed dumps (lowering, evaluation, faults,
+# refusals), the files the generator's slice S10t-2 must reproduce byte for byte.  make_tuple_forms.py
+# --check regenerates all six files; dump-lowering checks the lowering dump through the CLI too.
+.venv/bin/python tests/fixtures/tuple-forms-v1/make_tuple_forms.py --check
+.venv/bin/python -m coding_adventures_warrant_oracle dump-lowering --spec tests/fixtures/tuple-forms-v1/tuple_forms_v1.warrant --check tests/fixtures/tuple-forms-v1/tuple_forms_v1.oracle-lowering.json
 .venv/bin/python ../../rust/warrant-corpus-gen/tests/fixtures/dump_oracle_lowering.py --check
 .venv/bin/python ../../rust/warrant-corpus-gen/tests/fixtures/dump_oracle_enumeration.py --check
