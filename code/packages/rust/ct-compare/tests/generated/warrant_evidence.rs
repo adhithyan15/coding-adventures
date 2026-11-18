@@ -526,6 +526,93 @@ fn shrink_vals(cand: Vec<V>, prop_raw: &dyn Fn(&Vec<V>) -> bool) -> (Vec<V>, usi
     (cur, steps)
 }
 
+// ----- refinement starvation (VOS-D079, VER04h section 4.1) ----------------
+//
+// A refinement is applied by rejection: a case is redrawn up to 100 times.  A
+// refinement that admits few draws (`t < 8` over a byte admits 8 of 256, about
+// 3 percent) loses all 100 draws of some case with probability 0.97^100 = 4.7
+// percent, so 4,096 cases never all succeed and the suite failed with
+// `property-exhausted` while the exhaustive suite (which enumerates the
+// admissible values) passed.
+//
+//   * A claim whose every binder is *exactly enumerable* (its draw support IS
+//     its exhaustive domain) is rescued: when the 100 draws of one case are all
+//     rejected, the case is drawn uniformly from the admissible set instead.
+//     The ordinary rejection draw is untouched, so every case that used to be
+//     drawn is drawn identically.
+//   * Any other claim cannot be rescued (sampling the enumeration would narrow
+//     what the suite covers), so a refinement below `1/ACCEPT_FLOOR_DEN`
+//     acceptance is refused on the first draw with a clear message.
+
+/// Draws measured by the acceptance probe.
+const ACCEPT_PROBE: u64 = 2048;
+/// The floor: fewer than one admitted draw in this many is refused.  At 1/32 the
+/// 100-retry loop already loses a case with probability 4 percent.
+const ACCEPT_FLOOR_DEN: u64 = 32;
+
+/// True when the values `fresh` can draw for `ty` are exactly `domain(ty)`.
+fn exact_support(ty: Ty) -> bool {
+    match ty {
+        Ty::Bool => true,
+        Ty::U8 | Ty::Nat => true,
+        _ => false,
+    }
+}
+
+/// Every admitted environment of the Cartesian product of the binder domains,
+/// in the exhaustive suite's order.  Callers check `within_budget` first.
+fn admissible_set(tys: &[Ty], admit: Admit) -> Vec<Vec<V>> {
+    let domains: Vec<Vec<V>> = tys.iter().map(|t| domain(*t)).collect();
+    let mut out = Vec::new();
+    if domains.iter().any(|d| d.is_empty()) {
+        return out;
+    }
+    let mut idx = vec![0usize; domains.len()];
+    loop {
+        let env: Vec<V> = idx.iter().zip(&domains).map(|(i, d)| d[*i].clone()).collect();
+        if admit(&env) {
+            out.push(env);
+        }
+        let mut pos = idx.len();
+        loop {
+            if pos == 0 {
+                return out;
+            }
+            pos -= 1;
+            idx[pos] += 1;
+            if idx[pos] < domains[pos].len() {
+                break;
+            }
+            idx[pos] = 0;
+        }
+    }
+}
+
+/// The acceptance floor, as a pure function of the counts (`Err` is the message).
+fn acceptance_verdict(admitted: u64, probe: u64) -> Result<(), String> {
+    if admitted * ACCEPT_FLOOR_DEN < probe {
+        return Err(format!(
+            "refinement acceptance {admitted}/{probe} is below the floor 1/{ACCEPT_FLOOR_DEN} \
+             on a domain that cannot be enumerated (widen the refinement or narrow the binder types)"
+        ));
+    }
+    Ok(())
+}
+
+/// Measure the acceptance of `ACCEPT_PROBE` draws from a stream derived from
+/// `seed` (so the case stream of the suite is untouched).
+fn acceptance_probe(seed: u64, tys: &[Ty], admit: Admit) -> Result<(), String> {
+    let mut rng = SplitMix64::new(seed ^ 0xACCE_97F1_0042_0001);
+    let mut admitted = 0u64;
+    for _ in 0..ACCEPT_PROBE {
+        let mode = rng.bounded(8) as u8;
+        if admit(&build(tys, &mut RngSrc(&mut rng), mode)) {
+            admitted += 1;
+        }
+    }
+    acceptance_verdict(admitted, ACCEPT_PROBE)
+}
+
 /// L2 property suite over relation-biased generators.
 pub fn property(tag: &str, tys: &[Ty], admit: Admit, holds: Holds, fault: Fault) -> (Verdict, Stats) {
     let seed = SplitMix64::new(EVIDENCE_SEED ^ fnv1a64(tag.as_bytes())).next_u64();
@@ -538,7 +625,13 @@ pub fn property(tag: &str, tys: &[Ty], admit: Admit, holds: Holds, fault: Fault)
     let cases = Cell::new(0u64);
     let discarded = Cell::new(0u64);
     let equal = Cell::new(0u64);
+    let rescue = tys.iter().all(|t| exact_support(*t)) && within_budget(tys);
+    let pool: std::cell::RefCell<Option<Vec<Vec<V>>>> = std::cell::RefCell::new(None);
+    let probed = Cell::new(false);
     let gen = |rng: &mut SplitMix64| -> Result<Vec<V>, String> {
+        if !rescue && !probed.replace(true) {
+            acceptance_probe(seed, tys, admit)?;
+        }
         for _ in 0..100 {
             let mode = rng.bounded(8) as u8;
             let env = build(tys, &mut RngSrc(rng), mode);
@@ -550,6 +643,18 @@ pub fn property(tag: &str, tys: &[Ty], admit: Admit, holds: Holds, fault: Fault)
                 return Ok(env);
             }
             discarded.set(discarded.get() + 1);
+        }
+        if rescue {
+            let mut slot = pool.borrow_mut();
+            let set = slot.get_or_insert_with(|| admissible_set(tys, admit));
+            if !set.is_empty() {
+                let env = set[rng.bounded(set.len() as u64) as usize].clone();
+                cases.set(cases.get() + 1);
+                if env.len() >= 2 && env[0] == env[1] {
+                    equal.set(equal.get() + 1);
+                }
+                return Ok(env);
+            }
         }
         Err(FID_EXHAUSTED.to_string())
     };

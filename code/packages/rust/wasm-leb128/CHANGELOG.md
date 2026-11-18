@@ -2,6 +2,10 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased — regenerated evidence harness (VOS-038b)
+
+- `tests/generated/warrant_evidence.rs` regenerated with `gen_evidence` for the refinement sampler (a low-acceptance refinement over an enumerable domain is drawn from its admissible set; VER04h 4.1) and the observer timeout clamp (`WARRANT_OBS_TIMEOUT_SECS` at most 24 h, `checked_add` deadline; VER04j). No test, case count or recorded evidence manifest changes.
+
 ## [Unreleased] — Warrant-derived evidence (LEB01, VER04h)
 
 No change to the public API. One behaviour fix (SEC-006, below): the bounded
