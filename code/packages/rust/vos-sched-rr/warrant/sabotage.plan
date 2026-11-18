@@ -1,0 +1,33 @@
+# The sabotage plan of vos-sched-rr (VOS04 5.6): `vos-link gen-build` turns each entry into one line 9 of BUILD and BUILD_windows.
+# `<tier>/<name> <fault> [attack=<op>]`: <name> is a claim (exhaustive) or an example of code/specs/vos-sched-rr.warrant, <fault> a fault
+# bound in evidence.bindings; `field-flip` needs attack=<op> (VER04j 4.8).  `vos-link check-component` requires that every bound
+# fault and every field-flip operation is attacked; whether the claim CATCHES it is the shared checker's, at build time.
+exhaustive/rep_alpha field-zero
+exhaustive/insert_rep_lo wrong-ctor
+exhaustive/insert_rep_lo field-zero
+exhaustive/insert_rep_hi wrong-ctor
+exhaustive/insert_rep_hi field-zero
+exhaustive/remove_rep_lo wrong-ctor
+exhaustive/remove_rep_lo field-zero
+exhaustive/remove_rep_hi wrong-ctor
+exhaustive/remove_rep_hi field-zero
+exhaustive/dispatch_rep wrong-ctor
+exhaustive/dispatch_rep field-zero
+exhaustive/insert_safe wrong-ctor
+exhaustive/insert_safe field-zero
+exhaustive/remove_safe wrong-ctor
+exhaustive/remove_safe field-zero
+exhaustive/dispatch_safe wrong-ctor
+exhaustive/dispatch_safe field-zero
+exhaustive/safety_alpha_build field-zero
+exhaustive/pointer_kept field-zero
+exhaustive/dispatch_det_out wrong-ctor
+exhaustive/dispatch_det_img field-zero
+example/n_is_eight field-zero
+example/insert_three_sets_bit_three field-zero
+example/dispatch_from_two_picks_three wrong-ctor
+example/dispatch_from_two_moves_pointer_to_four field-zero
+exhaustive/safety_init field-flip attack=init
+exhaustive/safety_init field-flip attack=alpha_w
+exhaustive/rep_init field-flip attack=alpha_w
+exhaustive/dispatch_rep_post field-flip attack=alpha_w

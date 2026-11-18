@@ -4,7 +4,7 @@ All notable changes to this package are documented here.
 
 ## Unreleased — the component check and the coverage gate (VOS-039a)
 
-- `vos.toml` declares `coverage-floor = 95`; BUILD gains the Linux `cargo tarpaulin ... --fail-under 95` line (VOS-D070) and, last, `vos-link check-component .` (BUILD and BUILD_windows), which checks the file set, the BUILD lines 1 to 6 and 9 with their guards, the build-tool row and the floor (VOS04 5.6). Nothing else about the crate changed. Measured line coverage of `src/lib.rs`: 100% (57 of 57 lines).
+- `BUILD` and `BUILD_windows` are now **generated** by `vos-link gen-build` (VOS04 5.6) from `vos.toml`, `evidence.bindings`, the document and the new `warrant/sabotage.plan`, and `vos-link check-component` requires them byte for byte (a text lint over BUILD was bypassable by single-line tricks). `vos.toml` declares `coverage-floor = 95`, enforced by a Linux `cargo tarpaulin ... --fail-under 95` line (VOS-D070). Every sabotage line now runs through the shared checker `code/scripts/warrant_negctl.py` (VOS-D099, closing VOS-D088); no claim or fault lost its line (`sabotage.plan` is the old lines, one entry each). Measured line coverage of `src/lib.rs`: 100%.
 
 ## Heap rows restored (VOS-038c)
 
