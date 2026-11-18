@@ -290,6 +290,12 @@ worktree; report and preserve it if those checks do not pass.
 - [ ] `GBL-055` Define portable asset identity, loading, and invalid-input behavior.
 - [ ] `GBL-056` Define tick-based animation and skinning contracts with deterministic interpolation/state.
 - [ ] `GBL-057` Define a renderer contract that separates deterministic simulation output from host rendering.
+- [ ] `GBL-062` Add a canonical package-inventory `--git-ref` mode using the existing classifier and
+  regular-blob path inventory. The default working-tree report must fail closed when sparse-checkout
+  paths are omitted, while preserving untracked overlays in ordinary non-sparse working mode. Define
+  symlink and gitlink handling and test committed-ref parity, untracked-only changes, collisions, and
+  unknown classifications. This P2 tooling follow-up does not block `GBL-010`: refresh the inventory
+  after `GBL-003a` merges using the existing classifier and tracked-path audit.
 - [ ] `GBL-058` Repair the conflict between the actual `P2D09`/`P2D10` specification filenames/scopes
   and GAME00 labels. Keep this as a separate documentation repair; do not mint or reuse colliding game
   identifiers to paper over it.
