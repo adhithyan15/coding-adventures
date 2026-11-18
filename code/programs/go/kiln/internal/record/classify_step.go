@@ -500,7 +500,9 @@ func parseStep(pre *Pre, action string, step int, sc StepSidecar, pkgDir string,
 	if !sc.Started {
 		return nil, "the step did not start"
 	}
-	tr, why := parseHelperTrace(StepFile(pre.Dir, action, step, "trace"), pre.Config.KilnExe, pkgDir,
+	// The line number is for a human reading prepare's refusal; a step's reason
+	// goes to the sidecar's parse_reasons, which must stay stable, so it is dropped.
+	tr, why, _ := parseHelperTrace(StepFile(pre.Dir, action, step, "trace"), pre.Config.KilnExe, pkgDir,
 		pre.Binding.SandboxConfigSHA256, sc.RootStatus, sc.Exit125, limits)
 	if why != "" {
 		return nil, why
@@ -524,14 +526,20 @@ func parseStep(pre *Pre, action string, step int, sc StepSidecar, pkgDir string,
 //
 // `step` calls it per step; the structure probes (probe_run.go) call it per
 // probe run, so both are held to exactly the same rules.
-func parseHelperTrace(path, kilnExe, cwd, wantSHA string, rootStatus int, exit125 bool, limits trace.Limits) (*trace.Trace, string) {
+//
+// The third result is the 1-based trace line the parser refused (0 when the
+// failure is not tied to a line).  It is DISPLAY ONLY, for a human reading
+// `prepare`'s refusal: the reason string is what feeds the sidecar's
+// parse_reasons and must stay stable, so the line is never folded into it.  A
+// line number carries no path text.
+func parseHelperTrace(path, kilnExe, cwd, wantSHA string, rootStatus int, exit125 bool, limits trace.Limits) (*trace.Trace, string, int) {
 	f, err := openNoFollow(path)
 	if err != nil {
-		return nil, "the trace cannot be opened"
+		return nil, "the trace cannot be opened", 0
 	}
 	defer f.Close()
 	if st, err := f.Stat(); err != nil || !st.Mode().IsRegular() {
-		return nil, "the trace is not a regular file"
+		return nil, "the trace is not a regular file", 0
 	}
 	tr, err := trace.ParseOptions(f, cwd, trace.Options{Limits: limits, HelperRoot: true, HelperExe: kilnExe})
 	if err != nil {
@@ -541,30 +549,39 @@ func parseHelperTrace(path, kilnExe, cwd, wantSHA string, rootStatus int, exit12
 		// before it made the init child and "helper-no-exec" when the init died
 		// before the step.
 		if exit125 && errors.As(err, &te) && (te.Reason == "helper-no-exec" || te.Reason == "helper-no-init") {
-			return nil, "sandbox-refused"
+			return nil, "sandbox-refused", 0
 		}
-		return nil, traced.Sanitize(err.Error())
+		return nil, traced.Sanitize(err.Error()), refusedLine(err)
 	}
 	if tr.StepEvent() == nil {
 		if exit125 {
-			return nil, "sandbox-refused"
+			return nil, "sandbox-refused", 0
 		}
-		return nil, "the step's own execve is not in the trace"
+		return nil, "the step's own execve is not in the trace", 0
 	}
 	if root := tr.Procs[tr.RootPid]; root == nil || root.Exit == nil || root.Exit.Killed || root.Exit.Code != rootStatus {
-		return nil, "the root's exit line is not the sidecar's root_status"
+		return nil, "the root's exit line is not the sidecar's root_status", 0
 	}
 	if got, ok := flagValue(tr.RootExecArgv, "--config-sha256"); !ok {
-		return nil, "the root's --config-sha256 cannot be read from the trace"
+		return nil, "the root's --config-sha256 cannot be read from the trace", 0
 	} else if got != wantSHA {
-		return nil, "the root ran with another --config-sha256 than the sealed configuration's"
+		return nil, "the root ran with another --config-sha256 than the sealed configuration's", 0
 	}
 	if got, ok := flagValue(tr.InitExecArgv, "--sha256"); !ok {
-		return nil, "the init's --sha256 cannot be read from the trace"
+		return nil, "the init's --sha256 cannot be read from the trace", 0
 	} else if got != wantSHA {
-		return nil, "the init read another configuration than the sealed one"
+		return nil, "the init read another configuration than the sealed one", 0
 	}
-	return tr, ""
+	return tr, "", 0
+}
+
+// refusedLine is the trace line a *trace.Error names, or 0.
+func refusedLine(err error) int {
+	var te *trace.Error
+	if errors.As(err, &te) && te.Line > 0 {
+		return te.Line
+	}
+	return 0
 }
 
 // flagValue finds `name` among the arguments before the first "--" and returns
