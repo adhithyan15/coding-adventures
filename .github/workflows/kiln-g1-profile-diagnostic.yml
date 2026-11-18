@@ -6,7 +6,7 @@ on:
       - codex/kiln-g1-profile-diagnostic
     paths:
       - .github/workflows/kiln-g1-profile-diagnostic.yml
-      - code/programs/go/kiln/g1_profile_diagnostic_linux_amd64_test.go
+      - code/programs/go/kiln/ci/fixtures/g1_profile_diagnostic_linux_amd64_test.go
 
 permissions:
   contents: read
@@ -31,7 +31,7 @@ jobs:
           fetch-depth: 1
           persist-credentials: false
           sparse-checkout: |
-            code/programs/go/kiln/g1_profile_diagnostic_linux_amd64_test.go
+            code/programs/go/kiln/ci/fixtures/g1_profile_diagnostic_linux_amd64_test.go
           sparse-checkout-cone-mode: false
           filter: blob:none
 
@@ -67,14 +67,24 @@ jobs:
 
           snapshot() {
             local label="$1"
+            local cgroup_path
             {
               echo "snapshot=$label"
               date -u +%Y-%m-%dT%H:%M:%SZ
-              echo "cpu.max:"
+              cat /proc/self/cgroup
+              cgroup_path=$(awk -F: '$1 == "0" { print $3 }' /proc/self/cgroup)
+              echo "resolved_cgroup=/sys/fs/cgroup$cgroup_path"
+              echo "cgroup_cpu.max:"
+              cat "/sys/fs/cgroup$cgroup_path/cpu.max" 2>&1 || true
+              echo "cgroup_cpu.stat:"
+              cat "/sys/fs/cgroup$cgroup_path/cpu.stat" 2>&1 || true
+              echo "cgroup_cpu.pressure:"
+              cat "/sys/fs/cgroup$cgroup_path/cpu.pressure" 2>&1 || true
+              echo "root_cpu.max:"
               cat /sys/fs/cgroup/cpu.max 2>&1 || true
-              echo "cpu.stat:"
+              echo "root_cpu.stat:"
               cat /sys/fs/cgroup/cpu.stat 2>&1 || true
-              echo "cpu.pressure:"
+              echo "root_cpu.pressure:"
               cat /sys/fs/cgroup/cpu.pressure 2>&1 || true
               echo "proc.pressure.cpu:"
               cat /proc/pressure/cpu 2>&1 || true
@@ -129,7 +139,7 @@ jobs:
             echo "measure_source_blob=$(git -C "$GITHUB_WORKSPACE/runtime" rev-parse "HEAD:$measure_source")"
             echo "fixture_blob=$(git -C "$GITHUB_WORKSPACE/runtime" rev-parse "HEAD:$fixture")"
             echo "fixture_sha256=$(sha256sum "$GITHUB_WORKSPACE/runtime/$fixture" | cut -d' ' -f1)"
-            echo "diagnostic_helper_sha256=$(sha256sum "$GITHUB_WORKSPACE/diagnostic/code/programs/go/kiln/g1_profile_diagnostic_linux_amd64_test.go" | cut -d' ' -f1)"
+            echo "diagnostic_helper_sha256=$(sha256sum "$GITHUB_WORKSPACE/diagnostic/code/programs/go/kiln/ci/fixtures/g1_profile_diagnostic_linux_amd64_test.go" | cut -d' ' -f1)"
           } | tee "$output/identity.txt"
 
           if [[ "$(git -C "$GITHUB_WORKSPACE/runtime" rev-parse HEAD)" != "$RUNTIME_SHA" ]]; then
@@ -153,16 +163,36 @@ jobs:
             exit 2
           fi
 
-          # Admission is compiled and run from the untouched pinned runtime tree,
-          # before adding the diagnostic _test.go helper.
-          if ! git -C "$GITHUB_WORKSPACE/runtime" status --porcelain | grep -q .; then
-            capture admission env KILN_G1_GATE=1 go test -count=1 -run '^TestSandboxTraceGateSynthetic$' -v .
-          else
+          # Freeze and hash a clean admission binary before adding the diagnostic
+          # _test.go helper. Its layout cannot include the profiling test.
+          if ! clean_status=$(git -C "$GITHUB_WORKSPACE/runtime" status --porcelain); then
+            echo "could not inspect clean runtime checkout status" >&2
+            exit 2
+          elif [[ -n "$clean_status" ]]; then
             echo "runtime checkout is dirty before clean admission" >&2
             exit 2
           fi
+          if go test -c -o "$output/admission.test" . > "$output/admission-compile.log" 2>&1; then
+            cat "$output/admission-compile.log"
+          else
+            compile_status=$?
+            cat "$output/admission-compile.log"
+            echo "clean admission binary compilation failed: $compile_status" >&2
+            exit "$compile_status"
+          fi
+          echo "admission_binary_sha256=$(sha256sum "$output/admission.test" | cut -d' ' -f1)" | tee -a "$output/identity.txt"
+          capture admission env KILN_G1_GATE=1 "$output/admission.test" \
+            -test.timeout=60s -test.count=1 -test.run '^TestSandboxTraceGateSynthetic$' -test.v
+          admission_log="$output/admission.log"
+          if ! grep -Eq '^=== RUN[[:space:]]+TestSandboxTraceGateSynthetic$' "$admission_log" || \
+             ! grep -Eq '^--- (PASS|FAIL): TestSandboxTraceGateSynthetic([[:space:]]|$)' "$admission_log" || \
+             ! grep -Eq 'PROBE: trace synthetic-4mib-census bytes=4195800 lines=58968 .*gated=0' "$admission_log" || \
+             ! grep -Eq 'PROBE: trace synthetic-slice bytes=66600 lines=936 best_mb_s=[0-9]+\.[0-9]+ gated=1 repeats=7' "$admission_log"; then
+            echo "clean admission log is missing required test/probe markers" | tee -a "$output/status.txt"
+            failures=1
+          fi
 
-          helper="$GITHUB_WORKSPACE/diagnostic/code/programs/go/kiln/g1_profile_diagnostic_linux_amd64_test.go"
+          helper="$GITHUB_WORKSPACE/diagnostic/code/programs/go/kiln/ci/fixtures/g1_profile_diagnostic_linux_amd64_test.go"
           cp "$helper" g1_profile_diagnostic_linux_amd64_test.go
           go test -c -o "$output/diagnostic.test" . > "$output/compile.log" 2>&1
           compile_status=$?
@@ -179,6 +209,10 @@ jobs:
             capture "cpu-$replicate" env KILN_G1_PROFILE_KIND=cpu "$output/diagnostic.test" \
               -test.timeout=30s -test.count=1 -test.run '^TestG1DiagnosticSyntheticSlice$' -test.v \
               -test.cpuprofile="$profile"
+            if ! grep -Fq 'G1PROFILE: kind=cpu fixture_sha256=dc8acd0de1d9b235c3924d0d71e2fcd565274e09ded9975570f429b548525aae slice_sha256=6cd61f63fdec55ce37294ad061705394b1babda80e5368b17ecb5bd38e2207af bytes=66600 lines=936 helper_root=true gc=off_during_timing calls=20 timed_passes_min=140 timed_passes_max=4000' "$output/cpu-$replicate.log"; then
+              echo "CPU profile replicate $replicate is missing the exact diagnostic receipt" | tee -a "$output/status.txt"
+              failures=1
+            fi
             if [[ -s "$profile" ]]; then
               go tool pprof -top -nodecount=40 "$output/diagnostic.test" "$profile" \
                 > "$output/cpu-$replicate-flat.txt" 2>&1 || failures=1
@@ -195,6 +229,10 @@ jobs:
           capture allocation env KILN_G1_PROFILE_KIND=alloc "$output/diagnostic.test" \
             -test.timeout=30s -test.count=1 -test.run '^TestG1DiagnosticSyntheticSlice$' \
             -test.v -test.memprofile="$alloc_profile" -test.memprofilerate=1
+          if ! grep -Fq 'G1PROFILE: kind=alloc fixture_sha256=dc8acd0de1d9b235c3924d0d71e2fcd565274e09ded9975570f429b548525aae slice_sha256=6cd61f63fdec55ce37294ad061705394b1babda80e5368b17ecb5bd38e2207af bytes=66600 lines=936 helper_root=true gc=off_during_timing calls=2 timed_passes_min=14 timed_passes_max=400' "$output/allocation.log"; then
+            echo "allocation profile is missing the exact diagnostic receipt" | tee -a "$output/status.txt"
+            failures=1
+          fi
           if [[ -s "$alloc_profile" ]]; then
             go tool pprof -sample_index=alloc_objects -top -nodecount=40 "$output/diagnostic.test" "$alloc_profile" \
               > "$output/alloc-objects.txt" 2>&1 || failures=1
