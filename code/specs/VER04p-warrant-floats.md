@@ -886,9 +886,10 @@ lane, width, argument or return boundary, and domain. Oracle input bits do not
 prove callee-entry bits; an inside-subject receipt does not prove the
 consumer-visible return. Each canonical receipt payload also identifies the
 source digest, build digest, run identity, case ID and ordinal, requested input
-bits, actual observed boundary input bits, and actual observed result bits (or
-an explicit absent-result marker for a pre-call failure). Its identity includes
-the export and exact argument slot or return boundary. The receipt digest
+bits, actual observed boundary input bits, and the actual typed result at the
+declared boundary (raw float bits for a float result, exact `Nat` for a class
+result, or an explicit absent-result marker for a pre-call failure). Its
+identity includes the export and exact argument slot or return boundary. The receipt digest
 covers that canonical payload and excludes the digest field itself. A receipt
 is usable only for that exact source/build/run/case/boundary tuple. Before
 accepting evidence, the checker must reject stale-source receipts, same-domain
@@ -1142,12 +1143,56 @@ This document does not itself edit `VER-BACKLOG.md` or VER30. The rows it needs:
 |---|---|
 | WX-FL0 | this specification (VER04p); written 2026-11-16; domain errata recorded in §20; the three role-specific dispositions below remain required before FL1-S0 |
 | WX-FL1 (S0 to S7) | the implementation slices of section 17; retain VER30 C11's global feature order (WX-O1, WX-M1, WX-P1, then WX-FL1) and the roadmap's scheduled prerequisites WX-G, WX-D2, WX-F, LP-012, WX-S1 and WX-T1. These are queue-level prerequisites, not a claim that every scalar operation needs every feature. The `trig` pilot alone waits for TRIG-CONV (FL1-S6); independent audio fix AF-01a is not a prerequisite. `fclass` and `f_to_int` claims remain `not-live` until the FL-17/FL-18 boundary and result-representation requirements are implemented per lane. **Not** on WX-I128. |
-| WX-FL-REVIEW | required review roles before FL1-S0: IEEE-754 numerics, polyglot lane, and security. Record each role's reviewer, evidence inspected, findings, and disposition. The first combined adversarial review remains historical evidence in §20; it is not retroactively treated as three role-specific sign-offs. |
+| WX-FL-REVIEW | required review roles before FL1-S0: IEEE-754 numerics, polyglot lane, and security. Record each role's reviewer, evidence inspected, findings, and disposition in the scoped review record below. The first combined adversarial review remains historical evidence in §20; it is not retroactively treated as three role-specific sign-offs. |
 | WX-FL2 | float to text and back (blocked on T1) |
 | LP-012 amendment | the case-count kind table gains the `f32_edge`/`f64_edge`/`f32_set`/`f64_set`/`f32_all` rows of 11.1 |
 | a VER30 change record | floats are no longer frozen; the order sentence of memo section 5 |
 | a VER13 assumption | A-FLOAT-ENV: "the lane's float probe is complete for the hazards the lane can have" (discharged per lane by the probe set of 9.1) |
 | a VER04i amendment request | the registry already reserves stream tags `62`/`63`; no new tag is requested here. The TFV `S`-hex encoding of floats, per-lane `float_env=`, `payloads=`, `nonfinite=` keys and probe files remain proposed amendments. The current checker has no float binding fields; Python/TypeScript exceptions are not normalized unless mapped to a declared `Result` error variant under VER04i 5. |
+
+### Scoped review record
+
+The following records describe the actual review of candidate
+`c69bbb0f135e4c8bbd01e4d8293c2c31ed5f5e0d`. They approve only the named
+FL0 errata scope, not FL1 implementation or native/source floating-point
+proof. The typed-result wording correction requested by the lane review is
+included in this revision; each role must acknowledge the revised candidate
+before FL1-S0.
+
+* **IEEE-754 numerics — `/root/luna_float_numerics`.** Evidence inspected:
+  `code/scripts/ver04p_domain_witnesses.py`, its five tests, VER04p §§3.2–3.4,
+  5.2–5.3, 8.2, 9, 11.1–11.1.1, 12 and 17–20, VER04i §2.6.1, and both
+  backlogs. It independently checked the `2^24+1`, `2^53+1`, binary64-to-
+  binary32 midpoint, non-representable binary64 midpoint, largest-finite F32
+  and F64, and subnormal one-tap rational witnesses. It confirmed sign/magnitude
+  128-bit capacity covers every F32 magnitude while signed i128 does not, and
+  identified the 1024-bit F64 exact-integer requirement. Disposition on c69:
+  the scoped errata and bounded diagnostic are mathematically sound; approval
+  is limited to those named checks. Native/compiler proof, live lane bindings,
+  exact wide-integer modeling, exhaustive/numerical claims, and SAT/DRAT proof
+  remain not-live. Acknowledgement of this revision is pending.
+* **Polyglot lane — `/root/luna_backlog`.** Evidence inspected: VER04i §2.6.1,
+  the current Rust Warrant checker/IR and binding sources, VER04p §§8.2, 9.1,
+  12, 17–20, and the audio backlog. Findings on c69: tags 62/63 are already
+  reserved; current checker/IR/bindings lack float types and float environment
+  fields; Python `struct` and TypeScript `Math.fround` are operation-boundary
+  emulation, not native F32 evidence; probes cannot establish the compiler's
+  treatment of a particular subject expression; and exceptions require a
+  declared `Result` mapping. It requested typed-result receipts because native
+  `fclass` returns `Nat`; this revision distinguishes raw float result bits from
+  exact typed `Nat` values. Disposition on c69: substantive lane limitations
+  are accurately represented; final acknowledgement of this correction is
+  pending. No native/source float proof is approved.
+* **Security — `/root/luna_float_security`.** Evidence inspected: receipt
+  identity and digest rules, stale-source/cross-case/tamper controls, bounded
+  diagnostic and its negative controls, CI-selection wiring, and build/test
+  command behavior. Disposition on c69: approved for the scoped AF-05a/WX-FL0
+  errata. It confirmed that the receipt digest excludes its own field and that
+  the diagnostic does not claim a general converter or native/source proof. It
+  also found Unix `BUILD` is not fail-fast; a repository build-tool result is
+  required as authoritative package evidence. Final acknowledgement of this
+  wording revision is pending. FL-17/18, FL-13, and the native/compiler evidence
+  remain explicit gates.
 
 ## 19. Open questions and decisions
 
@@ -1171,7 +1216,7 @@ FL-10, FL-14, FL-15 and FL-16 were resolved by the owner on 2026-11-16 and are d
 | FL-14 | Should `within_ulps` treat an infinity as one step past the largest finite (5.4), or hold only when both are the same infinity? | **Resolved 2026-11-16 (owner).** The strict rule. `within_ulps` at an infinity holds only when both arguments are the same infinity; a finite value against an infinity is never within any `k` (5.4). It matches `rel_err_le`. |
 | FL-15 | The `trig` ports do not share one algorithm (15.1). Converge them, or weaken the pilot? | **Resolved 2026-11-16 (owner).** Converge. The `trig` ports are converged on one reference algorithm as separate work (backlog row TRIG-CONV): a `trig` specification first, then every port updated in its own PR. The floats pilot waits for it (15.1, FL1-S6). It changes result bits in some ports; the owner has accepted that. |
 | FL-16 | Go fuses on arm64, ppc64, s390x and riscv64 with no flag to stop it, so P2 makes every Go float claim `not-live` there. Accept, or allow a subject written with explicit `float64(x*y)` conversions to opt in? | **Resolved 2026-11-16 (owner).** Accept. Go float evidence is amd64-only, and the report says so (12.2). No opt-in for explicit `float64(x*y)` conversions: it would make the probe depend on trusting the subject's source. |
-| FL-17 | Is signaling-NaN classification observable at a subject call boundary? | Model `fclass` remains exact on raw `U_w` bits (`sNaN=0`, `qNaN=1`). For a native classifier, compare the returned exact `Nat` with the original input class only after a reviewed receipt observes the actual bits at public callee entry. For `fclass(subject(...))`, observe the exact typed result at the declared public return boundary. Canonical receipts bind source/build digests, run identity, case ID and ordinal, requested input bits, actual observed boundary input and result bits (or an explicit absent-result marker), export/lane/width/domain, and exact argument or return boundary; digest the payload with the digest field excluded. Reject stale-source, cross-case same-domain reuse, and tampered payloads. Pre-admit only routes that preserve class. An unavailable or known-quieting route makes that exact-class claim/domain `not-live`; a qualified mismatch or missing/corrupt receipt fails closed. `payloads=lost` permits lower payload changes but not signaling/quiet class loss. Directed witnesses cover both signs and widths, equal-payload s/q pairs and lower-payload changes; controls quiet the sNaN at transport, return the wrong `Nat`, lose only lower payload, and reuse stale, cross-case, or tampered receipts. These are FL1 requirements; the current bounded diagnostic does not test native lanes. |
+| FL-17 | Is signaling-NaN classification observable at a subject call boundary? | Model `fclass` remains exact on raw `U_w` bits (`sNaN=0`, `qNaN=1`). For a native classifier, compare the returned exact `Nat` with the original input class only after a reviewed receipt observes the actual bits at public callee entry. For `fclass(subject(...))`, observe the subject's exact typed float result at the declared public return boundary before classification. Canonical receipts bind source/build digests, run identity, case ID and ordinal, requested input bits, actual observed boundary input bits, typed result (raw float bits for float-valued results, exact `Nat` for classifier results, or explicit absence), export/lane/width/domain, and exact argument or return boundary; digest the payload with the digest field excluded. Reject stale-source, cross-case same-domain reuse, and tampered payloads. Pre-admit only routes that preserve class. An unavailable or known-quieting route makes that exact-class claim/domain `not-live`; a qualified mismatch or missing/corrupt receipt fails closed. `payloads=lost` permits lower payload changes but not signaling/quiet class loss. Directed witnesses cover both signs and widths, equal-payload s/q pairs and lower-payload changes; controls quiet the sNaN at transport, return the wrong `Nat`, lose only lower payload, and reuse stale, cross-case, or tampered receipts. These are FL1 requirements; the current bounded diagnostic does not test native lanes. |
 | FL-18 | How does exact `f_to_int` represent and transport finite results beyond the current `Int` width? | The contract remains `Some(trunc(x))` for every finite F32/F64 and `None` only for NaN/±infinity; the input domain is not narrowed. A versioned model intermediate must support exact signed magnitudes through 128 bits for F32 and 1024 bits for F64, with an independently checked oracle and exact option/value equality. Internal comparison may emit `Bool`; a direct export returning `Option<Int>` needs a separately versioned typed interface/encoding. Current symmetric signed-128 value paths and wire rules do not establish this. Candidate reuse points to audit, not selected or verified backends: Rust `bignum-core`'s sign/magnitude `BigInteger`/`BigRational`; `numeric-tower`'s pinned `num-bigint` dependency; Python's native `int`; and TypeScript's native `bigint`. Before selection, check each source/version, width behavior, limits, and transport costs against this requirement. Until implemented, refuse unsupported suites and report `not-live`; reject, saturation or `None` is never a substitute. The bounded checker only pins exact values and does not implement the future evaluator. |
 
 ## 20. Specification change record
