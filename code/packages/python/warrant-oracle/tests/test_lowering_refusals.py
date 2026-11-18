@@ -193,8 +193,8 @@ def test_a_claim_that_calls_an_op_only_inside_a_branch_still_calls_one():
 def test_the_adopters_are_unchanged_by_the_two_rules():
     # the committed adopter documents lower without a refusal.  wasm-leb128 used to carry two
     # impure-guard claims (`len(op(v)) >= 1 and len(op(v)) <= 10`, 42 claims, 2 refused); VER04r
-    # [D28] split each into `len(op(v)) >= 1` and `len(op(v)) <= 10` (44 claims), so no committed
-    # adopter has one now.  The claims it lost are asserted accepted, by name, and the rule itself
+    # [D28] split each into `len(op(v)) >= 1` and `len(op(v)) <= 10` (44 claims): wasm-leb128 has
+    # none now; hash-functions still has six (VER04r R13(d), CV2-F5).  The claims it lost are asserted accepted, by name, and the rule itself
     # is still tested below with the old shape written as a synthetic claim.
     spec = lower_document(parse_source(adopter_bytes("wasm-leb128")))
     assert len(spec.suites) == 44
@@ -208,6 +208,11 @@ def test_the_adopters_are_unchanged_by_the_two_rules():
         assert order.index(names[0]) + 1 == order.index(names[1])
     for name in ("ct-compare", "gf256"):
         assert all(s.refusal is None for s in lower_document(parse_source(adopter_bytes(name))).suites)
+    hf = lower_document(parse_source(adopter_bytes("hash-functions")))
+    refused = [s for s in hf.suites if s.refusal is not None]
+    assert len(refused) == 6 and all(
+        s.refusal.code == "generation" and s.refusal.message.startswith("W0701") for s in refused
+    )
 
 
 def test_the_old_wasm_leb128_shape_is_recorded_not_fatal():

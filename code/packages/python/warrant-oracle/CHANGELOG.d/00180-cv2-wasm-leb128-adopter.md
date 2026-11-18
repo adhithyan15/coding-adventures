@@ -11,5 +11,6 @@
 - Test pins move with the split of VER04r [D28] (42 to 44 claims in `wasm-leb128.warrant`): `test_parser.py` (165
   declarations, 44 `ClaimDecl`), `test_lower.py` `CENSUS` (`ir.core` 44), and
   `test_lowering_refusals.py::test_the_adopters_are_unchanged_by_the_two_rules`, which now asserts that all 44
-  suites lower without a refusal and that the split claims are accepted, in order; the impure-guard rule keeps a test
-  of its own with the old wasm-leb128 shape written as a synthetic claim. The README census row follows.
+  suites lower without a refusal and that the split claims are accepted, in order (wasm-leb128 has no impure-guard
+  refusal now; hash-functions still has six `W0701` ones, which the same test asserts: VER04r R13(d), CV2-F5); the
+  impure-guard rule keeps a test of its own with the old wasm-leb128 shape written as a synthetic claim. The README census row follows.
