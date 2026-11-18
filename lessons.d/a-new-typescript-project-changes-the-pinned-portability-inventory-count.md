@@ -19,6 +19,12 @@ projects and from 308 to 309 shared-config projects. Its explicit `rootDir` and
 package's exact effect to the repository assertion comments and counts; do not
 remove the inventory assertion or weaken the portability checks.
 
+The shared-source boundary fixture also enumerates TypeScript packages that
+consume `tsconfig.base.json`. Add a new package there, recompute the boundary
+digest, and update its versioned conformance-case digests and Go digest assertion.
+Passing the package portability test alone does not update that separate build
+input contract.
+
 When adding a TypeScript package, run the repository portability contract as
 well as package-local tests. In a sparse worktree, audit missing tracked inputs
 from the exact Git head rather than interpreting the sparse filesystem as the
