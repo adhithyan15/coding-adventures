@@ -46,16 +46,15 @@
 //! in an explicit refusal arm for the same reason.  [`census`] reports, per item, the
 //! refusal that would block it, without failing the document.
 //!
-//! ## `ir.fixed` (slice S10b): lowered, typed, costed, never evaluated
+//! ## `ir.fixed` (slices S10b and S10c-2): lowered, typed, costed and evaluated
 //!
 //! The 35 built-ins of VER04r Appendix A.1 are **lowered** (one [`Ir::Fixed`] node per call,
 //! the operand types inferred as for `add`, a static type argument written as the canonical
-//! type name in position 1) and each lowered unit records its `requires` (R9: the sorted union
-//! of the levels of its tags and of its callees' own `requires`, `ir.core` always present).  A
-//! unit whose `requires` holds `ir.fixed` is **refused** by [`lower_document`] and by the census
-//! with the level `ir.fixed`, exactly as before S10b, so `generate` stays a fail-closed stub
-//! for such documents; [`Partial::into_lowered_with_fixed`] hands the IR to the parity dump
-//! (`tests/fixed_parity.rs`), which is what S10b has to reproduce byte for byte.
+//! type name in position 1, the width of the operation recorded in [`Ir::Fixed::at`]) and each
+//! lowered unit records its `requires` (R9: the sorted union of the levels of its tags and of its
+//! callees' own `requires`, `ir.core` always present).  Since S10c-2 the evaluator runs them, so a
+//! unit that needs `ir.fixed` is no longer refused: [`lower_document`] returns it and `generate`
+//! emits it.  A **v0** document still refuses the built-in names (they are version scoped).
 //!
 //! ## `ir.tuple` (slice S10t-2): tuples, `project` and `match` on a `Result`
 //!
@@ -409,23 +408,21 @@ impl Partial {
         }
     }
 
-    /// The first refusal, in the order: declarations, operations, models, claims,
-    /// examples.  An item that lowered but needs `ir.fixed` is refused with that level.
+    /// The first refusal, in the order: declarations, operations, models, claims, examples.
     pub fn first_block(&self) -> Option<GenError> {
-        self.blocks(true).into_iter().next()
+        self.blocks().into_iter().next()
     }
 
-    /// The refusals in the order of [`Partial::first_block`]; `fixed_blocks` says whether an
-    /// item that lowered but needs `ir.fixed` counts as one.
-    fn blocks(&self, fixed_blocks: bool) -> Vec<GenError> {
+    /// The refusals in the order of [`Partial::first_block`].
+    fn blocks(&self) -> Vec<GenError> {
         let mut out: Vec<GenError> = self.declarations.clone();
-        fn push<T: Leveled>(out: &mut Vec<GenError>, slots: &[(String, Slot<T>)], fixed: bool) {
-            out.extend(slots.iter().filter_map(|(n, s)| blocked(s, n, fixed)));
+        fn push<T>(out: &mut Vec<GenError>, slots: &[(String, Slot<T>)]) {
+            out.extend(slots.iter().filter_map(|(_, s)| s.as_ref().err().cloned()));
         }
-        push(&mut out, &self.ops, fixed_blocks);
-        push(&mut out, &self.models, fixed_blocks);
-        push(&mut out, &self.suites, fixed_blocks);
-        push(&mut out, &self.examples, fixed_blocks);
+        push(&mut out, &self.ops);
+        push(&mut out, &self.models);
+        push(&mut out, &self.suites);
+        push(&mut out, &self.examples);
         out
     }
 
@@ -447,53 +444,42 @@ impl Partial {
             })
         };
         for (n, s) in &self.ops {
-            push(ItemKind::Op, n, blocked(s, n, true));
+            push(ItemKind::Op, n, s.as_ref().err().cloned());
         }
         for (n, s) in &self.models {
-            push(ItemKind::Model, n, blocked(s, n, true));
+            push(ItemKind::Model, n, s.as_ref().err().cloned());
         }
         for (n, s) in &self.suites {
-            push(ItemKind::Claim, n, blocked(s, n, true));
+            push(ItemKind::Claim, n, s.as_ref().err().cloned());
         }
         for (n, s) in &self.examples {
-            push(ItemKind::Example, n, blocked(s, n, true));
+            push(ItemKind::Example, n, s.as_ref().err().cloned());
         }
         rows
     }
 
-    /// The models that lowered within `ir.core`, in declaration order (for the census's cost
-    /// check).  A model that needs `ir.fixed` is refused by the census and left out.
+    /// The models that lowered, in declaration order (for the census's cost check).
     pub fn lowered_models(&self) -> Vec<LoweredModel> {
         self.models
             .iter()
-            .filter_map(|(_, s)| s.as_ref().ok().filter(|m| !m.needs_fixed()).cloned())
+            .filter_map(|(_, s)| s.as_ref().ok().cloned())
             .collect()
     }
 
-    /// The claims that lowered within `ir.core`, in declaration order.
+    /// The claims that lowered, in declaration order.
     pub fn lowered_suites(&self) -> Vec<&LoweredSuite> {
         self.suites
             .iter()
-            .filter_map(|(_, s)| s.as_ref().ok().filter(|s| !s.needs_fixed()))
+            .filter_map(|(_, s)| s.as_ref().ok())
             .collect()
     }
 
-    /// The fully lowered document, or the first refusal (a unit that needs `ir.fixed` is one).
+    /// The fully lowered document, or the first refusal.
     pub fn into_lowered(self) -> Result<Lowered, GenError> {
         if let Some(block) = self.first_block() {
             return Err(block);
         }
         // `first_block` found nothing, so every slot is `Ok`.
-        Ok(self.into_lowered_unchecked())
-    }
-
-    /// The fully lowered document **including its `ir.fixed` units**, or the first refusal of
-    /// any other kind.  Nothing downstream may evaluate or emit what this returns: it exists
-    /// for the lowering parity dump of slice S10b ([`crate::view::oracle_view_v1`]).
-    pub fn into_lowered_with_fixed(self) -> Result<Lowered, GenError> {
-        if let Some(block) = self.blocks(false).into_iter().next() {
-            return Err(block);
-        }
         Ok(self.into_lowered_unchecked())
     }
 
@@ -507,37 +493,6 @@ impl Partial {
             suites: oks(self.suites),
             examples: oks(self.examples),
         }
-    }
-}
-
-/// An item with a computed `requires` (R9).
-trait Leveled {
-    fn levels(&self) -> &[&'static str];
-
-    /// Does the item use a built-in of `ir.fixed` (directly or through a callee)?
-    fn needs_fixed(&self) -> bool {
-        self.levels().contains(&"ir.fixed")
-    }
-}
-
-macro_rules! leveled {
-    ($($t:ty),*) => {$(impl Leveled for $t {
-        fn levels(&self) -> &[&'static str] { &self.requires }
-    })*};
-}
-leveled!(LoweredOp, LoweredModel, LoweredSuite, LoweredExample);
-
-/// The refusal that blocks one slot: its own, or (if `fixed`) `ir.fixed` for an item that
-/// lowered but needs that level.
-fn blocked<T: Leveled>(slot: &Slot<T>, name: &str, fixed: bool) -> Option<GenError> {
-    match slot {
-        Err(e) => Some(e.clone()),
-        Ok(t) if fixed && t.needs_fixed() => Some(GenError::level(
-            Beyond::IrFixed,
-            name,
-            "fixed-width built-ins need ir.fixed",
-        )),
-        Ok(_) => None,
     }
 }
 
@@ -583,19 +538,6 @@ pub fn lower_document_omitting(
     let mut lowerer = Lowerer::new(file);
     lowerer.omit_examples = omit.to_vec();
     lowerer.run()?.into_lowered()
-}
-
-/// [`lower_document`] that also accepts the `ir.fixed` units (S10b): the document lowered in
-/// full, `ir.fixed` included, for the parity dump.  Everything else is refused as before.  The
-/// result must never reach the evaluator or the emitter: its models and suites may hold
-/// [`Ir::Fixed`] nodes, which only the lowering and the cost walk understand.
-///
-/// # Errors
-///
-/// As [`lower_document`], except that a unit that needs `ir.fixed` is not one.
-#[doc(hidden)]
-pub fn lower_document_with_fixed(file: &WarrantFile<'_>) -> Result<Lowered, GenError> {
-    lower_partial(file)?.into_lowered_with_fixed()
 }
 
 /// Per-item census: what blocks each operation, model, claim and example (VER04r 16.2 and
@@ -2228,7 +2170,14 @@ impl<'f, 'a> Lowerer<'f, 'a> {
         let Some(args) = args.filter(|a| a.len() == ir::fixed_arity(tag)) else {
             return Err(self.type_err("wrong number of arguments"));
         };
-        let fx = |ty: Option<FixedTy>, ops: Vec<Ir>| Ir::Fixed { tag, ty, args: ops };
+        // `at` is the width a built-in without a static type works at: its first operand's type.
+        let fx_at = |ty: Option<FixedTy>, at: Option<FixedTy>, ops: Vec<Ir>| Ir::Fixed {
+            tag,
+            ty,
+            at,
+            args: ops,
+        };
+        let fx = |ty: Option<FixedTy>, ops: Vec<Ir>| fx_at(ty, None, ops);
         let opt = |t: Ty| Ty::Option(Box::new(t));
         // The operand shapes that recur.
         let fixed_operand = |t: &Ty| t.is_fixed();
@@ -2297,7 +2246,7 @@ impl<'f, 'a> Lowerer<'f, 'a> {
                     "be_bytes" | "le_bytes" => Ty::bytes_n(f.bytes()),
                     _ => Ty::Nat,
                 };
-                Ok((fx(None, vec![x_ir]), ret))
+                Ok((fx_at(None, Some(f), vec![x_ir]), ret))
             }
             "shl" | "shr" | "sar" | "rotl" | "rotr" | "bit" => {
                 let (x_ir, x_ty) = self.expr(&args[0], None)?;
@@ -2314,19 +2263,20 @@ impl<'f, 'a> Lowerer<'f, 'a> {
                     );
                 }
                 let ret = if tag == "bit" { Ty::Bool } else { x_ty };
-                Ok((fx(None, vec![x_ir, n_ir]), ret))
+                Ok((fx_at(None, Some(f), vec![x_ir, n_ir]), ret))
             }
             "bit_and" | "bit_or" | "bit_xor" | "checked_add" | "checked_sub" | "checked_mul" => {
                 let (a_ir, a_ty, b_ir, b_ty) = self.operand_pair(args)?;
                 if !fixed_operand(&a_ty) || a_ty != b_ty {
                     return Err(self.type_err("operands must be fixed-width values of one type"));
                 }
+                let at = a_ty.fixed();
                 let ret = if tag.starts_with("bit_") {
                     a_ty
                 } else {
                     opt(a_ty)
                 };
-                Ok((fx(None, vec![a_ir, b_ir]), ret))
+                Ok((fx_at(None, at, vec![a_ir, b_ir]), ret))
             }
             "div" | "rem" => {
                 let (a_ir, a_ty, b_ir, b_ty) = self.operand_pair(args)?;
@@ -2354,7 +2304,7 @@ impl<'f, 'a> Lowerer<'f, 'a> {
                     return Err(self
                         .type_err("div_trunc and rem_trunc take two signed operands of one type"));
                 }
-                Ok((fx(None, vec![a_ir, b_ir]), opt(a_ty)))
+                Ok((fx_at(None, a_ty.fixed(), vec![a_ir, b_ir]), opt(a_ty)))
             }
             "imin" | "imax" => {
                 let (a_ir, a_ty) = self.expr(&args[0], Some(&Ty::Int))?;
@@ -2807,12 +2757,12 @@ mod tests {
     const OP_V1: &str =
         "warrant u v1\n  op f(a: Bytes, b: Bytes) -> Bool\n  op g<N: Nat>(a: Bytes<N>) -> Bool\n";
 
-    /// As `unchecked`, but keeps the units that need `ir.fixed` (the parity dump's path).
+    /// As `unchecked` (kept as a name: `ir.fixed` units lower since S10c-2).
     fn unchecked_fixed(src: &str) -> Result<Lowered, GenError> {
         let doc = SourceDocument::admit(src.as_bytes(), SourceLimits::default()).unwrap();
         let layout = capture_layout(&doc, LayoutLimits::default()).unwrap();
         let file = parse_document(&layout, &doc, ParserLimits::default()).unwrap();
-        lower_partial_unchecked(&file)?.into_lowered_with_fixed()
+        lower_partial_unchecked(&file)?.into_lowered()
     }
 
     #[test]

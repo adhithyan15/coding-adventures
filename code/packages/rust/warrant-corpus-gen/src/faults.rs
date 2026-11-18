@@ -32,8 +32,8 @@
 //! `requires` names any other level is emitted **as data** and each of its candidate claims that
 //! has a stand-in is `deferred`, naming the **first level of the fault's `requires`, in sorted
 //! order, that the gate does not implement** (R12); no witness search runs.  This is true even for
-//! a fault whose expression this crate *can* evaluate (the `ir.tuple` ones): no suite or chunk
-//! digest depends on a deferred fault (VER04r 8.2).  The gate is a **library parameter** only
+//! a fault whose expression this crate *can* evaluate (every one, since S10c-2 evaluates the
+//! `ir.fixed` built-ins): no suite or chunk digest depends on a deferred fault (VER04r 8.2).  The gate is a **library parameter** only
 //! ([`crate::emit::generate_gated`]); there is no command-line or environment switch.
 //!
 //! ## The three claim states
@@ -56,6 +56,8 @@
 //! `expected`.  The witness is the **lowest** admitted case, and its chunk joins the slim set.
 
 use crate::error::{code, GenError};
+use coding_adventures_warrant_grammar::fixed::FixedTy;
+
 use crate::eval::{Program, Stats, Vars};
 use crate::ir::{Arith, Cmp, Ir, Pat};
 use crate::json::Json;
@@ -96,20 +98,21 @@ pub fn first_unimplemented(requires: &[Level], gate: &[Level]) -> Option<Level> 
     requires.iter().copied().find(|l| !gate.contains(l))
 }
 
-/// A fault expression: IR the generator can evaluate, or data it can only write down.
+/// A fault expression: IR the generator evaluates.  Since S10c-2 every level the templates use
+/// (`ir.core`, `ir.fixed`, `ir.tuple`) is evaluable, so there is no longer a "data only" form; whether
+/// a fault is *searched* is the gate's decision (see the module documentation), not the
+/// expression's.
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum Expr {
-    /// An `ir.core` tree.
+    /// A tree of `ir.core`, `ir.fixed` and `ir.tuple` nodes.
     Core(Ir),
-    /// A tree of a level this generator does not implement, as JSON.
-    Data(Json),
 }
 
 impl Expr {
     fn json(&self) -> Json {
         match self {
             Expr::Core(ir) => ir.to_json(),
-            Expr::Data(j) => j.clone(),
         }
     }
 }
@@ -222,13 +225,6 @@ fn nonempty(x: &str) -> Box<Ir> {
     Box::new(Ir::Cmp(Cmp::Gt, Box::new(Ir::Len(var(x))), nat(0)))
 }
 
-fn lit_data(ty: &str, value: &str) -> Json {
-    Json::arr([
-        Json::str("lit"),
-        Json::obj([("type", Json::str(ty)), ("value", Json::str(value))]),
-    ])
-}
-
 fn refuse(op: &LoweredOp, fault: &str, why: &str) -> GenError {
     GenError::new(
         code::FAULT,
@@ -245,10 +241,12 @@ fn u8_lit(v: i128) -> Ir {
     }
 }
 
-fn fixed_node(tag: &str, args: Vec<Ir>) -> Ir {
+/// An `ir.fixed` node of the templates: `at` is the width a built-in without a static type works at.
+fn fixed_node(tag: &str, at: Option<FixedTy>, args: Vec<Ir>) -> Ir {
     Ir::Fixed {
         tag: crate::ir::fixed_tag(tag).unwrap_or("bit_xor"),
         ty: None,
+        at,
         args,
     }
 }
@@ -308,12 +306,18 @@ fn flip_expr(src: &Ir) -> Ir {
         Box::new(Ir::Concat(
             Box::new(fixed_node(
                 "be_bytes",
+                Some(FixedTy::U8),
                 vec![fixed_node(
                     "bit_xor",
+                    Some(FixedTy::U8),
                     vec![
                         fixed_node(
                             "unwrap_or",
-                            vec![fixed_node("at", vec![src.clone(), *nat(0)]), u8_lit(0)],
+                            None,
+                            vec![
+                                fixed_node("at", None, vec![src.clone(), *nat(0)]),
+                                u8_lit(0),
+                            ],
                         ),
                         u8_lit(1),
                     ],
@@ -366,16 +370,9 @@ fn project(src: &Ir, index: usize) -> Ir {
     Ir::Project(Box::new(src.clone()), index)
 }
 
-/// An expression of the level its tree needs: evaluable `ir.core`/`ir.tuple` IR, or, when a
-/// built-in of `ir.fixed` is inside, the JSON of the tree as data.
+/// An expression of a template (`ir.core`, `ir.fixed` and `ir.tuple` nodes, all evaluable).
 fn expr_of(ir: Ir) -> Expr {
-    let mut fixed = false;
-    ir.walk(&mut |n| fixed |= matches!(n, Ir::Fixed { .. }));
-    if fixed {
-        Expr::Data(ir.to_json())
-    } else {
-        Expr::Core(ir)
-    }
+    Expr::Core(ir)
 }
 
 /// Instantiate the template `name` on `op`'s signature, for a document with no error types
@@ -531,11 +528,17 @@ pub fn instantiate_in(
                 return Err(refuse(op, name, "xor-lsb needs a fixed-width result"));
             };
             (
-                Kind::Post(Expr::Data(Json::arr([
-                    Json::str("bit_xor"),
-                    Json::arr([Json::str("var"), Json::str(RESULT)]),
-                    lit_data(t.name(), "1"),
-                ]))),
+                Kind::Post(Expr::Core(fixed_node(
+                    "bit_xor",
+                    Some(t),
+                    vec![
+                        Ir::Var(RESULT.to_string()),
+                        Ir::Int {
+                            ty: Ty::Fixed(t),
+                            value: 1,
+                        },
+                    ],
+                ))),
                 vec![Level::Fixed],
             )
         }
@@ -554,11 +557,17 @@ pub fn instantiate_in(
                 .map(|p| {
                     (
                         (*p).to_string(),
-                        Expr::Data(Json::arr([
-                            Json::str("bit_and"),
-                            Json::arr([Json::str("var"), Json::str(*p)]),
-                            lit_data("U64", "9223372036854775807"),
-                        ])),
+                        Expr::Core(fixed_node(
+                            "bit_and",
+                            Some(FixedTy::U64),
+                            vec![
+                                Ir::Var((*p).to_string()),
+                                Ir::Int {
+                                    ty: Ty::Fixed(FixedTy::U64),
+                                    value: 9_223_372_036_854_775_807,
+                                },
+                            ],
+                        )),
                     )
                 })
                 .collect();
@@ -567,13 +576,19 @@ pub fn instantiate_in(
         // `flip-result-bit` [D27, D35]: a fixed-width, `Bytes`/`Bytes<N>` or `Result` of those.
         "flip-result-bit" => match &op.ret {
             ret if ret.is_fixed() => {
-                let t = ret.name();
+                let t = ret.fixed();
                 (
-                    Kind::Post(Expr::Data(Json::arr([
-                        Json::str("bit_xor"),
-                        Json::arr([Json::str("var"), Json::str(RESULT)]),
-                        lit_data(&t, "1"),
-                    ]))),
+                    Kind::Post(Expr::Core(fixed_node(
+                        "bit_xor",
+                        t,
+                        vec![
+                            Ir::Var(RESULT.to_string()),
+                            Ir::Int {
+                                ty: ret.clone(),
+                                value: 1,
+                            },
+                        ],
+                    ))),
                     vec![Level::Fixed],
                 )
             }
@@ -591,6 +606,7 @@ pub fn instantiate_in(
                     Kind::Post(expr_of(ok_form(op, name, |src| {
                         fixed_node(
                             "bit_xor",
+                            t.fixed(),
                             vec![
                                 src,
                                 Ir::Int {
@@ -855,9 +871,7 @@ pub fn search(
                     let mut moved: Vec<(&str, Value)> = vars.to_vec();
                     let mut rewritten_to: Vec<(String, Value)> = Vec::new();
                     for (param, expr) in rewrites {
-                        let Expr::Core(ir) = expr else {
-                            return Err(at(GenError::internal("a data fault was searched")));
-                        };
+                        let Expr::Core(ir) = expr;
                         let nv = program.eval(ir, &env, &mut st).map_err(at)?;
                         let pos = probe
                             .op
@@ -880,9 +894,7 @@ pub fn search(
                     program.eval(expected, &moved, &mut st).map_err(at)?
                 }
                 Kind::Post(e) | Kind::Replace(e) => {
-                    let Expr::Core(ir) = e else {
-                        return Err(at(GenError::internal("a data fault was searched")));
-                    };
+                    let Expr::Core(ir) = e;
                     env.push((RESULT, want.clone()));
                     program.eval(ir, &env, &mut st).map_err(at)?
                 }

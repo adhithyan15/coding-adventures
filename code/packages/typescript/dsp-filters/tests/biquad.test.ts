@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { Biquad, sosfilt } from "../src/index.js";
+import { Biquad, InvalidCoefficientError, sosfilt } from "../src/index.js";
 
 describe("Biquad filters and SOS cascade", () => {
   it("processes DC through lowpass biquad with unit gain", () => {
@@ -56,6 +56,73 @@ describe("Biquad filters and SOS cascade", () => {
     const out = sosfilt([sec1, sec2], signal);
     assert.equal(out.length, 5);
     assert.ok(Math.abs(out[0] - 0.01) < 1e-12);
+  });
+
+  it("characterizes reciprocal overflow in legacy tiny-coefficient normalization", () => {
+    const minSubnormal = Number.MIN_VALUE;
+    assert.equal(minSubnormal / minSubnormal, 1.0);
+    const output = new Biquad(
+      minSubnormal,
+      0.0,
+      0.0,
+      minSubnormal,
+      0.0,
+      0.0,
+    ).process([1.0]);
+    assert.equal(output.length, 1);
+    assert.equal(output[0], Infinity);
+
+    const identity = new Biquad(1.0, 0.0, 0.0, 1.0, 0.0, 0.0);
+    assert.deepEqual(Array.from(identity.process([1.0])), [1.0]);
+  });
+
+  it("characterizes legacy output overflow and a hidden non-finite delay", () => {
+    const largeFinite = 2 ** 1023;
+    assert.equal(Number.isFinite(largeFinite), true);
+
+    const immediate = new Biquad(2.0, 0.0, 0.0, 1.0, 0.0, 0.0);
+    const immediateOutput = immediate.process([largeFinite]);
+    assert.equal(immediateOutput.length, 1);
+    assert.equal(immediateOutput[0], Infinity);
+
+    const delayed = new Biquad(0.0, 2.0, 0.0, 1.0, 0.0, 0.0);
+    assert.deepEqual(Array.from(delayed.process([largeFinite])), [0.0]);
+    assert.equal(delayed.process([0.0])[0], Infinity);
+    delayed.reset();
+    assert.deepEqual(Array.from(delayed.process([0.0])), [0.0]);
+  });
+
+  it("characterizes legacy failed-block prefix commit and reset replay", () => {
+    const delay = new Biquad(0.0, 0.0, 1.0, 1.0, 0.0, 0.0);
+    assert.deepEqual(Array.from(delay.process([1.0, 2.0])), [0.0, 0.0]);
+    assert.throws(
+      () => delay.process([3.0, Number.NaN, 4.0]),
+      InvalidCoefficientError,
+    );
+
+    // The valid prefix commits before NaN is rejected; the suffix is skipped.
+    assert.deepEqual(Array.from(delay.process([0.0, 0.0])), [2.0, 3.0]);
+    delay.reset();
+    assert.deepEqual(Array.from(delay.process([1.0, 2.0, 3.0])), [0.0, 0.0, 1.0]);
+  });
+
+  it("characterizes final-stage and intermediate SOS overflow", () => {
+    const largeFinite = 2 ** 1023;
+    const identity = [1.0, 0.0, 0.0, 1.0, 0.0, 0.0];
+    const gainTwo = [2.0, 0.0, 0.0, 1.0, 0.0, 0.0];
+
+    const finalOverflow = sosfilt([gainTwo], [largeFinite]);
+    assert.equal(finalOverflow.length, 1);
+    assert.equal(finalOverflow[0], Infinity);
+
+    const afterIdentity = sosfilt([identity, gainTwo], [largeFinite]);
+    assert.equal(afterIdentity.length, 1);
+    assert.equal(afterIdentity[0], Infinity);
+
+    assert.throws(
+      () => sosfilt([gainTwo, identity], [largeFinite]),
+      InvalidCoefficientError,
+    );
   });
 });
 

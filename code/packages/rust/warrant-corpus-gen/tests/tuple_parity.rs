@@ -36,8 +36,8 @@ use coding_adventures_warrant_corpus_gen::faults::Level;
 use coding_adventures_warrant_corpus_gen::json::Json;
 use coding_adventures_warrant_corpus_gen::lower::{lower_document, lower_document_omitting};
 use coding_adventures_warrant_corpus_gen::view::oracle_view_v1;
-use coding_adventures_warrant_corpus_gen::{generate, generate_gated, CorpusV2, GenInput};
 use support::minijson::{parse, J};
+use support::parity::*;
 use support::*;
 
 const DIR: &str = "../../../python/warrant-oracle/tests/fixtures/tuple-forms-v1";
@@ -59,6 +59,9 @@ const FAULTS: &str = include_str!(
 const REFUSALS: &str = include_str!(
     "../../../python/warrant-oracle/tests/fixtures/tuple-forms-v1/tuple_forms_v1.oracle-refusals.json"
 );
+
+/// The specification's path as written into `corpus.json`.
+const SPEC: &str = "tuple_forms_v1.warrant";
 
 /// The bound the oracle's `dump-lowering` costs under by default (`MAX_IR_COST`).
 const LIMIT: u64 = 2_000;
@@ -87,20 +90,6 @@ fn lowering_text(src: &str) -> String {
     })
 }
 
-/// The first line where two texts differ, with a little context, for a readable failure.
-fn first_difference(a: &str, b: &str) -> String {
-    for (i, (x, y)) in a.lines().zip(b.lines()).enumerate() {
-        if x != y {
-            return format!("line {}: rust `{x}` vs oracle `{y}`", i + 1);
-        }
-    }
-    format!(
-        "lengths differ: {} vs {} lines",
-        a.lines().count(),
-        b.lines().count()
-    )
-}
-
 #[test]
 fn the_tuple_forms_document_lowers_to_the_oracle_dump_byte_for_byte() {
     let text = lowering_text(WARRANT);
@@ -109,121 +98,11 @@ fn the_tuple_forms_document_lowers_to_the_oracle_dump_byte_for_byte() {
 
 // ---- the evaluation and fault dumps ----------------------------------------------------------
 
-fn generated(src: &str, profile: &str, gate: Option<&[Level]>) -> Result<CorpusV2, GenError> {
-    with_file(src, |f| {
-        let input = GenInput {
-            file: f,
-            spec_path: "tuple_forms_v1.warrant",
-            spec_bytes: src.as_bytes(),
-            profile_bytes: profile.as_bytes(),
-            binding_faults: None,
-        };
-        match gate {
-            None => generate(&input),
-            Some(g) => generate_gated(&input, g),
-        }
-    })
-}
-
-fn to_json(j: &J) -> Json {
-    match j {
-        J::B(b) => Json::Bool(*b),
-        J::N(n) => Json::Int(*n),
-        J::S(s) => Json::str(s.clone()),
-        J::A(items) => Json::Arr(items.iter().map(to_json).collect()),
-        J::O(pairs) => Json::Obj(pairs.iter().map(|(k, v)| (k.clone(), to_json(v))).collect()),
-        J::Null => panic!("a v2 corpus holds no null"),
-    }
-}
-
-/// The suite-row keys of the evaluation view (the oracle's `parity_dumps._SUITE_KEYS`).
-const SUITE_KEYS: [&str; 23] = [
-    "id",
-    "claim",
-    "kind",
-    "requires",
-    "binders",
-    "demoted",
-    "domain_label",
-    "stream",
-    "result_type",
-    "product",
-    "chunks",
-    "cases",
-    "discarded",
-    "expected_calls",
-    "wraps",
-    "ir_cost",
-    "slim_chunks",
-    "slim_inputs_sha256",
-    "slim_expected_sha256",
-    "inputs_sha256",
-    "expected_sha256",
-    "v1_inputs_sha256",
-    "v1_expected_sha256",
-];
-
-/// `warrant-evaluation-parity-v1`: what the generator evaluates (the oracle's
-/// `parity_dumps.evaluation_view`).
-fn evaluation_view(c: &CorpusV2) -> Json {
-    let corpus = parse(&c.corpus_json).expect("corpus.json parses");
-    let mut suites = Vec::new();
-    for row in corpus.get("suites").a() {
-        let claim = row.get("claim").s();
-        let mut view: Vec<(String, Json)> = SUITE_KEYS
-            .iter()
-            .filter(|k| row.has(k))
-            .map(|k| (k.to_string(), to_json(row.get(k))))
-            .collect();
-        let file = format!("{}.txt", claim.replace('/', "."));
-        let text = &c
-            .chunk_files
-            .iter()
-            .find(|(n, _)| *n == file)
-            .unwrap_or_else(|| panic!("no chunk file for {claim}"))
-            .1;
-        view.push((
-            "chunk_lines".into(),
-            Json::arr(text.lines().map(Json::str)),
-        ));
-        suites.push((claim.to_string(), Json::Obj(view)));
-    }
-    let ops = match corpus.get("ops") {
-        J::O(pairs) => Json::Obj(
-            pairs
-                .iter()
-                .map(|(n, row)| (n.clone(), to_json(row.get("requires"))))
-                .collect(),
-        ),
-        _ => panic!("ops is an object"),
-    };
-    let mut out = vec![
-        ("schema".to_string(), Json::str("warrant-evaluation-parity-v1")),
-        ("module".to_string(), to_json(corpus.get("module"))),
-        ("document".to_string(), to_json(corpus.get("document"))),
-        ("chunk_size".to_string(), to_json(corpus.get("chunk_size"))),
-        ("budget".to_string(), to_json(corpus.get("budget"))),
-        ("max_ir_cost".to_string(), to_json(corpus.get("max_ir_cost"))),
-        ("levels".to_string(), to_json(corpus.get("levels"))),
-        ("ops".to_string(), ops),
-        ("suites".to_string(), Json::Obj(suites)),
-        ("examples".to_string(), to_json(corpus.get("examples"))),
-        ("cases_tfv".to_string(), Json::str(c.cases_tfv.clone())),
-    ];
-    if corpus.has("omitted_examples") {
-        out.push((
-            "omitted_examples".to_string(),
-            to_json(corpus.get("omitted_examples")),
-        ));
-    }
-    Json::Obj(out)
-}
-
 /// `warrant-fault-parity-v1`: the fault rows and the controls under both gates (the oracle's
 /// `parity_dumps.faults_view`).
 fn faults_view(src: &str, profile: &str) -> Json {
-    let shipped = generated(src, profile, None).expect("generates (shipped gate)");
-    let on = generated(src, profile, Some(&GATE_ON)).expect("generates (ir.tuple evaluated)");
+    let shipped = generated(src, SPEC, profile, None).expect("generates (shipped gate)");
+    let on = generated(src, SPEC, profile, Some(&GATE_ON)).expect("generates (ir.tuple evaluated)");
     let s = parse(&shipped.corpus_json).expect("parses");
     let g = parse(&on.corpus_json).expect("parses");
     assert_eq!(
@@ -247,7 +126,7 @@ fn faults_view(src: &str, profile: &str) -> Json {
 }
 
 fn evaluation_text(src: &str, profile: &str) -> String {
-    evaluation_view(&generated(src, profile, None).expect("generates"))
+    evaluation_view(&generated(src, SPEC, profile, None).expect("generates"))
         .render()
         .expect("render")
 }
@@ -409,7 +288,7 @@ fn a_dropped_arm_of_the_scrutinee_value_changes_the_call_count() {
     );
     assert_ne!(mutated, WARRANT);
     // the claim now calls no operation: refused (W0701), never silently emitted
-    let e = generated(&mutated, PROFILE, None).expect_err("a claim must call an op");
+    let e = generated(&mutated, SPEC, PROFILE, None).expect_err("a claim must call an op");
     assert_eq!(e.code, code::W0701, "{e}");
 }
 
@@ -428,14 +307,14 @@ fn a_changed_profile_changes_the_fault_dump() {
 fn the_gate_changes_exactly_the_witnesses_of_the_gated_faults() {
     // not a vacuous second view: the shipped gate defers, the gate that evaluates ir.tuple finds
     // witnesses, and a fault that also needs ir.fixed stays deferred
-    let shipped = generated(WARRANT, PROFILE, None).unwrap();
-    let on = generated(WARRANT, PROFILE, Some(&GATE_ON)).unwrap();
+    let shipped = generated(WARRANT, SPEC, PROFILE, None).unwrap();
+    let on = generated(WARRANT, SPEC, PROFILE, Some(&GATE_ON)).unwrap();
     assert_ne!(shipped.corpus_json, on.corpus_json);
     assert!(shipped.corpus_json.contains(r#""deferred": "ir.tuple""#));
     assert!(!on.corpus_json.contains(r#""deferred": "ir.tuple""#));
     assert!(on.corpus_json.contains(r#""deferred": "ir.fixed""#));
     // the shipped gate is the default of `generate`
-    let again = generated(WARRANT, PROFILE, Some(&[Level::Core])).unwrap();
+    let again = generated(WARRANT, SPEC, PROFILE, Some(&[Level::Core])).unwrap();
     assert_eq!(shipped, again);
 }
 

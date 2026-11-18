@@ -139,8 +139,10 @@ pub struct SuiteResult {
     pub binder_types: Vec<String>,
     /// The descriptor tree of each binder (every node has `size`).
     pub descriptors: Vec<Json>,
-    /// The binders demoted to fit the budget.  Always empty in S3b: a demotion produces a
-    /// 16-bit `fx_edge`, which VER04r 16.2 item 5 refuses.
+    /// The leaves demoted to fit the budget, in the order applied: the binder's index as decimal
+    /// text, then `.k` for a tuple component, `.ok` for the payload of a `Result` (the oracle's
+    /// `demote` paths, VER04j 2.6).  Each is a 16-bit `fx_full` demoted to the 16-bit `fx_edge`
+    /// of [D25].
     pub demoted: Vec<String>,
     /// The weakest label of the binders (VER04r 9.3).
     pub label: Label,
@@ -283,6 +285,7 @@ pub struct SuitePlan<'a> {
     suite: &'a LoweredSuite,
     program: &'a Program<'a>,
     binders: Vec<BinderDomain>,
+    demoted: Vec<String>,
     product: u64,
     chunk_size: u64,
     chunks_total: u64,
@@ -331,7 +334,11 @@ impl<'a> SuitePlan<'a> {
                 "chunk_size is a power of two in 2^10..2^16",
             )));
         }
-        let SuiteDomains { binders, product } = domains;
+        let SuiteDomains {
+            binders,
+            product,
+            demoted,
+        } = domains;
         let sizes: Vec<u64> = binders.iter().map(|b| b.size).collect();
         let checked: Option<u64> = sizes.iter().try_fold(1u64, |a, n| a.checked_mul(*n));
         if checked != Some(product) {
@@ -395,6 +402,7 @@ impl<'a> SuitePlan<'a> {
             suite,
             program,
             binders,
+            demoted,
             product,
             chunk_size,
             chunks_total,
@@ -710,7 +718,7 @@ impl<'a> SuitePlan<'a> {
             binder_names: self.binders.iter().map(|b| b.name.clone()).collect(),
             binder_types: self.binders.iter().map(|b| b.ty.name()).collect(),
             descriptors: self.binders.iter().map(|b| b.descriptor.clone()).collect(),
-            demoted: Vec::new(),
+            demoted: self.demoted.clone(),
             label: suite_label(&self.binders),
             product: self.product,
             chunk_size: self.chunk_size,

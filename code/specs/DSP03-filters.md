@@ -105,19 +105,191 @@ biquads (low-pass, high-pass), step response, scipy cross-check.
 windowed-sinc.
 
 ```rust
-pub fn design_low_pass(cutoff_hz: f32, sample_rate: f32, num_taps: u32, window: WindowType)
-    -> Vec<f32>;
-pub fn design_high_pass(cutoff_hz: f32, sample_rate: f32, num_taps: u32, window: WindowType)
-    -> Vec<f32>;
-pub fn design_band_pass(low_hz: f32, high_hz: f32, sample_rate: f32, num_taps: u32, window: WindowType)
-    -> Vec<f32>;
-pub fn butterworth_lowpass(order: u32, cutoff_hz: f32, sample_rate: f32)
+pub fn design_low_pass(cutoff_norm: f32, num_taps: u32, window: WindowType)
+    -> Vec<f32>; // legacy panic-on-invalid API
+pub fn try_design_low_pass(cutoff_norm: f32, num_taps: u32, window: WindowType)
+    -> Result<Vec<f32>, FilterError>;
+pub fn design_high_pass(cutoff_norm: f32, num_taps: u32, window: WindowType)
+    -> Vec<f32>; // legacy panic-on-invalid API
+pub fn try_design_high_pass(cutoff_norm: f32, num_taps: u32, window: WindowType)
+    -> Result<Vec<f32>, FilterError>;
+pub fn design_band_pass(low_cutoff_norm: f32, high_cutoff_norm: f32, num_taps: u32, window: WindowType)
+    -> Vec<f32>; // legacy panic-on-invalid API
+pub fn try_design_band_pass(low_cutoff_norm: f32, high_cutoff_norm: f32, num_taps: u32, window: WindowType)
+    -> Result<Vec<f32>, FilterError>;
+pub fn butterworth_lowpass(order: u32, cutoff_norm: f32)
     -> (Vec<f32>, Vec<f32>);  // (b, a)
-pub fn chebyshev1_lowpass(order: u32, ripple_db: f32, cutoff_hz: f32, sample_rate: f32)
+pub fn chebyshev1_lowpass(order: u32, ripple_db: f32, cutoff_norm: f32)
     -> (Vec<f32>, Vec<f32>);
 
-pub enum WindowType { Rectangular, Hamming, Hann, Blackman, Kaiser(f32) }
+pub enum WindowType { Rectangular, Hamming, Hann, Blackman }
 ```
+
+The FIR designer contract is lane-specific. `cutoff_norm` is a
+cycles-per-sample frequency, with Nyquist at `0.5`; it is not a
+frequency in Hz and takes no sample-rate argument. Low-pass and
+high-pass accept finite cutoffs in the inclusive range `[0.0, 0.5]`.
+Band-pass accepts finite cutoffs satisfying
+`0.0 <= low_cutoff_norm < high_cutoff_norm <= 0.5`. Rust uses `f32`,
+and Python/TypeScript use their native numeric types; negative zero is
+accepted wherever the comparisons admit it.
+
+Rust and Python allow at most `2^20` taps (largest accepted odd count
+`1,048,575`); TypeScript allows at most `2^16` taps (largest accepted
+odd count `65,535`). All three require a positive odd tap count. The
+Rust `u32` parameter cannot represent a negative count. TypeScript
+validates integer tap counts at runtime. Python's contract is for callers
+supplying an integer as annotated: its implementation checks positivity,
+parity, and the cap but does not enforce the runtime type, so wrong-object
+behavior (including `bool` or floating-point values) is outside this
+contract.
+
+Rust window selection is the typed `WindowType` enum with Rectangular,
+Hamming, Hann, and Blackman. Python accepts that lane's enum or a
+trimmed, case-insensitive string with one of those four names. TypeScript
+accepts those four normalized names plus `hanning` as a Hann alias and
+`kaiser` (using the `dsp-fft` default beta of 5); unknown window errors
+are lane-specific. Python and TypeScript report invalid design inputs
+with their existing typed exceptions. The additive Rust `try_design_*`
+APIs report validation errors through the existing
+`FilterError::InvalidCoefficient(String)` variant; no new public error
+variant is introduced.
+
+Rust validates low/high taps (positive odd, then cap) before cutoff
+finiteness and range. Band-pass validates taps, then cap, cutoff
+finiteness, then ordering/range. High-pass delegates to low-pass
+validation. The legacy Rust `design_*` wrappers and new `try_design_*`
+functions share each operation's checked calculation path. The legacy
+wrappers preserve their observable panic payload type, message, check
+order, and valid-input coefficient bits. Validation precedes
+tap-proportional coefficient allocation; this is not a global
+no-allocation or no-OOM guarantee.
+
+The current low-pass normalizer uses `sum(h)` and divides only when its
+absolute value is positive. Band-pass normalizes by the absolute
+center-frequency response, `abs(sum_k h[k] * cos(2*pi*f0*x_k))`, where
+`f0=(low_cutoff_norm+high_cutoff_norm)/2` and
+`x_k=k-(num_taps-1)/2`; it likewise divides only when the gain is
+positive. This work preserves those zero/cancellation branches and
+non-finite normalization behavior. A shared cancellation/output policy
+is tracked separately in AF-01c. This contract does not promise finite
+outputs for every otherwise accepted input.
+
+### Minimal Python/TypeScript conformance fixture (AF-02)
+
+`code/specs/fixtures/biquad-sos-v1/cases.json` is a versioned shared fixture
+for exactly two existing public operations: stateful `Biquad.process` and
+one-shot `sosfilt`. It uses JSON numbers decoded as finite binary64 values,
+exact numeric equality for finite outputs (positive and negative zero compare
+equal), and exact output length. No epsilon or platform-dependent
+transcendental golden is involved. Fixture validation is test-harness behavior
+and does not change either package API.
+
+The input is a 16-sample unit impulse. The `biquad.process` record uses the
+single section `[0.5, 0.25, 0.5, 2, -2, 0.5]`; its impulse response is
+`h[0]=1/4` and `h[n]=(6n-3)/2^(n+2)` for `1 <= n < 16`. The `sosfilt`
+record uses that section followed by `[1, -1, 0, 1, 0, 0]`; its response is
+`g[0]=1/4`, `g[1]=1/8`, and `g[n]=(15-6n)/2^(n+2)` for `2 <= n < 16`.
+These values are exact dyadic rationals representable in binary64. The fixture
+README records the independent derivation and limits.
+
+The Biquad operation is checked on one whole input, chunk lengths `[3, 1,
+12]`, and 16 single-sample calls. One instance retains state within each run;
+equivalent fresh instances are used for comparisons. A separate reset check
+processes a nonempty prefix, resets, and compares replay with a fresh instance.
+The test domain includes every nonempty contiguous partition of the 16
+samples: `2^15 = 32,768` partitions and 524,288 output samples per lane. SOS
+is invoked as a one-shot operation with fresh state each time; it is not a
+streaming contract. Empty sections with nonempty input are identity, and empty
+input is rejected even when sections are empty.
+
+The fixture has exactly two required unique operation records. Python and
+TypeScript test loaders reject missing or duplicate operation IDs, extra or
+missing fields, malformed section/sample shapes, booleans or non-numeric and
+non-finite values, and wrong expected lengths. Negative controls alter one
+expected dyadic sample and must fail as an output-value mismatch. Shared
+fixture or loader changes select both package suites in CI. This narrow
+fixture does not establish Rust parity, general audio/math/units schemas,
+native floating-point proofs, or package-wide exhaustive assurance; those
+remain separate backlog work.
+
+For this version, the root has exactly `schema_version`, `input`,
+`comparison`, and `cases`; the version is integer `1` (not boolean), and the
+comparison string is exactly `finite_exact_numeric_equal_zero_sign_ignored`.
+The input must equal the 16-sample unit impulse. The only valid ID/operation
+pairs are `biquad.process.impulse16` / `biquad.process` and
+`sosfilt.impulse16.two_sections` / `sosfilt`. The first record has exactly
+one six-number section, 16 expected samples, and positive non-boolean integer
+`chunk_lengths` equal to `[3, 1, 12]`; the second has exactly two six-number
+sections and 16 expected samples. Every numeric slot must convert to a finite
+binary64 value; booleans are not numbers in this fixture contract. JSON
+objects with duplicate field names are rejected by the Python loader.
+
+### Biquad/SOS failure and state-commit characterization (AF-02a)
+
+AF-02a characterizes existing Python and TypeScript public exports without
+changing them. The current public constructors reject raw non-finite
+coefficients and zero `a0`, then normalize by multiplying each numerator and
+feedback coefficient by `1/a0`. `Biquad.process` and `process_sample` reject
+non-finite input samples but do not check whether normalized coefficients,
+outputs, or updated delays became non-finite. `process` mutates the instance
+one sample at a time, so a later bad sample can throw after earlier samples
+have changed state. `sosfilt` builds and processes each section in order; a
+non-finite final-stage output can be returned, while an intermediate
+non-finite value is rejected when the next section validates its input.
+These are named legacy observations, not promises that all finite input yields
+finite output or that a failed call rolls state back.
+
+The characterization uses the actual Python and TypeScript public exports
+with binary64 inputs. Tests assert exception classes, finite/non-finite
+categories, returned values where finite, and recovery behavior; they do not
+pin NaN payloads or error messages. Let `m=2^-1074` be the least positive
+binary64 subnormal (bits `0x0000000000000001`) and `H=2^1023` (bits
+`0x7fe0000000000000`). Both are finite and exactly representable.
+
+1. Construct `Biquad(m,0,0,m,0,0)` and process `[1]`. The legacy constructor
+   accepts raw finite coefficients, `1/m` overflows to infinity, and the
+   returned sample is non-finite. A finite control verifies direct
+   `m/m = 1` and a normalized identity section returns `[1]`.
+2. Construct `Biquad(2,0,0,1,0,0)` and process `[H]`. The output is
+   non-finite from finite-input multiplication overflow.
+3. Construct `Biquad(0,2,0,1,0,0)`. Processing `[H]` returns zero but leaves
+   a non-finite delay; processing `[0]` next returns a non-finite value.
+   Calling `reset()` before processing `[0]` returns zero.
+4. Construct the pure two-sample delay `Biquad(0,0,1,1,0,0)`. Process
+   `[1,2]` to warm it, then call `process([3,NaN,4])`. The public call raises
+   the lane's `InvalidCoefficientError` when it reaches NaN, after committing
+   the first sample and before processing the suffix. A subsequent `[0,0]`
+   returns `[2,3]`. Reset followed by replaying `[1,2,3]` returns `[0,0,1]`.
+5. For SOS, a gain-two section `[2,0,0,1,0,0]` as the final section returns
+   a non-finite output on `[H]`; identity then gain-two also returns a
+   non-finite output. Gain-two then identity rejects its non-finite
+   intermediate at the next section's input check.
+
+The five recipes are bounded legacy observations; they do not prove every
+finite binary64 case or establish a generalized IEEE-754 claim. Do not alter
+the AF-02 finite-binary64 fixture schema to accommodate these diagnostics.
+
+AF-02a sets an opt-in checked-API policy for later Rust primitives. Checked
+construction divides each of the five non-`a0` coefficients directly by
+finite, nonzero `a0`, then rejects any non-finite normalized coefficient.
+Checked processing accepts finite inputs, computes output and candidate delays
+in local state, and rejects if output or either candidate delay is
+non-finite. A failed sample or block leaves the instance at its entry state;
+a block's state commits only after the entire block succeeds. `reset()` sets
+all delays to zero. Checked SOS returns a complete finite output or an error
+and rejects a non-finite intermediate before feeding the next section. Finite
+signed zeros and subnormals are allowed except for zero `a0`; there is no pole
+stability screen. This opt-in contract does not alter legacy Python or
+TypeScript entry points. AF-02b tracks potential additive checked
+Python/TypeScript APIs. AF-03 implements this checked policy in Rust and must
+not claim general waveform, pole-stability, or floating-point parity beyond
+the explicitly tested cases.
+
+The Butterworth and Chebyshev signatures above are existing separate
+IIR helpers; their cutoff parameter is also normalized in the current
+implementation. AF-01b does not change their behavior or specify their
+full validation policy.
 
 **Phase 6**: matrix-ir-lowered FIR.
 
@@ -238,11 +410,11 @@ native floating-point or Warrant proof evidence.
 
 **Phase 5 (design helpers)**:
 
-- `design_low_pass(0.25, 1.0, 33, Hamming)` matches scipy's
+- `design_low_pass(0.25, 33, Hamming)` matches scipy's
   `firwin(33, 0.25, window='hamming')` to ULP.
-- `butterworth_lowpass(2, 0.1, 1.0)` matches scipy's
+- `butterworth_lowpass(2, 0.1)` matches scipy's
   `butter(2, 0.1)` coefficients.
-- The composed `iir(x, *butterworth_lowpass(4, 0.1, 1.0))`
+- The composed `iir(x, *butterworth_lowpass(2, 0.1))`
   matches scipy's full filter pipeline.
 
 **Phase 6 (matrix-ir FIR)**:
@@ -287,9 +459,10 @@ layers we control.
    to overlap-add for V1.
 2. **Cascade biquad vs direct higher-order IIR.**  Higher-order
    direct forms accumulate noise quickly.  Phase 4 ships direct
-   form for the API contract; Phase 5's design helpers will
-   factor higher-order filters into biquad cascades and stack
-   `iir(...)` calls.
+   form for the API contract. The current Phase 5 Butterworth and
+   Chebyshev-I helpers support orders 1 and 2; higher-order
+   factorization into biquad cascades and stacked `iir(...)` calls
+   remains future work.
 3. **Group delay compensation.**  FIR with linear phase has
    constant group delay = `(K - 1) / 2`.  The Phase 2 API
    returns the full convolution and lets the caller trim;

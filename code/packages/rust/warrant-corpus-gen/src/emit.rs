@@ -144,9 +144,11 @@ pub fn generate(input: &GenInput<'_>) -> Result<CorpusV2, GenError> {
 ///
 /// The shipped gate is `ir.core` only until the atomic flip (S10c, [D29]).  This function is the
 /// **library parameter** the committed fault dump of S10t-1 is reproduced through
-/// (`tests/tuple_parity.rs` passes `ir.core` and `ir.tuple`); no command-line or environment
-/// switch reaches it.  `ir.fixed` in the gate would be refused by the evaluator, which does not run
-/// the built-ins yet.
+/// (`tests/tuple_parity.rs` passes `ir.core` and `ir.tuple`, `tests/fixed_eval_parity.rs` all three
+/// levels: the oracle's `GATE_OPEN`); no command-line or environment switch reaches it.  Since S10c-2
+/// the evaluator runs the 35 `ir.fixed` built-ins, so a gate that holds `ir.fixed` searches the
+/// `xor-lsb`, `ignore-high-bit` and `flip-result-bit` faults and finds the witnesses the oracle's
+/// committed dump records.
 ///
 /// # Errors
 ///

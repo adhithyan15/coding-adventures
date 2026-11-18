@@ -108,3 +108,76 @@ def test_sos_empty_cascade_is_identity() -> None:
 def test_sos_invalid_section_length() -> None:
     with pytest.raises(InvalidCoefficientError, match="must have 6 coefficients"):
         sos_cascade([1.0, 2.0], [[1.0, 2.0, 3.0]])
+
+
+def test_legacy_biquad_tiny_reciprocal_normalization_is_nonfinite() -> None:
+    min_subnormal = float.fromhex("0x0.0000000000001p-1022")
+    assert min_subnormal.hex() == "0x0.0000000000001p-1022"
+    assert math.isfinite(min_subnormal)
+
+    # The raw coefficients are finite. The legacy reciprocal normalization
+    # overflows even though direct division of these equal values is exact.
+    assert min_subnormal / min_subnormal == 1.0
+    output = Biquad(min_subnormal, 0.0, 0.0, min_subnormal, 0.0, 0.0).process(
+        [1.0]
+    )
+    assert len(output) == 1
+    assert math.isinf(output[0])
+    assert output[0] > 0.0
+
+    identity = Biquad(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)
+    assert identity.process([1.0]) == [1.0]
+
+
+def test_legacy_biquad_output_and_hidden_delay_overflow() -> None:
+    large_finite = float.fromhex("0x1.0000000000000p+1023")
+    assert large_finite.hex() == "0x1.0000000000000p+1023"
+    assert math.isfinite(large_finite)
+
+    immediate = Biquad(2.0, 0.0, 0.0, 1.0, 0.0, 0.0)
+    immediate_output = immediate.process([large_finite])
+    assert len(immediate_output) == 1
+    assert math.isinf(immediate_output[0])
+    assert immediate_output[0] > 0.0
+
+    delayed = Biquad(0.0, 2.0, 0.0, 1.0, 0.0, 0.0)
+    assert delayed.process([large_finite]) == [0.0]
+    delayed_output = delayed.process([0.0])
+    assert math.isinf(delayed_output[0])
+    assert delayed_output[0] > 0.0
+    delayed.reset()
+    assert delayed.process([0.0]) == [0.0]
+
+
+def test_legacy_biquad_failed_block_commits_prefix_and_reset_replays() -> None:
+    delay = Biquad(0.0, 0.0, 1.0, 1.0, 0.0, 0.0)
+    assert delay.process([1.0, 2.0]) == [0.0, 0.0]
+
+    with pytest.raises(InvalidCoefficientError):
+        delay.process([3.0, math.nan, 4.0])
+
+    # The valid prefix commits before NaN is rejected, and the suffix is not
+    # processed. This is an observation of the current legacy API.
+    assert delay.process([0.0, 0.0]) == [2.0, 3.0]
+
+    delay.reset()
+    assert delay.process([1.0, 2.0, 3.0]) == [0.0, 0.0, 1.0]
+
+
+def test_legacy_sos_final_and_intermediate_overflow_are_distinct() -> None:
+    large_finite = float.fromhex("0x1.0000000000000p+1023")
+    identity = [1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
+    gain_two = [2.0, 0.0, 0.0, 1.0, 0.0, 0.0]
+
+    final_overflow = sosfilt([gain_two], [large_finite])
+    assert len(final_overflow) == 1
+    assert math.isinf(final_overflow[0])
+    assert final_overflow[0] > 0.0
+
+    after_identity = sosfilt([identity, gain_two], [large_finite])
+    assert len(after_identity) == 1
+    assert math.isinf(after_identity[0])
+    assert after_identity[0] > 0.0
+
+    with pytest.raises(InvalidCoefficientError):
+        sosfilt([gain_two, identity], [large_finite])

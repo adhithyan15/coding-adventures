@@ -574,6 +574,29 @@ fn a_nat_that_flows_into_a_shift_count_gets_the_count_domain() {
 }
 
 #[test]
+fn a_parenthesised_shift_count_selects_the_count_domain_and_an_expression_does_not() {
+    // VER04r 5.1, 16.10 R10 (CV2-S10c-2): parentheses do not matter, an expression of the binder
+    // does not select.
+    let src = "warrant paren v1\n  op f(a: U8, n: Nat) -> U8\n  \
+               claim grouped:\n    forall a: U8, n: Nat. f(a, n) == shl(a, (n))\n  \
+               claim doubly:\n    forall a: U8, n: Nat. f(a, n) == shl(a, ((n)))\n  \
+               claim expression:\n    forall a: U8, n: Nat. f(a, n) == shl(a, (n + 1))\n";
+    with_file(src, |file| {
+        let env = DomainEnv::new(file);
+        let want = [
+            ("grouped", Domain::NatCount),
+            ("doubly", Domain::NatCount),
+            ("expression", Domain::Nat),
+        ];
+        for (name, count) in want {
+            let (binders, body) = claim(file, name);
+            let r = resolve_binders(&env, binders, Some(body), EXHAUSTIVE_BUDGET, name, (0, 0)).unwrap();
+            assert_eq!(r.domains, [Domain::Fx(FixedTy::U8), count], "{name}");
+        }
+    });
+}
+
+#[test]
 fn composite_binders_resolve_through_aliases_records_and_variants() {
     with_file(WXA, |file| {
         let env = DomainEnv::new(file);

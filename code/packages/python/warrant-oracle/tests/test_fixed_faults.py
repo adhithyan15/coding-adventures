@@ -277,7 +277,7 @@ FIXED_FAULTS = [
 
 def test_the_shipped_gate_is_ir_core_only_and_defers_every_ir_fixed_fault():
     assert IMPLEMENTED == ("ir.core",)
-    shipped = controls(IMPLEMENTED, FIXED_FAULTS)
+    shipped = controls(("ir.core",), FIXED_FAULTS)
     for key, control in shipped.items():
         level = next((lv for lv in control["requires"] if lv != "ir.core"), None)
         assert control["blind_claims"] == []
@@ -291,7 +291,7 @@ def test_the_shipped_gate_is_ir_core_only_and_defers_every_ir_fixed_fault():
 
 
 def test_the_open_gate_runs_the_witness_search_and_every_fault_is_seen():
-    shipped = controls(IMPLEMENTED, FIXED_FAULTS)
+    shipped = controls(("ir.core",), FIXED_FAULTS)
     opened = controls(GATE_OPEN, FIXED_FAULTS)
     assert set(shipped) == set(opened)
     for key, control in opened.items():
@@ -336,7 +336,7 @@ def test_the_ct_compare_eq_u64_witness_is_a_equals_zero_b_equals_two_to_the_63()
     """VER04r 13: the S10c witness of ``eq_u64/ignore-high-bit`` is chunk 0, ``a = 0``, ``b = 2**63``."""
     source = adopter_bytes("ct-compare")
     profile = (SPECS / "fixtures" / "ct-compare-warrant-v2" / "corpus.profile").read_bytes()
-    shipped = derive(source, profile, spec_ref="ct-compare.warrant", generator=GEN)
+    shipped = derive(source, profile, spec_ref="ct-compare.warrant", generator=GEN, implemented=("ir.core",))
     opened = derive(source, profile, spec_ref="ct-compare.warrant", generator=GEN, implemented=GATE_OPEN)
     cid = "warrant/ct_compare/negctl/exhaustive/eq_u64/ignore-high-bit"
     claim = "warrant/ct_compare/exhaustive/eq_u64_agrees"
@@ -413,7 +413,8 @@ def test_a_fault_no_case_can_see_is_blind_under_the_open_gate_and_needs_accept_b
     (control,) = out.corpus["controls"]
     assert control["required_claims"] == [] and control["blind_claims"] == ["warrant/f/exhaustive/c"]
     # under the shipped gate the same claim is not searched: the stand-in exists, so it is deferred
-    out = derive(doc.encode(), b"fault f ignore-high-bit\n", spec_ref="f.warrant", generator=GEN)
+    out = derive(doc.encode(), b"fault f ignore-high-bit\n", spec_ref="f.warrant", generator=GEN,
+                 implemented=("ir.core",))
     assert out.corpus["controls"][0]["slim_witness"] == [
         {"claim": "warrant/f/exhaustive/c", "deferred": "ir.fixed"}
     ]

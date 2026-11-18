@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### Added
+- Added checked public FIR design entry points for low-pass, high-pass, and band-pass using the existing `FilterError::InvalidCoefficient` variant; legacy wrappers retain their panic behavior and valid coefficient bits.
+
 ### Corrected
 - Removed the false FIR round-trip claim and single-input FIR, FFT-FIR, and IIR work/heap rows contradicted by source loops or output allocation; retained unrefuted output, depth, and design obligations.
 - Removed shared byte-length caps and design `no_panic` claims until the Warrant model has lane-specific sample framing and typed error behavior. These declarations are not executable evidence.

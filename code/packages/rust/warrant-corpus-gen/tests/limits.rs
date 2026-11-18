@@ -53,7 +53,7 @@ fn kind_names_spell_every_domain_kind() {
         (Domain::U64, "u64_edge"),
         (Domain::Fx(FixedTy::U64), "u64_edge"),
         (Domain::Nat, "nat_0_64"),
-        (Domain::NatCount, "nat_count"),
+        (Domain::NatCount, "nat_shift"),
         (Domain::Bytes, "bytes_d1"),
         (Domain::BytesN(4), "bytes_n(4)"),
         (Domain::Fx(FixedTy::I16), "fx_full(I16)"),
@@ -93,25 +93,33 @@ fn kind_names_spell_every_domain_kind() {
 
 #[test]
 fn the_16_2_scan_walks_into_records_and_variants() {
+    // items 3, 4 and 5 are settled (S10c-2) and not reported; item 1/2 is, deep inside a composite
     let rec = Domain::Data {
         name: "R".into(),
         ctors: vec![("R".into(), vec![Domain::Bool, Domain::NatCount])],
         record: true,
     };
-    assert_eq!(s162_items(&rec), ["3"]);
+    assert!(s162_items(&rec).is_empty());
     let var = Domain::Data {
         name: "V".into(),
         ctors: vec![
             ("A".into(), vec![Domain::FxEdge(FixedTy::I16)]),
-            ("B".into(), vec![Domain::Fx(FixedTy::I32)]),
+            ("B".into(), vec![Domain::List(Box::new(Domain::Bytes))]),
         ],
         record: false,
     };
-    let mut items = s162_items(&var);
-    items.sort_unstable();
-    assert_eq!(items, ["4", "5"]);
+    assert_eq!(s162_items(&var), ["1/2"]);
+    let rec = Domain::Data {
+        name: "R".into(),
+        ctors: vec![(
+            "R".into(),
+            vec![Domain::Fx(FixedTy::I32), Domain::List(Box::new(Domain::BytesN(2)))],
+        )],
+        record: true,
+    };
+    assert_eq!(s162_items(&rec), ["1/2"]);
     // a composite deeper than the scan's own guard is not followed (and not an error)
-    let mut deep = Domain::NatCount;
+    let mut deep = Domain::List(Box::new(Domain::Bytes));
     for _ in 0..80 {
         deep = Domain::Opt(Box::new(deep));
     }
@@ -250,6 +258,7 @@ fn the_planner_checks_binders_chunk_size_and_the_product_it_is_handed() {
         let nine = SuiteDomains {
             binders: (0..9).map(|i| binder(&format!("b{i}"))).collect(),
             product: 512,
+            demoted: Vec::new(),
         };
         let e = SuitePlan::new(&program, suite, nine, cost, 1024)
             .err()

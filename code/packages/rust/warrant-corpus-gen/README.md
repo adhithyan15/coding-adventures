@@ -16,12 +16,18 @@ slice S3). It reads a `.warrant` specification and will write the language-neutr
 >
 > **S10b** (`ir.fixed`): the 35 built-ins of VER04r Appendix A.1 are lowered, typed, given
 > `requires` and costed, and reproduce the oracle's lowering dump byte for byte (see
-> "`ir.fixed` lowering parity"). They are **not evaluated or emitted**: `generate` still refuses an
-> `ir.fixed` document.
+> "`ir.fixed` lowering parity").
 >
 > **S10t-2** (`ir.tuple`): tuples, `project` and `match` on a `Result` are lowered, typed, costed,
 > evaluated and emitted, and the generator reproduces the oracle's four `tuple-forms-v1` dumps byte
-> for byte (see "`ir.tuple` (S10t-2)"). `ir.fixed` documents still refuse.
+> for byte (see "`ir.tuple` (S10t-2)").
+>
+> **S10c-2** (`ir.fixed`, generator half): the 35 built-ins are **evaluated**, the domains of D21,
+> D25 and D26 are described (`nat_shift`, the signed and the 16-bit `fx_edge`), the `ir.fixed` fault
+> templates are evaluable, and `generate` emits `ir.fixed` documents. The generator reproduces the
+> five dumps of the oracle's `fixed-eval-v1` (lowering, evaluation, faults, values, domains) byte for
+> byte (see "`ir.fixed` evaluation (S10c-2)"). The **fault gate stays closed** until the flip (S10c),
+> so a control that needs `ir.fixed` is still `deferred` and the ct-compare fixture does not move.
 
 ## How it fits
 
@@ -55,14 +61,14 @@ on it, so changing it rebuilds no shared crate (VER04r section 13, "Rule").
 | `profile` | the strict reader of `corpus.profile` (VER04r 8.4): LF only, only an empty line is skipped, canonical decimals, `max_ir_cost` the only way to raise the cost bound, `accept_blind <op> <fault>` and `omit_example <id>` lines |
 | `types` | the small type language of `ir.core` (`Bool Int Nat U8..I64 Bytes Bytes<N> Result<T,E>`) and, since S10b, the IR-only `Option<T>` of the `ir.fixed` built-ins |
 | `patterns` | S10t-2: the six `match` patterns, the usefulness check, the corpus errors (code `ir`) |
-| `ir` | the 26 `ir.core` tags of VER04r Appendix A and their JSON form; S10b adds `Ir::Fixed`, the 35 `ir.fixed` built-ins of A.1 (lowered and costed, never evaluated), and `ir::levels`, the tag part of `requires` (R9) |
+| `ir` | the 26 `ir.core` tags of VER04r Appendix A and their JSON form; S10b adds `Ir::Fixed`, the 35 `ir.fixed` built-ins of A.1 (evaluated since S10c-2, on the width `Ir::Fixed::at` records), and `ir::levels`, the tag part of `requires` (R9) |
 | `lower` | syntax-directed, unoptimised lowering with a small annotating typer; the level refusals; `census` |
 | `analysis` | the pure-guard rule (4.4) and the v0 static arithmetic guard (3.3 rule 3) |
 | `arith` | the single wrapping rule (3.2): `wraps`, the 2^127 window, `MAX_IR_VALUE` |
 | `cost` | worst-path `ir_cost`, `max_ir_cost`, total IR work (4.2 rule 6) |
 | `view` | the "parity view" of a lowered document, compared with the oracle (`oracle_view` for `ir.core`, `oracle_view_v1` for the S10 dump with `requires`) |
 | `value`, `eval` | S3b: the `ir.core` evaluator (own implementation over this crate's IR): exact `Nat`/`Int` in the 2^127 window, wrapping fixed-width arithmetic counted as `wraps`, short-circuit `and`/`or`/`implies`/`if`, `MAX_IR_VALUE` checked before allocation, and `trace`, the pure-trace walk behind `expected_calls` and `wraps` |
-| `domains` | S3b: descriptor JSON, labels and sizes over the S2 `resolve_binders`/`Domain` API; refuses the VER04r 16.2 descriptors; value and encoding caches |
+| `domains` | S3b: descriptor JSON, labels and sizes over the S2 `resolve_binders`/`Domain` API (S10c-2: `nat_shift`, `fx_edge`, the `demoted` paths; refuses only a list of byte strings); the consumer-side `descriptor_size`; value and encoding caches |
 | `stream` | S3b: the 2.4 value encoders, the context prefix, the v1/v2 header, `warrant-chunks-v1` framing, FNV-1a-64, the slim base set |
 | `suite` | S3b: one suite: product enumeration (`unrank_product`, last binder fastest), admission evaluated once per prefix tuple, chunks, counts, suite and v1 whole-suite digests, slim set |
 | `enumerate` | S3b: a whole document at `full` depth, the total-work bounds, the v0 divergence guard rule 2, and the enumeration parity view |
@@ -239,54 +245,48 @@ seam, taking them as a parameter.
 
 ## The census (VER04r 16.2)
 
-`census::census_document` reports, per claim, the first thing that blocks emission at `ir.core`
-(a level, a VER04r generation rule, a cost bound, an over-budget product) and, independently,
-which of the five 16.2 descriptor items its binders touch. Over the **eleven adopters that bind
-`gen_evidence`** (profile `max_ir_cost 65536`, so no adopter is blocked by a cost it would
-simply declare), as of this slice:
+`census::census_document` reports, per claim, the first thing that blocks emission (a level, a
+VER04r generation rule, a cost bound, an over-budget product) and, independently, which of the 16.2
+descriptor items its binders touch that are still undecided (since S10c-2 only items 1/2, a list of
+byte strings). Over the **eleven adopters that bind `gen_evidence`** (profile `max_ir_cost 65536`, so
+no adopter is blocked by a cost it would simply declare), as of S10c-2:
 
-| adopter | claims | emittable at `ir.core` | first blockers |
+| adopter | claims | emittable | first blockers |
 |---|---:|---:|---|
 | ct-compare | 9 | **9** | none |
 | gf256 | 38 | **38** | none (declares `max_ir_cost 32768`) |
-| x25519 | 8 | 6 | `ir.fixed` 2 |
-| logic-gates | 88 | 28 | `ir.fixed` 57, `ir.data` 3 |
-| hash-functions | 56 | 4 | `ir.fixed` 25, `ir.data` 21, `W0701` 6 |
-| lzw | 21 | 4 | `ir.fixed` 17 |
-| arithmetic | 63 | 3 | `ir.data` 55, `ir.fixed` 5 |
-| wasm-leb128 | 42 | 13 | `ir.fixed` 24, `16.2` 3, `W0701` 2 |
+| x25519 | 8 | **8** | none |
+| logic-gates | 88 | 85 | `ir.data` 3 |
+| hash-functions | 56 | 29 | `ir.data` 21, `W0701` 6 |
+| lzw | 21 | **21** | none |
+| arithmetic | 63 | 8 | `ir.data` 55 |
+| wasm-leb128 | 42 | 40 | `W0701` 2 |
 | vos-sched-any | 8 | 0 | `ir.data` 8 |
 | vos-sched-fp-bitmap | 13 | 0 | `ir.data` 13 |
 | zeroize | 9 | 0 | `inout` 9 |
-| **total** | **355** | **105** | `ir.fixed` 130, `ir.data` 100, `inout` 9, `W0701` 8, `16.2` 3 |
+| **total** | **355** | **238** | `ir.data` 100, `inout` 9, `W0701` 8 |
 
-**Since S10b a claim is named by the first construct, in source order, that cannot be lowered,
-and by `ir.fixed` only when nothing else blocks it** (the built-ins now lower, so a claim that
-also uses a tuple or a constructor is named by that level, as the oracle's census names it). The
-table above is pinned per adopter in `tests/census.rs`. Before S10b the totals were `ir.data` 154,
-`ir.fixed` 101, `inout` 9 and `W0701` 2: tuples, projections and `match` on a `Result` moved from
-`ir.data` to `ir.tuple` (VER04r 4.1, D20, D35), and six `hash-functions` claims
-(`fnv1a_*_matches_both_models`, `djb2_*_matches_both_models`) that an `ir.fixed` built-in used to
-hide are `W0701`, a subject call under an impure guard (VER04r 4.4), like the two `wasm-leb128`
-claims of [D28].
+The table is pinned per adopter in `tests/census.rs`. History of the totals: before S10b `ir.data` 154,
+`ir.fixed` 101, `inout` 9, `W0701` 2; S10b `ir.data` 79, `ir.fixed` 99, `ir.tuple` 71, `W0701` 8 (89
+emittable); S10t-2 (`ir.tuple` lowers) `ir.data` 100, `ir.fixed` 130, `W0701` 8, `inout` 9, `16.2` 3 (105
+emittable); **S10c-2 evaluates `ir.fixed` and describes the signed and 16-bit `fx_edge` and `nat_shift`,
+so no claim is blocked on `ir.fixed` or `16.2` any more** (238 emittable).
 
-**S10t-2 lowers `ir.tuple`, so no claim is blocked on it any more** (it was 71 claims): they are
-emittable, `ir.fixed`, `ir.data`, or (3 `wasm-leb128` claims) a 16.2 item 4 descriptor refusal. The
-generator's census now equals the oracle's exactly for ct-compare, gf256, logic-gates, lzw and
-x25519; the ones that differ do so for non-tuple causes (`tests/census.rs`): wasm-leb128 (oracle 16
-`ok` + 2 `W0701`: 13 `ok` + 3 `16.2` here, the 2 impure-guard `W0701` agree since CV2-F1), arithmetic
-(10 claims over record/variant-typed ops, which the oracle lowers by counting `ir.data` in `requires`
-and the generator refuses until S10d) and hash-functions (the 6 impure-guard claims that also use a
-fixed-width built-in: the oracle names `ir.fixed`, a level wins, the generator `W0701`; both refuse).
-zeroize's `inout` is a generator-only refusal.
+The generator's census now **equals the oracle's exactly** (oracle numbers from running its lowering:
+`ok`, `W0701` for a lowering refusal, `ir.data`) for ct-compare, gf256, **wasm-leb128** (40 `ok`, 2
+`W0701`), **hash-functions** (29 `ok`, 6 `W0701`, 21 `ir.data`), logic-gates, **lzw** (21) and
+**x25519** (8). Two differences remain, both generator-side refusals of a feature, never a level
+(`tests/census.rs`): **arithmetic** (10 claims call an op whose signature holds a record or variant
+type: the oracle counts the type in `requires` (R9) and lowers, 18 `ok`; the generator refuses at
+`ir.data` until S11, 8 `ok`) and **zeroize** (`inout` parameters and `ensures`: the oracle lowers all 9,
+the generator refuses 9 until a later slice). The two `W0701` of wasm-leb128 and the six of
+hash-functions are claims with a subject call under an impure guard (VER04r 4.4), refused at lowering
+in both tools.
 
-Only **ct-compare and gf256 are emittable whole** (a document is emitted whole or not at all).
-For S10's decisions on the five divergences of VER04r 16.2: **no adopter binder is a `nat_count`,
-a list of byte strings (items 1 to 3 do not occur), item 4 (a signed `fx_edge`) occurs in 7
-`wasm-leb128` claims (`I64`), and item 5 (a 16-bit `fx_edge`) in 2 `lzw` claims** (two
-`U16`-sized binders demoted by the budget); every one of those claims is blocked by `ir.fixed`
-or `ir.data` first, so S10 decides them without a regression. The two `W0701` are
-`wasm-leb128` claims with a subject call under an impure guard (VER04r 4.4). Run the report with
+Only a **list of byte strings** (16.2 items 1 and 2) is still refused by the domain stage; no adopter
+binder is one, and no adopter binder was a `nat_count` (item 3). Of the decided items, item 4 (the
+signed `fx_edge`, `I64`) occurs in 7 wasm-leb128 claims and item 5 (the 16-bit `fx_edge`) in 2 lzw
+claims, both now emittable. Run the report with
 `cargo test -p coding_adventures_warrant_corpus_gen --test census -- --nocapture`.
 
 ## Fail closed
@@ -294,7 +294,7 @@ or `ir.data` first, so S10 decides them without a regression. The two `W0701` ar
 A construct beyond `ir.core` refuses the **whole document**, naming the level:
 
 ```text
-  level [ir.fixed] at `mix`: fixed-width built-ins need ir.fixed
+  level [ir.data] at `rc_model`: a record, variant, option or list needs ir.data
 ```
 
 `ir.fixed` (the integer built-ins), `ir.tuple` (tuple types and literals, projection, `match` on a
@@ -337,13 +337,8 @@ the canonical type name in position 1, `Option<T>` confined to the first operand
 static width of a `from_be`/`from_le` operand read from the one pass that lowers it (a bytes literal, a
 `concat` of sized operands, an `if` of equal widths: the checker's rule). Every lowered unit records its
 `requires` (R9: the sorted union of its tags' levels and its callees' own `requires`, `ir.core` always
-present) and each new tag costs `1 +` its operands.
-
-**Nothing is evaluated or emitted.** A unit whose `requires` holds `ir.fixed` is refused, naming the
-level, by `lower_document`, the census and therefore `generate` (the binary exits 2, as for every
-refusal, and writes nothing); `eval` refuses `Ir::Fixed` too. `lower_document_with_fixed` returns the
-lowered IR for the dump only, with every other rule applied: since CV2-F1 the oracle also refuses an
-impure guard at lowering, so there is no dump-only exception.
+present) and each new tag costs `1 +` its operands. A **v0** document refuses the built-in names (they
+are version scoped).
 
 `tests/fixed_parity.rs` lowers the oracle's `fixed_forms_v1.warrant` (all 35 built-ins at every width)
 and demands the text of `oracle_view_v1` equal the oracle's committed `fixed_forms_v1.oracle-lowering.json`
@@ -353,6 +348,46 @@ build tool's `rust/warrant-corpus-gen` row); the oracle's own BUILD checks the d
 `dump-lowering` subcommand. `tests/fixed_lowering.rs` pins the refusals, `requires`, cost and naming on
 small documents, including a deep-nesting regression for the width rule (the oracle's first version
 re-lowered the operand at every level and was exponential).
+
+## `ir.fixed` evaluation (S10c-2)
+
+Since S10c-2 the evaluator runs the 35 built-ins and `generate` emits `ir.fixed` documents
+(`lower_document_with_fixed` is gone: `lower_document` is the one path). The bit work is
+`warrant-grammar`'s `fixed` module (which agrees with the oracle's independent evaluator on every
+operand of the table below); `eval::fixed_builtin` adds the dispatch and the conventions:
+
+```text
+  width         the static type argument (widen wrap try max_value min_value from_be from_le) or the
+                first operand's type, which the lowering records in `Ir::Fixed::at` (not in the JSON)
+  Option        try checked_* div rem div_trunc rem_trunc at -> `Value::Opt`; `unwrap_or` is its one
+                consumer and evaluates both operands (no short circuit)
+  shift counts  an exact Nat, compared with the width before any host shift (shl shr -> 0, sar -> -1 or
+                0, bit -> false); rotl/rotr reduce n mod w first
+  wraps         only add sub mul neg count a wrap [D31]; wrap shl bit_not ... never do
+  from_be/le    a runtime width other than the target's is a corpus error (code `ir`), never a truncation
+```
+
+**Domains** (VER04r 5.1): `nat_shift` `{"d":"nat_shift","size":73}` [D26] for a `Nat` binder that is
+directly the count of `shl shr sar rotl rotr bit` in the claim body (a parenthesised count selects, an
+expression of the binder, a `model_call` argument and an `admit` do not: R10; the S2 resolver's
+`count_binders` now looks through parentheses); `fx_edge` for the signed 32- and 64-bit leaves [D21]
+(`I32` 559, `I64` 623) and for a 16-bit binder the budget demotes [D25] (`U16` 281, `I16` 527, recorded
+in `demoted` as `0`, `1`, `0.1`, `0.ok` ...). The S10b refusal of a signed `fx_edge` ("16.2 item 4") is
+gone; only a list of byte strings is still refused. `domains::descriptor_size` is the consumer-side
+check of VER04r 5.1 (checked sizes, 16 levels, every leaf's legality, the oracle's messages).
+
+**Faults**: the `ir.fixed` templates (`xor-lsb`, `ignore-high-bit`, `flip-result-bit`, the `Bytes` and
+`Ok` forms) are ordinary IR now, so `generate_gated` with `ir.fixed` in the gate searches them; the
+shipped gate (`generate`) is still `ir.core`, so every fault that needs `ir.fixed` is `deferred` and
+ct-compare's `eq_u64/ignore-high-bit` control is unchanged until the flip.
+
+`tests/fixed_eval_parity.rs` reproduces the five dumps of `python/warrant-oracle/tests/fixtures/fixed-eval-v1/`
+**byte for byte**: lowering, evaluation (112 suites, every chunk line and digest, `cases.tfv`), faults
+(the shipped and the open gate), values (about 9,800 evaluations: every built-in at every width on edge
+values and the count rows) and domains (the `fx_edge` and `nat_shift` value lists, and the consumer's
+verdicts), with negative controls. The files are read from the oracle's directory, so an edit there
+reruns it (the build tool's `rust/warrant-corpus-gen` row). The test never enumerates an adopter
+(wasm-leb128 alone is 46 million cases).
 
 ## The oracle parity test, and its limits
 
@@ -458,8 +493,10 @@ D19, D18), and a `GenError` carries `size` for exactly the two `Bytes` limits (t
 window is not a size error). The oracle's `tests/fixtures/omit-example-v2/` is reproduced byte for
 byte by `tests/omit_example.rs`.
 
-`ignore-high-bit` (`ir.fixed`, VER04r 8.2 [D9]) is emitted as data with `requires: ["ir.fixed"]`
-and `deferred` witnesses: ct-compare's `eq_u64` control is **not-live** until S10.
+`ignore-high-bit` (`ir.fixed`, VER04r 8.2 [D9]) is emitted with `requires: ["ir.fixed"]` and, under
+the shipped gate, `deferred` witnesses: ct-compare's `eq_u64` control is **not-live** until the flip
+(S10c). Under the open gate of `tests/fixed_eval_parity.rs` the witness search runs (the oracle's
+ct-compare witness is chunk 0, `a = 0`, `b = 2^63`).
 
 ct-compare's eight controls come out as the spec predicted: `eq_fixed/ignore-last-byte` has
 `blind_claims` `eq_fixed_agrees_w0`, `select_bytes/missing-error` has `select_picks`, and
@@ -494,7 +531,6 @@ generator (`generate`) does no I/O; everything is in `fsio.rs`, `cli.rs` and the
   the reader used to skip (S3d).
 - The evaluator is iterative; per-node `has_subject`/`may_fail_or_wrap` are recomputed per case
   on traced suites (a cache is a possible later optimisation, not needed for the bounds).
-- `ir.fixed` data nodes (`bit_and`, `bit_xor`) have no Appendix A shape yet (16.6 OPEN 2).
 - `has_subject`/`may_fail_or_wrap` are still recomputed per case on traced suites (review LOW 4,
   not needed for the bounds).
 - The oracle admits IR nesting of 65 (off by one against the limit of 64); a note for S4 part 2.
@@ -511,7 +547,10 @@ doctest and the integration tests:
 |---|---|
 | `enumeration` | the 18 digests and counts, the hand-written reproduction, the grammar-`Evaluator` differential, chunk structure and independence, **seeded-wrong negative controls** (a wrong evaluator op, a reordered enumeration, an off-by-one discard, a wrong wrap: each changes a digest), hand-computed `wraps` and call counts, slim stride, every refusal |
 | `enumeration_parity` | enumeration, `wraps`, descriptors, digests and every chunk line equal the oracle's, on ct-compare and three synthetic documents (including `enum_probe`) |
-| `census` | the census over the eleven adopters and one synthetic hit per 16.2 item |
+| `census` | the census over the eleven adopters, the oracle's census beside it, and the settled and open 16.2 items on synthetic documents |
+| `fixed_parity`, `fixed_lowering` | S10b: the lowering dump of `fixed-forms-v1`, the refusals, `requires` and cost of the built-ins |
+| `fixed_eval_parity` | S10c-2: the five dumps of `fixed-eval-v1` (lowering, evaluation, faults under both gates, values, domains) byte for byte, the shift-count rule, the demotions, negative controls |
+| `tuple_parity`, `tuple_forms` | S10t-2: the four dumps of `tuple-forms-v1`, the tuple forms one rule at a time |
 | `limits` | the resolver, planner and total-work refusals; the evaluator at the real bounds (64 model frames) on a default test thread; pure subject-argument failures refused at generation |
 | `oracle_parity`, `lowering`, `fail_closed` | S3a: lowering parity, ct-compare against the v1 corpus, one test per refused construct, `generate` refusals |
 | `emission` | S3c: the eight control rows, the 18 digests re-derived from the emitted `corpus.json`, every digest re-derived from the chunk files, `cases.tfv` equal to v1, chunk files equal to the oracle's, the key set, `corpus.json` pinned by digest, brute-force witness check, seeded-wrong controls |
