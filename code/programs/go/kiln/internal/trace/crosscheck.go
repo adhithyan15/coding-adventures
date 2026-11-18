@@ -278,12 +278,15 @@ func lineAt(data []byte, n int) string {
 // workflow-command line start, no unbounded output).  Real traces hold paths a
 // pull request chose, so this is only ever printed on an explicit KILN_TRACE_DIFF
 // run, for the lines around a mismatch.
-func sanitisedWindow(data []byte, n int) string {
+func sanitisedWindow(data []byte, n int) string { return sanitisedWindowR(data, n, 2) }
+
+// sanitisedWindowR is sanitisedWindow with a chosen radius (Diagnose uses 3).
+func sanitisedWindowR(data []byte, n, radius int) string {
 	if n <= 0 {
 		return ""
 	}
 	var b strings.Builder
-	for i := max(1, n-2); i <= n+2; i++ {
+	for i := max(1, n-radius); i <= n+radius; i++ {
 		l := lineAt(data, i)
 		if l == "" && i > n {
 			break
