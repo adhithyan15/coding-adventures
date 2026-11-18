@@ -103,8 +103,13 @@ def design_low_pass(
     s = sum(h)
     if abs(s) > 0.0:
         inv_s = 1.0 / s
-        for k in range(num_taps):
-            h[k] *= inv_s
+        # Retain legacy rounding unless the finite sum's reciprocal overflowed.
+        if math.isfinite(inv_s) or not math.isfinite(s):
+            for k in range(num_taps):
+                h[k] *= inv_s
+        else:
+            for k in range(num_taps):
+                h[k] /= s
 
     return h
 
@@ -194,8 +199,13 @@ def design_band_pass(
     gain_abs = abs(gain)
     if gain_abs > 0.0:
         inv_g = 1.0 / gain_abs
-        for k in range(num_taps):
-            h[k] *= inv_g
+        # Retain legacy rounding unless the finite gain's reciprocal overflowed.
+        if math.isfinite(inv_g) or not math.isfinite(gain_abs):
+            for k in range(num_taps):
+                h[k] *= inv_g
+        else:
+            for k in range(num_taps):
+                h[k] /= gain_abs
 
     return h
 
