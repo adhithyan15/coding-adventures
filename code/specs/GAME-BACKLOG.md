@@ -441,7 +441,7 @@ worktree; report and preserve it if those checks do not pass.
   official and helper binary SHA-256 values, host details, and artifacts
   `14458713072` / `14457444089` are recorded in
   `code/programs/go/kiln/ci/G1_PROFILE_RECEIPT.md`. A narrowly titled lexer
-  optimization PR is being opened with unchanged protected CI and gate
+  optimization PR is open with unchanged protected CI and gate
   semantics. Keep this broader G1 host-robustness item open until the PR passes
   ordinary protected checks and any slow-host rescue claim has a predeclared
   matched-host cohort independent of candidate results; retain every run and
