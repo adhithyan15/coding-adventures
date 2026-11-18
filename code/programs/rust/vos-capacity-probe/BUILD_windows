@@ -1,0 +1,3 @@
+cargo test --release -- --nocapture
+cargo run --release -q -- check ../../../specs/data/vos30-capacity-results.json
+cargo run --release -q -- table --check
