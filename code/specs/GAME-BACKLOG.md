@@ -90,12 +90,12 @@ completion satisfies the other.
 
 ## Prioritized delivery
 
-Priority reflects dependencies visible on 2026-11-17: GAME10 already has an exact v1 corpus and a
-bounded integration target; existing GAME01 consumer gaps are next because the portable package
-set already exists; reusable deterministic contracts precede new device, graphics, and host stacks.
+Priority reflects dependencies visible on 2026-11-18: GAME10's exact v1 corpus consumer has merged;
+the existing GAME01 Rust consumer gap is next because the package and canonical corpus already
+exist. Reusable deterministic contracts precede new device, graphics, and host stacks.
 This order avoids duplicating repository-wide `VER-*` and `MUS00`–`MUS08` work.
 
-After `GBL-001` merges, the proposed near-term order is `GBL-002` Rust Hamurabi corpus evidence,
+After `GBL-001` merged, the active item is `GBL-002` Rust Hamurabi corpus evidence, followed by
 `GBL-003a` constructor Warrant-model execution, `GBL-010` TypeScript GAME10 with exact `BigInt`
 handling, `GBL-050` Rust input action frames, and `GBL-050a` TypeScript input action frames. Then
 interleave `GBL-013` Go and `GBL-014` Python clock ports with the concrete GAME01/GAME02 missing
@@ -103,7 +103,7 @@ language ports according to dependencies and updated package evidence. Refresh f
 and rerun the canonical package report before picking the next implementation; this sequence is
 coordination state, not an implementation authorization for unrelated primitives.
 
-### P0 — `GBL-001`: Make GAME10 v1 a durable conformance boundary (active; [PR #19602](https://github.com/adhithyan15/coding-adventures/pull/19602))
+### P0 — `GBL-001`: Make GAME10 v1 a durable conformance boundary (merged; [PR #19602](https://github.com/adhithyan15/coding-adventures/pull/19602), squash `72778f4f553cf35fd361e2688acaeb6201414ea1`)
 
 - [x] Consume all 23 `game-clock-v1` cases from a Rust package test through public APIs. Dispatch all
   five operation tags; compare complete configs, complete states, all step-result fields, and exact
@@ -118,13 +118,29 @@ coordination state, not an implementation authorization for unrelated primitives
 - [x] Classify the result as finite package-corpus conformance only. Do not upgrade Warrant or
   assurance claims without separate evidence.
 
+  **Completion evidence (2026-11-18):** exact-head required CI passed on `77e830cac55e57b588a66efffa6c437aba2ccc25` (Ubuntu, macOS, Windows builds; D18F/P/Q/T; both Kiln sandbox jobs; metadata, CI-gate, and Human Languages Books gates). The squash commit is present on freshly fetched `origin/main`. Rust runtime capability execution was NOT-LIVE on the local macOS host; the Linux build lane is covered by CI. This completion records the clock corpus consumer and selection wiring only, not host pacing/render integration or formal proof.
+
 ### P1 — Close existing evidence gaps and Warrant limits
 
-- [ ] `GBL-002` Make Rust Hamurabi consume the shared 31-vector corpus; audit every registered language
+- [ ] `GBL-002` (active) Make Rust Hamurabi consume the shared 31-vector corpus; audit every registered language
   consumer before describing parity. Scope: consume canonical `code/specs/fixtures/hamurabi-v1/cases.json`
-  and compare all 31 cases, 53 trajectory turns and reports, and 14 refusal cases, including exact
-  `u64` values and error variants. Fix cases where tests merely hardcode a transcript. This proves
-  finite Rust corpus conformance only; do not label it cross-language parity.
+  and compare all 31 cases, 53 trajectory turns and byte-exact reports (including final newlines),
+  and 14 refusal cases across all 8 error variants. Preserve full-width `u64` fixture numbers from
+  the JSON parser's original numeric token text; compare all 15 state fields and enum payloads; chain
+  the actual returned state into the next turn. Exercise `validate_order` and `step_year` for every
+  refusal. Pin the four contractual fresh-start cases against `new_game(seed)`; the fixture's
+  initial states remain authoritative for transitions, including two cases intentionally different
+  from `new_game(seed)`. Fail on duplicate/missing cases and unknown operation tags. Same-harness
+  negative controls must reject a one-bit change to a >2^53 RNG word, a removed report newline, a
+  different valid error variant, and an always-error adapter. This proves finite Rust package-corpus
+  conformance only; do not label it cross-language parity or formal proof. Warrant evidence and the
+  report-only assurance limitations remain open under `GBL-003`/`GBL-005`.
+
+  **Selection rationale (2026-11-18):** the GAME10 consumer is merged, Rust Hamurabi already has a
+  registered conformance test but hardcodes its transcript, and the shared 31-vector fixture is an
+  existing canonical input. A 2026-11-17 static 26-row audit found 11 JSON consumers, five `cases.txt`
+  consumers, one OCaml test embedding literals despite its README, and this Rust hardcoded transcript;
+  that inventory is not live parity evidence. The JSON-to-text freshness gap is tracked separately.
 - [ ] `GBL-003a` Separately execute and assess the GAME10 constructor Warrant model: exercise the
   648-case boundary (105 `Ok`, 72 `ZeroFixedTimestep`, 162 `InvalidMaxFrameSteps`,
   309 `InvalidMaxFrameDelta`), stratified full-width property

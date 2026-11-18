@@ -34,8 +34,8 @@ In accordance with the repository's verification architecture (`VER00`, `VER04m`
    - Zero ambient system authority: `"capabilities": []` declared in `required_capabilities.json`.
    - Pure state transition: `step_year(state: &HamurabiState, order: &TurnOrder) -> Result<HamurabiState, HamurabiError>`.
    - All pseudo-randomness enters deterministically through explicit `PCG32` state stored inside `HamurabiState`.
-   - Uses exclusively bounded integer types (`u8`, `u32`, `u64`, `i32`). By avoiding IEEE-754 floating point arithmetic, state transitions produce bit-exact identical trajectories across all 18 implementation languages.
-   - Fully adoptable by Warrant (`code/specs/hamurabi.warrant`) under `VER04j` and `VER04m` (`state=explicit`), admitting complete formal proofs for conservation invariants, step bounds, zero allocations (`VER07`), and 26-CWE weakness closure (`VER15`).
+   - Uses bounded integer types (`u8`, `u32`, `u64`, `i32`). This is the intended deterministic contract for conforming ports; package presence alone does not establish bit-exact cross-language trajectories. The current dated lane inventory and evidence limits are recorded in `GAME-BACKLOG.md`.
+   - Warrant (`code/specs/hamurabi.warrant`) is a candidate contract under `VER04j` and `VER04m` (`state=explicit`); its presence does not mean the claims have live proof. As of the 2026-11-18 Rust report, assurance is `report-only`, claim evidence is empty, proof/exhaustive/fuzz entries are null, 24 weakness entries are excluded, and two exemptions are unapproved. Corpus conformance does not close those gaps.
 
 2. **Thin Host Presentation Shell:**
    - Wires terminal stdin/stdout, command line arguments, or web interfaces to the simulation core.
@@ -49,12 +49,12 @@ In accordance with the repository's verification architecture (`VER00`, `VER04m`
 
 | Field | Value |
 |---|---|
-| **Package Identity** | `hamurabi` (canonical normalized name across all 18 languages) |
+| **Package Identity** | `hamurabi` (portable package name; per-language implementation and evidence are inventoried in `GAME-BACKLOG.md`) |
 | **Parity Class** | `portable` |
 | **Declared Capabilities** | `[]` (strictly zero ambient capabilities in `required_capabilities.json`) |
 | **Direct Dependencies** | `rng` (`code/specs/rng.md` — specifically `rng::Pcg32`) |
 | **Transitive Dependencies**| None |
-| **Verification Level** | Tier 0 / Tier 2 Warrant Verified (`state=explicit`, `VER04m`) |
+| **Verification Level** | Capability and effect checks are separate from Warrant proof; consult current package receipts and assurance report |
 
 ### Static Capability Cage Guarantees
 
@@ -437,11 +437,11 @@ In compliance with `VER07`:
 
 ---
 
-## 26-CWE Matrix Closure (`VER15`) & Per-Lane CVE Proof Gates
+## CWE Requirements and Evidence Limits (`VER15`)
 
-In accordance with `VER15` (`code/specs/data/weakness-registry-v1.json`), every implementation lane MUST discharge or exclude all 26 canonical CWE classes.
+In accordance with `VER15` (`code/specs/data/weakness-registry-v1.json`), every implementation lane must provide reviewed evidence for its applicable CWE disposition before claiming closure. The table below is a set of intended arguments to verify, not a receipt of completed proof. In particular, the Rust Hamurabi assurance report currently has verdict `report-only`, no evidence attached to its claims, null proof/exhaustive/fuzz entries, and two unapproved exemptions. Finite corpus checks do not upgrade these statuses.
 
-### CWE Matrix Accounting
+### CWE Disposition Targets (Not Current Closure Evidence)
 
 | CWE | Name | Status | Method of Closure |
 |---|---|---|---|
