@@ -360,9 +360,15 @@ class _Lowerer:
         self.scope: dict[str, A.Ty] = {}
         self.order: list[str] = []  # models lowered so far, for "declared before"
         self._nest = 0
-        #: Has the unit being lowered met a tuple *type* (binder, parameter, result or the type
-        #: of a sub-expression)?  R9: that adds ``ir.tuple`` to its ``requires``.
-        self._tuple_typed = False
+        #: The levels the *types* met by the unit being lowered bring (binder, parameter,
+        #: result, type of a sub-expression): R9, ``ir.tuple`` for a tuple, ``ir.data`` for a
+        #: list, record or variant (section 4.1).  Added to its ``requires``.
+        self._type_levels: set = set()
+        self._data_names = frozenset([*spec.records, *spec.variants])
+        #: Static widths of ``Bytes`` expressions whose *type* forgot them (a literal, a
+        #: ``concat`` of such, an ``if`` of equal widths): ``id(ir) -> (ir, width)``.  The IR
+        #: node is kept so its id is never reused.  Filled in the single lowering pass.
+        self._widths: dict = {}
 
     # -- helpers ---------------------------------------------------------------
 
@@ -380,15 +386,21 @@ class _Lowerer:
         another level is marked unsupported with a ``level`` error naming it: the IR stays
         (for the lowering dump and for cost) and **evaluation refuses**.
         """
-        models = {n: m.ir for n, m in self.spec.models.items() if m.ir is not None}
-        found = set(L.ir_levels(list(irs), models))
-        if self._tuple_typed:
-            found.add(L.TUPLE)
+        # ``ir.core`` is always in a row's requires (VER04r section 6: "at least").  The call
+        # closure is read from each callee's own ``requires`` (already closed over its callees,
+        # in declaration order) instead of walking it again for every unit.
+        found = {L.CORE, *L.ir_levels(list(irs), follow=False)}
+        for tree in irs:
+            for node in walk(tree):
+                if node[0] == "model_call":
+                    found.update(self.spec.models[node[1]].requires)
+        found |= self._type_levels
         requires = tuple(sorted(found))
         for level in requires:
-            # The oracle evaluates ir.core, and the composite domains of S4 already carry
-            # tuple *values*, so a tuple type alone is counted and not refused.
-            if level not in (L.CORE, L.TUPLE):
+            # The oracle evaluates ir.core; the composite domains of S4 already carry tuple,
+            # list and record *values*, so a type alone is counted and not refused.  Only
+            # ir.fixed (a tag the evaluator cannot run) refuses evaluation.
+            if level == L.FIXED:
                 message = _FIXED_MESSAGE if level == L.FIXED else f"a construct of {level}"
                 return requires, self.level(level, message)
         return requires, None
@@ -397,8 +409,7 @@ class _Lowerer:
         """A type of a signature or binder: refuse ``Option`` (D23), count a tuple (R9)."""
         if L.type_refusal(ty) is not None:
             raise self.level(L.DATA, _OPTION_MESSAGE)
-        if L.TUPLE in L.type_levels(ty):
-            self._tuple_typed = True
+        self._type_levels |= L.type_levels(ty, self._data_names)
 
     # -- models ----------------------------------------------------------------
 
@@ -416,7 +427,7 @@ class _Lowerer:
         ret = _resolve(spec, decl.ret)
         model = LoweredModel(decl.name, params, ret, line=decl.line)
         self.scope = dict(params)
-        self._tuple_typed = False
+        self._type_levels = set()
         try:
             for _, pty in params:
                 self.check_type(pty)
@@ -451,7 +462,7 @@ class _Lowerer:
         for _, refinement in op.refinements:
             if _calls_op(self.spec, refinement):
                 raise OracleError("ir", "a subject call is forbidden here")
-        self._tuple_typed = False
+        self._type_levels = set()
         self.scope = dict(op.params)
         parts: list = []
         try:
@@ -473,16 +484,16 @@ class _Lowerer:
             for extra in parts[1:]:
                 op.admit = ["and", op.admit, extra]
             op.requires, op.unsupported = self.seal(op.admit)
-        elif self._tuple_typed:
-            # No admit, but the signature itself needs ir.tuple (R9): ``ir.core`` at least.
-            op.requires = (L.CORE, L.TUPLE)
+        else:
+            # No admit, but the signature itself may need ir.tuple / ir.data (R9).
+            op.requires = tuple(sorted({L.CORE, *self._type_levels}))
 
     # -- claims and examples -----------------------------------------------------
 
     def lower_claim(self, decl: A.ClaimDecl) -> LoweredSuite:
         spec = self.spec
         suite_id = f"warrant/{spec.name}/exhaustive/{decl.name}"
-        self._tuple_typed = False
+        self._type_levels = set()
         binders: list = []
         refinements: list = []
         body = decl.body
@@ -563,7 +574,7 @@ class _Lowerer:
 
     def lower_example(self, decl: A.ExampleDecl) -> LoweredExample:
         self.scope = {}
-        self._tuple_typed = False
+        self._type_levels = set()
         try:
             ir, ty = self.expr(decl.body, BOOL)
             if ty != BOOL:
@@ -605,8 +616,7 @@ class _Lowerer:
             ir, ty = self._expr(e, expected)
             if ty.head == "Option" and not option_ok:
                 raise self.level(L.DATA, _OPTION_MESSAGE)
-            if L.TUPLE in L.type_levels(ty):
-                self._tuple_typed = True
+            self._type_levels |= L.type_levels(ty, self._data_names)
             return ir, ty
         except RecursionError as exc:
             raise OracleError("limit", "an expression nests too deeply") from exc
@@ -629,7 +639,9 @@ class _Lowerer:
                 and len(e.hex) // 2 == expected.args[0]
             ):
                 ty = expected
-            return ["lit", {"type": "Bytes", "value": e.hex}], ty
+            node = ["lit", {"type": "Bytes", "value": e.hex}]
+            self._note_width(node, len(e.hex) // 2)
+            return node, ty
         if isinstance(e, A.Name):
             if len(e.parts) == 1:
                 name = e.parts[0]
@@ -663,7 +675,11 @@ class _Lowerer:
             common = _unify(t_ty, o_ty)
             if common is None:
                 raise self.err("the branches of an `if` have no common type")
-            return ["if", c_ir, t_ir, o_ir], common
+            node = ["if", c_ir, t_ir, o_ir]
+            wt, wo = self._static_width(t_ir, t_ty), self._static_width(o_ir, o_ty)
+            if wt is not None and wt == wo:
+                self._note_width(node, wt)
+            return node, common
         if isinstance(e, (A.TupleLit, A.Proj)):
             raise self.level(L.TUPLE, "tuples and projections need ir.tuple")
         if isinstance(e, A.ListLit):
@@ -781,6 +797,10 @@ class _Lowerer:
             b_ir, b_ty = self.expr(e.args[1], None)
             if a_ty.head != "Bytes" or b_ty.head != "Bytes":
                 raise self.level("ir.data", "concat of lists needs ir.data")
+            node = ["concat", a_ir, b_ir]
+            wa, wb = self._static_width(a_ir, a_ty), self._static_width(b_ir, b_ty)
+            if wa is not None and wb is not None:
+                self._note_width(node, wa + wb)
             if (
                 a_ty.args
                 and b_ty.args
@@ -788,8 +808,8 @@ class _Lowerer:
                 and isinstance(b_ty.args[0], int)
             ):
                 # Widths add: concat(Bytes<1>, Bytes<30>) is Bytes<31>.
-                return ["concat", a_ir, b_ir], A.Ty("Bytes", (a_ty.args[0] + b_ty.args[0],))
-            return ["concat", a_ir, b_ir], BYTES
+                return node, A.Ty("Bytes", (a_ty.args[0] + b_ty.args[0],))
+            return node, BYTES
         if name in ("take", "drop") and e.args is not None and len(e.args) == 2:
             a_ir, a_ty = self.expr(e.args[0], None)
             if a_ty.head != "Bytes":
@@ -878,7 +898,7 @@ class _Lowerer:
         if name in ("from_be", "from_le"):
             width = FIXED[static][0] // 8
             b_ir, b_ty = self.expr(args[0], A.Ty("Bytes", (width,)))
-            if self._static_width(args[0], b_ty) != width:
+            if self._static_width(b_ir, b_ty) != width:
                 raise self.err("from_be/from_le need Bytes of exactly the target's width")
             b_ty = A.Ty("Bytes", (width,))
             return [name, static, b_ir], A.Ty(static)
@@ -952,25 +972,25 @@ class _Lowerer:
             raise self.err("the default of unwrap_or does not have the Option's type")
         return [name, o_ir, d_ir], inner
 
-    def _static_width(self, node: object, ty: A.Ty) -> int | None:
-        """The static width of a ``Bytes`` expression, or ``None`` if it is only a ``Bytes``.
+    def _note_width(self, ir: object, width: int) -> None:
+        self._widths[id(ir)] = (ir, width)
 
-        A bytes literal and a ``concat`` of statically sized operands have a width the source
-        typer otherwise forgets (``concat(t, b"000000")`` with ``t: Bytes<1>`` is ``Bytes<4>``,
-        as in hash-functions).  ``from_be``/``from_le`` are the one place the width is
-        required, so it is recomputed here from the source tree; nothing else changes type.
+    def _static_width(self, ir: object, ty: A.Ty) -> int | None:
+        """The static width of a lowered ``Bytes`` expression, or ``None``.
+
+        The grammar checker types a bytes literal ``Bytes<len>``, a ``concat`` of two
+        statically sized operands ``Bytes<sum>`` and an ``if`` whose branches have the *same*
+        static width ``Bytes<n>`` (``common_type``); anything else that is not already
+        ``Bytes<N>`` is a plain ``Bytes``.  The source typer here forgets those widths (so no
+        ``result_type`` moves), so they are recorded as nodes are lowered, once, and read back
+        by ``from_be``/``from_le``, the one place a width is required.  VER04r A.1 names the rule.
         """
         if ty.head != "Bytes":
             return None
         if ty.args and isinstance(ty.args[0], int):
             return ty.args[0]
-        if isinstance(node, A.BytesLit):
-            return len(node.hex) // 2
-        if isinstance(node, A.Call) and node.name == ("concat",) and node.args is not None:
-            widths = [self._static_width(a, self.expr(a, None)[1]) for a in node.args]
-            if len(widths) == 2 and None not in widths:
-                return widths[0] + widths[1]
-        return None
+        hit = self._widths.get(id(ir))
+        return hit[1] if hit is not None else None
 
     def _operand_pair(self, args: tuple) -> tuple[object, A.Ty, object, A.Ty]:
         """Two operands of one operator: a bare literal takes the other side's type."""

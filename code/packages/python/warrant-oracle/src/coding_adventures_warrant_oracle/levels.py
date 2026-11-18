@@ -213,14 +213,15 @@ def tag_level(tag: str) -> str | None:
     return None
 
 
-def type_levels(ty: A.Ty) -> set[str]:
-    """The levels a *type* brings (section 16.10 R9, D23), looking inside type arguments.
+def type_levels(ty: A.Ty, data_names: frozenset | set = frozenset()) -> set[str]:
+    """The levels a *type* brings (section 16.10 R9; section 4.1), looking inside type arguments.
 
     A tuple type, or any type that contains one (``List<(U8,U8)>``,
     ``Result<(U64,Nat),E>``), adds ``ir.tuple``: the rule is on the **type**, not on a tag,
-    because a consumer that does not implement tuples cannot hold the value.  ``Option<T>``
-    adds ``ir.data`` (it is an IR-only intermediate, D23, and never a type of a binder,
-    parameter, result or value).  Every other type adds nothing.
+    because a consumer that does not implement tuples cannot hold the value.  The values of
+    ``ir.data`` (section 4.1: lists, records, variants) add ``ir.data`` the same way; a record
+    or variant is recognised by its name in ``data_names``.  ``Option`` is not counted here: it
+    is never allowed as a type at all (:func:`type_refusal`).
     """
     found: set[str] = set()
     stack = [ty]
@@ -230,7 +231,7 @@ def type_levels(ty: A.Ty) -> set[str]:
             continue
         if t.head == "()":
             found.add(TUPLE)
-        elif t.head == "Option":
+        elif t.head == "List" or t.head in data_names:
             found.add(DATA)
         stack.extend(t.args)
     return found
@@ -240,20 +241,31 @@ def type_refusal(ty: A.Ty) -> str | None:
     """The level that *refuses* ``ty`` where a type may appear, or ``None`` if it is allowed.
 
     Only ``Option<T>`` is refused (``ir.data``, D23): the oracle's composite domains already
-    enumerate tuple binders (slice S4), so a tuple type is **counted** in ``requires``
-    (:func:`type_levels`) and not refused; a consumer that lacks ``ir.tuple`` records the
-    suite ``not-live`` (section 4.1).
+    enumerate tuple, list and record binders (slice S4), so those types are **counted** in
+    ``requires`` (:func:`type_levels`) and not refused; a consumer that lacks the level
+    records the suite ``not-live`` (section 4.1).
     """
-    return DATA if DATA in type_levels(ty) else None
+    stack = [ty]
+    while stack:
+        t = stack.pop()
+        if not isinstance(t, A.Ty):
+            continue
+        if t.head == "Option":
+            return DATA
+        stack.extend(t.args)
+    return None
 
 
-def ir_levels(irs: object, models: Mapping[str, object] | None = None) -> list[str]:
+def ir_levels(
+    irs: object, models: Mapping[str, object] | None = None, *, follow: bool = True
+) -> list[str]:
     """The sorted ``requires`` of one or more IR trees (section 16.10 R9, the tag part).
 
     ``irs`` is one IR tree or a list of trees (a suite row's ``admit``, ``body`` and the two
     sides of its oracle).  ``models`` maps a model name to its IR body; the **call closure**
     of every ``model_call`` is included, each model once.  The result is the sorted,
-    duplicate-free list of level names, ``[]`` for no tags at all.  An unknown tag is an
+    duplicate-free list of level names, ``[]`` for no tags at all.  With ``follow=False`` a
+    ``model_call`` is not followed (the caller adds the callee's own, already closed, requires).  An unknown tag is an
     ``ir`` error (never skipped, section 4.2 rule 7); ``match`` has no tag-only level (its
     level depends on its scrutinee's static type: ``ir.tuple`` for a ``Result``, ``ir.data``
     otherwise, slice S10t) and is a ``level`` error naming ``ir.data``, the safe name: a lane
@@ -283,7 +295,10 @@ def ir_levels(irs: object, models: Mapping[str, object] | None = None) -> list[s
             continue
         if tag == "model_call":
             name = node[1]
-            if name not in seen_models:
+            if not follow:
+                # the caller adds the callee's own (already closed) ``requires``
+                pass
+            elif name not in seen_models:
                 seen_models.add(name)
                 body = models.get(name)
                 if body is None:
