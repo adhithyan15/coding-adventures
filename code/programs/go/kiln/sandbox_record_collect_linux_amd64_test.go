@@ -365,6 +365,17 @@ exit 0
 	}
 	complete := func(r recfmt.ShardRecord) bool { return r.Complete != nil && *r.Complete }
 
+	// D32: the actions expected to be known (A, B, C, E, F) have no unknown_writes
+	// reason.  If one has (a trace the epilogue could not parse is the usual
+	// cause), log what each of its step traces looks like to both readers before
+	// the assertions below fail, since the traces die with the temp dir.
+	for _, a := range []string{actA, actB, actC, actE, actF} {
+		if r := rec(a); r.Unknown != "" {
+			t.Logf("D32: %s has unknown writes %q; diagnosing its step traces", a, r.Unknown)
+			logStepTraces(t, recDir, a)
+		}
+	}
+
 	// A: a clean hit.
 	ra := rec(actA)
 	hasPkg := false

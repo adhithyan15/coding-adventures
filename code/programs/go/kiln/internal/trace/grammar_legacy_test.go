@@ -81,20 +81,17 @@ func handleLineGLegacy(text string, lineNo int, st *lineState) (rec *record, e *
 		if !ok {
 			return nil, incomplete(lineNo, reasonUnparsable)
 		}
-		if p := pend[pid]; p != nil {
-			// A process killed or exiting inside a call that has no effect on
-			// paths is normal (wait4 interrupted by SIGKILL).  A path call that
-			// never returned is not: its result is unknown.
-			if c := lookup(p.name); c.class != classIgnored && !p.dead {
-				return nil, incomplete(p.line, reasonUnresumed)
-			}
-			delete(pend, pid)
+		if e := exitInsideCall(st, pid, ex); e != nil {
+			return nil, e
 		}
 		return &record{line: lineNo, pid: pid, exit: ex}, nil
 
 	case "signal_line":
-		if p := pend[pid]; p != nil && p.dead {
-			return nil, incomplete(lineNo, reasonInterleaved)
+		if p := pend[pid]; p != nil {
+			if p.dead {
+				return nil, incomplete(lineNo, reasonInterleaved)
+			}
+			p.sawSignal = true
 		}
 		return nil, nil
 
@@ -115,7 +112,7 @@ func handleLineGLegacy(text string, lineNo int, st *lineState) (rec *record, e *
 		if pend[pid] != nil {
 			return nil, incomplete(lineNo, reasonInterleaved)
 		}
-		pend[pid] = &pending{name: "???", line: lineNo, dead: true, resumed: bt.TypeName == "DEAD_WHOLE"}
+		st.setPending(pid, &pending{name: "???", line: lineNo, dead: true, resumed: bt.TypeName == "DEAD_WHOLE"})
 		return nil, nil
 
 	case "resumed_line":
@@ -125,7 +122,7 @@ func handleLineGLegacy(text string, lineNo int, st *lineState) (rec *record, e *
 		if p == nil || p.name != name || p.dead {
 			return nil, incomplete(lineNo, reasonUnmatched)
 		}
-		delete(pend, pid)
+		st.clearPending(pid)
 		// Glue the half before "<unfinished ...>" to the text after the marker
 		// and read the whole call again, as one line.  Each half was already
 		// read on its own (the parse above), so no construct can span the seam:
@@ -143,7 +140,8 @@ func handleLineGLegacy(text string, lineNo int, st *lineState) (rec *record, e *
 			// returned: it failed, and the group is not dying.
 			return &record{line: p.line, pid: pid, exitCall: true, rawExit: call.name == "exit", retract: true}, nil
 		}
-		return finishCall(pid, lineNo, call, true, st.helper)
+		rec, e := finishCall(pid, lineNo, call, true, st.helper)
+		return withGhosts(p, call, rec, e)
 
 	case "call_line":
 		call, unfinished, prefix, r := callFromTreeLegacy(text, ast, bt)
@@ -159,7 +157,7 @@ func handleLineGLegacy(text string, lineNo int, st *lineState) (rec *record, e *
 					return nil, e
 				}
 			}
-			pend[pid] = &pending{name: call.name, prefix: prefix, line: lineNo}
+			st.setPending(pid, &pending{name: call.name, prefix: prefix, line: lineNo})
 			if isExitName(call.name) {
 				return &record{line: lineNo, pid: pid, exitCall: true, rawExit: call.name == "exit"}, nil
 			}
