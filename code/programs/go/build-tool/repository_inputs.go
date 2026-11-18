@@ -373,6 +373,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		paths:    biquadSosFixturePaths,
 	},
 	{
+		name:     "rust/dsp-filters",
+		language: "rust",
+		inputs:   "the shared Biquad/SOS conformance fixture read by package tests",
+		matches:  isBiquadSosFixture,
+		paths:    biquadSosFixturePaths,
+	},
+	{
 		name:     "typescript/dsp-filters",
 		language: "typescript",
 		inputs:   "the shared Biquad/SOS conformance fixture read by package tests",

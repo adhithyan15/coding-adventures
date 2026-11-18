@@ -40,7 +40,8 @@ function finiteNumber(value: unknown, where: string): number {
 function decodeFixture(text: string): Fixture {
   const root = object(JSON.parse(text) as unknown, "fixture");
   exactKeys(root, ["schema_version", "input", "comparison", "cases"], "fixture");
-  assert.equal(root.schema_version, 1, "schema_version must be 1");
+  const schemaVersion = finiteNumber(root.schema_version, "schema_version");
+  assert.equal(schemaVersion, 1, "schema_version must equal numeric value 1");
   assert.equal(root.comparison, "finite_exact_numeric_equal_zero_sign_ignored");
 
   assert.ok(Array.isArray(root.input) && root.input.length === 16, "input must contain 16 samples");
@@ -148,6 +149,14 @@ describe("shared AF-02 Biquad/SOS fixture", () => {
       invalid.schema_version = invalidVersion;
       assert.throws(() => decodeFixture(JSON.stringify(invalid)), /schema_version/);
     }
+    const stringVersion = structuredClone(original);
+    stringVersion.schema_version = "1";
+    assert.throws(() => decodeFixture(JSON.stringify(stringVersion)), /JSON number/);
+
+    for (const spelling of ["1.0", "1e0"]) {
+      const alternateVersion = fixtureText.replace('"schema_version": 1', `"schema_version": ${spelling}`);
+      decodeFixture(alternateVersion);
+    }
 
     const unknownField = structuredClone(original);
     unknownField.extra = 1;
@@ -177,6 +186,15 @@ describe("shared AF-02 Biquad/SOS fixture", () => {
     const wrongChunkCases = wrongChunks.cases as Record<string, unknown>[];
     wrongChunkCases[0].chunk_lengths = [16];
     assert.throws(() => decodeFixture(JSON.stringify(wrongChunks)), /equal \[3, 1, 12\]/);
+
+    decodeFixture(fixtureText.replace('"chunk_lengths": [3, 1, 12]', '"chunk_lengths": [3.0, 1e0, 12]'));
+    for (const invalidChunks of ["[3.5, 1, 12]", "[true, 1, 12]", '["3", 1, 12]']) {
+      const malformedChunks = fixtureText.replace(
+        '"chunk_lengths": [3, 1, 12]',
+        `"chunk_lengths": ${invalidChunks}`
+      );
+      assert.throws(() => decodeFixture(malformedChunks), /chunk_lengths/);
+    }
 
     const nonfinite = fixtureText.replace("0.25,", "1e999,");
     assert.throws(() => decodeFixture(nonfinite), /finite/);
