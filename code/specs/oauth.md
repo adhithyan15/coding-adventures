@@ -6153,6 +6153,32 @@ Authenticated handshake progression, record protection, certificate and
 revocation policy, and HTTP composition remain prerequisites; concrete HTTPS
 and live-provider readiness remain unavailable.
 
+An allocation-free `tls13-retry-handshake-traffic-key-material-binding`
+prerequisite now accepts only the exact-message retry handshake-traffic-secret
+proof above, one explicit client-or-server sender role, and caller-owned
+traffic-key-material storage. Before touching that storage, it requires the
+storage's data-driven selected cipher suite to equal the suite retained by the
+bound traffic secrets. It selects only the retained sender secret, imports
+that exact hash-length value into a fixed wipe-on-drop PRK using the retained
+suite's hash, and delegates to the existing fixed-memory traffic-key and
+static-IV derivation. Success returns a non-copyable wrapper retaining the
+complete CH1, HelloRetryRequest, CH2, final ServerHello, base-schedule, and
+handshake-traffic-secret proof beside the sender role and borrowed key-material
+view. No detached traffic secret, suite, hash, key or IV length, label, or
+context is accepted. Suite substitution fails before output mutation;
+downstream failures retain stable redacted categories and the existing
+clearing and staging behavior.
+
+This exact-message binding derives one direction's handshake key and static IV
+per call. It does not advance the transcript, authenticate CertificateVerify
+or Finished, construct or reserve a record nonce, create record-protection
+state, invoke an AEAD, frame or protect records, process alerts, validate
+certificates, establish trust, verify a hostname, enforce revocation, perform
+I/O, authorize HTTP or OAuth transport, or open a network connection.
+Authenticated handshake progression, record-state composition, certificate and
+revocation policy, and HTTP composition remain prerequisites; concrete HTTPS
+and live-provider readiness remain unavailable.
+
 An allocation-free `http1-fixed-request-body` prerequisite now binds one
 caller-borrowed, potentially sensitive request body to its exact byte length
 under an explicit caller ceiling. It encodes that length in canonical shortest
