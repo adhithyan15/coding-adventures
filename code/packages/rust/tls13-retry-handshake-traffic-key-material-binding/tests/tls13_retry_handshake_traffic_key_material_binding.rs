@@ -14,7 +14,8 @@ use tls13_named_group_policy::{NamedGroup, NamedGroupPolicy};
 use tls13_record_protection_state::RecordProtectionStateError;
 use tls13_retry_handshake_traffic_key_material_binding::{
     bind_retry_handshake_traffic_key_material, HandshakeTrafficSender,
-    RetryHandshakeRecordProtectionStateBindingError, RetryHandshakeTrafficKeyMaterialBindingError,
+    RetryHandshakeRecordProtectionStateBindingError, RetryHandshakeRecordProtectionStateIssuer,
+    RetryHandshakeTrafficKeyMaterialBindingError,
 };
 use tls13_retry_handshake_traffic_secrets_binding::bind_retry_handshake_traffic_secrets;
 use tls13_retry_key_schedule_binding::bind_retry_key_schedule;
@@ -230,51 +231,99 @@ fn derives_both_senders_from_and_retains_exact_retry_evidence() {
 
         let expected_client = expected_material(suite, traffic.traffic_secrets().client_secret());
         let expected_server = expected_material(suite, traffic.traffic_secrets().server_secret());
-        let mut client_storage = TrafficKeyMaterialStorage::new(suite).unwrap();
-        let mut server_storage = TrafficKeyMaterialStorage::new(suite).unwrap();
-        let client = bind_retry_handshake_traffic_key_material(
-            &traffic,
-            HandshakeTrafficSender::Client,
-            &mut client_storage,
-        )
-        .unwrap();
-        let server = bind_retry_handshake_traffic_key_material(
-            &traffic,
-            HandshakeTrafficSender::Server,
-            &mut server_storage,
-        )
-        .unwrap();
+        {
+            let mut client_preview = TrafficKeyMaterialStorage::new(suite).unwrap();
+            let mut server_preview = TrafficKeyMaterialStorage::new(suite).unwrap();
+            let client = bind_retry_handshake_traffic_key_material(
+                &traffic,
+                HandshakeTrafficSender::Client,
+                &mut client_preview,
+            )
+            .unwrap();
+            let server = bind_retry_handshake_traffic_key_material(
+                &traffic,
+                HandshakeTrafficSender::Server,
+                &mut server_preview,
+            )
+            .unwrap();
 
-        assert!(core::ptr::eq(client.traffic_secrets(), &traffic));
-        assert!(core::ptr::eq(server.traffic_secrets(), &traffic));
-        assert_eq!(client.sender(), HandshakeTrafficSender::Client);
-        assert_eq!(server.sender(), HandshakeTrafficSender::Server);
-        assert_eq!(client.selected_suite(), suite);
-        assert_eq!(server.selected_suite(), suite);
-        assert_eq!(client.key_material().key(), expected_client.0);
-        assert_eq!(client.key_material().iv(), expected_client.1);
-        assert_eq!(server.key_material().key(), expected_server.0);
-        assert_eq!(server.key_material().iv(), expected_server.1);
-        assert_ne!(client.key_material().key(), server.key_material().key());
+            assert!(core::ptr::eq(client.traffic_secrets(), &traffic));
+            assert!(core::ptr::eq(server.traffic_secrets(), &traffic));
+            assert_eq!(client.sender(), HandshakeTrafficSender::Client);
+            assert_eq!(server.sender(), HandshakeTrafficSender::Server);
+            assert_eq!(client.selected_suite(), suite);
+            assert_eq!(server.selected_suite(), suite);
+            assert_eq!(client.key_material().key(), expected_client.0);
+            assert_eq!(client.key_material().iv(), expected_client.1);
+            assert_eq!(server.key_material().key(), expected_server.0);
+            assert_eq!(server.key_material().iv(), expected_server.1);
+            assert_ne!(client.key_material().key(), server.key_material().key());
 
-        let debug = format!("{client:?}");
-        assert!(debug.contains("[RETAINED]"));
-        assert!(debug.contains("[SECRET]"));
-        for disclosed in ["retry-key-material", "8520f009", "de9edb7d"] {
-            assert!(!debug.contains(disclosed));
+            let debug = format!("{client:?}");
+            assert!(debug.contains("[RETAINED]"));
+            assert!(debug.contains("[SECRET]"));
+            for disclosed in ["retry-key-material", "8520f009", "de9edb7d"] {
+                assert!(!debug.contains(disclosed));
+            }
         }
 
-        let mut client_state = match client.into_record_protection_state() {
-            Ok(state) => state,
-            Err(_) => panic!("valid exact retry key material must create record state"),
-        };
-        assert!(core::ptr::eq(client_state.traffic_secrets(), &traffic));
+        let issuer = RetryHandshakeRecordProtectionStateIssuer::new(traffic);
+        assert!(!issuer.has_issued(HandshakeTrafficSender::Client));
+        assert!(!issuer.has_issued(HandshakeTrafficSender::Server));
+        let mut client_storage = TrafficKeyMaterialStorage::new(suite).unwrap();
+        let mut server_storage = TrafficKeyMaterialStorage::new(suite).unwrap();
+        let mut client_state =
+            match issuer.issue(HandshakeTrafficSender::Client, &mut client_storage) {
+                Ok(state) => state,
+                Err(_) => panic!("valid exact retry client state issuance must succeed"),
+            };
+        let mut server_state =
+            match issuer.issue(HandshakeTrafficSender::Server, &mut server_storage) {
+                Ok(state) => state,
+                Err(_) => panic!("valid exact retry server state issuance must succeed"),
+            };
+
+        assert!(issuer.has_issued(HandshakeTrafficSender::Client));
+        assert!(issuer.has_issued(HandshakeTrafficSender::Server));
+        assert!(core::ptr::eq(
+            client_state.traffic_secrets(),
+            issuer.traffic_secrets()
+        ));
+        assert!(core::ptr::eq(
+            server_state.traffic_secrets(),
+            issuer.traffic_secrets()
+        ));
         assert_eq!(client_state.sender(), HandshakeTrafficSender::Client);
+        assert_eq!(server_state.sender(), HandshakeTrafficSender::Server);
         assert_eq!(client_state.selected_suite(), suite);
+        assert_eq!(server_state.selected_suite(), suite);
         assert_eq!(client_state.record_state().records_used(), 0);
+        assert_eq!(server_state.record_state().records_used(), 0);
         assert_eq!(
             client_state.record_state().remaining_records(),
             suite.record_limit()
+        );
+
+        let mut duplicate_storage = TrafficKeyMaterialStorage::new(suite).unwrap();
+        let duplicate = match issuer.issue(HandshakeTrafficSender::Client, &mut duplicate_storage) {
+            Err(error) => error,
+            Ok(_) => panic!("one issuer must reject a second client state"),
+        };
+        assert_eq!(
+            duplicate,
+            RetryHandshakeRecordProtectionStateBindingError::SenderAlreadyIssued
+        );
+        let mut duplicate_server_storage = TrafficKeyMaterialStorage::new(suite).unwrap();
+        let duplicate_server = match issuer.issue(
+            HandshakeTrafficSender::Server,
+            &mut duplicate_server_storage,
+        ) {
+            Err(error) => error,
+            Ok(_) => panic!("one issuer must reject a second server state"),
+        };
+        assert_eq!(
+            duplicate_server,
+            RetryHandshakeRecordProtectionStateBindingError::SenderAlreadyIssued
         );
 
         {
@@ -284,7 +333,15 @@ fn derives_both_senders_from_and_retains_exact_retry_evidence() {
             assert_eq!(first.nonce(), expected_client.1);
             assert_eq!(first.selected_suite(), suite);
         }
+        {
+            let first = server_state.record_state_mut().reserve_next().unwrap();
+            assert_eq!(first.sequence_number(), 0);
+            assert_eq!(first.key(), expected_server.0);
+            assert_eq!(first.nonce(), expected_server.1);
+            assert_eq!(first.selected_suite(), suite);
+        }
         assert_eq!(client_state.record_state().records_used(), 1);
+        assert_eq!(server_state.record_state().records_used(), 1);
 
         let state_debug = format!("{client_state:?}");
         assert!(state_debug.contains("[RETAINED]"));
@@ -292,6 +349,9 @@ fn derives_both_senders_from_and_retains_exact_retry_evidence() {
         for disclosed in ["retry-key-material", "8520f009", "de9edb7d"] {
             assert!(!state_debug.contains(disclosed));
         }
+        let issuer_debug = format!("{issuer:?}");
+        assert!(issuer_debug.contains("[RETAINED]"));
+        assert!(!issuer_debug.contains("8520f009"));
     });
 }
 
@@ -333,7 +393,7 @@ fn routes_sha384_from_the_retained_suite() {
 }
 
 #[test]
-fn rejects_output_storage_for_another_suite_before_derivation() {
+fn rejects_wrong_suite_without_consuming_sender_issuance() {
     let mut x25519_output = [0xa5; 32];
     with_retry_x25519_messages(CipherSuite::TlsAes128GcmSha256, |messages| {
         let secret = derive_message_bound_retry_x25519_shared_secret(
@@ -366,6 +426,29 @@ fn rejects_output_storage_for_another_suite_before_derivation() {
             .unwrap_err(),
             RetryHandshakeTrafficKeyMaterialBindingError::CipherSuiteMismatch
         );
+
+        let issuer = RetryHandshakeRecordProtectionStateIssuer::new(traffic);
+        let issuance_error = match issuer.issue(HandshakeTrafficSender::Client, &mut output_storage)
+        {
+            Err(error) => error,
+            Ok(_) => panic!("mismatched storage must not produce record state"),
+        };
+        assert_eq!(
+            issuance_error,
+            RetryHandshakeRecordProtectionStateBindingError::KeyMaterial(
+                RetryHandshakeTrafficKeyMaterialBindingError::CipherSuiteMismatch
+            )
+        );
+        assert!(!issuer.has_issued(HandshakeTrafficSender::Client));
+
+        let mut matching_storage =
+            TrafficKeyMaterialStorage::new(transcript.transcript().selected_suite()).unwrap();
+        let state = match issuer.issue(HandshakeTrafficSender::Client, &mut matching_storage) {
+            Ok(state) => state,
+            Err(_) => panic!("failed issuance must remain retryable"),
+        };
+        assert_eq!(state.sender(), HandshakeTrafficSender::Client);
+        assert!(issuer.has_issued(HandshakeTrafficSender::Client));
     });
 }
 
@@ -397,7 +480,23 @@ fn errors_are_stable_and_payload_free() {
     assert!(derivation.source().is_some());
     assert!(!format!("{derivation:?}").contains("retry-key-material"));
 
-    let record_state = RetryHandshakeRecordProtectionStateBindingError::from(
+    let duplicate = RetryHandshakeRecordProtectionStateBindingError::SenderAlreadyIssued;
+    assert_eq!(
+        duplicate.to_string(),
+        "TLS 1.3 retry handshake record state already issued for sender"
+    );
+    assert!(duplicate.source().is_none());
+
+    let issuance_key = RetryHandshakeRecordProtectionStateBindingError::KeyMaterial(
+        RetryHandshakeTrafficKeyMaterialBindingError::CipherSuiteMismatch,
+    );
+    assert_eq!(
+        issuance_key.to_string(),
+        "TLS 1.3 retry handshake record-state key derivation failed"
+    );
+    assert!(issuance_key.source().is_some());
+
+    let record_state = RetryHandshakeRecordProtectionStateBindingError::RecordState(
         RecordProtectionStateError::UnsupportedSuiteParameters,
     );
     assert_eq!(
