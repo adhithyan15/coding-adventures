@@ -13,7 +13,7 @@ permissions:
 jobs:
   paired-gate:
     name: G1 A-B-B-A (${{ matrix.os }})
-    if: github.event.head_commit.message == 'perf(kiln): reuse lexer cursor for G1 candidate [kiln-g1-abba]'
+    if: contains(github.event.head_commit.message, '[kiln-g1-abba]')
     runs-on: ${{ matrix.os }}
     timeout-minutes: 25
     strategy:
