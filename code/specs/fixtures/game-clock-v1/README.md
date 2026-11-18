@@ -24,6 +24,8 @@ floors, `u64::MAX` input, and cumulative-counter overflow. The reference model e
 
 These vectors define package-specific conformance. The Rust `game-clock` package test consumes
 every case through the public API, checks every output field or exact `ClockError`, and checks that
-failed advances preserve their input state. This is finite corpus evidence; it is not a formal proof
-or exhaustive evidence for the full input domain. The fixture has no generated Warrant or
-source-level proof attached.
+failed advances preserve their input state. A TypeScript consumer is under review in GBL-010; its
+local evidence is not yet a merged receipt. These are finite corpus results, not a formal proof or
+exhaustive evidence for the full input domain. The separate constructor Warrant model has finite
+execution evidence, but it is not generated from this fixture and is not a source-level proof. The
+fixture itself has no generated Warrant or source-level proof attached.
