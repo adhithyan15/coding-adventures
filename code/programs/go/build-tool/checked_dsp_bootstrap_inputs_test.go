@@ -42,9 +42,11 @@ func TestDSPFiltersBootstrapChangesSelectTheirConsumers(t *testing.T) {
 		t.Fatalf("actual repository BUILD files must declare graph prerequisites: %v", err)
 	}
 	for _, recipe := range []struct{ path, command string }{
+		{"code/packages/python/dsp-filters/BUILD_windows", "# build-tool: deps=python/test-bootstrap"},
 		{"code/packages/python/dsp-filters/BUILD_windows", "uv pip install --no-deps -e ../test-bootstrap"},
 		{"code/packages/python/dsp-stft/BUILD_windows", "uv pip install --no-deps -e ../test-bootstrap"},
 		{"code/packages/typescript/dsp-filters/BUILD_windows", "npm ci --prefix ../test-bootstrap"},
+		{"code/packages/typescript/dsp-filters/BUILD_windows", "npm run build --prefix ../test-bootstrap"},
 	} {
 		contents, err := os.ReadFile(filepath.Join(root, recipe.path))
 		if err != nil {
@@ -52,6 +54,51 @@ func TestDSPFiltersBootstrapChangesSelectTheirConsumers(t *testing.T) {
 		}
 		if !strings.Contains(string(contents), recipe.command) {
 			t.Errorf("Windows recipe %s omits the real bootstrap setup command %q", recipe.path, recipe.command)
+		}
+	}
+	windowsConsumers := make([]discovery.Package, 0, 3)
+	for _, name := range []string{"python/dsp-filters", "python/dsp-stft", "typescript/dsp-filters"} {
+		var found bool
+		for _, pkg := range packages {
+			if pkg.Name != name {
+				continue
+			}
+			buildPath := discovery.GetBuildFileForPlatform(pkg.Path, "windows")
+			if filepath.Base(buildPath) != "BUILD_windows" {
+				t.Fatalf("%s Windows selection resolved to %s", name, buildPath)
+			}
+			content, err := os.ReadFile(buildPath)
+			if err != nil {
+				t.Fatalf("read %s Windows BUILD: %v", name, err)
+			}
+			windowsPackage := pkg
+			windowsPackage.BuildContent = string(content)
+			windowsPackage.BuildCommands = strings.Split(string(content), "\n")
+			windowsConsumers = append(windowsConsumers, windowsPackage)
+			found = true
+			break
+		}
+		if !found {
+			t.Fatalf("missing discovered Windows consumer %s", name)
+		}
+	}
+	if err := validator.ValidateBuildFilesAgainst(windowsConsumers, packages, graph); err != nil {
+		t.Fatalf("Windows-selected DSP recipes must validate their actual prerequisites: %v", err)
+	}
+	for _, source := range []struct{ language, path string }{
+		{"python", "code/packages/python/test-bootstrap/src/coding_adventures_test_bootstrap/pbt.py"},
+		{"typescript", "code/packages/typescript/test-bootstrap/src/pbt.ts"},
+	} {
+		changed, err := changedPackageRootsForPlatformAndLanguage(
+			[]string{source.path}, packages, root, "windows", source.language,
+		)
+		if err != nil {
+			t.Fatalf("resolve Windows %s bootstrap change: %v", source.language, err)
+		}
+		got := affectedForGraphWithTriggers(graph, triggers, changed, nil, false)
+		consumer := source.language + "/dsp-filters"
+		if !got[consumer] {
+			t.Errorf("Windows affected graph omits %s after bootstrap edit (roots %v; full set %v)", consumer, changed, got)
 		}
 	}
 	graphs := map[string]*directedgraph.Graph{"all": graph}

@@ -1,3 +1,4 @@
+# build-tool: deps=python/test-bootstrap
 uv venv --quiet --clear
 uv pip install --no-deps -e ../dsp-complex --quiet
 uv pip install --no-deps -e ../dsp-fft --quiet
