@@ -716,10 +716,13 @@ plan, and no report may call a component "proved".
 The template above is what every component should look like. Six facts make
 copying it today produce known-bad output, and each has a row that closes it:
 
-1. **`check_evidence.sh` is an exception list.** It tolerates exactly three
+1. **`check_evidence.sh` is an exception list.** It tolerated exactly three
    `init` and `field-zero` controls that cannot pass because the initial state
-   is already zero (VOS-D065). Every zero-initial-state component would copy
-   it. Fix the generator first (VOS-038), then delete the script.
+   is already zero (VOS-D065). VOS-038a landed `field-flip` and deleted
+   fp-bitmap's script; `vos-sched-rr` keeps a narrowed one for its three
+   `init`/`field-flip` controls (VOS-D098). A new component binds `init` with
+   `field-flip` and needs no script unless its only `init`-subject claim is a
+   closure claim.
 2. **`heap <= 0` is falsified by the harness** for non-scalar results, because
    the harness's own marshalling allocates (VOS-D063). Until it is fixed a
    component can only declare `heap 0` on scalar operations, and the report

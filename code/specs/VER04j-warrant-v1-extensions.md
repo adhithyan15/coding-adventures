@@ -637,11 +637,56 @@ to an earlier constructor with minimal fields, then field-wise; `Option` toward
 | `drop-consumed` | tuple results | second component replaced by `0` |
 | `swap-components` | homogeneous tuples | components exchanged |
 | `field-zero` | record results | first numeric field replaced by `0` |
+| `field-flip` | record results (applicable exactly where `field-zero` is) | lowest bit of the first numeric field flipped |
 | `wrong-ctor` | variant results | constructor replaced by its predecessor |
 | `ok-as-err` | `Result` of a composite | success reported as the first error case |
 | `off-by-one-consumed` | `(value, consumed)` pairs | `consumed + 1` / `- 1` |
 
 The last is the principal LEB128 bug class: right value, wrong bytes consumed.
+
+**`field-flip` (WX-SV2).** `field-zero` is *inert* on a record whose first numeric
+field is already `0`: the faulted result equals the real one, so no claim can
+distinguish them and the negative control can never pass (a by-value `init() -> Impl`
+over a zero state is the canonical case). `field-flip` replaces the first numeric
+field `x` by `x ^ 1` (the pair `2k, 2k+1` is exchanged, two's complement for a
+negative `x`; a fixed-width field keeps its width, because both members of a pair
+share a range). It changes the value for every `x`, so it is never inert on a
+record. It is applicable to exactly the result types `field-zero` is (a
+single-constructor record with a numeric field, inside an `Ok` or a `Some` as
+for every composite fault, checked at generation as W0701). The kinds it
+flips are exactly the numeric kinds a composite carries: a fixed-width integer, and
+`Nat` / a shift-count `Nat` (a composite holds these as a model integer, `V::Int`,
+never `V::Nat`); `x ^ 1` is non-negative for a non-negative `x`, and a fault result is not
+range-checked against the declared `Nat` domain (`64 ^ 1 = 65` lies outside `0..=64` but
+is only compared, never converted back to the host). Bool, enum and bytes fields are not
+numeric: a record with none is W0701.
+
+*Gating (no existing harness changes).* The generated function `fault_field_flip`
+and the `Fault::FieldFlip` variant are emitted only when some `evidence.bindings`
+line lists `field-flip` in `faults=`. A harness that never names it is byte for
+byte what it was before the fault existed.
+
+*Aiming a sabotage run (`WARRANT_EVIDENCE_ATTACK`).* A sabotage run
+(`WARRANT_EVIDENCE_FAULT=<fault>`) faults every operation that lists the fault. Two
+operations that both list `field-flip` can then cancel: an `init` flipped and the
+`alpha` that reads it flipped again give back the honest answer, so a claim such as
+`alpha(init()) == empty` sees nothing. A harness that names `field-flip` therefore also
+reads `WARRANT_EVIDENCE_ATTACK=<op>` once and lets only that operation obey the fault
+(the same effect as the negative controls' one-operation scope). Unset, behaviour is
+unchanged. The switch is emitted by the same prelude region as `fault_field_flip`, so
+a harness that never names the fault does not contain it.
+
+*Validation.* The harness exits with status 2 and a message when
+`WARRANT_EVIDENCE_ATTACK` names no operation of the bindings (a misspelt name would
+fault nothing and every test would pass), or when it is set while `WARRANT_EVIDENCE_FAULT`
+is unset or `none` (the honest suite would run under a sabotage name).
+
+*What it cannot catch.* A single-field flip can stay inside the set a claim
+accepts: a claim that asserts only "the result is in the image of a
+representation function" (a closure claim such as `init() == R(init())`) is not
+attacked by a flip that lands on another member of the image. Such a claim needs a
+fault that leaves the invariant's range (the backlog row VOS-D098 proposes
+one); `field-flip` is an *in-range* fault by design.
 
 ### 4.9 Cross-language portability (VER04i corpus encoding)
 
@@ -1345,7 +1390,9 @@ The numbering continues from the WX-B/WX-C items above.
     input catches it); `wrong-ctor` of the first constructor is the last
     (cyclic), and the predecessor's fields are the first element of each field's
     domain; `field-zero` needs a numeric field and `swap-components` a homogeneous
-    pair or longer tuple, each checked at generation (W0701); `ok-as-err` needs a
+    pair or longer tuple, each checked at generation (W0701); `field-flip`
+    (4.8, WX-SV2) has the same applicability as `field-zero` but flips the lowest bit
+    of the first numeric field, so a zero field is not inert; `ok-as-err` needs a
     `Result` whose payload is composite.  A fault rewrites the composite *inside* an
     `Ok` or a `Some` (an `Option<(U8, U8)>` result can be attacked by
     `swap-components`), and `drop-consumed` and `off-by-one-consumed` need a numeric

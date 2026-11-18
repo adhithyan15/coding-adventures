@@ -6094,7 +6094,7 @@ An allocation-free `tls13-retry-key-schedule-binding` prerequisite now joins
 the message-bound retry transcript and message-bound X25519 shared secret only
 when both borrow the same exact retained CH1, HelloRetryRequest, CH2, and final
 ServerHello selection proof. Before touching caller-owned base-secret storage,
-the composer also requires that storage's data-driven selected cipher suite to
+the composer also requires that storage's data-driven selected cipher suite
 equal the suite retained by the exact transcript. Only then does it pass the
 repository-owned 32-byte X25519 secret to the existing no-PSK base schedule.
 Success returns a non-copyable wrapper retaining both exact message-bound
@@ -6110,6 +6110,29 @@ handshake message, authenticate CertificateVerify or Finished, protect
 records, validate certificates, establish trust, enforce revocation, perform
 I/O, authorize HTTP or OAuth transport, or open a network connection. Traffic-
 secret derivation, authenticated handshake progression, record protection,
+certificate/revocation policy, and HTTP composition remain prerequisites;
+concrete HTTPS and live-provider readiness remain unavailable.
+
+An allocation-free `tls13-handshake-traffic-secrets` prerequisite now derives
+the client and server handshake traffic secrets from the existing
+suite-selected `BaseSecrets` view and one repository-owned `TranscriptHash`.
+Caller-owned fixed storage must retain the exact same data-driven selected
+cipher suite as the base schedule, and the transcript snapshot's algorithm
+must equal that suite's HKDF hash. Only then does the primitive import the
+existing Handshake Secret into a fixed wipe-on-drop PRK, apply the fixed
+`"c hs traffic"` and `"s hs traffic"` labels, stage both Hash-length results in
+wipe-on-drop owners, and copy them into caller-owned wipe-on-drop storage only
+after both derivations succeed. Success returns a non-copyable borrowed view;
+stable failures retain no secret or transcript bytes.
+
+This primitive accepts an already-computed transcript snapshot and does not
+prove which messages produced it, own transcript sequencing, or attach its
+outputs to the exact retry proof. That exact-message composition remains a
+separate prerequisite. It also does not derive traffic keys or IVs,
+authenticate CertificateVerify or Finished, protect records, validate
+certificates, establish trust, enforce revocation, perform I/O, authorize HTTP
+or OAuth transport, or open a network connection. Exact-message traffic-
+secret binding, authenticated handshake progression, record protection,
 certificate/revocation policy, and HTTP composition remain prerequisites;
 concrete HTTPS and live-provider readiness remain unavailable.
 

@@ -176,6 +176,15 @@ mod harness {
     pub fn field_zero(v: V) -> V {
         fault_field_zero(v)
     }
+    pub fn harness_ops() -> &'static [&'static str] {
+        HARNESS_OPS
+    }
+    pub fn attack_check(a: Option<&str>, f: Option<&str>, ops: &[&str]) -> Result<(), String> {
+        check_attack(a, f, ops)
+    }
+    pub fn field_flip(v: V) -> V {
+        fault_field_flip(v)
+    }
     pub fn drop_consumed(v: V) -> V {
         fault_drop_consumed(v)
     }
@@ -274,6 +283,7 @@ fn the_full_generated_suite_passes_and_every_fault_is_caught() {
         "drop-consumed",
         "swap-components",
         "field-zero",
+        "field-flip",
         "wrong-ctor",
         "ok-as-err",
         "off-by-one-consumed",
@@ -736,6 +746,22 @@ fn shrinkers_work_componentwise_and_prefer_earlier_constructors() {
 // ---------------------------------------------------------------------------
 
 #[test]
+fn the_attack_switch_is_validated() {
+    let ops: Vec<&str> = vec!["normalize", "blob"];
+    // The generated list names every operation the bindings declare.
+    assert!(harness::harness_ops().contains(&"normalize") && harness::harness_ops().contains(&"blob"));
+    assert!(harness::attack_check(None, None, &ops).is_ok());
+    assert!(harness::attack_check(Some("normalize"), Some("field-flip"), &ops).is_ok());
+    // Set without a fault: refused, not silently the honest suite.
+    let e = harness::attack_check(Some("normalize"), None, &ops).unwrap_err();
+    assert!(e.contains("requires WARRANT_EVIDENCE_FAULT"), "{e}");
+    assert!(harness::attack_check(Some("normalize"), Some("none"), &ops).is_err());
+    // A name no operation has: refused, not a run that faults nothing.
+    let e = harness::attack_check(Some("normalise"), Some("field-flip"), &ops).unwrap_err();
+    assert!(e.contains("names no operation"), "{e}");
+}
+
+#[test]
 fn each_fault_rewrites_exactly_what_the_specification_says() {
     let fx = |n: i128| V::Fixed(F::U8, n);
     let pair = |a: V, b: V| V::Tup(vec![a, b]);
@@ -786,6 +812,23 @@ fn each_fault_rewrites_exactly_what_the_specification_says() {
         harness::field_zero(rec),
         V::Con("Span", 0, "Span", vec![V::Bool(true), fx(0), fx(7)])
     );
+    // field-flip: the lowest bit of the first numeric field flips, so a zero
+    // field is NOT inert (WX-SV2), and flipping twice restores the record.
+    let zero = V::Con("Span", 0, "Span", vec![V::Bool(true), fx(0), fx(7)]);
+    assert_eq!(
+        harness::field_flip(zero.clone()),
+        V::Con("Span", 0, "Span", vec![V::Bool(true), fx(1), fx(7)])
+    );
+    let four = V::Con("Span", 0, "Span", vec![V::Bool(true), fx(5), fx(7)]);
+    assert_eq!(
+        harness::field_flip(four.clone()),
+        V::Con("Span", 0, "Span", vec![V::Bool(true), fx(4), fx(7)])
+    );
+    assert_eq!(harness::field_flip(harness::field_flip(four.clone())), four);
+    assert_ne!(harness::field_flip(zero.clone()), harness::field_zero(zero));
+    // A plain Int (the numeric tower) flips too, a negative one by two's complement.
+    let neg = V::Con("R", 0, "R", vec![V::Int(-1)]);
+    assert_eq!(harness::field_flip(neg), V::Con("R", 0, "R", vec![V::Int(-2)]));
     // wrong-ctor: the previous constructor (the last for the first), with the
     // first element of each field's domain as fields.
     let rect = V::Con("Shape", 1, "Rect", vec![fx(8), fx(9)]);
@@ -1023,6 +1066,7 @@ fn the_generated_suite_notices_every_fault_it_names() {
         "drop-consumed",
         "swap-components",
         "field-zero",
+        "field-flip",
         "wrong-ctor",
         "ok-as-err",
         "off-by-one-consumed",
