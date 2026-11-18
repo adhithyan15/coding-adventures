@@ -131,6 +131,10 @@ def _decode_fixture(raw: str) -> tuple[list[float], list[dict[str, Any]]]:
                 raise ValueError("chunk_lengths must sum to 16")
             if chunks != [3, 1, 12]:
                 raise ValueError("chunk_lengths must equal [3, 1, 12]")
+            # `json.loads` may produce integral-valued floats for alternate
+            # spellings. Preserve the decoded numeric policy while giving the
+            # public slicing path canonical Python indices.
+            record["chunk_lengths"] = chunks
         by_id[record_id] = record
     if set(by_id) != set(EXPECTED_RECORDS):
         raise ValueError("fixture is missing a required operation ID")
@@ -156,6 +160,16 @@ def _partition_chunks(signal: list[float], mask: int) -> list[list[float]]:
             chunks.append(signal[start : boundary + 1])
             start = boundary + 1
     chunks.append(signal[start:])
+    return chunks
+
+
+def _fixed_chunks(signal: list[float], lengths: list[int]) -> list[list[float]]:
+    chunks: list[list[float]] = []
+    start = 0
+    for length in lengths:
+        chunks.append(signal[start : start + length])
+        start += length
+    assert start == len(signal)
     return chunks
 
 
@@ -186,9 +200,12 @@ def test_shared_fixture_all_biquad_partitions_and_state_semantics() -> None:
     )
 
     _assert_exact_finite(_biquad(record).process(signal), expected)
+    assert record["chunk_lengths"] == [3, 1, 12]
+    assert all(type(length) is int for length in record["chunk_lengths"])
     chunked = _biquad(record)
     _assert_exact_finite(
-        _process_chunks(chunked, [signal[:3], signal[3:4], signal[4:]]), expected
+        _process_chunks(chunked, _fixed_chunks(signal, record["chunk_lengths"])),
+        expected,
     )
     samplewise = _biquad(record)
     _assert_exact_finite([samplewise.process_sample(x) for x in signal], expected)
@@ -300,7 +317,26 @@ def test_shared_fixture_loader_rejects_malformed_and_mutated_data() -> None:
         alternate_version = raw.replace(
             '"schema_version": 1', f'"schema_version": {spelling}', 1
         )
-        _decode_fixture(alternate_version)
+        alternate_signal, alternate_records = _decode_fixture(alternate_version)
+        _assert_exact_finite(
+            _biquad(alternate_records[0]).process(alternate_signal),
+            alternate_records[0]["expected"],
+        )
+
+    alternate_chunks_raw = raw.replace(
+        '"chunk_lengths": [3, 1, 12]', '"chunk_lengths": [3.0, 1e0, 12]'
+    )
+    alternate_signal, alternate_records = _decode_fixture(alternate_chunks_raw)
+    alternate_record = alternate_records[0]
+    assert alternate_record["chunk_lengths"] == [3, 1, 12]
+    assert all(type(length) is int for length in alternate_record["chunk_lengths"])
+    _assert_exact_finite(
+        _process_chunks(
+            _biquad(alternate_record),
+            _fixed_chunks(alternate_signal, alternate_record["chunk_lengths"]),
+        ),
+        alternate_record["expected"],
+    )
 
     unknown_field = json.loads(raw)
     unknown_field["extra"] = 1

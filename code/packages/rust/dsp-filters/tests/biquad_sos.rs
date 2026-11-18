@@ -369,6 +369,12 @@ fn wide_integer_adapter_repairs_only_complete_overflow_tokens() {
     ] {
         assert!(parse_with_wide_integer_adapter(input).is_ok(), "{input}");
     }
+    let rounded_wide = parse_with_wide_integer_adapter("[18446744073709551617]").unwrap();
+    let rounded_value = finite_f64(&array(&rounded_wide, "root").unwrap()[0], "wide[0]").unwrap();
+    assert_eq!(rounded_value, 18_446_744_073_709_551_616.0);
+    let negative_wide = parse_with_wide_integer_adapter("[-18446744073709551617]").unwrap();
+    let negative_value = finite_f64(&array(&negative_wide, "root").unwrap()[0], "wide[0]").unwrap();
+    assert_eq!(negative_value, -18_446_744_073_709_551_616.0);
     for input in [
         "[1e18446744073709551616]",
         "[01]",
@@ -529,8 +535,8 @@ fn shared_fixture_schema_decodes_equivalent_numeric_spellings_and_rejects_mutati
         assert!(parse_fixture(&malformed).is_err());
     }
 
-    let mut changed_sample = parse_fixture(&raw).unwrap();
-    changed_sample.biquad.expected[3] += 2.0f32.powi(-20);
+    let changed_expected_raw = raw.replacen("0.46875", "0.4687509536743164", 1);
+    let changed_sample = parse_fixture(&changed_expected_raw).unwrap();
     let actual = Biquad::new(changed_sample.biquad.sections[0])
         .unwrap()
         .process(&changed_sample.input)
@@ -539,6 +545,26 @@ fn shared_fixture_schema_decodes_equivalent_numeric_spellings_and_rejects_mutati
         &actual,
         &changed_sample.biquad.expected
     ));
+
+    let changed_section_raw = raw.replace(
+        "[0.5, 0.25, 0.5, 2, -2, 0.5]",
+        "[0.125, 0.25, 0.5, 2, -2, 0.5]",
+    );
+    let changed_section = parse_fixture(&changed_section_raw).unwrap();
+    let changed_actual = Biquad::new(changed_section.biquad.sections[0])
+        .unwrap()
+        .process(&changed_section.input)
+        .unwrap();
+    assert!(!finite_exact_match(
+        &changed_actual,
+        &changed_section.biquad.expected
+    ));
+
+    let f32_overflow_coefficient = raw.replace(
+        "[0.5, 0.25, 0.5, 2, -2, 0.5]",
+        "[3.402823669209385e38, 0.25, 0.5, 2, -2, 0.5]",
+    );
+    assert!(parse_fixture(&f32_overflow_coefficient).is_err());
 }
 
 #[test]
@@ -606,8 +632,8 @@ fn checked_caps_and_fma_distinguishing_recurrence_are_pinned() {
         .process(&oversized_signal)
         .unwrap_err();
     assert!(matches!(process_cap, FilterError::InvalidCoefficient(_)));
-    let sos_sample_cap = sosfilt(&[[f32::NAN, 0.0, 0.0, 1.0, 0.0, 0.0]], &oversized_signal)
-        .unwrap_err();
+    let sos_sample_cap =
+        sosfilt(&[[f32::NAN, 0.0, 0.0, 1.0, 0.0, 0.0]], &oversized_signal).unwrap_err();
     assert!(matches!(sos_sample_cap, FilterError::InvalidCoefficient(_)));
     assert!(sos_sample_cap.to_string().contains("MAX_SAMPLES"));
     let too_many_sections = vec![[1.0, 0.0, 0.0, 1.0, 0.0, 0.0]; MAX_ORDER + 1];
@@ -616,6 +642,13 @@ fn checked_caps_and_fma_distinguishing_recurrence_are_pinned() {
     assert!(section_cap.to_string().contains("section count"));
     let maximum_sections = vec![[1.0, 0.0, 0.0, 1.0, 0.0, 0.0]; MAX_ORDER];
     assert_eq!(sosfilt(&maximum_sections, &[1.0]).unwrap(), [1.0]);
+    let maximum_signal = vec![0.0; MAX_SAMPLES];
+    let maximum_output = Biquad::new([1.0, 0.0, 0.0, 1.0, 0.0, 0.0])
+        .unwrap()
+        .process(&maximum_signal)
+        .unwrap();
+    assert_eq!(maximum_output.len(), MAX_SAMPLES);
+    assert!(maximum_output.iter().all(|sample| *sample == 0.0));
     assert!(matches!(
         sosfilt(&too_many_sections, &[]),
         Err(FilterError::EmptySignal)
@@ -637,6 +670,15 @@ fn checked_caps_and_fma_distinguishing_recurrence_are_pinned() {
     ));
     assert!(matches!(
         sosfilt(&[half, identity], &[f32::MAX]),
+        Err(FilterError::InvalidCoefficient(_))
+    ));
+    let half_gain = [0.5, 0.0, 0.0, 1.0, 0.0, 0.0];
+    assert_eq!(
+        sosfilt(&[half_gain, half], &[f32::MAX]).unwrap(),
+        [f32::MAX]
+    );
+    assert!(matches!(
+        sosfilt(&[half, half_gain], &[f32::MAX]),
         Err(FilterError::InvalidCoefficient(_))
     ));
 
@@ -996,8 +1038,19 @@ fn fuzz_word(bytes: &[u8], offset: usize) -> u32 {
     u32::from_le_bytes(word)
 }
 
-fn run_structured_fuzz_case(bytes: &[u8], coverage: &mut CoverageBitmap) -> FuzzOutcome {
-    if bytes.len() < 37 {
+fn fuzz_crash(kind: &str) -> FuzzOutcome {
+    FuzzOutcome::Crash {
+        kind: kind.into(),
+        frames: vec!["biquad_sos::public_semantic_oracle".into()],
+    }
+}
+
+fn run_structured_fuzz_case_with_reset_mutant(
+    bytes: &[u8],
+    coverage: &mut CoverageBitmap,
+    skip_reset_for_negative_control: bool,
+) -> FuzzOutcome {
+    if bytes.len() < 33 {
         coverage.record_edge(0);
         return FuzzOutcome::Pass;
     }
@@ -1011,36 +1064,111 @@ fn run_structured_fuzz_case(bytes: &[u8], coverage: &mut CoverageBitmap) -> Fuzz
         f32::from_bits(fuzz_word(bytes, 29)),
         f32::from_bits(fuzz_word(bytes, 33)),
     ];
-    let outcome = match op {
-        0 => Biquad::new(section)
-            .and_then(|mut filter| filter.process_sample(samples[0]))
-            .map(|value| value.is_finite()),
-        1 => Biquad::new(section)
-            .and_then(|mut filter| filter.process(&samples))
-            .map(|values| values.iter().all(|value| value.is_finite())),
-        2 => {
-            sosfilt(&[section], &samples).map(|values| values.iter().all(|value| value.is_finite()))
-        }
-        _ => Biquad::new(section)
-            .and_then(|mut filter| {
-                let _ = filter.process_sample(samples[0]);
-                filter.reset();
-                filter.process_sample(samples[1])
-            })
-            .map(|value| value.is_finite()),
+    let class: usize;
+    let verdict = match op {
+        0 => match Biquad::new(section) {
+            Err(FilterError::InvalidCoefficient(_)) => {
+                class = 6;
+                true
+            }
+            Err(_) => return fuzz_crash("unexpected-constructor-error"),
+            Ok(mut filter) => match filter.process_sample(samples[0]) {
+                Ok(value) if value.is_finite() => {
+                    class = 1;
+                    true
+                }
+                Ok(_) => return fuzz_crash("nonfinite-sample-output"),
+                Err(FilterError::InvalidCoefficient(_)) => {
+                    class = 4;
+                    true
+                }
+                Err(_) => return fuzz_crash("unexpected-sample-error"),
+            },
+        },
+        1 => match Biquad::new(section) {
+            Err(FilterError::InvalidCoefficient(_)) => {
+                class = 6;
+                true
+            }
+            Err(_) => return fuzz_crash("unexpected-constructor-error"),
+            Ok(mut filter) => match filter.process(&samples) {
+                Ok(values)
+                    if values.len() == samples.len() && values.iter().all(|v| v.is_finite()) =>
+                {
+                    class = 1;
+                    true
+                }
+                Ok(_) => return fuzz_crash("invalid-block-result"),
+                Err(FilterError::InvalidCoefficient(_)) => {
+                    class = 4;
+                    true
+                }
+                Err(_) => return fuzz_crash("unexpected-block-error"),
+            },
+        },
+        2 => match sosfilt(&[section], &samples) {
+            Ok(values) if values.len() == samples.len() && values.iter().all(|v| v.is_finite()) => {
+                class = 1;
+                true
+            }
+            Ok(_) => return fuzz_crash("invalid-sos-result"),
+            Err(FilterError::InvalidCoefficient(_)) => {
+                class = 4;
+                true
+            }
+            Err(_) => return fuzz_crash("unexpected-sos-error"),
+        },
+        _ => match Biquad::new(section) {
+            Err(FilterError::InvalidCoefficient(_)) => {
+                class = 6;
+                true
+            }
+            Err(_) => return fuzz_crash("unexpected-constructor-error"),
+            Ok(mut filter) => match filter.process_sample(samples[0]) {
+                Err(FilterError::InvalidCoefficient(_)) => {
+                    class = 4;
+                    true
+                }
+                Err(_) => return fuzz_crash("unexpected-reset-prefix-error"),
+                Ok(first) if !first.is_finite() => return fuzz_crash("nonfinite-reset-prefix"),
+                Ok(_) => {
+                    if !skip_reset_for_negative_control {
+                        filter.reset();
+                    }
+                    let actual = filter.process_sample(samples[1]);
+                    let expected =
+                        Biquad::new(section).and_then(|mut fresh| fresh.process_sample(samples[1]));
+                    match (actual, expected) {
+                        (Ok(actual), Ok(expected))
+                            if actual.is_finite() && expected.is_finite() && actual == expected =>
+                        {
+                            class = 1;
+                        }
+                        (Ok(_), Ok(_)) => return fuzz_crash("reset-result-mismatch"),
+                        (
+                            Err(FilterError::InvalidCoefficient(_)),
+                            Err(FilterError::InvalidCoefficient(_)),
+                        ) => {
+                            class = 4;
+                        }
+                        _ => return fuzz_crash("reset-result-class-mismatch"),
+                    }
+                    true
+                }
+            },
+        },
     };
-    let class = match outcome {
-        Ok(true) => 1,
-        Ok(false) => 2,
-        Err(FilterError::EmptySignal) => 3,
-        Err(FilterError::InvalidCoefficient(ref message)) if message.contains("output") => 4,
-        Err(FilterError::InvalidCoefficient(ref message)) if message.contains("delay") => 5,
-        Err(FilterError::InvalidCoefficient(_)) => 6,
-        Err(_) => 7,
-    };
-    // Manual semantic outcome buckets; this is not compiler instrumentation.
+    if !verdict {
+        return fuzz_crash("semantic-invariant-failed");
+    }
+    // These manually assigned public-outcome bins guide admission; they are
+    // not production branch instrumentation or source-proof evidence.
     coverage.record_edge((op as usize) * 16 + class);
     FuzzOutcome::Pass
+}
+
+fn run_structured_fuzz_case(bytes: &[u8], coverage: &mut CoverageBitmap) -> FuzzOutcome {
+    run_structured_fuzz_case_with_reset_mutant(bytes, coverage, false)
 }
 
 #[test]
@@ -1066,12 +1194,28 @@ fn ver06_structured_raw_bit_fuzz_replays_and_exercises_minimization() {
         max_input_len: 40,
         base_energy: 8,
     };
+    let mut triage_coverage = CoverageBitmap::new();
+    let mut triage_admitted = 0usize;
+    for seed in &initial {
+        let mut trace = CoverageBitmap::new();
+        assert!(matches!(
+            run_structured_fuzz_case(seed, &mut trace),
+            FuzzOutcome::Pass
+        ));
+        let (has_new_edges, _) = triage_coverage.admit_trace(&trace.covered_edges());
+        if has_new_edges || triage_admitted == 0 {
+            triage_admitted += 1;
+        }
+    }
     let first = fuzz_target(&initial, &options, run_structured_fuzz_case);
     let replay = fuzz_target(&initial, &options, run_structured_fuzz_case);
+    let post_triage_admitted = first.admitted_seeds - triage_admitted;
     println!(
-        "AF-03 VER06 seed=0xAF03F022 iterations={} admitted={} edges={} crashes={} timeouts={} ooms={}",
+        "AF-03 VER06 seed=0xAF03F022 iterations={} admitted={} initial={} post-triage={} edges={} crashes={} timeouts={} ooms={}",
         first.iterations,
         first.admitted_seeds,
+        triage_admitted,
+        post_triage_admitted,
         first.total_edges,
         first.crashes.len(),
         first.timeouts,
@@ -1088,18 +1232,33 @@ fn ver06_structured_raw_bit_fuzz_replays_and_exercises_minimization() {
     assert_eq!(first.timeouts, 0);
     assert_eq!(first.ooms, 0);
 
-    let crash_kind = "intentional-minimizer-control";
-    let frames = ["biquad_sos::minimizer_control"];
-    let signature = crash_signature(crash_kind, &frames);
-    let minimized = minimize_crashing_input(&[0, 42, 0], &signature, |input| {
-        if input.contains(&42) {
-            FuzzOutcome::Crash {
-                kind: crash_kind.into(),
-                frames: frames.iter().map(|frame| (*frame).into()).collect(),
-            }
-        } else {
-            FuzzOutcome::Pass
-        }
-    });
-    assert_eq!(minimized, [42]);
+    let reset_fault = fuzz_seed(3, [0.0, 1.0, 0.0, 1.0, 0.0, 0.0], [1.0, 2.0, 0.0]);
+    let crash_kind = "reset-result-mismatch";
+    let signature = crash_signature(crash_kind, &["biquad_sos::public_semantic_oracle"]);
+    let mutant_outcome = |input: &[u8]| {
+        run_structured_fuzz_case_with_reset_mutant(input, &mut CoverageBitmap::new(), true)
+    };
+    assert!(matches!(
+        mutant_outcome(&reset_fault),
+        FuzzOutcome::Crash { .. }
+    ));
+    let minimized = minimize_crashing_input(&reset_fault, &signature, mutant_outcome);
+    assert!(matches!(
+        run_structured_fuzz_case_with_reset_mutant(
+            &minimized,
+            &mut CoverageBitmap::new(),
+            true
+        ),
+        FuzzOutcome::Crash { ref kind, .. } if kind == crash_kind
+    ));
+    assert!(matches!(
+        run_structured_fuzz_case(&reset_fault, &mut CoverageBitmap::new()),
+        FuzzOutcome::Pass
+    ));
+    assert!(minimized.len() < reset_fault.len());
+    println!(
+        "AF-03 VER06 reset semantic mutant minimized {} bytes to {} bytes and replayed",
+        reset_fault.len(),
+        minimized.len()
+    );
 }
