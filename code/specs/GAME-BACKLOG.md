@@ -445,7 +445,9 @@ worktree; report and preserve it if those checks do not pass.
   semantics. Keep this broader G1 host-robustness item open until the PR passes
   ordinary protected checks and any slow-host rescue claim has a predeclared
   matched-host cohort independent of candidate results; retain every run and
-  make no result-selected retries.
+  make no result-selected retries. The narrowly scoped optimization is PR
+  [#19657](https://github.com/adhithyan15/coding-adventures/pull/19657);
+  its ordinary protected checks and merge remain pending.
 - [ ] `GBL-058` Repair the conflict between the actual `P2D09`/`P2D10` specification filenames/scopes
   and GAME00 labels. Keep this as a separate documentation repair; do not mint or reuse colliding game
   identifiers to paper over it.
