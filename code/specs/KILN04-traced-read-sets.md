@@ -2471,67 +2471,71 @@ competing implementation, so it survives PR 8.
   gate's job is to catch the reader getting slower, and to refuse a host on
   which a cap-sized action could not finish.
 
-  *The normalisation.* Each synthetic measurement also times two CANDIDATE
-  **reference kernels** (`internal/trace/measure.go`), both frozen,
-  allocation-free (except what B deliberately allocates) and sinking their
-  result into a package variable:
-  **kernel A** (`refKernelA`) is a byte-at-a-time tokenizer-shaped state
-  machine (a 256-entry byte-class table, an 8x8 transition table, a branch on
-  the accept state) with a serial FNV-1a multiply chain per byte; one sample
-  runs it 8 times over the slice. It is a clock-frequency meter (about 9
-  cycles a byte, about 400 MB/s), blind to branch prediction, out-of-order
-  width, caches and the allocator, which drive the parser, so its cross-host
-  spread may exceed the reader's. **Kernel B** (`refKernelB`) is
-  parser-shaped: it splits the input on newlines, per line makes a token slice
-  of capacity 4 and appends heap token nodes (so growth allocates), finds
-  token boundaries with the class table and dispatches with a `switch` on the
-  class (different work per arm), copies each token to a string and looks it up
-  in a small prefilled `map[string]int`, keeps the last 64 lines live in a ring,
-  and hashes once per token, never per byte; one sample runs it twice. It
-  measures about 70 MB/s (3 to 4 times the reader) and allocates about 28 bytes
-  per input byte against the grammar path's 46. `BestPass1Calibrated` times one
-  sample of A, one of B and one grammar pass in each iteration of the usual loop
-  (the refusal-check pass doubles as the grammar warm-up, one warm-up sample of
-  each kernel, collector off and restored, at least 7 iterations spanning at
-  least 250 ms, at most 200) and keeps the minimum of each. The test makes three
-  such rounds per run and logs every round's k. Rates are
-  `ref_mb_s = 8 * len / refA` (kernel A), `refb_mb_s = 2 * len / refB`
-  (kernel B), and
+  *The normalisation.* Each synthetic measurement also times a **reference
+  kernel** (`refKernel`, `internal/trace/measure.go`) in the same loop, and
 
-      norm_mb_s = best_mb_s * refNominalMBs / ref_mb_s   (or refb_mb_s)
+      norm_mb_s = best_mb_s * refNominalMBs / ref_mb_s
 
-  is the rate the reader would have on the nominal host. Both kernels are
-  **FROZEN**: `refNominalMBs` is calibrated to exactly that code.
+  is the rate the reader would have on the nominal host (`refNominalMBs` = 72.0,
+  the kernel's rate there). The kernel is **parser-shaped, allocating and
+  FROZEN**: it splits the input on newlines; per line it makes a token slice of
+  capacity 4 and appends heap token nodes (so the slice grows and the allocator
+  runs); it finds token boundaries with a byte-class table and dispatches with a
+  `switch` on the class (different work per arm); it copies each token to a
+  string and looks it up in a small prefilled `map[string]int`; it keeps the last
+  64 lines live in a ring; and it hashes once per token, never per byte (no
+  serial multiply chain). It is NOT allocation-free: it allocates about 28 bytes
+  per input byte (the grammar path about 46) and runs at about 72 MB/s, 3 to 4
+  times the reader. One reference sample is 2 passes over the slice. A first
+  candidate, a byte-at-a-time state machine with a serial FNV multiply chain
+  ("kernel A"), was rejected: it is a clock-frequency meter, blind to branch
+  prediction, out-of-order width, caches and the allocator, and its cross-leg
+  spread was 1.39. `BestPass1Calibrated` times one reference sample and then one
+  grammar pass in each iteration of the usual loop (the refusal-check pass
+  doubles as the grammar warm-up, one warm-up sample of the kernel, collector
+  off and restored for a small trace, at least 7 iterations spanning at least
+  250 ms, at most 200) and keeps the minimum of each. `ref_mb_s = 2 * len /
+  refBest`. The kernel, its tables and dictionary, its pass count and
+  `refNominalMBs` are frozen together.
 
-  *Calibration procedure.* The nominal host is the fast-group runner: the
-  median slice rate of the fast legs is **19.5 MB/s**. On every leg the slice
-  line logs `k_a = ref_mb_s * 19.5 / best_mb_s` and `k_b = refb_mb_s * 19.5 /
-  best_mb_s` (the reference rate this leg's host would show if the slice read
-  19.5 there), plus each round's values (`k_a_rounds=`, `k_b_rounds=`). If a
-  kernel tracks the reader across hosts its k is the same on every host.
-  **Selection rule:** freeze the kernel with the smaller cross-leg
-  `max(k) / min(k)`, which must be at most **1.15** and must include a **slow**
-  leg (raw slice at most 16 MB/s: a calibration from fast hosts alone has not
-  tested the property that matters); delete the other kernel. Within a leg the
-  three rounds must agree to `max/min <= 1.05` (otherwise the leg is noise, not
-  evidence). Then `refNominalMBs = median(k)` of the chosen kernel over at least
-  **6 legs**. The time-box is about **8 legs**; if no kernel meets the rule
-  within it, G1 falls back to the raw 8 MB/s floor alone and `calibrated=0`
-  stays. Until it is calibrated, `refNominalMBs` is a placeholder and
-  `refNominalCalibrated = false`: norm_mb_s is not logged, the k values are the
-  report, and the normalised check never fails (`calibrated=0`). The calibrating
-  commit sets the constant, the flag and the kernel choice AND sets
-  `REQUIRE_CALIBRATED = True` in `ci/assert_sandbox_tests.py`, so that Go alone
-  cannot switch the independent check off by logging `calibrated=0`; the script
-  also insists `calibrated` is exactly `0` or `1`. **Recalibrate only on a Go
-  toolchain bump** (or if a kernel ever has to change, which needs the
-  procedure again). **Until calibration lands, a PR that touches
-  `internal/trace` or the shared lexer/parser must have its `synthetic-slice`
-  line checked by hand** (the raw 8 floor would not notice a 1.5x slowdown).
+  *Calibration (done, 8 CI legs).* On each leg
+  `k = ref_mb_s * 19.5 / best_mb_s` (the reference rate the leg's host would
+  show if the slice read the nominal 19.5 MB/s there), and
+  `norm_mb_s = best_mb_s * 72.0 / ref_mb_s`:
 
-  *Margins.* Normalised, the reader clears the nominal host by 19.5 / 14 =
-  **1.39x**. For the absolute floor: 2147 MB at 8 MB/s is **268 s** by the
-  slice proxy, about half the 600 s deadline (3.6 MB/s is the hard limit).
+  | CPU | best | ref | k | norm |
+  |---|---|---|---|---|
+  | Xeon 6975P-C | 19.3 | 71.4 | 72.0 | 19.5 |
+  | EPYC 7763 | 12.5 | 45.9 | 71.7 | 19.6 |
+  | Xeon 6975P-C | 19.4 | 69.7 | 70.1 | 20.0 |
+  | EPYC 9V74 | 16.8 | 65.4 | 75.9 | 18.5 |
+  | EPYC 9V45 | 20.8 | 85.0 | 79.8 | 17.6 |
+  | EPYC 9V74 | 16.7 | 66.2 | 77.5 | 18.2 |
+  | Xeon Platinum 8370C | 13.6 | 47.9 | 68.9 | 20.4 |
+  | Xeon Platinum 8573C | 17.4 | 59.4 | 66.5 | 21.1 |
+
+  The median k is 71.85, rounded to **`refNominalMBs = 72.0`**.
+  *Validity rule:* the within-leg k spread (rounds on one host) is at most 1.05,
+  and the worst-leg norm is at least 1.2 x the 14 floor (16.8) with a slow host
+  (raw slice at most 16) included. Observed: the worst norm is **17.6** (the
+  Zen 5 EPYC 9V45, a 1.26 margin over 14), and the slow legs (EPYC 7763 at 12.5,
+  Xeon 8370C at 13.6) normalise to 19.6 and 20.4. The cross-leg spread of k is
+  **1.20** (66.5 to 79.8), and it is systematic by CPU model: the kernel
+  over-rates Zen 4 and Zen 5 by 6 to 11% against the median (so the reader looks
+  6 to 10% slower there than it is) and under-rates the Intel 8573C. That
+  residual is inside the 1.39 margin and is not corrected per CPU.
+  **Recalibrate** when the Go toolchain changes, or when a new CPU model shows
+  norm below 16.8 on a PR that does not touch the parser; recalibration is a new
+  median over at least 6 legs. **Never add a per-CPU table.**
+  `refNominalCalibrated = true`: the synthetic test fails when norm is below 14,
+  the slice line says `calibrated=1`, and `ci/assert_sandbox_tests.py` sets
+  `REQUIRE_CALIBRATED = True`, so a line that says anything but `calibrated=1`
+  fails the job and Go alone cannot switch the independent check off.
+
+  *Margins.* Normalised, the reader clears the floor by 19.5 / 14 = **1.39x**
+  (the worst leg, 17.6 / 14 = 1.26x). For the absolute floor: 2147 MB at 8 MB/s
+  is **268 s** by the slice proxy, about half the 600 s deadline (3.6 MB/s is the
+  hard limit).
 
   The CI job prints the CPU model (`/proc/cpuinfo`) and `nproc` next to
   `uname -r`, so each leg's rate can be read against its host.
@@ -2567,7 +2571,7 @@ competing implementation, so it survives PR 8.
   floor on larger inputs is carried by one deterministic input that always runs
   (`TestSandboxTraceGateSynthetic`): a 64 KB slice of whole repetitions of
   `testdata/build.strace`, logged as `PROBE: trace synthetic-slice ... gated=1`,
-  with the same statistic, carrying both parts of G1 (its line also carries `ref_mb_s`, `refb_mb_s`, `k_a`, `k_b`, the per-round `k_a_rounds`/`k_b_rounds`, `norm_mb_s` (only once calibrated) and `calibrated=0|1`, all before `gated=` and before any refusal field). The same test reads the fixture repeated to
+  with the same statistic, carrying both parts of G1 (its line also carries `ref_mb_s`, `norm_mb_s` and `calibrated=1`, all before `gated=` and before any refusal field). The same test reads the fixture repeated to
   at least 4 MiB (pass 1 must read all of it) and logs its best-of-7 rate on its
   own line, `synthetic-4mib-census`, `gated=0`. Each gated line carries
   `best_mb_s` (gated, raw) and real traces also carry `grammar_mb_s` (single shot,
@@ -2575,7 +2579,7 @@ competing implementation, so it survives PR 8.
   `ci/assert_sandbox_tests.py` independently fails the job unless a passing test
   logged a `gated=1` line, the `synthetic-slice` line is among them and comes
   from `TestSandboxTraceGateSynthetic`, and every gated `best_mb_s` is finite,
-  positive and at least 8 (the slice line also needs a finite, positive `ref_mb_s` and `refb_mb_s`, `calibrated` exactly 0 or 1, and, only when it says `calibrated=1`, a `norm_mb_s` of at least 14); a PROBE line counts only when its payload starts
+  positive and at least 8 (the slice line also needs a finite, positive `ref_mb_s`, `calibrated=1`, and a `norm_mb_s` of at least 14); a PROBE line counts only when its payload starts
   with `PROBE: trace ` after the go test `file:line` prefix, which must be
   indented exactly four spaces (in `go test -v -json`, the mode CI runs, every
   `t.Logf` line has that indent at any subtest depth; a continuation line of a

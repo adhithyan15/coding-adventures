@@ -74,9 +74,9 @@ job (only: it sets `KILN_G1_GATE=1`; elsewhere the figures are logged, not
 enforced) also applies gate G1 (KILN04 section 4.9) in two parts: an absolute
 floor of 8 MB/s (best-of-7 grammar-path pass 1) on a real trace of 32 to 128 KB
 and on a fixed synthetic 64 KB slice (`synthetic-slice`), and, on that slice
-only, a host-normalised floor of 14 MB/s (the rate is rescaled by a frozen
-reference kernel timed beside it, so a slower runner is not read as a slower
-reader; report-only until its nominal constant is calibrated from CI). Larger
+only, a host-normalised floor of 14 MB/s (the rate is rescaled by a frozen,
+parser-shaped reference kernel timed beside it, nominal rate 72 MB/s calibrated
+over 8 CI legs, so a slower runner is not read as a slower reader). Larger
 traces are logged for the census only. The old scanner is deleted in PR 8, after
 a soak.
 
