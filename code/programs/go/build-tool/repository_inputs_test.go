@@ -126,9 +126,10 @@ func TestGameClockCorpusSelectsRustConsumerOnly(t *testing.T) {
 	}
 }
 
-func TestBiquadSosFixtureSelectsPythonAndTypeScriptConsumers(t *testing.T) {
+func TestBiquadSosFixtureSelectsAllLanguageConsumers(t *testing.T) {
 	packages := []discovery.Package{
 		{Name: "python/dsp-filters", Language: "python"},
+		{Name: "rust/dsp-filters", Language: "rust"},
 		{Name: "typescript/dsp-filters", Language: "typescript"},
 	}
 	for _, changed := range []string{
@@ -136,15 +137,22 @@ func TestBiquadSosFixtureSelectsPythonAndTypeScriptConsumers(t *testing.T) {
 		"code/specs/fixtures/biquad-sos-v1/README.md",
 	} {
 		got, err := repositoryInputConsumersForChange([]string{changed}, packages, "all")
-		want := map[string]bool{"python/dsp-filters": true, "typescript/dsp-filters": true}
+		want := map[string]bool{
+			"python/dsp-filters":     true,
+			"rust/dsp-filters":       true,
+			"typescript/dsp-filters": true,
+		}
 		if err != nil || !reflect.DeepEqual(got, want) {
-			t.Fatalf("%s selected %v, err %v; want both consumers", changed, got, err)
+			t.Fatalf("%s selected %v, err %v; want all consumers", changed, got, err)
 		}
 		if got, err := repositoryInputConsumersForChange([]string{changed}, packages, "python"); err != nil || !reflect.DeepEqual(got, map[string]bool{"python/dsp-filters": true}) {
 			t.Fatalf("python-only selection got %v, err %v", got, err)
 		}
 		if got, err := repositoryInputConsumersForChange([]string{changed}, packages, "typescript"); err != nil || !reflect.DeepEqual(got, map[string]bool{"typescript/dsp-filters": true}) {
 			t.Fatalf("typescript-only selection got %v, err %v", got, err)
+		}
+		if got, err := repositoryInputConsumersForChange([]string{changed}, packages, "rust"); err != nil || !reflect.DeepEqual(got, map[string]bool{"rust/dsp-filters": true}) {
+			t.Fatalf("rust-only selection got %v, err %v", got, err)
 		}
 	}
 	for changed, shouldMatch := range map[string]bool{
@@ -161,17 +169,51 @@ func TestBiquadSosFixtureSelectsPythonAndTypeScriptConsumers(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		if shouldMatch && len(selected) != 2 {
-			t.Errorf("expected both consumers for %q, got %v", changed, selected)
+		if shouldMatch && len(selected) != 3 {
+			t.Errorf("expected all consumers for %q, got %v", changed, selected)
 		}
 		if !shouldMatch && len(selected) != 0 {
 			t.Errorf("lookalike %q selected consumers %v", changed, selected)
 		}
 	}
-	if _, err := repositoryInputConsumersForChange(
-		[]string{"code/specs/fixtures/biquad-sos-v1/cases.json"}, nil, "all",
-	); err == nil {
-		t.Fatal("missing fixture consumers must fail closed")
+	for _, missing := range []string{"python", "rust", "typescript"} {
+		available := make([]discovery.Package, 0, len(packages)-1)
+		for _, pkg := range packages {
+			if pkg.Language != missing {
+				available = append(available, pkg)
+			}
+		}
+		if _, err := repositoryInputConsumersForChange(
+			[]string{"code/specs/fixtures/biquad-sos-v1/cases.json"}, available, "all",
+		); err == nil {
+			t.Errorf("missing %s fixture consumer must fail closed", missing)
+		}
+	}
+}
+
+// TestBoundedJSONDevDependencySelectsRustDSPFilters pins the test-only Cargo
+// edge that makes bounded-json edits rerun the Rust Biquad/SOS consumer.
+func TestBoundedJSONDevDependencySelectsRustDSPFilters(t *testing.T) {
+	root := toolchainFixtureRepoRoot(t)
+	packages, err := discovery.DiscoverPackages(filepath.Join(root, "code"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	graph, triggers, err := resolver.ResolveWithTestTriggers(packages)
+	if err != nil {
+		t.Fatalf("the repository Cargo dependency graph must resolve: %v", err)
+	}
+	if _, err := graph.IndependentGroups(); err != nil {
+		t.Fatalf("the build graph must remain acyclic: %v", err)
+	}
+	changed := map[string]bool{"rust/bounded-json": true}
+	withoutTestTriggers := affectedForGraph(graph, changed, nil, false)
+	withTestTriggers := affectedForGraphWithTriggers(graph, triggers, changed, nil, false)
+	if withoutTestTriggers["rust/dsp-filters"] {
+		t.Fatal("dsp-filters must not be selected through a normal build edge from bounded-json")
+	}
+	if !withTestTriggers["rust/dsp-filters"] {
+		t.Fatal("a bounded-json edit must select dsp-filters through its Cargo dev-dependency")
 	}
 }
 

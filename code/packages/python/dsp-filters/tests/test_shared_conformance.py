@@ -70,8 +70,9 @@ def _decode_fixture(raw: str) -> tuple[list[float], list[dict[str, Any]]]:
         {"schema_version", "input", "comparison", "cases"},
         "fixture",
     )
-    if root["schema_version"] != 1 or isinstance(root["schema_version"], bool):
-        raise ValueError("schema_version must be integer 1")
+    schema_version = _finite_number(root["schema_version"], "schema_version")
+    if schema_version != 1.0:
+        raise ValueError("schema_version must equal numeric value 1")
     if root["comparison"] != "finite_exact_numeric_equal_zero_sign_ignored":
         raise ValueError("unsupported comparison rule")
     signal = root["input"]
@@ -116,15 +117,18 @@ def _decode_fixture(raw: str) -> tuple[list[float], list[dict[str, Any]]]:
             _finite_number(value, f"expected[{i}]") for i, value in enumerate(expected)
         ]
         if operation == "biquad.process":
-            chunks = record["chunk_lengths"]
-            if (
-                not isinstance(chunks, list)
-                or any(type(length) is not int or length <= 0 for length in chunks)
-                or sum(chunks) != 16
-            ):
-                raise ValueError(
-                    "chunk_lengths must be positive integers summing to 16"
-                )
+            raw_chunks = record["chunk_lengths"]
+            if not isinstance(raw_chunks, list):
+                raise ValueError("chunk_lengths must be an array")
+            decoded_chunks = [
+                _finite_number(length, f"chunk_lengths[{i}]")
+                for i, length in enumerate(raw_chunks)
+            ]
+            if any(length <= 0 or not length.is_integer() for length in decoded_chunks):
+                raise ValueError("chunk_lengths must decode to positive integers")
+            chunks = [int(length) for length in decoded_chunks]
+            if sum(chunks) != 16:
+                raise ValueError("chunk_lengths must sum to 16")
             if chunks != [3, 1, 12]:
                 raise ValueError("chunk_lengths must equal [3, 1, 12]")
         by_id[record_id] = record
@@ -286,11 +290,17 @@ def test_shared_fixture_loader_rejects_malformed_and_mutated_data() -> None:
     with pytest.raises(ValueError, match="exactly two"):
         _decode_fixture(json.dumps(missing))
 
-    for invalid_version in (True, 2):
+    for invalid_version in (True, 2, "1"):
         invalid = json.loads(raw)
         invalid["schema_version"] = invalid_version
         with pytest.raises(ValueError, match="schema_version"):
             _decode_fixture(json.dumps(invalid))
+
+    for spelling in ("1.0", "1e0"):
+        alternate_version = raw.replace(
+            '"schema_version": 1', f'"schema_version": {spelling}', 1
+        )
+        _decode_fixture(alternate_version)
 
     unknown_field = json.loads(raw)
     unknown_field["extra"] = 1
@@ -326,6 +336,17 @@ def test_shared_fixture_loader_rejects_malformed_and_mutated_data() -> None:
     wrong_chunks["cases"][0]["chunk_lengths"] = [16]
     with pytest.raises(ValueError, match=r"equal \[3, 1, 12\]"):
         _decode_fixture(json.dumps(wrong_chunks))
+
+    alternate_chunks = raw.replace(
+        '"chunk_lengths": [3, 1, 12]', '"chunk_lengths": [3.0, 1e0, 12]'
+    )
+    _decode_fixture(alternate_chunks)
+    for invalid_chunks in ('[3.5, 1, 12]', '[true, 1, 12]', '["3", 1, 12]'):
+        malformed_chunks = raw.replace(
+            '"chunk_lengths": [3, 1, 12]', f'"chunk_lengths": {invalid_chunks}'
+        )
+        with pytest.raises(ValueError, match="chunk_lengths"):
+            _decode_fixture(malformed_chunks)
 
     changed_expected = json.loads(raw)
     changed_expected["cases"][0]["expected"][3] += 2**-20
