@@ -81,9 +81,9 @@ fn bit_predicate(
     slot: &BitVec,
 ) -> bit_blaster::aig::Edge {
     let mut terms = Vec::with_capacity(64);
-    for bit in 0_usize..64 {
+    for (bit, bit_value) in mask.bits.iter().copied().enumerate() {
         let selected = bv::eq(aig, slot, &BitVec::constant(SLOT_BITS, bit as u128));
-        terms.push(aig.and(selected, mask.bits[bit]));
+        terms.push(aig.and(selected, bit_value));
     }
     aig.or_all(&terms)
 }
