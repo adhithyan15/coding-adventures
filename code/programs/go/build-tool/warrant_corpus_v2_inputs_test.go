@@ -32,6 +32,7 @@ func TestWarrantCorpusV2FixtureSelectsGeneratorAndOracle(t *testing.T) {
 		{Name: "rust/lzw", Language: "rust"},
 		{Name: "rust/wasm-leb128", Language: "rust"},
 		{Name: "rust/test-bootstrap", Language: "rust"},
+		{Name: "rust/x25519", Language: "rust"},
 	}
 	both := map[string]bool{"rust/warrant-corpus-gen": true, "python/warrant-oracle": true}
 	// Every file of the fixture directory, and the bindings, select exactly the two.
@@ -56,8 +57,52 @@ func TestWarrantCorpusV2FixtureSelectsGeneratorAndOracle(t *testing.T) {
 			t.Fatalf("%s: python-only run selected %v", changed, got)
 		}
 	}
+	// CV2 S10 adopter (x25519), VER04r 16.10 [D32]: the table-driven rows give the second
+	// adopter the same selection as ct-compare. Every file of its fixture directory and its
+	// bindings select exactly the generator and the oracle, per language filter too.
+	for _, changed := range []string{
+		"code/specs/fixtures/x25519-warrant-v2/corpus.json",
+		"code/specs/fixtures/x25519-warrant-v2/cases.tfv",
+		"code/specs/fixtures/x25519-warrant-v2/corpus.profile",
+		"code/specs/fixtures/x25519-warrant-v2/README.md",
+		"code/specs/fixtures/x25519-warrant-v2/chunks/clamp_is_idempotent.txt",
+		"code/packages/rust/x25519/evidence.bindings",
+	} {
+		got, err := repositoryInputConsumersForChange([]string{changed}, packages, "all")
+		if err != nil || !reflect.DeepEqual(got, both) {
+			t.Fatalf("%s selected %v (err %v), want exactly the generator and the oracle", changed, got, err)
+		}
+		if got, _ := repositoryInputConsumersForChange([]string{changed}, packages, "rust"); !reflect.DeepEqual(got, map[string]bool{"rust/warrant-corpus-gen": true}) {
+			t.Fatalf("%s: rust-only run selected %v", changed, got)
+		}
+		if got, _ := repositoryInputConsumersForChange([]string{changed}, packages, "python"); !reflect.DeepEqual(got, map[string]bool{"python/warrant-oracle": true}) {
+			t.Fatalf("%s: python-only run selected %v", changed, got)
+		}
+	}
+	// The x25519 spec selects both too (it was already an oracle input; the table adds the generator).
+	got, err := repositoryInputConsumersForChange([]string{"code/specs/x25519.warrant"}, packages, "all")
+	if err != nil || !got["rust/warrant-corpus-gen"] || !got["python/warrant-oracle"] {
+		t.Fatalf("x25519.warrant selected %v (err %v)", got, err)
+	}
+	// Every adopter row selects both packages through each of its three path kinds, and the
+	// rows are distinct (a copy-pasted row would silently drop an adopter).
+	seen := map[string]bool{}
+	for _, adopter := range warrantAdopters {
+		if seen[adopter.module] {
+			t.Errorf("duplicate adopter row %s", adopter.module)
+		}
+		seen[adopter.module] = true
+		for _, changed := range []string{adopter.spec, adopter.fixture + "/corpus.json", adopter.bindings} {
+			if !isWarrantCorpusGenInput(changed) || !isWarrantOracleInput(changed) {
+				t.Errorf("%s (adopter %s) is not selected by both predicates", changed, adopter.module)
+			}
+		}
+	}
+	if len(warrantAdopters) != 2 || !seen["ct-compare"] || !seen["x25519"] {
+		t.Errorf("warrantAdopters = %v, want exactly ct-compare and x25519", warrantAdopters)
+	}
 	// The spec selects both too (among the other Warrant consumers of the document).
-	got, err := repositoryInputConsumersForChange([]string{"code/specs/ct-compare.warrant"}, packages, "all")
+	got, err = repositoryInputConsumersForChange([]string{"code/specs/ct-compare.warrant"}, packages, "all")
 	if err != nil || !got["rust/warrant-corpus-gen"] || !got["python/warrant-oracle"] {
 		t.Fatalf("ct-compare.warrant selected %v (err %v)", got, err)
 	}
@@ -163,6 +208,12 @@ func TestWarrantCorpusV2FixtureSelectsGeneratorAndOracle(t *testing.T) {
 		"docs/code/specs/fixtures/ct-compare-warrant-v2/corpus.json",
 		"code/packages/rust/ct-compare/evidence.bindings.bak",
 		"code/packages/rust/gf256/evidence.bindings",
+		"code/specs/fixtures/x25519-warrant-v20/corpus.json",
+		"code/specs/fixtures/x25519-warrant-v2",
+		"code/specs/fixtures/x25519-warrant-v2x/chunks/clamp_is_idempotent.txt",
+		`code\specs\fixtures\x25519-warrant-v2\corpus.json`,
+		"code/packages/rust/x25519/evidence.bindings.bak",
+		"code/packages/rust/x25519/tests/warrant_evidence.rs",
 		"code/packages/python/warrant-oracle/tests/fixtures/accept-blind-v20/corpus/corpus.json",
 		"code/packages/python/warrant-oracle/tests/fixtures/fixed-forms-v10/fixed_forms_v1.warrant",
 		"code/packages/python/warrant-oracle/tests/fixtures/fixed-forms-v1",
