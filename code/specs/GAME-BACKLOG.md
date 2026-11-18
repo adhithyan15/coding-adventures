@@ -108,6 +108,20 @@ full-checkout canonical package-presence report must be recorded before the next
 selection; a sparse-worktree report is not valid inventory evidence. This sequence is coordination
 state, not implementation authorization for unrelated primitives.
 
+Candidate committed-tree inventory for this GBL-010 branch was recomputed after rebasing onto
+`origin/main` `73fa1d9c44623a288fd54ca6f028df4b1063e2f0`, using the canonical classifier functions
+over regular blobs in the full Git package tree plus the committed TypeScript package at candidate
+`1065452714dc8cc91f9264192c9ac443340bf31a`. The base has 1,814 identities across all classified
+buckets, 1,772 within the established 15 lanes, 5,156 occupied established language-by-identity
+slots, and 5,572 package directories across all buckets (CSV SHA-256
+`fa58acfe33bf60e36bbedfff2885acc5b3a7b9c8a0421ca4a19b72c492729cf4`); there are zero collisions
+and zero unknown buckets. The candidate retains both identity counts and adds one occupied slot and
+one package directory: 5,157 established slots and 5,573 directories (CSV SHA-256
+`bea79efea09da8304c7e24df2a7693ed716198ae50f7c2911d8e7f25c09e71cb`), still with zero collisions
+and zero unknown buckets. `game-clock` moves from Rust-only (1/15) on the base to Rust and
+TypeScript (2/15) on the candidate; this is package presence only, not verified behavioral parity.
+Refresh again from merged `origin/main` before selecting the next port.
+
 For each serial delivery, use a fresh worktree from the latest fetched `origin/main`. After a PR
 merges, verify the published head and merged tree, confirm the worktree is clean, published, and
 idle, then remove it with normal Git worktree removal and prune registrations. Only then create a
