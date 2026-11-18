@@ -34,7 +34,8 @@ BASE = """warrant d v1
 
 def build(extra: str, profile: str = "", base: str = BASE) -> object:
     return derive(
-        (base + extra).encode(), profile.encode(), spec_ref="d.warrant", generator=GEN
+        (base + extra).encode(), profile.encode(), spec_ref="d.warrant", generator=GEN,
+        implemented=("ir.core",),  # the closed gate, explicit: these tests assert ``deferred``
     )
 
 

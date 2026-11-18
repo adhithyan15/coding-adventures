@@ -3,10 +3,12 @@
 from __future__ import annotations
 
 import math
+import random
 
 import pytest
 
 from dsp_filters import (
+    MAX_TAPS,
     InvalidCoefficientError,
     WindowType,
     butterworth_lowpass,
@@ -89,3 +91,50 @@ def test_chebyshev1_lowpass() -> None:
 def test_unknown_window_type() -> None:
     with pytest.raises(InvalidCoefficientError, match="unknown window type"):
         design_low_pass(0.1, 15, "unknown_window")
+
+
+def test_public_fir_design_domain_edges_and_validation_order() -> None:
+    for window in ("rectangular", "hamming", "hann", "blackman"):
+        assert len(design_low_pass(-0.0, 1, window)) == 1
+        assert len(design_high_pass(0.5, 1, window)) == 1
+        assert len(design_band_pass(-0.0, 0.5, 1, window)) == 1
+
+    # Python's documented integer domain includes the maximum odd count.
+    assert len(design_low_pass(0.25, MAX_TAPS - 1, "rectangular")) == MAX_TAPS - 1
+    for design_call in (
+        lambda: design_low_pass(0.25, MAX_TAPS + 1, "rectangular"),
+        lambda: design_high_pass(0.25, MAX_TAPS + 1, "rectangular"),
+        lambda: design_band_pass(0.1, 0.2, MAX_TAPS + 1, "rectangular"),
+    ):
+        with pytest.raises(InvalidCoefficientError, match="MAX_TAPS"):
+            design_call()
+
+    # Tap errors precede cutoff errors; BP ordering is checked after
+    # finite cutoffs. The lane exposes its existing typed exception.
+    with pytest.raises(InvalidCoefficientError, match="num_taps"):
+        design_low_pass(math.nan, 0, "rectangular")
+    with pytest.raises(InvalidCoefficientError, match="cutoff_norm"):
+        design_low_pass(math.inf, 3, "rectangular")
+    with pytest.raises(
+        InvalidCoefficientError, match="cutoff frequencies must be finite"
+    ):
+        design_band_pass(0.1, math.inf, 3, "rectangular")
+    with pytest.raises(InvalidCoefficientError, match="cutoffs must satisfy"):
+        design_band_pass(0.2, 0.2, 3, "rectangular")
+
+
+def test_seeded_fir_designer_valid_domain_samples() -> None:
+    windows = ("rectangular", "hamming", "hann", "blackman")
+    calls = 0
+    for seed in (0xA0D10, 0x51BADA55):
+        rng = random.Random(seed)
+        for _ in range(64):
+            taps = 1 + 2 * rng.randrange(16)
+            cutoff = rng.random() * 0.5
+            window = windows[rng.randrange(len(windows))]
+            assert len(design_low_pass(cutoff, taps, window)) == taps
+            assert len(design_high_pass(cutoff, taps, window)) == taps
+            high = 0.01 + cutoff * 0.98
+            assert len(design_band_pass(high * 0.2, high, taps, window)) == taps
+            calls += 3
+    assert calls == 384
