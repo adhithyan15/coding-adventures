@@ -884,9 +884,15 @@ mod tests {
                 "{bad}"
             );
         }
-        // a literal over MAX_IR_VALUE is refused before it is decoded
+        // a literal over MAX_IR_VALUE is refused before it is decoded, and it is a *size* error
         let huge = "00".repeat(65_537);
-        assert!(run(&Ir::Bytes(huge)).is_err());
+        assert!(run(&Ir::Bytes(huge)).unwrap_err().size);
+        assert!(run(&Ir::Bytes("00".repeat(65_536))).is_ok());
+        // a malformed literal is never a size error, however long (the shape is checked first)
+        for bad in ["zz".repeat(65_537), format!("{}0", "00".repeat(65_537))] {
+            let e = run(&Ir::Bytes(bad)).unwrap_err();
+            assert!(!e.size, "{e}");
+        }
     }
 
     #[test]
@@ -1110,6 +1116,7 @@ mod tests {
         let e = p.eval(&call, &vars, &mut Stats::default()).unwrap_err();
         assert_eq!(e.code, code::W0701);
         assert!(e.message.contains("MAX_IR_VALUE"));
+        assert!(e.size, "a concat past MAX_IR_VALUE is a size error");
         // exactly 65,536 is fine
         let half = Value::Bytes(Rc::from(vec![0u8; 32_768]));
         let vars = [("a", half.clone()), ("b", half)];

@@ -265,6 +265,18 @@ mod tests {
     }
 
     #[test]
+    fn only_a_size_error_is_flagged_and_it_is_still_w0701() {
+        let e = GenError::size_error("a Bytes value is too long");
+        assert!(e.size);
+        assert_eq!((e.code, e.message.as_str()), (code::W0701, "a Bytes value is too long"));
+        assert!(!GenError::new(code::W0701, "", "x").size);
+        assert!(!GenError::level(Beyond::IrFixed, "", "x").size);
+        assert!(!GenError::internal("x").size);
+        // attribution keeps the flag
+        assert!(e.at("claim").size);
+    }
+
+    #[test]
     fn at_fills_an_unattributed_error_and_keeps_an_attributed_one() {
         let e = GenError::new(code::TYPE, "", "x").at("claim");
         assert_eq!(e.at, "claim");

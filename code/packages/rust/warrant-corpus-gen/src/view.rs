@@ -171,7 +171,10 @@ fn view(lowered: &Lowered, limit: u64, v1: bool) -> Result<Json, GenError> {
     let mut examples = Vec::new();
     for x in &lowered.examples {
         let at = |e: GenError| e.at(&x.name);
-        let r = &x.reference;
+        // The dump lowers without `omit_example` lines, so every example has its reference.
+        let Some(r) = &x.reference else {
+            return Err(at(GenError::internal("an example has no reference decomposition")));
+        };
         let (subject, expected, result) = (
             ir_json(&r.subject).map_err(at)?,
             ir_json(&r.expected).map_err(at)?,

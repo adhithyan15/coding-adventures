@@ -43,7 +43,7 @@ use crate::faults::{instantiate, search, stand_in, ClaimState, Fault, Level, Pro
 use crate::json::Json;
 use crate::lower::{Lowered, SuiteKind};
 use crate::profile::{parse_profile, Profile};
-use crate::tfv::examples;
+use crate::tfv::examples_omitting;
 use crate::{analyse, CorpusV2, GenInput};
 
 /// The generator's name in `corpus.json`.
@@ -219,9 +219,10 @@ pub fn generate(input: &GenInput<'_>) -> Result<CorpusV2, GenError> {
     }
 
     let lowered = &enumeration.analysis.lowered;
-    let ex = examples(
+    let ex = examples_omitting(
         lowered,
         &crate::eval::Program::new(&lowered.models),
+        &profile.omit_examples,
     )?;
 
     // chunk files
@@ -396,7 +397,7 @@ pub fn generate(input: &GenInput<'_>) -> Result<CorpusV2, GenError> {
             })
             .collect(),
     );
-    let corpus = Json::obj([
+    let mut corpus = Json::obj([
         ("profile", Json::str("warrant-corpus-v2")),
         ("schema_version", Json::Int(2)),
         ("module", Json::str(lowered.module.as_str())),
@@ -461,6 +462,19 @@ pub fn generate(input: &GenInput<'_>) -> Result<CorpusV2, GenError> {
         ("accepted_blind_faults", Json::strs(accepted_blind.iter())),
         ("assumes", Json::Arr(Vec::new())),
     ]);
+    // A conditional key (VER04r 1.4, 16.10 R4): written only when an example is omitted, so
+    // no committed fixture moves a byte.  `[]` is never written.
+    if !ex.omitted.is_empty() {
+        let Json::Obj(members) = &mut corpus else {
+            return Err(GenError::internal("the corpus is an object"));
+        };
+        members.push((
+            "omitted_examples".to_string(),
+            Json::arr(ex.omitted.iter().map(|(id, why)| {
+                Json::obj([("id", Json::str(id.as_str())), ("reason", Json::str(*why))])
+            })),
+        ));
+    }
     Ok(CorpusV2 {
         corpus_json: corpus.render()?,
         chunk_files,

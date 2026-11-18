@@ -269,6 +269,14 @@ mod tests {
             code::W0701
         );
         assert_eq!(check_exact(i128::MIN).unwrap_err().code, code::W0701);
+        // the integer window is not a size error (VER04r 8.4: only the two Bytes limits are)
+        for e in [
+            check_exact(i128::MIN).unwrap_err(),
+            exact_op(Arith::Mul, i128::MAX, 2).unwrap_err(),
+            exact_neg(i128::MIN).unwrap_err(),
+        ] {
+            assert!(!e.size, "{e}");
+        }
         assert_eq!(check_exact(-i128::MAX).unwrap(), -i128::MAX);
         assert_eq!(exact_neg(i128::MIN).unwrap_err().code, code::W0701);
     }
@@ -282,6 +290,7 @@ mod tests {
             code::W0701
         );
         assert_eq!(check_value_len(u64::MAX).unwrap_err().code, code::W0701);
+        assert!(check_value_len(MAX_IR_VALUE + 1).unwrap_err().size);
     }
 
     #[test]
