@@ -84,7 +84,10 @@ func recStepGit(t *testing.T, gitBin, home, dir string, args ...string) string {
 	return strings.TrimSpace(string(out))
 }
 
-// recStepRun runs a command and returns its output and exit status.
+// recStepRun runs a command and returns its output and exit status.  When the
+// child exits non-zero because it refused a trace, it also logs trace.Diagnose's
+// report of that trace (trace_refusal_diag_test.go), since the trace dies with
+// the test's temp dir; the caller still reports the failure.
 func recStepRun(t *testing.T, cmd *exec.Cmd) (string, string, int) {
 	t.Helper()
 	var ob, eb bytes.Buffer
@@ -95,6 +98,7 @@ func recStepRun(t *testing.T, cmd *exec.Cmd) (string, string, int) {
 	case err == nil:
 		return ob.String(), eb.String(), 0
 	case errors.As(err, &ee):
+		logTraceRefusal(t, eb.String())
 		return ob.String(), eb.String(), ee.ExitCode()
 	}
 	t.Fatalf("%v", err)
