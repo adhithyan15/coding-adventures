@@ -15,7 +15,9 @@ import os
 import pathlib
 import sys
 import tempfile
+import time
 import unittest
+import unittest.mock
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 
@@ -307,6 +309,48 @@ class EndToEnd(unittest.TestCase):
             stdin=subprocess.DEVNULL,
         )
         self.assertEqual(done.returncode, 1)
+
+
+class Hang(unittest.TestCase):
+    """A hung command is killed with its tree and fails loudly (VOS-038b)."""
+
+    def test_timeout_var_is_parsed_and_defaults(self):
+        d = float(negctl.DEFAULT_TIMEOUT_SECS)
+        self.assertEqual(negctl.timeout_secs(None), d)
+        self.assertEqual(negctl.timeout_secs("junk"), d)
+        self.assertEqual(negctl.timeout_secs("0"), d)
+        self.assertEqual(negctl.timeout_secs("-3"), d)
+        self.assertEqual(negctl.timeout_secs("inf"), d)
+        self.assertEqual(negctl.timeout_secs("nan"), d)
+        self.assertEqual(negctl.timeout_secs(" 2.5 "), 2.5)
+
+    def test_a_hang_is_killed_and_reports_what_it_printed(self):
+        # The child prints a valid TAP prefix, then spawns a grandchild that
+        # inherits the pipes and sleeps, and sleeps itself: only a tree kill
+        # frees the pipes.
+        code = (
+            "import subprocess, sys, time\n"
+            "print('TAP version 14\\n1..2\\nnot ok 1 - a', flush=True)\n"
+            "subprocess.Popen([sys.executable, '-c', 'import time; time.sleep(600)'])\n"
+            "time.sleep(600)\n"
+        )
+        started = time.monotonic()
+        with unittest.mock.patch.dict(os.environ, {"WARRANT_NEGCTL_TIMEOUT_SECS": "2"}):
+            status, out = run(child(code))
+        self.assertLess(time.monotonic() - started, 60, "the hang was not bounded")
+        self.assertEqual(status, 1)
+        self.assertIn("did not finish within 2 s", out)
+        self.assertIn("not ok 1 - a", out)  # the partial output is shown
+
+    def test_run_command_reports_timed_out(self):
+        code, _, _, launch, timed_out = negctl.run_command(
+            child("import time; time.sleep(600)"), 1
+        )
+        self.assertTrue(timed_out)
+        self.assertIsNone(launch)
+        self.assertNotEqual(code, 0)
+        _, _, _, _, timed_out = negctl.run_command(child("pass"), 30)
+        self.assertFalse(timed_out)
 
 
 if __name__ == "__main__":
