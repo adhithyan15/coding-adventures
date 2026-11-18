@@ -3,6 +3,7 @@ name = "tls13-retry-transcript-binding"
 version = "0.1.0"
 edition = "2021"
 description = "Exact-message TLS 1.3 HelloRetryRequest transcript composition"
+license = "MIT"
 
 [dependencies]
 tls13-server-hello-retry-selection = { path = "../tls13-server-hello-retry-selection" }
