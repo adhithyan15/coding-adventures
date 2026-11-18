@@ -82,8 +82,19 @@ cargo run -q -p coding_adventures_warrant_corpus_gen --bin warrant-corpus-gen --
 
 Run it from the repository root: `--warrant` must be a repo-relative path (no `..`, no `\`, no
 leading `/`) because it is recorded verbatim as `spec` in `corpus.json`. `--bindings` is optional:
-when given, its `faults=` lists must equal the profile's `fault` lines per operation. Exit codes:
-`0` success, `1` refused, drifted or misused (the library `cli::run` returns `2` for a usage error; the binary reports it as `1` so it needs nothing from `std::process`). It is a `[[bin]]`, not an example, so the
+when given, its `faults=` lists must equal the profile's `fault` lines per operation. Exit codes, the independent oracle's convention (1 = the two sides differ, 2 = refused or error):
+
+| exit | meaning |
+| --- | --- |
+| `0` | success: written, or `--check` found the directory byte-identical |
+| `1` | drift: `--check` ran to the end and the committed bytes differ from the regenerated ones (the only exit 1) |
+| `2` | refused or error: any `GenError` that refuses generation (a level or feature beyond `ir.core`, a profile or checker error, a rule or limit, bindings whose `faults=` lists differ from the profile's), an unreadable input, a refused path, an I/O error writing the output, or a usage error |
+
+The status is chosen by where the error arose, not by the `GenError` code alone: the `drift` code is
+also raised by the bindings cross-check, which is a refusal (exit 2). A file missing from `--out` is
+one of the listed drift findings (exit 1). The binary needs `std::process::exit` to say 2 (an `Err`
+from `main` always exits 1), declared as `proc:signal` in `required_capabilities.json`.
+It is a `[[bin]]`, not an example, so the
 dev-only `test-hooks` feature (seeded-wrong evaluators) is never linked into it.
 
 **Write mode** validates every path first, refuses a symbolic link and a `chunks/` that holds a
@@ -289,7 +300,7 @@ static width of a `from_be`/`from_le` operand read from the one pass that lowers
 present) and each new tag costs `1 +` its operands.
 
 **Nothing is evaluated or emitted.** A unit whose `requires` holds `ir.fixed` is refused, naming the
-level, by `lower_document`, the census and therefore `generate` (the binary exits 1, as for every
+level, by `lower_document`, the census and therefore `generate` (the binary exits 2, as for every
 refusal, and writes nothing); `eval` refuses `Ir::Fixed` too. `lower_document_with_fixed` returns the
 lowered IR for the dump only, and skips VER04r 4.4's impure-guard refusal, which the oracle applies when
 it evaluates a suite and not when it lowers it.

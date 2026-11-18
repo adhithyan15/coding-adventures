@@ -1,27 +1,29 @@
 //! The `warrant-corpus-gen` command line: see `coding_adventures_warrant_corpus_gen::cli`.
 //!
-//! `main` returns a `Result` so the process needs nothing from `std::process` (the capability
-//! analyzer treats that module as process control, which this tool never uses): success exits
-//! 0 and every failure exits 1 (the runtime's status for an `Err`), after `run` has written
-//! its own message to stderr.  `cli::run` itself tells usage errors (2) from refusals (1).
+//! The exit status is `cli::run`'s return value, unchanged:
+//!
+//! ```text
+//!   0  success        1  `--check` found drift        2  refused, I/O error or misuse
+//! ```
+//!
+//! This is the convention of the independent oracle (`warrant-oracle`: 1 = the two sides
+//! disagree, 2 = the input was refused or unreadable), so a script can tell "the committed
+//! fixture is stale, regenerate it" from "the generator would not run" without parsing stderr.
+//!
+//! The status needs `std::process::exit`: returning an `Err` from `main` always exits 1 and
+//! cannot say 2.  (`std::process::ExitCode` would do too, but the capability analyzer reads it
+//! as `proc:exec`, a claim that this tool spawns something; `exit` reads as `proc:signal`,
+//! which is honest: the process ends itself and nothing else.  `required_capabilities.json`
+//! declares it.)  `run` has returned, and written its own messages, before `exit` is called.
 
-/// The failure `main` returns: its `Debug` form is the last line the runtime prints.
-struct Failed(i32);
-
-impl std::fmt::Debug for Failed {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "warrant-corpus-gen failed (status {})", self.0)
-    }
-}
-
-fn main() -> Result<(), Failed> {
+fn main() {
     let args: Vec<String> = std::env::args().skip(1).collect();
-    match coding_adventures_warrant_corpus_gen::cli::run(
+    let status = coding_adventures_warrant_corpus_gen::cli::run(
         &args,
         &mut std::io::stdout(),
         &mut std::io::stderr(),
-    ) {
-        0 => Ok(()),
-        n => Err(Failed(n)),
+    );
+    if status != 0 {
+        std::process::exit(status);
     }
 }
