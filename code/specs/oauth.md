@@ -926,6 +926,28 @@ HTTP, OAuth transport, or live-provider access. Those state, role, certificate,
 trust, revocation, handshake, and transport boundaries remain separate;
 concrete HTTPS remains unavailable.
 
+A bounded `tls13-reviewed-server-path-certificate-verify` composition closes
+the detached-key and caller-selected-role gaps for one reviewed RSA server
+path. It accepts only the strongest accumulated reviewed server-path proof,
+outer transcript-bound hash evidence, the exact decoded `CertificateVerify`
+message, data-driven RSA key policy, matching typed verifier limits, and
+caller-owned scratch. Before RSA work or scratch mutation it requires the
+retained RFC 8446 input role to be `Server`. It then derives the target
+certificate exclusively through the retained reviewed path, validates that
+certificate's exact SubjectPublicKeyInfo under the supplied RSA key policy,
+and delegates verification with that derived key. Non-copyable success
+evidence retains both the complete reviewed path and the outer
+selected-transcript signature verdict, so a detached certificate, key, role,
+path, transcript, message, or signature cannot be substituted after success.
+
+This composition does not prove that the selected transcript contains the
+right ordered handshake messages or stopped at the required state, verify the
+reviewed anchor's self-signature, select a revocation outcome, authenticate
+Finished, sequence a handshake, process or protect records, perform I/O, or
+authorize TLS, HTTP, OAuth transport, or live-provider access. Those remaining
+anchor, revocation, state, Finished, record, and transport boundaries remain
+separate; concrete HTTPS remains unavailable.
+
 A bounded `rsa-pss-sha512` prerequisite now validates one complete recovered
 RFC 8017 EMSA-PSS encoded message for the fixed SHA-512, 64-byte-salt profile.
 It composes the public layout gate and bounded SHA-512 MGF1 primitive, unmasks
