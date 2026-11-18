@@ -100,7 +100,7 @@ fn the_other_templates_instantiate_by_signature() {
         assert_eq!(xor.requires, [Level::Fixed]);
         assert!(json(&xor).contains(r#"["bit_xor",["var","result"],["lit",{"type":"U8","value":"1"}]]"#));
         // every name of the registry is reachable
-        assert_eq!(KNOWN_FAULTS.len(), 13);
+        assert_eq!(KNOWN_FAULTS.len(), 14);
     });
 }
 

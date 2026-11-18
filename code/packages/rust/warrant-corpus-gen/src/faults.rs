@@ -21,7 +21,8 @@
 //! A fault expression belongs to feature levels.  `ignore-high-bit` and `xor-lsb` use
 //! `bit_and`/`bit_xor`, which are `ir.fixed` (VER04r 8.2, [D9]); `ok-as-err`, `drop-consumed`,
 //! `swap-components` and the tuple-payload `missing-error` are `ir.tuple` (they are written with
-//! `match` on a `Result` and the tuple literal, [D35]); the `Ok` forms of `flip-result-bit` and
+//! `match` on a `Result` and the tuple literal, [D35]); `off-by-one-consumed` ([D36]; its `Nat` form
+//! uses `rem` and `unwrap_or`, its fixed-width form `bit_xor`) is `ir.fixed` plus `ir.tuple`; the `Ok` forms of `flip-result-bit` and
 //! `drop-last-result-byte` are `match` over the `Bytes` forms and so name two levels.  A fault
 //! row's `requires` is the **sorted union of the template's own levels and the levels of the op's
 //! parameter and result types** (R9, S10t-1 review): a fault on an operation with a tuple
@@ -179,7 +180,7 @@ impl Fault {
 }
 
 /// Every fault name of the registry (VER04r 8.2, the generic table).
-pub const KNOWN_FAULTS: [&str; 13] = [
+pub const KNOWN_FAULTS: [&str; 14] = [
     "invert",
     "missing-error",
     "swap-choice",
@@ -193,6 +194,7 @@ pub const KNOWN_FAULTS: [&str; 13] = [
     "ok-as-err",
     "drop-consumed",
     "swap-components",
+    "off-by-one-consumed",
 ];
 
 /// The name a `match` binds the payload of an `Ok` to in the `Ok` forms (VER04r 8.2); an op
@@ -363,9 +365,17 @@ fn tuple_target<'o>(
         Ty::Tuple(parts) => Ok((parts, false)),
         Ty::Result(ok, _) => match &**ok {
             Ty::Tuple(parts) => Ok((parts, true)),
-            _ => Err(refuse(op, fault, "needs a tuple or Result<tuple, E> result")),
+            _ => Err(refuse(
+                op,
+                fault,
+                &format!("{fault} needs a tuple or Result<tuple, E> result"),
+            )),
         },
-        _ => Err(refuse(op, fault, "needs a tuple or Result<tuple, E> result")),
+        _ => Err(refuse(
+                op,
+                fault,
+                &format!("{fault} needs a tuple or Result<tuple, E> result"),
+            )),
     }
 }
 
@@ -668,6 +678,83 @@ pub fn instantiate_in(
                 rewrite(Ir::Var(RESULT.to_string()))
             };
             (Kind::Post(expr_of(expr)), vec![Level::Tuple])
+        }
+        // The second component `n` exchanged with its pair partner: `n + 1` when `n` is even and
+        // `n - 1` when it is odd (VER04r 8.2 [D36], VER04j 4.8), inside an `Ok` for a `Result`.
+        // `Nat` component: `if unwrap_or(rem(C, 2), 0) == 0 then C + 1 else C - 1` (`Int` literals
+        // in the test, `Nat` literals in the arms; `add`/`sub` on a `Nat` are exact and `Int`
+        // typed, and the value is always a `Nat` value).  Fixed-width component: `bit_xor(C, 1)`.
+        // The numeric check comes before the `ok_payload` clash, as in the oracle.
+        "off-by-one-consumed" => {
+            let (components, inside) = tuple_target(op, name)?;
+            let second = &components[1];
+            if !(second.is_fixed() || *second == Ty::Nat) {
+                return Err(refuse(
+                    op,
+                    name,
+                    "off-by-one-consumed needs a numeric second component",
+                ));
+            }
+            let n = components.len();
+            let rewrite = |src: Ir| {
+                let c = project(&src, 1);
+                let x = if let Some(t) = second.fixed() {
+                    fixed_node(
+                        "bit_xor",
+                        Some(t),
+                        vec![
+                            c,
+                            Ir::Int {
+                                ty: Ty::Fixed(t),
+                                value: 1,
+                            },
+                        ],
+                    )
+                } else {
+                    let int = |v: i128| {
+                        Box::new(Ir::Int {
+                            ty: Ty::Int,
+                            value: v,
+                        })
+                    };
+                    let rem = fixed_node(
+                        "rem",
+                        None,
+                        vec![
+                            c.clone(),
+                            Ir::Int {
+                                ty: Ty::Int,
+                                value: 2,
+                            },
+                        ],
+                    );
+                    let even = fixed_node(
+                        "unwrap_or",
+                        None,
+                        vec![
+                            rem,
+                            Ir::Int {
+                                ty: Ty::Int,
+                                value: 0,
+                            },
+                        ],
+                    );
+                    Ir::If(
+                        Box::new(Ir::Cmp(Cmp::Eq, Box::new(even), int(0))),
+                        Box::new(Ir::Arith(Arith::Add, Ty::Int, Box::new(c.clone()), nat(1))),
+                        Box::new(Ir::Arith(Arith::Sub, Ty::Int, Box::new(c), nat(1))),
+                    )
+                };
+                let mut parts = vec![project(&src, 0), x];
+                parts.extend((2..n).map(|i| project(&src, i)));
+                Ir::Tuple(parts)
+            };
+            let expr = if inside {
+                ok_form(op, name, rewrite)?
+            } else {
+                rewrite(Ir::Var(RESULT.to_string()))
+            };
+            (Kind::Post(expr_of(expr)), vec![Level::Fixed, Level::Tuple])
         }
         // The components of a homogeneous tuple exchanged (reversed, so a pair is swapped).
         "swap-components" => {
