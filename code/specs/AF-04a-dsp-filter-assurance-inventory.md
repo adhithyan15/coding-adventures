@@ -207,8 +207,12 @@ compiler translates a checked Warrant but translation does not execute or
 validate the native source binding. HostTy and the filter state protocol are
 separate unresolved capabilities.
 
-The existing resource pilot does not establish heap/depth bounds. AF-04b may later bind a
-deliberately scoped public operation with explicit gaps; a partial FIR pilot
+The existing resource pilot does not establish heap/depth bounds. The current
+main revision extends VER04h §4.1 with exact-enumerable refinement rescue and
+an acceptance floor for non-enumerable refined properties; the pinned AF-04a
+subject predates that addition, so producer evidence must name its VER04h
+revision. AF-04b may later bind a deliberately scoped public operation with
+explicit gaps; a partial FIR pilot
 must not become a six-operation or package-wide badge. AF-05b is a separate
 release-blocking native/source float proof prerequisite. It must identify the
 compiler/toolchain, f32/f64 bit framing, endianness, NaN/subnormal/signed-zero
@@ -259,10 +263,13 @@ AF-04a's implementation artifact will be
    `Warrant_binding`, `native_refinement`) with explicit `not_live`/`unknown`
    states rather than inferred zeros.
 
-The validator will compare inventory in both directions against an
-immutable baseline pinned by this specification and source loaded with
-`git show <subject>:<path>`. It must not trust an editable manifest to supply
-its own expected export set or digest. It will recognize a documented finite
+The validator compares inventory in both directions against an immutable
+baseline pinned by this specification and source loaded with
+`git show <subject>:<path>`. It also compares audited source, test, producer,
+and Warrant blobs at committed `HEAD` with the baseline; changed inputs cannot
+silently inherit the old inventory. This is a Git-object guard, not a dirty
+working-tree check. It must not trust an editable manifest to supply its own
+expected export set or digest. It recognizes a documented finite
 set of Python AST, TypeScript export-block, Rust re-export/module, and Warrant
 declaration forms; unknown syntax fails closed or is marked unresolved, never
 treated as an empty API. The baseline covers qualified module paths, aliases
@@ -272,7 +279,8 @@ declarations. A missing file in one blob does not prove that no package-level
 binding exists; inspect the complete pinned package tree.
 
 Schema, source identity, and semantic completeness are separate failure
-classes. Negative controls must independently prove that (a) malformed data
+classes. The checker provides 27 negative corruption controls and one positive
+candidate-path control. They prove that (a) malformed data
 fails schema validation, (b) removing a known export, alias, method, or field
 fails completeness, (c) changing an alias target or swapping same-named
 Biquad lane identities fails semantic binding checks, (d) changing a pinned
@@ -282,19 +290,24 @@ a non-live binding/native proof fails even when valid unrelated evidence is
 present. Evidence IDs bind subject commit, operation, lane, evidence kind, and
 domain. `public_execution` requires a matching run artifact; a test-source
 declaration is only `configured`, not `executed`. The no-binding/no-native-proof
-baseline is independently checked against the pinned package tree. JSON schema
-validation alone does not establish source completeness; independent source
-comparison remains required.
+baseline is independently checked against the pinned package tree, including
+known package-root binding and harness paths. The checker admits only
+source-configured evidence for this inventory; it does not mint an executed
+receipt or promote a Warrant/native proof rung. JSON schema validation alone
+does not establish source completeness; independent source comparison remains
+required.
 
 ## 8. Acceptance and delivery dependencies
 
 AF-04a is complete only when the checked-in inventory contains all public
-exports in the three scoped lanes; the four Warrant copies and per-lane producer
-facts agree with pinned source; an inventory checker rejects the four negative
-controls above for their intended reasons; and an independent reviewer
-confirms the source/export census. Changes to the shared inventory must select
-the checker in the repository's normal build graph. Record checker/test
-commands and exit status for the actual candidate commit. Do not rerun
+exports and signatures in the three scoped lanes; the four Warrant copies and
+per-lane producer facts agree with pinned source; the checker rejects its
+negative controls for their intended reasons; the checker is invoked with
+`--self-test` in the unconditional repo-wide metadata-contract CI job; and an
+independent reviewer confirms the source/export census. Changes to the shared
+inventory select this CI path. The checkout fetches full history, so the
+immutable subject is available. Record the checker command and exit status for
+the actual candidate commit. Do not rerun
 unchanged package suites merely to restate prior evidence.
 
 This item ends with an auditable inventory, not a completed assurance claim.
