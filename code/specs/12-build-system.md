@@ -612,14 +612,67 @@ affected = closure + prerequisites
 ```
 
 Both sets are computed per platform from the same platform-filtered path
-list. A metadata change next to an edit of `BUILD_windows` therefore leaves
-the package local on Linux and macOS (where that front is filtered out) and
-makes it an ordinary root on Windows; the package is selected everywhere.
+list. A metadata change next to an edit of `BUILD_windows` is local on every
+platform when the front qualifies as a BUILD front below (a Rust shell package,
+status `M`); otherwise the front is an ordinary change on Windows (where it is
+the selected front) and filtered out elsewhere, and the package is selected
+everywhere.
+
+##### BUILD fronts
+
+An in-place edit of a package's own BUILD front is package-local too, under
+conditions much narrower than the metadata list. A changed path is a
+*package-local BUILD front* only when all of these hold:
+
+1. It is at the package root and its package-relative path is exactly one of
+   `BUILD`, `BUILD_linux`, `BUILD_mac`, `BUILD_mac_and_linux` or
+   `BUILD_windows` (case-sensitive, raw slash path; a backslash never matches).
+2. It is the front the platform selects (the existing platform filter drops
+   the others).
+3. Git status is exactly `M`. `A` can create the package on a platform or
+   shadow the generic `BUILD`; `D`, `T`, renames and unknown statuses likewise
+   change which file is selected, so they propagate.
+4. The package is a shell BUILD package. A Starlark BUILD declares `srcs` and
+   dependencies and always propagates.
+5. The package's language is in a closed gate that holds only `rust`
+   (`pkgmeta.BuildFrontLocalFor`).
+6. No veto applies: (V1) any front of the package contains
+   `BUILD_TOOL_UNSUPPORTED:` at HEAD, or the diff of a changed front adds or
+   removes such a line (`gitdiff.GetChangedFilesWithStatus` asks Git with
+   `-G` and reports those paths with the pseudo-status `!`); (V2) the front
+   cannot be read or is Starlark content; (V3) another package's BUILD names
+   this package's directory on a line that runs a BUILD front
+   (`(cd ../x && sh BUILD)`, `call BUILD_windows`).
+
+Evidence for the gate (mechanisms by which a dependent could observe a
+prerequisite's BUILD):
+
+| # | Mechanism | Handling |
+|---|---|---|
+| P1 | 11 packages execute other packages' BUILD files (`bash BUILD`, `sh BUILD`, `call BUILD_windows`) | V3, computed by scanning every BUILD front, never a list; `-validate-build-files` refuses an invocation naming no package directory and any script that runs a BUILD front |
+| P2 | Dependents consume state a prerequisite's BUILD run leaves behind (installed rocks, `dist/`, `node_modules`): `lua/lexer` relies on prerequisites having run `luarocks make --local`; `typescript/bitset` reads `../test-bootstrap/dist` | Language gate. Rust dependents (Rust, wasm and every cross-language wrapper) compile a Rust prerequisite from source in their own `cargo` invocation and read no BUILD output |
+| P3 | A dependent of a package whose BUILD is `BUILD_TOOL_UNSUPPORTED:` is reported unsupported and not run | V1 |
+| P4 | A new or deleted front changes which file a platform selects | status `M` only |
+| P5 | Starlark BUILDs declare `srcs` and `deps` | shell BUILDs only |
+
+To add a language to the gate: show that every kind of dependent of that
+language's packages builds the prerequisite from source in its own BUILD and
+reads nothing a prerequisite's BUILD run produces, list the sampled BUILDs, and
+add a row to the table above. `wasm` and `go` are the obvious candidates and
+are not yet admitted.
+
+Residual risks, accepted: a dependent that relies on a toolchain only its
+prerequisite declares with `# needs-toolchain:` is not re-run when that
+declaration is removed (the edited package itself is always selected, so its own
+declaration is honoured); and indirection in the directory name of a BUILD
+invocation (a variable or glob) that the validator's pattern does not match. The
+scheduled full builds are the backstop.
 
 The rule does not apply to:
 
 - strict-glob Starlark packages, which keep their declared-source semantics:
-  a declared `CHANGELOG.md` propagates, an undeclared one selects nothing;
+  a declared `CHANGELOG.md` propagates, an undeclared one selects nothing, and
+  their BUILD fronts always propagate;
 - packages seeded for an external fixture, forced packages, or a
   repository-boundary consumer of the file, which are ordinary changed
   packages;
