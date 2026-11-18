@@ -840,6 +840,25 @@ path, select trust roots, check time, names, or revocation, process TLS or HTTP,
 authorize OAuth transport, or perform any external effect. It is not evidence
 of certificate, HTTPS, or live-provider readiness.
 
+A bounded, data-driven `tls13-rsa-pss-signature-routing` prerequisite now
+routes one structurally decoded TLS 1.3 `CertificateVerify` signature to the
+fixed SHA-256, SHA-384, or SHA-512 RSASSA-PSS verifier. It requires a signature
+scheme already authorized by caller policy, the message body's exact matching
+wire identifier, a previously validated `rsaEncryption` public key, and an
+already-computed digest whose typed length matches the authorized scheme.
+Mismatched wire identifiers and digest profiles fail before RSA work or DB
+scratch mutation. Non-copyable success evidence retains the exact authorized
+scheme, message, public key, digest, and fixed-verifier evidence used.
+
+This routing evidence does not construct or hash the RFC 8446
+`CertificateVerify` signed input, prove which transcript produced the supplied
+digest, parse a certificate, bind a key to a validated server path, build or
+validate a path, verify a hostname, select trust roots, check time or
+revocation, sequence a handshake, process records, perform I/O, authorize HTTP
+or OAuth transport, or open a network connection. Those transcript,
+certificate, trust, revocation, handshake, and transport boundaries remain
+separate; concrete HTTPS and live-provider readiness remain unavailable.
+
 A bounded `rsa-pss-sha512` prerequisite now validates one complete recovered
 RFC 8017 EMSA-PSS encoded message for the fixed SHA-512, 64-byte-salt profile.
 It composes the public layout gate and bounded SHA-512 MGF1 primitive, unmasks
