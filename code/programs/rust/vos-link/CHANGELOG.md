@@ -4,6 +4,17 @@ All notable changes to this package are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added (VOS-039a, VOS-D070, VOS-D082)
+
+- `vos-link check-component <crate-dir>` (VOS04 section 5.6): the file set (CC02), the BUILD lines of
+  section 5.2 in `BUILD` and `BUILD_windows` with a failure on a missing line (CC03) and on a missing guard
+  (CC04: bail-out-aware sabotage lines, `check-component` after the generated suite), the build-tool row
+  (CC05), `publish = false` for kind `any` (CC06), the coverage floor of `vos.toml` and the Linux tarpaulin
+  line that enforces it (CC07), and the evidence manifest's "none ran = fail" conditions (CC08).
+  New dependency: the repository's `bounded-json` (the manifest is read by it, not by a hand parser).
+- `tests/component.rs` (43 tests): a passing production, reference and `-any` fixture and a negative control
+  per rule, each with its own code and text.
+
 ### Added (VOS-012b0, VOS-D061)
 
 - The `representation` tier (VOS02 2.7), the contract's fifth: a production crate carries **exactly

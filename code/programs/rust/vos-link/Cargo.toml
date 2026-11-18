@@ -2,7 +2,7 @@
 name = "vos-link"
 version = "0.1.0"
 edition = "2021"
-description = "Host tool of the verified-OS program (VOS-033, VOS02): gen-doc assembles and check-doc verifies code/specs/<impl>.warrant"
+description = "Host tool of the verified-OS program (VOS-033, VOS-039a, VOS02): gen-doc assembles and check-doc verifies code/specs/<impl>.warrant; check-component judges a component crate (VOS04 5.6)"
 
 [lib]
 name = "vos_link"
@@ -23,6 +23,8 @@ vos-manifest = { path = "../../../packages/rust/vos-manifest" }
 # `contract` and `obligations` for this tool).  Backlog VOS-D059 moves it into
 # vos-manifest when check-profile lands.
 vos-shape-check = { path = "../../../packages/rust/vos-shape-check" }
+# `check-component` (VOS-039a) reads the evidence manifest with the repository's bounded JSON reader.
+coding_adventures_bounded_json = { path = "../../../packages/rust/bounded-json" }
 
 # A test-only edge (VOS-D058): the tests read the real contract package's files
 # (`include_bytes!` / copies), and the build tool selects a package's tests by its Cargo
@@ -49,3 +51,7 @@ path = "tests/cli.rs"
 [[test]]
 name = "representation"
 path = "tests/representation.rs"
+
+[[test]]
+name = "component"
+path = "tests/component.rs"

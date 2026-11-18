@@ -8,6 +8,7 @@
 //! ```text
 //!   vos-link gen-doc   code/packages/rust/<impl>     writes code/specs/<impl>.warrant
 //!   vos-link check-doc code/packages/rust/<impl>     exit 1 on any drift or rule failure
+//!   vos-link check-component code/packages/rust/<impl>   the component file set, BUILD lines, guards, coverage floor (VOS04 5.6)
 //! ```
 //!
 //! ## The pipeline
@@ -42,10 +43,12 @@
 //! usage error).  A rule that fails on bytes that *were* admitted is a finding.
 
 pub mod check;
+pub mod component;
 pub mod error;
 pub mod fsio;
 pub mod inputs;
 pub mod ops;
 
+pub use component::check_component;
 pub use error::{Finding, NoVerdict};
 pub use ops::{check_doc, gen_doc, Outcome};

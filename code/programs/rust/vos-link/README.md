@@ -17,6 +17,7 @@ drift without a failing check.
 ```text
 vos-link gen-doc   code/packages/rust/<impl> [--root <repo>]   # writes code/specs/<impl>.warrant
 vos-link check-doc code/packages/rust/<impl> [--root <repo>]   # exit 1 on any drift or rule failure
+vos-link check-component code/packages/rust/<impl> [--root <repo>]   # is the crate a complete component? (VOS04 5.6)
 ```
 
 | Exit | Meaning |
@@ -24,6 +25,19 @@ vos-link check-doc code/packages/rust/<impl> [--root <repo>]   # exit 1 on any d
 | 0 | no findings |
 | 1 | findings (a rule failed on bytes that were read and admitted) |
 | 2 | no verdict (an unreadable or oversized file, a symlink, a path outside the repository, a usage error) |
+
+## `check-component` (VOS-039a, VOS04 section 5.6)
+
+`check-doc` judges one file; `check-component` judges the crate that owns it.  For a production,
+reference or `-any` crate it fails on: a missing file of the component file set (`CC02`), a missing BUILD
+line of VOS04 5.2 in `BUILD` or `BUILD_windows` (`CC03`), a missing "none ran = fail" guard (`CC04`: a
+sabotage line that is not bail-out-aware, `check-component` running before the generated suite), a
+missing build-tool row `vosImplementationRow("<crate>")` (`CC05`), an `-any` crate without
+`publish = false` (`CC06`, VOS-D082), a missing or too-low `coverage-floor` in `vos.toml` or a BUILD line
+that does not enforce it (`CC07`, VOS-D070), and an evidence manifest where a claim ran no case, fewer than
+4096 property cases or 5000 fuzz iterations, a tier has no negative control, or a control did not report
+`not ok` (`CC08`).  Contract crates (VOS-039b), check crates and fixtures are out of scope.  BUILD files
+are read as tokens, not parsed as shell; see `src/component.rs`.
 
 ## Inputs
 
@@ -82,7 +96,7 @@ fresh temporary file and a rename.  The Warrant analysis runs on a 256 MiB stack
 package through four fixture implementations (`tests/fixtures/impls`) and compares the
 output with a golden file (`VOS_LINK_BLESS=1 cargo test` accepts an intended change; the value must be exactly `1` and it is refused when `CI` is set);
 `negative_controls` covers NC1, NC2, NC4, NC4b, NC5, NC17 and the document-level NC18;
-`paths_and_io` the caps and path containment; `cli` the exit codes.  The symlink, FIFO and permission controls (NC18) are Unix-only
+`paths_and_io` the caps and path containment; `cli` the exit codes; `component` (43 tests) one passing fixture crate and one negative control per `check-component` rule, each asserting its own code and text (line coverage of `src/component.rs` 99.2%, tarpaulin).  The symlink, FIFO and permission controls (NC18) are Unix-only
 (`cfg(unix)`); on Windows the path logic is covered by pure-string tests of the verbatim-prefix
 handling and the lstat checks.  Line coverage is above
 95% (llvm-cov, hand-instrumented).  The fixtures are not workspace members.
