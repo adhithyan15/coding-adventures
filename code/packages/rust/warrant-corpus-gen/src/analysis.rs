@@ -269,4 +269,47 @@ mod tests {
         );
         assert!(check_v0_static_arith(&pure, &|_| false).is_ok());
     }
+
+    #[test]
+    fn a_match_arm_is_a_guard_and_its_scrutinee_must_be_pure_when_an_arm_calls() {
+        use crate::ir::Pat;
+        let arms = |body: Box<Ir>| {
+            vec![
+                (Pat::Ok(Box::new(Pat::Wild)), *body),
+                (Pat::ErrAny, Ir::Bool(true)),
+            ]
+        };
+        let m = |scrutinee: Box<Ir>, body: Box<Ir>| Ir::Match {
+            scrutinee,
+            arms: arms(body),
+        };
+        // a pure scrutinee over an arm that calls: fine
+        assert!(check_pure_guards(&m(var("r"), subj("f"))).is_ok());
+        // a scrutinee that calls over an arm that calls: the impure guard, W0701
+        let e = check_pure_guards(&m(subj("g"), subj("f"))).unwrap_err();
+        assert_eq!(e.code, code::W0701);
+        // the second arm counts too
+        let second = Ir::Match {
+            scrutinee: subj("g"),
+            arms: vec![
+                (Pat::Ok(Box::new(Pat::Wild)), Ir::Bool(true)),
+                (Pat::ErrAny, *subj("f")),
+            ],
+        };
+        assert!(check_pure_guards(&second).is_err());
+        // no arm calls: descend into the scrutinee as usual (a call there guards nothing)
+        assert!(check_pure_guards(&m(subj("g"), Box::new(Ir::Bool(true)))).is_ok());
+        // ... and an impure guard nested in the scrutinee is still found
+        let nested = m(
+            Box::new(Ir::If(subj("g"), subj("f"), Box::new(Ir::Bool(true)))),
+            Box::new(Ir::Bool(true)),
+        );
+        assert!(check_pure_guards(&nested).is_err());
+        // an impure guard inside an arm is found
+        let inner = m(
+            var("r"),
+            Box::new(Ir::If(subj("g"), subj("f"), Box::new(Ir::Bool(true)))),
+        );
+        assert!(check_pure_guards(&inner).is_err());
+    }
 }
