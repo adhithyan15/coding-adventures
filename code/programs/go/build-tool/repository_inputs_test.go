@@ -126,6 +126,55 @@ func TestGameClockCorpusSelectsRustConsumerOnly(t *testing.T) {
 	}
 }
 
+func TestBiquadSosFixtureSelectsPythonAndTypeScriptConsumers(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "python/dsp-filters", Language: "python"},
+		{Name: "typescript/dsp-filters", Language: "typescript"},
+	}
+	for _, changed := range []string{
+		"code/specs/fixtures/biquad-sos-v1/cases.json",
+		"code/specs/fixtures/biquad-sos-v1/README.md",
+	} {
+		got, err := repositoryInputConsumersForChange([]string{changed}, packages, "all")
+		want := map[string]bool{"python/dsp-filters": true, "typescript/dsp-filters": true}
+		if err != nil || !reflect.DeepEqual(got, want) {
+			t.Fatalf("%s selected %v, err %v; want both consumers", changed, got, err)
+		}
+		if got, err := repositoryInputConsumersForChange([]string{changed}, packages, "python"); err != nil || !reflect.DeepEqual(got, map[string]bool{"python/dsp-filters": true}) {
+			t.Fatalf("python-only selection got %v, err %v", got, err)
+		}
+		if got, err := repositoryInputConsumersForChange([]string{changed}, packages, "typescript"); err != nil || !reflect.DeepEqual(got, map[string]bool{"typescript/dsp-filters": true}) {
+			t.Fatalf("typescript-only selection got %v, err %v", got, err)
+		}
+	}
+	for changed, shouldMatch := range map[string]bool{
+		"code/specs/fixtures/biquad-sos-v1/cases.json":     true,
+		"code/specs/fixtures/biquad-sos-v10/cases.json":    false,
+		"code/specs/fixtures/biquad-sos-v1-old/cases.json": false,
+		"code/specs/fixtures/biquad-sos-v1":                false,
+		`code\specs\fixtures\biquad-sos-v1\cases.json`:     false,
+	} {
+		if got := isBiquadSosFixture(changed); got != shouldMatch {
+			t.Errorf("isBiquadSosFixture(%q) = %v, want %v", changed, got, shouldMatch)
+		}
+		selected, err := repositoryInputConsumersForChange([]string{changed}, packages, "all")
+		if err != nil {
+			t.Fatal(err)
+		}
+		if shouldMatch && len(selected) != 2 {
+			t.Errorf("expected both consumers for %q, got %v", changed, selected)
+		}
+		if !shouldMatch && len(selected) != 0 {
+			t.Errorf("lookalike %q selected consumers %v", changed, selected)
+		}
+	}
+	if _, err := repositoryInputConsumersForChange(
+		[]string{"code/specs/fixtures/biquad-sos-v1/cases.json"}, nil, "all",
+	); err == nil {
+		t.Fatal("missing fixture consumers must fail closed")
+	}
+}
+
 func TestHamurabiCorpusSelectsRegisteredRustConsumer(t *testing.T) {
 	languages := []string{
 		"rust", "go", "python", "typescript", "csharp", "fsharp", "java", "kotlin", "dart",
