@@ -14,6 +14,8 @@ uv pip install -e ".[dev]" --quiet
 # fixture is regenerated and this pin is reviewed with it. --profile is the fixture's own
 # hand-written corpus.profile, so an edit to it moves profile_sha256 and fails ([D14]).
 .venv/bin/python -m coding_adventures_warrant_oracle verify-v2 ../../../specs/fixtures/ct-compare-warrant-v2 --warrant ../../../specs/ct-compare.warrant --profile ../../../specs/fixtures/ct-compare-warrant-v2/corpus.profile --bindings ../../rust/ct-compare/evidence.bindings --expect-generator warrant-corpus-gen@0.6.0
+# CV2 S10 adopter (x25519): the committed x25519 v2 fixture, pinned and profile-checked as above.
+.venv/bin/python -m coding_adventures_warrant_oracle verify-v2 ../../../specs/fixtures/x25519-warrant-v2 --warrant ../../../specs/x25519.warrant --profile ../../../specs/fixtures/x25519-warrant-v2/corpus.profile --bindings ../../rust/x25519/evidence.bindings --expect-generator warrant-corpus-gen@0.6.0
 .venv/bin/python -m coding_adventures_warrant_oracle check --spec ../../../specs/ct-compare.warrant
 .venv/bin/python -m coding_adventures_warrant_oracle check --spec ../../../specs/gf256.warrant
 .venv/bin/python -m coding_adventures_warrant_oracle check --spec ../../../specs/wasm-leb128.warrant

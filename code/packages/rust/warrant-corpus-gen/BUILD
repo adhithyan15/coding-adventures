@@ -34,3 +34,7 @@ d=$(mktemp -d) && cd ../../../.. && g="cargo run -q --manifest-path code/package
 # the spec, the fixture or the bindings select this package through a build-tool consumer row
 # (repository_inputs.go, "rust/warrant-corpus-gen").
 cd ../../../.. && cargo run -q --manifest-path code/packages/rust/Cargo.toml -p coding_adventures_warrant_corpus_gen --bin warrant-corpus-gen -- --check --warrant code/specs/ct-compare.warrant --profile code/specs/fixtures/ct-compare-warrant-v2/corpus.profile --bindings code/packages/rust/ct-compare/evidence.bindings --out code/specs/fixtures/ct-compare-warrant-v2
+# CV2 S10 adopter (x25519): the committed x25519 v2 fixture is exactly what this generator writes
+# (same shape as the ct-compare line above; the build tool selects this package for an edit to
+# x25519.warrant, the fixture or the x25519 bindings: repository_inputs.go, warrantAdopters).
+cd ../../../.. && cargo run -q --manifest-path code/packages/rust/Cargo.toml -p coding_adventures_warrant_corpus_gen --bin warrant-corpus-gen -- --check --warrant code/specs/x25519.warrant --profile code/specs/fixtures/x25519-warrant-v2/corpus.profile --bindings code/packages/rust/x25519/evidence.bindings --out code/specs/fixtures/x25519-warrant-v2

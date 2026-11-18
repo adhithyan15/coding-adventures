@@ -123,6 +123,10 @@ crate's version fails that line until the fixture is regenerated and the diff re
 `profile_sha256` in `corpus.json` is the digest of the `--profile` file, so the build passes the
 fixture's own `corpus.profile` and an edit to it fails the line ([D14]).
 
+**The committed x25519 fixture.** `code/specs/fixtures/x25519-warrant-v2/` (the second adopter, CV2
+S10) is checked the same way by a second `--check` line in `BUILD` and `BUILD_windows`; its README
+has the command and what it holds (eight suites, five faults).
+
 ### As a library
 
 ```rust
