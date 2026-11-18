@@ -75,7 +75,12 @@
             "a2",
             "z1",
             "z2"
-          ]
+          ],
+          "derives": [
+            "Clone",
+            "Debug"
+          ],
+          "trait_impls": []
         },
         "WindowType": {
           "variants": [
@@ -83,7 +88,15 @@
             "Hamming",
             "Hann",
             "Blackman"
-          ]
+          ],
+          "derives": [
+            "Copy",
+            "Clone",
+            "Debug",
+            "PartialEq",
+            "Eq"
+          ],
+          "trait_impls": []
         },
         "FilterError": {
           "variants": [
@@ -91,6 +104,29 @@
             "EmptyKernel",
             "InvalidCoefficient(String)",
             "Fft(String)"
+          ],
+          "derives": [
+            "Debug",
+            "Clone",
+            "PartialEq"
+          ],
+          "trait_impls": [
+            {
+              "trait": "fmt::Display",
+              "methods": [
+                "fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result"
+              ]
+            },
+            {
+              "trait": "std::error::Error",
+              "methods": []
+            },
+            {
+              "trait": "From<dsp_fft::FftError>",
+              "methods": [
+                "from(e: dsp_fft::FftError) -> Self"
+              ]
+            }
           ]
         }
       },
@@ -221,8 +257,8 @@
       "root_export_entries": [
         {
           "name": "Biquad",
-          "namespace": "value",
-          "kind": "type"
+          "namespace": "type",
+          "kind": "struct"
         },
         {
           "name": "sosfilt",
@@ -231,8 +267,8 @@
         },
         {
           "name": "WindowType",
-          "namespace": "value",
-          "kind": "type"
+          "namespace": "type",
+          "kind": "enum"
         },
         {
           "name": "design_low_pass",
@@ -306,13 +342,13 @@
         },
         {
           "name": "FilterError",
-          "namespace": "value",
-          "kind": "type"
+          "namespace": "type",
+          "kind": "enum"
         },
         {
           "name": "design",
-          "namespace": "value",
-          "kind": "module"
+          "namespace": "module_path",
+          "kind": "public_module"
         },
         {
           "name": "iir",
@@ -960,6 +996,28 @@
         "MAX_SAMPLES": 16777216,
         "MAX_TAPS": 1048576,
         "MAX_ORDER": 1024
+      },
+      "error_types": {
+        "FilterError": {
+          "base": "ValueError",
+          "constructor": "inherited; package declares no __init__"
+        },
+        "EmptySignalError": {
+          "base": "FilterError",
+          "constructor": "inherited; package declares no __init__"
+        },
+        "EmptyKernelError": {
+          "base": "FilterError",
+          "constructor": "inherited; package declares no __init__"
+        },
+        "InvalidCoefficientError": {
+          "base": "FilterError",
+          "constructor": "inherited; package declares no __init__"
+        },
+        "FftError": {
+          "base": "FilterError",
+          "constructor": "inherited; package declares no __init__; not package-root exported"
+        }
       }
     },
     "typescript": {
@@ -1479,7 +1537,7 @@
           "runs structured raw-bit fuzz with manual semantic outcome feedback, replay, and fault minimization"
         ],
         "code/packages/typescript/dsp-filters/tests/shared_conformance.test.ts": [
-          "treats signed zero as equal under the fixture",
+          "treats signed zero as equal under the fixture's numeric comparison",
           "rejects malformed fixture records and an altered dyadic expected sample",
           "checks whole, fixed chunks, sample calls, reset replay, and all 32,768 partitions",
           "runs checked public APIs over the complete shared fixture domain",
@@ -1559,6 +1617,28 @@
         "MAX_SIGNAL_LEN": 16777216,
         "MAX_SAMPLES": 16777216,
         "MAX_ORDER": 1024
+      },
+      "error_types": {
+        "FilterError": {
+          "base": "Error",
+          "constructor": "constructor(message: string); sets name=FilterError"
+        },
+        "EmptySignalError": {
+          "base": "FilterError",
+          "constructor": "constructor(message: string = default); sets name=EmptySignalError"
+        },
+        "EmptyKernelError": {
+          "base": "FilterError",
+          "constructor": "constructor(message: string = default); sets name=EmptyKernelError"
+        },
+        "InvalidCoefficientError": {
+          "base": "FilterError",
+          "constructor": "constructor(message: string); sets name=InvalidCoefficientError"
+        },
+        "FftError": {
+          "base": "FilterError",
+          "constructor": "constructor(message: string); sets name=FftError"
+        }
       }
     }
   },
@@ -2207,7 +2287,8 @@
     "native_refinement": "not_live",
     "warrant_binding": "not_live",
     "host_float_and_state_binding": "not_live",
-    "note": "Absence is established by enumerating every path in the three pinned package trees, not by the Warrant blob alone."
+    "note": "Pinned-baseline and current committed HEAD package trees are enumerated separately. This is a Git-tree check, not a dirty-worktree artifact scan.",
+    "current_head_package_tree_walked": true
   },
   "producer_sources": [
     {
@@ -2275,7 +2356,7 @@
       "status": "configured",
       "test_path": "code/packages/rust/dsp-filters/tests/biquad_sos.rs",
       "test_blob_oid": "56675007a65110692428ef702a73e509bd59adce",
-      "evidence_domain": "VER06 seed AF03F022, 1024 bounded iterations, five structured initial seeds, max input 40 bytes, 11 corpus classes and 11 recorded manual outcome bins; caller bitmap only",
+      "evidence_domain": "VER06 seed AF03F022, 1024 bounded iterations, five source-level initial seeds, max input 40 bytes; per-run admissions and manual outcome bins are historical reports, not asserted source classes; caller bitmap only",
       "test_identities": [
         "ver06_structured_raw_bit_fuzz_replays_and_exercises_minimization"
       ]
@@ -2407,5 +2488,13 @@
     "mutation_requires_baseline_mutant_restored_hash_and_loaded_artifact_identity": true,
     "python_mutation_requires_cache_clear_and_bytecode_disabled": true,
     "native_coverage_is_not_inferred_from_semantic_bitmap": true
+  },
+  "shared_fixture_subject": {
+    "path": "code/specs/fixtures/biquad-sos-v1/cases.json",
+    "blob_oid": "3265b027d1d8be75fbd7b3f616bba260f0db2e06",
+    "fixture_identities": [
+      "biquad.process.impulse16",
+      "sosfilt.impulse16.two_sections"
+    ]
   }
 }

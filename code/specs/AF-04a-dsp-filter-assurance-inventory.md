@@ -44,7 +44,8 @@ copies, not four independent specifications.
 
 The machine-readable inventory will include every root-level export,
 module-visible Rust symbol, Python `__all__` entry, TypeScript index export,
-public class method, alias, constant, error type, package source path, and
+public class method and signature, alias, constant, error inheritance and
+constructor surface, Rust derive/trait declaration, package source path, and
 source blob OID. A parser-assisted listing is a completeness aid only: the
 inventory must be reviewed against the public source and package exports, and
 the checker must state which syntax forms it recognizes. It must not describe
@@ -85,6 +86,13 @@ accepted designer tap count under `MAX_TAPS` is `1,048,575`; direct `fir` and
 cycles/sample, with Nyquist at `0.5`. Butterworth and Chebyshev helpers support
 orders 1 and 2 only; there is no arbitrary-order cascade designer or checked
 variant.
+
+`Biquad` derives `Clone` and `Debug`; `WindowType` derives `Copy`, `Clone`,
+`Debug`, `PartialEq`, and `Eq`. `FilterError` derives `Debug`, `Clone`, and
+`PartialEq`; the inventory records its explicit `Display`, `Error`, and
+`From<dsp_fft::FftError>` implementations, including declared method
+signatures. This covers package-declared traits, not blanket or standard
+library inherited implementations.
 
 `FilterError` variants are `EmptySignal`, `EmptyKernel`,
 `InvalidCoefficient(String)`, and `Fft(String)`. It implements `Display`,
@@ -171,7 +179,7 @@ not proof of all inputs:
 
 | Lane | Existing public and property/fuzz evidence observed at subject revision |
 |---|---|
-| Rust | `tests/biquad_sos.rs` includes the public shared fixture, schema decoding, checked normalization/rollback/caps, and three bounded VER05 properties: 512 direct-form cases (`AF030001`), 512 two-feedback cases (`AF030002`), 128 general f32 block-error cases (`AF030003`). Structured VER06 test uses seed `AF03F022`, 1,024 campaign iterations, five initial structured seeds, max 40-byte inputs and recorded manual edge classes. `tests/public_design_api.rs` checks crate-root exports. These are bounded run receipts only when accompanied by the test runner manifest. |
+| Rust | `tests/biquad_sos.rs` includes the public shared fixture, schema decoding, checked normalization/rollback/caps, and three bounded VER05 properties: 512 direct-form cases (`AF030001`), 512 two-feedback cases (`AF030002`), 128 general f32 block-error cases (`AF030003`). Structured VER06 test uses seed `AF03F022`, 1,024 campaign iterations, five initial structured seeds, and max 40-byte inputs. Its reported admissions and manual outcome bins are historical run observations, not source-asserted corpus classes or fixed counts. `tests/public_design_api.rs` checks crate-root exports. These are bounded run receipts only when accompanied by the test runner manifest. |
 | Python | Public and checked APIs have unit, hostile-input, fixture, property and seeded mutation tests in package `tests/`. The Python bootstrap fuzzer's ordinary byte mutation admits candidates at a seeded 1-in-10 lottery; its callback exception handling is not a measured watchdog and does not provide native coverage feedback. A return value from a callback is not itself a crash record unless the callback raises. Do not label a seed-bounded run coverage-guided. |
 | TypeScript | Public and checked APIs have unit, hostile-input, fixture, property and mutation tests in package `tests/`. The bootstrap has a `CoverageBitmap` target interface, but current runner outcome accounting handles pass/crash while declared timeout/OOM outcomes are not surfaced as campaign results. A caller-supplied bitmap is not native instrumentation. |
 
@@ -233,7 +241,8 @@ The producer audit is deliberately per implementation:
 * TypeScript: PBT and semantic coverage-map fuzz entry points exist. The
   current runner does not account timeout/OOM enum outcomes as campaign
   results. It must not be credited with native edge instrumentation.
-* Rust: PBT and fuzz outcomes record callback-returned Timeout/OOM; the target
+* Rust: the fuzz runner reports callback-returned Timeout/OOM; the separate
+  PBT runner does not provide that fuzz-outcome accounting. The fuzz target
   supplies the `CoverageBitmap`. This is semantic/caller-provided feedback,
   not compiler-instrumented native coverage.
 
@@ -245,10 +254,11 @@ and producer correction. AF-05b remains a hard source-proof gate.
 
 ## 7. Machine-readable inventory and validation contract
 
-AF-04a's implementation artifact will be
-`code/specs/assurance/dsp-filters-inventory-v1.json`. It will contain:
+AF-04a's implementation artifact is
+`code/specs/assurance/dsp-filters-inventory-v1.json`. It contains:
 
-1. subject commit and package manifests/source blob OIDs;
+1. subject commit and package manifests/source blob OIDs, plus the shared
+   executable fixture's exact blob and case identities;
 2. exhaustive declared public-export entries, including aliases, module paths,
    methods, types, constants, errors, and lane visibility;
 3. operation-local scalar types, buffer forms, output form, validation and
@@ -266,9 +276,10 @@ AF-04a's implementation artifact will be
 The validator compares inventory in both directions against an immutable
 baseline pinned by this specification and source loaded with
 `git show <subject>:<path>`. It also compares audited source, test, producer,
-and Warrant blobs at committed `HEAD` with the baseline; changed inputs cannot
-silently inherit the old inventory. This is a Git-object guard, not a dirty
-working-tree check. It must not trust an editable manifest to supply its own
+Warrant, and shared-fixture blobs at committed `HEAD` with the baseline;
+changed inputs cannot silently inherit the old inventory. It separately walks
+the pinned and current committed package trees for bindings and reports. These
+are Git-object/tree guards, not a dirty working-tree check. It must not trust an editable manifest to supply its own
 expected export set or digest. It recognizes a documented finite
 set of Python AST, TypeScript export-block, Rust re-export/module, and Warrant
 declaration forms; unknown syntax fails closed or is marked unresolved, never
@@ -279,8 +290,12 @@ declarations. A missing file in one blob does not prove that no package-level
 binding exists; inspect the complete pinned package tree.
 
 Schema, source identity, and semantic completeness are separate failure
-classes. The checker provides 27 negative corruption controls and one positive
-candidate-path control. They prove that (a) malformed data
+classes. The checker provides 41 negative corruption/source controls and one
+positive candidate-path control. The controls include scope/precision and
+typed-namespace mutations, duplicate identities, producer-role swaps,
+contract-note deletions, Warrant resource/provenance promotions, trait/error
+surface omissions, shared-fixture drift, and unrecognized TypeScript exports.
+They prove that (a) malformed data
 fails schema validation, (b) removing a known export, alias, method, or field
 fails completeness, (c) changing an alias target or swapping same-named
 Biquad lane identities fails semantic binding checks, (d) changing a pinned

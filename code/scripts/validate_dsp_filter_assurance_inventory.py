@@ -20,6 +20,10 @@ from typing import Any, Callable
 PINNED_COMMIT = "cb60dc9820fc069325130193118e75fdba9b96bc"
 PINNED_TREE = "134b3571f5833c29c567c93489f3f5c012fba35f"
 INVENTORY_PATH = "code/specs/assurance/dsp-filters-inventory-v1.json"
+SHARED_FIXTURE_PATH = "code/specs/fixtures/biquad-sos-v1/cases.json"
+SHARED_FIXTURE_BLOB = "3265b027d1d8be75fbd7b3f616bba260f0db2e06"
+SHARED_FIXTURE_IDS = ["biquad.process.impulse16", "sosfilt.impulse16.two_sections"]
+EXPECTED_SUBJECT_SCOPE = "rust/python/typescript dsp-filters plus their Warrant and test-producer prerequisites"
 
 EXPECTED_ROOT_EXPORTS = {
     "rust": {
@@ -50,10 +54,10 @@ EXPECTED_ROOT_EXPORTS = {
 EXPECTED_PUBLIC_MODULES = {"design", "iir"}
 EXPECTED_PRIVATE_REEXPORTS = {"biquad": {"Biquad", "sosfilt"}}
 EXPECTED_EXPORT_ENTRY_KINDS = {
-    "rust": ({(name, "value", "type") for name in {"Biquad", "WindowType", "FilterError"}} |
+    "rust": ({("Biquad", "type", "struct"), ("WindowType", "type", "enum"), ("FilterError", "type", "enum")} |
              {(name, "value", "function") for name in {"sosfilt", "design_low_pass", "design_high_pass", "design_band_pass", "try_design_low_pass", "try_design_high_pass", "try_design_band_pass", "butterworth_lowpass", "chebyshev1_lowpass", "iir", "fir", "fir_fft"}} |
              {(name, "value", "constant") for name in {"MAX_SAMPLES", "MAX_TAPS", "MAX_ORDER"}} |
-             {("design", "value", "module"), ("iir", "module_path", "public_module")}),
+             {("design", "module_path", "public_module"), ("iir", "module_path", "public_module")}),
     "python": ({(name, "value_and_type", "type") for name in {"Biquad", "CheckedBiquad", "WindowType", "FilterError", "EmptySignalError", "EmptyKernelError", "InvalidCoefficientError"}} |
                {(name, "value", "function") for name in {"sos_cascade", "sosfilt", "checked_sosfilt", "design_low_pass", "design_high_pass", "design_band_pass", "butterworth_lowpass", "chebyshev1_lowpass", "iir", "fir", "fir_fft"}} |
                {(name, "value", "constant") for name in {"MAX_ORDER", "MAX_SAMPLES", "MAX_TAPS"}}),
@@ -120,6 +124,16 @@ EXPECTED_PRODUCER_PATHS = {
     "typescript": {"code/packages/typescript/test-bootstrap/src/fuzz.ts", "code/packages/typescript/test-bootstrap/src/pbt.ts"},
     "rust": {"code/packages/rust/test-bootstrap/src/fuzz.rs", "code/packages/rust/test-bootstrap/src/pbt.rs"},
 }
+EXPECTED_PRODUCER_ORDERED_PATHS = {
+    "python": ("code/packages/python/test-bootstrap/src/coding_adventures_test_bootstrap/fuzz.py", "code/packages/python/test-bootstrap/src/coding_adventures_test_bootstrap/pbt.py"),
+    "typescript": ("code/packages/typescript/test-bootstrap/src/fuzz.ts", "code/packages/typescript/test-bootstrap/src/pbt.ts"),
+    "rust": ("code/packages/rust/test-bootstrap/src/fuzz.rs", "code/packages/rust/test-bootstrap/src/pbt.rs"),
+}
+EXPECTED_PRECISION = {
+    "rust": "IEEE-754 binary32 f32",
+    "python": "IEEE-754 binary64 Python float",
+    "typescript": "IEEE-754 binary64 JavaScript number",
+}
 EXPECTED_PRODUCER_CLAIMS = {
     "python": ("seeded 1-in-10 corpus admission lottery, no execution-edge feedback", "exceptions recorded as crashes; callback return values ignored; no measured watchdog or native coverage"),
     "typescript": ("target-supplied CoverageBitmap semantic feedback; not native instrumentation", "runner records pass/crash; declared timeout/OOM outcomes currently dropped from report; no watchdog is implied"),
@@ -172,6 +186,130 @@ EXPECTED_NOTE_OPERATIONS = {
     "rust": {"fir/fir_fft", "iir", "Biquad", "sosfilt", "design_low_pass/design_high_pass/design_band_pass", "butterworth_lowpass/chebyshev1_lowpass"},
     "python": {"fir/fir_fft", "iir", "Biquad", "sos_cascade/sosfilt", "CheckedBiquad/checked_sosfilt", "design_low_pass/design_high_pass/design_band_pass", "butterworth_lowpass/chebyshev1_lowpass"},
     "typescript": {"fir/firFft/fir_fft", "lfilter/iir", "filtfilt", "Biquad", "sosfilt/sosCascade/sos_cascade", "CheckedBiquad/checkedSosfilt", "designLowPass/designHighPass/designBandPass/firwin", "butterworthLowpass/butterworthHighpass/butterworthBandpass/chebyshev1Lowpass"},
+}
+EXPECTED_NOTE_KEYS = {
+    "rust": {
+        "fir/fir_fft": {"operation", "signature", "precision", "state", "caps", "errors"},
+        "iir": {"operation", "signature", "precision", "state", "caps", "normalization", "errors"},
+        "Biquad": {"operation", "signature", "precision", "state", "caps", "normalization", "errors"},
+        "sosfilt": {"operation", "signature", "precision", "state", "caps", "empty_sections", "errors"},
+        "design_low_pass/design_high_pass/design_band_pass": {"operation", "signature", "precision", "caps", "errors"},
+        "butterworth_lowpass/chebyshev1_lowpass": {"operation", "signature", "precision", "orders", "higher_order"},
+    },
+    "python": {
+        "fir/fir_fft": {"operation", "signature", "precision", "caps", "errors"},
+        "iir": {"operation", "signature", "precision", "state", "caps", "normalization", "errors"},
+        "Biquad": {"operation", "signature", "precision", "state", "normalization", "errors"},
+        "sos_cascade/sosfilt": {"operation", "signature", "precision", "state", "caps", "empty_sections", "errors"},
+        "CheckedBiquad/checked_sosfilt": {"operation", "signature", "precision", "state", "caps", "input_policy", "normalization"},
+        "design_low_pass/design_high_pass/design_band_pass": {"operation", "signature", "precision", "cutoff_cycles_per_sample", "designer_taps", "designer_tap_domain", "window_names", "window_string_policy"},
+        "butterworth_lowpass/chebyshev1_lowpass": {"operation", "signature", "precision", "orders", "higher_order", "errors"},
+    },
+    "typescript": {
+        "fir/firFft/fir_fft": {"operation", "signature", "precision", "caps", "errors"},
+        "lfilter/iir": {"operation", "signature", "precision", "state", "caps", "normalization"},
+        "filtfilt": {"operation", "signature", "precision", "state", "caps"},
+        "Biquad": {"operation", "signature", "precision", "state", "caps", "normalization"},
+        "sosfilt/sosCascade/sos_cascade": {"operation", "signature", "precision", "state", "caps", "empty_sections"},
+        "CheckedBiquad/checkedSosfilt": {"operation", "signature", "precision", "state", "caps", "input_policy", "normalization"},
+        "designLowPass/designHighPass/designBandPass/firwin": {"operation", "signature", "precision", "cutoff_cycles_per_sample", "designer_tap_domain", "firwin", "windows"},
+        "butterworthLowpass/butterworthHighpass/butterworthBandpass/chebyshev1Lowpass": {"operation", "signature", "precision", "orders", "high_band_pass_helpers", "errors"},
+    },
+}
+EXPECTED_NOTE_CAP_FIELDS = {
+    "rust": {
+        "fir/fir_fft": {"signal_samples", "kernel_taps", "output_samples"},
+        "iir": {"signal_samples", "coefficient_vector_preflight", "polynomial_order", "maximum_accepted_coefficient_vector_length"},
+        "Biquad": {"process_samples"},
+        "sosfilt": {"signal_samples", "sections"},
+        "design_low_pass/design_high_pass/design_band_pass": {"designer_taps_max", "designer_taps_must_be_odd", "cutoff_cycles_per_sample"},
+        "butterworth_lowpass/chebyshev1_lowpass": None,
+    },
+    "python": {
+        "fir/fir_fft": {"signal_samples", "kernel_taps", "output_samples", "fft_length"},
+        "iir": {"signal_samples", "coefficient_vector_preflight", "polynomial_order", "maximum_accepted_coefficient_vector_length"},
+        "Biquad": None,
+        "sos_cascade/sosfilt": {"signal_samples", "sections", "coefficient_count_per_section"},
+        "CheckedBiquad/checked_sosfilt": {"process_samples", "sos_sections", "coefficient_count_per_section"},
+        "design_low_pass/design_high_pass/design_band_pass": None,
+        "butterworth_lowpass/chebyshev1_lowpass": None,
+    },
+    "typescript": {
+        "fir/firFft/fir_fft": {"signal_samples", "kernel_taps", "output_samples", "fft_length"},
+        "lfilter/iir": {"signal_samples", "coefficient_vector_preflight", "polynomial_order", "maximum_accepted_coefficient_vector_length"},
+        "filtfilt": {"signal_samples", "coefficient_vector_preflight", "polynomial_order", "padding"},
+        "Biquad": {"process_samples"},
+        "sosfilt/sosCascade/sos_cascade": {"signal_samples", "sections", "coefficient_count_per_section"},
+        "CheckedBiquad/checkedSosfilt": {"process_samples", "sos_sections", "coefficient_count_per_section"},
+        "designLowPass/designHighPass/designBandPass/firwin": None,
+        "butterworthLowpass/butterworthHighpass/butterworthBandpass/chebyshev1Lowpass": None,
+    },
+}
+EXPECTED_RUST_TRAITS = {
+    "Biquad": {"derives": ["Clone", "Debug"]},
+    "WindowType": {"derives": ["Copy", "Clone", "Debug", "PartialEq", "Eq"]},
+    "FilterError": {"derives": ["Debug", "Clone", "PartialEq"]},
+}
+EXPECTED_RUST_TRAIT_IMPLS = {
+    "Biquad": [],
+    "WindowType": [],
+    "FilterError": [
+        {"trait": "fmt::Display", "methods": ["fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result"]},
+        {"trait": "std::error::Error", "methods": []},
+        {"trait": "From<dsp_fft::FftError>", "methods": ["from(e: dsp_fft::FftError) -> Self"]},
+    ],
+}
+EXPECTED_ERROR_TYPES = {
+    "python": {
+        "FilterError": {"base": "ValueError", "constructor": "inherited; package declares no __init__"},
+        "EmptySignalError": {"base": "FilterError", "constructor": "inherited; package declares no __init__"},
+        "EmptyKernelError": {"base": "FilterError", "constructor": "inherited; package declares no __init__"},
+        "InvalidCoefficientError": {"base": "FilterError", "constructor": "inherited; package declares no __init__"},
+        "FftError": {"base": "FilterError", "constructor": "inherited; package declares no __init__; not package-root exported"},
+    },
+    "typescript": {
+        "FilterError": {"base": "Error", "constructor": "constructor(message: string); sets name=FilterError"},
+        "EmptySignalError": {"base": "FilterError", "constructor": "constructor(message: string = default); sets name=EmptySignalError"},
+        "EmptyKernelError": {"base": "FilterError", "constructor": "constructor(message: string = default); sets name=EmptyKernelError"},
+        "InvalidCoefficientError": {"base": "FilterError", "constructor": "constructor(message: string); sets name=InvalidCoefficientError"},
+        "FftError": {"base": "FilterError", "constructor": "constructor(message: string); sets name=FftError"},
+    },
+}
+EXPECTED_TYPESCRIPT_ERROR_CTORS = {
+    "FilterError": ("Error", "message: string", True),
+    "EmptySignalError": ("FilterError", 'message: string = "filter signal must be non-empty"', True),
+    "EmptyKernelError": ("FilterError", 'message: string = "filter kernel or coefficient list must be non-empty"', True),
+    "InvalidCoefficientError": ("FilterError", "message: string", True),
+    "FftError": ("FilterError", "message: string", True),
+}
+EXPECTED_NOTE_DETAILS = {
+    "rust": {
+        "fir/fir_fft": {"signature": "(signal: &[f32], kernel: &[f32]) -> Result<Vec<f32>, FilterError>", "precision": "f32", "state": "whole-buffer", "errors": ["EmptySignal", "EmptyKernel", "InvalidCoefficient", "Fft"]},
+        "iir": {"signature": "(signal: &[f32], b: &[f32], a: &[f32]) -> Result<Vec<f32>, FilterError>", "precision": "f32", "state": "one-shot zero initial delay; no persistent IIR object", "normalization": "reciprocal multiplication by 1/a0", "errors": ["EmptySignal", "EmptyKernel", "InvalidCoefficient"]},
+        "Biquad": {"signature": "Biquad::new([f32;6]); process_sample(&mut self,f32); process(&mut self,&[f32]); reset(&mut self)", "precision": "f32", "state": "persistent per instance; private delays; returned sample/block errors are failure-atomic", "normalization": "five direct divisions by finite nonzero a0", "errors": ["InvalidCoefficient"]},
+        "sosfilt": {"signature": "(sections: &[[f32;6]], signal: &[f32]) -> Result<Vec<f32>, FilterError>", "precision": "f32", "state": "one-shot fresh section state per call", "empty_sections": "identity for nonempty input", "errors": ["EmptySignal", "InvalidCoefficient"]},
+        "design_low_pass/design_high_pass/design_band_pass": {"signature": "legacy Vec wrappers plus additive try_design_* Result variants", "precision": "f32", "errors": ["legacy wrappers panic on invalid arguments", "try_design_* returns InvalidCoefficient"]},
+        "butterworth_lowpass/chebyshev1_lowpass": {"signature": "(order: u32, cutoff/ripple: f32) -> (Vec<f32>, Vec<f32>)", "precision": "f32", "orders": [1, 2], "higher_order": "unsupported; no cascade designer"},
+    },
+    "python": {
+        "fir/fir_fft": {"signature": "(signal: Sequence[float], kernel: Sequence[float]) -> list[float]", "precision": "binary64", "errors": ["EmptySignalError", "EmptyKernelError", "InvalidCoefficientError"]},
+        "iir": {"signature": "(signal: Sequence[float], b: Sequence[float], a: Sequence[float]) -> list[float]", "precision": "binary64", "state": "one-shot zero initial delay; no persistent IIR object", "normalization": "reciprocal multiplication by 1/a0", "errors": ["EmptySignalError", "EmptyKernelError", "InvalidCoefficientError"]},
+        "Biquad": {"signature": "Biquad(b0,b1,b2,a0,a1,a2); process_sample(x); process(signal); reset()", "precision": "binary64", "state": "persistent, public writable coefficients and delay slots; legacy block processing commits samplewise", "normalization": "reciprocal multiplication; raw finite and nonzero a0 checked but normalized values and outputs/delays are not finite-checked", "errors": ["InvalidCoefficientError", "EmptySignalError"]},
+        "sos_cascade/sosfilt": {"signature": "sos_cascade(signal,sos); sosfilt(sos,signal)", "precision": "binary64", "state": "one-shot fresh state per section/call", "empty_sections": "identity for nonempty input", "errors": ["EmptySignalError", "InvalidCoefficientError"]},
+        "CheckedBiquad/checked_sosfilt": {"signature": "checked constructors and functions return values or raise FilterError subclasses", "precision": "binary64", "state": "persistent Biquad; one-shot SOS; block operation uses candidate state and commits only on success", "input_policy": "exact built-in int/float only, bool and subclasses excluded; accepted integers convert once to binary64", "normalization": "direct division, rejects nonfinite normalized coefficients/output/delays"},
+        "design_low_pass/design_high_pass/design_band_pass": {"signature": "public low/high/band-pass designers; signatures use binary64 scalar inputs and list outputs", "precision": "binary64", "designer_taps": "positive odd, capped by MAX_TAPS=1048576", "cutoff_cycles_per_sample": "lowpass [0,.5], bandpass 0<=low<high<=.5", "window_names": ["rectangular", "hamming", "hann", "blackman"], "window_string_policy": "strip then lowercase", "designer_tap_domain": {"positive_odd_taps_max": 1048575, "low_high_cutoff": "[0,0.5]", "band_cutoff": "0<=low<high<=0.5"}},
+        "butterworth_lowpass/chebyshev1_lowpass": {"signature": "two lowpass helper exports only", "precision": "binary64", "orders": [1, 2], "higher_order": "unsupported", "errors": ["InvalidCoefficientError"]},
+    },
+    "typescript": {
+        "fir/firFft/fir_fft": {"signature": "(signal: Float64Array|ArrayLike<number>, kernel: Float64Array|ArrayLike<number>) -> Float64Array", "precision": "binary64", "errors": ["EmptySignalError", "EmptyKernelError", "InvalidCoefficientError"]},
+        "lfilter/iir": {"signature": "lfilter(b,a,signal); iir(signal,b,a)", "precision": "binary64", "state": "one-shot zero initial delay; no persistent IIR object", "normalization": "reciprocal multiplication by 1/a0"},
+        "filtfilt": {"signature": "filtfilt(b,a,signal)", "precision": "binary64", "state": "one-shot forward-backward filtering"},
+        "Biquad": {"signature": "constructor(b0,b1,b2,a0,a1,a2); processSample(x); process(signal); reset()", "precision": "binary64", "state": "persistent instance state; legacy process Number-coerces and commits each sample", "normalization": "reciprocal multiplication"},
+        "sosfilt/sosCascade/sos_cascade": {"signature": "(sos, signal)", "precision": "binary64", "state": "one-shot fresh state per section/call", "empty_sections": "identity for nonempty input"},
+        "CheckedBiquad/checkedSosfilt": {"signature": "strict binary64 checked stateful Biquad and one-shot SOS APIs", "precision": "binary64", "input_policy": "primitive finite number only; no coercion", "normalization": "direct division", "state": "block candidate state committed after full success"},
+        "designLowPass/designHighPass/designBandPass/firwin": {"signature": "design functions return Float64Array; IIR prototype functions return FilterCoefficients", "precision": "binary64", "cutoff_cycles_per_sample": "normalized, Nyquist 0.5", "firwin": "returns Float64Array; scalar cutoff selects low/high by passZero; cutoff pair selects band-pass/band-stop", "windows": ["rectangular", "hann", "hanning", "hamming", "blackman", "kaiser"], "designer_tap_domain": {"fir_design_taps": "positive odd integer <=65535", "firwin_taps": "positive odd integer <=65535", "low_high_cutoff": "[0,0.5]", "band_cutoff": "0<=low<high<=0.5"}},
+        "butterworthLowpass/butterworthHighpass/butterworthBandpass/chebyshev1Lowpass": {"signature": "FilterCoefficients with Float64Array b/a", "precision": "binary64", "orders": [1, 2], "high_band_pass_helpers": "TypeScript-only", "errors": ["InvalidCoefficientError"]},
+    },
 }
 
 EXPECTED_WARRANT_OPS = {
@@ -230,7 +368,7 @@ EXPECTED_EVIDENCE = {
 EXPECTED_EVIDENCE_DOMAINS = {
     ("rust", "Biquad/sosfilt", "public_execution"): "shared 16-sample exact dyadic fixture; fixed [3,1,12], samplewise, reset; 32768 contiguous partitions and 524288 Biquad outputs",
     ("rust", "Biquad/SOS VER05 direct/feedback models", "model"): "VER05 512 direct cases seed AF030001; 512 two-feedback cases seed AF030002; 128 general f32 block cases seed AF030003",
-    ("rust", "Biquad/SOS structured fuzz", "fuzz"): "VER06 seed AF03F022, 1024 bounded iterations, five structured initial seeds, max input 40 bytes, 11 corpus classes and 11 recorded manual outcome bins; caller bitmap only",
+    ("rust", "Biquad/SOS structured fuzz", "fuzz"): "VER06 seed AF03F022, 1024 bounded iterations, five source-level initial seeds, max input 40 bytes; per-run admissions and manual outcome bins are historical reports, not asserted source classes; caller bitmap only",
     ("python", "Biquad/SOS", "public_execution"): "shared fixed fixture; 32768 contiguous partitions/524288 outputs; 64 seeded partition samples AF02B001; 128 schema mutations AF02B003",
     ("python", "checked properties and source mutants", "property_and_mutation"): "bounded integer FIR/feedback domains and seeded raw-float/mutation corpora; exact run evidence must pin seed and imported source SHA",
     ("typescript", "Biquad/SOS", "public_execution"): "shared fixed fixture; 32768 contiguous partitions/524288 outputs; 64 seeded partition samples AF02B101; 128 schema mutations AF02B103",
@@ -239,8 +377,8 @@ EXPECTED_EVIDENCE_DOMAINS = {
 
 LANE_SCHEMA_KEYS = {
     "rust": {"package", "precision", "root_exports", "public_modules", "module_exports", "private_module_reexports", "members", "parameter_and_behavior_notes", "source_blobs", "test_sources", "export_targets", "root_export_entries", "member_signatures", "function_signatures", "constant_values", "operation_errors", "inline_unit_test_identities", "test_identities_by_path", "test_identity_status"},
-    "python": {"package", "precision", "root_exports", "members", "module_only_symbols", "parameter_and_behavior_notes", "source_blobs", "test_sources", "export_targets", "aliases", "root_export_entries", "member_signatures", "function_signatures", "constant_values", "operation_errors", "test_identities_by_path", "test_identity_status"},
-    "typescript": {"package", "precision", "root_exports", "members", "parameter_and_behavior_notes", "source_blobs", "test_sources", "export_targets", "aliases", "root_export_entries", "member_signatures", "function_signatures", "constant_values", "operation_errors", "test_identities_by_path", "test_identity_status"},
+    "python": {"package", "precision", "root_exports", "members", "module_only_symbols", "parameter_and_behavior_notes", "source_blobs", "test_sources", "export_targets", "aliases", "root_export_entries", "member_signatures", "function_signatures", "constant_values", "operation_errors", "test_identities_by_path", "test_identity_status", "error_types"},
+    "typescript": {"package", "precision", "root_exports", "members", "parameter_and_behavior_notes", "source_blobs", "test_sources", "export_targets", "aliases", "root_export_entries", "member_signatures", "function_signatures", "constant_values", "operation_errors", "test_identities_by_path", "test_identity_status", "error_types"},
 }
 
 
@@ -333,15 +471,15 @@ def exported_typescript(source: str) -> tuple[list[str], dict[str, str], dict[st
     names: list[str] = []
     targets: dict[str, str] = {}
     kinds: dict[str, str] = {}
-    if re.search(r"(?m)^\s*export\s+(?:\*|type\s*\{)", source):
-        raise ValidationError("unsupported_export_syntax", "TypeScript export-star/type-block syntax is outside the checked grammar")
+    if re.search(r"(?m)^\s*export\s+(?:\*|type\s*\{|default\b)", source):
+        raise ValidationError("unsupported_export_syntax", "TypeScript export-star/type/default syntax is outside the checked grammar")
     pattern = re.compile(r"export\s*\{([^}]*)\}\s*from\s*['\"]([^'\"]+)['\"]\s*;?", re.S)
     matches = list(pattern.finditer(source))
     stripped = pattern.sub("", source)
     if re.search(r"^\s*export\s*\{", stripped, re.M):
         raise ValidationError("unsupported_export_syntax", "unparsed TypeScript export block")
-    if re.search(r"(?m)^\s*export\s+(?:\*|type\s*\{)", stripped):
-        raise ValidationError("unsupported_export_syntax", "unparsed TypeScript export-star/type block")
+    if re.search(r"(?m)^\s*export\b", stripped):
+        raise ValidationError("unsupported_export_syntax", "unparsed TypeScript export declaration")
     if not matches:
         raise ValidationError("unsupported_export_syntax", "no TypeScript re-export blocks found")
     for match in matches:
@@ -479,14 +617,25 @@ def evidence_artifact_candidates(paths: set[str]) -> set[str]:
 
 
 def validate_inventory(repo: Path, doc: dict[str, Any], altered_sources: dict[str, str] | None = None, altered_current_oids: dict[str, str] | None = None) -> None:
-    exact_keys(doc, {"schema_version", "inventory_id", "subject", "lanes", "warrant_copies", "warrant_projection", "binding_and_report_tree_audit", "producer_sources", "evidence_records", "evidence_rungs", "provenance_policy"}, "schema", "inventory")
+    exact_keys(doc, {"schema_version", "inventory_id", "subject", "lanes", "warrant_copies", "warrant_projection", "binding_and_report_tree_audit", "producer_sources", "evidence_records", "evidence_rungs", "provenance_policy", "shared_fixture_subject"}, "schema", "inventory")
     require(doc.get("schema_version") == 1, "schema", "schema_version must be 1")
     require(doc.get("inventory_id") == "AF04A-DSP-FILTERS-API-ASSURANCE-v1", "schema", "inventory_id mismatch")
     subject = doc.get("subject", {})
     exact_keys(subject, {"repository", "commit", "tree", "scope"}, "schema", "subject")
     require(subject.get("commit") == PINNED_COMMIT, "source_identity", "subject commit is not the immutable baseline")
+    require(subject.get("repository") == "adhithyan15/coding-adventures" and subject.get("scope") == EXPECTED_SUBJECT_SCOPE, "source_completeness", "audit repository/scope differs from the reviewed three-lane boundary")
     actual_tree = git_text(repo, "rev-parse", f"{PINNED_COMMIT}^{{tree}}").strip()
     require(subject.get("tree") == PINNED_TREE == actual_tree, "source_identity", "subject tree mismatch")
+    fixture = doc.get("shared_fixture_subject")
+    exact_keys(fixture, {"path", "blob_oid", "fixture_identities"}, "schema", "shared fixture subject")
+    require(fixture == {"path": SHARED_FIXTURE_PATH, "blob_oid": SHARED_FIXTURE_BLOB, "fixture_identities": SHARED_FIXTURE_IDS}, "source_completeness", "shared fixture identity/domain differs from reviewed contract")
+    fixture_oid, fixture_source = pinned_blob(repo, SHARED_FIXTURE_PATH)
+    require(fixture_oid == SHARED_FIXTURE_BLOB, "source_identity", "shared fixture pinned blob differs")
+    require((altered_sources or {}).get(SHARED_FIXTURE_PATH, fixture_source) == fixture_source, "source_identity", "loaded shared fixture differs from pinned source")
+    fixture_data = json.loads(fixture_source)
+    require(fixture_data.get("schema_version") == 1 and [case.get("id") for case in fixture_data.get("cases", [])] == SHARED_FIXTURE_IDS, "source_completeness", "shared fixture case identities differ")
+    fixture_head_oid = (altered_current_oids or {}).get(SHARED_FIXTURE_PATH, git_text(repo, "rev-parse", f"HEAD:{SHARED_FIXTURE_PATH}").strip())
+    require(fixture_head_oid == fixture_oid, "source_drift", "current shared fixture differs from the pinned audit subject")
 
     lanes = doc.get("lanes")
     require(isinstance(lanes, dict) and set(lanes) == set(EXPECTED_ROOT_EXPORTS), "schema", "lane set mismatch")
@@ -494,6 +643,7 @@ def validate_inventory(repo: Path, doc: dict[str, Any], altered_sources: dict[st
     for lane, data in lanes.items():
         exact_keys(data, LANE_SCHEMA_KEYS[lane], "schema", f"{lane} lane")
         require(isinstance(data, dict), "schema", f"lane {lane} must be an object")
+        require(data.get("precision") == EXPECTED_PRECISION[lane], "source_completeness", f"{lane} precision differs from pinned API source")
         require(isinstance(data.get("parameter_and_behavior_notes"), list) and data["parameter_and_behavior_notes"], "source_completeness", f"{lane} parameter/behavior notes missing")
         require(set(data.get("members", {})) == EXPECTED_MEMBER_KEYS[lane], "source_completeness", f"{lane} member/type inventory incomplete")
         exports = data.get("root_exports")
@@ -515,10 +665,11 @@ def validate_inventory(repo: Path, doc: dict[str, Any], altered_sources: dict[st
         require(isinstance(entries, list) and entries, "schema", f"{lane} root_export_entries missing")
         entry_pairs = {(entry.get("name"), entry.get("namespace"), entry.get("kind")) for entry in entries if isinstance(entry, dict)}
         require(all(isinstance(entry, dict) and entry.get("name") and entry.get("namespace") and entry.get("kind") for entry in entries), "schema", f"{lane} export entry missing namespace/kind")
+        require(len(entry_pairs) == len(entries), "source_completeness", f"{lane} root export entries contain duplicate qualified identities")
         require({name for name, _, _ in entry_pairs} == set(exports), "source_completeness", f"{lane} typed export entries do not cover root exports")
         require(entry_pairs == EXPECTED_EXPORT_ENTRY_KINDS[lane], "source_completeness", f"{lane} export namespace/kind classification differs from the reviewed source census")
         if lane == "rust":
-            require(("iir", "value", "function") in entry_pairs and ("iir", "module_path", "public_module") in entry_pairs and ("design", "value", "module") in entry_pairs, "source_completeness", "Rust iir module/value namespace collision or design module lost")
+            require(("iir", "value", "function") in entry_pairs and ("iir", "module_path", "public_module") in entry_pairs and ("design", "module_path", "public_module") in entry_pairs, "source_completeness", "Rust iir module/value namespace collision or design module lost")
         if lane == "typescript":
             require({(name, namespace, kind) for name, namespace, kind in entry_pairs if name in {"FilterCoefficients", "FirwinOptions"}} == {("FilterCoefficients", "type_only", "interface"), ("FirwinOptions", "type_only", "interface")}, "source_completeness", "TypeScript type-only exports were not kept separate from runtime values")
         signatures = data.get("member_signatures", {})
@@ -533,12 +684,24 @@ def validate_inventory(repo: Path, doc: dict[str, Any], altered_sources: dict[st
         errors = data.get("operation_errors")
         require(isinstance(errors, dict) and set(errors) == EXPECTED_ERROR_OPERATION_KEYS[lane] and errors == EXPECTED_OPERATION_ERRORS[lane], "source_completeness", f"{lane} operation error map differs from the reviewed source census")
         if lane == "rust":
-            require(set(data["members"]["Biquad"]) == {"methods", "public_fields", "private_fields"} and set(data["members"]["WindowType"]) == {"variants"} and set(data["members"]["FilterError"]) == {"variants"}, "schema", "Rust member detail shape differs")
+            require(set(data["members"]["Biquad"]) == {"methods", "public_fields", "private_fields", "derives", "trait_impls"} and set(data["members"]["WindowType"]) == {"variants", "derives", "trait_impls"} and set(data["members"]["FilterError"]) == {"variants", "derives", "trait_impls"}, "schema", "Rust member detail shape differs")
+            for name, traits in EXPECTED_RUST_TRAITS.items():
+                expected = {**traits, "trait_impls": EXPECTED_RUST_TRAIT_IMPLS[name]}
+                require({key: data["members"][name][key] for key in ("derives", "trait_impls")} == expected, "source_completeness", f"Rust {name} derives/trait implementations differ")
         elif lane == "python":
             require(set(data["members"]["Biquad"]) == {"methods", "public_fields", "legacy_prefix_commit"} and set(data["members"]["CheckedBiquad"]) == {"methods", "public_fields", "failure_atomic_for_filter_owned_state", "private_fields"} and set(data["members"]["WindowType"]) == {"variants"}, "schema", "Python member detail shape differs")
             require(data["members"]["Biquad"]["legacy_prefix_commit"] is True and data["members"]["CheckedBiquad"]["failure_atomic_for_filter_owned_state"] is True, "source_completeness", "Python legacy/checked state disposition missing")
         else:
             require(set(data["members"]["Biquad"]) == {"methods", "public_fields", "typescript_private_fields", "runtime_privacy", "runtime_readonly_note"} and set(data["members"]["CheckedBiquad"]) == {"methods", "public_fields", "runtime_private_fields"} and set(data["members"]["FirwinOptions"]) == {"fields"} and set(data["members"]["FilterCoefficients"]) == {"fields"}, "schema", "TypeScript member detail shape differs")
+        if lane in EXPECTED_ERROR_TYPES:
+            require(data.get("error_types") == EXPECTED_ERROR_TYPES[lane], "source_completeness", f"{lane} error inheritance/constructor inventory differs")
+            actual_errors = python_error_hierarchy(repo) if lane == "python" else typescript_error_hierarchy(repo)
+            if lane == "python":
+                expected_python = {name: {"base": row["base"], "package_constructor": "inherited"} for name, row in EXPECTED_ERROR_TYPES[lane].items()}
+                require(actual_errors == expected_python, "source_completeness", "Python declared error bases/package constructors differ from source")
+            else:
+                expected_ts = {name: {"base": base, "constructor_args": args, "sets_name": sets_name} for name, (base, args, sets_name) in EXPECTED_TYPESCRIPT_ERROR_CTORS.items()}
+                require(actual_errors == expected_ts, "source_completeness", "TypeScript declared error bases/constructor signatures differ from source")
 
     for path, expected_oid in all_blobs.items():
         actual_oid, source = pinned_blob(repo, path)
@@ -553,7 +716,7 @@ def validate_inventory(repo: Path, doc: dict[str, Any], altered_sources: dict[st
     for row in producers:
         lane = row["lane"]
         require((row.get("feedback"), row.get("outcome_accounting")) == EXPECTED_PRODUCER_CLAIMS[lane], "source_completeness", f"{lane} producer capability/disposition claim differs from source audit")
-        require({row.get("fuzz_path"), row.get("pbt_path")} == EXPECTED_PRODUCER_PATHS[lane], "source_completeness", f"{lane} producer paths incomplete")
+        require((row.get("fuzz_path"), row.get("pbt_path")) == EXPECTED_PRODUCER_ORDERED_PATHS[lane], "source_completeness", f"{lane} fuzz/PBT producer roles or source paths differ")
         for path_key, oid_key in (("fuzz_path", "fuzz_blob_oid"), ("pbt_path", "pbt_blob_oid")):
             actual_oid, _ = pinned_blob(repo, row[path_key])
             require(actual_oid == row.get(oid_key), "source_identity", f"{lane} producer blob mismatch at {row[path_key]}")
@@ -624,6 +787,10 @@ def validate_inventory(repo: Path, doc: dict[str, Any], altered_sources: dict[st
     require(not rust["members"]["Biquad"]["public_fields"], "source_completeness", "Rust Biquad declares public fields unexpectedly")
     require(rust_enum_variants(repo, "code/packages/rust/dsp-filters/src/design.rs", "WindowType") == set(rust["members"]["WindowType"]["variants"]), "source_completeness", "Rust WindowType variants differ")
     require(rust_enum_variants(repo, "code/packages/rust/dsp-filters/src/lib.rs", "FilterError") == set(rust["members"]["FilterError"]["variants"]), "source_completeness", "Rust FilterError variants differ")
+    for name in EXPECTED_RUST_TRAITS:
+        path = "code/packages/rust/dsp-filters/src/biquad.rs" if name == "Biquad" else "code/packages/rust/dsp-filters/src/design.rs" if name == "WindowType" else "code/packages/rust/dsp-filters/src/lib.rs"
+        require(rust_type_derives(repo, path, name) == EXPECTED_RUST_TRAITS[name]["derives"], "source_completeness", f"Rust {name} derive list differs from source")
+    require(rust_trait_impls(repo) == EXPECTED_RUST_TRAIT_IMPLS["FilterError"], "source_completeness", "Rust FilterError trait implementation methods differ from source")
     require(set(re.findall(r"(?m)^\s*pub\s+(?:fn|enum|struct)\s+(\w+)", pinned_blob(repo, "code/packages/rust/dsp-filters/src/design.rs")[1])) == set(rust["module_exports"]["design"]), "source_completeness", "Rust public design-module API differs")
     require(set(re.findall(r"(?m)^\s*pub\s+fn\s+(\w+)", pinned_blob(repo, "code/packages/rust/dsp-filters/src/iir.rs")[1])) == set(rust["module_exports"]["iir"]), "source_completeness", "Rust public iir-module API differs")
 
@@ -637,7 +804,9 @@ def validate_inventory(repo: Path, doc: dict[str, Any], altered_sources: dict[st
                 tree = ast.parse(source)
                 actual_ids = [node.name for node in tree.body if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name.startswith("test_")]
             elif lane == "typescript":
-                actual_ids = re.findall(r"\bit\s*\(\s*['\"]([^'\"]+)['\"]", source) + re.findall(r"\btest\s*\(\s*['\"]([^'\"]+)['\"]", source)
+                actual_ids = re.findall(r"\bit\s*\(\s*(['\"])(.*?)\1", source, re.S)
+                actual_ids = [title for _, title in actual_ids]
+                actual_ids += [title for _, title in re.findall(r"\btest\s*\(\s*(['\"])(.*?)\1", source, re.S)]
             else:
                 actual_ids = re.findall(r"#\[test\]\s*fn\s+(\w+)\s*\(", source)
             require(actual_ids == expected_ids, "source_completeness", f"{lane} test identities differ at {path}")
@@ -662,6 +831,11 @@ def validate_inventory(repo: Path, doc: dict[str, Any], altered_sources: dict[st
     projection = doc.get("warrant_projection")
     exact_keys(projection, {"declared_operations", "all_arguments", "functional_claims", "examples", "biquad_or_sos_operations", "resource_rows", "operation_signatures_by_lane", "input_rows_by_lane", "label_rows_by_lane", "bound_rows_by_lane"}, "schema", "Warrant projection")
     require(projection.get("declared_operations") == ["fir", "fir_fft", "iir", "design_low_pass", "design_high_pass", "design_band_pass"] and projection.get("all_arguments") == "Bytes or Nat" and projection.get("functional_claims") == 0 and projection.get("examples") == 0 and projection.get("biquad_or_sos_operations") == 0, "warrant_declaration", "Warrant operation/claim projection differs")
+    expected_resource_rows = {
+        "canonical_rust_python": "FIR/FFT/IIR output/depth rows and three designer output/steps/heap/depth rows remain obligations; no Bytes-to-float codec or validated cost framing",
+        "typescript": "FIR/FFT work+heap, IIR work only; high-pass/band-pass window hostile rows omitted; all are unresolved lane-specific obligations, not proven false or satisfied",
+    }
+    require(projection.get("resource_rows") == expected_resource_rows, "warrant_declaration", "Warrant resource obligation disposition was altered")
     for projection_key in ("operation_signatures_by_lane", "input_rows_by_lane", "label_rows_by_lane", "bound_rows_by_lane"):
         require(set(projection.get(projection_key, {})) == set(warrant_paths), "warrant_declaration", f"Warrant {projection_key} lane set incomplete")
     for row in warrants:
@@ -692,13 +866,17 @@ def validate_inventory(repo: Path, doc: dict[str, Any], altered_sources: dict[st
         require(claims == 0 and doc["warrant_projection"]["functional_claims"] == 0 and doc["warrant_projection"]["examples"] == 0, "warrant_declaration", "unexpected functional claim/example")
 
     audit = doc["binding_and_report_tree_audit"]
-    exact_keys(audit, {"pinned_package_tree_walked", "rust_evidence_bindings_path", "generated_evidence_harness_path", "assurance_report_path", "native_refinement", "warrant_binding", "host_float_and_state_binding", "note"}, "schema", "tree audit")
+    exact_keys(audit, {"pinned_package_tree_walked", "current_head_package_tree_walked", "rust_evidence_bindings_path", "generated_evidence_harness_path", "assurance_report_path", "native_refinement", "warrant_binding", "host_float_and_state_binding", "note"}, "schema", "tree audit")
     for status_key in ("native_refinement", "warrant_binding", "host_float_and_state_binding"):
         require(audit.get(status_key) == "not_live", "unsupported_status", f"tree audit cannot promote {status_key}")
     tree_paths = set(git_text(repo, "ls-tree", "-r", "--name-only", PINNED_COMMIT, "code/packages/rust/dsp-filters", "code/packages/python/dsp-filters", "code/packages/typescript/dsp-filters").splitlines())
     require(audit.get("pinned_package_tree_walked") is True, "status", "package tree audit is not asserted")
     forbidden = sorted(evidence_artifact_candidates(tree_paths))
     require(not forbidden, "status", f"pinned package tree contains evidence artifacts not represented by the inventory: {forbidden}")
+    current_tree_paths = set(git_text(repo, "ls-tree", "-r", "--name-only", "HEAD", "code/packages/rust/dsp-filters", "code/packages/python/dsp-filters", "code/packages/typescript/dsp-filters").splitlines())
+    require(audit.get("current_head_package_tree_walked") is True, "status", "current HEAD package tree is not asserted")
+    current_forbidden = sorted(evidence_artifact_candidates(current_tree_paths))
+    require(not current_forbidden, "status", f"current HEAD package tree contains evidence artifacts not represented by the inventory: {current_forbidden}")
     for status_key in ("rust_evidence_bindings_path", "generated_evidence_harness_path", "assurance_report_path"):
         require(doc["binding_and_report_tree_audit"].get(status_key) == "absent", "status", f"unsupported artifact presence claim: {status_key}")
 
@@ -719,7 +897,16 @@ def validate_inventory(repo: Path, doc: dict[str, Any], altered_sources: dict[st
     expected_evkeys = {(lane, operation, kind, path, ids, EXPECTED_EVIDENCE_DOMAINS[(lane, operation, kind)]) for lane, operation, kind, path, ids in EXPECTED_EVIDENCE}
     actual_evkeys = {(r["lane"], r["operation"], r["kind"], r["test_path"], frozenset(r["test_identities"]), r["evidence_domain"]) for r in evidence_rows}
     require(len(actual_evkeys) == len(evidence_rows) and actual_evkeys == expected_evkeys, "evidence_provenance", "evidence records are duplicated, missing, or mismapped")
-    require(doc.get("provenance_policy", {}).get("evidence_key") == ["subject_commit", "lane", "operation", "kind", "domain"], "evidence_provenance", "evidence key does not bind subject/lane/operation/kind/domain")
+    expected_provenance = {
+        "evidence_key": ["subject_commit", "lane", "operation", "kind", "domain"],
+        "configured_is_not_executed": True,
+        "coverage_guided_is_not_exhaustive": True,
+        "mutation_requires_baseline_mutant_restored_hash_and_loaded_artifact_identity": True,
+        "python_mutation_requires_cache_clear_and_bytecode_disabled": True,
+        "native_coverage_is_not_inferred_from_semantic_bitmap": True,
+    }
+    exact_keys(doc.get("provenance_policy"), set(expected_provenance), "schema", "provenance policy")
+    require(doc["provenance_policy"] == expected_provenance, "unsupported_status", "provenance policy cannot weaken evidence or proof boundaries")
     rungs = doc.get("evidence_rungs")
     require(isinstance(rungs, list) and rungs, "evidence_provenance", "evidence rung section missing/empty")
     rung_keys = []
@@ -766,6 +953,60 @@ def rust_enum_variants(repo: Path, path: str, name: str) -> set[str]:
         payload = re.sub(r"\s+", "", variant.group(2) or "")
         variants.add(variant.group(1) + (f"({payload})" if variant.group(2) else ""))
     return variants
+
+
+def rust_type_derives(repo: Path, path: str, name: str) -> list[str]:
+    _, source = pinned_blob(repo, path)
+    match = re.search(rf"(?ms)#\[derive\(([^)]*)\)\]\s*pub\s+(?:struct|enum)\s+{re.escape(name)}\b", source)
+    if not match:
+        raise ValidationError("source_completeness", f"Rust derive declaration for {name} not found")
+    return [part.strip() for part in match.group(1).split(",") if part.strip()]
+
+
+def rust_trait_impls(repo: Path) -> list[dict[str, Any]]:
+    _, source = pinned_blob(repo, "code/packages/rust/dsp-filters/src/lib.rs")
+    results = []
+    for trait_name, start in (("fmt::Display", "impl fmt::Display for FilterError {"), ("From<dsp_fft::FftError>", "impl From<dsp_fft::FftError> for FilterError {")):
+        begin = source.find(start)
+        if begin < 0:
+            continue
+        end = source.find("\n}", begin)
+        if end < 0:
+            raise ValidationError("unsupported_source_syntax", f"unterminated Rust {trait_name} implementation")
+        block = source[begin:end]
+        methods = re.findall(r"(?m)^\s*fn\s+(\w+)\(([^)]*)\)\s*->\s*([^\{]+)\s*\{", block)
+        method_rows = [f"{name}({args.strip()}) -> {ret.strip()}" for name, args, ret in methods]
+        results.append({"trait": trait_name, "methods": method_rows})
+    if re.search(r"impl\s+std::error::Error\s+for\s+FilterError\s*\{\s*\}", source):
+        results.append({"trait": "std::error::Error", "methods": []})
+    order = {"fmt::Display": 0, "std::error::Error": 1, "From<dsp_fft::FftError>": 2}
+    return sorted(results, key=lambda row: order[row["trait"]])
+
+
+def python_error_hierarchy(repo: Path) -> dict[str, dict[str, str]]:
+    _, source = pinned_blob(repo, "code/packages/python/dsp-filters/src/dsp_filters/fir.py")
+    tree = ast.parse(source)
+    result = {}
+    for node in tree.body:
+        if isinstance(node, ast.ClassDef) and node.name in EXPECTED_ERROR_TYPES["python"]:
+            base = ast.unparse(node.bases[0]) if node.bases else "object"
+            has_init = any(isinstance(item, (ast.FunctionDef, ast.AsyncFunctionDef)) and item.name == "__init__" for item in node.body)
+            result[node.name] = {"base": base, "package_constructor": "declared" if has_init else "inherited"}
+    return result
+
+
+def typescript_error_hierarchy(repo: Path) -> dict[str, dict[str, str]]:
+    _, source = pinned_blob(repo, "code/packages/typescript/dsp-filters/src/errors.ts")
+    result = {}
+    for match in re.finditer(r"(?ms)export\s+class\s+(\w+)\s+extends\s+(\w+)\s*\{(.*?)^\}", source):
+        name, base, body = match.groups()
+        if name not in EXPECTED_ERROR_TYPES["typescript"]:
+            continue
+        constructor = re.search(r"(?m)^\s{2}constructor\(([^)]*)\)\s*\{", body)
+        normalized_args = re.sub(r"\s+", " ", constructor.group(1)).strip() if constructor else ""
+        sets_name = re.search(rf"this\.name\s*=\s*['\"]{re.escape(name)}['\"]", body) is not None
+        result[name] = {"base": base, "constructor_args": normalized_args, "sets_name": sets_name}
+    return result
 
 
 def source_constant_values(repo: Path, lane: str) -> dict[str, int]:
@@ -816,7 +1057,9 @@ def source_constant_values(repo: Path, lane: str) -> dict[str, int]:
 
 
 def validate_parameter_notes(lane: str, notes: list[dict[str, Any]], constants: dict[str, int]) -> None:
-    require({note.get("operation") for note in notes} == EXPECTED_NOTE_OPERATIONS[lane], "source_completeness", f"{lane} operation behavior notes incomplete")
+    require(isinstance(notes, list) and all(isinstance(note, dict) for note in notes), "schema", f"{lane} operation notes must be objects")
+    note_operations = [note.get("operation") for note in notes]
+    require(len(note_operations) == len(set(note_operations)) and set(note_operations) == EXPECTED_NOTE_OPERATIONS[lane], "source_completeness", f"{lane} operation behavior notes incomplete or duplicated")
     expected_caps = {
         "signal_samples": constants["MAX_SAMPLES"],
         "output_samples": constants["MAX_SAMPLES"],
@@ -835,10 +1078,17 @@ def validate_parameter_notes(lane: str, notes: list[dict[str, Any]], constants: 
         "padding": "3*max(coefficient lengths) when signal is longer than pad length; padded total <= 2^24",
     }
     for note in notes:
+        operation = note["operation"]
+        require(set(note) == EXPECTED_NOTE_KEYS[lane][operation], "source_completeness", f"{lane} {operation} behavior fields were removed or added")
+        expected_details = EXPECTED_NOTE_DETAILS[lane][operation]
+        require({key: value for key, value in note.items() if key not in {"operation", "caps"}} == expected_details, "source_completeness", f"{lane} {operation} behavior details differ from the reviewed source census")
         caps = note.get("caps")
-        if caps is None:
+        expected_cap_fields = EXPECTED_NOTE_CAP_FIELDS[lane][operation]
+        if expected_cap_fields is None:
+            require("caps" not in note, "source_completeness", f"{lane} {operation} unexpectedly declares a cap map")
             continue
         require(isinstance(caps, dict), "source_completeness", f"{lane} {note.get('operation')} caps must be a map")
+        require(set(caps) == expected_cap_fields, "source_completeness", f"{lane} {operation} cap/unit fields are incomplete or unexpected")
         for name, value in caps.items():
             require(name in expected_caps, "unsupported_source_syntax", f"unrecognized cap field {name} in {lane} {note.get('operation')}")
             require(value == expected_caps[name], "source_completeness", f"{lane} {note.get('operation')} cap {name} is not derived from the pinned constants")
@@ -1027,6 +1277,55 @@ def self_test(repo: Path, doc: dict[str, Any]) -> tuple[int, int]:
         candidate["evidence_records"][0]["test_identities"] = ["does_not_exist"]
     controls.append(("unreachable named-test evidence", attach_wrong_named_test, "evidence_provenance"))
 
+    def lie_precision(candidate: dict[str, Any]) -> None:
+        candidate["lanes"]["rust"]["precision"] = "IEEE-754 binary64"
+    controls.append(("wrong lane precision", lie_precision, "source_completeness"))
+
+    def widen_subject_scope(candidate: dict[str, Any]) -> None:
+        candidate["subject"]["scope"] = "all 22 languages and packages"
+    controls.append(("widen audited lane scope", widen_subject_scope, "source_completeness"))
+
+    def duplicate_export_identity(candidate: dict[str, Any]) -> None:
+        candidate["lanes"]["rust"]["root_export_entries"].append(copy.deepcopy(candidate["lanes"]["rust"]["root_export_entries"][0]))
+    controls.append(("duplicate qualified root export", duplicate_export_identity, "source_completeness"))
+
+    def swap_producer_roles(candidate: dict[str, Any]) -> None:
+        row = next(row for row in candidate["producer_sources"] if row["lane"] == "python")
+        row["fuzz_path"], row["pbt_path"] = row["pbt_path"], row["fuzz_path"]
+        row["fuzz_blob_oid"], row["pbt_blob_oid"] = row["pbt_blob_oid"], row["fuzz_blob_oid"]
+    controls.append(("swap fuzz and PBT producer roles", swap_producer_roles, "source_completeness"))
+
+    def weaken_warrant_resource_rows(candidate: dict[str, Any]) -> None:
+        candidate["warrant_projection"]["resource_rows"]["typescript"] = "all native bounds proven"
+    controls.append(("promote unresolved Warrant resource rows", weaken_warrant_resource_rows, "warrant_declaration"))
+
+    def weaken_provenance_policy(candidate: dict[str, Any]) -> None:
+        candidate["provenance_policy"]["configured_is_not_executed"] = False
+        candidate["provenance_policy"]["all_native_proved"] = True
+    controls.append(("weaken configured evidence policy", weaken_provenance_policy, "schema"))
+
+    def gut_operation_note(candidate: dict[str, Any]) -> None:
+        note = next(note for note in candidate["lanes"]["rust"]["parameter_and_behavior_notes"] if note["operation"] == "fir/fir_fft")
+        note.clear()
+        note["operation"] = "fir/fir_fft"
+    controls.append(("remove operation contract fields", gut_operation_note, "source_completeness"))
+
+    def omit_rust_traits(candidate: dict[str, Any]) -> None:
+        candidate["lanes"]["rust"]["members"]["FilterError"]["trait_impls"] = []
+    controls.append(("omit package-declared Rust traits", omit_rust_traits, "source_completeness"))
+
+    def alter_error_base(candidate: dict[str, Any]) -> None:
+        candidate["lanes"]["typescript"]["error_types"]["FilterError"]["base"] = "Object"
+    controls.append(("alter exported error superclass", alter_error_base, "source_completeness"))
+
+    def alter_shared_fixture_identity(candidate: dict[str, Any]) -> None:
+        candidate["shared_fixture_subject"]["fixture_identities"].pop()
+    controls.append(("omit shared fixture case identity", alter_shared_fixture_identity, "source_completeness"))
+
+    def corrupt_rust_namespace(candidate: dict[str, Any]) -> None:
+        next(entry for entry in candidate["lanes"]["rust"]["root_export_entries"] if entry["name"] == "WindowType")["namespace"] = "value"
+    controls.append(("misclassify Rust enum namespace", corrupt_rust_namespace, "source_completeness"))
+
     for name, mutate, expected_category in controls:
         candidate = copy.deepcopy(doc)
         mutate(candidate)
@@ -1046,12 +1345,28 @@ def self_test(repo: Path, doc: dict[str, Any]) -> tuple[int, int]:
     else:
         raise ValidationError("negative_control", "current-HEAD source drift escaped validation")
     try:
+        validate_inventory(repo, doc, altered_current_oids={SHARED_FIXTURE_PATH: "0" * 40})
+    except ValidationError as error:
+        if error.category != "source_drift":
+            raise ValidationError("negative_control", f"shared fixture drift failed as {error.category}, expected source_drift") from error
+    else:
+        raise ValidationError("negative_control", "current shared fixture drift escaped validation")
+    try:
         exported_typescript("export * from './untracked';")
     except ValidationError as error:
         if error.category != "unsupported_export_syntax":
             raise ValidationError("negative_control", f"TS export-star rejected as {error.category}, expected unsupported_export_syntax") from error
     else:
         raise ValidationError("negative_control", "TS export-star syntax escaped checked parser")
+    ts_root_source = pinned_blob(repo, "code/packages/typescript/dsp-filters/src/index.ts")[1]
+    for suffix in ("\nexport const unseen = 1;\n", "\nexport default 42;\n"):
+        try:
+            exported_typescript(ts_root_source + suffix)
+        except ValidationError as error:
+            if error.category != "unsupported_export_syntax":
+                raise ValidationError("negative_control", f"TS residual export rejected as {error.category}, expected unsupported_export_syntax") from error
+        else:
+            raise ValidationError("negative_control", "TS residual export escaped checked parser")
     candidates = {
         "code/packages/rust/dsp-filters/evidence.bindings",
         "code/packages/rust/dsp-filters/tests/generated/warrant_evidence.rs",
@@ -1082,7 +1397,7 @@ def self_test(repo: Path, doc: dict[str, Any]) -> tuple[int, int]:
             raise ValidationError("negative_control", f"Warrant declaration mutation failed as {error.category}") from error
     else:
         raise ValidationError("negative_control", "Warrant declaration mutation escaped validation")
-    return len(controls) + 4, 1
+    return len(controls) + 7, 1
 
 
 def main() -> int:
