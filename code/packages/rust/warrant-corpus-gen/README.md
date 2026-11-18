@@ -133,6 +133,15 @@ the first fixture whose profile carries `omit_example` lines (the six `bomb_*` e
 `not-op-eq-pure` and four `value-over-limit`) and a raised `max_ir_cost` (16384); its README has the
 command and what it holds (21 suites, 17,563,819 cases, five faults).
 
+**The committed wasm-leb128 fixture.** `code/specs/fixtures/wasm-leb128-warrant-v2/` (the fourth adopter, CV2
+S10) is checked by a fourth `--check --release` line in `BUILD` and `BUILD_windows` (2 min 11 s measured; about
+20 min in a debug build, so the line is release, VER04r D38; one line, not sharded). It is the first fixture
+with tuple values, `match` on a `Result` and the composite faults (`drop-consumed`, `ok-as-err`,
+`off-by-one-consumed`, the tuple-payload `missing-error`): 44 suites, 46,566,930 cases, 740 chunks, 20 faults, no
+profile knob beyond the fault lines. Its spec was changed first (VER04r D28: the two `W0701` claims split, 42 to
+44 claims) and `tests/census.rs` pins the result (357 claims, 242 emittable); its README has the command and
+what it holds.
+
 ### As a library
 
 ```rust

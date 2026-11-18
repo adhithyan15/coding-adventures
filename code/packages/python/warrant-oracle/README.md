@@ -337,6 +337,11 @@ The third adopter's fixture, `code/specs/fixtures/lzw-warrant-v2/` (21 suites, 1
 `omit_example` lines, `max_ir_cost 16384`), is verified by a third line of the same shape (with `--bindings
 code/packages/rust/lzw/evidence.bindings`); its full derive takes about 20 s, so no sharding is needed
 (VER04r 16.10 [D33]).
+The fourth adopter's fixture, `code/specs/fixtures/wasm-leb128-warrant-v2/` (44 suites, 46,566,930 cases, 740
+chunks, 20 faults including the composite ones and `off-by-one-consumed`), is verified by a fourth line of the
+same shape (with `--bindings code/packages/rust/wasm-leb128/evidence.bindings`). Its full derive takes **4 min
+53 s** on one core (15 times lzw's), by far the most expensive line of this package; it is one line, not
+sharded (VER04r 16.11 [D38]), and sharding by chunk stays the documented remedy if it ever stops fitting.
 
 ## Two refusals (S3e, owner decisions D18 and D19)
 
