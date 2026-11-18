@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### Added
+- Added public FIR designer contract regressions for cutoff endpoints, tap-cap boundaries, lane-specific windows, and validation error precedence.
+
 ### Fixed
 - Avoid reciprocal overflow during low-pass and band-pass FIR normalization when the finite nonzero normalization denominator has a nonfinite reciprocal; retain legacy multiplication when the reciprocal is finite.
 - `dsp-filters.warrant` was invalid Warrant (`max` is not a builtin); the iir steps bound now uses `imax`. Document only.

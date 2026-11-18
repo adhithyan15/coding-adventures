@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
+import { InvalidInputError } from "@coding-adventures/dsp-fft";
 import {
   butterworthBandpass,
   butterworthHighpass,
@@ -10,6 +11,7 @@ import {
   designLowPass,
   firwin,
   InvalidCoefficientError,
+  MAX_FILTER_TAPS,
 } from "../src/index.js";
 
 const COMMON_WINDOWS = ["rectangular", "hamming", "hann", "blackman"] as const;
@@ -50,6 +52,48 @@ function splitmix32(seed: number): () => number {
 }
 
 describe("Classical filter design (FIR and IIR)", () => {
+  it("enforces public FIR designer domains, lane windows, and error order", () => {
+    for (const window of COMMON_WINDOWS) {
+      assert.equal(designLowPass(-0, 1, window).length, 1);
+      assert.equal(designHighPass(0.5, 1, window).length, 1);
+      assert.equal(designBandPass(-0, 0.5, 1, window).length, 1);
+    }
+    assert.equal(designLowPass(0.25, 65535, "rectangular").length, 65535);
+    assert.equal(designLowPass(0.2, 3, "hanning").length, 3);
+    assert.equal(designLowPass(0.2, 3, "kaiser").length, 3);
+
+    assert.throws(
+      () => designLowPass(Number.NaN, 0, "rectangular"),
+      /numTaps must be odd and >= 1/
+    );
+    assert.throws(
+      () => designLowPass(0.2, MAX_FILTER_TAPS + 1, "rectangular"),
+      /exceeds MAX_FILTER_TAPS/
+    );
+    assert.throws(() => designLowPass(Number.NaN, 3, "rectangular"), InvalidCoefficientError);
+    assert.throws(() => designBandPass(0.1, Number.POSITIVE_INFINITY, 3, "rectangular"), InvalidCoefficientError);
+    assert.throws(() => designBandPass(0.2, 0.2, 3, "rectangular"), InvalidCoefficientError);
+    assert.throws(() => designLowPass(0.2, 3, "unknown"), InvalidInputError);
+  });
+
+  it("samples valid FIR designer inputs with fixed seeds", () => {
+    let calls = 0;
+    for (const seed of [0x0a0d10, 0x51bada55]) {
+      const next = splitmix32(seed);
+      for (let index = 0; index < 64; index++) {
+        const taps = 1 + 2 * (next() % 16);
+        const cutoff = (next() / 0x1_0000_0000) * 0.5;
+        const window = COMMON_WINDOWS[next() % COMMON_WINDOWS.length];
+        assert.equal(designLowPass(cutoff, taps, window).length, taps);
+        assert.equal(designHighPass(cutoff, taps, window).length, taps);
+        const high = 0.01 + cutoff * 0.98;
+        assert.equal(designBandPass(high * 0.2, high, taps, window).length, taps);
+        calls += 3;
+      }
+    }
+    assert.equal(calls, 384);
+  });
+
   it("avoids reciprocal overflow for finite normalized coefficients", () => {
     const cutoff = numberFromBits(0x0002000000000000n); // 2**-1025
     const nextCutoff = numberFromBits(0x0002000000000001n);
