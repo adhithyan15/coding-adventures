@@ -316,7 +316,7 @@ jobs:
             if [[ -z "$best_ns" ]]; then integrity_failure=1; fi
           done
 
-          python3 - "$output" <<'PY' | tee -a "$summary"
+          if python3 - "$output" <<'PY' | tee -a "$summary"
           import re, sys
           from pathlib import Path
           root = Path(sys.argv[1])
@@ -335,8 +335,13 @@ jobs:
               print(f"paired_mean_ns unavailable missing={missing}")
               sys.exit(1)
           PY
-          precision_summary_status=$?
-          if [[ "$precision_summary_status" -ne 0 ]]; then integrity_failure=1; fi
+          then
+            precision_summary_status=0
+          else
+            precision_summary_status=$?
+            integrity_failure=1
+            echo "precision summary incomplete; profile collection continues" | tee -a "$summary"
+          fi
           echo "candidate_gate_failure=$candidate_gate_failure integrity_failure=$integrity_failure" | tee -a "$summary"
 
           # Profile both pinned arms after all official admission cells, even
