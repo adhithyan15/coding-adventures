@@ -28,16 +28,19 @@ Both are canonical JSON (:func:`.corpus_v2.canonical`) and carry no generator na
 from __future__ import annotations
 
 from .corpus_v2 import canonical, chunk_file_name, derive
-from .faults import IMPLEMENTED
 
 EVALUATION_SCHEMA = "warrant-evaluation-parity-v1"
 FAULT_SCHEMA = "warrant-fault-parity-v1"
+#: The closed gate the dumps call "shipped": ``ir.core`` only.  An explicit literal, not
+#: ``faults.IMPLEMENTED``, so that opening the shipped gate (the atomic flip, [D29]) cannot move a
+#: committed dump.
+GATE_CLOSED = ("ir.core",)
 #: The gate of ``controls_gate_on`` of the ``ir.tuple`` fixture (slice S10t-1): ``ir.core`` and
 #: ``ir.tuple`` evaluated, ``ir.fixed`` not.
-GATE_ON = (*IMPLEMENTED, "ir.tuple")
+GATE_ON = ("ir.core", "ir.tuple")
 #: The test-only **open** gate of slice S10c-1: every level this oracle evaluates.  The flip (S10c,
 #: [D29]) turns it on in the shipped path; until then only a library parameter reaches it.
-GATE_OPEN = (*IMPLEMENTED, "ir.fixed", "ir.tuple")
+GATE_OPEN = ("ir.core", "ir.fixed", "ir.tuple")
 _GENERATOR = {"name": "parity-dump", "version": "0"}
 
 #: Suite-row keys of the evaluation view, in no particular order (the writer sorts).
@@ -69,9 +72,9 @@ _SUITE_KEYS = (
 
 
 def shipped_derivation(spec_bytes: bytes, profile_raw: bytes, spec_ref: str):
-    """``derive`` under the fault-evaluation gate as shipped; both views start from it, so a caller
-    that writes both derives once (``derived=`` / ``shipped=``)."""
-    return derive(spec_bytes, profile_raw, spec_ref=spec_ref, generator=_GENERATOR)
+    """``derive`` under the explicit closed gate :data:`GATE_CLOSED`; both views start from it, so a
+    caller that writes both derives once (``derived=`` / ``shipped=``)."""
+    return derive(spec_bytes, profile_raw, spec_ref=spec_ref, generator=_GENERATOR, implemented=GATE_CLOSED)
 
 
 def evaluation_view(
@@ -134,7 +137,7 @@ def faults_view(
     assert shipped.corpus["faults"] == on.corpus["faults"]  # the rows never depend on the gate
     view = _faults_dict(shipped, on)
     if gate == "fixed":
-        view["gate_shipped"] = list(IMPLEMENTED)
+        view["gate_shipped"] = list(GATE_CLOSED)
         view["gate_on"] = list(gate_on)
     return view
 
