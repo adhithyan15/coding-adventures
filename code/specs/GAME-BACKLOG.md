@@ -15,7 +15,7 @@ that must be produced, not a promise that the evidence exists already.
 
 | Workstream | Capability status | Language status | Verification status / limit |
 | --- | --- | --- | --- |
-| `GAME10` fixed-step clock | Rust core and v1 integer contract present; host pacing/render integration is separate and incomplete | Rust implementation; Python is an independent fixture validator, not a port; TS, Go, and other supported lanes remain | Durable consumer merged in [PR #19602](https://github.com/adhithyan15/coding-adventures/pull/19602), squash `72778f4f553cf35fd361e2688acaeb6201414ea1`; 23 vectors (9 success, 14 exact errors) pass package conformance. The constructor-only Warrant model/execution is implemented in open [PR #19618](https://github.com/adhithyan15/coding-adventures/pull/19618); exact-head CI is pending on this refresh branch. `validate_state`/`advance_frame`, universal proof, and native source proof remain unproved; no assurance proof slot is upgraded. |
+| `GAME10` fixed-step clock | Rust core and v1 integer contract present; host pacing/render integration is separate and incomplete | Rust implementation; Python is an independent fixture validator, not a port; TS, Go, and other supported lanes remain | Durable consumer merged in [PR #19602](https://github.com/adhithyan15/coding-adventures/pull/19602), squash `72778f4f553cf35fd361e2688acaeb6201414ea1`; 23 vectors (9 success, 14 exact errors) pass package conformance. The constructor-only Warrant model landed in merged [PR #19618](https://github.com/adhithyan15/coding-adventures/pull/19618), squash `a2163fc64c74c10f3bb0e62cd268363cbb560d21`; local finite execution covers 648 boundary cases and 1,024 stratified full-width inputs, while aggregate CI `BUILT` receipts do not establish Warrant execution. `validate_state`/`advance_frame`, universal proof, and native source proof remain unproved; no assurance proof slot is upgraded. |
 | `GAME11`–`GAME15c` early arcade | Rust packages exist for collision, arcade SFX, Pong, Breakout, discrete logic, CRT beam, and timer | Rust source present; other supported language lanes need inventory | No unified portable-evidence audit yet; collision, Pong, Breakout, and CRT Warrant drafts are parked. |
 | `GAME20`–`GAME25` tile/sprite/RPG | Rust packages exist for indexed palette, tilemap, sprite OAM, RPG grid/battle, and Monster RPG | Rust source present; verify required lanes rather than inferring from GAME00's portable label | Shared independent corpus and cross-language execution audit remain open. |
 | `GAME26`–`GAME29b` console devices | GAME26 GBA bridge, GAME27 NES, GAME28 Game Boy, and GAME29 GBA devices are missing from the Rust package tree | No verified portable console-device lane | Start with a narrow independently specified NES register/timing slice. Do not claim a complete console. |
@@ -304,8 +304,29 @@ worktree; report and preserve it if those checks do not pass.
   measured 19.5 MB/s and passed. All used Go 1.26.1 on linux/amd64. The pass was on AWS image
   `20261111.127.1` / kernel `7.0.0-1014-aws`; both misses were on Azure image `20261111.370.1` /
   kernel `7.0.0-1017-azure` (westcentralus and eastus). CPU model is not recorded, so provider/image
-  correlation is not proof of cause. Preserve all receipts and gate semantics; make no blind retry
-  of unchanged code. First run a native Linux amd64 diagnostic dispatch from `.github/workflows/ci.yml`
+  correlation is not proof of cause. A later limited manual diagnostic dispatch `44321293161`
+  measured 12.6 MB/s (5.297186 ms) for the same gated slice on Ubuntu 26 Azure eastus, image
+  `20261111.196.1`, kernel `7.0.0-1019-azure`; its separate census was 11.6 MB/s (`gated=0`).
+  The corresponding Ubuntu 24 AWS leg passed at 19.4 MB/s (census 18.0 MB/s). Both used Go 1.26.1.
+  This was a diagnostic/manual run, not full CI; it was cancelled after preserving the requested
+  artifacts. Preserve all receipts and gate semantics; make no blind retry of unchanged code.
+  The failed PR job checked out synthetic merge `99856c512` (PR head `d563077857e66f3917220611e5df91fafa7a0348`
+  into base `73fa1d9c446...`); the diagnostic dispatch checked out branch commit
+  `8638751e91d813a41767684c7af7f5bb39be85df` on current main with D33. Its Kiln trace/traced trees
+  were `de74a093b405c88126635bd33bb42d05383523e2` and
+  `e37d3956972662d7e4c5a243e15c934787746fe6`; lexer, strace-lexer, and strace-parser trees were
+  `8262cdf49df65e485f7f96d556565edc45cb7a7c`, `209ad45586ec07be748945f013a68bf99546d45d`, and
+  `92cb784a49174228d01ff853af57e5a708df3cef`. The exact diagnostic fixture and repeated-slice
+  SHA-256 values were `dc8acd0de1d9b235c3924d0d71e2fcd565274e09ded9975570f429b548525aae` and
+  `6cd61f63fdec55ce37294ad061705394b1babda80e5368b17ecb5bd38e2207af`.
+  The bounded native CPU profile attributed 33.77% cumulative CPU to `parseState.match`, 18.66% to
+  `matcher.match`, and 40.86% to `GrammarLexer.tokenizeStandardInto`; `newLexer` was 1.87% cumulative
+  CPU despite 49.45% of allocation space. This supports testing cursor reuse as a falsifiable
+  allocation hypothesis only; it does not establish the roughly 10.2% elapsed reduction needed by
+  the lower-rate probe, nor the >10.2% needed for useful margin. If same-host admission ABBA shows
+  only marginal wall gain, inspect the measured parser/matcher CPU paths next. Native summaries and
+  profiles are preserved under `/tmp/kiln-g1-profile-44321293161/`.
+  First run a native Linux amd64 diagnostic dispatch from `.github/workflows/ci.yml`
   with `full_build=false`, `cross_os_full=false`, and `kiln_g1_profile=true`; it records runner/source
   identity and runs profiles only on Ubuntu 24.04. Keep the existing uninstrumented G1 test as the
   admission result. A separate `TestG1DiagnosticSyntheticSlice` constructs the same repeated
@@ -323,7 +344,18 @@ worktree; report and preserve it if those checks do not pass.
   controls for public/owning and alias paths,
   atomic errors, and relevant Unicode/property/fuzz behavior without mirroring the implementation.
   No broad benchmark or verification framework, workload reduction, threshold weakening, or
-  production optimization before the profile-backed diagnosis is accepted.
+  production optimization before the profile-backed diagnosis is accepted. The accepted bounded
+  prototype is an opaque zero-value-ready single-owner lexer cursor held per independent
+  hook-free `LineParser`; it binds the immutable `Compiled` grammar for each call, with no cached
+  grammar pointer, token storage, hook, reset API, or global pool. Both fresh-owned and cursor
+  initialization must share setup while initializing self-referential stacks at the final address;
+  clear the cursor's full lexer state after success and error. Indentation/layout grammars and
+  hook-bearing calls remain on the owning path. Compare fresh-owned and reused sequences including
+  retained outputs, error/refusal recovery, spans, mode changes, Unicode normalization, and
+  independent cursors under `-race`; reuse the existing bounded lexer/strace-parser fuzzers.
+  Finite differential and sequence evidence cannot prove Go source/lifetime equivalence; record the
+  missing ownership/GC source bridge under existing VER/Warrant debt and do not add an unrelated SAT
+  model.
 - [ ] `GBL-058` Repair the conflict between the actual `P2D09`/`P2D10` specification filenames/scopes
   and GAME00 labels. Keep this as a separate documentation repair; do not mint or reuse colliding game
   identifiers to paper over it.
