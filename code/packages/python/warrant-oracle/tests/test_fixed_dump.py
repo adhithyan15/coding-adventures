@@ -153,10 +153,8 @@ def test_every_view_row_has_the_keys_the_generator_will_compare():
 def test_the_dump_refuses_a_document_it_cannot_show():
     base = "warrant d v1\n  op f(a: U8) -> U8\n"
     for body, level in (
-        ("  model m(a: U8) -> Bool = (a, a) == (a, a)\n", "ir.tuple"),
         ("  model m(a: Int) -> Bool = div(a, a) == div(a, a)\n", "ir.data"),
         ("  claim c:\n    forall a: U8. f(a) == [a]\n", "ir.data"),
-        ("  example e: f(1u8) == (1u8, 2u8)\n", "ir.tuple"),
         ("  op g(a: U8) -> Option<U8>\n", "ir.data"),
     ):
         with pytest.raises(OracleError) as err:
@@ -206,6 +204,6 @@ def test_dump_lowering_refuses_to_overwrite_its_input_and_bad_bounds(tmp_path, c
 
 def test_dump_lowering_reports_a_document_beyond_ir_fixed(tmp_path, capsys):
     doc = tmp_path / "d.warrant"
-    doc.write_text("warrant d v1\n  model m(a: U8) -> Bool = (a, a) == (a, a)\n")
+    doc.write_text("warrant d v1\n  model m(a: U8) -> Bool = [a] == [a]\n")
     assert run(["dump-lowering", "--spec", str(doc), "--out", str(tmp_path / "o.json")]) == 2
-    assert "beyond ir.fixed" in capsys.readouterr().err
+    assert "beyond ir.tuple" in capsys.readouterr().err

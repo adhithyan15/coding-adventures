@@ -38,7 +38,7 @@ from . import ast as A
 from . import tfv
 from .corpus_v1 import build_program
 from .errors import OracleError, SizeError
-from .faults import derive_controls
+from .faults import IMPLEMENTED, derive_controls
 from .ir_eval import WrapsInAdmit, admit_fn, run_admit
 from .lower import FIXED, Spec, _has_subject, _substitute, lower_document
 from .parser import parse_source
@@ -115,7 +115,11 @@ def _require_core(spec: Spec) -> None:
 
 
 def value_json(v: object, ty: A.Ty) -> object:
-    """An untagged JSON value of declared type ``ty`` (``ir.core`` types)."""
+    """An untagged JSON value of declared type ``ty`` (``ir.core`` and ``ir.tuple`` types).
+
+    A tuple is a JSON array in component order (section 2.3); a ``Result`` over a tuple is
+    ``{"ok": [..]}``.
+    """
     head = ty.head
     if head == "Bool":
         return bool(v)
@@ -123,6 +127,8 @@ def value_json(v: object, ty: A.Ty) -> object:
         return str(v)
     if head == "Bytes":
         return v.hex()
+    if head == "()":
+        return [value_json(x, t) for x, t in zip(v, ty.args)]
     if head == "Result":
         if v[0] == "ok":
             return {"ok": value_json(v[1], ty.args[0])}
@@ -143,9 +149,11 @@ def example_id(spec: Spec, ex) -> str:
 
 
 def _over_limit(v: object, ty: A.Ty) -> bool:
-    """Is a ``Bytes`` inside ``v`` (itself or under an ``ok``) longer than the section 2.3 limit?"""
+    """Is a ``Bytes`` inside ``v`` (itself, under an ``ok`` or in a tuple) over the section 2.3 limit?"""
     if ty.head == "Bytes":
         return len(v) > MAX_EXAMPLE_BYTES
+    if ty.head == "()":
+        return any(_over_limit(x, t) for x, t in zip(v, ty.args))
     if ty.head == "Result" and v[0] == "ok":
         return _over_limit(v[1], ty.args[0])
     return False
@@ -304,9 +312,21 @@ def _slim_set(plan: SuitePlan, prof: Profile, witnesses: set[int]) -> list[int]:
 
 
 def derive(
-    spec_bytes: bytes, profile_raw: bytes, *, spec_ref: str, generator: dict, work: Work | None = None
+    spec_bytes: bytes,
+    profile_raw: bytes,
+    *,
+    spec_ref: str,
+    generator: dict,
+    work: Work | None = None,
+    implemented: tuple = IMPLEMENTED,
 ) -> Derived:
-    """Derive the expected fixture (see the module docstring); raises :class:`OracleError`."""
+    """Derive the expected fixture (see the module docstring); raises :class:`OracleError`.
+
+    ``implemented`` is the fault-evaluation gate (:data:`.faults.IMPLEMENTED`, ``ir.core`` only until
+    the atomic flip of slice S10c, VER04r 13 and [D29]): the levels whose faults the witness search
+    evaluates.  It is a library parameter that tests (and the committed fault dump of S10t-1) pass;
+    no command line or environment switch reaches it.
+    """
     spec = lower_document(parse_source(spec_bytes))
     prof = parse_profile(profile_raw)
     _require_core(spec)
@@ -329,7 +349,7 @@ def derive(
         for s in spec.suites
     }
     fault_rows, controls, witnesses, accepted_blind = derive_controls(
-        spec, prog, plans, prof.faults, prof.chunk_size, prof.accept_blind
+        spec, prog, plans, prof.faults, prof.chunk_size, prof.accept_blind, implemented
     )
     out = Derived(corpus={})
     suite_rows = []
