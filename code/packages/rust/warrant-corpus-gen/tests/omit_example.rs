@@ -97,12 +97,10 @@ fn a_mutated_fixture_loses_parity() {
     let e = gen_at(FIXTURE_WARRANT, FIXTURE_PATH, &drop_last).unwrap_err();
     assert_eq!(e.code, code::W0701, "{e}");
     let one_less = FIXTURE_PROFILE.replace("omit_example warrant/omitx/example/echo_big_value\n", "");
-    // an emittable-by-size-only example is emitted when its line is gone
-    let out = gen_at(FIXTURE_WARRANT, FIXTURE_PATH, &one_less).unwrap();
-    assert_ne!(
-        out.corpus_json,
-        include_str!("../../../python/warrant-oracle/tests/fixtures/omit-example-v2/corpus/corpus.json")
-    );
+    // CV2-F1: the 4,096-byte cap is enforced at emission, so an over-limit example without its
+    // line is a refusal (code `limit`), no longer an emitted row.
+    let e = gen_at(FIXTURE_WARRANT, FIXTURE_PATH, &one_less).unwrap_err();
+    assert_eq!((e.code, e.at.as_str()), (code::LIMIT, "echo_big_value"), "{e}");
 }
 
 // ---- a small document builder (the same document the oracle's tests build) --------------------
@@ -342,6 +340,44 @@ fn a_bytes_value_under_ok_counts_toward_the_limit() {
     for body in ["res(b\"aa\") == Ok(b\"aa\")", "res(b\"aa\") == Err(E.BAD)"] {
         let e = refused(&ex("r", body), &["r"], "v1");
         assert_eq!(e.code, code::PROFILE, "{body}: {e}");
+    }
+}
+
+#[test]
+fn cv2_f1_a_non_omitted_example_over_4096_bytes_is_refused_at_emission() {
+    let (at, over) = ("61".repeat(4096), "61".repeat(4097));
+    // exactly 4,096 is emitted; 4,097 is not
+    assert!(try_gen(&ex("at", &format!("echo(b\"{at}\") == b\"{at}\"")), "", "v1").is_ok());
+    let g = grow13();
+    for (what, body) in [
+        ("argument", format!("echo({g}) == b\"aa\"")),
+        ("pure value", format!("echo(b\"aa\") == {g}")),
+        ("under ok", format!("res(b\"aa\") == Ok({g})")),
+        ("literal", format!("echo(b\"{over}\") == b\"aa\"")),
+    ] {
+        let e = try_gen(&ex("big", &body), "", "v1").unwrap_err();
+        assert_eq!((e.code, e.at.as_str()), (code::LIMIT, "big"), "{what}: {e}");
+        // the omit decision is unchanged: with the line it is still value-over-limit
+        let out = gen(&ex("big", &body), &omit("big"));
+        assert_eq!(reasons(&out), all(&["big"], "value-over-limit"), "{what}");
+    }
+}
+
+#[test]
+fn cv2_f1_a_size_error_in_a_callees_admit_refuses_even_with_the_line() {
+    // the admit itself grows a Bytes past MAX_IR_VALUE: a D19-check size error, not an argument's
+    let big = (
+        "bigadm",
+        &*format!("op bigadm(a: Bytes | same({}, a)) -> Bytes", grow17()),
+        "a",
+    );
+    let body = "bigadm(b\"aa\") == b\"aa\"";
+    let src = |ex_| doc_with_ops(&ex(ex_, body), "v1", &[big]);
+    for profile in [String::new(), omit("e")] {
+        let e = gen_at(&src("e"), "o.warrant", &profile).unwrap_err();
+        assert_eq!(e.code, code::W0701, "{e}");
+        assert!(!e.size, "the flag does not survive admits_call: {e}");
+        assert_ne!(e.at, "", "{e}");
     }
 }
 
@@ -612,7 +648,8 @@ fn the_binary_checks_the_committed_fixture_and_refuses_a_stale_or_unknown_line()
         }
         assert!(!o.exists(), "nothing is written for a refusal");
     }
-    // the corpus on disk no longer matches the profile that was edited to drop a line: drift
+    // the profile edited to drop a line: the example is over the cap and unomitted, so since CV2-F1
+    // it is a refusal (exit 2), not a drift
     let p = tmp.join("less.profile");
     std::fs::write(
         &p,
@@ -620,6 +657,6 @@ fn the_binary_checks_the_committed_fixture_and_refuses_a_stale_or_unknown_line()
     )
     .unwrap();
     let (c, _) = run(p.to_str().unwrap(), &committed, true);
-    assert_eq!(c, 1, "the example is emitted now, so the committed corpus differs");
+    assert_eq!(c, 2, "the over-limit example is refused at emission");
     let _ = std::fs::remove_dir_all(tmp);
 }
