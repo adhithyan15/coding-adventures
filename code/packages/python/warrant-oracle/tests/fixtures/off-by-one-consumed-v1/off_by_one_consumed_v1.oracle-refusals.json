@@ -1,0 +1,54 @@
+{
+  "fault": "off-by-one-consumed",
+  "refusals": [
+    {
+      "message": "fault: off-by-one-consumed needs a tuple or Result<tuple, E> result",
+      "name": "a-scalar-result",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: U8) -> U8\n"
+    },
+    {
+      "message": "fault: off-by-one-consumed needs a tuple or Result<tuple, E> result",
+      "name": "a-bytes-result",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: U8) -> Bytes\n"
+    },
+    {
+      "message": "fault: off-by-one-consumed needs a numeric second component",
+      "name": "a-non-numeric-second-component",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: U8) -> (U8,Bool)\n"
+    },
+    {
+      "message": "fault: off-by-one-consumed needs a numeric second component",
+      "name": "a-bytes-second-component",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: U8) -> (U8,Bytes<2>)\n"
+    },
+    {
+      "message": "fault: off-by-one-consumed needs a tuple or Result<tuple, E> result",
+      "name": "a-result-of-a-scalar",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: U8) -> Result<U8,E>\n"
+    },
+    {
+      "message": "fault: off-by-one-consumed needs a numeric second component",
+      "name": "a-result-with-a-non-numeric-second-component",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: U8) -> Result<(Nat,Bool),E>\n"
+    },
+    {
+      "message": "fault: off-by-one-consumed needs a tuple or Result<tuple, E> result",
+      "name": "an-option-result",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(a: U8) -> Option<(U8,Nat)>\n"
+    },
+    {
+      "message": "fault: an operation parameter is named ok_payload",
+      "name": "a-parameter-named-ok-payload-in-the-ok-form",
+      "oracle_code": "generation",
+      "source": "warrant refusals v1\n  error E = A | B\n  op f(ok_payload: U8) -> Result<(U8,Nat),E>\n"
+    }
+  ],
+  "schema": "warrant-faults-refusals-v1"
+}
