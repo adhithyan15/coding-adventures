@@ -104,6 +104,9 @@ def test_registry_covers_the_names_of_section_8_2():
     assert set(REGISTRY) == {
         "invert", "missing-error", "swap-choice", "off-by-one",
         "truncate-last", "ignore-last-byte", "xor-lsb", "ignore-high-bit",
+        # S10t-1 (VER04r 8.2, D27, D35, R3): the tuple templates and the Ok forms
+        "flip-result-bit", "drop-last-result-byte", "ok-as-err", "drop-consumed",
+        "swap-components",
     }
 
 
