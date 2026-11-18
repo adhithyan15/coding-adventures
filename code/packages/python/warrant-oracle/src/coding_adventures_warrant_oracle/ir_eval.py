@@ -38,6 +38,15 @@ Resource bounds (VER04r section 14)
 
 Unknown tags are errors, never skipped (VER04r section 4.2 rule 7).  A tag that
 belongs to a level this evaluator does not implement raises a ``level`` error.
+
+Typed analysis of ``ir.fixed`` (slice S10a)
+-------------------------------------------
+``Program(..., analyze=True)`` additionally *types and costs* the 35 built-ins of Appendix A.1
+(the shapes are checked, operand types inferred, ``Option<T>`` confined to its one consumer,
+cost ``1 +`` the operands).  The closure of such a node **raises the ``ir.fixed`` ``level``
+error when called**: nothing is evaluated until slice S10c-1, and a default ``Program``
+(``analyze=False``, which every verification path uses) refuses the tag outright, so
+``verify-v2``, ``emit-v2`` and the generator parity paths behave exactly as before.
 """
 
 from __future__ import annotations
@@ -46,6 +55,7 @@ from collections.abc import Callable
 from dataclasses import dataclass
 
 from . import ast as A
+from . import levels as L
 from .errors import OracleError
 from .lower import BOOL, BYTES, FIXED, INT, NAT, _substitute, _unify
 from .lower import _assignable as _strict_assignable
@@ -57,69 +67,14 @@ MAX_IR_VALUE = 65_536
 EXACT_BOUND = (1 << 127) - 1
 MAX_MEMO = 1 << 20
 
-CORE_TAGS = frozenset(
-    [
-        "lit",
-        "var",
-        "subject_op",
-        "model_call",
-        "len",
-        "ok",
-        "err",
-        "eq",
-        "ne",
-        "lt",
-        "gt",
-        "le",
-        "ge",
-        "add",
-        "sub",
-        "mul",
-        "and",
-        "or",
-        "implies",
-        "not",
-        "if",
-        "concat",
-        "take",
-        "drop",
-        "is_err",
-        "neg",
-    ]
-)
-#: Tags and built-ins of the levels above core: recognised so they can be
-#: *named*, never evaluated (VER04r section 10.4).
-_FIXED_TAGS = frozenset(
-    [
-        "wrap",
-        "widen",
-        "try_nat",
-        "checked_add",
-        "checked_sub",
-        "checked_mul",
-        "div",
-        "rem",
-        "shl",
-        "shr",
-        "sar",
-        "rotl",
-        "rotr",
-        "bit_and",
-        "bit_or",
-        "bit_xor",
-        "bit_not",
-        "popcount",
-        "clz",
-        "ctz",
-        "be_bytes",
-        "le_bytes",
-        "from_be",
-        "from_le",
-        "at",
-    ]
-)
-_DATA_TAGS = frozenset(["tuple", "project", "match", "some", "none", "ctor", "list"])
-_SEQ_TAGS = frozenset(["fold", "map", "all", "any", "range", "count"])
+CORE_TAGS = L.CORE_TAGS
+#: Tags and built-ins of the levels above core: recognised so they can be *named*, never
+#: evaluated (VER04r section 10.4).  ``match`` has no tag-only level (its scrutinee's type
+#: decides, slice S10t); the safe name is ``ir.data``, which implies ``ir.tuple``.
+_FIXED_TAGS = L.FIXED_TAGS
+_TUPLE_TAGS = L.TUPLE_TAGS
+_DATA_TAGS = frozenset(["match", *L.DATA_TAGS])
+_SEQ_TAGS = L.SEQ_TAGS
 
 _COMPARE = {"eq", "ne", "lt", "gt", "le", "ge"}
 _ARITH = {"add", "sub", "mul"}
@@ -227,6 +182,35 @@ def decode_int_text(text: object, ty: str) -> int:
     return value
 
 
+def _no_option(c: Compiled, where: str) -> None:
+    """``Option<T>`` is an IR-only intermediate whose one consumer is ``unwrap_or`` (D23, R8)."""
+    if c.ty.head == "Option":
+        raise OracleError(
+            "level", f"an Option is not allowed as {where}; only unwrap_or consumes one", level=L.DATA
+        )
+
+
+def _refuse_type(ty: A.Ty) -> None:
+    """A type of a binder, parameter, result or value must be allowed (D23, R9)."""
+    level = L.type_refusal(ty)
+    if level is not None:
+        raise OracleError("level", "a type that needs a higher level", level=level)
+
+
+def _inside(source: str, target: str) -> bool:
+    """Is the range of fixed type ``source`` inside that of ``target``?"""
+
+    def span(name: str) -> tuple[int, int]:
+        bits, signed = FIXED[name]
+        return (-(1 << (bits - 1)), (1 << (bits - 1)) - 1) if signed else (0, (1 << bits) - 1)
+
+    return span(target)[0] <= span(source)[0] and span(source)[1] <= span(target)[1]
+
+
+def _fixed_refusal(env: dict) -> object:
+    raise OracleError("level", "ir.fixed is typed and costed, not evaluated, until S10c-1", level="ir.fixed")
+
+
 class Program:
     """A set of models and subject-op signatures against which IR is compiled."""
 
@@ -238,9 +222,12 @@ class Program:
         stats: Stats | None = None,
         memo: bool = True,
         max_cost: int = MAX_IR_COST,
+        analyze: bool = False,
     ) -> None:
         self.models = models
         self.ops = ops
+        #: Type and cost the ``ir.fixed`` built-ins (slice S10a) instead of refusing them.
+        self.analyze = analyze
         #: 2,000 unless the corpus profile declares more (never above 65,536).
         self.max_cost = max_cost
         self.stats = stats or Stats()
@@ -254,6 +241,9 @@ class Program:
         self._memo_size = 0
         self._depth: dict[str, int] = {}
         self._dstack: list[list[int]] = []
+        #: Compiled callee ``admit`` rows, one per ``(op, static widths)`` (section 16.9
+        #: follow-up): the D19 pass and its cost both ask for the same row at every call site.
+        self._admits: dict[tuple, Compiled] = {}
 
     # -- public ----------------------------------------------------------------
 
@@ -268,6 +258,7 @@ class Program:
             raise OracleError("limit", "IR nests too deeply") from exc
         finally:
             self._dstack.pop()
+        _no_option(c, "an expression")
         if c.cost > self.max_cost:
             raise OracleError("limit", "ir-cost: expression exceeds MAX_IR_COST")
         return c
@@ -304,6 +295,10 @@ class Program:
         self._depth[name] = 1 + max(callee_depths, default=0)
         if self._depth[name] > MAX_MODEL_DEPTH:
             raise OracleError("limit", "model calls nest deeper than 64 frames")
+        for _, pty in m.params:
+            _refuse_type(pty)
+        _refuse_type(m.ret)
+        _no_option(body, "a model result")
         if not _assignable(body.ty, m.ret):
             raise OracleError("ir", "a model body does not have its declared type")
         if body.cost > self.max_cost:
@@ -323,7 +318,11 @@ class Program:
         sub = lambda child: self._compile(child, tenv, allow_subject, depth + 1)  # noqa: E731
         if tag not in CORE_TAGS:
             if tag in _FIXED_TAGS:
+                if self.analyze:
+                    return self._fixed(node, tenv, allow_subject, depth)
                 raise OracleError("level", "a tag of level ir.fixed", level="ir.fixed")
+            if tag in _TUPLE_TAGS:
+                raise OracleError("level", "a tag of level ir.tuple", level="ir.tuple")
             if tag in _DATA_TAGS:
                 raise OracleError("level", "a tag of level ir.data", level="ir.data")
             if tag in _SEQ_TAGS:
@@ -335,6 +334,7 @@ class Program:
             if len(node) != 2 or not isinstance(node[1], str) or node[1] not in tenv:
                 raise OracleError("ir", "an unbound IR variable")
             name = node[1]
+            _refuse_type(tenv[name])
             return Compiled(tenv[name], lambda env: env[name], 1, False)
         if tag == "subject_op":
             return self._subject(node, tenv, allow_subject, depth)
@@ -351,6 +351,8 @@ class Program:
         if len(node) != n + 1:
             raise OracleError("ir", "a malformed IR node")
         kids = [sub(child) for child in node[1:]]
+        for k in kids:
+            _no_option(k, f"an operand of {tag}")
         cost = 1 + sum(k.cost for k in kids)
         subj = any(k.subject for k in kids)
         return self._node(tag, kids, cost, subj)
@@ -400,8 +402,12 @@ class Program:
                 statics[sname] = w
         elif op.statics:
             raise OracleError("ir", "a missing static width")
+        for _, pty in op.params:
+            _refuse_type(pty)
+        _refuse_type(op.ret)
         kids = [self._compile(a, tenv, True, depth + 1) for a in node[2]]
         for k, (_, pty) in zip(kids, op.params):
+            _no_option(k, "an argument of a subject call")
             if not _assignable(k.ty, _substitute(pty, statics)):
                 raise OracleError("ir", "a subject argument has the wrong type")
         ret = _substitute(op.ret, statics)
@@ -428,6 +434,7 @@ class Program:
             raise OracleError("ir", "a model call has the wrong arity")
         kids = [self._compile(a, tenv, allow, depth + 1) for a in node[2]]
         for k, (_, pty) in zip(kids, m.params):
+            _no_option(k, "an argument of a model call")
             if not _assignable(k.ty, pty):
                 raise OracleError("ir", "a model argument has the wrong type")
         if any(k.subject for k in kids) and not allow:
@@ -468,6 +475,120 @@ class Program:
 
         cost = 1 + sum(k.cost for k in kids) + body.cost
         return Compiled(m.ret, call, cost, any(k.subject for k in kids))
+
+    # -- the ir.fixed built-ins, typed and costed (slice S10a) -----------------------------
+
+    def _fixed(self, node: list, tenv: dict, allow_subject: bool, depth: int) -> Compiled:
+        """Type and cost one ``ir.fixed`` node of Appendix A.1; its closure refuses to run.
+
+        The shape is checked first (arity, and the static type argument in position 1 of
+        ``widen wrap try from_be from_le max_value min_value``), then the operands are compiled
+        and typed.  Every tag costs ``1 +`` the sum of its operands (section 4.2 rule 6); a
+        static type argument is not an operand, so ``max_value`` costs ``1``.  A mismatch is an
+        ``ir`` error (a corpus error), an ``Option`` anywhere but ``unwrap_or``'s first operand
+        is the level ``ir.data`` (D23, R8).
+        """
+        tag = node[0]
+        static: str | None = None
+        first = 1
+        if tag in L.STATIC_TYPE_TAGS:
+            if len(node) < 2 or not isinstance(node[1], str) or node[1] not in FIXED:
+                raise OracleError("ir", "a static type argument is a fixed-width type name")
+            static = node[1]
+            first = 2
+        operands = node[first:]
+        if len(operands) != L.FIXED_ARITY[tag]:
+            raise OracleError("ir", "a malformed IR node")
+        kids = [self._compile(child, tenv, allow_subject, depth + 1) for child in operands]
+        for i, k in enumerate(kids):
+            if k.ty.head == "Option":
+                direct = tag == "unwrap_or" and i == 0 and operands[0][0] in L.OPTION_PRODUCERS
+                if not direct:
+                    _no_option(k, f"an operand of {tag}")
+        ty = self._fixed_type(tag, static, kids)
+        cost = 1 + sum(k.cost for k in kids)
+        return Compiled(ty, _fixed_refusal, cost, any(k.subject for k in kids))
+
+    def _fixed_type(self, tag: str, static: str | None, kids: list[Compiled]) -> A.Ty:
+        """The result type of an ``ir.fixed`` node (operand types are those of Appendix A.1)."""
+
+        def bad(why: str) -> OracleError:
+            return OracleError("ir", why)
+
+        types = [k.ty for k in kids]
+        fixed = lambda t: t.head in FIXED  # noqa: E731
+        signed = lambda t: FIXED[t.head][1]  # noqa: E731
+        if tag in ("max_value", "min_value"):
+            return A.Ty(static)
+        if tag in ("widen", "wrap", "try"):
+            (x,) = types
+            if fixed(x):
+                if tag == "widen" and not _inside(x.head, static):
+                    raise bad("widen needs a source range inside the target")
+            elif tag == "widen" or x.head not in ("Int", "Nat"):
+                raise bad("a conversion needs a fixed-width, Int or Nat operand")
+            return A.Ty("Option", (A.Ty(static),)) if tag == "try" else A.Ty(static)
+        if tag in ("to_int", "to_nat"):
+            (x,) = types
+            if not fixed(x) or (tag == "to_nat" and signed(x)):
+                raise bad("to_int needs a fixed-width operand and to_nat an unsigned one")
+            return INT if tag == "to_int" else NAT
+        if tag in ("from_be", "from_le"):
+            (x,) = types
+            if x != A.Ty("Bytes", (FIXED[static][0] // 8,)):
+                raise bad("from_be/from_le need Bytes of exactly the target's width")
+            return A.Ty(static)
+        if tag in ("bit_not", "popcount", "clz", "ctz", "be_bytes", "le_bytes"):
+            (x,) = types
+            if not fixed(x):
+                raise bad("a bit operation needs a fixed-width operand")
+            if tag == "bit_not":
+                return x
+            if tag in ("be_bytes", "le_bytes"):
+                return A.Ty("Bytes", (FIXED[x.head][0] // 8,))
+            return NAT
+        if tag in ("shl", "shr", "sar", "rotl", "rotr", "bit"):
+            x, n = types
+            if not fixed(x) or n != NAT:
+                raise bad("a shift needs a fixed-width operand and a Nat count")
+            if tag == "sar" and not signed(x):
+                raise bad("sar is for signed operands")
+            return BOOL if tag == "bit" else x
+        if tag in ("bit_and", "bit_or", "bit_xor", "checked_add", "checked_sub", "checked_mul"):
+            a, b = types
+            if not fixed(a) or a != b:
+                raise bad("operands must be fixed-width values of one type")
+            return a if tag.startswith("bit_") else A.Ty("Option", (a,))
+        if tag in ("div", "rem"):
+            a, b = types
+            if fixed(a) or fixed(b):
+                if a != b or signed(a):
+                    raise bad("div and rem take two unsigned operands of one type, or Int/Nat")
+                return A.Ty("Option", (a,))
+            if a.head not in ("Int", "Nat") or b.head not in ("Int", "Nat"):
+                raise bad("div and rem take two unsigned operands of one type, or Int/Nat")
+            return A.Ty("Option", (INT,))
+        if tag in ("div_trunc", "rem_trunc"):
+            a, b = types
+            if not fixed(a) or a != b or not signed(a):
+                raise bad("div_trunc and rem_trunc take two signed operands of one type")
+            return A.Ty("Option", (a,))
+        if tag in ("imin", "imax"):
+            if any(t.head not in ("Int", "Nat") for t in types):
+                raise bad("imin and imax take Int or Nat operands")
+            return INT
+        if tag == "at":
+            b, i = types
+            if b.head == "List":
+                raise OracleError("level", "at on a list needs ir.data", level=L.DATA)
+            if b.head != "Bytes" or i.head not in ("Nat", "Int"):
+                raise bad("at needs Bytes and a Nat or Int index")
+            return A.Ty("Option", (A.Ty("U8"),))
+        # unwrap_or(o, d)
+        o, d = types
+        if o.head != "Option" or not _assignable(d, o.args[0]):
+            raise bad("unwrap_or needs an Option and a default of its type")
+        return o.args[0]
 
     # -- the operators -------------------------------------------------------------
 
@@ -861,6 +982,26 @@ def run_admit(prog: Program, admit: Callable, penv: dict, v0: bool, op: str) -> 
     return verdict
 
 
+def compiled_admit(prog: Program, op: object, widths: list | None) -> Compiled | None:
+    """The compiled ``admit`` of subject op ``op`` for static ``widths``, or ``None``.
+
+    Compiled **once per** ``(op, widths)`` and kept on ``prog``: the D19 check (one closure per
+    call site) and its static cost (:func:`admit_check_cost`) used to compile the same row
+    again at every call site.  ``widths`` give the ``Bytes<N>`` parameters their types; two
+    call sites with the same widths share one :class:`Compiled`, whose closure is pure.
+    """
+    if op.admit is None:
+        return None
+    key = (op.name, tuple(widths or ()))
+    hit = prog._admits.get(key)
+    if hit is None:
+        statics = dict(zip(op.statics, widths or []))
+        ptenv = {n: _substitute(t, statics) for n, t in op.params}
+        hit = prog.compile(op.admit, ptenv, False)
+        prog._admits[key] = hit
+    return hit
+
+
 def admit_check_cost(prog: Program, ir: object, tenv: dict) -> int:
     """The IR work of [D19]'s per-case check for ``ir``: for every ``subject_op`` whose op has
     an ``admit``, the worst-path cost of that ``admit`` plus the cost of each argument that
@@ -879,9 +1020,7 @@ def admit_check_cost(prog: Program, ir: object, tenv: dict) -> int:
         if tag == "subject_op":
             op = prog.ops[node[1]]
             if op.admit is not None:
-                statics = dict(zip(op.statics, node[3] if len(node) == 4 else []))
-                ptenv = {n: _substitute(t, statics) for n, t in op.params}
-                total += prog.compile(op.admit, ptenv, False).cost
+                total += compiled_admit(prog, op, node[3] if len(node) == 4 else None).cost
                 total += sum(prog.compile(a, tenv, False).cost for a in node[2] if not has_subject(a))
             stack.extend(node[2])
         elif tag == "model_call":
@@ -897,11 +1036,8 @@ def admit_fn(prog: Program, op: object, widths: list | None) -> Callable | None:
     ``widths`` are the static widths of the call (``Bytes<N>`` parameters take their type
     from them); the closure takes a dict of parameter values.
     """
-    if op.admit is None:
-        return None
-    statics = dict(zip(op.statics, widths or []))
-    ptenv = {n: _substitute(t, statics) for n, t in op.params}
-    return prog.compile(op.admit, ptenv, False).fn
+    compiled = compiled_admit(prog, op, widths)
+    return None if compiled is None else compiled.fn
 
 
 def compile_admit_check(
