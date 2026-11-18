@@ -262,7 +262,7 @@ fn public_api_adapter(case: &JsonValue) -> Result<JsonValue, String> {
                 Ok(result) => {
                     // The public mutating wrapper must be atomic on error and agree on success.
                     let mut mutated = initial_state;
-                    let wrapped = mutated.advance(delta).map_err(|error| error_name(error))?;
+                    let wrapped = mutated.advance(delta).map_err(error_name)?;
                     if wrapped != result || mutated != result.state {
                         return Err("mutating wrapper disagrees with advance_frame".into());
                     }
