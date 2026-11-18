@@ -17,12 +17,26 @@ calls, and which IR feature level a construct needs.
 
 Feature levels (VER04r section 4.1)
 -----------------------------------
-The oracle implements ``ir.core`` only (slice S4).  Every source construct that
-belongs to a higher level (``ir.fixed`` integer built-ins, ``ir.data`` tuples,
-records, ``match`` ...) raises ``OracleError("level", ..., level=...)``.  The
-error is *recorded per model and per suite* rather than aborting the document,
-so the oracle can still check every suite whose closure is within ``ir.core``
-and report, by name, the suites it cannot.  A construct is never skipped.
+The oracle *evaluates* ``ir.core`` only (slice S4), but since slice S10a it *lowers and
+types* the 35 built-ins of ``ir.fixed`` (Appendix A.1).  A model, op admit, claim or example
+that uses one is lowered completely (its IR, its ``requires`` and, through
+:mod:`.ir_eval`, its cost are all available) and is then marked ``unsupported`` with a
+``level`` error naming ``ir.fixed``: **evaluation still refuses** until slice S10c-1.
+
+Every source construct that belongs to a level the lowerer cannot lower (``ir.tuple``
+tuples and ``match`` on a ``Result``, ``ir.data`` lists, records, variants and ``Option``
+anywhere but the intermediate use of ``ir.fixed``, ``ir.seq`` ...) raises
+``OracleError("level", ..., level=...)``.  The error is *recorded per model and per suite*
+rather than aborting the document, so the oracle can still check every suite whose closure is
+within ``ir.core`` and report, by name, the suites it cannot.  A construct is never skipped.
+
+``Option<T>`` is an IR-only intermediate (section 16.10 D23, R8)
+----------------------------------------------------------------
+Nine built-ins return an ``Option`` and ``unwrap_or`` is the **only** consumer, as its first
+operand and directly.  :meth:`_Lowerer.expr` therefore refuses (level ``ir.data``) an
+``Option``-typed expression unless the caller is that one operand, and refuses an ``Option``
+in a signature or binder.  ``div``/``rem`` on two ``Nat`` operands are typed ``Option<Int>``
+(R7, the grammar checker's rule).
 """
 
 from __future__ import annotations
@@ -30,6 +44,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 
 from . import ast as A
+from . import levels as L
 from .errors import OracleError
 
 # -- types ---------------------------------------------------------------------
@@ -53,49 +68,12 @@ FIXED = {
 MAX_EXPR_DEPTH = 64
 _PRIMITIVES = frozenset({"Bool", "Int", "Nat", "Bytes", *FIXED})
 
-#: Source built-ins and the IR level each needs (VER04r section 4.1).  The core
-#: ones (``len concat Ok Err``) are handled by the lowering itself.
-_LEVEL_FIXED = frozenset(
-    [
-        "widen",
-        "wrap",
-        "try",
-        "to_int",
-        "to_nat",
-        "max_value",
-        "min_value",
-        "checked_add",
-        "checked_sub",
-        "checked_mul",
-        "div_trunc",
-        "rem_trunc",
-        "rem",
-        "bit_and",
-        "bit_or",
-        "bit_xor",
-        "bit_not",
-        "shl",
-        "shr",
-        "sar",
-        "rotl",
-        "rotr",
-        "popcount",
-        "clz",
-        "ctz",
-        "bit",
-        "be_bytes",
-        "le_bytes",
-        "from_be",
-        "from_le",
-        "at",
-        "div",
-        "imin",
-        "imax",
-    ]
-)
-_LEVEL_DATA = frozenset(
-    ["Some", "None", "unwrap_or", "fixed", "slice", "to_list", "to_bytes", "replicate", "range"]
-)
+#: Source built-ins of ``ir.data`` that this lowerer does not lower (section 4.1).  The
+#: ``ir.fixed`` names are :data:`.levels.FIXED_TAGS`; the core ones (``len concat Ok Err``) are
+#: handled by the lowering itself.
+_LEVEL_DATA = frozenset(["Some", "None", "fixed", "slice", "to_list", "to_bytes", "replicate", "range"])
+_FIXED_MESSAGE = "fixed-width built-ins need ir.fixed"
+_OPTION_MESSAGE = "Option is an IR-only intermediate (its only consumer is unwrap_or)"
 _LEVEL_SEQ = frozenset(["fold", "map", "all", "any", "count"])
 
 
@@ -115,9 +93,14 @@ class LoweredModel:
     name: str
     params: list  # [(name, Ty)]
     ret: A.Ty
+    #: The lowered body, or ``None`` only when lowering itself was impossible (a construct of
+    #: a level the lowerer cannot lower).  A model that needs ``ir.fixed`` *has* its IR and
+    #: is still ``unsupported`` (evaluation refuses), so a dump can show what S10a lowers.
     ir: object | None = None
     unsupported: OracleError | None = None
     line: int = 0
+    #: The sorted levels of the body and of its call closure (R9); ``()`` when not lowered.
+    requires: tuple = ()
 
 
 @dataclass
@@ -131,11 +114,13 @@ class OpSig:
     #: The refinements lowered into one Bool IR (``and`` chain, source order), or ``None``.
     admit: object | None = None
     unsupported: OracleError | None = None
+    #: The levels the op's ``admit`` needs (R9); ``ir.core`` at least (section 6).
+    requires: tuple = ("ir.core",)
 
     def corpus_row_v2(self) -> dict:
-        """The ``ops.<name>`` row of a v2 corpus (VER04r section 6; ``ir.core`` ops)."""
+        """The ``ops.<name>`` row of a v2 corpus (VER04r section 6)."""
         row = self.corpus_row()
-        row["requires"] = ["ir.core"]
+        row["requires"] = list(self.requires)
         if self.admit is not None:
             row["admit"] = self.admit
         return row
@@ -163,6 +148,8 @@ class LoweredSuite:
     ops: list  # subject_op names in order of first occurrence
     unsupported: OracleError | None = None
     line: int = 0
+    #: The levels of ``admit`` and ``body`` and of their model closure (R9).
+    requires: tuple = ()
 
 
 @dataclass
@@ -174,6 +161,7 @@ class LoweredExample:
     result: A.Ty | None
     unsupported: OracleError | None = None
     line: int = 0
+    requires: tuple = ()
 
 
 class Spec:
@@ -372,6 +360,9 @@ class _Lowerer:
         self.scope: dict[str, A.Ty] = {}
         self.order: list[str] = []  # models lowered so far, for "declared before"
         self._nest = 0
+        #: Has the unit being lowered met a tuple *type* (binder, parameter, result or the type
+        #: of a sub-expression)?  R9: that adds ``ir.tuple`` to its ``requires``.
+        self._tuple_typed = False
 
     # -- helpers ---------------------------------------------------------------
 
@@ -380,6 +371,34 @@ class _Lowerer:
 
     def level(self, level: str, message: str) -> OracleError:
         return OracleError("level", message, level=level)
+
+    def seal(self, *irs: object) -> tuple[tuple, OracleError | None]:
+        """The ``requires`` of a fully lowered unit and its evaluation refusal (slice S10a).
+
+        ``requires`` is :func:`.levels.ir_levels` over ``irs`` and the call closure of every
+        ``model_call`` (R9).  The oracle evaluates ``ir.core`` only, so a unit that needs
+        another level is marked unsupported with a ``level`` error naming it: the IR stays
+        (for the lowering dump and for cost) and **evaluation refuses**.
+        """
+        models = {n: m.ir for n, m in self.spec.models.items() if m.ir is not None}
+        found = set(L.ir_levels(list(irs), models))
+        if self._tuple_typed:
+            found.add(L.TUPLE)
+        requires = tuple(sorted(found))
+        for level in requires:
+            # The oracle evaluates ir.core, and the composite domains of S4 already carry
+            # tuple *values*, so a tuple type alone is counted and not refused.
+            if level not in (L.CORE, L.TUPLE):
+                message = _FIXED_MESSAGE if level == L.FIXED else f"a construct of {level}"
+                return requires, self.level(level, message)
+        return requires, None
+
+    def check_type(self, ty: A.Ty) -> None:
+        """A type of a signature or binder: refuse ``Option`` (D23), count a tuple (R9)."""
+        if L.type_refusal(ty) is not None:
+            raise self.level(L.DATA, _OPTION_MESSAGE)
+        if L.TUPLE in L.type_levels(ty):
+            self._tuple_typed = True
 
     # -- models ----------------------------------------------------------------
 
@@ -397,14 +416,20 @@ class _Lowerer:
         ret = _resolve(spec, decl.ret)
         model = LoweredModel(decl.name, params, ret, line=decl.line)
         self.scope = dict(params)
+        self._tuple_typed = False
         try:
+            for _, pty in params:
+                self.check_type(pty)
+            self.check_type(ret)
             ir, ty = self.expr(decl.body, ret)
             if not _assignable(ty, ret):
                 raise self.err("a model body does not have its declared type")
             model.ir = ir
+            model.requires, model.unsupported = self.seal(ir)
         except OracleError as exc:
             if exc.code != "level":
                 raise
+            model.ir = None
             model.unsupported = exc
         spec.models[decl.name] = model
         self.order.append(decl.name)
@@ -415,12 +440,24 @@ class _Lowerer:
         One Bool IR over the parameters, ``and``-chained in source order exactly as a
         claim's binder refinements are (section 4.5).  A refinement above ``ir.core``
         is recorded in ``op.unsupported``, never skipped.
+
+        An ``admit`` is pure: it may not call a subject op (section 4.2 rule 3).  This is
+        checked for **every** op, whether or not a claim or example calls it, so the oracle
+        refuses exactly the documents the generator's front end refuses (its ``W0301``); the
+        refusal is the one the oracle gives when such an op *is* called, ``ir: a subject call
+        is forbidden here`` (section 16.9 follow-up).  It is made on the source tree, so a
+        subject call next to a construct of a higher level is still found.
         """
-        if not op.refinements:
-            return
+        for _, refinement in op.refinements:
+            if _calls_op(self.spec, refinement):
+                raise OracleError("ir", "a subject call is forbidden here")
+        self._tuple_typed = False
         self.scope = dict(op.params)
         parts: list = []
         try:
+            for _, pty in op.params:
+                self.check_type(pty)
+            self.check_type(op.ret)
             for _, refinement in op.refinements:
                 ir, ty = self.expr(refinement, BOOL)
                 if ty != BOOL:
@@ -431,16 +468,21 @@ class _Lowerer:
                 raise
             op.unsupported = exc
             return
-        admit = parts[0]
-        for extra in parts[1:]:
-            admit = ["and", admit, extra]
-        op.admit = admit
+        if parts:
+            op.admit = parts[0]
+            for extra in parts[1:]:
+                op.admit = ["and", op.admit, extra]
+            op.requires, op.unsupported = self.seal(op.admit)
+        elif self._tuple_typed:
+            # No admit, but the signature itself needs ir.tuple (R9): ``ir.core`` at least.
+            op.requires = (L.CORE, L.TUPLE)
 
     # -- claims and examples -----------------------------------------------------
 
     def lower_claim(self, decl: A.ClaimDecl) -> LoweredSuite:
         spec = self.spec
         suite_id = f"warrant/{spec.name}/exhaustive/{decl.name}"
+        self._tuple_typed = False
         binders: list = []
         refinements: list = []
         body = decl.body
@@ -448,6 +490,8 @@ class _Lowerer:
         unsupported: OracleError | None = None
         admit: object = ["lit", True]
         ir: object = ["lit", True]
+        lowered = False
+        requires: tuple = ()
         try:
             if isinstance(body, A.Quant):
                 if body.kind != "forall":
@@ -458,6 +502,7 @@ class _Lowerer:
                     ty = _resolve(spec, b.ty)
                     if b.inout:
                         raise self.err("a binder cannot be inout")
+                    self.check_type(ty)
                     self.scope[b.name] = ty
                     binders.append((b.name, ty))
                     if b.refinement is not None:
@@ -472,15 +517,18 @@ class _Lowerer:
             ir, ty = self.expr(body, BOOL)
             if ty != BOOL:
                 raise self.err("a claim body must be Bool")
+            lowered = True
+            requires, unsupported = self.seal(admit, ir)
         except OracleError as exc:
             if exc.code != "level":
                 raise
             unsupported = exc
+            lowered = False
         kind = "predicate"
         subject = expected = None
         result = BOOL
-        ops = _collect_ops(ir) if unsupported is None else []
-        if unsupported is None and ir[0] == "eq":
+        ops = _collect_ops(ir) if lowered else []
+        if lowered and ir[0] == "eq":
             left_has = _has_subject(ir[1])
             right_has = _has_subject(ir[2])
             if left_has != right_has:
@@ -500,6 +548,7 @@ class _Lowerer:
             ops,
             unsupported,
             decl.line,
+            requires,
         )
 
     def _type_of_side(self, body, subject_left: bool) -> A.Ty:
@@ -514,10 +563,12 @@ class _Lowerer:
 
     def lower_example(self, decl: A.ExampleDecl) -> LoweredExample:
         self.scope = {}
+        self._tuple_typed = False
         try:
             ir, ty = self.expr(decl.body, BOOL)
             if ty != BOOL:
                 raise self.err("an example body must be Bool")
+            requires, unsupported = self.seal(ir)
         except OracleError as exc:
             if exc.code != "level":
                 raise
@@ -529,21 +580,34 @@ class _Lowerer:
             subject, expected = (ir[1], ir[2]) if left_has else (ir[2], ir[1])
             node = decl.body
             result = self.expr(node.left if left_has else node.right, None)[1]
-        return LoweredExample(decl.name, ir, subject, expected, result, None, decl.line)
+        return LoweredExample(
+            decl.name, ir, subject, expected, result, unsupported, decl.line, requires
+        )
 
     # -- expressions -------------------------------------------------------------
 
-    def expr(self, e, expected: A.Ty | None) -> tuple[object, A.Ty]:
+    def expr(
+        self, e, expected: A.Ty | None, *, option_ok: bool = False
+    ) -> tuple[object, A.Ty]:
         """Lower ``e``; ``expected`` types bare literals and ``Ok``/``Err``.
 
         Nesting is capped at 64 (VER04 section 2: "64 nested expression nodes on any
         path"): a left-associative chain of 2,000 additions is a path of depth 2,000.
+
+        ``option_ok`` is true for exactly one caller: ``unwrap_or``, for its first operand
+        (section 16.10 D23, R8).  An ``Option``-typed result anywhere else is the level
+        ``ir.data``, so no node but ``unwrap_or`` ever receives an ``Option``.
         """
         self._nest += 1
         try:
             if self._nest > MAX_EXPR_DEPTH:
                 raise OracleError("limit", "an expression nests deeper than 64 nodes")
-            return self._expr(e, expected)
+            ir, ty = self._expr(e, expected)
+            if ty.head == "Option" and not option_ok:
+                raise self.level(L.DATA, _OPTION_MESSAGE)
+            if L.TUPLE in L.type_levels(ty):
+                self._tuple_typed = True
+            return ir, ty
         except RecursionError as exc:
             raise OracleError("limit", "an expression nests too deeply") from exc
         finally:
@@ -576,6 +640,8 @@ class _Lowerer:
                 raise self.err("an unbound name")
             head = e.parts[0]
             if head in self.scope:
+                if self.scope[head].head == "()":
+                    raise self.level(L.TUPLE, "a tuple projection needs ir.tuple")
                 raise self.level("ir.data", "projection needs ir.data")
             raise self.err("a qualified name is only valid inside Err(...)")
         if isinstance(e, A.Call):
@@ -598,10 +664,17 @@ class _Lowerer:
             if common is None:
                 raise self.err("the branches of an `if` have no common type")
             return ["if", c_ir, t_ir, o_ir], common
-        if isinstance(e, (A.TupleLit, A.ListLit, A.Proj)):
-            raise self.level("ir.data", "tuples, lists and projections need ir.data")
+        if isinstance(e, (A.TupleLit, A.Proj)):
+            raise self.level(L.TUPLE, "tuples and projections need ir.tuple")
+        if isinstance(e, A.ListLit):
+            raise self.level(L.DATA, "lists need ir.data")
         if isinstance(e, A.Match):
-            raise self.level("ir.data", "match needs ir.data")
+            # ``match`` is ir.tuple exactly when its scrutinee is a Result and ir.data otherwise
+            # (section 4.1, D35), so the scrutinee is typed first.  Neither is lowered yet.
+            _, s_ty = self.expr(e.scrutinee, None)
+            if s_ty.head == "Result":
+                raise self.level(L.TUPLE, "match on a Result needs ir.tuple")
+            raise self.level(L.DATA, "match needs ir.data")
         if isinstance(e, A.Quant):
             raise self.err("a quantifier is only allowed at the head of a claim")
         raise self.err("unsupported expression")
@@ -746,8 +819,8 @@ class _Lowerer:
             if expected.args[1].head != err_name:
                 raise self.err("an error case of the wrong error type")
             return ["err", case], expected
-        if name in _LEVEL_FIXED:
-            raise self.level("ir.fixed", "fixed-width built-ins need ir.fixed")
+        if name in L.FIXED_TAGS:
+            return self.fixed_call(name, e)
         if name in _LEVEL_DATA or name in ("Some",):
             raise self.level("ir.data", "Option and list built-ins need ir.data")
         if name in _LEVEL_SEQ:
@@ -755,6 +828,160 @@ class _Lowerer:
         if name in spec.records or _is_ctor(spec, name):
             raise self.level("ir.data", "constructors need ir.data")
         raise self.err(f"unknown callable `{name}`")
+
+    # -- the ir.fixed built-ins (Appendix A.1) ---------------------------------------
+
+    def fixed_call(self, name: str, e: A.Call) -> tuple[object, A.Ty]:
+        """Type and lower one of the 35 ``ir.fixed`` built-ins to its Appendix A.1 shape.
+
+        One IR node per call, same spelling, positional operands; a static type argument
+        (``widen<U32>(x)``) becomes the canonical type name, a JSON string in position 1.
+        Typing is inferred from the operands, as for ``add``, and is written from VER04j
+        sections 2.3, 3.2 and 3.3 and the table of VER04r A.1, not from the Rust checker; a
+        mismatch is a ``type`` error (a corpus error), never a silent conversion.  A built-in
+        in a v0 document is out of scope (VER04j 1.2: the names are version scoped) and keeps
+        the refusal it had before S10a.
+        """
+        if self.spec.version != "v1":
+            raise self.level(L.FIXED, _FIXED_MESSAGE)
+        arity = L.FIXED_ARITY[name]
+        static: str | None = None
+        if name in L.STATIC_TYPE_TAGS:
+            if len(e.statics) != 1 or not isinstance(e.statics[0], str):
+                raise self.err("this built-in takes one fixed-width type argument")
+            static = e.statics[0]
+            if static not in FIXED:
+                raise self.err("a static type argument is a fixed-width type")
+        elif e.statics:
+            raise self.err("this built-in takes no static argument")
+        if e.args is None or len(e.args) != arity:
+            raise self.err("wrong number of arguments")
+        args = e.args
+        if name in ("max_value", "min_value"):
+            return [name, static], A.Ty(static)
+        if name in ("widen", "wrap", "try"):
+            x_ir, x_ty = self.expr(args[0], None)
+            if is_fixed(x_ty):
+                if name == "widen" and not _range_inside(x_ty.head, static):
+                    raise self.err("widen needs a source whose range is inside the target")
+            elif name == "widen" or x_ty.head not in ("Int", "Nat"):
+                raise self.err("a conversion needs a fixed-width, Int or Nat operand")
+            target = A.Ty(static)
+            return [name, static, x_ir], (A.Ty("Option", (target,)) if name == "try" else target)
+        if name in ("to_int", "to_nat"):
+            x_ir, x_ty = self.expr(args[0], None)
+            if not is_fixed(x_ty) or (name == "to_nat" and FIXED[x_ty.head][1]):
+                raise self.err(
+                    "to_int needs a fixed-width operand and to_nat an unsigned one"
+                )
+            return [name, x_ir], (INT if name == "to_int" else NAT)
+        if name in ("from_be", "from_le"):
+            width = FIXED[static][0] // 8
+            b_ir, b_ty = self.expr(args[0], A.Ty("Bytes", (width,)))
+            if self._static_width(args[0], b_ty) != width:
+                raise self.err("from_be/from_le need Bytes of exactly the target's width")
+            b_ty = A.Ty("Bytes", (width,))
+            return [name, static, b_ir], A.Ty(static)
+        if name in ("bit_not", "popcount", "clz", "ctz", "be_bytes", "le_bytes"):
+            x_ir, x_ty = self.expr(args[0], None)
+            if not is_fixed(x_ty):
+                raise self.err("a bit operation needs a fixed-width operand")
+            if name == "bit_not":
+                return [name, x_ir], x_ty
+            if name in ("be_bytes", "le_bytes"):
+                return [name, x_ir], A.Ty("Bytes", (FIXED[x_ty.head][0] // 8,))
+            return [name, x_ir], NAT
+        if name in ("shl", "shr", "sar", "rotl", "rotr", "bit"):
+            x_ir, x_ty = self.expr(args[0], None)
+            n_ir, n_ty = self.expr(args[1], NAT)
+            if not is_fixed(x_ty):
+                raise self.err("a shift or bit test needs a fixed-width operand")
+            if n_ty != NAT:
+                raise self.err("a shift count or bit index is a Nat")
+            if name == "sar" and not FIXED[x_ty.head][1]:
+                raise self.err("sar is for signed operands (a logical shift is shr)")
+            return [name, x_ir, n_ir], (BOOL if name == "bit" else x_ty)
+        if name in ("bit_and", "bit_or", "bit_xor", "checked_add", "checked_sub", "checked_mul"):
+            a_ir, a_ty, b_ir, b_ty = self._operand_pair(args)
+            if not is_fixed(a_ty) or a_ty != b_ty:
+                raise self.err("operands must be fixed-width values of one type")
+            result = a_ty if name.startswith("bit_") else A.Ty("Option", (a_ty,))
+            return [name, a_ir, b_ir], result
+        if name in ("div", "rem"):
+            a_ir, a_ty, b_ir, b_ty = self._operand_pair(args)
+            if is_fixed(a_ty) or is_fixed(b_ty):
+                # Unsigned pairs only; a signed pair must say div_trunc/rem_trunc (floor and
+                # truncation differ, VER04j 2.3) and a fixed width never mixes with Int/Nat.
+                if a_ty != b_ty or FIXED[a_ty.head][1]:
+                    raise self.err("div and rem take two unsigned operands of one type, or Int/Nat")
+                return [name, a_ir, b_ir], A.Ty("Option", (a_ty,))
+            if a_ty.head not in ("Int", "Nat") or b_ty.head not in ("Int", "Nat"):
+                raise self.err("div and rem take two unsigned operands of one type, or Int/Nat")
+            # R7: two Nat operands give Option<Int> (the grammar checker's typing).
+            return [name, a_ir, b_ir], A.Ty("Option", (INT,))
+        if name in ("div_trunc", "rem_trunc"):
+            a_ir, a_ty, b_ir, b_ty = self._operand_pair(args)
+            if not is_fixed(a_ty) or a_ty != b_ty or not FIXED[a_ty.head][1]:
+                raise self.err("div_trunc and rem_trunc take two signed operands of one type")
+            return [name, a_ir, b_ir], A.Ty("Option", (a_ty,))
+        if name in ("imin", "imax"):
+            a_ir, a_ty = self.expr(args[0], INT)
+            b_ir, b_ty = self.expr(args[1], INT)
+            if a_ty.head not in ("Int", "Nat") or b_ty.head not in ("Int", "Nat"):
+                raise self.err("imin and imax take Int or Nat operands")
+            return [name, a_ir, b_ir], INT
+        if name == "at":
+            b_ir, b_ty = self.expr(args[0], None)
+            if b_ty.head == "List":
+                raise self.level(L.DATA, "at on a list needs ir.data")
+            i_ir, i_ty = self.expr(args[1], NAT)
+            if b_ty.head != "Bytes":
+                raise self.err("at needs Bytes")
+            if i_ty.head not in ("Nat", "Int"):
+                raise self.err("an index is a Nat or an Int")
+            return [name, b_ir, i_ir], A.Ty("Option", (A.Ty("U8"),))
+        # unwrap_or(o, d): the one consumer of an Option, as the first operand and directly.
+        o_ir, o_ty = self.expr(args[0], None, option_ok=True)
+        if o_ty.head != "Option":
+            raise self.err("unwrap_or needs an Option")
+        if o_ir[0] not in L.OPTION_PRODUCERS:
+            raise self.level(L.DATA, "an Option reaches unwrap_or only straight from a built-in")
+        inner = o_ty.args[0]
+        d_ir, d_ty = self.expr(args[1], inner)
+        if not _assignable(d_ty, inner):
+            raise self.err("the default of unwrap_or does not have the Option's type")
+        return [name, o_ir, d_ir], inner
+
+    def _static_width(self, node: object, ty: A.Ty) -> int | None:
+        """The static width of a ``Bytes`` expression, or ``None`` if it is only a ``Bytes``.
+
+        A bytes literal and a ``concat`` of statically sized operands have a width the source
+        typer otherwise forgets (``concat(t, b"000000")`` with ``t: Bytes<1>`` is ``Bytes<4>``,
+        as in hash-functions).  ``from_be``/``from_le`` are the one place the width is
+        required, so it is recomputed here from the source tree; nothing else changes type.
+        """
+        if ty.head != "Bytes":
+            return None
+        if ty.args and isinstance(ty.args[0], int):
+            return ty.args[0]
+        if isinstance(node, A.BytesLit):
+            return len(node.hex) // 2
+        if isinstance(node, A.Call) and node.name == ("concat",) and node.args is not None:
+            widths = [self._static_width(a, self.expr(a, None)[1]) for a in node.args]
+            if len(widths) == 2 and None not in widths:
+                return widths[0] + widths[1]
+        return None
+
+    def _operand_pair(self, args: tuple) -> tuple[object, A.Ty, object, A.Ty]:
+        """Two operands of one operator: a bare literal takes the other side's type."""
+        left, right = args
+        if _needs_context(left) and not _needs_context(right):
+            b_ir, b_ty = self.expr(right, None)
+            a_ir, a_ty = self.expr(left, b_ty)
+        else:
+            a_ir, a_ty = self.expr(left, None)
+            b_ir, b_ty = self.expr(right, a_ty)
+        return a_ir, a_ty, b_ir, b_ty
 
     def arity(self, e: A.Call, n: int) -> None:
         if e.args is None or len(e.args) != n or e.statics:
@@ -778,11 +1005,17 @@ class _Lowerer:
         if e.statics:
             raise self.err("a model takes no static arguments")
         args = self._args(model.params, e, {})
-        if model.unsupported is not None:
+        if model.ir is None:
+            # Not lowerable (a level this lowerer cannot lower): the caller inherits it.  A
+            # model that needs only ir.fixed *is* lowered; the caller's ``requires`` then
+            # includes it through the call closure (R9).
             raise model.unsupported
         return ["model_call", model.name, args], model.ret
 
     def subject_call(self, op: OpSig, e: A.Call) -> tuple[object, A.Ty]:
+        for _, pty in op.params:
+            self.check_type(pty)
+        self.check_type(op.ret)
         if len(e.statics) != len(op.statics):
             raise self.err("wrong number of static arguments")
         widths = []
@@ -797,6 +1030,31 @@ class _Lowerer:
         if widths:
             node.append(widths)
         return node, _substitute(op.ret, statics)
+
+
+def _range_inside(source: str, target: str) -> bool:
+    """Is the range of fixed type ``source`` inside that of ``target``? (``widen``'s rule.)"""
+
+    def span(name: str) -> tuple[int, int]:
+        bits, signed = FIXED[name]
+        return (-(1 << (bits - 1)), (1 << (bits - 1)) - 1) if signed else (0, (1 << bits) - 1)
+
+    (lo, hi), (tlo, thi) = span(source), span(target)
+    return tlo <= lo and hi <= thi
+
+
+def _calls_op(spec: Spec, node: object) -> bool:
+    """Does a source tree call a subject op (a callable declared with ``op``)?"""
+    stack = [node]
+    while stack:
+        item = stack.pop()
+        if isinstance(item, A.Call) and len(item.name) == 1 and item.name[0] in spec.ops:
+            return True
+        if isinstance(item, tuple | list):
+            stack.extend(item)
+        elif hasattr(item, "__slots__") and not isinstance(item, str):
+            stack.extend(getattr(item, f, None) for f in item.__slots__)
+    return False
 
 
 def _is_ctor(spec: Spec, name: str) -> bool:

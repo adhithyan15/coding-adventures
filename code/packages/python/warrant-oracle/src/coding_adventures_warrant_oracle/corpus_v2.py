@@ -273,7 +273,7 @@ def derive(
         for n, m in spec.models.items()
     }
     levels = {"ir.core"}
-    for row in [*ops.values(), *fault_rows, *controls]:
+    for row in [*suite_rows, *ops.values(), *fault_rows, *controls]:
         levels.update(row["requires"])
     out.corpus = {
         "profile": PROFILE,
@@ -310,7 +310,10 @@ def _suite_row(suite, plan: SuitePlan, res, chunk_text: bytes) -> dict:
         "kind": "exhaustive",
         "claim": suite.claim,
         "ops": list(suite.ops),
-        "requires": ["ir.core"],
+        # Computed (section 16.10 R9): the levels of every tag of ``admit`` and ``body`` and of
+        # their model closure, plus ``ir.tuple`` for a tuple type.  ``["ir.core"]`` for every
+        # document the oracle emits today.
+        "requires": list(suite.requires),
         "binders": [
             [b.name, {"type": str(b.ty), "domain": b.desc.to_json()}] for b in plan.binders
         ],

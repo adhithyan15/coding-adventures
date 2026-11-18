@@ -337,9 +337,9 @@ def test_a_claim_with_no_binders_has_one_case():
 def test_composite_binders_enumerate_through_nth():
     src = (
         b"warrant t v1\n  error E = A\n  record P(x: Bool, y: Bool)\n"
-        b"  op g(t: (Bool, Bool)) -> Bool\n  op h(p: P, o: Option<Bool>) -> Bool\n"
+        b"  op g(t: (Bool, Bool)) -> Bool\n  op h(p: P, o: (Bool, Bool)) -> Bool\n"
         b"  claim tup:\n    forall t: (Bool, Bool). g(t) == true\n"
-        b"  claim rec:\n    forall p: P, o: Option<Bool>. h(p, o) == true\n"
+        b"  claim rec:\n    forall p: P, o: (Bool, Bool). h(p, o) == true\n"
     )
     plan, _ = plan_for(src, "tup")
     r = plan.run("full")
@@ -350,7 +350,7 @@ def test_composite_binders_enumerate_through_nth():
     )
     assert r.chunks[0].inputs == hashlib.sha256(plan.prefix + le32(0) + body).digest()
     plan, _ = plan_for(src, "rec")
-    assert plan.run("full").cases == 4 * 3
+    assert plan.run("full").cases == 4 * 4
 
 
 def test_suite_row_reports_demotions_labels_and_descriptors():
