@@ -9,9 +9,10 @@
 #
 # faults=: the deliberate faults the negative controls attack each operation with.  The
 # tuple-returning operations are bound as a projection pair (`_out`, `_img`) so a fault applies
-# to each (VOS02 4.4, VOS-D021).  `init` is bound with `field-zero`, the only fault the generator
-# has for a record result, which is inert on a zero initial state (VOS02 13.4 F4, VOS-D065): the
-# three `negctl/*/init/field-zero` controls can never pass, and BUILD names them as known.
+# to each (VOS02 4.4, VOS-D021).  `init` and `alpha_w` are bound with `field-flip` (VER04j 4.8,
+# WX-SV2), the record fault that is never inert: `field-zero` changes nothing on the zero initial
+# state (VOS02 13.4 F4, VOS-D065), `field-flip` makes it a mask of 1.  A harness that names
+# `field-flip` also honours WARRANT_EVIDENCE_ATTACK=<op>, so BUILD can flip one operation at a time.
 package vos_sched_any
 revision 0.1.0
 spec code/specs/vos-sched-any.warrant
@@ -28,12 +29,12 @@ struct CfgN path=vos_sched_any::ghost::CfgN fields=v:u8
 enum Upd path=vos_sched_contract::Upd ctors=Changed,Unchanged,OutOfRange
 enum Pick path=vos_sched_contract::Pick ctors=Idle,Run(0:u8)
 
-op init export=vos_ghost_init ret=Impl faults=field-zero
+op init export=vos_ghost_init ret=Impl faults=field-flip
 op insert_out export=vos_ghost_insert_out args=Impl,u8 ret=Upd faults=wrong-ctor
 op insert_img export=vos_ghost_insert_img args=Impl,u8 ret=Impl faults=field-zero
 op remove_out export=vos_ghost_remove_out args=Impl,u8 ret=Upd faults=wrong-ctor
 op remove_img export=vos_ghost_remove_img args=Impl,u8 ret=Impl faults=field-zero
 op dispatch_out export=vos_ghost_dispatch_out args=Impl ret=Pick faults=wrong-ctor
 op dispatch_img export=vos_ghost_dispatch_img args=Impl ret=Impl faults=field-zero
-op alpha_w export=vos_ghost_alpha_w args=Impl ret=AbsW faults=field-zero
+op alpha_w export=vos_ghost_alpha_w args=Impl ret=AbsW faults=field-zero,field-flip
 op cfg_n export=vos_ghost_cfg_n ret=CfgN faults=field-zero

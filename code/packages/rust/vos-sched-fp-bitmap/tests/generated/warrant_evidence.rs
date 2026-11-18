@@ -602,6 +602,27 @@ fn fault_field_zero(v: V) -> V {
     })
 }
 
+/// Fault `field-flip` (WX-SV2): the lowest bit of the first numeric field of a
+/// record result is flipped.  Where `field-zero` is inert on a field that is
+/// already `0`, `x ^ 1` differs from `x` for every `x`: it exchanges the pair
+/// `2k, 2k+1` (two's complement for a negative `x`), and both members of a pair
+/// lie in one fixed width's range, so a fixed-width field keeps its width.
+fn fault_field_flip(v: V) -> V {
+    map_payload(v, |x| match x {
+        V::Con(t, i, c, mut vs) => {
+            if let Some(slot) = vs.iter_mut().find(|f| matches!(f, V::Int(_) | V::Fixed(..))) {
+                *slot = match &*slot {
+                    V::Int(n) => V::Int(n ^ 1),
+                    V::Fixed(f, n) => V::Fixed(*f, n ^ 1),
+                    other => other.clone(),
+                };
+            }
+            V::Con(t, i, c, vs)
+        }
+        other => other,
+    })
+}
+
 /// Fault `off-by-one-consumed`: the second component of a `(value, consumed)`
 /// pair is off by one, `+ 1` when even and `- 1` when odd, so both directions
 /// occur and a claim that pins `consumed` on every input catches the fault.
@@ -660,6 +681,7 @@ pub enum Fault {
     None,
     FieldZero,
     WrongCtor,
+    FieldFlip,
 }
 
 impl Fault {
@@ -668,6 +690,7 @@ impl Fault {
             Fault::None => "none",
             Fault::FieldZero => "field-zero",
             Fault::WrongCtor => "wrong-ctor",
+            Fault::FieldFlip => "field-flip",
         }
     }
     pub fn parse(text: &str) -> Option<Fault> {
@@ -675,6 +698,7 @@ impl Fault {
             Fault::None,
             Fault::FieldZero,
             Fault::WrongCtor,
+            Fault::FieldFlip,
         ]
         .into_iter()
         .find(|f| f.name() == text)
@@ -699,11 +723,23 @@ thread_local! {
     static ATTACK_OP: std::cell::RefCell<Option<&'static str>> = const { std::cell::RefCell::new(None) };
 }
 
+/// WX-SV2: `WARRANT_EVIDENCE_ATTACK=<op>` aims a sabotage run at one operation.
+/// Two operations that both list `field-flip` would otherwise both be flipped,
+/// and flipping an `init` and the `alpha` that reads it cancels (`(x ^ 1) ^ 1`),
+/// so a claim that relates the two (`alpha(init()) == empty`) would see nothing.
+/// Read once; unset means every operation that lists the fault obeys it.
+fn sabotage_op() -> Option<&'static str> {
+    static OP: std::sync::OnceLock<Option<String>> = std::sync::OnceLock::new();
+    OP.get_or_init(|| std::env::var("WARRANT_EVIDENCE_ATTACK").ok())
+        .as_deref()
+}
+
 /// The fault `op`'s adapter should obey: the requested one unless a negative
 /// control is attacking a different operation.
 fn fault_for(op: &str, fault: Fault) -> Fault {
     ATTACK_OP.with(|a| match *a.borrow() {
         Some(target) if target != op => Fault::None,
+        None if sabotage_op().is_some_and(|t| t != op) => Fault::None,
         _ => fault,
     })
 }
@@ -2403,6 +2439,25 @@ pub fn resolve_sabotage(fault: Option<&str>, filter: Option<&str>) -> Result<Fau
     }
 }
 
+/// WX-SV2: `WARRANT_EVIDENCE_ATTACK` must name a registered operation and needs a
+/// real fault to aim.  A misspelt operation would otherwise fault nothing, every
+/// test would pass and the sabotage run would look like a harness that cannot be
+/// attacked; a switch without a fault would silently run the honest suite.
+pub fn check_attack(attack: Option<&str>, fault: Option<&str>, ops: &[&str]) -> Result<(), String> {
+    let Some(op) = attack else {
+        return Ok(());
+    };
+    if !matches!(fault, Some(f) if f != "none") {
+        return Err(format!(
+            "WARRANT_EVIDENCE_ATTACK={op:?} requires WARRANT_EVIDENCE_FAULT to name a real fault"
+        ));
+    }
+    if !ops.contains(&op) {
+        return Err(format!("WARRANT_EVIDENCE_ATTACK={op:?} names no operation of this harness"));
+    }
+    Ok(())
+}
+
 /// A filtered suite that selects nothing proves nothing and must not pass.
 pub fn require_tests(count: usize, filter: Option<&str>) -> Result<(), String> {
     match filter {
@@ -2438,6 +2493,14 @@ pub fn run_main(src_dir: &std::path::Path) -> i32 {
     let suite = build_suite(fault);
     let registered = lock_or_recover(&META).len();
     if let Err(msg) = require_tests(registered, filter_var.as_deref()) {
+        eprintln!("{msg}");
+        return 2;
+    }
+    if let Err(msg) = check_attack(
+        std::env::var("WARRANT_EVIDENCE_ATTACK").ok().as_deref(),
+        fault_var.as_deref(),
+        HARNESS_OPS,
+    ) {
         eprintln!("{msg}");
         return 2;
     }
@@ -3442,7 +3505,7 @@ fn op_init(_w: &[u64], args: &[V], fault: Fault) -> V {
     let fault = fault_for("init", fault);
     let v: V = { let s1 = vos_ghost_init(); V::Con("Impl", 0, "Impl", vec![V::Fixed(F::U8, (s1.mask) as i128)]) };
     match fault {
-        Fault::FieldZero => fault_field_zero(v),
+        Fault::FieldFlip => fault_field_flip(v),
         _ => v,
     }
 }
@@ -3540,6 +3603,7 @@ fn op_alpha_w(_w: &[u64], args: &[V], fault: Fault) -> V {
     let v: V = { let s1 = vos_ghost_alpha_w(p0); V::Con("AbsW", 0, "AbsW", vec![V::Fixed(F::U8, (s1.w) as i128)]) };
     match fault {
         Fault::FieldZero => fault_field_zero(v),
+        Fault::FieldFlip => fault_field_flip(v),
         _ => v,
     }
 }
@@ -3553,6 +3617,8 @@ fn op_cfg_n(_w: &[u64], args: &[V], fault: Fault) -> V {
         _ => v,
     }
 }
+
+const HARNESS_OPS: &[&str] = &["alpha_w", "cfg_n", "dispatch_img", "dispatch_out", "init", "insert_img", "insert_out", "remove_img", "remove_out"];
 
 fn neg_ex_n_is_eight(fault: Fault) -> Verdict {
     example_verdict(example_n_is_eight(fault))
@@ -3887,20 +3953,40 @@ pub fn build_suite(fault: Fault) -> Suite {
         let caught: Vec<&str> = attacking("alpha_w", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldZero))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-zero")
     });
+    reg(&mut suite, Meta { fault: "field-flip".into(), target: "example".into(), ..Meta::new("warrant/vos_sched_fp_bitmap/negctl/example/alpha_w/field-flip", "negctl", "alpha_w", "") }, || {
+        let runs: [(&str, fn(Fault) -> Verdict); 1] = [("insert_three_sets_bit_three", neg_ex_insert_three_sets_bit_three)];
+        let caught: Vec<&str> = attacking("alpha_w", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldFlip))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "field-flip")
+    });
     reg(&mut suite, Meta { fault: "field-zero".into(), target: "exhaustive".into(), ..Meta::new("warrant/vos_sched_fp_bitmap/negctl/exhaustive/alpha_w/field-zero", "negctl", "alpha_w", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 2] = [("safety_alpha_build", neg_exh_safety_alpha_build), ("safety_init", neg_exh_safety_init)];
         let caught: Vec<&str> = attacking("alpha_w", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldZero))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-zero")
+    });
+    reg(&mut suite, Meta { fault: "field-flip".into(), target: "exhaustive".into(), ..Meta::new("warrant/vos_sched_fp_bitmap/negctl/exhaustive/alpha_w/field-flip", "negctl", "alpha_w", "") }, || {
+        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("safety_alpha_build", neg_exh_safety_alpha_build), ("safety_init", neg_exh_safety_init)];
+        let caught: Vec<&str> = attacking("alpha_w", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldFlip))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "field-flip")
     });
     reg(&mut suite, Meta { fault: "field-zero".into(), target: "property".into(), ..Meta::new("warrant/vos_sched_fp_bitmap/negctl/property/alpha_w/field-zero", "negctl", "alpha_w", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 2] = [("safety_alpha_build", neg_prop_safety_alpha_build), ("safety_init", neg_prop_safety_init)];
         let caught: Vec<&str> = attacking("alpha_w", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldZero))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-zero")
     });
+    reg(&mut suite, Meta { fault: "field-flip".into(), target: "property".into(), ..Meta::new("warrant/vos_sched_fp_bitmap/negctl/property/alpha_w/field-flip", "negctl", "alpha_w", "") }, || {
+        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("safety_alpha_build", neg_prop_safety_alpha_build), ("safety_init", neg_prop_safety_init)];
+        let caught: Vec<&str> = attacking("alpha_w", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldFlip))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "field-flip")
+    });
     reg(&mut suite, Meta { fault: "field-zero".into(), target: "fuzz".into(), ..Meta::new("warrant/vos_sched_fp_bitmap/negctl/fuzz/alpha_w/field-zero", "negctl", "alpha_w", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 2] = [("safety_alpha_build", neg_fuz_safety_alpha_build), ("safety_init", neg_fuz_safety_init)];
         let caught: Vec<&str> = attacking("alpha_w", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldZero))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "field-zero")
+    });
+    reg(&mut suite, Meta { fault: "field-flip".into(), target: "fuzz".into(), ..Meta::new("warrant/vos_sched_fp_bitmap/negctl/fuzz/alpha_w/field-flip", "negctl", "alpha_w", "") }, || {
+        let runs: [(&str, fn(Fault) -> Verdict); 2] = [("safety_alpha_build", neg_fuz_safety_alpha_build), ("safety_init", neg_fuz_safety_init)];
+        let caught: Vec<&str> = attacking("alpha_w", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldFlip))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "field-flip")
     });
     reg(&mut suite, Meta { fault: "field-zero".into(), target: "example".into(), ..Meta::new("warrant/vos_sched_fp_bitmap/negctl/example/cfg_n/field-zero", "negctl", "cfg_n", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 1] = [("n_is_eight", neg_ex_n_is_eight)];
@@ -3937,20 +4023,20 @@ pub fn build_suite(fault: Fault) -> Suite {
         let caught: Vec<&str> = attacking("dispatch_out", || runs.iter().find(|(_, f)| is_detected(&f(Fault::WrongCtor))).map(|(n, _)| *n).into_iter().collect());
         negctl_result(caught, "wrong-ctor")
     });
-    reg(&mut suite, Meta { fault: "field-zero".into(), target: "exhaustive".into(), ..Meta::new("warrant/vos_sched_fp_bitmap/negctl/exhaustive/init/field-zero", "negctl", "init", "") }, || {
+    reg(&mut suite, Meta { fault: "field-flip".into(), target: "exhaustive".into(), ..Meta::new("warrant/vos_sched_fp_bitmap/negctl/exhaustive/init/field-flip", "negctl", "init", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 1] = [("canon_init", neg_exh_canon_init)];
-        let caught: Vec<&str> = attacking("init", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldZero))).map(|(n, _)| *n).into_iter().collect());
-        negctl_result(caught, "field-zero")
+        let caught: Vec<&str> = attacking("init", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldFlip))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "field-flip")
     });
-    reg(&mut suite, Meta { fault: "field-zero".into(), target: "property".into(), ..Meta::new("warrant/vos_sched_fp_bitmap/negctl/property/init/field-zero", "negctl", "init", "") }, || {
+    reg(&mut suite, Meta { fault: "field-flip".into(), target: "property".into(), ..Meta::new("warrant/vos_sched_fp_bitmap/negctl/property/init/field-flip", "negctl", "init", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 1] = [("canon_init", neg_prop_canon_init)];
-        let caught: Vec<&str> = attacking("init", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldZero))).map(|(n, _)| *n).into_iter().collect());
-        negctl_result(caught, "field-zero")
+        let caught: Vec<&str> = attacking("init", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldFlip))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "field-flip")
     });
-    reg(&mut suite, Meta { fault: "field-zero".into(), target: "fuzz".into(), ..Meta::new("warrant/vos_sched_fp_bitmap/negctl/fuzz/init/field-zero", "negctl", "init", "") }, || {
+    reg(&mut suite, Meta { fault: "field-flip".into(), target: "fuzz".into(), ..Meta::new("warrant/vos_sched_fp_bitmap/negctl/fuzz/init/field-flip", "negctl", "init", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 1] = [("canon_init", neg_fuz_canon_init)];
-        let caught: Vec<&str> = attacking("init", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldZero))).map(|(n, _)| *n).into_iter().collect());
-        negctl_result(caught, "field-zero")
+        let caught: Vec<&str> = attacking("init", || runs.iter().find(|(_, f)| is_detected(&f(Fault::FieldFlip))).map(|(n, _)| *n).into_iter().collect());
+        negctl_result(caught, "field-flip")
     });
     reg(&mut suite, Meta { fault: "field-zero".into(), target: "exhaustive".into(), ..Meta::new("warrant/vos_sched_fp_bitmap/negctl/exhaustive/insert_img/field-zero", "negctl", "insert_img", "") }, || {
         let runs: [(&str, fn(Fault) -> Verdict); 2] = [("canon_insert_post", neg_exh_canon_insert_post), ("canon_insert_img", neg_exh_canon_insert_img)];

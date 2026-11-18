@@ -1159,6 +1159,8 @@ const WXA_FAULTS: &[(&str, &str)] = &[
     ("wrong-ctor", "WrongCtor"),
     ("ok-as-err", "OkAsErr"),
     ("off-by-one-consumed", "OffByOneConsumed"),
+    // WX-SV2: `field-zero` that is never inert (the lowest bit flips).
+    ("field-flip", "FieldFlip"),
 ];
 
 /// Faults for an operation whose result is a byte string (a digest, a codec
@@ -2368,7 +2370,7 @@ fn composite_adapter<'a>(
             "swap-components" => {
                 matches!(&core, Ty::Tuple(cs) if cs.len() >= 2 && cs.iter().all(|c| *c == cs[0]))
             }
-            "field-zero" => matches!(&core, Ty::Data { ctors, .. }
+            "field-zero" | "field-flip" => matches!(&core, Ty::Data { ctors, .. }
                 if ctors.len() == 1 && ctors[0].1.iter().any(is_numeric)),
             "wrong-ctor" => matches!(&core, Ty::Data { ctors, .. } if ctors.len() >= 2),
             "ok-as-err" => {
@@ -2538,6 +2540,7 @@ fn composite_adapter<'a>(
             "drop-consumed" => "fault_drop_consumed(v)".to_string(),
             "swap-components" => "fault_swap_components(v)".to_string(),
             "field-zero" => "fault_field_zero(v)".to_string(),
+            "field-flip" => "fault_field_flip(v)".to_string(),
             "off-by-one-consumed" => "fault_off_by_one_consumed(v)".to_string(),
             "wrong-ctor" => format!("fault_wrong_ctor(v, {})", core.rust()),
             "ok-as-err" => format!("fault_ok_as_err(v, \"{}\")", cases[0]),
@@ -3887,6 +3890,14 @@ pub fn generate_evidence_harness_with_tables(
     }
     if WXE_FAULTS.iter().any(|(n, _)| used_faults.contains(*n)) {
         features.insert("bytefaults");
+    }
+    // WX-SV2: `fault_field_flip` is emitted only for a binding that names it,
+    // so no harness written before the fault existed changes by a byte.
+    if used_faults.contains("field-flip") {
+        features.insert("fieldflip");
+        // The operations `WARRANT_EVIDENCE_ATTACK` may name (validated by `check_attack`).
+        let names: Vec<String> = shapes.keys().map(|k| format!("{k:?}")).collect();
+        let _ = write!(adapters, "const HARNESS_OPS: &[&str] = &[{}];\n\n", names.join(", "));
     }
     // WX-N: a v1 document with a fixed-width `Bytes<N>` anywhere labels that
     // domain `full` or `sample` instead of `set`.  Gated like the helpers above,
