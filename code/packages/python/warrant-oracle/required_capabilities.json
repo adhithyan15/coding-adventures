@@ -13,7 +13,7 @@
       "category": "fs",
       "action": "write",
       "target": "*",
-      "justification": "Writes the oracle's own enumeration digests to the single file named by --out or --emit-v2; it never writes beside the corpus and never overwrites an input."
+      "justification": "Writes the oracle's own enumeration digests, or (dump-lowering) the canonical lowering dump of one document, to the single file named by --out or --emit-v2; it never writes beside the corpus and never overwrites an input."
     },
     {
       "category": "stdout",

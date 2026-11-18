@@ -175,10 +175,14 @@ def test_gf256_evaluator_agrees_with_the_documented_examples():
 @pytest.mark.parametrize(
     "name,levels",
     [
-        ("wasm-leb128", {"ir.fixed": 21, "ir.data": 11}),
-        ("logic-gates", {"ir.fixed": 48, "ir.data": 12}),
+        # S10a: a suite is named by the first construct, in source order, that the lowerer cannot
+        # lower; ``ir.fixed`` built-ins are lowered, so a suite that uses them *and* tuples or
+        # constructors counts under the latter (it used to count under the first construct met,
+        # fixed or not).
+        ("wasm-leb128", {"ir.fixed": 8, "ir.tuple": 24}),
+        ("logic-gates", {"ir.fixed": 55, "ir.data": 3, "ir.tuple": 2}),
         ("lzw", {"ir.fixed": 17}),
-        ("arithmetic", {"ir.fixed": 45, "ir.data": 13}),
+        ("arithmetic", {"ir.fixed": 9, "ir.data": 45, "ir.tuple": 4}),
         ("x25519", {"ir.fixed": 2}),
     ],
 )
@@ -227,7 +231,7 @@ def test_census_counts_levels():
     c = census(lower_document(parse_source(adopter_bytes("arithmetic"))))
     assert (
         c["suites"] == 63
-        and c["suites_by_level"]["ir.fixed"] == 45
+        and c["suites_by_level"]["ir.fixed"] == 9
         and c["models_not_ir_core"] == 60
     )
 

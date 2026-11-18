@@ -77,14 +77,19 @@ def load_json(raw: bytes, limit: int = MAX_CORPUS_BYTES) -> object:
         raise OracleError("corpus", "corpus is not valid JSON") from exc
 
 
-def build_program(spec: Spec, **kwargs) -> Program:
-    """A :class:`Program` over every model the oracle could lower (``ir.core`` only)."""
+def build_program(spec: Spec, *, analyze: bool = False, **kwargs) -> Program:
+    """A :class:`Program` over every model the oracle could lower.
+
+    By default only the ``ir.core`` models (the ones it can evaluate).  With ``analyze`` it
+    holds every model that *was lowered*, ``ir.fixed`` ones included, and types and costs the
+    ``ir.fixed`` built-ins without evaluating them (slice S10a).
+    """
     models = {
         n: ModelDef(n, m.params, m.ret, m.ir)
         for n, m in spec.models.items()
-        if m.unsupported is None
+        if (m.ir is not None if analyze else m.unsupported is None)
     }
-    return Program(models, spec.ops, **kwargs)
+    return Program(models, spec.ops, analyze=analyze, **kwargs)
 
 
 # -- v1 spellings ------------------------------------------------------------------------
