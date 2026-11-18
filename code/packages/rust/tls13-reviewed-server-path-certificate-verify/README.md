@@ -4,8 +4,10 @@
 `CertificateVerify` verdict to the exact target key of the strongest
 accumulated reviewed RSA server path. Its stronger entry point accepts that
 path only through the existing exact HTTPS DNS destination binding. Its
-strongest entry point additionally requires the destination-bound path to
-retain the reviewed anchor's repository-owned self-signature proof.
+anchor-aware entry point additionally requires the destination-bound path to
+retain the reviewed anchor's repository-owned self-signature proof. An
+orthogonal direct-revocation entry point accepts the leaf only through the
+existing destination-bound complete no-check fixed-path revocation proof.
 
 The composition accepts only complete reviewed-path evidence, outer
 selected-transcript hash evidence, the exact decoded message, data-driven RSA
@@ -19,13 +21,19 @@ TLS SNI, HTTP Host authority, and reviewed-path binding, so the authenticated
 signature cannot be detached from the exact destination identity. The
 anchor-aware entry point retains that same graph plus the existing reviewed
 root self-signature evidence, so the handshake signature cannot be detached
-from the exact root whose self-signature was verified.
+from the exact root whose self-signature was verified. The direct-revocation
+entry point derives the leaf only through the destination already bound to the
+complete proof, then retains that proof and the exact signature verdict
+together.
 
-This package does not itself verify an anchor self-signature; the strongest
-entry point accepts only the complete proof produced by the existing
-repository-owned boundary. It does not prove ordered handshake state, choose a
-revocation result, authenticate Finished, process records, perform I/O, or make
-TLS, HTTPS, HTTP, OAuth transport, or live-provider access available.
+This package does not itself verify an anchor self-signature or evaluate
+revocation; the specialized entry points accept only complete proofs produced
+by existing repository-owned boundaries. The revocation composition currently
+covers only the direct no-check completion, not the retained nested, recursive,
+or alternative responder topologies. It does not acquire or refresh revocation
+data, prove ordered handshake state, authenticate Finished, process records,
+perform I/O, or make TLS, HTTPS, HTTP, OAuth transport, or live-provider access
+available.
 
 The end-to-end tests retain a public `www.apple.com` TLS 1.3 handshake capture
 from 2026-11-18 plus its 2026-11-11 leaf certificate. They reconstruct the
@@ -36,7 +44,11 @@ destination-bound entry point and prove that it retains the same destination,
 path, transcript, message, and signature graph. Finally, they verify the
 reviewed root self-signature and exercise the strongest entry point over the
 same exact graph. These checked-in public fixtures are test data only; the
-package performs no network access.
+package performs no network access. Focused direct-revocation entry-point tests
+use the same public transcript, leaf, message, and signature to prove exact
+evidence retention, leaf-key derivation, and role-first scratch non-mutation;
+the upstream sealed destination-to-revocation boundary enforces the exact-leaf
+object binding admitted by the production entry point.
 
 ## Development
 
