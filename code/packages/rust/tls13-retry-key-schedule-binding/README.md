@@ -7,8 +7,9 @@ caller-owned base-secret storage to retain the transcript's exact data-driven
 cipher suite before delegating to the repository-owned no-PSK key schedule.
 
 Proof and suite checks happen before key-schedule derivation can clear or write
-storage. Success retains both message-bound inputs beside the wipe-on-drop
-Early, Handshake, and Master Secret view. The package accepts no detached
+storage. Success retains both message-bound inputs beside the Early,
+Handshake, and Master Secret view into caller-owned wipe-on-drop storage. The
+package accepts no detached
 message bytes, cipher-suite policy, transcript hash, or shared secret.
 
 This pure composition does not derive handshake traffic secrets, advance the

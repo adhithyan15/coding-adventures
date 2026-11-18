@@ -6098,7 +6098,8 @@ the composer also requires that storage's data-driven selected cipher suite to
 equal the suite retained by the exact transcript. Only then does it pass the
 repository-owned 32-byte X25519 secret to the existing no-PSK base schedule.
 Success returns a non-copyable wrapper retaining both exact message-bound
-inputs and the wipe-on-drop Early, Handshake, and Master Secret view. Proof or
+inputs and the Early, Handshake, and Master Secret view into caller-owned
+wipe-on-drop storage. Proof or
 suite substitution fails with stable payload-free categories before schedule
 derivation or storage mutation; downstream schedule failures retain the
 existing redacted categories and clearing behavior.

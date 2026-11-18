@@ -181,7 +181,7 @@ impl<
         self.transcript
     }
 
-    /// Borrow the wipe-on-drop base-secret schedule result.
+    /// Borrow the base-secret view into caller-owned wipe-on-drop storage.
     #[must_use]
     pub const fn base_secrets(&self) -> &BaseSecrets<'storage> {
         &self.base_secrets
