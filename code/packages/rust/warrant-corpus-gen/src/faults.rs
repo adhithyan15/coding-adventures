@@ -372,10 +372,10 @@ fn tuple_target<'o>(
             )),
         },
         _ => Err(refuse(
-                op,
-                fault,
-                &format!("{fault} needs a tuple or Result<tuple, E> result"),
-            )),
+            op,
+            fault,
+            &format!("{fault} needs a tuple or Result<tuple, E> result"),
+        )),
     }
 }
 

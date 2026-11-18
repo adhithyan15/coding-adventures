@@ -125,15 +125,19 @@ fn every_refused_signature_has_the_generator_code_fault_and_the_oracles_reason()
                 // signature itself (`Option` is an IR-only intermediate), which is no weaker.
                 assert_eq!(name, "an-option-result", "{name}: {e}");
                 assert_eq!(e.code, code::LEVEL, "{e}");
+                assert_eq!(e.level, Some("ir.data"), "{e}");
                 continue;
             }
         };
         let e = instantiate(&op, "off-by-one-consumed").expect_err(name);
         assert_eq!(e.code, code::FAULT, "{name}: {e}");
-        assert!(
-            e.message.ends_with(&format!(": {}", why(r.get("message").s()))),
-            "{name}: generator `{}` vs oracle `{}`",
+        assert_eq!(
             e.message,
+            format!(
+                "the fault cannot be instantiated on this operation: {}",
+                why(r.get("message").s())
+            ),
+            "{name}: generator vs oracle `{}`",
             r.get("message").s()
         );
     }
@@ -145,6 +149,17 @@ fn the_ok_payload_clash_is_refused_only_in_the_ok_form() {
     assert!(instantiate(&bare, "off-by-one-consumed").is_ok());
     let ok = refusal_op("warrant r v1\n  error E = A | B\n  op f(ok_payload: U8) -> Result<(U8,Nat),E>\n");
     assert_eq!(instantiate(&ok, "off-by-one-consumed").unwrap_err().code, code::FAULT);
+    // Refusal order: a non-numeric second component is reported before the `ok_payload` clash, so
+    // the message is the numeric one, not the clash one.
+    let both =
+        refusal_op("warrant r v1\n  error E = A | B\n  op f(ok_payload: U8) -> Result<(U8,Bool),E>\n");
+    let e = instantiate(&both, "off-by-one-consumed").unwrap_err();
+    assert_eq!(e.code, code::FAULT, "{e}");
+    assert_eq!(
+        e.message,
+        "the fault cannot be instantiated on this operation: \
+         off-by-one-consumed needs a numeric second component"
+    );
 }
 
 #[test]

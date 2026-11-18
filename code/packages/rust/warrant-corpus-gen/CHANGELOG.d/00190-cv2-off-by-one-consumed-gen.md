@@ -10,3 +10,9 @@
   (rows, controls under the closed and open gates), the 10 refused signatures, and the wasm-leb128
   `Result<(U64,Nat),E>` template against the spec's compact JSON.
 - No version bump: no committed fixture names the fault, so no emitted byte of an existing fixture moves.
+- The shared `tuple_target` refusal text now leads with the fault name (`{fault} needs a tuple or
+  Result<tuple, E> result`), matching the oracle, so the `drop-consumed` and `swap-components` messages
+  change too. Error text only; no emitted byte moves.
+- The test pins the refusal order in the `Ok` form (`Result<(U8,Bool),E>` with an `ok_payload` parameter
+  gives the numeric-second-component refusal, not the clash), compares refusals exactly and checks the
+  `Option` row's level is `ir.data`.
