@@ -80,6 +80,11 @@ describe("Classical filter design (FIR and IIR)", () => {
     const lowPass = designLowPass(49.0 / 65536.0, 1, "rectangular");
     assert.equal(bitsFromNumber(lowPass[0]), 0x3fefffffffffffffn); // nextDown(1)
 
+    const bandPass = designBandPass(0.0, 49.0 / 65536.0, 1, "rectangular");
+    assert.equal(bitsFromNumber(bandPass[0]), 0x3fefffffffffffffn); // nextDown(1)
+    const firwinBandPass = firwin(1, [0.0, 49.0 / 65536.0], { window: "rectangular" });
+    assert.equal(bitsFromNumber(firwinBandPass[0]), 0x3fefffffffffffffn); // nextDown(1)
+
     const highPass = designHighPass(2.0 ** -53, 1, "rectangular");
     assert.equal(bitsFromNumber(highPass[0]), 0n);
     assert.deepEqual(Array.from(designLowPass(0.0, 3, "rectangular")), [0.0, 0.0, 0.0]);

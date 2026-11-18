@@ -63,6 +63,9 @@ def test_finite_reciprocal_path_preserves_legacy_result_bits() -> None:
     low_pass = design_low_pass(49.0 / 65536.0, 1, WindowType.RECTANGULAR)
     assert _bits(low_pass[0]) == 0x3FEFFFFFFFFFFFFF  # nextDown(1)
 
+    band_pass = design_band_pass(0.0, 49.0 / 65536.0, 1, WindowType.RECTANGULAR)
+    assert _bits(band_pass[0]) == 0x3FEFFFFFFFFFFFFF  # nextDown(1)
+
     high_pass = design_high_pass(2.0**-53, 1, WindowType.RECTANGULAR)
     assert _bits(high_pass[0]) == 0x0000000000000000
 
