@@ -188,6 +188,23 @@ Per the DSP roadmap:
 The reference implementation in Phase 2 (`fir`) and Phase 4
 (`iir`) is the oracle for all later phases.
 
+### Filter-designer normalization compatibility
+
+For the Python and TypeScript FIR design helpers, let `d` be the
+normalization denominator: the coefficient sum for low-pass, and the
+absolute coefficient sum for band-pass. Preserve the existing result
+`h * (1 / d)` bit-for-bit whenever `1 / d` is finite. When `1 / d` is
+non-finite and `d` itself is finite and nonzero, use `h / d` so a finite
+normalized coefficient is not lost to reciprocal overflow. Keep the
+existing behavior when `d` is zero, NaN, or infinite. High-pass and the
+`firwin` convenience entry points inherit the behavior of the design
+helper they call.
+
+This compatibility rule applies to the Python and TypeScript lanes. Rust
+already divides directly and is not changed by this rule. It defines a
+numerical compatibility target for these helpers; it does not establish
+native floating-point or Warrant proof evidence.
+
 ## Testing strategy
 
 **Phase 2 (scalar FIR direct)**:
