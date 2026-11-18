@@ -432,7 +432,12 @@ behavior.
 
 The checked kernel is separate from legacy code. It rejects a zero or
 non-finite `a0`, directly divides the other five coefficients by `a0`, and
-rejects any non-finite raw or normalized coefficient. For each sample it
+rejects any non-finite raw or normalized coefficient. Invalid primitive
+values, coefficients, normalized results, sample results, delay candidates,
+row shapes, and bounds raise the lane's existing
+`InvalidCoefficientError`; empty input raises `EmptySignalError`. Exceptions
+raised by caller-owned length or indexed-access methods propagate unchanged.
+For each sample it
 computes the DFII-T output and both candidate delays using separately rounded
 binary64 operations in the written order. A non-finite input, output, or
 candidate delay fails with the lane's existing filter error. The filter commits
@@ -461,29 +466,41 @@ without committing state; caller-defined accessor side effects are outside the
 guarantee.
 
 The checked APIs retain the existing `2^24` sample-per-call and `1024` SOS
-section limits; there is no product cap. Capture each relevant input length
-once, reject invalid or unsafe lengths, then check empty signal, sample cap,
-and SOS section cap in that order. For a Biquad constructor, inspect raw
-coefficients in slot order, reject zero `a0`, then inspect normalized values
-in `[b0,b1,b2,a1,a2]` order. For SOS, construct every section in section order
-before reading samples. For a block, inspect samples in index order and stop at
-the first error; entry state remains unchanged. Empty signal is rejected
-before section processing, including for empty SOS. Empty SOS with a nonempty
-finite signal returns a validated copy, preserving negative zero. Bounds and
-coefficient checks precede sample traversal and output allocation where
-applicable. Tests pin error class and precedence without relying on incidental
-message text.
+section limits; there is no product cap. A block reads signal length once,
+then rejects empty input or an over-cap signal before reading any samples.
+SOS follows the same first signal-length/empty/cap checks before it reads the
+sections length once and validates its nonnegative safe bound and section cap.
+It then reads each row length once, rejects anything other than six slots
+before touching that row's coefficient getters, and validates all rows in
+order before reading signal samples. A block reads samples in index order and
+stops at the first invalid value or propagated accessor exception; entry state
+remains unchanged. For a Biquad constructor, inspect raw coefficients in slot
+order, reject zero `a0`, then inspect normalized values in
+`[b0,b1,b2,a1,a2]` order. Empty SOS with a nonempty finite signal returns a
+validated copy, preserving negative zero. Bounds and coefficient checks
+precede sample traversal and output allocation where applicable. Tests pin
+error class and precedence without relying on incidental message text,
+including empty/over-cap signals paired with poison section accessors and
+five- or seven-slot rows paired with poison coefficient getters.
 
 The shared AF-02 fixture and all 32,768 partitions remain selected conformance
 cases; legacy AF-02a counterexamples remain unchanged. Checked tests separately
 cover minimum-subnormal identity, normalized coefficient/output/delay
 overflow, rollback after late invalid samples and accessor errors, SOS order,
 caps with poison accessors, and the separately rounded `f64::MAX` feedback
-boundary. Independent integer/FIR and feedback properties use domain-preserving
-shrinkers; generated binary64 state/error cases are counted separately. Python
-seeded mutation fuzz must raise on semantic violations because that runner
-ignores returned values. TypeScript semantic-guided fuzz must report semantic
-violations as crashes. These are bounded tests; they do not establish general
+boundary. They also accept exactly `MAX_SAMPLES` samples and `MAX_ORDER`
+sections, while testing each `+1` rejection without allocating an
+over-cap-sized buffer. Independent integer/FIR and feedback properties use
+domain-preserving shrinkers with fixed seeds and nonzero budgets; generated
+binary64 state/error cases are counted separately. Python seeded mutation fuzz
+must raise on semantic violations because that runner ignores returned values;
+record exceptions/crashes actually reported by the harness, not inferred
+timeout/OOM or native coverage. TypeScript semantic-guided fuzz must report
+semantic violations as crashes, exercise edge admission beyond initial
+triage, and retain actual outcome/replay counters only. Both lanes require a
+same-target intentional fault, minimized witness that fails the faulty target
+and passes the healthy target, and deterministic replay with the healthy run
+marked clean. These are bounded tests; they do not establish general
 cross-language bit/error parity, native float/source bindings, Warrant/SAT
 proof, a coverage-guided Python campaign, or package-wide verification. Future
 producer accounting/feedback work is tracked by AF-04c, and generic Python
