@@ -1,5 +1,7 @@
 # game-clock
 
+The Rust package's conformance tests consume [`GAME10`'s shared v1 vectors](../../../specs/fixtures/game-clock-v1/README.md) through the public API. The corpus covers 23 finite examples and is not an exhaustive proof of the clock contract.
+
 Deterministic integer-nanosecond fixed-timestep accumulator and frame pacer (`GAME10`).
 
 Part of the **Coding Adventures** polyglot monorepo historical game engine collection (`GAME00` §3 Era 1).
