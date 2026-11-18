@@ -57,7 +57,10 @@ from . import ast as A
 from . import levels as L
 from . import patterns as P
 from .errors import OracleError
-from .irtree import children
+from .irtree import children, match_arms
+
+#: ``ir_eval.MAX_IR_DEPTH`` (VER04r 14, IR nesting 64); repeated here because ``ir_eval`` imports this module.
+MAX_IR_DEPTH = 64
 
 # -- types ---------------------------------------------------------------------
 
@@ -162,6 +165,9 @@ class LoweredSuite:
     line: int = 0
     #: The levels of ``admit`` and ``body`` and of their model closure (R9).
     requires: tuple = ()
+    #: A lowering-time ``W0701`` (VER04r 4.3, 4.4): a subject call under an impure guard, or a
+    #: claim that calls no operation.  ``None`` for a claim the generator's lowering accepts.
+    refusal: OracleError | None = None
 
 
 @dataclass
@@ -392,6 +398,11 @@ class _Lowerer:
         #: ``concat`` of such, an ``if`` of equal widths): ``id(ir) -> (ir, width)``.  The IR
         #: node is kept so its id is never reused.  Filled in the single lowering pass.
         self._widths: dict = {}
+        #: Fixed-width ``add``/``sub``/``mul``/``neg`` nodes lowered so far, ``id(ir) -> ir`` (the
+        #: node is kept so its id is never reused), and the models whose call closure holds one.
+        #: Both feed the v0 guard, VER04r 3.3 rule 3 (:meth:`_v0_rule_3`).
+        self._fixed_arith: dict = {}
+        self._wrapping_models: set = set()
 
     # -- helpers ---------------------------------------------------------------
 
@@ -458,7 +469,19 @@ class _Lowerer:
             ir, ty = self.expr(decl.body, ret)
             if not self._flows(ir, ty, ret):
                 raise self.err("a model body does not have its declared type")
+            if _has_subject(ir):
+                # VER04r 4.2 rule 3, the generator's lowering refusal: a model is pure, so it
+                # may not call the subject, whether or not anything calls the model.
+                raise OracleError(
+                    "generation",
+                    f"W0701: a subject call inside the body of model `{decl.name}` (VER04r 4.2 rule 3)",
+                )
             model.ir = ir
+            if any(
+                id(n) in self._fixed_arith or (n[0] == "model_call" and n[1] in self._wrapping_models)
+                for n in walk(ir)
+            ):
+                self._wrapping_models.add(decl.name)
             model.requires, model.unsupported = self.seal(ir)
         except OracleError as exc:
             if exc.code != "level":
@@ -558,6 +581,25 @@ class _Lowerer:
                 raise
             unsupported = exc
             lowered = False
+        # VER04r 4.4 and 4.3, applied at lowering as the generator's lowering applies them: a
+        # subject call under an impure guard, and a claim that calls no op, are W0701.  The claim
+        # is still lowered (its IR is what a census and the dump show); the refusal is recorded
+        # in ``refusal`` and raised by every consumer that would evaluate or emit it.  A level
+        # refusal wins over it in evaluation (the generator meets a level while typing, before
+        # either rule); the lowering dump, which accepts ``ir.fixed``, raises the refusal.
+        refusal: OracleError | None = None
+        if lowered:
+            try:
+                check_pure_guards(ir)
+                self._v0_rule_3(ir)
+                if not _has_subject(ir):
+                    raise OracleError(
+                        "generation",
+                        "W0701: a claim must call at least one operation of the subject "
+                        "(VER04r 4.3)",
+                    )
+            except OracleError as exc:
+                refusal = exc
         kind = "predicate"
         subject = expected = None
         result = BOOL
@@ -583,7 +625,36 @@ class _Lowerer:
             unsupported,
             decl.line,
             requires,
+            refusal,
         )
+
+    def _v0_rule_3(self, ir: object) -> None:
+        """VER04r 3.3 rule 3, the generator's v0 guard: refuse, in a **v0** document, a fixed-width
+        ``+ - *`` or unary ``-`` with a subject call beneath it, or a ``model_call`` with a subject
+        call in an argument whose callee's call closure holds such a node.  The v0 harness
+        evaluates ``U8`` as ``Nat``, so a generation-time count cannot prove the two agree.
+        :func:`.ir_eval.fixed_arith_over_subject` makes the same test at evaluation; this one is
+        made on the types the lowerer already knows, so the refusal is a property of lowering.
+        """
+        if self.spec.version != "v0":
+            return
+        for node in walk(ir):
+            if id(node) in self._fixed_arith and _has_subject(node):
+                raise OracleError(
+                    "generation",
+                    "W0701: fixed-width arithmetic over a subject result in a v0 document "
+                    "(VER04r 3.3 rule 3)",
+                )
+            if (
+                node[0] == "model_call"
+                and node[1] in self._wrapping_models
+                and any(_has_subject(a) for a in node[2])
+            ):
+                raise OracleError(
+                    "generation",
+                    f"W0701: model `{node[1]}` (fixed-width arithmetic in its call closure) over a "
+                    "subject result in a v0 document (VER04r 3.3 rule 3)",
+                )
 
     def _type_of_side(self, body, subject_left: bool) -> A.Ty:
         """Type of the subject side of a reference claim (re-derived by checking)."""
@@ -901,7 +972,9 @@ class _Lowerer:
             # nodes; the literal carries the in-range value -2^(w-1), and
             # ``neg`` of the minimum wraps to itself (VER04r section 3.2).
             ty = A.Ty(operand.suffix.upper())
-            return ["neg", _lit_value(-operand.value, ty.head)], ty
+            node = ["neg", _lit_value(-operand.value, ty.head)]
+            self._fixed_arith[id(node)] = node
+            return node, ty
         ir, ty = self.expr(
             operand, expected if expected is not None and is_numeric(expected) else None
         )
@@ -909,7 +982,10 @@ class _Lowerer:
             raise self.err("unary minus needs a number")
         if ty.head in FIXED and not FIXED[ty.head][1]:
             raise self.err("unary minus on an unsigned type; write 0uN - a")
-        return ["neg", ir], (ty if is_fixed(ty) else INT)
+        node = ["neg", ir]
+        if is_fixed(ty):
+            self._fixed_arith[id(node)] = node
+        return node, (ty if is_fixed(ty) else INT)
 
     def binary(self, e: A.Binary, expected: A.Ty | None) -> tuple[object, A.Ty]:
         op = e.op
@@ -941,7 +1017,10 @@ class _Lowerer:
         if op in ("<", "<=", ">", ">="):
             return [tag, l_ir, r_ir], BOOL
         # Arithmetic: fixed-width stays fixed (and wraps); Nat/Int become Int.
-        return [tag, l_ir, r_ir], (common if is_fixed(common) else INT)
+        node = [tag, l_ir, r_ir]
+        if is_fixed(common):
+            self._fixed_arith[id(node)] = node
+        return node, (common if is_fixed(common) else INT)
 
     # -- calls --------------------------------------------------------------------
 
@@ -1318,6 +1397,59 @@ def walk(ir):
 
 def _has_subject(ir) -> bool:
     return any(n[0] == "subject_op" for n in walk(ir))
+
+
+def check_pure_guards(ir: object, depth: int = 0) -> None:
+    """Refuse a subject call under an impure guard (VER04r 4.4, ``W0701``), mirroring the generator.
+
+    ``expected_calls`` must not depend on what the subject returned, so a subject call may sit
+    under a guard only if the guard calls no subject::
+
+        if pure(x) then op(a) else true     ok     -- the guard calls no subject
+        if op(x) then op(a) else true       W0701
+        op(a) and op(b)                     W0701  -- op(a) guards op(b) and is impure
+        pure(x) and op(b)                   ok
+        op(a) and pure(b)                   ok     -- op(a) guards nothing that calls
+        match op(x) with arms calling op    W0701  -- a match arm is guarded by its scrutinee
+
+    A guard is the condition of an ``if``, the left operand of ``and``/``or``/``implies`` and the
+    scrutinee of a ``match`` whose arms call the subject.  The walk is the one
+    :func:`.ir_eval.compile_calls` makes at evaluation (which keeps its own refusals as a
+    backstop); doing it here makes the refusal a property of *lowering*.
+    """
+    if depth >= MAX_IR_DEPTH:
+        raise OracleError("limit", "IR nesting exceeds 64 levels")
+    if not _has_subject(ir):
+        return
+    tag = ir[0]
+    impure = OracleError("generation", "W0701: a subject call under an impure guard (VER04r 4.4)")
+    if tag == "if":
+        cond, then, other = ir[1], ir[2], ir[3]
+        if _has_subject(then) or _has_subject(other):
+            if _has_subject(cond):
+                raise impure
+            check_pure_guards(then, depth + 1)
+            check_pure_guards(other, depth + 1)
+        else:
+            check_pure_guards(cond, depth + 1)
+    elif tag in ("and", "or", "implies"):
+        if _has_subject(ir[2]):
+            if _has_subject(ir[1]):
+                raise impure
+            check_pure_guards(ir[2], depth + 1)
+        else:
+            check_pure_guards(ir[1], depth + 1)
+    elif tag == "match":
+        if any(_has_subject(body) for _pattern, body in match_arms(ir)):
+            if _has_subject(ir[1]):
+                raise impure
+            for _pattern, body in match_arms(ir):
+                check_pure_guards(body, depth + 1)
+        else:
+            check_pure_guards(ir[1], depth + 1)
+    else:
+        for child in children(ir):
+            check_pure_guards(child, depth + 1)
 
 
 def _collect_ops(ir) -> list[str]:

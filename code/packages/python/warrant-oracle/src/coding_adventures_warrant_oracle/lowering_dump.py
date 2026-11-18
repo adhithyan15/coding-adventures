@@ -65,6 +65,8 @@ def _check_lowered(spec: Spec) -> None:
         ):
             raise _refuse("op", op.name, op.unsupported)
     for suite in spec.suites:
+        if suite.refusal is not None:
+            raise suite.refusal  # the generator refuses it at lowering too (VER04r 4.3, 4.4)
         if not set(suite.requires) <= LOWERED_LEVELS or not suite.requires:
             raise _refuse("claim", suite.claim, suite.unsupported)
     for ex in spec.examples:
