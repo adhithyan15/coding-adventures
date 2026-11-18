@@ -56,7 +56,7 @@ the suites still blocked on `ir.data`):
 | zeroize | 9 | 9 | 0 | 8 / 1 / 0 |
 | x25519 | 8 | 8 | 0 | 6 / 2 / 0 |
 | lzw | 21 | 21 | 0 | 4 / 17 / 0 |
-| wasm-leb128 | 42 | 42 | 0 | 18 / 24 / 0 |
+| wasm-leb128 | 44 | 44 | 0 | 18 / 24 / 0 (42 claims; the two encoder bounds were split, VER04r D28) |
 | logic-gates | 88 | 85 | 3 | 28 / 57 / 3 |
 | hash-functions | 56 | 35 | 21 | 4 / 31 / 21 |
 | arithmetic | 63 | 18 | 45 | 7 / 11 / 45 |

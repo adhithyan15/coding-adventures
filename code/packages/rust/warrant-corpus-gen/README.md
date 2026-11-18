@@ -271,32 +271,32 @@ no adopter is blocked by a cost it would simply declare), as of S10c-2:
 | hash-functions | 56 | 29 | `ir.data` 21, `W0701` 6 |
 | lzw | 21 | **21** | none |
 | arithmetic | 63 | 8 | `ir.data` 55 |
-| wasm-leb128 | 42 | 40 | `W0701` 2 |
+| wasm-leb128 | 44 | **44** | none (was 42 claims, 40 emittable, `W0701` 2, before the VER04r D28 split) |
 | vos-sched-any | 8 | 0 | `ir.data` 8 |
 | vos-sched-fp-bitmap | 13 | 0 | `ir.data` 13 |
 | zeroize | 9 | 0 | `inout` 9 |
-| **total** | **355** | **238** | `ir.data` 100, `inout` 9, `W0701` 8 |
+| **total** | **357** | **242** | `ir.data` 100, `inout` 9, `W0701` 6 |
 
 The table is pinned per adopter in `tests/census.rs`. History of the totals: before S10b `ir.data` 154,
 `ir.fixed` 101, `inout` 9, `W0701` 2; S10b `ir.data` 79, `ir.fixed` 99, `ir.tuple` 71, `W0701` 8 (89
 emittable); S10t-2 (`ir.tuple` lowers) `ir.data` 100, `ir.fixed` 130, `W0701` 8, `inout` 9, `16.2` 3 (105
 emittable); **S10c-2 evaluates `ir.fixed` and describes the signed and 16-bit `fx_edge` and `nat_shift`,
-so no claim is blocked on `ir.fixed` or `16.2` any more** (238 emittable).
+so no claim is blocked on `ir.fixed` or `16.2` any more** (238 emittable); **the wasm-leb128 adopter
+splits its two `W0701` claims (VER04r D28: 42 to 44 claims)**, so 357 claims, 242 emittable, `W0701` 6.
 
 The generator's census now **equals the oracle's exactly** (oracle numbers from running its lowering:
-`ok`, `W0701` for a lowering refusal, `ir.data`) for ct-compare, gf256, **wasm-leb128** (40 `ok`, 2
-`W0701`), **hash-functions** (29 `ok`, 6 `W0701`, 21 `ir.data`), logic-gates, **lzw** (21) and
+`ok`, `W0701` for a lowering refusal, `ir.data`) for ct-compare, gf256, **wasm-leb128** (44 `ok`), **hash-functions** (29 `ok`, 6 `W0701`, 21 `ir.data`), logic-gates, **lzw** (21) and
 **x25519** (8). Two differences remain, both generator-side refusals of a feature, never a level
 (`tests/census.rs`): **arithmetic** (10 claims call an op whose signature holds a record or variant
 type: the oracle counts the type in `requires` (R9) and lowers, 18 `ok`; the generator refuses at
 `ir.data` until S11, 8 `ok`) and **zeroize** (`inout` parameters and `ensures`: the oracle lowers all 9,
-the generator refuses 9 until a later slice). The two `W0701` of wasm-leb128 and the six of
-hash-functions are claims with a subject call under an impure guard (VER04r 4.4), refused at lowering
+the generator refuses 9 until a later slice). The six `W0701` of
+hash-functions (wasm-leb128 had two until D28 split them) are claims with a subject call under an impure guard (VER04r 4.4), refused at lowering
 in both tools.
 
 Only a **list of byte strings** (16.2 items 1 and 2) is still refused by the domain stage; no adopter
 binder is one, and no adopter binder was a `nat_count` (item 3). Of the decided items, item 4 (the
-signed `fx_edge`, `I64`) occurs in 7 wasm-leb128 claims and item 5 (the 16-bit `fx_edge`) in 2 lzw
+signed `fx_edge`, `I64`) occurs in 8 wasm-leb128 claims (7 before the D28 split) and item 5 (the 16-bit `fx_edge`) in 2 lzw
 claims, both now emittable. Run the report with
 `cargo test -p coding_adventures_warrant_corpus_gen --test census -- --nocapture`.
 

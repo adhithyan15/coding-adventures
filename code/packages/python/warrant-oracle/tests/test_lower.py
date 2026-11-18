@@ -178,7 +178,7 @@ CENSUS = {
     # ``ir.core`` is every suite the oracle evaluates.  Only ``ir.data`` still blocks one (was
     # wasm-leb128 18/24, logic-gates 28/3/57 core/data/fixed, lzw 4/17, arithmetic 7/45/11,
     # x25519 6/2).
-    "wasm-leb128": {"ir.core": 42},
+    "wasm-leb128": {"ir.core": 44},
     "logic-gates": {"ir.core": 85, "ir.data": 3},
     "lzw": {"ir.core": 21},
     "arithmetic": {"ir.core": 18, "ir.data": 45},
