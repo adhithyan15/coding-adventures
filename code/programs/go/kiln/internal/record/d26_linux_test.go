@@ -10,6 +10,8 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"strings"
+	"syscall"
 	"testing"
 )
 
@@ -54,23 +56,53 @@ func TestSelfStartTicksAndAChildAreOnTheSameClock(t *testing.T) {
 	}
 }
 
-// The S3 bound derived from our own start counts a process started after us and
-// (when the host has an older pid 1) does not count one started long before.
+// The S3 bound derived from our own start, run through the comparison collect
+// itself uses (scanSurvivors, over a fake /proc holding REAL stat files): a
+// process started after us is counted, and pid 1, when it is older than the
+// bound, is excluded.
 func TestStartBoundSeparatesBeforeFromAfterOnTheRealKernel(t *testing.T) {
 	self, err := ReadSelfStartTicks()
 	if err != nil {
 		t.Fatal(err)
 	}
-	bound := self - SurvivorSlackTicks
-	if got := startOfChild(t); got < bound {
-		t.Fatalf("a process started after prepare falls before the bound: %d < %d", got, bound)
+	q := surQuery
+	q.SinceTicks = self - SurvivorSlackTicks
+	denied := &os.PathError{Op: "readlink", Path: "x", Err: syscall.EACCES}
+
+	// An uninspectable process of ours is S3's case: flagged only when new.
+	scan := func(stat []byte) []string {
+		f := host()
+		f.procs[30] = &fakeEntry{owner: 1000, cmdline: "x\x00", nsErr: denied, stat: string(stat)}
+		got, err := scanSurvivors(f, q)
+		if err != nil {
+			t.Fatal(err)
+		}
+		return got
 	}
+
+	child := exec.Command("sleep", "1")
+	if err := child.Start(); err != nil {
+		t.Skipf("no sleep: %v", err)
+	}
+	t.Cleanup(func() { child.Process.Kill(); child.Wait() })
+	cstat, err := os.ReadFile(fmt.Sprintf("/proc/%d/stat", child.Process.Pid))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := scan(cstat); len(got) != 1 || !strings.Contains(got[0], "S3") {
+		t.Fatalf("a process started after prepare was not counted: %v", got)
+	}
+
 	init1, err := os.ReadFile("/proc/1/stat")
 	if err != nil {
-		t.Skip("cannot read /proc/1/stat")
+		t.Log("cannot read /proc/1/stat; the old-process half is not checked")
+		return
 	}
-	t1, err := startTicks(init1)
-	if err != nil || t1 >= bound {
-		t.Skipf("pid 1 is not older than this test by the slack (start %d, bound %d): %v", t1, bound, err)
+	if t1, err := startTicks(init1); err != nil || t1 >= q.SinceTicks {
+		t.Logf("pid 1 is not older than the bound (start %d, bound %d, %v); the old-process half is not checked", t1, q.SinceTicks, err)
+		return
+	}
+	if got := scan(init1); len(got) != 0 {
+		t.Fatalf("pid 1, older than prepare, was counted: %v", got)
 	}
 }

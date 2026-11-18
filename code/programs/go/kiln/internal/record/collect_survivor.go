@@ -64,10 +64,10 @@ const (
 // ClockTicksPerSecond is USER_HZ; see recfmt.ClockTicksPerSecond.
 const ClockTicksPerSecond = recfmt.ClockTicksPerSecond
 
-// SurvivorSlackTicks is how much earlier than `prepare` a process may have
-// started and still count as new: 200 ticks, two seconds. A process's starttime
-// is truncated to a tick and `prepare` reads /proc/uptime at a one-tick
-// resolution, so a process forked a moment before the read must not look old.
+// SurvivorSlackTicks is how much earlier than `prepare`'s own start a process
+// may have started and still count as new: 200 ticks, two seconds. It is pure
+// margin: nothing of the build predates prepare's start, so the gate would be
+// right with none, and the slack only widens S3 (fail closed).
 const SurvivorSlackTicks = 2 * ClockTicksPerSecond
 
 // SurvivorQuery is what a scan is told: the checkout, the sealed sandbox

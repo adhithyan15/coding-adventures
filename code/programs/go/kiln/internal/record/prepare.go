@@ -185,6 +185,10 @@ type PrepareResult struct {
 }
 
 // Prepare runs the whole of `kiln record prepare`.
+//
+// The start time it seals is that of THIS process. A long-lived caller (a test
+// binary, say) therefore gets an earlier epoch than a fresh `kiln record
+// prepare`, which only widens S3: more processes count as new (fail closed).
 func Prepare(o Options) (*PrepareResult, error) {
 	if err := o.normalize(); err != nil {
 		return nil, err
