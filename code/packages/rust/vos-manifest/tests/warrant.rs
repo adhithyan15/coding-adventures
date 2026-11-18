@@ -645,3 +645,21 @@ fn a_model_with_more_than_63_parameters_is_refused_not_approximated() {
         BuildShape::Constructor { .. }
     ));
 }
+
+#[test]
+fn declared_names_lists_claims_and_examples_in_document_order() {
+    // VOS-039a: parsed only (no type check), claims and examples kept apart.
+    let doc = "warrant t v1
+  record Impl(x: U8)
+  claim c2:
+    forall v: Bool. v == v
+  example e1:
+    1u8 == 1u8
+  claim c1:
+    forall v: Bool. v == v
+";
+    let (claims, examples) = vos_manifest::warrant::declared_names(doc).unwrap();
+    assert_eq!(claims, ["c2", "c1"]);
+    assert_eq!(examples, ["e1"]);
+    assert!(vos_manifest::warrant::declared_names("not a document").is_err());
+}

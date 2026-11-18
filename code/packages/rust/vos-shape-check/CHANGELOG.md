@@ -6,6 +6,7 @@ All notable changes to this package are documented here.
 
 ### Added (VOS-039a)
 
+- `vos.toml` key `excused-controls`: the manifest ids of the negative controls a crate may fail (VOS-D065, VOS-D098).  Never empty, each id 1 to 128 plain bytes, at most 16, no repeats.  `vos-link gen-build` generates the tolerance script from it and `check-component` matches the ids whole.
 - `vos.toml` key `coverage-floor`: an integer percent 0 to 100, read into `VosToml::coverage_floor`.  The reader only
   bounds it (plain decimal digits; a sign, an underscore, a prefix, a fraction or a string is refused); the
   floor is enforced by `vos-link check-component` and the BUILD coverage line (VOS04 section 5.6, VOS-D070).

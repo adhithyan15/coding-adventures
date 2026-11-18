@@ -302,6 +302,16 @@ fn vos_toml_contract_and_obligations_keys() {
         ("coverage-floor = 0095", "integer from 0 to 100"),
         ("coverage-floor = \"95\"", "wrong type"),
         ("coverage-floor = 95\ncoverage-floor = 96", "duplicate key"),
+        ("excused-controls = []", "never empty"),
+        ("excused-controls = [\"\"]", "1 to 128 bytes"),
+        ("excused-controls = [\"a b\"]", "1 to 128 bytes"),
+        ("excused-controls = [1]", "holds strings"),
+        ("excused-controls = \"a\"", "wrong type"),
+        ("excused-controls = [\"a\", \"a\"]", "listed twice"),
+        (
+            "excused-controls = [\"a\"]\nexcused-controls = [\"b\"]",
+            "duplicate key",
+        ),
     ] {
         let e = parse_vos_toml(text).unwrap_err();
         assert!(e.1.contains(why), "{text:?}: {e:?}");
@@ -327,4 +337,21 @@ fn coverage_floor_is_an_integer_percent_and_optional() {
             "{text}"
         );
     }
+}
+
+#[test]
+fn excused_controls_are_whole_plain_ids() {
+    let v = parse_vos_toml("excused-controls = [\"m/negctl/exhaustive/init/field-flip\", \"x\"]")
+        .unwrap();
+    assert_eq!(
+        v.excused_controls,
+        ["m/negctl/exhaustive/init/field-flip", "x"]
+    );
+    assert!(parse_vos_toml("kind = \"any\"")
+        .unwrap()
+        .excused_controls
+        .is_empty());
+    let many: Vec<String> = (0..17).map(|i| format!("\"i{i}\"")).collect();
+    let e = parse_vos_toml(&format!("excused-controls = [{}]", many.join(","))).unwrap_err();
+    assert!(e.1.contains("more than 16"), "{e:?}");
 }

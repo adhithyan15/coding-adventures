@@ -4,6 +4,10 @@ All notable changes to this package are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added (VOS-039a)
+
+- `warrant::declared_names(text)`: the claim and example names of a document, parsed only.  `vos-link check-component` binds the evidence manifest and the sabotage plan to them.
+
 ### Added (VOS-012b0, VOS-D061)
 
 - `Tier` gains a fifth member, `Representation`, sorted between `policy` and `safety` (VOS02 2.7):

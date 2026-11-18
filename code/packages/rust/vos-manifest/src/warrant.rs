@@ -302,6 +302,25 @@ fn declaration_span(d: &Declaration<'_>) -> (usize, usize) {
     }
 }
 
+/// The names a Warrant document declares: its `claim`s and its `example`s, in document
+/// order.  The document is **parsed only** (type-checking is `check-doc`'s); this is what
+/// `vos-link check-component` binds the evidence manifest and the sabotage plan to
+/// (VOS-039a), so the claim set comes from the generated document, never from a BUILD file.
+pub fn declared_names(text: &str) -> Result<(Vec<String>, Vec<String>), WarrantFailure> {
+    with_parsed(text, |file, _tokens, _norm| {
+        let mut claims = Vec::new();
+        let mut examples = Vec::new();
+        for d in &file.declarations {
+            match d {
+                Declaration::Claim(c) => claims.push(c.name.to_string()),
+                Declaration::Example(e) => examples.push(e.name.to_string()),
+                _ => {}
+            }
+        }
+        Ok((claims, examples))
+    })
+}
+
 /// Parse and type-check a whole document with `warrant-grammar` and report what the
 /// R6 checks need.
 pub fn analyze_document(text: &str) -> Result<Analysis, WarrantFailure> {

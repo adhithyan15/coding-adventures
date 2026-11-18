@@ -152,7 +152,14 @@ pub struct VosToml {
     /// VOS-D070).  This reader only bounds it; `vos-link check-component` requires it of an
     /// implementation, holds it to the repository minimum and ties the BUILD gate to it.
     pub coverage_floor: Option<u8>,
+    /// The manifest ids of the negative controls this crate is allowed to fail (VOS-D065,
+    /// VOS-D098), as written.  Never empty when present, each id 1 to 128 bytes of
+    /// `[A-Za-z0-9_/.-]`.  Matched as WHOLE ids by `vos-link check-component`.
+    pub excused_controls: Vec<String>,
 }
+
+/// At most this many excused controls.
+pub const MAX_EXCUSED_CONTROLS: usize = 16;
 
 /// A `vos.toml` error: 1-based line and reason.
 pub type VosTomlError = (u32, String);
@@ -200,13 +207,14 @@ pub fn parse_vos_toml(text: &str) -> Result<VosToml, VosTomlError> {
         contract: None,
         obligations: Vec::new(),
         coverage_floor: None,
+        excused_controls: Vec::new(),
     };
     for Entry { path, value, line } in entries {
         let line = line as usize;
         let [key] = path.as_slice() else {
             return bad(
                 line,
-                "unknown key or table (allowed: class, kind, evidence-features, contract, obligations, coverage-floor)",
+                "unknown key or table (allowed: class, kind, evidence-features, contract, obligations, coverage-floor, excused-controls)",
             );
         };
         match (key.as_str(), value) {
@@ -292,9 +300,33 @@ pub fn parse_vos_toml(text: &str) -> Result<VosToml, VosTomlError> {
                 };
                 out.coverage_floor = Some(floor);
             }
+            ("excused-controls", Value::Array(items)) => {
+                if !out.excused_controls.is_empty() {
+                    return bad(line, "duplicate key");
+                }
+                if items.is_empty() {
+                    return bad(line, "excused-controls is never empty (omit the key)");
+                }
+                for item in items {
+                    let Value::Str(id) = item else {
+                        return bad(line, "excused-controls holds strings");
+                    };
+                    let plain = |b: u8| b.is_ascii_alphanumeric() || b"_/.-".contains(&b);
+                    if id.is_empty() || id.len() > 128 || !id.bytes().all(plain) {
+                        return bad(line, "an excused control id is 1 to 128 bytes of [A-Za-z0-9_/.-]");
+                    }
+                    if out.excused_controls.len() >= MAX_EXCUSED_CONTROLS {
+                        return bad(line, "more than 16 excused controls");
+                    }
+                    if out.excused_controls.contains(&id) {
+                        return bad(line, "an excused control is listed twice");
+                    }
+                    out.excused_controls.push(id);
+                }
+            }
             (
                 "class" | "kind" | "evidence-features" | "contract" | "obligations"
-                | "coverage-floor",
+                | "coverage-floor" | "excused-controls",
                 _,
             ) => {
                 return bad(line, "wrong type of value for this key")
@@ -302,7 +334,7 @@ pub fn parse_vos_toml(text: &str) -> Result<VosToml, VosTomlError> {
             _ => {
                 return bad(
                     line,
-                    "unknown key (allowed: class, kind, evidence-features, contract, obligations, coverage-floor)",
+                    "unknown key (allowed: class, kind, evidence-features, contract, obligations, coverage-floor, excused-controls)",
                 )
             }
         }
