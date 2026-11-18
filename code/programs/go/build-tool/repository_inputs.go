@@ -310,12 +310,19 @@ var (
 	// generator's tests regenerate byte for byte (accept_blind, D15); it lives in
 	// the oracle's directory, so only the generator needs a row for it.
 	warrantAcceptBlindFixture = "code/packages/python/warrant-oracle/tests/fixtures/accept-blind-v2"
-	// warrantCorpusGenPaths are the inputs of the generator's --check line.
+	// warrantFixedFormsFixture is the oracle's synthetic ir.fixed document and its committed
+	// lowering dump (CV2-S10a). The generator's tests/fixed_parity.rs lowers the first and
+	// reproduces the second byte for byte (CV2-S10b), reading both from this directory; it
+	// lies in the oracle's package, so only the generator needs a row for it.
+	warrantFixedFormsFixture = "code/packages/python/warrant-oracle/tests/fixtures/fixed-forms-v1"
+	// warrantCorpusGenPaths are the inputs of the generator's --check line and of its
+	// cross-package parity tests.
 	warrantCorpusGenPaths = []string{
 		"code/specs/ct-compare.warrant",
 		warrantCorpusV2Fixture,
 		warrantCorpusV2Bindings,
 		warrantAcceptBlindFixture,
+		warrantFixedFormsFixture,
 	}
 	// warrantOracleRowPaths adds the fixture directory to the oracle's exact files.
 	warrantOracleRowPaths = append(append([]string{}, warrantOraclePaths...), warrantCorpusV2Fixture)
@@ -970,7 +977,7 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	{
 		name:     "rust/warrant-corpus-gen",
 		language: "rust",
-		inputs:   "the ct-compare spec, bindings and committed v2 fixture its BUILD --check regenerates (VER04r 16.8)",
+		inputs:   "the ct-compare spec, bindings and committed v2 fixture its BUILD --check regenerates (VER04r 16.8), and the oracle's accept-blind and fixed-forms fixtures its tests reproduce",
 		matches:  isWarrantCorpusGenInput,
 		paths:    warrantCorpusGenPaths,
 	},
@@ -1063,13 +1070,16 @@ func isWarrantCorpusV2Fixture(changed string) bool {
 
 // isWarrantCorpusGenInput selects rust/warrant-corpus-gen, whose BUILD runs the
 // generator's --check against the committed v2 fixture with the ct-compare spec
-// and bindings, and whose tests regenerate the oracle's accept-blind fixture.
+// and bindings, and whose tests regenerate the oracle's accept-blind fixture and reproduce
+// the oracle's fixed-forms lowering dump (CV2-S10b).
 func isWarrantCorpusGenInput(changed string) bool {
 	switch changed {
 	case "code/specs/ct-compare.warrant", warrantCorpusV2Bindings:
 		return true
 	}
-	return isWarrantCorpusV2Fixture(changed) || strings.HasPrefix(changed, warrantAcceptBlindFixture+"/")
+	return isWarrantCorpusV2Fixture(changed) ||
+		strings.HasPrefix(changed, warrantAcceptBlindFixture+"/") ||
+		strings.HasPrefix(changed, warrantFixedFormsFixture+"/")
 }
 
 // isWarrantPythonLaneCorpusInput selects the Python runner package when the

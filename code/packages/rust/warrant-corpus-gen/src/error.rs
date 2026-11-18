@@ -69,7 +69,11 @@ pub mod code {
 pub enum Beyond {
     /// `ir.fixed`: integer built-ins (`wrap`, `shl`, `bit_and`, `be_bytes`, ...).
     IrFixed,
-    /// `ir.data`: tuples, records, variants, `Option`, lists, `match`, projection.
+    /// `ir.tuple`: tuple types, the tuple literal, `project`, and `match` on a `Result`
+    /// (VER04r 4.1, [D20, D35]).  Refused by this generator until slice S10t-2.
+    IrTuple,
+    /// `ir.data`: records, variants, `Option` anywhere but under `unwrap_or`, lists, `match` on
+    /// anything but a `Result`, constructor and record projection.
     IrData,
     /// `ir.seq`: the reserved WX-D `fold`/`map`/`all`/`any`/`count` level.
     IrSeq,
@@ -90,6 +94,7 @@ impl Beyond {
     pub fn name(self) -> &'static str {
         match self {
             Beyond::IrFixed => "ir.fixed",
+            Beyond::IrTuple => "ir.tuple",
             Beyond::IrData => "ir.data",
             Beyond::IrSeq => "ir.seq",
             Beyond::IrInoutRecords => "ir.inout.records",
@@ -195,6 +200,7 @@ mod tests {
     fn every_beyond_has_its_documented_name() {
         let names: Vec<&str> = [
             Beyond::IrFixed,
+            Beyond::IrTuple,
             Beyond::IrData,
             Beyond::IrSeq,
             Beyond::IrInoutRecords,
@@ -210,6 +216,7 @@ mod tests {
             names,
             [
                 "ir.fixed",
+                "ir.tuple",
                 "ir.data",
                 "ir.seq",
                 "ir.inout.records",

@@ -67,7 +67,7 @@ use std::rc::Rc;
 use crate::arith::{
     check_value_len, exact_neg, exact_op, fixed_neg, fixed_op, EXACT_BOUND, MAX_IR_VALUE,
 };
-use crate::error::{code, GenError};
+use crate::error::{code, Beyond, GenError};
 use crate::ir::{Arith, Cmp, Ir, Logic};
 use crate::lower::{LoweredModel, LoweredOp};
 use crate::value::{ill_typed, Value};
@@ -493,6 +493,15 @@ impl<'a> Program<'a> {
                 tasks.push(Task::Branch(t, e));
                 tasks.push(Task::Eval(c));
             }
+            // Typed and costed since S10b, never evaluated before S10c-1 (VER04r 13, S10):
+            // fail closed, naming the level.
+            Ir::Fixed { .. } => {
+                return Err(GenError::level(
+                    Beyond::IrFixed,
+                    "",
+                    "ir.fixed is lowered and costed but not evaluated yet (slice S10c-1)",
+                ))
+            }
         }
         Ok(())
     }
@@ -834,6 +843,7 @@ mod tests {
                 .collect(),
             ret,
             body,
+            requires: vec!["ir.core"],
         }
     }
     fn run(ir: &Ir) -> Result<Value, GenError> {

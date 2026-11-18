@@ -1,5 +1,10 @@
 cargo test -q -p coding_adventures_warrant_corpus_gen
 cargo clippy -p coding_adventures_warrant_corpus_gen --all-targets -- -D warnings
+# The tests include the two oracle parity checks: tests/oracle_parity.rs (ir.core, against this
+# crate's own committed dumps) and, since CV2-S10b, tests/fixed_parity.rs, which lowers the
+# oracle's fixed_forms_v1.warrant and reproduces its committed fixed_forms_v1.oracle-lowering.json
+# byte for byte. Both files lie in python/warrant-oracle/tests/fixtures/fixed-forms-v1/ and are
+# read from there (an edit to either selects this package: repository_inputs.go).
 # The crate's only OS access is in fsio.rs, cli.rs and the bin (required_capabilities.json
 # declares it); the analyzer checks the source against that manifest.
 cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .
