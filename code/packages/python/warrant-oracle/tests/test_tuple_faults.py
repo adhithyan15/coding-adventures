@@ -373,9 +373,11 @@ fault res_b flip-result-bit
 """
 
 
-def controls(implemented=None, profile=PROFILE, doc=DOC):
-    kw = {} if implemented is None else {"implemented": implemented}
-    out = derive(doc.encode(), profile.encode(), spec_ref="g.warrant", generator=GEN, **kw)
+GATE_CLOSED = ("ir.core",)
+
+
+def controls(implemented=GATE_CLOSED, profile=PROFILE, doc=DOC):
+    out = derive(doc.encode(), profile.encode(), spec_ref="g.warrant", generator=GEN, implemented=implemented)
     return {c["id"].rsplit("/", 2)[-2] + "/" + c["fault"]: c for c in out.corpus["controls"]}, out
 
 
