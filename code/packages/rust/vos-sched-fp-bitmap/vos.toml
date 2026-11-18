@@ -3,3 +3,4 @@ kind = "production"
 contract = "vos-sched-contract"
 obligations = ["canonical", "policy", "safety"]
 evidence-features = ["ghost"]
+coverage-floor = 95

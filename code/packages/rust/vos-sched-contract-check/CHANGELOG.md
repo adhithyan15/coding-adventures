@@ -4,6 +4,10 @@ All notable changes to this package are documented here.
 
 ## [Unreleased]
 
+### Changed (VOS-039a, VOS-D082)
+
+- `publish = false` in `Cargo.toml`: an evidence-only check crate is never published or shipped.  Applied by hand; no tool enforces it for check crates yet (VOS-D103).
+
 ### Added (VOS-012b0, VOS-D061)
 
 - The `representation` block is evaluated on a round-robin model (`impl-rr-models.part`): the eight

@@ -2,7 +2,11 @@
 
 All notable changes to this package are documented here.
 
-## Unreleased — heap rows restored (VOS-038c)
+## Unreleased — the component check and the coverage gate (VOS-039a)
+
+- `vos.toml` declares `coverage-floor = 95`; BUILD gains the Linux `cargo tarpaulin ... --fail-under 95` line (VOS-D070) and, last, `vos-link check-component .` (BUILD and BUILD_windows), which checks the file set, the BUILD lines 1 to 6 and 9 with their guards, the build-tool row and the floor (VOS04 5.6). Nothing else about the crate changed. Measured line coverage of `src/lib.rs`: 100% (57 of 57 lines).
+
+## Heap rows restored (VOS-038c)
 
 - `heap <= 0` is declared on every bound operation again (VOS-D063): the harness's heap observer now
   counts the export call only, not its own result marshalling. `warrant/impl.part`, the generated
