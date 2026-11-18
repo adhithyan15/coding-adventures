@@ -325,6 +325,34 @@ def test_for_all_duplicate_shrinker_proposals_still_use_budget(
     assert calls == 1  # duplicate proposals are counted, not rechecked
 
 
+def test_for_all_multi_argument_budget_and_replay() -> None:
+    def property_fn(flag: bool, value: int) -> bool:
+        return value != 64
+
+    flag_gen = pbt.Gen(lambda rng: False)
+    value_gen = pbt.Gen(lambda rng: 64)
+    first_run = for_all(
+        property_fn,
+        flag_gen,
+        value_gen,
+        count=1,
+        seed=0xAF04C0,
+        max_shrink_steps=1,
+    )
+    replay = for_all(
+        property_fn,
+        flag_gen,
+        value_gen,
+        count=1,
+        seed=0xAF04C0,
+        max_shrink_steps=1,
+    )
+    assert first_run == replay
+    assert first_run.counterexample == (False, 64)
+    assert first_run.shrunken == (False, 64)
+    assert first_run.shrink_steps == 1
+
+
 def test_for_all_exception_handling() -> None:
     def buggy_fn(x: int) -> bool:
         if x > 20:
