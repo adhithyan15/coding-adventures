@@ -114,7 +114,7 @@ fn every_refused_signature_has_the_generator_code_fault_and_the_oracles_reason()
     assert_eq!(dump.get("schema").s(), "warrant-faults-refusals-v1");
     assert_eq!(dump.get("fault").s(), "off-by-one-consumed");
     let rows = dump.get("refusals").a();
-    assert_eq!(rows.len(), 10);
+    assert_eq!(rows.len(), 11);
     for r in rows {
         let name = r.get("name").s();
         assert_eq!(r.get("oracle_code").s(), "generation", "{name}");

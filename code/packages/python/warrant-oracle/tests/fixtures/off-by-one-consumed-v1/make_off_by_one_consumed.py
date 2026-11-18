@@ -131,6 +131,7 @@ REFUSALS = [
     ("a-result-of-bytes", "  op f(a: U8) -> Result<Bytes,E>\n", "f"),
     # both defects at once: the oracle reports the second component first, as drop-consumed does
     ("a-non-numeric-second-component-before-the-ok-payload-clash", "  op f(ok_payload: U8) -> (U8,Bool)\n", "f"),
+    ("a-non-numeric-second-component-before-the-ok-payload-clash-in-the-ok-form", "  op f(ok_payload: U8) -> Result<(U8,Bool),E>\n", "f"),
     ("a-parameter-named-ok-payload-in-the-ok-form", "  op f(ok_payload: U8) -> Result<(U8,Nat),E>\n", "f"),
 ]
 
