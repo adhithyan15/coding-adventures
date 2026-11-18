@@ -2,9 +2,12 @@ package trace
 
 import (
 	"bytes"
+	"fmt"
 	"io"
+	"os"
 	"runtime"
 	"runtime/debug"
+	"strings"
 	"time"
 )
 
@@ -381,4 +384,139 @@ func measureData(data []byte, helperRoot bool, lim Limits) Measurement {
 		m.NewWindow = sanitisedWindow(data, at)
 	}
 	return m
+}
+
+// ---------------------------------------------------------------------------
+// Diagnose: what to log when a real trace is refused and then lost
+// ---------------------------------------------------------------------------
+
+// maxDiagnoseBytes caps Diagnose's output.  A CI log is not the place for an
+// unbounded dump, and the window can hold lines a pull request chose.  (A
+// variable only so a test can lower it: the worst case a real window reaches,
+// seven 160-byte lines quoted at up to four bytes a byte, is well under the cap.)
+var maxDiagnoseBytes = 8192
+
+// Diagnose explains, for a CI log, why pass 1 refuses a trace.  Like Measure it
+// is for tests and the kiln-sandbox CI job ONLY (TestMeasureIsNotUsedByProductionCode
+// keeps it out of production code).
+//
+// The incident that motivates it (D32): `kiln record prepare` refused a real
+// strace trace as "unparsable-line", the trace lived in a t.TempDir that was gone
+// by the time anyone looked, and the children that ran prepare had hand-built
+// environments without KILN_TRACE_DIFF, so the parse was grammar-only and never
+// cross-checked.  Nobody could say WHICH line was refused, or whether the old
+// scanner would have refused it too.  Diagnose answers both from the bytes:
+//
+//   - it runs pass 1 with BOTH readers (the hand-written scanner and the grammar
+//     path) and reports each one's reason, its Error line and its stop line (the
+//     line being processed when it refused);
+//   - the grammarPanics delta of the grammar run (it must be 0);
+//   - the total line count and whether the data ends in a newline (a trace cut
+//     off mid-line is refused at its last line for that reason alone);
+//   - a window of +-3 lines around the EARLIER stop line, the last earlier
+//     line from the same pid as the stop line (a refused "resumed" line pairs
+//     with a pending half that can be far above the window), and each reader's
+//     Error line when it differs from its stop line;
+//
+// Reasons and line numbers never hold path text, so they are always printed.
+// The window quotes trace lines, and real traces hold paths a pull request
+// chose, so it is printed only when KILN_TRACE_DIFF=1 in the environment, the
+// same policy as the cross-check's window (sanitisedWindow: each line cut to 160
+// bytes and Go-quoted, so no raw control character and no workflow-command line
+// start).  The refused line, the stop line's pid's last earlier line and a
+// reader's own Error line are key lines: shown with their first AND last 160
+// bytes, and printed before the window.  The whole result is at most
+// maxDiagnoseBytes (8 KB).
+func Diagnose(data []byte, helperRoot bool) string {
+	lim := DefaultLimits()
+	_, _, eOld, atOld := readRecordsAt(bytes.NewReader(data), lim, helperRoot, false)
+	before := grammarPanics.Load()
+	_, _, eNew, atNew := readRecordsAt(bytes.NewReader(data), lim, helperRoot, true)
+	panics := grammarPanics.Load() - before
+
+	lines := bytes.Count(data, []byte{'\n'})
+	endsNL := len(data) == 0 || data[len(data)-1] == '\n'
+	if !endsNL {
+		lines++
+	}
+	var b strings.Builder
+	fmt.Fprintf(&b, "  trace: %d bytes, %d lines, ends with newline: %v, helper root: %v\n",
+		len(data), lines, endsNL, helperRoot)
+	// Diagnose is pass 1 (the line reader) only.  A trace both readers accept
+	// here can still be refused later, by pass 2 (the model).
+	fmt.Fprintf(&b, "  pass 1 only: if both readers accepted, any refusal is in pass 2 (the model), not shown here\n")
+	describe := func(name string, e *Error, at int) {
+		if e == nil {
+			fmt.Fprintf(&b, "  %s: accepted pass 1 (stop line %d)\n", name, at)
+			return
+		}
+		fmt.Fprintf(&b, "  %s: refused %q at error line %d, stop line %d\n", name, e.Reason, e.Line, at)
+	}
+	describe("old scanner", eOld, atOld)
+	describe("grammar reader", eNew, atNew)
+	fmt.Fprintf(&b, "  grammar panics recovered: %d\n", panics)
+
+	// The earlier of the stop lines of the readers that refused.
+	stop := 0
+	for _, r := range []struct {
+		e  *Error
+		at int
+	}{{eOld, atOld}, {eNew, atNew}} {
+		if r.e != nil && r.at > 0 && (stop == 0 || r.at < stop) {
+			stop = r.at
+		}
+	}
+	if stop > 0 && os.Getenv("KILN_TRACE_DIFF") == "1" {
+		// The key lines come BEFORE the window, so the size cap can only cut the
+		// neighbours: each is shown with its head and its tail.
+		//  - a reader's own Error line when it is not its stop line (an unresumed
+		//    call at the end of the input is reported at the call's start);
+		//  - the last earlier line of the stop line's pid (a resume's pending half).
+		shown := map[int]bool{}
+		for _, r := range []struct {
+			name string
+			e    *Error
+			at   int
+		}{{"old scanner", eOld, atOld}, {"grammar reader", eNew, atNew}} {
+			if r.e != nil && r.e.Line > 0 && r.e.Line != r.at && !shown[r.e.Line] {
+				shown[r.e.Line] = true
+				fmt.Fprintf(&b, "  error line (%s):\n%s\n", r.name, windowOf(data, r.e.Line, 0, true))
+			}
+		}
+		if prev, pid := lastLineOfSamePid(data, stop); prev > 0 && !shown[prev] {
+			fmt.Fprintf(&b, "  last earlier line of pid %d:\n%s\n", pid, windowOf(data, prev, 0, true))
+		}
+		fmt.Fprintf(&b, "  window around line %d:\n%s\n", stop, windowOf(data, stop, 3, true))
+	}
+	out := b.String()
+	if len(out) > maxDiagnoseBytes {
+		// The window is quoted ASCII, so a byte cut cannot split a character.
+		const mark = "\n  ...(truncated)"
+		out = out[:max(0, maxDiagnoseBytes-len(mark))] + mark
+	}
+	return strings.TrimRight(out, "\n")
+}
+
+// lastLineOfSamePid finds the last line before line stop (1-based) that carries
+// the same pid prefix as line stop, in one pass over the data.  It returns 0
+// when line stop has no pid prefix or no earlier line shares it.
+func lastLineOfSamePid(data []byte, stop int) (line, pid int) {
+	pid, _, ok := parsePid(lineAt(data, stop))
+	if !ok {
+		return 0, 0
+	}
+	// The last earlier line with that pid.
+	rest := data
+	for i := 1; i < stop && len(rest) > 0; i++ {
+		var l []byte
+		if k := bytes.IndexByte(rest, '\n'); k < 0 {
+			l, rest = rest, nil
+		} else {
+			l, rest = rest[:k], rest[k+1:]
+		}
+		if p, _, found := parsePid(string(l)); found && p == pid {
+			line = i
+		}
+	}
+	return line, pid
 }
