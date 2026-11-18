@@ -95,32 +95,31 @@ GAME01 Rust corpus consumer, and the separate Kiln allocation-reuse repair have 
 deterministic contracts precede new device, graphics, and host stacks.
 This order avoids duplicating repository-wide `VER-*` and `MUS00`–`MUS08` work.
 
-As of 2026-11-18, `GBL-001`, `GBL-002`, `GBL-003a`, and `GBL-061` are merged. `GBL-010` is under
-review in open PR #19644; keep it open until its exact-head checks and merge are verified. Before
-that PR can clear, `GBL-063` is the blocking Kiln Ubuntu 24.04 G1 performance follow-up: diagnose
-the unchanged 14 MB/s gate miss on the exact 66,600-byte / 936-line workload, then make the smallest
-reusable hot-path repair supported by native Linux measurements. The current evidence correlates
-two misses with an Azure runner image/kernel and one pass with AWS, but the CPU model is absent, so
-it does not establish a runner cause. Keep the workload, floor, and failure receipts intact; do not
-retry unchanged code or infer a same-host speedup from separate CI jobs. After `GBL-010` lands,
-resume `GBL-050` Rust input action frames and `GBL-050a` TypeScript input action frames. A fresh
-full-checkout canonical package-presence report must be recorded before the next new language-port
-selection; a sparse-worktree report is not valid inventory evidence. This sequence is coordination
-state, not implementation authorization for unrelated primitives.
+As of 2026-11-18, `GBL-001`, `GBL-002`, `GBL-003a`, `GBL-061`, and the measured `GBL-063` parser
+repair are merged. `GBL-010` remains under review in open PR #19644; its new exact-head checks and
+merge are still pending. PR #19649 merged squash `399ab9af38c45817c6638defe368bf4596d4cad4`, and
+exact-head CI run `44345630607` passed the required Ubuntu 24.04 and 26.04 G1 lanes. Native paired
+measurements show 4.36% lower elapsed time on one Azure CPU and 3.54% on another with the existing
+14 MB/s floor unchanged. They do not establish that every historical CPU class or runner is fixed;
+the CPU model from prior misses remains unknown. Preserve the workload, floor, and failure receipts.
+The dependent TypeScript PR integration remains pending until #19644 passes its protected checks and
+merges. Then resume `GBL-050` Rust input action frames and `GBL-050a` TypeScript input action frames.
+A fresh full-checkout canonical package-presence report must be recorded before the next new
+language-port selection; a sparse-worktree report is not valid inventory evidence. This sequence is
+coordination state, not implementation authorization for unrelated primitives.
 
-Candidate committed-tree inventory for this GBL-010 branch was recomputed after rebasing onto
-`origin/main` `73fa1d9c44623a288fd54ca6f028df4b1063e2f0`, using the canonical classifier functions
-over regular blobs in the full Git package tree plus the committed TypeScript package at candidate
-`1065452714dc8cc91f9264192c9ac443340bf31a`. The base has 1,814 identities across all classified
-buckets, 1,772 within the established 15 lanes, 5,156 occupied established language-by-identity
-slots, and 5,572 package directories across all buckets (CSV SHA-256
+Candidate committed-tree inventory was recomputed for current base `origin/main`
+`399ab9af38c45817c6638defe368bf4596d4cad4` and refresh candidate
+`0f8844157be` using the existing `package_parity_report.py` classifier over full committed Git
+package paths. The current-main base has 1,814 identities across all classified buckets, 1,772
+within the established 15 lanes, 5,156 occupied established language-by-identity slots, and 5,572
+package directories across all buckets (CSV SHA-256
 `fa58acfe33bf60e36bbedfff2885acc5b3a7b9c8a0421ca4a19b72c492729cf4`); there are zero collisions
 and zero unknown buckets. The candidate retains both identity counts and adds one occupied slot and
 one package directory: 5,157 established slots and 5,573 directories (CSV SHA-256
 `bea79efea09da8304c7e24df2a7693ed716198ae50f7c2911d8e7f25c09e71cb`), still with zero collisions
-and zero unknown buckets. `game-clock` moves from Rust-only (1/15) on the base to Rust and
-TypeScript (2/15) on the candidate; this is package presence only, not verified behavioral parity.
-Refresh again from merged `origin/main` before selecting the next port.
+and zero unknown buckets. The candidate changes `game-clock` from Rust-only (1/15) to Rust and
+TypeScript (2/15); this is package presence only, not verified behavioral parity. The committed TypeScript package is the only package-path addition since the base. Refresh again from merged `origin/main` before selecting the next port.
 
 For each serial delivery, use a fresh worktree from the latest fetched `origin/main`. After a PR
 merges, verify the published head and merged tree, confirm the worktree is clean, published, and
@@ -443,11 +442,13 @@ worktree; report and preserve it if those checks do not pass.
   margin. They do not prove the historically slower CPU class is fixed: its CPU model was not
   recorded, and no host-cause inference is claimed. Preserve all cells and artifacts under
   `/tmp/kiln-g1-parser-abba-44343414219/`. The SAT/VER bridge covers a bounded 32-row observation
-  domain; it does not prove Go source behavior or lifetime semantics. GBL-063 remains pending until
-  ordinary protected PR checks pass and the repair is merged. Keep the cursor experiment separate
-  as a rejected floor repair, preserve the 14 MB/s gate and prior failure receipts. No open PR
-  in the current list owns parser fast-path work; draft PR #19633 concerns gate calibration and
-  cannot change or weaken this unchanged acceptance criterion.
+  domain; it does not prove Go source behavior or lifetime semantics. The selected repeated-U24
+  parser repair merged in PR #19649 as squash `399ab9af38c45817c6638defe368bf4596d4cad4`; exact-head
+  CI run `44345630607` passed both required Ubuntu G1 lanes. Paired native measurements recorded
+  4.36% and 3.54% lower elapsed time on two Azure CPUs with the unchanged 14 MB/s gate. The historical
+  failing CPU model is unknown, so this does not establish universal or historical runner coverage.
+  The parser component is merged; broader GBL-063 host robustness remains open. Keep the cursor
+  experiment separate as a rejected floor repair, preserve the 14 MB/s gate and prior failure receipts.
   A later focused lexer candidate `eedb854e2a5e6436be8ce6dc55295c902710d9e5`
   avoids copying each immutable `ModeTransition` value in the per-token loop
   and checks nonempty mode guards before scanning token triggers. The bounded
@@ -511,6 +512,7 @@ worktree; report and preserve it if those checks do not pass.
   does not repair that failure. Keep GBL-063 and broader host robustness open,
   preserve the 14 MB/s gate, and keep GoLexer VER/Warrant/native-source and
   SAT/source-equivalence obligations open.
+  GBL-010's dependent TypeScript integration remains pending its exact-head protected checks and merge.
 - [ ] `GBL-058` Repair the conflict between the actual `P2D09`/`P2D10` specification filenames/scopes
   and GAME00 labels. Keep this as a separate documentation repair; do not mint or reuse colliding game
   identifiers to paper over it.
