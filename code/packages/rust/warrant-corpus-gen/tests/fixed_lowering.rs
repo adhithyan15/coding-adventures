@@ -351,8 +351,10 @@ fn a_unit_is_named_by_its_first_unlowerable_construct_and_ir_fixed_only_when_not
             .and_then(|b| b.level)
     };
     assert_eq!(level("only_fixed"), Some("ir.fixed"));
-    assert_eq!(level("fixed_then_tuple"), Some("ir.tuple"));
-    assert_eq!(level("tuple_then_fixed"), Some("ir.tuple"));
+    // S10t-2: a tuple lowers, so a unit that uses one next to a built-in is `ir.fixed` again
+    // (what is left is the built-in); a constructor still blocks first
+    assert_eq!(level("fixed_then_tuple"), Some("ir.fixed"));
+    assert_eq!(level("tuple_then_fixed"), Some("ir.fixed"));
     assert_eq!(level("fixed_then_ctor"), Some("ir.data"));
 }
 
