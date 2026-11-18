@@ -105,19 +105,72 @@ biquads (low-pass, high-pass), step response, scipy cross-check.
 windowed-sinc.
 
 ```rust
-pub fn design_low_pass(cutoff_hz: f32, sample_rate: f32, num_taps: u32, window: WindowType)
-    -> Vec<f32>;
-pub fn design_high_pass(cutoff_hz: f32, sample_rate: f32, num_taps: u32, window: WindowType)
-    -> Vec<f32>;
-pub fn design_band_pass(low_hz: f32, high_hz: f32, sample_rate: f32, num_taps: u32, window: WindowType)
-    -> Vec<f32>;
+pub fn design_low_pass(cutoff_norm: f32, num_taps: u32, window: WindowType)
+    -> Vec<f32>; // legacy panic-on-invalid API
+pub fn try_design_low_pass(cutoff_norm: f32, num_taps: u32, window: WindowType)
+    -> Result<Vec<f32>, FilterError>;
+pub fn design_high_pass(cutoff_norm: f32, num_taps: u32, window: WindowType)
+    -> Vec<f32>; // legacy panic-on-invalid API
+pub fn try_design_high_pass(cutoff_norm: f32, num_taps: u32, window: WindowType)
+    -> Result<Vec<f32>, FilterError>;
+pub fn design_band_pass(low_cutoff_norm: f32, high_cutoff_norm: f32, num_taps: u32, window: WindowType)
+    -> Vec<f32>; // legacy panic-on-invalid API
+pub fn try_design_band_pass(low_cutoff_norm: f32, high_cutoff_norm: f32, num_taps: u32, window: WindowType)
+    -> Result<Vec<f32>, FilterError>;
 pub fn butterworth_lowpass(order: u32, cutoff_hz: f32, sample_rate: f32)
     -> (Vec<f32>, Vec<f32>);  // (b, a)
 pub fn chebyshev1_lowpass(order: u32, ripple_db: f32, cutoff_hz: f32, sample_rate: f32)
     -> (Vec<f32>, Vec<f32>);
 
-pub enum WindowType { Rectangular, Hamming, Hann, Blackman, Kaiser(f32) }
+pub enum WindowType { Rectangular, Hamming, Hann, Blackman }
 ```
+
+The FIR designer contract is lane-specific. `cutoff_norm` is a
+cycles-per-sample frequency, with Nyquist at `0.5`; it is not a
+frequency in Hz and takes no sample-rate argument. Low-pass and
+high-pass accept finite cutoffs in the inclusive range `[0.0, 0.5]`.
+Band-pass accepts finite cutoffs satisfying
+`0.0 <= low_cutoff_norm < high_cutoff_norm <= 0.5`. Rust uses `f32`,
+and Python/TypeScript use their native numeric types; negative zero is
+accepted wherever the comparisons admit it.
+
+Rust and Python allow at most `2^20` taps (largest accepted odd count
+`1,048,575`); TypeScript allows at most `2^16` taps (largest accepted
+odd count `65,535`). All three require a positive odd tap count. The
+Rust `u32` parameter cannot represent a negative count. Python and
+TypeScript validate integer tap counts at runtime; Python's annotations
+do not establish behavior for arbitrary non-integer objects.
+
+Rust window selection is the typed `WindowType` enum with Rectangular,
+Hamming, Hann, and Blackman. Python accepts that lane's enum or a
+trimmed, case-insensitive string with one of those four names. TypeScript
+accepts those four normalized names plus `hanning` as a Hann alias and
+`kaiser` (using the `dsp-fft` default beta of 5); unknown window errors
+are lane-specific. Python and TypeScript report invalid design inputs
+with their existing typed exceptions. The additive Rust `try_design_*`
+APIs report validation errors through the existing
+`FilterError::InvalidCoefficient(String)` variant; no new public error
+variant is introduced.
+
+Rust validates low/high taps (positive odd, then cap) before cutoff
+finiteness and range. Band-pass validates taps, then cap, cutoff
+finiteness, then ordering/range. High-pass delegates to low-pass
+validation. The legacy Rust `design_*` wrappers and new `try_design_*`
+functions share each operation's checked calculation path. The legacy
+wrappers preserve their observable panic payload type, message, check
+order, and valid-input coefficient bits. Validation precedes
+tap-proportional coefficient allocation; this is not a global
+no-allocation or no-OOM guarantee.
+
+The current low-pass normalizer uses `sum(h)` and divides only when its
+absolute value is positive. Band-pass normalizes by the absolute
+center-frequency response, `abs(sum_k h[k] * cos(2*pi*f0*x_k))`, where
+`f0=(low_cutoff_norm+high_cutoff_norm)/2` and
+`x_k=k-(num_taps-1)/2`; it likewise divides only when the gain is
+positive. This work preserves those zero/cancellation branches and
+non-finite normalization behavior. A shared cancellation/output policy
+is tracked separately in AF-01c. This contract does not promise finite
+outputs for every otherwise accepted input.
 
 **Phase 6**: matrix-ir-lowered FIR.
 
