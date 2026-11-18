@@ -14876,6 +14876,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "tls13-rsa-pss-signature-routing"
+version = "0.1.0"
+dependencies = [
+ "der-asn1",
+ "rsa-pss-sha256-signature",
+ "rsa-pss-sha384-signature",
+ "rsa-pss-sha512-signature",
+ "tls13-certificate-verify-message",
+ "tls13-signature-scheme-policy",
+ "x509-rsa-public-key",
+ "x509-subject-public-key-info",
+]
+
+[[package]]
 name = "tls13-server-hello-message"
 version = "0.1.0"
 dependencies = [
