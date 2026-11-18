@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Pin Kotlin compiler execution to in-process, non-incremental mode in the
+  package-local Gradle properties so package builds and CI use the same
+  settings. The Kotlin Gradle Plugin reads these as project properties, not
+  JVM `-D` system properties.
+
 - Skip `package-metadata-selection-*.json` cases, whose options carry
   `metadata_policy: "package_local"`. That variant keeps edits to a
   package's root changelog, capability manifest and assurance evidence from

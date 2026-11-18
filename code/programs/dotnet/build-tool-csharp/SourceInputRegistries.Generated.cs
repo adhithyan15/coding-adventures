@@ -1635,6 +1635,7 @@ internal static class SourceInputRegistryProjection
           "code/packages/typescript/fp-arithmetic",
           "code/packages/typescript/fpga",
           "code/packages/typescript/fuzz",
+          "code/packages/typescript/game-clock",
           "code/packages/typescript/garbage-collector",
           "code/packages/typescript/gfm-parser",
           "code/packages/typescript/gpu-core",

@@ -56,7 +56,7 @@ func timeoutPkg(t *testing.T, commands ...string) discovery.Package {
 func TestCommandTimeoutFailsPromptlyAndNamesCommand(t *testing.T) {
 	withCommandTimeout(t, 300*time.Millisecond)
 	slow := sleepCommand(60)
-	pkg := timeoutPkg(t, "echo before-the-hang", slow)
+	pkg := timeoutPkg(t, slow, "echo should-not-run")
 
 	began := time.Now()
 	result := runPackageBuild(pkg, false)
@@ -70,17 +70,16 @@ func TestCommandTimeoutFailsPromptlyAndNamesCommand(t *testing.T) {
 	if result.ReturnCode != timeoutReturnCode {
 		t.Errorf("return code = %d, want %d", result.ReturnCode, timeoutReturnCode)
 	}
-	if result.StepsRun != 2 || result.StepsTotal != 2 {
-		t.Errorf("steps = %d/%d, want 2/2", result.StepsRun, result.StepsTotal)
+	if result.StepsRun != 1 || result.StepsTotal != 2 {
+		t.Errorf("steps = %d/%d, want 1/2", result.StepsRun, result.StepsTotal)
 	}
-	for _, want := range []string{"rust/lzw", "command 2 of 2", slow, "timed out", "300ms"} {
+	for _, want := range []string{"rust/lzw", "command 1 of 2", "`" + slow + "`", "timed out", "300ms"} {
 		if !strings.Contains(result.Stderr, want) {
 			t.Errorf("stderr missing %q:\n%s", want, result.Stderr)
 		}
 	}
-	// Output buffered before the hang is kept, exactly like any failure.
-	if !strings.Contains(result.Stdout, "before-the-hang") {
-		t.Errorf("earlier output lost: %q", result.Stdout)
+	if strings.Contains(result.Stdout, "should-not-run") {
+		t.Errorf("command after the timeout ran: %q", result.Stdout)
 	}
 }
 

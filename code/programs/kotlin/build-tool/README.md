@@ -28,10 +28,10 @@ adapter, executor, or complete Kotlin build-tool implementation.
 ## Validation
 
 ```sh
-gradle --no-daemon --no-build-cache --max-workers=1 \
-  -Dkotlin.compiler.execution.strategy=in-process \
-  -Dkotlin.incremental=false clean check
+gradle --no-daemon --no-build-cache --max-workers=1 clean check
 ```
 
 The build treats compiler warnings as errors and enforces at least 95% line
-coverage with JaCoCo.
+coverage with JaCoCo. The package-local `gradle.properties` sets in-process,
+non-incremental Kotlin compilation for both package recipes and CI. These are
+Gradle project properties; JVM `-D` flags do not configure them.

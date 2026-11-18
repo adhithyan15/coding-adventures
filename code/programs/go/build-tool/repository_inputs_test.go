@@ -98,6 +98,7 @@ func TestRngCorpusSelectsEveryFixedLane(t *testing.T) {
 func TestGameClockInputsSelectRustConsumerAndGlobalWarrantChecker(t *testing.T) {
 	packages := []discovery.Package{
 		{Name: "rust/game-clock", Language: "rust"},
+		{Name: "typescript/game-clock", Language: "typescript"},
 		{Name: "rust/warrant-grammar", Language: "rust"},
 		{Name: "rust/wasm-leb128", Language: "rust"},
 		{Name: "python/warrant-oracle", Language: "python"},
@@ -109,11 +110,14 @@ func TestGameClockInputsSelectRustConsumerAndGlobalWarrantChecker(t *testing.T) 
 	if err != nil {
 		t.Fatal(err)
 	}
-	if want := map[string]bool{"rust/game-clock": true}; !reflect.DeepEqual(got, want) {
+	if want := map[string]bool{"rust/game-clock": true, "typescript/game-clock": true}; !reflect.DeepEqual(got, want) {
 		t.Fatalf("got %v, want %v", got, want)
 	}
 	if got, err := repositoryInputConsumersForChange(corpus, packages, "rust"); err != nil || !reflect.DeepEqual(got, map[string]bool{"rust/game-clock": true}) {
 		t.Fatalf("rust-only selection got %v, err %v", got, err)
+	}
+	if got, err := repositoryInputConsumersForChange(corpus, packages, "typescript"); err != nil || !reflect.DeepEqual(got, map[string]bool{"typescript/game-clock": true}) {
+		t.Fatalf("typescript-only selection got %v, err %v", got, err)
 	}
 	if got, err := repositoryInputConsumersForChange(corpus, packages, "go"); err != nil || len(got) != 0 {
 		t.Fatalf("go-only selection got %v, err %v", got, err)
@@ -121,6 +125,9 @@ func TestGameClockInputsSelectRustConsumerAndGlobalWarrantChecker(t *testing.T) 
 	warrantPath := []string{"code/specs/game-clock.warrant"}
 	if got, err := repositoryInputConsumersForChange(warrantPath, packages, "all"); err != nil || !reflect.DeepEqual(got, map[string]bool{"rust/game-clock": true, "rust/warrant-grammar": true}) {
 		t.Fatalf("GAME10 Warrant selection got %v, err %v", got, err)
+	}
+	if got, err := repositoryInputConsumersForChange(warrantPath, packages, "typescript"); err != nil || len(got) != 0 {
+		t.Fatalf("TypeScript must not be selected for the Warrant spec: got %v, err %v", got, err)
 	}
 	if got, err := repositoryInputConsumersForChange(warrantPath, packages, "rust"); err != nil || !reflect.DeepEqual(got, map[string]bool{"rust/game-clock": true, "rust/warrant-grammar": true}) {
 		t.Fatalf("rust-only GAME10 Warrant selection got %v, err %v", got, err)
@@ -137,9 +144,15 @@ func TestGameClockInputsSelectRustConsumerAndGlobalWarrantChecker(t *testing.T) 
 		"code/specs/game-clock.warrant.bak":                false,
 		"code/specs/other-game-clock.warrant":              false,
 	} {
+		if got := isGameClockCorpusInput(path); got != want {
+			t.Errorf("isGameClockCorpusInput(%q) = %v, want %v", path, got, want)
+		}
 		if got := isGameClockInput(path); got != want {
 			t.Errorf("isGameClockInput(%q) = %v, want %v", path, got, want)
 		}
+	}
+	if !isGameClockInput("code/specs/game-clock.warrant") || isGameClockCorpusInput("code/specs/game-clock.warrant") {
+		t.Fatal("the Warrant spec selects Rust only, not the TypeScript corpus consumer")
 	}
 }
 
