@@ -31,6 +31,22 @@ fn field<'a>(value: &'a JsonValue, name: &str) -> Result<&'a JsonValue, String> 
     Ok(value)
 }
 
+fn field_mut<'a>(value: &'a mut JsonValue, name: &str) -> Result<&'a mut JsonValue, String> {
+    let fields = match value {
+        JsonValue::Object(fields) => fields,
+        _ => return Err("field lookup: expected object".into()),
+    };
+    let mut found = fields.iter_mut().filter(|(key, _)| key == name);
+    let value = found
+        .next()
+        .map(|(_, value)| value)
+        .ok_or_else(|| format!("missing field {name}"))?;
+    if found.next().is_some() {
+        return Err(format!("duplicate field {name}"));
+    }
+    Ok(value)
+}
+
 fn string(value: &JsonValue, context: &str) -> Result<String, String> {
     match value {
         JsonValue::String(value) => Ok(value.clone()),
@@ -162,6 +178,37 @@ fn success_json(value: JsonValue) -> JsonValue {
     JsonValue::Object(vec![("ok".into(), value)])
 }
 
+fn semantically_equal(left: &JsonValue, right: &JsonValue) -> bool {
+    match (left, right) {
+        (JsonValue::Object(left), JsonValue::Object(right)) => {
+            if left.len() != right.len() {
+                return false;
+            }
+            let unique = |fields: &[(String, JsonValue)]| {
+                let mut names = std::collections::HashSet::new();
+                fields.iter().all(|(name, _)| names.insert(name))
+            };
+            if !unique(left) || !unique(right) {
+                return false;
+            }
+            left.iter().all(|(name, value)| {
+                right
+                    .iter()
+                    .find(|(other_name, _)| other_name == name)
+                    .is_some_and(|(_, other_value)| semantically_equal(value, other_value))
+            })
+        }
+        (JsonValue::Array(left), JsonValue::Array(right)) => {
+            left.len() == right.len()
+                && left
+                    .iter()
+                    .zip(right)
+                    .all(|(left, right)| semantically_equal(left, right))
+        }
+        _ => left == right,
+    }
+}
+
 fn checked_case(
     case: &JsonValue,
     adapter: fn(&JsonValue) -> Result<JsonValue, String>,
@@ -169,7 +216,7 @@ fn checked_case(
     let id = string(field(case, "id")?, "case id")?;
     let expected = field(case, "expected")?;
     let actual = adapter(case).map_err(|error| format!("{id}: adapter failed: {error}"))?;
-    if actual == *expected {
+    if semantically_equal(&actual, expected) {
         Ok(())
     } else {
         Err(format!(
@@ -281,6 +328,23 @@ fn always_error_adapter(_case: &JsonValue) -> Result<JsonValue, String> {
     Ok(error_json(ClockError::ZeroFixedTimestep))
 }
 
+fn reverse_object_members(value: &mut JsonValue) {
+    match value {
+        JsonValue::Object(fields) => {
+            fields.reverse();
+            for (_, value) in fields {
+                reverse_object_members(value);
+            }
+        }
+        JsonValue::Array(values) => {
+            for value in values {
+                reverse_object_members(value);
+            }
+        }
+        _ => {}
+    }
+}
+
 #[test]
 fn corpus_checker_rejects_negative_controls() {
     let cases = all_cases();
@@ -289,6 +353,37 @@ fn corpus_checker_rejects_negative_controls() {
         .find(|case| matches!(field(case, "expected").unwrap(), JsonValue::Object(fields) if fields.iter().any(|(name, _)| name == "ok")))
         .unwrap();
     assert!(checked_case(success, always_error_adapter).is_err());
+
+    let mut reordered_expected = success.clone();
+    reverse_object_members(field_mut(&mut reordered_expected, "expected").unwrap());
+    assert!(checked_case(&reordered_expected, public_api_adapter).is_ok());
+
+    let mut duplicate_expected = success.clone();
+    let JsonValue::Object(expected_fields) =
+        field_mut(&mut duplicate_expected, "expected").unwrap()
+    else {
+        panic!("expected object")
+    };
+    let JsonValue::Object(ok_fields) = &mut expected_fields
+        .iter_mut()
+        .find(|(name, _)| name == "ok")
+        .unwrap()
+        .1
+    else {
+        panic!("ok object")
+    };
+    let JsonValue::Object(config_fields) = &mut ok_fields
+        .iter_mut()
+        .find(|(name, _)| name == "config")
+        .unwrap()
+        .1
+    else {
+        panic!("config object")
+    };
+    // Keep the member count fixed but duplicate one name, matching the parsed
+    // shape an ambiguous JSON object could otherwise create.
+    config_fields[1].0 = "fixed_dt_ns".into();
+    assert!(checked_case(&duplicate_expected, public_api_adapter).is_err());
 
     let mut unknown_operation = success.clone();
     let JsonValue::Object(case_fields) = &mut unknown_operation else {
