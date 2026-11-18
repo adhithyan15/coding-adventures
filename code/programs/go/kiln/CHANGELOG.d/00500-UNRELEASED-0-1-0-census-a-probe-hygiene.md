@@ -30,6 +30,11 @@
   duration is never sealed: `TestProbeWallIsNeverSealed` encodes two reports that
   differ only in `Wall` and requires identical bytes with no duration in them,
   and the sandbox subtest checks the real `pre/probes.json`.
+- The sandbox subtest that checks the sealed probe report for timing is
+  structural (`probeReportProblems`): it walks every JSON object key for timing
+  names and requires each run object's keys to equal the encoder's schema,
+  instead of searching the text for "wall" (which matched the temp paths in the
+  document, named after the subtest).
 - A non-positive or unparsable wall is dropped, never used as a divisor, and
   counted (`walls_dropped=N` on the lines that follow). Portable tests for the
   line shape and the wall helpers live in `probe_line_test.go`.

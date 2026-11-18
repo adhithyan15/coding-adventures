@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 	"sync/atomic"
@@ -147,6 +148,111 @@ func TestWallFromSidecar(t *testing.T) {
 	} {
 		if got := wallFromSidecar(bad); got != droppedWall {
 			t.Errorf("%s: %v", name, got)
+		}
+	}
+}
+
+// Is a probe report free of timing?  A structural check, not a substring one
+// =========================================================================
+//
+// pre/probes.json embeds temp-directory paths built from the test's name, so a
+// search for the text "wall" in it finds the PATH, not a field.  What matters is
+// the report's SHAPE: no object key anywhere is a timing key, and a run object
+// has exactly the keys the sealed schema has (derived from the encoder on a
+// zero-wall run, not written out here), so a field of any name added later
+// fails too.
+
+// sealedRunKeys is the set of keys of one run object as EncodeProbes writes it.
+func sealedRunKeys(t testing.TB) map[string]bool {
+	t.Helper()
+	data, err := record.EncodeProbes(record.ProbeReport{Schema: record.ProbesSchema, Runs: []record.ProbeRunRecord{{Name: "x"}}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	var doc struct {
+		Runs []map[string]any `json:"runs"`
+	}
+	if err := json.Unmarshal(data, &doc); err != nil || len(doc.Runs) != 1 {
+		t.Fatalf("cannot read the encoder's own output: %v %s", err, data)
+	}
+	keys := map[string]bool{}
+	for k := range doc.Runs[0] {
+		keys[k] = true
+	}
+	return keys
+}
+
+// timingKey says an object key names a duration.
+func timingKey(k string) bool {
+	k = strings.ToLower(k)
+	return strings.HasPrefix(k, "wall") || k == "elapsed" || k == "duration"
+}
+
+// probeReportProblems lists what is wrong with a probes.json document: a timing
+// key at any depth, or a run object whose keys are not exactly runKeys.
+func probeReportProblems(data []byte, runKeys map[string]bool) []string {
+	var doc any
+	if err := json.Unmarshal(data, &doc); err != nil {
+		return []string{"not JSON: " + err.Error()}
+	}
+	var problems []string
+	var walk func(path string, v any)
+	walk = func(path string, v any) {
+		switch x := v.(type) {
+		case map[string]any:
+			for k, child := range x {
+				if timingKey(k) {
+					problems = append(problems, fmt.Sprintf("timing key %q at %s", k, path))
+				}
+				walk(path+"."+k, child)
+			}
+		case []any:
+			for i, child := range x {
+				walk(fmt.Sprintf("%s[%d]", path, i), child)
+			}
+		}
+	}
+	walk("$", doc)
+	if top, ok := doc.(map[string]any); ok {
+		runs, _ := top["runs"].([]any)
+		for i, r := range runs {
+			obj, _ := r.(map[string]any)
+			for k := range obj {
+				if !runKeys[k] {
+					problems = append(problems, fmt.Sprintf("runs[%d] has the key %q, which the sealed schema does not", i, k))
+				}
+			}
+			for k := range runKeys {
+				if _, ok := obj[k]; !ok {
+					problems = append(problems, fmt.Sprintf("runs[%d] lacks the key %q", i, k))
+				}
+			}
+		}
+	}
+	return problems
+}
+
+func TestProbeReportProblemsIsStructural(t *testing.T) {
+	keys := sealedRunKeys(t)
+	rep := record.ProbeReport{Schema: record.ProbesSchema, Action: "/x/wall/elapsed", Shadowed: []string{"/tmp/wall_time"},
+		Runs: []record.ProbeRunRecord{{Name: "wall", Argv: []string{"wall"}, Wall: time.Second}}}
+	data, err := record.EncodeProbes(rep)
+	if err != nil {
+		t.Fatal(err)
+	}
+	// The text "wall" is all over the values, and that is not a problem.
+	if p := probeReportProblems(data, keys); len(p) != 0 {
+		t.Errorf("a clean report was flagged: %v", p)
+	}
+	for name, bad := range map[string]string{
+		"wall key":      `{"runs":[{"name":"a","argv":[],"exit":0,"trace_bytes":1,"trace_sha256":"","wall_ns":5}]}`,
+		"upper key":     `{"Elapsed":1,"runs":[]}`,
+		"nested":        `{"runs":[],"toolchains":[{"tool":"t","duration":1}]}`,
+		"unknown field": `{"runs":[{"name":"a","argv":[],"exit":0,"trace_bytes":1,"trace_sha256":"","took":5}]}`,
+		"missing field": `{"runs":[{"name":"a"}]}`,
+	} {
+		if len(probeReportProblems([]byte(bad), keys)) == 0 {
+			t.Errorf("%s: not flagged", name)
 		}
 	}
 }

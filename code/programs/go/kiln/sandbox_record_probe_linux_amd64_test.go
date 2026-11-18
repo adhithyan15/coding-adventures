@@ -370,7 +370,7 @@ func TestSandboxRecordProbe(t *testing.T) {
 	// configuration, and logs each probe's trace with the probe's wall time.
 	// The wall is a census fact only: it is never in a sealed file, and the test
 	// says so by reading the real pre/probes.json and the encoder's output.
-	t.Run("probe wall time is census only and never sealed", func(t *testing.T) {
+	t.Run("probe timing stays out of the sealed report", func(t *testing.T) {
 		w := newProbeWorld(t, kiln, probeOpts{})
 		if stderr, code := w.prepare(t, w.strace); code != 0 {
 			t.Fatalf("record prepare: exit %d\nstderr: %s", code, stderr)
@@ -429,9 +429,12 @@ func TestSandboxRecordProbe(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
+		keys := sealedRunKeys(t)
 		for name, data := range map[string][]byte{"pre/probes.json": sealed, "EncodeProbes output": encoded} {
-			if strings.Contains(string(data), "wall") || strings.Contains(string(data), "elapsed") {
-				t.Errorf("%s mentions a wall time: %s", name, data)
+			// Structural, not a substring search: the document embeds temp paths
+			// named after this subtest.
+			if problems := probeReportProblems(data, keys); len(problems) != 0 {
+				t.Errorf("%s carries timing or an unsealed field: %v\n%s", name, problems, data)
 			}
 		}
 	})
