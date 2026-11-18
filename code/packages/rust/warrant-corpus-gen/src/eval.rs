@@ -288,7 +288,16 @@ impl<'a> Program<'a> {
             .filter_map(|((n, _), v)| v.clone().map(|v| (n.as_str(), v)))
             .collect();
         let mut st = Stats::default();
-        let admitted = self.eval(admit, &pvars, &mut st)?.as_bool()?;
+        // A size error while evaluating a callee's `admit` is a plain refusal (VER04r 8.4 step 3):
+        // it is never what an `omit_example` line excuses as `value-over-limit`, so the flag
+        // does not leave this function.
+        let admitted = self
+            .eval(admit, &pvars, &mut st)
+            .map_err(|mut e| {
+                e.size = false;
+                e
+            })?
+            .as_bool()?;
         if self.v0 && st.wraps > 0 {
             // [D18]: not recorded in `wraps`, but refused: the v0 harness would evaluate the
             // same `admit` as `Nat`.

@@ -595,24 +595,7 @@ pub fn lower_document_omitting(
 /// As [`lower_document`], except that a unit that needs `ir.fixed` is not one.
 #[doc(hidden)]
 pub fn lower_document_with_fixed(file: &WarrantFile<'_>) -> Result<Lowered, GenError> {
-    lower_partial_for_dump(file)?.into_lowered_with_fixed()
-}
-
-/// [`lower_partial`] for the parity dump: the same checker and the same lowering, but the one
-/// rule the oracle applies only when it *evaluates* a suite, not when it lowers it, is not
-/// applied: VER04r 4.4's refusal of a subject call under an impure guard (`W0701`).  The oracle's
-/// `fixed_forms_v1.warrant` has claims of the shape `op(a) == x or op(a) == y`, which it lowers
-/// and dumps and which the generator refuses everywhere else.  Never use this for a document
-/// whose lowering is evaluated or emitted.
-fn lower_partial_for_dump(file: &WarrantFile<'_>) -> Result<Partial, GenError> {
-    check_or_refuse(file, || {
-        let mut lowerer = Lowerer::new(file);
-        lowerer.skip_pure_guards = true;
-        lowerer.run()
-    })?;
-    let mut lowerer = Lowerer::new(file);
-    lowerer.skip_pure_guards = true;
-    lowerer.run()
+    lower_partial(file)?.into_lowered_with_fixed()
 }
 
 /// Per-item census: what blocks each operation, model, claim and example (VER04r 16.2 and
@@ -793,9 +776,6 @@ struct Lowerer<'f, 'a> {
     /// a `concat` of sized operands, an `if` of equal widths).  Read by `from_be`/`from_le`
     /// immediately after the operand's `expr` call: one lowering pass, never a re-lowering.
     last_width: Option<u64>,
-    /// Do not apply VER04r 4.4's impure-guard refusal (the parity dump only, see
-    /// [`lower_partial_for_dump`]).
-    skip_pure_guards: bool,
     /// The full ids of the examples an `omit_example` profile line names (VER04r 8.4).
     omit_examples: Vec<String>,
     /// The levels the *types* met by the unit being lowered bring (binder, parameter, result, the
@@ -866,7 +846,6 @@ impl<'f, 'a> Lowerer<'f, 'a> {
             option_ok: false,
             width_out: None,
             last_width: None,
-            skip_pure_guards: false,
             omit_examples: Vec::new(),
             type_levels: BTreeSet::new(),
         }
@@ -1367,9 +1346,7 @@ impl<'f, 'a> Lowerer<'f, 'a> {
             return Err(self.type_err("a claim body must be Bool"));
         }
         // VER04r 4.4: a subject call may sit under a guard only if the guard is pure.
-        if !self.skip_pure_guards {
-            check_pure_guards(&body)?;
-        }
+        check_pure_guards(&body)?;
         // VER04r 3.3 rule 3: a v0 document refuses fixed-width arithmetic over a subject
         // result, statically.
         self.v0_guard(&body)?;
@@ -1453,9 +1430,7 @@ impl<'f, 'a> Lowerer<'f, 'a> {
         let deferred = reference.is_none() && self.omit_examples.contains(&id);
         if !deferred {
             self.v0_guard(&body)?;
-            if !self.skip_pure_guards {
-                check_pure_guards(&body)?;
-            }
+            check_pure_guards(&body)?;
             if reference.is_none() {
                 return Err(GenError::new(
                     code::W0701,
