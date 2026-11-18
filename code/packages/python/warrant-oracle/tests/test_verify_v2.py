@@ -625,8 +625,12 @@ def test_a_preflip_ct_compare_corpus_with_a_stale_deferred_witness_fails_verify_
     assert not report.ok
     controls = [m for m in report.mismatches if m["code"] == "controls"]
     assert controls, report.mismatches
-    # no other group of check objects: the stale witness is the only difference but the version
-    assert {m["code"] for m in report.mismatches} <= {"controls", "generator"}
+    # no other group of check objects: the stale witness is the only difference, and every mismatch
+    # sits at that control's `slim_witness[0]` (`.chunk` missing, and an unexpected key)
+    index = next(i for i, c in enumerate(stale["controls"]) if c is row)
+    assert {m["code"] for m in report.mismatches} == {"controls"}
+    where = f"controls[{index}].slim_witness[0]"
+    assert {m["where"] for m in report.mismatches} == {where, f"{where}.chunk"}
 
 
 @pytest.mark.skipif(

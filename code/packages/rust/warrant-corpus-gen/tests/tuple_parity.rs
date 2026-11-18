@@ -103,9 +103,9 @@ fn the_tuple_forms_document_lowers_to_the_oracle_dump_byte_for_byte() {
 /// `warrant-fault-parity-v1`: the fault rows and the controls under both gates (the oracle's
 /// `parity_dumps.faults_view`).
 fn faults_view(src: &str, profile: &str) -> Json {
-    let shipped = generated(src, SPEC, profile, &GATE_CLOSED).expect("generates (closed gate)");
+    let closed = generated(src, SPEC, profile, &GATE_CLOSED).expect("generates (closed gate)");
     let on = generated(src, SPEC, profile, &GATE_ON).expect("generates (ir.tuple evaluated)");
-    let s = parse(&shipped.corpus_json).expect("parses");
+    let s = parse(&closed.corpus_json).expect("parses");
     let g = parse(&on.corpus_json).expect("parses");
     assert_eq!(
         s.get("faults"),
@@ -309,15 +309,15 @@ fn a_changed_profile_changes_the_fault_dump() {
 fn the_gate_changes_exactly_the_witnesses_of_the_gated_faults() {
     // not a vacuous second view: the closed gate defers, the gate that evaluates ir.tuple finds
     // witnesses, and a fault that also needs ir.fixed stays deferred
-    let shipped = generated(WARRANT, SPEC, PROFILE, &GATE_CLOSED).unwrap();
+    let closed = generated(WARRANT, SPEC, PROFILE, &GATE_CLOSED).unwrap();
     let on = generated(WARRANT, SPEC, PROFILE, &GATE_ON).unwrap();
-    assert_ne!(shipped.corpus_json, on.corpus_json);
-    assert!(shipped.corpus_json.contains(r#""deferred": "ir.tuple""#));
+    assert_ne!(closed.corpus_json, on.corpus_json);
+    assert!(closed.corpus_json.contains(r#""deferred": "ir.tuple""#));
     assert!(!on.corpus_json.contains(r#""deferred": "ir.tuple""#));
     assert!(on.corpus_json.contains(r#""deferred": "ir.fixed""#));
     // the closed gate is named, never inherited: this view does not move when `SHIPPED_GATE` does
     let again = generated(WARRANT, SPEC, PROFILE, &[Level::Core]).unwrap();
-    assert_eq!(shipped, again);
+    assert_eq!(closed, again);
 }
 
 #[test]

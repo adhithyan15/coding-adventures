@@ -114,9 +114,9 @@ fn evaluation_text(src: &str, profile: &str) -> String {
         .expect("render")
 }
 
-/// The committed document generated once under the shipped gate and once under the open gate: the
+/// The committed document generated once under the closed gate and once under the open gate: the
 /// tests below share them (a generation enumerates 112 suites, so each is paid for once).
-fn shipped() -> &'static CorpusV2 {
+fn closed() -> &'static CorpusV2 {
     static C: OnceLock<CorpusV2> = OnceLock::new();
     C.get_or_init(|| generated(WARRANT, SPEC, PROFILE, &GATE_CLOSED).expect("generates (closed gate)"))
 }
@@ -130,14 +130,14 @@ fn open() -> &'static CorpusV2 {
 
 #[test]
 fn the_fixed_eval_corpus_matches_the_oracle_evaluation_dump_byte_for_byte() {
-    let text = evaluation_view(shipped()).render().expect("render");
+    let text = evaluation_view(closed()).render().expect("render");
     assert!(text == EVALUATION, "{}", first_difference(&text, EVALUATION));
 }
 
 /// `warrant-fault-parity-v1` of the `"fixed"` fixture: the fault rows and the controls under the
-/// shipped gate and under the open gate (the oracle's `parity_dumps.faults_view(.., "fixed")`).
-fn faults_view(shipped: &CorpusV2, open: &CorpusV2) -> Json {
-    let s = parse(&shipped.corpus_json).expect("parses");
+/// closed gate and under the open gate (the oracle's `parity_dumps.faults_view(.., "fixed")`).
+fn faults_view(closed: &CorpusV2, open: &CorpusV2) -> Json {
+    let s = parse(&closed.corpus_json).expect("parses");
     let g = parse(&open.corpus_json).expect("parses");
     assert_eq!(
         s.get("faults"),
@@ -163,7 +163,7 @@ fn faults_view(shipped: &CorpusV2, open: &CorpusV2) -> Json {
 
 #[test]
 fn the_fault_rows_and_controls_match_the_oracle_fault_dump_byte_for_byte() {
-    let text = faults_view(shipped(), open()).render().expect("render");
+    let text = faults_view(closed(), open()).render().expect("render");
     assert!(text == FAULTS, "{}", first_difference(&text, FAULTS));
 }
 
@@ -650,7 +650,7 @@ fn dumped_descriptor(claim: &str, binder: usize) -> String {
 #[test]
 fn the_shift_count_rule_selects_exactly_where_the_oracle_does() {
     // R10, from the generated corpus itself and the committed dump together
-    let corpus = parse(&shipped().corpus_json).unwrap();
+    let corpus = parse(&closed().corpus_json).unwrap();
     let selected = [
         "c_sel_shl",
         "c_sel_shr",
@@ -702,7 +702,7 @@ fn the_shift_count_rule_selects_exactly_where_the_oracle_does() {
 
 #[test]
 fn the_sixteen_bit_binders_are_demoted_to_fx_edge_by_the_budget_alone() {
-    let corpus = parse(&shipped().corpus_json).unwrap();
+    let corpus = parse(&closed().corpus_json).unwrap();
     let mut demoted = 0;
     for s in corpus.get("suites").a() {
         for (index, b) in s.get("binders").a().iter().enumerate() {
@@ -742,18 +742,18 @@ fn a_nat_that_is_the_count_of_a_shift_never_selects_through_an_admit() {
     );
 }
 
-// ---- the gate stays closed ----------------------------------------------------------------------
+// ---- the closed gate ----------------------------------------------------------------------------
 
 #[test]
-fn the_shipped_gate_defers_every_ir_fixed_fault_and_the_open_gate_searches_it() {
-    let (shipped, open) = (shipped(), open());
-    assert_ne!(shipped.corpus_json, open.corpus_json);
-    assert!(shipped.corpus_json.contains(r#""deferred": "ir.fixed""#));
+fn the_closed_gate_defers_every_ir_fixed_fault_and_the_open_gate_searches_it() {
+    let (closed, open) = (closed(), open());
+    assert_ne!(closed.corpus_json, open.corpus_json);
+    assert!(closed.corpus_json.contains(r#""deferred": "ir.fixed""#));
     assert!(!open.corpus_json.contains(r#""deferred": "ir.fixed""#));
     assert!(!open.corpus_json.contains(r#""deferred": "ir.tuple""#));
     // nothing but the controls differ: no suite, chunk or example moves with the gate
-    assert_eq!(shipped.chunk_files, open.chunk_files);
-    assert_eq!(shipped.cases_tfv, open.cases_tfv);
+    assert_eq!(closed.chunk_files, open.chunk_files);
+    assert_eq!(closed.cases_tfv, open.cases_tfv);
     // the open gate finds witnesses and, for the tuple-and-fixed pair, also a blind control would
     // show: every fault of this document has one
     assert!(open.corpus_json.contains(r#""chunk": 0"#));
@@ -761,7 +761,7 @@ fn the_shipped_gate_defers_every_ir_fixed_fault_and_the_open_gate_searches_it() 
 
 #[test]
 fn generate_accepts_an_ir_fixed_document_and_still_refuses_a_v0_one() {
-    assert!(shipped().corpus_json.contains("ir.fixed"));
+    assert!(closed().corpus_json.contains("ir.fixed"));
     // the built-in names are version scoped: a v0 document keeps the level refusal
     let v0 = "warrant v0doc\n  op f(a: U8) -> U8\n  model m(a: U8) -> U8 = bit_not(a)\n  claim c:\n    forall a: U8. f(a) == m(a)\n";
     let e: GenError = with_file(v0, |f| lower_document(f).expect_err("refused"));
@@ -858,7 +858,7 @@ fn a_wrong_domain_loses_domains_parity() {
 #[test]
 fn the_types_of_the_document_are_all_eight() {
     // not a vacuous fixture: every fixed-width type is a binder type of some suite
-    let corpus = parse(&shipped().corpus_json).unwrap();
+    let corpus = parse(&closed().corpus_json).unwrap();
     let mut seen: Vec<String> = Vec::new();
     for s in corpus.get("suites").a() {
         for b in s.get("binders").a() {

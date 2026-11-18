@@ -2,8 +2,9 @@
 
 ``ok-as-err``, ``drop-consumed``, ``swap-components``, the tuple-payload ``missing-error`` and the
 ``Ok`` forms of ``flip-result-bit`` and ``drop-last-result-byte`` are instantiated as data; their
-evaluation is **gated** like ``ir.fixed``'s until the atomic flip (S10c, D29): the shipped path
-records ``deferred`` witnesses and a test-only library parameter turns the witness search on.
+evaluation is **gated** like ``ir.fixed``'s: since the atomic flip (S10c, D29) the shipped gate is
+open to ``ir.tuple``, and ``deferred`` witnesses are reachable only through an explicitly closed gate
+(``GATE_CLOSED``), which these tests pass.
 """
 
 from __future__ import annotations
@@ -395,7 +396,7 @@ def test_the_shipped_gate_is_open_and_the_closed_gate_defers_tuple_faults():
     assert witness(by["res/missing-error"]) == {"res_claim": "ir.tuple"}
     # a fault that needs ir.core only is evaluated even though it is in the same corpus
     assert witness(by["raw/drop-last-result-byte"]) == {"raw_claim": 0}
-    # ir.fixed stays deferred; two unimplemented levels name the first in sorted order
+    # ir.fixed stays deferred under the closed gate this test passes; two unimplemented levels name the first in sorted order
     assert witness(by["raw/flip-result-bit"]) == {"raw_claim": "ir.fixed"}
     assert witness(by["res_b/flip-result-bit"]) == {"res_b_claim": "ir.fixed"}
     assert witness(by["res_b/drop-last-result-byte"]) == {"res_b_claim": "ir.tuple"}
