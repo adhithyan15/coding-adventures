@@ -231,6 +231,29 @@ def _binary64_target(payload: bytes, *, sabotage: bool = False) -> None:
         raise AssertionError(f"checked identity mismatch: {actual!r} != {expected!r}")
 
 
+def _faulted_identity(payload: bytes) -> bool:
+    try:
+        _binary64_target(payload, sabotage=True)
+    except AssertionError as exc:
+        return str(exc).startswith("checked identity mismatch:")
+    return False
+
+
+def _minimize_identity_witness(payload: bytes) -> bytes:
+    """Single-pass byte-zeroing reducer; fuzz_bytes has no built-in minimizer.
+
+    Input width stays fixed because non-eight-byte values are skipped by this
+    raw-binary64 target. The returned all-zero word is the bytewise lower bound.
+    """
+    current = bytearray(payload)
+    for index in range(len(current)):
+        candidate = bytearray(current)
+        candidate[index] = 0
+        if _faulted_identity(bytes(candidate)):
+            current = candidate
+    return bytes(current)
+
+
 def test_ver06_seeded_mutation_fuzz_replays_and_detects_same_target_fault() -> None:
     witness = struct.pack(">d", 1.0)
     _binary64_target(witness)
@@ -255,7 +278,7 @@ def test_ver06_seeded_mutation_fuzz_replays_and_detects_same_target_fault() -> N
     assert first.iterations_run == replay.iterations_run == 256
     assert first.seed == replay.seed == 0xAF02BF01
     assert first.corpus_size == replay.corpus_size
-    assert first.corpus_size > len(initial)
+    assert first.corpus_size == 23
     assert first.crashes == replay.crashes == []
     assert first.unique_crashes == replay.unique_crashes == 0
 
@@ -267,10 +290,16 @@ def test_ver06_seeded_mutation_fuzz_replays_and_detects_same_target_fault() -> N
         initial_corpus=[witness],
     )
     assert faulty.iterations_run == 64
-    assert faulty.crashes
+    assert faulty.corpus_size == 5
+    assert len(faulty.crashes) == 28
+    assert faulty.unique_crashes == 23
+    assert faulty.crashes[0].iteration == 1
     failing_input = faulty.crashes[0].input_data
     assert isinstance(failing_input, bytes)
-    with pytest.raises(AssertionError, match="identity mismatch"):
-        _binary64_target(failing_input, sabotage=True)
-    _binary64_target(failing_input)
+    reduced = _minimize_identity_witness(failing_input)
+    assert reduced != failing_input
+    assert reduced == bytes(8)
+    assert struct.unpack(">d", reduced)[0] == 0.0
+    assert _faulted_identity(reduced)
+    _binary64_target(reduced)
 

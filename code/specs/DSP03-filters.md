@@ -494,24 +494,43 @@ including empty/over-cap signals paired with poison section accessors and
 five- or seven-slot rows paired with poison coefficient getters.
 
 The shared AF-02 fixture and all 32,768 partitions remain selected conformance
-cases; legacy AF-02a counterexamples remain unchanged. Checked tests separately
+cases; legacy AF-02a counterexamples remain unchanged. Direct FIR and feedback
+integer-oracle properties each run 512 cases with seeds `0xAF02B001` and
+`0xAF02B002`; shrink proposals preserve coefficient/sample ranges, positive
+length, and `±1` feedback signs. A one-case result-fault control per family
+checks that the constrained shrinker preserves a failing valid case and that
+the same case passes the healthy operation. Separate raw binary64 state cases
+run 128 words at seed `0xAF02B003`; that sample was 128 finite words. A fixed
+bit control set separately exercises five finite values (`±0`, minimum
+subnormal, minimum normal, maximum finite) and three non-finite values
+(`±Inf`, NaN).
+
+Checked tests separately
 cover minimum-subnormal identity, normalized coefficient/output/delay
 overflow, rollback after late invalid samples and accessor errors, SOS order,
 caps with poison accessors, and the separately rounded `f64::MAX` feedback
 boundary. They also accept exactly `MAX_SAMPLES` samples and `MAX_ORDER`
 sections, while testing each `+1` rejection without allocating an
-over-cap-sized buffer. Independent integer/FIR and feedback properties use
-domain-preserving shrinkers with fixed seeds and nonzero budgets; generated
-binary64 state/error cases are counted separately. Python seeded mutation fuzz
+over-cap-sized buffer. Python seeded mutation fuzz
 must raise on semantic violations because that runner ignores returned values;
 record exceptions/crashes actually reported by the harness, not inferred
-timeout/OOM or native coverage. TypeScript semantic-guided fuzz must report
+timeout/OOM or native coverage. The healthy Python run uses 256 iterations at
+seed `0xAF02BF01`, with corpus size 23 and no crashes; same-seed replay matches
+those fields. Its 64-iteration result-fault run at `0xAF02BF02` recorded 28
+crash entries and 23 unique exception fingerprints. Python has no producer
+minimizer, so the test applies an external fixed-width byte-zeroing reducer to
+one recorded crash; it reaches the all-zero word, which still fails the faulty
+operation and passes the healthy one. This is a bounded test helper, not a
+general producer feature. TypeScript semantic-guided fuzz must report
 semantic violations as crashes, exercise edge admission beyond initial
-triage, and retain actual outcome/replay counters only. Both lanes require a
-same-target intentional fault, minimized witness that fails the faulty target
-and passes the healthy target, and deterministic replay with the healthy run
-marked clean. These are bounded tests; they do not establish general
-cross-language bit/error parity, native float/source bindings, Warrant/SAT
+triage, and retain actual outcome/replay counters only. Its healthy 1,024
+iteration run at `0xAF02BF01` reported 196 admitted seeds, 198 manually recorded
+outcome edges, and zero crashes; same-seed replay matches. The same-target
+result-fault control is caught during initial triage, then the engine reducer
+shrinks the `1.0` witness to the all-zero eight-byte word; it crashes under the
+faulty callback and passes under the healthy callback. Both campaigns are
+bounded tests; they do not establish general cross-language bit/error parity,
+native float/source bindings, Warrant/SAT
 proof, a coverage-guided Python campaign, or package-wide verification. Future
 producer accounting/feedback work is tracked by AF-04c, and generic Python
 optional-development-dependency selection by AF-04d.

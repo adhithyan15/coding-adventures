@@ -406,8 +406,8 @@ describe("checked Biquad bounded VER05/VER06 evidence", () => {
     const first = fuzzTarget(initial, options, (input, coverage) => checkedOutcome(input, coverage));
     const replay = fuzzTarget(initial, options, (input, coverage) => checkedOutcome(input, coverage));
     assert.equal(first.iterations, 1024);
-    assert.equal(first.admittedSeeds > initial.length, true);
-    assert.ok(first.totalEdges > 0);
+    assert.equal(first.admittedSeeds, 196);
+    assert.equal(first.totalEdges, 198);
     assert.equal(first.crashes.length, 0);
     assert.equal(reportKey(replay), reportKey(first));
 
@@ -417,6 +417,10 @@ describe("checked Biquad bounded VER05/VER06 evidence", () => {
       { maxIterations: 16, seed: 0xAF02BF02, maxInputLen: 8 },
       (input, coverage) => checkedOutcome(input, coverage, true),
     );
+    assert.equal(faultyRun.iterations, 0);
+    assert.equal(faultyRun.admittedSeeds, 0);
+    assert.equal(faultyRun.totalEdges, 0);
+    assert.equal(faultyRun.crashes.length, 1);
     const crash = faultyRun.crashes.find((item) => item.kind === "identity-oracle-mismatch");
     assert.ok(crash);
     const minimized = minimizeCrashingInput(
@@ -424,6 +428,9 @@ describe("checked Biquad bounded VER05/VER06 evidence", () => {
       crashSignature(crash.kind, crash.frames),
       (input) => checkedOutcome(input, new CoverageBitmap(), true),
     );
+    assert.deepEqual(Array.from(minimized), Array<number>(8).fill(0));
+    assert.notDeepEqual(Array.from(minimized), Array.from(witness));
+    assert.equal(fuzzValue(minimized), 0);
     assert.equal(checkedOutcome(minimized, new CoverageBitmap(), true).status, "crash");
     assert.equal(checkedOutcome(minimized, new CoverageBitmap()).status, "pass");
     const healthyWitness = checkedOutcome(witness, new CoverageBitmap());
