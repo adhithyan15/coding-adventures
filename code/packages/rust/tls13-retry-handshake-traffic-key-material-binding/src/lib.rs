@@ -9,6 +9,7 @@
 use coding_adventures_hkdf::{FixedHkdfHash, HkdfPrk, HkdfPrkImportError};
 use core::fmt;
 use tls13_cipher_suite_policy::{HkdfHash, SelectedCipherSuite};
+use tls13_record_protection_state::{RecordProtectionState, RecordProtectionStateError};
 use tls13_retry_handshake_traffic_secrets_binding::{
     BoundRetryHandshakeTrafficSecrets, ExactRetryBaseSecrets,
 };
@@ -56,6 +57,28 @@ impl std::error::Error for RetryHandshakeTrafficKeyMaterialBindingError {
             Self::KeyMaterial(error) => Some(error),
             Self::CipherSuiteMismatch => None,
         }
+    }
+}
+
+/// Stable payload-free failure while creating exact retry record state.
+#[derive(Debug, Eq, PartialEq)]
+pub struct RetryHandshakeRecordProtectionStateBindingError(RecordProtectionStateError);
+
+impl fmt::Display for RetryHandshakeRecordProtectionStateBindingError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("TLS 1.3 retry handshake record-state composition failed")
+    }
+}
+
+impl std::error::Error for RetryHandshakeRecordProtectionStateBindingError {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        Some(&self.0)
+    }
+}
+
+impl From<RecordProtectionStateError> for RetryHandshakeRecordProtectionStateBindingError {
+    fn from(error: RecordProtectionStateError) -> Self {
+        Self(error)
     }
 }
 
@@ -117,6 +140,117 @@ impl<Evidence: ExactRetryBaseSecrets + ?Sized> fmt::Debug
             .field("sender", &self.sender)
             .field("key_material", &"[SECRET]")
             .finish()
+    }
+}
+
+/// One sender's record state attached to exact retry handshake evidence.
+///
+/// This value intentionally derives neither `Copy` nor `Clone`. The retained
+/// record state owns the traffic-key view, while the secret bytes remain in
+/// the caller-owned wipe-on-drop storage borrowed by that view.
+pub struct BoundRetryHandshakeRecordProtectionState<
+    'bound,
+    'evidence,
+    'secret_storage,
+    'material,
+    Evidence: ExactRetryBaseSecrets + ?Sized,
+> {
+    traffic_secrets:
+        &'bound BoundRetryHandshakeTrafficSecrets<'evidence, 'secret_storage, Evidence>,
+    sender: HandshakeTrafficSender,
+    state: RecordProtectionState<'material>,
+}
+
+impl<'bound, 'evidence, 'secret_storage, 'material, Evidence>
+    BoundRetryHandshakeRecordProtectionState<
+        'bound,
+        'evidence,
+        'secret_storage,
+        'material,
+        Evidence,
+    >
+where
+    Evidence: ExactRetryBaseSecrets + ?Sized,
+{
+    /// Borrow the complete exact-message retry traffic-secret proof.
+    #[must_use]
+    pub const fn traffic_secrets(
+        &self,
+    ) -> &'bound BoundRetryHandshakeTrafficSecrets<'evidence, 'secret_storage, Evidence> {
+        self.traffic_secrets
+    }
+
+    /// Return the sender whose retained secret supplied this record state.
+    #[must_use]
+    pub const fn sender(&self) -> HandshakeTrafficSender {
+        self.sender
+    }
+
+    /// Return the exact policy-selected suite retained by every component.
+    #[must_use]
+    pub const fn selected_suite(&self) -> SelectedCipherSuite {
+        self.state.selected_suite()
+    }
+
+    /// Borrow the exact retry-bound record-protection state.
+    #[must_use]
+    pub const fn record_state(&self) -> &RecordProtectionState<'material> {
+        &self.state
+    }
+
+    /// Mutably borrow the exact retry-bound record-protection state.
+    pub const fn record_state_mut(&mut self) -> &mut RecordProtectionState<'material> {
+        &mut self.state
+    }
+}
+
+impl<Evidence: ExactRetryBaseSecrets + ?Sized> fmt::Debug
+    for BoundRetryHandshakeRecordProtectionState<'_, '_, '_, '_, Evidence>
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("BoundRetryHandshakeRecordProtectionState")
+            .field("traffic_secrets", &"[RETAINED]")
+            .field("sender", &self.sender)
+            .field("record_state", &"[STATE]")
+            .finish()
+    }
+}
+
+impl<'bound, 'evidence, 'secret_storage, 'material, Evidence>
+    BoundRetryHandshakeTrafficKeyMaterial<'bound, 'evidence, 'secret_storage, 'material, Evidence>
+where
+    Evidence: ExactRetryBaseSecrets + ?Sized,
+{
+    /// Consume this exact retry traffic-key proof into fresh record state.
+    ///
+    /// The state starts at sequence zero and accepts no detached nonce policy,
+    /// record ceiling, key, IV, AEAD identifier, or selected suite.
+    pub fn into_record_protection_state(
+        self,
+    ) -> Result<
+        BoundRetryHandshakeRecordProtectionState<
+            'bound,
+            'evidence,
+            'secret_storage,
+            'material,
+            Evidence,
+        >,
+        RetryHandshakeRecordProtectionStateBindingError,
+    > {
+        let Self {
+            traffic_secrets,
+            sender,
+            key_material,
+        } = self;
+        let state = RecordProtectionState::new(key_material)
+            .map_err(RetryHandshakeRecordProtectionStateBindingError)?;
+
+        Ok(BoundRetryHandshakeRecordProtectionState {
+            traffic_secrets,
+            sender,
+            state,
+        })
     }
 }
 

@@ -11,9 +11,10 @@ use tls13_handshake_traffic_secrets::HandshakeTrafficSecretStorage;
 use tls13_key_schedule::BaseSecretStorage;
 use tls13_key_share::KeyShareLimits;
 use tls13_named_group_policy::{NamedGroup, NamedGroupPolicy};
+use tls13_record_protection_state::RecordProtectionStateError;
 use tls13_retry_handshake_traffic_key_material_binding::{
     bind_retry_handshake_traffic_key_material, HandshakeTrafficSender,
-    RetryHandshakeTrafficKeyMaterialBindingError,
+    RetryHandshakeRecordProtectionStateBindingError, RetryHandshakeTrafficKeyMaterialBindingError,
 };
 use tls13_retry_handshake_traffic_secrets_binding::bind_retry_handshake_traffic_secrets;
 use tls13_retry_key_schedule_binding::bind_retry_key_schedule;
@@ -262,6 +263,35 @@ fn derives_both_senders_from_and_retains_exact_retry_evidence() {
         for disclosed in ["retry-key-material", "8520f009", "de9edb7d"] {
             assert!(!debug.contains(disclosed));
         }
+
+        let mut client_state = match client.into_record_protection_state() {
+            Ok(state) => state,
+            Err(_) => panic!("valid exact retry key material must create record state"),
+        };
+        assert!(core::ptr::eq(client_state.traffic_secrets(), &traffic));
+        assert_eq!(client_state.sender(), HandshakeTrafficSender::Client);
+        assert_eq!(client_state.selected_suite(), suite);
+        assert_eq!(client_state.record_state().records_used(), 0);
+        assert_eq!(
+            client_state.record_state().remaining_records(),
+            suite.record_limit()
+        );
+
+        {
+            let first = client_state.record_state_mut().reserve_next().unwrap();
+            assert_eq!(first.sequence_number(), 0);
+            assert_eq!(first.key(), expected_client.0);
+            assert_eq!(first.nonce(), expected_client.1);
+            assert_eq!(first.selected_suite(), suite);
+        }
+        assert_eq!(client_state.record_state().records_used(), 1);
+
+        let state_debug = format!("{client_state:?}");
+        assert!(state_debug.contains("[RETAINED]"));
+        assert!(state_debug.contains("[STATE]"));
+        for disclosed in ["retry-key-material", "8520f009", "de9edb7d"] {
+            assert!(!state_debug.contains(disclosed));
+        }
     });
 }
 
@@ -366,4 +396,14 @@ fn errors_are_stable_and_payload_free() {
     );
     assert!(derivation.source().is_some());
     assert!(!format!("{derivation:?}").contains("retry-key-material"));
+
+    let record_state = RetryHandshakeRecordProtectionStateBindingError::from(
+        RecordProtectionStateError::UnsupportedSuiteParameters,
+    );
+    assert_eq!(
+        record_state.to_string(),
+        "TLS 1.3 retry handshake record-state composition failed"
+    );
+    assert!(record_state.source().is_some());
+    assert!(!format!("{record_state:?}").contains("retry-key-material"));
 }
