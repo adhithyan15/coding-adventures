@@ -348,9 +348,10 @@ layers we control.
    to overlap-add for V1.
 2. **Cascade biquad vs direct higher-order IIR.**  Higher-order
    direct forms accumulate noise quickly.  Phase 4 ships direct
-   form for the API contract; Phase 5's design helpers will
-   factor higher-order filters into biquad cascades and stack
-   `iir(...)` calls.
+   form for the API contract. The current Phase 5 Butterworth and
+   Chebyshev-I helpers support orders 1 and 2; higher-order
+   factorization into biquad cascades and stacked `iir(...)` calls
+   remains future work.
 3. **Group delay compensation.**  FIR with linear phase has
    constant group delay = `(K - 1) / 2`.  The Phase 2 API
    returns the full convolution and lets the caller trim;
