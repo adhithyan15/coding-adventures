@@ -95,9 +95,13 @@ func TestRngCorpusSelectsEveryFixedLane(t *testing.T) {
 	}
 }
 
-func TestGameClockCorpusSelectsRustConsumerOnly(t *testing.T) {
+func TestGameClockInputsSelectRustConsumerAndGlobalWarrantChecker(t *testing.T) {
 	packages := []discovery.Package{
 		{Name: "rust/game-clock", Language: "rust"},
+		{Name: "rust/warrant-grammar", Language: "rust"},
+		{Name: "rust/wasm-leb128", Language: "rust"},
+		{Name: "python/warrant-oracle", Language: "python"},
+		{Name: "go/warrant-corpus", Language: "go"},
 		{Name: "go/build-tool", Language: "go"},
 	}
 	corpus := []string{"code/specs/fixtures/game-clock-v1/cases.json"}
@@ -114,14 +118,27 @@ func TestGameClockCorpusSelectsRustConsumerOnly(t *testing.T) {
 	if got, err := repositoryInputConsumersForChange(corpus, packages, "go"); err != nil || len(got) != 0 {
 		t.Fatalf("go-only selection got %v, err %v", got, err)
 	}
+	warrantPath := []string{"code/specs/game-clock.warrant"}
+	if got, err := repositoryInputConsumersForChange(warrantPath, packages, "all"); err != nil || !reflect.DeepEqual(got, map[string]bool{"rust/game-clock": true, "rust/warrant-grammar": true}) {
+		t.Fatalf("GAME10 Warrant selection got %v, err %v", got, err)
+	}
+	if got, err := repositoryInputConsumersForChange(warrantPath, packages, "rust"); err != nil || !reflect.DeepEqual(got, map[string]bool{"rust/game-clock": true, "rust/warrant-grammar": true}) {
+		t.Fatalf("rust-only GAME10 Warrant selection got %v, err %v", got, err)
+	}
+	if got, err := repositoryInputConsumersForChange([]string{"code/specs/wasm-leb128.warrant"}, packages, "all"); err != nil || !reflect.DeepEqual(got, map[string]bool{"rust/warrant-grammar": true, "python/warrant-oracle": true}) {
+		t.Fatalf("other Warrant consumers selection got %v, err %v", got, err)
+	}
 	for path, want := range map[string]bool{
 		"code/specs/fixtures/game-clock-v1/cases.json":     true,
 		"code/specs/fixtures/game-clock-v10/cases.json":    false,
 		"code/specs/fixtures/game-clock-v1":                false,
 		"code/specs/fixtures/game-clock-v1-old/cases.json": false,
+		"code/specs/game-clock-v10.warrant":                false,
+		"code/specs/game-clock.warrant.bak":                false,
+		"code/specs/other-game-clock.warrant":              false,
 	} {
-		if got := isGameClockCorpus(path); got != want {
-			t.Errorf("isGameClockCorpus(%q) = %v, want %v", path, got, want)
+		if got := isGameClockInput(path); got != want {
+			t.Errorf("isGameClockInput(%q) = %v, want %v", path, got, want)
 		}
 	}
 }

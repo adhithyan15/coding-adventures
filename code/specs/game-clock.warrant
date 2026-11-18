@@ -12,6 +12,11 @@ warrant game_clock v1
 
   record GameClockState(tick_count: U64, frame_count: U64, elapsed_sim_ns: U64, elapsed_wall_ns: U64, accumulator_ns: U64, fixed_dt_ns: U64, max_frame_steps: U32, max_frame_delta_ns: U64, total_dropped_ns: U64, spiral_clamped_frames: U64)
 
+  -- Pure constructor model, independent of the subject operation. The ordered
+  -- branches preserve `GameClockConfig::validate` error precedence and the
+  -- successful constructor's zero counters and exact copied configuration.
+  model new_clock_model(c: GameClockConfig) -> Result<GameClockState, ClockError> = if c.fixed_dt_ns == 0u64 then Err(ClockError.ZeroFixedTimestep) else if c.fixed_dt_ns > 10000000000u64 then Err(ClockError.InvalidMaxFrameDelta) else if c.max_frame_steps == 0u32 or c.max_frame_steps > 1024u32 then Err(ClockError.InvalidMaxFrameSteps) else if c.max_frame_delta_ns < c.fixed_dt_ns or c.max_frame_delta_ns > 10000000000u64 then Err(ClockError.InvalidMaxFrameDelta) else Ok(GameClockState(0u64, 0u64, 0u64, 0u64, 0u64, c.fixed_dt_ns, c.max_frame_steps, c.max_frame_delta_ns, 0u64, 0u64))
+
   record ClockStepResult(state: GameClockState, steps_to_run: U32, alpha_milli: U32, alpha_q16: U32, spiral_of_death_clamped: Bool, dropped_ns: U64)
 
   op new_clock(config: GameClockConfig) -> Result<GameClockState, ClockError>
@@ -63,6 +68,9 @@ warrant game_clock v1
 
   claim new_clock_satisfies_invariant:
     forall c: GameClockConfig. match new_clock(c) with Ok(s) -> state_inv(s) | Err(_) -> true
+
+  claim new_clock_matches_model:
+    forall c: GameClockConfig. new_clock(c) == new_clock_model(c)
 
   claim advance_frame_bounds_steps:
     forall s: GameClockState, dt: U64. match advance_frame(s, dt) with Ok(r) -> r.steps_to_run <= s.max_frame_steps and state_inv(r.state) and r.alpha_milli < 1000u32 | Err(_) -> true

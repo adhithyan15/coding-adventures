@@ -207,7 +207,7 @@ var (
 	}
 
 	rngCorpusPaths         = []string{"code/specs/fixtures/rng-v1"}
-	gameClockCorpusPaths   = []string{"code/specs/fixtures/game-clock-v1"}
+	gameClockInputPaths    = []string{"code/specs/fixtures/game-clock-v1", "code/specs/game-clock.warrant"}
 	biquadSosFixturePaths  = []string{"code/specs/fixtures/biquad-sos-v1"}
 	hamurabiCorpusPaths    = []string{"code/specs/fixtures/hamurabi-v1"}
 	lunarLanderCorpusPaths = []string{"code/specs/fixtures/lunar-lander-v1"}
@@ -507,9 +507,9 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	{
 		name:     "rust/game-clock",
 		language: "rust",
-		inputs:   "the GAME10 fixed-step clock v1 corpus",
-		matches:  isGameClockCorpus,
-		paths:    gameClockCorpusPaths,
+		inputs:   "the GAME10 constructor Warrant model and fixed-step clock v1 corpus",
+		matches:  isGameClockInput,
+		paths:    gameClockInputPaths,
 	},
 	{
 		name:     "python/trig",
@@ -1379,10 +1379,11 @@ func isRngCorpus(changed string) bool {
 	return strings.HasPrefix(changed, "code/specs/fixtures/rng-v1/")
 }
 
-// isGameClockCorpus reports whether the GAME10 package's shared v1 vectors changed.
-// The versioned directory boundary deliberately excludes v10 lookalikes.
-func isGameClockCorpus(changed string) bool {
-	return strings.HasPrefix(changed, "code/specs/fixtures/game-clock-v1/")
+// isGameClockInput reports whether GAME10's constructor model or shared v1 vectors changed.
+// The exact spec path and versioned directory boundary deliberately exclude lookalikes.
+func isGameClockInput(changed string) bool {
+	return changed == "code/specs/game-clock.warrant" ||
+		strings.HasPrefix(changed, "code/specs/fixtures/game-clock-v1/")
 }
 
 // isBiquadSosFixture selects files in the versioned shared DSP fixture while

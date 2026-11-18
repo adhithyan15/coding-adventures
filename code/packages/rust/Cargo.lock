@@ -6919,6 +6919,7 @@ dependencies = [
  "coding_adventures_bounded_json",
  "coding_adventures_sha256",
  "coding_adventures_test_bootstrap",
+ "coding_adventures_warrant_grammar",
 ]
 
 [[package]]
