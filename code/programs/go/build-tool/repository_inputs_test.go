@@ -126,6 +126,48 @@ func TestGameClockCorpusSelectsRustConsumerOnly(t *testing.T) {
 	}
 }
 
+func TestHamurabiCorpusSelectsRegisteredRustConsumer(t *testing.T) {
+	languages := []string{
+		"rust", "go", "python", "typescript", "csharp", "fsharp", "java", "kotlin", "dart",
+		"swift", "haskell", "c", "cpp", "ocaml", "ruby", "elixir", "lua", "perl",
+	}
+	packages := make([]discovery.Package, 0, len(languages))
+	wantAll := make(map[string]bool, len(languages))
+	for _, language := range languages {
+		name := language + "/hamurabi"
+		packages = append(packages, discovery.Package{Name: name, Language: language})
+		wantAll[name] = true
+	}
+	corpus := []string{"code/specs/fixtures/hamurabi-v1/cases.json"}
+	got, err := repositoryInputConsumersForChange(corpus, packages, "all")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !reflect.DeepEqual(got, wantAll) {
+		t.Fatalf("all-lane selection got %v, want %v", got, wantAll)
+	}
+	for _, language := range languages {
+		packageName := language + "/hamurabi"
+		got, err := repositoryInputConsumersForChange(corpus, packages, language)
+		if err != nil || !reflect.DeepEqual(got, map[string]bool{packageName: true}) {
+			t.Fatalf("%s-only selection got %v, err %v", language, got, err)
+		}
+	}
+	for path, wantMatch := range map[string]bool{
+		"code/specs/fixtures/hamurabi-v1/cases.json":     true,
+		"code/specs/fixtures/hamurabi-v10/cases.json":    false,
+		"code/specs/fixtures/hamurabi-v1":                false,
+		"code/specs/fixtures/hamurabi-v1-old/cases.json": false,
+	} {
+		if got := isHamurabiCorpus(path); got != wantMatch {
+			t.Errorf("isHamurabiCorpus(%q) = %v, want %v", path, got, wantMatch)
+		}
+	}
+	if _, err := repositoryInputConsumersForChange(corpus, packages[1:], "rust"); err == nil {
+		t.Fatal("missing registered Rust Hamurabi consumer must fail closed")
+	}
+}
+
 func TestTrigReferenceCorpusSelectsConvertedPorts(t *testing.T) {
 	packages := []discovery.Package{
 		{Name: "python/trig", Language: "python"},

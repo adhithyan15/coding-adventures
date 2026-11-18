@@ -9,9 +9,13 @@ license = "MIT"
 rng = { path = "../rng" }
 
 [dev-dependencies]
+coding_adventures_bounded_json = { path = "../bounded-json" }
 coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
 coding_adventures_sha256 = { path = "../sha256" }
 capability-runtime-conformance = { path = "../capability-runtime-conformance" }
+coding-adventures-json-parser = { path = "../json-parser" }
+lexer = { path = "../lexer" }
+parser = { path = "../parser" }
 
 [[test]]
 name = "conformance"
