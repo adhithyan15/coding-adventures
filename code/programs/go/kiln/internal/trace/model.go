@@ -722,6 +722,22 @@ func (m *model) isHelperExe(path string) bool {
 	return path == m.opts.HelperExe || path == "/proc/self/exe"
 }
 
+// threadGroupOf walks pid's spawns while they carry CLONE_THREAD and returns
+// the group leader (the first pid that is not a thread, or has no spawn
+// record).  A chain deeper than maxProcessDepth stops at the pid reached, which
+// differs from any real leader, so the D33 comparison fails closed.
+func (m *model) threadGroupOf(pid int) int {
+	cur := pid
+	for n := 0; n < maxProcessDepth; n++ {
+		sp, ok := m.spawns[cur]
+		if !ok || !hasFlag(sp.flags, "CLONE_THREAD") {
+			return cur
+		}
+		cur = sp.parent
+	}
+	return -cur - 1 // too deep: a value no pid shares
+}
+
 func (m *model) apply(rec *record) *Error {
 	p, e := m.get(rec.pid, rec.line)
 	if e != nil {
@@ -740,6 +756,14 @@ func (m *model) apply(rec *record) *Error {
 	}
 	if p.exited {
 		return incomplete(rec.line, reasonEventAfterExit)
+	}
+	// D33: a phantom execve line was accepted in pass 1 against this exec; it
+	// is sound only if its thread was torn down by this very exec, so it must
+	// be in the same thread group.  Otherwise refuse at the ghost's line.
+	for _, g := range rec.ghosts {
+		if m.threadGroupOf(g.pid) != m.threadGroupOf(rec.pid) {
+			return incomplete(g.line, reasonUnresumed)
+		}
 	}
 	if rec.exitCall && rec.retract {
 		// A failed exit_group or exit whose start line was a candidate:

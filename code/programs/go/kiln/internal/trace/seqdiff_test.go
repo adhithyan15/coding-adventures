@@ -155,6 +155,7 @@ func FuzzSeqDiff(f *testing.F) {
 		"1  wait4(-1,   <unfinished ...>\n1  <... wait4 resumed>) = 0",
 		"1  wait4( ,  <unfinished ...>\n1  <... wait4 resumed>) = 0",
 		"1  ???( <unfinished ...>\n1  <... ??? resumed>)  = ?\n1  <... ??? resumed>)  = ?",
+		"1  execve(\"/a\", [\"a\"], 0x1 <unfinished ...>\n2  execve(\"/a\", [\"a\"], 0x1 <unfinished ...>\n2  +++ exited with 0 +++\n1  <... execve resumed>) = 0",
 		"1  stat( <unfinished ...>\n1  stat(a) = 0",
 		"1  exit_group(0 <unfinished ...>\n1  <... exit_group resumed>) = ?",
 		"1  fork( <unfinished ...>\n1  <... fork resumed>AT_FDCWD</w>>,) = ?",
