@@ -2438,6 +2438,29 @@ panics on a mismatch after printing a bounded, sanitised window of the lines
 around it to the job log. No artifact is uploaded (the traces hold paths a pull
 request chose, so the only thing kept is that window, in the log).
 
+**The refusal diagnostic (D32).** A kiln-sandbox run once refused a real trace
+("probe walk: the trace does not parse: trace-incomplete:unparsable-line") and the
+trace was deleted with the test's temp dir, so nobody could say which line was
+refused or whether the old scanner would have refused it too (the children that
+run `prepare` have hand-built environments without `KILN_TRACE_DIFF`, so their
+parse was grammar-only). Two small changes, no artifact:
+
+- `prepare`'s refusal now ends with the refused line, `the trace does not parse:
+  <reason> (line N)`, appended to the DISPLAY text only. The reason itself is
+  unchanged (it feeds the sidecar's `parse_reasons`), and a line number carries
+  no path text. (`step` records only the reason, as before.)
+- `trace.Diagnose` (measure.go, a test/CI instrument kept out of production code
+  like `Measure`) runs pass 1 with both readers and reports each one's reason,
+  error line and stop line, the `grammarPanics` delta, the line count and whether
+  the data ends in a newline; with `KILN_TRACE_DIFF=1` it adds a sanitised window
+  of three lines either side of the earlier stop line and the stop line's pid's
+  last earlier line (a resume's pending half can be far above), under the same
+  quoting as the cross-check's window. The whole report is at most 4 KB. The
+  sandbox tests' shared `recStepRun` helper calls it, in the test process (which
+  has the CI environment), when a child's stderr says `the trace does not parse`
+  and names `(trace: <path>)` (an absolute path under the temp dir, read back at
+  most 8 MiB), and logs it before the test fails.
+
 **The default-flip gates (restated by PR 6).** The first draft gated the flip on
 "at least 8 MB/s and within 3x of the old parser". That gate is replaced: a ratio
 to the old scanner measures how fast the old scanner is, not whether the grammar
