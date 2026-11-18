@@ -14773,6 +14773,8 @@ dependencies = [
  "tls13-client-hello-message",
  "tls13-extension-block",
  "tls13-extension-context-policy",
+ "tls13-handshake",
+ "tls13-handshake-reassembly",
  "tls13-handshake-traffic-secrets",
  "tls13-inner-plaintext",
  "tls13-key-schedule",
