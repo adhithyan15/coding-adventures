@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+### Tests
+- Declare `test-bootstrap` as a development dependency and install it in both build recipes so the PBT suite uses the shared `SplitMix64` implementation.
+
 ## 0.1.0 - 2026-11-15
 
 ### Added

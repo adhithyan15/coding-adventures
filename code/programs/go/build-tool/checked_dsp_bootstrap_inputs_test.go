@@ -1,21 +1,23 @@
 package main
 
 import (
+	"os"
 	"path/filepath"
-	"reflect"
 	"runtime"
+	"strings"
 	"testing"
 
 	directedgraph "github.com/adhithyan15/coding-adventures/code/packages/go/directed-graph"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/discovery"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/resolver"
+	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/validator"
 )
 
 // TestDSPFiltersBootstrapChangesSelectTheirConsumers exercises the repository
-// manifests and BUILD files, rather than a hand-built graph. Python's explicit
-// BUILD annotation declares its local test-bootstrap input; TypeScript's local
-// devDependency is part of the parsed package graph. A source edit in either
-// bootstrap package must schedule its same-language dsp-filters tests.
+// manifests and BUILD files, rather than a hand-built graph. The Python and
+// TypeScript dev dependencies must resolve to their actual package nodes, and
+// each discovered recipe must declare a runnable local install. A bootstrap
+// source edit must schedule its real same-language test consumers.
 func TestDSPFiltersBootstrapChangesSelectTheirConsumers(t *testing.T) {
 	root := toolchainFixtureRepoRoot(t)
 	packages, err := discovery.DiscoverPackages(filepath.Join(root, "code"))
@@ -25,6 +27,32 @@ func TestDSPFiltersBootstrapChangesSelectTheirConsumers(t *testing.T) {
 	graph, triggers, err := resolver.ResolveWithTestTriggers(packages)
 	if err != nil {
 		t.Fatalf("the repository dependency graph must resolve: %v", err)
+	}
+	validationPackages := make([]discovery.Package, 0, 4)
+	for _, pkg := range packages {
+		switch pkg.Name {
+		case "python/dsp-filters", "python/dsp-stft", "python/music-analysis", "typescript/dsp-filters":
+			validationPackages = append(validationPackages, pkg)
+		}
+	}
+	if len(validationPackages) != 4 {
+		t.Fatalf("discovered %d of the 4 changed test consumers", len(validationPackages))
+	}
+	if err := validator.ValidateBuildFilesAgainst(validationPackages, packages, graph); err != nil {
+		t.Fatalf("actual repository BUILD files must declare graph prerequisites: %v", err)
+	}
+	for _, recipe := range []struct{ path, command string }{
+		{"code/packages/python/dsp-filters/BUILD_windows", "uv pip install --no-deps -e ../test-bootstrap"},
+		{"code/packages/python/dsp-stft/BUILD_windows", "uv pip install --no-deps -e ../test-bootstrap"},
+		{"code/packages/typescript/dsp-filters/BUILD_windows", "npm ci --prefix ../test-bootstrap"},
+	} {
+		contents, err := os.ReadFile(filepath.Join(root, recipe.path))
+		if err != nil {
+			t.Fatalf("read Windows recipe %s: %v", recipe.path, err)
+		}
+		if !strings.Contains(string(contents), recipe.command) {
+			t.Errorf("Windows recipe %s omits the real bootstrap setup command %q", recipe.path, recipe.command)
+		}
 	}
 	graphs := map[string]*directedgraph.Graph{"all": graph}
 	triggerSets := map[string]resolver.TestTriggers{"all": triggers}
@@ -48,6 +76,8 @@ func TestDSPFiltersBootstrapChangesSelectTheirConsumers(t *testing.T) {
 	required := map[string]string{
 		"python/test-bootstrap":     "python",
 		"python/dsp-filters":        "python",
+		"python/dsp-stft":           "python",
+		"python/music-analysis":     "python",
 		"typescript/test-bootstrap": "typescript",
 		"typescript/dsp-filters":    "typescript",
 	}
@@ -66,6 +96,8 @@ func TestDSPFiltersBootstrapChangesSelectTheirConsumers(t *testing.T) {
 
 	for _, edge := range [][2]string{
 		{"python/test-bootstrap", "python/dsp-filters"},
+		{"python/dsp-filters", "python/dsp-stft"},
+		{"python/dsp-filters", "python/music-analysis"},
 		{"typescript/test-bootstrap", "typescript/dsp-filters"},
 	} {
 		if !graph.HasEdge(edge[0], edge[1]) {
@@ -78,48 +110,56 @@ func TestDSPFiltersBootstrapChangesSelectTheirConsumers(t *testing.T) {
 		path     string
 		language string
 		want     map[string]bool
+		absent   []string
 	}{
 		{
 			name:     "Python edit with all languages",
 			path:     "code/packages/python/test-bootstrap/src/coding_adventures_test_bootstrap/pbt.py",
 			language: "all",
-			want:     map[string]bool{"python/dsp-filters": true},
+			want:     map[string]bool{"python/dsp-filters": true, "python/dsp-stft": true, "python/music-analysis": true},
+			absent:   []string{"typescript/dsp-filters"},
 		},
 		{
 			name:     "Python-only edit",
 			path:     "code/packages/python/test-bootstrap/src/coding_adventures_test_bootstrap/fuzz.py",
 			language: "python",
-			want:     map[string]bool{"python/dsp-filters": true},
+			want:     map[string]bool{"python/dsp-filters": true, "python/dsp-stft": true, "python/music-analysis": true},
+			absent:   []string{"typescript/dsp-filters"},
 		},
 		{
 			name:     "Python edit excluded from TypeScript run",
 			path:     "code/packages/python/test-bootstrap/src/coding_adventures_test_bootstrap/pbt.py",
 			language: "typescript",
 			want:     map[string]bool{},
+			absent:   []string{"python/dsp-filters", "python/dsp-stft", "python/music-analysis"},
 		},
 		{
 			name:     "TypeScript edit with all languages",
 			path:     "code/packages/typescript/test-bootstrap/src/pbt.ts",
 			language: "all",
 			want:     map[string]bool{"typescript/dsp-filters": true},
+			absent:   []string{"python/dsp-filters", "python/dsp-stft", "python/music-analysis"},
 		},
 		{
 			name:     "TypeScript-only edit",
 			path:     "code/packages/typescript/test-bootstrap/src/fuzz.ts",
 			language: "typescript",
 			want:     map[string]bool{"typescript/dsp-filters": true},
+			absent:   []string{"python/dsp-filters", "python/dsp-stft", "python/music-analysis"},
 		},
 		{
 			name:     "TypeScript edit excluded from Python run",
 			path:     "code/packages/typescript/test-bootstrap/src/pbt.ts",
 			language: "python",
 			want:     map[string]bool{},
+			absent:   []string{"python/dsp-filters", "python/dsp-stft", "python/music-analysis"},
 		},
 		{
 			name:     "Python package lookalike",
 			path:     "code/packages/python/test-bootstrap-v10/src/coding_adventures_test_bootstrap/pbt.py",
 			language: "all",
 			want:     map[string]bool{},
+			absent:   []string{"python/dsp-filters", "python/dsp-stft", "python/music-analysis"},
 		},
 		{
 			name:     "TypeScript package lookalike",
@@ -143,19 +183,20 @@ func TestDSPFiltersBootstrapChangesSelectTheirConsumers(t *testing.T) {
 				t.Fatal(err)
 			}
 			got := affectedForGraphWithTriggers(selectedGraph, selectedTriggers, changed, nil, false)
-			selected := make(map[string]bool)
 			for name := range tc.want {
+				if !got[name] {
+					t.Errorf("affected set omits required consumer %q (roots %v; full set %v)", name, changed, got)
+				}
+			}
+			for _, name := range tc.absent {
 				if got[name] {
-					selected[name] = true
+					t.Errorf("affected set unexpectedly includes %q (roots %v; full set %v)", name, changed, got)
 				}
 			}
-			for _, name := range []string{"python/dsp-filters", "typescript/dsp-filters"} {
-				if got[name] && !tc.want[name] {
-					selected[name] = true
+			if tc.name == "Python package lookalike" || tc.name == "TypeScript package lookalike" {
+				if len(got) != 0 {
+					t.Fatalf("lookalike path selected packages %v (roots %v)", got, changed)
 				}
-			}
-			if !reflect.DeepEqual(selected, tc.want) {
-				t.Fatalf("affected consumers = %v, want %v (roots %v)", selected, tc.want, changed)
 			}
 		})
 	}
