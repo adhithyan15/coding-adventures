@@ -207,6 +207,7 @@ var (
 	}
 
 	rngCorpusPaths         = []string{"code/specs/fixtures/rng-v1"}
+	gameClockCorpusPaths   = []string{"code/specs/fixtures/game-clock-v1"}
 	hamurabiCorpusPaths    = []string{"code/specs/fixtures/hamurabi-v1"}
 	lunarLanderCorpusPaths = []string{"code/specs/fixtures/lunar-lander-v1"}
 	warrantGrammarPaths    = []string{
@@ -313,12 +314,25 @@ var (
 	// generator's tests regenerate byte for byte (accept_blind, D15); it lives in
 	// the oracle's directory, so only the generator needs a row for it.
 	warrantAcceptBlindFixture = "code/packages/python/warrant-oracle/tests/fixtures/accept-blind-v2"
-	// warrantCorpusGenPaths are the inputs of the generator's --check line.
+	// warrantFixedFormsFixture is the oracle's synthetic ir.fixed document and its committed
+	// lowering dump (CV2-S10a). The generator's tests/fixed_parity.rs lowers the first and
+	// reproduces the second byte for byte (CV2-S10b), reading both from this directory; it
+	// lies in the oracle's package, so only the generator needs a row for it.
+	warrantFixedFormsFixture = "code/packages/python/warrant-oracle/tests/fixtures/fixed-forms-v1"
+	// warrantOmitExampleFixture is the oracle's synthetic omit_example corpus (CV2-S10-1): its
+	// omit.warrant and corpus.profile are what the generator's tests/omit_example.rs
+	// regenerates corpus/ from, byte for byte. It lies in the oracle's directory, so only the
+	// generator needs a row for it.
+	warrantOmitExampleFixture = "code/packages/python/warrant-oracle/tests/fixtures/omit-example-v2"
+	// warrantCorpusGenPaths are the inputs of the generator's --check line and of its
+	// cross-package parity tests.
 	warrantCorpusGenPaths = []string{
 		"code/specs/ct-compare.warrant",
 		warrantCorpusV2Fixture,
 		warrantCorpusV2Bindings,
 		warrantAcceptBlindFixture,
+		warrantFixedFormsFixture,
+		warrantOmitExampleFixture,
 	}
 	// warrantOracleRowPaths adds the fixture directory to the oracle's exact files.
 	warrantOracleRowPaths = append(append([]string{}, warrantOraclePaths...), warrantCorpusV2Fixture)
@@ -468,6 +482,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "the shared rng conformance corpus",
 		matches:  isRngCorpus,
 		paths:    rngCorpusPaths,
+	},
+	{
+		name:     "rust/game-clock",
+		language: "rust",
+		inputs:   "the GAME10 fixed-step clock v1 corpus",
+		matches:  isGameClockCorpus,
+		paths:    gameClockCorpusPaths,
 	},
 	{
 		name:     "python/trig",
@@ -973,7 +994,7 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	{
 		name:     "rust/warrant-corpus-gen",
 		language: "rust",
-		inputs:   "the ct-compare spec, bindings and committed v2 fixture its BUILD --check regenerates (VER04r 16.8)",
+		inputs:   "the ct-compare spec, bindings and committed v2 fixture its BUILD --check regenerates (VER04r 16.8), and the oracle's accept-blind, fixed-forms and omit-example fixtures its tests reproduce",
 		matches:  isWarrantCorpusGenInput,
 		paths:    warrantCorpusGenPaths,
 	},
@@ -1066,13 +1087,17 @@ func isWarrantCorpusV2Fixture(changed string) bool {
 
 // isWarrantCorpusGenInput selects rust/warrant-corpus-gen, whose BUILD runs the
 // generator's --check against the committed v2 fixture with the ct-compare spec
-// and bindings, and whose tests regenerate the oracle's accept-blind fixture.
+// and bindings, and whose tests regenerate the oracle's accept-blind and omit-example
+// (CV2-S10-1) fixtures and reproduce the oracle's fixed-forms lowering dump (CV2-S10b).
 func isWarrantCorpusGenInput(changed string) bool {
 	switch changed {
 	case "code/specs/ct-compare.warrant", warrantCorpusV2Bindings:
 		return true
 	}
-	return isWarrantCorpusV2Fixture(changed) || strings.HasPrefix(changed, warrantAcceptBlindFixture+"/")
+	return isWarrantCorpusV2Fixture(changed) ||
+		strings.HasPrefix(changed, warrantAcceptBlindFixture+"/") ||
+		strings.HasPrefix(changed, warrantFixedFormsFixture+"/") ||
+		strings.HasPrefix(changed, warrantOmitExampleFixture+"/")
 }
 
 // isWarrantPythonLaneCorpusInput selects the Python runner package when the
@@ -1330,6 +1355,12 @@ func isKilnToolchainPinInput(changed string) bool {
 //	code/specs/rng.md                         → false (prose; the corpus pins behaviour)
 func isRngCorpus(changed string) bool {
 	return strings.HasPrefix(changed, "code/specs/fixtures/rng-v1/")
+}
+
+// isGameClockCorpus reports whether the GAME10 package's shared v1 vectors changed.
+// The versioned directory boundary deliberately excludes v10 lookalikes.
+func isGameClockCorpus(changed string) bool {
+	return strings.HasPrefix(changed, "code/specs/fixtures/game-clock-v1/")
 }
 
 // isTrigReferenceCorpus reports whether a changed path is a file of the shared

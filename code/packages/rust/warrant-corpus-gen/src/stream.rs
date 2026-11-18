@@ -114,8 +114,8 @@ pub fn in_v1_set(ty: &Ty) -> bool {
         Ty::Bool | Ty::Nat | Ty::Bytes(_) => true,
         Ty::Fixed(t) => matches!(t, FixedTy::U8 | FixedTy::U64),
         Ty::Result(ok, _) => in_v1_set(ok),
-        // `Int` never appears in a value (VER04r 2.1).
-        Ty::Int => false,
+        // `Int` never appears in a value (VER04r 2.1), nor does the IR-only `Option` (D23).
+        Ty::Int | Ty::Option(_) => false,
     }
 }
 

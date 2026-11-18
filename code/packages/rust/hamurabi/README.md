@@ -24,10 +24,10 @@ In accordance with the repository's verification architecture (`VER00`, `VER04m`
   ```rust
   step_year(state: &HamurabiState, order: &TurnOrder) -> Result<HamurabiState, HamurabiError>
   ```
-- **Bit-Exact Cross-Language Determinism:** All state transitions use exclusively bounded integer types (`u8`, `u32`, `u64`, `i32`). By avoiding IEEE-754 floating point arithmetic, transitions produce bit-exact identical trajectories across all 18 programming languages in the repository.
+- **Deterministic Integer Contract:** State transitions use bounded integer types (`u8`, `u32`, `u64`, `i32`). This supports bit-exact portable trajectories when each implementation conforms; the current per-language evidence and gaps are tracked in [`GAME-BACKLOG.md`](../../../specs/GAME-BACKLOG.md). A package directory alone is not conformance evidence.
 - **Explicit PRNG State:** All pseudo-randomness enters deterministically through explicit PCG32 state (`rng_state: u64`, `rng_inc: u64`) stored inside [`HamurabiState`].
 - **Zero Allocation Budget (`VER07`):** The simulation step `step_year` and order validation `validate_order` operate purely on value records and perform **zero heap allocations** on the simulation hot path (`max_alloc_bytes: Some(0)`).
-- **26-CWE Weakness Closure (`VER15`):** Complete closure or formal exclusion of all 26 canonical CWE classes.
+- **Assurance Evidence (`VER15`):** The checked-in assurance report is `report-only`; its claims have empty evidence and null proof, exhaustive, and fuzz entries. It records 24 excluded weakness entries and two unapproved exemptions. These are open evidence gaps, not a claim of complete 26-CWE closure. The finite corpus test added under GBL-002 is package conformance evidence only.
 
 ---
 

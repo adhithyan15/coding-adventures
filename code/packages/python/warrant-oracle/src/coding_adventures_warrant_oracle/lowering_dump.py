@@ -40,8 +40,8 @@ from .lower import Spec, lower_document
 from .parser import parse_source
 
 SCHEMA = "warrant-lowering-parity-v1"
-#: The levels a lowering dump can show: everything the lowerer lowers (S10a).
-LOWERED_LEVELS = frozenset([L.CORE, L.FIXED])
+#: The levels a lowering dump can show: everything the lowerer lowers (S10a, S10t-1).
+LOWERED_LEVELS = frozenset([L.CORE, L.FIXED, L.TUPLE])
 
 
 def _params(pairs: list) -> list:
@@ -51,7 +51,7 @@ def _params(pairs: list) -> list:
 def _refuse(kind: str, name: str, exc: OracleError | None) -> OracleError:
     why = f"{exc.code}: {exc.message}" if exc is not None else "needs a level this dump cannot show"
     level = exc.level if exc is not None and exc.level is not None else L.DATA
-    return OracleError("level", f"{kind} `{name}` is beyond ir.fixed ({why})", level=level)
+    return OracleError("level", f"{kind} `{name}` is beyond ir.tuple ({why})", level=level)
 
 
 def _check_lowered(spec: Spec) -> None:

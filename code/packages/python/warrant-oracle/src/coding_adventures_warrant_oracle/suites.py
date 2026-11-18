@@ -47,7 +47,8 @@ from .ir_eval import (
     fixed_arith_over_subject,
     may_wrap,
 )
-from .lower import BOOL, LoweredSuite, Spec, walk
+from .irtree import free_vars
+from .lower import BOOL, LoweredSuite, Spec
 from .stream import (
     chunk_digest_framing,
     context_prefix,
@@ -186,7 +187,8 @@ class _Binder:
 
 
 def _free_vars(ir: object) -> set[str]:
-    return {n[1] for n in walk(ir) if n[0] == "var"}
+    """The binders an IR tree reads (a ``match`` pattern's own binders are not free)."""
+    return free_vars(ir)
 
 
 class SuitePlan:

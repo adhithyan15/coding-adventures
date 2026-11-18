@@ -365,6 +365,7 @@ mod tests {
             params: vec![],
             ret: Ty::Bool,
             body,
+            requires: vec!["ir.core"],
         }
     }
     fn call(name: &str, args: Vec<Ir>) -> Ir {
@@ -668,6 +669,7 @@ mod tests {
                 result: Ty::Bool,
             },
             ops: vec!["f".into()],
+            requires: vec!["ir.core"],
         };
         // admit 1 ; body = 1 + (1+1) + (1+1+1) = 6 ; expected = 1 + 1 + 1 = 3
         let sc = suite_cost(&reference, &models, 2_000).unwrap();

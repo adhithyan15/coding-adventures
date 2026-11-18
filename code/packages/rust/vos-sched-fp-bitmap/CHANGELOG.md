@@ -4,6 +4,14 @@ All notable changes to this package are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Changed (VOS-038a, WX-SV2)
+
+- `init` is bound with `field-flip` (never inert on the zero state) and `alpha_w` with
+  `field-zero,field-flip`; the harness is regenerated. The three `init` controls now pass
+  (`canon_init` catches a mask of 1), so `warrant/check_evidence.sh` is **deleted** and BUILD runs
+  the suite plainly: 71 ok, exit 0. New sabotage lines: `canon_init`, `safety_init` (flip of `init`
+  and of `alpha_w`), `canon_{insert,remove,dispatch}_post` (flip of `alpha_w`).
+
 ### Changed (VOS-D081)
 
 - Regenerated for the contract's new `safety_init` claim: `code/specs/vos-sched-fp-bitmap.warrant`, the

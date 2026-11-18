@@ -10,12 +10,39 @@
 //!     --check     regenerate and compare byte for byte with --out; write nothing
 //!     --bindings  an evidence.bindings file; its `faults=` lists must equal the profile's
 //!
-//!   exit 0  success        exit 1  refused or drifted (the binary also reports a usage error as 1;
-//!                                `run` returns 2 for it)
 //! ```
 //!
+//! ## Exit status
+//!
+//! The convention is the independent oracle's (`warrant-oracle`, its `cli.py`): **1 means the
+//! two sides disagree, 2 means the tool refused or could not run**.  A caller (a BUILD line, a
+//! pre-commit hook) can then tell "the committed fixture is stale: regenerate and review" from
+//! "the generator would not run on this input" without reading stderr.
+//!
+//! ```text
+//!   0  success          written, or --check found the directory byte-identical
+//!   1  drift            --check ran to the end and the committed bytes differ from the
+//!                       regenerated ones (the only thing that exits 1; oracle: "MISMATCH")
+//!   2  refused / error  generation refused (any GenError: a level or feature beyond ir.core,
+//!                       a profile or checker error, a rule or limit violation, bindings whose
+//!                       faults= lists differ from the profile's), an input that cannot be
+//!                       read, a path that is refused, an I/O error while writing the output,
+//!                       or a usage error (oracle: OracleError and argparse both give 2)
+//! ```
+//!
+//! The split is by **where** the error arose, not by the `GenError` code alone: the `drift`
+//! code is also raised by the bindings cross-check, which is a refusal (nothing is compared,
+//! nothing is written), so it exits 2.  Only [`crate::fsio::check_corpus`]'s own `drift`
+//! finding, in `--check` mode, is a drift.  A file that is simply missing from `--out` is
+//! listed among that finding's differences (the file set is part of what is compared), so it
+//! is a drift too; the oracle's `dump-lowering --check` has a single committed file and treats
+//! an unreadable one as 2, which has no counterpart for a directory.  A directory that cannot
+//! be listed at all is an I/O error: 2.
+//!
+//! The binary passes `run`'s value through unchanged (see `src/bin`).
+//!
 //! [`run`] takes its arguments and writers so tests drive it without a process; the binary
-//! in `src/bin` is a four-line wrapper.  The generator is a *dev tool* with no
+//! in `src/bin` is a thin wrapper.  The generator is a *dev tool* with no
 //! `test-hooks` feature linked (that feature is dev-only).
 
 use std::io::Write;
@@ -113,13 +140,35 @@ fn parse_args(args: &[String]) -> Result<Args, String> {
     })
 }
 
-fn go(a: &Args, err: &mut dyn Write) -> Result<String, GenError> {
+/// Why [`go`] did not succeed, which decides the exit status (see the module documentation).
+enum Failure {
+    /// `--check` compared and the bytes differ: exit 1.
+    Drift(GenError),
+    /// Anything that stopped the tool before or instead of a comparison: exit 2.
+    Refused(GenError),
+}
+
+/// Exit status of a `--check` drift.
+pub const EXIT_DRIFT: i32 = 1;
+/// Exit status of a refusal, an I/O error or a usage error.
+pub const EXIT_REFUSED: i32 = 2;
+
+impl From<GenError> for Failure {
+    /// The `?` operator turns every ordinary error into a refusal; only the one comparison
+    /// site builds [`Failure::Drift`] explicitly.
+    fn from(e: GenError) -> Self {
+        Failure::Refused(e)
+    }
+}
+
+fn go(a: &Args, err: &mut dyn Write) -> Result<String, Failure> {
     if !spec_path_ok(&a.warrant) {
         return Err(GenError::new(
             code::IO,
             "--warrant",
             "must be a repo-relative path without `..`, `.`, `\\`, `:` or a leading `/` (it is recorded in the corpus)",
-        ));
+        )
+        .into());
     }
     if a.bindings.is_none() {
         let _ = writeln!(err, "warrant-corpus-gen: note: --bindings not given, the profile's faults are not checked against an evidence.bindings");
@@ -145,7 +194,15 @@ fn go(a: &Args, err: &mut dyn Write) -> Result<String, GenError> {
     })?;
     let out = Path::new(&a.out);
     if a.check {
-        check_corpus(out, &corpus)?;
+        // the one place a drift is told from a refusal: only the comparison's own `drift`
+        // finding exits 1; an I/O error while listing or reading is a refusal
+        check_corpus(out, &corpus).map_err(|e| {
+            if e.code == code::DRIFT {
+                Failure::Drift(e)
+            } else {
+                Failure::Refused(e)
+            }
+        })?;
         Ok(format!("ok: {} matches the regenerated corpus", a.out))
     } else {
         write_corpus(out, &corpus)?;
@@ -153,13 +210,13 @@ fn go(a: &Args, err: &mut dyn Write) -> Result<String, GenError> {
     }
 }
 
-/// Run the command line.  Returns the process exit code.
+/// Run the command line.  Returns the process exit code: 0, [`EXIT_DRIFT`] or [`EXIT_REFUSED`].
 pub fn run(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> i32 {
     let parsed = match parse_args(args) {
         Ok(p) => p,
         Err(m) => {
             let _ = writeln!(err, "warrant-corpus-gen: {m}\n{USAGE}");
-            return 2;
+            return EXIT_REFUSED;
         }
     };
     match go(&parsed, err) {
@@ -167,9 +224,13 @@ pub fn run(args: &[String], out: &mut dyn Write, err: &mut dyn Write) -> i32 {
             let _ = writeln!(out, "{msg}");
             0
         }
-        Err(e) => {
+        Err(Failure::Drift(e)) => {
             let _ = writeln!(err, "warrant-corpus-gen: {e}");
-            1
+            EXIT_DRIFT
+        }
+        Err(Failure::Refused(e)) => {
+            let _ = writeln!(err, "warrant-corpus-gen: {e}");
+            EXIT_REFUSED
         }
     }
 }

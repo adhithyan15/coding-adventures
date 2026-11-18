@@ -9,6 +9,23 @@
   or source/compiler proof. The build tool selects `rust/warrant-grammar` when the
   VER04p document or diagnostic changes.
 
+## Unreleased — WX-SV2: the `field-flip` fault (VOS-038a)
+
+- New composite-operation fault `field-flip` (VER04j 4.8): the lowest bit of the first
+  numeric field of a single-constructor record result is flipped (`Int` and fixed-width
+  alike). Applicable exactly where `field-zero` is (W0701 otherwise) and, unlike it, never
+  inert on a record, so a by-value `init() -> Impl` over a zero state has a negative control.
+- Emitted from a prelude region (`//@if fieldflip`) enabled only when some binding lists
+  `field-flip`; the `Fault` enum is already restricted to used faults. Every harness that
+  does not name it is byte for byte unchanged (checked with `gen_evidence --check` over all
+  13 Rust packages with an `evidence.bindings`).
+- The same region adds `WARRANT_EVIDENCE_ATTACK=<op>`: a sabotage run faults only that
+  operation, because flipping an `init` and the `alpha` that reads it cancels.
+- Tests: the applicability table, the gating (no `fault_field_flip`/`FieldFlip`/
+  `WARRANT_EVIDENCE_ATTACK` text without the binding), and, on the regenerated `wxa` fixture
+  (`normalize` now lists `field-flip`), the fault's behaviour and its negative control.
+- Regenerated: `tests/generated/wxa_evidence.rs` (opt-in), `vos-sched-fp-bitmap`, `-any`, `-rr`.
+
 ## Unreleased — shared negative-control checker tests (WD-HARN1c)
 
 - BUILD and BUILD_windows run `code/scripts/tests/test_warrant_negctl.py`, the tests of the shared

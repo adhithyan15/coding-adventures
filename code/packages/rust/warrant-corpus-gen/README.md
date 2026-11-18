@@ -13,6 +13,11 @@ slice S3). It reads a `.warrant` specification and will write the language-neutr
 > or an error; it never emits a part of one. The committed ct-compare fixture directory is
 > slice S3d (with or after the oracle's `verify-v2`, VER04r 16.3 [D10]); nothing under
 > `code/specs/fixtures/` is written by this crate's tests.
+>
+> **S10b** (`ir.fixed`): the 35 built-ins of VER04r Appendix A.1 are lowered, typed, given
+> `requires` and costed, and reproduce the oracle's lowering dump byte for byte (see
+> "`ir.fixed` lowering parity"). They are **not evaluated or emitted**: `generate` still refuses an
+> `ir.fixed` document.
 
 ## How it fits
 
@@ -43,14 +48,14 @@ on it, so changing it rebuilds no shared crate (VER04r section 13, "Rule").
 | module | what it is |
 |---|---|
 | `json` | the VER04i 9.1 canonical writer: sorted keys, two-space indent, LF, `\uXXXX` escapes. No `serde`: a canonical form must not inherit a library's defaults |
-| `profile` | the strict reader of `corpus.profile` (VER04r 8.4): LF only, only an empty line is skipped, canonical decimals, `max_ir_cost` the only way to raise the cost bound, `accept_blind <op> <fault>` lines |
-| `types` | the small type language of `ir.core` (`Bool Int Nat U8..I64 Bytes Bytes<N> Result<T,E>`) |
-| `ir` | the 26 `ir.core` tags of VER04r Appendix A and their JSON form |
+| `profile` | the strict reader of `corpus.profile` (VER04r 8.4): LF only, only an empty line is skipped, canonical decimals, `max_ir_cost` the only way to raise the cost bound, `accept_blind <op> <fault>` and `omit_example <id>` lines |
+| `types` | the small type language of `ir.core` (`Bool Int Nat U8..I64 Bytes Bytes<N> Result<T,E>`) and, since S10b, the IR-only `Option<T>` of the `ir.fixed` built-ins |
+| `ir` | the 26 `ir.core` tags of VER04r Appendix A and their JSON form; S10b adds `Ir::Fixed`, the 35 `ir.fixed` built-ins of A.1 (lowered and costed, never evaluated), and `ir::levels`, the tag part of `requires` (R9) |
 | `lower` | syntax-directed, unoptimised lowering with a small annotating typer; the level refusals; `census` |
 | `analysis` | the pure-guard rule (4.4) and the v0 static arithmetic guard (3.3 rule 3) |
 | `arith` | the single wrapping rule (3.2): `wraps`, the 2^127 window, `MAX_IR_VALUE` |
 | `cost` | worst-path `ir_cost`, `max_ir_cost`, total IR work (4.2 rule 6) |
-| `view` | the "parity view" of a lowered document, compared with the oracle |
+| `view` | the "parity view" of a lowered document, compared with the oracle (`oracle_view` for `ir.core`, `oracle_view_v1` for the S10 dump with `requires`) |
 | `value`, `eval` | S3b: the `ir.core` evaluator (own implementation over this crate's IR): exact `Nat`/`Int` in the 2^127 window, wrapping fixed-width arithmetic counted as `wraps`, short-circuit `and`/`or`/`implies`/`if`, `MAX_IR_VALUE` checked before allocation, and `trace`, the pure-trace walk behind `expected_calls` and `wraps` |
 | `domains` | S3b: descriptor JSON, labels and sizes over the S2 `resolve_binders`/`Domain` API; refuses the VER04r 16.2 descriptors; value and encoding caches |
 | `stream` | S3b: the 2.4 value encoders, the context prefix, the v1/v2 header, `warrant-chunks-v1` framing, FNV-1a-64, the slim base set |
@@ -77,8 +82,19 @@ cargo run -q -p coding_adventures_warrant_corpus_gen --bin warrant-corpus-gen --
 
 Run it from the repository root: `--warrant` must be a repo-relative path (no `..`, no `\`, no
 leading `/`) because it is recorded verbatim as `spec` in `corpus.json`. `--bindings` is optional:
-when given, its `faults=` lists must equal the profile's `fault` lines per operation. Exit codes:
-`0` success, `1` refused, drifted or misused (the library `cli::run` returns `2` for a usage error; the binary reports it as `1` so it needs nothing from `std::process`). It is a `[[bin]]`, not an example, so the
+when given, its `faults=` lists must equal the profile's `fault` lines per operation. Exit codes, the independent oracle's convention (1 = the two sides differ, 2 = refused or error):
+
+| exit | meaning |
+| --- | --- |
+| `0` | success: written, or `--check` found the directory byte-identical |
+| `1` | drift: `--check` ran to the end and the committed bytes differ from the regenerated ones (the only exit 1) |
+| `2` | refused or error: any `GenError` that refuses generation (a level or feature beyond `ir.core`, a profile or checker error, a rule or limit, bindings whose `faults=` lists differ from the profile's), an unreadable input, a refused path, an I/O error writing the output, or a usage error |
+
+The status is chosen by where the error arose, not by the `GenError` code alone: the `drift` code is
+also raised by the bindings cross-check, which is a refusal (exit 2). A file missing from `--out` is
+one of the listed drift findings (exit 1). The binary needs `std::process::exit` to say 2 (an `Err`
+from `main` always exits 1), declared as `proc:signal` in `required_capabilities.json`.
+It is a `[[bin]]`, not an example, so the
 dev-only `test-hooks` feature (seeded-wrong evaluators) is never linked into it.
 
 **Write mode** validates every path first, refuses a symbolic link and a `chunks/` that holds a
@@ -229,15 +245,25 @@ simply declare), as of this slice:
 | ct-compare | 9 | **9** | none |
 | gf256 | 38 | **38** | none (declares `max_ir_cost 32768`) |
 | x25519 | 8 | 6 | `ir.fixed` 2 |
-| logic-gates | 88 | 28 | `ir.fixed` 44, `ir.data` 16 |
-| hash-functions | 56 | 4 | `ir.fixed` 35, `ir.data` 17 |
+| logic-gates | 88 | 28 | `ir.fixed` 51, `ir.tuple` 6, `ir.data` 3 |
+| hash-functions | 56 | 4 | `ir.fixed` 25, `ir.tuple` 21, `W0701` 6 |
 | lzw | 21 | 4 | `ir.fixed` 17 |
-| arithmetic | 63 | 0 | `ir.data` 63 |
-| wasm-leb128 | 42 | 0 | `ir.data` 37, `ir.fixed` 3, `W0701` 2 |
+| arithmetic | 63 | 0 | `ir.data` 55, `ir.tuple` 8 |
+| wasm-leb128 | 42 | 0 | `ir.tuple` 36, `ir.fixed` 4, `W0701` 2 |
 | vos-sched-any | 8 | 0 | `ir.data` 8 |
 | vos-sched-fp-bitmap | 13 | 0 | `ir.data` 13 |
 | zeroize | 9 | 0 | `inout` 9 |
-| **total** | **355** | **89** | `ir.data` 154, `ir.fixed` 101, `inout` 9, `W0701` 2 |
+| **total** | **355** | **89** | `ir.fixed` 99, `ir.data` 79, `ir.tuple` 71, `inout` 9, `W0701` 8 |
+
+**Since S10b a claim is named by the first construct, in source order, that cannot be lowered,
+and by `ir.fixed` only when nothing else blocks it** (the built-ins now lower, so a claim that
+also uses a tuple or a constructor is named by that level, as the oracle's census names it). The
+table above is pinned per adopter in `tests/census.rs`. Before S10b the totals were `ir.data` 154,
+`ir.fixed` 101, `inout` 9 and `W0701` 2: tuples, projections and `match` on a `Result` moved from
+`ir.data` to `ir.tuple` (VER04r 4.1, D20, D35), and six `hash-functions` claims
+(`fnv1a_*_matches_both_models`, `djb2_*_matches_both_models`) that an `ir.fixed` built-in used to
+hide are `W0701`, a subject call under an impure guard (VER04r 4.4), like the two `wasm-leb128`
+claims of [D28].
 
 Only **ct-compare and gf256 are emittable whole** (a document is emitted whole or not at all).
 For S10's decisions on the five divergences of VER04r 16.2: **no adopter binder is a `nat_count`,
@@ -256,10 +282,37 @@ A construct beyond `ir.core` refuses the **whole document**, naming the level:
   level [ir.fixed] at `mix`: fixed-width built-ins need ir.fixed
 ```
 
-`ir.fixed` (integer built-ins), `ir.data` (tuples, records, `match`, `Option`, lists),
-`ir.seq` (reserved), and the features `inout`, `ensures`, `vectors`, `assume` rows. Nothing
+`ir.fixed` (the integer built-ins), `ir.tuple` (tuple types and literals, projection, `match` on a
+`Result`), `ir.data` (records, variants, `Option` and `List` types, lists, `match` on anything
+else), `ir.seq` (reserved), and the features `inout`, `ensures`, `vectors`, `assume` rows. Nothing
 is skipped and nothing is written. `census` reports, per operation, model, claim and
 example, what would block it, without failing the document.
+
+## `ir.fixed` lowering parity (S10b)
+
+Since slice S10b the lowerer reads the 35 built-ins of VER04r Appendix A.1 (`bit_and` ... `unwrap_or`):
+one `Ir::Fixed` node per call, operand types inferred as for `add`, a static type argument written as
+the canonical type name in position 1, `Option<T>` confined to the first operand of `unwrap_or`
+(anything else is `ir.data`, D23), `div`/`rem` on two `Nat` operands typed `Option<Int>` (R7), and the
+static width of a `from_be`/`from_le` operand read from the one pass that lowers it (a bytes literal, a
+`concat` of sized operands, an `if` of equal widths: the checker's rule). Every lowered unit records its
+`requires` (R9: the sorted union of its tags' levels and its callees' own `requires`, `ir.core` always
+present) and each new tag costs `1 +` its operands.
+
+**Nothing is evaluated or emitted.** A unit whose `requires` holds `ir.fixed` is refused, naming the
+level, by `lower_document`, the census and therefore `generate` (the binary exits 2, as for every
+refusal, and writes nothing); `eval` refuses `Ir::Fixed` too. `lower_document_with_fixed` returns the
+lowered IR for the dump only, and skips VER04r 4.4's impure-guard refusal, which the oracle applies when
+it evaluates a suite and not when it lowers it.
+
+`tests/fixed_parity.rs` lowers the oracle's `fixed_forms_v1.warrant` (all 35 built-ins at every width)
+and demands the text of `oracle_view_v1` equal the oracle's committed `fixed_forms_v1.oracle-lowering.json`
+(schema `warrant-lowering-parity-v1`) **byte for byte**. Both files are read from
+`python/warrant-oracle/tests/fixtures/fixed-forms-v1/`, not copied, so an edit to either reruns it (the
+build tool's `rust/warrant-corpus-gen` row); the oracle's own BUILD checks the dump against its
+`dump-lowering` subcommand. `tests/fixed_lowering.rs` pins the refusals, `requires`, cost and naming on
+small documents, including a deep-nesting regression for the width rule (the oracle's first version
+re-lowered the operand at every level and was exponential).
 
 ## The oracle parity test, and its limits
 
@@ -334,6 +387,33 @@ is listed, sorted, in `accepted_blind_faults`. The line must repeat a `fault` li
 naming a fault a claim *can* see is a `profile` error (a stale acceptance excuses nothing); it never
 excuses an op no claim calls. ct-compare has none; `python/warrant-oracle/tests/fixtures/accept-blind-v2/`
 is the small synthetic corpus both implementations agree on.
+
+### `omit_example <id>` ([D22], [D34], VER04r 8.4)
+
+A profile line `omit_example warrant/<module>/example/<name>` removes one example from `examples`
+when the generator can *decide* that it is inexpressible; the profile carries only the id and the
+tool computes the reason, written to the conditional `omitted_examples` key
+(`[{"id", "reason"}]`, sorted by id, **omitted** when there is none, so no existing fixture moves a byte):
+
+```text
+  shape is not  op(args) == pure                      -> not-op-eq-pure    (tested first)
+  evaluate: arguments, then the pure side             first error a size error (a Bytes literal or
+                                                      concat past MAX_IR_VALUE)  -> value-over-limit
+                                                      any other error             -> refuses
+  then the D19 check, then the D18 check              a failure                   -> refuses
+  completed, and an argument or the pure value is
+  over 4,096 bytes (also under Ok)                    -> value-over-limit
+  anything else                                       -> profile error: a stale line
+```
+
+An omitted example is **still lowered** (a level refusal refuses the document), but it is not
+evaluated for `cases.tfv`, not encoded and not admit-checked beyond the decision; its shape
+refusal (`W0701`) and the guard refusals are deferred to this decision. Without a line the same
+example is refused as before. Every example is evaluated in this order (arguments, pure side,
+D19, D18), and a `GenError` carries `size` for exactly the two `Bytes` limits (the 2^127 integer
+window is not a size error). The oracle's `tests/fixtures/omit-example-v2/` is reproduced byte for
+byte by `tests/omit_example.rs`.
+
 `ignore-high-bit` (`ir.fixed`, VER04r 8.2 [D9]) is emitted as data with `requires: ["ir.fixed"]`
 and `deferred` witnesses: ct-compare's `eq_u64` control is **not-live** until S10.
 

@@ -1,0 +1,8268 @@
+{
+  "document": "v1",
+  "errors": {
+    "TupleError": [
+      "Bad",
+      "Worse",
+      "Worst"
+    ]
+  },
+  "examples": [
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_pair",
+          [
+            [
+              "lit",
+              true
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "3"
+              }
+            ]
+          ]
+        ],
+        [
+          "tuple",
+          [
+            [
+              "lit",
+              true
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "3"
+              }
+            ]
+          ]
+        ]
+      ],
+      "expected": [
+        "tuple",
+        [
+          [
+            "lit",
+            true
+          ],
+          [
+            "lit",
+            {
+              "type": "Nat",
+              "value": "3"
+            }
+          ]
+        ]
+      ],
+      "name": "e_pair",
+      "result_type": "(Bool,Nat)",
+      "subject": [
+        "subject_op",
+        "op_pair",
+        [
+          [
+            "lit",
+            true
+          ],
+          [
+            "lit",
+            {
+              "type": "Nat",
+              "value": "3"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_lit2",
+          [
+            [
+              "lit",
+              true
+            ],
+            [
+              "lit",
+              false
+            ]
+          ]
+        ],
+        [
+          "tuple",
+          [
+            [
+              "lit",
+              true
+            ],
+            [
+              "lit",
+              false
+            ]
+          ]
+        ]
+      ],
+      "expected": [
+        "tuple",
+        [
+          [
+            "lit",
+            true
+          ],
+          [
+            "lit",
+            false
+          ]
+        ]
+      ],
+      "name": "e_lit2",
+      "result_type": "(Bool,Bool)",
+      "subject": [
+        "subject_op",
+        "op_lit2",
+        [
+          [
+            "lit",
+            true
+          ],
+          [
+            "lit",
+            false
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_nested",
+          [
+            [
+              "lit",
+              true
+            ],
+            [
+              "lit",
+              false
+            ],
+            [
+              "lit",
+              true
+            ]
+          ]
+        ],
+        [
+          "tuple",
+          [
+            [
+              "tuple",
+              [
+                [
+                  "lit",
+                  true
+                ],
+                [
+                  "lit",
+                  false
+                ]
+              ]
+            ],
+            [
+              "lit",
+              true
+            ]
+          ]
+        ]
+      ],
+      "expected": [
+        "tuple",
+        [
+          [
+            "tuple",
+            [
+              [
+                "lit",
+                true
+              ],
+              [
+                "lit",
+                false
+              ]
+            ]
+          ],
+          [
+            "lit",
+            true
+          ]
+        ]
+      ],
+      "name": "e_nested",
+      "result_type": "((Bool,Bool),Bool)",
+      "subject": [
+        "subject_op",
+        "op_nested",
+        [
+          [
+            "lit",
+            true
+          ],
+          [
+            "lit",
+            false
+          ],
+          [
+            "lit",
+            true
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_swap",
+          [
+            [
+              "tuple",
+              [
+                [
+                  "lit",
+                  true
+                ],
+                [
+                  "lit",
+                  false
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "tuple",
+          [
+            [
+              "lit",
+              false
+            ],
+            [
+              "lit",
+              true
+            ]
+          ]
+        ]
+      ],
+      "expected": [
+        "tuple",
+        [
+          [
+            "lit",
+            false
+          ],
+          [
+            "lit",
+            true
+          ]
+        ]
+      ],
+      "name": "e_tuple_arg",
+      "result_type": "(Bool,Bool)",
+      "subject": [
+        "subject_op",
+        "op_swap",
+        [
+          [
+            "tuple",
+            [
+              [
+                "lit",
+                true
+              ],
+              [
+                "lit",
+                false
+              ]
+            ]
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_k",
+          [
+            [
+              "lit",
+              true
+            ],
+            [
+              "lit",
+              false
+            ]
+          ]
+        ],
+        [
+          "ok",
+          [
+            "tuple",
+            [
+              [
+                "lit",
+                true
+              ],
+              [
+                "lit",
+                false
+              ]
+            ]
+          ]
+        ]
+      ],
+      "expected": [
+        "ok",
+        [
+          "tuple",
+          [
+            [
+              "lit",
+              true
+            ],
+            [
+              "lit",
+              false
+            ]
+          ]
+        ]
+      ],
+      "name": "e_k_ok",
+      "result_type": "Result<(Bool,Bool),TupleError>",
+      "subject": [
+        "subject_op",
+        "op_k",
+        [
+          [
+            "lit",
+            true
+          ],
+          [
+            "lit",
+            false
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_k",
+          [
+            [
+              "lit",
+              true
+            ],
+            [
+              "lit",
+              true
+            ]
+          ]
+        ],
+        [
+          "err",
+          "Worse"
+        ]
+      ],
+      "expected": [
+        "err",
+        "Worse"
+      ],
+      "name": "e_k_err",
+      "result_type": "Result<(Bool,Bool),TupleError>",
+      "subject": [
+        "subject_op",
+        "op_k",
+        [
+          [
+            "lit",
+            true
+          ],
+          [
+            "lit",
+            true
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_dec",
+          [
+            [
+              "lit",
+              true
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "7"
+              }
+            ]
+          ]
+        ],
+        [
+          "ok",
+          [
+            "tuple",
+            [
+              [
+                "lit",
+                true
+              ],
+              [
+                "lit",
+                {
+                  "type": "Nat",
+                  "value": "7"
+                }
+              ]
+            ]
+          ]
+        ]
+      ],
+      "expected": [
+        "ok",
+        [
+          "tuple",
+          [
+            [
+              "lit",
+              true
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "7"
+              }
+            ]
+          ]
+        ]
+      ],
+      "name": "e_dec",
+      "result_type": "Result<(Bool,Nat),TupleError>",
+      "subject": [
+        "subject_op",
+        "op_dec",
+        [
+          [
+            "lit",
+            true
+          ],
+          [
+            "lit",
+            {
+              "type": "Nat",
+              "value": "7"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_flip",
+          [
+            [
+              "ok",
+              [
+                "tuple",
+                [
+                  [
+                    "lit",
+                    true
+                  ],
+                  [
+                    "lit",
+                    false
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "ok",
+          [
+            "tuple",
+            [
+              [
+                "lit",
+                false
+              ],
+              [
+                "lit",
+                true
+              ]
+            ]
+          ]
+        ]
+      ],
+      "expected": [
+        "ok",
+        [
+          "tuple",
+          [
+            [
+              "lit",
+              false
+            ],
+            [
+              "lit",
+              true
+            ]
+          ]
+        ]
+      ],
+      "name": "e_result_arg",
+      "result_type": "Result<(Bool,Bool),TupleError>",
+      "subject": [
+        "subject_op",
+        "op_flip",
+        [
+          [
+            "ok",
+            [
+              "tuple",
+              [
+                [
+                  "lit",
+                  true
+                ],
+                [
+                  "lit",
+                  false
+                ]
+              ]
+            ]
+          ]
+        ]
+      ]
+    },
+    {
+      "body": [
+        "match",
+        [
+          "subject_op",
+          "op_k",
+          [
+            [
+              "lit",
+              true
+            ],
+            [
+              "lit",
+              false
+            ]
+          ]
+        ],
+        [
+          [
+            [
+              "ok",
+              [
+                "tuple",
+                [
+                  [
+                    "bind",
+                    "a"
+                  ],
+                  [
+                    "bind",
+                    "b"
+                  ]
+                ]
+              ]
+            ],
+            [
+              "and",
+              [
+                "var",
+                "a"
+              ],
+              [
+                "not",
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ]
+          ],
+          [
+            [
+              "err_any"
+            ],
+            [
+              "lit",
+              false
+            ]
+          ]
+        ]
+      ],
+      "expected": [],
+      "name": "e_match_ok",
+      "result_type": "",
+      "subject": []
+    },
+    {
+      "body": [
+        "match",
+        [
+          "subject_op",
+          "op_k",
+          [
+            [
+              "lit",
+              true
+            ],
+            [
+              "lit",
+              true
+            ]
+          ]
+        ],
+        [
+          [
+            [
+              "ok",
+              [
+                "wild"
+              ]
+            ],
+            [
+              "lit",
+              false
+            ]
+          ],
+          [
+            [
+              "err",
+              "Worse"
+            ],
+            [
+              "lit",
+              true
+            ]
+          ],
+          [
+            [
+              "err_any"
+            ],
+            [
+              "lit",
+              false
+            ]
+          ]
+        ]
+      ],
+      "expected": [],
+      "name": "e_match_err",
+      "result_type": "",
+      "subject": []
+    }
+  ],
+  "model_order": [
+    "lit2",
+    "lit3",
+    "lit4",
+    "lit5",
+    "lit6",
+    "lit7",
+    "lit8",
+    "nested",
+    "deep",
+    "lit_ctx",
+    "lit_arith",
+    "pair",
+    "proj0",
+    "proj1",
+    "proj_chain",
+    "proj_last8",
+    "proj_postfix",
+    "proj_literal",
+    "swap",
+    "tup_eq",
+    "tup_ne",
+    "tup_eq_lit",
+    "k",
+    "dec",
+    "m_ok_wild",
+    "m_ok_bind",
+    "m_ok_tuple",
+    "m_ok_tuple_wild",
+    "m_ok_nested",
+    "m_err_cases",
+    "m_err_any_last",
+    "m_bind_whole",
+    "m_wild_arm",
+    "m_returns_tuple",
+    "m_returns_result",
+    "m_nested_match",
+    "m_inner_match",
+    "m_on_call",
+    "m_arith_arm",
+    "mixed"
+  ],
+  "models": {
+    "dec": {
+      "body": [
+        "if",
+        [
+          "gt",
+          [
+            "var",
+            "n"
+          ],
+          [
+            "lit",
+            {
+              "type": "Nat",
+              "value": "60"
+            }
+          ]
+        ],
+        [
+          "err",
+          "Bad"
+        ],
+        [
+          "ok",
+          [
+            "tuple",
+            [
+              [
+                "var",
+                "a"
+              ],
+              [
+                "var",
+                "n"
+              ]
+            ]
+          ]
+        ]
+      ],
+      "ir_cost": 8,
+      "params": [
+        [
+          "a",
+          "Bool"
+        ],
+        [
+          "n",
+          "Nat"
+        ]
+      ],
+      "ret": "Result<(Bool,Nat),TupleError>"
+    },
+    "deep": {
+      "body": [
+        "tuple",
+        [
+          [
+            "tuple",
+            [
+              [
+                "tuple",
+                [
+                  [
+                    "var",
+                    "a"
+                  ],
+                  [
+                    "lit",
+                    {
+                      "type": "Nat",
+                      "value": "1"
+                    }
+                  ]
+                ]
+              ],
+              [
+                "not",
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ]
+          ],
+          [
+            "lit",
+            {
+              "type": "Bytes",
+              "value": ""
+            }
+          ]
+        ]
+      ],
+      "ir_cost": 8,
+      "params": [
+        [
+          "a",
+          "Bool"
+        ]
+      ],
+      "ret": "(((Bool,Nat),Bool),Bytes<0>)"
+    },
+    "k": {
+      "body": [
+        "if",
+        [
+          "and",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ],
+        [
+          "err",
+          "Worse"
+        ],
+        [
+          "ok",
+          [
+            "tuple",
+            [
+              [
+                "var",
+                "a"
+              ],
+              [
+                "var",
+                "b"
+              ]
+            ]
+          ]
+        ]
+      ],
+      "ir_cost": 8,
+      "params": [
+        [
+          "a",
+          "Bool"
+        ],
+        [
+          "b",
+          "Bool"
+        ]
+      ],
+      "ret": "Result<(Bool,Bool),TupleError>"
+    },
+    "lit2": {
+      "body": [
+        "tuple",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ],
+      "ir_cost": 3,
+      "params": [
+        [
+          "a",
+          "Bool"
+        ],
+        [
+          "b",
+          "Bool"
+        ]
+      ],
+      "ret": "(Bool,Bool)"
+    },
+    "lit3": {
+      "body": [
+        "tuple",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ],
+          [
+            "var",
+            "c"
+          ]
+        ]
+      ],
+      "ir_cost": 4,
+      "params": [
+        [
+          "a",
+          "Bool"
+        ],
+        [
+          "b",
+          "Bool"
+        ],
+        [
+          "c",
+          "Bool"
+        ]
+      ],
+      "ret": "(Bool,Bool,Bool)"
+    },
+    "lit4": {
+      "body": [
+        "tuple",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ],
+          [
+            "var",
+            "c"
+          ],
+          [
+            "var",
+            "d"
+          ]
+        ]
+      ],
+      "ir_cost": 5,
+      "params": [
+        [
+          "a",
+          "Bool"
+        ],
+        [
+          "b",
+          "Bool"
+        ],
+        [
+          "c",
+          "Bool"
+        ],
+        [
+          "d",
+          "Bool"
+        ]
+      ],
+      "ret": "(Bool,Bool,Bool,Bool)"
+    },
+    "lit5": {
+      "body": [
+        "tuple",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ],
+          [
+            "var",
+            "c"
+          ],
+          [
+            "var",
+            "d"
+          ],
+          [
+            "var",
+            "e"
+          ]
+        ]
+      ],
+      "ir_cost": 6,
+      "params": [
+        [
+          "a",
+          "Bool"
+        ],
+        [
+          "b",
+          "Bool"
+        ],
+        [
+          "c",
+          "Bool"
+        ],
+        [
+          "d",
+          "Bool"
+        ],
+        [
+          "e",
+          "Bool"
+        ]
+      ],
+      "ret": "(Bool,Bool,Bool,Bool,Bool)"
+    },
+    "lit6": {
+      "body": [
+        "tuple",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ],
+          [
+            "var",
+            "c"
+          ],
+          [
+            "var",
+            "d"
+          ],
+          [
+            "var",
+            "e"
+          ],
+          [
+            "var",
+            "f"
+          ]
+        ]
+      ],
+      "ir_cost": 7,
+      "params": [
+        [
+          "a",
+          "Bool"
+        ],
+        [
+          "b",
+          "Bool"
+        ],
+        [
+          "c",
+          "Bool"
+        ],
+        [
+          "d",
+          "Bool"
+        ],
+        [
+          "e",
+          "Bool"
+        ],
+        [
+          "f",
+          "Bool"
+        ]
+      ],
+      "ret": "(Bool,Bool,Bool,Bool,Bool,Bool)"
+    },
+    "lit7": {
+      "body": [
+        "tuple",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ],
+          [
+            "var",
+            "c"
+          ],
+          [
+            "var",
+            "d"
+          ],
+          [
+            "var",
+            "e"
+          ],
+          [
+            "var",
+            "f"
+          ],
+          [
+            "var",
+            "g"
+          ]
+        ]
+      ],
+      "ir_cost": 8,
+      "params": [
+        [
+          "a",
+          "Bool"
+        ],
+        [
+          "b",
+          "Bool"
+        ],
+        [
+          "c",
+          "Bool"
+        ],
+        [
+          "d",
+          "Bool"
+        ],
+        [
+          "e",
+          "Bool"
+        ],
+        [
+          "f",
+          "Bool"
+        ],
+        [
+          "g",
+          "Bool"
+        ]
+      ],
+      "ret": "(Bool,Bool,Bool,Bool,Bool,Bool,Bool)"
+    },
+    "lit8": {
+      "body": [
+        "tuple",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ],
+          [
+            "var",
+            "c"
+          ],
+          [
+            "var",
+            "d"
+          ],
+          [
+            "var",
+            "e"
+          ],
+          [
+            "var",
+            "f"
+          ],
+          [
+            "var",
+            "g"
+          ],
+          [
+            "var",
+            "h"
+          ]
+        ]
+      ],
+      "ir_cost": 9,
+      "params": [
+        [
+          "a",
+          "Bool"
+        ],
+        [
+          "b",
+          "Bool"
+        ],
+        [
+          "c",
+          "Bool"
+        ],
+        [
+          "d",
+          "Bool"
+        ],
+        [
+          "e",
+          "Bool"
+        ],
+        [
+          "f",
+          "Bool"
+        ],
+        [
+          "g",
+          "Bool"
+        ],
+        [
+          "h",
+          "Bool"
+        ]
+      ],
+      "ret": "(Bool,Bool,Bool,Bool,Bool,Bool,Bool,Bool)"
+    },
+    "lit_arith": {
+      "body": [
+        "tuple",
+        [
+          [
+            "add",
+            [
+              "var",
+              "a"
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "1"
+              }
+            ]
+          ],
+          [
+            "lit",
+            {
+              "type": "Nat",
+              "value": "3"
+            }
+          ]
+        ]
+      ],
+      "ir_cost": 5,
+      "params": [
+        [
+          "a",
+          "U8"
+        ]
+      ],
+      "ret": "(U8,Nat)"
+    },
+    "lit_ctx": {
+      "body": [
+        "tuple",
+        [
+          [
+            "lit",
+            {
+              "type": "Nat",
+              "value": "1"
+            }
+          ],
+          [
+            "lit",
+            {
+              "type": "Nat",
+              "value": "2"
+            }
+          ]
+        ]
+      ],
+      "ir_cost": 3,
+      "params": [],
+      "ret": "(Nat,Nat)"
+    },
+    "m_arith_arm": {
+      "body": [
+        "match",
+        [
+          "var",
+          "r"
+        ],
+        [
+          [
+            [
+              "ok",
+              [
+                "bind",
+                "x"
+              ]
+            ],
+            [
+              "add",
+              [
+                "var",
+                "x"
+              ],
+              [
+                "lit",
+                {
+                  "type": "U8",
+                  "value": "1"
+                }
+              ]
+            ]
+          ],
+          [
+            [
+              "err_any"
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "0"
+              }
+            ]
+          ]
+        ]
+      ],
+      "ir_cost": 5,
+      "params": [
+        [
+          "r",
+          "Result<U8,TupleError>"
+        ]
+      ],
+      "ret": "U8"
+    },
+    "m_bind_whole": {
+      "body": [
+        "match",
+        [
+          "var",
+          "r"
+        ],
+        [
+          [
+            [
+              "ok",
+              [
+                "wild"
+              ]
+            ],
+            [
+              "lit",
+              true
+            ]
+          ],
+          [
+            [
+              "bind",
+              "whole"
+            ],
+            [
+              "eq",
+              [
+                "var",
+                "whole"
+              ],
+              [
+                "var",
+                "r"
+              ]
+            ]
+          ]
+        ]
+      ],
+      "ir_cost": 5,
+      "params": [
+        [
+          "r",
+          "Result<Bool,TupleError>"
+        ]
+      ],
+      "ret": "Bool"
+    },
+    "m_err_any_last": {
+      "body": [
+        "match",
+        [
+          "var",
+          "r"
+        ],
+        [
+          [
+            [
+              "err",
+              "Bad"
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "1"
+              }
+            ]
+          ],
+          [
+            [
+              "err_any"
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "2"
+              }
+            ]
+          ],
+          [
+            [
+              "ok",
+              [
+                "wild"
+              ]
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "0"
+              }
+            ]
+          ]
+        ]
+      ],
+      "ir_cost": 3,
+      "params": [
+        [
+          "r",
+          "Result<Bool,TupleError>"
+        ]
+      ],
+      "ret": "Nat"
+    },
+    "m_err_cases": {
+      "body": [
+        "match",
+        [
+          "var",
+          "r"
+        ],
+        [
+          [
+            [
+              "ok",
+              [
+                "wild"
+              ]
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "0"
+              }
+            ]
+          ],
+          [
+            [
+              "err",
+              "Bad"
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "1"
+              }
+            ]
+          ],
+          [
+            [
+              "err",
+              "Worse"
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "2"
+              }
+            ]
+          ],
+          [
+            [
+              "err",
+              "Worst"
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "3"
+              }
+            ]
+          ]
+        ]
+      ],
+      "ir_cost": 3,
+      "params": [
+        [
+          "r",
+          "Result<Bool,TupleError>"
+        ]
+      ],
+      "ret": "Nat"
+    },
+    "m_inner_match": {
+      "body": [
+        "match",
+        [
+          "var",
+          "r"
+        ],
+        [
+          [
+            [
+              "ok",
+              [
+                "bind",
+                "x"
+              ]
+            ],
+            [
+              "match",
+              [
+                "var",
+                "s"
+              ],
+              [
+                [
+                  [
+                    "ok",
+                    [
+                      "bind",
+                      "y"
+                    ]
+                  ],
+                  [
+                    "and",
+                    [
+                      "var",
+                      "x"
+                    ],
+                    [
+                      "var",
+                      "y"
+                    ]
+                  ]
+                ],
+                [
+                  [
+                    "err_any"
+                  ],
+                  [
+                    "lit",
+                    false
+                  ]
+                ]
+              ]
+            ]
+          ],
+          [
+            [
+              "err_any"
+            ],
+            [
+              "lit",
+              false
+            ]
+          ]
+        ]
+      ],
+      "ir_cost": 7,
+      "params": [
+        [
+          "r",
+          "Result<Bool,TupleError>"
+        ],
+        [
+          "s",
+          "Result<Bool,TupleError>"
+        ]
+      ],
+      "ret": "Bool"
+    },
+    "m_nested_match": {
+      "body": [
+        "match",
+        [
+          "var",
+          "r"
+        ],
+        [
+          [
+            [
+              "ok",
+              [
+                "ok",
+                [
+                  "wild"
+                ]
+              ]
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "0"
+              }
+            ]
+          ],
+          [
+            [
+              "ok",
+              [
+                "err_any"
+              ]
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "1"
+              }
+            ]
+          ],
+          [
+            [
+              "err_any"
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "2"
+              }
+            ]
+          ]
+        ]
+      ],
+      "ir_cost": 3,
+      "params": [
+        [
+          "r",
+          "Result<Result<Bool,TupleError>,TupleError>"
+        ]
+      ],
+      "ret": "Nat"
+    },
+    "m_ok_bind": {
+      "body": [
+        "match",
+        [
+          "var",
+          "r"
+        ],
+        [
+          [
+            [
+              "ok",
+              [
+                "bind",
+                "x"
+              ]
+            ],
+            [
+              "var",
+              "x"
+            ]
+          ],
+          [
+            [
+              "err_any"
+            ],
+            [
+              "lit",
+              false
+            ]
+          ]
+        ]
+      ],
+      "ir_cost": 3,
+      "params": [
+        [
+          "r",
+          "Result<Bool,TupleError>"
+        ]
+      ],
+      "ret": "Bool"
+    },
+    "m_ok_nested": {
+      "body": [
+        "match",
+        [
+          "var",
+          "r"
+        ],
+        [
+          [
+            [
+              "ok",
+              [
+                "tuple",
+                [
+                  [
+                    "tuple",
+                    [
+                      [
+                        "bind",
+                        "a"
+                      ],
+                      [
+                        "wild"
+                      ]
+                    ]
+                  ],
+                  [
+                    "bind",
+                    "c"
+                  ]
+                ]
+              ]
+            ],
+            [
+              "and",
+              [
+                "var",
+                "a"
+              ],
+              [
+                "var",
+                "c"
+              ]
+            ]
+          ],
+          [
+            [
+              "err_any"
+            ],
+            [
+              "lit",
+              false
+            ]
+          ]
+        ]
+      ],
+      "ir_cost": 5,
+      "params": [
+        [
+          "r",
+          "Result<((Bool,Bool),Bool),TupleError>"
+        ]
+      ],
+      "ret": "Bool"
+    },
+    "m_ok_tuple": {
+      "body": [
+        "match",
+        [
+          "var",
+          "r"
+        ],
+        [
+          [
+            [
+              "ok",
+              [
+                "tuple",
+                [
+                  [
+                    "bind",
+                    "a"
+                  ],
+                  [
+                    "bind",
+                    "b"
+                  ]
+                ]
+              ]
+            ],
+            [
+              "and",
+              [
+                "var",
+                "a"
+              ],
+              [
+                "var",
+                "b"
+              ]
+            ]
+          ],
+          [
+            [
+              "err_any"
+            ],
+            [
+              "lit",
+              false
+            ]
+          ]
+        ]
+      ],
+      "ir_cost": 5,
+      "params": [
+        [
+          "r",
+          "Result<(Bool,Bool),TupleError>"
+        ]
+      ],
+      "ret": "Bool"
+    },
+    "m_ok_tuple_wild": {
+      "body": [
+        "match",
+        [
+          "var",
+          "r"
+        ],
+        [
+          [
+            [
+              "ok",
+              [
+                "tuple",
+                [
+                  [
+                    "wild"
+                  ],
+                  [
+                    "bind",
+                    "b"
+                  ]
+                ]
+              ]
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ],
+          [
+            [
+              "err_any"
+            ],
+            [
+              "lit",
+              false
+            ]
+          ]
+        ]
+      ],
+      "ir_cost": 3,
+      "params": [
+        [
+          "r",
+          "Result<(Bool,Bool),TupleError>"
+        ]
+      ],
+      "ret": "Bool"
+    },
+    "m_ok_wild": {
+      "body": [
+        "match",
+        [
+          "var",
+          "r"
+        ],
+        [
+          [
+            [
+              "ok",
+              [
+                "wild"
+              ]
+            ],
+            [
+              "lit",
+              true
+            ]
+          ],
+          [
+            [
+              "err_any"
+            ],
+            [
+              "lit",
+              false
+            ]
+          ]
+        ]
+      ],
+      "ir_cost": 3,
+      "params": [
+        [
+          "r",
+          "Result<(Bool,Bool),TupleError>"
+        ]
+      ],
+      "ret": "Bool"
+    },
+    "m_on_call": {
+      "body": [
+        "match",
+        [
+          "model_call",
+          "k",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ],
+        [
+          [
+            [
+              "ok",
+              [
+                "tuple",
+                [
+                  [
+                    "bind",
+                    "x"
+                  ],
+                  [
+                    "wild"
+                  ]
+                ]
+              ]
+            ],
+            [
+              "var",
+              "x"
+            ]
+          ],
+          [
+            [
+              "err",
+              "Worse"
+            ],
+            [
+              "lit",
+              true
+            ]
+          ],
+          [
+            [
+              "err_any"
+            ],
+            [
+              "lit",
+              false
+            ]
+          ]
+        ]
+      ],
+      "ir_cost": 13,
+      "params": [
+        [
+          "a",
+          "Bool"
+        ],
+        [
+          "b",
+          "Bool"
+        ]
+      ],
+      "ret": "Bool"
+    },
+    "m_returns_result": {
+      "body": [
+        "match",
+        [
+          "var",
+          "r"
+        ],
+        [
+          [
+            [
+              "ok",
+              [
+                "tuple",
+                [
+                  [
+                    "bind",
+                    "a"
+                  ],
+                  [
+                    "bind",
+                    "b"
+                  ]
+                ]
+              ]
+            ],
+            [
+              "ok",
+              [
+                "tuple",
+                [
+                  [
+                    "var",
+                    "b"
+                  ],
+                  [
+                    "var",
+                    "a"
+                  ]
+                ]
+              ]
+            ]
+          ],
+          [
+            [
+              "err_any"
+            ],
+            [
+              "err",
+              "Bad"
+            ]
+          ]
+        ]
+      ],
+      "ir_cost": 6,
+      "params": [
+        [
+          "r",
+          "Result<(Bool,Bool),TupleError>"
+        ]
+      ],
+      "ret": "Result<(Bool,Bool),TupleError>"
+    },
+    "m_returns_tuple": {
+      "body": [
+        "match",
+        [
+          "var",
+          "r"
+        ],
+        [
+          [
+            [
+              "ok",
+              [
+                "tuple",
+                [
+                  [
+                    "bind",
+                    "a"
+                  ],
+                  [
+                    "bind",
+                    "b"
+                  ]
+                ]
+              ]
+            ],
+            [
+              "tuple",
+              [
+                [
+                  "var",
+                  "b"
+                ],
+                [
+                  "var",
+                  "a"
+                ]
+              ]
+            ]
+          ],
+          [
+            [
+              "err_any"
+            ],
+            [
+              "tuple",
+              [
+                [
+                  "lit",
+                  false
+                ],
+                [
+                  "lit",
+                  false
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "ir_cost": 5,
+      "params": [
+        [
+          "r",
+          "Result<(Bool,Bool),TupleError>"
+        ]
+      ],
+      "ret": "(Bool,Bool)"
+    },
+    "m_wild_arm": {
+      "body": [
+        "match",
+        [
+          "var",
+          "r"
+        ],
+        [
+          [
+            [
+              "ok",
+              [
+                "wild"
+              ]
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "1"
+              }
+            ]
+          ],
+          [
+            [
+              "wild"
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "0"
+              }
+            ]
+          ]
+        ]
+      ],
+      "ir_cost": 3,
+      "params": [
+        [
+          "r",
+          "Result<Bool,TupleError>"
+        ]
+      ],
+      "ret": "Nat"
+    },
+    "mixed": {
+      "body": [
+        "tuple",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "n"
+          ],
+          [
+            "var",
+            "d"
+          ],
+          [
+            "var",
+            "f"
+          ]
+        ]
+      ],
+      "ir_cost": 5,
+      "params": [
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "n",
+          "Nat"
+        ],
+        [
+          "d",
+          "Bytes<0>"
+        ],
+        [
+          "f",
+          "Bool"
+        ]
+      ],
+      "ret": "(U8,Nat,Bytes<0>,Bool)"
+    },
+    "nested": {
+      "body": [
+        "tuple",
+        [
+          [
+            "tuple",
+            [
+              [
+                "var",
+                "a"
+              ],
+              [
+                "var",
+                "b"
+              ]
+            ]
+          ],
+          [
+            "var",
+            "c"
+          ]
+        ]
+      ],
+      "ir_cost": 5,
+      "params": [
+        [
+          "a",
+          "Bool"
+        ],
+        [
+          "b",
+          "Bool"
+        ],
+        [
+          "c",
+          "Bool"
+        ]
+      ],
+      "ret": "((Bool,Bool),Bool)"
+    },
+    "pair": {
+      "body": [
+        "tuple",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "n"
+          ]
+        ]
+      ],
+      "ir_cost": 3,
+      "params": [
+        [
+          "a",
+          "Bool"
+        ],
+        [
+          "n",
+          "Nat"
+        ]
+      ],
+      "ret": "(Bool,Nat)"
+    },
+    "proj0": {
+      "body": [
+        "project",
+        [
+          "var",
+          "t"
+        ],
+        0
+      ],
+      "ir_cost": 2,
+      "params": [
+        [
+          "t",
+          "(Bool,Nat)"
+        ]
+      ],
+      "ret": "Bool"
+    },
+    "proj1": {
+      "body": [
+        "project",
+        [
+          "var",
+          "t"
+        ],
+        1
+      ],
+      "ir_cost": 2,
+      "params": [
+        [
+          "t",
+          "(Bool,Nat)"
+        ]
+      ],
+      "ret": "Nat"
+    },
+    "proj_chain": {
+      "body": [
+        "project",
+        [
+          "project",
+          [
+            "var",
+            "t"
+          ],
+          0
+        ],
+        1
+      ],
+      "ir_cost": 3,
+      "params": [
+        [
+          "t",
+          "((Bool,Nat),Bool)"
+        ]
+      ],
+      "ret": "Nat"
+    },
+    "proj_last8": {
+      "body": [
+        "project",
+        [
+          "var",
+          "t"
+        ],
+        7
+      ],
+      "ir_cost": 2,
+      "params": [
+        [
+          "t",
+          "(Bool,Bool,Bool,Bool,Bool,Bool,Bool,Bool)"
+        ]
+      ],
+      "ret": "Bool"
+    },
+    "proj_literal": {
+      "body": [
+        "project",
+        [
+          "tuple",
+          [
+            [
+              "lit",
+              true
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "2"
+              }
+            ]
+          ]
+        ],
+        1
+      ],
+      "ir_cost": 4,
+      "params": [],
+      "ret": "U8"
+    },
+    "proj_postfix": {
+      "body": [
+        "project",
+        [
+          "model_call",
+          "pair",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "n"
+            ]
+          ]
+        ],
+        1
+      ],
+      "ir_cost": 7,
+      "params": [
+        [
+          "a",
+          "Bool"
+        ],
+        [
+          "n",
+          "Nat"
+        ]
+      ],
+      "ret": "Nat"
+    },
+    "swap": {
+      "body": [
+        "tuple",
+        [
+          [
+            "project",
+            [
+              "var",
+              "t"
+            ],
+            1
+          ],
+          [
+            "project",
+            [
+              "var",
+              "t"
+            ],
+            0
+          ]
+        ]
+      ],
+      "ir_cost": 5,
+      "params": [
+        [
+          "t",
+          "(Bool,Bool)"
+        ]
+      ],
+      "ret": "(Bool,Bool)"
+    },
+    "tup_eq": {
+      "body": [
+        "eq",
+        [
+          "var",
+          "a"
+        ],
+        [
+          "var",
+          "b"
+        ]
+      ],
+      "ir_cost": 3,
+      "params": [
+        [
+          "a",
+          "(Bool,Bool)"
+        ],
+        [
+          "b",
+          "(Bool,Bool)"
+        ]
+      ],
+      "ret": "Bool"
+    },
+    "tup_eq_lit": {
+      "body": [
+        "eq",
+        [
+          "var",
+          "a"
+        ],
+        [
+          "tuple",
+          [
+            [
+              "lit",
+              true
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "3"
+              }
+            ]
+          ]
+        ]
+      ],
+      "ir_cost": 5,
+      "params": [
+        [
+          "a",
+          "(Bool,Nat)"
+        ]
+      ],
+      "ret": "Bool"
+    },
+    "tup_ne": {
+      "body": [
+        "ne",
+        [
+          "var",
+          "a"
+        ],
+        [
+          "var",
+          "b"
+        ]
+      ],
+      "ir_cost": 3,
+      "params": [
+        [
+          "a",
+          "(Bool,Bool)"
+        ],
+        [
+          "b",
+          "(Bool,Bool)"
+        ]
+      ],
+      "ret": "Bool"
+    }
+  },
+  "module": "tuple_forms",
+  "ops": {
+    "op_bits": {
+      "params": [
+        [
+          "d",
+          "Bytes<2>"
+        ]
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "ret": "Bytes<2>"
+    },
+    "op_bytes": {
+      "params": [
+        [
+          "d",
+          "Bytes<2>"
+        ]
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "ret": "Result<Bytes<2>,TupleError>"
+    },
+    "op_dec": {
+      "params": [
+        [
+          "a",
+          "Bool"
+        ],
+        [
+          "n",
+          "Nat"
+        ]
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "ret": "Result<(Bool,Nat),TupleError>"
+    },
+    "op_deep": {
+      "params": [
+        [
+          "a",
+          "Bool"
+        ]
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "ret": "(((Bool,Nat),Bool),Bytes<0>)"
+    },
+    "op_flip": {
+      "params": [
+        [
+          "r",
+          "Result<(Bool,Bool),TupleError>"
+        ]
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "ret": "Result<(Bool,Bool),TupleError>"
+    },
+    "op_inc": {
+      "params": [
+        [
+          "a",
+          "U8"
+        ]
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "ret": "U8"
+    },
+    "op_k": {
+      "params": [
+        [
+          "a",
+          "Bool"
+        ],
+        [
+          "b",
+          "Bool"
+        ]
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "ret": "Result<(Bool,Bool),TupleError>"
+    },
+    "op_lit2": {
+      "params": [
+        [
+          "a",
+          "Bool"
+        ],
+        [
+          "b",
+          "Bool"
+        ]
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "ret": "(Bool,Bool)"
+    },
+    "op_lit3": {
+      "params": [
+        [
+          "a",
+          "Bool"
+        ],
+        [
+          "b",
+          "Bool"
+        ],
+        [
+          "c",
+          "Bool"
+        ]
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "ret": "(Bool,Bool,Bool)"
+    },
+    "op_lit4": {
+      "params": [
+        [
+          "a",
+          "Bool"
+        ],
+        [
+          "b",
+          "Bool"
+        ],
+        [
+          "c",
+          "Bool"
+        ],
+        [
+          "d",
+          "Bool"
+        ]
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "ret": "(Bool,Bool,Bool,Bool)"
+    },
+    "op_lit5": {
+      "params": [
+        [
+          "a",
+          "Bool"
+        ],
+        [
+          "b",
+          "Bool"
+        ],
+        [
+          "c",
+          "Bool"
+        ],
+        [
+          "d",
+          "Bool"
+        ],
+        [
+          "e",
+          "Bool"
+        ]
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "ret": "(Bool,Bool,Bool,Bool,Bool)"
+    },
+    "op_lit6": {
+      "params": [
+        [
+          "a",
+          "Bool"
+        ],
+        [
+          "b",
+          "Bool"
+        ],
+        [
+          "c",
+          "Bool"
+        ],
+        [
+          "d",
+          "Bool"
+        ],
+        [
+          "e",
+          "Bool"
+        ],
+        [
+          "f",
+          "Bool"
+        ]
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "ret": "(Bool,Bool,Bool,Bool,Bool,Bool)"
+    },
+    "op_lit7": {
+      "params": [
+        [
+          "a",
+          "Bool"
+        ],
+        [
+          "b",
+          "Bool"
+        ],
+        [
+          "c",
+          "Bool"
+        ],
+        [
+          "d",
+          "Bool"
+        ],
+        [
+          "e",
+          "Bool"
+        ],
+        [
+          "f",
+          "Bool"
+        ],
+        [
+          "g",
+          "Bool"
+        ]
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "ret": "(Bool,Bool,Bool,Bool,Bool,Bool,Bool)"
+    },
+    "op_lit8": {
+      "params": [
+        [
+          "a",
+          "Bool"
+        ],
+        [
+          "b",
+          "Bool"
+        ],
+        [
+          "c",
+          "Bool"
+        ],
+        [
+          "d",
+          "Bool"
+        ],
+        [
+          "e",
+          "Bool"
+        ],
+        [
+          "f",
+          "Bool"
+        ],
+        [
+          "g",
+          "Bool"
+        ],
+        [
+          "h",
+          "Bool"
+        ]
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "ret": "(Bool,Bool,Bool,Bool,Bool,Bool,Bool,Bool)"
+    },
+    "op_lit_arith": {
+      "params": [
+        [
+          "a",
+          "U8"
+        ]
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "ret": "(U8,Nat)"
+    },
+    "op_lit_ctx": {
+      "params": [],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "ret": "(Nat,Nat)"
+    },
+    "op_m_arith_arm": {
+      "params": [
+        [
+          "r",
+          "Result<U8,TupleError>"
+        ]
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "ret": "U8"
+    },
+    "op_m_bind_whole": {
+      "params": [
+        [
+          "r",
+          "Result<Bool,TupleError>"
+        ]
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "ret": "Bool"
+    },
+    "op_m_err_any_last": {
+      "params": [
+        [
+          "r",
+          "Result<Bool,TupleError>"
+        ]
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "ret": "Nat"
+    },
+    "op_m_err_cases": {
+      "params": [
+        [
+          "r",
+          "Result<Bool,TupleError>"
+        ]
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "ret": "Nat"
+    },
+    "op_m_inner_match": {
+      "params": [
+        [
+          "r",
+          "Result<Bool,TupleError>"
+        ],
+        [
+          "s",
+          "Result<Bool,TupleError>"
+        ]
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "ret": "Bool"
+    },
+    "op_m_nested_match": {
+      "params": [
+        [
+          "r",
+          "Result<Result<Bool,TupleError>,TupleError>"
+        ]
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "ret": "Nat"
+    },
+    "op_m_ok_bind": {
+      "params": [
+        [
+          "r",
+          "Result<Bool,TupleError>"
+        ]
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "ret": "Bool"
+    },
+    "op_m_ok_nested": {
+      "params": [
+        [
+          "r",
+          "Result<((Bool,Bool),Bool),TupleError>"
+        ]
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "ret": "Bool"
+    },
+    "op_m_ok_tuple": {
+      "params": [
+        [
+          "r",
+          "Result<(Bool,Bool),TupleError>"
+        ]
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "ret": "Bool"
+    },
+    "op_m_ok_tuple_wild": {
+      "params": [
+        [
+          "r",
+          "Result<(Bool,Bool),TupleError>"
+        ]
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "ret": "Bool"
+    },
+    "op_m_ok_wild": {
+      "params": [
+        [
+          "r",
+          "Result<(Bool,Bool),TupleError>"
+        ]
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "ret": "Bool"
+    },
+    "op_m_on_call": {
+      "params": [
+        [
+          "a",
+          "Bool"
+        ],
+        [
+          "b",
+          "Bool"
+        ]
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "ret": "Bool"
+    },
+    "op_m_returns_result": {
+      "params": [
+        [
+          "r",
+          "Result<(Bool,Bool),TupleError>"
+        ]
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "ret": "Result<(Bool,Bool),TupleError>"
+    },
+    "op_m_returns_tuple": {
+      "params": [
+        [
+          "r",
+          "Result<(Bool,Bool),TupleError>"
+        ]
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "ret": "(Bool,Bool)"
+    },
+    "op_m_wild_arm": {
+      "params": [
+        [
+          "r",
+          "Result<Bool,TupleError>"
+        ]
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "ret": "Nat"
+    },
+    "op_mixed": {
+      "admit": [
+        "lt",
+        [
+          "var",
+          "n"
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "2"
+          }
+        ]
+      ],
+      "params": [
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "n",
+          "Nat"
+        ],
+        [
+          "d",
+          "Bytes<0>"
+        ],
+        [
+          "f",
+          "Bool"
+        ]
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "ret": "(U8,Nat,Bytes<0>,Bool)"
+    },
+    "op_nested": {
+      "params": [
+        [
+          "a",
+          "Bool"
+        ],
+        [
+          "b",
+          "Bool"
+        ],
+        [
+          "c",
+          "Bool"
+        ]
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "ret": "((Bool,Bool),Bool)"
+    },
+    "op_pair": {
+      "params": [
+        [
+          "a",
+          "Bool"
+        ],
+        [
+          "n",
+          "Nat"
+        ]
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "ret": "(Bool,Nat)"
+    },
+    "op_proj0": {
+      "params": [
+        [
+          "t",
+          "(Bool,Nat)"
+        ]
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "ret": "Bool"
+    },
+    "op_proj1": {
+      "params": [
+        [
+          "t",
+          "(Bool,Nat)"
+        ]
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "ret": "Nat"
+    },
+    "op_proj_chain": {
+      "params": [
+        [
+          "t",
+          "((Bool,Nat),Bool)"
+        ]
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "ret": "Nat"
+    },
+    "op_proj_last8": {
+      "params": [
+        [
+          "t",
+          "(Bool,Bool,Bool,Bool,Bool,Bool,Bool,Bool)"
+        ]
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "ret": "Bool"
+    },
+    "op_proj_literal": {
+      "params": [],
+      "requires": [
+        "ir.core"
+      ],
+      "ret": "U8"
+    },
+    "op_proj_postfix": {
+      "params": [
+        [
+          "a",
+          "Bool"
+        ],
+        [
+          "n",
+          "Nat"
+        ]
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "ret": "Nat"
+    },
+    "op_small": {
+      "admit": [
+        "lt",
+        [
+          "var",
+          "a"
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "100"
+          }
+        ]
+      ],
+      "params": [
+        [
+          "a",
+          "U8"
+        ]
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "ret": "U8"
+    },
+    "op_swap": {
+      "params": [
+        [
+          "t",
+          "(Bool,Bool)"
+        ]
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "ret": "(Bool,Bool)"
+    },
+    "op_tup_eq": {
+      "params": [
+        [
+          "a",
+          "(Bool,Bool)"
+        ],
+        [
+          "b",
+          "(Bool,Bool)"
+        ]
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "ret": "Bool"
+    },
+    "op_tup_eq_lit": {
+      "params": [
+        [
+          "a",
+          "(Bool,Nat)"
+        ]
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "ret": "Bool"
+    },
+    "op_tup_ne": {
+      "params": [
+        [
+          "a",
+          "(Bool,Bool)"
+        ],
+        [
+          "b",
+          "(Bool,Bool)"
+        ]
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "ret": "Bool"
+    },
+    "op_u8": {
+      "params": [
+        [
+          "a",
+          "U8"
+        ]
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "ret": "U8"
+    },
+    "op_zero": {
+      "params": [
+        [
+          "d",
+          "Bytes<0>"
+        ]
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "ret": "Result<(Bool,Nat),TupleError>"
+    }
+  },
+  "schema": "warrant-lowering-parity-v1",
+  "suites": [
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "Bool"
+        ],
+        [
+          "b",
+          "Bool"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_lit2",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "lit2",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_lit2",
+      "expected": [
+        "model_call",
+        "lit2",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ],
+      "id": "warrant/tuple_forms/exhaustive/c_lit2",
+      "ir_cost": 17,
+      "kind": "reference",
+      "ops": [
+        "op_lit2"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "(Bool,Bool)",
+      "subject": [
+        "subject_op",
+        "op_lit2",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "Bool"
+        ],
+        [
+          "b",
+          "Bool"
+        ],
+        [
+          "c",
+          "Bool"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_lit3",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ],
+            [
+              "var",
+              "c"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "lit3",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ],
+            [
+              "var",
+              "c"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_lit3",
+      "expected": [
+        "model_call",
+        "lit3",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ],
+          [
+            "var",
+            "c"
+          ]
+        ]
+      ],
+      "id": "warrant/tuple_forms/exhaustive/c_lit3",
+      "ir_cost": 22,
+      "kind": "reference",
+      "ops": [
+        "op_lit3"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "(Bool,Bool,Bool)",
+      "subject": [
+        "subject_op",
+        "op_lit3",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ],
+          [
+            "var",
+            "c"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "Bool"
+        ],
+        [
+          "b",
+          "Bool"
+        ],
+        [
+          "c",
+          "Bool"
+        ],
+        [
+          "d",
+          "Bool"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_lit4",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ],
+            [
+              "var",
+              "c"
+            ],
+            [
+              "var",
+              "d"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "lit4",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ],
+            [
+              "var",
+              "c"
+            ],
+            [
+              "var",
+              "d"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_lit4",
+      "expected": [
+        "model_call",
+        "lit4",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ],
+          [
+            "var",
+            "c"
+          ],
+          [
+            "var",
+            "d"
+          ]
+        ]
+      ],
+      "id": "warrant/tuple_forms/exhaustive/c_lit4",
+      "ir_cost": 27,
+      "kind": "reference",
+      "ops": [
+        "op_lit4"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "(Bool,Bool,Bool,Bool)",
+      "subject": [
+        "subject_op",
+        "op_lit4",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ],
+          [
+            "var",
+            "c"
+          ],
+          [
+            "var",
+            "d"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "Bool"
+        ],
+        [
+          "b",
+          "Bool"
+        ],
+        [
+          "c",
+          "Bool"
+        ],
+        [
+          "d",
+          "Bool"
+        ],
+        [
+          "e",
+          "Bool"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_lit5",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ],
+            [
+              "var",
+              "c"
+            ],
+            [
+              "var",
+              "d"
+            ],
+            [
+              "var",
+              "e"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "lit5",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ],
+            [
+              "var",
+              "c"
+            ],
+            [
+              "var",
+              "d"
+            ],
+            [
+              "var",
+              "e"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_lit5",
+      "expected": [
+        "model_call",
+        "lit5",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ],
+          [
+            "var",
+            "c"
+          ],
+          [
+            "var",
+            "d"
+          ],
+          [
+            "var",
+            "e"
+          ]
+        ]
+      ],
+      "id": "warrant/tuple_forms/exhaustive/c_lit5",
+      "ir_cost": 32,
+      "kind": "reference",
+      "ops": [
+        "op_lit5"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "(Bool,Bool,Bool,Bool,Bool)",
+      "subject": [
+        "subject_op",
+        "op_lit5",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ],
+          [
+            "var",
+            "c"
+          ],
+          [
+            "var",
+            "d"
+          ],
+          [
+            "var",
+            "e"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "Bool"
+        ],
+        [
+          "b",
+          "Bool"
+        ],
+        [
+          "c",
+          "Bool"
+        ],
+        [
+          "d",
+          "Bool"
+        ],
+        [
+          "e",
+          "Bool"
+        ],
+        [
+          "f",
+          "Bool"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_lit6",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ],
+            [
+              "var",
+              "c"
+            ],
+            [
+              "var",
+              "d"
+            ],
+            [
+              "var",
+              "e"
+            ],
+            [
+              "var",
+              "f"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "lit6",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ],
+            [
+              "var",
+              "c"
+            ],
+            [
+              "var",
+              "d"
+            ],
+            [
+              "var",
+              "e"
+            ],
+            [
+              "var",
+              "f"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_lit6",
+      "expected": [
+        "model_call",
+        "lit6",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ],
+          [
+            "var",
+            "c"
+          ],
+          [
+            "var",
+            "d"
+          ],
+          [
+            "var",
+            "e"
+          ],
+          [
+            "var",
+            "f"
+          ]
+        ]
+      ],
+      "id": "warrant/tuple_forms/exhaustive/c_lit6",
+      "ir_cost": 37,
+      "kind": "reference",
+      "ops": [
+        "op_lit6"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "(Bool,Bool,Bool,Bool,Bool,Bool)",
+      "subject": [
+        "subject_op",
+        "op_lit6",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ],
+          [
+            "var",
+            "c"
+          ],
+          [
+            "var",
+            "d"
+          ],
+          [
+            "var",
+            "e"
+          ],
+          [
+            "var",
+            "f"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "Bool"
+        ],
+        [
+          "b",
+          "Bool"
+        ],
+        [
+          "c",
+          "Bool"
+        ],
+        [
+          "d",
+          "Bool"
+        ],
+        [
+          "e",
+          "Bool"
+        ],
+        [
+          "f",
+          "Bool"
+        ],
+        [
+          "g",
+          "Bool"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_lit7",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ],
+            [
+              "var",
+              "c"
+            ],
+            [
+              "var",
+              "d"
+            ],
+            [
+              "var",
+              "e"
+            ],
+            [
+              "var",
+              "f"
+            ],
+            [
+              "var",
+              "g"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "lit7",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ],
+            [
+              "var",
+              "c"
+            ],
+            [
+              "var",
+              "d"
+            ],
+            [
+              "var",
+              "e"
+            ],
+            [
+              "var",
+              "f"
+            ],
+            [
+              "var",
+              "g"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_lit7",
+      "expected": [
+        "model_call",
+        "lit7",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ],
+          [
+            "var",
+            "c"
+          ],
+          [
+            "var",
+            "d"
+          ],
+          [
+            "var",
+            "e"
+          ],
+          [
+            "var",
+            "f"
+          ],
+          [
+            "var",
+            "g"
+          ]
+        ]
+      ],
+      "id": "warrant/tuple_forms/exhaustive/c_lit7",
+      "ir_cost": 42,
+      "kind": "reference",
+      "ops": [
+        "op_lit7"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "(Bool,Bool,Bool,Bool,Bool,Bool,Bool)",
+      "subject": [
+        "subject_op",
+        "op_lit7",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ],
+          [
+            "var",
+            "c"
+          ],
+          [
+            "var",
+            "d"
+          ],
+          [
+            "var",
+            "e"
+          ],
+          [
+            "var",
+            "f"
+          ],
+          [
+            "var",
+            "g"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "Bool"
+        ],
+        [
+          "b",
+          "Bool"
+        ],
+        [
+          "c",
+          "Bool"
+        ],
+        [
+          "d",
+          "Bool"
+        ],
+        [
+          "e",
+          "Bool"
+        ],
+        [
+          "f",
+          "Bool"
+        ],
+        [
+          "g",
+          "Bool"
+        ],
+        [
+          "h",
+          "Bool"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_lit8",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ],
+            [
+              "var",
+              "c"
+            ],
+            [
+              "var",
+              "d"
+            ],
+            [
+              "var",
+              "e"
+            ],
+            [
+              "var",
+              "f"
+            ],
+            [
+              "var",
+              "g"
+            ],
+            [
+              "var",
+              "h"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "lit8",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ],
+            [
+              "var",
+              "c"
+            ],
+            [
+              "var",
+              "d"
+            ],
+            [
+              "var",
+              "e"
+            ],
+            [
+              "var",
+              "f"
+            ],
+            [
+              "var",
+              "g"
+            ],
+            [
+              "var",
+              "h"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_lit8",
+      "expected": [
+        "model_call",
+        "lit8",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ],
+          [
+            "var",
+            "c"
+          ],
+          [
+            "var",
+            "d"
+          ],
+          [
+            "var",
+            "e"
+          ],
+          [
+            "var",
+            "f"
+          ],
+          [
+            "var",
+            "g"
+          ],
+          [
+            "var",
+            "h"
+          ]
+        ]
+      ],
+      "id": "warrant/tuple_forms/exhaustive/c_lit8",
+      "ir_cost": 47,
+      "kind": "reference",
+      "ops": [
+        "op_lit8"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "(Bool,Bool,Bool,Bool,Bool,Bool,Bool,Bool)",
+      "subject": [
+        "subject_op",
+        "op_lit8",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ],
+          [
+            "var",
+            "c"
+          ],
+          [
+            "var",
+            "d"
+          ],
+          [
+            "var",
+            "e"
+          ],
+          [
+            "var",
+            "f"
+          ],
+          [
+            "var",
+            "g"
+          ],
+          [
+            "var",
+            "h"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "Bool"
+        ],
+        [
+          "b",
+          "Bool"
+        ],
+        [
+          "c",
+          "Bool"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_nested",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ],
+            [
+              "var",
+              "c"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "nested",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ],
+            [
+              "var",
+              "c"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_nested",
+      "expected": [
+        "model_call",
+        "nested",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ],
+          [
+            "var",
+            "c"
+          ]
+        ]
+      ],
+      "id": "warrant/tuple_forms/exhaustive/c_nested",
+      "ir_cost": 24,
+      "kind": "reference",
+      "ops": [
+        "op_nested"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "((Bool,Bool),Bool)",
+      "subject": [
+        "subject_op",
+        "op_nested",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ],
+          [
+            "var",
+            "c"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "Bool"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_deep",
+          [
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "deep",
+          [
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_deep",
+      "expected": [
+        "model_call",
+        "deep",
+        [
+          [
+            "var",
+            "a"
+          ]
+        ]
+      ],
+      "id": "warrant/tuple_forms/exhaustive/c_deep",
+      "ir_cost": 24,
+      "kind": "reference",
+      "ops": [
+        "op_deep"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "(((Bool,Nat),Bool),Bytes<0>)",
+      "subject": [
+        "subject_op",
+        "op_deep",
+        [
+          [
+            "var",
+            "a"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_lit_ctx",
+          []
+        ],
+        [
+          "model_call",
+          "lit_ctx",
+          []
+        ]
+      ],
+      "claim": "c_lit_ctx",
+      "expected": [
+        "model_call",
+        "lit_ctx",
+        []
+      ],
+      "id": "warrant/tuple_forms/exhaustive/c_lit_ctx",
+      "ir_cost": 11,
+      "kind": "reference",
+      "ops": [
+        "op_lit_ctx"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "(Nat,Nat)",
+      "subject": [
+        "subject_op",
+        "op_lit_ctx",
+        []
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "U8"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_lit_arith",
+          [
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "lit_arith",
+          [
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_lit_arith",
+      "expected": [
+        "model_call",
+        "lit_arith",
+        [
+          [
+            "var",
+            "a"
+          ]
+        ]
+      ],
+      "id": "warrant/tuple_forms/exhaustive/c_lit_arith",
+      "ir_cost": 18,
+      "kind": "reference",
+      "ops": [
+        "op_lit_arith"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "(U8,Nat)",
+      "subject": [
+        "subject_op",
+        "op_lit_arith",
+        [
+          [
+            "var",
+            "a"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "Bool"
+        ],
+        [
+          "n",
+          "Nat"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_pair",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "n"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "pair",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "n"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_pair",
+      "expected": [
+        "model_call",
+        "pair",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "n"
+          ]
+        ]
+      ],
+      "id": "warrant/tuple_forms/exhaustive/c_pair",
+      "ir_cost": 17,
+      "kind": "reference",
+      "ops": [
+        "op_pair"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "(Bool,Nat)",
+      "subject": [
+        "subject_op",
+        "op_pair",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "n"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "t",
+          "(Bool,Nat)"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_proj0",
+          [
+            [
+              "var",
+              "t"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "proj0",
+          [
+            [
+              "var",
+              "t"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_proj0",
+      "expected": [
+        "model_call",
+        "proj0",
+        [
+          [
+            "var",
+            "t"
+          ]
+        ]
+      ],
+      "id": "warrant/tuple_forms/exhaustive/c_proj0",
+      "ir_cost": 12,
+      "kind": "reference",
+      "ops": [
+        "op_proj0"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Bool",
+      "subject": [
+        "subject_op",
+        "op_proj0",
+        [
+          [
+            "var",
+            "t"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "t",
+          "(Bool,Nat)"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_proj1",
+          [
+            [
+              "var",
+              "t"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "proj1",
+          [
+            [
+              "var",
+              "t"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_proj1",
+      "expected": [
+        "model_call",
+        "proj1",
+        [
+          [
+            "var",
+            "t"
+          ]
+        ]
+      ],
+      "id": "warrant/tuple_forms/exhaustive/c_proj1",
+      "ir_cost": 12,
+      "kind": "reference",
+      "ops": [
+        "op_proj1"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Nat",
+      "subject": [
+        "subject_op",
+        "op_proj1",
+        [
+          [
+            "var",
+            "t"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "t",
+          "((Bool,Nat),Bool)"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_proj_chain",
+          [
+            [
+              "var",
+              "t"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "proj_chain",
+          [
+            [
+              "var",
+              "t"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_proj_chain",
+      "expected": [
+        "model_call",
+        "proj_chain",
+        [
+          [
+            "var",
+            "t"
+          ]
+        ]
+      ],
+      "id": "warrant/tuple_forms/exhaustive/c_proj_chain",
+      "ir_cost": 14,
+      "kind": "reference",
+      "ops": [
+        "op_proj_chain"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Nat",
+      "subject": [
+        "subject_op",
+        "op_proj_chain",
+        [
+          [
+            "var",
+            "t"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "t",
+          "(Bool,Bool,Bool,Bool,Bool,Bool,Bool,Bool)"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_proj_last8",
+          [
+            [
+              "var",
+              "t"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "proj_last8",
+          [
+            [
+              "var",
+              "t"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_proj_last8",
+      "expected": [
+        "model_call",
+        "proj_last8",
+        [
+          [
+            "var",
+            "t"
+          ]
+        ]
+      ],
+      "id": "warrant/tuple_forms/exhaustive/c_proj_last8",
+      "ir_cost": 12,
+      "kind": "reference",
+      "ops": [
+        "op_proj_last8"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Bool",
+      "subject": [
+        "subject_op",
+        "op_proj_last8",
+        [
+          [
+            "var",
+            "t"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "Bool"
+        ],
+        [
+          "n",
+          "Nat"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_proj_postfix",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "n"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "proj_postfix",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "n"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_proj_postfix",
+      "expected": [
+        "model_call",
+        "proj_postfix",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "n"
+          ]
+        ]
+      ],
+      "id": "warrant/tuple_forms/exhaustive/c_proj_postfix",
+      "ir_cost": 25,
+      "kind": "reference",
+      "ops": [
+        "op_proj_postfix"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Nat",
+      "subject": [
+        "subject_op",
+        "op_proj_postfix",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "n"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_proj_literal",
+          []
+        ],
+        [
+          "model_call",
+          "proj_literal",
+          []
+        ]
+      ],
+      "claim": "c_proj_literal",
+      "expected": [
+        "model_call",
+        "proj_literal",
+        []
+      ],
+      "id": "warrant/tuple_forms/exhaustive/c_proj_literal",
+      "ir_cost": 13,
+      "kind": "reference",
+      "ops": [
+        "op_proj_literal"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "U8",
+      "subject": [
+        "subject_op",
+        "op_proj_literal",
+        []
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "t",
+          "(Bool,Bool)"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_swap",
+          [
+            [
+              "var",
+              "t"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "swap",
+          [
+            [
+              "var",
+              "t"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_swap",
+      "expected": [
+        "model_call",
+        "swap",
+        [
+          [
+            "var",
+            "t"
+          ]
+        ]
+      ],
+      "id": "warrant/tuple_forms/exhaustive/c_swap",
+      "ir_cost": 18,
+      "kind": "reference",
+      "ops": [
+        "op_swap"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "(Bool,Bool)",
+      "subject": [
+        "subject_op",
+        "op_swap",
+        [
+          [
+            "var",
+            "t"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "(Bool,Bool)"
+        ],
+        [
+          "b",
+          "(Bool,Bool)"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_tup_eq",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "tup_eq",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_tup_eq",
+      "expected": [
+        "model_call",
+        "tup_eq",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ],
+      "id": "warrant/tuple_forms/exhaustive/c_tup_eq",
+      "ir_cost": 17,
+      "kind": "reference",
+      "ops": [
+        "op_tup_eq"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Bool",
+      "subject": [
+        "subject_op",
+        "op_tup_eq",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "(Bool,Bool)"
+        ],
+        [
+          "b",
+          "(Bool,Bool)"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_tup_ne",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "tup_ne",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_tup_ne",
+      "expected": [
+        "model_call",
+        "tup_ne",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ],
+      "id": "warrant/tuple_forms/exhaustive/c_tup_ne",
+      "ir_cost": 17,
+      "kind": "reference",
+      "ops": [
+        "op_tup_ne"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Bool",
+      "subject": [
+        "subject_op",
+        "op_tup_ne",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "(Bool,Nat)"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_tup_eq_lit",
+          [
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "tup_eq_lit",
+          [
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_tup_eq_lit",
+      "expected": [
+        "model_call",
+        "tup_eq_lit",
+        [
+          [
+            "var",
+            "a"
+          ]
+        ]
+      ],
+      "id": "warrant/tuple_forms/exhaustive/c_tup_eq_lit",
+      "ir_cost": 18,
+      "kind": "reference",
+      "ops": [
+        "op_tup_eq_lit"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Bool",
+      "subject": [
+        "subject_op",
+        "op_tup_eq_lit",
+        [
+          [
+            "var",
+            "a"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "Bool"
+        ],
+        [
+          "b",
+          "Bool"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_k",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "k",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_k",
+      "expected": [
+        "model_call",
+        "k",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ],
+      "id": "warrant/tuple_forms/exhaustive/c_k",
+      "ir_cost": 27,
+      "kind": "reference",
+      "ops": [
+        "op_k"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Result<(Bool,Bool),TupleError>",
+      "subject": [
+        "subject_op",
+        "op_k",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "Bool"
+        ],
+        [
+          "n",
+          "Nat"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_dec",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "n"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "dec",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "n"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_dec",
+      "expected": [
+        "model_call",
+        "dec",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "n"
+          ]
+        ]
+      ],
+      "id": "warrant/tuple_forms/exhaustive/c_dec",
+      "ir_cost": 27,
+      "kind": "reference",
+      "ops": [
+        "op_dec"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Result<(Bool,Nat),TupleError>",
+      "subject": [
+        "subject_op",
+        "op_dec",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "n"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "r",
+          "Result<(Bool,Bool),TupleError>"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_m_ok_wild",
+          [
+            [
+              "var",
+              "r"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "m_ok_wild",
+          [
+            [
+              "var",
+              "r"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_m_ok_wild",
+      "expected": [
+        "model_call",
+        "m_ok_wild",
+        [
+          [
+            "var",
+            "r"
+          ]
+        ]
+      ],
+      "id": "warrant/tuple_forms/exhaustive/c_m_ok_wild",
+      "ir_cost": 14,
+      "kind": "reference",
+      "ops": [
+        "op_m_ok_wild"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Bool",
+      "subject": [
+        "subject_op",
+        "op_m_ok_wild",
+        [
+          [
+            "var",
+            "r"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "r",
+          "Result<Bool,TupleError>"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_m_ok_bind",
+          [
+            [
+              "var",
+              "r"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "m_ok_bind",
+          [
+            [
+              "var",
+              "r"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_m_ok_bind",
+      "expected": [
+        "model_call",
+        "m_ok_bind",
+        [
+          [
+            "var",
+            "r"
+          ]
+        ]
+      ],
+      "id": "warrant/tuple_forms/exhaustive/c_m_ok_bind",
+      "ir_cost": 14,
+      "kind": "reference",
+      "ops": [
+        "op_m_ok_bind"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Bool",
+      "subject": [
+        "subject_op",
+        "op_m_ok_bind",
+        [
+          [
+            "var",
+            "r"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "r",
+          "Result<(Bool,Bool),TupleError>"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_m_ok_tuple",
+          [
+            [
+              "var",
+              "r"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "m_ok_tuple",
+          [
+            [
+              "var",
+              "r"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_m_ok_tuple",
+      "expected": [
+        "model_call",
+        "m_ok_tuple",
+        [
+          [
+            "var",
+            "r"
+          ]
+        ]
+      ],
+      "id": "warrant/tuple_forms/exhaustive/c_m_ok_tuple",
+      "ir_cost": 18,
+      "kind": "reference",
+      "ops": [
+        "op_m_ok_tuple"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Bool",
+      "subject": [
+        "subject_op",
+        "op_m_ok_tuple",
+        [
+          [
+            "var",
+            "r"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "r",
+          "Result<(Bool,Bool),TupleError>"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_m_ok_tuple_wild",
+          [
+            [
+              "var",
+              "r"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "m_ok_tuple_wild",
+          [
+            [
+              "var",
+              "r"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_m_ok_tuple_wild",
+      "expected": [
+        "model_call",
+        "m_ok_tuple_wild",
+        [
+          [
+            "var",
+            "r"
+          ]
+        ]
+      ],
+      "id": "warrant/tuple_forms/exhaustive/c_m_ok_tuple_wild",
+      "ir_cost": 14,
+      "kind": "reference",
+      "ops": [
+        "op_m_ok_tuple_wild"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Bool",
+      "subject": [
+        "subject_op",
+        "op_m_ok_tuple_wild",
+        [
+          [
+            "var",
+            "r"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "r",
+          "Result<((Bool,Bool),Bool),TupleError>"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_m_ok_nested",
+          [
+            [
+              "var",
+              "r"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "m_ok_nested",
+          [
+            [
+              "var",
+              "r"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_m_ok_nested",
+      "expected": [
+        "model_call",
+        "m_ok_nested",
+        [
+          [
+            "var",
+            "r"
+          ]
+        ]
+      ],
+      "id": "warrant/tuple_forms/exhaustive/c_m_ok_nested",
+      "ir_cost": 18,
+      "kind": "reference",
+      "ops": [
+        "op_m_ok_nested"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Bool",
+      "subject": [
+        "subject_op",
+        "op_m_ok_nested",
+        [
+          [
+            "var",
+            "r"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "r",
+          "Result<Bool,TupleError>"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_m_err_cases",
+          [
+            [
+              "var",
+              "r"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "m_err_cases",
+          [
+            [
+              "var",
+              "r"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_m_err_cases",
+      "expected": [
+        "model_call",
+        "m_err_cases",
+        [
+          [
+            "var",
+            "r"
+          ]
+        ]
+      ],
+      "id": "warrant/tuple_forms/exhaustive/c_m_err_cases",
+      "ir_cost": 14,
+      "kind": "reference",
+      "ops": [
+        "op_m_err_cases"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Nat",
+      "subject": [
+        "subject_op",
+        "op_m_err_cases",
+        [
+          [
+            "var",
+            "r"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "r",
+          "Result<Bool,TupleError>"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_m_err_any_last",
+          [
+            [
+              "var",
+              "r"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "m_err_any_last",
+          [
+            [
+              "var",
+              "r"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_m_err_any_last",
+      "expected": [
+        "model_call",
+        "m_err_any_last",
+        [
+          [
+            "var",
+            "r"
+          ]
+        ]
+      ],
+      "id": "warrant/tuple_forms/exhaustive/c_m_err_any_last",
+      "ir_cost": 14,
+      "kind": "reference",
+      "ops": [
+        "op_m_err_any_last"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Nat",
+      "subject": [
+        "subject_op",
+        "op_m_err_any_last",
+        [
+          [
+            "var",
+            "r"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "r",
+          "Result<Bool,TupleError>"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_m_bind_whole",
+          [
+            [
+              "var",
+              "r"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "m_bind_whole",
+          [
+            [
+              "var",
+              "r"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_m_bind_whole",
+      "expected": [
+        "model_call",
+        "m_bind_whole",
+        [
+          [
+            "var",
+            "r"
+          ]
+        ]
+      ],
+      "id": "warrant/tuple_forms/exhaustive/c_m_bind_whole",
+      "ir_cost": 18,
+      "kind": "reference",
+      "ops": [
+        "op_m_bind_whole"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Bool",
+      "subject": [
+        "subject_op",
+        "op_m_bind_whole",
+        [
+          [
+            "var",
+            "r"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "r",
+          "Result<Bool,TupleError>"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_m_wild_arm",
+          [
+            [
+              "var",
+              "r"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "m_wild_arm",
+          [
+            [
+              "var",
+              "r"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_m_wild_arm",
+      "expected": [
+        "model_call",
+        "m_wild_arm",
+        [
+          [
+            "var",
+            "r"
+          ]
+        ]
+      ],
+      "id": "warrant/tuple_forms/exhaustive/c_m_wild_arm",
+      "ir_cost": 14,
+      "kind": "reference",
+      "ops": [
+        "op_m_wild_arm"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Nat",
+      "subject": [
+        "subject_op",
+        "op_m_wild_arm",
+        [
+          [
+            "var",
+            "r"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "r",
+          "Result<(Bool,Bool),TupleError>"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_m_returns_tuple",
+          [
+            [
+              "var",
+              "r"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "m_returns_tuple",
+          [
+            [
+              "var",
+              "r"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_m_returns_tuple",
+      "expected": [
+        "model_call",
+        "m_returns_tuple",
+        [
+          [
+            "var",
+            "r"
+          ]
+        ]
+      ],
+      "id": "warrant/tuple_forms/exhaustive/c_m_returns_tuple",
+      "ir_cost": 18,
+      "kind": "reference",
+      "ops": [
+        "op_m_returns_tuple"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "(Bool,Bool)",
+      "subject": [
+        "subject_op",
+        "op_m_returns_tuple",
+        [
+          [
+            "var",
+            "r"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "r",
+          "Result<(Bool,Bool),TupleError>"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_m_returns_result",
+          [
+            [
+              "var",
+              "r"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "m_returns_result",
+          [
+            [
+              "var",
+              "r"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_m_returns_result",
+      "expected": [
+        "model_call",
+        "m_returns_result",
+        [
+          [
+            "var",
+            "r"
+          ]
+        ]
+      ],
+      "id": "warrant/tuple_forms/exhaustive/c_m_returns_result",
+      "ir_cost": 20,
+      "kind": "reference",
+      "ops": [
+        "op_m_returns_result"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Result<(Bool,Bool),TupleError>",
+      "subject": [
+        "subject_op",
+        "op_m_returns_result",
+        [
+          [
+            "var",
+            "r"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "r",
+          "Result<Result<Bool,TupleError>,TupleError>"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_m_nested_match",
+          [
+            [
+              "var",
+              "r"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "m_nested_match",
+          [
+            [
+              "var",
+              "r"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_m_nested_match",
+      "expected": [
+        "model_call",
+        "m_nested_match",
+        [
+          [
+            "var",
+            "r"
+          ]
+        ]
+      ],
+      "id": "warrant/tuple_forms/exhaustive/c_m_nested_match",
+      "ir_cost": 14,
+      "kind": "reference",
+      "ops": [
+        "op_m_nested_match"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Nat",
+      "subject": [
+        "subject_op",
+        "op_m_nested_match",
+        [
+          [
+            "var",
+            "r"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "r",
+          "Result<Bool,TupleError>"
+        ],
+        [
+          "s",
+          "Result<Bool,TupleError>"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_m_inner_match",
+          [
+            [
+              "var",
+              "r"
+            ],
+            [
+              "var",
+              "s"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "m_inner_match",
+          [
+            [
+              "var",
+              "r"
+            ],
+            [
+              "var",
+              "s"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_m_inner_match",
+      "expected": [
+        "model_call",
+        "m_inner_match",
+        [
+          [
+            "var",
+            "r"
+          ],
+          [
+            "var",
+            "s"
+          ]
+        ]
+      ],
+      "id": "warrant/tuple_forms/exhaustive/c_m_inner_match",
+      "ir_cost": 25,
+      "kind": "reference",
+      "ops": [
+        "op_m_inner_match"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Bool",
+      "subject": [
+        "subject_op",
+        "op_m_inner_match",
+        [
+          [
+            "var",
+            "r"
+          ],
+          [
+            "var",
+            "s"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "Bool"
+        ],
+        [
+          "b",
+          "Bool"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_m_on_call",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "m_on_call",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_m_on_call",
+      "expected": [
+        "model_call",
+        "m_on_call",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ],
+      "id": "warrant/tuple_forms/exhaustive/c_m_on_call",
+      "ir_cost": 37,
+      "kind": "reference",
+      "ops": [
+        "op_m_on_call"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Bool",
+      "subject": [
+        "subject_op",
+        "op_m_on_call",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "b"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "r",
+          "Result<U8,TupleError>"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_m_arith_arm",
+          [
+            [
+              "var",
+              "r"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "m_arith_arm",
+          [
+            [
+              "var",
+              "r"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_m_arith_arm",
+      "expected": [
+        "model_call",
+        "m_arith_arm",
+        [
+          [
+            "var",
+            "r"
+          ]
+        ]
+      ],
+      "id": "warrant/tuple_forms/exhaustive/c_m_arith_arm",
+      "ir_cost": 18,
+      "kind": "reference",
+      "ops": [
+        "op_m_arith_arm"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "U8",
+      "subject": [
+        "subject_op",
+        "op_m_arith_arm",
+        [
+          [
+            "var",
+            "r"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lt",
+        [
+          "var",
+          "n"
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "2"
+          }
+        ]
+      ],
+      "binders": [
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "n",
+          "Nat"
+        ],
+        [
+          "d",
+          "Bytes<0>"
+        ],
+        [
+          "f",
+          "Bool"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_mixed",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "n"
+            ],
+            [
+              "var",
+              "d"
+            ],
+            [
+              "var",
+              "f"
+            ]
+          ]
+        ],
+        [
+          "tuple",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "n"
+            ],
+            [
+              "var",
+              "d"
+            ],
+            [
+              "var",
+              "f"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_mixed",
+      "expected": [
+        "tuple",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "n"
+          ],
+          [
+            "var",
+            "d"
+          ],
+          [
+            "var",
+            "f"
+          ]
+        ]
+      ],
+      "id": "warrant/tuple_forms/exhaustive/c_mixed",
+      "ir_cost": 19,
+      "kind": "reference",
+      "ops": [
+        "op_mixed"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "(U8,Nat,Bytes<0>,Bool)",
+      "subject": [
+        "subject_op",
+        "op_mixed",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "n"
+          ],
+          [
+            "var",
+            "d"
+          ],
+          [
+            "var",
+            "f"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "Bool"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_pair",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "1"
+              }
+            ]
+          ]
+        ],
+        [
+          "tuple",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "1"
+              }
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_pair_literal",
+      "expected": [
+        "tuple",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "lit",
+            {
+              "type": "Nat",
+              "value": "1"
+            }
+          ]
+        ]
+      ],
+      "id": "warrant/tuple_forms/exhaustive/c_pair_literal",
+      "ir_cost": 11,
+      "kind": "reference",
+      "ops": [
+        "op_pair"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "(Bool,Nat)",
+      "subject": [
+        "subject_op",
+        "op_pair",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "lit",
+            {
+              "type": "Nat",
+              "value": "1"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "t",
+          "(Bool,Bool)"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_swap",
+          [
+            [
+              "subject_op",
+              "op_swap",
+              [
+                [
+                  "var",
+                  "t"
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "var",
+          "t"
+        ]
+      ],
+      "claim": "c_swap_involutive",
+      "expected": [
+        "var",
+        "t"
+      ],
+      "id": "warrant/tuple_forms/exhaustive/c_swap_involutive",
+      "ir_cost": 7,
+      "kind": "reference",
+      "ops": [
+        "op_swap"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "(Bool,Bool)",
+      "subject": [
+        "subject_op",
+        "op_swap",
+        [
+          [
+            "subject_op",
+            "op_swap",
+            [
+              [
+                "var",
+                "t"
+              ]
+            ]
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "(Bool,Bool)"
+        ],
+        [
+          "b",
+          "(Bool,Bool)"
+        ]
+      ],
+      "body": [
+        "ne",
+        [
+          "subject_op",
+          "op_tup_eq",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "tup_ne",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_u8_bool_ne",
+      "expected": [],
+      "id": "warrant/tuple_forms/exhaustive/c_u8_bool_ne",
+      "ir_cost": 11,
+      "kind": "predicate",
+      "ops": [
+        "op_tup_eq"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Bool",
+      "subject": []
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "t",
+          "(U8,Bool)"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_inc",
+          [
+            [
+              "project",
+              [
+                "var",
+                "t"
+              ],
+              0
+            ]
+          ]
+        ],
+        [
+          "add",
+          [
+            "project",
+            [
+              "var",
+              "t"
+            ],
+            0
+          ],
+          [
+            "lit",
+            {
+              "type": "U8",
+              "value": "1"
+            }
+          ]
+        ]
+      ],
+      "claim": "c_u8_bool",
+      "expected": [
+        "add",
+        [
+          "project",
+          [
+            "var",
+            "t"
+          ],
+          0
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "1"
+          }
+        ]
+      ],
+      "id": "warrant/tuple_forms/exhaustive/c_u8_bool",
+      "ir_cost": 13,
+      "kind": "reference",
+      "ops": [
+        "op_inc"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "U8",
+      "subject": [
+        "subject_op",
+        "op_inc",
+        [
+          [
+            "project",
+            [
+              "var",
+              "t"
+            ],
+            0
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "r",
+          "Result<(Bool,Bool),TupleError>"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_m_ok_tuple",
+          [
+            [
+              "var",
+              "r"
+            ]
+          ]
+        ],
+        [
+          "match",
+          [
+            "var",
+            "r"
+          ],
+          [
+            [
+              [
+                "ok",
+                [
+                  "tuple",
+                  [
+                    [
+                      "bind",
+                      "a"
+                    ],
+                    [
+                      "bind",
+                      "b"
+                    ]
+                  ]
+                ]
+              ],
+              [
+                "and",
+                [
+                  "var",
+                  "a"
+                ],
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ],
+            [
+              [
+                "err_any"
+              ],
+              [
+                "lit",
+                false
+              ]
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_ok_and_inline",
+      "expected": [
+        "match",
+        [
+          "var",
+          "r"
+        ],
+        [
+          [
+            [
+              "ok",
+              [
+                "tuple",
+                [
+                  [
+                    "bind",
+                    "a"
+                  ],
+                  [
+                    "bind",
+                    "b"
+                  ]
+                ]
+              ]
+            ],
+            [
+              "and",
+              [
+                "var",
+                "a"
+              ],
+              [
+                "var",
+                "b"
+              ]
+            ]
+          ],
+          [
+            [
+              "err_any"
+            ],
+            [
+              "lit",
+              false
+            ]
+          ]
+        ]
+      ],
+      "id": "warrant/tuple_forms/exhaustive/c_ok_and_inline",
+      "ir_cost": 14,
+      "kind": "reference",
+      "ops": [
+        "op_m_ok_tuple"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Bool",
+      "subject": [
+        "subject_op",
+        "op_m_ok_tuple",
+        [
+          [
+            "var",
+            "r"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "r",
+          "Result<(Bool,Bool),TupleError>"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_flip",
+          [
+            [
+              "var",
+              "r"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "m_returns_result",
+          [
+            [
+              "var",
+              "r"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_flip",
+      "expected": [
+        "model_call",
+        "m_returns_result",
+        [
+          [
+            "var",
+            "r"
+          ]
+        ]
+      ],
+      "id": "warrant/tuple_forms/exhaustive/c_flip",
+      "ir_cost": 20,
+      "kind": "reference",
+      "ops": [
+        "op_flip"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Result<(Bool,Bool),TupleError>",
+      "subject": [
+        "subject_op",
+        "op_flip",
+        [
+          [
+            "var",
+            "r"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "r",
+          "Result<(Bool,Bool),TupleError>"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_flip",
+          [
+            [
+              "var",
+              "r"
+            ]
+          ]
+        ],
+        [
+          "match",
+          [
+            "var",
+            "r"
+          ],
+          [
+            [
+              [
+                "ok",
+                [
+                  "tuple",
+                  [
+                    [
+                      "bind",
+                      "a"
+                    ],
+                    [
+                      "bind",
+                      "b"
+                    ]
+                  ]
+                ]
+              ],
+              [
+                "ok",
+                [
+                  "tuple",
+                  [
+                    [
+                      "var",
+                      "b"
+                    ],
+                    [
+                      "var",
+                      "a"
+                    ]
+                  ]
+                ]
+              ]
+            ],
+            [
+              [
+                "err_any"
+              ],
+              [
+                "err",
+                "Bad"
+              ]
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_flip_inline",
+      "expected": [
+        "match",
+        [
+          "var",
+          "r"
+        ],
+        [
+          [
+            [
+              "ok",
+              [
+                "tuple",
+                [
+                  [
+                    "bind",
+                    "a"
+                  ],
+                  [
+                    "bind",
+                    "b"
+                  ]
+                ]
+              ]
+            ],
+            [
+              "ok",
+              [
+                "tuple",
+                [
+                  [
+                    "var",
+                    "b"
+                  ],
+                  [
+                    "var",
+                    "a"
+                  ]
+                ]
+              ]
+            ]
+          ],
+          [
+            [
+              "err_any"
+            ],
+            [
+              "err",
+              "Bad"
+            ]
+          ]
+        ]
+      ],
+      "id": "warrant/tuple_forms/exhaustive/c_flip_inline",
+      "ir_cost": 16,
+      "kind": "reference",
+      "ops": [
+        "op_flip"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Result<(Bool,Bool),TupleError>",
+      "subject": [
+        "subject_op",
+        "op_flip",
+        [
+          [
+            "var",
+            "r"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "r",
+          "Result<U8,TupleError>"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_inc",
+          [
+            [
+              "match",
+              [
+                "var",
+                "r"
+              ],
+              [
+                [
+                  [
+                    "ok",
+                    [
+                      "bind",
+                      "x"
+                    ]
+                  ],
+                  [
+                    "var",
+                    "x"
+                  ]
+                ],
+                [
+                  [
+                    "err_any"
+                  ],
+                  [
+                    "lit",
+                    {
+                      "type": "U8",
+                      "value": "0"
+                    }
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "m_arith_arm",
+          [
+            [
+              "var",
+              "r"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_inc_in_arm",
+      "expected": [
+        "model_call",
+        "m_arith_arm",
+        [
+          [
+            "var",
+            "r"
+          ]
+        ]
+      ],
+      "id": "warrant/tuple_forms/exhaustive/c_inc_in_arm",
+      "ir_cost": 20,
+      "kind": "reference",
+      "ops": [
+        "op_inc"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "U8",
+      "subject": [
+        "subject_op",
+        "op_inc",
+        [
+          [
+            "match",
+            [
+              "var",
+              "r"
+            ],
+            [
+              [
+                [
+                  "ok",
+                  [
+                    "bind",
+                    "x"
+                  ]
+                ],
+                [
+                  "var",
+                  "x"
+                ]
+              ],
+              [
+                [
+                  "err_any"
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "U8",
+                    "value": "0"
+                  }
+                ]
+              ]
+            ]
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "match",
+        [
+          "var",
+          "r"
+        ],
+        [
+          [
+            [
+              "ok",
+              [
+                "tuple",
+                [
+                  [
+                    "bind",
+                    "a"
+                  ],
+                  [
+                    "bind",
+                    "b"
+                  ]
+                ]
+              ]
+            ],
+            [
+              "or",
+              [
+                "var",
+                "a"
+              ],
+              [
+                "var",
+                "b"
+              ]
+            ]
+          ],
+          [
+            [
+              "err_any"
+            ],
+            [
+              "lit",
+              true
+            ]
+          ]
+        ]
+      ],
+      "binders": [
+        [
+          "r",
+          "Result<(Bool,Bool),TupleError>"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_m_ok_tuple",
+          [
+            [
+              "var",
+              "r"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "m_ok_tuple",
+          [
+            [
+              "var",
+              "r"
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_admit_match",
+      "expected": [
+        "model_call",
+        "m_ok_tuple",
+        [
+          [
+            "var",
+            "r"
+          ]
+        ]
+      ],
+      "id": "warrant/tuple_forms/exhaustive/c_admit_match",
+      "ir_cost": 22,
+      "kind": "reference",
+      "ops": [
+        "op_m_ok_tuple"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Bool",
+      "subject": [
+        "subject_op",
+        "op_m_ok_tuple",
+        [
+          [
+            "var",
+            "r"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "Bool"
+        ],
+        [
+          "b",
+          "Bool"
+        ]
+      ],
+      "body": [
+        "match",
+        [
+          "subject_op",
+          "op_k",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "b"
+            ]
+          ]
+        ],
+        [
+          [
+            [
+              "ok",
+              [
+                "tuple",
+                [
+                  [
+                    "bind",
+                    "x"
+                  ],
+                  [
+                    "bind",
+                    "y"
+                  ]
+                ]
+              ]
+            ],
+            [
+              "and",
+              [
+                "eq",
+                [
+                  "var",
+                  "x"
+                ],
+                [
+                  "var",
+                  "a"
+                ]
+              ],
+              [
+                "eq",
+                [
+                  "var",
+                  "y"
+                ],
+                [
+                  "var",
+                  "b"
+                ]
+              ]
+            ]
+          ],
+          [
+            [
+              "err",
+              "Worse"
+            ],
+            [
+              "and",
+              [
+                "var",
+                "a"
+              ],
+              [
+                "var",
+                "b"
+              ]
+            ]
+          ],
+          [
+            [
+              "err_any"
+            ],
+            [
+              "lit",
+              false
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_k_match",
+      "expected": [],
+      "id": "warrant/tuple_forms/exhaustive/c_k_match",
+      "ir_cost": 12,
+      "kind": "predicate",
+      "ops": [
+        "op_k"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Bool",
+      "subject": []
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "d",
+          "Bytes<0>"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_zero",
+          [
+            [
+              "var",
+              "d"
+            ]
+          ]
+        ],
+        [
+          "err",
+          "Bad"
+        ]
+      ],
+      "claim": "c_zero",
+      "expected": [
+        "err",
+        "Bad"
+      ],
+      "id": "warrant/tuple_forms/exhaustive/c_zero",
+      "ir_cost": 6,
+      "kind": "reference",
+      "ops": [
+        "op_zero"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Result<(Bool,Nat),TupleError>",
+      "subject": [
+        "subject_op",
+        "op_zero",
+        [
+          [
+            "var",
+            "d"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "r",
+          "Result<U8,TupleError>"
+        ]
+      ],
+      "body": [
+        "match",
+        [
+          "var",
+          "r"
+        ],
+        [
+          [
+            [
+              "ok",
+              [
+                "bind",
+                "x"
+              ]
+            ],
+            [
+              "eq",
+              [
+                "subject_op",
+                "op_inc",
+                [
+                  [
+                    "var",
+                    "x"
+                  ]
+                ]
+              ],
+              [
+                "add",
+                [
+                  "var",
+                  "x"
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "U8",
+                    "value": "1"
+                  }
+                ]
+              ]
+            ]
+          ],
+          [
+            [
+              "err_any"
+            ],
+            [
+              "lit",
+              true
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_arm_calls",
+      "expected": [],
+      "id": "warrant/tuple_forms/exhaustive/c_arm_calls",
+      "ir_cost": 9,
+      "kind": "predicate",
+      "ops": [
+        "op_inc"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Bool",
+      "subject": []
+    },
+    {
+      "admit": [
+        "match",
+        [
+          "var",
+          "r"
+        ],
+        [
+          [
+            [
+              "ok",
+              [
+                "bind",
+                "x"
+              ]
+            ],
+            [
+              "lt",
+              [
+                "var",
+                "x"
+              ],
+              [
+                "lit",
+                {
+                  "type": "U8",
+                  "value": "100"
+                }
+              ]
+            ]
+          ],
+          [
+            [
+              "err_any"
+            ],
+            [
+              "lit",
+              true
+            ]
+          ]
+        ]
+      ],
+      "binders": [
+        [
+          "r",
+          "Result<U8,TupleError>"
+        ]
+      ],
+      "body": [
+        "match",
+        [
+          "var",
+          "r"
+        ],
+        [
+          [
+            [
+              "ok",
+              [
+                "bind",
+                "x"
+              ]
+            ],
+            [
+              "eq",
+              [
+                "subject_op",
+                "op_small",
+                [
+                  [
+                    "var",
+                    "x"
+                  ]
+                ]
+              ],
+              [
+                "var",
+                "x"
+              ]
+            ]
+          ],
+          [
+            [
+              "err_any"
+            ],
+            [
+              "lit",
+              true
+            ]
+          ]
+        ]
+      ],
+      "claim": "c_arm_admit_call",
+      "expected": [],
+      "id": "warrant/tuple_forms/exhaustive/c_arm_admit_call",
+      "ir_cost": 11,
+      "kind": "predicate",
+      "ops": [
+        "op_small"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "result_type": "Bool",
+      "subject": []
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "d",
+          "Bytes<2>"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_bytes",
+          [
+            [
+              "var",
+              "d"
+            ]
+          ]
+        ],
+        [
+          "if",
+          [
+            "eq",
+            [
+              "len",
+              [
+                "var",
+                "d"
+              ]
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "2"
+              }
+            ]
+          ],
+          [
+            "ok",
+            [
+              "var",
+              "d"
+            ]
+          ],
+          [
+            "err",
+            "Bad"
+          ]
+        ]
+      ],
+      "claim": "c_bytes",
+      "expected": [
+        "if",
+        [
+          "eq",
+          [
+            "len",
+            [
+              "var",
+              "d"
+            ]
+          ],
+          [
+            "lit",
+            {
+              "type": "Nat",
+              "value": "2"
+            }
+          ]
+        ],
+        [
+          "ok",
+          [
+            "var",
+            "d"
+          ]
+        ],
+        [
+          "err",
+          "Bad"
+        ]
+      ],
+      "id": "warrant/tuple_forms/exhaustive/c_bytes",
+      "ir_cost": 18,
+      "kind": "reference",
+      "ops": [
+        "op_bytes"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "Result<Bytes<2>,TupleError>",
+      "subject": [
+        "subject_op",
+        "op_bytes",
+        [
+          [
+            "var",
+            "d"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "d",
+          "Bytes<2>"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_bits",
+          [
+            [
+              "var",
+              "d"
+            ]
+          ]
+        ],
+        [
+          "var",
+          "d"
+        ]
+      ],
+      "claim": "c_bits",
+      "expected": [
+        "var",
+        "d"
+      ],
+      "id": "warrant/tuple_forms/exhaustive/c_bits",
+      "ir_cost": 6,
+      "kind": "reference",
+      "ops": [
+        "op_bits"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "Bytes<2>",
+      "subject": [
+        "subject_op",
+        "op_bits",
+        [
+          [
+            "var",
+            "d"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "U8"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_u8",
+          [
+            [
+              "var",
+              "a"
+            ]
+          ]
+        ],
+        [
+          "var",
+          "a"
+        ]
+      ],
+      "claim": "c_u8",
+      "expected": [
+        "var",
+        "a"
+      ],
+      "id": "warrant/tuple_forms/exhaustive/c_u8",
+      "ir_cost": 6,
+      "kind": "reference",
+      "ops": [
+        "op_u8"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "U8",
+      "subject": [
+        "subject_op",
+        "op_u8",
+        [
+          [
+            "var",
+            "a"
+          ]
+        ]
+      ]
+    }
+  ]
+}

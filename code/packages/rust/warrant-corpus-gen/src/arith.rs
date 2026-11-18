@@ -137,9 +137,7 @@ pub fn fixed_neg(ty: FixedTy, a: i128) -> (i128, bool) {
 /// `W0701` (the generator's form of `ir-overflow`, VER04r 4.2 rule 6) past the limit.
 pub fn check_value_len(len: u64) -> Result<(), GenError> {
     if len > MAX_IR_VALUE {
-        return Err(GenError::new(
-            code::W0701,
-            "",
+        return Err(GenError::size_error(
             "a Bytes or list value exceeds MAX_IR_VALUE (VER04r 4.2 rule 6)",
         ));
     }
@@ -271,6 +269,14 @@ mod tests {
             code::W0701
         );
         assert_eq!(check_exact(i128::MIN).unwrap_err().code, code::W0701);
+        // the integer window is not a size error (VER04r 8.4: only the two Bytes limits are)
+        for e in [
+            check_exact(i128::MIN).unwrap_err(),
+            exact_op(Arith::Mul, i128::MAX, 2).unwrap_err(),
+            exact_neg(i128::MIN).unwrap_err(),
+        ] {
+            assert!(!e.size, "{e}");
+        }
         assert_eq!(check_exact(-i128::MAX).unwrap(), -i128::MAX);
         assert_eq!(exact_neg(i128::MIN).unwrap_err().code, code::W0701);
     }
@@ -284,6 +290,7 @@ mod tests {
             code::W0701
         );
         assert_eq!(check_value_len(u64::MAX).unwrap_err().code, code::W0701);
+        assert!(check_value_len(MAX_IR_VALUE + 1).unwrap_err().size);
     }
 
     #[test]

@@ -40,7 +40,6 @@ Every operation is total and by value (`op(State, In) -> (Out, State)`); a bad i
 | `evidence.bindings` | the VER04h bindings: every operation is bound to a `vos_ghost_` wrapper with its faults |
 | `tests/generated/warrant_evidence.rs` | the generated exhaustive, property and fuzz suites and sabotage controls (never edited; BUILD checks it for drift) |
 | `evidence/test-manifest.json` | the evidence manifest written by the last real run |
-| `warrant/check_evidence.sh` | runs the suite and names the three known-inert controls (see below) |
 | `tests/behaviour.rs` | hand-written tests against a plain reference model, with and without `ghost` |
 | `tests/warrant_evidence.rs` | the shim that gives the generated harness a `main` (needs the `ghost` feature) |
 | `code/specs/vos-sched-fp-bitmap.warrant` | the **generated** document (`vos-link gen-doc`); never edited by hand |
@@ -76,18 +75,14 @@ evidence generator (VER04h) turns it and `evidence.bindings` into
 ```text
 cargo run -p coding_adventures_warrant_grammar --example gen_evidence -- vos-sched-fp-bitmap   # regenerate
 cargo run -p coding_adventures_warrant_grammar --example gen_evidence -- --check vos-sched-fp-bitmap
-sh warrant/check_evidence.sh                                                                    # run it
+WARRANT_EVIDENCE_OUT=evidence/test-manifest.json cargo test -p vos-sched-fp-bitmap --features ghost --test warrant_evidence   # run it
 ```
 
 13 exhaustive claims, 394,500 cases, the largest 65,536 (16.4% of the budget), plus the same 13
-as property and fuzz suites, 2 examples and 26 negative controls. Three controls cannot pass:
-`init` / `field-zero` (the initial field is already 0, so the fault changes nothing; VOS-D065).
-`warrant/check_evidence.sh` names them and requires cargo status 1, exactly 64 ok and exactly those
-three failures. A bare `cargo test --features ghost` therefore exits non-zero: use the BUILD lines.
-`evidence/test-manifest.json` records those three entries with `verdict: fail`. Nothing reads it today:
-`ca-assurance-report` loads a package's manifest only for a package that has an `assurance_report.json`
-or a lane consumer entry, and this package has neither. Whoever adds one must decide how a
-`fail` negative control is treated (VOS-D065); it must not be read as a pass.
+as property and fuzz suites, 2 examples and 30 negative controls. Every test passes (71 ok) and the
+run exits 0: `init` is bound with `field-flip` (VER04j 4.8, WX-SV2), which is never inert on the zero
+initial state, so there is no tolerance script (VOS-D065). `evidence/test-manifest.json` records no
+failing control.
 
 **The ceiling `heap 0` is not evidenced package-wide.** The harness's heap observer counts its own
 value marshalling, so only `insert_out` and `remove_out` carry a `heap <= 0` row (VOS-D063); the other
