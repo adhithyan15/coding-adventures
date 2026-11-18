@@ -1,0 +1,12 @@
+max_ir_cost 16384
+fault compress drop-last-result-byte
+fault compress flip-result-bit
+fault decompress drop-last-result-byte
+fault decompress flip-result-bit
+fault decompress missing-error
+omit_example warrant/lzw/example/bomb_1024_units_declaring_1024_bytes_delivers_them
+omit_example warrant/lzw/example/bomb_1024_units_declaring_exactly_the_cap_delivers_the_cap
+omit_example warrant/lzw/example/bomb_1024_units_declaring_one_byte_over_the_cap_is_rejected
+omit_example warrant/lzw/example/bomb_1024_units_declaring_one_gibibyte_is_rejected
+omit_example warrant/lzw/example/bomb_1024_units_is_rejected
+omit_example warrant/lzw/example/bomb_512_units_is_under_the_cap_and_decodes
