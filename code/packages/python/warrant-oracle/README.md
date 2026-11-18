@@ -71,8 +71,10 @@ lowerer can lower, and `ir.fixed` only when nothing else is. Census at this comm
   signature or binder, is the level `ir.data`.
 * **`requires`** (`levels.ir_levels`, R9): the sorted union of the levels of every tag of a
   suite's, op's `admit`'s expressions and of the call closure of every `model_call`; a tuple
-  *type* adds `ir.tuple`. `derive` writes it into suite and op rows (`["ir.core"]` for every
-  document it can emit today).
+  *type* adds `ir.tuple` and a list, record or variant type adds `ir.data`; `ir.core` is always
+  included. `derive` writes it into suite and op rows. Every committed fixture verifies unchanged;
+  a tuple-binder document gains `ir.tuple` in `requires`/`levels`, and an `Option` binder is
+  refused at `ir.data`.
 * **Cost**: every new tag is `1 +` its operands (a static type argument is not an operand).
 * **The dump** (`dump-lowering`, `lowering_dump`): the canonical JSON of the lowered IR, the
   `requires` and the cost of a document. `tests/fixtures/fixed-forms-v1/` holds the synthetic

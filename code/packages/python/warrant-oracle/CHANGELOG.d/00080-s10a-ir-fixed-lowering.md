@@ -1,8 +1,11 @@
 ## Unreleased - S10a: lowering, typing, `requires` and cost of the `ir.fixed` built-ins (VER04r A.1)
 
-No version bump and no emitted byte changes: the committed `synth-v2`, `accept-blind-v2` and
-ct-compare fixtures verify unchanged, and evaluating or emitting an `ir.fixed` suite still
-refuses with the level `ir.fixed`.
+No version bump. Every committed fixture (`synth-v2`, `accept-blind-v2`, ct-compare v2) verifies
+unchanged, and evaluating or emitting an `ir.fixed` suite still refuses with the level `ir.fixed`.
+Two intended changes to what `derive` emits or accepts: a document with a tuple, list, record or
+variant binder, parameter or result now gains `ir.tuple` / `ir.data` in `requires` and `levels`
+(R9, section 4.1), and a document with an `Option` binder (not only an uncalled op with `Option` in
+its signature) is now refused at `ir.data` (D23).
 
 ### Added
 
@@ -21,8 +24,10 @@ refuses with the level `ir.fixed`.
 - **`levels` module and `requires` inference** ([R9]): `ir_levels` is the sorted union of the levels
   of every tag and of the call closure of every `model_call`; a tuple *type* (binder, parameter,
   result, sub-expression) adds `ir.tuple`. Units record `requires` (`LoweredSuite`, `OpSig`,
-  `LoweredModel`, `LoweredExample`); `derive` writes it into suite and op rows and into `levels`
-  (identical to the old constant for every document it emits today).
+  `LoweredModel`, `LoweredExample`); `derive` writes it into suite and op rows and into `levels`.
+  `ir.core` is always included; a tuple type adds `ir.tuple` and a list, record or variant type adds
+  `ir.data` (counted, not refused: the S4 composite domains already enumerate them). A unit reads
+  its callees' own `requires` instead of re-walking the closure.
 - **`dump-lowering`** subcommand and `lowering_dump` module: the canonical lowering dump
   (`warrant-lowering-parity-v1`: lowered IR, computed `requires` and `ir_cost`) that the generator's
   S10b must reproduce byte for byte. `tests/fixtures/fixed-forms-v1/` commits the synthetic
@@ -42,10 +47,20 @@ refuses with the level `ir.fixed`.
 
 ### Changed
 
-- The level named for a unit is the first construct the lowerer cannot lower; a unit that only uses
+- The level named for a unit is the first unlowerable construct in source order; a unit that only uses
   `ir.fixed` is named `ir.fixed` (and keeps its IR). A suite mixing `ir.fixed` with tuples or
   constructors is therefore counted under the latter, so the pinned census moved (wasm-leb128,
   logic-gates, arithmetic).
 - Tuple tags, tuple projection and `match` on a `Result` are refused with `ir.tuple` (they were
   `ir.data`); `match` on any other scrutinee stays `ir.data`; `unwrap_or` left `ir.data`.
 - An op whose signature mentions `Option` is refused (`ir.data`) even if no claim calls it.
+
+### Review fixes (Fable, CV2-S10a)
+
+- `from_be`/`from_le` take the operand's static width from a single lowering pass (a bytes literal,
+  a `concat` of sized operands, an `if` of equal widths: the grammar checker's rule, now stated in
+  VER04r A.1); it was exponential in the nesting depth before.
+- `fixed_forms_v1.warrant` now passes the Rust grammar checker (`check_warrant`): examples put the
+  body on the next line and every op has its `assume`/`labels`/`input`/`bound` contract. It also
+  covers a bare literal on the left of a `Nat` operand (`div(7, n)`), `imin(n, 3)` and `from_be`
+  over an `if`.
