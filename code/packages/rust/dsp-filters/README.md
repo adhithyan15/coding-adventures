@@ -123,7 +123,7 @@ sample `x`:
 The implementation pre-scales `b` and `a` by `1/a[0]` so the
 inner loop avoids a divide per sample.
 
-Phase 5 will produce stable `(b, a)` pairs via Butterworth /
+Phase 5 provides stable `(b, a)` pairs via Butterworth /
 Chebyshev / windowed-sinc design helpers.
 
 ## Tests
