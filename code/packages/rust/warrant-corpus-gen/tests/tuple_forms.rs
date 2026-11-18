@@ -19,7 +19,7 @@ const OPS: [&str; 1] = ["op f(a: Bytes, b: Bytes) -> Bool"];
 
 fn lower(extra: &str) -> Result<Lowered, GenError> {
     let src = doc_ops(" v1", &OPS, &format!("  error E = X | Y\n{extra}"));
-    with_file(&src, |f| lower_document(f))
+    with_file(&src, lower_document)
 }
 
 fn json(l: &Lowered, model: &str) -> String {
