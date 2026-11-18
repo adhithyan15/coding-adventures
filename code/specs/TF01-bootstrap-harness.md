@@ -292,12 +292,13 @@ part of a BUILD line after the script name is the same on `sh` and `cmd`, and no
 temporary file can go stale. The environment prefix (`VAR=x` versus
 `set VAR=x&&`) and the interpreter (`python3` versus `python`) still differ.
 The checker bounds the command itself: after `WARRANT_NEGCTL_TIMEOUT_SECS`
-(default 1200) it kills the command's whole process tree (its own session on
+(default 1200, at most 86400) it kills the command's whole process tree (its own session on
 Unix, `taskkill /T` on Windows) and fails the control with the output printed so
 far, because the checker prints only when the command finishes and a silent hang
 otherwise costs the build tool's 90-minute per-command limit with no diagnosis
-(a Windows `rust/lzw` hang on PR #19613 left an empty log). The build tool's
-per-command timeout remains the outer backstop. Adopters call it as
+(a Windows `rust/lzw` hang on PR #19613 left an empty log). The same kill runs if the checker itself is terminated (SIGTERM, Ctrl-C), since
+the command runs in its own session and would otherwise be orphaned. The build
+tool's per-command timeout remains the outer backstop. Adopters call it as
 
 ```
 WARRANT_EVIDENCE_FAULT=F WARRANT_EVIDENCE_FILTER=T python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p P --test warrant_evidence

@@ -323,6 +323,75 @@ class Hang(unittest.TestCase):
         self.assertEqual(negctl.timeout_secs("inf"), d)
         self.assertEqual(negctl.timeout_secs("nan"), d)
         self.assertEqual(negctl.timeout_secs(" 2.5 "), 2.5)
+        self.assertEqual(negctl.timeout_secs("1e300"), 86400.0)
+        self.assertEqual(negctl.timeout_secs("86401"), 86400.0)
+
+    def test_a_huge_timeout_does_not_overflow_the_wait(self):
+        _, _, _, launch, timed_out = negctl.run_command(
+            child("pass"), negctl.timeout_secs("1e300")
+        )
+        self.assertIsNone(launch)
+        self.assertFalse(timed_out)
+
+    def test_partial_output_appears_exactly_once_after_a_timeout(self):
+        code = (
+            "import time\n"
+            "print('TAP version 14\\n1..1\\nnot ok 1 - a', flush=True)\n"
+            "time.sleep(600)\n"
+        )
+        _, out, _, _, timed_out = negctl.run_command(child(code), 1)
+        self.assertTrue(timed_out)
+        self.assertEqual(out.count("TAP version 14"), 1, out)
+        self.assertEqual(out.count("1..1"), 1, out)
+        self.assertEqual(negctl.judge(-9, out).count(
+            "expected exactly one TAP plan line '1..N', found 2 "
+            "(a crash before or without a plan is not a detection)"), 0)
+
+    @unittest.skipIf(os.name == "nt", "SIGTERM semantics are Unix-only")
+    def test_sigterm_to_the_checker_kills_the_command_tree(self):
+        import signal
+        import subprocess
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as tmp:
+            pidfile = os.path.join(tmp, "grandchild.pid")
+            grand = (
+                "import os, time\n"
+                f"open({pidfile!r}, 'w').write(str(os.getpid()))\n"
+                "time.sleep(600)\n"
+            )
+            top = (
+                "import subprocess, sys, time\n"
+                f"subprocess.Popen([sys.executable, '-c', {grand!r}])\n"
+                "time.sleep(600)\n"
+            )
+            checker = subprocess.Popen(
+                [sys.executable, str(pathlib.Path(negctl.__file__)), "--", *child(top)],
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+            try:
+                deadline = time.monotonic() + 30
+                while not pathlib.Path(pidfile).exists() or not pathlib.Path(pidfile).read_text():
+                    self.assertLess(time.monotonic() - deadline, 0, "grandchild never started")
+                    time.sleep(0.05)
+                pid = int(pathlib.Path(pidfile).read_text())
+                checker.send_signal(signal.SIGTERM)
+                checker.wait(timeout=30)
+                gone = False
+                for _ in range(100):
+                    try:
+                        os.kill(pid, 0)
+                    except ProcessLookupError:
+                        gone = True
+                        break
+                    time.sleep(0.1)
+                if not gone:
+                    os.kill(pid, signal.SIGKILL)
+                self.assertTrue(gone, "the grandchild outlived the checker")
+            finally:
+                checker.kill()
 
     def test_a_hang_is_killed_and_reports_what_it_printed(self):
         # The child prints a valid TAP prefix, then spawns a grandchild that

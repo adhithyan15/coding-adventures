@@ -237,6 +237,8 @@ def _clip(text: str) -> str:
 # nothing (this script prints only when it has finished) cost a whole CI job
 # and left no diagnosis.  Override with WARRANT_NEGCTL_TIMEOUT_SECS.
 DEFAULT_TIMEOUT_SECS = 20 * 60
+# The most a WARRANT_NEGCTL_TIMEOUT_SECS may ask for (24 h).
+MAX_TIMEOUT_SECS = 86_400
 
 
 def timeout_secs(var: str | None) -> float:
@@ -247,7 +249,8 @@ def timeout_secs(var: str | None) -> float:
         return float(DEFAULT_TIMEOUT_SECS)
     if not 0 < value < float("inf"):
         return float(DEFAULT_TIMEOUT_SECS)
-    return value
+    # A finite but absurd value (1e300) would overflow the wait below.
+    return min(value, float(MAX_TIMEOUT_SECS))
 
 
 def _kill_tree(proc: subprocess.Popen) -> None:
@@ -261,8 +264,9 @@ def _kill_tree(proc: subprocess.Popen) -> None:
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,
                 check=False,
+                timeout=30,
             )
-        except OSError:
+        except (OSError, subprocess.TimeoutExpired):
             pass
     else:
         import signal
@@ -275,6 +279,30 @@ def _kill_tree(proc: subprocess.Popen) -> None:
         proc.kill()
     except OSError:
         pass
+
+
+def _install_term_handler():
+    """Turn SIGTERM into SystemExit so ``run_command`` can kill the tree first."""
+    if os.name == "nt":
+        return None
+    import signal
+    import threading
+
+    if threading.current_thread() is not threading.main_thread():
+        return None
+
+    def handler(signum, frame):
+        raise SystemExit(128 + signum)
+
+    return signal.signal(signal.SIGTERM, handler)
+
+
+def _restore_term_handler(previous) -> None:
+    if previous is None:
+        return
+    import signal
+
+    signal.signal(signal.SIGTERM, previous)
 
 
 def run_command(
@@ -303,17 +331,28 @@ def run_command(
     except (OSError, ValueError) as error:  # not found, not executable, NUL in argv ...
         return -1, "", "", f"cannot run {argv[0]!r}: {error}", False
     timed_out = False
+    previous = _install_term_handler()
     try:
-        out, err = proc.communicate(timeout=timeout)
-    except subprocess.TimeoutExpired as expired:
-        timed_out = True
-        _kill_tree(proc)
-        out, err = expired.stdout or b"", expired.stderr or b""
         try:
-            more_out, more_err = proc.communicate(timeout=30)
-            out, err = out + (more_out or b""), err + (more_err or b"")
-        except subprocess.TimeoutExpired:
-            pass  # a survivor still holds a pipe; report what we have
+            out, err = proc.communicate(timeout=timeout)
+        except subprocess.TimeoutExpired as expired:
+            timed_out = True
+            _kill_tree(proc)
+            # communicate() after the kill returns everything accumulated so
+            # far (not just the new part), so it replaces, never appends.
+            try:
+                out, err = proc.communicate(timeout=30)
+            except subprocess.TimeoutExpired:
+                # A survivor still holds a pipe; report what the first wait saw.
+                out, err = expired.stdout or b"", expired.stderr or b""
+    except BaseException:
+        # Any abnormal exit of the checker (SIGTERM from a CI cancel or the
+        # build tool, Ctrl-C, an unexpected error): the command runs in its own
+        # session, so nothing else would ever stop it.
+        _kill_tree(proc)
+        raise
+    finally:
+        _restore_term_handler(previous)
     return (
         proc.returncode if proc.returncode is not None else -1,
         out.decode("utf-8", errors="replace"),
