@@ -38,7 +38,9 @@ The corpus `levels` are `ir.core`, `ir.fixed`, `ir.tuple`. All five controls are
 gate (none is `deferred`), **no claim is *proven* blind** (`blind_claims` is `[]` in each) and **no
 control has a witnessed claim**: every candidate claim is **unproven** (VER04r 5.6), because a stand-in
 exists only for a `reference` claim whose subject side is a bare call on plain binders (VER04r 16.6
-item 5) and the lzw claims are predicates, round trips or comparisons against models. So `slim_witness`
+item 5). In lzw, one claim is a predicate (`compress_is_at_least_seven_bytes`), five nest the subject call
+inside another (the round trips), and every other one (15) passes a computed argument (e.g. `be_bytes(x)`,
+`concat(..)`) or a literal (`b""`) rather than the bare binders. So `slim_witness`
 is `{"claim": ..., "unproven": true}` for each of the 8 required claims of the two `compress` controls
 and each of the 18 of the three `decompress` ones, and the lane's control fails closed until a runner
 shows each fault is caught. `accepted_blind_faults` is `[]`, so the profile has no `accept_blind` or
@@ -64,17 +66,19 @@ The two `match` examples are still lowered (which needs `ir.tuple`); the four eq
 `be_bytes` evaluated (`ir.fixed`) to size their arguments. No other example is omitted: the 21 others are
 emitted and appear in `cases.tfv`. A line for an emittable example would be an error.
 
-`max_ir_cost 16384`: the default bound of 2,000 node evaluations on the worst path is too low for
-`round_trip_of_long_runs`, whose model costs 15,105 (the next largest suite costs 237). The profile line
-is the only way to raise it (VER04r 4.2 rule 6, ceiling 65,536) and the value is recorded in `corpus.json`.
+`max_ir_cost 16384`: 15,105 is the total `ir_cost` (admit, body and expected) of the suite
+`round_trip_of_long_runs` (the next largest suite costs 237). The `max_ir_cost` knob bounds each expression,
+and the default 8192 is refused at that suite; 16,384 is the value the spec prescribes (the smallest power of
+two above 8,192 that admits it). The profile line is the only way to raise it (VER04r 4.2 rule 6, ceiling
+65,536) and the value is recorded in `corpus.json`.
 
 ## Regenerate
 
 From the repository root. Never edit `corpus.json`, `cases.tfv` or `chunks/` by hand. About 25 s in
-release mode.
+release mode (`--release`; about 3 min in a debug build).
 
 ```bash
-cargo run --manifest-path code/packages/rust/Cargo.toml -p coding_adventures_warrant_corpus_gen --bin warrant-corpus-gen -- \
+cargo run --release --manifest-path code/packages/rust/Cargo.toml -p coding_adventures_warrant_corpus_gen --bin warrant-corpus-gen -- \
   --warrant code/specs/lzw.warrant \
   --profile code/specs/fixtures/lzw-warrant-v2/corpus.profile \
   --bindings code/packages/rust/lzw/evidence.bindings \

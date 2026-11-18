@@ -39,6 +39,6 @@ cd ../../../.. && cargo run -q --manifest-path code/packages/rust/Cargo.toml -p 
 # x25519.warrant, the fixture or the x25519 bindings: repository_inputs.go, warrantAdopters).
 cd ../../../.. && cargo run -q --manifest-path code/packages/rust/Cargo.toml -p coding_adventures_warrant_corpus_gen --bin warrant-corpus-gen -- --check --warrant code/specs/x25519.warrant --profile code/specs/fixtures/x25519-warrant-v2/corpus.profile --bindings code/packages/rust/x25519/evidence.bindings --out code/specs/fixtures/x25519-warrant-v2
 # CV2 S10 adopter (lzw): the committed lzw v2 fixture (six bomb examples omitted by profile lines,
-# max_ir_cost 16384). About 25 s in release mode; the build tool selects this package for an edit to
+# max_ir_cost 16384). `--release`: about 25 s (in debug about 3 min, because the corpus has 17.5 M cases); the build tool selects this package for an edit to
 # lzw.warrant, the fixture or the lzw bindings (repository_inputs.go, warrantAdopters).
-cd ../../../.. && cargo run -q --manifest-path code/packages/rust/Cargo.toml -p coding_adventures_warrant_corpus_gen --bin warrant-corpus-gen -- --check --warrant code/specs/lzw.warrant --profile code/specs/fixtures/lzw-warrant-v2/corpus.profile --bindings code/packages/rust/lzw/evidence.bindings --out code/specs/fixtures/lzw-warrant-v2
+cd ../../../.. && cargo run -q --release --manifest-path code/packages/rust/Cargo.toml -p coding_adventures_warrant_corpus_gen --bin warrant-corpus-gen -- --check --warrant code/specs/lzw.warrant --profile code/specs/fixtures/lzw-warrant-v2/corpus.profile --bindings code/packages/rust/lzw/evidence.bindings --out code/specs/fixtures/lzw-warrant-v2

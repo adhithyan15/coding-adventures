@@ -7,7 +7,8 @@
   (the same shape as the ct-compare and x25519 lines). No source change and no version bump: the fixture is exactly
   what 0.6.0 writes (21 suites, 17,563,819 cases, five faults, six `omit_example` lines computed as two
   `not-op-eq-pure` and four `value-over-limit`, `max_ir_cost 16384`); the generator needed nothing for lzw. The
-  line takes about 25 s in release mode.
+  lzw line runs with `--release` (about 25 s; about 3 min in a debug build, because the corpus has 17.5 M cases);
+  the ct-compare and x25519 lines stay in debug.
 - The README names the new fixture. The build tool selects this package for an edit to the lzw spec, fixture or
   bindings through its table-driven adopter rows (VER04r 16.10 [D32]).
 

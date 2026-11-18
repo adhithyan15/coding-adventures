@@ -128,7 +128,7 @@ S10) is checked the same way by a second `--check` line in `BUILD` and `BUILD_wi
 has the command and what it holds (eight suites, five faults).
 
 **The committed lzw fixture.** `code/specs/fixtures/lzw-warrant-v2/` (the third adopter, CV2 S10) is
-checked by a third `--check` line in `BUILD` and `BUILD_windows` (about 25 s in release mode). It is
+checked by a third `--check` line in `BUILD` and `BUILD_windows` (the line runs with `--release`: about 25 s, against about 3 min in a debug build). It is
 the first fixture whose profile carries `omit_example` lines (the six `bomb_*` examples, two
 `not-op-eq-pure` and four `value-over-limit`) and a raised `max_ir_cost` (16384); its README has the
 command and what it holds (21 suites, 17,563,819 cases, five faults).
