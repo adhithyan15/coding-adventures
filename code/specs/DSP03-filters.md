@@ -301,9 +301,9 @@ native floating-point or Warrant proof evidence.
 
 - `design_low_pass(0.25, 33, Hamming)` matches scipy's
   `firwin(33, 0.25, window='hamming')` to ULP.
-- `butterworth_lowpass(2, 0.1, 1.0)` matches scipy's
+- `butterworth_lowpass(2, 0.1)` matches scipy's
   `butter(2, 0.1)` coefficients.
-- The composed `iir(x, *butterworth_lowpass(4, 0.1, 1.0))`
+- The composed `iir(x, *butterworth_lowpass(2, 0.1))`
   matches scipy's full filter pipeline.
 
 **Phase 6 (matrix-ir FIR)**:
