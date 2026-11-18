@@ -70,6 +70,11 @@ and `go vet ./...` passed. The targeted negative mutation that inverted the
 mode guard failed both the named guard test and generated differential test.
 The Go package's 96.8% statement-coverage result is specific to this lexer
 module; it does not establish Python/TypeScript producer coverage or limits.
+The A/B workflow's shared receipt classifier has 11 focused cases covering
+valid pass, valid baseline shortfall, valid candidate shortfall, zero/negative
+or below-bound durations, missing status/markers, abnormal exits, and terminal
+marker/exit mismatches. The recorded baseline U24 pass and U26 shortfall both
+classify as expected. No A/B candidate measurement has been collected yet.
 
 The Go lexer manifest declares no external capabilities and describes the
 package as pure computation; its generated capability cage remains unchanged.

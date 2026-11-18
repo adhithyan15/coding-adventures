@@ -7,6 +7,8 @@ on:
     paths:
       - .github/workflows/kiln-g1-abba-candidate.yml
       - code/programs/go/kiln/ci/testdata/g1_abba_precision_linux_amd64_test.go.tmpl
+      - code/programs/go/kiln/ci/classify_g1_gate_result.py
+      - code/programs/go/kiln/ci/test_classify_g1_gate_result.py
 
 permissions:
   contents: read
@@ -22,7 +24,7 @@ jobs:
         os: [ubuntu-24.04, ubuntu-26.04]
     env:
       BASELINE_SHA: adadc8fc0b9783b3a829fbb4309182f558d4561b
-      CANDIDATE_SHA: ${{ github.sha }}
+      CANDIDATE_SHA: eedb854e2a5e6436be8ce6dc55295c902710d9e5
     steps:
       - name: Checkout candidate and immutable baseline
         uses: actions/checkout@v7
@@ -57,12 +59,14 @@ jobs:
       - name: Checkout diagnostic test template
         uses: actions/checkout@v7
         with:
-          ref: ${{ env.CANDIDATE_SHA }}
+          ref: ${{ github.sha }}
           path: diagnostic
           fetch-depth: 1
           persist-credentials: false
           sparse-checkout: |
             code/programs/go/kiln/ci/testdata/g1_abba_precision_linux_amd64_test.go.tmpl
+            code/programs/go/kiln/ci/classify_g1_gate_result.py
+            code/programs/go/kiln/ci/test_classify_g1_gate_result.py
           sparse-checkout-cone-mode: false
           filter: blob:none
 
@@ -139,10 +143,16 @@ jobs:
           fixture_sha=dc8acd0de1d9b235c3924d0d71e2fcd565274e09ded9975570f429b548525aae
           slice_sha=6cd61f63fdec55ce37294ad061705394b1babda80e5368b17ecb5bd38e2207af
           helper="$GITHUB_WORKSPACE/diagnostic/code/programs/go/kiln/ci/testdata/g1_abba_precision_linux_amd64_test.go.tmpl"
+          classifier="$GITHUB_WORKSPACE/diagnostic/code/programs/go/kiln/ci/classify_g1_gate_result.py"
+          if ! python3 "$GITHUB_WORKSPACE/diagnostic/code/programs/go/kiln/ci/test_classify_g1_gate_result.py"; then
+            echo "G1 result classifier unit tests failed" >&2
+            exit 2
+          fi
           summary="$output/results.txt"
 
           {
             echo "workflow_sha=$GITHUB_SHA"
+            echo "diagnostic_checkout_sha=$(git -C "$GITHUB_WORKSPACE/diagnostic" rev-parse HEAD)"
             echo "baseline_sha=$BASELINE_SHA"
             echo "candidate_sha=$CANDIDATE_SHA"
             echo "runner_os=$RUNNER_OS runner_arch=$RUNNER_ARCH image_os=${ImageOS:-unknown} image_version=${ImageVersion:-unknown}"
@@ -159,6 +169,7 @@ jobs:
               done
               echo "gate_test_blob $checkout $(git -C "$root" rev-parse "HEAD:$gate_test")"
               echo "measure_source_blob $checkout $(git -C "$root" rev-parse "HEAD:$measure_source")"
+              echo "lexer_transition_blob $checkout $(git -C "$root" rev-parse HEAD:code/packages/go/lexer/grammar_lexer_f10.go)"
               echo "fixture_blob $checkout $(git -C "$root" rev-parse "HEAD:$fixture_rel")"
               actual_fixture_sha=$(sha256sum "$root/$fixture_rel" | cut -d' ' -f1)
               echo "fixture_sha256 $checkout $actual_fixture_sha"
@@ -174,6 +185,10 @@ jobs:
             echo "checkout identity mismatch" >&2
             exit 2
           fi
+          if [[ "$(git -C "$GITHUB_WORKSPACE/diagnostic" rev-parse HEAD)" != "$GITHUB_SHA" ]]; then
+            echo "diagnostic checkout does not match workflow event SHA" >&2
+            exit 2
+          fi
           for tree in baseline candidate; do
             root="$GITHUB_WORKSPACE/$tree"
             gate_blob=$(git -C "$root" rev-parse "HEAD:$gate_test")
@@ -184,6 +199,11 @@ jobs:
               exit 2
             fi
           done
+          if [[ "$(git -C "$GITHUB_WORKSPACE/baseline" rev-parse HEAD:code/packages/go/lexer/grammar_lexer_f10.go)" != 901967eefdc8dc4c05d43c89e77c5974c14b6c24 || \
+                "$(git -C "$GITHUB_WORKSPACE/candidate" rev-parse HEAD:code/packages/go/lexer/grammar_lexer_f10.go)" != 3fec22ab311048fc219823d714ce2fb0deefb8ec ]]; then
+            echo "lexer A/B source blobs do not match the reviewed candidate" >&2
+            exit 2
+          fi
           baseline_grammar_tree=$(git -C "$GITHUB_WORKSPACE/baseline" rev-parse HEAD:code/grammars/strace)
           candidate_grammar_tree=$(git -C "$GITHUB_WORKSPACE/candidate" rev-parse HEAD:code/grammars/strace)
           echo "strace_grammar_tree baseline=$baseline_grammar_tree candidate=$candidate_grammar_tree" | tee -a "$output/identity.txt"
@@ -264,15 +284,14 @@ jobs:
               "$output/admission-$checkout.test" -test.timeout=60s -test.count=1 \
               -test.run '^TestSandboxTraceGateSynthetic$' -test.v
             gate_status=$(sed -n 's/^exit_code=//p' "$output/$cell-admission.resources.txt" | head -1)
-            echo "cell_status cell=$cell official_exit=$gate_status" | tee -a "$summary"
-            if ! grep -Eq '^=== RUN[[:space:]]+TestSandboxTraceGateSynthetic$' "$admission_log" || \
-               ! grep -Eq '^--- (PASS|FAIL): TestSandboxTraceGateSynthetic([[:space:]]|$)' "$admission_log" || \
-               ! grep -Eq 'PROBE: trace synthetic-4mib-census bytes=4195800 lines=58968 .*gated=0 repeats=7' "$admission_log" || \
-               ! grep -Eq 'PROBE: trace synthetic-slice bytes=66600 lines=936 best_mb_s=[0-9]+\.[0-9]+ gated=1 repeats=7' "$admission_log"; then
-              echo "official cell $cell lacks the required run/probe markers" | tee -a "$summary"
+            cell_result=INVALID
+            if cell_result=$(python3 "$classifier" "$admission_log" "${gate_status:-}" "$checkout"); then
+              echo "cell_status cell=$cell official_exit=$gate_status result=$cell_result" | tee -a "$summary"
+            else
+              echo "cell_status cell=$cell official_exit=${gate_status:-missing} result=INVALID" | tee -a "$summary"
               integrity_failure=1
             fi
-            if [[ "$checkout" == candidate && "$gate_status" != 0 ]]; then
+            if [[ "$checkout" == candidate && "$cell_result" != PASS* ]]; then
               candidate_gate_failure=1
             fi
 
