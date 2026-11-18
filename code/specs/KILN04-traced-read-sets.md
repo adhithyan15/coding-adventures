@@ -2432,26 +2432,39 @@ recorder already enforces.
   deadline (`DefaultClassifyTimeout`, 10 minutes). A quarter is 150 s, so the
   floor is 2048 MiB / 150 s = 2,147 MB / 150 s, about **14 MB/s** (13.7 exactly;
   the job uses 14). The gate is on the **best** (minimum) pass-1 time over at
-  least 7 passes and at least 100 ms of wall time after one warm-up pass,
+  least 7 passes and at least **250 ms** of wall time after one warm-up pass,
   never on a single shot: a 50 KB trace is read in about 2 ms, so one sample is
   mostly noise, and noise only ever adds time, so the minimum is the right
   statistic for a capability floor. (On an Apple M2 Max a single-shot sample
-  fell to 5-7 MB/s under contention while the true rate is about 19.) The
-  kiln-sandbox job fails when a real trace of at least 32 KB falls below the
-  floor (smaller traces are not gated), and it always runs one deterministic
-  input, `synthetic-4mib`: `testdata/build.strace` repeated to at least 4 MiB
-  (pass 1 must read all of it; its best-of-7 rate is logged as `whole_mb_s`,
-  census only) and a 64 KB slice of whole repetitions gated with the same
-  statistic and floor (`TestSandboxTraceGateSynthetic`). The 4 MiB pass itself
-  is not gated: a 200 ms pass sees every change in how the CPU is shared, and a
-  best-of cannot see through sustained CPU shortage (measured on an M2 Max with
-  two busy threads per core: 4 MiB passes fell to 12 MB/s while the slice's best
-  stayed at 20). Each gated line says `gated=1` and carries
-  both `grammar_mb_s` (single shot, census only) and `best_mb_s` (gated);
-  `ci/assert_sandbox_tests.py` fails the job unless a passing test logged at
-  least one `gated=1` line and the `synthetic-4mib` line is among them, so G1
-  cannot go vacuous. A rate measured at about 50 KB or 4 MiB is a **proxy**: it
-  does not prove the rate at 2 GiB.
+  fell to 5-7 MB/s under contention while the true rate is about 20.) For a
+  trace of 128 KB or less the figure is taken **with the garbage collector off**
+  (after one collection), because a stop-the-world wait on a busy machine is
+  neighbour noise; production runs with the collector on, so the figure flatters
+  the reader a little. The measured idle rate of a whole 4 MiB pass (about 18.5
+  MB/s, collector on) is 10 to 15% below the slice figure, so the honest margin
+  over the floor is about **1.3x**, not the 1.4x or more the slice suggests.
+  The kiln-sandbox job fails when a real trace of **32 KB to 128 KB** falls below
+  the floor. Traces under 32 KB, and traces over 128 KB, are logged with
+  `gated=0` (census only): a long pass sees every change in how the CPU is
+  shared, and only about 7 passes fit, so best-of cannot see through a sustained
+  shortage (a 923 KB trace read below 14 MB/s in 15 of 60 contended trials). The
+  floor on larger inputs is carried by one deterministic input that always runs
+  (`TestSandboxTraceGateSynthetic`): a 64 KB slice of whole repetitions of
+  `testdata/build.strace`, logged as `PROBE: trace synthetic-slice ... gated=1`,
+  with the same statistic and floor. The same test reads the fixture repeated to
+  at least 4 MiB (pass 1 must read all of it) and logs its best-of-7 rate on its
+  own line, `synthetic-4mib-census`, `gated=0`. Each gated line carries
+  `best_mb_s` (gated) and real traces also carry `grammar_mb_s` (single shot,
+  census only). A zero best time or a non-finite or non-positive rate FAILS.
+  `ci/assert_sandbox_tests.py` independently fails the job unless a passing test
+  logged a `gated=1` line, the `synthetic-slice` line is among them and comes
+  from `TestSandboxTraceGateSynthetic`, and every gated `best_mb_s` is finite,
+  positive and at least 14; a PROBE line counts only when its payload starts
+  with `PROBE: trace ` after the go test `file:line` prefix. A rate measured at
+  about 50 KB or 64 KB is a **proxy**: it does not prove the rate at 2 GiB.
+  `trace.Measure`, `MeasureBest` and `BestPass1` toggle the process-global GC
+  setting, are not goroutine-safe, and are for CI and tests only
+  (`TestMeasureIsNotUsedByProductionCode`).
 - **G2 (report-only in PR 6; blocking before the old scanner is deleted).**
   Grammar parse time at most 10% of the step's wall time and at most 5 s
   absolute, at the census p99 trace size. The `PROBE:` lines carry

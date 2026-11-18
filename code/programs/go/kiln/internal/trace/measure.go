@@ -43,6 +43,14 @@ func Measure(r io.Reader, helperRoot bool) (Measurement, error) {
 	return MeasureBest(r, helperRoot, 0)
 }
 
+// MeasureBest and BestPass1 are for the kiln-sandbox CI job and tests ONLY.  For
+// a small trace they switch the garbage collector off for the duration with
+// debug.SetGCPercent, which is process-global and not goroutine-safe: they must
+// not be called concurrently with each other or with anything that cares about
+// the collector.  (TestMeasureIsNotUsedByProductionCode keeps them out of
+// non-test code.)  The figure they give is taken with the collector OFF,
+// production runs with it on, so it flatters the reader by a few percent.
+//
 // MeasureBest is Measure plus, when repeats > 0, one untimed warm-up pass and
 // then at least repeats timed passes (spanning at least 250 ms, at most 200 passes)
 // of the grammar path's pass 1, keeping the minimum
@@ -74,7 +82,7 @@ func BestPass1(data []byte, helperRoot bool, repeats int) (time.Duration, string
 }
 
 const (
-	smallTrace = 1 << 20
+	smallTrace = 128 << 10
 	minSpan    = 250 * time.Millisecond
 	maxPasses  = 200
 )

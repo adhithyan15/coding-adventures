@@ -34,7 +34,7 @@ REAL_PROBE = (
     "grammar_mb_s=22.8 best_mb_s=25.1 gated=1 old_allocs=1 grammar_allocs=2"
 )
 SYNTHETIC_PROBE = (
-    "    sandbox_tracesize_linux_amd64_test.go:130: PROBE: trace synthetic-4mib bytes=4194304 lines=9000 "
+    "    sandbox_tracesize_linux_amd64_test.go:130: PROBE: trace synthetic-slice bytes=65800 lines=9000 "
     "best_mb_s=30.0 gated=1 repeats=7"
 )
 
@@ -128,11 +128,46 @@ class GateG1(unittest.TestCase):
 
     def test_a_real_gated_line_without_the_synthetic_one_fails(self) -> None:
         problems = mod.gate_problems(stream(all_pass()) + probe_events("TestSandboxRecordStep", REAL_PROBE))
-        self.assertTrue(any("synthetic-4mib" in p for p in problems), problems)
+        self.assertTrue(any("synthetic-slice" in p for p in problems), problems)
 
     def test_a_gated_line_from_a_failing_test_does_not_count(self) -> None:
         problems = mod.gate_problems(stream(all_pass()) + probe_events("TestSandboxTraceGateSynthetic", SYNTHETIC_PROBE, "fail"))
         self.assertTrue(problems, problems)
+
+    def test_a_forged_substring_in_another_line_does_not_count(self) -> None:
+        forged = "    x_test.go:9: opened /tmp/PROBE: trace synthetic-slice best_mb_s=30.0 gated=1"
+        problems = mod.gate_problems(stream(all_pass()) + probe_events("TestSandboxTraceGateSynthetic", forged))
+        self.assertTrue(any("no passing test logged a gated" in p for p in problems), problems)
+        bare = "PROBE: trace synthetic-slice best_mb_s=30.0 gated=1"  # no file:line prefix
+        self.assertTrue(mod.gate_problems(stream(all_pass()) + probe_events("TestSandboxTraceGateSynthetic", bare)))
+
+    def test_the_synthetic_line_from_the_wrong_test_does_not_count(self) -> None:
+        problems = mod.gate_problems(stream(all_pass()) + probe_events("TestSandboxRecordStep", SYNTHETIC_PROBE))
+        self.assertTrue(any("synthetic-slice" in p and "missing" in p for p in problems), problems)
+
+    def test_a_gated_rate_below_the_floor_fails(self) -> None:
+        slow = SYNTHETIC_PROBE.replace("best_mb_s=30.0", "best_mb_s=13.9")
+        problems = mod.gate_problems(stream(all_pass()) + probe_events("TestSandboxTraceGateSynthetic", slow))
+        self.assertTrue(any("below the 14" in p for p in problems), problems)
+        ok = SYNTHETIC_PROBE.replace("best_mb_s=30.0", "best_mb_s=14.0")
+        self.assertEqual(mod.gate_problems(stream(all_pass()) + probe_events("TestSandboxTraceGateSynthetic", ok)), [])
+
+    def test_non_finite_zero_or_missing_rates_fail(self) -> None:
+        for bad in ("inf", "+Inf", "NaN", "0", "0.0", "-3.0", "abc"):
+            line = SYNTHETIC_PROBE.replace("best_mb_s=30.0", f"best_mb_s={bad}")
+            problems = mod.gate_problems(stream(all_pass()) + probe_events("TestSandboxTraceGateSynthetic", line))
+            self.assertTrue(problems, bad)
+        missing = SYNTHETIC_PROBE.replace("best_mb_s=30.0 ", "")
+        self.assertTrue(mod.gate_problems(stream(all_pass()) + probe_events("TestSandboxTraceGateSynthetic", missing)))
+
+    def test_a_slow_real_gated_trace_fails_even_with_the_synthetic_line(self) -> None:
+        slow = REAL_PROBE.replace("best_mb_s=25.1", "best_mb_s=9.0")
+        problems = mod.gate_problems(with_gate(stream(all_pass())) + probe_events("TestSandboxRecordStep", slow))
+        self.assertTrue(any("record-step" in p and "below" in p for p in problems), problems)
+
+    def test_the_4mib_census_line_is_not_gated(self) -> None:
+        census = "    x_test.go:5: PROBE: trace synthetic-4mib-census bytes=4195800 lines=1 best_mb_s=5.0 gated=0 repeats=7"
+        self.assertEqual(mod.gate_problems(with_gate(stream(all_pass())) + probe_events("TestSandboxTraceGateSynthetic", census)), [])
 
     def test_main_fails_when_the_gate_is_missing(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

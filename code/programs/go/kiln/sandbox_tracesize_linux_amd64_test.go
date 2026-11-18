@@ -21,7 +21,8 @@ import (
 //     and noise only ever adds time.  The minimum is the right statistic for a
 //     capability floor.  (The single-shot figure is still logged, as
 //     grammar_mb_s, for the census.)
-//   - Traces under gateMinBytes (32 KB) are not gated at all.
+//   - Traces under gateMinBytes (32 KB) or over gateMaxBytes (128 KB) are not
+//     gated at all (gated=0, census only).
 //
 // The rate on a ~50 KB trace or a 4 MiB repetition is a PROXY: it does not prove
 // the rate at 2 GiB (the line reader is linear, but memory pressure at that size
@@ -29,10 +30,15 @@ import (
 //
 // The gate cannot silently go vacuous: every gated PROBE line says gated=1, and
 // ci/assert_sandbox_tests.py fails the job unless at least one gated line was
-// logged and the deterministic synthetic-4mib line is among them.
+// logged and the deterministic synthetic-slice line is among them.
 const (
 	gateMinMBs   = 14.0
 	gateMinBytes = 32 << 10
+	// gateMaxBytes: above this a trace is census only (gated=0).  Best-of-N
+	// over a long pass sees sustained CPU shortage in every pass (a 923 KB trace
+	// read below 14 MB/s in 15 of 60 contended trials: only about 7 passes fit),
+	// so the synthetic slice, which is short enough to dodge it, carries the floor.
+	gateMaxBytes = 128 << 10
 	gateRepeats  = 7
 )
 
@@ -83,7 +89,7 @@ func probeTraceWall(t *testing.T, label, path string, wall time.Duration) {
 		}
 		return float64(m.Bytes) / d.Seconds() / 1e6
 	}
-	gated := m.Bytes >= gateMinBytes && m.NewError == ""
+	gated := m.Bytes >= gateMinBytes && m.Bytes <= gateMaxBytes && m.NewError == ""
 	wallFacts := ""
 	if wall > 0 {
 		wallFacts = fmt.Sprintf(" step_wall_ms=%d parse_ms=%.2f parse_share=%.4f",
@@ -92,11 +98,15 @@ func probeTraceWall(t *testing.T, label, path string, wall time.Duration) {
 	t.Logf("PROBE: trace %s bytes=%d lines=%d old_mb_s=%.1f grammar_mb_s=%.1f best_mb_s=%.1f gated=%d old_allocs=%d grammar_allocs=%d old_refusal=%q grammar_refusal=%q%s",
 		label, m.Bytes, m.Lines, mbs(m.OldTime), mbs(m.NewTime), mbs(m.NewBest), b2i(gated), m.OldAllocs, m.NewAllocs, m.OldError, m.NewError, wallFacts)
 	// G1 (blocking).
-	if gated && mbs(m.NewBest) < gateMinMBs {
+	if gated && (!finite(mbs(m.NewBest)) || !(mbs(m.NewBest) >= gateMinMBs)) {
 		t.Errorf("trace %s: the grammar path's best of %d passes read %d bytes at %.1f MB/s, below the %.0f MB/s floor (gate G1, KILN04 section 4.9)",
 			label, gateRepeats, m.Bytes, mbs(m.NewBest), gateMinMBs)
 	}
 }
+
+// finite is false for NaN and +/-Inf.  A best time of zero would make the rate
+// +Inf (or, as mbs returns 0 for it, 0), and neither may pass the gate.
+func finite(f float64) bool { return f-f == 0 }
 
 func b2i(b bool) int {
 	if b {
@@ -108,7 +118,7 @@ func b2i(b bool) int {
 // TestSandboxTraceGateSynthetic is the deterministic gate-G1 input: the committed
 // build.strace fixture repeated to at least 4 MiB.  Pass 1 must read all of it
 // (a refusal fails the test), its whole-input best-of-gateRepeats rate is logged
-// as whole_mb_s (census only), and the GATED figure is best_mb_s: the best of
+// as synthetic-4mib-census (gated=0), and the GATED figure (synthetic-slice, best_mb_s) is the best of
 // gateRepeats passes over a 64 KB slice of whole repetitions, against the same
 // floor.  Gating the 4 MiB pass itself would make the floor depend on how the CPU
 // is shared for the whole 200 ms of every pass (measured on an M2 Max with two
@@ -133,15 +143,22 @@ func TestSandboxTraceGateSynthetic(t *testing.T) {
 		// The fixture must be repeatable: pass 1 must read every line.
 		t.Fatalf("pass 1 refused the repeated fixture: %s", refusal)
 	}
+	// The 4 MiB census: its own line, never gated (see above).
+	t.Logf("PROBE: trace synthetic-4mib-census bytes=%d lines=%d best_mb_s=%.1f gated=0 repeats=%d",
+		len(whole), bytes.Count(whole, []byte{'\n'}), float64(len(whole))/wholeBest.Seconds()/1e6, gateRepeats)
 	best, refusal := trace.BestPass1(slice, true, gateRepeats)
 	if refusal != "" {
 		t.Fatalf("pass 1 refused the repeated fixture slice: %s", refusal)
 	}
-	mb := float64(len(slice)) / best.Seconds() / 1e6
-	t.Logf("PROBE: trace synthetic-4mib bytes=%d lines=%d whole_mb_s=%.1f slice_bytes=%d best_mb_s=%.1f gated=1 repeats=%d",
-		len(whole), bytes.Count(whole, []byte{'\n'}), float64(len(whole))/wholeBest.Seconds()/1e6, len(slice), mb, gateRepeats)
-	if mb < gateMinMBs {
-		t.Errorf("synthetic-4mib: the grammar path's best of %d passes read a %d byte slice at %.1f MB/s, below the %.0f MB/s floor (gate G1, KILN04 section 4.9)",
-			gateRepeats, len(slice), mb, gateMinMBs)
+	mb := 0.0
+	if best > 0 {
+		mb = float64(len(slice)) / best.Seconds() / 1e6
+	}
+	t.Logf("PROBE: trace synthetic-slice bytes=%d lines=%d best_mb_s=%.1f gated=1 repeats=%d",
+		len(slice), bytes.Count(slice, []byte{'\n'}), mb, gateRepeats)
+	// A zero or non-finite rate (a zero best time) fails: it is not a fast reader.
+	if best <= 0 || !finite(mb) || !(mb >= gateMinMBs) {
+		t.Errorf("synthetic-slice: the grammar path's best of %d passes read a %d byte slice in %v (%.1f MB/s), below the %.0f MB/s floor or not a measurement (gate G1, KILN04 section 4.9)",
+			gateRepeats, len(slice), best, mb, gateMinMBs)
 	}
 }
