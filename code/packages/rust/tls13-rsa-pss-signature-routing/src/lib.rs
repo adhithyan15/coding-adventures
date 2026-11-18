@@ -93,11 +93,20 @@ impl fmt::Debug for RsaPssMessageDigest<'_> {
 }
 
 /// One fixed verifier's already-validated public work limits.
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Eq, PartialEq)]
 pub enum Tls13RsaPssSignatureLimits {
     Sha256(RsaPssSha256SignatureLimits),
     Sha384(RsaPssSha384SignatureLimits),
     Sha512(RsaPssSha512SignatureLimits),
+}
+
+impl fmt::Debug for Tls13RsaPssSignatureLimits {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_tuple("Tls13RsaPssSignatureLimits")
+            .field(&self.profile())
+            .finish()
+    }
 }
 
 impl Tls13RsaPssSignatureLimits {

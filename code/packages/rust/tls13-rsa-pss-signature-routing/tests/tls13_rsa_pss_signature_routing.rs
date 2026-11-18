@@ -258,4 +258,9 @@ fn delegates_failures_and_redacts_diagnostics() {
     assert!(!diagnostic.contains("0806"));
     assert!(!diagnostic.contains("4242"));
     assert!(!diagnostic.contains("ddaf35"));
+
+    let limits =
+        Tls13RsaPssSignatureLimits::Sha512(RsaPssSha512SignatureLimits::new(256, 256).unwrap());
+    assert_eq!(format!("{limits:?}"), "Tls13RsaPssSignatureLimits(Sha512)");
+    assert!(!format!("{limits:?}").contains("256"));
 }
