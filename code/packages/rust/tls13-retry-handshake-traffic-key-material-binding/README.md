@@ -9,9 +9,9 @@ wipe-on-drop PRK and derives the selected suite's traffic key and static IV.
 Caller-owned output storage must retain the exact selected suite before any
 mutation. Success returns a non-cloneable wrapper retaining the complete CH1,
 HelloRetryRequest, CH2, final ServerHello, base-schedule, and handshake-secret
-proof beside the sender role and a borrowed fixed wipe-on-drop key-material
-view. Callers cannot supply a detached secret, suite, hash, output length,
-label, or context.
+proof beside the sender role and a borrowed key-material view into caller-owned
+fixed wipe-on-drop storage. Callers cannot supply a detached secret, suite,
+hash, output length, label, or context.
 
 This package derives one direction's handshake key and IV per call. It does
 not advance the transcript, authenticate CertificateVerify or Finished,
