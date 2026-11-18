@@ -46,15 +46,33 @@
 //! in an explicit refusal arm for the same reason.  [`census`] reports, per item, the
 //! refusal that would block it, without failing the document.
 //!
+//! ## `ir.fixed` (slice S10b): lowered, typed, costed, never evaluated
+//!
+//! The 35 built-ins of VER04r Appendix A.1 are **lowered** (one [`Ir::Fixed`] node per call,
+//! the operand types inferred as for `add`, a static type argument written as the canonical
+//! type name in position 1) and each lowered unit records its `requires` (R9: the sorted union
+//! of the levels of its tags and of its callees' own `requires`, `ir.core` always present).  A
+//! unit whose `requires` holds `ir.fixed` is **refused** by [`lower_document`] and by the census
+//! with the level `ir.fixed`, exactly as before S10b, so `generate` stays a fail-closed stub
+//! for such documents; [`Partial::into_lowered_with_fixed`] hands the IR to the parity dump
+//! (`tests/fixed_parity.rs`), which is what S10b has to reproduce byte for byte.
+//!
+//! `Option<T>` is an IR-only intermediate (D23, R8): nine built-ins produce one and
+//! `unwrap_or` consumes it, as its first operand and directly; anywhere else it is refused with
+//! the level `ir.data` (it is [`Ty::Option`], and it never reaches a signature).
+//!
+//! A refused unit is named by the **first construct, in source order, that cannot be lowered**;
+//! it is named `ir.fixed` only when nothing else blocks it (a built-in lowers, so a later tuple
+//! or constructor in the same unit gives the unit that level, the oracle's rule).
+//!
 //! The refusals, by level:
 //!
 //! ```text
-//!   ir.fixed   a V1 built-in of integer shape: widen wrap try to_int to_nat max_value
-//!              min_value checked_* rem div div_trunc rem_trunc bit_* shl shr sar rotl
-//!              rotr popcount clz ctz bit be_bytes le_bytes from_be from_le imin imax at
-//!   ir.data    tuples, projections, list literals, `match`, constructors, `Option`,
-//!              `List`, records, variants; Some None unwrap_or fixed slice to_list
-//!              to_bytes replicate range
+//!   ir.fixed   a unit that lowers and uses a built-in of Appendix A.1 (see above)
+//!   ir.tuple   tuple types, the tuple literal, projection, `match` on a `Result`
+//!   ir.data    list literals, `match` on anything but a `Result`, constructors, `Option` and
+//!              `List` types, records, variants; Some None fixed slice to_list to_bytes
+//!              replicate range, and an `Option` that is not the first operand of `unwrap_or`
 //!   ir.seq     fold map all any count (reserved)
 //!   inout / ensures / vectors / assume   WX-G, WX-E and assumption rows
 //! ```
@@ -75,7 +93,7 @@ use coding_adventures_warrant_grammar::parser::{
 
 use crate::analysis::{check_pure_guards, check_v0_static_arith};
 use crate::error::{code, Beyond, GenError};
-use crate::ir::{Arith, Cmp, Ir, Logic, MAX_IR_DEPTH};
+use crate::ir::{self, Arith, Cmp, Ir, Logic, MAX_IR_DEPTH, OPTION_PRODUCERS, STATIC_TYPE_TAGS};
 use crate::json::Json;
 use crate::types::{Ty, Width};
 
@@ -89,49 +107,10 @@ const MAX_TYPE_DEPTH: usize = 16;
 /// The longest `Bytes<N>` (VER04h section 3, `MAX_FIXED_WIDTH`).
 const MAX_FIXED_WIDTH: u64 = 4096;
 
-/// V1 built-ins of integer shape (VER04r 4.1 `ir.fixed`), by the names the grammar uses.
-const LEVEL_FIXED: [&str; 34] = [
-    "widen",
-    "wrap",
-    "try",
-    "to_int",
-    "to_nat",
-    "max_value",
-    "min_value",
-    "checked_add",
-    "checked_sub",
-    "checked_mul",
-    "div_trunc",
-    "rem_trunc",
-    "rem",
-    "bit_and",
-    "bit_or",
-    "bit_xor",
-    "bit_not",
-    "shl",
-    "shr",
-    "sar",
-    "rotl",
-    "rotr",
-    "popcount",
-    "clz",
-    "ctz",
-    "bit",
-    "be_bytes",
-    "le_bytes",
-    "from_be",
-    "from_le",
-    "at",
-    "div",
-    "imin",
-    "imax",
-];
-
-/// Constructors and sequence built-ins of `ir.data`.
-const LEVEL_DATA: [&str; 9] = [
+/// Constructors and sequence built-ins of `ir.data` (`unwrap_or` is `ir.fixed` since S10b).
+const LEVEL_DATA: [&str; 8] = [
     "Some",
     "None",
-    "unwrap_or",
     "fixed",
     "slice",
     "to_list",
@@ -139,6 +118,9 @@ const LEVEL_DATA: [&str; 9] = [
     "replicate",
     "range",
 ];
+
+/// Why an `Option` is refused anywhere but under `unwrap_or` (D23).
+const OPTION_MESSAGE: &str = "Option is an IR-only intermediate (its only consumer is unwrap_or)";
 
 /// The reserved WX-D sequence level.
 const LEVEL_SEQ: [&str; 5] = ["fold", "map", "all", "any", "count"];
@@ -171,6 +153,8 @@ pub struct LoweredOp {
     pub fresh: bool,
     /// The parameters' refinements as one Bool tree (`and`-folded left), if any.
     pub admit: Option<Ir>,
+    /// The sorted levels the `admit` needs (R9); `ir.core` is always present.
+    pub requires: Vec<&'static str>,
 }
 
 impl LoweredOp {
@@ -188,7 +172,7 @@ impl LoweredOp {
                 ),
             ),
             ("ret".to_string(), Json::str(self.ret.name())),
-            ("requires".to_string(), Json::strs(["ir.core"])),
+            ("requires".to_string(), Json::strs(self.requires.iter())),
         ];
         if !self.statics.is_empty() {
             row.push(("width_params".into(), Json::strs(self.statics.iter())));
@@ -214,6 +198,9 @@ pub struct LoweredModel {
     pub ret: Ty,
     /// The body.
     pub body: Ir,
+    /// The sorted levels of the body and of its callees (R9; a model has no `requires` of its
+    /// own in a corpus, section 1.4, but a caller reads it instead of walking the closure).
+    pub requires: Vec<&'static str>,
 }
 
 /// How a claim relates its subject to the model (VER04r 4.3).
@@ -249,6 +236,8 @@ pub struct LoweredSuite {
     pub kind: SuiteKind,
     /// The operations the body calls, in order of first occurrence.
     pub ops: Vec<String>,
+    /// The sorted levels of `admit`, `body` and their model closure (R9).
+    pub requires: Vec<&'static str>,
 }
 
 /// The reference decomposition of an example, when it has one.
@@ -272,6 +261,8 @@ pub struct LoweredExample {
     /// Its decomposition: exactly one subject call compared with a pure value (anything
     /// else is refused at lowering, so this is always present).
     pub reference: ExampleRef,
+    /// The sorted levels of the body and its model closure (R9).
+    pub requires: Vec<&'static str>,
 }
 
 /// A whole document lowered to `ir.core`.  Every item is within `ir.core`.
@@ -378,32 +369,23 @@ impl Partial {
     }
 
     /// The first refusal, in the order: declarations, operations, models, claims,
-    /// examples.
+    /// examples.  An item that lowered but needs `ir.fixed` is refused with that level.
     pub fn first_block(&self) -> Option<GenError> {
-        self.declarations
-            .iter()
-            .cloned()
-            .chain(
-                self.ops
-                    .iter()
-                    .filter_map(|(_, s)| s.as_ref().err().cloned()),
-            )
-            .chain(
-                self.models
-                    .iter()
-                    .filter_map(|(_, s)| s.as_ref().err().cloned()),
-            )
-            .chain(
-                self.suites
-                    .iter()
-                    .filter_map(|(_, s)| s.as_ref().err().cloned()),
-            )
-            .chain(
-                self.examples
-                    .iter()
-                    .filter_map(|(_, s)| s.as_ref().err().cloned()),
-            )
-            .next()
+        self.blocks(true).into_iter().next()
+    }
+
+    /// The refusals in the order of [`Partial::first_block`]; `fixed_blocks` says whether an
+    /// item that lowered but needs `ir.fixed` counts as one.
+    fn blocks(&self, fixed_blocks: bool) -> Vec<GenError> {
+        let mut out: Vec<GenError> = self.declarations.clone();
+        fn push<T: Leveled>(out: &mut Vec<GenError>, slots: &[(String, Slot<T>)], fixed: bool) {
+            out.extend(slots.iter().filter_map(|(n, s)| blocked(s, n, fixed)));
+        }
+        push(&mut out, &self.ops, fixed_blocks);
+        push(&mut out, &self.models, fixed_blocks);
+        push(&mut out, &self.suites, fixed_blocks);
+        push(&mut out, &self.examples, fixed_blocks);
+        out
     }
 
     /// Every item with its refusal, in the same order as [`Partial::first_block`].
@@ -424,43 +406,58 @@ impl Partial {
             })
         };
         for (n, s) in &self.ops {
-            push(ItemKind::Op, n, s.as_ref().err().cloned());
+            push(ItemKind::Op, n, blocked(s, n, true));
         }
         for (n, s) in &self.models {
-            push(ItemKind::Model, n, s.as_ref().err().cloned());
+            push(ItemKind::Model, n, blocked(s, n, true));
         }
         for (n, s) in &self.suites {
-            push(ItemKind::Claim, n, s.as_ref().err().cloned());
+            push(ItemKind::Claim, n, blocked(s, n, true));
         }
         for (n, s) in &self.examples {
-            push(ItemKind::Example, n, s.as_ref().err().cloned());
+            push(ItemKind::Example, n, blocked(s, n, true));
         }
         rows
     }
 
-    /// The models that lowered, in declaration order (for the census's cost check).
+    /// The models that lowered within `ir.core`, in declaration order (for the census's cost
+    /// check).  A model that needs `ir.fixed` is refused by the census and left out.
     pub fn lowered_models(&self) -> Vec<LoweredModel> {
         self.models
             .iter()
-            .filter_map(|(_, s)| s.as_ref().ok().cloned())
+            .filter_map(|(_, s)| s.as_ref().ok().filter(|m| !m.needs_fixed()).cloned())
             .collect()
     }
 
-    /// The claims that lowered, in declaration order.
+    /// The claims that lowered within `ir.core`, in declaration order.
     pub fn lowered_suites(&self) -> Vec<&LoweredSuite> {
         self.suites
             .iter()
-            .filter_map(|(_, s)| s.as_ref().ok())
+            .filter_map(|(_, s)| s.as_ref().ok().filter(|s| !s.needs_fixed()))
             .collect()
     }
 
-    /// The fully lowered document, or the first refusal.
+    /// The fully lowered document, or the first refusal (a unit that needs `ir.fixed` is one).
     pub fn into_lowered(self) -> Result<Lowered, GenError> {
         if let Some(block) = self.first_block() {
             return Err(block);
         }
         // `first_block` found nothing, so every slot is `Ok`.
-        Ok(Lowered {
+        Ok(self.into_lowered_unchecked())
+    }
+
+    /// The fully lowered document **including its `ir.fixed` units**, or the first refusal of
+    /// any other kind.  Nothing downstream may evaluate or emit what this returns: it exists
+    /// for the lowering parity dump of slice S10b ([`crate::view::oracle_view_v1`]).
+    pub fn into_lowered_with_fixed(self) -> Result<Lowered, GenError> {
+        if let Some(block) = self.blocks(false).into_iter().next() {
+            return Err(block);
+        }
+        Ok(self.into_lowered_unchecked())
+    }
+
+    fn into_lowered_unchecked(self) -> Lowered {
+        Lowered {
             module: self.module,
             version: self.version,
             errors: self.errors,
@@ -468,7 +465,38 @@ impl Partial {
             models: oks(self.models),
             suites: oks(self.suites),
             examples: oks(self.examples),
-        })
+        }
+    }
+}
+
+/// An item with a computed `requires` (R9).
+trait Leveled {
+    fn levels(&self) -> &[&'static str];
+
+    /// Does the item use a built-in of `ir.fixed` (directly or through a callee)?
+    fn needs_fixed(&self) -> bool {
+        self.levels().contains(&"ir.fixed")
+    }
+}
+
+macro_rules! leveled {
+    ($($t:ty),*) => {$(impl Leveled for $t {
+        fn levels(&self) -> &[&'static str] { &self.requires }
+    })*};
+}
+leveled!(LoweredOp, LoweredModel, LoweredSuite, LoweredExample);
+
+/// The refusal that blocks one slot: its own, or (if `fixed`) `ir.fixed` for an item that
+/// lowered but needs that level.
+fn blocked<T: Leveled>(slot: &Slot<T>, name: &str, fixed: bool) -> Option<GenError> {
+    match slot {
+        Err(e) => Some(e.clone()),
+        Ok(t) if fixed && t.needs_fixed() => Some(GenError::level(
+            Beyond::IrFixed,
+            name,
+            "fixed-width built-ins need ir.fixed",
+        )),
+        Ok(_) => None,
     }
 }
 
@@ -489,6 +517,37 @@ fn oks<T>(slots: Vec<(String, Slot<T>)>) -> Vec<T> {
 /// operations, models, claims, examples is returned.
 pub fn lower_document(file: &WarrantFile<'_>) -> Result<Lowered, GenError> {
     lower_partial(file)?.into_lowered()
+}
+
+/// [`lower_document`] that also accepts the `ir.fixed` units (S10b): the document lowered in
+/// full, `ir.fixed` included, for the parity dump.  Everything else is refused as before.  The
+/// result must never reach the evaluator or the emitter: its models and suites may hold
+/// [`Ir::Fixed`] nodes, which only the lowering and the cost walk understand.
+///
+/// # Errors
+///
+/// As [`lower_document`], except that a unit that needs `ir.fixed` is not one.
+pub fn lower_document_with_fixed(file: &WarrantFile<'_>) -> Result<Lowered, GenError> {
+    lower_partial_for_dump(file)?.into_lowered_with_fixed()
+}
+
+/// [`lower_partial`] for the parity dump: the same checker and the same lowering, but the one
+/// rule the oracle applies only when it *evaluates* a suite, not when it lowers it, is not
+/// applied: VER04r 4.4's refusal of a subject call under an impure guard (`W0701`).  The oracle's
+/// `fixed_forms_v1.warrant` has claims of the shape `op(a) == x or op(a) == y`, which it lowers
+/// and dumps and which the generator refuses everywhere else.  Never use this for a document
+/// whose lowering is evaluated or emitted.
+fn lower_partial_for_dump(file: &WarrantFile<'_>) -> Result<Partial, GenError> {
+    if let Err(e) = check_warrant(file) {
+        return Err(GenError::new(
+            code::CHECK,
+            "",
+            format!("the document does not pass the checker ({})", e.code),
+        ));
+    }
+    let mut lowerer = Lowerer::new(file);
+    lowerer.skip_pure_guards = true;
+    lowerer.run()
 }
 
 /// Per-item census: what blocks each operation, model, claim and example (VER04r 16.2 and
@@ -543,6 +602,8 @@ struct ModelEntry {
     /// Does the model's call closure (its body and every model it calls) contain a
     /// fixed-width `add`/`sub`/`mul`/`neg`?  Needed by the v0 guard (VER04r 3.3 rule 3).
     wraps: bool,
+    /// The levels of the model's body and callees (R9), read by its callers.
+    requires: Vec<&'static str>,
 }
 
 struct Lowerer<'f, 'a> {
@@ -562,6 +623,20 @@ struct Lowerer<'f, 'a> {
     /// example body being lowered, so `classify` never re-types a side without its context
     /// (S3a review, known gap L6).
     top_eq_types: Option<(Ty, Ty)>,
+    /// Set by `unwrap_or` for exactly one `expr` call, its first operand: the one place an
+    /// `Option` may be the type of an expression (D23, R8).  Taken at the start of that call.
+    option_ok: bool,
+    /// Set by the branch that lowers a `Bytes` literal, a `concat` or an `if` of equal widths
+    /// just before it returns, and taken by [`Lowerer::expr`] into `last_width`.
+    width_out: Option<u64>,
+    /// The static width of the `Bytes` expression the most recent `expr` call lowered, if it
+    /// is one the checker types `Bytes<n>` although this typer forgets the width (a literal,
+    /// a `concat` of sized operands, an `if` of equal widths).  Read by `from_be`/`from_le`
+    /// immediately after the operand's `expr` call: one lowering pass, never a re-lowering.
+    last_width: Option<u64>,
+    /// Do not apply VER04r 4.4's impure-guard refusal (the parity dump only, see
+    /// [`lower_partial_for_dump`]).
+    skip_pure_guards: bool,
 }
 
 /// Strip any number of parentheses: a group vanishes in the IR.
@@ -619,6 +694,10 @@ impl<'f, 'a> Lowerer<'f, 'a> {
             nest: 0,
             current_model: None,
             top_eq_types: None,
+            option_ok: false,
+            width_out: None,
+            last_width: None,
+            skip_pure_guards: false,
         }
     }
 
@@ -747,8 +826,10 @@ impl<'f, 'a> Lowerer<'f, 'a> {
             if let Ok(lop) = &ops[i].1 {
                 match self.lower_op_admit(decl, lop) {
                     Ok(admit) => {
+                        let requires = self.levels_of(admit.iter());
                         if let Ok(l) = &mut ops[i].1 {
                             l.admit = admit;
+                            l.requires = requires;
                         }
                     }
                     Err(e) if is_refusal(&e) => {
@@ -804,6 +885,18 @@ impl<'f, 'a> Lowerer<'f, 'a> {
         GenError::level(beyond, "", message)
     }
 
+    /// The `requires` of a lowered unit (VER04r 16.10 R9): [`ir::levels`] over `trees`, reading
+    /// each callee's own `requires` from the model table.  The part of R9 that is on *types* adds
+    /// nothing here: the types that would (a tuple, a list, a record) are refused before a unit
+    /// gets this far.
+    fn levels_of<'t>(&self, trees: impl IntoIterator<Item = &'t Ir>) -> Vec<&'static str> {
+        ir::levels(trees, &|name| {
+            self.models
+                .get(name)
+                .map_or_else(|| vec!["ir.core"], |e| e.requires.clone())
+        })
+    }
+
     // -- types -------------------------------------------------------------------
 
     fn resolve(&self, t: &TypeExpr<'_>, statics: &[String], depth: usize) -> Result<Ty, GenError> {
@@ -835,9 +928,9 @@ impl<'f, 'a> Lowerer<'f, 'a> {
                     Err(self.type_err("an unknown static width name"))
                 }
             }
-            TypeExpr::List { .. } | TypeExpr::Option { .. } | TypeExpr::Tuple { .. } => {
-                Err(self.level(Beyond::IrData, "List, Option and tuple types need ir.data"))
-            }
+            TypeExpr::Tuple { .. } => Err(self.level(Beyond::IrTuple, "tuple types need ir.tuple")),
+            TypeExpr::List { .. } => Err(self.level(Beyond::IrData, "List types need ir.data")),
+            TypeExpr::Option { .. } => Err(self.level(Beyond::IrData, OPTION_MESSAGE)),
             TypeExpr::Result {
                 ok_type, err_name, ..
             } => {
@@ -894,6 +987,7 @@ impl<'f, 'a> Lowerer<'f, 'a> {
             ret,
             fresh: op.is_fresh,
             admit: None,
+            requires: vec!["ir.core"],
         })
     }
 
@@ -941,6 +1035,7 @@ impl<'f, 'a> Lowerer<'f, 'a> {
                         ret: Some(model.ret.clone()),
                         outcome: Ok(()),
                         wraps: self.closure_wraps(&model.body),
+                        requires: model.requires.clone(),
                     },
                 );
                 Ok(Ok(model))
@@ -954,6 +1049,7 @@ impl<'f, 'a> Lowerer<'f, 'a> {
                         ret: None,
                         outcome: Err(e.clone()),
                         wraps: false,
+                        requires: vec!["ir.core"],
                     },
                 );
                 Ok(Err(e))
@@ -1012,11 +1108,13 @@ impl<'f, 'a> Lowerer<'f, 'a> {
                 "a subject call inside a model body (VER04r 4.2 rule 3)",
             ));
         }
+        let requires = self.levels_of([&ir]);
         Ok(LoweredModel {
             name: decl.name.to_string(),
             params,
             ret,
             body: ir,
+            requires,
         })
     }
 
@@ -1061,7 +1159,9 @@ impl<'f, 'a> Lowerer<'f, 'a> {
             return Err(self.type_err("a claim body must be Bool"));
         }
         // VER04r 4.4: a subject call may sit under a guard only if the guard is pure.
-        check_pure_guards(&body)?;
+        if !self.skip_pure_guards {
+            check_pure_guards(&body)?;
+        }
         // VER04r 3.3 rule 3: a v0 document refuses fixed-width arithmetic over a subject
         // result, statically.
         self.v0_guard(&body)?;
@@ -1076,6 +1176,7 @@ impl<'f, 'a> Lowerer<'f, 'a> {
             ));
         }
         let kind = self.classify(&body)?;
+        let requires = self.levels_of([&admit, &body]);
         Ok(LoweredSuite {
             id,
             claim: decl.name.to_string(),
@@ -1084,6 +1185,7 @@ impl<'f, 'a> Lowerer<'f, 'a> {
             body,
             kind,
             ops,
+            requires,
         })
     }
 
@@ -1121,7 +1223,9 @@ impl<'f, 'a> Lowerer<'f, 'a> {
             return Err(self.type_err("an example body must be Bool"));
         }
         self.v0_guard(&body)?;
-        check_pure_guards(&body)?;
+        if !self.skip_pure_guards {
+            check_pure_guards(&body)?;
+        }
         // The `examples` row of VER04r 1.4 can only say `op(literals) == pure`: exactly one
         // subject call, its arguments free of subject calls, on one side of an equality.
         let reference =
@@ -1141,10 +1245,12 @@ impl<'f, 'a> Lowerer<'f, 'a> {
                     "an example must be one subject call compared with a pure value (VER04r 1.4)",
                 )),
             };
+        let requires = self.levels_of([&body]);
         Ok(LoweredExample {
             name: decl.name.to_string(),
             body,
             reference,
+            requires,
         })
     }
 
@@ -1177,6 +1283,8 @@ impl<'f, 'a> Lowerer<'f, 'a> {
     /// Lower `e`; `expected` types bare literals and `Ok`/`Err`.
     fn expr(&mut self, e: &Expression<'a>, expected: Option<&Ty>) -> Result<(Ir, Ty), GenError> {
         let e = strip(e);
+        // Taken before any operand is lowered: it is for this node alone.
+        let option_ok = std::mem::take(&mut self.option_ok);
         self.nest += 1;
         let result = if self.nest > MAX_EXPR_DEPTH {
             Err(GenError::new(
@@ -1188,7 +1296,15 @@ impl<'f, 'a> Lowerer<'f, 'a> {
             self.expr_inner(e, expected)
         };
         self.nest -= 1;
-        result
+        // Every operand's `expr` call took its own `width_out`, so what is left is this node's.
+        self.last_width = self.width_out.take();
+        let (ir, ty) = result?;
+        // D23, R8: an `Option` is the type of an expression only as the first operand of
+        // `unwrap_or`; anywhere else it is `ir.data`.
+        if matches!(ty, Ty::Option(_)) && !option_ok {
+            return Err(self.level(Beyond::IrData, OPTION_MESSAGE));
+        }
+        Ok((ir, ty))
     }
 
     fn expr_inner(
@@ -1197,7 +1313,13 @@ impl<'f, 'a> Lowerer<'f, 'a> {
         expected: Option<&Ty>,
     ) -> Result<(Ir, Ty), GenError> {
         match e {
-            Expression::Literal { lit, .. } => self.literal(lit, expected),
+            Expression::Literal { lit, .. } => {
+                let lowered = self.literal(lit, expected)?;
+                if let Literal::Bytes(hex) = lit {
+                    self.width_out = Some(hex.len() as u64 / 2);
+                }
+                Ok(lowered)
+            }
             Expression::Reference {
                 name, widths, args, ..
             } => {
@@ -1221,37 +1343,59 @@ impl<'f, 'a> Lowerer<'f, 'a> {
                 if c_ty != Ty::Bool {
                     return Err(self.type_err("an `if` condition must be Bool"));
                 }
-                let ((t_ir, t_ty), (o_ir, o_ty)) =
+                // Each branch's static width is read right after its own `expr` call.
+                let ((t_ir, t_ty, wt), (o_ir, o_ty, wo)) =
                     if needs_context(then_branch) && !needs_context(else_branch) {
                         let o = self.expr(else_branch, expected)?;
+                        let wo = self.last_width;
                         let hint = if expected.is_none() {
                             Some(&o.1)
                         } else {
                             expected
                         };
                         let t = self.expr(then_branch, hint)?;
-                        (t, o)
+                        let wt = self.last_width;
+                        ((t.0, t.1, wt), (o.0, o.1, wo))
                     } else {
                         let t = self.expr(then_branch, expected)?;
+                        let wt = self.last_width;
                         let hint = if expected.is_some() {
                             expected
                         } else {
                             Some(&t.1)
                         };
                         let o = self.expr(else_branch, hint)?;
-                        (t, o)
+                        let wo = self.last_width;
+                        ((t.0, t.1, wt), (o.0, o.1, wo))
                     };
                 let common = Ty::unify(&t_ty, &o_ty)
                     .ok_or_else(|| self.type_err("the branches of an `if` have no common type"))?;
+                // The checker's `common_type`: two branches of the same static width stay
+                // `Bytes<n>`; anything else forgets it.
+                let (wt, wo) = (static_width(&t_ty, wt), static_width(&o_ty, wo));
+                if wt.is_some() && wt == wo {
+                    self.width_out = wt;
+                }
                 Ok((
                     Ir::If(Box::new(c_ir), Box::new(t_ir), Box::new(o_ir)),
                     common,
                 ))
             }
-            Expression::List { .. } | Expression::Tuple { .. } | Expression::Project { .. } => {
-                Err(self.level(Beyond::IrData, "tuples, lists and projections need ir.data"))
+            Expression::List { .. } => Err(self.level(Beyond::IrData, "lists need ir.data")),
+            Expression::Tuple { .. } | Expression::Project { .. } => {
+                Err(self.level(Beyond::IrTuple, "tuples and projections need ir.tuple"))
             }
-            Expression::Match { .. } => Err(self.level(Beyond::IrData, "match needs ir.data")),
+            Expression::Match { target, .. } => {
+                // `match` is `ir.tuple` exactly when its scrutinee is a `Result` and `ir.data`
+                // otherwise (VER04r 4.1, D35), so the scrutinee is typed first (a refusal in
+                // it comes first, in source order).
+                let (_, s_ty) = self.expr(target, None)?;
+                if matches!(s_ty, Ty::Result(..)) {
+                    Err(self.level(Beyond::IrTuple, "match on a Result needs ir.tuple"))
+                } else {
+                    Err(self.level(Beyond::IrData, "match needs ir.data"))
+                }
+            }
             Expression::Quantified { .. } => {
                 Err(self.type_err("a quantifier is only allowed at the head of a claim"))
             }
@@ -1478,9 +1622,15 @@ impl<'f, 'a> Lowerer<'f, 'a> {
             "concat" => {
                 arity(2)?;
                 let (a, a_ty) = self.expr(&args[0], None)?;
+                let wa = self.last_width;
                 let (b, b_ty) = self.expr(&args[1], None)?;
+                let wb = self.last_width;
                 if !a_ty.is_bytes() || !b_ty.is_bytes() {
                     return Err(self.type_err("concat needs byte strings"));
+                }
+                // The checker types a `concat` of two sized operands `Bytes<sum>`.
+                if let (Some(x), Some(y)) = (static_width(&a_ty, wa), static_width(&b_ty, wb)) {
+                    self.width_out = Some(x.saturating_add(y));
                 }
                 // Widths add: concat(Bytes<1>, Bytes<30>) is Bytes<31>.
                 let ty = match (&a_ty, &b_ty) {
@@ -1550,9 +1700,7 @@ impl<'f, 'a> Lowerer<'f, 'a> {
                     expected.cloned().unwrap_or(Ty::Bool),
                 ))
             }
-            n if LEVEL_FIXED.contains(&n) => {
-                Err(self.level(Beyond::IrFixed, "fixed-width built-ins need ir.fixed"))
-            }
+            n if ir::fixed_tag(n).is_some() => self.fixed_call(n, widths, Some(args)),
             n if LEVEL_DATA.contains(&n) => {
                 Err(self.level(Beyond::IrData, "Option and list built-ins need ir.data"))
             }
@@ -1564,6 +1712,230 @@ impl<'f, 'a> Lowerer<'f, 'a> {
                 Err(self.level(Beyond::IrData, "constructors need ir.data"))
             }
             _ => Err(self.type_err("an unknown callable")),
+        }
+    }
+
+    // -- the ir.fixed built-ins (Appendix A.1) ---------------------------------------------
+
+    /// Type and lower one of the 35 `ir.fixed` built-ins to its Appendix A.1 shape: one
+    /// [`Ir::Fixed`] node per call, same spelling, positional operands, the static type argument
+    /// (`widen<U32>(x)`) in position 1.  The operand types are inferred as for `add`, and the
+    /// rules are those of the table of VER04r A.1 (and of `checker.rs`, which has already
+    /// accepted the document: a mismatch here is the defensive `type` refusal, never a silent
+    /// conversion).  `div`/`rem` on two `Nat` operands give `Option<Int>` (R7).
+    ///
+    /// A built-in in a **v0** document is out of scope (VER04j 1.2: the names are version
+    /// scoped) and keeps the refusal it had before S10b.
+    fn fixed_call(
+        &mut self,
+        name: &str,
+        widths: &[AstWidth<'_>],
+        args: Option<&[Expression<'a>]>,
+    ) -> Result<(Ir, Ty), GenError> {
+        if self.file.version != Version::V1 {
+            return Err(self.level(Beyond::IrFixed, "fixed-width built-ins need ir.fixed"));
+        }
+        let tag =
+            ir::fixed_tag(name).ok_or_else(|| GenError::internal("a fixed built-in has no tag"))?;
+        let static_ty: Option<FixedTy> = if STATIC_TYPE_TAGS.contains(&tag) {
+            match widths {
+                [AstWidth::Named(n)] => Some(FixedTy::from_name(n).ok_or_else(|| {
+                    self.type_err("a static type argument is a fixed-width type")
+                })?),
+                _ => return Err(self.type_err("this built-in takes one fixed-width type argument")),
+            }
+        } else if widths.is_empty() {
+            None
+        } else {
+            return Err(self.type_err("this built-in takes no static argument"));
+        };
+        let Some(args) = args.filter(|a| a.len() == ir::fixed_arity(tag)) else {
+            return Err(self.type_err("wrong number of arguments"));
+        };
+        let fx = |ty: Option<FixedTy>, ops: Vec<Ir>| Ir::Fixed { tag, ty, args: ops };
+        let opt = |t: Ty| Ty::Option(Box::new(t));
+        // The operand shapes that recur.
+        let fixed_operand = |t: &Ty| t.is_fixed();
+        match tag {
+            "max_value" | "min_value" => {
+                let t = static_ty.ok_or_else(|| GenError::internal("no static type"))?;
+                Ok((fx(Some(t), vec![]), Ty::Fixed(t)))
+            }
+            "widen" | "wrap" | "try" => {
+                let t = static_ty.ok_or_else(|| GenError::internal("no static type"))?;
+                let (x_ir, x_ty) = self.expr(&args[0], None)?;
+                match x_ty.fixed() {
+                    Some(src) => {
+                        if tag == "widen" && !src.widens_to(t) {
+                            return Err(self.type_err(
+                                "widen needs a source whose range is inside the target",
+                            ));
+                        }
+                    }
+                    None => {
+                        if tag == "widen" || !matches!(x_ty, Ty::Int | Ty::Nat) {
+                            return Err(self
+                                .type_err("a conversion needs a fixed-width, Int or Nat operand"));
+                        }
+                    }
+                }
+                let ret = if tag == "try" {
+                    opt(Ty::Fixed(t))
+                } else {
+                    Ty::Fixed(t)
+                };
+                Ok((fx(Some(t), vec![x_ir]), ret))
+            }
+            "to_int" | "to_nat" => {
+                let (x_ir, x_ty) = self.expr(&args[0], None)?;
+                let signed = x_ty.fixed().is_some_and(FixedTy::signed);
+                if !x_ty.is_fixed() || (tag == "to_nat" && signed) {
+                    return Err(self.type_err(
+                        "to_int needs a fixed-width operand and to_nat an unsigned one",
+                    ));
+                }
+                Ok((
+                    fx(None, vec![x_ir]),
+                    if tag == "to_int" { Ty::Int } else { Ty::Nat },
+                ))
+            }
+            "from_be" | "from_le" => {
+                let t = static_ty.ok_or_else(|| GenError::internal("no static type"))?;
+                let want = t.bytes();
+                let (b_ir, b_ty) = self.expr(&args[0], Some(&Ty::bytes_n(want)))?;
+                // The operand's static width, from the one pass that just lowered it.
+                if static_width(&b_ty, self.last_width) != Some(want) {
+                    return Err(
+                        self.type_err("from_be/from_le need Bytes of exactly the target's width")
+                    );
+                }
+                Ok((fx(Some(t), vec![b_ir]), Ty::Fixed(t)))
+            }
+            "bit_not" | "popcount" | "clz" | "ctz" | "be_bytes" | "le_bytes" => {
+                let (x_ir, x_ty) = self.expr(&args[0], None)?;
+                let Some(f) = x_ty.fixed() else {
+                    return Err(self.type_err("a bit operation needs a fixed-width operand"));
+                };
+                let ret = match tag {
+                    "bit_not" => x_ty,
+                    "be_bytes" | "le_bytes" => Ty::bytes_n(f.bytes()),
+                    _ => Ty::Nat,
+                };
+                Ok((fx(None, vec![x_ir]), ret))
+            }
+            "shl" | "shr" | "sar" | "rotl" | "rotr" | "bit" => {
+                let (x_ir, x_ty) = self.expr(&args[0], None)?;
+                let (n_ir, n_ty) = self.expr(&args[1], Some(&Ty::Nat))?;
+                let Some(f) = x_ty.fixed() else {
+                    return Err(self.type_err("a shift or bit test needs a fixed-width operand"));
+                };
+                if n_ty != Ty::Nat {
+                    return Err(self.type_err("a shift count or bit index is a Nat"));
+                }
+                if tag == "sar" && !f.signed() {
+                    return Err(
+                        self.type_err("sar is for signed operands (a logical shift is shr)")
+                    );
+                }
+                let ret = if tag == "bit" { Ty::Bool } else { x_ty };
+                Ok((fx(None, vec![x_ir, n_ir]), ret))
+            }
+            "bit_and" | "bit_or" | "bit_xor" | "checked_add" | "checked_sub" | "checked_mul" => {
+                let (a_ir, a_ty, b_ir, b_ty) = self.operand_pair(args)?;
+                if !fixed_operand(&a_ty) || a_ty != b_ty {
+                    return Err(self.type_err("operands must be fixed-width values of one type"));
+                }
+                let ret = if tag.starts_with("bit_") {
+                    a_ty
+                } else {
+                    opt(a_ty)
+                };
+                Ok((fx(None, vec![a_ir, b_ir]), ret))
+            }
+            "div" | "rem" => {
+                let (a_ir, a_ty, b_ir, b_ty) = self.operand_pair(args)?;
+                let bad = || {
+                    self.type_err("div and rem take two unsigned operands of one type, or Int/Nat")
+                };
+                let ret = if a_ty.is_fixed() || b_ty.is_fixed() {
+                    // Unsigned pairs only: a signed pair must say div_trunc/rem_trunc (floor and
+                    // truncation differ, VER04j 2.3) and a fixed width never mixes with Int/Nat.
+                    if a_ty != b_ty || a_ty.fixed().is_some_and(FixedTy::signed) {
+                        return Err(bad());
+                    }
+                    opt(a_ty)
+                } else if matches!(a_ty, Ty::Int | Ty::Nat) && matches!(b_ty, Ty::Int | Ty::Nat) {
+                    // R7: two Nat operands give Option<Int> (the grammar checker's typing).
+                    opt(Ty::Int)
+                } else {
+                    return Err(bad());
+                };
+                Ok((fx(None, vec![a_ir, b_ir]), ret))
+            }
+            "div_trunc" | "rem_trunc" => {
+                let (a_ir, a_ty, b_ir, b_ty) = self.operand_pair(args)?;
+                if !a_ty.fixed().is_some_and(FixedTy::signed) || a_ty != b_ty {
+                    return Err(self
+                        .type_err("div_trunc and rem_trunc take two signed operands of one type"));
+                }
+                Ok((fx(None, vec![a_ir, b_ir]), opt(a_ty)))
+            }
+            "imin" | "imax" => {
+                let (a_ir, a_ty) = self.expr(&args[0], Some(&Ty::Int))?;
+                let (b_ir, b_ty) = self.expr(&args[1], Some(&Ty::Int))?;
+                if !matches!(a_ty, Ty::Int | Ty::Nat) || !matches!(b_ty, Ty::Int | Ty::Nat) {
+                    return Err(self.type_err("imin and imax take Int or Nat operands"));
+                }
+                Ok((fx(None, vec![a_ir, b_ir]), Ty::Int))
+            }
+            "at" => {
+                let (b_ir, b_ty) = self.expr(&args[0], None)?;
+                let (i_ir, i_ty) = self.expr(&args[1], Some(&Ty::Nat))?;
+                if !b_ty.is_bytes() {
+                    return Err(self.type_err("at needs Bytes"));
+                }
+                if !matches!(i_ty, Ty::Nat | Ty::Int) {
+                    return Err(self.type_err("an index is a Nat or an Int"));
+                }
+                Ok((fx(None, vec![b_ir, i_ir]), opt(Ty::Fixed(FixedTy::U8))))
+            }
+            // `unwrap_or(o, d)`: the one consumer of an Option, as the first operand and directly.
+            _ => {
+                self.option_ok = true;
+                let (o_ir, o_ty) = self.expr(&args[0], None)?;
+                let Ty::Option(inner) = o_ty else {
+                    return Err(self.type_err("unwrap_or needs an Option"));
+                };
+                let from_a_built_in =
+                    matches!(&o_ir, Ir::Fixed { tag, .. } if OPTION_PRODUCERS.contains(tag));
+                if !from_a_built_in {
+                    return Err(self.level(
+                        Beyond::IrData,
+                        "an Option reaches unwrap_or only straight from a built-in",
+                    ));
+                }
+                let (d_ir, d_ty) = self.expr(&args[1], Some(&inner))?;
+                if !Ty::assignable(&d_ty, &inner) {
+                    return Err(
+                        self.type_err("the default of unwrap_or does not have the Option's type")
+                    );
+                }
+                Ok((fx(None, vec![o_ir, d_ir]), *inner))
+            }
+        }
+    }
+
+    /// Two operands of one operator: a bare literal takes the other side's type.
+    fn operand_pair(&mut self, args: &[Expression<'a>]) -> Result<(Ir, Ty, Ir, Ty), GenError> {
+        let (left, right) = (&args[0], &args[1]);
+        if needs_context(left) && !needs_context(right) {
+            let (b_ir, b_ty) = self.expr(right, None)?;
+            let (a_ir, a_ty) = self.expr(left, Some(&b_ty))?;
+            Ok((a_ir, a_ty, b_ir, b_ty))
+        } else {
+            let (a_ir, a_ty) = self.expr(left, None)?;
+            let (b_ir, b_ty) = self.expr(right, Some(&a_ty))?;
+            Ok((a_ir, a_ty, b_ir, b_ty))
         }
     }
 
@@ -1664,6 +2036,18 @@ impl<'f, 'a> Lowerer<'f, 'a> {
             },
             sig.ret.substitute(&statics),
         ))
+    }
+}
+
+/// The static width of a lowered `Bytes` expression, or `None`: the width its type carries
+/// (`Bytes<4>`), else the one recorded as the node was lowered (`recorded`: a bytes literal, a
+/// `concat` of sized operands, an `if` of equal widths, the checker's `Literal::Bytes`, `concat`
+/// and `common_type` rule, VER04r A.1).  A `Bytes<N>` of a static *name* has none.
+fn static_width(ty: &Ty, recorded: Option<u64>) -> Option<u64> {
+    match ty {
+        Ty::Bytes(Some(Width::Lit(n))) => Some(*n),
+        Ty::Bytes(_) => recorded,
+        _ => None,
     }
 }
 
@@ -1889,6 +2273,159 @@ mod tests {
     fn a_projection_on_a_binder_needs_ir_data() {
         let e = unchecked(&format!("{OP}  model m(a: U8) -> U8 = a.zz\n")).unwrap_err();
         assert_eq!(e.level, Some("ir.data"));
+    }
+
+    /// The same document header as [`OP`] for a **v1** document (the built-ins are v1 only).
+    const OP_V1: &str =
+        "warrant u v1\n  op f(a: Bytes, b: Bytes) -> Bool\n  op g<N: Nat>(a: Bytes<N>) -> Bool\n";
+
+    /// As `unchecked`, but keeps the units that need `ir.fixed` (the parity dump's path).
+    fn unchecked_fixed(src: &str) -> Result<Lowered, GenError> {
+        let doc = SourceDocument::admit(src.as_bytes(), SourceLimits::default()).unwrap();
+        let layout = capture_layout(&doc, LayoutLimits::default()).unwrap();
+        let file = parse_document(&layout, &doc, ParserLimits::default()).unwrap();
+        lower_partial_unchecked(&file)?.into_lowered_with_fixed()
+    }
+
+    #[test]
+    fn a_misused_fixed_built_in_is_a_type_error_never_a_silent_conversion() {
+        // The checker rules all of these out first; the lowerer states the same table on its own
+        // (the second reader), so each is a `type` refusal and never lowers.
+        let cases = [
+            (
+                "mixed widths",
+                "model m(a: U8, b: U16) -> U8 = bit_and(a, b)",
+            ),
+            (
+                "bit_and of Nat",
+                "model m(a: Nat, b: Nat) -> Nat = bit_and(a, b)",
+            ),
+            ("sar of an unsigned", "model m(a: U8) -> U8 = sar(a, 1)"),
+            (
+                "a count that is not a Nat",
+                "model m(a: U8, b: U8) -> U8 = shl(a, b)",
+            ),
+            ("a shift of a Nat", "model m(a: Nat) -> Nat = shl(a, 1)"),
+            (
+                "widen to a narrower type",
+                "model m(a: U16) -> U8 = widen<U8>(a)",
+            ),
+            (
+                "widen across signedness",
+                "model m(a: I8) -> U32 = widen<U32>(a)",
+            ),
+            ("widen of a Nat", "model m(a: Nat) -> U8 = widen<U8>(a)"),
+            ("wrap of a Bool", "model m(a: Bool) -> U8 = wrap<U8>(a)"),
+            ("to_nat of a signed", "model m(a: I8) -> Nat = to_nat(a)"),
+            ("to_int of a Nat", "model m(a: Nat) -> Int = to_int(a)"),
+            (
+                "a signed div",
+                "model m(a: I8, b: I8) -> I8 = unwrap_or(div(a, b), 0i8)",
+            ),
+            (
+                "div_trunc of unsigned",
+                "model m(a: U8, b: U8) -> U8 = unwrap_or(div_trunc(a, b), 0u8)",
+            ),
+            (
+                "div mixing U8 and Nat",
+                "model m(a: U8, b: Nat) -> U8 = unwrap_or(div(a, b), 0u8)",
+            ),
+            (
+                "div of Bool",
+                "model m(a: Bool, b: Bool) -> Bool = unwrap_or(div(a, b), true)",
+            ),
+            (
+                "imin of a fixed width",
+                "model m(a: U8, b: U8) -> Int = imin(a, b)",
+            ),
+            (
+                "from_be of a dynamic Bytes",
+                "model m(a: Bytes) -> U16 = from_be<U16>(a)",
+            ),
+            (
+                "from_be of the wrong width",
+                "model m(a: Bytes<3>) -> U16 = from_le<U16>(a)",
+            ),
+            (
+                "from_be of a concat of the wrong width",
+                "model m(a: Bytes<4>) -> U32 = from_be<U32>(concat(a, b\"00\"))",
+            ),
+            (
+                "unwrap_or of a non-Option",
+                "model m(a: U8) -> U8 = unwrap_or(a, a)",
+            ),
+            (
+                "an unwrap_or default of the wrong type",
+                "model m(a: U8, b: U8) -> U8 = unwrap_or(div(a, b), true)",
+            ),
+            (
+                "at of a fixed width",
+                "model m(a: U8) -> U8 = unwrap_or(at(a, 0), 0u8)",
+            ),
+            (
+                "at with a Bool index",
+                "model m(a: Bytes) -> U8 = unwrap_or(at(a, true), 0u8)",
+            ),
+            (
+                "a missing static argument",
+                "model m(a: U8) -> U16 = widen(a)",
+            ),
+            (
+                "a static argument that is not a fixed-width type",
+                "model m(a: U8) -> U16 = widen<Nat>(a)",
+            ),
+            (
+                "a numeric static argument",
+                "model m(a: U8) -> U16 = widen<4>(a)",
+            ),
+            (
+                "two static arguments",
+                "model m(a: U8) -> U16 = widen<U16, U8>(a)",
+            ),
+            (
+                "a static argument where there is none",
+                "model m(a: U8) -> U8 = bit_not<U8>(a)",
+            ),
+            ("too few operands", "model m(a: U8) -> U8 = bit_and(a)"),
+            (
+                "an operand for max_value",
+                "model m(a: U8) -> U8 = max_value<U8>(a)",
+            ),
+            ("no argument list at all", "model m(a: U8) -> U8 = bit_not"),
+        ];
+        for (what, model) in cases {
+            let e = unchecked_fixed(&format!("{OP_V1}  {model}\n")).expect_err(what);
+            assert_eq!(
+                e.code,
+                code::TYPE,
+                "{what}: expected a type refusal, got {e}"
+            );
+        }
+    }
+
+    #[test]
+    fn a_built_in_in_a_v0_document_keeps_the_refusal_it_had_before_s10b() {
+        // VER04j 1.2: the names are version scoped; a v0 document does not have them.
+        let e = unchecked_fixed("warrant u\n  model m(a: U8) -> U8 = bit_not(a)\n").unwrap_err();
+        assert_eq!((e.code, e.level), (code::LEVEL, Some("ir.fixed")));
+    }
+
+    #[test]
+    fn an_option_that_is_not_the_first_operand_of_unwrap_or_is_ir_data() {
+        for (what, model) in [
+            ("a model result", "model m(a: U8, b: U8) -> U8 = checked_add(a, b)"),
+            ("an operand of eq", "model m(a: U8, b: U8) -> Bool = checked_add(a, b) == checked_add(b, a)"),
+            ("the default", "model m(a: U8, b: U8) -> U8 = unwrap_or(div(a, b), checked_add(a, b))"),
+            ("an if branch", "model m(a: U8, b: U8) -> U8 = unwrap_or(if true then checked_add(a, b) else checked_add(b, a), 0u8)"),
+            ("an argument", "model k(x: U8) -> U8 = x\n  model m(a: U8, b: U8) -> U8 = k(checked_add(a, b))"),
+            ("a try", "model m(a: Nat) -> U8 = to_nat(try<U8>(a))"),
+        ] {
+            let e = unchecked_fixed(&format!("{OP_V1}  {model}\n")).expect_err(what);
+            assert_eq!((e.code, e.level), (code::LEVEL, Some("ir.data")), "{what}: {e}");
+        }
+        // and the legal use lowers
+        let ok = "model m(a: U8, b: U8) -> U8 = unwrap_or(checked_add(a, b), 255u8)";
+        assert!(unchecked_fixed(&format!("{OP_V1}  {ok}\n")).is_ok());
     }
 
     #[test]

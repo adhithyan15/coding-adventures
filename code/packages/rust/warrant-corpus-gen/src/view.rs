@@ -20,10 +20,17 @@
 //!   }
 //! ```
 //!
-//! It is a *view*, not the `corpus.json` of slice S3c: it has no digests and no `requires`
-//! and it prints the operation rows without the S3 addition `requires` (the oracle has
-//! none); `admit` is the op's refinements as IR, lowered by the oracle's own typer in the
-//! dump script.
+//! It is a *view*, not the `corpus.json` of slice S3c: it has no digests.  The `v0` view has no
+//! `requires` either; `admit` is the op's refinements as IR, lowered by the oracle's own typer
+//! in the dump script.
+//!
+//! ## The `v1` view (slice S10b)
+//!
+//! [`oracle_view_v1`] is the schema `warrant-lowering-parity-v1` of the oracle's `dump-lowering`
+//! (`python/warrant-oracle`, `lowering_dump.py`): the same view with the computed `requires`
+//! (VER04r 16.10 R9) on every op row and every suite, for documents that use the `ir.fixed`
+//! built-ins.  `tests/fixed_parity.rs` renders the Rust lowering of the oracle's committed
+//! `fixed_forms_v1.warrant` and demands it equal the committed dump byte for byte.
 
 use crate::cost::{suite_cost, ModelCosts};
 use crate::error::{code, GenError};
@@ -31,8 +38,11 @@ use crate::ir::{Ir, MAX_IR_DEPTH};
 use crate::json::Json;
 use crate::lower::{Lowered, SuiteKind};
 
-/// The `schema` string of the view.
+/// The `schema` string of the `v0` view.
 pub const VIEW_SCHEMA: &str = "warrant-lowering-parity-v0";
+
+/// The `schema` string of the `v1` view (adds `requires`, S10b).
+pub const VIEW_SCHEMA_V1: &str = "warrant-lowering-parity-v1";
 
 fn params_json(params: &[(String, crate::types::Ty)]) -> Json {
     Json::arr(
@@ -60,6 +70,22 @@ fn ir_json(ir: &Ir) -> Result<Json, GenError> {
 ///
 /// A cost-limit or depth refusal, as [`ModelCosts::compute`] and [`suite_cost`].
 pub fn oracle_view(lowered: &Lowered, limit: u64) -> Result<Json, GenError> {
+    view(lowered, limit, false)
+}
+
+/// The `v1` parity view of `lowered` (see the module documentation): [`oracle_view`] plus
+/// `requires` on every op row and every suite.  `lowered` may hold `ir.fixed` units (obtain it
+/// from [`crate::lower::lower_document_with_fixed`]); their `ir_cost` is `1 +` the operands per
+/// built-in, as the oracle's analysing `Program` computes it.
+///
+/// # Errors
+///
+/// A cost-limit or depth refusal, as [`ModelCosts::compute`] and [`suite_cost`].
+pub fn oracle_view_v1(lowered: &Lowered, limit: u64) -> Result<Json, GenError> {
+    view(lowered, limit, true)
+}
+
+fn view(lowered: &Lowered, limit: u64, v1: bool) -> Result<Json, GenError> {
     let costs = ModelCosts::compute(&lowered.models, limit)?;
     let errors = Json::obj(
         lowered
@@ -81,6 +107,9 @@ pub fn oracle_view(lowered: &Lowered, limit: u64) -> Result<Json, GenError> {
         }
         if let Some(admit) = &op.admit {
             row.push(("admit".into(), ir_json(admit).map_err(|e| e.at(&op.name))?));
+        }
+        if v1 {
+            row.push(("requires".into(), Json::strs(op.requires.iter())));
         }
         ops.push((op.name.clone(), Json::Obj(row)));
     }
@@ -120,7 +149,7 @@ pub fn oracle_view(lowered: &Lowered, limit: u64) -> Result<Json, GenError> {
         };
         // The oracle writes `null` for the absent sides of a predicate; the canonical
         // writer has no null, so both sides write an empty array instead.
-        suites.push(Json::obj([
+        let mut row = vec![
             ("id", Json::str(s.id.as_str())),
             ("claim", Json::str(s.claim.as_str())),
             ("kind", Json::str(kind)),
@@ -132,7 +161,11 @@ pub fn oracle_view(lowered: &Lowered, limit: u64) -> Result<Json, GenError> {
             ("result_type", Json::str(result)),
             ("ops", Json::strs(s.ops.iter())),
             ("ir_cost", Json::Int(sc.total)),
-        ]));
+        ];
+        if v1 {
+            row.push(("requires", Json::strs(s.requires.iter())));
+        }
+        suites.push(Json::obj(row));
     }
     let mut examples = Vec::new();
     for x in &lowered.examples {
@@ -152,7 +185,10 @@ pub fn oracle_view(lowered: &Lowered, limit: u64) -> Result<Json, GenError> {
         ]));
     }
     Ok(Json::obj([
-        ("schema", Json::str(VIEW_SCHEMA)),
+        (
+            "schema",
+            Json::str(if v1 { VIEW_SCHEMA_V1 } else { VIEW_SCHEMA }),
+        ),
         ("module", Json::str(lowered.module.as_str())),
         ("document", Json::str(lowered.document())),
         ("errors", errors),
