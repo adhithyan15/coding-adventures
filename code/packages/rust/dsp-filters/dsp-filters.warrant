@@ -82,36 +82,36 @@ warrant dsp_filters v1
 
   input design_low_pass.cutoff_norm:
     hostile
-    ensures no_panic, terminates
+    ensures terminates
   input design_low_pass.num_taps:
     hostile
-    ensures no_panic, terminates
+    ensures terminates
   input design_low_pass.window:
     hostile
-    ensures no_panic, terminates
+    ensures terminates
 
   input design_high_pass.cutoff_norm:
     hostile
-    ensures no_panic, terminates
+    ensures terminates
   input design_high_pass.num_taps:
     hostile
-    ensures no_panic, terminates
+    ensures terminates
   input design_high_pass.window:
     hostile
-    ensures no_panic, terminates
+    ensures terminates
 
   input design_band_pass.low_norm:
     hostile
-    ensures no_panic, terminates
+    ensures terminates
   input design_band_pass.high_norm:
     hostile
-    ensures no_panic, terminates
+    ensures terminates
   input design_band_pass.num_taps:
     hostile
-    ensures no_panic, terminates
+    ensures terminates
   input design_band_pass.window:
     hostile
-    ensures no_panic, terminates
+    ensures terminates
 
   bound fir:
     output <= len(signal) + len(kernel)
