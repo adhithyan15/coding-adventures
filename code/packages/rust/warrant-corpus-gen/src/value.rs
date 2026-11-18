@@ -11,6 +11,7 @@
 //!   Value::Ok(Box<Value>)      Ok(v)       of a Result
 //!   Value::Err(Rc<str>)        Err(E.CASE) of a Result (the case name; errors are nominal)
 //!   Value::Tuple(Vec<Value>)   (v1, .., vn)  an `ir.tuple` value, 2 to 8 components (S10t-2)
+//!   Value::Opt(Option<Box<Value>>)  none / some(v)  inside an `ir.fixed` expression only (S10c-2)
 //! ```
 //!
 //! An `i128` holds every `U64` and every `I64` exactly, and every exact `Nat`/`Int`
@@ -41,6 +42,10 @@ pub enum Value {
     Err(Rc<str>),
     /// `(v1, .., vn)`: the components in order (`ir.tuple`).  Equality is component-wise.
     Tuple(Vec<Value>),
+    /// `none` or `some(v)`: the IR-only intermediate of the nine `ir.fixed` producers (`try`,
+    /// `checked_*`, `div`, `rem`, `div_trunc`, `rem_trunc`, `at`), consumed by `unwrap_or` alone.  It
+    /// is never a binder, a parameter, a result or an encoded value (VER04r 16.10 [D23]).
+    Opt(Option<Box<Value>>),
 }
 
 impl Value {

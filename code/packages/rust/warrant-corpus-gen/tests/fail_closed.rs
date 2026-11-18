@@ -152,8 +152,20 @@ fn record_and_variant_declarations_need_ir_data() {
 
 // ---- ir.fixed ----------------------------------------------------------------
 
+/// `ir.fixed` lowers (and is evaluated) since S10c-2: the unit is not refused, it `requires` the level.
+fn requires_of_model(src: &str, name: &str) -> Vec<&'static str> {
+    with_file(src, |f| {
+        lower_document(f)
+            .expect("an ir.fixed document lowers")
+            .model(name)
+            .expect("the model")
+            .requires
+            .clone()
+    })
+}
+
 #[test]
-fn integer_built_ins_need_ir_fixed() {
+fn integer_built_ins_lower_and_require_ir_fixed() {
     for (i, body) in [
         "bit_and(a, b)",
         "bit_or(a, b)",
@@ -166,38 +178,43 @@ fn integer_built_ins_need_ir_fixed() {
     .enumerate()
     {
         let m = format!("  model fx{i}(a: U8, b: U8) -> U8 = {body}\n");
-        assert_level(
-            &doc_ops(" v1", &["op f(a: Bytes, b: Bytes) -> Bool"], &m),
-            "ir.fixed",
-            &format!("fx{i}"),
+        let src = doc_ops(" v1", &["op f(a: Bytes, b: Bytes) -> Bool"], &m);
+        assert_eq!(
+            requires_of_model(&src, &format!("fx{i}")),
+            ["ir.core", "ir.fixed"],
+            "{body}"
         );
     }
 }
 
 #[test]
-fn width_changing_and_endian_built_ins_need_ir_fixed() {
+fn width_changing_and_endian_built_ins_lower_and_require_ir_fixed() {
     let m = "  model wd(a: U8) -> U64 = widen<U64>(a)\n";
-    assert_level(
-        &doc_ops(" v1", &["op f(a: Bytes, b: Bytes) -> Bool"], m),
-        "ir.fixed",
-        "wd",
-    );
+    let src = doc_ops(" v1", &["op f(a: Bytes, b: Bytes) -> Bool"], m);
+    assert_eq!(requires_of_model(&src, "wd"), ["ir.core", "ir.fixed"]);
     let m = "  model be(a: U32) -> Bytes = be_bytes(a)\n";
-    assert_level(
-        &doc_ops(" v1", &["op f(a: Bytes, b: Bytes) -> Bool"], m),
-        "ir.fixed",
-        "be",
-    );
+    let src = doc_ops(" v1", &["op f(a: Bytes, b: Bytes) -> Bool"], m);
+    assert_eq!(requires_of_model(&src, "be"), ["ir.core", "ir.fixed"]);
 }
 
 #[test]
-fn a_built_in_in_a_claim_names_the_claim() {
+fn a_built_in_in_a_claim_makes_the_suite_require_ir_fixed() {
     let c = "  claim cb:\n    forall a: U8, b: U8. f(b\"\", b\"\") == (bit_and(a, b) == 0u8)\n";
-    assert_level(
-        &doc_ops(" v1", &["op f(a: Bytes, b: Bytes) -> Bool"], c),
-        "ir.fixed",
-        "cb",
-    );
+    let src = doc_ops(" v1", &["op f(a: Bytes, b: Bytes) -> Bool"], c);
+    with_file(&src, |f| {
+        let l = lower_document(f).expect("lowers");
+        assert_eq!(l.suites[0].claim, "cb");
+        assert_eq!(l.suites[0].requires, ["ir.core", "ir.fixed"]);
+    });
+}
+
+#[test]
+fn a_v0_document_still_refuses_the_built_in_names_naming_ir_fixed() {
+    // the names are version scoped (VER04j 1.2): a v0 document has no `bit_not`
+    let m = "  model fx(a: U8) -> U8 = bit_not(a)\n";
+    let src = doc_ops("", &["op f(a: Bytes, b: Bytes) -> Bool"], m);
+    let e = with_file(&src, |f| lower_document(f).expect_err("refused"));
+    assert!(e.code == code::LEVEL || e.code == code::CHECK, "{e}");
 }
 
 // ---- features ----------------------------------------------------------------
@@ -293,32 +310,16 @@ fn census_reports_each_blocked_item_without_failing_the_document() {
     };
     assert!(get(ItemKind::Op, "f").blocked.is_none());
     assert!(get(ItemKind::Model, "ok").blocked.is_none());
-    assert_eq!(
-        get(ItemKind::Model, "fx").blocked.as_ref().unwrap().level,
-        Some("ir.fixed")
-    );
+    // S10c-2: a built-in is evaluated, so a model that uses one is not blocked
+    assert!(get(ItemKind::Model, "fx").blocked.is_none());
     assert_eq!(
         get(ItemKind::Model, "dat").blocked.as_ref().unwrap().level,
         Some("ir.data")
     );
-    // a model that calls a blocked model inherits the blocker
-    assert_eq!(
-        get(ItemKind::Model, "uses_fx")
-            .blocked
-            .as_ref()
-            .unwrap()
-            .level,
-        Some("ir.fixed")
-    );
+    // a model that calls a model that uses a built-in is not blocked either
+    assert!(get(ItemKind::Model, "uses_fx").blocked.is_none());
     assert!(get(ItemKind::Claim, "clean").blocked.is_none());
-    assert_eq!(
-        get(ItemKind::Claim, "via_model")
-            .blocked
-            .as_ref()
-            .unwrap()
-            .level,
-        Some("ir.fixed")
-    );
+    assert!(get(ItemKind::Claim, "via_model").blocked.is_none());
     assert_eq!(
         get(ItemKind::Claim, "via_data")
             .blocked
@@ -330,8 +331,8 @@ fn census_reports_each_blocked_item_without_failing_the_document() {
     assert!(get(ItemKind::Example, "e_clean").blocked.is_none());
     // and the whole document is refused with the first blocker in declaration order
     let e = with_file(&src, |f| lower_document(f).unwrap_err());
-    assert_eq!(e.level, Some("ir.fixed"));
-    assert_eq!(e.at, "fx");
+    assert_eq!(e.level, Some("ir.data"));
+    assert_eq!(e.at, "dat");
 }
 
 #[test]
@@ -396,7 +397,7 @@ fn generate_still_refuses_what_is_beyond_ir_core_and_bad_profiles() {
     let beyond = doc_ops(
         " v1",
         &["op f(a: Bytes, b: Bytes) -> Bool"],
-        "  model fx(a: U8) -> U8 = bit_not(a)\n",
+        "  model dat(a: U8) -> Nat = len([a, a])\n",
     );
     with_file(&beyond, |f| {
         let e = generate(&GenInput {
@@ -408,7 +409,7 @@ fn generate_still_refuses_what_is_beyond_ir_core_and_bad_profiles() {
         })
         .unwrap_err();
         assert_eq!(e.code, code::LEVEL);
-        assert_eq!(e.level, Some("ir.fixed"));
+        assert_eq!(e.level, Some("ir.data"));
     });
 }
 
@@ -478,12 +479,13 @@ fn census_follows_blockers_through_records_constructors_ops_and_examples() {
     assert_eq!(level(ItemKind::Op, "o"), Some("ir.data"));
     assert_eq!(level(ItemKind::Claim, "via_blocked_op"), Some("ir.data"));
     assert_eq!(level(ItemKind::Claim, "via_blocked_model"), Some("ir.data"));
-    assert_eq!(level(ItemKind::Example, "ex_fixed"), Some("ir.fixed"));
+    // S10c-2: a built-in in an example is evaluated, not refused
+    assert_eq!(level(ItemKind::Example, "ex_fixed"), None);
     assert!(find(ItemKind::Op, "shr_ref").blocked.is_none());
 }
 
 #[test]
-fn an_op_refinement_beyond_ir_core_blocks_the_op_and_its_callers() {
+fn an_op_refinement_that_uses_a_built_in_lowers_and_requires_ir_fixed() {
     let src = doc_ops(
         " v1",
         &[
@@ -497,17 +499,17 @@ fn an_op_refinement_beyond_ir_core_blocks_the_op_and_its_callers() {
         .iter()
         .find(|r| r.kind == ItemKind::Op && r.name == "g")
         .unwrap();
-    assert_eq!(op.blocked.as_ref().unwrap().level, Some("ir.fixed"));
-    // S10b: a claim that lowers within `ir.core` is not blocked by its callee's `admit`; the
-    // oracle's `requires` does not read it either (R9 is on the unit's own tags and models).
-    // The document is still refused, at the op, so `generate` stays closed.
+    // S10c-2: an `admit` that uses a built-in lowers (it `requires` `ir.fixed`): nothing blocks
+    assert!(op.blocked.is_none());
     let claim = rows
         .iter()
         .find(|r| r.kind == ItemKind::Claim && r.name == "cg")
         .unwrap();
     assert!(claim.blocked.is_none());
-    let e = with_file(&src, |f| lower_document(f).unwrap_err());
-    assert_eq!((e.level, e.at.as_str()), (Some("ir.fixed"), "g"));
+    with_file(&src, |f| {
+        let l = lower_document(f).expect("lowers");
+        assert_eq!(l.op("g").unwrap().requires, ["ir.core", "ir.fixed"]);
+    });
 }
 
 #[test]

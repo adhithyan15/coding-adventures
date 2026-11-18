@@ -1457,17 +1457,22 @@ fn a_product_over_the_budget_is_w0706_and_over_4096_chunks_is_a_limit() {
 }
 
 #[test]
-fn a_demoted_16_bit_binder_is_refused_naming_ver04r_16_2() {
-    // two U16 binders are 2^32 ordinals: the budget demotion makes the first an edge set,
-    // an `FxEdge(16)` descriptor, which VER04r 16.2 item 5 leaves undecided
+fn a_demoted_16_bit_binder_is_a_described_fx_edge_since_s10c_2() {
+    // two U16 binders are 2^32 ordinals: the budget demotion makes the first an edge set, the
+    // 16-bit `fx_edge` of [D25] (VER04r 16.2 item 5, settled), and records the demotion
     let src = v1_with(
         "",
         "  claim demoted:\n    forall a: U16, b: U16. op_u16(a) == id16(b)\n",
     );
-    let e = enumerate_err(&src, &small_profile());
-    assert_eq!(e.code, code::DOMAIN);
-    assert!(e.message.contains("16.2 item 5"), "{e}");
-    assert_eq!(e.at, "demoted", "the refusal names the claim");
+    let en = with_file(&src, |f| enumerate_document(f, &small_profile()).unwrap());
+    let s = &en.suites[0];
+    assert_eq!(s.claim, "demoted");
+    assert!(!s.demoted.is_empty(), "the budget demoted a binder");
+    assert_eq!(s.demoted[0], "0", "the leftmost full 16-bit leaf goes first");
+    let first = s.descriptors[0].render().unwrap();
+    assert!(first.contains("\"d\": \"fx_edge\"") && first.contains("\"t\": \"U16\""), "{first}");
+    assert!(first.contains("\"size\": 281"), "{first}");
+    assert_eq!(s.label.name(), "bounded-set");
 }
 
 #[test]

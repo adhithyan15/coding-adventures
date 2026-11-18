@@ -25,8 +25,9 @@
 //!   Nat                             {"d":"nat_0_64"}               bounded-set    65
 //!   Bytes                           {"d":"bytes_d1"}               bounded-set   347
 //!   Bytes<N>                        {"d":"bytes_n","n":N}          full (N<=1) / sample (N>=2)
+//!   Nat that is a shift count       {"d":"nat_shift"}              bounded-set   73
 //!   8/16-bit fixed (not U8)         {"d":"fx_full","t":T}          full
-//!   unsigned 32-bit fixed           {"d":"fx_edge","t":T}          bounded-set  313
+//!   16/32/64-bit fixed (not U64)    {"d":"fx_edge","t":T}          bounded-set  281 313 527 559 623
 //!   Result<T,E>                     {"d":"result","ok":D,"errs":[..]}   label of D
 //!   (T1,..,Tn)                      {"d":"tuple","of":[D1,..,Dn]}       weakest label of the Di
 //! ```
@@ -36,23 +37,30 @@
 //!
 //! Every node also records its `size`.  `Bytes<N>` for `N >= 2` is `sample` (VER04r 9.3).
 //!
-//! ## What is refused, and why (VER04r 16.2, decided for S3 in 16.3 item 11e)
+//! ## What is refused, and why (VER04r 16.2, decided in S10c, [D21] [D25] [D26])
 //!
-//! The S2 API reports what the *generator* enumerates, and it differs from VER04r 5.1 in
-//! five places.  Until S10 settles them with the census this slice produces
-//! ([`crate::census`]), a binder that would need one of them is **refused**, naming the item:
+//! The S2 API reported what the *generator* enumerates, which differed from VER04r 5.1 in five
+//! places; S3 refused a binder that needed one of them, naming the item, until S10 settled them
+//! with the census.  S10c-1 (the oracle) and S10c-2 (this generator) settle three:
 //!
-//! | 16.2 item | descriptor | refusal |
+//! | 16.2 item | descriptor | decision |
 //! |---|---|---|
-//! | 1, 2 | a `List` whose element domain is a byte string | `domain` |
-//! | 3 | `NatCount` (the 73-value shift-count domain, not `0..=K`) | `domain` |
-//! | 4 | a signed `fx_edge` (`I32`, `I64`: sorted, plus `-1..=-255`) | `domain` |
-//! | 5 | `FxEdge` at 16 bits (a demoted `U16`/`I16`) | `domain` |
+//! | 1, 2 | a `List` whose element domain is a byte string | still refused (`domain`): `ir.data` |
+//! | 3 | the 73-value shift-count domain | **`{"d":"nat_shift","size":73}`** [D26] (a leaf, no `k`) |
+//! | 4 | a signed `fx_edge` (`I32`, `I64`: sorted, plus `-1..=-255`) | **`fx_edge`** [D21]: `I16` 527, `I32` 559, `I64` 623 |
+//! | 5 | `FxEdge` at 16 bits (a demoted `U16`/`I16`) | **`fx_edge`** [D25]: by demotion only, 281 / 527 |
 //!
-//! (`ct-compare` hits none: its binders are `Bytes`, `Bytes<N>`, `U64` and `Bool`.)  A
-//! composite (record, variant, option, list) is `ir.data`: refused naming the level (a tuple is
-//! `ir.tuple` and is described).
-//! `Domain` is `#[non_exhaustive]`, so the last arm of every match here refuses.
+//! `nat_shift` is chosen by the S2 resolver for a `Nat` binder that is *directly* the count of
+//! `shl shr sar rotl rotr bit` in the claim body (R10: parentheses do not matter, an expression of
+//! the binder does not select, and an `admit` never does).  An 8-bit `fx_edge` has no descriptor
+//! [D25]: the resolver never demotes an 8-bit binder, and [`describe`] refuses a hand-built one.
+//! A composite (record, variant, option, list) is `ir.data`: refused naming the level (a tuple is
+//! `ir.tuple` and is described).  `Domain` is `#[non_exhaustive]`, so the last arm of every match
+//! here refuses.
+//!
+//! [`descriptor_size`] is the **consumer-side** check of VER04r 5.1: it recomputes the `size` of a
+//! descriptor tree in checked arithmetic and refuses a malformed, mis-sized or illegal leaf with the
+//! oracle's own message (`tests/fixed_eval_parity.rs` reproduces the oracle's verdict table).
 //!
 //! ## Value caches
 //!
@@ -214,13 +222,16 @@ pub struct SuiteDomains {
     pub binders: Vec<BinderDomain>,
     /// `P`, the number of product ordinals.
     pub product: u64,
+    /// The demotions the budget applied, in order, as the oracle writes them (see
+    /// [`demotion_path`]).
+    pub demoted: Vec<String>,
 }
 
 fn refuse(item: &str, what: &str) -> GenError {
     GenError::new(
         code::DOMAIN,
         "",
-        format!("{what}: VER04r 16.2 item {item} is undecided; S10 settles it with the S3b census"),
+        format!("{what}: VER04r 16.2 item {item} is undecided; S11 (ir.data) settles it"),
     )
 }
 
@@ -278,16 +289,22 @@ pub fn describe(d: &Domain, depth: usize) -> Result<(Json, Label, u64), GenError
             Label::Full,
             size,
         ),
-        Domain::Fx(f) if f.signed() => {
-            return Err(refuse("4", "a signed fx_edge (I32, I64)"));
-        }
-        Domain::Fx(f) => (
+        // [D21] a wide leaf, signed or not; [D25] a demoted 16-bit leaf, which is the same
+        // descriptor.  An 8-bit `fx_edge` has none (the resolver never makes one).
+        Domain::Fx(f) | Domain::FxEdge(f) if f.bits() >= 16 && *f != FixedTy::U64 => (
             leaf("fx_edge", size, Some(("t", Json::str(f.name())))),
             Label::BoundedSet,
             size,
         ),
-        Domain::FxEdge(_) => return Err(refuse("5", "a 16-bit fx_edge (a demoted U16 or I16)")),
-        Domain::NatCount => return Err(refuse("3", "nat_count (the shift-count domain)")),
+        Domain::FxEdge(_) => {
+            return Err(GenError::new(
+                code::DOMAIN,
+                "",
+                "fx_edge is for 16-, 32- and 64-bit types other than U64 (D25)",
+            ))
+        }
+        // [D26] the shift-count domain: a leaf of 73 values, no `k`.
+        Domain::NatCount => (leaf("nat_shift", size, None), Label::BoundedSet, size),
         Domain::Res(ok, errs, _) => {
             let (inner, label, _) = describe(ok, depth + 1)?;
             (
@@ -341,8 +358,184 @@ pub fn describe(d: &Domain, depth: usize) -> Result<(Json, Label, u64), GenError
     })
 }
 
+/// Why a descriptor tree is not acceptable to a consumer: the oracle's `generation` (a malformed,
+/// mis-sized or illegal descriptor, `W0706` for a size past 64 bits) or `limit` (too deep).  The
+/// message is the oracle's own words, so the verdict table of `fixed-eval-v1` compares byte for byte.
+fn bad(message: &str) -> GenError {
+    GenError::new(code::DOMAIN, "", message)
+}
+
+/// Recompute the `size` of a descriptor tree and check it **as a consumer must** (VER04r 5.1).
+///
+/// Every node's declared `size` must equal the recomputed one (in checked arithmetic: a size of
+/// 2^64 or more is refused, as `W0706` would be), the tree is at most 16 levels deep, a node has
+/// exactly the keys its kind allows, and the leaves are legal: `fx_full` is for 8- and 16-bit types
+/// other than `U8`; `fx_edge` for 16-, 32- and 64-bit types other than `U64`, **never 8-bit**
+/// [D25]; `nat_shift` has exactly 73 values [D26].  Returns the size.
+///
+/// ```
+/// use coding_adventures_warrant_corpus_gen::domains::descriptor_size;
+/// use coding_adventures_warrant_corpus_gen::json::Json;
+///
+/// let leaf = Json::obj([("d", Json::str("nat_shift")), ("size", Json::Int(73))]);
+/// assert_eq!(descriptor_size(&leaf, 1).unwrap(), 73);
+/// let wrong = Json::obj([("d", Json::str("nat_shift")), ("size", Json::Int(72))]);
+/// assert!(descriptor_size(&wrong, 1).is_err());
+/// ```
+///
+/// # Errors
+///
+/// `domain` for everything above except depth, which is `limit`.
+pub fn descriptor_size(d: &Json, depth: usize) -> Result<u64, GenError> {
+    use coding_adventures_warrant_grammar::fixed::{edge_domain, FixedTy};
+    if depth > MAX_DESCRIPTOR_DEPTH {
+        return Err(GenError::new(
+            code::LIMIT,
+            "",
+            "descriptor tree deeper than 16 levels",
+        ));
+    }
+    let malformed = || bad("a malformed descriptor");
+    let Json::Obj(pairs) = d else {
+        return Err(malformed());
+    };
+    let get = |k: &str| pairs.iter().find(|(n, _)| n == k).map(|(_, v)| v);
+    let (Some(Json::Str(kind)), Some(Json::Int(declared))) = (get("d"), get("size")) else {
+        return Err(malformed());
+    };
+    let need = |keys: &[&str]| {
+        let mut want: Vec<&str> = vec!["d", "size"];
+        want.extend_from_slice(keys);
+        let mut have: Vec<&str> = pairs.iter().map(|(n, _)| n.as_str()).collect();
+        want.sort_unstable();
+        have.sort_unstable();
+        if want == have {
+            Ok(())
+        } else {
+            Err(bad("a descriptor has the wrong keys"))
+        }
+    };
+    let fixed_type = || -> Result<FixedTy, GenError> {
+        match get("t") {
+            Some(Json::Str(name)) => FixedTy::from_name(name)
+                .ok_or_else(|| bad("a descriptor names no fixed-width type")),
+            _ => Err(bad("a descriptor names no fixed-width type")),
+        }
+    };
+    let checked = |size: Option<u64>| {
+        size.ok_or_else(|| bad("W0706: a descriptor size does not fit 64 bits"))
+    };
+    let leaf_size = |dom: &Domain| dom.domain_size().ok_or_else(malformed);
+    let size: u64 = match kind.as_str() {
+        "bool" | "u8_all" | "u64_edge" | "nat_0_64" | "bytes_d1" | "nat_shift" => {
+            need(&[])?;
+            match kind.as_str() {
+                "bool" => 2,
+                "u8_all" => 256,
+                "u64_edge" => 377,
+                "nat_0_64" => 65,
+                "bytes_d1" => leaf_size(&Domain::Bytes)?,
+                _ => 73,
+            }
+        }
+        "bytes_n" => {
+            need(&["n"])?;
+            match get("n") {
+                Some(Json::Int(n)) if *n <= 4096 => leaf_size(&Domain::BytesN(*n))?,
+                _ => return Err(bad("bytes_n needs a width in 0..4096")),
+            }
+        }
+        "nat_count" => {
+            need(&["k"])?;
+            match get("k") {
+                Some(Json::Int(k)) if *k <= 4096 => k + 1,
+                _ => return Err(bad("nat_count needs K in 0..4096")),
+            }
+        }
+        "fx_full" => {
+            need(&["t"])?;
+            let t = fixed_type()?;
+            if t == FixedTy::U8 || t.bits() > 16 {
+                return Err(bad("fx_full is for 8- and 16-bit types other than U8"));
+            }
+            1u64 << t.bits()
+        }
+        "fx_edge" => {
+            need(&["t"])?;
+            let t = fixed_type()?;
+            if t == FixedTy::U64 || t.bits() < 16 {
+                return Err(bad(
+                    "fx_edge is for 16-, 32- and 64-bit types other than U64 (D25)",
+                ));
+            }
+            edge_domain(t).len() as u64
+        }
+        "tuple" => {
+            need(&["of"])?;
+            let Some(Json::Arr(parts)) = get("of").filter(|v| !matches!(v, Json::Arr(a) if a.is_empty())) else {
+                return Err(bad("a tuple descriptor has components"));
+            };
+            let mut size = 1u64;
+            for part in parts {
+                size = checked(size.checked_mul(descriptor_size(part, depth + 1)?))?;
+            }
+            size
+        }
+        "option" => {
+            need(&["of"])?;
+            let inner = descriptor_size(get("of").ok_or_else(malformed)?, depth + 1)?;
+            checked(inner.checked_add(1))?
+        }
+        "result" => {
+            need(&["ok", "errs"])?;
+            let errs = match get("errs") {
+                Some(Json::Arr(e)) if e.iter().all(|x| matches!(x, Json::Str(_))) => e.len() as u64,
+                _ => return Err(bad("a result descriptor lists error cases")),
+            };
+            let ok = descriptor_size(get("ok").ok_or_else(malformed)?, depth + 1)?;
+            checked(ok.checked_add(errs))?
+        }
+        "list" => {
+            need(&["of"])?;
+            let inner = descriptor_size(get("of").ok_or_else(malformed)?, depth + 1)?;
+            let (d16, d4) = (inner.min(16), inner.min(4));
+            checked(
+                1u64.checked_add(d16)
+                    .and_then(|x| x.checked_add(d16 * d16))
+                    .and_then(|x| x.checked_add(d4 * d4 * d4)),
+            )?
+        }
+        "variant" => {
+            need(&["ctors"])?;
+            let Some(Json::Arr(ctors)) = get("ctors").filter(|v| !matches!(v, Json::Arr(a) if a.is_empty())) else {
+                return Err(bad("a variant descriptor has constructors"));
+            };
+            let mut size = 0u64;
+            for ctor in ctors {
+                let Json::Arr(pair) = ctor else {
+                    return Err(bad("a malformed variant constructor"));
+                };
+                let [_, Json::Arr(fields)] = pair.as_slice() else {
+                    return Err(bad("a malformed variant constructor"));
+                };
+                let mut product = 1u64;
+                for field in fields {
+                    product = checked(product.checked_mul(descriptor_size(field, depth + 1)?))?;
+                }
+                size = checked(size.checked_add(product))?;
+            }
+            size
+        }
+        _ => return Err(bad("an unknown descriptor kind")),
+    };
+    if *declared != size {
+        return Err(bad("a descriptor's size is not its recomputed size"));
+    }
+    Ok(size)
+}
+
 /// A short name for a domain tree, for reports: the descriptor name of a leaf
-/// (`bytes_d1`, `u64_edge`, `fx_edge(I64)`), `nat_count` for the shift-count domain,
+/// (`bytes_d1`, `u64_edge`, `fx_edge(I64)`), `nat_shift` for the shift-count domain,
 /// `fx_edge16(U16)` for a demoted 16-bit leaf, and the composite kinds spelled out.
 pub fn kind_name(d: &Domain) -> String {
     use coding_adventures_warrant_grammar::fixed::FixedTy;
@@ -351,7 +544,7 @@ pub fn kind_name(d: &Domain) -> String {
         Domain::U8 | Domain::Fx(FixedTy::U8) => "u8_all".into(),
         Domain::U64 | Domain::Fx(FixedTy::U64) => "u64_edge".into(),
         Domain::Nat => "nat_0_64".into(),
-        Domain::NatCount => "nat_count".into(),
+        Domain::NatCount => "nat_shift".into(),
         Domain::Bytes => "bytes_d1".into(),
         Domain::BytesN(n) => format!("bytes_n({n})"),
         Domain::Fx(f) if f.bits() <= 16 => format!("fx_full({})", f.name()),
@@ -375,9 +568,10 @@ fn is_byte_string(d: &Domain) -> bool {
     matches!(d, Domain::Bytes | Domain::BytesN(_))
 }
 
-/// The VER04r 16.2 items a domain tree touches, for the census: `"1/2"` (list of byte
-/// strings), `"3"` (`nat_count`), `"4"` (signed `fx_edge`), `"5"` (`FxEdge` at 16 bits).
-/// Independent of whether the domain is otherwise `ir.core`.
+/// The VER04r 16.2 items a domain tree touches **that are still undecided**, for the census: only
+/// `"1/2"` (a list of byte strings, `ir.data`).  Items 3, 4 and 5 are settled since S10c ([D26],
+/// [D21], [D25]) and are described, not refused.  Independent of whether the domain is otherwise
+/// `ir.core`.
 pub fn s162_items(d: &Domain) -> Vec<&'static str> {
     let mut out = Vec::new();
     fn walk(d: &Domain, out: &mut Vec<&'static str>, depth: usize) {
@@ -390,9 +584,6 @@ pub fn s162_items(d: &Domain) -> Vec<&'static str> {
             }
         };
         match d {
-            Domain::NatCount => add("3"),
-            Domain::FxEdge(_) => add("5"),
-            Domain::Fx(f) if f.bits() > 16 && f.signed() => add("4"),
             Domain::List(inner) => {
                 if is_byte_string(inner) {
                     add("1/2");
@@ -529,10 +720,58 @@ pub fn resolve_claim(
             e
         })?);
     }
+    let demoted = resolved
+        .demotions
+        .iter()
+        .map(|d| demotion_path(&resolved_domains(&binders), d))
+        .collect();
     Ok(SuiteDomains {
         binders,
         product: resolved.product,
+        demoted,
     })
+}
+
+fn resolved_domains(binders: &[BinderDomain]) -> Vec<&Domain> {
+    binders.iter().map(|b| &b.domain).collect()
+}
+
+/// The oracle's spelling of one demotion (`domains.demote`, VER04j 2.6): the binder's index as
+/// decimal text, then `.k` for component `k` of a tuple and `.ok` for the payload of a `Result`
+/// (`.some` for an option, `.elem` for a list: not `ir.core`/`ir.tuple`).  The S2 resolver records
+/// the same walk without the `Result` step (`Demotion::path` holds tuple indices only), so it is
+/// rebuilt by walking the **resolved** tree of the binder to the demoted leaf.
+pub fn demotion_path(domains: &[&Domain], d: &coding_adventures_warrant_grammar::domain::Demotion) -> String {
+    let mut out = d.binder.to_string();
+    let mut path = d.path.iter();
+    let mut cur = domains[d.binder];
+    loop {
+        match cur {
+            Domain::Res(inner, _, _) => {
+                out.push_str(".ok");
+                cur = inner;
+            }
+            Domain::Opt(inner) => {
+                out.push_str(".some");
+                cur = inner;
+            }
+            Domain::List(inner) => {
+                out.push_str(".elem");
+                cur = inner;
+            }
+            Domain::Tuple(parts) => {
+                let Some(k) = path.next() else { break };
+                out.push('.');
+                out.push_str(k);
+                match k.parse::<usize>().ok().and_then(|k| parts.get(k)) {
+                    Some(next) => cur = next,
+                    None => break,
+                }
+            }
+            _ => break,
+        }
+    }
+    out
 }
 
 /// The weakest label over a suite's binders (`full` for none).
@@ -620,21 +859,103 @@ mod tests {
     }
 
     #[test]
-    fn the_16_2_descriptors_are_refused_naming_the_item() {
-        let cases = [
-            (Domain::NatCount, "item 3"),
-            (Domain::Fx(FixedTy::I64), "item 4"),
-            (Domain::Fx(FixedTy::I32), "item 4"),
-            (Domain::FxEdge(FixedTy::U16), "item 5"),
-            (Domain::FxEdge(FixedTy::I16), "item 5"),
-            (Domain::List(Box::new(Domain::Bytes)), "item 1/2"),
-            (Domain::List(Box::new(Domain::BytesN(2))), "item 1/2"),
-        ];
-        for (dom, item) in cases {
+    fn the_settled_16_2_items_are_described_and_the_undecided_one_is_refused() {
+        // [D26] the shift-count leaf: 73 values, no `k`, bounded-set
+        let (j, l, n) = d(Domain::NatCount);
+        assert_eq!((l, n), (Label::BoundedSet, 73));
+        assert_eq!(
+            j.split_whitespace().collect::<String>(),
+            r#"{"d":"nat_shift","size":73}"#
+        );
+        // [D21] signed edge sets, [D25] a demoted 16-bit leaf: the same descriptor
+        for (dom, ty, size) in [
+            (Domain::Fx(FixedTy::I32), "I32", 559),
+            (Domain::Fx(FixedTy::I64), "I64", 623),
+            (Domain::FxEdge(FixedTy::U16), "U16", 281),
+            (Domain::FxEdge(FixedTy::I16), "I16", 527),
+        ] {
+            let (j, l, n) = d(dom);
+            assert_eq!((l, n), (Label::BoundedSet, size), "{ty}");
+            assert_eq!(
+                j.split_whitespace().collect::<String>(),
+                format!(r#"{{"d":"fx_edge","size":{size},"t":"{ty}"}}"#)
+            );
+        }
+        // [D25] an 8-bit fx_edge has no descriptor, and neither has a U64 one (it is u64_edge)
+        for dom in [Domain::FxEdge(FixedTy::U8), Domain::FxEdge(FixedTy::I8), Domain::FxEdge(FixedTy::U64)] {
             let e = describe(&dom, 1).unwrap_err();
             assert_eq!(e.code, code::DOMAIN, "{dom:?}");
-            assert!(e.message.contains(item), "{dom:?}: {}", e.message);
+            assert!(e.message.contains("D25"), "{}", e.message);
         }
+        // items 1 and 2 stay undecided until ir.data
+        for dom in [
+            Domain::List(Box::new(Domain::Bytes)),
+            Domain::List(Box::new(Domain::BytesN(2))),
+        ] {
+            let e = describe(&dom, 1).unwrap_err();
+            assert_eq!(e.code, code::DOMAIN, "{dom:?}");
+            assert!(e.message.contains("item 1/2"), "{}", e.message);
+        }
+    }
+
+    #[test]
+    fn the_consumer_check_recomputes_sizes_and_rejects_illegal_leaves() {
+        let leaf = |d: &str, size: u64, t: Option<&str>| {
+            let mut row = vec![("d", Json::str(d)), ("size", Json::Int(size))];
+            if let Some(t) = t {
+                row.push(("t", Json::str(t)));
+            }
+            Json::obj(row)
+        };
+        let ok = |j: Json| descriptor_size(&j, 1).unwrap();
+        assert_eq!(ok(leaf("nat_shift", 73, None)), 73);
+        assert_eq!(ok(leaf("fx_edge", 527, Some("I16"))), 527);
+        assert_eq!(ok(leaf("fx_edge", 281, Some("U16"))), 281);
+        assert_eq!(ok(leaf("fx_full", 65_536, Some("I16"))), 65_536);
+        let pair = Json::obj([
+            ("d", Json::str("tuple")),
+            ("of", Json::arr([leaf("nat_shift", 73, None), leaf("bool", 2, None)])),
+            ("size", Json::Int(146)),
+        ]);
+        assert_eq!(ok(pair), 146);
+        for (j, message) in [
+            (leaf("fx_edge", 256, Some("U8")), "D25"),
+            (leaf("fx_edge", 256, Some("I8")), "D25"),
+            (leaf("fx_edge", 377, Some("U64")), "D25"),
+            (leaf("fx_edge", 377, Some("I16")), "recomputed size"),
+            (leaf("fx_edge", 314, Some("U32")), "recomputed size"),
+            (leaf("fx_full", 256, Some("U8")), "fx_full is for 8- and 16-bit"),
+            (leaf("nat_shift", 72, None), "recomputed size"),
+            (leaf("bool", 2, Some("U8")), "wrong keys"),
+            (leaf("nat_zzz", 1, None), "unknown descriptor kind"),
+            (Json::Int(1), "malformed"),
+        ] {
+            let e = descriptor_size(&j, 1).unwrap_err();
+            assert_eq!(e.code, code::DOMAIN);
+            assert!(e.message.contains(message), "{}: {message}", e.message);
+        }
+        // 17 levels is a limit error, and a size past 2^64 is W0706's, never a wrap
+        let mut deep = leaf("bool", 2, None);
+        for _ in 0..16 {
+            deep = Json::obj([
+                ("d", Json::str("option")),
+                ("of", deep),
+                ("size", Json::Int(3)),
+            ]);
+        }
+        assert_eq!(descriptor_size(&deep, 1).unwrap_err().code, code::LIMIT);
+        let big = |size: u64| leaf("u8_all", size, None);
+        let mut tuple = Json::obj([
+            ("d", Json::str("tuple")),
+            ("of", Json::arr(vec![big(256); 9])),
+            ("size", Json::Int(0)),
+        ]);
+        assert!(descriptor_size(&tuple, 1).unwrap_err().message.contains("W0706"));
+        if let Json::Obj(p) = &mut tuple {
+            p[1].1 = Json::arr(vec![big(256); 3]);
+            p[2].1 = Json::Int(256 * 256 * 256);
+        }
+        assert_eq!(descriptor_size(&tuple, 1).unwrap(), 1 << 24);
     }
 
     #[test]
@@ -678,8 +999,11 @@ mod tests {
     }
 
     #[test]
-    fn the_16_2_scan_finds_items_inside_composites_without_refusing() {
-        assert_eq!(s162_items(&Domain::NatCount), ["3"]);
+    fn the_16_2_scan_reports_only_the_undecided_item_inside_composites() {
+        // items 3, 4 and 5 are settled (S10c): they are described, so the scan no longer counts them
+        assert!(s162_items(&Domain::NatCount).is_empty());
+        assert!(s162_items(&Domain::Fx(FixedTy::I64)).is_empty());
+        assert!(s162_items(&Domain::FxEdge(FixedTy::U16)).is_empty());
         assert_eq!(s162_items(&Domain::Bool), Vec::<&str>::new());
         let nested = Domain::Tuple(vec![
             Domain::Fx(FixedTy::I64),
@@ -687,13 +1011,7 @@ mod tests {
             Domain::FxEdge(FixedTy::U16),
             Domain::NatCount,
         ]);
-        let mut items = s162_items(&nested);
-        items.sort_unstable();
-        assert_eq!(items, ["1/2", "3", "4", "5"]);
-        // a fine unsigned wide leaf and a v1 U64 are not on the list
-        assert!(s162_items(&Domain::Fx(FixedTy::U32)).is_empty());
-        assert!(s162_items(&Domain::Fx(FixedTy::U64)).is_empty());
-        assert!(s162_items(&Domain::Fx(FixedTy::I8)).is_empty());
+        assert_eq!(s162_items(&nested), ["1/2"]);
         // a list of Nat is not a list of byte strings
         assert!(s162_items(&Domain::List(Box::new(Domain::Nat))).is_empty());
     }

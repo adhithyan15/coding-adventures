@@ -1,10 +1,11 @@
 //! # The adopter census (VER04r 16.2, slice S3b)
 //!
 //! VER04r 16.2 lists five places where what the evidence generator enumerates is not what
-//! section 5.1 says, and 16.3 item 11e asks S3 to **report a census** so that S10 can decide
+//! section 5.1 says, and 16.3 item 11e asked S3 to **report a census** so that S10 could decide
 //! them with real documents in hand: which adopters have a binder whose domain is a list of
-//! byte strings, `nat_count`, a signed edge set or a 16-bit edge set.  This module is that
-//! report, and a little more: for **every claim** of a document it says whether the S3
+//! byte strings, `nat_count`, a signed edge set or a 16-bit edge set.  S10c decided items 3, 4 and
+//! 5 ([D26], [D21], [D25]: described, no longer refused), so only a list of byte strings is still a
+//! hit.  This module is that report, and a little more: for **every claim** of a document it says whether the S3
 //! generator can emit it at `ir.core` and, if not, *why* (the first refusal: a level, a
 //! VER04r generation rule, a cost bound, an over-budget product, a 16.2 descriptor).
 //!
@@ -43,7 +44,7 @@ pub struct ClaimCensus {
     /// The product ordinals and the descriptor of each binder, or the resolver's refusal
     /// (`W0706` over budget, `W0707` an over-wide `Bytes<N>`).
     pub domain: Result<(u64, Vec<String>), GenError>,
-    /// The VER04r 16.2 items the binders touch: `"1/2"`, `"3"`, `"4"`, `"5"`.
+    /// The VER04r 16.2 items the binders touch that are still undecided: `"1/2"` only (S10c).
     pub s162: Vec<&'static str>,
 }
 
@@ -286,7 +287,7 @@ pub fn render(docs: &[(String, Result<DocCensus, GenError>)], verbose: bool) -> 
         );
     }
     if by_item.is_empty() {
-        let _ = writeln!(out, "  VER04r 16.2: no claim touches any of the five items");
+        let _ = writeln!(out, "  VER04r 16.2: no claim touches an undecided item (only 1/2, a list of byte strings, is left)");
     }
     out
 }
