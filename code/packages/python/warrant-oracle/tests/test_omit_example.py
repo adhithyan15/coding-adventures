@@ -302,9 +302,72 @@ def test_a_wrap_while_evaluating_the_admit_still_refuses():
     assert "admit of op `wa`" in msg
 
 
+def test_a_size_error_inside_a_callees_admit_refuses_and_is_not_value_over_limit():
+    # CV2-F1 (VER04r 8.4 step 3): only a size error in the arguments or the pure side qualifies;
+    # the [D19] check evaluates the callee's admit, and a size error there refuses.
+    OPS.append(("big", f"op big(a: Bytes | len({nest(17, 'a')}) > 0, b: Bytes) -> Bytes", "ab"))
+    try:
+        for names in ("big", ""):  # with the line and without it, the same refusal
+            msg = refused(ex("big", 'big(b"aa", b"bb") == b"bb"'), names, "ir-overflow")
+            assert "admit of op `big`" in msg
+        with pytest.raises(OracleError) as err:
+            gen(ex("big", 'big(b"aa", b"bb") == b"bb"'), omit("big"))
+        assert not isinstance(err.value, SizeError)
+        # the same size error in an *argument* still qualifies
+        out = gen(ex("arg", f'big({GROW17}, b"bb") == b"bb"'), omit("arg"))
+        assert reasons(out) == {"arg": "value-over-limit"}
+    finally:
+        OPS.pop()
+
+
 def test_any_other_check_failure_still_refuses():
     # an example with an op that does not exist is a type error: the line never rescues it
     refused(ex("s", f'nosuch({GROW17}) == b"aa"'), "s", "type")
+
+
+# -- a value over 4,096 bytes in an emitted example is a generation error (CV2-F1; VER04r 2.3, 14) --
+
+
+def test_a_non_omitted_example_with_a_bytes_value_over_4096_is_a_limit_error():
+    over = "61" * 4097
+    for body in (
+        f'echo(b"{over}") == b"aa"',  # an argument
+        f'echo(b"aa") == b"{over}"',  # the pure side
+        f"echo({GROW13}) == b\"aa\"",  # computed, under MAX_IR_VALUE
+        f"res(b\"aa\") == Ok({GROW13})",  # under an ok
+    ):
+        msg = refused(ex("big", body), "", "limit")
+        assert "over 4096 bytes" in msg
+        assert "6161" not in msg  # never a value
+    # exactly 4,096 bytes is emitted
+    at = "61" * 4096
+    out = gen(ex("at", f'echo(b"{at}") == b"{at}"'), "")
+    assert [e["id"] for e in out.corpus["examples"]] == ["warrant/omitx/example/at"]
+    # the line turns the refusal into the omission
+    assert reasons(gen(ex("big", f'echo(b"{over}") == b"aa"'), omit("big"))) == {
+        "big": "value-over-limit"
+    }
+
+
+def test_the_order_of_the_checks_is_unchanged_a_wrap_or_admit_failure_comes_first():
+    body = f"wr(255u8 + 2u8, {GROW13}) == b\"aa\""
+    msg = refused(ex("w", body), "", "generation", version="v0")
+    assert msg.startswith("W0701") and "wraps" in msg
+    msg = refused(ex("a", f'lo(20u8, {GROW13}) == b"aa"'), "", "generation")
+    assert "outside the op's admit" in msg
+
+
+def test_removing_the_omit_line_of_the_fixture_example_is_now_a_refusal(tmp_path):
+    profile = tmp_path / "corpus.profile"
+    write_lf(
+        profile,
+        "".join(
+            f"{ln}\n" for ln in PROFILE.read_text().splitlines() if "echo_big_value" not in ln
+        ),
+    )
+    with pytest.raises(OracleError) as err:
+        check(profile=profile)
+    assert err.value.code == "limit" and "echo_big_value" in err.value.message
 
 
 # -- the key ---------------------------------------------------------------------------------

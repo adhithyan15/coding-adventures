@@ -205,6 +205,15 @@ def _evaluate_example(spec: Spec, prog, ex):
             f"W0701: example `{ex.name}`: U8 arithmetic wraps while evaluating the admit of "
             f"op `{op.name}`; v0 harness evaluates U8 as Nat (VER04r 3.3 rule 2)",
         ) from None
+    except SizeError:
+        # Author refinement (CV2-F1): a size error while evaluating a callee's ``admit`` (the [D19]
+        # check) is *not* a ``SizeError`` for ``omit_example``.  Section 8.4 step 3 names only the
+        # arguments and the pure side, so re-raise it as the plain ``ir-overflow`` refusal.
+        raise OracleError(
+            "ir-overflow",
+            f"example `{ex.name}`: a size error while evaluating the admit of op `{op.name}` "
+            "(VER04r 8.4 step 3 names only the arguments and the pure side)",
+        ) from None
     if not inside:
         raise OracleError(
             "generation",
@@ -266,6 +275,15 @@ def _examples(spec: Spec, prog, omit: list[str] = ()) -> tuple[list[dict], bytes
             raise OracleError(
                 "generation", "W0701: an example is one subject call compared with a pure value"
             ) from None
+        # VER04r 2.3 and 14 (author refinement, CV2-F1): a ``Bytes`` value in an emitted example is
+        # at most 4,096 bytes.  Only an ``omit_example`` line (reason ``value-over-limit``) excuses
+        # a larger one; without it the example is a generation error, code ``limit``.
+        if any(_over_limit(a, t) for a, (_, t) in zip(args, ptypes)) or _over_limit(expected, ret):
+            raise OracleError(
+                "limit",
+                f"example `{ex.name}` has a Bytes argument or value over {MAX_EXAMPLE_BYTES} bytes "
+                "(VER04r 2.3); an omit_example line can omit it",
+            )
         width = next(iter(statics.values())) if statics else None
         row = {
             "id": eid,
