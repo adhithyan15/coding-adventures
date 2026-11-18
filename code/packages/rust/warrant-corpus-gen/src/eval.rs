@@ -769,8 +769,15 @@ fn clamp_count(n: i128, len: usize) -> usize {
 fn decode_hex(hex: &str) -> Result<Vec<u8>, GenError> {
     let bad = || GenError::new(code::W0701, "", "a Bytes literal is even lowercase hex");
     let b = hex.as_bytes();
-    if !b.len().is_multiple_of(2) || (b.len() / 2) as u64 > MAX_IR_VALUE {
+    // The shape is checked first, then the size, as the oracle does: only a well-formed
+    // literal over MAX_IR_VALUE is a *size* error (VER04r 8.4, [D34]).
+    if !b.len().is_multiple_of(2) || !b.iter().all(|c| matches!(c, b'0'..=b'9' | b'a'..=b'f')) {
         return Err(bad());
+    }
+    if (b.len() / 2) as u64 > MAX_IR_VALUE {
+        return Err(GenError::size_error(
+            "a Bytes literal exceeds MAX_IR_VALUE (VER04r 4.2 rule 6)",
+        ));
     }
     let nibble = |c: u8| match c {
         b'0'..=b'9' => Ok(c - b'0'),

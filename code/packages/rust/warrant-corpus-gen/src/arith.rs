@@ -137,9 +137,7 @@ pub fn fixed_neg(ty: FixedTy, a: i128) -> (i128, bool) {
 /// `W0701` (the generator's form of `ir-overflow`, VER04r 4.2 rule 6) past the limit.
 pub fn check_value_len(len: u64) -> Result<(), GenError> {
     if len > MAX_IR_VALUE {
-        return Err(GenError::new(
-            code::W0701,
-            "",
+        return Err(GenError::size_error(
             "a Bytes or list value exceeds MAX_IR_VALUE (VER04r 4.2 rule 6)",
         ));
     }
