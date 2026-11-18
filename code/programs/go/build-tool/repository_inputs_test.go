@@ -95,6 +95,37 @@ func TestRngCorpusSelectsEveryFixedLane(t *testing.T) {
 	}
 }
 
+func TestGameClockCorpusSelectsRustConsumerOnly(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "rust/game-clock", Language: "rust"},
+		{Name: "go/build-tool", Language: "go"},
+	}
+	corpus := []string{"code/specs/fixtures/game-clock-v1/cases.json"}
+	got, err := repositoryInputConsumersForChange(corpus, packages, "all")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if want := map[string]bool{"rust/game-clock": true}; !reflect.DeepEqual(got, want) {
+		t.Fatalf("got %v, want %v", got, want)
+	}
+	if got, err := repositoryInputConsumersForChange(corpus, packages, "rust"); err != nil || !reflect.DeepEqual(got, map[string]bool{"rust/game-clock": true}) {
+		t.Fatalf("rust-only selection got %v, err %v", got, err)
+	}
+	if got, err := repositoryInputConsumersForChange(corpus, packages, "go"); err != nil || len(got) != 0 {
+		t.Fatalf("go-only selection got %v, err %v", got, err)
+	}
+	for path, want := range map[string]bool{
+		"code/specs/fixtures/game-clock-v1/cases.json":     true,
+		"code/specs/fixtures/game-clock-v10/cases.json":    false,
+		"code/specs/fixtures/game-clock-v1":                false,
+		"code/specs/fixtures/game-clock-v1-old/cases.json": false,
+	} {
+		if got := isGameClockCorpus(path); got != want {
+			t.Errorf("isGameClockCorpus(%q) = %v, want %v", path, got, want)
+		}
+	}
+}
+
 func TestTrigReferenceCorpusSelectsConvertedPorts(t *testing.T) {
 	packages := []discovery.Package{
 		{Name: "python/trig", Language: "python"},

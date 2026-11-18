@@ -6090,6 +6090,29 @@ remaining TLS state, key-schedule, record, certificate, revocation, and HTTP
 composition remain prerequisites; concrete HTTPS and live-provider readiness
 remain unavailable.
 
+An allocation-free `tls13-retry-key-schedule-binding` prerequisite now joins
+the message-bound retry transcript and message-bound X25519 shared secret only
+when both borrow the same exact retained CH1, HelloRetryRequest, CH2, and final
+ServerHello selection proof. Before touching caller-owned base-secret storage,
+the composer also requires that storage's data-driven selected cipher suite to
+equal the suite retained by the exact transcript. Only then does it pass the
+repository-owned 32-byte X25519 secret to the existing no-PSK base schedule.
+Success returns a non-copyable wrapper retaining both exact message-bound
+inputs and the Early, Handshake, and Master Secret view into caller-owned
+wipe-on-drop storage. Proof or
+suite substitution fails with stable payload-free categories before schedule
+derivation or storage mutation; downstream schedule failures retain the
+existing redacted categories and clearing behavior.
+
+This pure binding does not derive client or server handshake traffic secrets,
+consume the retained transcript hash in Derive-Secret, sequence any later
+handshake message, authenticate CertificateVerify or Finished, protect
+records, validate certificates, establish trust, enforce revocation, perform
+I/O, authorize HTTP or OAuth transport, or open a network connection. Traffic-
+secret derivation, authenticated handshake progression, record protection,
+certificate/revocation policy, and HTTP composition remain prerequisites;
+concrete HTTPS and live-provider readiness remain unavailable.
+
 An allocation-free `http1-fixed-request-body` prerequisite now binds one
 caller-borrowed, potentially sensitive request body to its exact byte length
 under an explicit caller ceiling. It encodes that length in canonical shortest

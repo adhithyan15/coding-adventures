@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- A durable public-API consumer for all 23 `game-clock-v1` shared-corpus cases, including exact output/error comparison, failed mutable-advance state preservation, and conformance negative controls.
+
 ### Fixed
 - `code/specs/game-clock.warrant` was invalid Warrant (`->` implication in a claim); rewritten as `if .. then .. else true`. Document only.
 
