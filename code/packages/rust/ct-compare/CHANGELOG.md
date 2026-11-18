@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased — regenerated evidence harness (VOS-038b)
+
+- `tests/generated/warrant_evidence.rs` regenerated with `gen_evidence` for the refinement sampler (a low-acceptance refinement over an enumerable domain is drawn from its admissible set; VER04h 4.1). No test, case count or recorded evidence manifest changes.
+
 ## Unreleased
 
 - Make the VER08b runtime-capability jail check strict on Linux (CAP-RT): new

@@ -838,18 +838,33 @@ static OBS_TIMEOUT_MS: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU
 /// and 2 (usage), so no check of "the run failed" can mistake it for a result.
 const OBS_TIMEOUT_EXIT: i32 = 70;
 
+/// The most `WARRANT_OBS_TIMEOUT_SECS` may raise the bound to (24 h).  Without a
+/// ceiling a huge value overflowed `Instant + Duration` (a panic) and, short of
+/// that, made the bound effectively unbounded (VOS-D085).
+const OBS_MAX_RAISE_SECS: u64 = 86_400;
+
+/// The raise `WARRANT_OBS_TIMEOUT_SECS` asks for, in milliseconds: unset or
+/// unparsable is 0, anything above `OBS_MAX_RAISE_SECS` is clamped to it.
+fn obs_raise_ms(var: Option<&str>) -> u64 {
+    var.and_then(|v| v.trim().parse::<u64>().ok())
+        .map_or(0, |secs| secs.min(OBS_MAX_RAISE_SECS) * 1000)
+}
+
 /// The bound in force: the (test-shortenable) default, raised, never lowered,
-/// by `WARRANT_OBS_TIMEOUT_SECS`.
+/// by `WARRANT_OBS_TIMEOUT_SECS` (at most `OBS_MAX_RAISE_SECS`).
 fn obs_timeout() -> std::time::Duration {
     static RAISE_MS: std::sync::OnceLock<u64> = std::sync::OnceLock::new();
-    let raise = *RAISE_MS.get_or_init(|| {
-        std::env::var("WARRANT_OBS_TIMEOUT_SECS")
-            .ok()
-            .and_then(|v| v.trim().parse::<u64>().ok())
-            .map_or(0, |secs| secs.saturating_mul(1000))
-    });
+    let raise = *RAISE_MS
+        .get_or_init(|| obs_raise_ms(std::env::var("WARRANT_OBS_TIMEOUT_SECS").ok().as_deref()));
     let base = OBS_TIMEOUT_MS.load(std::sync::atomic::Ordering::SeqCst);
     std::time::Duration::from_millis(base.max(raise))
+}
+
+/// The deadline of a wait of `timeout` from `now`.  An unrepresentable instant
+/// fails closed: the deadline is `now`, already past, so the wait times out and
+/// the run bails out instead of waiting without a bound or panicking.
+fn obs_deadline(now: std::time::Instant, timeout: std::time::Duration) -> std::time::Instant {
+    now.checked_add(timeout).unwrap_or(now)
 }
 
 thread_local! {
@@ -1061,7 +1076,7 @@ fn obs_exec(job: impl FnOnce() -> V + Send + 'static) -> Exec {
             return Exec::Lost;
         }
         // One deadline for the whole wait: a spurious wakeup does not extend it.
-        let deadline = std::time::Instant::now() + timeout;
+        let deadline = obs_deadline(std::time::Instant::now(), timeout);
         let mut g = lock_or_recover(&slot.state);
         while g.is_none() {
             let left = deadline.saturating_duration_since(std::time::Instant::now());

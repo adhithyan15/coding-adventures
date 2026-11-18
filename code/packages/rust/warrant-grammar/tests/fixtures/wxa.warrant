@@ -138,7 +138,7 @@ warrant wxa v1
   claim order_matches_the_model:
     forall a: U8, b: U8. order(a, b) == order_model(a, b)
   claim order_on_a_tuple_binder:
-    forall p: (U8, Bool). order(p.0, p.0) == (p.0, p.0)
+    forall p: (U8, Bool) | p.1 or not p.1. order(p.0, p.0) == (p.0, p.0)
   claim split_matches_the_model:
     forall a: U8. split(a) == split_model(a)
   claim try_pair_matches_the_model:

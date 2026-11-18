@@ -1,13 +1,13 @@
 //! TLS 1.3 server `CertificateVerify` bound to a reviewed RSA path leaf.
 //!
 //! The path-only composition accepts selected-transcript hash evidence and the
-//! strongest accumulated reviewed RSA server-path proof. Its stronger HTTPS
-//! entry point accepts that path only through the existing exact DNS
-//! destination binding. Both authorize the server role, derive and validate
-//! the exact reviewed target certificate's RSA key, and delegate signature
-//! verification to repository-owned code. They do not establish ordered
-//! handshake state, anchor self-signature, revocation, Finished, records, TLS,
-//! HTTP, OAuth, or network readiness.
+//! strongest accumulated reviewed RSA server-path proof. Stronger HTTPS entry
+//! points accept that path only through the existing exact DNS destination
+//! binding, with or without retained anchor self-signature evidence. All three
+//! authorize the server role, derive and validate the exact reviewed target
+//! certificate's RSA key, and delegate signature verification to
+//! repository-owned code. They do not establish ordered handshake state,
+//! revocation, Finished, records, TLS, HTTP, OAuth, or network readiness.
 
 #![forbid(unsafe_code)]
 
@@ -15,7 +15,8 @@ use core::fmt;
 
 use der_asn1::Asn1Limits;
 use https_reviewed_server_path_binding::{
-    BoundHttpsDnsDestinationToReviewedServerPath, ReviewedHttpsServerPath,
+    BoundHttpsDnsDestinationToReviewedServerPath,
+    BoundHttpsDnsDestinationToReviewedServerPathAnchorSelfSignature, ReviewedHttpsServerPath,
 };
 use tls13_certificate_verify_input::CertificateVerifyRole;
 use tls13_certificate_verify_message::CertificateVerifyMessage;
@@ -230,6 +231,239 @@ impl fmt::Debug
 {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter.write_str("VerifiedReviewedServerPathCertificateVerify")
+    }
+}
+
+/// Non-copyable evidence retaining the exact HTTPS DNS destination, reviewed
+/// path, anchor self-signature, and selected-transcript server signature
+/// verdict.
+pub struct VerifiedHttpsDnsDestinationReviewedServerPathAnchorSelfSignatureCertificateVerify<
+    'destination,
+    'server_name,
+    'host,
+    'evidence,
+    'initialized,
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'policy,
+    'anchor_certificate,
+    'anchor_encoded,
+    'role_certificate,
+    'role_encoded,
+    'signature_certificate,
+    'signature_encoded,
+    'signature_issuer_certificate,
+    'signature_issuer_encoded,
+    'signature_anchor_certificate,
+    'signature_anchor_encoded,
+    'hashed,
+    'bound,
+    'transcript,
+    'output,
+    'message,
+    'body,
+> {
+    https_destination_reviewed_server_path_anchor_self_signature:
+        &'destination BoundHttpsDnsDestinationToReviewedServerPathAnchorSelfSignature<
+            'server_name,
+            'host,
+            'evidence,
+            'initialized,
+            'path,
+            'target,
+            'target_encoded,
+            'candidates,
+            'candidate_encoded,
+            'policy,
+            'anchor_certificate,
+            'anchor_encoded,
+            'role_certificate,
+            'role_encoded,
+            'signature_certificate,
+            'signature_encoded,
+            'signature_issuer_certificate,
+            'signature_issuer_encoded,
+            'signature_anchor_certificate,
+            'signature_anchor_encoded,
+        >,
+    verification: VerifiedReviewedServerPathCertificateVerify<
+        'destination,
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+        'hashed,
+        'bound,
+        'transcript,
+        'output,
+        'message,
+        'body,
+    >,
+}
+
+impl<
+        'destination,
+        'server_name,
+        'host,
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+        'signature_certificate,
+        'signature_encoded,
+        'signature_issuer_certificate,
+        'signature_issuer_encoded,
+        'signature_anchor_certificate,
+        'signature_anchor_encoded,
+        'hashed,
+        'bound,
+        'transcript,
+        'output,
+        'message,
+        'body,
+    >
+    VerifiedHttpsDnsDestinationReviewedServerPathAnchorSelfSignatureCertificateVerify<
+        'destination,
+        'server_name,
+        'host,
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+        'signature_certificate,
+        'signature_encoded,
+        'signature_issuer_certificate,
+        'signature_issuer_encoded,
+        'signature_anchor_certificate,
+        'signature_anchor_encoded,
+        'hashed,
+        'bound,
+        'transcript,
+        'output,
+        'message,
+        'body,
+    >
+{
+    /// Return the exact destination, reviewed path, and anchor signature proof.
+    #[must_use]
+    pub const fn https_destination_reviewed_server_path_anchor_self_signature(
+        &self,
+    ) -> &'destination BoundHttpsDnsDestinationToReviewedServerPathAnchorSelfSignature<
+        'server_name,
+        'host,
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+        'signature_certificate,
+        'signature_encoded,
+        'signature_issuer_certificate,
+        'signature_issuer_encoded,
+        'signature_anchor_certificate,
+        'signature_anchor_encoded,
+    > {
+        self.https_destination_reviewed_server_path_anchor_self_signature
+    }
+
+    /// Return the exact reviewed-path `CertificateVerify` verdict.
+    #[must_use]
+    pub const fn verification(
+        &self,
+    ) -> &VerifiedReviewedServerPathCertificateVerify<
+        'destination,
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+        'hashed,
+        'bound,
+        'transcript,
+        'output,
+        'message,
+        'body,
+    > {
+        &self.verification
+    }
+}
+
+impl fmt::Debug
+    for VerifiedHttpsDnsDestinationReviewedServerPathAnchorSelfSignatureCertificateVerify<
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+    >
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str(
+            "VerifiedHttpsDnsDestinationReviewedServerPathAnchorSelfSignatureCertificateVerify",
+        )
     }
 }
 
@@ -619,6 +853,123 @@ pub fn verify_https_dns_destination_reviewed_server_path_certificate_verify<
     Ok(
         VerifiedHttpsDnsDestinationReviewedServerPathCertificateVerify {
             https_destination_reviewed_server_path,
+            verification,
+        },
+    )
+}
+
+/// Verify one server `CertificateVerify` through the exact HTTPS DNS
+/// destination, reviewed path, and retained anchor self-signature proof.
+#[allow(clippy::too_many_arguments)]
+pub fn verify_https_dns_destination_reviewed_server_path_anchor_self_signature_certificate_verify<
+    'destination,
+    'server_name,
+    'host,
+    'evidence,
+    'initialized,
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'policy,
+    'anchor_certificate,
+    'anchor_encoded,
+    'role_certificate,
+    'role_encoded,
+    'signature_certificate,
+    'signature_encoded,
+    'signature_issuer_certificate,
+    'signature_issuer_encoded,
+    'signature_anchor_certificate,
+    'signature_anchor_encoded,
+    'hashed,
+    'bound,
+    'transcript,
+    'output,
+    'message,
+    'body,
+    'key_policy,
+>(
+    https_destination_reviewed_server_path_anchor_self_signature: &'destination BoundHttpsDnsDestinationToReviewedServerPathAnchorSelfSignature<
+        'server_name,
+        'host,
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+        'signature_certificate,
+        'signature_encoded,
+        'signature_issuer_certificate,
+        'signature_issuer_encoded,
+        'signature_anchor_certificate,
+        'signature_anchor_encoded,
+    >,
+    hashed_input: &'hashed HashedTranscriptBoundCertificateVerifyInput<
+        'bound,
+        'transcript,
+        'output,
+    >,
+    message: &'message CertificateVerifyMessage<'body>,
+    rsa_key_policy: RsaPublicKeyPolicy<'key_policy>,
+    rsa_key_limits: Asn1Limits,
+    data_block_scratch: &mut [u8],
+    signature_limits: Tls13RsaPssSignatureLimits,
+) -> Result<
+    VerifiedHttpsDnsDestinationReviewedServerPathAnchorSelfSignatureCertificateVerify<
+        'destination,
+        'server_name,
+        'host,
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+        'signature_certificate,
+        'signature_encoded,
+        'signature_issuer_certificate,
+        'signature_issuer_encoded,
+        'signature_anchor_certificate,
+        'signature_anchor_encoded,
+        'hashed,
+        'bound,
+        'transcript,
+        'output,
+        'message,
+        'body,
+    >,
+    ReviewedServerPathCertificateVerifyError,
+> {
+    let verification = verify_reviewed_server_path_certificate_verify(
+        https_destination_reviewed_server_path_anchor_self_signature
+            .reviewed_server_path_anchor_self_signature()
+            .reviewed_server_path(),
+        hashed_input,
+        message,
+        rsa_key_policy,
+        rsa_key_limits,
+        data_block_scratch,
+        signature_limits,
+    )?;
+
+    Ok(
+        VerifiedHttpsDnsDestinationReviewedServerPathAnchorSelfSignatureCertificateVerify {
+            https_destination_reviewed_server_path_anchor_self_signature,
             verification,
         },
     )

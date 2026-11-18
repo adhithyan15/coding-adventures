@@ -51,6 +51,15 @@ mod harness {
         }
     }
     include!("generated/wx_evidence.rs");
+
+    pub fn exact(t: Ty) -> bool {
+        exact_support(t)
+    }
+    pub fn floor_verdict(admitted: u64, probe: u64) -> Result<(), String> {
+        acceptance_verdict(admitted, probe)
+    }
+    pub const PROBE: u64 = ACCEPT_PROBE;
+    pub const FLOOR_DEN: u64 = ACCEPT_FLOOR_DEN;
 }
 use harness::{Fault, Ty, F, V};
 
@@ -733,4 +742,148 @@ fn u8_arithmetic_in_the_generated_model_wraps_wd_013() {
     assert_eq!(V::arith(&u8v(0), &u8v(1), '-'), u8v(255));
     assert_eq!(V::arith(&u8v(200), &u8v(2), '*'), u8v(144));
     assert!(harness::example_sub8_wraps_below_zero(Fault::None));
+}
+
+// ---------------------------------------------------------------------------
+// VOS-D079: refinement starvation (VER04h section 4.1)
+// ---------------------------------------------------------------------------
+
+use std::sync::atomic::{AtomicU64, Ordering};
+
+fn byte(env: &[V]) -> i128 {
+    match &env[0] {
+        V::Fixed(_, v) => *v,
+        other => panic!("not a fixed value: {other:?}"),
+    }
+}
+
+fn message_of(v: &Verdict) -> String {
+    match v {
+        Verdict::Fail { message, .. } => message.clone(),
+        Verdict::Pass => String::new(),
+    }
+}
+
+/// Bit `v` is set for every admitted value the suite evaluated.
+static SEEN_LOW: AtomicU64 = AtomicU64::new(0);
+
+#[test]
+fn a_three_percent_refinement_over_a_byte_no_longer_starves_the_property_suite() {
+    // `t < 8` over `U8` admits 8 of 256 draws.  Before VOS-D079 a case lost all
+    // 100 rejection draws with probability 0.97^100 = 4.7 percent, so the 4,096
+    // cases failed with `property-exhausted` while the exhaustive suite (which
+    // enumerates the 256 values) passed.  Now the suite is rescued by sampling
+    // the admissible set.
+    SEEN_LOW.store(0, Ordering::SeqCst);
+    let (verdict, stats) = harness::property(
+        "warrant/test/low-acceptance",
+        &[Ty::Fx(F::U8)],
+        |env| byte(env) < 8,
+        |env, _| {
+            SEEN_LOW.fetch_or(1 << byte(env), Ordering::SeqCst);
+            true
+        },
+        Fault::None,
+    );
+    assert!(matches!(verdict, Verdict::Pass), "{verdict:?}");
+    assert_eq!(stats.cases, harness::PROPERTY_CASES, "every case was admitted");
+    assert!(stats.discarded > 0, "the rejection loop did run first");
+    // Uniform over the admissible set: all 8 values are reached.
+    assert_eq!(SEEN_LOW.load(Ordering::SeqCst), 0xFF);
+}
+
+#[test]
+fn an_empty_admissible_set_is_still_property_exhausted() {
+    let (verdict, _) = harness::property(
+        "warrant/test/empty",
+        &[Ty::Fx(F::U8)],
+        |_| false,
+        |_, _| true,
+        Fault::None,
+    );
+    assert!(is_fail(&verdict, "property-exhausted"), "{verdict:?}");
+}
+
+#[test]
+fn a_high_acceptance_refinement_draws_exactly_as_before() {
+    // `t < 128` admits half: the rejection loop never exhausts, the rescue is
+    // never taken, and the discarded count is the rejection loop's alone.
+    let (verdict, stats) = harness::property(
+        "warrant/test/half",
+        &[Ty::Fx(F::U8)],
+        |env| byte(env) < 128,
+        |_, _| true,
+        Fault::None,
+    );
+    assert!(matches!(verdict, Verdict::Pass), "{verdict:?}");
+    assert_eq!(stats.cases, harness::PROPERTY_CASES);
+}
+
+#[test]
+fn a_low_acceptance_refinement_on_a_domain_that_cannot_be_enumerated_is_refused_clearly() {
+    // `U64` draws are not enumerable (the exhaustive domain is an edge set), so
+    // there is no rescue; about 1.5 percent of draws are in 1..8, under the floor.
+    let (verdict, stats) = harness::property(
+        "warrant/test/wide",
+        &[Ty::Fx(F::U64)],
+        |env| (1..8).contains(&byte(env)),
+        |_, _| true,
+        Fault::None,
+    );
+    assert!(is_fail(&verdict, "property-exhausted"), "{verdict:?}");
+    let m = message_of(&verdict);
+    assert!(m.contains("is below the floor 1/8"), "{m}");
+    assert!(m.contains("cannot be enumerated"), "{m}");
+    assert_eq!(stats.cases, 0, "refused before the first case");
+}
+
+#[test]
+fn a_refinement_above_the_floor_on_a_wide_domain_passes() {
+    // `x < 256` admits about a third of the `U64` draws.
+    let (verdict, stats) = harness::property(
+        "warrant/test/wide-ok",
+        &[Ty::Fx(F::U64)],
+        |env| byte(env) < 256,
+        |_, _| true,
+        Fault::None,
+    );
+    assert!(matches!(verdict, Verdict::Pass), "{verdict:?}");
+    assert_eq!(stats.cases, harness::PROPERTY_CASES);
+}
+
+#[test]
+fn the_acceptance_floor_is_one_in_eight_of_the_probe() {
+    assert_eq!((harness::PROBE, harness::FLOOR_DEN), (2048, 8));
+    assert!(harness::floor_verdict(256, 2048).is_ok(), "exactly 1/8 is admitted");
+    assert!(harness::floor_verdict(2048, 2048).is_ok());
+    let m = harness::floor_verdict(255, 2048).unwrap_err();
+    assert!(m.contains("refinement acceptance 255/2048 is below the floor 1/8"), "{m}");
+    assert!(harness::floor_verdict(0, 2048).is_err());
+}
+
+#[test]
+fn only_binders_whose_draw_support_is_their_domain_are_rescued() {
+    for t in [Ty::Bool, Ty::Nat, Ty::Fx(F::U8), Ty::Fx(F::I8), Ty::Fx(F::U16), Ty::Fx(F::I16)] {
+        assert!(harness::exact(t), "{t:?}");
+    }
+    for t in [Ty::Fx(F::U32), Ty::Fx(F::I64), Ty::Fx(F::U64), Ty::Bytes, Ty::BytesN(4), Ty::NatCount, Ty::FxEdge(F::U8)] {
+        assert!(!harness::exact(t), "{t:?}");
+    }
+}
+
+#[test]
+fn a_six_percent_refinement_on_a_wide_domain_is_now_refused() {
+    // Under the old 1/32 floor a 4-5 percent claim passed the probe and then
+    // exhausted (0.95^100 = 0.6 percent per case, near-certain over 4,096 cases).
+    // `1 <= x < 40` over `U64` admits about 6 percent (3/8 * 39/300 plus six
+    // power-of-two draws), between the old floor and the new one.
+    let (verdict, _) = harness::property(
+        "warrant/test/five-percent",
+        &[Ty::Fx(F::U64)],
+        |env| (1..40).contains(&byte(env)),
+        |_, _| true,
+        Fault::None,
+    );
+    assert!(is_fail(&verdict, "property-exhausted"), "{verdict:?}");
+    assert!(message_of(&verdict).contains("below the floor 1/8"), "{}", message_of(&verdict));
 }

@@ -2,6 +2,10 @@
 
 All notable changes to this package are documented here.
 
+## Unreleased — regenerated evidence harness (VOS-038b)
+
+- `tests/generated/warrant_evidence.rs` regenerated with `gen_evidence` for the observer timeout clamp (`WARRANT_OBS_TIMEOUT_SECS` at most 24 h, `checked_add` deadline; VER04j). No test, case count or recorded evidence manifest changes.
+
 ## [0.1.0] - Unreleased
 
 ### Changed (VOS-038a, WX-SV2)

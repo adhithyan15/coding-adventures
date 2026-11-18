@@ -964,6 +964,23 @@ or grant network authority. Those trust, revocation, state, record, and
 transport boundaries remain separate; concrete HTTPS and live-provider
 readiness remain unavailable.
 
+A still stronger entry point now accepts only the exact HTTPS DNS destination
+and reviewed server path already bound to the reviewed anchor's
+repository-owned self-signature proof. It performs the same role-first exact
+leaf `CertificateVerify` verification and retains the destination, complete
+reviewed path, reviewed root selection, anchor self-signature verdict,
+selected transcript, decoded message, derived key, and server signature
+verdict together. This closes substitution between the root whose
+self-signature was verified and the destination-bound path used for handshake
+authentication; the entry point itself neither loads trust roots nor repeats
+anchor verification.
+
+This composition still does not select or enforce revocation, prove ordered
+transcript state, authenticate Finished, protect records, perform TLS or HTTP
+I/O, authorize OAuth transport, or grant network authority. Those revocation,
+state, record, and transport boundaries remain separate; concrete HTTPS and
+live-provider readiness remain unavailable.
+
 A bounded `rsa-pss-sha512` prerequisite now validates one complete recovered
 RFC 8017 EMSA-PSS encoded message for the fixed SHA-512, 64-byte-salt profile.
 It composes the public layout gate and bounded SHA-512 MGF1 primitive, unmasks
