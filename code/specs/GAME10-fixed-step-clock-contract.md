@@ -125,7 +125,10 @@ The standard-library Python validator beside the corpus checks the wire represen
 shape, then computes each expectation independently from this contract. It uses Python integers
 for intermediate arithmetic. The frame model runs bounded ticks up to `max_frame_steps`, then
 accounts for any remaining whole ticks as dropped time. Its reference model operates only on JSON
-inputs and its own arithmetic.
+inputs and its own arithmetic. A durable Rust package test consumes this corpus through the public
+API, dispatches every operation, compares complete successful values and exact error variants, and
+checks that failed stateful advances do not mutate their input. Unknown operations and unconsumed
+cases fail closed.
 
 Include successful vectors so an implementation that always returns an error fails. Include
 rejected configuration and state inputs, validation-precedence cases, exact step-limit behavior,
@@ -138,8 +141,9 @@ stateful adapter.
 ## Evidence boundary
 
 This corpus is package-specific conformance evidence. During review, a temporary Rust harness
-checked every committed vector against the public API. Checked-in language consumers are follow-up
-work.
+checked every committed vector against the public API; the checked-in Rust public-API consumer is
+the first implementation task tracked in `GAME-BACKLOG.md`. This is finite corpus evidence, not a
+formal proof or a claim that the implementation is correct for all possible inputs.
 
 Each of the three checked-in Warrant claims treats any returned `Err` as satisfying the claim. Its
 state invariant covers configuration and accumulator bounds. This contract also specifies the

@@ -207,6 +207,7 @@ var (
 	}
 
 	rngCorpusPaths         = []string{"code/specs/fixtures/rng-v1"}
+	gameClockCorpusPaths   = []string{"code/specs/fixtures/game-clock-v1"}
 	hamurabiCorpusPaths    = []string{"code/specs/fixtures/hamurabi-v1"}
 	lunarLanderCorpusPaths = []string{"code/specs/fixtures/lunar-lander-v1"}
 	warrantGrammarPaths    = []string{
@@ -472,6 +473,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "the shared rng conformance corpus",
 		matches:  isRngCorpus,
 		paths:    rngCorpusPaths,
+	},
+	{
+		name:     "rust/game-clock",
+		language: "rust",
+		inputs:   "the GAME10 fixed-step clock v1 corpus",
+		matches:  isGameClockCorpus,
+		paths:    gameClockCorpusPaths,
 	},
 	{
 		name:     "python/trig",
@@ -1334,6 +1342,12 @@ func isKilnToolchainPinInput(changed string) bool {
 //	code/specs/rng.md                         → false (prose; the corpus pins behaviour)
 func isRngCorpus(changed string) bool {
 	return strings.HasPrefix(changed, "code/specs/fixtures/rng-v1/")
+}
+
+// isGameClockCorpus reports whether the GAME10 package's shared v1 vectors changed.
+// The versioned directory boundary deliberately excludes v10 lookalikes.
+func isGameClockCorpus(changed string) bool {
+	return strings.HasPrefix(changed, "code/specs/fixtures/game-clock-v1/")
 }
 
 // isTrigReferenceCorpus reports whether a changed path is a file of the shared
