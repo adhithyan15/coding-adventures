@@ -115,7 +115,11 @@ def _require_core(spec: Spec) -> None:
 
 
 def value_json(v: object, ty: A.Ty) -> object:
-    """An untagged JSON value of declared type ``ty`` (``ir.core`` types)."""
+    """An untagged JSON value of declared type ``ty`` (``ir.core`` and ``ir.tuple`` types).
+
+    A tuple is a JSON array in component order (section 2.3); a ``Result`` over a tuple is
+    ``{"ok": [..]}``.
+    """
     head = ty.head
     if head == "Bool":
         return bool(v)
@@ -123,6 +127,8 @@ def value_json(v: object, ty: A.Ty) -> object:
         return str(v)
     if head == "Bytes":
         return v.hex()
+    if head == "()":
+        return [value_json(x, t) for x, t in zip(v, ty.args)]
     if head == "Result":
         if v[0] == "ok":
             return {"ok": value_json(v[1], ty.args[0])}
@@ -143,9 +149,11 @@ def example_id(spec: Spec, ex) -> str:
 
 
 def _over_limit(v: object, ty: A.Ty) -> bool:
-    """Is a ``Bytes`` inside ``v`` (itself or under an ``ok``) longer than the section 2.3 limit?"""
+    """Is a ``Bytes`` inside ``v`` (itself, under an ``ok`` or in a tuple) over the section 2.3 limit?"""
     if ty.head == "Bytes":
         return len(v) > MAX_EXAMPLE_BYTES
+    if ty.head == "()":
+        return any(_over_limit(x, t) for x, t in zip(v, ty.args))
     if ty.head == "Result" and v[0] == "ok":
         return _over_limit(v[1], ty.args[0])
     return False
@@ -304,7 +312,12 @@ def _slim_set(plan: SuitePlan, prof: Profile, witnesses: set[int]) -> list[int]:
 
 
 def derive(
-    spec_bytes: bytes, profile_raw: bytes, *, spec_ref: str, generator: dict, work: Work | None = None
+    spec_bytes: bytes,
+    profile_raw: bytes,
+    *,
+    spec_ref: str,
+    generator: dict,
+    work: Work | None = None,
 ) -> Derived:
     """Derive the expected fixture (see the module docstring); raises :class:`OracleError`."""
     spec = lower_document(parse_source(spec_bytes))

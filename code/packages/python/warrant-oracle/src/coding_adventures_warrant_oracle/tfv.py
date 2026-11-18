@@ -27,7 +27,11 @@ def _text(value: str) -> str:
 
 
 def value(v: object, ty: A.Ty) -> str:
-    """One TFV value of Warrant type ``ty`` (``ir.core`` types only)."""
+    """One TFV value of Warrant type ``ty`` (``ir.core`` and ``ir.tuple`` types).
+
+    A tuple is ``L<n> v1 .. vn`` (section 2.5; VER04j 4.9), components in order and nested the same
+    way; a ``Result`` stays the ``M`` form around whatever its payload is.
+    """
     head = ty.head
     if head == "Bool":
         return "T" if v else "F"
@@ -35,6 +39,8 @@ def value(v: object, ty: A.Ty) -> str:
         return f"I{v}"
     if head == "Bytes":
         return "X" + v.hex()
+    if head == "()":
+        return f"L{len(v)} " + " ".join(value(x, t) for x, t in zip(v, ty.args))
     if head == "Result":
         if v[0] == "ok":
             return "M1 " + _text("ok") + " " + value(v[1], ty.args[0])

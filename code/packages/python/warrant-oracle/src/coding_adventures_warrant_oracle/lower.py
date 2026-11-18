@@ -17,18 +17,28 @@ calls, and which IR feature level a construct needs.
 
 Feature levels (VER04r section 4.1)
 -----------------------------------
-The oracle *evaluates* ``ir.core`` only (slice S4), but since slice S10a it *lowers and
-types* the 35 built-ins of ``ir.fixed`` (Appendix A.1).  A model, op admit, claim or example
-that uses one is lowered completely (its IR, its ``requires`` and, through
-:mod:`.ir_eval`, its cost are all available) and is then marked ``unsupported`` with a
-``level`` error naming ``ir.fixed``: **evaluation still refuses** until slice S10c-1.
+The oracle *evaluates* ``ir.core`` and (since slice S10t-1) ``ir.tuple``; since slice S10a it also
+*lowers and types* the 35 built-ins of ``ir.fixed`` (Appendix A.1).  A model, op admit, claim or
+example that uses one of those is lowered completely (its IR, its ``requires`` and, through
+:mod:`.ir_eval`, its cost are all available) and is then marked ``unsupported`` with a ``level``
+error naming ``ir.fixed``: **evaluation still refuses** until slice S10c-1.
 
-Every source construct that belongs to a level the lowerer cannot lower (``ir.tuple``
-tuples and ``match`` on a ``Result``, ``ir.data`` lists, records, variants and ``Option``
-anywhere but the intermediate use of ``ir.fixed``, ``ir.seq`` ...) raises
-``OracleError("level", ..., level=...)``.  The error is *recorded per model and per suite*
-rather than aborting the document, so the oracle can still check every suite whose closure is
-within ``ir.core`` and report, by name, the suites it cannot.  A construct is never skipped.
+``ir.tuple`` (slice S10t-1)
+---------------------------
+Tuple types ``(T1,..,Tn)``, the tuple literal, ``t.i`` / ``e.i`` projection and ``match`` on a
+``Result`` (the six patterns ``ok err err_any tuple bind wild``) are lowered to
+``["tuple", [..]]``, ``["project", e, i]`` and ``["match", s, [[pat, arm], ..]]`` (Appendix A.1) and
+evaluated.  A ``match`` is ``ir.tuple`` exactly when its scrutinee is a ``Result`` and ``ir.data``
+otherwise (section 4.1, D35).  The patterns are checked **before** any arm body is lowered, so the
+corpus errors of A.1 (fall-through, an unreachable arm, a duplicate or shadowing ``bind``, oracle
+code ``corpus``) cannot be hidden by a body that is only recorded as a level error.
+
+Every other source construct that belongs to a level the lowerer cannot lower (``ir.data`` lists,
+records, variants and ``Option`` anywhere but the intermediate use of ``ir.fixed``, ``match`` on
+anything but a ``Result``, ``ir.seq`` ...) raises ``OracleError("level", ..., level=...)``.  The
+error is *recorded per model and per suite* rather than aborting the document, so the oracle can still
+check every suite whose closure is within what it evaluates and report, by name, the suites it
+cannot.  A construct is never skipped.
 
 ``Option<T>`` is an IR-only intermediate (section 16.10 D23, R8)
 ----------------------------------------------------------------
@@ -45,7 +55,9 @@ from dataclasses import dataclass, field
 
 from . import ast as A
 from . import levels as L
+from . import patterns as P
 from .errors import OracleError
+from .irtree import children
 
 # -- types ---------------------------------------------------------------------
 
@@ -319,6 +331,9 @@ def _unify(a: A.Ty, b: A.Ty) -> A.Ty | None:
     if a.head == b.head == "Result" and a.args[1] == b.args[1]:
         inner = _unify(a.args[0], b.args[0])
         return A.Ty("Result", (inner, a.args[1])) if inner is not None else None
+    if a.head == b.head == "()" and len(a.args) == len(b.args):
+        parts = [_unify(x, y) for x, y in zip(a.args, b.args)]
+        return None if any(p is None for p in parts) else A.Ty("()", tuple(parts))
     return None
 
 
@@ -332,6 +347,8 @@ def _assignable(src: A.Ty, dst: A.Ty) -> bool:
         return not dst.args or src.args == dst.args
     if src.head == dst.head == "Result" and src.args[1] == dst.args[1]:
         return _assignable(src.args[0], dst.args[0])
+    if src.head == dst.head == "()" and len(src.args) == len(dst.args):
+        return all(_assignable(x, y) for x, y in zip(src.args, dst.args))
     return False
 
 
@@ -347,6 +364,12 @@ def _needs_context(e) -> bool:
         return _needs_context(e.then) and _needs_context(e.other)
     if isinstance(e, A.Binary) and e.op in ("+", "-", "*"):
         return _needs_context(e.left) and _needs_context(e.right)
+    if isinstance(e, A.TupleLit):
+        # A tuple takes the type of its components; one whose component has no type of its own
+        # (a bare literal, ``Ok(..)``) is typed from its sibling or its context.
+        return any(_needs_context(item) for item in e.items)
+    if isinstance(e, A.Match):
+        return all(_needs_context(body) for _, body in e.arms)
     return False
 
 
@@ -433,7 +456,7 @@ class _Lowerer:
                 self.check_type(pty)
             self.check_type(ret)
             ir, ty = self.expr(decl.body, ret)
-            if not _assignable(ty, ret):
+            if not self._flows(ir, ty, ret):
                 raise self.err("a model body does not have its declared type")
             model.ir = ir
             model.requires, model.unsupported = self.seal(ir)
@@ -653,7 +676,7 @@ class _Lowerer:
             head = e.parts[0]
             if head in self.scope:
                 if self.scope[head].head == "()":
-                    raise self.level(L.TUPLE, "a tuple projection needs ir.tuple")
+                    return self.project(["var", head], self.scope[head], e.parts[1:])
                 raise self.level("ir.data", "projection needs ir.data")
             raise self.err("a qualified name is only valid inside Err(...)")
         if isinstance(e, A.Call):
@@ -680,20 +703,174 @@ class _Lowerer:
             if wt is not None and wt == wo:
                 self._note_width(node, wt)
             return node, common
-        if isinstance(e, (A.TupleLit, A.Proj)):
-            raise self.level(L.TUPLE, "tuples and projections need ir.tuple")
+        if isinstance(e, A.TupleLit):
+            return self.tuple_literal(e, expected)
+        if isinstance(e, A.Proj):
+            base_ir, base_ty = self.expr(e.base, None)
+            if base_ty.head == "()":
+                return self.project(base_ir, base_ty, (e.field,))
+            if base_ty.head in spec.records or base_ty.head in spec.variants:
+                raise self.level(L.DATA, "projection needs ir.data")
+            raise self.err("a projection needs a tuple")
         if isinstance(e, A.ListLit):
             raise self.level(L.DATA, "lists need ir.data")
         if isinstance(e, A.Match):
-            # ``match`` is ir.tuple exactly when its scrutinee is a Result and ir.data otherwise
-            # (section 4.1, D35), so the scrutinee is typed first.  Neither is lowered yet.
-            _, s_ty = self.expr(e.scrutinee, None)
-            if s_ty.head == "Result":
-                raise self.level(L.TUPLE, "match on a Result needs ir.tuple")
-            raise self.level(L.DATA, "match needs ir.data")
+            return self.match(e, expected)
         if isinstance(e, A.Quant):
             raise self.err("a quantifier is only allowed at the head of a claim")
         raise self.err("unsupported expression")
+
+    # -- ir.tuple: tuples, projection and match on a Result (slice S10t-1) ----------------------
+
+    def tuple_literal(self, e: A.TupleLit, expected: A.Ty | None) -> tuple[object, A.Ty]:
+        """``(a, b, ..)`` -> ``["tuple", [a, b, ..]]`` of type ``(Ta,Tb,..)`` (A.1, R2).
+
+        A component is typed with the matching component of ``expected`` when that is a tuple of
+        the same arity (so ``(low7(b0), 1)`` in a ``Result<(U64,Nat),E>`` context has a ``Nat``
+        literal), and on its own otherwise.  Two to eight components: the parser has already
+        refused nine, and a one-component parenthesis is not a tuple.
+        """
+        n = len(e.items)
+        if not 2 <= n <= P.MAX_TUPLE_ARITY:
+            raise self.err("a tuple has 2 to 8 components")
+        hints = (
+            expected.args
+            if expected is not None and expected.head == "()" and len(expected.args) == n
+            else (None,) * n
+        )
+        lowered = [self.expr(item, hint) for item, hint in zip(e.items, hints)]
+        return ["tuple", [ir for ir, _ in lowered]], A.Ty("()", tuple(ty for _, ty in lowered))
+
+    def project(self, ir: object, ty: A.Ty, parts: tuple) -> tuple[object, A.Ty]:
+        """Chain ``["project", e, i]`` for each index in ``parts`` (``t.0.1``); ``i`` is a JSON integer."""
+        for part in parts:
+            index = _tuple_index(part)
+            if ty.head != "()" or index is None or index >= len(ty.args):
+                raise self.err("a tuple projection is a component index of a tuple")
+            ir, ty = ["project", ir, index], ty.args[index]
+            self._type_levels |= L.type_levels(ty, self._data_names)
+        return ir, ty
+
+    def match(self, e: A.Match, expected: A.Ty | None) -> tuple[object, A.Ty]:
+        """``match r with Ok(..) -> .. | Err(..) -> ..`` on a ``Result`` (A.1; ``ir.tuple``, D35).
+
+        ``match`` is ``ir.tuple`` exactly when its scrutinee is a ``Result`` and ``ir.data`` for any
+        other type (section 4.1), so the scrutinee is typed first.  The patterns are lowered and the
+        corpus-error rules (fall-through, an unreachable arm, a duplicate or shadowing ``bind``) are
+        decided *before* any arm body is lowered, so such a document is refused even if a body would
+        have been recorded as a level error.  Arm bodies are typed with the pattern's binders in scope
+        (an arm that needs a context takes the first self-typed arm's type, as ``if`` does); the arms
+        must have one type.
+        """
+        s_ir, s_ty = self.expr(e.scrutinee, None)
+        if s_ty.head != "Result":
+            raise self.level(L.DATA, "match needs ir.data")
+        patterns: list = []
+        bound: list = []
+        for pattern, _ in e.arms:
+            binds: list = []
+            patterns.append(self.pattern(pattern, s_ty, binds, set()))
+            bound.append(binds)
+        P.check_arms(patterns, s_ty, self.spec.errors)
+        arms = e.arms
+        bodies: list = [None] * len(arms)
+        types: list = [None] * len(arms)
+        hint = expected
+        order = [i for i, (_, b) in enumerate(arms) if not _needs_context(b)]
+        order += [i for i, (_, b) in enumerate(arms) if _needs_context(b)]
+        for i in order:
+            body = arms[i][1]
+            saved, self.scope = self.scope, dict(self.scope)
+            try:
+                for name, ty in bound[i]:
+                    if ty is not None:
+                        self.scope[name] = ty
+                    elif _mentions(body, name):
+                        raise self.level(L.DATA, "an error value bound by a pattern has no IR form")
+                bodies[i], types[i] = self.expr(body, hint)
+            finally:
+                self.scope = saved
+            if hint is None:
+                hint = types[i]
+        common = types[0]
+        for ty in types[1:]:
+            common = _unify(common, ty) if common is not None else None
+        if common is None:
+            raise self.err("the arms of a match have no common type")
+        node = ["match", s_ir, [[p, b] for p, b in zip(patterns, bodies)]]
+        return node, common
+
+    def pattern(
+        self, p: A.Pattern, ty: A.Ty, binds: list, seen: set, depth: int = 1
+    ) -> list:
+        """Lower one source pattern against the static type ``ty`` to its IR pattern (A.1).
+
+        ``Ok(p)`` is ``["ok", p]``; ``Err(E.CASE)`` is ``["err", "CASE"]``; ``Err(_)`` and ``Err(e)``
+        are ``["err_any"]`` (an error value has no IR form, so ``e`` may not be *used*; it is still
+        declared, for the duplicate and shadowing rules); a tuple pattern is ``["tuple", [..]]``; a
+        name is ``["bind", name]`` and ``_`` is ``["wild"]``.  A literal pattern (``true``) is not
+        one of the six and is the level ``ir.data``.
+        """
+        if depth > P.MAX_PATTERN_DEPTH:
+            raise OracleError("limit", "pattern nesting exceeds 8 levels")
+        kind = p.kind
+        if kind == "wild":
+            return ["wild"]
+        if kind == "bool":
+            raise self.level(L.DATA, "a literal pattern needs ir.data")
+        if kind == "bind":
+            name = p.name[0]
+            self._reject_constructor_name(name)
+            self._declare(name, ty, binds, seen)
+            return ["bind", name]
+        if kind == "tuple":
+            if ty.head != "()" or len(ty.args) != len(p.items):
+                raise self.err("a tuple pattern does not match the type of its value")
+            return [
+                "tuple",
+                [self.pattern(item, t, binds, seen, depth + 1) for item, t in zip(p.items, ty.args)],
+            ]
+        parts = p.name
+        if parts == ("Ok",):
+            if ty.head != "Result" or len(p.items) != 1:
+                raise self.err("Ok takes one pattern and needs a Result")
+            return ["ok", self.pattern(p.items[0], ty.args[0], binds, seen, depth + 1)]
+        if parts == ("Err",):
+            if ty.head != "Result" or len(p.items) != 1:
+                raise self.err("Err takes one pattern and needs a Result")
+            inner = p.items[0]
+            if inner.kind == "wild":
+                return ["err_any"]
+            if inner.kind == "bind":
+                self._reject_constructor_name(inner.name[0])
+                self._declare(inner.name[0], None, binds, seen)
+                return ["err_any"]
+            if inner.kind == "ctor" and len(inner.name) == 2 and not inner.items:
+                err_name, case = inner.name
+                if err_name != ty.args[1].head or case not in self.spec.errors.get(err_name, ()):
+                    raise self.err("an error case of the wrong error type")
+                return ["err", case]
+            raise self.err("an Err pattern is an error case, a name or _")
+        if len(parts) == 1 and (parts[0] in ("Some", "None") or _is_ctor(self.spec, parts[0])):
+            raise self.level(L.DATA, "constructor patterns need ir.data")
+        raise self.err("an unknown constructor in a pattern")
+
+    def _reject_constructor_name(self, name: str) -> None:
+        if name in ("Some", "None") or _is_ctor(self.spec, name):
+            raise self.level(L.DATA, "constructor patterns need ir.data")
+        if name in ("Ok", "Err"):
+            raise self.err("Ok and Err are constructors, not names")
+
+    def _declare(self, name: str, ty: A.Ty | None, binds: list, seen: set) -> None:
+        """Declare a pattern binder: a duplicate or a shadowing name is a corpus error (A.1, R2)."""
+        if name in seen:
+            raise OracleError("corpus", "the same bind name twice in one pattern")
+        if name in self.scope or name == "result":
+            raise OracleError(
+                "corpus", "a bind name shadows a binder, a parameter, result or an outer bind"
+            )
+        seen.add(name)
+        binds.append((name, ty))
 
     def int_literal(self, e: A.IntLit, expected: A.Ty | None) -> tuple[object, A.Ty]:
         if e.suffix is None:
@@ -823,7 +1000,7 @@ class _Lowerer:
             if expected is None or expected.head != "Result":
                 raise self.err("Ok needs a Result context")
             ir, ty = self.expr(e.args[0], expected.args[0])
-            if not _assignable(ty, expected.args[0]):
+            if not self._flows(ir, ty, expected.args[0]):
                 raise self.err("an Ok payload does not have the Result's value type")
             return ["ok", ir], A.Ty("Result", (ty, expected.args[1]))
         if name == "Err":
@@ -972,6 +1149,21 @@ class _Lowerer:
             raise self.err("the default of unwrap_or does not have the Option's type")
         return [name, o_ir, d_ir], inner
 
+    def _flows(self, ir: object, ty: A.Ty, want: A.Ty) -> bool:
+        """Can the lowered expression ``ir`` of type ``ty`` flow to ``want``?
+
+        :func:`_assignable`, plus the static-width rule of VER04r A.1: an expression whose *type*
+        forgot its width (a bytes literal, a ``concat`` of sized operands, an ``if`` of equal widths)
+        but whose recorded static width is ``N`` flows to ``Bytes<N>``, as in the grammar checker.
+        A tuple or ``Result`` is checked component by component only where the types already agree
+        structurally; widths are looked up for a ``Bytes`` expression itself.
+        """
+        if _assignable(ty, want):
+            return True
+        if ty.head == want.head == "Bytes" and want.args and isinstance(want.args[0], int):
+            return self._static_width(ir, ty) == want.args[0]
+        return False
+
     def _note_width(self, ir: object, width: int) -> None:
         self._widths[id(ir)] = (ir, width)
 
@@ -1014,7 +1206,7 @@ class _Lowerer:
         for arg, (_, pty) in zip(e.args, params):
             want = _substitute(pty, statics)
             ir, ty = self.expr(arg, want)
-            if not _assignable(ty, want):
+            if not self._flows(ir, ty, want):
                 raise self.err("an argument does not match its parameter type")
             out.append(ir)
         return out
@@ -1050,6 +1242,29 @@ class _Lowerer:
         if widths:
             node.append(widths)
         return node, _substitute(op.ret, statics)
+
+
+def _tuple_index(text: str) -> int | None:
+    """A projection index: canonical decimal digits (no sign, no leading zero), else ``None``."""
+    if text.isascii() and text.isdigit() and (text == "0" or text[0] != "0"):
+        return int(text)
+    return None
+
+
+def _mentions(node: object, name: str) -> bool:
+    """Does a source tree name ``name`` (as a variable or a call head)?"""
+    stack = [node]
+    while stack:
+        item = stack.pop()
+        if isinstance(item, A.Name) and item.parts[0] == name:
+            return True
+        if isinstance(item, A.Call) and item.name[0] == name:
+            return True
+        if isinstance(item, tuple | list):
+            stack.extend(item)
+        elif hasattr(item, "__slots__") and not isinstance(item, str):
+            stack.extend(getattr(item, f, None) for f in item.__slots__)
+    return False
 
 
 def _range_inside(source: str, target: str) -> bool:
@@ -1091,20 +1306,14 @@ def _substitute(ty: A.Ty, statics: dict) -> A.Ty:
 
 
 def walk(ir):
-    """Yield every IR node of a tree (pre-order), looking inside argument lists."""
+    """Yield every IR node of a tree (pre-order); never a ``match`` pattern (:func:`.irtree.children`)."""
     stack = [ir]
     while stack:
         node = stack.pop()
         if not (isinstance(node, list) and node and isinstance(node[0], str)):
             continue
         yield node
-        tag = node[0]
-        if tag in ("lit", "var", "err"):
-            continue
-        if tag in ("subject_op", "model_call"):
-            stack.extend(reversed(node[2]))
-            continue
-        stack.extend(reversed(node[1:]))
+        stack.extend(reversed(children(node)))
 
 
 def _has_subject(ir) -> bool:

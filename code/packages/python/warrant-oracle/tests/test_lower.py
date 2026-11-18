@@ -172,10 +172,14 @@ def test_claim_without_a_quantifier_has_no_binders():
 CENSUS = {
     "ct-compare": {"ir.core": 9},
     "gf256": {"ir.core": 38},
-    "wasm-leb128": {"ir.core": 10, "ir.tuple": 24, "ir.fixed": 8},
-    "logic-gates": {"ir.core": 28, "ir.data": 3, "ir.tuple": 2, "ir.fixed": 55},
+    # S10t-1: ``ir.tuple`` is lowered and evaluated, so no suite is *blocked* on it any more: the
+    # 24 + 2 + 4 tuple-blocked suites of S10a are core (evaluable) or, when they also use an
+    # ``ir.fixed`` built-in, ``ir.fixed``.  (Was: wasm-leb128 10/24/8, logic-gates 28/3/2/55,
+    # arithmetic 5/45/4/9 for core/tuple-or-data/fixed.)
+    "wasm-leb128": {"ir.core": 18, "ir.fixed": 24},
+    "logic-gates": {"ir.core": 28, "ir.data": 3, "ir.fixed": 57},
     "lzw": {"ir.core": 4, "ir.fixed": 17},
-    "arithmetic": {"ir.core": 5, "ir.data": 45, "ir.tuple": 4, "ir.fixed": 9},
+    "arithmetic": {"ir.core": 7, "ir.data": 45, "ir.fixed": 11},
     "x25519": {"ir.core": 6, "ir.fixed": 2},
 }
 
@@ -201,7 +205,6 @@ def test_unsupported_models_are_recorded_not_fatal():
     [
         ("wrap<U8>(a) == a", "ir.fixed"),
         ("bit_and(a, a) == a", "ir.fixed"),
-        ("(a, a) == (a, a)", "ir.tuple"),
         ("[a] == [a]", "ir.data"),
         ("unwrap_or(div(a, a), 0u8) == a", "ir.fixed"),
         ("div(a, a) == div(a, a)", "ir.data"),
@@ -330,6 +333,8 @@ def test_static_arguments_on_a_plain_op_are_a_parse_level_error():
     assert err.value.code == "parse"
 
 
-def test_projection_of_a_binder_is_a_level_not_a_type_error():
+def test_projection_of_a_tuple_binder_lowers_since_s10t1():
     m = model_ir("a.0 == 1", params="a: (Nat, Nat)", ret="Bool")
-    assert m.unsupported.level == "ir.tuple"
+    assert m.unsupported is None
+    assert m.ir == ["eq", ["project", ["var", "a"], 0], ["lit", {"type": "Nat", "value": "1"}]]
+    assert m.requires == ("ir.core", "ir.tuple")

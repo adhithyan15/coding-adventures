@@ -109,7 +109,7 @@ def emit(
         "chunk_size": chunk_size,
         "budget": budget,
         "max_ir_cost": max_ir_cost,
-        "levels_implemented": ["ir.core"],
+        "levels_implemented": ["ir.core", "ir.tuple"],
         "suites": rows,
         "summary": _summary(rows),
     }
