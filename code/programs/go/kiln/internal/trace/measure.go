@@ -90,11 +90,17 @@ const (
 func bestPass1(data []byte, helperRoot bool, lim Limits, repeats int) time.Duration {
 	readRecordsAt(bytes.NewReader(data), lim, helperRoot, true) // warm-up: caches, page faults
 	if len(data) <= smallTrace {
-		// A small trace's pass makes under a megabyte of garbage, so a collection
-		// during it is not the reader's cost: it is a stop-the-world wait, which on
-		// a busy machine can take tens of milliseconds.  Switch the collector off
-		// for the (bounded: at most maxPasses passes) measurement, after one
-		// collection to start from a clean heap.  A large trace keeps the
+		// A small trace's pass makes garbage in proportion to its size (the grammar
+		// path allocates about 46 bytes per input byte: up to about 6 MB for a
+		// 128 KB trace), so a collection during it is not the reader's cost: it is
+		// a stop-the-world wait, which on a busy machine can take tens of
+		// milliseconds.  Switch the collector off for the (bounded: at most
+		// maxPasses passes) measurement, after one collection to start from a
+		// clean heap.  The bound on the heap that piles up is therefore about
+		// maxPasses x 6 MB = 1.2 GB in the worst case (BestPass1Calibrated adds the
+		// reference kernel's roughly 28 bytes per byte on top, over a 64 KB slice:
+		// a few MB per iteration); the usual 250 ms span ends the loop after a few
+		// dozen passes, a few hundred MB.  A large trace keeps the
 		// collector on: its passes are long enough that a pause is a small share,
 		// and its garbage is too big to pile up.
 		runtime.GC()
@@ -117,42 +123,42 @@ func bestPass1(data []byte, helperRoot bool, lim Limits, repeats int) time.Durat
 }
 
 // ---------------------------------------------------------------------------
-// The reference kernels: rulers for the host (gate G1, KILN04 section 4.9)
+// The reference kernel: a ruler for the host (gate G1, KILN04 section 4.9)
 // ---------------------------------------------------------------------------
 //
 // GitHub's runner fleet varies about 1.75x in CPU speed, so a raw MB/s floor on
 // the grammar path gives false failures on the slow hosts.  To tell "the reader
 // got slower" from "this host is slower", every calibrated measurement also times
-// two small, fixed kernels, and the test rescales the reader's rate by them.
+// a small, fixed, PARSER-SHAPED kernel (refKernel), and the test rescales the
+// reader's rate by it: norm_mb_s = best_mb_s * refNominalMBs / ref_mb_s.
 //
-// Why two?  They are CANDIDATES.  Kernel A is a pure clock-frequency meter: a
-// serial chain of dependent multiplies that knows nothing about branch
-// prediction, out-of-order width, caches or the allocator, which are what drive
-// the parser.  Kernel B is parser-shaped: it splits lines, tokenizes, allocates,
-// dispatches through a switch, hashes strings into a map and keeps lines live.
-// The calibration (KILN04 section 4.9) logs k_a and k_b on every leg; the one
-// whose k varies LESS across hosts is frozen as the ruler and the other is
-// deleted.
+// The kernel is deliberately not a pure clock meter (a first candidate, a serial
+// multiply chain, was rejected at a 1.39x cross-host spread): it does the kinds
+// of work the parser does, so it slows down on a host in the same way the parser
+// does.  It splits the input on newlines; per line it makes a token slice of
+// capacity 4 and appends heap token nodes (so the slice grows and the allocator
+// runs); it finds token boundaries with a byte-class table and dispatches with a
+// `switch` on the class (different work per arm); it copies each token to a
+// string and looks it up in a small prefilled map; it keeps the last 64 lines
+// live in a ring; and it hashes once per TOKEN, never per byte, so there is no
+// serial multiply chain.  It is NOT allocation-free: it allocates about 28 bytes
+// per input byte (the grammar path about 46).
 //
-// *** FROZEN.  Both kernels, their tables, their pass counts (refARepeats,
-// *** refBRepeats) and the nominal constant calibrated to them (refNominalMBs in
-// *** sandbox_tracesize_linux_amd64_test.go) must never change: edit one and the
-// *** ruler moves silently, making the nominal constant wrong.  If a kernel must
-// *** change, recalibrate (KILN04 section 4.9) in the same PR.
+// *** FROZEN.  The kernel, its tables, its dictionary, its pass count
+// *** (refRepeats) and the nominal constant calibrated to it (refNominalMBs in
+// *** sandbox_tracesize_linux_amd64_test.go, 72.0) must never change: edit any of
+// *** it and the ruler moves silently, making the nominal constant wrong.  If the
+// *** kernel must change, recalibrate (KILN04 section 4.9) in the same PR.
 //
-// Both are allocation-free apart from what B deliberately allocates, and both
-// write their result to a package-level sink so the compiler cannot delete them.
+// The result goes to package-level sinks so the compiler cannot delete the work.
 const (
-	refStates   = 8
-	refClasses  = 8
-	refARepeats = 8 // kernel A passes per timed sample: FROZEN
-	refBRepeats = 2 // kernel B passes per timed sample: FROZEN
-	fnvOffset   = 14695981039346656037
-	fnvPrime    = 1099511628211
+	refRepeats = 2 // kernel passes per timed sample: FROZEN
+	fnvOffset  = 14695981039346656037
+	fnvPrime   = 1099511628211
 )
 
-// Byte classes shared by both kernels: 0 other, 1 identifier, 2 digit, 3 quote,
-// 4 escape, 5 bracket, 6 comma, 7 space.
+// Byte classes: 0 other, 1 identifier, 2 digit, 3 quote, 4 escape, 5 bracket,
+// 6 comma, 7 space.
 const (
 	clsOther = iota
 	clsIdent
@@ -187,66 +193,16 @@ var refClass = func() (t [256]uint8) {
 	return
 }()
 
-// refSink keeps the kernels' results alive: a value stored in a package-level
-// variable cannot be proved dead.  refSinkS and refRing do the same for the
-// strings and line slices kernel B builds.
+// refSink and refSinkS keep the kernel's results alive: a value stored in a
+// package-level variable cannot be proved dead.
 var (
 	refSink  uint64
 	refSinkS string
 )
 
-// ---- Kernel A: the clock-frequency meter ----------------------------------
-
-// refNext[state][class] is kernel A's transition table.  The numbers are
-// arbitrary but fixed.
-var refNext = [refStates][refClasses]uint8{
-	{0, 1, 2, 3, 0, 4, 5, 7},
-	{1, 1, 1, 3, 6, 4, 7, 7},
-	{2, 1, 2, 3, 0, 4, 7, 7},
-	{3, 3, 3, 7, 6, 3, 3, 3},
-	{4, 1, 2, 3, 0, 4, 5, 0},
-	{5, 1, 2, 3, 0, 4, 5, 7},
-	{3, 3, 3, 3, 3, 3, 3, 3},
-	{0, 1, 2, 3, 4, 5, 6, 0},
-}
-
-// refKernelA is a tokenizer-shaped state machine with a serial FNV-1a hash per
-// byte (state 7 is the "accept" state and takes a data-dependent branch).  It
-// allocates nothing.  Its cost is dominated by the dependent multiplies, so it
-// measures clock speed and multiplier latency more than anything else.
-func refKernelA(data []byte) uint64 {
-	h := uint64(fnvOffset)
-	state := uint8(0)
-	for _, b := range data {
-		state = refNext[state&(refStates-1)][refClass[b]&(refClasses-1)]
-		if state == 7 {
-			h ^= uint64(b) << 8
-			h *= fnvPrime
-		}
-		h ^= uint64(state)
-		h *= fnvPrime
-		h ^= uint64(b)
-		h *= fnvPrime
-	}
-	return h
-}
-
-func refSampleA(data []byte) time.Duration {
-	t0 := time.Now()
-	var h uint64
-	for i := 0; i < refARepeats; i++ {
-		h ^= refKernelA(data)
-	}
-	d := time.Since(t0)
-	refSink ^= h
-	return d
-}
-
-// ---- Kernel B: the parser-shaped candidate --------------------------------
-
-// refTok is one token of kernel B, a heap node like the parser's records: its
+// refTok is one token of the kernel, a heap node like the parser's records: its
 // kind (a byte class, or 8 for a quoted string), byte range, the token's text
-// copied to the heap, and a numeric value.
+// copied to the heap, and numeric values.
 type refTok struct {
 	kind       uint8
 	start, end int32
@@ -256,7 +212,7 @@ type refTok struct {
 	extra      uint64
 }
 
-// refLine is what kernel B keeps live per line: the token pointers (grown by
+// refLine is what the kernel keeps live per line: the token pointers (grown by
 // append, so it allocates) and the last identifier.
 type refLine struct {
 	toks []*refTok
@@ -281,14 +237,9 @@ var refDict = func() map[string]int {
 	return m
 }()
 
-// refKernelB splits data on '\n'; per line it finds token boundaries with the
-// class table, dispatches on the token kind with a switch (different work per
-// arm), looks identifiers up in refDict after copying them to a heap string,
-// and appends every token to a slice that starts at capacity 4 (so most lines
-// grow it).  It hashes once per TOKEN, never per byte, so it has no serial
-// multiply chain; its time is spent in branches, table loads, the allocator and
-// the map, like the parser's.
-func refKernelB(data []byte) uint64 {
+// refKernel is the frozen reference workload: one pass over data (see the
+// section comment for what it does and why).
+func refKernel(data []byte) uint64 {
 	h := uint64(fnvOffset)
 	depth, commas := 0, 0
 	lineNo := 0
@@ -356,11 +307,12 @@ func refKernelB(data []byte) uint64 {
 	return h ^ uint64(depth) ^ uint64(commas)
 }
 
-func refSampleB(data []byte) time.Duration {
+// refSample is one timed reference sample: refRepeats passes of the kernel.
+func refSample(data []byte) time.Duration {
 	t0 := time.Now()
 	var h uint64
-	for i := 0; i < refBRepeats; i++ {
-		h ^= refKernelB(data)
+	for i := 0; i < refRepeats; i++ {
+		h ^= refKernel(data)
 	}
 	d := time.Since(t0)
 	refSink ^= h
@@ -368,54 +320,42 @@ func refSampleB(data []byte) time.Duration {
 	return d
 }
 
-// RefBytes is how many bytes one reference sample processes for data under
-// kernel A and under kernel B: divide by the best reference time to get the
-// host's reference rate.
-func RefBytes(data []byte) (a, b int) { return refARepeats * len(data), refBRepeats * len(data) }
+// RefBytes is how many bytes one reference sample processes for data: divide it
+// by the best reference time to get the host's reference rate (ref_mb_s).
+func RefBytes(data []byte) int { return refRepeats * len(data) }
 
-// Calibrated is what BestPass1Calibrated measured: the minimum time of each of
-// the grammar pass, reference sample A and reference sample B, and the refusal
-// of the pass ("" when it read every line).
-type Calibrated struct {
-	Best, RefA, RefB time.Duration
-	Refusal          string
-}
-
-// BestPass1Calibrated is BestPass1 plus the host rulers.  Each iteration of the
+// BestPass1Calibrated is BestPass1 plus the host ruler.  Each iteration of the
 // usual loop (at least repeats iterations spanning at least 250 ms, at most 200,
-// collector off and restored for a small trace) times one sample of kernel A,
-// one of kernel B and one grammar pass, in that order, so all three see the same
-// stretches of host noise; the minimum of each is kept (noise only adds time).
-// The untimed refusal-check pass doubles as the grammar warm-up; each kernel has
-// one untimed warm-up sample.  CI/test use only (see BestPass1).
-func BestPass1Calibrated(data []byte, helperRoot bool, repeats int) Calibrated {
+// collector off and restored for a small trace) times one reference sample and
+// then one grammar pass, so both see the same stretches of host noise; the
+// minimum of each is kept (noise only adds time).  The untimed refusal-check
+// pass doubles as the grammar warm-up; the kernel has one untimed warm-up
+// sample.  It returns the best grammar pass time, the best reference sample
+// time, and the refusal of the pass ("" when it read every line).  CI/test use
+// only (see BestPass1).
+func BestPass1Calibrated(data []byte, helperRoot bool, repeats int) (best, refBest time.Duration, refusal string) {
 	lim := DefaultLimits()
-	var r Calibrated
 	_, _, e, _ := readRecordsAt(bytes.NewReader(data), lim, helperRoot, true) // refusal check and warm-up
 	if e != nil {
-		r.Refusal = e.Reason
+		refusal = e.Reason
 	}
-	refSampleA(data)
-	refSampleB(data)
+	refSample(data)
 	if len(data) <= smallTrace {
 		runtime.GC()
 		defer debug.SetGCPercent(debug.SetGCPercent(-1))
 	}
 	start := time.Now()
 	for i := 0; i < repeats || (time.Since(start) < minSpan && i < maxPasses); i++ {
-		if d := refSampleA(data); i == 0 || d < r.RefA {
-			r.RefA = d
-		}
-		if d := refSampleB(data); i == 0 || d < r.RefB {
-			r.RefB = d
+		if d := refSample(data); i == 0 || d < refBest {
+			refBest = d
 		}
 		t0 := time.Now()
 		readRecordsAt(bytes.NewReader(data), lim, helperRoot, true)
-		if d := time.Since(t0); i == 0 || d < r.Best {
-			r.Best = d
+		if d := time.Since(t0); i == 0 || d < best {
+			best = d
 		}
 	}
-	return r
+	return best, refBest, refusal
 }
 
 func measureData(data []byte, helperRoot bool, lim Limits) Measurement {

@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"fmt"
 	"os"
-	"strings"
 	"testing"
 	"time"
 
@@ -25,10 +24,10 @@ import (
 //     deterministic synthetic slice only.  GitHub's runner fleet varies about
 //     1.75x in CPU speed (the slice read 12.3 to 21.6 MB/s across ten legs), so a
 //     raw 14 gives false failures on slow hosts.  The slice's measurement also
-//     times a frozen reference kernel (trace.refKernelA or refKernelB, whichever calibration keeps) and the reader's rate is
-//     rescaled to the nominal host:
+//     times a frozen, parser-shaped reference kernel (trace.refKernel) in the
+//     same loop, and the reader's rate is rescaled to the nominal host:
 //
-//     norm_mb_s = best_mb_s * refNominalMBs / ref_mb_s   (logged once calibrated)
+//     norm_mb_s = best_mb_s * refNominalMBs / ref_mb_s
 //
 //     "Would this reader clear 14 MB/s on the nominal host?"  A slower host slows
 //     both numbers alike and cancels out; a slower READER only lowers best_mb_s.
@@ -66,26 +65,17 @@ const (
 	gateAbsMinMBs = 8.0
 	// gateNormMinMBs: the host-normalised capability floor, synthetic slice only.
 	gateNormMinMBs = 14.0
-	// refNominalMBs is the reference kernel's rate on the NOMINAL host (the
-	// fast-group runner, where the slice reads 19.5 MB/s).  PLACEHOLDER: it is
-	// calibrated from CI (procedure: KILN04 section 4.9), and until
-	// refNominalCalibrated is true the normalised check is REPORT-ONLY (logged as
-	// norm_mb_s, calibrated=0, never failing).  Recalibrate only on a Go toolchain
-	// bump (or if the frozen kernel in internal/trace/measure.go ever changes).
-	refNominalMBs = 100.0
-	// refNominalCalibrated flips to true in the PR that records the measured
-	// refNominalMBs; it is what turns the normalised check from a log line into a
-	// gate (here and, through calibrated=1, in assert_sandbox_tests.py).
-	refNominalCalibrated = false
-	// refRulerB selects which frozen kernel norm_mb_s uses.  The calibrating
-	// commit sets it to the kernel whose cross-leg k varied less and deletes the
-	// other kernel (KILN04 section 4.9).
-	refRulerB = false
-	// calNominalSliceMBs is the nominal host's slice rate (the fast-group median),
-	// the "19.5" in k = ref_mb_s * 19.5 / best_mb_s.  calRounds is how many full
-	// calibrated measurements the synthetic test makes (each logs its own k).
-	calNominalSliceMBs = 19.5
-	calRounds          = 3
+	// refNominalMBs is the reference kernel's rate on the NOMINAL host: the
+	// median over the eight calibration legs of k = ref_mb_s * 19.5 / best_mb_s
+	// (71.85, rounded to 72.0; the derivation and the legs are in KILN04 section
+	// 4.9).  Recalibrate (a new median over at least six legs) when the Go
+	// toolchain changes, or when a new CPU model shows norm below 16.8 on a PR
+	// that does not touch the parser; never add a per-CPU table.
+	refNominalMBs = 72.0
+	// refNominalCalibrated is true: the normalised check FAILS the synthetic test
+	// below 14, and the slice line says calibrated=1 (which
+	// assert_sandbox_tests.py now requires).
+	refNominalCalibrated = true
 
 	gateMinBytes = 32 << 10
 	// gateMaxBytes: above this a trace is census only (gated=0).  Best-of-N
@@ -212,74 +202,38 @@ func TestSandboxTraceGateSynthetic(t *testing.T) {
 	// The 4 MiB census: its own line, never gated (see above).
 	t.Logf("PROBE: trace synthetic-4mib-census bytes=%d lines=%d best_mb_s=%.1f gated=0 repeats=%d",
 		len(whole), bytes.Count(whole, []byte{'\n'}), float64(len(whole))/wholeBest.Seconds()/1e6, gateRepeats)
-	// Three calibration rounds (calRounds): each is a full calibrated measurement
-	// (best-of-7 of the grammar pass and of both reference kernels).  Every round's
-	// k_a and k_b is logged (k_a_rounds=, k_b_rounds=) so the calibration can see
-	// the within-leg spread; the figures the gate uses are the minimum times over
-	// all the rounds (noise only adds time).
-	//
-	// k = ref_mb_s * calNominalSliceMBs / best_mb_s is "the reference rate this
-	// host would show if the slice read at the nominal 19.5 MB/s here".  If a
-	// kernel tracks the reader across hosts, its k is the same on every host.
-	var best, refA, refB time.Duration
-	var kaRounds, kbRounds []string
+	// One interleaved calibrated measurement: the best-of-7 grammar pass and the
+	// best-of-7 reference sample come from the same loop, so they see the same
+	// host noise.
+	best, refBest, refusal := trace.BestPass1Calibrated(slice, true, gateRepeats)
+	if refusal != "" {
+		t.Fatalf("pass 1 refused the repeated fixture slice: %s", refusal)
+	}
 	rate := func(n int, d time.Duration) float64 {
 		if d <= 0 {
 			return 0
 		}
 		return float64(n) / d.Seconds() / 1e6
 	}
-	aBytes, bBytes := trace.RefBytes(slice)
-	for r := 0; r < calRounds; r++ {
-		c := trace.BestPass1Calibrated(slice, true, gateRepeats)
-		if c.Refusal != "" {
-			t.Fatalf("pass 1 refused the repeated fixture slice: %s", c.Refusal)
-		}
-		mbR := rate(len(slice), c.Best)
-		kaRounds = append(kaRounds, fmt.Sprintf("%.1f", rate(aBytes, c.RefA)*calNominalSliceMBs/mbR))
-		kbRounds = append(kbRounds, fmt.Sprintf("%.1f", rate(bBytes, c.RefB)*calNominalSliceMBs/mbR))
-		if r == 0 || c.Best < best {
-			best = c.Best
-		}
-		if r == 0 || c.RefA < refA {
-			refA = c.RefA
-		}
-		if r == 0 || c.RefB < refB {
-			refB = c.RefB
-		}
-	}
-	mb, refAMB, refBMB := rate(len(slice), best), rate(aBytes, refA), rate(bBytes, refB)
-	kA, kB := refAMB*calNominalSliceMBs/mb, refBMB*calNominalSliceMBs/mb
+	mb, refMB := rate(len(slice), best), rate(trace.RefBytes(slice), refBest)
+	norm := mb * refNominalMBs / refMB
 	// A zero or non-finite value (a zero time) fails everywhere: it is not a
 	// measurement.
-	for _, v := range []float64{mb, refAMB, refBMB, kA, kB} {
+	for _, v := range []float64{mb, refMB, norm} {
 		if !finite(v) || v <= 0 {
-			t.Fatalf("synthetic-slice: not a measurement: best %v (%.1f MB/s), kernel A %v (%.1f MB/s), kernel B %v (%.1f MB/s)", best, mb, refA, refAMB, refB, refBMB)
+			t.Fatalf("synthetic-slice: not a measurement: best %v (%.1f MB/s), reference %v (%.1f MB/s), normalised %.1f MB/s", best, mb, refBest, refMB, norm)
 		}
 	}
-	// norm_mb_s is logged ONLY once calibrated: with the placeholder nominal
-	// constant it would be a misleading number.  Until then the k values are the
-	// report.  The facts come BEFORE gated= and before any refusal field (the CI
-	// script reads key=value pairs left to right and the refusals stay last).
-	refMB := refAMB
-	if refRulerB {
-		refMB = refBMB
-	}
-	norm := mb * refNominalMBs / refMB
-	normField := ""
-	if refNominalCalibrated {
-		normField = fmt.Sprintf(" norm_mb_s=%.1f", norm)
-	}
-	t.Logf("PROBE: trace synthetic-slice bytes=%d lines=%d best_mb_s=%.1f ref_mb_s=%.1f refb_mb_s=%.1f k_a=%.1f k_b=%.1f k_a_rounds=%s k_b_rounds=%s%s calibrated=%d gated=%d repeats=%d",
-		len(slice), bytes.Count(slice, []byte{'\n'}), mb, refAMB, refBMB, kA, kB,
-		strings.Join(kaRounds, ","), strings.Join(kbRounds, ","), normField,
+	// The facts come BEFORE gated= and before any refusal field (the CI script
+	// reads key=value pairs left to right and the refusals stay last).
+	t.Logf("PROBE: trace synthetic-slice bytes=%d lines=%d best_mb_s=%.1f ref_mb_s=%.1f norm_mb_s=%.1f calibrated=%d gated=%d repeats=%d",
+		len(slice), bytes.Count(slice, []byte{'\n'}), mb, refMB, norm,
 		b2i(refNominalCalibrated), b2i(g1Enforced()), gateRepeats)
 	if g1Enforced() && !(mb >= gateAbsMinMBs) {
 		t.Errorf("synthetic-slice: the grammar path's best of %d passes read a %d byte slice in %v (%.1f MB/s), below the %.0f MB/s absolute floor (gate G1, KILN04 section 4.9)",
 			gateRepeats, len(slice), best, mb, gateAbsMinMBs)
 	}
-	// The capability gate.  Until refNominalMBs is calibrated from CI it does not
-	// fail; afterwards a normalised rate below 14 fails.
+	// The capability gate: a normalised rate below 14 fails.
 	if g1Enforced() && refNominalCalibrated && !(norm >= gateNormMinMBs) {
 		t.Errorf("synthetic-slice: normalised rate %.1f MB/s (raw %.1f, reference %.1f, nominal %.1f) is below the %.0f MB/s capability floor (gate G1, KILN04 section 4.9)",
 			norm, mb, refMB, refNominalMBs, gateNormMinMBs)
