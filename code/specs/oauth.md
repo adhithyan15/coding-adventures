@@ -6179,6 +6179,26 @@ Authenticated handshake progression, record-state composition, certificate and
 revocation policy, and HTTP composition remain prerequisites; concrete HTTPS
 and live-provider readiness remain unavailable.
 
+The same allocation-free boundary now also consumes that exact-message retry
+handshake traffic-key proof into one direction's record-protection state. The
+conversion accepts no detached key, static IV, nonce length, record ceiling,
+AEAD identifier, sequence number, or cipher suite. It moves the retained
+traffic-key view into the existing repository-owned record-state primitive,
+starts the monotonic record sequence at zero, and returns a non-copyable
+wrapper that still retains the complete retry traffic-secret proof and the
+explicit sender role. Callers may borrow or mutably borrow the state through
+that wrapper, but cannot detach it from the exact CH1, HelloRetryRequest, CH2,
+final ServerHello, base-schedule, traffic-secret, and sender evidence.
+
+This exact-message state composition does not advance the handshake
+transcript, authenticate CertificateVerify or Finished, invoke an AEAD, frame
+or protect a record, process alerts, validate certificates, establish trust,
+verify a hostname, enforce revocation, perform I/O, authorize HTTP or OAuth
+transport, or open a network connection. Authenticated handshake progression,
+record protection, certificate and revocation policy, and HTTP composition
+remain prerequisites; concrete HTTPS and live-provider readiness remain
+unavailable.
+
 An allocation-free `http1-fixed-request-body` prerequisite now binds one
 caller-borrowed, potentially sensitive request body to its exact byte length
 under an explicit caller ceiling. It encodes that length in canonical shortest
