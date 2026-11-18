@@ -16,11 +16,10 @@ script is the second, independent check, on the JSON stream itself:
     deterministic `synthetic-slice` line (from TestSandboxTraceGateSynthetic) is one of them;
     every gated `best_mb_s` is re-checked against the 8 MB/s absolute floor and
     must be finite and positive; the synthetic line must also carry a finite,
-    positive `ref_mb_s` and `refb_mb_s` (the two candidate host reference kernels'
-    rates), a `calibrated` of exactly 0 or 1 (0 fails once REQUIRE_CALIBRATED is
-    set), and, once the Go
-    side says `calibrated=1`, its host-normalised `norm_mb_s` must be at least
-    14 MB/s (G1 is two parts: an absolute safety floor on every gated line and a
+    positive `ref_mb_s` (the frozen reference kernel's rate), a `calibrated` of
+    exactly 1 (REQUIRE_CALIBRATED: calibrated=0 or anything else fails), and a
+    `norm_mb_s` of at least 14 MB/s (G1 is two parts: an absolute safety floor on
+    every gated line and a
     host-normalised capability gate on the slice; KILN04 section 4.9).  A PROBE line counts only when its payload starts with
     "PROBE: trace " after the go test file:line prefix.  Without this, a run in
     which every real trace is under 32 KB would pass G1 vacuously.
@@ -175,15 +174,13 @@ def check(lines: list[str]) -> list[str]:
 
 # G1, part one: the absolute safety floor, applied to EVERY gated line.
 GATE_FLOOR_MB_S = 8.0
-# G1, part two: the host-normalised capability floor on the synthetic slice,
-# enforced only when the Go side logged calibrated=1 (refNominalMBs measured from
-# CI).  Until then norm_mb_s is report-only.
+# G1, part two: the host-normalised capability floor on the synthetic slice
+# (norm_mb_s = best_mb_s * refNominalMBs / ref_mb_s).
 NORM_FLOOR_MB_S = 14.0
-# The independent switch the Go side cannot turn off.  While False, a line that
-# says calibrated=0 is accepted (the nominal constant is still a placeholder).
-# The calibrating commit sets this to True, after which calibrated=0 FAILS: Go
-# alone cannot silently disable the normalised gate by logging calibrated=0.
-REQUIRE_CALIBRATED = False
+# The independent switch the Go side cannot turn off: a synthetic line whose
+# calibrated is not exactly "1" fails, so Go alone cannot silently disable the
+# normalised gate by logging calibrated=0.
+REQUIRE_CALIBRATED = True
 SYNTHETIC_LABEL = "synthetic-slice"
 SYNTHETIC_TEST = "TestSandboxTraceGateSynthetic"
 # A PROBE line as `go test -v -json` carries it (the mode CI runs): exactly four
@@ -322,16 +319,14 @@ def positive_finite(fields: dict[str, str], key: str) -> float | None:
 
 
 def synthetic_problems(fields: dict[str, str]) -> list[str]:
-    """The extra G1 checks on the synthetic-slice line: usable host reference
-    rates for BOTH candidate kernels (ref_mb_s is kernel A, refb_mb_s is B),
-    `calibrated` exactly "0" or "1" (anything else, or a missing field, fails),
-    calibrated=0 failing once REQUIRE_CALIBRATED is True, and, when the line says
-    calibrated=1, the normalised capability floor.  With calibrated=0 (the nominal
-    constant is still a placeholder) norm_mb_s is not looked at."""
+    """The extra G1 checks on the synthetic-slice line: a usable host reference
+    rate (ref_mb_s), `calibrated` exactly "0" or "1" (anything else, or a missing
+    field, fails) and, with REQUIRE_CALIBRATED, exactly "1"; and, when the line
+    says calibrated=1, a present, finite, positive norm_mb_s of at least the
+    normalised capability floor."""
     problems = []
-    for key in ("ref_mb_s", "refb_mb_s"):
-        if positive_finite(fields, key) is None:
-            problems.append(f"gate G1: {SYNTHETIC_LABEL}: {key}={fields.get(key, '(missing)')} is not a positive finite rate")
+    if positive_finite(fields, "ref_mb_s") is None:
+        problems.append(f"gate G1: {SYNTHETIC_LABEL}: ref_mb_s={fields.get('ref_mb_s', '(missing)')} is not a positive finite rate")
     calibrated = fields.get("calibrated")
     if calibrated not in ("0", "1"):
         problems.append(f"gate G1: {SYNTHETIC_LABEL}: calibrated={calibrated if calibrated is not None else '(missing)'} must be exactly 0 or 1")

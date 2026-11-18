@@ -36,7 +36,7 @@ REAL_PROBE = (
 )
 SYNTHETIC_PROBE = (
     "    sandbox_tracesize_linux_amd64_test.go:130: PROBE: trace synthetic-slice bytes=65800 lines=9000 "
-    "best_mb_s=30.0 ref_mb_s=100.0 refb_mb_s=50.0 k_a=65.0 k_b=32.5 norm_mb_s=30.0 calibrated=0 gated=1 repeats=7"
+    "best_mb_s=30.0 ref_mb_s=100.0 norm_mb_s=30.0 calibrated=1 gated=1 repeats=7"
 )
 
 
@@ -172,52 +172,44 @@ class GateG1(unittest.TestCase):
             line = SYNTHETIC_PROBE.replace("ref_mb_s=100.0", f"ref_mb_s={bad}")
             self.assertTrue(any("ref_mb_s" in p for p in self.synthetic(line)), bad)
 
-    def test_a_missing_or_non_finite_kernel_b_rate_fails(self) -> None:
-        missing = SYNTHETIC_PROBE.replace("refb_mb_s=50.0 ", "")
-        self.assertTrue(any("refb_mb_s" in p for p in self.synthetic(missing)))
-        for bad in ("inf", "NaN", "0", "-1.0", "abc"):
-            line = SYNTHETIC_PROBE.replace("refb_mb_s=50.0", f"refb_mb_s={bad}")
-            self.assertTrue(any("refb_mb_s" in p for p in self.synthetic(line)), bad)
-
     def test_calibrated_must_be_exactly_0_or_1(self) -> None:
         for bad in ("2", "true", "01", "-1", "", "yes"):
-            line = SYNTHETIC_PROBE.replace("calibrated=0", f"calibrated={bad}")
+            line = SYNTHETIC_PROBE.replace("calibrated=1", f"calibrated={bad}")
             self.assertTrue(any("calibrated=" in p and "exactly 0 or 1" in p for p in self.synthetic(line)), bad)
-        missing = SYNTHETIC_PROBE.replace("calibrated=0 ", "")
+        missing = SYNTHETIC_PROBE.replace("calibrated=1 ", "")
         self.assertTrue(any("exactly 0 or 1" in p for p in self.synthetic(missing)))
-        for good in ("0", "1"):
-            line = SYNTHETIC_PROBE.replace("calibrated=0", f"calibrated={good}")
-            self.assertEqual(self.synthetic(line), [], good)
-
-    def test_require_calibrated_makes_calibrated_0_fail(self) -> None:
         self.assertEqual(self.synthetic(SYNTHETIC_PROBE), [])
-        mod.REQUIRE_CALIBRATED = True
-        try:
-            self.assertTrue(any("REQUIRE_CALIBRATED" in p for p in self.synthetic(SYNTHETIC_PROBE)))
-            ok = SYNTHETIC_PROBE.replace("calibrated=0", "calibrated=1")
-            self.assertEqual(self.synthetic(ok), [])
-        finally:
-            mod.REQUIRE_CALIBRATED = False
 
-    def test_the_default_does_not_require_calibration_until_the_calibrating_commit(self) -> None:
-        self.assertIs(mod.REQUIRE_CALIBRATED, False)
+    def test_calibrated_0_fails_because_calibration_is_required(self) -> None:
+        # The calibrating commit made calibrated=1 mandatory: Go cannot switch the
+        # normalised gate off by logging calibrated=0.
+        self.assertIs(mod.REQUIRE_CALIBRATED, True)
+        line = SYNTHETIC_PROBE.replace("calibrated=1", "calibrated=0")
+        self.assertTrue(any("REQUIRE_CALIBRATED" in p for p in self.synthetic(line)))
+        # With a low norm and calibrated=0 the line still fails (never accepted).
+        low = line.replace("norm_mb_s=30.0", "norm_mb_s=1.0")
+        self.assertTrue(self.synthetic(low))
+
+    def test_the_switch_can_be_relaxed_only_in_the_module(self) -> None:
+        mod.REQUIRE_CALIBRATED = False
+        try:
+            line = SYNTHETIC_PROBE.replace("calibrated=1", "calibrated=0")
+            self.assertEqual(self.synthetic(line), [])
+        finally:
+            mod.REQUIRE_CALIBRATED = True
 
     def test_a_missing_norm_when_calibrated_fails(self) -> None:
-        line = SYNTHETIC_PROBE.replace("norm_mb_s=30.0 ", "").replace("calibrated=0", "calibrated=1")
+        line = SYNTHETIC_PROBE.replace("norm_mb_s=30.0 ", "")
         self.assertTrue(any("norm_mb_s" in p for p in self.synthetic(line)))
 
     def test_a_normalised_rate_below_the_floor_fails_when_calibrated(self) -> None:
-        low = SYNTHETIC_PROBE.replace("norm_mb_s=30.0", "norm_mb_s=13.9").replace("calibrated=0", "calibrated=1")
+        low = SYNTHETIC_PROBE.replace("norm_mb_s=30.0", "norm_mb_s=13.9")
         self.assertTrue(any("norm_mb_s" in p and "below the 14" in p for p in self.synthetic(low)))
-        ok = SYNTHETIC_PROBE.replace("norm_mb_s=30.0", "norm_mb_s=14.0").replace("calibrated=0", "calibrated=1")
+        ok = SYNTHETIC_PROBE.replace("norm_mb_s=30.0", "norm_mb_s=14.0")
         self.assertEqual(self.synthetic(ok), [])
         for bad in ("inf", "NaN", "0", "abc"):
-            line = SYNTHETIC_PROBE.replace("norm_mb_s=30.0", f"norm_mb_s={bad}").replace("calibrated=0", "calibrated=1")
+            line = SYNTHETIC_PROBE.replace("norm_mb_s=30.0", f"norm_mb_s={bad}")
             self.assertTrue(any("norm_mb_s" in p for p in self.synthetic(line)), bad)
-
-    def test_a_low_normalised_rate_is_ignored_when_uncalibrated(self) -> None:
-        low = SYNTHETIC_PROBE.replace("norm_mb_s=30.0", "norm_mb_s=1.0")
-        self.assertEqual(self.synthetic(low), [])
 
     def test_a_refusal_cannot_claim_calibration_or_a_reference_rate(self) -> None:
         # The facts before the refusals win; text after them is never read.
