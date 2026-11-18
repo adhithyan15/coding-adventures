@@ -11,6 +11,7 @@ const { fixture, raw } = loadValidatedFixture();
 
 test("all GAME10 v1 vectors pass the actual Python validator and TS public exports", () => {
   runCorpus(fixture.cases);
+  runCorpus([...fixture.cases].reverse());
 });
 
 test("the harness rejects vacuous, mutated, missing, duplicate, and unknown cases", () => {
@@ -39,6 +40,12 @@ test("the harness rejects vacuous, mutated, missing, duplicate, and unknown case
   const duplicate = fixture.cases.map((item) => structuredClone(item));
   duplicate[duplicate.length - 1] = structuredClone(duplicate[0]);
   assert.throws(() => runCorpus(duplicate), /duplicate case ID/);
+
+  const replacedId = fixture.cases.map((item, index) => {
+    const copy = structuredClone(item);
+    return index === 0 ? { ...copy, id: "replacement_case_with_valid_contents" } : copy;
+  });
+  assert.throws(() => runCorpus(replacedId), /unknown canonical GAME10 v1 case ID/);
 
   const unknownOp = fixture.cases.map((item, index) => {
     return index === 0

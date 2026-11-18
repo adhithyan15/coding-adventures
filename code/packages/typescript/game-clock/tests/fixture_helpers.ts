@@ -32,6 +32,32 @@ export interface GameClockFixture {
 
 const fixtureRelative = path.join("code", "specs", "fixtures", "game-clock-v1");
 
+const canonicalV1CaseIds = new Set([
+  "standard_60hz_rounding",
+  "from_hz_60_rounding",
+  "from_hz_zero",
+  "new_clock_success",
+  "new_clock_zero_precedes_other_errors",
+  "new_clock_step_error_precedes_delta_error",
+  "validate_zero_precedence",
+  "validate_tick_product_overflow",
+  "validate_accumulator_precedes_tick_product_overflow",
+  "validate_elapsed_sim_mismatch",
+  "validate_arbitrary_counters_at_u64_max",
+  "advance_fractional_alpha_floors",
+  "advance_exact_step_limit_is_not_clamped",
+  "advance_wall_and_spiral_drops",
+  "advance_u64_max_raw_delta",
+  "advance_zero_delta_preserves_nonincremented_max_counters",
+  "advance_validates_state_before_raw_delta",
+  "advance_frame_count_overflow",
+  "advance_tick_count_overflow",
+  "advance_elapsed_sim_overflow",
+  "advance_elapsed_wall_overflow",
+  "advance_total_dropped_overflow",
+  "advance_spiral_counter_overflow",
+]);
+
 export function findRepositoryRoot(start = path.dirname(fileURLToPath(import.meta.url))): string {
   let current = start;
   for (let depth = 0; depth < 12; depth += 1) {
@@ -209,6 +235,7 @@ export function runCorpus(
   for (const fixtureCase of cases) {
     assert.ok(fixtureCase.id.length > 0, "case IDs are non-empty");
     assert.ok(!seen.has(fixtureCase.id), `duplicate case ID ${fixtureCase.id}`);
+    assert.ok(canonicalV1CaseIds.has(fixtureCase.id), `unknown canonical GAME10 v1 case ID ${fixtureCase.id}`);
     seen.add(fixtureCase.id);
     operations.add(fixtureCase.op);
     const actual = dispatch(fixtureCase.op, fixtureCase.input);
@@ -216,6 +243,7 @@ export function runCorpus(
     if ("error" in actual) refused += 1;
     else accepted += 1;
   }
+  assert.deepStrictEqual(seen, canonicalV1CaseIds, "the complete canonical GAME10 v1 ID set is required");
   assert.deepStrictEqual(
     [...operations].sort(),
     ["advance_frame", "from_hz", "new_clock", "standard_60hz", "validate_state"],

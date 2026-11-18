@@ -35,6 +35,35 @@ function checkedOracleAdd(left: bigint, right: bigint): bigint | undefined {
   return sum <= MAX_U64 ? sum : undefined;
 }
 
+/** Independent constructor oracle used to check exact refusals in the mutation campaign. */
+function oracleNewClock(config: GameClockConfig): Result<GameClockState> {
+  if (config.fixed_dt_ns === 0n) return { ok: false, error: ClockError.ZeroFixedTimestep };
+  if (config.fixed_dt_ns > HARD_MAX_DELTA_NS) {
+    return { ok: false, error: ClockError.InvalidMaxFrameDelta };
+  }
+  if (config.max_frame_steps === 0 || config.max_frame_steps > 1024) {
+    return { ok: false, error: ClockError.InvalidMaxFrameSteps };
+  }
+  if (config.max_frame_delta_ns < config.fixed_dt_ns || config.max_frame_delta_ns > HARD_MAX_DELTA_NS) {
+    return { ok: false, error: ClockError.InvalidMaxFrameDelta };
+  }
+  return {
+    ok: true,
+    value: {
+      tick_count: 0n,
+      frame_count: 0n,
+      elapsed_sim_ns: 0n,
+      elapsed_wall_ns: 0n,
+      accumulator_ns: 0n,
+      fixed_dt_ns: config.fixed_dt_ns,
+      max_frame_steps: config.max_frame_steps,
+      max_frame_delta_ns: config.max_frame_delta_ns,
+      total_dropped_ns: 0n,
+      spiral_clamped_frames: 0n,
+    },
+  };
+}
+
 /** Independent bounded-subtraction oracle; its step loop is capped by max_frame_steps. */
 function oracleAdvance(state: GameClockState, raw: bigint): OracleResult {
   const clamped = raw > state.max_frame_delta_ns ? state.max_frame_delta_ns : raw;
@@ -277,11 +306,12 @@ test("bounded seeded mutation campaign: 256 cases, 8 mutations, 32-byte interpre
       max_frame_delta_ns: maxDelta,
     };
     const beforeConfig = structuredClone(cfg);
+    const expectedStart = oracleNewClock(cfg);
     const start = new_clock(cfg);
+    assert.deepStrictEqual(start, expectedStart, `constructor mutation case ${caseIndex}`);
     assert.deepStrictEqual(cfg, beforeConfig);
     if (!start.ok) {
       refusalCounts.constructor += 1;
-      assert.ok(Object.values(ClockError).includes(start.error));
       continue;
     }
     acceptCounts.constructor += 1;
