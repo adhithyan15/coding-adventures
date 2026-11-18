@@ -12,7 +12,125 @@ import {
   InvalidCoefficientError,
 } from "../src/index.js";
 
+const COMMON_WINDOWS = ["rectangular", "hamming", "hann", "blackman"] as const;
+const TAP_COUNTS = [1, 3, 5] as const;
+const MIN_SUBNORMAL = Number.MIN_VALUE;
+const FLOAT_BUFFER = new ArrayBuffer(8);
+const FLOAT_VIEW = new DataView(FLOAT_BUFFER);
+
+function numberFromBits(bits: bigint): number {
+  FLOAT_VIEW.setBigUint64(0, bits, false);
+  return FLOAT_VIEW.getFloat64(0, false);
+}
+
+function bitsFromNumber(value: number): bigint {
+  FLOAT_VIEW.setFloat64(0, value, false);
+  return FLOAT_VIEW.getBigUint64(0, false);
+}
+
+function assertFinite(coefficients: Float64Array): void {
+  for (const coefficient of coefficients) assert.ok(Number.isFinite(coefficient));
+}
+
+function exercise(cutoff: number, taps: number, window: string): void {
+  assertFinite(designLowPass(cutoff, taps, window));
+  assertFinite(designHighPass(cutoff, taps, window));
+  assertFinite(designBandPass(0.0, cutoff, taps, window));
+}
+
+function splitmix32(seed: number): () => number {
+  let state = seed >>> 0;
+  return () => {
+    state = (state + 0x9e3779b9) >>> 0;
+    let z = state;
+    z = Math.imul(z ^ (z >>> 16), 0x21f0aaad);
+    z = Math.imul(z ^ (z >>> 15), 0x735a2d97);
+    return (z ^ (z >>> 15)) >>> 0;
+  };
+}
+
 describe("Classical filter design (FIR and IIR)", () => {
+  it("avoids reciprocal overflow for finite normalized coefficients", () => {
+    const cutoff = numberFromBits(0x0002000000000000n); // 2**-1025
+    const nextCutoff = numberFromBits(0x0002000000000001n);
+
+    assert.deepEqual(Array.from(designLowPass(cutoff, 1, "rectangular")), [1.0]);
+    assert.deepEqual(Array.from(designBandPass(0.0, cutoff, 1, "rectangular")), [1.0]);
+    assert.deepEqual(Array.from(designLowPass(nextCutoff, 1, "rectangular")), [1.0]);
+    assert.deepEqual(Array.from(designHighPass(cutoff, 1, "rectangular")), [0.0]);
+
+    const minsubHann = designLowPass(MIN_SUBNORMAL, 3, "hann");
+    assert.deepEqual(Array.from(minsubHann), [0.0, 1.0, 0.0]);
+    assertFinite(designHighPass(MIN_SUBNORMAL, 3, "hann"));
+    assertFinite(designBandPass(0.0, MIN_SUBNORMAL, 3, "hann"));
+
+    assert.deepEqual(Array.from(firwin(1, cutoff, { window: "rectangular" })), [1.0]);
+    assert.deepEqual(
+      Array.from(firwin(1, cutoff, { window: "rectangular", passZero: false })),
+      [0.0]
+    );
+    assert.deepEqual(
+      Array.from(firwin(1, [0.0, cutoff], { window: "rectangular" })),
+      [1.0]
+    );
+    assertFinite(firwin(3, [0.0, MIN_SUBNORMAL], { window: "hann", passZero: true }));
+  });
+
+  it("preserves finite-reciprocal result bits and existing edge behavior", () => {
+    const lowPass = designLowPass(49.0 / 65536.0, 1, "rectangular");
+    assert.equal(bitsFromNumber(lowPass[0]), 0x3fefffffffffffffn); // nextDown(1)
+
+    const highPass = designHighPass(2.0 ** -53, 1, "rectangular");
+    assert.equal(bitsFromNumber(highPass[0]), 0n);
+    assert.deepEqual(Array.from(designLowPass(0.0, 3, "rectangular")), [0.0, 0.0, 0.0]);
+    assert.throws(() => designBandPass(0.0, 0.0, 3, "rectangular"), InvalidCoefficientError);
+    assert.throws(() => designLowPass(Number.NaN, 3, "rectangular"), InvalidCoefficientError);
+  });
+
+  it("enumerates the declared finite subnormal corpus", () => {
+    let calls = 0;
+    for (let mantissa = 1; mantissa <= 256; mantissa++) {
+      const cutoff = mantissa * MIN_SUBNORMAL;
+      for (const taps of TAP_COUNTS) {
+        for (const window of COMMON_WINDOWS) {
+          exercise(cutoff, taps, window);
+          calls += 3;
+        }
+      }
+    }
+    assert.equal(calls, 9216);
+  });
+
+  it("checks deterministic raw-bit cases around reciprocal overflow", () => {
+    const centerBits = 0x0002000000000000n;
+    let checked = 0;
+    for (let offset = -64n; offset <= 64n; offset++) {
+      const cutoff = numberFromBits(centerBits + offset);
+      const caseIndex = checked / 3;
+      const taps = TAP_COUNTS[caseIndex % TAP_COUNTS.length];
+      const window = COMMON_WINDOWS[caseIndex % COMMON_WINDOWS.length];
+      exercise(cutoff, taps, window);
+      checked += 3;
+    }
+    assert.equal(checked, 387);
+  });
+
+  it("runs bounded seeded raw-bit subnormal fuzz cases", () => {
+    let cases = 0;
+    for (const seed of [0x0a0d10, 0x51bada55]) {
+      const next = splitmix32(seed);
+      for (let index = 0; index < 64; index++) {
+        const mantissa = (BigInt(next()) << 20n) | BigInt(next() & 0x000fffff);
+        const cutoff = numberFromBits(mantissa || 1n);
+        const taps = TAP_COUNTS[next() % TAP_COUNTS.length];
+        const window = COMMON_WINDOWS[next() % COMMON_WINDOWS.length];
+        exercise(cutoff, taps, window);
+        cases += 3;
+      }
+    }
+    assert.equal(cases, 384);
+  });
+
   it("designs lowpass FIR filter with unit DC gain and symmetry", () => {
     const numTaps = 31;
     const h = designLowPass(0.2, numTaps, "hamming");

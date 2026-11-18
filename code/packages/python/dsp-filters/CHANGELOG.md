@@ -5,6 +5,7 @@ All notable changes to `coding-adventures-dsp-filters` will be documented in thi
 ## Unreleased
 
 ### Corrected
+- Avoid reciprocal overflow during low-pass and band-pass FIR normalization when the finite nonzero normalization denominator has a nonfinite reciprocal; retain legacy multiplication when the reciprocal is finite.
 - Removed the false FIR round-trip claim and single-input resource rows that contradict full convolution or omit kernel work; retained unrefuted output and depth obligations.
 - Removed shared byte-length caps and design `no_panic` claims until the Warrant model has lane-specific sample framing and typed error behavior. These declarations are not executable evidence.
 - Added direct FIR regression coverage for `[2] * [2] = [4]` and the one-tap identity.
