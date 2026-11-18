@@ -160,11 +160,41 @@ def check(lines: list[str]) -> list[str]:
 GATE_FLOOR_MB_S = 14.0
 SYNTHETIC_LABEL = "synthetic-slice"
 SYNTHETIC_TEST = "TestSandboxTraceGateSynthetic"
-# A PROBE line as `go test -json` carries it: "    file_test.go:123: PROBE: trace
-# LABEL k=v ...".  The payload must START with "PROBE: trace " right after that
-# file:line prefix, so the text cannot be forged by a substring inside another
-# line (a trace path, an error message).
-PROBE_RE = re.compile(r"^\s*[\w.\-]+\.go:\d+: (PROBE: trace (\S+) .*)$")
+# A PROBE line as `go test -json` carries it: the indent `go test` gives a t.Logf
+# line, then "file_test.go:123: ", then the payload, which must START with
+# "PROBE: trace ".  The indent is exact, not "any whitespace": go test indents a
+# test's log lines by four spaces per level of subtest nesting (four for a top
+# level test, eight for "Test/sub", ...) and every CONTINUATION line of a
+# multi-line message by four more.  So the indent a real PROBE line has is
+# 4 * (1 + the number of "/" in the test name), and a line indented more than
+# that is a continuation, which cannot be a PROBE line.  The payload anchor means
+# the text cannot be forged by a substring inside another line (a trace path, an
+# error message).
+def probe_re(test: str) -> re.Pattern[str]:
+    indent = " " * (4 * (1 + test.count("/")))
+    return re.compile("^" + indent + r"[\w.\-]+\.go:\d+: (PROBE: trace (\S+) .*)$")
+
+
+# The Go tests write every number this script trusts BEFORE the refusal fields,
+# which hold %q-quoted text a trace influenced.  Only the text before the first
+# refusal field is read for key=value pairs.
+REFUSAL_MARKERS = (" old_refusal=", " grammar_refusal=", " new_refusal=")
+FIELD_RE = re.compile(r"(\w+)=(\S+)")
+
+
+def probe_fields(payload: str) -> dict[str, str]:
+    """The key=value facts of a PROBE payload: read only from the text before the
+    first refusal field, and the FIRST occurrence of a key wins, so a refusal
+    that quotes `best_mb_s=99 gated=1` cannot override or add to the real fields."""
+    cut = len(payload)
+    for marker in REFUSAL_MARKERS:
+        at = payload.find(marker)
+        if at != -1:
+            cut = min(cut, at)
+    fields: dict[str, str] = {}
+    for key, value in FIELD_RE.findall(payload[:cut]):
+        fields.setdefault(key, value)
+    return fields
 
 
 def gated_probes(lines: list[str]) -> list[tuple[str, str, dict[str, str]]]:
@@ -185,10 +215,10 @@ def gated_probes(lines: list[str]) -> list[tuple[str, str, dict[str, str]]]:
         if event.get("Action") != "output" or final.get(test) != "pass":
             continue
         for text in event.get("Output", "").splitlines():
-            m = PROBE_RE.match(text)
+            m = probe_re(test).match(text)
             if not m:
                 continue
-            fields = dict(re.findall(r"(\w+)=(\S+)", m.group(1)))
+            fields = probe_fields(m.group(1))
             if fields.get("gated") == "1":
                 out.append((test, m.group(2), fields))
     return out

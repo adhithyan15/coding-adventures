@@ -31,7 +31,8 @@ def stream(outcomes: dict[str, str]) -> list[str]:
 
 REAL_PROBE = (
     "    sandbox_tracesize_linux_amd64_test.go:80: PROBE: trace record-step bytes=51650 lines=327 old_mb_s=144.7 "
-    "grammar_mb_s=22.8 best_mb_s=25.1 gated=1 old_allocs=1 grammar_allocs=2"
+    "grammar_mb_s=22.8 best_mb_s=25.1 gated=1 old_allocs=1 grammar_allocs=2 step_wall_ms=900 parse_ms=2.26 "
+    'parse_share=0.0025 old_refusal="" grammar_refusal=""'
 )
 SYNTHETIC_PROBE = (
     "    sandbox_tracesize_linux_amd64_test.go:130: PROBE: trace synthetic-slice bytes=65800 lines=9000 "
@@ -176,6 +177,58 @@ class GateG1(unittest.TestCase):
         census = "    x_test.go:5: PROBE: trace synthetic-4mib-census bytes=4195800 lines=1 best_mb_s=5.0 gated=0 repeats=7"
         self.assertEqual(mod.gate_problems(with_gate(stream(all_pass())) + probe_events("TestSandboxTraceGateSynthetic", census)), [])
 
+    def test_a_refusal_quoting_fields_cannot_override_the_real_ones(self) -> None:
+        # The slow real rate is followed by refusals that quote a fast, gated line.
+        evil = (
+            "    x_test.go:9: PROBE: trace evil bytes=1 lines=1 best_mb_s=9.0 gated=1 "
+            'old_refusal="best_mb_s=99 gated=1" grammar_refusal="best_mb_s=99 gated=1 extra=1"'
+        )
+        (probe,) = mod.gated_probes(probe_events("TestSandboxRecordStep", evil))
+        self.assertEqual(probe[2]["best_mb_s"], "9.0")
+        self.assertNotIn("extra", probe[2])
+        self.assertTrue(mod.gate_problems(with_gate(stream(all_pass())) + probe_events("TestSandboxRecordStep", evil)))
+        # And a line whose REAL fields are ungated is not made gated by a refusal.
+        sneaky = (
+            "    x_test.go:9: PROBE: trace sneaky bytes=1 lines=1 best_mb_s=30.0 gated=0 "
+            'old_refusal="" grammar_refusal="gated=1"'
+        )
+        self.assertEqual(mod.gated_probes(probe_events("TestSandboxRecordStep", sneaky)), [])
+
+    def test_probe_fields_stop_at_the_first_refusal_and_keep_the_first_key(self) -> None:
+        self.assertEqual(
+            mod.probe_fields('PROBE: trace a best_mb_s=30.0 gated=1 best_mb_s=1.0 old_refusal="gated=0" grammar_refusal=""'),
+            {"best_mb_s": "30.0", "gated": "1"},
+        )
+        self.assertEqual(mod.probe_fields("PROBE: trace a k=1 k=2 k=3"), {"k": "1"})
+
+    def test_a_duplicate_key_keeps_the_first_value(self) -> None:
+        dup = SYNTHETIC_PROBE.replace("repeats=7", "repeats=7 best_mb_s=1.0")
+        self.assertEqual(mod.gate_problems(with_gate(stream(all_pass())) + probe_events("TestSandboxTraceGateSynthetic", dup)), [])
+        dup_first_bad = SYNTHETIC_PROBE.replace("best_mb_s=30.0", "best_mb_s=1.0").replace("repeats=7", "repeats=7 best_mb_s=30.0")
+        self.assertTrue(mod.gate_problems(stream(all_pass()) + probe_events("TestSandboxTraceGateSynthetic", dup_first_bad)))
+
+    def test_a_continuation_line_is_not_a_probe_line(self) -> None:
+        # t.Logf("first\nPROBE: ...") prints the second line indented eight spaces.
+        cont = "        x_test.go:9: PROBE: trace evil bytes=1 lines=1 best_mb_s=30.0 gated=1"
+        self.assertEqual(mod.gated_probes(probe_events("TestSandboxRecordStep", cont)), [])
+        tab = "\t    x_test.go:9: PROBE: trace evil bytes=1 lines=1 best_mb_s=30.0 gated=1"
+        self.assertEqual(mod.gated_probes(probe_events("TestSandboxRecordStep", tab)), [])
+        three = "   x_test.go:9: PROBE: trace evil bytes=1 lines=1 best_mb_s=30.0 gated=1"
+        self.assertEqual(mod.gated_probes(probe_events("TestSandboxRecordStep", three)), [])
+
+    def test_a_subtest_probe_line_has_the_subtests_indent(self) -> None:
+        # go test indents a subtest's log lines by eight spaces, a sub-subtest's by twelve.
+        good = "        x_test.go:9: PROBE: trace probe-pipes bytes=60000 lines=1 best_mb_s=30.0 gated=1"
+        self.assertEqual(len(mod.gated_probes(probe_events("TestSandboxRecordProbe/ok", good))), 1)
+        self.assertEqual(mod.gated_probes(probe_events("TestSandboxRecordProbe/ok", "    " + good.lstrip())), [])
+        self.assertEqual(mod.gated_probes(probe_events("TestSandboxRecordProbe/ok", "    " + good)), [])
+
+    def test_well_formed_lines_still_parse(self) -> None:
+        (real,) = mod.gated_probes(probe_events("TestSandboxRecordStep", REAL_PROBE))
+        self.assertEqual((real[1], real[2]["best_mb_s"], real[2]["step_wall_ms"], real[2]["parse_share"]), ("record-step", "25.1", "900", "0.0025"))
+        (syn,) = mod.gated_probes(probe_events("TestSandboxTraceGateSynthetic", SYNTHETIC_PROBE))
+        self.assertEqual(syn[1], "synthetic-slice")
+
     def test_main_fails_when_the_gate_is_missing(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "nogate.json"
@@ -246,18 +299,20 @@ class CiWiring(unittest.TestCase):
         self.assertTrue(all(len(f) <= 452 and ("F2:" in f or "PROBE:" in f) for f in facts["TestA/sub"]))
 
     def test_full_probe_line_with_step_wall_survives(self) -> None:
-        # The D24 G2 census fields come last on the line; they must not be cut.
+        # The D24 G2 census fields precede the two refusal fields, which come last
+        # on the line; the numbers must survive the 450 character cut.
         probe = (
             "    sandbox_tracesize_linux_amd64_test.go:55: PROBE: trace probe-some-long-run-name bytes=51650 lines=327 "
-            "old_mb_s=144.7 grammar_mb_s=22.8 old_allocs=12345 grammar_allocs=67890 old_refusal=\"\" "
-            "grammar_refusal=\"\" step_wall_ms=123456 parse_ms=2.26 parse_share=0.0002"
+            "old_mb_s=144.7 grammar_mb_s=22.8 best_mb_s=25.1 gated=0 old_allocs=12345 grammar_allocs=67890 "
+            "step_wall_ms=123456 parse_ms=2.26 parse_share=0.0002 old_refusal=\"\" grammar_refusal=\"\""
         )
         lines = [
             json.dumps({"Action": "output", "Test": "TestA", "Output": probe + "\n"}),
             json.dumps({"Action": "pass", "Test": "TestA"}),
         ]
         (fact,) = mod.passing_facts(lines)["TestA"]
-        self.assertTrue(fact.endswith("parse_share=0.0002"), fact)
+        self.assertIn("parse_share=0.0002", fact)
+        self.assertTrue(fact.endswith('grammar_refusal=""'), fact)
 
     def test_output_cannot_inject_workflow_commands(self) -> None:
         def out(test: str, text: str) -> str:
