@@ -733,9 +733,9 @@ copying it today produce known-bad output, and each has a row that closes it:
    fallback of VOS-038).
 4. **Coverage is measured once by hand and gates nothing** (VOS-D070). A
    component's line coverage is claimed in a README and nothing fails if it
-   drops.
+   drops. **Closed by VOS-039a** (section 5.6, item G).
 5. **The lemma check is a per-contract crate** (VOS-D049): every contract
-   would copy `vos-sched-contract-check`. VOS-039 makes it generic.
+   would copy `vos-sched-contract-check`. VOS-039b makes it generic.
 6. **No mechanism evidences one implementation at two configurations**, a
    reduced X1 configuration and the shipped X2 configuration, because
    `contract.vos` pins one configuration (VOS-D068).
@@ -743,11 +743,17 @@ copying it today produce known-bad output, and each has a row that closes it:
 The component kit (VOS-039) is the answer to the whole list: after three real
 implementations exist, the kit extracts what they have in common into a
 `vos-link check-component` that verifies the file set, the BUILD lines and the
-build-tool row, so the template is **checked**, not remembered.
+build-tool row, so the template is **checked**, not remembered. VOS-039 is
+delivered in four slices: **039a** `check-component` and the coverage gate
+(section 5.6, as built); **039b** the generic contract check that retires
+`vos-sched-contract-check` (VOS-D049); **039c** the oracle-preservation claim
+of every `-any` (VOS-D080); **039d** the migration of the VOS sabotage lines to
+`code/scripts/warrant_negctl.py` (VOS-D099, closing VOS-D088) with the
+step-counter tick audit (VOS-D089).
 
 ### 5.5 What a reviewer checks in a component PR
 
-Until `check-component` exists, this is the list a reviewer applies by hand.
+`check-component` (section 5.6) now checks the file-set, BUILD-line, guard, selection-row and coverage rows of this list; the rest a reviewer still applies by hand.
 Each item has a mechanical check or an artifact to look at, so a reviewer is
 reading evidence and not opinion:
 
@@ -768,6 +774,128 @@ reading evidence and not opinion:
 | Time-carrying contracts state an overflow rule | The contract text | Saturating or a horizon precondition (rule 7) |
 | Nothing claims more than it has | The README and the report | No "proved" before VOS-029; the implementation's report prints "no SAT evidence"; lemmas printed as "SAT-certified at N = ..." only, in the contract PR |
 | The selection row exists | `repository_inputs.go` | A tool edit selects the crate in a dry run |
+
+### 5.6 `vos-link check-component`, as built (VOS-039a)
+
+```text
+vos-link check-component <crate-dir> [--root <repo-root>]     exit 0 pass, 1 findings, 2 no verdict
+```
+
+**Scope (decision).** The command judges an **implementation crate**: a crate
+whose `vos.toml` says kind `production`, `reference` or `any`, because only
+those have a document, a harness and the section 5.2 BUILD lines. Any other kind
+is a finding (`CC01`), not a pass: `contract` crates have a different file set
+and are VOS-039b's; check crates (`vos-sched-contract-check`, class H, retired by
+039b) and test fixtures are not components and have no document to check. The
+one rule that reaches them is VOS-D082 (`publish = false` for evidence-only
+crates): for them it is a **manual** rule, applied in this PR to
+`vos-sched-contract-check`, and enforced by the tool only for kind `any`
+(VOS-D103 asks for a tool that sweeps the rest).
+
+**What it checks.** Every finding has a code and its own text, so a BUILD log
+says which rule failed. A rule that cannot be applied (a symlink, a file over its
+cap) is *no verdict*, exit 2, as for `check-doc`.
+
+| Code | Check | Fails when |
+|---|---|---|
+| `CC01` | The kind is an implementation kind | `vos.toml` is missing, malformed, or names another kind |
+| `CC02` | The file set (section 5.1) | any of `BUILD`, `BUILD_windows`, `README.md`, `CHANGELOG.md` or `CHANGELOG.d/_meta.md`, `Cargo.toml`, `vos.toml`, `required_capabilities.json`, `warrant/impl.part`, `evidence.bindings`, `evidence/test-manifest.json`, `tests/generated/warrant_evidence.rs`, `code/specs/<crate>.warrant` is absent. One finding per missing file |
+| `CC03` | BUILD lines 1 to 6 and 9 are present, in `BUILD` **and** `BUILD_windows` | a required line is absent (a missing line is a finding, not a skip); the finding names the line number of section 5.2 and the text it looked for |
+| `CC04` | Each line has its "none ran = fail" guard (section 5.2, below) | the guard is absent, mis-ordered or weaker than required |
+| `CC05` | The build-tool row | `code/programs/go/build-tool/repository_inputs.go` has no `vosImplementationRow("<crate>")` call (line 11) |
+| `CC06` | VOS-D082 | kind `any` and `Cargo.toml` lacks `publish = false` |
+| `CC07` | The coverage gate (VOS-D070, item G) | `vos.toml` has no `coverage-floor`, the floor is below 95, or Linux `BUILD` lacks the coverage line that enforces it |
+| `CC08` | The evidence manifest (the guards of lines 6 to 9, item M) | see below |
+
+**Which BUILD line is which.** Lines are matched on the text of non-comment
+lines, with the crate name filled in; a line is present if one BUILD line
+contains every fragment. This is a narrow textual check of a shell script, not a
+parser of it, and it is deliberately strict on the fragments that carry meaning
+and silent on everything else:
+
+| # | Fragments one line must contain |
+|---|---|
+| 1 | `cargo test -p <crate> --lib --test behaviour`; the same with `--features ghost` (or each `evidence-features` entry of `vos.toml`); `cargo test -p <crate> --doc` (three lines) |
+| 2 | `vos-shape-check` and `-- .` |
+| 3 | `coding_adventures_ca_capability_analyzer` and `--dir .` |
+| 4 | `vos-link/Cargo.toml` and `check-doc .` |
+| 5 | `gen_evidence` and `--check <crate>` |
+| 6 to 8 | one line that runs the generated suite and rewrites the manifest: `WARRANT_EVIDENCE_OUT=evidence/test-manifest.json` with `--test warrant_evidence`, or a line that runs `warrant/check_evidence.sh` when that script contains both fragments |
+| 9 | at least one line with `WARRANT_EVIDENCE_FAULT=` |
+| 10 | not checked until VOS-029 (nothing to run); a `vos-x3` BUILD line is not required |
+| 11 | the build-tool row, as `CC05` |
+
+**Guards (`CC04`).** Lines 1 to 5 fail by exit status, which `sh -e` and the
+build tool already turn into a failed build; their guard is the line itself.
+Lines 6 to 10 are the ones a silent skip reports green, so they have three
+guards, all of them checked here:
+
+* **Order.** The `check-component` line itself must come **after** the line-6
+  line in `BUILD` and `BUILD_windows`, so it reads the manifest that run just
+  rewrote, not a stale committed one. A `check-component` line before the run,
+  or none, is a finding.
+* **Bail-out awareness.** Every sabotage line (line 9) must be bail-out-aware:
+  its text contains `Bail out!` (the POSIX `awk` form and the `findstr` form
+  both do) or it runs `code/scripts/warrant_negctl.py` (the normative form,
+  VOS-D099). The old `grep -q '^not ok '` form, which passes a hung run, is a
+  finding (VOS-D088).
+* **The manifest (item M).** `evidence/test-manifest.json` is read with the
+  repository's JSON reader (`bounded-json`) and must satisfy:
+  `schema` is `warrant-test-evidence-v1` and `tests` is non-empty (an empty
+  manifest fails, line 6); every claim with an `exhaustive` entry has `cases` > 0
+  (a zero-case claim fails, line 6); every such claim has a `property` entry with
+  `cases` >= 4096 (line 7) and a `fuzz` entry with `iterations` >= 5000 (line 8);
+  every `exhaustive`, `property`, `fuzz` and `example` entry has verdict `pass`;
+  every tier (`exhaustive`, `property`, `fuzz`) has at least one `negctl` entry
+  and every `negctl` entry has verdict `pass`, except the entries whose full `id`
+  appears in `warrant/check_evidence.sh` (the exception list of VOS-D065 and
+  VOS-D098; no script, no exception).
+
+**What `check-component` does not check yet, each with a row.** The exact "controls
+equal operations times tiers" count of line 9 (the manifest does not say which
+tiers an operation is exercised in, and the bindings reader is the generator's:
+VOS-D104); the VER06 parser-fuzz seed corpus and length bounds of line 8 (a crate
+cannot yet declare that it parses: VOS-D105); the command-type check of line 2
+(VOS-D077); that every operation has a control in every tier it appears in
+(VOS-D080 notes `insert_img` and `remove_img` in `-any`).
+
+**Item G, the coverage gate (VOS-D070).** The coverage tool is
+`cargo tarpaulin`, which CI already installs on Linux (pinned, `--locked`, with
+`llvm-tools`; `ci.yml`), and which other Rust packages of the repository run.
+It runs on the LLVM engine (the same engine as the other crates that spawn
+processes; no ptrace dependence). The floor is **declared in `vos.toml`**:
+
+```toml
+coverage-floor = 95
+```
+
+an integer percent of line coverage of `<crate>/src/*`, tests excluded. The
+number is not invented here: it is the repository's package standard (95 or
+more for libraries), and `check-component` refuses a floor below 95; a crate may
+declare a higher one. The gate is a BUILD line that `check-component` requires
+on Linux (tarpaulin is a Linux gate in this repository, as everywhere else; macOS
+and Windows skip it, and `BUILD_windows` does not carry it):
+
+```text
+if [ "$(uname)" = "Linux" ]; then cargo tarpaulin -p <crate> --features ghost --lib --test behaviour --ignore-tests --engine llvm --include-files '<crate>/src/*' --fail-under <floor> --skip-clean; fi
+```
+
+`check-component` fails if the line is absent, or if `--fail-under` is not equal
+to the `vos.toml` floor, or if `--include-files` does not name `<crate>/src/*`
+(without it tarpaulin scores the whole workspace and the floor measures nothing).
+A run that measures no line of the crate ("none ran = fail") makes tarpaulin
+exit non-zero, which was checked by running it with a pattern that matches
+nothing: `No coverage results collected`, exit 1. The measured numbers belong in
+the README **only as a dated measurement**; the floor is what a build keeps true.
+
+**Negative controls.** `vos-link`'s tests build a fixture crate that passes, then
+break it one way at a time: a missing required file; a missing BUILD line (in
+`BUILD`, and separately in `BUILD_windows`); a missing guard (a sabotage line
+that is not bail-out-aware; `check-component` before the manifest-writing run);
+a manifest with an empty claim, a property count under 4096, a failing control;
+a missing build-tool row; a kind-`any` crate without `publish = false`; a
+missing or too-low coverage floor, and a missing coverage line. Each must fail
+with its own code and text.
 
 ---
 
@@ -792,7 +920,7 @@ them.
 | 3 | VOS-D081 | Safety-tier `init` claim | The VOS-012a run showed nothing constrains `init` outside `canonical`; it changes every implementation's safety digests, so it lands before the second implementation of the contract (`rr`) |
 | 4 | VOS-012b | `vos-sched-rr` (representation mode) | The first representation-mode implementation (VOS-D061) and the first swap |
 | 5 | VOS-038 | Generator debts: D065 non-inert record fault, D063 heap observer, D025 array builder | Before mass production |
-| 6 | VOS-039 | Component kit: generic contract check (D049), `vos-link check-component`, coverage gate | After three real implementations exist |
+| 6 | VOS-039 | Component kit: 039a `vos-link check-component` and coverage gate (done), 039b generic contract check (D049), 039c oracle preservation of every `-any` (D080), 039d sabotage lines to `warrant_negctl.py` (D099) | After three real implementations exist |
 | 7 | VOS-028b | Capacity probe (fixture: `vos-sched-fp-bitmap`) | Fixes the X1 sizes (VOS00 D4) and decides 029's funding |
 | 8 | VOS-040 | Host model-SAT lane on the `sched` contract, plus the Rust-lowering spike | Reuses the probe harness |
 | 9 | VOS-005 | `emu-core` | The emulator has been idle and everything bootable waits on it |
