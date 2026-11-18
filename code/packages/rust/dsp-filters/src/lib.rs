@@ -9,8 +9,10 @@
 #![forbid(unsafe_code)]
 #![warn(rust_2018_idioms)]
 
+mod biquad;
 pub mod design;
 pub mod iir;
+pub use biquad::{sosfilt, Biquad};
 pub use design::{
     butterworth_lowpass, chebyshev1_lowpass, design_band_pass, design_high_pass, design_low_pass,
     try_design_band_pass, try_design_high_pass, try_design_low_pass, WindowType,
