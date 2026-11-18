@@ -1,6 +1,7 @@
 package record
 
 import (
+	"bytes"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -191,6 +192,44 @@ func goodReport(cfg *sandbox.Config, shadowed []string) ProbeReport {
 		rep.Runs = append(rep.Runs, ProbeRunRecord{Name: sp.Name, Argv: sp.Argv, TraceBytes: 10, TraceSHA256: strings.Repeat("0", 64)})
 	}
 	return rep
+}
+
+// TestProbeWallIsNeverSealed: a probe's wall time is an in-memory census fact
+// (ProbeRunRecord.Wall).  Two reports that differ ONLY in wall time must encode
+// to the same bytes, and the bytes must hold no trace of a duration, or
+// pre/probes.json would differ from run to run.
+func TestProbeWallIsNeverSealed(t *testing.T) {
+	cfg := probeCfg()
+	plain := goodReport(cfg, []string{"/usr/a"})
+	timed := goodReport(cfg, []string{"/usr/a"})
+	for i := range timed.Runs {
+		timed.Runs[i].Wall = time.Duration(123456789+i) * time.Nanosecond
+	}
+	a, err := EncodeProbes(plain)
+	if err != nil {
+		t.Fatal(err)
+	}
+	b, err := EncodeProbes(timed)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !bytes.Equal(a, b) {
+		t.Fatalf("a wall time reached the sealed bytes:\n%s\n%s", a, b)
+	}
+	for _, needle := range []string{"wall", "123456789", "elapsed", "duration"} {
+		if strings.Contains(string(b), needle) {
+			t.Errorf("sealed bytes mention %q: %s", needle, b)
+		}
+	}
+	back, err := DecodeProbes(b)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, r := range back.Runs {
+		if r.Wall != 0 {
+			t.Errorf("a decoded run carries a wall time: %v", r.Wall)
+		}
+	}
 }
 
 func TestProbesRoundTripAndStrictDecode(t *testing.T) {

@@ -136,7 +136,7 @@ func runProbe(in ProbeInput, probeDir string, spec ProbeSpec, deadline time.Dura
 	if err := CheckProbeRun(spec, obs, tr); err != nil {
 		return ProbeRunRecord{}, diag(err)
 	}
-	return ProbeRunRecord{Name: spec.Name, Argv: spec.Argv, Exit: run.code, TraceBytes: sink.n, TraceSHA256: hex.EncodeToString(sink.h.Sum(nil))}, nil
+	return ProbeRunRecord{Name: spec.Name, Argv: spec.Argv, Exit: run.code, TraceBytes: sink.n, TraceSHA256: hex.EncodeToString(sink.h.Sum(nil)), Wall: elapsed}, nil
 }
 
 // probesLeftNothing requires tmpdir to be empty and every state root to be

@@ -47,6 +47,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"reflect"
 	"strings"
 	"syscall"
 	"testing"
@@ -360,6 +361,81 @@ func TestSandboxRecordProbe(t *testing.T) {
 		// Nothing of the probe is left where a step could see it.
 		if entries, err := os.ReadDir(legacy.RecordTmpdir); err != nil || len(entries) != 0 {
 			t.Errorf("tmpdir after the probes: %v %v", entries, err)
+		}
+	})
+
+	// The G2 census for the probe path (KILN04 section 4.9): `record prepare`
+	// runs in a child process, so its in-memory ProbeRunRecord.Wall is out of
+	// reach; this runs the same exported runner in-process, on the sealed
+	// configuration, and logs each probe's trace with the probe's wall time.
+	// The wall is a census fact only: it is never in a sealed file, and the test
+	// says so by reading the real pre/probes.json and the encoder's output.
+	t.Run("probe timing stays out of the sealed report", func(t *testing.T) {
+		w := newProbeWorld(t, kiln, probeOpts{})
+		if stderr, code := w.prepare(t, w.strace); code != 0 {
+			t.Fatalf("record prepare: exit %d\nstderr: %s", code, stderr)
+		}
+		pre, err := record.VerifyPre(w.recDir)
+		if err != nil {
+			t.Fatal(err)
+		}
+		sealed, err := os.ReadFile(filepath.Join(w.recDir, "pre", record.ProbesFile))
+		if err != nil {
+			t.Fatal(err)
+		}
+		cfgPath := filepath.Join(w.recDir, "pre", "sandbox.json")
+		cfgBytes, err := os.ReadFile(cfgPath)
+		if err != nil {
+			t.Fatal(err)
+		}
+		sum := sha256.Sum256(cfgBytes)
+		runDir := t.TempDir()
+		action := pre.Probes.Action
+		// Env is KILN_ACTION, KILN_STEP, KILN_STEP_COUNT and PATH only.  The real
+		// stepProcessEnv would also add LD_LIBRARY_PATH when the sealed tools name
+		// one.  That is fine here: the probes run plain /bin and /usr programs,
+		// and this subtest takes timing of the same strace + sandbox-exec + trace
+		// path, which does not depend on the library search path.
+		rep, err := record.RunStructureProbes(record.ProbeInput{
+			Dir: runDir, Cfg: pre.Config, ConfigPath: cfgPath, ConfigSHA256: hex.EncodeToString(sum[:]), Action: action,
+			KilnExe: pre.Config.KilnExe, Strace: w.strace,
+			Env: []string{"KILN_ACTION=" + action, "KILN_STEP=0", "KILN_STEP_COUNT=1", "PATH=" + pre.Tools.Path},
+		})
+		if err != nil {
+			t.Fatal(err)
+		}
+		// The in-process report is the same kind of report the sealed one is: it
+		// passes the same check, and runs the same probes in the same order.
+		if err := record.CheckProbeReport(pre.Config, rep, []string{action}); err != nil {
+			t.Fatalf("the in-process probe report is not a valid one: %v", err)
+		}
+		var sealedNames, ranNames []string
+		for _, r := range pre.Probes.Runs {
+			sealedNames = append(sealedNames, r.Name)
+		}
+		for _, r := range rep.Runs {
+			ranNames = append(ranNames, r.Name)
+		}
+		if !reflect.DeepEqual(sealedNames, ranNames) {
+			t.Errorf("the in-process run names %v are not the sealed report's %v", ranNames, sealedNames)
+		}
+		for _, r := range rep.Runs {
+			if r.Wall <= 0 {
+				t.Errorf("%s: no wall time in memory: %v", r.Name, r.Wall)
+			}
+			probeTraceWall(t, "probe-wall-"+r.Name, filepath.Join(runDir, record.ProbeDir, r.Name+".trace"), r.Wall)
+		}
+		encoded, err := record.EncodeProbes(rep)
+		if err != nil {
+			t.Fatal(err)
+		}
+		keys := sealedRunKeys(t)
+		for name, data := range map[string][]byte{"pre/probes.json": sealed, "EncodeProbes output": encoded} {
+			// Structural, not a substring search: the document embeds temp paths
+			// named after this subtest.
+			if problems := probeReportProblems(data, keys); len(problems) != 0 {
+				t.Errorf("%s carries timing or an unsealed field: %v\n%s", name, problems, data)
+			}
 		}
 	})
 
