@@ -303,6 +303,9 @@ func TestRunPackageBuildStopsOnFailure(t *testing.T) {
 	if result.Status != "failed" {
 		t.Fatalf("expected failed, got %s", result.Status)
 	}
+	if !contains(result.Stdout, "first") {
+		t.Fatal("output buffered before the failure was lost")
+	}
 	// "third" should not appear in stdout because execution stops at the failure.
 	if contains(result.Stdout, "third") {
 		t.Fatal("should not have executed command after failure")

@@ -10,6 +10,11 @@ All notable changes to the TypeScript build tool will be documented in this file
 
 ### Changed
 
+- Compile the real CLI once per Vitest run and launch fresh Node processes from
+  the emitted JavaScript for the duplicate-identity and invalid-UTF-8 fixtures.
+  The fixtures keep their 5-second process-tree limits and exact diagnostics;
+  the emitted registry asset is byte-checked and test-owned output is removed
+  on setup failure or suite teardown.
 - `vitest.config.ts` sets `testTimeout: 30_000`. The tests that start real
   processes (git in `tests/gitdiff.test.ts`, the CLI through node + tsx in
   `tests/resolver.test.ts`, which already gives that child 30 s) ran 5.2 s on

@@ -206,12 +206,13 @@ var (
 		"code/scripts/tests/test_trig_reference_dart_fixtures.py",
 	}
 
-	rngCorpusPaths         = []string{"code/specs/fixtures/rng-v1"}
-	gameClockInputPaths    = []string{"code/specs/fixtures/game-clock-v1", "code/specs/game-clock.warrant"}
-	biquadSosFixturePaths  = []string{"code/specs/fixtures/biquad-sos-v1"}
-	hamurabiCorpusPaths    = []string{"code/specs/fixtures/hamurabi-v1"}
-	lunarLanderCorpusPaths = []string{"code/specs/fixtures/lunar-lander-v1"}
-	warrantGrammarPaths    = []string{
+	rngCorpusPaths                 = []string{"code/specs/fixtures/rng-v1"}
+	gameClockInputPaths            = []string{"code/specs/fixtures/game-clock-v1", "code/specs/game-clock.warrant"}
+	typescriptGameClockCorpusPaths = []string{"code/specs/fixtures/game-clock-v1"}
+	biquadSosFixturePaths          = []string{"code/specs/fixtures/biquad-sos-v1"}
+	hamurabiCorpusPaths            = []string{"code/specs/fixtures/hamurabi-v1"}
+	lunarLanderCorpusPaths         = []string{"code/specs/fixtures/lunar-lander-v1"}
+	warrantGrammarPaths            = []string{
 		"code/grammars/warrant",
 		"code/specs/fixtures/warrant-syntax-v1",
 		"code/specs/fixtures/warrant-vectors-synthetic-v1",
@@ -545,6 +546,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "the GAME10 constructor Warrant model and fixed-step clock v1 corpus",
 		matches:  isGameClockInput,
 		paths:    gameClockInputPaths,
+	},
+	{
+		name:     "typescript/game-clock",
+		language: "typescript",
+		inputs:   "the shared GAME10 fixed-step clock v1 corpus",
+		matches:  isGameClockCorpusInput,
+		paths:    typescriptGameClockCorpusPaths,
 	},
 	{
 		name:     "python/trig",
@@ -1463,8 +1471,13 @@ func isRngCorpus(changed string) bool {
 // isGameClockInput reports whether GAME10's constructor model or shared v1 vectors changed.
 // The exact spec path and versioned directory boundary deliberately exclude lookalikes.
 func isGameClockInput(changed string) bool {
-	return changed == "code/specs/game-clock.warrant" ||
-		strings.HasPrefix(changed, "code/specs/fixtures/game-clock-v1/")
+	return changed == "code/specs/game-clock.warrant" || isGameClockCorpusInput(changed)
+}
+
+// isGameClockCorpusInput selects only the shared GAME10 v1 vectors. The
+// TypeScript consumer intentionally does not read or execute the Warrant spec.
+func isGameClockCorpusInput(changed string) bool {
+	return strings.HasPrefix(changed, "code/specs/fixtures/game-clock-v1/")
 }
 
 // isBiquadSosFixture selects files in the versioned shared DSP fixture while
