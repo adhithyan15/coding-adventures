@@ -28,7 +28,11 @@
 //!   8/16-bit fixed (not U8)         {"d":"fx_full","t":T}          full
 //!   unsigned 32-bit fixed           {"d":"fx_edge","t":T}          bounded-set  313
 //!   Result<T,E>                     {"d":"result","ok":D,"errs":[..]}   label of D
+//!   (T1,..,Tn)                      {"d":"tuple","of":[D1,..,Dn]}       weakest label of the Di
 //! ```
+//!
+//! A tuple domain is the Cartesian product of its components, the **last** component varying
+//! fastest (`ir.tuple`, S10t-2); its `size` is the product, checked.
 //!
 //! Every node also records its `size`.  `Bytes<N>` for `N >= 2` is `sample` (VER04r 9.3).
 //!
@@ -46,7 +50,8 @@
 //! | 5 | `FxEdge` at 16 bits (a demoted `U16`/`I16`) | `domain` |
 //!
 //! (`ct-compare` hits none: its binders are `Bytes`, `Bytes<N>`, `U64` and `Bool`.)  A
-//! composite (tuple, record, variant, option, list) is `ir.data`: refused naming the level.
+//! composite (record, variant, option, list) is `ir.data`: refused naming the level (a tuple is
+//! `ir.tuple` and is described).
 //! `Domain` is `#[non_exhaustive]`, so the last arm of every match here refuses.
 //!
 //! ## Value caches
@@ -299,11 +304,29 @@ pub fn describe(d: &Domain, depth: usize) -> Result<(Json, Label, u64), GenError
         Domain::List(inner) if is_byte_string(inner) => {
             return Err(refuse("1/2", "a list of byte strings"));
         }
-        Domain::Tuple(_) | Domain::Data { .. } | Domain::Opt(_) | Domain::List(_) => {
+        Domain::Tuple(parts) => {
+            let mut described = Vec::with_capacity(parts.len());
+            let mut label = Label::Full;
+            for part in parts {
+                let (j, l, _) = describe(part, depth + 1)?;
+                label = weakest(label, l);
+                described.push(j);
+            }
+            (
+                Json::obj([
+                    ("d", Json::str("tuple")),
+                    ("of", Json::arr(described)),
+                    ("size", Json::Int(size)),
+                ]),
+                label,
+                size,
+            )
+        }
+        Domain::Data { .. } | Domain::Opt(_) | Domain::List(_) => {
             return Err(GenError::level(
                 Beyond::IrData,
                 "",
-                "a tuple, record, variant, option or list binder needs ir.data",
+                "a record, variant, option or list binder needs ir.data",
             ));
         }
         // `Domain` is non-exhaustive: a kind this generator has not heard of is refused,
@@ -615,9 +638,18 @@ mod tests {
     }
 
     #[test]
-    fn composites_are_ir_data_and_a_deep_tree_is_a_limit_error() {
+    fn a_tuple_is_described_and_other_composites_are_ir_data_and_a_deep_tree_is_a_limit_error() {
+        // ir.tuple (S10t-2): the Cartesian product, the weakest label of its components
+        let pair = Domain::Tuple(vec![Domain::Bool, Domain::BytesN(2)]);
+        let (json, label, size) = describe(&pair, 1).unwrap();
+        assert_eq!(
+            json.render().unwrap().split_whitespace().collect::<String>(),
+            r#"{"d":"tuple","of":[{"d":"bool","size":2},{"d":"bytes_n","n":2,"size":16}],"size":32}"#
+        );
+        assert_eq!((label, size), (Label::Sample, 32));
+        // a composite that is not a tuple is still ir.data, also inside a tuple
         for dom in [
-            Domain::Tuple(vec![Domain::Bool]),
+            Domain::Tuple(vec![Domain::Bool, Domain::Opt(Box::new(Domain::Bool))]),
             Domain::Opt(Box::new(Domain::Bool)),
             Domain::List(Box::new(Domain::Bool)),
         ] {

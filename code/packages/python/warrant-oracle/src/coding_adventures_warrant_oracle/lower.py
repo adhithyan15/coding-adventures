@@ -17,11 +17,12 @@ calls, and which IR feature level a construct needs.
 
 Feature levels (VER04r section 4.1)
 -----------------------------------
-The oracle *evaluates* ``ir.core`` and (since slice S10t-1) ``ir.tuple``; since slice S10a it also
-*lowers and types* the 35 built-ins of ``ir.fixed`` (Appendix A.1).  A model, op admit, claim or
-example that uses one of those is lowered completely (its IR, its ``requires`` and, through
-:mod:`.ir_eval`, its cost are all available) and is then marked ``unsupported`` with a ``level``
-error naming ``ir.fixed``: **evaluation still refuses** until slice S10c-1.
+The oracle *evaluates* ``ir.core``, ``ir.tuple`` (slice S10t-1) and ``ir.fixed`` (slice S10c-1); since
+slice S10a it *lowers and types* the 35 built-ins of ``ir.fixed`` (Appendix A.1) and, since slice S10c-1,
+:mod:`.ir_eval` evaluates them too, so a model, op admit, claim or example that uses one of those
+is lowered completely (its IR, its ``requires`` and its cost) and is evaluable like any other.  In a
+v0 document the built-ins keep the ``ir.fixed`` ``level`` refusal (VER04j 1.2: the names are
+version scoped).
 
 ``ir.tuple`` (slice S10t-1)
 ---------------------------
@@ -413,12 +414,15 @@ class _Lowerer:
         return OracleError("level", message, level=level)
 
     def seal(self, *irs: object) -> tuple[tuple, OracleError | None]:
-        """The ``requires`` of a fully lowered unit and its evaluation refusal (slice S10a).
+        """The ``requires`` of a fully lowered unit and its evaluation refusal.
 
         ``requires`` is :func:`.levels.ir_levels` over ``irs`` and the call closure of every
-        ``model_call`` (R9).  The oracle evaluates ``ir.core`` only, so a unit that needs
-        another level is marked unsupported with a ``level`` error naming it: the IR stays
-        (for the lowering dump and for cost) and **evaluation refuses**.
+        ``model_call`` (R9).  Since slice S10c-1 the oracle evaluates ``ir.core``, ``ir.tuple`` and
+        ``ir.fixed``, so a unit that lowered completely is never refused here: the second result
+        is always ``None`` and is kept so that every caller (and the generator's mirror of this
+        function) still has one place that could mark a unit ``unsupported`` for a level the
+        evaluator lacks.  A construct of ``ir.data`` or ``ir.seq`` never reaches this point: the
+        lowerer raises a ``level`` error for it.
         """
         # ``ir.core`` is always in a row's requires (VER04r section 6: "at least").  The call
         # closure is read from each callee's own ``requires`` (already closed over its callees,
@@ -429,15 +433,7 @@ class _Lowerer:
                 if node[0] == "model_call":
                     found.update(self.spec.models[node[1]].requires)
         found |= self._type_levels
-        requires = tuple(sorted(found))
-        for level in requires:
-            # The oracle evaluates ir.core; the composite domains of S4 already carry tuple,
-            # list and record *values*, so a type alone is counted and not refused.  Only
-            # ir.fixed (a tag the evaluator cannot run) refuses evaluation.
-            if level == L.FIXED:
-                message = _FIXED_MESSAGE if level == L.FIXED else f"a construct of {level}"
-                return requires, self.level(level, message)
-        return requires, None
+        return tuple(sorted(found)), None
 
     def check_type(self, ty: A.Ty) -> None:
         """A type of a signature or binder: refuse ``Option`` (D23), count a tuple (R9)."""

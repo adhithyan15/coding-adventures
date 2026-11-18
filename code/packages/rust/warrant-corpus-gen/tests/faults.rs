@@ -5,7 +5,8 @@ mod support;
 use coding_adventures_warrant_corpus_gen::emit::build_faults;
 use coding_adventures_warrant_corpus_gen::enumerate::enumerate_analysed;
 use coding_adventures_warrant_corpus_gen::faults::{
-    instantiate, search, stand_in, ClaimState, Expr, Fault, Kind, Level, Probe, KNOWN_FAULTS,
+    first_unimplemented, instantiate, search, stand_in, ClaimState, Expr, Fault, Kind, Level, Probe,
+    KNOWN_FAULTS, SHIPPED_GATE,
 };
 use coding_adventures_warrant_corpus_gen::ir::Ir;
 use coding_adventures_warrant_corpus_gen::lower::lower_document;
@@ -69,8 +70,8 @@ fn templates_render_exactly_as_section_8() {
         )
     );
     let hb = instantiate(&ct_op("eq_u64"), "ignore-high-bit").unwrap();
-    assert_eq!(hb.level, Level::Fixed);
-    assert!(!hb.level.implemented());
+    assert_eq!(hb.requires, [Level::Fixed]);
+    assert_eq!(first_unimplemented(&hb.requires, &SHIPPED_GATE), Some(Level::Fixed));
     assert_eq!(
         json(&hb),
         concat!(
@@ -96,10 +97,10 @@ fn the_other_templates_instantiate_by_signature() {
         let tl = instantiate(l.op("blob").unwrap(), "truncate-last").unwrap();
         assert!(matches!(tl.kind, Kind::Post(Expr::Core(Ir::If(..)))));
         let xor = instantiate(l.op("byte").unwrap(), "xor-lsb").unwrap();
-        assert_eq!(xor.level, Level::Fixed);
+        assert_eq!(xor.requires, [Level::Fixed]);
         assert!(json(&xor).contains(r#"["bit_xor",["var","result"],["lit",{"type":"U8","value":"1"}]]"#));
         // every name of the registry is reachable
-        assert_eq!(KNOWN_FAULTS.len(), 8);
+        assert_eq!(KNOWN_FAULTS.len(), 13);
     });
 }
 
@@ -277,7 +278,7 @@ fn pre_fault_rewrites_apply_simultaneously() {
         let mk = |swap: bool| Fault {
             name: "swap-ab".into(),
             op: "g".into(),
-            level: Level::Core,
+            requires: vec![Level::Core],
             kind: Kind::Pre(vec![
                 ("a".into(), Expr::Core(*var("b"))),
                 ("b".into(), Expr::Core(if swap { *var("a") } else { *var("b") })),
@@ -315,7 +316,7 @@ fn a_binder_passed_twice_needs_one_rewrite_or_there_is_no_stand_in() {
         let one = Fault {
             name: "one".into(),
             op: "g".into(),
-            level: Level::Core,
+            requires: vec![Level::Core],
             kind: Kind::Pre(vec![("a".into(), Expr::Core(Ir::Var("b".into())))]),
         };
         assert!(stand_in(s, &one, op).is_none(), "x is rewritten at one position only");

@@ -93,6 +93,11 @@ type CollectOptions struct {
 	SurvivorScanTimeout time.Duration
 	Now                 func() time.Time
 	Sleep               func(time.Duration)
+	// SelfStartTicks reads this process's own start time (field 22 of
+	// /proc/self/stat, in ticks since boot); the default is ReadSelfStartTicks.
+	// Collect uses it only to check the sealed prepared_ticks is on this boot's
+	// clock (D26).
+	SelfStartTicks func() (int64, error)
 }
 
 // CollectResult says what a successful Collect wrote.
@@ -185,12 +190,24 @@ func Collect(o CollectOptions) (*CollectResult, error) {
 		return nil, fmt.Errorf("--root %q is not the checkout the shard was prepared for (%q)", printable(o.Root), printable(pre.Config.RepoRoot))
 	}
 	// 2a. Nothing of the sandbox may still be running (D6, token `survivor`).
-	// "Started after prepare" is the sealed prepared_at less two seconds of slack
-	// (it has a one-second resolution, and so does the boot time); a value that
-	// does not parse leaves the time zero, which makes every process count.
+	// "Started after prepare" is the sealed prepared_ticks (clock ticks since boot,
+	// the clock a process's starttime is in) less SurvivorSlackTicks. No wall-clock
+	// time is involved (D26); the decoder refuses a binding without a positive
+	// prepared_ticks, and a bound of zero or less would make every process count.
 	q := SurvivorQuery{RepoRoot: pre.Config.RepoRoot, Configs: []string{pre.ConfigPath, filepath.Join(o.Dir, "probe", "toolchains-sandbox.json")}}
-	if t, err := time.Parse(time.RFC3339, pre.Binding.PreparedAt); err == nil {
-		q.Since = t.Add(-2 * time.Second)
+	q.SinceTicks = pre.Binding.PreparedTicks - SurvivorSlackTicks
+	// Sanity check, no schema field needed: collect starts after prepare, on the
+	// same boot, so our own start time is not less than the sealed one. If it is
+	// (a reboot between the two, or prepare and collect reading different clock
+	// sources, as a container with a virtualised /proc can), prepared_ticks says
+	// nothing about this boot: a bound of 0 counts every process (fail closed). If
+	// our own start cannot be read, the same.
+	selfStart := o.SelfStartTicks
+	if selfStart == nil {
+		selfStart = ReadSelfStartTicks
+	}
+	if mine, err := selfStart(); err != nil || mine < pre.Binding.PreparedTicks {
+		q.SinceTicks = 0
 	}
 	survivors := waitSurvivors(func() ([]string, error) { return o.Survivors(q) }, o.SurvivorWait, o.Now, o.Sleep, o.SurvivorScanTimeout)
 	kiln, err := ResolveBinary("the kiln binary", o.KilnExe)

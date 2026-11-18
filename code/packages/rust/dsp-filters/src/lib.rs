@@ -12,8 +12,8 @@
 pub mod design;
 pub mod iir;
 pub use design::{
-    butterworth_lowpass, chebyshev1_lowpass, design_band_pass, design_high_pass,
-    design_low_pass, WindowType,
+    butterworth_lowpass, chebyshev1_lowpass, design_band_pass, design_high_pass, design_low_pass,
+    try_design_band_pass, try_design_high_pass, try_design_low_pass, WindowType,
 };
 pub use iir::iir;
 
@@ -64,26 +64,32 @@ pub fn fir(signal: &[f32], kernel: &[f32]) -> Result<Vec<f32>, FilterError> {
     }
     let n = signal.len();
     let k = kernel.len();
-    let out_len = n.checked_add(k).and_then(|x| x.checked_sub(1)).ok_or_else(|| {
-        FilterError::InvalidCoefficient("convolution output length overflow".into())
-    })?;
+    let out_len = n
+        .checked_add(k)
+        .and_then(|x| x.checked_sub(1))
+        .ok_or_else(|| {
+            FilterError::InvalidCoefficient("convolution output length overflow".into())
+        })?;
     if out_len > MAX_SAMPLES {
         return Err(FilterError::InvalidCoefficient(format!(
             "convolution output length {} exceeds MAX_SAMPLES {}",
-            out_len,
-            MAX_SAMPLES
+            out_len, MAX_SAMPLES
         )));
     }
 
     // Validate finite floats BEFORE any allocation
     for &x in signal {
         if !x.is_finite() {
-            return Err(FilterError::InvalidCoefficient("non-finite float in signal".into()));
+            return Err(FilterError::InvalidCoefficient(
+                "non-finite float in signal".into(),
+            ));
         }
     }
     for &h in kernel {
         if !h.is_finite() {
-            return Err(FilterError::InvalidCoefficient("non-finite float in kernel".into()));
+            return Err(FilterError::InvalidCoefficient(
+                "non-finite float in kernel".into(),
+            ));
         }
     }
 
@@ -129,36 +135,42 @@ pub fn fir_fft(signal: &[f32], kernel: &[f32]) -> Result<Vec<f32>, FilterError> 
     }
     let n = signal.len();
     let k = kernel.len();
-    let out_len = n.checked_add(k).and_then(|x| x.checked_sub(1)).ok_or_else(|| {
-        FilterError::InvalidCoefficient("convolution output length overflow".into())
-    })?;
+    let out_len = n
+        .checked_add(k)
+        .and_then(|x| x.checked_sub(1))
+        .ok_or_else(|| {
+            FilterError::InvalidCoefficient("convolution output length overflow".into())
+        })?;
     if out_len > MAX_SAMPLES {
         return Err(FilterError::InvalidCoefficient(format!(
             "convolution output length {} exceeds MAX_SAMPLES {}",
-            out_len,
-            MAX_SAMPLES
+            out_len, MAX_SAMPLES
         )));
     }
 
     for &x in signal {
         if !x.is_finite() {
-            return Err(FilterError::InvalidCoefficient("non-finite float in signal".into()));
+            return Err(FilterError::InvalidCoefficient(
+                "non-finite float in signal".into(),
+            ));
         }
     }
     for &h in kernel {
         if !h.is_finite() {
-            return Err(FilterError::InvalidCoefficient("non-finite float in kernel".into()));
+            return Err(FilterError::InvalidCoefficient(
+                "non-finite float in kernel".into(),
+            ));
         }
     }
 
-    let fft_len = out_len.checked_next_power_of_two().ok_or_else(|| {
-        FilterError::InvalidCoefficient("FFT length overflow".into())
-    })?.max(2);
+    let fft_len = out_len
+        .checked_next_power_of_two()
+        .ok_or_else(|| FilterError::InvalidCoefficient("FFT length overflow".into()))?
+        .max(2);
     if fft_len > MAX_SAMPLES {
         return Err(FilterError::InvalidCoefficient(format!(
             "FFT length {} exceeds MAX_SAMPLES {}",
-            fft_len,
-            MAX_SAMPLES
+            fft_len, MAX_SAMPLES
         )));
     }
 
@@ -182,7 +194,8 @@ pub fn fir_fft(signal: &[f32], kernel: &[f32]) -> Result<Vec<f32>, FilterError> 
         prod[2 * b + 1] = r1 * i2 + i1 * r2;
     }
 
-    let mut out = dsp_fft::irfft_scalar(&prod, fft_len as u32).map_err(|e| FilterError::Fft(e.to_string()))?;
+    let mut out = dsp_fft::irfft_scalar(&prod, fft_len as u32)
+        .map_err(|e| FilterError::Fft(e.to_string()))?;
     out.truncate(out_len);
     Ok(out)
 }
@@ -247,10 +260,215 @@ mod tests {
         }
     }
 
+    fn assert_bits(actual: &[f32], expected: &[u32]) {
+        assert_eq!(actual.len(), expected.len());
+        for (index, (value, bits)) in actual.iter().zip(expected).enumerate() {
+            assert_eq!(
+                value.to_bits(),
+                *bits,
+                "coefficient bit mismatch at {index}"
+            );
+        }
+    }
+
     fn sample_f32(rng: &mut SplitMix64) -> f32 {
         let u = rng.next_u64();
         let mantissa = (u & 0x00ff_ffff) as f32 / (0x0100_0000 as f32);
         (mantissa * 2.0) - 1.0
+    }
+
+    #[test]
+    fn checked_designers_match_legacy_coefficient_bits() {
+        for &window in &[
+            WindowType::Rectangular,
+            WindowType::Hamming,
+            WindowType::Hann,
+            WindowType::Blackman,
+        ] {
+            for &cutoff in &[0.0, 0.1, 0.25, 0.5] {
+                let legacy = design_low_pass(cutoff, 5, window);
+                let checked = try_design_low_pass(cutoff, 5, window).unwrap();
+                assert_eq!(
+                    legacy.iter().map(|v| v.to_bits()).collect::<Vec<_>>(),
+                    checked.iter().map(|v| v.to_bits()).collect::<Vec<_>>()
+                );
+
+                let legacy = design_high_pass(cutoff, 5, window);
+                let checked = try_design_high_pass(cutoff, 5, window).unwrap();
+                assert_eq!(
+                    legacy.iter().map(|v| v.to_bits()).collect::<Vec<_>>(),
+                    checked.iter().map(|v| v.to_bits()).collect::<Vec<_>>()
+                );
+            }
+            let legacy = design_band_pass(0.0, 0.5, 5, window);
+            let checked = try_design_band_pass(0.0, 0.5, 5, window).unwrap();
+            assert_eq!(
+                legacy.iter().map(|v| v.to_bits()).collect::<Vec<_>>(),
+                checked.iter().map(|v| v.to_bits()).collect::<Vec<_>>()
+            );
+        }
+    }
+
+    #[test]
+    fn legacy_designers_match_prechecked_algebraic_bit_baselines() {
+        // Captured from the public functions at baseline
+        // 7e9f7d57a70fd446288888e48e8fea8e868019dc. These one-tap and
+        // signed-zero cases do not depend on platform libm precision.
+        assert_bits(
+            &design_low_pass(-0.0, 1, WindowType::Rectangular),
+            &[0x8000_0000],
+        );
+        assert_bits(
+            &design_low_pass(0.25, 1, WindowType::Rectangular),
+            &[0x3f80_0000],
+        );
+        assert_bits(
+            &design_high_pass(0.0, 1, WindowType::Rectangular),
+            &[0x3f80_0000],
+        );
+        assert_bits(
+            &design_band_pass(0.0, 0.5, 1, WindowType::Rectangular),
+            &[0x3f80_0000],
+        );
+    }
+
+    #[test]
+    fn checked_designers_validate_before_tap_allocation() {
+        assert!(matches!(
+            try_design_low_pass(f32::NAN, 0, WindowType::Rectangular),
+            Err(FilterError::InvalidCoefficient(_))
+        ));
+        assert!(matches!(
+            try_design_high_pass(0.2, 2, WindowType::Rectangular),
+            Err(FilterError::InvalidCoefficient(_))
+        ));
+        assert!(matches!(
+            try_design_band_pass(f32::NAN, 0.2, 0, WindowType::Rectangular),
+            Err(FilterError::InvalidCoefficient(_))
+        ));
+
+        let cap_error =
+            match try_design_low_pass(0.2, (MAX_TAPS + 1) as u32, WindowType::Rectangular) {
+                Err(error) => error,
+                Ok(_) => panic!("MAX_TAPS + 1 must be rejected before building a kernel"),
+            };
+        assert!(matches!(cap_error, FilterError::InvalidCoefficient(_)));
+        let bp_cap_error = match try_design_band_pass(
+            0.1,
+            f32::INFINITY,
+            (MAX_TAPS + 1) as u32,
+            WindowType::Rectangular,
+        ) {
+            Err(error) => error,
+            Ok(_) => panic!("band-pass tap cap must precede cutoff validation"),
+        };
+        assert_eq!(
+            bp_cap_error,
+            FilterError::InvalidCoefficient(format!(
+                "num_taps {} exceeds MAX_TAPS {}",
+                MAX_TAPS + 1,
+                MAX_TAPS
+            ))
+        );
+
+        // Exercise the largest accepted odd count once; this is a
+        // bounded allocation below the documented tap cap.
+        let largest_odd =
+            try_design_low_pass(0.25, (MAX_TAPS - 1) as u32, WindowType::Rectangular).unwrap();
+        assert_eq!(largest_odd.len(), MAX_TAPS - 1);
+    }
+
+    #[test]
+    fn checked_designers_report_validation_order_and_error_text() {
+        assert_eq!(
+            try_design_low_pass(f32::NAN, 0, WindowType::Rectangular).unwrap_err(),
+            FilterError::InvalidCoefficient("num_taps must be odd and >= 1; got 0".into())
+        );
+        assert_eq!(
+            try_design_high_pass(0.6, 3, WindowType::Rectangular).unwrap_err(),
+            FilterError::InvalidCoefficient("cutoff_norm must be in [0.0, 0.5]; got 0.6".into())
+        );
+        assert_eq!(
+            try_design_band_pass(0.2, 0.2, 3, WindowType::Rectangular).unwrap_err(),
+            FilterError::InvalidCoefficient(
+                "cutoffs must satisfy 0.0 <= low < high <= 0.5; got low=0.2, high=0.2".into()
+            )
+        );
+        assert_eq!(
+            try_design_band_pass(0.2, f32::NAN, 3, WindowType::Rectangular).unwrap_err(),
+            FilterError::InvalidCoefficient("cutoffs must be finite".into())
+        );
+    }
+
+    #[test]
+    fn checked_designers_match_legacy_for_seeded_valid_domain_samples() {
+        let windows = [
+            WindowType::Rectangular,
+            WindowType::Hamming,
+            WindowType::Hann,
+            WindowType::Blackman,
+        ];
+        let mut calls = 0usize;
+        for seed in [0x000a_0d10, 0x51ba_da55] {
+            let mut rng = SplitMix64::new(seed);
+            for _ in 0..64 {
+                let word = rng.next_u64();
+                let unit = ((word >> 40) as u32) as f32 / 16_777_216.0;
+                let cutoff = unit * 0.5;
+                let taps = 1 + 2 * ((rng.next_u64() % 16) as u32);
+                let window = windows[(rng.next_u64() % windows.len() as u64) as usize];
+                let lp = try_design_low_pass(cutoff, taps, window).unwrap();
+                let legacy_lp = design_low_pass(cutoff, taps, window);
+                assert_eq!(
+                    lp.iter().map(|v| v.to_bits()).collect::<Vec<_>>(),
+                    legacy_lp.iter().map(|v| v.to_bits()).collect::<Vec<_>>()
+                );
+                let hp = try_design_high_pass(cutoff, taps, window).unwrap();
+                let legacy_hp = design_high_pass(cutoff, taps, window);
+                assert_eq!(
+                    hp.iter().map(|v| v.to_bits()).collect::<Vec<_>>(),
+                    legacy_hp.iter().map(|v| v.to_bits()).collect::<Vec<_>>()
+                );
+                let high = 0.01 + cutoff * 0.98;
+                let low = high * 0.2;
+                let bp = try_design_band_pass(low, high, taps, window).unwrap();
+                let legacy_bp = design_band_pass(low, high, taps, window);
+                assert_eq!(
+                    bp.iter().map(|v| v.to_bits()).collect::<Vec<_>>(),
+                    legacy_bp.iter().map(|v| v.to_bits()).collect::<Vec<_>>()
+                );
+                calls += 3;
+            }
+        }
+        assert_eq!(calls, 384);
+    }
+
+    #[test]
+    fn legacy_designers_preserve_panic_payload_type_and_message() {
+        let formatted =
+            std::panic::catch_unwind(|| design_low_pass(0.2, 0, WindowType::Rectangular))
+                .unwrap_err();
+        assert_eq!(
+            formatted.downcast_ref::<String>().map(String::as_str),
+            Some("num_taps must be odd and >= 1; got 0")
+        );
+
+        let literal = std::panic::catch_unwind(|| {
+            design_band_pass(0.1, f32::INFINITY, 3, WindowType::Rectangular)
+        })
+        .unwrap_err();
+        assert_eq!(
+            literal.downcast_ref::<&'static str>().copied(),
+            Some("cutoffs must be finite")
+        );
+
+        let formatted_bp =
+            std::panic::catch_unwind(|| design_band_pass(0.2, 0.2, 3, WindowType::Rectangular))
+                .unwrap_err();
+        assert_eq!(
+            formatted_bp.downcast_ref::<String>().map(String::as_str),
+            Some("cutoffs must satisfy 0.0 <= low < high <= 0.5; got low=0.2, high=0.2")
+        );
     }
 
     #[test]

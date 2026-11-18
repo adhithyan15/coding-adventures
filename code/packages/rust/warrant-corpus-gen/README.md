@@ -18,6 +18,10 @@ slice S3). It reads a `.warrant` specification and will write the language-neutr
 > `requires` and costed, and reproduce the oracle's lowering dump byte for byte (see
 > "`ir.fixed` lowering parity"). They are **not evaluated or emitted**: `generate` still refuses an
 > `ir.fixed` document.
+>
+> **S10t-2** (`ir.tuple`): tuples, `project` and `match` on a `Result` are lowered, typed, costed,
+> evaluated and emitted, and the generator reproduces the oracle's four `tuple-forms-v1` dumps byte
+> for byte (see "`ir.tuple` (S10t-2)"). `ir.fixed` documents still refuse.
 
 ## How it fits
 
@@ -50,6 +54,7 @@ on it, so changing it rebuilds no shared crate (VER04r section 13, "Rule").
 | `json` | the VER04i 9.1 canonical writer: sorted keys, two-space indent, LF, `\uXXXX` escapes. No `serde`: a canonical form must not inherit a library's defaults |
 | `profile` | the strict reader of `corpus.profile` (VER04r 8.4): LF only, only an empty line is skipped, canonical decimals, `max_ir_cost` the only way to raise the cost bound, `accept_blind <op> <fault>` and `omit_example <id>` lines |
 | `types` | the small type language of `ir.core` (`Bool Int Nat U8..I64 Bytes Bytes<N> Result<T,E>`) and, since S10b, the IR-only `Option<T>` of the `ir.fixed` built-ins |
+| `patterns` | S10t-2: the six `match` patterns, the usefulness check, the corpus errors (code `ir`) |
 | `ir` | the 26 `ir.core` tags of VER04r Appendix A and their JSON form; S10b adds `Ir::Fixed`, the 35 `ir.fixed` built-ins of A.1 (lowered and costed, never evaluated), and `ir::levels`, the tag part of `requires` (R9) |
 | `lower` | syntax-directed, unoptimised lowering with a small annotating typer; the level refusals; `census` |
 | `analysis` | the pure-guard rule (4.4) and the v0 static arithmetic guard (3.3 rule 3) |
@@ -245,15 +250,15 @@ simply declare), as of this slice:
 | ct-compare | 9 | **9** | none |
 | gf256 | 38 | **38** | none (declares `max_ir_cost 32768`) |
 | x25519 | 8 | 6 | `ir.fixed` 2 |
-| logic-gates | 88 | 28 | `ir.fixed` 51, `ir.tuple` 6, `ir.data` 3 |
-| hash-functions | 56 | 4 | `ir.fixed` 25, `ir.tuple` 21, `W0701` 6 |
+| logic-gates | 88 | 28 | `ir.fixed` 57, `ir.data` 3 |
+| hash-functions | 56 | 4 | `ir.fixed` 25, `ir.data` 21, `W0701` 6 |
 | lzw | 21 | 4 | `ir.fixed` 17 |
-| arithmetic | 63 | 0 | `ir.data` 55, `ir.tuple` 8 |
-| wasm-leb128 | 42 | 0 | `ir.tuple` 36, `ir.fixed` 4, `W0701` 2 |
+| arithmetic | 63 | 3 | `ir.data` 55, `ir.fixed` 5 |
+| wasm-leb128 | 42 | 13 | `ir.fixed` 24, `16.2` 3, `W0701` 2 |
 | vos-sched-any | 8 | 0 | `ir.data` 8 |
 | vos-sched-fp-bitmap | 13 | 0 | `ir.data` 13 |
 | zeroize | 9 | 0 | `inout` 9 |
-| **total** | **355** | **89** | `ir.fixed` 99, `ir.data` 79, `ir.tuple` 71, `inout` 9, `W0701` 8 |
+| **total** | **355** | **105** | `ir.fixed` 130, `ir.data` 100, `inout` 9, `W0701` 8, `16.2` 3 |
 
 **Since S10b a claim is named by the first construct, in source order, that cannot be lowered,
 and by `ir.fixed` only when nothing else blocks it** (the built-ins now lower, so a claim that
@@ -264,6 +269,16 @@ table above is pinned per adopter in `tests/census.rs`. Before S10b the totals w
 (`fnv1a_*_matches_both_models`, `djb2_*_matches_both_models`) that an `ir.fixed` built-in used to
 hide are `W0701`, a subject call under an impure guard (VER04r 4.4), like the two `wasm-leb128`
 claims of [D28].
+
+**S10t-2 lowers `ir.tuple`, so no claim is blocked on it any more** (it was 71 claims): they are
+emittable, `ir.fixed`, `ir.data`, or (3 `wasm-leb128` claims) a 16.2 item 4 descriptor refusal. The
+generator's census now equals the oracle's exactly for ct-compare, gf256, logic-gates, lzw and
+x25519; the ones that differ do so for non-tuple causes (`tests/census.rs`): wasm-leb128 (oracle 16
+`ok` + 2 `W0701`: 13 `ok` + 3 `16.2` here, the 2 impure-guard `W0701` agree since CV2-F1), arithmetic
+(10 claims over record/variant-typed ops, which the oracle lowers by counting `ir.data` in `requires`
+and the generator refuses until S10d) and hash-functions (the 6 impure-guard claims that also use a
+fixed-width built-in: the oracle names `ir.fixed`, a level wins, the generator `W0701`; both refuse).
+zeroize's `inout` is a generator-only refusal.
 
 Only **ct-compare and gf256 are emittable whole** (a document is emitted whole or not at all).
 For S10's decisions on the five divergences of VER04r 16.2: **no adopter binder is a `nat_count`,
@@ -288,6 +303,31 @@ else), `ir.seq` (reserved), and the features `inout`, `ensures`, `vectors`, `ass
 is skipped and nothing is written. `census` reports, per operation, model, claim and
 example, what would block it, without failing the document.
 
+## `ir.tuple` (S10t-2)
+
+The tuple type `(T1,..,Tn)` (2 to 8), the literal, `project` (`t.i`, `t.0.1`, `f(x).1`) and `match` on
+a `Result` with the patterns `ok err err_any tuple bind wild` (VER04r A.1, D20, D35): lowering,
+typing, cost (`1 +` the scrutinee `+` the maximum over the arms), evaluation (exactly one arm), the
+`tuple` descriptor, stream tag `64`, TFV `L<n>` and JSON arrays. A `match` arm is a guard for call
+counting, wraps, D19 and v0 rule 3; a subject call in an arm under a subject scrutinee is `W0701`.
+`Err(e)` is `err_any` and an arm that uses `e` is `ir.data`; a `match` on a non-`Result` is `ir.data`.
+
+The corpus errors (a `match` that falls through, an unreachable arm, a duplicate or shadowing bind)
+are refused with the generator code `ir` (unreachable first, R12). The S2 checker raises the same
+rules (`W0301`, `W0203`); `lower` maps exactly those kinds to `ir`. `concat`, bytes literals and `if`
+over sized operands flow to `Bytes<N>` everywhere (A.1).
+
+Faults: `ok-as-err`, `drop-consumed`, `swap-components`, the tuple-payload `missing-error`, and the bare
+and `Ok` forms of `flip-result-bit` / `drop-last-result-byte`, in the exact 8.2 JSON; a fault's
+`requires` is the sorted union of its template's levels and its op's types (R9). Fault evaluation is
+gated to `ir.core` (`emit::generate_gated` is the library parameter; the flip, S10c, turns it on), so
+the shipped controls of a tuple fault are `deferred`, naming the first unimplemented level (R12).
+`ir.fixed` suites still refuse.
+
+`tests/tuple_parity.rs` reproduces `python/warrant-oracle/tests/fixtures/tuple-forms-v1/` byte for
+byte: the lowering, evaluation, fault (shipped and `ir.tuple`-evaluated gates) and refusals dumps,
+with negative controls. `tests/tuple_forms.rs` pins the rules one at a time.
+
 ## `ir.fixed` lowering parity (S10b)
 
 Since slice S10b the lowerer reads the 35 built-ins of VER04r Appendix A.1 (`bit_and` ... `unwrap_or`):
@@ -302,8 +342,8 @@ present) and each new tag costs `1 +` its operands.
 **Nothing is evaluated or emitted.** A unit whose `requires` holds `ir.fixed` is refused, naming the
 level, by `lower_document`, the census and therefore `generate` (the binary exits 2, as for every
 refusal, and writes nothing); `eval` refuses `Ir::Fixed` too. `lower_document_with_fixed` returns the
-lowered IR for the dump only, and skips VER04r 4.4's impure-guard refusal, which the oracle applies when
-it evaluates a suite and not when it lowers it.
+lowered IR for the dump only, with every other rule applied: since CV2-F1 the oracle also refuses an
+impure guard at lowering, so there is no dump-only exception.
 
 `tests/fixed_parity.rs` lowers the oracle's `fixed_forms_v1.warrant` (all 35 built-ins at every width)
 and demands the text of `oracle_view_v1` equal the oracle's committed `fixed_forms_v1.oracle-lowering.json`
@@ -405,6 +445,10 @@ tool computes the reason, written to the conditional `omitted_examples` key
   over 4,096 bytes (also under Ok)                    -> value-over-limit
   anything else                                       -> profile error: a stale line
 ```
+
+Without a line, since CV2-F1, an example whose argument or pure value holds a `Bytes` over 4,096 bytes
+(itself, under `Ok` or in a tuple) is refused at emission (code `limit`), after the D19 and D18 checks.
+A size error while evaluating a callee's `admit` refuses even with a line (it is not `value-over-limit`).
 
 An omitted example is **still lowered** (a level refusal refuses the document), but it is not
 evaluated for `cases.tfv`, not encoded and not admit-checked beyond the decision; its shape

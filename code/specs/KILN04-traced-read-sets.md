@@ -1193,13 +1193,24 @@ mount point shadows beneath an `ro_roots` entry, the checkout or a state root
   decision, not an accident: a recording that ran nothing is a void shard.
 
 **P10. The binding.** `pre/binding.json` is `recfmt.EncodeBinding` of
-`kiln-record-binding/1`: `repository`, `run`, `attempt` and `revision` (the
+`kiln-record-binding/2`: `repository`, `run`, `attempt` and `revision` (the
 commit `VerifyTree` returned, which `GITHUB_SHA` equalled), `shard_index`,
 `shard_count`, the digests of the graph, steps, partition, host facts,
 inventory and sandbox configuration, `kiln_sha256`, `build_tool_sha256`,
 `strace_sha256`, `git_sha256`,
 `recorder` (`legacy.RecorderVersion`), `strace_version`, `kernel`
-(`/proc/sys/kernel/osrelease`), `job_start` and `prepared_at`. Every
+(`/proc/sys/kernel/osrelease`), `job_start`, `prepared_at` (wall clock, display
+and audit only) and `prepared_ticks` (D26: field 22 of `/proc/self/stat` as `prepare` read it
+FIRST THING, before it starts any process, that is `prepare`'s own start time
+in clock ticks since boot, 100 per second; an integer from 1 to 100 years of
+ticks; a binding without it, or with it out of range, is refused, which is why
+the schema went from `/1` to `/2`). It is sealed from `prepare`'s own start,
+not from a later clock reading, because `prepare` starts sandboxes itself (the
+structure probe and the toolchain probes, whose argv a PR can edit and whose
+timeouts run to minutes) and a leftover of one of those must count as new for
+S3; its own start is earlier than anything it spawns, by construction, and it
+is the same kernel field, unit and epoch as every comparand (no float parse, no
+`/proc/uptime`, which a container may virtualise). Every
 `pre/` file is written exactly as the `recfmt` encoder produced it, with no
 trailing newline, so `binding_id` is the SHA-256 of the file and the merge's
 strict decoder reads it back byte for byte. Given the same inputs and the same
@@ -1440,21 +1451,28 @@ tokens that the merge already knew (M3, M4) and nothing wrote until now.
   non-dumpable task the kernel makes it the root of the task's user namespace,
   which a hostile step could arrange to look like root). "Started after
   `prepare`" compares field 22 of `/proc/<pid>/stat` (parsed after the last
-  `)`, plus `btime` from `/proc/stat`, 100 ticks per second) with the sealed
-  `binding.prepared_at` less 2 s; an unreadable or unparsable `stat` counts as
+  `)`, in clock ticks since boot, 100 per second) with the sealed
+  `binding.prepared_ticks` less 200 ticks (2 s); no wall-clock time and no
+  `btime` is involved (D26). An unreadable or unparsable `stat` counts as
   after. The rule exists because a real survivor is always inspectable from
   `collect`: it lives in a user namespace our user owns, so we hold ptrace
   access to it even if it made itself non-dumpable; what we cannot inspect is a
   stranger's, or an OLD process of ours (a `systemd --user` manager, an
   ssh-agent) that no build started, and counting those would void every run.
   Each scan is bounded to 5 s (a `/proc` read can block on an uninterruptible
-  task); one that is not done counts as a survivor. The start-time gate compares
-  the wall-clock `prepared_at` with `btime`-derived start times, so a backward
-  wall-clock step of more than 2 s between `prepare` and `collect` can exclude a
-  new process from S3 only; S1 and S2 are unaffected, and a step cannot move
-  the clock. A monotonic, boot-relative comparison is a planned follow-up. (The
-  tick count is converted without overflow, and an absurd one, over 100 years,
-  counts as new.) There is **no cwd test**: a shell left in the
+  task); one that is not done counts as a survivor. The start-time gate is boot-relative
+  (D26): `prepare` reads its own `/proc/self/stat` field 22 first thing and
+  seals it as `binding.prepared_ticks`, and the gate compares it with
+  `/proc/<pid>/stat` field 22 of each process, both ticks since boot parsed by
+  the same function, so a step of the wall clock (NTP, `date -s`) between
+  `prepare` and `collect` cannot exclude a new process from S3. (Before D26 the
+  gate converted `starttime` through `btime` and compared it with the
+  wall-clock `prepared_at`, and a backward step of more than 2 s could.)
+  `prepare` refuses an unreadable or out-of-range own start time. `collect`
+  checks the sealed value against its own start time, read the same way, which
+  cannot be earlier on one boot: if it is (a reboot between the two, or the two
+  reading different clock sources), or cannot be read, the bound is zero and
+  every process counts (fail closed). (An absurd `starttime`, over 100 years of ticks, counts as new.) There is **no cwd test**: a shell left in the
   checkout writes nothing, and a cwd test would void every run launched from a
   terminal in the repository. A process that vanishes while being read is not
   one. The scan repeats every 200 ms for up to 10 s (`CollectOptions.SurvivorWait`;
@@ -2472,7 +2490,20 @@ recorder already enforces.
   logged a `gated=1` line, the `synthetic-slice` line is among them and comes
   from `TestSandboxTraceGateSynthetic`, and every gated `best_mb_s` is finite,
   positive and at least 14; a PROBE line counts only when its payload starts
-  with `PROBE: trace ` after the go test `file:line` prefix. A rate measured at
+  with `PROBE: trace ` after the go test `file:line` prefix, which must be
+  indented exactly four spaces (in `go test -v -json`, the mode CI runs, every
+  `t.Logf` line has that indent at any subtest depth; a continuation line of a
+  multi-line message has eight and no `file:line`, so it cannot match). The
+  script also buffers output per test and reads only newline-terminated lines,
+  because `test2json` cuts a long line into events of at most 1024 bytes with no
+  newline at the cut, and the second half of a long `%q` refusal must not be
+  taken for a line of its own. A label ending in `:` is not a measurement
+  (the tests log failures to open or measure a trace as `PROBE: trace-error`,
+  with the error `%q`-quoted). The two `%q` refusal fields (`old_refusal=`,
+  `grammar_refusal=`) are the LAST fields of a line; the script reads
+  `key=value` facts only from the text before the first refusal field, and the
+  first occurrence of a key wins, so text a trace influenced cannot forge a
+  fact. A rate measured at
   about 50 KB or 64 KB is a **proxy**: it does not prove the rate at 2 GiB.
   `trace.Measure`, `MeasureBest` and `BestPass1` toggle the process-global GC
   setting, are not goroutine-safe, and are for CI and tests only
@@ -2481,10 +2512,18 @@ recorder already enforces.
   Grammar parse time at most 10% of the step's wall time and at most 5 s
   absolute, at the census p99 trace size. The `PROBE:` lines carry
   `step_wall_ms`, `parse_ms` and `parse_share` where the step's wall time is
-  known, so the census can be read off CI logs. Today that is only the
-  `TestSandboxStraceSignals` trace, which is sleep-dominated, so its share is
-  not representative: wall-time plumbing through the record-step and probe
-  paths is required before G2 can become blocking (a backlog item).
+  known, so the census can be read off CI logs. The wall comes from the step
+  sidecar's `started_at`/`ended_at` (`kiln-record-step/2`) for the record-step
+  test, from the probe runner's in-memory `ProbeRunRecord.Wall` for the probe
+  path, and from a stopwatch for `TestSandboxStraceSignals` (sleep-dominated,
+  so its share is not representative). A wall that is not positive (a stamp
+  that does not parse, a clock that stepped back) is dropped, never divided by,
+  and counted as `walls_dropped=N`, a process-global cumulative counter that
+  appears on every later `PROBE: trace` line of the run. A wall time is NEVER written into a sealed
+  file: `ProbeRunRecord.Wall` is `json:"-"` and `TestProbeWallIsNeverSealed`
+  holds that line, because a wall differs on every run and would make
+  `pre/probes.json` non-reproducible. What remains before G2 can block is
+  reading the census (p99 trace size, the shares) off real CI runs.
 
 Measured: on a real kiln-sandbox CI trace (51,650 bytes, 327 lines) the old
 scanner reads 144.7 MB/s and the grammar path (compact `LineParser`) 22.8 MB/s;
@@ -2555,6 +2594,53 @@ rather than the "within 3x" gate figure; the gate was restated (G1, G2 above) fr
 the real-trace `PROBE:` lines. Cutting the
 remaining per-line token-slice allocation (a lexer `TokenizeInto`) is P2 PR 6, not to be confused
 with D24 PR 6, the default flip.
+
+**P2 PR 6 experiment: caller-owned token storage.** Add
+`(*Compiled).TokenizeInto(source string, dst []Token) ([]Token, error)` as an
+opt-in entry point for reuse. It must run the same standard-mode tokenizer and
+grammar matcher as `Tokenize`, with identical token kinds, values, source
+positions, flags, EOF token, errors, and refusal order. The returned slice may
+reuse and overwrite `dst`; its contents are borrowed until the caller next
+reuses that storage. `Tokenize` and `GrammarLexer.Tokenize` remain allocation-
+owning APIs: later tokenization, errors, or parser calls must never mutate
+previously returned owned slices. Keep pre/post-tokenize hooks and callbacks on
+their existing owned path. Do not silently route indentation or layout modes
+through a different algorithm; reuse may be limited to the standard mode unless
+all other modes retain exact behavior.
+
+`strace-lexer.TokenizeLineMaxInto` must preserve the existing byte limit,
+newline, invalid-token and malformed-string checks. The owning
+`strace-parser.ParseLineTokens` / `checkLine` path continues to request owned
+tokens. `LineParser.ParseLineInto` may pass only its own previous token buffer
+as scratch after invalidating the previous tree and token borrows. Do not reuse
+or clear token storage supplied or returned by `PreParse` hooks; keep hook-
+bearing calls on the existing owned route if their lifetime cannot be
+preserved. Compact-parser refusal precedence, including the late `PostParse`
+refusal, must not change. A failed parse may expose the same token results and
+error as today; its storage is still borrowed only until the next parse or
+`Reset`.
+
+Clear occupied token slots before retaining/refilling owned scratch so old
+source strings are not pinned through stale `Token.Value` fields. Bound the
+retained token capacity and discard oversize buffers; `Reset` releases token,
+tree, and source references. The zero value remains usable, separate
+`LineParser` instances remain safe to use concurrently, and no mutable global
+pool is allowed. Never retain or mutate caller source bytes, use unsafe
+string conversion, or let a reused buffer escape through an owning API.
+
+Acceptance requires exact token/EOF/error/position equivalence; owned-output
+stability; long-to-short, invalid-to-valid, blank-line and source-retention
+cases; reset and oversize-cap checks; hook/borrow lifetime checks; and race,
+differential, and bounded fuzz tests. Measure the ordered 26 lines from
+`build.strace` repeated 36 times with splitting outside the timer, identical
+token count/checksum/EOF/error verification, and interleaved baseline/candidate
+and candidate/baseline runs. Record source SHA, Go version, OS/architecture,
+CPU, GC settings, fixture hash, and commands. Mac measurements are local
+relative evidence only. Allocation reductions do not establish a Linux
+throughput improvement; retain the 14 MB/s Linux gate and make no native Linux
+speedup claim without a same-host native Linux comparison. Report candidate CI
+gate results and Mac relative measurements separately. `newLexer` allocation
+is outside this isolated experiment.
 
 **The PR split.**
 

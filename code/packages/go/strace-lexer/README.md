@@ -38,10 +38,20 @@ if tok, _, bad := stracelexer.FirstError(toks); bad {
 }
 
 body, _ := stracelexer.DecodeAnnotation(`a\<b\>`) // "a<b>"
+
+scratch := make([]lexer.Token, 0, 64)
+toks, err = stracelexer.TokenizeLineMaxInto(line, 1<<20, scratch)
+// toks borrows scratch's returned storage until it is reused.
 ```
 
 `Token.Column` is the 1-based byte column, so the raw text of a run of tokens is
 `line[first.Column-1 : last.Column-1+len(last.Value)]`.
+
+`TokenizeLineMaxInto` preserves the byte limit and newline checks before
+tokenizing into caller storage. The returned tokens borrow the returned slice;
+the caller owns its lifetime and must clear any old tail it truncated before
+passing a shorter scratch slice. `TokenizeLine` and `TokenizeLineMax` continue
+to return independent owned slices.
 
 ## Properties (each pinned by a test)
 

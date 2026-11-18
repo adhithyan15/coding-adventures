@@ -52,14 +52,21 @@ falls through, an arm no value can reach, the same ``bind`` twice in a pattern, 
 a binder, a parameter, ``result`` or an outer ``bind``) are ``corpus`` errors.  A ``match`` arm is a
 *guard* for call counting (section 4.4): a subject call in an arm needs a pure scrutinee.
 
-Typed analysis of ``ir.fixed`` (slice S10a)
--------------------------------------------
-``Program(..., analyze=True)`` additionally *types and costs* the 35 built-ins of Appendix A.1
-(the shapes are checked, operand types inferred, ``Option<T>`` confined to its one consumer,
-cost ``1 +`` the operands).  The closure of such a node **raises the ``ir.fixed`` ``level``
-error when called**: nothing is evaluated until slice S10c-1, and a default ``Program``
-(``analyze=False``, which every verification path uses) refuses the tag outright, so
-``verify-v2``, ``emit-v2`` and the generator parity paths behave exactly as before.
+``ir.fixed`` (slices S10a and S10c-1)
+-------------------------------------
+The 35 built-ins of Appendix A.1 are typed, costed (``1 +`` the operands) and **evaluated** on Python
+integers with explicit masking (:meth:`Program._fixed_fn`).  The semantics, in one paragraph: a
+fixed-width value is held as the mathematical integer it denotes, in the type's range; every bit
+operation works on the ``w``-bit two's-complement *pattern* (``value & (2**w - 1)``) and re-reads the
+result in the type (``wrap_to``); a shift count is an exact ``Nat`` and ``n >= w`` is compared
+**before** any host shift (``shl``/``shr`` give 0, ``sar`` gives ``-1`` or 0, ``bit`` gives false),
+while ``rotl``/``rotr`` reduce ``n mod w`` first; ``popcount``/``clz``/``ctz`` read the pattern
+(``clz``/``ctz`` of 0 is ``w``); ``div``/``rem`` on ``Int``/``Nat`` are floor division and the
+divisor-signed remainder, on unsigned fixed values plain, and ``div_trunc``/``rem_trunc`` truncate
+toward zero; an ``Option`` is ``("none",)`` or ``("some", v)`` and its one consumer is ``unwrap_or``
+(both operands are evaluated: no short circuit).  ``wraps`` counts only ``add sub mul neg`` [D31]: the
+explicit truncations (``wrap``, ``shl``, ``bit_not`` ...) never count.  ``Program(..., analyze=True)``
+is accepted for compatibility and changes nothing: there is no longer a mode that only types.
 """
 
 from __future__ import annotations
@@ -83,9 +90,9 @@ EXACT_BOUND = (1 << 127) - 1
 MAX_MEMO = 1 << 20
 
 CORE_TAGS = L.CORE_TAGS
-#: Tags and built-ins of the levels above core: recognised so they can be *named*, never
-#: evaluated (VER04r section 10.4).  The tuple tags and ``match`` on a ``Result`` (``ir.tuple``)
-#: are evaluated since slice S10t-1.
+#: Tags and built-ins of the levels above core.  The tuple tags and ``match`` on a ``Result``
+#: (``ir.tuple``) are evaluated since slice S10t-1 and the 35 ``ir.fixed`` built-ins since S10c-1;
+#: ``ir.data`` and ``ir.seq`` tags are recognised so they can be *named* (VER04r section 10.4).
 _FIXED_TAGS = L.FIXED_TAGS
 _TUPLE_TAGS = L.TUPLE_TAGS
 _DATA_TAGS = frozenset(L.DATA_TAGS)
@@ -243,8 +250,189 @@ def _inside(source: str, target: str) -> bool:
     return span(target)[0] <= span(source)[0] and span(source)[1] <= span(target)[1]
 
 
-def _fixed_refusal(env: dict) -> object:
-    raise OracleError("level", "ir.fixed is typed and costed, not evaluated, until S10c-1", level="ir.fixed")
+_NONE = ("none",)
+
+
+def _fixed_fn(tag: str, static: str | None, kids: list[Compiled]) -> Callable:
+    """The closure of one ``ir.fixed`` node (Appendix A.1), operand types already checked.
+
+    Values are Python ints in the type's range; a bit operation masks to the ``w``-bit pattern and
+    re-reads the result with :func:`wrap_to`.  Nothing here counts a ``wrap`` [D31].  The operand
+    closures are called left to right, every one of them (``unwrap_or`` evaluates both).
+    """
+    fns = [k.fn for k in kids]
+    # The width and signedness the operation works at: the static type argument for the tags that
+    # have one, otherwise the first operand's own type (``bit_*``, shifts, counts, endian bytes).
+    ty = static if static is not None else (kids[0].ty.head if kids else "")
+    bits, signed = FIXED.get(ty, (0, False))
+    mask = (1 << bits) - 1 if bits else 0
+    lo, hi = (-(1 << (bits - 1)), (1 << (bits - 1)) - 1) if signed else (0, mask)
+
+    def reread(pattern: int) -> int:
+        return wrap_to(pattern, bits, signed)
+
+    if tag in ("max_value", "min_value"):
+        const = hi if tag == "max_value" else lo
+        return lambda env: const
+    a = fns[0] if fns else None
+    b = fns[1] if len(fns) > 1 else None
+    if tag in ("bit_and", "bit_or", "bit_xor"):
+        op = {
+            "bit_and": lambda x, y: x & y,
+            "bit_or": lambda x, y: x | y,
+            "bit_xor": lambda x, y: x ^ y,
+        }[tag]
+        return lambda env: reread(op(a(env) & mask, b(env) & mask))
+    if tag == "bit_not":
+        return lambda env: reread(~(a(env) & mask) & mask)
+    if tag in ("shl", "shr", "sar", "rotl", "rotr", "bit"):
+        return _shift_fn(tag, bits, signed, mask, a, b)
+    if tag == "popcount":
+        return lambda env: bin(a(env) & mask).count("1")
+    if tag == "clz":
+        return lambda env: bits - (a(env) & mask).bit_length()
+    if tag == "ctz":
+
+        def ctz(env: dict) -> int:
+            p = a(env) & mask
+            return bits if p == 0 else (p & -p).bit_length() - 1
+
+        return ctz
+    if tag == "widen":
+        return a
+    if tag == "wrap":
+        return lambda env: reread(a(env))
+    if tag == "try":
+
+        def try_(env: dict) -> tuple:
+            v = a(env)
+            return ("some", v) if lo <= v <= hi else _NONE
+
+        return try_
+    if tag in ("to_int", "to_nat"):
+        return a
+    if tag in ("checked_add", "checked_sub", "checked_mul"):
+        exact = {
+            "checked_add": lambda x, y: x + y,
+            "checked_sub": lambda x, y: x - y,
+            "checked_mul": lambda x, y: x * y,
+        }[tag]
+
+        def checked(env: dict) -> tuple:
+            v = exact(a(env), b(env))
+            return ("some", v) if lo <= v <= hi else _NONE
+
+        return checked
+    if tag in ("div", "rem"):
+        # Unsigned fixed pairs and Int/Nat pairs only (a signed fixed pair is refused by the typer):
+        # Python's ``//`` and ``%`` are floor division and the divisor-signed remainder, which is
+        # what ``Int``/``Nat`` need and, for non-negative operands, plain division.
+        want_div = tag == "div"
+
+        def divrem(env: dict) -> tuple:
+            x, y = a(env), b(env)
+            if y == 0:
+                return _NONE
+            return ("some", x // y if want_div else x % y)
+
+        return divrem
+    if tag in ("div_trunc", "rem_trunc"):
+        want_div = tag == "div_trunc"
+
+        def divrem_trunc(env: dict) -> tuple:
+            x, y = a(env), b(env)
+            if y == 0 or (x == lo and y == -1):
+                return _NONE
+            q = abs(x) // abs(y)
+            if (x < 0) != (y < 0):
+                q = -q
+            return ("some", q if want_div else x - q * y)
+
+        return divrem_trunc
+    if tag in ("imin", "imax"):
+        pick = min if tag == "imin" else max
+        return lambda env: pick(a(env), b(env))
+    if tag in ("be_bytes", "le_bytes"):
+        order = "big" if tag == "be_bytes" else "little"
+        width = bits // 8
+        return lambda env: (a(env) & mask).to_bytes(width, order)
+    if tag in ("from_be", "from_le"):
+        order = "big" if tag == "from_be" else "little"
+
+        def from_bytes(env: dict) -> int:
+            data = a(env)
+            if len(data) * 8 != bits:
+                # A corpus error, never a truncation or a zero extension (Appendix A.1).
+                raise OracleError("ir", "from_be/from_le need exactly the target's width in bytes")
+            return reread(int.from_bytes(data, order))
+
+        return from_bytes
+    if tag == "at":
+
+        def at(env: dict) -> tuple:
+            data, i = a(env), b(env)
+            return ("some", data[i]) if 0 <= i < len(data) else _NONE
+
+        return at
+    if tag == "unwrap_or":
+
+        def unwrap_or(env: dict) -> object:
+            option = a(env)
+            default = b(env)  # evaluated whether or not it is used: no short circuit
+            return option[1] if option[0] == "some" else default
+
+        return unwrap_or
+    raise OracleError("ir", "an unknown ir.fixed tag")  # pragma: no cover (FIXED_ARITY is exhaustive)
+
+
+def _shift_fn(tag: str, bits: int, signed: bool, mask: int, a: Callable, b: Callable) -> Callable:
+    """``shl shr sar rotl rotr bit``: the count is an exact ``Nat`` (Appendix A.1, notes).
+
+    ``n >= w`` is compared **before** any shift, so the result never depends on a host's masking
+    of the count: ``shl(1u8, 8) == 0``, ``sar(-1i8, 300) == -1``, ``bit(x, 64) == false``.  The
+    rotations reduce ``n mod w`` first.
+    """
+    if tag == "shl":
+
+        def shl(env: dict) -> int:
+            x, n = a(env), b(env)
+            return 0 if n >= bits else wrap_to((x & mask) << n, bits, signed)
+
+        return shl
+    if tag == "shr":
+
+        def shr(env: dict) -> int:
+            x, n = a(env), b(env)
+            return 0 if n >= bits else wrap_to((x & mask) >> n, bits, signed)
+
+        return shr
+    if tag == "sar":
+
+        def sar(env: dict) -> int:
+            x, n = a(env), b(env)
+            if n >= bits:
+                return -1 if x < 0 else 0
+            return x >> n  # Python's shift of a negative int fills with the sign
+
+        return sar
+    if tag in ("rotl", "rotr"):
+        left = tag == "rotl"
+
+        def rotate(env: dict) -> int:
+            x, n = a(env), b(env)
+            k = n % bits
+            if not left:
+                k = (bits - k) % bits
+            p = x & mask
+            return wrap_to(((p << k) | (p >> (bits - k))) & mask, bits, signed)
+
+        return rotate
+
+    def bit(env: dict) -> bool:
+        x, i = a(env), b(env)
+        return i < bits and ((x & mask) >> i) & 1 == 1
+
+    return bit
 
 
 class Program:
@@ -267,7 +455,7 @@ class Program:
         #: against it and the exhaustiveness check completes a ``Result`` with it.  An error type
         #: that is not listed is an open set (:mod:`.patterns`).
         self.errors = errors or {}
-        #: Type and cost the ``ir.fixed`` built-ins (slice S10a) instead of refusing them.
+        #: Kept for compatibility: since S10c-1 the ``ir.fixed`` built-ins are always evaluated.
         self.analyze = analyze
         #: 2,000 unless the corpus profile declares more (never above 65,536).
         self.max_cost = max_cost
@@ -303,6 +491,15 @@ class Program:
         if c.cost > self.max_cost:
             raise OracleError("limit", "ir-cost: expression exceeds MAX_IR_COST")
         return c
+
+    def compile_node(self, ir: object, tenv: dict[str, A.Ty]) -> Compiled:
+        """Compile a pure expression **without** the top-level ``Option`` check.
+
+        :meth:`compile` refuses an ``Option`` result (an IR-only intermediate, D23); the committed
+        value tables of slice S10c-1 and the tests print what the nine producers return, so they
+        compile the producer node itself through here.  No cost bound is applied either.
+        """
+        return self._compile(ir, tenv, False, 0)
 
     def model(self, name: str) -> Compiled:
         """Compile (once) the body of model ``name``."""
@@ -359,9 +556,7 @@ class Program:
         sub = lambda child: self._compile(child, tenv, allow_subject, depth + 1)  # noqa: E731
         if tag not in CORE_TAGS:
             if tag in _FIXED_TAGS:
-                if self.analyze:
-                    return self._fixed(node, tenv, allow_subject, depth)
-                raise OracleError("level", "a tag of level ir.fixed", level="ir.fixed")
+                return self._fixed(node, tenv, allow_subject, depth)
             if tag == "tuple":
                 return self._tuple(node, tenv, allow_subject, depth)
             if tag == "project":
@@ -626,14 +821,14 @@ class Program:
     # -- the ir.fixed built-ins, typed and costed (slice S10a) -----------------------------
 
     def _fixed(self, node: list, tenv: dict, allow_subject: bool, depth: int) -> Compiled:
-        """Type and cost one ``ir.fixed`` node of Appendix A.1; its closure refuses to run.
+        """Type, cost and compile one ``ir.fixed`` node of Appendix A.1.
 
         The shape is checked first (arity, and the static type argument in position 1 of
         ``widen wrap try from_be from_le max_value min_value``), then the operands are compiled
         and typed.  Every tag costs ``1 +`` the sum of its operands (section 4.2 rule 6); a
         static type argument is not an operand, so ``max_value`` costs ``1``.  A mismatch is an
         ``ir`` error (a corpus error), an ``Option`` anywhere but ``unwrap_or``'s first operand
-        is the level ``ir.data`` (D23, R8).
+        is the level ``ir.data`` (D23, R8).  The closure is :func:`_fixed_fn`.
         """
         tag = node[0]
         static: str | None = None
@@ -654,7 +849,7 @@ class Program:
                     _no_option(k, f"an operand of {tag}")
         ty = self._fixed_type(tag, static, kids)
         cost = 1 + sum(k.cost for k in kids)
-        return Compiled(ty, _fixed_refusal, cost, any(k.subject for k in kids))
+        return Compiled(ty, _fixed_fn(tag, static, kids), cost, any(k.subject for k in kids))
 
     def _fixed_type(self, tag: str, static: str | None, kids: list[Compiled]) -> A.Ty:
         """The result type of an ``ir.fixed`` node (operand types are those of Appendix A.1)."""

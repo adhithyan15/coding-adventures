@@ -3,12 +3,9 @@
 package record
 
 import (
-	"errors"
 	"io"
 	"os"
 	"strconv"
-	"strings"
-	"time"
 )
 
 // maxProcRead bounds one read of a /proc file (a command line or a mountinfo of
@@ -65,26 +62,6 @@ func (liveProc) ReadFile(pid int, name string) ([]byte, error) {
 		return nil, errTruncated // never parse a partial last line
 	}
 	return data, nil
-}
-
-// Boot is /proc/stat's btime and the clock tick rate. CLK_TCK is 100 on every
-// Linux kernel this runs on (USER_HZ is fixed at 100 for the user-space ABI of
-// the architectures kiln supports), and Go has no sysconf without cgo.
-func (liveProc) Boot() (time.Time, int, error) {
-	data, err := os.ReadFile("/proc/stat")
-	if err != nil {
-		return time.Time{}, 0, err
-	}
-	for _, line := range strings.Split(string(data), "\n") {
-		if rest, ok := strings.CutPrefix(line, "btime "); ok {
-			n, err := strconv.ParseInt(strings.TrimSpace(rest), 10, 64)
-			if err != nil {
-				return time.Time{}, 0, err
-			}
-			return time.Unix(n, 0), 100, nil
-		}
-	}
-	return time.Time{}, 0, errors.New("/proc/stat has no btime")
 }
 
 // liveSurvivors scans the real /proc.

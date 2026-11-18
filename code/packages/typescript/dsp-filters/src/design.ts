@@ -66,8 +66,15 @@ export function designLowPass(
   }
   if (Math.abs(sum) > 0.0) {
     const invSum = 1.0 / sum;
-    for (let k = 0; k < numTaps; k++) {
-      h[k] *= invSum;
+    // Retain legacy rounding unless the finite sum's reciprocal overflowed.
+    if (Number.isFinite(invSum) || !Number.isFinite(sum)) {
+      for (let k = 0; k < numTaps; k++) {
+        h[k] *= invSum;
+      }
+    } else {
+      for (let k = 0; k < numTaps; k++) {
+        h[k] /= sum;
+      }
     }
   }
 
@@ -148,8 +155,15 @@ export function designBandPass(
   const gainAbs = Math.abs(gain);
   if (gainAbs > 0.0) {
     const invG = 1.0 / gainAbs;
-    for (let k = 0; k < numTaps; k++) {
-      h[k] *= invG;
+    // Retain legacy rounding unless the finite gain's reciprocal overflowed.
+    if (Number.isFinite(invG) || !Number.isFinite(gainAbs)) {
+      for (let k = 0; k < numTaps; k++) {
+        h[k] *= invG;
+      }
+    } else {
+      for (let k = 0; k < numTaps; k++) {
+        h[k] /= gainAbs;
+      }
     }
   }
 

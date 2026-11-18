@@ -105,19 +105,80 @@ biquads (low-pass, high-pass), step response, scipy cross-check.
 windowed-sinc.
 
 ```rust
-pub fn design_low_pass(cutoff_hz: f32, sample_rate: f32, num_taps: u32, window: WindowType)
-    -> Vec<f32>;
-pub fn design_high_pass(cutoff_hz: f32, sample_rate: f32, num_taps: u32, window: WindowType)
-    -> Vec<f32>;
-pub fn design_band_pass(low_hz: f32, high_hz: f32, sample_rate: f32, num_taps: u32, window: WindowType)
-    -> Vec<f32>;
-pub fn butterworth_lowpass(order: u32, cutoff_hz: f32, sample_rate: f32)
+pub fn design_low_pass(cutoff_norm: f32, num_taps: u32, window: WindowType)
+    -> Vec<f32>; // legacy panic-on-invalid API
+pub fn try_design_low_pass(cutoff_norm: f32, num_taps: u32, window: WindowType)
+    -> Result<Vec<f32>, FilterError>;
+pub fn design_high_pass(cutoff_norm: f32, num_taps: u32, window: WindowType)
+    -> Vec<f32>; // legacy panic-on-invalid API
+pub fn try_design_high_pass(cutoff_norm: f32, num_taps: u32, window: WindowType)
+    -> Result<Vec<f32>, FilterError>;
+pub fn design_band_pass(low_cutoff_norm: f32, high_cutoff_norm: f32, num_taps: u32, window: WindowType)
+    -> Vec<f32>; // legacy panic-on-invalid API
+pub fn try_design_band_pass(low_cutoff_norm: f32, high_cutoff_norm: f32, num_taps: u32, window: WindowType)
+    -> Result<Vec<f32>, FilterError>;
+pub fn butterworth_lowpass(order: u32, cutoff_norm: f32)
     -> (Vec<f32>, Vec<f32>);  // (b, a)
-pub fn chebyshev1_lowpass(order: u32, ripple_db: f32, cutoff_hz: f32, sample_rate: f32)
+pub fn chebyshev1_lowpass(order: u32, ripple_db: f32, cutoff_norm: f32)
     -> (Vec<f32>, Vec<f32>);
 
-pub enum WindowType { Rectangular, Hamming, Hann, Blackman, Kaiser(f32) }
+pub enum WindowType { Rectangular, Hamming, Hann, Blackman }
 ```
+
+The FIR designer contract is lane-specific. `cutoff_norm` is a
+cycles-per-sample frequency, with Nyquist at `0.5`; it is not a
+frequency in Hz and takes no sample-rate argument. Low-pass and
+high-pass accept finite cutoffs in the inclusive range `[0.0, 0.5]`.
+Band-pass accepts finite cutoffs satisfying
+`0.0 <= low_cutoff_norm < high_cutoff_norm <= 0.5`. Rust uses `f32`,
+and Python/TypeScript use their native numeric types; negative zero is
+accepted wherever the comparisons admit it.
+
+Rust and Python allow at most `2^20` taps (largest accepted odd count
+`1,048,575`); TypeScript allows at most `2^16` taps (largest accepted
+odd count `65,535`). All three require a positive odd tap count. The
+Rust `u32` parameter cannot represent a negative count. TypeScript
+validates integer tap counts at runtime. Python's contract is for callers
+supplying an integer as annotated: its implementation checks positivity,
+parity, and the cap but does not enforce the runtime type, so wrong-object
+behavior (including `bool` or floating-point values) is outside this
+contract.
+
+Rust window selection is the typed `WindowType` enum with Rectangular,
+Hamming, Hann, and Blackman. Python accepts that lane's enum or a
+trimmed, case-insensitive string with one of those four names. TypeScript
+accepts those four normalized names plus `hanning` as a Hann alias and
+`kaiser` (using the `dsp-fft` default beta of 5); unknown window errors
+are lane-specific. Python and TypeScript report invalid design inputs
+with their existing typed exceptions. The additive Rust `try_design_*`
+APIs report validation errors through the existing
+`FilterError::InvalidCoefficient(String)` variant; no new public error
+variant is introduced.
+
+Rust validates low/high taps (positive odd, then cap) before cutoff
+finiteness and range. Band-pass validates taps, then cap, cutoff
+finiteness, then ordering/range. High-pass delegates to low-pass
+validation. The legacy Rust `design_*` wrappers and new `try_design_*`
+functions share each operation's checked calculation path. The legacy
+wrappers preserve their observable panic payload type, message, check
+order, and valid-input coefficient bits. Validation precedes
+tap-proportional coefficient allocation; this is not a global
+no-allocation or no-OOM guarantee.
+
+The current low-pass normalizer uses `sum(h)` and divides only when its
+absolute value is positive. Band-pass normalizes by the absolute
+center-frequency response, `abs(sum_k h[k] * cos(2*pi*f0*x_k))`, where
+`f0=(low_cutoff_norm+high_cutoff_norm)/2` and
+`x_k=k-(num_taps-1)/2`; it likewise divides only when the gain is
+positive. This work preserves those zero/cancellation branches and
+non-finite normalization behavior. A shared cancellation/output policy
+is tracked separately in AF-01c. This contract does not promise finite
+outputs for every otherwise accepted input.
+
+The Butterworth and Chebyshev signatures above are existing separate
+IIR helpers; their cutoff parameter is also normalized in the current
+implementation. AF-01b does not change their behavior or specify their
+full validation policy.
 
 **Phase 6**: matrix-ir-lowered FIR.
 
@@ -188,6 +249,26 @@ Per the DSP roadmap:
 The reference implementation in Phase 2 (`fir`) and Phase 4
 (`iir`) is the oracle for all later phases.
 
+### Filter-designer normalization compatibility
+
+For the Python and TypeScript FIR design helpers, let `d` be the
+normalization denominator: the coefficient sum for low-pass, and the
+absolute center-frequency response gain for band-pass,
+`abs(sum_k h[k] * cos(2*pi*f0*x_k))`, where `x_k=k-centre`,
+`centre=(num_taps-1)/2`, and `f0` is the midpoint of the two band edges.
+Preserve the existing result
+`h * (1 / d)` bit-for-bit whenever `1 / d` is finite. When `1 / d` is
+non-finite and `d` itself is finite and nonzero, use `h / d` so a finite
+normalized coefficient is not lost to reciprocal overflow. Keep the
+existing behavior when `d` is zero, NaN, or infinite. High-pass and the
+`firwin` convenience entry points inherit the behavior of the design
+helper they call (`firwin` exists in the TypeScript package).
+
+This compatibility rule applies to the Python and TypeScript lanes. Rust
+already divides directly and is not changed by this rule. It defines a
+numerical compatibility target for these helpers; it does not establish
+native floating-point or Warrant proof evidence.
+
 ## Testing strategy
 
 **Phase 2 (scalar FIR direct)**:
@@ -218,11 +299,11 @@ The reference implementation in Phase 2 (`fir`) and Phase 4
 
 **Phase 5 (design helpers)**:
 
-- `design_low_pass(0.25, 1.0, 33, Hamming)` matches scipy's
+- `design_low_pass(0.25, 33, Hamming)` matches scipy's
   `firwin(33, 0.25, window='hamming')` to ULP.
-- `butterworth_lowpass(2, 0.1, 1.0)` matches scipy's
+- `butterworth_lowpass(2, 0.1)` matches scipy's
   `butter(2, 0.1)` coefficients.
-- The composed `iir(x, *butterworth_lowpass(4, 0.1, 1.0))`
+- The composed `iir(x, *butterworth_lowpass(2, 0.1))`
   matches scipy's full filter pipeline.
 
 **Phase 6 (matrix-ir FIR)**:
@@ -267,9 +348,10 @@ layers we control.
    to overlap-add for V1.
 2. **Cascade biquad vs direct higher-order IIR.**  Higher-order
    direct forms accumulate noise quickly.  Phase 4 ships direct
-   form for the API contract; Phase 5's design helpers will
-   factor higher-order filters into biquad cascades and stack
-   `iir(...)` calls.
+   form for the API contract. The current Phase 5 Butterworth and
+   Chebyshev-I helpers support orders 1 and 2; higher-order
+   factorization into biquad cascades and stacked `iir(...)` calls
+   remains future work.
 3. **Group delay compensation.**  FIR with linear phase has
    constant group delay = `(K - 1) / 2`.  The Phase 2 API
    returns the full convolution and lets the caller trim;

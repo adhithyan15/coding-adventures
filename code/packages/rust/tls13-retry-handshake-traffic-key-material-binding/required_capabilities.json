@@ -3,5 +3,5 @@
   "version": 1,
   "package": "rust/tls13-retry-handshake-traffic-key-material-binding",
   "capabilities": [],
-  "justification": "Pure composition of exact caller-owned TLS retry traffic-secret evidence, repository-owned fixed-memory HKDF and key derivation, and caller-owned wipe-on-drop key-material storage. It performs no filesystem, network, DNS, process, environment, clock, entropy, credential access, signing, certificate, trust-root, path-validation, hostname, revocation, audit, HTTP, OAuth, or external effect."
+  "justification": "Pure single-use per-sender composition of exact caller-owned TLS retry traffic-secret evidence, repository-owned fixed-memory HKDF, key derivation, monotonic record state, in-memory TLS 1.3 record protection, bounded authenticated handshake reassembly, public no-PSK server-flight ordering, a synchronous caller callback, and caller-owned wipe-on-drop storage. It performs no filesystem, network, DNS, process, environment, clock, entropy, credential access, signing, certificate, trust-root, path-validation, hostname, revocation, audit, HTTP, OAuth, or external effect."
 }

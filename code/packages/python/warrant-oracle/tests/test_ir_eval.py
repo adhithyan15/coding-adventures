@@ -183,19 +183,12 @@ def test_unknown_tags_are_errors_never_skipped():
 @pytest.mark.parametrize(
     "tag,level",
     [
-        ("shl", "ir.fixed"),
-        ("wrap", "ir.fixed"),
-        ("bit_and", "ir.fixed"),
-        ("at", "ir.fixed"),
-        ("try", "ir.fixed"),
-        ("unwrap_or", "ir.fixed"),
-        ("max_value", "ir.fixed"),
         ("some", "ir.data"),
         ("fold", "ir.seq"),
         ("all", "ir.seq"),
     ],
 )
-def test_tags_of_other_levels_are_named_not_evaluated(tag, level):
+def test_tags_of_levels_above_the_evaluator_are_named_not_evaluated(tag, level):
     with pytest.raises(OracleError) as err:
         run([tag, ["lit", True]])
     assert err.value.code == "level" and err.value.level == level

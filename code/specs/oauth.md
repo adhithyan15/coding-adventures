@@ -6179,6 +6179,133 @@ Authenticated handshake progression, record-state composition, certificate and
 revocation policy, and HTTP composition remain prerequisites; concrete HTTPS
 and live-provider readiness remain unavailable.
 
+The same allocation-free boundary now also consumes the complete exact-message
+retry handshake traffic-secret proof into a non-cloneable per-sender
+record-state issuer. One successful client issuance and one successful server
+issuance are permitted. A repeated issuance for the same sender fails before
+the caller-owned output storage is touched, so the same retained key and static
+IV cannot acquire a second sequence-zero state through this boundary. Failed
+derivation or state construction does not consume the sender's issuance, so a
+caller may retry with valid storage.
+
+Each successful issuance accepts only an explicit sender role and
+caller-owned traffic-key-material storage for the retained selected suite. It
+derives that retained sender's key and static IV, moves the resulting view into
+the existing repository-owned record-state primitive, starts the monotonic
+record sequence at zero, and marks the sender issued before returning. The
+non-copyable result borrows the single-use issuer, retains the explicit sender,
+and permits only borrowed access to the state. It accepts no detached key,
+static IV, nonce length, record ceiling, AEAD identifier, sequence number, or
+cipher suite, and it cannot detach the state from the exact CH1,
+HelloRetryRequest, CH2, final ServerHello, base-schedule, traffic-secret, and
+sender evidence.
+
+This exact-message state composition does not advance the handshake
+transcript, authenticate CertificateVerify or Finished, invoke an AEAD, frame
+or protect a record, process alerts, validate certificates, establish trust,
+verify a hostname, enforce revocation, perform I/O, authorize HTTP or OAuth
+transport, or open a network connection. Authenticated handshake progression,
+record protection, certificate and revocation policy, and HTTP composition
+remain prerequisites; concrete HTTPS and live-provider readiness remain
+unavailable.
+
+The exact retry record-state wrapper can now be borrowed by an allocation-free
+handshake-record binding that delegates only to the existing repository-owned,
+data-driven record-protection dispatcher. Sealing accepts one borrowed
+handshake message, explicit zero-padding length, the existing ciphertext and
+inner-plaintext policies, caller scratch, and caller output. It fixes the
+protected content type to `Handshake`, consumes the next nonce only under the
+existing dispatcher rules, and returns non-copyable evidence retaining the
+exact state wrapper, plaintext request, and sealed output prefix. Callers
+cannot substitute a detached key, IV, nonce, sequence, AEAD route, content
+type, or output prefix.
+
+Opening retains the exact ciphertext input and state wrapper beside the
+existing authentication-before-release output owner. An authenticated inner
+content type other than `Handshake` is rejected before any content view is
+returned; dropping that rejected opened owner clears the authenticated output
+prefix. Success returns non-copyable evidence exposing only the authenticated
+handshake content, padding length, sender role, selected suite, exact input,
+and retained retry proof. AEAD or policy failure preserves the existing
+redacted categories and nonce-consumption rules.
+
+This binding does not parse or sequence the authenticated handshake message,
+advance its transcript, authenticate CertificateVerify or Finished, process
+alerts, select epochs, perform key updates, validate certificates, establish
+trust, verify a hostname, enforce revocation, perform I/O, authorize HTTP or
+OAuth transport, or open a network connection. Authenticated handshake
+progression, certificate and revocation policy, and HTTP/TLS transport
+composition remain prerequisites; concrete HTTPS and live-provider readiness
+remain unavailable.
+
+The exact retry record boundary can now be consumed into an allocation-free
+authenticated handshake reassembler that owns both the single-use sender state
+and one existing bounded handshake reassembler over caller-owned storage. Each
+record is opened internally through the repository-owned dispatcher, must
+authenticate as inner content type `Handshake`, and is copied into the bounded
+reassembler only after authentication. The owner therefore preserves one
+monotonic sender sequence and cannot accept detached plaintext fragments or a
+second record state.
+
+One call drains the complete authenticated record content. It invokes a
+caller-supplied, non-retaining handler once for each complete policy-authorized
+handshake message, continues across coalesced messages, and retains an
+incomplete final message for the next authenticated record. Success returns
+non-copyable evidence retaining the exact ciphertext input and reassembly
+owner beside the completed-message count, authenticated content length,
+partial-message status, sender role, selected suite, and post-open record
+count. Record authentication, unexpected-content-type rejection, output
+clearing, reassembly bounds, initialized-storage clearing, and stable redacted
+failures remain those of the composed repository-owned primitives.
+Any record authentication, content-type, reassembly, or handler-unwind failure
+clears the buffered fragment and permanently poisons that owner. Later calls
+fail before record processing, so a rejected sequence position cannot splice
+non-contiguous authenticated records into one handshake message.
+
+This composition does not interpret a handshake body, enforce the no-PSK
+server-flight order, advance a transcript, bind handler behavior to later
+state, authenticate CertificateVerify or Finished, process alerts, select
+epochs, perform key updates, validate certificates, establish trust, verify a
+hostname, enforce revocation, perform I/O, authorize HTTP or OAuth transport,
+or open a network connection. Authenticated ordered handshake progression,
+certificate and revocation policy, and HTTP/TLS transport composition remain
+prerequisites; concrete HTTPS and live-provider readiness remain unavailable.
+
+The authenticated retry reassembly boundary can now be consumed into a
+server-only ordered-flight owner that composes the exact monotonic server
+record state with the existing `tls13-no-psk-server-flight` transition policy.
+Construction rejects client-sender state and any reassembler that already
+consumed or failed a record, then starts only at `ExpectEncryptedExtensions`;
+callers cannot inject a detached ordering state, carry a pre-composition
+fragment, or resume at a later position. For each complete policy-authorized message,
+the owner advances the public no-PSK server-flight type sequence before it
+lends the message to the caller's non-retaining handler. The handler receives
+an ordered wrapper retaining the exact authenticated message beside the
+post-accept state and client-authentication requirement, so it cannot mistake
+pre-transition bytes for ordered progression.
+
+Success returns non-copyable evidence retaining the exact ciphertext input,
+authenticated reassembly result, post-record server-flight state, and
+client-authentication requirement. An unexpected message type permanently
+poisons and clears the composed reassembly owner before returning a stable,
+payload-free ordering error; later records fail before authentication or
+handler invocation. Record, content-type, reassembly, and handler-unwind
+failures retain the same terminal behavior. A handler may already have acted
+on earlier valid messages in the same authenticated record before a later
+message fails ordering, so any such caller-owned effect remains caller-audited
+and is not transactional.
+
+This bounded composition enforces only the public no-PSK server-flight message
+type order over authenticated retry-handshake records. It does not interpret
+message bodies, advance a transcript, validate EncryptedExtensions, process a
+CertificateRequest, validate a certificate chain or hostname, authenticate
+CertificateVerify or Finished, establish trust, enforce revocation, select
+epochs, perform key updates, emit an alert, perform I/O, authorize HTTP or
+OAuth transport, or open a network connection. Body-specific processing,
+transcript and signature authentication, certificate and revocation policy,
+and HTTP/TLS transport composition remain prerequisites; concrete HTTPS and
+live-provider readiness remain unavailable.
+
 An allocation-free `http1-fixed-request-body` prerequisite now binds one
 caller-borrowed, potentially sensitive request body to its exact byte length
 under an explicit caller ceiling. It encodes that length in canonical shortest

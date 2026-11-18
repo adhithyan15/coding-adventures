@@ -91,6 +91,16 @@ func TokenizeLine(line string) ([]lexer.Token, error) {
 // For anything else it succeeds, with ERR_* tokens marking what the grammar
 // does not allow.
 func TokenizeLineMax(line string, maxBytes int) ([]lexer.Token, error) {
+	return TokenizeLineMaxInto(line, maxBytes, nil)
+}
+
+// TokenizeLineMaxInto tokenizes one line into caller-provided token storage.
+// It has the same byte, newline, and grammar checks as TokenizeLineMax. On
+// success the returned tokens borrow dst's storage when standard tokenization
+// can reuse it; on error the returned slice is nil. The caller owns the
+// storage and its lifetime. If dst is a shortened prefix of an older result,
+// the caller must clear any truncated tail it wants to release.
+func TokenizeLineMaxInto(line string, maxBytes int, dst []lexer.Token) ([]lexer.Token, error) {
 	if errLine != nil {
 		return nil, errLine
 	}
@@ -103,7 +113,7 @@ func TokenizeLineMax(line string, maxBytes int) ([]lexer.Token, error) {
 	if strings.IndexByte(line, '\n') >= 0 {
 		return nil, ErrNewline
 	}
-	return compiledLine.Tokenize(line)
+	return compiledLine.TokenizeInto(line, dst)
 }
 
 // IsErrToken reports whether t is one of the grammar's ERR_* tokens.

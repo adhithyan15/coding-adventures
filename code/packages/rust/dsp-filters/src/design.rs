@@ -29,11 +29,12 @@
 //!
 //! ## Validation
 //!
-//! V1 panics via `assert!` on invalid input (out-of-range cutoff,
-//! even `num_taps`, unsupported filter order, non-finite values,
-//! or taps exceeding defensive caps).  Callers should validate
-//! parameters before calling.
+//! The legacy windowed-sinc `design_*` wrappers preserve panic behavior
+//! for invalid input. The checked `try_design_*` FIR entry points return
+//! validation failures through `FilterError::InvalidCoefficient`.
+//! Butterworth/Chebyshev IIR helpers retain their existing panic behavior.
 
+use std::borrow::Cow;
 use std::f32::consts::PI;
 
 /// Choice of window function for the windowed-sinc FIR designs.
@@ -64,7 +65,8 @@ pub enum WindowType {
 // ─────────────────────────── FIR design ───────────────────────────
 
 /// Design a linear-phase low-pass FIR filter via the windowed-sinc
-/// method.
+/// method. Invalid parameters panic for compatibility; use
+/// [`try_design_low_pass`] when validation errors should be returned.
 ///
 /// - `cutoff_norm`: normalised cutoff frequency in `[0.0, 0.5]`
 ///   where `0.5` is Nyquist.
@@ -80,32 +82,44 @@ pub enum WindowType {
 ///
 /// Panics if `num_taps` is even or zero, exceeds `MAX_TAPS`, or if
 /// `cutoff_norm` is non-finite or outside `[0.0, 0.5]`.
-pub fn design_low_pass(
+pub fn design_low_pass(cutoff_norm: f32, num_taps: u32, window: WindowType) -> Vec<f32> {
+    legacy_result(design_low_pass_checked(cutoff_norm, num_taps, window))
+}
+
+/// Checked low-pass FIR designer. Cutoffs are normalized cycles per
+/// sample in `[0.0, 0.5]`; tap validation happens before coefficient
+/// allocation.
+///
+/// # Errors
+///
+/// Returns `FilterError::InvalidCoefficient` for invalid taps or cutoff.
+pub fn try_design_low_pass(
     cutoff_norm: f32,
     num_taps: u32,
     window: WindowType,
-) -> Vec<f32> {
-    assert!(
-        num_taps >= 1 && num_taps % 2 == 1,
-        "num_taps must be odd and >= 1; got {}",
-        num_taps
-    );
-    assert!(
-        (num_taps as usize) <= crate::MAX_TAPS,
-        "num_taps {} exceeds MAX_TAPS {}",
-        num_taps,
-        crate::MAX_TAPS
-    );
-    assert!(
-        cutoff_norm.is_finite(),
-        "cutoff_norm must be finite; got {}",
-        cutoff_norm
-    );
-    assert!(
-        (0.0..=0.5).contains(&cutoff_norm),
-        "cutoff_norm must be in [0.0, 0.5]; got {}",
-        cutoff_norm
-    );
+) -> Result<Vec<f32>, crate::FilterError> {
+    design_low_pass_checked(cutoff_norm, num_taps, window).map_err(invalid_coefficient)
+}
+
+fn design_low_pass_checked(
+    cutoff_norm: f32,
+    num_taps: u32,
+    window: WindowType,
+) -> Result<Vec<f32>, Cow<'static, str>> {
+    validate_taps(num_taps)?;
+    validate_tap_cap(num_taps)?;
+    if !cutoff_norm.is_finite() {
+        return Err(Cow::Owned(format!(
+            "cutoff_norm must be finite; got {}",
+            cutoff_norm
+        )));
+    }
+    if !(0.0..=0.5).contains(&cutoff_norm) {
+        return Err(Cow::Owned(format!(
+            "cutoff_norm must be in [0.0, 0.5]; got {}",
+            cutoff_norm
+        )));
+    }
 
     let n = num_taps as usize;
     let m = (num_taps - 1) as f32; // peak symmetry index
@@ -132,8 +146,7 @@ pub fn design_low_pass(
                 WindowType::Hamming => 0.54 - 0.46 * (2.0 * PI * n_f / m).cos(),
                 WindowType::Hann => 0.5 * (1.0 - (2.0 * PI * n_f / m).cos()),
                 WindowType::Blackman => {
-                    0.42 - 0.5 * (2.0 * PI * n_f / m).cos()
-                        + 0.08 * (4.0 * PI * n_f / m).cos()
+                    0.42 - 0.5 * (2.0 * PI * n_f / m).cos() + 0.08 * (4.0 * PI * n_f / m).cos()
                 }
             }
         };
@@ -146,28 +159,48 @@ pub fn design_low_pass(
             *v /= sum;
         }
     }
-    h
+    Ok(h)
 }
 
 /// Design a linear-phase high-pass FIR filter via spectral
-/// inversion of a windowed-sinc low-pass.
-pub fn design_high_pass(
+/// inversion of a windowed-sinc low-pass. Invalid parameters panic
+/// for compatibility; use [`try_design_high_pass`] for returned errors.
+pub fn design_high_pass(cutoff_norm: f32, num_taps: u32, window: WindowType) -> Vec<f32> {
+    legacy_result(design_high_pass_checked(cutoff_norm, num_taps, window))
+}
+
+/// Checked high-pass FIR designer. It uses the same validation and
+/// coefficient path as the legacy [`design_high_pass`] wrapper.
+///
+/// # Errors
+///
+/// Returns `FilterError::InvalidCoefficient` for invalid taps or cutoff.
+pub fn try_design_high_pass(
     cutoff_norm: f32,
     num_taps: u32,
     window: WindowType,
-) -> Vec<f32> {
-    let lp = design_low_pass(cutoff_norm, num_taps, window);
+) -> Result<Vec<f32>, crate::FilterError> {
+    design_high_pass_checked(cutoff_norm, num_taps, window).map_err(invalid_coefficient)
+}
+
+fn design_high_pass_checked(
+    cutoff_norm: f32,
+    num_taps: u32,
+    window: WindowType,
+) -> Result<Vec<f32>, Cow<'static, str>> {
+    let lp = design_low_pass_checked(cutoff_norm, num_taps, window)?;
     let centre = (num_taps as usize - 1) / 2;
     let mut hp = lp;
     for v in &mut hp {
         *v = -*v;
     }
     hp[centre] += 1.0;
-    hp
+    Ok(hp)
 }
 
 /// Design a linear-phase band-pass FIR filter via the windowed-sinc
-/// method.
+/// method. Invalid parameters panic for compatibility; use
+/// [`try_design_band_pass`] for returned errors.
 ///
 /// - `low_cutoff_norm`: lower cutoff frequency in `[0.0, 0.5]`
 /// - `high_cutoff_norm`: upper cutoff frequency in `[0.0, 0.5]`
@@ -188,27 +221,48 @@ pub fn design_band_pass(
     num_taps: u32,
     window: WindowType,
 ) -> Vec<f32> {
-    assert!(
-        num_taps >= 1 && num_taps % 2 == 1,
-        "num_taps must be odd and >= 1; got {}",
-        num_taps
-    );
-    assert!(
-        (num_taps as usize) <= crate::MAX_TAPS,
-        "num_taps {} exceeds MAX_TAPS {}",
-        num_taps,
-        crate::MAX_TAPS
-    );
-    assert!(
-        low_cutoff_norm.is_finite() && high_cutoff_norm.is_finite(),
-        "cutoffs must be finite"
-    );
-    assert!(
-        low_cutoff_norm >= 0.0 && low_cutoff_norm < high_cutoff_norm && high_cutoff_norm <= 0.5,
-        "cutoffs must satisfy 0.0 <= low < high <= 0.5; got low={}, high={}",
+    legacy_result(design_band_pass_checked(
         low_cutoff_norm,
-        high_cutoff_norm
-    );
+        high_cutoff_norm,
+        num_taps,
+        window,
+    ))
+}
+
+/// Checked band-pass FIR designer with strict `low < high` ordering.
+///
+/// # Errors
+///
+/// Returns `FilterError::InvalidCoefficient` for invalid taps or cutoffs.
+pub fn try_design_band_pass(
+    low_cutoff_norm: f32,
+    high_cutoff_norm: f32,
+    num_taps: u32,
+    window: WindowType,
+) -> Result<Vec<f32>, crate::FilterError> {
+    design_band_pass_checked(low_cutoff_norm, high_cutoff_norm, num_taps, window)
+        .map_err(invalid_coefficient)
+}
+
+fn design_band_pass_checked(
+    low_cutoff_norm: f32,
+    high_cutoff_norm: f32,
+    num_taps: u32,
+    window: WindowType,
+) -> Result<Vec<f32>, Cow<'static, str>> {
+    validate_taps(num_taps)?;
+    validate_tap_cap(num_taps)?;
+    if !low_cutoff_norm.is_finite() || !high_cutoff_norm.is_finite() {
+        // This legacy assertion used a string literal as its panic
+        // payload, unlike the formatted assertions below.
+        return Err(Cow::Borrowed("cutoffs must be finite"));
+    }
+    if !(low_cutoff_norm >= 0.0 && low_cutoff_norm < high_cutoff_norm && high_cutoff_norm <= 0.5) {
+        return Err(Cow::Owned(format!(
+            "cutoffs must satisfy 0.0 <= low < high <= 0.5; got low={}, high={}",
+            low_cutoff_norm, high_cutoff_norm
+        )));
+    }
 
     let n = num_taps as usize;
     let m = (num_taps - 1) as f32;
@@ -236,8 +290,7 @@ pub fn design_band_pass(
                 WindowType::Hamming => 0.54 - 0.46 * (2.0 * PI * n_f / m).cos(),
                 WindowType::Hann => 0.5 * (1.0 - (2.0 * PI * n_f / m).cos()),
                 WindowType::Blackman => {
-                    0.42 - 0.5 * (2.0 * PI * n_f / m).cos()
-                        + 0.08 * (4.0 * PI * n_f / m).cos()
+                    0.42 - 0.5 * (2.0 * PI * n_f / m).cos() + 0.08 * (4.0 * PI * n_f / m).cos()
                 }
             }
         };
@@ -257,7 +310,40 @@ pub fn design_band_pass(
             *v /= gain_abs;
         }
     }
-    h
+    Ok(h)
+}
+
+fn validate_taps(num_taps: u32) -> Result<(), Cow<'static, str>> {
+    if num_taps < 1 || num_taps % 2 != 1 {
+        return Err(Cow::Owned(format!(
+            "num_taps must be odd and >= 1; got {}",
+            num_taps
+        )));
+    }
+    Ok(())
+}
+
+fn validate_tap_cap(num_taps: u32) -> Result<(), Cow<'static, str>> {
+    if num_taps as usize > crate::MAX_TAPS {
+        return Err(Cow::Owned(format!(
+            "num_taps {} exceeds MAX_TAPS {}",
+            num_taps,
+            crate::MAX_TAPS
+        )));
+    }
+    Ok(())
+}
+
+fn invalid_coefficient(reason: Cow<'static, str>) -> crate::FilterError {
+    crate::FilterError::InvalidCoefficient(reason.into_owned())
+}
+
+fn legacy_result<T>(result: Result<T, Cow<'static, str>>) -> T {
+    match result {
+        Ok(value) => value,
+        Err(Cow::Borrowed(payload)) => std::panic::panic_any(payload),
+        Err(Cow::Owned(payload)) => std::panic::panic_any(payload),
+    }
 }
 
 // ─────────────────────────── IIR design ───────────────────────────
@@ -302,10 +388,7 @@ pub fn butterworth_lowpass(order: u32, cutoff_norm: f32) -> (Vec<f32>, Vec<f32>)
             let a0 = 1.0 + alpha;
             let a1 = -2.0 * cos_w0;
             let a2 = 1.0 - alpha;
-            (
-                vec![b0 / a0, b1 / a0, b2 / a0],
-                vec![1.0, a1 / a0, a2 / a0],
-            )
+            (vec![b0 / a0, b1 / a0, b2 / a0], vec![1.0, a1 / a0, a2 / a0])
         }
         _ => unreachable!("order validated above"),
     }
@@ -324,11 +407,7 @@ pub fn butterworth_lowpass(order: u32, cutoff_norm: f32) -> (Vec<f32>, Vec<f32>)
 ///
 /// Panics if `order` is not 1 or 2, `ripple_db <= 0.0` or not finite,
 /// or `cutoff_norm` is outside `(0.0, 0.5)` or not finite.
-pub fn chebyshev1_lowpass(
-    order: u32,
-    ripple_db: f32,
-    cutoff_norm: f32,
-) -> (Vec<f32>, Vec<f32>) {
+pub fn chebyshev1_lowpass(order: u32, ripple_db: f32, cutoff_norm: f32) -> (Vec<f32>, Vec<f32>) {
     assert!(
         order == 1 || order == 2,
         "Chebyshev-I supports orders 1 and 2; got {}",
@@ -369,10 +448,7 @@ pub fn chebyshev1_lowpass(
             let b1 = 2.0 * b0;
             let b2 = b0;
 
-            (
-                vec![b0 / a0, b1 / a0, b2 / a0],
-                vec![1.0, a1 / a0, a2 / a0],
-            )
+            (vec![b0 / a0, b1 / a0, b2 / a0], vec![1.0, a1 / a0, a2 / a0])
         }
         _ => unreachable!("order validated above"),
     }
@@ -582,7 +658,11 @@ mod tests {
         let sum_b: f32 = b.iter().sum();
         let sum_a: f32 = a.iter().sum();
         let dc = sum_b / sum_a;
-        assert!(approx_eq(dc, 1.0, 1e-4), "Chebyshev-I order 1 DC gain = {}", dc);
+        assert!(
+            approx_eq(dc, 1.0, 1e-4),
+            "Chebyshev-I order 1 DC gain = {}",
+            dc
+        );
     }
 
     #[test]

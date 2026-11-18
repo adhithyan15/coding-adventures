@@ -1,10 +1,10 @@
-"""Slice S10a: ``requires`` inference, the typed IR compiler's cost, and evaluation refusing.
+"""Slice S10a: ``requires`` inference and the typed IR compiler's cost (evaluation: S10c-1).
 
 * ``ir_levels`` is the sorted union of the levels of every tag of an expression and of the call
   closure of every ``model_call`` (VER04r section 16.10 R9); a tuple *type* adds ``ir.tuple``.
-* ``Program(analyze=True)`` types and costs the 35 built-ins (``1 +`` the operands, section 4.2
-  rule 6) and *never evaluates them*; a default ``Program`` refuses them, so ``emit-v2``,
-  ``verify-v2`` and the generator parity paths still refuse ``ir.fixed`` suites by level.
+* A ``Program`` types and costs the 35 built-ins (``1 +`` the operands, section 4.2 rule 6).  Until
+  slice S10c-1 it refused to *evaluate* them (the default one by level, an ``analyze=True`` one when
+  the closure ran); since S10c-1 every ``Program`` evaluates them and ``analyze`` changes nothing.
 """
 
 from __future__ import annotations
@@ -128,10 +128,9 @@ def test_requires_is_the_sorted_union_over_tags_and_the_model_closure():
     assert spec.models["rot"].requires == both and spec.models["plain2"].requires == ("ir.core",)
     ex = {e.name: e.requires for e in spec.examples}
     assert ex == {"ex_core": ("ir.core",), "ex_fixed": both}
-    # evaluation refuses exactly the units that need ir.fixed
-    refused = {s.claim for s in spec.suites if s.unsupported is not None}
-    assert refused == {"direct", "via_model", "via_admit"}
-    assert spec.ops["g"].unsupported.level == "ir.fixed" and spec.ops["f"].unsupported is None
+    # since S10c-1 evaluation refuses no unit for needing ir.fixed
+    assert all(s.unsupported is None for s in spec.suites)
+    assert spec.ops["g"].unsupported is None and spec.ops["f"].unsupported is None
 
 
 def test_a_tuple_type_adds_ir_tuple_even_without_a_tuple_tag():
@@ -338,21 +337,18 @@ def test_a_malformed_tuple_tag_is_an_ir_error_not_a_level():
         assert err.value.code == "ir"
 
 
-# -- evaluation still refuses -------------------------------------------------------------------
+# -- ir.fixed is evaluated since S10c-1 -------------------------------------------------------------
 
 
-def test_the_default_program_refuses_every_ir_fixed_tag_by_level():
+def test_every_program_evaluates_every_ir_fixed_tag_and_analyze_changes_nothing():
+    for analyze in (False, True):
+        c = Program({}, {}, analyze=analyze).compile(["bit_not", V("a")], {"a": U8})
+        assert c.fn({"a": 1}) == 254
+    # the 35 names are all compiled (a malformed operand list is an ir error, never a level one)
     for tag in sorted(L.FIXED_TAGS):
         with pytest.raises(OracleError) as err:
             Program({}, {}).compile([tag, ["lit", True]], {})
-        assert err.value.code == "level" and err.value.level == "ir.fixed", tag
-
-
-def test_an_analyzed_closure_raises_the_level_instead_of_evaluating():
-    c = compiled(["bit_not", V("a")], {"a": U8})
-    with pytest.raises(OracleError) as err:
-        c.fn({"a": 1})
-    assert err.value.code == "level" and err.value.level == "ir.fixed"
+        assert err.value.code == "ir", tag
 
 
 FIXED_DOC = (
@@ -362,24 +358,24 @@ FIXED_DOC = (
 )
 
 
-def test_emit_names_the_ir_fixed_suites_not_live_and_still_enumerates_the_rest():
+def test_emit_enumerates_the_ir_fixed_suites():
     tree = emit(FIXED_DOC.encode())
     assert tree["suites"]["live"]["status"] == "ok"
-    assert tree["suites"]["fixed"]["status"] == "not-live"
-    assert tree["suites"]["fixed"]["level"] == "ir.fixed"
-    assert tree["summary"]["not_live_by_level"] == {"ir.fixed": 1}
+    assert tree["suites"]["fixed"]["status"] == "ok"
+    assert tree["suites"]["fixed"]["cases"] == 256
+    assert tree["summary"]["not_live_by_level"] == {}
+    assert tree["levels_implemented"] == ["ir.core", "ir.fixed", "ir.tuple"]
 
 
-def test_a_suite_plan_and_derive_refuse_an_ir_fixed_document():
+def test_a_suite_plan_and_derive_accept_an_ir_fixed_document():
     spec = lower(FIXED_DOC)
-    with pytest.raises(OracleError) as err:
-        SuitePlan(spec, build_program(spec), spec.suites[1])
-    assert err.value.code == "level" and err.value.level == "ir.fixed"
-    with pytest.raises(OracleError) as err:
-        derive(FIXED_DOC.encode(), b"", spec_ref="s.warrant", generator=GEN)
-    assert err.value.code == "level" and err.value.level == "ir.fixed"
-    # the default program does not even hold the model (it cannot evaluate it)
-    assert "nb" not in build_program(spec).models and "nb" in build_program(spec, analyze=True).models
+    prog = build_program(spec)
+    assert "nb" in prog.models  # the default program holds it now: it can evaluate it
+    plan = SuitePlan(spec, prog, spec.suites[1])
+    assert plan.product == 256
+    out = derive(FIXED_DOC.encode(), b"", spec_ref="s.warrant", generator=GEN)
+    assert out.corpus["levels"] == ["ir.core", "ir.fixed"]
+    assert [s["requires"] for s in out.corpus["suites"]] == [["ir.core"], ["ir.core", "ir.fixed"]]
 
 
 def test_derive_writes_computed_requires_that_equal_the_constant_for_core_documents():
