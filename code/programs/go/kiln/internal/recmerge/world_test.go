@@ -98,7 +98,7 @@ func newWorld(t *testing.T, specs ...shardSpec) *world {
 			Revision: rev, ShardIndex: i, ShardCount: len(specs), GraphSHA256: dGraph, StepsSHA256: dSteps,
 			PartitionSHA256: part, HostFactsSHA256: sha(fb), InventorySHA256: sha(ib),
 			SandboxConfigSHA256: dGraph, KilnSHA256: dGraph, BuildToolSHA256: dGraph, StraceSHA256: dGraph, GitSHA256: dGraph, Recorder: legacy.RecorderVersion,
-			StraceVersion: "strace", Kernel: "k", JobStart: 1, PreparedAt: "2026-11-13T00:00:00Z"}
+			StraceVersion: "strace", Kernel: "k", JobStart: 1, PreparedAt: "2026-11-13T00:00:00Z", PreparedTicks: 1000}
 		bb, err := recfmt.EncodeBinding(b)
 		if err != nil {
 			t.Fatal(err)

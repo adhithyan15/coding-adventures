@@ -285,9 +285,10 @@ func (p *prep) options() Options {
 			}
 			return "strace -- version 6.8", nil
 		},
-		Kernel:    func() (string, error) { return "6.8.0-test", nil },
-		Structure: p.structure,
-		ProbeRun:  p.probeRun,
+		Kernel:         func() (string, error) { return "6.8.0-test", nil },
+		SelfStartTicks: func() (int64, error) { return 123456, nil },
+		Structure:      p.structure,
+		ProbeRun:       p.probeRun,
 	}
 }
 
@@ -421,7 +422,7 @@ func TestPrepareWritesTheSealedRecord(t *testing.T) {
 		KilnSHA256:          sumOf([]byte("kiln binary")), BuildToolSHA256: sumOf([]byte("build tool binary")),
 		StraceSHA256: sumOf([]byte("strace")), GitSHA256: p.gitSum,
 		Recorder: legacy.RecorderVersion, StraceVersion: "strace -- version 6.8", Kernel: "6.8.0-test",
-		JobStart: 1794000000, PreparedAt: "2026-11-13T02:03:04Z",
+		JobStart: 1794000000, PreparedAt: "2026-11-13T02:03:04Z", PreparedTicks: 123456,
 	}
 	part, err := ReadPartition(filepath.Join(res.PreDir, "build-plan.json"), 2)
 	if err != nil {
@@ -758,6 +759,15 @@ func TestPrepareRefusals(t *testing.T) {
 		"a kernel that cannot be read": {opts: func(p *prep, o *Options) {
 			o.Kernel = func() (string, error) { return "", errors.New("no /proc") }
 		}, want: "no /proc"},
+		"a start time that cannot be read": {opts: func(p *prep, o *Options) {
+			o.SelfStartTicks = func() (int64, error) { return 0, errors.New("no self stat here") }
+		}, want: "no self stat here"},
+		"a start time that says zero": {opts: func(p *prep, o *Options) {
+			o.SelfStartTicks = func() (int64, error) { return 0, nil }
+		}, want: "0 ticks"},
+		"a start time that is absurd": {opts: func(p *prep, o *Options) {
+			o.SelfStartTicks = func() (int64, error) { return recfmt.MaxClockTicks + 1, nil }
+		}, want: "ticks"},
 		"a plan package the graph does not know": {before: func(p *prep) {
 			plan = strings.Replace(fixturePlan, `"rel_path": "code/packages/x/z"`, `"rel_path": "code/packages/x/ghost"`, 1)
 		}, want: "graph export does not know"},
@@ -914,7 +924,7 @@ func TestPrepareWorksWithTheDefaultTmpdirOption(t *testing.T) {
 	// Options.Tmpdir defaults to legacy.RecordTmpdir, which a test must not
 	// create in the real /tmp: assert the default and stop before any write.
 	o := Options{Root: "/r", Dir: "/d", BuildTool: "/b", KilnExe: "/k", Strace: "/s", Git: "/g", ShardCount: 1}
-	if err := o.normalize(); err != nil || o.Tmpdir != legacy.RecordTmpdir || o.RunTool == nil || o.StraceVersion == nil || o.Kernel == nil || o.Now == nil || o.Getenv == nil {
+	if err := o.normalize(); err != nil || o.Tmpdir != legacy.RecordTmpdir || o.RunTool == nil || o.StraceVersion == nil || o.Kernel == nil || o.SelfStartTicks == nil || o.Now == nil || o.Getenv == nil {
 		t.Fatalf("%+v %v", o, err)
 	}
 }

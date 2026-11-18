@@ -147,6 +147,12 @@ type Options struct {
 	Tmpdir string
 	// Now is the clock; it defaults to time.Now.
 	Now func() time.Time
+	// SelfStartTicks reads prepare's own start time: field 22 of
+	// /proc/self/stat, in clock ticks since boot. Prepare calls it FIRST, before
+	// it starts any process, and seals the value as binding.prepared_ticks; it
+	// is what S3's start-time gate uses (D26). Now is audit only. It defaults to
+	// ReadSelfStartTicks, and prepare refuses to run when it fails or says < 1.
+	SelfStartTicks func() (int64, error)
 
 	// The seams. Each defaults to the real thing.
 	RunTool       Runner
@@ -179,9 +185,26 @@ type PrepareResult struct {
 }
 
 // Prepare runs the whole of `kiln record prepare`.
+//
+// The start time it seals is that of THIS process. A long-lived caller (a test
+// binary, say) therefore gets an earlier epoch than a fresh `kiln record
+// prepare`, which only widens S3: more processes count as new (fail closed).
 func Prepare(o Options) (*PrepareResult, error) {
 	if err := o.normalize(); err != nil {
 		return nil, err
+	}
+	// The boot-relative start of this process, read before ANYTHING else. Prepare
+	// starts sandboxes itself (the structure probe, the toolchain probes with
+	// argv a PR can edit and timeouts up to minutes), and a process one of those
+	// leaves behind must count as new for S3 in collect. Our own start is
+	// earlier than every process we spawn, by construction, so no ordering of
+	// the steps below can put a probe's leftover before this value (D26).
+	preparedTicks, err := o.SelfStartTicks()
+	if err != nil {
+		return nil, fmt.Errorf("prepare: this process's start time cannot be read: %w", err)
+	}
+	if preparedTicks < 1 || preparedTicks > recfmt.MaxClockTicks {
+		return nil, fmt.Errorf("prepare: this process's start time says %d ticks", preparedTicks)
 	}
 	getenv := o.Getenv
 	repo, run, attempt, err := githubIdentity(getenv)
@@ -612,7 +635,7 @@ func Prepare(o Options) (*PrepareResult, error) {
 		HostFactsSHA256: w.sums["host-facts.json"], InventorySHA256: w.sums["inventory.json"],
 		SandboxConfigSHA256: w.sums["sandbox.json"], KilnSHA256: kiln.SHA256, BuildToolSHA256: bt.SHA256, StraceSHA256: strace.SHA256, GitSHA256: git.SHA256,
 		Recorder: legacy.RecorderVersion, StraceVersion: straceVer, Kernel: kernel, JobStart: o.JobStart,
-		PreparedAt: o.Now().UTC().Format(time.RFC3339),
+		PreparedAt: o.Now().UTC().Format(time.RFC3339), PreparedTicks: preparedTicks,
 	}
 	bindBytes, err := recfmt.EncodeBinding(binding)
 	if err != nil {
@@ -676,6 +699,9 @@ func (o *Options) normalize() error {
 	}
 	if o.Now == nil {
 		o.Now = time.Now
+	}
+	if o.SelfStartTicks == nil {
+		o.SelfStartTicks = ReadSelfStartTicks
 	}
 	if o.RunTool == nil {
 		o.RunTool = execTool
