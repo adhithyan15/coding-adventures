@@ -2673,20 +2673,40 @@ fn uses_composites<'a>(file: &WarrantFile<'a>, env: &TyEnv<'a>) -> bool {
 // ---------------------------------------------------------------------------
 
 /// VOS-D063 (VER04j section 14.3 item 54): wrap every call of `export` in the
-/// adapter text `adapter` in `obs_scope(|| ...)`, so the allocation window
-/// covers the export and nothing else (not the marshalling of its arguments or
-/// of its result).  A call is the identifier `export` (with any `path::` before
-/// it) followed by `(`; the identifier must not continue a longer one
-/// (`op_<n>`, `<export>_x`).  Returns `None` when there is no call at all: an
-/// observed operation whose export is never called would be silently
-/// unobserved.
+/// adapter text `adapter` in `obs_call!(..)`, so the allocation window covers
+/// the export and the drop of its result and nothing else (not the marshalling
+/// of its arguments or of its result; see `ObsHold` in the prelude).
+///
+/// A call is the identifier `export` (with any `path::` before it) directly
+/// followed by `(`.  EVERY occurrence of the identifier outside a string literal
+/// must be such a call: a method call `.export(`, a turbofish `export::<T>(`, a
+/// bare reference or a call that cannot be wrapped would leave an unobserved
+/// export call, so the function returns `None` (generation fails).  `None` also
+/// when there is no call at all.  The identifier must not continue a longer one
+/// (`op_<n>`, `<export>_x`).
 ///
 /// ```text
 ///   let v: V = match vos_ghost_insert_out(p0, p1) { .. };
-///   let v: V = match obs_scope(|| vos_ghost_insert_out(p0, p1)) { .. };
+///   let v: V = match obs_call!(vos_ghost_insert_out(p0, p1)) { .. };
 /// ```
 fn scope_export_calls(adapter: &str, export: &str) -> Option<String> {
     let is_ident = |c: char| c.is_ascii_alphanumeric() || c == '_';
+    // Byte ranges of string literals (their text is not code).
+    let mut strings: Vec<(usize, usize)> = Vec::new();
+    let mut open: Option<usize> = None;
+    let mut escaped = false;
+    for (i, c) in adapter.char_indices() {
+        match open {
+            None if c == '"' => open = Some(i),
+            Some(from) if !escaped && c == '"' => {
+                strings.push((from, i));
+                open = None;
+            }
+            _ => {}
+        }
+        escaped = open.is_some() && !escaped && c == '\\';
+    }
+    let in_string = |at: usize| strings.iter().any(|&(a, b)| at > a && at < b);
     let mut out = String::with_capacity(adapter.len() + 64);
     let mut rest = 0; // bytes of `adapter` already copied into `out`
     let mut from = 0; // where to look for the next occurrence
@@ -2696,9 +2716,13 @@ fn scope_export_calls(adapter: &str, export: &str) -> Option<String> {
         let end = at + export.len();
         from = end;
         let before = adapter[..at].chars().next_back();
-        // Not the tail of a longer identifier (a path separator is fine).
-        if before.is_some_and(is_ident) || !adapter[end..].starts_with('(') {
-            continue;
+        let after = adapter[end..].chars().next();
+        if before.is_some_and(is_ident) || after.is_some_and(is_ident) || in_string(at) {
+            continue; // part of a longer identifier, or text
+        }
+        // A method call, a turbofish or a bare reference: not wrappable.
+        if before == Some('.') || after != Some('(') {
+            return None;
         }
         // Include a `crate::path::` prefix in the wrapped expression.
         let mut start = at;
@@ -2731,7 +2755,7 @@ fn scope_export_calls(adapter: &str, export: &str) -> Option<String> {
             continue; // inside a call already wrapped
         }
         out.push_str(&adapter[rest..start]);
-        out.push_str("obs_scope(|| ");
+        out.push_str("obs_call!(");
         out.push_str(&adapter[start..close]);
         out.push(')');
         rest = close;
@@ -4069,7 +4093,7 @@ mod scope_tests {
     fn wraps_the_call_and_nothing_around_it() {
         let a = "fn op_f(a: u8) -> V {\n    let v: V = match f(p0, g(p1)) { Ok(r) => V::Bool(r) };\n}\n";
         let w = scope_export_calls(a, "f").unwrap();
-        assert!(w.contains("match obs_scope(|| f(p0, g(p1))) {"), "{w}");
+        assert!(w.contains("match obs_call!(f(p0, g(p1))) {"), "{w}");
         // `op_f(` is the adapter's own name, not a call.
         assert!(w.starts_with("fn op_f("), "{w}");
     }
@@ -4077,7 +4101,7 @@ mod scope_tests {
     #[test]
     fn a_path_prefix_belongs_to_the_wrapped_expression() {
         let w = scope_export_calls("x(pkg::sub::f(a))", "f").unwrap();
-        assert_eq!(w, "x(obs_scope(|| pkg::sub::f(a)))");
+        assert_eq!(w, "x(obs_call!(pkg::sub::f(a)))");
     }
 
     #[test]
@@ -4086,14 +4110,20 @@ mod scope_tests {
         let w = scope_export_calls(a, "f").unwrap();
         assert_eq!(
             w,
-            "match fault { A => obs_scope(|| f(1)), _ => obs_scope(|| f(2)) } f_other(3) of(4)"
+            "match fault { A => obs_call!(f(1)), _ => obs_call!(f(2)) } f_other(3) of(4)"
         );
     }
 
     #[test]
     fn a_call_nested_in_a_wrapped_call_is_wrapped_once() {
         let w = scope_export_calls("f(f(1))", "f").unwrap();
-        assert_eq!(w, "obs_scope(|| f(f(1)))");
+        assert_eq!(w, "obs_call!(f(f(1)))");
+    }
+
+    #[test]
+    fn the_name_inside_a_string_literal_is_text_not_a_call() {
+        let w = scope_export_calls("fault_for(\"f\", x); f(1); panic!(\"f(2) \\\" f\")", "f").unwrap();
+        assert_eq!(w, "fault_for(\"f\", x); obs_call!(f(1)); panic!(\"f(2) \\\" f\")");
     }
 
     #[test]
@@ -4101,5 +4131,14 @@ mod scope_tests {
         assert!(scope_export_calls("fn op_f() {}", "f").is_none());
         assert!(scope_export_calls("let x = f;", "f").is_none());
         assert!(scope_export_calls("f(1, 2", "f").is_none());
+    }
+
+    #[test]
+    fn one_unwrappable_occurrence_refuses_the_whole_adapter() {
+        // The first call could be wrapped; the others are an unobserved export call.
+        assert!(scope_export_calls("f(1); s.f(2)", "f").is_none(), "method call");
+        assert!(scope_export_calls("f(1); f::<u8>(2)", "f").is_none(), "turbofish");
+        assert!(scope_export_calls("f(1); let g = f;", "f").is_none(), "bare reference");
+        assert!(scope_export_calls("f(1); pkg::f::<u8>(2)", "f").is_none(), "path turbofish");
     }
 }

@@ -1133,6 +1133,59 @@ fn obs_scope<R>(f: impl FnOnce() -> R) -> R {
     f()
 }
 
+/// How the adapter gets a marshalling copy of the export's result while the
+/// original is dropped INSIDE a window (the result's `Drop` is the subject's
+/// code, so an allocation there is the subject's).  Marshalling stays outside
+/// the window (VOS-D063); only the drop of the original is observed.
+///
+/// `obs_call!` is a macro because the choice is made by autoref method
+/// resolution on the CONCRETE result type, which a generic function cannot do:
+///
+///   * `T: Clone`  -> `ObsViaClone`: marshal the clone, drop the original in a scope;
+///   * otherwise   -> `ObsViaMove`: marshal the original; if the type has drop glue
+///     its drop (outside any window) cannot be observed, so the instance FAILS
+///     loudly instead of passing silently.  A type with no drop glue (plain data)
+///     has nothing to observe and is passed through.
+pub struct ObsHold<T>(pub Option<T>);
+
+pub trait ObsViaClone<T> {
+    fn obs_split(&mut self) -> T;
+}
+
+impl<T: Clone> ObsViaClone<T> for ObsHold<T> {
+    fn obs_split(&mut self) -> T {
+        let r = self.0.take().expect("result present");
+        let copy = r.clone();
+        obs_scope(move || drop(r));
+        copy
+    }
+}
+
+pub trait ObsViaMove<T> {
+    fn obs_split(&mut self) -> T;
+}
+
+impl<T> ObsViaMove<T> for &mut ObsHold<T> {
+    fn obs_split(&mut self) -> T {
+        let r = self.0.take().expect("result present");
+        if std::mem::needs_drop::<T>() {
+            obs_fail(
+                "bound-heap-exceeded: the export's result type has drop glue and is not Clone, so its drop cannot be observed"
+                    .to_string(),
+            );
+        }
+        r
+    }
+}
+
+/// Call the export inside the window, then split its result (see `ObsHold`).
+macro_rules! obs_call {
+    ($call:expr) => {{
+        let mut hold = ObsHold(Some(obs_scope(|| $call)));
+        (&mut hold).obs_split()
+    }};
+}
+
 type ObsJob = Box<dyn FnOnce() + Send>;
 
 struct Worker {

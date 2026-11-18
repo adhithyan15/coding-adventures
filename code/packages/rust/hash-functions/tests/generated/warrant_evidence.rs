@@ -1002,6 +1002,59 @@ fn obs_scope<R>(f: impl FnOnce() -> R) -> R {
     f()
 }
 
+/// How the adapter gets a marshalling copy of the export's result while the
+/// original is dropped INSIDE a window (the result's `Drop` is the subject's
+/// code, so an allocation there is the subject's).  Marshalling stays outside
+/// the window (VOS-D063); only the drop of the original is observed.
+///
+/// `obs_call!` is a macro because the choice is made by autoref method
+/// resolution on the CONCRETE result type, which a generic function cannot do:
+///
+///   * `T: Clone`  -> `ObsViaClone`: marshal the clone, drop the original in a scope;
+///   * otherwise   -> `ObsViaMove`: marshal the original; if the type has drop glue
+///     its drop (outside any window) cannot be observed, so the instance FAILS
+///     loudly instead of passing silently.  A type with no drop glue (plain data)
+///     has nothing to observe and is passed through.
+pub struct ObsHold<T>(pub Option<T>);
+
+pub trait ObsViaClone<T> {
+    fn obs_split(&mut self) -> T;
+}
+
+impl<T: Clone> ObsViaClone<T> for ObsHold<T> {
+    fn obs_split(&mut self) -> T {
+        let r = self.0.take().expect("result present");
+        let copy = r.clone();
+        obs_scope(move || drop(r));
+        copy
+    }
+}
+
+pub trait ObsViaMove<T> {
+    fn obs_split(&mut self) -> T;
+}
+
+impl<T> ObsViaMove<T> for &mut ObsHold<T> {
+    fn obs_split(&mut self) -> T {
+        let r = self.0.take().expect("result present");
+        if std::mem::needs_drop::<T>() {
+            obs_fail(
+                "bound-heap-exceeded: the export's result type has drop glue and is not Clone, so its drop cannot be observed"
+                    .to_string(),
+            );
+        }
+        r
+    }
+}
+
+/// Call the export inside the window, then split its result (see `ObsHold`).
+macro_rules! obs_call {
+    ($call:expr) => {{
+        let mut hold = ObsHold(Some(obs_scope(|| $call)));
+        (&mut hold).obs_split()
+    }};
+}
+
 type ObsJob = Box<dyn FnOnce() + Send>;
 
 struct Worker {
@@ -6125,7 +6178,7 @@ fn op_djb2(_w: &[u64], args: &[V], fault: Fault) -> V {
 fn op_polynomial_rolling_raw(_w: &[u64], args: &[V], fault: Fault) -> V {
     let fault = fault_for("polynomial_rolling", fault);
     let p0 = args[0].bytes();
-    let v: V = V::Fixed(F::U64, (obs_scope(|| polynomial_rolling(p0))) as i128);
+    let v: V = V::Fixed(F::U64, (obs_call!(polynomial_rolling(p0))) as i128);
     match fault {
         Fault::FlipResultBit => fault_flip_result_bit(v),
         _ => v,
@@ -6161,7 +6214,7 @@ fn op_polynomial_rolling_with_params(_w: &[u64], args: &[V], fault: Fault) -> V 
 fn op_murmur3_32_raw(_w: &[u64], args: &[V], fault: Fault) -> V {
     let fault = fault_for("murmur3_32", fault);
     let p0 = args[0].bytes();
-    let v: V = V::Fixed(F::U32, (obs_scope(|| murmur3_32(p0))) as i128);
+    let v: V = V::Fixed(F::U32, (obs_call!(murmur3_32(p0))) as i128);
     match fault {
         Fault::FlipResultBit => fault_flip_result_bit(v),
         _ => v,
@@ -6181,7 +6234,7 @@ fn op_murmur3_32_with_seed_raw(_w: &[u64], args: &[V], fault: Fault) -> V {
     let fault = fault_for("murmur3_32_with_seed", fault);
     let p0 = args[0].bytes();
     let p1 = host::<u32>(args[1].int());
-    let v: V = V::Fixed(F::U32, (obs_scope(|| murmur3_32_with_seed(p0, p1))) as i128);
+    let v: V = V::Fixed(F::U32, (obs_call!(murmur3_32_with_seed(p0, p1))) as i128);
     match fault {
         Fault::FlipResultBit => fault_flip_result_bit(v),
         _ => v,
@@ -6201,7 +6254,7 @@ fn op_siphash_2_4_raw(_w: &[u64], args: &[V], fault: Fault) -> V {
     let fault = fault_for("siphash_2_4", fault);
     let p0 = args[0].bytes();
     let p1 = &<[u8; 16]>::try_from(args[1].bytes()).unwrap_or_else(|_| std::panic::panic_any(Unreachable));
-    let v: V = V::Fixed(F::U64, (obs_scope(|| siphash_2_4(p0, p1))) as i128);
+    let v: V = V::Fixed(F::U64, (obs_call!(siphash_2_4(p0, p1))) as i128);
     match fault {
         Fault::FlipResultBit => fault_flip_result_bit(v),
         _ => v,

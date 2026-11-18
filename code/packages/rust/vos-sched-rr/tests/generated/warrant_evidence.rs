@@ -1026,6 +1026,59 @@ fn obs_scope<R>(f: impl FnOnce() -> R) -> R {
     f()
 }
 
+/// How the adapter gets a marshalling copy of the export's result while the
+/// original is dropped INSIDE a window (the result's `Drop` is the subject's
+/// code, so an allocation there is the subject's).  Marshalling stays outside
+/// the window (VOS-D063); only the drop of the original is observed.
+///
+/// `obs_call!` is a macro because the choice is made by autoref method
+/// resolution on the CONCRETE result type, which a generic function cannot do:
+///
+///   * `T: Clone`  -> `ObsViaClone`: marshal the clone, drop the original in a scope;
+///   * otherwise   -> `ObsViaMove`: marshal the original; if the type has drop glue
+///     its drop (outside any window) cannot be observed, so the instance FAILS
+///     loudly instead of passing silently.  A type with no drop glue (plain data)
+///     has nothing to observe and is passed through.
+pub struct ObsHold<T>(pub Option<T>);
+
+pub trait ObsViaClone<T> {
+    fn obs_split(&mut self) -> T;
+}
+
+impl<T: Clone> ObsViaClone<T> for ObsHold<T> {
+    fn obs_split(&mut self) -> T {
+        let r = self.0.take().expect("result present");
+        let copy = r.clone();
+        obs_scope(move || drop(r));
+        copy
+    }
+}
+
+pub trait ObsViaMove<T> {
+    fn obs_split(&mut self) -> T;
+}
+
+impl<T> ObsViaMove<T> for &mut ObsHold<T> {
+    fn obs_split(&mut self) -> T {
+        let r = self.0.take().expect("result present");
+        if std::mem::needs_drop::<T>() {
+            obs_fail(
+                "bound-heap-exceeded: the export's result type has drop glue and is not Clone, so its drop cannot be observed"
+                    .to_string(),
+            );
+        }
+        r
+    }
+}
+
+/// Call the export inside the window, then split its result (see `ObsHold`).
+macro_rules! obs_call {
+    ($call:expr) => {{
+        let mut hold = ObsHold(Some(obs_scope(|| $call)));
+        (&mut hold).obs_split()
+    }};
+}
+
 type ObsJob = Box<dyn FnOnce() + Send>;
 
 struct Worker {
@@ -3827,7 +3880,7 @@ fn field_pos(ty: &str, f: &str) -> usize {
 #[allow(unused_variables, unused_mut)]
 fn op_init_raw(_w: &[u64], args: &[V], fault: Fault) -> V {
     let fault = fault_for("init", fault);
-    let v: V = { let s1 = obs_scope(|| vos_ghost_init()); V::Con("Impl", 0, "Impl", vec![V::Fixed(F::U8, (s1.mask) as i128), V::Fixed(F::U8, (s1.ptr) as i128)]) };
+    let v: V = { let s1 = obs_call!(vos_ghost_init()); V::Con("Impl", 0, "Impl", vec![V::Fixed(F::U8, (s1.mask) as i128), V::Fixed(F::U8, (s1.ptr) as i128)]) };
     match fault {
         Fault::FieldFlip => fault_field_flip(v),
         _ => v,
@@ -3847,7 +3900,7 @@ fn op_insert_out_raw(_w: &[u64], args: &[V], fault: Fault) -> V {
     let fault = fault_for("insert_out", fault);
     let p0 = vos_sched_rr::ghost::Image { mask: host::<u8>(args[0].fields()[0].int()), ptr: host::<u8>(args[0].fields()[1].int()) };
     let p1 = host::<u8>(args[1].int());
-    let v: V = match obs_scope(|| vos_ghost_insert_out(p0, p1)) { vos_sched_contract::Upd::Changed {  } => V::Con("Upd", 0, "Changed", vec![]), vos_sched_contract::Upd::Unchanged {  } => V::Con("Upd", 1, "Unchanged", vec![]), vos_sched_contract::Upd::OutOfRange {  } => V::Con("Upd", 2, "OutOfRange", vec![]), };
+    let v: V = match obs_call!(vos_ghost_insert_out(p0, p1)) { vos_sched_contract::Upd::Changed {  } => V::Con("Upd", 0, "Changed", vec![]), vos_sched_contract::Upd::Unchanged {  } => V::Con("Upd", 1, "Unchanged", vec![]), vos_sched_contract::Upd::OutOfRange {  } => V::Con("Upd", 2, "OutOfRange", vec![]), };
     match fault {
         Fault::WrongCtor => fault_wrong_ctor(v, Ty::Data("Upd", &[("Changed", &[]), ("Unchanged", &[]), ("OutOfRange", &[])])),
         _ => v,
@@ -3867,7 +3920,7 @@ fn op_insert_img_raw(_w: &[u64], args: &[V], fault: Fault) -> V {
     let fault = fault_for("insert_img", fault);
     let p0 = vos_sched_rr::ghost::Image { mask: host::<u8>(args[0].fields()[0].int()), ptr: host::<u8>(args[0].fields()[1].int()) };
     let p1 = host::<u8>(args[1].int());
-    let v: V = { let s1 = obs_scope(|| vos_ghost_insert_img(p0, p1)); V::Con("Impl", 0, "Impl", vec![V::Fixed(F::U8, (s1.mask) as i128), V::Fixed(F::U8, (s1.ptr) as i128)]) };
+    let v: V = { let s1 = obs_call!(vos_ghost_insert_img(p0, p1)); V::Con("Impl", 0, "Impl", vec![V::Fixed(F::U8, (s1.mask) as i128), V::Fixed(F::U8, (s1.ptr) as i128)]) };
     match fault {
         Fault::FieldZero => fault_field_zero(v),
         _ => v,
@@ -3887,7 +3940,7 @@ fn op_remove_out_raw(_w: &[u64], args: &[V], fault: Fault) -> V {
     let fault = fault_for("remove_out", fault);
     let p0 = vos_sched_rr::ghost::Image { mask: host::<u8>(args[0].fields()[0].int()), ptr: host::<u8>(args[0].fields()[1].int()) };
     let p1 = host::<u8>(args[1].int());
-    let v: V = match obs_scope(|| vos_ghost_remove_out(p0, p1)) { vos_sched_contract::Upd::Changed {  } => V::Con("Upd", 0, "Changed", vec![]), vos_sched_contract::Upd::Unchanged {  } => V::Con("Upd", 1, "Unchanged", vec![]), vos_sched_contract::Upd::OutOfRange {  } => V::Con("Upd", 2, "OutOfRange", vec![]), };
+    let v: V = match obs_call!(vos_ghost_remove_out(p0, p1)) { vos_sched_contract::Upd::Changed {  } => V::Con("Upd", 0, "Changed", vec![]), vos_sched_contract::Upd::Unchanged {  } => V::Con("Upd", 1, "Unchanged", vec![]), vos_sched_contract::Upd::OutOfRange {  } => V::Con("Upd", 2, "OutOfRange", vec![]), };
     match fault {
         Fault::WrongCtor => fault_wrong_ctor(v, Ty::Data("Upd", &[("Changed", &[]), ("Unchanged", &[]), ("OutOfRange", &[])])),
         _ => v,
@@ -3907,7 +3960,7 @@ fn op_remove_img_raw(_w: &[u64], args: &[V], fault: Fault) -> V {
     let fault = fault_for("remove_img", fault);
     let p0 = vos_sched_rr::ghost::Image { mask: host::<u8>(args[0].fields()[0].int()), ptr: host::<u8>(args[0].fields()[1].int()) };
     let p1 = host::<u8>(args[1].int());
-    let v: V = { let s1 = obs_scope(|| vos_ghost_remove_img(p0, p1)); V::Con("Impl", 0, "Impl", vec![V::Fixed(F::U8, (s1.mask) as i128), V::Fixed(F::U8, (s1.ptr) as i128)]) };
+    let v: V = { let s1 = obs_call!(vos_ghost_remove_img(p0, p1)); V::Con("Impl", 0, "Impl", vec![V::Fixed(F::U8, (s1.mask) as i128), V::Fixed(F::U8, (s1.ptr) as i128)]) };
     match fault {
         Fault::FieldZero => fault_field_zero(v),
         _ => v,
@@ -3926,7 +3979,7 @@ fn op_remove_img(w: &[u64], args: &[V], fault: Fault) -> V {
 fn op_dispatch_out_raw(_w: &[u64], args: &[V], fault: Fault) -> V {
     let fault = fault_for("dispatch_out", fault);
     let p0 = vos_sched_rr::ghost::Image { mask: host::<u8>(args[0].fields()[0].int()), ptr: host::<u8>(args[0].fields()[1].int()) };
-    let v: V = match obs_scope(|| vos_ghost_dispatch_out(p0)) { vos_sched_contract::Pick::Idle {  } => V::Con("Pick", 0, "Idle", vec![]), vos_sched_contract::Pick::Run { 0: y1 } => V::Con("Pick", 1, "Run", vec![V::Fixed(F::U8, (y1) as i128)]), };
+    let v: V = match obs_call!(vos_ghost_dispatch_out(p0)) { vos_sched_contract::Pick::Idle {  } => V::Con("Pick", 0, "Idle", vec![]), vos_sched_contract::Pick::Run { 0: y1 } => V::Con("Pick", 1, "Run", vec![V::Fixed(F::U8, (y1) as i128)]), };
     match fault {
         Fault::WrongCtor => fault_wrong_ctor(v, Ty::Data("Pick", &[("Idle", &[]), ("Run", &[Ty::Fx(F::U8)])])),
         _ => v,
@@ -3945,7 +3998,7 @@ fn op_dispatch_out(w: &[u64], args: &[V], fault: Fault) -> V {
 fn op_dispatch_img_raw(_w: &[u64], args: &[V], fault: Fault) -> V {
     let fault = fault_for("dispatch_img", fault);
     let p0 = vos_sched_rr::ghost::Image { mask: host::<u8>(args[0].fields()[0].int()), ptr: host::<u8>(args[0].fields()[1].int()) };
-    let v: V = { let s1 = obs_scope(|| vos_ghost_dispatch_img(p0)); V::Con("Impl", 0, "Impl", vec![V::Fixed(F::U8, (s1.mask) as i128), V::Fixed(F::U8, (s1.ptr) as i128)]) };
+    let v: V = { let s1 = obs_call!(vos_ghost_dispatch_img(p0)); V::Con("Impl", 0, "Impl", vec![V::Fixed(F::U8, (s1.mask) as i128), V::Fixed(F::U8, (s1.ptr) as i128)]) };
     match fault {
         Fault::FieldZero => fault_field_zero(v),
         _ => v,
@@ -3964,7 +4017,7 @@ fn op_dispatch_img(w: &[u64], args: &[V], fault: Fault) -> V {
 fn op_alpha_w_raw(_w: &[u64], args: &[V], fault: Fault) -> V {
     let fault = fault_for("alpha_w", fault);
     let p0 = vos_sched_rr::ghost::Image { mask: host::<u8>(args[0].fields()[0].int()), ptr: host::<u8>(args[0].fields()[1].int()) };
-    let v: V = { let s1 = obs_scope(|| vos_ghost_alpha_w(p0)); V::Con("AbsW", 0, "AbsW", vec![V::Fixed(F::U8, (s1.w) as i128)]) };
+    let v: V = { let s1 = obs_call!(vos_ghost_alpha_w(p0)); V::Con("AbsW", 0, "AbsW", vec![V::Fixed(F::U8, (s1.w) as i128)]) };
     match fault {
         Fault::FieldZero => fault_field_zero(v),
         Fault::FieldFlip => fault_field_flip(v),

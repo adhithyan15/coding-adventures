@@ -2,18 +2,29 @@
 -- a record, a payload-carrying variant and a record again, each with `heap <= 0`.  It is NOT a
 -- package specification.  `make` and `pick` allocate nothing, so their rows must hold even
 -- though the harness allocates to marshal their results; `grow`'s export allocates a kilobyte,
--- so its row must FAIL: the observer counts the export and only the export.
+-- so its row must FAIL: the observer counts the export and only the export.  `held` returns a
+-- type whose `Drop` allocates (the export itself does not): the drop of the result is the
+-- subject's code and is observed too.  `raw` returns a type with drop glue that is not `Clone`,
+-- whose drop cannot be observed: that instance must fail loudly, never pass silently.
 warrant wxo v1
   variant Pick = Idle | Run(t: U8)
   record Cfg(v: U8)
+  record Hold(v: U8)
+  record Raw(v: U8)
 
   op make() -> Cfg
   op pick(k: U8) -> Pick
   op grow(k: U8) -> Cfg
+  op held(k: U8) -> Hold
+  op raw(k: U8) -> Raw
 
   labels pick:
     k public
   labels grow:
+    k public
+  labels held:
+    k public
+  labels raw:
     k public
 
   bound make:
@@ -25,6 +36,12 @@ warrant wxo v1
   bound grow:
     steps <= 8
     heap <= 0
+  bound held:
+    steps <= 8
+    heap <= 0
+  bound raw:
+    steps <= 8
+    heap <= 0
 
   example make_is_seven:
     make() == Cfg(7u8)
@@ -32,6 +49,10 @@ warrant wxo v1
     pick(3u8) == Run(3u8)
   example pick_idles_on_255:
     pick(255u8) == Idle
+  example held_echoes:
+    held(2u8) == Hold(2u8)
+  example raw_echoes:
+    raw(3u8) == Raw(3u8)
   example grow_echoes:
     grow(1u8) == Cfg(1u8)
 

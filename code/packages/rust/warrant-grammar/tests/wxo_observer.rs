@@ -58,3 +58,20 @@ fn the_manifest_records_zero_for_the_honest_operations_and_the_peak_for_the_allo
     let entry = &entry[..entry.find('}').unwrap()];
     assert!(entry.contains("\"max_observed_heap\": 1024"), "{entry}");
 }
+
+#[test]
+fn an_allocation_in_the_drop_of_the_result_is_caught() {
+    // The export allocates nothing; the result's Drop allocates 512 bytes.  The original is
+    // dropped inside a window while the marshalling copy is made outside it.
+    let o = outcome("example/held_echoes");
+    assert!(!o.passed(), "an allocating Drop must fail heap <= 0");
+    let m = message(o);
+    assert!(m.contains("bound-heap-exceeded") && m.contains("512 bytes against a heap bound of 0"), "{m}");
+}
+
+#[test]
+fn a_result_with_drop_glue_that_cannot_be_cloned_fails_loudly() {
+    let o = outcome("example/raw_echoes");
+    assert!(!o.passed(), "an unobservable drop must not pass silently");
+    assert!(message(o).contains("is not Clone"), "{}", message(o));
+}

@@ -1717,10 +1717,18 @@ The numbering continues from 14.1.
     falsified by the harness for every operation whose result is not a scalar or a
     payload-free variant, and `vos-sched-fp-bitmap` could declare the row on two of its
     eight operations only.  Now the worker's window is *closed* when a job starts and is
-    opened by `obs_scope(f)` around exactly one expression: the call of the export (the
+    opened by `obs_scope(f)` (through `obs_call!`) around exactly one expression: the call of the export (the
     generator wraps each call of the binding's `export=` in the adapter text it has just
-    emitted; no call found is a generation error, never an unobserved operation).  The
-    window is restored on unwinding, so a subject panic cannot leave it open.  One other
+    emitted as `obs_call!(export(..))`; EVERY occurrence of the export name outside a string
+    literal must be such a call, and a method call, a turbofish, a bare reference or no call
+    at all is a generation error, never an unobserved export call).  The window is restored
+    on unwinding, so a subject panic cannot leave it open.  **The drop of the result is
+    observed too.**  The result's `Drop` is the subject's code, so `obs_call!` splits a
+    marshalling copy off the result (`T: Clone`, chosen by autoref resolution on the concrete
+    type), marshals the copy outside the window and drops the original inside one.  A result
+    with drop glue that is not `Clone` cannot be split: the instance fails with
+    `bound-heap-exceeded: ... is not Clone`, never a silent pass (a type without drop glue has
+    nothing to observe).  Marshalling is still never inside a window.  One other
     allocation is observed on purpose: the `limit-after-alloc` fault's hog (section 6.4),
     which stands in for an allocating subject and is allocated through `obs_scope` so the
     observer still flags it.  What is therefore *not* counted: argument conversion, result
@@ -1733,7 +1741,21 @@ The numbering continues from 14.1.
     beside the honest record, variant and scalar operations that must pass.  Only
     documents with an `output` or `heap` row carry the observer, so only their harnesses
     change.  `check-profile`'s NC9 (VOS-D055) is unaffected: a missing `heap` row is still
-    not evidenced.
+    not evidenced.  **Limits of the observer (stated, not fixed).**  (a) *Threads.* The window
+    is a thread-local of the worker, so memory allocated on another thread during the call (a
+    pool thread that already exists, a thread the subject's runtime owns) is not charged;
+    `thread::spawn` itself allocates on the calling thread and is.  The observer is therefore
+    not a sandbox (item 50).  For VOS components the primary barrier is the shape checker, not
+    this observer: they are `no_std`, single-threaded and have no allocator (SH1), so there is
+    no thread and no allocation to miss.  (b) *One-time initialisation.* A lazy static, a
+    `OnceLock` or a cache filled by an earlier call outside any window is not charged to a
+    later call, so a `heap <= 0` row can hold on the second call of an export whose first call
+    allocated.  A warm-up call inside a scope would call the export twice (arguments may not be
+    `Copy`; an operation may carry state), so it is not done; logged as VOS-D102.  (c) The
+    liveness of the observer on a real subject is shown by the `wxo` control (an allocating
+    export, an allocating `Drop`, an uncloneable result), which runs in `warrant-grammar`'s
+    BUILD (`cargo test`), not by the manifests: since only the export is observed, an
+    exhaustive suite whose inputs are rejected records a peak of 0.
 55. **`fixed<N>(bytes)` in a generated model (VOS-D025).**  The type checker and the ground
     evaluator have always accepted `fixed<N>(b)` (VER04 section 4: `Some(b)` when `b` is
     exactly `N` bytes, else `None`), but the evidence generator's expression translation

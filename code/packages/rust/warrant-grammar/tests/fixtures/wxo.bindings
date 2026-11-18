@@ -10,7 +10,11 @@ fuzz_iterations 200
 negctl_fuzz_iterations 100
 exhaustive_budget 400000
 struct Cfg path=wxo_subject::Cfg fields=v:u8
+struct Hold path=wxo_subject::Hold fields=v:u8
+struct Raw path=wxo_subject::Raw fields=v:u8
 enum Pick path=wxo_subject::Pick ctors=Idle,Run(0:u8)
 op make export=make ret=Cfg faults=field-zero
 op pick export=pick args=u8 ret=Pick faults=wrong-ctor
 op grow export=grow args=u8 ret=Cfg faults=field-zero
+op held export=held args=u8 ret=Hold faults=field-zero
+op raw export=raw args=u8 ret=Raw faults=field-zero

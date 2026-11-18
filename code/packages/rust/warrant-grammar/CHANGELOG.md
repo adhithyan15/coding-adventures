@@ -12,6 +12,11 @@
   Controls: `tests/wxo_observer.rs` (a record and a variant result pass `heap <= 0`; an export that allocates
   a kilobyte fails it with `bound-heap-exceeded`), the existing `wxh_*` observer tests (now run their jobs
   inside `obs_scope`) and unit tests of `scope_export_calls`.
+- Review of VOS-038c: every export call is wrapped as `obs_call!(..)` and generation fails if ANY occurrence of
+  the export name (method call, turbofish, bare reference) cannot be wrapped. `obs_call!` marshals a clone and
+  drops the original result inside a window, so an allocating `Drop` is charged to the subject; a result with drop
+  glue that is not `Clone` fails the instance loudly. wxo gains `held` (allocating Drop, caught) and `raw`
+  (uncloneable, refused). The observer's thread and lazy-static limits are stated in VER04j 14.3 item 54 (VOS-D102).
 - VOS-D025 first half (VER04j 14.3 item 55): `fixed<N>(bytes)` with a literal `N` is generated (`V::fixed_n`,
   a new `fixedn` prelude region emitted only when a body uses it) instead of stopping at W0701. Fixture
   `tests/fixtures/wxf.warrant` builds a `Bytes<8>` state with `fixed<8>(concat(..))`; its 256-state exhaustive,
