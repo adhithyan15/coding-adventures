@@ -208,6 +208,7 @@ var (
 
 	rngCorpusPaths         = []string{"code/specs/fixtures/rng-v1"}
 	gameClockCorpusPaths   = []string{"code/specs/fixtures/game-clock-v1"}
+	biquadSosFixturePaths  = []string{"code/specs/fixtures/biquad-sos-v1"}
 	hamurabiCorpusPaths    = []string{"code/specs/fixtures/hamurabi-v1"}
 	lunarLanderCorpusPaths = []string{"code/specs/fixtures/lunar-lander-v1"}
 	warrantGrammarPaths    = []string{
@@ -364,6 +365,20 @@ var (
 )
 
 var repositoryInputConsumers = []repositoryInputConsumer{
+	{
+		name:     "python/dsp-filters",
+		language: "python",
+		inputs:   "the shared Biquad/SOS conformance fixture read by package tests",
+		matches:  isBiquadSosFixture,
+		paths:    biquadSosFixturePaths,
+	},
+	{
+		name:     "typescript/dsp-filters",
+		language: "typescript",
+		inputs:   "the shared Biquad/SOS conformance fixture read by package tests",
+		matches:  isBiquadSosFixture,
+		paths:    biquadSosFixturePaths,
+	},
 	{
 		name:     "rust/vos-manifest",
 		language: "rust",
@@ -1375,6 +1390,12 @@ func isRngCorpus(changed string) bool {
 // The versioned directory boundary deliberately excludes v10 lookalikes.
 func isGameClockCorpus(changed string) bool {
 	return strings.HasPrefix(changed, "code/specs/fixtures/game-clock-v1/")
+}
+
+// isBiquadSosFixture selects files in the versioned shared DSP fixture while
+// excluding adjacent lookalike versions.
+func isBiquadSosFixture(changed string) bool {
+	return strings.HasPrefix(changed, "code/specs/fixtures/biquad-sos-v1/")
 }
 
 // isTrigReferenceCorpus reports whether a changed path is a file of the shared
