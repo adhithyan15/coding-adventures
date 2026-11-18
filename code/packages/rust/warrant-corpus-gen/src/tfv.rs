@@ -8,10 +8,12 @@
 //! ```text
 //!   corpus.json  {"id","op","args":[..],"expected":..,"result_type"[,"width"]}
 //!                values untagged, decoded by declared type (2.3): integers are decimal
-//!                strings, bytes lowercase hex, Result is {"ok":v} / {"err":"CASE"}
+//!                strings, bytes lowercase hex, Result is {"ok":v} / {"err":"CASE"},
+//!                a tuple is a JSON array of its components
 //!   cases.tfv    tfv 1
 //!                <id> R<n> Kop S<hex op> K<param> <v> .. [Kwidth I<w>] Kexpect <v>
-//!                T/F, I<decimal>, X<hex>, Result as `M1 S6f6b v` / `M1 S657272 S<hex case>`
+//!                T/F, I<decimal>, X<hex>, Result as `M1 S6f6b v` / `M1 S657272 S<hex case>`,
+//!                a tuple as `L<n> v1 .. vn` (nested the same way)
 //! ```
 //!
 //! Every value is checked against its declared type with the stream encoder first, so an
@@ -40,6 +42,13 @@ fn json_value(ty: &Ty, v: &Value) -> Result<Json, GenError> {
         (_, Value::Bytes(b)) => Json::str(hex(b)),
         (Ty::Result(ok, _), Value::Ok(inner)) => Json::obj([("ok", json_value(ok, inner)?)]),
         (_, Value::Err(case)) => Json::obj([("err", Json::str(&**case))]),
+        (Ty::Tuple(parts), Value::Tuple(items)) if parts.len() == items.len() => Json::arr(
+            parts
+                .iter()
+                .zip(items)
+                .map(|(t, v)| json_value(t, v))
+                .collect::<Result<Vec<_>, _>>()?,
+        ),
         _ => return Err(GenError::internal("an example value has the wrong shape")),
     })
 }
@@ -54,6 +63,14 @@ fn tfv_value(ty: &Ty, v: &Value) -> Result<String, GenError> {
             format!("M1 S{} {}", hex(b"ok"), tfv_value(ok, inner)?)
         }
         (_, Value::Err(case)) => format!("M1 S{} S{}", hex(b"err"), hex(case.as_bytes())),
+        (Ty::Tuple(parts), Value::Tuple(items)) if parts.len() == items.len() => {
+            let mut out = format!("L{}", items.len());
+            for (t, v) in parts.iter().zip(items) {
+                out.push(' ');
+                out.push_str(&tfv_value(t, v)?);
+            }
+            out
+        }
         _ => return Err(GenError::internal("an example value has the wrong shape")),
     })
 }
@@ -97,6 +114,9 @@ fn over_limit(ty: &Ty, v: &Value) -> bool {
     match (ty, v) {
         (_, Value::Bytes(b)) => b.len() > MAX_EXAMPLE_BYTES,
         (Ty::Result(ok, _), Value::Ok(inner)) => over_limit(ok, inner),
+        (Ty::Tuple(parts), Value::Tuple(items)) => {
+            parts.iter().zip(items).any(|(t, v)| over_limit(t, v))
+        }
         _ => false,
     }
 }
