@@ -84,8 +84,8 @@ fn the_file_set_and_sizes_are_those_of_ct_compare() {
     assert_eq!(c.cases_tfv.len(), V1_TFV.len());
 }
 
-const CORPUS_BYTES: usize = 43792; // with the version masked as `VERSION`
-const CORPUS_DIGEST: &str = "fe31236c9e1e951350092f2a21f3fbe3674c748e0523c48bc9e59654db488e14";
+const CORPUS_BYTES: usize = 43780; // with the version masked as `VERSION` (43792 before the S10c flip: the `deferred` witness was 12 bytes longer)
+const CORPUS_DIGEST: &str = "2ecd1225005e325cca8f86271170cb09f92aa5bb3d58344851d9f219b1a3f66c";
 
 #[test]
 fn corpus_json_is_pinned_by_digest_with_the_version_masked() {
