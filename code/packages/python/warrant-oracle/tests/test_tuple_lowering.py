@@ -178,8 +178,9 @@ def test_project_by_name_and_chain():
 
 
 def test_project_after_a_call_and_on_a_literal():
-    m = model("p(a, 3).1", "a: Bool", "Nat")
-    assert m.ir == ["project", ["subject_op", "p", [var("a"), lit("Nat", 3)]], 1]
+    # a model body calls no subject (VER04r 4.2 rule 3), so the call is lowered in a claim
+    suite = lower(BASE + "  claim c:\n    forall a: Bool. p(a, 3).1 == 3\n").suites[0]
+    assert suite.body[1] == ["project", ["subject_op", "p", [var("a"), lit("Nat", 3)]], 1]
     assert model("(true, 2u8).1", "", "U8").ir == [
         "project",
         ["tuple", [["lit", True], lit("U8", 2)]],
@@ -358,10 +359,10 @@ def test_match_patterns_outside_the_six_are_refused_by_level_or_type():
 
 
 def test_an_error_value_bound_by_a_pattern_has_no_ir_form_so_it_may_not_be_used():
-    assert model("match h(a) with Ok(x) -> x | Err(e) -> false").unsupported is None
-    used = model("match h(a) with Ok(x) -> x | Err(e) -> e == e")
+    r = "r: Result<Bool,E>"
+    assert model("match r with Ok(x) -> x | Err(e) -> false", r).unsupported is None
+    used = model("match r with Ok(x) -> x | Err(e) -> e == e", r)
     assert used.unsupported.code == "level" and used.unsupported.level == "ir.data"
-    called = model("match h(a) with Ok(x) -> x | Err(e) -> g2(e)")  # noqa: F841  (unknown callable)
 
 
 def test_the_bool_scrutinee_of_a_tuple_projection_in_match_arm_scope():
@@ -738,7 +739,7 @@ def test_requires_of_a_match_is_ir_tuple():
 def test_requires_counts_a_tuple_type_without_any_tuple_tag():
     # an op that returns a tuple, compared with eq against a model call: no tuple tag at all
     spec = lower(
-        "warrant t v1\n  op f(a: U8) -> (U8,U8)\n  model m(a: U8) -> (U8,U8) = f(a)\n"
+        "warrant t v1\n  op f(a: U8) -> (U8,U8)\n  model m(a: U8) -> (U8,U8) = (a, a)\n"
         "  claim c:\n    forall a: U8. f(a) == m(a)\n"
     )
     assert spec.suites[0].requires == ("ir.core", "ir.tuple")

@@ -207,6 +207,8 @@ class SuitePlan:
         self.work = work if work is not None else Work("full")
         if suite.unsupported is not None:
             raise suite.unsupported
+        if suite.refusal is not None:
+            raise suite.refusal
         if chunk_size & (chunk_size - 1) or not (1 << 10) <= chunk_size <= (1 << 16):
             raise OracleError("generation", "chunk_size is a power of two in 2^10..2^16")
         self.spec = spec

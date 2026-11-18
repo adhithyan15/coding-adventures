@@ -12009,17 +12009,14 @@
         ]
       ],
       "body": [
-        "or",
+        "and",
         [
           "eq",
           [
-            "subject_op",
-            "op_not_u8",
+            "bit_not",
             [
-              [
-                "var",
-                "a"
-              ]
+              "var",
+              "a"
             ]
           ],
           [
@@ -12360,17 +12357,14 @@
         ]
       ],
       "body": [
-        "or",
+        "and",
         [
           "eq",
           [
-            "subject_op",
-            "op_not_u16",
+            "bit_not",
             [
-              [
-                "var",
-                "a"
-              ]
+              "var",
+              "a"
             ]
           ],
           [
@@ -12711,17 +12705,14 @@
         ]
       ],
       "body": [
-        "or",
+        "and",
         [
           "eq",
           [
-            "subject_op",
-            "op_not_u32",
+            "bit_not",
             [
-              [
-                "var",
-                "a"
-              ]
+              "var",
+              "a"
             ]
           ],
           [
@@ -13062,17 +13053,14 @@
         ]
       ],
       "body": [
-        "or",
+        "and",
         [
           "eq",
           [
-            "subject_op",
-            "op_not_u64",
+            "bit_not",
             [
-              [
-                "var",
-                "a"
-              ]
+              "var",
+              "a"
             ]
           ],
           [
@@ -13413,17 +13401,14 @@
         ]
       ],
       "body": [
-        "or",
+        "and",
         [
           "eq",
           [
-            "subject_op",
-            "op_not_i8",
+            "bit_not",
             [
-              [
-                "var",
-                "a"
-              ]
+              "var",
+              "a"
             ]
           ],
           [
@@ -13764,17 +13749,14 @@
         ]
       ],
       "body": [
-        "or",
+        "and",
         [
           "eq",
           [
-            "subject_op",
-            "op_not_i16",
+            "bit_not",
             [
-              [
-                "var",
-                "a"
-              ]
+              "var",
+              "a"
             ]
           ],
           [
@@ -14115,17 +14097,14 @@
         ]
       ],
       "body": [
-        "or",
+        "and",
         [
           "eq",
           [
-            "subject_op",
-            "op_not_i32",
+            "bit_not",
             [
-              [
-                "var",
-                "a"
-              ]
+              "var",
+              "a"
             ]
           ],
           [
@@ -14466,17 +14445,14 @@
         ]
       ],
       "body": [
-        "or",
+        "and",
         [
           "eq",
           [
-            "subject_op",
-            "op_not_i64",
+            "bit_not",
             [
-              [
-                "var",
-                "a"
-              ]
+              "var",
+              "a"
             ]
           ],
           [

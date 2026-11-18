@@ -239,7 +239,10 @@ def main() -> str:
         w(f"  claim c_and_{s}:")
         w(f"    forall a: {t}, b: {t}. op_and_{s}(a, b) == bit_and(a, b)")
         w(f"  claim c_not_{s}:")
-        w(f"    forall a: {t}. op_not_{s}(a) == bit_xor(a, max_value<{t}>()) or op_not_{s}(a) == bit_not(a)")
+        # A pure guard over a subject call (VER04r 4.4): the left operand calls no op, so it may
+        # guard the right one.  (Until CV2-F1 this was ``op(a) == x or op(a) == y``, an impure
+        # guard the generator refuses; the same two built-ins, bit_xor and bit_not, stay.)
+        w(f"    forall a: {t}. bit_not(a) == bit_xor(a, max_value<{t}>()) and op_not_{s}(a) == bit_not(a)")
         w(f"  claim c_shl_{s}:")
         w(f"    forall a: {t}, n: Nat | n < {2 * bits}. op_shl_{s}(a, n) == shl(a, n)")
         w(f"  claim c_pop_{s}:")
