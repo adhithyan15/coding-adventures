@@ -602,6 +602,33 @@ def test_the_committed_ct_compare_v2_fixture_verifies():
 
 
 
+def test_a_preflip_ct_compare_corpus_with_a_stale_deferred_witness_fails_verify_v2(tmp_path):
+    """CV2-S10c negative test: the shipped gate implements ``ir.fixed``, so the oracle refuses the
+    pre-flip corpus whose ``eq_u64/ignore-high-bit`` control still says ``deferred``."""
+    from conftest import CODE
+
+    fixture = CODE / "specs" / "fixtures" / "ct-compare-warrant-v2"
+    preflip = HERE.parent / "ct-compare-v2-preflip" / "corpus.json"
+    stale = json.loads(preflip.read_text(encoding="utf-8"))
+    row = next(c for c in stale["controls"] if c["id"].endswith("/eq_u64/ignore-high-bit"))
+    assert row["slim_witness"] == [{"claim": "warrant/ct_compare/exhaustive/eq_u64_agrees", "deferred": "ir.fixed"}]
+    assert stale["generator"]["version"] == "0.5.0"
+    root = tmp_path / "ct"
+    shutil.copytree(fixture, root)
+    (root / "corpus.json").write_bytes(preflip.read_bytes())
+    report, _ = check(
+        root,
+        CODE / "specs" / "ct-compare.warrant",
+        fixture / "corpus.profile",
+        CODE / "packages/rust/ct-compare/evidence.bindings",
+    )
+    assert not report.ok
+    controls = [m for m in report.mismatches if m["code"] == "controls"]
+    assert controls, report.mismatches
+    # no other group of check objects: the stale witness is the only difference but the version
+    assert {m["code"] for m in report.mismatches} <= {"controls", "generator"}
+
+
 @pytest.mark.skipif(
     "WARRANT_CT_COMPARE_V2" not in os.environ,
     reason="set WARRANT_CT_COMPARE_V2 to a generated ct-compare v2 directory",
