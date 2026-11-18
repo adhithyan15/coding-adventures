@@ -25,6 +25,13 @@
 
 - `TestDefaultPathIsTheGrammarPath`: with the cross-check unset, a stricter-only
   input is refused, and a reason-only input carries the grammar path's reason.
+- Gate G1 is enforced only in the dedicated kiln-sandbox job, via the test-only
+  env var `KILN_G1_GATE=1` (set in `ci.yml` next to `KILN_TRACE_DIFF`). The
+  general build job runs kiln's tests in parallel with many other packages and
+  measured the synthetic slice at 11.2 MB/s, so elsewhere the same PROBE lines
+  are logged with `gated=0` and no floor (zero time / non-finite rate still
+  fail). First dedicated-job figures: synthetic-slice 21.6 (26.04) and 18.7
+  (24.04) MB/s, real traces 28-37.
 - kiln-sandbox gate G1 (KILN04 4.9): a real trace of 32 to 128 KB whose grammar
   path pass 1 is below 14 MB/s fails the job; larger and smaller traces are
   census only (`gated=0`). The gated figure is the best (minimum) of at least 7

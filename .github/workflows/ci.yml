@@ -1265,6 +1265,12 @@ jobs:
           # lines around it in the job log.  (No artifact is uploaded: the
           # window is the only thing kept, and it stays in this job's log.)
           KILN_TRACE_DIFF: '1'
+          # Gate G1 (grammar-path pass-1 throughput floor, KILN04 4.9) is enforced
+          # only in this dedicated job.  The general build job runs kiln's tests in
+          # parallel with many other packages, so a floor there measures the runner.
+          # assert_sandbox_tests.py requires a gated=1 synthetic-slice line, so a
+          # job without this variable fails.
+          KILN_G1_GATE: '1'
         shell: bash
         run: |
           set -euo pipefail

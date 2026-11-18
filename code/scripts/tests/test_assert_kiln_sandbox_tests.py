@@ -165,6 +165,13 @@ class GateG1(unittest.TestCase):
         problems = mod.gate_problems(with_gate(stream(all_pass())) + probe_events("TestSandboxRecordStep", slow))
         self.assertTrue(any("record-step" in p and "below" in p for p in problems), problems)
 
+    def test_a_job_without_the_gate_env_var_fails(self) -> None:
+        # Without KILN_G1_GATE=1 the Go tests log the synthetic slice with gated=0,
+        # so the kiln-sandbox job's stream has no gated line and must fail.
+        ungated = SYNTHETIC_PROBE.replace("gated=1", "gated=0")
+        problems = mod.gate_problems(stream(all_pass()) + probe_events("TestSandboxTraceGateSynthetic", ungated))
+        self.assertTrue(any("no passing test logged a gated" in p for p in problems), problems)
+
     def test_the_4mib_census_line_is_not_gated(self) -> None:
         census = "    x_test.go:5: PROBE: trace synthetic-4mib-census bytes=4195800 lines=1 best_mb_s=5.0 gated=0 repeats=7"
         self.assertEqual(mod.gate_problems(with_gate(stream(all_pass())) + probe_events("TestSandboxTraceGateSynthetic", census)), [])
@@ -194,6 +201,7 @@ class CiWiring(unittest.TestCase):
         self.assertIn("KILN_REQUIRE_SANDBOX: '1'", body)
         # D24: real traces are cross-checked between the old scanner and the grammar path.
         self.assertIn("KILN_TRACE_DIFF: '1'", body)
+        self.assertIn("KILN_G1_GATE: '1'", body)
         self.assertIn("go test -count=1 -run Sandbox -v -json .", body)
         self.assertIn("assert_sandbox_tests.py", body)
         # The assertion is its own step and runs even when the tests failed, so

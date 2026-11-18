@@ -31,6 +31,16 @@ import (
 // The gate cannot silently go vacuous: every gated PROBE line says gated=1, and
 // ci/assert_sandbox_tests.py fails the job unless at least one gated line was
 // logged and the deterministic synthetic-slice line is among them.
+//
+// The floor is enforced ONLY where KILN_G1_GATE=1 (the dedicated kiln-sandbox CI
+// job, which runs these tests alone).  Anywhere else (the general build job runs
+// kiln's tests in parallel with many other packages: a synthetic-slice there read
+// 11.2 MB/s, a contended machine and not a slow reader; or a local run) the same
+// PROBE lines are logged with gated=0 and the floor is not applied.  The
+// measurement-validity checks (a zero time, a non-finite rate) fail everywhere.
+// The variable is read in test code only.
+func g1Enforced() bool { return os.Getenv("KILN_G1_GATE") == "1" }
+
 const (
 	gateMinMBs   = 14.0
 	gateMinBytes = 32 << 10
@@ -89,7 +99,10 @@ func probeTraceWall(t *testing.T, label, path string, wall time.Duration) {
 		}
 		return float64(m.Bytes) / d.Seconds() / 1e6
 	}
-	gated := m.Bytes >= gateMinBytes && m.Bytes <= gateMaxBytes && m.NewError == ""
+	gated := g1Enforced() && m.Bytes >= gateMinBytes && m.Bytes <= gateMaxBytes && m.NewError == ""
+	if m.NewError == "" && m.Repeats > 0 && (m.NewBest <= 0 || !finite(mbs(m.NewBest))) {
+		t.Errorf("trace %s: not a measurement: best time %v", label, m.NewBest)
+	}
 	wallFacts := ""
 	if wall > 0 {
 		wallFacts = fmt.Sprintf(" step_wall_ms=%d parse_ms=%.2f parse_share=%.4f",
@@ -154,10 +167,10 @@ func TestSandboxTraceGateSynthetic(t *testing.T) {
 	if best > 0 {
 		mb = float64(len(slice)) / best.Seconds() / 1e6
 	}
-	t.Logf("PROBE: trace synthetic-slice bytes=%d lines=%d best_mb_s=%.1f gated=1 repeats=%d",
-		len(slice), bytes.Count(slice, []byte{'\n'}), mb, gateRepeats)
+	t.Logf("PROBE: trace synthetic-slice bytes=%d lines=%d best_mb_s=%.1f gated=%d repeats=%d",
+		len(slice), bytes.Count(slice, []byte{'\n'}), mb, b2i(g1Enforced()), gateRepeats)
 	// A zero or non-finite rate (a zero best time) fails: it is not a fast reader.
-	if best <= 0 || !finite(mb) || !(mb >= gateMinMBs) {
+	if best <= 0 || !finite(mb) || (g1Enforced() && !(mb >= gateMinMBs)) {
 		t.Errorf("synthetic-slice: the grammar path's best of %d passes read a %d byte slice in %v (%.1f MB/s), below the %.0f MB/s floor or not a measurement (gate G1, KILN04 section 4.9)",
 			gateRepeats, len(slice), best, mb, gateMinMBs)
 	}

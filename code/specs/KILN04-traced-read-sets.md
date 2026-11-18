@@ -2443,8 +2443,20 @@ recorder already enforces.
   the reader a little. The measured idle rate of a whole 4 MiB pass (about 18.5
   MB/s, collector on) is 10 to 15% below the slice figure, so the honest margin
   over the floor is about **1.3x**, not the 1.4x or more the slice suggests.
-  The kiln-sandbox job fails when a real trace of **32 KB to 128 KB** falls below
-  the floor. Traces under 32 KB, and traces over 128 KB, are logged with
+  **G1 is enforced in the dedicated kiln-sandbox job only**, selected by the
+  test-only environment variable `KILN_G1_GATE=1`, set in that job in `ci.yml`
+  and read nowhere in production code. Elsewhere (the general `build` job, local
+  runs) the same `PROBE:` lines are logged with `gated=0` and no floor is
+  applied (a zero best time or a non-finite rate still fails). The reason: the
+  general build job runs kiln's tests in parallel with many other packages, and
+  there the synthetic slice read 11.2 MB/s (66,600 bytes in 5.96 ms) and the
+  4 MiB census 8.9: a contended runner, not a slow reader. The first figures from
+  the dedicated job: `synthetic-slice` 21.6 MB/s on the 26.04 image and 18.7 on
+  24.04, real traces 28 to 37 MB/s gated. A kiln-sandbox job run without
+  `KILN_G1_GATE=1` has no `gated=1` synthetic line, so
+  `assert_sandbox_tests.py` fails it.
+  In the job, a real trace of **32 KB to 128 KB** that falls below the floor fails
+  it. Traces under 32 KB, and traces over 128 KB, are logged with
   `gated=0` (census only): a long pass sees every change in how the CPU is
   shared, and only about 7 passes fit, so best-of cannot see through a sustained
   shortage (a 923 KB trace read below 14 MB/s in 15 of 60 contended trials). The
