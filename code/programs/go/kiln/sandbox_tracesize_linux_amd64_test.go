@@ -55,7 +55,7 @@ const (
 // probeTrace is probeTraceWall without a step wall time.
 func probeTrace(t *testing.T, label, path string) {
 	t.Helper()
-	probeTraceWall(t, label, path, 0)
+	probeTraceWall(t, label, path, noWall)
 }
 
 // probeTraceWall logs, with the "PROBE:" marker the CI script surfaces, the size of
@@ -66,10 +66,14 @@ func probeTrace(t *testing.T, label, path string) {
 // measurement runs on a private copy of the bytes; it cannot change what the
 // test goes on to assert.
 //
-// wall is the step's wall-clock time when the caller has it (0 when not).  It
-// adds step_wall_ms, parse_ms and parse_share (grammar pass-1 time over wall) to
-// the line, for the G2 census; G2 is report-only in PR 6, and needs wall time
-// plumbed through the record-step and probe paths before it can block.
+// wall is the step's wall-clock time when the caller has it (noWall when not).
+// It adds step_wall_ms, parse_ms and parse_share (grammar pass-1 time over wall)
+// to the line, for the G2 census (report-only until the census is read: KILN04
+// section 4.9).  The record-step test takes it from the step sidecar
+// (wallFromSidecar), the probe test from ProbeRunRecord.Wall, the signals test
+// from its own stopwatch.  A negative wall (an unusable one) is dropped and
+// counted as walls_dropped=N on the lines that follow.  The refusal fields are
+// the last two on the line.
 func probeTraceWall(t *testing.T, label, path string, wall time.Duration) {
 	t.Helper()
 	fh, err := os.Open(path)
@@ -103,13 +107,16 @@ func probeTraceWall(t *testing.T, label, path string, wall time.Duration) {
 	if m.NewError == "" && m.Repeats > 0 && (m.NewBest <= 0 || !finite(mbs(m.NewBest))) {
 		t.Errorf("trace %s: not a measurement: best time %v", label, m.NewBest)
 	}
-	wallFacts := ""
-	if wall > 0 {
-		wallFacts = fmt.Sprintf(" step_wall_ms=%d parse_ms=%.2f parse_share=%.4f",
-			wall.Milliseconds(), float64(m.NewTime.Microseconds())/1000, m.NewTime.Seconds()/wall.Seconds())
+	// The wall facts, then the refusals LAST (see probe_line_test.go for why the
+	// order is part of the CI script's contract).
+	facts, dropped := wallFacts(wall, m.NewTime)
+	if dropped {
+		droppedWalls.Add(1)
 	}
-	t.Logf("PROBE: trace %s bytes=%d lines=%d old_mb_s=%.1f grammar_mb_s=%.1f best_mb_s=%.1f gated=%d old_allocs=%d grammar_allocs=%d old_refusal=%q grammar_refusal=%q%s",
-		label, m.Bytes, m.Lines, mbs(m.OldTime), mbs(m.NewTime), mbs(m.NewBest), b2i(gated), m.OldAllocs, m.NewAllocs, m.OldError, m.NewError, wallFacts)
+	t.Logf("%s", traceProbeLine(
+		fmt.Sprintf("PROBE: trace %s bytes=%d lines=%d old_mb_s=%.1f grammar_mb_s=%.1f best_mb_s=%.1f gated=%d old_allocs=%d grammar_allocs=%d",
+			label, m.Bytes, m.Lines, mbs(m.OldTime), mbs(m.NewTime), mbs(m.NewBest), b2i(gated), m.OldAllocs, m.NewAllocs),
+		facts, droppedWalls.Load(), m.OldError, m.NewError))
 	// G1 (blocking).
 	if gated && (!finite(mbs(m.NewBest)) || !(mbs(m.NewBest) >= gateMinMBs)) {
 		t.Errorf("trace %s: the grammar path's best of %d passes read %d bytes at %.1f MB/s, below the %.0f MB/s floor (gate G1, KILN04 section 4.9)",

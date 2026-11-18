@@ -109,6 +109,13 @@ type ProbeRunRecord struct {
 	Exit        int      `json:"exit"`
 	TraceBytes  int64    `json:"trace_bytes"`
 	TraceSHA256 string   `json:"trace_sha256"`
+	// Wall is how long the probe's strace run took, kept IN MEMORY ONLY for the
+	// G2 census (KILN04 section 4.9: parse time over step wall time).  It is
+	// tagged json:"-" on purpose: a wall time differs on every run, so one in a
+	// sealed file would make pre/probes.json (and the digest that covers it)
+	// non-reproducible.  EncodeProbes never writes it and DecodeProbes always
+	// leaves it zero; TestProbeWallIsNeverSealed holds that line.
+	Wall time.Duration `json:"-"`
 }
 
 // ProbeReport is pre/probes.json.

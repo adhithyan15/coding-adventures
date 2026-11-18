@@ -363,6 +363,58 @@ func TestSandboxRecordProbe(t *testing.T) {
 		}
 	})
 
+	// The G2 census for the probe path (KILN04 section 4.9): `record prepare`
+	// runs in a child process, so its in-memory ProbeRunRecord.Wall is out of
+	// reach; this runs the same exported runner in-process, on the sealed
+	// configuration, and logs each probe's trace with the probe's wall time.
+	// The wall is a census fact only: it is never in a sealed file, and the test
+	// says so by reading the real pre/probes.json and the encoder's output.
+	t.Run("probe wall time is census only and never sealed", func(t *testing.T) {
+		w := newProbeWorld(t, kiln, probeOpts{})
+		if stderr, code := w.prepare(t, w.strace); code != 0 {
+			t.Fatalf("record prepare: exit %d\nstderr: %s", code, stderr)
+		}
+		pre, err := record.VerifyPre(w.recDir)
+		if err != nil {
+			t.Fatal(err)
+		}
+		sealed, err := os.ReadFile(filepath.Join(w.recDir, "pre", record.ProbesFile))
+		if err != nil {
+			t.Fatal(err)
+		}
+		cfgPath := filepath.Join(w.recDir, "pre", "sandbox.json")
+		cfgBytes, err := os.ReadFile(cfgPath)
+		if err != nil {
+			t.Fatal(err)
+		}
+		sum := sha256.Sum256(cfgBytes)
+		runDir := t.TempDir()
+		action := pre.Probes.Action
+		rep, err := record.RunStructureProbes(record.ProbeInput{
+			Dir: runDir, Cfg: pre.Config, ConfigPath: cfgPath, ConfigSHA256: hex.EncodeToString(sum[:]), Action: action,
+			KilnExe: pre.Config.KilnExe, Strace: w.strace,
+			Env: []string{"KILN_ACTION=" + action, "KILN_STEP=0", "KILN_STEP_COUNT=1", "PATH=" + pre.Tools.Path},
+		})
+		if err != nil {
+			t.Fatal(err)
+		}
+		for _, r := range rep.Runs {
+			if r.Wall <= 0 {
+				t.Errorf("%s: no wall time in memory: %v", r.Name, r.Wall)
+			}
+			probeTraceWall(t, "probe-"+r.Name, filepath.Join(runDir, record.ProbeDir, r.Name+".trace"), r.Wall)
+		}
+		encoded, err := record.EncodeProbes(rep)
+		if err != nil {
+			t.Fatal(err)
+		}
+		for name, data := range map[string][]byte{"pre/probes.json": sealed, "EncodeProbes output": encoded} {
+			if strings.Contains(string(data), "wall") || strings.Contains(string(data), "elapsed") {
+				t.Errorf("%s mentions a wall time: %s", name, data)
+			}
+		}
+	})
+
 	t.Run("fifo in a state root", func(t *testing.T) {
 		w := newProbeWorld(t, kiln, probeOpts{state: true})
 		if err := syscall.Mkfifo(filepath.Join(w.state, "evil.fifo"), 0o600); err != nil {
