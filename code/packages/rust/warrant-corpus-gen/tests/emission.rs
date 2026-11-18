@@ -9,7 +9,7 @@
 //!   files (a file and the corpus that names it cannot disagree);
 //! * `cases.tfv` equals the v1 file byte for byte, the chunk files equal the independent
 //!   oracle's `chunk_lines`, and the **eight control rows** are asserted in full: the three
-//!   blind pairs, the not-live `eq_u64/ignore-high-bit` and the witness chunk of each;
+//!   blind pairs, the `ir.fixed` `eq_u64/ignore-high-bit` (live under the shipped gate) and the witness chunk of each;
 //! * the bytes of `corpus.json` are pinned by SHA-256 (with the generator version masked, so a
 //!   version bump does not look like a behaviour change).
 //!
@@ -273,6 +273,39 @@ fn chunk_files_equal_the_independent_oracles_chunk_lines() {
 
 // ---- the eight controls ---------------------------------------------------------------
 
+/// The shipped gate (since the S10c flip) is open to `ir.fixed` and `ir.tuple`.
+#[test]
+fn the_shipped_gate_is_open_to_ir_fixed_and_ir_tuple() {
+    use coding_adventures_warrant_corpus_gen::faults::{Level, SHIPPED_GATE};
+    assert_eq!(SHIPPED_GATE, [Level::Core, Level::Fixed, Level::Tuple]);
+}
+
+/// The closed gate (`ir.core` only) stays reachable through `generate_gated`: the `ir.fixed`
+/// control is then `deferred`, and nothing but the controls differs from the shipped output.
+#[test]
+fn the_closed_gate_still_defers_the_ir_fixed_control() {
+    use coding_adventures_warrant_corpus_gen::faults::Level;
+    let closed = with_file(CT_COMPARE, |f| {
+        coding_adventures_warrant_corpus_gen::generate_gated(
+            &GenInput {
+                file: f,
+                spec_path: "code/specs/ct-compare.warrant",
+                spec_bytes: CT_COMPARE.as_bytes(),
+                profile_bytes: CT_PROFILE.as_bytes(),
+                binding_faults: None,
+            },
+            &[Level::Core],
+        )
+    })
+    .expect("ct-compare generates under the closed gate");
+    let shipped = ct();
+    assert_ne!(closed.corpus_json, shipped.corpus_json);
+    assert!(closed.corpus_json.contains(r#""deferred": "ir.fixed""#));
+    assert!(!shipped.corpus_json.contains(r#""deferred""#));
+    assert_eq!(closed.chunk_files, shipped.chunk_files);
+    assert_eq!(closed.cases_tfv, shipped.cases_tfv);
+}
+
 struct Row {
     id: &'static str,
     requires: &'static str,
@@ -296,8 +329,10 @@ fn the_eight_control_rows_have_the_right_states() {
         // blind pair 1: Bytes<0> has no last byte
         Row { id: "eq_fixed/ignore-last-byte", requires: "ir.core", required: &W[1..], blind: &W[..1], witness: &["chunk 0"; 4] },
         Row { id: "eq_fixed/invert", requires: "ir.core", required: &W, blind: &[], witness: &["chunk 0"; 5] },
-        // the not-live control (D9): data, deferred witness, not unproven
-        Row { id: "eq_u64/ignore-high-bit", requires: "ir.fixed", required: &["eq_u64_agrees"], blind: &[], witness: &["deferred ir.fixed"] },
+        // the ir.fixed control (D9): data in the fault row, and live since the flip (S10c, D29):
+        // the shipped gate evaluates ir.fixed, so it has a witness chunk, not `deferred`
+        // (the closed-gate test below pins the `deferred` shape)
+        Row { id: "eq_u64/ignore-high-bit", requires: "ir.fixed", required: &["eq_u64_agrees"], blind: &[], witness: &["chunk 0"] },
         Row { id: "eq_u64/invert", requires: "ir.core", required: &["eq_u64_agrees"], blind: &[], witness: &["chunk 0"] },
         // blind pair 2: equal lengths never give Err
         Row { id: "select_bytes/missing-error", requires: "ir.core", required: &["select_rejects_mismatch"], blind: &["select_picks"], witness: &["chunk 0"] },
@@ -334,7 +369,7 @@ fn the_eight_control_rows_have_the_right_states() {
             assert_eq!(e.keys().len(), 2);
         }
     }
-    // the not-live control is data: its fault row says so
+    // the ir.fixed control is data in the fault row: the row says what it needs
     let f = c.get("faults").a().iter().find(|f| f.get("fault").s() == "ignore-high-bit").unwrap();
     assert_eq!(f.get("requires").strs(), ["ir.fixed"]);
     assert_eq!(f.get("kind").s(), "pre");

@@ -28,8 +28,9 @@
 //! parameter needs `ir.tuple` even where the template names no tuple tag.
 //!
 //! The **fault-evaluation gate** is the set of levels whose faults the witness search evaluates.
-//! It is [`SHIPPED_GATE`], `ir.core` only, until the atomic flip (S10c, [D29]): a fault whose
-//! `requires` names any other level is emitted **as data** and each of its candidate claims that
+//! It is [`SHIPPED_GATE`]: `ir.core`, `ir.fixed` and `ir.tuple`, since the atomic flip (S10c, [D29]).
+//! A caller may pass a narrower gate (the closed gate is `ir.core` only): a fault whose
+//! `requires` names any level the gate lacks is emitted **as data** and each of its candidate claims that
 //! has a stand-in is `deferred`, naming the **first level of the fault's `requires`, in sorted
 //! order, that the gate does not implement** (R12); no witness search runs.  This is true even for
 //! a fault whose expression this crate *can* evaluate (every one, since S10c-2 evaluates the
@@ -89,8 +90,10 @@ impl Level {
     }
 }
 
-/// The shipped fault-evaluation gate: `ir.core` only (until the flip of S10c, [D29]).
-pub const SHIPPED_GATE: [Level; 1] = [Level::Core];
+/// The shipped fault-evaluation gate: `ir.core`, `ir.fixed` and `ir.tuple`, every level this crate
+/// evaluates (opened by the atomic flip of S10c, [D29]).  A caller that wants the closed gate passes
+/// `&[Level::Core]` to [`crate::emit::generate_gated`] explicitly.
+pub const SHIPPED_GATE: [Level; 3] = [Level::Core, Level::Fixed, Level::Tuple];
 
 /// The first level of `requires` (sorted) that `gate` does not implement, or `None` when every
 /// level is implemented (the fault is then searched, not deferred).

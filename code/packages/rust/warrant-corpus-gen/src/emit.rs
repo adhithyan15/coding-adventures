@@ -128,7 +128,7 @@ pub fn build_faults(
     Ok(faults)
 }
 
-/// Emit a v2 corpus with the shipped fault-evaluation gate ([`SHIPPED_GATE`]: `ir.core` only).
+/// Emit a v2 corpus with the shipped fault-evaluation gate ([`SHIPPED_GATE`]: `ir.core`, `ir.fixed`, `ir.tuple`).
 ///
 /// # Errors
 ///

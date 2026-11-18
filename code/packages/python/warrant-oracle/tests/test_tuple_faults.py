@@ -28,6 +28,7 @@ from coding_adventures_warrant_oracle.suites import SuitePlan, Work
 
 GEN = {"name": "test", "version": "0"}
 GATE_ON = ("ir.core", "ir.tuple")
+GATE_OPEN = ("ir.core", "ir.fixed", "ir.tuple")
 R = ["var", "result"]
 N0 = ["lit", {"type": "Nat", "value": "0"}]
 N1 = ["lit", {"type": "Nat", "value": "1"}]
@@ -385,8 +386,9 @@ def witness(control: dict) -> dict:
     return {w["claim"].rsplit("/", 1)[-1]: w.get("chunk", w.get("deferred", w.get("unproven"))) for w in control["slim_witness"]}
 
 
-def test_the_shipped_gate_is_ir_core_only_so_tuple_faults_are_deferred():
-    assert IMPLEMENTED == ("ir.core",)
+def test_the_shipped_gate_is_open_and_the_closed_gate_defers_tuple_faults():
+    assert IMPLEMENTED == ("ir.core", "ir.fixed", "ir.tuple")
+    assert GATE_CLOSED == ("ir.core",)
     by, out = controls()
     assert witness(by["pair/drop-consumed"]) == {"pair_claim": "ir.tuple", "pair_pred": True}
     assert witness(by["res/ok-as-err"]) == {"res_claim": "ir.tuple"}
@@ -453,15 +455,19 @@ def test_a_tuple_fault_no_claim_can_see_is_blind_once_the_gate_is_on_and_deferre
 
 
 def test_derive_controls_takes_the_gate_as_a_parameter_and_defaults_to_the_shipped_one():
+    # the shipped gate is open: ``ir.tuple`` and ``ir.fixed`` faults are searched, not deferred
     s = lower_document(parse_source(DOC))
     prog = build_program(s)
     plans = {x.claim: SuitePlan(s, prog, x, chunk_size=1024, work=Work("full")) for x in s.suites}
     prof = parse_profile(PROFILE.encode())
     shipped = derive_controls(s, prog, plans, prof.faults, 1024)
+    closed = derive_controls(s, prog, plans, prof.faults, 1024, implemented=GATE_CLOSED)
     on = derive_controls(s, prog, plans, prof.faults, 1024, implemented=GATE_ON)
-    assert shipped[0] == on[0]  # the fault rows never depend on the gate
-    assert shipped[1] != on[1]  # the controls do
-    assert shipped[1] == derive_controls(s, prog, plans, prof.faults, 1024, implemented=IMPLEMENTED)[1]
+    opened = derive_controls(s, prog, plans, prof.faults, 1024, implemented=GATE_OPEN)
+    assert shipped[0] == closed[0] == on[0]  # the fault rows never depend on the gate
+    assert closed[1] != on[1]  # the controls do
+    assert shipped[1] == opened[1] == derive_controls(s, prog, plans, prof.faults, 1024, implemented=IMPLEMENTED)[1]
+    assert shipped[1] != closed[1]  # the shipped gate is no longer the closed one
 
 
 def test_the_registry_has_the_thirteen_names():
