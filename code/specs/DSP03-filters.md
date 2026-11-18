@@ -201,7 +201,7 @@ non-finite and `d` itself is finite and nonzero, use `h / d` so a finite
 normalized coefficient is not lost to reciprocal overflow. Keep the
 existing behavior when `d` is zero, NaN, or infinite. High-pass and the
 `firwin` convenience entry points inherit the behavior of the design
-helper they call.
+helper they call (`firwin` exists in the TypeScript package).
 
 This compatibility rule applies to the Python and TypeScript lanes. Rust
 already divides directly and is not changed by this rule. It defines a
