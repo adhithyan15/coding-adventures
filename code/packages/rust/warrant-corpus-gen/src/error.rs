@@ -123,6 +123,11 @@ pub struct GenError {
     /// admitted case ([D19]): the enumerator appends that case's ordinal.  A flag, not a
     /// message match, so rewording a sentence can never silently drop the ordinal.
     pub during_case: bool,
+    /// Raised by one of the two `Bytes` size limits of VER04r 4.2 rule 6 (a literal, or a
+    /// `concat`, past `MAX_IR_VALUE`), as the oracle's `SizeError`.  It is what an
+    /// `omit_example` line may excuse as `value-over-limit` (VER04r 8.4, [D34]); an
+    /// integer-window overflow is not a size error.  Always `W0701` as before.
+    pub size: bool,
 }
 
 impl GenError {
@@ -134,6 +139,16 @@ impl GenError {
             at: at.into(),
             message: message.into(),
             during_case: false,
+            size: false,
+        }
+    }
+
+    /// A `Bytes` value over `MAX_IR_VALUE`: a `W0701` that is also a *size* error
+    /// ([`GenError::size`]).
+    pub fn size_error(message: impl Into<String>) -> GenError {
+        GenError {
+            size: true,
+            ..GenError::new(code::W0701, "", message)
         }
     }
 
@@ -146,6 +161,7 @@ impl GenError {
             at: at.into(),
             message: message.into(),
             during_case: false,
+            size: false,
         }
     }
 
@@ -246,6 +262,18 @@ mod tests {
         assert_eq!(e.code, code::W0701);
         assert_eq!(e.message, "internal: an invariant broke");
         assert_eq!(e.at("claim").at, "claim");
+    }
+
+    #[test]
+    fn only_a_size_error_is_flagged_and_it_is_still_w0701() {
+        let e = GenError::size_error("a Bytes value is too long");
+        assert!(e.size);
+        assert_eq!((e.code, e.message.as_str()), (code::W0701, "a Bytes value is too long"));
+        assert!(!GenError::new(code::W0701, "", "x").size);
+        assert!(!GenError::level(Beyond::IrFixed, "", "x").size);
+        assert!(!GenError::internal("x").size);
+        // attribution keeps the flag
+        assert!(e.at("claim").size);
     }
 
     #[test]

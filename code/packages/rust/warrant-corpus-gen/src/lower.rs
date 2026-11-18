@@ -258,9 +258,12 @@ pub struct LoweredExample {
     pub name: String,
     /// The whole Bool body.
     pub body: Ir,
-    /// Its decomposition: exactly one subject call compared with a pure value (anything
-    /// else is refused at lowering, so this is always present).
-    pub reference: ExampleRef,
+    /// Its decomposition: exactly one subject call compared with a pure value.  Anything
+    /// else is refused at lowering (`W0701`) **unless** the profile has an `omit_example` line
+    /// for the example (VER04r 8.4, [D34]): then the shape decision is deferred and this is
+    /// `None`, which the example stage reads as the reason `not-op-eq-pure`.  Only an
+    /// omitted example can be `None`.
+    pub reference: Option<ExampleRef>,
     /// The sorted levels of the body and its model closure (R9).
     pub requires: Vec<&'static str>,
 }
@@ -519,6 +522,33 @@ pub fn lower_document(file: &WarrantFile<'_>) -> Result<Lowered, GenError> {
     lower_partial(file)?.into_lowered()
 }
 
+/// [`lower_document`] for a document whose profile has `omit_example` lines: an example whose
+/// full id (`warrant/<module>/example/<name>`) is in `omit` and whose shape is not
+/// `op(args) == pure` is **classified, not refused**: its [`LoweredExample::reference`] is
+/// `None` and the impure-guard and v0 rule-3 refusals of its body are not applied, as the
+/// oracle's lowering never applies them to an example (VER04r 8.4).  Every other refusal
+/// (a level, a type error, a limit) still refuses the document, and an example that is not
+/// named in `omit` is refused exactly as in [`lower_document`].
+///
+/// # Errors
+///
+/// As [`lower_document`].
+pub fn lower_document_omitting(
+    file: &WarrantFile<'_>,
+    omit: &[String],
+) -> Result<Lowered, GenError> {
+    if let Err(e) = check_warrant(file) {
+        return Err(GenError::new(
+            code::CHECK,
+            "",
+            format!("the document does not pass the checker ({})", e.code),
+        ));
+    }
+    let mut lowerer = Lowerer::new(file);
+    lowerer.omit_examples = omit.to_vec();
+    lowerer.run()?.into_lowered()
+}
+
 /// [`lower_document`] that also accepts the `ir.fixed` units (S10b): the document lowered in
 /// full, `ir.fixed` included, for the parity dump.  Everything else is refused as before.  The
 /// result must never reach the evaluator or the emitter: its models and suites may hold
@@ -638,6 +668,8 @@ struct Lowerer<'f, 'a> {
     /// Do not apply VER04r 4.4's impure-guard refusal (the parity dump only, see
     /// [`lower_partial_for_dump`]).
     skip_pure_guards: bool,
+    /// The full ids of the examples an `omit_example` profile line names (VER04r 8.4).
+    omit_examples: Vec<String>,
 }
 
 /// Strip any number of parentheses: a group vanishes in the IR.
@@ -699,6 +731,7 @@ impl<'f, 'a> Lowerer<'f, 'a> {
             width_out: None,
             last_width: None,
             skip_pure_guards: false,
+            omit_examples: Vec::new(),
         }
     }
 
@@ -1223,29 +1256,38 @@ impl<'f, 'a> Lowerer<'f, 'a> {
         if ty != Ty::Bool {
             return Err(self.type_err("an example body must be Bool"));
         }
-        self.v0_guard(&body)?;
-        if !self.skip_pure_guards {
-            check_pure_guards(&body)?;
-        }
         // The `examples` row of VER04r 1.4 can only say `op(literals) == pure`: exactly one
         // subject call, its arguments free of subject calls, on one side of an equality.
-        let reference =
-            match self.classify(&body)? {
-                SuiteKind::Reference {
-                    subject: subject @ Ir::Subject { .. },
-                    expected,
-                    result,
-                } if subject.children().iter().all(|a| !a.has_subject()) => ExampleRef {
-                    subject,
-                    expected,
-                    result,
-                },
-                _ => return Err(GenError::new(
+        // The shape is decided first, so that an example the profile omits ([D34]) can be
+        // classified `not-op-eq-pure` without the guard refusals below, which the oracle's
+        // lowering never applies to an example.
+        let reference = match self.classify(&body)? {
+            SuiteKind::Reference {
+                subject: subject @ Ir::Subject { .. },
+                expected,
+                result,
+            } if subject.children().iter().all(|a| !a.has_subject()) => Some(ExampleRef {
+                subject,
+                expected,
+                result,
+            }),
+            _ => None,
+        };
+        let id = format!("warrant/{}/example/{}", self.module, decl.name);
+        let deferred = reference.is_none() && self.omit_examples.contains(&id);
+        if !deferred {
+            self.v0_guard(&body)?;
+            if !self.skip_pure_guards {
+                check_pure_guards(&body)?;
+            }
+            if reference.is_none() {
+                return Err(GenError::new(
                     code::W0701,
                     "",
                     "an example must be one subject call compared with a pure value (VER04r 1.4)",
-                )),
-            };
+                ));
+            }
+        }
         let requires = self.levels_of([&body]);
         Ok(LoweredExample {
             name: decl.name.to_string(),

@@ -769,8 +769,15 @@ fn clamp_count(n: i128, len: usize) -> usize {
 fn decode_hex(hex: &str) -> Result<Vec<u8>, GenError> {
     let bad = || GenError::new(code::W0701, "", "a Bytes literal is even lowercase hex");
     let b = hex.as_bytes();
-    if !b.len().is_multiple_of(2) || (b.len() / 2) as u64 > MAX_IR_VALUE {
+    // The shape is checked first, then the size, as the oracle does: only a well-formed
+    // literal over MAX_IR_VALUE is a *size* error (VER04r 8.4, [D34]).
+    if !b.len().is_multiple_of(2) || !b.iter().all(|c| matches!(c, b'0'..=b'9' | b'a'..=b'f')) {
         return Err(bad());
+    }
+    if (b.len() / 2) as u64 > MAX_IR_VALUE {
+        return Err(GenError::size_error(
+            "a Bytes literal exceeds MAX_IR_VALUE (VER04r 4.2 rule 6)",
+        ));
     }
     let nibble = |c: u8| match c {
         b'0'..=b'9' => Ok(c - b'0'),
@@ -877,9 +884,15 @@ mod tests {
                 "{bad}"
             );
         }
-        // a literal over MAX_IR_VALUE is refused before it is decoded
+        // a literal over MAX_IR_VALUE is refused before it is decoded, and it is a *size* error
         let huge = "00".repeat(65_537);
-        assert!(run(&Ir::Bytes(huge)).is_err());
+        assert!(run(&Ir::Bytes(huge)).unwrap_err().size);
+        assert!(run(&Ir::Bytes("00".repeat(65_536))).is_ok());
+        // a malformed literal is never a size error, however long (the shape is checked first)
+        for bad in ["zz".repeat(65_537), format!("{}0", "00".repeat(65_537))] {
+            let e = run(&Ir::Bytes(bad)).unwrap_err();
+            assert!(!e.size, "{e}");
+        }
     }
 
     #[test]
@@ -1103,6 +1116,7 @@ mod tests {
         let e = p.eval(&call, &vars, &mut Stats::default()).unwrap_err();
         assert_eq!(e.code, code::W0701);
         assert!(e.message.contains("MAX_IR_VALUE"));
+        assert!(e.size, "a concat past MAX_IR_VALUE is a size error");
         // exactly 65,536 is fine
         let half = Value::Bytes(Rc::from(vec![0u8; 32_768]));
         let vars = [("a", half.clone()), ("b", half)];

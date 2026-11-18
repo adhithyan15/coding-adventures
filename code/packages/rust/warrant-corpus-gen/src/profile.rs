@@ -11,6 +11,7 @@
 //!   slim_chunk eq_agrees 3
 //!   fault multiply generator-shift
 //!   accept_blind multiply generator-shift
+//!   omit_example warrant/lzw/example/bomb512
 //! ```
 //!
 //! `max_ir_cost` is the **only** way to raise the per-expression IR cost bound above its
@@ -32,6 +33,11 @@
 //! * `accept_blind <op> <fault>` ([D15], VER04r 16.8) excuses a fault that every candidate
 //!   claim is blind to.  It must repeat a `fault` line of the same file (checked here); that
 //!   the fault really is all-blind is checked against the document ([`crate::emit`]);
+//! * `omit_example <id>` ([D22], [D34], VER04r 8.4) names one example by its full id; it may
+//!   not repeat.  The profile carries only the id: whether the example really is inexpressible,
+//!   and the *reason* (`not-op-eq-pure` or `value-over-limit`), are decided against the document
+//!   ([`crate::tfv::examples_omitting`]), where an id that names no example, or an example that is
+//!   emittable, is a `profile` error;
 //! * a token is printable ASCII (`!`..=`~`) and non-empty: two spaces in a row, a leading or
 //!   trailing space, a tab, a no-break space, NEL, a control character or a BOM are errors, and so
 //!   are `budget 0` and `slim_stride 0` (VER04r 16.4 item 7; the oracle's reader accepts
@@ -79,6 +85,9 @@ pub struct Profile {
     /// `accept_blind <op> <fault>` lines, in file order: the all-blind faults the corpus
     /// accepts ([D15]); each is also a `fault` line.
     pub accept_blind: Vec<(String, String)>,
+    /// `omit_example <id>` lines, in file order: full example ids (`warrant/<module>/example/
+    /// <name>`), each at most once.
+    pub omit_examples: Vec<String>,
     /// The SHA-256 of the file's bytes: `profile_sha256` in `corpus.json` (VER04r 1.4).
     pub sha256: String,
 }
@@ -94,6 +103,7 @@ impl Default for Profile {
             slim_chunks: Vec::new(),
             faults: Vec::new(),
             accept_blind: Vec::new(),
+            omit_examples: Vec::new(),
             sha256: sha256_hex(b""),
         }
     }
@@ -208,6 +218,12 @@ pub fn parse_profile(raw: &[u8]) -> Result<Profile, GenError> {
                 }
                 prof.accept_blind.push(entry);
             }
+            ("omit_example", 2) => {
+                if prof.omit_examples.iter().any(|id| id == parts[1]) {
+                    return Err(bad("an omit_example line may not repeat"));
+                }
+                prof.omit_examples.push(parts[1].to_string());
+            }
             _ => return Err(bad("an unknown or malformed profile line")),
         }
     }
@@ -292,6 +308,32 @@ mod tests {
         }
         // an empty line, and the end of a file without a final LF, are still fine
         assert!(parse("\n\nbudget 1").is_ok());
+    }
+
+    #[test]
+    fn omit_example_lines_parse_in_order_and_refuse_every_malformed_form() {
+        let text = "omit_example warrant/m/example/b\nbudget 4096\nomit_example warrant/m/example/a\n";
+        let p = parse(text).unwrap();
+        assert_eq!(
+            p.omit_examples,
+            ["warrant/m/example/b", "warrant/m/example/a"]
+        );
+        assert_eq!(p.sha256, sha256_hex(text.as_bytes()));
+        assert!(parse("").unwrap().omit_examples.is_empty());
+        // the same table is in python/warrant-oracle/tests/test_omit_example.py
+        for text in [
+            "omit_example\n",
+            "omit_example a b\n",
+            "omit_example  a\n",
+            "omit_example a \n",
+            "omit_example \n",
+            "omit_example a\nomit_example a\n",
+            "OMIT_EXAMPLE a\n",
+            "omit_example a\n \n",
+            "omit_example a\u{a0}\n",
+        ] {
+            assert_eq!(parse(text).unwrap_err().code, code::PROFILE, "{text:?}");
+        }
     }
 
     #[test]

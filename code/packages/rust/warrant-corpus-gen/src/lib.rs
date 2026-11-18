@@ -152,7 +152,7 @@ pub struct Analysis {
 /// a VER04r generation rule (`W0701`), a type error, or a cost limit (`limit`).  Every
 /// error is attributed to the claim, model, operation or example it concerns.
 pub fn analyse(file: &WarrantFile<'_>, profile: &Profile) -> Result<Analysis, GenError> {
-    let lowered = lower_document(file)?;
+    let lowered = lower::lower_document_omitting(file, &profile.omit_examples)?;
     let limit = profile.max_ir_cost;
     let model_costs = ModelCosts::compute(&lowered.models, limit)?;
     let mut suite_costs = Vec::with_capacity(lowered.suites.len());

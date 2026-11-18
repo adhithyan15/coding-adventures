@@ -5,6 +5,9 @@ cargo clippy -p coding_adventures_warrant_corpus_gen --all-targets -- -D warning
 # oracle's fixed_forms_v1.warrant and reproduces its committed fixed_forms_v1.oracle-lowering.json
 # byte for byte. Both files lie in python/warrant-oracle/tests/fixtures/fixed-forms-v1/ and are
 # read from there (an edit to either selects this package: repository_inputs.go).
+# CV2-S10-1: tests/omit_example.rs regenerates the oracle's omit-example-v2 fixture (omit.warrant +
+# corpus.profile -> corpus/) byte for byte; an edit to that directory selects this package
+# (repository_inputs.go). A generator version bump regenerates it too (ct-compare README checklist).
 # The crate's only OS access is in fsio.rs, cli.rs and the bin (required_capabilities.json
 # declares it); the analyzer checks the source against that manifest.
 cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .

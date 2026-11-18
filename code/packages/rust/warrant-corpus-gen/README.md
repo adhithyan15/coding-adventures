@@ -48,7 +48,7 @@ on it, so changing it rebuilds no shared crate (VER04r section 13, "Rule").
 | module | what it is |
 |---|---|
 | `json` | the VER04i 9.1 canonical writer: sorted keys, two-space indent, LF, `\uXXXX` escapes. No `serde`: a canonical form must not inherit a library's defaults |
-| `profile` | the strict reader of `corpus.profile` (VER04r 8.4): LF only, only an empty line is skipped, canonical decimals, `max_ir_cost` the only way to raise the cost bound, `accept_blind <op> <fault>` lines |
+| `profile` | the strict reader of `corpus.profile` (VER04r 8.4): LF only, only an empty line is skipped, canonical decimals, `max_ir_cost` the only way to raise the cost bound, `accept_blind <op> <fault>` and `omit_example <id>` lines |
 | `types` | the small type language of `ir.core` (`Bool Int Nat U8..I64 Bytes Bytes<N> Result<T,E>`) and, since S10b, the IR-only `Option<T>` of the `ir.fixed` built-ins |
 | `ir` | the 26 `ir.core` tags of VER04r Appendix A and their JSON form; S10b adds `Ir::Fixed`, the 35 `ir.fixed` built-ins of A.1 (lowered and costed, never evaluated), and `ir::levels`, the tag part of `requires` (R9) |
 | `lower` | syntax-directed, unoptimised lowering with a small annotating typer; the level refusals; `census` |
@@ -387,6 +387,33 @@ is listed, sorted, in `accepted_blind_faults`. The line must repeat a `fault` li
 naming a fault a claim *can* see is a `profile` error (a stale acceptance excuses nothing); it never
 excuses an op no claim calls. ct-compare has none; `python/warrant-oracle/tests/fixtures/accept-blind-v2/`
 is the small synthetic corpus both implementations agree on.
+
+### `omit_example <id>` ([D22], [D34], VER04r 8.4)
+
+A profile line `omit_example warrant/<module>/example/<name>` removes one example from `examples`
+when the generator can *decide* that it is inexpressible; the profile carries only the id and the
+tool computes the reason, written to the conditional `omitted_examples` key
+(`[{"id", "reason"}]`, sorted by id, **omitted** when there is none, so no existing fixture moves a byte):
+
+```text
+  shape is not  op(args) == pure                      -> not-op-eq-pure    (tested first)
+  evaluate: arguments, then the pure side             first error a size error (a Bytes literal or
+                                                      concat past MAX_IR_VALUE)  -> value-over-limit
+                                                      any other error             -> refuses
+  then the D19 check, then the D18 check              a failure                   -> refuses
+  completed, and an argument or the pure value is
+  over 4,096 bytes (also under Ok)                    -> value-over-limit
+  anything else                                       -> profile error: a stale line
+```
+
+An omitted example is **still lowered** (a level refusal refuses the document), but it is not
+evaluated for `cases.tfv`, not encoded and not admit-checked beyond the decision; its shape
+refusal (`W0701`) and the guard refusals are deferred to this decision. Without a line the same
+example is refused as before. Every example is evaluated in this order (arguments, pure side,
+D19, D18), and a `GenError` carries `size` for exactly the two `Bytes` limits (the 2^127 integer
+window is not a size error). The oracle's `tests/fixtures/omit-example-v2/` is reproduced byte for
+byte by `tests/omit_example.rs`.
+
 `ignore-high-bit` (`ir.fixed`, VER04r 8.2 [D9]) is emitted as data with `requires: ["ir.fixed"]`
 and `deferred` witnesses: ct-compare's `eq_u64` control is **not-live** until S10.
 
