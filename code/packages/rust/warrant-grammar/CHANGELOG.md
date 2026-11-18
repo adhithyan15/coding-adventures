@@ -1,5 +1,24 @@
 # Changelog
 
+## Unreleased — refinement sampler and observer timeout clamp (VOS-038b)
+
+- VOS-D079 (VER04h 4.1): a refined binder of low acceptance no longer reports `property-exhausted`.
+  The rejection draw is unchanged; when a case's 100 retries are all rejected and every binder is
+  exactly enumerable, the case is drawn uniformly from the admissible set (built once). Otherwise an
+  acceptance floor (1/32 over 2,048 probe draws from a derived stream) refuses the claim on its first
+  draw with a clear message. Emitted from a new `refine` prelude region (a harness without a refined
+  binder is byte for byte unchanged); passing runs draw identical cases, so no manifest changes.
+  The floor runs in the harness, not the generator (VOS-D100).
+- VOS-D085 (VER04j): in the `obs` region, `WARRANT_OBS_TIMEOUT_SECS` is clamped to `OBS_MAX_RAISE_SECS`
+  (24 h) by `obs_raise_ms`, and the deadline is `obs_deadline` (`checked_add`, fail closed to an
+  already-past deadline), so a huge value neither panics nor disables the bound.
+- Tests: rescue, empty set, high acceptance, floor refusal, floor boundary and `exact_support` (`wx`),
+  the composite branch (`wxa`, whose fixture gains a vacuous refinement so the branch is compiled), the
+  clamp table, `Duration::MAX` and a child process with the maximal variable (`wxh_supervisor`).
+- Regenerated: adopters arithmetic, ct-compare, gf256, logic-gates, lzw, wasm-leb128 (refine);
+  hash-functions, lzw, wasm-leb128, vos-sched-any, -fp-bitmap, -rr (obs); fixtures `wx`, `wxa`, `wxh`.
+  vos-probe-ready, x25519 and zeroize are unchanged.
+
 ## Unreleased — WX-SV2: the `field-flip` fault (VOS-038a)
 
 - New composite-operation fault `field-flip` (VER04j 4.8): the lowest bit of the first
