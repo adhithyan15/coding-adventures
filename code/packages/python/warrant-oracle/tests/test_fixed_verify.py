@@ -70,7 +70,8 @@ def test_an_ir_fixed_document_derives_a_corpus_with_computed_requires(tmp_path):
     assert rows["c_be"]["stream"] == "warrant-stream-v2"  # a U32 binder: the first real use of v2
     assert [e["id"].rsplit("/", 1)[1] for e in corpus["examples"]] == ["e_rot", "e_be"]
     # the gate is closed: the ir.fixed fault is data and its control says deferred
-    (control,) = corpus["controls"]
+    closed = derive(DOC, PROFILE, spec_ref="v.warrant", generator=GEN, implemented=("ir.core",)).corpus
+    (control,) = closed["controls"]
     assert control["requires"] == ["ir.fixed"]
     assert control["slim_witness"] == [{"claim": "warrant/v/exhaustive/c_flip", "deferred": "ir.fixed"}]
     assert corpus["faults"][0]["expr"] == ["bit_xor", ["var", "result"], ["lit", {"type": "U16", "value": "1"}]]
@@ -115,7 +116,7 @@ def test_a_mutated_ir_fixed_corpus_fails_verify_v2(tmp_path, name, change):
 
 
 def test_the_open_gate_changes_only_the_control_and_the_slim_set(tmp_path):
-    shipped = derive(DOC, PROFILE, spec_ref="v.warrant", generator=GEN)
+    shipped = derive(DOC, PROFILE, spec_ref="v.warrant", generator=GEN, implemented=("ir.core",))
     opened = derive(DOC, PROFILE, spec_ref="v.warrant", generator=GEN, implemented=("ir.core", "ir.fixed", "ir.tuple"))
     assert shipped.corpus["controls"][0]["slim_witness"] != opened.corpus["controls"][0]["slim_witness"]
     assert opened.corpus["controls"][0]["slim_witness"] == [{"claim": "warrant/v/exhaustive/c_flip", "chunk": 0}]
