@@ -527,6 +527,7 @@ pub fn lower_document(file: &WarrantFile<'_>) -> Result<Lowered, GenError> {
 /// # Errors
 ///
 /// As [`lower_document`], except that a unit that needs `ir.fixed` is not one.
+#[doc(hidden)]
 pub fn lower_document_with_fixed(file: &WarrantFile<'_>) -> Result<Lowered, GenError> {
     lower_partial_for_dump(file)?.into_lowered_with_fixed()
 }

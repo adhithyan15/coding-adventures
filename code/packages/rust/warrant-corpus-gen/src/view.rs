@@ -81,6 +81,7 @@ pub fn oracle_view(lowered: &Lowered, limit: u64) -> Result<Json, GenError> {
 /// # Errors
 ///
 /// A cost-limit or depth refusal, as [`ModelCosts::compute`] and [`suite_cost`].
+#[doc(hidden)]
 pub fn oracle_view_v1(lowered: &Lowered, limit: u64) -> Result<Json, GenError> {
     view(lowered, limit, true)
 }
