@@ -461,9 +461,19 @@ strings, boxed numbers, booleans, `bigint`, or objects through `Number` or
 `valueOf`. Coefficient and signal arrays are read by a single captured length
 and bounded indexed access, not by an unbounded user iterator. Lengths must be
 safe nonnegative integers and within the existing per-call limit before
-allocation or traversal. Holes, invalid elements, and accessor exceptions fail
-without committing state; caller-defined accessor side effects are outside the
-guarantee.
+allocation or traversal. Python invokes the indexed sequence's `__len__()` once
+and requires its raw result to be an exact built-in nonnegative `int`; it does
+not route the result through `len()` or `__index__`. Boolean, subclass, other
+integer-like, negative, and over-cap results are rejected. The ordinary
+descriptor call supports built-in and custom `Sequence` implementations, and
+exceptions raised by that accessor propagate unchanged. For TypeScript, every
+index of an actual `Array` must be an own element, so inherited numeric
+properties cannot fill a sparse slot; other indexed array-like objects retain
+their indexed accessor behavior. Holes, invalid elements, and accessor
+exceptions fail without committing state; caller-defined accessor side effects
+are outside the guarantee. Normalized coefficients are kept in private
+immutable storage and filter delays are private state; the guarantee does not
+cover deliberate mutation of Python underscore-prefixed internals.
 
 The checked APIs retain the existing `2^24` sample-per-call and `1024` SOS
 section limits; there is no product cap. A block reads signal length once,

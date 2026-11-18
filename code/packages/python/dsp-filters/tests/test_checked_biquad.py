@@ -43,8 +43,11 @@ class _RaiseOnSecond(Sequence[object]):
 
 
 class _RaiseOnLength(Sequence[object]):
+    def __init__(self, error: Exception | None = None) -> None:
+        self.error = error or RuntimeError("caller length failed")
+
     def __len__(self) -> int:
-        raise RuntimeError("caller length failed")
+        raise self.error
 
     def __getitem__(self, index: int) -> object:
         raise AssertionError(f"unexpected indexed read {index}")
@@ -53,6 +56,10 @@ class _RaiseOnLength(Sequence[object]):
 class _IndexHook:
     def __index__(self) -> int:
         raise AssertionError("length validation must not call __index__")
+
+
+class _IntSubclass(int):
+    pass
 
 
 class _RawLengthSequence(Sequence[object]):
@@ -180,11 +187,13 @@ def test_checked_lengths_are_captured_once_and_caller_length_errors_propagate() 
     signal = CountedSequence()
     assert CheckedBiquad(1, 0, 0, 1, 0, 0).process(signal) == [1.0]
     assert signal.length_reads == 1
-    with pytest.raises(RuntimeError, match="caller length failed"):
-        CheckedBiquad(1, 0, 0, 1, 0, 0).process(_RaiseOnLength())
+    marker = RuntimeError("caller length marker")
+    with pytest.raises(RuntimeError, match="caller length marker") as raised:
+        CheckedBiquad(1, 0, 0, 1, 0, 0).process(_RaiseOnLength(marker))
+    assert raised.value is marker
 
     assert CheckedBiquad(1, 0, 0, 1, 0, 0).process(_StaticLengthSequence()) == [1.0]
-    for raw_length in (True, 1.0, _IndexHook(), -1, 2**100):
+    for raw_length in (True, 1.0, _IntSubclass(1), _IndexHook(), -1, 2**100):
         with pytest.raises(InvalidCoefficientError):
             CheckedBiquad(1, 0, 0, 1, 0, 0).process(_RawLengthSequence(raw_length))
 
