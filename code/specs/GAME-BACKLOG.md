@@ -95,31 +95,42 @@ GAME01 Rust corpus consumer, and the separate Kiln allocation-reuse repair have 
 deterministic contracts precede new device, graphics, and host stacks.
 This order avoids duplicating repository-wide `VER-*` and `MUS00`–`MUS08` work.
 
-As of 2026-11-18, `GBL-001`, `GBL-002`, `GBL-003a`, `GBL-061`, and the measured `GBL-063` parser
-repair are merged. `GBL-010` remains under review in open PR #19644; its new exact-head checks and
-merge are still pending. PR #19649 merged squash `399ab9af38c45817c6638defe368bf4596d4cad4`, and
-exact-head CI run `44345630607` passed the required Ubuntu 24.04 and 26.04 G1 lanes. Native paired
-measurements show 4.36% lower elapsed time on one Azure CPU and 3.54% on another with the existing
-14 MB/s floor unchanged. They do not establish that every historical CPU class or runner is fixed;
-the CPU model from prior misses remains unknown. Preserve the workload, floor, and failure receipts.
-The dependent TypeScript PR integration remains pending until #19644 passes its protected checks and
+As of 2026-11-18, `GBL-001`, `GBL-002`, `GBL-003a`, `GBL-061`, and the selected `GBL-063` parser
+repair are merged. PR #19649 merged squash `399ab9af38c45817c6638defe368bf4596d4cad4`; exact-head
+CI run `44345630607` passed the required Ubuntu 24.04 and 26.04 G1 lanes under the then-current
+14 MB/s absolute floor. Its paired native measurements showed 4.36% and 3.54% lower elapsed time on
+two Azure CPUs. That historical run predates the later G1 calibration and does not establish that
+every historical CPU class or runner is fixed; the CPU model from prior misses remains unknown. The
+current main gate has an 8 MB/s raw absolute floor and a calibrated 14 MB/s host-normalised floor on
+the fixed synthetic slice. Preserve both historical receipts and the current gate requirements.
+
+`GBL-010` remains under review in open PR #19644. On prior public head `45ee52078ed`, exact-head CI
+run `44374216434` included Windows `rust/game-clock` and `typescript/game-clock` BUILT receipts, but
+the Windows Go executor failed after Kotlin Gradle reported `BUILD SUCCESSFUL`, when a process kept
+the captured output pipe open beyond the existing five-second wait. The package-local Kotlin
+Gradle-property repair is locally verified; exact rebased-head protected checks remain pending.
+These BUILT receipts do not prove Windows runtime containment, and the pipe owner remains unknown.
+The dependent TypeScript integration remains pending until #19644 passes its protected checks and
 merges. Then resume `GBL-050` Rust input action frames and `GBL-050a` TypeScript input action frames.
 A fresh full-checkout canonical package-presence report must be recorded before the next new
 language-port selection; a sparse-worktree report is not valid inventory evidence. This sequence is
 coordination state, not implementation authorization for unrelated primitives.
 
-Candidate committed-tree inventory was recomputed for current base `origin/main`
-`399ab9af38c45817c6638defe368bf4596d4cad4` and refresh candidate
-`0f8844157be` using the existing `package_parity_report.py` classifier over full committed Git
-package paths. The current-main base has 1,814 identities across all classified buckets, 1,772
-within the established 15 lanes, 5,156 occupied established language-by-identity slots, and 5,572
-package directories across all buckets (CSV SHA-256
-`fa58acfe33bf60e36bbedfff2885acc5b3a7b9c8a0421ca4a19b72c492729cf4`); there are zero collisions
-and zero unknown buckets. The candidate retains both identity counts and adds one occupied slot and
-one package directory: 5,157 established slots and 5,573 directories (CSV SHA-256
-`bea79efea09da8304c7e24df2a7693ed716198ae50f7c2911d8e7f25c09e71cb`), still with zero collisions
-and zero unknown buckets. The candidate changes `game-clock` from Rust-only (1/15) to Rust and
-TypeScript (2/15); this is package presence only, not verified behavioral parity. The committed TypeScript package is the only package-path addition since the base. Refresh again from merged `origin/main` before selecting the next port.
+Candidate committed-tree inventory was recomputed from full committed Git paths with the existing
+`package_parity_report.py` classifier for base `origin/main` `6b7889dc95672e58879785ba3372f30a195a5fa1`
+and integrated candidate `ead34d4c72874cf293d4b05e1f62c47eccf85aa8`. The base has 1,816 identities
+across all classified buckets, 1,774 implementation identities in the established 15 lanes, 5,158
+occupied established language-by-identity slots, and 5,574 package directories across all buckets;
+CSV and JSON SHA-256 are `3c6bc1672bf843a004f7a1120477a178b2e7ed40be4e3dc8c7b6bb79a94f1838` and
+`762e69148f7628f958e8ce4c95d96f3e1202d4f37633a8cf0aa6895933856950`. The candidate retains both
+identity counts and adds one occupied slot and one package directory: 5,159 established slots and
+5,575 directories; CSV and JSON SHA-256 are
+`850054a82a256387219629db5051ffb1f3b3572cc7ba29a27340d989215f769d` and
+`174b2bba690f62c2d03c1fc03fc5578a6312a5954054c64cc4629fe6107d987f`. Both reports have zero
+collisions and zero unknown buckets. The candidate changes `game-clock` from Rust-only (1/15) to
+Rust and TypeScript (2/15); this is package presence only, not verified behavioral parity. The
+committed TypeScript package is the only package-path addition since the base. Refresh again from
+merged `origin/main` before selecting the next port.
 
 For each serial delivery, use a fresh worktree from the latest fetched `origin/main`. After a PR
 merges, verify the published head and merged tree, confirm the worktree is clean, published, and
