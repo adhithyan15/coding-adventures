@@ -177,11 +177,21 @@ byte unchanged):
    with a clear diagnostic, not found 100 retries into iteration 3. The first draw of
    such a claim's property suite measures the acceptance of `ACCEPT_PROBE = 2048` draws
    (from a stream derived from the suite seed, so the case stream is untouched). If fewer
-   than `1/ACCEPT_FLOOR_DEN` (`ACCEPT_FLOOR_DEN = 32`, about 3.1 percent: at that rate the
-   100-retry loop fails a case with probability 4 percent) are admitted, the suite fails
-   with `property-exhausted` and the message `refinement acceptance <k>/2048 is below the
-   floor 1/32 on a domain that cannot be enumerated (widen the refinement or narrow the
+   than `1/ACCEPT_FLOOR_DEN` (`ACCEPT_FLOOR_DEN = 8`, 12.5 percent) are admitted, the suite
+   fails with `property-exhausted` and the message `refinement acceptance <k>/2048 is below the
+   floor 1/8 on a domain that cannot be enumerated (widen the refinement or narrow the
    binder types)`.
+
+The floor is derived, not chosen. A case is lost with probability (1 - a)^R (R = 100
+retries) and the suite fails if any of its C cases is lost, so P(fail) is about
+C (1 - a)^R. With C = `PROPERTY_CASES` = 4096 and P(fail) < 0.01, (1 - a)^100 < 2.4e-6, so
+a > 12.0 percent, hence 1/8. (The first draft, 1/32, let a 4 percent claim through:
+0.96^100 = 1.7 percent per case.) A harness asserts `PROPERTY_CASES <= 4096` at compile
+time; a larger count must re-derive the floor.
+
+A rescued claim draws its cases from a small set, so its case count overstates coverage:
+the harness prints `# property <tag>: rescued by enumeration, <n> distinct admissible
+case(s)` to stderr when it builds the set.
 
 The floor is evaluated when the suite starts, in the harness, not when the generator
 runs: a refinement is emitted as Rust, and the generator has no evaluator for it (the

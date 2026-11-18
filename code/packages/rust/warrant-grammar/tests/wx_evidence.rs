@@ -832,7 +832,7 @@ fn a_low_acceptance_refinement_on_a_domain_that_cannot_be_enumerated_is_refused_
     );
     assert!(is_fail(&verdict, "property-exhausted"), "{verdict:?}");
     let m = message_of(&verdict);
-    assert!(m.contains("is below the floor 1/32"), "{m}");
+    assert!(m.contains("is below the floor 1/8"), "{m}");
     assert!(m.contains("cannot be enumerated"), "{m}");
     assert_eq!(stats.cases, 0, "refused before the first case");
 }
@@ -852,12 +852,12 @@ fn a_refinement_above_the_floor_on_a_wide_domain_passes() {
 }
 
 #[test]
-fn the_acceptance_floor_is_one_in_thirty_two_of_the_probe() {
-    assert_eq!((harness::PROBE, harness::FLOOR_DEN), (2048, 32));
-    assert!(harness::floor_verdict(64, 2048).is_ok(), "exactly 1/32 is admitted");
+fn the_acceptance_floor_is_one_in_eight_of_the_probe() {
+    assert_eq!((harness::PROBE, harness::FLOOR_DEN), (2048, 8));
+    assert!(harness::floor_verdict(256, 2048).is_ok(), "exactly 1/8 is admitted");
     assert!(harness::floor_verdict(2048, 2048).is_ok());
-    let m = harness::floor_verdict(63, 2048).unwrap_err();
-    assert!(m.contains("refinement acceptance 63/2048 is below the floor 1/32"), "{m}");
+    let m = harness::floor_verdict(255, 2048).unwrap_err();
+    assert!(m.contains("refinement acceptance 255/2048 is below the floor 1/8"), "{m}");
     assert!(harness::floor_verdict(0, 2048).is_err());
 }
 
@@ -869,4 +869,21 @@ fn only_binders_whose_draw_support_is_their_domain_are_rescued() {
     for t in [Ty::Fx(F::U32), Ty::Fx(F::I64), Ty::Fx(F::U64), Ty::Bytes, Ty::BytesN(4), Ty::NatCount, Ty::FxEdge(F::U8)] {
         assert!(!harness::exact(t), "{t:?}");
     }
+}
+
+#[test]
+fn a_six_percent_refinement_on_a_wide_domain_is_now_refused() {
+    // Under the old 1/32 floor a 4-5 percent claim passed the probe and then
+    // exhausted (0.95^100 = 0.6 percent per case, near-certain over 4,096 cases).
+    // `1 <= x < 40` over `U64` admits about 6 percent (3/8 * 39/300 plus six
+    // power-of-two draws), between the old floor and the new one.
+    let (verdict, _) = harness::property(
+        "warrant/test/five-percent",
+        &[Ty::Fx(F::U64)],
+        |env| (1..40).contains(&byte(env)),
+        |_, _| true,
+        Fault::None,
+    );
+    assert!(is_fail(&verdict, "property-exhausted"), "{verdict:?}");
+    assert!(message_of(&verdict).contains("below the floor 1/8"), "{}", message_of(&verdict));
 }

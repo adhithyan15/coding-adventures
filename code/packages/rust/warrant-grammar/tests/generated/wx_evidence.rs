@@ -986,13 +986,22 @@ fn shrink_vals(cand: Vec<V>, prop_raw: &dyn Fn(&Vec<V>) -> bool) -> (Vec<V>, usi
 //     drawn is drawn identically.
 //   * Any other claim cannot be rescued (sampling the enumeration would narrow
 //     what the suite covers), so a refinement below `1/ACCEPT_FLOOR_DEN`
-//     acceptance is refused on the first draw with a clear message.
+//     acceptance is refused on the first draw with a clear message.  The floor
+//     is 1/8: see `ACCEPT_FLOOR_DEN` for the derivation.
 
 /// Draws measured by the acceptance probe.
 const ACCEPT_PROBE: u64 = 2048;
-/// The floor: fewer than one admitted draw in this many is refused.  At 1/32 the
-/// 100-retry loop already loses a case with probability 4 percent.
-const ACCEPT_FLOOR_DEN: u64 = 32;
+/// The floor: fewer than one admitted draw in this many is refused.
+///
+/// Derivation.  A case draws at most R = 100 times, so it is lost with
+/// probability (1 - a)^R at acceptance a, and the suite fails if any of its C
+/// cases is lost: P(fail) ~ C * (1 - a)^R.  Requiring that below 0.01 with
+/// C = 4096 gives (1 - a)^100 < 2.4e-6, a > 12.0 percent, so the floor is 1/8
+/// (12.5 percent).  At the old 1/32 a claim at 4 percent (0.96^100 = 1.7 percent
+/// per case) passed the probe and then failed.  A document whose
+/// `property_cases` exceeds 4096 must re-derive the floor (the assertion below).
+const ACCEPT_FLOOR_DEN: u64 = 8;
+const _: () = assert!(PROPERTY_CASES <= 4096, "re-derive ACCEPT_FLOOR_DEN for this case count");
 
 /// True when the values `fresh` can draw for `ty` are exactly `domain(ty)`.
 fn exact_support(ty: Ty) -> bool {
@@ -1091,7 +1100,16 @@ pub fn property(tag: &str, tys: &[Ty], admit: Admit, holds: Holds, fault: Fault)
         }
         if rescue {
             let mut slot = pool.borrow_mut();
-            let set = slot.get_or_insert_with(|| admissible_set(tys, admit));
+            let set = slot.get_or_insert_with(|| {
+                let set = admissible_set(tys, admit);
+                // Rescued cases repeat members of a small set: say how small, so
+                // the case count is not read as that many distinct cases.
+                eprintln!(
+                    "# property {tag}: rescued by enumeration, {} distinct admissible case(s)",
+                    set.len()
+                );
+                set
+            });
             if !set.is_empty() {
                 let env = set[rng.bounded(set.len() as u64) as usize].clone();
                 cases.set(cases.get() + 1);
