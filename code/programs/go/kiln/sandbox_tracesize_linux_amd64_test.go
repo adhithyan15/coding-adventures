@@ -78,13 +78,15 @@ func probeTraceWall(t *testing.T, label, path string, wall time.Duration) {
 	t.Helper()
 	fh, err := os.Open(path)
 	if err != nil {
-		t.Logf("PROBE: trace %s: cannot open: %v", label, err)
+		// Not in the "PROBE: trace " namespace the CI script parses, and the error
+		// text is quoted: it is not a measurement and must not be read as facts.
+		t.Logf("PROBE: trace-error %s cannot open: %q", label, err.Error())
 		return
 	}
 	defer fh.Close()
 	m, err := trace.MeasureBest(fh, true, gateRepeats)
 	if err != nil {
-		t.Logf("PROBE: trace %s: cannot measure: %v", label, err)
+		t.Logf("PROBE: trace-error %s cannot measure: %q", label, err.Error())
 		return
 	}
 	// On a REAL trace the grammar path must accept everything the old scanner

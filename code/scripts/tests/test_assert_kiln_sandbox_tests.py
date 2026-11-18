@@ -216,12 +216,59 @@ class GateG1(unittest.TestCase):
         three = "   x_test.go:9: PROBE: trace evil bytes=1 lines=1 best_mb_s=30.0 gated=1"
         self.assertEqual(mod.gated_probes(probe_events("TestSandboxRecordStep", three)), [])
 
-    def test_a_subtest_probe_line_has_the_subtests_indent(self) -> None:
-        # go test indents a subtest's log lines by eight spaces, a sub-subtest's by twelve.
-        good = "        x_test.go:9: PROBE: trace probe-pipes bytes=60000 lines=1 best_mb_s=30.0 gated=1"
-        self.assertEqual(len(mod.gated_probes(probe_events("TestSandboxRecordProbe/ok", good))), 1)
-        self.assertEqual(mod.gated_probes(probe_events("TestSandboxRecordProbe/ok", "    " + good.lstrip())), [])
-        self.assertEqual(mod.gated_probes(probe_events("TestSandboxRecordProbe/ok", "    " + good)), [])
+    def test_a_subtest_probe_line_has_four_spaces_in_verbose_mode(self) -> None:
+        # go test -v indents EVERY t.Logf line four spaces, at any subtest depth;
+        # eight spaces is a continuation line.
+        good = "    x_test.go:9: PROBE: trace probe-pipes bytes=60000 lines=1 best_mb_s=30.0 gated=1"
+        for test in ("TestSandboxRecordProbe/ok", "TestSandboxRecordProbe/ok/deep"):
+            self.assertEqual(len(mod.gated_probes(probe_events(test, good))), 1, test)
+            self.assertEqual(mod.gated_probes(probe_events(test, "    " + good)), [], test)
+
+    def test_a_real_verbose_json_subtest_event_parses(self) -> None:
+        # Copied verbatim from `go test -v -json` (go1.26) on a scratch test whose
+        # subtest "sub one" logged a PROBE line and a two-line message.
+        real = {"Time": "2026-11-17T19:30:15.369747-08:00", "Action": "output", "Package": "scratchfix", "Test": "TestTop/sub_one",
+                "Output": "    a_test.go:7: PROBE: trace probe-pipes bytes=60000 lines=1 best_mb_s=30.0 gated=1\n"}
+        forged = {"Time": "2026-11-17T19:30:15.369759-08:00", "Action": "output", "Package": "scratchfix", "Test": "TestTop/sub_one",
+                  "Output": "        PROBE: trace evil bytes=1 best_mb_s=99 gated=1\n"}
+        lines = [json.dumps(real), json.dumps(forged), json.dumps({"Action": "pass", "Test": "TestTop/sub_one"})]
+        found = mod.gated_probes(lines)
+        self.assertEqual([(t, label) for t, label, _ in found], [("TestTop/sub_one", "probe-pipes")])
+
+    def test_a_probe_line_split_across_events_still_parses(self) -> None:
+        text = SYNTHETIC_PROBE + "\n"
+        cut = len(text) // 2
+        events = [
+            json.dumps({"Action": "output", "Test": "TestSandboxTraceGateSynthetic", "Output": text[:cut]}),
+            json.dumps({"Action": "output", "Test": "TestSandboxTraceGateSynthetic", "Output": text[cut:]}),
+            json.dumps({"Action": "pass", "Test": "TestSandboxTraceGateSynthetic"}),
+        ]
+        (probe,) = mod.gated_probes(events)
+        self.assertEqual((probe[1], probe[2]["best_mb_s"]), ("synthetic-slice", "30.0"))
+
+    def test_a_forged_line_after_a_1024_byte_split_does_not_match(self) -> None:
+        # test2json cuts a long line at 1024 bytes with no newline; what follows the
+        # cut is the middle of the SAME line, even when it looks like a PROBE line.
+        head = '    x_test.go:5: PROBE: trace long bytes=1 lines=1 best_mb_s=9.0 gated=0 old_refusal="' + "a" * 900
+        evil = '    evil.go:1: PROBE: trace evil bytes=1 lines=1 best_mb_s=99 gated=1 repeats=7'
+        events = [
+            json.dumps({"Action": "output", "Test": "TestSandboxRecordStep", "Output": head}),
+            json.dumps({"Action": "output", "Test": "TestSandboxRecordStep", "Output": evil + '" grammar_refusal=""\n'}),
+            json.dumps({"Action": "pass", "Test": "TestSandboxRecordStep"}),
+        ]
+        self.assertEqual(mod.gated_probes(events), [])
+        # An unterminated tail at the end is not a line either.
+        tail = [
+            json.dumps({"Action": "output", "Test": "TestSandboxRecordStep", "Output": evil}),
+            json.dumps({"Action": "pass", "Test": "TestSandboxRecordStep"}),
+        ]
+        self.assertEqual(mod.gated_probes(tail), [])
+        # The facts printed for the log follow the same rule.
+        self.assertEqual(mod.passing_facts(events), {"TestSandboxRecordStep": [mod.LOG_PREFIX + (head + evil + '" grammar_refusal=""').strip()[: mod.MAX_FACT_CHARS]]})
+
+    def test_a_label_ending_in_a_colon_is_not_a_measurement(self) -> None:
+        err = "    x_test.go:5: PROBE: trace probe-pipes: cannot open: best_mb_s=99 gated=1 open x: no such file"
+        self.assertEqual(mod.gated_probes(probe_events("TestSandboxRecordProbe", err)), [])
 
     def test_well_formed_lines_still_parse(self) -> None:
         (real,) = mod.gated_probes(probe_events("TestSandboxRecordStep", REAL_PROBE))

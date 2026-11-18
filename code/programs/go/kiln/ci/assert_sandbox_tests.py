@@ -97,23 +97,22 @@ def failing_output(lines: list[str], limit: int = 60) -> dict[str, list[str]]:
 
 def passing_facts(lines: list[str]) -> dict[str, list[str]]:
     """The marked output lines of every test that passed: at most MAX_FACT_LINES
-    in all, each cut to MAX_FACT_CHARS."""
+    in all, each cut to MAX_FACT_CHARS.  Only complete lines count (see
+    terminated_lines)."""
     final: dict[str, str] = {}
-    found: dict[str, list[str]] = {}
+    events = []
     for line in lines:
         try:
             event = json.loads(line)
         except json.JSONDecodeError:
             continue
-        test = event.get("Test")
-        if not test:
-            continue
-        if event.get("Action") == "output":
-            for text in event.get("Output", "").splitlines():
-                if any(m in text for m in FACT_MARKERS):
-                    found.setdefault(test, []).append(LOG_PREFIX + text.strip()[:MAX_FACT_CHARS])
-        elif event.get("Action") in FINAL:
-            final[test] = event["Action"]
+        events.append(event)
+        if event.get("Test") and event.get("Action") in FINAL:
+            final[event["Test"]] = event["Action"]
+    found: dict[str, list[str]] = {}
+    for test, text in terminated_lines(events):
+        if any(m in text for m in FACT_MARKERS):
+            found.setdefault(test, []).append(LOG_PREFIX + text.strip()[:MAX_FACT_CHARS])
     out: dict[str, list[str]] = {}
     budget = MAX_FACT_LINES
     for test in sorted(found):
@@ -160,19 +159,40 @@ def check(lines: list[str]) -> list[str]:
 GATE_FLOOR_MB_S = 14.0
 SYNTHETIC_LABEL = "synthetic-slice"
 SYNTHETIC_TEST = "TestSandboxTraceGateSynthetic"
-# A PROBE line as `go test -json` carries it: the indent `go test` gives a t.Logf
-# line, then "file_test.go:123: ", then the payload, which must START with
-# "PROBE: trace ".  The indent is exact, not "any whitespace": go test indents a
-# test's log lines by four spaces per level of subtest nesting (four for a top
-# level test, eight for "Test/sub", ...) and every CONTINUATION line of a
-# multi-line message by four more.  So the indent a real PROBE line has is
-# 4 * (1 + the number of "/" in the test name), and a line indented more than
-# that is a continuation, which cannot be a PROBE line.  The payload anchor means
-# the text cannot be forged by a substring inside another line (a trace path, an
-# error message).
-def probe_re(test: str) -> re.Pattern[str]:
-    indent = " " * (4 * (1 + test.count("/")))
-    return re.compile("^" + indent + r"[\w.\-]+\.go:\d+: (PROBE: trace (\S+) .*)$")
+# A PROBE line as `go test -v -json` carries it (the mode CI runs): exactly four
+# spaces, then "file_test.go:123: ", then the payload, which must START with
+# "PROBE: trace ".  In -v mode EVERY t.Logf line of a test is indented exactly four
+# spaces, whatever the subtest depth (TestTop, TestTop/sub and TestTop/sub/deep
+# all print "    a_test.go:7: ...").  Only a CONTINUATION line of a multi-line
+# message is indented differently (eight spaces, and it has no file:line), so the
+# exact anchor rejects it.  (Without -v, go test indents four spaces per subtest
+# level; CI does not run that way.)  The payload anchor means the text cannot be
+# forged by a substring inside another line (a trace path, an error message).
+PROBE_RE = re.compile(r"^ {4}[\w.\-]+\.go:\d+: (PROBE: trace (\S+) .*)$")
+
+
+def terminated_lines(events: list[dict]) -> list[tuple[str, str]]:
+    """(test, line) for every COMPLETE line of every test's output, in order.
+
+    test2json cuts a long output line into Output events of at most 1024 bytes,
+    with no newline at the cut.  Taking splitlines() of each event on its own
+    would make the second half of a long line (a long %q refusal, say) look like
+    a line of its own, and an attacker-influenced refusal could then begin with
+    "    evil.go:1: PROBE: trace ...".  So the output is buffered per test and a
+    line counts only once its newline has arrived; an unterminated tail waits
+    for the next event of the same test and, if none comes, is dropped (it is
+    never a whole line)."""
+    pending: dict[str, str] = {}
+    out: list[tuple[str, str]] = []
+    for event in events:
+        test = event.get("Test", "")
+        if event.get("Action") != "output" or not test:
+            continue
+        buf = pending.get(test, "") + event.get("Output", "")
+        *whole, tail = buf.split("\n")
+        pending[test] = tail
+        out.extend((test, line) for line in whole)
+    return out
 
 
 # The Go tests write every number this script trusts BEFORE the refusal fields,
@@ -210,17 +230,17 @@ def gated_probes(lines: list[str]) -> list[tuple[str, str, dict[str, str]]]:
         if event.get("Test") and event.get("Action") in FINAL:
             final[event["Test"]] = event["Action"]
     out = []
-    for event in events:
-        test = event.get("Test", "")
-        if event.get("Action") != "output" or final.get(test) != "pass":
+    for test, text in terminated_lines(events):
+        if final.get(test) != "pass":
             continue
-        for text in event.get("Output", "").splitlines():
-            m = probe_re(test).match(text)
-            if not m:
-                continue
-            fields = probe_fields(m.group(1))
-            if fields.get("gated") == "1":
-                out.append((test, m.group(2), fields))
+        m = PROBE_RE.match(text)
+        # A label ends in no colon: "PROBE: trace x: cannot open: ..." is an error
+        # line, not a measurement, and its text is not facts.
+        if not m or m.group(2).endswith(":"):
+            continue
+        fields = probe_fields(m.group(1))
+        if fields.get("gated") == "1":
+            out.append((test, m.group(2), fields))
     return out
 
 

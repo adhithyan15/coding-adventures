@@ -2473,9 +2473,15 @@ recorder already enforces.
   from `TestSandboxTraceGateSynthetic`, and every gated `best_mb_s` is finite,
   positive and at least 14; a PROBE line counts only when its payload starts
   with `PROBE: trace ` after the go test `file:line` prefix, which must be
-  indented exactly as `go test` indents a log line of that test (four spaces
-  per level of subtest nesting), so a continuation line of multi-line output
-  cannot match. The two `%q` refusal fields (`old_refusal=`,
+  indented exactly four spaces (in `go test -v -json`, the mode CI runs, every
+  `t.Logf` line has that indent at any subtest depth; a continuation line of a
+  multi-line message has eight and no `file:line`, so it cannot match). The
+  script also buffers output per test and reads only newline-terminated lines,
+  because `test2json` cuts a long line into events of at most 1024 bytes with no
+  newline at the cut, and the second half of a long `%q` refusal must not be
+  taken for a line of its own. A label ending in `:` is not a measurement
+  (the tests log failures to open or measure a trace as `PROBE: trace-error`,
+  with the error `%q`-quoted). The two `%q` refusal fields (`old_refusal=`,
   `grammar_refusal=`) are the LAST fields of a line; the script reads
   `key=value` facts only from the text before the first refusal field, and the
   first occurrence of a key wins, so text a trace influenced cannot forge a
@@ -2494,7 +2500,8 @@ recorder already enforces.
   path, and from a stopwatch for `TestSandboxStraceSignals` (sleep-dominated,
   so its share is not representative). A wall that is not positive (a stamp
   that does not parse, a clock that stepped back) is dropped, never divided by,
-  and counted as `walls_dropped=N`. A wall time is NEVER written into a sealed
+  and counted as `walls_dropped=N`, a process-global cumulative counter that
+  appears on every later `PROBE: trace` line of the run. A wall time is NEVER written into a sealed
   file: `ProbeRunRecord.Wall` is `json:"-"` and `TestProbeWallIsNeverSealed`
   holds that line, because a wall differs on every run and would make
   `pre/probes.json` non-reproducible. What remains before G2 can block is

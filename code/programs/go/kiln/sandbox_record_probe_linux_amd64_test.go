@@ -47,6 +47,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"reflect"
 	"strings"
 	"syscall"
 	"testing"
@@ -390,6 +391,11 @@ func TestSandboxRecordProbe(t *testing.T) {
 		sum := sha256.Sum256(cfgBytes)
 		runDir := t.TempDir()
 		action := pre.Probes.Action
+		// Env is KILN_ACTION, KILN_STEP, KILN_STEP_COUNT and PATH only.  The real
+		// stepProcessEnv would also add LD_LIBRARY_PATH when the sealed tools name
+		// one.  That is fine here: the probes run plain /bin and /usr programs,
+		// and this subtest takes timing of the same strace + sandbox-exec + trace
+		// path, which does not depend on the library search path.
 		rep, err := record.RunStructureProbes(record.ProbeInput{
 			Dir: runDir, Cfg: pre.Config, ConfigPath: cfgPath, ConfigSHA256: hex.EncodeToString(sum[:]), Action: action,
 			KilnExe: pre.Config.KilnExe, Strace: w.strace,
@@ -398,11 +404,26 @@ func TestSandboxRecordProbe(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
+		// The in-process report is the same kind of report the sealed one is: it
+		// passes the same check, and runs the same probes in the same order.
+		if err := record.CheckProbeReport(pre.Config, rep, []string{action}); err != nil {
+			t.Fatalf("the in-process probe report is not a valid one: %v", err)
+		}
+		var sealedNames, ranNames []string
+		for _, r := range pre.Probes.Runs {
+			sealedNames = append(sealedNames, r.Name)
+		}
+		for _, r := range rep.Runs {
+			ranNames = append(ranNames, r.Name)
+		}
+		if !reflect.DeepEqual(sealedNames, ranNames) {
+			t.Errorf("the in-process run names %v are not the sealed report's %v", ranNames, sealedNames)
+		}
 		for _, r := range rep.Runs {
 			if r.Wall <= 0 {
 				t.Errorf("%s: no wall time in memory: %v", r.Name, r.Wall)
 			}
-			probeTraceWall(t, "probe-"+r.Name, filepath.Join(runDir, record.ProbeDir, r.Name+".trace"), r.Wall)
+			probeTraceWall(t, "probe-wall-"+r.Name, filepath.Join(runDir, record.ProbeDir, r.Name+".trace"), r.Wall)
 		}
 		encoded, err := record.EncodeProbes(rep)
 		if err != nil {
