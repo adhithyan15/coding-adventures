@@ -266,6 +266,11 @@ mod tests {
     }
 
     #[test]
+    fn fir_multiplies_single_sample_coefficients() {
+        assert_eq!(fir(&[2.0], &[2.0]).unwrap(), vec![4.0]);
+    }
+
+    #[test]
     fn fir_output_length_equals_n_plus_k_minus_one() {
         for n in 1..=10 {
             for k in 1..=10 {

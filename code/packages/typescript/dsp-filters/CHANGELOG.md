@@ -4,6 +4,7 @@
 
 ### Fixed
 - `dsp-filters.warrant` was invalid Warrant (`max` is not a builtin); the iir steps bound now uses `imax`. Document only.
+- Removed the false FIR round-trip claim, common byte-length caps, and design `no_panic` claims pending lane-specific sample framing and typed error behavior. Added public FIR regressions for `[2] * [2] = [4]` and the one-tap identity. Warrant declarations remain obligations, not executed evidence.
 
 ## 0.1.0
 
