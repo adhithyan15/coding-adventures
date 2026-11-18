@@ -25,7 +25,22 @@
 
 - `TestDefaultPathIsTheGrammarPath`: with the cross-check unset, a stricter-only
   input is refused, and a reason-only input carries the grammar path's reason.
-- kiln-sandbox: a real trace of 32 KB or more that the grammar path reads below
-  14 MB/s fails the job (G1). `PROBE: trace` lines gain `step_wall_ms`,
-  `parse_ms` and `parse_share` where the step's wall time is known (G2 census).
-  `ci/assert_sandbox_tests.py` prints up to 60 facts of 450 characters.
+- kiln-sandbox gate G1 (KILN04 4.9): a real trace of 32 KB or more whose grammar
+  path pass 1 is below 14 MB/s fails the job. The gated figure is the best
+  (minimum) of at least 7 passes spanning at least 100 ms after a warm-up, not a
+  single shot (a ~2 ms sample flaked to 5-7 MB/s under contention); the
+  collector is switched off during a small trace's passes.
+  `trace.MeasureBest` / `trace.BestPass1` provide it. It is a proxy for the
+  2 GiB cap, not a proof.
+- `TestSandboxTraceGateSynthetic`: `testdata/build.strace` repeated to 4 MiB
+  (pass 1 must read it all; `whole_mb_s` is census only) plus a 64 KB slice
+  gated best-of-7 against the same floor, logged as `PROBE: trace synthetic-4mib`.
+- `PROBE: trace` lines gain `best_mb_s` and `gated=0|1` (single-shot
+  `grammar_mb_s` stays for the census) and, where the step's wall time is known
+  (only the signals test today), `step_wall_ms`, `parse_ms`, `parse_share` for
+  the G2 census (report-only; needs wall-time plumbing before it can block).
+- `ci/assert_sandbox_tests.py` fails the job unless a passing test logged a
+  `gated=1` PROBE line and `synthetic-4mib` is among them (G1 cannot go
+  vacuous); it prints up to 60 facts of 450 characters. New pytest cases.
+- KILN04 4.9: G1 is stated as a pass-1 rate; a stale "uploads an artifact on any
+  mismatch" sentence is corrected (ci.yml uploads none).

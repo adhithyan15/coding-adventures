@@ -29,6 +29,27 @@ def stream(outcomes: dict[str, str]) -> list[str]:
     return lines
 
 
+REAL_PROBE = (
+    "    sandbox_tracesize_linux_amd64_test.go:80: PROBE: trace record-step bytes=51650 lines=327 old_mb_s=144.7 "
+    "grammar_mb_s=22.8 best_mb_s=25.1 gated=1 old_allocs=1 grammar_allocs=2"
+)
+SYNTHETIC_PROBE = (
+    "    sandbox_tracesize_linux_amd64_test.go:130: PROBE: trace synthetic-4mib bytes=4194304 lines=9000 "
+    "best_mb_s=30.0 gated=1 repeats=7"
+)
+
+
+def probe_events(test: str, text: str, action: str = "pass") -> list[str]:
+    return [
+        json.dumps({"Action": "output", "Test": test, "Output": text + "\n"}),
+        json.dumps({"Action": action, "Test": test}),
+    ]
+
+
+def with_gate(lines: list[str]) -> list[str]:
+    return lines + probe_events("TestSandboxTraceGateSynthetic", SYNTHETIC_PROBE)
+
+
 def all_pass() -> dict[str, str]:
     return {name: "pass" for name in mod.REQUIRED}
 
@@ -71,7 +92,7 @@ class AssertScript(unittest.TestCase):
     def test_main_exit_codes(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             good = Path(tmp) / "good.json"
-            good.write_text("\n".join(stream(all_pass())), encoding="utf-8")
+            good.write_text("\n".join(with_gate(stream(all_pass()))), encoding="utf-8")
             bad = Path(tmp) / "bad.json"
             bad.write_text("\n".join(stream({})), encoding="utf-8")
             self.assertEqual(mod.main(["x", str(good)]), 0)
@@ -88,6 +109,36 @@ class AssertScript(unittest.TestCase):
         source = "\n".join(f.read_text(encoding="utf-8") for f in files)
         declared = set(re.findall(r"^func (TestSandbox\w+)\(", source, re.M))
         self.assertEqual(declared, set(mod.REQUIRED))
+
+
+class GateG1(unittest.TestCase):
+    """The throughput gate must have been applied, not skipped by omission."""
+
+    def test_synthetic_gated_line_satisfies_the_gate(self) -> None:
+        self.assertEqual(mod.gate_problems(with_gate(stream(all_pass()))), [])
+
+    def test_a_missing_gate_fails(self) -> None:
+        problems = mod.gate_problems(stream(all_pass()))
+        self.assertTrue(any("no passing test logged a gated PROBE" in p for p in problems), problems)
+
+    def test_an_ungated_probe_does_not_count(self) -> None:
+        ungated = REAL_PROBE.replace("gated=1", "gated=0")
+        problems = mod.gate_problems(stream(all_pass()) + probe_events("TestSandboxRecordStep", ungated))
+        self.assertTrue(problems, problems)
+
+    def test_a_real_gated_line_without_the_synthetic_one_fails(self) -> None:
+        problems = mod.gate_problems(stream(all_pass()) + probe_events("TestSandboxRecordStep", REAL_PROBE))
+        self.assertTrue(any("synthetic-4mib" in p for p in problems), problems)
+
+    def test_a_gated_line_from_a_failing_test_does_not_count(self) -> None:
+        problems = mod.gate_problems(stream(all_pass()) + probe_events("TestSandboxTraceGateSynthetic", SYNTHETIC_PROBE, "fail"))
+        self.assertTrue(problems, problems)
+
+    def test_main_fails_when_the_gate_is_missing(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "nogate.json"
+            path.write_text("\n".join(stream(all_pass())), encoding="utf-8")
+            self.assertEqual(mod.main(["x", str(path)]), 1)
 
 
 class CiWiring(unittest.TestCase):

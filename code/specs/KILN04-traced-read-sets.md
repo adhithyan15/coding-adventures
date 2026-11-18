@@ -2416,10 +2416,9 @@ existing test runs both parsers and compares the `Trace`, `Reason` and `Line`.
 Beyond that: a pass-1 record diff, `FuzzParseDiff` and `FuzzLineDiff` with a
 committed corpus (at least 30 minutes locally per PR, nightly in CI), and
 `KILN_TRACE_DIFF=1` in the kiln-sandbox job, which cross-checks real traces and
-uploads an artifact on any mismatch. Those artifacts contain real trace
-data, so they are produced only on trusted CI runs (never for fork PRs), are
-kept for 7 days, hold only the mismatching trace, and are never published
-elsewhere.
+panics on a mismatch after printing a bounded, sanitised window of the lines
+around it to the job log. No artifact is uploaded (the traces hold paths a pull
+request chose, so the only thing kept is that window, in the log).
 
 **The default-flip gates (restated by PR 6).** The first draft gated the flip on
 "at least 8 MB/s and within 3x of the old parser". That gate is replaced: a ratio
@@ -2427,17 +2426,40 @@ to the old scanner measures how fast the old scanner is, not whether the grammar
 path is fast enough. The new gates are absolute and tied to the deadline the
 recorder already enforces.
 
-- **G1 (blocking).** The grammar path must parse a cap-sized action
-  (`DefaultMaxTraceTotal`, 2 GiB) in at most a quarter of the classify deadline
-  (`DefaultClassifyTimeout`, 10 minutes). A quarter is 150 s, so the floor is
-  2048 MiB / 150 s = 2,147 MB / 150 s, about **14 MB/s** (13.7 exactly; the
-  job uses 14). The kiln-sandbox job fails when a real trace of at least 32 KB
-  parses below 14 MB/s with the grammar path (smaller traces are timer noise).
+- **G1 (blocking).** The grammar path's **pass 1** (the line reader,
+  `readRecordsAt`) must run at a rate that would get a cap-sized action
+  (`DefaultMaxTraceTotal`, 2 GiB) through in at most a quarter of the classify
+  deadline (`DefaultClassifyTimeout`, 10 minutes). A quarter is 150 s, so the
+  floor is 2048 MiB / 150 s = 2,147 MB / 150 s, about **14 MB/s** (13.7 exactly;
+  the job uses 14). The gate is on the **best** (minimum) pass-1 time over at
+  least 7 passes and at least 100 ms of wall time after one warm-up pass,
+  never on a single shot: a 50 KB trace is read in about 2 ms, so one sample is
+  mostly noise, and noise only ever adds time, so the minimum is the right
+  statistic for a capability floor. (On an Apple M2 Max a single-shot sample
+  fell to 5-7 MB/s under contention while the true rate is about 19.) The
+  kiln-sandbox job fails when a real trace of at least 32 KB falls below the
+  floor (smaller traces are not gated), and it always runs one deterministic
+  input, `synthetic-4mib`: `testdata/build.strace` repeated to at least 4 MiB
+  (pass 1 must read all of it; its best-of-7 rate is logged as `whole_mb_s`,
+  census only) and a 64 KB slice of whole repetitions gated with the same
+  statistic and floor (`TestSandboxTraceGateSynthetic`). The 4 MiB pass itself
+  is not gated: a 200 ms pass sees every change in how the CPU is shared, and a
+  best-of cannot see through sustained CPU shortage (measured on an M2 Max with
+  two busy threads per core: 4 MiB passes fell to 12 MB/s while the slice's best
+  stayed at 20). Each gated line says `gated=1` and carries
+  both `grammar_mb_s` (single shot, census only) and `best_mb_s` (gated);
+  `ci/assert_sandbox_tests.py` fails the job unless a passing test logged at
+  least one `gated=1` line and the `synthetic-4mib` line is among them, so G1
+  cannot go vacuous. A rate measured at about 50 KB or 4 MiB is a **proxy**: it
+  does not prove the rate at 2 GiB.
 - **G2 (report-only in PR 6; blocking before the old scanner is deleted).**
   Grammar parse time at most 10% of the step's wall time and at most 5 s
   absolute, at the census p99 trace size. The `PROBE:` lines carry
-  `step_wall_ms` and the parse share where the step's wall time is known, so the
-  census can be read off CI logs.
+  `step_wall_ms`, `parse_ms` and `parse_share` where the step's wall time is
+  known, so the census can be read off CI logs. Today that is only the
+  `TestSandboxStraceSignals` trace, which is sleep-dominated, so its share is
+  not representative: wall-time plumbing through the record-step and probe
+  paths is required before G2 can become blocking (a backlog item).
 
 Measured: on a real kiln-sandbox CI trace (51,650 bytes, 327 lines) the old
 scanner reads 144.7 MB/s and the grammar path (compact `LineParser`) 22.8 MB/s;

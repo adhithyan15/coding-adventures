@@ -70,8 +70,9 @@ a soundness downgrade; rollback is a revert). The package's tests run both on
 every `Parse` and fail on any disagreement the spec's table does not allow, and
 `KILN_TRACE_DIFF=1` does the same for real traces (the kiln-sandbox CI job sets
 it; a mismatch panics with a bounded, sanitised window of lines). The sandbox
-job also fails a real trace of 32 KB or more that the grammar path reads below
-14 MB/s (gate G1, KILN04 section 4.9). The old scanner is deleted in PR 8, after
+job also fails a real trace of 32 KB or more (and a fixed 4 MiB synthetic one)
+whose best-of-7 grammar-path pass 1 is below 14 MB/s (gate G1, KILN04 section
+4.9). The old scanner is deleted in PR 8, after
 a soak.
 
 ## Usage
