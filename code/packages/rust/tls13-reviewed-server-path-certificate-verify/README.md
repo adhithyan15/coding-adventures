@@ -3,7 +3,9 @@
 `tls13-reviewed-server-path-certificate-verify` binds one TLS 1.3 server
 `CertificateVerify` verdict to the exact target key of the strongest
 accumulated reviewed RSA server path. Its stronger entry point accepts that
-path only through the existing exact HTTPS DNS destination binding.
+path only through the existing exact HTTPS DNS destination binding. Its
+strongest entry point additionally requires the destination-bound path to
+retain the reviewed anchor's repository-owned self-signature proof.
 
 The composition accepts only complete reviewed-path evidence, outer
 selected-transcript hash evidence, the exact decoded message, data-driven RSA
@@ -14,12 +16,16 @@ SubjectPublicKeyInfo, and delegates signature verification to repository-owned
 RSA-PSS code. The path-only non-copyable result retains both complete proofs.
 The destination entry point additionally retains the complete certificate SAN,
 TLS SNI, HTTP Host authority, and reviewed-path binding, so the authenticated
-signature cannot be detached from the exact destination identity.
+signature cannot be detached from the exact destination identity. The
+anchor-aware entry point retains that same graph plus the existing reviewed
+root self-signature evidence, so the handshake signature cannot be detached
+from the exact root whose self-signature was verified.
 
-This package does not prove ordered handshake state, verify the reviewed
-anchor's self-signature, choose a revocation result, authenticate Finished,
-process records, perform I/O, or make TLS, HTTPS, HTTP, OAuth transport, or
-live-provider access available.
+This package does not itself verify an anchor self-signature; the strongest
+entry point accepts only the complete proof produced by the existing
+repository-owned boundary. It does not prove ordered handshake state, choose a
+revocation result, authenticate Finished, process records, perform I/O, or make
+TLS, HTTPS, HTTP, OAuth transport, or live-provider access available.
 
 The end-to-end tests retain a public `www.apple.com` TLS 1.3 handshake capture
 from 2026-11-18 plus its 2026-11-11 leaf certificate. They reconstruct the
@@ -27,8 +33,10 @@ complete reviewed path to the pinned public-Web-PKI root, prove that a client
 role fails before output or scratch mutation, and verify the captured server
 signature with the exact reviewed leaf key. They also exercise the stronger
 destination-bound entry point and prove that it retains the same destination,
-path, transcript, message, and signature graph. These checked-in public
-fixtures are test data only; the package performs no network access.
+path, transcript, message, and signature graph. Finally, they verify the
+reviewed root self-signature and exercise the strongest entry point over the
+same exact graph. These checked-in public fixtures are test data only; the
+package performs no network access.
 
 ## Development
 
