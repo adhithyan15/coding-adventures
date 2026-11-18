@@ -1,3 +1,4 @@
+# needs-toolchain: python
 cargo test -q -p gf256 --lib --test gf256_test -- --nocapture
 # VER08b: the whole public API runs inside a seccomp/Landlock jail derived from
 # required_capabilities.json (no capabilities), watched by an independent strace.
@@ -13,13 +14,13 @@ cargo test -q -p gf256 --test runtime_capability
 # to completion).
 cargo run -q -p coding_adventures_warrant_grammar --example gen_evidence -- --check gf256
 WARRANT_EVIDENCE_OUT=evidence/test-manifest.json cargo test -q -p gf256 --test warrant_evidence
-WARRANT_EVIDENCE_FAULT=or-for-xor WARRANT_EVIDENCE_FILTER=/exhaustive/add_matches_xor_model cargo test -q -p gf256 --test warrant_evidence 2>/dev/null | grep -q '^not ok '
-WARRANT_EVIDENCE_FAULT=wrapping-sub WARRANT_EVIDENCE_FILTER=/exhaustive/subtract_matches_xor_model cargo test -q -p gf256 --test warrant_evidence 2>/dev/null | grep -q '^not ok '
-WARRANT_EVIDENCE_FAULT=mul-as-add WARRANT_EVIDENCE_FILTER=/exhaustive/multiply_matches_peasant_model cargo test -q -p gf256 --test warrant_evidence 2>/dev/null | grep -q '^not ok '
-WARRANT_EVIDENCE_FAULT=alt-poly WARRANT_EVIDENCE_FILTER=/exhaustive/multiply_matches_peasant_model cargo test -q -p gf256 --test warrant_evidence 2>/dev/null | grep -q '^not ok '
-WARRANT_EVIDENCE_FAULT=generator-shift WARRANT_EVIDENCE_FILTER=/exhaustive/multiply_matches_peasant_model cargo test -q -p gf256 --test warrant_evidence 2>/dev/null | grep -q '^not ok '
-WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/divide_by_zero_rejected cargo test -q -p gf256 --test warrant_evidence 2>/dev/null | grep -q '^not ok '
-WARRANT_EVIDENCE_FAULT=exp-mod-256 WARRANT_EVIDENCE_FILTER=/exhaustive/power_reduces_mod_group_order cargo test -q -p gf256 --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=or-for-xor WARRANT_EVIDENCE_FILTER=/exhaustive/add_matches_xor_model python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p gf256 --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=wrapping-sub WARRANT_EVIDENCE_FILTER=/exhaustive/subtract_matches_xor_model python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p gf256 --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=mul-as-add WARRANT_EVIDENCE_FILTER=/exhaustive/multiply_matches_peasant_model python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p gf256 --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=alt-poly WARRANT_EVIDENCE_FILTER=/exhaustive/multiply_matches_peasant_model python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p gf256 --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=generator-shift WARRANT_EVIDENCE_FILTER=/exhaustive/multiply_matches_peasant_model python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p gf256 --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/divide_by_zero_rejected python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p gf256 --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=exp-mod-256 WARRANT_EVIDENCE_FILTER=/exhaustive/power_reduces_mod_group_order python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p gf256 --test warrant_evidence
 # The labels/bound rows are attempted on the real source; the front end refuses
 # it, so the proof manifest records every obligation `not-live` with the blocker.
 WARRANT_PROOF_OUT=$PWD/evidence cargo test -q -p coding_adventures_warrant_ir --test gf256_proofs

@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- WD-HARN1c: the `--sabotage always-pass` negative control in `BUILD` and `BUILD_windows` now runs through the shared checker `code/scripts/warrant_negctl.py -- node bin/cli.mjs --sabotage always-pass` (no shell, so no `grep`/`findstr` dependence): it requires a non-zero exit, one TAP plan `1..N`, points numbered `1..N`, a real `not ok` and no `Bail out!`, and prints the captured output on failure. Both BUILD files declare `# needs-toolchain: python`.
 - Fixed `BUILD_windows`: the sabotage check was `findstr /b "not ok "`, which `findstr` reads as the two alternatives `not` and `ok`, so any passing `ok N` line satisfied it and the negative control passed vacuously. It is now the literal match `findstr /B /C:"not ok "` (WD-HARN1c).
 - Fixed the canonical `ct-compare.warrant` tests, which asserted 1 claim and 13 results; the spec now has 9 claims (VER-P030), so they expect 9 claims and 21 results (12 examples + 9 claims).
 - Raised the claim-refinement rejection-sampling cap in `src/warrant.ts` from 100 to 1000 attempts: `len(a) == len(b)` over two independent `Bytes` binders is accepted ~1 time in 33, so `select_picks` failed deterministically with "Generator filter exhausted". Mirrors the same fix in `warrant-compiler`.

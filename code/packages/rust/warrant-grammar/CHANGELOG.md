@@ -2,6 +2,16 @@
 
 ## Unreleased — WX-SV2: the `field-flip` fault (VOS-038a)
 
+### Changed
+
+- **WD-HARN1c: negative controls run through the shared checker.** The sole sabotage line in
+  `BUILD` and `BUILD_windows` (the `--sabotage always-pass` self-corpus control) now call `code/scripts/warrant_negctl.py -- cargo test ...` instead of a
+  `grep`/`findstr` pipe. Every fault, filter and cargo argument is unchanged and in the same
+  order. The checker also requires a non-zero exit, exactly one TAP plan, test points numbered
+  `1..N` and no `Bail out!`, and prints the captured output when a control fails (the Windows
+  lines printed nothing). Each BUILD file declares `# needs-toolchain: python`. No source,
+  test or evidence change.
+
 - New composite-operation fault `field-flip` (VER04j 4.8): the lowest bit of the first
   numeric field of a single-constructor record result is flipped (`Int` and fixed-width
   alike). Applicable exactly where `field-zero` is (W0701 otherwise) and, unlike it, never

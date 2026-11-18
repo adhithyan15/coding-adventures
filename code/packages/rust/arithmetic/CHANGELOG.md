@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased] — Warrant-derived evidence (AR01, VER04h)
 
+### Changed
+
+- **WD-HARN1c: negative controls run through the shared checker.** All 13 sabotage lines in
+  each of `BUILD`, `BUILD_linux` and `BUILD_windows` now call `code/scripts/warrant_negctl.py -- cargo test ...` instead of a
+  `grep`/`findstr` pipe. Every fault, filter and cargo argument is unchanged and in the same
+  order. The checker also requires a non-zero exit, exactly one TAP plan, test points numbered
+  `1..N` and no `Bail out!`, and prints the captured output when a control fails (the Windows
+  lines printed nothing). Each BUILD file declares `# needs-toolchain: python`. No source,
+  test or evidence change.
+
 Layer 2 of the Intel 4004 verification chain (VER27 section 4.15, backlog LV-006,
 LP-011), on top of `logic-gates` (layer 1). (Cargo.toml stays at 0.1.0: this whole
 entry is unreleased and the version is bumped at release.)
