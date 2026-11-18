@@ -22,6 +22,25 @@
 //! lowering produces them and the cost walk counts them (`1 +` the operands); **nothing
 //! evaluates them yet** (slice S10c-1), and [`crate::eval`] refuses the variant, naming the level.
 //!
+//! ## `ir.tuple` (slice S10t-2)
+//!
+//! Three more shapes, [`Ir::Tuple`], [`Ir::Project`] and [`Ir::Match`] (`match` on a `Result`,
+//! VER04r Appendix A.1, [D35]).  They are the shapes a generic walker gets wrong:
+//!
+//! ```text
+//!   ["tuple", [e1, .., en]]                  the operands are ONE list at position 1
+//!   ["project", e, i]                        i is a JSON integer, not an expression
+//!   ["match", s, [[pattern, arm], ..]]       a PATTERN is not an expression, though
+//!                                            ["ok", ["bind", "x"]] looks like the `ok`
+//!                                            constructor and ["tuple", [..]] like a literal
+//! ```
+//!
+//! [`Ir::children`] is the one place that knows which parts of a node are sub-expressions (the
+//! scrutinee and the arm **bodies** of a `match`, never a [`Pat`]); every walker of this crate
+//! goes through it, so none can drop a tuple operand or visit a pattern.  (The oracle's lesson
+//! `a-generic-ir-walker-that-reads-node-1-...`: grep for a walker that reads the node's raw
+//! fields before adding a shape.)
+//!
 //! ## Wire form
 //!
 //! The JSON is the v1 array encoding, unchanged: `["var","a"]`, `["lit",true]`,
@@ -193,7 +212,89 @@ pub enum Ir {
         /// The operands, left to right (the static type argument is not an operand).
         args: Vec<Ir>,
     },
+    /// `["tuple", [e1, .., en]]`, `2 <= n <= 8` (`ir.tuple`).
+    Tuple(Vec<Ir>),
+    /// `["project", e, i]`: the `i`-th component (0-based) of a tuple (`ir.tuple`).
+    Project(Box<Ir>, usize),
+    /// `["match", s, [[pattern, arm], ..]]` on a `Result` scrutinee (`ir.tuple`, [D35]): the
+    /// arms are tried in order and **exactly one** arm body is evaluated.
+    Match {
+        /// The scrutinee, of a `Result` type.
+        scrutinee: Box<Ir>,
+        /// `(pattern, body)` in source order; never empty.
+        arms: Vec<(Pat, Ir)>,
+    },
 }
+
+/// A pattern of a `match` on a `Result` (Appendix A.1): one of exactly six.
+///
+/// ```text
+///   ["ok", pat]           an `Ok` whose payload matches `pat`
+///   ["err", "CASE"]       an `Err` of exactly that error case
+///   ["err_any"]           an `Err` of any case (`Err(_)` and `Err(e)`: the error value has no IR form)
+///   ["tuple", [pats]]     a tuple of the same arity, component by component
+///   ["bind", "name"]      anything; binds `name` to the matched value
+///   ["wild"]              anything
+/// ```
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum Pat {
+    /// `["wild"]`.
+    Wild,
+    /// `["bind", "x"]`.
+    Bind(String),
+    /// `["ok", p]`.
+    Ok(Box<Pat>),
+    /// `["err", "CASE"]`.
+    Err(String),
+    /// `["err_any"]`.
+    ErrAny,
+    /// `["tuple", [p1, .., pn]]`.
+    Tuple(Vec<Pat>),
+}
+
+impl Pat {
+    /// The names this pattern binds, in source order (looking inside `ok` and `tuple`).
+    pub fn binds(&self) -> Vec<&str> {
+        let mut out = Vec::new();
+        let mut stack = vec![self];
+        while let Some(p) = stack.pop() {
+            match p {
+                Pat::Bind(n) => out.push(n.as_str()),
+                Pat::Ok(inner) => stack.push(inner),
+                Pat::Tuple(parts) => stack.extend(parts.iter().rev()),
+                Pat::Wild | Pat::Err(_) | Pat::ErrAny => {}
+            }
+        }
+        out
+    }
+
+    /// The JSON array form of the pattern.
+    pub fn to_json(&self) -> Json {
+        match self {
+            Pat::Wild => Json::arr([Json::str("wild")]),
+            Pat::Bind(n) => Json::arr([Json::str("bind"), Json::str(n.as_str())]),
+            Pat::Ok(inner) => Json::arr([Json::str("ok"), inner.to_json()]),
+            Pat::Err(case) => Json::arr([Json::str("err"), Json::str(case.as_str())]),
+            Pat::ErrAny => Json::arr([Json::str("err_any")]),
+            Pat::Tuple(parts) => Json::arr([
+                Json::str("tuple"),
+                Json::arr(parts.iter().map(Pat::to_json)),
+            ]),
+        }
+    }
+
+    /// How deeply the pattern nests (a leaf is 1).
+    pub fn depth(&self) -> usize {
+        match self {
+            Pat::Ok(inner) => 1 + inner.depth(),
+            Pat::Tuple(parts) => 1 + parts.iter().map(Pat::depth).max().unwrap_or(0),
+            _ => 1,
+        }
+    }
+}
+
+/// The tags of `ir.tuple` (Appendix A.1).
+pub const TUPLE_TAGS: [&str; 3] = ["tuple", "project", "match"];
 
 /// Exactly the 35 names of `ir.fixed` (VER04r 4.1, Appendix A.1, [D24]), in the oracle's order.
 /// `try` is spelled `try`.
@@ -266,7 +367,9 @@ pub fn fixed_tag(name: &str) -> Option<&'static str> {
 }
 
 /// The `requires` of lowered trees (VER04r 16.10 R9, the tag part; the spec calls it
-/// `ir::levels`): `ir.core` (always present), `ir.fixed` for every [`Ir::Fixed`] node, and, for
+/// `ir::levels`): `ir.core` (always present), `ir.fixed` for every [`Ir::Fixed`] node, `ir.tuple`
+/// for every [`Ir::Tuple`], [`Ir::Project`] and [`Ir::Match`] (a `match` on a `Result` is
+/// `ir.tuple`, [D35]; the type half of R9 is the lowerer's), and, for
 /// every `model_call`, the callee's own `requires` as `callee` returns it (already closed over
 /// the callee's callees, so the closure is never walked again).  Sorted and duplicate-free.
 pub fn levels<'t>(
@@ -278,6 +381,9 @@ pub fn levels<'t>(
         tree.walk(&mut |n| match n {
             Ir::Fixed { .. } => {
                 found.insert("ir.fixed");
+            }
+            Ir::Tuple(_) | Ir::Project(..) | Ir::Match { .. } => {
+                found.insert("ir.tuple");
             }
             Ir::Model { name, .. } => found.extend(callee(name)),
             _ => {}
@@ -353,16 +459,26 @@ impl Ir {
             Ir::Drop(..) => "drop",
             Ir::IsErr(_) => "is_err",
             Ir::Fixed { tag, .. } => tag,
+            Ir::Tuple(_) => "tuple",
+            Ir::Project(..) => "project",
+            Ir::Match { .. } => "match",
         }
     }
 
-    /// The operand sub-trees in evaluation order (for a call, its arguments).
+    /// The sub-expressions in evaluation order (for a call, its arguments; for a tuple, its
+    /// components; for a `match`, the scrutinee and then the arm **bodies**, never a pattern).
+    /// The one place that says which parts of a node are expressions.
     pub fn children(&self) -> Vec<&Ir> {
         match self {
             Ir::Bool(_) | Ir::Int { .. } | Ir::Bytes(_) | Ir::Var(_) | Ir::Err(_) => vec![],
             Ir::Subject { args, .. } | Ir::Model { args, .. } | Ir::Fixed { args, .. } => {
                 args.iter().collect()
             }
+            Ir::Tuple(parts) => parts.iter().collect(),
+            Ir::Project(base, _) => vec![base],
+            Ir::Match { scrutinee, arms } => std::iter::once(&**scrutinee)
+                .chain(arms.iter().map(|(_, body)| body))
+                .collect(),
             Ir::Len(a) | Ir::Ok(a) | Ir::Not(a) | Ir::IsErr(a) | Ir::Neg(_, a) => vec![a],
             Ir::Cmp(_, a, b)
             | Ir::Arith(_, _, a, b)
@@ -457,6 +573,16 @@ impl Ir {
                 Json::arr(args.iter().map(Ir::to_json)),
             ]),
             Ir::Err(case) => Json::arr([tag(), Json::str(case.as_str())]),
+            Ir::Tuple(parts) => Json::arr([tag(), Json::arr(parts.iter().map(Ir::to_json))]),
+            Ir::Project(base, index) => Json::arr([tag(), base.to_json(), Json::Int(*index as u64)]),
+            Ir::Match { scrutinee, arms } => Json::arr([
+                tag(),
+                scrutinee.to_json(),
+                Json::arr(
+                    arms.iter()
+                        .map(|(p, body)| Json::arr([p.to_json(), body.to_json()])),
+                ),
+            ]),
             Ir::Fixed { ty, args, .. } => {
                 let mut items = vec![tag()];
                 items.extend(ty.map(|t| Json::str(t.name())));

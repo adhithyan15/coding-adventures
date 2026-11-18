@@ -5,7 +5,8 @@
 //!
 //! * **Pure guards (4.4).**  `expected_calls` must not depend on what the subject returned,
 //!   so a subject call may sit under a guard (the condition of an `if`, the left operand
-//!   guarding the right of `and`/`or`/`implies`) only if the guard itself calls no subject.
+//!   guarding the right of `and`/`or`/`implies`, the scrutinee of a `match` whose arm calls)
+//!   only if the guard itself calls no subject.
 //!
 //! * **The v0 divergence guard, rule 3 (3.3).**  A frozen v0 document's Rust harness
 //!   evaluates `U8` as `Nat`, so a fixed-width `+ - *` or unary `-` whose value depends on a
@@ -74,6 +75,18 @@ fn guards(ir: &Ir) -> Result<(), GenError> {
                 guards(r)
             } else {
                 guards(l)
+            }
+        }
+        // A `match` arm is a guard whose condition is the scrutinee (VER04r 4.4): a subject call in
+        // an arm needs a pure scrutinee.  With no call in any arm only the scrutinee is of interest.
+        Ir::Match { scrutinee, arms } => {
+            if arms.iter().any(|(_, body)| body.has_subject()) {
+                if scrutinee.has_subject() {
+                    return Err(impure());
+                }
+                arms.iter().try_for_each(|(_, body)| guards(body))
+            } else {
+                guards(scrutinee)
             }
         }
         other => other.children().into_iter().try_for_each(guards),

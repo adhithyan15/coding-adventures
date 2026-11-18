@@ -31,6 +31,9 @@
 //!   concat take drop            total: take/drop clamp, a negative count is 0; a result
 //!                               over MAX_IR_VALUE is refused BEFORE it is allocated
 //!   is_err e                    true for an Err
+//!   tuple project               the components in order / the i-th component (`ir.tuple`)
+//!   match s [[pat, arm]..]      evaluates the scrutinee, then **exactly one** arm: the first whose
+//!                               pattern matches, with its binders in scope (`ir.tuple`, [D35])
 //!   model_call                  evaluates the arguments left to right, then the body in a
 //!                               fresh frame
 //!   subject_op                  cannot be evaluated: the generator has no subject
@@ -54,6 +57,12 @@
 //! An operand that only runs under a short circuit whose guard depends on a subject result
 //! is skipped (the guard is not pure, which 4.4 refuses anyway for operands that call).
 //!
+//! A `match` arm is a **guard** whose condition is the scrutinee: the arm taken is decided by the
+//! scrutinee's value and the patterns.  A subject call in an arm therefore needs a pure
+//! scrutinee (else `W0701`, the impure guard), and then only the taken arm is on the trace, with
+//! the pattern's binders in scope for the nodes beneath it.  A `match` with no subject call in
+//! any arm is counted by its scrutinee alone.
+//!
 //! ## Seeded-wrong controls
 //!
 //! [`Sabotage`] makes the evaluator wrong on purpose (`eq` answering `ne`, `sub` adding,
@@ -68,8 +77,9 @@ use crate::arith::{
     check_value_len, exact_neg, exact_op, fixed_neg, fixed_op, EXACT_BOUND, MAX_IR_VALUE,
 };
 use crate::error::{code, Beyond, GenError};
-use crate::ir::{Arith, Cmp, Ir, Logic};
+use crate::ir::{Arith, Cmp, Ir, Logic, Pat};
 use crate::lower::{LoweredModel, LoweredOp};
+use crate::patterns::match_pattern;
 use crate::value::{ill_typed, Value};
 
 /// The most model frames that may be active at once (VER04 section 2, VER04r 14).
@@ -366,6 +376,10 @@ impl<'a> Program<'a> {
         let mut tasks: Vec<Task<'t>> = vec![Task::Eval(ir)];
         let mut vals: Vec<Value> = Vec::new();
         let mut frames: Vec<Vec<(&'t str, Value)>> = Vec::new();
+        // The binders of the `match` arms being evaluated, as `(frame depth, name, value)`: the
+        // entries of the current frame are contiguous at the top (an arm finishes before the frame
+        // that holds it is popped), so a lookup stops at the first entry of another depth.
+        let mut binds: Vec<(usize, &'t str, Value)> = Vec::new();
         while let Some(task) = tasks.pop() {
             if tasks.len() > self.max_tasks {
                 return Err(GenError::new(
@@ -377,7 +391,41 @@ impl<'a> Program<'a> {
             match task {
                 Task::Eval(node) => {
                     let env: &Vars<'_> = frames.last().map_or(vars, |f| f.as_slice());
+                    if let Ir::Var(name) = node {
+                        let depth = frames.len();
+                        let bound = binds
+                            .iter()
+                            .rev()
+                            .take_while(|(d, _, _)| *d == depth)
+                            .find(|(_, n, _)| *n == name.as_str())
+                            .map(|(_, _, v)| v.clone());
+                        if let Some(v) = bound {
+                            vals.push(v);
+                            continue;
+                        }
+                    }
                     self.start(node, env, &mut tasks, &mut vals)?;
+                }
+                Task::Arms(arms) => {
+                    let value = pop(&mut vals)?;
+                    let depth = frames.len();
+                    let mut picked = None;
+                    for (pattern, body) in arms {
+                        let mut found: Vec<(&'t str, Value)> = Vec::new();
+                        if match_pattern(pattern, &value, &mut found) {
+                            picked = Some((body, found));
+                            break;
+                        }
+                    }
+                    let Some((body, found)) = picked else {
+                        return Err(GenError::internal("a match fell through"));
+                    };
+                    tasks.push(Task::PopBinds(found.len()));
+                    tasks.push(Task::Eval(body));
+                    binds.extend(found.into_iter().map(|(n, v)| (depth, n, v)));
+                }
+                Task::PopBinds(n) => {
+                    binds.truncate(binds.len().saturating_sub(n));
                 }
                 Task::Apply(node) => self.apply(node, &mut vals, st)?,
                 Task::CallModel(i) => {
@@ -493,6 +541,18 @@ impl<'a> Program<'a> {
                 tasks.push(Task::Branch(t, e));
                 tasks.push(Task::Eval(c));
             }
+            Ir::Tuple(parts) => {
+                tasks.push(Task::Apply(node));
+                tasks.extend(parts.iter().rev().map(Task::Eval));
+            }
+            Ir::Project(base, _) => {
+                tasks.push(Task::Apply(node));
+                tasks.push(Task::Eval(base));
+            }
+            Ir::Match { scrutinee, arms } => {
+                tasks.push(Task::Arms(arms));
+                tasks.push(Task::Eval(scrutinee));
+            }
             // Typed and costed since S10b, never evaluated before S10c-1 (VER04r 13, S10):
             // fail closed, naming the level.
             Ir::Fixed { .. } => {
@@ -549,6 +609,20 @@ impl<'a> Program<'a> {
                 out.extend_from_slice(y);
                 Value::Bytes(Rc::from(out))
             }
+            Ir::Tuple(parts) => {
+                let at = vals
+                    .len()
+                    .checked_sub(parts.len())
+                    .ok_or_else(|| GenError::internal("a tuple lost its components"))?;
+                Value::Tuple(vals.drain(at..).collect())
+            }
+            Ir::Project(_, index) => match pop(vals)? {
+                Value::Tuple(items) => items
+                    .into_iter()
+                    .nth(*index)
+                    .ok_or_else(|| ill_typed("a tuple with that component"))?,
+                _ => return Err(ill_typed("a tuple operand")),
+            },
             Ir::Take(..) | Ir::Drop(..) => {
                 let n = pop(vals)?.as_int()?;
                 let x = pop(vals)?;
@@ -609,7 +683,12 @@ impl<'a> Program<'a> {
     ///
     /// `W0701` for a subject call under an impure guard (the lowering already refuses it)
     /// and every [`Program::eval`] error.
-    pub fn trace(&self, ir: &Ir, vars: &Vars<'_>, st: &mut Stats) -> Result<u64, GenError> {
+    pub fn trace<'c>(
+        &self,
+        ir: &'c Ir,
+        vars: &'c Vars<'c>,
+        st: &mut Stats,
+    ) -> Result<u64, GenError> {
         let impure = || {
             GenError::new(
                 code::W0701,
@@ -617,17 +696,22 @@ impl<'a> Program<'a> {
                 "a subject call under an impure guard (VER04r 4.4)",
             )
         };
-        let mut stack = vec![ir];
+        // The scopes of the `match` arms taken so far: the case's variables plus the pattern's
+        // binders.  `None` is the case's own variables.
+        let mut scopes: Vec<Vec<(&'c str, Value)>> = Vec::new();
+        let mut stack: Vec<(&'c Ir, Option<usize>)> = vec![(ir, None)];
         let mut calls = 0u64;
-        while let Some(node) = stack.pop() {
+        while let Some((node, scope)) = stack.pop() {
             if !node.has_subject() {
                 // Every pure node on the trace that can wrap or leave a bound is evaluated,
                 // so a failure surfaces here and not in every lane (VER04r 3.2, 3.3).
                 if self.may_fail_or_wrap(node) {
-                    self.eval(node, vars, st)?;
+                    let env: &Vars<'_> = scope.map_or(vars, |i| scopes[i].as_slice());
+                    self.eval(node, env, st)?;
                 }
                 continue;
             }
+            let env: &Vars<'_> = scope.map_or(vars, |i| scopes[i].as_slice());
             match node {
                 Ir::Subject { op, args, .. } => {
                     calls += 1;
@@ -639,7 +723,7 @@ impl<'a> Program<'a> {
                             vals.push(if a.has_subject() {
                                 None
                             } else {
-                                Some(self.eval(a, vars, &mut Stats::default())?)
+                                Some(self.eval(a, env, &mut Stats::default())?)
                             });
                         }
                         if !self.admits_call(op, &vals)? {
@@ -648,17 +732,17 @@ impl<'a> Program<'a> {
                     }
                     // Left to right, as the oracle walks: the first offending call of a case
                     // is the same one in both (a stack pops the last pushed first).
-                    stack.extend(args.iter().rev());
+                    stack.extend(args.iter().rev().map(|a| (a, scope)));
                 }
                 Ir::If(c, t, e) => {
                     if t.has_subject() || e.has_subject() {
                         if c.has_subject() {
                             return Err(impure());
                         }
-                        let taken = self.eval(c, vars, st)?.as_bool()?;
-                        stack.push(if taken { t } else { e });
+                        let taken = self.eval(c, env, st)?.as_bool()?;
+                        stack.push((if taken { t } else { e }, scope));
                     } else {
-                        stack.push(c);
+                        stack.push((c, scope));
                     }
                 }
                 Ir::Logic(op, a, b) => {
@@ -666,26 +750,53 @@ impl<'a> Program<'a> {
                         if a.has_subject() {
                             return Err(impure());
                         }
-                        let left = self.eval(a, vars, st)?.as_bool()?;
+                        let left = self.eval(a, env, st)?.as_bool()?;
                         let runs = match op {
                             Logic::And | Logic::Implies => left,
                             Logic::Or => !left,
                         };
                         if runs {
-                            stack.push(b);
+                            stack.push((b, scope));
                         }
                     } else {
-                        stack.push(a);
+                        stack.push((a, scope));
                     }
                 }
-                other => stack.extend(other.children().into_iter().rev()),
+                Ir::Match { scrutinee, arms } => {
+                    // A `match` arm is a guard whose condition is the scrutinee (VER04r 4.4).
+                    if arms.iter().any(|(_, body)| body.has_subject()) {
+                        if scrutinee.has_subject() {
+                            return Err(impure());
+                        }
+                        let value = self.eval(scrutinee, env, st)?;
+                        let mut picked = None;
+                        for (pattern, body) in arms {
+                            let mut found: Vec<(&'c str, Value)> = Vec::new();
+                            if match_pattern(pattern, &value, &mut found) {
+                                picked = Some((body, found));
+                                break;
+                            }
+                        }
+                        let Some((body, found)) = picked else {
+                            return Err(GenError::internal("a match fell through"));
+                        };
+                        let mut inner: Vec<(&'c str, Value)> = env.to_vec();
+                        inner.extend(found);
+                        scopes.push(inner);
+                        stack.push((body, Some(scopes.len() - 1)));
+                    } else {
+                        // Only the scrutinee calls: the arms are not on the trace.
+                        stack.push((scrutinee, scope));
+                    }
+                }
+                other => stack.extend(other.children().into_iter().rev().map(|c| (c, scope))),
             }
         }
         Ok(calls)
     }
 
-    /// The call count of `ir` when it does not depend on the case: no `if` or short
-    /// circuit has a subject in a branch.  `None` means "trace each case".
+    /// The call count of `ir` when it does not depend on the case: no `if`, short
+    /// circuit or `match` arm has a subject in a branch.  `None` means "trace each case".
     pub fn static_calls(&self, ir: &Ir) -> Option<u64> {
         let mut stack = vec![ir];
         let mut calls = 0u64;
@@ -702,6 +813,10 @@ impl<'a> Program<'a> {
                 Ir::If(c, ..) => stack.push(c),
                 Ir::Logic(_, _, b) if b.has_subject() => return None,
                 Ir::Logic(_, a, _) => stack.push(a),
+                Ir::Match { arms, .. } if arms.iter().any(|(_, b)| b.has_subject()) => {
+                    return None
+                }
+                Ir::Match { scrutinee, .. } => stack.push(scrutinee),
                 other => stack.extend(other.children()),
             }
         }
@@ -736,6 +851,10 @@ enum Task<'t> {
     CheckBool,
     /// `if`: the condition is on the stack; take one branch.
     Branch(&'t Ir, &'t Ir),
+    /// `match`: the scrutinee's value is on the stack; evaluate the first arm that matches.
+    Arms(&'t [(Pat, Ir)]),
+    /// Close the binders of the arm just evaluated.
+    PopBinds(usize),
 }
 
 fn pop(vals: &mut Vec<Value>) -> Result<Value, GenError> {
