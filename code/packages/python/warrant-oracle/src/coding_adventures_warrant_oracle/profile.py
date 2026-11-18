@@ -22,6 +22,12 @@ item 7, closed by slice S4 part 2) no token that is empty or not printable ASCII
 every candidate claim is blind to.  The reader checks that the line repeats a ``fault``
 line of the same file and does not repeat itself; that the fault really is all-blind is
 checked against the document (:func:`.faults.derive_controls`).
+
+``omit_example <id>`` (owner decisions [D22] and [D34], section 8.4) removes one example from
+``examples`` when the tool can decide that it is inexpressible.  The line carries only the id;
+the *reason* is computed (:mod:`.corpus_v2`).  The reader checks the token count and that the
+line does not repeat itself; that the id names an example, and that the example really is
+inexpressible, are checked against the document.
 """
 
 from __future__ import annotations
@@ -48,6 +54,7 @@ class Profile:
     slim_chunks: list = field(default_factory=list)  # [(claim, index)]
     faults: list = field(default_factory=list)  # [(op, fault)]
     accept_blind: list = field(default_factory=list)  # [(op, fault)]
+    omit_examples: list = field(default_factory=list)  # [example id], in file order
 
 
 def _int(text: str) -> int:
@@ -110,6 +117,10 @@ def parse_profile(raw: bytes) -> Profile:
             if row in prof.accept_blind:
                 raise OracleError("corpus", "an accept_blind line is repeated")
             prof.accept_blind.append(row)
+        elif key == "omit_example" and len(parts) == 2:
+            if parts[1] in prof.omit_examples:
+                raise OracleError("corpus", "an omit_example line is repeated")
+            prof.omit_examples.append(parts[1])
         else:
             raise OracleError("corpus", "an unknown or malformed profile line")
     if any(row not in prof.faults for row in prof.accept_blind):
