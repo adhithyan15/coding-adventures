@@ -145,17 +145,19 @@ def test_the_walk_is_depth_bounded_like_the_generators():
     assert err.value.code == "limit"
 
 
-def test_a_level_refusal_wins_in_evaluation_but_the_dump_shows_the_refusal():
-    # a claim that is both ir.fixed and impure: the generator meets the level first (while typing),
-    # and only its dump mode, which accepts ir.fixed, reaches the guard rule.
+def test_an_ir_fixed_claim_that_is_impure_is_refused_by_both_the_evaluation_and_the_dump():
+    # Until S10c-1 a claim that was both ir.fixed and impure showed the *level* first in evaluation
+    # (the generator meets the level while typing) and the guard rule only in the dump, which
+    # accepted ir.fixed.  ir.fixed is evaluated now, so there is no level to meet: both refuse the
+    # guard (W0701, code ``generation``).
     claim = "f(a) == bit_not(a) or f(a) == a"
     data = document(claim)
     suite = lower_document(parse_source(data)).suites[0]
-    assert suite.unsupported is not None and suite.unsupported.code == "level"
+    assert suite.unsupported is None
     assert suite.refusal is not None and "impure guard" in suite.refusal.message
     with pytest.raises(OracleError) as err:
         derive(data, b"", spec_ref="g.warrant", generator={"name": "t", "version": "0"})
-    assert err.value.code == "level"
+    assert err.value.code == "generation"
     with pytest.raises(OracleError) as err:
         view(data)
     assert err.value.code == "generation"

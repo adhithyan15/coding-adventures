@@ -781,14 +781,14 @@ def test_requires_takes_the_call_closure_through_a_model_that_uses_a_tuple():
     assert spec.suites[0].requires == ("ir.core", "ir.tuple")
 
 
-def test_requires_unions_ir_fixed_and_ir_tuple_and_names_the_unevaluable_level():
+def test_requires_unions_ir_fixed_and_ir_tuple_and_the_suite_is_evaluable():
     spec = lower(
         "warrant t v1\n  op f(a: U8) -> (U8,U8)\n"
         "  claim c:\n    forall a: U8. f(a) == (bit_not(a), a)\n"
     )
     suite = spec.suites[0]
     assert suite.requires == ("ir.core", "ir.fixed", "ir.tuple")
-    assert suite.unsupported.level == "ir.fixed"  # fixed is lowered, not evaluated (S10c-1)
+    assert suite.unsupported is None  # ir.fixed is evaluated since S10c-1
 
 
 # -- the lzw acceptance conditions (VER04r 13, the lzw adopter row) ----------------------------------------------
@@ -798,42 +798,26 @@ LZW_MATCH = (
     "bomb_512_units_is_under_the_cap_and_decodes",
     "bomb_1024_units_declaring_exactly_the_cap_delivers_the_cap",
 )
-LZW_EQ = (
-    "bomb_1024_units_is_rejected",
-    "bomb_1024_units_declaring_one_byte_over_the_cap_is_rejected",
-    "bomb_1024_units_declaring_one_gibibyte_is_rejected",
-    "bomb_1024_units_declaring_1024_bytes_delivers_them",
-)
 
 
 def test_lzw_match_examples_lower_and_are_not_op_eq_pure():
     """The two ``match decompress(..) with Ok/Err`` bomb examples lower (S10t-1) and classify as
-    ``not-op-eq-pure`` under an ``omit_example`` line; the four eq-shaped ones need ``be_bytes``
-    evaluation (S10c) and still refuse at the level ``ir.fixed``."""
+    ``not-op-eq-pure`` under an ``omit_example`` line.  Since S10c-1 they are evaluable at every
+    level they use (``be_bytes`` in ``bomb512``), and the four eq-shaped ones classify as
+    ``value-over-limit`` (``tests/test_fixed_lzw.py``)."""
     from coding_adventures_warrant_oracle.corpus_v2 import example_id, omit_reason
 
     spec = lower(adopter_bytes("lzw"))
-    prog = build_program(spec, analyze=True, max_cost=65_536)
+    prog = build_program(spec, max_cost=65_536)
     by_name = {x.name: x for x in spec.examples}
     for name in LZW_MATCH:
         ex = by_name[name]
         # it lowered: a ``match`` with the scrutinee ``decompress(..)`` and the arms Ok(r) / Err(e)
         assert ex.body[0] == "match" and ex.body[1][0] == "subject_op"
         assert ex.body[2][0][0] == ["ok", ["bind", "r"]] and ex.body[2][1][0] == ["err_any"]
-        # its only level problem is ir.fixed (bomb512 uses be_bytes): the tuple level is lowered
-        assert ex.unsupported.level == "ir.fixed" and set(ex.requires) == {
-            "ir.core",
-            "ir.fixed",
-            "ir.tuple",
-        }
+        assert ex.unsupported is None and set(ex.requires) == {"ir.core", "ir.fixed", "ir.tuple"}
         assert omit_reason(spec, prog, ex) == "not-op-eq-pure"
         assert example_id(spec, ex) == f"warrant/lzw/example/{name}"
-    for name in LZW_EQ:
-        ex = by_name[name]
-        assert ex.unsupported.level == "ir.fixed"
-        with pytest.raises(OracleError) as err:  # be_bytes is evaluated from S10c
-            omit_reason(spec, prog, ex)
-        assert err.value.code == "level" and err.value.level == "ir.fixed"
 
 
 def test_lzw_match_examples_are_omitted_by_the_profile_line_machinery():
@@ -841,7 +825,7 @@ def test_lzw_match_examples_are_omitted_by_the_profile_line_machinery():
     from coding_adventures_warrant_oracle.corpus_v2 import _examples, example_id
 
     spec = lower(adopter_bytes("lzw"))
-    prog = build_program(spec, analyze=True, max_cost=65_536)
+    prog = build_program(spec, max_cost=65_536)
     spec.examples = [x for x in spec.examples if x.name in LZW_MATCH]
     ids = [example_id(spec, x) for x in spec.examples]
     rows, tfv_text, omitted = _examples(spec, prog, ids)

@@ -88,7 +88,7 @@ def test_reordered_faults_and_controls_are_mismatches():
 
 
 def test_unsupported_models_are_reported_not_agreed():
-    src = b"warrant ct_compare v1\n  op f(a: U8) -> U8\n  model m(a: U8) -> U8 = bit_not(a)\n  claim c:\n    forall a: U8. f(a) == a\n"
+    src = b"warrant ct_compare v1\n  op f(a: U8) -> U8\n  model m(a: U8) -> Nat = len([a])\n  claim c:\n    forall a: U8. f(a) == a\n"
     import hashlib
 
     corpus = copy.deepcopy(CORPUS)
