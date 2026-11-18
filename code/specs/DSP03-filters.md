@@ -230,8 +230,8 @@ token spells the value as `1`, `1.0`, or `1e0`. The Python loader converts
 accepted chunk lengths to Python integers before slicing. Both language
 loaders reject booleans, strings, nonintegral values, nonfinite values, and
 structural values that do not equal the required small integer. General
-numeric slots must be finite binary64 values; cross-lane decoders then apply
-the declared f64-to-f32 exactness check. JSON objects with duplicate field
+numeric slots must be finite binary64 values; the Rust fixture consumer also
+applies the declared f64-to-f32 exactness check. JSON objects with duplicate field
 names are rejected by the Python loader.
 
 The canonical fixture uses integer tokens for its version and chunk lengths.
@@ -258,8 +258,8 @@ parser's signed-64-bit integer representation, the adapter may retry after
 changing only that complete numeric token to a decimal-exponent spelling with
 the same binary64 parse result. The parser's reported byte offset is only a
 candidate locator. The adapter independently verifies signed-64-bit overflow,
-the complete `-?[1-9][0-9]*` token, and JSON value delimiters (BOF, `[`, or
-`:` before it; EOF, `,`, `]`, or `}` after it), allowing only JSON whitespace
+the complete `-?[1-9][0-9]*` token, and JSON value delimiters (BOF, `[`, `,`,
+or `:` before it; EOF, `,`, `]`, or `}` after it), allowing only JSON whitespace
 around delimiters. It then requires a finite binary64 parse before insertion
 of `e0`. It must not rewrite fractions, existing exponents, strings,
 malformed numbers, or values whose binary64 parse is non-finite. Reparse the
@@ -267,7 +267,8 @@ whole document with the same depth limit after each bounded repair, so
 duplicate keys and all other syntax errors remain visible. At most 70 repairs
 are permitted for this fixed fixture schema. Tests pin positive/negative
 overflow offsets, including a UTF-8 prefix, and cover accepted wide integers
-plus fraction, exponent, quoted, malformed, overflow-to-infinity,
+in the first and a later array slot (for example
+`[0,18446744073709551616,0,1,0,0]`), plus fraction, exponent, quoted, malformed, overflow-to-infinity,
 duplicate-key, and retry-limit controls. This test-only adaptation is not a
 general JSON parser or production API and makes no offset claim for other
 parser implementations.
