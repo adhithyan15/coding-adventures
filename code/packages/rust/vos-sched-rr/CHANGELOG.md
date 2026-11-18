@@ -2,6 +2,13 @@
 
 All notable changes to this package are documented here.
 
+## Unreleased — heap rows restored (VOS-038c)
+
+- `heap <= 0` is declared on every bound operation again (VOS-D063): the harness's heap observer now
+  counts the export call only, not its own result marshalling. `warrant/impl.part`, the generated
+  `code/specs/vos-sched-rr.warrant`, `tests/generated/warrant_evidence.rs` and `evidence/test-manifest.json`
+  regenerated; every operation records `max_observed_heap 0`.
+
 ## Unreleased — regenerated evidence harness (VOS-038b)
 
 - `tests/generated/warrant_evidence.rs` regenerated with `gen_evidence` for the observer timeout clamp (`WARRANT_OBS_TIMEOUT_SECS` at most 24 h, `checked_add` deadline; VER04j). No test, case count or recorded evidence manifest changes.
