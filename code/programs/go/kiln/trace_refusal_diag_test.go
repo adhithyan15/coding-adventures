@@ -5,6 +5,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 
@@ -137,6 +138,9 @@ func logStepTraces(t testing.TB, recDir, action string) {
 }
 
 func TestTraceRefusalPath(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("the fixtures are POSIX absolute paths (/tmp/...), which filepath.IsAbs refuses on Windows; strace traces are Linux-only")
+	}
 	root := filepath.Join(string(filepath.Separator), "tmp", "t1")
 	in := func(rel string) string { return filepath.Join(root, rel) }
 	msg := func(p string) string {
