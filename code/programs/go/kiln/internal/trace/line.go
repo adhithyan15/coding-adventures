@@ -232,7 +232,7 @@ func isExitName(n string) bool { return n == "exit_group" || n == "exit" }
 type lineState struct {
 	pend map[int]*pending
 	// execs indexes the pending execve calls (see setPending).
-	execs map[string][]int
+	execs map[string]*execQueue
 	root  int // pid of the first line
 	// helper is HelperRoot: name classification (unknown, refused) is DEFERRED
 	// to pass 2, because whether a name is refused depends on which process
@@ -267,17 +267,40 @@ type pending struct {
 }
 
 // setPending and clearPending are the only places a pending call is added or
-// removed, in all three readers.  Besides the pend map they keep st.execs, the
-// pids of the pending execve calls per text-before-"<unfinished ...>", in line
+// removed, in all three readers.  Besides the pend map they keep st.execs, a
+// FIFO per text-before-"<unfinished ...>" of the pending execve calls, in line
 // order, so ghostOwner finds its owner without scanning the whole map (D33).
 // st.execs is derived state: it is not part of the reader-agreement comparison.
+//
+// The FIFO is lazy: removing a call from the middle costs nothing (the entry
+// just goes stale), and only the head is trimmed, so N same-text calls
+// resumed in any order cost O(N) in all, not O(N^2).  An entry is live only if
+// the pid's pending call is still that very call (same line), so a reused pid
+// cannot revive a stale entry.
+type execQueue struct {
+	ents []execEnt
+	head int
+}
+
+type execEnt struct{ pid, line int }
+
+func (st *lineState) execLive(e execEnt) bool {
+	p := st.pend[e.pid]
+	return p != nil && p.line == e.line && p.name == "execve"
+}
+
 func (st *lineState) setPending(pid int, p *pending) {
 	st.pend[pid] = p
 	if p.name == "execve" {
 		if st.execs == nil {
-			st.execs = map[string][]int{}
+			st.execs = map[string]*execQueue{}
 		}
-		st.execs[p.prefix] = append(st.execs[p.prefix], pid)
+		q := st.execs[p.prefix]
+		if q == nil {
+			q = &execQueue{}
+			st.execs[p.prefix] = q
+		}
+		q.ents = append(q.ents, execEnt{pid, p.line})
 	}
 }
 
@@ -288,17 +311,13 @@ func (st *lineState) clearPending(pid int) {
 	}
 	delete(st.pend, pid)
 	if p.name == "execve" {
-		l := st.execs[p.prefix]
-		for i, q := range l {
-			if q == pid {
-				l = append(l[:i:i], l[i+1:]...)
-				break
+		if q := st.execs[p.prefix]; q != nil {
+			for q.head < len(q.ents) && !st.execLive(q.ents[q.head]) {
+				q.head++
 			}
-		}
-		if len(l) == 0 {
-			delete(st.execs, p.prefix)
-		} else {
-			st.execs[p.prefix] = l
+			if q.head == len(q.ents) {
+				delete(st.execs, p.prefix)
+			}
 		}
 	}
 }
@@ -327,21 +346,29 @@ func exitInsideCall(st *lineState, pid int, ex *Exit) *Error {
 
 // ghostOwner finds the pending execve a phantom "execve(" line copies (D33), or
 // nil when the line is not a phantom.  Every condition is in the file head
-// ("A phantom execve").  st.execs lists the candidates (same text) in line
-// order, so the first other pid is the earliest: the answer is deterministic,
+// ("A phantom execve").  st.execs queues the candidates (same text) in line
+// order, so the first live entry is the earliest: the answer is deterministic,
 // and it must also be EARLIER than the ghost's own line.
 func ghostOwner(st *lineState, pid int, p *pending, ex *Exit) *pending {
 	if p.name != "execve" || p.sawSignal || len(p.ghosts) != 0 || ex.Killed || ex.Code != 0 ||
 		!strings.HasPrefix(p.prefix, `execve("/`) {
 		return nil
 	}
-	for _, q := range st.execs[p.prefix] {
-		if q != pid {
-			if l := st.pend[q]; l.line < p.line {
-				return l
-			}
+	// The head of the queue is the earliest live execve of this text (clearPending
+	// trims dead entries off the head).  If it is the ghost itself, nothing
+	// earlier exists; if an entry is stale anyway, skip it rather than trust it.
+	q := st.execs[p.prefix]
+	if q == nil {
+		return nil
+	}
+	for _, e := range q.ents[q.head:] {
+		if !st.execLive(e) {
+			continue
+		}
+		if e.pid == pid || e.line >= p.line {
 			return nil
 		}
+		return st.pend[e.pid]
 	}
 	return nil
 }

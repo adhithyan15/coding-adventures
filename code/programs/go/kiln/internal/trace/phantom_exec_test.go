@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"strings"
 	"testing"
+	"time"
 )
 
 // The phantom execve (D33): a thread that de_thread killed at a syscall-entry
@@ -298,6 +299,32 @@ func TestPhantomExecBeyondTheDepthBound(t *testing.T) {
 	}
 	if got := strings.Split(diff, "\n")[e.Line-1]; !strings.HasPrefix(got, strconv.Itoa(p+depth)+"  execve(") {
 		t.Fatalf("refused line %d is %q, want the ghost's", e.Line, got)
+	}
+}
+
+// Many pending execves of one text, resumed in order, must not cost O(N^2)
+// (the owner index removes entries lazily).  20000 would take tens of seconds
+// of copying with a list that is rebuilt on every removal; the bound is generous.
+func TestPhantomExecIndexIsLinear(t *testing.T) {
+	const n = 20000
+	var b strings.Builder
+	for k := 2; k < n+2; k++ {
+		b.WriteString(clones(1, k))
+	}
+	for k := 2; k < n+2; k++ {
+		b.WriteString(unf(k))
+	}
+	for k := 2; k < n+2; k++ {
+		b.WriteString(resumed(k))
+	}
+	for k := 2; k < n+2; k++ {
+		b.WriteString(exited(k))
+	}
+	b.WriteString(exited(1))
+	start := time.Now()
+	mustParse(t, b.String())
+	if d := time.Since(start); d > 10*time.Second {
+		t.Fatalf("%d same-text pending execves took %v: not linear", n, d)
 	}
 }
 
