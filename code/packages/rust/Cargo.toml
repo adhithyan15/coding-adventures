@@ -1535,4 +1535,5 @@ members = [
   "vos-probe-ready",
   "vos-sched-fp-bitmap",
   "vos-sched-rr",
+  "rsa-pss-sha512-signature",
 ]

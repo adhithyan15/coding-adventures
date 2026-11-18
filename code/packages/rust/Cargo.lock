@@ -11986,6 +11986,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "rsa-pss-sha512-signature"
+version = "0.1.0"
+dependencies = [
+ "der-asn1",
+ "rsa-pss-encoded-message-layout",
+ "rsa-pss-sha512",
+ "rsa-public-operation",
+ "x509-rsa-public-key",
+ "x509-subject-public-key-info",
+]
+
+[[package]]
 name = "rsa-public-operation"
 version = "0.1.0"
 dependencies = [
