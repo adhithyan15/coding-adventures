@@ -135,23 +135,36 @@ def test_shrinking_primitives() -> None:
     # Bound the negative regression so the old floor-division loop fails
     # promptly instead of hanging the test process.
     assert list(islice(shrink_int(-8), 5)) == [0, -4, -6, -7]
-    assert list(shrink_int(8, 3)) == [3, 6, 7]
-    assert list(shrink_int(-8, -3)) == [-3, -6, -7]
-    assert list(shrink_int(8, 8)) == []
+    for val, target, expected in (
+        (8, 3, [3, 6, 7]),
+        (-8, -3, [-3, -6, -7]),
+        (8, 8, []),
+    ):
+        distance = abs(val - target)
+        proposals = list(islice(shrink_int(val, target), distance.bit_length() + 1))
+        assert proposals == expected
+        assert len(proposals) == distance.bit_length()
 
     # Binary bisection emits the target and each halved distance once, even
     # for translated targets and integers far beyond machine word sizes.
     for val in range(-16, 17):
         for target in range(-16, 17):
-            proposals = list(shrink_int(val, target))
+            distance = abs(val - target)
+            proposals = list(
+                islice(shrink_int(val, target), distance.bit_length() + 1)
+            )
             assert len(proposals) == len(set(proposals))
             assert all(abs(item - target) < abs(val - target) for item in proposals)
             if val != target:
                 assert proposals[0] == target
                 assert len(proposals) == abs(val - target).bit_length()
+            assert len(proposals) == distance.bit_length()
     huge_val = (1 << 4096) + 123
     huge_target = -(1 << 2048) + 17
-    huge_proposals = list(shrink_int(huge_val, huge_target))
+    huge_distance = abs(huge_val - huge_target)
+    huge_proposals = list(
+        islice(shrink_int(huge_val, huge_target), huge_distance.bit_length() + 1)
+    )
     assert len(huge_proposals) == abs(huge_val - huge_target).bit_length()
     assert len(huge_proposals) == len(set(huge_proposals))
     assert all(
@@ -205,7 +218,8 @@ def test_seeded_integer_shrink_properties() -> None:
     limit = (1 << 63) - 1
 
     def shrink_invariants(value: int, target: int) -> bool:
-        proposals = list(shrink_int(value, target))
+        distance = abs(value - target)
+        proposals = list(islice(shrink_int(value, target), distance.bit_length() + 1))
         return (
             (not proposals if value == target else proposals[0] == target)
             and len(proposals) == len(set(proposals))
@@ -213,7 +227,7 @@ def test_seeded_integer_shrink_properties() -> None:
                 abs(candidate - target) < abs(value - target)
                 for candidate in proposals
             )
-            and len(proposals) == abs(value - target).bit_length()
+            and len(proposals) == distance.bit_length()
         )
 
     result = for_all(
@@ -306,11 +320,16 @@ def test_for_all_duplicate_shrinker_proposals_still_use_budget(
         calls += 1
         return False
 
+    class ExtraPull(RuntimeError):
+        pass
+
     def repeating_shrinker(value: int):
         nonlocal yielded
-        while True:
+        for _ in range(3):
             yielded += 1
             yield value
+        yielded += 1
+        raise ExtraPull("shrinker pulled beyond its three-proposal budget")
 
     monkeypatch.setattr(pbt, "shrink_value", repeating_shrinker)
     result = for_all(
@@ -351,6 +370,27 @@ def test_for_all_multi_argument_budget_and_replay() -> None:
     assert first_run.counterexample == (False, 64)
     assert first_run.shrunken == (False, 64)
     assert first_run.shrink_steps == 1
+
+
+def test_for_all_budget_spans_arguments_and_restarts() -> None:
+    calls: list[tuple[int, int]] = []
+
+    def property_fn(first: int, second: int) -> bool:
+        calls.append((first, second))
+        return second != 8
+
+    first_gen = pbt.Gen(lambda rng: 1)
+    second_gen = pbt.Gen(lambda rng: 8)
+    result = for_all(
+        property_fn,
+        first_gen,
+        second_gen,
+        count=1,
+        max_shrink_steps=2,
+    )
+    assert calls == [(1, 8), (0, 8), (0, 0)]
+    assert result.shrunken == (0, 8)
+    assert result.shrink_steps == 2
 
 
 def test_for_all_exception_handling() -> None:
