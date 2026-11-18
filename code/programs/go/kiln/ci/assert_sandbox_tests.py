@@ -70,9 +70,20 @@ MAX_FACT_CHARS = 450
 LOG_PREFIX = "  "
 
 
+def printable(text: str) -> str:
+    """text with every character outside printable ASCII written as \\xNN.
+
+    The Actions runner treats a line that starts with "::" as a workflow command,
+    and a bare carriage return (or NEL, or any other control character a terminal
+    or log pipeline may take for a line break) inside a printed line could start
+    one.  Escaping everything but 0x20..0x7e leaves no character that can break a
+    line."""
+    return re.sub(r"[^\x20-\x7e]", lambda m: "\\x%02x" % ord(m.group()), text)
+
+
 def log_lines(text: str) -> list[str]:
     """The lines of a piece of test output, each safe to print."""
-    return [LOG_PREFIX + line for line in text.splitlines() or [""]]
+    return [LOG_PREFIX + printable(line) for line in text.splitlines() or [""]]
 
 
 def failing_output(lines: list[str], limit: int = 60) -> dict[str, list[str]]:
@@ -97,23 +108,22 @@ def failing_output(lines: list[str], limit: int = 60) -> dict[str, list[str]]:
 
 def passing_facts(lines: list[str]) -> dict[str, list[str]]:
     """The marked output lines of every test that passed: at most MAX_FACT_LINES
-    in all, each cut to MAX_FACT_CHARS."""
+    in all, each cut to MAX_FACT_CHARS.  Only complete lines count (see
+    terminated_lines)."""
     final: dict[str, str] = {}
-    found: dict[str, list[str]] = {}
+    events = []
     for line in lines:
         try:
             event = json.loads(line)
         except json.JSONDecodeError:
             continue
-        test = event.get("Test")
-        if not test:
-            continue
-        if event.get("Action") == "output":
-            for text in event.get("Output", "").splitlines():
-                if any(m in text for m in FACT_MARKERS):
-                    found.setdefault(test, []).append(LOG_PREFIX + text.strip()[:MAX_FACT_CHARS])
-        elif event.get("Action") in FINAL:
-            final[test] = event["Action"]
+        events.append(event)
+        if event.get("Test") and event.get("Action") in FINAL:
+            final[event["Test"]] = event["Action"]
+    found: dict[str, list[str]] = {}
+    for test, text in terminated_lines(events):
+        if any(m in text for m in FACT_MARKERS):
+            found.setdefault(test, []).append(LOG_PREFIX + printable(text).strip()[:MAX_FACT_CHARS])
     out: dict[str, list[str]] = {}
     budget = MAX_FACT_LINES
     for test in sorted(found):
@@ -160,11 +170,77 @@ def check(lines: list[str]) -> list[str]:
 GATE_FLOOR_MB_S = 14.0
 SYNTHETIC_LABEL = "synthetic-slice"
 SYNTHETIC_TEST = "TestSandboxTraceGateSynthetic"
-# A PROBE line as `go test -json` carries it: "    file_test.go:123: PROBE: trace
-# LABEL k=v ...".  The payload must START with "PROBE: trace " right after that
-# file:line prefix, so the text cannot be forged by a substring inside another
-# line (a trace path, an error message).
-PROBE_RE = re.compile(r"^\s*[\w.\-]+\.go:\d+: (PROBE: trace (\S+) .*)$")
+# A PROBE line as `go test -v -json` carries it (the mode CI runs): exactly four
+# spaces, then "file_test.go:123: ", then the payload, which must START with
+# "PROBE: trace ".  In -v mode EVERY t.Logf line of a test is indented exactly four
+# spaces, whatever the subtest depth (TestTop, TestTop/sub and TestTop/sub/deep
+# all print "    a_test.go:7: ...").  Only a CONTINUATION line of a multi-line
+# message is indented differently (eight spaces, and it has no file:line), so the
+# exact anchor rejects it.  (Without -v, go test indents four spaces per subtest
+# level; CI does not run that way.)  The payload anchor means the text cannot be
+# forged by a substring inside another line (a trace path, an error message).
+PROBE_RE = re.compile(r"^ {4}[\w.\-]+\.go:\d+: (PROBE: trace (\S+) .*)$")
+
+
+# The longest unterminated line terminated_lines will hold for one test.  A longer
+# one is "poisoned" (never yielded), which also keeps the buffering linear.
+MAX_PENDING_CHARS = 64 * 1024
+
+
+def terminated_lines(events: list[dict]) -> list[tuple[str, str]]:
+    """(test, line) for every COMPLETE line of every test's output, in order.
+
+    test2json cuts a long output line into Output events of at most 1024 bytes,
+    with no newline at the cut.  Taking splitlines() of each event on its own
+    would make the second half of a long line (a long %q refusal, say) look like
+    a line of its own, and an attacker-influenced refusal could then begin with
+    "    evil.go:1: PROBE: trace ...".  So the output is buffered per test and a
+    line counts only once its newline has arrived; an unterminated tail waits
+    for the next event of the same test and, if none comes, is dropped (it is
+    never a whole line)."""
+    state: dict[str, tuple[str, bool]] = {}
+    out: list[tuple[str, str]] = []
+    for event in events:
+        test = event.get("Test", "")
+        if event.get("Action") != "output" or not test:
+            continue
+        tail, poisoned = state.get(test, ("", False))
+        parts = event.get("Output", "").split("\n")
+        for i, part in enumerate(parts):
+            if not poisoned:
+                tail += part
+                if len(tail) > MAX_PENDING_CHARS:
+                    # An over-long line is never a PROBE line: drop it, and
+                    # everything up to its newline, without buffering more.
+                    poisoned, tail = True, ""
+            if i < len(parts) - 1:  # a newline ended this line
+                if not poisoned:
+                    out.append((test, tail))
+                tail, poisoned = "", False
+        state[test] = (tail, poisoned)
+    return out
+
+
+# The Go tests write every number this script trusts BEFORE the refusal fields,
+# which hold %q-quoted text a trace influenced.  Only the text before the first
+# refusal field is read for key=value pairs.
+REFUSAL_MARKERS = (" old_refusal=", " grammar_refusal=", " new_refusal=")
+FIELD_RE = re.compile(r"(\w+)=(\S+)")
+
+
+def probe_fields(payload: str) -> dict[str, str]:
+    """The key=value facts of a PROBE payload: read only from the text before the
+    first refusal field, and the FIRST occurrence of a key wins, so a refusal
+    that quotes `best_mb_s=99 gated=1` cannot override or add to the real fields."""
+    cut = len(payload)
+    for marker in REFUSAL_MARKERS:
+        at = payload.find(marker)
+        if at != -1:
+            cut = min(cut, at)
+    fields: dict[str, str] = {}
+    for key, value in FIELD_RE.findall(payload[:cut]):
+        fields.setdefault(key, value)
+    return fields
 
 
 def gated_probes(lines: list[str]) -> list[tuple[str, str, dict[str, str]]]:
@@ -180,17 +256,17 @@ def gated_probes(lines: list[str]) -> list[tuple[str, str, dict[str, str]]]:
         if event.get("Test") and event.get("Action") in FINAL:
             final[event["Test"]] = event["Action"]
     out = []
-    for event in events:
-        test = event.get("Test", "")
-        if event.get("Action") != "output" or final.get(test) != "pass":
+    for test, text in terminated_lines(events):
+        if final.get(test) != "pass":
             continue
-        for text in event.get("Output", "").splitlines():
-            m = PROBE_RE.match(text)
-            if not m:
-                continue
-            fields = dict(re.findall(r"(\w+)=(\S+)", m.group(1)))
-            if fields.get("gated") == "1":
-                out.append((test, m.group(2), fields))
+        m = PROBE_RE.match(text)
+        # A label ends in no colon: "PROBE: trace x: cannot open: ..." is an error
+        # line, not a measurement, and its text is not facts.
+        if not m or m.group(2).endswith(":"):
+            continue
+        fields = probe_fields(m.group(1))
+        if fields.get("gated") == "1":
+            out.append((test, m.group(2), fields))
     return out
 
 
@@ -230,15 +306,15 @@ def main(argv: list[str]) -> int:
         return 2
     problems = check(lines) + gate_problems(lines)
     for test, output in sorted(failing_output(lines).items()):
-        print(f"::group::output of failing test {test}")
+        print(f"::group::output of failing test {printable(test)}")
         print("\n".join(output))
         print("::endgroup::")
     for test, facts in passing_facts(lines).items():
-        print(f"::group::facts logged by passing test {test}")
+        print(f"::group::facts logged by passing test {printable(test)}")
         print("\n".join(facts))
         print("::endgroup::")
     for problem in problems:
-        print(f"::error::{problem}")
+        print(f"::error::{printable(problem)}")
     if problems:
         return 1
     print(f"all {len(REQUIRED)} sandbox tests ran and passed, none skipped")
