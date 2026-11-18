@@ -10,6 +10,7 @@
 //!   Value::Bytes(Rc<[u8]>)     Bytes and Bytes<N>
 //!   Value::Ok(Box<Value>)      Ok(v)       of a Result
 //!   Value::Err(Rc<str>)        Err(E.CASE) of a Result (the case name; errors are nominal)
+//!   Value::Tuple(Vec<Value>)   (v1, .., vn)  an `ir.tuple` value, 2 to 8 components (S10t-2)
 //! ```
 //!
 //! An `i128` holds every `U64` and every `I64` exactly, and every exact `Nat`/`Int`
@@ -38,6 +39,8 @@ pub enum Value {
     Ok(Box<Value>),
     /// `Err(E.CASE)`: the case name.
     Err(Rc<str>),
+    /// `(v1, .., vn)`: the components in order (`ir.tuple`).  Equality is component-wise.
+    Tuple(Vec<Value>),
 }
 
 impl Value {
@@ -50,8 +53,9 @@ impl Value {
     ///
     /// # Errors
     ///
-    /// `level [ir.data]` for a list, option, tuple, record or variant: those belong to a
-    /// later level and never reach an `ir.core` binder.
+    /// `level [ir.data]` for a list, option, record or variant: those belong to a later level
+    /// and never reach a binder of a document this generator emits.  A tuple converts
+    /// component by component (`ir.tuple`).
     pub fn from_eval(v: &EvalValue) -> Result<Value, GenError> {
         Ok(match v {
             EvalValue::Bool(b) => Value::Bool(*b),
@@ -63,14 +67,17 @@ impl Value {
             EvalValue::Bytes(b) => Value::bytes(b),
             EvalValue::Result(Ok(inner)) => Value::Ok(Box::new(Value::from_eval(inner)?)),
             EvalValue::Result(Err((_, case))) => Value::Err(Rc::from(case.as_str())),
-            EvalValue::List(_)
-            | EvalValue::Option(_)
-            | EvalValue::Tuple(_)
-            | EvalValue::Con { .. } => {
+            EvalValue::Tuple(items) => Value::Tuple(
+                items
+                    .iter()
+                    .map(Value::from_eval)
+                    .collect::<Result<Vec<_>, _>>()?,
+            ),
+            EvalValue::List(_) | EvalValue::Option(_) | EvalValue::Con { .. } => {
                 return Err(GenError::level(
                     Beyond::IrData,
                     "",
-                    "a list, option, tuple, record or variant value needs ir.data",
+                    "a list, option, record or variant value needs ir.data",
                 ))
             }
         })
@@ -150,11 +157,30 @@ mod tests {
     }
 
     #[test]
+    fn tuples_convert_component_by_component_and_compare_structurally() {
+        let t = EvalValue::Tuple(vec![
+            EvalValue::Bool(true),
+            EvalValue::Tuple(vec![EvalValue::Nat(3), EvalValue::Bytes(vec![1])]),
+        ]);
+        let v = Value::from_eval(&t).unwrap();
+        assert_eq!(
+            v,
+            Value::Tuple(vec![
+                Value::Bool(true),
+                Value::Tuple(vec![Value::Int(3), Value::bytes(&[1])])
+            ])
+        );
+        assert_ne!(v, Value::Tuple(vec![Value::Bool(true)]));
+        // a list inside a tuple is still ir.data
+        let bad = EvalValue::Tuple(vec![EvalValue::Bool(true), EvalValue::List(vec![])]);
+        assert_eq!(Value::from_eval(&bad).unwrap_err().level, Some("ir.data"));
+    }
+
+    #[test]
     fn composites_are_ir_data_and_refused_naming_the_level() {
         for v in [
             EvalValue::List(vec![]),
             EvalValue::Option(None),
-            EvalValue::Tuple(vec![]),
             EvalValue::Con {
                 ty: "T".into(),
                 index: 0,

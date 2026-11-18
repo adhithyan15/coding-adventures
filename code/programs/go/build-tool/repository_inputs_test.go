@@ -510,6 +510,34 @@ func TestRepositoryInputConsumersForChange(t *testing.T) {
 	}
 }
 
+func TestVer04pDomainDiagnosticSelectsWarrantGrammar(t *testing.T) {
+	packages := []discovery.Package{{Name: "rust/warrant-grammar", Language: "rust"}}
+	cases := map[string]bool{
+		"code/specs/VER04p-warrant-floats.md":                true,
+		"code/scripts/ver04p_domain_witnesses.py":            true,
+		"code/scripts/tests/test_ver04p_domain_witnesses.py": true,
+		"code/specs/VER04p-warrant-floats.md.bak":            false,
+		"code/scripts/tests/test_other_domain_witnesses.py":  false,
+		"code/specs/AUDIO-WORKSTATION-BACKLOG.md":            false,
+	}
+	for path, want := range cases {
+		if got := isWarrantGrammarInput(path); got != want {
+			t.Errorf("isWarrantGrammarInput(%q) = %v, want %v", path, got, want)
+		}
+		got, err := repositoryInputConsumersForChange([]string{path}, packages, "all")
+		if err != nil {
+			t.Fatal(err)
+		}
+		wantConsumers := map[string]bool{}
+		if want {
+			wantConsumers["rust/warrant-grammar"] = true
+		}
+		if !reflect.DeepEqual(got, wantConsumers) {
+			t.Errorf("change %q selects %v, want %v", path, got, wantConsumers)
+		}
+	}
+}
+
 // mosaicGuardWorld writes a miniature repository with the real dependency
 // shape: the guard crate depends on the manifest crate, the artifact builder
 // depends on the guard, and a Mosaic app depends on the toolkit through its

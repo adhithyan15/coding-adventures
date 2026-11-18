@@ -7,8 +7,15 @@
 #![forbid(unsafe_code)]
 
 use coding_adventures_hkdf::{FixedHkdfHash, HkdfPrk, HkdfPrkImportError};
+use core::cell::Cell;
 use core::fmt;
 use tls13_cipher_suite_policy::{HkdfHash, SelectedCipherSuite};
+use tls13_inner_plaintext::Tls13InnerPlaintextPolicy;
+use tls13_record::{Tls13CiphertextPolicy, TlsContentType};
+use tls13_record_protection::{
+    open_tls13_record, seal_tls13_record, OpenedTls13Record, RecordProtectionError, Tls13Plaintext,
+};
+use tls13_record_protection_state::{RecordProtectionState, RecordProtectionStateError};
 use tls13_retry_handshake_traffic_secrets_binding::{
     BoundRetryHandshakeTrafficSecrets, ExactRetryBaseSecrets,
 };
@@ -56,6 +63,110 @@ impl std::error::Error for RetryHandshakeTrafficKeyMaterialBindingError {
             Self::KeyMaterial(error) => Some(error),
             Self::CipherSuiteMismatch => None,
         }
+    }
+}
+
+/// Stable payload-free failures while issuing exact retry record state.
+#[derive(Debug, Eq, PartialEq)]
+pub enum RetryHandshakeRecordProtectionStateBindingError {
+    /// This issuer already created record state for the requested sender.
+    SenderAlreadyIssued,
+    /// Repository-owned key-material binding failed.
+    KeyMaterial(RetryHandshakeTrafficKeyMaterialBindingError),
+    /// Repository-owned record-state construction failed.
+    RecordState(RecordProtectionStateError),
+}
+
+impl fmt::Display for RetryHandshakeRecordProtectionStateBindingError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str(match self {
+            Self::SenderAlreadyIssued => {
+                "TLS 1.3 retry handshake record state already issued for sender"
+            }
+            Self::KeyMaterial(_) => "TLS 1.3 retry handshake record-state key derivation failed",
+            Self::RecordState(_) => "TLS 1.3 retry handshake record-state composition failed",
+        })
+    }
+}
+
+impl std::error::Error for RetryHandshakeRecordProtectionStateBindingError {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        match self {
+            Self::KeyMaterial(error) => Some(error),
+            Self::RecordState(error) => Some(error),
+            Self::SenderAlreadyIssued => None,
+        }
+    }
+}
+
+/// Stable payload-free failures while binding retry handshake records.
+#[derive(Debug, Eq, PartialEq)]
+pub enum RetryHandshakeRecordBindingError {
+    /// Repository-owned TLS 1.3 record protection failed.
+    RecordProtection(RecordProtectionError),
+    /// A successfully authenticated record was not a handshake record.
+    UnexpectedContentType,
+}
+
+impl fmt::Display for RetryHandshakeRecordBindingError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str(match self {
+            Self::RecordProtection(_) => "TLS 1.3 retry handshake record protection failed",
+            Self::UnexpectedContentType => {
+                "TLS 1.3 retry record authenticated with a non-handshake content type"
+            }
+        })
+    }
+}
+
+impl std::error::Error for RetryHandshakeRecordBindingError {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        match self {
+            Self::RecordProtection(error) => Some(error),
+            Self::UnexpectedContentType => None,
+        }
+    }
+}
+
+/// One caller-owned handshake plaintext request.
+///
+/// This value intentionally derives neither `Copy` nor `Clone` so the sealed
+/// proof can retain the exact request rather than detached replacement bytes.
+pub struct RetryHandshakePlaintext<'content> {
+    content: &'content [u8],
+    padding_length: usize,
+}
+
+impl<'content> RetryHandshakePlaintext<'content> {
+    /// Retain exact handshake content and the requested zero-padding length.
+    #[must_use]
+    pub const fn new(content: &'content [u8], padding_length: usize) -> Self {
+        Self {
+            content,
+            padding_length,
+        }
+    }
+
+    /// Borrow the exact handshake content.
+    #[must_use]
+    pub const fn content(&self) -> &'content [u8] {
+        self.content
+    }
+
+    /// Return the requested zero-padding length.
+    #[must_use]
+    pub const fn padding_length(&self) -> usize {
+        self.padding_length
+    }
+}
+
+impl fmt::Debug for RetryHandshakePlaintext<'_> {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("RetryHandshakePlaintext")
+            .field("content", &"[REDACTED]")
+            .field("padding_length", &self.padding_length)
+            .finish()
     }
 }
 
@@ -118,6 +229,518 @@ impl<Evidence: ExactRetryBaseSecrets + ?Sized> fmt::Debug
             .field("key_material", &"[SECRET]")
             .finish()
     }
+}
+
+const CLIENT_STATE_ISSUED: u8 = 1;
+const SERVER_STATE_ISSUED: u8 = 2;
+
+impl HandshakeTrafficSender {
+    const fn issuance_bit(self) -> u8 {
+        match self {
+            Self::Client => CLIENT_STATE_ISSUED,
+            Self::Server => SERVER_STATE_ISSUED,
+        }
+    }
+}
+
+/// Single-use per-sender issuer for exact retry handshake record state.
+///
+/// Construction consumes the complete non-cloneable traffic-secret proof.
+/// Each sender can obtain state exactly once from this issuer. The interior
+/// issuance bits make this type non-`Sync`, so duplicate checks and successful
+/// issuance cannot race across threads.
+pub struct RetryHandshakeRecordProtectionStateIssuer<
+    'evidence,
+    'secret_storage,
+    Evidence: ExactRetryBaseSecrets + ?Sized,
+> {
+    traffic_secrets: BoundRetryHandshakeTrafficSecrets<'evidence, 'secret_storage, Evidence>,
+    issued: Cell<u8>,
+}
+
+impl<'evidence, 'secret_storage, Evidence>
+    RetryHandshakeRecordProtectionStateIssuer<'evidence, 'secret_storage, Evidence>
+where
+    Evidence: ExactRetryBaseSecrets + ?Sized,
+{
+    /// Consume exact retry traffic-secret evidence into a fresh issuer.
+    #[must_use]
+    pub const fn new(
+        traffic_secrets: BoundRetryHandshakeTrafficSecrets<'evidence, 'secret_storage, Evidence>,
+    ) -> Self {
+        Self {
+            traffic_secrets,
+            issued: Cell::new(0),
+        }
+    }
+
+    /// Borrow the complete exact-message retry traffic-secret proof.
+    #[must_use]
+    pub const fn traffic_secrets(
+        &self,
+    ) -> &BoundRetryHandshakeTrafficSecrets<'evidence, 'secret_storage, Evidence> {
+        &self.traffic_secrets
+    }
+
+    /// Report whether this issuer already created state for `sender`.
+    #[must_use]
+    pub fn has_issued(&self, sender: HandshakeTrafficSender) -> bool {
+        self.issued.get() & sender.issuance_bit() != 0
+    }
+
+    /// Issue fresh sequence-zero state for one not-yet-issued sender.
+    ///
+    /// A duplicate sender fails before `storage` is touched. Failed key
+    /// derivation or state construction leaves the sender unissued so a caller
+    /// can retry with valid storage.
+    pub fn issue<'issuer, 'material>(
+        &'issuer self,
+        sender: HandshakeTrafficSender,
+        storage: &'material mut TrafficKeyMaterialStorage,
+    ) -> Result<
+        BoundRetryHandshakeRecordProtectionState<
+            'issuer,
+            'evidence,
+            'secret_storage,
+            'material,
+            Evidence,
+        >,
+        RetryHandshakeRecordProtectionStateBindingError,
+    > {
+        let issuance_bit = sender.issuance_bit();
+        if self.issued.get() & issuance_bit != 0 {
+            return Err(RetryHandshakeRecordProtectionStateBindingError::SenderAlreadyIssued);
+        }
+
+        let bound =
+            bind_retry_handshake_traffic_key_material(&self.traffic_secrets, sender, storage)
+                .map_err(RetryHandshakeRecordProtectionStateBindingError::KeyMaterial)?;
+        let BoundRetryHandshakeTrafficKeyMaterial { key_material, .. } = bound;
+        let state = RecordProtectionState::new(key_material)
+            .map_err(RetryHandshakeRecordProtectionStateBindingError::RecordState)?;
+
+        self.issued.set(self.issued.get() | issuance_bit);
+        Ok(BoundRetryHandshakeRecordProtectionState {
+            issuer: self,
+            sender,
+            state,
+        })
+    }
+}
+
+impl<Evidence: ExactRetryBaseSecrets + ?Sized> fmt::Debug
+    for RetryHandshakeRecordProtectionStateIssuer<'_, '_, Evidence>
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("RetryHandshakeRecordProtectionStateIssuer")
+            .field("traffic_secrets", &"[RETAINED]")
+            .field(
+                "client_issued",
+                &self.has_issued(HandshakeTrafficSender::Client),
+            )
+            .field(
+                "server_issued",
+                &self.has_issued(HandshakeTrafficSender::Server),
+            )
+            .finish()
+    }
+}
+
+/// One sender's record state attached to a single-use retry issuer.
+///
+/// This value intentionally derives neither `Copy` nor `Clone`. The retained
+/// record state owns the traffic-key view, while the secret bytes remain in
+/// the caller-owned wipe-on-drop storage borrowed by that view.
+pub struct BoundRetryHandshakeRecordProtectionState<
+    'issuer,
+    'evidence,
+    'secret_storage,
+    'material,
+    Evidence: ExactRetryBaseSecrets + ?Sized,
+> {
+    issuer:
+        &'issuer RetryHandshakeRecordProtectionStateIssuer<'evidence, 'secret_storage, Evidence>,
+    sender: HandshakeTrafficSender,
+    state: RecordProtectionState<'material>,
+}
+
+impl<'issuer, 'evidence, 'secret_storage, 'material, Evidence>
+    BoundRetryHandshakeRecordProtectionState<
+        'issuer,
+        'evidence,
+        'secret_storage,
+        'material,
+        Evidence,
+    >
+where
+    Evidence: ExactRetryBaseSecrets + ?Sized,
+{
+    /// Borrow the complete exact-message retry traffic-secret proof.
+    #[must_use]
+    pub const fn traffic_secrets(
+        &self,
+    ) -> &'issuer BoundRetryHandshakeTrafficSecrets<'evidence, 'secret_storage, Evidence> {
+        &self.issuer.traffic_secrets
+    }
+
+    /// Return the sender whose retained secret supplied this record state.
+    #[must_use]
+    pub const fn sender(&self) -> HandshakeTrafficSender {
+        self.sender
+    }
+
+    /// Return the exact policy-selected suite retained by every component.
+    #[must_use]
+    pub const fn selected_suite(&self) -> SelectedCipherSuite {
+        self.state.selected_suite()
+    }
+
+    /// Borrow the exact retry-bound record-protection state.
+    #[must_use]
+    pub const fn record_state(&self) -> &RecordProtectionState<'material> {
+        &self.state
+    }
+
+    /// Mutably borrow the exact retry-bound record-protection state.
+    pub const fn record_state_mut(&mut self) -> &mut RecordProtectionState<'material> {
+        &mut self.state
+    }
+}
+
+impl<Evidence: ExactRetryBaseSecrets + ?Sized> fmt::Debug
+    for BoundRetryHandshakeRecordProtectionState<'_, '_, '_, '_, Evidence>
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("BoundRetryHandshakeRecordProtectionState")
+            .field("issuer", &"[RETAINED]")
+            .field("sender", &self.sender)
+            .field("record_state", &"[STATE]")
+            .finish()
+    }
+}
+
+/// One sealed handshake record attached to its exact retry state and request.
+///
+/// The retained shared borrows prevent both state reuse and output mutation
+/// while this proof is live. This value intentionally derives neither `Copy`
+/// nor `Clone`.
+pub struct SealedRetryHandshakeRecord<
+    'state,
+    'issuer,
+    'evidence,
+    'secret_storage,
+    'material,
+    'content,
+    'output,
+    Evidence: ExactRetryBaseSecrets + ?Sized,
+> {
+    state: &'state BoundRetryHandshakeRecordProtectionState<
+        'issuer,
+        'evidence,
+        'secret_storage,
+        'material,
+        Evidence,
+    >,
+    plaintext: RetryHandshakePlaintext<'content>,
+    output: &'output [u8],
+}
+
+impl<'state, 'issuer, 'evidence, 'secret_storage, 'material, 'content, 'output, Evidence>
+    SealedRetryHandshakeRecord<
+        'state,
+        'issuer,
+        'evidence,
+        'secret_storage,
+        'material,
+        'content,
+        'output,
+        Evidence,
+    >
+where
+    Evidence: ExactRetryBaseSecrets + ?Sized,
+{
+    /// Borrow the complete exact-message retry traffic-secret proof.
+    #[must_use]
+    pub const fn traffic_secrets(
+        &self,
+    ) -> &'issuer BoundRetryHandshakeTrafficSecrets<'evidence, 'secret_storage, Evidence> {
+        self.state.traffic_secrets()
+    }
+
+    /// Return the sender whose monotonic record state sealed this record.
+    #[must_use]
+    pub const fn sender(&self) -> HandshakeTrafficSender {
+        self.state.sender()
+    }
+
+    /// Return the policy-selected suite retained by the exact record state.
+    #[must_use]
+    pub const fn selected_suite(&self) -> SelectedCipherSuite {
+        self.state.selected_suite()
+    }
+
+    /// Borrow the exact handshake content supplied for sealing.
+    #[must_use]
+    pub const fn content(&self) -> &'content [u8] {
+        self.plaintext.content()
+    }
+
+    /// Return the requested zero-padding length.
+    #[must_use]
+    pub const fn padding_length(&self) -> usize {
+        self.plaintext.padding_length()
+    }
+
+    /// Borrow the exact sealed record prefix written by the dispatcher.
+    #[must_use]
+    pub const fn output(&self) -> &'output [u8] {
+        self.output
+    }
+
+    /// Return the sender-state record count after sealing.
+    #[must_use]
+    pub const fn records_used(&self) -> u64 {
+        self.state.record_state().records_used()
+    }
+}
+
+impl<Evidence: ExactRetryBaseSecrets + ?Sized> fmt::Debug
+    for SealedRetryHandshakeRecord<'_, '_, '_, '_, '_, '_, '_, Evidence>
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("SealedRetryHandshakeRecord")
+            .field("state", &"[RETAINED]")
+            .field("plaintext", &"[REDACTED]")
+            .field("output", &"[REDACTED]")
+            .finish()
+    }
+}
+
+/// Seal one exact retry-bound TLS 1.3 handshake record.
+///
+/// The inner content type is fixed to `handshake`; callers provide no detached
+/// content type. Sequence and output behavior follows the repository-owned
+/// record dispatcher.
+pub fn seal_retry_handshake_record<
+    'state,
+    'issuer,
+    'evidence,
+    'secret_storage,
+    'material,
+    'content,
+    'output,
+    Evidence,
+>(
+    state: &'state mut BoundRetryHandshakeRecordProtectionState<
+        'issuer,
+        'evidence,
+        'secret_storage,
+        'material,
+        Evidence,
+    >,
+    ciphertext_policy: &Tls13CiphertextPolicy,
+    inner_policy: &Tls13InnerPlaintextPolicy,
+    plaintext: RetryHandshakePlaintext<'content>,
+    cleartext_scratch: &mut [u8],
+    output: &'output mut [u8],
+) -> Result<
+    SealedRetryHandshakeRecord<
+        'state,
+        'issuer,
+        'evidence,
+        'secret_storage,
+        'material,
+        'content,
+        'output,
+        Evidence,
+    >,
+    RetryHandshakeRecordBindingError,
+>
+where
+    Evidence: ExactRetryBaseSecrets + ?Sized,
+{
+    let used = seal_tls13_record(
+        state.record_state_mut(),
+        ciphertext_policy,
+        inner_policy,
+        Tls13Plaintext::new(
+            TlsContentType::Handshake,
+            plaintext.content(),
+            plaintext.padding_length(),
+        ),
+        cleartext_scratch,
+        output,
+    )
+    .map_err(RetryHandshakeRecordBindingError::RecordProtection)?;
+
+    Ok(SealedRetryHandshakeRecord {
+        state: &*state,
+        plaintext,
+        output: &output[..used],
+    })
+}
+
+/// One authenticated handshake record attached to exact input and retry state.
+///
+/// The retained dispatcher owner wipes the authenticated plaintext prefix on
+/// drop. Shared borrows prevent state reuse, input mutation, and opened-output
+/// mutation while this proof is live. This value intentionally derives neither
+/// `Copy` nor `Clone`.
+pub struct OpenedRetryHandshakeRecord<
+    'state,
+    'issuer,
+    'evidence,
+    'secret_storage,
+    'material,
+    'input,
+    'output,
+    Evidence: ExactRetryBaseSecrets + ?Sized,
+> {
+    state: &'state BoundRetryHandshakeRecordProtectionState<
+        'issuer,
+        'evidence,
+        'secret_storage,
+        'material,
+        Evidence,
+    >,
+    input: &'input [u8],
+    opened: OpenedTls13Record<'output>,
+}
+
+impl<'state, 'issuer, 'evidence, 'secret_storage, 'material, 'input, 'output, Evidence>
+    OpenedRetryHandshakeRecord<
+        'state,
+        'issuer,
+        'evidence,
+        'secret_storage,
+        'material,
+        'input,
+        'output,
+        Evidence,
+    >
+where
+    Evidence: ExactRetryBaseSecrets + ?Sized,
+{
+    /// Borrow the complete exact-message retry traffic-secret proof.
+    #[must_use]
+    pub const fn traffic_secrets(
+        &self,
+    ) -> &'issuer BoundRetryHandshakeTrafficSecrets<'evidence, 'secret_storage, Evidence> {
+        self.state.traffic_secrets()
+    }
+
+    /// Return the sender whose monotonic record state opened this record.
+    #[must_use]
+    pub const fn sender(&self) -> HandshakeTrafficSender {
+        self.state.sender()
+    }
+
+    /// Return the policy-selected suite retained by the exact record state.
+    #[must_use]
+    pub const fn selected_suite(&self) -> SelectedCipherSuite {
+        self.state.selected_suite()
+    }
+
+    /// Borrow the exact ciphertext record supplied for opening.
+    #[must_use]
+    pub const fn input(&self) -> &'input [u8] {
+        self.input
+    }
+
+    /// Borrow authenticated handshake content.
+    #[must_use]
+    pub fn content(&self) -> &[u8] {
+        self.opened.content()
+    }
+
+    /// Return the authenticated zero-padding length.
+    #[must_use]
+    pub const fn padding_length(&self) -> usize {
+        self.opened.padding_length()
+    }
+
+    /// Return the sender-state record count after opening.
+    #[must_use]
+    pub const fn records_used(&self) -> u64 {
+        self.state.record_state().records_used()
+    }
+}
+
+impl<Evidence: ExactRetryBaseSecrets + ?Sized> fmt::Debug
+    for OpenedRetryHandshakeRecord<'_, '_, '_, '_, '_, '_, '_, Evidence>
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("OpenedRetryHandshakeRecord")
+            .field("state", &"[RETAINED]")
+            .field("input", &"[REDACTED]")
+            .field("opened", &"[REDACTED]")
+            .finish()
+    }
+}
+
+/// Authenticate and open one exact retry-bound TLS 1.3 handshake record.
+///
+/// Authentication completes before the inner content type is inspected. An
+/// authenticated non-handshake record is rejected and its opened owner wipes
+/// the plaintext prefix before this function returns.
+pub fn open_retry_handshake_record<
+    'state,
+    'issuer,
+    'evidence,
+    'secret_storage,
+    'material,
+    'input,
+    'output,
+    Evidence,
+>(
+    state: &'state mut BoundRetryHandshakeRecordProtectionState<
+        'issuer,
+        'evidence,
+        'secret_storage,
+        'material,
+        Evidence,
+    >,
+    ciphertext_policy: &Tls13CiphertextPolicy,
+    inner_policy: &Tls13InnerPlaintextPolicy,
+    input: &'input [u8],
+    output: &'output mut [u8],
+) -> Result<
+    OpenedRetryHandshakeRecord<
+        'state,
+        'issuer,
+        'evidence,
+        'secret_storage,
+        'material,
+        'input,
+        'output,
+        Evidence,
+    >,
+    RetryHandshakeRecordBindingError,
+>
+where
+    Evidence: ExactRetryBaseSecrets + ?Sized,
+{
+    let opened = open_tls13_record(
+        state.record_state_mut(),
+        ciphertext_policy,
+        inner_policy,
+        input,
+        output,
+    )
+    .map_err(RetryHandshakeRecordBindingError::RecordProtection)?;
+    if opened.content_type() != TlsContentType::Handshake {
+        return Err(RetryHandshakeRecordBindingError::UnexpectedContentType);
+    }
+
+    Ok(OpenedRetryHandshakeRecord {
+        state: &*state,
+        input,
+        opened,
+    })
 }
 
 /// Bind one exact retry handshake traffic secret to its traffic key and IV.

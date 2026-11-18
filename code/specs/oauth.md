@@ -6179,6 +6179,65 @@ Authenticated handshake progression, record-state composition, certificate and
 revocation policy, and HTTP composition remain prerequisites; concrete HTTPS
 and live-provider readiness remain unavailable.
 
+The same allocation-free boundary now also consumes the complete exact-message
+retry handshake traffic-secret proof into a non-cloneable per-sender
+record-state issuer. One successful client issuance and one successful server
+issuance are permitted. A repeated issuance for the same sender fails before
+the caller-owned output storage is touched, so the same retained key and static
+IV cannot acquire a second sequence-zero state through this boundary. Failed
+derivation or state construction does not consume the sender's issuance, so a
+caller may retry with valid storage.
+
+Each successful issuance accepts only an explicit sender role and
+caller-owned traffic-key-material storage for the retained selected suite. It
+derives that retained sender's key and static IV, moves the resulting view into
+the existing repository-owned record-state primitive, starts the monotonic
+record sequence at zero, and marks the sender issued before returning. The
+non-copyable result borrows the single-use issuer, retains the explicit sender,
+and permits only borrowed access to the state. It accepts no detached key,
+static IV, nonce length, record ceiling, AEAD identifier, sequence number, or
+cipher suite, and it cannot detach the state from the exact CH1,
+HelloRetryRequest, CH2, final ServerHello, base-schedule, traffic-secret, and
+sender evidence.
+
+This exact-message state composition does not advance the handshake
+transcript, authenticate CertificateVerify or Finished, invoke an AEAD, frame
+or protect a record, process alerts, validate certificates, establish trust,
+verify a hostname, enforce revocation, perform I/O, authorize HTTP or OAuth
+transport, or open a network connection. Authenticated handshake progression,
+record protection, certificate and revocation policy, and HTTP composition
+remain prerequisites; concrete HTTPS and live-provider readiness remain
+unavailable.
+
+The exact retry record-state wrapper can now be borrowed by an allocation-free
+handshake-record binding that delegates only to the existing repository-owned,
+data-driven record-protection dispatcher. Sealing accepts one borrowed
+handshake message, explicit zero-padding length, the existing ciphertext and
+inner-plaintext policies, caller scratch, and caller output. It fixes the
+protected content type to `Handshake`, consumes the next nonce only under the
+existing dispatcher rules, and returns non-copyable evidence retaining the
+exact state wrapper, plaintext request, and sealed output prefix. Callers
+cannot substitute a detached key, IV, nonce, sequence, AEAD route, content
+type, or output prefix.
+
+Opening retains the exact ciphertext input and state wrapper beside the
+existing authentication-before-release output owner. An authenticated inner
+content type other than `Handshake` is rejected before any content view is
+returned; dropping that rejected opened owner clears the authenticated output
+prefix. Success returns non-copyable evidence exposing only the authenticated
+handshake content, padding length, sender role, selected suite, exact input,
+and retained retry proof. AEAD or policy failure preserves the existing
+redacted categories and nonce-consumption rules.
+
+This binding does not parse or sequence the authenticated handshake message,
+advance its transcript, authenticate CertificateVerify or Finished, process
+alerts, select epochs, perform key updates, validate certificates, establish
+trust, verify a hostname, enforce revocation, perform I/O, authorize HTTP or
+OAuth transport, or open a network connection. Authenticated handshake
+progression, certificate and revocation policy, and HTTP/TLS transport
+composition remain prerequisites; concrete HTTPS and live-provider readiness
+remain unavailable.
+
 An allocation-free `http1-fixed-request-body` prerequisite now binds one
 caller-borrowed, potentially sensitive request body to its exact byte length
 under an explicit caller ceiling. It encodes that length in canonical shortest

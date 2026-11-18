@@ -10,6 +10,9 @@
 //!   "level"   a construct beyond `ir.core` (level named)    lowering
 //!   "W0701"   a VER04r generation rule is violated          lowering, cost, arith
 //!   "type"    the document does not type check              lowering
+//!   "ir"      a corpus error of Appendix A.1 (a `match` that falls   lowering
+//!             through, an unreachable arm, a duplicate or
+//!             shadowing `bind`)
 //!   "check"   the S2 checker refused the document           lowering
 //!   "limit"   a resource bound of VER04r section 14         lowering, cost, profile
 //!   "W0706"   a suite admits nothing / is over budget      enumeration
@@ -37,6 +40,12 @@ pub mod code {
     pub const TYPE: &str = "type";
     /// The S2 checker (`warrant-grammar`) refused the document.
     pub const CHECK: &str = "check";
+    /// A corpus error of VER04r Appendix A.1 (S10t-2), the generator's reading of the oracle's
+    /// `corpus` code: a `match` that can fall through, an arm no value can reach, the same `bind`
+    /// twice in one pattern, a `bind` that shadows a binder, a parameter, `result` or an outer
+    /// `bind`.  Raised in this order of precedence (VER04r 16.10 R12): per pattern, duplicate and
+    /// shadowing binds; then, per match, unreachable arms in arm order, then fall-through.
+    pub const IR: &str = "ir";
     /// A resource bound was exceeded (IR depth, cost, work, profile size).
     pub const LIMIT: &str = "limit";
     /// A suite admits no case, or its product is over the budget (the v1 generator's code).
@@ -70,7 +79,9 @@ pub enum Beyond {
     /// `ir.fixed`: integer built-ins (`wrap`, `shl`, `bit_and`, `be_bytes`, ...).
     IrFixed,
     /// `ir.tuple`: tuple types, the tuple literal, `project`, and `match` on a `Result`
-    /// (VER04r 4.1, [D20, D35]).  Refused by this generator until slice S10t-2.
+    /// (VER04r 4.1, [D20, D35]).  Lowered, costed and evaluated since slice S10t-2; the level is
+    /// still named here because a *consumer* that does not implement it must name it, and for
+    /// the faults whose evaluation is gated (VER04r 16.10 R12).
     IrTuple,
     /// `ir.data`: records, variants, `Option` anywhere but under `unwrap_or`, lists, `match` on
     /// anything but a `Result`, constructor and record projection.

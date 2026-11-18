@@ -2472,7 +2472,20 @@ recorder already enforces.
   logged a `gated=1` line, the `synthetic-slice` line is among them and comes
   from `TestSandboxTraceGateSynthetic`, and every gated `best_mb_s` is finite,
   positive and at least 14; a PROBE line counts only when its payload starts
-  with `PROBE: trace ` after the go test `file:line` prefix. A rate measured at
+  with `PROBE: trace ` after the go test `file:line` prefix, which must be
+  indented exactly four spaces (in `go test -v -json`, the mode CI runs, every
+  `t.Logf` line has that indent at any subtest depth; a continuation line of a
+  multi-line message has eight and no `file:line`, so it cannot match). The
+  script also buffers output per test and reads only newline-terminated lines,
+  because `test2json` cuts a long line into events of at most 1024 bytes with no
+  newline at the cut, and the second half of a long `%q` refusal must not be
+  taken for a line of its own. A label ending in `:` is not a measurement
+  (the tests log failures to open or measure a trace as `PROBE: trace-error`,
+  with the error `%q`-quoted). The two `%q` refusal fields (`old_refusal=`,
+  `grammar_refusal=`) are the LAST fields of a line; the script reads
+  `key=value` facts only from the text before the first refusal field, and the
+  first occurrence of a key wins, so text a trace influenced cannot forge a
+  fact. A rate measured at
   about 50 KB or 64 KB is a **proxy**: it does not prove the rate at 2 GiB.
   `trace.Measure`, `MeasureBest` and `BestPass1` toggle the process-global GC
   setting, are not goroutine-safe, and are for CI and tests only
@@ -2481,10 +2494,18 @@ recorder already enforces.
   Grammar parse time at most 10% of the step's wall time and at most 5 s
   absolute, at the census p99 trace size. The `PROBE:` lines carry
   `step_wall_ms`, `parse_ms` and `parse_share` where the step's wall time is
-  known, so the census can be read off CI logs. Today that is only the
-  `TestSandboxStraceSignals` trace, which is sleep-dominated, so its share is
-  not representative: wall-time plumbing through the record-step and probe
-  paths is required before G2 can become blocking (a backlog item).
+  known, so the census can be read off CI logs. The wall comes from the step
+  sidecar's `started_at`/`ended_at` (`kiln-record-step/2`) for the record-step
+  test, from the probe runner's in-memory `ProbeRunRecord.Wall` for the probe
+  path, and from a stopwatch for `TestSandboxStraceSignals` (sleep-dominated,
+  so its share is not representative). A wall that is not positive (a stamp
+  that does not parse, a clock that stepped back) is dropped, never divided by,
+  and counted as `walls_dropped=N`, a process-global cumulative counter that
+  appears on every later `PROBE: trace` line of the run. A wall time is NEVER written into a sealed
+  file: `ProbeRunRecord.Wall` is `json:"-"` and `TestProbeWallIsNeverSealed`
+  holds that line, because a wall differs on every run and would make
+  `pre/probes.json` non-reproducible. What remains before G2 can block is
+  reading the census (p99 trace size, the shares) off real CI runs.
 
 Measured: on a real kiln-sandbox CI trace (51,650 bytes, 327 lines) the old
 scanner reads 144.7 MB/s and the grammar path (compact `LineParser`) 22.8 MB/s;

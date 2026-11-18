@@ -109,6 +109,27 @@ func TestWarrantCorpusV2FixtureSelectsGeneratorAndOracle(t *testing.T) {
 			t.Fatalf("%s selected %v, want %v (err %v)", changed, got, want, err)
 		}
 	}
+	// CV2-S10t-2: the oracle's ir.tuple document, its profile and its four committed dumps are
+	// reproduced by the generator's tests/tuple_parity.rs, read from the oracle's directory.
+	// tuple_forms_v1.warrant is a Warrant document, so rust/warrant-grammar is selected as well.
+	for _, changed := range []string{
+		"code/packages/python/warrant-oracle/tests/fixtures/tuple-forms-v1/tuple_forms_v1.warrant",
+		"code/packages/python/warrant-oracle/tests/fixtures/tuple-forms-v1/tuple_forms_v1.profile",
+		"code/packages/python/warrant-oracle/tests/fixtures/tuple-forms-v1/tuple_forms_v1.oracle-lowering.json",
+		"code/packages/python/warrant-oracle/tests/fixtures/tuple-forms-v1/tuple_forms_v1.oracle-evaluation.json",
+		"code/packages/python/warrant-oracle/tests/fixtures/tuple-forms-v1/tuple_forms_v1.oracle-faults.json",
+		"code/packages/python/warrant-oracle/tests/fixtures/tuple-forms-v1/tuple_forms_v1.oracle-refusals.json",
+		"code/packages/python/warrant-oracle/tests/fixtures/tuple-forms-v1/make_tuple_forms.py",
+	} {
+		want := map[string]bool{"rust/warrant-corpus-gen": true}
+		if isWarrantDocument(changed) {
+			want["rust/warrant-grammar"] = true
+		}
+		got, err = repositoryInputConsumersForChange([]string{changed}, packages, "all")
+		if err != nil || !reflect.DeepEqual(got, want) {
+			t.Fatalf("%s selected %v, want %v (err %v)", changed, got, want, err)
+		}
+	}
 	// Lookalikes select neither: another version directory, the directory itself (a
 	// changed *file* is what is mapped), a backslash spelling, another crate's bindings.
 	for _, changed := range []string{
@@ -124,6 +145,8 @@ func TestWarrantCorpusV2FixtureSelectsGeneratorAndOracle(t *testing.T) {
 		"code/packages/python/warrant-oracle/tests/fixtures/fixed-forms-v1",
 		"code/packages/python/warrant-oracle/tests/fixtures/omit-example-v20/corpus/corpus.json",
 		"code/packages/python/warrant-oracle/tests/fixtures/omit-example-v2",
+		"code/packages/python/warrant-oracle/tests/fixtures/tuple-forms-v10/tuple_forms_v1.warrant",
+		"code/packages/python/warrant-oracle/tests/fixtures/tuple-forms-v1",
 		"code/specs/fixtures/ct-compare-warrant-v1/consumers.backup.json",
 	} {
 		got, err := repositoryInputConsumersForChange([]string{changed}, packages, "all")
