@@ -95,13 +95,18 @@ GAME01 Rust corpus consumer, and the separate Kiln allocation-reuse repair have 
 deterministic contracts precede new device, graphics, and host stacks.
 This order avoids duplicating repository-wide `VER-*` and `MUS00`–`MUS08` work.
 
-As of 2026-11-18, `GBL-001`, `GBL-002`, and `GBL-061` are merged. The immediate active item is
-`GBL-003a` in open PR #19618; its exact-head checks must pass before moving on. Then proceed to
-`GBL-010` TypeScript GAME10 with exact `BigInt` handling, `GBL-050` Rust input action frames, and
-`GBL-050a` TypeScript input action frames. Reprioritize remaining clock ports after those reusable
-boundaries. A fresh full-checkout canonical package-presence report must be recorded before the
-next new language-port selection; a sparse-worktree report is not valid inventory evidence. This
-sequence is coordination state, not implementation authorization for unrelated primitives.
+As of 2026-11-18, `GBL-001`, `GBL-002`, `GBL-003a`, and `GBL-061` are merged. `GBL-010` is under
+review in open PR #19644; keep it open until its exact-head checks and merge are verified. Before
+that PR can clear, `GBL-063` is the blocking Kiln Ubuntu 24.04 G1 performance follow-up: diagnose
+the unchanged 14 MB/s gate miss on the exact 66,600-byte / 936-line workload, then make the smallest
+reusable hot-path repair supported by native Linux measurements. The current evidence correlates
+two misses with an Azure runner image/kernel and one pass with AWS, but the CPU model is absent, so
+it does not establish a runner cause. Keep the workload, floor, and failure receipts intact; do not
+retry unchanged code or infer a same-host speedup from separate CI jobs. After `GBL-010` lands,
+resume `GBL-050` Rust input action frames and `GBL-050a` TypeScript input action frames. A fresh
+full-checkout canonical package-presence report must be recorded before the next new language-port
+selection; a sparse-worktree report is not valid inventory evidence. This sequence is coordination
+state, not implementation authorization for unrelated primitives.
 
 For each serial delivery, use a fresh worktree from the latest fetched `origin/main`. After a PR
 merges, verify the published head and merged tree, confirm the worktree is clean, published, and
@@ -161,15 +166,7 @@ worktree; report and preserve it if those checks do not pass.
   CI build-table recipes selected Ubuntu and macOS affected-package jobs and produced BUILT package
   receipts, but aggregate outputs suppress individual command counts and runtime verdicts. The
   Windows affected-package test step was SKIPPED; no native Windows Hamurabi execution is claimed.
-- [ ] `GBL-003a` (implementation in open [PR #19618](https://github.com/adhithyan15/coding-adventures/pull/19618); exact-head CI pending) Separately execute and assess the GAME10 constructor Warrant model: exercise the
-  648-case boundary (105 `Ok`, 72 `ZeroFixedTimestep`, 162 `InvalidMaxFrameSteps`,
-  309 `InvalidMaxFrameDelta`), stratified full-width property
-  cases, and always-`Err`, error-precedence, and wrong-state mutants. Constructor-only execution does
-  not prove `validate`, `advance`, or the shared `WX-SP1` proof; the native proof remains unproved.
-  Keep those items open under `GBL-003`. The portable corpus/WX-SP1 route also depends on Warrant
-  `ir.data` records and variants (CV2-S11; tracked gap CV2-F10); current fixed built-ins and tuple
-  `Result` support do not encode `GameClockConfig`/`GameClockState` records. Do not call this model
-  execution a Rust-to-Warrant source proof or a full-domain universal proof.
+- [x] `GBL-003a` (merged in [PR #19618](https://github.com/adhithyan15/coding-adventures/pull/19618), squash `a2163fc64c74c10f3bb0e62cd268363cbb560d21`) Separately execute and assess the GAME10 constructor Warrant model. Local finite execution covered the 648-case boundary (105 `Ok`, 72 `ZeroFixedTimestep`, 162 `InvalidMaxFrameSteps`, 309 `InvalidMaxFrameDelta`) and 1,024 stratified full-width inputs; aggregate CI `BUILT` receipts are not Warrant execution evidence. Constructor-only execution does not prove `validate`, `advance`, or the shared `WX-SP1` proof; those source and universal proof claims remain open under `GBL-003`. The portable corpus/WX-SP1 route also depends on Warrant `ir.data` records and variants (CV2-S11; tracked gap CV2-F10); current fixed built-ins and tuple `Result` support do not encode `GameClockConfig`/`GameClockState` records. Do not call this model execution a Rust-to-Warrant source proof or a full-domain universal proof.
 - [x] `GBL-061` (merged in [PR #19630](https://github.com/adhithyan15/coding-adventures/pull/19630), squash `1de3c7f6e9b74765f48cce277187f1920a487a81`) Add caller-owned token-vector reuse to the Go lexer and strace parser after measuring the per-line allocation hotspot. The 14 MB/s Kiln Ubuntu 26.04 floor was unchanged. On exact-head CI run `44247169191`, the 66,600-byte / 936-line synthetic reported 19.9 MB/s on Ubuntu 24.04 and 22.1 MB/s on Ubuntu 26.04 (`gated=1`, seven repeats); the separate 4,195,800-byte census reported 18.8 and 20.3 MB/s (`gated=0`). These are candidate gate receipts, not a native same-host Linux A/B or proof of a Linux speedup. Full affected-package CI built Go lexer, strace lexer/parser, and Kiln; no native Windows execution was selected. Local macOS allocation and timing evidence, sparse full-suite limits, and review scope are recorded in the PR.
 - [ ] `GBL-059` Preserve useful per-package CI receipts: commands/recipe selection, stdout summary, seed, source revision, platform, and runtime verdict. Audit existing `VER`/build-tool receipt and KILN facilities before extending them; do not create a competing evidence framework. `GBL-061` exact-head artifacts exposed only build-plan in the downloaded artifact set and aggregate logs suppressed command/test details, so package-level CI claims remain limited to explicit `BUILT` and gate receipts.
 - [ ] `GBL-060` Execute portable game-core functional tests natively on Windows. Current affected-package Windows steps can skip Rust packages; compile-only cross checks and Windows job presence are not native game-core execution evidence. Keep `NOT-LIVE` platform containment separate from test coverage.
@@ -295,7 +292,30 @@ worktree; report and preserve it if those checks do not pass.
   paths are omitted, while preserving untracked overlays in ordinary non-sparse working mode. Define
   symlink and gitlink handling and test committed-ref parity, untracked-only changes, collisions, and
   unknown classifications. This P2 tooling follow-up does not block `GBL-010`: refresh the inventory
-  after `GBL-003a` merges using the existing classifier and tracked-path audit.
+  from refreshed `origin/main` using the existing classifier and tracked-path audit; `GBL-003a` is
+  already merged.
+- [ ] `GBL-063` Repair the repeated Ubuntu 24.04 Kiln G1 synthetic throughput miss with the smallest
+  reusable optimization justified by native Linux evidence. On PR #19644 head
+  `d563077857e66f3917220611e5df91fafa7a0348`, run `44316496407` job `134844872264` measured
+  66,600 bytes / 936 lines at 12.7 MB/s (5.246689 ms) against the unchanged 14 MB/s floor, which
+  requires about 9.3% less elapsed time; census throughput was 12.0 MB/s and `gated=0`. The
+  concurrent Ubuntu 26 lane passed at 19.7 MB/s. The earlier unchanged-source Ubuntu 24 run
+  `134824627592` measured 12.8 MB/s (5.220751 ms) and also failed; Ubuntu 24 run `134816988790`
+  measured 19.5 MB/s and passed. All used Go 1.26.1 on linux/amd64. The pass was on AWS image
+  `20261111.127.1` / kernel `7.0.0-1014-aws`; both misses were on Azure image `20261111.370.1` /
+  kernel `7.0.0-1017-azure` (westcentralus and eastus). CPU model is not recorded, so provider/image
+  correlation is not proof of cause. Preserve all receipts and gate semantics; make no blind retry
+  of unchanged code. First profile the exact synthetic slice on a native Linux amd64 host using the
+  dedicated G1 job path in `.github/workflows/ci.yml` (not the four-fixture `BenchmarkPass1`): run
+  `go test -count=1 -run Sandbox -v -json .` with `-cpuprofile` and, in a separate profile run,
+  `-memprofile`, recording image, kernel, provider/region, CPU model when available, toolchain,
+  source revision, and workload identity. Inspect the actual hot path before choosing a repair;
+  compare pre/post revisions on the same host and toolchain in A-B-B-A order on that identical
+  slice. Keep the 14 MB/s floor, input, seven-repeat best-of rule, failure receipts, and the separate
+  ungated census unchanged. Add focused correctness controls for public/owning and alias paths,
+  atomic errors, and relevant Unicode/property/fuzz behavior without mirroring the implementation.
+  No broad benchmark or verification framework, workload reduction, threshold weakening, or
+  production optimization before the profile-backed diagnosis is accepted.
 - [ ] `GBL-058` Repair the conflict between the actual `P2D09`/`P2D10` specification filenames/scopes
   and GAME00 labels. Keep this as a separate documentation repair; do not mint or reuse colliding game
   identifiers to paper over it.
