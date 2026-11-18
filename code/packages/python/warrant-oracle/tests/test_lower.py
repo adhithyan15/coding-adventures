@@ -172,15 +172,17 @@ def test_claim_without_a_quantifier_has_no_binders():
 CENSUS = {
     "ct-compare": {"ir.core": 9},
     "gf256": {"ir.core": 38},
-    # S10t-1: ``ir.tuple`` is lowered and evaluated, so no suite is *blocked* on it any more: the
-    # 24 + 2 + 4 tuple-blocked suites of S10a are core (evaluable) or, when they also use an
-    # ``ir.fixed`` built-in, ``ir.fixed``.  (Was: wasm-leb128 10/24/8, logic-gates 28/3/2/55,
-    # arithmetic 5/45/4/9 for core/tuple-or-data/fixed.)
-    "wasm-leb128": {"ir.core": 18, "ir.fixed": 24},
-    "logic-gates": {"ir.core": 28, "ir.data": 3, "ir.fixed": 57},
-    "lzw": {"ir.core": 4, "ir.fixed": 17},
-    "arithmetic": {"ir.core": 7, "ir.data": 45, "ir.fixed": 11},
-    "x25519": {"ir.core": 6, "ir.fixed": 2},
+    # S10t-1: ``ir.tuple`` is lowered and evaluated, so no suite is *blocked* on it any more (was
+    # wasm-leb128 10/24/8, logic-gates 28/3/2/55, arithmetic 5/45/4/9 for core/tuple-or-data/fixed).
+    # S10c-1: ``ir.fixed`` is evaluated too, so a suite that needs it is live: the count under
+    # ``ir.core`` is every suite the oracle evaluates.  Only ``ir.data`` still blocks one (was
+    # wasm-leb128 18/24, logic-gates 28/3/57 core/data/fixed, lzw 4/17, arithmetic 7/45/11,
+    # x25519 6/2).
+    "wasm-leb128": {"ir.core": 42},
+    "logic-gates": {"ir.core": 85, "ir.data": 3},
+    "lzw": {"ir.core": 21},
+    "arithmetic": {"ir.core": 18, "ir.data": 45},
+    "x25519": {"ir.core": 8},
 }
 
 
@@ -195,18 +197,20 @@ def test_level_census_per_adopter(name):
 
 
 def test_unsupported_models_are_recorded_not_fatal():
-    spec = lower(adopter_bytes("wasm-leb128"))
-    assert spec.models["low7"].unsupported.level == "ir.fixed"
-    assert spec.models["du1"].unsupported is not None
+    spec = lower(adopter_bytes("arithmetic"))
+    blocked = [m for m in spec.models.values() if m.unsupported is not None]
+    assert len(blocked) == 19 and all(m.unsupported.level == "ir.data" for m in blocked)
+    wasm = lower(adopter_bytes("wasm-leb128"))
+    assert wasm.models["low7"].unsupported is None and wasm.models["low7"].requires == (
+        "ir.core",
+        "ir.fixed",
+    )
 
 
 @pytest.mark.parametrize(
     "body,level",
     [
-        ("wrap<U8>(a) == a", "ir.fixed"),
-        ("bit_and(a, a) == a", "ir.fixed"),
         ("[a] == [a]", "ir.data"),
-        ("unwrap_or(div(a, a), 0u8) == a", "ir.fixed"),
         ("div(a, a) == div(a, a)", "ir.data"),
         ("match a with x -> true", "ir.data"),
         ("all(a, a)", "ir.seq"),
@@ -220,10 +224,19 @@ def test_level_errors_name_the_level(body, level):
 
 def test_suite_inherits_the_level_of_a_model_it_calls():
     spec = lower(
+        "warrant p v1\n  op f(a: U8) -> U8\n  model g(a: U8) -> Bool = [a] == [a]\n"
+        "  claim c:\n    forall a: U8. g(a) == (f(a) == a)\n"
+    )
+    assert spec.suites[0].unsupported.level == "ir.data"
+
+
+def test_a_suite_that_calls_an_ir_fixed_model_is_live_and_requires_ir_fixed():
+    spec = lower(
         "warrant p v1\n  op f(a: U8) -> U8\n  model g(a: U8) -> U8 = bit_not(a)\n"
         "  claim c:\n    forall a: U8. f(a) == g(a)\n"
     )
-    assert spec.suites[0].unsupported.level == "ir.fixed"
+    assert spec.suites[0].unsupported is None
+    assert spec.suites[0].requires == ("ir.core", "ir.fixed")
 
 
 # -- type errors ------------------------------------------------------------------------

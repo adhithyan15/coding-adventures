@@ -290,16 +290,17 @@ def test_a_stride_denser_than_automatic_adds_chunks_and_never_removes_the_ends()
 
 def test_a_suite_that_admits_nothing_and_a_document_above_ir_core_are_refused():
     assert "zero" in refused("  claim z:\n    forall a: U8 | a > 255u8. id8(a) == a\n")
-    refused("  claim z:\n    forall a: U8. id8(a) == bit_not(a)\n", code="level")
-    refused("  model m(a: U8) -> U8 = bit_not(a)\n", code="level")
+    # ir.fixed is evaluated since S10c-1: the document above ir.core is an ir.data one
+    refused("  claim z:\n    forall a: U8. id8(a) == [a]\n", code="level")
+    refused("  model m(a: U8) -> Nat = len([a])\n", code="level")
     refused(
         "  claim z:\n    forall a: U8. id8(a) == a\n"
-        "  example e:\n    id8(bit_not(0u8)) == 255u8\n",
+        "  example e:\n    id8(0u8) == len([0u8])\n",
         code="level",
     )
     refused("  assume platform:\n    memory.bounded\n  claim z:\n    forall a: U8. id8(a) == a\n")
     refused(
-        "  op bit(a: U8 | bit_not(a) == a) -> U8\n  claim z:\n    forall a: U8. id8(a) == a\n",
+        "  op bit(a: U8 | len([a]) == 1) -> U8\n  claim z:\n    forall a: U8. id8(a) == a\n",
         code="level",
     )
 

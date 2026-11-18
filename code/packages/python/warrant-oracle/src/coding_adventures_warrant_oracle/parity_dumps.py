@@ -32,8 +32,12 @@ from .faults import IMPLEMENTED
 
 EVALUATION_SCHEMA = "warrant-evaluation-parity-v1"
 FAULT_SCHEMA = "warrant-fault-parity-v1"
-#: The gate of ``controls_gate_on``: ``ir.core`` and ``ir.tuple`` evaluated, ``ir.fixed`` not.
+#: The gate of ``controls_gate_on`` of the ``ir.tuple`` fixture (slice S10t-1): ``ir.core`` and
+#: ``ir.tuple`` evaluated, ``ir.fixed`` not.
 GATE_ON = (*IMPLEMENTED, "ir.tuple")
+#: The test-only **open** gate of slice S10c-1: every level this oracle evaluates.  The flip (S10c,
+#: [D29]) turns it on in the shipped path; until then only a library parameter reaches it.
+GATE_OPEN = (*IMPLEMENTED, "ir.fixed", "ir.tuple")
 _GENERATOR = {"name": "parity-dump", "version": "0"}
 
 #: Suite-row keys of the evaluation view, in no particular order (the writer sorts).
@@ -64,9 +68,21 @@ _SUITE_KEYS = (
 )
 
 
-def evaluation_view(spec_bytes: bytes, profile_raw: bytes) -> dict:
+def shipped_derivation(spec_bytes: bytes, profile_raw: bytes, spec_ref: str):
+    """``derive`` under the fault-evaluation gate as shipped; both views start from it, so a caller
+    that writes both derives once (``derived=`` / ``shipped=``)."""
+    return derive(spec_bytes, profile_raw, spec_ref=spec_ref, generator=_GENERATOR)
+
+
+def evaluation_view(
+    spec_bytes: bytes,
+    profile_raw: bytes,
+    spec_ref: str = "tuple_forms_v1.warrant",
+    derived=None,
+) -> dict:
     """The parity view of what the oracle evaluates (see the module docstring)."""
-    derived = derive(spec_bytes, profile_raw, spec_ref="tuple_forms_v1.warrant", generator=_GENERATOR)
+    if derived is None:
+        derived = shipped_derivation(spec_bytes, profile_raw, spec_ref)
     corpus = derived.corpus
     suites = {}
     for row in corpus["suites"]:
@@ -92,17 +108,38 @@ def evaluation_view(spec_bytes: bytes, profile_raw: bytes) -> dict:
     return out
 
 
-def faults_view(spec_bytes: bytes, profile_raw: bytes) -> dict:
-    """The parity view of the fault rows and the controls under both gates (module docstring)."""
-    shipped = derive(spec_bytes, profile_raw, spec_ref="tuple_forms_v1.warrant", generator=_GENERATOR)
+def faults_view(
+    spec_bytes: bytes,
+    profile_raw: bytes,
+    spec_ref: str = "tuple_forms_v1.warrant",
+    gate: str = "tuple",
+    shipped=None,
+) -> dict:
+    """The parity view of the fault rows and the controls under both gates (module docstring).
+
+    ``gate`` is ``"tuple"`` (the S10t-1 fixture: ``ir.tuple`` evaluated, ``ir.fixed`` not) or
+    ``"fixed"`` (the S10c-1 fixture: the open gate :data:`GATE_OPEN`, which also records both gates
+    as lists so that a reader sees what ``controls_shipped`` and ``controls_gate_on`` mean).
+    """
+    gate_on = {"tuple": GATE_ON, "fixed": GATE_OPEN}[gate]
+    if shipped is None:
+        shipped = shipped_derivation(spec_bytes, profile_raw, spec_ref)
     on = derive(
         spec_bytes,
         profile_raw,
-        spec_ref="tuple_forms_v1.warrant",
+        spec_ref=spec_ref,
         generator=_GENERATOR,
-        implemented=GATE_ON,
+        implemented=gate_on,
     )
     assert shipped.corpus["faults"] == on.corpus["faults"]  # the rows never depend on the gate
+    view = _faults_dict(shipped, on)
+    if gate == "fixed":
+        view["gate_shipped"] = list(IMPLEMENTED)
+        view["gate_on"] = list(gate_on)
+    return view
+
+
+def _faults_dict(shipped, on) -> dict:
     return {
         "schema": FAULT_SCHEMA,
         "module": shipped.corpus["module"],
@@ -115,11 +152,19 @@ def faults_view(spec_bytes: bytes, profile_raw: bytes) -> dict:
     }
 
 
-def dump_evaluation(spec_bytes: bytes, profile_raw: bytes) -> bytes:
+def dump_evaluation(
+    spec_bytes: bytes, profile_raw: bytes, spec_ref: str = "tuple_forms_v1.warrant", derived=None
+) -> bytes:
     """:func:`evaluation_view` in the canonical writer (what is committed)."""
-    return canonical(evaluation_view(spec_bytes, profile_raw))
+    return canonical(evaluation_view(spec_bytes, profile_raw, spec_ref, derived))
 
 
-def dump_faults(spec_bytes: bytes, profile_raw: bytes) -> bytes:
+def dump_faults(
+    spec_bytes: bytes,
+    profile_raw: bytes,
+    spec_ref: str = "tuple_forms_v1.warrant",
+    gate: str = "tuple",
+    shipped=None,
+) -> bytes:
     """:func:`faults_view` in the canonical writer (what is committed)."""
-    return canonical(faults_view(spec_bytes, profile_raw))
+    return canonical(faults_view(spec_bytes, profile_raw, spec_ref, gate, shipped))

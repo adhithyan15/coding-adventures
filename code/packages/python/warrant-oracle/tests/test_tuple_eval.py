@@ -257,7 +257,7 @@ def test_the_derived_corpus_of_a_tuple_document_has_computed_requires_and_levels
 
 def test_emit_reports_a_tuple_suite_live_and_names_the_implemented_levels():
     tree = emit(PAIRS)
-    assert tree["levels_implemented"] == ["ir.core", "ir.tuple"]
+    assert tree["levels_implemented"] == ["ir.core", "ir.fixed", "ir.tuple"]
     assert {r["status"] for r in tree["suites"].values()} == {"ok"}
     assert tree["suites"]["swap_claim"]["stream_header"] == "warrant-stream-v2"
 
@@ -299,7 +299,7 @@ def test_the_cli_emits_a_tuple_document(tmp_path, capsys):
     assert run(["emit-v2", "--spec", str(doc), "--out", str(out), "--depth", "full"]) == 0
     tree = json.loads(out.read_text())
     assert tree["suites"]["swap_claim"]["stream_header"] == "warrant-stream-v2"
-    assert tree["levels_implemented"] == ["ir.core", "ir.tuple"]
+    assert tree["levels_implemented"] == ["ir.core", "ir.fixed", "ir.tuple"]
     del capsys
 
 

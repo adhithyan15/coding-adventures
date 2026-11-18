@@ -1,8 +1,8 @@
 """Slice S10a: lowering, typing and refusals of the 35 ``ir.fixed`` built-ins (VER04r A.1).
 
 Every built-in is lowered to the exact JSON shape of Appendix A.1, typed from its operands, and
-the unit that uses it is marked ``unsupported`` at the level ``ir.fixed``: *evaluation still
-refuses*.  ``Option<T>`` is an IR-only intermediate whose only consumer is ``unwrap_or``
+the unit that uses it is evaluable since slice S10c-1 (it was marked ``unsupported`` at the level
+``ir.fixed`` in S10a, when evaluation still refused).  ``Option<T>`` is an IR-only intermediate whose only consumer is ``unwrap_or``
 (section 16.10 D23, R8) and ``div``/``rem`` on two ``Nat`` operands give ``Option<Int>`` (R7).
 """
 
@@ -35,9 +35,8 @@ def model(body: str, params: str, ret: str, prelude: str = ""):
 
 def lowered_ir(body: str, params: str, ret: str):
     m = model(body, params, ret)
-    # evaluation refuses (the level is named); the IR is nevertheless there to be dumped.
-    assert m.unsupported is not None and m.unsupported.level == "ir.fixed"
-    assert m.unsupported.code == "level"
+    # ir.fixed is evaluated since S10c-1: the unit is not refused, and its IR is there to be dumped.
+    assert m.unsupported is None, m.unsupported
     return m.ir
 
 
@@ -400,13 +399,13 @@ def test_an_option_from_a_subject_op_is_refused_too():
     assert spec.suites[0].unsupported.level == "ir.data"
 
 
-def test_a_producer_in_a_claim_is_lowered_and_marked_ir_fixed():
+def test_a_producer_in_a_claim_is_lowered_and_requires_ir_fixed():
     spec = lower(
         "warrant p v1\n  op f(a: U8, b: U8) -> U8\n  claim c:\n"
         "    forall a: U8, b: U8. f(a, b) == unwrap_or(checked_add(a, b), 255u8)\n"
     )
     s = spec.suites[0]
-    assert s.unsupported.level == "ir.fixed" and s.kind == "reference" and s.ops == ["f"]
+    assert s.unsupported is None and s.kind == "reference" and s.ops == ["f"]
     assert s.expected[0] == "unwrap_or" and s.requires == ("ir.core", "ir.fixed")
 
 

@@ -78,7 +78,8 @@ def test_unreadable_oversized_and_symlinked_inputs_exit_2(tmp_path, capsys):
 def test_check_prints_the_level_census(capsys):
     assert cli("check", "--spec", SPECS / "lzw.warrant") == 0
     tree = json.loads(capsys.readouterr().out)
-    assert tree["module"] == "lzw" and tree["suites_by_level"] == {"ir.core": 4, "ir.fixed": 17}
+    # S10c-1: ir.fixed is evaluated, so all 21 suites of lzw are live (was ir.core 4 + ir.fixed 17)
+    assert tree["module"] == "lzw" and tree["suites_by_level"] == {"ir.core": 21}
 
 
 def test_parser_requires_a_command():
@@ -176,25 +177,24 @@ def test_gf256_evaluator_agrees_with_the_documented_examples():
     "name,levels",
     [
         # S10a: a suite is named by the first construct, in source order, that the lowerer cannot
-        # lower; ``ir.fixed`` built-ins are lowered, so a suite that uses them *and* tuples or
-        # constructors counts under the latter (it used to count under the first construct met,
-        # fixed or not).
-        # S10t-1: ``ir.tuple`` is evaluated, so those suites are live (or ``ir.fixed`` when they
-        # also use a fixed-width built-in).  Was: wasm-leb128 fixed 8 + tuple 24, logic-gates
-        # fixed 55 + data 3 + tuple 2, arithmetic fixed 9 + data 45 + tuple 4.
-        ("wasm-leb128", {"ir.fixed": 24}),
-        ("logic-gates", {"ir.fixed": 57, "ir.data": 3}),
-        ("lzw", {"ir.fixed": 17}),
-        ("arithmetic", {"ir.fixed": 11, "ir.data": 45}),
-        ("x25519", {"ir.fixed": 2}),
+        # lower.  S10t-1: ``ir.tuple`` is evaluated (was wasm-leb128 fixed 8 + tuple 24, logic-gates
+        # fixed 55 + data 3 + tuple 2, arithmetic fixed 9 + data 45 + tuple 4).  S10c-1: ``ir.fixed``
+        # is evaluated too, so only ``ir.data`` still blocks a suite (was wasm-leb128 fixed 24,
+        # logic-gates fixed 57 + data 3, lzw fixed 17, arithmetic fixed 11 + data 45, x25519 fixed 2).
+        # This is the parse-and-lower census (``census``): enumerating these adopters is far too
+        # heavy for a unit test (wasm-leb128 is 46 million cases), see ``test_fixed_lzw``.
+        ("wasm-leb128", {}),
+        ("logic-gates", {"ir.data": 3}),
+        ("lzw", {}),
+        ("arithmetic", {"ir.data": 45}),
+        ("x25519", {}),
     ],
 )
 def test_later_adopters_report_not_live_by_level(name, levels):
-    tree = emit(adopter_bytes(name), profile=PROFILE)
-    assert tree["summary"]["not_live_by_level"] == levels
-    assert tree["summary"]["not-live"] == sum(levels.values())
-    live = tree["summary"]["ok"] + tree["summary"]["refused"]
-    assert live + tree["summary"]["not-live"] == len(tree["suites"])
+    c = census(lower_document(parse_source(adopter_bytes(name))))
+    blocked = {k: v for k, v in c["suites_by_level"].items() if k != "ir.core"}
+    assert blocked == levels
+    assert sum(c["suites_by_level"].values()) == c["suites"]
 
 
 def test_emit_can_select_suites_and_depth(tmp_path):
@@ -234,8 +234,8 @@ def test_census_counts_levels():
     c = census(lower_document(parse_source(adopter_bytes("arithmetic"))))
     assert (
         c["suites"] == 63
-        and c["suites_by_level"]["ir.fixed"] == 11
-        and c["models_not_ir_core"] == 60
+        and c["suites_by_level"] == {"ir.core": 18, "ir.data": 45}
+        and c["models_not_ir_core"] == 19
     )
 
 
