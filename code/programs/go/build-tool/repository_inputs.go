@@ -329,6 +329,11 @@ var (
 	// tests/tuple_parity.rs reproduces the dumps byte for byte (CV2-S10t-2), reading them from this
 	// directory; it lies in the oracle's package, so only the generator needs a row for it.
 	warrantTupleFormsFixture = "code/packages/python/warrant-oracle/tests/fixtures/tuple-forms-v1"
+	// warrantFixedEvalFixture is the oracle's synthetic ir.fixed EVALUATION document, its profile and its
+	// five committed dumps (lowering, evaluation, faults, values, domains; CV2-S10c-1). The generator's
+	// tests/fixed_eval_parity.rs reproduces the dumps byte for byte (CV2-S10c-2), reading them from this
+	// directory; it lies in the oracle's package, so only the generator needs a row for it.
+	warrantFixedEvalFixture = "code/packages/python/warrant-oracle/tests/fixtures/fixed-eval-v1"
 	// warrantCorpusGenPaths are the inputs of the generator's --check line and of its
 	// cross-package parity tests.
 	warrantCorpusGenPaths = []string{
@@ -339,6 +344,7 @@ var (
 		warrantFixedFormsFixture,
 		warrantOmitExampleFixture,
 		warrantTupleFormsFixture,
+		warrantFixedEvalFixture,
 	}
 	// warrantOracleRowPaths adds the fixture directory to the oracle's exact files.
 	warrantOracleRowPaths = append(append([]string{}, warrantOraclePaths...), warrantCorpusV2Fixture)
@@ -1000,7 +1006,7 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	{
 		name:     "rust/warrant-corpus-gen",
 		language: "rust",
-		inputs:   "the ct-compare spec, bindings and committed v2 fixture its BUILD --check regenerates (VER04r 16.8), and the oracle's accept-blind, fixed-forms, omit-example and tuple-forms fixtures its tests reproduce",
+		inputs:   "the ct-compare spec, bindings and committed v2 fixture its BUILD --check regenerates (VER04r 16.8), and the oracle's accept-blind, fixed-forms, omit-example, tuple-forms and fixed-eval fixtures its tests reproduce",
 		matches:  isWarrantCorpusGenInput,
 		paths:    warrantCorpusGenPaths,
 	},
@@ -1104,7 +1110,8 @@ func isWarrantCorpusGenInput(changed string) bool {
 		strings.HasPrefix(changed, warrantAcceptBlindFixture+"/") ||
 		strings.HasPrefix(changed, warrantFixedFormsFixture+"/") ||
 		strings.HasPrefix(changed, warrantOmitExampleFixture+"/") ||
-		strings.HasPrefix(changed, warrantTupleFormsFixture+"/")
+		strings.HasPrefix(changed, warrantTupleFormsFixture+"/") ||
+		strings.HasPrefix(changed, warrantFixedEvalFixture+"/")
 }
 
 // isWarrantPythonLaneCorpusInput selects the Python runner package when the
