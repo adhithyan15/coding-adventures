@@ -225,8 +225,10 @@ class GateG1(unittest.TestCase):
             self.assertEqual(mod.gated_probes(probe_events(test, "    " + good)), [], test)
 
     def test_a_real_verbose_json_subtest_event_parses(self) -> None:
-        # Copied verbatim from `go test -v -json` (go1.26) on a scratch test whose
-        # subtest "sub one" logged a PROBE line and a two-line message.
+        # Only the FIRST event is verbatim `go test -v -json` output (go1.26), from
+        # a scratch test whose subtest "sub one" logged a PROBE line.  The second
+        # is hand-written to look like the continuation line of a multi-line
+        # message (eight spaces, no file:line), which go test does print.
         real = {"Time": "2026-11-17T19:30:15.369747-08:00", "Action": "output", "Package": "scratchfix", "Test": "TestTop/sub_one",
                 "Output": "    a_test.go:7: PROBE: trace probe-pipes bytes=60000 lines=1 best_mb_s=30.0 gated=1\n"}
         forged = {"Time": "2026-11-17T19:30:15.369759-08:00", "Action": "output", "Package": "scratchfix", "Test": "TestTop/sub_one",
@@ -265,6 +267,40 @@ class GateG1(unittest.TestCase):
         self.assertEqual(mod.gated_probes(tail), [])
         # The facts printed for the log follow the same rule.
         self.assertEqual(mod.passing_facts(events), {"TestSandboxRecordStep": [mod.LOG_PREFIX + (head + evil + '" grammar_refusal=""').strip()[: mod.MAX_FACT_CHARS]]})
+
+    def test_facts_print_no_control_characters_and_no_workflow_command(self) -> None:
+        def out(text: str) -> str:
+            return json.dumps({"Action": "output", "Test": "TestA", "Output": text})
+
+        lines = [
+            out("    x_test.go:1: F2: a\r::error::x\n"),
+            out("    x_test.go:2: F2: b\x85::warning::y\n"),
+            out("    x_test.go:3: F2: c\x1b[31m\u2028::error::z\n"),
+            json.dumps({"Action": "pass", "Test": "TestA"}),
+        ]
+        facts = mod.passing_facts(lines)["TestA"]
+        self.assertEqual(len(facts), 3)
+        for fact in facts:
+            self.assertEqual(fact, mod.printable(fact))
+            self.assertFalse([c for c in fact if not 0x20 <= ord(c) <= 0x7E], fact)
+            self.assertFalse(any(piece.startswith("::") for piece in fact.splitlines()), fact)
+        self.assertIn("\\x0d::error::x", facts[0])
+        # The failing test's output is escaped the same way.
+        bad = [out("x\r::error::boom\n"), json.dumps({"Action": "fail", "Test": "TestA"})]
+        printed = [line for text in mod.failing_output(bad).values() for line in text]
+        self.assertTrue(printed)
+        self.assertFalse([line for line in printed if line.startswith("::") or "\r" in line], printed)
+
+    def test_an_over_long_line_is_dropped_and_the_next_line_still_parses(self) -> None:
+        big = "    x_test.go:1: PROBE: trace huge bytes=1 lines=1 best_mb_s=99 gated=1 " + "a" * (mod.MAX_PENDING_CHARS + 10)
+        test = "TestSandboxTraceGateSynthetic"
+        events = [
+            json.dumps({"Action": "output", "Test": test, "Output": big[:5000]}),
+            json.dumps({"Action": "output", "Test": test, "Output": big[5000:] + "\n" + SYNTHETIC_PROBE + "\n"}),
+            json.dumps({"Action": "pass", "Test": test}),
+        ]
+        found = mod.gated_probes(events)
+        self.assertEqual([label for _, label, _ in found], ["synthetic-slice"])
 
     def test_a_label_ending_in_a_colon_is_not_a_measurement(self) -> None:
         err = "    x_test.go:5: PROBE: trace probe-pipes: cannot open: best_mb_s=99 gated=1 open x: no such file"

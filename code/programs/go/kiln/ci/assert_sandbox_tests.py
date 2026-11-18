@@ -70,9 +70,20 @@ MAX_FACT_CHARS = 450
 LOG_PREFIX = "  "
 
 
+def printable(text: str) -> str:
+    """text with every character outside printable ASCII written as \\xNN.
+
+    The Actions runner treats a line that starts with "::" as a workflow command,
+    and a bare carriage return (or NEL, or any other control character a terminal
+    or log pipeline may take for a line break) inside a printed line could start
+    one.  Escaping everything but 0x20..0x7e leaves no character that can break a
+    line."""
+    return re.sub(r"[^\x20-\x7e]", lambda m: "\\x%02x" % ord(m.group()), text)
+
+
 def log_lines(text: str) -> list[str]:
     """The lines of a piece of test output, each safe to print."""
-    return [LOG_PREFIX + line for line in text.splitlines() or [""]]
+    return [LOG_PREFIX + printable(line) for line in text.splitlines() or [""]]
 
 
 def failing_output(lines: list[str], limit: int = 60) -> dict[str, list[str]]:
@@ -112,7 +123,7 @@ def passing_facts(lines: list[str]) -> dict[str, list[str]]:
     found: dict[str, list[str]] = {}
     for test, text in terminated_lines(events):
         if any(m in text for m in FACT_MARKERS):
-            found.setdefault(test, []).append(LOG_PREFIX + text.strip()[:MAX_FACT_CHARS])
+            found.setdefault(test, []).append(LOG_PREFIX + printable(text).strip()[:MAX_FACT_CHARS])
     out: dict[str, list[str]] = {}
     budget = MAX_FACT_LINES
     for test in sorted(found):
@@ -171,6 +182,11 @@ SYNTHETIC_TEST = "TestSandboxTraceGateSynthetic"
 PROBE_RE = re.compile(r"^ {4}[\w.\-]+\.go:\d+: (PROBE: trace (\S+) .*)$")
 
 
+# The longest unterminated line terminated_lines will hold for one test.  A longer
+# one is "poisoned" (never yielded), which also keeps the buffering linear.
+MAX_PENDING_CHARS = 64 * 1024
+
+
 def terminated_lines(events: list[dict]) -> list[tuple[str, str]]:
     """(test, line) for every COMPLETE line of every test's output, in order.
 
@@ -182,16 +198,26 @@ def terminated_lines(events: list[dict]) -> list[tuple[str, str]]:
     line counts only once its newline has arrived; an unterminated tail waits
     for the next event of the same test and, if none comes, is dropped (it is
     never a whole line)."""
-    pending: dict[str, str] = {}
+    state: dict[str, tuple[str, bool]] = {}
     out: list[tuple[str, str]] = []
     for event in events:
         test = event.get("Test", "")
         if event.get("Action") != "output" or not test:
             continue
-        buf = pending.get(test, "") + event.get("Output", "")
-        *whole, tail = buf.split("\n")
-        pending[test] = tail
-        out.extend((test, line) for line in whole)
+        tail, poisoned = state.get(test, ("", False))
+        parts = event.get("Output", "").split("\n")
+        for i, part in enumerate(parts):
+            if not poisoned:
+                tail += part
+                if len(tail) > MAX_PENDING_CHARS:
+                    # An over-long line is never a PROBE line: drop it, and
+                    # everything up to its newline, without buffering more.
+                    poisoned, tail = True, ""
+            if i < len(parts) - 1:  # a newline ended this line
+                if not poisoned:
+                    out.append((test, tail))
+                tail, poisoned = "", False
+        state[test] = (tail, poisoned)
     return out
 
 
@@ -280,15 +306,15 @@ def main(argv: list[str]) -> int:
         return 2
     problems = check(lines) + gate_problems(lines)
     for test, output in sorted(failing_output(lines).items()):
-        print(f"::group::output of failing test {test}")
+        print(f"::group::output of failing test {printable(test)}")
         print("\n".join(output))
         print("::endgroup::")
     for test, facts in passing_facts(lines).items():
-        print(f"::group::facts logged by passing test {test}")
+        print(f"::group::facts logged by passing test {printable(test)}")
         print("\n".join(facts))
         print("::endgroup::")
     for problem in problems:
-        print(f"::error::{problem}")
+        print(f"::error::{printable(problem)}")
     if problems:
         return 1
     print(f"all {len(REQUIRED)} sandbox tests ran and passed, none skipped")
