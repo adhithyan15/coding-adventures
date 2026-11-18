@@ -1538,4 +1538,5 @@ members = [
   "rsa-pss-sha512-signature",
   "tls13-rsa-pss-signature-routing",
   "tls13-rsa-pss-certificate-verify",
+  "tls13-certificate-verify-transcript-binding",
 ]

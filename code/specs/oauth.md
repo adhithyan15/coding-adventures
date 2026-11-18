@@ -884,6 +884,29 @@ transport, or open a network connection. Those transcript, certificate,
 trust, revocation, handshake, and transport boundaries remain separate;
 concrete HTTPS and live-provider readiness remain unavailable.
 
+A bounded `tls13-certificate-verify-transcript-binding` composition now closes
+the detached-transcript-hash and detached-transcript-algorithm gap for that
+operation. It accepts one immutable selected repository transcript state, one
+caller-selected CertificateVerify role, caller-owned output, and one already
+policy-authorized RSA-PSS scheme. The composition snapshots the transcript
+internally, maps only its suite-bound SHA-256 or SHA-384 algorithm to the exact
+framing metadata, constructs the role-specific RFC 8446 signed input, and then
+delegates hashing to `tls13-rsa-pss-certificate-verify`. Non-copyable evidence
+retains the selected transcript state, exact snapshot, role-bound framed input,
+authorized signature scheme, and owned scheme-bound digest together. The API
+accepts neither detached transcript bytes nor caller-selected transcript-hash
+metadata, and the retained immutable transcript borrow prevents that state from
+advancing while the evidence is live.
+
+This evidence does not prove that the caller fed the selected transcript the
+right ordered handshake messages or stopped at the required handshake state,
+authorize the caller-selected client or server role, bind a certificate or
+validated path key, authenticate Finished, sequence a handshake, process or
+protect records, perform I/O, authorize HTTP or OAuth transport, or open a
+network connection. Those ordered-state, role, certificate, trust, revocation,
+handshake, and transport boundaries remain separate; concrete HTTPS and
+live-provider readiness remain unavailable.
+
 A bounded `rsa-pss-sha512` prerequisite now validates one complete recovered
 RFC 8017 EMSA-PSS encoded message for the fixed SHA-512, 64-byte-salt profile.
 It composes the public layout gate and bounded SHA-512 MGF1 primitive, unmasks
