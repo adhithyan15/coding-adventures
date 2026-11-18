@@ -68,6 +68,19 @@ func TestWarrantCorpusV2FixtureSelectsGeneratorAndOracle(t *testing.T) {
 	if err != nil || !reflect.DeepEqual(got, map[string]bool{"rust/warrant-corpus-gen": true}) {
 		t.Fatalf("accept-blind fixture selected %v (err %v)", got, err)
 	}
+	// CV2-S10b: the oracle's ir.fixed document and its lowering dump are reproduced by the
+	// generator's tests/fixed_parity.rs, read from the oracle's directory: the generator needs
+	// the row, the oracle has the path prefix.
+	for _, changed := range []string{
+		"code/packages/python/warrant-oracle/tests/fixtures/fixed-forms-v1/fixed_forms_v1.warrant",
+		"code/packages/python/warrant-oracle/tests/fixtures/fixed-forms-v1/fixed_forms_v1.oracle-lowering.json",
+		"code/packages/python/warrant-oracle/tests/fixtures/fixed-forms-v1/make_fixed_forms.py",
+	} {
+		got, err = repositoryInputConsumersForChange([]string{changed}, packages, "all")
+		if err != nil || !reflect.DeepEqual(got, map[string]bool{"rust/warrant-corpus-gen": true}) {
+			t.Fatalf("%s selected %v (err %v)", changed, got, err)
+		}
+	}
 	// Lookalikes select neither: another version directory, the directory itself (a
 	// changed *file* is what is mapped), a backslash spelling, another crate's bindings.
 	for _, changed := range []string{
@@ -79,6 +92,8 @@ func TestWarrantCorpusV2FixtureSelectsGeneratorAndOracle(t *testing.T) {
 		"code/packages/rust/ct-compare/evidence.bindings.bak",
 		"code/packages/rust/gf256/evidence.bindings",
 		"code/packages/python/warrant-oracle/tests/fixtures/accept-blind-v20/corpus/corpus.json",
+		"code/packages/python/warrant-oracle/tests/fixtures/fixed-forms-v10/fixed_forms_v1.warrant",
+		"code/packages/python/warrant-oracle/tests/fixtures/fixed-forms-v1",
 		"code/specs/fixtures/ct-compare-warrant-v1/consumers.backup.json",
 	} {
 		got, err := repositoryInputConsumersForChange([]string{changed}, packages, "all")
