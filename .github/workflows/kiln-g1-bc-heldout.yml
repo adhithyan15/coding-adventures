@@ -1,0 +1,361 @@
+name: Kiln G1 held-out B-C experiment
+
+on:
+  push:
+    branches:
+      - codex/g1-ascii-step-run-heldout
+    paths:
+      - .github/workflows/kiln-g1-bc-heldout.yml
+      - code/programs/go/kiln/ci/testdata/g1_abba_precision_linux_amd64_test.go.tmpl
+      - code/programs/go/kiln/ci/classify_g1_gate_result.py
+      - code/programs/go/kiln/ci/test_classify_g1_gate_result.py
+      - code/programs/go/kiln/ci/check_g1_production_delta.py
+      - code/programs/go/kiln/ci/test_check_g1_production_delta.py
+
+permissions:
+  contents: read
+
+jobs:
+  paired-gate:
+    name: G1 B1-C1-C2-B2 (${{ matrix.os }}, slot ${{ matrix.slot }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, ubuntu-26.04]
+        slot: [1, 2]
+    env:
+      BASELINE_SHA: 1a3f378412a5eeb899bcc8e10c8c0c3b9a066bb1
+      CANDIDATE_SHA: 29e15236f358f22f66fab507a38a652afd786ea3
+    steps:
+      - name: Checkout candidate C
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ env.CANDIDATE_SHA }}
+          path: candidate
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout: |
+            code/grammars
+            code/packages/go
+            code/programs/go/kiln
+            code/specs
+          sparse-checkout-cone-mode: false
+          filter: blob:none
+
+      - name: Checkout pinned baseline B
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ env.BASELINE_SHA }}
+          path: baseline
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout: |
+            code/grammars
+            code/packages/go
+            code/programs/go/kiln
+            code/specs
+          sparse-checkout-cone-mode: false
+          filter: blob:none
+
+      - name: Checkout experiment helpers
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.sha }}
+          path: experiment
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout: |
+            code/programs/go/kiln/ci/testdata/g1_abba_precision_linux_amd64_test.go.tmpl
+            code/programs/go/kiln/ci/classify_g1_gate_result.py
+            code/programs/go/kiln/ci/test_classify_g1_gate_result.py
+            code/programs/go/kiln/ci/check_g1_production_delta.py
+            code/programs/go/kiln/ci/test_check_g1_production_delta.py
+          sparse-checkout-cone-mode: false
+          filter: blob:none
+
+      - name: Set up Go
+        uses: actions/setup-go@v7
+        with:
+          go-version: '1.26.1'
+          cache-dependency-path: 'candidate/code/**/go.sum'
+
+      - name: Freeze clean binaries and run fixed B1-C1-C2-B2 cells
+        working-directory: candidate/code/programs/go/kiln
+        shell: bash
+        run: |
+          set -uo pipefail
+          output="$RUNNER_TEMP/kiln-g1-heldout-bc"
+          mkdir -p "$output"
+          integrity_failure=0
+          candidate_gate_failure=0
+
+          snapshot() {
+            local label="$1" cgroup_path
+            {
+              echo "snapshot=$label"
+              date -u +%Y-%m-%dT%H:%M:%SZ
+              cat /proc/self/cgroup
+              cgroup_path=$(awk -F: '$1 == "0" { print $3 }' /proc/self/cgroup)
+              echo "resolved_cgroup=/sys/fs/cgroup$cgroup_path"
+              echo "process_cgroup_cpu.max:"
+              cat "/sys/fs/cgroup$cgroup_path/cpu.max" 2>&1 || true
+              echo "process_cgroup_cpu.stat:"
+              cat "/sys/fs/cgroup$cgroup_path/cpu.stat" 2>&1 || true
+              echo "process_cgroup_cpu.pressure:"
+              cat "/sys/fs/cgroup$cgroup_path/cpu.pressure" 2>&1 || true
+              echo "root_cpu.max:"
+              cat /sys/fs/cgroup/cpu.max 2>&1 || true
+              echo "root_cpu.stat:"
+              cat /sys/fs/cgroup/cpu.stat 2>&1 || true
+              echo "root_cpu.pressure:"
+              cat /sys/fs/cgroup/cpu.pressure 2>&1 || true
+              echo "proc.pressure.cpu:"
+              cat /proc/pressure/cpu 2>&1 || true
+              awk '$1 == "cpu" { print "proc.stat.cpu_steal_ticks=" $9 }' /proc/stat
+            }
+          }
+
+          capture() {
+            local root="$1" label="$2" log="$3"
+            shift 3
+            snapshot "before-$label" > "$output/$label.resources.txt"
+            if (cd "$root/code/programs/go/kiln" && "$@") > "$log" 2>&1; then
+              printf 'exit_code=0\n' >> "$output/$label.resources.txt"
+            else
+              local status=$?
+              printf 'exit_code=%s\n' "$status" >> "$output/$label.resources.txt"
+            fi
+            snapshot "after-$label" >> "$output/$label.resources.txt"
+            cat "$log"
+            cat "$output/$label.resources.txt"
+          }
+
+          runtime_tree_paths=(
+            code/programs/go/kiln
+            code/programs/go/kiln/internal/trace
+            code/programs/go/kiln/internal/traced
+            code/grammars/strace
+            code/packages/go/lexer
+            code/packages/go/parser
+            code/packages/go/strace-lexer
+            code/packages/go/strace-parser
+          )
+          gate_test=code/programs/go/kiln/sandbox_tracesize_linux_amd64_test.go
+          measure_source=code/programs/go/kiln/internal/trace/measure.go
+          fixture_rel=code/programs/go/kiln/internal/trace/testdata/build.strace
+          fixture_sha=dc8acd0de1d9b235c3924d0d71e2fcd565274e09ded9975570f429b548525aae
+          slice_sha=6cd61f63fdec55ce37294ad061705394b1babda80e5368b17ecb5bd38e2207af
+          helper="$GITHUB_WORKSPACE/experiment/code/programs/go/kiln/ci/testdata/g1_abba_precision_linux_amd64_test.go.tmpl"
+          classifier="$GITHUB_WORKSPACE/experiment/code/programs/go/kiln/ci/classify_g1_gate_result.py"
+          delta_checker="$GITHUB_WORKSPACE/experiment/code/programs/go/kiln/ci/check_g1_production_delta.py"
+          summary="$output/results.txt"
+
+          if ! python3 "$GITHUB_WORKSPACE/experiment/code/programs/go/kiln/ci/test_classify_g1_gate_result.py"; then
+            echo "G1 result classifier unit tests failed" >&2
+            exit 2
+          fi
+          if ! python3 "$GITHUB_WORKSPACE/experiment/code/programs/go/kiln/ci/test_check_g1_production_delta.py"; then
+            echo "compiled production delta checker unit tests failed" >&2
+            exit 2
+          fi
+
+          {
+            echo "workflow_sha=$GITHUB_SHA"
+            echo "experiment_checkout_sha=$(git -C "$GITHUB_WORKSPACE/experiment" rev-parse HEAD)"
+            echo "baseline_version_B_sha=$BASELINE_SHA"
+            echo "candidate_version_C_sha=$CANDIDATE_SHA"
+            echo "cell_mapping=B1/B2=baseline-version-B; C1/C2=candidate-version-C"
+            echo "cohort_slot=${{ matrix.slot }}"
+            echo "runner_os=$RUNNER_OS runner_arch=$RUNNER_ARCH image_os=${ImageOS:-unknown} image_version=${ImageVersion:-unknown}"
+            echo "go=$(go version) gomaxprocs=${GOMAXPROCS:-default}"
+            uname -a
+            cat /etc/os-release
+            lscpu
+            echo "precision_helper_template_sha256=$(sha256sum "$helper" | cut -d' ' -f1)"
+            for checkout in baseline candidate; do
+              root="$GITHUB_WORKSPACE/$checkout"
+              echo "checkout=$checkout head=$(git -C "$root" rev-parse HEAD)"
+              for path in "${runtime_tree_paths[@]}"; do
+                echo "runtime_tree $checkout $path $(git -C "$root" rev-parse "HEAD:$path")"
+              done
+              echo "gate_test_blob $checkout $(git -C "$root" rev-parse "HEAD:$gate_test")"
+              echo "measure_source_blob $checkout $(git -C "$root" rev-parse "HEAD:$measure_source")"
+              echo "lexer_matcher_blob $checkout $(git -C "$root" rev-parse HEAD:code/packages/go/lexer/matcher.go)"
+              echo "lexer_transition_blob $checkout $(git -C "$root" rev-parse HEAD:code/packages/go/lexer/grammar_lexer_f10.go)"
+              echo "strace_grammar_tree $checkout $(git -C "$root" rev-parse HEAD:code/grammars/strace)"
+              echo "fixture_blob $checkout $(git -C "$root" rev-parse "HEAD:$fixture_rel")"
+              actual_fixture_sha=$(sha256sum "$root/$fixture_rel" | cut -d' ' -f1)
+              echo "fixture_sha256 $checkout $actual_fixture_sha"
+              if [[ "$actual_fixture_sha" != "$fixture_sha" ]]; then
+                echo "fixture changed in $checkout" >&2
+                exit 2
+              fi
+            done
+          } | tee "$output/identity.txt"
+
+          if [[ "$(git -C "$GITHUB_WORKSPACE/baseline" rev-parse HEAD)" != "$BASELINE_SHA" || \
+                "$(git -C "$GITHUB_WORKSPACE/candidate" rev-parse HEAD)" != "$CANDIDATE_SHA" ]]; then
+            echo "checkout identity mismatch" >&2
+            exit 2
+          fi
+          if [[ "$(git -C "$GITHUB_WORKSPACE/experiment" rev-parse HEAD)" != "$GITHUB_SHA" ]]; then
+            echo "experiment checkout does not match workflow event SHA" >&2
+            exit 2
+          fi
+          for tree in baseline candidate; do
+            root="$GITHUB_WORKSPACE/$tree"
+            gate_blob=$(git -C "$root" rev-parse "HEAD:$gate_test")
+            measure_blob=$(git -C "$root" rev-parse "HEAD:$measure_source")
+            if [[ "$gate_blob" != f834ff07849b8c1dd8b412d99e4e95e119176614 || \
+                  "$measure_blob" != c04b3a093c81262201ecb2f43d48f9a162312eff ]]; then
+              echo "gate or BestPass1 source drift in $tree" >&2
+              exit 2
+            fi
+          done
+          if [[ "$(git -C "$GITHUB_WORKSPACE/baseline" rev-parse HEAD:code/packages/go/lexer/matcher.go)" != e2ecb4d52a32122f2056a632f7a4e645860f9667 || \
+                "$(git -C "$GITHUB_WORKSPACE/candidate" rev-parse HEAD:code/packages/go/lexer/matcher.go)" != 72ca3a12145dcc74b84ccb3baf757bd6d32c4bcb ]]; then
+            echo "matcher B/C source blobs do not match the reviewed candidate" >&2
+            exit 2
+          fi
+          for checkout in baseline candidate; do
+            if [[ "$(git -C "$GITHUB_WORKSPACE/$checkout" rev-parse HEAD:code/packages/go/lexer/grammar_lexer_f10.go)" != 3fec22ab311048fc219823d714ce2fb0deefb8ec ]]; then
+              echo "transition source changed in $checkout" >&2
+              exit 2
+            fi
+          done
+          baseline_grammar_tree=$(git -C "$GITHUB_WORKSPACE/baseline" rev-parse HEAD:code/grammars/strace)
+          candidate_grammar_tree=$(git -C "$GITHUB_WORKSPACE/candidate" rev-parse HEAD:code/grammars/strace)
+          if [[ "$baseline_grammar_tree" != "$candidate_grammar_tree" ]]; then
+            echo "strace grammar changed between B and C" >&2
+            exit 2
+          fi
+
+          if ! python3 "$delta_checker" "$GITHUB_WORKSPACE/baseline" "$GITHUB_WORKSPACE/candidate" \
+              > "$output/production-go-delta.txt" 2> "$output/production-go-delta-error.txt"; then
+            cat "$output/production-go-delta-error.txt" >&2
+            cat "$output/production-go-delta.txt"
+            exit 2
+          fi
+          cat "$output/production-go-delta.txt" | tee -a "$output/identity.txt"
+
+          # Compile clean official binaries before copying the precision helper.
+          for checkout in baseline candidate; do
+            root="$GITHUB_WORKSPACE/$checkout"
+            if ! clean_status=$(git -C "$root" status --porcelain); then
+              echo "could not inspect $checkout tree before admission compile" >&2
+              exit 2
+            elif [[ -n "$clean_status" ]]; then
+              echo "$checkout tree is dirty before admission compile" >&2
+              exit 2
+            fi
+            if (cd "$root/code/programs/go/kiln" && go test -c -o "$output/admission-$checkout.test" .) \
+                > "$output/compile-$checkout.log" 2>&1; then
+              cat "$output/compile-$checkout.log"
+            else
+              compile_status=$?
+              cat "$output/compile-$checkout.log"
+              echo "admission compile failed for $checkout: $compile_status" >&2
+              exit "$compile_status"
+            fi
+            echo "admission_binary_sha256 $checkout $(sha256sum "$output/admission-$checkout.test" | cut -d' ' -f1)" | tee -a "$output/identity.txt"
+          done
+
+          # Compile a separate exact-slice helper; its timing is never the gate.
+          for checkout in baseline candidate; do
+            root="$GITHUB_WORKSPACE/$checkout"
+            cp "$helper" "$root/code/programs/go/kiln/g1_abba_precision_linux_amd64_test.go"
+            if (cd "$root/code/programs/go/kiln" && go test -c -o "$output/precision-$checkout.test" .) \
+                > "$output/precision-compile-$checkout.log" 2>&1; then
+              cat "$output/precision-compile-$checkout.log"
+            else
+              compile_status=$?
+              cat "$output/precision-compile-$checkout.log"
+              echo "precision helper compile failed for $checkout: $compile_status" >&2
+              exit "$compile_status"
+            fi
+            echo "precision_binary_sha256 $checkout $(sha256sum "$output/precision-$checkout.test" | cut -d' ' -f1)" | tee -a "$output/identity.txt"
+          done
+
+          echo "baseline_version_B=$BASELINE_SHA candidate_version_C=$CANDIDATE_SHA" | tee "$summary"
+          echo "cell_mapping=B1/B2=baseline-version-B; C1/C2=candidate-version-C" | tee -a "$summary"
+          for cell in B1 C1 C2 B2; do
+            if [[ "$cell" == B* ]]; then checkout=baseline; else checkout=candidate; fi
+            root="$GITHUB_WORKSPACE/$checkout"
+            admission_log="$output/$cell-admission.log"
+            detail_log="$output/$cell-precision.log"
+            echo "cell_start cell=$cell arm=$checkout sha=$(git -C "$root" rev-parse HEAD)" | tee -a "$summary"
+
+            capture "$root" "$cell-admission" "$admission_log" env KILN_G1_GATE=1 \
+              "$output/admission-$checkout.test" -test.timeout=60s -test.count=1 \
+              -test.run '^TestSandboxTraceGateSynthetic$' -test.v
+            gate_status=$(sed -n 's/^exit_code=//p' "$output/$cell-admission.resources.txt" | head -1)
+            cell_result=INVALID
+            if cell_result=$(python3 "$classifier" "$admission_log" "${gate_status:-}" "$checkout"); then
+              echo "cell_status cell=$cell arm=$checkout official_exit=$gate_status result=$cell_result" | tee -a "$summary"
+            else
+              echo "cell_status cell=$cell arm=$checkout official_exit=${gate_status:-missing} result=INVALID" | tee -a "$summary"
+              integrity_failure=1
+            fi
+            if [[ "$checkout" == candidate && "$cell_result" != PASS* ]]; then
+              candidate_gate_failure=1
+            fi
+
+            capture "$root" "$cell-precision" "$detail_log" env KILN_G1_PROFILE_KIND=exact \
+              "$output/precision-$checkout.test" -test.timeout=30s -test.count=1 \
+              -test.run '^TestG1ABBAExactSliceTime$' -test.v
+            detail_status=$(sed -n 's/^exit_code=//p' "$output/$cell-precision.resources.txt" | head -1)
+            echo "precision_status cell=$cell exit=$detail_status" | tee -a "$summary"
+            if [[ "$detail_status" != 0 ]] || \
+               ! grep -Eq '^=== RUN[[:space:]]+TestG1ABBAExactSliceTime$' "$detail_log" || \
+               ! grep -Eq '^--- PASS: TestG1ABBAExactSliceTime([[:space:]]|$)' "$detail_log" || \
+               ! grep -Eq 'G1DETAIL: fixture_sha256=dc8acd0de1d9b235c3924d0d71e2fcd565274e09ded9975570f429b548525aae slice_sha256=6cd61f63fdec55ce37294ad061705394b1babda80e5368b17ecb5bd38e2207af bytes=66600 lines=936 best_ns=[1-9][0-9]* rate_bytes_per_second=[0-9]+\.[0-9]+ refusal=none helper_root=true gc=off_during_timing repeats_min=7' "$detail_log"; then
+              echo "precision cell $cell is missing valid exact-slice markers" | tee -a "$summary"
+              integrity_failure=1
+            fi
+            best_ns=$(sed -n 's/.*G1DETAIL: .* best_ns=\([0-9][0-9]*\) .*/\1/p' "$detail_log" | head -1)
+            echo "cell_precision_ns cell=$cell best_ns=${best_ns:-missing}" | tee -a "$summary"
+            if [[ -z "$best_ns" ]]; then integrity_failure=1; fi
+          done
+
+          if python3 - "$output" <<'PY' | tee -a "$summary"
+          import re, sys
+          from pathlib import Path
+          root = Path(sys.argv[1])
+          values = {}
+          for cell in ("B1", "C1", "C2", "B2"):
+              text = (root / f"{cell}-precision.log").read_text()
+              found = re.search(r"G1DETAIL: .*? best_ns=(\d+)", text)
+              if found:
+                  values[cell] = int(found.group(1))
+          if len(values) == 4:
+              b = (values["B1"] + values["B2"]) / 2
+              c = (values["C1"] + values["C2"]) / 2
+              print(f"paired_mean_ns B={b:.1f} C={c:.1f} C_elapsed_change_pct={(c-b)/b*100:.4f}")
+          else:
+              missing = sorted({"B1", "C1", "C2", "B2"} - set(values))
+              print(f"paired_mean_ns unavailable missing={missing}")
+              sys.exit(1)
+          PY
+          then
+            precision_summary_status=0
+          else
+            precision_summary_status=$?
+            integrity_failure=1
+            echo "precision summary incomplete; official cells retained" | tee -a "$summary"
+          fi
+          echo "candidate_gate_failure=$candidate_gate_failure integrity_failure=$integrity_failure" | tee -a "$summary"
+          echo "final_candidate_gate_failure=$candidate_gate_failure final_integrity_failure=$integrity_failure" | tee -a "$summary"
+          if [[ "$candidate_gate_failure" -ne 0 || "$integrity_failure" -ne 0 ]]; then
+            exit 1
+          fi
+
+      - name: Upload held-out B-C cells and provenance
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: kiln-g1-heldout-bc-${{ matrix.os }}-slot${{ matrix.slot }}
+          path: ${{ runner.temp }}/kiln-g1-heldout-bc/
+          if-no-files-found: error
+          retention-days: 3
