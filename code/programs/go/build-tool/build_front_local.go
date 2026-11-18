@@ -6,7 +6,9 @@ package main
 // internal/gitdiff.ClassifyChangedFiles decides from a path, a Git status and
 // two package facts (language, Starlark) whether an in-place edit of a root
 // BUILD front is package-local. Three vetoes need the filesystem and are
-// computed here, then handed to the classifier as gitdiff.StatusOrdinary:
+// computed here, then handed to the classifier as gitdiff.StatusOrdinary (a veto) or, for a front all
+// three leave alone, gitdiff.StatusLocalFront (the only status the classifier
+// accepts as local, so a front never examined here stays ordinary):
 //
 //	V1  the package carries the platform-unsupported marker at HEAD in any of
 //	    its fronts (its dependents are reported "dep-unsupported"; editing the
@@ -32,9 +34,11 @@ import (
 	starlarkeval "github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/starlark"
 )
 
-// ordinaryBuildFronts returns the changed BUILD-front paths that must stay
-// ordinary although Git says M: vetoes V1-V3. A nil result means none.
-func ordinaryBuildFronts(changed []string, statuses gitdiff.ChangeStatuses, packages []discovery.Package, repoRoot string) map[string]bool {
+// clearedBuildFronts returns the changed BUILD-front paths the veto pass
+// positively examined and cleared: status M, a shell package of a gated
+// language, mapped to a discovered package, and passing V1-V3. Only these may
+// become gitdiff.StatusLocalFront. A nil result means none.
+func clearedBuildFronts(changed []string, statuses gitdiff.ChangeStatuses, packages []discovery.Package, repoRoot string) map[string]bool {
 	packageByDir := make(map[string]discovery.Package, len(packages))
 	for _, pkg := range packages {
 		if rel, err := filepath.Rel(repoRoot, pkg.Path); err == nil {
@@ -81,12 +85,11 @@ func ordinaryBuildFronts(changed []string, statuses gitdiff.ChangeStatuses, pack
 		frontsByName[entry.Name] = entry
 	}
 
-	ordinary := map[string]bool{}
+	cleared := map[string]bool{}
 	for _, c := range candidates {
 		entry := frontsByName[c.pkg.Name]
 		// V3: another package runs this package's BUILD.
 		if executed[c.pkg.Name] {
-			ordinary[c.path] = true
 			continue
 		}
 		// V1: unsupported-protocol marker in any front at HEAD.
@@ -98,14 +101,13 @@ func ordinaryBuildFronts(changed []string, statuses gitdiff.ChangeStatuses, pack
 			}
 		}
 		if marked {
-			ordinary[c.path] = true
 			continue
 		}
 		// V2: unreadable or Starlark content.
 		content, ok := entry.Fronts[path.Base(filepath.ToSlash(c.path))]
-		if !ok || starlarkeval.IsStarlarkBuild(content) {
-			ordinary[c.path] = true
+		if ok && !starlarkeval.IsStarlarkBuild(content) {
+			cleared[c.path] = true
 		}
 	}
-	return ordinary
+	return cleared
 }

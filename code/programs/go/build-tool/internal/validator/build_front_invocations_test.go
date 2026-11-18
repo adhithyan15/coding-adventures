@@ -102,9 +102,9 @@ func TestValidateBuildFrontInvocationsReportsGitFailure(t *testing.T) {
 	}
 }
 
-// The checked-out repository itself. A sparse checkout lacks packages whose
-// BUILD another package runs (conduit-hello runs python/conduit's), which
-// would read as unresolved, so such a checkout is skipped.
+// The checked-out repository itself. A checkout lacking packages whose
+// BUILD another package runs (conduit-hello runs python/conduit's) would read
+// as unresolved, so it is skipped; any checkout that has the probe runs it.
 func TestRepositoryBuildFrontInvocationsResolve(t *testing.T) {
 	root, err := filepath.Abs(filepath.Join("..", "..", "..", "..", "..", ".."))
 	if err != nil {
@@ -113,8 +113,12 @@ func TestRepositoryBuildFrontInvocationsResolve(t *testing.T) {
 	if _, statErr := os.Stat(filepath.Join(root, "code", "specs", "12-build-system.md")); statErr != nil {
 		t.Fatalf("repository root not found at %s", root)
 	}
-	if out, _ := exec.Command("git", "-C", root, "config", "--get", "core.sparseCheckout").Output(); strings.TrimSpace(string(out)) == "true" {
-		t.Skip("sparse checkout: packages whose BUILD is run by another package may be absent")
+	// Skip only when the package whose BUILD conduit-hello runs is absent.
+	// CI's sparse pattern excludes only human-languages, so the probe exists
+	// there and the check really runs; core.sparseCheckout alone is not a
+	// reason to skip.
+	if _, statErr := os.Stat(filepath.Join(root, "code", "packages", "python", "conduit", "BUILD")); statErr != nil {
+		t.Skip("python/conduit absent: packages whose BUILD is run by another package are missing")
 	}
 	packages, err := discovery.DiscoverPackagesAllPlatforms(filepath.Join(root, "code"))
 	if err != nil {

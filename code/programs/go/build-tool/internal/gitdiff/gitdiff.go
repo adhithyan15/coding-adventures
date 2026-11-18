@@ -28,6 +28,14 @@ func isBuildFront(base string) bool {
 // whose diff adds or removes a platform-unsupported marker line).
 const StatusOrdinary byte = '!'
 
+// StatusLocalFront is a pseudo-status the host records for a root BUILD front
+// that Git reports as modified in place AND that the host's veto pass
+// positively examined and cleared (see WithClearedFronts). ClassifyChangedFiles
+// treats a BUILD front as package-local only with this status, so a front the
+// host never examined (it could not map the path to a package, or the veto
+// pass was skipped) is ordinary: the rule fails closed.
+const StatusLocalFront byte = 'L'
+
 // ChangeStatuses maps a raw changed Git path to the first letter of its
 // `git diff --name-status` status: A (added), M (modified), D (deleted),
 // T (type changed, e.g. a file became a symlink), R/C (renamed/copied, never
@@ -66,6 +74,26 @@ func (statuses ChangeStatuses) WithOrdinary(paths map[string]bool) ChangeStatuse
 	for path := range paths {
 		if _, ok := copied[path]; ok {
 			copied[path] = StatusOrdinary
+		}
+	}
+	return copied
+}
+
+// WithClearedFronts returns a copy of statuses in which every path in paths
+// whose status is exactly M becomes StatusLocalFront. Any other path, and any
+// path in paths that has no status, is left alone. A nil map stays nil and an
+// empty paths set returns statuses itself.
+func (statuses ChangeStatuses) WithClearedFronts(paths map[string]bool) ChangeStatuses {
+	if statuses == nil || len(paths) == 0 {
+		return statuses
+	}
+	copied := make(ChangeStatuses, len(statuses))
+	for path, status := range statuses {
+		copied[path] = status
+	}
+	for path := range paths {
+		if copied[path] == 'M' {
+			copied[path] = StatusLocalFront
 		}
 	}
 	return copied
@@ -319,13 +347,14 @@ func ClassifyChangedFiles(changedFiles []string, packages []discovery.Package, r
 				// can break a dependent that needs it to exist (packaging
 				// file lists).
 				//
-				// A root BUILD front is local only when modified in place
+				// A root BUILD front is local only when it was modified in place
 				// (an added or deleted front changes which file a platform
 				// selects), the package is a shell package of a language in
-				// the closed gate; the host's vetoes arrive as StatusOrdinary.
+				// the closed gate, AND the host's veto pass cleared it
+				// (StatusLocalFront). A plain M is not enough: fail closed.
 				switch {
 				case pkgmeta.IsBuildFront(relToPackage):
-					if statuses.Modified(raw) && !pkg.isStarlark && pkgmeta.BuildFrontLocalFor(pkg.language) {
+					if statuses[raw] == StatusLocalFront && !pkg.isStarlark && pkgmeta.BuildFrontLocalFor(pkg.language) {
 						local[pkg.name] = true
 					} else {
 						propagating[pkg.name] = true

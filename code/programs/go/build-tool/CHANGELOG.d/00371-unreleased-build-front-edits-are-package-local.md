@@ -20,3 +20,12 @@
   root BUILD fronts of package-prefix packages as local;
   `package-metadata-selection-build-front.json` and `-lookalikes.json` pin
   it. No other implementation changes: they skip the variant.
+- The front-invocation pattern also recognises interpreter paths and option
+  tokens (`/bin/sh`, `bash -euo pipefail`, `env bash`, `cmd /c`, `pwsh -File`),
+  `<` operands, `>`/`2>&1` terminators and a bare front as a command.
+- The classifier accepts a BUILD front as local only with the new
+  `StatusLocalFront` pseudo-status, which the host sets (`clearedBuildFronts`)
+  only for fronts its veto pass examined and cleared; anything else fails
+  closed to ordinary.
+- `TestRepositoryBuildFrontInvocationsResolve` skips only when the
+  `python/conduit` probe is absent, so sparse CI checkouts run it.

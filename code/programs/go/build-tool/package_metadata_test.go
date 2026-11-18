@@ -483,7 +483,7 @@ func TestPackageLocalBuildFrontPlan(t *testing.T) {
 
 // With no candidate (an M front of a Rust package) nothing is read: a package
 // whose directory does not exist produces no error and a nil result.
-func TestOrdinaryBuildFrontsReadsNothingWithoutCandidates(t *testing.T) {
+func TestClearedBuildFrontsReadsNothingWithoutCandidates(t *testing.T) {
 	root := t.TempDir()
 	packages := []discovery.Package{{Name: "rust/ghost", Path: filepath.Join(root, "code/packages/rust/ghost"), Language: "rust"}}
 	ghost := "code/packages/rust/ghost/"
@@ -497,14 +497,36 @@ func TestOrdinaryBuildFrontsReadsNothingWithoutCandidates(t *testing.T) {
 		{"nested front", []string{ghost + "x/BUILD"}, additive(ghost + "x/BUILD")},
 		{"unknown statuses", []string{ghost + "BUILD"}, nil},
 	} {
-		if got := ordinaryBuildFronts(tc.changed, tc.statuses, packages, root); got != nil {
-			t.Errorf("%s: ordinaryBuildFronts = %v, want nil", tc.name, got)
+		if got := clearedBuildFronts(tc.changed, tc.statuses, packages, root); got != nil {
+			t.Errorf("%s: clearedBuildFronts = %v, want nil", tc.name, got)
 		}
 	}
-	// A candidate whose front cannot be read is vetoed (V2).
-	got := ordinaryBuildFronts([]string{ghost + "BUILD"}, additive(ghost+"BUILD"), packages, root)
-	if !got[ghost+"BUILD"] {
-		t.Errorf("unreadable front must stay ordinary, got %v", got)
+	// A candidate whose front cannot be read is not cleared (V2).
+	if got := clearedBuildFronts([]string{ghost + "BUILD"}, additive(ghost+"BUILD"), packages, root); got[ghost+"BUILD"] {
+		t.Errorf("unreadable front must not be cleared, got %v", got)
+	}
+}
+
+// Fail closed: a front the veto pass never examined (here, a changed path that
+// maps to no discovered package) is never cleared, so selectPackageRoots keeps
+// it ordinary. A front in a discovered package that passes the veto pass is
+// cleared and local.
+func TestUnexaminedBuildFrontStaysOrdinary(t *testing.T) {
+	root, packages := metadataWorld(t)
+	unmapped := "code/packages/rust/not-discovered/BUILD"
+	if got := clearedBuildFronts([]string{unmapped}, additive(unmapped), packages, root); len(got) != 0 {
+		t.Errorf("unmapped front cleared: %v", got)
+	}
+	// The classifier alone: a plain M front (never cleared) propagates.
+	changed := []string{"code/packages/rust/meta/BUILD"}
+	propagating, local := gitdiff.ClassifyChangedFiles(changed, packages, root, additive(changed...))
+	if !propagating["rust/meta"] || len(local) != 0 {
+		t.Errorf("uncleared M front: propagating=%v local=%v; want propagating", propagating, local)
+	}
+	// Through the host, the same edit is cleared and local.
+	roots, localSet, err := selectPackageRoots(changed, additive(changed...), packages, root, "linux", "all")
+	if err != nil || len(roots) != 0 || !localSet["rust/meta"] {
+		t.Errorf("cleared front: roots=%v local=%v err=%v", roots, localSet, err)
 	}
 }
 

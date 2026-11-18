@@ -2,7 +2,7 @@
   "schema_version": 1,
   "id": "diff-selection/package-metadata-lookalikes",
   "domain": "diff_selection",
-  "summary": "README.md and nested, misspelled, case-varied or file-shaped metadata names are ordinary package-prefix changes and still select every dependent, and nested, backup, unknown-suffix or case-varied BUILD-front names.",
+  "summary": "README.md and nested, misspelled, case-varied or file-shaped metadata names are ordinary package-prefix changes and still select every dependent, as do nested, backup, unknown-suffix or case-varied BUILD-front names.",
   "platforms": [
     "darwin",
     "linux",

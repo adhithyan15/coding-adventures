@@ -82,10 +82,26 @@ var (
 	// MENTION: the word BUILD (or a platform variant) as a whole token.
 	// BUILD_TOOL_UNSUPPORTED does not match: `_` continues the token.
 	buildFrontMention = regexp.MustCompile(`(?:^|[^A-Za-z0-9_.-])BUILD(?:_windows|_mac_and_linux|_mac|_linux)?(?:$|[^A-Za-z0-9_.-])`)
-	// INVOCATION: an interpreter or ./ path whose operand is a BUILD front.
+	// INVOCATION: a line that runs a BUILD front. Three shapes:
+	//
+	//  1. an interpreter (optional path prefix: sh, /bin/sh, bash, dash, zsh,
+	//     ksh, source, ., call, cmd, cmd.exe, pwsh, powershell, env), then any
+	//     number of option tokens (-x, -euo, pipefail, -File, /c, call, a
+	//     nested shell name for `env bash`), then the operand, which is
+	//     either whitespace-separated or fed by `<` (`sh < BUILD`);
+	//  2. a ./ or ../ path whose last element is a front;
+	//  3. a front (optionally path-qualified) as the first word of a command:
+	//     at the start of the line or right after ; & | (not after an open
+	//     parenthesis, which prose such as "(BUILD_windows names ...)" uses).
+	//
+	// The operand ends at end of line, whitespace, ; & | ) < > (so `BUILD>log`
+	// and `BUILD 2>&1` match); BUILD.bak, BUILD_debug and foo/BUILDings do not.
 	buildFrontInvocation = regexp.MustCompile(
-		`(?:^|[\s;&|(])(?:sh|bash|dash|zsh|ksh|source|\.|call|CALL)\s+["']?(?:[^\s"';&|()]*[/\\])?BUILD(?:_windows|_mac_and_linux|_mac|_linux)?["']?(?:$|[\s;&|)])` +
-			`|(?:^|[\s;&|(])["']?\.{1,2}[/\\](?:[^\s"';&|()]*[/\\])?BUILD(?:_windows|_mac_and_linux|_mac|_linux)?["']?(?:$|[\s;&|)])`)
+		`(?:^|[\s;&|(])(?:[^\s"';&|()<>]*[/\\])?(?:sh|bash|dash|zsh|ksh|source|\.|call|CALL|cmd|cmd\.exe|CMD|pwsh|powershell|powershell\.exe|env)` +
+			`(?:\s+(?:-{1,2}[A-Za-z][^\s"';&|()<>]*|/[cCkK]|pipefail|call|CALL|(?:[^\s"';&|()<>]*[/\\])?(?:sh|bash|dash|zsh|ksh)))*` +
+			`(?:\s+|\s*<\s*)["']?(?:[^\s"';&|()<>]*[/\\])?BUILD(?:_windows|_mac_and_linux|_mac|_linux)?["']?(?:$|[\s;&|)<>])` +
+			`|(?:^|[\s;&|(])["']?\.{1,2}[/\\](?:[^\s"';&|()<>]*[/\\])?BUILD(?:_windows|_mac_and_linux|_mac|_linux)?["']?(?:$|[\s;&|)<>])` +
+			`|(?:^|[;&|])\s*["']?(?:[^\s"';&|()<>]*[/\\])?BUILD(?:_windows|_mac_and_linux|_mac|_linux)?["']?(?:$|[\s;&|)<>])`)
 	buildFrontRem = regexp.MustCompile(`(?i)^@?rem(\s|$)`)
 )
 

@@ -670,7 +670,7 @@ func selectPackageRoots(
 	// assurance evidence, an in-place edit of its own Rust BUILD front) is
 	// selected separately and without its dependents; see package_metadata.go
 	// and build_front_local.go. README.md is not package-local.
-	statuses = statuses.WithOrdinary(ordinaryBuildFronts(filtered, statuses, packages, repoRoot))
+	statuses = statuses.WithClearedFronts(clearedBuildFronts(filtered, statuses, packages, repoRoot))
 	changed, local = gitdiff.ClassifyChangedFiles(filtered, packages, repoRoot, statuses)
 	// External native-acceptance specifications need a producer root as well
 	// as a step gate. Otherwise CI enables the step without selecting its

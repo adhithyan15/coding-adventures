@@ -154,3 +154,37 @@ func TestScanBuildFrontReferences(t *testing.T) {
 		t.Fatal("IsFrontInvocation misclassifies")
 	}
 }
+
+// Every shape a BUILD can use to run a front must be recognised, and nearby
+// text that merely names BUILD must not be.
+func TestIsFrontInvocationShapes(t *testing.T) {
+	for _, line := range []string{
+		"sh BUILD", "sh -e BUILD", "bash -euo pipefail BUILD", "/bin/sh BUILD",
+		"/usr/bin/env bash BUILD", "cmd /c BUILD_windows", "cmd.exe /c call BUILD_windows",
+		"pwsh -File BUILD", "powershell -File BUILD_windows", "sh < BUILD",
+		"sh BUILD>log", "sh BUILD 2>&1", "sh BUILD | tee x", "sh BUILD && echo ok", "sh BUILD; echo ok",
+		"BUILD_windows", "call BUILD_windows", "CALL ..\\x\\BUILD_windows", "cd x && BUILD_mac",
+		"(cd ../x && bash BUILD)", "source ../x/BUILD_mac", "./BUILD", "x; ../y/BUILD 2>&1",
+		"/bin/bash -x ../y/BUILD_linux",
+	} {
+		if !IsFrontInvocation(line) {
+			t.Errorf("%q should be a front invocation", line)
+		}
+	}
+	for _, line := range []string{
+		"sh BUILD.bak", "sh BUILD_debug", "echo BUILD", "echo sh BUILD_x", "cargo test",
+		"sh foo/BUILDings", "sh BUILDings", "bash -c 'echo BUILD'", "BUILD.bak", "BUILD_debug",
+		"cat foo/BUILD", "foo/BUILDings", "(BUILD_windows names the platform)",
+	} {
+		if IsFrontInvocation(line) {
+			t.Errorf("%q must not be a front invocation", line)
+		}
+	}
+	// A commented-out invocation is skipped by the scan, not by the pattern.
+	executed, unresolved := ScanBuildFrontReferences([]PackageFronts{
+		{Name: "a/x", Dir: "x", Fronts: map[string]string{"BUILD": "# sh BUILD\ncargo test\n"}},
+	})
+	if len(executed) != 0 || len(unresolved) != 0 {
+		t.Errorf("comment: executed=%v unresolved=%v", executed, unresolved)
+	}
+}

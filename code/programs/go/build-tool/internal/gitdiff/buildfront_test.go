@@ -29,11 +29,12 @@ func TestClassifyChangedFiles_BuildFronts(t *testing.T) {
 		local    []string
 		prop     []string
 	}{
-		{"BUILD M", []string{rustPkg + "BUILD"}, ChangeStatuses{rustPkg + "BUILD": 'M'}, []string{"rust/p"}, nil},
-		{"BUILD_linux M", []string{rustPkg + "BUILD_linux"}, ChangeStatuses{rustPkg + "BUILD_linux": 'M'}, []string{"rust/p"}, nil},
-		{"BUILD_mac M", []string{rustPkg + "BUILD_mac"}, ChangeStatuses{rustPkg + "BUILD_mac": 'M'}, []string{"rust/p"}, nil},
-		{"BUILD_mac_and_linux M", []string{rustPkg + "BUILD_mac_and_linux"}, ChangeStatuses{rustPkg + "BUILD_mac_and_linux": 'M'}, []string{"rust/p"}, nil},
-		{"BUILD_windows M", []string{rustPkg + "BUILD_windows"}, ChangeStatuses{rustPkg + "BUILD_windows": 'M'}, []string{"rust/p"}, nil},
+		{"BUILD M", []string{rustPkg + "BUILD"}, ChangeStatuses{rustPkg + "BUILD": 'L'}, []string{"rust/p"}, nil},
+		{"BUILD_linux M", []string{rustPkg + "BUILD_linux"}, ChangeStatuses{rustPkg + "BUILD_linux": 'L'}, []string{"rust/p"}, nil},
+		{"BUILD_mac M", []string{rustPkg + "BUILD_mac"}, ChangeStatuses{rustPkg + "BUILD_mac": 'L'}, []string{"rust/p"}, nil},
+		{"BUILD_mac_and_linux M", []string{rustPkg + "BUILD_mac_and_linux"}, ChangeStatuses{rustPkg + "BUILD_mac_and_linux": 'L'}, []string{"rust/p"}, nil},
+		{"BUILD_windows M", []string{rustPkg + "BUILD_windows"}, ChangeStatuses{rustPkg + "BUILD_windows": 'L'}, []string{"rust/p"}, nil},
+		{"BUILD M never cleared by the host", []string{rustPkg + "BUILD"}, ChangeStatuses{rustPkg + "BUILD": 'M'}, nil, []string{"rust/p"}},
 		{"BUILD A", []string{rustPkg + "BUILD"}, ChangeStatuses{rustPkg + "BUILD": 'A'}, nil, []string{"rust/p"}},
 		{"BUILD D", []string{rustPkg + "BUILD"}, ChangeStatuses{rustPkg + "BUILD": 'D'}, nil, []string{"rust/p"}},
 		{"BUILD T", []string{rustPkg + "BUILD"}, ChangeStatuses{rustPkg + "BUILD": 'T'}, nil, []string{"rust/p"}},
@@ -41,14 +42,14 @@ func TestClassifyChangedFiles_BuildFronts(t *testing.T) {
 		{"BUILD ordinary pseudo-status", []string{rustPkg + "BUILD"}, ChangeStatuses{rustPkg + "BUILD": StatusOrdinary}, nil, []string{"rust/p"}},
 		{"BUILD nil statuses", []string{rustPkg + "BUILD"}, nil, nil, []string{"rust/p"}},
 		{"BUILD M + source M", []string{rustPkg + "BUILD", rustPkg + "src/lib.rs"}, ChangeStatuses{rustPkg + "BUILD": 'M', rustPkg + "src/lib.rs": 'M'}, nil, []string{"rust/p"}},
-		{"BUILD M + changelog M", []string{rustPkg + "BUILD", rustPkg + "CHANGELOG.md"}, ChangeStatuses{rustPkg + "BUILD": 'M', rustPkg + "CHANGELOG.md": 'M'}, []string{"rust/p"}, nil},
+		{"BUILD M + changelog M", []string{rustPkg + "BUILD", rustPkg + "CHANGELOG.md"}, ChangeStatuses{rustPkg + "BUILD": 'L', rustPkg + "CHANGELOG.md": 'M'}, []string{"rust/p"}, nil},
 		{"nested BUILD M", []string{rustPkg + "nested/BUILD"}, ChangeStatuses{rustPkg + "nested/BUILD": 'M'}, nil, []string{"rust/p"}},
 		{"BUILD.bak M", []string{rustPkg + "BUILD.bak"}, ChangeStatuses{rustPkg + "BUILD.bak": 'M'}, nil, []string{"rust/p"}},
 		{"BUILD_debug M", []string{rustPkg + "BUILD_debug"}, ChangeStatuses{rustPkg + "BUILD_debug": 'M'}, nil, []string{"rust/p"}},
-		{"typescript BUILD M", []string{"code/packages/typescript/p/BUILD"}, ChangeStatuses{"code/packages/typescript/p/BUILD": 'M'}, nil, []string{"typescript/p"}},
-		{"lua BUILD M", []string{"code/packages/lua/p/BUILD"}, ChangeStatuses{"code/packages/lua/p/BUILD": 'M'}, nil, []string{"lua/p"}},
-		{"rust Starlark without srcs BUILD M", []string{"code/packages/rust/star/BUILD"}, ChangeStatuses{"code/packages/rust/star/BUILD": 'M'}, nil, []string{"rust/star"}},
-		{"rust Starlark with srcs BUILD M", []string{"code/packages/rust/starsrcs/BUILD"}, ChangeStatuses{"code/packages/rust/starsrcs/BUILD": 'M'}, nil, []string{"rust/starsrcs"}},
+		{"typescript BUILD L", []string{"code/packages/typescript/p/BUILD"}, ChangeStatuses{"code/packages/typescript/p/BUILD": 'L'}, nil, []string{"typescript/p"}},
+		{"lua BUILD L", []string{"code/packages/lua/p/BUILD"}, ChangeStatuses{"code/packages/lua/p/BUILD": 'L'}, nil, []string{"lua/p"}},
+		{"rust Starlark without srcs BUILD M", []string{"code/packages/rust/star/BUILD"}, ChangeStatuses{"code/packages/rust/star/BUILD": 'L'}, nil, []string{"rust/star"}},
+		{"rust Starlark with srcs BUILD M", []string{"code/packages/rust/starsrcs/BUILD"}, ChangeStatuses{"code/packages/rust/starsrcs/BUILD": 'L'}, nil, []string{"rust/starsrcs"}},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			prop, local := ClassifyChangedFiles(tc.changed, packages, "/repo", tc.statuses)
@@ -59,6 +60,21 @@ func TestClassifyChangedFiles_BuildFronts(t *testing.T) {
 				t.Errorf("local = %v, want %v", got, tc.local)
 			}
 		})
+	}
+}
+
+func TestWithClearedFronts(t *testing.T) {
+	statuses := ChangeStatuses{"a": 'M', "b": 'A', "c": StatusOrdinary}
+	got := statuses.WithClearedFronts(map[string]bool{"a": true, "b": true, "c": true, "zz": true})
+	if got["a"] != StatusLocalFront || got["b"] != 'A' || got["c"] != StatusOrdinary || len(got) != 3 {
+		t.Errorf("got %v", got)
+	}
+	if statuses["a"] != 'M' {
+		t.Error("WithClearedFronts must not mutate its receiver")
+	}
+	var none ChangeStatuses
+	if none.WithClearedFronts(map[string]bool{"a": true}) != nil {
+		t.Error("nil stays nil")
 	}
 }
 
