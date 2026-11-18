@@ -447,7 +447,34 @@ worktree; report and preserve it if those checks do not pass.
   matched-host cohort independent of candidate results; retain every run and
   make no result-selected retries. The narrowly scoped optimization is PR
   [#19657](https://github.com/adhithyan15/coding-adventures/pull/19657);
-  its ordinary protected checks and merge remain pending.
+  its protected U26 G1 gate failed at 13.7 MB/s on synthetic merge
+  `cc832fafea9c`; auto-merge is disabled, and the remaining successful checks do
+  not override that failure.
+  Follow-up evidence: fixed diagnostic cohort run `44377433767` compared A
+  `efe517a24fef9ddad591e468f72f8e1251e177ac` with frozen B
+  `1a3f378412a5eeb899bcc8e10c8c0c3b9a066bb1` on four predeclared Ubuntu jobs.
+  Only the U26 AMD EPYC 9V74 slot reproduced an A miss/B pass (A 13.6/13.7,
+  B 14.1/14.3 MB/s); all other slots passed on both revisions. B profiles
+  repeatedly show `matcher.match` as a residual hotspot. Candidate C adds a
+  narrow ASCII-only `stepRun` specialization in the Go lexer. Its code and
+  bounded frozen-matcher/regexp semantic checks were reviewed; local macOS
+  component and fixture-pipeline benchmarks are plausibility data, not Linux
+  admission evidence. The fixed B/C four-host diagnostic workflow was reviewed
+  as commit `362e7a3d371dc68efc9fc4b29fee94a27a4784cc`; run `44385830717`
+  completed with four jobs and all 16 official cells passing. Each slot's C1/C2
+  rounded slice rates exceeded both B1/B2 rates. The separate helper means
+  favored C by 10.50%, 10.67%, 8.15%, and 1.30% on U24 slot1, U24 slot2, U26
+  slot1, and U26 slot2, respectively; U26 slot2 C2 was slower than both B
+  helper cells, so the mean does not describe every measurement. All eight B
+  cells passed too: the held-out run has zero matched B-miss/C-pass rescues and
+  does not establish population-wide robustness. Full rates, per-cell
+  exit/classification, artifacts, source/binary identities, and host details
+  are in `code/programs/go/kiln/ci/G1_PROFILE_RECEIPT.md`. PR #19657 remains at
+  head `1a3f378412a5eeb899bcc8e10c8c0c3b9a066bb1`, with its separate protected
+  U26 G1 gate failing at 13.7 MB/s and auto-merge disabled; this diagnostic run
+  does not repair that failure. Keep GBL-063 and broader host robustness open,
+  preserve the 14 MB/s gate, and keep GoLexer VER/Warrant/native-source and
+  SAT/source-equivalence obligations open.
 - [ ] `GBL-058` Repair the conflict between the actual `P2D09`/`P2D10` specification filenames/scopes
   and GAME00 labels. Keep this as a separate documentation repair; do not mint or reuse colliding game
   identifiers to paper over it.
