@@ -321,59 +321,78 @@ pub fn declared_names(text: &str) -> Result<(Vec<String>, Vec<String>), WarrantF
     })
 }
 
-/// For each claim of a parsed document, which of `ops` its text calls, in document order.
+/// For each claim of a parsed document, which of `ops` its body calls, in the order first met.
 ///
-/// A **lexical over-approximation** on a document that already parsed: a name of `ops` that
-/// is an identifier immediately followed by `(`, in the claim's span, with `--` comments
-/// removed.  `vos-link` uses it to require that every claim that calls a bound operation is
-/// attacked by a sabotage control (VOS-039a review M3); over-approximating can only ask
-/// for more controls, never fewer.  The exact claim-to-operation map is VOS-D107.
+/// The claim's **parsed expression** is walked (a text scan was bypassable: `--` inside a
+/// string literal cut the line and hid a call).  A call is a single-segment reference with an
+/// argument list whose name is in `ops`, anywhere in the body, comments and strings being
+/// invisible to a tree.  `vos-link` uses it to require that every claim that calls a bound
+/// operation is attacked by a sabotage control (VOS-039a review M3).  It does NOT follow a
+/// call into a `model` body, so M3 relies on models being operation-free (the document's
+/// type check refuses an operation call in a model today; the transitive closure is VOS-D107).
 pub fn claim_calls(
     text: &str,
     ops: &[String],
 ) -> Result<Vec<(String, Vec<String>)>, WarrantFailure> {
-    with_parsed(text, |file, _tokens, norm| {
+    with_parsed(text, |file, _tokens, _norm| {
         let mut out = Vec::new();
         for d in &file.declarations {
             if let Declaration::Claim(c) = d {
-                let span = norm.get(c.span.0..c.span.1).unwrap_or("");
-                out.push((c.name.to_string(), called_names(span, ops)));
+                let mut found = Vec::new();
+                calls_in(&c.body, ops, &mut found);
+                out.push((c.name.to_string(), found));
             }
         }
         Ok(out)
     })
 }
 
-/// The members of `ops` that appear in `src` as `name(` outside `--` comments.
-pub fn called_names(src: &str, ops: &[String]) -> Vec<String> {
-    let mut found: Vec<String> = Vec::new();
-    for line in src.lines() {
-        let code = line.split("--").next().unwrap_or("");
-        let b = code.as_bytes();
-        let mut i = 0;
-        while i < b.len() {
-            if b[i].is_ascii_alphabetic() || b[i] == b'_' {
-                let start = i;
-                while i < b.len() && (b[i].is_ascii_alphanumeric() || b[i] == b'_') {
-                    i += 1;
-                }
-                let name = &code[start..i];
-                let mut j = i;
-                while j < b.len() && b[j] == b' ' {
-                    j += 1;
-                }
-                if b.get(j) == Some(&b'(')
-                    && ops.iter().any(|o| o == name)
-                    && !found.iter().any(|f| f == name)
-                {
-                    found.push(name.to_string());
-                }
-            } else {
-                i += 1;
+/// Collect the members of `ops` called inside `e`.
+fn calls_in(e: &Expression<'_>, ops: &[String], out: &mut Vec<String>) {
+    match e {
+        Expression::Quantified { body, .. } => calls_in(body, ops, out),
+        Expression::Conditional {
+            condition,
+            then_branch,
+            else_branch,
+            ..
+        } => {
+            for x in [condition, then_branch, else_branch] {
+                calls_in(x, ops, out);
             }
         }
+        Expression::Match { target, arms, .. } => {
+            calls_in(target, ops, out);
+            for a in arms {
+                calls_in(&a.body, ops, out);
+            }
+        }
+        Expression::Binary { left, right, .. } => {
+            calls_in(left, ops, out);
+            calls_in(right, ops, out);
+        }
+        Expression::Unary { operand, .. } => calls_in(operand, ops, out),
+        Expression::Literal { .. } => {}
+        Expression::List { elements, .. } | Expression::Tuple { elements, .. } => {
+            for x in elements {
+                calls_in(x, ops, out);
+            }
+        }
+        Expression::Reference { name, args, .. } => {
+            if let Some(args) = args {
+                if let [one] = name.segments.as_slice() {
+                    if ops.iter().any(|o| o == one) && !out.iter().any(|o| o == one) {
+                        out.push((*one).to_string());
+                    }
+                }
+                for x in args {
+                    calls_in(x, ops, out);
+                }
+            }
+        }
+        Expression::Grouped { inner, .. } => calls_in(inner, ops, out),
+        Expression::Project { base, .. } => calls_in(base, ops, out),
     }
-    found
 }
 
 /// Parse and type-check a whole document with `warrant-grammar` and report what the

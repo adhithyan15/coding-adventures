@@ -854,7 +854,7 @@ name must be a claim of the document) or `example` (an example of the document);
 VER04j 4.8) and nothing else does; no entry repeats. **Completeness:** every fault of
 every bound operation has an entry, and every operation that lists `field-flip` has
 an `attack=` entry; and **every claim whose text calls a bound operation appears in at
-least one entry** (a lexical over-approximation, `vos_manifest::warrant::claim_calls`; the
+least one entry** (found by walking the claim's parsed expression, `vos_manifest::warrant::claim_calls`; calls through a `model` body are not followed, VOS-D107; the
 one exemption is a claim whose operations' faults are all excused, below). An author
 cannot attack one easy claim per fault and leave the rest untried. Counting controls per
 operation and tier is VOS-D104. Whether the named claim really catches the fault is the run's
@@ -867,8 +867,9 @@ text, so it cannot carry a shell fragment.
 (rr's `init`, VOS-D098) declares `excused-controls = [{ id = "<manifest id>", reason = "VOS-Dnnn" }, ...]` in
 `vos.toml`: whole ids of the form `warrant/<module>/negctl/<tier>/<op>/<fault>`, never an
 empty list, never an empty id, and every excuse carries a `reason` that is a backlog row
-(`VOS-D` and three digits) which **must exist in `code/specs/VOS-BACKLOG.md` and not be
-done**: an excuse is traceable and expires when its row is closed (the control must then
+(`VOS-D` and three digits) which **must be the first cell of exactly one row of `code/specs/VOS-BACKLOG.md`
+whose status cell begins `open` or `queued`** (an allowlist: `resolved`, `withdrawn`,
+`done in ...` and the rest are closed): an excuse is traceable and expires when its row is closed (the control must then
 pass). `gen-build` writes `warrant/check_evidence.sh` from the list
 (it requires exit status 1, at least one `ok`, and exactly those ids failing).
 `check-component` requires the script byte-equal to the generated one, and refuses a

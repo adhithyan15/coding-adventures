@@ -5,7 +5,7 @@
 # Runs the generated suite and rewrites the manifest.  Exactly the controls listed below may fail
 # (VOS-D065, VOS-D098: a claim that cannot see the fault); anything else failing, or one of them
 # passing, or no test passing at all, is an error.  Each excuse names its backlog row, and
-# `vos-link` refuses it once that row is done:
+# `vos-link` refuses it once that row is not open or queued:
 #   warrant/vos_sched_rr/negctl/exhaustive/init/field-flip (VOS-D098)
 #   warrant/vos_sched_rr/negctl/property/init/field-flip (VOS-D098)
 #   warrant/vos_sched_rr/negctl/fuzz/init/field-flip (VOS-D098)

@@ -1263,7 +1263,9 @@ fn an_oversized_build_file_is_no_verdict() {
 
 // --- review round 2 ------------------------------------------------------------------------
 
-use vos_link::build_gen::{backlog_row_status, interpolation_problems, GenInputs, PlanEntry};
+use vos_link::build_gen::{
+    backlog_row_status, interpolation_problems, GenInputs, PlanEntry, RowState,
+};
 use vos_shape_check::manifest::Excuse;
 
 /// M1: a feature pasted into BUILD is shell text.  Each hostile value is refused at generation.
@@ -1537,18 +1539,18 @@ fn m4_an_excuse_needs_an_open_backlog_row() {
     has(
         &o,
         "CC04",
-        "names VOS-D065, which is done: remove the excuse",
+        "VOS-D065 has status \"done** (somewhere)\", which is not open or queued",
     );
     // A row that does not exist.
     let (_r, o) = set("m4-absent", "VOS-D999", Some(BACKLOG));
     has(
         &o,
         "CC04",
-        "names VOS-D999, which is not a row of code/specs/VOS-BACKLOG.md",
+        "VOS-D999 is not a row of code/specs/VOS-BACKLOG.md",
     );
     // No backlog at all.
     let (_r, o) = set("m4-nofile", "VOS-D098", None);
-    has(&o, "CC04", "which is not a row");
+    has(&o, "CC04", "is not a row");
     // An open row is accepted, and check-component agrees.
     let (r, o) = set("m4-open", "VOS-D098", Some(BACKLOG));
     assert!(o.findings.is_empty(), "{}", show(&o));
@@ -1562,11 +1564,94 @@ fn m4_an_excuse_needs_an_open_backlog_row() {
 }
 
 #[test]
-fn backlog_row_status_reads_the_last_cell() {
-    let b = "| VOS-D001 | a | b | P1 | queued |\n| VOS-D002 | a | b | P1 | **done** (#1) |\n| VOS-D003 | a | b | P3 | Done |\n| VOS-D0041 | x | y | z | queued |\nVOS-D005 | no leading bar |\n";
-    assert_eq!(backlog_row_status(b, "VOS-D001"), Some(false));
-    assert_eq!(backlog_row_status(b, "VOS-D002"), Some(true));
-    assert_eq!(backlog_row_status(b, "VOS-D003"), Some(true));
-    assert_eq!(backlog_row_status(b, "VOS-D004"), None);
-    assert_eq!(backlog_row_status(b, "VOS-D005"), None);
+fn backlog_row_status_is_an_allowlist_of_open_statuses() {
+    let row = |id: &str, st: &str| format!("| {id} | a | b | P2 | {st} |\n");
+    let mut b = String::new();
+    for (id, st) in [
+        ("VOS-D001", "queued"),
+        ("VOS-D002", "**done** (#1)"),
+        ("VOS-D003", "Done"),
+        ("VOS-D004", "open"),
+        ("VOS-D005", "resolved in VOS-039a"),
+        ("VOS-D006", "withdrawn"),
+        ("VOS-D007", "done in this PR (VOS-039a)"),
+        ("VOS-D008", "queued (folded into VOS-D009)"),
+        ("VOS-D009", "partly done"),
+        ("VOS-D010", "in progress"),
+        ("VOS-D012", "**Queued**"),
+    ] {
+        b += &row(id, st);
+    }
+    b += &row("VOS-D011", "queued");
+    b += &row("VOS-D011", "queued");
+    b += "VOS-D013 | no leading bar |\n";
+    let state = |id: &str| backlog_row_status(&b, id);
+    for open in ["VOS-D001", "VOS-D004", "VOS-D008", "VOS-D012"] {
+        assert_eq!(state(open), RowState::Open, "{open}");
+    }
+    for (closed, st) in [
+        ("VOS-D002", "done** (#1)"),
+        ("VOS-D003", "Done"),
+        ("VOS-D005", "resolved in VOS-039a"),
+        ("VOS-D006", "withdrawn"),
+        ("VOS-D007", "done in this PR (VOS-039a)"),
+        ("VOS-D009", "partly done"),
+        ("VOS-D010", "in progress"),
+    ] {
+        assert!(
+            matches!(state(closed), RowState::Closed(ref s) if s.starts_with(&st[..4])),
+            "{closed}: {:?}",
+            state(closed)
+        );
+    }
+    assert_eq!(state("VOS-D011"), RowState::Duplicate);
+    assert_eq!(state("VOS-D013"), RowState::Missing);
+    assert_eq!(state("VOS-D099"), RowState::Missing);
+}
+
+/// M4 through the whole check: a resolved, withdrawn or "done in this PR" row, a duplicate id
+/// and an absent row are all refused as an excuse's reason.
+#[test]
+fn m4_resolved_withdrawn_done_in_this_pr_and_duplicate_rows_do_not_excuse() {
+    for (what, backlog, want) in [
+        (
+            "resolved",
+            "| VOS-D098 | x | y | P2 | resolved in VOS-040 |\n",
+            "has status \"resolved in VOS-040\"",
+        ),
+        (
+            "withdrawn",
+            "| VOS-D098 | x | y | P2 | withdrawn |\n",
+            "has status \"withdrawn\"",
+        ),
+        (
+            "done in",
+            "| VOS-D098 | x | y | P2 | done in this PR (#1) |\n",
+            "has status \"done in this PR (#1)\"",
+        ),
+        (
+            "duplicate",
+            "| VOS-D098 | x | y | P2 | queued |\n| VOS-D098 | x | y | P2 | queued |\n",
+            "more than one backlog row",
+        ),
+    ] {
+        let r = good("m4-allow", PROD, "production", false);
+        r.write(&p(PROD, "vos.toml"), vos_toml("production", EXCUSED));
+        r.write("code/specs/VOS-BACKLOG.md", backlog);
+        let o = gen_build(&r.pkg(PROD), None).unwrap();
+        assert!(!o.findings.is_empty(), "{what}");
+        assert!(
+            o.findings.iter().all(|f| f.code == "CC04"),
+            "{what}: {}",
+            show(&o)
+        );
+        has(&o, "CC04", want);
+    }
+    let r = good("m4-allow-ok", PROD, "production", false);
+    r.write(&p(PROD, "vos.toml"), vos_toml("production", EXCUSED));
+    r.write(
+        "code/specs/VOS-BACKLOG.md",
+        "| VOS-D098 | x | y | P2 | open |\n",
+    );
+    assert!(gen_build(&r.pkg(PROD), None).unwrap().findings.is_empty());
 }

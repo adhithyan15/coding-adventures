@@ -471,7 +471,7 @@ pub fn tolerance_script(g: &GenInputs) -> Option<String> {
 # Runs the generated suite and rewrites the manifest.  Exactly the controls listed below may fail\n\
 # (VOS-D065, VOS-D098: a claim that cannot see the fault); anything else failing, or one of them\n\
 # passing, or no test passing at all, is an error.  Each excuse names its backlog row, and\n\
-# `vos-link` refuses it once that row is done:\n\
+# `vos-link` refuses it once that row is not open or queued:\n\
 {why}\
 set -eu\n\
 \n\
@@ -586,25 +586,26 @@ pub fn load_inputs(
         let backlog = layout.specs_dir().join("VOS-BACKLOG.md");
         let text = read_text(&backlog, BACKLOG_MAX_BYTES)?;
         for x in &vt.excused_controls {
-            match backlog_row_status(text.as_deref().unwrap_or(""), &x.reason) {
-                None => f.push(Finding::new(
-                    "CC04",
-                    format!(
-                        "vos.toml: excuse {} names {}, which is not a row of code/specs/VOS-BACKLOG.md",
-                        esc(&x.id),
-                        x.reason
-                    ),
-                )),
-                Some(true) => f.push(Finding::new(
-                    "CC04",
-                    format!(
-                        "vos.toml: excuse {} names {}, which is done: remove the excuse (the control must now pass)",
-                        esc(&x.id),
-                        x.reason
-                    ),
-                )),
-                Some(false) => {}
-            }
+            let problem = match backlog_row_status(text.as_deref().unwrap_or(""), &x.reason) {
+                RowState::Open => continue,
+                RowState::Missing => format!(
+                    "{} is not a row of code/specs/VOS-BACKLOG.md",
+                    x.reason
+                ),
+                RowState::Duplicate => format!(
+                    "{} is the first cell of more than one backlog row, so the reference is ambiguous",
+                    x.reason
+                ),
+                RowState::Closed(st) => format!(
+                    "{} has status {}, which is not open or queued: remove the excuse (the control must now pass)",
+                    x.reason,
+                    esc(&st)
+                ),
+            };
+            f.push(Finding::new(
+                "CC04",
+                format!("vos.toml: excuse {}: {problem}", esc(&x.id)),
+            ));
         }
     }
 
@@ -656,24 +657,45 @@ pub fn load_inputs(
     Ok(Ok(g))
 }
 
-/// Is the backlog row `id` (`VOS-Dnnn`) present, and is it done?  `None`: no such row.  A row
-/// is a line starting `| <id> |`; it is done when its last cell, stripped of `*`, begins `done`.
-pub fn backlog_row_status(backlog: &str, id: &str) -> Option<bool> {
+/// What the backlog says about a row.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum RowState {
+    /// No line starts `| <id> |`.
+    Missing,
+    /// More than one line does: the reference is ambiguous.
+    Duplicate,
+    /// The status cell begins `open` or `queued` (after `*` markup): an excuse may cite it.
+    Open,
+    /// Anything else (`done in ..`, `resolved ..`, `withdrawn`, `partly done`, ...), with the
+    /// cell as written.  An ALLOWLIST: a status that is not known to be open is not open.
+    Closed(String),
+}
+
+/// Read the status of backlog row `id` (`VOS-Dnnn`).  A row is a line starting `| <id> |`; its
+/// status is the last cell.  The vocabulary of open D rows in VOS-BACKLOG.md is `queued` and
+/// `open` (no D row uses `in progress`).
+pub fn backlog_row_status(backlog: &str, id: &str) -> RowState {
     let head = format!("| {id} |");
-    let row = backlog.lines().find(|l| l.starts_with(&head))?;
+    let mut rows = backlog.lines().filter(|l| l.starts_with(&head));
+    let Some(row) = rows.next() else {
+        return RowState::Missing;
+    };
+    if rows.next().is_some() {
+        return RowState::Duplicate;
+    }
     let cell = row
         .trim_end()
         .trim_end_matches('|')
         .rsplit('|')
         .next()
         .unwrap_or("");
-    Some(
-        cell.trim()
-            .trim_matches('*')
-            .trim()
-            .to_ascii_lowercase()
-            .starts_with("done"),
-    )
+    let status = cell.trim().trim_matches('*').trim();
+    let lower = status.to_ascii_lowercase();
+    if lower.starts_with("open") || lower.starts_with("queued") {
+        RowState::Open
+    } else {
+        RowState::Closed(status.to_string())
+    }
 }
 
 /// What follows the marker line of an existing BUILD file: the author's own lines.
