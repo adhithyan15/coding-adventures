@@ -220,24 +220,43 @@ func ParseLineTokens(line string, opts Options) (*parser.ASTNode, []lexer.Token,
 // The compact path (ParseLineInto) calls it too, so both paths refuse the same
 // lines with the same error values by construction.
 func checkLine(line string, opts Options) ([]lexer.Token, error) {
+	toks, _, err := checkLineWithScratch(line, opts, nil, false)
+	return toks, err
+}
+
+// checkLineWithScratch is checkLine's shared validation path. When reuse is
+// true, only a parser-owned token slice is supplied to TokenizeLineMaxInto;
+// hook-bearing callers stay on the owning path so hooks may retain or replace
+// their input without observing later mutation.
+func checkLineWithScratch(line string, opts Options, dst []lexer.Token, reuse bool) ([]lexer.Token, []lexer.Token, error) {
+	scratch := dst[:0]
 	if compileErr != nil {
-		return nil, &LineError{Kind: KindSyntax, Err: compileErr, Msg: "grammar did not compile"}
+		return nil, scratch, &LineError{Kind: KindSyntax, Err: compileErr, Msg: "grammar did not compile"}
 	}
 	if len(line) > opts.MaxLineBytes {
-		return nil, &LineError{Kind: KindLimit, Err: stracelexer.ErrLineTooLong, Msg: "line too long"}
+		return nil, scratch, &LineError{Kind: KindLimit, Err: stracelexer.ErrLineTooLong, Msg: "line too long"}
 	}
 	if strings.IndexByte(line, '\n') >= 0 {
-		return nil, &LineError{Kind: KindNewline, Err: stracelexer.ErrNewline, Msg: "newline in line"}
+		return nil, scratch, &LineError{Kind: KindNewline, Err: stracelexer.ErrNewline, Msg: "newline in line"}
 	}
 	if line != "" && (line[0] == ' ' || line[len(line)-1] == ' ') {
-		return nil, &LineError{Kind: KindSpace, Msg: "line starts or ends with a space"}
+		return nil, scratch, &LineError{Kind: KindSpace, Msg: "line starts or ends with a space"}
 	}
-	toks, err := stracelexer.TokenizeLineMax(line, opts.MaxLineBytes)
+	var toks []lexer.Token
+	var err error
+	if reuse {
+		toks, err = stracelexer.TokenizeLineMaxInto(line, opts.MaxLineBytes, dst)
+	} else {
+		toks, err = stracelexer.TokenizeLineMax(line, opts.MaxLineBytes)
+	}
 	if err != nil {
-		return nil, &LineError{Kind: KindSyntax, Err: err, Msg: "lexing"}
+		return nil, scratch, &LineError{Kind: KindSyntax, Err: err, Msg: "lexing"}
+	}
+	if reuse {
+		scratch = toks
 	}
 	if len(toks) > opts.MaxTokens {
-		return toks, &LineError{Kind: KindLimit, Err: parser.ErrMaxTokens, Msg: "too many tokens"}
+		return toks, scratch, &LineError{Kind: KindLimit, Err: parser.ErrMaxTokens, Msg: "too many tokens"}
 	}
 
 	// The first thing in the line that the grammar can never accept: an ERR_*
@@ -255,20 +274,20 @@ func checkLine(line string, opts Options) ([]lexer.Token, error) {
 		t := toks[i]
 		switch {
 		case stracelexer.IsErrToken(t):
-			return toks, &LineError{Kind: KindErrToken, Token: t, Msg: "bad " + t.TypeName}
+			return toks, scratch, &LineError{Kind: KindErrToken, Token: t, Msg: "bad " + t.TypeName}
 		case t.TypeName == "ANNOTATED" && strings.IndexByte(t.Value, '\\') >= 0:
 			_, body := stracelexer.AnnotationBody(t)
 			if _, derr := stracelexer.DecodeAnnotation(body); derr != nil {
-				return toks, &LineError{Kind: KindBadAnnotation, Token: t, Err: derr, Msg: "annotation does not decode"}
+				return toks, scratch, &LineError{Kind: KindBadAnnotation, Token: t, Err: derr, Msg: "annotation does not decode"}
 			}
 		case t.TypeName == "QUOTED" && !opts.LenientQuoted && strings.IndexByte(t.Value, '\\') >= 0:
 			body, _ := stracelexer.QuotedBody(t)
 			if _, derr := stracelexer.DecodeString(body); derr != nil {
-				return toks, &LineError{Kind: KindBadQuoted, Token: t, Err: derr, Msg: "string does not decode"}
+				return toks, scratch, &LineError{Kind: KindBadQuoted, Token: t, Err: derr, Msg: "string does not decode"}
 			}
 		}
 	}
-	return toks, nil
+	return toks, scratch, nil
 }
 
 // classifyParseError maps an error of the shared parser to a *LineError.
