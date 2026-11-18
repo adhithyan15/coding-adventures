@@ -981,6 +981,24 @@ I/O, authorize OAuth transport, or grant network authority. Those revocation,
 state, record, and transport boundaries remain separate; concrete HTTPS and
 live-provider readiness remain unavailable.
 
+An orthogonal direct-revocation entry point now accepts only the exact HTTPS
+DNS destination already bound to the complete direct no-check fixed-path
+revocation proof. After the same server-role gate, it derives the leaf through
+that destination, validates the exact SubjectPublicKeyInfo under caller policy,
+verifies the selected-transcript `CertificateVerify`, and retains the complete
+destination and revocation proof with the exact signature verdict. This closes
+substitution between the leaf covered by complete direct revocation evidence
+and the leaf key used for handshake authentication. The entry point does not
+repeat revocation evaluation or acquire, refresh, or load revocation data.
+
+The composition does not yet admit the existing nested, double-nested,
+recursive, or alternative intermediate-status-responder completion topologies.
+It also does not prove ordered transcript state, authenticate Finished, protect
+records, perform TLS or HTTP I/O, authorize OAuth transport, or grant network
+authority. Those remaining revocation-topology, state, record, and transport
+boundaries remain separate; concrete HTTPS and live-provider readiness remain
+unavailable.
+
 A bounded `rsa-pss-sha512` prerequisite now validates one complete recovered
 RFC 8017 EMSA-PSS encoded message for the fixed SHA-512, 64-byte-salt profile.
 It composes the public layout gate and bounded SHA-512 MGF1 primitive, unmasks
