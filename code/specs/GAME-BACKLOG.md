@@ -34,7 +34,7 @@ bounded integration target; existing GAME01 consumer gaps are next because the p
 set already exists; reusable deterministic contracts precede new device, graphics, and host stacks.
 This order avoids duplicating repository-wide `VER-*` and `MUS00`–`MUS08` work.
 
-### P0 — `GBL-001`: Make GAME10 v1 a durable conformance boundary (active; PR link pending)
+### P0 — `GBL-001`: Make GAME10 v1 a durable conformance boundary (active; [PR #19602](https://github.com/adhithyan15/coding-adventures/pull/19602))
 
 - [x] Consume all 23 `game-clock-v1` cases from a Rust package test through public APIs. Dispatch all
   five operation tags; compare complete configs, complete states, all step-result fields, and exact
