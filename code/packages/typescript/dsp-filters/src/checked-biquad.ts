@@ -3,6 +3,13 @@ import { EmptySignalError, InvalidCoefficientError } from "./errors.js";
 
 type IndexedValues = ArrayLike<unknown>;
 
+function indexedValue(value: IndexedValues, index: number, name: string): unknown {
+  if (Array.isArray(value) && !Object.prototype.hasOwnProperty.call(value, index)) {
+    throw new InvalidCoefficientError(`${name} must not contain array holes`);
+  }
+  return value[index];
+}
+
 function finiteNumber(value: unknown, name: string): number {
   if (typeof value !== "number" || !Number.isFinite(value)) {
     throw new InvalidCoefficientError(`${name} must be a finite primitive number`);
@@ -25,14 +32,9 @@ type Advanced = readonly [output: number, z1: number, z2: number];
 
 /** A strict, finite, failure-atomic binary64 DFII-T filter section. */
 export class CheckedBiquad {
-  readonly b0: number;
-  readonly b1: number;
-  readonly b2: number;
-  readonly a1: number;
-  readonly a2: number;
-
-  private z1 = 0.0;
-  private z2 = 0.0;
+  readonly #coefficients: readonly [number, number, number, number, number];
+  #z1 = 0.0;
+  #z2 = 0.0;
 
   constructor(b0: number, b1: number, b2: number, a0: number, a1: number, a2: number) {
     const raw = [b0, b1, b2, a0, a1, a2].map((value, index) =>
@@ -46,13 +48,20 @@ export class CheckedBiquad {
     if (!normalized.every(Number.isFinite)) {
       throw new InvalidCoefficientError("normalized coefficients must be finite");
     }
-    [this.b0, this.b1, this.b2, this.a1, this.a2] = normalized;
+    this.#coefficients = Object.freeze(normalized) as unknown as readonly [
+      number,
+      number,
+      number,
+      number,
+      number,
+    ];
   }
 
   private advance(sample: number, z1: number, z2: number): Advanced {
-    const output = this.b0 * sample + z1;
-    const nextZ1 = this.b1 * sample - this.a1 * output + z2;
-    const nextZ2 = this.b2 * sample - this.a2 * output;
+    const [b0, b1, b2, a1, a2] = this.#coefficients;
+    const output = b0 * sample + z1;
+    const nextZ1 = b1 * sample - a1 * output + z2;
+    const nextZ2 = b2 * sample - a2 * output;
     if (!Number.isFinite(output)) {
       throw new InvalidCoefficientError("non-finite biquad output");
     }
@@ -64,9 +73,9 @@ export class CheckedBiquad {
 
   processSample(sample: number): number {
     const value = finiteNumber(sample, "sample");
-    const [output, nextZ1, nextZ2] = this.advance(value, this.z1, this.z2);
-    this.z1 = nextZ1;
-    this.z2 = nextZ2;
+    const [output, nextZ1, nextZ2] = this.advance(value, this.#z1, this.#z2);
+    this.#z1 = nextZ1;
+    this.#z2 = nextZ2;
     return output;
   }
 
@@ -79,25 +88,25 @@ export class CheckedBiquad {
       throw new InvalidCoefficientError("signal exceeds MAX_SAMPLES");
     }
 
-    let z1 = this.z1;
-    let z2 = this.z2;
+    let z1 = this.#z1;
+    let z2 = this.#z2;
     const output = new Float64Array(length);
     for (let index = 0; index < length; index += 1) {
-      const sample = finiteNumber(signal[index], `signal[${index}]`);
+      const sample = finiteNumber(indexedValue(signal, index, `signal[${index}]`), `signal[${index}]`);
       const advanced = this.advance(sample, z1, z2);
       output[index] = advanced[0];
       z1 = advanced[1];
       z2 = advanced[2];
     }
 
-    this.z1 = z1;
-    this.z2 = z2;
+    this.#z1 = z1;
+    this.#z2 = z2;
     return output;
   }
 
   reset(): void {
-    this.z1 = 0.0;
-    this.z2 = 0.0;
+    this.#z1 = 0.0;
+    this.#z2 = 0.0;
   }
 }
 
@@ -121,7 +130,7 @@ export function checkedSosfilt(
 
   const checkedSections: CheckedBiquad[] = [];
   for (let sectionIndex = 0; sectionIndex < sectionCount; sectionIndex += 1) {
-    const row = sections[sectionIndex];
+    const row = indexedValue(sections, sectionIndex, `section[${sectionIndex}]`);
     if (row === null || typeof row !== "object") {
       throw new InvalidCoefficientError(`section[${sectionIndex}] must be indexed`);
     }
@@ -131,14 +140,14 @@ export function checkedSosfilt(
     }
     const values: number[] = [];
     for (let index = 0; index < 6; index += 1) {
-      values.push(finiteNumber((row as IndexedValues)[index], `section[${sectionIndex}][${index}]`));
+      values.push(finiteNumber(indexedValue(row as IndexedValues, index, `section[${sectionIndex}][${index}]`), `section[${sectionIndex}][${index}]`));
     }
     checkedSections.push(new CheckedBiquad(values[0], values[1], values[2], values[3], values[4], values[5]));
   }
 
   let current: Float64Array = new Float64Array(signalLength);
   for (let index = 0; index < signalLength; index += 1) {
-    current[index] = finiteNumber(signal[index], `signal[${index}]`);
+    current[index] = finiteNumber(indexedValue(signal, index, `signal[${index}]`), `signal[${index}]`);
   }
   for (const section of checkedSections) {
     current = section.process(current);

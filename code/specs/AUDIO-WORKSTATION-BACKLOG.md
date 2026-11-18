@@ -4,6 +4,8 @@
 **Source audit:** `audio-workstation-roadmap.md` and `audio-workstation-inventory.json`, audited at `befa557a8e4c17f0091eeace8030859323cc0a24`
 **Repository delivery baseline:** `origin/main` `10eeb7add42d2e7af504eef2f5e3707a61971cc9` (freshly fetched for AF-02b)
 
+**Post-merge worktree gate:** Before starting the next work item after any PR merge, verify the merged PR and fresh `origin/main` paths, release owned processes and working directories, confirm clean tracked and untracked state, measure the completed worktree, remove it normally, prune worktree metadata, and report reclaimed size, final inventory, and free space. Preserve dirty, unmerged, active, or ambiguous trees; never force-remove them.
+
 This is the durable, prioritized delivery queue for connecting the repository's
 existing math, circuit, DSP, music, and audio I/O foundations. A source file or
 package is evidence of an implementation location only. It does not establish

@@ -46,6 +46,10 @@ describe("checked binary64 Biquad", () => {
       () => new CheckedBiquad(2, 0, 0, Number.MIN_VALUE, 0, 0),
       InvalidCoefficientError,
     );
+    const filter = identity();
+    assert.equal(Object.hasOwn(filter, "b0"), false);
+    assert.equal(Object.hasOwn(filter, "a1"), false);
+    assert.equal(Object.hasOwn(filter, "z1"), false);
   });
 
   it("rejects non-finite output and either candidate delay without committing", () => {
@@ -82,6 +86,14 @@ describe("checked binary64 Biquad", () => {
     } as unknown as ArrayLike<unknown>;
     assert.throws(() => delay.process(signal), (error: unknown) => error === accessorError);
     assert.deepEqual(Array.from(delay.process([0, 0])), [0, 0]);
+
+    let lengthReads = 0;
+    const counted = {
+      get length(): number { lengthReads += 1; return 1; },
+      0: 1,
+    };
+    assert.deepEqual(Array.from(identity().process(counted)), [1]);
+    assert.equal(lengthReads, 1);
   });
 
   it("uses separately rounded binary64 steps and rolls back on overflow", () => {
@@ -128,13 +140,61 @@ describe("checked SOS", () => {
 
     for (const rowLength of [5, 7]) {
       let coefficientReads = 0;
+      let rowLengthReads = 0;
       const row = Object.defineProperties({}, {
-        length: { value: rowLength },
+        length: { get() { rowLengthReads += 1; return rowLength; } },
         0: { get() { coefficientReads += 1; throw new Error("coefficient touched"); } },
       }) as ArrayLike<unknown>;
       assert.throws(() => checkedSosfilt([row], [1]), InvalidCoefficientError);
       assert.equal(coefficientReads, 0);
+      assert.equal(rowLengthReads, 1);
     }
+  });
+
+  it("rejects malformed lengths and indexed containers before traversal", () => {
+    for (const length of [-1, 1.5, NaN, Number.MAX_SAFE_INTEGER + 1]) {
+      assert.throws(
+        () => identity().process({ length } as unknown as ArrayLike<unknown>),
+        InvalidCoefficientError,
+      );
+    }
+    assert.throws(
+      () => identity().process(null as unknown as ArrayLike<unknown>),
+      InvalidCoefficientError,
+    );
+
+    let sampleReads = 0;
+    const overlong = Object.defineProperties({}, {
+      length: { value: MAX_SAMPLES + 1 },
+      0: { get() { sampleReads += 1; throw new Error("sample touched"); } },
+    }) as ArrayLike<unknown>;
+    assert.throws(() => identity().process(overlong), InvalidCoefficientError);
+    assert.equal(sampleReads, 0);
+
+    let sectionReads = 0;
+    const overcap = Object.defineProperties({}, {
+      length: { value: MAX_ORDER + 1 },
+      0: { get() { sectionReads += 1; throw new Error("section touched"); } },
+    }) as ArrayLike<unknown>;
+    assert.throws(() => checkedSosfilt(overcap, [1]), InvalidCoefficientError);
+    assert.equal(sectionReads, 0);
+  });
+
+  it("rejects sparse arrays even when numeric values exist on their prototype", () => {
+    const inherited = Object.create(Array.prototype) as Record<number, number>;
+    inherited[0] = 1;
+    const sparseSignal = new Array<unknown>(1);
+    Object.setPrototypeOf(sparseSignal, inherited);
+    assert.equal(sparseSignal[0], 1);
+    assert.throws(() => identity().process(sparseSignal), InvalidCoefficientError);
+
+    const sparseSections = new Array<unknown>(1);
+    Object.setPrototypeOf(sparseSections, inherited);
+    assert.throws(() => checkedSosfilt(sparseSections, [1]), InvalidCoefficientError);
+
+    const sparseRow = new Array<unknown>(6);
+    Object.setPrototypeOf(sparseRow, inherited);
+    assert.throws(() => checkedSosfilt([sparseRow], [1]), InvalidCoefficientError);
   });
 
   it("accepts the exact sample and SOS section limits", () => {

@@ -42,7 +42,10 @@ def _length_once(value: object, name: str) -> int:
     """Read a caller-provided length once and enforce safe bounded indexing."""
     if not isinstance(value, Sequence):
         raise InvalidCoefficientError(f"{name} must be an indexed sequence")
-    length = len(value)  # type: ignore[arg-type]
+    # Call the accessor directly: built-in ``len`` applies ``__index__`` to
+    # the result, which would blur the checked API's exact-integer boundary.
+    # Direct descriptor access also preserves exceptions raised by the caller.
+    length = value.__len__()
     if type(length) is not int or length < 0:
         raise InvalidCoefficientError(
             f"{name} length must be a safe nonnegative integer"
@@ -53,7 +56,7 @@ def _length_once(value: object, name: str) -> int:
 class CheckedBiquad:
     """Failure-atomic DFII-T section with strict binary64 input validation."""
 
-    __slots__ = ("b0", "b1", "b2", "a1", "a2", "_z1", "_z2")
+    __slots__ = ("_coefficients", "_z1", "_z2")
 
     def __init__(
         self,
@@ -86,7 +89,7 @@ class CheckedBiquad:
         if not all(math.isfinite(value) for value in normalized):
             raise InvalidCoefficientError("normalized coefficients must be finite")
 
-        self.b0, self.b1, self.b2, self.a1, self.a2 = normalized
+        self._coefficients = normalized
         self._z1 = 0.0
         self._z2 = 0.0
 
@@ -115,7 +118,7 @@ class CheckedBiquad:
         """Process one strictly typed sample, committing state only on success."""
         value = _finite_number(sample, "sample")
         output, next_z1, next_z2 = self._advance(
-            self.b0, self.b1, self.b2, self.a1, self.a2,
+            *self._coefficients,
             self._z1, self._z2, value,
         )
         self._z1, self._z2 = next_z1, next_z2
@@ -134,7 +137,7 @@ class CheckedBiquad:
         for index in range(length):
             value = _finite_number(signal[index], f"signal[{index}]")  # type: ignore[index]
             sample_output, z1, z2 = self._advance(
-                self.b0, self.b1, self.b2, self.a1, self.a2, z1, z2, value
+                *self._coefficients, z1, z2, value
             )
             output.append(sample_output)
 
@@ -165,7 +168,11 @@ def checked_sosfilt(sections: _Sequence, signal: _Sequence) -> list[float]:
         row_length = _length_once(row, f"section[{section_index}]")
         if row_length != 6:
             raise InvalidCoefficientError("SOS section must have six coefficients")
-        coefficients = [row[index] for index in range(6)]  # type: ignore[index]
+        coefficients = []
+        for index in range(6):
+            coefficients.append(
+                _finite_number(row[index], f"section[{section_index}][{index}]")  # type: ignore[index]
+            )
         checked_sections.append(CheckedBiquad(*coefficients))
 
     current = [

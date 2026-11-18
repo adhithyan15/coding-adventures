@@ -42,6 +42,41 @@ class _RaiseOnSecond(Sequence[object]):
         return 4.0
 
 
+class _RaiseOnLength(Sequence[object]):
+    def __len__(self) -> int:
+        raise RuntimeError("caller length failed")
+
+    def __getitem__(self, index: int) -> object:
+        raise AssertionError(f"unexpected indexed read {index}")
+
+
+class _IndexHook:
+    def __index__(self) -> int:
+        raise AssertionError("length validation must not call __index__")
+
+
+class _RawLengthSequence(Sequence[object]):
+    def __init__(self, raw_length: object) -> None:
+        self.raw_length = raw_length
+
+    def __len__(self) -> int:  # type: ignore[override]
+        return self.raw_length  # type: ignore[return-value]
+
+    def __getitem__(self, index: int) -> object:
+        raise AssertionError(f"unexpected indexed read {index}")
+
+
+class _StaticLengthSequence(Sequence[object]):
+    @staticmethod
+    def __len__() -> int:
+        return 1
+
+    def __getitem__(self, index: int) -> object:
+        if index == 0:
+            return 1.0
+        raise IndexError(index)
+
+
 class _Zeros(Sequence[object]):
     def __init__(self, length: int) -> None:
         self.length = length
@@ -123,8 +158,35 @@ def test_checked_state_is_atomic_for_invalid_samples_accessors_and_overflow() ->
     assert rounded.process_sample(1.0) == maximum
     with pytest.raises(InvalidCoefficientError):
         rounded.process_sample(2.0)
+    assert rounded.process_sample(0.0) == -maximum
     rounded.reset()
     assert rounded.process_sample(1.0) == maximum
+
+
+def test_checked_lengths_are_captured_once_and_caller_length_errors_propagate() -> None:
+    class CountedSequence(Sequence[object]):
+        def __init__(self) -> None:
+            self.length_reads = 0
+
+        def __len__(self) -> int:
+            self.length_reads += 1
+            return 1
+
+        def __getitem__(self, index: int) -> object:
+            if index == 0:
+                return 1.0
+            raise IndexError(index)
+
+    signal = CountedSequence()
+    assert CheckedBiquad(1, 0, 0, 1, 0, 0).process(signal) == [1.0]
+    assert signal.length_reads == 1
+    with pytest.raises(RuntimeError, match="caller length failed"):
+        CheckedBiquad(1, 0, 0, 1, 0, 0).process(_RaiseOnLength())
+
+    assert CheckedBiquad(1, 0, 0, 1, 0, 0).process(_StaticLengthSequence()) == [1.0]
+    for raw_length in (True, 1.0, _IndexHook(), -1, 2**100):
+        with pytest.raises(InvalidCoefficientError):
+            CheckedBiquad(1, 0, 0, 1, 0, 0).process(_RawLengthSequence(raw_length))
 
 
 def test_checked_sos_is_one_shot_ordered_and_preserves_empty_identity_zero() -> None:
@@ -143,10 +205,16 @@ def test_checked_sos_is_one_shot_ordered_and_preserves_empty_identity_zero() -> 
 
 
 def test_checked_sos_validation_order_avoids_poison_accessors() -> None:
-    empty_sections = _PoisonSequence(1)
+    class PoisonSectionLength(Sequence[object]):
+        def __len__(self) -> int:
+            raise AssertionError("section length getter ran before signal check")
+
+        def __getitem__(self, index: int) -> object:
+            raise AssertionError("section indexed before signal check")
+
+    empty_sections = PoisonSectionLength()
     with pytest.raises(EmptySignalError):
         checked_sosfilt(empty_sections, [])
-    assert empty_sections.reads == 0
 
     overlong_signal = _PoisonSequence(MAX_SAMPLES + 1)
     overcap_sections = _PoisonSequence(MAX_ORDER + 1)
@@ -154,6 +222,16 @@ def test_checked_sos_validation_order_avoids_poison_accessors() -> None:
         checked_sosfilt(overcap_sections, overlong_signal)
     assert overlong_signal.reads == 0
     assert overcap_sections.reads == 0
+
+    with pytest.raises(InvalidCoefficientError):
+        checked_sosfilt(overcap_sections, [1.0])
+    assert overcap_sections.reads == 0
+
+    with pytest.raises(InvalidCoefficientError):
+        checked_sosfilt([object()], [1.0])
+
+    with pytest.raises(InvalidCoefficientError):
+        CheckedBiquad(1, 0, 0, 1, 0, 0).process(_PoisonSequence(MAX_SAMPLES + 1))
 
     class WrongRow(Sequence[object]):
         def __init__(self, row_length: int) -> None:
@@ -172,6 +250,32 @@ def test_checked_sos_validation_order_avoids_poison_accessors() -> None:
         with pytest.raises(InvalidCoefficientError):
             checked_sosfilt([row], [1.0])
         assert row.reads == 0
+
+    class InvalidFirstSlot(Sequence[object]):
+        def __init__(self) -> None:
+            self.reads: list[int] = []
+
+        def __len__(self) -> int:
+            return 6
+
+        def __getitem__(self, index: int) -> object:
+            self.reads.append(index)
+            if index == 0:
+                return True
+            if index == 1:
+                raise AssertionError("later slot read after invalid first value")
+            return 0.0
+
+    row = InvalidFirstSlot()
+    with pytest.raises(InvalidCoefficientError):
+        checked_sosfilt([row], [1.0])
+    assert row.reads == [0]
+
+
+def test_normalized_coefficients_are_not_public_writable_attributes() -> None:
+    filter_ = CheckedBiquad(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)
+    assert not hasattr(filter_, "b0")
+    assert not hasattr(filter_, "a1")
 
 
 def test_checked_exact_sample_and_section_caps() -> None:
