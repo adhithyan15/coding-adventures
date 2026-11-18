@@ -50,6 +50,17 @@ multiple directories for the same identity.
 - Swift
 - TypeScript
 
+### Go SAT solver gap (2026-11-18)
+
+`code/packages/typescript/sat-solver` is the TypeScript `sat-solver` package;
+`code/packages/rust/cdcl-sat` is a separate Rust `cdcl-sat` package. These are
+distinct canonical identities, and neither directory name is evidence of a Go
+port. The current tracked Go packages contain no `sat-solver` identity. The
+bounded Go parser SAT check described by [VER backlog](VER-BACKLOG.md) is an
+opt-in test bridge to the existing TypeScript solver, not an implementation
+port and not package parity. A Go SAT-solver port remains a separate future
+parity item.
+
 ### Separately classified lanes
 
 - C, C++, and OCaml are emerging implementation lanes. They need their
@@ -122,6 +133,20 @@ language buckets:
 
 The loop must not start by attempting 14,070 singleton slots. It should finish
 the broadly established portable core, then classify the sparse majority.
+
+### Queued identity gap: Go SAT solver (2026-11-18)
+
+After the blocking `GBL-063` Kiln performance repair and open `GBL-010` PR
+#19644 are resolved, prioritize a Go `sat-solver` implementation before
+selecting another package-parity item. Align its source/API with the existing
+TypeScript `code/packages/typescript/sat-solver` identity and contract; include
+shared fixtures, assignment validation, bounded brute-force/model/mutant
+evidence, Go `BUILD`/`BUILD_windows`, README, changelog, metadata, and CI. Refresh
+the canonical package matrix after that implementation lands. Rust
+`code/packages/rust/cdcl-sat` remains a distinct package identity and does not
+fill the Go `sat-solver` cell. The current Go parser SAT miter is test-only
+validation and does not implement or close this parity item. Cross-linked from
+the [VER backlog](VER-BACKLOG.md).
 
 The post-#16722 refresh classified these newly evidenced gaps before the next
 implementation selection:

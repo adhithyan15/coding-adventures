@@ -96,10 +96,10 @@ def test_the_derived_corpus_has_every_feature_the_fixture_exists_for(good):
         "claim": "warrant/synth/exhaustive/add2_commutes",
         "unproven": True,
     }
-    deferred = control(corpus, "bump", "xor-lsb")
-    assert deferred["requires"] == ["ir.fixed"]
-    assert deferred["slim_witness"] == [
-        {"claim": "warrant/synth/exhaustive/bump_is_inc", "deferred": "ir.fixed"}
+    live_fixed = control(corpus, "bump", "xor-lsb")  # an ir.fixed control: live since the flip (S10c, D29)
+    assert live_fixed["requires"] == ["ir.fixed"]
+    assert live_fixed["slim_witness"] == [
+        {"claim": "warrant/synth/exhaustive/bump_is_inc", "chunk": 0}
     ]
     assert corpus["accepted_blind_faults"] == [] and corpus["levels"] == ["ir.core", "ir.fixed"]
 
@@ -225,12 +225,21 @@ def test_a_witness_chunk_missing_from_the_slim_set_fails(tmp_path):
     assert codes(root) == {"enumeration"}
 
 
-def test_a_deferred_control_made_live_fails(tmp_path):
+def test_an_ir_fixed_control_with_a_falsified_requires_fails(tmp_path):
     root = fresh(tmp_path)
     corpus = load(root)
     ctl = control(corpus, "bump", "xor-lsb")
     ctl["requires"] = ["ir.core"]
-    ctl["slim_witness"] = [{"claim": ctl["required_claims"][0], "chunk": 0}]
+    save(root, corpus)
+    assert codes(root) == {"controls"}
+
+
+def test_a_stale_deferred_witness_for_an_implemented_level_fails(tmp_path):
+    # the shipped gate implements ir.fixed (the flip, S10c, D29): `deferred` is no longer derivable
+    root = fresh(tmp_path)
+    corpus = load(root)
+    ctl = control(corpus, "bump", "xor-lsb")
+    ctl["slim_witness"] = [{"claim": ctl["required_claims"][0], "deferred": "ir.fixed"}]
     save(root, corpus)
     assert codes(root) == {"controls"}
 
@@ -589,8 +598,39 @@ def test_the_committed_ct_compare_v2_fixture_verifies():
     assert derived.corpus["accepted_blind_faults"] == []
     # the generator pin of [D13]: the recorded generator is exactly the one the build expects
     gen = derived.corpus["generator"]
-    assert (gen["name"], gen["version"]) == ("warrant-corpus-gen", "0.5.0")
+    assert (gen["name"], gen["version"]) == ("warrant-corpus-gen", "0.6.0")
 
+
+
+def test_a_preflip_ct_compare_corpus_with_a_stale_deferred_witness_fails_verify_v2(tmp_path):
+    """CV2-S10c negative test: the shipped gate implements ``ir.fixed``, so the oracle refuses the
+    pre-flip corpus whose ``eq_u64/ignore-high-bit`` control still says ``deferred``."""
+    from conftest import CODE
+
+    fixture = CODE / "specs" / "fixtures" / "ct-compare-warrant-v2"
+    preflip = HERE.parent / "ct-compare-v2-preflip" / "corpus.json"
+    stale = json.loads(preflip.read_text(encoding="utf-8"))
+    row = next(c for c in stale["controls"] if c["id"].endswith("/eq_u64/ignore-high-bit"))
+    assert row["slim_witness"] == [{"claim": "warrant/ct_compare/exhaustive/eq_u64_agrees", "deferred": "ir.fixed"}]
+    assert stale["generator"]["version"] == "0.5.0"
+    root = tmp_path / "ct"
+    shutil.copytree(fixture, root)
+    (root / "corpus.json").write_bytes(preflip.read_bytes())
+    report, _ = check(
+        root,
+        CODE / "specs" / "ct-compare.warrant",
+        fixture / "corpus.profile",
+        CODE / "packages/rust/ct-compare/evidence.bindings",
+    )
+    assert not report.ok
+    controls = [m for m in report.mismatches if m["code"] == "controls"]
+    assert controls, report.mismatches
+    # no other group of check objects: the stale witness is the only difference, and every mismatch
+    # sits at that control's `slim_witness[0]` (`.chunk` missing, and an unexpected key)
+    index = next(i for i, c in enumerate(stale["controls"]) if c is row)
+    assert {m["code"] for m in report.mismatches} == {"controls"}
+    where = f"controls[{index}].slim_witness[0]"
+    assert {m["where"] for m in report.mismatches} == {where, f"{where}.chunk"}
 
 
 @pytest.mark.skipif(

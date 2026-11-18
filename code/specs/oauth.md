@@ -884,6 +884,86 @@ transport, or open a network connection. Those transcript, certificate,
 trust, revocation, handshake, and transport boundaries remain separate;
 concrete HTTPS and live-provider readiness remain unavailable.
 
+A bounded `tls13-certificate-verify-transcript-binding` composition now closes
+the detached-transcript-hash and detached-transcript-algorithm gap for that
+operation. It accepts one immutable selected repository transcript state, one
+caller-selected CertificateVerify role, caller-owned output, and one already
+policy-authorized RSA-PSS scheme. The composition snapshots the transcript
+internally, maps only its suite-bound SHA-256 or SHA-384 algorithm to the exact
+framing metadata, constructs the role-specific RFC 8446 signed input, and then
+delegates hashing to `tls13-rsa-pss-certificate-verify`. Non-copyable evidence
+retains the selected transcript state, exact snapshot, role-bound framed input,
+authorized signature scheme, and owned scheme-bound digest together. The API
+accepts neither detached transcript bytes nor caller-selected transcript-hash
+metadata, and the retained immutable transcript borrow prevents that state from
+advancing while the evidence is live.
+
+This evidence does not prove that the caller fed the selected transcript the
+right ordered handshake messages or stopped at the required handshake state,
+authorize the caller-selected client or server role, bind a certificate or
+validated path key, authenticate Finished, sequence a handshake, process or
+protect records, perform I/O, authorize HTTP or OAuth transport, or open a
+network connection. Those ordered-state, role, certificate, trust, revocation,
+handshake, and transport boundaries remain separate; concrete HTTPS and
+live-provider readiness remain unavailable.
+
+A follow-up verification stage in that composition now accepts only the outer
+transcript-bound hash evidence, the exact decoded `CertificateVerify` message,
+one already validated RSA public key, matching typed verifier limits, and
+caller-owned scratch. It delegates to the existing repository-owned RSA-PSS
+certificate verifier and returns non-copyable success evidence retaining both
+the outer selected-transcript proof and the complete lower signature-verdict
+proof. Callers therefore cannot obtain this stronger verdict from detached
+framing or hash evidence, and the returned proof keeps the selected transcript,
+role-specific input, authorized scheme, message, key, and signature verdict in
+one lifetime-bound graph.
+
+The public key is still only algorithm- and strength-validated: this stage does
+not bind it to an authenticated certificate or reviewed server path. It also
+does not prove ordered handshake state, authorize the selected role, check
+Finished, sequence a handshake, process records, perform I/O, or authorize TLS,
+HTTP, OAuth transport, or live-provider access. Those state, role, certificate,
+trust, revocation, handshake, and transport boundaries remain separate;
+concrete HTTPS remains unavailable.
+
+A bounded `tls13-reviewed-server-path-certificate-verify` composition closes
+the detached-key and caller-selected-role gaps for one reviewed RSA server
+path. It accepts only the strongest accumulated reviewed server-path proof,
+outer transcript-bound hash evidence, the exact decoded `CertificateVerify`
+message, data-driven RSA key policy, matching typed verifier limits, and
+caller-owned scratch. Before RSA work or scratch mutation it requires the
+retained RFC 8446 input role to be `Server`. It then derives the target
+certificate exclusively through the retained reviewed path, validates that
+certificate's exact SubjectPublicKeyInfo under the supplied RSA key policy,
+and delegates verification with that derived key. Non-copyable success
+evidence retains both the complete reviewed path and the outer
+selected-transcript signature verdict, so a detached certificate, key, role,
+path, transcript, message, or signature cannot be substituted after success.
+
+This composition does not prove that the selected transcript contains the
+right ordered handshake messages or stopped at the required state, verify the
+reviewed anchor's self-signature, select a revocation outcome, authenticate
+Finished, sequence a handshake, process or protect records, perform I/O, or
+authorize TLS, HTTP, OAuth transport, or live-provider access. Those remaining
+anchor, revocation, state, Finished, record, and transport boundaries remain
+separate; concrete HTTPS remains unavailable.
+
+The same package now exposes a stronger exact-destination entry point. It
+accepts the reviewed server path only through the existing non-copyable HTTPS
+DNS destination binding, then delegates the same role-first exact-leaf
+`CertificateVerify` verification. Success retains the complete certificate
+SAN, TLS SNI, HTTP Host authority, reviewed path, selected transcript, decoded
+message, derived key, and signature verdict in one lifetime-bound graph. This
+closes substitution between a destination-proven leaf and the leaf used for
+handshake authentication.
+
+The stronger entry point still does not add anchor self-signature evidence,
+select or enforce revocation, prove ordered transcript state, authenticate
+Finished, protect records, perform TLS or HTTP I/O, authorize OAuth transport,
+or grant network authority. Those trust, revocation, state, record, and
+transport boundaries remain separate; concrete HTTPS and live-provider
+readiness remain unavailable.
+
 A bounded `rsa-pss-sha512` prerequisite now validates one complete recovered
 RFC 8017 EMSA-PSS encoded message for the fixed SHA-512, 64-byte-salt profile.
 It composes the public layout gate and bounded SHA-512 MGF1 primitive, unmasks

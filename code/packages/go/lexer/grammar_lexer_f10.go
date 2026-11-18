@@ -107,8 +107,19 @@ func (l *GrammarLexer) applyTransitions(tok Token) {
 	// The active group is the top of the group stack.
 	active := l.groupStack[len(l.groupStack)-1]
 
-	for _, rule := range l.c.transitions {
-		// 1. Token-type guard: does the rule trigger on this token's type?
+	for index := range l.c.transitions {
+		// The transition table is immutable after compilation. Keep a pointer to
+		// the ordered entry so a ModeTransition's slice headers are not copied
+		// for every emitted token.
+		rule := &l.c.transitions[index]
+
+		// 1. In-mode guard: most rules in a multi-mode grammar do not apply in
+		// the current mode, so reject them before scanning their token list.
+		if rule.InMode != "" && rule.InMode != active {
+			continue
+		}
+
+		// 2. Token-type guard: does the rule trigger on this token's type?
 		typeMatched := false
 		for _, onType := range rule.OnTokens {
 			if onType == tok.TypeName {
@@ -117,12 +128,6 @@ func (l *GrammarLexer) applyTransitions(tok Token) {
 			}
 		}
 		if !typeMatched {
-			continue
-		}
-
-		// 2. In-mode guard: rule must be for the current active group
-		//    (or have no in-mode constraint).
-		if rule.InMode != "" && rule.InMode != active {
 			continue
 		}
 

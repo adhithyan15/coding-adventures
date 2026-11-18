@@ -14,7 +14,7 @@
 //! |---|---|---|
 //! | `.oracle-lowering.json` | `warrant-lowering-parity-v1` | [`view::oracle_view_v1`] of the lowered document |
 //! | `.oracle-evaluation.json` | `warrant-evaluation-parity-v1` | the generated corpus (`corpus.json`, chunk files, `cases.tfv`) |
-//! | `.oracle-faults.json` | `warrant-fault-parity-v1` | the same corpus twice: the shipped fault gate (`ir.core`) and `ir.core` + `ir.tuple` |
+//! | `.oracle-faults.json` | `warrant-fault-parity-v1` | the same corpus twice: the explicitly pinned closed fault gate (`ir.core`) and `ir.core` + `ir.tuple` |
 //! | `.oracle-refusals.json` | `warrant-refusals-parity-v1` | each corpus-error document, refused with the generator code `ir` |
 //!
 //! The files are read from the oracle's directory (no copy), so an edit to any of them reruns this
@@ -25,7 +25,9 @@
 //! The faults dump is **normative** for the composite fault JSON (`ok-as-err`, `drop-consumed`,
 //! `swap-components`, the tuple-payload `missing-error`, VER04r 16.10 R11): a fault row here is the
 //! oracle's byte for byte.  Its second control view (`controls_gate_on`) is what the flip turns
-//! on; until then the generator reaches it through [`generate_gated`], a library parameter.
+//! on; until then the generator reaches it through [`generate_gated`], a library parameter.  Every view
+//! names its gate (`GATE_CLOSED`, `GATE_ON`) rather than taking the default of `generate`, so the flip
+//! that opens the shipped gate leaves these dumps untouched.
 //!
 //! The negative controls at the bottom show each comparison can fail.
 
@@ -101,9 +103,9 @@ fn the_tuple_forms_document_lowers_to_the_oracle_dump_byte_for_byte() {
 /// `warrant-fault-parity-v1`: the fault rows and the controls under both gates (the oracle's
 /// `parity_dumps.faults_view`).
 fn faults_view(src: &str, profile: &str) -> Json {
-    let shipped = generated(src, SPEC, profile, None).expect("generates (shipped gate)");
-    let on = generated(src, SPEC, profile, Some(&GATE_ON)).expect("generates (ir.tuple evaluated)");
-    let s = parse(&shipped.corpus_json).expect("parses");
+    let closed = generated(src, SPEC, profile, &GATE_CLOSED).expect("generates (closed gate)");
+    let on = generated(src, SPEC, profile, &GATE_ON).expect("generates (ir.tuple evaluated)");
+    let s = parse(&closed.corpus_json).expect("parses");
     let g = parse(&on.corpus_json).expect("parses");
     assert_eq!(
         s.get("faults"),
@@ -126,7 +128,7 @@ fn faults_view(src: &str, profile: &str) -> Json {
 }
 
 fn evaluation_text(src: &str, profile: &str) -> String {
-    evaluation_view(&generated(src, SPEC, profile, None).expect("generates"))
+    evaluation_view(&generated(src, SPEC, profile, &GATE_CLOSED).expect("generates"))
         .render()
         .expect("render")
 }
@@ -288,7 +290,7 @@ fn a_dropped_arm_of_the_scrutinee_value_changes_the_call_count() {
     );
     assert_ne!(mutated, WARRANT);
     // the claim now calls no operation: refused (W0701), never silently emitted
-    let e = generated(&mutated, SPEC, PROFILE, None).expect_err("a claim must call an op");
+    let e = generated(&mutated, SPEC, PROFILE, &GATE_CLOSED).expect_err("a claim must call an op");
     assert_eq!(e.code, code::W0701, "{e}");
 }
 
@@ -305,17 +307,17 @@ fn a_changed_profile_changes_the_fault_dump() {
 
 #[test]
 fn the_gate_changes_exactly_the_witnesses_of_the_gated_faults() {
-    // not a vacuous second view: the shipped gate defers, the gate that evaluates ir.tuple finds
+    // not a vacuous second view: the closed gate defers, the gate that evaluates ir.tuple finds
     // witnesses, and a fault that also needs ir.fixed stays deferred
-    let shipped = generated(WARRANT, SPEC, PROFILE, None).unwrap();
-    let on = generated(WARRANT, SPEC, PROFILE, Some(&GATE_ON)).unwrap();
-    assert_ne!(shipped.corpus_json, on.corpus_json);
-    assert!(shipped.corpus_json.contains(r#""deferred": "ir.tuple""#));
+    let closed = generated(WARRANT, SPEC, PROFILE, &GATE_CLOSED).unwrap();
+    let on = generated(WARRANT, SPEC, PROFILE, &GATE_ON).unwrap();
+    assert_ne!(closed.corpus_json, on.corpus_json);
+    assert!(closed.corpus_json.contains(r#""deferred": "ir.tuple""#));
     assert!(!on.corpus_json.contains(r#""deferred": "ir.tuple""#));
     assert!(on.corpus_json.contains(r#""deferred": "ir.fixed""#));
-    // the shipped gate is the default of `generate`
-    let again = generated(WARRANT, SPEC, PROFILE, Some(&[Level::Core])).unwrap();
-    assert_eq!(shipped, again);
+    // the closed gate is named, never inherited: this view does not move when `SHIPPED_GATE` does
+    let again = generated(WARRANT, SPEC, PROFILE, &[Level::Core]).unwrap();
+    assert_eq!(closed, again);
 }
 
 #[test]

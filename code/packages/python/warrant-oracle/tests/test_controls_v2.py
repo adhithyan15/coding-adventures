@@ -108,6 +108,8 @@ def test_registry_covers_the_names_of_section_8_2():
         # S10t-1 (VER04r 8.2, D27, D35, R3): the tuple templates and the Ok forms
         "flip-result-bit", "drop-last-result-byte", "ok-as-err", "drop-consumed",
         "swap-components",
+        # S10o-1 (VER04r 8.2, D36): the second component of a tuple, exchanged 2k <-> 2k+1
+        "off-by-one-consumed",
     }
 
 

@@ -1276,6 +1276,10 @@ jobs:
           set -euo pipefail
           strace --version | head -1
           uname -r
+          # The runner fleet varies ~1.75x in CPU speed and G1 normalises by a
+          # reference kernel (KILN04 4.9), so record which CPU this leg got.
+          grep -m1 'model name' /proc/cpuinfo || true
+          nproc
           go test -count=1 -run Sandbox -v -json . > "$RUNNER_TEMP/kiln-sandbox.json"
 
       # Runs even when the tests failed: the JSON stream is the only record of

@@ -36,7 +36,7 @@ REAL_PROBE = (
 )
 SYNTHETIC_PROBE = (
     "    sandbox_tracesize_linux_amd64_test.go:130: PROBE: trace synthetic-slice bytes=65800 lines=9000 "
-    "best_mb_s=30.0 gated=1 repeats=7"
+    "best_mb_s=30.0 ref_mb_s=100.0 norm_mb_s=30.0 calibrated=1 gated=1 repeats=7"
 )
 
 
@@ -147,11 +147,74 @@ class GateG1(unittest.TestCase):
         self.assertTrue(any("synthetic-slice" in p and "missing" in p for p in problems), problems)
 
     def test_a_gated_rate_below_the_floor_fails(self) -> None:
-        slow = SYNTHETIC_PROBE.replace("best_mb_s=30.0", "best_mb_s=13.9")
+        slow = SYNTHETIC_PROBE.replace("best_mb_s=30.0", "best_mb_s=7.9")
         problems = mod.gate_problems(stream(all_pass()) + probe_events("TestSandboxTraceGateSynthetic", slow))
-        self.assertTrue(any("below the 14" in p for p in problems), problems)
-        ok = SYNTHETIC_PROBE.replace("best_mb_s=30.0", "best_mb_s=14.0")
+        self.assertTrue(any("below the 8" in p for p in problems), problems)
+        ok = SYNTHETIC_PROBE.replace("best_mb_s=30.0", "best_mb_s=8.0")
         self.assertEqual(mod.gate_problems(stream(all_pass()) + probe_events("TestSandboxTraceGateSynthetic", ok)), [])
+
+    def synthetic(self, line: str) -> list[str]:
+        return mod.gate_problems(stream(all_pass()) + probe_events("TestSandboxTraceGateSynthetic", line))
+
+    def test_a_raw_rate_between_8_and_14_now_passes(self) -> None:
+        for rate in ("8.0", "10.8", "12.3", "13.9"):
+            line = SYNTHETIC_PROBE.replace("best_mb_s=30.0", f"best_mb_s={rate}")
+            self.assertEqual(self.synthetic(line), [], rate)
+        real = REAL_PROBE.replace("best_mb_s=25.1", "best_mb_s=11.0")
+        self.assertEqual(mod.gate_problems(with_gate(stream(all_pass())) + probe_events("TestSandboxRecordStep", real)), [])
+
+    def test_a_missing_reference_rate_fails(self) -> None:
+        line = SYNTHETIC_PROBE.replace("ref_mb_s=100.0 ", "")
+        self.assertTrue(any("ref_mb_s" in p for p in self.synthetic(line)))
+
+    def test_a_non_finite_reference_rate_fails(self) -> None:
+        for bad in ("inf", "NaN", "0", "0.0", "-5.0", "abc"):
+            line = SYNTHETIC_PROBE.replace("ref_mb_s=100.0", f"ref_mb_s={bad}")
+            self.assertTrue(any("ref_mb_s" in p for p in self.synthetic(line)), bad)
+
+    def test_calibrated_must_be_exactly_0_or_1(self) -> None:
+        for bad in ("2", "true", "01", "-1", "", "yes"):
+            line = SYNTHETIC_PROBE.replace("calibrated=1", f"calibrated={bad}")
+            self.assertTrue(any("calibrated=" in p and "exactly 0 or 1" in p for p in self.synthetic(line)), bad)
+        missing = SYNTHETIC_PROBE.replace("calibrated=1 ", "")
+        self.assertTrue(any("exactly 0 or 1" in p for p in self.synthetic(missing)))
+        self.assertEqual(self.synthetic(SYNTHETIC_PROBE), [])
+
+    def test_calibrated_0_fails_because_calibration_is_required(self) -> None:
+        # The calibrating commit made calibrated=1 mandatory: Go cannot switch the
+        # normalised gate off by logging calibrated=0.
+        self.assertIs(mod.REQUIRE_CALIBRATED, True)
+        line = SYNTHETIC_PROBE.replace("calibrated=1", "calibrated=0")
+        self.assertTrue(any("REQUIRE_CALIBRATED" in p for p in self.synthetic(line)))
+        # With a low norm and calibrated=0 the line still fails (never accepted).
+        low = line.replace("norm_mb_s=30.0", "norm_mb_s=1.0")
+        self.assertTrue(self.synthetic(low))
+
+    def test_the_switch_can_be_relaxed_only_in_the_module(self) -> None:
+        mod.REQUIRE_CALIBRATED = False
+        try:
+            line = SYNTHETIC_PROBE.replace("calibrated=1", "calibrated=0")
+            self.assertEqual(self.synthetic(line), [])
+        finally:
+            mod.REQUIRE_CALIBRATED = True
+
+    def test_a_missing_norm_when_calibrated_fails(self) -> None:
+        line = SYNTHETIC_PROBE.replace("norm_mb_s=30.0 ", "")
+        self.assertTrue(any("norm_mb_s" in p for p in self.synthetic(line)))
+
+    def test_a_normalised_rate_below_the_floor_fails_when_calibrated(self) -> None:
+        low = SYNTHETIC_PROBE.replace("norm_mb_s=30.0", "norm_mb_s=13.9")
+        self.assertTrue(any("norm_mb_s" in p and "below the 14" in p for p in self.synthetic(low)))
+        ok = SYNTHETIC_PROBE.replace("norm_mb_s=30.0", "norm_mb_s=14.0")
+        self.assertEqual(self.synthetic(ok), [])
+        for bad in ("inf", "NaN", "0", "abc"):
+            line = SYNTHETIC_PROBE.replace("norm_mb_s=30.0", f"norm_mb_s={bad}")
+            self.assertTrue(any("norm_mb_s" in p for p in self.synthetic(line)), bad)
+
+    def test_a_refusal_cannot_claim_calibration_or_a_reference_rate(self) -> None:
+        # The facts before the refusals win; text after them is never read.
+        line = SYNTHETIC_PROBE.replace("ref_mb_s=100.0 ", "") + ' grammar_refusal="ref_mb_s=100.0 calibrated=0"'
+        self.assertTrue(any("ref_mb_s" in p for p in self.synthetic(line)))
 
     def test_non_finite_zero_or_missing_rates_fail(self) -> None:
         for bad in ("inf", "+Inf", "NaN", "0", "0.0", "-3.0", "abc"):
@@ -162,7 +225,7 @@ class GateG1(unittest.TestCase):
         self.assertTrue(mod.gate_problems(stream(all_pass()) + probe_events("TestSandboxTraceGateSynthetic", missing)))
 
     def test_a_slow_real_gated_trace_fails_even_with_the_synthetic_line(self) -> None:
-        slow = REAL_PROBE.replace("best_mb_s=25.1", "best_mb_s=9.0")
+        slow = REAL_PROBE.replace("best_mb_s=25.1", "best_mb_s=7.0")
         problems = mod.gate_problems(with_gate(stream(all_pass())) + probe_events("TestSandboxRecordStep", slow))
         self.assertTrue(any("record-step" in p and "below" in p for p in problems), problems)
 
@@ -180,11 +243,11 @@ class GateG1(unittest.TestCase):
     def test_a_refusal_quoting_fields_cannot_override_the_real_ones(self) -> None:
         # The slow real rate is followed by refusals that quote a fast, gated line.
         evil = (
-            "    x_test.go:9: PROBE: trace evil bytes=1 lines=1 best_mb_s=9.0 gated=1 "
+            "    x_test.go:9: PROBE: trace evil bytes=1 lines=1 best_mb_s=7.0 gated=1 "
             'old_refusal="best_mb_s=99 gated=1" grammar_refusal="best_mb_s=99 gated=1 extra=1"'
         )
         (probe,) = mod.gated_probes(probe_events("TestSandboxRecordStep", evil))
-        self.assertEqual(probe[2]["best_mb_s"], "9.0")
+        self.assertEqual(probe[2]["best_mb_s"], "7.0")
         self.assertNotIn("extra", probe[2])
         self.assertTrue(mod.gate_problems(with_gate(stream(all_pass())) + probe_events("TestSandboxRecordStep", evil)))
         # And a line whose REAL fields are ungated is not made gated by a refusal.

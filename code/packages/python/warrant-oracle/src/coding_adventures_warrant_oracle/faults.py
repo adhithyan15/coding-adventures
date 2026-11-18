@@ -42,10 +42,18 @@ The ``ir.tuple`` templates (slice S10t-1; VER04r 8.2, 16.10 R3 and R11)
 their JSON is what the S10t-1 committed dump
 (``tests/fixtures/tuple-forms-v1/tuple_forms_v1.oracle-faults.json``) pins and what the generator's
 S10t-2 must reproduce byte for byte (R11).  Before the flip (S10c, D29) their *evaluation* is gated
-exactly as ``ir.fixed``'s is: :data:`IMPLEMENTED` holds ``ir.core`` only, so a control whose fault
-needs ``ir.tuple`` (or ``ir.fixed``) records ``{"claim": C, "deferred": "ir.tuple"}`` witnesses and no
+exactly as ``ir.fixed``'s was: :data:`IMPLEMENTED` held ``ir.core`` only, so a control whose fault
+needed ``ir.tuple`` (or ``ir.fixed``) recorded ``{"claim": C, "deferred": "ir.tuple"}`` witnesses and no
 witness search runs.  The gate is reachable only through the ``implemented`` parameter of
 :func:`derive_controls`, which the tests use; no command line or environment switch exists.
+
+``off-by-one-consumed`` (slice S10o-1; VER04r 8.2 and 16.10 [D36])
+-----------------------------------------------------------------
+The second component ``n`` of a tuple result, or of the tuple inside an ``Ok``, becomes ``n + 1``
+when ``n`` is even and ``n - 1`` when it is odd.  Unlike the faults above, **VER04r 8.2 fixes its JSON**
+(the dump follows the spec, R11), and it requires ``ir.fixed`` plus ``ir.tuple``.  Its committed faults
+dump lives in a fixture directory of its own (``tests/fixtures/off-by-one-consumed-v1``), which the
+generator's slice S10o-2 must reproduce byte for byte.
 """
 
 from __future__ import annotations
@@ -63,11 +71,10 @@ FIXED_LEVEL = "ir.fixed"
 TUPLE_LEVEL = "ir.tuple"
 #: The levels whose *faults* this oracle evaluates (the witness search).  A fault that needs any
 #: other level is instantiated and compared as opaque data (section 10.4) and its witnesses are
-#: ``deferred``.  ``ir.tuple`` is implemented (lowering, typing, cost, evaluation, S10t-1) but its
-#: fault evaluation is **gated** like ``ir.fixed``'s until the atomic flip (S10c, D29): the flip
-#: adds ``ir.fixed`` and ``ir.tuple`` here.  Tests reach the gate through ``derive_controls(...,
-#: implemented=...)``, never through a switch.
-IMPLEMENTED = (CORE,)
+#: ``deferred``.  ``ir.fixed`` and ``ir.tuple`` are implemented (lowering, typing, cost, evaluation) and, since the
+#: atomic flip (S10c, D29), their fault evaluation is open here too.  The closed gate (``("ir.core",)``)
+#: stays reachable through ``derive_controls(..., implemented=...)``, never through a switch.
+IMPLEMENTED = (CORE, FIXED_LEVEL, TUPLE_LEVEL)
 #: The name a ``match`` binds the payload of an ``Ok`` to in the ``Ok`` forms (VER04r 8.2); an op
 #: parameter of that name would be shadowed, a corpus error, so the templates refuse it.
 OK_PAYLOAD = "ok_payload"
@@ -301,6 +308,47 @@ def _drop_consumed(op: OpSig, errors) -> tuple:
     return "post", [TUPLE_LEVEL], expr
 
 
+def _off_by_one_consumed(op: OpSig, errors) -> tuple:
+    """``off-by-one-consumed`` [D36]: the second component ``n`` becomes ``n + 1`` (even) or ``n - 1`` (odd).
+
+    The fault of VER04j 4.8 ("right value, wrong bytes consumed") as the Rust harness applies it:
+    the pair ``2k, 2k+1`` is exchanged, so both directions occur and the value never leaves its
+    type.  Applies exactly where ``drop-consumed`` does (a tuple, or a ``Result`` of one, whose second
+    component is ``Nat`` or fixed-width) and its JSON is the normative block of VER04r 8.2:
+
+    * ``Nat`` component ``C``:
+      ``if unwrap_or(rem(C, 2), 0) == 0 then C + 1 else C - 1`` (``Int`` literals in the parity
+      test, ``Nat`` literals in the arms; ``add``/``sub`` on a ``Nat`` are exact, so the value is
+      always a ``Nat`` value: an odd ``n`` has ``n >= 1`` and the largest ``Nat`` is odd);
+    * fixed-width component: ``bit_xor(C, 1)``, the harness's wrapping ``+ 1`` / ``- 1`` on the bit
+      pattern (an even pattern has bit 0 clear, an odd one has it set, so no carry or borrow occurs).
+
+    ``requires`` is ``ir.fixed`` and ``ir.tuple`` in all four combinations.  An ``Err`` is unchanged
+    (the ``err_any`` arm of the ``Ok`` form returns ``result``).
+    """
+    tup, inside = _tuple_target(op, "off-by-one-consumed")
+    second = tup.args[1]
+    if second.head not in FIXED and second.head != "Nat":
+        raise _fail("off-by-one-consumed needs a numeric second component")
+
+    def rewrite(src: list) -> list:
+        c = _project(src, 1)
+        if second.head == "Nat":
+            x = [
+                "if",
+                ["eq", ["unwrap_or", ["rem", c, _lit("Int", 2)], _lit("Int", 0)], _lit("Int", 0)],
+                ["add", c, _lit("Nat", 1)],
+                ["sub", c, _lit("Nat", 1)],
+            ]
+        else:
+            x = ["bit_xor", c, _lit(second.head, 1)]
+        n = len(tup.args)
+        return ["tuple", [_project(src, 0), x, *(_project(src, i) for i in range(2, n))]]
+
+    expr = _ok_form(op, rewrite) if inside else rewrite(_var("result"))
+    return "post", [FIXED_LEVEL, TUPLE_LEVEL], expr
+
+
 def _swap_components(op: OpSig, errors) -> tuple:
     """The components of a homogeneous tuple exchanged (reversed, so a pair is swapped)."""
     tup, inside = _tuple_target(op, "swap-components")
@@ -343,6 +391,7 @@ REGISTRY = {
     "ok-as-err": _ok_as_err,
     "drop-consumed": _drop_consumed,
     "swap-components": _swap_components,
+    "off-by-one-consumed": _off_by_one_consumed,
 }
 
 
@@ -490,11 +539,12 @@ def derive_controls(
     profile lines (section 16.6 item 2); the three claim lists keep suite order.
 
     ``implemented`` is the **fault-evaluation gate** (the levels whose faults the witness search
-    evaluates).  The shipped value is :data:`IMPLEMENTED` (``ir.core``): a fault whose ``requires``
+    evaluates).  The shipped value is :data:`IMPLEMENTED` (``ir.core``, ``ir.fixed``, ``ir.tuple``): a fault whose ``requires``
     names any other level is emitted as data and each of its candidate claims that has a stand-in is
     ``{"claim": C, "deferred": L}`` with ``L`` the first level of the fault's ``requires`` that is not
     implemented (a fault needing two unimplemented levels names the first in sorted order).  The
-    atomic flip (S10c) turns the gate on; until then only tests pass another value.
+    atomic flip (S10c) opened the gate to ``ir.fixed`` and ``ir.tuple``; only tests pass a narrower
+    value (the closed gate is ``("ir.core",)``).
     """
     for name, op in spec.ops.items():
         if any(p == "result" for p, _ in op.params):

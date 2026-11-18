@@ -2,7 +2,7 @@
 
 A document that needs ``ir.fixed`` now emits a corpus: the suites are evaluated and written, and
 ``verify-v2`` re-derives and compares every row.  Only the *fault evaluation* is gated: the control of an
-``ir.fixed`` fault records ``deferred`` witnesses until the atomic flip (S10c, D29).  A mutated corpus (a
+``ir.fixed`` fault records ``deferred`` witnesses under the closed gate and chunk witnesses under the shipped one (open since the atomic flip, S10c, D29).  A mutated corpus (a
 witness where the gate says ``deferred``, an altered fault expression, a wrong ``requires``, a wrong
 shift-count descriptor) fails.
 """
@@ -69,12 +69,22 @@ def test_an_ir_fixed_document_derives_a_corpus_with_computed_requires(tmp_path):
     assert rows["c_rot"]["stream"] == "warrant-stream-v1"  # U8, Nat, U8: the v1 type set
     assert rows["c_be"]["stream"] == "warrant-stream-v2"  # a U32 binder: the first real use of v2
     assert [e["id"].rsplit("/", 1)[1] for e in corpus["examples"]] == ["e_rot", "e_be"]
-    # the gate is closed: the ir.fixed fault is data and its control says deferred
+    # the closed gate (explicit): the ir.fixed fault is data and its control says deferred
     closed = derive(DOC, PROFILE, spec_ref="v.warrant", generator=GEN, implemented=("ir.core",)).corpus
     (control,) = closed["controls"]
     assert control["requires"] == ["ir.fixed"]
     assert control["slim_witness"] == [{"claim": "warrant/v/exhaustive/c_flip", "deferred": "ir.fixed"}]
     assert corpus["faults"][0]["expr"] == ["bit_xor", ["var", "result"], ["lit", {"type": "U16", "value": "1"}]]
+
+
+def test_a_closed_gate_corpus_fails_verify_v2_under_the_shipped_gate(tmp_path):
+    # the `deferred` code path stays covered: a corpus derived under the closed gate says `deferred`
+    # for an ir.fixed control, which the shipped (open) gate refutes
+    root, warrant, prof, _ = write_corpus(tmp_path)
+    closed = derive(DOC, PROFILE, spec_ref="v.warrant", generator=GEN, implemented=("ir.core",))
+    assert closed.corpus["controls"][0]["slim_witness"][0].get("deferred") == "ir.fixed"
+    (root / "corpus.json").write_bytes(canonical(closed.corpus))
+    assert not verify(tmp_path, root, warrant, prof).ok
 
 
 def test_verify_v2_accepts_a_derived_ir_fixed_corpus(tmp_path):
@@ -93,10 +103,17 @@ def mutate(tmp_path, root, change) -> None:
     "name,change",
     [
         (
-            "a witness chunk where the gate says deferred",
-            lambda c: c["controls"][0]["slim_witness"][0].update({"chunk": 0}) or c["controls"][0]["slim_witness"][0].pop("deferred"),
+            "a stale deferred witness where the open gate says chunk",
+            lambda c: c["controls"][0]["slim_witness"].__setitem__(
+                0, {"claim": c["controls"][0]["slim_witness"][0]["claim"], "deferred": "ir.fixed"}
+            ),
         ),
-        ("a deferred level the gate implements", lambda c: c["controls"][0]["slim_witness"][0].update({"deferred": "ir.core"})),
+        (
+            "a deferred level the gate implements",
+            lambda c: c["controls"][0]["slim_witness"].__setitem__(
+                0, {"claim": c["controls"][0]["slim_witness"][0]["claim"], "deferred": "ir.core"}
+            ),
+        ),
         ("an altered fault expression", lambda c: c["faults"][0].update({"expr": ["not", ["var", "result"]]})),
         ("a wrong suite requires", lambda c: c["suites"][0].update({"requires": ["ir.core"]})),
         (
@@ -118,6 +135,8 @@ def test_a_mutated_ir_fixed_corpus_fails_verify_v2(tmp_path, name, change):
 def test_the_open_gate_changes_only_the_control_and_the_slim_set(tmp_path):
     shipped = derive(DOC, PROFILE, spec_ref="v.warrant", generator=GEN, implemented=("ir.core",))
     opened = derive(DOC, PROFILE, spec_ref="v.warrant", generator=GEN, implemented=("ir.core", "ir.fixed", "ir.tuple"))
+    default = derive(DOC, PROFILE, spec_ref="v.warrant", generator=GEN)
+    assert default.corpus == opened.corpus  # the shipped gate is the open one
     assert shipped.corpus["controls"][0]["slim_witness"] != opened.corpus["controls"][0]["slim_witness"]
     assert opened.corpus["controls"][0]["slim_witness"] == [{"claim": "warrant/v/exhaustive/c_flip", "chunk": 0}]
     for key in ("suites", "faults", "examples", "ops", "models", "levels"):

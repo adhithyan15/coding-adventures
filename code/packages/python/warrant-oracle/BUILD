@@ -3,17 +3,22 @@ uv pip install -e ".[dev]" --quiet
 .venv/bin/python -m ruff check src tests
 .venv/bin/python -m pytest tests/ -v --tb=short
 .venv/bin/python -m coding_adventures_warrant_oracle verify-v1 --spec ../../../specs/ct-compare.warrant --corpus ../../../specs/fixtures/ct-compare-warrant-v1/corpus.json
-.venv/bin/python -m coding_adventures_warrant_oracle verify-v2 tests/fixtures/synth-v2/corpus --warrant tests/fixtures/synth-v2/synth.warrant --profile tests/fixtures/synth-v2/corpus.profile --expect-generator warrant-corpus-gen@0.5.0
+.venv/bin/python -m coding_adventures_warrant_oracle verify-v2 tests/fixtures/synth-v2/corpus --warrant tests/fixtures/synth-v2/synth.warrant --profile tests/fixtures/synth-v2/corpus.profile --expect-generator warrant-corpus-gen@0.6.0
 .venv/bin/python -m coding_adventures_warrant_oracle verify-v2 tests/fixtures/accept-blind-v2/corpus --warrant tests/fixtures/accept-blind-v2/blind.warrant --profile tests/fixtures/accept-blind-v2/corpus.profile
 # CV2-S10-1: the omit_example fixture (three omitted examples, both reasons); make_fixture.py
 # regenerates corpus/ from the oracle, verify-v2 gates it, and the generator's parity PR must match it.
 .venv/bin/python tests/fixtures/omit-example-v2/make_fixture.py --check
-.venv/bin/python -m coding_adventures_warrant_oracle verify-v2 tests/fixtures/omit-example-v2/corpus --warrant tests/fixtures/omit-example-v2/omit.warrant --profile tests/fixtures/omit-example-v2/corpus.profile --expect-generator warrant-corpus-gen@0.5.0
+.venv/bin/python -m coding_adventures_warrant_oracle verify-v2 tests/fixtures/omit-example-v2/corpus --warrant tests/fixtures/omit-example-v2/omit.warrant --profile tests/fixtures/omit-example-v2/corpus.profile --expect-generator warrant-corpus-gen@0.6.0
 # CV2-S3d: the committed ct-compare v2 fixture. --expect-generator pins the generator name and
 # version that corpus.json records ([D13], VER04r 16.8): a generator bump fails here until the
 # fixture is regenerated and this pin is reviewed with it. --profile is the fixture's own
 # hand-written corpus.profile, so an edit to it moves profile_sha256 and fails ([D14]).
-.venv/bin/python -m coding_adventures_warrant_oracle verify-v2 ../../../specs/fixtures/ct-compare-warrant-v2 --warrant ../../../specs/ct-compare.warrant --profile ../../../specs/fixtures/ct-compare-warrant-v2/corpus.profile --bindings ../../rust/ct-compare/evidence.bindings --expect-generator warrant-corpus-gen@0.5.0
+.venv/bin/python -m coding_adventures_warrant_oracle verify-v2 ../../../specs/fixtures/ct-compare-warrant-v2 --warrant ../../../specs/ct-compare.warrant --profile ../../../specs/fixtures/ct-compare-warrant-v2/corpus.profile --bindings ../../rust/ct-compare/evidence.bindings --expect-generator warrant-corpus-gen@0.6.0
+# CV2 S10 adopter (x25519): the committed x25519 v2 fixture, pinned and profile-checked as above.
+.venv/bin/python -m coding_adventures_warrant_oracle verify-v2 ../../../specs/fixtures/x25519-warrant-v2 --warrant ../../../specs/x25519.warrant --profile ../../../specs/fixtures/x25519-warrant-v2/corpus.profile --bindings ../../rust/x25519/evidence.bindings --expect-generator warrant-corpus-gen@0.6.0
+# CV2 S10 adopter (lzw): the committed lzw v2 fixture (six omitted examples, max_ir_cost 16384); the full derive
+# of its 17,563,819 cases takes about 20 s, so one line suffices (VER04r 16.10 [D33]).
+.venv/bin/python -m coding_adventures_warrant_oracle verify-v2 ../../../specs/fixtures/lzw-warrant-v2 --warrant ../../../specs/lzw.warrant --profile ../../../specs/fixtures/lzw-warrant-v2/corpus.profile --bindings ../../rust/lzw/evidence.bindings --expect-generator warrant-corpus-gen@0.6.0
 .venv/bin/python -m coding_adventures_warrant_oracle check --spec ../../../specs/ct-compare.warrant
 .venv/bin/python -m coding_adventures_warrant_oracle check --spec ../../../specs/gf256.warrant
 .venv/bin/python -m coding_adventures_warrant_oracle check --spec ../../../specs/wasm-leb128.warrant
@@ -35,5 +40,8 @@ uv pip install -e ".[dev]" --quiet
 # domain table of D21/D25/D26), the files the generator's slice S10c-2 must reproduce byte for byte.
 .venv/bin/python tests/fixtures/fixed-eval-v1/make_fixed_eval.py --check
 .venv/bin/python -m coding_adventures_warrant_oracle dump-lowering --spec tests/fixtures/fixed-eval-v1/fixed_eval_v1.warrant --check tests/fixtures/fixed-eval-v1/fixed_eval_v1.oracle-lowering.json
+# CV2-S10o-1: the synthetic off-by-one-consumed document (VER04r 8.2, D36) and its committed faults and
+# refusals dumps, the files the generator's slice S10o-2 must reproduce byte for byte.
+.venv/bin/python tests/fixtures/off-by-one-consumed-v1/make_off_by_one_consumed.py --check
 .venv/bin/python ../../rust/warrant-corpus-gen/tests/fixtures/dump_oracle_lowering.py --check
 .venv/bin/python ../../rust/warrant-corpus-gen/tests/fixtures/dump_oracle_enumeration.py --check

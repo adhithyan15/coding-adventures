@@ -63,10 +63,13 @@ text-only check left open:
    bailed out, or crashed), ``go run`` reports 1, and the TF01 runner uses 1,
    2 and 70 for different things.  No portable single code exists, so the TAP
    below carries the real distinction.  A process killed by a signal is also
-   non-zero (Python reports it as a negative code).  The script sets no
-   timeout of its own: a ``--timeout`` that kills only the command cannot
-   bound a grandchild that still holds the output pipes, so a hung command
-   is left to the build tool's per-command timeout, which kills the tree.
+   non-zero (Python reports it as a negative code).  A command still
+   running after ``WARRANT_NEGCTL_TIMEOUT_SECS`` (default 1200) is killed
+   together with its whole process tree (its own session on Unix,
+   ``taskkill /T`` on Windows) and fails the control with whatever it had
+   printed.  Before this, a hang printed nothing at all (this script prints
+   only once the command has finished) and cost the build tool's 90-minute
+   per-command limit: a Windows CI hang of ``rust/lzw``, VOS-038b.
 2. **The TAP plan line ``1..N`` is present, exactly once.**  The TF01 runner
    writes the plan *before* running any test and flushes it.  A crash
    part-way through (segfault, ``process::exit``, an OOM kill) therefore still
@@ -227,11 +230,94 @@ def _clip(text: str) -> str:
     return f"{text[:half]}\n[... {omitted} characters omitted ...]\n{text[-half:]}"
 
 
-def run_command(argv: Sequence[str]) -> tuple[int, str, str, str | None]:
-    """Run ``argv`` with no shell.  Return (returncode, stdout, stderr, launch_error).
+# How long the sabotage command may run before it is killed.  An honest run
+# is seconds (the test binary is already built by the lines before it), and
+# even a cold compile on a loaded Windows runner is minutes; the build tool's
+# own per-command limit is 90 minutes, which is how a hang that printed
+# nothing (this script prints only when it has finished) cost a whole CI job
+# and left no diagnosis.  Override with WARRANT_NEGCTL_TIMEOUT_SECS.
+DEFAULT_TIMEOUT_SECS = 20 * 60
+# The most a WARRANT_NEGCTL_TIMEOUT_SECS may ask for (24 h).
+MAX_TIMEOUT_SECS = 86_400
 
+
+def timeout_secs(var: str | None) -> float:
+    """The bound in force: ``var`` if it is a positive finite number, else the default."""
+    try:
+        value = float((var or "").strip())
+    except ValueError:
+        return float(DEFAULT_TIMEOUT_SECS)
+    if not 0 < value < float("inf"):
+        return float(DEFAULT_TIMEOUT_SECS)
+    # A finite but absurd value (1e300) would overflow the wait below.
+    return min(value, float(MAX_TIMEOUT_SECS))
+
+
+def _kill_tree(proc: subprocess.Popen) -> None:
+    """Kill ``proc`` and every process it started, so no grandchild holds the pipes."""
+    if os.name == "nt":
+        # taskkill /T walks the child tree; its own failure (already gone) is fine.
+        try:
+            subprocess.run(
+                ["taskkill", "/F", "/T", "/PID", str(proc.pid)],
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                check=False,
+                timeout=30,
+            )
+        except (OSError, subprocess.TimeoutExpired):
+            pass
+    else:
+        import signal
+
+        try:
+            os.killpg(proc.pid, signal.SIGKILL)  # the child leads its own session
+        except OSError:
+            pass
+    try:
+        proc.kill()
+    except OSError:
+        pass
+
+
+def _install_term_handler():
+    """Turn SIGTERM into SystemExit so ``run_command`` can kill the tree first."""
+    if os.name == "nt":
+        return None
+    import signal
+    import threading
+
+    if threading.current_thread() is not threading.main_thread():
+        return None
+
+    def handler(signum, frame):
+        raise SystemExit(128 + signum)
+
+    return signal.signal(signal.SIGTERM, handler)
+
+
+def _restore_term_handler(previous) -> None:
+    if previous is None:
+        return
+    import signal
+
+    signal.signal(signal.SIGTERM, previous)
+
+
+def run_command(
+    argv: Sequence[str], timeout: float | None = None
+) -> tuple[int, str, str, str | None, bool]:
+    """Run ``argv`` with no shell.
+
+    Return (returncode, stdout, stderr, launch_error, timed_out).
     ``launch_error`` is set when the program could not be started at all.
-    There is deliberately no timeout (see rule 1 in the module docstring).
+    ``timed_out`` is set when ``timeout`` seconds passed: the whole process
+    tree is then killed and whatever it had printed so far is returned, so a
+    hang is a loud, diagnosable failure rather than a silent 90-minute wait.
+    The command runs in its own session (Unix) so the kill reaches its
+    grandchildren: a kill of the command alone cannot bound a grandchild that
+    still holds the output pipes.
     """
     try:
         proc = subprocess.Popen(
@@ -240,15 +326,39 @@ def run_command(argv: Sequence[str]) -> tuple[int, str, str, str | None]:
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             env=os.environ.copy(),
+            start_new_session=(os.name != "nt"),
         )
     except (OSError, ValueError) as error:  # not found, not executable, NUL in argv ...
-        return -1, "", "", f"cannot run {argv[0]!r}: {error}"
-    out, err = proc.communicate()
+        return -1, "", "", f"cannot run {argv[0]!r}: {error}", False
+    timed_out = False
+    previous = _install_term_handler()
+    try:
+        try:
+            out, err = proc.communicate(timeout=timeout)
+        except subprocess.TimeoutExpired as expired:
+            timed_out = True
+            _kill_tree(proc)
+            # communicate() after the kill returns everything accumulated so
+            # far (not just the new part), so it replaces, never appends.
+            try:
+                out, err = proc.communicate(timeout=30)
+            except subprocess.TimeoutExpired:
+                # A survivor still holds a pipe; report what the first wait saw.
+                out, err = expired.stdout or b"", expired.stderr or b""
+    except BaseException:
+        # Any abnormal exit of the checker (SIGTERM from a CI cancel or the
+        # build tool, Ctrl-C, an unexpected error): the command runs in its own
+        # session, so nothing else would ever stop it.
+        _kill_tree(proc)
+        raise
+    finally:
+        _restore_term_handler(previous)
     return (
-        proc.returncode,
+        proc.returncode if proc.returncode is not None else -1,
         out.decode("utf-8", errors="replace"),
         err.decode("utf-8", errors="replace"),
         None,
+        timed_out,
     )
 
 
@@ -273,11 +383,19 @@ def main(argv: Sequence[str] | None = None) -> int:
     if reconfigure is not None:
         reconfigure(errors="replace")
 
-    code, stdout, stderr, launch_error = run_command(rest)
+    bound = timeout_secs(os.environ.get("WARRANT_NEGCTL_TIMEOUT_SECS"))
+    code, stdout, stderr, launch_error, timed_out = run_command(rest, bound)
     if launch_error is not None:
         problems = [launch_error]
     else:
         problems = judge(code, stdout, stderr)
+        if timed_out:
+            problems.insert(
+                0,
+                f"the command did not finish within {bound:g} s and its process tree "
+                "was killed (a hang is never a detection); the output below is what "
+                "it had printed",
+            )
 
     if not problems:
         print(

@@ -13,7 +13,7 @@ Why this document (each feature is one thing `verify-v2` must re-derive):
 | a witness chunk outside the stride set (chunk 27 of `add2_model`) and a `slim_chunk` line (chunk 40 of `add2_commutes`) | `add2_model`, `add2_commutes` |
 | blind claims (`pick_equal_length` for `missing-error`, `pick_mismatch` for `swap-choice`) | controls |
 | an unproven claim (predicate `add2_commutes`) | control `add2 off-by-one` |
-| deferred `ir.fixed` controls with opaque fault rows | `xor-lsb` on `bump` and `wide` |
+| `ir.fixed` controls with opaque fault rows, live (witness chunks) since the S10c flip | `xor-lsb` on `bump` and `wide` |
 | `truncate-last` (a `Bytes` result) and `off-by-one` on a `Nat` result | `echo`, `size_of` |
 | a predicate suite, a v2-header suite (`U16`), a static width, an operation `admit`, a `U8` wrap (v1 document) | `add2_commutes`, `wide_is_identity`, `cmp_fixed_agrees_w2`, `wide`, `bump_is_inc` |
 
@@ -29,7 +29,11 @@ cargo run -p coding_adventures_warrant_corpus_gen --bin warrant-corpus-gen -- \
 `corpus/` is `* -text` (a CRLF would be a different corpus). The ct-compare v2 fixture is
 **not** here: it is `code/specs/fixtures/ct-compare-warrant-v2/` (S3d).
 
-`corpus.json` records `generator` (`warrant-corpus-gen` 0.5.0); the oracle's `BUILD` and
-`BUILD_windows` pass `--expect-generator warrant-corpus-gen@0.5.0` for this fixture too, so a
-generator version bump fails the build until this directory is regenerated (only
-`generator.version` should change) and the pin is updated (VER04r 16.8 [D13]).
+`corpus.json` records `generator` (`warrant-corpus-gen` 0.6.0); the oracle's `BUILD` and
+`BUILD_windows` pass `--expect-generator warrant-corpus-gen@0.6.0` for this fixture too, so a
+generator version bump fails the build until this directory is regenerated and the pin is updated
+(VER04r 16.8 [D13]). A plain version bump changes only `generator.version`; **a change of the
+shipped fault gate also moves the `slim_witness` of the `ir.fixed` controls** (the 0.6.0 flip,
+S10c, turned `bump/xor-lsb` and `wide/xor-lsb` from `deferred` into chunk witnesses, and could in
+general move `slim_chunks` and the slim digests). Review the diff by hand: this fixture has no
+generator `--check` (backlog CV2-F6).

@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased — warrant_negctl.py bounds a hung command (VOS-038b Windows `rust/lzw` hang)
+
+- `code/scripts/warrant_negctl.py` kills the sabotaged command's whole process tree after
+  `WARRANT_NEGCTL_TIMEOUT_SECS` (default 1200 s, clamped to 86400 s; nan, inf, zero, negative and
+  non-numeric fall back to the default) and fails the control with the output captured so far,
+  which appears once. The same kill runs on SIGTERM or any abnormal exit of the checker, and the
+  Windows `taskkill` call has its own 30 s bound. Before this a hang printed nothing and cost the
+  build tool's 90-minute limit. TF01 section 6 updated; tests added to `test_warrant_negctl.py`.
+
 ## Unreleased — CV2-S10c-2: a parenthesised shift count selects `NatCount`
 
 - `count_binders` (the `NatCount` refinement of VER04j 3.6) looks through `Expression::Grouped`:

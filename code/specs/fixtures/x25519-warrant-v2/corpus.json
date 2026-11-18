@@ -1,0 +1,1747 @@
+{
+  "accepted_blind_faults": [],
+  "assumes": [],
+  "budget": 16777216,
+  "chunk_size": 65536,
+  "controls": [
+    {
+      "blind_claims": [],
+      "fault": "drop-last-result-byte",
+      "id": "warrant/x25519/negctl/exhaustive/clamp_scalar/drop-last-result-byte",
+      "op": "clamp_scalar",
+      "required_claims": [
+        "warrant/x25519/exhaustive/clamp_edges_match_the_definition",
+        "warrant/x25519/exhaustive/clamp_leaves_the_middle_alone",
+        "warrant/x25519/exhaustive/clamp_is_idempotent",
+        "warrant/x25519/exhaustive/clamp_keeps_thirty_two_bytes",
+        "warrant/x25519/exhaustive/x25519_clamps_its_scalar"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/x25519/exhaustive/clamp_edges_match_the_definition",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/x25519/exhaustive/clamp_leaves_the_middle_alone",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/x25519/exhaustive/clamp_is_idempotent",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/x25519/exhaustive/clamp_keeps_thirty_two_bytes",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/x25519/exhaustive/x25519_clamps_its_scalar",
+          "unproven": true
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "flip-result-bit",
+      "id": "warrant/x25519/negctl/exhaustive/clamp_scalar/flip-result-bit",
+      "op": "clamp_scalar",
+      "required_claims": [
+        "warrant/x25519/exhaustive/clamp_edges_match_the_definition",
+        "warrant/x25519/exhaustive/clamp_leaves_the_middle_alone",
+        "warrant/x25519/exhaustive/clamp_is_idempotent",
+        "warrant/x25519/exhaustive/clamp_keeps_thirty_two_bytes",
+        "warrant/x25519/exhaustive/x25519_clamps_its_scalar"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/x25519/exhaustive/clamp_edges_match_the_definition",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/x25519/exhaustive/clamp_leaves_the_middle_alone",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/x25519/exhaustive/clamp_is_idempotent",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/x25519/exhaustive/clamp_keeps_thirty_two_bytes",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/x25519/exhaustive/x25519_clamps_its_scalar",
+          "unproven": true
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "flip-result-bit",
+      "id": "warrant/x25519/negctl/exhaustive/x25519/flip-result-bit",
+      "op": "x25519",
+      "required_claims": [
+        "warrant/x25519/exhaustive/x25519_clamps_its_scalar",
+        "warrant/x25519/exhaustive/x25519_at_zero_is_low_order",
+        "warrant/x25519/exhaustive/x25519_at_nine_is_base",
+        "warrant/x25519/exhaustive/x25519_base_is_x25519_at_nine"
+      ],
+      "requires": [
+        "ir.fixed",
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/x25519/exhaustive/x25519_clamps_its_scalar",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/x25519/exhaustive/x25519_at_zero_is_low_order",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/x25519/exhaustive/x25519_at_nine_is_base",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/x25519/exhaustive/x25519_base_is_x25519_at_nine",
+          "unproven": true
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "missing-error",
+      "id": "warrant/x25519/negctl/exhaustive/x25519/missing-error",
+      "op": "x25519",
+      "required_claims": [
+        "warrant/x25519/exhaustive/x25519_clamps_its_scalar",
+        "warrant/x25519/exhaustive/x25519_at_zero_is_low_order",
+        "warrant/x25519/exhaustive/x25519_at_nine_is_base",
+        "warrant/x25519/exhaustive/x25519_base_is_x25519_at_nine"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/x25519/exhaustive/x25519_clamps_its_scalar",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/x25519/exhaustive/x25519_at_zero_is_low_order",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/x25519/exhaustive/x25519_at_nine_is_base",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/x25519/exhaustive/x25519_base_is_x25519_at_nine",
+          "unproven": true
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "flip-result-bit",
+      "id": "warrant/x25519/negctl/exhaustive/x25519_base/flip-result-bit",
+      "op": "x25519_base",
+      "required_claims": [
+        "warrant/x25519/exhaustive/x25519_at_nine_is_base",
+        "warrant/x25519/exhaustive/x25519_base_is_x25519_at_nine"
+      ],
+      "requires": [
+        "ir.fixed",
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/x25519/exhaustive/x25519_at_nine_is_base",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/x25519/exhaustive/x25519_base_is_x25519_at_nine",
+          "unproven": true
+        }
+      ],
+      "target_kind": "exhaustive"
+    }
+  ],
+  "document": "v1",
+  "examples": [
+    {
+      "args": [
+        "a546e36bf0527c9d3b16154b82465edd62144c0ac1fc5a18506a2244ba449ac4",
+        "e6db6867583030db3594c1a424b15f7c726624ec26b3353b10a903a6d0ab1c4c"
+      ],
+      "expected": {
+        "ok": "c3da55379de9c6908e94ea4df28d084f32eccf03491c71f754b4075577a28552"
+      },
+      "id": "warrant/x25519/example/rfc7748_5_2_vector_1",
+      "op": "x25519",
+      "result_type": "Result<Bytes<32>,X25519Error>"
+    },
+    {
+      "args": [
+        "4b66e9d4d1b4673c5ad22691957d6af5c11b6421e0ea01d42ca4169e7918ba0d",
+        "e5210f12786811d3f4b7959d0538ae2c31dbe7106fc03c3efc4cd549c715a493"
+      ],
+      "expected": {
+        "ok": "95cbde9476e8907d7aade45cb4b873f88b595a68799fa152e6f8f7647aac7957"
+      },
+      "id": "warrant/x25519/example/rfc7748_5_2_vector_2",
+      "op": "x25519",
+      "result_type": "Result<Bytes<32>,X25519Error>"
+    },
+    {
+      "args": [
+        "0900000000000000000000000000000000000000000000000000000000000000",
+        "0900000000000000000000000000000000000000000000000000000000000000"
+      ],
+      "expected": {
+        "ok": "422c8e7a6227d7bca1350b3e2bb7279f7897b87bb6854b783c60e80311ae3079"
+      },
+      "id": "warrant/x25519/example/rfc7748_5_2_one_iteration",
+      "op": "x25519",
+      "result_type": "Result<Bytes<32>,X25519Error>"
+    },
+    {
+      "args": [
+        "77076d0a7318a57d3c16c17251b26645df4c2f87ebc0992ab177fba51db92c2a"
+      ],
+      "expected": {
+        "ok": "8520f0098930a754748b7ddcb43ef75a0dbf3a0d26381af4eba4a98eaa9b4e6a"
+      },
+      "id": "warrant/x25519/example/rfc7748_6_1_alice_public",
+      "op": "x25519_base",
+      "result_type": "Result<Bytes<32>,X25519Error>"
+    },
+    {
+      "args": [
+        "5dab087e624a8a4b79e17f8b83800ee66f3bb1292618b6fd1c2f8b27ff88e0eb"
+      ],
+      "expected": {
+        "ok": "de9edb7d7b7dc1b4d35b61c2ece435373f8343c85b78674dadfc7e146f882b4f"
+      },
+      "id": "warrant/x25519/example/rfc7748_6_1_bob_public",
+      "op": "x25519_base",
+      "result_type": "Result<Bytes<32>,X25519Error>"
+    },
+    {
+      "args": [
+        "77076d0a7318a57d3c16c17251b26645df4c2f87ebc0992ab177fba51db92c2a",
+        "de9edb7d7b7dc1b4d35b61c2ece435373f8343c85b78674dadfc7e146f882b4f"
+      ],
+      "expected": {
+        "ok": "4a5d9d5ba4ce2de1728e3bf480350f25e07e21c947d19e3376f09b3c1e161742"
+      },
+      "id": "warrant/x25519/example/rfc7748_6_1_shared_secret_alice",
+      "op": "x25519",
+      "result_type": "Result<Bytes<32>,X25519Error>"
+    },
+    {
+      "args": [
+        "5dab087e624a8a4b79e17f8b83800ee66f3bb1292618b6fd1c2f8b27ff88e0eb",
+        "8520f0098930a754748b7ddcb43ef75a0dbf3a0d26381af4eba4a98eaa9b4e6a"
+      ],
+      "expected": {
+        "ok": "4a5d9d5ba4ce2de1728e3bf480350f25e07e21c947d19e3376f09b3c1e161742"
+      },
+      "id": "warrant/x25519/example/rfc7748_6_1_shared_secret_bob",
+      "op": "x25519",
+      "result_type": "Result<Bytes<32>,X25519Error>"
+    },
+    {
+      "args": [
+        "a546e36bf0527c9d3b16154b82465edd62144c0ac1fc5a18506a2244ba449ac4"
+      ],
+      "expected": "a046e36bf0527c9d3b16154b82465edd62144c0ac1fc5a18506a2244ba449a44",
+      "id": "warrant/x25519/example/clamp_of_rfc_scalar_1",
+      "op": "clamp_scalar",
+      "result_type": "Bytes<32>"
+    },
+    {
+      "args": [
+        "a546e36bf0527c9d3b16154b82465edd62144c0ac1fc5a18506a2244ba449ac4",
+        "0000000000000000000000000000000000000000000000000000000000000000"
+      ],
+      "expected": {
+        "err": "LOW_ORDER"
+      },
+      "id": "warrant/x25519/example/zero_point_is_refused",
+      "op": "x25519",
+      "result_type": "Result<Bytes<32>,X25519Error>"
+    }
+  ],
+  "fault_models": {},
+  "faults": [
+    {
+      "expr": [
+        "if",
+        [
+          "gt",
+          [
+            "len",
+            [
+              "var",
+              "result"
+            ]
+          ],
+          [
+            "lit",
+            {
+              "type": "Nat",
+              "value": "0"
+            }
+          ]
+        ],
+        [
+          "take",
+          [
+            "var",
+            "result"
+          ],
+          [
+            "sub",
+            [
+              "len",
+              [
+                "var",
+                "result"
+              ]
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "1"
+              }
+            ]
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "Bytes",
+            "value": "00"
+          }
+        ]
+      ],
+      "fault": "drop-last-result-byte",
+      "kind": "post",
+      "op": "clamp_scalar",
+      "requires": [
+        "ir.core"
+      ]
+    },
+    {
+      "expr": [
+        "if",
+        [
+          "gt",
+          [
+            "len",
+            [
+              "var",
+              "result"
+            ]
+          ],
+          [
+            "lit",
+            {
+              "type": "Nat",
+              "value": "0"
+            }
+          ]
+        ],
+        [
+          "concat",
+          [
+            "be_bytes",
+            [
+              "bit_xor",
+              [
+                "unwrap_or",
+                [
+                  "at",
+                  [
+                    "var",
+                    "result"
+                  ],
+                  [
+                    "lit",
+                    {
+                      "type": "Nat",
+                      "value": "0"
+                    }
+                  ]
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "U8",
+                    "value": "0"
+                  }
+                ]
+              ],
+              [
+                "lit",
+                {
+                  "type": "U8",
+                  "value": "1"
+                }
+              ]
+            ]
+          ],
+          [
+            "drop",
+            [
+              "var",
+              "result"
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "1"
+              }
+            ]
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "Bytes",
+            "value": "01"
+          }
+        ]
+      ],
+      "fault": "flip-result-bit",
+      "kind": "post",
+      "op": "clamp_scalar",
+      "requires": [
+        "ir.fixed"
+      ]
+    },
+    {
+      "expr": [
+        "match",
+        [
+          "var",
+          "result"
+        ],
+        [
+          [
+            [
+              "ok",
+              [
+                "bind",
+                "ok_payload"
+              ]
+            ],
+            [
+              "ok",
+              [
+                "if",
+                [
+                  "gt",
+                  [
+                    "len",
+                    [
+                      "var",
+                      "ok_payload"
+                    ]
+                  ],
+                  [
+                    "lit",
+                    {
+                      "type": "Nat",
+                      "value": "0"
+                    }
+                  ]
+                ],
+                [
+                  "concat",
+                  [
+                    "be_bytes",
+                    [
+                      "bit_xor",
+                      [
+                        "unwrap_or",
+                        [
+                          "at",
+                          [
+                            "var",
+                            "ok_payload"
+                          ],
+                          [
+                            "lit",
+                            {
+                              "type": "Nat",
+                              "value": "0"
+                            }
+                          ]
+                        ],
+                        [
+                          "lit",
+                          {
+                            "type": "U8",
+                            "value": "0"
+                          }
+                        ]
+                      ],
+                      [
+                        "lit",
+                        {
+                          "type": "U8",
+                          "value": "1"
+                        }
+                      ]
+                    ]
+                  ],
+                  [
+                    "drop",
+                    [
+                      "var",
+                      "ok_payload"
+                    ],
+                    [
+                      "lit",
+                      {
+                        "type": "Nat",
+                        "value": "1"
+                      }
+                    ]
+                  ]
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "Bytes",
+                    "value": "01"
+                  }
+                ]
+              ]
+            ]
+          ],
+          [
+            [
+              "err_any"
+            ],
+            [
+              "var",
+              "result"
+            ]
+          ]
+        ]
+      ],
+      "fault": "flip-result-bit",
+      "kind": "post",
+      "op": "x25519",
+      "requires": [
+        "ir.fixed",
+        "ir.tuple"
+      ]
+    },
+    {
+      "expr": [
+        "if",
+        [
+          "is_err",
+          [
+            "var",
+            "result"
+          ]
+        ],
+        [
+          "ok",
+          [
+            "var",
+            "k"
+          ]
+        ],
+        [
+          "var",
+          "result"
+        ]
+      ],
+      "fault": "missing-error",
+      "kind": "replace",
+      "op": "x25519",
+      "requires": [
+        "ir.core"
+      ]
+    },
+    {
+      "expr": [
+        "match",
+        [
+          "var",
+          "result"
+        ],
+        [
+          [
+            [
+              "ok",
+              [
+                "bind",
+                "ok_payload"
+              ]
+            ],
+            [
+              "ok",
+              [
+                "if",
+                [
+                  "gt",
+                  [
+                    "len",
+                    [
+                      "var",
+                      "ok_payload"
+                    ]
+                  ],
+                  [
+                    "lit",
+                    {
+                      "type": "Nat",
+                      "value": "0"
+                    }
+                  ]
+                ],
+                [
+                  "concat",
+                  [
+                    "be_bytes",
+                    [
+                      "bit_xor",
+                      [
+                        "unwrap_or",
+                        [
+                          "at",
+                          [
+                            "var",
+                            "ok_payload"
+                          ],
+                          [
+                            "lit",
+                            {
+                              "type": "Nat",
+                              "value": "0"
+                            }
+                          ]
+                        ],
+                        [
+                          "lit",
+                          {
+                            "type": "U8",
+                            "value": "0"
+                          }
+                        ]
+                      ],
+                      [
+                        "lit",
+                        {
+                          "type": "U8",
+                          "value": "1"
+                        }
+                      ]
+                    ]
+                  ],
+                  [
+                    "drop",
+                    [
+                      "var",
+                      "ok_payload"
+                    ],
+                    [
+                      "lit",
+                      {
+                        "type": "Nat",
+                        "value": "1"
+                      }
+                    ]
+                  ]
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "Bytes",
+                    "value": "01"
+                  }
+                ]
+              ]
+            ]
+          ],
+          [
+            [
+              "err_any"
+            ],
+            [
+              "var",
+              "result"
+            ]
+          ]
+        ]
+      ],
+      "fault": "flip-result-bit",
+      "kind": "post",
+      "op": "x25519_base",
+      "requires": [
+        "ir.fixed",
+        "ir.tuple"
+      ]
+    }
+  ],
+  "generator": {
+    "name": "warrant-corpus-gen",
+    "version": "0.6.0"
+  },
+  "levels": [
+    "ir.core",
+    "ir.fixed",
+    "ir.tuple"
+  ],
+  "max_ir_cost": 2000,
+  "model_order": [
+    "clamped",
+    "unclamped"
+  ],
+  "models": {
+    "clamped": {
+      "body": [
+        "concat",
+        [
+          "concat",
+          [
+            "be_bytes",
+            [
+              "bit_and",
+              [
+                "from_be",
+                "U8",
+                [
+                  "var",
+                  "a"
+                ]
+              ],
+              [
+                "lit",
+                {
+                  "type": "U8",
+                  "value": "248"
+                }
+              ]
+            ]
+          ],
+          [
+            "var",
+            "m"
+          ]
+        ],
+        [
+          "be_bytes",
+          [
+            "bit_or",
+            [
+              "bit_and",
+              [
+                "from_be",
+                "U8",
+                [
+                  "var",
+                  "z"
+                ]
+              ],
+              [
+                "lit",
+                {
+                  "type": "U8",
+                  "value": "127"
+                }
+              ]
+            ],
+            [
+              "lit",
+              {
+                "type": "U8",
+                "value": "64"
+              }
+            ]
+          ]
+        ]
+      ],
+      "params": [
+        [
+          "a",
+          "Bytes<1>"
+        ],
+        [
+          "m",
+          "Bytes<30>"
+        ],
+        [
+          "z",
+          "Bytes<1>"
+        ]
+      ]
+    },
+    "unclamped": {
+      "body": [
+        "concat",
+        [
+          "concat",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "m"
+          ]
+        ],
+        [
+          "var",
+          "z"
+        ]
+      ],
+      "params": [
+        [
+          "a",
+          "Bytes<1>"
+        ],
+        [
+          "m",
+          "Bytes<30>"
+        ],
+        [
+          "z",
+          "Bytes<1>"
+        ]
+      ]
+    }
+  },
+  "module": "x25519",
+  "ops": {
+    "clamp_scalar": {
+      "params": [
+        [
+          "k",
+          "Bytes<32>"
+        ]
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "ret": "Bytes<32>"
+    },
+    "x25519": {
+      "params": [
+        [
+          "k",
+          "Bytes<32>"
+        ],
+        [
+          "u",
+          "Bytes<32>"
+        ]
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "ret": "Result<Bytes<32>,X25519Error>"
+    },
+    "x25519_base": {
+      "params": [
+        [
+          "k",
+          "Bytes<32>"
+        ]
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "ret": "Result<Bytes<32>,X25519Error>"
+    }
+  },
+  "profile": "warrant-corpus-v2",
+  "profile_sha256": "d9309609db0d80a535258bdf4ff993721230f9c48d1835a207c16263b44c20e1",
+  "schema_version": 2,
+  "spec": "code/specs/x25519.warrant",
+  "spec_sha256": "8ce5baf3826a9ddb252de07aa4571fd818b66c04df1b5f7d15b7e90acb42d41d",
+  "suites": [
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "bytes_n",
+              "n": 1,
+              "size": 256
+            },
+            "type": "Bytes<1>"
+          }
+        ],
+        [
+          "z",
+          {
+            "domain": {
+              "d": "bytes_n",
+              "n": 1,
+              "size": 256
+            },
+            "type": "Bytes<1>"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "clamp_scalar",
+          [
+            [
+              "model_call",
+              "unclamped",
+              [
+                [
+                  "var",
+                  "a"
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "Bytes",
+                    "value": "000000000000000000000000000000000000000000000000000000000000"
+                  }
+                ],
+                [
+                  "var",
+                  "z"
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "clamped",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "lit",
+              {
+                "type": "Bytes",
+                "value": "000000000000000000000000000000000000000000000000000000000000"
+              }
+            ],
+            [
+              "var",
+              "z"
+            ]
+          ]
+        ]
+      ],
+      "cases": 65536,
+      "chunks": 1,
+      "chunks_sha256": "d43c12611d03d92361aca39b6146a88013fb5bdcc4a4f14679d519152ff65f70",
+      "claim": "clamp_edges_match_the_definition",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 65536,
+      "expected_sha256": "f047ae59ba14ee63b3ee08fabbcc7d1c41a20e99c4e1c062e6b4d40e12b0379d",
+      "id": "warrant/x25519/exhaustive/clamp_edges_match_the_definition",
+      "inputs_sha256": "5425b83d1396202268c29b39d93ca489b26e39011314b01d97162dc9b0c494b3",
+      "ir_cost": 50,
+      "kind": "exhaustive",
+      "ops": [
+        "clamp_scalar"
+      ],
+      "oracle": {
+        "expected": [
+          "model_call",
+          "clamped",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "lit",
+              {
+                "type": "Bytes",
+                "value": "000000000000000000000000000000000000000000000000000000000000"
+              }
+            ],
+            [
+              "var",
+              "z"
+            ]
+          ]
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "clamp_scalar",
+          [
+            [
+              "model_call",
+              "unclamped",
+              [
+                [
+                  "var",
+                  "a"
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "Bytes",
+                    "value": "000000000000000000000000000000000000000000000000000000000000"
+                  }
+                ],
+                [
+                  "var",
+                  "z"
+                ]
+              ]
+            ]
+          ]
+        ]
+      },
+      "product": 65536,
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "result_type": "Bytes<32>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "f047ae59ba14ee63b3ee08fabbcc7d1c41a20e99c4e1c062e6b4d40e12b0379d",
+      "slim_inputs_sha256": "5425b83d1396202268c29b39d93ca489b26e39011314b01d97162dc9b0c494b3",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "46453f3a65ee767bea56699269df95bcc27fee4328ad80ff856de6b6ceade5af",
+      "v1_inputs_sha256": "4a773c9124a31f948b77437909b26dd5ae65d0d97886a9e7bfc3eac8ef2ca9d4",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "m",
+          {
+            "domain": {
+              "d": "bytes_n",
+              "n": 30,
+              "size": 94
+            },
+            "type": "Bytes<30>"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "clamp_scalar",
+          [
+            [
+              "model_call",
+              "unclamped",
+              [
+                [
+                  "lit",
+                  {
+                    "type": "Bytes",
+                    "value": "ff"
+                  }
+                ],
+                [
+                  "var",
+                  "m"
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "Bytes",
+                    "value": "ff"
+                  }
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "clamped",
+          [
+            [
+              "lit",
+              {
+                "type": "Bytes",
+                "value": "ff"
+              }
+            ],
+            [
+              "var",
+              "m"
+            ],
+            [
+              "lit",
+              {
+                "type": "Bytes",
+                "value": "ff"
+              }
+            ]
+          ]
+        ]
+      ],
+      "cases": 94,
+      "chunks": 1,
+      "chunks_sha256": "86f70bdd6348188aafd4bac68b964e3439236c4820d443536294acc064a81bef",
+      "claim": "clamp_leaves_the_middle_alone",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "sample",
+      "expected_calls": 94,
+      "expected_sha256": "7cd18a9dbc0ddbe93b3f4c8a51865bbdbef852a4dff4fe66285b85084b557c22",
+      "id": "warrant/x25519/exhaustive/clamp_leaves_the_middle_alone",
+      "inputs_sha256": "57b1d59f73c950364cc6c85badcc5ee28deee5e4acef36d60a00d4648458b6d6",
+      "ir_cost": 50,
+      "kind": "exhaustive",
+      "ops": [
+        "clamp_scalar"
+      ],
+      "oracle": {
+        "expected": [
+          "model_call",
+          "clamped",
+          [
+            [
+              "lit",
+              {
+                "type": "Bytes",
+                "value": "ff"
+              }
+            ],
+            [
+              "var",
+              "m"
+            ],
+            [
+              "lit",
+              {
+                "type": "Bytes",
+                "value": "ff"
+              }
+            ]
+          ]
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "clamp_scalar",
+          [
+            [
+              "model_call",
+              "unclamped",
+              [
+                [
+                  "lit",
+                  {
+                    "type": "Bytes",
+                    "value": "ff"
+                  }
+                ],
+                [
+                  "var",
+                  "m"
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "Bytes",
+                    "value": "ff"
+                  }
+                ]
+              ]
+            ]
+          ]
+        ]
+      },
+      "product": 94,
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "result_type": "Bytes<32>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "7cd18a9dbc0ddbe93b3f4c8a51865bbdbef852a4dff4fe66285b85084b557c22",
+      "slim_inputs_sha256": "57b1d59f73c950364cc6c85badcc5ee28deee5e4acef36d60a00d4648458b6d6",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "229e94ac70c147c5e726fc6718b96e8fb0ead04ff44a1340a00694417d9a2a85",
+      "v1_inputs_sha256": "e4e8ec01706d1a48d18a0851c53f6208d8aa72dcf05e3f09fb2fa3e4d00e8c17",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "k",
+          {
+            "domain": {
+              "d": "bytes_n",
+              "n": 32,
+              "size": 100
+            },
+            "type": "Bytes<32>"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "clamp_scalar",
+          [
+            [
+              "subject_op",
+              "clamp_scalar",
+              [
+                [
+                  "var",
+                  "k"
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "subject_op",
+          "clamp_scalar",
+          [
+            [
+              "var",
+              "k"
+            ]
+          ]
+        ]
+      ],
+      "cases": 100,
+      "chunks": 1,
+      "chunks_sha256": "bec11c048259f4cac32790271426fc6665537149d4bf6e3a8e9d471ad1543776",
+      "claim": "clamp_is_idempotent",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "sample",
+      "expected_calls": 300,
+      "id": "warrant/x25519/exhaustive/clamp_is_idempotent",
+      "inputs_sha256": "b31b5460fdb990177bf2794137587ff69eacf3b6055d473da8296e65dcdd05b2",
+      "ir_cost": 7,
+      "kind": "exhaustive",
+      "ops": [
+        "clamp_scalar"
+      ],
+      "oracle": {
+        "kind": "predicate"
+      },
+      "product": 100,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "Bool",
+      "slim_chunks": [
+        0
+      ],
+      "slim_inputs_sha256": "b31b5460fdb990177bf2794137587ff69eacf3b6055d473da8296e65dcdd05b2",
+      "stream": "warrant-stream-v1",
+      "v1_inputs_sha256": "410110a784c2369a91ef70e58264c83f85e601cbf2c2752aa237b79cd3196c3d",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "k",
+          {
+            "domain": {
+              "d": "bytes_n",
+              "n": 32,
+              "size": 100
+            },
+            "type": "Bytes<32>"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "len",
+          [
+            "subject_op",
+            "clamp_scalar",
+            [
+              [
+                "var",
+                "k"
+              ]
+            ]
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "32"
+          }
+        ]
+      ],
+      "cases": 100,
+      "chunks": 1,
+      "chunks_sha256": "947959a21fed561db761e5420c8a6687dbc4786f95c1858bdf89279cc8052aa6",
+      "claim": "clamp_keeps_thirty_two_bytes",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "sample",
+      "expected_calls": 100,
+      "expected_sha256": "ae69cac8dfb30770d03f77db371a9d2e18ebf91771fd867475de0f861648f112",
+      "id": "warrant/x25519/exhaustive/clamp_keeps_thirty_two_bytes",
+      "inputs_sha256": "2aa6c342d4f33f73aef0484a512a2a9517ce761b75f2063328166e8abd33a335",
+      "ir_cost": 7,
+      "kind": "exhaustive",
+      "ops": [
+        "clamp_scalar"
+      ],
+      "oracle": {
+        "expected": [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "32"
+          }
+        ],
+        "kind": "reference",
+        "subject": [
+          "len",
+          [
+            "subject_op",
+            "clamp_scalar",
+            [
+              [
+                "var",
+                "k"
+              ]
+            ]
+          ]
+        ]
+      },
+      "product": 100,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "Nat",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "ae69cac8dfb30770d03f77db371a9d2e18ebf91771fd867475de0f861648f112",
+      "slim_inputs_sha256": "2aa6c342d4f33f73aef0484a512a2a9517ce761b75f2063328166e8abd33a335",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "a2991e33e1dd9278a609c04245ff1980f266a72e2717d13177247c285b9acfe1",
+      "v1_inputs_sha256": "5d43b4c8efe7deb5a35a8925c7674c98cafb6be28469a409dc6eca2ddeeef02a",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "k",
+          {
+            "domain": {
+              "d": "bytes_n",
+              "n": 32,
+              "size": 100
+            },
+            "type": "Bytes<32>"
+          }
+        ],
+        [
+          "u",
+          {
+            "domain": {
+              "d": "bytes_n",
+              "n": 32,
+              "size": 100
+            },
+            "type": "Bytes<32>"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "x25519",
+          [
+            [
+              "var",
+              "k"
+            ],
+            [
+              "var",
+              "u"
+            ]
+          ]
+        ],
+        [
+          "subject_op",
+          "x25519",
+          [
+            [
+              "subject_op",
+              "clamp_scalar",
+              [
+                [
+                  "var",
+                  "k"
+                ]
+              ]
+            ],
+            [
+              "var",
+              "u"
+            ]
+          ]
+        ]
+      ],
+      "cases": 10000,
+      "chunks": 1,
+      "chunks_sha256": "9058ed4439d9450e8955af5ecbaf0923785b8b6c50bdd977e54ca257192bebf5",
+      "claim": "x25519_clamps_its_scalar",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "sample",
+      "expected_calls": 30000,
+      "id": "warrant/x25519/exhaustive/x25519_clamps_its_scalar",
+      "inputs_sha256": "427bf6a0a083a253c2c9fad4879d550455f2f6f155ae8bcc3ca5e2534341254e",
+      "ir_cost": 9,
+      "kind": "exhaustive",
+      "ops": [
+        "x25519",
+        "clamp_scalar"
+      ],
+      "oracle": {
+        "kind": "predicate"
+      },
+      "product": 10000,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "Bool",
+      "slim_chunks": [
+        0
+      ],
+      "slim_inputs_sha256": "427bf6a0a083a253c2c9fad4879d550455f2f6f155ae8bcc3ca5e2534341254e",
+      "stream": "warrant-stream-v1",
+      "v1_inputs_sha256": "2faf8a8675eca0198655bb66d2bedf70ee1f5461313b0c7d48548f729891f932",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "k",
+          {
+            "domain": {
+              "d": "bytes_n",
+              "n": 32,
+              "size": 100
+            },
+            "type": "Bytes<32>"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "x25519",
+          [
+            [
+              "var",
+              "k"
+            ],
+            [
+              "lit",
+              {
+                "type": "Bytes",
+                "value": "0000000000000000000000000000000000000000000000000000000000000000"
+              }
+            ]
+          ]
+        ],
+        [
+          "err",
+          "LOW_ORDER"
+        ]
+      ],
+      "cases": 100,
+      "chunks": 1,
+      "chunks_sha256": "e4d984ccda2fc12d8c99d608b26ffd8c5ad2a0751075e28fad620458a07d87f8",
+      "claim": "x25519_at_zero_is_low_order",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "sample",
+      "expected_calls": 100,
+      "expected_sha256": "3b999a268c8cd32b54af3778f7897ca536e0ecff749b98e4785ebce4a1937acf",
+      "id": "warrant/x25519/exhaustive/x25519_at_zero_is_low_order",
+      "inputs_sha256": "6640169cad7c0a6058269cf7c4712b06f5b48eb6d507b1c19ae0cb7eb371d5d6",
+      "ir_cost": 7,
+      "kind": "exhaustive",
+      "ops": [
+        "x25519"
+      ],
+      "oracle": {
+        "expected": [
+          "err",
+          "LOW_ORDER"
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "x25519",
+          [
+            [
+              "var",
+              "k"
+            ],
+            [
+              "lit",
+              {
+                "type": "Bytes",
+                "value": "0000000000000000000000000000000000000000000000000000000000000000"
+              }
+            ]
+          ]
+        ]
+      },
+      "product": 100,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "Result<Bytes<32>,X25519Error>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "3b999a268c8cd32b54af3778f7897ca536e0ecff749b98e4785ebce4a1937acf",
+      "slim_inputs_sha256": "6640169cad7c0a6058269cf7c4712b06f5b48eb6d507b1c19ae0cb7eb371d5d6",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "b4fbc1512ef71d76e5403d6da2b9379ce4b7cc9c180271d5e8054132af0222d4",
+      "v1_inputs_sha256": "b9aced0470a675473ea69a309eab796f72c6ef5c5b93a8f543cdf73873a62b4d",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "k",
+          {
+            "domain": {
+              "d": "bytes_n",
+              "n": 32,
+              "size": 100
+            },
+            "type": "Bytes<32>"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "x25519",
+          [
+            [
+              "var",
+              "k"
+            ],
+            [
+              "lit",
+              {
+                "type": "Bytes",
+                "value": "0900000000000000000000000000000000000000000000000000000000000000"
+              }
+            ]
+          ]
+        ],
+        [
+          "subject_op",
+          "x25519_base",
+          [
+            [
+              "var",
+              "k"
+            ]
+          ]
+        ]
+      ],
+      "cases": 100,
+      "chunks": 1,
+      "chunks_sha256": "de0d845d29cebe32d4879d3f9bb072c3848d9fa5e5e4a1f8b049b3dcbed220da",
+      "claim": "x25519_at_nine_is_base",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "sample",
+      "expected_calls": 200,
+      "id": "warrant/x25519/exhaustive/x25519_at_nine_is_base",
+      "inputs_sha256": "2f8d9e99d96377f57d28399c27ec972239098a0a30fc85b54d6b0799d7ed55f8",
+      "ir_cost": 7,
+      "kind": "exhaustive",
+      "ops": [
+        "x25519",
+        "x25519_base"
+      ],
+      "oracle": {
+        "kind": "predicate"
+      },
+      "product": 100,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "Bool",
+      "slim_chunks": [
+        0
+      ],
+      "slim_inputs_sha256": "2f8d9e99d96377f57d28399c27ec972239098a0a30fc85b54d6b0799d7ed55f8",
+      "stream": "warrant-stream-v1",
+      "v1_inputs_sha256": "8dae8a9b36a1933482a76c35a2b8a8db59ddeea4b0f2ecfcbe8e74c2d9d89018",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "k",
+          {
+            "domain": {
+              "d": "bytes_n",
+              "n": 32,
+              "size": 100
+            },
+            "type": "Bytes<32>"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "x25519_base",
+          [
+            [
+              "var",
+              "k"
+            ]
+          ]
+        ],
+        [
+          "subject_op",
+          "x25519",
+          [
+            [
+              "var",
+              "k"
+            ],
+            [
+              "lit",
+              {
+                "type": "Bytes",
+                "value": "0900000000000000000000000000000000000000000000000000000000000000"
+              }
+            ]
+          ]
+        ]
+      ],
+      "cases": 100,
+      "chunks": 1,
+      "chunks_sha256": "7383b8b0fd0a555da501b2061abf97344ec6777f01461354404001751c2f6910",
+      "claim": "x25519_base_is_x25519_at_nine",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "sample",
+      "expected_calls": 200,
+      "id": "warrant/x25519/exhaustive/x25519_base_is_x25519_at_nine",
+      "inputs_sha256": "323217b7d22f102b97327e07f757500461ad6ff0d5e43f671c7eb3d6a6b7a9c6",
+      "ir_cost": 7,
+      "kind": "exhaustive",
+      "ops": [
+        "x25519_base",
+        "x25519"
+      ],
+      "oracle": {
+        "kind": "predicate"
+      },
+      "product": 100,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "Bool",
+      "slim_chunks": [
+        0
+      ],
+      "slim_inputs_sha256": "323217b7d22f102b97327e07f757500461ad6ff0d5e43f671c7eb3d6a6b7a9c6",
+      "stream": "warrant-stream-v1",
+      "v1_inputs_sha256": "3728d1e6043a01043c6ca2dbc69b8e5d2f320a9f99c11dba9fd1423a6d68c7f7",
+      "wraps": 0
+    }
+  ],
+  "types": {
+    "X25519Error": {
+      "cases": [
+        "LOW_ORDER"
+      ],
+      "kind": "error"
+    }
+  }
+}
