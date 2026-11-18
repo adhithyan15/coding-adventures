@@ -914,7 +914,11 @@ per-test cap (default 64 MiB, a tool-profile value) that makes an over-cap
 allocation *fail*, so a bomb is recorded as a failed instance
 (`bound-heap-exceeded`, with the measured peak), not a process abort or CI OOM.
 The observer is subject to VER04 §7's controls: a subject whose result is
-unchanged but whose allocation grows must be distinguished. Measured peak is
+unchanged but whose allocation grows must be distinguished. **The observed region is the export call, and only it** (VOS-D063; section 14.2 item 54):
+the allocations the adapter makes to marshal arguments into host values and the result
+into a Warrant value belong to the harness, not to the subject, and are not counted. A
+fault that is *modelled as an allocation by the subject* (`limit-after-alloc`) is
+allocated inside the region, so it is still counted. Measured peak is
 compared with the bound evaluated at the instance's arguments; the manifest
 records `max_observed_heap`, `bound_at_max` and `instances_observed`. A lane
 without an allocation observer records `heap` and `output` as `not-live`: a bomb
@@ -1489,10 +1493,10 @@ The numbering continues from 14.1.
     workers holding at most 1 GiB between them are ever abandoned in one process
     (`OBS_MAX_ABANDONED`, `OBS_MAX_HELD`); after that an observed call is refused with
     the same failure instead of being started.  **The supervisor is bounded (WD-HARN1,
-    item 53).**  The window is the whole adapter call (argument conversion, the export, result
-    conversion), so the adapter's copy of the result counts: a `heap` bound must
-    leave room for one extra copy of the output, as the spec's own example
-    (`2 * to_int(max_output)`) does.  The measured peak is compared with the `heap`
+    item 53).**  The window covers the export call only (item 54; it used to be the whole adapter
+    call, argument conversion and result conversion included, so the adapter's own copy of a
+    result counted and a `heap <= 0` row on any record or payload-carrying result was
+    falsified by the harness).  The measured peak is compared with the `heap`
     row evaluated at the call's arguments; a call over the row fails.
 34. **Failure vocabulary.** `bound-heap-exceeded` is not in the closed TF01 section 5.3
     failure-id vocabulary and `test-bootstrap`'s vocabulary is not changed here.  The
@@ -1707,6 +1711,29 @@ The numbering continues from 14.1.
     allocator writes when it trips, so a panic in an instance is a failed verdict and
     never a cascade.  The first rule is the only one that changes a verdict text (it
     adds one); every adopter's generated harness changes, and is regenerated.
+54. **The observer counts the export, not the harness (VOS-D063).**  The window of item 33
+    used to be the whole adapter call.  The adapter builds the Warrant value of a record or
+    of a payload-carrying variant with a `vec!` (64 bytes for `Run(u8)`), so `heap <= 0` was
+    falsified by the harness for every operation whose result is not a scalar or a
+    payload-free variant, and `vos-sched-fp-bitmap` could declare the row on two of its
+    eight operations only.  Now the worker's window is *closed* when a job starts and is
+    opened by `obs_scope(f)` around exactly one expression: the call of the export (the
+    generator wraps each call of the binding's `export=` in the adapter text it has just
+    emitted; no call found is a generation error, never an unobserved operation).  The
+    window is restored on unwinding, so a subject panic cannot leave it open.  One other
+    allocation is observed on purpose: the `limit-after-alloc` fault's hog (section 6.4),
+    which stands in for an allocating subject and is allocated through `obs_scope` so the
+    observer still flags it.  What is therefore *not* counted: argument conversion, result
+    conversion, the `Fault` rewrites of the result, and the harness's own bookkeeping.  A
+    `heap` bound no longer needs room for the adapter's copy of the output (items 33 and 53
+    said it did); a bound that did leave it is merely looser.  The cap (item 33) is enforced
+    on the same region, so a bomb in the export is still contained and a bomb in a
+    marshalling copy (a harness bug, not a subject property) is not.  Controls: a fixture
+    subject whose export allocates against `heap <= 0` must fail (`tests/wxo_observer.rs`),
+    beside the honest record, variant and scalar operations that must pass.  Only
+    documents with an `output` or `heap` row carry the observer, so only their harnesses
+    change.  `check-profile`'s NC9 (VOS-D055) is unaffected: a missing `heap` row is still
+    not evidenced.
 
 ### 14.4 WX-N (fixed-length byte arrays across the host boundary)
 
