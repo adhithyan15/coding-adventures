@@ -76,9 +76,15 @@ func TestWarrantCorpusV2FixtureSelectsGeneratorAndOracle(t *testing.T) {
 		"code/packages/python/warrant-oracle/tests/fixtures/fixed-forms-v1/fixed_forms_v1.oracle-lowering.json",
 		"code/packages/python/warrant-oracle/tests/fixtures/fixed-forms-v1/make_fixed_forms.py",
 	} {
+		want := map[string]bool{"rust/warrant-corpus-gen": true}
+		// Every *.warrant document anywhere in the repository is also an input of
+		// rust/warrant-grammar (isWarrantDocument): its syntax corpus admits each one.
+		if isWarrantDocument(changed) {
+			want["rust/warrant-grammar"] = true
+		}
 		got, err = repositoryInputConsumersForChange([]string{changed}, packages, "all")
-		if err != nil || !reflect.DeepEqual(got, map[string]bool{"rust/warrant-corpus-gen": true}) {
-			t.Fatalf("%s selected %v (err %v)", changed, got, err)
+		if err != nil || !reflect.DeepEqual(got, want) {
+			t.Fatalf("%s selected %v, want %v (err %v)", changed, got, want, err)
 		}
 	}
 	// Lookalikes select neither: another version directory, the directory itself (a
