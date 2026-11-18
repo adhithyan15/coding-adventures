@@ -799,6 +799,58 @@ mod tests {
     }
 
     #[test]
+    fn tuple_project_and_match_have_the_appendix_json_and_children_never_yield_a_pattern() {
+        let j = |ir: &Ir| {
+            ir.to_json()
+                .render()
+                .unwrap()
+                .split_whitespace()
+                .collect::<String>()
+        };
+        let t = Ir::Tuple(vec![*var("a"), *var("b")]);
+        assert_eq!(j(&t), r#"["tuple",[["var","a"],["var","b"]]]"#);
+        assert_eq!(t.children().len(), 2, "the operands, not one list");
+        let p = Ir::Project(Box::new(t.clone()), 1);
+        assert_eq!(j(&p), r#"["project",["tuple",[["var","a"],["var","b"]]],1]"#);
+        let m = Ir::Match {
+            scrutinee: var("r"),
+            arms: vec![
+                (
+                    Pat::Ok(Box::new(Pat::Tuple(vec![Pat::Bind("x".into()), Pat::Wild]))),
+                    Ir::Var("x".into()),
+                ),
+                (Pat::Err("X".into()), Ir::Bool(true)),
+                (Pat::ErrAny, Ir::Bool(false)),
+            ],
+        };
+        assert_eq!(
+            j(&m),
+            concat!(
+                r#"["match",["var","r"],[[["ok",["tuple",[["bind","x"],["wild"]]]],["var","x"]],"#,
+                r#"[["err","X"],["lit",true]],[["err_any"],["lit",false]]]]"#
+            )
+        );
+        // children: the scrutinee and the three bodies; a pattern is never visited
+        let mut tags = vec![];
+        m.walk(&mut |n| tags.push(n.tag()));
+        assert_eq!(tags, ["match", "var", "var", "lit", "lit"]);
+        let mut pat_tuples = 0;
+        m.walk(&mut |n| pat_tuples += usize::from(matches!(n, Ir::Tuple(_))));
+        assert_eq!(pat_tuples, 0, "the tuple pattern is not a tuple expression");
+        assert_eq!(m.depth(), 2);
+        // pattern helpers
+        let Ir::Match { arms, .. } = &m else { unreachable!() };
+        assert_eq!(arms[0].0.binds(), ["x"]);
+        assert_eq!(arms[0].0.depth(), 3);
+        // levels: all three shapes are ir.tuple
+        let none = |_: &str| vec!["ir.core"];
+        for tree in [&t, &p, &m] {
+            assert_eq!(levels([tree], &none), ["ir.core", "ir.tuple"]);
+        }
+        assert_eq!(TUPLE_TAGS, ["tuple", "project", "match"]);
+    }
+
+    #[test]
     fn the_arith_type_annotation_is_not_written() {
         let a = Ir::Arith(Arith::Add, Ty::Fixed(FixedTy::U8), var("a"), var("b"));
         let b = Ir::Arith(Arith::Add, Ty::Nat, var("a"), var("b"));
