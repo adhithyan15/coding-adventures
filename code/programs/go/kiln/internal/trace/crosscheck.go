@@ -280,8 +280,27 @@ func lineAt(data []byte, n int) string {
 // run, for the lines around a mismatch.
 func sanitisedWindow(data []byte, n int) string { return sanitisedWindowR(data, n, 2) }
 
-// sanitisedWindowR is sanitisedWindow with a chosen radius (Diagnose uses 3).
+// sanitisedWindowR is sanitisedWindow with a chosen radius.
 func sanitisedWindowR(data []byte, n, radius int) string {
+	return windowOf(data, n, radius, false)
+}
+
+// quoteHeadTail quotes a key line.  A line of at most 320 bytes is shown whole;
+// a longer one as its first 160 bytes, " ... ", and its last 160 bytes, each part
+// Go-quoted separately.  The tail matters: the shapes that get a real trace
+// refused (`... <unfinished ...>) = ?`, a result after a long argument list) sit
+// at the END of long lines (clone flags, execve argv, long paths).
+func quoteHeadTail(l string) string {
+	if len(l) <= 320 {
+		return strconv.QuoteToASCII(l)
+	}
+	return strconv.QuoteToASCII(l[:160]) + " ... " + strconv.QuoteToASCII(l[len(l)-160:])
+}
+
+// windowOf prints the lines n-radius..n+radius, each as Go-quoted text.  A
+// neighbour is cut to its first 160 bytes; line n itself, when keyTail is set, is
+// shown with its head AND tail (quoteHeadTail).
+func windowOf(data []byte, n, radius int, keyTail bool) string {
 	if n <= 0 {
 		return ""
 	}
@@ -291,14 +310,20 @@ func sanitisedWindowR(data []byte, n, radius int) string {
 		if l == "" && i > n {
 			break
 		}
-		if len(l) > 160 {
-			l = l[:160] + "..."
-		}
 		mark := "  "
 		if i == n {
 			mark = "> "
 		}
-		fmt.Fprintf(&b, "  %s%d: %s\n", mark, i, strconv.QuoteToASCII(l))
+		var q string
+		if i == n && keyTail {
+			q = quoteHeadTail(l)
+		} else {
+			if len(l) > 160 {
+				l = l[:160] + "..."
+			}
+			q = strconv.QuoteToASCII(l)
+		}
+		fmt.Fprintf(&b, "  %s%d: %s\n", mark, i, q)
 	}
 	return strings.TrimRight(b.String(), "\n")
 }

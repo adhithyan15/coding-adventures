@@ -151,8 +151,8 @@ func measureData(data []byte, helperRoot bool, lim Limits) Measurement {
 // maxDiagnoseBytes caps Diagnose's output.  A CI log is not the place for an
 // unbounded dump, and the window can hold lines a pull request chose.  (A
 // variable only so a test can lower it: the worst case a real window reaches,
-// seven 160-byte lines quoted at up to four bytes a byte, sits near the cap.)
-var maxDiagnoseBytes = 4096
+// seven 160-byte lines quoted at up to four bytes a byte, is well under the cap.)
+var maxDiagnoseBytes = 8192
 
 // Diagnose explains, for a CI log, why pass 1 refuses a trace.  Like Measure it
 // is for tests and the kiln-sandbox CI job ONLY (TestMeasureIsNotUsedByProductionCode
@@ -171,16 +171,20 @@ var maxDiagnoseBytes = 4096
 //   - the grammarPanics delta of the grammar run (it must be 0);
 //   - the total line count and whether the data ends in a newline (a trace cut
 //     off mid-line is refused at its last line for that reason alone);
-//   - a window of +-3 lines around the EARLIER stop line, and the last earlier
-//     line from the same pid as the stop line, because a refused "resumed" line
-//     pairs with a pending half that can be far above the window.
+//   - a window of +-3 lines around the EARLIER stop line, the last earlier
+//     line from the same pid as the stop line (a refused "resumed" line pairs
+//     with a pending half that can be far above the window), and each reader's
+//     Error line when it differs from its stop line;
 //
 // Reasons and line numbers never hold path text, so they are always printed.
 // The window quotes trace lines, and real traces hold paths a pull request
 // chose, so it is printed only when KILN_TRACE_DIFF=1 in the environment, the
 // same policy as the cross-check's window (sanitisedWindow: each line cut to 160
 // bytes and Go-quoted, so no raw control character and no workflow-command line
-// start).  The whole result is at most maxDiagnoseBytes.
+// start).  The refused line, the stop line's pid's last earlier line and a
+// reader's own Error line are key lines: shown with their first AND last 160
+// bytes, and printed before the window.  The whole result is at most
+// maxDiagnoseBytes (8 KB).
 func Diagnose(data []byte, helperRoot bool) string {
 	lim := DefaultLimits()
 	_, _, eOld, atOld := readRecordsAt(bytes.NewReader(data), lim, helperRoot, false)
@@ -196,6 +200,9 @@ func Diagnose(data []byte, helperRoot bool) string {
 	var b strings.Builder
 	fmt.Fprintf(&b, "  trace: %d bytes, %d lines, ends with newline: %v, helper root: %v\n",
 		len(data), lines, endsNL, helperRoot)
+	// Diagnose is pass 1 (the line reader) only.  A trace both readers accept
+	// here can still be refused later, by pass 2 (the model).
+	fmt.Fprintf(&b, "  pass 1 only: if both readers accepted, any refusal is in pass 2 (the model), not shown here\n")
 	describe := func(name string, e *Error, at int) {
 		if e == nil {
 			fmt.Fprintf(&b, "  %s: accepted pass 1 (stop line %d)\n", name, at)
@@ -218,10 +225,26 @@ func Diagnose(data []byte, helperRoot bool) string {
 		}
 	}
 	if stop > 0 && os.Getenv("KILN_TRACE_DIFF") == "1" {
-		fmt.Fprintf(&b, "  window around line %d:\n%s\n", stop, sanitisedWindowR(data, stop, 3))
-		if prev, pid := lastLineOfSamePid(data, stop); prev > 0 && prev < stop-3 {
-			fmt.Fprintf(&b, "  last earlier line of pid %d:\n%s\n", pid, sanitisedWindowR(data, prev, 0))
+		// The key lines come BEFORE the window, so the size cap can only cut the
+		// neighbours: each is shown with its head and its tail.
+		//  - a reader's own Error line when it is not its stop line (an unresumed
+		//    call at the end of the input is reported at the call's start);
+		//  - the last earlier line of the stop line's pid (a resume's pending half).
+		shown := map[int]bool{}
+		for _, r := range []struct {
+			name string
+			e    *Error
+			at   int
+		}{{"old scanner", eOld, atOld}, {"grammar reader", eNew, atNew}} {
+			if r.e != nil && r.e.Line > 0 && r.e.Line != r.at && !shown[r.e.Line] {
+				shown[r.e.Line] = true
+				fmt.Fprintf(&b, "  error line (%s):\n%s\n", r.name, windowOf(data, r.e.Line, 0, true))
+			}
 		}
+		if prev, pid := lastLineOfSamePid(data, stop); prev > 0 && !shown[prev] {
+			fmt.Fprintf(&b, "  last earlier line of pid %d:\n%s\n", pid, windowOf(data, prev, 0, true))
+		}
+		fmt.Fprintf(&b, "  window around line %d:\n%s\n", stop, windowOf(data, stop, 3, true))
 	}
 	out := b.String()
 	if len(out) > maxDiagnoseBytes {

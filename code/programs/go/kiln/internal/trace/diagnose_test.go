@@ -85,8 +85,8 @@ func TestDiagnoseHostileStopLine(t *testing.T) {
 
 func TestDiagnoseIsBounded(t *testing.T) {
 	t.Setenv("KILN_TRACE_DIFF", "1")
-	if maxDiagnoseBytes != 4096 {
-		t.Fatalf("the documented cap is 4 KB, not %d", maxDiagnoseBytes)
+	if maxDiagnoseBytes != 8192 {
+		t.Fatalf("the documented cap is 8 KB, not %d", maxDiagnoseBytes)
 	}
 	// The real window stays under the cap; lowering it shows the cut is made.
 	out := Diagnose([]byte(diagTrace()), false)
