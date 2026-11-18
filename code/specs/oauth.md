@@ -6127,14 +6127,87 @@ stable failures retain no secret or transcript bytes.
 
 This primitive accepts an already-computed transcript snapshot and does not
 prove which messages produced it, own transcript sequencing, or attach its
-outputs to the exact retry proof. That exact-message composition remains a
-separate prerequisite. It also does not derive traffic keys or IVs,
+outputs to the exact retry proof. It also does not derive traffic keys or IVs,
 authenticate CertificateVerify or Finished, protect records, validate
 certificates, establish trust, enforce revocation, perform I/O, authorize HTTP
-or OAuth transport, or open a network connection. Exact-message traffic-
-secret binding, authenticated handshake progression, record protection,
-certificate/revocation policy, and HTTP composition remain prerequisites;
-concrete HTTPS and live-provider readiness remain unavailable.
+or OAuth transport, or open a network connection.
+
+An allocation-free `tls13-retry-handshake-traffic-secrets-binding`
+prerequisite now accepts only the exact-message `BoundRetryBaseSecrets` proof
+and caller-owned handshake-traffic-secret storage. Before touching that
+storage, it requires the storage's data-driven selected cipher suite to equal
+the suite retained by the bound retry transcript. It then snapshots that exact
+CH1, HelloRetryRequest, CH2, and final ServerHello transcript and delegates the
+bound base secrets plus snapshot to the fixed-memory handshake traffic-secret
+primitive. Success returns a non-copyable wrapper that retains the complete
+message-bound base schedule beside the borrowed client and server secret view;
+no detached message, suite, transcript hash, or base secret is accepted.
+Suite substitution fails before output mutation, and downstream derivation
+failures retain the existing stable redacted categories and clearing behavior.
+
+This exact-message binding does not advance the transcript beyond ServerHello,
+derive traffic keys or IVs, authenticate CertificateVerify or Finished,
+protect records, validate certificates, establish trust, enforce revocation,
+perform I/O, authorize HTTP or OAuth transport, or open a network connection.
+Authenticated handshake progression, record protection, certificate and
+revocation policy, and HTTP composition remain prerequisites; concrete HTTPS
+and live-provider readiness remain unavailable.
+
+An allocation-free `tls13-retry-handshake-traffic-key-material-binding`
+prerequisite now accepts only the exact-message retry handshake-traffic-secret
+proof above, one explicit client-or-server sender role, and caller-owned
+traffic-key-material storage. Before touching that storage, it requires the
+storage's data-driven selected cipher suite to equal the suite retained by the
+bound traffic secrets. It selects only the retained sender secret, imports
+that exact hash-length value into a fixed wipe-on-drop PRK using the retained
+suite's hash, and delegates to the existing fixed-memory traffic-key and
+static-IV derivation. Success returns a non-copyable wrapper retaining the
+complete CH1, HelloRetryRequest, CH2, final ServerHello, base-schedule, and
+handshake-traffic-secret proof beside the sender role and borrowed key-material
+view. No detached traffic secret, suite, hash, key or IV length, label, or
+context is accepted. Suite substitution fails before output mutation;
+downstream failures retain stable redacted categories and the existing
+clearing and staging behavior.
+
+This exact-message binding derives one direction's handshake key and static IV
+per call. It does not advance the transcript, authenticate CertificateVerify
+or Finished, construct or reserve a record nonce, create record-protection
+state, invoke an AEAD, frame or protect records, process alerts, validate
+certificates, establish trust, verify a hostname, enforce revocation, perform
+I/O, authorize HTTP or OAuth transport, or open a network connection.
+Authenticated handshake progression, record-state composition, certificate and
+revocation policy, and HTTP composition remain prerequisites; concrete HTTPS
+and live-provider readiness remain unavailable.
+
+The same allocation-free boundary now also consumes the complete exact-message
+retry handshake traffic-secret proof into a non-cloneable per-sender
+record-state issuer. One successful client issuance and one successful server
+issuance are permitted. A repeated issuance for the same sender fails before
+the caller-owned output storage is touched, so the same retained key and static
+IV cannot acquire a second sequence-zero state through this boundary. Failed
+derivation or state construction does not consume the sender's issuance, so a
+caller may retry with valid storage.
+
+Each successful issuance accepts only an explicit sender role and
+caller-owned traffic-key-material storage for the retained selected suite. It
+derives that retained sender's key and static IV, moves the resulting view into
+the existing repository-owned record-state primitive, starts the monotonic
+record sequence at zero, and marks the sender issued before returning. The
+non-copyable result borrows the single-use issuer, retains the explicit sender,
+and permits only borrowed access to the state. It accepts no detached key,
+static IV, nonce length, record ceiling, AEAD identifier, sequence number, or
+cipher suite, and it cannot detach the state from the exact CH1,
+HelloRetryRequest, CH2, final ServerHello, base-schedule, traffic-secret, and
+sender evidence.
+
+This exact-message state composition does not advance the handshake
+transcript, authenticate CertificateVerify or Finished, invoke an AEAD, frame
+or protect a record, process alerts, validate certificates, establish trust,
+verify a hostname, enforce revocation, perform I/O, authorize HTTP or OAuth
+transport, or open a network connection. Authenticated handshake progression,
+record protection, certificate and revocation policy, and HTTP composition
+remain prerequisites; concrete HTTPS and live-provider readiness remain
+unavailable.
 
 An allocation-free `http1-fixed-request-body` prerequisite now binds one
 caller-borrowed, potentially sensitive request body to its exact byte length

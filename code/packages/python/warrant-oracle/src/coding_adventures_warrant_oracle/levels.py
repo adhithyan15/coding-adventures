@@ -24,8 +24,16 @@ its expressions and in the call closure of every** ``model_call`` -- a model has
 ``ir.fixed`` although its own body names no built-in.  :func:`ir_levels` computes it from the
 IR; the lowerer adds the second half of R9, which is on **types** (a binder, parameter,
 result or sub-expression whose static type is or contains a tuple adds ``ir.tuple``, even
-where no tuple tag appears; :func:`type_levels`).  Tuple *tags* and ``match`` are slice S10t's:
-the lowerer refuses them with the level ``ir.tuple``.
+where no tuple tag appears; :func:`type_levels`).  Since slice S10t-1 the tuple tags and ``match``
+on a ``Result`` (``ir.tuple``) are lowered, typed, costed and evaluated like the core tags.
+
+``match`` (section 4.1, [D35])
+------------------------------
+``match`` is ``ir.tuple`` exactly when its scrutinee is a ``Result`` and ``ir.data`` for any other
+type.  The lowerer lowers a ``match`` only on a ``Result`` (any other scrutinee is refused at the
+source with ``ir.data``), so an IR ``match`` is ``ir.tuple`` here; the typed IR compiler
+(:mod:`.ir_eval`), which knows the scrutinee's static type, refuses a ``match`` on anything else
+with ``ir.data``.
 
 ``Option<T>`` (section 16.10 D23, R8)
 -------------------------------------
@@ -40,6 +48,7 @@ from collections.abc import Mapping
 
 from . import ast as A
 from .errors import OracleError
+from .irtree import children, is_node
 
 CORE = "ir.core"
 FIXED = "ir.fixed"
@@ -266,10 +275,9 @@ def ir_levels(
     of every ``model_call`` is included, each model once.  The result is the sorted,
     duplicate-free list of level names, ``[]`` for no tags at all.  With ``follow=False`` a
     ``model_call`` is not followed (the caller adds the callee's own, already closed, requires).  An unknown tag is an
-    ``ir`` error (never skipped, section 4.2 rule 7); ``match`` has no tag-only level (its
-    level depends on its scrutinee's static type: ``ir.tuple`` for a ``Result``, ``ir.data``
-    otherwise, slice S10t) and is a ``level`` error naming ``ir.data``, the safe name: a lane
-    that lacks ``ir.data`` is refused, and one that has it has ``ir.tuple`` too (R1).
+    ``ir`` error (never skipped, section 4.2 rule 7).  A ``match`` is ``ir.tuple`` (see the module
+    docstring): its patterns are not expressions and are never visited, only the scrutinee and the
+    arm bodies are.
     """
     trees = irs if _is_tree_list(irs) else [irs]
     models = models or {}
@@ -278,39 +286,22 @@ def ir_levels(
     stack = list(trees)
     while stack:
         node = stack.pop()
-        if not (isinstance(node, list) and node and isinstance(node[0], str)):
+        if not is_node(node):
             continue
         tag = node[0]
-        if tag == "match":
-            raise OracleError(
-                "level",
-                "a match is typed by its scrutinee, which is the slice of S10t",
-                level=DATA,
-            )
-        level = tag_level(tag)
+        level = TUPLE if tag == "match" else tag_level(tag)
         if level is None:
             raise OracleError("ir", "an unknown IR tag")
         levels.add(level)
-        if tag in ("lit", "var", "err"):
-            continue
-        if tag == "model_call":
+        if tag == "model_call" and follow:
             name = node[1]
-            if not follow:
-                # the caller adds the callee's own (already closed) ``requires``
-                pass
-            elif name not in seen_models:
+            if name not in seen_models:
                 seen_models.add(name)
                 body = models.get(name)
                 if body is None:
                     raise OracleError("ir", "a call to an unknown model")
                 stack.append(body)
-            stack.extend(node[2])
-        elif tag == "subject_op":
-            stack.extend(node[2])
-        elif tag == "tuple":
-            stack.extend(node[1])
-        else:
-            stack.extend(node[1:])
+        stack.extend(children(node))
     return sorted(levels)
 
 

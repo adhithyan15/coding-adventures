@@ -1,0 +1,181 @@
+{
+  "refusals": [
+    {
+      "generator_code": "ir",
+      "message": "a match that can fall through",
+      "name": "fall-through-missing-err",
+      "oracle_code": "corpus",
+      "oracle_level": "",
+      "source": "warrant refusals v1\n  error E = A | B | C\n  op f(a: Bool) -> Result<(Bool,Bool),E>\n  op g(a: Bool) -> Result<Bool,E>\n  model m(r: Result<Bool,E>) -> Bool = match r with Ok(_) -> true\n"
+    },
+    {
+      "generator_code": "ir",
+      "message": "a match that can fall through",
+      "name": "fall-through-missing-case",
+      "oracle_code": "corpus",
+      "oracle_level": "",
+      "source": "warrant refusals v1\n  error E = A | B | C\n  op f(a: Bool) -> Result<(Bool,Bool),E>\n  op g(a: Bool) -> Result<Bool,E>\n  model m(r: Result<Bool,E>) -> Bool = match r with Ok(_) -> true | Err(E.A) -> false | Err(E.B) -> false\n"
+    },
+    {
+      "generator_code": "ir",
+      "message": "a match that can fall through",
+      "name": "fall-through-missing-ok",
+      "oracle_code": "corpus",
+      "oracle_level": "",
+      "source": "warrant refusals v1\n  error E = A | B | C\n  op f(a: Bool) -> Result<(Bool,Bool),E>\n  op g(a: Bool) -> Result<Bool,E>\n  model m(r: Result<Bool,E>) -> Bool = match r with Err(_) -> false\n"
+    },
+    {
+      "generator_code": "ir",
+      "message": "a match arm that no value can reach",
+      "name": "fall-through-partial-tuple",
+      "oracle_code": "corpus",
+      "oracle_level": "",
+      "source": "warrant refusals v1\n  error E = A | B | C\n  op f(a: Bool) -> Result<(Bool,Bool),E>\n  op g(a: Bool) -> Result<Bool,E>\n  model m(r: Result<(Bool,Bool),E>) -> Bool = match r with Ok((a, b)) -> a | Err(_) -> false | Ok(_) -> true\n"
+    },
+    {
+      "generator_code": "ir",
+      "message": "a match arm that no value can reach",
+      "name": "unreachable-after-wild",
+      "oracle_code": "corpus",
+      "oracle_level": "",
+      "source": "warrant refusals v1\n  error E = A | B | C\n  op f(a: Bool) -> Result<(Bool,Bool),E>\n  op g(a: Bool) -> Result<Bool,E>\n  model m(r: Result<Bool,E>) -> Bool = match r with _ -> true | Ok(_) -> false\n"
+    },
+    {
+      "generator_code": "ir",
+      "message": "a match arm that no value can reach",
+      "name": "unreachable-after-err-any",
+      "oracle_code": "corpus",
+      "oracle_level": "",
+      "source": "warrant refusals v1\n  error E = A | B | C\n  op f(a: Bool) -> Result<(Bool,Bool),E>\n  op g(a: Bool) -> Result<Bool,E>\n  model m(r: Result<Bool,E>) -> Bool = match r with Ok(_) -> true | Err(_) -> false | Err(E.A) -> true\n"
+    },
+    {
+      "generator_code": "ir",
+      "message": "a match arm that no value can reach",
+      "name": "unreachable-duplicate-case",
+      "oracle_code": "corpus",
+      "oracle_level": "",
+      "source": "warrant refusals v1\n  error E = A | B | C\n  op f(a: Bool) -> Result<(Bool,Bool),E>\n  op g(a: Bool) -> Result<Bool,E>\n  model m(r: Result<Bool,E>) -> Bool = match r with Ok(_) -> true | Err(E.A) -> false | Err(E.A) -> true | Err(_) -> false\n"
+    },
+    {
+      "generator_code": "ir",
+      "message": "a match arm that no value can reach",
+      "name": "unreachable-after-all-cases",
+      "oracle_code": "corpus",
+      "oracle_level": "",
+      "source": "warrant refusals v1\n  error E = A | B | C\n  op f(a: Bool) -> Result<(Bool,Bool),E>\n  op g(a: Bool) -> Result<Bool,E>\n  model m(r: Result<Bool,E>) -> Bool = match r with Ok(_) -> true | Err(E.A) -> false | Err(E.B) -> false | Err(E.C) -> false | Err(_) -> true\n"
+    },
+    {
+      "generator_code": "ir",
+      "message": "a match arm that no value can reach",
+      "name": "unreachable-tuple-after-bind",
+      "oracle_code": "corpus",
+      "oracle_level": "",
+      "source": "warrant refusals v1\n  error E = A | B | C\n  op f(a: Bool) -> Result<(Bool,Bool),E>\n  op g(a: Bool) -> Result<Bool,E>\n  model m(r: Result<(Bool,Bool),E>) -> Bool = match r with Ok(t) -> true | Ok((a, b)) -> a | Err(_) -> false\n"
+    },
+    {
+      "generator_code": "ir",
+      "message": "the same bind name twice in one pattern",
+      "name": "duplicate-bind",
+      "oracle_code": "corpus",
+      "oracle_level": "",
+      "source": "warrant refusals v1\n  error E = A | B | C\n  op f(a: Bool) -> Result<(Bool,Bool),E>\n  op g(a: Bool) -> Result<Bool,E>\n  model m(r: Result<(Bool,Bool),E>) -> Bool = match r with Ok((a, a)) -> a | Err(_) -> false\n"
+    },
+    {
+      "generator_code": "ir",
+      "message": "the same bind name twice in one pattern",
+      "name": "duplicate-bind-nested",
+      "oracle_code": "corpus",
+      "oracle_level": "",
+      "source": "warrant refusals v1\n  error E = A | B | C\n  op f(a: Bool) -> Result<(Bool,Bool),E>\n  op g(a: Bool) -> Result<Bool,E>\n  model m(r: Result<((Bool,Bool),Bool),E>) -> Bool = match r with Ok(((a, b), a)) -> a | Err(_) -> false\n"
+    },
+    {
+      "generator_code": "ir",
+      "message": "a bind name shadows a binder, a parameter, result or an outer bind",
+      "name": "bind-shadows-a-parameter",
+      "oracle_code": "corpus",
+      "oracle_level": "",
+      "source": "warrant refusals v1\n  error E = A | B | C\n  op f(a: Bool) -> Result<(Bool,Bool),E>\n  op g(a: Bool) -> Result<Bool,E>\n  model m(a: Bool, r: Result<Bool,E>) -> Bool = match r with Ok(a) -> a | Err(_) -> false\n"
+    },
+    {
+      "generator_code": "ir",
+      "message": "a bind name shadows a binder, a parameter, result or an outer bind",
+      "name": "bind-shadows-a-binder",
+      "oracle_code": "corpus",
+      "oracle_level": "",
+      "source": "warrant refusals v1\n  error E = A | B | C\n  op f(a: Bool) -> Result<(Bool,Bool),E>\n  op g(a: Bool) -> Result<Bool,E>\n  claim c:\n    forall a: Bool. g(a) == (match g(a) with Ok(a) -> Ok(a) | Err(_) -> Err(E.A))\n"
+    },
+    {
+      "generator_code": "ir",
+      "message": "a bind name shadows a binder, a parameter, result or an outer bind",
+      "name": "bind-shadows-result",
+      "oracle_code": "corpus",
+      "oracle_level": "",
+      "source": "warrant refusals v1\n  error E = A | B | C\n  op f(a: Bool) -> Result<(Bool,Bool),E>\n  op g(a: Bool) -> Result<Bool,E>\n  model m(r: Result<Bool,E>) -> Bool = match r with Ok(result) -> result | Err(_) -> false\n"
+    },
+    {
+      "generator_code": "ir",
+      "message": "a bind name shadows a binder, a parameter, result or an outer bind",
+      "name": "bind-shadows-an-outer-bind",
+      "oracle_code": "corpus",
+      "oracle_level": "",
+      "source": "warrant refusals v1\n  error E = A | B | C\n  op f(a: Bool) -> Result<(Bool,Bool),E>\n  op g(a: Bool) -> Result<Bool,E>\n  model m(r: Result<Result<Bool,E>,E>) -> Bool = match r with Ok(x) -> (match x with Ok(x) -> x | Err(_) -> false) | Err(_) -> false\n"
+    },
+    {
+      "generator_code": "ir",
+      "message": "a bind name shadows a binder, a parameter, result or an outer bind",
+      "name": "bind-shadows-the-scrutinee-name",
+      "oracle_code": "corpus",
+      "oracle_level": "",
+      "source": "warrant refusals v1\n  error E = A | B | C\n  op f(a: Bool) -> Result<(Bool,Bool),E>\n  op g(a: Bool) -> Result<Bool,E>\n  model m(r: Result<Bool,E>) -> Bool = match r with Ok(r) -> r | Err(_) -> false\n"
+    },
+    {
+      "generator_code": "",
+      "message": "the arms of a match have no common type",
+      "name": "arms-have-no-common-type",
+      "oracle_code": "type",
+      "oracle_level": "",
+      "source": "warrant refusals v1\n  error E = A | B | C\n  op f(a: Bool) -> Result<(Bool,Bool),E>\n  op g(a: Bool) -> Result<Bool,E>\n  model m(r: Result<Bool,E>) -> Bool = match r with Ok(_) -> true | Err(_) -> 1\n"
+    },
+    {
+      "generator_code": "",
+      "message": "a tuple pattern does not match the type of its value",
+      "name": "a-tuple-pattern-needs-a-tuple",
+      "oracle_code": "type",
+      "oracle_level": "",
+      "source": "warrant refusals v1\n  error E = A | B | C\n  op f(a: Bool) -> Result<(Bool,Bool),E>\n  op g(a: Bool) -> Result<Bool,E>\n  model m(r: Result<Bool,E>) -> Bool = match r with Ok((a, b)) -> a | Err(_) -> false\n"
+    },
+    {
+      "generator_code": "",
+      "message": "a tuple pattern does not match the type of its value",
+      "name": "a-tuple-pattern-of-the-wrong-arity",
+      "oracle_code": "type",
+      "oracle_level": "",
+      "source": "warrant refusals v1\n  error E = A | B | C\n  op f(a: Bool) -> Result<(Bool,Bool),E>\n  op g(a: Bool) -> Result<Bool,E>\n  model m(r: Result<(Bool,Bool),E>) -> Bool = match r with Ok((a, b, c)) -> a | Err(_) -> false\n"
+    },
+    {
+      "generator_code": "",
+      "message": "an error case of the wrong error type",
+      "name": "an-unknown-error-case",
+      "oracle_code": "type",
+      "oracle_level": "",
+      "source": "warrant refusals v1\n  error E = A | B | C\n  op f(a: Bool) -> Result<(Bool,Bool),E>\n  op g(a: Bool) -> Result<Bool,E>\n  model m(r: Result<Bool,E>) -> Bool = match r with Ok(_) -> true | Err(E.Z) -> false | Err(_) -> true\n"
+    },
+    {
+      "generator_code": "",
+      "message": "a tuple projection is a component index of a tuple",
+      "name": "a-projection-index-out-of-range",
+      "oracle_code": "type",
+      "oracle_level": "",
+      "source": "warrant refusals v1\n  error E = A | B | C\n  op f(a: Bool) -> Result<(Bool,Bool),E>\n  op g(a: Bool) -> Result<Bool,E>\n  model m(t: (Bool,Bool)) -> Bool = t.2\n"
+    },
+    {
+      "generator_code": "",
+      "message": "projection needs ir.data",
+      "name": "a-projection-of-a-non-tuple",
+      "oracle_code": "level",
+      "oracle_level": "ir.data",
+      "source": "warrant refusals v1\n  error E = A | B | C\n  op f(a: Bool) -> Result<(Bool,Bool),E>\n  op g(a: Bool) -> Result<Bool,E>\n  model m(t: Bool) -> Bool = t.0\n"
+    }
+  ],
+  "schema": "warrant-refusals-parity-v1"
+}

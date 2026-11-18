@@ -31,7 +31,8 @@
 //! | [`json`] | S3a | the VER04i 9.1 canonical writer (no `serde`) |
 //! | [`profile`] | S3a | the strict `corpus.profile` reader (VER04r 8.4) |
 //! | [`types`] | S3a | the small type language of `ir.core` and its unification rules |
-//! | [`ir`] | S3a | the 26 `ir.core` tags (Appendix A) and their JSON form |
+//! | [`ir`] | S3a | the 26 `ir.core` tags (Appendix A), `ir.fixed` nodes (S10b), the `ir.tuple` shapes (S10t-2) and their JSON form |
+//! | [`patterns`] | S10t-2 | the six `match` patterns, the usefulness check and the corpus errors (`ir`) |
 //! | [`lower`] | S3a | syntax-directed lowering with the annotating typer; level refusals |
 //! | [`analysis`] | S3a | the pure-guard rule (4.4) and the v0 static arithmetic guard (3.3 rule 3) |
 //! | [`arith`] | S3a | the single wrapping rule (3.2): `wraps`, the 2^127 window, `MAX_IR_VALUE` |
@@ -116,6 +117,7 @@ pub mod fsio;
 pub mod ir;
 pub mod json;
 pub mod lower;
+pub mod patterns;
 pub mod profile;
 pub mod stream;
 pub mod suite;
@@ -152,7 +154,7 @@ pub struct Analysis {
 /// a VER04r generation rule (`W0701`), a type error, or a cost limit (`limit`).  Every
 /// error is attributed to the claim, model, operation or example it concerns.
 pub fn analyse(file: &WarrantFile<'_>, profile: &Profile) -> Result<Analysis, GenError> {
-    let lowered = lower_document(file)?;
+    let lowered = lower::lower_document_omitting(file, &profile.omit_examples)?;
     let limit = profile.max_ir_cost;
     let model_costs = ModelCosts::compute(&lowered.models, limit)?;
     let mut suite_costs = Vec::with_capacity(lowered.suites.len());
@@ -218,4 +220,4 @@ pub struct GenInput<'a> {
     pub binding_faults: Option<&'a [(String, Vec<String>)]>,
 }
 
-pub use emit::generate;
+pub use emit::{generate, generate_gated};

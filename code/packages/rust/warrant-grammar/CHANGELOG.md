@@ -1,11 +1,20 @@
 # Changelog
 
+## Unreleased — bounded VER04p domain witness checks
+
+- `BUILD` and `BUILD_windows` run `code/scripts/tests/test_ver04p_domain_witnesses.py`.
+  The exact-rational diagnostic checks the documented integer ties, adjacent F32/F64
+  encodings, F64-to-F32 midpoint, post-rounding de-duplication, largest-finite ranges,
+  and subnormal one-tap ratio. It uses no host float and is not a Warrant native-float
+  or source/compiler proof. The build tool selects `rust/warrant-grammar` when the
+  VER04p document or diagnostic changes.
+
 ## Unreleased — refinement sampler and observer timeout clamp (VOS-038b)
 
 - VOS-D079 (VER04h 4.1): a refined binder of low acceptance no longer reports `property-exhausted`.
   The rejection draw is unchanged; when a case's 100 retries are all rejected and every binder is
   exactly enumerable, the case is drawn uniformly from the admissible set (built once). Otherwise an
-  acceptance floor (1/32 over 2,048 probe draws from a derived stream) refuses the claim on its first
+  acceptance floor (1/8 over 2,048 probe draws, derived from C(1-a)^100 < 0.01 at C = 4,096 from a derived stream) refuses the claim on its first
   draw with a clear message. Emitted from a new `refine` prelude region (a harness without a refined
   binder is byte for byte unchanged); passing runs draw identical cases, so no manifest changes.
   The floor runs in the harness, not the generator (VOS-D100).

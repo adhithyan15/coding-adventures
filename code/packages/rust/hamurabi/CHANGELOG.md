@@ -5,6 +5,15 @@ All notable changes to the `hamurabi` crate will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Added
+- Added a Rust integration test that consumes all 31 canonical `hamurabi-v1` fixture cases through public APIs, chaining all 53 trajectory turns, comparing all state fields and byte-exact reports, and checking all 14 typed refusals.
+- Added same-harness negative controls for a nonconforming always-error adapter, full-width RNG mutation, report newline mutation, error-variant mutation, duplicate/missing cases, duplicate JSON keys, and unknown or missing operation fields.
+
+### Changed
+- Clarified that package conformance tests do not establish cross-language parity or close the report-only Warrant/CWE evidence gaps.
+
 ## 0.1.0 — 2026-11-15
 
 ### Added
@@ -36,4 +45,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Hardened `step_year` against CWE-190 with saturating additions and bounded conversions.
   - Closed capability declaration in `required_capabilities.json` (`capabilities: []`) verified by `ca-capability-analyzer`.
   - Effect certificate (`effect_certificate.json`) proved zero side effects.
-  - Assurance report (`assurance_report.json`) addressing all 26 CWEs per `VER15`.
+  - Assurance report (`assurance_report.json`) is report-only; it does not establish all 26 CWE dispositions or live Warrant proofs per `VER15`.

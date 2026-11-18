@@ -16,12 +16,25 @@
 //! does not know, or a template the operation's signature cannot take, is a generation error
 //! (`fault`): nothing is skipped.
 //!
-//! ## Levels: data the generator cannot evaluate
+//! ## Levels: data the generator cannot evaluate, and the gate
 //!
-//! A fault expression belongs to a feature level.  `ignore-high-bit` and `xor-lsb` use
-//! `bit_and`/`bit_xor`, which are `ir.fixed` (VER04r 8.2, [D9]).  This generator implements
-//! `ir.core` only, so such a fault is emitted **as data** ([`Expr::Data`], `requires:
-//! ["ir.fixed"]`) and never evaluated: no suite or chunk digest depends on it (VER04r 8.2).
+//! A fault expression belongs to feature levels.  `ignore-high-bit` and `xor-lsb` use
+//! `bit_and`/`bit_xor`, which are `ir.fixed` (VER04r 8.2, [D9]); `ok-as-err`, `drop-consumed`,
+//! `swap-components` and the tuple-payload `missing-error` are `ir.tuple` (they are written with
+//! `match` on a `Result` and the tuple literal, [D35]); the `Ok` forms of `flip-result-bit` and
+//! `drop-last-result-byte` are `match` over the `Bytes` forms and so name two levels.  A fault
+//! row's `requires` is the **sorted union of the template's own levels and the levels of the op's
+//! parameter and result types** (R9, S10t-1 review): a fault on an operation with a tuple
+//! parameter needs `ir.tuple` even where the template names no tuple tag.
+//!
+//! The **fault-evaluation gate** is the set of levels whose faults the witness search evaluates.
+//! It is [`SHIPPED_GATE`], `ir.core` only, until the atomic flip (S10c, [D29]): a fault whose
+//! `requires` names any other level is emitted **as data** and each of its candidate claims that
+//! has a stand-in is `deferred`, naming the **first level of the fault's `requires`, in sorted
+//! order, that the gate does not implement** (R12); no witness search runs.  This is true even for
+//! a fault whose expression this crate *can* evaluate (the `ir.tuple` ones): no suite or chunk
+//! digest depends on a deferred fault (VER04r 8.2).  The gate is a **library parameter** only
+//! ([`crate::emit::generate_gated`]); there is no command-line or environment switch.
 //!
 //! ## The three claim states
 //!
@@ -44,20 +57,23 @@
 
 use crate::error::{code, GenError};
 use crate::eval::{Program, Stats, Vars};
-use crate::ir::{Arith, Cmp, Ir};
+use crate::ir::{Arith, Cmp, Ir, Pat};
 use crate::json::Json;
-use crate::lower::{LoweredOp, LoweredSuite, SuiteKind};
+use crate::lower::{ErrorType, LoweredOp, LoweredSuite, SuiteKind};
 use crate::suite::SuitePlan;
-use crate::types::Ty;
+use crate::types::{Ty, Width};
 use crate::value::Value;
 
-/// The feature level of a fault expression.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+/// A feature level of a fault expression.  The derived order is the order of the level names
+/// (`ir.core` < `ir.fixed` < `ir.tuple`), which is the sorted order a `requires` list is in.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum Level {
     /// `ir.core`: the 26 tags of Appendix A.
     Core,
     /// `ir.fixed`: the fixed-width built-ins (`bit_and`, `bit_xor`, ...).
     Fixed,
+    /// `ir.tuple`: the tuple literal, `project` and `match` on a `Result`.
+    Tuple,
 }
 
 impl Level {
@@ -66,13 +82,18 @@ impl Level {
         match self {
             Level::Core => "ir.core",
             Level::Fixed => "ir.fixed",
+            Level::Tuple => "ir.tuple",
         }
     }
+}
 
-    /// Can this generator evaluate expressions of the level?
-    pub fn implemented(self) -> bool {
-        self == Level::Core
-    }
+/// The shipped fault-evaluation gate: `ir.core` only (until the flip of S10c, [D29]).
+pub const SHIPPED_GATE: [Level; 1] = [Level::Core];
+
+/// The first level of `requires` (sorted) that `gate` does not implement, or `None` when every
+/// level is implemented (the fault is then searched, not deferred).
+pub fn first_unimplemented(requires: &[Level], gate: &[Level]) -> Option<Level> {
+    requires.iter().copied().find(|l| !gate.contains(l))
 }
 
 /// A fault expression: IR the generator can evaluate, or data it can only write down.
@@ -113,8 +134,8 @@ pub struct Fault {
     pub op: String,
     /// What it does.
     pub kind: Kind,
-    /// The level of its expression.
-    pub level: Level,
+    /// The sorted levels the fault needs: its template's and its op's types' (R9).
+    pub requires: Vec<Level>,
 }
 
 impl Fault {
@@ -123,7 +144,10 @@ impl Fault {
         let mut row = vec![
             ("fault".to_string(), Json::str(self.name.as_str())),
             ("op".to_string(), Json::str(self.op.as_str())),
-            ("requires".to_string(), Json::strs([self.level.name()])),
+            (
+                "requires".to_string(),
+                Json::strs(self.requires.iter().map(|l| l.name())),
+            ),
         ];
         match &self.kind {
             Kind::Pre(rewrites) => {
@@ -149,7 +173,7 @@ impl Fault {
 }
 
 /// Every fault name of the registry (VER04r 8.2, the generic table).
-pub const KNOWN_FAULTS: [&str; 8] = [
+pub const KNOWN_FAULTS: [&str; 13] = [
     "invert",
     "missing-error",
     "swap-choice",
@@ -158,7 +182,16 @@ pub const KNOWN_FAULTS: [&str; 8] = [
     "ignore-last-byte",
     "xor-lsb",
     "ignore-high-bit",
+    "flip-result-bit",
+    "drop-last-result-byte",
+    "ok-as-err",
+    "drop-consumed",
+    "swap-components",
 ];
+
+/// The name a `match` binds the payload of an `Ok` to in the `Ok` forms (VER04r 8.2); an op
+/// parameter of that name would be shadowed, a corpus error, so the templates refuse it.
+pub const OK_PAYLOAD: &str = "ok_payload";
 
 /// The reserved name of the call's result in a fault expression.
 pub const RESULT: &str = "result";
@@ -204,13 +237,172 @@ fn refuse(op: &LoweredOp, fault: &str, why: &str) -> GenError {
     )
 }
 
-/// Instantiate the template `name` on `op`'s signature.
+/// `U8` literal.
+fn u8_lit(v: i128) -> Ir {
+    Ir::Int {
+        ty: Ty::Fixed(coding_adventures_warrant_grammar::fixed::FixedTy::U8),
+        value: v,
+    }
+}
+
+fn fixed_node(tag: &str, args: Vec<Ir>) -> Ir {
+    Ir::Fixed {
+        tag: crate::ir::fixed_tag(tag).unwrap_or("bit_xor"),
+        ty: None,
+        args,
+    }
+}
+
+/// The zero literal of a type (VER04r 16.10 R3): `0`, `false` or zero bytes.
+fn zero(ty: &Ty, op: &LoweredOp, fault: &str) -> Result<Ir, GenError> {
+    Ok(match ty {
+        Ty::Bool => Ir::Bool(false),
+        Ty::Nat | Ty::Fixed(_) => Ir::Int {
+            ty: ty.clone(),
+            value: 0,
+        },
+        Ty::Bytes(None) => Ir::Bytes(String::new()),
+        Ty::Bytes(Some(Width::Lit(n))) => Ir::Bytes("00".repeat(usize::try_from(*n).unwrap_or(0))),
+        Ty::Bytes(Some(Width::Param(_))) => {
+            return Err(refuse(op, fault, "a named width has no zero literal"))
+        }
+        _ => {
+            return Err(refuse(
+                op,
+                fault,
+                "a component of this type has no zero literal",
+            ))
+        }
+    })
+}
+
+/// The `Ok` form (VER04r 8.2): rewrite the payload of an `Ok`, leave an `Err` alone:
+/// `["match", R, [[["ok",["bind","ok_payload"]], ["ok", F]], [["err_any"], R]]]`, `F` being
+/// `body` applied to `["var","ok_payload"]`.
+fn ok_form(op: &LoweredOp, fault: &str, body: impl Fn(Ir) -> Ir) -> Result<Ir, GenError> {
+    if op.params.iter().any(|(p, _)| p == OK_PAYLOAD) {
+        return Err(refuse(op, fault, "an operation parameter is named ok_payload"));
+    }
+    Ok(Ir::Match {
+        scrutinee: var(RESULT),
+        arms: vec![
+            (
+                Pat::Ok(Box::new(Pat::Bind(OK_PAYLOAD.to_string()))),
+                Ir::Ok(Box::new(body(Ir::Var(OK_PAYLOAD.to_string())))),
+            ),
+            (Pat::ErrAny, Ir::Var(RESULT.to_string())),
+        ],
+    })
+}
+
+/// The `Bytes` form of `flip-result-bit` over `src` (VER04r 8.2, exact JSON):
+/// `if len(src) > 0 then concat(be_bytes(bit_xor(unwrap_or(at(src, 0), 0u8), 1u8)), drop(src, 1))
+/// else b"01"`.
+fn flip_expr(src: &Ir) -> Ir {
+    Ir::If(
+        Box::new(Ir::Cmp(
+            Cmp::Gt,
+            Box::new(Ir::Len(Box::new(src.clone()))),
+            nat(0),
+        )),
+        Box::new(Ir::Concat(
+            Box::new(fixed_node(
+                "be_bytes",
+                vec![fixed_node(
+                    "bit_xor",
+                    vec![
+                        fixed_node(
+                            "unwrap_or",
+                            vec![fixed_node("at", vec![src.clone(), *nat(0)]), u8_lit(0)],
+                        ),
+                        u8_lit(1),
+                    ],
+                )],
+            )),
+            Box::new(Ir::Drop(Box::new(src.clone()), nat(1))),
+        )),
+        Box::new(Ir::Bytes("01".to_string())),
+    )
+}
+
+/// The `Bytes` form of `drop-last-result-byte` over `src` (VER04r 8.2, exact JSON):
+/// `if len(src) > 0 then take(src, len(src) - 1) else b"00"`.
+fn drop_last_expr(src: &Ir) -> Ir {
+    Ir::If(
+        Box::new(Ir::Cmp(
+            Cmp::Gt,
+            Box::new(Ir::Len(Box::new(src.clone()))),
+            nat(0),
+        )),
+        Box::new(Ir::Take(
+            Box::new(src.clone()),
+            Box::new(Ir::Arith(
+                Arith::Sub,
+                Ty::Int,
+                Box::new(Ir::Len(Box::new(src.clone()))),
+                nat(1),
+            )),
+        )),
+        Box::new(Ir::Bytes("00".to_string())),
+    )
+}
+
+/// The tuple type a composite fault targets and whether it sits inside an `Ok`.
+fn tuple_target<'o>(
+    op: &'o LoweredOp,
+    fault: &str,
+) -> Result<(&'o [Ty], bool), GenError> {
+    match &op.ret {
+        Ty::Tuple(parts) => Ok((parts, false)),
+        Ty::Result(ok, _) => match &**ok {
+            Ty::Tuple(parts) => Ok((parts, true)),
+            _ => Err(refuse(op, fault, "needs a tuple or Result<tuple, E> result")),
+        },
+        _ => Err(refuse(op, fault, "needs a tuple or Result<tuple, E> result")),
+    }
+}
+
+fn project(src: &Ir, index: usize) -> Ir {
+    Ir::Project(Box::new(src.clone()), index)
+}
+
+/// An expression of the level its tree needs: evaluable `ir.core`/`ir.tuple` IR, or, when a
+/// built-in of `ir.fixed` is inside, the JSON of the tree as data.
+fn expr_of(ir: Ir) -> Expr {
+    let mut fixed = false;
+    ir.walk(&mut |n| fixed |= matches!(n, Ir::Fixed { .. }));
+    if fixed {
+        Expr::Data(ir.to_json())
+    } else {
+        Expr::Core(ir)
+    }
+}
+
+/// Instantiate the template `name` on `op`'s signature, for a document with no error types
+/// ([`instantiate_in`] with none; `ok-as-err` needs them).
+///
+/// # Errors
+///
+/// As [`instantiate_in`].
+pub fn instantiate(op: &LoweredOp, name: &str) -> Result<Fault, GenError> {
+    instantiate_in(op, name, &[])
+}
+
+/// Instantiate the template `name` on `op`'s signature.  `errors` are the document's error types
+/// (the cases of an `ok-as-err` fault come from them).
+///
+/// The row's `requires` is the sorted union of the template's own levels and the levels of the
+/// op's parameter and result types (R9).
 ///
 /// # Errors
 ///
 /// `fault` for an unknown name or a signature the template cannot take; `W0701` for an op
 /// with a parameter called `result` (the reserved name, VER04r 8.1).
-pub fn instantiate(op: &LoweredOp, name: &str) -> Result<Fault, GenError> {
+pub fn instantiate_in(
+    op: &LoweredOp,
+    name: &str,
+    errors: &[ErrorType],
+) -> Result<Fault, GenError> {
     check_reserved(op)?;
     let bytes_params: Vec<&str> = op
         .params
@@ -218,14 +410,36 @@ pub fn instantiate(op: &LoweredOp, name: &str) -> Result<Fault, GenError> {
         .filter(|(_, t)| t.is_bytes())
         .map(|(n, _)| n.as_str())
         .collect();
-    let (kind, level) = match name {
+    let (kind, levels): (Kind, Vec<Level>) = match name {
         "invert" => {
             if op.ret != Ty::Bool {
                 return Err(refuse(op, name, "invert needs a Bool result"));
             }
-            (Kind::Post(Expr::Core(Ir::Not(var(RESULT)))), Level::Core)
+            (
+                Kind::Post(Expr::Core(Ir::Not(var(RESULT)))),
+                vec![Level::Core],
+            )
         }
         "missing-error" => {
+            if let Ty::Result(ok, _) = &op.ret {
+                if let Ty::Tuple(components) = &**ok {
+                    // R3: the i-th component is the first parameter, in parameter order, of
+                    // exactly that type, else that type's zero.
+                    let mut parts = Vec::with_capacity(components.len());
+                    for c in components {
+                        parts.push(match op.params.iter().find(|(_, t)| t == c) {
+                            Some((n, _)) => Ir::Var(n.clone()),
+                            None => zero(c, op, name)?,
+                        });
+                    }
+                    let expr = Ir::If(
+                        Box::new(Ir::IsErr(var(RESULT))),
+                        Box::new(Ir::Ok(Box::new(Ir::Tuple(parts)))),
+                        var(RESULT),
+                    );
+                    return finish(op, name, Kind::Replace(expr_of(expr)), vec![Level::Tuple]);
+                }
+            }
             let payload_ok = matches!(&op.ret, Ty::Result(ok, _) if ok.is_bytes());
             let first = bytes_params.first();
             match (payload_ok, first) {
@@ -235,13 +449,13 @@ pub fn instantiate(op: &LoweredOp, name: &str) -> Result<Fault, GenError> {
                         Box::new(Ir::Ok(var(p))),
                         var(RESULT),
                     ))),
-                    Level::Core,
+                    vec![Level::Core],
                 ),
                 _ => {
                     return Err(refuse(
                         op,
                         name,
-                        "missing-error needs a Result<Bytes, E> result and a Bytes parameter",
+                        "missing-error needs a Result<Bytes, E> or Result<tuple, E> result and a Bytes parameter",
                     ))
                 }
             }
@@ -255,7 +469,7 @@ pub fn instantiate(op: &LoweredOp, name: &str) -> Result<Fault, GenError> {
                     "choice".to_string(),
                     Expr::Core(Ir::Not(var("choice"))),
                 )]),
-                Level::Core,
+                vec![Level::Core],
             )
         }
         "off-by-one" => {
@@ -274,7 +488,7 @@ pub fn instantiate(op: &LoweredOp, name: &str) -> Result<Fault, GenError> {
                         value: 1,
                     }),
                 ))),
-                Level::Core,
+                vec![Level::Core],
             )
         }
         "truncate-last" => {
@@ -287,7 +501,7 @@ pub fn instantiate(op: &LoweredOp, name: &str) -> Result<Fault, GenError> {
                     Box::new(Ir::Take(var(RESULT), len_minus_one(RESULT))),
                     var(RESULT),
                 ))),
-                Level::Core,
+                vec![Level::Core],
             )
         }
         "ignore-last-byte" => {
@@ -310,7 +524,7 @@ pub fn instantiate(op: &LoweredOp, name: &str) -> Result<Fault, GenError> {
                     )
                 })
                 .collect();
-            (Kind::Pre(rewrites), Level::Core)
+            (Kind::Pre(rewrites), vec![Level::Core])
         }
         "xor-lsb" => {
             let Some(t) = op.ret.fixed() else {
@@ -322,7 +536,7 @@ pub fn instantiate(op: &LoweredOp, name: &str) -> Result<Fault, GenError> {
                     Json::arr([Json::str("var"), Json::str(RESULT)]),
                     lit_data(t.name(), "1"),
                 ]))),
-                Level::Fixed,
+                vec![Level::Fixed],
             )
         }
         "ignore-high-bit" => {
@@ -348,7 +562,132 @@ pub fn instantiate(op: &LoweredOp, name: &str) -> Result<Fault, GenError> {
                     )
                 })
                 .collect();
-            (Kind::Pre(rewrites), Level::Fixed)
+            (Kind::Pre(rewrites), vec![Level::Fixed])
+        }
+        // `flip-result-bit` [D27, D35]: a fixed-width, `Bytes`/`Bytes<N>` or `Result` of those.
+        "flip-result-bit" => match &op.ret {
+            ret if ret.is_fixed() => {
+                let t = ret.name();
+                (
+                    Kind::Post(Expr::Data(Json::arr([
+                        Json::str("bit_xor"),
+                        Json::arr([Json::str("var"), Json::str(RESULT)]),
+                        lit_data(&t, "1"),
+                    ]))),
+                    vec![Level::Fixed],
+                )
+            }
+            ret if ret.is_bytes() => (
+                Kind::Post(expr_of(flip_expr(&Ir::Var(RESULT.to_string())))),
+                vec![Level::Fixed],
+            ),
+            Ty::Result(ok, _) if ok.is_bytes() => (
+                Kind::Post(expr_of(ok_form(op, name, |src| flip_expr(&src))?)),
+                vec![Level::Fixed, Level::Tuple],
+            ),
+            Ty::Result(ok, _) if ok.is_fixed() => {
+                let t = (**ok).clone();
+                (
+                    Kind::Post(expr_of(ok_form(op, name, |src| {
+                        fixed_node(
+                            "bit_xor",
+                            vec![
+                                src,
+                                Ir::Int {
+                                    ty: t.clone(),
+                                    value: 1,
+                                },
+                            ],
+                        )
+                    })?)),
+                    vec![Level::Fixed, Level::Tuple],
+                )
+            }
+            _ => {
+                return Err(refuse(
+                    op,
+                    name,
+                    "flip-result-bit needs a fixed-width, Bytes or Result of those result",
+                ))
+            }
+        },
+        // `drop-last-result-byte` [D27, D35]: `Bytes`/`Bytes<N>` or a `Result` of one.
+        "drop-last-result-byte" => match &op.ret {
+            ret if ret.is_bytes() => (
+                Kind::Post(expr_of(drop_last_expr(&Ir::Var(RESULT.to_string())))),
+                vec![Level::Core],
+            ),
+            Ty::Result(ok, _) if ok.is_bytes() => (
+                Kind::Post(expr_of(ok_form(op, name, |src| drop_last_expr(&src))?)),
+                vec![Level::Core, Level::Tuple],
+            ),
+            _ => {
+                return Err(refuse(
+                    op,
+                    name,
+                    "drop-last-result-byte needs a Bytes or Result<Bytes, E> result",
+                ))
+            }
+        },
+        // The second component replaced by `0` (VER04j 4.8), inside an `Ok` for a `Result`.
+        "drop-consumed" => {
+            let (components, inside) = tuple_target(op, name)?;
+            let second = &components[1];
+            if !(second.is_fixed() || *second == Ty::Nat) {
+                return Err(refuse(op, name, "drop-consumed needs a numeric second component"));
+            }
+            let zero_second = zero(second, op, name)?;
+            let n = components.len();
+            let rewrite = |src: Ir| {
+                let mut parts = vec![project(&src, 0), zero_second.clone()];
+                parts.extend((2..n).map(|i| project(&src, i)));
+                Ir::Tuple(parts)
+            };
+            let expr = if inside {
+                ok_form(op, name, rewrite)?
+            } else {
+                rewrite(Ir::Var(RESULT.to_string()))
+            };
+            (Kind::Post(expr_of(expr)), vec![Level::Tuple])
+        }
+        // The components of a homogeneous tuple exchanged (reversed, so a pair is swapped).
+        "swap-components" => {
+            let (components, inside) = tuple_target(op, name)?;
+            if components.iter().any(|c| *c != components[0]) {
+                return Err(refuse(op, name, "swap-components needs a homogeneous tuple"));
+            }
+            let n = components.len();
+            let rewrite = |src: Ir| Ir::Tuple((0..n).rev().map(|i| project(&src, i)).collect());
+            let expr = if inside {
+                ok_form(op, name, rewrite)?
+            } else {
+                rewrite(Ir::Var(RESULT.to_string()))
+            };
+            (Kind::Post(expr_of(expr)), vec![Level::Tuple])
+        }
+        // Success reported as the first error case of the error type (VER04j 4.8).
+        "ok-as-err" => {
+            let Ty::Result(ok, err_name) = &op.ret else {
+                return Err(refuse(op, name, "ok-as-err needs a Result<tuple, E> result"));
+            };
+            if !matches!(&**ok, Ty::Tuple(_)) {
+                return Err(refuse(op, name, "ok-as-err needs a Result<tuple, E> result"));
+            }
+            let Some(first) = errors
+                .iter()
+                .find(|e| e.name == *err_name)
+                .and_then(|e| e.cases.first())
+            else {
+                return Err(refuse(op, name, "ok-as-err needs the error type's cases"));
+            };
+            let expr = Ir::Match {
+                scrutinee: var(RESULT),
+                arms: vec![
+                    (Pat::Ok(Box::new(Pat::Wild)), Ir::Err(first.clone())),
+                    (Pat::ErrAny, Ir::Var(RESULT.to_string())),
+                ],
+            };
+            (Kind::Post(expr_of(expr)), vec![Level::Tuple])
         }
         _ => {
             return Err(GenError::new(
@@ -358,11 +697,27 @@ pub fn instantiate(op: &LoweredOp, name: &str) -> Result<Fault, GenError> {
             ))
         }
     };
+    finish(op, name, kind, levels)
+}
+
+/// Seal a fault: its `requires` is the sorted, duplicate-free union of `levels` and the levels of
+/// the op's types (a tuple parameter or result adds `ir.tuple`, R9).
+fn finish(
+    op: &LoweredOp,
+    name: &str,
+    kind: Kind,
+    mut levels: Vec<Level>,
+) -> Result<Fault, GenError> {
+    if op.params.iter().any(|(_, t)| t.contains_tuple()) || op.ret.contains_tuple() {
+        levels.push(Level::Tuple);
+    }
+    levels.sort_unstable();
+    levels.dedup();
     Ok(Fault {
         name: name.to_string(),
         op: op.name.clone(),
         kind,
-        level,
+        requires: levels,
     })
 }
 

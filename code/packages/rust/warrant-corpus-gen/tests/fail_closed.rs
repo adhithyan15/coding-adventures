@@ -48,14 +48,20 @@ fn match_needs_ir_data() {
 }
 
 #[test]
-fn a_tuple_projection_needs_ir_tuple() {
-    // S10b: a tuple literal and `project` are `ir.tuple` (VER04r 4.1, D20), not `ir.data`.
+fn a_tuple_projection_lowers_at_ir_tuple() {
+    // S10t-2: a tuple literal and `project` are `ir.tuple` (VER04r 4.1, D20) and are lowered, not
+    // refused: the unit `requires` the level (R9).
     let m = "  model tp(a: U8) -> U8 = (a, a).0\n";
-    assert_level(
-        &doc_ops(" v1", &["op f(a: Bytes, b: Bytes) -> Bool"], m),
-        "ir.tuple",
-        "tp",
-    );
+    let src = doc_ops(" v1", &["op f(a: Bytes, b: Bytes) -> Bool"], m);
+    with_file(&src, |f| {
+        let l = lower_document(f).unwrap();
+        let tp = l.model("tp").unwrap();
+        assert_eq!(tp.requires, ["ir.core", "ir.tuple"]);
+        assert_eq!(
+            tp.body.to_json().render().unwrap().split_whitespace().collect::<String>(),
+            r#"["project",["tuple",[["var","a"],["var","a"]]],0]"#
+        );
+    });
 }
 
 #[test]
@@ -63,7 +69,12 @@ fn match_on_a_result_is_ir_tuple_and_on_anything_else_ir_data() {
     // D35: `match` is `ir.tuple` exactly when the scrutinee's static type is a `Result`.
     let ops = ["op f(a: Bytes, b: Bytes) -> Bool"];
     let r2 = "  error E = BAD\n  model mk(a: U8) -> Result<U8, E> = Ok(a)\n  model rr(a: U8) -> U8 = match mk(a) with Ok(x) -> x | Err(e) -> 0u8\n";
-    assert_level(&doc_ops(" v1", &ops, r2), "ir.tuple", "rr");
+    with_file(&doc_ops(" v1", &ops, r2), |f| {
+        let l = lower_document(f).unwrap();
+        // the call closure and the tuple level: a match on a Result is ir.tuple
+        assert_eq!(l.model("rr").unwrap().requires, ["ir.core", "ir.tuple"]);
+        assert_eq!(l.model("mk").unwrap().requires, ["ir.core"]);
+    });
     let o = "  model oo(o: Bool) -> U8 = match o with true -> 1u8 | false -> 0u8\n";
     assert_level(&doc_ops(" v1", &ops, o), "ir.data", "oo");
 }
@@ -89,13 +100,15 @@ fn constructors_and_option_built_ins_need_ir_data() {
 }
 
 #[test]
-fn a_tuple_type_in_a_model_signature_needs_ir_tuple() {
-    let m = "  model tt(a: U8) -> (U8, U8) = (a, a)\n";
-    assert_level(
-        &doc_ops(" v1", &["op f(a: Bytes, b: Bytes) -> Bool"], m),
-        "ir.tuple",
-        "tt",
-    );
+fn a_tuple_type_in_a_model_signature_needs_ir_tuple_by_type_alone() {
+    // R9, the type half: the level comes from the type even where no tuple tag appears.
+    let m = "  model tt(a: U8) -> (U8, U8) = (a, a)\n  model through(t: (U8, U8)) -> (U8, U8) = t\n";
+    with_file(&doc_ops(" v1", &["op f(a: Bytes, b: Bytes) -> Bool"], m), |f| {
+        let l = lower_document(f).unwrap();
+        assert_eq!(l.model("tt").unwrap().ret.name(), "(U8,U8)");
+        // `through` has no tuple tag at all and is `ir.tuple` all the same
+        assert_eq!(l.model("through").unwrap().requires, ["ir.core", "ir.tuple"]);
+    });
 }
 
 #[test]
@@ -270,7 +283,7 @@ fn a_refinement_that_calls_the_subject_is_w0701() {
 
 #[test]
 fn census_reports_each_blocked_item_without_failing_the_document() {
-    let extra = "  model ok(a: U8) -> U8 = a\n  model fx(a: U8) -> U8 = bit_not(a)\n  model dat(a: U8) -> U8 = (a, a).0\n  model uses_fx(a: U8) -> U8 = fx(a)\n  claim clean:\n    forall a: Bytes. f(a, a) == true\n  claim via_model:\n    forall a: U8. f(b\"\", b\"\") == (uses_fx(a) == 0u8)\n  claim via_data:\n    forall a: U8. f(b\"\", b\"\") == (dat(a) == 0u8)\n  example e_clean:\n    f(b\"\", b\"\") == true\n";
+    let extra = "  model ok(a: U8) -> U8 = a\n  model fx(a: U8) -> U8 = bit_not(a)\n  model dat(a: U8) -> Nat = len([a, a])\n  model uses_fx(a: U8) -> U8 = fx(a)\n  claim clean:\n    forall a: Bytes. f(a, a) == true\n  claim via_model:\n    forall a: U8. f(b\"\", b\"\") == (uses_fx(a) == 0u8)\n  claim via_data:\n    forall a: U8. f(b\"\", b\"\") == (dat(a) == 0)\n  example e_clean:\n    f(b\"\", b\"\") == true\n";
     let src = doc_ops(" v1", &["op f(a: Bytes, b: Bytes) -> Bool"], extra);
     let rows = with_file(&src, |f| census(f).expect("census"));
     let get = |kind, name: &str| {
@@ -286,7 +299,7 @@ fn census_reports_each_blocked_item_without_failing_the_document() {
     );
     assert_eq!(
         get(ItemKind::Model, "dat").blocked.as_ref().unwrap().level,
-        Some("ir.tuple")
+        Some("ir.data")
     );
     // a model that calls a blocked model inherits the blocker
     assert_eq!(
@@ -312,7 +325,7 @@ fn census_reports_each_blocked_item_without_failing_the_document() {
             .as_ref()
             .unwrap()
             .level,
-        Some("ir.tuple")
+        Some("ir.data")
     );
     assert!(get(ItemKind::Example, "e_clean").blocked.is_none());
     // and the whole document is refused with the first blocker in declaration order
@@ -498,7 +511,7 @@ fn an_op_refinement_beyond_ir_core_blocks_the_op_and_its_callers() {
 }
 
 #[test]
-fn an_alias_of_a_core_type_is_resolved_away_and_an_alias_of_a_tuple_is_refused() {
+fn an_alias_of_a_core_type_or_of_a_tuple_is_resolved_away() {
     let ok = doc_ops(
         " v1",
         &["op f(a: Bytes, b: Bytes) -> Bool"],
@@ -515,7 +528,12 @@ fn an_alias_of_a_core_type_is_resolved_away_and_an_alias_of_a_tuple_is_refused()
         &["op f(a: Bytes, b: Bytes) -> Bool"],
         "  model Pair = (U8, U8)\n  model uses(a: Pair) -> Bool = true\n",
     );
-    assert_level(&tuple, "ir.tuple", "uses");
+    with_file(&tuple, |f| {
+        let l = lower_document(f).unwrap();
+        assert_eq!(l.models.len(), 1);
+        assert_eq!(l.models[0].params[0].1.name(), "(U8,U8)");
+        assert_eq!(l.models[0].requires, ["ir.core", "ir.tuple"]);
+    });
 }
 
 // ---- M1: the v0 guard through a model call; L4: examples; L3 ----------------------------

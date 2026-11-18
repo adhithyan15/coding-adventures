@@ -126,6 +126,48 @@ func TestGameClockCorpusSelectsRustConsumerOnly(t *testing.T) {
 	}
 }
 
+func TestHamurabiCorpusSelectsRegisteredRustConsumer(t *testing.T) {
+	languages := []string{
+		"rust", "go", "python", "typescript", "csharp", "fsharp", "java", "kotlin", "dart",
+		"swift", "haskell", "c", "cpp", "ocaml", "ruby", "elixir", "lua", "perl",
+	}
+	packages := make([]discovery.Package, 0, len(languages))
+	wantAll := make(map[string]bool, len(languages))
+	for _, language := range languages {
+		name := language + "/hamurabi"
+		packages = append(packages, discovery.Package{Name: name, Language: language})
+		wantAll[name] = true
+	}
+	corpus := []string{"code/specs/fixtures/hamurabi-v1/cases.json"}
+	got, err := repositoryInputConsumersForChange(corpus, packages, "all")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !reflect.DeepEqual(got, wantAll) {
+		t.Fatalf("all-lane selection got %v, want %v", got, wantAll)
+	}
+	for _, language := range languages {
+		packageName := language + "/hamurabi"
+		got, err := repositoryInputConsumersForChange(corpus, packages, language)
+		if err != nil || !reflect.DeepEqual(got, map[string]bool{packageName: true}) {
+			t.Fatalf("%s-only selection got %v, err %v", language, got, err)
+		}
+	}
+	for path, wantMatch := range map[string]bool{
+		"code/specs/fixtures/hamurabi-v1/cases.json":     true,
+		"code/specs/fixtures/hamurabi-v10/cases.json":    false,
+		"code/specs/fixtures/hamurabi-v1":                false,
+		"code/specs/fixtures/hamurabi-v1-old/cases.json": false,
+	} {
+		if got := isHamurabiCorpus(path); got != wantMatch {
+			t.Errorf("isHamurabiCorpus(%q) = %v, want %v", path, got, wantMatch)
+		}
+	}
+	if _, err := repositoryInputConsumersForChange(corpus, packages[1:], "rust"); err == nil {
+		t.Fatal("missing registered Rust Hamurabi consumer must fail closed")
+	}
+}
+
 func TestTrigReferenceCorpusSelectsConvertedPorts(t *testing.T) {
 	packages := []discovery.Package{
 		{Name: "python/trig", Language: "python"},
@@ -465,6 +507,34 @@ func TestRepositoryInputConsumersForChange(t *testing.T) {
 				t.Fatalf("got %v, want %v", got, tc.want)
 			}
 		})
+	}
+}
+
+func TestVer04pDomainDiagnosticSelectsWarrantGrammar(t *testing.T) {
+	packages := []discovery.Package{{Name: "rust/warrant-grammar", Language: "rust"}}
+	cases := map[string]bool{
+		"code/specs/VER04p-warrant-floats.md":                true,
+		"code/scripts/ver04p_domain_witnesses.py":            true,
+		"code/scripts/tests/test_ver04p_domain_witnesses.py": true,
+		"code/specs/VER04p-warrant-floats.md.bak":            false,
+		"code/scripts/tests/test_other_domain_witnesses.py":  false,
+		"code/specs/AUDIO-WORKSTATION-BACKLOG.md":            false,
+	}
+	for path, want := range cases {
+		if got := isWarrantGrammarInput(path); got != want {
+			t.Errorf("isWarrantGrammarInput(%q) = %v, want %v", path, got, want)
+		}
+		got, err := repositoryInputConsumersForChange([]string{path}, packages, "all")
+		if err != nil {
+			t.Fatal(err)
+		}
+		wantConsumers := map[string]bool{}
+		if want {
+			wantConsumers["rust/warrant-grammar"] = true
+		}
+		if !reflect.DeepEqual(got, wantConsumers) {
+			t.Errorf("change %q selects %v, want %v", path, got, wantConsumers)
+		}
 	}
 }
 

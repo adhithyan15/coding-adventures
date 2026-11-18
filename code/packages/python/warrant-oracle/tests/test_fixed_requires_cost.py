@@ -79,9 +79,8 @@ def test_levels_refuse_what_they_cannot_classify():
     with pytest.raises(OracleError) as err:
         L.ir_levels(["model_call", "nowhere", []])
     assert err.value.code == "ir"
-    with pytest.raises(OracleError) as err:  # a match is typed by its scrutinee (S10t)
-        L.ir_levels(["match", V("a"), []])
-    assert err.value.code == "level" and err.value.level == "ir.data"
+    # S10t-1: an IR ``match`` is ``ir.tuple`` (the lowerer only lowers a match on a Result)
+    assert L.ir_levels(["match", V("a"), [[["wild"], V("b")]]]) == ["ir.core", "ir.tuple"]
     assert L.tag_level("match") is None and L.tag_level("nope") is None
 
 
@@ -157,18 +156,20 @@ def test_a_tuple_type_adds_ir_tuple_even_without_a_tuple_tag():
     assert all(s.unsupported is None for s in spec.suites)
 
 
-def test_tuple_tags_and_match_are_refused_with_the_level_ir_tuple():
+def test_tuple_tags_and_match_on_a_result_lower_and_are_evaluable_since_s10t1():
     for body, params in (
         ("(a, a) == (a, a)", "a: U8"),
         ("a.0 == 1", "a: (Nat, Nat)"),
     ):
         spec = lower(f"warrant t v1\n  model m({params}) -> Bool = {body}\n")
-        assert spec.models["m"].unsupported.level == "ir.tuple"
+        assert spec.models["m"].unsupported is None
+        assert spec.models["m"].requires == ("ir.core", "ir.tuple")
     spec = lower(
         "warrant t v1\n  error E = A\n  op k(a: U8) -> Result<U8, E>\n"
         "  claim c:\n    forall a: U8. match k(a) with Ok(x) -> true | Err(E.A) -> false\n"
     )
-    assert spec.suites[0].unsupported.level == "ir.tuple"  # match on a Result (D35)
+    assert spec.suites[0].unsupported is None  # match on a Result (D35) is ir.tuple, evaluated
+    assert spec.suites[0].requires == ("ir.core", "ir.tuple")
     spec = lower(
         "warrant t v1\n  model m(a: U8) -> Bool = match a with x -> true\n"
     )
@@ -177,10 +178,10 @@ def test_tuple_tags_and_match_are_refused_with_the_level_ir_tuple():
 
 def test_a_claim_calling_an_unlowerable_model_inherits_its_level():
     spec = lower(
-        "warrant t v1\n  op f(a: U8) -> U8\n  model g(a: U8) -> Bool = (a, a) == (a, a)\n"
+        "warrant t v1\n  op f(a: U8) -> U8\n  model g(a: U8) -> Bool = [a] == [a]\n"
         "  claim c:\n    forall a: U8. g(a) == (f(a) == a)\n"
     )
-    assert spec.suites[0].unsupported.level == "ir.tuple"
+    assert spec.suites[0].unsupported.level == "ir.data"
 
 
 # -- the typed compiler: cost ---------------------------------------------------------------
@@ -330,11 +331,11 @@ def test_the_typed_compiler_refuses_an_option_in_models_ops_and_variables():
     assert err.value.level == "ir.data"
 
 
-def test_a_tuple_tag_is_named_at_ir_tuple_by_the_compiler():
+def test_a_malformed_tuple_tag_is_an_ir_error_not_a_level():
     for tag in ("tuple", "project"):
         with pytest.raises(OracleError) as err:
             compiled([tag, V("a")], {"a": U8})
-        assert err.value.code == "level" and err.value.level == "ir.tuple"
+        assert err.value.code == "ir"
 
 
 # -- evaluation still refuses -------------------------------------------------------------------

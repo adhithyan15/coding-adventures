@@ -310,7 +310,9 @@ exit 0
 		t.Fatal(err)
 	}
 	defer fh.Close()
-	probeTrace(t, "record-step", tracePath)
+	// The step's wall time comes from its sidecar's started_at/ended_at, so the
+	// PROBE line carries step_wall_ms, parse_ms and parse_share (G2 census).
+	probeTraceWall(t, "record-step", tracePath, wallFromSidecar(sc0))
 	tr, err := trace.ParseOptions(fh, pkgDir, trace.Options{HelperRoot: true, HelperExe: kiln})
 	if err != nil {
 		raw, _ := os.ReadFile(tracePath)

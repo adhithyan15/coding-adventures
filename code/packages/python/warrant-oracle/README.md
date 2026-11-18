@@ -22,17 +22,17 @@ It is **stdlib-only**, shares no code, data file or table with the generator, an
 **never reads the generator's IR as truth**: it parses the `.warrant` source and
 lowers it itself, then only *compares*.
 
-## What is here (slice S4, parts 1 and 2, and S10a)
+## What is here (slice S4, parts 1 and 2, S10a and S10t-1)
 
 | Part | Module | Notes |
 |---|---|---|
 | reader | `lexer`, `parser`, `ast` | layout tokens, v0 + VER04j v1 + VER04k WX-G syntax, fail-closed, admission limits |
-| checker + lowering | `lower`, `levels` | typing, contextual literals, **unoptimised** syntax-directed IR, the 35 `ir.fixed` built-ins, `requires` inference, named level errors |
-| evaluator | `ir_eval` | `ir.core`, the single wrapping rule (VER04 section 3), `MAX_IR_VALUE`, cost bound, call counting |
+| checker + lowering | `lower`, `levels`, `patterns`, `irtree` | typing, contextual literals, **unoptimised** syntax-directed IR, the 35 `ir.fixed` built-ins, tuples and `match` on a `Result` (`ir.tuple`), `requires` inference, named level errors |
+| evaluator | `ir_eval` | `ir.core` and `ir.tuple`, the single wrapping rule (VER04 section 3), `MAX_IR_VALUE`, cost bound, call counting (a `match` arm is a guard) |
 | domains | `domains` | every descriptor of VER04r 5.1, `size`/`nth`, budget demotion |
 | streams | `stream` | `warrant-stream-v1/v2` encoders, chunk and suite framing, FNV-1a slim selection |
 | suites | `suites` | product enumeration, admission arithmetic, chunking, per-chunk digests |
-| gate | `corpus_v1`, `emit`, `cli`, `lowering_dump` | the ct-compare v1 gate, v2 digest emitter, level census, lowering dump |
+| gate | `corpus_v1`, `emit`, `cli`, `lowering_dump`, `parity_dumps` | the ct-compare v1 gate, v2 digest emitter, level census, lowering, evaluation and fault dumps |
 | v2 gate (part 2) | `corpus_v2`, `faults`, `tfv`, `verify_v2` | derives a whole v2 fixture from the `.warrant` and `corpus.profile`; `verify-v2` compares it with the directory |
 
 Every adopter parses: ct-compare, gf256, wasm-leb128, logic-gates, lzw,
@@ -40,15 +40,17 @@ arithmetic, x25519 (and the WX-G `inout`/`ensures` syntax of zeroize).
 
 ### Feature levels
 
-The evaluator implements **`ir.core`** only (VER04r section 4.1). Since slice S10a the
-lowerer also **lowers, types and costs the 35 built-ins of `ir.fixed`** (Appendix A.1; see
-below), so a model, op `admit`, claim or example that uses them has its IR and its computed
-`requires`, and is then recorded `not-live` at the level `ir.fixed`: *evaluation still
-refuses*. A construct the lowerer cannot lower, `ir.tuple` (tuple tags, `match` on a
-`Result`), `ir.data` (records, variants, `match` on anything else, `Option` anywhere but
-the intermediate use of `ir.fixed`) or the reserved `ir.seq`, is recorded with that level
-*named*; it is never skipped silently. A unit is named by the first construct beyond what the
-lowerer can lower, and `ir.fixed` only when nothing else is. Census at this commit:
+The evaluator implements **`ir.core` and `ir.tuple`** (VER04r section 4.1; `ir.tuple` since slice
+S10t-1, see below). Since slice S10a the lowerer also **lowers, types and costs the 35 built-ins of
+`ir.fixed`** (Appendix A.1; see below), so a model, op `admit`, claim or example that uses them has
+its IR and its computed `requires`, and is then recorded `not-live` at the level `ir.fixed`:
+*evaluation still refuses* (slice S10c-1). A construct the lowerer cannot lower, `ir.data` (records,
+variants, `match` on anything but a `Result`, `Option` anywhere but the intermediate use of
+`ir.fixed`) or the reserved `ir.seq`, is recorded with that level *named*; it is never skipped
+silently. A unit is named by the first construct beyond what the lowerer can lower, and `ir.fixed`
+only when nothing else is. Census (the pins of `tests/test_lower.py::CENSUS`); the `ir.tuple` column
+is empty since S10t-1 because tuples are evaluated, so a suite that needs tuples is `ir.core`
+(evaluable) or, when it also uses a fixed-width built-in, `ir.fixed`:
 
 | Adopter | suites | `ir.core` | `ir.fixed` | `ir.tuple` | `ir.data` |
 |---|---:|---:|---:|---:|---:|
@@ -56,9 +58,50 @@ lowerer can lower, and `ir.fixed` only when nothing else is. Census at this comm
 | gf256 | 38 | 38 | 0 | 0 | 0 |
 | x25519 | 8 | 6 | 2 | 0 | 0 |
 | lzw | 21 | 4 | 17 | 0 | 0 |
-| wasm-leb128 | 42 | 10 | 8 | 24 | 0 |
-| logic-gates | 88 | 28 | 55 | 2 | 3 |
-| arithmetic | 63 | 5 | 9 | 4 | 45 |
+| wasm-leb128 | 42 | 18 | 24 | 0 | 0 |
+| logic-gates | 88 | 28 | 57 | 0 | 3 |
+| arithmetic | 63 | 7 | 11 | 0 | 45 |
+
+(Before S10t-1: wasm-leb128 10 / 8 / 24 / 0, logic-gates 28 / 55 / 2 / 3, arithmetic 5 / 9 / 4 / 45.)
+
+### `ir.tuple`: tuples and `match` on a `Result` (slice S10t-1)
+
+* **Forms** (Appendix A.1, R2): the type `(T1,..,Tn)` (2 to 8 components), the literal
+  `["tuple", [e1, .., en]]`, `["project", e, i]` (`t.i`, a chain `t.0.1`, or `f(x).1`), values as
+  Python tuples and JSON arrays, stream tag `64` with a `u32` count, TFV `L<n> v1 .. vn`, the
+  descriptor `tuple` (Cartesian product, last component fastest) and component-wise `==`/`!=`.
+* **`match` on a `Result`** with the patterns `ok err err_any tuple bind wild`
+  (`["match", s, [[pat, arm], ..]]`) in claims, models, op `admit`s and examples. It is `ir.tuple`
+  exactly when the scrutinee is a `Result` (D35); any other scrutinee is `ir.data`. Cost is
+  `1 +` the scrutinee `+` the maximum over the arms; exactly one arm is evaluated. A literal pattern
+  (`Ok(true)`) is not one of the six and is `ir.data`; `Err(e)` is `err_any`, and `e` may not be used
+  (an error value has no IR form).
+* **Corpus errors** (code `corpus`, checked before any arm body is lowered, `patterns.py`): a match
+  that can fall through, an arm no value can reach (the usual usefulness check), the same `bind`
+  twice in one pattern, and a `bind` that shadows a binder, a parameter, `result` or an outer `bind`.
+* **Lowering-time `W0701`** (CV2-F1): a subject call under an impure guard (VER04r 4.4) and a claim that
+  calls no op (4.3) are refused when the claim is lowered, as the generator refuses them (recorded in
+  `LoweredSuite.refusal`, raised by `derive`, `emit-v2` and `dump-lowering`). A non-omitted example with a
+  `Bytes` over 4,096 bytes is a `limit` error (VER04r 2.3).
+* **A `match` arm is a guard** for call counting (VER04r 4.4): a subject call in an arm needs a pure
+  scrutinee, and then only the arm the scrutinee selects counts; the wrap trace, the D19 admit check
+  and the v0 rule-3 walk follow the same arm (`irtree.children` and `ir_eval.walk_scoped`).
+* **Emission**: `derive`, `emit-v2` and `verify-v2` now evaluate `ir.tuple` suites and examples
+  (`levels_implemented` is `["ir.core", "ir.tuple"]`); `ir.fixed` documents still refuse.
+* **`requires`** (R9) was already type-directed since S10a; S10t-1 pins every place a tuple type
+  can hide (binder, op or model parameter or result, an example value, a pattern binder) and a
+  fault row's `requires` now also counts the types of its op.
+* **Faults** (`faults.py`): `ok-as-err`, `drop-consumed`, `swap-components`, the tuple-payload
+  `missing-error` (R3) and the `Ok` forms of `flip-result-bit` and `drop-last-result-byte` are
+  instantiated as data. **Their evaluation is gated** exactly like `ir.fixed`'s: `IMPLEMENTED` is
+  `("ir.core",)`, so a control that needs `ir.tuple` has `{"claim": C, "deferred": "ir.tuple"}`
+  witnesses; the atomic flip (S10c) turns the gate on, and until then only the library parameter
+  `derive(..., implemented=...)` reaches the witness search (tests only).
+* **The committed dumps** (`tests/fixtures/tuple-forms-v1/`, generated by `make_tuple_forms.py`,
+  which `BUILD` runs with `--check`): the document, the lowering dump, the evaluation dump
+  (`parity_dumps.evaluation_view`), the fault dump (`parity_dumps.faults_view`, **normative for the
+  composite fault JSON**, R11) and every corpus-error document with its refusal. Slice S10t-2 (the
+  generator) must reproduce them byte for byte. They carry no generator name or version.
 
 ### `ir.fixed` lowering, `requires` and the lowering dump (slice S10a)
 
@@ -253,8 +296,9 @@ subject-dependent argument the op's `admit` reads refused statically (VER04r 4.5
 
 ## Not yet done
 
-* Evaluating `ir.fixed` (slice S10c-1), `ir.tuple` (S10t), `ir.data` (S11) and `inout`/`ensures`
-  monitoring (S12): a document above `ir.core` is refused whole, naming the level.
+* Evaluating `ir.fixed` (slice S10c-1), `ir.data` (S11) and `inout`/`ensures` monitoring (S12): a
+  document above `ir.tuple` is refused whole, naming the level. The fault-evaluation gate for
+  `ir.fixed` and `ir.tuple` is turned on at the atomic flip (S10c).
 * The oracle's `domain_label`/`depth` rows are emitted but not yet compared with a
   lane manifest.
 * The shape of `assumes` (VER04r 16.4 item 4); `verify-v2` expects `[]`.

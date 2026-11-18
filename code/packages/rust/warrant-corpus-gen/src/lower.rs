@@ -57,6 +57,40 @@
 //! for such documents; [`Partial::into_lowered_with_fixed`] hands the IR to the parity dump
 //! (`tests/fixed_parity.rs`), which is what S10b has to reproduce byte for byte.
 //!
+//! ## `ir.tuple` (slice S10t-2): tuples, `project` and `match` on a `Result`
+//!
+//! The tuple type `(T1,..,Tn)`, the literal `["tuple", [..]]`, `["project", e, i]` (also `t.i`,
+//! `t.0.1`, `f(x).1`) and `match` on a `Result` with the six patterns of Appendix A.1 are lowered
+//! like the core forms, written from the spec and compared byte for byte with the oracle's
+//! committed dumps (`tests/tuple_parity.rs`).  What is different from a core form:
+//!
+//! ```text
+//!   patterns    lowered and checked BEFORE any arm body (so a corpus error cannot hide behind
+//!               a body refused at a level): duplicate bind, shadowing bind, then, per match,
+//!               unreachable arms in arm order, then fall-through (R12); all of them `ir`
+//!   Err(e)      lowers to ["err_any"]: an error value has no IR form, so an arm that *uses* `e`
+//!               is refused at `ir.data`; `Err(_)` is the same node
+//!   arm typing  an arm that needs a context takes the first self-typed arm's type, as `if`
+//!               does; the arms must unify, else a `type` error (not a corpus error)
+//!   scrutinee   `match` is `ir.tuple` exactly when the scrutinee's static type is a `Result`
+//!               and `ir.data` for any other type
+//!   requires    R9, the type half: a binder, parameter, result or sub-expression whose type is or
+//!               contains a tuple adds `ir.tuple` even where no tuple tag appears
+//! ```
+//!
+//! The grammar crate's checker enforces the same match rules (`W0301`, `W0203`), so the corpus
+//! errors usually reach this generator as a checker refusal; [`check_or_refuse`] maps those three
+//! kinds, and only those, to the generator code `ir`, naming the precise corpus error by
+//! re-lowering the document without the checker.
+//!
+//! ## Static widths flow to `Bytes<N>` everywhere (VER04r A.1, slice S10t)
+//!
+//! A `concat` of two statically sized operands, a bytes literal and an `if` of equal widths are
+//! `Bytes<N>` to the checker.  This typer forgets the width in the *type* (it stays `Bytes`) and
+//! records it as the node is lowered; [`Lowerer::flows`] reads it back wherever a value flows to
+//! a `Bytes<N>`: a model body to its declared result, an `Ok` payload, an argument to its
+//! parameter, and the operand of `from_be`/`from_le`.  (Before S10t only the last did.)
+//!
 //! `Option<T>` is an IR-only intermediate (D23, R8): nine built-ins produce one and
 //! `unwrap_or` consumes it, as its first operand and directly; anywhere else it is refused with
 //! the level `ir.data` (it is [`Ty::Option`], and it never reaches a signature).
@@ -82,19 +116,23 @@
 //! fixed-width `+ - *` or unary `-` with a subject call beneath it (VER04r 3.3 rule 3) are
 //! `W0701` refusals: the document is well typed but the corpus cannot express it honestly.
 
-use std::collections::{HashMap, HashSet};
+use std::collections::{BTreeSet, HashMap, HashSet};
 
-use coding_adventures_warrant_grammar::checker::check_warrant;
+use coding_adventures_warrant_grammar::checker::{check_warrant, CheckerError, CheckerErrorKind};
 use coding_adventures_warrant_grammar::fixed::FixedTy;
 use coding_adventures_warrant_grammar::parser::{
-    AssumptionsDecl, BinaryOp, ClaimDecl, Declaration, ExampleDecl, Expression, Literal, ModelDecl,
-    OpDecl, Parameter, TypeExpr, UnaryOp, Version, WarrantFile, Width as AstWidth,
+    AssumptionsDecl, BinaryOp, ClaimDecl, Declaration, ExampleDecl, Expression, Literal, MatchArm,
+    ModelDecl, OpDecl, Parameter, Pattern, ProjKey, TypeExpr, UnaryOp, Version, WarrantFile,
+    Width as AstWidth,
 };
 
 use crate::analysis::{check_pure_guards, check_v0_static_arith};
 use crate::error::{code, Beyond, GenError};
-use crate::ir::{self, Arith, Cmp, Ir, Logic, MAX_IR_DEPTH, OPTION_PRODUCERS, STATIC_TYPE_TAGS};
+use crate::ir::{
+    self, Arith, Cmp, Ir, Logic, Pat, MAX_IR_DEPTH, OPTION_PRODUCERS, STATIC_TYPE_TAGS,
+};
 use crate::json::Json;
+use crate::patterns::{self, MAX_PATTERN_DEPTH, MAX_TUPLE_ARITY};
 use crate::types::{Ty, Width};
 
 /// Expression nesting limit while lowering (VER04 section 2: "64 nested expression nodes
@@ -258,9 +296,12 @@ pub struct LoweredExample {
     pub name: String,
     /// The whole Bool body.
     pub body: Ir,
-    /// Its decomposition: exactly one subject call compared with a pure value (anything
-    /// else is refused at lowering, so this is always present).
-    pub reference: ExampleRef,
+    /// Its decomposition: exactly one subject call compared with a pure value.  Anything
+    /// else is refused at lowering (`W0701`) **unless** the profile has an `omit_example` line
+    /// for the example (VER04r 8.4, [D34]): then the shape decision is deferred and this is
+    /// `None`, which the example stage reads as the reason `not-op-eq-pure`.  Only an
+    /// omitted example can be `None`.
+    pub reference: Option<ExampleRef>,
     /// The sorted levels of the body and its model closure (R9).
     pub requires: Vec<&'static str>,
 }
@@ -519,6 +560,31 @@ pub fn lower_document(file: &WarrantFile<'_>) -> Result<Lowered, GenError> {
     lower_partial(file)?.into_lowered()
 }
 
+/// [`lower_document`] for a document whose profile has `omit_example` lines: an example whose
+/// full id (`warrant/<module>/example/<name>`) is in `omit` and whose shape is not
+/// `op(args) == pure` is **classified, not refused**: its [`LoweredExample::reference`] is
+/// `None` and the impure-guard and v0 rule-3 refusals of its body are not applied, as the
+/// oracle's lowering never applies them to an example (VER04r 8.4).  Every other refusal
+/// (a level, a type error, a limit) still refuses the document, and an example that is not
+/// named in `omit` is refused exactly as in [`lower_document`].
+///
+/// # Errors
+///
+/// As [`lower_document`].
+pub fn lower_document_omitting(
+    file: &WarrantFile<'_>,
+    omit: &[String],
+) -> Result<Lowered, GenError> {
+    check_or_refuse(file, || {
+        let mut lowerer = Lowerer::new(file);
+        lowerer.omit_examples = omit.to_vec();
+        lowerer.run()
+    })?;
+    let mut lowerer = Lowerer::new(file);
+    lowerer.omit_examples = omit.to_vec();
+    lowerer.run()?.into_lowered()
+}
+
 /// [`lower_document`] that also accepts the `ir.fixed` units (S10b): the document lowered in
 /// full, `ir.fixed` included, for the parity dump.  Everything else is refused as before.  The
 /// result must never reach the evaluator or the emitter: its models and suites may hold
@@ -539,13 +605,11 @@ pub fn lower_document_with_fixed(file: &WarrantFile<'_>) -> Result<Lowered, GenE
 /// and dumps and which the generator refuses everywhere else.  Never use this for a document
 /// whose lowering is evaluated or emitted.
 fn lower_partial_for_dump(file: &WarrantFile<'_>) -> Result<Partial, GenError> {
-    if let Err(e) = check_warrant(file) {
-        return Err(GenError::new(
-            code::CHECK,
-            "",
-            format!("the document does not pass the checker ({})", e.code),
-        ));
-    }
+    check_or_refuse(file, || {
+        let mut lowerer = Lowerer::new(file);
+        lowerer.skip_pure_guards = true;
+        lowerer.run()
+    })?;
     let mut lowerer = Lowerer::new(file);
     lowerer.skip_pure_guards = true;
     lowerer.run()
@@ -561,14 +625,108 @@ pub fn census(file: &WarrantFile<'_>) -> Result<Vec<CensusRow>, GenError> {
 /// Lower every item independently, keeping refusals per item.  Only a malformed document
 /// (checker error, type error, resource limit) is an `Err`.
 pub fn lower_partial(file: &WarrantFile<'_>) -> Result<Partial, GenError> {
-    if let Err(e) = check_warrant(file) {
+    check_or_refuse(file, || lower_partial_unchecked(file))?;
+    lower_partial_unchecked(file)
+}
+/// Run the S2 checker; a refusal is `code == "check"` (the checker's own diagnostic code in the
+/// message), **except** the three that are corpus errors of Appendix A.1 and so the generator code
+/// `ir` (VER04r 16.10 R2, R12): a `match` that falls through (`NonExhaustiveMatch`), an arm no
+/// value can reach (`RedundantArm`), and a pattern name that repeats or shadows another
+/// (`ShadowedBinding` raised at a match arm).  The checker enforces the same match rules as the
+/// oracle's `patterns.py`, so a corpus-error document is refused here before the lowerer sees it;
+/// to name *which* corpus error (and in the oracle's order: patterns before bodies), the document
+/// is lowered once more **without** the checker (`unchecked`) and that refusal is used when it is
+/// an `ir` one.
+///
+/// A name the checker refuses as a bind and the oracle accepts (a bind named like a model, an op,
+/// an error type, a variant constructor or a reserved built-in) is also `ir` here: the generator
+/// is stricter than the oracle there, and says so with the shadowing sentence.
+fn check_or_refuse(
+    file: &WarrantFile<'_>,
+    unchecked: impl FnOnce() -> Result<Partial, GenError>,
+) -> Result<(), GenError> {
+    let Err(e) = check_warrant(file) else {
+        return Ok(());
+    };
+    let generic = match &e.kind {
+        CheckerErrorKind::NonExhaustiveMatch => Some(patterns::FALLS_THROUGH),
+        CheckerErrorKind::RedundantArm => Some(patterns::UNREACHABLE),
+        CheckerErrorKind::ShadowedBinding(_) if is_match_arm(file, &e) => {
+            Some(patterns::SHADOWING_BIND)
+        }
+        _ => None,
+    };
+    let Some(generic) = generic else {
         return Err(GenError::new(
             code::CHECK,
             "",
             format!("the document does not pass the checker ({})", e.code),
         ));
+    };
+    match unchecked() {
+        Err(precise) if precise.code == code::IR => Err(precise),
+        _ => Err(GenError::new(code::IR, "", generic)),
     }
-    lower_partial_unchecked(file)
+}
+
+/// Is the checker error located at a `match` arm of the document (its span is an arm's)?
+fn is_match_arm(file: &WarrantFile<'_>, e: &CheckerError) -> bool {
+    fn arms_of<'e, 'a>(root: &'e Expression<'a>, out: &mut Vec<&'e MatchArm<'a>>) {
+        let mut stack = vec![root];
+        while let Some(x) = stack.pop() {
+            match x {
+                Expression::Quantified { binders, body, .. } => {
+                    stack.extend(binders.iter().filter_map(|b| b.refinement.as_ref()));
+                    stack.push(body);
+                }
+                Expression::Conditional {
+                    condition,
+                    then_branch,
+                    else_branch,
+                    ..
+                } => stack.extend([&**condition, &**then_branch, &**else_branch]),
+                Expression::Match { target, arms, .. } => {
+                    stack.push(target);
+                    for a in arms {
+                        out.push(a);
+                        stack.push(&a.body);
+                    }
+                }
+                Expression::Binary { left, right, .. } => stack.extend([&**left, &**right]),
+                Expression::Unary { operand, .. } => stack.push(operand),
+                Expression::Grouped { inner, .. } => stack.push(inner),
+                Expression::List { elements, .. } | Expression::Tuple { elements, .. } => {
+                    stack.extend(elements)
+                }
+                Expression::Reference { args, .. } => {
+                    stack.extend(args.iter().flat_map(|a| a.iter()))
+                }
+                Expression::Project { base, .. } => stack.push(base),
+                Expression::Literal { .. } => {}
+            }
+        }
+    }
+    let mut arms = Vec::new();
+    for d in &file.declarations {
+        match d {
+            Declaration::Model(m) => {
+                if let Some(b) = &m.body {
+                    arms_of(b, &mut arms);
+                }
+            }
+            Declaration::Claim(c) => arms_of(&c.body, &mut arms),
+            Declaration::Example(x) => arms_of(&x.body, &mut arms),
+            Declaration::Op(o) => {
+                for p in &o.params {
+                    if let Some(r) = &p.refinement {
+                        arms_of(r, &mut arms);
+                    }
+                }
+            }
+            _ => {}
+        }
+    }
+    arms.iter().any(|a| a.span == e.span)
 }
 
 /// [`lower_partial`] without the checker, so the unit tests can reach the defensive
@@ -638,6 +796,12 @@ struct Lowerer<'f, 'a> {
     /// Do not apply VER04r 4.4's impure-guard refusal (the parity dump only, see
     /// [`lower_partial_for_dump`]).
     skip_pure_guards: bool,
+    /// The full ids of the examples an `omit_example` profile line names (VER04r 8.4).
+    omit_examples: Vec<String>,
+    /// The levels the *types* met by the unit being lowered bring (binder, parameter, result, the
+    /// type of every sub-expression): R9's type half, `ir.tuple` for a tuple.  Reset at the start
+    /// of every unit and added to its `requires` by [`Lowerer::levels_of`].
+    type_levels: BTreeSet<&'static str>,
 }
 
 /// Strip any number of parentheses: a group vanishes in the IR.
@@ -676,6 +840,10 @@ fn needs_context(e: &Expression<'_>) -> bool {
             right,
             ..
         } => needs_context(left) && needs_context(right),
+        // A tuple takes the type of its components; one whose component has no type of its own (a
+        // bare literal, `Ok(..)`) is typed from its sibling or its context.
+        Expression::Tuple { elements, .. } => elements.iter().any(needs_context),
+        Expression::Match { arms, .. } => arms.iter().all(|a| needs_context(&a.body)),
         _ => false,
     }
 }
@@ -699,6 +867,8 @@ impl<'f, 'a> Lowerer<'f, 'a> {
             width_out: None,
             last_width: None,
             skip_pure_guards: false,
+            omit_examples: Vec::new(),
+            type_levels: BTreeSet::new(),
         }
     }
 
@@ -886,16 +1056,27 @@ impl<'f, 'a> Lowerer<'f, 'a> {
         GenError::level(beyond, "", message)
     }
 
-    /// The `requires` of a lowered unit (VER04r 16.10 R9): [`ir::levels`] over `trees`, reading
-    /// each callee's own `requires` from the model table.  The part of R9 that is on *types* adds
-    /// nothing here: the types that would (a tuple, a list, a record) are refused before a unit
-    /// gets this far.
+    /// The `requires` of a lowered unit (VER04r 16.10 R9): [`ir::levels`] over `trees` (the tag
+    /// half, reading each callee's own `requires` from the model table) united with the levels of
+    /// the **types** the unit met ([`Lowerer::type_levels`], the type half: a tuple type adds
+    /// `ir.tuple` even where no tuple tag appears).  Sorted and duplicate-free, `ir.core` always.
     fn levels_of<'t>(&self, trees: impl IntoIterator<Item = &'t Ir>) -> Vec<&'static str> {
-        ir::levels(trees, &|name| {
+        let mut found: BTreeSet<&'static str> = ir::levels(trees, &|name| {
             self.models
                 .get(name)
                 .map_or_else(|| vec!["ir.core"], |e| e.requires.clone())
         })
+        .into_iter()
+        .collect();
+        found.extend(self.type_levels.iter().copied());
+        found.into_iter().collect()
+    }
+
+    /// Record the levels a type brings (R9, the type half).
+    fn note_type(&mut self, ty: &Ty) {
+        if ty.contains_tuple() {
+            self.type_levels.insert("ir.tuple");
+        }
     }
 
     // -- types -------------------------------------------------------------------
@@ -929,7 +1110,16 @@ impl<'f, 'a> Lowerer<'f, 'a> {
                     Err(self.type_err("an unknown static width name"))
                 }
             }
-            TypeExpr::Tuple { .. } => Err(self.level(Beyond::IrTuple, "tuple types need ir.tuple")),
+            TypeExpr::Tuple { elems, .. } => {
+                if !(2..=MAX_TUPLE_ARITY).contains(&elems.len()) {
+                    return Err(self.type_err("a tuple has 2 to 8 components"));
+                }
+                let parts = elems
+                    .iter()
+                    .map(|e| self.resolve(e, statics, depth + 1))
+                    .collect::<Result<Vec<_>, _>>()?;
+                Ok(Ty::Tuple(parts))
+            }
             TypeExpr::List { .. } => Err(self.level(Beyond::IrData, "List types need ir.data")),
             TypeExpr::Option { .. } => Err(self.level(Beyond::IrData, OPTION_MESSAGE)),
             TypeExpr::Result {
@@ -981,6 +1171,9 @@ impl<'f, 'a> Lowerer<'f, 'a> {
             ));
         }
         let ret = self.resolve(&op.return_type, &statics, 0)?;
+        // R9, the type half: the signature alone may need `ir.tuple` (the admit, if any, is
+        // folded in by `lower_op_admit`).
+        let tuple = params.iter().any(|(_, t)| t.contains_tuple()) || ret.contains_tuple();
         Ok(LoweredOp {
             name: op.name.to_string(),
             statics,
@@ -988,7 +1181,11 @@ impl<'f, 'a> Lowerer<'f, 'a> {
             ret,
             fresh: op.is_fresh,
             admit: None,
-            requires: vec!["ir.core"],
+            requires: if tuple {
+                vec!["ir.core", "ir.tuple"]
+            } else {
+                vec!["ir.core"]
+            },
         })
     }
 
@@ -996,6 +1193,11 @@ impl<'f, 'a> Lowerer<'f, 'a> {
     /// operation's parameters; a refinement is typed Bool and has no `subject_op`.
     fn lower_op_admit(&mut self, op: &OpDecl<'a>, lop: &LoweredOp) -> Result<Option<Ir>, GenError> {
         self.scope = lop.params.iter().cloned().collect();
+        self.type_levels.clear();
+        for (_, t) in &lop.params {
+            self.note_type(t);
+        }
+        self.note_type(&lop.ret);
         let mut refinements = Vec::new();
         for p in &op.params {
             if let Some(r) = &p.refinement {
@@ -1082,6 +1284,7 @@ impl<'f, 'a> Lowerer<'f, 'a> {
     }
 
     fn lower_model_inner(&mut self, decl: &ModelDecl<'a>) -> Result<LoweredModel, GenError> {
+        self.type_levels.clear();
         let mut params = Vec::new();
         for p in &decl.params {
             if p.inout {
@@ -1090,16 +1293,19 @@ impl<'f, 'a> Lowerer<'f, 'a> {
             if p.refinement.is_some() {
                 return Err(self.type_err("a model parameter has no refinement"));
             }
-            params.push((p.name.to_string(), self.resolve(&p.param_type, &[], 0)?));
+            let ty = self.resolve(&p.param_type, &[], 0)?;
+            self.note_type(&ty);
+            params.push((p.name.to_string(), ty));
         }
         let ret = self.resolve(&decl.target_type, &[], 0)?;
+        self.note_type(&ret);
         let body = decl
             .body
             .as_ref()
             .ok_or_else(|| self.type_err("a model has no body"))?;
         self.scope = params.iter().cloned().collect();
         let (ir, ty) = self.expr(body, Some(&ret))?;
-        if !Ty::assignable(&ty, &ret) {
+        if !self.flows(&ty, &ret, self.last_width) {
             return Err(self.type_err("a model body does not have its declared type"));
         }
         if ir.has_subject() {
@@ -1124,6 +1330,7 @@ impl<'f, 'a> Lowerer<'f, 'a> {
     fn lower_claim(&mut self, decl: &ClaimDecl<'a>) -> Result<LoweredSuite, GenError> {
         let id = format!("warrant/{}/exhaustive/{}", self.module, decl.name);
         self.scope = HashMap::new();
+        self.type_levels.clear();
         let mut binders: Vec<(String, Ty)> = Vec::new();
         let mut refinements: Vec<Ir> = Vec::new();
         let mut body_ast = strip(&decl.body);
@@ -1203,6 +1410,7 @@ impl<'f, 'a> Lowerer<'f, 'a> {
             return Err(self.type_err("a binder cannot be inout"));
         }
         let ty = self.resolve(&b.param_type, &[], 0)?;
+        self.note_type(&ty);
         self.scope.insert(b.name.to_string(), ty.clone());
         binders.push((b.name.to_string(), ty));
         if let Some(r) = &b.refinement {
@@ -1217,35 +1425,45 @@ impl<'f, 'a> Lowerer<'f, 'a> {
 
     fn lower_example(&mut self, decl: &ExampleDecl<'a>) -> Result<LoweredExample, GenError> {
         self.scope = HashMap::new();
+        self.type_levels.clear();
         let body_ast = strip(&decl.body);
         self.top_eq_types = None;
         let (body, ty) = self.expr(body_ast, Some(&Ty::Bool))?;
         if ty != Ty::Bool {
             return Err(self.type_err("an example body must be Bool"));
         }
-        self.v0_guard(&body)?;
-        if !self.skip_pure_guards {
-            check_pure_guards(&body)?;
-        }
         // The `examples` row of VER04r 1.4 can only say `op(literals) == pure`: exactly one
         // subject call, its arguments free of subject calls, on one side of an equality.
-        let reference =
-            match self.classify(&body)? {
-                SuiteKind::Reference {
-                    subject: subject @ Ir::Subject { .. },
-                    expected,
-                    result,
-                } if subject.children().iter().all(|a| !a.has_subject()) => ExampleRef {
-                    subject,
-                    expected,
-                    result,
-                },
-                _ => return Err(GenError::new(
+        // The shape is decided first, so that an example the profile omits ([D34]) can be
+        // classified `not-op-eq-pure` without the guard refusals below, which the oracle's
+        // lowering never applies to an example.
+        let reference = match self.classify(&body)? {
+            SuiteKind::Reference {
+                subject: subject @ Ir::Subject { .. },
+                expected,
+                result,
+            } if subject.children().iter().all(|a| !a.has_subject()) => Some(ExampleRef {
+                subject,
+                expected,
+                result,
+            }),
+            _ => None,
+        };
+        let id = format!("warrant/{}/example/{}", self.module, decl.name);
+        let deferred = reference.is_none() && self.omit_examples.contains(&id);
+        if !deferred {
+            self.v0_guard(&body)?;
+            if !self.skip_pure_guards {
+                check_pure_guards(&body)?;
+            }
+            if reference.is_none() {
+                return Err(GenError::new(
                     code::W0701,
                     "",
                     "an example must be one subject call compared with a pure value (VER04r 1.4)",
-                )),
-            };
+                ));
+            }
+        }
         let requires = self.levels_of([&body]);
         Ok(LoweredExample {
             name: decl.name.to_string(),
@@ -1305,6 +1523,7 @@ impl<'f, 'a> Lowerer<'f, 'a> {
         if matches!(ty, Ty::Option(_)) && !option_ok {
             return Err(self.level(Beyond::IrData, OPTION_MESSAGE));
         }
+        self.note_type(&ty);
         Ok((ir, ty))
     }
 
@@ -1383,20 +1602,21 @@ impl<'f, 'a> Lowerer<'f, 'a> {
                 ))
             }
             Expression::List { .. } => Err(self.level(Beyond::IrData, "lists need ir.data")),
-            Expression::Tuple { .. } | Expression::Project { .. } => {
-                Err(self.level(Beyond::IrTuple, "tuples and projections need ir.tuple"))
-            }
-            Expression::Match { target, .. } => {
-                // `match` is `ir.tuple` exactly when its scrutinee is a `Result` and `ir.data`
-                // otherwise (VER04r 4.1, D35), so the scrutinee is typed first (a refusal in
-                // it comes first, in source order).
-                let (_, s_ty) = self.expr(target, None)?;
-                if matches!(s_ty, Ty::Result(..)) {
-                    Err(self.level(Beyond::IrTuple, "match on a Result needs ir.tuple"))
-                } else {
-                    Err(self.level(Beyond::IrData, "match needs ir.data"))
+            Expression::Tuple { elements, .. } => self.tuple_literal(elements, expected),
+            Expression::Project { base, key, .. } => {
+                let (b_ir, b_ty) = self.expr(base, None)?;
+                match (&b_ty, key) {
+                    (Ty::Tuple(_), ProjKey::Index(i)) => {
+                        let text = i.to_string();
+                        self.project(b_ir, b_ty, &[text.as_str()])
+                    }
+                    (Ty::Tuple(_), ProjKey::Field(_)) => {
+                        Err(self.type_err("a tuple projection is a component index of a tuple"))
+                    }
+                    _ => Err(self.type_err("a projection needs a tuple")),
                 }
             }
+            Expression::Match { target, arms, .. } => self.match_expr(target, arms, expected),
             Expression::Quantified { .. } => {
                 Err(self.type_err("a quantifier is only allowed at the head of a claim"))
             }
@@ -1462,7 +1682,7 @@ impl<'f, 'a> Lowerer<'f, 'a> {
         }
     }
 
-    fn name(&self, segments: &[&str]) -> Result<(Ir, Ty), GenError> {
+    fn name(&mut self, segments: &[&str]) -> Result<(Ir, Ty), GenError> {
         if segments.len() == 1 {
             let n = segments[0];
             if let Some(ty) = self.scope.get(n) {
@@ -1473,7 +1693,10 @@ impl<'f, 'a> Lowerer<'f, 'a> {
             }
             return Err(self.type_err("an unbound name"));
         }
-        if self.scope.contains_key(segments[0]) {
+        if let Some(head_ty) = self.scope.get(segments[0]).cloned() {
+            if matches!(head_ty, Ty::Tuple(_)) {
+                return self.project(Ir::Var(segments[0].to_string()), head_ty, &segments[1..]);
+            }
             return Err(self.level(Beyond::IrData, "projection needs ir.data"));
         }
         Err(self.type_err("a qualified name is only valid inside Err(...)"))
@@ -1664,7 +1887,7 @@ impl<'f, 'a> Lowerer<'f, 'a> {
                     return Err(self.type_err("Ok needs a Result context"));
                 };
                 let (ir, ty) = self.expr(&args[0], Some(ok_ty))?;
-                if !Ty::assignable(&ty, ok_ty) {
+                if !self.flows(&ty, ok_ty, self.last_width) {
                     return Err(
                         self.type_err("an Ok payload does not have the Result's value type")
                     );
@@ -1713,6 +1936,283 @@ impl<'f, 'a> Lowerer<'f, 'a> {
                 Err(self.level(Beyond::IrData, "constructors need ir.data"))
             }
             _ => Err(self.type_err("an unknown callable")),
+        }
+    }
+
+    // -- ir.tuple: tuples, projection and match on a Result (slice S10t-2) ---------------------
+
+    /// `(a, b, ..)` -> `["tuple", [a, b, ..]]` of type `(Ta,Tb,..)` (A.1, R2).
+    ///
+    /// A component is typed with the matching component of `expected` when that is a tuple of the
+    /// same arity (so `(low7(b0), 1)` in a `Result<(U64,Nat),E>` context has a `Nat` literal), and
+    /// on its own otherwise.  Two to eight components: the parser has already refused nine, and a
+    /// one-component parenthesis is not a tuple.
+    fn tuple_literal(
+        &mut self,
+        elements: &[Expression<'a>],
+        expected: Option<&Ty>,
+    ) -> Result<(Ir, Ty), GenError> {
+        let n = elements.len();
+        if !(2..=MAX_TUPLE_ARITY).contains(&n) {
+            return Err(self.type_err("a tuple has 2 to 8 components"));
+        }
+        let hints: Vec<Option<Ty>> = match expected {
+            Some(Ty::Tuple(parts)) if parts.len() == n => parts.iter().cloned().map(Some).collect(),
+            _ => vec![None; n],
+        };
+        let mut irs = Vec::with_capacity(n);
+        let mut tys = Vec::with_capacity(n);
+        for (item, hint) in elements.iter().zip(&hints) {
+            let (ir, ty) = self.expr(item, hint.as_ref())?;
+            irs.push(ir);
+            tys.push(ty);
+        }
+        Ok((Ir::Tuple(irs), Ty::Tuple(tys)))
+    }
+
+    /// Chain `["project", e, i]` for each index in `parts` (`t.0.1`); `i` is a decimal component
+    /// index of the tuple type reached so far.
+    fn project(&mut self, mut ir: Ir, mut ty: Ty, parts: &[&str]) -> Result<(Ir, Ty), GenError> {
+        for part in parts {
+            let (Ty::Tuple(components), Some(index)) = (&ty, tuple_index(part)) else {
+                return Err(self.type_err("a tuple projection is a component index of a tuple"));
+            };
+            let Some(next) = components.get(index).cloned() else {
+                return Err(self.type_err("a tuple projection is a component index of a tuple"));
+            };
+            ir = Ir::Project(Box::new(ir), index);
+            ty = next;
+            self.note_type(&ty);
+        }
+        Ok((ir, ty))
+    }
+
+    /// `match r with Ok(..) -> .. | Err(..) -> ..` on a `Result` (A.1; `ir.tuple`, D35).
+    ///
+    /// `match` is `ir.tuple` exactly when its scrutinee is a `Result` and `ir.data` for any other
+    /// type (VER04r 4.1), so the scrutinee is typed first.  The patterns are lowered and the
+    /// corpus-error rules (a duplicate or shadowing `bind`, an unreachable arm, fall-through) are
+    /// decided *before* any arm body is lowered, so such a document is refused even if a body would
+    /// have been recorded as a level refusal.  Arm bodies are typed with the pattern's binders in
+    /// scope (an arm that needs a context takes the first self-typed arm's type, as `if` does);
+    /// the arms must have one type.
+    fn match_expr(
+        &mut self,
+        target: &Expression<'a>,
+        arms: &[MatchArm<'a>],
+        expected: Option<&Ty>,
+    ) -> Result<(Ir, Ty), GenError> {
+        let (s_ir, s_ty) = self.expr(target, None)?;
+        if !matches!(s_ty, Ty::Result(..)) {
+            return Err(self.level(Beyond::IrData, "match needs ir.data"));
+        }
+        let mut pats: Vec<Pat> = Vec::with_capacity(arms.len());
+        let mut bound: Vec<Vec<(String, Option<Ty>)>> = Vec::with_capacity(arms.len());
+        for arm in arms {
+            let mut binds = Vec::new();
+            let mut seen: Vec<String> = Vec::new();
+            pats.push(self.pattern(&arm.pattern, &s_ty, &mut binds, &mut seen, 1)?);
+            bound.push(binds);
+        }
+        let refs: Vec<&Pat> = pats.iter().collect();
+        patterns::check_arms(&refs, &s_ty, &self.errors)?;
+        let mut bodies: Vec<Option<Ir>> = vec![None; arms.len()];
+        let mut types: Vec<Option<Ty>> = vec![None; arms.len()];
+        let mut hint: Option<Ty> = expected.cloned();
+        let order: Vec<usize> = (0..arms.len())
+            .filter(|&i| !needs_context(&arms[i].body))
+            .chain((0..arms.len()).filter(|&i| needs_context(&arms[i].body)))
+            .collect();
+        for i in order {
+            let body = &arms[i].body;
+            let saved = self.scope.clone();
+            let mut refused = None;
+            for (name, ty) in &bound[i] {
+                match ty {
+                    Some(t) => {
+                        self.scope.insert(name.clone(), t.clone());
+                    }
+                    None if mentions(body, name) => {
+                        refused = Some(self.level(
+                            Beyond::IrData,
+                            "an error value bound by a pattern has no IR form",
+                        ));
+                        break;
+                    }
+                    None => {}
+                }
+            }
+            let lowered = match refused {
+                Some(e) => Err(e),
+                None => self.expr(body, hint.as_ref()),
+            };
+            self.scope = saved;
+            let (ir, ty) = lowered?;
+            if hint.is_none() {
+                hint = Some(ty.clone());
+            }
+            bodies[i] = Some(ir);
+            types[i] = Some(ty);
+        }
+        let mut common: Option<Ty> = types[0].clone();
+        for ty in types.iter().skip(1) {
+            common = match (common, ty) {
+                (Some(c), Some(t)) => Ty::unify(&c, t),
+                _ => None,
+            };
+        }
+        let Some(common) = common else {
+            return Err(self.type_err("the arms of a match have no common type"));
+        };
+        let arms_ir: Vec<(Pat, Ir)> = pats
+            .into_iter()
+            .zip(bodies)
+            .map(|(p, b)| b.map(|b| (p, b)))
+            .collect::<Option<_>>()
+            .ok_or_else(|| GenError::internal("a match arm was not lowered"))?;
+        Ok((
+            Ir::Match {
+                scrutinee: Box::new(s_ir),
+                arms: arms_ir,
+            },
+            common,
+        ))
+    }
+
+    /// Lower one source pattern against the static type `ty` to its IR pattern (A.1).
+    ///
+    /// `Ok(p)` is `["ok", p]`; `Err(E.CASE)` is `["err", "CASE"]`; `Err(_)` and `Err(e)` are
+    /// `["err_any"]` (an error value has no IR form, so `e` may not be *used*; it is still
+    /// declared, for the duplicate and shadowing rules); a tuple pattern is `["tuple", [..]]`; a
+    /// name is `["bind", name]` and `_` is `["wild"]`.  A literal pattern (`true`) is not one of
+    /// the six and is the level `ir.data`.
+    fn pattern(
+        &mut self,
+        p: &Pattern<'a>,
+        ty: &Ty,
+        binds: &mut Vec<(String, Option<Ty>)>,
+        seen: &mut Vec<String>,
+        depth: usize,
+    ) -> Result<Pat, GenError> {
+        if depth > MAX_PATTERN_DEPTH {
+            return Err(GenError::new(
+                code::LIMIT,
+                "",
+                "pattern nesting exceeds 8 levels",
+            ));
+        }
+        match p {
+            Pattern::Wild => Ok(Pat::Wild),
+            Pattern::Bool(_) => Err(self.level(Beyond::IrData, "a literal pattern needs ir.data")),
+            Pattern::None | Pattern::Some(_) => Err(self.level(
+                Beyond::IrData,
+                "constructor patterns need ir.data",
+            )),
+            Pattern::Tuple(items) => {
+                let Ty::Tuple(parts) = ty else {
+                    return Err(self.type_err("a tuple pattern does not match the type of its value"));
+                };
+                if parts.len() != items.len() {
+                    return Err(self.type_err("a tuple pattern does not match the type of its value"));
+                }
+                let mut out = Vec::with_capacity(items.len());
+                for (item, t) in items.iter().zip(parts) {
+                    out.push(self.pattern(item, t, binds, seen, depth + 1)?);
+                }
+                Ok(Pat::Tuple(out))
+            }
+            Pattern::Ok(inner) => {
+                let Ty::Result(ok_ty, _) = ty else {
+                    return Err(self.type_err("Ok takes one pattern and needs a Result"));
+                };
+                Ok(Pat::Ok(Box::new(self.pattern(inner, ok_ty, binds, seen, depth + 1)?)))
+            }
+            Pattern::Err(inner) => {
+                let Ty::Result(_, err_name) = ty else {
+                    return Err(self.type_err("Err takes one pattern and needs a Result"));
+                };
+                if matches!(**inner, Pattern::Wild) {
+                    return Ok(Pat::ErrAny);
+                }
+                if let Some(name) = inner.as_binder() {
+                    self.reject_constructor_name(name)?;
+                    self.declare(name, None, binds, seen)?;
+                    return Ok(Pat::ErrAny);
+                }
+                if let Pattern::Ctor { name, args } = &**inner {
+                    if name.segments.len() == 2 && args.is_empty() {
+                        let (en, case) = (name.segments[0], name.segments[1]);
+                        let known = self
+                            .errors
+                            .get(en)
+                            .is_some_and(|cases| cases.iter().any(|c| c == case));
+                        if en != err_name || !known {
+                            return Err(self.type_err("an error case of the wrong error type"));
+                        }
+                        return Ok(Pat::Err(case.to_string()));
+                    }
+                }
+                Err(self.type_err("an Err pattern is an error case, a name or _"))
+            }
+            Pattern::Ctor { name, args } => {
+                if let (Some(n), true) = (p.as_binder(), args.is_empty()) {
+                    self.reject_constructor_name(n)?;
+                    self.declare(n, Some(ty.clone()), binds, seen)?;
+                    return Ok(Pat::Bind(n.to_string()));
+                }
+                if name.segments.len() == 1
+                    && (matches!(name.segments[0], "Some" | "None") || self.is_ctor(name.segments[0]))
+                {
+                    return Err(self.level(Beyond::IrData, "constructor patterns need ir.data"));
+                }
+                Err(self.type_err("an unknown constructor in a pattern"))
+            }
+        }
+    }
+
+    fn reject_constructor_name(&self, name: &str) -> Result<(), GenError> {
+        if matches!(name, "Some" | "None") || self.is_ctor(name) {
+            return Err(self.level(Beyond::IrData, "constructor patterns need ir.data"));
+        }
+        if matches!(name, "Ok" | "Err") {
+            return Err(self.type_err("Ok and Err are constructors, not names"));
+        }
+        Ok(())
+    }
+
+    /// Declare a pattern binder: a duplicate or a shadowing name is a corpus error (A.1, R2).
+    fn declare(
+        &self,
+        name: &str,
+        ty: Option<Ty>,
+        binds: &mut Vec<(String, Option<Ty>)>,
+        seen: &mut Vec<String>,
+    ) -> Result<(), GenError> {
+        if seen.iter().any(|n| n == name) {
+            return Err(GenError::new(code::IR, "", patterns::DUPLICATE_BIND));
+        }
+        if self.scope.contains_key(name) || name == "result" {
+            return Err(GenError::new(code::IR, "", patterns::SHADOWING_BIND));
+        }
+        seen.push(name.to_string());
+        binds.push((name.to_string(), ty));
+        Ok(())
+    }
+
+    /// Can the lowered expression of type `ty` flow to a place of type `want`?
+    ///
+    /// [`Ty::assignable`], plus the static-width rule of VER04r A.1: an expression whose *type*
+    /// forgot its width (a bytes literal, a `concat` of sized operands, an `if` of equal widths)
+    /// but whose recorded static width is `N` flows to `Bytes<N>`, as in the grammar checker.
+    /// `recorded` is [`Lowerer::last_width`], read **immediately** after the operand's `expr`
+    /// call (one lowering pass, never a re-lowering).
+    fn flows(&self, ty: &Ty, want: &Ty, recorded: Option<u64>) -> bool {
+        if Ty::assignable(ty, want) {
+            return true;
+        }
+        match (ty, want) {
+            (Ty::Bytes(_), Ty::Bytes(Some(Width::Lit(n)))) => static_width(ty, recorded) == Some(*n),
+            _ => false,
         }
     }
 
@@ -1953,7 +2453,7 @@ impl<'f, 'a> Lowerer<'f, 'a> {
         for (arg, (_, pty)) in args.iter().zip(params) {
             let want = pty.substitute(statics);
             let (ir, ty) = self.expr(arg, Some(&want))?;
-            if !Ty::assignable(&ty, &want) {
+            if !self.flows(&ty, &want, self.last_width) {
                 return Err(self.type_err("an argument does not match its parameter type"));
             }
             out.push(ir);
@@ -2038,6 +2538,58 @@ impl<'f, 'a> Lowerer<'f, 'a> {
             sig.ret.substitute(&statics),
         ))
     }
+}
+
+/// A projection index: canonical decimal digits (no sign, no leading zero), else `None`.
+fn tuple_index(text: &str) -> Option<usize> {
+    if text.is_empty() || !text.bytes().all(|b| b.is_ascii_digit()) {
+        return None;
+    }
+    if text != "0" && text.starts_with('0') {
+        return None;
+    }
+    text.parse().ok()
+}
+
+/// Does a source expression name `name` (as a variable, the head of a qualified name, or a call
+/// head)?  Used to refuse an arm that *uses* the error value an `Err(e)` pattern bound.
+fn mentions(root: &Expression<'_>, name: &str) -> bool {
+    let mut stack = vec![root];
+    while let Some(x) = stack.pop() {
+        match x {
+            Expression::Reference {
+                name: q, args, ..
+            } => {
+                if q.segments.first() == Some(&name) {
+                    return true;
+                }
+                stack.extend(args.iter().flat_map(|a| a.iter()));
+            }
+            Expression::Quantified { binders, body, .. } => {
+                stack.extend(binders.iter().filter_map(|b| b.refinement.as_ref()));
+                stack.push(body);
+            }
+            Expression::Conditional {
+                condition,
+                then_branch,
+                else_branch,
+                ..
+            } => stack.extend([&**condition, &**then_branch, &**else_branch]),
+            Expression::Match { target, arms, .. } => {
+                stack.push(target);
+                stack.extend(arms.iter().map(|a| &a.body));
+            }
+            Expression::Binary { left, right, .. } => stack.extend([&**left, &**right]),
+            Expression::Unary { operand, .. } => stack.push(operand),
+            Expression::Grouped { inner, .. } => stack.push(inner),
+            Expression::List { elements, .. } | Expression::Tuple { elements, .. } => {
+                stack.extend(elements)
+            }
+            Expression::Project { base, .. } => stack.push(base),
+            Expression::Literal { .. } => {}
+        }
+    }
+    false
 }
 
 /// The static width of a lowered `Bytes` expression, or `None`: the width its type carries

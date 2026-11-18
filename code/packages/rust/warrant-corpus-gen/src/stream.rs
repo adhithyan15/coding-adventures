@@ -13,9 +13,13 @@
 //!   I8 I16 I32 I64           11, then 8 bytes two's complement, sign-extended to 64 bits
 //!   Bytes  Bytes<N>          20, u32-LE length, the bytes
 //!   Ok(v)  Err(E.CASE)       50 plus the inner value  /  51, u32-LE length, UTF-8 case name
+//!   (v1, .., vn)             64, u32-LE component count, the components (`ir.tuple`)
 //! ```
 //!
-//! (`List`, `Option`, tuples, records and variants, `30 40/41 64 65`, belong to `ir.data`.)
+//! A tuple *value* carries the `64` tag and its count because nested composites must be
+//! self-delimiting or two different values could serialise to the same bytes; a top-level binder
+//! list is a plain concatenation of the binders' values.  (`List`, `Option`, records and variants,
+//! `30 40/41 65`, belong to `ir.data`.)
 //!
 //! ## Framing
 //!
@@ -107,13 +111,15 @@ pub fn put_field(out: &mut Vec<u8>, text: &str) -> Result<(), GenError> {
 }
 
 /// Is `ty` in the v1 type set `{Bool, U8, U64, Nat, Bytes, Bytes<N>, Result<v1,E>}`?
-/// (`List` and `Option` are in the set too but are `ir.data`.)
+/// (`List` and `Option` are in the set too but are `ir.data`; a tuple is not in it, so a suite
+/// with a tuple anywhere in its types has the `warrant-stream-v2` header.)
 pub fn in_v1_set(ty: &Ty) -> bool {
     use coding_adventures_warrant_grammar::fixed::FixedTy;
     match ty {
         Ty::Bool | Ty::Nat | Ty::Bytes(_) => true,
         Ty::Fixed(t) => matches!(t, FixedTy::U8 | FixedTy::U64),
         Ty::Result(ok, _) => in_v1_set(ok),
+        Ty::Tuple(_) => false,
         // `Int` never appears in a value (VER04r 2.1), nor does the IR-only `Option` (D23).
         Ty::Int | Ty::Option(_) => false,
     }
@@ -194,6 +200,13 @@ pub fn encode(ty: &Ty, v: &Value, out: &mut Vec<u8>) -> Result<(), GenError> {
         (Ty::Result(..), Value::Err(case)) => {
             out.push(0x51);
             put_field(out, case)?;
+        }
+        (Ty::Tuple(parts), Value::Tuple(items)) if parts.len() == items.len() => {
+            out.push(0x64);
+            put_u32(out, items.len())?;
+            for (t, v) in parts.iter().zip(items) {
+                encode(t, v, out)?;
+            }
         }
         (Ty::Int, _) => return Err(bad("may not have type Int (VER04r 2.1)")),
         _ => return Err(bad("does not have its declared shape")),

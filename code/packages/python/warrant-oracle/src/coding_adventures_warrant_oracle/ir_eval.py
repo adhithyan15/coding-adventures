@@ -39,6 +39,19 @@ Resource bounds (VER04r section 14)
 Unknown tags are errors, never skipped (VER04r section 4.2 rule 7).  A tag that
 belongs to a level this evaluator does not implement raises a ``level`` error.
 
+``ir.tuple`` (slice S10t-1)
+---------------------------
+The tuple literal ``["tuple", [e1, .., en]]`` (2 to 8 components, type ``(T1,..,Tn)``, cost
+``1 +`` the operands), ``["project", e, i]`` (a 0-based JSON integer ``i``, type ``Ti``) and
+``["match", s, [[pat, arm], ..]]`` on a ``Result`` are typed, costed and evaluated.  A tuple value
+is a Python tuple and equality is component-wise.  ``match`` evaluates **exactly one arm**, the arm of
+the first pattern that matches, with the pattern's binders in scope (:mod:`.patterns`); its cost is
+``1 +`` cost(scrutinee) ``+`` the **maximum** over the arms (section 4.2 rule 6).  A ``match`` whose
+scrutinee is not a ``Result`` is the level ``ir.data``.  The corpus errors of Appendix A.1 (a match that
+falls through, an arm no value can reach, the same ``bind`` twice in a pattern, a ``bind`` that shadows
+a binder, a parameter, ``result`` or an outer ``bind``) are ``corpus`` errors.  A ``match`` arm is a
+*guard* for call counting (section 4.4): a subject call in an arm needs a pure scrutinee.
+
 Typed analysis of ``ir.fixed`` (slice S10a)
 -------------------------------------------
 ``Program(..., analyze=True)`` additionally *types and costs* the 35 built-ins of Appendix A.1
@@ -56,7 +69,9 @@ from dataclasses import dataclass
 
 from . import ast as A
 from . import levels as L
+from . import patterns as P
 from .errors import OracleError, SizeError
+from .irtree import children, is_node, match_arms
 from .lower import BOOL, BYTES, FIXED, INT, NAT, _substitute, _unify
 from .lower import _assignable as _strict_assignable
 
@@ -69,11 +84,11 @@ MAX_MEMO = 1 << 20
 
 CORE_TAGS = L.CORE_TAGS
 #: Tags and built-ins of the levels above core: recognised so they can be *named*, never
-#: evaluated (VER04r section 10.4).  ``match`` has no tag-only level (its scrutinee's type
-#: decides, slice S10t); the safe name is ``ir.data``, which implies ``ir.tuple``.
+#: evaluated (VER04r section 10.4).  The tuple tags and ``match`` on a ``Result`` (``ir.tuple``)
+#: are evaluated since slice S10t-1.
 _FIXED_TAGS = L.FIXED_TAGS
 _TUPLE_TAGS = L.TUPLE_TAGS
-_DATA_TAGS = frozenset(["match", *L.DATA_TAGS])
+_DATA_TAGS = frozenset(L.DATA_TAGS)
 _SEQ_TAGS = L.SEQ_TAGS
 
 _COMPARE = {"eq", "ne", "lt", "gt", "le", "ge"}
@@ -93,12 +108,33 @@ def _assignable(src: A.Ty, dst: A.Ty) -> bool:
     if src.head == dst.head == "Result":
         payload = src.args[0] == _UNKNOWN or _assignable(src.args[0], dst.args[0])
         return payload and (_UNKNOWN in (src.args[1], dst.args[1]) or src.args[1] == dst.args[1])
+    if src.head == dst.head == "()":
+        return len(src.args) == len(dst.args) and all(
+            _assignable(x, y) for x, y in zip(src.args, dst.args)
+        )
     return _strict_assignable(src, dst)
 
 
 def _merge_result(a: A.Ty, b: A.Ty) -> A.Ty:
     """The more informative of two ``Result`` types (``?`` is the unknown)."""
     return b if a.args[0] == _UNKNOWN else a
+
+
+def _common(a: A.Ty, b: A.Ty) -> A.Ty | None:
+    """The common type of two branch or operand types, or ``None``.
+
+    ``Result`` types merge their unknowns (the lax rule ``if`` has always had); tuple types are
+    unified component by component (``Nat`` with ``Int``, ``Bytes<N>`` with ``Bytes``); everything
+    else is :func:`.lower._unify`.
+    """
+    if a.head == "Result" and b.head == "Result":
+        return _merge_result(a, b)
+    if a.head == b.head == "()":
+        if len(a.args) != len(b.args):
+            return None
+        parts = [_common(x, y) for x, y in zip(a.args, b.args)]
+        return None if any(p is None for p in parts) else A.Ty("()", tuple(parts))
+    return _unify(a, b)
 
 
 @dataclass
@@ -223,9 +259,14 @@ class Program:
         memo: bool = True,
         max_cost: int = MAX_IR_COST,
         analyze: bool = False,
+        errors: dict | None = None,
     ) -> None:
         self.models = models
         self.ops = ops
+        #: Error type name -> its cases, for ``match``: an ``["err", "CASE"]`` pattern is checked
+        #: against it and the exhaustiveness check completes a ``Result`` with it.  An error type
+        #: that is not listed is an open set (:mod:`.patterns`).
+        self.errors = errors or {}
         #: Type and cost the ``ir.fixed`` built-ins (slice S10a) instead of refusing them.
         self.analyze = analyze
         #: 2,000 unless the corpus profile declares more (never above 65,536).
@@ -321,8 +362,12 @@ class Program:
                 if self.analyze:
                     return self._fixed(node, tenv, allow_subject, depth)
                 raise OracleError("level", "a tag of level ir.fixed", level="ir.fixed")
-            if tag in _TUPLE_TAGS:
-                raise OracleError("level", "a tag of level ir.tuple", level="ir.tuple")
+            if tag == "tuple":
+                return self._tuple(node, tenv, allow_subject, depth)
+            if tag == "project":
+                return self._project(node, tenv, allow_subject, depth)
+            if tag == "match":
+                return self._match(node, tenv, allow_subject, depth)
             if tag in _DATA_TAGS:
                 raise OracleError("level", "a tag of level ir.data", level="ir.data")
             if tag in _SEQ_TAGS:
@@ -475,6 +520,108 @@ class Program:
 
         cost = 1 + sum(k.cost for k in kids) + body.cost
         return Compiled(m.ret, call, cost, any(k.subject for k in kids))
+
+    # -- ir.tuple: the tuple literal, project and match on a Result (slice S10t-1) -------------
+
+    def _tuple(self, node: list, tenv: dict, allow_subject: bool, depth: int) -> Compiled:
+        """``["tuple", [e1, .., en]]``: 2 to 8 operands, type ``(T1,..,Tn)``, cost ``1 +`` the operands."""
+        if len(node) != 2 or not isinstance(node[1], list):
+            raise OracleError("ir", "a malformed tuple node")
+        operands = node[1]
+        if not P.MAX_TUPLE_ARITY >= len(operands) >= 2:
+            raise OracleError("ir", "a tuple has 2 to 8 components")
+        kids = [self._compile(child, tenv, allow_subject, depth + 1) for child in operands]
+        for k in kids:
+            _no_option(k, "a tuple component")
+        fns = [k.fn for k in kids]
+        return Compiled(
+            A.Ty("()", tuple(k.ty for k in kids)),
+            lambda env: tuple(f(env) for f in fns),
+            1 + sum(k.cost for k in kids),
+            any(k.subject for k in kids),
+        )
+
+    def _project(self, node: list, tenv: dict, allow_subject: bool, depth: int) -> Compiled:
+        """``["project", e, i]``: ``i`` is a 0-based JSON integer inside the tuple's arity."""
+        if len(node) != 3 or type(node[2]) is not int or not isinstance(node[1], list):
+            raise OracleError("ir", "a malformed project node")
+        base = self._compile(node[1], tenv, allow_subject, depth + 1)
+        _no_option(base, "an operand of project")
+        index = node[2]
+        if base.ty.head != "()":
+            raise OracleError("ir", "project needs a tuple")
+        if not 0 <= index < len(base.ty.args):
+            raise OracleError("ir", "a projection index outside the tuple")
+        bf = base.fn
+        return Compiled(base.ty.args[index], lambda env: bf(env)[index], 1 + base.cost, base.subject)
+
+    def match_arms(
+        self, node: list, tenv: dict, allow_subject: bool = False, depth: int = 0
+    ) -> tuple[Compiled, list]:
+        """Type the scrutinee and patterns of a ``match``: ``(scrutinee, [(matcher, binders, body)])``.
+
+        ``binders`` is the arm's ``{name: type}``; ``matcher(value, binds)`` fills ``binds`` and says
+        whether the pattern matches.  This is everything about a ``match`` that does not compile an
+        arm body, so the call-counting analyses (a ``match`` arm is a guard, section 4.4) can compile
+        each body in its own scope.  The corpus errors of Appendix A.1 are raised here.
+        """
+        arms = match_arms(node)
+        s = self._compile(node[1], tenv, allow_subject, depth + 1)
+        _no_option(s, "a match scrutinee")
+        if s.ty.head != "Result":
+            raise OracleError("level", "match on a scrutinee that is not a Result", level=L.DATA)
+        if len(arms) > P.MAX_ARMS:
+            raise OracleError("limit", "a match has more than 256 arms")
+        out: list = []
+        patterns: list = []
+        for pattern, body in arms:
+            binds: list = []
+            P.type_pattern(pattern, s.ty, self.errors, binds)
+            names = [n for n, _ in binds]
+            if len(set(names)) != len(names):
+                raise OracleError("corpus", "the same bind name twice in one pattern")
+            for name in names:
+                if name in tenv or name == "result":
+                    raise OracleError(
+                        "corpus",
+                        "a bind name shadows a binder, a parameter, result or an outer bind",
+                    )
+            patterns.append(pattern)
+            out.append((P.compile_pattern(pattern), dict(binds), body))
+        P.check_arms(patterns, s.ty, self.errors)
+        return s, out
+
+    def _match(self, node: list, tenv: dict, allow_subject: bool, depth: int) -> Compiled:
+        """``["match", s, [[pat, arm], ..]]`` on a ``Result``; one arm is evaluated (rule 2).
+
+        Cost: ``1 +`` cost(scrutinee) ``+`` the maximum over the arms (rule 6).  The arms must have
+        one type (:func:`_common`).
+        """
+        s, arms = self.match_arms(node, tenv, allow_subject, depth)
+        compiled: list = []
+        common: A.Ty | None = None
+        worst = 0
+        subject = s.subject
+        for matcher, binders, body in arms:
+            kid = self._compile(body, {**tenv, **binders}, allow_subject, depth + 1)
+            _no_option(kid, "a match arm")
+            common = kid.ty if common is None else _common(common, kid.ty)
+            if common is None:
+                raise OracleError("ir", "the arms of a match have no common type")
+            compiled.append((matcher, kid.fn))
+            worst = max(worst, kid.cost)
+            subject = subject or kid.subject
+        sf = s.fn
+
+        def run(env: dict) -> object:
+            value = sf(env)
+            for matcher, arm in compiled:
+                binds: dict = {}
+                if matcher(value, binds):
+                    return arm({**env, **binds})
+            raise OracleError("ir", "a match fell through")  # pragma: no cover (exhaustive)
+
+        return Compiled(common, run, 1 + s.cost + worst, subject)
 
     # -- the ir.fixed built-ins, typed and costed (slice S10a) -----------------------------
 
@@ -650,10 +797,7 @@ class Program:
             c, t, e = kids
             if c.ty != BOOL:
                 raise OracleError("ir", "an if condition is Bool")
-            if t.ty.head == "Result" and e.ty.head == "Result":
-                common = _merge_result(t.ty, e.ty)
-            else:
-                common = _unify(t.ty, e.ty)
+            common = _common(t.ty, e.ty)
             if common is None:
                 raise OracleError("ir", "the branches of an if have no common type")
             cf, tf, ef = c.fn, t.fn, e.fn
@@ -698,7 +842,7 @@ class Program:
             if a.ty.head == "Result" or b.ty.head == "Result":
                 if a.ty.head != b.ty.head:
                     raise OracleError("ir", "comparing a Result with a non-Result")
-            elif _unify(a.ty, b.ty) is None:
+            elif _common(a.ty, b.ty) is None:
                 raise OracleError("ir", "equality needs operands of one type")
             if tag == "eq":
                 return Compiled(BOOL, lambda env: af(env) == bf(env), cost, subj)
@@ -756,17 +900,11 @@ def has_subject(ir: object) -> bool:
     stack = [ir]
     while stack:
         node = stack.pop()
-        if not (isinstance(node, list) and node and isinstance(node[0], str)):
+        if not is_node(node):
             continue
-        tag = node[0]
-        if tag == "subject_op":
+        if node[0] == "subject_op":
             return True
-        if tag in ("lit", "var", "err"):
-            continue
-        if tag == "model_call":
-            stack.extend(node[2])
-            continue
-        stack.extend(node[1:])
+        stack.extend(children(node))
     return False
 
 
@@ -776,50 +914,74 @@ def compile_calls(prog: Program, ir: object, tenv: dict) -> int | Callable:
     The count is taken on the *pure trace* (VER04r section 4.4): a subject call
     may sit under a guard only if the guard's condition is pure, so that the
     count never depends on what a subject returned.  Anything else is the
-    generation error ``W0701``.
+    generation error ``W0701``.  A ``match`` arm is a guard whose condition is the scrutinee
+    (the arm taken is decided by the scrutinee's value and the patterns): a subject call in an
+    arm needs a pure scrutinee, and then only the taken arm counts.
     """
 
-    def count(node: object, depth: int = 0) -> int | Callable:
+    def count(node: object, env_types: dict, depth: int = 0) -> int | Callable:
         if depth >= MAX_IR_DEPTH:
             raise OracleError("limit", "IR nesting exceeds 64 levels")
         if not has_subject(node):
             return 0
         tag = node[0]
         if tag == "subject_op":
-            parts = [count(a, depth + 1) for a in node[2]]
+            parts = [count(a, env_types, depth + 1) for a in node[2]]
             return _sum(1, parts)
         if tag == "if":
             cond, then, other = node[1], node[2], node[3]
             if has_subject(then) or has_subject(other):
                 if has_subject(cond):
                     raise OracleError("generation", "W0701: a subject call under an impure guard")
-                cf = prog.compile(cond, tenv, False).fn
-                tc, ec = count(then, depth + 1), count(other, depth + 1)
+                cf = prog.compile(cond, env_types, False).fn
+                tc, ec = count(then, env_types, depth + 1), count(other, env_types, depth + 1)
                 return lambda env: (
                     (tc(env) if callable(tc) else tc)
                     if cf(env)
                     else (ec(env) if callable(ec) else ec)
                 )
-            return count(cond, depth + 1)
+            return count(cond, env_types, depth + 1)
         if tag in ("and", "or", "implies"):
             left, right = node[1], node[2]
             if has_subject(right):
                 if has_subject(left):
                     raise OracleError("generation", "W0701: a subject call under an impure guard")
-                lf = prog.compile(left, tenv, False).fn
-                rc = count(right, depth + 1)
+                lf = prog.compile(left, env_types, False).fn
+                rc = count(right, env_types, depth + 1)
                 # ``and`` and ``implies`` evaluate the right operand when the left is true
                 # (implies: when ``not left`` is false), ``or`` when it is false.
                 runs_when = (lambda v: not v) if tag == "or" else (lambda v: bool(v))
                 return lambda env: (rc(env) if callable(rc) else rc) if runs_when(lf(env)) else 0
-            return count(left, depth + 1)
+            return count(left, env_types, depth + 1)
+        if tag == "match":
+            return count_match(node, env_types, depth)
         if tag == "model_call":
             # The arguments are IR; the name is not.  ``inc(bump(a))`` has one call.
-            return _sum(0, [count(a, depth + 1) for a in node[2]])
-        children = [count(c, depth + 1) for c in node[1:] if isinstance(c, list)]
-        return _sum(0, children)
+            return _sum(0, [count(a, env_types, depth + 1) for a in node[2]])
+        return _sum(0, [count(c, env_types, depth + 1) for c in children(node)])
 
-    return count(ir)
+    def count_match(node: list, env_types: dict, depth: int) -> int | Callable:
+        scrutinee = node[1]
+        arm_subject = any(has_subject(body) for _p, body in match_arms(node))
+        if not arm_subject:
+            return count(scrutinee, env_types, depth + 1)
+        if has_subject(scrutinee):
+            raise OracleError("generation", "W0701: a subject call under an impure guard")
+        s, arms = prog.match_arms(node, env_types)
+        counts = [(m, count(body, {**env_types, **b}, depth + 1)) for m, b, body in arms]
+        sf = s.fn
+
+        def taken(env: dict) -> int:
+            value = sf(env)
+            for matcher, c in counts:
+                binds: dict = {}
+                if matcher(value, binds):
+                    return c({**env, **binds}) if callable(c) else c
+            raise OracleError("ir", "a match fell through")  # pragma: no cover (exhaustive)
+
+        return taken
+
+    return count(ir, tenv)
 
 
 #: Nodes that can wrap or fail when evaluated on the pure trace (section 3.3 rule 1):
@@ -835,23 +997,16 @@ def may_wrap(prog: Program, ir: object, _seen: set | None = None) -> bool:
     stack = [ir]
     while stack:
         node = stack.pop()
-        if not (isinstance(node, list) and node and isinstance(node[0], str)):
+        if not is_node(node):
             continue
         tag = node[0]
         if tag in _ARITH_TAGS:
             return True
-        if tag in ("lit", "var", "err"):
-            continue
-        if tag == "model_call":
-            if node[1] not in seen and node[1] in prog.models:
-                seen.add(node[1])
-                if may_wrap(prog, prog.models[node[1]].ir, seen):
-                    return True
-            stack.extend(node[2])
-        elif tag == "subject_op":
-            stack.extend(node[2])
-        else:
-            stack.extend(node[1:])
+        if tag == "model_call" and node[1] not in seen and node[1] in prog.models:
+            seen.add(node[1])
+            if may_wrap(prog, prog.models[node[1]].ir, seen):
+                return True
+        stack.extend(children(node))
     return False
 
 
@@ -867,33 +1022,33 @@ def compile_trace(prog: Program, ir: object, tenv: dict) -> Callable | None:
     Returns ``None`` when nothing on the trace can wrap.
     """
 
-    def tr(node: object, depth: int = 0) -> list[Callable]:
+    def tr(node: object, env_types: dict, depth: int = 0) -> list[Callable]:
         if depth >= MAX_IR_DEPTH:
             raise OracleError("limit", "IR nesting exceeds 64 levels")
         if not has_subject(node):
             if may_wrap(prog, node):
-                return [prog.compile(node, tenv, False).fn]
+                return [prog.compile(node, env_types, False).fn]
             return []
         tag = node[0]
         if tag == "subject_op" or tag == "model_call":
-            return [f for a in node[2] for f in tr(a, depth + 1)]
+            return [f for a in node[2] for f in tr(a, env_types, depth + 1)]
         if tag == "if":
             cond, then, other = node[1], node[2], node[3]
             if has_subject(then) or has_subject(other):
-                cf = prog.compile(cond, tenv, False).fn
-                tt, et = tr(then, depth + 1), tr(other, depth + 1)
+                cf = prog.compile(cond, env_types, False).fn
+                tt, et = tr(then, env_types, depth + 1), tr(other, env_types, depth + 1)
 
                 def run_if(env: dict) -> None:
                     for f in tt if cf(env) else et:
                         f(env)
 
                 return [run_if]
-            return tr(cond, depth + 1)
+            return tr(cond, env_types, depth + 1)
         if tag in ("and", "or", "implies"):
             left, right = node[1], node[2]
             if has_subject(right):
-                lf = prog.compile(left, tenv, False).fn
-                rt = tr(right, depth + 1)
+                lf = prog.compile(left, env_types, False).fn
+                rt = tr(right, env_types, depth + 1)
                 runs = (lambda v: not v) if tag == "or" else bool
 
                 def run_sc(env: dict) -> None:
@@ -902,10 +1057,34 @@ def compile_trace(prog: Program, ir: object, tenv: dict) -> Callable | None:
                             f(env)
 
                 return [run_sc]
-            return tr(left, depth + 1)
-        return [f for c in node[1:] if isinstance(c, list) for f in tr(c, depth + 1)]
+            return tr(left, env_types, depth + 1)
+        if tag == "match":
+            return trace_match(node, env_types, depth)
+        return [f for c in children(node) for f in tr(c, env_types, depth + 1)]
 
-    fns = tr(ir)
+    def trace_match(node: list, env_types: dict, depth: int) -> list[Callable]:
+        scrutinee = node[1]
+        if not any(has_subject(body) for _p, body in match_arms(node)):
+            return tr(scrutinee, env_types, depth + 1)
+        if has_subject(scrutinee):
+            raise OracleError("generation", "W0701: a subject call under an impure guard")
+        s, arms = prog.match_arms(node, env_types)
+        traces = [(m, tr(body, {**env_types, **b}, depth + 1)) for m, b, body in arms]
+        sf = s.fn
+
+        def run_match(env: dict) -> None:
+            value = sf(env)
+            for matcher, fns in traces:
+                binds: dict = {}
+                if matcher(value, binds):
+                    inner = {**env, **binds}
+                    for f in fns:
+                        f(inner)
+                    return
+
+        return [run_match]
+
+    fns = tr(ir, tenv)
     if not fns:
         return None
 
@@ -934,17 +1113,12 @@ def _reads(ir: object) -> set[str]:
     stack = [ir]
     while stack:
         node = stack.pop()
-        if not (isinstance(node, list) and node and isinstance(node[0], str)):
+        if not is_node(node):
             continue
-        tag = node[0]
-        if tag == "var":
+        if node[0] == "var":
             seen.add(node[1])
-        elif tag in ("lit", "err"):
-            continue
-        elif tag in ("model_call", "subject_op"):
-            stack.extend(node[2])
         else:
-            stack.extend(node[1:])
+            stack.extend(children(node))
     return seen
 
 
@@ -1002,6 +1176,27 @@ def compiled_admit(prog: Program, op: object, widths: list | None) -> Compiled |
     return hit
 
 
+def walk_scoped(prog: Program, ir: object, env_types: dict, allow_subject: bool = True):
+    """Yield ``(node, types)`` for every node of ``ir``; ``types`` is the scope the node is typed in.
+
+    Inside a ``match`` arm the scope gains the arm's pattern binders (their types come from the
+    scrutinee and the patterns), so an analysis that must *compile* a sub-expression (to learn its
+    static type) can do so there.  Patterns are never yielded.
+    """
+    stack = [(ir, env_types)]
+    while stack:
+        node, types = stack.pop()
+        if not is_node(node):
+            continue
+        yield node, types
+        if node[0] == "match":
+            _s, arms = prog.match_arms(node, types, allow_subject)
+            stack.append((node[1], types))
+            stack.extend((body, {**types, **binders}) for _m, binders, body in arms)
+        else:
+            stack.extend((c, types) for c in children(node))
+
+
 def admit_check_cost(prog: Program, ir: object, tenv: dict) -> int:
     """The IR work of [D19]'s per-case check for ``ir``: for every ``subject_op`` whose op has
     an ``admit``, the worst-path cost of that ``admit`` plus the cost of each argument that
@@ -1009,24 +1204,12 @@ def admit_check_cost(prog: Program, ir: object, tenv: dict) -> int:
     to the IR-work meter and **not** part of the recorded ``ir_cost``.
     """
     total = 0
-    stack = [ir]
-    while stack:
-        node = stack.pop()
-        if not (isinstance(node, list) and node and isinstance(node[0], str)):
-            continue
-        tag = node[0]
-        if tag in ("lit", "var", "err"):
-            continue
-        if tag == "subject_op":
+    for node, types in walk_scoped(prog, ir, tenv):
+        if node[0] == "subject_op":
             op = prog.ops[node[1]]
             if op.admit is not None:
                 total += compiled_admit(prog, op, node[3] if len(node) == 4 else None).cost
-                total += sum(prog.compile(a, tenv, False).cost for a in node[2] if not has_subject(a))
-            stack.extend(node[2])
-        elif tag == "model_call":
-            stack.extend(node[2])
-        else:
-            stack.extend(node[1:])
+                total += sum(prog.compile(a, types, False).cost for a in node[2] if not has_subject(a))
     return total
 
 
@@ -1056,14 +1239,14 @@ def compile_admit_check(
     ``None`` when no call on the body is of an op with an ``admit``.
     """
 
-    def tr(node: object, depth: int = 0) -> list[Callable]:
+    def tr(node: object, env_types: dict, depth: int = 0) -> list[Callable]:
         if depth >= MAX_IR_DEPTH:
             raise OracleError("limit", "IR nesting exceeds 64 levels")
         if not has_subject(node):
             return []
         tag = node[0]
         if tag == "subject_op":
-            kids = [f for a in node[2] for f in tr(a, depth + 1)]
+            kids = [f for a in node[2] for f in tr(a, env_types, depth + 1)]
             op = prog.ops[node[1]]
             if op.admit is None:
                 return kids
@@ -1080,7 +1263,7 @@ def compile_admit_check(
             # An argument that depends on a subject result is not an input of the check:
             # the admit does not read its parameter (just refused otherwise).
             args = [
-                (n, prog.compile(a, tenv, False).fn)
+                (n, prog.compile(a, env_types, False).fn)
                 for n, a in zip(names, node[2])
                 if n not in dynamic
             ]
@@ -1091,24 +1274,24 @@ def compile_admit_check(
 
             return [check] + kids
         if tag == "model_call":
-            return [f for a in node[2] for f in tr(a, depth + 1)]
+            return [f for a in node[2] for f in tr(a, env_types, depth + 1)]
         if tag == "if":
             cond, then, other = node[1], node[2], node[3]
             if has_subject(then) or has_subject(other):
-                cf = prog.compile(cond, tenv, False).fn
-                tt, et = tr(then, depth + 1), tr(other, depth + 1)
+                cf = prog.compile(cond, env_types, False).fn
+                tt, et = tr(then, env_types, depth + 1), tr(other, env_types, depth + 1)
 
                 def run_if(env: dict) -> None:
                     for f in tt if cf(env) else et:
                         f(env)
 
                 return [run_if] if tt or et else []
-            return tr(cond, depth + 1)
+            return tr(cond, env_types, depth + 1)
         if tag in ("and", "or", "implies"):
             left, right = node[1], node[2]
             if has_subject(right):
-                lf = prog.compile(left, tenv, False).fn
-                rt = tr(right, depth + 1)
+                lf = prog.compile(left, env_types, False).fn
+                rt = tr(right, env_types, depth + 1)
                 runs = (lambda v: not v) if tag == "or" else bool
 
                 def run_sc(env: dict) -> None:
@@ -1117,10 +1300,34 @@ def compile_admit_check(
                             f(env)
 
                 return [run_sc] if rt else []
-            return tr(left, depth + 1)
-        return [f for c in node[1:] if isinstance(c, list) for f in tr(c, depth + 1)]
+            return tr(left, env_types, depth + 1)
+        if tag == "match":
+            return check_match(node, env_types, depth)
+        return [f for c in children(node) for f in tr(c, env_types, depth + 1)]
 
-    fns = tr(ir)
+    def check_match(node: list, env_types: dict, depth: int) -> list[Callable]:
+        scrutinee = node[1]
+        if not any(has_subject(body) for _p, body in match_arms(node)):
+            return tr(scrutinee, env_types, depth + 1)
+        if has_subject(scrutinee):
+            raise OracleError("generation", "W0701: a subject call under an impure guard")
+        s, arms = prog.match_arms(node, env_types)
+        checks = [(m, tr(body, {**env_types, **b}, depth + 1)) for m, b, body in arms]
+        sf = s.fn
+
+        def run_match(env: dict) -> None:
+            value = sf(env)
+            for matcher, fns in checks:
+                binds: dict = {}
+                if matcher(value, binds):
+                    inner = {**env, **binds}
+                    for f in fns:
+                        f(inner)
+                    return
+
+        return [run_match] if any(fns for _m, fns in checks) else []
+
+    fns = tr(ir, tenv)
     if not fns:
         return None
 
@@ -1156,33 +1363,25 @@ def fixed_arith_over_subject(prog: Program, ir: object, tenv: dict) -> bool:
             return closure[name]
         closure[name] = False  # models are acyclic (rule 4.2.1); this only guards hostile input
         m = prog.models[name]
-        mtenv = dict(m.params)
         result = False
-        stack = [m.ir]
-        while stack and not result:
-            node = stack.pop()
-            if not (isinstance(node, list) and node and isinstance(node[0], str)):
-                continue
+        for node, types in walk_scoped(prog, m.ir, dict(m.params), allow_subject=False):
             tag = node[0]
-            if tag in _FIXED_ARITH_TAGS and prog.compile(node[1], mtenv, False).ty.head in FIXED or tag == "model_call" and model_has_fixed(node[1]):
+            if (
+                tag in _FIXED_ARITH_TAGS
+                and prog.compile(node[1], types, False).ty.head in FIXED
+                or tag == "model_call"
+                and model_has_fixed(node[1])
+            ):
                 result = True
-            elif tag not in ("lit", "var", "err"):
-                stack.extend(node[2] if tag in ("model_call", "subject_op") else node[1:])
+                break
         closure[name] = result
         return result
 
-    stack = [ir]
-    while stack:
-        node = stack.pop()
-        if not (isinstance(node, list) and node and isinstance(node[0], str)):
-            continue
+    for node, types in walk_scoped(prog, ir, tenv):
         tag = node[0]
-        if tag in ("lit", "var", "err"):
-            continue
         if tag in _FIXED_ARITH_TAGS and has_subject(node):
-            if prog.compile(node[1], tenv, True).ty.head in FIXED:
+            if prog.compile(node[1], types, True).ty.head in FIXED:
                 return True
         elif tag == "model_call" and has_subject(node) and model_has_fixed(node[1]):
             return True
-        stack.extend(node[2] if tag in ("model_call", "subject_op") else node[1:])
     return False

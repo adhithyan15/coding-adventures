@@ -10,6 +10,8 @@
 //!   ----------------------------------------  ----------------------------------------
 //!   lit, var, err                             1
 //!   if                                        1 + cost(cond) + MAX(cost(then), cost(else))
+//!   match                                     1 + cost(scrutinee) + MAX over the arms (one runs)
+//!   tuple, project                            1 + sum(operands)
 //!   model_call                                1 + sum(args) + cost(model body)
 //!   subject_op                                1 + sum(args)    (the subject's work is not IR work)
 //!   every other tag, and/or/implies too       1 + sum(operands) (a short circuit is never credited)
@@ -182,6 +184,15 @@ fn cost(ir: &Ir, models: &ModelCosts, limit: u64) -> Result<u64, GenError> {
         Ir::If(c, t, e) => {
             acc = bump(acc, cost(c, models, limit)?, limit)?;
             let worst = cost(t, models, limit)?.max(cost(e, models, limit)?);
+            bump(acc, worst, limit)
+        }
+        // `1 +` the scrutinee `+` the **maximum** over the arms (rule 6): exactly one arm runs.
+        Ir::Match { scrutinee, arms } => {
+            acc = bump(acc, cost(scrutinee, models, limit)?, limit)?;
+            let mut worst = 0;
+            for (_, body) in arms {
+                worst = worst.max(cost(body, models, limit)?);
+            }
             bump(acc, worst, limit)
         }
         Ir::Model { name, args } => {

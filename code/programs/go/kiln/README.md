@@ -61,12 +61,20 @@ enforces it: `go list -deps` filtered to non-standard, non-repo paths must be
 empty, every `require` names a repo module, and every `replace` target is a
 relative path inside the repo.
 
-The trace parser has two readers of a strace line: the hand-written scanner (the
-default) and the grammar path (`code/grammars/strace`, through `strace-lexer` and
-`strace-parser`). While the grammar path is on probation, the package's tests
-run both on every `Parse` and fail on any disagreement the spec's table does not
-allow, and `KILN_TRACE_DIFF=1` does the same for real traces (the kiln-sandbox CI
-job sets it; a mismatch panics with a bounded, sanitised window of lines).
+The trace parser reads a strace line with the grammar path
+(`code/grammars/strace`, through `strace-lexer` and `strace-parser`): it is the
+production default (D24 PR 6). The old hand-written scanner is kept only as an
+oracle on probation, reachable through the cross-check and never as a production
+reader; there is no switch back to it (it is the lenient reader, so that would be
+a soundness downgrade; rollback is a revert). The package's tests run both on
+every `Parse` and fail on any disagreement the spec's table does not allow, and
+`KILN_TRACE_DIFF=1` does the same for real traces (the kiln-sandbox CI job sets
+it; a mismatch panics with a bounded, sanitised window of lines). The sandbox
+job (only: it sets `KILN_G1_GATE=1`; elsewhere the figures are logged, not
+enforced) also fails a real trace of 32 to 128 KB (and a fixed synthetic 64 KB
+slice, `synthetic-slice`) whose best-of-7 grammar-path pass 1 is below 14 MB/s
+(gate G1, KILN04 section 4.9); larger traces are logged for the census only. The old scanner is deleted in PR 8, after
+a soak.
 
 ## Usage
 

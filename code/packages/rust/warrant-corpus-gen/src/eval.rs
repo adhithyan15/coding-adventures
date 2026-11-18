@@ -31,6 +31,9 @@
 //!   concat take drop            total: take/drop clamp, a negative count is 0; a result
 //!                               over MAX_IR_VALUE is refused BEFORE it is allocated
 //!   is_err e                    true for an Err
+//!   tuple project               the components in order / the i-th component (`ir.tuple`)
+//!   match s [[pat, arm]..]      evaluates the scrutinee, then **exactly one** arm: the first whose
+//!                               pattern matches, with its binders in scope (`ir.tuple`, [D35])
 //!   model_call                  evaluates the arguments left to right, then the body in a
 //!                               fresh frame
 //!   subject_op                  cannot be evaluated: the generator has no subject
@@ -54,6 +57,12 @@
 //! An operand that only runs under a short circuit whose guard depends on a subject result
 //! is skipped (the guard is not pure, which 4.4 refuses anyway for operands that call).
 //!
+//! A `match` arm is a **guard** whose condition is the scrutinee: the arm taken is decided by the
+//! scrutinee's value and the patterns.  A subject call in an arm therefore needs a pure
+//! scrutinee (else `W0701`, the impure guard), and then only the taken arm is on the trace, with
+//! the pattern's binders in scope for the nodes beneath it.  A `match` with no subject call in
+//! any arm is counted by its scrutinee alone.
+//!
 //! ## Seeded-wrong controls
 //!
 //! [`Sabotage`] makes the evaluator wrong on purpose (`eq` answering `ne`, `sub` adding,
@@ -68,8 +77,9 @@ use crate::arith::{
     check_value_len, exact_neg, exact_op, fixed_neg, fixed_op, EXACT_BOUND, MAX_IR_VALUE,
 };
 use crate::error::{code, Beyond, GenError};
-use crate::ir::{Arith, Cmp, Ir, Logic};
+use crate::ir::{Arith, Cmp, Ir, Logic, Pat};
 use crate::lower::{LoweredModel, LoweredOp};
+use crate::patterns::match_pattern;
 use crate::value::{ill_typed, Value};
 
 /// The most model frames that may be active at once (VER04 section 2, VER04r 14).
@@ -366,6 +376,10 @@ impl<'a> Program<'a> {
         let mut tasks: Vec<Task<'t>> = vec![Task::Eval(ir)];
         let mut vals: Vec<Value> = Vec::new();
         let mut frames: Vec<Vec<(&'t str, Value)>> = Vec::new();
+        // The binders of the `match` arms being evaluated, as `(frame depth, name, value)`: the
+        // entries of the current frame are contiguous at the top (an arm finishes before the frame
+        // that holds it is popped), so a lookup stops at the first entry of another depth.
+        let mut binds: Vec<(usize, &'t str, Value)> = Vec::new();
         while let Some(task) = tasks.pop() {
             if tasks.len() > self.max_tasks {
                 return Err(GenError::new(
@@ -377,7 +391,41 @@ impl<'a> Program<'a> {
             match task {
                 Task::Eval(node) => {
                     let env: &Vars<'_> = frames.last().map_or(vars, |f| f.as_slice());
+                    if let Ir::Var(name) = node {
+                        let depth = frames.len();
+                        let bound = binds
+                            .iter()
+                            .rev()
+                            .take_while(|(d, _, _)| *d == depth)
+                            .find(|(_, n, _)| *n == name.as_str())
+                            .map(|(_, _, v)| v.clone());
+                        if let Some(v) = bound {
+                            vals.push(v);
+                            continue;
+                        }
+                    }
                     self.start(node, env, &mut tasks, &mut vals)?;
+                }
+                Task::Arms(arms) => {
+                    let value = pop(&mut vals)?;
+                    let depth = frames.len();
+                    let mut picked = None;
+                    for (pattern, body) in arms {
+                        let mut found: Vec<(&'t str, Value)> = Vec::new();
+                        if match_pattern(pattern, &value, &mut found) {
+                            picked = Some((body, found));
+                            break;
+                        }
+                    }
+                    let Some((body, found)) = picked else {
+                        return Err(GenError::internal("a match fell through"));
+                    };
+                    tasks.push(Task::PopBinds(found.len()));
+                    tasks.push(Task::Eval(body));
+                    binds.extend(found.into_iter().map(|(n, v)| (depth, n, v)));
+                }
+                Task::PopBinds(n) => {
+                    binds.truncate(binds.len().saturating_sub(n));
                 }
                 Task::Apply(node) => self.apply(node, &mut vals, st)?,
                 Task::CallModel(i) => {
@@ -493,6 +541,18 @@ impl<'a> Program<'a> {
                 tasks.push(Task::Branch(t, e));
                 tasks.push(Task::Eval(c));
             }
+            Ir::Tuple(parts) => {
+                tasks.push(Task::Apply(node));
+                tasks.extend(parts.iter().rev().map(Task::Eval));
+            }
+            Ir::Project(base, _) => {
+                tasks.push(Task::Apply(node));
+                tasks.push(Task::Eval(base));
+            }
+            Ir::Match { scrutinee, arms } => {
+                tasks.push(Task::Arms(arms));
+                tasks.push(Task::Eval(scrutinee));
+            }
             // Typed and costed since S10b, never evaluated before S10c-1 (VER04r 13, S10):
             // fail closed, naming the level.
             Ir::Fixed { .. } => {
@@ -549,6 +609,20 @@ impl<'a> Program<'a> {
                 out.extend_from_slice(y);
                 Value::Bytes(Rc::from(out))
             }
+            Ir::Tuple(parts) => {
+                let at = vals
+                    .len()
+                    .checked_sub(parts.len())
+                    .ok_or_else(|| GenError::internal("a tuple lost its components"))?;
+                Value::Tuple(vals.drain(at..).collect())
+            }
+            Ir::Project(_, index) => match pop(vals)? {
+                Value::Tuple(items) => items
+                    .into_iter()
+                    .nth(*index)
+                    .ok_or_else(|| ill_typed("a tuple with that component"))?,
+                _ => return Err(ill_typed("a tuple operand")),
+            },
             Ir::Take(..) | Ir::Drop(..) => {
                 let n = pop(vals)?.as_int()?;
                 let x = pop(vals)?;
@@ -609,7 +683,12 @@ impl<'a> Program<'a> {
     ///
     /// `W0701` for a subject call under an impure guard (the lowering already refuses it)
     /// and every [`Program::eval`] error.
-    pub fn trace(&self, ir: &Ir, vars: &Vars<'_>, st: &mut Stats) -> Result<u64, GenError> {
+    pub fn trace<'c>(
+        &self,
+        ir: &'c Ir,
+        vars: &'c Vars<'c>,
+        st: &mut Stats,
+    ) -> Result<u64, GenError> {
         let impure = || {
             GenError::new(
                 code::W0701,
@@ -617,17 +696,22 @@ impl<'a> Program<'a> {
                 "a subject call under an impure guard (VER04r 4.4)",
             )
         };
-        let mut stack = vec![ir];
+        // The scopes of the `match` arms taken so far: the case's variables plus the pattern's
+        // binders.  `None` is the case's own variables.
+        let mut scopes: Vec<Vec<(&'c str, Value)>> = Vec::new();
+        let mut stack: Vec<(&'c Ir, Option<usize>)> = vec![(ir, None)];
         let mut calls = 0u64;
-        while let Some(node) = stack.pop() {
+        while let Some((node, scope)) = stack.pop() {
             if !node.has_subject() {
                 // Every pure node on the trace that can wrap or leave a bound is evaluated,
                 // so a failure surfaces here and not in every lane (VER04r 3.2, 3.3).
                 if self.may_fail_or_wrap(node) {
-                    self.eval(node, vars, st)?;
+                    let env: &Vars<'_> = scope.map_or(vars, |i| scopes[i].as_slice());
+                    self.eval(node, env, st)?;
                 }
                 continue;
             }
+            let env: &Vars<'_> = scope.map_or(vars, |i| scopes[i].as_slice());
             match node {
                 Ir::Subject { op, args, .. } => {
                     calls += 1;
@@ -639,7 +723,7 @@ impl<'a> Program<'a> {
                             vals.push(if a.has_subject() {
                                 None
                             } else {
-                                Some(self.eval(a, vars, &mut Stats::default())?)
+                                Some(self.eval(a, env, &mut Stats::default())?)
                             });
                         }
                         if !self.admits_call(op, &vals)? {
@@ -648,17 +732,17 @@ impl<'a> Program<'a> {
                     }
                     // Left to right, as the oracle walks: the first offending call of a case
                     // is the same one in both (a stack pops the last pushed first).
-                    stack.extend(args.iter().rev());
+                    stack.extend(args.iter().rev().map(|a| (a, scope)));
                 }
                 Ir::If(c, t, e) => {
                     if t.has_subject() || e.has_subject() {
                         if c.has_subject() {
                             return Err(impure());
                         }
-                        let taken = self.eval(c, vars, st)?.as_bool()?;
-                        stack.push(if taken { t } else { e });
+                        let taken = self.eval(c, env, st)?.as_bool()?;
+                        stack.push((if taken { t } else { e }, scope));
                     } else {
-                        stack.push(c);
+                        stack.push((c, scope));
                     }
                 }
                 Ir::Logic(op, a, b) => {
@@ -666,26 +750,53 @@ impl<'a> Program<'a> {
                         if a.has_subject() {
                             return Err(impure());
                         }
-                        let left = self.eval(a, vars, st)?.as_bool()?;
+                        let left = self.eval(a, env, st)?.as_bool()?;
                         let runs = match op {
                             Logic::And | Logic::Implies => left,
                             Logic::Or => !left,
                         };
                         if runs {
-                            stack.push(b);
+                            stack.push((b, scope));
                         }
                     } else {
-                        stack.push(a);
+                        stack.push((a, scope));
                     }
                 }
-                other => stack.extend(other.children().into_iter().rev()),
+                Ir::Match { scrutinee, arms } => {
+                    // A `match` arm is a guard whose condition is the scrutinee (VER04r 4.4).
+                    if arms.iter().any(|(_, body)| body.has_subject()) {
+                        if scrutinee.has_subject() {
+                            return Err(impure());
+                        }
+                        let value = self.eval(scrutinee, env, st)?;
+                        let mut picked = None;
+                        for (pattern, body) in arms {
+                            let mut found: Vec<(&'c str, Value)> = Vec::new();
+                            if match_pattern(pattern, &value, &mut found) {
+                                picked = Some((body, found));
+                                break;
+                            }
+                        }
+                        let Some((body, found)) = picked else {
+                            return Err(GenError::internal("a match fell through"));
+                        };
+                        let mut inner: Vec<(&'c str, Value)> = env.to_vec();
+                        inner.extend(found);
+                        scopes.push(inner);
+                        stack.push((body, Some(scopes.len() - 1)));
+                    } else {
+                        // Only the scrutinee calls: the arms are not on the trace.
+                        stack.push((scrutinee, scope));
+                    }
+                }
+                other => stack.extend(other.children().into_iter().rev().map(|c| (c, scope))),
             }
         }
         Ok(calls)
     }
 
-    /// The call count of `ir` when it does not depend on the case: no `if` or short
-    /// circuit has a subject in a branch.  `None` means "trace each case".
+    /// The call count of `ir` when it does not depend on the case: no `if`, short
+    /// circuit or `match` arm has a subject in a branch.  `None` means "trace each case".
     pub fn static_calls(&self, ir: &Ir) -> Option<u64> {
         let mut stack = vec![ir];
         let mut calls = 0u64;
@@ -702,6 +813,10 @@ impl<'a> Program<'a> {
                 Ir::If(c, ..) => stack.push(c),
                 Ir::Logic(_, _, b) if b.has_subject() => return None,
                 Ir::Logic(_, a, _) => stack.push(a),
+                Ir::Match { arms, .. } if arms.iter().any(|(_, b)| b.has_subject()) => {
+                    return None
+                }
+                Ir::Match { scrutinee, .. } => stack.push(scrutinee),
                 other => stack.extend(other.children()),
             }
         }
@@ -736,6 +851,10 @@ enum Task<'t> {
     CheckBool,
     /// `if`: the condition is on the stack; take one branch.
     Branch(&'t Ir, &'t Ir),
+    /// `match`: the scrutinee's value is on the stack; evaluate the first arm that matches.
+    Arms(&'t [(Pat, Ir)]),
+    /// Close the binders of the arm just evaluated.
+    PopBinds(usize),
 }
 
 fn pop(vals: &mut Vec<Value>) -> Result<Value, GenError> {
@@ -769,8 +888,15 @@ fn clamp_count(n: i128, len: usize) -> usize {
 fn decode_hex(hex: &str) -> Result<Vec<u8>, GenError> {
     let bad = || GenError::new(code::W0701, "", "a Bytes literal is even lowercase hex");
     let b = hex.as_bytes();
-    if !b.len().is_multiple_of(2) || (b.len() / 2) as u64 > MAX_IR_VALUE {
+    // The shape is checked first, then the size, as the oracle does: only a well-formed
+    // literal over MAX_IR_VALUE is a *size* error (VER04r 8.4, [D34]).
+    if !b.len().is_multiple_of(2) || !b.iter().all(|c| matches!(c, b'0'..=b'9' | b'a'..=b'f')) {
         return Err(bad());
+    }
+    if (b.len() / 2) as u64 > MAX_IR_VALUE {
+        return Err(GenError::size_error(
+            "a Bytes literal exceeds MAX_IR_VALUE (VER04r 4.2 rule 6)",
+        ));
     }
     let nibble = |c: u8| match c {
         b'0'..=b'9' => Ok(c - b'0'),
@@ -877,9 +1003,15 @@ mod tests {
                 "{bad}"
             );
         }
-        // a literal over MAX_IR_VALUE is refused before it is decoded
+        // a literal over MAX_IR_VALUE is refused before it is decoded, and it is a *size* error
         let huge = "00".repeat(65_537);
-        assert!(run(&Ir::Bytes(huge)).is_err());
+        assert!(run(&Ir::Bytes(huge)).unwrap_err().size);
+        assert!(run(&Ir::Bytes("00".repeat(65_536))).is_ok());
+        // a malformed literal is never a size error, however long (the shape is checked first)
+        for bad in ["zz".repeat(65_537), format!("{}0", "00".repeat(65_537))] {
+            let e = run(&Ir::Bytes(bad)).unwrap_err();
+            assert!(!e.size, "{e}");
+        }
     }
 
     #[test]
@@ -1103,6 +1235,7 @@ mod tests {
         let e = p.eval(&call, &vars, &mut Stats::default()).unwrap_err();
         assert_eq!(e.code, code::W0701);
         assert!(e.message.contains("MAX_IR_VALUE"));
+        assert!(e.size, "a concat past MAX_IR_VALUE is a size error");
         // exactly 65,536 is fine
         let half = Value::Bytes(Rc::from(vec![0u8; 32_768]));
         let vars = [("a", half.clone()), ("b", half)];
@@ -1413,6 +1546,247 @@ mod tests {
         // a body with nothing that can wrap needs no trace
         let calm = Ir::Cmp(Cmp::Eq, Box::new(subject("f", vec![])), nat(1));
         assert!(!p.may_wrap(&calm));
+    }
+
+    // -- ir.tuple: tuple, project, match (S10t-2) -------------------------------------------------
+
+    fn tup(parts: Vec<Ir>) -> Ir {
+        Ir::Tuple(parts)
+    }
+    fn proj(base: Ir, i: usize) -> Ir {
+        Ir::Project(Box::new(base), i)
+    }
+    fn mt(scrutinee: Ir, arms: Vec<(Pat, Ir)>) -> Ir {
+        Ir::Match {
+            scrutinee: Box::new(scrutinee),
+            arms,
+        }
+    }
+    fn okp(p: Pat) -> Pat {
+        Pat::Ok(Box::new(p))
+    }
+    fn bind(n: &str) -> Pat {
+        Pat::Bind(n.into())
+    }
+
+    #[test]
+    fn a_tuple_evaluates_its_components_in_order_and_project_picks_one() {
+        let t = tup(vec![Ir::Bool(true), *nat(3), tup(vec![*nat(1), *bytes("ab")])]);
+        assert_eq!(
+            run(&t).unwrap(),
+            Value::Tuple(vec![
+                Value::Bool(true),
+                Value::Int(3),
+                Value::Tuple(vec![Value::Int(1), Value::bytes(&[0xab])])
+            ])
+        );
+        assert_eq!(run(&proj(t.clone(), 1)).unwrap(), Value::Int(3));
+        assert_eq!(run(&proj(proj(t.clone(), 2), 1)).unwrap(), Value::bytes(&[0xab]));
+        // equality is structural, component by component
+        let eq = |a: Ir, b: Ir| run(&Ir::Cmp(Cmp::Eq, Box::new(a), Box::new(b))).unwrap();
+        assert_eq!(eq(t.clone(), t.clone()), Value::Bool(true));
+        assert_eq!(
+            eq(tup(vec![*nat(1), *nat(2)]), tup(vec![*nat(2), *nat(1)])),
+            Value::Bool(false)
+        );
+        // a tuple operand that wraps counts its wrap
+        let u8t = FixedTy::U8;
+        let wrapping = tup(vec![
+            Ir::Arith(Arith::Add, Ty::Fixed(u8t), fx(u8t, 255), fx(u8t, 1)),
+            *nat(0),
+        ]);
+        assert_eq!(wraps_of(&wrapping), 1);
+    }
+
+    #[test]
+    fn a_project_outside_the_tuple_or_of_a_non_tuple_is_an_ill_typed_tree() {
+        assert_eq!(run(&proj(tup(vec![*nat(1), *nat(2)]), 2)).unwrap_err().code, code::W0701);
+        assert_eq!(run(&proj(*nat(1), 0)).unwrap_err().code, code::W0701);
+    }
+
+    #[test]
+    fn a_match_evaluates_exactly_one_arm_the_first_that_matches() {
+        let r = |v: Value| vec![("r", v)];
+        let m = mt(
+            *var("r"),
+            vec![
+                (okp(Pat::Tuple(vec![bind("a"), Pat::Wild])), *var("a")),
+                (Pat::Err("X".into()), *nat(10)),
+                (Pat::ErrAny, *nat(20)),
+            ],
+        );
+        let p = Program::new(&[]);
+        let go = |v: Value| p.eval(&m, &r(v), &mut Stats::default()).unwrap();
+        let pair = Value::Tuple(vec![Value::Int(7), Value::Int(8)]);
+        assert_eq!(go(Value::Ok(Box::new(pair))), Value::Int(7));
+        assert_eq!(go(Value::Err("X".into())), Value::Int(10));
+        assert_eq!(go(Value::Err("Y".into())), Value::Int(20));
+        // the arm that is not taken is not evaluated: a wrap in it is not counted
+        let u8t = FixedTy::U8;
+        let wrap = Ir::Arith(Arith::Add, Ty::Fixed(u8t), fx(u8t, 255), fx(u8t, 1));
+        let m = mt(
+            *var("r"),
+            vec![(okp(Pat::Wild), Ir::Bool(true)), (Pat::ErrAny, Ir::Cmp(Cmp::Eq, Box::new(wrap), fx(u8t, 0)))],
+        );
+        let mut st = Stats::default();
+        p.eval(&m, &r(Value::Ok(Box::new(Value::Int(0)))), &mut st).unwrap();
+        assert_eq!(st.wraps, 0);
+        p.eval(&m, &r(Value::Err("E".into())), &mut st).unwrap();
+        assert_eq!(st.wraps, 1);
+    }
+
+    #[test]
+    fn a_bind_is_visible_to_its_arm_and_to_a_nested_match_but_not_after() {
+        // match r with Ok(x) -> (match s with Ok(y) -> (x, y) | Err(_) -> (x, x)) | Err(_) -> (0, 0)
+        let inner = mt(
+            *var("s"),
+            vec![
+                (okp(bind("y")), tup(vec![*var("x"), *var("y")])),
+                (Pat::ErrAny, tup(vec![*var("x"), *var("x")])),
+            ],
+        );
+        let m = mt(
+            *var("r"),
+            vec![
+                (okp(bind("x")), inner),
+                (Pat::ErrAny, tup(vec![*nat(0), *nat(0)])),
+            ],
+        );
+        let ok = |n: i128| Value::Ok(Box::new(Value::Int(n)));
+        let vars = vec![("r", ok(1)), ("s", ok(2))];
+        let p = Program::new(&[]);
+        assert_eq!(
+            p.eval(&m, &vars, &mut Stats::default()).unwrap(),
+            Value::Tuple(vec![Value::Int(1), Value::Int(2)])
+        );
+        let vars = vec![("r", ok(1)), ("s", Value::Err("E".into()))];
+        assert_eq!(
+            p.eval(&m, &vars, &mut Stats::default()).unwrap(),
+            Value::Tuple(vec![Value::Int(1), Value::Int(1)])
+        );
+        // `x` is not bound outside the arm: a variable read after the match is unbound
+        let after = Ir::Logic(
+            Logic::And,
+            Box::new(Ir::Cmp(Cmp::Eq, Box::new(m.clone()), Box::new(m))),
+            Box::new(Ir::Cmp(Cmp::Eq, var("x"), nat(1))),
+        );
+        assert_eq!(
+            p.eval(&after, &vars, &mut Stats::default()).unwrap_err().code,
+            code::W0701
+        );
+    }
+
+    #[test]
+    fn a_callee_parameter_named_like_a_callers_bind_is_the_callees_own() {
+        // model g(x: Nat) -> Nat = x ;  match r with Ok(x) -> g(5) | Err(_) -> 0
+        // the callee's `x` is its parameter (5), not the caller's bind (1)
+        let g = model("g", &[("x", Ty::Nat)], Ty::Nat, *var("x"));
+        let call = Ir::Model {
+            name: "g".into(),
+            args: vec![*nat(5)],
+        };
+        let m = mt(
+            *var("r"),
+            vec![(okp(bind("x")), call), (Pat::ErrAny, *nat(0))],
+        );
+        let models = [g];
+        let vars = vec![("r", Value::Ok(Box::new(Value::Int(1))))];
+        assert_eq!(
+            Program::new(&models).eval(&m, &vars, &mut Stats::default()).unwrap(),
+            Value::Int(5)
+        );
+        // and a match inside the callee binds in the callee's frame, leaving the caller's alone
+        let inner = mt(
+            Ir::Ok(var("x")),
+            vec![(okp(bind("y")), *var("y")), (Pat::ErrAny, *nat(0))],
+        );
+        let h = model("h", &[("x", Ty::Nat)], Ty::Nat, inner);
+        let call = Ir::Model {
+            name: "h".into(),
+            args: vec![*nat(9)],
+        };
+        let outer = mt(
+            *var("r"),
+            vec![
+                (okp(bind("y")), Ir::Arith(Arith::Add, Ty::Int, Box::new(call), var("y"))),
+                (Pat::ErrAny, *nat(0)),
+            ],
+        );
+        let models = [h];
+        assert_eq!(
+            Program::new(&models).eval(&outer, &vars, &mut Stats::default()).unwrap(),
+            Value::Int(10),
+            "h(9) = 9 with its own y; the caller's y is 1"
+        );
+    }
+
+    #[test]
+    fn a_match_that_falls_through_is_an_internal_refusal() {
+        let m = mt(*var("r"), vec![(Pat::Err("X".into()), *nat(1))]);
+        let e = Program::new(&[])
+            .eval(&m, &[("r", Value::Ok(Box::new(Value::Int(0))))], &mut Stats::default())
+            .unwrap_err();
+        assert!(e.message.contains("fell through"), "{e}");
+    }
+
+    #[test]
+    fn a_match_arm_is_a_guard_for_call_counting() {
+        // match r with Ok(x) -> f(x) == x | Err(_) -> true : a call exactly when r is an Ok
+        let call = |a: Ir| Ir::Cmp(Cmp::Eq, Box::new(subject("f", vec![a])), var("x"));
+        let m = mt(
+            *var("r"),
+            vec![(okp(bind("x")), call(*var("x"))), (Pat::ErrAny, Ir::Bool(true))],
+        );
+        let p = Program::new(&[]);
+        assert_eq!(p.static_calls(&m), None, "the count depends on the case");
+        let ok = vec![("r", Value::Ok(Box::new(Value::Int(3))))];
+        let err = vec![("r", Value::Err("E".into()))];
+        assert_eq!(trace_of(&m, &ok), (1, 0));
+        assert_eq!(trace_of(&m, &err), (0, 0));
+        // a call in the scrutinee counts whatever the arms are, and the arms are not traced
+        let scrut = mt(
+            subject("f", vec![*var("a")]),
+            vec![(okp(Pat::Wild), Ir::Bool(true)), (Pat::ErrAny, Ir::Bool(false))],
+        );
+        assert_eq!(p.static_calls(&scrut), Some(1));
+        assert_eq!(trace_of(&scrut, &[("a", Value::Int(0))]), (1, 0));
+        // a call in an arm under a scrutinee that calls: the impure guard (VER04r 4.4)
+        let impure = mt(
+            subject("f", vec![*var("a")]),
+            vec![(okp(bind("x")), subject("g", vec![*var("x")])), (Pat::ErrAny, Ir::Bool(true))],
+        );
+        let e = p
+            .trace(&impure, &[("a", Value::Int(0))], &mut Stats::default())
+            .unwrap_err();
+        assert_eq!(e.code, code::W0701);
+        assert!(e.message.contains("impure guard"));
+    }
+
+    #[test]
+    fn the_wraps_of_the_scrutinee_and_the_taken_arm_are_counted_and_the_other_arm_is_not() {
+        // The scrutinee wraps once when it is evaluated to pick the arm; the taken arm calls
+        // f(255u8 + 1u8) and the argument's wrap counts once; the untaken arm's wrap does not.
+        let u8t = FixedTy::U8;
+        let wrap = |a: i128| Ir::Arith(Arith::Add, Ty::Fixed(u8t), fx(u8t, a), fx(u8t, 1));
+        let scrut = Ir::If(
+            Box::new(Ir::Cmp(Cmp::Eq, Box::new(wrap(255)), fx(u8t, 0))),
+            Box::new(Ir::Ok(nat(1))),
+            Box::new(Ir::Err("E".into())),
+        );
+        let called = |op: &str| {
+            Ir::Cmp(
+                Cmp::Eq,
+                Box::new(subject(op, vec![wrap(255)])),
+                Box::new(Ir::Bool(true)),
+            )
+        };
+        let m = mt(
+            scrut,
+            vec![(okp(Pat::Wild), called("f")), (Pat::ErrAny, called("g"))],
+        );
+        let mut st = Stats::default();
+        assert_eq!(Program::new(&[]).trace(&m, &[], &mut st).unwrap(), 1);
+        assert_eq!(st.wraps, 2, "the scrutinee's wrap and the taken arm's argument's wrap");
     }
 
     // -- the seeded-wrong evaluators ---------------------------------------------------------

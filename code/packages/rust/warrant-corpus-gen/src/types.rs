@@ -10,10 +10,12 @@
 //!   Bool   Int   Nat   U8 U16 U32 U64 I8 I16 I32 I64
 //!   Bytes  Bytes<4>  Bytes<N>           -- a literal width or a static width parameter
 //!   Result<T, ErrorName>
+//!   (T1,T2)  ((Bool,Nat),U8)            -- ir.tuple: 2 to 8 components, structural
 //! ```
 //!
-//! `List`, `Option`, tuples, records and variants belong to `ir.data` and never reach a
-//! [`Ty`]: the lowering refuses them first, naming the level.
+//! Tuples `(T1,..,Tn)` (2 to 8 components) belong to `ir.tuple` (slice S10t-2); `List`, `Option`
+//! (except as the IR-only intermediate of D23), records and variants belong to `ir.data` and never
+//! reach a [`Ty`]: the lowering refuses them first, naming the level.
 //!
 //! `Int` is the mathematical integer of VER04 section 3.  It exists only inside the IR
 //! (the type of `Nat - Nat`, of a bare literal outside a `Nat` context); VER04r 2.1 allows
@@ -54,6 +56,9 @@ pub enum Ty {
     /// directly; the lowering refuses it everywhere else (level `ir.data`), so it never reaches
     /// a signature, a binder or a stream.
     Option(Box<Ty>),
+    /// `(T1, .., Tn)`, `2 <= n <= 8` (`ir.tuple`, VER04r 4.1, [D20]): structural, so two tuple
+    /// types are equal exactly when their components are.
+    Tuple(Vec<Ty>),
 }
 
 impl Ty {
@@ -77,6 +82,21 @@ impl Ty {
             Ty::Bytes(Some(Width::Param(p))) => format!("Bytes<{p}>"),
             Ty::Result(ok, err) => format!("Result<{},{err}>", ok.name()),
             Ty::Option(inner) => format!("Option<{}>", inner.name()),
+            Ty::Tuple(parts) => format!(
+                "({})",
+                parts.iter().map(Ty::name).collect::<Vec<_>>().join(",")
+            ),
+        }
+    }
+
+    /// Is this type, or a type inside it, a tuple?  The type half of R9 (VER04r 16.10): a binder,
+    /// parameter, result or sub-expression whose static type is or contains a tuple needs
+    /// `ir.tuple` even where the IR names no tuple tag.
+    pub fn contains_tuple(&self) -> bool {
+        match self {
+            Ty::Tuple(_) => true,
+            Ty::Result(ok, _) | Ty::Option(ok) => ok.contains_tuple(),
+            _ => false,
         }
     }
 
@@ -109,6 +129,7 @@ impl Ty {
     ///   Nat   with Int      -> Int          (Nat widens)
     ///   Bytes<N> with Bytes<M> / Bytes -> Bytes   (the width is forgotten)
     ///   Result<A,E> with Result<B,E>   -> Result<unify(A,B),E>
+    ///   (A,..) with (B,..), same arity -> (unify(A,B),..)        (ir.tuple)
     ///   anything else must be equal; nothing else is implicit
     /// ```
     pub fn unify(a: &Ty, b: &Ty) -> Option<Ty> {
@@ -121,6 +142,12 @@ impl Ty {
             (Ty::Result(x, e1), Ty::Result(y, e2)) if e1 == e2 => {
                 Ty::unify(x, y).map(|t| Ty::Result(Box::new(t), e1.clone()))
             }
+            (Ty::Tuple(xs), Ty::Tuple(ys)) if xs.len() == ys.len() => xs
+                .iter()
+                .zip(ys)
+                .map(|(x, y)| Ty::unify(x, y))
+                .collect::<Option<Vec<_>>>()
+                .map(Ty::Tuple),
             _ => None,
         }
     }
@@ -135,6 +162,9 @@ impl Ty {
             (Ty::Nat, Ty::Int) => true,
             (Ty::Bytes(_), Ty::Bytes(None)) => true,
             (Ty::Result(x, e1), Ty::Result(y, e2)) if e1 == e2 => Ty::assignable(x, y),
+            (Ty::Tuple(xs), Ty::Tuple(ys)) if xs.len() == ys.len() => {
+                xs.iter().zip(ys).all(|(x, y)| Ty::assignable(x, y))
+            }
             _ => false,
         }
     }
@@ -149,6 +179,7 @@ impl Ty {
                 .map(|(_, v)| Ty::bytes_n(*v))
                 .unwrap_or_else(|| self.clone()),
             Ty::Result(ok, e) => Ty::Result(Box::new(ok.substitute(statics)), e.clone()),
+            Ty::Tuple(parts) => Ty::Tuple(parts.iter().map(|p| p.substitute(statics)).collect()),
             other => other.clone(),
         }
     }
@@ -231,6 +262,38 @@ mod tests {
             &Ty::Result(Box::new(Ty::BYTES), "F".into())
         ));
         assert!(!Ty::assignable(&Ty::Bool, &Ty::Nat));
+    }
+
+    #[test]
+    fn tuples_are_structural_named_without_spaces_and_counted_by_r9() {
+        let pair = Ty::Tuple(vec![Ty::Bool, Ty::Nat]);
+        assert_eq!(pair.name(), "(Bool,Nat)");
+        let nested = Ty::Tuple(vec![pair.clone(), Ty::bytes_n(0)]);
+        assert_eq!(nested.name(), "((Bool,Nat),Bytes<0>)");
+        assert_eq!(
+            Ty::Result(Box::new(pair.clone()), "E".into()).name(),
+            "Result<(Bool,Nat),E>"
+        );
+        assert!(pair.contains_tuple() && nested.contains_tuple());
+        assert!(Ty::Result(Box::new(pair.clone()), "E".into()).contains_tuple());
+        assert!(!Ty::Result(Box::new(Ty::Bool), "E".into()).contains_tuple());
+        assert!(!Ty::bytes_n(2).contains_tuple());
+        // unify is component by component, assignable too, and the arity must agree
+        let wide = Ty::Tuple(vec![Ty::Bool, Ty::Int]);
+        assert_eq!(Ty::unify(&pair, &wide), Some(wide.clone()));
+        assert_eq!(Ty::unify(&pair, &Ty::Tuple(vec![Ty::Bool])), None);
+        assert_eq!(Ty::unify(&pair, &Ty::Tuple(vec![Ty::Bool, Ty::Bool])), None);
+        assert!(Ty::assignable(&pair, &wide));
+        assert!(!Ty::assignable(&wide, &pair));
+        let narrow = Ty::Tuple(vec![Ty::bytes_n(1)]);
+        assert!(!Ty::assignable(&narrow, &Ty::Tuple(vec![Ty::BYTES, Ty::Bool])));
+        // a tuple is never a Result, and substitute looks inside
+        assert_eq!(Ty::unify(&pair, &Ty::Bool), None);
+        let param = Ty::Tuple(vec![Ty::Bytes(Some(Width::Param("N".into()))), Ty::Bool]);
+        assert_eq!(
+            param.substitute(&[("N".into(), 4)]),
+            Ty::Tuple(vec![Ty::bytes_n(4), Ty::Bool])
+        );
     }
 
     #[test]
