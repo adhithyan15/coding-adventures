@@ -159,6 +159,15 @@ def _process_chunks(filter_: Biquad, chunks: list[list[float]]) -> list[float]:
     return output
 
 
+def _next_u32(state: list[int]) -> int:
+    value = state[0]
+    value ^= (value << 13) & 0xFFFFFFFF
+    value ^= value >> 17
+    value ^= (value << 5) & 0xFFFFFFFF
+    state[0] = value & 0xFFFFFFFF
+    return state[0]
+
+
 def test_shared_fixture_all_biquad_partitions_and_state_semantics() -> None:
     signal, records = _decode_fixture(FIXTURE.read_text(encoding="utf-8"))
     record = records[0]
@@ -194,6 +203,70 @@ def test_shared_fixture_sosfilt_is_one_shot_and_empty_behavior() -> None:
     _assert_exact_finite(sosfilt([], signal), signal)
     with pytest.raises(EmptySignalError):
         sosfilt([], [])
+
+
+def test_fixture_comparison_treats_signed_zero_as_equal() -> None:
+    _assert_exact_finite([-0.0], [0.0])
+    _assert_exact_finite([0.0], [-0.0])
+
+
+def test_seeded_partition_property_samples() -> None:
+    """Bounded property samples: 64 vectors, each checked under random splits."""
+    _, records = _decode_fixture(FIXTURE.read_text(encoding="utf-8"))
+    record = records[0]
+    state = [0xAF02A11]
+    for _ in range(64):
+        length = 1 + _next_u32(state) % 32
+        signal = [((_next_u32(state) & 0xFFFF) - 32768) / 32768 for _ in range(length)]
+        boundaries = [
+            index
+            for index in range(1, length)
+            if _next_u32(state) & 1
+        ]
+        chunks: list[list[float]] = []
+        start = 0
+        for end in boundaries:
+            chunks.append(signal[start:end])
+            start = end
+        chunks.append(signal[start:])
+        expected = _biquad(record).process(signal)
+        actual = _process_chunks(_biquad(record), chunks)
+        _assert_exact_finite(actual, expected)
+
+
+def test_seeded_fixture_schema_fuzz_cases() -> None:
+    """Deterministic malformed-fixture fuzz sample: 128 mutations, seed 0xF102."""
+    raw = FIXTURE.read_text(encoding="utf-8")
+    state = [0xF102]
+    for _ in range(128):
+        document = json.loads(raw)
+        mutation = _next_u32(state) % 12
+        if mutation == 0:
+            document["schema_version"] = True
+        elif mutation == 1:
+            del document["comparison"]
+        elif mutation == 2:
+            document["unknown"] = 0
+        elif mutation == 3:
+            document["cases"].pop()
+        elif mutation == 4:
+            document["cases"][1]["id"] = document["cases"][0]["id"]
+        elif mutation == 5:
+            document["cases"][0]["unexpected"] = 0
+        elif mutation == 6:
+            document["cases"][0]["sections"][0][0] = True
+        elif mutation == 7:
+            document["input"][0] = "1"
+        elif mutation == 8:
+            document["cases"][0]["expected"].pop()
+        elif mutation == 9:
+            document["cases"][0]["chunk_lengths"] = [16]
+        elif mutation == 10:
+            document["cases"][0]["expected"][0] = float("nan")
+        else:
+            document["cases"][0]["id"] = "unknown.operation"
+        with pytest.raises(ValueError):
+            _decode_fixture(json.dumps(document))
 
 
 def test_shared_fixture_loader_rejects_malformed_and_mutated_data() -> None:

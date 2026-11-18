@@ -95,7 +95,7 @@ function assertExactFinite(actual: ArrayLike<number>, expected: number[]): void 
   for (let i = 0; i < expected.length; i++) {
     const got = actual[i];
     assert.ok(Number.isFinite(got), `output[${i}] is non-finite: ${got}`);
-    assert.equal(got, expected[i], `output[${i}] value mismatch`);
+    assert.ok(got === expected[i], `output[${i}] value mismatch`);
   }
 }
 
@@ -122,7 +122,21 @@ function processChunks(filter: Biquad, chunks: number[][]): number[] {
   return output;
 }
 
+function nextU32(state: { value: number }): number {
+  let value = state.value;
+  value ^= value << 13;
+  value ^= value >>> 17;
+  value ^= value << 5;
+  state.value = value >>> 0;
+  return state.value;
+}
+
 describe("shared AF-02 Biquad/SOS fixture", () => {
+  it("treats signed zero as equal under the fixture's numeric comparison", () => {
+    assertExactFinite([-0], [0]);
+    assertExactFinite([0], [-0]);
+  });
+
   it("rejects malformed fixture records and an altered dyadic expected sample", () => {
     const original = JSON.parse(fixtureText) as Record<string, unknown>;
     const missing = structuredClone(original);
@@ -216,5 +230,64 @@ describe("shared AF-02 Biquad/SOS fixture", () => {
     assertExactFinite(sosfilt(record.sections, fixture.input), record.expected);
     assertExactFinite(sosfilt([], fixture.input), fixture.input);
     assert.throws(() => sosfilt([], []), EmptySignalError);
+  });
+
+  it("checks 64 seeded partition-property samples", () => {
+    const fixture = decodeFixture(fixtureText);
+    const record = fixture.cases[0];
+    const state = { value: 0x0af02a11 };
+    for (let trial = 0; trial < 64; trial++) {
+      const length = 1 + (nextU32(state) % 32);
+      const input = Array.from({ length }, () => ((nextU32(state) & 0xffff) - 32768) / 32768);
+      const boundaries: number[] = [];
+      for (let index = 1; index < length; index++) {
+        if ((nextU32(state) & 1) !== 0) boundaries.push(index);
+      }
+      const chunks: number[][] = [];
+      let start = 0;
+      for (const end of boundaries) {
+        chunks.push(input.slice(start, end));
+        start = end;
+      }
+      chunks.push(input.slice(start));
+      const expected = makeBiquad(record).process(input);
+      assertExactFinite(processChunks(makeBiquad(record), chunks), [...expected]);
+    }
+  });
+
+  it("rejects 128 seeded malformed-fixture fuzz mutations", () => {
+    const state = { value: 0x0000f102 };
+    for (let trial = 0; trial < 128; trial++) {
+      const document = JSON.parse(fixtureText) as Record<string, unknown>;
+      const mutation = nextU32(state) % 12;
+      if (mutation === 0) {
+        document.schema_version = true;
+      } else if (mutation === 1) {
+        delete document.comparison;
+      } else if (mutation === 2) {
+        document.unknown = 0;
+      } else if (mutation === 3) {
+        (document.cases as unknown[]).pop();
+      } else if (mutation === 4) {
+        const cases = document.cases as Record<string, unknown>[];
+        cases[1].id = cases[0].id;
+      } else if (mutation === 5) {
+        (document.cases as Record<string, unknown>[])[0].unexpected = 0;
+      } else if (mutation === 6) {
+        const cases = document.cases as Record<string, unknown>[];
+        ((cases[0].sections as unknown[][])[0])[0] = true;
+      } else if (mutation === 7) {
+        (document.input as unknown[])[0] = "1";
+      } else if (mutation === 8) {
+        ((document.cases as Record<string, unknown>[])[0].expected as unknown[]).pop();
+      } else if (mutation === 9) {
+        (document.cases as Record<string, unknown>[])[0].chunk_lengths = [16];
+      } else if (mutation === 10) {
+        ((document.cases as Record<string, unknown>[])[0].expected as unknown[])[0] = Number.POSITIVE_INFINITY;
+      } else {
+        (document.cases as Record<string, unknown>[])[0].id = "unknown.operation";
+      }
+      assert.throws(() => decodeFixture(JSON.stringify(document)));
+    }
   });
 });
