@@ -199,4 +199,4 @@ IDs.
 
 ## Open owner question (CV2, D19)
 
-- **OPEN.** Is it still open whether subject-dependent admit-read arguments should be exempt from the D19 static refusal (VER04r section 4.5: a call whose op `admit` reads a parameter whose argument contains a `subject_op` is refused with `W0701` in every body that makes it)? Recommendation: no. An exemption would mean *unchecked*. VER04r §16.8 holds the OPEN.
+- **OPEN.** Should subject-dependent admit-read arguments be exempt from the D19 static refusal (VER04r section 4.5: a call whose op `admit` reads a parameter whose argument contains a `subject_op` is refused with `W0701` in every body that makes it)? Recommendation: no. An exemption would mean *unchecked*. VER04r §16.8 holds the OPEN.
