@@ -907,6 +907,25 @@ network connection. Those ordered-state, role, certificate, trust, revocation,
 handshake, and transport boundaries remain separate; concrete HTTPS and
 live-provider readiness remain unavailable.
 
+A follow-up verification stage in that composition now accepts only the outer
+transcript-bound hash evidence, the exact decoded `CertificateVerify` message,
+one already validated RSA public key, matching typed verifier limits, and
+caller-owned scratch. It delegates to the existing repository-owned RSA-PSS
+certificate verifier and returns non-copyable success evidence retaining both
+the outer selected-transcript proof and the complete lower signature-verdict
+proof. Callers therefore cannot obtain this stronger verdict from detached
+framing or hash evidence, and the returned proof keeps the selected transcript,
+role-specific input, authorized scheme, message, key, and signature verdict in
+one lifetime-bound graph.
+
+The public key is still only algorithm- and strength-validated: this stage does
+not bind it to an authenticated certificate or reviewed server path. It also
+does not prove ordered handshake state, authorize the selected role, check
+Finished, sequence a handshake, process records, perform I/O, or authorize TLS,
+HTTP, OAuth transport, or live-provider access. Those state, role, certificate,
+trust, revocation, handshake, and transport boundaries remain separate;
+concrete HTTPS remains unavailable.
+
 A bounded `rsa-pss-sha512` prerequisite now validates one complete recovered
 RFC 8017 EMSA-PSS encoded message for the fixed SHA-512, 64-byte-salt profile.
 It composes the public layout gate and bounded SHA-512 MGF1 primitive, unmasks
