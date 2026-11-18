@@ -299,7 +299,7 @@ native floating-point or Warrant proof evidence.
 
 **Phase 5 (design helpers)**:
 
-- `design_low_pass(0.25, 1.0, 33, Hamming)` matches scipy's
+- `design_low_pass(0.25, 33, Hamming)` matches scipy's
   `firwin(33, 0.25, window='hamming')` to ULP.
 - `butterworth_lowpass(2, 0.1, 1.0)` matches scipy's
   `butter(2, 0.1)` coefficients.
