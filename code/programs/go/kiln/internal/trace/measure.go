@@ -93,11 +93,17 @@ const (
 func bestPass1(data []byte, helperRoot bool, lim Limits, repeats int) time.Duration {
 	readRecordsAt(bytes.NewReader(data), lim, helperRoot, true) // warm-up: caches, page faults
 	if len(data) <= smallTrace {
-		// A small trace's pass makes under a megabyte of garbage, so a collection
-		// during it is not the reader's cost: it is a stop-the-world wait, which on
-		// a busy machine can take tens of milliseconds.  Switch the collector off
-		// for the (bounded: at most maxPasses passes) measurement, after one
-		// collection to start from a clean heap.  A large trace keeps the
+		// A small trace's pass makes garbage in proportion to its size (the grammar
+		// path allocates about 46 bytes per input byte: up to about 6 MB for a
+		// 128 KB trace), so a collection during it is not the reader's cost: it is
+		// a stop-the-world wait, which on a busy machine can take tens of
+		// milliseconds.  Switch the collector off for the (bounded: at most
+		// maxPasses passes) measurement, after one collection to start from a
+		// clean heap.  The bound on the heap that piles up is therefore about
+		// maxPasses x 6 MB = 1.2 GB in the worst case (BestPass1Calibrated adds the
+		// reference kernel's roughly 28 bytes per byte on top, over a 64 KB slice:
+		// a few MB per iteration); the usual 250 ms span ends the loop after a few
+		// dozen passes, a few hundred MB.  A large trace keeps the
 		// collector on: its passes are long enough that a pause is a small share,
 		// and its garbage is too big to pile up.
 		runtime.GC()
@@ -117,6 +123,242 @@ func bestPass1(data []byte, helperRoot bool, lim Limits, repeats int) time.Durat
 		}
 	}
 	return best
+}
+
+// ---------------------------------------------------------------------------
+// The reference kernel: a ruler for the host (gate G1, KILN04 section 4.9)
+// ---------------------------------------------------------------------------
+//
+// GitHub's runner fleet varies about 1.75x in CPU speed, so a raw MB/s floor on
+// the grammar path gives false failures on the slow hosts.  To tell "the reader
+// got slower" from "this host is slower", every calibrated measurement also times
+// a small, fixed, PARSER-SHAPED kernel (refKernel), and the test rescales the
+// reader's rate by it: norm_mb_s = best_mb_s * refNominalMBs / ref_mb_s.
+//
+// The kernel is deliberately not a pure clock meter (a first candidate, a serial
+// multiply chain, was rejected at a 1.39x cross-host spread): it does the kinds
+// of work the parser does, so it slows down on a host in the same way the parser
+// does.  It splits the input on newlines; per line it makes a token slice of
+// capacity 4 and appends heap token nodes (so the slice grows and the allocator
+// runs); it finds token boundaries with a byte-class table and dispatches with a
+// `switch` on the class (different work per arm); it copies each token to a
+// string and looks it up in a small prefilled map; it keeps the last 64 lines
+// live in a ring; and it hashes once per TOKEN, never per byte, so there is no
+// serial multiply chain.  It is NOT allocation-free: it allocates about 28 bytes
+// per input byte (the grammar path about 46).
+//
+// *** FROZEN.  The kernel, its tables, its dictionary, its pass count
+// *** (refRepeats) and the nominal constant calibrated to it (refNominalMBs in
+// *** sandbox_tracesize_linux_amd64_test.go, 72.0) must never change: edit any of
+// *** it and the ruler moves silently, making the nominal constant wrong.  If the
+// *** kernel must change, recalibrate (KILN04 section 4.9) in the same PR.
+//
+// The result goes to package-level sinks so the compiler cannot delete the work.
+const (
+	refRepeats = 2 // kernel passes per timed sample: FROZEN
+	fnvOffset  = 14695981039346656037
+	fnvPrime   = 1099511628211
+)
+
+// Byte classes: 0 other, 1 identifier, 2 digit, 3 quote, 4 escape, 5 bracket,
+// 6 comma, 7 space.
+const (
+	clsOther = iota
+	clsIdent
+	clsDigit
+	clsQuote
+	clsEscape
+	clsBracket
+	clsComma
+	clsSpace
+)
+
+// refClass maps a byte to its class.  Built once at init, read-only afterwards.
+var refClass = func() (t [256]uint8) {
+	for c := 0; c < 256; c++ {
+		switch {
+		case c >= 'a' && c <= 'z', c >= 'A' && c <= 'Z', c == '_':
+			t[c] = clsIdent
+		case c >= '0' && c <= '9':
+			t[c] = clsDigit
+		case c == '"':
+			t[c] = clsQuote
+		case c == '\\':
+			t[c] = clsEscape
+		case c == '(' || c == ')' || c == '[' || c == ']' || c == '{' || c == '}':
+			t[c] = clsBracket
+		case c == ',':
+			t[c] = clsComma
+		case c == ' ' || c == '\t' || c == '\n':
+			t[c] = clsSpace
+		}
+	}
+	return
+}()
+
+// refSink and refSinkS keep the kernel's results alive: a value stored in a
+// package-level variable cannot be proved dead.
+var (
+	refSink  uint64
+	refSinkS string
+)
+
+// refTok is one token of the kernel, a heap node like the parser's records: its
+// kind (a byte class, or 8 for a quoted string), byte range, the token's text
+// copied to the heap, and numeric values.
+type refTok struct {
+	kind       uint8
+	start, end int32
+	text       string
+	val        uint64
+	aux        uint64
+	extra      uint64
+}
+
+// refLine is what the kernel keeps live per line: the token pointers (grown by
+// append, so it allocates) and the last identifier.
+type refLine struct {
+	toks []*refTok
+	name string
+}
+
+// refRing holds the last 64 lines so their allocations stay live, as a parser's
+// records do.
+var refRing [64]refLine
+
+// refDict is the small prefilled map identifier tokens are looked up in.
+var refDict = func() map[string]int {
+	m := make(map[string]int)
+	for i, w := range []string{
+		"openat", "read", "write", "close", "execve", "mmap", "munmap", "stat",
+		"fstat", "lstat", "access", "getcwd", "readlink", "clone", "wait4",
+		"exit_group", "O_RDONLY", "O_CLOEXEC", "AT_FDCWD", "ENOENT", "PROT_READ",
+		"MAP_PRIVATE", "NULL", "resumed", "unfinished", "pid",
+	} {
+		m[w] = i + 1
+	}
+	return m
+}()
+
+// refKernel is the frozen reference workload: one pass over data (see the
+// section comment for what it does and why).
+func refKernel(data []byte) uint64 {
+	h := uint64(fnvOffset)
+	depth, commas := 0, 0
+	lineNo := 0
+	for len(data) > 0 {
+		end := bytes.IndexByte(data, '\n')
+		var line []byte
+		if end < 0 {
+			line, data = data, nil
+		} else {
+			line, data = data[:end], data[end+1:]
+		}
+		toks := make([]*refTok, 0, 4)
+		name := ""
+		for i := 0; i < len(line); {
+			c := refClass[line[i]]
+			s := i
+			i++
+			var kind uint8 = c
+			switch c {
+			case clsIdent:
+				for i < len(line) && (refClass[line[i]] == clsIdent || refClass[line[i]] == clsDigit) {
+					i++
+				}
+				name = string(line[s:i]) // heap copy: kept live in the ring
+				h = (h ^ uint64(refDict[name]+1)) * fnvPrime
+			case clsDigit:
+				v := uint64(line[s] - '0')
+				for i < len(line) && refClass[line[i]] == clsDigit {
+					v = v*10 + uint64(line[i]-'0')
+					i++
+				}
+				h = (h ^ v) * fnvPrime
+			case clsQuote:
+				kind = 8
+				for i < len(line) && line[i] != '"' {
+					if line[i] == '\\' {
+						i++
+					}
+					i++
+				}
+				if i < len(line) {
+					i++
+				}
+				h = (h ^ uint64(i-s)) * fnvPrime
+			case clsBracket:
+				if line[s] == '(' || line[s] == '[' || line[s] == '{' {
+					depth++
+				} else {
+					depth--
+				}
+				h = (h ^ uint64(depth&0xff)) * fnvPrime
+			case clsComma:
+				commas++
+				h = (h ^ uint64(commas)) * fnvPrime
+			case clsSpace:
+				continue // whitespace is skipped, not a token
+			default:
+				h = (h ^ uint64(line[s])) * fnvPrime
+			}
+			toks = append(toks, &refTok{kind: kind, start: int32(s), end: int32(i), text: string(line[s:i]), val: h, aux: uint64(refDict[string(line[s:i])]), extra: uint64(depth)})
+		}
+		refRing[lineNo&(len(refRing)-1)] = refLine{toks: toks, name: name}
+		lineNo++
+	}
+	return h ^ uint64(depth) ^ uint64(commas)
+}
+
+// refSample is one timed reference sample: refRepeats passes of the kernel.
+func refSample(data []byte) time.Duration {
+	t0 := time.Now()
+	var h uint64
+	for i := 0; i < refRepeats; i++ {
+		h ^= refKernel(data)
+	}
+	d := time.Since(t0)
+	refSink ^= h
+	refSinkS = refRing[0].name
+	return d
+}
+
+// RefBytes is how many bytes one reference sample processes for data: divide it
+// by the best reference time to get the host's reference rate (ref_mb_s).
+func RefBytes(data []byte) int { return refRepeats * len(data) }
+
+// BestPass1Calibrated is BestPass1 plus the host ruler.  Each iteration of the
+// usual loop (at least repeats iterations spanning at least 250 ms, at most 200,
+// collector off and restored for a small trace) times one reference sample and
+// then one grammar pass, so both see the same stretches of host noise; the
+// minimum of each is kept (noise only adds time).  The untimed refusal-check
+// pass doubles as the grammar warm-up; the kernel has one untimed warm-up
+// sample.  It returns the best grammar pass time, the best reference sample
+// time, and the refusal of the pass ("" when it read every line).  CI/test use
+// only (see BestPass1).
+func BestPass1Calibrated(data []byte, helperRoot bool, repeats int) (best, refBest time.Duration, refusal string) {
+	lim := DefaultLimits()
+	_, _, e, _ := readRecordsAt(bytes.NewReader(data), lim, helperRoot, true) // refusal check and warm-up
+	if e != nil {
+		refusal = e.Reason
+	}
+	refSample(data)
+	if len(data) <= smallTrace {
+		runtime.GC()
+		defer debug.SetGCPercent(debug.SetGCPercent(-1))
+	}
+	start := time.Now()
+	for i := 0; i < repeats || (time.Since(start) < minSpan && i < maxPasses); i++ {
+		if d := refSample(data); i == 0 || d < refBest {
+			refBest = d
+		}
+		t0 := time.Now()
+		readRecordsAt(bytes.NewReader(data), lim, helperRoot, true)
+		if d := time.Since(t0); i == 0 || d < best {
+			best = d
+		}
+	}
+	return best, refBest, refusal
 }
 
 func measureData(data []byte, helperRoot bool, lim Limits) Measurement {

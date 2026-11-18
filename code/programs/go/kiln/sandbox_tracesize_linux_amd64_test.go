@@ -11,9 +11,28 @@ import (
 )
 
 // Gate G1 of the default flip (KILN04 section 4.9): the grammar path's PASS 1
-// (the line reader) must read at a rate that would get a cap-sized action (2 GiB)
-// through in a quarter of the classify deadline (10 minutes): 2048 MiB / 150 s =
-// about 13.7 MB/s, rounded up to 14.  Two things make that a sound gate here:
+// (the line reader) must read fast enough to get a cap-sized action (2 GiB)
+// through well inside the classify deadline (10 minutes, hard limit 600 s, which
+// is 3.6 MB/s).  G1 has TWO parts:
+//
+//   - an ABSOLUTE SAFETY FLOOR, gateAbsMinMBs = 8 MB/s raw, on every gated PROBE
+//     line (the synthetic slice and each real trace of 32-128 KB).  Even the
+//     slowest host seen reads about 11 MB/s; 8 leaves headroom for noise and is
+//     still more than twice the hard limit.
+//
+//   - a HOST-NORMALISED CAPABILITY GATE, gateNormMinMBs = 14 MB/s, on the
+//     deterministic synthetic slice only.  GitHub's runner fleet varies about
+//     1.75x in CPU speed (the slice read 12.3 to 21.6 MB/s across ten legs), so a
+//     raw 14 gives false failures on slow hosts.  The slice's measurement also
+//     times a frozen, parser-shaped reference kernel (trace.refKernel) in the
+//     same loop, and the reader's rate is rescaled to the nominal host:
+//
+//     norm_mb_s = best_mb_s * refNominalMBs / ref_mb_s
+//
+//     "Would this reader clear 14 MB/s on the nominal host?"  A slower host slows
+//     both numbers alike and cancels out; a slower READER only lowers best_mb_s.
+//
+// Two things make the measurement sound:
 //
 //   - It is applied to the BEST (minimum) time of gateRepeats passes after a
 //     warm-up pass, never to a single shot: a 50 KB trace is read in about two
@@ -36,13 +55,28 @@ import (
 // job, which runs these tests alone).  Anywhere else (the general build job runs
 // kiln's tests in parallel with many other packages: a synthetic-slice there read
 // 11.2 MB/s, a contended machine and not a slow reader; or a local run) the same
-// PROBE lines are logged with gated=0 and the floor is not applied.  The
+// PROBE lines are logged with gated=0 and the floors are not applied.  The
 // measurement-validity checks (a zero time, a non-finite rate) fail everywhere.
 // The variable is read in test code only.
 func g1Enforced() bool { return os.Getenv("KILN_G1_GATE") == "1" }
 
 const (
-	gateMinMBs   = 14.0
+	// gateAbsMinMBs: the raw safety floor, every gated line.
+	gateAbsMinMBs = 8.0
+	// gateNormMinMBs: the host-normalised capability floor, synthetic slice only.
+	gateNormMinMBs = 14.0
+	// refNominalMBs is the reference kernel's rate on the NOMINAL host: the
+	// median over the eight calibration legs of k = ref_mb_s * 19.5 / best_mb_s
+	// (71.85, rounded to 72.0; the derivation and the legs are in KILN04 section
+	// 4.9).  Recalibrate (a new median over at least six legs) when the Go
+	// toolchain changes, or when a new CPU model shows norm below 16.8 on a PR
+	// that does not touch the parser; never add a per-CPU table.
+	refNominalMBs = 72.0
+	// refNominalCalibrated is true: the normalised check FAILS the synthetic test
+	// below 14, and the slice line says calibrated=1 (which
+	// assert_sandbox_tests.py now requires).
+	refNominalCalibrated = true
+
 	gateMinBytes = 32 << 10
 	// gateMaxBytes: above this a trace is census only (gated=0).  Best-of-N
 	// over a long pass sees sustained CPU shortage in every pass (a 923 KB trace
@@ -120,9 +154,9 @@ func probeTraceWall(t *testing.T, label, path string, wall time.Duration) {
 			label, m.Bytes, m.Lines, mbs(m.OldTime), mbs(m.NewTime), mbs(m.NewBest), b2i(gated), m.OldAllocs, m.NewAllocs),
 		facts, droppedWalls.Load(), m.OldError, m.NewError))
 	// G1 (blocking).
-	if gated && (!finite(mbs(m.NewBest)) || !(mbs(m.NewBest) >= gateMinMBs)) {
-		t.Errorf("trace %s: the grammar path's best of %d passes read %d bytes at %.1f MB/s, below the %.0f MB/s floor (gate G1, KILN04 section 4.9)",
-			label, gateRepeats, m.Bytes, mbs(m.NewBest), gateMinMBs)
+	if gated && (!finite(mbs(m.NewBest)) || !(mbs(m.NewBest) >= gateAbsMinMBs)) {
+		t.Errorf("trace %s: the grammar path's best of %d passes read %d bytes at %.1f MB/s, below the %.0f MB/s absolute floor (gate G1, KILN04 section 4.9)",
+			label, gateRepeats, m.Bytes, mbs(m.NewBest), gateAbsMinMBs)
 	}
 }
 
@@ -168,19 +202,40 @@ func TestSandboxTraceGateSynthetic(t *testing.T) {
 	// The 4 MiB census: its own line, never gated (see above).
 	t.Logf("PROBE: trace synthetic-4mib-census bytes=%d lines=%d best_mb_s=%.1f gated=0 repeats=%d",
 		len(whole), bytes.Count(whole, []byte{'\n'}), float64(len(whole))/wholeBest.Seconds()/1e6, gateRepeats)
-	best, refusal := trace.BestPass1(slice, true, gateRepeats)
+	// One interleaved calibrated measurement: the best-of-7 grammar pass and the
+	// best-of-7 reference sample come from the same loop, so they see the same
+	// host noise.
+	best, refBest, refusal := trace.BestPass1Calibrated(slice, true, gateRepeats)
 	if refusal != "" {
 		t.Fatalf("pass 1 refused the repeated fixture slice: %s", refusal)
 	}
-	mb := 0.0
-	if best > 0 {
-		mb = float64(len(slice)) / best.Seconds() / 1e6
+	rate := func(n int, d time.Duration) float64 {
+		if d <= 0 {
+			return 0
+		}
+		return float64(n) / d.Seconds() / 1e6
 	}
-	t.Logf("PROBE: trace synthetic-slice bytes=%d lines=%d best_mb_s=%.1f gated=%d repeats=%d",
-		len(slice), bytes.Count(slice, []byte{'\n'}), mb, b2i(g1Enforced()), gateRepeats)
-	// A zero or non-finite rate (a zero best time) fails: it is not a fast reader.
-	if best <= 0 || !finite(mb) || (g1Enforced() && !(mb >= gateMinMBs)) {
-		t.Errorf("synthetic-slice: the grammar path's best of %d passes read a %d byte slice in %v (%.1f MB/s), below the %.0f MB/s floor or not a measurement (gate G1, KILN04 section 4.9)",
-			gateRepeats, len(slice), best, mb, gateMinMBs)
+	mb, refMB := rate(len(slice), best), rate(trace.RefBytes(slice), refBest)
+	norm := mb * refNominalMBs / refMB
+	// A zero or non-finite value (a zero time) fails everywhere: it is not a
+	// measurement.
+	for _, v := range []float64{mb, refMB, norm} {
+		if !finite(v) || v <= 0 {
+			t.Fatalf("synthetic-slice: not a measurement: best %v (%.1f MB/s), reference %v (%.1f MB/s), normalised %.1f MB/s", best, mb, refBest, refMB, norm)
+		}
+	}
+	// The facts come BEFORE gated= and before any refusal field (the CI script
+	// reads key=value pairs left to right and the refusals stay last).
+	t.Logf("PROBE: trace synthetic-slice bytes=%d lines=%d best_mb_s=%.1f ref_mb_s=%.1f norm_mb_s=%.1f calibrated=%d gated=%d repeats=%d",
+		len(slice), bytes.Count(slice, []byte{'\n'}), mb, refMB, norm,
+		b2i(refNominalCalibrated), b2i(g1Enforced()), gateRepeats)
+	if g1Enforced() && !(mb >= gateAbsMinMBs) {
+		t.Errorf("synthetic-slice: the grammar path's best of %d passes read a %d byte slice in %v (%.1f MB/s), below the %.0f MB/s absolute floor (gate G1, KILN04 section 4.9)",
+			gateRepeats, len(slice), best, mb, gateAbsMinMBs)
+	}
+	// The capability gate: a normalised rate below 14 fails.
+	if g1Enforced() && refNominalCalibrated && !(norm >= gateNormMinMBs) {
+		t.Errorf("synthetic-slice: normalised rate %.1f MB/s (raw %.1f, reference %.1f, nominal %.1f) is below the %.0f MB/s capability floor (gate G1, KILN04 section 4.9)",
+			norm, mb, refMB, refNominalMBs, gateNormMinMBs)
 	}
 }
