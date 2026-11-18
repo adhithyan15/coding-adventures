@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased — shared negative-control checker tests (WD-HARN1c)
+
+- BUILD and BUILD_windows run `code/scripts/tests/test_warrant_negctl.py`, the tests of the shared
+  sabotage checker `code/scripts/warrant_negctl.py` (stdlib Python; `python3` on Unix, `python` on
+  Windows). Both declare `# needs-toolchain: python`. The build tool lists the script and its tests
+  as repository inputs of this package, so editing either reruns them. No source, prelude or generated
+  file changes; the package's own sabotage line is unchanged (adopters migrate in later PRs).
+
 ## Unreleased — WD-HARN1b harness follow-ups (LOW findings of the WD-HARN1 review)
 
 - Prelude, `obs` region only: `obs_bail_out` writes its stderr line with

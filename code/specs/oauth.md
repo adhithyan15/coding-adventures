@@ -6043,6 +6043,29 @@ Handshake-state and transcript binding, the remaining TLS transport, and HTTP
 composition remain prerequisites; concrete HTTPS and live-provider readiness
 remain unavailable.
 
+The `tls13-x25519-key-share-binding` composition additionally accepts the
+message-bound final-share evidence returned by
+`tls13-server-hello-retry-selection`. That entry point obtains the decoded
+ServerHello share only through the retained CH1, HelloRetryRequest, CH2, and
+final-ServerHello proof, then applies the existing scalar-to-offer comparison
+and repository-owned X25519 execution without accepting detached key-share or
+policy input. Success returns a non-copyable wrapper borrowing the complete
+message proof and owning the existing wipe-on-drop shared-secret view, so
+later composition cannot separate the derived secret from the exact public
+handshake evidence that authorized it. Failures preserve the existing stable,
+payload-free categories and leave caller-owned output unchanged.
+
+This message-bound execution still does not generate entropy or an ephemeral
+private key, own or wipe the caller's private scalar, compare every permitted
+ClientHello2 change, apply a retry cookie or PSK binder update, bind the
+messages or secret to a transcript, apply the transcript `message_hash`
+rewrite, reject a second retry in connection state, process a handshake,
+derive traffic secrets, protect records, validate certificates, establish
+trust, enforce revocation, perform I/O, authorize HTTP or OAuth transport, or
+open a network connection. Handshake-state and transcript composition, the
+remaining TLS transport, and HTTP composition remain prerequisites; concrete
+HTTPS and live-provider readiness remain unavailable.
+
 An allocation-free `http1-fixed-request-body` prerequisite now binds one
 caller-borrowed, potentially sensitive request body to its exact byte length
 under an explicit caller ceiling. It encodes that length in canonical shortest
