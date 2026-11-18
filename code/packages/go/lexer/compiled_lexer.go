@@ -543,6 +543,45 @@ func (c *Compiled) Tokenize(source string) ([]Token, error) {
 	return l.tokenizeAll()
 }
 
+// TokenizeInto tokenizes source with the compiled grammar, reusing dst's
+// backing storage when the grammar uses standard tokenization and dst has
+// enough capacity. The returned slice borrows that storage; callers may reuse
+// or overwrite it on the next call. The currently occupied elements of dst
+// are cleared before standard-mode reuse. If dst is a shortened prefix of a
+// previous result, the caller remains responsible for any elements truncated
+// from its length. As with Tokenize, a lexical error returns a nil token slice
+// and an error; the partial output is cleared, but dst must not be assumed
+// unchanged.
+//
+// Indentation and layout grammars keep their existing owned-output path and
+// do not mutate dst. Tokenize remains the allocation-owning API.
+func (c *Compiled) TokenizeInto(source string, dst []Token) ([]Token, error) {
+	if c.indentMode || c.layoutMode {
+		return c.Tokenize(source)
+	}
+	clear(dst)
+	l := c.newLexer(source)
+	tokens, err := l.tokenizeStandardInto(dst)
+	if err != nil {
+		// The current partial output is cleared here. If appending grew beyond
+		// the original scratch, the first cap(dst) tokens were also written to
+		// that old backing array and must be cleared there too.
+		clear(tokens)
+	}
+	if cap(dst) >= tokenCapacityHint(len(l.source)) && cap(dst) > 0 {
+		original := dst[:cap(dst)]
+		if len(tokens) > 0 && &tokens[0] != &original[0] {
+			// The returned output moved to a new backing array. Do not leave
+			// token strings retained in the caller's now-unused scratch.
+			clear(original)
+		}
+	}
+	if err != nil {
+		return nil, err
+	}
+	return tokens, err
+}
+
 // ---------------------------------------------------------------------------
 // First-byte analysis
 // ---------------------------------------------------------------------------

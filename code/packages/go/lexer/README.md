@@ -21,6 +21,8 @@ compiled, err := lexer.Compile(tg) // once; bad patterns are errors, not panics
 if err != nil { /* ... */ }
 
 tokens, err := compiled.Tokenize(line) // many times, from many goroutines
+scratch := make([]lexer.Token, 0, 64)
+tokens, err = compiled.TokenizeInto(line, scratch) // borrowed caller storage
 var lexErr *lexer.LexError
 if errors.As(err, &lexErr) {
     fmt.Println(lexErr.Line, lexErr.Column, lexErr.Message)
@@ -31,6 +33,16 @@ if errors.As(err, &lexErr) {
 yields (types, values, lines, columns, flags) for every input the old path
 accepts, and returns a `*LexError` where the old path panics. It never panics and
 contains no `recover()`. A `*Compiled` is immutable and safe for concurrent use.
+
+`Compiled.TokenizeInto` is an opt-in standard-mode caller-buffer API. Its
+returned tokens borrow the returned slice storage until the caller reuses it.
+The currently occupied input elements are cleared before reuse. If the caller
+passes a shortened prefix, it remains responsible for any truncated tail. On a
+lexical error the method returns nil and clears partial output, including
+written entries in the original scratch if append grew. Indentation and layout
+grammars use the existing owned-output path without changing `dst`.
+`Tokenize` remains the allocation-owning API and earlier results are never
+changed by later calls.
 
 It is also fast, without changing what the grammar means (rules are still tried
 in order, first match wins):

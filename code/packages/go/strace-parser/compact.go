@@ -47,8 +47,9 @@ package straceparser
 //
 // The Tree reuses its flat arrays from line to line, but (inherited from the
 // parser package) drops an array larger than its pooled cap at the next parse,
-// so one huge line does not pin memory forever.  The token slice is replaced on
-// every line, so it is never retained beyond the next call.
+// so one huge line does not pin memory forever. For hook-free parses, the
+// parser-owned token slice is also reused; a token slice exposed to PreParse
+// hooks stays on the owning path and is never reused or cleared by this parser.
 //
 // What a LineParser pins between calls: the last line string, its token slice
 // and the Tree.  That is bounded by Options.MaxLineBytes (up to 1 MiB for a
@@ -59,8 +60,8 @@ package straceparser
 //
 // # What is not yet allocation-free
 //
-// The lexer has no caller-buffer entry point (no TokenizeInto), so each line
-// still allocates its token slice.  That is the next saving (P2 PR 6).
+// The standard compiled lexer has a caller-buffer entry point. LineParser uses
+// its own token buffer as scratch only when no PreParse hooks are present.
 
 import (
 	"errors"
@@ -93,12 +94,18 @@ var errNilLineParser = errors.New("strace-parser: ParseLineInto needs a non-nil 
 // ready to use.  Not safe for concurrent use; do not copy.  See the file
 // comment for what stays valid until when.
 type LineParser struct {
-	tree  parser.Tree
-	line  string
-	toks  []lexer.Token
-	body  parser.NodeID
-	valid bool
+	tree    parser.Tree
+	line    string
+	toks    []lexer.Token
+	scratch []lexer.Token
+	body    parser.NodeID
+	valid   bool
 }
+
+// maxRetainedTokenCapacity keeps a large token slice from pinning memory when
+// a LineParser moves back to short lines. Larger buffers are cleared only over
+// their occupied length, then dropped on reset.
+const maxRetainedTokenCapacity = 4096
 
 // ParseLineInto tokenizes and parses one line into lp, discarding the previous
 // result.  It accepts and refuses exactly what ParseLineTokens does, with the
@@ -115,10 +122,12 @@ func (lp *LineParser) ParseLineInto(line string, opts Options) error {
 	if lp == nil {
 		return errNilLineParser
 	}
+	opts = opts.withDefaults()
 	lp.Reset()
 	lp.line = line
-	opts = opts.withDefaults()
-	toks, err := checkLine(line, opts)
+	usesPreParse := len(opts.PreParse) > 0
+	toks, scratch, err := checkLineWithScratch(line, opts, lp.scratch, !usesPreParse)
+	lp.scratch = scratch
 	lp.toks = toks
 	if err != nil {
 		return err
@@ -139,6 +148,12 @@ func (lp *LineParser) Reset() {
 		return
 	}
 	lp.tree.Reset()
+	clear(lp.scratch)
+	if cap(lp.scratch) > maxRetainedTokenCapacity {
+		lp.scratch = nil
+	} else {
+		lp.scratch = lp.scratch[:0]
+	}
 	lp.line, lp.toks, lp.body, lp.valid = "", nil, parser.NoNode, false
 }
 

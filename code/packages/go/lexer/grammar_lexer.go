@@ -876,7 +876,24 @@ func tokenCapacityHint(sourceLen int) int {
 //  2. Append EOF.
 //  3. Reset group stack and skip state for reuse.
 func (l *GrammarLexer) tokenizeStandard() ([]Token, error) {
-	tokens := make([]Token, 0, tokenCapacityHint(len(l.source)))
+	tokens, err := l.tokenizeStandardInto(nil)
+	if err != nil {
+		return nil, err
+	}
+	return tokens, nil
+}
+
+// tokenizeStandardInto is the standard tokenizer's single implementation.
+// dst is private scratch supplied by Compiled.TokenizeInto; the owned public
+// path passes nil and preserves the same capacity hint as before.
+func (l *GrammarLexer) tokenizeStandardInto(dst []Token) ([]Token, error) {
+	hint := tokenCapacityHint(len(l.source))
+	if cap(dst) < hint {
+		dst = make([]Token, 0, hint)
+	} else {
+		dst = dst[:0]
+	}
+	tokens := dst
 
 	for l.pos < len(l.source) {
 		char := l.source[l.pos]
@@ -889,7 +906,7 @@ func (l *GrammarLexer) tokenizeStandard() ([]Token, error) {
 			if l.skipEnabled {
 				skipped, err := l.trySkip()
 				if err != nil {
-					return nil, err
+					return tokens, err
 				}
 				if skipped {
 					continue
@@ -921,10 +938,10 @@ func (l *GrammarLexer) tokenizeStandard() ([]Token, error) {
 		// preserving backward compatibility.
 		tok, matched, err := l.matchToken(l.tableFor())
 		if err != nil {
-			return nil, err
+			return tokens, err
 		}
 		if !matched {
-			return nil, &LexError{l.line, l.column, fmt.Sprintf("Unexpected character %q", char)}
+			return tokens, &LexError{l.line, l.column, fmt.Sprintf("Unexpected character %q", char)}
 		}
 
 		// Update per-type bracket depth tracking.

@@ -175,10 +175,21 @@ worktree; report and preserve it if those checks do not pass.
   its one same-head retry for PR #19618. A separate AWS-backed Ubuntu control measured 18.9 MB/s;
   Azure-backed PR #19605 and #19619 observations were 15.9 and 15.6 MB/s. These are different
   runner instances, not a same-host A/B comparison; they establish neither a deterministic parser
-  regression nor a proven environment-only cause. Local macOS profiling found token-vector
-  allocations but no wall-time hotspot proof. Preserve the 14 MB/s gate and the PR #19619 probe
-  changes. A native Linux same-host comparison and the unchanged gate are required before claiming
-  a throughput repair. The merged #19619 probe/log-hygiene PR remains separate.
+  regression nor a proven environment-only cause. A temporary local Apple M4 Pro experiment on the
+  exact 26-line `build.strace` corpus repeated 36 times measured the owning token path at 67.6–67.7
+  MB/s, 2,184,198 B/op and 1,872 allocations; the caller-buffer path measured 77.5 MB/s, 539,144
+  B/op and 936 allocations. The candidate pass-1 path measured 26.66–26.82 MB/s versus 24.74–25.34
+  MB/s baseline and 172,138–172,141 B/op / 501 allocations versus 285,651–285,654 B/op / 571
+  allocations; the compact full-fixture path measured 34.40–34.46 MB/s versus 31.91–32.40 MB/s
+  and 45,671–45,674 B/op / 85 allocations versus 166,839–166,841 B/op / 156 allocations.
+  Bounded 100-iteration `GOGC=off` runs measured the token path at 63.72/63.92 MB/s baseline and
+  65.95/73.05 MB/s candidate, and pass 1 at 23.99/24.14 MB/s baseline and 25.43/25.07 MB/s
+  candidate. These short bounded runs support allocation accounting but have visible timing spread.
+  These are local relative measurements only. The exact-fixture harness is temporary, not CI
+  evidence; it uses cached interface dispatch for the new method plus the same length/newline
+  guards. Preserve the 14 MB/s gate and the PR #19619 probe changes. Make no native Linux speedup
+  claim without a native same-host comparison; report candidate gate results and Mac
+  relative/allocation evidence separately. The merged #19619 probe/log-hygiene PR remains separate.
 - [ ] `GBL-003` Repair GAME10's three Warrant claims and assurance report. Add meaningful positive and negative
   evidence for `validate` and `advance`, shared proof through `WXSP1`, generated/property and fuzz
   coverage, and Warrant evidence only through a separately reviewed design. A passing finite corpus
