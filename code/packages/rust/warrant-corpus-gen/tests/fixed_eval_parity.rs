@@ -11,7 +11,7 @@
 //! |---|---|---|
 //! | `.oracle-lowering.json` | `warrant-lowering-parity-v1` | [`view::oracle_view_v1`] of the lowered document |
 //! | `.oracle-evaluation.json` | `warrant-evaluation-parity-v1` | the generated corpus (`corpus.json`, chunk files, `cases.tfv`) |
-//! | `.oracle-faults.json` | `warrant-fault-parity-v1` | the same corpus under the shipped gate (`ir.core`) and the test-only **open** gate (`ir.core`, `ir.fixed`, `ir.tuple`) |
+//! | `.oracle-faults.json` | `warrant-fault-parity-v1` | the same corpus under the explicitly pinned closed gate (`ir.core`, `GATE_CLOSED`) and the test-only **open** gate (`ir.core`, `ir.fixed`, `ir.tuple`) |
 //! | `.oracle-values.json` | `warrant-fixed-values-parity-v1` | the generator's evaluator on every built-in at every width on edge values |
 //! | `.oracle-domains.json` | `warrant-domain-parity-v1` | the resolved leaf domains, and the consumer-side descriptor check |
 //!
@@ -109,7 +109,7 @@ fn the_fixed_eval_document_lowers_to_the_oracle_dump_byte_for_byte() {
 // ---- the evaluation and fault dumps ----------------------------------------------------------
 
 fn evaluation_text(src: &str, profile: &str) -> String {
-    evaluation_view(&generated(src, SPEC, profile, None).expect("generates"))
+    evaluation_view(&generated(src, SPEC, profile, &GATE_CLOSED).expect("generates"))
         .render()
         .expect("render")
 }
@@ -118,13 +118,13 @@ fn evaluation_text(src: &str, profile: &str) -> String {
 /// tests below share them (a generation enumerates 112 suites, so each is paid for once).
 fn shipped() -> &'static CorpusV2 {
     static C: OnceLock<CorpusV2> = OnceLock::new();
-    C.get_or_init(|| generated(WARRANT, SPEC, PROFILE, None).expect("generates (shipped gate)"))
+    C.get_or_init(|| generated(WARRANT, SPEC, PROFILE, &GATE_CLOSED).expect("generates (closed gate)"))
 }
 
 fn open() -> &'static CorpusV2 {
     static C: OnceLock<CorpusV2> = OnceLock::new();
     C.get_or_init(|| {
-        generated(WARRANT, SPEC, PROFILE, Some(&GATE_OPEN)).expect("generates (open gate)")
+        generated(WARRANT, SPEC, PROFILE, &GATE_OPEN).expect("generates (open gate)")
     })
 }
 
@@ -804,7 +804,7 @@ fn an_expression_count_loses_the_nat_shift_domain() {
     // nat_0_64 (the same expression c_nosel_expr uses)
     let mutated = WARRANT.replacen("shl(a, (n))", "shl(a, len(take(b\"0102030405\", n)))", 1);
     assert_ne!(mutated, WARRANT);
-    let mutated_corpus = generated(&mutated, SPEC, PROFILE, None).unwrap();
+    let mutated_corpus = generated(&mutated, SPEC, PROFILE, &GATE_CLOSED).unwrap();
     assert_ne!(evaluation_view(&mutated_corpus).render().unwrap(), EVALUATION);
     let corpus = parse(&mutated_corpus.corpus_json).unwrap();
     let suite = corpus
@@ -821,8 +821,8 @@ fn a_changed_profile_changes_the_fault_dump() {
     let mutated = PROFILE.replacen("fault op_x_u8 xor-lsb\n", "", 1);
     assert_ne!(mutated, PROFILE);
     let text = faults_view(
-        &generated(WARRANT, SPEC, &mutated, None).unwrap(),
-        &generated(WARRANT, SPEC, &mutated, Some(&GATE_OPEN)).unwrap(),
+        &generated(WARRANT, SPEC, &mutated, &GATE_CLOSED).unwrap(),
+        &generated(WARRANT, SPEC, &mutated, &GATE_OPEN).unwrap(),
     )
     .render()
     .unwrap();
