@@ -107,4 +107,3 @@ def test_seeded_subnormal_fuzz(seed: int) -> None:
         taps = rng.choice(TAP_COUNTS)
         window = rng.choice(WINDOWS)
         _exercise(cutoff, taps, window)
-
