@@ -1,0 +1,16 @@
+# Warrant binding manifest for code/specs/vos-probe-ready.warrant (the VOS-028b probe fixture).
+# The faults are the negative controls E1 uses as its G3 control: a mutated generated claim
+# that the harness must report failing.
+package vos_probe_ready
+revision 0.1.0
+spec code/specs/vos-probe-ready.warrant
+output code/packages/rust/vos-probe-ready/tests/generated/warrant_evidence.rs
+seed 0x564f_5330_3238_4231
+property_cases 4096
+fuzz_iterations 5000
+negctl_fuzz_iterations 1000
+exhaustive_budget 400000
+
+op insert8 export=insert8 args=u8,u8 faults=shift-mask
+op insert10 export=insert10 args=u16,u8 faults=shift-mask
+op pick8 export=pick8 args=u8 faults=shift-mask

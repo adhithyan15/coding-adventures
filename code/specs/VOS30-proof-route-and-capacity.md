@@ -1,9 +1,10 @@
 # VOS30 -- The Machine-Proof Route (X3) and Solver Capacity
 
-**Status:** Draft, specified before the code (backlog VOS-028a, spec only). No
-probe, no executor and no certificate exists. Section 8 holds numbers from an
-advisor's throwaway experiment; they are calibration, not evidence, and the
-committed probe of VOS-028b replaces them.
+**Status:** The probe of section 9 is built (backlog VOS-028b): its committed
+results, the generated table of section 9.8 and the decision of section 8.5 are
+the evidence. No executor and no certificate exists (VOS-029). The numbers of
+section 8.2 are the advisor's throwaway experiment; they are calibration, not
+evidence, and the generated table supersedes them on every disagreement.
 
 **Layer:** Child of the umbrella. It makes concrete the third stage of
 [VOS00](VOS00-verified-os-program.md) section 10.1 (proof on the compiled
@@ -873,12 +874,22 @@ certificate it produces is used as evidence of anything about the OS.
 
 ### 8.1 What this section is
 
-A decision aid. It states the advisor's calibration (8.2), the validity limits
-that qualify it (8.4, repeated in the probe's output), the thresholds that turn numbers into a decision (8.3), and the
-**current decision state** (8.5). When VOS-028b lands, the generated table
-(section 9.8) replaces the tables of 8.2 and 8.5 states the decision from it.
+A decision aid. It states the advisor's calibration (8.2, superseded), the
+validity limits that qualify every number (8.4, repeated in the probe's output),
+the thresholds that turn numbers into a decision (8.3), and the **current
+decision state** (8.5). VOS-028b has landed: the generated table (section 9.8)
+is the evidence, 8.2 is kept as the record of what the advisor saw, and 8.5
+states the decision from the table.
 
 ### 8.2 Advisor calibration (scratch, not reproducible from the repository); superseded by the generated table from VOS-028b
+
+> **Superseded by VOS-028b.** Everything in this subsection is the advisor's
+> scratch measurement, kept as history and as a cross-check, and **no number in
+> it may be quoted as evidence of capacity**: the generated table of section 9.8
+> (maximum over at least five seeds, hash-pinned, checked for drift, under the
+> *default* checker limits) wins on every disagreement. The probe's instances are
+> not the advisor's (section 9.10 says how they differ), so the tables below
+> compare by order of magnitude only.
 
 Measured by the advisor in a throwaway scratch crate on an arm64 Mac, release
 build, with the in-repository `bit-blaster`, `cdcl-sat` and `drat-check`
@@ -974,9 +985,13 @@ Stated in conflicts and checker work first, seconds second (seconds depend on
 the machine, conflicts do not).
 
 **Seeds.** Every knob is run with **at least 5 seeds**. The row that drives a
-verdict and the table is the **maximum** over seeds (the worst conflicts, the
-largest DRAT, the largest RSS); a median would let one hard instance hide. The
-minimum and the seed count are recorded as well.
+verdict and the table is the **worst seed's own row**, chosen by a fixed rule
+(non-green first, then the most conflicts of one obligation, then the longest
+solve, then the lowest seed) so that conflicts, DRAT size and the checker's verdict
+are from one seed; a median would let one hard instance hide. The table adds the
+maximum solve time and resident memory over the seeds in one group-level column, so
+the single-row rule hides neither. The seed count and the number of distinct
+instances are recorded as well.
 
 An obligation is **GREEN** only if all of, in its worst seed:
 
@@ -1044,43 +1059,163 @@ Print these with every number, because each one limits what it supports:
 5. **One machine, one solver build.** Seconds are host-specific; the
    conflicts and work are the portable part.
 6. **The advisor numbers raised the `drat-check` limits**, so every proof there
-   was checkable; under the shipped limits many are not (the REJECT rows).
+   was checkable; under the shipped limits many are not (the REJECT rows). The
+   probe never raises a limit: a proof the default limits reject is a red row.
+7. **The D instances share one symbolic base index** (the fields of one table
+   entry, the shape of a thread-table operation): `k` accesses at word offsets
+   `i + j` of a T-word table. `k` *independent* symbolic indices (a product of
+   `T^k` cases when split) are not measured, and `i` has `log2 T` bits, so the
+   out-of-range case of section 4.3 does not arise.
+8. **Liveness is exact only for small cones.** Guard G2 decides a declared bit
+   that random flips did not find sensitive by a SAT query when the cone has at
+   most 4,000 AND nodes; for a larger cone the count rests on 256 random
+   assignments and the row says so in its `note`.
+9. **Both sides run on one stepper.** The code side and the reference side are
+   executed by the same symbolic stepper; only the *circuits* of the diverged
+   instructions differ. A stepper bug that affects both sides alike is invisible
+   to the miter; the checks against it are the probe's differential of the
+   stepper against the concrete simulator, the independent concrete evaluator of
+   the replay, and the replay of every control on the real `riscv-simulator`.
+10. **"Five seeds" means five distinct instances only where the table's Seeds
+    column says so.** A deterministic shape may build one circuit for several
+    seeds (the seed then varies only the variable numbering; for C1 on an A1 base
+    all five seeds have the same conflicts), and 18 groups of the committed file
+    (15 solver groups and the three B1 groups, which are identical by design) have
+    fewer than five distinct `instance_sha256`. Each group's line is its worst
+    seed's own row, every cell from that one row.
 
 ### 8.5 Current decision state
 
-(When VOS-028b states the decision here, the sentence **names the reviewer who
-regenerated the full tier and the host** it was regenerated on, and says that
-`dirty_tree`, `binary_sha256` and the banner are self-reported, so the
-regeneration is a process control; section 9.6.)
+**Decision (VOS-028b): Infeasible: re-plan X3** (row 1 of section 8.3), computed
+by `vos-capacity-probe decide` from the rows under the generated table of section
+9.8 (1,625 rows; tool 0.1.0 at repository revision `be35c919f51f`; recorded on
+`aarch64-apple-darwin`, Darwin 25.5.0, `rustc 1.98.0`).
 
-* The **monolithic route**, as VOS00 section 10.1 drew it, is already in the
-  *Infeasible: re-plan X3* row: the monolithic dependent chain is not green from
-  n = 25 (table B2), and the memory mux is not green from T = 8, k = 2
-  (table D). Nothing further is needed to say that the *monolithic* route does
-  not work.
-* **A1 is green at N = 64** (table A), so a bitmap `pick` as a single, small
-  obligation is plausible.
-* The **compositional route is pending**: the advisor's n = 25 per-instruction
-  result (table B3) is encouraging but has no proof logging and a single point.
-  The B3 and D3 numbers of VOS-028b decide whether the route is funded as
-  planned, funded with mitigations, or re-planned.
+**Reviewer: none yet.** The full tier was run once by the implementer (an
+automated session) on that developer Mac, so `regeneration` in the results file
+is null and the table carries the banner "Full tier not independently
+regenerated". `dirty_tree`, `binary_sha256` and the banner are *self-reported by
+the tool*, so regeneration by a named person on a stated host is a process
+control (section 9.6): until a reviewer has regenerated the full tier and a line
+`Regenerated by <name> on <host>` replaces this paragraph, **the decision is
+provisional**. What `check` verifies technically is reproduced on every BUILD: all
+85 quick-tier rows re-run to the same digests, verdicts, controls and conflict
+counts. A first full run (discarded: it recorded `dirty_tree: true`, see the
+lesson on provenance fields) agreed with this one on the instance digest, the
+verdict and, for every UNSAT row, the conflict count, on all 1,572 rows that ended
+by their own verdict; the 53 rows that differ either ended on the 120 s wall (a
+function of machine speed, as it must be) or are the ten E2 rows whose
+expectation the second run corrected.
 
-Until VOS-028b lands, VOS-029 is **designed** with cut points, per-path splitting
-and concretised addresses from the start (section 10), but is not **funded**
-(the backlog says "depends on VOS-028b's decision").
+**What decided it.** Row 1 holds when a *required* shape is not green in its worst
+seed at the finest decomposition tested (section 9.11). Two are not, **but neither
+measures what its name says**; the narrower, supported reading follows them:
 
-What this means for components being built meanwhile (VOS-010 and the
-`emu-core` toys, VOS00 section 14.3 D4):
+* **C1 at 200 instructions, 25% divergence.** C1 on a B base is built as
+  `pub XOR (f_code(s) XOR f_ref(s))` for two secret copies: it contains **two B2
+  equivalences by construction** and can never be greener than B2 (section 9.7). It
+  is not code-against-code two-safety. It reaches the 1,000,000-conflict cap at 200
+  instructions and is red from 25 (354,220 conflicts at 5%). C1 on the A1 base is
+  **green at every N** (115 to 942 conflicts). And section 3.6 already says VOS-029
+  delivers no two-safety on a real entry, so **C1 does not gate VOS-029a**.
+* **D3 at T = 8, k = 16.** In the two seeds that did not finish, the worst
+  obligation reached 503,554 and 454,472 conflicts and no proof was produced
+  (unmeasured); in the three that finished it is 242,607, 240,488 and 217,654
+  conflicts with 37 to 43 MB of DRAT. The generated table shows the worst seed's own
+  row (503,554 conflicts, no proof). "Two of five seeds `unknown`" is the **120 s
+  row-sum wall** (VOS-D095: one row holds all eight obligations), not a
+  per-obligation timeout. The identical obligation unsplit (D2, T = 8, k = 16) is
+  184,385 to 503,554 conflicts and 31 to 116 MB of DRAT, two seeds rejected by the
+  checker. With k = 8 it is green (at most 33,278 conflicts): the cliff is **chain
+  depth** (D2: k = 8 is 10k to 28k conflicts, k = 16 is 184k to 504k).
 
-* Keep **N = 8** for X1: 65,536 cases per claim, 16.4% of the budget (VOS01
-  section 5.6). The hard limits are N at most 10 for an operation with a full
-  `U8` index and N at most 18 for state-only operations.
-* At about 100,000 cases per second or more, time never bites; the 400,000-case
-  budget does.
-* X3 for bitmap state is width-insensitive, so the X3 instance need not equal
-  the X1 instance (section 5.1).
-* For table-indexed state (a thread table), plan on T at most 8 to 16 per
-  obligation, or one obligation per index.
+**The supported finding is narrower than "X3 is infeasible":** an obligation that
+chains more than about two to four non-structurally-matched 32-bit arithmetic
+operations exceeds the checker's budget, and every obligation cut finer is green by
+a factor of 60 or more (B3 with a cut after every instruction: worst step 1,654
+conflicts against a budget of 100,000). It is a constraint on **cut density**, not
+on X3 as a route. Row 1 is still the computed outcome of the procedure fixed before
+the run, and it stays.
+
+**What the table shows besides, and what it does not.**
+
+* **Green, with a wide margin:** A1 and A2 at every N up to 64 (at most 547
+  conflicts); B3 in certified mode **with a cut after every instruction**, at
+  every length from 25 to 1,000 and at 5%, 25% and 100% divergence (the worst
+  step is 1,654 conflicts at every length; 1,000 instructions at 100% divergence
+  is 925,077 conflicts in 1,000 certified obligations); D4 (a cut after every
+  access, the tables compared whole) through T = 16 at k up to 16; D2 (concrete
+  offsets) at T of 16 or more for every k; B4 `x*5` and `base + i*12` at every
+  width; `n`-term re-association up to n = 4.
+* **Red:** monolithic B2 from 50 instructions at every divergence (and from 25 at
+  100%), where it reaches the proof cap or the wall (the cliff of table B2); B3
+  with a cut every 8 instructions at 1,000 instructions (a worst step of 108,397
+  conflicts) and every 32 instructions from 25 instructions; `n`-term
+  re-association from n = 5 (470,248 conflicts, rejected by the default checker
+  limits; n = 6 and 7 reach the cap); D1 (the eq/ite chain, no split, no cut) from
+  k = 4 at T of 8 or more (k = 8 at T = 4); D4 at T of 64 or more (one access compared on the whole table
+  needs 104,487 conflicts at T = 64 and T = 256 does not finish); C2 at T of 16 or
+  more by a small margin (110,229 and 112,084 conflicts).
+* **Not measured, because a row has a 120 s wall:** a *split* or *chain* is one
+  row, so the wall bounds the sum of its obligations: D3 at T of 64 or more and B3
+  with a cut every 32 at 1,000 instructions end `unknown (timeout)` before every
+  obligation has run. Section 8.3's feasibility total is 10 minutes; a larger
+  budget for chains would resolve these (backlog VOS-D095).
+* **What it means.** The compositional route is cheap *where an obligation holds
+  at most a few chained, non-structurally-matched arithmetic operations*: with a
+  cut after every instruction (state equality as the cut relation, which
+  presupposes a model aligned with the instructions: the owned-compile lane of VER13
+  section 4.3 item 1, where a source map gives cut points by construction) the worst
+  obligation is 1,654 conflicts at every length. Cuts every 8 instructions are red
+  on the long entries and every 32 from 25 instructions; the grid jumps from 1 to 8,
+  so **cuts every 2 and 4 instructions were not measured**. **Not measured at all:**
+  a split by index *plus* a cut per access *plus* a comparison of only the touched
+  word (section 4.4): D4 compares whole tables, so its red at T of 64 or more (one
+  access, 94,699 to 104,487 conflicts, every seed rejected by the default checker
+  limits) says nothing about that combination. The limit is the checker, not memory:
+  a million-conflict proof is 0.7 to 1.2 GB resident here, a proof of about 83,000
+  conflicts is the smallest rejected for work, and a 457,844-conflict proof was
+  accepted, so conflicts are not monotone in checker work.
+* **One solver over many segments is the wrong form.** The incremental mode (one
+  solver, assumptions per segment) took about two minutes for the 1,000
+  per-instruction segments that certified mode (a fresh CNF each) did in about
+  three seconds: the learned-clause database of one long incremental run slows every
+  later segment (answering open question 4 of section 11.1).
+* **Proxy.** Everything above is synthetic code with synthetic divergence (section
+  8.4); VOS-029a's re-run of tiers B and D on the real compiled `pick`, `insert`
+  and `remove` is what would turn proxy numbers into evidence.
+
+**Consequence (section 8.3, row 1) and the expected path.** Do not fund VOS-029 as
+planned *until the re-plan row VOS-028c has run*: cut density as a route invariant
+(about 50,000 conflicts per obligation, below the checker's rejection at about
+83,000, with a checker-work bound beside it), where cuts come from on compiled code
+(SAT sweeping on B2, else the owned-compile lane becomes mandatory), memory as a
+split plus per-access cuts plus touched-word comparison (a new D5), and two-safety
+replaced by code-against-code trace shapes (backlog VOS-D096). VOS-029a's first
+target (`fp-bitmap` `pick`, `insert`, `remove`: the A1 and A2 shapes) is green, so
+**VOS-028c is expected to re-fund VOS-029a unchanged**. The drat-check limits are
+not raised. The owner decides.
+
+What this means for components being built meanwhile (VOS-010 and the `emu-core`
+toys, VOS00 section 14.3 D4):
+
+* Keep **N = 8** for X1: 65,536 cases per claim, 16.4% of the budget (VOS01 section
+  5.6). The hard limits are N at most 10 for an operation with a full `U8` index and
+  N at most 18 for state-only operations; **measured**: the generator accepts
+  `insert` at N = 10 (262,144 cases, enumerated here) and refuses it at N = 11 with
+  W0706 (524,288 cases).
+* **Enumeration throughput** (host-specific, on the recording host): the real
+  scheduler's committed harness runs 65,536 cases in 0.6 to 0.8 s (roughly 100,000
+  cases per second, the figure of VOS02 section 13.2); the fixture's simpler harness
+  runs 1.5 to 3 million per second. Time never bites; the 400,000-case budget does.
+  The 64 MiB domain-byte bound never bites first for `Bytes<W>` binders (the case
+  product passes 400,000 before the bytes pass 64 MiB; the widest single binder,
+  `Bytes<4096>`, is 50.7 MB).
+* X3 for bitmap state is width-insensitive (A1 and A2 are green to N = 64), so the
+  X3 instance need not equal the X1 instance (section 5.1).
+* For table-indexed state (a thread table), plan on T at most 16 per obligation, or
+  one obligation per index and a cut between accesses, and keep a word from being
+  updated twice in one obligation (the D2 and D3 cliff when k exceeds T).
 
 ---
 
@@ -1095,17 +1230,32 @@ guards, the measurements, the budget, the result file, the table and its check.
 * Program: `code/programs/rust/vos-capacity-probe`, class P in `vos.toml`
   (VOS03 section 2). Not a library; no other crate depends on it.
 * Dependencies: path dependencies only: `bit-blaster`, `cdcl-sat`, `drat-check`,
-  `riscv-simulator`, `riscv-encoder`. **Zero third-party crates.**
-* Fixture package: `vos-probe-ready`, the VOS01 section 5 toy as a real package,
-  *committed* with its `.warrant` and `evidence.bindings` at the fixed generator
-  paths (the coordinator's decision: "file the probe, not the number"). It is
-  replaced when VOS-011 lands the real component. It exists so experiments E1
-  and E2 measure the **generated by-value harness**, not a handwritten loop.
+  `riscv-simulator`, `riscv-encoder`, plus (VOS-028b) `coding_adventures_sha256`
+  (digests), `coding_adventures_bounded_json` (the results file),
+  `coding_adventures_warrant_grammar` (E2 and the N = 11 refusal), `vos-sched-fp-bitmap`
+  with its `ghost` feature, `vos-sched-contract`, `vos-probe-ready` and
+  `coding_adventures_test_bootstrap` (what the included generated harnesses use).
+  **Zero third-party crates.**
+* Fixtures (decided in VOS-028b, because VOS-011 has landed): the **real production
+  scheduler `vos-sched-fp-bitmap`** is the fixture of every E1 knob that fits N = 8
+  (binder products 256 and 65,536), through its *committed generated harness*
+  (`tests/generated/warrant_evidence.rs`), included into the probe with `include!`
+  and driven in process through the harness's own public `exh_<claim>(Fault)` entry
+  points (the real crate's test target is `harness = false` and refuses a filtered
+  run that is not a sabotage run, so a per-claim run-only rate cannot be taken from
+  its binary; the in-process route needs no change to a production crate). The
+  real crate is fixed at N = 8, so the knobs it cannot give (`insert` at N = 10,
+  the 393,216-case binder product, the N = 11 refusal, the `Impl(mask: U8)` form at
+  a second width) come from the **committed fixture package `vos-probe-ready`**
+  (`code/packages/rust/vos-probe-ready`, class H, with its `.warrant`,
+  `evidence.bindings` and generated harness at the fixed generator paths): the
+  VOS01 section 5 toy, kept and narrowed to exactly what the real component cannot
+  provide. It is no longer "replaced": it never claims to be the scheduler.
 * Results: `code/specs/data/vos30-capacity-results.json`, written only by the
   tool, and the generated table of section 9.8.
 
-**Instance generation: a probe-private minimal symbolic RV32I stepper** of about
-300 lines, over hand-assembled instruction sequences:
+**Instance generation: a probe-private minimal symbolic RV32I stepper** (a few
+hundred lines, `cpu.rs`), over hand-assembled instruction sequences:
 
 * built on the `bit-blaster` (`Aig`, `bv`, `Tseitin`);
 * sequences assembled with `riscv-encoder` and **decoded with
@@ -1127,33 +1277,50 @@ rejected, with the reason, so they are not reopened:
 
 ```
 vos-capacity-probe list
-vos-capacity-probe run --tier quick|full [--only A1,B3] --out results.json
-vos-capacity-probe check results.json
-vos-capacity-probe table
+vos-capacity-probe run --tier quick|full [--only A1,B3] [--jobs N] [--seeds N] --out results.json
+vos-capacity-probe check results.json [--jobs N]
+vos-capacity-probe table [--check | --write] [--results FILE] [--spec FILE]
+vos-capacity-probe decide [--results FILE]
+vos-capacity-probe row --spec JSON --wall SECONDS          (the child process of run)
 ```
 
-* `list` prints each experiment, its knob values per tier and its guards.
+Exit status 0 is success, 1 means the command ran and found violations, 2 means a
+malformed command line or an unreadable input (a gate never confuses the two).
+
+* `list` prints each experiment, its knob counts per tier and its guards.
 * `run` executes the selected experiments, **one child process per row** so peak
-  resident memory is attributable (the run script wraps each child with
-  `/usr/bin/time -l` on macOS or `-v` on Linux; the tool parses it), and
-  appends one row per `(experiment, knob)`.
+  resident memory is attributable (each child is wrapped with `/usr/bin/time -l`
+  on macOS or `-v` on Linux; the tool parses it), and records one row per
+  `(experiment, knob, seed)`. At least five seeds per knob (`--seeds` may raise
+  it, never lower it). `--tier quick` also applies the BUILD gate of section 9.3.
 * `check` validates a results file against the schema and the guards, **re-runs
   every quick-tier row** and compares digests, verdicts, controls and conflict
-  counts, and exits non-zero on any violation; full-tier rows are validated for
-  schema and guards only and are regenerated by a reviewer (section 9.6).
-* `table` renders the markdown table of section 9.8 from the committed results
-  file; with `--check` it fails if the VOS30 spec's generated block differs.
+  counts, requires that the file contain every quick row of the current plan, and
+  exits 1 on any violation; full-tier rows are validated for schema and guards
+  only and are regenerated by a reviewer (section 9.6).
+* `table` renders the markdown block of section 9.8 from the committed results
+  file; `--check` fails if the VOS30 spec's generated block differs, and
+  `--write` splices the block between the markers.
+* `decide` prints the section 8.3 outcome and the conditions that placed it.
 
 ### 9.3 BUILD
 
-The BUILD file runs the unit tests and `run --tier quick` only. The quick tier
-takes the smallest knob of each experiment, finishes in **under 30 seconds**, and
-asserts **verdicts and SAT controls, never timings** (timings differ per host;
-asserting them would be a flaky gate). **The quick tier fails BUILD on any row
-that is `unknown`, `killed`, `oom`, `crashed` or `refused`**, with one exception:
-the E1 `N = 11` row, which *must* be `refused` with W0706 (a missing refusal
-fails). A guard violation (section 9.4) fails BUILD. The full tier is run by hand
-or nightly; its output is committed by a person who reviews it (section 9.6, "what
+The BUILD file runs, in release mode (SAT is slow in a debug build): the unit and
+integration tests; `run --tier quick`; `check` of the committed results file;
+`table --check`; and `gen_evidence --check` of the fixture. **Which part runs in
+CI** (the spec was silent, so the choice is stated here): the quick tier and the
+`check` re-run of the *same* quick-tier rows, in a few seconds of solver time;
+the full tier is a recorded offline run that BUILD never executes. The quick tier
+takes the smallest knob of each experiment at every recorded seed (the plan's
+`quick` flag), and asserts **verdicts and SAT controls, never timings** (timings
+differ per host; asserting them would be a flaky gate). **The quick tier fails
+BUILD on any row that is `unknown`, `killed`, `oom`, `crashed`, `sat` (an UNSAT
+shape that is not) or `refused`**, with one exception: the E1 `N = 11` row, which
+*must* be `refused` with W0706 (a missing refusal fails). A B1 row must be
+`collapsed` (an identical sequence that does not collapse is a guard failure),
+and every UNSAT, collapsed or enumeration row must carry a passing G3 control. A
+guard violation (section 9.4) fails BUILD. The full tier is run by hand or
+nightly; its output is committed by a person who reviews it (section 9.6, "what
 `check` can and cannot verify").
 
 ### 9.4 Validity guards, on every row
@@ -1187,7 +1354,19 @@ cone can mention an input bit and still ignore it):
   that bit and see whether any output bit changes; a bit is *sensitive* if it ever
   does. (Where an instance is small, a SAT query "two inputs differing only in
   this bit give different outputs" replaces the sampling.) `entropy_bits` is the
-  number of sensitive bits.
+  number of sensitive bits. **As built:** the sampling is the first stage and
+  the SAT query decides every bit it did not find sensitive, for a cone of at
+  most 4,000 ANDs (and `undecided bits x ANDs` at most 400,000); a larger cone is
+  measured by sampling alone, and a very large one by a sample of the bits with
+  the count scaled, and the row says so in its `note`. (Sampling alone calls a
+  64-bit `pick` dead: a bit matters only when no higher bit is set, which random
+  assignments reach for about nine bits of any width.) In the cut form (inputs
+  `...@c` and `...@r`, one per side) each side is measured against *its own*
+  declared inputs. For a **self-composition** (C1, C2) the output is
+  secret-independent by design, so the two cones measured are the two sides of
+  the equivalence that cancels the secret (`code(s) XOR ref(s)` taken apart), not
+  the output. For a **chain** the counts are summed over the segments that have
+  any AND at all; a chain with none is `collapsed`.
 * A row is `collapsed` if, on **either** side's output cone (the rule must hold for
   both sides, so it fails closed), fewer than **50% of the declared bits are sensitive**, or
   if the AND count of the miter cone is below **25% of the AND count of the same
@@ -1245,13 +1424,20 @@ silent drop):
    million conflicts); past it the row is `unknown`.
 2. **Wall timeout, 120 s per row**, as a loop over `set_conflict_budget(Some(20_000))`
    with a clock check between slices (`cdcl-sat/src/solver.rs:422`; the budget
-   counts down per slice, so it is reset each iteration). A timeout is
-   `result = "unknown"` with the conflicts used so far.
+   counts down per slice, so it is reset each iteration; as built a slice also
+   ends at 4 x 10^8 watch-list visits, `Solver::set_work_budget`, so the clock is
+   read about every second even on a million-clause formula where 20,000
+   conflicts would take minutes). A timeout is `result = "unknown"`, cap `wall`,
+   with the conflicts used so far. A chain also stops between two obligations.
 3. **Whole-process-group kill.** The row runs as a child in its **own process
    group**; the parent kills the *group* on the wall timeout, covering **every
    stage**: instance generation and CNF writing, the solve, and `drat-check`, not
    only the solver loop. A stage that never returns (a pathological generator, a
    checker running to its work limit) is thereby bounded too. Result `killed`.
+   As built the kill is at **300 s**: 120 s of solving, 30 s for the control
+   stage and 150 s of slack, because the checker's own work limit (2^32 visits)
+   bounds one check to about two minutes; a row that merely needs its check is
+   red for the right reason, not `killed`.
 4. **Enforced memory cap per child**: the parent polls the child's resident set
    **every 50 ms** (`/usr/bin/time` output is only a final figure) and kills the
    group above **2 GB** (result `oom`). The row records **which cap tripped**
@@ -1292,6 +1478,7 @@ both are run and recorded:
   "limits": { "timeout_s": 120, "conflict_slice": 20000, "proof_conflict_cap": 1000000,
               "rss_cap_kb": 2097152, "seeds": 5,
               "drat_check": { "max_vars": 1048576, "max_work": 4294967296 } },
+  "regeneration": null | { "reviewer": "<name>", "host": "<host>" },
   "rows": [ Row, ... ]
 }
 ```
@@ -1308,7 +1495,7 @@ both are run and recorded:
 | `control_instance_sha256` | string | SHA-256 of the control's DIMACS |
 | `ands`, `vars`, `clauses` | integer | size of the miter cone (measured from the AIG) and CNF |
 | `entropy_bits`, `declared_bits` | integer | symbolic input bits the output cone depends on, and the declared inputs (G2) |
-| `result` | string | `unsat`, `sat`, `unknown`, `collapsed`, `refused`, `killed`, `oom`, `crashed` |
+| `result` | string | `unsat`, `sat`, `unknown`, `collapsed`, `refused`, `killed`, `oom`, `crashed`; and `pass`, `fail` for the enumeration rows E1 and E2 |
 | `collapsed_reason` | string or null | the enum of section 4.5 |
 | `control` | object | `{ "result": "sat", "model_checks_cnf": true, "replayed": true }` (G3) |
 | `conflicts`, `propagations` | integer | solver counters (summed over steps for chains) |
@@ -1358,16 +1545,16 @@ the quick tier uses the smallest value only.
 | **B1** | A straight-line sequence against itself (divergence 0%) | lengths 200, 500, 1000; **must report `collapsed`**; measures build time and memory only |
 | **B2** | *Monolithic*, a share of instructions encoded differently in the reference | length 25, 50, 100, 200, 500, 1000, times divergence 5%, 25%, 100% |
 | **B3** | B2 with cut points: per instruction, then per block every 8 and every 32. **Total and worst-step conflicts, certified mode: the number that funds VOS-029.** | same grid; both modes of section 9.5, at least 5 seeds |
-| **B4** | *Arithmetic with no cut point*: n-term re-association; `x*5` against `(x<<2)+x`; `base + i*12` against shift-add | n = 2 to 7 at W = 32; W = 8, 16, 32 |
-| **C1** | *Self-composition* of A and B: two copies, public inputs shared, secrets fresh, observable = pc/address/count trace plus public outputs (as `prove_with_custom_inputs`, `warrant-ir/src/ct_proof.rs:222`, and VER20 section 2.3) | the same sweeps as A and B |
+| **B4** | *Arithmetic with no cut point*: n-term re-association; `x*5` against `(x<<2)+x`; `base + i*12` against shift-add | n = 3 to 7 at W = 32 (n = 2 is one adder against itself); W = 8, 16, 32 |
+| **C1** | *Self-composition shape* of an A1 or B body, **as built**: two copies, public inputs shared, secrets fresh; the observable is the public output `pub_chain XOR (f_code(s) XOR f_ref(s))`, secret-independent only because `f_code` and `f_ref` are *equivalent* (section 9.10). So **C1 on a B base contains two B2 equivalences by construction and can never be greener than B2**; it is not code-against-code two-safety and builds no pc, address or count trace (the original description, after `prove_with_custom_inputs` and VER20 section 2.3, is not what was measured; code-against-code trace shapes are backlog VOS-D096). C2 is the only experiment whose observable is an address trace | the same sweeps as A and B |
 | **C2** | A secret-dependent load index (**must be SAT**) and a padded constant-time variant (UNSAT) | T = 8, 16, 64 |
-| **D1** | *Memory mux*: T words, k chained symbolic load-modify-store, the `sym.rs` eq/ite chain against a mux tree | T = 4 to 256, k = 1 to 16 |
+| **D1** | *Memory mux*: T words, k chained symbolic load-modify-store at offsets `i + j` of one symbolic base index, the `sym.rs` eq/ite chain against a mux tree | T = 4, 8, 16, 64, 256, k = 1, 2, 4, 8, 16 |
 | **D2** | D1 with concrete offsets | same grid |
 | **D3** | D1 case-split on the index: T obligations, reported as **sum and max** | same grid |
 | **D4** | Both sides share the mux structure, with cut points after each access | same grid |
-| **E1** | *Enumeration throughput* of the generated by-value harness on the committed fixture `vos-probe-ready`. Run-only cases per second, compile time separate. Binder product 256, 65,536, 262,144 (insert at N = 10) and 393,216; **N = 11 must be refused (W0706)**. The `Impl(mask: U8)` form against the 8-`Bool` form. G3 control: a mutated generated claim that the harness must report failing | as stated |
-| **E2** | *Enumeration memory*: record widths 1, 8, 64, 256 bytes times case counts; where the 64 MiB domain bound (VER04m E10) bites before 400,000 cases. G3 control: a record whose width violates the bound must be refused | as stated |
-| **F** | DRAT size and check time on every UNSAT row: pass under default limits, bytes per conflict, check/solve ratio | derived from all UNSAT rows |
+| **E1** | *Enumeration throughput* of the generated by-value harness: the real `vos-sched-fp-bitmap` at N = 8 (binder products 256 and 65,536) and the fixture `vos-probe-ready` (65,536 in the 8-`Bool` form and in the `Impl(mask: U8)` form, 262,144 for insert at N = 10, 393,216); **N = 11 must be refused (W0706)**. Run-only cases per second (the harness is compiled into the probe: compile time is the probe's build). G3 control: the same claim against a broken adapter, which the harness must report failing; the refusal row's control is the same document at N = 10, which must be accepted | as stated |
+| **E2** | *Enumeration memory*: `k` binders of `Bytes<W>` (W = 1, 8, 64, 256, 4096; k = 1 to 4): the generator's own accounting of cases and domain bytes (`domain::resolve_binders`), and for an accepted claim the materialised domains and the counted product; where the 64 MiB domain bound (VER04m E10) bites before 400,000 cases. G3 control: a binder wider than the 4096 cap must be refused (W0707) | as stated |
+| **F** | DRAT size and check time on every UNSAT row: pass under default limits, bytes per conflict, check/solve ratio | derived constants printed under the generated table (section 9.8), not a row of its own |
 
 Notes on a few of them, because the shape explains the choice:
 
@@ -1391,50 +1578,537 @@ Notes on a few of them, because the shape explains the choice:
 ### 9.8 The generated table and its check mode
 
 `vos-capacity-probe table` reads the committed results file and emits, for each
-experiment-knob group, one line using the **maximum over seeds** (section 8.3):
+experiment-knob group, one line that is the **worst seed's own row** (section 8.3;
+the tie-break is the lowest seed), with two group-level cells: the seeds (counted
+of total, and the distinct instances among the counted) and the maximum solve time
+and resident memory over the seeds:
 
 ```
-| Experiment | Knob | Mode | ANDs | Vars | Clauses | Entropy bits | Seeds | Conflicts (total / worst) | Solve | DRAT | Check work | Default limits | RSS | Control | Verdict |
+| Experiment | Knob | Mode | ANDs | Vars | Clauses | Entropy bits | Seeds | Conflicts (total / worst) | Solve | DRAT | Check work | Default limits | RSS | Control | Max over seeds (solve / RSS) | Verdict |
 ```
 
 `Control` is `replayed` or the failure; `Verdict` is `GREEN`, `red (reason)`,
 `collapsed`, `unknown (timeout)`, `killed`, `oom` or `crashed`, computed from
 section 8.3. The generated block **begins with a fixed banner and the validity
-limits** (section 8.4, all six), so a table can never be read without them:
+limits** (section 8.4, all of them), so a table can never be read without them:
 
 ```
 PROXY: synthetic hand-written code with synthetic divergence, not compiler
 output. These numbers bound solver capacity per obligation shape; they do not
-prove any entry verifiable. Seeds >= 5, maximum shown. <full-tier regeneration
+prove any entry verifiable. Seeds >= 5; each line is its worst seed's own row. <full-tier regeneration
 banner if applicable>
 ```
 
-The table is placed in this document between the markers
-
-```
-<!-- vos30-table:begin -->
-<!-- vos30-table:end -->
-```
-
-by VOS-028b (the markers are not present in the spec until a generated table
-exists, because an empty block would look like a result). `table --check`
+The table is placed in this document between a pair of HTML-comment markers
+named `vos30-table:begin` and `vos30-table:end` (they are written out only once,
+around the block itself, because the checker finds the first pair; the markers
+were not present in the spec until a generated table existed, because an empty
+block would look like a result). `table --check`
 regenerates the block and compares it byte for byte with the spec, failing on
 **drift**. It **also fails if section 8.5 states a decision** (one of the three
-rows of section 8.3) **while the generated block is absent or empty**, and if the
-results file is absent while the block is present. **No number in the table is
-hand-typed.** VOS-028b also replaces the tables of section 8.2 with a pointer to
-the generated one and states the decision of section 8.5 from it.
+rows of section 8.3, after the words `Decision (VOS-028b)` in bold) **while the
+generated block is absent or empty**, if the stated row is not the row the results
+give, if the results file is absent while the block is present, and if the results
+file exists but the block does not. **No number in the table is hand-typed.**
+VOS-028b keeps the tables of section 8.2 as history under a *superseded* banner
+(so that the comparison with the advisor stays readable) and states the decision of
+section 8.5 from the generated table.
+
+**The generated table** (written by `vos-capacity-probe table --write`; never edit
+between the markers by hand, `table --check` fails on any difference):
+
+<!-- vos30-table:begin -->
+PROXY: synthetic hand-written code with synthetic divergence, not compiler
+output. These numbers bound solver capacity per obligation shape; they do not
+prove any entry verifiable. Seeds >= 5; each line is its worst seed's own row (ties: lowest seed), with the maximum solve time and resident memory over the seeds in the last column but one. Full tier not independently regenerated.
+
+Validity limits (VOS30 section 8.4), printed with every number:
+
+1. Hand-written code is not compiler output: no register allocation, spills, fusion or inlining; real code may be easier or harder.
+2. The divergence is synthetic: the reference differs from the code in controlled proportions (5%, 25%, 100% of the live instructions that have an alternative encoding), not as a real compiler's would.
+3. Trap entry, CSRs and `mret` are not modelled: only the ALU, `lw`/`lbu`/`sw`/`sb` and forward branches with a concrete PC.
+4. The probe bounds solver capacity per obligation shape; it does not prove any entry verifiable.
+5. One machine, one solver build: seconds are host-specific, conflicts and work are the portable part.
+6. The probe never raises the `drat-check` limits: a proof the default limits reject is a red row (the advisor's numbers raised them, so every proof there was checkable).
+7. The D instances share one symbolic base index; `k` independent symbolic indices are not measured, and the index has `log2 T` bits so no out-of-range case arises.
+8. Liveness is decided exactly only for cones of at most 4,000 ANDs; a larger cone's entropy rests on 256 random assignments (a row says so in its note).
+9. Both sides run on one stepper: a stepper bug that affects both alike is invisible to the miter (the checks are the differential against the simulator, the independent evaluator and the replay of every control).
+10. "Five seeds" means five distinct instances only where the Seeds column says so: a deterministic shape (A, C on an A1 base, D with a concrete index) may build the same circuit for several seeds. A group's line is its worst seed's own row, chosen by non-green, then most conflicts, then longest solve, then lowest seed, with every cell from that one row except the two group-level cells (the distinct-instance count and the maximum solve and resident memory over the seeds); a proof or check that was never produced shows `-`, unmeasured.
+
+Run: `vos-capacity-probe` 0.1.0, `rustc 1.98.0 (88d9e12ae 2026-08-18)`, Darwin 25.5.0; the `check` re-run reproduces the quick-tier rows.
+
+| Experiment | Knob | Mode | ANDs | Vars | Clauses | Entropy bits | Seeds (distinct instances) | Conflicts (total / worst) | Solve | DRAT | Check work | Default limits | RSS | Control | Max over seeds (solve / RSS) | Verdict |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| A1 | n=8 | monolithic | 122 | 130 | 367 | 8/8 | 5/5 (5 distinct) | 31 | <1 ms | 455 B | 25,003 | pass | 3 MB | replayed | <1 ms / 3 MB | GREEN |
+| A1 | n=16 | monolithic | 217 | 233 | 652 | 16/16 | 5/5 (5 distinct) | 49 | <1 ms | 1.1 kB | 66,593 | pass | 3 MB | replayed | 2 ms / 4 MB | GREEN |
+| A1 | n=32 | monolithic | 428 | 460 | 1,285 | 32/32 | 5/5 (4 distinct) | 146 | 2 ms | 5.4 kB | 378,972 | pass | 4 MB | replayed | 2 ms / 5 MB | GREEN |
+| A1 | n=64 | monolithic | 1,089 | 1,153 | 3,268 | 64/64 | 5/5 (5 distinct) | 269 | 19 ms | 15.7 kB | 1,233,772 | pass | 6 MB | replayed | 19 ms / 6 MB | GREEN |
+| A2 | n=8 | monolithic | 243 | 259 | 730 | 16/16 | 5/5 (4 distinct) | 83 | <1 ms | 2.9 kB | 40,286 | pass | 3 MB | replayed | <1 ms / 3 MB | GREEN |
+| A2 | n=16 | monolithic | 353 | 377 | 1,060 | 24/24 | 5/5 (3 distinct) | 138 | 2 ms | 3.5 kB | 59,133 | pass | 4 MB | replayed | 2 ms / 4 MB | GREEN |
+| A2 | n=32 | monolithic | 575 | 615 | 1,726 | 40/40 | 5/5 (4 distinct) | 274 | 4 ms | 6.7 kB | 169,848 | pass | 4 MB | replayed | 5 ms / 5 MB | GREEN |
+| A2 | n=64 | monolithic | 1,153 | 1,225 | 3,460 | 72/72 | 5/5 (4 distinct) | 547 | 16 ms | 28.1 kB | 1,057,321 | pass | 6 MB | replayed | 16 ms / 6 MB | GREEN |
+| B1 | length=200 div=0% | monolithic | 0 | 1 | 2 | 1,312/1,312 | 0/5 (1 distinct) | 0 | <1 ms | 2 B | 2 | pass | 22 MB | replayed | <1 ms / 24 MB | collapsed |
+| B1 | length=500 div=0% | monolithic | 0 | 1 | 2 | 2,912/2,912 | 0/5 (1 distinct) | 0 | <1 ms | 2 B | 2 | pass | 43 MB | replayed | <1 ms / 44 MB | collapsed |
+| B1 | length=1000 div=0% | monolithic | 0 | 1 | 2 | 5,560/5,568 | 0/5 (1 distinct) | 0 | <1 ms | 2 B | 2 | pass | 43 MB | replayed | <1 ms / 88 MB | collapsed |
+| B2 | length=25 div=5% | monolithic | 3,785 | 4,066 | 11,356 | 384/384 | 2/5 (2 distinct) | 75,647 | 1.9 s | 12.7 MB | 355,842,522 | pass | 76 MB | replayed | 1.9 s / 76 MB | GREEN |
+| B2 | length=25 div=25% | monolithic | 5,068 | 5,381 | 15,205 | 384/384 | 5/5 (5 distinct) | 86,612 | 1.3 s | 12.0 MB | 400,094,331 | pass | 81 MB | replayed | 1.3 s / 81 MB | GREEN |
+| B2 | length=25 div=100% | monolithic | 10,443 | 10,827 | 31,330 | 384/384 | 5/5 (5 distinct) | 325,114 | 6.3 s | 57.7 MB | 2,902,296,656 | pass | 308 MB | replayed | 6.3 s / 308 MB | red (conflicts > 100k, DRAT > 32 MB) |
+| B2 | length=50 div=5% | monolithic | 12,256 | 12,768 | 36,769 | 512/512 | 5/5 (5 distinct) | 992,101 | 29.1 s | 228.7 MB | - | REJECT | 963 MB | replayed | 29.1 s / 963 MB | red (conflicts > 100k, solve > 10 s, DRAT > 32 MB, default limits reject) |
+| B2 | length=50 div=25% | monolithic | 14,193 | 14,705 | 42,580 | 512/512 | 5/5 (5 distinct) | 973,766 | 30.3 s | 213.1 MB | - | REJECT | 946 MB | replayed | 30.3 s / 946 MB | red (conflicts > 100k, solve > 10 s, DRAT > 32 MB, default limits reject) |
+| B2 | length=50 div=100% | monolithic | 19,407 | 19,919 | 58,222 | 512/512 | 5/5 (5 distinct) | 1,000,039 | 37.1 s | - | - | - | 280 MB | not run | 37.1 s / 803 MB | unknown (conflict cap) |
+| B2 | length=100 div=5% | monolithic | 21,219 | 21,987 | 63,658 | 768/768 | 5/5 (5 distinct) | 1,000,038 | 30.8 s | - | - | - | 290 MB | not run | 30.8 s / 836 MB | unknown (conflict cap) |
+| B2 | length=100 div=25% | monolithic | 26,241 | 27,009 | 78,724 | 768/768 | 5/5 (5 distinct) | 1,000,038 | 34.9 s | - | - | - | 317 MB | not run | 37.6 s / 352 MB | unknown (conflict cap) |
+| B2 | length=100 div=100% | monolithic | 36,180 | 36,948 | 108,541 | 768/768 | 5/5 (5 distinct) | 1,000,052 | 46.2 s | - | - | - | 344 MB | not run | 47.9 s / 344 MB | unknown (conflict cap) |
+| B2 | length=200 div=5% | monolithic | 41,307 | 42,619 | 123,922 | 1,312/1,312 | 5/5 (5 distinct) | 1,000,038 | 36.3 s | - | - | - | 333 MB | not run | 41.9 s / 353 MB | unknown (conflict cap) |
+| B2 | length=200 div=25% | monolithic | 52,742 | 54,054 | 158,227 | 1,312/1,312 | 5/5 (5 distinct) | 1,000,031 | 48.8 s | - | - | - | 341 MB | not run | 48.8 s / 360 MB | unknown (conflict cap) |
+| B2 | length=200 div=100% | monolithic | 71,269 | 72,581 | 213,808 | 1,312/1,312 | 5/5 (5 distinct) | 1,000,039 | 1.2 min | - | - | - | 371 MB | not run | 1.2 min / 380 MB | unknown (conflict cap) |
+| B2 | length=500 div=5% | monolithic | 119,970 | 122,882 | 359,911 | 2,912/2,912 | 5/5 (5 distinct) | 1,000,035 | 1.4 min | - | - | - | 426 MB | not run | 1.5 min / 462 MB | unknown (conflict cap) |
+| B2 | length=500 div=25% | monolithic | 135,200 | 138,112 | 405,601 | 2,912/2,912 | 5/5 (5 distinct) | 1,000,030 | 1.3 min | - | - | - | 408 MB | not run | 1.8 min / 480 MB | unknown (conflict cap) |
+| B2 | length=500 div=100% | monolithic | 175,904 | 178,816 | 527,713 | 2,912/2,912 | 5/5 (5 distinct) | 880,026 | 2.0 min | - | - | - | 472 MB | not run | 2.0 min / 486 MB | unknown (timeout) |
+| B2 | length=1000 div=5% | monolithic | 238,145 | 243,713 | 714,436 | 5,568/5,568 | 5/5 (5 distinct) | 920,012 | 2.0 min | - | - | - | 540 MB | not run | 2.0 min / 540 MB | unknown (timeout) |
+| B2 | length=1000 div=25% | monolithic | 264,631 | 270,199 | 793,894 | 5,568/5,568 | 5/5 (5 distinct) | 860,025 | 2.0 min | - | - | - | 476 MB | not run | 2.0 min / 500 MB | unknown (timeout) |
+| B2 | length=1000 div=100% | monolithic | 360,679 | 366,247 | 1,082,038 | 5,568/5,568 | 5/5 (5 distinct) | 720,016 | 2.0 min | - | - | - | 499 MB | not run | 2.0 min / 499 MB | unknown (timeout) |
+| B3 | length=25 div=5% cut=every1 | certified | 9,187 | 16,545 | 41,490 | 1,375/1,376 | 5/5 (5 distinct) | 10,836 / 1,654 | 55 ms (8 ms worst) | 49.7 kB | 2,631,161 | pass | 7 MB | replayed | 67 ms / 7 MB | GREEN |
+| B3 | length=25 div=5% cut=every1 | incremental | 9,187 | 16,545 | 41,490 | 1,375/1,376 | 5/5 (5 distinct) | 10,929 / 1,653 | 135 ms (14 ms worst) | - | - | - | 12 MB | replayed | 155 ms / 13 MB | GREEN |
+| B3 | length=25 div=5% cut=every8 | certified | 8,456 | 12,274 | 32,646 | 697/704 | 5/5 (5 distinct) | 55,323 / 44,132 | 571 ms (478 ms worst) | 6.2 MB | 217,359,873 | pass | 53 MB | replayed | 571 ms / 53 MB | GREEN |
+| B3 | length=25 div=5% cut=every8 | incremental | 8,456 | 12,274 | 32,646 | 697/704 | 5/5 (5 distinct) | 48,029 / 31,450 | 465 ms (313 ms worst) | - | - | - | 14 MB | replayed | 465 ms / 14 MB | GREEN |
+| B3 | length=25 div=5% cut=every32 | certified | 7,484 | 9,680 | 26,761 | 384/384 | 5/5 (5 distinct) | 231,357 | 4.1 s | 41.8 MB | 2,860,040,290 | pass | 232 MB | replayed | 4.1 s / 232 MB | red (conflicts > 100k, DRAT > 32 MB) |
+| B3 | length=25 div=5% cut=every32 | incremental | 7,484 | 9,680 | 26,761 | 384/384 | 5/5 (5 distinct) | 191,917 | 2.9 s | - | - | - | 22 MB | replayed | 2.9 s / 22 MB | red (conflicts > 100k) |
+| B3 | length=25 div=25% cut=every1 | certified | 10,913 | 18,493 | 47,334 | 1,374/1,376 | 5/5 (5 distinct) | 16,138 / 1,654 | 83 ms (9 ms worst) | 49.7 kB | 2,631,161 | pass | 6 MB | replayed | 83 ms / 7 MB | GREEN |
+| B3 | length=25 div=25% cut=every1 | incremental | 10,913 | 18,493 | 47,334 | 1,374/1,376 | 5/5 (5 distinct) | 15,354 / 1,724 | 135 ms (14 ms worst) | - | - | - | 13 MB | replayed | 141 ms / 13 MB | GREEN |
+| B3 | length=25 div=25% cut=every8 | certified | 8,981 | 12,799 | 34,221 | 697/704 | 5/5 (5 distinct) | 79,624 / 67,598 | 866 ms (773 ms worst) | 9.1 MB | 346,831,211 | pass | 63 MB | replayed | 866 ms / 63 MB | GREEN |
+| B3 | length=25 div=25% cut=every8 | incremental | 8,981 | 12,799 | 34,221 | 697/704 | 5/5 (5 distinct) | 71,311 / 53,721 | 752 ms (583 ms worst) | - | - | - | 14 MB | replayed | 752 ms / 14 MB | GREEN |
+| B3 | length=25 div=25% cut=every32 | certified | 8,009 | 10,205 | 28,336 | 384/384 | 5/5 (5 distinct) | 226,422 | 3.9 s | 39.6 MB | 2,797,104,165 | pass | 252 MB | replayed | 3.9 s / 252 MB | red (conflicts > 100k, DRAT > 32 MB) |
+| B3 | length=25 div=25% cut=every32 | incremental | 8,009 | 10,205 | 28,336 | 384/384 | 5/5 (5 distinct) | 222,706 | 3.6 s | - | - | - | 26 MB | replayed | 3.6 s / 26 MB | red (conflicts > 100k) |
+| B3 | length=25 div=100% cut=every1 | certified | 13,100 | 20,680 | 53,895 | 1,374/1,376 | 5/5 (5 distinct) | 25,370 / 1,654 | 136 ms (13 ms worst) | 49.7 kB | 2,631,161 | pass | 7 MB | replayed | 137 ms / 9 MB | GREEN |
+| B3 | length=25 div=100% cut=every1 | incremental | 13,614 | 21,694 | 56,557 | 1,440/1,440 | 5/5 (5 distinct) | 26,574 / 2,170 | 217 ms (17 ms worst) | - | - | - | 14 MB | replayed | 217 ms / 15 MB | GREEN |
+| B3 | length=25 div=100% cut=every8 | certified | 10,787 | 14,605 | 39,639 | 697/704 | 5/5 (5 distinct) | 111,063 / 82,866 | 1.3 s (1.0 s worst) | 12.6 MB | 543,329,342 | pass | 81 MB | replayed | 1.3 s / 81 MB | GREEN |
+| B3 | length=25 div=100% cut=every8 | incremental | 10,787 | 14,605 | 39,639 | 697/704 | 5/5 (5 distinct) | 112,753 / 88,660 | 1.2 s (1.0 s worst) | - | - | - | 17 MB | replayed | 1.2 s / 19 MB | GREEN |
+| B3 | length=25 div=100% cut=every32 | certified | 10,766 | 12,962 | 36,607 | 384/384 | 5/5 (5 distinct) | 328,465 | 7.0 s | 62.6 MB | 3,371,365,906 | pass | 317 MB | replayed | 7.0 s / 317 MB | red (conflicts > 100k, DRAT > 32 MB) |
+| B3 | length=25 div=100% cut=every32 | incremental | 9,722 | 11,918 | 33,475 | 384/384 | 5/5 (5 distinct) | 312,561 | 6.0 s | - | - | - | 34 MB | replayed | 6.0 s / 34 MB | red (conflicts > 100k) |
+| B3 | length=50 div=5% cut=every1 | certified | 20,336 | 35,698 | 90,614 | 2,781/2,784 | 5/5 (5 distinct) | 26,009 / 1,654 | 131 ms (8 ms worst) | 49.7 kB | 2,631,161 | pass | 7 MB | replayed | 131 ms / 7 MB | GREEN |
+| B3 | length=50 div=5% cut=every1 | incremental | 18,200 | 33,348 | 83,564 | 2,752/2,784 | 5/5 (5 distinct) | 21,233 / 1,658 | 407 ms (29 ms worst) | - | - | - | 19 MB | replayed | 429 ms / 21 MB | GREEN |
+| B3 | length=50 div=5% cut=every8 | certified | 18,144 | 26,344 | 70,109 | 1,497/1,504 | 5/5 (5 distinct) | 80,916 / 38,073 | 753 ms (370 ms worst) | 4.8 MB | 161,611,641 | pass | 48 MB | replayed | 979 ms / 48 MB | GREEN |
+| B3 | length=50 div=5% cut=every8 | incremental | 17,877 | 26,064 | 69,269 | 1,501/1,504 | 5/5 (5 distinct) | 105,462 / 45,660 | 1.1 s (533 ms worst) | - | - | - | 22 MB | replayed | 1.1 s / 22 MB | GREEN |
+| B3 | length=50 div=5% cut=every32 | certified | 15,638 | 19,943 | 55,271 | 768/768 | 5/5 (5 distinct) | 492,443 / 458,541 | 10.5 s (10.1 s worst) | 125.1 MB | 123,848,555 | REJECT | 533 MB | replayed | 10.5 s / 533 MB | red (conflicts > 100k, solve > 10 s, DRAT > 32 MB, default limits reject) |
+| B3 | length=50 div=5% cut=every32 | incremental | 15,638 | 19,943 | 55,271 | 768/768 | 5/5 (5 distinct) | 543,722 / 516,871 | 10.7 s (10.3 s worst) | - | - | - | 45 MB | replayed | 10.7 s / 45 MB | red (conflicts > 100k, solve > 10 s) |
+| B3 | length=50 div=25% cut=every1 | certified | 18,873 | 32,889 | 83,137 | 2,570/2,624 | 5/5 (5 distinct) | 25,175 / 1,654 | 133 ms (10 ms worst) | 49.7 kB | 2,631,161 | pass | 8 MB | replayed | 155 ms / 8 MB | GREEN |
+| B3 | length=50 div=25% cut=every1 | incremental | 18,873 | 32,889 | 83,137 | 2,570/2,624 | 5/5 (5 distinct) | 25,864 / 2,175 | 356 ms (27 ms worst) | - | - | - | 20 MB | replayed | 435 ms / 20 MB | GREEN |
+| B3 | length=50 div=25% cut=every8 | certified | 18,732 | 26,919 | 71,834 | 1,501/1,504 | 5/5 (5 distinct) | 151,740 / 79,743 | 1.6 s (884 ms worst) | 11.9 MB | 458,230,858 | pass | 76 MB | replayed | 1.6 s / 76 MB | GREEN |
+| B3 | length=50 div=25% cut=every8 | incremental | 18,732 | 26,919 | 71,834 | 1,501/1,504 | 5/5 (5 distinct) | 149,401 / 68,253 | 1.7 s (689 ms worst) | - | - | - | 24 MB | replayed | 1.7 s / 24 MB | GREEN |
+| B3 | length=50 div=25% cut=every32 | certified | 16,615 | 20,920 | 58,202 | 768/768 | 5/5 (5 distinct) | 516,034 / 453,189 | 10.3 s (9.5 s worst) | 109.9 MB | 288,991,068 | REJECT | 481 MB | replayed | 10.3 s / 481 MB | red (conflicts > 100k, DRAT > 32 MB, default limits reject) |
+| B3 | length=50 div=25% cut=every32 | incremental | 16,615 | 20,920 | 58,202 | 768/768 | 5/5 (5 distinct) | 456,719 / 398,345 | 8.1 s (7.3 s worst) | - | - | - | 42 MB | replayed | 8.1 s / 42 MB | red (conflicts > 100k) |
+| B3 | length=50 div=100% cut=every1 | certified | 25,581 | 41,001 | 106,523 | 2,752/2,784 | 5/5 (5 distinct) | 46,412 / 1,654 | 237 ms (9 ms worst) | 49.7 kB | 2,631,161 | pass | 8 MB | replayed | 251 ms / 9 MB | GREEN |
+| B3 | length=50 div=100% cut=every1 | incremental | 26,051 | 41,537 | 108,131 | 2,781/2,784 | 5/5 (5 distinct) | 47,740 / 1,978 | 441 ms (23 ms worst) | - | - | - | 24 MB | replayed | 473 ms / 24 MB | GREEN |
+| B3 | length=50 div=100% cut=every8 | certified | 23,338 | 31,538 | 85,691 | 1,497/1,504 | 5/5 (5 distinct) | 229,589 / 111,031 | 2.6 s (1.5 s worst) | 18.5 MB | 864,498,572 | pass | 125 MB | replayed | 2.9 s / 125 MB | red (conflicts > 100k) |
+| B3 | length=50 div=100% cut=every8 | incremental | 23,338 | 31,538 | 85,691 | 1,497/1,504 | 5/5 (5 distinct) | 217,870 / 108,157 | 2.5 s (1.3 s worst) | - | - | - | 28 MB | replayed | 3.1 s / 30 MB | red (conflicts > 100k) |
+| B3 | length=50 div=100% cut=every32 | certified | 20,739 | 25,044 | 70,574 | 768/768 | 5/5 (5 distinct) | 851,636 / 755,567 | 25.4 s (24.1 s worst) | 261.7 MB | 541,936,572 | REJECT | 984 MB | replayed | 25.4 s / 984 MB | red (conflicts > 100k, solve > 10 s, DRAT > 32 MB, default limits reject) |
+| B3 | length=50 div=100% cut=every32 | incremental | 18,807 | 22,912 | 64,368 | 712/736 | 5/5 (5 distinct) | 756,669 / 714,288 | 19.6 s (19.1 s worst) | - | - | - | 55 MB | replayed | 19.6 s / 55 MB | red (conflicts > 100k, solve > 10 s) |
+| B3 | length=100 div=5% cut=every1 | certified | 38,781 | 68,273 | 172,999 | 5,298/5,376 | 5/5 (5 distinct) | 46,884 / 1,654 | 230 ms (8 ms worst) | 49.7 kB | 2,631,161 | pass | 7 MB | replayed | 231 ms / 8 MB | GREEN |
+| B3 | length=100 div=5% cut=every1 | incremental | 37,197 | 65,833 | 165,869 | 5,260/5,344 | 5/5 (5 distinct) | 45,617 / 2,225 | 1.1 s (50 ms worst) | - | - | - | 37 MB | replayed | 1.3 s / 39 MB | GREEN |
+| B3 | length=100 div=5% cut=every8 | certified | 34,185 | 50,411 | 133,386 | 2,997/3,008 | 5/5 (5 distinct) | 117,298 / 38,073 | 1.1 s (361 ms worst) | 4.8 MB | 161,611,641 | pass | 44 MB | replayed | 1.5 s / 51 MB | GREEN |
+| B3 | length=100 div=5% cut=every8 | incremental | 33,573 | 49,792 | 131,529 | 2,954/3,008 | 5/5 (5 distinct) | 159,975 / 49,511 | 1.9 s (536 ms worst) | - | - | - | 38 MB | replayed | 1.9 s / 38 MB | GREEN |
+| B3 | length=100 div=5% cut=every32 | certified | 28,394 | 36,892 | 101,940 | 1,472/1,472 | 5/5 (5 distinct) | 546,474 / 330,237 | 9.0 s (6.0 s worst) | 78.4 MB | 797,077,021 | REJECT | 412 MB | replayed | 9.0 s / 412 MB | red (conflicts > 100k, DRAT > 32 MB, default limits reject) |
+| B3 | length=100 div=5% cut=every32 | incremental | 28,394 | 36,892 | 101,940 | 1,472/1,472 | 5/5 (5 distinct) | 603,407 / 385,480 | 10.7 s (6.8 s worst) | - | - | - | 53 MB | replayed | 10.7 s / 53 MB | red (conflicts > 100k) |
+| B3 | length=100 div=25% cut=every1 | certified | 40,511 | 70,351 | 178,663 | 5,397/5,472 | 5/5 (5 distinct) | 55,630 / 1,654 | 275 ms (8 ms worst) | 49.7 kB | 2,631,161 | pass | 8 MB | replayed | 287 ms / 8 MB | GREEN |
+| B3 | length=100 div=25% cut=every1 | incremental | 41,862 | 71,382 | 182,326 | 5,298/5,376 | 5/5 (5 distinct) | 57,910 / 1,967 | 1.1 s (58 ms worst) | - | - | - | 42 MB | replayed | 1.1 s / 42 MB | GREEN |
+| B3 | length=100 div=25% cut=every8 | certified | 36,715 | 54,358 | 144,087 | 3,162/3,200 | 5/5 (5 distinct) | 149,937 / 60,275 | 1.4 s (610 ms worst) | 8.0 MB | 317,107,715 | pass | 74 MB | replayed | 1.6 s / 74 MB | GREEN |
+| B3 | length=100 div=25% cut=every8 | incremental | 36,715 | 54,358 | 144,087 | 3,162/3,200 | 5/5 (5 distinct) | 154,676 / 64,999 | 2.0 s (713 ms worst) | - | - | - | 38 MB | replayed | 2.0 s / 38 MB | GREEN |
+| B3 | length=100 div=25% cut=every32 | certified | 31,177 | 39,866 | 110,672 | 1,504/1,504 | 5/5 (5 distinct) | 524,903 / 371,820 | 9.7 s (7.3 s worst) | 74.9 MB | 373,798,705 | REJECT | 389 MB | replayed | 11.5 s / 389 MB | red (conflicts > 100k, DRAT > 32 MB, default limits reject) |
+| B3 | length=100 div=25% cut=every32 | incremental | 30,617 | 39,115 | 108,609 | 1,472/1,472 | 5/5 (5 distinct) | 659,681 / 406,086 | 12.3 s (7.2 s worst) | - | - | - | 58 MB | replayed | 13.0 s / 59 MB | red (conflicts > 100k) |
+| B3 | length=100 div=100% cut=every1 | certified | 49,895 | 79,110 | 205,886 | 5,138/5,248 | 5/5 (5 distinct) | 94,362 / 1,654 | 481 ms (9 ms worst) | 49.7 kB | 2,631,161 | pass | 8 MB | replayed | 481 ms / 8 MB | GREEN |
+| B3 | length=100 div=100% cut=every1 | incremental | 50,914 | 81,046 | 210,748 | 5,397/5,472 | 5/5 (5 distinct) | 91,737 / 2,114 | 1.3 s (51 ms worst) | - | - | - | 44 MB | replayed | 1.4 s / 44 MB | GREEN |
+| B3 | length=100 div=100% cut=every8 | certified | 44,084 | 60,665 | 164,148 | 2,954/3,008 | 5/5 (5 distinct) | 482,991 / 136,837 | 5.7 s (2.1 s worst) | 23.7 MB | 1,430,704,938 | pass | 172 MB | replayed | 5.7 s / 172 MB | red (conflicts > 100k) |
+| B3 | length=100 div=100% cut=every8 | incremental | 44,084 | 60,665 | 164,148 | 2,954/3,008 | 5/5 (5 distinct) | 378,366 / 84,289 | 5.0 s (1.3 s worst) | - | - | - | 51 MB | replayed | 5.0 s / 54 MB | GREEN |
+| B3 | length=100 div=100% cut=every32 | certified | 39,563 | 48,061 | 135,447 | 1,472/1,472 | 5/5 (5 distinct) | 1,242,516 / 751,102 | 32.8 s (22.5 s worst) | 235.7 MB | 2,238,150,132 | REJECT | 1017 MB | replayed | 38.2 s / 1017 MB | red (conflicts > 100k, solve > 10 s, DRAT > 32 MB, default limits reject) |
+| B3 | length=100 div=100% cut=every32 | incremental | 41,498 | 50,187 | 141,635 | 1,504/1,504 | 5/5 (5 distinct) | 1,353,109 / 914,295 | 39.6 s (30.4 s worst) | - | - | - | 108 MB | replayed | 40.0 s / 114 MB | red (conflicts > 100k, solve > 10 s) |
+| B3 | length=200 div=5% cut=every1 | certified | 74,691 | 130,767 | 329,991 | 10,416/10,528 | 5/5 (5 distinct) | 90,469 / 1,654 | 446 ms (8 ms worst) | 49.7 kB | 2,631,161 | pass | 8 MB | replayed | 467 ms / 8 MB | GREEN |
+| B3 | length=200 div=5% cut=every1 | incremental | 75,598 | 134,255 | 338,365 | 10,739/10,880 | 5/5 (5 distinct) | 91,110 / 1,894 | 4.4 s (130 ms worst) | - | - | - | 78 MB | replayed | 4.4 s / 78 MB | GREEN |
+| B3 | length=200 div=5% cut=every8 | certified | 66,865 | 100,527 | 264,366 | 6,215/6,272 | 5/5 (5 distinct) | 273,115 / 62,069 | 2.5 s (620 ms worst) | 8.6 MB | 338,160,953 | pass | 78 MB | replayed | 2.5 s / 78 MB | GREEN |
+| B3 | length=200 div=5% cut=every8 | incremental | 66,865 | 100,527 | 264,366 | 6,215/6,272 | 5/5 (5 distinct) | 274,297 / 64,434 | 5.0 s (869 ms worst) | - | - | - | 74 MB | replayed | 5.0 s / 74 MB | GREEN |
+| B3 | length=200 div=5% cut=every32 | certified | 56,416 | 73,139 | 201,944 | 2,944/2,944 | 5/5 (5 distinct) | 876,820 / 311,668 | 14.6 s (5.7 s worst) | 68.5 MB | 1,254,324,538 | REJECT | 462 MB | replayed | 14.6 s / 462 MB | red (conflicts > 100k, DRAT > 32 MB, default limits reject) |
+| B3 | length=200 div=5% cut=every32 | incremental | 56,416 | 73,139 | 201,944 | 2,944/2,944 | 5/5 (5 distinct) | 972,080 / 393,035 | 21.2 s (8.0 s worst) | - | - | - | 101 MB | replayed | 21.2 s / 101 MB | red (conflicts > 100k) |
+| B3 | length=200 div=25% cut=every1 | certified | 81,678 | 140,487 | 357,061 | 10,739/10,880 | 5/5 (5 distinct) | 114,378 / 1,654 | 579 ms (11 ms worst) | 49.7 kB | 2,631,161 | pass | 8 MB | replayed | 579 ms / 8 MB | GREEN |
+| B3 | length=200 div=25% cut=every1 | incremental | 79,859 | 136,973 | 348,035 | 10,358/10,560 | 5/5 (5 distinct) | 110,048 / 2,066 | 4.1 s (143 ms worst) | - | - | - | 79 MB | replayed | 4.4 s / 83 MB | GREEN |
+| B3 | length=200 div=25% cut=every8 | certified | 72,433 | 104,244 | 277,607 | 5,885/5,920 | 5/5 (5 distinct) | 349,408 / 81,015 | 3.3 s (910 ms worst) | 11.9 MB | 467,684,237 | pass | 91 MB | replayed | 3.5 s / 103 MB | GREEN |
+| B3 | length=200 div=25% cut=every8 | incremental | 71,830 | 104,461 | 277,688 | 5,959/6,016 | 5/5 (5 distinct) | 355,962 / 80,960 | 5.5 s (1.0 s worst) | - | - | - | 76 MB | replayed | 5.5 s / 77 MB | GREEN |
+| B3 | length=200 div=25% cut=every32 | certified | 62,756 | 78,685 | 219,342 | 2,816/2,816 | 5/5 (5 distinct) | 1,352,222 / 557,516 | 24.2 s (11.3 s worst) | 106.6 MB | 1,742,389,789 | REJECT | 544 MB | replayed | 24.8 s / 679 MB | red (conflicts > 100k, solve > 10 s, DRAT > 32 MB, default limits reject) |
+| B3 | length=200 div=25% cut=every32 | incremental | 62,756 | 78,685 | 219,342 | 2,816/2,816 | 5/5 (5 distinct) | 1,400,892 / 571,328 | 28.7 s (12.7 s worst) | - | - | - | 117 MB | replayed | 30.6 s / 125 MB | red (conflicts > 100k, solve > 10 s) |
+| B3 | length=200 div=100% cut=every1 | certified | 99,305 | 158,070 | 410,570 | 10,626/10,752 | 5/5 (5 distinct) | 184,040 / 1,654 | 932 ms (8 ms worst) | 49.7 kB | 2,631,161 | pass | 8 MB | replayed | 953 ms / 8 MB | GREEN |
+| B3 | length=200 div=100% cut=every1 | incremental | 98,926 | 158,370 | 411,276 | 10,595/10,720 | 5/5 (5 distinct) | 175,518 / 1,950 | 4.4 s (108 ms worst) | - | - | - | 87 MB | replayed | 4.8 s / 91 MB | GREEN |
+| B3 | length=200 div=100% cut=every8 | certified | 91,195 | 125,360 | 338,865 | 6,215/6,272 | 5/5 (5 distinct) | 756,535 / 145,720 | 8.1 s (1.9 s worst) | 24.0 MB | 1,352,118,184 | pass | 169 MB | replayed | 8.1 s / 169 MB | red (conflicts > 100k) |
+| B3 | length=200 div=100% cut=every8 | incremental | 91,195 | 125,360 | 338,865 | 6,215/6,272 | 5/5 (5 distinct) | 680,099 / 130,831 | 10.8 s (2.4 s worst) | - | - | - | 106 MB | replayed | 10.8 s / 106 MB | red (conflicts > 100k) |
+| B3 | length=200 div=100% cut=every32 | certified | 78,303 | 95,116 | 267,875 | 2,944/2,944 | 5/5 (5 distinct) | 2,288,439 / 721,901 | 1.0 min (21.5 s worst) | 242.6 MB | 3,351,048,633 | REJECT | 977 MB | replayed | 1.1 min / 977 MB | red (conflicts > 100k, solve > 10 s, DRAT > 32 MB, default limits reject) |
+| B3 | length=200 div=100% cut=every32 | incremental | 81,322 | 97,365 | 275,382 | 2,816/2,816 | 5/5 (5 distinct) | 2,509,986 / 865,868 | 1.3 min (30.2 s worst) | - | - | - | 205 MB | replayed | 1.7 min / 248 MB | red (conflicts > 100k, solve > 10 s) |
+| B3 | length=500 div=5% cut=every1 | certified | 186,628 | 327,204 | 825,360 | 26,085/26,368 | 5/5 (5 distinct) | 227,004 / 1,654 | 1.1 s (8 ms worst) | 49.7 kB | 2,631,161 | pass | 8 MB | replayed | 1.2 s / 9 MB | GREEN |
+| B3 | length=500 div=5% cut=every1 | incremental | 190,811 | 333,452 | 842,772 | 26,188/26,560 | 5/5 (5 distinct) | 236,978 / 2,047 | 24.3 s (347 ms worst) | - | - | - | 161 MB | replayed | 27.3 s / 161 MB | GREEN |
+| B3 | length=500 div=5% cut=every8 | certified | 169,307 | 254,436 | 669,511 | 15,629/15,808 | 5/5 (5 distinct) | 693,685 / 55,281 | 6.3 s (592 ms worst) | 8.3 MB | 318,392,059 | pass | 80 MB | replayed | 6.3 s / 80 MB | GREEN |
+| B3 | length=500 div=5% cut=every8 | incremental | 169,307 | 254,436 | 669,511 | 15,629/15,808 | 5/5 (5 distinct) | 641,415 / 51,364 | 25.1 s (1.1 s worst) | - | - | - | 164 MB | replayed | 26.4 s / 165 MB | GREEN |
+| B3 | length=500 div=5% cut=every32 | certified | 142,428 | 181,828 | 504,650 | 6,880/6,880 | 5/5 (5 distinct) | 3,046,603 / 508,021 | 53.9 s (10.4 s worst) | 102.0 MB | 3,691,402,987 | REJECT | 553 MB | replayed | 53.9 s / 574 MB | red (conflicts > 100k, solve > 10 s, DRAT > 32 MB, default limits reject) |
+| B3 | length=500 div=5% cut=every32 | incremental | 142,428 | 181,828 | 504,650 | 6,880/6,880 | 5/5 (5 distinct) | 3,176,342 / 467,016 | 1.3 min (13.1 s worst) | - | - | - | 255 MB | replayed | 1.3 min / 255 MB | red (conflicts > 100k, solve > 10 s) |
+| B3 | length=500 div=25% cut=every1 | certified | 199,429 | 340,569 | 865,455 | 26,085/26,368 | 5/5 (5 distinct) | 274,446 / 1,654 | 1.4 s (18 ms worst) | 49.7 kB | 2,631,161 | pass | 9 MB | replayed | 1.4 s / 9 MB | GREEN |
+| B3 | length=500 div=25% cut=every1 | incremental | 203,263 | 349,144 | 888,330 | 26,527/26,848 | 5/5 (5 distinct) | 273,917 / 2,316 | 29.2 s (385 ms worst) | - | - | - | 160 MB | replayed | 29.2 s / 168 MB | GREEN |
+| B3 | length=500 div=25% cut=every8 | certified | 180,090 | 262,039 | 695,550 | 15,212/15,264 | 5/5 (5 distinct) | 841,643 / 80,846 | 8.1 s (908 ms worst) | 12.7 MB | 619,739,698 | pass | 101 MB | replayed | 8.8 s / 103 MB | GREEN |
+| B3 | length=500 div=25% cut=every8 | incremental | 183,049 | 268,578 | 711,937 | 15,629/15,808 | 5/5 (5 distinct) | 909,046 / 92,611 | 29.0 s (2.0 s worst) | - | - | - | 200 MB | replayed | 29.0 s / 200 MB | GREEN |
+| B3 | length=500 div=25% cut=every32 | certified | 147,306 | 184,025 | 513,710 | 6,464/6,464 | 5/5 (5 distinct) | 3,252,763 / 896,954 | 1.1 min (27.2 s worst) | - | - | - | 1022 MB | not run | 1.1 min / 1022 MB | unknown (timeout) |
+| B3 | length=500 div=25% cut=every32 | incremental | 117,848 | 147,985 | 412,617 | 5,280/5,280 | 5/5 (5 distinct) | 3,392,772 / 762,872 | 2.0 min (44.8 s worst) | - | - | - | 274 MB | not run | 2.0 min / 305 MB | unknown (timeout) |
+| B3 | length=500 div=100% cut=every1 | certified | 250,531 | 398,431 | 1,035,433 | 26,612/27,008 | 5/5 (5 distinct) | 462,572 / 1,654 | 2.4 s (9 ms worst) | 49.7 kB | 2,631,161 | pass | 8 MB | replayed | 2.4 s / 9 MB | GREEN |
+| B3 | length=500 div=100% cut=every1 | incremental | 244,614 | 390,213 | 1,013,431 | 26,096/26,432 | 5/5 (5 distinct) | 420,972 / 2,119 | 28.8 s (437 ms worst) | - | - | - | 215 MB | replayed | 30.8 s / 225 MB | GREEN |
+| B3 | length=500 div=100% cut=every8 | certified | 223,489 | 306,717 | 829,584 | 15,212/15,264 | 5/5 (5 distinct) | 1,749,845 / 177,660 | 18.7 s (2.7 s worst) | 30.5 MB | 1,507,274,934 | pass | 250 MB | replayed | 19.7 s / 250 MB | red (conflicts > 100k) |
+| B3 | length=500 div=100% cut=every8 | incremental | 223,489 | 306,717 | 829,584 | 15,212/15,264 | 5/5 (5 distinct) | 1,625,581 / 161,463 | 34.3 s (3.9 s worst) | - | - | - | 293 MB | replayed | 37.1 s / 298 MB | red (conflicts > 100k) |
+| B3 | length=500 div=100% cut=every32 | certified | 75,406 | 90,486 | 255,884 | 2,616/2,624 | 5/5 (5 distinct) | 2,926,235 / 871,997 | 1.4 min (29.8 s worst) | - | - | - | 934 MB | not run | 1.4 min / 934 MB | unknown (timeout) |
+| B3 | length=500 div=100% cut=every32 | incremental | 100,267 | 120,496 | 340,596 | 3,520/3,520 | 5/5 (5 distinct) | 3,258,671 / 812,043 | 2.0 min (31.4 s worst) | - | - | - | 264 MB | not run | 2.0 min / 264 MB | unknown (timeout) |
+| B3 | length=1000 div=5% cut=every1 | certified | 381,817 | 674,139 | 1,702,501 | 53,323/53,952 | 5/5 (5 distinct) | 466,471 / 1,654 | 2.3 s (12 ms worst) | 49.7 kB | 2,631,161 | pass | 9 MB | replayed | 2.3 s / 9 MB | GREEN |
+| B3 | length=1000 div=5% cut=every1 | incremental | 376,890 | 661,229 | 1,669,467 | 52,282/52,928 | 5/5 (5 distinct) | 450,786 / 2,037 | 1.8 min (1.7 s worst) | - | - | - | 235 MB | replayed | 2.0 min / 244 MB | GREEN |
+| B3 | length=1000 div=5% cut=every8 | certified | 329,085 | 492,961 | 1,297,558 | 30,305/30,560 | 5/5 (5 distinct) | 1,088,361 / 73,299 | 10.4 s (810 ms worst) | 10.1 MB | 479,184,175 | pass | 90 MB | replayed | 12.6 s / 90 MB | GREEN |
+| B3 | length=1000 div=5% cut=every8 | incremental | 329,085 | 492,961 | 1,297,558 | 30,305/30,560 | 5/5 (5 distinct) | 1,085,650 / 89,515 | 1.5 min (2.0 s worst) | - | - | - | 234 MB | replayed | 1.7 min / 238 MB | GREEN |
+| B3 | length=1000 div=5% cut=every32 | certified | 230,106 | 295,053 | 817,545 | 11,368/11,392 | 5/5 (5 distinct) | 3,555,918 / 497,648 | 59.1 s (9.8 s worst) | - | - | - | 533 MB | not run | 1.0 min / 699 MB | unknown (timeout) |
+| B3 | length=1000 div=5% cut=every32 | incremental | 274,839 | 354,647 | 980,753 | 14,013/14,016 | 5/5 (5 distinct) | 4,244,394 / 473,408 | 1.9 min (9.2 s worst) | - | - | - | 426 MB | replayed | 2.0 min / 448 MB | red (conflicts > 100k) |
+| B3 | length=1000 div=25% cut=every1 | certified | 393,697 | 678,222 | 1,721,396 | 52,020/52,768 | 5/5 (5 distinct) | 536,730 / 1,654 | 3.3 s (37 ms worst) | 49.7 kB | 2,631,161 | pass | 9 MB | replayed | 3.3 s / 9 MB | GREEN |
+| B3 | length=1000 div=25% cut=every1 | incremental | 395,848 | 679,959 | 1,726,611 | 52,195/52,832 | 5/5 (5 distinct) | 514,150 / 2,289 | 1.8 min (1.0 s worst) | - | - | - | 248 MB | replayed | 2.0 min / 253 MB | GREEN |
+| B3 | length=1000 div=25% cut=every8 | certified | 356,118 | 521,358 | 1,381,609 | 30,612/30,752 | 5/5 (5 distinct) | 1,581,650 / 108,397 | 16.0 s (1.6 s worst) | 20.9 MB | 940,758,272 | pass | 162 MB | replayed | 16.8 s / 162 MB | red (conflicts > 100k) |
+| B3 | length=1000 div=25% cut=every8 | incremental | 356,118 | 521,358 | 1,381,609 | 30,612/30,752 | 5/5 (5 distinct) | 1,554,428 / 123,921 | 1.5 min (2.6 s worst) | - | - | - | 264 MB | replayed | 1.7 min / 303 MB | red (conflicts > 100k) |
+| B3 | length=1000 div=25% cut=every32 | certified | 145,692 | 183,847 | 512,036 | 6,656/6,656 | 5/5 (5 distinct) | 3,089,513 / 593,005 | 1.0 min (18.2 s worst) | - | - | - | 806 MB | not run | 1.0 min / 806 MB | unknown (timeout) |
+| B3 | length=1000 div=25% cut=every32 | incremental | 208,323 | 262,697 | 731,493 | 9,536/9,536 | 5/5 (5 distinct) | 4,238,049 / 721,465 | 2.0 min (24.6 s worst) | - | - | - | 391 MB | not run | 2.0 min / 403 MB | unknown (timeout) |
+| B3 | length=1000 div=100% cut=every1 | certified | 486,400 | 774,959 | 2,011,611 | 52,195/52,832 | 5/5 (5 distinct) | 879,895 / 1,654 | 4.5 s (20 ms worst) | 49.7 kB | 2,631,161 | pass | 9 MB | replayed | 4.7 s / 9 MB | GREEN |
+| B3 | length=1000 div=100% cut=every1 | incremental | 491,633 | 783,595 | 2,034,850 | 52,468/53,216 | 5/5 (5 distinct) | 838,915 / 2,036 | 2.0 min (888 ms worst) | - | - | - | 295 MB | not run | 2.0 min / 298 MB | unknown (timeout) |
+| B3 | length=1000 div=100% cut=every8 | certified | 442,662 | 609,523 | 1,647,244 | 30,305/30,560 | 5/5 (5 distinct) | 3,026,339 / 136,837 | 31.7 s (2.1 s worst) | 23.7 MB | 1,430,704,938 | pass | 207 MB | replayed | 36.6 s / 207 MB | red (conflicts > 100k) |
+| B3 | length=1000 div=100% cut=every8 | incremental | 447,057 | 618,466 | 1,670,461 | 30,846/31,168 | 5/5 (5 distinct) | 3,229,883 / 130,319 | 1.7 min (3.8 s worst) | - | - | - | 440 MB | not run | 1.7 min / 503 MB | unknown (timeout) |
+| B3 | length=1000 div=100% cut=every32 | certified | 13,002 | 15,389 | 43,698 | 416/416 | 5/5 (5 distinct) | 1,000,041 / 1,000,041 | 32.7 s (32.7 s worst) | - | - | - | 385 MB | not run | 1.2 min / 840 MB | unknown (conflict cap) |
+| B3 | length=1000 div=100% cut=every32 | incremental | 100,573 | 120,802 | 341,514 | 3,520/3,520 | 5/5 (5 distinct) | 3,181,695 / 937,220 | 2.0 min (47.9 s worst) | - | - | - | 246 MB | not run | 2.0 min / 263 MB | unknown (timeout) |
+| B4 | shape=assoc n=3 w=32 | monolithic | 1,003 | 1,099 | 3,010 | 96/96 | 5/5 (5 distinct) | 14,916 | 84 ms | 1.2 MB | 26,853,314 | pass | 14 MB | replayed | 84 ms / 15 MB | GREEN |
+| B4 | shape=assoc n=4 w=32 | monolithic | 1,441 | 1,569 | 4,324 | 128/128 | 5/5 (5 distinct) | 87,315 | 753 ms | 9.6 MB | 384,690,405 | pass | 69 MB | replayed | 753 ms / 69 MB | GREEN |
+| B4 | shape=assoc n=5 w=32 | monolithic | 1,879 | 2,039 | 5,638 | 160/160 | 5/5 (5 distinct) | 470,248 | 8.3 s | 69.0 MB | - | REJECT | 387 MB | replayed | 8.3 s / 387 MB | red (conflicts > 100k, DRAT > 32 MB, default limits reject) |
+| B4 | shape=assoc n=6 w=32 | monolithic | 2,317 | 2,509 | 6,952 | 192/192 | 5/5 (5 distinct) | 1,000,034 | 26.4 s | - | - | - | 252 MB | not run | 26.4 s / 252 MB | unknown (conflict cap) |
+| B4 | shape=assoc n=7 w=32 | monolithic | 2,755 | 2,979 | 8,266 | 224/224 | 5/5 (5 distinct) | 1,000,044 | 21.9 s | - | - | - | 264 MB | not run | 23.0 s / 266 MB | unknown (conflict cap) |
+| B4 | shape=mul5 w=8 | monolithic | 107 | 115 | 322 | 8/8 | 5/5 (5 distinct) | 141 | <1 ms | 2.9 kB | 129,656 | pass | 3 MB | replayed | <1 ms / 3 MB | GREEN |
+| B4 | shape=mul5 w=16 | monolithic | 299 | 315 | 898 | 16/16 | 5/5 (5 distinct) | 799 | 5 ms | 25.5 kB | 1,765,836 | pass | 4 MB | replayed | 7 ms / 4 MB | GREEN |
+| B4 | shape=mul5 w=32 | monolithic | 683 | 715 | 2,050 | 32/32 | 5/5 (5 distinct) | 2,743 | 20 ms | 179.1 kB | 7,512,250 | pass | 7 MB | replayed | 20 ms / 7 MB | GREEN |
+| B4 | shape=mul12 w=8 | monolithic | 140 | 152 | 421 | 14/16 | 5/5 (5 distinct) | 334 | 2 ms | 8.6 kB | 417,919 | pass | 3 MB | replayed | 2 ms / 3 MB | GREEN |
+| B4 | shape=mul12 w=16 | monolithic | 420 | 448 | 1,261 | 30/32 | 5/5 (5 distinct) | 2,408 | 18 ms | 148.6 kB | 6,591,898 | pass | 6 MB | replayed | 19 ms / 6 MB | GREEN |
+| B4 | shape=mul12 w=32 | monolithic | 980 | 1,040 | 2,941 | 62/64 | 5/5 (5 distinct) | 10,200 | 77 ms | 923.8 kB | 27,708,369 | pass | 12 MB | replayed | 77 ms / 12 MB | GREEN |
+| C1 | base=a1 n=8 | monolithic | 329 | 353 | 988 | 24/24 | 5/5 (1 distinct) | 115 | <1 ms | 3.0 kB | 109,394 | pass | 4 MB | replayed | <1 ms / 4 MB | GREEN |
+| C1 | base=a1 n=16 | monolithic | 560 | 608 | 1,681 | 48/48 | 5/5 (1 distinct) | 174 | 1 ms | 5.5 kB | 235,932 | pass | 4 MB | replayed | 1 ms / 5 MB | GREEN |
+| C1 | base=a1 n=32 | monolithic | 1,063 | 1,159 | 3,190 | 96/96 | 5/5 (1 distinct) | 508 | 5 ms | 23.3 kB | 1,479,672 | pass | 6 MB | replayed | 5 ms / 6 MB | GREEN |
+| C1 | base=a1 n=64 | monolithic | 2,965 | 3,157 | 8,896 | 192/192 | 5/5 (1 distinct) | 942 | 13 ms | 67.7 kB | 5,837,284 | pass | 11 MB | replayed | 13 ms / 11 MB | GREEN |
+| C1 | base=b length=25 div=5% | monolithic | 16,103 | 17,255 | 48,310 | 1,050/1,152 | 4/5 (4 distinct) | 354,220 | 6.0 s | 55.0 MB | 2,423,385,995 | pass | 291 MB | replayed | 6.0 s / 291 MB | red (conflicts > 100k, DRAT > 32 MB) |
+| C1 | base=b length=25 div=25% | monolithic | 17,975 | 19,127 | 53,926 | 1,050/1,152 | 5/5 (5 distinct) | 397,794 | 8.3 s | 69.6 MB | 2,756,316,349 | pass | 332 MB | replayed | 8.3 s / 332 MB | red (conflicts > 100k, DRAT > 32 MB) |
+| C1 | base=b length=25 div=100% | monolithic | 24,195 | 25,347 | 72,586 | 1,050/1,152 | 5/5 (5 distinct) | 1,000,031 | 31.8 s | - | - | - | 294 MB | not run | 31.8 s / 820 MB | unknown (conflict cap) |
+| C1 | base=b length=50 div=5% | monolithic | 32,154 | 33,690 | 96,463 | 1,527/1,536 | 5/5 (5 distinct) | 1,000,040 | 28.2 s | - | - | - | 319 MB | not run | 33.1 s / 781 MB | unknown (conflict cap) |
+| C1 | base=b length=50 div=25% | monolithic | 38,492 | 40,028 | 115,477 | 1,527/1,536 | 5/5 (5 distinct) | 1,000,043 | 41.4 s | - | - | - | 333 MB | not run | 41.4 s / 635 MB | unknown (conflict cap) |
+| C1 | base=b length=50 div=100% | monolithic | 49,428 | 50,964 | 148,285 | 1,527/1,536 | 5/5 (5 distinct) | 1,000,042 | 58.5 s | - | - | - | 352 MB | not run | 1.2 min / 352 MB | unknown (conflict cap) |
+| C1 | base=b length=100 div=5% | monolithic | 51,270 | 53,574 | 153,811 | 2,208/2,304 | 5/5 (5 distinct) | 1,000,038 | 46.7 s | - | - | - | 342 MB | not run | 49.5 s / 342 MB | unknown (conflict cap) |
+| C1 | base=b length=100 div=25% | monolithic | 64,479 | 66,783 | 193,438 | 2,301/2,304 | 5/5 (5 distinct) | 1,000,036 | 50.4 s | - | - | - | 342 MB | not run | 50.4 s / 342 MB | unknown (conflict cap) |
+| C1 | base=b length=100 div=100% | monolithic | 87,619 | 89,923 | 262,858 | 2,298/2,304 | 5/5 (5 distinct) | 1,000,034 | 59.3 s | - | - | - | 344 MB | not run | 1.2 min / 364 MB | unknown (conflict cap) |
+| C1 | base=b length=200 div=5% | monolithic | 108,689 | 112,625 | 326,068 | 3,840/3,936 | 5/5 (5 distinct) | 1,000,038 | 48.9 s | - | - | - | 391 MB | not run | 53.8 s / 423 MB | unknown (conflict cap) |
+| C1 | base=b length=200 div=25% | monolithic | 132,668 | 136,604 | 398,005 | 3,927/3,936 | 5/5 (5 distinct) | 1,000,046 | 59.9 s | - | - | - | 392 MB | not run | 1.1 min / 414 MB | unknown (conflict cap) |
+| C1 | base=b length=200 div=100% | monolithic | 168,873 | 172,809 | 506,620 | 3,918/3,936 | 5/5 (5 distinct) | 1,000,036 | 1.2 min | - | - | - | 458 MB | not run | 1.6 min / 510 MB | unknown (conflict cap) |
+| C1 | base=b length=500 div=5% | monolithic | 301,552 | 310,288 | 904,657 | 8,709/8,736 | 5/5 (5 distinct) | 1,000,033 | 1.9 min | - | - | - | 611 MB | not run | 1.9 min / 611 MB | unknown (conflict cap) |
+| C1 | base=b length=500 div=25% | monolithic | 337,042 | 345,778 | 1,011,127 | 8,709/8,736 | 5/5 (5 distinct) | 1,000,032 | 1.7 min | - | - | - | 548 MB | not run | 2.1 min / 548 MB | unknown (conflict cap) |
+| C1 | base=b length=500 div=100% | monolithic | 423,450 | 432,186 | 1,270,351 | 8,709/8,736 | 5/5 (5 distinct) | 560,013 | 2.0 min | - | - | - | 488 MB | not run | 2.1 min / 488 MB | unknown (timeout) |
+| C1 | base=b length=1000 div=5% | monolithic | 588,787 | 605,491 | 1,766,362 | 16,704/16,704 | 5/5 (5 distinct) | 1,000,033 | 1.8 min | - | - | - | 795 MB | not run | 2.0 min / 795 MB | unknown (conflict cap) |
+| C1 | base=b length=1000 div=25% | monolithic | 626,952 | 643,648 | 1,880,857 | 16,677/16,704 | 5/5 (5 distinct) | 1,000,039 | 2.0 min | - | - | - | 766 MB | not run | 2.0 min / 784 MB | unknown (conflict cap) |
+| C1 | base=b length=1000 div=100% | monolithic | 845,205 | 861,909 | 2,535,616 | 16,704/16,704 | 5/5 (5 distinct) | 280,007 | 2.1 min | - | - | - | 573 MB | not run | 2.1 min / 573 MB | unknown (timeout) |
+| C2 | t=8 | monolithic | 10,464 | 10,912 | 31,393 | 440/448 | 5/5 (5 distinct) | 94,081 | 1.7 s | 10.4 MB | 444,053,739 | pass | 94 MB | replayed | 1.7 s / 94 MB | GREEN |
+| C2 | t=16 | monolithic | 12,685 | 13,133 | 38,056 | 440/448 | 5/5 (5 distinct) | 110,229 | 2.1 s | 14.7 MB | 990,611,662 | pass | 119 MB | replayed | 2.1 s / 119 MB | red (conflicts > 100k) |
+| C2 | t=64 | monolithic | 25,335 | 25,783 | 76,006 | 440/448 | 5/5 (5 distinct) | 112,084 | 3.9 s | 18.9 MB | 2,310,294,171 | pass | 137 MB | replayed | 3.9 s / 137 MB | red (conflicts > 100k) |
+| D1 | t=4 k=1 | monolithic | 2,383 | 2,545 | 7,150 | 162/162 | 5/5 (5 distinct) | 5,478 | 51 ms | 348.9 kB | 23,143,160 | pass | 10 MB | replayed | 52 ms / 10 MB | GREEN |
+| D1 | t=4 k=2 | monolithic | 4,381 | 4,543 | 13,144 | 162/162 | 5/5 (5 distinct) | 20,158 | 214 ms | 1.7 MB | 161,132,472 | pass | 26 MB | replayed | 231 ms / 26 MB | GREEN |
+| D1 | t=4 k=4 | monolithic | 8,472 | 8,634 | 25,417 | 162/162 | 5/5 (5 distinct) | 52,971 | 939 ms | 5.9 MB | 763,974,231 | pass | 61 MB | replayed | 939 ms / 61 MB | GREEN |
+| D1 | t=4 k=8 | monolithic | 15,353 | 15,515 | 46,060 | 161/162 | 5/5 (5 distinct) | 664,091 | 25.9 s | 140.7 MB | - | REJECT | 633 MB | replayed | 25.9 s / 633 MB | red (conflicts > 100k, solve > 10 s, DRAT > 32 MB, default limits reject) |
+| D1 | t=4 k=16 | monolithic | 29,098 | 29,260 | 87,295 | 160/162 | 5/5 (5 distinct) | 1,000,047 | 1.4 min | - | - | - | 470 MB | not run | 1.4 min / 473 MB | unknown (conflict cap) |
+| D1 | t=8 k=1 | monolithic | 4,311 | 4,602 | 12,934 | 291/291 | 5/5 (5 distinct) | 12,702 | 137 ms | 857.1 kB | 117,343,743 | pass | 17 MB | replayed | 137 ms / 18 MB | GREEN |
+| D1 | t=8 k=2 | monolithic | 7,855 | 8,146 | 23,566 | 291/291 | 5/5 (5 distinct) | 34,395 | 462 ms | 3.3 MB | 581,196,540 | pass | 40 MB | replayed | 546 ms / 43 MB | GREEN |
+| D1 | t=8 k=4 | monolithic | 15,045 | 15,336 | 45,136 | 291/291 | 5/5 (5 distinct) | 101,243 | 2.0 s | 12.7 MB | 3,305,878,753 | pass | 107 MB | replayed | 2.1 s / 107 MB | red (conflicts > 100k) |
+| D1 | t=8 k=8 | monolithic | 29,787 | 30,078 | 89,362 | 291/291 | 5/5 (5 distinct) | 281,503 | 9.6 s | 44.5 MB | - | REJECT | 209 MB | replayed | 11.0 s / 217 MB | red (conflicts > 100k, DRAT > 32 MB, default limits reject) |
+| D1 | t=8 k=16 | monolithic | 53,722 | 54,013 | 161,167 | 290/291 | 5/5 (5 distinct) | 1,000,047 | 1.6 min | - | - | - | 437 MB | not run | 1.6 min / 448 MB | unknown (conflict cap) |
+| D1 | t=16 k=1 | monolithic | 8,167 | 8,715 | 24,502 | 548/548 | 5/5 (5 distinct) | 23,587 | 789 ms | 1.6 MB | 414,932,420 | pass | 30 MB | replayed | 789 ms / 33 MB | GREEN |
+| D1 | t=16 k=2 | monolithic | 14,801 | 15,349 | 44,404 | 548/548 | 5/5 (5 distinct) | 71,794 | 1.4 s | 8.3 MB | 2,514,237,761 | pass | 82 MB | replayed | 1.6 s / 82 MB | GREEN |
+| D1 | t=16 k=4 | monolithic | 28,177 | 28,725 | 84,532 | 548/548 | 5/5 (5 distinct) | 225,148 | 6.6 s | 32.5 MB | - | REJECT | 193 MB | replayed | 6.7 s / 193 MB | red (conflicts > 100k, DRAT > 32 MB, default limits reject) |
+| D1 | t=16 k=8 | monolithic | 55,310 | 55,858 | 165,931 | 548/548 | 5/5 (5 distinct) | 580,474 | 33.5 s | 98.7 MB | - | REJECT | 454 MB | replayed | 37.2 s / 466 MB | red (conflicts > 100k, solve > 10 s, DRAT > 32 MB, default limits reject) |
+| D1 | t=16 k=16 | monolithic | 111,020 | 111,568 | 333,061 | 548/548 | 5/5 (5 distinct) | 1,000,043 | 1.9 min | - | - | - | 387 MB | not run | 2.1 min / 403 MB | unknown (conflict cap) |
+| D1 | t=64 k=1 | monolithic | 31,308 | 33,394 | 93,925 | 2,086/2,086 | 5/5 (5 distinct) | 87,365 | 7.6 s | 8.6 MB | - | REJECT | 107 MB | replayed | 8.0 s / 111 MB | red (default limits reject) |
+| D1 | t=64 k=2 | monolithic | 56,469 | 58,555 | 169,408 | 2,086/2,086 | 5/5 (5 distinct) | 314,927 | 23.4 s | 48.7 MB | - | REJECT | 295 MB | replayed | 24.2 s / 295 MB | red (conflicts > 100k, solve > 10 s, DRAT > 32 MB, default limits reject) |
+| D1 | t=64 k=4 | monolithic | 106,921 | 109,007 | 320,764 | 2,086/2,086 | 5/5 (5 distinct) | 916,339 | 1.3 min | 176.5 MB | - | REJECT | 831 MB | replayed | 1.4 min / 831 MB | red (conflicts > 100k, solve > 10 s, DRAT > 32 MB, default limits reject) |
+| D1 | t=64 k=8 | monolithic | 208,238 | 210,324 | 624,715 | 2,086/2,086 | 5/5 (5 distinct) | 641,142 | 2.0 min | - | - | - | 395 MB | not run | 2.0 min / 395 MB | unknown (timeout) |
+| D1 | t=64 k=16 | monolithic | 412,451 | 414,537 | 1,237,354 | 2,086/2,086 | 5/5 (5 distinct) | 178,406 | 2.0 min | - | - | - | 341 MB | not run | 2.0 min / 341 MB | unknown (timeout) |
+| D1 | t=256 k=1 | monolithic | 123,847 | 132,079 | 371,542 | 8,232/8,232 | 5/5 (5 distinct) | 36,513 | 2.4 min | - | - | - | 86 MB | not run | 2.4 min / 88 MB | unknown (timeout) |
+| D1 | t=256 k=2 | monolithic | 223,139 | 231,371 | 669,418 | 8,232/8,232 | 5/5 (5 distinct) | 12,829 | 2.4 min | - | - | - | 135 MB | not run | 2.5 min / 136 MB | unknown (timeout) |
+| D1 | t=256 k=4 | monolithic | 421,839 | 430,071 | 1,265,518 | 8,232/8,232 | 5/5 (5 distinct) | 8,843 | 2.2 min | - | - | - | 286 MB | not run | 2.2 min / 286 MB | unknown (timeout) |
+| D1 | t=256 k=8 | monolithic | 819,684 | 827,916 | 2,459,053 | 8,232/8,232 | 5/5 (5 distinct) | 7,989 | 2.1 min | - | - | - | 469 MB | not run | 2.1 min / 470 MB | unknown (timeout) |
+| D1 | t=256 k=16 | monolithic | 1,617,057 | 1,625,289 | 4,851,172 | 8,232/8,232 | 5/5 (5 distinct) | 19,653 | 2.0 min | - | - | - | 914 MB | not run | 2.0 min / 914 MB | unknown (timeout) |
+| D2 | t=4 k=1 | monolithic | 752 | 816 | 2,257 | 160/160 | 5/5 (4 distinct) | 1,421 | 7 ms | 41.4 kB | 1,455,054 | pass | 5 MB | replayed | 7 ms / 5 MB | GREEN |
+| D2 | t=4 k=2 | monolithic | 1,502 | 1,598 | 4,507 | 160/160 | 5/5 (5 distinct) | 4,482 | 31 ms | 308.3 kB | 7,103,819 | pass | 8 MB | replayed | 31 ms / 8 MB | GREEN |
+| D2 | t=4 k=4 | monolithic | 2,997 | 3,157 | 8,992 | 160/160 | 5/5 (5 distinct) | 12,733 | 121 ms | 1.0 MB | 20,831,706 | pass | 15 MB | replayed | 121 ms / 15 MB | GREEN |
+| D2 | t=4 k=8 | monolithic | 5,470 | 5,630 | 16,411 | 159/160 | 5/5 (5 distinct) | 180,204 | 3.7 s | 32.5 MB | 1,939,451,699 | pass | 178 MB | replayed | 3.9 s / 178 MB | red (conflicts > 100k, DRAT > 32 MB) |
+| D2 | t=4 k=16 | monolithic | 10,375 | 10,535 | 31,126 | 158/160 | 5/5 (5 distinct) | 1,000,041 | 47.7 s | - | - | - | 407 MB | not run | 48.8 s / 794 MB | unknown (conflict cap) |
+| D2 | t=8 k=1 | monolithic | 752 | 816 | 2,257 | 288/288 | 5/5 (3 distinct) | 1,421 | 8 ms | 41.4 kB | 1,455,054 | pass | 5 MB | replayed | 8 ms / 5 MB | GREEN |
+| D2 | t=8 k=2 | monolithic | 1,502 | 1,598 | 4,507 | 288/288 | 5/5 (4 distinct) | 4,413 | 33 ms | 304.6 kB | 6,902,112 | pass | 8 MB | replayed | 33 ms / 8 MB | GREEN |
+| D2 | t=8 k=4 | monolithic | 2,997 | 3,157 | 8,992 | 288/288 | 5/5 (5 distinct) | 13,580 | 132 ms | 1.2 MB | 22,697,590 | pass | 16 MB | replayed | 132 ms / 16 MB | GREEN |
+| D2 | t=8 k=8 | monolithic | 5,982 | 6,270 | 17,947 | 288/288 | 5/5 (5 distinct) | 28,100 | 431 ms | 2.9 MB | 84,988,020 | pass | 32 MB | replayed | 431 ms / 32 MB | GREEN |
+| D2 | t=8 k=16 | monolithic | 10,887 | 11,175 | 32,662 | 287/288 | 5/5 (5 distinct) | 503,554 | 17.0 s | 110.8 MB | - | REJECT | 498 MB | replayed | 17.0 s / 498 MB | red (conflicts > 100k, solve > 10 s, DRAT > 32 MB, default limits reject) |
+| D2 | t=16 k=1 | monolithic | 752 | 816 | 2,257 | 544/544 | 5/5 (4 distinct) | 1,421 | 7 ms | 41.4 kB | 1,455,054 | pass | 5 MB | replayed | 7 ms / 5 MB | GREEN |
+| D2 | t=16 k=2 | monolithic | 1,502 | 1,598 | 4,507 | 544/544 | 5/5 (5 distinct) | 4,413 | 33 ms | 304.6 kB | 6,902,112 | pass | 8 MB | replayed | 33 ms / 8 MB | GREEN |
+| D2 | t=16 k=4 | monolithic | 2,997 | 3,157 | 8,992 | 544/544 | 5/5 (5 distinct) | 13,620 | 131 ms | 1.1 MB | 24,923,244 | pass | 14 MB | replayed | 131 ms / 15 MB | GREEN |
+| D2 | t=16 k=8 | monolithic | 5,982 | 6,270 | 17,947 | 544/544 | 5/5 (5 distinct) | 31,030 | 435 ms | 2.8 MB | 83,217,714 | pass | 32 MB | replayed | 435 ms / 33 MB | GREEN |
+| D2 | t=16 k=16 | monolithic | 11,911 | 12,455 | 35,734 | 544/544 | 5/5 (5 distinct) | 82,566 | 2.0 s | 9.4 MB | 462,178,479 | pass | 84 MB | replayed | 2.0 s / 84 MB | GREEN |
+| D2 | t=64 k=1 | monolithic | 752 | 816 | 2,257 | 2,080/2,080 | 5/5 (5 distinct) | 1,421 | 7 ms | 41.4 kB | 1,455,054 | pass | 6 MB | replayed | 7 ms / 6 MB | GREEN |
+| D2 | t=64 k=2 | monolithic | 1,502 | 1,598 | 4,507 | 2,080/2,080 | 5/5 (5 distinct) | 4,302 | 30 ms | 259.2 kB | 6,061,567 | pass | 9 MB | replayed | 33 ms / 9 MB | GREEN |
+| D2 | t=64 k=4 | monolithic | 2,997 | 3,157 | 8,992 | 2,080/2,080 | 5/5 (5 distinct) | 14,369 | 147 ms | 1.3 MB | 29,121,280 | pass | 18 MB | replayed | 147 ms / 18 MB | GREEN |
+| D2 | t=64 k=8 | monolithic | 5,982 | 6,270 | 17,947 | 2,080/2,080 | 5/5 (5 distinct) | 31,435 | 463 ms | 3.1 MB | 87,189,408 | pass | 37 MB | replayed | 463 ms / 37 MB | GREEN |
+| D2 | t=64 k=16 | monolithic | 11,911 | 12,455 | 35,734 | 2,080/2,080 | 5/5 (5 distinct) | 71,516 | 1.6 s | 8.0 MB | 374,350,546 | pass | 64 MB | replayed | 1.6 s / 64 MB | GREEN |
+| D2 | t=256 k=1 | monolithic | 752 | 816 | 2,257 | 8,224/8,224 | 5/5 (4 distinct) | 1,421 | 8 ms | 41.4 kB | 1,455,058 | pass | 7 MB | replayed | 8 ms / 7 MB | GREEN |
+| D2 | t=256 k=2 | monolithic | 1,502 | 1,598 | 4,507 | 8,224/8,224 | 5/5 (4 distinct) | 4,158 | 30 ms | 255.1 kB | 5,677,997 | pass | 9 MB | replayed | 30 ms / 9 MB | GREEN |
+| D2 | t=256 k=4 | monolithic | 2,997 | 3,157 | 8,992 | 8,224/8,224 | 5/5 (5 distinct) | 13,370 | 137 ms | 1.1 MB | 23,853,954 | pass | 17 MB | replayed | 137 ms / 17 MB | GREEN |
+| D2 | t=256 k=8 | monolithic | 5,982 | 6,270 | 17,947 | 8,224/8,224 | 5/5 (5 distinct) | 28,304 | 391 ms | 2.7 MB | 70,719,027 | pass | 34 MB | replayed | 391 ms / 34 MB | GREEN |
+| D2 | t=256 k=16 | monolithic | 11,911 | 12,455 | 35,734 | 8,224/8,224 | 5/5 (5 distinct) | 75,207 | 1.8 s | 7.7 MB | 360,165,175 | pass | 63 MB | replayed | 1.8 s / 68 MB | GREEN |
+| D3 | t=4 k=1 | split | 3,008 | 3,264 | 9,028 | 640/640 | 5/5 (5 distinct) | 5,684 / 1,421 | 29 ms (8 ms worst) | 41.4 kB | 1,455,058 | pass | 6 MB | replayed | 29 ms / 6 MB | GREEN |
+| D3 | t=4 k=2 | split | 6,008 | 6,392 | 18,028 | 640/640 | 5/5 (5 distinct) | 18,264 / 4,818 | 136 ms (36 ms worst) | 354.7 kB | 7,302,634 | pass | 11 MB | replayed | 136 ms / 11 MB | GREEN |
+| D3 | t=4 k=4 | split | 11,988 | 12,628 | 35,968 | 640/640 | 5/5 (5 distinct) | 41,212 / 12,733 | 371 ms (125 ms worst) | 1.0 MB | 20,831,706 | pass | 22 MB | replayed | 371 ms / 23 MB | GREEN |
+| D3 | t=4 k=8 | split | 21,880 | 22,520 | 65,644 | 636/640 | 5/5 (5 distinct) | 698,465 / 193,930 | 13.6 s (3.8 s worst) | 37.3 MB | 2,314,347,216 | pass | 273 MB | replayed | 14.2 s / 273 MB | red (conflicts > 100k, DRAT > 32 MB) |
+| D3 | t=4 k=16 | split | 10,375 | 10,535 | 31,126 | 158/160 | 5/5 (5 distinct) | 1,000,044 / 1,000,044 | 44.7 s (44.7 s worst) | - | - | - | 397 MB | not run | 1.5 min / 972 MB | unknown (conflict cap) |
+| D3 | t=8 k=1 | split | 6,016 | 6,528 | 18,056 | 2,304/2,304 | 5/5 (5 distinct) | 11,368 / 1,421 | 58 ms (7 ms worst) | 41.4 kB | 1,455,054 | pass | 6 MB | replayed | 58 ms / 6 MB | GREEN |
+| D3 | t=8 k=2 | split | 12,016 | 12,784 | 36,056 | 2,304/2,304 | 5/5 (5 distinct) | 34,021 / 4,482 | 248 ms (33 ms worst) | 308.3 kB | 7,103,819 | pass | 9 MB | replayed | 248 ms / 11 MB | GREEN |
+| D3 | t=8 k=4 | split | 23,976 | 25,256 | 71,936 | 2,304/2,304 | 5/5 (5 distinct) | 85,777 / 13,682 | 816 ms (140 ms worst) | 1.2 MB | 26,435,760 | pass | 23 MB | replayed | 866 ms / 24 MB | GREEN |
+| D3 | t=8 k=8 | split | 47,856 | 50,160 | 143,576 | 2,304/2,304 | 5/5 (5 distinct) | 247,475 / 33,278 | 3.4 s (482 ms worst) | 3.2 MB | 102,975,646 | pass | 40 MB | replayed | 3.4 s / 41 MB | GREEN |
+| D3 | t=8 k=16 | split | 65,322 | 67,050 | 195,972 | 1,722/1,728 | 5/5 (5 distinct) | 2,600,900 / 503,554 | 1.2 min (14.3 s worst) | - | - | - | 535 MB | not run | 1.2 min / 535 MB | unknown (timeout) |
+| D3 | t=16 k=1 | split | 12,032 | 13,056 | 36,112 | 8,704/8,704 | 5/5 (5 distinct) | 22,736 / 1,421 | 113 ms (7 ms worst) | 41.4 kB | 1,455,058 | pass | 8 MB | replayed | 113 ms / 8 MB | GREEN |
+| D3 | t=16 k=2 | split | 24,032 | 25,568 | 72,112 | 8,704/8,704 | 5/5 (5 distinct) | 65,917 / 4,818 | 465 ms (35 ms worst) | 354.7 kB | 7,302,634 | pass | 12 MB | replayed | 492 ms / 12 MB | GREEN |
+| D3 | t=16 k=4 | split | 47,952 | 50,512 | 143,872 | 8,704/8,704 | 5/5 (5 distinct) | 186,567 / 14,230 | 1.7 s (134 ms worst) | 1.3 MB | 24,923,175 | pass | 27 MB | replayed | 1.7 s / 27 MB | GREEN |
+| D3 | t=16 k=8 | split | 95,712 | 100,320 | 287,152 | 8,704/8,704 | 5/5 (5 distinct) | 473,018 / 34,725 | 6.3 s (494 ms worst) | 3.6 MB | 116,622,646 | pass | 46 MB | replayed | 6.3 s / 46 MB | GREEN |
+| D3 | t=16 k=16 | split | 190,576 | 199,280 | 571,744 | 8,704/8,704 | 5/5 (5 distinct) | 1,152,880 / 82,566 | 24.6 s (2.2 s worst) | 9.4 MB | 462,178,479 | pass | 140 MB | replayed | 24.6 s / 148 MB | GREEN |
+| D3 | t=64 k=1 | split | 48,128 | 52,224 | 144,448 | 133,120/133,120 | 5/5 (5 distinct) | 90,944 / 1,421 | 456 ms (8 ms worst) | 41.4 kB | 1,455,058 | pass | 8 MB | replayed | 456 ms / 8 MB | GREEN |
+| D3 | t=64 k=2 | split | 96,128 | 102,272 | 288,448 | 133,120/133,120 | 5/5 (5 distinct) | 267,991 / 4,382 | 2.0 s (37 ms worst) | 298.5 kB | 6,630,915 | pass | 14 MB | replayed | 2.0 s / 14 MB | GREEN |
+| D3 | t=64 k=4 | split | 191,808 | 202,048 | 575,488 | 133,120/133,120 | 5/5 (5 distinct) | 762,558 / 15,201 | 7.5 s (384 ms worst) | 1.4 MB | 31,580,639 | pass | 30 MB | replayed | 8.4 s / 30 MB | GREEN |
+| D3 | t=64 k=8 | split | 382,848 | 401,280 | 1,148,608 | 133,120/133,120 | 5/5 (5 distinct) | 1,865,035 / 36,124 | 27.1 s (1.6 s worst) | 3.7 MB | 103,364,146 | pass | 49 MB | replayed | 28.6 s / 49 MB | GREEN |
+| D3 | t=64 k=16 | split | 512,173 | 535,565 | 1,536,562 | 89,440/89,440 | 5/5 (5 distinct) | 3,125,750 / 82,469 | 1.2 min (3.0 s worst) | - | - | - | 134 MB | not run | 1.2 min / 134 MB | unknown (timeout) |
+| D3 | t=256 k=1 | split | 192,512 | 208,896 | 577,792 | 2,105,344/2,105,344 | 5/5 (5 distinct) | 363,776 / 1,421 | 2.0 s (36 ms worst) | 41.4 kB | 1,455,058 | pass | 9 MB | replayed | 2.0 s / 9 MB | GREEN |
+| D3 | t=256 k=2 | split | 384,512 | 409,088 | 1,153,792 | 2,105,344/2,105,344 | 5/5 (5 distinct) | 1,125,754 / 4,482 | 9.1 s (138 ms worst) | 308.3 kB | 7,103,949 | pass | 15 MB | replayed | 9.1 s / 15 MB | GREEN |
+| D3 | t=256 k=4 | split | 731,268 | 770,308 | 2,194,048 | 2,006,656/2,006,656 | 5/5 (5 distinct) | 2,839,352 / 15,227 | 33.5 s (573 ms worst) | - | - | - | 36 MB | not run | 33.9 s / 36 MB | unknown (timeout) |
+| D3 | t=256 k=8 | split | 610,164 | 639,540 | 1,830,594 | 838,848/838,848 | 5/5 (5 distinct) | 2,914,034 / 38,366 | 52.4 s (1.9 s worst) | - | - | - | 59 MB | not run | 53.4 s / 59 MB | unknown (timeout) |
+| D3 | t=256 k=16 | split | 440,707 | 460,835 | 1,322,158 | 304,288/304,288 | 5/5 (5 distinct) | 2,655,191 / 86,112 | 1.1 min (4.3 s worst) | - | - | - | 150 MB | not run | 1.1 min / 150 MB | unknown (timeout) |
+| D4 | t=4 k=1 | certified | 2,576 | 3,542 | 9,661 | 162/162 | 5/5 (5 distinct) | 8,894 | 93 ms | 760.5 kB | 61,488,465 | pass | 15 MB | replayed | 93 ms / 15 MB | GREEN |
+| D4 | t=4 k=1 | incremental | 2,576 | 3,542 | 9,661 | 162/162 | 5/5 (5 distinct) | 8,730 | 92 ms | - | - | - | 8 MB | replayed | 92 ms / 8 MB | GREEN |
+| D4 | t=4 k=2 | certified | 5,152 | 7,084 | 19,322 | 324/324 | 5/5 (5 distinct) | 21,148 / 12,254 | 225 ms (127 ms worst) | 1.2 MB | 99,267,535 | pass | 17 MB | replayed | 225 ms / 18 MB | GREEN |
+| D4 | t=4 k=2 | incremental | 5,162 | 7,094 | 19,352 | 324/324 | 5/5 (5 distinct) | 20,124 / 12,988 | 237 ms (157 ms worst) | - | - | - | 9 MB | replayed | 237 ms / 10 MB | GREEN |
+| D4 | t=4 k=4 | certified | 10,300 | 14,164 | 38,632 | 648/648 | 5/5 (5 distinct) | 42,993 / 12,254 | 581 ms (185 ms worst) | 1.2 MB | 99,267,535 | pass | 27 MB | replayed | 611 ms / 27 MB | GREEN |
+| D4 | t=4 k=4 | incremental | 10,300 | 14,164 | 38,632 | 648/648 | 5/5 (5 distinct) | 43,792 / 13,907 | 568 ms (180 ms worst) | - | - | - | 15 MB | replayed | 914 ms / 15 MB | GREEN |
+| D4 | t=4 k=8 | certified | 20,600 | 28,328 | 77,264 | 1,296/1,296 | 5/5 (5 distinct) | 87,914 / 12,254 | 916 ms (126 ms worst) | 1.2 MB | 99,267,535 | pass | 24 MB | replayed | 973 ms / 26 MB | GREEN |
+| D4 | t=4 k=8 | incremental | 20,600 | 28,328 | 77,264 | 1,296/1,296 | 5/5 (5 distinct) | 88,099 / 13,907 | 1.3 s (214 ms worst) | - | - | - | 23 MB | replayed | 1.3 s / 23 MB | GREEN |
+| D4 | t=4 k=16 | certified | 41,208 | 56,664 | 154,552 | 2,592/2,592 | 5/5 (5 distinct) | 172,576 / 12,254 | 1.8 s (136 ms worst) | 1.2 MB | 99,267,535 | pass | 26 MB | replayed | 1.8 s / 27 MB | GREEN |
+| D4 | t=4 k=16 | incremental | 41,208 | 56,664 | 154,552 | 2,592/2,592 | 5/5 (5 distinct) | 175,234 / 13,907 | 3.2 s (287 ms worst) | - | - | - | 41 MB | replayed | 3.4 s / 41 MB | GREEN |
+| D4 | t=8 k=1 | certified | 4,640 | 6,376 | 17,393 | 291/291 | 5/5 (5 distinct) | 15,912 | 216 ms | 1.3 MB | 197,144,967 | pass | 23 MB | replayed | 216 ms / 25 MB | GREEN |
+| D4 | t=8 k=1 | incremental | 4,640 | 6,376 | 17,393 | 291/291 | 5/5 (5 distinct) | 16,269 | 230 ms | - | - | - | 11 MB | replayed | 230 ms / 12 MB | GREEN |
+| D4 | t=8 k=2 | certified | 9,286 | 12,758 | 34,804 | 582/582 | 5/5 (5 distinct) | 35,852 / 19,940 | 482 ms (263 ms worst) | 2.0 MB | 303,453,739 | pass | 33 MB | replayed | 482 ms / 33 MB | GREEN |
+| D4 | t=8 k=2 | incremental | 9,286 | 12,758 | 34,804 | 582/582 | 5/5 (5 distinct) | 38,664 / 23,165 | 583 ms (366 ms worst) | - | - | - | 17 MB | replayed | 583 ms / 17 MB | GREEN |
+| D4 | t=8 k=4 | certified | 18,576 | 25,520 | 69,620 | 1,164/1,164 | 5/5 (5 distinct) | 76,681 / 22,234 | 977 ms (269 ms worst) | 2.5 MB | 339,040,134 | pass | 41 MB | replayed | 1.0 s / 42 MB | GREEN |
+| D4 | t=8 k=4 | incremental | 18,576 | 25,520 | 69,620 | 1,164/1,164 | 5/5 (5 distinct) | 84,135 / 23,165 | 1.5 s (441 ms worst) | - | - | - | 21 MB | replayed | 1.5 s / 23 MB | GREEN |
+| D4 | t=8 k=8 | certified | 37,152 | 51,040 | 139,240 | 2,328/2,328 | 5/5 (5 distinct) | 154,804 / 23,591 | 2.0 s (297 ms worst) | 2.4 MB | 344,212,042 | pass | 40 MB | replayed | 2.7 s / 45 MB | GREEN |
+| D4 | t=8 k=8 | incremental | 37,152 | 51,040 | 139,240 | 2,328/2,328 | 5/5 (5 distinct) | 174,424 / 25,279 | 4.9 s (1.4 s worst) | - | - | - | 43 MB | replayed | 9.5 s / 43 MB | GREEN |
+| D4 | t=8 k=16 | certified | 74,392 | 102,168 | 278,744 | 4,656/4,656 | 5/5 (5 distinct) | 302,849 / 23,726 | 5.9 s (1.2 s worst) | 2.5 MB | 362,473,573 | pass | 45 MB | replayed | 5.9 s / 49 MB | GREEN |
+| D4 | t=8 k=16 | incremental | 74,312 | 102,088 | 278,504 | 4,656/4,656 | 5/5 (5 distinct) | 338,664 / 25,279 | 11.0 s (1.4 s worst) | - | - | - | 79 MB | replayed | 12.6 s / 81 MB | GREEN |
+| D4 | t=16 k=1 | certified | 8,768 | 12,038 | 32,845 | 548/548 | 5/5 (5 distinct) | 32,611 | 589 ms | 2.8 MB | 856,014,320 | pass | 46 MB | replayed | 624 ms / 46 MB | GREEN |
+| D4 | t=16 k=1 | incremental | 8,768 | 12,038 | 32,845 | 548/548 | 5/5 (5 distinct) | 32,283 | 806 ms | - | - | - | 22 MB | replayed | 806 ms / 22 MB | GREEN |
+| D4 | t=16 k=2 | certified | 17,548 | 24,088 | 65,726 | 1,096/1,096 | 5/5 (5 distinct) | 68,469 / 41,045 | 1.3 s (682 ms worst) | 4.1 MB | 1,195,450,951 | pass | 54 MB | replayed | 1.3 s / 59 MB | GREEN |
+| D4 | t=16 k=2 | incremental | 17,548 | 24,088 | 65,726 | 1,096/1,096 | 5/5 (5 distinct) | 79,914 / 51,008 | 3.1 s (2.6 s worst) | - | - | - | 26 MB | replayed | 3.8 s / 27 MB | GREEN |
+| D4 | t=16 k=4 | certified | 35,106 | 48,186 | 131,482 | 2,192/2,192 | 5/5 (5 distinct) | 142,443 / 41,045 | 3.4 s (1.2 s worst) | 4.1 MB | 1,195,450,951 | pass | 64 MB | replayed | 4.5 s / 64 MB | GREEN |
+| D4 | t=16 k=4 | incremental | 35,106 | 48,186 | 131,482 | 2,192/2,192 | 5/5 (5 distinct) | 156,402 / 51,008 | 7.3 s (2.7 s worst) | - | - | - | 43 MB | replayed | 7.9 s / 46 MB | GREEN |
+| D4 | t=16 k=8 | certified | 70,224 | 96,384 | 263,000 | 4,384/4,384 | 5/5 (5 distinct) | 286,910 / 41,045 | 6.1 s (1.8 s worst) | 4.3 MB | 1,203,321,046 | pass | 70 MB | replayed | 6.4 s / 70 MB | GREEN |
+| D4 | t=16 k=8 | incremental | 70,224 | 96,384 | 263,000 | 4,384/4,384 | 5/5 (5 distinct) | 308,342 / 51,008 | 18.9 s (4.6 s worst) | - | - | - | 82 MB | replayed | 22.7 s / 82 MB | GREEN |
+| D4 | t=16 k=16 | certified | 140,456 | 192,776 | 526,024 | 8,768/8,768 | 5/5 (5 distinct) | 583,279 / 43,695 | 13.8 s (2.2 s worst) | 4.7 MB | 1,230,144,028 | pass | 71 MB | replayed | 14.9 s / 73 MB | GREEN |
+| D4 | t=16 k=16 | incremental | 140,456 | 192,776 | 526,024 | 8,768/8,768 | 5/5 (5 distinct) | 594,674 / 42,745 | 56.6 s (10.8 s worst) | - | - | - | 113 MB | replayed | 1.0 min / 134 MB | red (solve > 10 s) |
+| D4 | t=64 k=1 | certified | 33,536 | 45,986 | 125,509 | 2,086/2,086 | 5/5 (5 distinct) | 104,487 | 14.3 s | 11.9 MB | - | REJECT | 109 MB | replayed | 15.4 s / 123 MB | red (conflicts > 100k, solve > 10 s, default limits reject) |
+| D4 | t=64 k=1 | incremental | 33,536 | 45,986 | 125,509 | 2,086/2,086 | 5/5 (5 distinct) | 110,564 | 12.1 s | - | - | - | 61 MB | replayed | 16.6 s / 64 MB | red (conflicts > 100k, solve > 10 s) |
+| D4 | t=64 k=2 | certified | 67,096 | 91,996 | 251,090 | 4,172/4,172 | 5/5 (5 distinct) | 247,860 / 148,383 | 21.1 s (11.3 s worst) | 20.6 MB | - | REJECT | 161 MB | replayed | 23.3 s / 161 MB | red (conflicts > 100k, solve > 10 s, default limits reject) |
+| D4 | t=64 k=2 | incremental | 67,106 | 92,006 | 251,120 | 4,172/4,172 | 5/5 (5 distinct) | 223,346 / 134,660 | 39.3 s (25.1 s worst) | - | - | - | 94 MB | replayed | 39.3 s / 94 MB | red (conflicts > 100k, solve > 10 s) |
+| D4 | t=64 k=4 | certified | 134,214 | 184,014 | 502,246 | 8,344/8,344 | 5/5 (5 distinct) | 520,424 / 148,774 | 41.5 s (11.9 s worst) | 20.6 MB | - | REJECT | 192 MB | replayed | 44.0 s / 194 MB | red (conflicts > 100k, solve > 10 s, default limits reject) |
+| D4 | t=64 k=4 | incremental | 134,234 | 184,034 | 502,306 | 8,344/8,344 | 5/5 (5 distinct) | 485,995 / 134,660 | 1.6 min (30.3 s worst) | - | - | - | 159 MB | replayed | 1.7 min / 159 MB | red (conflicts > 100k, solve > 10 s) |
+| D4 | t=64 k=8 | certified | 234,900 | 322,050 | 879,007 | 14,602/14,602 | 5/5 (5 distinct) | 796,516 / 148,774 | 1.2 min (11.7 s worst) | - | - | - | 180 MB | not run | 1.3 min / 202 MB | unknown (timeout) |
+| D4 | t=64 k=8 | incremental | 167,795 | 230,045 | 627,890 | 10,430/10,430 | 5/5 (5 distinct) | 489,328 / 134,660 | 2.1 min (33.1 s worst) | - | - | - | 146 MB | not run | 2.2 min / 167 MB | unknown (timeout) |
+| D4 | t=64 k=16 | certified | 201,334 | 276,034 | 753,408 | 12,516/12,516 | 5/5 (5 distinct) | 776,513 / 148,774 | 1.2 min (13.5 s worst) | - | - | - | 190 MB | not run | 1.2 min / 196 MB | unknown (timeout) |
+| D4 | t=64 k=16 | incremental | 167,795 | 230,045 | 627,890 | 10,430/10,430 | 5/5 (5 distinct) | 489,328 / 134,660 | 2.2 min (33.9 s worst) | - | - | - | 162 MB | not run | 2.3 min / 163 MB | unknown (timeout) |
+| D4 | t=256 k=1 | certified | 132,608 | 181,742 | 496,093 | 8,232/8,232 | 5/5 (5 distinct) | 14,113 | 2.4 min | - | - | - | 103 MB | not run | 2.4 min / 107 MB | unknown (timeout) |
+| D4 | t=256 k=1 | incremental | 132,613 | 181,747 | 496,108 | 8,232/8,232 | 5/5 (5 distinct) | 14,162 | 2.3 min | - | - | - | 114 MB | not run | 2.4 min / 119 MB | unknown (timeout) |
+| D4 | t=256 k=2 | certified | 132,608 | 181,742 | 496,093 | 8,232/8,232 | 5/5 (5 distinct) | 12,014 | 2.0 min | - | - | - | 102 MB | not run | 2.1 min / 107 MB | unknown (timeout) |
+| D4 | t=256 k=2 | incremental | 132,613 | 181,747 | 496,108 | 8,232/8,232 | 5/5 (5 distinct) | 13,703 | 2.4 min | - | - | - | 120 MB | not run | 2.4 min / 120 MB | unknown (timeout) |
+| D4 | t=256 k=4 | certified | 132,613 | 181,747 | 496,108 | 8,232/8,232 | 5/5 (5 distinct) | 13,806 | 2.4 min | - | - | - | 106 MB | not run | 2.4 min / 109 MB | unknown (timeout) |
+| D4 | t=256 k=4 | incremental | 132,608 | 181,742 | 496,093 | 8,232/8,232 | 5/5 (5 distinct) | 14,784 | 2.4 min | - | - | - | 116 MB | not run | 2.4 min / 119 MB | unknown (timeout) |
+| D4 | t=256 k=8 | certified | 132,608 | 181,742 | 496,093 | 8,232/8,232 | 5/5 (5 distinct) | 14,758 | 2.4 min | - | - | - | 110 MB | not run | 2.4 min / 110 MB | unknown (timeout) |
+| D4 | t=256 k=8 | incremental | 132,608 | 181,742 | 496,093 | 8,232/8,232 | 5/5 (5 distinct) | 14,784 | 2.4 min | - | - | - | 114 MB | not run | 2.4 min / 119 MB | unknown (timeout) |
+| D4 | t=256 k=16 | certified | 132,613 | 181,747 | 496,108 | 8,232/8,232 | 5/5 (5 distinct) | 14,357 | 2.3 min | - | - | - | 102 MB | not run | 2.4 min / 109 MB | unknown (timeout) |
+| D4 | t=256 k=16 | incremental | 132,608 | 181,742 | 496,093 | 8,232/8,232 | 5/5 (5 distinct) | 17,358 | 2.3 min | - | - | - | 120 MB | not run | 2.3 min / 120 MB | unknown (timeout) |
+| E1 | claim=dispatch_policy fixture=vos-sched-fp-bitmap binders=256 | enum | - | - | - | - | 5/5 (1 distinct) | - | <1 ms | - | - | - | 2 MB | replayed | <1 ms / 2 MB | pass (318,606 cases/s, slowest) |
+| E1 | claim=insert_safe fixture=vos-sched-fp-bitmap binders=65536 | enum | - | - | - | - | 5/5 (1 distinct) | - | 779 ms | - | - | - | 2 MB | replayed | 779 ms / 2 MB | pass (84,177 cases/s, slowest) |
+| E1 | claim=insert_n8_bool fixture=vos-probe-ready binders=65536 | enum | - | - | - | - | 5/5 (1 distinct) | - | 43 ms | - | - | - | 2 MB | replayed | 43 ms / 2 MB | pass (1,534,811 cases/s, slowest) |
+| E1 | claim=insert_n8_mask fixture=vos-probe-ready binders=65536 | enum | - | - | - | - | 5/5 (1 distinct) | - | 22 ms | - | - | - | 2 MB | replayed | 22 ms / 2 MB | pass (2,930,544 cases/s, slowest) |
+| E1 | claim=insert_n10 fixture=vos-probe-ready binders=262144 | enum | - | - | - | - | 5/5 (1 distinct) | - | 155 ms | - | - | - | 2 MB | replayed | 155 ms / 2 MB | pass (1,691,679 cases/s, slowest) |
+| E1 | claim=insert_n8_mask_tagged fixture=vos-probe-ready binders=393216 | enum | - | - | - | - | 5/5 (1 distinct) | - | 192 ms | - | - | - | 2 MB | replayed | 192 ms / 2 MB | pass (2,043,759 cases/s, slowest) |
+| E1 | claim=insert_n11 fixture=refusal binders=524288 | enum | - | - | - | - | 5/5 (1 distinct) | - | <1 ms | - | - | - | 2 MB | replayed | <1 ms / 2 MB | refused (W0706) |
+| E2 | width=1 binders=1 | enum | - | - | - | - | 5/5 (1 distinct) | - | <1 ms | - | - | - | 2 MB | replayed | <1 ms / 2 MB | pass |
+| E2 | width=1 binders=2 | enum | - | - | - | - | 5/5 (1 distinct) | - | 6 ms | - | - | - | 2 MB | replayed | 6 ms / 2 MB | pass |
+| E2 | width=1 binders=3 | enum | - | - | - | - | 5/5 (1 distinct) | - | <1 ms | - | - | - | 2 MB | replayed | <1 ms / 2 MB | refused (W0706) |
+| E2 | width=1 binders=4 | enum | - | - | - | - | 5/5 (1 distinct) | - | <1 ms | - | - | - | 2 MB | replayed | <1 ms / 2 MB | refused (W0706) |
+| E2 | width=8 binders=1 | enum | - | - | - | - | 5/5 (1 distinct) | - | <1 ms | - | - | - | 2 MB | replayed | <1 ms / 2 MB | pass |
+| E2 | width=8 binders=2 | enum | - | - | - | - | 5/5 (1 distinct) | - | <1 ms | - | - | - | 2 MB | replayed | <1 ms / 2 MB | pass |
+| E2 | width=8 binders=3 | enum | - | - | - | - | 5/5 (1 distinct) | - | 5 ms | - | - | - | 2 MB | replayed | 5 ms / 2 MB | pass |
+| E2 | width=8 binders=4 | enum | - | - | - | - | 5/5 (1 distinct) | - | <1 ms | - | - | - | 2 MB | replayed | <1 ms / 2 MB | refused (W0706) |
+| E2 | width=64 binders=1 | enum | - | - | - | - | 5/5 (1 distinct) | - | <1 ms | - | - | - | 2 MB | replayed | <1 ms / 2 MB | pass |
+| E2 | width=64 binders=2 | enum | - | - | - | - | 5/5 (1 distinct) | - | 4 ms | - | - | - | 2 MB | replayed | 4 ms / 2 MB | pass |
+| E2 | width=64 binders=3 | enum | - | - | - | - | 5/5 (1 distinct) | - | <1 ms | - | - | - | 2 MB | replayed | <1 ms / 2 MB | refused (W0706) |
+| E2 | width=64 binders=4 | enum | - | - | - | - | 5/5 (1 distinct) | - | <1 ms | - | - | - | 2 MB | replayed | <1 ms / 2 MB | refused (W0706) |
+| E2 | width=256 binders=1 | enum | - | - | - | - | 5/5 (1 distinct) | - | <1 ms | - | - | - | 3 MB | replayed | <1 ms / 3 MB | pass |
+| E2 | width=256 binders=2 | enum | - | - | - | - | 5/5 (1 distinct) | - | <1 ms | - | - | - | 2 MB | replayed | <1 ms / 2 MB | refused (W0706) |
+| E2 | width=256 binders=3 | enum | - | - | - | - | 5/5 (1 distinct) | - | <1 ms | - | - | - | 2 MB | replayed | <1 ms / 2 MB | refused (W0706) |
+| E2 | width=256 binders=4 | enum | - | - | - | - | 5/5 (1 distinct) | - | <1 ms | - | - | - | 2 MB | replayed | <1 ms / 2 MB | refused (W0706) |
+| E2 | width=4096 binders=1 | enum | - | - | - | - | 5/5 (1 distinct) | - | 11 ms | - | - | - | 52 MB | replayed | 11 ms / 52 MB | pass |
+| E2 | width=4096 binders=2 | enum | - | - | - | - | 5/5 (1 distinct) | - | <1 ms | - | - | - | 2 MB | replayed | <1 ms / 2 MB | refused (W0706) |
+| E2 | width=4096 binders=3 | enum | - | - | - | - | 5/5 (1 distinct) | - | <1 ms | - | - | - | 2 MB | replayed | <1 ms / 2 MB | refused (W0706) |
+| E2 | width=4096 binders=4 | enum | - | - | - | - | 5/5 (1 distinct) | - | <1 ms | - | - | - | 2 MB | replayed | <1 ms / 2 MB | refused (W0706) |
+
+Derived constants (experiment F), from the counted monolithic UNSAT rows of at least 1,000 conflicts:
+
+* Solver throughput: 9,472 to 216,691 conflicts per second.
+* DRAT size: 29 to 329 bytes per conflict.
+* `drat-check` time: 0.3x to 3.5x the solve time.
+* Checker work: 851 to 37,362 literal visits per conflict.
+* Default `drat-check` work limit (2^32): the largest proof accepted has 457,844 conflicts, the smallest rejected for work has 82,835.
+* Resident memory: 0.7 to 1.2 GB per million conflicts (rows of at least 100,000 conflicts).
+
+Section 8.3 evaluated on these rows: **row 1, Infeasible: re-plan X3**.
+
+* D3 at T = 8, k = 16: NOT green; worst conflicts 503554, worst solve 14278 ms
+* C1 at 200 instructions, 25% divergence: NOT green; worst conflicts 1000046, worst solve 66990 ms
+<!-- vos30-table:end -->
 
 ### 9.9 Timeline
 
-The probe is cheap to write (about 300 lines of stepper, plus the experiment
-harness) and the full tier may take hours; BUILD runs only the quick tier.
-Interpretation is part of the PR: it ends with the decision sentence of
-section 8.5, filled in.
+The probe was cheap to write (the stepper, the shapes and the experiment harness
+are a few thousand lines with their tests) and the full tier takes hours; BUILD
+runs only the quick tier. Interpretation is part of the PR: it ends with the
+decision sentence of section 8.5, filled in. **Status: done in the VOS-028b PR**
+(stacked on #19571); the full tier was run by the implementer and still needs
+regeneration by a named reviewer on a stated host before the numbers count as
+evidence (section 9.6).
+
+### 9.10 Implementation decisions of VOS-028b
+
+Everything below is what the implementation fixed where this section left a choice
+open. Each item is binding on `check` and on a later re-run.
+
+**Instances.** One seed makes one program; `(experiment, knob, seed)` fixes the
+DIMACS text (G4). For the deterministic shapes (A, C, D) the seed shuffles the
+**order in which the AIG inputs are created**, i.e. the variable numbering, which
+is the one honest source of solver variance they have; for the generated programs
+(B) it also selects the program, the divergence sites and the control mutation.
+
+| Id | Code side | Reference side |
+|---|---|---|
+| A1 | the branch-free RV32I `clz32` binary search (five `srli/sltiu/slli/sll/add` rounds and a zero fix-up), then `r = 32 - clz` (N = 64: two words and a mask select) | a priority chain `ite(bit N-1, N, ite(bit N-2, N-1, ... ite(bit 0, 1, 0)))`, the position of the highest set member plus one, 0 when empty |
+| A2 | branch-free insert and remove on an N-bit mask (`sltiu` guard, `sll` of 1, mask select; N = 64: two words), both outputs compared | per-`Bool` update `ite(p == i, b, m_i)`; `p >= N` changes nothing |
+| B | a seeded straight-line RV32I sequence over `x1..x8` with a fresh symbolic `lw` every 6 instructions (G2), at most 20% entropy-killing operations | the same sequence as an `Op` list built through the same `bv` operations, except that a seeded share of the instructions that have an alternative is encoded differently (adder identities, reversed barrel stages, borrow-bit comparisons, commuted multiplier) |
+| B3 | segments of 1, 8 or 32 instructions, each in its own AIG; every live-in register and memory word is **two fresh inputs, one per side, joined by an equality premise** (the hypothesis as clauses); all registers and words the segment writes are compared | as B |
+| B4 | n-term re-association `((a+b)+c)+d` against `a+(b+(c+d))`, `x*5` against `(x<<2)+x` (the multiplier by a symbolic register premised equal to 5), and `base + i*12` against shift-add; width W by comparing the low W bits of zero-extended W-bit inputs | as stated |
+| C1 | two copies of an A1 or B body with public inputs shared and secrets fresh; the public output is `pub_chain XOR (f_code(s) XOR f_ref(s))`, secret-independent only *semantically*, so the proof is a real cancellation, not a structural one | the same with `f_code(s)` alone (a leak), the SAT control |
+| C2 | the padded variant loads all T words at constant addresses after a semantically cancelled secret perturbation of the address (UNSAT); the leaking variant loads `table[s & (T-1)]` (SAT) | observable = the address trace |
+| D | `k` load-add-store accesses at word offsets `i + j` (mod T) of one symbolic base index `i` over a T-word table: the code side is the `sym.rs`-style eq/ite chain over a store log, the reference a per-word array with a binary mux tree; the data operation is the code's `add` against the reference's alternative encoding of it (so that the concrete-offset rows are not collapsed) | as stated |
+| D2, D3, D4 | D2: `i` a constant (concrete offsets). D3: D2 for every `i = 0 .. T-1` as T obligations, `conflicts` the sum and `worst_step_conflicts` the max. D4: per access, fresh code and reference tables joined by equality premises, both sides built with the same mux structure; both modes | |
+
+**Limits of the D shape** (item 7 of section 8.4): the k accesses share one
+symbolic base index, as the fields of one thread-table entry do; k *independent*
+symbolic indices (a product of T^k cases when split) are not measured, and `i` has
+log2 T bits, so the out-of-range case of section 4.3 does not arise.
+
+**Which part runs in CI.** BUILD runs the unit tests, `run --tier quick` and
+`check` of the committed results file. The quick tier is the smallest knob of
+every experiment at all recorded seeds (at least 5); `check` re-runs exactly those
+rows and compares the digest, verdict, control and conflict count (section 9.6).
+The full tier is a recorded offline run, committed by a person who regenerated it
+(section 9.6); BUILD never runs it.
+
+**Fields added to the row** (section 9.6): `tier` (`quick` or `full`), `steps`
+(the number of obligations of a chain or split), `worst_step_solve_ms`, and
+`metrics` (an object of experiment-specific numbers: E1 and E2 counts and rates, the
+divergence actually applied). For a chain or split row `solve_ms` and `check_ms`
+are totals, `drat_bytes`, `check_work` and `pass_default_limits` describe the
+**worst obligation** (the green predicate of section 8.3 is per obligation), and the
+solve-time clause of green uses `worst_step_solve_ms`.
+
+**Timeouts.** The solver loop stops itself at 120 s (cap `wall`, result `unknown`);
+the control stage has its own 30 s; the parent kills the process group at 300 s
+if the child is still running in any stage (result `killed`, cap `wall`).
+
+**Deviations from the text above, with the reason.**
+
+* E1 and E2 rows have no solver fields (`null`); their "seeds" are repetitions
+  (the counts are deterministic, the rates are samples, and the table shows the
+  slowest). Their `result` is `pass`, `fail` or `refused` (the closed set of
+  section 9.6 gains `pass` and `fail` for them) and their control is `caught`:
+  a broken adapter that the harness reports failing, or a binder width over the
+  cap that the generator refuses. A refused E1 row carries `result = "refused"`
+  and `green = false`; BUILD expects exactly that row (section 9.3).
+* **B4 starts at three terms.** `n = 2` is `a + b` against `a + b`: one adder,
+  hash-consed into itself, a collapse by construction and not a re-association.
+* **D sweep.** `T` in 4, 8, 16, 64, 256 and `k` in 1, 2, 4, 8, 16 (a grid of 25
+  knobs per experiment); D4 and B3 run both modes.
+* **The incremental mode is informational** and logs no proof: its `green` is the
+  same predicate without the DRAT and default-limit clauses, and the decision
+  never reads it.
+* **A chain's `green`** is the section 8.3 predicate per obligation: the worst
+  obligation's conflicts and solve time, the largest DRAT, the checker accepting
+  every obligation. The total is in `conflicts` and `solve_ms`.
+* **E1 digests the document.** An E1 row's `instance_sha256` is the SHA-256 of the
+  Warrant document the harness was generated from, not of the generated text: a
+  regeneration of a harness by a newer generator must not break a probe whose
+  claim set is unchanged, while a changed claim changes the document and the
+  case counts.
+* **The real scheduler's harness installs its allocation observer as the
+  probe's global allocator** (a generated `unsafe impl GlobalAlloc`, inert
+  outside an observed call: one thread-local check per allocation). It changes no
+  conflict or work count; the probe cannot avoid it without editing a generated
+  file (backlog VOS-D091).
+
+### 9.11 The decision procedure, as built
+
+`decide` (and the line printed under the generated table) applies section 8.3 to
+the rows. The definitions it fixes, where 8.3 left them to the implementation:
+
+* A **group** is every seed of one `(experiment, mode, knob)`. A **counted** row
+  is one that is not `collapsed`. A group is **green** iff at least one row is
+  counted and every counted row is green. A group that is missing from the file,
+  or whose every seed is collapsed, is **not green** (unclassified is red).
+* **Row 1** (infeasible) holds iff any of these required shapes is not green, at
+  the finest decomposition tested: A1 at N = 32; D3 at T = 8 with k = 16 (one
+  obligation per index); B3 in certified mode with a cut after every instruction
+  at 200 instructions and 25% divergence; C1 on a B body of 200 instructions at
+  25% divergence.
+* **Row 2** (feasible, reduced and mitigated) holds, if row 1 does not, iff any
+  of: B3 (certified, 25% divergence) is green at 1,000 instructions with a cut
+  after every instruction but not with a cut every 32 (green only with cuts at 8
+  instructions or fewer), or is green at 200 instructions but not at 1,000 (only
+  up to about 200); D3 at k = 16 is not green at T = 64 or at T = 256 (green only
+  for T at most 16); B4 re-association is not green at some n of 5, 6, 7 (only n at
+  most 4).
+* **Row 3** (feasible as planned) holds, if neither row 1 nor row 2 does, iff all
+  of: A1 and A2 are green at N = 32 and 64; B3 (certified, 25% divergence) is
+  green at 1,000 instructions for some cut granularity, with a worst step of at
+  most 10,000 conflicts and a total (solve plus check) of at most 60 s; D2 and D3
+  are green at T = 64, k = 16; C1 on a 1,000-instruction body at 25% divergence is
+  green.
+* If none of the three holds, the outcome is row 1 and the printed reasons say
+  which row-3 condition failed.
+
+The unit tests of `results.rs` carry a negative control for every clause.
 
 ---
 
 ## 10. What VOS-029 must deliver
+
+**Status after VOS-028b: not funded.** The probe's decision is row 1 of section 8.3
+(section 8.5), so VOS-029 is a *design for a re-plan*, not a work item: what
+follows records what the route would need, and the probe's numbers say which parts
+are cheap (certified per-instruction cuts, A1 and A2, a cut between accesses on small
+tables) and which are not (monolithic miters from 50 instructions, self-composition
+without relational cuts, a whole table compared after every access above 16 words).
 
 VOS-029 is the symbolic RV32I executor and the first machine proof (VER13
 section 4.3 item 2). It is **designed around the compositional route**, with cut
@@ -1499,7 +2173,11 @@ two-safety on a real entry (VOS-026 and after), and the owned-compile lane.
    lightly (D1 uses word accesses; `lbu`/`sb` appear in A and B).
 4. **Incremental versus per-CNF.** If route B lands, is one incremental certified
    solver faster than many CNFs, or does the learned-clause database of an
-   incremental run slow later segments? B3's two modes answer part of this.
+   incremental run slow later segments? **Answered in part by B3 (VOS-028b):** at
+   1,000 per-instruction segments one incremental solver was about forty times
+   slower than a fresh CNF per segment (about two minutes against about three
+   seconds); the incremental mode logs no proof, so route B's certified form is
+   still unmeasured.
 5. **Equivalence sweeping.** VOS00 section 12 row 9 (arrays, incremental solving,
    k-induction, and the planned equivalence-sweeping work) would make the
    monolithic route cheaper. The probe's decision table keeps it as the
@@ -1522,6 +2200,18 @@ backlog are cross-referenced there.
 | `cdcl-sat` lacks certified assumption-based UNSAT (failed-assumption lemma logging) for cut-point composition | VOS-D045 |
 | No `riscv32` target is installed and VOS22 does not exist, so capacity numbers are proxies until VOS-029 re-runs them | VOS-D046 |
 | VOS00 section 10.2 claimed fixed-size arrays are "within reach of inlining plus bit-blasting"; true only for concrete or case-split indices | VOS-D047, done in this PR |
+
+VOS-028b added six more (VOS-D091 to VOS-D096) and measured VOS-D042:
+
+| Finding | Row |
+|---|---|
+| The default `drat-check` work limit rejects a proof from 82,835 conflicts and has accepted one of 457,844 (measured) | VOS-D042 |
+| A generated harness installs its allocation observer as the global allocator when included in another program | VOS-D091 |
+| The probe's resident-set poll spawns `ps` every 50 ms | VOS-D092 |
+| D instances share one symbolic base index; independent indices and the out-of-range case are not measured | VOS-D093 |
+| A full run writes its file only at the end (a first 2 h 17 min run was lost to a wrong provenance field) | VOS-D094 |
+| The 120 s row wall bounds the sum of a chain's obligations; the 8.3 feasibility total is 10 minutes | VOS-D095 |
+| Two-safety needs relational cut points, a split with chained updates and a whole-table comparison need a cone-of-influence comparison: the two shapes that put 8.5 in row 1 | VOS-D096 |
 
 ---
 

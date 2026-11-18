@@ -142,6 +142,51 @@ func TestVosRoundRobinRowSelectsOnlyItsOwnDocument(t *testing.T) {
 	}
 }
 
+// The capacity probe (VOS-028b) and its fixture have rows: an edit to the committed results file,
+// to the VOS30 spec or to the fixture's document selects the probe, and nothing unrelated does.
+func TestVosCapacityProbeAndFixtureRows(t *testing.T) {
+	rows := map[string]*repositoryInputConsumer{}
+	for i := range repositoryInputConsumers {
+		switch repositoryInputConsumers[i].name {
+		case "rust/programs/vos-capacity-probe", "rust/vos-probe-ready":
+			rows[repositoryInputConsumers[i].name] = &repositoryInputConsumers[i]
+		}
+	}
+	probe, fixture := rows["rust/programs/vos-capacity-probe"], rows["rust/vos-probe-ready"]
+	if probe == nil || fixture == nil || probe.language != "rust" || fixture.language != "rust" || len(probe.paths) == 0 {
+		t.Fatalf("missing rows: probe %+v fixture %+v", probe, fixture)
+	}
+	for path, want := range map[string]bool{
+		"code/specs/data/vos30-capacity-results.json":    true,
+		"code/specs/data/vos30-capacity-results.json.x":  false,
+		"code/specs/VOS30-proof-route-and-capacity.md":   true,
+		"code/specs/VOS30-proof-route-and-capacity.mdx":  false,
+		"code/specs/vos-probe-ready.warrant":             true,
+		"code/specs/vos-sched-rr.warrant":                false,
+		"code/specs/data/other.json":                     false,
+		"code/programs/rust/vos-capacity-probe/src/a.rs": false,
+	} {
+		if got := probe.matches(path); got != want {
+			t.Errorf("rust/programs/vos-capacity-probe matches(%q) = %v, want %v", path, got, want)
+		}
+	}
+	for _, p := range probe.paths {
+		if !probe.matches(p) {
+			t.Errorf("declared path %s is not matched by its own predicate", p)
+		}
+	}
+	for path, want := range map[string]bool{
+		"code/specs/vos-probe-ready.warrant":          true,
+		"code/specs/vos-sched-rr.warrant":             false,
+		"code/packages/rust/warrant-grammar/src/a.rs": true,
+		"code/packages/rust/vos-probe-ready/src/a.rs": false,
+	} {
+		if got := fixture.matches(path); got != want {
+			t.Errorf("rust/vos-probe-ready matches(%q) = %v, want %v", path, got, want)
+		}
+	}
+}
+
 // Every directory a VOS tool path names exists, so a rename cannot silently orphan the row.
 func TestVosToolPathsExist(t *testing.T) {
 	for _, p := range vosToolPaths {
