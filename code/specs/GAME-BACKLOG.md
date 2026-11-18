@@ -212,8 +212,30 @@ worktree; report and preserve it if those checks do not pass.
 
 ### P2 — Port the clock contract
 
-- [ ] `GBL-010` Implement GAME10 public APIs and exact v1 corpus consumption in TypeScript, preserving
-  canonical `u64` values as `BigInt` across fixture parsing and public APIs.
+- [ ] `GBL-010` (current selection; implementation complete locally, PR/CI pending) Implement the five GAME10 public APIs and consume all 23 v1
+  vectors through TypeScript public exports. Keep canonical `u64` values as `bigint`, validate
+  `u32` widths without coercion, return exact semantic `ClockError` variants, and reject host
+  wrong-kind/width inputs with the TypeScript binding's `TypeError`/`RangeError` boundary. Check
+  every config, all ten state fields, all six step-result fields, and input immutability on success
+  and refusal. Use the existing Python validator against original fixture bytes before parsing in
+  JavaScript, plus same-path negative controls. Add bounded seeded property and mutation-fuzz
+  evidence with recorded seeds/counts/strata; finite tests do not discharge the open Warrant/source
+  proof targets. Wire the exact fixture path to the TypeScript package and reject v10/lookalike
+  paths while preserving the separate Rust/global-Warrant selection. Add normal `BUILD`,
+  `BUILD_windows`, package metadata, README and changelog entries. After the package is committed,
+  refresh this canonical inventory and record the TypeScript slot separately from emerging lanes.
+  Local package `BUILD` and `BUILD_windows` command sets passed on macOS. The focused suite passed
+  15/15 with 98.35% source line coverage and 92.52% branch coverage. The seeded property run used
+  seed `0x47434c4b5f545350` for 1,024 cases across eight strata (128 each); the mutation campaign
+  used seed `0x47434c4b5f46555a` for 256 cases and eight mutations per case. The bounded SAT miter
+  covers 16 inputs, with mismatch UNSAT and a same-path spiral mutant SAT witness. These are finite
+  local package results; native Windows execution, universal/source proof, and full-domain claims
+  remain open. The repository TypeScript portability contract's explicit inventory must be updated
+  for every new package; this port moves its total/shared counts from 515/308 to 516/309 without
+  changing inherited-path or standalone-emitter counts. Run that full portability test on the new
+  package closure in addition to package-local checks. JavaScript `bigint` and returned-record
+  allocation means native GAME10 zero-allocation, per-step, and constant-time proof targets are not
+  established by this port.
 - [ ] `GBL-011` Add fixture external-input/build-selection edges and negative v10 selection tests in each
   affected build lane. Preserve canonical decimal `u64`, bounded numeric `u32`, strict booleans, and
   exact error behavior across runtimes.
