@@ -311,13 +311,20 @@ fn vos_toml_contract_and_obligations_keys() {
 #[test]
 fn coverage_floor_is_an_integer_percent_and_optional() {
     // VOS-039a: the declared floor of the coverage gate (VOS04 section 5.6).
-    assert_eq!(parse_vos_toml("kind = \"any\"").unwrap().coverage_floor, None);
+    assert_eq!(
+        parse_vos_toml("kind = \"any\"").unwrap().coverage_floor,
+        None
+    );
     for (text, want) in [
         ("coverage-floor = 95", 95),
         ("coverage-floor = 0", 0),
         ("coverage-floor = 100", 100),
         ("coverage-floor = 7", 7),
     ] {
-        assert_eq!(parse_vos_toml(text).unwrap().coverage_floor, Some(want), "{text}");
+        assert_eq!(
+            parse_vos_toml(text).unwrap().coverage_floor,
+            Some(want),
+            "{text}"
+        );
     }
 }
