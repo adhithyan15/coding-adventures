@@ -329,6 +329,12 @@ var (
 			fixture:  "code/specs/fixtures/lzw-warrant-v2",
 			bindings: "code/packages/rust/lzw/evidence.bindings",
 		},
+		{
+			module:   "wasm-leb128",
+			spec:     "code/specs/wasm-leb128.warrant",
+			fixture:  "code/specs/fixtures/wasm-leb128-warrant-v2",
+			bindings: "code/packages/rust/wasm-leb128/evidence.bindings",
+		},
 	}
 	// warrantAcceptBlindFixture is the oracle's small synthetic corpus that the
 	// generator's tests regenerate byte for byte (accept_blind, D15); it lives in
