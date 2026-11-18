@@ -1,0 +1,16 @@
+# VOS-D063 test fixture: how the in-test subject (`wxo_subject`) implements the operations of
+# wxo.warrant.  `make` and `pick` allocate nothing; `grow` allocates inside the export.
+package wxo_subject
+revision 0.0.0
+spec code/packages/rust/warrant-grammar/tests/fixtures/wxo.warrant
+output code/packages/rust/warrant-grammar/tests/generated/wxo_evidence.rs
+seed 0x5758_4f5f_4556_4944
+property_cases 256
+fuzz_iterations 200
+negctl_fuzz_iterations 100
+exhaustive_budget 400000
+struct Cfg path=wxo_subject::Cfg fields=v:u8
+enum Pick path=wxo_subject::Pick ctors=Idle,Run(0:u8)
+op make export=make ret=Cfg faults=field-zero
+op pick export=pick args=u8 ret=Pick faults=wrong-ctor
+op grow export=grow args=u8 ret=Cfg faults=field-zero

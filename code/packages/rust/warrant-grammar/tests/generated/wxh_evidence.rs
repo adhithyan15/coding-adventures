@@ -753,8 +753,10 @@ fn attacking<T>(op: &'static str, body: impl FnOnce() -> T) -> T {
 // WX-H: the allocation observer (VER04j sections 6.3 and 14.2 item 33).
 //
 // Every adapter call of an operation that has a `heap` or `output` bound runs
-// on a worker thread inside an *allocation window*.  A counting global
-// allocator charges every allocation made on a thread whose window is open.
+// on a worker thread; the *allocation window* is open around the call of the
+// export only (`obs_scope`, VOS-D063), never around the adapter's marshalling.
+// A counting global allocator charges every allocation made on a thread whose
+// window is open.
 //
 //   supervisor thread            worker thread (window open)
 //   -----------------            ---------------------------
@@ -986,6 +988,36 @@ unsafe impl GlobalAlloc for Observer {
 #[global_allocator]
 static OBSERVER: Observer = Observer;
 
+/// Closes the window again when an `obs_scope` ends, however it ends (a return
+/// or a panic unwinding through it).
+struct ObsScopeGuard(bool);
+
+impl Drop for ObsScopeGuard {
+    fn drop(&mut self) {
+        let _ = WIN.try_with(|w| w.active.set(self.0));
+    }
+}
+
+/// Run `f` with the allocation window OPEN: every allocation it makes is charged
+/// to the observed call, and nothing outside such a scope is (VOS-D063, VER04j
+/// 14.3 item 54).  The generator wraps exactly one expression of each observed
+/// adapter, the call of the export, so the `vec!` that marshals a record or a
+/// variant into a Warrant value is the harness's and is not counted.  On a
+/// thread that is not an observer worker (no reply slot) it only runs `f`.
+fn obs_scope<R>(f: impl FnOnce() -> R) -> R {
+    let was = WIN
+        .try_with(|w| {
+            if w.slot.get().is_some() {
+                w.active.replace(true)
+            } else {
+                w.active.get()
+            }
+        })
+        .unwrap_or(false);
+    let _restore = ObsScopeGuard(was);
+    f()
+}
+
 type ObsJob = Box<dyn FnOnce() + Send>;
 
 struct Worker {
@@ -1048,10 +1080,12 @@ fn obs_exec(job: impl FnOnce() -> V + Send + 'static) -> Exec {
         let slot = worker.slot;
         *lock_or_recover(&slot.state) = None;
         let wrapped: ObsJob = Box::new(move || {
+            // The window starts CLOSED (VOS-D063): `obs_scope` opens it around
+            // the export call and around nothing else.
             WIN.with(|w| {
                 w.cur.set(0);
                 w.peak.set(0);
-                w.active.set(true);
+                w.active.set(false);
             });
             let r = catch_unwind(AssertUnwindSafe(job));
             let peak = WIN.with(|w| {
@@ -3006,8 +3040,8 @@ fn op_decompress_raw(_w: &[u64], args: &[V], fault: Fault) -> V {
     let p0 = args[0].bytes();
     let p1 = host::<u32>(args[1].int());
     let p1 = match fault { Fault::IgnoreLimit => u32::MAX, Fault::OffByOneLimit => p1.saturating_add(1), _ => p1 };
-    let hog = (fault == Fault::LimitAfterAlloc).then(|| vec![0u8; p1 as usize]);
-    let v: V = match decompress(p0, p1) {
+    let hog = (fault == Fault::LimitAfterAlloc).then(|| obs_scope(|| vec![0u8; p1 as usize]));
+    let v: V = match obs_scope(|| decompress(p0, p1)) {
         Ok(r) => V::Ok(Box::new(V::Bytes((r).to_vec()))),
         Err(_) if fault == Fault::MissingError => V::Ok(Box::new(domain_take(Ty::Bytes, 1).remove(0))),
         Err(e) => match e {

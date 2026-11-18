@@ -880,7 +880,7 @@ fn emit_v1_call(
     let arity = match name {
         "max_value" | "min_value" => 0,
         "widen" | "wrap" | "try" | "to_int" | "to_nat" | "bit_not" | "popcount" | "clz" | "ctz"
-        | "be_bytes" | "le_bytes" | "from_be" | "from_le" | "Some" => 1,
+        | "be_bytes" | "le_bytes" | "from_be" | "from_le" | "Some" | "fixed" => 1,
         "checked_add" | "checked_sub" | "checked_mul" | "div" | "rem" | "div_trunc"
         | "rem_trunc" | "unwrap_or" | "imin" | "imax" | "bit_and" | "bit_or" | "bit_xor" | "shl" | "shr" | "sar"
         | "rotl" | "rotr" | "bit" => 2,
@@ -892,6 +892,14 @@ fn emit_v1_call(
     let t = || static_fixed(widths, span);
     Ok(Some(match name {
         "Some" => format!("V::Opt(Some(Box::new({})))", p[0]),
+        // VOS-D025: `fixed<N>(bytes)` is `Some(bytes)` of exactly N bytes, else `None`
+        // (the ground evaluator's rule; VER04 section 4).  N is a literal width: a
+        // symbolic one has no value in a generated model.
+        "fixed" => match widths {
+            [Width::Literal(n)] if *n <= MAX_FIXED_WIDTH => format!("V::fixed_n({n}usize, &{})", p[0]),
+            [Width::Literal(n)] => return Err(width_too_large(*n, span)),
+            _ => return Err(unsupported("`fixed` needs one literal width", span)),
+        },
         "max_value" => format!("V::max_value({})", t()?),
         "min_value" => format!("V::min_value({})", t()?),
         "widen" => format!("V::widen({}, &{})", t()?, p[0]),
@@ -2439,7 +2447,7 @@ fn composite_adapter<'a>(
         if faults.iter().any(|f| f == "limit-after-alloc") {
             let _ = writeln!(
                 s,
-                "    let hog = (fault == Fault::LimitAfterAlloc).then(|| vec![0u8; p{l} as usize]);"
+                "    let hog = (fault == Fault::LimitAfterAlloc).then(|| obs_scope(|| vec![0u8; p{l} as usize]));"
             );
         }
     }
@@ -2663,6 +2671,79 @@ fn uses_composites<'a>(file: &WarrantFile<'a>, env: &TyEnv<'a>) -> bool {
 // ---------------------------------------------------------------------------
 // WX-H helpers
 // ---------------------------------------------------------------------------
+
+/// VOS-D063 (VER04j section 14.3 item 54): wrap every call of `export` in the
+/// adapter text `adapter` in `obs_scope(|| ...)`, so the allocation window
+/// covers the export and nothing else (not the marshalling of its arguments or
+/// of its result).  A call is the identifier `export` (with any `path::` before
+/// it) followed by `(`; the identifier must not continue a longer one
+/// (`op_<n>`, `<export>_x`).  Returns `None` when there is no call at all: an
+/// observed operation whose export is never called would be silently
+/// unobserved.
+///
+/// ```text
+///   let v: V = match vos_ghost_insert_out(p0, p1) { .. };
+///   let v: V = match obs_scope(|| vos_ghost_insert_out(p0, p1)) { .. };
+/// ```
+fn scope_export_calls(adapter: &str, export: &str) -> Option<String> {
+    let is_ident = |c: char| c.is_ascii_alphanumeric() || c == '_';
+    let mut out = String::with_capacity(adapter.len() + 64);
+    let mut rest = 0; // bytes of `adapter` already copied into `out`
+    let mut from = 0; // where to look for the next occurrence
+    let mut calls = 0;
+    while let Some(off) = adapter[from..].find(export) {
+        let at = from + off;
+        let end = at + export.len();
+        from = end;
+        let before = adapter[..at].chars().next_back();
+        // Not the tail of a longer identifier (a path separator is fine).
+        if before.is_some_and(is_ident) || !adapter[end..].starts_with('(') {
+            continue;
+        }
+        // Include a `crate::path::` prefix in the wrapped expression.
+        let mut start = at;
+        while let Some(c) = adapter[..start].chars().next_back() {
+            if is_ident(c) || c == ':' {
+                start -= c.len_utf8();
+            } else {
+                break;
+            }
+        }
+        // The matching close parenthesis (the generated arguments contain no
+        // string or character literal with a parenthesis).
+        let mut depth = 0usize;
+        let mut close = None;
+        for (i, c) in adapter[end..].char_indices() {
+            match c {
+                '(' => depth += 1,
+                ')' => {
+                    depth -= 1;
+                    if depth == 0 {
+                        close = Some(end + i + 1);
+                        break;
+                    }
+                }
+                _ => {}
+            }
+        }
+        let close = close?;
+        if start < rest {
+            continue; // inside a call already wrapped
+        }
+        out.push_str(&adapter[rest..start]);
+        out.push_str("obs_scope(|| ");
+        out.push_str(&adapter[start..close]);
+        out.push(')');
+        rest = close;
+        from = close;
+        calls += 1;
+    }
+    if calls == 0 {
+        return None;
+    }
+    out.push_str(&adapter[rest..]);
+    Some(out)
+}
 
 /// The limit parameter of an operation's `output` row: the one unsigned numeric
 /// parameter (`U16`, `U32`, `U64` or `Nat`) the bound mentions.  `Ok(None)` when
@@ -3697,6 +3778,16 @@ pub fn generate_evidence_harness_with_tables(
                     op.span,
                 ));
             }
+            // VOS-D063: only the export call is inside the allocation window.
+            let emitted = scope_export_calls(&emitted, &binding.export).ok_or_else(|| {
+                unsupported(
+                    format!(
+                        "the adapter of `{}` has no call of `{}` to observe",
+                        op.name, binding.export
+                    ),
+                    op.span,
+                )
+            })?;
             adapters.push_str(&emitted.replacen(&from, &to, 1));
             let n = op.name;
             let resolve = if shape.scoped() {
@@ -3895,6 +3986,9 @@ pub fn generate_evidence_harness_with_tables(
     if body.contains("V::concat(") {
         features.insert("concat");
     }
+    if body.contains("V::fixed_n(") {
+        features.insert("fixedn");
+    }
     if WXE_FAULTS.iter().any(|(n, _)| used_faults.contains(*n)) {
         features.insert("bytefaults");
     }
@@ -3965,4 +4059,47 @@ pub fn generate_evidence_harness_with_tables(
     out.push_str(&neg_wrappers);
     out.push_str(&suite);
     Ok(out)
+}
+
+#[cfg(test)]
+mod scope_tests {
+    use super::scope_export_calls;
+
+    #[test]
+    fn wraps_the_call_and_nothing_around_it() {
+        let a = "fn op_f(a: u8) -> V {\n    let v: V = match f(p0, g(p1)) { Ok(r) => V::Bool(r) };\n}\n";
+        let w = scope_export_calls(a, "f").unwrap();
+        assert!(w.contains("match obs_scope(|| f(p0, g(p1))) {"), "{w}");
+        // `op_f(` is the adapter's own name, not a call.
+        assert!(w.starts_with("fn op_f("), "{w}");
+    }
+
+    #[test]
+    fn a_path_prefix_belongs_to_the_wrapped_expression() {
+        let w = scope_export_calls("x(pkg::sub::f(a))", "f").unwrap();
+        assert_eq!(w, "x(obs_scope(|| pkg::sub::f(a)))");
+    }
+
+    #[test]
+    fn every_call_is_wrapped_and_a_longer_identifier_is_not_a_call() {
+        let a = "match fault { A => f(1), _ => f(2) } f_other(3) of(4)";
+        let w = scope_export_calls(a, "f").unwrap();
+        assert_eq!(
+            w,
+            "match fault { A => obs_scope(|| f(1)), _ => obs_scope(|| f(2)) } f_other(3) of(4)"
+        );
+    }
+
+    #[test]
+    fn a_call_nested_in_a_wrapped_call_is_wrapped_once() {
+        let w = scope_export_calls("f(f(1))", "f").unwrap();
+        assert_eq!(w, "obs_scope(|| f(f(1)))");
+    }
+
+    #[test]
+    fn no_call_and_an_unbalanced_call_are_refused() {
+        assert!(scope_export_calls("fn op_f() {}", "f").is_none());
+        assert!(scope_export_calls("let x = f;", "f").is_none());
+        assert!(scope_export_calls("f(1, 2", "f").is_none());
+    }
 }

@@ -914,7 +914,7 @@ per-test cap (default 64 MiB, a tool-profile value) that makes an over-cap
 allocation *fail*, so a bomb is recorded as a failed instance
 (`bound-heap-exceeded`, with the measured peak), not a process abort or CI OOM.
 The observer is subject to VER04 §7's controls: a subject whose result is
-unchanged but whose allocation grows must be distinguished. **The observed region is the export call, and only it** (VOS-D063; section 14.2 item 54):
+unchanged but whose allocation grows must be distinguished. **The observed region is the export call, and only it** (VOS-D063; section 14.3 item 54):
 the allocations the adapter makes to marshal arguments into host values and the result
 into a Warrant value belong to the harness, not to the subject, and are not counted. A
 fault that is *modelled as an allocation by the subject* (`limit-after-alloc`) is
@@ -1734,8 +1734,26 @@ The numbering continues from 14.1.
     documents with an `output` or `heap` row carry the observer, so only their harnesses
     change.  `check-profile`'s NC9 (VOS-D055) is unaffected: a missing `heap` row is still
     not evidenced.
+55. **`fixed<N>(bytes)` in a generated model (VOS-D025).**  The type checker and the ground
+    evaluator have always accepted `fixed<N>(b)` (VER04 section 4: `Some(b)` when `b` is
+    exactly `N` bytes, else `None`), but the evidence generator's expression translation
+    had no case for it and stopped at W0701 "call to `fixed`".  That blocked every model
+    that builds a fixed-size byte array (the linear scan of VOS01 section 5.4 builds its
+    state with `match fixed<8>(concat(..)) with Some(b) -> b | None -> ..`).  The
+    generator now translates it: `fixed<N>(e)` becomes `V::fixed_n(N, &e)`, an `Opt` of the
+    same byte string (or `None` on a length mismatch), evaluated by the same rule as the
+    ground evaluator, so the differential test of section 10.3 covers it.  `N` must be a
+    literal width within `MAX_FIXED_WIDTH` (4096); a named width is W0701 (it has no value
+    in a generated model) and a larger one is W0706, exactly as for a call's widths.  The
+    helper is a prelude part (`//@if fixedn`) emitted only when a body uses it, so no other
+    harness changes by a byte.  The fixture `tests/fixtures/wxf.warrant` (eight `Bool`
+    binders build a `Bytes<8>` state; `tally`, `lowest` and `highest` over it) generates and
+    passes its exhaustive (256 states), property and fuzz suites and its negative controls
+    (`tests/wxf_array.rs`).  **Not part of this item:** the second half of VOS-D025, that a
+    claim which calls no operation (the contract's lemmas) is W0701 (VOS-D005), is unchanged:
+    those lemmas stay unevidenced.
 
-### 14.4 WX-N (fixed-length byte arrays across the host boundary)
+### 14.3 WX-E (fixed-length byte arrays across the host boundary)
 
 **What was missing, exactly.**  The *language* already has a length-indexed bytes
 type: `Bytes<N>` with a literal `N` is parsed, checked (`Bytes<N> <: Bytes`,

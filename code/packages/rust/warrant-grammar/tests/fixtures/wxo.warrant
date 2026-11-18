@@ -1,0 +1,41 @@
+-- VOS-D063 test fixture (VER04j section 14.3 item 54): a v1 document whose operations return
+-- a record, a payload-carrying variant and a record again, each with `heap <= 0`.  It is NOT a
+-- package specification.  `make` and `pick` allocate nothing, so their rows must hold even
+-- though the harness allocates to marshal their results; `grow`'s export allocates a kilobyte,
+-- so its row must FAIL: the observer counts the export and only the export.
+warrant wxo v1
+  variant Pick = Idle | Run(t: U8)
+  record Cfg(v: U8)
+
+  op make() -> Cfg
+  op pick(k: U8) -> Pick
+  op grow(k: U8) -> Cfg
+
+  labels pick:
+    k public
+  labels grow:
+    k public
+
+  bound make:
+    steps <= 8
+    heap <= 0
+  bound pick:
+    steps <= 8
+    heap <= 0
+  bound grow:
+    steps <= 8
+    heap <= 0
+
+  example make_is_seven:
+    make() == Cfg(7u8)
+  example pick_runs_three:
+    pick(3u8) == Run(3u8)
+  example pick_idles_on_255:
+    pick(255u8) == Idle
+  example grow_echoes:
+    grow(1u8) == Cfg(1u8)
+
+  claim pick_names_the_thread:
+    forall k: U8. pick(k) == (if k == 255u8 then Idle else Run(k))
+  claim grow_echoes_for_every_k:
+    forall k: U8. grow(k) == Cfg(k)
