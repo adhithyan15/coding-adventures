@@ -12,10 +12,10 @@ the dump, is normative: the dump here must reproduce it.
 | File | What it is |
 |---|---|
 | `make_off_by_one_consumed.py` | writes (or `--check`s) the four files below; `BUILD` runs `--check` |
-| `off_by_one_consumed_v1.warrant` | generated synthetic document: bare tuples with a `Nat`, `U8` and `I8` second component, `Result<(U64,Nat),E>` and `Result<(I64,Nat),E>` (the wasm-leb128 decoder shapes), `Result<(Bool,U8),E>`, a 3-tuple |
+| `off_by_one_consumed_v1.warrant` | generated synthetic document: bare tuples with a `Nat`, `U8` and `I8` second component, `Result<(U64,Nat),E>` and `Result<(I64,Nat),E>` (the wasm-leb128 decoder shapes), `Result<(Bool,U8),E>`, a 3-tuple; `dec_u64` also carries a second claim over its `Err` region (`n == 7`), blind for this fault |
 | `off_by_one_consumed_v1.profile` | the `corpus.profile`: one `fault <op> off-by-one-consumed` line per op |
-| `off_by_one_consumed_v1.oracle-faults.json` | `parity_dumps.faults_view` under the open gate: every fault row, and the controls under the shipped (closed) and the open gate |
-| `off_by_one_consumed_v1.oracle-refusals.json` | every signature the fault refuses, with the oracle's code and message |
+| `off_by_one_consumed_v1.oracle-faults.json` | `parity_dumps.faults_view` under the open gate: every fault row, and the controls under the explicit closed gate (`controls_shipped`/`gate_shipped`, a historical key name shared with `fixed-eval-v1`; `GATE_CLOSED`) and the open gate (`controls_gate_on`/`gate_on`, `GATE_OPEN`, what both tools ship since the S10c flip) |
+| `off_by_one_consumed_v1.oracle-refusals.json` | every signature the fault refuses (scalar, `Bytes`, `Result<Bytes,E>`, non-numeric second component, `ok_payload` clash, and both defects at once, where the second component is reported first), with the oracle's code and message |
 
 `.gitattributes` (`* -text`) keeps the bytes exact on every platform.
 

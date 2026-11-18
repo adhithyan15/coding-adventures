@@ -82,7 +82,9 @@
       "target_kind": "exhaustive"
     },
     {
-      "blind_claims": [],
+      "blind_claims": [
+        "warrant/off_by_one_consumed/exhaustive/c_dec_u64_err"
+      ],
       "fault": "off-by-one-consumed",
       "id": "warrant/off_by_one_consumed/negctl/exhaustive/dec_u64/off-by-one-consumed",
       "op": "dec_u64",
@@ -229,7 +231,8 @@
       "id": "warrant/off_by_one_consumed/negctl/exhaustive/dec_u64/off-by-one-consumed",
       "op": "dec_u64",
       "required_claims": [
-        "warrant/off_by_one_consumed/exhaustive/c_dec_u64"
+        "warrant/off_by_one_consumed/exhaustive/c_dec_u64",
+        "warrant/off_by_one_consumed/exhaustive/c_dec_u64_err"
       ],
       "requires": [
         "ir.fixed",
@@ -238,6 +241,10 @@
       "slim_witness": [
         {
           "claim": "warrant/off_by_one_consumed/exhaustive/c_dec_u64",
+          "deferred": "ir.fixed"
+        },
+        {
+          "claim": "warrant/off_by_one_consumed/exhaustive/c_dec_u64_err",
           "deferred": "ir.fixed"
         }
       ],

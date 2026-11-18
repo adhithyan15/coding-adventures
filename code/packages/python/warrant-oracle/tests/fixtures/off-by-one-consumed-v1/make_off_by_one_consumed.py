@@ -22,7 +22,7 @@ generated):
     the ``corpus.profile`` the dump uses (one ``fault <op> off-by-one-consumed`` line per op);
 ``off_by_one_consumed_v1.oracle-faults.json``
     the fault dump (``parity_dumps.faults_view``, open gate): every fault row (the JSON of section 8.2)
-    and the controls under the shipped and the open gate;
+    and the controls under the explicit closed gate and the open gate;
 ``off_by_one_consumed_v1.oracle-refusals.json``
     every signature the fault refuses, with the oracle's code and message.
 
@@ -45,6 +45,11 @@ from coding_adventures_warrant_oracle.parser import parse_source
 HERE = pathlib.Path(__file__).resolve().parent
 NAME = "off_by_one_consumed_v1"
 
+#: ``EXTRA_CLAIMS`` adds a second, restricted claim to an op: ``dec_u64`` also claims its ``Err`` region
+#: (``n == 7``, where the model answers ``Err(E.Bad)``), a claim whose stand-in expects only ``Err`` and is
+#: therefore proven blind for this fault (VER04r 8.2), the parity contract for a control with a required
+#: claim and a blind one.
+#:
 #: ``(op name, parameters, result type, model body)``: each is also a pure model ``m_<op>`` so a
 #: reference claim ``c_<op>`` (``op(args) == m_op(args)``) can see the fault.  ``Nat`` parameters are
 #: guarded (``n < 8``) in the op and the claim (a model parameter has no refinement) so the suites stay small.
@@ -57,6 +62,10 @@ OPS = [
     ("dec_u8", "a: Bool, n: U8", "Result<(Bool,U8),E>", "if n > 200u8 then Err(E.Bad) else Ok((a, n))"),
     ("tri", "a: U8, n: Nat | n < 8, c: Bool", "(U8,Nat,Bool)", "(a, n, c)"),
 ]
+
+EXTRA_CLAIMS = {
+    "dec_u64": [("err", "v: U64, n: Nat | n == 7", "dec_u64(v, n) == Err(E.Bad)")],
+}
 
 PROFILE = (
     "budget 16777216\nchunk_size 1024\nslim_stride auto\n"
@@ -93,6 +102,8 @@ def document() -> str:
     for name, params, _ret, _body in OPS:
         args = ", ".join(_param_names(params))
         out += [f"  claim c_{name}:", f"    forall {params}. {name}({args}) == m_{name}({args})"]
+        for suffix, eparams, expr in EXTRA_CLAIMS.get(name, []):
+            out += [f"  claim c_{name}_{suffix}:", f"    forall {eparams}. {expr}"]
     out.append("")
     return "\n".join(out) + "\n"
 
@@ -117,6 +128,9 @@ REFUSALS = [
     ("a-result-of-a-scalar", "  op f(a: U8) -> Result<U8,E>\n", "f"),
     ("a-result-with-a-non-numeric-second-component", "  op f(a: U8) -> Result<(Nat,Bool),E>\n", "f"),
     ("an-option-result", "  op f(a: U8) -> Option<(U8,Nat)>\n", "f"),
+    ("a-result-of-bytes", "  op f(a: U8) -> Result<Bytes,E>\n", "f"),
+    # both defects at once: the oracle reports the second component first, as drop-consumed does
+    ("a-non-numeric-second-component-before-the-ok-payload-clash", "  op f(ok_payload: U8) -> (U8,Bool)\n", "f"),
     ("a-parameter-named-ok-payload-in-the-ok-form", "  op f(ok_payload: U8) -> Result<(U8,Nat),E>\n", "f"),
 ]
 

@@ -126,6 +126,8 @@ warrant off_by_one_consumed v1
     forall a: Bool, n: I8. bare_i8(a, n) == m_bare_i8(a, n)
   claim c_dec_u64:
     forall v: U64, n: Nat | n < 8. dec_u64(v, n) == m_dec_u64(v, n)
+  claim c_dec_u64_err:
+    forall v: U64, n: Nat | n == 7. dec_u64(v, n) == Err(E.Bad)
   claim c_dec_i64:
     forall v: I64, n: Nat | n < 8. dec_i64(v, n) == m_dec_i64(v, n)
   claim c_dec_u8:

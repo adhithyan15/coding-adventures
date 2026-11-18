@@ -250,10 +250,21 @@ def test_the_committed_faults_dump_holds_the_spec_json_and_live_controls():
     by_op = {f["op"]: f for f in dump["faults"]}
     assert set(by_op) == {"bare_nat", "bare_u8", "bare_i8", "dec_u64", "dec_i64", "dec_u8", "tri"}
     assert compact(by_op["dec_u64"]["expr"]) == SPEC_COMPACT
-    # the shipped gate (ir.fixed and ir.tuple open) evaluates, the closed one defers: both are recorded
+    # `controls_shipped` = the explicit closed gate GATE_CLOSED (`gate_shipped` in the dump; a historical key
+    # name shared with fixed-eval-v1), so every claim defers; `controls_gate_on` = GATE_OPEN, which is what
+    # both tools ship since the S10c flip, so every claim evaluates
     assert all("deferred" in w for c in dump["controls_shipped"] for w in c["slim_witness"])
     assert all("chunk" in w for c in dump["controls_gate_on"] for w in c["slim_witness"])
-    assert all(c["blind_claims"] == [] for c in dump["controls_gate_on"])
+    assert dump["gate_shipped"] == ["ir.core"]
+    assert all(c["blind_claims"] == [] for c in dump["controls_shipped"])
+    # the one Err-region claim is proven blind under the open gate (section 8.2): its stand-in expects only Err
+    blind = {c["op"]: c["blind_claims"] for c in dump["controls_gate_on"] if c["blind_claims"]}
+    assert blind == {"dec_u64": ["warrant/off_by_one_consumed/exhaustive/c_dec_u64_err"]}
+    ctl = next(c for c in dump["controls_gate_on"] if c["op"] == "dec_u64")
+    assert ctl["required_claims"] == ["warrant/off_by_one_consumed/exhaustive/c_dec_u64"]
+    assert [w["claim"] for w in ctl["slim_witness"]] == ctl["required_claims"]
+    closed = next(c for c in dump["controls_shipped"] if c["op"] == "dec_u64")
+    assert closed["required_claims"] == ctl["required_claims"] + blind["dec_u64"]
 
 
 def test_the_committed_refusals_are_all_generation_fault_errors():
@@ -261,3 +272,25 @@ def test_the_committed_refusals_are_all_generation_fault_errors():
     assert dump["refusals"] and all(
         r["oracle_code"] == "generation" and r["message"].startswith("fault:") for r in dump["refusals"]
     )
+
+
+def test_the_committed_refusals_pin_the_bytes_result_and_the_second_component_first_ordering():
+    dump = json.loads((FIXTURE / "off_by_one_consumed_v1.oracle-refusals.json").read_text(encoding="utf-8"))
+    by_name = {r["name"]: r for r in dump["refusals"]}
+    bytes_row = by_name["a-result-of-bytes"]
+    assert "-> Result<Bytes,E>" in bytes_row["source"]
+    assert bytes_row["message"] == "fault: off-by-one-consumed needs a tuple or Result<tuple, E> result"
+    order = by_name["a-non-numeric-second-component-before-the-ok-payload-clash"]
+    assert "op f(ok_payload: U8) -> (U8,Bool)" in order["source"]
+    assert order["message"] == "fault: off-by-one-consumed needs a numeric second component"
+    assert "ok_payload" not in order["message"]
+
+
+def test_a_numeric_second_component_is_checked_before_the_ok_payload_name():
+    s = lower_document(parse_source(b"warrant r v1\n  error E = A | B\n  op f(ok_payload: U8) -> (U8,Bool)\n"))
+    with pytest.raises(OracleError) as mine:
+        fault_row(s.ops["f"], "off-by-one-consumed", s.errors)
+    with pytest.raises(OracleError) as theirs:
+        fault_row(s.ops["f"], "drop-consumed", s.errors)
+    assert "numeric second component" in mine.value.message
+    assert mine.value.message.replace("off-by-one-consumed", "X") == theirs.value.message.replace("drop-consumed", "X")
