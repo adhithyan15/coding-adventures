@@ -213,6 +213,8 @@ def test_the_nat_binders_of_the_selection_claims_follow_r10():
         "c_sel_rotr",
         "c_sel_bit",
         "c_sel_in_tuple",
+        "c_sel_in_subject_arg",
+        "c_sel_parenthesised",
         "c_sel_and_admit",
     ]
     for claim in selected:

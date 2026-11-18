@@ -320,6 +320,9 @@
     "op_sel": [
       "ir.core"
     ],
+    "op_sel_arg": [
+      "ir.core"
+    ],
     "op_sel_arm": [
       "ir.core"
     ],
@@ -3294,6 +3297,60 @@
       "v1_inputs_sha256": "cd3f97715a02233a755a111f9816daa3773ad3a909ec225bdd9c16e9d4aa009c",
       "wraps": 0
     },
+    "c_sel_in_subject_arg": {
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ],
+        [
+          "n",
+          {
+            "domain": {
+              "d": "nat_shift",
+              "size": 73
+            },
+            "type": "Nat"
+          }
+        ]
+      ],
+      "cases": 18688,
+      "chunk_lines": [
+        "0 18688 0 18688 4967a78826ce24def40fe668bbd3a8da518982b6796c1356db7b17785aa91bf7 8050761437242542b0c051d64999bf95b44ec4bbc2965ec426f82162f93de676"
+      ],
+      "chunks": 1,
+      "claim": "c_sel_in_subject_arg",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "bounded-set",
+      "expected_calls": 18688,
+      "expected_sha256": "a3ffbb89ef83c68321eea0ac5e8876b0c0fa6f67dd2f43a25e78a67414a3d5fd",
+      "id": "warrant/fixed_eval/exhaustive/c_sel_in_subject_arg",
+      "inputs_sha256": "05a5d0dc8e7ae52ab3dfeb4044edf9ddff78da5dbd0d34b6c3b937137ecb7dd5",
+      "ir_cost": 8,
+      "kind": "exhaustive",
+      "product": 18688,
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "result_type": "U8",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "a3ffbb89ef83c68321eea0ac5e8876b0c0fa6f67dd2f43a25e78a67414a3d5fd",
+      "slim_inputs_sha256": "05a5d0dc8e7ae52ab3dfeb4044edf9ddff78da5dbd0d34b6c3b937137ecb7dd5",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "408cf896203223c86311e9026210c9d73f19221967a345bb8e687a0ce8f8d5c0",
+      "v1_inputs_sha256": "960f33f8a7649bda76d8e0ac26d4c99fef0e33bfa60fb58eac698e8a045babb3",
+      "wraps": 0
+    },
     "c_sel_in_tuple": {
       "binders": [
         [
@@ -3399,6 +3456,60 @@
       "stream": "warrant-stream-v1",
       "v1_expected_sha256": "1ba678169d27474477d4bf65443004aadee9617f276325415a9b557f7a72c7b4",
       "v1_inputs_sha256": "111b8066b7209ba64bd731d3c6da33bd58b15318302082fd2aafd0e5bb86526a",
+      "wraps": 0
+    },
+    "c_sel_parenthesised": {
+      "binders": [
+        [
+          "a",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ],
+        [
+          "n",
+          {
+            "domain": {
+              "d": "nat_shift",
+              "size": 73
+            },
+            "type": "Nat"
+          }
+        ]
+      ],
+      "cases": 18688,
+      "chunk_lines": [
+        "0 18688 0 18688 3d5f219c884776b4c7f4d37345aa35ac6b34fbc052d893cdfbaf131d51a76e5e fcc545b53293364c72738ed4ab7492e8679dd7bdbad509d0df1b027682171d19"
+      ],
+      "chunks": 1,
+      "claim": "c_sel_parenthesised",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "bounded-set",
+      "expected_calls": 18688,
+      "expected_sha256": "50fe048bef942cff51105c1603a9132074fb856b9d0d32bf75c8919a1e8a5870",
+      "id": "warrant/fixed_eval/exhaustive/c_sel_parenthesised",
+      "inputs_sha256": "c497194aca43f9d7d42856216cd79dff60236fbebdfe49cbb3b042d453f3208d",
+      "ir_cost": 11,
+      "kind": "exhaustive",
+      "product": 18688,
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "result_type": "U8",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "50fe048bef942cff51105c1603a9132074fb856b9d0d32bf75c8919a1e8a5870",
+      "slim_inputs_sha256": "c497194aca43f9d7d42856216cd79dff60236fbebdfe49cbb3b042d453f3208d",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "0a2b75a7379ebd3ba696149faa58030018be8e729326b47438c83ea8c4071ca2",
+      "v1_inputs_sha256": "88a35ebfbd3edca56f4e62f88b44cad52e7ffd19610352d8c18326482f60b952",
       "wraps": 0
     },
     "c_sel_rotl": {

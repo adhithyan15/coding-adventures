@@ -158,6 +158,20 @@ def test_the_nat_shift_domain_is_not_demoted_and_still_counts_toward_the_budget(
     assert "W0706" in err.value.message
 
 
+def test_two_nat_shift_binders_over_budget_are_refused_because_nat_shift_is_never_demoted():
+    claim = "  claim c:\n    forall n: Nat, k: Nat. g(1u8, n, k) == shl(shl(1u8, n), k)\n"
+    assert plan(claim).product == 73 * 73
+    assert plan(claim, budget=73 * 73).product == 73 * 73
+    with pytest.raises(OracleError) as err:
+        plan(claim, budget=73 * 73 - 1)
+    assert "W0706" in err.value.message
+
+
+def test_a_parenthesised_count_selects():
+    d = descs("  claim c:\n    forall a: U8, n: Nat. f(a, n) == shl(a, (n))\n")
+    assert d["n"] == SHIFT
+
+
 def test_16_bit_binders_demote_to_fx_edge_by_budget_only_d25():
     head = HEAD + "  op w(a: U16, b: U16) -> U16\n  op v(a: I16, n: Nat) -> I16\n"
     full = plan("  claim c:\n    forall a: U16. w(a, a) == a\n", version_head=head)

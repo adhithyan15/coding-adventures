@@ -7790,6 +7790,18 @@
       ],
       "ret": "U8"
     },
+    "op_sel_arg": {
+      "params": [
+        [
+          "x",
+          "U8"
+        ]
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "ret": "U8"
+    },
     "op_sel_arm": {
       "params": [
         [
@@ -16219,6 +16231,160 @@
       "subject": [
         "subject_op",
         "op_sel_pair",
+        [
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "n"
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "n",
+          "Nat"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_sel_arg",
+          [
+            [
+              "shl",
+              [
+                "var",
+                "a"
+              ],
+              [
+                "var",
+                "n"
+              ]
+            ]
+          ]
+        ],
+        [
+          "var",
+          "a"
+        ]
+      ],
+      "claim": "c_sel_in_subject_arg",
+      "expected": [
+        "var",
+        "a"
+      ],
+      "id": "warrant/fixed_eval/exhaustive/c_sel_in_subject_arg",
+      "ir_cost": 8,
+      "kind": "reference",
+      "ops": [
+        "op_sel_arg"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "result_type": "U8",
+      "subject": [
+        "subject_op",
+        "op_sel_arg",
+        [
+          [
+            "shl",
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "n"
+            ]
+          ]
+        ]
+      ]
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "a",
+          "U8"
+        ],
+        [
+          "n",
+          "Nat"
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "op_sel",
+          [
+            [
+              "var",
+              "a"
+            ],
+            [
+              "var",
+              "n"
+            ]
+          ]
+        ],
+        [
+          "shl",
+          [
+            "var",
+            "a"
+          ],
+          [
+            "var",
+            "n"
+          ]
+        ]
+      ],
+      "claim": "c_sel_parenthesised",
+      "expected": [
+        "shl",
+        [
+          "var",
+          "a"
+        ],
+        [
+          "var",
+          "n"
+        ]
+      ],
+      "id": "warrant/fixed_eval/exhaustive/c_sel_parenthesised",
+      "ir_cost": 11,
+      "kind": "reference",
+      "ops": [
+        "op_sel"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "result_type": "U8",
+      "subject": [
+        "subject_op",
+        "op_sel",
         [
           [
             "var",

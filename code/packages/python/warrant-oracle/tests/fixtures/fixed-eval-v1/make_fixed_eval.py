@@ -262,6 +262,9 @@ SELECTION = [
     ("sel_bit", "a: U8, n: Nat", "a, n", "bit(a, n)"),
     # selected: the count is a binder inside a tuple literal operand, and inside a match arm
     ("sel_in_tuple", "a: U8, n: Nat", "a, n", "(shl(a, n), a)"),
+    # selected: a count inside a subject-call argument, and a parenthesised count (the IR has no groups)
+    ("sel_in_subject_arg", "a: U8, n: Nat", "shl(a, n)", "a"),
+    ("sel_parenthesised", "a: U8, n: Nat", "a, n", "shl(a, (n))"),
     # not selected: the count is an expression of the binder, a model argument, or only in an admit
     ("nosel_expr", "a: U8, n: Nat", "a, n", "shl(a, len(take(b\"0102030405\", n)))"),
     ("nosel_model", "a: U8, n: Nat", "a, n", "m_sel(a, n)"),
@@ -301,6 +304,7 @@ def main() -> str:
     declare_op("  op op_sel_s(a: I8, n: Nat) -> I8")
     declare_op("  op op_sel_pair(a: U8, n: Nat) -> (U8,U8)")
     declare_op("  op op_sel_bool(a: U8, n: Nat) -> Bool")
+    declare_op("  op op_sel_arg(x: U8) -> U8")
     declare_op("  op op_sel_k(n: Nat, k: Nat) -> U8")
     declare_op("  op op_sel_t(a: U8, n: Nat) -> U8")
     declare_op("  op op_sel_arm(a: U8, n: Nat) -> U8")
@@ -352,6 +356,7 @@ def main() -> str:
         "sel_sar": "op_sel_s",
         "sel_in_tuple": "op_sel_pair",
         "sel_bit": "op_sel_bool",
+        "sel_in_subject_arg": "op_sel_arg",
         "sel_one_of_two": "op_sel_k",
         "nosel_tuple_binder": "op_sel_t",
     }

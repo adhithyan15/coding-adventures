@@ -178,6 +178,7 @@ warrant fixed_eval v1
   op op_sel_s(a: I8, n: Nat) -> I8
   op op_sel_pair(a: U8, n: Nat) -> (U8,U8)
   op op_sel_bool(a: U8, n: Nat) -> Bool
+  op op_sel_arg(x: U8) -> U8
   op op_sel_k(n: Nat, k: Nat) -> U8
   op op_sel_t(a: U8, n: Nat) -> U8
   op op_sel_arm(a: U8, n: Nat) -> U8
@@ -405,6 +406,8 @@ warrant fixed_eval v1
   labels op_sel_bool:
     a secret
     n secret
+  labels op_sel_arg:
+    x secret
   labels op_sel_k:
     n secret
     k secret
@@ -807,6 +810,9 @@ warrant fixed_eval v1
     hostile
     ensures no_panic, terminates
   input op_sel_bool.n:
+    hostile
+    ensures no_panic, terminates
+  input op_sel_arg.x:
     hostile
     ensures no_panic, terminates
   input op_sel_k.n:
@@ -1223,6 +1229,10 @@ warrant fixed_eval v1
     steps <= 64
     heap <= 0
     depth <= 8
+  bound op_sel_arg:
+    steps <= 64
+    heap <= 0
+    depth <= 8
   bound op_sel_k:
     steps <= 64
     heap <= 0
@@ -1471,6 +1481,10 @@ warrant fixed_eval v1
     forall a: U8, n: Nat. op_sel_bool(a, n) == bit(a, n)
   claim c_sel_in_tuple:
     forall a: U8, n: Nat. op_sel_pair(a, n) == (shl(a, n), a)
+  claim c_sel_in_subject_arg:
+    forall a: U8, n: Nat. op_sel_arg(shl(a, n)) == a
+  claim c_sel_parenthesised:
+    forall a: U8, n: Nat. op_sel(a, n) == shl(a, (n))
   claim c_nosel_expr:
     forall a: U8, n: Nat. op_sel(a, n) == shl(a, len(take(b"0102030405", n)))
   claim c_nosel_model:
