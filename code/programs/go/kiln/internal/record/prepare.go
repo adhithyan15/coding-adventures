@@ -147,6 +147,11 @@ type Options struct {
 	Tmpdir string
 	// Now is the clock; it defaults to time.Now.
 	Now func() time.Time
+	// Uptime reads the boot-relative clock: clock ticks since boot, from
+	// /proc/uptime. It is sealed as binding.prepared_ticks and is what S3's
+	// start-time gate uses (D26); Now is audit only. It defaults to
+	// ReadUptimeTicks, and prepare refuses to run when it fails or says <= 0.
+	Uptime func() (int64, error)
 
 	// The seams. Each defaults to the real thing.
 	RunTool       Runner
@@ -605,6 +610,16 @@ func Prepare(o Options) (*PrepareResult, error) {
 			return nil, err
 		}
 	}
+	// The boot-relative reading is taken as late as the wall-clock one, with the
+	// pre/ files already written: a process that started while prepare was
+	// working is NEW (D26).
+	preparedTicks, err := o.Uptime()
+	if err != nil {
+		return nil, fmt.Errorf("prepare: the boot-relative clock cannot be read: %w", err)
+	}
+	if preparedTicks < 1 {
+		return nil, fmt.Errorf("prepare: the boot-relative clock says %d ticks", preparedTicks)
+	}
 	binding := recfmt.Binding{
 		Schema: recfmt.SchemaBinding, Repository: repo, Run: run, Attempt: attempt, Revision: vt.Commit,
 		ShardIndex: o.ShardIndex, ShardCount: o.ShardCount,
@@ -612,7 +627,7 @@ func Prepare(o Options) (*PrepareResult, error) {
 		HostFactsSHA256: w.sums["host-facts.json"], InventorySHA256: w.sums["inventory.json"],
 		SandboxConfigSHA256: w.sums["sandbox.json"], KilnSHA256: kiln.SHA256, BuildToolSHA256: bt.SHA256, StraceSHA256: strace.SHA256, GitSHA256: git.SHA256,
 		Recorder: legacy.RecorderVersion, StraceVersion: straceVer, Kernel: kernel, JobStart: o.JobStart,
-		PreparedAt: o.Now().UTC().Format(time.RFC3339),
+		PreparedAt: o.Now().UTC().Format(time.RFC3339), PreparedTicks: preparedTicks,
 	}
 	bindBytes, err := recfmt.EncodeBinding(binding)
 	if err != nil {
@@ -676,6 +691,9 @@ func (o *Options) normalize() error {
 	}
 	if o.Now == nil {
 		o.Now = time.Now
+	}
+	if o.Uptime == nil {
+		o.Uptime = ReadUptimeTicks
 	}
 	if o.RunTool == nil {
 		o.RunTool = execTool

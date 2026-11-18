@@ -1193,13 +1193,17 @@ mount point shadows beneath an `ro_roots` entry, the checkout or a state root
   decision, not an accident: a recording that ran nothing is a void shard.
 
 **P10. The binding.** `pre/binding.json` is `recfmt.EncodeBinding` of
-`kiln-record-binding/1`: `repository`, `run`, `attempt` and `revision` (the
+`kiln-record-binding/2`: `repository`, `run`, `attempt` and `revision` (the
 commit `VerifyTree` returned, which `GITHUB_SHA` equalled), `shard_index`,
 `shard_count`, the digests of the graph, steps, partition, host facts,
 inventory and sandbox configuration, `kiln_sha256`, `build_tool_sha256`,
 `strace_sha256`, `git_sha256`,
 `recorder` (`legacy.RecorderVersion`), `strace_version`, `kernel`
-(`/proc/sys/kernel/osrelease`), `job_start` and `prepared_at`. Every
+(`/proc/sys/kernel/osrelease`), `job_start`, `prepared_at` (wall clock, display
+and audit only) and `prepared_ticks` (D26: the first field of `/proc/uptime` at
+`prepare`, in clock ticks of 100 per second since boot, an integer of at least 1;
+a binding without it, or with it not positive, is refused, which is why the
+schema went from `/1` to `/2`). Every
 `pre/` file is written exactly as the `recfmt` encoder produced it, with no
 trailing newline, so `binding_id` is the SHA-256 of the file and the merge's
 strict decoder reads it back byte for byte. Given the same inputs and the same
@@ -1440,21 +1444,25 @@ tokens that the merge already knew (M3, M4) and nothing wrote until now.
   non-dumpable task the kernel makes it the root of the task's user namespace,
   which a hostile step could arrange to look like root). "Started after
   `prepare`" compares field 22 of `/proc/<pid>/stat` (parsed after the last
-  `)`, plus `btime` from `/proc/stat`, 100 ticks per second) with the sealed
-  `binding.prepared_at` less 2 s; an unreadable or unparsable `stat` counts as
+  `)`, in clock ticks since boot, 100 per second) with the sealed
+  `binding.prepared_ticks` less 200 ticks (2 s); no wall-clock time and no
+  `btime` is involved (D26). An unreadable or unparsable `stat` counts as
   after. The rule exists because a real survivor is always inspectable from
   `collect`: it lives in a user namespace our user owns, so we hold ptrace
   access to it even if it made itself non-dumpable; what we cannot inspect is a
   stranger's, or an OLD process of ours (a `systemd --user` manager, an
   ssh-agent) that no build started, and counting those would void every run.
   Each scan is bounded to 5 s (a `/proc` read can block on an uninterruptible
-  task); one that is not done counts as a survivor. The start-time gate compares
-  the wall-clock `prepared_at` with `btime`-derived start times, so a backward
-  wall-clock step of more than 2 s between `prepare` and `collect` can exclude a
-  new process from S3 only; S1 and S2 are unaffected, and a step cannot move
-  the clock. A monotonic, boot-relative comparison is a planned follow-up. (The
-  tick count is converted without overflow, and an absurd one, over 100 years,
-  counts as new.) There is **no cwd test**: a shell left in the
+  task); one that is not done counts as a survivor. The start-time gate is boot-relative
+  (D26): `prepare` seals `/proc/uptime` as `binding.prepared_ticks`, and the
+  gate compares it with `/proc/<pid>/stat` field 22, both ticks since boot, so a
+  step of the wall clock (NTP, `date -s`) between `prepare` and `collect`
+  cannot exclude a new process from S3. (Before D26 the gate converted
+  `starttime` through `btime` and compared it with the wall-clock
+  `prepared_at`, and a backward step of more than 2 s could.) `prepare` refuses
+  an unreadable, non-finite or non-positive `/proc/uptime`. A reboot between
+  `prepare` and `collect` is not detected and is not a case the recorder has: the
+  two run in one job. (An absurd `starttime`, over 100 years of ticks, counts as new.) There is **no cwd test**: a shell left in the
   checkout writes nothing, and a cwd test would void every run launched from a
   terminal in the repository. A process that vanishes while being read is not
   one. The scan repeats every 200 ms for up to 10 s (`CollectOptions.SurvivorWait`;

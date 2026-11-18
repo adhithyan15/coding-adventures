@@ -44,6 +44,7 @@ package record
 import (
 	"errors"
 	"fmt"
+	"math"
 	"os"
 	"strconv"
 	"strings"
@@ -59,13 +60,67 @@ const (
 	maxSurvivorsListed  = 8
 )
 
+// ClockTicksPerSecond is USER_HZ, the rate /proc/<pid>/stat's starttime and the
+// ticks `prepare` seals (binding.prepared_ticks) are both counted in. It is 100
+// on every Linux kernel kiln supports (USER_HZ is fixed in the user-space ABI,
+// whatever CONFIG_HZ is), and Go has no sysconf without cgo.
+const ClockTicksPerSecond = 100
+
+// SurvivorSlackTicks is how much earlier than `prepare` a process may have
+// started and still count as new: 200 ticks, two seconds. A process's starttime
+// is truncated to a tick and `prepare` reads /proc/uptime at a one-tick
+// resolution, so a process forked a moment before the read must not look old.
+const SurvivorSlackTicks = 2 * ClockTicksPerSecond
+
 // SurvivorQuery is what a scan is told: the checkout, the sealed sandbox
 // configurations whose command-line mention marks a sandbox supervisor (S2), and
-// the moment `prepare` ran (S3 looks only at processes that started after it).
+// the boot-relative moment `prepare` ran (S3 looks only at processes that
+// started after it).
+//
+// SinceTicks is in clock ticks since boot, the same clock as a process's
+// starttime, so the comparison involves no wall-clock time at all and a step of
+// the wall clock (NTP, a manual `date -s`) between `prepare` and `collect`
+// cannot move a process across the line (decision D26). It already has the slack
+// taken off. Zero or less: every process counts.
 type SurvivorQuery struct {
-	RepoRoot string
-	Configs  []string
-	Since    time.Time // zero: every process counts
+	RepoRoot   string
+	Configs    []string
+	SinceTicks int64
+}
+
+// ParseUptimeTicks turns the text of /proc/uptime ("12345.67 8910.11": seconds
+// since boot, then idle seconds) into clock ticks since boot, rounded down.
+// Only the first field is read. A first field that is not a finite number, or
+// is not positive, or is more than 100 years, is refused: a clock that cannot
+// be read is not a clock, and `prepare` must not seal a made-up one (S3's gate
+// would then be wrong in a direction nobody could see).
+func ParseUptimeTicks(data []byte) (int64, error) {
+	f := strings.Fields(string(data))
+	if len(f) == 0 {
+		return 0, errors.New("/proc/uptime is empty")
+	}
+	secs, err := strconv.ParseFloat(f[0], 64)
+	if err != nil {
+		return 0, fmt.Errorf("/proc/uptime: %v", err)
+	}
+	if math.IsNaN(secs) || math.IsInf(secs, 0) || secs <= 0 || secs > 100*365*24*3600 {
+		return 0, fmt.Errorf("/proc/uptime says %q seconds since boot", f[0])
+	}
+	ticks := int64(secs * ClockTicksPerSecond)
+	if ticks < 1 {
+		return 0, fmt.Errorf("/proc/uptime says %q seconds since boot, under one tick", f[0])
+	}
+	return ticks, nil
+}
+
+// ReadUptimeTicks reads the live /proc/uptime as clock ticks since boot. It is
+// the default of Options.Uptime; it fails anywhere without /proc.
+func ReadUptimeTicks() (int64, error) {
+	data, err := os.ReadFile("/proc/uptime")
+	if err != nil {
+		return 0, err
+	}
+	return ParseUptimeTicks(data)
 }
 
 // errTruncated is what a read of a /proc file says when it hit the read bound:
@@ -88,9 +143,6 @@ type procFS interface {
 	ReadLink(pid int, name string) (string, error)
 	// ReadFile reads /proc/<pid>/<name>, bounded (errTruncated past the bound).
 	ReadFile(pid int, name string) ([]byte, error)
-	// Boot is the boot time (/proc/stat btime) and the clock ticks per second
-	// that /proc/<pid>/stat's starttime is counted in.
-	Boot() (btime time.Time, tck int, err error)
 }
 
 // gone says an error means the process no longer exists.
@@ -133,31 +185,30 @@ func statusOurs(status []byte, me uint32) bool {
 	return true
 }
 
-// startedAt is the moment a process started: field 22 of /proc/<pid>/stat
-// (clock ticks since boot). comm, field 2, may hold spaces and parentheses, so
-// the fields are counted from after the LAST ")".
-func startedAt(stat []byte, btime time.Time, tck int) (time.Time, error) {
+// startTicks is when a process started: field 22 of /proc/<pid>/stat, in clock
+// ticks since boot (ClockTicksPerSecond). It stays in ticks: the gate compares
+// it with the ticks `prepare` sealed, and never converts through btime, which is
+// derived from the wall clock (D26). comm, field 2, may hold spaces and
+// parentheses, so the fields are counted from after the LAST ")".
+func startTicks(stat []byte) (int64, error) {
 	i := strings.LastIndexByte(string(stat), ')')
-	if i < 0 || tck <= 0 {
-		return time.Time{}, errors.New("stat has no comm")
+	if i < 0 {
+		return 0, errors.New("stat has no comm")
 	}
 	f := strings.Fields(string(stat[i+1:])) // f[0] is field 3
 	if len(f) < 20 {
-		return time.Time{}, errors.New("stat has too few fields")
+		return 0, errors.New("stat has too few fields")
 	}
 	ticks, err := strconv.ParseUint(f[19], 10, 63)
 	if err != nil {
-		return time.Time{}, err
+		return 0, err
 	}
-	// Divide before multiplying: ticks*1e9 wraps int64 above ~9.2e9 ticks (about
-	// 2.9 years at 100 Hz), and a wrapped value would make a new process look old.
 	// A count of more than 100 years of ticks is not a real one: unknown, which
 	// the caller counts as "started after prepare" (fail closed).
-	if ticks > uint64(tck)*100*365*24*3600 {
-		return time.Time{}, errors.New("stat starttime is absurd")
+	if ticks > ClockTicksPerSecond*100*365*24*3600 {
+		return 0, errors.New("stat starttime is absurd")
 	}
-	t := uint64(tck)
-	return btime.Add(time.Duration(ticks/t)*time.Second + time.Duration(ticks%t)*time.Second/time.Duration(t)), nil
+	return int64(ticks), nil
 }
 
 // scanSurvivors returns what it found, one line per survivor (at most
@@ -177,8 +228,10 @@ func startedAt(stat []byte, btime time.Time, tck int) (time.Time, error) {
 //     that cannot be read or parsed is ours; the owner of /proc/<pid> is only
 //     one more reason to say ours, never a reason to skip;
 //   - S3 applies only to a process that started at or after `prepare` (minus
-//     slack): nothing of this build is older. A stat that cannot be read or
-//     parsed counts as started after.
+//     slack): nothing of this build is older. Both sides are ticks since boot
+//     (starttime against binding.prepared_ticks), so a wall-clock step cannot
+//     misplace a process (D26). A stat that cannot be read or parsed counts as
+//     started after.
 //
 // S1 and S2 apply to every process.
 func scanSurvivors(fs procFS, q SurvivorQuery) ([]string, error) {
@@ -191,7 +244,6 @@ func scanSurvivors(fs procFS, q SurvivorQuery) ([]string, error) {
 	if err != nil {
 		return nil, fmt.Errorf("/proc cannot be listed: %v", err)
 	}
-	btime, tck, berr := fs.Boot()
 	me := fs.UID()
 	var found []string
 	n := 0
@@ -225,18 +277,18 @@ func scanSurvivors(fs procFS, q SurvivorQuery) ([]string, error) {
 				return after
 			}
 			known = true
-			if q.Since.IsZero() {
+			if q.SinceTicks <= 0 {
 				return after
 			}
 			st, err := fs.ReadFile(pid, "stat")
-			if err != nil || berr != nil {
-				return after
-			}
-			t, err := startedAt(st, btime, tck)
 			if err != nil {
 				return after
 			}
-			after = !t.Before(q.Since)
+			t, err := startTicks(st)
+			if err != nil {
+				return after
+			}
+			after = t >= q.SinceTicks
 			return after
 		}
 		// fail records an inspection that failed: gone is nothing; otherwise it is

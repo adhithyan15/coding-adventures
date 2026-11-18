@@ -52,9 +52,13 @@ import (
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/traced"
 )
 
+// MaxPreparedTicks bounds binding.prepared_ticks: 100 years at 100 ticks per
+// second. A larger value is not a real uptime.
+const MaxPreparedTicks = 100 * 365 * 24 * 3600 * 100
+
 // Schema names, one per file.  A version bump is a new name.
 const (
-	SchemaBinding   = "kiln-record-binding/1"
+	SchemaBinding   = "kiln-record-binding/2"
 	SchemaHostFacts = "kiln-record-host-facts/1"
 	SchemaInventory = "kiln-record-inventory/1"
 	SchemaShard     = "kiln-record-shard/1"
@@ -121,7 +125,14 @@ type Binding struct {
 	StraceVersion       string `json:"strace_version"`
 	Kernel              string `json:"kernel"`
 	JobStart            int64  `json:"job_start"`
-	PreparedAt          string `json:"prepared_at"`
+	// PreparedAt is wall-clock time, for display and audit ONLY: it must never
+	// gate anything, because the wall clock can step.
+	PreparedAt string `json:"prepared_at"`
+	// PreparedTicks is /proc/uptime at prepare, in clock ticks (USER_HZ, 100 per
+	// second) since boot: the same clock as /proc/<pid>/stat's starttime. It is
+	// what S3's "started after prepare" gate compares against (D26). Added in
+	// binding/2; a binding without it, or with it not positive, is refused.
+	PreparedTicks int64 `json:"prepared_ticks"`
 }
 
 // HostFacts is pre/host-facts.json: the machine facts the weak key hashes and
@@ -405,6 +416,8 @@ func (b *Binding) Validate() error {
 		return fmt.Errorf("binding: recorder %d", b.Recorder)
 	case b.JobStart < 0:
 		return fmt.Errorf("binding: job_start %d", b.JobStart)
+	case b.PreparedTicks < 1 || b.PreparedTicks > MaxPreparedTicks:
+		return fmt.Errorf("binding: prepared_ticks %d", b.PreparedTicks)
 	}
 	// Ordered slices, not maps: the FIRST failure is the one reported, and a
 	// cause text must be the same bytes on every run (merge output is compared

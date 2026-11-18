@@ -21,11 +21,6 @@ type fakeProc struct {
 	block chan struct{}
 }
 
-// fakeBoot is the boot time of the fake host; ticks count from it at 100 Hz.
-var fakeBoot = time.Unix(1_000_000, 0)
-
-func (f *fakeProc) Boot() (time.Time, int, error) { return fakeBoot, 100, nil }
-
 type fakeEntry struct {
 	owner   uint32
 	ownErr  error
@@ -323,12 +318,13 @@ func TestWaitSurvivorsDefaultIsTenSecondsAndAFailedScanIsASurvivor(t *testing.T)
 // S3 after the review: ownership from status, start time, S2 for the probe
 // configuration, truncated reads, a scan that blocks.
 
-// prepared is the moment prepare ran in these tests: 1000 s after boot.
-var prepared = fakeBoot.Add(1000 * time.Second)
+// prepared is the moment prepare ran in these tests: 1000 s after boot, in
+// ticks (what binding.prepared_ticks holds).
+const prepared = 1000 * ClockTicksPerSecond
 
 func sinceQuery() SurvivorQuery {
 	q := surQuery
-	q.Since = prepared.Add(-2 * time.Second)
+	q.SinceTicks = prepared - SurvivorSlackTicks
 	return q
 }
 
@@ -411,8 +407,8 @@ func TestSurvivorS3HostileOwnerRootButStatusUidOurs(t *testing.T) {
 
 func TestSurvivorStatParsesACommWithParentheses(t *testing.T) {
 	st := []byte(statLine("a ) (b c", 12345))
-	got, err := startedAt(st, fakeBoot, 100)
-	if err != nil || !got.Equal(fakeBoot.Add(123450*time.Millisecond)) {
+	got, err := startTicks(st)
+	if err != nil || got != 12345 {
 		t.Fatalf("%v %v", got, err)
 	}
 	// ... end to end: a comm like that, old, is ignored.
@@ -453,13 +449,13 @@ func TestSurvivorTruncatedMountinfoFailsClosedWhateverTheOwner(t *testing.T) {
 
 func TestSurvivorStartTimeDoesNotOverflow(t *testing.T) {
 	for _, ticks := range []int{10_000_000_000, 100_000_000_000} {
-		got, err := startedAt([]byte(statLine("x", ticks)), fakeBoot, 100)
-		if err != nil || !got.Equal(fakeBoot.Add(time.Duration(ticks/100)*time.Second)) {
+		got, err := startTicks([]byte(statLine("x", ticks)))
+		if err != nil || got != int64(ticks) {
 			t.Fatalf("%d: %v %v", ticks, got, err)
 		}
 	}
 	// An absurd count is unknown, and unknown counts as new.
-	if _, err := startedAt([]byte(statLine("x", 1_000_000_000_000)), fakeBoot, 100); err == nil {
+	if _, err := startTicks([]byte(statLine("x", 1_000_000_000_000))); err == nil {
 		t.Fatal("an absurd starttime was believed")
 	}
 	denied := &os.PathError{Op: "readlink", Path: "x", Err: syscall.EACCES}
@@ -479,5 +475,76 @@ func TestSurvivorScanThatBlocksCountsAsASurvivor(t *testing.T) {
 	got := waitSurvivors(scan, -1, c.now, c.sleep, 20*time.Millisecond)
 	if len(got) != 1 || !strings.Contains(got[0], "took longer") {
 		t.Fatalf("%v", got)
+	}
+}
+
+// ---------------------------------------------------------------------------
+// D26: the gate is boot-relative. Nothing below touches a wall clock, because
+// the gate no longer reads one: a process's starttime (ticks since boot) is
+// compared with binding.prepared_ticks (ticks since boot at prepare).
+
+// The incident the decision answers. The old gate converted starttime to wall
+// time through btime and compared it with the wall-clock prepared_at. A wall
+// clock that steps BACK 10 s between prepare and the step moves btime (and so
+// every derived start time) 10 s earlier than prepared_at, and a process that
+// started 2 s after prepare looked as if it had started 8 s before it (outside
+// the 2 s slack): excluded from S3. The boot-relative gate has no such input.
+func TestSurvivorS3WallClockStepBackDoesNotExcludeANewProcess(t *testing.T) {
+	denied := &os.PathError{Op: "readlink", Path: "x", Err: syscall.EACCES}
+	f := host()
+	newTicks := prepared + 2*ClockTicksPerSecond
+	f.procs[30] = &fakeEntry{owner: 1000, cmdline: "x\x00", nsErr: denied, stat: statLine("x", newTicks)}
+	got, _ := scanSurvivors(f, sinceQuery())
+	if len(got) != 1 || !strings.Contains(got[0], "S3") {
+		t.Fatalf("a new process was excluded: %v", got)
+	}
+	// The old arithmetic, replayed, to show what it did with the same process.
+	wallPrepared := time.Unix(5_000_000, 0)                               // prepared_at
+	btime := wallPrepared.Add(-1000 * time.Second).Add(-10 * time.Second) // btime after a 10 s step back
+	started := btime.Add(time.Duration(newTicks) * time.Second / ClockTicksPerSecond)
+	if !started.Before(wallPrepared.Add(-2 * time.Second)) {
+		t.Fatal("the old arithmetic no longer shows the bug this test documents")
+	}
+}
+
+func TestSurvivorS3ProcessStartedBeforePrepareIsStillExcluded(t *testing.T) {
+	denied := &os.PathError{Op: "readlink", Path: "x", Err: syscall.EACCES}
+	f := host()
+	f.procs[30] = &fakeEntry{owner: 1000, cmdline: "x\x00", nsErr: denied, stat: statLine("x", prepared-SurvivorSlackTicks-1)}
+	if got, _ := scanSurvivors(f, sinceQuery()); len(got) != 0 {
+		t.Fatalf("an old process was flagged: %v", got)
+	}
+	// The line is inclusive: exactly the slack before prepare is new.
+	f.procs[30].stat = statLine("x", prepared-SurvivorSlackTicks)
+	if got, _ := scanSurvivors(f, sinceQuery()); len(got) != 1 {
+		t.Fatalf("the boundary: %v", got)
+	}
+}
+
+func TestSurvivorS3NoBoundMeansEveryProcessCounts(t *testing.T) {
+	denied := &os.PathError{Op: "readlink", Path: "x", Err: syscall.EACCES}
+	f := host()
+	f.procs[30] = &fakeEntry{owner: 1000, cmdline: "x\x00", nsErr: denied, stat: statLine("x", 1)}
+	if got, _ := scanSurvivors(f, surQuery); len(got) != 1 { // SinceTicks is zero
+		t.Fatalf("%v", got)
+	}
+}
+
+func TestParseUptimeTicks(t *testing.T) {
+	for in, want := range map[string]int64{
+		"12345.67 8910.11\n": 1234567,
+		"0.01 0.00":          1,
+		"100 5":              10000,
+		"  7.999  1":         799, // rounded down
+	} {
+		got, err := ParseUptimeTicks([]byte(in))
+		if err != nil || got != want {
+			t.Errorf("%q: %d %v, want %d", in, got, err, want)
+		}
+	}
+	for _, in := range []string{"", "\n", "abc 1", "0.00 5", "0.004 1", "-3.0 1", "NaN 1", "+Inf 1", "Inf 1", "1e300 1", "99999999999 1"} {
+		if got, err := ParseUptimeTicks([]byte(in)); err == nil {
+			t.Errorf("%q accepted as %d", in, got)
+		}
 	}
 }

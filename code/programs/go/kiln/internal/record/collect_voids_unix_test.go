@@ -55,12 +55,12 @@ func TestCollectSurvivorVoidsTheRunAndEveryRecord(t *testing.T) {
 		t.Fatalf("the scan was given %q and %q", gotRoot, gotCfg)
 	}
 	// The probe sandbox's configuration is named too, and the start-time bound is
-	// the sealed prepared_at less two seconds.
+	// the sealed prepared_ticks less the slack, in boot-relative ticks (D26).
 	if len(gotQ.Configs) != 2 || gotQ.Configs[1] != filepath.Join(f.p.dir, "probe", "toolchains-sandbox.json") {
 		t.Fatalf("configs %v", gotQ.Configs)
 	}
-	if want, _ := time.Parse(time.RFC3339, f.pre.Binding.PreparedAt); !gotQ.Since.Equal(want.Add(-2 * time.Second)) {
-		t.Fatalf("since %v, prepared_at %q", gotQ.Since, f.pre.Binding.PreparedAt)
+	if f.pre.Binding.PreparedTicks < 1 || gotQ.SinceTicks != f.pre.Binding.PreparedTicks-SurvivorSlackTicks {
+		t.Fatalf("since %d, prepared_ticks %d", gotQ.SinceTicks, f.pre.Binding.PreparedTicks)
 	}
 	sh := f.decode()
 	if !hasVoid(sh, "survivor") || hasVoid(sh, "state-preloaded") || hasVoid(sh, "tracked-changed") {

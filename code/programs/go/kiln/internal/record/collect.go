@@ -185,13 +185,12 @@ func Collect(o CollectOptions) (*CollectResult, error) {
 		return nil, fmt.Errorf("--root %q is not the checkout the shard was prepared for (%q)", printable(o.Root), printable(pre.Config.RepoRoot))
 	}
 	// 2a. Nothing of the sandbox may still be running (D6, token `survivor`).
-	// "Started after prepare" is the sealed prepared_at less two seconds of slack
-	// (it has a one-second resolution, and so does the boot time); a value that
-	// does not parse leaves the time zero, which makes every process count.
+	// "Started after prepare" is the sealed prepared_ticks (clock ticks since boot,
+	// the clock a process's starttime is in) less SurvivorSlackTicks. No wall-clock
+	// time is involved (D26); the decoder refuses a binding without a positive
+	// prepared_ticks, and a bound of zero or less would make every process count.
 	q := SurvivorQuery{RepoRoot: pre.Config.RepoRoot, Configs: []string{pre.ConfigPath, filepath.Join(o.Dir, "probe", "toolchains-sandbox.json")}}
-	if t, err := time.Parse(time.RFC3339, pre.Binding.PreparedAt); err == nil {
-		q.Since = t.Add(-2 * time.Second)
-	}
+	q.SinceTicks = pre.Binding.PreparedTicks - SurvivorSlackTicks
 	survivors := waitSurvivors(func() ([]string, error) { return o.Survivors(q) }, o.SurvivorWait, o.Now, o.Sleep, o.SurvivorScanTimeout)
 	kiln, err := ResolveBinary("the kiln binary", o.KilnExe)
 	if err != nil {
