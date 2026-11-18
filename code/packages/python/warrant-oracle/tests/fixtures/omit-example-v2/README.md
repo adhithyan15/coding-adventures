@@ -14,3 +14,8 @@ fixtures), and `BUILD` runs `make_fixture.py --check` and `verify-v2` on it.
 `echo_small` is kept, so `cases.tfv` has one record. The recorded generator is
 `warrant-corpus-gen@0.5.0`; the generator's S10-1 PR is checked against this directory and
 regenerates it from its own output (the bytes must not move).
+
+**[D13] note.** The recorded generator is pinned by `BUILD`. A generator version bump must
+regenerate this fixture (`make_fixture.py`, or the generator's own writer once it has one) and move
+the pin. The generator's S10-1 PR adds this fixture to the ct-compare README checklist and to the
+section 16.8 count of places a bump touches; this PR does not edit that README.

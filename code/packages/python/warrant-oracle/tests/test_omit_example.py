@@ -60,6 +60,7 @@ OPS = [
 def doc(examples: str, version: str = "v1") -> bytes:
     s = "warrant omitx" + ("" if version == "v0" else " v1") + "\n  error E = BAD\n"
     s += "  model x2(a: Bytes) -> Bytes = concat(a, a)\n"
+    s += "  model same(a: Bytes, b: Bytes) -> Bool = a == b\n"
     s += "  model sq(a: Int) -> Int = a * a\n"
     for _, line, _ in OPS:
         s += f"  {line}\n"
@@ -175,10 +176,21 @@ def test_not_op_eq_pure_is_decided_from_the_shape():
         "two": 'echo(b"aa") == echo(b"aa")',  # a subject on both sides
         "pure": 'b"aa" == b"aa"',  # no subject at all
         "nested": 'x2(echo(b"aa")) == b"aaaa"',  # the subject is not the top of its side
+        "inner": 'echo(echo(b"aa")) == b"aa"',  # a subject call inside an argument
+        "inner_right": 'b"aa" == echo(echo(b"aa"))',
+        "inner_two": 'lo(1u8, echo(b"aa")) == b"aa"',
+        "lt": 'x2(b"aa") != echo(b"aa")',  # not an equality
+        "boolean": 'same(echo(b"aa"), b"aa")',  # a Bool call with a subject inside
     }
     examples = "".join(ex(n, b) for n, b in shapes.items())
     out = gen(examples, "".join(omit(n) for n in shapes))
     assert reasons(out) == dict.fromkeys(shapes, "not-op-eq-pure")
+
+
+def test_a_shape_that_is_not_op_eq_pure_without_the_line_is_the_generators_w0701():
+    for body in ('echo(echo(b"aa")) == b"aa"', 'echo(b"aa") != echo(b"bb")', 'echo(b"aa") == echo(b"aa")'):
+        msg = refused(ex("s", body), "", "generation")
+        assert msg.startswith("W0701") and "one subject call" in msg
 
 
 def test_value_over_limit_by_a_completed_evaluation_with_a_final_value_over_4096_bytes():

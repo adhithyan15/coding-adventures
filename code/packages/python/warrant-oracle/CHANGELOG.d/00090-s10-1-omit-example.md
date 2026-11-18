@@ -26,3 +26,12 @@ example is omitted). The generator follows in its own PR (VER04r section 13, S10
 - `_examples` now evaluates an example in the order of 8.4 (arguments, pure side, then the D19 and D18
   checks); an example that fails two of these reports the one that comes first in that order (messages
   only; no emitted byte).
+
+### Review fixes (Fable, CV2-S10-1)
+
+- The `not-op-eq-pure` shape test now matches the generator's `lower_example`: a subject call inside
+  an argument (`echo(echo(x)) == y`) is `not-op-eq-pure` (it was refused with `ir: a subject call is
+  forbidden here`). Two subject calls, a subject on both sides, a non-equality body and a
+  non-top subject call are pinned by tests.
+- VER04r 8.4 and the section 13 lzw row carry the four rulings (shape, first error, levels,
+  evaluation order) and the lzw acceptance conditions as author refinements.

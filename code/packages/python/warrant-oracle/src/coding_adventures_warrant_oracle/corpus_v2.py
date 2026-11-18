@@ -40,7 +40,7 @@ from .corpus_v1 import build_program
 from .errors import OracleError, SizeError
 from .faults import derive_controls
 from .ir_eval import WrapsInAdmit, admit_fn, run_admit
-from .lower import FIXED, Spec, _substitute, lower_document
+from .lower import FIXED, Spec, _has_subject, _substitute, lower_document
 from .parser import parse_source
 from .profile import Profile, parse_profile
 from .stream import slim_base_set
@@ -165,7 +165,10 @@ def _evaluate_example(spec: Spec, prog, ex):
        checks run, and each refuses.
     """
     node = ex.subject
-    if node is None or node[0] != "subject_op":
+    # The generator's rule (``lower_example``, W0701): exactly one subject call, its arguments
+    # free of subject calls, on one side of an equality, the other side pure.  ``ex.subject`` is
+    # set only for an ``==`` with a subject on exactly one side; the rest is tested here.
+    if node is None or node[0] != "subject_op" or any(_has_subject(a) for a in node[2]):
         raise _NotOpEqPure
     op = spec.ops[node[1]]
     statics = dict(zip(op.statics, node[3])) if len(node) == 4 else {}
