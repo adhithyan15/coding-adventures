@@ -205,6 +205,12 @@ var (
 		"code/specs/fixtures/warrant-vectors-synthetic-v1",
 		"code/scripts/warrant_syntax_corpus.py",
 		"code/scripts/tests/test_warrant_syntax_corpus.py",
+		// WD-HARN1c: the shared negative-control checker and its tests, which
+		// warrant-grammar's BUILD runs (the tests are the Windows-executed proof
+		// that the check's bail-out and plan rules work).  A script edit selects
+		// only this package, not every adopter that calls the script.
+		"code/scripts/warrant_negctl.py",
+		"code/scripts/tests/test_warrant_negctl.py",
 		"code/scripts/tfv.py",
 		"code/specs/VER04-warrant-language.md",
 		"code/specs/VER04a-warrant-source-admission.md",
@@ -875,7 +881,7 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	{
 		name:     "rust/warrant-grammar",
 		language: "rust",
-		inputs:   "canonical Warrant grammars, syntax corpus, vector fixtures and transport gate",
+		inputs:   "canonical Warrant grammars, syntax corpus, vector fixtures, transport gate and the shared negative-control checker",
 		matches:  isWarrantGrammarInput,
 		paths:    warrantGrammarPaths,
 		globs:    []string{warrantDocumentGlob},
@@ -1151,6 +1157,8 @@ func isWarrantGrammarInput(changed string) bool {
 		strings.HasPrefix(changed, "code/specs/fixtures/warrant-vectors-synthetic-v1/") ||
 		changed == "code/scripts/warrant_syntax_corpus.py" ||
 		changed == "code/scripts/tests/test_warrant_syntax_corpus.py" ||
+		changed == "code/scripts/warrant_negctl.py" ||
+		changed == "code/scripts/tests/test_warrant_negctl.py" ||
 		changed == "code/scripts/tfv.py" ||
 		changed == "code/specs/ct-compare.warrant" ||
 		changed == "code/specs/fixtures/ct-compare-warrant-v1/cases.tfv" ||
