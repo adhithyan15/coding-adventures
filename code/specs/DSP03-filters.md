@@ -213,6 +213,18 @@ fixture does not establish Rust parity, general audio/math/units schemas,
 native floating-point proofs, or package-wide exhaustive assurance; those
 remain separate backlog work.
 
+For this version, the root has exactly `schema_version`, `input`,
+`comparison`, and `cases`; the version is integer `1` (not boolean), and the
+comparison string is exactly `finite_exact_numeric_equal_zero_sign_ignored`.
+The input must equal the 16-sample unit impulse. The only valid ID/operation
+pairs are `biquad.process.impulse16` / `biquad.process` and
+`sosfilt.impulse16.two_sections` / `sosfilt`. The first record has exactly
+one six-number section, 16 expected samples, and positive non-boolean integer
+`chunk_lengths` equal to `[3, 1, 12]`; the second has exactly two six-number
+sections and 16 expected samples. Every numeric slot must convert to a finite
+binary64 value; booleans are not numbers in this fixture contract. JSON
+objects with duplicate field names are rejected by the Python loader.
+
 The Butterworth and Chebyshev signatures above are existing separate
 IIR helpers; their cutoff parameter is also normalized in the current
 implementation. AF-01b does not change their behavior or specify their
