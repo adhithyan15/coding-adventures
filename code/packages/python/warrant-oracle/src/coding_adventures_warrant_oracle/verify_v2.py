@@ -10,7 +10,7 @@ contain, then compares it with the bytes on disk::
 
 The three checks of section 10.3 map onto the groups below (a mismatch names its group):
 
-``lowering``      check 1: ``types ops models model_order examples`` and, per suite, ``id kind
+``lowering``      check 1: ``types ops models model_order examples omitted_examples`` and, per suite, ``id kind
                   claim ops requires admit body oracle result_type`` and each binder's type;
 ``enumeration``   check 2: ``budget chunk_size max_ir_cost`` and per suite the domains,
                   counts, digests, ``slim_*`` and the chunk files themselves;
@@ -38,7 +38,7 @@ import re
 import stat
 
 from .corpus_v1 import Report, load_json
-from .corpus_v2 import Derived, canonical, derive
+from .corpus_v2 import REASONS, Derived, canonical, derive
 from .errors import OracleError
 from .profile import parse_profile
 
@@ -55,6 +55,7 @@ _GROUP_OF_TOP = {
     "models": "lowering",
     "model_order": "lowering",
     "examples": "lowering",
+    "omitted_examples": "lowering",
     "budget": "enumeration",
     "chunk_size": "enumeration",
     "max_ir_cost": "enumeration",
@@ -172,8 +173,36 @@ def _compare_binders(want: list, got: object, base: str, report: Report) -> None
             report.miss("enumeration", path, message)
 
 
+def _check_omitted_shape(got: object, report: Report) -> None:
+    """The closed rules of the conditional ``omitted_examples`` key (section 1.4, R4).
+
+    Present, it is a non-empty list of ``{id, reason}`` rows, sorted by ``id`` (bytes) with no
+    duplicate and a ``reason`` from the closed set.  The comparison with the derived value
+    already fails every such corpus; these checks say *which* rule it broke.
+    """
+    where = "omitted_examples"
+    if not isinstance(got, list) or not got:
+        report.miss("lowering", where, "a present omitted_examples is a non-empty list")
+        return
+    ids: list = []
+    for i, row in enumerate(got):
+        if not isinstance(row, dict) or set(row) != {"id", "reason"}:
+            report.miss("lowering", f"{where}[{i}]", "a row is exactly {id, reason}")
+            continue
+        if not isinstance(row["id"], str) or row["reason"] not in REASONS:
+            report.miss("lowering", f"{where}[{i}]", "an id is a string and a reason is in the closed set")
+            continue
+        ids.append(row["id"])
+    if len(set(ids)) != len(ids):
+        report.miss("lowering", where, "an example id is omitted twice")
+    elif ids != sorted(ids, key=str.encode):
+        report.miss("lowering", where, "the rows are not sorted by id")
+
+
 def compare_corpus(want: dict, got: dict, report: Report) -> None:
     """Group every difference between the derived and the on-disk ``corpus.json``."""
+    if "omitted_examples" in got:
+        _check_omitted_shape(got["omitted_examples"], report)
     for key in sorted(set(want) | set(got)):
         if key not in got:
             report.miss(_GROUP_OF_TOP.get(key, "header"), key, "missing")
@@ -384,5 +413,8 @@ def verify_v2(
         }
         for s in derived.corpus["suites"]
     }
+    omitted = derived.corpus.get("omitted_examples", [])
+    if omitted:
+        report.notes.append(f"omitted_examples {len(omitted)}")
     report.notes.append(f"profile_sha256 {hashlib.sha256(profile_raw).hexdigest()}")
     return report, derived

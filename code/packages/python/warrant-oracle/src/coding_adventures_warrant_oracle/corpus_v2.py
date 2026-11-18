@@ -37,7 +37,7 @@ from dataclasses import dataclass, field
 from . import ast as A
 from . import tfv
 from .corpus_v1 import build_program
-from .errors import OracleError
+from .errors import OracleError, SizeError
 from .faults import derive_controls
 from .ir_eval import WrapsInAdmit, admit_fn, run_admit
 from .lower import FIXED, Spec, _substitute, lower_document
@@ -130,58 +130,130 @@ def value_json(v: object, ty: A.Ty) -> object:
     raise OracleError("level", "a value of this type needs a later level", level="ir.data")
 
 
-def _examples(spec: Spec, prog) -> tuple[list[dict], bytes]:
+MAX_EXAMPLE_BYTES = 4096  # the section 2.3 limit on a ``Bytes`` value in ``corpus.json``
+REASONS = ("not-op-eq-pure", "value-over-limit")  # the closed vocabulary of [D34]
+
+
+class _NotOpEqPure(Exception):
+    """An example whose shape is not ``op(args) == pure`` (internal: decides a reason)."""
+
+
+def example_id(spec: Spec, ex) -> str:
+    return f"warrant/{spec.name}/example/{ex.name}"
+
+
+def _over_limit(v: object, ty: A.Ty) -> bool:
+    """Is a ``Bytes`` inside ``v`` (itself or under an ``ok``) longer than the section 2.3 limit?"""
+    if ty.head == "Bytes":
+        return len(v) > MAX_EXAMPLE_BYTES
+    if ty.head == "Result" and v[0] == "ok":
+        return _over_limit(v[1], ty.args[0])
+    return False
+
+
+def _evaluate_example(spec: Spec, prog, ex):
+    """One example, in the normative order of section 8.4: shape, arguments, pure side, checks.
+
+    Returns ``(op, statics, ptypes, ret, args, expected)``.  The order is the contract of the
+    ``value-over-limit`` decision, so the steps are numbered the way the spec numbers them:
+
+    1. the arguments are evaluated left to right, then the pure side (an error ends the run,
+       so the *first* error is the one seen);
+    2. any error that is not a size error is raised as it is (a refusal);
+    3. a :class:`SizeError` is raised as it is too: the caller decides whether it qualifies;
+    4. only if everything evaluated do the [D18] (v0 wrap) and [D19] (outside ``admit``)
+       checks run, and each refuses.
+    """
+    node = ex.subject
+    if node is None or node[0] != "subject_op":
+        raise _NotOpEqPure
+    op = spec.ops[node[1]]
+    statics = dict(zip(op.statics, node[3])) if len(node) == 4 else {}
+    if len(statics) > 1:
+        raise OracleError("generation", "an example with several static widths has no shape")
+    stats = prog.stats
+    before = stats.wraps
+    try:
+        stats.counting = True
+        args = [prog.compile(a, {}, False).fn({}) for a in node[2]]
+        expected = prog.compile(ex.expected, {}, False).fn({})
+    finally:
+        stats.counting = False
+    wrapped = stats.wraps > before
+    # [D19]: an example is a call, so its arguments must be inside the op's ``admit``.
+    admit = admit_fn(prog, op, node[3] if len(node) == 4 else None)
+    try:
+        inside = admit is None or run_admit(
+            prog, admit, {n: v for (n, _), v in zip(op.params, args)}, spec.version == "v0", op.name
+        )
+    except WrapsInAdmit:
+        raise OracleError(
+            "generation",
+            f"W0701: example `{ex.name}`: U8 arithmetic wraps while evaluating the admit of "
+            f"op `{op.name}`; v0 harness evaluates U8 as Nat (VER04r 3.3 rule 2)",
+        ) from None
+    if not inside:
+        raise OracleError(
+            "generation",
+            f"W0701: example `{ex.name}` calls op `{op.name}` with arguments outside "
+            "the op's admit",
+        )
+    if spec.version == "v0" and wrapped:
+        # [D18], section 3.3 rule 2: an example's evaluation wraps in a v0 document.
+        raise OracleError(
+            "generation",
+            f"W0701: example `{ex.name}`: U8 arithmetic wraps; v0 harness evaluates U8 as Nat",
+        )
+    ptypes = [(n, _static(t, statics)) for n, t in op.params]
+    return op, statics, ptypes, _static(op.ret, statics), args, expected
+
+
+def omit_reason(spec: Spec, prog, ex) -> str:
+    """The computed reason an ``omit_example`` line may excuse ``ex`` (section 8.4, [D34]).
+
+    ``not-op-eq-pure`` is tested first, from the shape alone.  Otherwise the example is
+    evaluated as for emission; the first error decides: a size error qualifies as
+    ``value-over-limit``, any other error refuses.  A completed evaluation that passed the
+    [D18]/[D19] checks qualifies only when a final argument or the pure value is over
+    4,096 bytes.  An example that qualifies for nothing is a stale profile (``corpus``).
+    The messages name the id and never a value.
+    """
+    eid = example_id(spec, ex)
+    try:
+        _, _, ptypes, ret, args, expected = _evaluate_example(spec, prog, ex)
+    except _NotOpEqPure:
+        return "not-op-eq-pure"
+    except SizeError:
+        return "value-over-limit"
+    if any(_over_limit(a, t) for a, (_, t) in zip(args, ptypes)) or _over_limit(expected, ret):
+        return "value-over-limit"
+    raise OracleError(
+        "corpus", f"an omit_example line names an example that is emittable: `{eid}`"
+    )
+
+
+def _examples(spec: Spec, prog, omit: list[str] = ()) -> tuple[list[dict], bytes, list[dict]]:
+    """``(examples rows, cases.tfv, omitted_examples rows)``; omitted examples are not evaluated
+    beyond the reason decision, not encoded and not admit-checked (section 16.10 R4)."""
+    known = {example_id(spec, ex) for ex in spec.examples}
+    for eid in omit:
+        if eid not in known:
+            raise OracleError("corpus", "an omit_example line names no example of the spec")
     rows: list[dict] = []
     lines: list[str] = []
+    omitted: list[dict] = []
     for ex in spec.examples:
-        node = ex.subject
-        if node is None or node[0] != "subject_op":
+        eid = example_id(spec, ex)
+        if eid in omit:
+            omitted.append({"id": eid, "reason": omit_reason(spec, prog, ex)})
+            continue
+        try:
+            op, statics, ptypes, ret, args, expected = _evaluate_example(spec, prog, ex)
+        except _NotOpEqPure:
             raise OracleError(
                 "generation", "W0701: an example is one subject call compared with a pure value"
-            )
-        op = spec.ops[node[1]]
-        statics = dict(zip(op.statics, node[3])) if len(node) == 4 else {}
-        if len(statics) > 1:
-            raise OracleError("generation", "an example with several static widths has no shape")
-        stats = prog.stats
-        before, stats.counting = stats.wraps, True
-        try:
-            args = [prog.compile(a, {}, False).fn({}) for a in node[2]]
-        finally:
-            stats.counting = False
-        # [D19]: an example is a call, so its arguments must be inside the op's ``admit``.
-        admit = admit_fn(prog, op, node[3] if len(node) == 4 else None)
-        try:
-            inside = admit is None or run_admit(
-                prog, admit, {n: v for (n, _), v in zip(op.params, args)}, spec.version == "v0", op.name
-            )
-        except WrapsInAdmit:
-            raise OracleError(
-                "generation",
-                f"W0701: example `{ex.name}`: U8 arithmetic wraps while evaluating the admit of "
-                f"op `{op.name}`; v0 harness evaluates U8 as Nat (VER04r 3.3 rule 2)",
             ) from None
-        if not inside:
-            raise OracleError(
-                "generation",
-                f"W0701: example `{ex.name}` calls op `{op.name}` with arguments outside "
-                "the op's admit",
-            )
-        stats.counting = True
-        try:
-            expected = prog.compile(ex.expected, {}, False).fn({})
-        finally:
-            stats.counting = False
-        if spec.version == "v0" and stats.wraps > before:
-            # [D18], section 3.3 rule 2: an example's evaluation wraps in a v0 document.
-            raise OracleError(
-                "generation",
-                f"W0701: example `{ex.name}`: U8 arithmetic wraps; v0 harness evaluates U8 as Nat",
-            )
-        ptypes = [(n, _static(t, statics)) for n, t in op.params]
-        ret = _static(op.ret, statics)
         width = next(iter(statics.values())) if statics else None
-        eid = f"warrant/{spec.name}/example/{ex.name}"
         row = {
             "id": eid,
             "op": op.name,
@@ -193,7 +265,7 @@ def _examples(spec: Spec, prog) -> tuple[list[dict], bytes]:
             row["width"] = width
         rows.append(row)
         lines.append(tfv.record(eid, op.name, ptypes, args, width, expected, ret))
-    return rows, tfv.document(lines)
+    return rows, tfv.document(lines), sorted(omitted, key=lambda r: r["id"].encode())
 
 
 def _static(ty: A.Ty, statics: dict) -> A.Ty:
@@ -266,7 +338,7 @@ def derive(
         text = "".join(c.line() + "\n" for c in res.chunks).encode("ascii")
         out.chunk_files[chunk_file_name(suite.claim)] = text
         suite_rows.append(_suite_row(suite, plan, res, text))
-    examples, out.tfv = _examples(spec, prog)
+    examples, out.tfv, omitted = _examples(spec, prog, prof.omit_examples)
     ops = {n: o.corpus_row_v2() for n, o in spec.ops.items()}
     models = {
         n: {"params": [[p, str(t)] for p, t in m.params], "body": m.ir}
@@ -300,6 +372,10 @@ def derive(
         "accepted_blind_faults": accepted_blind,
         "assumes": [],
     }
+    if omitted:
+        # A conditional key (sections 1.4, 16.10 R4): written only when an example is omitted,
+        # so no emitted byte of an existing fixture moves.
+        out.corpus["omitted_examples"] = omitted
     return out
 
 
