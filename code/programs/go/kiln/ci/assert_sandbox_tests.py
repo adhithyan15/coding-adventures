@@ -16,7 +16,9 @@ script is the second, independent check, on the JSON stream itself:
     deterministic `synthetic-slice` line (from TestSandboxTraceGateSynthetic) is one of them;
     every gated `best_mb_s` is re-checked against the 8 MB/s absolute floor and
     must be finite and positive; the synthetic line must also carry a finite,
-    positive `ref_mb_s` (the host reference kernel's rate), and, once the Go
+    positive `ref_mb_s` and `refb_mb_s` (the two candidate host reference kernels'
+    rates), a `calibrated` of exactly 0 or 1 (0 fails once REQUIRE_CALIBRATED is
+    set), and, once the Go
     side says `calibrated=1`, its host-normalised `norm_mb_s` must be at least
     14 MB/s (G1 is two parts: an absolute safety floor on every gated line and a
     host-normalised capability gate on the slice; KILN04 section 4.9).  A PROBE line counts only when its payload starts with
@@ -177,6 +179,11 @@ GATE_FLOOR_MB_S = 8.0
 # enforced only when the Go side logged calibrated=1 (refNominalMBs measured from
 # CI).  Until then norm_mb_s is report-only.
 NORM_FLOOR_MB_S = 14.0
+# The independent switch the Go side cannot turn off.  While False, a line that
+# says calibrated=0 is accepted (the nominal constant is still a placeholder).
+# The calibrating commit sets this to True, after which calibrated=0 FAILS: Go
+# alone cannot silently disable the normalised gate by logging calibrated=0.
+REQUIRE_CALIBRATED = False
 SYNTHETIC_LABEL = "synthetic-slice"
 SYNTHETIC_TEST = "TestSandboxTraceGateSynthetic"
 # A PROBE line as `go test -v -json` carries it (the mode CI runs): exactly four
@@ -315,14 +322,22 @@ def positive_finite(fields: dict[str, str], key: str) -> float | None:
 
 
 def synthetic_problems(fields: dict[str, str]) -> list[str]:
-    """The extra G1 checks on the synthetic-slice line: a usable host reference
-    rate, and, when the line says calibrated=1, the normalised capability floor.
-    With calibrated=0 (the nominal constant is still a placeholder) norm_mb_s is
-    report-only and is not looked at."""
+    """The extra G1 checks on the synthetic-slice line: usable host reference
+    rates for BOTH candidate kernels (ref_mb_s is kernel A, refb_mb_s is B),
+    `calibrated` exactly "0" or "1" (anything else, or a missing field, fails),
+    calibrated=0 failing once REQUIRE_CALIBRATED is True, and, when the line says
+    calibrated=1, the normalised capability floor.  With calibrated=0 (the nominal
+    constant is still a placeholder) norm_mb_s is not looked at."""
     problems = []
-    if positive_finite(fields, "ref_mb_s") is None:
-        problems.append(f"gate G1: {SYNTHETIC_LABEL}: ref_mb_s={fields.get('ref_mb_s', '(missing)')} is not a positive finite rate")
-    if fields.get("calibrated") == "1":
+    for key in ("ref_mb_s", "refb_mb_s"):
+        if positive_finite(fields, key) is None:
+            problems.append(f"gate G1: {SYNTHETIC_LABEL}: {key}={fields.get(key, '(missing)')} is not a positive finite rate")
+    calibrated = fields.get("calibrated")
+    if calibrated not in ("0", "1"):
+        problems.append(f"gate G1: {SYNTHETIC_LABEL}: calibrated={calibrated if calibrated is not None else '(missing)'} must be exactly 0 or 1")
+    elif calibrated == "0" and REQUIRE_CALIBRATED:
+        problems.append(f"gate G1: {SYNTHETIC_LABEL}: calibrated=0 but the normalised gate is required (REQUIRE_CALIBRATED)")
+    if calibrated == "1":
         norm = positive_finite(fields, "norm_mb_s")
         if norm is None:
             problems.append(f"gate G1: {SYNTHETIC_LABEL}: norm_mb_s={fields.get('norm_mb_s', '(missing)')} is not a positive finite rate")
