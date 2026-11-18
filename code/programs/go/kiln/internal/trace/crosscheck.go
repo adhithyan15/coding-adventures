@@ -17,9 +17,10 @@ import (
 
 // This file is the differential check of D24 (KILN04 section 4.9).
 //
-// While the hand-written scanner is the default and the grammar path is on
-// probation, a hook in ParseOptions can run BOTH on the same input and refuse to
-// go on when they disagree.  Two things turn it on:
+// The grammar path is the production default (D24 PR 6); the hand-written
+// scanner is kept as the oracle, on probation until PR 8 deletes it.  A hook in
+// ParseOptions can run BOTH on the same input and refuse to go on when they
+// disagree, returning the grammar path's answer.  Two things turn it on:
 //
 //   - this package's tests (a _test.go init sets crossCheck), which makes every
 //     existing Parse test a differential with no edit to any of them;
@@ -95,8 +96,10 @@ func noteAllowed(row string) {
 }
 
 // parseCrossChecked runs the old scanner and the grammar path on one input and
-// returns the old scanner's answer, or panics when the two disagree in a way
-// the spec does not allow.
+// returns the grammar path's answer (the production default; for a reason-only
+// row of the spec's table that is the grammar path's Reason), or panics when the
+// two disagree in a way the spec does not allow.  The old scanner is only the
+// oracle it is compared against.
 func parseCrossChecked(r io.Reader, initialCwd string, opts Options) (*Trace, error) {
 	src := &replaySource{src: r}
 	trOld, errOld := parseWith(src.cursor(), initialCwd, opts, false)
@@ -110,7 +113,7 @@ func parseCrossChecked(r io.Reader, initialCwd string, opts Options) (*Trace, er
 		}
 		panic(m)
 	}
-	return trOld, errOld
+	return trNew, errNew
 }
 
 // replaySource lets two parses read the same stream: it records what the first
