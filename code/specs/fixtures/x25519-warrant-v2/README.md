@@ -33,15 +33,28 @@ and the oracle both check that the profile equals that list):
 | `x25519` | `missing-error` | `ir.core` |
 | `x25519_base` | `flip-result-bit` (inside the `Ok`) | `ir.fixed`, `ir.tuple` |
 
-All five controls are **live** in the shipped gate (none is `deferred`), and **no control is blind**
-(`blind_claims` is `[]` in each; `accepted_blind_faults` is `[]`, so the profile has no
+All five controls are **live** in the shipped gate (none is `deferred`), and **no claim is *proven*
+blind** (`blind_claims` is `[]` in each; `accepted_blind_faults` is `[]`, so the profile has no
 `accept_blind`, `slim_chunk` or `omit_example` line). Every candidate claim is **unproven**
-(VER04r 5.6): a stand-in needs a `reference` suite whose subject side is exactly `op(binders)`, and
-x25519's claims either compare two subject calls, wrap the call in another subject call or in a
-model (`clamped`, `unclamped`), or are predicates, so no witness chunk can be searched before a
-lane runs. The lane's control therefore fails closed until a runner shows each fault is caught
-(`required_claims` lists the claims, `slim_witness` is `{"claim": ..., "unproven": true}` per
-claim). The empty-result forms of the two `Bytes` faults (`01` for `flip-result-bit`, `00` for
+(VER04r 5.6): a stand-in exists only for a `reference` claim whose subject side is a bare call on
+plain binders (VER04r 16.6 item 5), and every x25519 claim misses that. It passes a model call as
+an argument (`clamp_edges_match_the_definition`, `clamp_leaves_the_middle_alone`), passes a literal
+argument (`x25519_at_zero_is_low_order`), wraps the call in `len(..)` (`clamp_keeps_thirty_two_bytes`),
+or is a predicate (`clamp_is_idempotent`, `x25519_clamps_its_scalar`, `x25519_at_nine_is_base`,
+`x25519_base_is_x25519_at_nine`). So no witness chunk can be searched before a lane runs. The lane's
+control therefore fails closed until a runner shows each fault is caught (`required_claims` lists
+the claims, `slim_witness` is `{"claim": ..., "unproven": true}` per claim).
+
+Some required claims are in fact blind for some faults but cannot be proven so by the stand-in rule:
+`x25519/flip-result-bit` against `x25519_at_zero_is_low_order` (the result is `Err`, unchanged) and
+against `x25519_clamps_its_scalar` (the fault cancels on both sides); `clamp_scalar/flip-result-bit`
+against `clamp_keeps_thirty_two_bytes` (the length is unchanged) and against
+`x25519_clamps_its_scalar` (bit 0 is clamped away). Each control still has at least one required
+claim that catches it: `clamp_scalar/drop-last-result-byte` is caught by
+`clamp_keeps_thirty_two_bytes` and `clamp_edges_match_the_definition`; `clamp_scalar/flip-result-bit`
+by `clamp_edges_match_the_definition`; `x25519/flip-result-bit` by `x25519_at_nine_is_base`;
+`x25519/missing-error` by `x25519_at_zero_is_low_order`; `x25519_base/flip-result-bit` by both base
+claims. The empty-result forms of the two `Bytes` faults (`01` for `flip-result-bit`, `00` for
 `drop-last-result-byte`) were confirmed against the Rust harness before this fixture was committed
 (VER04r 8.2, R6): `fault_flip_result_bit` pushes `1` and `fault_drop_last_result_byte` pushes `0`
 for an empty byte string (`code/packages/rust/x25519/tests/generated/warrant_evidence.rs`). A
@@ -52,7 +65,7 @@ for an empty byte string (`code/packages/rust/x25519/tests/generated/warrant_evi
 From the repository root. Never edit `corpus.json`, `cases.tfv` or `chunks/` by hand.
 
 ```bash
-cargo run -p coding_adventures_warrant_corpus_gen --bin warrant-corpus-gen -- \
+cargo run --manifest-path code/packages/rust/Cargo.toml -p coding_adventures_warrant_corpus_gen --bin warrant-corpus-gen -- \
   --warrant code/specs/x25519.warrant \
   --profile code/specs/fixtures/x25519-warrant-v2/corpus.profile \
   --bindings code/packages/rust/x25519/evidence.bindings \

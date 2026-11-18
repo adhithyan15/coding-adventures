@@ -23,7 +23,7 @@ it was `{"deferred": "ir.fixed"}`); three controls list a *blind* claim (VER04r 
 From the repository root. Never edit `corpus.json`, `cases.tfv` or `chunks/` by hand.
 
 ```bash
-cargo run -p coding_adventures_warrant_corpus_gen --bin warrant-corpus-gen -- \
+cargo run --manifest-path code/packages/rust/Cargo.toml -p coding_adventures_warrant_corpus_gen --bin warrant-corpus-gen -- \
   --warrant code/specs/ct-compare.warrant \
   --profile code/specs/fixtures/ct-compare-warrant-v2/corpus.profile \
   --bindings code/packages/rust/ct-compare/evidence.bindings \
