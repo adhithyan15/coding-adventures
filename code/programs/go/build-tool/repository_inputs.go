@@ -224,6 +224,9 @@ var (
 		"code/scripts/tfv.py",
 		"code/specs/VER04-warrant-language.md",
 		"code/specs/VER04a-warrant-source-admission.md",
+		"code/specs/VER04p-warrant-floats.md",
+		"code/scripts/ver04p_domain_witnesses.py",
+		"code/scripts/tests/test_ver04p_domain_witnesses.py",
 		"code/specs/ct-compare.warrant",
 		"code/specs/fixtures/ct-compare-warrant-v1/cases.tfv",
 		"code/specs/fixtures/ct-compare-warrant-v1/corpus.json",
@@ -1177,6 +1180,8 @@ func isWarrantGrammarInput(changed string) bool {
 		changed == "code/scripts/tests/test_warrant_syntax_corpus.py" ||
 		changed == "code/scripts/warrant_negctl.py" ||
 		changed == "code/scripts/tests/test_warrant_negctl.py" ||
+		changed == "code/scripts/ver04p_domain_witnesses.py" ||
+		changed == "code/scripts/tests/test_ver04p_domain_witnesses.py" ||
 		changed == "code/scripts/tfv.py" ||
 		changed == "code/specs/ct-compare.warrant" ||
 		changed == "code/specs/fixtures/ct-compare-warrant-v1/cases.tfv" ||
@@ -1184,7 +1189,8 @@ func isWarrantGrammarInput(changed string) bool {
 		changed == "code/specs/fixtures/ct-compare-warrant-v1/consumers.json" ||
 		changed == "code/specs/fixtures/ct-compare-warrant-v1/consumers.schema.json" ||
 		changed == "code/specs/VER04-warrant-language.md" ||
-		changed == "code/specs/VER04a-warrant-source-admission.md"
+		changed == "code/specs/VER04a-warrant-source-admission.md" ||
+		changed == "code/specs/VER04p-warrant-floats.md"
 }
 
 // These Perl packages load Rust cdylibs and share a helper outside their own
