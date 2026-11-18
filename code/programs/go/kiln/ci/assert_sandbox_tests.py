@@ -10,7 +10,14 @@ script is the second, independent check, on the JSON stream itself:
   * every test named in REQUIRED has a final "pass";
   * no test of any name, subtests included, ended in "skip" or "fail";
   * every top-level test whose name contains "Sandbox" is in REQUIRED, so a new
-    sandbox test cannot be added without being named here.
+    sandbox test cannot be added without being named here;
+  * gate G1 of the grammar-path default (KILN04 section 4.9) was really applied:
+    a passing test logged at least one `PROBE: trace ... gated=1` line, and the
+    deterministic `synthetic-slice` line (from TestSandboxTraceGateSynthetic) is one of them;
+    every gated `best_mb_s` is re-checked against the 14 MB/s floor and must be
+    finite and positive.  A PROBE line counts only when its payload starts with
+    "PROBE: trace " after the go test file:line prefix.  Without this, a run in
+    which every real trace is under 32 KB would pass G1 vacuously.
 
 Usage: assert_sandbox_tests.py <go-test-json-file>
 Exit status 0 when all hold, 1 when not, 2 for a usage or input error.
@@ -19,6 +26,8 @@ Exit status 0 when all hold, 1 when not, 2 for a usage or input error.
 from __future__ import annotations
 
 import json
+import math
+import re
 import sys
 
 REQUIRED = (
@@ -46,6 +55,7 @@ REQUIRED = (
     "TestSandboxRecordProbe",
     "TestSandboxRecordGates",
     "TestSandboxRecordSurvivor",
+    "TestSandboxTraceGateSynthetic",
 )
 
 FINAL = {"pass", "fail", "skip"}
@@ -53,8 +63,8 @@ FINAL = {"pass", "fail", "skip"}
 # Facts a PASSING test wants in the CI log (a t.Log line that holds one of these
 # markers).  Only these are printed, bounded, so the log stays readable.
 FACT_MARKERS = ("F2:", "PROBE:")
-MAX_FACT_LINES = 20
-MAX_FACT_CHARS = 300
+MAX_FACT_LINES = 60
+MAX_FACT_CHARS = 450
 # Every printed line of test output starts with this, so no line of a test's
 # output can begin with "::" and be taken for a GitHub workflow command.
 LOG_PREFIX = "  "
@@ -147,6 +157,67 @@ def check(lines: list[str]) -> list[str]:
     return problems
 
 
+GATE_FLOOR_MB_S = 14.0
+SYNTHETIC_LABEL = "synthetic-slice"
+SYNTHETIC_TEST = "TestSandboxTraceGateSynthetic"
+# A PROBE line as `go test -json` carries it: "    file_test.go:123: PROBE: trace
+# LABEL k=v ...".  The payload must START with "PROBE: trace " right after that
+# file:line prefix, so the text cannot be forged by a substring inside another
+# line (a trace path, an error message).
+PROBE_RE = re.compile(r"^\s*[\w.\-]+\.go:\d+: (PROBE: trace (\S+) .*)$")
+
+
+def gated_probes(lines: list[str]) -> list[tuple[str, str, dict[str, str]]]:
+    """(test, label, fields) of every `gated=1` PROBE line a passing test logged."""
+    final: dict[str, str] = {}
+    events = []
+    for line in lines:
+        try:
+            event = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        events.append(event)
+        if event.get("Test") and event.get("Action") in FINAL:
+            final[event["Test"]] = event["Action"]
+    out = []
+    for event in events:
+        test = event.get("Test", "")
+        if event.get("Action") != "output" or final.get(test) != "pass":
+            continue
+        for text in event.get("Output", "").splitlines():
+            m = PROBE_RE.match(text)
+            if not m:
+                continue
+            fields = dict(re.findall(r"(\w+)=(\S+)", m.group(1)))
+            if fields.get("gated") == "1":
+                out.append((test, m.group(2), fields))
+    return out
+
+
+def gate_problems(lines: list[str]) -> list[str]:
+    """Problems with gate G1 (empty: it was applied and met).  Only the output of
+    tests that ended in "pass" counts, the whole stream is scanned (not the
+    bounded facts that get printed), and the script re-checks every gated rate
+    itself: the Go test's own assertion is not the only line of defence."""
+    gated = gated_probes(lines)
+    problems = []
+    if not gated:
+        return ["gate G1: no passing test logged a gated PROBE line (gated=1); the throughput floor was not applied"]
+    if not any(test == SYNTHETIC_TEST and label == SYNTHETIC_LABEL for test, label, _ in gated):
+        problems.append(f"gate G1: the deterministic {SYNTHETIC_LABEL} PROBE line (gated=1, from {SYNTHETIC_TEST}) is missing")
+    for _, label, fields in gated:
+        try:
+            rate = float(fields.get("best_mb_s", ""))
+        except ValueError:
+            problems.append(f"gate G1: {label}: best_mb_s is missing or not a number")
+            continue
+        if not math.isfinite(rate) or rate <= 0:
+            problems.append(f"gate G1: {label}: best_mb_s={fields['best_mb_s']} is not a positive finite rate")
+        elif rate < GATE_FLOOR_MB_S:
+            problems.append(f"gate G1: {label}: best_mb_s={rate} is below the {GATE_FLOOR_MB_S:g} MB/s floor")
+    return problems
+
+
 def main(argv: list[str]) -> int:
     if len(argv) != 2:
         print(__doc__, file=sys.stderr)
@@ -157,7 +228,7 @@ def main(argv: list[str]) -> int:
     except OSError as error:
         print(f"error: {error}", file=sys.stderr)
         return 2
-    problems = check(lines)
+    problems = check(lines) + gate_problems(lines)
     for test, output in sorted(failing_output(lines).items()):
         print(f"::group::output of failing test {test}")
         print("\n".join(output))

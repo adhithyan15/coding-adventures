@@ -29,6 +29,27 @@ def stream(outcomes: dict[str, str]) -> list[str]:
     return lines
 
 
+REAL_PROBE = (
+    "    sandbox_tracesize_linux_amd64_test.go:80: PROBE: trace record-step bytes=51650 lines=327 old_mb_s=144.7 "
+    "grammar_mb_s=22.8 best_mb_s=25.1 gated=1 old_allocs=1 grammar_allocs=2"
+)
+SYNTHETIC_PROBE = (
+    "    sandbox_tracesize_linux_amd64_test.go:130: PROBE: trace synthetic-slice bytes=65800 lines=9000 "
+    "best_mb_s=30.0 gated=1 repeats=7"
+)
+
+
+def probe_events(test: str, text: str, action: str = "pass") -> list[str]:
+    return [
+        json.dumps({"Action": "output", "Test": test, "Output": text + "\n"}),
+        json.dumps({"Action": action, "Test": test}),
+    ]
+
+
+def with_gate(lines: list[str]) -> list[str]:
+    return lines + probe_events("TestSandboxTraceGateSynthetic", SYNTHETIC_PROBE)
+
+
 def all_pass() -> dict[str, str]:
     return {name: "pass" for name in mod.REQUIRED}
 
@@ -71,7 +92,7 @@ class AssertScript(unittest.TestCase):
     def test_main_exit_codes(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             good = Path(tmp) / "good.json"
-            good.write_text("\n".join(stream(all_pass())), encoding="utf-8")
+            good.write_text("\n".join(with_gate(stream(all_pass()))), encoding="utf-8")
             bad = Path(tmp) / "bad.json"
             bad.write_text("\n".join(stream({})), encoding="utf-8")
             self.assertEqual(mod.main(["x", str(good)]), 0)
@@ -88,6 +109,78 @@ class AssertScript(unittest.TestCase):
         source = "\n".join(f.read_text(encoding="utf-8") for f in files)
         declared = set(re.findall(r"^func (TestSandbox\w+)\(", source, re.M))
         self.assertEqual(declared, set(mod.REQUIRED))
+
+
+class GateG1(unittest.TestCase):
+    """The throughput gate must have been applied, not skipped by omission."""
+
+    def test_synthetic_gated_line_satisfies_the_gate(self) -> None:
+        self.assertEqual(mod.gate_problems(with_gate(stream(all_pass()))), [])
+
+    def test_a_missing_gate_fails(self) -> None:
+        problems = mod.gate_problems(stream(all_pass()))
+        self.assertTrue(any("no passing test logged a gated PROBE" in p for p in problems), problems)
+
+    def test_an_ungated_probe_does_not_count(self) -> None:
+        ungated = REAL_PROBE.replace("gated=1", "gated=0")
+        problems = mod.gate_problems(stream(all_pass()) + probe_events("TestSandboxRecordStep", ungated))
+        self.assertTrue(problems, problems)
+
+    def test_a_real_gated_line_without_the_synthetic_one_fails(self) -> None:
+        problems = mod.gate_problems(stream(all_pass()) + probe_events("TestSandboxRecordStep", REAL_PROBE))
+        self.assertTrue(any("synthetic-slice" in p for p in problems), problems)
+
+    def test_a_gated_line_from_a_failing_test_does_not_count(self) -> None:
+        problems = mod.gate_problems(stream(all_pass()) + probe_events("TestSandboxTraceGateSynthetic", SYNTHETIC_PROBE, "fail"))
+        self.assertTrue(problems, problems)
+
+    def test_a_forged_substring_in_another_line_does_not_count(self) -> None:
+        forged = "    x_test.go:9: opened /tmp/PROBE: trace synthetic-slice best_mb_s=30.0 gated=1"
+        problems = mod.gate_problems(stream(all_pass()) + probe_events("TestSandboxTraceGateSynthetic", forged))
+        self.assertTrue(any("no passing test logged a gated" in p for p in problems), problems)
+        bare = "PROBE: trace synthetic-slice best_mb_s=30.0 gated=1"  # no file:line prefix
+        self.assertTrue(mod.gate_problems(stream(all_pass()) + probe_events("TestSandboxTraceGateSynthetic", bare)))
+
+    def test_the_synthetic_line_from_the_wrong_test_does_not_count(self) -> None:
+        problems = mod.gate_problems(stream(all_pass()) + probe_events("TestSandboxRecordStep", SYNTHETIC_PROBE))
+        self.assertTrue(any("synthetic-slice" in p and "missing" in p for p in problems), problems)
+
+    def test_a_gated_rate_below_the_floor_fails(self) -> None:
+        slow = SYNTHETIC_PROBE.replace("best_mb_s=30.0", "best_mb_s=13.9")
+        problems = mod.gate_problems(stream(all_pass()) + probe_events("TestSandboxTraceGateSynthetic", slow))
+        self.assertTrue(any("below the 14" in p for p in problems), problems)
+        ok = SYNTHETIC_PROBE.replace("best_mb_s=30.0", "best_mb_s=14.0")
+        self.assertEqual(mod.gate_problems(stream(all_pass()) + probe_events("TestSandboxTraceGateSynthetic", ok)), [])
+
+    def test_non_finite_zero_or_missing_rates_fail(self) -> None:
+        for bad in ("inf", "+Inf", "NaN", "0", "0.0", "-3.0", "abc"):
+            line = SYNTHETIC_PROBE.replace("best_mb_s=30.0", f"best_mb_s={bad}")
+            problems = mod.gate_problems(stream(all_pass()) + probe_events("TestSandboxTraceGateSynthetic", line))
+            self.assertTrue(problems, bad)
+        missing = SYNTHETIC_PROBE.replace("best_mb_s=30.0 ", "")
+        self.assertTrue(mod.gate_problems(stream(all_pass()) + probe_events("TestSandboxTraceGateSynthetic", missing)))
+
+    def test_a_slow_real_gated_trace_fails_even_with_the_synthetic_line(self) -> None:
+        slow = REAL_PROBE.replace("best_mb_s=25.1", "best_mb_s=9.0")
+        problems = mod.gate_problems(with_gate(stream(all_pass())) + probe_events("TestSandboxRecordStep", slow))
+        self.assertTrue(any("record-step" in p and "below" in p for p in problems), problems)
+
+    def test_a_job_without_the_gate_env_var_fails(self) -> None:
+        # Without KILN_G1_GATE=1 the Go tests log the synthetic slice with gated=0,
+        # so the kiln-sandbox job's stream has no gated line and must fail.
+        ungated = SYNTHETIC_PROBE.replace("gated=1", "gated=0")
+        problems = mod.gate_problems(stream(all_pass()) + probe_events("TestSandboxTraceGateSynthetic", ungated))
+        self.assertTrue(any("no passing test logged a gated" in p for p in problems), problems)
+
+    def test_the_4mib_census_line_is_not_gated(self) -> None:
+        census = "    x_test.go:5: PROBE: trace synthetic-4mib-census bytes=4195800 lines=1 best_mb_s=5.0 gated=0 repeats=7"
+        self.assertEqual(mod.gate_problems(with_gate(stream(all_pass())) + probe_events("TestSandboxTraceGateSynthetic", census)), [])
+
+    def test_main_fails_when_the_gate_is_missing(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "nogate.json"
+            path.write_text("\n".join(stream(all_pass())), encoding="utf-8")
+            self.assertEqual(mod.main(["x", str(path)]), 1)
 
 
 class CiWiring(unittest.TestCase):
@@ -108,6 +201,7 @@ class CiWiring(unittest.TestCase):
         self.assertIn("KILN_REQUIRE_SANDBOX: '1'", body)
         # D24: real traces are cross-checked between the old scanner and the grammar path.
         self.assertIn("KILN_TRACE_DIFF: '1'", body)
+        self.assertIn("KILN_G1_GATE: '1'", body)
         self.assertIn("go test -count=1 -run Sandbox -v -json .", body)
         self.assertIn("assert_sandbox_tests.py", body)
         # The assertion is its own step and runs even when the tests failed, so
@@ -143,13 +237,27 @@ class CiWiring(unittest.TestCase):
             return json.dumps({"Action": "output", "Test": test, "Output": text + "\n"})
 
         lines = [out("TestA/sub", "    x_test.go:1: F2: init order " + "y" * 400), out("TestA/sub", "plain line")]
-        lines += [out("TestA/sub", f"PROBE: fact {i}") for i in range(30)]
+        lines += [out("TestA/sub", f"PROBE: fact {i}") for i in range(80)]
         lines += [json.dumps({"Action": "pass", "Test": "TestA/sub"})]
         lines += [out("TestB", "F2: from a failing test"), json.dumps({"Action": "fail", "Test": "TestB"})]
         facts = mod.passing_facts(lines)
         self.assertEqual(list(facts), ["TestA/sub"])
-        self.assertEqual(len(facts["TestA/sub"]), 20)
-        self.assertTrue(all(len(f) <= 302 and ("F2:" in f or "PROBE:" in f) for f in facts["TestA/sub"]))
+        self.assertEqual(len(facts["TestA/sub"]), 60)
+        self.assertTrue(all(len(f) <= 452 and ("F2:" in f or "PROBE:" in f) for f in facts["TestA/sub"]))
+
+    def test_full_probe_line_with_step_wall_survives(self) -> None:
+        # The D24 G2 census fields come last on the line; they must not be cut.
+        probe = (
+            "    sandbox_tracesize_linux_amd64_test.go:55: PROBE: trace probe-some-long-run-name bytes=51650 lines=327 "
+            "old_mb_s=144.7 grammar_mb_s=22.8 old_allocs=12345 grammar_allocs=67890 old_refusal=\"\" "
+            "grammar_refusal=\"\" step_wall_ms=123456 parse_ms=2.26 parse_share=0.0002"
+        )
+        lines = [
+            json.dumps({"Action": "output", "Test": "TestA", "Output": probe + "\n"}),
+            json.dumps({"Action": "pass", "Test": "TestA"}),
+        ]
+        (fact,) = mod.passing_facts(lines)["TestA"]
+        self.assertTrue(fact.endswith("parse_share=0.0002"), fact)
 
     def test_output_cannot_inject_workflow_commands(self) -> None:
         def out(test: str, text: str) -> str:

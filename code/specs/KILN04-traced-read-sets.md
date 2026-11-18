@@ -2416,17 +2416,99 @@ existing test runs both parsers and compares the `Trace`, `Reason` and `Line`.
 Beyond that: a pass-1 record diff, `FuzzParseDiff` and `FuzzLineDiff` with a
 committed corpus (at least 30 minutes locally per PR, nightly in CI), and
 `KILN_TRACE_DIFF=1` in the kiln-sandbox job, which cross-checks real traces and
-uploads an artifact on any mismatch. Those artifacts contain real trace
-data, so they are produced only on trusted CI runs (never for fork PRs), are
-kept for 7 days, hold only the mismatching trace, and are never published
-elsewhere. The default flips to the grammar path only
-when it lexes and parses at **at least 8 MB/s and within 3x of the old
-parser** on the committed benchmark (the old parser runs at about 23.7 MB/s;
-the unmodified toolchain at about 0.95 MB/s, hence the toolchain PRs below).
-If it cannot, the fallback is a worker pool for the stateless per-line
-lex/parse with the semantic pass kept sequential. The old scanner is deleted
-only after the flip has soaked with zero diffs; until then it is kept as a
-test-only oracle. The resource limits (1 GiB and 8M events, and the caps above) may be
+panics on a mismatch after printing a bounded, sanitised window of the lines
+around it to the job log. No artifact is uploaded (the traces hold paths a pull
+request chose, so the only thing kept is that window, in the log).
+
+**The default-flip gates (restated by PR 6).** The first draft gated the flip on
+"at least 8 MB/s and within 3x of the old parser". That gate is replaced: a ratio
+to the old scanner measures how fast the old scanner is, not whether the grammar
+path is fast enough. The new gates are absolute and tied to the deadline the
+recorder already enforces.
+
+- **G1 (blocking).** The grammar path's **pass 1** (the line reader,
+  `readRecordsAt`) must run at a rate that would get a cap-sized action
+  (`DefaultMaxTraceTotal`, 2 GiB) through in at most a quarter of the classify
+  deadline (`DefaultClassifyTimeout`, 10 minutes). A quarter is 150 s, so the
+  floor is 2048 MiB / 150 s = 2,147 MB / 150 s, about **14 MB/s** (13.7 exactly;
+  the job uses 14). The gate is on the **best** (minimum) pass-1 time over at
+  least 7 passes and at least **250 ms** of wall time after one warm-up pass,
+  never on a single shot: a 50 KB trace is read in about 2 ms, so one sample is
+  mostly noise, and noise only ever adds time, so the minimum is the right
+  statistic for a capability floor. (On an Apple M2 Max a single-shot sample
+  fell to 5-7 MB/s under contention while the true rate is about 20.) For a
+  trace of 128 KB or less the figure is taken **with the garbage collector off**
+  (after one collection), because a stop-the-world wait on a busy machine is
+  neighbour noise; production runs with the collector on, so the figure flatters
+  the reader a little. The measured idle rate of a whole 4 MiB pass (about 18.5
+  MB/s, collector on) is 10 to 15% below the slice figure, so the honest margin
+  over the floor is about **1.3x**, not the 1.4x or more the slice suggests.
+  **G1 is enforced in the dedicated kiln-sandbox job only**, selected by the
+  test-only environment variable `KILN_G1_GATE=1`, set in that job in `ci.yml`
+  and read nowhere in production code. Elsewhere (the general `build` job, local
+  runs) the same `PROBE:` lines are logged with `gated=0` and no floor is
+  applied (a zero best time or a non-finite rate still fails). The reason: the
+  general build job runs kiln's tests in parallel with many other packages, and
+  there the synthetic slice read 11.2 MB/s (66,600 bytes in 5.96 ms) and the
+  4 MiB census 8.9: a contended runner, not a slow reader. The first figures from
+  the dedicated job: `synthetic-slice` 21.6 MB/s on the 26.04 image and 18.7 on
+  24.04, real traces 28 to 37 MB/s gated. A kiln-sandbox job run without
+  `KILN_G1_GATE=1` has no `gated=1` synthetic line, so
+  `assert_sandbox_tests.py` fails it.
+  In the job, a real trace of **32 KB to 128 KB** that falls below the floor fails
+  it. Traces under 32 KB, and traces over 128 KB, are logged with
+  `gated=0` (census only): a long pass sees every change in how the CPU is
+  shared, and only about 7 passes fit, so best-of cannot see through a sustained
+  shortage (a 923 KB trace read below 14 MB/s in 15 of 60 contended trials). The
+  floor on larger inputs is carried by one deterministic input that always runs
+  (`TestSandboxTraceGateSynthetic`): a 64 KB slice of whole repetitions of
+  `testdata/build.strace`, logged as `PROBE: trace synthetic-slice ... gated=1`,
+  with the same statistic and floor. The same test reads the fixture repeated to
+  at least 4 MiB (pass 1 must read all of it) and logs its best-of-7 rate on its
+  own line, `synthetic-4mib-census`, `gated=0`. Each gated line carries
+  `best_mb_s` (gated) and real traces also carry `grammar_mb_s` (single shot,
+  census only). A zero best time or a non-finite or non-positive rate FAILS.
+  `ci/assert_sandbox_tests.py` independently fails the job unless a passing test
+  logged a `gated=1` line, the `synthetic-slice` line is among them and comes
+  from `TestSandboxTraceGateSynthetic`, and every gated `best_mb_s` is finite,
+  positive and at least 14; a PROBE line counts only when its payload starts
+  with `PROBE: trace ` after the go test `file:line` prefix. A rate measured at
+  about 50 KB or 64 KB is a **proxy**: it does not prove the rate at 2 GiB.
+  `trace.Measure`, `MeasureBest` and `BestPass1` toggle the process-global GC
+  setting, are not goroutine-safe, and are for CI and tests only
+  (`TestMeasureIsNotUsedByProductionCode`).
+- **G2 (report-only in PR 6; blocking before the old scanner is deleted).**
+  Grammar parse time at most 10% of the step's wall time and at most 5 s
+  absolute, at the census p99 trace size. The `PROBE:` lines carry
+  `step_wall_ms`, `parse_ms` and `parse_share` where the step's wall time is
+  known, so the census can be read off CI logs. Today that is only the
+  `TestSandboxStraceSignals` trace, which is sleep-dominated, so its share is
+  not representative: wall-time plumbing through the record-step and probe
+  paths is required before G2 can become blocking (a backlog item).
+
+Measured: on a real kiln-sandbox CI trace (51,650 bytes, 327 lines) the old
+scanner reads 144.7 MB/s and the grammar path (compact `LineParser`) 22.8 MB/s;
+on the committed fixtures pass 1 is 16.9 MB/s on an Apple M2 Max. Before the
+compact parser (P2 PR 5) the grammar path ran at 11.6 MB/s and would have failed
+G1. (An earlier draft of this section quoted the old parser at 23.7 MB/s; that
+was a stale measurement and is withdrawn.) If G1 is ever missed again, the
+fallback is a worker pool for the stateless per-line lex/parse with the semantic
+pass kept sequential.
+
+**What the flip means (PR 6).** The grammar path is the production default.
+`parseCrossChecked` returns the grammar path's result, so for every
+reason-only row of the table above the recorder now surfaces the grammar path's
+`Reason`. The old scanner stays compiled as the **oracle**, reachable only
+through `crossCheck` (this package's tests, and `KILN_TRACE_DIFF=1` in the
+kiln-sandbox job): an old-refused/new-accepted pair is still a loud failure, and
+every other comparison rule is unchanged. There is no runtime or environment
+switch back to the old scanner: that would be a soundness downgrade (it is the
+lenient reader). Rollback is a revert.
+
+**Deleting the old scanner (PR 8).** Only after Phase B (PR 7) and a soak of at
+least 14 days and at least 200 kiln-sandbox runs with zero mismatches, zero
+allowed divergences on real traces, and clean nightly fuzzing, and with G2
+holding. Until then it is kept as the oracle. The resource limits (1 GiB and 8M events, and the caps above) may be
 lowered freely, but raised only by a spec revision that includes a DoS review
 and a benchmark of the worst-case input, with the new values committed in the
 spec.
@@ -2443,7 +2525,7 @@ mismatch to the job log (no artifact is uploaded: the window is all that is
 kept, and it stays in that log); and it logs `PROBE: trace ...` lines with the
 size, line count and the throughput of both readers for every trace the sandbox
 tests produce. **Trace sizes and grammar-path throughput on real traces: to come
-from the first CI run.** The default stays the old scanner; the flip is D24 PR 6.
+from the first CI run.** The default was still the old scanner then; the flip is D24 PR 6.
 
 **On the compact `LineParser` (P2 PR 5).** `handleLineG` no longer builds an
 `*ASTNode` tree per line. Each trace parse owns one `straceparser.LineParser`
@@ -2458,8 +2540,8 @@ keeps the ASTNode version as a test-only reference and
 `compact_equiv_test.go` (fixtures, 300k seeded lines, 600k seeded sequences,
 `FuzzCompactEqualsLegacy`) demands identical output. The all-space-argument
 guard stays in kiln's `trimArgs` (the parser accepts `1  f( , <unfinished ...>`
-with the raw argument `" "` on every path). The old scanner is still the
-default, and `crossCheck` is unchanged. Measured on the four committed fixture
+with the raw argument `" "` on every path). The old scanner was still the
+default then, and `crossCheck` was unchanged. Measured on the four committed fixture
 traces (Apple M2 Max, `go test ./internal/trace -bench 'LineHandler|Pass1'
 -benchmem`): the old scanner 201 MB/s, 359 allocs per corpus pass; the grammar
 path on the ASTNode tree 13.6 MB/s, 1693 allocs; on the compact path 17.9 MB/s,
@@ -2469,8 +2551,8 @@ COUNT: bytes per pass only drop from about 360 KB to about 203 KB, against about
 slice); production pass 1 (bufio plus
 handler) 141 MB/s old against 16.9 MB/s grammar. The fixtures are short
 and dense, so the ratio to the old scanner (8x to 11x here: 141/16.9 for pass 1, 201/17.9 for the handler) is a worst case
-rather than the "within 3x" gate figure; the gate is still to be restated from
-the real-trace `PROBE:` lines (which now also log allocations). Cutting the
+rather than the "within 3x" gate figure; the gate was restated (G1, G2 above) from
+the real-trace `PROBE:` lines. Cutting the
 remaining per-line token-slice allocation (a lexer `TokenizeInto`) is P2 PR 6, not to be confused
 with D24 PR 6, the default flip.
 
@@ -2490,9 +2572,9 @@ with D24 PR 6, the default flip.
    `require`/`replace` for the in-repo modules, the CI sandbox-job path
    filter, `handleLineG`, `crossCheck`, the fuzzers, and a measurement of
    real trace sizes.
-6. Flip the default (the gate above).
-7. Phase B conversions, one PR each.
-8. Delete the old scanner.
+6. **Done (PR 6).** Flip the default to the grammar path (G1 above); the old scanner stays as the oracle.
+7. Phase B conversions, one PR each. *Pending.*
+8. Delete the old scanner (soak criteria above). *Pending.*
 
 ## 5. From trace to manifest
 
