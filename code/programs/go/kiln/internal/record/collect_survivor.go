@@ -44,12 +44,13 @@ package record
 import (
 	"errors"
 	"fmt"
-	"math"
 	"os"
 	"strconv"
 	"strings"
 	"syscall"
 	"time"
+
+	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/recfmt"
 )
 
 // DefaultSurvivorWait and survivorPoll are the wait for a dying process tree and
@@ -60,11 +61,8 @@ const (
 	maxSurvivorsListed  = 8
 )
 
-// ClockTicksPerSecond is USER_HZ, the rate /proc/<pid>/stat's starttime and the
-// ticks `prepare` seals (binding.prepared_ticks) are both counted in. It is 100
-// on every Linux kernel kiln supports (USER_HZ is fixed in the user-space ABI,
-// whatever CONFIG_HZ is), and Go has no sysconf without cgo.
-const ClockTicksPerSecond = 100
+// ClockTicksPerSecond is USER_HZ; see recfmt.ClockTicksPerSecond.
+const ClockTicksPerSecond = recfmt.ClockTicksPerSecond
 
 // SurvivorSlackTicks is how much earlier than `prepare` a process may have
 // started and still count as new: 200 ticks, two seconds. A process's starttime
@@ -74,7 +72,7 @@ const SurvivorSlackTicks = 2 * ClockTicksPerSecond
 
 // SurvivorQuery is what a scan is told: the checkout, the sealed sandbox
 // configurations whose command-line mention marks a sandbox supervisor (S2), and
-// the boot-relative moment `prepare` ran (S3 looks only at processes that
+// the boot-relative moment `prepare` started (S3 looks only at processes that
 // started after it).
 //
 // SinceTicks is in clock ticks since boot, the same clock as a process's
@@ -88,39 +86,25 @@ type SurvivorQuery struct {
 	SinceTicks int64
 }
 
-// ParseUptimeTicks turns the text of /proc/uptime ("12345.67 8910.11": seconds
-// since boot, then idle seconds) into clock ticks since boot, rounded down.
-// Only the first field is read. A first field that is not a finite number, or
-// is not positive, or is more than 100 years, is refused: a clock that cannot
-// be read is not a clock, and `prepare` must not seal a made-up one (S3's gate
-// would then be wrong in a direction nobody could see).
-func ParseUptimeTicks(data []byte) (int64, error) {
-	f := strings.Fields(string(data))
-	if len(f) == 0 {
-		return 0, errors.New("/proc/uptime is empty")
-	}
-	secs, err := strconv.ParseFloat(f[0], 64)
-	if err != nil {
-		return 0, fmt.Errorf("/proc/uptime: %v", err)
-	}
-	if math.IsNaN(secs) || math.IsInf(secs, 0) || secs <= 0 || secs > 100*365*24*3600 {
-		return 0, fmt.Errorf("/proc/uptime says %q seconds since boot", f[0])
-	}
-	ticks := int64(secs * ClockTicksPerSecond)
-	if ticks < 1 {
-		return 0, fmt.Errorf("/proc/uptime says %q seconds since boot, under one tick", f[0])
-	}
-	return ticks, nil
-}
-
-// ReadUptimeTicks reads the live /proc/uptime as clock ticks since boot. It is
-// the default of Options.Uptime; it fails anywhere without /proc.
-func ReadUptimeTicks() (int64, error) {
-	data, err := os.ReadFile("/proc/uptime")
+// ReadSelfStartTicks is this process's own start time: field 22 of
+// /proc/self/stat, in clock ticks since boot. It is the default of
+// Options.SelfStartTicks (prepare) and CollectOptions.SelfStartTicks, and it uses
+// startTicks, the parser the S3 gate applies to every other process, so the
+// sealed value and the comparands are one field of one file, in one unit, on one
+// epoch. It fails anywhere without /proc.
+func ReadSelfStartTicks() (int64, error) {
+	data, err := os.ReadFile("/proc/self/stat")
 	if err != nil {
 		return 0, err
 	}
-	return ParseUptimeTicks(data)
+	t, err := startTicks(data)
+	if err != nil {
+		return 0, err
+	}
+	if t < 1 {
+		return 0, fmt.Errorf("/proc/self/stat says this process started at tick %d", t)
+	}
+	return t, nil
 }
 
 // errTruncated is what a read of a /proc file says when it hit the read bound:
@@ -205,7 +189,7 @@ func startTicks(stat []byte) (int64, error) {
 	}
 	// A count of more than 100 years of ticks is not a real one: unknown, which
 	// the caller counts as "started after prepare" (fail closed).
-	if ticks > ClockTicksPerSecond*100*365*24*3600 {
+	if ticks > recfmt.MaxClockTicks {
 		return 0, errors.New("stat starttime is absurd")
 	}
 	return int64(ticks), nil

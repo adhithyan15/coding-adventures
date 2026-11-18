@@ -1200,10 +1200,17 @@ inventory and sandbox configuration, `kiln_sha256`, `build_tool_sha256`,
 `strace_sha256`, `git_sha256`,
 `recorder` (`legacy.RecorderVersion`), `strace_version`, `kernel`
 (`/proc/sys/kernel/osrelease`), `job_start`, `prepared_at` (wall clock, display
-and audit only) and `prepared_ticks` (D26: the first field of `/proc/uptime` at
-`prepare`, in clock ticks of 100 per second since boot, an integer of at least 1;
-a binding without it, or with it not positive, is refused, which is why the
-schema went from `/1` to `/2`). Every
+and audit only) and `prepared_ticks` (D26: field 22 of `/proc/self/stat` as `prepare` read it
+FIRST THING, before it starts any process, that is `prepare`'s own start time
+in clock ticks since boot, 100 per second; an integer from 1 to 100 years of
+ticks; a binding without it, or with it out of range, is refused, which is why
+the schema went from `/1` to `/2`). It is sealed from `prepare`'s own start,
+not from a later clock reading, because `prepare` starts sandboxes itself (the
+structure probe and the toolchain probes, whose argv a PR can edit and whose
+timeouts run to minutes) and a leftover of one of those must count as new for
+S3; its own start is earlier than anything it spawns, by construction, and it
+is the same kernel field, unit and epoch as every comparand (no float parse, no
+`/proc/uptime`, which a container may virtualise). Every
 `pre/` file is written exactly as the `recfmt` encoder produced it, with no
 trailing newline, so `binding_id` is the SHA-256 of the file and the merge's
 strict decoder reads it back byte for byte. Given the same inputs and the same
@@ -1454,15 +1461,18 @@ tokens that the merge already knew (M3, M4) and nothing wrote until now.
   ssh-agent) that no build started, and counting those would void every run.
   Each scan is bounded to 5 s (a `/proc` read can block on an uninterruptible
   task); one that is not done counts as a survivor. The start-time gate is boot-relative
-  (D26): `prepare` seals `/proc/uptime` as `binding.prepared_ticks`, and the
-  gate compares it with `/proc/<pid>/stat` field 22, both ticks since boot, so a
-  step of the wall clock (NTP, `date -s`) between `prepare` and `collect`
-  cannot exclude a new process from S3. (Before D26 the gate converted
-  `starttime` through `btime` and compared it with the wall-clock
-  `prepared_at`, and a backward step of more than 2 s could.) `prepare` refuses
-  an unreadable, non-finite or non-positive `/proc/uptime`. A reboot between
-  `prepare` and `collect` is not detected and is not a case the recorder has: the
-  two run in one job. (An absurd `starttime`, over 100 years of ticks, counts as new.) There is **no cwd test**: a shell left in the
+  (D26): `prepare` reads its own `/proc/self/stat` field 22 first thing and
+  seals it as `binding.prepared_ticks`, and the gate compares it with
+  `/proc/<pid>/stat` field 22 of each process, both ticks since boot parsed by
+  the same function, so a step of the wall clock (NTP, `date -s`) between
+  `prepare` and `collect` cannot exclude a new process from S3. (Before D26 the
+  gate converted `starttime` through `btime` and compared it with the
+  wall-clock `prepared_at`, and a backward step of more than 2 s could.)
+  `prepare` refuses an unreadable or out-of-range own start time. `collect`
+  checks the sealed value against its own start time, read the same way, which
+  cannot be earlier on one boot: if it is (a reboot between the two, or the two
+  reading different clock sources), or cannot be read, the bound is zero and
+  every process counts (fail closed). (An absurd `starttime`, over 100 years of ticks, counts as new.) There is **no cwd test**: a shell left in the
   checkout writes nothing, and a cwd test would void every run launched from a
   terminal in the repository. A process that vanishes while being read is not
   one. The scan repeats every 200 ms for up to 10 s (`CollectOptions.SurvivorWait`;

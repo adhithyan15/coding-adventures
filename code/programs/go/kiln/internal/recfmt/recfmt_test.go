@@ -369,7 +369,7 @@ func TestBindingValidation(t *testing.T) {
 		"job start":  func(b *Binding) { b.JobStart = -1 },
 		"ticks zero": func(b *Binding) { b.PreparedTicks = 0 },
 		"ticks neg":  func(b *Binding) { b.PreparedTicks = -5 },
-		"ticks huge": func(b *Binding) { b.PreparedTicks = MaxPreparedTicks + 1 },
+		"ticks huge": func(b *Binding) { b.PreparedTicks = MaxClockTicks + 1 },
 		"digest":     func(b *Binding) { b.GraphSHA256 = "x" },
 		"text":       func(b *Binding) { b.Kernel = "a\nb" },
 	}

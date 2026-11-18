@@ -52,9 +52,16 @@ import (
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/traced"
 )
 
-// MaxPreparedTicks bounds binding.prepared_ticks: 100 years at 100 ticks per
-// second. A larger value is not a real uptime.
-const MaxPreparedTicks = 100 * 365 * 24 * 3600 * 100
+// ClockTicksPerSecond is USER_HZ, the rate /proc/<pid>/stat's starttime is
+// counted in. It is 100 on every Linux kernel kiln supports (USER_HZ is fixed in
+// the user-space ABI, whatever CONFIG_HZ is), and Go has no sysconf without cgo.
+const ClockTicksPerSecond = 100
+
+// MaxClockTicks is the one bound on any count of clock ticks since boot that
+// kiln believes: 100 years. A larger value is not a real start time. The
+// sealed binding.prepared_ticks and a process's stat starttime are both checked
+// against it.
+const MaxClockTicks = 100 * 365 * 24 * 3600 * ClockTicksPerSecond
 
 // Schema names, one per file.  A version bump is a new name.
 const (
@@ -128,10 +135,13 @@ type Binding struct {
 	// PreparedAt is wall-clock time, for display and audit ONLY: it must never
 	// gate anything, because the wall clock can step.
 	PreparedAt string `json:"prepared_at"`
-	// PreparedTicks is /proc/uptime at prepare, in clock ticks (USER_HZ, 100 per
-	// second) since boot: the same clock as /proc/<pid>/stat's starttime. It is
-	// what S3's "started after prepare" gate compares against (D26). Added in
-	// binding/2; a binding without it, or with it not positive, is refused.
+	// PreparedTicks is field 22 of /proc/self/stat as `prepare` read it FIRST
+	// THING, before it started any process: prepare's own start time in clock
+	// ticks (USER_HZ) since boot, the very field and units of every comparand.
+	// It is what S3's "started after prepare" gate compares against (D26).
+	// Anything prepare spawns (the structure and toolchain probes) starts after
+	// it. Added in binding/2; a binding without it, or with it not positive, is
+	// refused.
 	PreparedTicks int64 `json:"prepared_ticks"`
 }
 
@@ -416,7 +426,7 @@ func (b *Binding) Validate() error {
 		return fmt.Errorf("binding: recorder %d", b.Recorder)
 	case b.JobStart < 0:
 		return fmt.Errorf("binding: job_start %d", b.JobStart)
-	case b.PreparedTicks < 1 || b.PreparedTicks > MaxPreparedTicks:
+	case b.PreparedTicks < 1 || b.PreparedTicks > MaxClockTicks:
 		return fmt.Errorf("binding: prepared_ticks %d", b.PreparedTicks)
 	}
 	// Ordered slices, not maps: the FIRST failure is the one reported, and a

@@ -529,22 +529,3 @@ func TestSurvivorS3NoBoundMeansEveryProcessCounts(t *testing.T) {
 		t.Fatalf("%v", got)
 	}
 }
-
-func TestParseUptimeTicks(t *testing.T) {
-	for in, want := range map[string]int64{
-		"12345.67 8910.11\n": 1234567,
-		"0.01 0.00":          1,
-		"100 5":              10000,
-		"  7.999  1":         799, // rounded down
-	} {
-		got, err := ParseUptimeTicks([]byte(in))
-		if err != nil || got != want {
-			t.Errorf("%q: %d %v, want %d", in, got, err, want)
-		}
-	}
-	for _, in := range []string{"", "\n", "abc 1", "0.00 5", "0.004 1", "-3.0 1", "NaN 1", "+Inf 1", "Inf 1", "1e300 1", "99999999999 1"} {
-		if got, err := ParseUptimeTicks([]byte(in)); err == nil {
-			t.Errorf("%q accepted as %d", in, got)
-		}
-	}
-}
