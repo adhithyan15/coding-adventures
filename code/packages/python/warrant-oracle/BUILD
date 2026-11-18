@@ -30,5 +30,10 @@ uv pip install -e ".[dev]" --quiet
 # --check regenerates all six files; dump-lowering checks the lowering dump through the CLI too.
 .venv/bin/python tests/fixtures/tuple-forms-v1/make_tuple_forms.py --check
 .venv/bin/python -m coding_adventures_warrant_oracle dump-lowering --spec tests/fixtures/tuple-forms-v1/tuple_forms_v1.warrant --check tests/fixtures/tuple-forms-v1/tuple_forms_v1.oracle-lowering.json
+# CV2-S10c-1: the synthetic ir.fixed EVALUATION document and its committed dumps (lowering, evaluation, faults
+# under the closed and a test-only open gate, the value table of every built-in at every width, and the
+# domain table of D21/D25/D26), the files the generator's slice S10c-2 must reproduce byte for byte.
+.venv/bin/python tests/fixtures/fixed-eval-v1/make_fixed_eval.py --check
+.venv/bin/python -m coding_adventures_warrant_oracle dump-lowering --spec tests/fixtures/fixed-eval-v1/fixed_eval_v1.warrant --check tests/fixtures/fixed-eval-v1/fixed_eval_v1.oracle-lowering.json
 .venv/bin/python ../../rust/warrant-corpus-gen/tests/fixtures/dump_oracle_lowering.py --check
 .venv/bin/python ../../rust/warrant-corpus-gen/tests/fixtures/dump_oracle_enumeration.py --check
