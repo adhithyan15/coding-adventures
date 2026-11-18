@@ -273,6 +273,16 @@ pub fn examples_omitting(
             continue;
         }
         let ev = evaluated.map_err(at)?;
+        // VER04r 2.3, 14: the 4,096-byte cap is enforced at emission, after the D18/D19 checks
+        // `evaluate` has made.  The omit decision above is unchanged.
+        if ev.any_over_limit() {
+            return Err(at(GenError::new(
+                code::LIMIT,
+                "",
+                "an example argument or pure value is a Bytes over 4,096 bytes (VER04r 2.3); \
+                 omit it with an `omit_example` line",
+            )));
+        }
         let mut arg_json = Vec::new();
         let mut fields = vec![("op".to_string(), format!("S{}", hex(ev.lop.name.as_bytes())))];
         for (pname, concrete, v) in &ev.args {

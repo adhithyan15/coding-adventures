@@ -6,7 +6,7 @@ that S2/S3 output can later be diffed against.  Each suite is recorded as one of
 
 ``ok``          enumerated; digests present;
 ``not-live``    needs an IR level this oracle does not implement (the level is
-                named: ``ir.fixed``, ``ir.data``, ``ir.seq``);
+                named: ``ir.data``, ``ir.seq``);
 ``refused``     a resource bound or generation rule refused it (the code is named,
                 e.g. ``limit: ir-cost`` -- see the README on gf256).
 
@@ -109,7 +109,7 @@ def emit(
         "chunk_size": chunk_size,
         "budget": budget,
         "max_ir_cost": max_ir_cost,
-        "levels_implemented": ["ir.core", "ir.tuple"],
+        "levels_implemented": ["ir.core", "ir.fixed", "ir.tuple"],
         "suites": rows,
         "summary": _summary(rows),
     }

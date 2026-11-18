@@ -18,9 +18,13 @@ The leaf orders are the ones the specifications fix, written out once:
 ``u64_edge``   ``0..255``; then ``1<<i`` for ``i = 8..63``; then ``MAX``;
                then ``MAX ^ (1<<i)`` for ``i = 0..63``            (377 values)
 ``fx_full``    every value of an 8- or 16-bit type, ascending
-``fx_edge``    the same edge pattern at width ``w``, reinterpreted in two's
-               complement for signed types                (u32: 313, u16: 281)
+``fx_edge``    the same edge pattern at width ``w``; for a **signed** type the set
+               ``wrap_S(E_U(w)) | {-255..-1}``, de-duplicated and ascending
+               [D21]                       (u16: 281, u32: 313; i16: 527, i32: 559, i64: 623).
+               16-bit only by budget demotion, never for 8 bits [D25]
 ``nat_count``  ``0..K``                                     (``nat_0_64``: K=64)
+``nat_shift``  ``0..64`` then ``65 127 128 129 255 256 65535 65536`` (73 values) [D26]; a
+               ``Nat`` binder that *is* the count operand of ``shl shr sar rotl rotr bit``
 ``bytes_d1``   the 347-string set of VER04h section 3
 ``bytes_n``    ``Bytes<N>``: the length-``N`` members of ``bytes_d1`` for
                ``N <= 3``, else ``4 + 3N`` strings (fills, then one-position edits)
@@ -44,6 +48,7 @@ from dataclasses import dataclass
 
 from . import ast as A
 from .errors import OracleError
+from .irtree import children, is_node
 from .lower import FIXED, Spec
 
 MAX_DESC_DEPTH = 16
@@ -181,12 +186,36 @@ def leaf_fx_full(ty: A.Ty) -> Desc:
     return _Listed("fx_full", ty, list(range(lo, hi)), "full", {"t": ty.head})
 
 
-def leaf_fx_edge(ty: A.Ty) -> Desc:
+#: The boundary shift counts a ``nat_shift`` adds to ``0..=64`` (VER04j 3.6, [D26]).
+_SHIFT_EXTRAS = (65, 127, 128, 129, 255, 256, 65535, 65536)
+
+
+def leaf_nat_shift() -> Desc:
+    """``{"d":"nat_shift","size":73}``: the shift-count domain of VER04j 3.6 [D26] (a leaf, no ``k``)."""
+    return _Listed("nat_shift", A.Ty("Nat"), [*range(65), *_SHIFT_EXTRAS], "bounded-set")
+
+
+def edge_values(ty: A.Ty) -> list[int]:
+    """The ``fx_edge`` value list of a 16-, 32- or 64-bit fixed-width type (VER04r 5.1, [D21], [D25]).
+
+    Unsigned width ``w``: ``E_U(w)`` in the order of :func:`_edge_unsigned`.  Signed: those bit
+    patterns read in two's complement, **plus** ``-255..=-1``, de-duplicated and in **ascending
+    numeric order** (``I16`` 527, ``I32`` 559, ``I64`` 623).  An 8-bit type has no ``fx_edge``
+    [D25]: the unsigned formula repeats values there and no resolver produces one.
+    """
     bits, signed = FIXED[ty.head]
+    if bits < 16:
+        raise OracleError("generation", "fx_edge is illegal for 8-bit types (VER04r 5.1, D25)")
     values = _edge_unsigned(bits)
-    if signed:
-        values = [v - (1 << bits) if v >= 1 << (bits - 1) else v for v in values]
-    return _Listed("fx_edge", ty, values, "bounded-set", {"t": ty.head})
+    if not signed:
+        return values
+    half, span = 1 << (bits - 1), 1 << bits
+    negatives = range(-255, 0)
+    return sorted({v - span if v >= half else v for v in values} | set(negatives))
+
+
+def leaf_fx_edge(ty: A.Ty) -> Desc:
+    return _Listed("fx_edge", ty, edge_values(ty), "bounded-set", {"t": ty.head})
 
 
 class TupleDesc(Desc):
@@ -428,6 +457,158 @@ def descriptor_for(spec: Spec, ty: A.Ty, depth: int = 0) -> Desc:
         ]
         return VariantDesc(ty, ctors)
     raise OracleError("generation", "a binder of this type has no domain")
+
+
+#: The built-ins whose second operand is a shift count or bit index (VER04j 3.6, [D26]).
+COUNT_TAGS = frozenset(["shl", "shr", "sar", "rotl", "rotr", "bit"])
+
+
+def count_binders(body: object) -> set[str]:
+    """The names a claim body uses **directly** as the count operand of a shift, rotation or ``bit``.
+
+    VER04r 5.1 and 16.10 R10: only the count operand itself selects ``nat_shift``.  ``shl(x, n)``
+    selects ``n``; ``shl(x, n + 1)``, a ``model_call`` argument and a count that is a projection
+    or any other expression do not, and neither does a binder that reaches a count only through a
+    model body or an ``admit`` (the caller passes the claim *body*, never its ``admit``).  The walk
+    uses :func:`.irtree.children`, the one place that knows which parts of a node are
+    sub-expressions (a tuple literal's operands, a ``match`` arm body; never a pattern).
+    """
+    found: set[str] = set()
+    stack = [body]
+    while stack:
+        node = stack.pop()
+        if not is_node(node):
+            continue
+        if node[0] in COUNT_TAGS and len(node) == 3:
+            count = node[2]
+            if is_node(count) and count[0] == "var" and len(count) == 2 and isinstance(count[1], str):
+                found.add(count[1])
+        stack.extend(children(node))
+    return found
+
+
+def refine_counts(descs: list[Desc], binders: list, body: object, version: str) -> list[str]:
+    """Give every ``Nat`` binder that is directly a shift count the ``nat_shift`` leaf (in place).
+
+    ``binders`` is the suite's ``[(name, Ty)]``.  Only a binder whose declared type is exactly
+    ``Nat`` is refined, and only in a ``v1`` document (a ``v0`` document has no shifts), before
+    any budget demotion.  Returns the refined binder names in binder order.
+    """
+    if version == "v0":
+        return []
+    counts = count_binders(body)
+    refined = []
+    for k, (name, ty) in enumerate(binders):
+        if ty.head == "Nat" and not ty.args and name in counts:
+            descs[k] = leaf_nat_shift()
+            refined.append(name)
+    return refined
+
+
+def descriptor_size(d: object, depth: int = 1) -> int:
+    """Recompute the ``size`` of a descriptor tree and check it as a consumer must (VER04r 5.1).
+
+    Every node's declared ``size`` must equal the recomputed one (checked arithmetic: a Python
+    ``int`` cannot overflow, and a size past ``2**64`` is refused as ``W0706`` would be), the tree
+    is at most 16 levels deep, and the legality rules of the leaves are enforced: ``fx_full`` is
+    for 8- and 16-bit types other than ``U8``; ``fx_edge`` for 16-, 32- and 64-bit types other
+    than ``U64``, **never 8-bit** [D25]; ``nat_shift`` has exactly 73 values [D26].  Returns the
+    size; raises ``OracleError("generation", ..)`` otherwise.
+    """
+    if depth > MAX_DESC_DEPTH:
+        raise OracleError("limit", "descriptor tree deeper than 16 levels")
+    if not isinstance(d, dict) or not isinstance(d.get("d"), str) or type(d.get("size")) is not int:
+        raise OracleError("generation", "a malformed descriptor")
+    kind = d["d"]
+
+    def need(keys: set) -> None:
+        if set(d) != {"d", "size", *keys}:
+            raise OracleError("generation", "a descriptor has the wrong keys")
+
+    def fixed_type() -> A.Ty:
+        name = d.get("t")
+        if name not in FIXED:
+            raise OracleError("generation", "a descriptor names no fixed-width type")
+        return A.Ty(name)
+
+    if kind in ("bool", "u8_all", "u64_edge", "nat_0_64", "bytes_d1", "nat_shift"):
+        need(set())
+        size = {
+            "bool": 2,
+            "u8_all": 256,
+            "u64_edge": len(_edge_unsigned(64)),
+            "nat_0_64": 65,
+            "bytes_d1": len(_D1),
+            "nat_shift": 73,
+        }[kind]
+    elif kind == "bytes_n":
+        need({"n"})
+        if type(d["n"]) is not int or not 0 <= d["n"] <= 4096:
+            raise OracleError("generation", "bytes_n needs a width in 0..4096")
+        size = len(_bytes_n(d["n"]))
+    elif kind == "nat_count":
+        need({"k"})
+        if type(d["k"]) is not int or not 0 <= d["k"] <= 4096:
+            raise OracleError("generation", "nat_count needs K in 0..4096")
+        size = d["k"] + 1
+    elif kind == "fx_full":
+        need({"t"})
+        ty = fixed_type()
+        if ty.head == "U8" or FIXED[ty.head][0] > 16:
+            raise OracleError("generation", "fx_full is for 8- and 16-bit types other than U8")
+        size = 1 << FIXED[ty.head][0]
+    elif kind == "fx_edge":
+        need({"t"})
+        ty = fixed_type()
+        if ty.head == "U64" or FIXED[ty.head][0] < 16:
+            raise OracleError(
+                "generation", "fx_edge is for 16-, 32- and 64-bit types other than U64 (D25)"
+            )
+        size = len(edge_values(ty))
+    elif kind == "tuple":
+        need({"of"})
+        parts = d["of"]
+        if not isinstance(parts, list) or not parts:
+            raise OracleError("generation", "a tuple descriptor has components")
+        size = 1
+        for part in parts:
+            size = _checked_size(size * descriptor_size(part, depth + 1))
+    elif kind == "option":
+        need({"of"})
+        size = _checked_size(1 + descriptor_size(d["of"], depth + 1))
+    elif kind == "result":
+        need({"ok", "errs"})
+        if not isinstance(d["errs"], list) or not all(isinstance(e, str) for e in d["errs"]):
+            raise OracleError("generation", "a result descriptor lists error cases")
+        size = _checked_size(descriptor_size(d["ok"], depth + 1) + len(d["errs"]))
+    elif kind == "list":
+        need({"of"})
+        inner = descriptor_size(d["of"], depth + 1)
+        d16, d4 = min(16, inner), min(4, inner)
+        size = _checked_size(1 + d16 + d16**2 + d4**3)
+    elif kind == "variant":
+        need({"ctors"})
+        if not isinstance(d["ctors"], list) or not d["ctors"]:
+            raise OracleError("generation", "a variant descriptor has constructors")
+        size = 0
+        for ctor in d["ctors"]:
+            if not (isinstance(ctor, list) and len(ctor) == 2 and isinstance(ctor[1], list)):
+                raise OracleError("generation", "a malformed variant constructor")
+            fields = 1
+            for field in ctor[1]:
+                fields = _checked_size(fields * descriptor_size(field, depth + 1))
+            size = _checked_size(size + fields)
+    else:
+        raise OracleError("generation", "an unknown descriptor kind")
+    if d["size"] != size:
+        raise OracleError("generation", "a descriptor's size is not its recomputed size")
+    return size
+
+
+def _checked_size(size: int) -> int:
+    if size >= 1 << 64:
+        raise OracleError("generation", "W0706: a descriptor size does not fit 64 bits")
+    return size
 
 
 def demote(binders: list[Desc], budget: int) -> list[str]:

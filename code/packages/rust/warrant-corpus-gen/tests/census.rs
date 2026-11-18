@@ -173,12 +173,20 @@ const PINS: [(&str, &[(&str, usize)]); 11] = [
     ("zeroize", &[("inout", 9)]),
 ];
 
-/// The oracle's pins for the same documents (`warrant-oracle/tests/test_lower.py` `CENSUS`, as
-/// of S10t-1: suites by `unsupported.level`, `ir.core` for none).
-const ORACLE_PINS: [(&str, &[(&str, usize)]); 7] = [
+/// The oracle's census of the same documents as of CV2-F1: its suites by `unsupported.level`, and
+/// a suite with no level but a lowering refusal (`LoweredSuite.refusal`, the impure guard and the
+/// claim-calls-no-op rule, VER04r 4.3, 4.4) by `W0701`; `ok` for none.  A level refusal wins over
+/// the lowering refusal, as in the oracle's evaluation, so the six hash-functions claims that have
+/// both are `ir.fixed`.  (`warrant-oracle/tests/test_lower.py` `CENSUS` keys by level only, so it
+/// still reads `ir.core 18` for wasm-leb128: those 18 hold the 2 refused claims.)
+const ORACLE_PINS: [(&str, &[(&str, usize)]); 8] = [
     ("ct-compare", &[("ok", 9)]),
     ("gf256", &[("ok", 38)]),
-    ("wasm-leb128", &[("ok", 18), ("ir.fixed", 24)]),
+    ("wasm-leb128", &[("ok", 16), ("W0701", 2), ("ir.fixed", 24)]),
+    (
+        "hash-functions",
+        &[("ok", 4), ("ir.data", 21), ("ir.fixed", 31)],
+    ),
     (
         "logic-gates",
         &[("ok", 28), ("ir.data", 3), ("ir.fixed", 57)],
@@ -231,13 +239,20 @@ fn the_generator_census_agrees_with_the_oracle_and_every_difference_has_a_named_
         let g = histogram(name);
         assert!(ok(&g) <= ok(&pin(oracle)), "{name}");
     }
-    // wasm-leb128: the oracle's 18 `ir.core` claims are 13 here plus 3 whose binder descriptor the
-    // generator refuses until VER04r 16.2 is decided (`16.2` item 4, a signed `fx_edge` leaf: the domain stage) and 2
-    // whose body has a subject call under an impure guard (`W0701`, VER04r 4.4: the generator
-    // applies the rule at lowering, the oracle when it evaluates).
+    // wasm-leb128: the oracle's 16 `ok` and 2 `W0701` (the impure guard, which both tools now apply
+    // at lowering: CV2-F1 closed the guard-timing gap) are 13 `ok` and 2 `W0701` here plus 3 whose
+    // binder descriptor the generator refuses until VER04r 16.2 is decided (`16.2` item 4, a signed
+    // `fx_edge` leaf: the domain stage, which the oracle's lowering does not reach).
     let w = histogram("wasm-leb128");
     assert_eq!((w["16.2"], w["W0701"], w["ok"], w["ir.fixed"]), (3, 2, 13, 24));
-    assert_eq!(w["16.2"] + w["W0701"] + w["ok"], 18);
+    assert_eq!(w["16.2"] + w["ok"], 16);
+    // hash-functions: six claims have a subject call under an impure guard *and* use a fixed-width
+    // built-in.  Both tools refuse them; the oracle names the level (`ir.fixed`, a level refusal
+    // wins over the lowering refusal), the generator the guard (`W0701`, its lowering meets the
+    // guard first).  Same set of refused claims, a different first reason.
+    let h = histogram("hash-functions");
+    assert_eq!((h["W0701"], h["ir.fixed"], h["ir.data"], h["ok"]), (6, 25, 21, 4));
+    assert_eq!(h["W0701"] + h["ir.fixed"], 31);
     // arithmetic: 10 claims call an op whose signature holds a record or variant type.  The oracle
     // counts the type in `requires` (R9) and lowers; the generator refuses it at `ir.data` until
     // S10d.  So the oracle's 4 `ir.core` and 6 `ir.fixed` of those are `ir.data` here.

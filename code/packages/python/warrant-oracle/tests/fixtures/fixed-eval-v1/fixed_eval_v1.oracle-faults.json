@@ -1,0 +1,1982 @@
+{
+  "accepted_blind_faults": [],
+  "controls_gate_on": [
+    {
+      "blind_claims": [],
+      "fault": "drop-last-result-byte",
+      "id": "warrant/fixed_eval/negctl/exhaustive/op_bytes/drop-last-result-byte",
+      "op": "op_bytes",
+      "required_claims": [
+        "warrant/fixed_eval/exhaustive/c_bytes"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/fixed_eval/exhaustive/c_bytes"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "flip-result-bit",
+      "id": "warrant/fixed_eval/negctl/exhaustive/op_bytes/flip-result-bit",
+      "op": "op_bytes",
+      "required_claims": [
+        "warrant/fixed_eval/exhaustive/c_bytes"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/fixed_eval/exhaustive/c_bytes"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "truncate-last",
+      "id": "warrant/fixed_eval/negctl/exhaustive/op_bytes/truncate-last",
+      "op": "op_bytes",
+      "required_claims": [
+        "warrant/fixed_eval/exhaustive/c_bytes"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/fixed_eval/exhaustive/c_bytes"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "drop-last-result-byte",
+      "id": "warrant/fixed_eval/negctl/exhaustive/op_bytes2/drop-last-result-byte",
+      "op": "op_bytes2",
+      "required_claims": [
+        "warrant/fixed_eval/exhaustive/c_bytes2"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/fixed_eval/exhaustive/c_bytes2"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "flip-result-bit",
+      "id": "warrant/fixed_eval/negctl/exhaustive/op_bytes2/flip-result-bit",
+      "op": "op_bytes2",
+      "required_claims": [
+        "warrant/fixed_eval/exhaustive/c_bytes2"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/fixed_eval/exhaustive/c_bytes2"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "truncate-last",
+      "id": "warrant/fixed_eval/negctl/exhaustive/op_bytes2/truncate-last",
+      "op": "op_bytes2",
+      "required_claims": [
+        "warrant/fixed_eval/exhaustive/c_bytes2"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/fixed_eval/exhaustive/c_bytes2"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "ignore-high-bit",
+      "id": "warrant/fixed_eval/negctl/exhaustive/op_eq_two/ignore-high-bit",
+      "op": "op_eq_two",
+      "required_claims": [
+        "warrant/fixed_eval/exhaustive/c_eq_two"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/fixed_eval/exhaustive/c_eq_two"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "ignore-high-bit",
+      "id": "warrant/fixed_eval/negctl/exhaustive/op_eq_u64/ignore-high-bit",
+      "op": "op_eq_u64",
+      "required_claims": [
+        "warrant/fixed_eval/exhaustive/c_eq_u64"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/fixed_eval/exhaustive/c_eq_u64"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "invert",
+      "id": "warrant/fixed_eval/negctl/exhaustive/op_eq_u64/invert",
+      "op": "op_eq_u64",
+      "required_claims": [
+        "warrant/fixed_eval/exhaustive/c_eq_u64"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/fixed_eval/exhaustive/c_eq_u64"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "drop-last-result-byte",
+      "id": "warrant/fixed_eval/negctl/exhaustive/op_r/drop-last-result-byte",
+      "op": "op_r",
+      "required_claims": [
+        "warrant/fixed_eval/exhaustive/c_r"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/fixed_eval/exhaustive/c_r"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "flip-result-bit",
+      "id": "warrant/fixed_eval/negctl/exhaustive/op_r/flip-result-bit",
+      "op": "op_r",
+      "required_claims": [
+        "warrant/fixed_eval/exhaustive/c_r"
+      ],
+      "requires": [
+        "ir.fixed",
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/fixed_eval/exhaustive/c_r"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "missing-error",
+      "id": "warrant/fixed_eval/negctl/exhaustive/op_r/missing-error",
+      "op": "op_r",
+      "required_claims": [
+        "warrant/fixed_eval/exhaustive/c_r"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/fixed_eval/exhaustive/c_r"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "drop-last-result-byte",
+      "id": "warrant/fixed_eval/negctl/exhaustive/op_r2/drop-last-result-byte",
+      "op": "op_r2",
+      "required_claims": [
+        "warrant/fixed_eval/exhaustive/c_r2"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/fixed_eval/exhaustive/c_r2"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "flip-result-bit",
+      "id": "warrant/fixed_eval/negctl/exhaustive/op_r2/flip-result-bit",
+      "op": "op_r2",
+      "required_claims": [
+        "warrant/fixed_eval/exhaustive/c_r2"
+      ],
+      "requires": [
+        "ir.fixed",
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/fixed_eval/exhaustive/c_r2"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "flip-result-bit",
+      "id": "warrant/fixed_eval/negctl/exhaustive/op_rfix/flip-result-bit",
+      "op": "op_rfix",
+      "required_claims": [
+        "warrant/fixed_eval/exhaustive/c_rfix"
+      ],
+      "requires": [
+        "ir.fixed",
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/fixed_eval/exhaustive/c_rfix"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "xor-lsb",
+      "id": "warrant/fixed_eval/negctl/exhaustive/op_x_i16/xor-lsb",
+      "op": "op_x_i16",
+      "required_claims": [
+        "warrant/fixed_eval/exhaustive/c_x_i16"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/fixed_eval/exhaustive/c_x_i16"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "flip-result-bit",
+      "id": "warrant/fixed_eval/negctl/exhaustive/op_x_i32/flip-result-bit",
+      "op": "op_x_i32",
+      "required_claims": [
+        "warrant/fixed_eval/exhaustive/c_x_i32"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/fixed_eval/exhaustive/c_x_i32"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "flip-result-bit",
+      "id": "warrant/fixed_eval/negctl/exhaustive/op_x_i64/flip-result-bit",
+      "op": "op_x_i64",
+      "required_claims": [
+        "warrant/fixed_eval/exhaustive/c_x_i64"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/fixed_eval/exhaustive/c_x_i64"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "xor-lsb",
+      "id": "warrant/fixed_eval/negctl/exhaustive/op_x_u64/xor-lsb",
+      "op": "op_x_u64",
+      "required_claims": [
+        "warrant/fixed_eval/exhaustive/c_x_u64"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/fixed_eval/exhaustive/c_x_u64"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "flip-result-bit",
+      "id": "warrant/fixed_eval/negctl/exhaustive/op_x_u8/flip-result-bit",
+      "op": "op_x_u8",
+      "required_claims": [
+        "warrant/fixed_eval/exhaustive/c_x_u8"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/fixed_eval/exhaustive/c_x_u8"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "xor-lsb",
+      "id": "warrant/fixed_eval/negctl/exhaustive/op_x_u8/xor-lsb",
+      "op": "op_x_u8",
+      "required_claims": [
+        "warrant/fixed_eval/exhaustive/c_x_u8"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/fixed_eval/exhaustive/c_x_u8"
+        }
+      ],
+      "target_kind": "exhaustive"
+    }
+  ],
+  "controls_shipped": [
+    {
+      "blind_claims": [],
+      "fault": "drop-last-result-byte",
+      "id": "warrant/fixed_eval/negctl/exhaustive/op_bytes/drop-last-result-byte",
+      "op": "op_bytes",
+      "required_claims": [
+        "warrant/fixed_eval/exhaustive/c_bytes"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/fixed_eval/exhaustive/c_bytes"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "flip-result-bit",
+      "id": "warrant/fixed_eval/negctl/exhaustive/op_bytes/flip-result-bit",
+      "op": "op_bytes",
+      "required_claims": [
+        "warrant/fixed_eval/exhaustive/c_bytes"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/fixed_eval/exhaustive/c_bytes",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "truncate-last",
+      "id": "warrant/fixed_eval/negctl/exhaustive/op_bytes/truncate-last",
+      "op": "op_bytes",
+      "required_claims": [
+        "warrant/fixed_eval/exhaustive/c_bytes"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/fixed_eval/exhaustive/c_bytes"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "drop-last-result-byte",
+      "id": "warrant/fixed_eval/negctl/exhaustive/op_bytes2/drop-last-result-byte",
+      "op": "op_bytes2",
+      "required_claims": [
+        "warrant/fixed_eval/exhaustive/c_bytes2"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/fixed_eval/exhaustive/c_bytes2"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "flip-result-bit",
+      "id": "warrant/fixed_eval/negctl/exhaustive/op_bytes2/flip-result-bit",
+      "op": "op_bytes2",
+      "required_claims": [
+        "warrant/fixed_eval/exhaustive/c_bytes2"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/fixed_eval/exhaustive/c_bytes2",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "truncate-last",
+      "id": "warrant/fixed_eval/negctl/exhaustive/op_bytes2/truncate-last",
+      "op": "op_bytes2",
+      "required_claims": [
+        "warrant/fixed_eval/exhaustive/c_bytes2"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/fixed_eval/exhaustive/c_bytes2"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "ignore-high-bit",
+      "id": "warrant/fixed_eval/negctl/exhaustive/op_eq_two/ignore-high-bit",
+      "op": "op_eq_two",
+      "required_claims": [
+        "warrant/fixed_eval/exhaustive/c_eq_two"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/fixed_eval/exhaustive/c_eq_two",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "ignore-high-bit",
+      "id": "warrant/fixed_eval/negctl/exhaustive/op_eq_u64/ignore-high-bit",
+      "op": "op_eq_u64",
+      "required_claims": [
+        "warrant/fixed_eval/exhaustive/c_eq_u64"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/fixed_eval/exhaustive/c_eq_u64",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "invert",
+      "id": "warrant/fixed_eval/negctl/exhaustive/op_eq_u64/invert",
+      "op": "op_eq_u64",
+      "required_claims": [
+        "warrant/fixed_eval/exhaustive/c_eq_u64"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/fixed_eval/exhaustive/c_eq_u64"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "drop-last-result-byte",
+      "id": "warrant/fixed_eval/negctl/exhaustive/op_r/drop-last-result-byte",
+      "op": "op_r",
+      "required_claims": [
+        "warrant/fixed_eval/exhaustive/c_r"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/fixed_eval/exhaustive/c_r",
+          "deferred": "ir.tuple"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "flip-result-bit",
+      "id": "warrant/fixed_eval/negctl/exhaustive/op_r/flip-result-bit",
+      "op": "op_r",
+      "required_claims": [
+        "warrant/fixed_eval/exhaustive/c_r"
+      ],
+      "requires": [
+        "ir.fixed",
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/fixed_eval/exhaustive/c_r",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "missing-error",
+      "id": "warrant/fixed_eval/negctl/exhaustive/op_r/missing-error",
+      "op": "op_r",
+      "required_claims": [
+        "warrant/fixed_eval/exhaustive/c_r"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "chunk": 0,
+          "claim": "warrant/fixed_eval/exhaustive/c_r"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "drop-last-result-byte",
+      "id": "warrant/fixed_eval/negctl/exhaustive/op_r2/drop-last-result-byte",
+      "op": "op_r2",
+      "required_claims": [
+        "warrant/fixed_eval/exhaustive/c_r2"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/fixed_eval/exhaustive/c_r2",
+          "deferred": "ir.tuple"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "flip-result-bit",
+      "id": "warrant/fixed_eval/negctl/exhaustive/op_r2/flip-result-bit",
+      "op": "op_r2",
+      "required_claims": [
+        "warrant/fixed_eval/exhaustive/c_r2"
+      ],
+      "requires": [
+        "ir.fixed",
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/fixed_eval/exhaustive/c_r2",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "flip-result-bit",
+      "id": "warrant/fixed_eval/negctl/exhaustive/op_rfix/flip-result-bit",
+      "op": "op_rfix",
+      "required_claims": [
+        "warrant/fixed_eval/exhaustive/c_rfix"
+      ],
+      "requires": [
+        "ir.fixed",
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/fixed_eval/exhaustive/c_rfix",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "xor-lsb",
+      "id": "warrant/fixed_eval/negctl/exhaustive/op_x_i16/xor-lsb",
+      "op": "op_x_i16",
+      "required_claims": [
+        "warrant/fixed_eval/exhaustive/c_x_i16"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/fixed_eval/exhaustive/c_x_i16",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "flip-result-bit",
+      "id": "warrant/fixed_eval/negctl/exhaustive/op_x_i32/flip-result-bit",
+      "op": "op_x_i32",
+      "required_claims": [
+        "warrant/fixed_eval/exhaustive/c_x_i32"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/fixed_eval/exhaustive/c_x_i32",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "flip-result-bit",
+      "id": "warrant/fixed_eval/negctl/exhaustive/op_x_i64/flip-result-bit",
+      "op": "op_x_i64",
+      "required_claims": [
+        "warrant/fixed_eval/exhaustive/c_x_i64"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/fixed_eval/exhaustive/c_x_i64",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "xor-lsb",
+      "id": "warrant/fixed_eval/negctl/exhaustive/op_x_u64/xor-lsb",
+      "op": "op_x_u64",
+      "required_claims": [
+        "warrant/fixed_eval/exhaustive/c_x_u64"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/fixed_eval/exhaustive/c_x_u64",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "flip-result-bit",
+      "id": "warrant/fixed_eval/negctl/exhaustive/op_x_u8/flip-result-bit",
+      "op": "op_x_u8",
+      "required_claims": [
+        "warrant/fixed_eval/exhaustive/c_x_u8"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/fixed_eval/exhaustive/c_x_u8",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "xor-lsb",
+      "id": "warrant/fixed_eval/negctl/exhaustive/op_x_u8/xor-lsb",
+      "op": "op_x_u8",
+      "required_claims": [
+        "warrant/fixed_eval/exhaustive/c_x_u8"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/fixed_eval/exhaustive/c_x_u8",
+          "deferred": "ir.fixed"
+        }
+      ],
+      "target_kind": "exhaustive"
+    }
+  ],
+  "faults": [
+    {
+      "expr": [
+        "if",
+        [
+          "gt",
+          [
+            "len",
+            [
+              "var",
+              "result"
+            ]
+          ],
+          [
+            "lit",
+            {
+              "type": "Nat",
+              "value": "0"
+            }
+          ]
+        ],
+        [
+          "take",
+          [
+            "var",
+            "result"
+          ],
+          [
+            "sub",
+            [
+              "len",
+              [
+                "var",
+                "result"
+              ]
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "1"
+              }
+            ]
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "Bytes",
+            "value": "00"
+          }
+        ]
+      ],
+      "fault": "drop-last-result-byte",
+      "kind": "post",
+      "op": "op_bytes",
+      "requires": [
+        "ir.core"
+      ]
+    },
+    {
+      "expr": [
+        "if",
+        [
+          "gt",
+          [
+            "len",
+            [
+              "var",
+              "result"
+            ]
+          ],
+          [
+            "lit",
+            {
+              "type": "Nat",
+              "value": "0"
+            }
+          ]
+        ],
+        [
+          "concat",
+          [
+            "be_bytes",
+            [
+              "bit_xor",
+              [
+                "unwrap_or",
+                [
+                  "at",
+                  [
+                    "var",
+                    "result"
+                  ],
+                  [
+                    "lit",
+                    {
+                      "type": "Nat",
+                      "value": "0"
+                    }
+                  ]
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "U8",
+                    "value": "0"
+                  }
+                ]
+              ],
+              [
+                "lit",
+                {
+                  "type": "U8",
+                  "value": "1"
+                }
+              ]
+            ]
+          ],
+          [
+            "drop",
+            [
+              "var",
+              "result"
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "1"
+              }
+            ]
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "Bytes",
+            "value": "01"
+          }
+        ]
+      ],
+      "fault": "flip-result-bit",
+      "kind": "post",
+      "op": "op_bytes",
+      "requires": [
+        "ir.fixed"
+      ]
+    },
+    {
+      "expr": [
+        "if",
+        [
+          "gt",
+          [
+            "len",
+            [
+              "var",
+              "result"
+            ]
+          ],
+          [
+            "lit",
+            {
+              "type": "Nat",
+              "value": "0"
+            }
+          ]
+        ],
+        [
+          "take",
+          [
+            "var",
+            "result"
+          ],
+          [
+            "sub",
+            [
+              "len",
+              [
+                "var",
+                "result"
+              ]
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "1"
+              }
+            ]
+          ]
+        ],
+        [
+          "var",
+          "result"
+        ]
+      ],
+      "fault": "truncate-last",
+      "kind": "post",
+      "op": "op_bytes",
+      "requires": [
+        "ir.core"
+      ]
+    },
+    {
+      "expr": [
+        "if",
+        [
+          "gt",
+          [
+            "len",
+            [
+              "var",
+              "result"
+            ]
+          ],
+          [
+            "lit",
+            {
+              "type": "Nat",
+              "value": "0"
+            }
+          ]
+        ],
+        [
+          "take",
+          [
+            "var",
+            "result"
+          ],
+          [
+            "sub",
+            [
+              "len",
+              [
+                "var",
+                "result"
+              ]
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "1"
+              }
+            ]
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "Bytes",
+            "value": "00"
+          }
+        ]
+      ],
+      "fault": "drop-last-result-byte",
+      "kind": "post",
+      "op": "op_bytes2",
+      "requires": [
+        "ir.core"
+      ]
+    },
+    {
+      "expr": [
+        "if",
+        [
+          "gt",
+          [
+            "len",
+            [
+              "var",
+              "result"
+            ]
+          ],
+          [
+            "lit",
+            {
+              "type": "Nat",
+              "value": "0"
+            }
+          ]
+        ],
+        [
+          "concat",
+          [
+            "be_bytes",
+            [
+              "bit_xor",
+              [
+                "unwrap_or",
+                [
+                  "at",
+                  [
+                    "var",
+                    "result"
+                  ],
+                  [
+                    "lit",
+                    {
+                      "type": "Nat",
+                      "value": "0"
+                    }
+                  ]
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "U8",
+                    "value": "0"
+                  }
+                ]
+              ],
+              [
+                "lit",
+                {
+                  "type": "U8",
+                  "value": "1"
+                }
+              ]
+            ]
+          ],
+          [
+            "drop",
+            [
+              "var",
+              "result"
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "1"
+              }
+            ]
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "Bytes",
+            "value": "01"
+          }
+        ]
+      ],
+      "fault": "flip-result-bit",
+      "kind": "post",
+      "op": "op_bytes2",
+      "requires": [
+        "ir.fixed"
+      ]
+    },
+    {
+      "expr": [
+        "if",
+        [
+          "gt",
+          [
+            "len",
+            [
+              "var",
+              "result"
+            ]
+          ],
+          [
+            "lit",
+            {
+              "type": "Nat",
+              "value": "0"
+            }
+          ]
+        ],
+        [
+          "take",
+          [
+            "var",
+            "result"
+          ],
+          [
+            "sub",
+            [
+              "len",
+              [
+                "var",
+                "result"
+              ]
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "1"
+              }
+            ]
+          ]
+        ],
+        [
+          "var",
+          "result"
+        ]
+      ],
+      "fault": "truncate-last",
+      "kind": "post",
+      "op": "op_bytes2",
+      "requires": [
+        "ir.core"
+      ]
+    },
+    {
+      "fault": "ignore-high-bit",
+      "kind": "pre",
+      "op": "op_eq_two",
+      "requires": [
+        "ir.fixed"
+      ],
+      "rewrites": [
+        {
+          "expr": [
+            "bit_and",
+            [
+              "var",
+              "a"
+            ],
+            [
+              "lit",
+              {
+                "type": "U64",
+                "value": "9223372036854775807"
+              }
+            ]
+          ],
+          "param": "a"
+        },
+        {
+          "expr": [
+            "bit_and",
+            [
+              "var",
+              "b"
+            ],
+            [
+              "lit",
+              {
+                "type": "U64",
+                "value": "9223372036854775807"
+              }
+            ]
+          ],
+          "param": "b"
+        }
+      ]
+    },
+    {
+      "fault": "ignore-high-bit",
+      "kind": "pre",
+      "op": "op_eq_u64",
+      "requires": [
+        "ir.fixed"
+      ],
+      "rewrites": [
+        {
+          "expr": [
+            "bit_and",
+            [
+              "var",
+              "a"
+            ],
+            [
+              "lit",
+              {
+                "type": "U64",
+                "value": "9223372036854775807"
+              }
+            ]
+          ],
+          "param": "a"
+        },
+        {
+          "expr": [
+            "bit_and",
+            [
+              "var",
+              "b"
+            ],
+            [
+              "lit",
+              {
+                "type": "U64",
+                "value": "9223372036854775807"
+              }
+            ]
+          ],
+          "param": "b"
+        }
+      ]
+    },
+    {
+      "expr": [
+        "not",
+        [
+          "var",
+          "result"
+        ]
+      ],
+      "fault": "invert",
+      "kind": "post",
+      "op": "op_eq_u64",
+      "requires": [
+        "ir.core"
+      ]
+    },
+    {
+      "expr": [
+        "match",
+        [
+          "var",
+          "result"
+        ],
+        [
+          [
+            [
+              "ok",
+              [
+                "bind",
+                "ok_payload"
+              ]
+            ],
+            [
+              "ok",
+              [
+                "if",
+                [
+                  "gt",
+                  [
+                    "len",
+                    [
+                      "var",
+                      "ok_payload"
+                    ]
+                  ],
+                  [
+                    "lit",
+                    {
+                      "type": "Nat",
+                      "value": "0"
+                    }
+                  ]
+                ],
+                [
+                  "take",
+                  [
+                    "var",
+                    "ok_payload"
+                  ],
+                  [
+                    "sub",
+                    [
+                      "len",
+                      [
+                        "var",
+                        "ok_payload"
+                      ]
+                    ],
+                    [
+                      "lit",
+                      {
+                        "type": "Nat",
+                        "value": "1"
+                      }
+                    ]
+                  ]
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "Bytes",
+                    "value": "00"
+                  }
+                ]
+              ]
+            ]
+          ],
+          [
+            [
+              "err_any"
+            ],
+            [
+              "var",
+              "result"
+            ]
+          ]
+        ]
+      ],
+      "fault": "drop-last-result-byte",
+      "kind": "post",
+      "op": "op_r",
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ]
+    },
+    {
+      "expr": [
+        "match",
+        [
+          "var",
+          "result"
+        ],
+        [
+          [
+            [
+              "ok",
+              [
+                "bind",
+                "ok_payload"
+              ]
+            ],
+            [
+              "ok",
+              [
+                "if",
+                [
+                  "gt",
+                  [
+                    "len",
+                    [
+                      "var",
+                      "ok_payload"
+                    ]
+                  ],
+                  [
+                    "lit",
+                    {
+                      "type": "Nat",
+                      "value": "0"
+                    }
+                  ]
+                ],
+                [
+                  "concat",
+                  [
+                    "be_bytes",
+                    [
+                      "bit_xor",
+                      [
+                        "unwrap_or",
+                        [
+                          "at",
+                          [
+                            "var",
+                            "ok_payload"
+                          ],
+                          [
+                            "lit",
+                            {
+                              "type": "Nat",
+                              "value": "0"
+                            }
+                          ]
+                        ],
+                        [
+                          "lit",
+                          {
+                            "type": "U8",
+                            "value": "0"
+                          }
+                        ]
+                      ],
+                      [
+                        "lit",
+                        {
+                          "type": "U8",
+                          "value": "1"
+                        }
+                      ]
+                    ]
+                  ],
+                  [
+                    "drop",
+                    [
+                      "var",
+                      "ok_payload"
+                    ],
+                    [
+                      "lit",
+                      {
+                        "type": "Nat",
+                        "value": "1"
+                      }
+                    ]
+                  ]
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "Bytes",
+                    "value": "01"
+                  }
+                ]
+              ]
+            ]
+          ],
+          [
+            [
+              "err_any"
+            ],
+            [
+              "var",
+              "result"
+            ]
+          ]
+        ]
+      ],
+      "fault": "flip-result-bit",
+      "kind": "post",
+      "op": "op_r",
+      "requires": [
+        "ir.fixed",
+        "ir.tuple"
+      ]
+    },
+    {
+      "expr": [
+        "if",
+        [
+          "is_err",
+          [
+            "var",
+            "result"
+          ]
+        ],
+        [
+          "ok",
+          [
+            "var",
+            "d"
+          ]
+        ],
+        [
+          "var",
+          "result"
+        ]
+      ],
+      "fault": "missing-error",
+      "kind": "replace",
+      "op": "op_r",
+      "requires": [
+        "ir.core"
+      ]
+    },
+    {
+      "expr": [
+        "match",
+        [
+          "var",
+          "result"
+        ],
+        [
+          [
+            [
+              "ok",
+              [
+                "bind",
+                "ok_payload"
+              ]
+            ],
+            [
+              "ok",
+              [
+                "if",
+                [
+                  "gt",
+                  [
+                    "len",
+                    [
+                      "var",
+                      "ok_payload"
+                    ]
+                  ],
+                  [
+                    "lit",
+                    {
+                      "type": "Nat",
+                      "value": "0"
+                    }
+                  ]
+                ],
+                [
+                  "take",
+                  [
+                    "var",
+                    "ok_payload"
+                  ],
+                  [
+                    "sub",
+                    [
+                      "len",
+                      [
+                        "var",
+                        "ok_payload"
+                      ]
+                    ],
+                    [
+                      "lit",
+                      {
+                        "type": "Nat",
+                        "value": "1"
+                      }
+                    ]
+                  ]
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "Bytes",
+                    "value": "00"
+                  }
+                ]
+              ]
+            ]
+          ],
+          [
+            [
+              "err_any"
+            ],
+            [
+              "var",
+              "result"
+            ]
+          ]
+        ]
+      ],
+      "fault": "drop-last-result-byte",
+      "kind": "post",
+      "op": "op_r2",
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ]
+    },
+    {
+      "expr": [
+        "match",
+        [
+          "var",
+          "result"
+        ],
+        [
+          [
+            [
+              "ok",
+              [
+                "bind",
+                "ok_payload"
+              ]
+            ],
+            [
+              "ok",
+              [
+                "if",
+                [
+                  "gt",
+                  [
+                    "len",
+                    [
+                      "var",
+                      "ok_payload"
+                    ]
+                  ],
+                  [
+                    "lit",
+                    {
+                      "type": "Nat",
+                      "value": "0"
+                    }
+                  ]
+                ],
+                [
+                  "concat",
+                  [
+                    "be_bytes",
+                    [
+                      "bit_xor",
+                      [
+                        "unwrap_or",
+                        [
+                          "at",
+                          [
+                            "var",
+                            "ok_payload"
+                          ],
+                          [
+                            "lit",
+                            {
+                              "type": "Nat",
+                              "value": "0"
+                            }
+                          ]
+                        ],
+                        [
+                          "lit",
+                          {
+                            "type": "U8",
+                            "value": "0"
+                          }
+                        ]
+                      ],
+                      [
+                        "lit",
+                        {
+                          "type": "U8",
+                          "value": "1"
+                        }
+                      ]
+                    ]
+                  ],
+                  [
+                    "drop",
+                    [
+                      "var",
+                      "ok_payload"
+                    ],
+                    [
+                      "lit",
+                      {
+                        "type": "Nat",
+                        "value": "1"
+                      }
+                    ]
+                  ]
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "Bytes",
+                    "value": "01"
+                  }
+                ]
+              ]
+            ]
+          ],
+          [
+            [
+              "err_any"
+            ],
+            [
+              "var",
+              "result"
+            ]
+          ]
+        ]
+      ],
+      "fault": "flip-result-bit",
+      "kind": "post",
+      "op": "op_r2",
+      "requires": [
+        "ir.fixed",
+        "ir.tuple"
+      ]
+    },
+    {
+      "expr": [
+        "match",
+        [
+          "var",
+          "result"
+        ],
+        [
+          [
+            [
+              "ok",
+              [
+                "bind",
+                "ok_payload"
+              ]
+            ],
+            [
+              "ok",
+              [
+                "bit_xor",
+                [
+                  "var",
+                  "ok_payload"
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "U8",
+                    "value": "1"
+                  }
+                ]
+              ]
+            ]
+          ],
+          [
+            [
+              "err_any"
+            ],
+            [
+              "var",
+              "result"
+            ]
+          ]
+        ]
+      ],
+      "fault": "flip-result-bit",
+      "kind": "post",
+      "op": "op_rfix",
+      "requires": [
+        "ir.fixed",
+        "ir.tuple"
+      ]
+    },
+    {
+      "expr": [
+        "bit_xor",
+        [
+          "var",
+          "result"
+        ],
+        [
+          "lit",
+          {
+            "type": "I16",
+            "value": "1"
+          }
+        ]
+      ],
+      "fault": "xor-lsb",
+      "kind": "post",
+      "op": "op_x_i16",
+      "requires": [
+        "ir.fixed"
+      ]
+    },
+    {
+      "expr": [
+        "bit_xor",
+        [
+          "var",
+          "result"
+        ],
+        [
+          "lit",
+          {
+            "type": "I32",
+            "value": "1"
+          }
+        ]
+      ],
+      "fault": "flip-result-bit",
+      "kind": "post",
+      "op": "op_x_i32",
+      "requires": [
+        "ir.fixed"
+      ]
+    },
+    {
+      "expr": [
+        "bit_xor",
+        [
+          "var",
+          "result"
+        ],
+        [
+          "lit",
+          {
+            "type": "I64",
+            "value": "1"
+          }
+        ]
+      ],
+      "fault": "flip-result-bit",
+      "kind": "post",
+      "op": "op_x_i64",
+      "requires": [
+        "ir.fixed"
+      ]
+    },
+    {
+      "expr": [
+        "bit_xor",
+        [
+          "var",
+          "result"
+        ],
+        [
+          "lit",
+          {
+            "type": "U64",
+            "value": "1"
+          }
+        ]
+      ],
+      "fault": "xor-lsb",
+      "kind": "post",
+      "op": "op_x_u64",
+      "requires": [
+        "ir.fixed"
+      ]
+    },
+    {
+      "expr": [
+        "bit_xor",
+        [
+          "var",
+          "result"
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "1"
+          }
+        ]
+      ],
+      "fault": "flip-result-bit",
+      "kind": "post",
+      "op": "op_x_u8",
+      "requires": [
+        "ir.fixed"
+      ]
+    },
+    {
+      "expr": [
+        "bit_xor",
+        [
+          "var",
+          "result"
+        ],
+        [
+          "lit",
+          {
+            "type": "U8",
+            "value": "1"
+          }
+        ]
+      ],
+      "fault": "xor-lsb",
+      "kind": "post",
+      "op": "op_x_u8",
+      "requires": [
+        "ir.fixed"
+      ]
+    }
+  ],
+  "gate_on": [
+    "ir.core",
+    "ir.fixed",
+    "ir.tuple"
+  ],
+  "gate_shipped": [
+    "ir.core"
+  ],
+  "levels_gate_on": [
+    "ir.core",
+    "ir.fixed",
+    "ir.tuple"
+  ],
+  "levels_shipped": [
+    "ir.core",
+    "ir.fixed",
+    "ir.tuple"
+  ],
+  "module": "fixed_eval",
+  "schema": "warrant-fault-parity-v1"
+}

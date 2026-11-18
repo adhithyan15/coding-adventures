@@ -259,14 +259,16 @@ def test_a_suite_that_admits_nothing_is_a_generation_error():
 
 
 def test_unsupported_suite_cannot_be_planned():
+    # ``ir.fixed`` is evaluated since S10c-1, so the suite of a level the oracle lacks is an
+    # ``ir.data`` one (a list literal)
     spec = lower_document(
         parse_source(
-            b"warrant u v1\n  op f(a: U8) -> U8\n  claim c:\n    forall a: U8. f(a) == bit_not(a)\n"
+            b"warrant u v1\n  op f(a: U8) -> U8\n  claim c:\n    forall a: U8. f(a) == [a]\n"
         )
     )
     with pytest.raises(OracleError) as err:
         SuitePlan(spec, build_program(spec), spec.suites[0])
-    assert err.value.code == "level" and err.value.level == "ir.fixed"
+    assert err.value.code == "level" and err.value.level == "ir.data"
 
 
 def test_budget_demotion_and_refusal_flow_through_the_plan():

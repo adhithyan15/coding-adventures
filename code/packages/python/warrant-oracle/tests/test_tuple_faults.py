@@ -328,16 +328,16 @@ def test_drop_last_result_byte_evaluates_on_core():
     assert evaluate("rawn", "drop-last-result-byte", b"\x01\x02\x03\x04") == b"\x01\x02\x03"
 
 
-def test_the_ir_fixed_forms_are_typed_but_not_evaluated():
+def test_the_ir_fixed_forms_are_evaluated_since_s10c1():
     s = spec()
     r = fault_row(s.ops["res_b"], "flip-result-bit", s.errors)
-    prog = Program({}, s.ops, analyze=True, errors=s.errors)
+    prog = Program({}, s.ops, errors=s.errors)
     tenv = {"d": s.ops["res_b"].params[0][1], "result": s.ops["res_b"].ret}
-    compiled = prog.compile(r["expr"], tenv, False)  # types and costs: the match arms use fixed tags
+    compiled = prog.compile(r["expr"], tenv, False)  # the match arms use fixed tags
     assert compiled.ty.head == "Result"
-    with pytest.raises(OracleError) as err:
-        compiled.fn({"d": b"", "result": ("ok", b"\x01")})
-    assert err.value.level == "ir.fixed"
+    assert compiled.fn({"d": b"", "result": ("ok", b"\x01")}) == ("ok", b"\x00")
+    assert compiled.fn({"d": b"", "result": ("ok", b"")}) == ("ok", b"\x01")
+    assert compiled.fn({"d": b"", "result": ("err", "C")}) == ("err", "C")
 
 
 # -- the gate -----------------------------------------------------------------------------------------------------------

@@ -6209,6 +6209,35 @@ record protection, certificate and revocation policy, and HTTP composition
 remain prerequisites; concrete HTTPS and live-provider readiness remain
 unavailable.
 
+The exact retry record-state wrapper can now be borrowed by an allocation-free
+handshake-record binding that delegates only to the existing repository-owned,
+data-driven record-protection dispatcher. Sealing accepts one borrowed
+handshake message, explicit zero-padding length, the existing ciphertext and
+inner-plaintext policies, caller scratch, and caller output. It fixes the
+protected content type to `Handshake`, consumes the next nonce only under the
+existing dispatcher rules, and returns non-copyable evidence retaining the
+exact state wrapper, plaintext request, and sealed output prefix. Callers
+cannot substitute a detached key, IV, nonce, sequence, AEAD route, content
+type, or output prefix.
+
+Opening retains the exact ciphertext input and state wrapper beside the
+existing authentication-before-release output owner. An authenticated inner
+content type other than `Handshake` is rejected before any content view is
+returned; dropping that rejected opened owner clears the authenticated output
+prefix. Success returns non-copyable evidence exposing only the authenticated
+handshake content, padding length, sender role, selected suite, exact input,
+and retained retry proof. AEAD or policy failure preserves the existing
+redacted categories and nonce-consumption rules.
+
+This binding does not parse or sequence the authenticated handshake message,
+advance its transcript, authenticate CertificateVerify or Finished, process
+alerts, select epochs, perform key updates, validate certificates, establish
+trust, verify a hostname, enforce revocation, perform I/O, authorize HTTP or
+OAuth transport, or open a network connection. Authenticated handshake
+progression, certificate and revocation policy, and HTTP/TLS transport
+composition remain prerequisites; concrete HTTPS and live-provider readiness
+remain unavailable.
+
 An allocation-free `http1-fixed-request-body` prerequisite now binds one
 caller-borrowed, potentially sensitive request body to its exact byte length
 under an explicit caller ceiling. It encodes that length in canonical shortest

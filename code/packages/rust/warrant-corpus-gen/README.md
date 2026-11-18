@@ -273,11 +273,12 @@ claims of [D28].
 **S10t-2 lowers `ir.tuple`, so no claim is blocked on it any more** (it was 71 claims): they are
 emittable, `ir.fixed`, `ir.data`, or (3 `wasm-leb128` claims) a 16.2 item 4 descriptor refusal. The
 generator's census now equals the oracle's exactly for ct-compare, gf256, logic-gates, lzw and
-x25519; the two that differ do so for non-tuple causes (`tests/census.rs`): wasm-leb128 (oracle 18
-`ir.core`: 13 here + 3 `16.2` + 2 `W0701` impure guard applied at lowering) and arithmetic (10 claims
-over record/variant-typed ops, which the oracle lowers by counting `ir.data` in `requires` and the
-generator refuses until S10d). hash-functions' 6 `W0701` and zeroize's `inout` are also
-generator-only refusals.
+x25519; the ones that differ do so for non-tuple causes (`tests/census.rs`): wasm-leb128 (oracle 16
+`ok` + 2 `W0701`: 13 `ok` + 3 `16.2` here, the 2 impure-guard `W0701` agree since CV2-F1), arithmetic
+(10 claims over record/variant-typed ops, which the oracle lowers by counting `ir.data` in `requires`
+and the generator refuses until S10d) and hash-functions (the 6 impure-guard claims that also use a
+fixed-width built-in: the oracle names `ir.fixed`, a level wins, the generator `W0701`; both refuse).
+zeroize's `inout` is a generator-only refusal.
 
 Only **ct-compare and gf256 are emittable whole** (a document is emitted whole or not at all).
 For S10's decisions on the five divergences of VER04r 16.2: **no adopter binder is a `nat_count`,
@@ -341,8 +342,8 @@ present) and each new tag costs `1 +` its operands.
 **Nothing is evaluated or emitted.** A unit whose `requires` holds `ir.fixed` is refused, naming the
 level, by `lower_document`, the census and therefore `generate` (the binary exits 2, as for every
 refusal, and writes nothing); `eval` refuses `Ir::Fixed` too. `lower_document_with_fixed` returns the
-lowered IR for the dump only, and skips VER04r 4.4's impure-guard refusal, which the oracle applies when
-it evaluates a suite and not when it lowers it.
+lowered IR for the dump only, with every other rule applied: since CV2-F1 the oracle also refuses an
+impure guard at lowering, so there is no dump-only exception.
 
 `tests/fixed_parity.rs` lowers the oracle's `fixed_forms_v1.warrant` (all 35 built-ins at every width)
 and demands the text of `oracle_view_v1` equal the oracle's committed `fixed_forms_v1.oracle-lowering.json`
@@ -444,6 +445,10 @@ tool computes the reason, written to the conditional `omitted_examples` key
   over 4,096 bytes (also under Ok)                    -> value-over-limit
   anything else                                       -> profile error: a stale line
 ```
+
+Without a line, since CV2-F1, an example whose argument or pure value holds a `Bytes` over 4,096 bytes
+(itself, under `Ok` or in a tuple) is refused at emission (code `limit`), after the D19 and D18 checks.
+A size error while evaluating a callee's `admit` refuses even with a line (it is not `value-over-limit`).
 
 An omitted example is **still lowered** (a level refusal refuses the document), but it is not
 evaluated for `cases.tfv`, not encoded and not admit-checked beyond the decision; its shape
