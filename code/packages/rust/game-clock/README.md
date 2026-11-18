@@ -33,7 +33,8 @@ To achieve bit-exact reproducibility across CPU architectures and operating syst
   - If a frame backlog accumulates more than `max_frame_steps` (default 8 steps), the step count is clamped to `max_frame_steps`, `spiral_of_death_clamped` is set to `true`, and the excess backlog is drained so the clock recovers immediately on the next frame.
 - **Divide-by-Zero Immunity (`CWE-369`):** Rejects `fixed_dt_ns == 0` and `from_hz(0, ...)` with `Err(ClockError::ZeroFixedTimestep)`.
 - **Integer Overflow Immunity (`CWE-190`):** All counters (`tick_count`, `frame_count`, `elapsed_sim_ns`, `elapsed_wall_ns`, `total_dropped_ns`) use checked arithmetic returning `Err(ClockError::TimestampOverflow)`.
-- **26-CWE Matrix Closure (`VER15`):** Complete formal verification and exclusion matrix documented in `assurance_report.json`.
+- **Assurance status (`VER15`):** The checked-in `assurance_report.json` is report-only; it does not establish 26-CWE closure. Its seven claims have 1,000-case property entries without linked evidence, null exhaustive/fuzz/proof fields, and two unapproved exemptions. See `GAME-BACKLOG.md` items `GBL-003`, `GBL-004`, and `GBL-007` for the remaining verification work.
+- **Constructor model execution (`GBL-003a`):** A Rust integration test checks the pure Warrant ground model against the exported `new_clock` API over 648 boundary configurations and seeded, stratified property inputs. This finite execution is not a universal proof, does not prove the Warrant model is equivalent for every `GameClockConfig`, and does not cover `validate_state` or `advance_frame`.
 
 ---
 
