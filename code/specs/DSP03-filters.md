@@ -214,16 +214,118 @@ native floating-point proofs, or package-wide exhaustive assurance; those
 remain separate backlog work.
 
 For this version, the root has exactly `schema_version`, `input`,
-`comparison`, and `cases`; the version is integer `1` (not boolean), and the
-comparison string is exactly `finite_exact_numeric_equal_zero_sign_ignored`.
+`comparison`, and `cases`; the decoded finite numeric version must equal `1`
+(booleans are rejected), and the comparison string is exactly
+`finite_exact_numeric_equal_zero_sign_ignored`.
 The input must equal the 16-sample unit impulse. The only valid ID/operation
 pairs are `biquad.process.impulse16` / `biquad.process` and
 `sosfilt.impulse16.two_sections` / `sosfilt`. The first record has exactly
-one six-number section, 16 expected samples, and positive non-boolean integer
-`chunk_lengths` equal to `[3, 1, 12]`; the second has exactly two six-number
-sections and 16 expected samples. Every numeric slot must convert to a finite
-binary64 value; booleans are not numbers in this fixture contract. JSON
-objects with duplicate field names are rejected by the Python loader.
+one six-number section, 16 expected samples, and positive non-boolean numeric
+`chunk_lengths` equal by decoded value to `[3, 1, 12]`; the second has exactly
+two six-number sections and 16 expected samples. Every numeric slot must convert to a finite
+binary64 value; booleans are not numbers in this fixture contract. Decoded
+numeric values for `schema_version` and `chunk_lengths` use finite binary64
+numeric equality to the required integers, independent of whether the JSON
+token spells the value as `1`, `1.0`, or `1e0`. The Python loader converts
+accepted chunk lengths to Python integers before slicing. Both language
+loaders reject booleans, strings, nonintegral values, nonfinite values, and
+structural values that do not equal the required small integer. General
+numeric slots must be finite binary64 values; cross-lane decoders then apply
+the declared f64-to-f32 exactness check. JSON objects with duplicate field
+names are rejected by the Python loader.
+
+The canonical fixture uses integer tokens for its version and chunk lengths.
+Literal JSON controls also cover equivalent decimal and exponent spellings
+(`1.0`, `1e0`, and `[3.0, 1e0, 12]`) and reject values such as `1.5`, `true`,
+and strings for structural fields. This is decoded-value compatibility for
+the fixed schema, not a promise that arbitrary JSON documents have identical
+lexical handling across languages. Rust's AF-03 fixture adapter accepts an
+integer or floating parser value only when its finite binary64 value equals
+the required integer exactly.
+
+#### AF-02c / Shared fixture integer decoding
+
+AF-02c resolves the version-1 structural-number ambiguity before adding a
+third consumer. Required integer-valued fields are checked by decoded finite
+binary64 value, not by JSON token category; booleans and strings remain
+invalid. Python canonicalizes accepted chunk lengths to integers before using
+them as slice indices. Rust must preserve the same value semantics when its
+strict JSON parser distinguishes integer and floating-number nodes.
+
+The Rust test adapter uses the existing bounded JSON parser and does not
+change that parser or the fixture. If a legal plain integer token exceeds the
+parser's signed-64-bit integer representation, the adapter may retry after
+changing only that complete numeric token to a decimal-exponent spelling with
+the same binary64 parse result. The parser's reported byte offset is only a
+candidate locator. The adapter independently verifies signed-64-bit overflow,
+the complete `-?[1-9][0-9]*` token, and JSON value delimiters (BOF, `[`, or
+`:` before it; EOF, `,`, `]`, or `}` after it), allowing only JSON whitespace
+around delimiters. It then requires a finite binary64 parse before insertion
+of `e0`. It must not rewrite fractions, existing exponents, strings,
+malformed numbers, or values whose binary64 parse is non-finite. Reparse the
+whole document with the same depth limit after each bounded repair, so
+duplicate keys and all other syntax errors remain visible. At most 70 repairs
+are permitted for this fixed fixture schema. Tests pin positive/negative
+overflow offsets, including a UTF-8 prefix, and cover accepted wide integers
+plus fraction, exponent, quoted, malformed, overflow-to-infinity,
+duplicate-key, and retry-limit controls. This test-only adaptation is not a
+general JSON parser or production API and makes no offset claim for other
+parser implementations.
+
+### Checked Rust Biquad and SOS primitives (AF-03)
+
+AF-03 adds public Rust-only checked primitives while leaving the existing
+Python and TypeScript entry points and Rust `iir` function unchanged. The
+intended crate-root API is `Biquad::new([f32; 6])`,
+`Biquad::process_sample(f32)`, `Biquad::process(&[f32])`, `Biquad::reset()`,
+and one-shot `sosfilt(&[[f32; 6]], &[f32])`, with fallible construction and
+processing using the existing `FilterError` variants. Section slots are
+`[b0,b1,b2,a0,a1,a2]`; normalized coefficients are computed by directly
+dividing each of the five non-`a0` values by finite, nonzero `a0`. Reject
+non-finite raw or normalized coefficients. Do not add epsilon thresholds or
+pole-stability rejection: finite unstable filters are accepted until an
+operation produces a non-finite result or state candidate.
+
+For each sample, use Direct Form II Transposed:
+`y=b0*x+z1`, `z1'=b1*x-a1*y+z2`, and `z2'=b2*x-a2*y`. Reject a non-finite
+input, output, or either candidate delay using the existing invalid
+coefficient error. A sample commits both delays only on success. A block
+evaluates against local candidate state and commits only after every sample
+succeeds; any returned `Err` leaves its entry state unchanged. `reset()` sets
+both delays to positive zero. This failure-atomic statement applies to
+returned errors; it does not promise recovery from allocation failure, panic,
+or process termination and is not a no-panic or heap-bound proof.
+
+Empty signal is rejected. Enforce `MAX_SAMPLES` per block and `MAX_ORDER` as
+the maximum number of SOS sections (1024); do not introduce a product cap.
+For `sosfilt`, check empty signal, sample cap, and section cap in that order;
+then validate all sections in order before evaluating samples. Construction
+checks raw coefficients in slot order, rejects zero `a0`, then checks
+normalized coefficients in `[b0,b1,b2,a1,a2]` order. Processing checks each
+input sample and its output/delay candidates in input order. Check bounds
+before coefficient- or sample-proportional work. SOS is one-shot, starts each
+section with zero delays, processes sections in order, and returns a complete
+finite vector or an error. Empty sections with nonempty finite input return an
+identity copy; empty input is rejected even when sections are empty.
+
+Rust `f32` checked behavior and errors are intentionally not claimed to match
+Python/TypeScript binary64 behavior beyond the selected AF-02 fixture cases.
+The fixture consumer must use the actual shared JSON file and public crate
+exports, reject duplicate keys and malformed shapes, convert each numeric
+slot to finite `f64` then finite `f32`, and require casting that `f32` back to
+`f64` to equal the parsed value (positive and negative zero compare equal).
+Golden values are never rounded to make them fit `f32`.
+
+AF-03 acceptance separates the fixed 32,768-partition fixture run from
+deterministic properties, general state/error properties, and fuzz trials.
+The exact-oracle property families use integer-derived dyadic sections and
+inputs with bounded lengths; the oracle computes integer recurrence values
+first and only then converts the exact dyadic result to `f32`. A separate
+feedback family checks nontrivial recurrence and shrinks underlying integer
+parameters rather than arbitrary floats. VER05/VER06 harness results and
+fault mutations are evidence for their stated bounded domains only. Native
+floating-point/source bindings, exhaustive `f32` arithmetic, SAT/SMT proofs,
+and package-wide verification remain release-blocking.
 
 ### Biquad/SOS failure and state-commit characterization (AF-02a)
 
