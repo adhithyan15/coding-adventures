@@ -23,11 +23,22 @@ mutably borrow the state through that wrapper, but cannot detach it from the
 complete retry proof or create a second sequence-zero state for the same
 sender through this boundary.
 
-This package derives one direction's handshake key and IV and can create the
-matching record state. It does not advance the transcript, authenticate
-CertificateVerify or Finished, invoke an AEAD, protect records, validate
-certificates, establish trust, verify hostnames, enforce revocation, perform
-I/O, authorize HTTP or OAuth, or provide TLS, HTTPS, or live-provider readiness.
+The exact state wrapper can also seal or open one retry-handshake record through
+the repository-owned record dispatcher. Sealing fixes the authenticated inner
+content type to `handshake` and returns a proof that retains the exact state,
+plaintext request, and sealed output prefix. Opening authenticates before it
+returns content, rejects an authenticated non-handshake content type, and
+returns a proof retaining the exact state, ciphertext input, and wipe-on-drop
+opened owner. Both proof types keep the borrowed state and record buffers from
+being reused or mutated while live. Record sequence and failure behavior remain
+the dispatcher's existing policy.
+
+This package derives one direction's handshake key and IV, creates matching
+record state, and protects exact retry-handshake records in caller-owned
+buffers. It does not advance the transcript, authenticate CertificateVerify or
+Finished, validate certificates, establish trust, verify hostnames, enforce
+revocation, perform I/O, authorize HTTP or OAuth, or provide TLS, HTTPS, or
+live-provider readiness.
 
 ## Verification
 

@@ -8,14 +8,18 @@ use tls13_client_hello_message::{decode_client_hello, ClientHelloLimits};
 use tls13_extension_block::ExtensionBlockLimits;
 use tls13_extension_context_policy::{ExtensionContextPolicy, STANDARD_TLS13_EXTENSION_RULES};
 use tls13_handshake_traffic_secrets::HandshakeTrafficSecretStorage;
+use tls13_inner_plaintext::Tls13InnerPlaintextPolicy;
 use tls13_key_schedule::BaseSecretStorage;
 use tls13_key_share::KeyShareLimits;
 use tls13_named_group_policy::{NamedGroup, NamedGroupPolicy};
-use tls13_record_protection_state::RecordProtectionStateError;
+use tls13_record::{Tls13CiphertextPolicy, TlsContentType};
+use tls13_record_protection::{open_tls13_record, seal_tls13_record, Tls13Plaintext};
+use tls13_record_protection_state::{RecordProtectionState, RecordProtectionStateError};
 use tls13_retry_handshake_traffic_key_material_binding::{
-    bind_retry_handshake_traffic_key_material, HandshakeTrafficSender,
-    RetryHandshakeRecordProtectionStateBindingError, RetryHandshakeRecordProtectionStateIssuer,
-    RetryHandshakeTrafficKeyMaterialBindingError,
+    bind_retry_handshake_traffic_key_material, open_retry_handshake_record,
+    seal_retry_handshake_record, HandshakeTrafficSender, RetryHandshakePlaintext,
+    RetryHandshakeRecordBindingError, RetryHandshakeRecordProtectionStateBindingError,
+    RetryHandshakeRecordProtectionStateIssuer, RetryHandshakeTrafficKeyMaterialBindingError,
 };
 use tls13_retry_handshake_traffic_secrets_binding::bind_retry_handshake_traffic_secrets;
 use tls13_retry_key_schedule_binding::bind_retry_key_schedule;
@@ -326,22 +330,143 @@ fn derives_both_senders_from_and_retains_exact_retry_evidence() {
             RetryHandshakeRecordProtectionStateBindingError::SenderAlreadyIssued
         );
 
+        let ciphertext_policy = Tls13CiphertextPolicy::new(1024).unwrap();
+        let inner_policy = Tls13InnerPlaintextPolicy::new(
+            &[TlsContentType::Handshake, TlsContentType::Alert],
+            1008,
+        )
+        .unwrap();
+
+        let client_prk = HkdfPrk::import_exact(
+            fixed_hash(suite),
+            issuer.traffic_secrets().traffic_secrets().client_secret(),
+        )
+        .unwrap();
+        let mut peer_client_storage = TrafficKeyMaterialStorage::new(suite).unwrap();
+        let peer_client_material =
+            derive_traffic_key_material(&client_prk, &mut peer_client_storage).unwrap();
+        let mut peer_client_state = RecordProtectionState::new(peer_client_material).unwrap();
+
+        let mut client_scratch = [0xa5; 128];
+        let mut client_wire = [0xcc; 160];
+        let client_used;
         {
-            let first = client_state.record_state_mut().reserve_next().unwrap();
-            assert_eq!(first.sequence_number(), 0);
-            assert_eq!(first.key(), expected_client.0);
-            assert_eq!(first.nonce(), expected_client.1);
-            assert_eq!(first.selected_suite(), suite);
+            let sealed = seal_retry_handshake_record(
+                &mut client_state,
+                &ciphertext_policy,
+                &inner_policy,
+                RetryHandshakePlaintext::new(b"client retry flight", 3),
+                &mut client_scratch,
+                &mut client_wire,
+            )
+            .unwrap();
+            assert!(core::ptr::eq(
+                sealed.traffic_secrets(),
+                issuer.traffic_secrets()
+            ));
+            assert_eq!(sealed.sender(), HandshakeTrafficSender::Client);
+            assert_eq!(sealed.selected_suite(), suite);
+            assert_eq!(sealed.content(), b"client retry flight");
+            assert_eq!(sealed.padding_length(), 3);
+            assert_eq!(sealed.records_used(), 1);
+            assert_eq!(&sealed.output()[..3], &[23, 3, 3]);
+            client_used = sealed.output().len();
+            let debug = format!("{sealed:?}");
+            assert!(debug.contains("[RETAINED]"));
+            assert!(debug.contains("[REDACTED]"));
+            assert!(!debug.contains("client retry flight"));
         }
+        assert_eq!(client_scratch[..23], [0; 23]);
+
+        let mut peer_client_opened = [0x5a; 128];
         {
-            let first = server_state.record_state_mut().reserve_next().unwrap();
-            assert_eq!(first.sequence_number(), 0);
-            assert_eq!(first.key(), expected_server.0);
-            assert_eq!(first.nonce(), expected_server.1);
-            assert_eq!(first.selected_suite(), suite);
+            let opened = open_tls13_record(
+                &mut peer_client_state,
+                &ciphertext_policy,
+                &inner_policy,
+                &client_wire[..client_used],
+                &mut peer_client_opened,
+            )
+            .unwrap();
+            assert_eq!(opened.content_type(), TlsContentType::Handshake);
+            assert_eq!(opened.content(), b"client retry flight");
+            assert_eq!(opened.padding_length(), 3);
         }
+        assert_eq!(peer_client_opened[..23], [0; 23]);
+
+        let server_prk = HkdfPrk::import_exact(
+            fixed_hash(suite),
+            issuer.traffic_secrets().traffic_secrets().server_secret(),
+        )
+        .unwrap();
+        let mut peer_server_storage = TrafficKeyMaterialStorage::new(suite).unwrap();
+        let peer_server_material =
+            derive_traffic_key_material(&server_prk, &mut peer_server_storage).unwrap();
+        let mut peer_server_state = RecordProtectionState::new(peer_server_material).unwrap();
+        let mut server_scratch = [0xa5; 128];
+        let mut server_wire = [0xcc; 160];
+        let server_used = seal_tls13_record(
+            &mut peer_server_state,
+            &ciphertext_policy,
+            &inner_policy,
+            Tls13Plaintext::new(TlsContentType::Handshake, b"server retry flight", 5),
+            &mut server_scratch,
+            &mut server_wire,
+        )
+        .unwrap();
+        let mut server_opened = [0x5a; 128];
+        {
+            let opened = open_retry_handshake_record(
+                &mut server_state,
+                &ciphertext_policy,
+                &inner_policy,
+                &server_wire[..server_used],
+                &mut server_opened,
+            )
+            .unwrap();
+            assert!(core::ptr::eq(
+                opened.traffic_secrets(),
+                issuer.traffic_secrets()
+            ));
+            assert_eq!(opened.sender(), HandshakeTrafficSender::Server);
+            assert_eq!(opened.selected_suite(), suite);
+            assert_eq!(opened.input(), &server_wire[..server_used]);
+            assert_eq!(opened.content(), b"server retry flight");
+            assert_eq!(opened.padding_length(), 5);
+            assert_eq!(opened.records_used(), 1);
+            let debug = format!("{opened:?}");
+            assert!(debug.contains("[RETAINED]"));
+            assert!(debug.contains("[REDACTED]"));
+            assert!(!debug.contains("server retry flight"));
+        }
+        assert_eq!(server_opened[..25], [0; 25]);
+
+        let alert_used = seal_tls13_record(
+            &mut peer_server_state,
+            &ciphertext_policy,
+            &inner_policy,
+            Tls13Plaintext::new(TlsContentType::Alert, &[2, 40], 2),
+            &mut server_scratch,
+            &mut server_wire,
+        )
+        .unwrap();
+        server_opened.fill(0x5a);
+        assert_eq!(
+            open_retry_handshake_record(
+                &mut server_state,
+                &ciphertext_policy,
+                &inner_policy,
+                &server_wire[..alert_used],
+                &mut server_opened,
+            )
+            .unwrap_err(),
+            RetryHandshakeRecordBindingError::UnexpectedContentType
+        );
+        assert_eq!(server_opened[..5], [0; 5]);
+        assert!(server_opened[5..].iter().all(|byte| *byte == 0x5a));
+
         assert_eq!(client_state.record_state().records_used(), 1);
-        assert_eq!(server_state.record_state().records_used(), 1);
+        assert_eq!(server_state.record_state().records_used(), 2);
 
         let state_debug = format!("{client_state:?}");
         assert!(state_debug.contains("[RETAINED]"));
@@ -505,4 +630,11 @@ fn errors_are_stable_and_payload_free() {
     );
     assert!(record_state.source().is_some());
     assert!(!format!("{record_state:?}").contains("retry-key-material"));
+
+    let unexpected = RetryHandshakeRecordBindingError::UnexpectedContentType;
+    assert_eq!(
+        unexpected.to_string(),
+        "TLS 1.3 retry record authenticated with a non-handshake content type"
+    );
+    assert!(unexpected.source().is_none());
 }
