@@ -1366,7 +1366,7 @@ and capability strengths are not withheld for class K (VER29 section 7.2.1).
 | Tool | Class | Home | What it does |
 |---|---|---|---|
 | `vos-manifest` | P (parser) | `code/packages/rust/vos-manifest` | parsers and canonical emitters for `contract.vos`, `profile.vos`, `profile.lock`; total, bounded, fail closed, a fuzz target per parser (VER06, as VOS-D001 requires of EMU00); `alloc` allowed (VOS01 section 1.6) |
-| `vos-link` | H (host) | `code/programs/rust/vos-link` | `gen-doc`, `check-doc`, `check-component` (VOS-039a, VOS04 section 5.6), `check-profile` (`--write-lock`), `check-owners`; reads files; the image build command and its gate are VOS22 |
+| `vos-link` | H (host) | `code/programs/rust/vos-link` | `gen-doc`, `check-doc`, `gen-build` and `check-component` (VOS-039a, VOS04 section 5.6), `check-profile` (`--write-lock`), `check-owners`; reads files; the image build command and its gate are VOS22 |
 | `vos-shape-check` | tool (class H) | `code/packages/rust/vos-shape-check` | SH1-SH15, SH17, SH18, class tags; uses the VER08a lexer as a **library**; reads each crate's class from its README (VOS01 section 1.6) |
 
 **Do not add modes to `ca-capability-analyzer`.** A change to that crate selects
@@ -1388,7 +1388,8 @@ Commands, as the CI invocation will read them:
 ```text
 vos-link gen-doc     code/packages/rust/vos-ready-bitmap            # writes code/specs/vos-ready-bitmap.warrant
 vos-link check-doc   code/packages/rust/vos-ready-bitmap            # exit 1 on any drift
-vos-link check-component code/packages/rust/vos-ready-bitmap        # the component file set, BUILD lines, guards, selection row, coverage floor (VOS04 section 5.6)
+vos-link gen-build   code/packages/rust/vos-ready-bitmap            # writes the canonical region of BUILD and BUILD_windows (VOS04 section 5.6)
+vos-link check-component code/packages/rust/vos-ready-bitmap        # file set, BUILD byte-equal to gen-build's, selection row, coverage floor, manifest
 vos-link check-profile profiles/rtos-min/profile.vos [--write-lock]
 vos-link check-owners                                                # CODEOWNERS covers the authority files (section 7.4)
 ```
