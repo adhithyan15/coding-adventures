@@ -232,11 +232,12 @@ const (
 // node is one element of the compiled grammar. It is a flat union: each kind
 // uses only the fields it needs.
 type node struct {
-	kind       nodeKind
-	subs       []*node // kSeq, kAlt
-	sub        *node   // kRep, kOpt, kGroup, kPosLook, kNegLook, kOneOrMore, kSepRep
-	sep        *node   // kSepRep
-	atLeastOne bool
+	kind          nodeKind
+	leadingTokens uint8   // kAlt: cached leading direct-token run, capped at 255
+	subs          []*node // kSeq, kAlt
+	sub           *node   // kRep, kOpt, kGroup, kPosLook, kNegLook, kOneOrMore, kSepRep
+	sep           *node   // kSepRep
+	atLeastOne    bool
 
 	rule int32 // kRule: rule id, or -1 if the name is undefined
 
@@ -373,6 +374,12 @@ func (c *Compiled) compileElement(el grammartools.GrammarElement) *node {
 		n := &node{kind: kAlt, subs: make([]*node, len(e.Choices))}
 		for i, s := range e.Choices {
 			n.subs[i] = c.compileElement(s)
+		}
+		if runEnd := leadingTokenRunEnd(n.subs); runEnd >= 2 {
+			if runEnd > 255 {
+				runEnd = 255
+			}
+			n.leadingTokens = uint8(runEnd)
 		}
 		return n
 	case grammartools.Repetition:
@@ -1415,7 +1422,15 @@ func (s *parseState) match(n *node) bool {
 
 	case kAlt:
 		cm := s.curMax
-		for _, choice := range n.subs {
+		choices := n.subs
+		next := 0
+		if runEnd := int(n.leadingTokens); runEnd >= 2 {
+			if s.matchLeadingTokenRun(choices[:runEnd], save) {
+				return true
+			}
+			next = runEnd
+		}
+		for _, choice := range choices[next:] {
 			s.pos = save
 			if s.match(choice) {
 				return true
@@ -1554,6 +1569,63 @@ func (s *parseState) match(n *node) bool {
 	}
 
 	return false // kFail
+}
+
+// leadingTokenRunEnd returns the end of an initial run of direct token
+// alternatives that all use the same newline policy. It runs only while
+// compiling a grammar. The 255-choice cap fits the compact cached field and
+// leaves any longer suffix to the ordinary matcher. Keeping this to the
+// leading run means a preceding nonterminal choice can set the sticky
+// resource-limit flag before later alternatives are considered, exactly as in
+// the generic matcher.
+func leadingTokenRunEnd(choices []*node) int {
+	if len(choices) < 2 || choices[0].kind != kTok {
+		return 0
+	}
+	skipNL := choices[0].skipNL
+	end := 1
+	for end < len(choices) && end < 255 && choices[end].kind == kTok && choices[end].skipNL == skipNL {
+		end++
+	}
+	if end < 2 {
+		return 0
+	}
+	return end
+}
+
+// matchLeadingTokenRun tries direct token alternatives using one lookahead.
+// Each branch still contributes its expected token in the original order when
+// it fails; the whole run restores the pre-skip position if none matches.
+func (s *parseState) matchLeadingTokenRun(choices []*node, save int) bool {
+	s.pos = save
+	if choices[0].skipNL {
+		s.skipNewlines()
+	}
+	tokenPos := s.pos
+	t := s.tok()
+	tn := t.TypeName
+	if tn == "" {
+		tn = tokenTypeName(*t)
+	}
+
+	for _, choice := range choices {
+		// The run contains only kTok nodes and cannot itself set a resource
+		// limit, but keep the sticky refusal guard explicit at this boundary.
+		if s.exceeded {
+			s.pos = save
+			return false
+		}
+		if tn == choice.name || (t.Type == choice.tokType && choice.tokType != lexer.TokenName) {
+			s.pos = tokenPos
+			s.stack = append(s.stack, int32(tokenPos))
+			s.advance()
+			return true
+		}
+		s.pos = tokenPos
+		s.recordFailure(choice.exp)
+	}
+	s.pos = save
+	return false
 }
 
 func (s *parseState) matchToken(n *node) bool {

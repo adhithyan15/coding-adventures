@@ -2,10 +2,11 @@
 
 The templates (``xor-lsb``, ``ignore-high-bit``, ``flip-result-bit``, ``drop-last-result-byte`` and
 the shipped ``truncate-last``) are instantiated as data and written exactly as section 8.2 prints
-them; since this slice the evaluator can run them.  The **gate stays closed**: ``IMPLEMENTED`` is
-``("ir.core",)`` until the atomic flip (S10c, D29), a control whose fault needs ``ir.fixed`` records
-``deferred`` witnesses and only a library parameter opens it.  The tests open it to check the witness
-search against a brute-force search.
+them; since this slice the evaluator can run them.  Since the atomic flip (S10c, D29) the shipped gate
+``IMPLEMENTED`` is open to ``ir.fixed`` and ``ir.tuple``; the closed gate ``("ir.core",)`` stays
+reachable through the library parameter, and a control whose fault needs ``ir.fixed`` then records
+``deferred`` witnesses.  The tests check both gates and the witness search against a brute-force
+search.
 """
 
 from __future__ import annotations
@@ -275,8 +276,8 @@ FIXED_FAULTS = [
 ]
 
 
-def test_the_shipped_gate_is_ir_core_only_and_defers_every_ir_fixed_fault():
-    assert IMPLEMENTED == ("ir.core",)
+def test_the_shipped_gate_is_open_and_the_closed_gate_defers_every_ir_fixed_fault():
+    assert IMPLEMENTED == ("ir.core", "ir.fixed", "ir.tuple")
     shipped = controls(("ir.core",), FIXED_FAULTS)
     for key, control in shipped.items():
         level = next((lv for lv in control["requires"] if lv != "ir.core"), None)
@@ -311,7 +312,7 @@ def test_a_single_library_parameter_opens_the_gate_and_nothing_else_does():
     assert "implemented" in inspect.signature(derive).parameters
     assert "implemented" in inspect.signature(faults.derive_controls).parameters
     assert "implemented" not in inspect.getsource(cli)
-    assert faults.IMPLEMENTED == ("ir.core",)
+    assert faults.IMPLEMENTED == ("ir.core", "ir.fixed", "ir.tuple")
 
 
 # -- the witness search against brute force ------------------------------------------------------------------
@@ -341,7 +342,7 @@ def test_the_ct_compare_eq_u64_witness_is_a_equals_zero_b_equals_two_to_the_63()
     cid = "warrant/ct_compare/negctl/exhaustive/eq_u64/ignore-high-bit"
     claim = "warrant/ct_compare/exhaustive/eq_u64_agrees"
     row = next(c for c in shipped.corpus["controls"] if c["id"] == cid)
-    assert row["slim_witness"] == [{"claim": claim, "deferred": "ir.fixed"}]  # the committed fixture
+    assert row["slim_witness"] == [{"claim": claim, "deferred": "ir.fixed"}]  # the closed gate (pre-flip fixture)
     row = next(c for c in opened.corpus["controls"] if c["id"] == cid)
     assert row["slim_witness"] == [{"claim": claim, "chunk": 0}]
     assert row["requires"] == ["ir.fixed"] and row["required_claims"] == [claim]

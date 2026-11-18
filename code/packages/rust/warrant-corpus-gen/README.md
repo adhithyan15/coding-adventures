@@ -26,8 +26,9 @@ slice S3). It reads a `.warrant` specification and will write the language-neutr
 > D25 and D26 are described (`nat_shift`, the signed and the 16-bit `fx_edge`), the `ir.fixed` fault
 > templates are evaluable, and `generate` emits `ir.fixed` documents. The generator reproduces the
 > five dumps of the oracle's `fixed-eval-v1` (lowering, evaluation, faults, values, domains) byte for
-> byte (see "`ir.fixed` evaluation (S10c-2)"). The **fault gate stays closed** until the flip (S10c),
-> so a control that needs `ir.fixed` is still `deferred` and the ct-compare fixture does not move.
+> byte (see "`ir.fixed` evaluation (S10c-2)"). The **fault gate was opened by the flip (S10c, 0.6.0)**:
+> `SHIPPED_GATE` is `ir.core`, `ir.fixed` and `ir.tuple`, so a control that needs `ir.fixed` or `ir.tuple` has a
+> witness chunk, and the ct-compare `eq_u64/ignore-high-bit` control is live.
 
 ## How it fits
 
@@ -320,8 +321,9 @@ over sized operands flow to `Bytes<N>` everywhere (A.1).
 Faults: `ok-as-err`, `drop-consumed`, `swap-components`, the tuple-payload `missing-error`, and the bare
 and `Ok` forms of `flip-result-bit` / `drop-last-result-byte`, in the exact 8.2 JSON; a fault's
 `requires` is the sorted union of its template's levels and its op's types (R9). Fault evaluation is
-gated to `ir.core` (`emit::generate_gated` is the library parameter; the flip, S10c, turns it on), so
-the shipped controls of a tuple fault are `deferred`, naming the first unimplemented level (R12).
+gated by `SHIPPED_GATE`, open to `ir.core`, `ir.fixed` and `ir.tuple` since the flip (S10c, 0.6.0); under a
+narrower gate passed to `emit::generate_gated` (the closed gate is `&[Level::Core]`) the controls of a tuple
+fault are `deferred`, naming the first unimplemented level (R12).
 `ir.fixed` suites still refuse.
 
 `tests/tuple_parity.rs` reproduces `python/warrant-oracle/tests/fixtures/tuple-forms-v1/` byte for
@@ -377,9 +379,9 @@ gone; only a list of byte strings is still refused. `domains::descriptor_size` i
 check of VER04r 5.1 (checked sizes, 16 levels, every leaf's legality, the oracle's messages).
 
 **Faults**: the `ir.fixed` templates (`xor-lsb`, `ignore-high-bit`, `flip-result-bit`, the `Bytes` and
-`Ok` forms) are ordinary IR now, so `generate_gated` with `ir.fixed` in the gate searches them; the
-shipped gate (`generate`) is still `ir.core`, so every fault that needs `ir.fixed` is `deferred` and
-ct-compare's `eq_u64/ignore-high-bit` control is unchanged until the flip.
+`Ok` forms) are ordinary IR now, so the shipped gate (`generate`, open to `ir.fixed` and `ir.tuple` since the
+flip) searches them; `generate_gated(.., &[Level::Core])` is the closed gate, under which every fault that
+needs `ir.fixed` is `deferred`.
 
 `tests/fixed_eval_parity.rs` reproduces the five dumps of `python/warrant-oracle/tests/fixtures/fixed-eval-v1/`
 **byte for byte**: lowering, evaluation (112 suites, every chunk line and digest, `cases.tfv`), faults
@@ -494,9 +496,9 @@ window is not a size error). The oracle's `tests/fixtures/omit-example-v2/` is r
 byte by `tests/omit_example.rs`.
 
 `ignore-high-bit` (`ir.fixed`, VER04r 8.2 [D9]) is emitted with `requires: ["ir.fixed"]` and, under
-the shipped gate, `deferred` witnesses: ct-compare's `eq_u64` control is **not-live** until the flip
-(S10c). Under the open gate of `tests/fixed_eval_parity.rs` the witness search runs (the oracle's
-ct-compare witness is chunk 0, `a = 0`, `b = 2^63`).
+the shipped gate (open since the flip, S10c), a chunk witness: ct-compare's `eq_u64` control is live (chunk 0,
+`a = 0`, `b = 2^63`). Under the closed gate (`&[Level::Core]`, used by `tests/fixed_eval_parity.rs` for its
+shipped view) the witness is `deferred`.
 
 ct-compare's eight controls come out as the spec predicted: `eq_fixed/ignore-last-byte` has
 `blind_claims` `eq_fixed_agrees_w0`, `select_bytes/missing-error` has `select_picks`, and

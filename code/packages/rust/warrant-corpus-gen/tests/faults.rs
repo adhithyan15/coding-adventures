@@ -6,7 +6,7 @@ use coding_adventures_warrant_corpus_gen::emit::build_faults;
 use coding_adventures_warrant_corpus_gen::enumerate::enumerate_analysed;
 use coding_adventures_warrant_corpus_gen::faults::{
     first_unimplemented, instantiate, search, stand_in, ClaimState, Expr, Fault, Kind, Level, Probe,
-    KNOWN_FAULTS, SHIPPED_GATE,
+    KNOWN_FAULTS,
 };
 use coding_adventures_warrant_corpus_gen::ir::Ir;
 use coding_adventures_warrant_corpus_gen::lower::lower_document;
@@ -71,7 +71,7 @@ fn templates_render_exactly_as_section_8() {
     );
     let hb = instantiate(&ct_op("eq_u64"), "ignore-high-bit").unwrap();
     assert_eq!(hb.requires, [Level::Fixed]);
-    assert_eq!(first_unimplemented(&hb.requires, &SHIPPED_GATE), Some(Level::Fixed));
+    assert_eq!(first_unimplemented(&hb.requires, &[Level::Core]), Some(Level::Fixed));
     assert_eq!(
         json(&hb),
         concat!(

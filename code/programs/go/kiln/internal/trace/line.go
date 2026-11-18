@@ -73,6 +73,30 @@ import (
 // pid lives on (a non-leader exec while the leader sits at the stop) is refused
 // by its "superseded by execve" line and the mismatched resume.
 //
+// # A phantom execve (D33)
+//
+// The same race has a fourth spelling.  Thread T was at a syscall-entry stop
+// when another thread L's execve made de_thread kill it; strace still
+// dispatched T's stale stop, PTRACE_GET_SYSCALL_INFO returned op=NONE with only
+// its header written, and strace (which tests only op == EXIT) reused its
+// static entry buffer, still holding L's execve.  So it prints a byte-identical
+// line under T:
+//
+//	4288  execve("/usr/bin/sh", ["sh", "-c", "x"], 0x24e1 /* 5 vars */ <unfinished ...>
+//	4289  execve("/usr/bin/sh", ["sh", "-c", "x"], 0x24e1 /* 5 vars */ <unfinished ...>
+//	4289  +++ exited with 0 +++
+//	4288  <... execve resumed>) = 0
+//
+// exitInsideCall accepts the unfinished execve at T's exit, and drops it, only
+// when: it is execve (not execveat) with an absolute path; T's next line is
+// its own exit with code 0 (no signal line, not killed); another pid has an
+// EARLIER pending execve with the same text before "<unfinished ...>" (the
+// earliest wins); and that owner later resumes with "= 0" (withGhosts; a failed
+// owner refuses at the ghost's line, a never-resumed one at its own).  Pass 2 (model.apply)
+// also requires T and L in one thread group.  It is sound because L's
+// identical execve succeeded: T died before its image changed, and its only
+// possible effect is reading the path L's exec reads.
+//
 // Events are recorded in the order calls COMPLETE (when the return value is
 // known), which for a split call is the position of its "resumed" line.
 
@@ -191,7 +215,14 @@ type record struct {
 	// a seccomp filter the step installed): the thread group is not dying, so
 	// the marker taken at the start line is withdrawn.
 	retract bool
+	// ghosts are the phantom execve lines (D33) that were accepted against this
+	// completed execve; pass 2 checks they share its thread group.
+	ghosts []ghost
 }
+
+// ghost is a phantom "execve(" line accepted by ghostOwner: the pid that
+// printed it and the line it was printed on.
+type ghost struct{ pid, line int }
 
 // isExitName: the two calls that end a thread (exit) or a thread group
 // (exit_group), whose START lines the model keeps (Trace.InitExitLine).
@@ -200,7 +231,9 @@ func isExitName(n string) bool { return n == "exit_group" || n == "exit" }
 // lineState is what the line handler carries between lines.
 type lineState struct {
 	pend map[int]*pending
-	root int // pid of the first line
+	// execs indexes the pending execve calls (see setPending).
+	execs map[string]*execQueue
+	root  int // pid of the first line
 	// helper is HelperRoot: name classification (unknown, refused) is DEFERRED
 	// to pass 2, because whether a name is refused depends on which process
 	// made the call and whether it has exec'd, and that is only known once the
@@ -226,6 +259,134 @@ type pending struct {
 	// its exit line are acceptable next; the pending ends at the exit line.
 	dead    bool
 	resumed bool
+	// sawSignal: a signal line from this pid arrived while the call was pending
+	// (the D33 phantom-exec rule needs the ghost's next line to be its exit).
+	sawSignal bool
+	// ghosts: phantom execve lines (D33) accepted against this pending execve.
+	ghosts []ghost
+}
+
+// setPending and clearPending are the only places a pending call is added or
+// removed, in all three readers.  Besides the pend map they keep st.execs, a
+// FIFO per text-before-"<unfinished ...>" of the pending execve calls, in line
+// order, so ghostOwner finds its owner without scanning the whole map (D33).
+// st.execs is derived state: it is not part of the reader-agreement comparison.
+//
+// The FIFO is lazy: removing a call from the middle costs nothing (the entry
+// just goes stale), and only the head is trimmed, so N same-text calls
+// resumed in any order cost O(N) in all, not O(N^2).  An entry is live only if
+// the pid's pending call is still that very call (same line), so a reused pid
+// cannot revive a stale entry.
+type execQueue struct {
+	ents []execEnt
+	head int
+}
+
+type execEnt struct{ pid, line int }
+
+func (st *lineState) execLive(e execEnt) bool {
+	p := st.pend[e.pid]
+	return p != nil && p.line == e.line && p.name == "execve"
+}
+
+func (st *lineState) setPending(pid int, p *pending) {
+	st.pend[pid] = p
+	if p.name == "execve" {
+		if st.execs == nil {
+			st.execs = map[string]*execQueue{}
+		}
+		q := st.execs[p.prefix]
+		if q == nil {
+			q = &execQueue{}
+			st.execs[p.prefix] = q
+		}
+		q.ents = append(q.ents, execEnt{pid, p.line})
+	}
+}
+
+func (st *lineState) clearPending(pid int) {
+	p := st.pend[pid]
+	if p == nil {
+		return
+	}
+	delete(st.pend, pid)
+	if p.name == "execve" {
+		if q := st.execs[p.prefix]; q != nil {
+			for q.head < len(q.ents) && !st.execLive(q.ents[q.head]) {
+				q.head++
+			}
+			if q.head == len(q.ents) {
+				delete(st.execs, p.prefix)
+			}
+		}
+	}
+}
+
+// exitInsideCall is what an exit line does to the exiting pid's pending call,
+// shared by all readers so they cannot drift.  An ignored-class call or a
+// killed-at-entry entry just ends (D18); a phantom execve (D33) is recorded on
+// its owner and ends; anything else is an unresumed call, refused at the call's
+// own line.
+func exitInsideCall(st *lineState, pid int, ex *Exit) *Error {
+	p := st.pend[pid]
+	if p == nil {
+		return nil
+	}
+	if lookup(p.name).class == classIgnored || p.dead {
+		st.clearPending(pid)
+		return nil
+	}
+	if l := ghostOwner(st, pid, p, ex); l != nil {
+		l.ghosts = append(l.ghosts, ghost{pid, p.line})
+		st.clearPending(pid)
+		return nil
+	}
+	return incomplete(p.line, reasonUnresumed)
+}
+
+// ghostOwner finds the pending execve a phantom "execve(" line copies (D33), or
+// nil when the line is not a phantom.  Every condition is in the file head
+// ("A phantom execve").  st.execs queues the candidates (same text) in line
+// order, so the first live entry is the earliest: the answer is deterministic,
+// and it must also be EARLIER than the ghost's own line.
+func ghostOwner(st *lineState, pid int, p *pending, ex *Exit) *pending {
+	if p.name != "execve" || p.sawSignal || len(p.ghosts) != 0 || ex.Killed || ex.Code != 0 ||
+		!strings.HasPrefix(p.prefix, `execve("/`) {
+		return nil
+	}
+	// The head of the queue is the earliest live execve of this text (clearPending
+	// trims dead entries off the head).  If it is the ghost itself, nothing
+	// earlier exists; if an entry is stale anyway, skip it rather than trust it.
+	q := st.execs[p.prefix]
+	if q == nil {
+		return nil
+	}
+	for _, e := range q.ents[q.head:] {
+		if !st.execLive(e) {
+			continue
+		}
+		if e.pid == pid || e.line >= p.line {
+			return nil
+		}
+		return st.pend[e.pid]
+	}
+	return nil
+}
+
+// withGhosts finishes the owner's resumed execve (D33): a failed exec with
+// ghosts means the ghost line was not a copy of a successful call, so the first
+// ghost's line is refused; otherwise the ghosts ride on the record to pass 2.
+func withGhosts(p *pending, call rawCall, rec *record, e *Error) (*record, *Error) {
+	if len(p.ghosts) == 0 {
+		return rec, e
+	}
+	if e == nil && !call.ret.ok() {
+		return nil, incomplete(p.ghosts[0].line, reasonUnresumed)
+	}
+	if rec != nil {
+		rec.ghosts = p.ghosts
+	}
+	return rec, e
 }
 
 const (
@@ -602,22 +763,22 @@ func handleLine(text string, lineNo int, st *lineState) (*record, *Error) {
 		if !ok {
 			return nil, incomplete(lineNo, reasonUnparsable)
 		}
-		if p := pend[pid]; p != nil {
-			// A process killed or exiting inside a call that has no effect on
-			// paths is normal (wait4 interrupted by SIGKILL).  A path call that
-			// never returned is not: its result is unknown.
-			if c := lookup(p.name); c.class != classIgnored && !p.dead {
-				return nil, incomplete(p.line, reasonUnresumed)
-			}
-			delete(pend, pid)
+		// A process killed or exiting inside a call that has no effect on paths
+		// is normal (wait4 interrupted by SIGKILL).  A path call that never
+		// returned is not: its result is unknown (but see D33).
+		if e := exitInsideCall(st, pid, ex); e != nil {
+			return nil, e
 		}
 		return &record{line: lineNo, pid: pid, exit: ex}, nil
 	case strings.HasPrefix(body, "--- "):
 		if !strings.HasSuffix(body, " ---") || len(body) < 8 {
 			return nil, incomplete(lineNo, reasonUnparsable)
 		}
-		if p := pend[pid]; p != nil && p.dead {
-			return nil, incomplete(lineNo, reasonInterleaved)
+		if p := pend[pid]; p != nil {
+			if p.dead {
+				return nil, incomplete(lineNo, reasonInterleaved)
+			}
+			p.sawSignal = true
 		}
 		return nil, nil
 	case strings.HasPrefix(body, "<... "):
@@ -644,7 +805,7 @@ func handleLine(text string, lineNo int, st *lineState) (*record, *Error) {
 			p.resumed = true
 			return nil, nil
 		}
-		delete(pend, pid)
+		st.clearPending(pid)
 		call, unfinished, _, r := parseCall(p.prefix + rest[k+len(" resumed>"):])
 		if r != "" {
 			return nil, incomplete(lineNo, r)
@@ -657,7 +818,8 @@ func handleLine(text string, lineNo int, st *lineState) (*record, *Error) {
 			// returned: it failed, and the group is not dying.
 			return &record{line: p.line, pid: pid, exitCall: true, rawExit: call.name == "exit", retract: true}, nil
 		}
-		return finishCall(pid, lineNo, call, true, st.helper)
+		rec, e := finishCall(pid, lineNo, call, true, st.helper)
+		return withGhosts(p, call, rec, e)
 	}
 	if body == deadOpen || (strings.HasPrefix(body, deadWhole) && isUnknownResult(body[len(deadWhole):])) {
 		// See "A thread killed at syscall entry" in the file head.  Something
@@ -665,7 +827,7 @@ func handleLine(text string, lineNo int, st *lineState) (*record, *Error) {
 		if pend[pid] != nil {
 			return nil, incomplete(lineNo, reasonInterleaved)
 		}
-		pend[pid] = &pending{name: "???", line: lineNo, dead: true, resumed: body != deadOpen}
+		st.setPending(pid, &pending{name: "???", line: lineNo, dead: true, resumed: body != deadOpen})
 		return nil, nil
 	}
 	call, unfinished, prefix, r := parseCall(body)
@@ -681,7 +843,7 @@ func handleLine(text string, lineNo int, st *lineState) (*record, *Error) {
 				return nil, e
 			}
 		}
-		pend[pid] = &pending{name: call.name, prefix: prefix, line: lineNo}
+		st.setPending(pid, &pending{name: call.name, prefix: prefix, line: lineNo})
 		if isExitName(call.name) {
 			return &record{line: lineNo, pid: pid, exitCall: true, rawExit: call.name == "exit"}, nil
 		}

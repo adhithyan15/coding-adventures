@@ -512,7 +512,7 @@ version; until then the canned fixtures are hand-written.
 directory is the one current at its `<unfinished ...>` line. An unfinished
 call may end at the process's exit line only if it carries no path
 (`wait4`, `exit_group`); an unfinished path call that never resumes is
-`unresumed-call`. One more shape is accepted: a thread killed at syscall
+`unresumed-call`, with one exception (the phantom `execve`, D33, below). Another shape is accepted: a thread killed at syscall
 entry. When a fatal signal is already pending (a sibling's `exit_group`, a
 SIGKILL, an exec by another thread), strace cannot name the call and prints
 `???`, in exactly one of three spellings, each followed by that thread's exit
@@ -532,6 +532,58 @@ This covers the superseded-leader exec case too, which is still refused. A
 handled call whose result is `?` (including `ERESTARTSYS`) is `result`:
 restarted calls are not recognised in v1. A final line without its newline is `unparsable-line`, since strace may have
 been cut off mid-line.
+
+**A phantom `execve` (D33).** The same race has a fourth spelling. A thread T
+that was at a syscall-ENTRY stop when another thread L's `execve` made
+`de_thread` kill it can have its stale stop dispatched by strace anyway.
+`PTRACE_GET_SYSCALL_INFO` then returns `op=NONE` with only its header written;
+strace's `syscall.c` tests only for `op == EXIT`, so its static entry buffer
+still holds L's `execve`, and it prints a byte-identical line under T's pid,
+then T's exit:
+
+```
+4288  execve("/usr/bin/sh", ["sh", "-c", "..."], 0x24e1f3f4ab70 /* 5 vars */ <unfinished ...>
+4289  execve("/usr/bin/sh", ["sh", "-c", "..."], 0x24e1f3f4ab70 /* 5 vars */ <unfinished ...>
+4289  +++ exited with 0 +++
+4288  <... execve resumed>) = 0
+```
+
+(Captured from `kiln record prepare`: the sandbox-init leader execs once, on
+a locked thread, and 4289 was a Go runtime thread.) It cannot be avoided in
+Kiln, since any multithreaded Go or JVM program has the race, so it is a
+parser rule. The unfinished `execve` is accepted, and produces no record, only
+when ALL of these hold; otherwise it stays `unresumed-call` at T's line:
+
+1. T's pending call is `execve` (not `execveat`), and T's NEXT line is exactly
+   `+++ exited with 0 +++`: no signal line or anything else between, not
+   killed, code 0.
+2. Another pid L has a pending `execve` with an EARLIER line and a
+   byte-identical text before `<unfinished ...>` (the earliest, if several).
+3. The path is absolute: the line starts `execve("/`.
+4. L's `execve` later resumes with `= 0`. If the owner's `execve` resumes with
+   a failure, the refusal is at the ghost's line; if the owner never resumes,
+   or exits first, the refusal is the owner's own `unresumed-call` (at the
+   owner's line).
+5. In pass 2, T and L are in the same thread group (the spawns with
+   `CLONE_THREAD` lead from one to the other's leader, within the depth
+   bound). Otherwise the refusal is at the ghost's line.
+
+Soundness: even if the line were real, L's byte-identical `execve` succeeded,
+so T was torn down before its image changed; its only possible effect is
+reading the same absolute path L's recorded exec reads, and it writes nothing.
+T's exit record stands; the phantom yields no event. Both readers share one
+helper (`exitInsideCall`), so they cannot drift. The thread-group walk of
+rule 5 is memoised and bounded like the other group walks; past the depth bound
+it can only refuse a real same-group pair, never accept two groups as one.
+
+Known residual: a step that races two `execve`s of the same absolute path
+against a swap of a symlink on that path could, in principle, have a killed
+REAL sibling's open of the old target dropped as a phantom, so that open is not
+recorded. That binary never runs (the sibling was torn down before its image
+changed), and the owner's open of the path is recorded. We judge this
+acceptable: it needs a deliberate race inside one step, and the reviewers
+judged it theoretical.
+
 
 **Process model.**
 - A first pass collects every child pid a `fork`, `vfork` or `clone`
@@ -2404,6 +2456,7 @@ byte as an `ERR_*` token), so it can never panic on hostile input.
 | `= 5 /* 9 in strace's PID NS */<x>` (an annotation, or a marker, after the pid-namespace note with no word before the `<`) | accepted | refused, `unparsable-line` (`ERR_LT`) | strace prints the annotation first; a bare `<` is an `ERR_LT` | `TestPR5Divergences` |
 | an exit line holding a non-ASCII Unicode space (`exited with 0` followed by U+00A0) | accepted (`strings.TrimSpace` removes it) | refused, `unparsable-line` | the exit token is ASCII only | `TestPR5Divergences` |
 | a `<... NAME resumed>` line that is itself malformed AND has no matching pending call | refused, `unmatched-resume` | refused, `unparsable-line` (or `ambiguous-path`) | the grammar path reads a line before it looks at the pending call | `TestPR5Divergences` |
+| an unfinished `execve(` from a pid that then exits with code 0 right after it, while an earlier pid's byte-identical `execve` is pending and later resumes `= 0` in the same thread group (D33) | accepted, no event for the ghost line | accepted, no event for the ghost line | none: both readers call the same helper, `exitInsideCall`; every other shape stays `unresumed-call` | `TestPhantomExecAccepted`, `TestPhantomExecRefused` |
 | a line whose syntax is bad AND whose effect the old scanner refused first: `interleaved-call` (a call while another is pending), or the `unresumed-call` an exit line raises | refused, `interleaved-call` / `unresumed-call` | refused, `unparsable-line` or `ambiguous-path` (same line) | the old scanner checks a line's syntax before it looks at the pending calls, so these reasons mean it accepted the syntax; the grammar path refuses the syntax first | `TestSeqDiffSeeded` (reason-only; the old scanner always refused too) |
 | a call with more top-level items than its arity cap AND a later syntax defect (for a split call, the cap is applied to the glued text; a same-pid signal line `--- SIG ... ---` between the halves does not break the glue, an exit line does) | refused, `arity` (stopped while scanning) | refused, `unparsable-line` or `ambiguous-path` | the grammar parses the whole line before counting | `TestLineDiffSeeded` (row "too many arguments and a later error"), `TestSignalBetweenSplitCallHalves` |
 | a line with a structural error AND a later bad annotation | refused, `unparsable-line` (first problem wins) | refused, `ambiguous-path` | the parser reports a failure position only as the start of the failing rule, so a syntax error cannot be ordered against a later bad token; the bad token is reported | `TestBadTokenWinsOverEarlierSyntaxError` |
@@ -2437,6 +2490,50 @@ committed corpus (at least 30 minutes locally per PR, nightly in CI), and
 panics on a mismatch after printing a bounded, sanitised window of the lines
 around it to the job log. No artifact is uploaded (the traces hold paths a pull
 request chose, so the only thing kept is that window, in the log).
+
+**The refusal diagnostic (D32).** A kiln-sandbox run once refused a real trace
+("probe walk: the trace does not parse: trace-incomplete:unparsable-line") and the
+trace was deleted with the test's temp dir, so nobody could say which line was
+refused or whether the old scanner would have refused it too (the children that
+run `prepare` have hand-built environments without `KILN_TRACE_DIFF`, so their
+parse was grammar-only). Two small changes, no artifact:
+
+- `prepare`'s refusal now ends with the refused line, `the trace does not parse:
+  <reason> (line N)`, appended to the DISPLAY text only. The reason itself is
+  unchanged (it feeds the sidecar's `parse_reasons`), and a line number carries
+  no path text. (`step` records only the reason, as before.)
+- `trace.Diagnose` (measure.go, a test/CI instrument kept out of production code
+  like `Measure`) runs pass 1 with both readers and reports each one's reason,
+  error line and stop line, the `grammarPanics` delta, the line count and whether
+  the data ends in a newline; with `KILN_TRACE_DIFF=1` it adds a sanitised window
+  of three lines either side of the earlier stop line, the stop line's pid's
+  last earlier line (a resume's pending half can be far above) and a reader's own
+  Error line when it differs from its stop line (an unresumed call at the end),
+  under the same quoting as the cross-check's window. Those key lines show their
+  first AND last 160 bytes (the refused shape `... <unfinished ...>) = ?` sits at
+  the end of long lines) and are printed before the window; neighbours keep only
+  their head. The report says it is pass 1 only (a trace both readers accept can
+  still be refused by pass 2, the model) and is at most 8 KB. The sandbox tests'
+  shared `recStepRun` helper calls it, in the test process (which has the CI
+  environment), when a child's stderr says `the trace does not parse` and names
+  `(trace: <path>)` (an absolute path under the temp dir, opened once with
+  `O_NOFOLLOW|O_NONBLOCK`, regular files only, read back at most 8 MiB with a
+  note when cut), and logs it before the test fails. A step's or the epilogue's
+  refusal is in the sidecar's `parse_reasons`, not on stderr, so the step,
+  collect and gates sandbox tests call the same diagnostic on the action's step
+  traces (`record.StepFile`) when they see a parse reason or an unexpected
+  unknown write.
+
+**The phantom exec (D33).** `kiln record prepare`'s "signals" probe trace was
+refused `unresumed-call` by both readers: strace printed a second, byte-identical
+`execve(... <unfinished ...>` under a Go runtime thread that `de_thread` had
+just killed, followed by that thread's exit (section 4.5, "A phantom `execve`").
+Decision: a narrow parser rule rather than a kiln change, because any
+multithreaded program execing has the race. It needs a matching pending
+`execve` of the same text and an earlier line, the exit directly after it with
+code 0, an absolute path, the owner resuming `= 0`, and (pass 2) the same thread
+group; every miss is the old `unresumed-call`. The captured trace is a test,
+and both fuzzers seed it.
 
 **The default-flip gates (restated by PR 6).** The first draft gated the flip on
 "at least 8 MB/s and within 3x of the old parser". That gate is replaced: a ratio

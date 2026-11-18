@@ -4,6 +4,7 @@
 
 ### Added
 - Added public Biquad/SOS characterization tests for reciprocal normalization overflow, output and hidden-delay overflow, partial state commit after invalid input, and SOS section-order behavior.
+- Aligned the AF-02 fixture test loader with decoded finite binary64 equality for version and chunk-length fields, including decimal/exponent spellings and malformed controls.
 - Added public FIR designer contract regressions for cutoff endpoints, tap-cap boundaries, lane-specific windows, and validation error precedence.
 - Added strict shared AF-02 Biquad/SOS fixture checks, including all 32,768 impulse chunk partitions, reset replay, 64 seeded partition-property samples, and 128 seeded malformed-fixture fuzz samples through public exports.
 

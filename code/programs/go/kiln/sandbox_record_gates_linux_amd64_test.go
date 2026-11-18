@@ -362,6 +362,7 @@ exit 0
 		switch o.Action {
 		case "code/packages/x/a", "code/packages/x/v":
 			if !o.Recordable || len(o.Reasons) != 0 {
+				logStepTraces(t, recDir, o.Action) // D32: a trace reason would be here
 				t.Errorf("%s: %+v", o.Action, o)
 			}
 		case "code/packages/x/g":

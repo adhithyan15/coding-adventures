@@ -1,0 +1,7 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/tls13-certificate-verify-transcript-binding",
+  "capabilities": [],
+  "justification": "Pure framing and hashing over an immutable repository-owned TLS transcript state, caller-selected public role, policy-authorized public signature scheme, and caller-owned output. It performs no filesystem, network, process, environment, clock, entropy, credential, private-key, signing, certificate parsing, trust-root, path, hostname, revocation, record, HTTP, OAuth, transport, audit, trace, or external-effect access."
+}

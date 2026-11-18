@@ -146,6 +146,7 @@ func FuzzLineDiff(f *testing.F) {
 		"1  f(\"a\\qb\") = 0", "1  f(\"a\"\"b\") = 0", "1  openat(3</a>x</b>, \"x\", O_RDONLY O_CLOEXEC) = 3</x>",
 		"1  stat(\"a\\0b\", {}) = 0", "1  f(\xc2\xa0) = 0", "1  --- SIGCHLD {si_signo=SIGCHLD} ---",
 		"1  <... f resumed></x>) = 0", "1  wait4(-1,  <unfinished ...>",
+		"1  execve(\"/usr/bin/sh\", [\"sh\"], 0x1 /* 5 vars */ <unfinished ...>",
 	} {
 		f.Add(l)
 	}
@@ -170,6 +171,9 @@ func FuzzParseDiff(f *testing.F) {
 		f.Add(string(b))
 	}
 	for _, s := range killedEntrySeeds {
+		f.Add(s)
+	}
+	for _, s := range phantomExecSeeds {
 		f.Add(s)
 	}
 	for _, s := range signalSeeds {

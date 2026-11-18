@@ -8,13 +8,13 @@ import (
 	"testing"
 )
 
-// TestMeasureIsNotUsedByProductionCode: trace.Measure, MeasureBest and BestPass1
+// TestMeasureIsNotUsedByProductionCode: trace.Measure, MeasureBest, BestPass1 and Diagnose
 // are CI/test instruments.  For a small trace they switch the garbage collector
 // off with debug.SetGCPercent, which is process-global and not goroutine-safe
 // (internal/trace/measure.go), so no non-test source file under kiln may call
 // them.  Their own definition file is the only exception.
 func TestMeasureIsNotUsedByProductionCode(t *testing.T) {
-	re := regexp.MustCompile(`\b(Measure|MeasureBest|BestPass1)\(`)
+	re := regexp.MustCompile(`\b(Measure|MeasureBest|BestPass1|Diagnose)\(`)
 	err := filepath.WalkDir(".", func(path string, d os.DirEntry, err error) error {
 		if err != nil {
 			return err

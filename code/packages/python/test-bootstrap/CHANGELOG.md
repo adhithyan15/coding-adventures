@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+- Integer shrinking now terminates for negative values and nonzero targets, and `for_all` enforces its shrink-step budget while consuming proposals, including duplicates.
+
 ## 0.1.0 - 2026-11-15
 
 ### Added

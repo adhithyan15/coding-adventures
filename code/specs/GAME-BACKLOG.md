@@ -15,7 +15,7 @@ that must be produced, not a promise that the evidence exists already.
 
 | Workstream | Capability status | Language status | Verification status / limit |
 | --- | --- | --- | --- |
-| `GAME10` fixed-step clock | Rust core and v1 integer contract present; host pacing/render integration is separate and incomplete | Rust implementation; Python is an independent fixture validator, not a port; TS, Go, and other supported lanes remain | Durable consumer merged in [PR #19602](https://github.com/adhithyan15/coding-adventures/pull/19602), squash `72778f4f553cf35fd361e2688acaeb6201414ea1`; 23 vectors (9 success, 14 exact errors) pass package conformance. The constructor-only Warrant model/execution is implemented in open [PR #19618](https://github.com/adhithyan15/coding-adventures/pull/19618); exact-head CI is pending on this refresh branch. `validate_state`/`advance_frame`, universal proof, and native source proof remain unproved; no assurance proof slot is upgraded. |
+| `GAME10` fixed-step clock | Rust core and v1 integer contract present; host pacing/render integration is separate and incomplete | Rust implementation; Python is an independent fixture validator, not a port; TS, Go, and other supported lanes remain | Durable consumer merged in [PR #19602](https://github.com/adhithyan15/coding-adventures/pull/19602), squash `72778f4f553cf35fd361e2688acaeb6201414ea1`; 23 vectors (9 success, 14 exact errors) pass package conformance. The constructor-only Warrant model landed in merged [PR #19618](https://github.com/adhithyan15/coding-adventures/pull/19618), squash `a2163fc64c74c10f3bb0e62cd268363cbb560d21`; local finite execution covers 648 boundary cases and 1,024 stratified full-width inputs, while aggregate CI `BUILT` receipts do not establish Warrant execution. `validate_state`/`advance_frame`, universal proof, and native source proof remain unproved; no assurance proof slot is upgraded. |
 | `GAME11`–`GAME15c` early arcade | Rust packages exist for collision, arcade SFX, Pong, Breakout, discrete logic, CRT beam, and timer | Rust source present; other supported language lanes need inventory | No unified portable-evidence audit yet; collision, Pong, Breakout, and CRT Warrant drafts are parked. |
 | `GAME20`–`GAME25` tile/sprite/RPG | Rust packages exist for indexed palette, tilemap, sprite OAM, RPG grid/battle, and Monster RPG | Rust source present; verify required lanes rather than inferring from GAME00's portable label | Shared independent corpus and cross-language execution audit remain open. |
 | `GAME26`–`GAME29b` console devices | GAME26 GBA bridge, GAME27 NES, GAME28 Game Boy, and GAME29 GBA devices are missing from the Rust package tree | No verified portable console-device lane | Start with a narrow independently specified NES register/timing slice. Do not claim a complete console. |
@@ -95,13 +95,18 @@ GAME01 Rust corpus consumer, and the separate Kiln allocation-reuse repair have 
 deterministic contracts precede new device, graphics, and host stacks.
 This order avoids duplicating repository-wide `VER-*` and `MUS00`–`MUS08` work.
 
-As of 2026-11-18, `GBL-001`, `GBL-002`, and `GBL-061` are merged. The immediate active item is
-`GBL-003a` in open PR #19618; its exact-head checks must pass before moving on. Then proceed to
-`GBL-010` TypeScript GAME10 with exact `BigInt` handling, `GBL-050` Rust input action frames, and
-`GBL-050a` TypeScript input action frames. Reprioritize remaining clock ports after those reusable
-boundaries. A fresh full-checkout canonical package-presence report must be recorded before the
-next new language-port selection; a sparse-worktree report is not valid inventory evidence. This
-sequence is coordination state, not implementation authorization for unrelated primitives.
+As of 2026-11-18, `GBL-001`, `GBL-002`, `GBL-003a`, and `GBL-061` are merged. `GBL-010` is under
+review in open PR #19644; keep it open until its exact-head checks and merge are verified. Before
+that PR can clear, `GBL-063` is the blocking Kiln Ubuntu 24.04 G1 performance follow-up: diagnose
+the unchanged 14 MB/s gate miss on the exact 66,600-byte / 936-line workload, then make the smallest
+reusable hot-path repair supported by native Linux measurements. The current evidence correlates
+two misses with an Azure runner image/kernel and one pass with AWS, but the CPU model is absent, so
+it does not establish a runner cause. Keep the workload, floor, and failure receipts intact; do not
+retry unchanged code or infer a same-host speedup from separate CI jobs. After `GBL-010` lands,
+resume `GBL-050` Rust input action frames and `GBL-050a` TypeScript input action frames. A fresh
+full-checkout canonical package-presence report must be recorded before the next new language-port
+selection; a sparse-worktree report is not valid inventory evidence. This sequence is coordination
+state, not implementation authorization for unrelated primitives.
 
 For each serial delivery, use a fresh worktree from the latest fetched `origin/main`. After a PR
 merges, verify the published head and merged tree, confirm the worktree is clean, published, and
@@ -161,15 +166,7 @@ worktree; report and preserve it if those checks do not pass.
   CI build-table recipes selected Ubuntu and macOS affected-package jobs and produced BUILT package
   receipts, but aggregate outputs suppress individual command counts and runtime verdicts. The
   Windows affected-package test step was SKIPPED; no native Windows Hamurabi execution is claimed.
-- [ ] `GBL-003a` (implementation in open [PR #19618](https://github.com/adhithyan15/coding-adventures/pull/19618); exact-head CI pending) Separately execute and assess the GAME10 constructor Warrant model: exercise the
-  648-case boundary (105 `Ok`, 72 `ZeroFixedTimestep`, 162 `InvalidMaxFrameSteps`,
-  309 `InvalidMaxFrameDelta`), stratified full-width property
-  cases, and always-`Err`, error-precedence, and wrong-state mutants. Constructor-only execution does
-  not prove `validate`, `advance`, or the shared `WX-SP1` proof; the native proof remains unproved.
-  Keep those items open under `GBL-003`. The portable corpus/WX-SP1 route also depends on Warrant
-  `ir.data` records and variants (CV2-S11; tracked gap CV2-F10); current fixed built-ins and tuple
-  `Result` support do not encode `GameClockConfig`/`GameClockState` records. Do not call this model
-  execution a Rust-to-Warrant source proof or a full-domain universal proof.
+- [x] `GBL-003a` (merged in [PR #19618](https://github.com/adhithyan15/coding-adventures/pull/19618), squash `a2163fc64c74c10f3bb0e62cd268363cbb560d21`) Separately execute and assess the GAME10 constructor Warrant model. Local finite execution covered the 648-case boundary (105 `Ok`, 72 `ZeroFixedTimestep`, 162 `InvalidMaxFrameSteps`, 309 `InvalidMaxFrameDelta`) and 1,024 stratified full-width inputs; aggregate CI `BUILT` receipts are not Warrant execution evidence. Constructor-only execution does not prove `validate`, `advance`, or the shared `WX-SP1` proof; those source and universal proof claims remain open under `GBL-003`. The portable corpus/WX-SP1 route also depends on Warrant `ir.data` records and variants (CV2-S11; tracked gap CV2-F10); current fixed built-ins and tuple `Result` support do not encode `GameClockConfig`/`GameClockState` records. Do not call this model execution a Rust-to-Warrant source proof or a full-domain universal proof.
 - [x] `GBL-061` (merged in [PR #19630](https://github.com/adhithyan15/coding-adventures/pull/19630), squash `1de3c7f6e9b74765f48cce277187f1920a487a81`) Add caller-owned token-vector reuse to the Go lexer and strace parser after measuring the per-line allocation hotspot. The 14 MB/s Kiln Ubuntu 26.04 floor was unchanged. On exact-head CI run `44247169191`, the 66,600-byte / 936-line synthetic reported 19.9 MB/s on Ubuntu 24.04 and 22.1 MB/s on Ubuntu 26.04 (`gated=1`, seven repeats); the separate 4,195,800-byte census reported 18.8 and 20.3 MB/s (`gated=0`). These are candidate gate receipts, not a native same-host Linux A/B or proof of a Linux speedup. Full affected-package CI built Go lexer, strace lexer/parser, and Kiln; no native Windows execution was selected. Local macOS allocation and timing evidence, sparse full-suite limits, and review scope are recorded in the PR.
 - [ ] `GBL-059` Preserve useful per-package CI receipts: commands/recipe selection, stdout summary, seed, source revision, platform, and runtime verdict. Audit existing `VER`/build-tool receipt and KILN facilities before extending them; do not create a competing evidence framework. `GBL-061` exact-head artifacts exposed only build-plan in the downloaded artifact set and aggregate logs suppressed command/test details, so package-level CI claims remain limited to explicit `BUILT` and gate receipts.
 - [ ] `GBL-060` Execute portable game-core functional tests natively on Windows. Current affected-package Windows steps can skip Rust packages; compile-only cross checks and Windows job presence are not native game-core execution evidence. Keep `NOT-LIVE` platform containment separate from test coverage.
@@ -295,7 +292,126 @@ worktree; report and preserve it if those checks do not pass.
   paths are omitted, while preserving untracked overlays in ordinary non-sparse working mode. Define
   symlink and gitlink handling and test committed-ref parity, untracked-only changes, collisions, and
   unknown classifications. This P2 tooling follow-up does not block `GBL-010`: refresh the inventory
-  after `GBL-003a` merges using the existing classifier and tracked-path audit.
+  from refreshed `origin/main` using the existing classifier and tracked-path audit; `GBL-003a` is
+  already merged.
+- [ ] `GBL-063` Repair the repeated Ubuntu 24.04 Kiln G1 synthetic throughput miss with the smallest
+  reusable optimization justified by native Linux evidence. On PR #19644 head
+  `d563077857e66f3917220611e5df91fafa7a0348`, run `44316496407` job `134844872264` measured
+  66,600 bytes / 936 lines at 12.7 MB/s (5.246689 ms) against the unchanged 14 MB/s floor, which
+  requires about 9.3% less elapsed time; census throughput was 12.0 MB/s and `gated=0`. The
+  concurrent Ubuntu 26 lane passed at 19.7 MB/s. The earlier unchanged-source Ubuntu 24 run
+  `134824627592` measured 12.8 MB/s (5.220751 ms) and also failed; Ubuntu 24 run `134816988790`
+  measured 19.5 MB/s and passed. All used Go 1.26.1 on linux/amd64. The pass was on AWS image
+  `20261111.127.1` / kernel `7.0.0-1014-aws`; both misses were on Azure image `20261111.370.1` /
+  kernel `7.0.0-1017-azure` (westcentralus and eastus). CPU model is not recorded, so provider/image
+  correlation is not proof of cause. A later limited manual diagnostic dispatch `44321293161`
+  measured 12.6 MB/s (5.297186 ms) for the same gated slice on Ubuntu 26 Azure eastus, image
+  `20261111.196.1`, kernel `7.0.0-1019-azure`; its separate census was 11.6 MB/s (`gated=0`).
+  The corresponding Ubuntu 24 AWS leg passed at 19.4 MB/s (census 18.0 MB/s). Both used Go 1.26.1.
+  This was a diagnostic/manual run, not full CI; it was cancelled after preserving the requested
+  artifacts. Preserve all receipts and gate semantics; make no blind retry of unchanged code.
+  The failed PR job checked out synthetic merge `99856c512` (PR head `d563077857e66f3917220611e5df91fafa7a0348`
+  into base `73fa1d9c446...`); the diagnostic dispatch checked out branch commit
+  `8638751e91d813a41767684c7af7f5bb39be85df` on current main with D33. Its Kiln trace/traced trees
+  were `de74a093b405c88126635bd33bb42d05383523e2` and
+  `e37d3956972662d7e4c5a243e15c934787746fe6`; lexer, strace-lexer, and strace-parser trees were
+  `8262cdf49df65e485f7f96d556565edc45cb7a7c`, `209ad45586ec07be748945f013a68bf99546d45d`, and
+  `92cb784a49174228d01ff853af57e5a708df3cef`. The exact diagnostic fixture and repeated-slice
+  SHA-256 values were `dc8acd0de1d9b235c3924d0d71e2fcd565274e09ded9975570f429b548525aae` and
+  `6cd61f63fdec55ce37294ad061705394b1babda80e5368b17ecb5bd38e2207af`.
+  The bounded native CPU profile attributed 33.77% cumulative CPU to `parseState.match`, 18.66% to
+  `matcher.match`, and 40.86% to `GrammarLexer.tokenizeStandardInto`; `newLexer` was 1.87% cumulative
+  CPU despite 49.45% of allocation space. This supports testing cursor reuse as a falsifiable
+  allocation hypothesis only; it does not establish the roughly 10.2% elapsed reduction needed by
+  the lower-rate probe, nor the >10.2% needed for useful margin. If same-host admission ABBA shows
+  only marginal wall gain, inspect the measured parser/matcher CPU paths next. Native summaries and
+  profiles are preserved under `/tmp/kiln-g1-profile-44321293161/`.
+  First run a native Linux amd64 diagnostic dispatch from `.github/workflows/ci.yml`
+  with `full_build=false`, `cross_os_full=false`, and `kiln_g1_profile=true`; it records runner/source
+  identity and runs profiles only on Ubuntu 24.04. Keep the existing uninstrumented G1 test as the
+  admission result. A separate `TestG1DiagnosticSyntheticSlice` constructs the same repeated
+  `build.strace` slice and calls `trace.BestPass1` with `HelperRoot=true`, excluding the 4 MiB census
+  and other sandbox tests from both profiles. Assert 66,600 bytes / 936 lines and record the fixture
+  SHA-256. Run 20 `BestPass1` calls with `-cpuprofile` (at least 5 seconds, up to 4,000 timed passes)
+  and two calls in a separate `-memprofile -memprofilerate=1` run (at least 500 ms, up to 400 timed
+  passes), each with a 30-second timeout; instrumented timing is diagnostic only. Record image,
+  kernel, provider/region, CPU model when available, toolchain, actual checkout SHA/runtime tree
+  IDs, and workload identity. Inspect the actual hot path before choosing a repair;
+  compare pre/post revisions on the same host and toolchain in A-B-B-A order on that identical
+  slice. Keep the 14 MB/s floor, input, and failure receipts unchanged. G1 uses at least seven timed
+  passes spanning at least 250 ms (up to 200); the logged `repeats=7` is the minimum requested count,
+  not the actual adaptive pass count. Keep the separate ungated census. Add focused correctness
+  controls for public/owning and alias paths,
+  atomic errors, and relevant Unicode/property/fuzz behavior without mirroring the implementation.
+  A bounded opaque zero-value-ready single-owner lexer cursor was prototyped and reviewed, with one
+  cursor per independent
+  hook-free `LineParser`; it binds the immutable `Compiled` grammar for each call, with no cached
+  grammar pointer, token storage, hook, reset API, or global pool. Both fresh-owned and cursor
+  initialization must share setup while initializing self-referential stacks at the final address;
+  clear the cursor's full lexer state after success and error. Indentation/layout grammars and
+  hook-bearing calls remain on the owning path. Compare fresh-owned and reused sequences including
+  retained outputs, error/refusal recovery, spans, mode changes, Unicode normalization, and
+  independent cursors under `-race`; reuse the existing bounded lexer/strace-parser fuzzers. These
+  correctness controls passed locally (full affected-package race suites and 30-second lexer,
+  parser, and trace fuzz campaigns); they establish neither a performance repair nor universal Go
+  source/lifetime equivalence.
+  The reviewed candidate `639a7129ddf9d72995df1b6c73c112db8aab2c44` was measured against pinned
+  baseline `10eeb7add42d2e7af504eef2f5e3707a61971cc9` in workflow run
+  [44334489030](https://github.com/adhithyan15/coding-adventures/actions/runs/44334489030), with
+  the corrected workflow checkout at `abb2b3217ac975226870bab17d7f54c65a203c1d`. The four cells
+  were A1 baseline, B1/B2 candidate, A2 baseline, on each of Ubuntu 24.04 and 26.04; both used Go
+  1.26.1 linux/amd64 and identical fixture (`dc8acd0d…525aae`) / repeated-slice
+  (`6cd61f63…2207af`) hashes. Ubuntu 24 AWS (image `20261111.127.1`, kernel `7.0.0-1014-aws`,
+  Xeon 6975P-C) passed every official gate cell: A1 19.4, B1 19.7, B2 19.9, A2 19.4 MB/s.
+  Its separate precise helper medians were 3,616,626 ns for A and 3,463,755 ns for B (about 4.2%
+  faster). Ubuntu 26 Azure (image `20261111.196.1`, kernel `7.0.0-1019-azure`, Xeon Platinum
+  8370C) failed the unchanged official 14 MB/s gate in all four cells: A1 13.7, B1 13.9, B2
+  displayed 14.0 but failed below the floor, and A2 13.8 MB/s. The helper medians were 4,937,395
+  ns for A and 4,936,559 ns for B (about 0.02% faster), so cursor reuse did not improve the slow
+  host meaningfully and is not the G1 floor repair. The run preserved all admission failures and
+  precision observations; no retry was made. Keep this prototype recoverable for isolated
+  correctness/allocation work, but do not publish it as the performance repair. Await a new scope
+  based on the measured parser/matcher CPU path. The missing ownership/GC source bridge remains
+  under existing VER/Warrant debt; do not add an unrelated SAT model.
+  The selected parser-only repair optimizes a leading contiguous run of direct basic
+  `kTok` alternatives in `parseState.match(kAlt)`. Native pprof attributed 330 ms flat to the
+  `switch n.kind`, 70 ms to failed-choice stack restoration, and 1.68 s cumulative to recursive
+  `kAlt` calls (overlapping costs); the strace grammar repeats token alternatives in `arg`, `inner`,
+  and `tail`. For a leading run of at least two `kTok` nodes sharing `skipNL`, inspect normalized
+  token name and legacy enum once while preserving choice order, the ordered name/enum predicate,
+  failure recording and expected-prefix order, post-skip failure position, and rollback to the
+  pre-skip position if the entire run misses. Continue with ordinary sequential matching after the
+  run. Generic matching stops when `s.exceeded` is set, so retain depth/memo/resource refusals and
+  never record later expected IDs after exhaustion. Keep later mixed alternatives sequential; do
+  not change whole rules, memoization/depth/curMax, or cursor ownership in this candidate. Old/new
+  behavior was compared across exact tokens, name/enum ambiguity, enum-only tokens, EOF,
+  newline-skip rollback, expected-prefix order, compact output, and resource-bound refusals; existing
+  differential/sequence fuzzers and focused race checks passed. The reviewed candidate
+  `242c6943acd9b168740796f11e603f1316b81e61` was compared with pinned baseline
+  `10eeb7add42d2e7af504eef2f5e3707a61971cc9` in narrow workflow run
+  [44343414219](https://github.com/adhithyan15/coding-adventures/actions/runs/44343414219).
+  All four official admission cells passed on both hosts without changing the 14 MB/s floor or
+  4 MiB census. Both used Go 1.26.1 linux/amd64, fixture SHA-256
+  `dc8acd0de1d9b235c3924d0d71e2fcd565274e09ded9975570f429b548525aae`, and repeated-slice SHA-256
+  `6cd61f63fdec55ce37294ad061705394b1babda80e5368b17ecb5bd38e2207af`. Only the parser tree
+  differed (`17c0d769dd57a57d6677d1702e77173c85edff4c` baseline,
+  `c84ff3d25b4cd8a56a1db012ca3c45ec360e9479` candidate); Kiln, trace, traced, lexer, strace-lexer,
+  strace-parser, gate, and measurement trees matched.
+  Ubuntu 24.04 used Azure image `20261111.370.1`, kernel `7.0.0-1017-azure`, Xeon Platinum 8573C:
+  official A1/B1/B2/A2 rates 14.7/15.2/15.3/14.5 MB/s, precise BestPass1 medians 4,715,529 ns
+  baseline versus 4,509,879.5 ns candidate (4.36% lower elapsed time), and ungated census rates
+  13.5/13.5/13.9/13.3 MB/s. Ubuntu 26.04 used Azure image `20261111.196.1`, kernel
+  `7.0.0-1019-azure`, AMD EPYC 9V74: official rates 16.7/17.4/17.3/16.7 MB/s, precise medians
+  4,006,460.5 ns baseline versus 3,864,630 ns candidate (3.54% lower elapsed time), and census
+  rates 15.7/16.0/16.2/15.4 MB/s. These show useful within-host gains and modest U24 admission
+  margin. They do not prove the historically slower CPU class is fixed: its CPU model was not
+  recorded, and no host-cause inference is claimed. Preserve all cells and artifacts under
+  `/tmp/kiln-g1-parser-abba-44343414219/`. The SAT/VER bridge covers a bounded 32-row observation
+  domain; it does not prove Go source behavior or lifetime semantics. GBL-063 remains pending until
+  ordinary protected PR checks pass and the repair is merged. Keep the cursor experiment separate
+  as a rejected floor repair, preserve the 14 MB/s gate and prior failure receipts. No open PR
+  in the current list owns parser fast-path work; draft PR #19633 concerns gate calibration and
+  cannot change or weaken this unchanged acceptance criterion.
 - [ ] `GBL-058` Repair the conflict between the actual `P2D09`/`P2D10` specification filenames/scopes
   and GAME00 labels. Keep this as a separate documentation repair; do not mint or reuse colliding game
   identifiers to paper over it.

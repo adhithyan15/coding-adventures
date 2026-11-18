@@ -20,7 +20,7 @@
   "faults": [],
   "generator": {
     "name": "warrant-corpus-gen",
-    "version": "0.5.0"
+    "version": "0.6.0"
   },
   "levels": [
     "ir.core"

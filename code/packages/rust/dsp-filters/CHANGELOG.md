@@ -3,6 +3,7 @@
 ## Unreleased
 
 ### Added
+- Added checked f32 `Biquad` and one-shot `sosfilt` primitives with finite normalization/output/state checks and failure-atomic block processing.
 - Added checked public FIR design entry points for low-pass, high-pass, and band-pass using the existing `FilterError::InvalidCoefficient` variant; legacy wrappers retain their panic behavior and valid coefficient bits.
 
 ### Corrected

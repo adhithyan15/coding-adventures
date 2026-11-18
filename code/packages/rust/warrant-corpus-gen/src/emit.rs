@@ -128,7 +128,7 @@ pub fn build_faults(
     Ok(faults)
 }
 
-/// Emit a v2 corpus with the shipped fault-evaluation gate ([`SHIPPED_GATE`]: `ir.core` only).
+/// Emit a v2 corpus with the shipped fault-evaluation gate ([`SHIPPED_GATE`]: `ir.core`, `ir.fixed`, `ir.tuple`).
 ///
 /// # Errors
 ///
@@ -142,7 +142,8 @@ pub fn generate(input: &GenInput<'_>) -> Result<CorpusV2, GenError> {
 /// data and every candidate claim that has a stand-in is `deferred`, naming the first level of the
 /// fault's `requires` (sorted) the gate does not hold (VER04r 16.10 R12); no witness search runs.
 ///
-/// The shipped gate is `ir.core` only until the atomic flip (S10c, [D29]).  This function is the
+/// The shipped gate has been `ir.core`, `ir.fixed`, `ir.tuple` since the flip (S10c, [D29]); callers
+/// pass `&[Level::Core]` for the closed gate.  This function is the
 /// **library parameter** the committed fault dump of S10t-1 is reproduced through
 /// (`tests/tuple_parity.rs` passes `ir.core` and `ir.tuple`, `tests/fixed_eval_parity.rs` all three
 /// levels: the oracle's `GATE_OPEN`); no command-line or environment switch reaches it.  Since S10c-2

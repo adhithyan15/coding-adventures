@@ -301,6 +301,7 @@ type model struct {
 	rootExeced bool         // helper mode: the root group has had its one exec
 	initExeced bool         // helper mode: the init child's first successful exec of the helper binary was kept
 	rootMemo   map[int]bool // inRootGroup answers, so each pid is walked once
+	groupMemo  map[int]int  // threadGroupOf answers (D33), likewise
 	initMemo   map[int]bool // inInitThreads answers
 	// exitCand: pid -> start line of its exit_group that has not returned, for
 	// init-group threads after the step's exec.  rawExits: start lines of
@@ -722,6 +723,49 @@ func (m *model) isHelperExe(path string) bool {
 	return path == m.opts.HelperExe || path == "/proc/self/exe"
 }
 
+// threadGroupOf walks pid's spawns while they carry CLONE_THREAD and returns
+// the group leader (the first pid that is not a thread, or has no spawn
+// record).  Every answer is memoised for every pid on the walked chain and each
+// step is counted in walkSteps, like inRootGroup and inInitThreads, so a
+// hostile deep chain times many ghosts costs one walk, not 4096 lookups each.
+//
+// A chain deeper than maxProcessDepth stops at the pid reached and answers
+// -cur-1 (negative, so never a leader).  Two pids whose walks stop at the same
+// ancestor therefore compare EQUAL, and so do pids that share a memoised chain.
+// That is still sound for D33: a negative answer is only given along links that
+// are all CLONE_THREAD, so equal answers really are one thread group.  The
+// bound can only make two threads of one group compare UNEQUAL (a refusal),
+// never two groups equal.
+func (m *model) threadGroupOf(pid int) int {
+	if m.groupMemo == nil {
+		m.groupMemo = map[int]int{}
+	}
+	var path []int
+	res := 0
+	for cur, n := pid, 0; ; n++ {
+		if v, ok := m.groupMemo[cur]; ok {
+			res = v
+			break
+		}
+		m.walkSteps++
+		path = append(path, cur)
+		sp, ok := m.spawns[cur]
+		if !ok || !hasFlag(sp.flags, "CLONE_THREAD") {
+			res = cur
+			break
+		}
+		if n >= maxProcessDepth {
+			res = -cur - 1
+			break
+		}
+		cur = sp.parent
+	}
+	for _, p := range path {
+		m.groupMemo[p] = res
+	}
+	return res
+}
+
 func (m *model) apply(rec *record) *Error {
 	p, e := m.get(rec.pid, rec.line)
 	if e != nil {
@@ -740,6 +784,17 @@ func (m *model) apply(rec *record) *Error {
 	}
 	if p.exited {
 		return incomplete(rec.line, reasonEventAfterExit)
+	}
+	// D33: a phantom execve line was accepted in pass 1 against this exec; it
+	// is sound only if its thread was torn down by this very exec, so it must
+	// be in the same thread group.  Otherwise refuse at the ghost's line.
+	if len(rec.ghosts) > 0 {
+		owner := m.threadGroupOf(rec.pid)
+		for _, g := range rec.ghosts {
+			if m.threadGroupOf(g.pid) != owner {
+				return incomplete(g.line, reasonUnresumed)
+			}
+		}
 	}
 	if rec.exitCall && rec.retract {
 		// A failed exit_group or exit whose start line was a candidate:

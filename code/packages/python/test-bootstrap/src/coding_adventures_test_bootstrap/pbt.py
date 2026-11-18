@@ -9,6 +9,7 @@ from __future__ import annotations
 import string
 from collections.abc import Callable, Iterator, Sequence
 from dataclasses import dataclass
+from itertools import islice
 from typing import Any
 
 from coding_adventures_test_bootstrap.prng import SplitMix64
@@ -194,10 +195,11 @@ def shrink_int(val: int, target: int = 0) -> Iterator[int]:
         return
     diff = val - target
     yield target
-    half = diff // 2
-    while half != 0:
-        yield val - half
-        half = half // 2
+    direction = 1 if diff > 0 else -1
+    distance = abs(diff) // 2
+    while distance:
+        yield val - direction * distance
+        distance //= 2
 
 
 def shrink_bytes(data: bytes) -> Iterator[bytes]:
@@ -287,8 +289,15 @@ def _shrink_counterexample(
     while improved and steps < max_steps:
         improved = False
         for arg_idx in range(len(current)):
-            for shrunk_val in shrink_value(current[arg_idx]):
+            # Slice the iterator before consuming it so even a broken or
+            # non-progressing shrinker cannot exceed the global step budget.
+            remaining_steps = max_steps - steps
+            for shrunk_val in islice(
+                shrink_value(current[arg_idx]), remaining_steps
+            ):
                 steps += 1
+                if shrunk_val == current[arg_idx]:
+                    continue
                 candidate = list(current)
                 candidate[arg_idx] = shrunk_val
                 cand_tuple = tuple(candidate)

@@ -342,8 +342,8 @@ def derive(
 ) -> Derived:
     """Derive the expected fixture (see the module docstring); raises :class:`OracleError`.
 
-    ``implemented`` is the fault-evaluation gate (:data:`.faults.IMPLEMENTED`, ``ir.core`` only until
-    the atomic flip of slice S10c, VER04r 13 and [D29]): the levels whose faults the witness search
+    ``implemented`` is the fault-evaluation gate (:data:`.faults.IMPLEMENTED`: ``ir.core``, ``ir.fixed`` and
+    ``ir.tuple`` since the atomic flip of slice S10c, VER04r 13 and [D29]): the levels whose faults the witness search
     evaluates.  It is a library parameter that tests (and the committed fault dump of S10t-1) pass;
     no command line or environment switch reaches it.
     """
