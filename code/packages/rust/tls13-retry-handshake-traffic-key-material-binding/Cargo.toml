@@ -8,6 +8,8 @@ license = "MIT"
 [dependencies]
 coding_adventures_hkdf = { path = "../hkdf" }
 tls13-cipher-suite-policy = { path = "../tls13-cipher-suite-policy" }
+tls13-handshake = { path = "../tls13-handshake" }
+tls13-handshake-reassembly = { path = "../tls13-handshake-reassembly" }
 tls13-inner-plaintext = { path = "../tls13-inner-plaintext" }
 tls13-record = { path = "../tls13-record" }
 tls13-record-protection = { path = "../tls13-record-protection" }

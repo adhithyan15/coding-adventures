@@ -33,12 +33,24 @@ opened owner. Both proof types keep the borrowed state and record buffers from
 being reused or mutated while live. Record sequence and failure behavior remain
 the dispatcher's existing policy.
 
+The exact state can additionally be consumed into a bounded authenticated
+handshake reassembler. Each record is authenticated under that one monotonic
+sender state before any bytes enter reassembly storage. The owner retains a
+final fragment across records and synchronously lends every complete,
+policy-authorized message to a caller callback, including multiple messages
+coalesced in one record. Caller-owned opened-record and reassembly buffers are
+wiped by their repository-owned owners, while the result retains the exact
+ciphertext input and retry evidence until it is consumed.
+Any record authentication, content-type, reassembly, or handler-unwind failure
+clears the fragment and permanently closes the owner before a later record can
+be processed, preventing cross-gap message splicing.
+
 This package derives one direction's handshake key and IV, creates matching
 record state, and protects exact retry-handshake records in caller-owned
-buffers. It does not advance the transcript, authenticate CertificateVerify or
-Finished, validate certificates, establish trust, verify hostnames, enforce
-revocation, perform I/O, authorize HTTP or OAuth, or provide TLS, HTTPS, or
-live-provider readiness.
+buffers. It does not enforce handshake-message order, advance the transcript,
+authenticate CertificateVerify or Finished, validate certificates, establish
+trust, verify hostnames, enforce revocation, perform I/O, authorize HTTP or
+OAuth, or provide TLS, HTTPS, or live-provider readiness.
 
 ## Verification
 

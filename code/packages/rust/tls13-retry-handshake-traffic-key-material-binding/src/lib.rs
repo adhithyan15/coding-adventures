@@ -2,7 +2,9 @@
 //!
 //! This crate consumes only the existing exact-message retry handshake
 //! traffic-secret proof and derives one sender's traffic key and static IV into
-//! caller-owned wipe-on-drop storage.
+//! caller-owned wipe-on-drop storage. It can consume the resulting monotonic
+//! record state into bounded reassembly so only authenticated record content
+//! becomes policy-authorized handshake messages.
 
 #![forbid(unsafe_code)]
 
@@ -10,6 +12,8 @@ use coding_adventures_hkdf::{FixedHkdfHash, HkdfPrk, HkdfPrkImportError};
 use core::cell::Cell;
 use core::fmt;
 use tls13_cipher_suite_policy::{HkdfHash, SelectedCipherSuite};
+use tls13_handshake::{Tls13HandshakeMessage, Tls13HandshakePolicy};
+use tls13_handshake_reassembly::{ReassemblyError, ReassemblyProgress, Tls13HandshakeReassembler};
 use tls13_inner_plaintext::Tls13InnerPlaintextPolicy;
 use tls13_record::{Tls13CiphertextPolicy, TlsContentType};
 use tls13_record_protection::{
@@ -124,6 +128,37 @@ impl std::error::Error for RetryHandshakeRecordBindingError {
         match self {
             Self::RecordProtection(error) => Some(error),
             Self::UnexpectedContentType => None,
+        }
+    }
+}
+
+/// Stable payload-free failures while opening and reassembling retry records.
+#[derive(Debug, Eq, PartialEq)]
+pub enum RetryHandshakeRecordReassemblyError {
+    /// A prior failure permanently closed this reassembly owner.
+    OwnerFailed,
+    /// Repository-owned record binding failed.
+    Record(RetryHandshakeRecordBindingError),
+    /// Repository-owned bounded handshake reassembly failed.
+    Reassembly(ReassemblyError),
+}
+
+impl fmt::Display for RetryHandshakeRecordReassemblyError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str(match self {
+            Self::OwnerFailed => "TLS 1.3 retry handshake reassembly owner already failed",
+            Self::Record(_) => "TLS 1.3 retry record authentication failed during reassembly",
+            Self::Reassembly(_) => "TLS 1.3 retry handshake reassembly failed",
+        })
+    }
+}
+
+impl std::error::Error for RetryHandshakeRecordReassemblyError {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        match self {
+            Self::Record(error) => Some(error),
+            Self::Reassembly(error) => Some(error),
+            Self::OwnerFailed => None,
         }
     }
 }
@@ -741,6 +776,339 @@ where
         input,
         opened,
     })
+}
+
+/// Exact retry record state composed with bounded authenticated reassembly.
+///
+/// This owner consumes the non-cloneable sender state so every fragment copied
+/// into its reassembler first passed authentication under one monotonic record
+/// sequence. Caller-owned reassembly storage is cleared by the composed
+/// repository-owned primitive. This value intentionally derives neither
+/// `Copy` nor `Clone`.
+pub struct RetryHandshakeRecordReassembler<
+    'issuer,
+    'evidence,
+    'secret_storage,
+    'material,
+    'reassembly,
+    Evidence: ExactRetryBaseSecrets + ?Sized,
+> {
+    state: BoundRetryHandshakeRecordProtectionState<
+        'issuer,
+        'evidence,
+        'secret_storage,
+        'material,
+        Evidence,
+    >,
+    reassembler: Tls13HandshakeReassembler<'reassembly>,
+    message_in_progress: bool,
+    failed: bool,
+}
+
+impl<'issuer, 'evidence, 'secret_storage, 'material, 'reassembly, Evidence>
+    RetryHandshakeRecordReassembler<
+        'issuer,
+        'evidence,
+        'secret_storage,
+        'material,
+        'reassembly,
+        Evidence,
+    >
+where
+    Evidence: ExactRetryBaseSecrets + ?Sized,
+{
+    /// Consume exact sender state into a bounded authenticated reassembler.
+    pub fn new(
+        state: BoundRetryHandshakeRecordProtectionState<
+            'issuer,
+            'evidence,
+            'secret_storage,
+            'material,
+            Evidence,
+        >,
+        handshake_policy: Tls13HandshakePolicy,
+        reassembly_storage: &'reassembly mut [u8],
+    ) -> Result<Self, RetryHandshakeRecordReassemblyError> {
+        let reassembler = Tls13HandshakeReassembler::new(handshake_policy, reassembly_storage)
+            .map_err(RetryHandshakeRecordReassemblyError::Reassembly)?;
+        Ok(Self {
+            state,
+            reassembler,
+            message_in_progress: false,
+            failed: false,
+        })
+    }
+
+    /// Borrow the complete exact-message retry traffic-secret proof.
+    #[must_use]
+    pub const fn traffic_secrets(
+        &self,
+    ) -> &'issuer BoundRetryHandshakeTrafficSecrets<'evidence, 'secret_storage, Evidence> {
+        self.state.traffic_secrets()
+    }
+
+    /// Return the sender authenticated by this owner's monotonic state.
+    #[must_use]
+    pub const fn sender(&self) -> HandshakeTrafficSender {
+        self.state.sender()
+    }
+
+    /// Return the policy-selected suite retained by the exact record state.
+    #[must_use]
+    pub const fn selected_suite(&self) -> SelectedCipherSuite {
+        self.state.selected_suite()
+    }
+
+    /// Return whether a partial handshake message awaits another record.
+    #[must_use]
+    pub const fn message_in_progress(&self) -> bool {
+        self.message_in_progress
+    }
+
+    /// Return whether a failure permanently closed this owner.
+    #[must_use]
+    pub const fn is_failed(&self) -> bool {
+        self.failed
+    }
+
+    /// Return the record count already consumed by this owner.
+    #[must_use]
+    pub const fn records_used(&self) -> u64 {
+        self.state.record_state().records_used()
+    }
+
+    /// Authenticate one record and drain all of its handshake content.
+    ///
+    /// `on_message` is invoked synchronously once for each complete
+    /// policy-authorized message. Its borrowed message cannot escape the call.
+    /// A final fragment remains in bounded caller-owned reassembly storage for
+    /// the next authenticated record.
+    pub fn open_and_reassemble<'owner, 'input, F>(
+        &'owner mut self,
+        ciphertext_policy: &Tls13CiphertextPolicy,
+        inner_policy: &Tls13InnerPlaintextPolicy,
+        input: &'input [u8],
+        opened_output: &mut [u8],
+        mut on_message: F,
+    ) -> Result<
+        ReassembledRetryHandshakeRecord<
+            'owner,
+            'issuer,
+            'evidence,
+            'secret_storage,
+            'material,
+            'reassembly,
+            'input,
+            Evidence,
+        >,
+        RetryHandshakeRecordReassemblyError,
+    >
+    where
+        F: for<'message> FnMut(Tls13HandshakeMessage<'message>),
+    {
+        if self.failed {
+            return Err(RetryHandshakeRecordReassemblyError::OwnerFailed);
+        }
+
+        let opened = match open_tls13_record(
+            self.state.record_state_mut(),
+            ciphertext_policy,
+            inner_policy,
+            input,
+            opened_output,
+        ) {
+            Ok(opened) => opened,
+            Err(error) => {
+                self.fail();
+                return Err(RetryHandshakeRecordReassemblyError::Record(
+                    RetryHandshakeRecordBindingError::RecordProtection(error),
+                ));
+            }
+        };
+        if opened.content_type() != TlsContentType::Handshake {
+            self.fail();
+            return Err(RetryHandshakeRecordReassemblyError::Record(
+                RetryHandshakeRecordBindingError::UnexpectedContentType,
+            ));
+        }
+
+        let authenticated_content_length = opened.content().len();
+        let mut offset = 0;
+        let mut completed_messages = 0;
+        while offset < authenticated_content_length {
+            let progress = match self
+                .reassembler
+                .push_authenticated_record_content(&opened.content()[offset..])
+            {
+                Ok(progress) => progress,
+                Err(error) => {
+                    self.fail();
+                    return Err(RetryHandshakeRecordReassemblyError::Reassembly(error));
+                }
+            };
+            let consumed = progress.consumed();
+            debug_assert!(consumed > 0);
+            offset += consumed;
+            match progress {
+                ReassemblyProgress::Incomplete { .. } => {
+                    self.message_in_progress = true;
+                }
+                ReassemblyProgress::Complete { message, .. } => {
+                    self.message_in_progress = false;
+                    completed_messages += 1;
+                    let handler_result =
+                        std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+                            on_message(message)
+                        }));
+                    if let Err(payload) = handler_result {
+                        self.fail();
+                        std::panic::resume_unwind(payload);
+                    }
+                }
+            }
+        }
+        drop(opened);
+
+        Ok(ReassembledRetryHandshakeRecord {
+            owner: &*self,
+            input,
+            authenticated_content_length,
+            completed_messages,
+            message_in_progress: self.message_in_progress,
+        })
+    }
+
+    fn fail(&mut self) {
+        self.reassembler.reset();
+        self.message_in_progress = false;
+        self.failed = true;
+    }
+}
+
+impl<Evidence: ExactRetryBaseSecrets + ?Sized> fmt::Debug
+    for RetryHandshakeRecordReassembler<'_, '_, '_, '_, '_, Evidence>
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("RetryHandshakeRecordReassembler")
+            .field("state", &"[RETAINED]")
+            .field("reassembler", &"[REDACTED]")
+            .field("message_in_progress", &self.message_in_progress)
+            .field("failed", &self.failed)
+            .finish()
+    }
+}
+
+/// Result of draining one authenticated retry-handshake record.
+///
+/// The retained shared owner borrow prevents another record from advancing the
+/// sequence before this exact input result is consumed. This value
+/// intentionally derives neither `Copy` nor `Clone`.
+pub struct ReassembledRetryHandshakeRecord<
+    'owner,
+    'issuer,
+    'evidence,
+    'secret_storage,
+    'material,
+    'reassembly,
+    'input,
+    Evidence: ExactRetryBaseSecrets + ?Sized,
+> {
+    owner: &'owner RetryHandshakeRecordReassembler<
+        'issuer,
+        'evidence,
+        'secret_storage,
+        'material,
+        'reassembly,
+        Evidence,
+    >,
+    input: &'input [u8],
+    authenticated_content_length: usize,
+    completed_messages: usize,
+    message_in_progress: bool,
+}
+
+impl<'owner, 'issuer, 'evidence, 'secret_storage, 'material, 'reassembly, 'input, Evidence>
+    ReassembledRetryHandshakeRecord<
+        'owner,
+        'issuer,
+        'evidence,
+        'secret_storage,
+        'material,
+        'reassembly,
+        'input,
+        Evidence,
+    >
+where
+    Evidence: ExactRetryBaseSecrets + ?Sized,
+{
+    /// Borrow the complete exact-message retry traffic-secret proof.
+    #[must_use]
+    pub const fn traffic_secrets(
+        &self,
+    ) -> &'issuer BoundRetryHandshakeTrafficSecrets<'evidence, 'secret_storage, Evidence> {
+        self.owner.traffic_secrets()
+    }
+
+    /// Return the sender whose state authenticated this exact input.
+    #[must_use]
+    pub const fn sender(&self) -> HandshakeTrafficSender {
+        self.owner.sender()
+    }
+
+    /// Return the exact selected suite retained by the owner.
+    #[must_use]
+    pub const fn selected_suite(&self) -> SelectedCipherSuite {
+        self.owner.selected_suite()
+    }
+
+    /// Borrow the exact ciphertext record supplied to this operation.
+    #[must_use]
+    pub const fn input(&self) -> &'input [u8] {
+        self.input
+    }
+
+    /// Return the authenticated inner handshake-content length.
+    #[must_use]
+    pub const fn authenticated_content_length(&self) -> usize {
+        self.authenticated_content_length
+    }
+
+    /// Return how many complete messages the handler received.
+    #[must_use]
+    pub const fn completed_messages(&self) -> usize {
+        self.completed_messages
+    }
+
+    /// Return whether the owner retained a final incomplete message.
+    #[must_use]
+    pub const fn message_in_progress(&self) -> bool {
+        self.message_in_progress
+    }
+
+    /// Return the sender-state record count after opening this input.
+    #[must_use]
+    pub const fn records_used(&self) -> u64 {
+        self.owner.records_used()
+    }
+}
+
+impl<Evidence: ExactRetryBaseSecrets + ?Sized> fmt::Debug
+    for ReassembledRetryHandshakeRecord<'_, '_, '_, '_, '_, '_, '_, Evidence>
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("ReassembledRetryHandshakeRecord")
+            .field("owner", &"[RETAINED]")
+            .field("input", &"[REDACTED]")
+            .field(
+                "authenticated_content_length",
+                &self.authenticated_content_length,
+            )
+            .field("completed_messages", &self.completed_messages)
+            .field("message_in_progress", &self.message_in_progress)
+            .finish()
+    }
 }
 
 /// Bind one exact retry handshake traffic secret to its traffic key and IV.
