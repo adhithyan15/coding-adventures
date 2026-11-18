@@ -15,7 +15,7 @@ that must be produced, not a promise that the evidence exists already.
 
 | Workstream | Capability status | Language status | Verification status / limit |
 | --- | --- | --- | --- |
-| `GAME10` fixed-step clock | Rust core and v1 integer contract present; host pacing/render integration is separate and incomplete | Rust implementation; Python is an independent fixture validator, not a port; TS, Go, and other supported lanes remain | Durable Rust consumer merged in [PR #19602](https://github.com/adhithyan15/coding-adventures/pull/19602), squash `72778f4f553cf35fd361e2688acaeb6201414ea1`; 23 vectors (9 success, 14 exact errors) pass package conformance. Existing Warrant claims accept any `Err`; assurance report has empty evidence and null exhaustive/fuzz/proof entries. No formal proof claim. |
+| `GAME10` fixed-step clock | Rust core and v1 integer contract present; host pacing/render integration is separate and incomplete | Rust implementation; Python is an independent fixture validator, not a port; TS, Go, and other supported lanes remain | Durable consumer merged in [PR #19602](https://github.com/adhithyan15/coding-adventures/pull/19602), squash `72778f4f553cf35fd361e2688acaeb6201414ea1`; 23 vectors (9 success, 14 exact errors) pass package conformance. Constructor model execution is pending in open [PR #19618](https://github.com/adhithyan15/coding-adventures/pull/19618), currently blocked by the separate Kiln throughput gate (`GBL-061`). Existing Warrant claims accept any `Err`; assurance report has empty evidence and null exhaustive/fuzz/proof entries. No formal proof claim. |
 | `GAME11`–`GAME15c` early arcade | Rust packages exist for collision, arcade SFX, Pong, Breakout, discrete logic, CRT beam, and timer | Rust source present; other supported language lanes need inventory | No unified portable-evidence audit yet; collision, Pong, Breakout, and CRT Warrant drafts are parked. |
 | `GAME20`–`GAME25` tile/sprite/RPG | Rust packages exist for indexed palette, tilemap, sprite OAM, RPG grid/battle, and Monster RPG | Rust source present; verify required lanes rather than inferring from GAME00's portable label | Shared independent corpus and cross-language execution audit remain open. |
 | `GAME26`–`GAME29b` console devices | GAME26 GBA bridge, GAME27 NES, GAME28 Game Boy, and GAME29 GBA devices are missing from the Rust package tree | No verified portable console-device lane | Start with a narrow independently specified NES register/timing slice. Do not claim a complete console. |
@@ -23,7 +23,7 @@ that must be produced, not a promise that the evidence exists already.
 | `GAME30`–`GAME35` 2.5D/3D | No Rust packages found for math3d, raycast, BSP, rasterizer, dungeon, or Quake bridge | No verified lane matrix | Capability is missing; fixed-point/F64 contracts and independent rendering/geometry oracles must precede claims. |
 | `GAME40`–`GAME45` flight | No Rust packages found for rigidbody, aero, terrain, HUD, GPU bridge, or flight sim | No verified lane matrix | Capability is missing; host/device integration and deterministic physics evidence remain unbuilt. |
 | Networking and tooling | Not decomposed into owned game contracts | No verified lane matrix | Define explicit protocol and tool inputs/outputs only after deterministic simulation foundations. |
-| `GAME01` Hamurabi | Deterministic simulation core present; console and host integration are separate concerns | Canonical report snapshot at base `7bec66bbd9059ab11be24920bf876162df8da302`: present in all 15 established lanes and all 3 emerging lanes; package presence is not parity | [PR #19609](https://github.com/adhithyan15/coding-adventures/pull/19609) adds Rust's canonical 31-case public-API consumer; local debug/release, strict Clippy, capability/certificate checks and Go fixture selection pass. MacOS reports the Linux-only runtime gate NOT-LIVE; exact-head PR CI is pending. The 2026-11-17 static 26-row audit remains historical, not a live parity receipt: Go runs the corpus, Python/TypeScript routes were sampled, OCaml embeds literals despite its README, and five lanes read a text projection without a freshness guard. Rust assurance remains report-only with empty evidence and null proof/fuzz entries; `GBL-009` tracks substantiation. |
+| `GAME01` Hamurabi | Deterministic simulation core present; console and host integration are separate concerns | Canonical report snapshot at base `7bec66bbd9059ab11be24920bf876162df8da302`: present in all 15 established lanes and all 3 emerging lanes; package presence is not parity | Rust's canonical 31-case public-API consumer merged in [PR #19609](https://github.com/adhithyan15/coding-adventures/pull/19609), squash `794c5795da8c76072f988cce02a267b1a314b4a7`. Local debug/release and strict Clippy pass; capability/certificate checks and Go fixture selection pass. macOS reports Linux-only runtime gate NOT-LIVE. Exact-head CI's Ubuntu/macOS build-table recipes selected affected-package jobs and reported BUILT; aggregate logs suppress command counts/runtime verdicts. The Windows affected-package test step was SKIPPED, so native Windows execution is not claimed. The 2026-11-17 static 26-row audit remains historical, not live parity: Go ran the corpus; Python/TypeScript routes were sampled; OCaml embeds literals despite its README; five lanes read a text projection without freshness checking. Rust assurance remains report-only with empty evidence and null proof/fuzz entries; `GBL-009` tracks substantiation. |
 | `GAME02` Lunar Lander | Fixed-point contract and several cores present; host/presentation integration is incomplete | Rust, Python, TypeScript, Go, Ruby, Perl, Lua, Elixir packages exist; audit them against supported lanes | Verify each language against shared vectors; do not infer parity from directory presence. Expand generated/property coverage after corpus consumers. |
 | Parked F64 specifications | Five game Warrant drafts depend on float support | Warrant does not yet implement F64 | WX-FL1 in `VER-BACKLOG.md` gates restoration; no proof/evidence claim until then. |
 
@@ -90,18 +90,26 @@ completion satisfies the other.
 
 ## Prioritized delivery
 
-Priority reflects dependencies visible on 2026-11-18: GAME10's exact v1 corpus consumer has merged;
-the existing GAME01 Rust consumer gap is next because the package and canonical corpus already
-exist. Reusable deterministic contracts precede new device, graphics, and host stacks.
+Priority reflects dependencies visible on 2026-11-18: GAME10's exact v1 corpus consumer and the
+GAME01 Rust corpus consumer have merged. Reusable deterministic contracts precede new device,
+graphics, and host stacks.
 This order avoids duplicating repository-wide `VER-*` and `MUS00`–`MUS08` work.
 
-After `GBL-001` merged, the active item is `GBL-002` Rust Hamurabi corpus evidence, followed by
-`GBL-003a` constructor Warrant-model execution, `GBL-010` TypeScript GAME10 with exact `BigInt`
-handling, `GBL-050` Rust input action frames, and `GBL-050a` TypeScript input action frames. Then
-interleave `GBL-013` Go and `GBL-014` Python clock ports with the concrete GAME01/GAME02 missing
-language ports according to dependencies and updated package evidence. Refresh from fresh `main`
-and rerun the canonical package report before picking the next implementation; this sequence is
-coordination state, not an implementation authorization for unrelated primitives.
+As of 2026-11-18, `GBL-001` and `GBL-002` are merged. The active dependency is `GBL-061`, a
+bounded investigation of the unrelated Kiln synthetic-throughput gate currently blocking the
+open `GBL-003a` constructor-model PR. The fixed 14 MB/s threshold remains in force. After resolving
+that gate and `GBL-003a`, proceed to `GBL-010` TypeScript GAME10 with exact `BigInt` handling,
+`GBL-050` Rust input action frames, then `GBL-050a` TypeScript input action frames. Continue with
+`GBL-013` Go and `GBL-014` Python clock ports and concrete GAME01/GAME02 missing-language ports
+according to dependencies and updated package evidence. Refresh from fresh `main` and rerun the
+canonical package report before picking the next implementation; this sequence is coordination
+state, not implementation authorization for unrelated primitives.
+
+For each serial delivery, use a fresh worktree from the latest fetched `origin/main`. After a PR
+merges, verify the published head and merged tree, confirm the worktree is clean, published, and
+idle, then remove it with normal Git worktree removal and prune registrations. Only then create a
+new worktree for the next selected item. Never force-remove a dirty, unpublished, or active
+worktree; report and preserve it if those checks do not pass.
 
 ### P0 — `GBL-001`: Make GAME10 v1 a durable conformance boundary (merged; [PR #19602](https://github.com/adhithyan15/coding-adventures/pull/19602), squash `72778f4f553cf35fd361e2688acaeb6201414ea1`)
 
@@ -122,7 +130,7 @@ coordination state, not an implementation authorization for unrelated primitives
 
 ### P1 — Close existing evidence gaps and Warrant limits
 
-- [x] `GBL-002` (local acceptance complete; [PR #19609](https://github.com/adhithyan15/coding-adventures/pull/19609) active) Make Rust Hamurabi consume the shared 31-vector corpus; audit every registered language
+- [x] `GBL-002` (merged in [PR #19609](https://github.com/adhithyan15/coding-adventures/pull/19609), squash `794c5795da8c76072f988cce02a267b1a314b4a7`) Make Rust Hamurabi consume the shared 31-vector corpus; audit every registered language
   consumer before describing parity. Scope: consume canonical `code/specs/fixtures/hamurabi-v1/cases.json`
   and compare all 31 cases, 53 trajectory turns and byte-exact reports (including final newlines),
   and 14 refusal cases across all 8 error variants. Preserve full-width `u64` fixture numbers from
@@ -151,13 +159,26 @@ coordination state, not an implementation authorization for unrelated primitives
   correctly reports Linux-only NOT-LIVE on macOS. A focused Go build-tool test confirms the exact
   fixture path selects all 18 registered Hamurabi lanes and rejects version lookalikes. This is Rust
   package conformance plus build selection only; the static audit remains distinct from live
-  cross-language parity, and Hamurabi assurance evidence remains open under `GBL-009`.
-- [ ] `GBL-003a` Separately execute and assess the GAME10 constructor Warrant model: exercise the
+  cross-language parity, and Hamurabi assurance evidence remains open under `GBL-009`. Exact-head
+  CI build-table recipes selected Ubuntu and macOS affected-package jobs and produced BUILT package
+  receipts, but aggregate outputs suppress individual command counts and runtime verdicts. The
+  Windows affected-package test step was SKIPPED; no native Windows Hamurabi execution is claimed.
+- [ ] `GBL-003a` (open [PR #19618](https://github.com/adhithyan15/coding-adventures/pull/19618), pending Kiln gate) Separately execute and assess the GAME10 constructor Warrant model: exercise the
   648-case boundary (105 `Ok`, 72 `ZeroFixedTimestep`, 162 `InvalidMaxFrameSteps`,
   309 `InvalidMaxFrameDelta`), stratified full-width property
   cases, and always-`Err`, error-precedence, and wrong-state mutants. Constructor-only execution does
   not prove `validate`, `advance`, or the shared `WX-SP1` proof; the native proof remains unproved.
   Keep those items open under `GBL-003`.
+- [ ] `GBL-061` (active dependency of `GBL-003a`) Diagnose and, if supported by paired measurements,
+  implement the isolated KILN04 P2 PR 6 caller-owned token-vector reuse experiment. The unchanged
+  Ubuntu 26.04 Kiln synthetic gate has a 14 MB/s floor and measured 13.2 MB/s, then 12.3 MB/s on
+  its one same-head retry for PR #19618. A separate AWS-backed Ubuntu control measured 18.9 MB/s;
+  Azure-backed PR #19605 and #19619 observations were 15.9 and 15.6 MB/s. These are different
+  runner instances, not a same-host A/B comparison; they establish neither a deterministic parser
+  regression nor a proven environment-only cause. Local macOS profiling found token-vector
+  allocations but no wall-time hotspot proof. Preserve the 14 MB/s gate and the PR #19619 probe
+  changes. A native Linux same-host comparison and the unchanged gate are required before claiming
+  a throughput repair. The merged #19619 probe/log-hygiene PR remains separate.
 - [ ] `GBL-003` Repair GAME10's three Warrant claims and assurance report. Add meaningful positive and negative
   evidence for `validate` and `advance`, shared proof through `WXSP1`, generated/property and fuzz
   coverage, and Warrant evidence only through a separately reviewed design. A passing finite corpus
