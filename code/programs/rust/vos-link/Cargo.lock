@@ -224,6 +224,7 @@ name = "vos-link"
 version = "0.1.0"
 dependencies = [
  "coding_adventures_bounded_json",
+ "coding_adventures_warrant_grammar",
  "vos-manifest",
  "vos-sched-contract",
  "vos-shape-check",

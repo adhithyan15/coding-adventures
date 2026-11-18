@@ -163,6 +163,10 @@ var (
 		"code/packages/rust/state-machine",
 		"code/packages/rust/toml-lexer",
 		"code/packages/rust/toml-parser",
+		// VOS-039a: vos-link reads the evidence manifest with bounded-json, and every
+		// generated BUILD runs its sabotage lines through the shared negative-control checker.
+		"code/packages/rust/bounded-json",
+		"code/scripts/warrant_negctl.py",
 		"code/grammars/vos_contract",
 		"code/grammars/vos_document",
 	}

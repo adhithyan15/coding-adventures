@@ -24,6 +24,8 @@ vos-manifest = { path = "../../../packages/rust/vos-manifest" }
 # vos-manifest when check-profile lands.
 vos-shape-check = { path = "../../../packages/rust/vos-shape-check" }
 # `check-component` (VOS-039a) reads the evidence manifest with the repository's bounded JSON reader.
+# The evidence generator's own bindings reader: `gen-build` and `check-component` read `evidence.bindings` with it.
+coding_adventures_warrant_grammar = { path = "../../../packages/rust/warrant-grammar" }
 coding_adventures_bounded_json = { path = "../../../packages/rust/bounded-json" }
 
 # A test-only edge (VOS-D058): the tests read the real contract package's files

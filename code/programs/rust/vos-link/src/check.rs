@@ -41,7 +41,7 @@ use crate::inputs::{ImplKind, Loaded};
 /// `and`s overflows a 2 MiB stack at a few hundred terms (backlog VOS-D057).  The Warrant
 /// token budget (65,536) bounds the depth; 256 MiB is far above what that allows, and
 /// costs address space, not memory, until it is used.
-const WARRANT_STACK_BYTES: usize = 256 * 1024 * 1024;
+pub(crate) const WARRANT_STACK_BYTES: usize = 256 * 1024 * 1024;
 
 /// What verification found.
 #[derive(Debug, Default)]
