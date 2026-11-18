@@ -73,3 +73,22 @@ Things to know:
 - **No `PostParse`.** Those hooks transform `*ASTNode`s, so `ParseInto` refuses them; call `ToAST` and apply them yourself.
 
 Run `go test -bench . -benchmem` to see the `BenchmarkParse*` numbers (`BenchmarkParseStraceLike` uses the real strace grammar from `testdata/`).
+
+### Ordered token alternatives
+
+The compiled matcher checks a leading contiguous run of direct token
+alternatives with one lookahead. It preserves the grammar's choice order,
+newline skipping, legacy token-enum fallback, failed-prefix diagnostics, and
+sticky resource-limit behavior. Ordinary `go test ./...` compares the bounded
+name/type/newline domain against the frozen parser engine. The optional
+test-only SAT miter uses fresh observations from that Go test and the existing
+TypeScript solver; it does not add a Node dependency to this package:
+
+```sh
+npm ci --prefix code/packages/typescript/test-bootstrap
+npm run build --prefix code/packages/typescript/test-bootstrap
+node code/packages/go/parser/verify_alt_token_run_sat.mjs
+```
+
+The SAT model covers only its explicit 32-row token-input domain. It is a finite
+semantic cross-check, not a proof of the Go source or all parser executions.

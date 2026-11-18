@@ -35,6 +35,13 @@ pilot does not authorize a package release.
 | D21 rand/thread/ui taxonomy | #18781 | Taxonomy/selected enforcers, not full effect proofs |
 | Pilot quirks log | #18786 | Record of rough edges, not proof evidence |
 
+The TypeScript `sat-solver` package (`code/packages/typescript/sat-solver`) and
+Rust `cdcl-sat` package (`code/packages/rust/cdcl-sat`) have distinct canonical
+names; the tracked Go tree has no `sat-solver` package. The optional bounded Go
+parser miter reuses the TypeScript solver from test code only. It establishes
+neither a Go solver port nor cross-language package parity; track that separate
+gap in the [package parity roadmap](package-parity-roadmap.md).
+
 ## Prioritized pilot queue
 
 `ready-local` permits preparation, not a claim that dependencies are delivered.
