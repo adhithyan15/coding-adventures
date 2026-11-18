@@ -6271,6 +6271,41 @@ or open a network connection. Authenticated ordered handshake progression,
 certificate and revocation policy, and HTTP/TLS transport composition remain
 prerequisites; concrete HTTPS and live-provider readiness remain unavailable.
 
+The authenticated retry reassembly boundary can now be consumed into a
+server-only ordered-flight owner that composes the exact monotonic server
+record state with the existing `tls13-no-psk-server-flight` transition policy.
+Construction rejects client-sender state and any reassembler that already
+consumed or failed a record, then starts only at `ExpectEncryptedExtensions`;
+callers cannot inject a detached ordering state, carry a pre-composition
+fragment, or resume at a later position. For each complete policy-authorized message,
+the owner advances the public no-PSK server-flight type sequence before it
+lends the message to the caller's non-retaining handler. The handler receives
+an ordered wrapper retaining the exact authenticated message beside the
+post-accept state and client-authentication requirement, so it cannot mistake
+pre-transition bytes for ordered progression.
+
+Success returns non-copyable evidence retaining the exact ciphertext input,
+authenticated reassembly result, post-record server-flight state, and
+client-authentication requirement. An unexpected message type permanently
+poisons and clears the composed reassembly owner before returning a stable,
+payload-free ordering error; later records fail before authentication or
+handler invocation. Record, content-type, reassembly, and handler-unwind
+failures retain the same terminal behavior. A handler may already have acted
+on earlier valid messages in the same authenticated record before a later
+message fails ordering, so any such caller-owned effect remains caller-audited
+and is not transactional.
+
+This bounded composition enforces only the public no-PSK server-flight message
+type order over authenticated retry-handshake records. It does not interpret
+message bodies, advance a transcript, validate EncryptedExtensions, process a
+CertificateRequest, validate a certificate chain or hostname, authenticate
+CertificateVerify or Finished, establish trust, enforce revocation, select
+epochs, perform key updates, emit an alert, perform I/O, authorize HTTP or
+OAuth transport, or open a network connection. Body-specific processing,
+transcript and signature authentication, certificate and revocation policy,
+and HTTP/TLS transport composition remain prerequisites; concrete HTTPS and
+live-provider readiness remain unavailable.
+
 An allocation-free `http1-fixed-request-body` prerequisite now binds one
 caller-borrowed, potentially sensitive request body to its exact byte length
 under an explicit caller ceiling. It encodes that length in canonical shortest
