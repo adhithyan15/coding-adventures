@@ -72,14 +72,16 @@ identity for nonempty input, and rejects empty input. The signal cap is
 `MAX_SAMPLES = 2^24`; its section cap is `MAX_ORDER = 1024`. There is no
 aggregate samples-times-sections cap.
 
-`iir(b, a, signal)` is also one-shot; it does not expose persistent delay
-state. Its coefficient-array caps are `MAX_TAPS = 2^20`, its signal cap is
-`2^24`, and `MAX_ORDER = 1024` means maximum polynomial order here. The same
-`MAX_ORDER` constant therefore has distinct meanings by operation: polynomial
-order for `iir`, number of sections for `sosfilt`. Keep units operation-local.
-Legacy `design_*` return `Vec<f32>` and panic for invalid arguments; additive
-`try_design_*` return `Result`. FIR tap length must be odd, so the largest
-accepted tap count under `MAX_TAPS` is `1,048,575`. Cutoffs are normalized
+`iir(signal, b, a)` is also one-shot; it does not expose persistent delay
+state. Its coefficient-array preflight ceiling is `MAX_TAPS = 2^20`, its signal
+cap is `2^24`, and `MAX_ORDER = 1024` means maximum polynomial order here, so
+accepted coefficient vectors are at most 1,025 elements. The same `MAX_ORDER`
+constant therefore has distinct meanings by operation: polynomial order for
+`iir`, number of sections for `sosfilt`. Keep units operation-local. Legacy
+`design_*` return `Vec<f32>` and panic for invalid arguments; additive
+`try_design_*` return `Result`. Designer tap length must be odd, so the largest
+accepted designer tap count under `MAX_TAPS` is `1,048,575`; direct `fir` and
+`fir_fft` accept even kernel lengths. Cutoffs are normalized
 cycles/sample, with Nyquist at `0.5`. Butterworth and Chebyshev helpers support
 orders 1 and 2 only; there is no arbitrary-order cascade designer or checked
 variant.
@@ -99,24 +101,28 @@ The package `__all__` exports `fir`, `fir_fft`, `iir`; `design_low_pass`,
 `MAX_TAPS`; and errors `FilterError`, `EmptyKernelError`,
 `EmptySignalError`, `InvalidCoefficientError`.
 
-Public numerical APIs use Python floats (binary64), Python numeric sequences,
-and list results. `Biquad` is mutable DFII-T state with `reset`,
-`process_sample`, and block `process`; its legacy constructor normalizes by
-reciprocal multiplication. Its six cookbook class constructors are
-`lowpass`, `highpass`, `bandpass`, `notch`, `allpass`, and `peak`. Legacy
-`sos_cascade(signal, sos)` is the historical argument order; `sosfilt` is also
-exported. SOS state is local to each call. The opt-in checked path adds strict
-binary64 input checks, direct-division normalization, finite output/delay
-checks, and returned-error rollback for `process`/checked SOS. It has no pole
-screen. Python integer inputs accepted by the checked path are converted to
-binary64; booleans are excluded.
+Arithmetic and results use binary64; legacy APIs accept Python numeric
+sequences and return lists. `Biquad` exposes writable `b0`, `b1`, `b2`, `a1`,
+`a2`, `z1`, and `z2` slots; its constructor reciprocal-normalizes after raw
+finite/zero checks, but does not reject nonfinite normalized coefficients. It
+has `reset`, `process_sample`, `process`, and class constructors `lowpass`,
+`highpass`, `bandpass`, `notch`, `allpass`, and `peak`. `process` converts
+samples with `float` and commits as it goes, so a later bad sample leaves valid
+prefix progress. `sos_cascade(signal, sos)` is the historical argument order;
+`sosfilt(sos, signal)` is the alias order. SOS state is local to each call.
+`CheckedBiquad`/`checked_sosfilt` accept only exact built-in int/float inputs,
+exclude bool/subclasses and convert checked integers once to binary64. They use
+direct-division normalization and reject nonfinite normalized coefficients,
+outputs, and candidate delays. Checked block processing is atomic for
+filter-owned state on ordinary failures/accessor exceptions; exceptions from
+caller accessors propagate, and no caller-created reentrant mutation guarantee
+is claimed. The checked path has no pole screen.
 
 Python caps are `MAX_SAMPLES = 2^24`, `MAX_TAPS = 2^20`, `MAX_ORDER = 1024`.
 The package raises `FilterError` subclasses rather than returning `Result`.
 `FftError` is defined inside `fir.py` but is absent from the package `__all__`
-and has no raise site in the pinned source. Validation order, Python accessor
-exceptions, and legacy partial-progress behavior are lane facts and must be
-recorded per operation rather than generalized from the checked APIs.
+and has no raise site in the pinned source. Validation order and Python
+accessor exceptions are recorded per operation, not generalized across APIs.
 
 ### TypeScript
 
@@ -133,18 +139,28 @@ The package index exports `Biquad`, `sosfilt` with aliases `sosCascade` and
 The lane uses JavaScript `number` (binary64) and commonly accepts
 `Float64Array | ArrayLike<number>`; outputs are normally `Float64Array`.
 Legacy Biquad/SOS normalization uses reciprocal multiplication. `Biquad`
-exposes readonly normalized coefficient fields but keeps delay state private;
-it has `reset`, `processSample`, `process`, and six static cookbook
-constructors. `sosfilt(sos, signal)` is one-shot with fresh section state on
-each call. Checked APIs use strict finite primitive numbers and direct
-division, validate output/delay state, and make block processing failure
-atomic. They do not add a pole screen.
+exposes readonly normalized coefficient fields and TypeScript-`private`
+`z1`/`z2` (compile-time privacy only; ordinary runtime properties). It has
+`reset`, `processSample`, `process`, and static `lowpass`, `highpass`,
+`bandpass`, `notch`, `allpass`, and `peak` constructors. Legacy `process`
+Number-coerces indexed values and mutates state per sample. `sosfilt(sos,
+signal)` is one-shot with fresh section state on each call. Checked APIs use
+strict finite primitive numbers and direct division, validate output/delay
+state, and make block processing failure atomic for filter-owned state on
+ordinary failures; they do not promise atomicity against caller-created
+reentrant accessors or add a pole screen.
 
 TypeScript caps are `MAX_SIGNAL_LEN = 2^24`, `MAX_FILTER_TAPS = 2^16`, and
 `MAX_ORDER = 2^10`. The exported aliases above share implementations; inventory
 both the alias and canonical name. `filtfilt`, `firwin`, and the additional
 Butterworth high/band-pass constructors are TypeScript-only public functions
 at this pinned revision and must not be silently omitted as non-parity.
+`FilterCoefficients` is `{b: Float64Array, a: Float64Array}`;
+`FirwinOptions` is `{window?: string, passZero?: boolean}`. A scalar cutoff
+selects low/high pass by `passZero`; a `[low, high]` pair selects band-pass or
+band-stop. The FFT window parser accepts rectangular, Hann/Hanning, Hamming,
+Blackman, and Kaiser; Python accepts its four enum names, stripping and
+lowercasing string input.
 
 ## 4. Existing tests and evidence: bounded, lane-specific receipts
 
@@ -175,10 +191,11 @@ one blob; TypeScript is a distinct copy. Each declares the six operations
 `design_band_pass` using `Bytes`/`Nat`. The files have no functional claim or
 example that reaches an implementation, no Biquad/SOS declaration, and no
 lane binding, generated evidence harness, or assurance report for this package.
-The TypeScript copy retains work/heap expressions for FIR/FFT/IIR and differs
-from the other three copies' resource rows. That is a lane-specific
-unresolved obligation; this inventory does not infer that the retained rows
-are false or that their resource units are meaningful.
+The TypeScript copy retains work and heap expressions for FIR and FIR-FFT, a
+work expression for IIR, and omits hostile-input rows for high-pass and
+band-pass `window`. That is a lane-specific unresolved obligation; this
+inventory does not infer that retained rows are false or their resource units
+are meaningful.
 
 Warrant `Bytes` length is not a sample/tap count without a lane-specific codec
 and representation. Rust `f32`, Python binary64 sequences, TypeScript
@@ -190,8 +207,7 @@ compiler translates a checked Warrant but translation does not execute or
 validate the native source binding. HostTy and the filter state protocol are
 separate unresolved capabilities.
 
-VER04h requires uncovered functional claims to be rejected. The existing
-resource pilot does not establish heap/depth bounds. AF-04b may later bind a
+The existing resource pilot does not establish heap/depth bounds. AF-04b may later bind a
 deliberately scoped public operation with explicit gaps; a partial FIR pilot
 must not become a six-operation or package-wide badge. AF-05b is a separate
 release-blocking native/source float proof prerequisite. It must identify the
@@ -243,14 +259,32 @@ AF-04a's implementation artifact will be
    `Warrant_binding`, `native_refinement`) with explicit `not_live`/`unknown`
    states rather than inferred zeros.
 
-The validator will check schema, source identity, and semantic completeness as
-separate failure classes. Its negative controls must independently prove that
-(a) a malformed record fails schema validation, (b) deleting a known export
-fails export-completeness validation, (c) changing a pinned source blob fails
-identity validation, and (d) asserting a non-live binding/proof as live fails
-status validation. A passing JSON schema check alone does not establish a
-complete source census; source comparison and independent review remain
-required.
+The validator will compare inventory in both directions against an
+immutable baseline pinned by this specification and source loaded with
+`git show <subject>:<path>`. It must not trust an editable manifest to supply
+its own expected export set or digest. It will recognize a documented finite
+set of Python AST, TypeScript export-block, Rust re-export/module, and Warrant
+declaration forms; unknown syntax fails closed or is marked unresolved, never
+treated as an empty API. The baseline covers qualified module paths, aliases
+and targets, argument order, type/runtime namespace, public methods/fields,
+and package tree paths. Warrant copies are checked as comment-aware
+declarations. A missing file in one blob does not prove that no package-level
+binding exists; inspect the complete pinned package tree.
+
+Schema, source identity, and semantic completeness are separate failure
+classes. Negative controls must independently prove that (a) malformed data
+fails schema validation, (b) removing a known export, alias, method, or field
+fails completeness, (c) changing an alias target or swapping same-named
+Biquad lane identities fails semantic binding checks, (d) changing a pinned
+source blob fails identity validation, (e) a historical receipt for another
+subject/lane/op/domain/kind does not satisfy the current key, and (f) promoting
+a non-live binding/native proof fails even when valid unrelated evidence is
+present. Evidence IDs bind subject commit, operation, lane, evidence kind, and
+domain. `public_execution` requires a matching run artifact; a test-source
+declaration is only `configured`, not `executed`. The no-binding/no-native-proof
+baseline is independently checked against the pinned package tree. JSON schema
+validation alone does not establish source completeness; independent source
+comparison remains required.
 
 ## 8. Acceptance and delivery dependencies
 
