@@ -140,62 +140,51 @@ fn the_unlowerable_adopters_are_refused_whole_with_the_level_named() {
 
 /// Claims by first blocker, per adopter, with `max_ir_cost 65536`: **a claim is named by the
 /// first construct, in source order, that cannot be lowered, and by `ir.fixed` only when nothing
-/// else blocks it** (S10b: the built-ins now lower, so a claim that also uses a tuple or a
-/// constructor is named by that level, as the oracle's census names it).  Before S10b every claim
-/// that met a built-in first was `ir.fixed`: the README's old totals were `ir.data` 154,
-/// `ir.fixed` 101, `inout` 9, `W0701` 2; they are now `ir.data` 79, `ir.fixed` 99, `ir.tuple` 71,
-/// `W0701` 8, `inout` 9 and 89 emittable.
+/// else blocks it** (S10b: the built-ins lower, so a claim that also uses a constructor is named by
+/// that level, as the oracle's census names it).
+///
+/// History.  Before S10b every claim that met a built-in first was `ir.fixed`: the README's old
+/// totals were `ir.data` 154, `ir.fixed` 101, `inout` 9, `W0701` 2.  S10b: `ir.data` 79,
+/// `ir.fixed` 99, `ir.tuple` 71, `W0701` 8, `inout` 9 and 89 emittable.  **S10t-2** lowers
+/// `ir.tuple`, so no claim is *blocked* on it any more: the 71 `ir.tuple` claims are emittable
+/// (`ok`), `ir.fixed` (they also use a built-in), `ir.data` (they also use a list or a record)
+/// or, for wasm-leb128, a 16.2 descriptor refusal of the domain stage.  Now: `ir.data` 100,
+/// `ir.fixed` 130, `W0701` 8, `inout` 9, `16.2` 3 and 105 emittable.
 const PINS: [(&str, &[(&str, usize)]); 11] = [
-    ("arithmetic", &[("ir.data", 55), ("ir.tuple", 8)]),
+    ("arithmetic", &[("ir.data", 55), ("ir.fixed", 5), ("ok", 3)]),
     ("ct-compare", &[("ok", 9)]),
     ("gf256", &[("ok", 38)]),
     (
         "hash-functions",
-        &[("W0701", 6), ("ir.fixed", 25), ("ir.tuple", 21), ("ok", 4)],
+        &[("W0701", 6), ("ir.data", 21), ("ir.fixed", 25), ("ok", 4)],
     ),
     (
         "logic-gates",
-        &[
-            ("ir.data", 3),
-            ("ir.fixed", 51),
-            ("ir.tuple", 6),
-            ("ok", 28),
-        ],
+        &[("ir.data", 3), ("ir.fixed", 57), ("ok", 28)],
     ),
     ("lzw", &[("ir.fixed", 17), ("ok", 4)]),
     ("vos-sched-any", &[("ir.data", 8)]),
     ("vos-sched-fp-bitmap", &[("ir.data", 13)]),
     (
         "wasm-leb128",
-        &[("W0701", 2), ("ir.fixed", 4), ("ir.tuple", 36)],
+        &[("16.2", 3), ("W0701", 2), ("ir.fixed", 24), ("ok", 13)],
     ),
     ("x25519", &[("ir.fixed", 2), ("ok", 6)]),
     ("zeroize", &[("inout", 9)]),
 ];
 
-/// The oracle's pins for the same documents (`warrant-oracle/tests/test_lower.py` `CENSUS`:
-/// suites by `unsupported.level`, `ir.core` for none).
+/// The oracle's pins for the same documents (`warrant-oracle/tests/test_lower.py` `CENSUS`, as
+/// of S10t-1: suites by `unsupported.level`, `ir.core` for none).
 const ORACLE_PINS: [(&str, &[(&str, usize)]); 7] = [
     ("ct-compare", &[("ok", 9)]),
     ("gf256", &[("ok", 38)]),
-    (
-        "wasm-leb128",
-        &[("ok", 10), ("ir.tuple", 24), ("ir.fixed", 8)],
-    ),
+    ("wasm-leb128", &[("ok", 18), ("ir.fixed", 24)]),
     (
         "logic-gates",
-        &[
-            ("ok", 28),
-            ("ir.data", 3),
-            ("ir.tuple", 2),
-            ("ir.fixed", 55),
-        ],
+        &[("ok", 28), ("ir.data", 3), ("ir.fixed", 57)],
     ),
     ("lzw", &[("ok", 4), ("ir.fixed", 17)]),
-    (
-        "arithmetic",
-        &[("ok", 5), ("ir.data", 45), ("ir.tuple", 4), ("ir.fixed", 9)],
-    ),
+    ("arithmetic", &[("ok", 7), ("ir.data", 45), ("ir.fixed", 11)]),
     ("x25519", &[("ok", 6), ("ir.fixed", 2)]),
 ];
 
@@ -227,38 +216,33 @@ fn the_first_blocker_histogram_of_every_adopter_is_pinned() {
 }
 
 #[test]
-fn the_generator_census_agrees_with_the_oracle_where_both_lower_the_same_document() {
-    // Exactly equal for the four documents whose every claim both tools lower or refuse for the
-    // same reason.
-    for name in ["ct-compare", "gf256", "lzw", "x25519"] {
+fn the_generator_census_agrees_with_the_oracle_and_every_difference_has_a_named_cause() {
+    // Exactly equal for the five documents whose every claim both tools lower or refuse for the
+    // same reason.  S10t-2 closed the gap of S10b (follow-up CV2-F5) for tuples: logic-gates is
+    // now in this list, and wasm-leb128's and arithmetic's tuple-blocked claims lower.
+    for name in ["ct-compare", "gf256", "logic-gates", "lzw", "x25519"] {
         let oracle = ORACLE_PINS.iter().find(|p| p.0 == name).unwrap().1;
         assert_eq!(histogram(name), pin(oracle), "{name}");
     }
-    // The three that differ, differ in one direction only and for two reasons, both of them
-    // things the generator refused before S10b and still refuses: a tuple, record or variant
-    // *type* in an op signature (the oracle counts it in `requires`, section 16.10 R9, and
-    // lowers; the generator refuses at `ir.tuple` / `ir.data`), and VER04r 4.4's impure guard
-    // (`W0701`, applied at lowering by the generator and when evaluating by the oracle).  So
-    // the generator never *lowers* a claim the oracle refuses.
+    // The two that still differ, differ in one direction only: the generator never *lowers* a
+    // claim the oracle refuses, and what separates them is no longer `ir.tuple`.
     let ok = |h: &std::collections::BTreeMap<String, usize>| h.get("ok").copied().unwrap_or(0);
     for (name, oracle) in &ORACLE_PINS {
         let g = histogram(name);
         assert!(ok(&g) <= ok(&pin(oracle)), "{name}");
     }
-    // wasm-leb128: the oracle's 8 core and 4 fixed claims over tuple-typed ops are `ir.tuple`
-    // here, and the 2 `ir.core` claims with an impure guard are `W0701`.
+    // wasm-leb128: the oracle's 18 `ir.core` claims are 13 here plus 3 whose binder descriptor the
+    // generator refuses until VER04r 16.2 is decided (`16.2` item 4, a signed `fx_edge` leaf: the domain stage) and 2
+    // whose body has a subject call under an impure guard (`W0701`, VER04r 4.4: the generator
+    // applies the rule at lowering, the oracle when it evaluates).
     let w = histogram("wasm-leb128");
-    assert_eq!(
-        (w["ir.tuple"], w["ir.fixed"], w["W0701"]),
-        (24 + 8 + 4, 8 - 4, 2)
-    );
-    // logic-gates: 4 claims that use built-ins and call the tuple-typed `priority_encoder`.
-    let l = histogram("logic-gates");
-    assert_eq!((l["ir.tuple"], l["ir.fixed"]), (2 + 4, 55 - 4));
-    // arithmetic: no claim is lowered (records and variants are refused as declarations).
+    assert_eq!((w["16.2"], w["W0701"], w["ok"], w["ir.fixed"]), (3, 2, 13, 24));
+    assert_eq!(w["16.2"] + w["W0701"] + w["ok"], 18);
+    // arithmetic: 10 claims call an op whose signature holds a record or variant type.  The oracle
+    // counts the type in `requires` (R9) and lowers; the generator refuses it at `ir.data` until
+    // S10d.  So the oracle's 4 `ir.core` and 6 `ir.fixed` of those are `ir.data` here.
     let a = histogram("arithmetic");
-    assert_eq!(a.get("ok"), None);
-    assert_eq!(a["ir.data"] + a["ir.tuple"], 5 + 45 + 4 + 9);
+    assert_eq!((a["ir.data"], a["ir.fixed"], a["ok"]), (45 + 10, 11 - 6, 7 - 4));
 }
 
 // -- the census logic on synthetic documents ------------------------------------------------

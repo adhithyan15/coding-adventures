@@ -39,7 +39,10 @@ use coding_adventures_sha256::sha256_hex;
 
 use crate::enumerate::{enumerate_analysed, SuiteView};
 use crate::error::{code, GenError};
-use crate::faults::{instantiate, search, stand_in, ClaimState, Fault, Level, Probe};
+use crate::faults::{
+    first_unimplemented, instantiate_in, search, stand_in, ClaimState, Fault, Level, Probe,
+    SHIPPED_GATE,
+};
 use crate::json::Json;
 use crate::lower::{Lowered, SuiteKind};
 use crate::profile::{parse_profile, Profile};
@@ -85,7 +88,7 @@ pub fn build_faults(
                 "a fault line names an operation the document does not declare",
             )
         })?;
-        faults.push(instantiate(op, name)?);
+        faults.push(instantiate_in(op, name, &lowered.errors)?);
     }
     faults.sort_by(|a, b| (a.op.as_bytes(), a.name.as_bytes()).cmp(&(b.op.as_bytes(), b.name.as_bytes())));
     if let Some(b) = bindings {
@@ -125,13 +128,31 @@ pub fn build_faults(
     Ok(faults)
 }
 
-/// Emit a v2 corpus.
+/// Emit a v2 corpus with the shipped fault-evaluation gate ([`SHIPPED_GATE`]: `ir.core` only).
+///
+/// # Errors
+///
+/// As [`generate_gated`].
+pub fn generate(input: &GenInput<'_>) -> Result<CorpusV2, GenError> {
+    generate_gated(input, &SHIPPED_GATE)
+}
+
+/// Emit a v2 corpus with `gate` as the **fault-evaluation gate**: the levels whose faults the
+/// witness search evaluates.  A fault whose `requires` names a level outside the gate is emitted as
+/// data and every candidate claim that has a stand-in is `deferred`, naming the first level of the
+/// fault's `requires` (sorted) the gate does not hold (VER04r 16.10 R12); no witness search runs.
+///
+/// The shipped gate is `ir.core` only until the atomic flip (S10c, [D29]).  This function is the
+/// **library parameter** the committed fault dump of S10t-1 is reproduced through
+/// (`tests/tuple_parity.rs` passes `ir.core` and `ir.tuple`); no command-line or environment
+/// switch reaches it.  `ir.fixed` in the gate would be refused by the evaluator, which does not run
+/// the built-ins yet.
 ///
 /// # Errors
 ///
 /// Any [`analyse`] or enumeration refusal; `profile`, `fault` and `drift` for the fault
 /// rules above; `W0701` for two suites whose chunk file names are equal ignoring case.
-pub fn generate(input: &GenInput<'_>) -> Result<CorpusV2, GenError> {
+pub fn generate_gated(input: &GenInput<'_>, gate: &[Level]) -> Result<CorpusV2, GenError> {
     let profile = parse_profile(input.profile_bytes)?;
     let analysis = analyse(input.file, &profile)?;
     let faults = build_faults(&analysis.lowered, &profile, input.binding_faults)?;
@@ -179,8 +200,9 @@ pub fn generate(input: &GenInput<'_>) -> Result<CorpusV2, GenError> {
                     None => {
                         states.insert((view.index, fi), ClaimState::Unproven);
                     }
-                    Some(_) if !f.level.implemented() => {
-                        states.insert((view.index, fi), ClaimState::Deferred(f.level));
+                    Some(_) if first_unimplemented(&f.requires, gate).is_some() => {
+                        let level = first_unimplemented(&f.requires, gate).unwrap_or(Level::Core);
+                        states.insert((view.index, fi), ClaimState::Deferred(level));
                     }
                     Some(si) => probes.push((
                         fi,
@@ -239,7 +261,7 @@ pub fn generate(input: &GenInput<'_>) -> Result<CorpusV2, GenError> {
             ("kind", Json::str("exhaustive")),
             ("claim", Json::str(s.claim.as_str())),
             ("ops", Json::strs(ls.ops.iter())),
-            ("requires", Json::strs(["ir.core"])),
+            ("requires", Json::strs(ls.requires.iter())),
             (
                 "binders",
                 Json::arr(
@@ -302,11 +324,24 @@ pub fn generate(input: &GenInput<'_>) -> Result<CorpusV2, GenError> {
     // controls
     let mut control_rows = Vec::new();
     let mut accepted_blind: Vec<String> = Vec::new();
+    // `levels`: the union of every `requires` of a suite, op, fault and control row (and core).
     let mut levels: Vec<&'static str> = vec![Level::Core.name()];
-    for (fi, f) in faults.iter().enumerate() {
-        if !levels.contains(&f.level.name()) {
-            levels.push(f.level.name());
+    let mut add_levels = |names: &mut dyn Iterator<Item = &'static str>| {
+        for n in names {
+            if !levels.contains(&n) {
+                levels.push(n);
+            }
         }
+    };
+    for ls in &lowered.suites {
+        add_levels(&mut ls.requires.iter().copied());
+    }
+    for op in &lowered.ops {
+        add_levels(&mut op.requires.iter().copied());
+    }
+    for (fi, f) in faults.iter().enumerate() {
+        // the fault row and its control row carry the same list
+        add_levels(&mut f.requires.iter().map(|l| l.name()));
         let mut required = Vec::new();
         let mut blind = Vec::new();
         let mut witness = Vec::new();
@@ -373,7 +408,7 @@ pub fn generate(input: &GenInput<'_>) -> Result<CorpusV2, GenError> {
             ("op", Json::str(f.op.as_str())),
             ("fault", Json::str(f.name.as_str())),
             ("target_kind", Json::str("exhaustive")),
-            ("requires", Json::strs([f.level.name()])),
+            ("requires", Json::strs(f.requires.iter().map(|l| l.name()))),
             ("required_claims", Json::Arr(required)),
             ("blind_claims", Json::Arr(blind)),
             ("slim_witness", Json::Arr(witness)),
