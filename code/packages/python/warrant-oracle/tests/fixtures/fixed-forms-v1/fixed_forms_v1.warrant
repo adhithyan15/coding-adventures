@@ -900,7 +900,7 @@ warrant fixed_forms v1
   claim c_and_u8:
     forall a: U8, b: U8. op_and_u8(a, b) == bit_and(a, b)
   claim c_not_u8:
-    forall a: U8. op_not_u8(a) == bit_xor(a, max_value<U8>()) or op_not_u8(a) == bit_not(a)
+    forall a: U8. bit_not(a) == bit_xor(a, max_value<U8>()) and op_not_u8(a) == bit_not(a)
   claim c_shl_u8:
     forall a: U8, n: Nat | n < 16. op_shl_u8(a, n) == shl(a, n)
   claim c_pop_u8:
@@ -910,7 +910,7 @@ warrant fixed_forms v1
   claim c_and_u16:
     forall a: U16, b: U16. op_and_u16(a, b) == bit_and(a, b)
   claim c_not_u16:
-    forall a: U16. op_not_u16(a) == bit_xor(a, max_value<U16>()) or op_not_u16(a) == bit_not(a)
+    forall a: U16. bit_not(a) == bit_xor(a, max_value<U16>()) and op_not_u16(a) == bit_not(a)
   claim c_shl_u16:
     forall a: U16, n: Nat | n < 32. op_shl_u16(a, n) == shl(a, n)
   claim c_pop_u16:
@@ -920,7 +920,7 @@ warrant fixed_forms v1
   claim c_and_u32:
     forall a: U32, b: U32. op_and_u32(a, b) == bit_and(a, b)
   claim c_not_u32:
-    forall a: U32. op_not_u32(a) == bit_xor(a, max_value<U32>()) or op_not_u32(a) == bit_not(a)
+    forall a: U32. bit_not(a) == bit_xor(a, max_value<U32>()) and op_not_u32(a) == bit_not(a)
   claim c_shl_u32:
     forall a: U32, n: Nat | n < 64. op_shl_u32(a, n) == shl(a, n)
   claim c_pop_u32:
@@ -930,7 +930,7 @@ warrant fixed_forms v1
   claim c_and_u64:
     forall a: U64, b: U64. op_and_u64(a, b) == bit_and(a, b)
   claim c_not_u64:
-    forall a: U64. op_not_u64(a) == bit_xor(a, max_value<U64>()) or op_not_u64(a) == bit_not(a)
+    forall a: U64. bit_not(a) == bit_xor(a, max_value<U64>()) and op_not_u64(a) == bit_not(a)
   claim c_shl_u64:
     forall a: U64, n: Nat | n < 128. op_shl_u64(a, n) == shl(a, n)
   claim c_pop_u64:
@@ -940,7 +940,7 @@ warrant fixed_forms v1
   claim c_and_i8:
     forall a: I8, b: I8. op_and_i8(a, b) == bit_and(a, b)
   claim c_not_i8:
-    forall a: I8. op_not_i8(a) == bit_xor(a, max_value<I8>()) or op_not_i8(a) == bit_not(a)
+    forall a: I8. bit_not(a) == bit_xor(a, max_value<I8>()) and op_not_i8(a) == bit_not(a)
   claim c_shl_i8:
     forall a: I8, n: Nat | n < 16. op_shl_i8(a, n) == shl(a, n)
   claim c_pop_i8:
@@ -950,7 +950,7 @@ warrant fixed_forms v1
   claim c_and_i16:
     forall a: I16, b: I16. op_and_i16(a, b) == bit_and(a, b)
   claim c_not_i16:
-    forall a: I16. op_not_i16(a) == bit_xor(a, max_value<I16>()) or op_not_i16(a) == bit_not(a)
+    forall a: I16. bit_not(a) == bit_xor(a, max_value<I16>()) and op_not_i16(a) == bit_not(a)
   claim c_shl_i16:
     forall a: I16, n: Nat | n < 32. op_shl_i16(a, n) == shl(a, n)
   claim c_pop_i16:
@@ -960,7 +960,7 @@ warrant fixed_forms v1
   claim c_and_i32:
     forall a: I32, b: I32. op_and_i32(a, b) == bit_and(a, b)
   claim c_not_i32:
-    forall a: I32. op_not_i32(a) == bit_xor(a, max_value<I32>()) or op_not_i32(a) == bit_not(a)
+    forall a: I32. bit_not(a) == bit_xor(a, max_value<I32>()) and op_not_i32(a) == bit_not(a)
   claim c_shl_i32:
     forall a: I32, n: Nat | n < 64. op_shl_i32(a, n) == shl(a, n)
   claim c_pop_i32:
@@ -970,7 +970,7 @@ warrant fixed_forms v1
   claim c_and_i64:
     forall a: I64, b: I64. op_and_i64(a, b) == bit_and(a, b)
   claim c_not_i64:
-    forall a: I64. op_not_i64(a) == bit_xor(a, max_value<I64>()) or op_not_i64(a) == bit_not(a)
+    forall a: I64. bit_not(a) == bit_xor(a, max_value<I64>()) and op_not_i64(a) == bit_not(a)
   claim c_shl_i64:
     forall a: I64, n: Nat | n < 128. op_shl_i64(a, n) == shl(a, n)
   claim c_pop_i64:
