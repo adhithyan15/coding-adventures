@@ -12,23 +12,32 @@ compiler-preserved full-scan fixed-length comparison. Only a match can pass the
 exact decoded server public share to the selected-group-bound X25519 execution
 boundary.
 
+The message-bound retry entry point accepts only
+`BoundRetryServerKeyShareMessages`. It obtains the decoded server share through
+that non-copyable CH1, HelloRetryRequest, CH2, and final-ServerHello proof and
+accepts no detached offer, share, or named-group policy. Success returns a new
+non-copyable wrapper that retains both the complete message proof and the
+existing shared-secret owner, keeping later typed composition attached to the
+public handshake evidence that authorized the operation.
+
 Mismatch, unsupported-group, public-key derivation, and downstream key-
 agreement failures leave caller-owned shared-secret output unchanged. Success
-returns the existing non-cloneable shared-secret view; dropping it wipes the
-exact borrowed output.
+returns the existing non-cloneable shared-secret view directly or inside the
+message-bound wrapper; dropping either owner wipes the exact borrowed output.
 
 ## Boundary
 
-The caller still owns and must wipe the private scalar. This package does not
-generate entropy or an ephemeral key, prove that the retained offer was sent,
-bind either hello to a transcript, advance a handshake, derive traffic secrets,
-protect records, validate certificates, establish trust, check revocation,
-perform I/O, authorize HTTP or OAuth transport, or open a network connection.
-The comparison inherits its repository package's compiler-observability
-guarantee and adds no hardware side-channel claim. The existing X25519
-primitive's optimized-code behavior and internal temporary handling remain
-properties of that package. This crate does not establish TLS, HTTPS, or live-
-provider readiness.
+The caller still owns and must wipe the private scalar. The message-bound entry
+point proves the offer and selected share came from one exact retained retry
+exchange, but this package does not generate entropy or an ephemeral key, bind
+either hello or the derived secret to a transcript, advance a handshake,
+derive traffic secrets, protect records, validate certificates, establish
+trust, check revocation, perform I/O, authorize HTTP or OAuth transport, or
+open a network connection. The comparison inherits its repository package's
+compiler-observability guarantee and adds no hardware side-channel claim. The
+existing X25519 primitive's optimized-code behavior and internal temporary
+handling remain properties of that package. This crate does not establish TLS,
+HTTPS, or live-provider readiness.
 
 ## Development
 

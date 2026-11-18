@@ -15,5 +15,8 @@ uv pip install --python .venv -e .[dev] --quiet
 .venv\Scripts\python -m coding_adventures_warrant_oracle check --spec ..\..\..\specs\lzw.warrant
 .venv\Scripts\python -m coding_adventures_warrant_oracle check --spec ..\..\..\specs\arithmetic.warrant
 .venv\Scripts\python -m coding_adventures_warrant_oracle check --spec ..\..\..\specs\x25519.warrant
+# CV2-S10a: the synthetic ir.fixed document and its committed lowering dump.
+.venv\Scripts\python tests\fixtures\fixed-forms-v1\make_fixed_forms.py --check
+.venv\Scripts\python -m coding_adventures_warrant_oracle dump-lowering --spec tests\fixtures\fixed-forms-v1\fixed_forms_v1.warrant --check tests\fixtures\fixed-forms-v1\fixed_forms_v1.oracle-lowering.json
 .venv\Scripts\python ..\..\rust\warrant-corpus-gen\tests\fixtures\dump_oracle_lowering.py --check
 .venv\Scripts\python ..\..\rust\warrant-corpus-gen\tests\fixtures\dump_oracle_enumeration.py --check

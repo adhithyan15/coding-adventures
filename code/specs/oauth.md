@@ -5958,6 +5958,35 @@ state, transcript composition, key agreement, and the remaining TLS/HTTP stack
 remain separate prerequisites. Concrete HTTPS and live-provider readiness
 remain unavailable.
 
+An allocation-free composition boundary in
+`tls13-server-hello-retry-selection` now attaches that retry key-share
+transition to the exact decoded messages already retained by one
+`BoundServerHelloRetrySelection`. After the retained extension-context policy
+has authorized both ClientHello/ServerHello pairs, the composer locates the
+first ClientHello `supported_groups` and `key_share`, the HelloRetryRequest
+`key_share`, and the second ClientHello `key_share` directly in those exact
+extension blocks. It decodes them under caller-selected resource ceilings and
+one retained data-driven named-group policy, then runs the repository-owned
+retry-transition binders. Success retains the complete retry-selection proof,
+the exact policy, and the non-copyable transition evidence. A final step
+locates the ordinary ServerHello `key_share` from the same retained proof and
+returns message-bound final-share evidence that cannot outlive that composed
+transition. Missing, malformed, disallowed, or inconsistent public inputs fail
+with stable diagnostics that retain no extension data, group identifiers,
+public-key bytes, counts, positions, or lengths.
+
+This composition proves only the origin and continuity of public key-share
+evidence across the four retained messages. It does not compare every other
+permitted ClientHello2 change; apply a retry cookie, PSK binder update, or
+early-data removal; require fresh private key material; invoke key agreement;
+apply the transcript `message_hash` rewrite; reject a second retry in
+connection state; sequence a handshake; derive traffic secrets; protect
+records; validate certificates; establish trust; enforce revocation; perform
+I/O; authorize HTTP or OAuth transport; or open a network connection. Complete
+retry-transition policy, connection state, transcript composition, key
+agreement, and the remaining TLS/HTTP stack remain separate prerequisites.
+Concrete HTTPS and live-provider readiness remain unavailable.
+
 A bounded `tls13-x25519-key-agreement` prerequisite now routes one key-
 agreement operation only from an exact `tls13-named-group-policy` selection.
 The selected group must bind the X25519 algorithm, standard 32-byte peer key-
@@ -6013,6 +6042,29 @@ behavior and internal temporary handling remain properties of that package.
 Handshake-state and transcript binding, the remaining TLS transport, and HTTP
 composition remain prerequisites; concrete HTTPS and live-provider readiness
 remain unavailable.
+
+The `tls13-x25519-key-share-binding` composition additionally accepts the
+message-bound final-share evidence returned by
+`tls13-server-hello-retry-selection`. That entry point obtains the decoded
+ServerHello share only through the retained CH1, HelloRetryRequest, CH2, and
+final-ServerHello proof, then applies the existing scalar-to-offer comparison
+and repository-owned X25519 execution without accepting detached key-share or
+policy input. Success returns a non-copyable wrapper borrowing the complete
+message proof and owning the existing wipe-on-drop shared-secret view, so
+later composition cannot separate the derived secret from the exact public
+handshake evidence that authorized it. Failures preserve the existing stable,
+payload-free categories and leave caller-owned output unchanged.
+
+This message-bound execution still does not generate entropy or an ephemeral
+private key, own or wipe the caller's private scalar, compare every permitted
+ClientHello2 change, apply a retry cookie or PSK binder update, bind the
+messages or secret to a transcript, apply the transcript `message_hash`
+rewrite, reject a second retry in connection state, process a handshake,
+derive traffic secrets, protect records, validate certificates, establish
+trust, enforce revocation, perform I/O, authorize HTTP or OAuth transport, or
+open a network connection. Handshake-state and transcript composition, the
+remaining TLS transport, and HTTP composition remain prerequisites; concrete
+HTTPS and live-provider readiness remain unavailable.
 
 An allocation-free `http1-fixed-request-body` prerequisite now binds one
 caller-borrowed, potentially sensitive request body to its exact byte length

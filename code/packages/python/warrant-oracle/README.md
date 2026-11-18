@@ -22,17 +22,17 @@ It is **stdlib-only**, shares no code, data file or table with the generator, an
 **never reads the generator's IR as truth**: it parses the `.warrant` source and
 lowers it itself, then only *compares*.
 
-## What is here (slice S4, parts 1 and 2)
+## What is here (slice S4, parts 1 and 2, and S10a)
 
 | Part | Module | Notes |
 |---|---|---|
 | reader | `lexer`, `parser`, `ast` | layout tokens, v0 + VER04j v1 + VER04k WX-G syntax, fail-closed, admission limits |
-| checker + lowering | `lower` | typing, contextual literals, **unoptimised** syntax-directed IR, named level errors |
+| checker + lowering | `lower`, `levels` | typing, contextual literals, **unoptimised** syntax-directed IR, the 35 `ir.fixed` built-ins, `requires` inference, named level errors |
 | evaluator | `ir_eval` | `ir.core`, the single wrapping rule (VER04 section 3), `MAX_IR_VALUE`, cost bound, call counting |
 | domains | `domains` | every descriptor of VER04r 5.1, `size`/`nth`, budget demotion |
 | streams | `stream` | `warrant-stream-v1/v2` encoders, chunk and suite framing, FNV-1a slim selection |
 | suites | `suites` | product enumeration, admission arithmetic, chunking, per-chunk digests |
-| gate | `corpus_v1`, `emit`, `cli` | the ct-compare v1 gate, v2 digest emitter, level census |
+| gate | `corpus_v1`, `emit`, `cli`, `lowering_dump` | the ct-compare v1 gate, v2 digest emitter, level census, lowering dump |
 | v2 gate (part 2) | `corpus_v2`, `faults`, `tfv`, `verify_v2` | derives a whole v2 fixture from the `.warrant` and `corpus.profile`; `verify-v2` compares it with the directory |
 
 Every adopter parses: ct-compare, gf256, wasm-leb128, logic-gates, lzw,
@@ -40,20 +40,47 @@ arithmetic, x25519 (and the WX-G `inout`/`ensures` syntax of zeroize).
 
 ### Feature levels
 
-The evaluator implements **`ir.core`** only (VER04r section 4.1). A model or suite
-that needs `ir.fixed` (shifts, masks, `wrap`, `be_bytes`, ...), `ir.data` (tuples,
-records, `match`, `Option`) or the reserved `ir.seq` is recorded as `not-live`
-with the level *named*; it is never skipped silently. Census at this commit:
+The evaluator implements **`ir.core`** only (VER04r section 4.1). Since slice S10a the
+lowerer also **lowers, types and costs the 35 built-ins of `ir.fixed`** (Appendix A.1; see
+below), so a model, op `admit`, claim or example that uses them has its IR and its computed
+`requires`, and is then recorded `not-live` at the level `ir.fixed`: *evaluation still
+refuses*. A construct the lowerer cannot lower, `ir.tuple` (tuple tags, `match` on a
+`Result`), `ir.data` (records, variants, `match` on anything else, `Option` anywhere but
+the intermediate use of `ir.fixed`) or the reserved `ir.seq`, is recorded with that level
+*named*; it is never skipped silently. A unit is named by the first construct beyond what the
+lowerer can lower, and `ir.fixed` only when nothing else is. Census at this commit:
 
-| Adopter | suites | `ir.core` | `ir.fixed` | `ir.data` |
-|---|---:|---:|---:|---:|
-| ct-compare | 9 | 9 | 0 | 0 |
-| gf256 | 38 | 38 | 0 | 0 |
-| x25519 | 8 | 6 | 2 | 0 |
-| lzw | 21 | 4 | 17 | 0 |
-| wasm-leb128 | 42 | 10 | 21 | 11 |
-| logic-gates | 88 | 28 | 48 | 12 |
-| arithmetic | 63 | 5 | 45 | 13 |
+| Adopter | suites | `ir.core` | `ir.fixed` | `ir.tuple` | `ir.data` |
+|---|---:|---:|---:|---:|---:|
+| ct-compare | 9 | 9 | 0 | 0 | 0 |
+| gf256 | 38 | 38 | 0 | 0 | 0 |
+| x25519 | 8 | 6 | 2 | 0 | 0 |
+| lzw | 21 | 4 | 17 | 0 | 0 |
+| wasm-leb128 | 42 | 10 | 8 | 24 | 0 |
+| logic-gates | 88 | 28 | 55 | 2 | 3 |
+| arithmetic | 63 | 5 | 9 | 4 | 45 |
+
+### `ir.fixed` lowering, `requires` and the lowering dump (slice S10a)
+
+* **Lowering and typing** (`lower.fixed_call`, `ir_eval.Program(analyze=True)`): one IR node per
+  built-in, same spelling, positional operands, a static type argument as the canonical type
+  name in position 1 (`["widen", "U32", e]`, `["max_value", "I64"]`). Two independent typers
+  (the source typer and the IR typer) implement Appendix A.1; `div`/`rem` on two `Nat`
+  operands are `Option<Int>` (R7). `Option<T>` is an IR-only intermediate whose only consumer is
+  `unwrap_or` as its first operand, directly (D23, R8); any other use, and an `Option` in a
+  signature or binder, is the level `ir.data`.
+* **`requires`** (`levels.ir_levels`, R9): the sorted union of the levels of every tag of a
+  suite's, op's `admit`'s expressions and of the call closure of every `model_call`; a tuple
+  *type* adds `ir.tuple` and a list, record or variant type adds `ir.data`; `ir.core` is always
+  included. `derive` writes it into suite and op rows. Every committed fixture verifies unchanged;
+  a tuple-binder document gains `ir.tuple` in `requires`/`levels`, and an `Option` binder is
+  refused at `ir.data`.
+* **Cost**: every new tag is `1 +` its operands (a static type argument is not an operand).
+* **The dump** (`dump-lowering`, `lowering_dump`): the canonical JSON of the lowered IR, the
+  `requires` and the cost of a document. `tests/fixtures/fixed-forms-v1/` holds the synthetic
+  `ir.fixed` document (every one of the 35 built-ins at every width the spec allows; generated
+  by `make_fixed_forms.py`) and its committed dump, which slice S10b must reproduce byte for
+  byte. `BUILD` runs both `--check`s.
 
 ## Usage
 
@@ -73,6 +100,11 @@ python -m coding_adventures_warrant_oracle emit-v2 \
 # Exit 3 means some suites were not-live or refused; --allow-partial accepts that.
 # Parse and lower a document; print what level each suite needs.
 python -m coding_adventures_warrant_oracle check --spec code/specs/lzw.warrant
+
+# The canonical lowering dump of a document (S10a): write it, or check a committed one.
+python -m coding_adventures_warrant_oracle dump-lowering \
+    --spec tests/fixtures/fixed-forms-v1/fixed_forms_v1.warrant --check \
+    tests/fixtures/fixed-forms-v1/fixed_forms_v1.oracle-lowering.json
 ```
 
 Exit status: `0` the gate passed, `1` a mismatch, `2` an input was unreadable or
@@ -204,8 +236,8 @@ subject-dependent argument the op's `admit` reads refused statically (VER04r 4.5
 
 ## Not yet done
 
-* `ir.fixed`, `ir.data` (slices S10, S11) and `inout`/`ensures` monitoring (S12): a
-  document above `ir.core` is refused whole, naming the level.
+* Evaluating `ir.fixed` (slice S10c-1), `ir.tuple` (S10t), `ir.data` (S11) and `inout`/`ensures`
+  monitoring (S12): a document above `ir.core` is refused whole, naming the level.
 * The oracle's `domain_label`/`depth` rows are emitted but not yet compared with a
   lane manifest.
 * The shape of `assumes` (VER04r 16.4 item 4); `verify-v2` expects `[]`.

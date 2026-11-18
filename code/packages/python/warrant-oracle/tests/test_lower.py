@@ -167,15 +167,15 @@ def test_claim_without_a_quantifier_has_no_binders():
     assert spec.suites[0].binders == []
 
 
-# -- level census (the oracle implements ir.core only) -------------------------------
+# -- level census (S10a: a unit is named by the first unlowerable construct in source order) -------------------------------
 
 CENSUS = {
     "ct-compare": {"ir.core": 9},
     "gf256": {"ir.core": 38},
-    "wasm-leb128": {"ir.core": 10, "ir.data": 11, "ir.fixed": 21},
-    "logic-gates": {"ir.core": 28, "ir.data": 12, "ir.fixed": 48},
+    "wasm-leb128": {"ir.core": 10, "ir.tuple": 24, "ir.fixed": 8},
+    "logic-gates": {"ir.core": 28, "ir.data": 3, "ir.tuple": 2, "ir.fixed": 55},
     "lzw": {"ir.core": 4, "ir.fixed": 17},
-    "arithmetic": {"ir.core": 5, "ir.data": 13, "ir.fixed": 45},
+    "arithmetic": {"ir.core": 5, "ir.data": 45, "ir.tuple": 4, "ir.fixed": 9},
     "x25519": {"ir.core": 6, "ir.fixed": 2},
 }
 
@@ -199,11 +199,12 @@ def test_unsupported_models_are_recorded_not_fatal():
 @pytest.mark.parametrize(
     "body,level",
     [
-        ("wrap<U8>(a)", "ir.fixed"),
-        ("bit_and(a, a)", "ir.fixed"),
-        ("(a, a) == (a, a)", "ir.data"),
+        ("wrap<U8>(a) == a", "ir.fixed"),
+        ("bit_and(a, a) == a", "ir.fixed"),
+        ("(a, a) == (a, a)", "ir.tuple"),
         ("[a] == [a]", "ir.data"),
-        ("unwrap_or(div(a, a), 0) == 0", "ir.data"),
+        ("unwrap_or(div(a, a), 0u8) == a", "ir.fixed"),
+        ("div(a, a) == div(a, a)", "ir.data"),
         ("match a with x -> true", "ir.data"),
         ("all(a, a)", "ir.seq"),
         ("len([a]) == 1", "ir.data"),
@@ -331,4 +332,4 @@ def test_static_arguments_on_a_plain_op_are_a_parse_level_error():
 
 def test_projection_of_a_binder_is_a_level_not_a_type_error():
     m = model_ir("a.0 == 1", params="a: (Nat, Nat)", ret="Bool")
-    assert m.unsupported.level == "ir.data"
+    assert m.unsupported.level == "ir.tuple"

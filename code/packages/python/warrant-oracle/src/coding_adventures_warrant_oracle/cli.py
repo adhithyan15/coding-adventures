@@ -9,6 +9,7 @@
     warrant-oracle verify-v2 <corpus-dir> --warrant x.warrant --profile corpus.profile \
                              [--bindings evidence.bindings] [--expect-generator name@version]
     warrant-oracle check     --spec x.warrant
+    warrant-oracle dump-lowering --spec x.warrant [--max-ir-cost N] (--out f.json | --check f.json)
 
 Exit status: ``0`` the gate passed; ``1`` a mismatch (the corpus and the oracle
 disagree); ``2`` the input could not be read or refused (a resource bound, a
@@ -26,7 +27,9 @@ import sys
 from .corpus_v1 import verify_v1
 from .emit import census, dumps, emit, suite_row
 from .errors import OracleError
+from .ir_eval import MAX_IR_COST
 from .lower import lower_document
+from .lowering_dump import dump
 from .parser import parse_source
 from .profile import parse_profile
 from .suites import DEFAULT_BUDGET, DEFAULT_CHUNK_SIZE
@@ -75,6 +78,20 @@ def build_parser() -> argparse.ArgumentParser:
     )
     c = sub.add_parser("check", help="parse and lower a document; report levels")
     c.add_argument("--spec", required=True)
+    d = sub.add_parser(
+        "dump-lowering",
+        help="write or check the canonical lowering dump of a document (ir.fixed parity, S10a)",
+    )
+    d.add_argument("--spec", required=True)
+    d.add_argument(
+        "--max-ir-cost",
+        type=int,
+        default=MAX_IR_COST,
+        help="the corpus.profile bound the costs are computed under (default 2,000)",
+    )
+    where = d.add_mutually_exclusive_group(required=True)
+    where.add_argument("--out", help="write the dump here")
+    where.add_argument("--check", help="exit 1 unless this committed dump is what the oracle writes")
     w = sub.add_parser("verify-v2", help="gate an on-disk warrant-corpus-v2 fixture (S4 part 2)")
     w.add_argument("corpus_dir", help="a fixture directory: corpus.json, chunks/, cases.tfv")
     w.add_argument("--warrant", required=True, help="the .warrant source the corpus was made from")
@@ -140,6 +157,23 @@ def _verify_v2(args: argparse.Namespace) -> int:
     return 0 if report.ok else 1
 
 
+def _dump_lowering(args: argparse.Namespace, spec_bytes: bytes) -> int:
+    if not 2_000 <= args.max_ir_cost <= 65_536:
+        raise OracleError("limit", "max_ir_cost is between 2,000 and 65,536")
+    text = dump(spec_bytes, args.max_ir_cost)
+    if args.check is not None:
+        committed = _read(args.check, 16 << 20)
+        if committed != text:
+            print(f"warrant-oracle: dump-lowering: DIFFERS: {args.check}", file=sys.stderr)
+            return 1
+        print(f"warrant-oracle: dump-lowering: ok: {args.check} ({len(text)} bytes)")
+        return 0
+    _check_out(args.out, [args.spec])
+    pathlib.Path(args.out).write_bytes(text)
+    print(f"warrant-oracle: dump-lowering: wrote {args.out} ({len(text)} bytes)")
+    return 0
+
+
 def _run(args: argparse.Namespace) -> int:
     if args.command == "verify-v2":
         return _verify_v2(args)
@@ -147,6 +181,8 @@ def _run(args: argparse.Namespace) -> int:
     if args.command == "check":
         sys.stdout.write(dumps(census(lower_document(parse_source(spec_bytes)))))
         return 0
+    if args.command == "dump-lowering":
+        return _dump_lowering(args, spec_bytes)
     if args.command == "emit-v2":
         _check_out(args.out, [args.spec] + ([args.profile] if args.profile else []))
         profile = parse_profile(_read(args.profile, 64 * 1024)) if args.profile else None
