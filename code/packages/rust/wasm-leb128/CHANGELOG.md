@@ -8,6 +8,17 @@ No change to the public API. One behaviour fix (SEC-006, below): the bounded
 decoders reject `max_bits > 64`. (Cargo.toml stays at 0.2.0: this whole entry is
 unreleased and the version is bumped at release.)
 
+### Changed
+
+- **WD-HARN1c: negative controls run through the shared checker.** All 20 sabotage lines in
+  each of `BUILD`, `BUILD_linux` and `BUILD_windows` now call
+  `code/scripts/warrant_negctl.py -- cargo test ...` instead of an `awk` pipe (Unix) or a
+  `%TEMP%` capture plus `findstr` (Windows). Every fault, filter and cargo argument is
+  unchanged and in the same order. The checker also requires a non-zero exit, exactly one TAP
+  plan and test points numbered `1..N`, and prints the captured output when a control fails
+  (the Windows lines printed nothing). Each BUILD file declares `# needs-toolchain: python`.
+  No source, test or evidence change.
+
 ### Fixed
 
 - `decode_unsigned_bounded` / `decode_signed_bounded` now return `Err` for

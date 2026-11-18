@@ -1,10 +1,12 @@
 package main
 
 import (
+	"io/fs"
 	"os"
 	"path/filepath"
 	"reflect"
 	"slices"
+	"strings"
 	"testing"
 
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/discovery"
@@ -490,24 +492,62 @@ func TestNegativeControlCheckerSelectsOnlyItsTestHome(t *testing.T) {
 	}
 }
 
-// WD-HARN1c: warrant-grammar's BUILD runs the checker's Python tests, so it
-// declares the Python toolchain explicitly on both fronts (the same directive
-// java-to-semantic-ir uses) rather than relying on a system python3.
-func TestWarrantGrammarDeclaresPythonOnBothBuildFronts(t *testing.T) {
-	packageRoot := filepath.Join(
-		toolchainFixtureRepoRoot(t), "code", "packages", "rust", "warrant-grammar",
-	)
-	buildFiles := make(map[string]string)
-	for _, filename := range []string{"BUILD", "BUILD_windows"} {
-		content, err := os.ReadFile(filepath.Join(packageRoot, filename))
+// WD-HARN1c: every BUILD file that calls the shared negative-control checker
+// (code/scripts/warrant_negctl.py) runs it with `python3` (`python` on
+// Windows), so that file must itself declare `# needs-toolchain: python`:
+// CI installs Python on Linux only for a package that declares it. The files
+// are found by scanning every BUILD* under code/packages and code/programs for
+// the script name, not from a list, so a package migrated later is pinned the
+// moment its BUILD starts calling the checker. warrant-grammar is among them
+// because its BUILD runs the checker's own tests.
+func TestEveryBuildFileUsingTheNegctlCheckerDeclaresPython(t *testing.T) {
+	repoRoot := toolchainFixtureRepoRoot(t)
+	users := make(map[string]string)
+	for _, top := range []string{"packages", "programs"} {
+		root := filepath.Join(repoRoot, "code", top)
+		err := filepath.WalkDir(root, func(path string, entry fs.DirEntry, walkErr error) error {
+			if walkErr != nil {
+				return walkErr
+			}
+			if entry.IsDir() {
+				switch entry.Name() {
+				case "node_modules", "target", ".git", "vendor":
+					return filepath.SkipDir
+				}
+				return nil
+			}
+			if !strings.HasPrefix(entry.Name(), "BUILD") {
+				return nil
+			}
+			content, err := os.ReadFile(path)
+			if err != nil {
+				return err
+			}
+			if strings.Contains(string(content), "warrant_negctl.py") {
+				users[path] = string(content)
+			}
+			return nil
+		})
 		if err != nil {
 			t.Fatal(err)
 		}
-		buildFiles[filename] = string(content)
 	}
-	for _, platform := range []string{"linux", "windows"} {
-		if got := discovery.ExtraToolchainsForSnapshot(buildFiles, platform); !slices.Contains(got, "python") {
-			t.Fatalf("%s selected front declared %v, want python", platform, got)
+	if len(users) == 0 {
+		t.Fatal("found no BUILD file that calls warrant_negctl.py; the scan is broken")
+	}
+	for path, content := range users {
+		name := filepath.Base(path)
+		goos := "linux"
+		switch {
+		case strings.HasSuffix(name, "_windows"):
+			goos = "windows"
+		case strings.HasSuffix(name, "_mac"):
+			goos = "darwin"
+		}
+		got := discovery.ExtraToolchainsForSnapshot(map[string]string{name: content}, goos)
+		if !slices.Contains(got, "python") {
+			rel, _ := filepath.Rel(repoRoot, path)
+			t.Errorf("%s calls warrant_negctl.py but declares %v, want python (add `# needs-toolchain: python`)", filepath.ToSlash(rel), got)
 		}
 	}
 }

@@ -7,6 +7,17 @@ findings fixed on the way (SEC-002, SEC-002a, below). The wire format is unchang
 `compress` output is byte for byte what it was. (Cargo.toml stays at 0.1.0: this whole
 entry is unreleased and the version is bumped at release.)
 
+### Changed
+
+- **WD-HARN1c: negative controls run through the shared checker.** All 22 sabotage lines in
+  each of `BUILD`, `BUILD_linux` and `BUILD_windows` now call
+  `code/scripts/warrant_negctl.py -- cargo test ...` instead of an `awk` pipe (Unix) or a
+  `%TEMP%` capture plus `findstr` (Windows). Every fault, filter and cargo argument is
+  unchanged and in the same order. The checker also requires a non-zero exit, exactly one TAP
+  plan and test points numbered `1..N`, and prints the captured output when a control fails
+  (the Windows lines printed nothing). Each BUILD file declares `# needs-toolchain: python`.
+  No source, test or evidence change.
+
 ### Fixed
 
 - **SEC-002, decompression bomb (CWE-409).** `decompress` delivers at most

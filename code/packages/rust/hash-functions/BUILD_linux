@@ -1,3 +1,4 @@
+# needs-toolchain: python
 # BUILD_linux is BUILD plus ONE change: the VER08b runtime-capability line runs with
 # RCG_STRICT=1.  The build tool picks BUILD_linux first on Linux, BUILD on macOS
 # (BUILD_mac / BUILD_mac_and_linux do not exist here) and BUILD_windows on Windows.
@@ -19,20 +20,20 @@ RCG_STRICT=1 cargo test -q -p coding_adventures_hash_functions --test runtime_ca
 # flip-result-bit XORs the least significant bit of the integer.
 cargo run -q -p coding_adventures_warrant_grammar --example gen_evidence -- --check hash-functions
 WARRANT_EVIDENCE_OUT=evidence/test-manifest.json cargo test -q -p coding_adventures_hash_functions --test warrant_evidence
-# A negative control passes only if the sabotaged run printed a `not ok ` line AND no `Bail out!` anywhere (not anchored: a subject's
-# unterminated stdout write could put it mid-line).
-# A pipeline's status is its last command's, so the old `grep -q '^not ok '` passed a run where one
-# test failed as intended and a later one hung (observer timeout: `Bail out!`, exit 70) and the hang
-# went unreported.  The pipe also hides the binary's exit status, so this reads the TAP on stdout.
-WARRANT_EVIDENCE_FAULT=flip-result-bit WARRANT_EVIDENCE_FILTER=/exhaustive/fnv1a_32_one_byte_matches_both_models cargo test -q -p coding_adventures_hash_functions --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
-WARRANT_EVIDENCE_FAULT=flip-result-bit WARRANT_EVIDENCE_FILTER=/exhaustive/fnv1a_64_one_byte_matches_both_models cargo test -q -p coding_adventures_hash_functions --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
-WARRANT_EVIDENCE_FAULT=flip-result-bit WARRANT_EVIDENCE_FILTER=/exhaustive/djb2_one_byte_matches_both_models cargo test -q -p coding_adventures_hash_functions --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
-WARRANT_EVIDENCE_FAULT=flip-result-bit WARRANT_EVIDENCE_FILTER=/exhaustive/polynomial_rolling_one_byte_is_the_byte cargo test -q -p coding_adventures_hash_functions --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
-WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/polynomial_params_zero_modulus_is_rejected cargo test -q -p coding_adventures_hash_functions --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
-WARRANT_EVIDENCE_FAULT=flip-result-bit WARRANT_EVIDENCE_FILTER=/exhaustive/polynomial_params_abc_every_parameter_pair cargo test -q -p coding_adventures_hash_functions --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
-WARRANT_EVIDENCE_FAULT=flip-result-bit WARRANT_EVIDENCE_FILTER=/exhaustive/murmur3_32_one_byte_matches_the_model cargo test -q -p coding_adventures_hash_functions --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
-WARRANT_EVIDENCE_FAULT=flip-result-bit WARRANT_EVIDENCE_FILTER=/exhaustive/murmur3_seed_len_0 cargo test -q -p coding_adventures_hash_functions --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
-WARRANT_EVIDENCE_FAULT=flip-result-bit WARRANT_EVIDENCE_FILTER=/exhaustive/siphash_len_0 cargo test -q -p coding_adventures_hash_functions --test warrant_evidence 2>/dev/null | awk '/^not ok /{n=1} /Bail out!/{b=1} END{exit !(n&&!b)}'
+# Negative controls (WD-HARN1c): each line plants a fault (WARRANT_EVIDENCE_FAULT), aims the
+# generated test target at one cheap claim (WARRANT_EVIDENCE_FILTER) and hands the run to the
+# shared checker code/scripts/warrant_negctl.py, which passes only if the sabotaged suite exited
+# non-zero, printed exactly one TAP plan, reported a real `not ok`, did not `Bail out!` and numbered
+# its test points 1..N.  The rule lives in the script (and its tests), not in this file.
+WARRANT_EVIDENCE_FAULT=flip-result-bit WARRANT_EVIDENCE_FILTER=/exhaustive/fnv1a_32_one_byte_matches_both_models python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p coding_adventures_hash_functions --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=flip-result-bit WARRANT_EVIDENCE_FILTER=/exhaustive/fnv1a_64_one_byte_matches_both_models python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p coding_adventures_hash_functions --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=flip-result-bit WARRANT_EVIDENCE_FILTER=/exhaustive/djb2_one_byte_matches_both_models python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p coding_adventures_hash_functions --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=flip-result-bit WARRANT_EVIDENCE_FILTER=/exhaustive/polynomial_rolling_one_byte_is_the_byte python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p coding_adventures_hash_functions --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/polynomial_params_zero_modulus_is_rejected python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p coding_adventures_hash_functions --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=flip-result-bit WARRANT_EVIDENCE_FILTER=/exhaustive/polynomial_params_abc_every_parameter_pair python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p coding_adventures_hash_functions --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=flip-result-bit WARRANT_EVIDENCE_FILTER=/exhaustive/murmur3_32_one_byte_matches_the_model python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p coding_adventures_hash_functions --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=flip-result-bit WARRANT_EVIDENCE_FILTER=/exhaustive/murmur3_seed_len_0 python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p coding_adventures_hash_functions --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=flip-result-bit WARRANT_EVIDENCE_FILTER=/exhaustive/siphash_len_0 python3 ../../../scripts/warrant_negctl.py -- cargo test -q -p coding_adventures_hash_functions --test warrant_evidence
 # siphash_2_4's key is `secret`: its constant-time obligation is attempted on the real source,
 # the front end refuses it, and the proof manifest records it `not-live` with the blocker.
 WARRANT_PROOF_OUT=$PWD/evidence cargo test -q -p coding_adventures_warrant_ir --test hash_functions_proofs
