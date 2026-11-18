@@ -101,6 +101,17 @@ func TokenizeLineMax(line string, maxBytes int) ([]lexer.Token, error) {
 // storage and its lifetime. If dst is a shortened prefix of an older result,
 // the caller must clear any truncated tail it wants to release.
 func TokenizeLineMaxInto(line string, maxBytes int, dst []lexer.Token) ([]lexer.Token, error) {
+	return tokenizeLineMaxInto(line, maxBytes, dst, nil)
+}
+
+// TokenizeLineMaxIntoWithCursor applies the same line checks as
+// TokenizeLineMaxInto, then reuses cursor's private lexer state. The cursor
+// must have one owner and must not be used concurrently or reentrantly.
+func TokenizeLineMaxIntoWithCursor(line string, maxBytes int, dst []lexer.Token, cursor *lexer.TokenCursor) ([]lexer.Token, error) {
+	return tokenizeLineMaxInto(line, maxBytes, dst, cursor)
+}
+
+func tokenizeLineMaxInto(line string, maxBytes int, dst []lexer.Token, cursor *lexer.TokenCursor) ([]lexer.Token, error) {
 	if errLine != nil {
 		return nil, errLine
 	}
@@ -112,6 +123,9 @@ func TokenizeLineMaxInto(line string, maxBytes int, dst []lexer.Token) ([]lexer.
 	}
 	if strings.IndexByte(line, '\n') >= 0 {
 		return nil, ErrNewline
+	}
+	if cursor != nil {
+		return cursor.TokenizeInto(compiledLine, line, dst)
 	}
 	return compiledLine.TokenizeInto(line, dst)
 }

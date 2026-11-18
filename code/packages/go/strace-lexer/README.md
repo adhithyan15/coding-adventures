@@ -42,6 +42,8 @@ body, _ := stracelexer.DecodeAnnotation(`a\<b\>`) // "a<b>"
 scratch := make([]lexer.Token, 0, 64)
 toks, err = stracelexer.TokenizeLineMaxInto(line, 1<<20, scratch)
 // toks borrows scratch's returned storage until it is reused.
+var cursor lexer.TokenCursor // one owner, e.g. one per parser/goroutine
+toks, err = stracelexer.TokenizeLineMaxIntoWithCursor(line, 1<<20, scratch, &cursor)
 ```
 
 `Token.Column` is the 1-based byte column, so the raw text of a run of tokens is
@@ -51,7 +53,10 @@ toks, err = stracelexer.TokenizeLineMaxInto(line, 1<<20, scratch)
 tokenizing into caller storage. The returned tokens borrow the returned slice;
 the caller owns its lifetime and must clear any old tail it truncated before
 passing a shorter scratch slice. `TokenizeLine` and `TokenizeLineMax` continue
-to return independent owned slices.
+to return independent owned slices. `TokenizeLineMaxIntoWithCursor` applies the
+same checks and also reuses one zero-value-ready lexer cursor. Give each
+independent caller its own cursor; do not use one concurrently or copy it while
+live. Its lexer state is cleared after every tokenization call.
 
 ## Properties (each pinned by a test)
 

@@ -93,10 +93,11 @@ A `LineParser` is **not safe for concurrent use** and must not be copied.
 `PrefixBeforeUnfinished` are substrings of the line you passed, so they outlive
 the next parse. The tree's arrays are reused but the parser package drops an
 oversized one at the next parse, so one huge line does not pin memory. For
-hook-free compact parses, the line parser also reuses its private token buffer;
-it clears occupied entries on reset and drops capacities above 4096 tokens.
-Calls with `PreParse` hooks use the owning lexer path so retained hook inputs
-are not mutated. Token slices remain borrowed until the next parse/reset. The
+hook-free compact parses, the line parser also reuses its private token buffer
+and lexer cursor; it clears occupied entries on reset and drops token-buffer
+capacities above 4096 tokens. Calls with `PreParse` hooks use the owning lexer
+path so retained hook inputs are not mutated. Token slices remain borrowed
+until the next parse/reset. The
 existing fixture throughput figures are historical, and this buffer change
 alone does not establish a Linux throughput improvement. See KILN04 for the
 measurement contract and the unchanged Linux acceptance threshold.

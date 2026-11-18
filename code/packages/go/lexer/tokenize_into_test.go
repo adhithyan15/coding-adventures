@@ -94,6 +94,143 @@ func TestTokenizeIntoMatchesOwningTokenizerAcrossModes(t *testing.T) {
 	}
 }
 
+func TestTokenCursorMatchesOwningTokenizerAndClearsBetweenCalls(t *testing.T) {
+	standard := tokenizeIntoStandardGrammar()
+	caseFolded := tokenizeIntoStandardGrammar()
+	caseFolded.CaseSensitive = false
+	grouped := fixtureTransitionGrammar()
+	grouped.Definitions = append(grouped.Definitions, def("NAME", `[a-z]+`, true))
+	grouped.SkipDefinitions = []grammartools.TokenDefinition{def("WS", `[ ]+`, true)}
+	grammars := []*grammartools.TokenGrammar{standard, caseFolded, grouped, indentGrammar()}
+	for grammarIndex, grammar := range grammars {
+		c, err := Compile(grammar)
+		if err != nil {
+			t.Fatal(err)
+		}
+		var cursor TokenCursor
+		var scratch []Token
+		sources := []string{"alpha + beta", "++++++++@", "gamma\n", "K + DELTA"}
+		if grammarIndex == 2 {
+			sources = append(sources, `x "inside" y`, `{ raw text } z`, `a / b / c`, `x "still in group`)
+		}
+		for _, source := range sources {
+			owned, ownedErr := c.Tokenize(source)
+			retained := append([]Token(nil), owned...)
+			got, gotErr := cursor.TokenizeInto(c, source, scratch)
+			if !reflect.DeepEqual(got, owned) || !reflect.DeepEqual(gotErr, ownedErr) {
+				t.Fatalf("grammar %d cursor result for %q = (%#v, %v), owning result = (%#v, %v)", grammarIndex, source, got, gotErr, owned, ownedErr)
+			}
+			if !reflect.DeepEqual(owned, retained) {
+				t.Fatalf("grammar %d cursor call mutated retained owning output for %q", grammarIndex, source)
+			}
+			if !reflect.DeepEqual(cursor.lexer, GrammarLexer{}) {
+				t.Fatalf("grammar %d cursor retained lexer state after %q", grammarIndex, source)
+			}
+			if gotErr == nil {
+				scratch = got
+			}
+		}
+	}
+
+	// Refuse after entering a group, then reuse the same cursor with another
+	// compiled grammar to prove the next call starts at its own start mode.
+	groupGrammar := fixtureTransitionGrammar()
+	groupGrammar.Definitions = append(groupGrammar.Definitions, def("NAME", `[a-z]+`, true))
+	groupGrammar.SkipDefinitions = []grammartools.TokenDefinition{def("WS", `[ ]+`, true)}
+	cGrouped, err := Compile(groupGrammar)
+	if err != nil {
+		t.Fatal(err)
+	}
+	cStandard, err := Compile(tokenizeIntoStandardGrammar())
+	if err != nil {
+		t.Fatal(err)
+	}
+	var cursor TokenCursor
+	if _, err := cursor.TokenizeInto(cGrouped, "a / §", nil); err == nil {
+		t.Fatal("unexpected character in active group mode was accepted")
+	}
+	if !reflect.DeepEqual(cursor.lexer, GrammarLexer{}) {
+		t.Fatal("cursor retained active group state after lexical error")
+	}
+	got, gotErr := cursor.TokenizeInto(cStandard, "alpha + beta", nil)
+	want, wantErr := cStandard.Tokenize("alpha + beta")
+	if !reflect.DeepEqual(got, want) || !reflect.DeepEqual(gotErr, wantErr) {
+		t.Fatalf("cursor reused across grammars = (%#v, %v), fresh owner = (%#v, %v)", got, gotErr, want, wantErr)
+	}
+}
+
+func TestTokenCursorFiniteSequenceModel(t *testing.T) {
+	standardGrammar := tokenizeIntoStandardGrammar()
+	caseFoldedGrammar := tokenizeIntoStandardGrammar()
+	caseFoldedGrammar.CaseSensitive = false
+	groupGrammar := fixtureTransitionGrammar()
+	groupGrammar.Definitions = append(groupGrammar.Definitions, def("NAME", `[a-z]+`, true))
+	groupGrammar.SkipDefinitions = []grammartools.TokenDefinition{def("WS", `[ ]+`, true)}
+	grammars := []*grammartools.TokenGrammar{standardGrammar, caseFoldedGrammar, groupGrammar}
+	compiled := make([]*Compiled, len(grammars))
+	for i, grammar := range grammars {
+		var err error
+		compiled[i], err = Compile(grammar)
+		if err != nil {
+			t.Fatal(err)
+		}
+	}
+	type input struct {
+		grammar int
+		source  string
+	}
+	type ownedResult struct {
+		tokens   []Token
+		baseline []Token
+	}
+	inputs := []input{
+		{0, "alpha + beta"},
+		{0, "++++++@"},
+		{0, ""},
+		{1, "K + DELTA"},
+		{2, `x "inside" y`},
+		{2, `{ raw text } z`},
+		{2, `a / b / c`},
+		{2, "a / §"},
+		{2, `x "still in group`},
+	}
+
+	// Enumerate every length-three call sequence from the finite control set.
+	// The owning API is the independent observable oracle at each step.
+	for first := range inputs {
+		for second := range inputs {
+			for third := range inputs {
+				sequence := []input{inputs[first], inputs[second], inputs[third]}
+				var cursor TokenCursor
+				var scratch []Token
+				var retained []ownedResult
+				for step, item := range sequence {
+					c := compiled[item.grammar]
+					want, wantErr := c.Tokenize(item.source)
+					retained = append(retained, ownedResult{tokens: want, baseline: append([]Token(nil), want...)})
+					got, gotErr := cursor.TokenizeInto(c, item.source, scratch)
+					if !reflect.DeepEqual(got, want) || !reflect.DeepEqual(gotErr, wantErr) {
+						t.Fatalf("sequence %d/%d/%d step %d input %q: cursor=(%#v,%v), owned=(%#v,%v)", first, second, third, step, item.source, got, gotErr, want, wantErr)
+					}
+					if !reflect.DeepEqual(cursor.lexer, GrammarLexer{}) {
+						t.Fatalf("sequence %d/%d/%d step %d retained private cursor state", first, second, third, step)
+					}
+					if gotErr == nil {
+						scratch = got
+					} else {
+						scratch = nil
+					}
+				}
+				for i, result := range retained {
+					if !reflect.DeepEqual(result.tokens, result.baseline) {
+						t.Fatalf("sequence %d/%d/%d mutated retained owning result %d", first, second, third, i)
+					}
+				}
+			}
+		}
+	}
+}
+
 func TestTokenizeIntoReusesAndReplacesCallerStorage(t *testing.T) {
 	standard, err := Compile(tokenizeIntoStandardGrammar())
 	if err != nil {
@@ -260,6 +397,8 @@ func FuzzTokenizeIntoMatchesLegacyAndOwning(f *testing.F) {
 			t.Skip()
 		}
 		for _, c := range []*Compiled{sensitive, caseFolded} {
+			var cursor TokenCursor
+			var cursorScratch []Token
 			owned, ownedErr := c.Tokenize(source)
 			ownedBefore := append([]Token(nil), owned...)
 			want, panicMessage, ok := oracleOutcome(c.grammar, source)
@@ -288,6 +427,20 @@ func FuzzTokenizeIntoMatchesLegacyAndOwning(f *testing.F) {
 				}
 				if !reflect.DeepEqual(owned, ownedBefore) {
 					t.Fatalf("TokenizeInto mutated an owned result for %q", source)
+				}
+				cursorScratch = make([]Token, 0, capacity)
+				cursorGot, cursorErr := cursor.TokenizeInto(c, source, cursorScratch)
+				if !reflect.DeepEqual(cursorGot, owned) || !reflect.DeepEqual(cursorErr, ownedErr) {
+					t.Fatalf("TokenCursor differs from owned for %q with cap %d: err=%v want=%v", source, capacity, cursorErr, ownedErr)
+				}
+				cursorScratch = cursorGot
+				second, secondErr := cursor.TokenizeInto(c, source, cursorScratch)
+				if !reflect.DeepEqual(second, owned) || !reflect.DeepEqual(secondErr, ownedErr) {
+					t.Fatalf("reused TokenCursor differs from owned for %q with cap %d", source, capacity)
+				}
+				cursorScratch = second
+				if !reflect.DeepEqual(cursor.lexer, GrammarLexer{}) {
+					t.Fatalf("TokenCursor retained lexer state after %q", source)
 				}
 				moved := len(got) > 0 && cap(original) > 0 && &got[0] != &original[0]
 				if (gotErr != nil || moved) && !reflect.DeepEqual(original, make([]Token, len(original))) {

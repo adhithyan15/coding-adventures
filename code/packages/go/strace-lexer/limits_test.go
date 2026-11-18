@@ -101,6 +101,31 @@ func TestTokenizeLineMaxIntoPreservesChecksAndResults(t *testing.T) {
 	}
 }
 
+func TestTokenizeLineMaxIntoWithCursorKeepsChecksAndRecovers(t *testing.T) {
+	line := `1  close(3</e>) = 0`
+	want, err := TokenizeLineMax(line, len(line))
+	if err != nil {
+		t.Fatal(err)
+	}
+	var cursor lexer.TokenCursor
+	var storage []lexer.Token
+	got, err := TokenizeLineMaxIntoWithCursor(line, len(line), storage, &cursor)
+	if err != nil || !reflect.DeepEqual(got, want) {
+		t.Fatalf("cursor result = (%#v, %v), owning result = (%#v, nil)", got, err, want)
+	}
+	storage = got
+	if _, err := TokenizeLineMaxIntoWithCursor(line+"\n", len(line), storage, &cursor); err != ErrLineTooLong {
+		t.Fatalf("over-limit newline error = %v, want ErrLineTooLong", err)
+	}
+	if _, err := TokenizeLineMaxIntoWithCursor(line+"\n", len(line)+1, storage, &cursor); err != ErrNewline {
+		t.Fatalf("newline error = %v, want ErrNewline", err)
+	}
+	got, err = TokenizeLineMaxIntoWithCursor(line, len(line), storage, &cursor)
+	if err != nil || !reflect.DeepEqual(got, want) {
+		t.Fatalf("cursor failed after refusals: result = (%#v, %v)", got, err)
+	}
+}
+
 // A decoded string is arbitrary bytes, NUL included: consumers must reject it.
 func TestDecodeStringCanReturnNUL(t *testing.T) {
 	got, err := DecodeString(`a\0b`)

@@ -71,10 +71,6 @@ on:
         description: 'Also run the 15 shards on macOS and Windows (needs full_build; ~45 jobs)'
         type: boolean
         default: false
-      kiln_g1_profile:
-        description: 'Collect isolated native Linux profiles of Kiln G1 synthetic-slice pass 1'
-        type: boolean
-        default: false
 
 # One run per branch at a time. Superseded runs are cancelled everywhere but
 # main (below). Scheduled and dispatch runs on main use separate concurrency groups
@@ -1290,86 +1286,6 @@ jobs:
         shell: bash
         run: |
           python3 "$GITHUB_WORKSPACE/code/programs/go/kiln/ci/assert_sandbox_tests.py" "$RUNNER_TEMP/kiln-sandbox.json"
-
-      # Diagnostic only: profile the exact G1 synthetic slice in isolation.
-      # These instrumented runs do not enforce or report the admission rate;
-      # the gate above remains the sole acceptance measurement. Keep this
-      # dispatch-only and on Ubuntu 24.04 so ordinary PR checks are unchanged.
-      - name: Record G1 diagnostic runner and source identity
-        if: always() && github.event_name == 'workflow_dispatch' && inputs.kiln_g1_profile == true && inputs.full_build == false && inputs.cross_os_full == false && matrix.os == 'ubuntu-24.04'
-        working-directory: code/programs/go/kiln
-        shell: bash
-        run: |
-          set -euo pipefail
-          go version
-          uname -a
-          cat /etc/os-release
-          lscpu
-          echo "GITHUB_SHA=$GITHUB_SHA"
-          echo "checked_out_head=$(git rev-parse HEAD)"
-          for source_path in \
-            code/programs/go/kiln \
-            code/programs/go/kiln/internal/trace \
-            code/programs/go/kiln/internal/traced \
-            code/packages/go/lexer \
-            code/packages/go/strace-lexer \
-            code/packages/go/strace-parser
-          do
-            echo "runtime_tree $source_path $(git -C "$GITHUB_WORKSPACE" rev-parse "HEAD:$source_path")"
-          done
-          go test -c -o "$RUNNER_TEMP/kiln-g1-diagnostic.test" .
-          sha256sum "$RUNNER_TEMP/kiln-g1-diagnostic.test"
-          go version -m "$RUNNER_TEMP/kiln-g1-diagnostic.test"
-
-      - name: Collect isolated G1 CPU profile
-        if: always() && github.event_name == 'workflow_dispatch' && inputs.kiln_g1_profile == true && inputs.full_build == false && inputs.cross_os_full == false && matrix.os == 'ubuntu-24.04'
-        working-directory: code/programs/go/kiln
-        shell: bash
-        run: |
-          KILN_G1_PROFILE_KIND=cpu "$RUNNER_TEMP/kiln-g1-diagnostic.test" \
-            -test.timeout=30s -test.count=1 -test.run '^TestG1DiagnosticSyntheticSlice$' -test.v \
-            -test.cpuprofile="$RUNNER_TEMP/kiln-g1-cpu.pprof"
-
-      - name: Collect isolated G1 allocation profile
-        if: always() && github.event_name == 'workflow_dispatch' && inputs.kiln_g1_profile == true && inputs.full_build == false && inputs.cross_os_full == false && matrix.os == 'ubuntu-24.04'
-        working-directory: code/programs/go/kiln
-        shell: bash
-        run: |
-          KILN_G1_PROFILE_KIND=alloc "$RUNNER_TEMP/kiln-g1-diagnostic.test" \
-            -test.timeout=30s -test.count=1 -test.run '^TestG1DiagnosticSyntheticSlice$' -test.v \
-            -test.memprofile="$RUNNER_TEMP/kiln-g1-heap.pprof" -test.memprofilerate=1
-
-      - name: Summarize isolated G1 profiles
-        if: always() && github.event_name == 'workflow_dispatch' && inputs.kiln_g1_profile == true && inputs.full_build == false && inputs.cross_os_full == false && matrix.os == 'ubuntu-24.04'
-        working-directory: code/programs/go/kiln
-        shell: bash
-        run: |
-          set -euo pipefail
-          if [[ -x "$RUNNER_TEMP/kiln-g1-diagnostic.test" && -s "$RUNNER_TEMP/kiln-g1-cpu.pprof" ]]; then
-            go tool pprof -top -nodecount=40 "$RUNNER_TEMP/kiln-g1-diagnostic.test" "$RUNNER_TEMP/kiln-g1-cpu.pprof" > "$RUNNER_TEMP/kiln-g1-cpu-top.txt"
-            go tool pprof -top -cum -nodecount=40 "$RUNNER_TEMP/kiln-g1-diagnostic.test" "$RUNNER_TEMP/kiln-g1-cpu.pprof" > "$RUNNER_TEMP/kiln-g1-cpu-cumulative.txt"
-          else
-            echo 'CPU profile or diagnostic binary is missing' >&2
-          fi
-          if [[ -x "$RUNNER_TEMP/kiln-g1-diagnostic.test" && -s "$RUNNER_TEMP/kiln-g1-heap.pprof" ]]; then
-            go tool pprof -sample_index=alloc_objects -top -nodecount=40 "$RUNNER_TEMP/kiln-g1-diagnostic.test" "$RUNNER_TEMP/kiln-g1-heap.pprof" > "$RUNNER_TEMP/kiln-g1-alloc-objects.txt"
-            go tool pprof -sample_index=alloc_space -top -nodecount=40 "$RUNNER_TEMP/kiln-g1-diagnostic.test" "$RUNNER_TEMP/kiln-g1-heap.pprof" > "$RUNNER_TEMP/kiln-g1-alloc-space.txt"
-          else
-            echo 'Allocation profile or diagnostic binary is missing' >&2
-          fi
-          cat "$RUNNER_TEMP"/kiln-g1-*.txt
-
-      - name: Upload isolated G1 profiles
-        if: always() && github.event_name == 'workflow_dispatch' && inputs.kiln_g1_profile == true && inputs.full_build == false && inputs.cross_os_full == false && matrix.os == 'ubuntu-24.04'
-        uses: actions/upload-artifact@v7
-        with:
-          name: kiln-g1-profiles-${{ matrix.os }}
-          path: |
-            ${{ runner.temp }}/kiln-g1-*.pprof
-            ${{ runner.temp }}/kiln-g1-*.txt
-            ${{ runner.temp }}/kiln-g1-diagnostic.test
-          if-no-files-found: error
-          retention-days: 3
 
   d18f-message-conformance:
     name: D18F message conformance

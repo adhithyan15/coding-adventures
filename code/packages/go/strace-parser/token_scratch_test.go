@@ -155,6 +155,12 @@ func TestLineParserPreParseReplacementStaysOwned(t *testing.T) {
 }
 
 func TestLineParserReusesScratchAfterError(t *testing.T) {
+	good := `1  close(3</e>) = 0`
+	_, retained, retainedErr := ParseLineTokens(good, DefaultOptions())
+	if retainedErr != nil {
+		t.Fatal(retainedErr)
+	}
+	retainedBefore := append([]lexer.Token(nil), retained...)
 	var lp LineParser
 	bad := `1  openat(AT_FDCWD</w>, "/e", O_RDONLY`
 	if err := lp.ParseLineInto(bad, DefaultOptions()); err == nil {
@@ -163,7 +169,6 @@ func TestLineParserReusesScratchAfterError(t *testing.T) {
 	if len(lp.scratch) == 0 {
 		t.Fatal("error case did not retain lexed tokens for reuse")
 	}
-	good := `1  close(3</e>) = 0`
 	wantTree, wantTokens, wantErr := ParseLineTokens(good, DefaultOptions())
 	if wantErr != nil {
 		t.Fatal(wantErr)
@@ -173,6 +178,9 @@ func TestLineParserReusesScratchAfterError(t *testing.T) {
 	}
 	if wantTree == nil || !reflect.DeepEqual(lp.Tokens(), wantTokens) || lp.BodyKind() != "call_line" {
 		t.Fatalf("valid line after error differs from owning parse: tokens=%#v body=%q", lp.Tokens(), lp.BodyKind())
+	}
+	if !reflect.DeepEqual(retained, retainedBefore) {
+		t.Fatal("cursor reuse mutated token storage retained from ParseLineTokens")
 	}
 }
 

@@ -437,6 +437,14 @@ func newGrammarLexerImpl(source string, grammar *grammartools.TokenGrammar) *Gra
 
 // newLexer creates the per-run state for one source text.
 func (c *Compiled) newLexer(source string) *GrammarLexer {
+	l := new(GrammarLexer)
+	initLexerAt(l, c, source)
+	return l
+}
+
+// initLexerAt initializes one lexer at its final address. The inline stacks
+// below point into l itself, so callers must not copy an initialized lexer.
+func initLexerAt(l *GrammarLexer, c *Compiled, source string) {
 	// When CaseSensitive is false, lowercase the entire source before
 	// tokenization. Keywords in the .tokens file are already lowercase, so
 	// this makes keyword matching work.
@@ -444,7 +452,7 @@ func (c *Compiled) newLexer(source string) *GrammarLexer {
 	if c.lowerSource {
 		src = strings.ToLower(source)
 	}
-	l := &GrammarLexer{
+	*l = GrammarLexer{
 		c:              c,
 		source:         src,
 		originalSource: source,
@@ -455,7 +463,6 @@ func (c *Compiled) newLexer(source string) *GrammarLexer {
 	l.indentStack = l.indentBuf[:1]
 	l.stackBuf[0] = c.startMode
 	l.groupStack = l.stackBuf[:1]
-	return l
 }
 
 // AddPreTokenize registers a text transform to run before tokenization.

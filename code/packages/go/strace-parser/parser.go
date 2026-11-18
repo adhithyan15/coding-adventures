@@ -220,15 +220,15 @@ func ParseLineTokens(line string, opts Options) (*parser.ASTNode, []lexer.Token,
 // The compact path (ParseLineInto) calls it too, so both paths refuse the same
 // lines with the same error values by construction.
 func checkLine(line string, opts Options) ([]lexer.Token, error) {
-	toks, _, err := checkLineWithScratch(line, opts, nil, false)
+	toks, _, err := checkLineWithCursorScratch(line, opts, nil, nil)
 	return toks, err
 }
 
-// checkLineWithScratch is checkLine's shared validation path. When reuse is
-// true, only a parser-owned token slice is supplied to TokenizeLineMaxInto;
-// hook-bearing callers stay on the owning path so hooks may retain or replace
-// their input without observing later mutation.
-func checkLineWithScratch(line string, opts Options, dst []lexer.Token, reuse bool) ([]lexer.Token, []lexer.Token, error) {
+// checkLineWithCursorScratch is checkLine's shared validation path. A cursor
+// is supplied only for parser-owned hook-free output; hook-bearing callers
+// stay on the owning path so hooks may retain or replace their input without
+// observing later mutation.
+func checkLineWithCursorScratch(line string, opts Options, dst []lexer.Token, cursor *lexer.TokenCursor) ([]lexer.Token, []lexer.Token, error) {
 	scratch := dst[:0]
 	if compileErr != nil {
 		return nil, scratch, &LineError{Kind: KindSyntax, Err: compileErr, Msg: "grammar did not compile"}
@@ -244,15 +244,15 @@ func checkLineWithScratch(line string, opts Options, dst []lexer.Token, reuse bo
 	}
 	var toks []lexer.Token
 	var err error
-	if reuse {
-		toks, err = stracelexer.TokenizeLineMaxInto(line, opts.MaxLineBytes, dst)
+	if cursor != nil {
+		toks, err = stracelexer.TokenizeLineMaxIntoWithCursor(line, opts.MaxLineBytes, dst, cursor)
 	} else {
 		toks, err = stracelexer.TokenizeLineMax(line, opts.MaxLineBytes)
 	}
 	if err != nil {
 		return nil, scratch, &LineError{Kind: KindSyntax, Err: err, Msg: "lexing"}
 	}
-	if reuse {
+	if cursor != nil {
 		scratch = toks
 	}
 	if len(toks) > opts.MaxTokens {

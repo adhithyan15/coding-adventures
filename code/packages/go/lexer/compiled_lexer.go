@@ -559,8 +559,39 @@ func (c *Compiled) TokenizeInto(source string, dst []Token) ([]Token, error) {
 	if c.indentMode || c.layoutMode {
 		return c.Tokenize(source)
 	}
+	l := new(GrammarLexer)
+	return tokenizeIntoStandard(l, c, source, dst)
+}
+
+// TokenCursor is reusable per-run state for standard-mode caller-buffer
+// tokenization. Its zero value is ready to use. A cursor has one owner and
+// must not be used concurrently or reentrantly; independent cursors may share
+// the same immutable Compiled grammar. Each call clears its private lexer
+// state before returning. Indentation and layout grammars use the owning path.
+//
+// The cursor is intentionally opaque: its self-referential inline stacks must
+// be initialized at the final address and must never be copied while live.
+type TokenCursor struct {
+	lexer GrammarLexer
+}
+
+// TokenizeInto tokenizes source with c while reusing this cursor's private
+// lexer state and dst's backing storage when possible. Returned token storage
+// has the same ownership rules as Compiled.TokenizeInto. The cursor is empty
+// again on success or lexical error.
+func (cursor *TokenCursor) TokenizeInto(c *Compiled, source string, dst []Token) ([]Token, error) {
+	if cursor == nil {
+		return c.TokenizeInto(source, dst)
+	}
+	if c.indentMode || c.layoutMode {
+		return c.Tokenize(source)
+	}
+	return tokenizeIntoStandard(&cursor.lexer, c, source, dst)
+}
+
+func tokenizeIntoStandard(l *GrammarLexer, c *Compiled, source string, dst []Token) ([]Token, error) {
 	clear(dst)
-	l := c.newLexer(source)
+	initLexerAt(l, c, source)
 	tokens, err := l.tokenizeStandardInto(dst)
 	if err != nil {
 		// The current partial output is cleared here. If appending grew beyond
@@ -577,8 +608,10 @@ func (c *Compiled) TokenizeInto(source string, dst []Token) ([]Token, error) {
 		}
 	}
 	if err != nil {
+		*l = GrammarLexer{}
 		return nil, err
 	}
+	*l = GrammarLexer{}
 	return tokens, err
 }
 

@@ -23,6 +23,8 @@ if err != nil { /* ... */ }
 tokens, err := compiled.Tokenize(line) // many times, from many goroutines
 scratch := make([]lexer.Token, 0, 64)
 tokens, err = compiled.TokenizeInto(line, scratch) // borrowed caller storage
+var cursor lexer.TokenCursor // zero value is ready; one owner
+tokens, err = cursor.TokenizeInto(compiled, line, scratch) // reuse per-run lexer state too
 var lexErr *lexer.LexError
 if errors.As(err, &lexErr) {
     fmt.Println(lexErr.Line, lexErr.Column, lexErr.Message)
@@ -43,6 +45,13 @@ written entries in the original scratch if append grew. Indentation and layout
 grammars use the existing owned-output path without changing `dst`.
 `Tokenize` remains the allocation-owning API and earlier results are never
 changed by later calls.
+
+When one goroutine repeatedly tokenizes with a shared compiled grammar, a
+zero-value `TokenCursor` also reuses the per-run lexer state. Give each
+independent caller its own cursor; it is not safe for concurrent or reentrant
+use, and a live cursor must not be copied. The cursor clears its lexer state on
+success and lexical error. Indentation and layout grammars keep the owning
+path. Use `Compiled.Tokenize` when returned tokens must be independently owned.
 
 It is also fast, without changing what the grammar means (rules are still tried
 in order, first match wins):

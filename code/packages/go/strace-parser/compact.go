@@ -98,6 +98,7 @@ type LineParser struct {
 	line    string
 	toks    []lexer.Token
 	scratch []lexer.Token
+	cursor  lexer.TokenCursor
 	body    parser.NodeID
 	valid   bool
 }
@@ -126,7 +127,11 @@ func (lp *LineParser) ParseLineInto(line string, opts Options) error {
 	lp.Reset()
 	lp.line = line
 	usesPreParse := len(opts.PreParse) > 0
-	toks, scratch, err := checkLineWithScratch(line, opts, lp.scratch, !usesPreParse)
+	var cursor *lexer.TokenCursor
+	if !usesPreParse {
+		cursor = &lp.cursor
+	}
+	toks, scratch, err := checkLineWithCursorScratch(line, opts, lp.scratch, cursor)
 	lp.scratch = scratch
 	lp.toks = toks
 	if err != nil {
