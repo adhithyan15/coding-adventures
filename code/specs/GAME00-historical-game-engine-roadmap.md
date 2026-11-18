@@ -1,5 +1,7 @@
 # GAME00 — Historical Game Engine Roadmap (Mainframe, Arcade, Retro Tile, Flash on LangVM, 2.5D/3D & Flight Sim)
 
+> Active delivery priorities, capability/language status, verification limits, and discovered gaps are tracked in [`GAME-BACKLOG.md`](GAME-BACKLOG.md). This historical roadmap remains the catalog of target systems and their era context.
+
 ## Status
 
 Roadmap / master spec. Surveys the technical and historical evolution of real-time computer

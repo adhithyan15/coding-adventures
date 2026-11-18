@@ -22,6 +22,8 @@ hand-authored counters, exact step-limit behavior, both sources of dropped time,
 floors, `u64::MAX` input, and cumulative-counter overflow. The reference model executes at most
 `max_frame_steps` ticks by subtraction, then drains any remaining whole ticks with integer division.
 
-These vectors carry a package-specific conformance classification. During review, a temporary Rust harness checked every committed vector against the public API.
-Checked-in language consumers are follow-up work. The fixture has no
-generated Warrant or source-level proof attached.
+These vectors define package-specific conformance. The Rust `game-clock` package test consumes
+every case through the public API, checks every output field or exact `ClockError`, and checks that
+failed advances preserve their input state. This is finite corpus evidence; it is not a formal proof
+or exhaustive evidence for the full input domain. The fixture has no generated Warrant or
+source-level proof attached.
