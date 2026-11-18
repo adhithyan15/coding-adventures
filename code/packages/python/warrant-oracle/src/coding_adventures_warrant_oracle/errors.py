@@ -37,3 +37,16 @@ class OracleError(Exception):
 
     def __str__(self) -> str:
         return f"{self.code}: {self.message}"
+
+
+class SizeError(OracleError):
+    """A ``Bytes`` value past ``MAX_IR_VALUE`` (``ir-overflow``, checked before the allocation).
+
+    A subclass, so every existing ``except OracleError`` and every ``code == "ir-overflow"``
+    test behaves as before.  It exists so that ``omit_example`` can tell the one error that may
+    qualify an example as ``value-over-limit`` (VER04r 8.4, [D34]) from the exact-integer window
+    overflow, which shares the code but is an ordinary evaluation error that refuses.
+    """
+
+    def __init__(self, message: str) -> None:
+        super().__init__("ir-overflow", message)

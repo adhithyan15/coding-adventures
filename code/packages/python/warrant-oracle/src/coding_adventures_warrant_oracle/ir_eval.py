@@ -56,7 +56,7 @@ from dataclasses import dataclass
 
 from . import ast as A
 from . import levels as L
-from .errors import OracleError
+from .errors import OracleError, SizeError
 from .lower import BOOL, BYTES, FIXED, INT, NAT, _substitute, _unify
 from .lower import _assignable as _strict_assignable
 
@@ -374,7 +374,7 @@ class Program:
                 ):
                     raise OracleError("ir", "a Bytes literal is even lowercase hex")
                 if len(text) // 2 > MAX_IR_VALUE:
-                    raise OracleError("ir-overflow", "a Bytes literal exceeds MAX_IR_VALUE")
+                    raise SizeError("a Bytes literal exceeds MAX_IR_VALUE")
                 data = bytes.fromhex(text)
                 # A literal's width is its length, so it can flow to a ``Bytes<N>``.
                 return Compiled(A.Ty("Bytes", (len(data),)), lambda env: data, 1, False)
@@ -677,7 +677,7 @@ class Program:
             def concat(env: dict) -> bytes:
                 x, y = af(env), bf(env)
                 if len(x) + len(y) > MAX_IR_VALUE:
-                    raise OracleError("ir-overflow", "a Bytes value exceeds MAX_IR_VALUE")
+                    raise SizeError("a Bytes value exceeds MAX_IR_VALUE")
                 return x + y
 
             widths = [t.ty.args[0] for t in (a, b) if t.ty.args and isinstance(t.ty.args[0], int)]

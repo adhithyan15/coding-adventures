@@ -153,7 +153,11 @@ def _verify_v2(args: argparse.Namespace) -> int:
         )
     cases = sum(s["cases"] for s in report.suites.values())
     status = "ok" if report.ok else "FAILED"
-    print(f"warrant-oracle: verify-v2: {status}: {cases} cases across {len(report.suites)} suites")
+    omitted = next((n.split()[1] for n in report.notes if n.startswith("omitted_examples ")), None)
+    extra = f", {omitted} omitted examples" if omitted else ""
+    print(
+        f"warrant-oracle: verify-v2: {status}: {cases} cases across {len(report.suites)} suites{extra}"
+    )
     return 0 if report.ok else 1
 
 
