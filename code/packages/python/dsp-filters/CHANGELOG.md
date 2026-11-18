@@ -5,6 +5,8 @@ All notable changes to `coding-adventures-dsp-filters` will be documented in thi
 ## Unreleased
 
 ### Added
+- Added opt-in strict `CheckedBiquad` and `checked_sosfilt` APIs with finite direct normalization, state rollback on returned failures, and separate legacy-compatible entry points.
+- Added bounded test-bootstrap as a development dependency for checked numerical properties and mutations.
 - Added public Biquad/SOS characterization tests for reciprocal normalization overflow, output and hidden-delay overflow, partial state commit after invalid input, and SOS section-order behavior.
 - Aligned the AF-02 fixture test loader with decoded finite binary64 equality for version and chunk-length fields, including decimal/exponent spellings and malformed controls.
 - Added public FIR designer contract regressions for cutoff endpoints, tap-cap boundaries, and validation error precedence.

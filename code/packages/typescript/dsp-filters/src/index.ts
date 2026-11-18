@@ -10,6 +10,7 @@ export {
   sos_cascade,
   sosfilt,
 } from "./biquad.js";
+export { CheckedBiquad, checkedSosfilt } from "./checked-biquad.js";
 export {
   MAX_FILTER_TAPS,
   MAX_ORDER,

@@ -1,6 +1,11 @@
 use core::ptr;
 
 use der_asn1::{Asn1Decoder, Asn1Limits};
+use http1_request_host_authority::{
+    validate_http1_request_host_authority, Http1RequestHostAuthorityLimits,
+};
+use https_destination_name_binding::bind_https_dns_destination;
+use https_reviewed_server_path_binding::bind_https_dns_destination_to_reviewed_server_path;
 use rsa_pss_sha256_signature::RsaPssSha256SignatureLimits;
 use rsa_public_operation::RsaPublicOperationLimits;
 use tls13_certificate_verify_input::{CertificateVerifyRole, MAXIMUM_INPUT_LENGTH};
@@ -12,9 +17,11 @@ use tls13_cipher_suite_policy::{
     CipherSuite, CipherSuitePolicy, CipherSuitePolicyEntry, SelectedCipherSuite,
 };
 use tls13_reviewed_server_path_certificate_verify::{
+    verify_https_dns_destination_reviewed_server_path_certificate_verify,
     verify_reviewed_server_path_certificate_verify, ReviewedServerPathCertificateVerifyErrorKind,
 };
 use tls13_rsa_pss_signature_routing::Tls13RsaPssSignatureLimits;
+use tls13_server_name::TlsServerName;
 use tls13_signature_scheme_policy::{
     AuthorizedSignatureScheme, SignatureScheme, SignatureSchemePolicy,
 };
@@ -429,4 +436,115 @@ fn public_composition_verifies_the_captured_signature_with_the_exact_reviewed_le
 #[test]
 fn public_composition_rejects_client_role_before_output_or_scratch_mutation() {
     exercise_public_composition(CertificateVerifyRole::Client, false);
+}
+
+fn exercise_https_destination_composition(role: CertificateVerifyRole, expect_success: bool) {
+    let leaf_encoded = fixture(LEAF_HEX);
+    let intermediate_encoded = fixture(INTERMEDIATE_HEX);
+    let root_encoded = fixture(ROOT_HEX);
+    let leaf = decode(&leaf_encoded);
+    let candidates = vec![decode(&intermediate_encoded), decode(&root_encoded)];
+    reviewed_server_path!(reviewed_path, &leaf, &candidates);
+
+    let server_name = TlsServerName::new("www.apple.com").unwrap();
+    let host = validate_http1_request_host_authority(
+        b"WWW.APPLE.COM",
+        Some(443),
+        Http1RequestHostAuthorityLimits::new(253, 259).unwrap(),
+    )
+    .unwrap();
+    let destination =
+        bind_https_dns_destination(&leaf, server_name, host, Asn1Limits::default()).unwrap();
+    let destination_path =
+        bind_https_dns_destination_to_reviewed_server_path(destination, reviewed_path).unwrap();
+
+    let transcript_encoded = fixture(TRANSCRIPT_HEX);
+    let transcript = selected_transcript(&transcript_encoded);
+    let mut output = [0xa5; MAXIMUM_INPUT_LENGTH + 7];
+    let signature = fixture(SIGNATURE_HEX);
+    let mut scratch = [0xa5; 223];
+    let before_scratch = scratch;
+    let expected_input;
+    {
+        let bound = bind_certificate_verify_transcript(&transcript, role, &mut output).unwrap();
+        let hashed = hash_transcript_bound_certificate_verify_input(authorized_scheme(), &bound);
+        let message =
+            CertificateVerifyMessage::new(SignatureScheme::RsaPssRsaeSha256.wire_id(), &signature)
+                .unwrap();
+        expected_input = bound.input().as_bytes().to_vec();
+        let result = verify_https_dns_destination_reviewed_server_path_certificate_verify(
+            &destination_path,
+            &hashed,
+            &message,
+            RsaPublicKeyPolicy::new(2_048, 2_048, ALLOWED_EXPONENTS).unwrap(),
+            Asn1Limits::default(),
+            &mut scratch,
+            Tls13RsaPssSignatureLimits::Sha256(RsaPssSha256SignatureLimits::new(300, 300).unwrap()),
+        );
+
+        if expect_success {
+            let verified = result
+                .expect("captured server signature must verify through exact HTTPS destination");
+            assert!(ptr::eq(
+                verified.https_destination_reviewed_server_path(),
+                &destination_path,
+            ));
+            assert!(ptr::eq(
+                verified.verification().reviewed_server_path(),
+                destination_path.reviewed_server_path(),
+            ));
+            assert!(ptr::eq(
+                verified.verification().verification().hashed_input(),
+                &hashed,
+            ));
+            assert!(ptr::eq(
+                verified
+                    .verification()
+                    .verification()
+                    .verification()
+                    .signature()
+                    .message(),
+                &message,
+            ));
+            assert!(ptr::eq(destination_path.destination().certificate(), &leaf,));
+            assert_eq!(
+                destination_path.destination().server_name().as_str(),
+                "www.apple.com",
+            );
+            assert_eq!(
+                destination_path.destination().host_authority().host(),
+                b"WWW.APPLE.COM",
+            );
+            assert_eq!(
+                destination_path.destination().host_authority().port(),
+                Some(443),
+            );
+            assert_eq!(
+                format!("{verified:?}"),
+                "VerifiedHttpsDnsDestinationReviewedServerPathCertificateVerify",
+            );
+        } else {
+            assert_eq!(
+                result.unwrap_err().kind(),
+                ReviewedServerPathCertificateVerifyErrorKind::WrongEndpointRole,
+            );
+        }
+    }
+    assert_eq!(&output[..expected_input.len()], expected_input);
+    assert!(output[expected_input.len()..]
+        .iter()
+        .all(|byte| *byte == 0xa5));
+    if !expect_success {
+        assert_eq!(scratch, before_scratch);
+    }
+}
+
+#[test]
+fn https_destination_composition_retains_the_exact_destination_path_and_signature() {
+    exercise_https_destination_composition(CertificateVerifyRole::Server, true);
+}
+
+#[test]
+fn https_destination_composition_rejects_client_role_before_buffer_mutation() {
+    exercise_https_destination_composition(CertificateVerifyRole::Client, false);
 }
