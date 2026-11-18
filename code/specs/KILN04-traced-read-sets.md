@@ -2426,12 +2426,63 @@ to the old scanner measures how fast the old scanner is, not whether the grammar
 path is fast enough. The new gates are absolute and tied to the deadline the
 recorder already enforces.
 
-- **G1 (blocking).** The grammar path's **pass 1** (the line reader,
-  `readRecordsAt`) must run at a rate that would get a cap-sized action
-  (`DefaultMaxTraceTotal`, 2 GiB) through in at most a quarter of the classify
-  deadline (`DefaultClassifyTimeout`, 10 minutes). A quarter is 150 s, so the
-  floor is 2048 MiB / 150 s = 2,147 MB / 150 s, about **14 MB/s** (13.7 exactly;
-  the job uses 14). The gate is on the **best** (minimum) pass-1 time over at
+- **G1 (blocking), in two parts.** The grammar path's **pass 1** (the line
+  reader, `readRecordsAt`) must be fast enough to get a cap-sized action
+  (`DefaultMaxTraceTotal`, 2 GiB) through well inside the classify deadline
+  (`DefaultClassifyTimeout`, 10 minutes).
+  (a) **A host-normalised capability gate** on the deterministic synthetic
+  slice: the reader's rate, rescaled to a nominal host, must be at least
+  **14 MB/s** (2048 MiB / 150 s, a quarter of the deadline, is 13.7 MB/s,
+  rounded up to 14). It answers "did the reader get slower?" without being
+  fooled by a slower runner.
+  (b) **An absolute safety floor** of **8 MB/s raw**, on every gated line (the
+  slice and each real trace of 32 to 128 KB). It answers "could a cap-sized
+  action still finish?" whatever the host: the hard limit is the 600 s
+  deadline, which is 2147 MB / 600 s = 3.6 MB/s, and 8 is more than twice that.
+
+  *Why two parts.* GitHub's runner fleet varies about **1.75x** in CPU speed. The
+  slice (best-of-7, 64 KB) read, over ten kiln-sandbox legs, 21.6, 18.7, 15.9,
+  14.3, 19.2, 19.6, 19.4, 15.6, 20.2 and 12.3 MB/s: a raw 14 fails the slow
+  hosts for reasons that are not the reader's. On the slowest host seen (the
+  census read 10.8 MB/s there) a 2 GiB action takes about **199 s**, 33% of the
+  deadline. That is a fact about the host that no code gate can change; the
+  gate's job is to catch the reader getting slower, and to refuse a host on
+  which a cap-sized action could not finish.
+
+  *The normalisation.* Each synthetic measurement also times a **reference
+  kernel** (`trace.refKernel`, `internal/trace/measure.go`): a frozen,
+  allocation-free, byte-at-a-time tokenizer-shaped state machine (a 256-entry
+  byte-class table, an 8x8 transition table, a data-dependent branch on the
+  accept state, FNV-1a mixing into a sink variable). One reference sample runs
+  it 8 times over the slice. `BestPass1Calibrated` times one kernel sample and
+  then one grammar pass in each iteration of the usual loop (warm-up of each,
+  collector off and restored, at least 7 iterations spanning at least 250 ms,
+  at most 200) and keeps the minimum of each. The ref rate is
+  `ref_mb_s = 8 * len(data) / refBest`, and
+
+      norm_mb_s = best_mb_s * refNominalMBs / ref_mb_s
+
+  is the rate the reader would have on the nominal host. The kernel is
+  **FROZEN**: `refNominalMBs` is calibrated to exactly that code.
+
+  *Calibration procedure.* The nominal host is the fast-group runner: the
+  median slice rate of the fast legs is **19.5 MB/s**. For each calibration leg
+  `k = ref_mb_s * 19.5 / best_mb_s` (the reference rate this leg's host would
+  show if the slice read 19.5 there); `refNominalMBs = median(k)` over at least
+  **6 legs**. The calibration is valid only if `max(k) / min(k) <= 1.15` (the
+  kernel tracks the reader across hosts) and at least one leg was a **slow**
+  host (raw slice at most 16 MB/s: a calibration from fast hosts alone has not
+  tested the property that matters). Until it is calibrated,
+  `refNominalMBs` is a placeholder and `refNominalCalibrated = false`: the
+  normalised value is **report-only** (`calibrated=0` on the line, never
+  failing). The calibrating PR sets the constant and the flag. **Recalibrate
+  only on a Go toolchain bump** (or if the kernel ever has to change, which
+  needs the procedure again).
+
+  The CI job prints the CPU model (`/proc/cpuinfo`) and `nproc` next to
+  `uname -r`, so each leg's rate can be read against its host.
+
+  *The measurement.* The gate is on the **best** (minimum) pass-1 time over at
   least 7 passes and at least **250 ms** of wall time after one warm-up pass,
   never on a single shot: a 50 KB trace is read in about 2 ms, so one sample is
   mostly noise, and noise only ever adds time, so the minimum is the right
@@ -2455,7 +2506,7 @@ recorder already enforces.
   24.04, real traces 28 to 37 MB/s gated. A kiln-sandbox job run without
   `KILN_G1_GATE=1` has no `gated=1` synthetic line, so
   `assert_sandbox_tests.py` fails it.
-  In the job, a real trace of **32 KB to 128 KB** that falls below the floor fails
+  In the job, a real trace of **32 KB to 128 KB** that falls below the 8 MB/s absolute floor fails
   it. Traces under 32 KB, and traces over 128 KB, are logged with
   `gated=0` (census only): a long pass sees every change in how the CPU is
   shared, and only about 7 passes fit, so best-of cannot see through a sustained
@@ -2463,15 +2514,15 @@ recorder already enforces.
   floor on larger inputs is carried by one deterministic input that always runs
   (`TestSandboxTraceGateSynthetic`): a 64 KB slice of whole repetitions of
   `testdata/build.strace`, logged as `PROBE: trace synthetic-slice ... gated=1`,
-  with the same statistic and floor. The same test reads the fixture repeated to
+  with the same statistic, carrying both parts of G1 (its line also carries `ref_mb_s`, `norm_mb_s` and `calibrated=0|1`, all before `gated=` and before any refusal field). The same test reads the fixture repeated to
   at least 4 MiB (pass 1 must read all of it) and logs its best-of-7 rate on its
   own line, `synthetic-4mib-census`, `gated=0`. Each gated line carries
-  `best_mb_s` (gated) and real traces also carry `grammar_mb_s` (single shot,
+  `best_mb_s` (gated, raw) and real traces also carry `grammar_mb_s` (single shot,
   census only). A zero best time or a non-finite or non-positive rate FAILS.
   `ci/assert_sandbox_tests.py` independently fails the job unless a passing test
   logged a `gated=1` line, the `synthetic-slice` line is among them and comes
   from `TestSandboxTraceGateSynthetic`, and every gated `best_mb_s` is finite,
-  positive and at least 14; a PROBE line counts only when its payload starts
+  positive and at least 8 (the slice line also needs a finite, positive `ref_mb_s`, and, only when it says `calibrated=1`, a `norm_mb_s` of at least 14); a PROBE line counts only when its payload starts
   with `PROBE: trace ` after the go test `file:line` prefix, which must be
   indented exactly four spaces (in `go test -v -json`, the mode CI runs, every
   `t.Logf` line has that indent at any subtest depth; a continuation line of a
@@ -2529,7 +2580,16 @@ lenient reader). Rollback is a revert.
 **Deleting the old scanner (PR 8).** Only after Phase B (PR 7) and a soak of at
 least 14 days and at least 200 kiln-sandbox runs with zero mismatches, zero
 allowed divergences on real traces, and clean nightly fuzzing, and with G2
-holding. Until then it is kept as the oracle. The resource limits (1 GiB and 8M events, and the caps above) may be
+holding. Until then it is kept as the oracle.
+
+**What counts toward the 200 runs (soak rule).** The soak measures the
+cross-check, not the throughput gate. A kiln-sandbox run counts toward the 200
+if its cross-checked tests ran under `KILN_TRACE_DIFF=1` with no mismatch and no
+divergence, **whatever G1 did** (a slow host failing the capability or absolute
+gate says nothing about whether the two readers agree). A job that died before
+its tests ran (a runner fault, a setup failure) counts **neither way**: it is
+not a pass and it does not reset the count. Only a mismatch or a divergence
+resets the count. The resource limits (1 GiB and 8M events, and the caps above) may be
 lowered freely, but raised only by a spec revision that includes a DoS review
 and a benchmark of the worst-case input, with the new values committed in the
 spec.
