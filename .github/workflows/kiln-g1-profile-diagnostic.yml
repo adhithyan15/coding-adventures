@@ -6,7 +6,7 @@ on:
       - codex/kiln-g1-profile-diagnostic
     paths:
       - .github/workflows/kiln-g1-profile-diagnostic.yml
-      - code/programs/go/kiln/ci/fixtures/g1_profile_diagnostic_linux_amd64_test.go
+      - code/programs/go/kiln/ci/testdata/g1_profile_diagnostic_linux_amd64_test.go.tmpl
 
 permissions:
   contents: read
@@ -31,7 +31,7 @@ jobs:
           fetch-depth: 1
           persist-credentials: false
           sparse-checkout: |
-            code/programs/go/kiln/ci/fixtures/g1_profile_diagnostic_linux_amd64_test.go
+            code/programs/go/kiln/ci/testdata/g1_profile_diagnostic_linux_amd64_test.go.tmpl
           sparse-checkout-cone-mode: false
           filter: blob:none
 
@@ -139,7 +139,7 @@ jobs:
             echo "measure_source_blob=$(git -C "$GITHUB_WORKSPACE/runtime" rev-parse "HEAD:$measure_source")"
             echo "fixture_blob=$(git -C "$GITHUB_WORKSPACE/runtime" rev-parse "HEAD:$fixture")"
             echo "fixture_sha256=$(sha256sum "$GITHUB_WORKSPACE/runtime/$fixture" | cut -d' ' -f1)"
-            echo "diagnostic_helper_sha256=$(sha256sum "$GITHUB_WORKSPACE/diagnostic/code/programs/go/kiln/ci/fixtures/g1_profile_diagnostic_linux_amd64_test.go" | cut -d' ' -f1)"
+            echo "diagnostic_helper_sha256=$(sha256sum "$GITHUB_WORKSPACE/diagnostic/code/programs/go/kiln/ci/testdata/g1_profile_diagnostic_linux_amd64_test.go.tmpl" | cut -d' ' -f1)"
           } | tee "$output/identity.txt"
 
           if [[ "$(git -C "$GITHUB_WORKSPACE/runtime" rev-parse HEAD)" != "$RUNTIME_SHA" ]]; then
@@ -192,7 +192,7 @@ jobs:
             failures=1
           fi
 
-          helper="$GITHUB_WORKSPACE/diagnostic/code/programs/go/kiln/ci/fixtures/g1_profile_diagnostic_linux_amd64_test.go"
+          helper="$GITHUB_WORKSPACE/diagnostic/code/programs/go/kiln/ci/testdata/g1_profile_diagnostic_linux_amd64_test.go.tmpl"
           cp "$helper" g1_profile_diagnostic_linux_amd64_test.go
           go test -c -o "$output/diagnostic.test" . > "$output/compile.log" 2>&1
           compile_status=$?
