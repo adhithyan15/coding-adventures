@@ -125,7 +125,8 @@
               "trait": "From<dsp_fft::FftError>",
               "methods": [
                 "from(e: dsp_fft::FftError) -> Self"
-              ]
+              ],
+              "behavior": "FilterError::Fft(e.to_string())"
             }
           ]
         }
@@ -1495,7 +1496,8 @@
         ],
         "CheckedBiquad": [
           "EmptySignalError",
-          "InvalidCoefficientError"
+          "InvalidCoefficientError",
+          "indexed accessor exceptions propagate"
         ],
         "checkedSosfilt": [
           "EmptySignalError",
@@ -1503,7 +1505,8 @@
           "indexed accessor exceptions propagate"
         ],
         "design*": [
-          "InvalidCoefficientError"
+          "InvalidCoefficientError",
+          "upstream InvalidInputError for unsupported window names"
         ]
       },
       "test_identities_by_path": {
@@ -1625,11 +1628,11 @@
         },
         "EmptySignalError": {
           "base": "FilterError",
-          "constructor": "constructor(message: string = default); sets name=EmptySignalError"
+          "constructor": "constructor(message: string = \"filter signal must be non-empty\"); sets name=EmptySignalError"
         },
         "EmptyKernelError": {
           "base": "FilterError",
-          "constructor": "constructor(message: string = default); sets name=EmptyKernelError"
+          "constructor": "constructor(message: string = \"filter kernel or coefficient list must be non-empty\"); sets name=EmptyKernelError"
         },
         "InvalidCoefficientError": {
           "base": "FilterError",

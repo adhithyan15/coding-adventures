@@ -172,9 +172,9 @@ EXPECTED_OPERATION_ERRORS = {
         "filtfilt": ["EmptySignalError", "EmptyKernelError", "InvalidCoefficientError"],
         "Biquad": ["EmptySignalError", "InvalidCoefficientError"],
         "sosfilt": ["EmptySignalError", "InvalidCoefficientError"],
-        "CheckedBiquad": ["EmptySignalError", "InvalidCoefficientError"],
+        "CheckedBiquad": ["EmptySignalError", "InvalidCoefficientError", "indexed accessor exceptions propagate"],
         "checkedSosfilt": ["EmptySignalError", "InvalidCoefficientError", "indexed accessor exceptions propagate"],
-        "design*": ["InvalidCoefficientError"],
+        "design*": ["InvalidCoefficientError", "upstream InvalidInputError for unsupported window names"],
     },
 }
 EXPECTED_MEMBER_KEYS = {
@@ -256,7 +256,7 @@ EXPECTED_RUST_TRAIT_IMPLS = {
     "FilterError": [
         {"trait": "fmt::Display", "methods": ["fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result"]},
         {"trait": "std::error::Error", "methods": []},
-        {"trait": "From<dsp_fft::FftError>", "methods": ["from(e: dsp_fft::FftError) -> Self"]},
+        {"trait": "From<dsp_fft::FftError>", "methods": ["from(e: dsp_fft::FftError) -> Self"], "behavior": "FilterError::Fft(e.to_string())"},
     ],
 }
 EXPECTED_ERROR_TYPES = {
@@ -269,8 +269,8 @@ EXPECTED_ERROR_TYPES = {
     },
     "typescript": {
         "FilterError": {"base": "Error", "constructor": "constructor(message: string); sets name=FilterError"},
-        "EmptySignalError": {"base": "FilterError", "constructor": "constructor(message: string = default); sets name=EmptySignalError"},
-        "EmptyKernelError": {"base": "FilterError", "constructor": "constructor(message: string = default); sets name=EmptyKernelError"},
+        "EmptySignalError": {"base": "FilterError", "constructor": 'constructor(message: string = "filter signal must be non-empty"); sets name=EmptySignalError'},
+        "EmptyKernelError": {"base": "FilterError", "constructor": 'constructor(message: string = "filter kernel or coefficient list must be non-empty"); sets name=EmptyKernelError'},
         "InvalidCoefficientError": {"base": "FilterError", "constructor": "constructor(message: string); sets name=InvalidCoefficientError"},
         "FftError": {"base": "FilterError", "constructor": "constructor(message: string); sets name=FftError"},
     },
@@ -976,7 +976,11 @@ def rust_trait_impls(repo: Path) -> list[dict[str, Any]]:
         block = source[begin:end]
         methods = re.findall(r"(?m)^\s*fn\s+(\w+)\(([^)]*)\)\s*->\s*([^\{]+)\s*\{", block)
         method_rows = [f"{name}({args.strip()}) -> {ret.strip()}" for name, args, ret in methods]
-        results.append({"trait": trait_name, "methods": method_rows})
+        row = {"trait": trait_name, "methods": method_rows}
+        if trait_name.startswith("From<"):
+            behavior = re.search(r"FilterError::Fft\(e\.to_string\(\)\)", block)
+            row["behavior"] = "FilterError::Fft(e.to_string())" if behavior else "unrecognized conversion body"
+        results.append(row)
     if re.search(r"impl\s+std::error::Error\s+for\s+FilterError\s*\{\s*\}", source):
         results.append({"trait": "std::error::Error", "methods": []})
     order = {"fmt::Display": 0, "std::error::Error": 1, "From<dsp_fft::FftError>": 2}
@@ -1321,6 +1325,18 @@ def self_test(repo: Path, doc: dict[str, Any]) -> tuple[int, int]:
     def alter_shared_fixture_identity(candidate: dict[str, Any]) -> None:
         candidate["shared_fixture_subject"]["fixture_identities"].pop()
     controls.append(("omit shared fixture case identity", alter_shared_fixture_identity, "source_completeness"))
+
+    def omit_upstream_operation_error(candidate: dict[str, Any]) -> None:
+        candidate["lanes"]["typescript"]["operation_errors"]["design*"].remove("upstream InvalidInputError for unsupported window names")
+    controls.append(("omit upstream window error", omit_upstream_operation_error, "source_completeness"))
+
+    def change_error_constructor_default(candidate: dict[str, Any]) -> None:
+        candidate["lanes"]["typescript"]["error_types"]["EmptySignalError"]["constructor"] = "constructor(message: string); sets name=EmptySignalError"
+    controls.append(("change exported error constructor default", change_error_constructor_default, "source_completeness"))
+
+    def change_from_conversion_behavior(candidate: dict[str, Any]) -> None:
+        candidate["lanes"]["rust"]["members"]["FilterError"]["trait_impls"][2]["behavior"] = "FilterError::InvalidCoefficient(e.to_string())"
+    controls.append(("alter Rust error conversion behavior", change_from_conversion_behavior, "source_completeness"))
 
     def corrupt_rust_namespace(candidate: dict[str, Any]) -> None:
         next(entry for entry in candidate["lanes"]["rust"]["root_export_entries"] if entry["name"] == "WindowType")["namespace"] = "value"

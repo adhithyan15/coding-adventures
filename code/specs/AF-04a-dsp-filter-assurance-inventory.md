@@ -91,8 +91,8 @@ variant.
 `Debug`, `PartialEq`, and `Eq`. `FilterError` derives `Debug`, `Clone`, and
 `PartialEq`; the inventory records its explicit `Display`, `Error`, and
 `From<dsp_fft::FftError>` implementations, including declared method
-signatures. This covers package-declared traits, not blanket or standard
-library inherited implementations.
+signatures and conversion behavior. This covers package-declared traits, not
+blanket or standard library inherited implementations.
 
 `FilterError` variants are `EmptySignal`, `EmptyKernel`,
 `InvalidCoefficient(String)`, and `Fft(String)`. It implements `Display`,
@@ -290,11 +290,13 @@ declarations. A missing file in one blob does not prove that no package-level
 binding exists; inspect the complete pinned package tree.
 
 Schema, source identity, and semantic completeness are separate failure
-classes. The checker provides 41 negative corruption/source controls and one
+classes. The checker provides 44 negative corruption/source controls and one
 positive candidate-path control. The controls include scope/precision and
 typed-namespace mutations, duplicate identities, producer-role swaps,
 contract-note deletions, Warrant resource/provenance promotions, trait/error
-surface omissions, shared-fixture drift, and unrecognized TypeScript exports.
+surface omissions, shared-fixture drift, upstream/constructor error omissions,
+and unrecognized TypeScript exports. Detailed behavior prose is a curated,
+reviewed source fact, not mechanically derived behavior or native proof.
 They prove that (a) malformed data
 fails schema validation, (b) removing a known export, alias, method, or field
 fails completeness, (c) changing an alias target or swapping same-named
