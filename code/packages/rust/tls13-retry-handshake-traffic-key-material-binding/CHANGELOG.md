@@ -21,3 +21,10 @@
 - Clear buffered fragments and permanently close the owner on record,
   content-type, reassembly, or handler-unwind failure so rejected sequence
   positions cannot splice non-contiguous records into a message.
+- Consume authenticated server-sender reassembly into an internally initialized
+  no-PSK server-flight owner and advance its public message-type order before
+  lending each accepted message to the caller.
+- Reject client sender state and reassemblers that already consumed or failed a
+  record, retain post-accept ordering and client-auth state in callback and
+  record evidence, and permanently close the owner on ordering failure before
+  any later record can be processed.
