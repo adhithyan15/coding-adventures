@@ -40,5 +40,8 @@ uv pip install -e ".[dev]" --quiet
 # domain table of D21/D25/D26), the files the generator's slice S10c-2 must reproduce byte for byte.
 .venv/bin/python tests/fixtures/fixed-eval-v1/make_fixed_eval.py --check
 .venv/bin/python -m coding_adventures_warrant_oracle dump-lowering --spec tests/fixtures/fixed-eval-v1/fixed_eval_v1.warrant --check tests/fixtures/fixed-eval-v1/fixed_eval_v1.oracle-lowering.json
+# CV2-S10o-1: the synthetic off-by-one-consumed document (VER04r 8.2, D36) and its committed faults and
+# refusals dumps, the files the generator's slice S10o-2 must reproduce byte for byte.
+.venv/bin/python tests/fixtures/off-by-one-consumed-v1/make_off_by_one_consumed.py --check
 .venv/bin/python ../../rust/warrant-corpus-gen/tests/fixtures/dump_oracle_lowering.py --check
 .venv/bin/python ../../rust/warrant-corpus-gen/tests/fixtures/dump_oracle_enumeration.py --check

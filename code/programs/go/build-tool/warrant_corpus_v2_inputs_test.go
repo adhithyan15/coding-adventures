@@ -227,6 +227,25 @@ func TestWarrantCorpusV2FixtureSelectsGeneratorAndOracle(t *testing.T) {
 			t.Fatalf("%s selected %v, want %v (err %v)", changed, got, want, err)
 		}
 	}
+	// CV2-S10o-1: the oracle's off-by-one-consumed document, its profile and its committed faults and
+	// refusals dumps are reproduced by the generator's slice S10o-2, read from the oracle's directory.
+	// off_by_one_consumed_v1.warrant is a Warrant document, so rust/warrant-grammar is selected as well.
+	for _, changed := range []string{
+		"code/packages/python/warrant-oracle/tests/fixtures/off-by-one-consumed-v1/off_by_one_consumed_v1.warrant",
+		"code/packages/python/warrant-oracle/tests/fixtures/off-by-one-consumed-v1/off_by_one_consumed_v1.profile",
+		"code/packages/python/warrant-oracle/tests/fixtures/off-by-one-consumed-v1/off_by_one_consumed_v1.oracle-faults.json",
+		"code/packages/python/warrant-oracle/tests/fixtures/off-by-one-consumed-v1/off_by_one_consumed_v1.oracle-refusals.json",
+		"code/packages/python/warrant-oracle/tests/fixtures/off-by-one-consumed-v1/make_off_by_one_consumed.py",
+	} {
+		want := map[string]bool{"rust/warrant-corpus-gen": true}
+		if isWarrantDocument(changed) {
+			want["rust/warrant-grammar"] = true
+		}
+		got, err = repositoryInputConsumersForChange([]string{changed}, packages, "all")
+		if err != nil || !reflect.DeepEqual(got, want) {
+			t.Fatalf("%s selected %v, want %v (err %v)", changed, got, want, err)
+		}
+	}
 	// Lookalikes select neither: another version directory, the directory itself (a
 	// changed *file* is what is mapped), a backslash spelling, another crate's bindings.
 	for _, changed := range []string{
@@ -258,6 +277,8 @@ func TestWarrantCorpusV2FixtureSelectsGeneratorAndOracle(t *testing.T) {
 		"code/packages/python/warrant-oracle/tests/fixtures/tuple-forms-v1",
 		"code/packages/python/warrant-oracle/tests/fixtures/fixed-eval-v10/fixed_eval_v1.warrant",
 		"code/packages/python/warrant-oracle/tests/fixtures/fixed-eval-v1",
+		"code/packages/python/warrant-oracle/tests/fixtures/off-by-one-consumed-v10/off_by_one_consumed_v1.warrant",
+		"code/packages/python/warrant-oracle/tests/fixtures/off-by-one-consumed-v1",
 		"code/specs/fixtures/ct-compare-warrant-v1/consumers.backup.json",
 	} {
 		got, err := repositoryInputConsumersForChange([]string{changed}, packages, "all")
