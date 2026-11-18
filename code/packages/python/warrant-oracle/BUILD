@@ -16,6 +16,9 @@ uv pip install -e ".[dev]" --quiet
 .venv/bin/python -m coding_adventures_warrant_oracle verify-v2 ../../../specs/fixtures/ct-compare-warrant-v2 --warrant ../../../specs/ct-compare.warrant --profile ../../../specs/fixtures/ct-compare-warrant-v2/corpus.profile --bindings ../../rust/ct-compare/evidence.bindings --expect-generator warrant-corpus-gen@0.6.0
 # CV2 S10 adopter (x25519): the committed x25519 v2 fixture, pinned and profile-checked as above.
 .venv/bin/python -m coding_adventures_warrant_oracle verify-v2 ../../../specs/fixtures/x25519-warrant-v2 --warrant ../../../specs/x25519.warrant --profile ../../../specs/fixtures/x25519-warrant-v2/corpus.profile --bindings ../../rust/x25519/evidence.bindings --expect-generator warrant-corpus-gen@0.6.0
+# CV2 S10 adopter (lzw): the committed lzw v2 fixture (six omitted examples, max_ir_cost 16384); the full derive
+# of its 17,563,819 cases takes about 20 s, so one line suffices (VER04r 16.10 [D33]).
+.venv/bin/python -m coding_adventures_warrant_oracle verify-v2 ../../../specs/fixtures/lzw-warrant-v2 --warrant ../../../specs/lzw.warrant --profile ../../../specs/fixtures/lzw-warrant-v2/corpus.profile --bindings ../../rust/lzw/evidence.bindings --expect-generator warrant-corpus-gen@0.6.0
 .venv/bin/python -m coding_adventures_warrant_oracle check --spec ../../../specs/ct-compare.warrant
 .venv/bin/python -m coding_adventures_warrant_oracle check --spec ../../../specs/gf256.warrant
 .venv/bin/python -m coding_adventures_warrant_oracle check --spec ../../../specs/wasm-leb128.warrant
