@@ -3,5 +3,5 @@
   "version": 1,
   "package": "rust/tls13-certificate-verify-transcript-binding",
   "capabilities": [],
-  "justification": "Pure framing and hashing over an immutable repository-owned TLS transcript state, caller-selected public role, policy-authorized public signature scheme, and caller-owned output. It performs no filesystem, network, process, environment, clock, entropy, credential, private-key, signing, certificate parsing, trust-root, path, hostname, revocation, record, HTTP, OAuth, transport, audit, trace, or external-effect access."
+  "justification": "Pure framing, hashing, and public RSA verification over an immutable repository-owned TLS transcript state, caller-selected public role, policy-authorized public signature scheme, a validated public key, and caller-owned output and scratch. It performs no filesystem, network, process, environment, clock, entropy, credential, private-key, signing, certificate parsing, trust-root, path, hostname, revocation, record, HTTP, OAuth, transport, audit, trace, or external-effect access."
 }
