@@ -79,6 +79,10 @@ is empty since S10t-1 because tuples are evaluated, so a suite that needs tuples
 * **Corpus errors** (code `corpus`, checked before any arm body is lowered, `patterns.py`): a match
   that can fall through, an arm no value can reach (the usual usefulness check), the same `bind`
   twice in one pattern, and a `bind` that shadows a binder, a parameter, `result` or an outer `bind`.
+* **Lowering-time `W0701`** (CV2-F1): a subject call under an impure guard (VER04r 4.4) and a claim that
+  calls no op (4.3) are refused when the claim is lowered, as the generator refuses them (recorded in
+  `LoweredSuite.refusal`, raised by `derive`, `emit-v2` and `dump-lowering`). A non-omitted example with a
+  `Bytes` over 4,096 bytes is a `limit` error (VER04r 2.3).
 * **A `match` arm is a guard** for call counting (VER04r 4.4): a subject call in an arm needs a pure
   scrutinee, and then only the arm the scrutinee selects counts; the wrap trace, the D19 admit check
   and the v0 rule-3 walk follow the same arm (`irtree.children` and `ir_eval.walk_scoped`).
