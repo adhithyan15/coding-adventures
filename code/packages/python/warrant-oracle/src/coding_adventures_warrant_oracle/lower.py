@@ -57,7 +57,10 @@ from . import ast as A
 from . import levels as L
 from . import patterns as P
 from .errors import OracleError
-from .irtree import children
+from .irtree import children, match_arms
+
+#: ``ir_eval.MAX_IR_DEPTH`` (VER04r 14, IR nesting 64); repeated here because ``ir_eval`` imports this module.
+MAX_IR_DEPTH = 64
 
 # -- types ---------------------------------------------------------------------
 
@@ -162,6 +165,9 @@ class LoweredSuite:
     line: int = 0
     #: The levels of ``admit`` and ``body`` and of their model closure (R9).
     requires: tuple = ()
+    #: A lowering-time ``W0701`` (VER04r 4.3, 4.4): a subject call under an impure guard, or a
+    #: claim that calls no operation.  ``None`` for a claim the generator's lowering accepts.
+    refusal: OracleError | None = None
 
 
 @dataclass
@@ -558,6 +564,24 @@ class _Lowerer:
                 raise
             unsupported = exc
             lowered = False
+        # VER04r 4.4 and 4.3, applied at lowering as the generator's lowering applies them: a
+        # subject call under an impure guard, and a claim that calls no op, are W0701.  The claim
+        # is still lowered (its IR is what a census and the dump show); the refusal is recorded
+        # in ``refusal`` and raised by every consumer that would evaluate or emit it.  A level
+        # refusal wins over it in evaluation (the generator meets a level while typing, before
+        # either rule); the lowering dump, which accepts ``ir.fixed``, raises the refusal.
+        refusal: OracleError | None = None
+        if lowered:
+            try:
+                check_pure_guards(ir)
+                if not _has_subject(ir):
+                    raise OracleError(
+                        "generation",
+                        "W0701: a claim must call at least one operation of the subject "
+                        "(VER04r 4.3)",
+                    )
+            except OracleError as exc:
+                refusal = exc
         kind = "predicate"
         subject = expected = None
         result = BOOL
@@ -583,6 +607,7 @@ class _Lowerer:
             unsupported,
             decl.line,
             requires,
+            refusal,
         )
 
     def _type_of_side(self, body, subject_left: bool) -> A.Ty:
@@ -1318,6 +1343,59 @@ def walk(ir):
 
 def _has_subject(ir) -> bool:
     return any(n[0] == "subject_op" for n in walk(ir))
+
+
+def check_pure_guards(ir: object, depth: int = 0) -> None:
+    """Refuse a subject call under an impure guard (VER04r 4.4, ``W0701``), mirroring the generator.
+
+    ``expected_calls`` must not depend on what the subject returned, so a subject call may sit
+    under a guard only if the guard calls no subject::
+
+        if pure(x) then op(a) else true     ok     -- the guard calls no subject
+        if op(x) then op(a) else true       W0701
+        op(a) and op(b)                     W0701  -- op(a) guards op(b) and is impure
+        pure(x) and op(b)                   ok
+        op(a) and pure(b)                   ok     -- op(a) guards nothing that calls
+        match op(x) with arms calling op    W0701  -- a match arm is guarded by its scrutinee
+
+    A guard is the condition of an ``if``, the left operand of ``and``/``or``/``implies`` and the
+    scrutinee of a ``match`` whose arms call the subject.  The walk is the one
+    :func:`.ir_eval.compile_calls` makes at evaluation (which keeps its own refusals as a
+    backstop); doing it here makes the refusal a property of *lowering*.
+    """
+    if depth >= MAX_IR_DEPTH:
+        raise OracleError("limit", "IR nesting exceeds 64 levels")
+    if not _has_subject(ir):
+        return
+    tag = ir[0]
+    impure = OracleError("generation", "W0701: a subject call under an impure guard (VER04r 4.4)")
+    if tag == "if":
+        cond, then, other = ir[1], ir[2], ir[3]
+        if _has_subject(then) or _has_subject(other):
+            if _has_subject(cond):
+                raise impure
+            check_pure_guards(then, depth + 1)
+            check_pure_guards(other, depth + 1)
+        else:
+            check_pure_guards(cond, depth + 1)
+    elif tag in ("and", "or", "implies"):
+        if _has_subject(ir[2]):
+            if _has_subject(ir[1]):
+                raise impure
+            check_pure_guards(ir[2], depth + 1)
+        else:
+            check_pure_guards(ir[1], depth + 1)
+    elif tag == "match":
+        if any(_has_subject(body) for _pattern, body in match_arms(ir)):
+            if _has_subject(ir[1]):
+                raise impure
+            for _pattern, body in match_arms(ir):
+                check_pure_guards(body, depth + 1)
+        else:
+            check_pure_guards(ir[1], depth + 1)
+    else:
+        for child in children(ir):
+            check_pure_guards(child, depth + 1)
 
 
 def _collect_ops(ir) -> list[str]:

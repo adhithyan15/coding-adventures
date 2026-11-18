@@ -97,6 +97,8 @@ def _require_core(spec: Spec) -> None:
     for suite in spec.suites:
         if suite.unsupported is not None:
             raise suite.unsupported
+        if suite.refusal is not None:
+            raise suite.refusal
     for ex in spec.examples:
         if ex.unsupported is not None:
             raise ex.unsupported
