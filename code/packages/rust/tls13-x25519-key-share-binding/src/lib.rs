@@ -6,8 +6,10 @@
 //! the decoded server public share can reach repository-owned X25519 execution.
 //!
 //! This boundary does not generate, own, or wipe the caller's private scalar.
-//! It does not prove that the retained offer was transmitted or transcript-
-//! bound, and it does not establish TLS, HTTPS, or live-provider readiness.
+//! Its message-bound retry entry point proves that the retained offer and
+//! selected share came from one exact four-message retry exchange, but it does
+//! not bind that exchange to a transcript or establish TLS, HTTPS, or live-
+//! provider readiness.
 
 #![forbid(unsafe_code)]
 
@@ -16,6 +18,7 @@ use coding_adventures_x25519::x25519_base;
 use core::fmt;
 use tls13_key_share::DecodedServerKeyShare;
 use tls13_named_group_policy::KeyAgreementAlgorithm;
+use tls13_server_hello_retry_selection::BoundRetryServerKeyShareMessages;
 use tls13_x25519_key_agreement::{
     derive_x25519_shared_secret, KeyAgreementError, KeyAgreementErrorKind, X25519SharedSecret,
 };
@@ -127,4 +130,176 @@ pub fn derive_bound_x25519_shared_secret<'output>(
         output,
     )
     .map_err(Into::into)
+}
+
+/// One X25519 secret that remains attached to exact retry-message evidence.
+///
+/// This value intentionally derives neither [`Copy`] nor [`Clone`]. Its
+/// shared-secret field retains the existing wipe-on-drop behavior, while the
+/// borrowed message proof prevents later composition from substituting a
+/// detached ClientHello offer or ServerHello share.
+pub struct MessageBoundRetryX25519SharedSecret<
+    'messages,
+    'output,
+    'bound,
+    'retry_client,
+    'retry_cipher_offer,
+    'retry_server,
+    'retry_version_offer,
+    'retry_rules,
+    'final_client,
+    'final_cipher_offer,
+    'final_server,
+    'final_version_offer,
+    'final_rules,
+> {
+    messages: &'messages BoundRetryServerKeyShareMessages<
+        'bound,
+        'retry_client,
+        'retry_cipher_offer,
+        'retry_server,
+        'retry_version_offer,
+        'retry_rules,
+        'final_client,
+        'final_cipher_offer,
+        'final_server,
+        'final_version_offer,
+        'final_rules,
+    >,
+    shared_secret: X25519SharedSecret<'output>,
+}
+
+impl<
+        'messages,
+        'output,
+        'bound,
+        'retry_client,
+        'retry_cipher_offer,
+        'retry_server,
+        'retry_version_offer,
+        'retry_rules,
+        'final_client,
+        'final_cipher_offer,
+        'final_server,
+        'final_version_offer,
+        'final_rules,
+    >
+    MessageBoundRetryX25519SharedSecret<
+        'messages,
+        'output,
+        'bound,
+        'retry_client,
+        'retry_cipher_offer,
+        'retry_server,
+        'retry_version_offer,
+        'retry_rules,
+        'final_client,
+        'final_cipher_offer,
+        'final_server,
+        'final_version_offer,
+        'final_rules,
+    >
+{
+    /// Borrow the exact CH1, HRR, CH2, and final-ServerHello evidence.
+    #[must_use]
+    pub const fn messages(
+        &self,
+    ) -> &'messages BoundRetryServerKeyShareMessages<
+        'bound,
+        'retry_client,
+        'retry_cipher_offer,
+        'retry_server,
+        'retry_version_offer,
+        'retry_rules,
+        'final_client,
+        'final_cipher_offer,
+        'final_server,
+        'final_version_offer,
+        'final_rules,
+    > {
+        self.messages
+    }
+
+    /// Borrow the selected-group-bound shared secret.
+    #[must_use]
+    pub const fn shared_secret(&self) -> &X25519SharedSecret<'output> {
+        &self.shared_secret
+    }
+}
+
+impl fmt::Debug
+    for MessageBoundRetryX25519SharedSecret<'_, '_, '_, '_, '_, '_, '_, '_, '_, '_, '_, '_, '_>
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("MessageBoundRetryX25519SharedSecret")
+            .field("messages", &"[RETAINED]")
+            .field("shared_secret", &"[SECRET]")
+            .finish()
+    }
+}
+
+/// Derive X25519 only from one exact retained retry-message proof.
+///
+/// The decoded ServerHello share is obtained internally from `messages`; this
+/// API accepts no detached offer, share, or named-group policy. All scalar
+/// matching, selected-group routing, output invariants, and secret wiping are
+/// delegated to [`derive_bound_x25519_shared_secret`].
+pub fn derive_message_bound_retry_x25519_shared_secret<
+    'messages,
+    'output,
+    'bound,
+    'retry_client,
+    'retry_cipher_offer,
+    'retry_server,
+    'retry_version_offer,
+    'retry_rules,
+    'final_client,
+    'final_cipher_offer,
+    'final_server,
+    'final_version_offer,
+    'final_rules,
+>(
+    messages: &'messages BoundRetryServerKeyShareMessages<
+        'bound,
+        'retry_client,
+        'retry_cipher_offer,
+        'retry_server,
+        'retry_version_offer,
+        'retry_rules,
+        'final_client,
+        'final_cipher_offer,
+        'final_server,
+        'final_version_offer,
+        'final_rules,
+    >,
+    private_scalar: &[u8; 32],
+    output: &'output mut [u8; 32],
+) -> Result<
+    MessageBoundRetryX25519SharedSecret<
+        'messages,
+        'output,
+        'bound,
+        'retry_client,
+        'retry_cipher_offer,
+        'retry_server,
+        'retry_version_offer,
+        'retry_rules,
+        'final_client,
+        'final_cipher_offer,
+        'final_server,
+        'final_version_offer,
+        'final_rules,
+    >,
+    KeyShareBindingError,
+> {
+    let shared_secret = derive_bound_x25519_shared_secret(
+        messages.server_share().server_share(),
+        private_scalar,
+        output,
+    )?;
+    Ok(MessageBoundRetryX25519SharedSecret {
+        messages,
+        shared_secret,
+    })
 }

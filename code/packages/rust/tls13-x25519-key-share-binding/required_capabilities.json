@@ -3,5 +3,5 @@
   "version": 1,
   "package": "rust/tls13-x25519-key-share-binding",
   "capabilities": [],
-  "justification": "Pure binding of caller-owned TLS key-share evidence to repository-owned comparison and X25519 execution. It performs no filesystem, network, DNS, process, environment, clock, entropy, credential access, signing, certificate, trust-root, path-validation, hostname, revocation, audit, HTTP, OAuth, or external effect."
+  "justification": "Pure binding of caller-owned TLS key-share evidence, including an exact retained four-message retry proof, to repository-owned comparison and X25519 execution. It reads a caller-owned private scalar only after selected-group routing, owns no key material, and performs no filesystem, network, DNS, process, environment, clock, entropy, credential access, signing, certificate, trust-root, path-validation, hostname, revocation, audit, HTTP, OAuth, or external effect."
 }
