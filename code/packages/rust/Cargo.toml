@@ -1494,6 +1494,7 @@ members = [
   "tls13-server-hello-message",
   "tls13-server-hello-selection",
   "tls13-server-hello-retry-selection",
+  "tls13-retry-transcript-binding",
   "tls13-server-hello-version-selection",
   "tls13-key-share-entry",
   "tls13-server-name",
