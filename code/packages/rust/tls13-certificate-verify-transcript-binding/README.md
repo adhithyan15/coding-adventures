@@ -13,11 +13,20 @@ Callers cannot inject detached transcript bytes or transcript-hash metadata,
 cannot advance the selected transcript while the evidence exists, and cannot
 mutate the caller-owned framed bytes while they are borrowed.
 
+A third stage accepts only that outer transcript-bound hash evidence together
+with the exact decoded `CertificateVerify` message, a validated RSA public key,
+typed verifier limits, and caller-owned scratch. It delegates the RSA-PSS
+operation to the existing repository-owned verifier and returns a non-copyable
+verdict retaining both the complete outer proof and the lower signature proof.
+The stronger verdict therefore cannot be constructed from detached framing or
+hash evidence.
+
 This package does not decide whether the selected transcript contains the
 right ordered handshake messages or is at the right state. It does not
 authorize the caller-selected endpoint role, parse or validate a certificate,
-bind a server-path key, check Finished, process records, perform I/O, or make
-TLS, HTTPS, OAuth transport, or live-provider access available.
+bind the validated key to a certificate or reviewed server path, check
+Finished, process records, perform I/O, or make TLS, HTTPS, OAuth transport, or
+live-provider access available.
 
 ```rust
 use tls13_certificate_verify_input::{CertificateVerifyRole, MAXIMUM_INPUT_LENGTH};
