@@ -117,9 +117,9 @@ pub fn design_band_pass(low_cutoff_norm: f32, high_cutoff_norm: f32, num_taps: u
     -> Vec<f32>; // legacy panic-on-invalid API
 pub fn try_design_band_pass(low_cutoff_norm: f32, high_cutoff_norm: f32, num_taps: u32, window: WindowType)
     -> Result<Vec<f32>, FilterError>;
-pub fn butterworth_lowpass(order: u32, cutoff_hz: f32, sample_rate: f32)
+pub fn butterworth_lowpass(order: u32, cutoff_norm: f32)
     -> (Vec<f32>, Vec<f32>);  // (b, a)
-pub fn chebyshev1_lowpass(order: u32, ripple_db: f32, cutoff_hz: f32, sample_rate: f32)
+pub fn chebyshev1_lowpass(order: u32, ripple_db: f32, cutoff_norm: f32)
     -> (Vec<f32>, Vec<f32>);
 
 pub enum WindowType { Rectangular, Hamming, Hann, Blackman }
@@ -174,6 +174,11 @@ positive. This work preserves those zero/cancellation branches and
 non-finite normalization behavior. A shared cancellation/output policy
 is tracked separately in AF-01c. This contract does not promise finite
 outputs for every otherwise accepted input.
+
+The Butterworth and Chebyshev signatures above are existing separate
+IIR helpers; their cutoff parameter is also normalized in the current
+implementation. AF-01b does not change their behavior or specify their
+full validation policy.
 
 **Phase 6**: matrix-ir-lowered FIR.
 
