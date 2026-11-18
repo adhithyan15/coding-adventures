@@ -1,7 +1,7 @@
 # Audio workstation foundations backlog
 
-**Last reviewed:** 2026-11-17  
-**Source audit:** `audio-workstation-roadmap.md` and `audio-workstation-inventory.json`, audited at `befa557a8e4c17f0091eeace8030859323cc0a24`  
+**Last reviewed:** 2026-11-17
+**Source audit:** `audio-workstation-roadmap.md` and `audio-workstation-inventory.json`, audited at `befa557a8e4c17f0091eeace8030859323cc0a24`
 **Repository delivery baseline:** `origin/main` `2522fa18a0e274ab6bd826a5adc9861c6953de9a`
 
 This is the durable, prioritized delivery queue for connecting the repository's

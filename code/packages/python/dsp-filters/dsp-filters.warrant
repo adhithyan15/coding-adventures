@@ -142,4 +142,3 @@ warrant dsp_filters v1
     steps <= 64 * num_taps + 1024
     heap <= 4 * num_taps + 1024
     depth <= 16
-
