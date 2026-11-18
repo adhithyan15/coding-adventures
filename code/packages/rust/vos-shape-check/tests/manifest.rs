@@ -294,8 +294,30 @@ fn vos_toml_contract_and_obligations_keys() {
             "more than 5",
         ),
         ("obligation = [\"a\"]", "unknown key"),
+        ("coverage-floor = 101", "integer from 0 to 100"),
+        ("coverage-floor = -1", "integer from 0 to 100"),
+        ("coverage-floor = 9_5", "integer from 0 to 100"),
+        ("coverage-floor = 95.0", "integer from 0 to 100"),
+        ("coverage-floor = 0x5f", "integer from 0 to 100"),
+        ("coverage-floor = 0095", "integer from 0 to 100"),
+        ("coverage-floor = \"95\"", "wrong type"),
+        ("coverage-floor = 95\ncoverage-floor = 96", "duplicate key"),
     ] {
         let e = parse_vos_toml(text).unwrap_err();
         assert!(e.1.contains(why), "{text:?}: {e:?}");
+    }
+}
+
+#[test]
+fn coverage_floor_is_an_integer_percent_and_optional() {
+    // VOS-039a: the declared floor of the coverage gate (VOS04 section 5.6).
+    assert_eq!(parse_vos_toml("kind = \"any\"").unwrap().coverage_floor, None);
+    for (text, want) in [
+        ("coverage-floor = 95", 95),
+        ("coverage-floor = 0", 0),
+        ("coverage-floor = 100", 100),
+        ("coverage-floor = 7", 7),
+    ] {
+        assert_eq!(parse_vos_toml(text).unwrap().coverage_floor, Some(want), "{text}");
     }
 }

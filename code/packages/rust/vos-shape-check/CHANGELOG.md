@@ -4,6 +4,12 @@ All notable changes to this package are documented here.
 
 ## [Unreleased]
 
+### Added (VOS-039a)
+
+- `vos.toml` key `coverage-floor`: an integer percent 0 to 100, read into `VosToml::coverage_floor`.  The reader only
+  bounds it (plain decimal digits; a sign, an underscore, a prefix, a fraction or a string is refused); the
+  floor is enforced by `vos-link check-component` and the BUILD coverage line (VOS04 section 5.6, VOS-D070).
+
 ### Fixed (VOS-D075, CI flake `item11_item_scanning_is_linear`)
 
 - The linearity tests (`item11`, `item12`, `l3`) no longer compare wall-clock growth

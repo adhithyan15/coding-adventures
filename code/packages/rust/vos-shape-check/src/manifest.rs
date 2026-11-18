@@ -148,6 +148,10 @@ pub struct VosToml {
     pub contract: Option<String>,
     /// The tiers `vos-link gen-doc` embeds, in file order, as written.
     pub obligations: Vec<String>,
+    /// The declared floor of line coverage, an integer percent 0 to 100 (VOS04 section 5.6,
+    /// VOS-D070).  This reader only bounds it; `vos-link check-component` requires it of an
+    /// implementation, holds it to the repository minimum and ties the BUILD gate to it.
+    pub coverage_floor: Option<u8>,
 }
 
 /// A `vos.toml` error: 1-based line and reason.
@@ -195,13 +199,14 @@ pub fn parse_vos_toml(text: &str) -> Result<VosToml, VosTomlError> {
         evidence_features: Vec::new(),
         contract: None,
         obligations: Vec::new(),
+        coverage_floor: None,
     };
     for Entry { path, value, line } in entries {
         let line = line as usize;
         let [key] = path.as_slice() else {
             return bad(
                 line,
-                "unknown key or table (allowed: class, kind, evidence-features, contract, obligations)",
+                "unknown key or table (allowed: class, kind, evidence-features, contract, obligations, coverage-floor)",
             );
         };
         match (key.as_str(), value) {
@@ -271,13 +276,33 @@ pub fn parse_vos_toml(text: &str) -> Result<VosToml, VosTomlError> {
                     out.obligations.push(name);
                 }
             }
-            ("class" | "kind" | "evidence-features" | "contract" | "obligations", _) => {
+            ("coverage-floor", Value::Other(v)) => {
+                if out.coverage_floor.is_some() {
+                    return bad(line, "duplicate key");
+                }
+                // An integer written as plain decimal digits: no sign, no underscore, no
+                // radix prefix, no fraction (those arrive as other text and are refused).
+                let floor = if !v.is_empty() && v.len() <= 3 && v.bytes().all(|b| b.is_ascii_digit()) {
+                    v.parse::<u8>().ok().filter(|n| *n <= 100)
+                } else {
+                    None
+                };
+                let Some(floor) = floor else {
+                    return bad(line, "coverage-floor is an integer from 0 to 100");
+                };
+                out.coverage_floor = Some(floor);
+            }
+            (
+                "class" | "kind" | "evidence-features" | "contract" | "obligations"
+                | "coverage-floor",
+                _,
+            ) => {
                 return bad(line, "wrong type of value for this key")
             }
             _ => {
                 return bad(
                     line,
-                    "unknown key (allowed: class, kind, evidence-features, contract, obligations)",
+                    "unknown key (allowed: class, kind, evidence-features, contract, obligations, coverage-floor)",
                 )
             }
         }
