@@ -1,6 +1,6 @@
-# GAME11 input action frame v1 vectors
+# GBL-050 input action frame v1 vectors
 
-`cases.json` is the shared, explicit wire corpus for the pure GAME11 per-player
+`cases.json` is the shared, explicit wire corpus for the pure GBL-050 per-player
 reducer. Tick and button-mask values are canonical decimal strings, preserving
 all `u64` values in every language. Player IDs are exact JSON `u32` integers.
 

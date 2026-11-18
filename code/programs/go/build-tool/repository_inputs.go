@@ -209,6 +209,7 @@ var (
 	rngCorpusPaths                 = []string{"code/specs/fixtures/rng-v1"}
 	gameClockInputPaths            = []string{"code/specs/fixtures/game-clock-v1", "code/specs/game-clock.warrant"}
 	typescriptGameClockCorpusPaths = []string{"code/specs/fixtures/game-clock-v1"}
+	gameInputFrameV1Paths          = []string{"code/specs/fixtures/game-input-frame-v1"}
 	biquadSosFixturePaths          = []string{"code/specs/fixtures/biquad-sos-v1"}
 	hamurabiCorpusPaths            = []string{"code/specs/fixtures/hamurabi-v1"}
 	lunarLanderCorpusPaths         = []string{"code/specs/fixtures/lunar-lander-v1"}
@@ -553,6 +554,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "the shared GAME10 fixed-step clock v1 corpus",
 		matches:  isGameClockCorpusInput,
 		paths:    typescriptGameClockCorpusPaths,
+	},
+	{
+		name:     "rust/game-input-frame",
+		language: "rust",
+		inputs:   "the GAME input action frame v1 corpus",
+		matches:  isGameInputFrameV1,
+		paths:    gameInputFrameV1Paths,
 	},
 	{
 		name:     "python/trig",
@@ -1478,6 +1486,12 @@ func isGameClockInput(changed string) bool {
 // TypeScript consumer intentionally does not read or execute the Warrant spec.
 func isGameClockCorpusInput(changed string) bool {
 	return strings.HasPrefix(changed, "code/specs/fixtures/game-clock-v1/")
+}
+
+// isGameInputFrameV1 selects only files inside GAME's exact v1 vector directory.
+// Neighboring versions, directory-only paths, and similarly named fixtures do not select it.
+func isGameInputFrameV1(changed string) bool {
+	return strings.HasPrefix(changed, "code/specs/fixtures/game-input-frame-v1/")
 }
 
 // isBiquadSosFixture selects files in the versioned shared DSP fixture while

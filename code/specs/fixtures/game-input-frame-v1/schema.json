@@ -21,11 +21,18 @@
       "maxLength": 20
     },
     "axisValue": {"type": "integer", "minimum": -32768, "maximum": 32767},
+    "axisLevel": {"type": "integer", "minimum": -32767, "maximum": 32767},
     "axes": {
       "type": "array",
       "minItems": 16,
       "maxItems": 16,
       "items": {"$ref": "#/$defs/axisValue"}
+    },
+    "frameAxes": {
+      "type": "array",
+      "minItems": 16,
+      "maxItems": 16,
+      "items": {"$ref": "#/$defs/axisLevel"}
     },
     "state": {
       "type": "object",
@@ -67,7 +74,7 @@
         "held_buttons": {"$ref": "#/$defs/u64"},
         "pressed_buttons": {"$ref": "#/$defs/u64"},
         "released_buttons": {"$ref": "#/$defs/u64"},
-        "axes": {"$ref": "#/$defs/axes"}
+        "axes": {"$ref": "#/$defs/frameAxes"}
       }
     },
     "error": {
