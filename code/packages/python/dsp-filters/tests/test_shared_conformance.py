@@ -104,8 +104,11 @@ def _decode_fixture(raw: str) -> tuple[list[float], list[dict[str, Any]]]:
         for section_index, section in enumerate(sections):
             if not isinstance(section, list) or len(section) != 6:
                 raise ValueError(f"{record_id}: section must have six coefficients")
-            for coefficient_index, value in enumerate(section):
+            sections[section_index] = [
                 _finite_number(value, f"sections[{section_index}][{coefficient_index}]")
+                for coefficient_index, value in enumerate(section)
+            ]
+        record["sections"] = sections
         expected = record["expected"]
         if not isinstance(expected, list) or len(expected) != 16:
             raise ValueError(f"{record_id}: expected must contain 16 samples")
@@ -172,6 +175,11 @@ def test_shared_fixture_all_biquad_partitions_and_state_semantics() -> None:
     signal, records = _decode_fixture(FIXTURE.read_text(encoding="utf-8"))
     record = records[0]
     expected = record["expected"]
+    assert all(
+        type(coefficient) is float
+        for section in record["sections"]
+        for coefficient in section
+    )
 
     _assert_exact_finite(_biquad(record).process(signal), expected)
     chunked = _biquad(record)
