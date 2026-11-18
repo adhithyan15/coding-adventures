@@ -92,11 +92,14 @@ A `LineParser` is **not safe for concurrent use** and must not be copied.
 `Reset`; the strings from `RawArgs`, `AppendRawArgs`, `TextAfterClose` and
 `PrefixBeforeUnfinished` are substrings of the line you passed, so they outlive
 the next parse. The tree's arrays are reused but the parser package drops an
-oversized one at the next parse, so one huge line does not pin memory. The lexer
-has no caller-buffer entry point yet, so the token slice is still allocated per
-line (P2 PR 6). On the fixture corpus the compact path runs at about 22.7 MB/s
-with 155 allocs per pass, against 1355 allocs and 16.9 MB/s for the ASTNode path
-with its helpers; the lexer alone is 41.6 MB/s.
+oversized one at the next parse, so one huge line does not pin memory. For
+hook-free compact parses, the line parser also reuses its private token buffer;
+it clears occupied entries on reset and drops capacities above 4096 tokens.
+Calls with `PreParse` hooks use the owning lexer path so retained hook inputs
+are not mutated. Token slices remain borrowed until the next parse/reset. The
+existing fixture throughput figures are historical, and this buffer change
+alone does not establish a Linux throughput improvement. See KILN04 for the
+measurement contract and the unchanged Linux acceptance threshold.
 
 ## What is pinned by tests
 

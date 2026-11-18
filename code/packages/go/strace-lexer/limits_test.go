@@ -1,8 +1,11 @@
 package stracelexer
 
 import (
+	"reflect"
 	"strings"
 	"testing"
+
+	"github.com/adhithyan15/coding-adventures/code/packages/go/lexer"
 )
 
 // The "???" lines are whole-line tokens in exactly the spellings the old parser
@@ -64,6 +67,37 @@ func TestLineByteLimit(t *testing.T) {
 	// The length check comes first: an over-long line with a newline is a length error.
 	if _, err := TokenizeLineMax("1  f()\n", 3); err != ErrLineTooLong {
 		t.Errorf("%v", err)
+	}
+}
+
+func TestTokenizeLineMaxIntoPreservesChecksAndResults(t *testing.T) {
+	line := `1  close(3</e>) = 0`
+	want, err := TokenizeLineMax(line, len(line))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	storage := []lexer.Token{{TypeName: "SENTINEL", Value: "untouched"}}
+	before := append([]lexer.Token(nil), storage...)
+	if _, err := TokenizeLineMaxInto(line+"\n", len(line), storage); err != ErrLineTooLong {
+		t.Fatalf("over-limit newline error = %v, want ErrLineTooLong", err)
+	}
+	if !reflect.DeepEqual(storage, before) {
+		t.Fatal("pre-lex length refusal changed caller storage")
+	}
+	if _, err := TokenizeLineMaxInto(line+"\n", len(line)+1, storage); err != ErrNewline {
+		t.Fatalf("in-limit newline error = %v, want ErrNewline", err)
+	}
+	if !reflect.DeepEqual(storage, before) {
+		t.Fatal("pre-lex newline refusal changed caller storage")
+	}
+
+	got, err := TokenizeLineMaxInto(line, len(line), storage)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !reflect.DeepEqual(got, want) {
+		t.Fatalf("Into tokens differ:\n got: %#v\nwant: %#v", got, want)
 	}
 }
 
