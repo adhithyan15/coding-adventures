@@ -284,6 +284,10 @@ def test_the_committed_refusals_pin_the_bytes_result_and_the_second_component_fi
     assert "op f(ok_payload: U8) -> (U8,Bool)" in order["source"]
     assert order["message"] == "fault: off-by-one-consumed needs a numeric second component"
     assert "ok_payload" not in order["message"]
+    ok_order = by_name["a-non-numeric-second-component-before-the-ok-payload-clash-in-the-ok-form"]
+    assert "op f(ok_payload: U8) -> Result<(U8,Bool),E>" in ok_order["source"]
+    assert ok_order["message"] == "fault: off-by-one-consumed needs a numeric second component"
+    assert "ok_payload" not in ok_order["message"]
 
 
 def test_a_numeric_second_component_is_checked_before_the_ok_payload_name():

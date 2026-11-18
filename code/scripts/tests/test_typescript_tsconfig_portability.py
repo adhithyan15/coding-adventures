@@ -460,8 +460,9 @@ console.log(prose, nested);
         # +1: lunar-lander, the GAME02 isolated standalone simulation package.
         # +2: music-machine-web and music-machine-node (MUS-W3-C standalone packages).
         # +1: music-analysis (MUS-W5-B2 isolated standalone package).
-        self.assertEqual(summary.total_projects, 515)
-        self.assertEqual(summary.shared_projects, 308)
+        # +1: game-clock, the GAME10 TypeScript clock contract port.
+        self.assertEqual(summary.total_projects, 516)
+        self.assertEqual(summary.shared_projects, 309)
         self.assertEqual(summary.inherited_root_dir, 135)
         self.assertEqual(summary.inherited_out_dir, 138)
         # forme-authoring-core, forme-authoring-editor,
@@ -635,7 +636,8 @@ console.log(prose, nested);
         # +1: lunar-lander locks its standalone compiler and test toolchain.
         # +2: music-machine-web and music-machine-node lock their standalone compiler.
         # +1: music-analysis locks its standalone compiler.
-        self.assertEqual(summary.locked_compilers, 528)
+        # +1: game-clock locks its standalone compiler and test toolchain.
+        self.assertEqual(summary.locked_compilers, 529)
 
 
 if __name__ == "__main__":

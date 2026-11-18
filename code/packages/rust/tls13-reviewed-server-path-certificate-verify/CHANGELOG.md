@@ -6,6 +6,10 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- Exact HTTPS DNS destination, direct no-check complete fixed-path revocation,
+  and TLS 1.3 server `CertificateVerify` composition with role-first leaf-key
+  verification, non-copyable retained evidence, public-fixture success, and
+  buffer-non-mutation coverage.
 - Exact HTTPS DNS destination, reviewed path, reviewed anchor self-signature,
   and TLS 1.3 server `CertificateVerify` composition, with public-fixture
   success and role-first buffer-non-mutation coverage.

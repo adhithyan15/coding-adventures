@@ -30,6 +30,27 @@ through `18446744073709551615`. Every `u32` value is a JSON integer in range. JS
 booleans and are rejected in integer fields. This representation preserves the full `u64` range
 across runtimes with narrower JSON number types.
 
+### TypeScript public binding
+
+The TypeScript package exposes `standard_60hz`, `from_hz`, `new_clock`, `validate_state`, and
+`advance_frame` as named ES-module functions. Config, state, and step-result records use readonly
+fields with the GAME10 spellings and types: each `u64` is a `bigint`, each `u32` is a `number`, and
+flags are booleans. They are not JSON records. Every successful constructor or advance returns new
+records and freezes the returned records; neither success nor refusal mutates caller-owned inputs.
+
+Functions with semantic refusals return the discriminated result
+`{ ok: true, value } | { ok: false, error }`, where `error` is exactly one of the five
+`ClockError` variants below. `validate_state` uses `{ ok: true }` for success. Host-value mistakes
+are programmer errors and throw before semantic validation: a wrong JavaScript kind throws
+`TypeError`; a `bigint` outside `0..=u64::MAX`, or a `number` that is fractional, non-finite, or
+outside `0..=u32::MAX`, throws `RangeError`. `-0` is accepted by the numeric `u32` boundary and
+then follows the ordinary zero-value semantic rule. Implementations do not coerce values or
+truncate them to fit a width. The API preserves the full `u64` range and uses integer arithmetic.
+
+These host type/range exceptions are outside the portable JSON corpus, whose inputs have already
+passed its wire representation checks. They do not replace or reorder the semantic `ClockError`
+precedence below.
+
 ## Configuration construction and validation
 
 `standard_60hz()` returns `fixed_dt_ns = 16666667`, `max_frame_steps = 8`, and
@@ -140,14 +161,18 @@ stateful adapter.
 
 ## Evidence boundary
 
-This corpus is package-specific conformance evidence. During review, a temporary Rust harness
-checked every committed vector against the public API; the checked-in Rust public-API consumer is
-the first implementation task tracked in `GAME-BACKLOG.md`. This is finite corpus evidence, not a
-formal proof or a claim that the implementation is correct for all possible inputs.
+This corpus is package-specific conformance evidence. The checked-in Rust public-API consumer
+landed in PR #19602 and the Rust constructor Warrant-model execution landed in PR #19618. The latter
+ran a 648-case boundary matrix, 1,024 seeded constructor cases, and same-path fault controls against
+the native constructor. These are finite package and model-execution results; they are not a
+Rust-to-Warrant source proof or a proof over the full input domain.
 
-Each of the three checked-in Warrant claims treats any returned `Err` as satisfying the claim. Its
-state invariant covers configuration and accumulator bounds. This contract also specifies the
-`elapsed_sim_ns == tick_count * fixed_dt_ns` relation. The assurance report records property case
-counts, with empty evidence arrays and null exhaustive, fuzz, and proof entries. Corpus-specific
-execution evidence and source-level proof are absent from that report. Later evidence reports should
-carry the package-specific conformance classification.
+The constructor Warrant claim is now an unguarded equality with `new_clock_model`, a pure total
+constructor model. The remaining `validate_state` and `advance_frame` claims still treat any returned
+`Err` as satisfying the claim. The Warrant state invariant covers configuration and accumulator
+bounds. This contract also specifies the `elapsed_sim_ns == tick_count * fixed_dt_ns` relation. The
+assurance report records property case counts, with empty evidence arrays and null exhaustive, fuzz,
+and proof entries. Rust package conformance and finite constructor-model execution do not fill those
+report fields or establish source-level proof. Generated/property/fuzz evidence and the required
+`validate_state`/`advance_frame` Warrant claims remain open; later evidence reports must carry each
+package-specific conformance classification separately from proof claims.
