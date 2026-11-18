@@ -1,0 +1,56 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/vos-capacity-probe",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "*",
+      "justification": "check and table read the committed results file and the VOS30 spec; meta reads the running executable to record its SHA-256."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "*",
+      "justification": "run --out writes the results file; table --write splices the generated block into the spec between its two markers."
+    },
+    {
+      "category": "fs",
+      "action": "list",
+      "target": "*",
+      "justification": "Reported by the analyzer for a file-existence test of the results path."
+    },
+    {
+      "category": "env",
+      "action": "read",
+      "target": "*",
+      "justification": "Command-line arguments, the path of the running executable (the parent re-executes itself as the row child) and the diagnostic VOS_PROBE_TRACE switch."
+    },
+    {
+      "category": "stdout",
+      "action": "write",
+      "target": "*",
+      "justification": "Prints reports, progress and the child's answer lines to standard output and standard error."
+    },
+    {
+      "category": "time",
+      "action": "read",
+      "target": "*",
+      "justification": "The wall clock of the solve loop and the per-row timeouts (VOS30 section 9.5); the file never records a timestamp."
+    },
+    {
+      "category": "proc",
+      "action": "exec",
+      "target": "*",
+      "justification": "One child process per row under /usr/bin/time, polled with ps and killed as a process group with /bin/kill on the wall or memory cap; git, rustc and uname for the run metadata. Never a network or shell."
+    },
+    {
+      "category": "thread",
+      "action": "spawn",
+      "target": "*",
+      "justification": "A bounded pool of worker threads that each supervise one child process, and the reader threads of a child's pipes; all joined before the results are used."
+    }
+  ],
+  "justification": "A measurement tool of the verified-OS program: it runs the repository's own solver crates on generated instances in child processes and writes one results file. No network. The capability analyzer cannot see the generated harnesses the probe include!s (CAP003); they are the generated, committed evidence harnesses of vos-sched-fp-bitmap and vos-probe-ready, whose own packages declare an empty footprint."
+}

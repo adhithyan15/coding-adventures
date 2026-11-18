@@ -1,0 +1,33 @@
+[package]
+name = "vos-capacity-probe"
+version = "0.1.0"
+edition = "2021"
+description = "Solver and enumeration capacity probe of the verified-OS program (VOS-028b, VOS30 section 9): synthetic RV32I miters, certified chains, memory, self-composition and enumeration experiments, with resource limits, validity guards and a reproducible results file"
+
+[lib]
+name = "vos_capacity_probe"
+path = "src/lib.rs"
+
+[[bin]]
+name = "vos-capacity-probe"
+path = "src/main.rs"
+
+# A standalone cargo root (like the other programs under code/programs/rust): every
+# dependency is an in-repository path dependency, no third-party crate.
+[workspace]
+
+[dependencies]
+bit-blaster = { path = "../../../packages/rust/bit-blaster" }
+cdcl-sat = { path = "../../../packages/rust/cdcl-sat" }
+drat-check = { path = "../../../packages/rust/drat-check" }
+riscv-simulator = { path = "../../../packages/rust/riscv-simulator" }
+riscv-encoder = { path = "../../../packages/rust/riscv-encoder" }
+coding_adventures_sha256 = { path = "../../../packages/rust/sha256" }
+coding_adventures_bounded_json = { path = "../../../packages/rust/bounded-json" }
+coding_adventures_warrant_grammar = { path = "../../../packages/rust/warrant-grammar" }
+# What the included generated harnesses (E1) are built from: the real scheduler with its ghost
+# face, its contract crate, the narrowed fixture, and the harness runtime.
+vos-sched-fp-bitmap = { path = "../../../packages/rust/vos-sched-fp-bitmap", features = ["ghost"] }
+vos-sched-contract = { path = "../../../packages/rust/vos-sched-contract" }
+vos-probe-ready = { path = "../../../packages/rust/vos-probe-ready" }
+coding_adventures_test_bootstrap = { path = "../../../packages/rust/test-bootstrap" }
