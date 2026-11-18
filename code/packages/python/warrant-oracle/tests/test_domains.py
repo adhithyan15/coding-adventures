@@ -23,6 +23,7 @@ from coding_adventures_warrant_oracle.domains import (
     leaf_fx_edge,
     leaf_fx_full,
     leaf_nat_count,
+    leaf_nat_shift,
     leaf_u8_all,
     leaf_u64_edge,
 )
@@ -73,20 +74,51 @@ def test_u64_edge_order_and_size():
 
 @pytest.mark.parametrize(
     "ty,size",
-    [("U32", 313), ("U16", 281), ("U64", 377), ("I32", 313), ("I64", 377), ("I16", 281)],
+    [("U32", 313), ("U16", 281), ("U64", 377), ("I32", 559), ("I64", 623), ("I16", 527)],
 )
 def test_fx_edge_sizes(ty, size):
     assert leaf_fx_edge(T(ty)).size() == size
 
 
-def test_fx_edge_signed_is_the_same_bit_patterns_reinterpreted():
-    u = leaf_fx_edge(T("U32"))
-    s = leaf_fx_edge(T("I32"))
-    mask = (1 << 32) - 1
-    assert [v & mask for v in s.values] == u.values
-    assert s.nth(256 + 23) == -(1 << 31)  # 1 << 31 reinterpreted
-    assert s.nth(280) == -1  # MAX
-    assert s.nth(0) == 0 and s.nth(255) == 255
+def test_fx_edge_signed_is_the_wrapped_edge_set_plus_the_small_negatives_sorted():
+    """[D21]: ``wrap_S(E_U(w)) | {-255..-1}``, de-duplicated, ascending (the generator's set)."""
+    for name, size in (("I16", 527), ("I32", 559), ("I64", 623)):
+        s = leaf_fx_edge(T(name))
+        bits = int(name[1:])
+        unsigned = leaf_fx_edge(T("U" + name[1:])).values
+        wrapped = {v - (1 << bits) if v >= 1 << (bits - 1) else v for v in unsigned}
+        assert s.values == sorted(wrapped | set(range(-255, 0)))
+        assert len(s.values) == len(set(s.values)) == size
+        assert s.values[0] == -(1 << (bits - 1)) and s.values[-1] == (1 << (bits - 1)) - 1
+    # the head, the negatives and the zero of the 64-bit set, by value
+    s = leaf_fx_edge(T("I64")).values
+    assert s[:3] == [-(1 << 63), -(1 << 62) - 1, -(1 << 61) - 1]
+    assert s.index(-255) < s.index(-1) < s.index(0)
+    # unsigned edge sets are unchanged and in pattern order (not sorted)
+    u = leaf_fx_edge(T("U32")).values
+    assert u[:3] == [0, 1, 2] and u[256] == 1 << 8 and u[280] == (1 << 32) - 1 and u != sorted(u)
+
+
+def test_fx_edge_at_8_bits_is_illegal_and_16_bits_exists_for_demotion_d25():
+    for name in ("U8", "I8"):
+        with pytest.raises(OracleError) as err:
+            leaf_fx_edge(T(name))
+        assert err.value.code == "generation" and "illegal" in err.value.message
+    assert leaf_fx_edge(T("U16")).size() == 281 and leaf_fx_edge(T("I16")).size() == 527
+    assert leaf_fx_edge(T("I16")).to_json() == {"d": "fx_edge", "t": "I16", "size": 527}
+
+
+def test_nat_shift_is_the_73_value_leaf_of_d26():
+    d = leaf_nat_shift()
+    assert d.to_json() == {"d": "nat_shift", "size": 73}
+    assert d.values == [*range(65), 65, 127, 128, 129, 255, 256, 65535, 65536]
+    assert d.label == "bounded-set" and d.ty == T("Nat")
+    # nat_count stays 0..K (D26): it is not the shift domain
+    assert leaf_nat_count(64).size() == 65 and leaf_nat_count(100).to_json() == {
+        "d": "nat_count",
+        "k": 100,
+        "size": 101,
+    }
 
 
 def test_fx_full_unsigned_and_signed():
@@ -274,7 +306,7 @@ def test_composite_leaves_demote_depth_first_left_to_right():
     assert binders[0].size() == 281 * 65536
     assert demote(binders, 100_000) == ["0.1"] and binders[0].size() == 281 * 281
     rec_like = [descriptor_for(SPEC, T("()", (T("Bool"), T("I16"))))]
-    assert demote(rec_like, 100_000) == ["0.1"] and rec_like[0].size() == 2 * 281
+    assert demote(rec_like, 100_000) == ["0.1"] and rec_like[0].size() == 2 * 527
     opt = [descriptor_for(SPEC, T("Option", (T("U16"),)))]
     assert demote(opt, 1000) == ["0.some"] and opt[0].size() == 282
     lst = [descriptor_for(SPEC, T("List", (T("U16"),)))]

@@ -34,7 +34,7 @@ from array import array
 from dataclasses import dataclass, field
 
 from . import ast as A
-from .domains import Desc, _Listed, check_budget, demote, descriptor_for
+from .domains import Desc, _Listed, check_budget, demote, descriptor_for, refine_counts
 from .errors import OracleError
 from .ir_eval import (
     OutsideAdmit,
@@ -216,6 +216,9 @@ class SuitePlan:
         self.suite = suite
         self.chunk_size = chunk_size
         descs = [descriptor_for(spec, ty) for _, ty in suite.binders]
+        # [D26], R10: a ``Nat`` binder that is directly a shift count has the 73-value ``nat_shift``
+        # leaf; decided from the claim *body* (never ``admit``), before any budget demotion.
+        refine_counts(descs, suite.binders, suite.body, spec.version)
         self.demoted = demote(descs, budget)
         self.product = check_budget(descs, budget)
         self.binders = [
