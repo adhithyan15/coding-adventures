@@ -1,0 +1,4853 @@
+{
+  "accepted_blind_faults": [],
+  "assumes": [],
+  "budget": 16777216,
+  "chunk_size": 65536,
+  "controls": [
+    {
+      "blind_claims": [],
+      "fault": "drop-last-result-byte",
+      "id": "warrant/lzw/negctl/exhaustive/compress/drop-last-result-byte",
+      "op": "compress",
+      "required_claims": [
+        "warrant/lzw/exhaustive/compress_is_at_least_seven_bytes",
+        "warrant/lzw/exhaustive/compress_one_byte_matches_the_model",
+        "warrant/lzw/exhaustive/compress_two_bytes_match_the_model",
+        "warrant/lzw/exhaustive/round_trip",
+        "warrant/lzw/exhaustive/round_trip_of_short_runs",
+        "warrant/lzw/exhaustive/round_trip_of_long_runs",
+        "warrant/lzw/exhaustive/round_trip_of_repeated_byte_pairs",
+        "warrant/lzw/exhaustive/round_trip_after_a_prefix"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/lzw/exhaustive/compress_is_at_least_seven_bytes",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/compress_one_byte_matches_the_model",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/compress_two_bytes_match_the_model",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/round_trip",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/round_trip_of_short_runs",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/round_trip_of_long_runs",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/round_trip_of_repeated_byte_pairs",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/round_trip_after_a_prefix",
+          "unproven": true
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "flip-result-bit",
+      "id": "warrant/lzw/negctl/exhaustive/compress/flip-result-bit",
+      "op": "compress",
+      "required_claims": [
+        "warrant/lzw/exhaustive/compress_is_at_least_seven_bytes",
+        "warrant/lzw/exhaustive/compress_one_byte_matches_the_model",
+        "warrant/lzw/exhaustive/compress_two_bytes_match_the_model",
+        "warrant/lzw/exhaustive/round_trip",
+        "warrant/lzw/exhaustive/round_trip_of_short_runs",
+        "warrant/lzw/exhaustive/round_trip_of_long_runs",
+        "warrant/lzw/exhaustive/round_trip_of_repeated_byte_pairs",
+        "warrant/lzw/exhaustive/round_trip_after_a_prefix"
+      ],
+      "requires": [
+        "ir.fixed"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/lzw/exhaustive/compress_is_at_least_seven_bytes",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/compress_one_byte_matches_the_model",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/compress_two_bytes_match_the_model",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/round_trip",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/round_trip_of_short_runs",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/round_trip_of_long_runs",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/round_trip_of_repeated_byte_pairs",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/round_trip_after_a_prefix",
+          "unproven": true
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "drop-last-result-byte",
+      "id": "warrant/lzw/negctl/exhaustive/decompress/drop-last-result-byte",
+      "op": "decompress",
+      "required_claims": [
+        "warrant/lzw/exhaustive/round_trip",
+        "warrant/lzw/exhaustive/round_trip_of_short_runs",
+        "warrant/lzw/exhaustive/round_trip_of_long_runs",
+        "warrant/lzw/exhaustive/round_trip_of_repeated_byte_pairs",
+        "warrant/lzw/exhaustive/round_trip_after_a_prefix",
+        "warrant/lzw/exhaustive/declared_length_cuts_the_output",
+        "warrant/lzw/exhaustive/a_huge_declared_length_is_harmless",
+        "warrant/lzw/exhaustive/decompress_empty_input_rejected",
+        "warrant/lzw/exhaustive/decompress_one_byte_rejected",
+        "warrant/lzw/exhaustive/decompress_header_only_rejected",
+        "warrant/lzw/exhaustive/decompress_one_payload_byte_rejected",
+        "warrant/lzw/exhaustive/decompress_two_byte_payload_model",
+        "warrant/lzw/exhaustive/decompress_missing_clear_rejected",
+        "warrant/lzw/exhaustive/decompress_invalid_first_code_rejected",
+        "warrant/lzw/exhaustive/decompress_invalid_first_code_every_value",
+        "warrant/lzw/exhaustive/decompress_zero_header_two_byte_payload_model",
+        "warrant/lzw/exhaustive/decompress_two_bytes_rejected",
+        "warrant/lzw/exhaustive/decompress_three_bytes_rejected"
+      ],
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/lzw/exhaustive/round_trip",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/round_trip_of_short_runs",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/round_trip_of_long_runs",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/round_trip_of_repeated_byte_pairs",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/round_trip_after_a_prefix",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/declared_length_cuts_the_output",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/a_huge_declared_length_is_harmless",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/decompress_empty_input_rejected",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/decompress_one_byte_rejected",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/decompress_header_only_rejected",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/decompress_one_payload_byte_rejected",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/decompress_two_byte_payload_model",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/decompress_missing_clear_rejected",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/decompress_invalid_first_code_rejected",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/decompress_invalid_first_code_every_value",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/decompress_zero_header_two_byte_payload_model",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/decompress_two_bytes_rejected",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/decompress_three_bytes_rejected",
+          "unproven": true
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "flip-result-bit",
+      "id": "warrant/lzw/negctl/exhaustive/decompress/flip-result-bit",
+      "op": "decompress",
+      "required_claims": [
+        "warrant/lzw/exhaustive/round_trip",
+        "warrant/lzw/exhaustive/round_trip_of_short_runs",
+        "warrant/lzw/exhaustive/round_trip_of_long_runs",
+        "warrant/lzw/exhaustive/round_trip_of_repeated_byte_pairs",
+        "warrant/lzw/exhaustive/round_trip_after_a_prefix",
+        "warrant/lzw/exhaustive/declared_length_cuts_the_output",
+        "warrant/lzw/exhaustive/a_huge_declared_length_is_harmless",
+        "warrant/lzw/exhaustive/decompress_empty_input_rejected",
+        "warrant/lzw/exhaustive/decompress_one_byte_rejected",
+        "warrant/lzw/exhaustive/decompress_header_only_rejected",
+        "warrant/lzw/exhaustive/decompress_one_payload_byte_rejected",
+        "warrant/lzw/exhaustive/decompress_two_byte_payload_model",
+        "warrant/lzw/exhaustive/decompress_missing_clear_rejected",
+        "warrant/lzw/exhaustive/decompress_invalid_first_code_rejected",
+        "warrant/lzw/exhaustive/decompress_invalid_first_code_every_value",
+        "warrant/lzw/exhaustive/decompress_zero_header_two_byte_payload_model",
+        "warrant/lzw/exhaustive/decompress_two_bytes_rejected",
+        "warrant/lzw/exhaustive/decompress_three_bytes_rejected"
+      ],
+      "requires": [
+        "ir.fixed",
+        "ir.tuple"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/lzw/exhaustive/round_trip",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/round_trip_of_short_runs",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/round_trip_of_long_runs",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/round_trip_of_repeated_byte_pairs",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/round_trip_after_a_prefix",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/declared_length_cuts_the_output",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/a_huge_declared_length_is_harmless",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/decompress_empty_input_rejected",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/decompress_one_byte_rejected",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/decompress_header_only_rejected",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/decompress_one_payload_byte_rejected",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/decompress_two_byte_payload_model",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/decompress_missing_clear_rejected",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/decompress_invalid_first_code_rejected",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/decompress_invalid_first_code_every_value",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/decompress_zero_header_two_byte_payload_model",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/decompress_two_bytes_rejected",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/decompress_three_bytes_rejected",
+          "unproven": true
+        }
+      ],
+      "target_kind": "exhaustive"
+    },
+    {
+      "blind_claims": [],
+      "fault": "missing-error",
+      "id": "warrant/lzw/negctl/exhaustive/decompress/missing-error",
+      "op": "decompress",
+      "required_claims": [
+        "warrant/lzw/exhaustive/round_trip",
+        "warrant/lzw/exhaustive/round_trip_of_short_runs",
+        "warrant/lzw/exhaustive/round_trip_of_long_runs",
+        "warrant/lzw/exhaustive/round_trip_of_repeated_byte_pairs",
+        "warrant/lzw/exhaustive/round_trip_after_a_prefix",
+        "warrant/lzw/exhaustive/declared_length_cuts_the_output",
+        "warrant/lzw/exhaustive/a_huge_declared_length_is_harmless",
+        "warrant/lzw/exhaustive/decompress_empty_input_rejected",
+        "warrant/lzw/exhaustive/decompress_one_byte_rejected",
+        "warrant/lzw/exhaustive/decompress_header_only_rejected",
+        "warrant/lzw/exhaustive/decompress_one_payload_byte_rejected",
+        "warrant/lzw/exhaustive/decompress_two_byte_payload_model",
+        "warrant/lzw/exhaustive/decompress_missing_clear_rejected",
+        "warrant/lzw/exhaustive/decompress_invalid_first_code_rejected",
+        "warrant/lzw/exhaustive/decompress_invalid_first_code_every_value",
+        "warrant/lzw/exhaustive/decompress_zero_header_two_byte_payload_model",
+        "warrant/lzw/exhaustive/decompress_two_bytes_rejected",
+        "warrant/lzw/exhaustive/decompress_three_bytes_rejected"
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "slim_witness": [
+        {
+          "claim": "warrant/lzw/exhaustive/round_trip",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/round_trip_of_short_runs",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/round_trip_of_long_runs",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/round_trip_of_repeated_byte_pairs",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/round_trip_after_a_prefix",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/declared_length_cuts_the_output",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/a_huge_declared_length_is_harmless",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/decompress_empty_input_rejected",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/decompress_one_byte_rejected",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/decompress_header_only_rejected",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/decompress_one_payload_byte_rejected",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/decompress_two_byte_payload_model",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/decompress_missing_clear_rejected",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/decompress_invalid_first_code_rejected",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/decompress_invalid_first_code_every_value",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/decompress_zero_header_two_byte_payload_model",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/decompress_two_bytes_rejected",
+          "unproven": true
+        },
+        {
+          "claim": "warrant/lzw/exhaustive/decompress_three_bytes_rejected",
+          "unproven": true
+        }
+      ],
+      "target_kind": "exhaustive"
+    }
+  ],
+  "document": "v1",
+  "examples": [
+    {
+      "args": [
+        ""
+      ],
+      "expected": "00000000000302",
+      "id": "warrant/lzw/example/compress_empty",
+      "op": "compress",
+      "result_type": "Bytes"
+    },
+    {
+      "args": [
+        "41"
+      ],
+      "expected": "0000000100830404",
+      "id": "warrant/lzw/example/compress_one_byte",
+      "op": "compress",
+      "result_type": "Bytes"
+    },
+    {
+      "args": [
+        "4142"
+      ],
+      "expected": "000000020083080908",
+      "id": "warrant/lzw/example/compress_two_distinct_bytes",
+      "op": "compress",
+      "result_type": "Bytes"
+    },
+    {
+      "args": [
+        "414241424142"
+      ],
+      "expected": "0000000600830811283020",
+      "id": "warrant/lzw/example/compress_ababab",
+      "op": "compress",
+      "result_type": "Bytes"
+    },
+    {
+      "args": [
+        "41414141414141"
+      ],
+      "expected": "000000070083081c182420",
+      "id": "warrant/lzw/example/compress_seven_a",
+      "op": "compress",
+      "result_type": "Bytes"
+    },
+    {
+      "args": [
+        "544f42454f524e4f54544f42454f52544f42454f524e4f54"
+      ],
+      "expected": "0000001800a93c1152e48914274fa80824687061c183090302",
+      "id": "warrant/lzw/example/compress_tobeornot",
+      "op": "compress",
+      "result_type": "Bytes"
+    },
+    {
+      "args": [
+        "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff"
+      ],
+      "expected": "0000020000010410308040010307102450b0804103070f204490308142050b173064d0b08143070f1f40841031824409132750a450b182450b172f60c4903183460d1b3770e4d0b183470f1f3f800411328448112347902451b2844913274fa0449132854a152b57b064d1b2854b172f5fc0841133864c193367d0a451b3864d1b376fe0c49133874e1d3b77f0e4d1b3874f1f3f7f000512348850214387102552b4885123478f204592348952254b973065d2b48953274f9f408512358a542953a750a552b58a552b57af60c592358b562d5bb770e5d2b58b572f5fbf800513368c583163c7902553b68c593367cfa04593368d5a356bd7b065d3b68d5b376fdfc08513378e5c3973e7d0a553b78e5d3b77efe0c593378f5e3d7bf7f0e5d3b78f5f3f7fff084490410829c4904310494491451869c49147208944924928a9c4924b30c944934d38e9c4934f40094594514829c5945350494595555869c59557608945965968a9c5965b70c945975d78e9c5975f80094698618829c6986390494699659869c69967a089469a69a8a9c69a6bb0c9469b6db8e9c69b6fc009479c71c829c79c73d049479d75d869c79d77e089479e79e8a9c79e7bf0c9479f7df8e9c79f7f000604",
+      "id": "warrant/lzw/example/compress_every_byte_value_twice",
+      "op": "compress",
+      "result_type": "Bytes"
+    },
+    {
+      "args": [
+        "00000000000302"
+      ],
+      "expected": {
+        "ok": ""
+      },
+      "id": "warrant/lzw/example/decompress_empty_stream",
+      "op": "decompress",
+      "result_type": "Result<Bytes,LzwError>"
+    },
+    {
+      "args": [
+        "0000000100830404"
+      ],
+      "expected": {
+        "ok": "41"
+      },
+      "id": "warrant/lzw/example/decompress_one_byte",
+      "op": "decompress",
+      "result_type": "Result<Bytes,LzwError>"
+    },
+    {
+      "args": [
+        "0000000600830811283020"
+      ],
+      "expected": {
+        "ok": "414241424142"
+      },
+      "id": "warrant/lzw/example/decompress_ababab",
+      "op": "decompress",
+      "result_type": "Result<Bytes,LzwError>"
+    },
+    {
+      "args": [
+        "000000070083081c182420"
+      ],
+      "expected": {
+        "ok": "41414141414141"
+      },
+      "id": "warrant/lzw/example/decompress_seven_a_tricky_token",
+      "op": "decompress",
+      "result_type": "Result<Bytes,LzwError>"
+    },
+    {
+      "args": [
+        "0000001800a93c1152e48914274fa80824687061c183090302"
+      ],
+      "expected": {
+        "ok": "544f42454f524e4f54544f42454f52544f42454f524e4f54"
+      },
+      "id": "warrant/lzw/example/decompress_tobeornot",
+      "op": "decompress",
+      "result_type": "Result<Bytes,LzwError>"
+    },
+    {
+      "args": [
+        "000000020083000c1210"
+      ],
+      "expected": {
+        "ok": "4141"
+      },
+      "id": "warrant/lzw/example/decompress_mid_stream_clear",
+      "op": "decompress",
+      "result_type": "Result<Bytes,LzwError>"
+    },
+    {
+      "args": [
+        ""
+      ],
+      "expected": {
+        "err": "CORRUPT"
+      },
+      "id": "warrant/lzw/example/decompress_empty_input",
+      "op": "decompress",
+      "result_type": "Result<Bytes,LzwError>"
+    },
+    {
+      "args": [
+        "000000"
+      ],
+      "expected": {
+        "err": "CORRUPT"
+      },
+      "id": "warrant/lzw/example/decompress_three_bytes_no_header",
+      "op": "decompress",
+      "result_type": "Result<Bytes,LzwError>"
+    },
+    {
+      "args": [
+        "00000000"
+      ],
+      "expected": {
+        "err": "CORRUPT"
+      },
+      "id": "warrant/lzw/example/decompress_header_only",
+      "op": "decompress",
+      "result_type": "Result<Bytes,LzwError>"
+    },
+    {
+      "args": [
+        "00000001ff0000"
+      ],
+      "expected": {
+        "err": "CORRUPT"
+      },
+      "id": "warrant/lzw/example/decompress_first_code_is_not_clear",
+      "op": "decompress",
+      "result_type": "Result<Bytes,LzwError>"
+    },
+    {
+      "args": [
+        "0000000100070200"
+      ],
+      "expected": {
+        "err": "CORRUPT"
+      },
+      "id": "warrant/lzw/example/decompress_invalid_code",
+      "op": "decompress",
+      "result_type": "Result<Bytes,LzwError>"
+    },
+    {
+      "args": [
+        "ffffffff00830404"
+      ],
+      "expected": {
+        "ok": "41"
+      },
+      "id": "warrant/lzw/example/a_huge_declared_length_on_a_small_stream",
+      "op": "decompress",
+      "result_type": "Result<Bytes,LzwError>"
+    },
+    {
+      "args": [
+        "000000050083081c182420"
+      ],
+      "expected": {
+        "ok": "4141414141"
+      },
+      "id": "warrant/lzw/example/a_short_declared_length_cuts_the_output",
+      "op": "decompress",
+      "result_type": "Result<Bytes,LzwError>"
+    },
+    {
+      "args": [
+        "000000000083081c182420"
+      ],
+      "expected": {
+        "ok": ""
+      },
+      "id": "warrant/lzw/example/a_zero_declared_length_delivers_nothing",
+      "op": "decompress",
+      "result_type": "Result<Bytes,LzwError>"
+    }
+  ],
+  "fault_models": {},
+  "faults": [
+    {
+      "expr": [
+        "if",
+        [
+          "gt",
+          [
+            "len",
+            [
+              "var",
+              "result"
+            ]
+          ],
+          [
+            "lit",
+            {
+              "type": "Nat",
+              "value": "0"
+            }
+          ]
+        ],
+        [
+          "take",
+          [
+            "var",
+            "result"
+          ],
+          [
+            "sub",
+            [
+              "len",
+              [
+                "var",
+                "result"
+              ]
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "1"
+              }
+            ]
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "Bytes",
+            "value": "00"
+          }
+        ]
+      ],
+      "fault": "drop-last-result-byte",
+      "kind": "post",
+      "op": "compress",
+      "requires": [
+        "ir.core"
+      ]
+    },
+    {
+      "expr": [
+        "if",
+        [
+          "gt",
+          [
+            "len",
+            [
+              "var",
+              "result"
+            ]
+          ],
+          [
+            "lit",
+            {
+              "type": "Nat",
+              "value": "0"
+            }
+          ]
+        ],
+        [
+          "concat",
+          [
+            "be_bytes",
+            [
+              "bit_xor",
+              [
+                "unwrap_or",
+                [
+                  "at",
+                  [
+                    "var",
+                    "result"
+                  ],
+                  [
+                    "lit",
+                    {
+                      "type": "Nat",
+                      "value": "0"
+                    }
+                  ]
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "U8",
+                    "value": "0"
+                  }
+                ]
+              ],
+              [
+                "lit",
+                {
+                  "type": "U8",
+                  "value": "1"
+                }
+              ]
+            ]
+          ],
+          [
+            "drop",
+            [
+              "var",
+              "result"
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "1"
+              }
+            ]
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "Bytes",
+            "value": "01"
+          }
+        ]
+      ],
+      "fault": "flip-result-bit",
+      "kind": "post",
+      "op": "compress",
+      "requires": [
+        "ir.fixed"
+      ]
+    },
+    {
+      "expr": [
+        "match",
+        [
+          "var",
+          "result"
+        ],
+        [
+          [
+            [
+              "ok",
+              [
+                "bind",
+                "ok_payload"
+              ]
+            ],
+            [
+              "ok",
+              [
+                "if",
+                [
+                  "gt",
+                  [
+                    "len",
+                    [
+                      "var",
+                      "ok_payload"
+                    ]
+                  ],
+                  [
+                    "lit",
+                    {
+                      "type": "Nat",
+                      "value": "0"
+                    }
+                  ]
+                ],
+                [
+                  "take",
+                  [
+                    "var",
+                    "ok_payload"
+                  ],
+                  [
+                    "sub",
+                    [
+                      "len",
+                      [
+                        "var",
+                        "ok_payload"
+                      ]
+                    ],
+                    [
+                      "lit",
+                      {
+                        "type": "Nat",
+                        "value": "1"
+                      }
+                    ]
+                  ]
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "Bytes",
+                    "value": "00"
+                  }
+                ]
+              ]
+            ]
+          ],
+          [
+            [
+              "err_any"
+            ],
+            [
+              "var",
+              "result"
+            ]
+          ]
+        ]
+      ],
+      "fault": "drop-last-result-byte",
+      "kind": "post",
+      "op": "decompress",
+      "requires": [
+        "ir.core",
+        "ir.tuple"
+      ]
+    },
+    {
+      "expr": [
+        "match",
+        [
+          "var",
+          "result"
+        ],
+        [
+          [
+            [
+              "ok",
+              [
+                "bind",
+                "ok_payload"
+              ]
+            ],
+            [
+              "ok",
+              [
+                "if",
+                [
+                  "gt",
+                  [
+                    "len",
+                    [
+                      "var",
+                      "ok_payload"
+                    ]
+                  ],
+                  [
+                    "lit",
+                    {
+                      "type": "Nat",
+                      "value": "0"
+                    }
+                  ]
+                ],
+                [
+                  "concat",
+                  [
+                    "be_bytes",
+                    [
+                      "bit_xor",
+                      [
+                        "unwrap_or",
+                        [
+                          "at",
+                          [
+                            "var",
+                            "ok_payload"
+                          ],
+                          [
+                            "lit",
+                            {
+                              "type": "Nat",
+                              "value": "0"
+                            }
+                          ]
+                        ],
+                        [
+                          "lit",
+                          {
+                            "type": "U8",
+                            "value": "0"
+                          }
+                        ]
+                      ],
+                      [
+                        "lit",
+                        {
+                          "type": "U8",
+                          "value": "1"
+                        }
+                      ]
+                    ]
+                  ],
+                  [
+                    "drop",
+                    [
+                      "var",
+                      "ok_payload"
+                    ],
+                    [
+                      "lit",
+                      {
+                        "type": "Nat",
+                        "value": "1"
+                      }
+                    ]
+                  ]
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "Bytes",
+                    "value": "01"
+                  }
+                ]
+              ]
+            ]
+          ],
+          [
+            [
+              "err_any"
+            ],
+            [
+              "var",
+              "result"
+            ]
+          ]
+        ]
+      ],
+      "fault": "flip-result-bit",
+      "kind": "post",
+      "op": "decompress",
+      "requires": [
+        "ir.fixed",
+        "ir.tuple"
+      ]
+    },
+    {
+      "expr": [
+        "if",
+        [
+          "is_err",
+          [
+            "var",
+            "result"
+          ]
+        ],
+        [
+          "ok",
+          [
+            "var",
+            "data"
+          ]
+        ],
+        [
+          "var",
+          "result"
+        ]
+      ],
+      "fault": "missing-error",
+      "kind": "replace",
+      "op": "decompress",
+      "requires": [
+        "ir.core"
+      ]
+    }
+  ],
+  "generator": {
+    "name": "warrant-corpus-gen",
+    "version": "0.6.0"
+  },
+  "levels": [
+    "ir.core",
+    "ir.fixed",
+    "ir.tuple"
+  ],
+  "max_ir_cost": 16384,
+  "model_order": [
+    "unit",
+    "units2",
+    "units4",
+    "units8",
+    "units16",
+    "units32",
+    "units64",
+    "units128",
+    "units256",
+    "units512",
+    "units1024",
+    "stop9",
+    "bomb512",
+    "bomb1024",
+    "starts_with_clear",
+    "clear_then",
+    "pair2",
+    "pair4",
+    "pair8",
+    "a_prefix",
+    "stream1",
+    "bits2",
+    "stream2",
+    "rep2",
+    "rep4",
+    "rep8",
+    "rep16",
+    "rep64",
+    "rep256",
+    "rep1024"
+  ],
+  "models": {
+    "a_prefix": {
+      "body": [
+        "if",
+        [
+          "eq",
+          [
+            "var",
+            "h"
+          ],
+          [
+            "lit",
+            {
+              "type": "U32",
+              "value": "0"
+            }
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "Bytes",
+            "value": ""
+          }
+        ],
+        [
+          "if",
+          [
+            "eq",
+            [
+              "var",
+              "h"
+            ],
+            [
+              "lit",
+              {
+                "type": "U32",
+                "value": "1"
+              }
+            ]
+          ],
+          [
+            "lit",
+            {
+              "type": "Bytes",
+              "value": "41"
+            }
+          ],
+          [
+            "if",
+            [
+              "eq",
+              [
+                "var",
+                "h"
+              ],
+              [
+                "lit",
+                {
+                  "type": "U32",
+                  "value": "2"
+                }
+              ]
+            ],
+            [
+              "lit",
+              {
+                "type": "Bytes",
+                "value": "4141"
+              }
+            ],
+            [
+              "if",
+              [
+                "eq",
+                [
+                  "var",
+                  "h"
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "U32",
+                    "value": "3"
+                  }
+                ]
+              ],
+              [
+                "lit",
+                {
+                  "type": "Bytes",
+                  "value": "414141"
+                }
+              ],
+              [
+                "if",
+                [
+                  "eq",
+                  [
+                    "var",
+                    "h"
+                  ],
+                  [
+                    "lit",
+                    {
+                      "type": "U32",
+                      "value": "4"
+                    }
+                  ]
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "Bytes",
+                    "value": "41414141"
+                  }
+                ],
+                [
+                  "if",
+                  [
+                    "eq",
+                    [
+                      "var",
+                      "h"
+                    ],
+                    [
+                      "lit",
+                      {
+                        "type": "U32",
+                        "value": "5"
+                      }
+                    ]
+                  ],
+                  [
+                    "lit",
+                    {
+                      "type": "Bytes",
+                      "value": "4141414141"
+                    }
+                  ],
+                  [
+                    "if",
+                    [
+                      "eq",
+                      [
+                        "var",
+                        "h"
+                      ],
+                      [
+                        "lit",
+                        {
+                          "type": "U32",
+                          "value": "6"
+                        }
+                      ]
+                    ],
+                    [
+                      "lit",
+                      {
+                        "type": "Bytes",
+                        "value": "414141414141"
+                      }
+                    ],
+                    [
+                      "lit",
+                      {
+                        "type": "Bytes",
+                        "value": "41414141414141"
+                      }
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "params": [
+        [
+          "h",
+          "U32"
+        ]
+      ]
+    },
+    "bits2": {
+      "body": [
+        "bit_or",
+        [
+          "bit_or",
+          [
+            "lit",
+            {
+              "type": "U64",
+              "value": "256"
+            }
+          ],
+          [
+            "shl",
+            [
+              "widen",
+              "U64",
+              [
+                "var",
+                "x"
+              ]
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "9"
+              }
+            ]
+          ]
+        ],
+        [
+          "bit_or",
+          [
+            "shl",
+            [
+              "widen",
+              "U64",
+              [
+                "var",
+                "y"
+              ]
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "18"
+              }
+            ]
+          ],
+          [
+            "shl",
+            [
+              "lit",
+              {
+                "type": "U64",
+                "value": "257"
+              }
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "27"
+              }
+            ]
+          ]
+        ]
+      ],
+      "params": [
+        [
+          "x",
+          "U8"
+        ],
+        [
+          "y",
+          "U8"
+        ]
+      ]
+    },
+    "bomb1024": {
+      "body": [
+        "concat",
+        [
+          "be_bytes",
+          [
+            "var",
+            "n"
+          ]
+        ],
+        [
+          "concat",
+          [
+            "model_call",
+            "units1024",
+            []
+          ],
+          [
+            "model_call",
+            "stop9",
+            []
+          ]
+        ]
+      ],
+      "params": [
+        [
+          "n",
+          "U32"
+        ]
+      ]
+    },
+    "bomb512": {
+      "body": [
+        "concat",
+        [
+          "be_bytes",
+          [
+            "var",
+            "n"
+          ]
+        ],
+        [
+          "concat",
+          [
+            "model_call",
+            "units512",
+            []
+          ],
+          [
+            "model_call",
+            "stop9",
+            []
+          ]
+        ]
+      ],
+      "params": [
+        [
+          "n",
+          "U32"
+        ]
+      ]
+    },
+    "clear_then": {
+      "body": [
+        "le_bytes",
+        [
+          "bit_or",
+          [
+            "lit",
+            {
+              "type": "U32",
+              "value": "256"
+            }
+          ],
+          [
+            "shl",
+            [
+              "add",
+              [
+                "widen",
+                "U32",
+                [
+                  "var",
+                  "k"
+                ]
+              ],
+              [
+                "lit",
+                {
+                  "type": "U32",
+                  "value": "258"
+                }
+              ]
+            ],
+            [
+              "lit",
+              {
+                "type": "Nat",
+                "value": "9"
+              }
+            ]
+          ]
+        ]
+      ],
+      "params": [
+        [
+          "k",
+          "U8"
+        ]
+      ]
+    },
+    "pair2": {
+      "body": [
+        "concat",
+        [
+          "be_bytes",
+          [
+            "var",
+            "w"
+          ]
+        ],
+        [
+          "be_bytes",
+          [
+            "var",
+            "w"
+          ]
+        ]
+      ],
+      "params": [
+        [
+          "w",
+          "U16"
+        ]
+      ]
+    },
+    "pair4": {
+      "body": [
+        "concat",
+        [
+          "model_call",
+          "pair2",
+          [
+            [
+              "var",
+              "w"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "pair2",
+          [
+            [
+              "var",
+              "w"
+            ]
+          ]
+        ]
+      ],
+      "params": [
+        [
+          "w",
+          "U16"
+        ]
+      ]
+    },
+    "pair8": {
+      "body": [
+        "concat",
+        [
+          "model_call",
+          "pair4",
+          [
+            [
+              "var",
+              "w"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "pair4",
+          [
+            [
+              "var",
+              "w"
+            ]
+          ]
+        ]
+      ],
+      "params": [
+        [
+          "w",
+          "U16"
+        ]
+      ]
+    },
+    "rep1024": {
+      "body": [
+        "concat",
+        [
+          "concat",
+          [
+            "model_call",
+            "rep256",
+            [
+              [
+                "var",
+                "x"
+              ]
+            ]
+          ],
+          [
+            "model_call",
+            "rep256",
+            [
+              [
+                "var",
+                "x"
+              ]
+            ]
+          ]
+        ],
+        [
+          "concat",
+          [
+            "model_call",
+            "rep256",
+            [
+              [
+                "var",
+                "x"
+              ]
+            ]
+          ],
+          [
+            "model_call",
+            "rep256",
+            [
+              [
+                "var",
+                "x"
+              ]
+            ]
+          ]
+        ]
+      ],
+      "params": [
+        [
+          "x",
+          "U8"
+        ]
+      ]
+    },
+    "rep16": {
+      "body": [
+        "concat",
+        [
+          "model_call",
+          "rep8",
+          [
+            [
+              "var",
+              "x"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "rep8",
+          [
+            [
+              "var",
+              "x"
+            ]
+          ]
+        ]
+      ],
+      "params": [
+        [
+          "x",
+          "U8"
+        ]
+      ]
+    },
+    "rep2": {
+      "body": [
+        "concat",
+        [
+          "be_bytes",
+          [
+            "var",
+            "x"
+          ]
+        ],
+        [
+          "be_bytes",
+          [
+            "var",
+            "x"
+          ]
+        ]
+      ],
+      "params": [
+        [
+          "x",
+          "U8"
+        ]
+      ]
+    },
+    "rep256": {
+      "body": [
+        "concat",
+        [
+          "concat",
+          [
+            "model_call",
+            "rep64",
+            [
+              [
+                "var",
+                "x"
+              ]
+            ]
+          ],
+          [
+            "model_call",
+            "rep64",
+            [
+              [
+                "var",
+                "x"
+              ]
+            ]
+          ]
+        ],
+        [
+          "concat",
+          [
+            "model_call",
+            "rep64",
+            [
+              [
+                "var",
+                "x"
+              ]
+            ]
+          ],
+          [
+            "model_call",
+            "rep64",
+            [
+              [
+                "var",
+                "x"
+              ]
+            ]
+          ]
+        ]
+      ],
+      "params": [
+        [
+          "x",
+          "U8"
+        ]
+      ]
+    },
+    "rep4": {
+      "body": [
+        "concat",
+        [
+          "model_call",
+          "rep2",
+          [
+            [
+              "var",
+              "x"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "rep2",
+          [
+            [
+              "var",
+              "x"
+            ]
+          ]
+        ]
+      ],
+      "params": [
+        [
+          "x",
+          "U8"
+        ]
+      ]
+    },
+    "rep64": {
+      "body": [
+        "concat",
+        [
+          "concat",
+          [
+            "model_call",
+            "rep16",
+            [
+              [
+                "var",
+                "x"
+              ]
+            ]
+          ],
+          [
+            "model_call",
+            "rep16",
+            [
+              [
+                "var",
+                "x"
+              ]
+            ]
+          ]
+        ],
+        [
+          "concat",
+          [
+            "model_call",
+            "rep16",
+            [
+              [
+                "var",
+                "x"
+              ]
+            ]
+          ],
+          [
+            "model_call",
+            "rep16",
+            [
+              [
+                "var",
+                "x"
+              ]
+            ]
+          ]
+        ]
+      ],
+      "params": [
+        [
+          "x",
+          "U8"
+        ]
+      ]
+    },
+    "rep8": {
+      "body": [
+        "concat",
+        [
+          "model_call",
+          "rep4",
+          [
+            [
+              "var",
+              "x"
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "rep4",
+          [
+            [
+              "var",
+              "x"
+            ]
+          ]
+        ]
+      ],
+      "params": [
+        [
+          "x",
+          "U8"
+        ]
+      ]
+    },
+    "starts_with_clear": {
+      "body": [
+        "eq",
+        [
+          "bit_and",
+          [
+            "var",
+            "w"
+          ],
+          [
+            "lit",
+            {
+              "type": "U16",
+              "value": "511"
+            }
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "U16",
+            "value": "256"
+          }
+        ]
+      ],
+      "params": [
+        [
+          "w",
+          "U16"
+        ]
+      ]
+    },
+    "stop9": {
+      "body": [
+        "lit",
+        {
+          "type": "Bytes",
+          "value": "0101"
+        }
+      ],
+      "params": []
+    },
+    "stream1": {
+      "body": [
+        "concat",
+        [
+          "lit",
+          {
+            "type": "Bytes",
+            "value": "00000001"
+          }
+        ],
+        [
+          "le_bytes",
+          [
+            "bit_or",
+            [
+              "bit_or",
+              [
+                "lit",
+                {
+                  "type": "U32",
+                  "value": "256"
+                }
+              ],
+              [
+                "shl",
+                [
+                  "widen",
+                  "U32",
+                  [
+                    "var",
+                    "x"
+                  ]
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "Nat",
+                    "value": "9"
+                  }
+                ]
+              ]
+            ],
+            [
+              "shl",
+              [
+                "lit",
+                {
+                  "type": "U32",
+                  "value": "257"
+                }
+              ],
+              [
+                "lit",
+                {
+                  "type": "Nat",
+                  "value": "18"
+                }
+              ]
+            ]
+          ]
+        ]
+      ],
+      "params": [
+        [
+          "x",
+          "U8"
+        ]
+      ]
+    },
+    "stream2": {
+      "body": [
+        "concat",
+        [
+          "lit",
+          {
+            "type": "Bytes",
+            "value": "00000002"
+          }
+        ],
+        [
+          "concat",
+          [
+            "le_bytes",
+            [
+              "wrap",
+              "U32",
+              [
+                "model_call",
+                "bits2",
+                [
+                  [
+                    "var",
+                    "x"
+                  ],
+                  [
+                    "var",
+                    "y"
+                  ]
+                ]
+              ]
+            ]
+          ],
+          [
+            "be_bytes",
+            [
+              "wrap",
+              "U8",
+              [
+                "shr",
+                [
+                  "model_call",
+                  "bits2",
+                  [
+                    [
+                      "var",
+                      "x"
+                    ],
+                    [
+                      "var",
+                      "y"
+                    ]
+                  ]
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "Nat",
+                    "value": "32"
+                  }
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "params": [
+        [
+          "x",
+          "U8"
+        ],
+        [
+          "y",
+          "U8"
+        ]
+      ]
+    },
+    "unit": {
+      "body": [
+        "lit",
+        {
+          "type": "Bytes",
+          "value": "0083081c48b0a0c18308132a5cc8b0a1c38710234a9c48b1a2c58b18336adcc8b1a3c78f20438a1c49b2a4c9932853aa5cc9b2a5cb973063ca9c49b3a6cd9b3873eadcc9b3a7cf9f40830a1d4ab4a8d1a348932a5dcab4a9d3a750a34a9d4ab5aad5ab58b36addcab5abd7af60c38a1d4bb6acd9b368d3aa5dcbb6addbb770e3ca9d4bb7aeddbb78f3eaddcbb7afdfbf80030b1e4cb8b0e1c388132b5eccb8b1e3c790234b9e4cb9b2e5cb98336bdeccb9b3e7cfa0438b1e4dbab4e9d3a853ab5ecdbab5ebd7b063cb9e4dbbb6eddbb873ebdecdbbb7efdfc0830b1f4ebcb8f1e3c8932b5fcebcb9f3e7d0a34b9f4ebdbaf5ebd8b36bdfcebdbbf7efe0c38b1f4fbebcf9f3e8d3ab5fcfbebdfbf7f0e3cb9f4fbfbefdfb"
+        }
+      ],
+      "params": []
+    },
+    "units1024": {
+      "body": [
+        "concat",
+        [
+          "model_call",
+          "units512",
+          []
+        ],
+        [
+          "model_call",
+          "units512",
+          []
+        ]
+      ],
+      "params": []
+    },
+    "units128": {
+      "body": [
+        "concat",
+        [
+          "model_call",
+          "units64",
+          []
+        ],
+        [
+          "model_call",
+          "units64",
+          []
+        ]
+      ],
+      "params": []
+    },
+    "units16": {
+      "body": [
+        "concat",
+        [
+          "model_call",
+          "units8",
+          []
+        ],
+        [
+          "model_call",
+          "units8",
+          []
+        ]
+      ],
+      "params": []
+    },
+    "units2": {
+      "body": [
+        "concat",
+        [
+          "model_call",
+          "unit",
+          []
+        ],
+        [
+          "model_call",
+          "unit",
+          []
+        ]
+      ],
+      "params": []
+    },
+    "units256": {
+      "body": [
+        "concat",
+        [
+          "model_call",
+          "units128",
+          []
+        ],
+        [
+          "model_call",
+          "units128",
+          []
+        ]
+      ],
+      "params": []
+    },
+    "units32": {
+      "body": [
+        "concat",
+        [
+          "model_call",
+          "units16",
+          []
+        ],
+        [
+          "model_call",
+          "units16",
+          []
+        ]
+      ],
+      "params": []
+    },
+    "units4": {
+      "body": [
+        "concat",
+        [
+          "model_call",
+          "units2",
+          []
+        ],
+        [
+          "model_call",
+          "units2",
+          []
+        ]
+      ],
+      "params": []
+    },
+    "units512": {
+      "body": [
+        "concat",
+        [
+          "model_call",
+          "units256",
+          []
+        ],
+        [
+          "model_call",
+          "units256",
+          []
+        ]
+      ],
+      "params": []
+    },
+    "units64": {
+      "body": [
+        "concat",
+        [
+          "model_call",
+          "units32",
+          []
+        ],
+        [
+          "model_call",
+          "units32",
+          []
+        ]
+      ],
+      "params": []
+    },
+    "units8": {
+      "body": [
+        "concat",
+        [
+          "model_call",
+          "units4",
+          []
+        ],
+        [
+          "model_call",
+          "units4",
+          []
+        ]
+      ],
+      "params": []
+    }
+  },
+  "module": "lzw",
+  "omitted_examples": [
+    {
+      "id": "warrant/lzw/example/bomb_1024_units_declaring_1024_bytes_delivers_them",
+      "reason": "value-over-limit"
+    },
+    {
+      "id": "warrant/lzw/example/bomb_1024_units_declaring_exactly_the_cap_delivers_the_cap",
+      "reason": "not-op-eq-pure"
+    },
+    {
+      "id": "warrant/lzw/example/bomb_1024_units_declaring_one_byte_over_the_cap_is_rejected",
+      "reason": "value-over-limit"
+    },
+    {
+      "id": "warrant/lzw/example/bomb_1024_units_declaring_one_gibibyte_is_rejected",
+      "reason": "value-over-limit"
+    },
+    {
+      "id": "warrant/lzw/example/bomb_1024_units_is_rejected",
+      "reason": "value-over-limit"
+    },
+    {
+      "id": "warrant/lzw/example/bomb_512_units_is_under_the_cap_and_decodes",
+      "reason": "not-op-eq-pure"
+    }
+  ],
+  "ops": {
+    "compress": {
+      "params": [
+        [
+          "data",
+          "Bytes"
+        ]
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "ret": "Bytes"
+    },
+    "decompress": {
+      "params": [
+        [
+          "data",
+          "Bytes"
+        ]
+      ],
+      "requires": [
+        "ir.core"
+      ],
+      "ret": "Result<Bytes,LzwError>"
+    }
+  },
+  "profile": "warrant-corpus-v2",
+  "profile_sha256": "fb99a35bab8c1dc016a7d34352f3b23a892851c49ceea2f061483081563fde39",
+  "schema_version": 2,
+  "spec": "code/specs/lzw.warrant",
+  "spec_sha256": "7edc8f9cfd43e6c469652e8fc3e6cc8e3f0900b00e2a0a7d3ffed1c6e5caa193",
+  "suites": [
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "d",
+          {
+            "domain": {
+              "d": "bytes_d1",
+              "size": 347
+            },
+            "type": "Bytes"
+          }
+        ]
+      ],
+      "body": [
+        "ge",
+        [
+          "len",
+          [
+            "subject_op",
+            "compress",
+            [
+              [
+                "var",
+                "d"
+              ]
+            ]
+          ]
+        ],
+        [
+          "lit",
+          {
+            "type": "Nat",
+            "value": "7"
+          }
+        ]
+      ],
+      "cases": 347,
+      "chunks": 1,
+      "chunks_sha256": "a5cdd9671754d13e3086a42825bc7ef7e958c90a709dabd2ddf1a23ea339170b",
+      "claim": "compress_is_at_least_seven_bytes",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "bounded-set",
+      "expected_calls": 347,
+      "id": "warrant/lzw/exhaustive/compress_is_at_least_seven_bytes",
+      "inputs_sha256": "f6a987cbf9303cd59d571b81c7190bb1a5c993fc858cd4a0307c36fb83452fe1",
+      "ir_cost": 6,
+      "kind": "exhaustive",
+      "ops": [
+        "compress"
+      ],
+      "oracle": {
+        "kind": "predicate"
+      },
+      "product": 347,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "Bool",
+      "slim_chunks": [
+        0
+      ],
+      "slim_inputs_sha256": "f6a987cbf9303cd59d571b81c7190bb1a5c993fc858cd4a0307c36fb83452fe1",
+      "stream": "warrant-stream-v1",
+      "v1_inputs_sha256": "bc4ae09c1d16be2b1707044e6b0eb808135ef91f968fbf35caab699fd27431d7",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "x",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "compress",
+          [
+            [
+              "be_bytes",
+              [
+                "var",
+                "x"
+              ]
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "stream1",
+          [
+            [
+              "var",
+              "x"
+            ]
+          ]
+        ]
+      ],
+      "cases": 256,
+      "chunks": 1,
+      "chunks_sha256": "327f2a21b7cb67ec9a27e90a5fbe8c663974c9c38cb603559849ea2e479e41ed",
+      "claim": "compress_one_byte_matches_the_model",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 256,
+      "expected_sha256": "e27f8dde72efb92ab18ce9cbc260399c824870a86ab0d83bc1a6fd786d8618ba",
+      "id": "warrant/lzw/exhaustive/compress_one_byte_matches_the_model",
+      "inputs_sha256": "8fcf04ef6404c2db01a61dbe8c632eddec9cb1dc854e57015a4ceb3fd8f88ab7",
+      "ir_cost": 35,
+      "kind": "exhaustive",
+      "ops": [
+        "compress"
+      ],
+      "oracle": {
+        "expected": [
+          "model_call",
+          "stream1",
+          [
+            [
+              "var",
+              "x"
+            ]
+          ]
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "compress",
+          [
+            [
+              "be_bytes",
+              [
+                "var",
+                "x"
+              ]
+            ]
+          ]
+        ]
+      },
+      "product": 256,
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "result_type": "Bytes",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "e27f8dde72efb92ab18ce9cbc260399c824870a86ab0d83bc1a6fd786d8618ba",
+      "slim_inputs_sha256": "8fcf04ef6404c2db01a61dbe8c632eddec9cb1dc854e57015a4ceb3fd8f88ab7",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "0ce48b904987861b61957c1ff65282837f658709635b79286803cb08763fdfb9",
+      "v1_inputs_sha256": "d940ecf79b5e423646d7527cfa2687e5134d6bb6385b479fb954adf1427a26d0",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "x",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ],
+        [
+          "y",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "compress",
+          [
+            [
+              "concat",
+              [
+                "be_bytes",
+                [
+                  "var",
+                  "x"
+                ]
+              ],
+              [
+                "be_bytes",
+                [
+                  "var",
+                  "y"
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "model_call",
+          "stream2",
+          [
+            [
+              "var",
+              "x"
+            ],
+            [
+              "var",
+              "y"
+            ]
+          ]
+        ]
+      ],
+      "cases": 65536,
+      "chunks": 1,
+      "chunks_sha256": "04edd3e7c8148de1567265a8cc65e6e24353c1ffa00f1f02209bd1c6da5b9884",
+      "claim": "compress_two_bytes_match_the_model",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 65536,
+      "expected_sha256": "d01517aed33c2dd3da2fc4647e8a57b6c7e80acd94ce25e6805f32e9767664b5",
+      "id": "warrant/lzw/exhaustive/compress_two_bytes_match_the_model",
+      "inputs_sha256": "308cca9c45c60530b1bda52112d844aaa0ab2204d25003f5a39467cfc8431f68",
+      "ir_cost": 104,
+      "kind": "exhaustive",
+      "ops": [
+        "compress"
+      ],
+      "oracle": {
+        "expected": [
+          "model_call",
+          "stream2",
+          [
+            [
+              "var",
+              "x"
+            ],
+            [
+              "var",
+              "y"
+            ]
+          ]
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "compress",
+          [
+            [
+              "concat",
+              [
+                "be_bytes",
+                [
+                  "var",
+                  "x"
+                ]
+              ],
+              [
+                "be_bytes",
+                [
+                  "var",
+                  "y"
+                ]
+              ]
+            ]
+          ]
+        ]
+      },
+      "product": 65536,
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "result_type": "Bytes",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "d01517aed33c2dd3da2fc4647e8a57b6c7e80acd94ce25e6805f32e9767664b5",
+      "slim_inputs_sha256": "308cca9c45c60530b1bda52112d844aaa0ab2204d25003f5a39467cfc8431f68",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "8fc79fb7fc606bf2b907cab20bec885221a227743eee245509b115b9bbaa2e0d",
+      "v1_inputs_sha256": "2a1e3e626dcf77110e0b89afdabe213a1c707e9d76f0380a1c1fb93b1f74cbee",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "d",
+          {
+            "domain": {
+              "d": "bytes_d1",
+              "size": 347
+            },
+            "type": "Bytes"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "decompress",
+          [
+            [
+              "subject_op",
+              "compress",
+              [
+                [
+                  "var",
+                  "d"
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "ok",
+          [
+            "var",
+            "d"
+          ]
+        ]
+      ],
+      "cases": 347,
+      "chunks": 1,
+      "chunks_sha256": "6b0d37e5c6a1d760e34cadd9cea3f481d00a9408fefa42710118616ff1aec1f8",
+      "claim": "round_trip",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "bounded-set",
+      "expected_calls": 694,
+      "expected_sha256": "4c16c889771bce0517c72cfd895620aab4f58d2ae3b406347b7700413e40f809",
+      "id": "warrant/lzw/exhaustive/round_trip",
+      "inputs_sha256": "68f02915e889649a0114071618e8a461a79ed6c98d99c87fa1115da873c3f4e8",
+      "ir_cost": 9,
+      "kind": "exhaustive",
+      "ops": [
+        "decompress",
+        "compress"
+      ],
+      "oracle": {
+        "expected": [
+          "ok",
+          [
+            "var",
+            "d"
+          ]
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "decompress",
+          [
+            [
+              "subject_op",
+              "compress",
+              [
+                [
+                  "var",
+                  "d"
+                ]
+              ]
+            ]
+          ]
+        ]
+      },
+      "product": 347,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "Result<Bytes,LzwError>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "4c16c889771bce0517c72cfd895620aab4f58d2ae3b406347b7700413e40f809",
+      "slim_inputs_sha256": "68f02915e889649a0114071618e8a461a79ed6c98d99c87fa1115da873c3f4e8",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "4939b9412c5da38d5863a0b5d6e50f97c16220c1a7d2e379ba8fd3f5e299a209",
+      "v1_inputs_sha256": "ab62e6194f4feb96201ff77840ca4389b98b080d8c435e8f3cdd724605813bca",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "x",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "decompress",
+          [
+            [
+              "subject_op",
+              "compress",
+              [
+                [
+                  "model_call",
+                  "rep16",
+                  [
+                    [
+                      "var",
+                      "x"
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "ok",
+          [
+            "model_call",
+            "rep16",
+            [
+              [
+                "var",
+                "x"
+              ]
+            ]
+          ]
+        ]
+      ],
+      "cases": 256,
+      "chunks": 1,
+      "chunks_sha256": "2798db5123717587032d4e9504378528fba47139e967f2d2441245161768b3b2",
+      "claim": "round_trip_of_short_runs",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 512,
+      "expected_sha256": "01e0caf0e84a7cf629c6b33572c9a29fe9ba9d8baf383669bf1faadd4da45bf3",
+      "id": "warrant/lzw/exhaustive/round_trip_of_short_runs",
+      "inputs_sha256": "496a82f01923cca7dbc7ad2cdc50fcef36ebc9cd66792a4727fcf067de31d281",
+      "ir_cost": 237,
+      "kind": "exhaustive",
+      "ops": [
+        "decompress",
+        "compress"
+      ],
+      "oracle": {
+        "expected": [
+          "ok",
+          [
+            "model_call",
+            "rep16",
+            [
+              [
+                "var",
+                "x"
+              ]
+            ]
+          ]
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "decompress",
+          [
+            [
+              "subject_op",
+              "compress",
+              [
+                [
+                  "model_call",
+                  "rep16",
+                  [
+                    [
+                      "var",
+                      "x"
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      },
+      "product": 256,
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "result_type": "Result<Bytes,LzwError>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "01e0caf0e84a7cf629c6b33572c9a29fe9ba9d8baf383669bf1faadd4da45bf3",
+      "slim_inputs_sha256": "496a82f01923cca7dbc7ad2cdc50fcef36ebc9cd66792a4727fcf067de31d281",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "b3ecc87b3ce3c8d8b29eb39925653ef32028e784ae406b5110cf29035caaedb8",
+      "v1_inputs_sha256": "538076e0dbc20b4c9cb123c4e988f62edf4f53dfe52a27f2935809cce07d3e36",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "x",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "decompress",
+          [
+            [
+              "subject_op",
+              "compress",
+              [
+                [
+                  "model_call",
+                  "rep1024",
+                  [
+                    [
+                      "var",
+                      "x"
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "ok",
+          [
+            "model_call",
+            "rep1024",
+            [
+              [
+                "var",
+                "x"
+              ]
+            ]
+          ]
+        ]
+      ],
+      "cases": 256,
+      "chunks": 1,
+      "chunks_sha256": "2daf42bd7862053375345faa3a52a0909c4e5127a9a6d57e93999cd089c15112",
+      "claim": "round_trip_of_long_runs",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 512,
+      "expected_sha256": "b7ee1be8f8cec149b785cd6e4fc1fc0989c20f546f767f07f0f7a7fc05cd8330",
+      "id": "warrant/lzw/exhaustive/round_trip_of_long_runs",
+      "inputs_sha256": "628652652f69e4b1e2f48f4698dfac5fe1c06430d9019df8d883e7010cd0181f",
+      "ir_cost": 15105,
+      "kind": "exhaustive",
+      "ops": [
+        "decompress",
+        "compress"
+      ],
+      "oracle": {
+        "expected": [
+          "ok",
+          [
+            "model_call",
+            "rep1024",
+            [
+              [
+                "var",
+                "x"
+              ]
+            ]
+          ]
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "decompress",
+          [
+            [
+              "subject_op",
+              "compress",
+              [
+                [
+                  "model_call",
+                  "rep1024",
+                  [
+                    [
+                      "var",
+                      "x"
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      },
+      "product": 256,
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "result_type": "Result<Bytes,LzwError>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "b7ee1be8f8cec149b785cd6e4fc1fc0989c20f546f767f07f0f7a7fc05cd8330",
+      "slim_inputs_sha256": "628652652f69e4b1e2f48f4698dfac5fe1c06430d9019df8d883e7010cd0181f",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "11b3dd17e12298a2d755ad043b65bf0e444f5e2ac9c1da0b14db4cec6254ee06",
+      "v1_inputs_sha256": "10622673abb1c3f09b2f91f3aaa462a402f872963864610afc44830572bef20d",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "w",
+          {
+            "domain": {
+              "d": "fx_full",
+              "size": 65536,
+              "t": "U16"
+            },
+            "type": "U16"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "decompress",
+          [
+            [
+              "subject_op",
+              "compress",
+              [
+                [
+                  "model_call",
+                  "pair8",
+                  [
+                    [
+                      "var",
+                      "w"
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "ok",
+          [
+            "model_call",
+            "pair8",
+            [
+              [
+                "var",
+                "w"
+              ]
+            ]
+          ]
+        ]
+      ],
+      "cases": 65536,
+      "chunks": 1,
+      "chunks_sha256": "7dc32b4211a554b36460da9af987a1ed81df958710666be2ad7b55b1af65f957",
+      "claim": "round_trip_of_repeated_byte_pairs",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 131072,
+      "expected_sha256": "8a72ff0fff85a282cf5f3d966a85b260b6961f55cf14855b620c475ec363ca0e",
+      "id": "warrant/lzw/exhaustive/round_trip_of_repeated_byte_pairs",
+      "inputs_sha256": "794ee85818440af2eae58141bbc0b43250d277573455cfa27254f00512525763",
+      "ir_cost": 117,
+      "kind": "exhaustive",
+      "ops": [
+        "decompress",
+        "compress"
+      ],
+      "oracle": {
+        "expected": [
+          "ok",
+          [
+            "model_call",
+            "pair8",
+            [
+              [
+                "var",
+                "w"
+              ]
+            ]
+          ]
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "decompress",
+          [
+            [
+              "subject_op",
+              "compress",
+              [
+                [
+                  "model_call",
+                  "pair8",
+                  [
+                    [
+                      "var",
+                      "w"
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      },
+      "product": 65536,
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "result_type": "Result<Bytes,LzwError>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "8a72ff0fff85a282cf5f3d966a85b260b6961f55cf14855b620c475ec363ca0e",
+      "slim_inputs_sha256": "794ee85818440af2eae58141bbc0b43250d277573455cfa27254f00512525763",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "p",
+          {
+            "domain": {
+              "d": "bytes_d1",
+              "size": 347
+            },
+            "type": "Bytes"
+          }
+        ],
+        [
+          "d",
+          {
+            "domain": {
+              "d": "bytes_d1",
+              "size": 347
+            },
+            "type": "Bytes"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "decompress",
+          [
+            [
+              "subject_op",
+              "compress",
+              [
+                [
+                  "concat",
+                  [
+                    "var",
+                    "p"
+                  ],
+                  [
+                    "var",
+                    "d"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "ok",
+          [
+            "concat",
+            [
+              "var",
+              "p"
+            ],
+            [
+              "var",
+              "d"
+            ]
+          ]
+        ]
+      ],
+      "cases": 120409,
+      "chunks": 2,
+      "chunks_sha256": "9cc9dd378134e7948c024390f0880b078d772929e6c257ce76a3f88ec0d47925",
+      "claim": "round_trip_after_a_prefix",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "bounded-set",
+      "expected_calls": 240818,
+      "expected_sha256": "712332456d3ec8801b6424ff4cfb1e113650975eb704382fb924754a0f37fe3c",
+      "id": "warrant/lzw/exhaustive/round_trip_after_a_prefix",
+      "inputs_sha256": "6af611b7033e0f8870cb9b83b9f6b9ed76f926af2707431b1e7395404a05b282",
+      "ir_cost": 15,
+      "kind": "exhaustive",
+      "ops": [
+        "decompress",
+        "compress"
+      ],
+      "oracle": {
+        "expected": [
+          "ok",
+          [
+            "concat",
+            [
+              "var",
+              "p"
+            ],
+            [
+              "var",
+              "d"
+            ]
+          ]
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "decompress",
+          [
+            [
+              "subject_op",
+              "compress",
+              [
+                [
+                  "concat",
+                  [
+                    "var",
+                    "p"
+                  ],
+                  [
+                    "var",
+                    "d"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      },
+      "product": 120409,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "Result<Bytes,LzwError>",
+      "slim_chunks": [
+        0,
+        1
+      ],
+      "slim_expected_sha256": "712332456d3ec8801b6424ff4cfb1e113650975eb704382fb924754a0f37fe3c",
+      "slim_inputs_sha256": "6af611b7033e0f8870cb9b83b9f6b9ed76f926af2707431b1e7395404a05b282",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "930e73e67bcf19baed3f7cccd8f31888d9160bd937b02a1659f2d7f515765615",
+      "v1_inputs_sha256": "b12704605ec5b5e1ef282307d801189c2066b65f7bb40e2041ec146694e9e534",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "h",
+          {
+            "domain": {
+              "d": "fx_edge",
+              "size": 313,
+              "t": "U32"
+            },
+            "type": "U32"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "decompress",
+          [
+            [
+              "concat",
+              [
+                "be_bytes",
+                [
+                  "var",
+                  "h"
+                ]
+              ],
+              [
+                "lit",
+                {
+                  "type": "Bytes",
+                  "value": "0083081c182420"
+                }
+              ]
+            ]
+          ]
+        ],
+        [
+          "ok",
+          [
+            "model_call",
+            "a_prefix",
+            [
+              [
+                "var",
+                "h"
+              ]
+            ]
+          ]
+        ]
+      ],
+      "cases": 313,
+      "chunks": 1,
+      "chunks_sha256": "9480c2ce9efd655d90ceab9918f3e595ae65c46db624f590bb1bcf3033d9523d",
+      "claim": "declared_length_cuts_the_output",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "bounded-set",
+      "expected_calls": 313,
+      "expected_sha256": "ea415b0de79ce37a1f78478c7624c26b30ef6512d015b07975d70038d2fcb81c",
+      "id": "warrant/lzw/exhaustive/declared_length_cuts_the_output",
+      "inputs_sha256": "c6ba8debf13ab24d0f4a77a3b2ed5d68c57910ed17122dfbfe64bf9c34a53314",
+      "ir_cost": 71,
+      "kind": "exhaustive",
+      "ops": [
+        "decompress"
+      ],
+      "oracle": {
+        "expected": [
+          "ok",
+          [
+            "model_call",
+            "a_prefix",
+            [
+              [
+                "var",
+                "h"
+              ]
+            ]
+          ]
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "decompress",
+          [
+            [
+              "concat",
+              [
+                "be_bytes",
+                [
+                  "var",
+                  "h"
+                ]
+              ],
+              [
+                "lit",
+                {
+                  "type": "Bytes",
+                  "value": "0083081c182420"
+                }
+              ]
+            ]
+          ]
+        ]
+      },
+      "product": 313,
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "result_type": "Result<Bytes,LzwError>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "ea415b0de79ce37a1f78478c7624c26b30ef6512d015b07975d70038d2fcb81c",
+      "slim_inputs_sha256": "c6ba8debf13ab24d0f4a77a3b2ed5d68c57910ed17122dfbfe64bf9c34a53314",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "h",
+          {
+            "domain": {
+              "d": "fx_full",
+              "size": 65536,
+              "t": "U16"
+            },
+            "type": "U16"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "decompress",
+          [
+            [
+              "concat",
+              [
+                "be_bytes",
+                [
+                  "bit_or",
+                  [
+                    "lit",
+                    {
+                      "type": "U32",
+                      "value": "4278190080"
+                    }
+                  ],
+                  [
+                    "widen",
+                    "U32",
+                    [
+                      "var",
+                      "h"
+                    ]
+                  ]
+                ]
+              ],
+              [
+                "lit",
+                {
+                  "type": "Bytes",
+                  "value": "0083081c182420"
+                }
+              ]
+            ]
+          ]
+        ],
+        [
+          "ok",
+          [
+            "lit",
+            {
+              "type": "Bytes",
+              "value": "41414141414141"
+            }
+          ]
+        ]
+      ],
+      "cases": 65536,
+      "chunks": 1,
+      "chunks_sha256": "e8f7d560a694e6be1755cb75ffc41c7f7cca2048ccd4ca81db3daae1e56bf2af",
+      "claim": "a_huge_declared_length_is_harmless",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 65536,
+      "expected_sha256": "8f49efaa67bc44c7813773db6690075876d297ec2f9e7a88a36db6d399111a3c",
+      "id": "warrant/lzw/exhaustive/a_huge_declared_length_is_harmless",
+      "inputs_sha256": "3273b95520471acb134a9ba70e37e2d1313bb4ed7b822473a25c076731891643",
+      "ir_cost": 14,
+      "kind": "exhaustive",
+      "ops": [
+        "decompress"
+      ],
+      "oracle": {
+        "expected": [
+          "ok",
+          [
+            "lit",
+            {
+              "type": "Bytes",
+              "value": "41414141414141"
+            }
+          ]
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "decompress",
+          [
+            [
+              "concat",
+              [
+                "be_bytes",
+                [
+                  "bit_or",
+                  [
+                    "lit",
+                    {
+                      "type": "U32",
+                      "value": "4278190080"
+                    }
+                  ],
+                  [
+                    "widen",
+                    "U32",
+                    [
+                      "var",
+                      "h"
+                    ]
+                  ]
+                ]
+              ],
+              [
+                "lit",
+                {
+                  "type": "Bytes",
+                  "value": "0083081c182420"
+                }
+              ]
+            ]
+          ]
+        ]
+      },
+      "product": 65536,
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "result_type": "Result<Bytes,LzwError>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "8f49efaa67bc44c7813773db6690075876d297ec2f9e7a88a36db6d399111a3c",
+      "slim_inputs_sha256": "3273b95520471acb134a9ba70e37e2d1313bb4ed7b822473a25c076731891643",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "o",
+          {
+            "domain": {
+              "d": "nat_0_64",
+              "size": 65
+            },
+            "type": "Nat"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "decompress",
+          [
+            [
+              "lit",
+              {
+                "type": "Bytes",
+                "value": ""
+              }
+            ]
+          ]
+        ],
+        [
+          "err",
+          "CORRUPT"
+        ]
+      ],
+      "cases": 65,
+      "chunks": 1,
+      "chunks_sha256": "8b92aa4b554b369c353814674821b793ff47574425afd8409ac4184e2efc704b",
+      "claim": "decompress_empty_input_rejected",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "bounded-set",
+      "expected_calls": 65,
+      "expected_sha256": "2842774fe89a73290a216d66ba6b766a2e686d983adece34be17500175ea994b",
+      "id": "warrant/lzw/exhaustive/decompress_empty_input_rejected",
+      "inputs_sha256": "aa9c5a8ccb00501ab0c35e361f6cffa6cbe3c3d537e2b4eea6261f798d9705d7",
+      "ir_cost": 6,
+      "kind": "exhaustive",
+      "ops": [
+        "decompress"
+      ],
+      "oracle": {
+        "expected": [
+          "err",
+          "CORRUPT"
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "decompress",
+          [
+            [
+              "lit",
+              {
+                "type": "Bytes",
+                "value": ""
+              }
+            ]
+          ]
+        ]
+      },
+      "product": 65,
+      "requires": [
+        "ir.core"
+      ],
+      "result_type": "Result<Bytes,LzwError>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "2842774fe89a73290a216d66ba6b766a2e686d983adece34be17500175ea994b",
+      "slim_inputs_sha256": "aa9c5a8ccb00501ab0c35e361f6cffa6cbe3c3d537e2b4eea6261f798d9705d7",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "b8ff75a954c1165b2faa42c427d44d69b27c3f47cfe59f0962ae3be6f5a6a17a",
+      "v1_inputs_sha256": "fcd8bf402ad8727d1fb6f32c092ba95f29e1800c6eb2b25a681274bd7da00805",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "x",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "decompress",
+          [
+            [
+              "be_bytes",
+              [
+                "var",
+                "x"
+              ]
+            ]
+          ]
+        ],
+        [
+          "err",
+          "CORRUPT"
+        ]
+      ],
+      "cases": 256,
+      "chunks": 1,
+      "chunks_sha256": "080c61546efd39a0a8ab89fde81be86cc26172519b5b690d1ee158b8879649d5",
+      "claim": "decompress_one_byte_rejected",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 256,
+      "expected_sha256": "1ec3bfdb73d294566f8ee6295dffac21cce2c030316b636c0fea1f976e12b6a3",
+      "id": "warrant/lzw/exhaustive/decompress_one_byte_rejected",
+      "inputs_sha256": "00db23b5367c1e67b760326842db1f2577fe981e6f3a594892793239fbc4cb57",
+      "ir_cost": 7,
+      "kind": "exhaustive",
+      "ops": [
+        "decompress"
+      ],
+      "oracle": {
+        "expected": [
+          "err",
+          "CORRUPT"
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "decompress",
+          [
+            [
+              "be_bytes",
+              [
+                "var",
+                "x"
+              ]
+            ]
+          ]
+        ]
+      },
+      "product": 256,
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "result_type": "Result<Bytes,LzwError>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "1ec3bfdb73d294566f8ee6295dffac21cce2c030316b636c0fea1f976e12b6a3",
+      "slim_inputs_sha256": "00db23b5367c1e67b760326842db1f2577fe981e6f3a594892793239fbc4cb57",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "405928947a1a2e238232a2366e732718aea6569e8f9dedc4a7ac3e83a194755a",
+      "v1_inputs_sha256": "3db253be0520331c47484034cd633faeaef296421926dd25b6cdfaafaa945c90",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "n",
+          {
+            "domain": {
+              "d": "fx_edge",
+              "size": 313,
+              "t": "U32"
+            },
+            "type": "U32"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "decompress",
+          [
+            [
+              "be_bytes",
+              [
+                "var",
+                "n"
+              ]
+            ]
+          ]
+        ],
+        [
+          "err",
+          "CORRUPT"
+        ]
+      ],
+      "cases": 313,
+      "chunks": 1,
+      "chunks_sha256": "fa722955815b3aaf0297f066b35acd3e4ea76ebebb7a697fac29a0acedee9e7c",
+      "claim": "decompress_header_only_rejected",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "bounded-set",
+      "expected_calls": 313,
+      "expected_sha256": "1a668f2fa95f9676e19300db8a2f415aa3b65c52e6fefe09f6ccc202742b591c",
+      "id": "warrant/lzw/exhaustive/decompress_header_only_rejected",
+      "inputs_sha256": "5b9dc0cc940b3c4fdd1c9ea9e359a3256ef2b18ef65a8d02eef3651d013380f6",
+      "ir_cost": 7,
+      "kind": "exhaustive",
+      "ops": [
+        "decompress"
+      ],
+      "oracle": {
+        "expected": [
+          "err",
+          "CORRUPT"
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "decompress",
+          [
+            [
+              "be_bytes",
+              [
+                "var",
+                "n"
+              ]
+            ]
+          ]
+        ]
+      },
+      "product": 313,
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "result_type": "Result<Bytes,LzwError>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "1a668f2fa95f9676e19300db8a2f415aa3b65c52e6fefe09f6ccc202742b591c",
+      "slim_inputs_sha256": "5b9dc0cc940b3c4fdd1c9ea9e359a3256ef2b18ef65a8d02eef3651d013380f6",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "n",
+          {
+            "domain": {
+              "d": "fx_edge",
+              "size": 313,
+              "t": "U32"
+            },
+            "type": "U32"
+          }
+        ],
+        [
+          "x",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "decompress",
+          [
+            [
+              "concat",
+              [
+                "be_bytes",
+                [
+                  "var",
+                  "n"
+                ]
+              ],
+              [
+                "be_bytes",
+                [
+                  "var",
+                  "x"
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "err",
+          "CORRUPT"
+        ]
+      ],
+      "cases": 80128,
+      "chunks": 2,
+      "chunks_sha256": "29e109cdda2c79e79b394b033241c90aa677ba9b0137d1d6dd52cb08ef0a9382",
+      "claim": "decompress_one_payload_byte_rejected",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "bounded-set",
+      "expected_calls": 80128,
+      "expected_sha256": "4f4a28df5d8c9cf259acc4f126119eac71c5e691eb0ad1232f8f966bf1dc19f0",
+      "id": "warrant/lzw/exhaustive/decompress_one_payload_byte_rejected",
+      "inputs_sha256": "6b7db69f0cfb900c60c778cbb7288b111b30417524e88be841291e1f6b16c19d",
+      "ir_cost": 10,
+      "kind": "exhaustive",
+      "ops": [
+        "decompress"
+      ],
+      "oracle": {
+        "expected": [
+          "err",
+          "CORRUPT"
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "decompress",
+          [
+            [
+              "concat",
+              [
+                "be_bytes",
+                [
+                  "var",
+                  "n"
+                ]
+              ],
+              [
+                "be_bytes",
+                [
+                  "var",
+                  "x"
+                ]
+              ]
+            ]
+          ]
+        ]
+      },
+      "product": 80128,
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "result_type": "Result<Bytes,LzwError>",
+      "slim_chunks": [
+        0,
+        1
+      ],
+      "slim_expected_sha256": "4f4a28df5d8c9cf259acc4f126119eac71c5e691eb0ad1232f8f966bf1dc19f0",
+      "slim_inputs_sha256": "6b7db69f0cfb900c60c778cbb7288b111b30417524e88be841291e1f6b16c19d",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "n",
+          {
+            "domain": {
+              "d": "fx_edge",
+              "size": 313,
+              "t": "U32"
+            },
+            "type": "U32"
+          }
+        ],
+        [
+          "w",
+          {
+            "domain": {
+              "d": "fx_edge",
+              "size": 281,
+              "t": "U16"
+            },
+            "type": "U16"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "decompress",
+          [
+            [
+              "concat",
+              [
+                "be_bytes",
+                [
+                  "var",
+                  "n"
+                ]
+              ],
+              [
+                "le_bytes",
+                [
+                  "var",
+                  "w"
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "if",
+          [
+            "model_call",
+            "starts_with_clear",
+            [
+              [
+                "var",
+                "w"
+              ]
+            ]
+          ],
+          [
+            "ok",
+            [
+              "lit",
+              {
+                "type": "Bytes",
+                "value": ""
+              }
+            ]
+          ],
+          [
+            "err",
+            "CORRUPT"
+          ]
+        ]
+      ],
+      "cases": 87953,
+      "chunks": 2,
+      "chunks_sha256": "4f3dd8d90ccca2196b6b1f56a4b19092fbd38d9475e471f68b273d8976ddded7",
+      "claim": "decompress_two_byte_payload_model",
+      "demoted": [
+        "1"
+      ],
+      "discarded": 0,
+      "domain_label": "bounded-set",
+      "expected_calls": 87953,
+      "expected_sha256": "f9187376bf017f23940256c18739c8437c362c7d89105e1fc39b275a61324d3e",
+      "id": "warrant/lzw/exhaustive/decompress_two_byte_payload_model",
+      "inputs_sha256": "6dab0cef26dbe66cd2e526ddbbab14349c4ee75118d21d97ebf1931adad70b1a",
+      "ir_cost": 28,
+      "kind": "exhaustive",
+      "ops": [
+        "decompress"
+      ],
+      "oracle": {
+        "expected": [
+          "if",
+          [
+            "model_call",
+            "starts_with_clear",
+            [
+              [
+                "var",
+                "w"
+              ]
+            ]
+          ],
+          [
+            "ok",
+            [
+              "lit",
+              {
+                "type": "Bytes",
+                "value": ""
+              }
+            ]
+          ],
+          [
+            "err",
+            "CORRUPT"
+          ]
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "decompress",
+          [
+            [
+              "concat",
+              [
+                "be_bytes",
+                [
+                  "var",
+                  "n"
+                ]
+              ],
+              [
+                "le_bytes",
+                [
+                  "var",
+                  "w"
+                ]
+              ]
+            ]
+          ]
+        ]
+      },
+      "product": 87953,
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "result_type": "Result<Bytes,LzwError>",
+      "slim_chunks": [
+        0,
+        1
+      ],
+      "slim_expected_sha256": "f9187376bf017f23940256c18739c8437c362c7d89105e1fc39b275a61324d3e",
+      "slim_inputs_sha256": "6dab0cef26dbe66cd2e526ddbbab14349c4ee75118d21d97ebf1931adad70b1a",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "not",
+        [
+          "model_call",
+          "starts_with_clear",
+          [
+            [
+              "var",
+              "w"
+            ]
+          ]
+        ]
+      ],
+      "binders": [
+        [
+          "n",
+          {
+            "domain": {
+              "d": "fx_edge",
+              "size": 313,
+              "t": "U32"
+            },
+            "type": "U32"
+          }
+        ],
+        [
+          "w",
+          {
+            "domain": {
+              "d": "fx_edge",
+              "size": 281,
+              "t": "U16"
+            },
+            "type": "U16"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "decompress",
+          [
+            [
+              "concat",
+              [
+                "be_bytes",
+                [
+                  "var",
+                  "n"
+                ]
+              ],
+              [
+                "concat",
+                [
+                  "le_bytes",
+                  [
+                    "var",
+                    "w"
+                  ]
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "Bytes",
+                    "value": "0083081c182420"
+                  }
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "err",
+          "CORRUPT"
+        ]
+      ],
+      "cases": 87640,
+      "chunks": 2,
+      "chunks_sha256": "65f763916b0ace6cffe62d992e804c7443e65927251214af7d908820967c7e97",
+      "claim": "decompress_missing_clear_rejected",
+      "demoted": [
+        "1"
+      ],
+      "discarded": 313,
+      "domain_label": "bounded-set",
+      "expected_calls": 87640,
+      "expected_sha256": "5202bc0387d40cbd0c24bfd11f5fde73fe487aa92ace03b1b465abce80ad1826",
+      "id": "warrant/lzw/exhaustive/decompress_missing_clear_rejected",
+      "inputs_sha256": "a62c08ec9f07a360585ff40327f759c25ceb39ff2d07403b03ec25b2484ce584",
+      "ir_cost": 19,
+      "kind": "exhaustive",
+      "ops": [
+        "decompress"
+      ],
+      "oracle": {
+        "expected": [
+          "err",
+          "CORRUPT"
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "decompress",
+          [
+            [
+              "concat",
+              [
+                "be_bytes",
+                [
+                  "var",
+                  "n"
+                ]
+              ],
+              [
+                "concat",
+                [
+                  "le_bytes",
+                  [
+                    "var",
+                    "w"
+                  ]
+                ],
+                [
+                  "lit",
+                  {
+                    "type": "Bytes",
+                    "value": "0083081c182420"
+                  }
+                ]
+              ]
+            ]
+          ]
+        ]
+      },
+      "product": 87953,
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "result_type": "Result<Bytes,LzwError>",
+      "slim_chunks": [
+        0,
+        1
+      ],
+      "slim_expected_sha256": "5202bc0387d40cbd0c24bfd11f5fde73fe487aa92ace03b1b465abce80ad1826",
+      "slim_inputs_sha256": "a62c08ec9f07a360585ff40327f759c25ceb39ff2d07403b03ec25b2484ce584",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "n",
+          {
+            "domain": {
+              "d": "fx_edge",
+              "size": 313,
+              "t": "U32"
+            },
+            "type": "U32"
+          }
+        ],
+        [
+          "k",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "decompress",
+          [
+            [
+              "concat",
+              [
+                "be_bytes",
+                [
+                  "bit_or",
+                  [
+                    "var",
+                    "n"
+                  ],
+                  [
+                    "lit",
+                    {
+                      "type": "U32",
+                      "value": "1"
+                    }
+                  ]
+                ]
+              ],
+              [
+                "model_call",
+                "clear_then",
+                [
+                  [
+                    "bit_and",
+                    [
+                      "var",
+                      "k"
+                    ],
+                    [
+                      "lit",
+                      {
+                        "type": "U8",
+                        "value": "127"
+                      }
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "err",
+          "CORRUPT"
+        ]
+      ],
+      "cases": 80128,
+      "chunks": 2,
+      "chunks_sha256": "1c6ea78e34f0239759fe19ef4ee4e292c7ad7d99f9b7c83758b57aafb9a313cb",
+      "claim": "decompress_invalid_first_code_rejected",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "bounded-set",
+      "expected_calls": 80128,
+      "expected_sha256": "f386ea1c834998c181851bc64dce6a52980e97f8d6991b96b997255134ed5ab9",
+      "id": "warrant/lzw/exhaustive/decompress_invalid_first_code_rejected",
+      "inputs_sha256": "76517679680c842e91f3a3a49d53451b6ca2923fc4a4c32c38cb6c3d83a3e8ac",
+      "ir_cost": 23,
+      "kind": "exhaustive",
+      "ops": [
+        "decompress"
+      ],
+      "oracle": {
+        "expected": [
+          "err",
+          "CORRUPT"
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "decompress",
+          [
+            [
+              "concat",
+              [
+                "be_bytes",
+                [
+                  "bit_or",
+                  [
+                    "var",
+                    "n"
+                  ],
+                  [
+                    "lit",
+                    {
+                      "type": "U32",
+                      "value": "1"
+                    }
+                  ]
+                ]
+              ],
+              [
+                "model_call",
+                "clear_then",
+                [
+                  [
+                    "bit_and",
+                    [
+                      "var",
+                      "k"
+                    ],
+                    [
+                      "lit",
+                      {
+                        "type": "U8",
+                        "value": "127"
+                      }
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      },
+      "product": 80128,
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "result_type": "Result<Bytes,LzwError>",
+      "slim_chunks": [
+        0,
+        1
+      ],
+      "slim_expected_sha256": "f386ea1c834998c181851bc64dce6a52980e97f8d6991b96b997255134ed5ab9",
+      "slim_inputs_sha256": "76517679680c842e91f3a3a49d53451b6ca2923fc4a4c32c38cb6c3d83a3e8ac",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "k",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "decompress",
+          [
+            [
+              "concat",
+              [
+                "be_bytes",
+                [
+                  "lit",
+                  {
+                    "type": "U32",
+                    "value": "1"
+                  }
+                ]
+              ],
+              [
+                "model_call",
+                "clear_then",
+                [
+                  [
+                    "bit_and",
+                    [
+                      "var",
+                      "k"
+                    ],
+                    [
+                      "lit",
+                      {
+                        "type": "U8",
+                        "value": "127"
+                      }
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "err",
+          "CORRUPT"
+        ]
+      ],
+      "cases": 256,
+      "chunks": 1,
+      "chunks_sha256": "e495c3157317e4ae5caa8e6a387c3421a38d0986cc1966a7f3119e65b91edd1a",
+      "claim": "decompress_invalid_first_code_every_value",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 256,
+      "expected_sha256": "15a1a0a97fb6c67812371e6695711c6526b6c42d278fc68603690e4bbd177ea3",
+      "id": "warrant/lzw/exhaustive/decompress_invalid_first_code_every_value",
+      "inputs_sha256": "6955bcd2d6a75d04fe9a344249ce5d50c0c5e555ec77248bdc33d8c2e0601e99",
+      "ir_cost": 21,
+      "kind": "exhaustive",
+      "ops": [
+        "decompress"
+      ],
+      "oracle": {
+        "expected": [
+          "err",
+          "CORRUPT"
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "decompress",
+          [
+            [
+              "concat",
+              [
+                "be_bytes",
+                [
+                  "lit",
+                  {
+                    "type": "U32",
+                    "value": "1"
+                  }
+                ]
+              ],
+              [
+                "model_call",
+                "clear_then",
+                [
+                  [
+                    "bit_and",
+                    [
+                      "var",
+                      "k"
+                    ],
+                    [
+                      "lit",
+                      {
+                        "type": "U8",
+                        "value": "127"
+                      }
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      },
+      "product": 256,
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "result_type": "Result<Bytes,LzwError>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "15a1a0a97fb6c67812371e6695711c6526b6c42d278fc68603690e4bbd177ea3",
+      "slim_inputs_sha256": "6955bcd2d6a75d04fe9a344249ce5d50c0c5e555ec77248bdc33d8c2e0601e99",
+      "stream": "warrant-stream-v1",
+      "v1_expected_sha256": "d08b965e54f012f65d81baa4d4e3b5db3712c11f30393c638199e3adce35723d",
+      "v1_inputs_sha256": "5ce65941309bb4803a1ba8d69e8bbe1f95ea4db608d6cb152faec9e3c45c847c",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "w",
+          {
+            "domain": {
+              "d": "fx_full",
+              "size": 65536,
+              "t": "U16"
+            },
+            "type": "U16"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "decompress",
+          [
+            [
+              "concat",
+              [
+                "be_bytes",
+                [
+                  "lit",
+                  {
+                    "type": "U32",
+                    "value": "0"
+                  }
+                ]
+              ],
+              [
+                "le_bytes",
+                [
+                  "var",
+                  "w"
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "if",
+          [
+            "model_call",
+            "starts_with_clear",
+            [
+              [
+                "var",
+                "w"
+              ]
+            ]
+          ],
+          [
+            "ok",
+            [
+              "lit",
+              {
+                "type": "Bytes",
+                "value": ""
+              }
+            ]
+          ],
+          [
+            "err",
+            "CORRUPT"
+          ]
+        ]
+      ],
+      "cases": 65536,
+      "chunks": 1,
+      "chunks_sha256": "1bc9ab948ddc42769d276d199d0708f46e6ee7808bc44178d01293798d91596f",
+      "claim": "decompress_zero_header_two_byte_payload_model",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 65536,
+      "expected_sha256": "1adde975f0e7ba9a9c755c31caf87b4ffc445527da8bc418691b9c75812ee8c6",
+      "id": "warrant/lzw/exhaustive/decompress_zero_header_two_byte_payload_model",
+      "inputs_sha256": "e69b960bffe16ff17c8f02a51ea494178b2a0538d4a1c5dccf94b72318dce901",
+      "ir_cost": 28,
+      "kind": "exhaustive",
+      "ops": [
+        "decompress"
+      ],
+      "oracle": {
+        "expected": [
+          "if",
+          [
+            "model_call",
+            "starts_with_clear",
+            [
+              [
+                "var",
+                "w"
+              ]
+            ]
+          ],
+          [
+            "ok",
+            [
+              "lit",
+              {
+                "type": "Bytes",
+                "value": ""
+              }
+            ]
+          ],
+          [
+            "err",
+            "CORRUPT"
+          ]
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "decompress",
+          [
+            [
+              "concat",
+              [
+                "be_bytes",
+                [
+                  "lit",
+                  {
+                    "type": "U32",
+                    "value": "0"
+                  }
+                ]
+              ],
+              [
+                "le_bytes",
+                [
+                  "var",
+                  "w"
+                ]
+              ]
+            ]
+          ]
+        ]
+      },
+      "product": 65536,
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "result_type": "Result<Bytes,LzwError>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "1adde975f0e7ba9a9c755c31caf87b4ffc445527da8bc418691b9c75812ee8c6",
+      "slim_inputs_sha256": "e69b960bffe16ff17c8f02a51ea494178b2a0538d4a1c5dccf94b72318dce901",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "w",
+          {
+            "domain": {
+              "d": "fx_full",
+              "size": 65536,
+              "t": "U16"
+            },
+            "type": "U16"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "decompress",
+          [
+            [
+              "be_bytes",
+              [
+                "var",
+                "w"
+              ]
+            ]
+          ]
+        ],
+        [
+          "err",
+          "CORRUPT"
+        ]
+      ],
+      "cases": 65536,
+      "chunks": 1,
+      "chunks_sha256": "26fde884118b1124cbee46e7835d2d4931a77aa19697e63521aee763c96ff642",
+      "claim": "decompress_two_bytes_rejected",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 65536,
+      "expected_sha256": "7bbab7e8d1b98dcafe041b7d2926323bbec2580486c1452f4693fc56d02ada08",
+      "id": "warrant/lzw/exhaustive/decompress_two_bytes_rejected",
+      "inputs_sha256": "5cef8d98b419e6110563a3bb4cab5d8e17a95d6040af665b0074bf74dae1734b",
+      "ir_cost": 7,
+      "kind": "exhaustive",
+      "ops": [
+        "decompress"
+      ],
+      "oracle": {
+        "expected": [
+          "err",
+          "CORRUPT"
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "decompress",
+          [
+            [
+              "be_bytes",
+              [
+                "var",
+                "w"
+              ]
+            ]
+          ]
+        ]
+      },
+      "product": 65536,
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "result_type": "Result<Bytes,LzwError>",
+      "slim_chunks": [
+        0
+      ],
+      "slim_expected_sha256": "7bbab7e8d1b98dcafe041b7d2926323bbec2580486c1452f4693fc56d02ada08",
+      "slim_inputs_sha256": "5cef8d98b419e6110563a3bb4cab5d8e17a95d6040af665b0074bf74dae1734b",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    },
+    {
+      "admit": [
+        "lit",
+        true
+      ],
+      "binders": [
+        [
+          "w",
+          {
+            "domain": {
+              "d": "fx_full",
+              "size": 65536,
+              "t": "U16"
+            },
+            "type": "U16"
+          }
+        ],
+        [
+          "x",
+          {
+            "domain": {
+              "d": "u8_all",
+              "size": 256
+            },
+            "type": "U8"
+          }
+        ]
+      ],
+      "body": [
+        "eq",
+        [
+          "subject_op",
+          "decompress",
+          [
+            [
+              "concat",
+              [
+                "be_bytes",
+                [
+                  "var",
+                  "w"
+                ]
+              ],
+              [
+                "be_bytes",
+                [
+                  "var",
+                  "x"
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "err",
+          "CORRUPT"
+        ]
+      ],
+      "cases": 16777216,
+      "chunks": 256,
+      "chunks_sha256": "0163a96af9ac1d821819a8c42318c733180a05f84a830dfb98ff4283e39f69ea",
+      "claim": "decompress_three_bytes_rejected",
+      "demoted": [],
+      "discarded": 0,
+      "domain_label": "full",
+      "expected_calls": 16777216,
+      "expected_sha256": "c0d2d10de152baef0f52e30d7928ae0c48d06278d005405765ff15e33ced2d6e",
+      "id": "warrant/lzw/exhaustive/decompress_three_bytes_rejected",
+      "inputs_sha256": "0f09b0859bfa59427d679da0dd53cf9e993850441ab2f112bf1841aabdf8b72f",
+      "ir_cost": 10,
+      "kind": "exhaustive",
+      "ops": [
+        "decompress"
+      ],
+      "oracle": {
+        "expected": [
+          "err",
+          "CORRUPT"
+        ],
+        "kind": "reference",
+        "subject": [
+          "subject_op",
+          "decompress",
+          [
+            [
+              "concat",
+              [
+                "be_bytes",
+                [
+                  "var",
+                  "w"
+                ]
+              ],
+              [
+                "be_bytes",
+                [
+                  "var",
+                  "x"
+                ]
+              ]
+            ]
+          ]
+        ]
+      },
+      "product": 16777216,
+      "requires": [
+        "ir.core",
+        "ir.fixed"
+      ],
+      "result_type": "Result<Bytes,LzwError>",
+      "slim_chunks": [
+        0,
+        11,
+        30,
+        49,
+        68,
+        87,
+        106,
+        125,
+        144,
+        163,
+        182,
+        201,
+        220,
+        239,
+        255
+      ],
+      "slim_expected_sha256": "ed45e64444b8dd749b32ae71095abfb3e09c600c70622bcfbad9523e46a1bfbd",
+      "slim_inputs_sha256": "8745192b020d14555ba070f07daba370ed0d36366d5d7819dd57a5c833ba799d",
+      "stream": "warrant-stream-v2",
+      "wraps": 0
+    }
+  ],
+  "types": {
+    "LzwError": {
+      "cases": [
+        "CORRUPT"
+      ],
+      "kind": "error"
+    }
+  }
+}
