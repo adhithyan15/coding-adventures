@@ -1,0 +1,219 @@
+name: Kiln G1 baseline profile diagnostic
+
+on:
+  push:
+    branches:
+      - codex/kiln-g1-profile-diagnostic
+    paths:
+      - .github/workflows/kiln-g1-profile-diagnostic.yml
+      - code/programs/go/kiln/g1_profile_diagnostic_linux_amd64_test.go
+
+permissions:
+  contents: read
+
+jobs:
+  g1-baseline-profile:
+    name: G1 baseline profile (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, ubuntu-26.04]
+    env:
+      RUNTIME_SHA: adadc8fc0b9783b3a829fbb4309182f558d4561b
+    steps:
+      - name: Checkout diagnostic helper
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.sha }}
+          path: diagnostic
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout: |
+            code/programs/go/kiln/g1_profile_diagnostic_linux_amd64_test.go
+          sparse-checkout-cone-mode: false
+          filter: blob:none
+
+      - name: Checkout pinned current-main runtime
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ env.RUNTIME_SHA }}
+          path: runtime
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout: |
+            code/grammars
+            code/packages/go
+            code/programs/go/kiln
+            code/specs
+          sparse-checkout-cone-mode: false
+          filter: blob:none
+
+      - name: Set up Go
+        uses: actions/setup-go@v7
+        with:
+          go-version: '1.26.1'
+          cache-dependency-path: 'runtime/code/**/go.sum'
+
+      - name: Run clean admission and isolated diagnostic profiles
+        working-directory: runtime/code/programs/go/kiln
+        shell: bash
+        run: |
+          set -uo pipefail
+          output="$RUNNER_TEMP/kiln-g1-baseline"
+          mkdir -p "$output"
+          failures=0
+
+          snapshot() {
+            local label="$1"
+            {
+              echo "snapshot=$label"
+              date -u +%Y-%m-%dT%H:%M:%SZ
+              echo "cpu.max:"
+              cat /sys/fs/cgroup/cpu.max 2>&1 || true
+              echo "cpu.stat:"
+              cat /sys/fs/cgroup/cpu.stat 2>&1 || true
+              echo "cpu.pressure:"
+              cat /sys/fs/cgroup/cpu.pressure 2>&1 || true
+              echo "proc.pressure.cpu:"
+              cat /proc/pressure/cpu 2>&1 || true
+              awk '$1 == "cpu" { print "proc.stat.cpu_steal_ticks=" $9 }' /proc/stat
+            }
+          }
+
+          capture() {
+            local label="$1"
+            shift
+            local log="$output/$label.log"
+            snapshot "before-$label" > "$output/$label.resources.txt"
+            if "$@" > "$log" 2>&1; then
+              printf 'exit_code=0\n' >> "$output/$label.resources.txt"
+            else
+              local status=$?
+              printf 'exit_code=%s\n' "$status" >> "$output/$label.resources.txt"
+              failures=1
+            fi
+            snapshot "after-$label" >> "$output/$label.resources.txt"
+            cat "$log"
+            cat "$output/$label.resources.txt"
+          }
+
+          {
+            echo "workflow_sha=$GITHUB_SHA"
+            echo "diagnostic_checkout_head=$(git -C "$GITHUB_WORKSPACE/diagnostic" rev-parse HEAD)"
+            echo "runtime_head=$(git -C "$GITHUB_WORKSPACE/runtime" rev-parse HEAD)"
+            echo "runtime_expected=$RUNTIME_SHA"
+            echo "runner_image_os=${ImageOS:-unknown}"
+            echo "runner_image_version=${ImageVersion:-unknown}"
+            echo "go=$(go version)"
+            echo "gomaxprocs=${GOMAXPROCS:-default}"
+            uname -a
+            cat /etc/os-release
+            lscpu
+            for source_path in \
+              code/programs/go/kiln \
+              code/programs/go/kiln/internal/trace \
+              code/programs/go/kiln/internal/traced \
+              code/packages/go/lexer \
+              code/packages/go/parser \
+              code/packages/go/strace-lexer \
+              code/packages/go/strace-parser
+            do
+              echo "runtime_tree $source_path $(git -C "$GITHUB_WORKSPACE/runtime" rev-parse "HEAD:$source_path")"
+            done
+            gate_test=code/programs/go/kiln/sandbox_tracesize_linux_amd64_test.go
+            measure_source=code/programs/go/kiln/internal/trace/measure.go
+            fixture=code/programs/go/kiln/internal/trace/testdata/build.strace
+            echo "gate_test_blob=$(git -C "$GITHUB_WORKSPACE/runtime" rev-parse "HEAD:$gate_test")"
+            echo "measure_source_blob=$(git -C "$GITHUB_WORKSPACE/runtime" rev-parse "HEAD:$measure_source")"
+            echo "fixture_blob=$(git -C "$GITHUB_WORKSPACE/runtime" rev-parse "HEAD:$fixture")"
+            echo "fixture_sha256=$(sha256sum "$GITHUB_WORKSPACE/runtime/$fixture" | cut -d' ' -f1)"
+            echo "diagnostic_helper_sha256=$(sha256sum "$GITHUB_WORKSPACE/diagnostic/code/programs/go/kiln/g1_profile_diagnostic_linux_amd64_test.go" | cut -d' ' -f1)"
+          } | tee "$output/identity.txt"
+
+          if [[ "$(git -C "$GITHUB_WORKSPACE/runtime" rev-parse HEAD)" != "$RUNTIME_SHA" ]]; then
+            echo "runtime checkout does not match pinned current-main A" >&2
+            exit 2
+          fi
+          if [[ "$(git -C "$GITHUB_WORKSPACE/diagnostic" rev-parse HEAD)" != "$GITHUB_SHA" ]]; then
+            echo "diagnostic checkout does not match workflow event SHA" >&2
+            exit 2
+          fi
+          if [[ "$(git -C "$GITHUB_WORKSPACE/runtime" rev-parse "HEAD:code/programs/go/kiln/sandbox_tracesize_linux_amd64_test.go")" != "f834ff07849b8c1dd8b412d99e4e95e119176614" ]]; then
+            echo "G1 admission source drifted" >&2
+            exit 2
+          fi
+          if [[ "$(git -C "$GITHUB_WORKSPACE/runtime" rev-parse "HEAD:code/programs/go/kiln/internal/trace/measure.go")" != "c04b3a093c81262201ecb2f43d48f9a162312eff" ]]; then
+            echo "BestPass1 measurement source drifted" >&2
+            exit 2
+          fi
+          if [[ "$(sha256sum "$GITHUB_WORKSPACE/runtime/code/programs/go/kiln/internal/trace/testdata/build.strace" | cut -d' ' -f1)" != "dc8acd0de1d9b235c3924d0d71e2fcd565274e09ded9975570f429b548525aae" ]]; then
+            echo "G1 fixture drifted" >&2
+            exit 2
+          fi
+
+          # Admission is compiled and run from the untouched pinned runtime tree,
+          # before adding the diagnostic _test.go helper.
+          if ! git -C "$GITHUB_WORKSPACE/runtime" status --porcelain | grep -q .; then
+            capture admission env KILN_G1_GATE=1 go test -count=1 -run '^TestSandboxTraceGateSynthetic$' -v .
+          else
+            echo "runtime checkout is dirty before clean admission" >&2
+            exit 2
+          fi
+
+          helper="$GITHUB_WORKSPACE/diagnostic/code/programs/go/kiln/g1_profile_diagnostic_linux_amd64_test.go"
+          cp "$helper" g1_profile_diagnostic_linux_amd64_test.go
+          go test -c -o "$output/diagnostic.test" . > "$output/compile.log" 2>&1
+          compile_status=$?
+          cat "$output/compile.log"
+          echo "diagnostic_binary_exit=$compile_status" | tee -a "$output/identity.txt"
+          if [[ "$compile_status" -ne 0 ]]; then
+            exit "$compile_status"
+          fi
+          echo "diagnostic_binary_sha256=$(sha256sum "$output/diagnostic.test" | cut -d' ' -f1)" | tee -a "$output/identity.txt"
+          go version -m "$output/diagnostic.test" | tee "$output/diagnostic_binary_modules.txt"
+
+          for replicate in 1 2 3; do
+            profile="$output/cpu-$replicate.pprof"
+            capture "cpu-$replicate" env KILN_G1_PROFILE_KIND=cpu "$output/diagnostic.test" \
+              -test.timeout=30s -test.count=1 -test.run '^TestG1DiagnosticSyntheticSlice$' -test.v \
+              -test.cpuprofile="$profile"
+            if [[ -s "$profile" ]]; then
+              go tool pprof -top -nodecount=40 "$output/diagnostic.test" "$profile" \
+                > "$output/cpu-$replicate-flat.txt" 2>&1 || failures=1
+              go tool pprof -top -cum -nodecount=40 "$output/diagnostic.test" "$profile" \
+                > "$output/cpu-$replicate-cumulative.txt" 2>&1 || failures=1
+              cat "$output/cpu-$replicate-flat.txt" "$output/cpu-$replicate-cumulative.txt"
+            else
+              echo "CPU profile replicate $replicate missing or empty" | tee -a "$output/status.txt"
+              failures=1
+            fi
+          done
+
+          alloc_profile="$output/alloc.pprof"
+          capture allocation env KILN_G1_PROFILE_KIND=alloc "$output/diagnostic.test" \
+            -test.timeout=30s -test.count=1 -test.run '^TestG1DiagnosticSyntheticSlice$' \
+            -test.v -test.memprofile="$alloc_profile" -test.memprofilerate=1
+          if [[ -s "$alloc_profile" ]]; then
+            go tool pprof -sample_index=alloc_objects -top -nodecount=40 "$output/diagnostic.test" "$alloc_profile" \
+              > "$output/alloc-objects.txt" 2>&1 || failures=1
+            go tool pprof -sample_index=alloc_space -top -nodecount=40 "$output/diagnostic.test" "$alloc_profile" \
+              > "$output/alloc-space.txt" 2>&1 || failures=1
+            cat "$output/alloc-objects.txt" "$output/alloc-space.txt"
+          else
+            echo "allocation profile missing or empty" | tee -a "$output/status.txt"
+            failures=1
+          fi
+
+          echo "diagnostic_failures=$failures" | tee -a "$output/status.txt"
+          exit "$failures"
+
+      - name: Upload bounded baseline profiles and provenance
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: kiln-g1-baseline-profile-${{ matrix.os }}
+          path: ${{ runner.temp }}/kiln-g1-baseline/
+          if-no-files-found: error
+          retention-days: 3
