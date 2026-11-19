@@ -1222,6 +1222,56 @@ is not a record directory (a real `pre/` and `traces/`), when a path is not
 absolute, when an output exists (outputs are created `O_EXCL`, mode 0600), or
 when an output would lie inside `--dir`: it never writes there.
 
+*The Markdown verdict.* The `Verdict` section states the cross-check status, and on
+the next line the count of traces SKIPPED as too large to cross-check
+(`skipped_too_large`, with their bytes), so an "ok" cannot be read as covering a
+trace that was only timed. The `Host` section carries the CPU model.
+
+**The census workflow (census PR D): `.github/workflows/kiln-census.yml`.**
+`workflow_dispatch` only; the scheduled weekly run is census PR E. One job,
+`census`, runs on `ubuntu-24.04` and `ubuntu-26.04` (the `kiln-sandbox` job's
+labels; `fail-fast: false`), `permissions: contents: read`, a `kiln-census`
+concurrency group that queues and never cancels, and a job timeout.
+
+- *Inputs.* `shard_count` (integer, 1 to 256, default 16) and `shard_indices`
+  (1 to 8 comma-separated integers, each below the count, no repeats, default
+  `0`). They reach the shell only through `env:` and are validated there
+  (regular expressions, then arithmetic bounds) before anything runs; only the
+  normalised values are exported to later steps. The first step also refuses a
+  ref that is not the repository's default branch, because `prepare` would exit 3
+  on it (P2: trusted runs only).
+- *Recording.* Full checkout (no token kept), Go, the AppArmor userns sysctl
+  and strace (guarded: `command -v strace`, else `code/scripts/ci/apt-install.sh`;
+  the text `apt-get update` is forbidden in any workflow). `kiln` and the build
+  tool are built into `$RUNNER_TEMP/bin` with the Go caches in `$RUNNER_TEMP`
+  too (P3 wants the binaries outside the checkout; a cache under `$HOME` would be
+  a non-empty state root, `state-preloaded`). For each sampled shard, in order:
+  reset and clean the checkout, a fresh `$HOME` (state roots start empty), a fresh
+  record directory and `/tmp/kiln-tmp`; `kiln record prepare`; the traced build,
+  exactly the command of P1, launched under `env -i` with `pre/tools.json`'s
+  `build_tool_env` and wrapped in `::stop-commands::<random token>`;
+  `kiln record collect`; `kiln record census --dir <rec> --records
+  <rec>/records.jsonl --out census-<os>-shard<i>.json --md census-<os>-shard<i>.md`
+  with `GOMEMLIMIT=8GiB` (the cross-check buffers a trace of up to 256 MiB and
+  parses it twice; the hosted runner has 16 GiB). A failing BUILD step is census
+  data, not a job failure; a build cut off by the per-shard timeout (90 minutes),
+  a failed `prepare` or `collect` and any non-zero census exit are.
+- *Output.* Each Markdown summary is appended to `$GITHUB_STEP_SUMMARY`, and
+  `census-*.json` and `census-*.md` are uploaded as the artifact
+  `kiln-census-<os>` (30 days). The upload runs `if: always()`, and the job's
+  verdict is decided by the last step, so a census that exited 4 still publishes.
+- *Exit semantics.* The job fails when any census exits non-zero: 4 (a
+  cross-check mismatch, any allowed divergence or a `parse_panic`), 1
+  (infrastructure) or 2 (usage), or when `prepare` or `collect` fail or a build
+  times out.
+- *Never uploaded.* The record directory, the traces, the sidecars,
+  `records.jsonl` and the strace stderr files: they hold host paths and command
+  lines (4.3). Only the sanitised summary leaves the runner.
+- *Limits.* The sample builds with whatever toolchains the runner image has;
+  steps that need an absent one fail and are recorded as such (they appear under
+  `record_failed` and `sidecar.root_status_nonzero`), which biases the share of
+  recordable actions on a sample.
+
 **P3. Binary placement (D15).** The Kiln binary (the running executable,
 resolved through symlinks) and the build-tool binary must be regular files
 whose path equals its own resolved path, and must lie outside every place a
