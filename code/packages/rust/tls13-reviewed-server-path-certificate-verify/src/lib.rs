@@ -9,9 +9,10 @@
 //! exact destination-bound complete fixed-path proofs. All entry points
 //! authorize the server role, derive and validate the exact retained target
 //! certificate's RSA key, and delegate signature verification to repository-
-//! owned code. They do not establish ordered handshake state, Finished,
-//! records, TLS, HTTP,
-//! OAuth, or network readiness.
+//! owned code. A stronger transition binds only the five complete revocation
+//! variants to the no-PSK server-flight position that expects
+//! `CertificateVerify`, then advances that state to expect `Finished`. It does
+//! not authenticate Finished, records, TLS, HTTP, OAuth, or network readiness.
 
 #![forbid(unsafe_code)]
 
@@ -33,6 +34,8 @@ use tls13_certificate_verify_transcript_binding::{
     verify_transcript_bound_certificate_verify, HashedTranscriptBoundCertificateVerifyInput,
     VerifiedTranscriptBoundCertificateVerify,
 };
+use tls13_handshake::Tls13HandshakeType;
+use tls13_no_psk_server_flight::{NoPskServerFlight, ServerFlightError};
 use tls13_rsa_pss_certificate_verify::Tls13RsaPssCertificateVerifyErrorKind;
 use tls13_rsa_pss_signature_routing::Tls13RsaPssSignatureLimits;
 use x509_certificate::X509Certificate;
@@ -78,6 +81,10 @@ mod alternative_revocation_evidence_sealed {
     pub trait Sealed<'encoded> {
         fn server_certificate(&self) -> &X509Certificate<'encoded>;
     }
+}
+
+mod complete_revocation_certificate_verify_sealed {
+    pub trait Sealed {}
 }
 
 impl<'server_name, 'host, 'target, 'target_encoded, Proof, IntermediateRevocation>
@@ -1919,6 +1926,124 @@ where
     )
 }
 
+macro_rules! impl_complete_revocation_certificate_verify_sealed {
+    ($verification:ident) => {
+        impl<
+                'destination,
+                'target_encoded,
+                'hashed,
+                'bound,
+                'transcript,
+                'output,
+                'message,
+                'body,
+                Evidence: ?Sized,
+            > complete_revocation_certificate_verify_sealed::Sealed
+            for $verification<
+                'destination,
+                'target_encoded,
+                'hashed,
+                'bound,
+                'transcript,
+                'output,
+                'message,
+                'body,
+                Evidence,
+            >
+        {
+        }
+    };
+}
+
+impl_complete_revocation_certificate_verify_sealed!(
+    VerifiedHttpsDnsDestinationReviewedDirectNoCheckCompleteFixedPathRevocationCertificateVerify
+);
+impl_complete_revocation_certificate_verify_sealed!(
+    VerifiedHttpsDnsDestinationReviewedNestedNoCheckCompleteFixedPathRevocationCertificateVerify
+);
+impl_complete_revocation_certificate_verify_sealed!(
+    VerifiedHttpsDnsDestinationReviewedDoubleNestedNoCheckCompleteFixedPathRevocationCertificateVerify
+);
+impl_complete_revocation_certificate_verify_sealed!(
+    VerifiedHttpsDnsDestinationReviewedRecursiveResponderNoCheckCompleteFixedPathRevocationCertificateVerify
+);
+impl_complete_revocation_certificate_verify_sealed!(
+    VerifiedHttpsDnsDestinationReviewedIntermediateStatusResponderRevocationResponderNoCheckCompleteFixedPathRevocationCertificateVerify
+);
+
+/// Non-copyable evidence that an exact complete-revocation server
+/// `CertificateVerify` verdict advanced the no-PSK server flight to Finished.
+pub struct OrderedNoPskServerFlightReviewedRevocationCertificateVerify<
+    'flight,
+    'verification,
+    Verification: ?Sized,
+> {
+    server_flight: &'flight mut NoPskServerFlight,
+    verification: &'verification Verification,
+}
+
+impl<'flight, 'verification, Verification: ?Sized>
+    OrderedNoPskServerFlightReviewedRevocationCertificateVerify<
+        'flight,
+        'verification,
+        Verification,
+    >
+{
+    /// Return the server flight now positioned to accept `Finished`.
+    #[must_use]
+    pub const fn server_flight(&self) -> &NoPskServerFlight {
+        self.server_flight
+    }
+
+    /// Return the exact complete-revocation `CertificateVerify` verdict.
+    #[must_use]
+    pub const fn verification(&self) -> &'verification Verification {
+        self.verification
+    }
+}
+
+impl<Verification: ?Sized> fmt::Debug
+    for OrderedNoPskServerFlightReviewedRevocationCertificateVerify<'_, '_, Verification>
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("OrderedNoPskServerFlightReviewedRevocationCertificateVerify")
+    }
+}
+
+/// Advance an exact no-PSK server flight only with one of the five complete-
+/// revocation HTTPS destination-bound server `CertificateVerify` verdicts.
+///
+/// An unexpected state fails through the ordering policy before mutation. On
+/// success the non-copyable result retains both the mutable flight and the
+/// exact verification proof so a later Finished composition can consume the
+/// transition without detaching the authenticated certificate and revocation
+/// graph.
+#[allow(private_bounds)]
+pub fn advance_no_psk_server_flight_after_reviewed_revocation_certificate_verify<
+    'flight,
+    'verification,
+    Verification: ?Sized + complete_revocation_certificate_verify_sealed::Sealed,
+>(
+    server_flight: &'flight mut NoPskServerFlight,
+    verification: &'verification Verification,
+) -> Result<
+    OrderedNoPskServerFlightReviewedRevocationCertificateVerify<
+        'flight,
+        'verification,
+        Verification,
+    >,
+    ServerFlightError,
+> {
+    server_flight.accept(Tls13HandshakeType::CertificateVerify)?;
+
+    Ok(
+        OrderedNoPskServerFlightReviewedRevocationCertificateVerify {
+            server_flight,
+            verification,
+        },
+    )
+}
+
 #[allow(clippy::too_many_arguments)]
 fn verify_server_certificate_verify_after_role<
     'certificate,
@@ -1998,14 +2123,17 @@ fn require_server_role(
 #[cfg(test)]
 mod tests {
     use super::{
-        alternative_revocation_evidence_sealed, direct_revocation_evidence_sealed,
-        double_nested_revocation_evidence_sealed, nested_revocation_evidence_sealed,
-        recursive_revocation_evidence_sealed, require_server_role, validate_leaf_public_key,
+        advance_no_psk_server_flight_after_reviewed_revocation_certificate_verify,
+        alternative_revocation_evidence_sealed, complete_revocation_certificate_verify_sealed,
+        direct_revocation_evidence_sealed, double_nested_revocation_evidence_sealed,
+        nested_revocation_evidence_sealed, recursive_revocation_evidence_sealed,
+        require_server_role, validate_leaf_public_key,
         verify_https_dns_destination_reviewed_direct_no_check_complete_fixed_path_revocation_certificate_verify,
         verify_https_dns_destination_reviewed_double_nested_no_check_complete_fixed_path_revocation_certificate_verify,
         verify_https_dns_destination_reviewed_intermediate_status_responder_revocation_responder_no_check_complete_fixed_path_revocation_certificate_verify,
         verify_https_dns_destination_reviewed_nested_no_check_complete_fixed_path_revocation_certificate_verify,
         verify_https_dns_destination_reviewed_recursive_responder_no_check_complete_fixed_path_revocation_certificate_verify,
+        OrderedNoPskServerFlightReviewedRevocationCertificateVerify,
         ReviewedServerPathCertificateVerifyError, ReviewedServerPathCertificateVerifyErrorKind,
         VerifiedHttpsDnsDestinationReviewedDirectNoCheckCompleteFixedPathRevocationCertificateVerify,
         VerifiedHttpsDnsDestinationReviewedDoubleNestedNoCheckCompleteFixedPathRevocationCertificateVerify,
@@ -2022,6 +2150,8 @@ mod tests {
         bind_certificate_verify_transcript, hash_transcript_bound_certificate_verify_input,
     };
     use tls13_cipher_suite_policy::{CipherSuite, CipherSuitePolicy, CipherSuitePolicyEntry};
+    use tls13_handshake::Tls13HandshakeType;
+    use tls13_no_psk_server_flight::{NoPskServerFlight, ServerFlightErrorKind, ServerFlightState};
     use tls13_rsa_pss_signature_routing::Tls13RsaPssSignatureLimits;
     use tls13_signature_scheme_policy::{SignatureScheme, SignatureSchemePolicy};
     use tls13_transcript::{PendingTls13Transcript, TranscriptPolicy};
@@ -2089,6 +2219,13 @@ mod tests {
 
     struct TestAlternativeRevocationEvidence<'certificate, 'encoded> {
         certificate: &'certificate X509Certificate<'encoded>,
+    }
+
+    struct TestCompleteRevocationCertificateVerify;
+
+    impl complete_revocation_certificate_verify_sealed::Sealed
+        for TestCompleteRevocationCertificateVerify
+    {
     }
 
     impl<'certificate, 'encoded> alternative_revocation_evidence_sealed::Sealed<'encoded>
@@ -2410,6 +2547,22 @@ mod tests {
                 u8,
             >;
         assert_alternative_evidence::<'static, OfficialAlternativeEvidence>();
+
+        fn assert_ordered_transition_admission<Verification>()
+        where
+            Verification: complete_revocation_certificate_verify_sealed::Sealed,
+        {
+        }
+        assert_ordered_transition_admission::<RevocationProof>();
+        assert_ordered_transition_admission::<NestedRevocationProof>();
+        assert_ordered_transition_admission::<DoubleNestedRevocationProof>();
+        assert_ordered_transition_admission::<RecursiveRevocationProof>();
+        assert_ordered_transition_admission::<AlternativeRevocationProof>();
+
+        type OrderedProof =
+            OrderedNoPskServerFlightReviewedRevocationCertificateVerify<'static, 'static, u8>;
+        assert!(core::any::type_name::<OrderedProof>()
+            .contains("OrderedNoPskServerFlightReviewedRevocationCertificateVerify"));
     }
 
     fn exercise_direct_revocation_entry_point(role: CertificateVerifyRole, expect_success: bool) {
@@ -2934,6 +3087,63 @@ mod tests {
     #[test]
     fn alternative_revocation_entry_point_rejects_client_before_scratch_mutation() {
         exercise_alternative_revocation_entry_point(CertificateVerifyRole::Client, false);
+    }
+
+    #[test]
+    fn ordered_transition_retains_exact_verification_and_client_auth_requirement() {
+        let mut server_flight = NoPskServerFlight::new();
+        server_flight
+            .accept(Tls13HandshakeType::EncryptedExtensions)
+            .unwrap();
+        server_flight
+            .accept(Tls13HandshakeType::CertificateRequest)
+            .unwrap();
+        server_flight
+            .accept(Tls13HandshakeType::Certificate)
+            .unwrap();
+        let verification = TestCompleteRevocationCertificateVerify;
+
+        {
+            let ordered =
+                advance_no_psk_server_flight_after_reviewed_revocation_certificate_verify(
+                    &mut server_flight,
+                    &verification,
+                )
+                .unwrap();
+
+            assert_eq!(
+                ordered.server_flight().state(),
+                ServerFlightState::ExpectFinished
+            );
+            assert!(ordered.server_flight().client_authentication_requested());
+            assert!(core::ptr::eq(ordered.verification(), &verification));
+            assert_eq!(
+                format!("{ordered:?}"),
+                "OrderedNoPskServerFlightReviewedRevocationCertificateVerify",
+            );
+        }
+
+        assert_eq!(server_flight.state(), ServerFlightState::ExpectFinished);
+        assert!(server_flight.client_authentication_requested());
+    }
+
+    #[test]
+    fn ordered_transition_rejects_wrong_state_without_mutation() {
+        let mut server_flight = NoPskServerFlight::new();
+        let verification = TestCompleteRevocationCertificateVerify;
+
+        let error = advance_no_psk_server_flight_after_reviewed_revocation_certificate_verify(
+            &mut server_flight,
+            &verification,
+        )
+        .unwrap_err();
+
+        assert_eq!(error.kind(), ServerFlightErrorKind::UnexpectedMessage);
+        assert_eq!(
+            server_flight.state(),
+            ServerFlightState::ExpectEncryptedExtensions,
+        );
+        assert!(!server_flight.client_authentication_requested());
     }
 
     #[test]

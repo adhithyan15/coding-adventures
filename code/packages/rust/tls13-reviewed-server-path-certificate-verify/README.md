@@ -54,6 +54,22 @@ status-responder evidence retention, leaf-key derivation, and role-first
 scratch non-mutation; the upstream sealed destination-to-revocation boundary
 enforces the exact-leaf object binding admitted by the production entry point.
 
+An ordered no-PSK server-flight transition accepts only those five sealed
+destination-bound complete-revocation `CertificateVerify` result types. The
+flight must already be positioned at `ExpectCertificateVerify`; success
+advances it to `ExpectFinished` and returns non-copyable evidence retaining a
+mutable borrow of that exact flight plus the exact verification proof. A wrong
+state fails through the ordering policy without mutation, and the optional
+client-authentication requirement remains attached to the flight.
+
+This bounded transition does not remove the lower-level message-type API or
+prove that its earlier accepted types and the verified message share one
+encoded handshake stream. It does not update a transcript, authenticate
+Finished, enforce the later client-authentication response, protect records,
+perform I/O, or make TLS, HTTPS, HTTP, OAuth transport, or live-provider access
+available. It accesses no credential and causes no signing, provider, trace,
+storage, clock, network, or other external effect.
+
 ## Development
 
 ```bash

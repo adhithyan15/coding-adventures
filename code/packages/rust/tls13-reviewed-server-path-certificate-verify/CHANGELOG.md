@@ -6,6 +6,9 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- Ordered no-PSK server-flight transition from `ExpectCertificateVerify` to
+  `ExpectFinished` that admits only the five sealed destination-bound complete-
+  revocation signature verdicts and retains the exact flight and proof.
 - Exact HTTPS DNS destination, alternative intermediate-status-responder
   no-check complete fixed-path revocation, and TLS 1.3 server
   `CertificateVerify` composition with sealed exact-leaf admission, retained
