@@ -16,7 +16,7 @@ fn field<'a>(value: &'a JsonValue, name: &str) -> &'a JsonValue {
     }
 }
 
-fn string<'a>(value: &'a JsonValue) -> &'a str {
+fn string(value: &JsonValue) -> &str {
     match value {
         JsonValue::String(text) => text,
         _ => panic!("expected string, got {value:?}"),
@@ -42,7 +42,9 @@ fn parse_u64(text: &str) -> u64 {
 fn bytes_hex(text: &str) -> Vec<u8> {
     assert_eq!(text.len() % 2, 0, "odd-length hex input");
     text.as_bytes()
-        .chunks_exact(2)
+        .as_chunks::<2>()
+        .0
+        .iter()
         .map(|pair| u8::from_str_radix(std::str::from_utf8(pair).unwrap(), 16).unwrap())
         .collect()
 }
@@ -442,7 +444,7 @@ fn check_exhaustive(fixture: &JsonValue) {
             "{op} index 0 (empty input)"
         );
         assert_eq!(index, 65_793);
-        let _ = validate_stream(stream, stream, count, width).unwrap();
+        validate_stream(stream, stream, count, width).unwrap();
         if op == "fnv1a_32" {
             assert_eq!(
                 validate_stream(&stream[..stream.len() - 1], stream, count, width),
