@@ -1,6 +1,10 @@
 package traced
 
-import "sort"
+import (
+	"sort"
+
+	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/trace"
+)
 
 // The census observer (KILN04, "Census side file")
 // ================================================
@@ -40,6 +44,91 @@ type CensusEntry struct {
 
 type censusKey struct{ kind, path string }
 
+// Op classes (census only)
+// ------------------------
+//
+// `host-read` says an action looked at a host path; it does not say HOW.  The
+// answer matters for the fix: a stat of /usr/lib/x is a lookup the image could
+// vouch for, a read of it is content, a listing sees every sibling.  The
+// classifier knows the call it is judging, so it tells the observer, in a CLOSED
+// vocabulary (OpClasses): the class is chosen by the classifier's own state,
+// never copied from the trace.
+//
+//	listing        getdents: the call saw every name in a directory
+//	absent-probe   the look found nothing (ENOENT/ENOTDIR): a probe
+//	open           open/openat/creat that found something
+//	stat           a stat, access, readlink or other metadata call that found it
+//	lookup         a link crossed on the way to a path, not the call's own target
+//	exec           execve/execveat (and what the kernel loaded for it)
+//	chdir          chdir
+//	write          a call that can write
+//	other          anything else
+//
+// Precedence: listing, then absent-probe, then the call's own kind.  Nothing
+// reads these counts for a verdict: record.json is byte-identical with and
+// without a Census (TestCensusDoesNotChangeTheRecord).
+var OpClasses = []string{"listing", "absent-probe", "open", "stat", "lookup", "exec", "chdir", "write", "other"}
+
+// IsOpClass says s is a member of OpClasses.
+func IsOpClass(s string) bool {
+	for _, c := range OpClasses {
+		if s == c {
+			return true
+		}
+	}
+	return false
+}
+
+// opKindOf is the call's own kind for the op class, from the parser's table
+// kind (a fixed vocabulary).
+func opKindOf(ev *trace.Event) string {
+	switch ev.Kind {
+	case trace.KindOpen:
+		return "open"
+	case trace.KindMetadata:
+		return "stat"
+	case trace.KindListing:
+		return "listing"
+	case trace.KindDirectory:
+		return "chdir"
+	case trace.KindWrite:
+		return "write"
+	case trace.KindProcess:
+		return "exec"
+	}
+	return "other"
+}
+
+// opClass is the class of the observation in progress.
+func (c *classifier) opClass() string {
+	switch {
+	case c.obsListing:
+		return "listing"
+	case !c.obsPresent:
+		return "absent-probe"
+	case IsOpClass(c.opKind):
+		return c.opKind
+	}
+	return "other"
+}
+
+// noteOp counts one occurrence of kind raised by an observation of the given
+// class.  A class outside OpClasses is dropped, so the table stays bounded.
+func (c *Census) noteOp(kind, class string) {
+	if c == nil || !IsOpClass(class) {
+		return
+	}
+	if c.Ops == nil {
+		c.Ops = map[string]map[string]int64{}
+	}
+	m := c.Ops[kind]
+	if m == nil {
+		m = map[string]int64{}
+		c.Ops[kind] = m
+	}
+	m[class]++
+}
+
 // Census collects path-carrying reasons.  Use NewCensus.  It is not safe for
 // concurrent use (a classifier is serial).
 type Census struct {
@@ -49,6 +138,9 @@ type Census struct {
 	// pairs dropped because a bound was reached.
 	Total    int64
 	Overflow map[string]int64
+	// Ops counts, per kind, the occurrences by op class (OpClasses).  Only
+	// host-read is split so far.
+	Ops map[string]map[string]int64
 }
 
 // NewCensus returns an empty observer.

@@ -232,6 +232,11 @@ type classifier struct {
 	// census, when set, observes path-carrying reasons before the cap.  It is
 	// write-only: nothing in the classifier reads it.
 	census *Census
+	// opKind, obsPresent and obsListing say what the call being observed IS, for
+	// the census alone (census.go, "op class"): the classifier's decisions never
+	// read them.  opKind is set per event, obsPresent and obsListing per observe.
+	opKind                 string
+	obsPresent, obsListing bool
 	// incomplete is the negation of RawRecord.WritesComplete: set the moment
 	// something happens that could hide a write from Writes/TrackedWrites.
 	// Every setter says which trigger of KILN04 section 5.5 it is.
@@ -279,6 +284,10 @@ func (c *classifier) reason(r string) {
 	c.reasons[r] = true
 	if c.census != nil {
 		c.census.noteReason(r)
+		if strings.HasPrefix(r, "host-read") {
+			// Census only: what kind of look raised it (see opClass).
+			c.census.noteOp("host-read", c.opClass())
+		}
 	}
 	// W8: a read-side problem is only a reason, but the same problem while a
 	// write is being placed means the write may be somewhere else.
@@ -292,6 +301,18 @@ func (c *classifier) reason(r string) {
 func (c *classifier) reasonAt(r, path string) {
 	if c.census != nil {
 		c.census.noteClean(r, c.redact(path))
+	}
+	c.reason(r)
+}
+
+// reasonSub is reason for one whose text carries no path and whose KIND the
+// census wants split by cause (unstable-path, exec-unreadable): the record gets
+// exactly the reason it always got, and the census observer alone is told the
+// fixed sub-code and the redacted path.  The sub-code is a string literal at
+// each call site, never a slice of the input.
+func (c *classifier) reasonSub(r, sub, path string) {
+	if c.census != nil {
+		c.census.noteClean(r+":"+sub, c.redact(path))
 	}
 	c.reason(r)
 }
@@ -330,6 +351,7 @@ func (c *classifier) event(t *trace.Trace, ev *trace.Event) {
 	}
 	c.callOK = ev.Result.OK
 	c.callPresent = presence(ev.Result)
+	c.opKind = opKindOf(ev)
 	switch ev.Kind {
 	case trace.KindOpen:
 		c.open(ev)
@@ -615,6 +637,7 @@ func (c *classifier) isCreated(abs string) bool {
 //	inside the repository      -> a pkg:, path: or list: entry
 //	anywhere else              -> the host-root rules
 func (c *classifier) observe(abs string, present, listing bool) {
+	c.obsPresent, c.obsListing = present, listing
 	switch {
 	case isVirtual(abs):
 		c.observeVirtual(abs)
@@ -966,8 +989,8 @@ func (c *classifier) touchedAfterParents(abs string, after pos) bool {
 // lookups.
 func (c *classifier) checkStability() {
 	idx := map[string]*modIndex{}
-	c.judge(&c.lookupSet, idx, func() { c.reason(rUnstable) })
-	c.judge(&c.wr, idx, func() { c.incomplete = true })
+	c.judge(&c.lookupSet, idx, func(p, sub string) { c.reasonSub(rUnstable, sub, p) })
+	c.judge(&c.wr, idx, func(string, string) { c.incomplete = true })
 	for p, from := range c.execReads {
 		// Measured from the FIRST exec's start: any change that completed after
 		// it began may have altered the bytes the kernel read.
@@ -976,17 +999,19 @@ func (c *classifier) checkStability() {
 			bad = true
 		}
 		if bad {
-			c.reason(rExecUnreadable)
+			c.reasonSub(rExecUnreadable, "modified-after-exec", p)
 		}
 	}
 }
 
 // judge applies the stability rule to the lookups in l; bad is called once
-// for each lookup that is unstable.
-func (c *classifier) judge(l *lookupSet, idx map[string]*modIndex, bad func()) {
+// for each lookup that is unstable, with the path and a fixed sub-code saying
+// WHICH rule it failed (the census splits unstable-path by it; the verdict
+// ignores both arguments).
+func (c *classifier) judge(l *lookupSet, idx map[string]*modIndex, bad func(path, sub string)) {
 	for p, at := range l.seen {
 		if !c.stable(p, at) {
-			bad()
+			bad(p, "component-changed")
 		}
 	}
 	for p, sp := range l.seenAbsent {
@@ -1005,7 +1030,7 @@ func (c *classifier) judge(l *lookupSet, idx map[string]*modIndex, bad func()) {
 			idx[p] = mi
 		}
 		if mi.unsafe(ms, sp.s, sp.e) || removedBeforeMade(ms, c.firstMade(ms), sp.s) {
-			bad()
+			bad(p, "absent-changed")
 		}
 	}
 	for p, at := range l.seenFinal {
@@ -1013,14 +1038,14 @@ func (c *classifier) judge(l *lookupSet, idx map[string]*modIndex, bad func()) {
 		// leftover is then an untracked observation, for the merge job); one it
 		// changed must satisfy the creation rule.
 		if len(c.mods[p]) > 0 && !c.createdOnce(p, at) {
-			bad()
+			bad(p, "final-changed")
 		}
 	}
 	// The followed finals of a successful stat or exec: the open-only rule,
 	// else the strict rules they would have met as ordinary lookups.
 	for p, sp := range l.relFinal {
 		if len(c.mods[p]) > 0 && !c.openOnly(p, sp, false) && !c.createdOnce(p, sp.s) {
-			bad()
+			bad(p, "followed-final-changed")
 		}
 	}
 	for p, sp := range l.relAbs {
@@ -1039,7 +1064,7 @@ func (c *classifier) judge(l *lookupSet, idx map[string]*modIndex, bad func()) {
 			idx[p] = mi
 		}
 		if mi.unsafe(ms, sp.s, sp.e) {
-			bad()
+			bad(p, "followed-absent-changed")
 		}
 	}
 	// A followed final name that the post-run disk shows absent was removed, or
@@ -1052,15 +1077,15 @@ func (c *classifier) judge(l *lookupSet, idx map[string]*modIndex, bad func()) {
 		ms := c.mods[p]
 		firstMade := c.firstMade(ms)
 		if g.present && !firstMade.before(g.from) {
-			bad()
+			bad(p, "gone-but-found")
 		}
 		if removedBeforeMade(ms, firstMade, g.from) {
-			bad()
+			bad(p, "removed-before-made")
 		}
 	}
 	for p := range l.seenFile {
 		if c.touchedAfter(p, pos{}, true) {
-			bad()
+			bad(p, "file-changed")
 		}
 	}
 	for p, sp := range l.ownSeen {
@@ -1083,7 +1108,7 @@ func (c *classifier) judge(l *lookupSet, idx map[string]*modIndex, bad func()) {
 				idx[q] = mi
 			}
 			if mi.overlaps(ms, sp.s, sp.e) {
-				bad()
+				bad(p, "own-overlap")
 				break
 			}
 		}

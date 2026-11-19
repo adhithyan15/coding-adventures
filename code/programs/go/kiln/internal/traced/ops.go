@@ -169,7 +169,7 @@ func (c *classifier) openCall(ev *trace.Event, f openFlags) {
 		_, a := c.rel(abs)
 		_, b := c.rel(ret)
 		if a || b {
-			c.reason(rUnstable)
+			c.reasonSub(rUnstable, "fd-path-differs", abs)
 		}
 		abs = ret
 	}
