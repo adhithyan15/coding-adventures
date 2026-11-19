@@ -453,6 +453,7 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	vosImplementationRow("vos-sched-any"),
 	vosImplementationRow("vos-sched-rr"),
 	vosImplementationRow("vos-probe-ready"),
+	vosContractRow("vos-sched-contract"),
 	{
 		name:     "rust/programs/vos-capacity-probe",
 		language: "rust",
@@ -1425,6 +1426,22 @@ func vosImplementationRow(crate string) repositoryInputConsumer {
 		inputs:   "its generated document " + doc + " and the VOS tools its BUILD runs outside Cargo (vos-link check-doc, vos-shape-check, the evidence generator, the capability analyzer)",
 		matches:  func(changed string) bool { return changed == doc || isVosToolInput(changed) },
 		paths:    append([]string{doc}, vosToolPaths...),
+	}
+}
+
+// vosContractRow is the row of one VOS contract crate (`code/packages/rust/<crate>`, kind
+// contract, VOS-039b-1).  Its BUILD runs `vos-link check-contract` and `check-component` outside
+// Cargo (the generated Rust of the contract crate does not depend on them), so a change to a VOS
+// tool or grammar must select it.  A contract has no generated document of its own (the
+// implementations embed its parts), so unlike vosImplementationRow nothing under code/specs
+// selects it; its own files select it through the package path.
+func vosContractRow(crate string) repositoryInputConsumer {
+	return repositoryInputConsumer{
+		name:     "rust/" + crate,
+		language: "rust",
+		inputs:   "the VOS tools its BUILD runs outside Cargo (vos-link check-contract, vos-link check-component, vos-shape-check, the capability analyzer)",
+		matches:  isVosToolInput,
+		paths:    append([]string{}, vosToolPaths...),
 	}
 }
 

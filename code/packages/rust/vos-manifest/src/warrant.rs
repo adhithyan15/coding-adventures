@@ -283,6 +283,74 @@ pub fn claims_of_block(block: &str) -> Result<Vec<ClaimFact>, WarrantFailure> {
     })
 }
 
+/// What kind of declaration a block holds (for [`declarations_of_block`]).
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum DeclKind {
+    /// `model NAME(...) -> T = body`.
+    Model,
+    /// `claim NAME: ...`.
+    Claim,
+    /// Anything else: `record`, `variant`, `op`, `bound`, `example`, `assume`, ...
+    Other,
+}
+
+/// One top-level declaration of a block: what it is, its name, and where it lies.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct DeclFact {
+    /// What kind.
+    pub kind: DeclKind,
+    /// The declared name (empty for [`DeclKind::Other`]).
+    pub name: String,
+    /// Byte offset of the declaration's start **in the block**.
+    pub start: usize,
+    /// Byte offset one past its end **in the block**.
+    pub end: usize,
+    /// A `model` with a body (a model without one is a bound operation's stand-in).
+    pub has_body: bool,
+}
+
+/// The top-level declarations of a block, with their byte spans **in the block**, by the
+/// Warrant parser (nothing is scanned).
+///
+/// `vos-link check-contract` replaces a model of the contract block by the declaration of a
+/// mutant part, **by span**: a text search for "the same line" could replace the wrong place
+/// or fail silently, a parsed span cannot.  The block is wrapped in a header and parsed only
+/// (it need not type-check alone).  A block whose normalised text differs from its bytes is
+/// refused, because then a span would not index the block; an admitted part is LF-only ASCII,
+/// so this never fires for one.
+pub fn declarations_of_block(block: &str) -> Result<Vec<DeclFact>, WarrantFailure> {
+    let header = "warrant vos_block v1\n";
+    let text = format!("{header}{block}");
+    with_parsed(&text, |file, _tokens, norm| {
+        if norm != text {
+            return Err(refuse(
+                WarrantStage::Parse,
+                &text,
+                "the block's normalised text differs from its bytes: its spans would not index it"
+                    .to_string(),
+                None,
+            ));
+        }
+        let mut out = Vec::new();
+        for d in &file.declarations {
+            let (start, end) = declaration_span(d);
+            let (kind, name, has_body) = match d {
+                Declaration::Model(m) => (DeclKind::Model, m.name.to_string(), m.body.is_some()),
+                Declaration::Claim(c) => (DeclKind::Claim, c.name.to_string(), false),
+                _ => (DeclKind::Other, String::new(), false),
+            };
+            out.push(DeclFact {
+                kind,
+                name,
+                start: start.saturating_sub(header.len()),
+                end: end.saturating_sub(header.len()),
+                has_body,
+            });
+        }
+        Ok(out)
+    })
+}
+
 fn declaration_span(d: &Declaration<'_>) -> (usize, usize) {
     match d {
         Declaration::Model(x) => x.span,

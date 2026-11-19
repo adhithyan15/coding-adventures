@@ -93,4 +93,4 @@ records `max_observed_heap 0` for each. (The source has no allocator, SH1; the r
 shape fact into evidence.)
 
 The nine model-level lemmas of the contract are not here: they live in the contract package's
-`lemmas.part`, evaluated by `vos-sched-contract-check` (VOS02 R1.4, VOS-D064).
+`lemmas.part`, evaluated by `vos-link check-contract` (VOS02 R1.4, VOS-D064, VOS-039b-1).

@@ -95,9 +95,9 @@ class K contract or component crate cannot depend on the Warrant tooling
 that wants its Warrant text parsed, type-checked and evaluated before `vos-link gen-doc`
 exists (VOS-033) puts those tests in a test-only sibling crate with `class = "H"` in its
 `vos.toml`, which depends normally on the contract crate (so the build graph reruns it
-when the contract changes) and on `warrant-grammar`. `vos-sched-contract-check` is the
-first (VOS10 section 12); it is folded into `vos-link`'s tests when VOS-033 lands
-(VOS-D049).
+when the contract changes) and on `warrant-grammar`. `vos-sched-contract-check` was the
+first (VOS10 section 12); `vos-link check-contract` (VOS-039b-1, VOS02 D-GD11) replaced it, and no
+new contract needs a sibling crate.
 
 **`#[cfg(test)]` items are masked.** An item whose attribute list contains
 exactly `cfg(test)` is removed from the token stream before any rule runs. It

@@ -1,0 +1,1 @@
+  model pre_ins(t: U8) -> Bool = t < 3u8
