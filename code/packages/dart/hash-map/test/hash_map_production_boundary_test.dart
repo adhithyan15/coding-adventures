@@ -1,16 +1,15 @@
 import 'package:coding_adventures_hash_map/coding_adventures_hash_map.dart';
 import 'package:test/test.dart';
 
-import 'hash_map_shared_fixture_test.dart' as fixture;
-
 void main() {
   test(
     'public maximum-capacity chaining accepts its boundary and rejects growth',
     () {
-      const maximum = HashMapLimits.maximumCapacity;
+      const maximum = 1048576;
+      expect(HashMapLimits.maximumCapacity, maximum);
       final before = HashMap<int>.fromEntries(
         _entries(maximum),
-        capacity: maximum,
+        capacity: 524288,
         strategy: CollisionStrategy.separateChaining,
         hashAlgorithm: const HashAlgorithm.fnv1a32(),
       );
@@ -18,6 +17,14 @@ void main() {
       expect(before.capacity, maximum);
       expect(before.has(_key(maximum - 1)), isTrue);
       expect(before.valueForKey(_key(maximum - 1)), maximum - 1);
+      for (var value = 0; value < maximum; value++) {
+        expect(before.has(_key(value)), isTrue, reason: 'chaining key=$value');
+        expect(
+          before.valueForKey(_key(value)),
+          value,
+          reason: 'chaining key=$value value',
+        );
+      }
 
       final distinct = _key(maximum);
       final growthError = _captureError(
@@ -44,7 +51,8 @@ void main() {
       expect(afterRemove.has(distinct), isFalse);
       expect(before.has(_key(maximum - 1)), isTrue);
       print(
-        'DT18 public chaining boundary: capacity=$maximum, entries=$maximum, '
+        'DT18 public chaining boundary: capacity=$maximum after growth from '
+        '524288, entries=$maximum, '
         'distinct-at-limit rejected; replace and delete/reinsert preserved '
         'capacity and earlier versions.',
       );
@@ -55,11 +63,12 @@ void main() {
   test(
     'public maximum-capacity probing pins the 75 percent transition',
     () {
-      const maximum = HashMapLimits.maximumCapacity;
+      const maximum = 1048576;
+      expect(HashMapLimits.maximumCapacity, maximum);
       const threshold = maximum * 3 ~/ 4;
       final before = HashMap<int>.fromEntries(
         _entries(threshold),
-        capacity: maximum,
+        capacity: 524288,
         strategy: CollisionStrategy.linearProbing,
         hashAlgorithm: const HashAlgorithm.fnv1a32(),
       );
@@ -67,6 +76,14 @@ void main() {
       expect(before.capacity, maximum);
       expect(before.has(_key(threshold - 1)), isTrue);
       expect(before.valueForKey(_key(threshold - 1)), threshold - 1);
+      for (var value = 0; value < threshold; value++) {
+        expect(before.has(_key(value)), isTrue, reason: 'probing key=$value');
+        expect(
+          before.valueForKey(_key(value)),
+          value,
+          reason: 'probing key=$value value',
+        );
+      }
 
       final distinct = _key(threshold);
       final growthError = _captureError(
@@ -93,7 +110,8 @@ void main() {
       expect(afterRemove.has(distinct), isFalse);
       expect(before.has(_key(threshold - 1)), isTrue);
       print(
-        'DT18 public probing boundary: capacity=$maximum, entries=$threshold '
+        'DT18 public probing boundary: capacity=$maximum after growth from '
+        '524288, entries=$threshold '
         '(75%); crossing-at-limit rejected, replacement and delete/reinsert '
         'preserved the exact threshold and earlier versions.',
       );
@@ -103,7 +121,8 @@ void main() {
 
   test('public key payload accepts exactly 1 MiB and rejects one byte more',
       () {
-    const maximum = HashMapLimits.maximumKeyByteCount;
+    const maximum = 1048576;
+    expect(HashMapLimits.maximumKeyByteCount, maximum);
     final maximumKey = HashMapKey.bytes(List<int>.filled(maximum, 0x5a));
     expect(maximumKey.encodedBytes, hasLength(maximum + 9));
     final map = HashMap<int>(

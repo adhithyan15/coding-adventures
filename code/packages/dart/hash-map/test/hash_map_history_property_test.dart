@@ -104,12 +104,14 @@ void main() {
             var model = List<int>.filled(keyIds.length, 0);
             final versions = <HashMap<Object?>>[current];
             final modelVersions = <List<int>>[List<int>.of(model)];
-            final versionOrdinals = <int>[ordinalOffset];
+            // Every sequence starts from the one canonical empty history at
+            // ordinal zero, regardless of the full sequence's length block.
+            final versionOrdinals = <int>[0];
 
             _assertHistoryState(
               current,
               model,
-              ordinalOffset,
+              0,
               strategyName,
               streams,
               physicalStreams,
@@ -230,7 +232,7 @@ void main() {
         for (var index = 0; index < stringKeys.length; index++)
           'string:generated-$index-🙂',
       ];
-      final map = <String, Object?>{};
+      final model = <_ModelEntry>[];
       var assertions = 0;
 
       for (var caseIndex = 0; caseIndex < 512; caseIndex++) {
@@ -242,13 +244,13 @@ void main() {
           strategy: strategy,
           hashAlgorithm: const HashAlgorithm.fnv1a32(),
         );
-        map.clear();
+        model.clear();
         for (var operation = 0; operation < 96; operation++) {
           final slot = random.nextInt(keys.length);
           final identity = identities[slot];
           if (random.nextInt(4) == 0) {
             actual = actual.removingValueForKey(keys[slot]);
-            map.remove(identity);
+            model.removeWhere((entry) => entry.key == identity);
           } else {
             final selector = random.nextInt(5);
             final Object? value = switch (selector) {
@@ -259,10 +261,17 @@ void main() {
               _ => random.nextInt(1000),
             };
             actual = actual.setting(value, forKey: keys[slot]);
-            map[identity] = value;
+            final previous = model.indexWhere((entry) => entry.key == identity);
+            if (previous < 0) {
+              model.add(_ModelEntry(identity, value));
+            } else {
+              model[previous] = _ModelEntry(identity, value);
+            }
           }
           for (var querySlot = 0; querySlot < keys.length; querySlot++) {
-            final expectedPresent = map.containsKey(identities[querySlot]);
+            final expectedIndex =
+                model.indexWhere((entry) => entry.key == identities[querySlot]);
+            final expectedPresent = expectedIndex >= 0;
             expect(
               actual.has(keys[querySlot]),
               expectedPresent,
@@ -271,25 +280,69 @@ void main() {
             );
             expect(
               actual.valueForKey(keys[querySlot]),
-              map[identities[querySlot]],
+              expectedPresent ? model[expectedIndex].value : null,
               reason:
                   'seed=0x$seed case=$caseIndex op=$operation value=$querySlot',
             );
             assertions += 2;
           }
-          expect(actual.count, map.length,
+          expect(actual.count, model.length,
               reason: 'seed=0x$seed case=$caseIndex op=$operation count');
         }
+
+        // Reproducibly mutate caller-owned byte lists after key construction.
+        // The local expected framing is encoded from the saved source bytes,
+        // never from the public key's equality or encodedBytes getter.
+        final payload = List<int>.generate(
+          random.nextInt(65),
+          (_) => random.nextInt(256),
+        );
+        final savedPayload = List<int>.of(payload);
+        final ownedKey = HashMapKey.bytes(payload);
+        final ownershipMap = HashMap<int>(
+          capacity: 3,
+          strategy: strategy,
+          hashAlgorithm: const HashAlgorithm.fnv1a32(),
+        ).setting(caseIndex, forKey: ownedKey);
+        final changedPayload = List<int>.of(payload);
+        if (changedPayload.isEmpty) {
+          changedPayload.add(1);
+        } else {
+          changedPayload[0] ^= 1;
+        }
+        payload
+          ..clear()
+          ..addAll(changedPayload);
+        expect(ownedKey.encodedBytes, _independentEncoding(0, savedPayload),
+            reason: 'seed=0x$seed case=$caseIndex copied source bytes');
+        expect(ownershipMap.has(HashMapKey.bytes(savedPayload)), isTrue,
+            reason: 'seed=0x$seed case=$caseIndex original key remains');
+        expect(ownershipMap.has(HashMapKey.bytes(changedPayload)), isFalse,
+            reason: 'seed=0x$seed case=$caseIndex changed key is distinct');
       }
       expect(assertions, 512 * 96 * keys.length * 2);
       print(
         'DT18 deterministic generated sequences: seed=0x$seed, '
-        '512 cases × 96 operations; public query assertions=$assertions. '
+        '512 cases × 96 operations plus 512 byte-list mutation cases; '
+        'public query assertions=$assertions. '
         'Replayable; no coverage feedback or shrinking.',
       );
     },
   );
 }
+
+class _ModelEntry {
+  const _ModelEntry(this.key, this.value);
+  final String key;
+  final Object? value;
+}
+
+List<int> _independentEncoding(int tag, List<int> payload) => [
+      tag,
+      for (var shift = 0; shift < 64; shift += 8)
+        payload.length >> shift & 0xff,
+      ...payload,
+    ];
 
 void _assertHistoryState(
   HashMap<Object?> map,

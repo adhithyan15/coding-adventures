@@ -1,4 +1,4 @@
-import 'dart:collection';
+import 'dart:collection' show IterableBase, ListBase;
 import 'dart:convert';
 
 import 'package:coding_adventures_hash_map/coding_adventures_hash_map.dart';
@@ -139,7 +139,7 @@ void expectFixtureError(Object error, Map<String, dynamic> expected) {
     case 'invalid_byte':
       expect(error, isA<InvalidByte>());
       expect((error as InvalidByte).index, fields['index']);
-      expect((error as InvalidByte).value, fields['value']);
+      expect(error.value, fields['value']);
     case 'malformed_utf16':
       expect(error, isA<MalformedUtf16>());
       expect(
@@ -147,7 +147,7 @@ void expectFixtureError(Object error, Map<String, dynamic> expected) {
     case 'key_too_long':
       expect(error, isA<KeyTooLong>());
       expect((error as KeyTooLong).actual, fields['actual']);
-      expect((error as KeyTooLong).maximum, fields['maximum']);
+      expect(error.maximum, fields['maximum']);
     default:
       fail('Unknown expected error id: $id');
   }
@@ -170,6 +170,17 @@ void main() {
   test('fixture snapshot preserves the canonical JSON bytes', () {
     final bytes = base64Decode(hashMapFixtureJsonBase64Chunks.join());
     expect(bytes, hasLength(469237));
+    expect(
+      _sha256Hex(const [0x61, 0x62, 0x63]),
+      'ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad',
+      reason: 'SHA-256 implementation known answer',
+    );
+    expect(
+      _sha256Hex(bytes),
+      '4b8e2ebaa80e50c0d680d1f1c7ef7f8eb96944a46356dc30db31be4e2daee86a',
+      reason:
+          'decoded generated snapshot equals frozen canonical fixture bytes',
+    );
     expect(hashMapFixture['schema'], 'dt18-hash-map-v1');
     expect(hashMapFixture['oracle'], 'dt18-association-list-v1');
     expect((hashMapFixture['dart_only_cases'] as List<dynamic>), hasLength(9));
@@ -230,6 +241,78 @@ void main() {
     );
   });
 
+  test(
+      'public key, algorithm, and configuration equality/hashCode are coherent',
+      () {
+    final fnv = const HashAlgorithm.fnv1a32();
+    final sameFnv = const HashAlgorithm.fnv1a32();
+    final murmur = HashAlgorithm.murmur3(seed: 7);
+    final sameMurmur = HashAlgorithm.murmur3(seed: 7);
+    final otherMurmur = HashAlgorithm.murmur3(seed: 8);
+    final sipKey = List<int>.generate(16, (index) => index);
+    final sip = HashAlgorithm.sipHash24(key: sipKey);
+    final sameSip = HashAlgorithm.sipHash24(key: List<int>.of(sipKey));
+    final changedSipKey = List<int>.of(sipKey)..[15] = 14;
+    final changedSip = HashAlgorithm.sipHash24(key: changedSipKey);
+    final shortSip = HashAlgorithm.sipHash24(key: sipKey.sublist(0, 15));
+
+    for (final pair in [
+      (fnv, sameFnv),
+      (murmur, sameMurmur),
+      (sip, sameSip),
+    ]) {
+      expect(pair.$1, pair.$2);
+      expect(pair.$1.hashCode, pair.$2.hashCode);
+    }
+    expect(fnv, isNot(murmur));
+    expect(murmur, isNot(otherMurmur));
+    expect(sip, isNot(changedSip));
+    expect(sip, isNot(shortSip));
+    expect(murmur.hashCode, isNot(otherMurmur.hashCode));
+
+    final key = HashMapKey.bytes([1, 2, 3]);
+    final sameKey = HashMapKey.bytes([1, 2, 3]);
+    final changedKey = HashMapKey.bytes([1, 2, 4]);
+    final shortKey = HashMapKey.bytes([1, 2]);
+    final stringKey = HashMapKey.string('\u0001\u0002\u0003');
+    expect(key, key); // identity path
+    expect(key, sameKey);
+    expect(key.hashCode, sameKey.hashCode);
+    expect(key, isNot(changedKey));
+    expect(key, isNot(shortKey));
+    expect(key, isNot(stringKey)); // equal payload, different public tag
+
+    HashMapConfiguration config({
+      int capacity = 7,
+      CollisionStrategy strategy = CollisionStrategy.separateChaining,
+      HashAlgorithm? algorithm,
+    }) =>
+        HashMap<Object?>(
+          capacity: capacity,
+          strategy: strategy,
+          hashAlgorithm: algorithm ?? fnv,
+        ).configuration;
+
+    final configuration = config();
+    final sameConfiguration = config();
+    expect(configuration, sameConfiguration);
+    expect(configuration.hashCode, sameConfiguration.hashCode);
+    expect(configuration, isNot(config(capacity: 8)));
+    expect(
+      configuration,
+      isNot(config(strategy: CollisionStrategy.linearProbing)),
+    );
+    expect(configuration, isNot(config(algorithm: murmur)));
+  });
+
+  test('an isolated low surrogate is rejected at its public string offset', () {
+    final error = _captureError(
+      () => HashMapKey.string(String.fromCharCodes([0xdc00])),
+    );
+    expect(error, isA<MalformedUtf16>());
+    expect((error as MalformedUtf16).codeUnitOffset, 0);
+  });
+
   test('public maps match every directed operation and physical order', () {
     for (final row in hashMapFixture['operation_cases'] as List<dynamic>) {
       final item = row as Map<String, dynamic>;
@@ -244,10 +327,16 @@ void main() {
         final key = fixtureKey(step['key_id'] as String);
         switch (step['op']) {
           case 'set':
-            map = map.setting(
-              fixtureValue(step['value_id'] as String),
-              forKey: key,
+            late HashMap<Object?> updated;
+            expect(
+              () => updated = map.setting(
+                fixtureValue(step['value_id'] as String),
+                forKey: key,
+              ),
+              returnsNormally,
+              reason: '${item['id']} ${step['op']} ${step['key_id']}',
             );
+            map = updated;
           case 'remove':
             map = map.removingValueForKey(key);
           case 'get':
@@ -325,12 +414,13 @@ void main() {
 
       final left = build(item['left'] as Map<String, dynamic>);
       final right = build(item['right'] as Map<String, dynamic>);
-      final leftBefore = left.entries.toList();
-      final rightBefore = right.entries.toList();
-      final keyIdByEncoding = <String, String>{
-        for (final entry in fixtureKeys.entries)
-          entry.value['encoded_hex'] as String: entry.key,
-      };
+      final keyIdByEncoding = <String, String>{};
+      for (final entry in fixtureKeys.entries) {
+        keyIdByEncoding.putIfAbsent(
+          entry.value['encoded_hex'] as String,
+          () => entry.key,
+        );
+      }
       expect(
         right.entries
             .map((entry) => keyIdByEncoding[fixtureHex(entry.key.encodedBytes)])
@@ -351,8 +441,6 @@ void main() {
       );
       expectFixtureState(result, expected['state'] as Map<String, dynamic>);
       if (item['inputs_unchanged'] == true) {
-        expect(left.entries, leftBefore);
-        expect(right.entries, rightBefore);
         expectFixtureState(
           left,
           (item['left'] as Map<String, dynamic>)['expected_state']
@@ -408,6 +496,93 @@ void main() {
     expect((original.valueForKey(fixtureKey('k0')) as Map)['field'], 2);
     expect((changed.valueForKey(fixtureKey('k0')) as Map)['field'], 2);
     expect(original.has(fixtureKey('k1')), isFalse);
+  });
+
+  test('byte and string key tags remain distinct under a forced collision', () {
+    final byteKey = HashMapKey.bytes([0x61]);
+    final stringKey = HashMapKey.string('a');
+    final map = HashMap<String>(
+      capacity: 1,
+      strategy: CollisionStrategy.separateChaining,
+      hashAlgorithm: const HashAlgorithm.fnv1a32(),
+    ).setting('byte', forKey: byteKey).setting('string', forKey: stringKey);
+    expect(map.count, 2);
+    expect(map.has(byteKey), isTrue);
+    expect(map.has(stringKey), isTrue);
+    expect(map.valueForKey(byteKey), 'byte');
+    expect(map.valueForKey(stringKey), 'string');
+  });
+
+  test('byte keys validate the one captured caller snapshot', () {
+    final changing = _ChangingByteList([7, 256]);
+    final key = HashMapKey.bytes(changing);
+    expect(changing.elementReads, 1);
+    expect(fixtureHex(key.encodedBytes), '00010000000000000007');
+    final map = HashMap<int>(
+      capacity: 3,
+      hashAlgorithm: const HashAlgorithm.fnv1a32(),
+    ).setting(1, forKey: key);
+    expect(map.has(HashMapKey.bytes([7])), isTrue);
+    expect(map.valueForKey(HashMapKey.bytes([7])), 1);
+
+    final invalidFirst = _ChangingByteList([256]);
+    final error = _captureError(() => HashMapKey.bytes(invalidFirst));
+    expect(error, isA<InvalidByte>());
+    expect((error as InvalidByte).index, 0);
+    expect(error.value, 256);
+    expect(invalidFirst.elementReads, 1);
+  });
+
+  test('public deletion of an absent valid key leaves the map unchanged', () {
+    for (final strategy in CollisionStrategy.values) {
+      final original = HashMap<int>(
+        capacity: 7,
+        strategy: strategy,
+        hashAlgorithm: const HashAlgorithm.fnv1a32(),
+      ).setting(7, forKey: HashMapKey.bytes([1]));
+      final removed = original.removingValueForKey(HashMapKey.bytes([2]));
+      expect(removed.count, original.count);
+      expect(removed.capacity, original.capacity);
+      expect(removed.has(HashMapKey.bytes([1])), isTrue);
+      expect(removed.valueForKey(HashMapKey.bytes([1])), 7);
+      expect(original.has(HashMapKey.bytes([2])), isFalse);
+    }
+  });
+
+  test(
+      'public placement preserves exact wide hash reduction on non-power capacity',
+      () {
+    const capacity = 257;
+    const entryCount = 180; // Below the linear-probing 75 percent threshold.
+    final algorithm = HashAlgorithm.sipHash24(
+      key: fixtureBytes('000102030405060708090a0b0c0d0e0f'),
+    );
+    final expectedSlots = List<int?>.filled(capacity, null);
+    final source = <MapEntry<HashMapKey, int>>[];
+    for (var value = 0; value < entryCount; value++) {
+      final key = HashMapKey.bytes([value >> 8, value & 0xff]);
+      source.add(MapEntry<HashMapKey, int>(key, value));
+      final start =
+          (algorithm.validatedHash(key.encodedBytes) % BigInt.from(capacity))
+              .toInt();
+      var slot = start;
+      while (expectedSlots[slot] != null) {
+        slot = (slot + 1) % capacity;
+      }
+      expectedSlots[slot] = value;
+    }
+    final map = HashMap<int>.fromEntries(
+      source,
+      capacity: capacity,
+      strategy: CollisionStrategy.linearProbing,
+      hashAlgorithm: algorithm,
+    );
+    expect(map.capacity, capacity);
+    expect(map.count, entryCount);
+    expect(map.entries.map((entry) => entry.value).toList(), [
+      for (final value in expectedSlots)
+        if (value != null) value,
+    ]);
   });
 
   test('shared error cases reach public constructors and operations', () {
@@ -626,7 +801,7 @@ Object _captureError(void Function() operation) {
   } catch (error) {
     return error;
   }
-  throw StateError('Expected public operation to throw.');
+  fail('Expected public operation to throw.');
 }
 
 class FixtureIteratorError implements Exception {}
@@ -640,6 +815,31 @@ class _IteratorRequestCounter
     iteratorRequests++;
     throw FixtureIteratorError();
   }
+}
+
+class _ChangingByteList extends ListBase<int> {
+  _ChangingByteList(this.readSequence);
+
+  final List<int> readSequence;
+  int elementReads = 0;
+
+  @override
+  int get length => 1;
+
+  @override
+  set length(int value) => throw UnsupportedError('fixed test list');
+
+  @override
+  int operator [](int index) {
+    if (index != 0) throw RangeError.index(index, this);
+    final sequenceIndex = elementReads++;
+    return readSequence[
+        sequenceIndex < readSequence.length ? sequenceIndex : 0];
+  }
+
+  @override
+  void operator []=(int index, int value) =>
+      throw UnsupportedError('fixed test list');
 }
 
 class _CountingIterable extends IterableBase<MapEntry<HashMapKey, Object?>> {
@@ -731,3 +931,153 @@ class _ThrowAfterInvalidIterator
     throw FixtureIteratorError();
   }
 }
+
+const _sha256Mask = 0xffffffff;
+const _sha256RoundConstants = <int>[
+  0x428a2f98,
+  0x71374491,
+  0xb5c0fbcf,
+  0xe9b5dba5,
+  0x3956c25b,
+  0x59f111f1,
+  0x923f82a4,
+  0xab1c5ed5,
+  0xd807aa98,
+  0x12835b01,
+  0x243185be,
+  0x550c7dc3,
+  0x72be5d74,
+  0x80deb1fe,
+  0x9bdc06a7,
+  0xc19bf174,
+  0xe49b69c1,
+  0xefbe4786,
+  0x0fc19dc6,
+  0x240ca1cc,
+  0x2de92c6f,
+  0x4a7484aa,
+  0x5cb0a9dc,
+  0x76f988da,
+  0x983e5152,
+  0xa831c66d,
+  0xb00327c8,
+  0xbf597fc7,
+  0xc6e00bf3,
+  0xd5a79147,
+  0x06ca6351,
+  0x14292967,
+  0x27b70a85,
+  0x2e1b2138,
+  0x4d2c6dfc,
+  0x53380d13,
+  0x650a7354,
+  0x766a0abb,
+  0x81c2c92e,
+  0x92722c85,
+  0xa2bfe8a1,
+  0xa81a664b,
+  0xc24b8b70,
+  0xc76c51a3,
+  0xd192e819,
+  0xd6990624,
+  0xf40e3585,
+  0x106aa070,
+  0x19a4c116,
+  0x1e376c08,
+  0x2748774c,
+  0x34b0bcb5,
+  0x391c0cb3,
+  0x4ed8aa4a,
+  0x5b9cca4f,
+  0x682e6ff3,
+  0x748f82ee,
+  0x78a5636f,
+  0x84c87814,
+  0x8cc70208,
+  0x90befffa,
+  0xa4506ceb,
+  0xbef9a3f7,
+  0xc67178f2,
+];
+
+String _sha256Hex(List<int> bytes) {
+  final padded = List<int>.of(bytes)..add(0x80);
+  while (padded.length % 64 != 56) {
+    padded.add(0);
+  }
+  final bitLength = BigInt.from(bytes.length) * BigInt.from(8);
+  for (var shift = 56; shift >= 0; shift -= 8) {
+    padded.add(((bitLength >> shift) & BigInt.from(0xff)).toInt());
+  }
+
+  final state = <int>[
+    0x6a09e667,
+    0xbb67ae85,
+    0x3c6ef372,
+    0xa54ff53a,
+    0x510e527f,
+    0x9b05688c,
+    0x1f83d9ab,
+    0x5be0cd19,
+  ];
+  for (var offset = 0; offset < padded.length; offset += 64) {
+    final words = List<int>.filled(64, 0);
+    for (var index = 0; index < 16; index++) {
+      final start = offset + index * 4;
+      words[index] = ((padded[start] << 24) |
+              (padded[start + 1] << 16) |
+              (padded[start + 2] << 8) |
+              padded[start + 3]) &
+          _sha256Mask;
+    }
+    for (var index = 16; index < 64; index++) {
+      final x = words[index - 15];
+      final y = words[index - 2];
+      final sigma0 = _rotateRight32(x, 7) ^ _rotateRight32(x, 18) ^ (x >>> 3);
+      final sigma1 = _rotateRight32(y, 17) ^ _rotateRight32(y, 19) ^ (y >>> 10);
+      words[index] = (words[index - 16] + sigma0 + words[index - 7] + sigma1) &
+          _sha256Mask;
+    }
+
+    var a = state[0];
+    var b = state[1];
+    var c = state[2];
+    var d = state[3];
+    var e = state[4];
+    var f = state[5];
+    var g = state[6];
+    var h = state[7];
+    for (var index = 0; index < 64; index++) {
+      final sum1 =
+          _rotateRight32(e, 6) ^ _rotateRight32(e, 11) ^ _rotateRight32(e, 25);
+      final choose = (e & f) ^ ((~e) & g);
+      final temp1 =
+          (h + sum1 + choose + _sha256RoundConstants[index] + words[index]) &
+              _sha256Mask;
+      final sum0 =
+          _rotateRight32(a, 2) ^ _rotateRight32(a, 13) ^ _rotateRight32(a, 22);
+      final majority = (a & b) ^ (a & c) ^ (b & c);
+      final temp2 = (sum0 + majority) & _sha256Mask;
+      h = g;
+      g = f;
+      f = e;
+      e = (d + temp1) & _sha256Mask;
+      d = c;
+      c = b;
+      b = a;
+      a = (temp1 + temp2) & _sha256Mask;
+    }
+    state[0] = (state[0] + a) & _sha256Mask;
+    state[1] = (state[1] + b) & _sha256Mask;
+    state[2] = (state[2] + c) & _sha256Mask;
+    state[3] = (state[3] + d) & _sha256Mask;
+    state[4] = (state[4] + e) & _sha256Mask;
+    state[5] = (state[5] + f) & _sha256Mask;
+    state[6] = (state[6] + g) & _sha256Mask;
+    state[7] = (state[7] + h) & _sha256Mask;
+  }
+  return state.map((word) => word.toRadixString(16).padLeft(8, '0')).join();
+}
+
+int _rotateRight32(int value, int distance) =>
+    ((value >>> distance) | (value << (32 - distance))) & _sha256Mask;
