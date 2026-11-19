@@ -26,6 +26,7 @@
           "items": {
             "oneOf": [
               {"$ref": "#/$defs/solve"},
+              {"$ref": "#/$defs/propagate"},
               {"$ref": "#/$defs/addClause"},
               {"$ref": "#/$defs/reset"}
             ]
@@ -51,6 +52,15 @@
       "properties": {
         "max_conflicts": {"type": "integer", "minimum": 0},
         "max_steps": {"type": "integer", "minimum": 0}
+      }
+    },
+    "propagate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["op", "expect_conflict"],
+      "properties": {
+        "op": {"const": "propagate"},
+        "expect_conflict": {"type": "boolean"}
       }
     },
     "addClause": {

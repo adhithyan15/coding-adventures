@@ -106,10 +106,29 @@ Directly converting boolean expressions to CNF via distributive laws causes expo
 The dedicated package under `code/packages/typescript/sat-solver` is the
 implemented identity; the target path above is historical bootstrap wording.
 Its `extractCore` performs implication-graph traversal, deduplication, and
-filtering against assumptions, without a minimization pass. The earlier phrase
-“minimal subset” is therefore not an implementation guarantee. The package
-also has two known follow-ups: a known permanent contradiction can return
-early before clearing a prior failed core, and its DIMACS header test accepts
-some malformed `p cnf` prefixes or extra fields. The Go port clears core state
-and applies a strict documented header grammar; these upstream TypeScript
-repairs are separate backlog items.
+filtering against assumptions, without a minimization pass. Failed assumption
+cores are sound, duplicate-free subsets of assumptions; order and minimality
+are unspecified.
+
+The remaining correctness and contract repairs are tracked as VER-P043. A
+known permanent contradiction can return early before clearing a prior failed
+core, and the DIMACS reader accepts malformed `p cnf` prefixes or extra header
+fields. Its propagation budget currently advances the queue head before
+checking whether a step is available; after an interrupted root propagation,
+a public propagation call can consume a conflict without making the
+contradiction sticky, allowing a later solve to report a model that falsifies
+an input clause. The repair must check the step budget before consuming trail
+work, preserve pending root work across UNKNOWN, make actual level-zero
+conflicts sticky even when found through public `propagate()`, and keep
+nonroot assumption conflicts local to that solve. A valid solve call that
+reaches the known-root-UNSAT fast return must clear an older failed core without
+changing malformed-assumption validation precedence. DIMACS headers must
+contain exactly four whitespace-separated tokens: `p cnf <vars> <clauses>`.
+
+The shared SAT CNF corpus adds a portable `propagate` step with a boolean
+expected-conflict outcome so Go and TypeScript exercise the same recovery
+lifecycle without pinning a private clause index. Each consumer validates SAT
+models and failed cores against the original signed DIMACS formula,
+independently of its production parser. VER-P043 is the selected next serial
+repair after the Go port merge; source-bound proof tooling and line/branch
+evidence remain separate work.
