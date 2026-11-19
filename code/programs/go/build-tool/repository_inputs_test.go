@@ -137,6 +137,12 @@ func TestGameClockInputsSelectRustConsumerAndGlobalWarrantChecker(t *testing.T) 
 	if got, err := repositoryInputConsumersForChange(warrantPath, packages, "rust"); err != nil || !reflect.DeepEqual(got, map[string]bool{"rust/game-clock": true, "rust/warrant-grammar": true}) {
 		t.Fatalf("rust-only GAME10 Warrant selection got %v, err %v", got, err)
 	}
+	for _, input := range gameClockInputPaths {
+		selected, err := repositoryInputConsumersForChange([]string{input}, packages, "rust")
+		if err != nil || !selected["rust/game-clock"] {
+			t.Fatalf("Rust-only input %s selected %v, err %v; want rust/game-clock", input, selected, err)
+		}
+	}
 	if got, err := repositoryInputConsumersForChange([]string{"code/specs/wasm-leb128.warrant"}, packages, "all"); err != nil || !reflect.DeepEqual(got, map[string]bool{"rust/warrant-grammar": true, "python/warrant-oracle": true, "rust/warrant-corpus-gen": true}) {
 		t.Fatalf("other Warrant consumers selection got %v, err %v", got, err)
 	}
@@ -152,8 +158,24 @@ func TestGameClockInputsSelectRustConsumerAndGlobalWarrantChecker(t *testing.T) 
 		if got := isGameClockCorpusInput(path); got != want {
 			t.Errorf("isGameClockCorpusInput(%q) = %v, want %v", path, got, want)
 		}
-		if got := isGameClockInput(path); got != want {
-			t.Errorf("isGameClockInput(%q) = %v, want %v", path, got, want)
+	}
+	for _, path := range gameClockInputPaths {
+		if !isGameClockInput(path) {
+			t.Errorf("Rust game-clock input %q was not selected", path)
+		}
+	}
+	if !sort.StringsAreSorted(gameClockInputPaths) {
+		t.Fatalf("Rust game-clock inputs are not sorted: %v", gameClockInputPaths)
+	}
+	for _, path := range []string{
+		".cargo/config.toml.bak",
+		"code/packages/rust/Cargo.toml.bak",
+		"code/packages/rust/game-clock/../../Cargo.lock",
+		"code/specs/fixtures/game-clock-v10/cases.json",
+		"code/specs/game-clock.warrant.bak",
+	} {
+		if isGameClockInput(path) {
+			t.Errorf("lookalike Rust game-clock path %q was selected", path)
 		}
 	}
 	if !isGameClockInput("code/specs/game-clock.warrant") || isGameClockCorpusInput("code/specs/game-clock.warrant") {
