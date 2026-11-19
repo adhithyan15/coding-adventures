@@ -15,7 +15,7 @@ that must be produced, not a promise that the evidence exists already.
 
 | Workstream | Capability status | Language status | Verification status / limit |
 | --- | --- | --- | --- |
-| `GAME10` fixed-step clock | Rust core and v1 integer contract present; host pacing/render integration is separate and incomplete | Rust and TypeScript implementations (2/15 established lanes); Python is an independent fixture validator, not a port; other supported lanes remain | Durable Rust consumer merged in [PR #19602](https://github.com/adhithyan15/coding-adventures/pull/19602), squash `72778f4f553cf35fd361e2688acaeb6201414ea1`; TypeScript public API/vector consumer merged in [PR #19644](https://github.com/adhithyan15/coding-adventures/pull/19644), squash `4ec975d`. The constructor-only Warrant model landed in [PR #19618](https://github.com/adhithyan15/coding-adventures/pull/19618), squash `a2163fc64c74c10f3bb0e62cd268363cbb560d21`; its finite execution covers 648 boundary cases and 1,024 stratified full-width inputs, but is not source proof. `validate_state`/`advance_frame`, universal proof, and native source proof remain open; no assurance proof slot is upgraded. Structural package presence is not behavioral parity. |
+| `GAME10` fixed-step clock | Rust core and v1 integer contract present; host pacing/render integration is separate and incomplete | Rust and TypeScript implementations (2/15 established lanes); Python is an independent fixture validator, not a port; other supported lanes remain | Durable Rust consumer merged in [PR #19602](https://github.com/adhithyan15/coding-adventures/pull/19602), TypeScript public API/vector consumer in [PR #19644](https://github.com/adhithyan15/coding-adventures/pull/19644), and exact `validate_state` Warrant model/evidence slice in [PR #19698](https://github.com/adhithyan15/coding-adventures/pull/19698), squash `95c2ce07e0132d5eb424464a9311b4c09060c478`. The constructor model remains separate and finite. `advance_frame`, manifest-derived assurance, universal proof, and Rust source equivalence remain open; the canonical assurance report remains report-only. Structural presence is not behavioral parity. |
 | `GAME11`–`GAME15c` early arcade | Rust packages exist for collision, arcade SFX, Pong, Breakout, discrete logic, CRT beam, and timer | Rust source present; other supported language lanes need inventory | No unified portable-evidence audit yet; collision, Pong, Breakout, and CRT Warrant drafts are parked. |
 | `GAME20`–`GAME25` tile/sprite/RPG | Rust packages exist for indexed palette, tilemap, sprite OAM, RPG grid/battle, and Monster RPG | Rust source present; verify required lanes rather than inferring from GAME00's portable label | Shared independent corpus and cross-language execution audit remain open. |
 | `GAME26`–`GAME29b` console devices | GAME26 GBA bridge, GAME27 NES, GAME28 Game Boy, and GAME29 GBA devices are missing from the Rust package tree | No verified portable console-device lane | Start with a narrow independently specified NES register/timing slice. Do not claim a complete console. |
@@ -104,8 +104,8 @@ and Go build-tool packages. The canonical package report on merged main now reco
 `game-clock` and `game-input-frame` in Rust and TypeScript (each 2/15 established lanes). This
 is structural package presence only, not behavioral parity across other languages.
 
-The next selected item is GBL-003b, the bounded exact `validate_state` assurance slice for
-GAME10. Its priority is the concrete P1 assurance gap in an existing foundational clock: the
+The item selected at that time was GBL-003b, the bounded exact `validate_state` assurance slice for
+GAME10. Its priority was the concrete P1 assurance gap in an existing foundational clock: the
 current invariant omits the public validator's `elapsed_sim_ns == tick_count * fixed_dt_ns`
 condition, no exact validator claim exists, and the existing invariant claims tolerate errors.
 The native Warrant
@@ -133,6 +133,31 @@ The production-source test harness compares Windows-capable physical file identi
 refused when pinned to the production path; the copy-bound proof succeeds, then the consumer
 identity gate rejects it. Relative-path and wrong-digest controls remain. This test-only Windows
 review delta passed 22/22 local package tests; the merged exact-head Windows build also completed.
+
+**GBL-003b closeout (2026-11-19):** exact `validate_state` Warrant evaluation and bounded evidence
+merged in [PR #19698](https://github.com/adhithyan15/coding-adventures/pull/19698), reviewed head
+`493c2d2785f5c0fedcb11a8f2956cdef2bcd9d43`, protected squash
+`95c2ce07e0132d5eb424464a9311b4c09060c478`. On the merged head, CI, Books, and Swift workflows
+passed; Ubuntu, macOS, and Windows each reported `BUILT` for `rust/game-clock`,
+`rust/typescript-warrant-ir`, `typescript/game-input-frame`, and `go/programs/build-tool`. The
+Windows affected-package recipe completed successfully; its package receipt does not replace the
+local scoped evidence below. Local native Warrant evaluation compared 14 branch vectors, 35
+threshold vectors, and 2,048 seeded full-width property inputs against the public Rust API and
+independent `u128` oracle. The typed-state VER06 campaign made 1,028 three-way callback comparisons
+including seeds; the separate malformed transport campaign made 2,055 callbacks, of which 194
+decoded records reached validation and 1,861 shape errors were refused before validation. The
+bounded SAT suite passed 9 tests with full-width fixed-parameter queries and checked compositional
+certificates/replay. Scoped coverage for `game-clock/src/lib.rs` is 146/147 lines (99.32%); the
+uncovered defensive `from_hz` error branch is unreachable for `u32` frequency because the largest
+representable timestep is below the cap. These are finite native and bounded results, not a
+universal source-equivalence proof. `GBL-003` remains open for `advance_frame` and broader package
+assurance, and `VER-P046` remains open for manifest-derived evidence. A follow-up assurance audit
+found that the current finite harness does not fit the existing manifest adapter/report schema;
+the precise blockers are recorded under `VER-P046`.
+The canonical package report after this merge records both `game-clock` and `game-input-frame` in
+Rust and TypeScript (each 2/15 established lanes); this is package presence, not behavioral parity.
+The earlier GBL-003b selection rationale above is now historical. No next implementation item has
+been selected here; root reprioritizes from the remaining backlog after this closeout.
 
 As of 2026-11-18, `GBL-001`, `GBL-002`, `GBL-003a`, `GBL-061`, and the selected `GBL-063` parser
 repair are merged. PR #19649 merged squash `399ab9af38c45817c6638defe368bf4596d4cad4`; exact-head
@@ -256,14 +281,17 @@ worktree; report and preserve it if those checks do not pass.
 - [ ] `GBL-003` Repair GAME10's three Warrant claims and assurance report. Add meaningful positive and negative
   evidence for `validate` and `advance`, shared proof through `WXSP1`, generated/property and fuzz
   coverage, and Warrant evidence only through a separately reviewed design. A passing finite corpus
-  or constructor-only model does not repair a claim that accepts every error.
-- [ ] `GBL-003b` **Selected next:** implement the exact public `validate_state` Warrant claim and
+  or constructor-only model does not repair a claim that accepts every error. The exact `validate_state`
+  claim is now covered by completed `GBL-003b`; remaining work includes `advance_frame`, any other
+  stale broad claims, source equivalence, and report/manifest integration under `VER-P046`.
+- [x] `GBL-003b` (merged in [PR #19698](https://github.com/adhithyan15/coding-adventures/pull/19698), squash `95c2ce07e0132d5eb424464a9311b4c09060c478`) Implement the exact public `validate_state` Warrant claim and
   independent evidence described in [GBL-003b](GBL-003b-game-clock-validate-state-warrant.md).
   Preserve the ordered eight outcomes, checked full-width product overflow, exact `Result` equality,
   Warrant claim-shape controls, independent `u128` oracle, generated/PBT/fuzz strata, bounded
   checked SAT queries, and unchanged public Rust witness replay. This closes only the validator
-  slice; `advance_frame`, universal whole-package/source claims, and other `GBL-003` obligations
-  remain open.
+  slice. The local comparisons, all three OS package recipes, and limitations are recorded in the
+  GBL-003b closeout above. `advance_frame`, universal whole-package/source claims, and other
+  `GBL-003` obligations remain open.
 - [ ] `GBL-004` Add generated/property tests for arithmetic invariants, validation precedence,
   conservation, and atomic failure. Record generators and bounds.
 - [ ] `GBL-007` Add bounded fuzzing where package tooling supports it, and record corpus, runtime,
@@ -348,7 +376,7 @@ worktree; report and preserve it if those checks do not pass.
 ### P3 — Complete Lunar Lander language coverage
 
 - [ ] `GBL-020` Before adding more Lunar Lander ports, audit current Rust, Python, TypeScript, Go, Ruby, Perl, Lua, and Elixir packages against the normative fixed-point contract and shared vectors.
-- [ ] `GBL-020a` (GAME01a) Specify and implement a reusable portable fixed-point arithmetic substrate, including rounding, overflow, saturation, and refusal semantics; Lunar Lander title-specific math is not a shared substrate.
+- [ ] `GBL-020a` (GAME01a) Specify and implement a reusable portable fixed-point arithmetic substrate, including rounding, overflow, saturation, and refusal semantics; Lunar Lander title-specific math is not a shared substrate. A bounded admission review found one plausible first slice: a binary signed Q16.16 scalar profile over two `I32` inputs has 312,481 canonical edge pairs (`559²`), below the current `2^26` exhaustive budget. This is an edge corpus, not the `2^64` input-pair domain. The real API path, default scalar-adapter panic/refusal normalization, signed rounding, and report evidence need an explicit contract; symbolic signed shifts/division may be unsupported and must refuse honestly rather than supply fake proof. Q32.32, square root, and CORDIC remain separate open design work. This candidate has not been selected. The bounded inventory found no reusable general fixed-point package: Lunar Lander's scaled coordinates/integrator and the audio package's Q16.16 gain/filter helpers are title-/audio-specific. Canonical presence remains Lunar Lander in 8/15 established and 0/3 emerging lanes; no math behavioral parity follows from that presence.
 - [ ] `GBL-020b` (GAME01b) Specify a deterministic `sim-turn-core` contract over caller-supplied fixed-point state and time; define shared vectors and lane gates after GAME01a. Keep host scheduling and runtime authority outside this core.
 - [ ] `GBL-021` Add the missing established C# Lunar Lander port, consuming the shared fixed-point
   corpus and satisfying package/build metadata requirements.
