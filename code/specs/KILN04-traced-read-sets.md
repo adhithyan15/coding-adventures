@@ -1096,7 +1096,14 @@ one is skipped and counted). Decoding is strict (`legacy.PolicyDecode`: no
 unknown key, no duplicate or case-variant key, no trailing data), the schema
 string and the embedded action are checked, kinds must match `[a-z0-9:_-]{1,96}`
 and counts must not be negative. A file that fails any of that is skipped and
-counted under a problem code; nothing panics and nothing is believed.
+counted under a problem code; nothing panics and nothing is believed. A panic in
+one trace's parse is recovered and counted (`parse_panic`). When both `record.json`
+and `record.failed` exist, `record.failed` wins, as in `collect`. A `record.json`
+whose `binding_id` or `sealed_sha256` is not the verified `pre/`'s is counted
+(`record_binding_mismatch`) and ignored. The census takes the record directory's
+lock (the flock `step` and `collect` use) exclusively and without waiting, and
+refuses, exit 1, writing nothing, while a recording holds it; so it runs only
+where flock exists (not on Windows).
 
 *Per step trace.* (1) Bytes and lines are counted. (2) The wall time is
 `ended_at - started_at` from the sidecar; a wall that is not positive is dropped
@@ -1115,8 +1122,11 @@ in memory at a time.
 what kept it out of production was its process-global allowed-divergence
 counter. It is now serialised by a mutex, so concurrent calls cannot charge one
 trace another's hits, and `TestMeasureIsNotUsedByProductionCode` no longer lists
-it. A second guard, `TestParseCrossCheckedOnlyInCensus`, allows exactly one
-production caller, `internal/record/census_report.go`: `kiln record census` is a
+it. A second guard, `TestParseCrossCheckedOnlyInCensus`, is on the syntax tree
+(`go/parser`): it flags ANY reference to `ParseCrossChecked` (a call, a method
+value, an alias or dot import) outside its definition file and exactly one
+production file, `internal/record/census_report.go`, and the census receives it
+through `CensusOptions.CrossCheck`, not a package variable, because `kiln record census` is a
 diagnostic that must never run inside a recording (the record child's
 environment deliberately lacks `KILN_TRACE_DIFF`).
 
@@ -1139,22 +1149,48 @@ optional Markdown rendering at most 256 KiB). Top-level keys: `schema`,
   distinct paths and occurrences) and `top_paths` (the 200 most frequent full
   paths). Paths are sanitised (non-printable runes become `?`), redacted
   (`$HOME`, `$TMPDIR`, the record directory and the workspace become `$HOME`,
-  `$TMPDIR`, `$RECORD_DIR`, `$WORKSPACE`) and cut to 512 runes
-  (`paths_truncated`). At most 500,000 distinct (kind, path) pairs are kept; the
-  rest are counted in `bounds.paths_dropped`.
+  `$TMPDIR`, `$RECORD_DIR`, `$WORKSPACE`; a prefix is replaced only at a
+  path-component boundary, so `/tmp` leaves `/usr/lib/tmpfiles.d` and `/var/tmp`
+  alone) and cut to 512 runes (`paths_truncated`). At most 100,000 distinct
+  (kind, path) pairs and 32 MiB of their text are kept; the rest are counted in
+  `bounds.paths_dropped`.
+- `explain`: why actions are not recordable, every key from a CLOSED list in the
+  source (a code is never a slice of the input; anything unmatched is `other`):
+  `record_reason_kinds` (the path-free kind of each classifier reason in
+  `record.json`, actions per kind: `failed`, `vcs-read`, `daemon-left`,
+  `trace-incomplete:unstable-path`, `trace-incomplete:recipe-mismatch`, ...),
+  `record_parse_reasons` (record.json's `parse_reasons` by code:
+  `unparsable-line`, `unresumed-call`, `size`, `sandbox-refused`,
+  `unclean:<reason>`, ...), `parse_refusals` (the same codes for the traces this
+  census's own parse refused), `record_failed` (the text of `record.failed`
+  mapped to `timeout`, `traces-too-large`, `record-too-large`, `panic`,
+  `classifier-failed`, `classifier-not-started`, `record-invalid`, `other`) and
+  `sidecar` (`steps`, `truncated` by reason, `not_clean`, `unclean` by reason,
+  `exit_125`, `root_status_nonzero`).
+- `host`: the image id, kernel, strace version line and shard index and count
+  from the verified `pre/`, and the first `model name` of `/proc/cpuinfo`, all
+  sanitised.
 - `trace_sizes`: `all` and `root_ok` (steps with `root_status` 0), each `n`,
   `p50`, `p90`, `p99`, `max` (nearest rank) and `log2_buckets`.
 - `timing`: distributions of `step_wall_ms`, `parse_ms`, `parse_share`, and the
   counts `share_over_10pct`, `parse_over_5s` (the two limbs of G2), `g2_failing`
-  (either) and `walls_dropped`. Report-only.
+  (either) and `walls_dropped`; `parse_mb_per_s` (throughput distribution);
+  `by_size` (per log2 size bucket: n and the `parse_ms` and `parse_share`
+  distributions); `g2_at_p99` (the same two limbs over the traces at or above
+  the census p99 size, where G2 is defined); and `first_parse` (the first timed
+  parse alone, its lazy initialisation included, which each classify child pays
+  again, so the per-action child cost can be added back). Report-only.
 - `per_action`: the total trace bytes of each action against the 2 GiB cap
   (`DefaultMaxTraceTotal`): a distribution, how many reach 50%, 90% and 100% of
   the cap, and the ten largest (sanitised names).
-- `cross_check`: `traces`, `bytes`, `accepted`, `mismatches`, `allowed`, `refused`
-  and at most 20 `details` (an action's digest prefix, step and the mismatch's
+- `cross_check`: `traces`, `bytes`, `accepted`, `mismatches`, `allowed`, `refused`,
+  `skipped_too_large` and `skipped_bytes` (a trace over 256 MiB is timed but not
+  cross-checked, because the cross-check buffers it whole and parses it twice; the
+  workflow should set `GOMEMLIMIT`) and at most 20 `details` (an action's digest prefix, step and the mismatch's
   `Detail`, sanitised and cut; never the window of trace lines).
 - `languages`: per language (the plan's, else `code/packages/<lang>/`; at most
-  64, the rest `other`): `actions`, `recordable` (`record.json` believed and
+  64, the rest `other`; shown as code spans in list items, so `www.x.example` and
+  `:emoji:` cannot autolink or render): `actions`, `recordable` (`record.json` believed and
   `writes_complete`), `clean` (recordable with an empty census) and the share.
 
 *Bounds.* If the encoded JSON exceeds 512 KiB, the top lists are halved until it
@@ -1166,7 +1202,8 @@ environment value and no trace line.
 path is written inside a code span whose delimiter is longer than any backtick
 run in the text; every other piece of text has `\` `` ` `` `|` `<` `>` `[` `]`
 `&` `*` `_` `#` `~` backslash-escaped; there is no table cell that holds
-attacker text; no raw control character occurs; and no line starts with `::`
+attacker text (languages, kinds and every other name are code spans in list
+items); no raw control character occurs; and no line starts with `::`
 (every line starts with a fixed marker of ours).
 
 *Exit codes.* 0: the census ran and the cross-check found nothing. 4: a
