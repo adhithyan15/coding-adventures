@@ -8,8 +8,10 @@ import unittest
 from generate import make_cases
 from hash_map_oracle import (
     HISTORY_COUNT,
+    bucket_index,
     decode_history_ordinal,
     history_ordinal,
+    parse_key,
     physical_order_table,
 )
 from validate import (
@@ -160,6 +162,14 @@ class HashMapFixtureValidationTests(unittest.TestCase):
             validate_bytes(b'{"schema":')
 
     def test_full_cycle_witness_contains_fallback_and_threshold_growth(self) -> None:
+        keys = {row["id"]: parse_key(row) for row in self.document["key_cases"]}
+        self.assertEqual(
+            [
+                bucket_index(keys[f"cycle{index}"], 4, {"kind": "fnv1a32"})
+                for index in range(4)
+            ],
+            [2, 1, 0, 3],
+        )
         case = next(
             row
             for row in self.document["operation_cases"]
@@ -173,6 +183,59 @@ class HashMapFixtureValidationTests(unittest.TestCase):
         self.assertFalse(case["steps"][9]["expected"]["observation"]["has"])
         self.assertEqual(case["steps"][-2]["expected"]["state"]["count"], 3)
         self.assertEqual(case["steps"][-1]["expected"]["state"]["capacity"], 8)
+
+    def test_chaining_case_grows_for_a_distinct_fourth_key(self) -> None:
+        case = next(
+            row
+            for row in self.document["operation_cases"]
+            if row["id"] == "chaining-non-power-capacity-three-to-six"
+        )
+        first_three = [step["key_id"] for step in case["steps"][:3]]
+        fourth = case["steps"][-1]
+        self.assertEqual(len(set(first_three)), 3)
+        self.assertNotIn(fourth["key_id"], first_three)
+        self.assertEqual(fourth["expected"]["state"]["count"], 4)
+        self.assertEqual(fourth["expected"]["state"]["capacity"], 6)
+
+    def test_merge_configuration_capacity_matches_merged_state(self) -> None:
+        result = self.document["merge_cases"][0]["expected_result"]
+        self.assertEqual(
+            result["configuration"]["capacity"], result["state"]["capacity"]
+        )
+        left = self.document["merge_cases"][0]["left"]
+        self.assertEqual(left["configuration"]["capacity"], 3)
+        self.assertEqual(left["expected_state"]["capacity"], 3)
+
+    def test_dart_invalid_algorithm_inputs_fail_after_construction(self) -> None:
+        expected_ids = {
+            "invalid-byte-in-sixteen-byte-siphash-key",
+            "negative-murmur-seed",
+            "murmur-seed-above-uint32",
+        }
+        cases = {
+            row["id"]: row
+            for row in self.document["dart_only_cases"]
+            if row["id"] in expected_ids
+        }
+        self.assertEqual(set(cases), expected_ids)
+        for case in cases.values():
+            self.assertEqual(case["constructor_result"], "success")
+            self.assertEqual(
+                case["validation_operation"], "HashAlgorithm.validatedHash"
+            )
+            self.assertEqual(case["validation_data_hex"], "")
+
+    def test_from_entries_stops_at_first_invalid_item(self) -> None:
+        case = next(
+            row
+            for row in self.document["dart_only_cases"]
+            if row["id"] == "from-entries-stops-after-first-invalid-entry"
+        )
+        self.assertEqual(case["expected_error"]["id"], "key_too_long")
+        self.assertEqual(case["expected_entries_yielded"], 2)
+        self.assertEqual(case["expected_advances_after_invalid_entry"], 0)
+        self.assertEqual(case["expected_iterator_requests"], 1)
+        self.assertFalse(case["expected_map_returned"])
 
     def test_null_value_case_also_pins_presence(self) -> None:
         case = next(

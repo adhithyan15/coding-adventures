@@ -32,8 +32,9 @@ by its ordinal, `sum(9^j for j < length) + base9_rank(operation_indices)`.
 For each sequence, the semantic stream stores one character
 encoding the final value state (`absent`, `v0`, or `v1` for each key in
 `k0,k1,k2` order), using `d0 + 3*d1 + 9*d2`. Each consumer replays every
-sequence, checks every prefix against that prefix's own ordinal, and verifies
-all earlier persistent versions after the sequence completes.
+sequence, checks every prefix against that prefix's own ordinal, and after
+each prefix rechecks every earlier persistent version retained by that
+history.
 
 Separate physical-order streams point into the 16-entry table of ordered
 subsets/permutations. Capacity streams pin capacity four for every history;
@@ -50,11 +51,13 @@ behaviors. Swift classifies those inputs as unrepresentable or skipped without
 claiming rejection. The later Dart consumer must pass them through its real
 public API without adapter prevalidation.
 
-The public full-cycle case inserts and removes four FNV-colliding keys at
-capacity four, creating four tombstones at live count zero. It then exercises
-full-cycle lookup, earliest-tombstone reuse, and growth-before-tombstone-reuse.
-The Swift consumer must execute those operations through the public API and
-compare every recorded state. The production maximum-capacity map recipe is
+The public full-cycle case inserts and removes four keys whose FNV home buckets
+are distinct at capacity four, creating four tombstones at live count zero.
+It then exercises full-cycle lookup, earliest-tombstone reuse, and
+growth-before-tombstone-reuse. A low live count does not imply that a probe
+table has an empty slot. The Swift consumer must execute those operations
+through the public API and compare every recorded state. The production
+maximum-capacity map recipe is
 recorded as a Dart gate3 requirement only; this Swift phase does not claim a
 million-entry execution.
 

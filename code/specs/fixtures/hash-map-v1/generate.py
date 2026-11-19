@@ -340,7 +340,7 @@ def make_chain_growth_case(
             {"op": "set", "key_id": "k1", "value_id": "v1"},
             {"op": "set", "key_id": "k2", "value_id": "null"},
             {"op": "set", "key_id": "k0-alias", "value_id": "c0"},
-            {"op": "set", "key_id": "cycle0", "value_id": "c1"},
+            {"op": "set", "key_id": "cycle1", "value_id": "c1"},
         ],
         keys,
         values,
@@ -524,9 +524,12 @@ def make_merge_case(keys: dict[str, Key], values: dict[str, Any]) -> dict[str, A
         "expected_right_physical_order": right_physical_order,
         "expected_result": {
             "configuration": {
-                key: value
-                for key, value in left_configuration.items()
-                if key != "hash_configuration"
+                **{
+                    key: value
+                    for key, value in left_configuration.items()
+                    if key != "hash_configuration"
+                },
+                "capacity": merged.capacity,
             },
             "state": observe_state(merged),
         },
@@ -681,7 +684,10 @@ def make_dart_only_cases() -> list[dict[str, Any]]:
         {
             "id": "invalid-byte-in-sixteen-byte-siphash-key",
             "operation": "HashAlgorithm.sipHash24",
+            "constructor_result": "success",
             "raw_key_values": [0, 0, 0, 0, 0, 256, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            "validation_operation": "HashAlgorithm.validatedHash",
+            "validation_data_hex": "",
             "expected_error": {
                 "id": "invalid_byte",
                 "fields": {"index": 5, "value": 256},
@@ -690,13 +696,19 @@ def make_dart_only_cases() -> list[dict[str, Any]]:
         {
             "id": "negative-murmur-seed",
             "operation": "HashAlgorithm.murmur3",
+            "constructor_result": "success",
             "seed": -1,
+            "validation_operation": "HashAlgorithm.validatedHash",
+            "validation_data_hex": "",
             "expected_error": {"id": "invalid_murmur_seed", "fields": {"seed": -1}},
         },
         {
             "id": "murmur-seed-above-uint32",
             "operation": "HashAlgorithm.murmur3",
+            "constructor_result": "success",
             "seed": 4_294_967_296,
+            "validation_operation": "HashAlgorithm.validatedHash",
+            "validation_data_hex": "",
             "expected_error": {
                 "id": "invalid_murmur_seed",
                 "fields": {"seed": 4_294_967_296},
@@ -752,6 +764,39 @@ def make_dart_only_cases() -> list[dict[str, Any]]:
             ],
             "expected_iterator_requests": 1,
             "expected_count": 2,
+        },
+        {
+            "id": "from-entries-stops-after-first-invalid-entry",
+            "operation": "HashMap.fromEntries",
+            "configuration": {
+                "capacity": 4,
+                "strategy": "separateChaining",
+                "hash_configuration_id": "fnv32",
+            },
+            "iterable_behavior": "yield-valid-then-overlong-then-throw-on-next-advance",
+            "source_entries": [
+                {"key_id": "k0", "value_id": "v0"},
+                {
+                    "key_recipe": {
+                        "kind": "repeated-byte",
+                        "byte": 0,
+                        "length": MAXIMUM_KEY_BYTES + 1,
+                    },
+                    "value_id": "v1",
+                },
+            ],
+            "sentinel_exception_type": "FixtureIteratorError",
+            "expected_error": {
+                "id": "key_too_long",
+                "fields": {
+                    "actual": MAXIMUM_KEY_BYTES + 1,
+                    "maximum": MAXIMUM_KEY_BYTES,
+                },
+            },
+            "expected_iterator_requests": 1,
+            "expected_entries_yielded": 2,
+            "expected_advances_after_invalid_entry": 0,
+            "expected_map_returned": False,
         },
     ]
 

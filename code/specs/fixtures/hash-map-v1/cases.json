@@ -1588,16 +1588,16 @@
         },
         {
           "op": "set",
-          "key_id": "cycle0",
+          "key_id": "cycle1",
           "value_id": "c1",
           "expected": {
             "error_id": null,
             "state": {
-              "count": 3,
-              "capacity": 3,
+              "count": 4,
+              "capacity": 6,
               "load_factor_ratio": [
-                3,
-                3
+                4,
+                6
               ],
               "entries": [
                 {
@@ -1606,14 +1606,19 @@
                   "value": null
                 },
                 {
-                  "key_id": "cycle0",
+                  "key_id": "k1",
+                  "value_id": "v1",
+                  "value": 11
+                },
+                {
+                  "key_id": "cycle1",
                   "value_id": "c1",
                   "value": 17
                 },
                 {
-                  "key_id": "k1",
-                  "value_id": "v1",
-                  "value": 11
+                  "key_id": "k0-alias",
+                  "value_id": "c0",
+                  "value": 13
                 }
               ]
             }
@@ -2096,7 +2101,7 @@
       ],
       "expected_result": {
         "configuration": {
-          "capacity": 3,
+          "capacity": 6,
           "strategy": "separateChaining",
           "hash_configuration_id": "fnv32"
         },
@@ -2335,6 +2340,7 @@
     {
       "id": "invalid-byte-in-sixteen-byte-siphash-key",
       "operation": "HashAlgorithm.sipHash24",
+      "constructor_result": "success",
       "raw_key_values": [
         0,
         0,
@@ -2353,6 +2359,8 @@
         0,
         0
       ],
+      "validation_operation": "HashAlgorithm.validatedHash",
+      "validation_data_hex": "",
       "expected_error": {
         "id": "invalid_byte",
         "fields": {
@@ -2364,7 +2372,10 @@
     {
       "id": "negative-murmur-seed",
       "operation": "HashAlgorithm.murmur3",
+      "constructor_result": "success",
       "seed": -1,
+      "validation_operation": "HashAlgorithm.validatedHash",
+      "validation_data_hex": "",
       "expected_error": {
         "id": "invalid_murmur_seed",
         "fields": {
@@ -2375,7 +2386,10 @@
     {
       "id": "murmur-seed-above-uint32",
       "operation": "HashAlgorithm.murmur3",
+      "constructor_result": "success",
       "seed": 4294967296,
+      "validation_operation": "HashAlgorithm.validatedHash",
+      "validation_data_hex": "",
       "expected_error": {
         "id": "invalid_murmur_seed",
         "fields": {
@@ -2450,6 +2464,42 @@
       ],
       "expected_iterator_requests": 1,
       "expected_count": 2
+    },
+    {
+      "id": "from-entries-stops-after-first-invalid-entry",
+      "operation": "HashMap.fromEntries",
+      "configuration": {
+        "capacity": 4,
+        "strategy": "separateChaining",
+        "hash_configuration_id": "fnv32"
+      },
+      "iterable_behavior": "yield-valid-then-overlong-then-throw-on-next-advance",
+      "source_entries": [
+        {
+          "key_id": "k0",
+          "value_id": "v0"
+        },
+        {
+          "key_recipe": {
+            "kind": "repeated-byte",
+            "byte": 0,
+            "length": 1048577
+          },
+          "value_id": "v1"
+        }
+      ],
+      "sentinel_exception_type": "FixtureIteratorError",
+      "expected_error": {
+        "id": "key_too_long",
+        "fields": {
+          "actual": 1048577,
+          "maximum": 1048576
+        }
+      },
+      "expected_iterator_requests": 1,
+      "expected_entries_yielded": 2,
+      "expected_advances_after_invalid_entry": 0,
+      "expected_map_returned": false
     }
   ],
   "dart_gate3_boundary_requirements": {
