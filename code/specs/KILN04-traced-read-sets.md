@@ -1037,6 +1037,27 @@ commit `VerifyTree` vouches for. `GITHUB_REPOSITORY`, `GITHUB_RUN_ID` and
 binding). The package builds, vets and tests on every platform; only the CLI
 entry checks the platform, so the logic is unit-tested on developers' machines.
 
+**Census side file (`census.json`).** The classify child (§4.8, P13) also
+writes `traces/<sha256(action)>/census.json`, schema `kiln-record-census/1`, a
+diagnostic that exists so a later host-path census can count every host path
+that would void a recording BEFORE the 16-reasons-per-kind cap (`capReasons`)
+hides all but a few, and so it can see the path behind
+`trace-incomplete:proc-path`, which carries none. `traced.Input.Census` is an
+optional observer that sees every path-carrying reason (`host-read`,
+`writes-tracked`, `trace-visible`, `state-write`, `network`, `daemon`, and each
+`proc-path`) as the classifier raises it. It only counts: the record is
+byte-identical with and without it. The file holds `{schema, action, total,
+overflow, entries: [{kind, path, count}]}` with entries sorted by kind then
+path, each path made printable and redacted exactly as in a reason. The
+observer keeps at most 4096 distinct (kind, path) pairs per action; a new pair
+beyond that adds to `overflow` (and `total`) instead, and the file is bounded to
+512 KiB (entries are dropped from the tail into `overflow` if needed). It is
+always on, **best-effort** (a failed write changes neither the verdict nor the
+child's exit status), written atomically (temp file, then `rename`), and never
+read for any verdict: it is not in a shard, not sealed, not hashed. `collect`
+and `step` accept the name `census.json` (and a stray `census.json.tmp-*`) in
+an action's directory and do not count it as an orphan or an unexpected entry.
+
 **P3. Binary placement (D15).** The Kiln binary (the running executable,
 resolved through symlinks) and the build-tool binary must be regular files
 whose path equals its own resolved path, and must lie outside every place a
