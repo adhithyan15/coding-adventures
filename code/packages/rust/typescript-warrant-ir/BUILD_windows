@@ -1,6 +1,8 @@
+# build-tool: deps=rust/bit-blaster rust/sha256 rust/warrant-ir
 # The bridge is test and proof infrastructure. Its test invokes Node on the exact
 # checked-in TypeScript fixture and source-mutant copies of those same bytes.
 node --version
 cargo test -p typescript-warrant-ir -- --nocapture
+cargo test -p typescript-warrant-ir --example source-proof -- --nocapture
 cargo test -p typescript-warrant-ir --release -- --nocapture
 cargo run --manifest-path ../ca-capability-analyzer/Cargo.toml -- --dir . --check-module
