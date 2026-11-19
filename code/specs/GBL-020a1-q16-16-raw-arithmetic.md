@@ -1,6 +1,6 @@
 # GBL-020a1: raw signed Q16.16 arithmetic
 
-**Status:** selected specification; implementation has not started. This is the first
+**Status:** selected specification; implementation and finite evidence are in progress. Canonical source-IR proof/report admission is currently not-live and tracked by VER-P047. This is the first
 slice of GBL-020a, not completion of that parent.
 
 ## Purpose and boundary

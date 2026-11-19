@@ -1212,7 +1212,7 @@ const WXG_FAULTS: &[(&str, &str)] = &[
 fn bool_field_flip_applies(full: &Ty) -> bool {
     let record_has_bool = |ty: &Ty| {
         matches!(ty, Ty::Data { ctors, record: true, .. }
-            if ctors.len() == 1 && ctors[0].1.iter().any(|field| *field == Ty::Bool))
+            if ctors.len() == 1 && ctors[0].1.contains(&Ty::Bool))
     };
     match full {
         Ty::Data { .. } => record_has_bool(full),

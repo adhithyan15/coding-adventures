@@ -159,11 +159,18 @@ Rust and TypeScript (each 2/15 established lanes); this is package presence, not
 The earlier GBL-003b selection rationale above is now historical. **Next selected item:
 GBL-020a1**, a reusable raw signed Q16.16 arithmetic foundation in the Rust `fixed-point`
 package. This follows the completed exact clock validator assurance and adds a reusable
-simulation capability with four explicitly admitted rounding modes; GBL-020a remains open for
-Q32.32, square root, CORDIC, and broader portability. VER-P046's whole-clock manifest adapter
-and above-budget evidence disposition remain open follow-ups, but are not a demonstrated
-prerequisite for this separate arithmetic contract. The selection is recorded before
-implementation; historical P0–P5 groupings do not themselves select work.
+simulation capability with four specified rounding modes; actual generator admission is not yet
+established. The current Warrant source frontend refuses the file at its top-level `const`, and
+isolated exports also refuse `Result` or custom `Q16` types. VER-P047 now tracks the bounded
+source-disposition/report prerequisite: preserve these as `not-live` without inventing proofs,
+counts, or source equivalence. VER-P048 separately covers derived missing-step coverage for
+CWE-400 and CWE-407 without author-approved exemptions. Runtime arithmetic work may continue,
+but canonical assurance closure waits for P047 and P048. GBL-020a remains open for Q32.32, square root, CORDIC, and broader
+portability. VER-P046's whole-clock manifest adapter and above-budget evidence disposition remain
+separate follow-ups. The repository-wide report sweep also found 26 unrelated saved reports that
+predate the required VER04i `lanes` field; their migration is tracked separately under VER-P049 and
+does not expand this Q16 item. The selection is recorded before implementation; historical P0–P5
+groupings do not themselves select work.
 
 As of 2026-11-18, `GBL-001`, `GBL-002`, `GBL-003a`, `GBL-061`, and the selected `GBL-063` parser
 repair are merged. PR #19649 merged squash `399ab9af38c45817c6638defe368bf4596d4cad4`; exact-head
@@ -356,7 +363,15 @@ worktree; report and preserve it if those checks do not pass.
   whether a repository-root lookalike such as `.cargo/config.toml.bak` is rejected consistently by
   Go/Python versus C#/Swift candidate selection and source filtering. This is an unresolved contract
   question, not a confirmed production mismatch; keep the valid six-input case and nearby-path
-  negatives intact while probing it.
+  negatives intact while probing it. A further scoped audit is required for the new GBL-020a1
+  assurance consumers: inspect the actual files read by `ca-assurance-report`'s fixed-point report
+  test sandbox and `warrant-ir`'s fixed-point proof driver, then prove their path selection and
+  persisted-cache invalidation, restore, and unchanged-hit behavior. The report sandbox reads
+  fixed-point `src/**`, `evidence/**`, `Cargo.toml`, `effect_certificate.json`, `evidence.bindings`,
+  `assurance-profile.json`, and `code/specs/fixed-point.warrant`; the WIR proof test reads fixed-point
+  `src/**`, `evidence.bindings`, and the same Warrant specification. Also include only the exact
+  Cargo workspace/config inputs consumed by their BUILD commands. Keep this consumer-specific; do
+  not add a blanket Warrant-adopter registry or claim a repository-wide external-input cache fix.
 - [ ] `GBL-013` Implement GAME10 public APIs and exact v1 corpus consumption in Go.
 - [ ] `GBL-014` Implement GAME10 public APIs and exact v1 corpus consumption in Python.
 - [ ] `GBL-012` Add the remaining established GAME10 package ports with exact shared corpus consumers,
@@ -382,7 +397,7 @@ worktree; report and preserve it if those checks do not pass.
 ### P3 — Complete Lunar Lander language coverage
 
 - [ ] `GBL-020` Before adding more Lunar Lander ports, audit current Rust, Python, TypeScript, Go, Ruby, Perl, Lua, and Elixir packages against the normative fixed-point contract and shared vectors.
-- [ ] `GBL-020a` (GAME01a) Specify and implement a reusable portable fixed-point arithmetic substrate, including rounding, overflow, saturation, and refusal semantics; Lunar Lander title-specific math is not a shared substrate. **Selected next:** `GBL-020a1`, the full raw signed Q16.16 arithmetic foundation specified in [`GBL-020a1-q16-16-raw-arithmetic.md`](GBL-020a1-q16-16-raw-arithmetic.md). It defines four explicit rounding modes, checked and saturating operations, typed refusal, exact-rational oracle, the 559-value canonical edge generator (312,481 pairs per binary operation; 1,249,924 four-mode multiplication/division cases), generated evidence admission against actual public exports, bounded proof controls, and exact source/cache input tracking. The edge campaign is not the full `2^64` operand-pair domain. Initial admission found the generator cannot yet apply an existing mutation fault to the nested result's direct overflow Boolean, while requiring every bound operation to have a non-vacuous fault. Implement the narrowly scoped VER `WX-FAULT2` prerequisite and prove legacy-adopter stability before completing full Q16 admission; no API flattening or surrogate subject. Q32.32, square root, and CORDIC remain separate open work in parent GBL-020a. The bounded inventory found no reusable general fixed-point package: Lunar Lander's scaled coordinates/integrator and audio Q16.16 gain/filter helpers are title-/audio-specific. Canonical presence remains Lunar Lander in 8/15 established and 0/3 emerging lanes; no math behavioral parity follows from that presence.
+- [ ] `GBL-020a` (GAME01a) Specify and implement a reusable portable fixed-point arithmetic substrate, including rounding, overflow, saturation, and refusal semantics; Lunar Lander title-specific math is not a shared substrate. **Selected next:** `GBL-020a1`, the full raw signed Q16.16 arithmetic foundation specified in [`GBL-020a1-q16-16-raw-arithmetic.md`](GBL-020a1-q16-16-raw-arithmetic.md). It defines four explicit rounding modes, checked and saturating operations, typed refusal, exact-rational oracle, the 559-value canonical edge generator (312,481 pairs per binary operation; 1,249,924 four-mode multiplication/division cases), generated evidence admission against actual public exports, bounded proof controls, and exact source/cache input tracking. The edge campaign is not the full `2^64` operand-pair domain. The WX-FAULT2 prerequisite is implemented: its opt-in Boolean-field fault now reaches the nested saturation result while preserving legacy adopter output. Current admission has separately exposed that the canonical source frontend refuses this module's top-level `const` and the exported custom-record/`Result` signatures; VER-P047 tracks honest source-not-live reporting; VER-P048 tracks derived CWE-400/CWE-407 missing-step dispositions. No API flattening, surrogate subject, or author-created approval is allowed. Q32.32, square root, and CORDIC remain separate open work in parent GBL-020a. The bounded inventory found no reusable general fixed-point package: Lunar Lander's scaled coordinates/integrator and audio Q16.16 gain/filter helpers are title-/audio-specific. Canonical presence remains Lunar Lander in 8/15 established and 0/3 emerging lanes; no math behavioral parity follows from that presence.
 - [ ] `GBL-020b` (GAME01b) Specify a deterministic `sim-turn-core` contract over caller-supplied fixed-point state and time; define shared vectors and lane gates after GAME01a. Keep host scheduling and runtime authority outside this core.
 - [ ] `GBL-021` Add the missing established C# Lunar Lander port, consuming the shared fixed-point
   corpus and satisfying package/build metadata requirements.

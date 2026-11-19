@@ -1,0 +1,72 @@
+{
+  "schema_version": "ver24-effect-cert-v1",
+  "package": "rust/fixed-point",
+  "source_digest": "0fffef85edcfb028aeade572d52d280815a1556e95341083579d9bb3428e7639",
+  "manifest_digest": "a9af3896c4a3309ffc9bbdba2585e60250f799c2e7fcbfd5843ed1636f6f434d",
+  "declared_effects": [],
+  "entry_points": [
+    {
+      "name": "from_raw",
+      "signature": "pub const fn from_raw(raw: i32) -> Self",
+      "effects": []
+    },
+    {
+      "name": "raw",
+      "signature": "pub const fn raw(self) -> i32",
+      "effects": []
+    },
+    {
+      "name": "from_integer",
+      "signature": "pub fn from_integer(value: i32) -> Result<Q16, Q16Error>",
+      "effects": []
+    },
+    {
+      "name": "checked_add",
+      "signature": "pub fn checked_add(a: Q16, b: Q16) -> Result<Q16, Q16Error>",
+      "effects": []
+    },
+    {
+      "name": "checked_sub",
+      "signature": "pub fn checked_sub(a: Q16, b: Q16) -> Result<Q16, Q16Error>",
+      "effects": []
+    },
+    {
+      "name": "saturating_add",
+      "signature": "pub fn saturating_add(a: Q16, b: Q16) -> SaturatingResult",
+      "effects": []
+    },
+    {
+      "name": "saturating_sub",
+      "signature": "pub fn saturating_sub(a: Q16, b: Q16) -> SaturatingResult",
+      "effects": []
+    },
+    {
+      "name": "checked_mul",
+      "signature": "pub fn checked_mul(a: Q16, b: Q16, mode: RoundingMode) -> Result<Q16, Q16Error>",
+      "effects": []
+    },
+    {
+      "name": "saturating_mul",
+      "signature": "pub fn saturating_mul(a: Q16, b: Q16, mode: RoundingMode) -> SaturatingResult",
+      "effects": []
+    },
+    {
+      "name": "checked_div",
+      "signature": "pub fn checked_div(a: Q16, b: Q16, mode: RoundingMode) -> Result<Q16, Q16Error>",
+      "effects": []
+    },
+    {
+      "name": "saturating_div",
+      "signature": "pub fn saturating_div(a: Q16, b: Q16, mode: RoundingMode) -> Result<SaturatingResult, Q16Error>",
+      "effects": []
+    },
+    {
+      "name": "to_integer",
+      "signature": "pub fn to_integer(value: Q16, mode: RoundingMode) -> i32",
+      "effects": []
+    }
+  ],
+  "unconditional_roots": [],
+  "banned_construct_exceptions": [],
+  "label": "proved"
+}
