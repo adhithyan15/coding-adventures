@@ -156,8 +156,14 @@ found that the current finite harness does not fit the existing manifest adapter
 the precise blockers are recorded under `VER-P046`.
 The canonical package report after this merge records both `game-clock` and `game-input-frame` in
 Rust and TypeScript (each 2/15 established lanes); this is package presence, not behavioral parity.
-The earlier GBL-003b selection rationale above is now historical. No next implementation item has
-been selected here; root reprioritizes from the remaining backlog after this closeout.
+The earlier GBL-003b selection rationale above is now historical. **Next selected item:
+GBL-020a1**, a reusable raw signed Q16.16 arithmetic foundation in the Rust `fixed-point`
+package. This follows the completed exact clock validator assurance and adds a reusable
+simulation capability with four explicitly admitted rounding modes; GBL-020a remains open for
+Q32.32, square root, CORDIC, and broader portability. VER-P046's whole-clock manifest adapter
+and above-budget evidence disposition remain open follow-ups, but are not a demonstrated
+prerequisite for this separate arithmetic contract. The selection is recorded before
+implementation; historical P0–P5 groupings do not themselves select work.
 
 As of 2026-11-18, `GBL-001`, `GBL-002`, `GBL-003a`, `GBL-061`, and the selected `GBL-063` parser
 repair are merged. PR #19649 merged squash `399ab9af38c45817c6638defe368bf4596d4cad4`; exact-head
@@ -376,7 +382,7 @@ worktree; report and preserve it if those checks do not pass.
 ### P3 — Complete Lunar Lander language coverage
 
 - [ ] `GBL-020` Before adding more Lunar Lander ports, audit current Rust, Python, TypeScript, Go, Ruby, Perl, Lua, and Elixir packages against the normative fixed-point contract and shared vectors.
-- [ ] `GBL-020a` (GAME01a) Specify and implement a reusable portable fixed-point arithmetic substrate, including rounding, overflow, saturation, and refusal semantics; Lunar Lander title-specific math is not a shared substrate. A bounded admission review found one plausible first slice: a binary signed Q16.16 scalar profile over two `I32` inputs has 312,481 canonical edge pairs (`559²`), below the current `2^26` exhaustive budget. This is an edge corpus, not the `2^64` input-pair domain. The real API path, default scalar-adapter panic/refusal normalization, signed rounding, and report evidence need an explicit contract; symbolic signed shifts/division may be unsupported and must refuse honestly rather than supply fake proof. Q32.32, square root, and CORDIC remain separate open design work. This candidate has not been selected. The bounded inventory found no reusable general fixed-point package: Lunar Lander's scaled coordinates/integrator and the audio package's Q16.16 gain/filter helpers are title-/audio-specific. Canonical presence remains Lunar Lander in 8/15 established and 0/3 emerging lanes; no math behavioral parity follows from that presence.
+- [ ] `GBL-020a` (GAME01a) Specify and implement a reusable portable fixed-point arithmetic substrate, including rounding, overflow, saturation, and refusal semantics; Lunar Lander title-specific math is not a shared substrate. **Selected next:** `GBL-020a1`, the full raw signed Q16.16 arithmetic foundation specified in [`GBL-020a1-q16-16-raw-arithmetic.md`](GBL-020a1-q16-16-raw-arithmetic.md). It defines four explicit rounding modes, checked and saturating operations, typed refusal, exact-rational oracle, the 559-value canonical edge generator (312,481 pairs per binary operation; 1,249,924 four-mode multiplication/division cases), generated evidence admission against actual public exports, bounded proof controls, and exact source/cache input tracking. The edge campaign is not the full `2^64` operand-pair domain. The first implementation gate is a real canonical generator compile/run against the exact API and error types; if unavailable without a subject-changing shim, stop and record the generator prerequisite. Q32.32, square root, and CORDIC remain separate open work in parent GBL-020a. The bounded inventory found no reusable general fixed-point package: Lunar Lander's scaled coordinates/integrator and audio Q16.16 gain/filter helpers are title-/audio-specific. Canonical presence remains Lunar Lander in 8/15 established and 0/3 emerging lanes; no math behavioral parity follows from that presence.
 - [ ] `GBL-020b` (GAME01b) Specify a deterministic `sim-turn-core` contract over caller-supplied fixed-point state and time; define shared vectors and lane gates after GAME01a. Keep host scheduling and runtime authority outside this core.
 - [ ] `GBL-021` Add the missing established C# Lunar Lander port, consuming the shared fixed-point
   corpus and satisfying package/build metadata requirements.
