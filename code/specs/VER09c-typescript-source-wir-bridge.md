@@ -245,7 +245,8 @@ invalidation test. On Rust 1.100.0, strict all-target Clippy, debug and release
 test suites passed; library coverage was 394/408 lines (96.57%).
 
 The CI build tool also runs strict Clippy before the crate's declared `BUILD`
-commands. The first PR run exposed a collapsible-if lint in the library and a
+commands. The first PR's macOS CI run exposed a collapsible-if lint in the
+library. A subsequent local Rust 1.100 strict all-target Clippy run exposed a
 needless-range-loop lint in the independent test oracle; both were repaired
 without changing lowering behavior or the oracle's bit order. This gate must be
 included when describing the effective build recipe and local reproduction.
