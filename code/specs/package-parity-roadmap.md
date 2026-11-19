@@ -50,7 +50,7 @@ multiple directories for the same identity.
 - Swift
 - TypeScript
 
-### Go SAT solver gap (2026-11-18)
+### Go SAT solver gap and selected delivery (2026-11-18)
 
 `code/packages/typescript/sat-solver` is the TypeScript `sat-solver` package;
 `code/packages/rust/cdcl-sat` is a separate Rust `cdcl-sat` package. These are
@@ -58,8 +58,12 @@ distinct canonical identities, and neither directory name is evidence of a Go
 port. The current tracked Go packages contain no `sat-solver` identity. The
 bounded Go parser SAT check described by [VER backlog](VER-BACKLOG.md) is an
 opt-in test bridge to the existing TypeScript solver, not an implementation
-port and not package parity. A Go SAT-solver port remains a separate future
-parity item.
+port and not package parity. Native Go `sat-solver` is the selected next
+package-parity delivery, specified by [VER09b](VER09b-go-sat-solver.md); its
+contract requires shared TypeScript/Go fixtures and behavioral evidence.
+Presence in the canonical reporter remains structural evidence only until
+those tests and implementation are complete. The TypeScript GBL-050a
+input-frame port follows this Go package in the serial delivery queue.
 
 ### Separately classified lanes
 
@@ -134,15 +138,18 @@ language buckets:
 The loop must not start by attempting 14,070 singleton slots. It should finish
 the broadly established portable core, then classify the sparse majority.
 
-### Queued identity gap: Go SAT solver (2026-11-18)
+### Selected identity gap: Go SAT solver (2026-11-18)
 
-After the blocking `GBL-063` Kiln performance repair and open `GBL-010` PR
-#19644 are resolved, prioritize a Go `sat-solver` implementation before
-selecting another package-parity item. Align its source/API with the existing
-TypeScript `code/packages/typescript/sat-solver` identity and contract; include
-shared fixtures, assignment validation, bounded brute-force/model/mutant
-evidence, Go `BUILD`/`BUILD_windows`, README, changelog, metadata, and CI. Refresh
-the canonical package matrix after that implementation lands. Rust
+PR #19644 (`GBL-010`) merged as `4ec975d`, and the Rust action-frame boundary
+merged as PR #19668 (`ccd8618`). The Go `sat-solver` is now selected before the
+later TypeScript action-frame port. The broader `GBL-063` host robustness work
+remains separately tracked and is not part of this dependency-free Go package.
+Align source/API behavior with the existing TypeScript
+`code/packages/typescript/sat-solver` identity and contract; include a shared
+valid corpus consumed by both ports, assignment/core validation, bounded
+brute-force/model/mutant evidence, Go `BUILD`/`BUILD_windows`, README,
+changelog, metadata, and CI. Refresh the canonical reporter after delivery;
+presence remains structural evidence only. Rust
 `code/packages/rust/cdcl-sat` remains a distinct package identity and does not
 fill the Go `sat-solver` cell. The current Go parser SAT miter is test-only
 validation and does not implement or close this parity item. Cross-linked from

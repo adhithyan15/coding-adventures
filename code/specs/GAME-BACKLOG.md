@@ -293,8 +293,9 @@ worktree; report and preserve it if those checks do not pass.
 
 ### P3 — Complete Lunar Lander language coverage
 
-- [ ] `GBL-020` Verify current Rust, Python, TypeScript, Go, Ruby, Perl, Lua, and Elixir packages against the
-  normative fixed-point contract and shared vectors.
+- [ ] `GBL-020` Before adding more Lunar Lander ports, audit current Rust, Python, TypeScript, Go, Ruby, Perl, Lua, and Elixir packages against the normative fixed-point contract and shared vectors.
+- [ ] `GBL-020a` (GAME01a) Specify and implement a reusable portable fixed-point arithmetic substrate, including rounding, overflow, saturation, and refusal semantics; Lunar Lander title-specific math is not a shared substrate.
+- [ ] `GBL-020b` (GAME01b) Specify a deterministic `sim-turn-core` contract over caller-supplied fixed-point state and time; define shared vectors and lane gates after GAME01a. Keep host scheduling and runtime authority outside this core.
 - [ ] `GBL-021` Add the missing established C# Lunar Lander port, consuming the shared fixed-point
   corpus and satisfying package/build metadata requirements.
 - [ ] `GBL-023` Add the missing established F# Lunar Lander port with shared corpus and package/build evidence.
@@ -344,20 +345,22 @@ worktree; report and preserve it if those checks do not pass.
   build on verified simulation foundations. Replay and checkpoints are tracked in `GBL-051`.
 - [ ] `GBL-042` Reconcile GAME00's GAME30–GAME35 and GAME40–GAME45 rows with actual packages, language lanes, device backends,
   and host integration. Roadmap presence alone is not completion evidence.
-- [ ] `GBL-050` (active; spec/corpus committed first, Rust implementation in progress) Define a portable
-  pure action-frame reducer. The v1 boundary accepts one full-width `u32` player ID, caller-owned
+- [x] `GBL-050` Rust v1 action-frame boundary delivered by PR #19668, squash
+  `ccd86180bb0b274d5e0a30c37a55c512c42aeba3`, merged 2026-11-18. This closes
+  the Rust v1 slice only, not the language queue, host integration, replay, or
+  checkpoint family. The boundary accepts one full-width `u32` player ID, caller-owned
   `u64` simulation tick, 64 button levels, 16 signed absolute axes, and at most 256 ordered changes;
   it refuses invalid frames atomically with stable validation order. Edge masks summarize whether
   transitions occurred and do not retain within-tick ordering or tap counts. Current evidence is
   bounded to the stated reducer, finite vectors/domain enumeration, seeded properties, harness/parser
   fuzzing, a 64-slot/3-transition SAT model, and extracted scalar-helper proofs; no whole-reducer
   source proof or universal claim is established. Runtime containment is reported per host.
-- [ ] `GBL-050a` Port the input action-frame contract and vectors to TypeScript after the Rust boundary is stable.
+- [ ] `GBL-050a` (next after Go sat-solver parity) Port the input action-frame contract and vectors to TypeScript; the Rust boundary is merged and stable.
 - [ ] `GBL-050-language-queue` Port the stable contract to Go, Python, C#, Dart, Elixir, F#, Haskell,
   Java, Kotlin, Lua, Perl, Ruby, and Swift, each with independent public-API conformance evidence.
   The emerging C, C++, and OCaml lanes remain a separate 0/3 queue. Package presence alone is not
-  behavioral parity. Go SAT-solver parity remains the first package-parity selection after this
-  primitive; the Rust `cdcl-sat` dependency is already available here.
+  behavioral parity. Go SAT-solver parity is the selected package-parity delivery before the
+  TypeScript input-frame port; the Rust `cdcl-sat` dependency is already available.
 - [ ] `GBL-050-input-followups` Define host input binding and multi-device aggregation; caller-owned
   host tick assignment and event ordering; focus-loss/disconnect release policy; richer text and
   relative pointer input; quantization and action layouts/banks; and ordered/versioned replay.
