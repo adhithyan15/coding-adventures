@@ -77,7 +77,7 @@ final class HashMap<V> {
         HashAlgorithm.sipHash24(key: HashMapLimits.deterministicSipHashKey);
     _validateMapConfiguration(capacity, algorithm);
     // The private builder consumes entries sequentially and publishes only after
-    // every entry succeeds. This keeps million-entry setup linear and atomic.
+    // every entry succeeds. This avoids copying the entire table per entry.
     final builder = _TableBuilder<V>.empty(
       capacity: capacity,
       strategy: strategy,
