@@ -4746,6 +4746,30 @@ enforce revocation, invoke an AEAD, protect records, perform I/O, authorize
 HTTP or OAuth transport, or open a network connection. Concrete HTTPS remains
 unavailable.
 
+An allocation-free `tls13-finished-transcript-binding` prerequisite now closes
+the detached transcript-hash input at that Finished verifier. It accepts one
+immutable repository-owned selected transcript, one already-derived Finished
+key, and exact borrowed peer verify-data. Exact selected-suite equality is
+checked before snapshotting or HMAC work; then the transcript is snapshot only
+inside the composition and that snapshot alone is supplied to repository-owned
+Finished verification. Success returns non-copyable evidence retaining the
+exact transcript, suite-bound snapshot, and `VerifiedFinished` verdict
+together. The retained immutable transcript borrow prevents that state from
+advancing while the evidence is live. Stable failures retain no transcript,
+digest, verify-data, suite, role, length, or offset bytes. SHA-256 and SHA-384
+success paths and a same-hash different-suite substitution are covered.
+
+This binding does not prove which ordered handshake encodings entered the
+transcript, choose the correct client/server BaseKey or sender role, or connect
+the earlier `CertificateVerify` transcript to the later Finished transcript.
+It does not sequence the handshake, authenticate a certificate, establish
+trust, enforce revocation, bind a record epoch, protect records, perform I/O,
+authorize HTTP or OAuth transport, or open a network connection. It accesses
+no credential and causes no edit, signing operation, provider or trace event,
+storage, clock, network, or other external effect. Ordered transcript
+continuity, record protection, and transport remain separate blockers;
+concrete HTTPS and live-provider readiness remain unavailable.
+
 The repository-owned `tls13-key-schedule` boundary now composes the no-PSK
 RFC 8446 section 7.1 base-secret transitions for a full ephemeral key exchange.
 One caller-policy-selected cipher suite remains the sole source of SHA-256 or
