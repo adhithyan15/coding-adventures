@@ -1057,6 +1057,26 @@ authority. Those remaining revocation-topology, state, record, and transport
 boundaries remain separate; concrete HTTPS and live-provider readiness remain
 unavailable.
 
+A fifth revocation entry point now accepts only the exact HTTPS DNS destination
+already bound to the complete alternative intermediate-status-responder
+revocation responder no-check fixed-path proof. Its private sealed admission
+has exactly one production implementation: the repository-owned alternative
+destination/revocation boundary. After the same server-role gate it derives
+the leaf through that retained destination, validates the exact
+SubjectPublicKeyInfo under caller policy, verifies the selected-transcript
+`CertificateVerify`, and retains the complete alternative proof with the exact
+signature verdict. This closes substitution between the server leaf covered
+by the alternative completion and the key used for handshake authentication
+without repeating revocation evaluation.
+
+This entry point completes the five existing destination-bound complete
+revocation topologies; it does not generalize path construction or revocation
+policy. It does not acquire or refresh status, prove ordered transcript state,
+authenticate Finished, protect records, perform TLS or HTTP I/O, authorize
+OAuth transport, or grant network authority. Those remaining path, state,
+record, and transport boundaries remain separate; concrete HTTPS and live-
+provider readiness remain unavailable.
+
 A bounded `rsa-pss-sha512` prerequisite now validates one complete recovered
 RFC 8017 EMSA-PSS encoded message for the fixed SHA-512, 64-byte-salt profile.
 It composes the public layout gate and bounded SHA-512 MGF1 primitive, unmasks

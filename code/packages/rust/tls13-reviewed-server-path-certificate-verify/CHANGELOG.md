@@ -6,6 +6,10 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- Exact HTTPS DNS destination, alternative intermediate-status-responder
+  no-check complete fixed-path revocation, and TLS 1.3 server
+  `CertificateVerify` composition with sealed exact-leaf admission, retained
+  evidence, and role-first public-fixture tests.
 - Exact HTTPS DNS destination, recursive-responder no-check complete fixed-path
   revocation, and TLS 1.3 server `CertificateVerify` composition with sealed
   exact-leaf admission, retained evidence, and role-first public-fixture tests.
