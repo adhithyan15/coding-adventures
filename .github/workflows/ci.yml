@@ -1255,7 +1255,7 @@ jobs:
       - name: Install strace for the real-strace sandbox test
         timeout-minutes: 10  # apt can stall on a mirror; fail fast, not at 6h (#12163)
         # Both runner images ship strace, so only touch apt when it is missing:
-        # `apt-get update` against a stalled mirror failed this required job
+        # refreshing the apt index against a stalled mirror failed this required job
         # with nothing Kiln-related wrong (2026-11-19, PR #19689).
         run: |
           if command -v strace >/dev/null 2>&1; then
@@ -4582,7 +4582,7 @@ jobs:
         if: needs.detect.outputs.needs_rust == 'true' && runner.os == 'Linux'
         timeout-minutes: 10  # apt can stall on a mirror; fail fast, not at 6h (#12163)
         # strace ships on the runner image; only touch apt when it is missing
-        # (an `apt-get update` mirror stall failed kiln-sandbox, 2026-11-19).
+        # (an apt index refresh stalled on a mirror and failed kiln-sandbox, 2026-11-19).
         run: |
           if command -v strace >/dev/null 2>&1; then
             echo "strace preinstalled: $(strace -V | head -1)"
