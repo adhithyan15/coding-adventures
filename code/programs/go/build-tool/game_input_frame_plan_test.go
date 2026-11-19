@@ -69,6 +69,64 @@ func TestTypeScriptLanguageFilteredPlanKeepsRustProvidersAndToolchain(t *testing
 		t.Fatalf("resolve fixture baseline: %v", err)
 	}
 	base := strings.TrimSpace(string(baseBytes))
+	for _, input := range typescriptGameInputFrameInputs {
+		reset := exec.Command("git", "reset", "--hard", base)
+		reset.Dir = root
+		if output, err := reset.CombinedOutput(); err != nil {
+			t.Fatalf("reset fixture before %s probe: %v\n%s", input, err, output)
+		}
+		inputPath := filepath.Join(root, filepath.FromSlash(input))
+		originalInput, err := os.ReadFile(inputPath)
+		if err != nil {
+			t.Fatalf("read plan input %s: %v", input, err)
+		}
+		mutatedInput := mutateTypeScriptGameInputFrameInput(t, input, originalInput)
+		if len(mutatedInput) != len(originalInput) {
+			t.Fatalf("plan input mutation %s changed byte length", input)
+		}
+		if err := os.WriteFile(inputPath, mutatedInput, 0o644); err != nil {
+			t.Fatal(err)
+		}
+		for _, args := range [][]string{{"add", input}, {"commit", "-qm", "change " + input}} {
+			command := exec.Command("git", args...)
+			command.Dir = root
+			if output, err := command.CombinedOutput(); err != nil {
+				t.Fatalf("git %v: %v\n%s", args, err, output)
+			}
+		}
+		planPath := filepath.Join(root, "input-plan-"+strings.ReplaceAll(strings.Trim(input, "/."), "/", "-")+".json")
+		emitOutput := runBuildToolPlanProcess(t,
+			"-root", root, "-language", "typescript", "-diff-base", base, "-ci-gates=", "-emit-plan", planPath,
+		)
+		bp, err := plan.Read(planPath)
+		if err != nil {
+			t.Fatalf("read emitted plan for %s: %v", input, err)
+		}
+		if !containsString(bp.AffectedPackages, gameInputFrameCacheConsumer) ||
+			!bp.LanguagesNeeded["typescript"] || !bp.LanguagesNeeded["rust"] {
+			t.Fatalf("input %s did not select TS consumer and its Rust toolchain: affected=%v languages=%v output=%s",
+				input, bp.AffectedPackages, bp.LanguagesNeeded, emitOutput)
+		}
+		for _, provider := range []string{gameInputFrameCacheBridge, gameInputFrameCacheParser, gameInputFrameCacheWIR, gameInputFrameCacheSolver} {
+			if !containsPlanPackage(bp.Packages, provider) {
+				t.Fatalf("input %s emitted plan lost provider %s", input, provider)
+			}
+		}
+		replayOutput := runBuildToolPlanProcess(t,
+			"-root", root, "-language", "typescript", "-plan-file", planPath,
+			"-cache-file", filepath.Join(root, "input-cache-"+strings.ReplaceAll(strings.Trim(input, "/."), "/", "-")+".json"), "-dry-run",
+		)
+		if !strings.Contains(replayOutput, "Loaded plan:") || !strings.Contains(replayOutput, gameInputFrameCacheConsumer) {
+			t.Fatalf("input %s plan replay omitted TS consumer: %s", input, replayOutput)
+		}
+		t.Logf("actual external-input selector + plan replay: path=%s bytes_before=%d bytes_after=%d sha256_before=%s sha256_after=%s affected_ts=true providers=%d languages=%v replay=%q",
+			input, len(originalInput), len(mutatedInput), digestHex(originalInput), digestHex(mutatedInput), len(bp.Packages), bp.LanguagesNeeded, replayOutput)
+	}
+	resetBaseline := exec.Command("git", "reset", "--hard", base)
+	resetBaseline.Dir = root
+	if output, err := resetBaseline.CombinedOutput(); err != nil {
+		t.Fatalf("restore fixture baseline before proof-provider probe: %v\n%s", err, output)
+	}
 	bridge := filepath.Join(root, "code/packages/rust/typescript-warrant-ir/src/lib.rs")
 	original, err := os.ReadFile(bridge)
 	if err != nil {
@@ -201,6 +259,15 @@ func containsString(values []string, wanted string) bool {
 func containsPlanEdge(edges [][2]string, wanted [2]string) bool {
 	for _, edge := range edges {
 		if edge == wanted {
+			return true
+		}
+	}
+	return false
+}
+
+func containsPlanPackage(packages []plan.PackageEntry, wanted string) bool {
+	for _, pkg := range packages {
+		if pkg.Name == wanted {
 			return true
 		}
 	}

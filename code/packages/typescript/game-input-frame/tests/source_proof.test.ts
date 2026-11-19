@@ -77,7 +77,7 @@ function invokeProof(
 function runCli(cliArgs: string[]) {
   return spawnSync(
     "cargo",
-    ["run", "-q", "-p", "typescript-warrant-ir", "--example", "source-proof", "--", ...cliArgs],
+    ["run", "--locked", "-q", "-p", "typescript-warrant-ir", "--example", "source-proof", "--", ...cliArgs],
     { cwd: rustWorkspace, encoding: "utf8" },
   );
 }
@@ -170,7 +170,7 @@ test("the healthy WIR query binds exact production digital.ts bytes", () => {
   const child = spawnSync(
     "cargo",
     [
-      "run", "-q", "-p", "typescript-warrant-ir", "--example", "source-proof", "--",
+      "run", "--locked", "-q", "-p", "typescript-warrant-ir", "--example", "source-proof", "--",
       "--source", sourcePath, "--expected-path", relativeSourcePath,
       "--sha256", sourceDigest, "--query", "healthy:Proved",
     ],

@@ -109,6 +109,21 @@ The candidate `package_parity_report.py` snapshot recognizes the normalized
 This is package presence only, not behavioral parity or blanket parity across
 the game primitive queue.
 
+**Implementation receipt (2026-11-19, PR #19689; draft/pending CI):** the
+consumer cache tests now cover the six exact inputs listed in the GBL-050a
+companion: the shared 21-vector corpus, inherited TypeScript base config, root
+`.cargo/config.toml`, Rust workspace manifest/lockfile, and Rust `.cargo`
+configuration. The existing generic TypeScript shared-input negative remains
+unchanged; a separate game-input-frame source-collection fixture positively
+selects all six inputs. Temporary-repository probes exercise same-length valid
+mutations through selection, filtered plan replay, and persisted-cache
+miss/restore/hit paths. The canonical boundary contains 21 rows, 32
+registrations, and 28 unique paths. Local native receipts are Swift 97/97,
+C# 163/163, F# focused hasher 4/4, and Go's 16 packages plus `go vet`;
+Python conformance is 96/96 and corpus metadata validation covers 205 case
+documents and 328 staged fixture files. These are local receipts; the PR's
+exact-head CI and protected merge are still pending.
+
 As of 2026-11-18, `GBL-001`, `GBL-002`, `GBL-003a`, `GBL-061`, and the selected `GBL-063` parser
 repair are merged. PR #19649 merged squash `399ab9af38c45817c6638defe368bf4596d4cad4`; exact-head
 CI run `44345630607` passed the required Ubuntu 24.04 and 26.04 G1 lanes under the then-current

@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
+	"sort"
 	"strings"
 	"testing"
 
@@ -166,20 +167,18 @@ func TestGameInputFrameV1SelectsRustAndTypeScriptConsumers(t *testing.T) {
 		{Name: "rust/game-clock", Language: "rust"},
 		{Name: "typescript/game-input-frame", Language: "typescript"},
 	}
-	for _, changed := range []string{"code/specs/fixtures/game-input-frame-v1/cases.json"} {
+	for _, changed := range typescriptGameInputFrameInputs {
 		selected, err := repositoryInputConsumersForChange([]string{changed}, packages, "all")
-		if err != nil || !reflect.DeepEqual(selected, map[string]bool{"rust/game-input-frame": true, "typescript/game-input-frame": true}) {
-			t.Fatalf("%s selected %v, err %v; want Rust and TypeScript GAME frame", changed, selected, err)
+		if err != nil || !selected["typescript/game-input-frame"] {
+			t.Fatalf("%s selected %v, err %v; want TypeScript GAME frame", changed, selected, err)
+		}
+		tsSelected, err := repositoryInputConsumersForChange([]string{changed}, packages, "typescript")
+		if err != nil || !reflect.DeepEqual(tsSelected, map[string]bool{"typescript/game-input-frame": true}) {
+			t.Fatalf("typescript-only %s selected %v, err %v", changed, tsSelected, err)
 		}
 	}
-	for _, changed := range []string{"code/specs/fixtures/game-input-frame-v1/schema.json", "code/specs/fixtures/game-input-frame-v1/validate.py"} {
-		selected, err := repositoryInputConsumersForChange([]string{changed}, packages, "all")
-		if err != nil || !reflect.DeepEqual(selected, map[string]bool{"rust/game-input-frame": true}) {
-			t.Fatalf("%s selected %v, err %v; want Rust-only GAME frame", changed, selected, err)
-		}
-	}
-	if selected, err := repositoryInputConsumersForChange([]string{"code/specs/fixtures/game-input-frame-v1/cases.json"}, packages, "typescript"); err != nil || !reflect.DeepEqual(selected, map[string]bool{"typescript/game-input-frame": true}) {
-		t.Fatalf("typescript-only corpus selection = %v, err %v", selected, err)
+	if selected, err := repositoryInputConsumersForChange([]string{"code/specs/fixtures/game-input-frame-v1/schema.json"}, packages, "all"); err != nil || !reflect.DeepEqual(selected, map[string]bool{"rust/game-input-frame": true}) {
+		t.Fatalf("schema-only selector = %v, err %v; want Rust-only frame consumer", selected, err)
 	}
 	for path, want := range map[string]bool{
 		"code/specs/fixtures/game-input-frame-v1/cases.json":       true,
@@ -193,10 +192,57 @@ func TestGameInputFrameV1SelectsRustAndTypeScriptConsumers(t *testing.T) {
 			t.Errorf("isGameInputFrameV1(%q) = %v, want %v", path, got, want)
 		}
 	}
-	if !isTypeScriptGameInputFrameCorpus("code/specs/fixtures/game-input-frame-v1/cases.json") ||
-		isTypeScriptGameInputFrameCorpus("code/specs/fixtures/game-input-frame-v1/schema.json") ||
-		isTypeScriptGameInputFrameCorpus("code/specs/fixtures/game-input-frame-v10/cases.json") {
-		t.Fatal("TypeScript GAME input predicate is not exact")
+	if !isTypeScriptGameInputFrameInput(".cargo/config.toml") ||
+		isTypeScriptGameInputFrameInput(".cargo/config.toml.bak") ||
+		isTypeScriptGameInputFrameInput("code/packages/rust/Cargo.toml.bak") ||
+		isTypeScriptGameInputFrameInput("code/specs/fixtures/game-input-frame-v10/cases.json") {
+		t.Fatal("TypeScript GAME proof-input predicate is not exact")
+	}
+}
+
+func TestTypeScriptGameInputFrameHashSelectorAndBoundaryShareExactInputs(t *testing.T) {
+	if !sort.StringsAreSorted(typescriptGameInputFrameInputs) {
+		t.Fatalf("TypeScript game-input-frame hash inputs are not byte-sorted: %v", typescriptGameInputFrameInputs)
+	}
+	selectorInputs := repositoryInputsByPackage()["typescript/game-input-frame"]
+	if selectorInputs == nil || !reflect.DeepEqual(selectorInputs.paths, typescriptGameInputFrameInputs) {
+		t.Fatalf("selector inputs = %#v, want shared sorted list %v", selectorInputs, typescriptGameInputFrameInputs)
+	}
+	boundaryPath := filepath.Join(toolchainFixtureRepoRoot(t), "code/specs/fixtures/build-tool-v1/repository-source-input-boundary.json")
+	data, err := os.ReadFile(boundaryPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var boundary struct {
+		Boundaries []struct {
+			AppliesTo struct {
+				ExactRoots []string `json:"exact_roots"`
+			} `json:"applies_to"`
+			Inputs []struct {
+				Path string `json:"path"`
+			} `json:"inputs"`
+		} `json:"boundaries"`
+	}
+	if err := json.Unmarshal(data, &boundary); err != nil {
+		t.Fatal(err)
+	}
+	boundaryInputs := make(map[string]bool)
+	const packageRoot = "code/packages/typescript/game-input-frame"
+	for _, row := range boundary.Boundaries {
+		if !containsString(row.AppliesTo.ExactRoots, packageRoot) {
+			continue
+		}
+		for _, input := range row.Inputs {
+			boundaryInputs[input.Path] = true
+		}
+	}
+	var sortedBoundaryInputs []string
+	for input := range boundaryInputs {
+		sortedBoundaryInputs = append(sortedBoundaryInputs, input)
+	}
+	sort.Strings(sortedBoundaryInputs)
+	if !reflect.DeepEqual(sortedBoundaryInputs, typescriptGameInputFrameInputs) {
+		t.Fatalf("exact-root boundary inputs = %v, want selector/hash inputs %v", sortedBoundaryInputs, typescriptGameInputFrameInputs)
 	}
 }
 

@@ -12,6 +12,7 @@ const expectedPath = relative(repositoryRoot, sourcePath).split(sep).join("/");
 const digest = createHash("sha256").update(readFileSync(sourcePath)).digest("hex");
 const args = [
   "run",
+  "--locked",
   "-q",
   "-p",
   "typescript-warrant-ir",

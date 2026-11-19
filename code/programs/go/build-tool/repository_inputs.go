@@ -215,11 +215,18 @@ var (
 	gameClockInputPaths            = []string{"code/specs/fixtures/game-clock-v1", "code/specs/game-clock.warrant"}
 	typescriptGameClockCorpusPaths = []string{"code/specs/fixtures/game-clock-v1"}
 	gameInputFrameV1Paths          = []string{"code/specs/fixtures/game-input-frame-v1"}
-	typescriptGameInputFrameCorpus = []string{"code/specs/fixtures/game-input-frame-v1/cases.json"}
-	biquadSosFixturePaths          = []string{"code/specs/fixtures/biquad-sos-v1"}
-	hamurabiCorpusPaths            = []string{"code/specs/fixtures/hamurabi-v1"}
-	lunarLanderCorpusPaths         = []string{"code/specs/fixtures/lunar-lander-v1"}
-	warrantGrammarPaths            = []string{
+	typescriptGameInputFrameInputs = []string{
+		".cargo/config.toml",
+		"code/packages/rust/.cargo/config.toml",
+		"code/packages/rust/Cargo.lock",
+		"code/packages/rust/Cargo.toml",
+		"code/packages/typescript/tsconfig.base.json",
+		"code/specs/fixtures/game-input-frame-v1/cases.json",
+	}
+	biquadSosFixturePaths  = []string{"code/specs/fixtures/biquad-sos-v1"}
+	hamurabiCorpusPaths    = []string{"code/specs/fixtures/hamurabi-v1"}
+	lunarLanderCorpusPaths = []string{"code/specs/fixtures/lunar-lander-v1"}
+	warrantGrammarPaths    = []string{
 		"code/grammars/warrant",
 		"code/specs/fixtures/warrant-syntax-v1",
 		"code/specs/fixtures/warrant-vectors-synthetic-v1",
@@ -591,9 +598,9 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	{
 		name:     "typescript/game-input-frame",
 		language: "typescript",
-		inputs:   "the shared GAME input action frame v1 cases",
-		matches:  isTypeScriptGameInputFrameCorpus,
-		paths:    typescriptGameInputFrameCorpus,
+		inputs:   "the shared GAME input action frame v1 cases and exact TypeScript/Rust proof-tool configuration inputs",
+		matches:  isTypeScriptGameInputFrameInput,
+		paths:    typescriptGameInputFrameInputs,
 	},
 	{
 		name:     "python/trig",
@@ -1527,8 +1534,13 @@ func isGameInputFrameV1(changed string) bool {
 	return strings.HasPrefix(changed, "code/specs/fixtures/game-input-frame-v1/")
 }
 
-func isTypeScriptGameInputFrameCorpus(changed string) bool {
-	return changed == "code/specs/fixtures/game-input-frame-v1/cases.json"
+func isTypeScriptGameInputFrameInput(changed string) bool {
+	for _, input := range typescriptGameInputFrameInputs {
+		if changed == input {
+			return true
+		}
+	}
+	return false
 }
 
 // isBiquadSosFixture selects files in the versioned shared DSP fixture while

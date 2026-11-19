@@ -1,8 +1,10 @@
 package main
 
 import (
+	"bytes"
 	"crypto/sha256"
 	"encoding/hex"
+	"encoding/json"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -32,13 +34,7 @@ type gameInputCachePackage struct {
 func writeGameInputCacheFixture(t *testing.T) (string, []discovery.Package, *directedgraph.Graph) {
 	t.Helper()
 	root := t.TempDir()
-	fixturePath := filepath.Join(root, filepath.FromSlash(typescriptGameInputFrameCorpus[0]))
-	if err := os.MkdirAll(filepath.Dir(fixturePath), 0o755); err != nil {
-		t.Fatal(err)
-	}
-	if err := os.WriteFile(fixturePath, []byte("{\"v\":1}\n"), 0o644); err != nil {
-		t.Fatal(err)
-	}
+	copyTypeScriptGameInputFrameInputs(t, root)
 	fixtures := []gameInputCachePackage{
 		{
 			name: gameInputFrameCacheConsumer, language: "typescript",
@@ -85,7 +81,7 @@ func writeGameInputCacheFixture(t *testing.T) (string, []discovery.Package, *dir
 		{
 			name: "go/unrelated-cache-test", language: "go",
 			manifest: "module example.com/unrelated\n\ngo 1.23\n",
-			build: "echo unrelated", sourcePath: "main.go", source: "package main\nfunc main() {}\n",
+			build:    "echo unrelated", sourcePath: "main.go", source: "package main\nfunc main() {}\n",
 		},
 	}
 
@@ -121,6 +117,106 @@ func writeGameInputCacheFixture(t *testing.T) (string, []discovery.Package, *dir
 	return root, packages, graph
 }
 
+func copyTypeScriptGameInputFrameInputs(t *testing.T, root string) {
+	t.Helper()
+	repositoryRoot := toolchainFixtureRepoRoot(t)
+	for _, input := range typescriptGameInputFrameInputs {
+		original, err := os.ReadFile(filepath.Join(repositoryRoot, filepath.FromSlash(input)))
+		if err != nil {
+			t.Fatalf("read checked external input %s: %v", input, err)
+		}
+		destination := filepath.Join(root, filepath.FromSlash(input))
+		if err := os.MkdirAll(filepath.Dir(destination), 0o755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(destination, original, 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	// Keep CLI fixtures self-contained: the real workspace manifest contains
+	// hundreds of crates, while this graph intentionally models only the proof
+	// bridge and its declared transitive providers.
+	workspaceManifest := `[workspace]
+resolver = "2"
+members = [
+  "bit-blaster",
+  "lexer",
+  "sha256",
+  "typescript-lexer",
+  "typescript-parser",
+  "typescript-warrant-ir",
+  "warrant-ir",
+]
+`
+	if err := os.WriteFile(filepath.Join(root, "code/packages/rust/Cargo.toml"), []byte(workspaceManifest), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	exemptions := "EXCLUDED code/packages/rust  # synthetic virtual Cargo workspace root has no package target\n"
+	if err := os.WriteFile(filepath.Join(root, "code/BUILD-EXEMPTIONS"), []byte(exemptions), 0o644); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func mutateTypeScriptGameInputFrameInput(t *testing.T, path string, original []byte) []byte {
+	t.Helper()
+	var before, after string
+	replacementCount := 1
+	switch path {
+	case "code/specs/fixtures/game-input-frame-v1/cases.json":
+		before, after = `"tick": "1"`, `"tick": "2"`
+		replacementCount = 2 // Keep the first vector's input and expected frame aligned.
+	case "code/packages/typescript/tsconfig.base.json":
+		before, after = `"target": "ES2022"`, `"target": "ES2023"`
+	case "code/packages/rust/Cargo.toml":
+		before, after = `resolver = "2"`, `resolver = "1"`
+	case "code/packages/rust/Cargo.lock":
+		before, after = "version = 4\n", "version = 3\n"
+	case "code/packages/rust/.cargo/config.toml", ".cargo/config.toml":
+		before, after = `linker = "rust-lld"`, `linker = "lld-link"`
+	default:
+		t.Fatalf("no semantic mutation defined for external input %s", path)
+	}
+	mutated := strings.Replace(string(original), before, after, replacementCount)
+	if mutated == string(original) {
+		t.Fatalf("external mutation source text %q not found in %s", before, path)
+	}
+	if strings.HasSuffix(path, ".json") && !json.Valid([]byte(mutated)) {
+		t.Fatalf("external input mutation is not valid JSON: %s", path)
+	}
+	if path == "code/specs/fixtures/game-input-frame-v1/cases.json" {
+		var corpus struct {
+			Cases []struct {
+				Input struct {
+					Tick string `json:"tick"`
+				} `json:"input"`
+				Expected struct {
+					Frame struct {
+						Tick string `json:"tick"`
+					} `json:"frame"`
+				} `json:"expected"`
+			} `json:"cases"`
+		}
+		if err := json.Unmarshal([]byte(mutated), &corpus); err != nil {
+			t.Fatalf("decode mutated game-input-frame corpus: %v", err)
+		}
+		if len(corpus.Cases) == 0 || corpus.Cases[0].Input.Tick != "2" ||
+			corpus.Cases[0].Expected.Frame.Tick != corpus.Cases[0].Input.Tick {
+			t.Fatalf("first vector is not semantically paired after mutation: input tick=%q expected tick=%q",
+				corpus.Cases[0].Input.Tick, corpus.Cases[0].Expected.Frame.Tick)
+		}
+	}
+	return []byte(mutated)
+}
+
+func mustReadFile(t *testing.T, path string) []byte {
+	t.Helper()
+	data, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	return data
+}
+
 func runGameInputFrameCacheProbe(
 	t *testing.T,
 	root string,
@@ -151,7 +247,7 @@ func runGameInputFrameCacheProbe(
 	}
 	hashPackage := func(pkg discovery.Package) (string, error) {
 		if pkg.Name == gameInputFrameCacheConsumer {
-			return hasher.HashPackageWithRepositoryInputs(pkg, root, typescriptGameInputFrameCorpus)
+			return hasher.HashPackageWithRepositoryInputs(pkg, root, typescriptGameInputFrameInputs)
 		}
 		return hasher.HashPackage(pkg)
 	}
@@ -211,34 +307,43 @@ func TestPersistedCacheUsesCompleteTypeScriptProofToolClosure(t *testing.T) {
 	if status != "skipped" {
 		t.Fatalf("unchanged persisted cache status = %q, want skipped", status)
 	}
-	corpusPath := filepath.Join(root, filepath.FromSlash(typescriptGameInputFrameCorpus[0]))
-	originalCorpus, err := os.ReadFile(corpusPath)
+	bridgeControl, err := os.ReadFile(filepath.Join(root, "code/packages/rust/typescript-warrant-ir/src/lib.rs"))
 	if err != nil {
 		t.Fatal(err)
 	}
-	changedCorpus := strings.Replace(string(originalCorpus), `"v":1`, `"v":2`, 1)
-	if changedCorpus == string(originalCorpus) || len(changedCorpus) != len(originalCorpus) {
-		t.Fatal("corpus mutation must change content without changing byte length")
-	}
-	if err := os.WriteFile(corpusPath, []byte(changedCorpus), 0o644); err != nil {
-		t.Fatal(err)
-	}
-	t.Logf("source mutation: path=%s bytes_before=%d bytes_after=%d sha256_before=%s sha256_after=%s",
-		typescriptGameInputFrameCorpus[0], len(originalCorpus), len(changedCorpus), digestHex(originalCorpus), digestHex([]byte(changedCorpus)))
-	status, corpusChangedPackageHashes, _ := runGameInputFrameCacheProbe(t, root, allPackages, graph)
-	if status != "built" || corpusChangedPackageHashes[gameInputFrameCacheConsumer] == initialPackageHashes[gameInputFrameCacheConsumer] {
-		t.Fatalf("external corpus mutation was not hashed: status=%q", status)
-	}
-	if err := os.WriteFile(corpusPath, originalCorpus, 0o644); err != nil {
-		t.Fatal(err)
-	}
-	status, corpusRestoredHashes, _ := runGameInputFrameCacheProbe(t, root, allPackages, graph)
-	if status != "built" || corpusRestoredHashes[gameInputFrameCacheConsumer] != initialPackageHashes[gameInputFrameCacheConsumer] {
-		t.Fatalf("restored corpus digest not recognized: status=%q", status)
-	}
-	status, _, _ = runGameInputFrameCacheProbe(t, root, allPackages, graph)
-	if status != "skipped" {
-		t.Fatalf("restored corpus warm cache status = %q, want skipped", status)
+	for _, input := range typescriptGameInputFrameInputs {
+		inputPath := filepath.Join(root, filepath.FromSlash(input))
+		originalInput, err := os.ReadFile(inputPath)
+		if err != nil {
+			t.Fatalf("read external input %s: %v", input, err)
+		}
+		mutatedInput := mutateTypeScriptGameInputFrameInput(t, input, originalInput)
+		if len(mutatedInput) != len(originalInput) || bytes.Equal(mutatedInput, originalInput) {
+			t.Fatalf("external input mutation %s must differ with equal byte length", input)
+		}
+		if err := os.WriteFile(inputPath, mutatedInput, 0o644); err != nil {
+			t.Fatal(err)
+		}
+		if !bytes.Equal(bridgeControl, mustReadFile(t, filepath.Join(root, "code/packages/rust/typescript-warrant-ir/src/lib.rs"))) {
+			t.Fatalf("direct proof provider changed during external input mutation %s", input)
+		}
+		t.Logf("external input mutation: path=%s bytes_before=%d bytes_after=%d sha256_before=%s sha256_after=%s provider_control_sha256=%s",
+			input, len(originalInput), len(mutatedInput), digestHex(originalInput), digestHex(mutatedInput), digestHex(bridgeControl))
+		status, changedHashes, _ := runGameInputFrameCacheProbe(t, root, allPackages, graph)
+		if status != "built" || changedHashes[gameInputFrameCacheConsumer] == initialPackageHashes[gameInputFrameCacheConsumer] {
+			t.Fatalf("external input mutation %s was not hashed: status=%q", input, status)
+		}
+		if err := os.WriteFile(inputPath, originalInput, 0o644); err != nil {
+			t.Fatal(err)
+		}
+		status, restoredHashes, _ := runGameInputFrameCacheProbe(t, root, allPackages, graph)
+		if status != "built" || restoredHashes[gameInputFrameCacheConsumer] != initialPackageHashes[gameInputFrameCacheConsumer] {
+			t.Fatalf("restored input %s did not restore the original key: status=%q", input, status)
+		}
+		status, _, _ = runGameInputFrameCacheProbe(t, root, allPackages, graph)
+		if status != "skipped" {
+			t.Fatalf("restored input %s warm cache status = %q, want skipped", input, status)
+		}
 	}
 
 	bridgeSource := filepath.Join(root, "code/packages/rust/typescript-warrant-ir/src/lib.rs")

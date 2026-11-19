@@ -317,12 +317,12 @@ struct HasherTests {
         )
 
         #expect(checkedObject.isEqual(productionObject))
-        #expect(checked.boundaries.count == 19)
-        #expect(checked.boundaries.flatMap(\.inputs).count == 27)
-        #expect(Set(checked.boundaries.flatMap(\.inputs).map(\.path)).count == 25)
+        #expect(checked.boundaries.count == 21)
+        #expect(checked.boundaries.flatMap(\.inputs).count == 32)
+        #expect(Set(checked.boundaries.flatMap(\.inputs).map(\.path)).count == 28)
         #expect(
             Hasher.repositorySourceInputBoundaryDigest
-                == "974f31ba55e8c738954c6fa0138d4005ad3c27a667ed79634667213b5ccf4a6d"
+                == "02975c651ded7e4191ca4f1a142148ecd17176ae585c349c62a86163b13c0d16"
         )
         #expect(
             try Hasher.canonicalRepositorySourceInputBoundaryDigest(from: checkedData)
@@ -343,6 +343,7 @@ struct HasherTests {
         "source-collection-repository-starlark-load.json",
         "source-collection-repository-typescript-program-shared.json",
         "source-collection-repository-typescript-shared.json",
+        "source-collection-repository-typescript-game-input-frame-proof-inputs.json",
         "source-collection-repository-visicalc-deno-cross-package.json",
     ])
     func consumesNeutralRepositoryBoundaryFixture(_ name: String) throws {
