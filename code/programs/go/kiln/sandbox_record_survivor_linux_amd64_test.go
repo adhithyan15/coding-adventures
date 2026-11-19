@@ -172,6 +172,9 @@ exit 0
 			return nil
 		})
 	})
+	// D34: when the test ends, cross-check every trace the children wrote (registered
+	// after the temp dir, so it runs before the directory is deleted).
+	crossCheckChildTraces(t, recDir)
 
 	// The action's one step, as the build tool runs it.
 	env := append(append([]string{}, pre.Tools.BuildToolEnv...), "KILN_ACTION="+rel, "KILN_STEP=0", "KILN_STEP_COUNT=1")

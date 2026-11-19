@@ -253,6 +253,9 @@ exit 0
 			return nil
 		})
 	})
+	// D34: when the test ends, cross-check every trace the children wrote (registered
+	// after the temp dir, so it runs before the directory is deleted).
+	crossCheckChildTraces(t, recDir)
 
 	// The build, serially (-jobs 1): each action's steps in order, an action
 	// stopped at its first failing step, as the build tool does.

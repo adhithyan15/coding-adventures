@@ -55,6 +55,43 @@ func init() {
 	}
 }
 
+// ParseCrossChecked is ParseOptions with the cross-check forced on, for a TEST
+// that wants to re-run, in its own process, the parse a child process did.
+//
+// Why it exists (D34).  The real recordings run in CHILD processes (`kiln
+// record prepare`, `step`, the classify child, `collect`), each with a
+// hand-built environment that deliberately lacks KILN_TRACE_DIFF: the
+// environment is sealed into facts and keys, so a debugging switch must never
+// ride into it.  Those parses are grammar-only.  The kiln-sandbox tests
+// therefore read every trace the children left behind and call this, so each
+// real trace is seen by both readers.
+//
+// It differs from ParseOptions in two ways.  A disagreement comes back as a
+// VALUE (the third result, a *CrossCheckMismatch) instead of a panic, so the
+// caller can count and report it; and it does not depend on the package's
+// crossCheck variable or the environment.  allowed is how many stricter-only
+// divergences (the spec's list, section 4.9) this one parse took: on a REAL
+// trace a caller must treat any as a failure.  The package-wide allowed counter
+// is process-global, so a caller must not run two of these at once.
+//
+// It is a test instrument: TestMeasureIsNotUsedByProductionCode keeps it out of
+// production code.
+func ParseCrossChecked(r io.Reader, initialCwd string, opts Options) (tr *Trace, err error, mismatch *CrossCheckMismatch, allowed int) {
+	before := AllowedDivergences()
+	defer func() {
+		if p := recover(); p != nil {
+			m, ok := p.(*CrossCheckMismatch)
+			if !ok {
+				panic(p)
+			}
+			tr, err, mismatch = nil, nil, m
+		}
+		allowed = AllowedDivergences() - before
+	}()
+	tr, err = parseCrossChecked(r, initialCwd, opts)
+	return
+}
+
 // CrossCheckMismatch is what a failed cross-check panics with.
 type CrossCheckMismatch struct {
 	Detail string // what differs, without any path text

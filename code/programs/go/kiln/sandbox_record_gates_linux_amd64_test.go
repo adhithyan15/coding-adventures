@@ -214,6 +214,9 @@ exit 0
 			return nil
 		})
 	})
+	// D34: when the test ends, cross-check every trace the children wrote (registered
+	// after the temp dir, so it runs before the directory is deleted).
+	crossCheckChildTraces(t, recDir)
 	if out, eb, code := recStepRun(t, prep); code != 0 {
 		t.Fatalf("record prepare: exit %d\nstdout: %s\nstderr: %s", code, out, eb)
 	}

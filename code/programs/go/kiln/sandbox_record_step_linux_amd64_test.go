@@ -275,6 +275,9 @@ exit 0
 			return nil
 		})
 	})
+	// D34: when the test ends, cross-check every trace the children wrote (registered
+	// after the temp dir, so it runs before the directory is deleted).
+	crossCheckChildTraces(t, recDir)
 
 	// step: as the build tool's -exec-wrapper runs it.
 	step := func(n int) (stdout, stderr string, code int, sc record.StepSidecar) {
