@@ -783,9 +783,11 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                 "    if [[ \"${DIAG_MODE:-ok}\" == log_unknown ]]; then printf 'I/flutter ( 4321): MOSAIC_NATIVE_DIAG v=1 stage=environment_answer result=unexpected elapsed_us=17\\n'; exit 0; fi\n"
                 "    if [[ \"${DIAG_MODE:-ok}\" == log_suffix ]]; then printf 'I/flutter ( 4321): MOSAIC_NATIVE_DIAG v=1 stage=environment_answer result=decoded_success elapsed_us=17 trailing\\n'; exit 0; fi\n"
                 "    if [[ \"${DIAG_MODE:-ok}\" == real_timeout ]]; then\n"
+                "      raw=\"$(cat /proc/$$/stat)\"; fields=\"${raw##*) }\"; set -- $fields; printf '%s %s %s %s\\n' \"$$\" \"$3\" \"$4\" \"${20}\" > \"$DIAG_HANG_IDENTITIES_PATH\"\n"
                 "      trap '' TERM\n"
                 "      /bin/sleep 30 &\n"
                 "      child=$!\n"
+                "      raw=\"$(cat /proc/$child/stat)\"; fields=\"${raw##*) }\"; set -- $fields; printf '%s %s %s %s\\n' \"$child\" \"$3\" \"$4\" \"${20}\" >> \"$DIAG_HANG_IDENTITIES_PATH\"\n"
                 "      wait \"$child\"\n"
                 "    fi\n"
                 "    printf 'I/flutter ( 4321): MOSAIC_NATIVE_DIAG v=1 stage=main result=entered elapsed_us=2\\n'\n"
@@ -942,6 +944,7 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                     "DIAG_RUN_AS_HELPER": str(run_as_helper),
                     "DIAG_APP_DATA_ROOT": str(app_data_root),
                     "DIAG_MODE": mode,
+                    "DIAG_HANG_IDENTITIES_PATH": str(root / f"hung-identities-{mode}.txt"),
                     "DIAG_TIMEOUT_DISPATCH_PATH": str(root / f"timeout-dispatch-{mode}.log"),
                 }
                 if shutil.which("timeout"):
@@ -1067,6 +1070,16 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
             self.assertTrue(recorded_temps)
             self.assertTrue(all(not Path(path).exists() for path in recorded_temps))
 
+            def current_stat(pid: int) -> tuple[str, int, int, int] | None:
+                try:
+                    raw = Path(f"/proc/{pid}/stat").read_text(encoding="ascii")
+                except FileNotFoundError:
+                    return None
+                close_paren = raw.rfind(")")
+                self.assertGreaterEqual(close_paren, 0, raw)
+                fields = raw[close_paren + 2 :].split()
+                return fields[0], int(fields[2]), int(fields[3]), int(fields[19])
+
             real_timeout = shutil.which("timeout")
             if real_timeout:
                 version = subprocess.run(
@@ -1082,6 +1095,12 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                 timeout_dispatches = (
                     root / "timeout-dispatch-real_timeout.log"
                 ).read_text(encoding="ascii").splitlines()
+                real_identities = [
+                    tuple(int(field) for field in line.split())
+                    for line in (root / "hung-identities-real_timeout.txt")
+                    .read_text(encoding="ascii")
+                    .splitlines()
+                ]
                 recorded_temps = temp_tracker.read_text(encoding="utf-8").splitlines()
                 remaining_temps = [path for path in recorded_temps if Path(path).exists()]
                 if not recorded_temps:
@@ -1093,6 +1112,24 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                 self.assertIn("diagnostic_capture=timed_out_cleaned", real_timeout_gate.stdout)
                 self.assertIn("real-timeout-command", timeout_dispatches)
                 self.assertLess(real_elapsed, 6.5, f"timeout executable={timeout_identity}")
+                self.assertEqual(len(real_identities), 2)
+                real_group = real_identities[0][1]
+                self.assertTrue(all(identity[1] == real_group for identity in real_identities))
+                self.assertTrue(all(identity[2] == real_group for identity in real_identities))
+                for pid, _pgrp, _session, starttime in real_identities:
+                    current = current_stat(pid)
+                    self.assertTrue(
+                        current is None or current[3] != starttime,
+                        f"actual diagnostic collector left process {pid} live: {current}",
+                    )
+                remaining_real_group = []
+                for entry in Path("/proc").iterdir():
+                    if not entry.name.isdigit():
+                        continue
+                    current = current_stat(int(entry.name))
+                    if current is not None and current[1] == real_group:
+                        remaining_real_group.append((entry.name, current))
+                self.assertEqual(remaining_real_group, [])
                 print(
                     f"diagnostic_supervisor_timeout={timeout_identity},"
                     f"gate_exit={real_timeout_gate.returncode},elapsed={real_elapsed:.3f}s"
@@ -1135,6 +1172,52 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                 self.assertEqual(normal.returncode, 0, normal.stderr)
                 self.assertIn("normal-worker-output", normal.stdout)
                 self.assertIn("diagnostic_supervisor=completed", normal.stdout)
+
+                expired_marker = root / "expired-worker-started"
+                expired = subprocess.run(
+                    [
+                        sys.executable,
+                        str(helper),
+                        "--deadline-boottime-cs",
+                        str(deadline_cs(-1.0)),
+                        "--",
+                        sys.executable,
+                        "-c",
+                        f"open({str(expired_marker)!r}, 'w').write('started')",
+                    ],
+                    capture_output=True,
+                    text=True,
+                    timeout=2,
+                    check=False,
+                )
+                self.assertEqual(expired.returncode, 127, expired.stderr)
+                self.assertIn("diagnostic_supervisor=unavailable", expired.stdout)
+                self.assertFalse(expired_marker.exists(), "expired work launched a collector")
+
+                readiness_marker = root / "readiness-failure-worker-started"
+                readiness_driver = root / "readiness-driver.py"
+                marker_code = f"open({str(readiness_marker)!r}, 'w').write('started')"
+                readiness_driver.write_text(
+                    "import importlib.util, pathlib, sys, time\n"
+                    f"helper = pathlib.Path({str(helper)!r})\n"
+                    "spec = importlib.util.spec_from_file_location('diag_supervisor', helper)\n"
+                    "module = importlib.util.module_from_spec(spec)\n"
+                    "sys.modules[spec.name] = module\n"
+                    "spec.loader.exec_module(module)\n"
+                    "module._wait_ready = lambda _fd, _deadline: False\n"
+                    f"raise SystemExit(module.supervise([{sys.executable!r}, '-c', {marker_code!r}], int((time.clock_gettime(time.CLOCK_BOOTTIME) + 3.0) * 100)))\n",
+                    encoding="utf-8",
+                )
+                readiness_failure = subprocess.run(
+                    [sys.executable, str(readiness_driver)],
+                    capture_output=True,
+                    text=True,
+                    timeout=2,
+                    check=False,
+                )
+                self.assertEqual(readiness_failure.returncode, 127, readiness_failure.stderr)
+                self.assertIn("diagnostic_supervisor=startup_failed_cleaned", readiness_failure.stdout)
+                self.assertFalse(readiness_marker.exists(), "unreleased worker executed its command")
 
                 child_pid_path = root / "child.pid"
                 grandchild_pid_path = root / "grandchild.pid"
@@ -1242,6 +1325,90 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                     "diagnostic_supervisor_tree=leader_exit_first,"
                     f"resistant_child_reaped=true,grandchild_reaped=true,elapsed={cleanup_elapsed:.3f}s"
                 )
+
+                # Force an exception in the supervisor after the release
+                # handshake, but only after the worker has published a
+                # complete resistant process tree. The helper must kill its
+                # already-verified private group and reap before returning.
+                fault_ready = root / "fault-ready"
+                fault_identities = root / "fault-identities"
+                # Use a compact tree with a leader and two resistant children;
+                # write all identities before publishing readiness.
+                fault_code = "\n".join(
+                    (
+                        "import os, signal, time",
+                        "def identity(pid):",
+                        "    raw = open(f'/proc/{pid}/stat').read()",
+                        "    fields = raw[raw.rfind(')') + 2:].split()",
+                        "    return f'{pid} {fields[2]} {fields[3]} {fields[19]}'",
+                        f"identity_path = {str(fault_identities)!r}",
+                        f"ready_path = {str(fault_ready)!r}",
+                        "with open(identity_path, 'w') as stream: stream.write(identity(os.getpid()) + '\\n')",
+                        "child = os.fork()",
+                        "if child == 0:",
+                        "    signal.signal(signal.SIGTERM, signal.SIG_IGN)",
+                        "    grandchild = os.fork()",
+                        "    if grandchild == 0:",
+                        "        signal.signal(signal.SIGTERM, signal.SIG_IGN)",
+                        "        with open(identity_path, 'a') as stream: stream.write(identity(os.getpid()) + '\\n')",
+                        "        open(ready_path + '.grandchild', 'w').write('ready')",
+                        "        while True: time.sleep(30)",
+                        "    with open(identity_path, 'a') as stream: stream.write(identity(os.getpid()) + '\\n')",
+                        "    deadline = time.monotonic() + 1.0",
+                        "    while time.monotonic() < deadline and not os.path.exists(ready_path + '.grandchild'): time.sleep(0.005)",
+                        "    if not os.path.exists(ready_path + '.grandchild'): raise SystemExit(92)",
+                        "    open(ready_path, 'w').write('ready')",
+                        "    while True: time.sleep(30)",
+                        "deadline = time.monotonic() + 1.0",
+                        "while time.monotonic() < deadline and not os.path.exists(ready_path): time.sleep(0.005)",
+                        "if not os.path.exists(ready_path): raise SystemExit(91)",
+                        "while True: time.sleep(30)",
+                    )
+                )
+                # A Python wrapper injects a parent-side observer error only
+                # after the fixture confirms all identities are on disk.
+                fault_driver = root / "fault-driver.py"
+                driver_lines = (
+                    "import importlib.util, pathlib, sys, time",
+                    f"helper = pathlib.Path({str(helper)!r})",
+                    "spec = importlib.util.spec_from_file_location('diag_supervisor', helper)",
+                    "module = importlib.util.module_from_spec(spec)",
+                    "sys.modules[spec.name] = module",
+                    "spec.loader.exec_module(module)",
+                    f"ready = pathlib.Path({str(fault_ready)!r})",
+                    "def fail_after_tree(_pid):",
+                    "    deadline = time.monotonic() + 2.0",
+                    "    while time.monotonic() < deadline and not ready.exists(): time.sleep(0.005)",
+                    "    if not ready.exists(): raise RuntimeError('fixture did not become ready')",
+                    "    raise RuntimeError('injected supervisor observation failure')",
+                    "module._peek_exit = fail_after_tree",
+                    f"raise SystemExit(module.supervise([{sys.executable!r}, '-c', {fault_code!r}], int((time.clock_gettime(time.CLOCK_BOOTTIME) + 3.0) * 100)))",
+                )
+                fault_driver.write_text("\n".join(driver_lines) + "\n", encoding="utf-8")
+                fault_result = subprocess.run(
+                    [sys.executable, str(fault_driver)],
+                    capture_output=True,
+                    text=True,
+                    timeout=4,
+                    check=False,
+                )
+                self.assertEqual(fault_result.returncode, 126, fault_result.stdout + fault_result.stderr)
+                self.assertIn("diagnostic_supervisor=post_release_exception", fault_result.stdout)
+                fault_records = [
+                    tuple(int(field) for field in line.split())
+                    for line in fault_identities.read_text(encoding="ascii").splitlines()
+                ]
+                self.assertEqual(len(fault_records), 3)
+                fault_group = fault_records[0][1]
+                self.assertTrue(all(record[1] == fault_group for record in fault_records))
+                self.assertTrue(all(record[2] == fault_group for record in fault_records))
+                for pid, _pgrp, _session, starttime in fault_records:
+                    current = current_stat(pid)
+                    self.assertTrue(
+                        current is None or current[3] != starttime,
+                        f"post-release exception left same process identity: {pid} {current}",
+                    )
+                self.assertIsNone(sentinel.poll(), "post-release cleanup touched unrelated sentinel")
             finally:
                 if sentinel.poll() is None:
                     sentinel.terminate()

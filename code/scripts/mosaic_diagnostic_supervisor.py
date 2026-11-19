@@ -21,7 +21,6 @@ from dataclasses import dataclass
 from typing import Sequence
 
 PR_SET_CHILD_SUBREAPER = 36
-MAX_TRACKED_DESCENDANTS = 256
 POLL_SECONDS = 0.01
 TERM_GRACE_SECONDS = 0.70
 REAP_RESERVE_SECONDS = 0.20
@@ -94,44 +93,6 @@ def _read_stat(pid: int) -> ProcStat | None:
     )
 
 
-def _proc_table() -> dict[int, ProcStat]:
-    table: dict[int, ProcStat] = {}
-    with os.scandir("/proc") as entries:
-        for entry in entries:
-            if not entry.name.isdigit():
-                continue
-            pid = int(entry.name)
-            try:
-                stat = _read_stat(pid)
-            except (OSError, ValueError):
-                continue
-            if stat is not None:
-                table[pid] = stat
-    return table
-
-
-def _owned_tree(
-    table: dict[int, ProcStat], leader_pid: int, supervisor_pid: int
-) -> tuple[list[ProcStat], bool]:
-    """Enumerate the worker tree and any descendants adopted by this helper."""
-
-    if leader_pid not in table:
-        return [], False
-    owned = {leader_pid}
-    changed = True
-    while changed:
-        changed = False
-        for pid, stat in table.items():
-            if pid in owned:
-                continue
-            if stat.ppid in owned or stat.ppid == supervisor_pid:
-                owned.add(pid)
-                changed = True
-                if len(owned) > MAX_TRACKED_DESCENDANTS + 1:
-                    return [table[item] for item in list(owned)[: MAX_TRACKED_DESCENDANTS + 1] if item in table], True
-    return [table[pid] for pid in owned if pid in table], False
-
-
 def _peek_exit(pid: int) -> int | None:
     """Read a child's exit status without freeing its PID/PGID."""
 
@@ -143,10 +104,8 @@ def _peek_exit(pid: int) -> int | None:
     return -int(result.si_status)
 
 
-def _signal_owned(
-    table: dict[int, ProcStat], leader_pid: int, leader_starttime: int, signum: int
-) -> bool:
-    """Signal the pinned private group and exact descendants that escaped it."""
+def _signal_owned(leader_pid: int, leader_starttime: int, signum: int) -> bool:
+    """Signal only the pinned private process group."""
 
     try:
         leader = _read_stat(leader_pid)
@@ -159,115 +118,36 @@ def _signal_owned(
         or leader.session != leader_pid
     ):
         return False
-    supervisor_pid = os.getpid()
-    owned, truncated = _owned_tree(table, leader_pid, supervisor_pid)
-    if truncated:
-        return False
-    complete = True
     try:
         os.killpg(leader_pid, signum)
     except ProcessLookupError:
-        pass
+        return True
     except OSError as error:
-        if error.errno != errno.ESRCH:
-            complete = False
-
-    for stat in owned:
-        if stat.pid == leader_pid or stat.state == "Z":
-            continue
-        if stat.pgrp == leader_pid:
-            continue  # already covered by the private-group signal
-        try:
-            current = _read_stat(stat.pid)
-        except (OSError, ValueError):
-            complete = False
-            continue
-        if current is None:
-            continue
-        if current.starttime != stat.starttime:
-            complete = False
-            continue
-        try:
-            os.kill(stat.pid, signum)
-        except ProcessLookupError:
-            pass
-        except OSError as error:
-            if error.errno != errno.ESRCH:
-                complete = False
-    return complete
+        return error.errno == errno.ESRCH
+    return True
 
 
-def _kill_adopted_escaped(table: dict[int, ProcStat], leader_pid: int) -> bool:
-    """Kill current adopted descendants outside the already-signaled group."""
-
-    complete = True
-    supervisor_pid = os.getpid()
-    for stat in table.values():
-        if stat.ppid != supervisor_pid or stat.pid == leader_pid or stat.state == "Z":
-            continue
-        if stat.pgrp == leader_pid:
-            continue
-        try:
-            current = _read_stat(stat.pid)
-        except (OSError, ValueError):
-            complete = False
-            continue
-        if current is None:
-            continue
-        if current.starttime != stat.starttime:
-            complete = False
-            continue
-        try:
-            os.kill(stat.pid, signal.SIGKILL)
-        except ProcessLookupError:
-            pass
-        except OSError as error:
-            if error.errno != errno.ESRCH:
-                complete = False
-    return complete
-
-
-def _reap_to_deadline(
-    leader_pid: int,
-    leader_starttime: int,
-    deadline: float,
-    *,
-    group_signal_sent: bool,
-) -> bool:
+def _reap_to_deadline(leader_pid: int, deadline: float) -> tuple[bool, bool]:
     """Reap all adopted descendants; report incomplete on deadline or error."""
 
+    descendants_reaped = False
     while _clock() < deadline:
-        try:
-            table = _proc_table()
-            if not _kill_adopted_escaped(table, leader_pid):
-                cleanup_problem = True
-            else:
-                cleanup_problem = False
-        except (OSError, ValueError):
-            table = {}
-            cleanup_problem = True
-
         # The worker leader has already been pinned through its final group
         # signal. Reaping any child is now safe: no future signal uses its PGID.
-        reaped_any = False
         while True:
             try:
                 pid, _status = os.waitpid(-1, os.WNOHANG)
             except ChildProcessError:
-                return not cleanup_problem
+                return True, descendants_reaped
             except OSError:
-                cleanup_problem = True
-                break
+                return False, descendants_reaped
             if pid <= 0:
                 break
-            reaped_any = True
-        if not cleanup_problem and not reaped_any:
-            # waitpid returning 0 means a child is still alive. Keep polling;
-            # its exact group was already signaled, and escaped children are
-            # rechecked above under their start-time identities.
-            pass
+            descendants_reaped = descendants_reaped or pid != leader_pid
+        # waitpid returning 0 means a child is still alive. Keep polling; the
+        # collector's verified private group was already signalled.
         time.sleep(min(POLL_SECONDS, max(0.0, deadline - _clock())))
-    return False
+    return False, descendants_reaped
 
 
 def _wait_ready(fd: int, deadline: float) -> bool:
@@ -282,11 +162,16 @@ def _wait_ready(fd: int, deadline: float) -> bool:
     return False
 
 
-def _child_exec(command: Sequence[str], ready_fd: int) -> None:
+def _child_exec(command: Sequence[str], ready_fd: int, release_fd: int) -> None:
     try:
         os.setsid()
         os.write(ready_fd, b"1")
         os.close(ready_fd)
+        # Do not execute the collector until the parent has validated the
+        # private session identity and confirmed that work time remains.
+        if os.read(release_fd, 1) != b"1":
+            os._exit(125)
+        os.close(release_fd)
         os.execvpe(command[0], list(command), os.environ.copy())
     except BaseException:  # noqa: BLE001 - a forked child cannot unwind safely
         try:
@@ -329,7 +214,8 @@ def supervise(command: Sequence[str], deadline_cs: int) -> int:
         return RESULT_UNAVAILABLE
     try:
         deadline = deadline_cs / 100.0
-        if _clock() >= deadline:
+        work_deadline = deadline - 1.0
+        if _clock() >= work_deadline:
             raise RuntimeError("deadline already elapsed")
         _enable_subreaper()
     except (OSError, RuntimeError, ValueError):
@@ -340,108 +226,128 @@ def supervise(command: Sequence[str], deadline_cs: int) -> int:
     for signum in (signal.SIGTERM, signal.SIGINT, signal.SIGHUP):
         old_handlers[signum] = signal.signal(signum, _on_cancel)
 
-    ready_read, ready_write = os.pipe()
+    created_pipes: list[int] = []
+    try:
+        ready_read, ready_write = os.pipe()
+        created_pipes.extend((ready_read, ready_write))
+        release_read, release_write = os.pipe()
+        created_pipes.extend((release_read, release_write))
+    except OSError:
+        for fd in created_pipes:
+            os.close(fd)
+        print("diagnostic_supervisor=worker_pipe_failed")
+        return RESULT_UNAVAILABLE
     try:
         leader_pid = os.fork()
     except OSError:
-        os.close(ready_read)
-        os.close(ready_write)
+        for fd in (ready_read, ready_write, release_read, release_write):
+            os.close(fd)
         print("diagnostic_supervisor=worker_fork_failed")
         return RESULT_UNAVAILABLE
     if leader_pid == 0:
         os.close(ready_read)
-        _child_exec(command, ready_write)
+        os.close(release_write)
+        _child_exec(command, ready_write, release_read)
         os._exit(127)
 
     os.close(ready_write)
+    os.close(release_read)
+    released = False
+    descendants_reaped = False
     try:
-        ready = _wait_ready(ready_read, deadline - 1.0)
-    finally:
+        ready = _wait_ready(ready_read, work_deadline)
         os.close(ready_read)
-    try:
-        initial = _read_stat(leader_pid)
-    except (OSError, ValueError):
-        initial = None
-    if (
-        not ready
-        or initial is None
-        or initial.pid != leader_pid
-        or initial.pgrp != leader_pid
-        or initial.session != leader_pid
-    ):
+        ready_read = -1
+        if ready:
+            initial = _read_stat(leader_pid)
+        else:
+            initial = None
+        if (
+            not ready
+            or initial is None
+            or initial.pid != leader_pid
+            or initial.pgrp != leader_pid
+            or initial.session != leader_pid
+            or _clock() >= work_deadline
+            or _cancel_signal is not None
+        ):
+            os.close(release_write)
+            release_write = -1
+            cleaned = _reap_unisolated_child(leader_pid, deadline)
+            label = "startup_failed_cleaned" if cleaned else "startup_cleanup_incomplete"
+            print(f"diagnostic_supervisor={label}")
+            return RESULT_UNAVAILABLE if cleaned else RESULT_CLEANUP_INCOMPLETE
+
+        leader_starttime = initial.starttime
+        # Treat an interrupted write as potentially released. The outer error
+        # path then uses the already verified group identity, never a raw PID.
+        released = True
+        os.write(release_write, b"1")
+        os.close(release_write)
+        release_write = -1
+
+        try:
+            worker_exit: int | None = None
+            worker_timed_out = False
+            while _clock() < work_deadline:
+                if _cancel_signal is not None:
+                    worker_timed_out = True
+                    break
+                worker_exit = _peek_exit(leader_pid)
+                if worker_exit is not None:
+                    break
+                time.sleep(min(POLL_SECONDS, max(0.0, work_deadline - _clock())))
+            if worker_exit is None:
+                worker_exit = _peek_exit(leader_pid)
+            if worker_exit is None:
+                worker_timed_out = True
+
+            if worker_timed_out:
+                cleanup_ok = _signal_owned(leader_pid, leader_starttime, signal.SIGTERM)
+                kill_at = min(deadline - REAP_RESERVE_SECONDS, _clock() + TERM_GRACE_SECONDS)
+                while _clock() < kill_at and _cancel_signal is None:
+                    time.sleep(min(POLL_SECONDS, max(0.0, kill_at - _clock())))
+                cleanup_ok = _signal_owned(
+                    leader_pid, leader_starttime, signal.SIGKILL
+                ) and cleanup_ok
+            else:
+                # Keep the exited leader unreaped until the final private-group
+                # signal, so its PID cannot be recycled as an unrelated PGID.
+                cleanup_ok = _signal_owned(
+                    leader_pid, leader_starttime, signal.SIGKILL
+                )
+            cleaned, descendants_reaped = _reap_to_deadline(leader_pid, deadline)
+            cleanup_ok = cleanup_ok and cleaned
+        except BaseException:  # noqa: BLE001 - cleanup must precede process exit
+            # The release pipe proved the session's identity. Keep that leader
+            # unreaped and clean only its private group before returning an
+            # explicit failure status. No numeric descendant PID is signalled.
+            cleanup_ok = _signal_owned(
+                leader_pid, leader_starttime, signal.SIGKILL
+            )
+            reaped, _ = _reap_to_deadline(leader_pid, deadline)
+            cleanup_ok = reaped and cleanup_ok
+            print("diagnostic_supervisor=post_release_exception")
+            return RESULT_CLEANUP_INCOMPLETE
+    except BaseException:  # noqa: BLE001 - pre-release worker is held at the gate
+        if ready_read >= 0:
+            os.close(ready_read)
+        if release_write >= 0:
+            os.close(release_write)
+        if released:
+            cleanup_ok = _signal_owned(
+                leader_pid, leader_starttime, signal.SIGKILL
+            )
+            reaped, _ = _reap_to_deadline(leader_pid, deadline)
+            cleanup_ok = reaped and cleanup_ok
+            print("diagnostic_supervisor=startup_exception_cleanup_" + ("complete" if cleanup_ok else "incomplete"))
+            return RESULT_UNAVAILABLE if cleanup_ok else RESULT_CLEANUP_INCOMPLETE
+        # Before release the command has not executed and cannot have children;
+        # this direct-child cleanup therefore cannot target an unrelated PID.
         cleaned = _reap_unisolated_child(leader_pid, deadline)
         label = "startup_failed_cleaned" if cleaned else "startup_cleanup_incomplete"
         print(f"diagnostic_supervisor={label}")
         return RESULT_UNAVAILABLE if cleaned else RESULT_CLEANUP_INCOMPLETE
-
-    leader_starttime = initial.starttime
-    work_deadline = deadline - 1.0
-    worker_exit: int | None = None
-    worker_timed_out = False
-    try:
-        while _clock() < work_deadline:
-            if _cancel_signal is not None:
-                worker_timed_out = True
-                break
-            worker_exit = _peek_exit(leader_pid)
-            if worker_exit is not None:
-                break
-            time.sleep(min(POLL_SECONDS, max(0.0, work_deadline - _clock())))
-        if worker_exit is None:
-            worker_exit = _peek_exit(leader_pid)
-        if worker_exit is None:
-            worker_timed_out = True
-    except (ChildProcessError, OSError, ValueError):
-        # Ownership uncertainty is not permission to signal a numeric PGID.
-        print("diagnostic_supervisor=worker_ownership_lost")
-        return RESULT_CLEANUP_INCOMPLETE
-
-    cleanup_deadline = deadline
-    cleanup_ok = True
-    try:
-        table = _proc_table()
-        owned, truncated = _owned_tree(table, leader_pid, os.getpid())
-        if truncated:
-            cleanup_ok = False
-        descendants_present = any(stat.pid != leader_pid for stat in owned)
-
-        if worker_timed_out:
-            if not _signal_owned(
-                table, leader_pid, leader_starttime, signal.SIGTERM
-            ):
-                cleanup_ok = False
-            kill_at = min(
-                deadline - REAP_RESERVE_SECONDS,
-                _clock() + TERM_GRACE_SECONDS,
-            )
-            while _clock() < kill_at:
-                if _cancel_signal is not None:
-                    # A second external signal does not change ownership; it
-                    # only advances escalation inside the original deadline.
-                    break
-                time.sleep(min(POLL_SECONDS, max(0.0, kill_at - _clock())))
-            table = _proc_table()
-            if not _signal_owned(
-                table, leader_pid, leader_starttime, signal.SIGKILL
-            ):
-                cleanup_ok = False
-        else:
-            # Even after natural leader exit, kill only its still-pinned group
-            # before reaping its PID. This closes any stray collector children.
-            if not _signal_owned(
-                table, leader_pid, leader_starttime, signal.SIGKILL
-            ):
-                cleanup_ok = False
-
-        cleaned = _reap_to_deadline(
-            leader_pid,
-            leader_starttime,
-            cleanup_deadline,
-            group_signal_sent=True,
-        )
-        cleanup_ok = cleanup_ok and cleaned
-    except (OSError, ValueError, ChildProcessError):
-        cleanup_ok = False
 
     for signum, handler in old_handlers.items():
         signal.signal(signum, handler)
@@ -452,7 +358,7 @@ def supervise(command: Sequence[str], deadline_cs: int) -> int:
     if worker_timed_out:
         print("diagnostic_supervisor=timed_out_cleaned")
         return RESULT_TIMED_OUT_CLEANED
-    if descendants_present:
+    if descendants_reaped:
         print("diagnostic_supervisor=descendants_cleaned")
         return RESULT_DESCENDANTS_CLEANED
     if worker_exit == 0:

@@ -76,16 +76,21 @@ included in this summary cap.
 The probe must use the app's existing `run-as` identity. A failed command,
 timeout, or unreadable response is `probe_failed`; it must never be reported as
 absence. It reports only a size class, not state contents. The failure-only
-capture runs in a private worker session supervised by a Linux child subreaper.
-One absolute boot-clock deadline is recorded before the supervisor starts: up
+capture runs in a fresh private worker session supervised by a Linux child
+subreaper. The worker waits at a release handshake until the parent verifies
+its session identity and remaining work budget, so startup failure cannot
+leave an already-running collector behind. One absolute boot-clock deadline is
+recorded before the supervisor starts: up
 to five seconds for collection and at most one second for TERM/KILL escalation
 and reaping. The worker's PID remains unreaped until its last process-group
 signal; adopted descendants are reaped before success is reported. If ownership
 or cleanup cannot be confirmed within the deadline, the summary reports
 `cleanup_incomplete`. This bounds the collector's ordinary process-tree cleanup
 path, not kernel stalls or detached processes outside the trusted collector
-tree. The supervisor signals only its fresh private session and verified
-adopted descendants; the ordinary gate path does not use it.
+tree. The supervisor signals only its verified private process group; escaped
+or otherwise out-of-scope descendants make cleanup incomplete rather than
+being signalled by a separately observed PID. The ordinary gate path does not
+use it.
 
 The collector filters host markers to the current Trestle PID/launch window,
 and reports whether log capture itself was complete, clipped, timed out, or
