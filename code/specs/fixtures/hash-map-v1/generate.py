@@ -634,19 +634,31 @@ def make_error_cases() -> list[dict[str, Any]]:
                 "strategy": "separateChaining",
                 "hash_configuration": {"kind": "fnv1a32"},
             },
+            "initial_entries": [{"key_id": "bytes-a", "value": 7}],
             "key_recipe": {
                 "kind": "repeated-byte",
                 "byte": 0,
                 "length": MAXIMUM_KEY_BYTES + 1,
             },
             "value": 7,
-            "before_state": {"count": 0, "capacity": 16, "entries": []},
+            "before_state": {
+                "count": 1,
+                "capacity": 16,
+                "load_factor_ratio": [1, 16],
+                "entries": [{"key_id": "bytes-a", "value": 7}],
+            },
             "expected_error": {
                 "id": "key_too_long",
                 "fields": {
                     "actual": MAXIMUM_KEY_BYTES + 1,
                     "maximum": MAXIMUM_KEY_BYTES,
                 },
+            },
+            "expected_state": {
+                "count": 1,
+                "capacity": 16,
+                "load_factor_ratio": [1, 16],
+                "entries": [{"key_id": "bytes-a", "value": 7}],
             },
             "original_map_unchanged": True,
         },
@@ -659,12 +671,23 @@ def make_error_cases() -> list[dict[str, Any]]:
                 "strategy": "linearProbing",
                 "hash_configuration": {"kind": "fnv1a32"},
             },
+            "initial_entries": [{"key_id": "bytes-a", "value": 7}],
             "key_recipe": {
                 "kind": "repeated-byte",
                 "byte": 0,
                 "length": MAXIMUM_KEY_BYTES + 1,
             },
-            "expected_observation": {"has": False, "value": None},
+            "expected_observation": {
+                "has": False,
+                "value": None,
+                "remove_result": False,
+            },
+            "expected_state": {
+                "count": 1,
+                "capacity": 16,
+                "load_factor_ratio": [1, 16],
+                "entries": [{"key_id": "bytes-a", "value": 7}],
+            },
             "expected_state_unchanged": True,
         },
     ]

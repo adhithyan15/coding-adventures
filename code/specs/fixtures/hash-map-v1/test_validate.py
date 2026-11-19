@@ -237,6 +237,34 @@ class HashMapFixtureValidationTests(unittest.TestCase):
         self.assertEqual(case["expected_iterator_requests"], 1)
         self.assertFalse(case["expected_map_returned"])
 
+    def test_oversized_key_failure_and_noops_preserve_nonempty_maps(self) -> None:
+        error_cases = {row["id"]: row for row in self.document["error_cases"]}
+        setting = error_cases["oversized-key-setting-is-atomic"]
+        lookup = error_cases["oversized-key-lookup-and-removal-are-absent-no-ops"]
+        expected_state = {
+            "count": 1,
+            "capacity": 16,
+            "load_factor_ratio": [1, 16],
+            "entries": [{"key_id": "bytes-a", "value": 7}],
+        }
+        for case in (setting, lookup):
+            self.assertEqual(
+                case["initial_entries"], [{"key_id": "bytes-a", "value": 7}]
+            )
+        self.assertEqual(setting["before_state"], expected_state)
+        self.assertEqual(setting["expected_state"], expected_state)
+        self.assertTrue(setting["original_map_unchanged"])
+        self.assertEqual(
+            lookup["expected_observation"],
+            {
+                "has": False,
+                "value": None,
+                "remove_result": False,
+            },
+        )
+        self.assertEqual(lookup["expected_state"], expected_state)
+        self.assertTrue(lookup["expected_state_unchanged"])
+
     def test_null_value_case_also_pins_presence(self) -> None:
         case = next(
             row

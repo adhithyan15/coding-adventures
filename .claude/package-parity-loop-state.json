@@ -19114,8 +19114,8 @@
       "fixture_gate": {
         "status": "pending_independent_review",
         "fixture_path": "code/specs/fixtures/hash-map-v1/cases.json",
-        "fixture_bytes": 468316,
-        "fixture_sha256": "0745a3ca29c46022ab8f598fb3d379f26b01675d1d37b5c741c34549322344d1",
+        "fixture_bytes": 469237,
+        "fixture_sha256": "4b8e2ebaa80e50c0d680d1f1c7ef7f8eb96944a46356dc30db31be4e2daee86a",
         "histories_per_strategy": 66430,
         "production_implementation_authorized": false
       }

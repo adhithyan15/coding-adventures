@@ -22,6 +22,11 @@ expected typed error, count, capacity, exact load-factor ratio, query result,
 and physical entry order. Null values remain distinct from absent keys by
 recording the `has` observation.
 
+Both oversized-key checks start from a nonempty map containing `bytes-a → 7`.
+The failed insertion pins the full before and after state; oversized `get`,
+`has`, and `remove` pin their results and the unchanged entry, capacity, and
+load-factor state.
+
 ## Exhaustive histories
 
 `history_recipe` defines nine ordered operations: six set combinations over

@@ -2278,6 +2278,12 @@
           "kind": "fnv1a32"
         }
       },
+      "initial_entries": [
+        {
+          "key_id": "bytes-a",
+          "value": 7
+        }
+      ],
       "key_recipe": {
         "kind": "repeated-byte",
         "byte": 0,
@@ -2285,9 +2291,18 @@
       },
       "value": 7,
       "before_state": {
-        "count": 0,
+        "count": 1,
         "capacity": 16,
-        "entries": []
+        "load_factor_ratio": [
+          1,
+          16
+        ],
+        "entries": [
+          {
+            "key_id": "bytes-a",
+            "value": 7
+          }
+        ]
       },
       "expected_error": {
         "id": "key_too_long",
@@ -2295,6 +2310,20 @@
           "actual": 1048577,
           "maximum": 1048576
         }
+      },
+      "expected_state": {
+        "count": 1,
+        "capacity": 16,
+        "load_factor_ratio": [
+          1,
+          16
+        ],
+        "entries": [
+          {
+            "key_id": "bytes-a",
+            "value": 7
+          }
+        ]
       },
       "original_map_unchanged": true
     },
@@ -2309,6 +2338,12 @@
           "kind": "fnv1a32"
         }
       },
+      "initial_entries": [
+        {
+          "key_id": "bytes-a",
+          "value": 7
+        }
+      ],
       "key_recipe": {
         "kind": "repeated-byte",
         "byte": 0,
@@ -2316,7 +2351,22 @@
       },
       "expected_observation": {
         "has": false,
-        "value": null
+        "value": null,
+        "remove_result": false
+      },
+      "expected_state": {
+        "count": 1,
+        "capacity": 16,
+        "load_factor_ratio": [
+          1,
+          16
+        ],
+        "entries": [
+          {
+            "key_id": "bytes-a",
+            "value": 7
+          }
+        ]
       },
       "expected_state_unchanged": true
     }
