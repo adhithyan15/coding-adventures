@@ -65,6 +65,7 @@ and generator produce. The same command is in the package `BUILD` and
 | every suite above | negative control: the suite is re-run with a deliberate fault injected at the adapter and must fail with a registered failure id | same adapter | `negctl/<suite>/<claim>/<fault>` |
 | `labels <op>` with `secret` rows | 2-safety (constant-time) proof obligation on the real lowered source | `src/lib.rs` lowered by `warrant-ir` | `proof/<op>/constant-time` |
 | `bound <op>` `steps <= f(n)` | `BoundProver` obligation per concrete size | same lowered source | `proof/<op>/steps-bound` |
+| operation with only public labels, no `steps` bound and no cost-proof anchor | refusal-only source-equivalence disposition; actual public export is attempted by the Rust-subset/WIR frontend, but frontend acceptance alone is not equivalence | actual public export and current source tree | `source-equivalence/<op>` |
 | `bound <op>` `heap`/`depth` | not discharged by the pilot prover; recorded `unchecked` | n/a | `proof/<op>/heap-bound`, `…/depth-bound` |
 | `input … rejects … with E` | covered by claims of the form `op(...) == Err(E)`; a `rejects` row with no such claim is reported as uncovered | real export | via claim |
 | `fresh` op | adapter checks the output buffer does not alias an input and that inputs are unchanged after the caller mutates the output | real export | folded into every claim on the op |
@@ -340,8 +341,8 @@ and `target` (the suite id attacked).
 
 `evidence/proof-manifest.json` (`schema: "warrant-proof-evidence-v1"`) lists
 obligations with `id`, `op`, `function`, `kind`
-(`constant-time | steps-bound | negative-control`), `label`
-(`proved | bounded(K) | unknown | falsified-as-expected | unchecked`),
+(`constant-time | steps-bound | negative-control | source-equivalence`), `label`
+(`proved | bounded(K) | unknown | falsified-as-expected | unchecked | not-live`),
 `verdict`, `max_len`, per-shape `runs`, `certificates`
 (`{id, kind, count}`; `kind` is `miter` or `trivial-miter-collapsed`) and, for
 the obligations a run discharges, `obligation_sha256`: the SHA-256 of the
@@ -361,6 +362,40 @@ per file, sorted by path bytes:
     u64-LE path length,    path bytes   (relative to src/, "/" separators)
     u64-LE content length, content bytes
 ```
+
+### 8.1 Refusal-only source-equivalence anchor
+
+Some Warrant documents have no secret operands and no `steps` bound. They have
+no constant-time or cost proof obligation for the report to derive, even when
+the package still needs one claim row per operation. Such an operation may use
+one `source-equivalence` entry only as an explicit **refusal-only fallback**:
+
+* The operation must have every parameter explicitly labelled `public`, no
+  `secret` label, and no `steps` bound. It must have no `constant-time` or
+  `steps-bound` entry that already anchors its report claim. This fallback
+  cannot replace, weaken, or hide a declared cost obligation.
+* Its id is exactly `warrant/<module>/source-equivalence/<op>`, its `kind` is
+  exactly `source-equivalence`, and its `function` is the exact public export
+  named by the operation's validated `evidence.bindings` row. Its `label` and
+  `verdict` are exactly `not-live`, `max_len` is zero, and it has no
+  certificates or obligation digest. `evidence.bindings` must declare
+  `proofs_not_live=<reason>` for that operation.
+* The report checker reruns the Rust-subset/WIR frontend on that actual public
+  export. The check is bound to the current Warrant document and the exact
+  `src/**/*.rs` tree through their existing manifest hashes. The recorded
+  refusal must be reproducible. A newly accepted export, mismatched function,
+  missing opt-in, stale source/spec pin, any other status or label, or any
+  certificate makes checking fail.
+* This entry records only that the source frontend refused the export. It never
+  asserts semantic equivalence, receives a passing rank, discharges CWE-400,
+  CWE-208 or another weakness, or makes E5 pass. E5 remains `not-live` when an
+  operation is anchored only by these fallback entries. SAT/DRAT circuit
+  evidence is separate and cannot be represented as a source-level result.
+
+If a future frontend parses and lowers an export but no source-to-Warrant
+equivalence proof is available, this fallback does not apply: the proof status
+is not a frontend refusal. That result stays unsupported until a separately
+specified proof kind is implemented.
 
 Every field is length-prefixed, so different file sets never frame to the same
 bytes.  A symlink, a non-UTF-8 name, an oversized or too deeply nested file
@@ -626,6 +661,14 @@ Further checks added by the security review (each has a falsification test in
     varint-codec, boolean-logic, bit-arithmetic, lossless-compression) moved
     verbatim into their `assurance-profile.json`; each committed report changes only
     by the added `profile_sha256` line.
+
+23. **Source-equivalence fallback is refusal-only** (VER-P047). It is accepted
+    only for a fully public operation with no `steps` bound and no recognized
+    cost-proof anchor, with the exact operation id and bound export symbol,
+    explicit `proofs_not_live` opt-in, current source/spec pins and a refusal
+    reproduced by the Rust-subset/WIR frontend. It is never a passing proof or
+    weakness discharge, and it leaves E5 `not-live`; all existing constant-time
+    and steps-bound rules remain unchanged.
 
 Evidence ids come from three places: manifest entries (`warrant/...`,
 `bench/...`; must exist and have verdict `pass`), attestations derived from the
