@@ -25,8 +25,11 @@ script is the second, independent check, on the JSON stream itself:
     which every real trace is under 32 KB would pass G1 vacuously.
 
   * the D34 cross-check of the traces the record CHILDREN wrote really ran: a
-    passing test logged at least one `PROBE: crosscheck traces=N ...` line with
-    N >= 1, and every such line of a passing test says mismatches=0 and
+    passing test logged at least one `PROBE: crosscheck traces=N accepted=K ...`
+    line, the traces total at least 1 and the ACCEPTED total at least 1 (a check
+    whose parameters drifted has both readers refuse every trace alike, which is
+    "agreement" with mismatches=0; accepted is what shows a trace was really
+    parsed), and every such line of a passing test says mismatches=0 and
     allowed=0 (the Go test fails on anything else; this is the independent check,
     and it keeps the check from going vacuous).  The line is anchored and read
     exactly like a PROBE: trace line (probe_fields: first key wins).
@@ -351,21 +354,27 @@ def crosscheck_problems(lines: list[str]) -> list[str]:
         return ["D34: no passing test logged a `PROBE: crosscheck` line; the child traces were not cross-checked"]
     problems = []
     total = 0
+    accepted = 0
     for test, fields in found:
         numbers = {}
-        for key in ("traces", "bytes", "mismatches", "allowed"):
+        for key in ("traces", "accepted", "bytes", "mismatches", "allowed"):
             value = fields.get(key, "")
             if not value.isascii() or not value.isdigit():
                 problems.append(f"D34: {test}: crosscheck {key}={value or '(missing)'} is not a count")
             else:
                 numbers[key] = int(value)
-        if len(numbers) != 4:
+        if len(numbers) != 5:
             continue
         total += numbers["traces"]
+        accepted += numbers["accepted"]
+        if numbers["accepted"] > numbers["traces"]:
+            problems.append(f"D34: {test}: crosscheck accepted={numbers['accepted']} exceeds traces={numbers['traces']}")
         if numbers["mismatches"] or numbers["allowed"]:
             problems.append(f"D34: {test}: crosscheck mismatches={numbers['mismatches']} allowed={numbers['allowed']} (both must be 0 on real traces)")
     if total < 1:
         problems.append("D34: every `PROBE: crosscheck` line says traces=0; no real trace was cross-checked")
+    if total >= 1 and accepted < 1:
+        problems.append("D34: no cross-checked trace was ACCEPTED (accepted=0 in total): the check's parameters may have drifted, so every trace was refused alike")
     return problems
 
 
