@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "schema.json",
+  "title": "DT17 Hash Functions v1 Shared Fixture",
+  "type": "object",
+  "required": [
+    "schema",
+    "oracle",
+    "exhaustive",
+    "known_answers",
+    "utf8_cases",
+    "directed",
+    "generated",
+    "mutations",
+    "analysis",
+    "dart_only_invalid",
+    "rust_panics"
+  ],
+  "properties": {
+    "schema": { "const": "dt17-hash-functions-v1" },
+    "oracle": { "const": "dt17-exact-arithmetic-v1" },
+    "exhaustive": {
+      "type": "object",
+      "required": ["domain", "fixed_parameters", "expected_hex_streams"],
+      "properties": {
+        "domain": {
+          "type": "object",
+          "required": ["lengths", "order", "count"],
+          "properties": {
+            "lengths": { "const": [0, 1, 2] },
+            "order": { "const": "length-then-lexicographic-bytes" },
+            "count": { "const": 65793 }
+          }
+        },
+        "fixed_parameters": { "type": "object" },
+        "expected_hex_streams": {
+          "type": "object",
+          "required": [
+            "fnv1a_32",
+            "fnv1a_64",
+            "djb2",
+            "polynomial_rolling",
+            "polynomial_rolling_with_params",
+            "murmur3_32",
+            "murmur3_32_with_seed",
+            "siphash_2_4"
+          ],
+          "properties": {
+            "fnv1a_32": { "$ref": "#/$defs/hexStream" },
+            "fnv1a_64": { "$ref": "#/$defs/hexStream" },
+            "djb2": { "$ref": "#/$defs/hexStream" },
+            "polynomial_rolling": { "$ref": "#/$defs/hexStream" },
+            "polynomial_rolling_with_params": { "$ref": "#/$defs/hexStream" },
+            "murmur3_32": { "$ref": "#/$defs/hexStream" },
+            "murmur3_32_with_seed": { "$ref": "#/$defs/hexStream" },
+            "siphash_2_4": { "$ref": "#/$defs/hexStream" }
+          },
+          "additionalProperties": false
+        }
+      }
+    },
+    "known_answers": { "type": "array", "items": { "$ref": "#/$defs/knownAnswer" } },
+    "utf8_cases": { "type": "array", "items": { "$ref": "#/$defs/knownAnswer" } },
+    "directed": { "type": "array", "items": { "$ref": "#/$defs/hashRecord" } },
+    "generated": { "type": "object", "required": ["algorithm", "seed_hex", "count", "cases"] },
+    "mutations": { "type": "object", "required": ["algorithm", "seed_hex", "bit_flips", "cases"] },
+    "analysis": { "type": "array" },
+    "dart_only_invalid": { "type": "array" },
+    "rust_panics": { "type": "array" }
+  },
+  "$defs": {
+    "hexStream": {
+      "type": "string",
+      "pattern": "^[0-9a-f]+$",
+      "description": "Concatenated outputs, one fixed-width lowercase hex integer per exhaustive input. Width is 8 for U32 or 16 for U64; exact stream length is count times width."
+    },
+    "knownAnswer": {
+      "type": "object",
+      "required": ["id", "op", "expected_hex", "provenance"],
+      "properties": {
+        "id": { "type": "string" },
+        "op": { "type": "string" },
+        "data_hex": { "type": "string", "pattern": "^([0-9a-f]{2})*$" },
+        "text": { "type": "string" },
+        "parameters": { "type": "object" },
+        "expected_hex": { "$ref": "#/$defs/hexStream" },
+        "provenance": { "type": "string" }
+      }
+    },
+    "hashRecord": {
+      "type": "object",
+      "required": ["id", "data_hex", "parameters", "expected_hex"],
+      "properties": {
+        "id": { "type": "string" },
+        "data_hex": { "type": "string", "pattern": "^([0-9a-f]{2})*$" },
+        "parameters": { "type": "object" },
+        "expected_hex": { "type": "object" }
+      }
+    }
+  }
+}

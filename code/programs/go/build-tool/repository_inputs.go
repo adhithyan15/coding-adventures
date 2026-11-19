@@ -208,6 +208,7 @@ var (
 
 	rngCorpusPaths                 = []string{"code/specs/fixtures/rng-v1"}
 	fenwickTreeContractPaths       = []string{"code/specs/DT06-fenwick-tree.md", "code/specs/fixtures/fenwick-tree-v1"}
+	dt17HashFunctionsPaths         = []string{"code/specs/DT17-hash-functions.md", "code/specs/DT17b-hash-functions-dart-profile.md", "code/specs/fixtures/hash-functions-v1"}
 	gameClockInputPaths            = []string{"code/specs/fixtures/game-clock-v1", "code/specs/game-clock.warrant"}
 	typescriptGameClockCorpusPaths = []string{"code/specs/fixtures/game-clock-v1"}
 	gameInputFrameV1Paths          = []string{"code/specs/fixtures/game-input-frame-v1"}
@@ -396,6 +397,20 @@ var (
 )
 
 var repositoryInputConsumers = []repositoryInputConsumer{
+	{
+		name:     "rust/hash-functions",
+		language: "rust",
+		inputs:   "the shared DT17 byte-hash and Dart profile contract plus v1 fixture",
+		matches:  isDt17HashFunctionsInput,
+		paths:    dt17HashFunctionsPaths,
+	},
+	{
+		name:     "dart/hash-functions",
+		language: "dart",
+		inputs:   "the shared DT17 byte-hash and Dart profile contract plus v1 fixture",
+		matches:  isDt17HashFunctionsInput,
+		paths:    dt17HashFunctionsPaths,
+	},
 	{
 		name:     "dart/fenwick-tree",
 		language: "dart",
@@ -1529,6 +1544,17 @@ func isFenwickTreeContractInput(changed string) bool {
 	}
 	return changed == "code/specs/DT06-fenwick-tree.md" ||
 		strings.HasPrefix(changed, "code/specs/fixtures/fenwick-tree-v1/")
+}
+
+// isDt17HashFunctionsInput selects the two exact shared contracts and the
+// versioned v1 fixture tree, excluding neighboring spec and fixture names.
+func isDt17HashFunctionsInput(changed string) bool {
+	if path.Clean(changed) != changed {
+		return false
+	}
+	return changed == "code/specs/DT17-hash-functions.md" ||
+		changed == "code/specs/DT17b-hash-functions-dart-profile.md" ||
+		strings.HasPrefix(changed, "code/specs/fixtures/hash-functions-v1/")
 }
 
 // isTrigReferenceCorpus reports whether a changed path is a file of the shared
