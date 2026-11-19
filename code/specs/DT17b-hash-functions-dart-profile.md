@@ -23,24 +23,29 @@ Public function names use Dart lower-camel case: `fnv1a32`, `fnv1a64`,
 `hashStringSiphash`. Wrappers expose `hash(List<int> data)` and `outputBits`.
 The wrapper types are `Fnv1a32`, `Fnv1a64`, `Djb2`, `PolynomialRolling`,
 `Murmur3_32`, and `SipHash24`. The SipHash wrapper requires its key at
-construction. Avalanche analysis
-accepts a hash callback, declared output width, and explicit sample byte
-sequences. Distribution analysis accepts a callback, explicit input byte
-sequences, and bucket count. No helper silently generates samples.
+construction. A wrapper's `hash` returns the same type as its corresponding
+function: Dart `int` for 32-bit algorithms and `BigInt` for 64-bit algorithms.
+Avalanche and distribution callbacks have the uniform type
+`BigInt Function(List<int>)`. Callers adapt 32-bit functions with
+`BigInt.from`; callbacks returning `int` are not accepted implicitly. No
+helper silently generates samples.
 
 ## Numeric and byte domains
 
-Byte inputs are sequences of integers from 0 through 255. Invalid elements are
-rejected, not truncated or reinterpreted as signed bytes. Empty byte sequences
-are valid for every hash. Byte APIs accept arbitrary byte contents, including
+Byte inputs are sequences of integers from 0 through 255. Invalid elements
+raise `ArgumentError`; values are never truncated or reinterpreted as signed
+bytes. Empty byte sequences are valid for every hash. Byte APIs accept
+arbitrary byte contents, including
 invalid UTF-8. String conveniences encode valid Unicode strings as UTF-8 and
 reject unpaired UTF-16 surrogates rather than silently replacing them.
 
-Seeds are integers in `0..0xffffffff`. Polynomial base and modulus are
-integers in `0..0xffffffffffffffff`, with modulus zero rejected. Compatibility
-defaults are base 31 and modulus `2^61 - 1`. Polynomial steps compute the exact
-mathematical intermediate `(hash * base + byte)` before reduction modulo the
-modulus. They do not wrap that intermediate at 64 bits.
+Seeds are Dart `int` values in `0..0xffffffff`. Polynomial base and modulus
+are `BigInt` values in `0..0xffffffffffffffff`, with modulus zero rejected.
+The parameterized function and wrapper require both parameters as `BigInt`,
+including small values. Compatibility defaults are `BigInt.from(31)` and
+`BigInt.parse('2305843009213693951')` (`2^61 - 1`). Polynomial steps compute
+the exact mathematical intermediate `(hash * base + byte)` before reduction
+modulo the modulus. They do not wrap that intermediate at 64 bits.
 
 All arithmetic uses exact `BigInt` intermediates where a result could exceed
 JavaScript's exact integer range. FNV-1a and Murmur3 apply their specified
@@ -66,10 +71,10 @@ or do not fit the declared width. It uses exact counters before converting the
 final score to `double`.
 
 Distribution analysis requires at least one input and a positive bucket count.
-Empty byte input remains valid. It maps each validated unsigned callback
-result with exact integer modulo before converting the bounded bucket index.
-Its chi-squared result is a `double` computed from the complete supplied
-corpus.
+Empty byte input remains valid. Callback values must be `BigInt` values in
+`0..0xffffffffffffffff`. The helper maps each result with exact integer modulo
+before converting the bounded bucket index. Its chi-squared result is a
+`double` computed from the complete supplied corpus.
 
 Invalid byte values, seeds, polynomial parameters, SipHash key lengths,
 analysis widths, empty analysis corpora, bucket counts, and callback outputs
@@ -80,23 +85,42 @@ Unicode scalar sequences passed to a string convenience also raise
 
 ## Conformance evidence
 
-The implementation milestone uses the existing shared DT17 literal vectors as
-the independent oracle. Fixture u64 values are encoded as decimal or
-hexadecimal strings, not JSON numbers. The Dart consumer parses them directly
-to `BigInt`. VM and Node runs must execute the same fixture cases through the
-public Dart APIs. Node evidence must execute those public calls under Node.
-Compilation alone does not establish runtime conformance. Fixture loading may
-use a test-only bridge or generated constant snapshot verified against the
-neutral JSON corpus, while production remains free of I/O dependencies.
+The implementation milestone first creates a versioned neutral corpus and
+independent exact-arithmetic reference model, then cross-checks admitted
+published known answers against the existing public Rust package. These are
+separate evidence sources: model-generated expectations do not become literal
+known-answer vectors. Fixture u64 values use decimal or hexadecimal string
+encoding to preserve exactness through JSON parsing. The Dart consumer parses
+them directly to `BigInt`.
+
+The corpus includes exhaustive inputs consisting of every byte string of
+length zero, one, and two (65,793 inputs per applicable operation) under a
+fixed documented seed, fixed SipHash key, and default polynomial parameters.
+It also includes directed four- and eight-byte block and tail boundaries,
+wrap carries, maximum seed and key bytes, and polynomial cases whose exact
+intermediate exceeds 64 bits. Longer deterministic property histories and
+byte-mutation fuzzing must record seeds, iteration counts, replayable failing
+inputs, and shrinking only where the selected engine actually supports it.
+Executed source-fault controls must reach and fail the intended assertions;
+syntax or setup failures are not controls.
+
+VM and Node runs must execute the same fixture cases through public Dart APIs.
+Node evidence must execute those public calls under Node. Compilation alone
+does not establish runtime conformance. Fixture loading may use a test-only
+bridge or generated constant snapshot verified against the neutral JSON
+corpus, while production remains free of I/O dependencies. Report the actual
+coverage engine and its line/branch capabilities, with at least 95% measured
+coverage under the configured native Dart test workflow. No SAT or native
+Warrant proof is claimed without executing the actual supporting engine.
 
 Tests cover empty and high-bit bytes, embedded zeroes, UTF-8 including
 supplementary scalars, 32-bit and 64-bit wrap boundaries, Murmur tail lengths
 and nonzero seeds, SipHash key and output boundaries, polynomial parameters
 and exact intermediates, wrapper output widths, input ownership, and analysis
-parameter failures. Expected answers come from neutral vectors or independent
-literals, not another production language's output. Avalanche and distribution
-are deterministic checks over caller-supplied samples. They do not prove
-cryptographic security or statistical quality for all inputs.
+parameter failures. Literal known answers and independent model-generated
+exhaustive expectations remain distinguishable in the corpus. Avalanche and
+distribution are deterministic checks over caller-supplied samples. They do
+not prove cryptographic security or statistical quality for all inputs.
 
 This profile does not establish native Warrant proof, timing behavior,
 collision resistance, password-hashing suitability, security certification,

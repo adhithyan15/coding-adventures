@@ -18989,11 +18989,29 @@
       "branch": null,
       "pr_number": null,
       "selection_blocked": true,
-      "notes": "Three missing 11/15 slots, separate from existing Swift owner. DT17 correction must fix FNV-1a and Murmur3 vectors first. Preserve explicit 32/64-bit masks, little-endian behavior, and caller-supplied SipHash keys. Split by lane before implementation.",
+      "notes": "Historical inventory pin: three missing 11/15 slots. At exact main 4ca0030e43d41d0919a309e4607b2d4851129b0d, the fresh audit reports twelve of fifteen established hash-functions lanes, with Dart, Java, and Kotlin absent. The Dart work is now split into child hash-functions-dart-lane-parity. Java and Kotlin remain pending under this umbrella. The DT17 vector correction is merged. Preserve explicit 32/64-bit masks, little-endian behavior, and caller-supplied SipHash keys. No lane conformance is inferred from structural presence.",
       "postmerge_preparation_evidence": [
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/hash-functions-dart-java-kotlin-lane-parity"
       ],
       "post17905_audit_note": "Saved documentary profile decisions, independent witnesses and validation preparation incorporated at the exact owner-notes entry. Historical pins are immutable; unresolved scope decisions, selection blocks and dependencies remain. No native qualification or reviewed exception credited."
+    },
+    {
+      "id": "hash-functions-dart-lane-parity",
+      "title": "Implement and validate the Dart DT17 hash-functions profile",
+      "status": "pending",
+      "depends_on": [
+        "hash-functions-dt17-vector-and-documentation-correction"
+      ],
+      "branch": "codex/parity-dart-hash-functions-20261119",
+      "pr_number": null,
+      "selection_blocked": true,
+      "selection_revision": "4ca0030e43d41d0919a309e4607b2d4851129b0d",
+      "selection_notes": "Fresh 2026-11-19 review selects the Dart child from the existing combined Dart/JVM owner. The exact-main structural audit reports twelve of fifteen established lanes for hash-functions, with Dart, Java, and Kotlin absent. This child isolates Dart and does not select the JVM lanes.",
+      "notes": "Phase 1 profile commit 1cad278ae21ad820a8f4f6c0838b43cb2da932e0 defines the Dart and JavaScript numeric, byte, string, wrapper, and analysis contracts in code/specs/DT17b-hash-functions-dart-profile.md. Implementation remains blocked until independent review approves both the profile and the Phase 2 neutral fixture/oracle contract. Before implementation, prepare a versioned neutral DT17 corpus, an independent exact-arithmetic model, and cross-check admitted published answers against the existing public Rust package. Later validation must execute the same public fixture cases on Dart VM and Node. No SAT proof, Warrant proof, or all-language claim is made.",
+      "postmerge_preparation_evidence": [
+        "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/hash-functions-dart-lane-parity",
+        "code/specs/DT17b-hash-functions-dart-profile.md"
+      ]
     },
     {
       "id": "tree-dt02-language-neutral-conformance-and-existing-lane-reconciliation",
