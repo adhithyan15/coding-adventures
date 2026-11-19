@@ -1,6 +1,6 @@
 -- Generated from the reviewed language source-input registry.
 -- Reviewed package-data projection; tests check the full registry and digest.
-return { digest = "8f3d9ee3a696671b6889bba64962b0193ade73f8ed10ecb6ab5353b436ca4ad1", data = {
+return { digest = "4b695e89c165297a539091b9e74b60a3be0fd6b056c13fb36d66cdc696e7a1d2", data = {
   ["languages"] = {
     {
       ["case_alias_groups"] = {
@@ -1541,7 +1541,7 @@ return { digest = "8f3d9ee3a696671b6889bba64962b0193ade73f8ed10ecb6ab5353b436ca4
           ["id"] = "rust-tests-resource-inputs",
           ["owner"] = "build-tool-language-source-input-registry-corpus-and-engine-audit",
           ["path_prefix"] = "tests",
-          ["reason"] = "Tracked Rust tests consume reviewed archive, parser, compiler-diff, Mosaic, spreadsheet, subprocess, and WebAssembly fixtures below tests.",
+          ["reason"] = "Tracked Rust tests consume reviewed archive, TypeScript proof source, parser, compiler-diff, Mosaic, spreadsheet, subprocess, and WebAssembly fixtures below tests.",
           ["role"] = "resource",
           ["scope"] = "subtree",
           ["suffixes"] = {
@@ -1556,6 +1556,7 @@ return { digest = "8f3d9ee3a696671b6889bba64962b0193ade73f8ed10ecb6ab5353b436ca4
             ".stdout",
             ".test",
             ".toml",
+            ".ts",
             ".txt",
             ".wast",
             ".xls",

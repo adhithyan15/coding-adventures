@@ -537,6 +537,7 @@ members = [
     "radix-tree",
     "typescript-lexer",
     "typescript-parser",
+    "typescript-warrant-ir",
     "vendor-api-simulators",
     "verilog-lexer",
     "verilog-parser",
