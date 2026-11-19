@@ -2389,8 +2389,8 @@ func TestEnqueueAlreadyAssignedIsIdempotentAndRejectsOpposite(t *testing.T) {
 		t.Fatal(err)
 	}
 	positive, _ := MakeLit(v, false)
-	if !s.enqueue(positive, -1) {
-		t.Fatal("first root assignment failed")
+	if added, err := s.AddClause([]Lit{positive}); err != nil || !added {
+		t.Fatalf("original unit clause setup: added=%t err=%v", added, err)
 	}
 	trailLength := len(s.trail)
 	if !s.enqueue(positive, -1) {
@@ -2404,5 +2404,15 @@ func TestEnqueueAlreadyAssignedIsIdempotentAndRejectsOpposite(t *testing.T) {
 	}
 	if got := s.VarValue(v); got != True {
 		t.Fatalf("conflict changed existing assignment: %v", got)
+	}
+	if !oracleSAT(1, [][]Lit{{positive}}, nil) {
+		t.Fatal("independent oracle rejected the original unit clause")
+	}
+	if got, err := s.Solve(); err != nil || got != SolveSat {
+		t.Fatalf("unit formula after conflicting enqueue=%v %v", got, err)
+	}
+	model, valid := s.Model()
+	if !valid || !allClausesSatisfied([][]Lit{{positive}}, model) {
+		t.Fatalf("model no longer satisfies the original clause: %v/%t", model, valid)
 	}
 }
